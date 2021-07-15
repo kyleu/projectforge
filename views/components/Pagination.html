@@ -1,0 +1,17 @@
+{% import "github.com/valyala/fasthttp" %}
+{% import "github.com/kyleu/projectforge/app/filter" %}
+
+{% func Pagination(section string, count int, params *filter.Params, u *fasthttp.URI) %}{% stripspace %}
+  {% if params != nil %}
+    {% if params.HasNextPage(count) %}
+      <div class="right">
+        <a href="?{%s params.NextPage().ToQueryString(u) %}">Next page</a>
+      </div>
+    {% endif %}
+    {% if params.HasPreviousPage() %}
+      <div class="left">
+        <a href="?{%s params.PreviousPage().ToQueryString(u) %}">Previous page</a>
+      </div>
+    {% endif %}
+  {% endif %}
+{% endstripspace %}{% endfunc %}

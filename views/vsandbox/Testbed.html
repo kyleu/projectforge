@@ -1,0 +1,77 @@
+{% import "github.com/kyleu/projectforge/app" %}
+{% import "github.com/kyleu/projectforge/app/controller/cutil" %}
+{% import "github.com/kyleu/projectforge/app/sandbox" %}
+{% import "github.com/kyleu/projectforge/views/components" %}
+{% import "github.com/kyleu/projectforge/views/layout" %}
+{% import "github.com/kyleu/projectforge/views/vsvg" %}
+
+{% code type Testbed struct { layout.Basic } %}
+
+{% func (p *Testbed) Body(as *app.State, ps *cutil.PageState) %}
+{%= icons(as, ps) %}
+{%= tabs(as, ps) %}
+{%= accordion(as, ps) %}
+{%= modal(as, ps) %}
+{% endfunc %}
+
+{%- func icons(as *app.State, ps *cutil.PageState) -%}
+  <div class="card">
+    <h3>SVG Icons</h3>
+    {%= vsvg.IconGallery(as, ps) %}
+  </div>
+{%- endfunc -%}
+
+{%- func tabs(as *app.State, ps *cutil.PageState) -%}
+  <div class="card">
+    <h3>Tabs</h3>
+    <div class="tabs">
+      {%- for _, o := range sandbox.AllSandboxes -%}
+      <input name="type" type="radio" id="sandbox-{%s o.Key %}" class="input"/>
+      <label for="sandbox-{%s o.Key %}" class="label">{%s o.Title %}</label>
+      <div class="panel"><p>This is a sandbox named {%s o.Title %}</p></div>
+      {%- endfor -%}
+    </div>
+  </div>
+{%- endfunc -%}
+
+{%- func accordion(as *app.State, ps *cutil.PageState) -%}
+  <div class="card">
+    <h3>Accordion</h3>
+    <ul class="accordion">
+      <li>
+        <input id="accordion-a" type="checkbox" hidden />
+        <label for="accordion-a">{%= components.ExpandCollapse(3, ps) %} Option A</label>
+        <div class="bd">Option A!</div>
+      </li>
+      <li>
+        <input id="accordion-b" type="checkbox" hidden />
+        <label for="accordion-b">{%= components.ExpandCollapse(3, ps) %} Option B</label>
+        <div class="bd">Option B!</div>
+      </li>
+      <li>
+        <input id="accordion-c" type="checkbox" hidden />
+        <label for="accordion-c">{%= components.ExpandCollapse(3, ps) %} Option C</label>
+        <div class="bd">Option C!</div>
+      </li>
+    </ul>
+  </div>
+{%- endfunc -%}
+
+{%- func modal(as *app.State, ps *cutil.PageState) -%}
+  <div class="card">
+    <h3>Modal</h3>
+    <div><a href="#modal-x">Open modal</a></div>
+  </div>
+  <div id="modal-x" class="modal" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2>Modal</h2>
+      </div>
+      <div class="modal-body">
+        Here's a modal body!
+      </div>
+    </div>
+  </div>
+{%- endfunc -%}

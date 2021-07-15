@@ -1,0 +1,6 @@
+{% func Indent(br bool, level int) %}{% stripspace %}
+  {% if br %}{% newline %}{% endif %}
+  {% for i := 0; i < level; i ++ %}
+    {% space %}{% space %}
+  {% endfor %}
+{% endstripspace %}{% endfunc %}

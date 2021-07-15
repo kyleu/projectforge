@@ -1,0 +1,47 @@
+{% import "github.com/kyleu/projectforge/app" %}
+{% import "github.com/kyleu/projectforge/app/auth" %}
+
+{% func Authentication(as *app.State) %}
+  {%- code
+    prvs, err := as.Auth.Providers()
+    if err != nil {
+      panic(err)
+    }
+  -%}
+  <div class="card">
+    <div class="right"><a href="#modal-available"><button type="button">Available</button></a></div>
+    <h3>Authentication</h3>
+    {%- if len(prvs) == 0 -%}
+      <em>no authentication providers configured, why not <a href="#modal-available">add one</a>?</em>
+    {%- else -%}
+    <ul>
+      {%- for _, prv := range prvs -%}
+      <li><a href="/auth/{%s prv.ID %}?refer={%u `/settings` %}">{%s auth.AvailableProviderNames[prv.ID] %}</a></li>
+      {%- endfor -%}
+    </ul>
+    {%- endif -%}
+  </div>
+
+  <div id="modal-available" class="modal" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2>Available Authentication Providers</h2>
+      </div>
+      <div class="modal-body">
+        <ul>
+          {%- for _, x := range auth.AvailableProviderKeys -%}
+          <li title="{%s auth.ProviderUsage(x, prvs.Contains(x)) %}">
+            {%- if prvs.Contains(x) -%}
+            {%s auth.AvailableProviderNames[x] %}
+            {%- else -%}
+            <em>{%s auth.AvailableProviderNames[x] %}</em>
+            {%- endif -%}
+          </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    </div>
+  </div>
+{% endfunc %}

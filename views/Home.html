@@ -1,0 +1,15 @@
+{% import "github.com/kyleu/projectforge/app" %}
+{% import "github.com/kyleu/projectforge/app/controller/cutil" %}
+{% import "github.com/kyleu/projectforge/app/util" %}
+{% import "github.com/kyleu/projectforge/views/components" %}
+{% import "github.com/kyleu/projectforge/views/layout" %}
+
+{% code type Home struct {
+  layout.Basic
+} %}
+
+{% func (p *Home) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>{%= components.SVGRef(`app`, 20, 20, `icon`, ps) %}{%s util.AppName %}</h3>
+  </div>
+{% endfunc %}

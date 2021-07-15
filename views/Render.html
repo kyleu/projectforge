@@ -1,0 +1,48 @@
+{% import "fmt" %}
+{% import "sort" %}
+{% import "github.com/kyleu/projectforge/app" %}
+{% import "github.com/kyleu/projectforge/app/controller/cutil" %}
+{% import "github.com/kyleu/projectforge/app/util" %}
+{% import "github.com/kyleu/projectforge/views/components" %}
+{% import "github.com/kyleu/projectforge/views/layout" %}
+
+{% func Render(page layout.Page, as *app.State, ps *cutil.PageState) %}{%code
+	defer func() {
+		x := recover()
+		if x != nil {
+      ps.Logger.Error(fmt.Sprintf("Error processing template [%T]: %+v", x, x))
+      panic(x)
+		}
+	}()
+%}<!DOCTYPE html>
+<html lang="en">
+<!-- {%s cutil.PageComment %} -->
+<head>{%= page.Head(as, ps) %}</head>
+{%- if ps.Profile.Mode != "" -%}<body class="{%s ps.Profile.ModeClass() %}">{%- else -%}<body>{%- endif -%}
+{%- if len(ps.Flashes) > 0 -%}{%= renderFlashes(ps.Flashes) %}{%- endif -%}
+{%= page.Nav(as, ps) %}
+<main id="content">{%= page.Body(as, ps) %}</main>
+{%- code sort.Strings(ps.Icons) -%}
+{% if len(ps.Icons) > 0 %}<div class="icon-list" style="display: none;">{% for _, icon := range ps.Icons %}
+  {%= components.SVG(icon) %}{% endfor %}
+</div>
+{% endif %}</body>
+</html>
+{% endfunc %}
+
+{% func renderFlashes(flashes []string) %}{% stripspace %}
+  {% if len(flashes) > 0 %}
+    <div id="flash-container">
+      {% for idx, f := range flashes %}
+        {% code level, msg := util.SplitString(f, ':', true) %}
+        <div class="flash">
+          <input type="radio" style="display:none;" id="hide-flash-{%d idx %}">
+          <label for="hide-flash-{%d idx %}"><span>×</span></label>
+          <div class="content flash-{%s level %}">
+            {%s msg %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endstripspace %}{% endfunc %}

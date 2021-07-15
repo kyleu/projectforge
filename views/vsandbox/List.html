@@ -1,0 +1,17 @@
+{% import "github.com/kyleu/projectforge/app" %}
+{% import "github.com/kyleu/projectforge/app/controller/cutil" %}
+{% import "github.com/kyleu/projectforge/app/sandbox" %}
+{% import "github.com/kyleu/projectforge/views/layout" %}
+
+{% code type List struct { layout.Basic } %}
+
+{% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>Sandboxes</h3>
+    <ul>
+      {% for _, s := range sandbox.AllSandboxes %}
+        <li><a href="/sandbox/{%s s.Key %}">{%s s.Title %}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endfunc %}

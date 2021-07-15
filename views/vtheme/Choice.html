@@ -1,0 +1,21 @@
+{% import "github.com/kyleu/projectforge/app/controller/cutil" %}
+{% import "github.com/kyleu/projectforge/app/theme" %}
+{% import "github.com/kyleu/projectforge/views/vutil" %}
+
+{% func Choice(themes theme.Themes, selected string, indent int, ps *cutil.PageState) %}{% stripspace %}
+  {%= vutil.Indent(true, indent) %}
+  <div class="choice mt">
+    {% for _, t := range themes %}
+      {%= vutil.Indent(true, indent + 1) %}
+      <label title="{%s t.Key %}">
+        {% if t.Key == selected %}
+          <input type="radio" name="theme" value="{%s t.Key %}" checked="checked" />
+        {% else %}
+          <input type="radio" name="theme" value="{%s t.Key %}" />
+        {% endif %}
+        {%= MockupTheme(t, indent + 2, ps) %}
+      </label>
+    {% endfor %}
+  {%= vutil.Indent(true, indent) %}
+  </div>
+{% endstripspace %}{% endfunc %}

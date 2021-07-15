@@ -1,0 +1,19 @@
+{% import "github.com/kyleu/projectforge/app" %}
+{% import "github.com/kyleu/projectforge/app/controller/cutil" %}
+{% import "github.com/kyleu/projectforge/views/components" %}
+{% import "github.com/kyleu/projectforge/views/layout" %}
+
+{% code type Run struct {
+  layout.Basic
+  Key string
+  Title string
+  Result interface{}
+} %}
+
+{% func (p *Run) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>{%s p.Title %}</h3>
+    {%= components.JSON(p.Result) %}
+  </div>
+{% endfunc %}
+

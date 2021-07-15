@@ -1,0 +1,92 @@
+{% import "github.com/kyleu/projectforge/app/util" %}
+{% import "github.com/kyleu/projectforge/views/vutil" %}
+
+{% func FormInput(key string, id string, value string) %}{% stripspace %}
+  {% if id == "" %}
+    <input name="{%s key %}" value="{%s value %}" />
+  {% else %}
+    <input id="{%s id %}" name="{%s key %}" value="{%s value %}" />
+  {% endif %}
+{% endstripspace %}{% endfunc %}
+
+{% func FormInputNumber(key string, id string, value interface{}) %}{% stripspace %}
+  {% if id == "" %}
+    <input name="{%s key %}" type="number" value="{%v value %}" />
+  {% else %}
+    <input id="{%s id %}" name="{%s key %}" type="number" value="{%v value %}" />
+  {% endif %}
+{% endstripspace %}{% endfunc %}
+
+{% func FormInputTimestamp(key string, id string, value interface{}) %}{% stripspace %}
+  {% if id == "" %}
+    <input name="{%s key %}" type="datetime-local" value="{%v value %}" />
+  {% else %}
+    <input id="{%s id %}" name="{%s key %}" type="datetime-local" value="{%v value %}" />
+  {% endif %}
+{% endstripspace %}{% endfunc %}
+
+{% func FormTextarea(key string, id string, value string) %}{% stripspace %}
+  {% if id == "" %}
+    <textarea name="{%s key %}">{%s value %}</textarea>
+  {% else %}
+    <textarea id="{%s id %}" name="{%s key %}">{%s value %}</textarea>
+  {% endif %}
+{% endstripspace %}{% endfunc %}
+
+{% func FormSelect(key string, id string, value string, opts []string, titles []string, indent int) %}{% stripspace %}
+  {% if id == "" %}
+    <select name="{%s key %}">
+  {% else %}
+    <select name="{%s key %}" id="{%s id %}">
+  {% endif %}
+    {% for idx, opt := range opts %}
+      {% code
+        title := opt
+        if idx < len(titles) {
+          title = titles[idx]
+        }
+      %}
+      {%= vutil.Indent(true, indent + 1) %}
+      {% if opt == value %}
+        <option selected="selected" value="{%s opt %}">{%s title %}</option>
+      {% else %}
+        <option value="{%s opt %}">{%s title %}</option>
+      {% endif %}
+    {% endfor %}
+  {%= vutil.Indent(true, indent) %}
+  </select>
+{% endstripspace %}{% endfunc %}
+
+{% func FormRadio(key string, value string, opts []string, titles []string, indent int) %}{% stripspace %}
+  {% for idx, opt := range opts %}
+    {% code
+      title := opt
+      if idx < len(titles) {
+        title = titles[idx]
+      }
+    %}
+    {%= vutil.Indent(true, indent) %}
+    {% if opt == value %}
+      <label><input type="radio" name="{%s key %}" value="{%s opt %}" checked="checked" />{% space %}{%s title %}</label>
+    {% else %}
+      <label><input type="radio" name="{%s key %}" value="{%s opt %}" />{% space %}{%s title %}</label>
+    {% endif %}
+  {% endfor %}
+{% endstripspace %}{% endfunc %}
+
+{% func FormCheckbox(key string, values []string, opts []string, titles []string, indent int) %}{% stripspace %}
+  {% for idx, opt := range opts %}
+    {% code
+      title := opt
+      if idx < len(titles) {
+        title = titles[idx]
+      }
+    %}
+    {%= vutil.Indent(true, indent) %}
+    {% if util.StringArrayContains(values, opt) %}
+      <label><input type="checkbox" name="{%s key %}" value="{%s opt %}" checked="checked" />{% space %}{%s title %}</label>
+    {% else %}
+      <label><input type="checkbox" name="{%s key %}" value="{%s opt %}" />{% space %}{%s title %}</label>
+    {% endif %}
+  {% endfor %}
+{% endstripspace %}{% endfunc %}

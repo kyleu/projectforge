@@ -1,0 +1,100 @@
+{% import "github.com/kyleu/projectforge/app" %}
+{% import "github.com/kyleu/projectforge/app/controller/cutil" %}
+{% import "github.com/kyleu/projectforge/app/action" %}
+{% import "github.com/kyleu/projectforge/app/util" %}
+{% import "github.com/kyleu/projectforge/views/components" %}
+{% import "github.com/kyleu/projectforge/views/layout" %}
+
+{% code type Result struct {
+  layout.Basic
+  Cfg util.ValueMap
+  Result *action.Result
+} %}
+
+{% func (p *Result) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <div class="right">
+      <a href="#modal-cfg"><button type="button">Config</button></a>
+      <a href="#modal-result"><button type="button">Result</button></a>
+    </div>
+    <h3>Result</h3>
+    <p>{%s p.Result.Status %}</p>
+  </div>
+
+  <div class="card">
+    <h3>Config</h3>
+    <table>
+      <tbody>
+        {%- for _, k := range p.Cfg.Keys() -%}
+        <tr>
+          <td>{%s k %}</td>
+          <td>{%v p.Cfg[k] %}</td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Errors</h3>
+    {%- if len(p.Result.Errors) == 0 -%}
+    <p>no errors</p>
+    {%- else -%}
+    <table>
+      <tbody>
+        {%- for _, e := range p.Result.Errors -%}
+        <tr>
+          <td>{%s e %}</td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+    {%- endif -%}
+  </div>
+
+  <div class="card">
+    <h3>Logs</h3>
+    {%- if len(p.Result.Logs) == 0 -%}
+    <p>no logs</p>
+    {%- else -%}
+    <table>
+      <tbody>
+        {%- for _, l := range p.Result.Logs -%}
+        <tr>
+          <td><pre>{%s l %}</pre></td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+    {%- endif -%}
+  </div>
+
+  {%- for _, mr := range p.Result.Modules -%}
+    <div class="card">
+      <div class="right">{%s mr.Status %}</div>
+      <h3>Module [{%s mr.Key %}]</h3>
+      <h4>Diffs</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Path</th>
+            <th>Status</th>
+            <th>Patch</th>
+          </tr>
+        </thead>
+        <tbody>
+          {%- for _, diff := range mr.Diffs -%}
+          <tr>
+            <td>{%s diff.Path %}</td>
+            <td>{%s diff.Status %}</td>
+            <td><pre>{%s= diff.Patch %}</pre></td>
+          </tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
+  {%- endfor -%}
+
+  {%= components.JSONModal("cfg", "Config JSON", p.Cfg, 1) %}
+  {%= components.JSONModal("result", "Result JSON", p.Result, 1) %}
+{% endfunc %}

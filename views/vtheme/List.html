@@ -1,0 +1,24 @@
+{% import "github.com/kyleu/projectforge/app" %}
+{% import "github.com/kyleu/projectforge/app/controller/cutil" %}
+{% import "github.com/kyleu/projectforge/app/theme" %}
+{% import "github.com/kyleu/projectforge/views/components" %}
+{% import "github.com/kyleu/projectforge/views/layout" %}
+
+{% code type List struct {
+  layout.Basic
+  Themes theme.Themes
+} %}
+
+{% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <div class="right"><a href="/theme/new" title="add new theme">{%= components.SVGRef(`plus`, 20, 20, `icon`, ps) %}</a></div>
+    <h3>Themes</h3>
+    <div class="theme-container mt">
+      {%- for _, t := range p.Themes -%}
+      <div class="theme-item">
+        <a href="/theme/{%s t.Key %}">{%= MockupTheme(t, 3, ps) %}</a>
+      </div>
+      {%- endfor -%}
+    </div>
+  </div>
+{% endfunc %}

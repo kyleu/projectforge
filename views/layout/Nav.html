@@ -1,0 +1,46 @@
+{% import "strings" %}
+{% import "github.com/kyleu/projectforge/app" %}
+{% import "github.com/kyleu/projectforge/app/controller/cutil" %}
+{% import "github.com/kyleu/projectforge/app/menu" %}
+{% import "github.com/kyleu/projectforge/views/components" %}
+{% import "github.com/kyleu/projectforge/views/vutil" %}
+
+{% func Nav(as *app.State, ps *cutil.PageState) %}<nav id="navbar">
+  <a class="logo" href="{%s ps.RootPath %}" title="{%s ps.RootTitle %} {%s as.BuildInfo.String() %}">{%= components.SVGRef(ps.RootIcon, 32, 32, ``, ps) %}</a>
+  <div class="breadcrumbs">
+    <a class="link" href="{%s ps.RootPath %}">{%s ps.RootTitle %}</a>{%= NavItems(ps.Menu, ps.Breadcrumbs) %}
+  </div>
+  <form action="{%s ps.SearchPath %}" class="search" title="search">
+    <input type="search" name="q" placeholder=" " />
+    <div class="search-image" style="display: none;"><svg><use xlink:href="#svg-search" /></svg></div>
+  </form>
+  <a class="profile" title="{%s ps.Profile.AuthString(ps.Auth) %}" href="{%s ps.ProfilePath %}">{%= components.SVGRef(`profile`, 24, 24, ``, ps) %}</a>
+
+  <input type="checkbox" id="menu-toggle-input" style="display: none;" />
+  <label class="menu-toggle" for="menu-toggle-input"><div class="spinner diagonal part-1"></div><div class="spinner horizontal"></div><div class="spinner diagonal part-2"></div></label>
+  {%= Menu(ps) %}
+</nav>{% endfunc %}
+
+{% func NavItems(m menu.Items, breadcrumbs cutil.Breadcrumbs) %}{% stripspace %}
+  {% for idx, bc := range breadcrumbs %}
+    {% code
+      i := m.GetByPath(breadcrumbs[:idx + 1])
+    %}
+    {%= vutil.Indent(true, 2) %}
+    <span class="separator">/</span>
+    {%= vutil.Indent(true, 2) %}
+    {% if i == nil %}
+      {% code
+        bcLink := ""
+        if strings.Contains(bc, "||") {
+          bci := strings.Index(bc, "||")
+          bcLink = bc[bci + 2:]
+          bc = bc[:bci]
+        }
+      %}
+      <a class="link" href="{%s bcLink %}">{%s bc %}</a>
+    {% else %}
+      <a class="link" href="{%s i.Route %}">{%s i.Title %}</a>
+    {% endif %}
+  {% endfor %}
+{% endstripspace %}{% endfunc %}

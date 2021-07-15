@@ -1,0 +1,17 @@
+{% import "github.com/kyleu/projectforge/app" %}
+{% import "github.com/kyleu/projectforge/app/controller/cutil" %}
+{% import "github.com/kyleu/projectforge/app/svg" %}
+{% import "github.com/kyleu/projectforge/views/layout" %}
+
+{% code type View struct {
+  layout.Basic
+  SVG *svg.SVG
+} %}
+
+{% func (p *View) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>SVG Icon [{%s p.SVG.Key %}]</h3>
+    <p>{%s= p.SVG.Markup %}</p>
+    <pre>{%s p.SVG.Markup %}</pre>
+  </div>
+{% endfunc %}

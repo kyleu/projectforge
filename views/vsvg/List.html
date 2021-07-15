@@ -1,0 +1,52 @@
+{% import "github.com/kyleu/projectforge/app" %}
+{% import "github.com/kyleu/projectforge/app/controller/cutil" %}
+{% import "github.com/kyleu/projectforge/app/util" %}
+{% import "github.com/kyleu/projectforge/views/components" %}
+{% import "github.com/kyleu/projectforge/views/layout" %}
+
+{% code type List struct { layout.Basic } %}
+
+{% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>SVG icons</h3>
+    <a href="/tools/svg/build"><button>Rebuild</button></a>
+  </div>
+  <div class="card">
+    <h3>Add a new icon</h3>
+    <form action="/tools/svg/add" method="get">
+      <table>
+        <tbody>
+          <tr>
+            <th><label for="input-src">Source Key</label></th>
+            <td><input id="input-src" name="src" value="" /></td>
+          </tr>
+          <tr>
+            <th><label for="input-tgt">Target Key</label></th>
+            <td><input id="input-tgt" name="tgt" value="" /></td>
+          </tr>
+          <tr>
+            <th><label for="input-url">URL</label></th>
+            <td><input id="input-url" name="url" value="" /></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="mt">
+        <button type="submit">Add/Update SVG</button>
+      </div>
+    </form>
+  </div>
+  <div class="card">
+    {%= IconGallery(as, ps) %}
+  </div>
+{% endfunc %}
+
+{%- func IconGallery(as *app.State, ps *cutil.PageState) -%}
+  <div class="flex-wrap mt">
+    {%- for _, k := range util.SVGIconKeys -%}
+    <div style="text-align: center; margin: 6px 12px 6px 0; padding: 6px; border: var(--border);">
+      <div style="color: var(--color-foreground-muted);">{%= components.SVGRef(k, 64, 64, "icon", ps) %}</div>
+      <div style="font-size: 75%;">{%s k %}</div>
+    </div>
+    {%- endfor -%}
+  </div>
+{%- endfunc -%}

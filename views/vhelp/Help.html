@@ -1,0 +1,24 @@
+{% import "github.com/kyleu/projectforge/app" %}
+{% import "github.com/kyleu/projectforge/app/controller/cutil" %}
+{% import "github.com/kyleu/projectforge/app/util" %}
+{% import "github.com/kyleu/projectforge/views/layout" %}
+{% import "github.com/kyleu/projectforge/views/vsettings" %}
+
+{% code type Help struct { layout.Basic } %}
+
+{% func (p *Help) Body(as *app.State, ps *cutil.PageState) %}
+  {%= vsettings.About(as) %}
+  <div class="card">
+    <h3>Help</h3>
+    <p>Coming soon...</p>
+  </div>
+  {%= Feedback() %}
+{% endfunc %}
+
+{% func Feedback() %}
+  <div class="card">
+    <h3>Feedback</h3>
+    <p>For now, email <a href="mailto:{%s util.AppContact %}">{%s util.AppContact %}</a></p>
+  </div>
+{% endfunc %}
+
