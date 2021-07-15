@@ -1,0 +1,40 @@
+.accordion {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.accordion li {
+  border-top: var(--border);
+}
+.accordion li:first-child {
+  border-top: none;
+}
+
+.accordion .bd {
+  display: none;
+  padding: var(--padding-small);
+}
+
+.accordion label {
+  display: block;
+  cursor: pointer;
+  padding: var(--padding-small);
+}
+
+.accordion input[type=checkbox]:checked ~ .bd {
+  display: block;
+}
+
+.accordion input[type=checkbox] ~ label .expand {
+  display: block;
+}
+.accordion input[type=checkbox] ~ label .collapse {
+  display: none;
+}
+.accordion input[type=checkbox]:checked ~ label .expand {
+  display: none;
+}
+.accordion input[type=checkbox]:checked ~ label .collapse {
+  display: block;
+}

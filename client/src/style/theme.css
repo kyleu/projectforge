@@ -1,0 +1,47 @@
+.theme-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.theme-container .theme-item {
+  margin: 0 var(--padding);
+}
+
+.mockup {
+  cursor: pointer;
+  text-align: left;
+  margin: auto;
+  width: 166px;
+  height: 126px;
+  font-size: 80%;
+}
+
+.mockup .mock-link:hover {
+  text-decoration: underline;
+}
+
+.mockup .mock-nav {
+  height: 18px;
+}
+
+.mockup .mock-muted {
+  margin: 0 6px;
+}
+
+.mockup .mock-menu {
+  float: left;
+  width: 30px;
+  height: 102px;
+}
+.mockup .mock-menu .mock-link, .mockup .mock-menu .mock-link-selected {
+  padding-left: 4px;
+}
+
+.mockup .mock-main {
+  padding: 4px 4px 4px 30px;
+  height: 102px;
+}
+.mockup .mock-main ul {
+  margin-top: var(--padding-small);
+}
+

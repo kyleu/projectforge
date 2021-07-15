@@ -2,6 +2,6 @@
 /.idea
 /.scannerwork
 /build
-/tmp
-
+/client/node_modules
 /testproject
+/tmp

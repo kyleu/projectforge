@@ -1,0 +1,37 @@
+#flash-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+}
+
+#flash-container input:checked ~ * {
+  display: none;
+}
+
+#flash-container label {
+  float: right;
+  padding: var(--padding);
+  cursor: pointer;
+}
+
+#flash-container .flash {
+  background-color: var(--color-background-muted);
+  opacity: 1;
+  -webkit-transition: opacity 500ms linear;
+  transition: opacity 500ms linear;
+}
+
+#flash-container .flash .content {
+  min-width: 480px;
+  padding: 16px 0 0 12px;
+  min-height: var(--nav-height);
+}
+
+#flash-container .flash-success {
+  color: var(--color-success);
+}
+
+#flash-container .flash-error {
+  color: var(--color-error);
+}
