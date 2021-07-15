@@ -1,0 +1,59 @@
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+
+table tr {
+  margin: 0;
+  padding: 0;
+}
+
+table th label {
+  display: block;
+}
+
+table td, table th {
+  padding: var(--padding-small);
+  border-bottom: var(--border);
+  margin: 0;
+  min-width: 1px;
+}
+
+table tbody tr:last-child td, table tbody tr:last-child th {
+  border-bottom: none;
+}
+
+table thead th {
+  margin: 0;
+  text-align: left;
+  font-weight: bold;
+}
+
+table .shrink {
+  width: 1px;
+  white-space: nowrap;
+}
+
+table .resize {
+  padding: var(--padding-small);
+  resize: horizontal;
+  overflow: hidden;
+  width: 100%;
+}
+
+@supports (-moz-appearance:none) {
+  table .resize {
+    min-width: 100%;
+  }
+}
+
+table .tfill {
+  width: 99%;
+}
+
+table.centered th, table.centered td {
+  text-align: center;
+}

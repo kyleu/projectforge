@@ -1,0 +1,54 @@
+{% import "fmt" %}
+{% import "$PF_PACKAGE$/app/controller/cutil" %}
+{% import "$PF_PACKAGE$/app/theme" %}
+{% import "$PF_PACKAGE$/app/util" %}
+{% import "$PF_PACKAGE$/views/components" %}
+{% import "$PF_PACKAGE$/views/vutil" %}
+
+{% func MockupTheme(t *theme.Theme, indent int, ps *cutil.PageState) %}{% stripspace %}
+  {%= MockupColors("light", t.Light, indent, ps) %}
+  {%= MockupColors("dark", t.Dark, indent, ps) %}
+  <div class="title">{%s t.Key %}</div>
+{% endstripspace %}{% endfunc %}
+
+{% func MockupColors(mode string, c *theme.Colors, indent int, ps *cutil.PageState) %}{% stripspace %}
+  {% code
+    navStyle := fmt.Sprintf("color: %s; background-color: %s;", c.NavForeground, c.NavBackground)
+
+    menuStyle := fmt.Sprintf("color: %s; background-color: %s;", c.MenuForeground, c.MenuBackground)
+    menuLinkStyle := fmt.Sprintf("color: %s;", c.MenuForeground)
+    menuLinkSelectedStyle := fmt.Sprintf("color: %s; background-color: %s;", c.MenuSelectedForeground, c.MenuSelectedBackground)
+
+    mainStyle := fmt.Sprintf("color: %s; background-color: %s;", c.Foreground, c.Background)
+    mutedStyle := fmt.Sprintf("color: %s; background-color: %s;", c.ForegroundMuted, c.BackgroundMuted)
+    linkStyle := fmt.Sprintf("color: %s;", c.LinkForeground)
+    linkVisitedStyle := fmt.Sprintf("color: %s;", c.LinkVisitedForeground)
+
+    cls := "mockup"
+    if mode != "" {
+      cls += " only-" + mode
+    }
+  %}
+  {%= vutil.Indent(true, indent) %}
+  <div class="{%s cls %}">
+    <div class="mock-nav" style="{%s navStyle %}">{%= components.SVGRef(`app`, 12, 12, `icon`, ps) %}{%s util.AppName %}</div>
+    <div class="mock-menu" style="{%s menuStyle %}">
+      <div class="mock-link" style="{%s menuLinkStyle %}">A</div>
+      <div class="mock-link-selected" style="{%s menuLinkSelectedStyle %}">B</div>
+      <div class="mock-link" style="{%s menuLinkStyle %}">C</div>
+      <div class="mock-link" style="{%s menuLinkStyle %}">D</div>
+    </div>
+    <div class="mock-main" style="{%s mainStyle %}">
+      <div>Welcome!</div>
+      <div>
+        <div class="mock-muted" style="{%s mutedStyle %}">Here's some links:</div>
+        <ul>
+          <li class="mock-link" style="{%s linkStyle %}">New</li>
+          <li class="mock-link" style="{%s linkStyle %}">Also New</li>
+          <li class="mock-link-visited" style="{%s linkVisitedStyle %}">Visited</li>
+        </ul>
+      </div>
+    </div>
+  {%= vutil.Indent(true, indent) %}
+  </div>
+{% endstripspace %}{% endfunc %}

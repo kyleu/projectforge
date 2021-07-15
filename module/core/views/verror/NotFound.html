@@ -1,0 +1,13 @@
+{% import "$PF_PACKAGE$/app" %}
+{% import "$PF_PACKAGE$/app/controller/cutil" %}
+{% import "$PF_PACKAGE$/views/layout" %}
+
+{% code type NotFound struct { layout.Basic } %}
+
+{% func (p *NotFound) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>404 not found</h3>
+    <p>Sorry about that</p>
+  </div>
+{% endfunc %}
+

@@ -1,0 +1,22 @@
+{% import "$PF_PACKAGE$/app/controller/cutil" %}
+{% import "$PF_PACKAGE$/app/util" %}
+{% import "$PF_PACKAGE$/views/vutil" %}
+
+{% func IconPicker(selected string, name string, ps *cutil.PageState, indent int) %}{% stripspace %}
+  {%= vutil.Indent(true, indent) %}
+  <div class="choice">
+    {% for _, k := range util.SVGIconKeys %}
+      {%= vutil.Indent(true, indent + 1) %}
+      <label title="{%s k %}">
+        {% if k == selected %}
+          <input type="radio" name="{%s name %}" value="{%s k %}" checked="checked" />
+        {% else %}
+          <input type="radio" name="{%s name %}" value="{%s k %}" />
+        {% endif %}
+        {% space %}
+        {%= SVGRef(k, 48, 48, "", ps) %}
+      </label>
+    {% endfor %}
+  {%= vutil.Indent(true, indent) %}
+  </div>
+{% endstripspace %}{% endfunc %}

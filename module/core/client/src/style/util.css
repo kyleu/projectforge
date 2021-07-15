@@ -1,0 +1,146 @@
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
+.clear {
+  clear: both;
+}
+
+.hidden {
+  opacity: 0;
+}
+
+.mt {
+  margin-top: var(--padding);
+}
+
+.mb {
+  margin-bottom: var(--padding);
+}
+
+.no-padding {
+  padding: 0 !important;
+}
+
+.margin {
+  margin: var(--padding);
+}
+
+.two-pane {
+  display: flex;
+}
+.two-pane .l {
+  flex-grow: 1;
+}
+.two-pane .r {
+  padding-left: var(--padding-small);
+}
+
+.pre {
+  font-family: monospace, monospace;
+  white-space: pre;
+}
+
+.expand, .collapse {
+  float: left;
+  margin-top: 2px;
+  margin-right: 4px;
+}
+
+.sort-title {
+  padding-right: 24px;
+}
+
+.sort-icon {
+  display: inline-block;
+  float: right;
+  height: 18px;
+  width: 18px;
+}
+
+.sort-hover .sort-icon {
+  display: none;
+}
+
+.sort-hover:hover .sort-icon {
+  display: block;
+}
+
+.svg-fill {
+  fill: currentColor;
+}
+
+.svg-stroke {
+  stroke: currentColor;
+}
+
+.error-owned {
+  color: green;
+}
+
+.error-location {
+  margin-left: 16px;
+  margin-bottom: 8px;
+}
+
+.icon {
+  float: left;
+  margin-right: 4px;
+  margin-top: 2px;
+}
+
+.icon-block {
+  margin-right: 4px;
+}
+
+.choice {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.choice input {
+  display: none;
+}
+
+.choice .title {
+  text-align: center;
+  cursor: pointer;
+}
+
+.choice input ~ * {
+  border: 3px solid transparent;
+}
+.choice input:checked ~ * {
+  border: 3px solid var(--color-foreground-muted);
+}
+
+.border-left {
+  border-left: var(--border);
+}
+
+.flex-wrap {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.toggle label {
+  cursor: pointer;
+  display: block;
+  width: 100%;
+}
+
+.toggle .x {
+  display: none;
+}
+
+.toggle input[type=checkbox]:checked ~ label {
+  display: none;
+}
+
+.toggle input[type=checkbox]:checked ~ .x {
+  display: block;
+}

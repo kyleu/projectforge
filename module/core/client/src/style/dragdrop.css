@@ -1,0 +1,73 @@
+.drag-container .item {
+  border: var(--border);
+  margin-top: 12px;
+  padding: 12px;
+}
+
+.drag-container .content {
+  display: flex;
+  flex-direction: row;
+}
+
+.drag-container .container {
+  padding: 6px 0;
+  transition: padding 400ms linear;
+}
+
+.drag-container .handle {
+  margin-right: 8px;
+  cursor: move;
+}
+
+.drag-container .drag-actions {
+  height: 24px;
+}
+
+.drag-container .drag-actions .message {
+  display: none;
+}
+
+.drag-container .drag-actions .form {
+  display: block;
+}
+
+.drag-container .drag-actions.no-changes .message {
+  display: block;
+}
+
+.drag-container .drag-actions.no-changes .form {
+  display: none;
+}
+
+.drag-container .drag-edit {
+  display: none;
+}
+
+/* readonly */
+.drag-container.readonly .container {
+  padding: 0;
+}
+
+.drag-container.readonly .drag-edit {
+  display: block;
+}
+
+.drag-container.readonly .drag-actions {
+  display: none;
+}
+
+.drag-container.readonly .handle {
+  display: none;
+}
+
+.drag-container.readonly .remove {
+  display: none;
+}
+
+.drag-container.readonly .l {
+  width: 100%;
+}
+
+.drag-container.readonly .r {
+  display: none;
+}

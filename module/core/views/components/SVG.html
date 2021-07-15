@@ -1,0 +1,21 @@
+{% import "fmt" %}
+{% import "$PF_PACKAGE$/app/controller/cutil" %}
+{% import "$PF_PACKAGE$/app/util" %}
+
+{% func SVG(k string) %}{%s= util.SVGLibrary[k] %}{% endfunc %}
+
+{% func SVGRef(k string, w int, h int, cls string, ps *cutil.PageState) %}{% stripspace %}
+  {% if k != "" %}
+    {% code
+      ps.AddIcon(k)
+      if w == 0 { w = 20 }
+      if h == 0 { h = 20 }
+      style := fmt.Sprintf("width: %dpx; height: %dpx;", w, h)
+    %}
+    {% if cls == "" %}
+      <svg style="{%s style %}"><use xlink:href="#svg-{%s k %}" /></svg>
+    {% else %}
+      <svg class="{%s cls %}" style="{%s style %}"><use xlink:href="#svg-{%s k %}" /></svg>
+    {% endif %}
+  {% endif %}
+{% endstripspace %}{% endfunc %}

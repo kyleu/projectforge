@@ -1,0 +1,110 @@
+.menu-container {
+  position:absolute;
+  top: var(--nav-height);
+  left: 0;
+  width: var(--menu-width);
+  min-width: var(--menu-width);
+  height: calc(100% - var(--nav-height));
+  overflow: auto;
+  color: var(--color-menu-foreground);
+  background-color: var(--color-menu-background);
+  transition: transform 250ms ease-in-out;
+}
+
+@media (max-width: 800px) {
+  .menu-container {
+    transform: translateX(calc(-1 * var(--menu-width)));
+    min-width: 0;
+  }
+}
+
+.menu-container .menu {
+  padding: var(--padding) 0 calc(var(--padding) * 2) 0;
+}
+
+.menu-container ul {
+  margin: 0;
+  list-style: none;
+  padding: 0;
+}
+
+.menu-container .item, .menu-container label {
+  display: block;
+  padding: 4px 0;
+  user-select: none;
+}
+
+.menu-container .final {
+  color: var(--color-menu-selected-foreground);
+  background-color: var(--color-menu-selected-background);
+}
+
+.menu-container .separator {
+  margin: var(--padding-small) 0;
+  border-bottom: var(--border);
+}
+
+.menu-container .label-link {
+  float: right;
+  margin-right: var(--padding);
+  margin-top: 3px;
+}
+
+.menu-container .item svg {
+  margin-left: 19px;
+}
+
+.menu-container a {
+  color: var(--color-menu-foreground);
+}
+
+.menu-container label {
+  cursor: pointer;
+}
+
+.level-0 .item, .level-0 label {
+  padding-left: var(--menu-padding);
+}
+
+.level-1 .item, .level-1 label {
+  padding-left: calc(var(--menu-padding) * 2);
+}
+
+.level-2 .item, .level-2 label {
+  padding-left: calc(var(--menu-padding) * 3);
+}
+
+.level-3 .item, .level-3 label {
+  padding-left: calc(var(--menu-padding) * 4);
+}
+
+.level-4 .label-item, .level-4 label {
+  padding-left: calc(var(--menu-padding) * 5);
+}
+
+.level-5 .label-item, .level-5 label {
+  padding-left: calc(var(--menu-padding) * 6);
+}
+
+.level-1, .level-2, .level-3, .level-4, .level-5 {
+  height: 100%;
+  max-height: 0;
+  overflow: hidden;
+}
+
+.menu-container input[type=checkbox]:checked + label + ul {
+  max-height: 10000px;
+}
+
+.menu-container input[type=checkbox] + label .expand {
+  display: inline;
+}
+.menu-container input[type=checkbox] + label .collapse {
+  display: none;
+}
+.menu-container input[type=checkbox]:checked + label .expand {
+  display: none;
+}
+.menu-container input[type=checkbox]:checked + label .collapse {
+  display: inline;
+}

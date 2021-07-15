@@ -1,0 +1,13 @@
+This is the base page interface. All pages implement this interface.
+
+{% import "$PF_PACKAGE$/app" %}
+{% import "$PF_PACKAGE$/app/controller/cutil" %}
+
+{% interface
+  Page {
+    Head(as *app.State, ps *cutil.PageState)
+    Nav(as *app.State, ps *cutil.PageState)
+    Menu(ps *cutil.PageState)
+    Body(as *app.State, ps *cutil.PageState)
+  }
+%}

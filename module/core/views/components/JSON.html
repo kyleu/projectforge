@@ -1,0 +1,32 @@
+{% import "$PF_PACKAGE$/app/controller/cutil" %}
+{% import "$PF_PACKAGE$/app/util" %}
+
+{% func JSONModal(key string, title string, item interface{}, indent int) %}{% stripspace %}
+  <div id="modal-{%s key %}" class="modal" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2>{%s title %}</h2>
+      </div>
+      <div class="modal-body">
+        {%= JSON(item) %}
+      </div>
+    </div>
+  </div>
+{% endstripspace %}{% endfunc %}
+
+{% func JSON(v interface{}) %}{% stripspace %}
+  {% code
+    b, ok := v.([]byte)
+    if ok {
+      _ = util.FromJSON(b, &v)
+    }
+  %}
+  {% code out, err := cutil.Format(v, `json`) %}
+  {% if err == nil %}
+    {%s= out %}
+  {% else %}
+    {%s err.Error() %}
+  {% endif %}
+{% endstripspace %}{% endfunc %}

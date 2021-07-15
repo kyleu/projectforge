@@ -1,0 +1,11 @@
+{% import "$PF_PACKAGE$/app" %}
+{% import "$PF_PACKAGE$/app/controller/cutil" %}
+
+{% code
+  type Basic struct {}
+  var _ Page = (*Basic)(nil)
+%}
+{% func (p *Basic) Head(as *app.State, ps *cutil.PageState) %}{%= Head(as, ps) %}{% endfunc %}
+{% func (p *Basic) Nav(as *app.State, ps *cutil.PageState) %}{%= Nav(as, ps) %}{% endfunc %}
+{% func (p *Basic) Menu(ps *cutil.PageState) %}{%= Menu(ps) %}{% endfunc %}
+{% func (p *Basic) Body(as *app.State, ps *cutil.PageState) %}default body{% endfunc %}

@@ -1,0 +1,85 @@
+{% import "$PF_PACKAGE$/app" %}
+{% import "$PF_PACKAGE$/app/auth" %}
+{% import "$PF_PACKAGE$/app/controller/cutil" %}
+{% import "$PF_PACKAGE$/app/theme" %}
+{% import "$PF_PACKAGE$/app/user" %}
+{% import "$PF_PACKAGE$/views/components" %}
+{% import "$PF_PACKAGE$/views/layout" %}
+{% import "$PF_PACKAGE$/views/vtheme" %}
+
+{% code type Profile struct {
+  layout.Basic
+  Profile *user.Profile
+  Theme *theme.Theme
+  Providers auth.Providers
+  Referrer string
+} %}
+
+{% func (p *Profile) Body(as *app.State, ps *cutil.PageState) %}
+  {%= SigninTable(p.Providers, p.Referrer, as, ps) %}
+  <form action="" method="post">
+    <div class="card">
+      <div class="right">
+        <a href="#modal-profile"><button type="button">Profile</button></a>
+        <a href="#modal-theme"><button type="button">Theme</button></a>
+      </div>
+      <h3>Profile</h3>
+      <table class="mt">
+        <tbody>
+          {%= components.TableInput("name", "Name", p.Profile.Name, 5) %}
+          <tr>
+            <th class="shrink"><label>Mode</label></th>
+            <td>
+              <label>
+                {%- if p.Profile.Mode == "" -%}
+                <input type="radio" class="mode-input" name="mode" value="" checked="checked" />
+                {%- else -%}
+                <input type="radio" class="mode-input" name="mode" value="" />
+                {%- endif -%}
+                System Default
+              </label>
+              <label>
+                {%- if p.Profile.Mode == "light" -%}
+                <input type="radio" class="mode-input" name="mode" value="light" checked="checked" />
+                {%- else -%}
+                <input type="radio" class="mode-input" name="mode" value="light" />
+                {%- endif -%}
+                Light
+              </label>
+              <label>
+                {%- if p.Profile.Mode == "dark" -%}
+                <input type="radio" class="mode-input" name="mode" value="dark" checked="checked" />
+                {%- else -%}
+                <input type="radio" class="mode-input" name="mode" value="dark" />
+                {%- endif -%}
+                Dark
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <th class="shrink"><label>Theme</label></th>
+            <td>
+              <div class="right">
+                <a href="/theme">Edit Themes</a>
+              </div>
+              {%- code
+                sel := ps.Profile.Theme
+                if sel == "" {
+                  sel = "default"
+                }
+              -%}
+              {%= vtheme.Choice(as.Themes.All(), sel, 3, ps) %}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="mt">
+        <button type="submit">Save All Changes</button>
+        <button type="reset">Reset</button>
+      </div>
+    </div>
+  </form>
+
+  {%= components.JSONModal("profile", "Profile JSON", p.Profile, 1) %}
+  {%= components.JSONModal("theme", "Theme JSON", p.Theme, 1) %}
+{% endfunc %}

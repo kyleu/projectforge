@@ -1,0 +1,12 @@
+{% import "$PF_PACKAGE$/app" %}
+{% import "$PF_PACKAGE$/app/controller/cutil" %}
+{% import "$PF_PACKAGE$/views/layout" %}
+
+{% code type Installation struct { layout.Basic } %}
+
+{% func (p *Installation) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>Installation</h3>
+    <p>TODO</p>
+  </div>
+{% endfunc %}

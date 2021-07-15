@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <symbol id="svg-minus" viewBox="0 0 32 32">
+    <path class="svg-fill" d="M 5 15 L 5 17 L 27 17 L 27 15 Z" />
+  </symbol>
+  <use xlink:href="#svg-minus" />
+</svg>

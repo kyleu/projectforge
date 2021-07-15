@@ -1,0 +1,17 @@
+{% import "$PF_PACKAGE$/app" %}
+{% import "$PF_PACKAGE$/app/util" %}
+
+{% func About(as *app.State) %}
+  <div class="card">
+    {%- if util.AppSource != "" -%}
+    <div class="right"><a href="{%s util.AppSource %}"><button>Github</button></a></div>
+    {%- endif -%}
+    <h3 title="github:{%s as.BuildInfo.Commit %}">{%s util.AppName %} {%s as.BuildInfo.String() %}</h3>
+    {%- if util.AppLegal != "" -%}
+    <div>{%s= util.AppLegal %}</div>
+    {%- endif -%}
+    {%- if util.AppURL != "" -%}
+    <p><a href="{%s= util.AppURL %}">{%s= util.AppURL %}</a></p>
+    {%- endif -%}
+  </div>
+{% endfunc %}

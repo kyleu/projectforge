@@ -1,0 +1,266 @@
+# http://goreleaser.com
+env:
+  - XSKIP_DESKTOP=false
+  - XSKIP_MOBILE=false
+  - XSKIP_NOTARIZE=false
+  - XNAME=$PF_AUTHOR_NAME$
+  - XEMAIL=$PF_AUTHOR_EMAIL$
+  - XORG=$PF_ORG$
+  - XHOMEPAGE=$PF_HOMEPAGE$
+  - XLICENSE=$PF_LICENSE$
+  - XSUMMARY=$PF_SUMMARY$
+  - XDESCRIPTION=$PF_DESCRIPTION$
+
+brews:
+  -
+    tap:
+      owner: "$PF_ORG$"
+      name: "homebrew-$PF_ORG$"
+    commit_author:
+      name: "$PF_AUTHOR_NAME$"
+      email: "$PF_AUTHOR_EMAIL$"
+    folder: Formula
+    homepage: "{{ .Env.XHOMEPAGE }}"
+    description: "{{ .Env.XDESCRIPTION }}"
+    license: "{{ .Env.XLICENSE }}"
+    skip_upload: false
+
+signs:
+  - artifacts: checksum
+
+archives:
+  - format: zip
+    wrap_in_directory: false
+    replacements: &replacements
+      darwin: macos
+      386: i386
+      amd64: x86_64
+    files:
+      - none*
+
+# Everything below this line is generic
+
+dist: "build/dist"
+
+source:
+  enabled: true
+  name_template: "{{ .ProjectName }}_{{ .Version }}_source"
+  format: "zip"
+
+snapshot:
+  name_template: "{{ .Tag }}-SNAPSHOT"
+
+release:
+  draft: true
+  header: |
+    ## {{ .Version }} ({{ .Date }})
+    See $PF_HOMEPAGE$ for download links and documentation
+
+  extra_files:
+    - glob: "./build/dist/*_notarized.zip"
+    - glob: "./build/dist/*.dmg"
+    - glob: "./build/dist/*_desktop_*.zip"
+    - glob: "./build/dist/*_mobile_*.zip"
+
+changelog:
+  skip: true
+
+checksum:
+  name_template: "checksums.txt"
+
+dockers:
+  -
+    image_templates:
+      - "ghcr.io/{{ .Env.XORG }}/{{.ProjectName}}:{{ .Tag }}"
+      - "ghcr.io/{{ .Env.XORG }}/{{.ProjectName}}:v{{ .Major }}"
+      - "ghcr.io/{{ .Env.XORG }}/{{.ProjectName}}:v{{ .Major }}.{{ .Minor }}"
+      - "ghcr.io/{{ .Env.XORG }}/{{.ProjectName}}:latest"
+
+nfpms:
+  -
+    vendor: "{{ .Env.XNAME }}"
+    homepage: "{{ .Env.XHOMEPAGE }}"
+    maintainer: "{{ .Env.XNAME }} <{{ .Env.XEMAIL }}>"
+    description: "{{ .Env.XDESCRIPTION }}"
+    license: "{{ .Env.XLICENSE }}"
+    replacements: *replacements
+    formats:
+      - apk
+      - deb
+      - rpm
+
+scoop:
+  bucket:
+    owner: "{{ .Env.XORG }}"
+    name: "{{ .ProjectName }}"
+  commit_author:
+    name: "{{ .Env.XNAME }}"
+    email: "{{ .Env.XEMAIL }}"
+  commit_msg_template: "Scoop update for {{ .ProjectName }} version {{ .Tag }}"
+  homepage: "{{ .Env.XHOMEPAGE }}"
+  description: "{{ .Env.XSUMMARY }}"
+  license: "{{ .Env.XLICENSE }}"
+  skip_upload: false
+
+snapcrafts:
+  -
+    publish: false
+    replacements: *replacements
+    summary: "{{ .Env.XSUMMARY }}"
+    description: "{{ .Env.XDESCRIPTION }}"
+    grade: stable
+    confinement: strict
+    license: "$PF_LICENSE$"
+
+builds:
+  - id: "darwin_amd64"
+    goos:
+      - darwin
+    goarch:
+      - amd64
+    mod_timestamp: "{{ .CommitTimestamp }}"
+    hooks:
+      post:
+        - "./bin/build/desktop.release.sh {{ .Version }}"
+        - "./bin/build/notarize-amd64.sh {{ .Version }}"
+
+  - id: "darwin_arm64"
+    goos:
+      - darwin
+    goarch:
+      - arm64
+    mod_timestamp: "{{ .CommitTimestamp }}"
+    hooks:
+      post:
+        - "./bin/build/notarize-arm64.sh {{ .Version }}"
+
+  - id: "linux"
+    goos:
+      - linux
+    goarch:
+      - 386
+      - amd64
+      - arm
+      - arm64
+      - mips
+      - mipsle
+      - mips64
+      - mips64le
+      - ppc64
+      - ppc64le
+      - riscv64
+      - s390x
+    goarm:
+      - 5
+      - 6
+      - 7
+    gomips:
+      - hardfloat
+      - softfloat
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+  - id: "windows"
+    goos:
+      - windows
+    goarch:
+      - 386
+      - amd64
+      - arm
+      - arm64
+    goarm:
+      - 5
+      - 6
+      - 7
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+  - id: "js"
+    goos:
+      - js
+    goarch:
+      - wasm
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+  - id: "aix"
+    goos:
+      - aix
+    goarch:
+      - ppc64
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+  - id: "dragonfly"
+    goos:
+      - dragonfly
+    goarch:
+      - amd64
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+  - id: "illumos"
+    goos:
+      - illumos
+    goarch:
+      - amd64
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+  - id: "freebsd"
+    goos:
+      - freebsd
+    goarch:
+      - 386
+      - amd64
+      - arm
+      - arm64
+    goarm:
+      - 5
+      - 6
+      - 7
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+  - id: "netbsd"
+    goos:
+      - netbsd
+    goarch:
+      - 386
+      - amd64
+      - arm
+      - arm64
+    goarm:
+      - 7
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+  - id: "openbsd"
+    goos:
+      - openbsd
+    goarch:
+      - 386
+      - amd64
+      - arm
+      - arm64
+    goarm:
+      - 5
+      - 6
+      - 7
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+  - id: "plan9"
+    goos:
+      - plan9
+    goarch:
+      - 386
+      - amd64
+      - arm
+    goarm:
+      - 5
+      - 6
+      - 7
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+  - id: "solaris"
+    goos:
+      - solaris
+    goarch:
+      - amd64
+    mod_timestamp: "{{ .CommitTimestamp }}"
+    hooks:
+      post:
+        - "./bin/build/android.sh {{ .Version }}"
+        - "./bin/build/ios.sh {{ .Version }}"

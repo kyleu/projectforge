@@ -1,0 +1,31 @@
+{% import "$PF_PACKAGE$/app" %}
+{% import "$PF_PACKAGE$/app/auth" %}
+{% import "$PF_PACKAGE$/app/controller/cutil" %}
+{% import "$PF_PACKAGE$/app/util" %}
+
+{% func SigninTable(prvs auth.Providers, referrer string, as *app.State, ps *cutil.PageState) %}
+  {%- if len(prvs) > 0 -%}
+  <div class="card">
+    <h3>Sign in to {%s util.AppName %}</h3>
+    <ul>
+      {%- for _, prv := range prvs -%}
+      <li>
+        {%- if referrer == "" -%}
+        <a href="/auth/{%s prv.ID %}">{%s prv.Title %}</a>
+        {%- else -%}
+        <a href="/auth/{%s prv.ID %}?refer={%u referrer %}">{%s prv.Title %}</a>
+        {%- endif -%}
+        {%- code as := ps.Auth.GetByProvider(prv.ID) -%}
+        {%- if len(as) > 0 -%}
+        <ul>
+        {%- for _, a := range as -%}
+          <li>{%s a.Email %} (<a href="/auth/{%u a.Provider %}/logout?email={%u a.Email %}">sign out</a>)</li>
+        {%- endfor -%}
+        </ul>
+        {%- endif -%}
+      </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+  {%- endif -%}
+{% endfunc %}

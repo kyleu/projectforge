@@ -1,0 +1,13 @@
+{% import "$PF_PACKAGE$/app" %}
+{% import "$PF_PACKAGE$/app/util" %}
+{% import "$PF_PACKAGE$/app/controller/cutil" %}
+{% import "$PF_PACKAGE$/views/layout" %}
+
+{% code type Debug struct { layout.Basic } %}
+
+{% func (p *Debug) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>{%s ps.Title %}</h3>
+    <pre>{%s util.ToJSON(ps.Data) %}</pre>
+  </div>
+{% endfunc %}

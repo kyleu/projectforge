@@ -1,0 +1,112 @@
+#navbar {
+  height: var(--nav-height);
+  display: flex;
+  color: var(--color-nav-foreground);
+  background-color: var(--color-nav-background);
+}
+
+#navbar .menu-toggle {
+  display: none;
+  order: -1;
+  transition: all 0.3s;
+  box-sizing: border-box;
+  cursor: pointer;
+  height: 24px;
+  width: 24px;
+  margin: 16px 12px 0 12px;
+}
+
+#navbar .menu-toggle a {
+  color: var(--color-nav-foreground);
+}
+
+@media (max-width: 800px) {
+  #navbar .menu-toggle {
+    display: block;
+  }
+  #navbar .logo {
+    display: none;
+  }
+}
+
+#navbar #menu-toggle-input:checked ~ .menu-container {
+  transform: translateX(0);
+}
+
+.menu-toggle .spinner {
+  transition: all 0.3s;
+  box-sizing: border-box;
+  position: absolute;
+  height: 3px;
+  width: 100%;
+  background-color: var(--color-nav-foreground);
+}
+
+.menu-toggle .horizontal {
+  transition: all 0.3s;
+  box-sizing: border-box;
+  position: relative;
+  float: left;
+  margin-top: 3px;
+}
+
+.menu-toggle .diagonal.part-1 {
+  position: relative;
+  transition: all 0.3s;
+  box-sizing: border-box;
+  float: left;
+}
+
+.menu-toggle .diagonal.part-2 {
+  transition: all 0.3s;
+  box-sizing: border-box;
+  position: relative;
+  float: left;
+  margin-top: 3px;
+}
+
+input[type=checkbox]:checked ~ .menu-toggle > .horizontal {
+  transition: all 0.3s;
+  box-sizing: border-box;
+  opacity: 0;
+}
+
+input[type=checkbox]:checked ~ .menu-toggle > .diagonal.part-1 {
+  transition: all 0.3s;
+  box-sizing: border-box;
+  transform: rotate(135deg);
+  margin-top: 8px;
+}
+
+input[type=checkbox]:checked ~ .menu-toggle > .diagonal.part-2 {
+  transition: all 0.3s;
+  box-sizing: border-box;
+  transform: rotate(-135deg);
+  margin-top: -9px;
+}
+
+#navbar .logo {
+  margin: 8px;
+  color: var(--color-nav-foreground);
+}
+
+#navbar .breadcrumbs {
+  height: 40px;
+  line-height: var(--nav-height);
+  font-size: 24px;
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+#navbar .search-image {
+  display: block !important;
+}
+
+#navbar .breadcrumbs a {
+  color: var(--color-nav-foreground);
+}
+
+#navbar .profile {
+  margin: 12px;
+  color: var(--color-nav-foreground);
+}

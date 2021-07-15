@@ -1,0 +1,113 @@
+{% import "$PF_PACKAGE$/app" %}
+{% import "$PF_PACKAGE$/app/controller/cutil" %}
+{% import "$PF_PACKAGE$/app/theme" %}
+{% import "$PF_PACKAGE$/views/components" %}
+{% import "$PF_PACKAGE$/views/layout" %}
+
+{% code type Edit struct {
+  layout.Basic
+  Theme *theme.Theme
+} %}
+
+{% func (p *Edit) Body(as *app.State, ps *cutil.PageState) %}
+  <form action="" method="post">
+    <div class="card">
+      <div class="right"><a href="#modal-theme"><button type="button">JSON</button></a></div>
+      <h3>{% if p.Theme.Key == theme.KeyNew %}New Theme{% else %}Theme Edit{% endif %}</h3>
+      <table class="mt">
+        <tbody>
+          {%= components.TableInput("key", "Key", p.Theme.Key, 5) %}
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <table class="centered">
+        <thead>
+        <tr>
+          <th></th>
+          <th class="border-left" colspan="2">
+            <div>Light</div>
+            <div id="mockup-light">{%= MockupColors("", p.Theme.Light, 5, ps) %}</div>
+          </th>
+          <th class="border-left" colspan="2">
+            <div>Dark</div>
+            <div id="mockup-dark">{%= MockupColors("", p.Theme.Dark, 5, ps) %}</div>
+          </th>
+        </tr>
+        <tr>
+          <th></th>
+          <th class="border-left">Background</th>
+          <th>Foreground</th>
+          <th class="border-left">Background</th>
+          <th>Foreground</th>
+        </tr>
+        </thead>
+        {%- code
+        t := p.Theme
+        lp := "light"
+        dp := "dark"
+        -%}
+        <tbody>
+          <tr>
+            <th>Main Content</th>
+            <td class="border-left">{%= cinput(lp, "background", t.Light.Background) %}</td>
+            <td>{%= cinput(lp, "foreground", t.Light.Foreground) %}</td>
+            <td class="border-left">{%= cinput(dp, "background", t.Dark.Background) %}</td>
+            <td>{%= cinput(dp, "foreground", t.Dark.Foreground) %}</td>
+          </tr>
+          <tr>
+            <th>Muted</th>
+            <td class="border-left">{%= cinput(lp, "background-muted", t.Light.BackgroundMuted) %}</td>
+            <td>{%= cinput(lp, "foreground-muted", t.Light.ForegroundMuted) %}</td>
+            <td class="border-left">{%= cinput(dp, "background-muted", t.Dark.BackgroundMuted) %}</td>
+            <td>{%= cinput(dp, "foreground-muted", t.Dark.ForegroundMuted) %}</td>
+          </tr>
+          <tr>
+            <th>Link</th>
+            <td class="border-left"></td>
+            <td>{%= cinput(lp, "link-foreground", t.Light.LinkForeground) %}</td>
+            <td class="border-left"></td>
+            <td>{%= cinput(dp, "link-foreground", t.Dark.LinkForeground) %}</td>
+          </tr>
+          <tr>
+            <th>Visited Link</th>
+            <td class="border-left"></td>
+            <td>{%= cinput(lp, "link-visited-foreground", t.Light.LinkVisitedForeground) %}</td>
+            <td class="border-left"></td>
+            <td>{%= cinput(dp, "link-visited-foreground", t.Dark.LinkVisitedForeground) %}</td>
+          </tr>
+          <tr>
+            <th>Navigation</th>
+            <td class="border-left">{%= cinput(lp, "nav-background", t.Light.NavBackground) %}</td>
+            <td>{%= cinput(lp, "nav-foreground", t.Light.NavForeground) %}</td>
+            <td class="border-left">{%= cinput(dp, "nav-background", t.Dark.NavBackground) %}</td>
+            <td>{%= cinput(dp, "nav-foreground", t.Dark.NavForeground) %}</td>
+          </tr>
+          <tr>
+            <th>Menu</th>
+            <td class="border-left">{%= cinput(lp, "menu-background", t.Light.MenuBackground) %}</td>
+            <td>{%= cinput(lp, "menu-foreground", t.Light.MenuForeground) %}</td>
+            <td class="border-left">{%= cinput(dp, "menu-background", t.Dark.MenuBackground) %}</td>
+            <td>{%= cinput(dp, "menu-foreground", t.Dark.MenuForeground) %}</td>
+          </tr>
+          <tr>
+            <th>Selected Menu</th>
+            <td class="border-left">{%= cinput(lp, "menu-selected-background", t.Light.MenuSelectedBackground) %}</td>
+            <td>{%= cinput(lp, "menu-selected-foreground", t.Light.MenuSelectedForeground) %}</td>
+            <td class="border-left">{%= cinput(dp, "menu-selected-background", t.Dark.MenuSelectedBackground) %}</td>
+            <td>{%= cinput(dp, "menu-selected-foreground", t.Dark.MenuSelectedForeground) %}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <button type="submit">Save All Changes</button>
+      <a href="/theme/{%s t.Key %}"><button type="button">Reset</button></a>
+    </div>
+  </form>
+  {%= components.JSONModal("theme", "Theme JSON", p.Theme, 1) %}
+{% endfunc %}
+
+{% func cinput(mode string, k string, v string) %}{% stripspace %}
+  <input class="color-var" data-mode="{%s mode %}" data-var="color-{%s k %}" type="color" id="{%s mode %}-{%s k %}" name="{%s mode %}-{%s k %}" value="{%s v %}" autocomplete="off" />
+{% endstripspace %}{% endfunc %}
