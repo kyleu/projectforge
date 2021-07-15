@@ -1,0 +1,23 @@
+{
+  "key": "projectforge",
+  "type": "projectforge.dev",
+  "version": "0.0.0",
+  "name": "Project Forge",
+  "package": "github.com/kyleu/projectforge",
+  "args": "-v --addr=0.0.0.0 all",
+  "port": 40000,
+  "modules": ["core"],
+  "ignore": ["module", "testproject"],
+  "info": {
+    "org": "kyleu",
+    "authorName": "Kyle U",
+    "authorEmail": "kyle@kyleu.com",
+    "license": "Proprietary",
+    "bundle": "com.kyleu.projectforge",
+    "signingIdentity": "Developer ID Application: Kyle Unverferth (C6S478FYLD)",
+    "homepage": "https://projectforge.dev",
+    "sourcecode": "https://github.com/kyleu/projectforge",
+    "summary": "Build cool stuff with projectforge",
+    "description": "Helps you build and maintain lightning-fast Golang projects"
+  }
+}
