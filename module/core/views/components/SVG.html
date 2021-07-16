@@ -1,6 +1,8 @@
-{% import "fmt" %}
-{% import "$PF_PACKAGE$/app/controller/cutil" %}
-{% import "$PF_PACKAGE$/app/util" %}
+{% import (
+  "fmt"
+  "$PF_PACKAGE$/app/controller/cutil"
+  "$PF_PACKAGE$/app/util"
+) %}
 
 {% func SVG(k string) %}{%s= util.SVGLibrary[k] %}{% endfunc %}
 

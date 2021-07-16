@@ -1,6 +1,8 @@
-{% import "fmt" %}
-{% import "github.com/kyleu/projectforge/app/controller/cutil" %}
-{% import "github.com/kyleu/projectforge/app/util" %}
+{% import (
+  "fmt"
+  "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/app/util"
+) %}
 
 {% func SVG(k string) %}{%s= util.SVGLibrary[k] %}{% endfunc %}
 

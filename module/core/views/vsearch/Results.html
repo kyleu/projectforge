@@ -1,6 +1,8 @@
-{% import "$PF_PACKAGE$/app" %}
-{% import "$PF_PACKAGE$/app/controller/cutil" %}
-{% import "$PF_PACKAGE$/views/layout" %}
+{% import (
+  "$PF_PACKAGE$/app"
+  "$PF_PACKAGE$/app/controller/cutil"
+  "$PF_PACKAGE$/views/layout"
+) %}
 
 {% code type Results struct {
   layout.Basic

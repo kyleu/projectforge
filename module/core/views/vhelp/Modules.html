@@ -1,7 +1,9 @@
-{% import "$PF_PACKAGE$/app" %}
-{% import "$PF_PACKAGE$/app/controller/cutil" %}
-{% import "$PF_PACKAGE$/views/layout" %}
-{% import "runtime/debug" %}
+{% import (
+  "$PF_PACKAGE$/app"
+  "$PF_PACKAGE$/app/controller/cutil"
+  "$PF_PACKAGE$/views/layout"
+  "runtime/debug"
+) %}
 
 {% code type Modules struct {
   layout.Basic

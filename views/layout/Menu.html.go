@@ -5,226 +5,220 @@
 package layout
 
 //line views/layout/Menu.html:1
-import "strings"
+import (
+	"github.com/kyleu/projectforge/app/controller/cutil"
+	"github.com/kyleu/projectforge/app/menu"
+	"github.com/kyleu/projectforge/views/components"
+	"github.com/kyleu/projectforge/views/vutil"
+	"strings"
+)
 
-//line views/layout/Menu.html:2
-import "github.com/kyleu/projectforge/app/controller/cutil"
-
-//line views/layout/Menu.html:3
-import "github.com/kyleu/projectforge/app/menu"
-
-//line views/layout/Menu.html:4
-import "github.com/kyleu/projectforge/views/components"
-
-//line views/layout/Menu.html:5
-import "github.com/kyleu/projectforge/views/vutil"
-
-//line views/layout/Menu.html:7
+//line views/layout/Menu.html:9
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/layout/Menu.html:7
+//line views/layout/Menu.html:9
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/layout/Menu.html:7
+//line views/layout/Menu.html:9
 func StreamMenu(qw422016 *qt422016.Writer, ps *cutil.PageState) {
-//line views/layout/Menu.html:7
+//line views/layout/Menu.html:9
 	qw422016.N().S(`<div class="menu-container">`)
-//line views/layout/Menu.html:9
+//line views/layout/Menu.html:11
 	vutil.StreamIndent(qw422016, true, 2)
-//line views/layout/Menu.html:9
+//line views/layout/Menu.html:11
 	qw422016.N().S(`<div class="menu">`)
-//line views/layout/Menu.html:11
-	vutil.StreamIndent(qw422016, true, 3)
-//line views/layout/Menu.html:11
-	qw422016.N().S(`<ul class="level-0">`)
 //line views/layout/Menu.html:13
-	for _, i := range ps.Menu {
-//line views/layout/Menu.html:14
-		StreamMenuItem(qw422016, i, []string{}, ps.Breadcrumbs, 3, ps)
-//line views/layout/Menu.html:15
-	}
-//line views/layout/Menu.html:16
 	vutil.StreamIndent(qw422016, true, 3)
+//line views/layout/Menu.html:13
+	qw422016.N().S(`<ul class="level-0">`)
+//line views/layout/Menu.html:15
+	for _, i := range ps.Menu {
 //line views/layout/Menu.html:16
+		StreamMenuItem(qw422016, i, []string{}, ps.Breadcrumbs, 3, ps)
+//line views/layout/Menu.html:17
+	}
+//line views/layout/Menu.html:18
+	vutil.StreamIndent(qw422016, true, 3)
+//line views/layout/Menu.html:18
 	qw422016.N().S(`</ul>`)
-//line views/layout/Menu.html:18
+//line views/layout/Menu.html:20
 	vutil.StreamIndent(qw422016, true, 2)
-//line views/layout/Menu.html:18
-	qw422016.N().S(`</div>`)
 //line views/layout/Menu.html:20
+	qw422016.N().S(`</div>`)
+//line views/layout/Menu.html:22
 	vutil.StreamIndent(qw422016, true, 1)
-//line views/layout/Menu.html:20
+//line views/layout/Menu.html:22
 	qw422016.N().S(`</div>`)
-//line views/layout/Menu.html:22
-}
-
-//line views/layout/Menu.html:22
-func WriteMenu(qq422016 qtio422016.Writer, ps *cutil.PageState) {
-//line views/layout/Menu.html:22
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/layout/Menu.html:22
-	StreamMenu(qw422016, ps)
-//line views/layout/Menu.html:22
-	qt422016.ReleaseWriter(qw422016)
-//line views/layout/Menu.html:22
-}
-
-//line views/layout/Menu.html:22
-func Menu(ps *cutil.PageState) string {
-//line views/layout/Menu.html:22
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/layout/Menu.html:22
-	WriteMenu(qb422016, ps)
-//line views/layout/Menu.html:22
-	qs422016 := string(qb422016.B)
-//line views/layout/Menu.html:22
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/layout/Menu.html:22
-	return qs422016
-//line views/layout/Menu.html:22
+//line views/layout/Menu.html:24
 }
 
 //line views/layout/Menu.html:24
-func StreamMenuItem(qw422016 *qt422016.Writer, i *menu.Item, path []string, breadcrumbs cutil.Breadcrumbs, indent int, ps *cutil.PageState) {
+func WriteMenu(qq422016 qtio422016.Writer, ps *cutil.PageState) {
+//line views/layout/Menu.html:24
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/layout/Menu.html:24
+	StreamMenu(qw422016, ps)
+//line views/layout/Menu.html:24
+	qt422016.ReleaseWriter(qw422016)
+//line views/layout/Menu.html:24
+}
+
+//line views/layout/Menu.html:24
+func Menu(ps *cutil.PageState) string {
+//line views/layout/Menu.html:24
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/layout/Menu.html:24
+	WriteMenu(qb422016, ps)
+//line views/layout/Menu.html:24
+	qs422016 := string(qb422016.B)
+//line views/layout/Menu.html:24
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/layout/Menu.html:24
+	return qs422016
+//line views/layout/Menu.html:24
+}
+
 //line views/layout/Menu.html:26
+func StreamMenuItem(qw422016 *qt422016.Writer, i *menu.Item, path []string, breadcrumbs cutil.Breadcrumbs, indent int, ps *cutil.PageState) {
+//line views/layout/Menu.html:28
 	path = append(path, i.Key)
 	active, final := breadcrumbs.Active(i, path)
 
-//line views/layout/Menu.html:29
+//line views/layout/Menu.html:31
 	if i.Key == "" {
-//line views/layout/Menu.html:30
-		vutil.StreamIndent(qw422016, true, indent+1)
-//line views/layout/Menu.html:30
-		qw422016.N().S(`<li class="separator"></li>`)
 //line views/layout/Menu.html:32
+		vutil.StreamIndent(qw422016, true, indent+1)
+//line views/layout/Menu.html:32
+		qw422016.N().S(`<li class="separator"></li>`)
+//line views/layout/Menu.html:34
 	} else if len(i.Children) > 0 {
-//line views/layout/Menu.html:33
+//line views/layout/Menu.html:35
 		itemID := strings.Join(path, "--")
 
-//line views/layout/Menu.html:34
-		vutil.StreamIndent(qw422016, true, indent+1)
-//line views/layout/Menu.html:35
-		if active {
-//line views/layout/Menu.html:35
-			qw422016.N().S(`<li class="active">`)
-//line views/layout/Menu.html:35
-		} else {
-//line views/layout/Menu.html:35
-			qw422016.N().S(`<li>`)
-//line views/layout/Menu.html:35
-		}
 //line views/layout/Menu.html:36
-		vutil.StreamIndent(qw422016, true, indent+2)
+		vutil.StreamIndent(qw422016, true, indent+1)
 //line views/layout/Menu.html:37
 		if active {
 //line views/layout/Menu.html:37
-			qw422016.N().S(`<input id="`)
-//line views/layout/Menu.html:38
-			qw422016.E().S(itemID)
-//line views/layout/Menu.html:38
-			qw422016.N().S(`-input" type="checkbox" checked="checked" hidden />`)
-//line views/layout/Menu.html:39
+			qw422016.N().S(`<li class="active">`)
+//line views/layout/Menu.html:37
 		} else {
-//line views/layout/Menu.html:39
-			qw422016.N().S(`<input id="`)
-//line views/layout/Menu.html:40
-			qw422016.E().S(itemID)
-//line views/layout/Menu.html:40
-			qw422016.N().S(`-input" type="checkbox" hidden />`)
-//line views/layout/Menu.html:41
+//line views/layout/Menu.html:37
+			qw422016.N().S(`<li>`)
+//line views/layout/Menu.html:37
 		}
-//line views/layout/Menu.html:42
+//line views/layout/Menu.html:38
 		vutil.StreamIndent(qw422016, true, indent+2)
-//line views/layout/Menu.html:43
-		if final {
-//line views/layout/Menu.html:43
-			qw422016.N().S(`<label class="final" for="`)
-//line views/layout/Menu.html:43
+//line views/layout/Menu.html:39
+		if active {
+//line views/layout/Menu.html:39
+			qw422016.N().S(`<input id="`)
+//line views/layout/Menu.html:40
 			qw422016.E().S(itemID)
-//line views/layout/Menu.html:43
-			qw422016.N().S(`-input" title="`)
-//line views/layout/Menu.html:43
-			qw422016.E().S(i.Description)
-//line views/layout/Menu.html:43
-			qw422016.N().S(`">`)
-//line views/layout/Menu.html:43
+//line views/layout/Menu.html:40
+			qw422016.N().S(`-input" type="checkbox" checked="checked" hidden />`)
+//line views/layout/Menu.html:41
 		} else {
-//line views/layout/Menu.html:43
-			qw422016.N().S(`<label for="`)
-//line views/layout/Menu.html:43
+//line views/layout/Menu.html:41
+			qw422016.N().S(`<input id="`)
+//line views/layout/Menu.html:42
 			qw422016.E().S(itemID)
-//line views/layout/Menu.html:43
-			qw422016.N().S(`-input" title="`)
-//line views/layout/Menu.html:43
-			qw422016.E().S(i.Description)
-//line views/layout/Menu.html:43
-			qw422016.N().S(`">`)
+//line views/layout/Menu.html:42
+			qw422016.N().S(`-input" type="checkbox" hidden />`)
 //line views/layout/Menu.html:43
 		}
 //line views/layout/Menu.html:44
-		if i.Route != "" {
+		vutil.StreamIndent(qw422016, true, indent+2)
 //line views/layout/Menu.html:45
-			vutil.StreamIndent(qw422016, true, indent+3)
+		if final {
 //line views/layout/Menu.html:45
-			qw422016.N().S(`<a class="label-link" href="`)
-//line views/layout/Menu.html:46
-			qw422016.E().S(i.Route)
-//line views/layout/Menu.html:46
+			qw422016.N().S(`<label class="final" for="`)
+//line views/layout/Menu.html:45
+			qw422016.E().S(itemID)
+//line views/layout/Menu.html:45
+			qw422016.N().S(`-input" title="`)
+//line views/layout/Menu.html:45
+			qw422016.E().S(i.Description)
+//line views/layout/Menu.html:45
 			qw422016.N().S(`">`)
+//line views/layout/Menu.html:45
+		} else {
+//line views/layout/Menu.html:45
+			qw422016.N().S(`<label for="`)
+//line views/layout/Menu.html:45
+			qw422016.E().S(itemID)
+//line views/layout/Menu.html:45
+			qw422016.N().S(`-input" title="`)
+//line views/layout/Menu.html:45
+			qw422016.E().S(i.Description)
+//line views/layout/Menu.html:45
+			qw422016.N().S(`">`)
+//line views/layout/Menu.html:45
+		}
 //line views/layout/Menu.html:46
-			components.StreamSVGRef(qw422016, `link`, 15, 15, ``, ps)
-//line views/layout/Menu.html:46
-			qw422016.N().S(`</a>`)
+		if i.Route != "" {
 //line views/layout/Menu.html:47
-		}
+			vutil.StreamIndent(qw422016, true, indent+3)
+//line views/layout/Menu.html:47
+			qw422016.N().S(`<a class="label-link" href="`)
 //line views/layout/Menu.html:48
-		components.StreamExpandCollapse(qw422016, indent+3, ps)
+			qw422016.E().S(i.Route)
+//line views/layout/Menu.html:48
+			qw422016.N().S(`">`)
+//line views/layout/Menu.html:48
+			components.StreamSVGRef(qw422016, `link`, 15, 15, ``, ps)
+//line views/layout/Menu.html:48
+			qw422016.N().S(`</a>`)
 //line views/layout/Menu.html:49
-		vutil.StreamIndent(qw422016, true, indent+3)
+		}
 //line views/layout/Menu.html:50
-		if i.Icon != "" {
+		components.StreamExpandCollapse(qw422016, indent+3, ps)
 //line views/layout/Menu.html:51
-			components.StreamSVGRef(qw422016, i.Icon, 16, 16, "icon", ps)
+		vutil.StreamIndent(qw422016, true, indent+3)
 //line views/layout/Menu.html:52
-		}
+		if i.Icon != "" {
 //line views/layout/Menu.html:53
-		qw422016.E().S(i.Title)
+			components.StreamSVGRef(qw422016, i.Icon, 16, 16, "icon", ps)
 //line views/layout/Menu.html:54
-		vutil.StreamIndent(qw422016, true, indent+2)
-//line views/layout/Menu.html:54
-		qw422016.N().S(`</label>`)
-//line views/layout/Menu.html:56
-		vutil.StreamIndent(qw422016, true, indent+2)
-//line views/layout/Menu.html:56
-		qw422016.N().S(`<ul class="level-`)
-//line views/layout/Menu.html:57
-		qw422016.N().D(len(path))
-//line views/layout/Menu.html:57
-		qw422016.N().S(`">`)
-//line views/layout/Menu.html:58
-		for _, i := range i.Children {
-//line views/layout/Menu.html:59
-			StreamMenuItem(qw422016, i, path, breadcrumbs, indent+2, ps)
-//line views/layout/Menu.html:60
 		}
-//line views/layout/Menu.html:61
+//line views/layout/Menu.html:55
+		qw422016.E().S(i.Title)
+//line views/layout/Menu.html:56
 		vutil.StreamIndent(qw422016, true, indent+2)
+//line views/layout/Menu.html:56
+		qw422016.N().S(`</label>`)
+//line views/layout/Menu.html:58
+		vutil.StreamIndent(qw422016, true, indent+2)
+//line views/layout/Menu.html:58
+		qw422016.N().S(`<ul class="level-`)
+//line views/layout/Menu.html:59
+		qw422016.N().D(len(path))
+//line views/layout/Menu.html:59
+		qw422016.N().S(`">`)
+//line views/layout/Menu.html:60
+		for _, i := range i.Children {
 //line views/layout/Menu.html:61
+			StreamMenuItem(qw422016, i, path, breadcrumbs, indent+2, ps)
+//line views/layout/Menu.html:62
+		}
+//line views/layout/Menu.html:63
+		vutil.StreamIndent(qw422016, true, indent+2)
+//line views/layout/Menu.html:63
 		qw422016.N().S(`</ul>`)
-//line views/layout/Menu.html:63
-		vutil.StreamIndent(qw422016, true, indent+1)
-//line views/layout/Menu.html:63
-		qw422016.N().S(`</li>`)
 //line views/layout/Menu.html:65
-	} else {
+		vutil.StreamIndent(qw422016, true, indent+1)
+//line views/layout/Menu.html:65
+		qw422016.N().S(`</li>`)
 //line views/layout/Menu.html:67
+	} else {
+//line views/layout/Menu.html:69
 		finalClass := "item"
 		if active {
 			finalClass += " active"
@@ -233,89 +227,89 @@ func StreamMenuItem(qw422016 *qt422016.Writer, i *menu.Item, path []string, brea
 			finalClass += " final"
 		}
 
-//line views/layout/Menu.html:75
+//line views/layout/Menu.html:77
 		vutil.StreamIndent(qw422016, true, indent+1)
-//line views/layout/Menu.html:75
+//line views/layout/Menu.html:77
 		qw422016.N().S(`<li>`)
-//line views/layout/Menu.html:77
-		if i.Description == "" {
-//line views/layout/Menu.html:77
-			qw422016.N().S(`<a class="`)
-//line views/layout/Menu.html:78
-			qw422016.E().S(finalClass)
-//line views/layout/Menu.html:78
-			qw422016.N().S(`" href="`)
-//line views/layout/Menu.html:78
-			qw422016.E().S(i.Route)
-//line views/layout/Menu.html:78
-			qw422016.N().S(`">`)
 //line views/layout/Menu.html:79
-			if i.Icon != "" {
-//line views/layout/Menu.html:80
-				components.StreamSVGRef(qw422016, i.Icon, 16, 16, "icon", ps)
-//line views/layout/Menu.html:81
-			}
-//line views/layout/Menu.html:82
-			qw422016.E().S(i.Title)
-//line views/layout/Menu.html:82
-			qw422016.N().S(`</a>`)
-//line views/layout/Menu.html:84
-		} else {
-//line views/layout/Menu.html:84
+		if i.Description == "" {
+//line views/layout/Menu.html:79
 			qw422016.N().S(`<a class="`)
-//line views/layout/Menu.html:85
+//line views/layout/Menu.html:80
 			qw422016.E().S(finalClass)
-//line views/layout/Menu.html:85
+//line views/layout/Menu.html:80
 			qw422016.N().S(`" href="`)
-//line views/layout/Menu.html:85
+//line views/layout/Menu.html:80
 			qw422016.E().S(i.Route)
-//line views/layout/Menu.html:85
-			qw422016.N().S(`" title="`)
-//line views/layout/Menu.html:85
-			qw422016.E().S(i.Description)
-//line views/layout/Menu.html:85
+//line views/layout/Menu.html:80
 			qw422016.N().S(`">`)
-//line views/layout/Menu.html:86
+//line views/layout/Menu.html:81
 			if i.Icon != "" {
-//line views/layout/Menu.html:87
+//line views/layout/Menu.html:82
 				components.StreamSVGRef(qw422016, i.Icon, 16, 16, "icon", ps)
-//line views/layout/Menu.html:88
+//line views/layout/Menu.html:83
 			}
-//line views/layout/Menu.html:89
+//line views/layout/Menu.html:84
 			qw422016.E().S(i.Title)
-//line views/layout/Menu.html:89
+//line views/layout/Menu.html:84
 			qw422016.N().S(`</a>`)
+//line views/layout/Menu.html:86
+		} else {
+//line views/layout/Menu.html:86
+			qw422016.N().S(`<a class="`)
+//line views/layout/Menu.html:87
+			qw422016.E().S(finalClass)
+//line views/layout/Menu.html:87
+			qw422016.N().S(`" href="`)
+//line views/layout/Menu.html:87
+			qw422016.E().S(i.Route)
+//line views/layout/Menu.html:87
+			qw422016.N().S(`" title="`)
+//line views/layout/Menu.html:87
+			qw422016.E().S(i.Description)
+//line views/layout/Menu.html:87
+			qw422016.N().S(`">`)
+//line views/layout/Menu.html:88
+			if i.Icon != "" {
+//line views/layout/Menu.html:89
+				components.StreamSVGRef(qw422016, i.Icon, 16, 16, "icon", ps)
+//line views/layout/Menu.html:90
+			}
 //line views/layout/Menu.html:91
-		}
+			qw422016.E().S(i.Title)
 //line views/layout/Menu.html:91
-		qw422016.N().S(`</li>`)
+			qw422016.N().S(`</a>`)
 //line views/layout/Menu.html:93
+		}
+//line views/layout/Menu.html:93
+		qw422016.N().S(`</li>`)
+//line views/layout/Menu.html:95
 	}
-//line views/layout/Menu.html:94
+//line views/layout/Menu.html:96
 }
 
-//line views/layout/Menu.html:94
+//line views/layout/Menu.html:96
 func WriteMenuItem(qq422016 qtio422016.Writer, i *menu.Item, path []string, breadcrumbs cutil.Breadcrumbs, indent int, ps *cutil.PageState) {
-//line views/layout/Menu.html:94
+//line views/layout/Menu.html:96
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/layout/Menu.html:94
+//line views/layout/Menu.html:96
 	StreamMenuItem(qw422016, i, path, breadcrumbs, indent, ps)
-//line views/layout/Menu.html:94
+//line views/layout/Menu.html:96
 	qt422016.ReleaseWriter(qw422016)
-//line views/layout/Menu.html:94
+//line views/layout/Menu.html:96
 }
 
-//line views/layout/Menu.html:94
+//line views/layout/Menu.html:96
 func MenuItem(i *menu.Item, path []string, breadcrumbs cutil.Breadcrumbs, indent int, ps *cutil.PageState) string {
-//line views/layout/Menu.html:94
+//line views/layout/Menu.html:96
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/layout/Menu.html:94
+//line views/layout/Menu.html:96
 	WriteMenuItem(qb422016, i, path, breadcrumbs, indent, ps)
-//line views/layout/Menu.html:94
+//line views/layout/Menu.html:96
 	qs422016 := string(qb422016.B)
-//line views/layout/Menu.html:94
+//line views/layout/Menu.html:96
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/layout/Menu.html:94
+//line views/layout/Menu.html:96
 	return qs422016
-//line views/layout/Menu.html:94
+//line views/layout/Menu.html:96
 }

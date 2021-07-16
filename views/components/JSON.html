@@ -1,5 +1,7 @@
-{% import "github.com/kyleu/projectforge/app/controller/cutil" %}
-{% import "github.com/kyleu/projectforge/app/util" %}
+{% import (
+  "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/app/util"
+) %}
 
 {% func JSONModal(key string, title string, item interface{}, indent int) %}{% stripspace %}
   <div id="modal-{%s key %}" class="modal" style="display: none;">

@@ -5,87 +5,234 @@
 package vproject
 
 //line views/vproject/Detail.html:1
-import "github.com/kyleu/projectforge/app"
+import (
+	"github.com/kyleu/projectforge/app"
+	"github.com/kyleu/projectforge/app/controller/cutil"
+	"github.com/kyleu/projectforge/app/project"
+	"github.com/kyleu/projectforge/views/components"
+	"github.com/kyleu/projectforge/views/layout"
+	"strings"
+)
 
-//line views/vproject/Detail.html:2
-import "github.com/kyleu/projectforge/app/controller/cutil"
-
-//line views/vproject/Detail.html:3
-import "github.com/kyleu/projectforge/app/project"
-
-//line views/vproject/Detail.html:4
-import "github.com/kyleu/projectforge/views/components"
-
-//line views/vproject/Detail.html:5
-import "github.com/kyleu/projectforge/views/layout"
-
-//line views/vproject/Detail.html:7
+//line views/vproject/Detail.html:10
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vproject/Detail.html:7
+//line views/vproject/Detail.html:10
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vproject/Detail.html:7
+//line views/vproject/Detail.html:10
 type Detail struct {
 	layout.Basic
 	Project *project.Project
 }
 
-//line views/vproject/Detail.html:12
+//line views/vproject/Detail.html:15
 func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vproject/Detail.html:12
+//line views/vproject/Detail.html:15
 	qw422016.N().S(`
 `)
-//line views/vproject/Detail.html:13
+//line views/vproject/Detail.html:16
 	prj := p.Project
 
-//line views/vproject/Detail.html:13
+//line views/vproject/Detail.html:17
+	info := prj.Info
+
+//line views/vproject/Detail.html:17
 	qw422016.N().S(`  <div class="card">
     <div class="right"><a href="#modal-project"><button type="button">JSON</button></a></div>
     <h3>Project [`)
-//line views/vproject/Detail.html:16
+//line views/vproject/Detail.html:20
 	qw422016.E().S(prj.Key)
-//line views/vproject/Detail.html:16
+//line views/vproject/Detail.html:20
 	qw422016.N().S(`]</h3>
+    <table class="mt">
+      <tbody>
+        <tr>
+          <th>Key</th>
+          <td>`)
+//line views/vproject/Detail.html:25
+	qw422016.E().S(prj.Key)
+//line views/vproject/Detail.html:25
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th>Type</th>
+          <td>`)
+//line views/vproject/Detail.html:29
+	qw422016.E().S(prj.Type)
+//line views/vproject/Detail.html:29
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th>Name</th>
+          <td>`)
+//line views/vproject/Detail.html:33
+	qw422016.E().S(prj.Name)
+//line views/vproject/Detail.html:33
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th>Version</th>
+          <td>`)
+//line views/vproject/Detail.html:37
+	qw422016.E().S(prj.Version)
+//line views/vproject/Detail.html:37
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th>Package</th>
+          <td>`)
+//line views/vproject/Detail.html:41
+	qw422016.E().S(prj.Package)
+//line views/vproject/Detail.html:41
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th>Port</th>
+          <td>`)
+//line views/vproject/Detail.html:45
+	qw422016.N().D(prj.Port)
+//line views/vproject/Detail.html:45
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th>Modules</th>
+          <td>`)
+//line views/vproject/Detail.html:49
+	qw422016.E().S(strings.Join(prj.Modules, ", "))
+//line views/vproject/Detail.html:49
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th>Ignore</th>
+          <td>`)
+//line views/vproject/Detail.html:53
+	qw422016.E().S(strings.Join(prj.Ignore, ", "))
+//line views/vproject/Detail.html:53
+	qw422016.N().S(`</td>
+        </tr>
+
+        <tr>
+          <th>Organization</th>
+          <td>`)
+//line views/vproject/Detail.html:58
+	qw422016.E().S(info.Org)
+//line views/vproject/Detail.html:58
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th>Author Name</th>
+          <td>`)
+//line views/vproject/Detail.html:62
+	qw422016.E().S(info.AuthorName)
+//line views/vproject/Detail.html:62
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th>Author Email</th>
+          <td>`)
+//line views/vproject/Detail.html:66
+	qw422016.E().S(info.AuthorEmail)
+//line views/vproject/Detail.html:66
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th>License</th>
+          <td>`)
+//line views/vproject/Detail.html:70
+	qw422016.E().S(info.License)
+//line views/vproject/Detail.html:70
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th>Bundle</th>
+          <td>`)
+//line views/vproject/Detail.html:74
+	qw422016.E().S(info.Bundle)
+//line views/vproject/Detail.html:74
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th>Signing Identity</th>
+          <td>`)
+//line views/vproject/Detail.html:78
+	qw422016.E().S(info.SigningIdentity)
+//line views/vproject/Detail.html:78
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th>Homepage</th>
+          <td>`)
+//line views/vproject/Detail.html:82
+	qw422016.E().S(info.Homepage)
+//line views/vproject/Detail.html:82
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th>Source Code</th>
+          <td>`)
+//line views/vproject/Detail.html:86
+	qw422016.E().S(info.Sourcecode)
+//line views/vproject/Detail.html:86
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th>Summary</th>
+          <td>`)
+//line views/vproject/Detail.html:90
+	qw422016.E().S(info.Summary)
+//line views/vproject/Detail.html:90
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th>Description</th>
+          <td>`)
+//line views/vproject/Detail.html:94
+	qw422016.E().S(info.Description)
+//line views/vproject/Detail.html:94
+	qw422016.N().S(`</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
   `)
-//line views/vproject/Detail.html:18
+//line views/vproject/Detail.html:99
 	components.StreamJSONModal(qw422016, "project", "Project JSON", prj, 1)
-//line views/vproject/Detail.html:18
+//line views/vproject/Detail.html:99
 	qw422016.N().S(`
 `)
-//line views/vproject/Detail.html:19
+//line views/vproject/Detail.html:100
 }
 
-//line views/vproject/Detail.html:19
+//line views/vproject/Detail.html:100
 func (p *Detail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vproject/Detail.html:19
+//line views/vproject/Detail.html:100
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/Detail.html:19
+//line views/vproject/Detail.html:100
 	p.StreamBody(qw422016, as, ps)
-//line views/vproject/Detail.html:19
+//line views/vproject/Detail.html:100
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/Detail.html:19
+//line views/vproject/Detail.html:100
 }
 
-//line views/vproject/Detail.html:19
+//line views/vproject/Detail.html:100
 func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vproject/Detail.html:19
+//line views/vproject/Detail.html:100
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/Detail.html:19
+//line views/vproject/Detail.html:100
 	p.WriteBody(qb422016, as, ps)
-//line views/vproject/Detail.html:19
+//line views/vproject/Detail.html:100
 	qs422016 := string(qb422016.B)
-//line views/vproject/Detail.html:19
+//line views/vproject/Detail.html:100
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/Detail.html:19
+//line views/vproject/Detail.html:100
 	return qs422016
-//line views/vproject/Detail.html:19
+//line views/vproject/Detail.html:100
 }

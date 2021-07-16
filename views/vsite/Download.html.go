@@ -5,54 +5,48 @@
 package vsite
 
 //line views/vsite/Download.html:1
-import "github.com/kyleu/projectforge/app"
+import (
+	"github.com/kyleu/projectforge/app"
+	"github.com/kyleu/projectforge/app/controller/cutil"
+	"github.com/kyleu/projectforge/app/site/download"
+	"github.com/kyleu/projectforge/app/util"
+	"github.com/kyleu/projectforge/views/layout"
+)
 
-//line views/vsite/Download.html:2
-import "github.com/kyleu/projectforge/app/site/download"
-
-//line views/vsite/Download.html:3
-import "github.com/kyleu/projectforge/app/util"
-
-//line views/vsite/Download.html:4
-import "github.com/kyleu/projectforge/app/controller/cutil"
-
-//line views/vsite/Download.html:5
-import "github.com/kyleu/projectforge/views/layout"
-
-//line views/vsite/Download.html:7
+//line views/vsite/Download.html:9
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vsite/Download.html:7
+//line views/vsite/Download.html:9
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vsite/Download.html:7
+//line views/vsite/Download.html:9
 type Download struct {
 	layout.Basic
 	Links download.Links
 }
 
-//line views/vsite/Download.html:12
+//line views/vsite/Download.html:14
 func (p *Download) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsite/Download.html:12
+//line views/vsite/Download.html:14
 	qw422016.N().S(`
   `)
-//line views/vsite/Download.html:13
+//line views/vsite/Download.html:15
 	var l *download.Link
 
-//line views/vsite/Download.html:13
+//line views/vsite/Download.html:15
 	qw422016.N().S(`
   <div class="card">
     <h3>Download `)
-//line views/vsite/Download.html:15
+//line views/vsite/Download.html:17
 	qw422016.E().S(util.AppName)
-//line views/vsite/Download.html:15
+//line views/vsite/Download.html:17
 	qw422016.N().S(`</h3>
   </div>
 
@@ -64,19 +58,19 @@ func (p *Download) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
         macOS
         <ul>
           `)
-//line views/vsite/Download.html:25
+//line views/vsite/Download.html:27
 	l = p.Links.Get("desktop", "macos", "x86_64")
 
-//line views/vsite/Download.html:25
+//line views/vsite/Download.html:27
 	qw422016.N().S(`
           <li><a href="`)
-//line views/vsite/Download.html:26
+//line views/vsite/Download.html:28
 	qw422016.E().S(l.URL)
-//line views/vsite/Download.html:26
+//line views/vsite/Download.html:28
 	qw422016.N().S(`">`)
-//line views/vsite/Download.html:26
+//line views/vsite/Download.html:28
 	qw422016.E().S(l.URL)
-//line views/vsite/Download.html:26
+//line views/vsite/Download.html:28
 	qw422016.N().S(`</a></li>
         </ul>
       </li>
@@ -84,19 +78,19 @@ func (p *Download) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
         Linux
         <ul>
           `)
-//line views/vsite/Download.html:32
+//line views/vsite/Download.html:34
 	l = p.Links.Get("desktop", "linux", "x86_64")
 
-//line views/vsite/Download.html:32
+//line views/vsite/Download.html:34
 	qw422016.N().S(`
           <li><a href="`)
-//line views/vsite/Download.html:33
+//line views/vsite/Download.html:35
 	qw422016.E().S(l.URL)
-//line views/vsite/Download.html:33
+//line views/vsite/Download.html:35
 	qw422016.N().S(`">`)
-//line views/vsite/Download.html:33
+//line views/vsite/Download.html:35
 	qw422016.E().S(l.URL)
-//line views/vsite/Download.html:33
+//line views/vsite/Download.html:35
 	qw422016.N().S(`</a></li>
         </ul>
       </li>
@@ -104,19 +98,19 @@ func (p *Download) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
         Windows
         <ul>
           `)
-//line views/vsite/Download.html:39
+//line views/vsite/Download.html:41
 	l = p.Links.Get("desktop", "windows", "x86_64")
 
-//line views/vsite/Download.html:39
+//line views/vsite/Download.html:41
 	qw422016.N().S(`
           <li><a href="`)
-//line views/vsite/Download.html:40
+//line views/vsite/Download.html:42
 	qw422016.E().S(l.URL)
-//line views/vsite/Download.html:40
+//line views/vsite/Download.html:42
 	qw422016.N().S(`">`)
-//line views/vsite/Download.html:40
+//line views/vsite/Download.html:42
 	qw422016.E().S(l.URL)
-//line views/vsite/Download.html:40
+//line views/vsite/Download.html:42
 	qw422016.N().S(`</a></li>
         </ul>
       </li>
@@ -131,19 +125,19 @@ func (p *Download) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
         macOS
         <ul>
           `)
-//line views/vsite/Download.html:53
+//line views/vsite/Download.html:55
 	l = p.Links.Get("server", "macos", "x86_64")
 
-//line views/vsite/Download.html:53
+//line views/vsite/Download.html:55
 	qw422016.N().S(`
           <li><a href="`)
-//line views/vsite/Download.html:54
+//line views/vsite/Download.html:56
 	qw422016.E().S(l.URL)
-//line views/vsite/Download.html:54
+//line views/vsite/Download.html:56
 	qw422016.N().S(`">`)
-//line views/vsite/Download.html:54
+//line views/vsite/Download.html:56
 	qw422016.E().S(l.URL)
-//line views/vsite/Download.html:54
+//line views/vsite/Download.html:56
 	qw422016.N().S(`</a></li>
         </ul>
       </li>
@@ -151,19 +145,19 @@ func (p *Download) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
         Linux
         <ul>
           `)
-//line views/vsite/Download.html:60
+//line views/vsite/Download.html:62
 	l = p.Links.Get("server", "linux", "x86_64")
 
-//line views/vsite/Download.html:60
+//line views/vsite/Download.html:62
 	qw422016.N().S(`
           <li><a href="`)
-//line views/vsite/Download.html:61
+//line views/vsite/Download.html:63
 	qw422016.E().S(l.URL)
-//line views/vsite/Download.html:61
+//line views/vsite/Download.html:63
 	qw422016.N().S(`">`)
-//line views/vsite/Download.html:61
+//line views/vsite/Download.html:63
 	qw422016.E().S(l.URL)
-//line views/vsite/Download.html:61
+//line views/vsite/Download.html:63
 	qw422016.N().S(`</a></li>
         </ul>
       </li>
@@ -171,50 +165,50 @@ func (p *Download) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
         Windows
         <ul>
           `)
-//line views/vsite/Download.html:67
+//line views/vsite/Download.html:69
 	l = p.Links.Get("server", "windows", "x86_64")
 
-//line views/vsite/Download.html:67
+//line views/vsite/Download.html:69
 	qw422016.N().S(`
           <li><a href="`)
-//line views/vsite/Download.html:68
+//line views/vsite/Download.html:70
 	qw422016.E().S(l.URL)
-//line views/vsite/Download.html:68
+//line views/vsite/Download.html:70
 	qw422016.N().S(`">`)
-//line views/vsite/Download.html:68
+//line views/vsite/Download.html:70
 	qw422016.E().S(l.URL)
-//line views/vsite/Download.html:68
+//line views/vsite/Download.html:70
 	qw422016.N().S(`</a></li>
         </ul>
       </li>
     </ul>
   </div>
 `)
-//line views/vsite/Download.html:73
+//line views/vsite/Download.html:75
 }
 
-//line views/vsite/Download.html:73
+//line views/vsite/Download.html:75
 func (p *Download) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsite/Download.html:73
+//line views/vsite/Download.html:75
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsite/Download.html:73
+//line views/vsite/Download.html:75
 	p.StreamBody(qw422016, as, ps)
-//line views/vsite/Download.html:73
+//line views/vsite/Download.html:75
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsite/Download.html:73
+//line views/vsite/Download.html:75
 }
 
-//line views/vsite/Download.html:73
+//line views/vsite/Download.html:75
 func (p *Download) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsite/Download.html:73
+//line views/vsite/Download.html:75
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsite/Download.html:73
+//line views/vsite/Download.html:75
 	p.WriteBody(qb422016, as, ps)
-//line views/vsite/Download.html:73
+//line views/vsite/Download.html:75
 	qs422016 := string(qb422016.B)
-//line views/vsite/Download.html:73
+//line views/vsite/Download.html:75
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsite/Download.html:73
+//line views/vsite/Download.html:75
 	return qs422016
-//line views/vsite/Download.html:73
+//line views/vsite/Download.html:75
 }

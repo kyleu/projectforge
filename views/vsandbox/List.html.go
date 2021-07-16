@@ -5,87 +5,83 @@
 package vsandbox
 
 //line views/vsandbox/List.html:1
-import "github.com/kyleu/projectforge/app"
+import (
+	"github.com/kyleu/projectforge/app"
+	"github.com/kyleu/projectforge/app/controller/cutil"
+	"github.com/kyleu/projectforge/app/sandbox"
+	"github.com/kyleu/projectforge/views/layout"
+)
 
-//line views/vsandbox/List.html:2
-import "github.com/kyleu/projectforge/app/controller/cutil"
-
-//line views/vsandbox/List.html:3
-import "github.com/kyleu/projectforge/app/sandbox"
-
-//line views/vsandbox/List.html:4
-import "github.com/kyleu/projectforge/views/layout"
-
-//line views/vsandbox/List.html:6
+//line views/vsandbox/List.html:8
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vsandbox/List.html:6
+//line views/vsandbox/List.html:8
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vsandbox/List.html:6
+//line views/vsandbox/List.html:8
 type List struct{ layout.Basic }
 
-//line views/vsandbox/List.html:8
+//line views/vsandbox/List.html:10
 func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsandbox/List.html:8
+//line views/vsandbox/List.html:10
 	qw422016.N().S(`
   <div class="card">
     <h3>Sandboxes</h3>
     <ul>
       `)
-//line views/vsandbox/List.html:12
+//line views/vsandbox/List.html:14
 	for _, s := range sandbox.AllSandboxes {
-//line views/vsandbox/List.html:12
+//line views/vsandbox/List.html:14
 		qw422016.N().S(`
         <li><a href="/sandbox/`)
-//line views/vsandbox/List.html:13
+//line views/vsandbox/List.html:15
 		qw422016.E().S(s.Key)
-//line views/vsandbox/List.html:13
+//line views/vsandbox/List.html:15
 		qw422016.N().S(`">`)
-//line views/vsandbox/List.html:13
+//line views/vsandbox/List.html:15
 		qw422016.E().S(s.Title)
-//line views/vsandbox/List.html:13
+//line views/vsandbox/List.html:15
 		qw422016.N().S(`</a></li>
       `)
-//line views/vsandbox/List.html:14
+//line views/vsandbox/List.html:16
 	}
-//line views/vsandbox/List.html:14
+//line views/vsandbox/List.html:16
 	qw422016.N().S(`
     </ul>
   </div>
 `)
-//line views/vsandbox/List.html:17
+//line views/vsandbox/List.html:19
 }
 
-//line views/vsandbox/List.html:17
+//line views/vsandbox/List.html:19
 func (p *List) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsandbox/List.html:17
+//line views/vsandbox/List.html:19
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsandbox/List.html:17
+//line views/vsandbox/List.html:19
 	p.StreamBody(qw422016, as, ps)
-//line views/vsandbox/List.html:17
+//line views/vsandbox/List.html:19
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsandbox/List.html:17
+//line views/vsandbox/List.html:19
 }
 
-//line views/vsandbox/List.html:17
+//line views/vsandbox/List.html:19
 func (p *List) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsandbox/List.html:17
+//line views/vsandbox/List.html:19
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsandbox/List.html:17
+//line views/vsandbox/List.html:19
 	p.WriteBody(qb422016, as, ps)
-//line views/vsandbox/List.html:17
+//line views/vsandbox/List.html:19
 	qs422016 := string(qb422016.B)
-//line views/vsandbox/List.html:17
+//line views/vsandbox/List.html:19
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsandbox/List.html:17
+//line views/vsandbox/List.html:19
 	return qs422016
-//line views/vsandbox/List.html:17
+//line views/vsandbox/List.html:19
 }

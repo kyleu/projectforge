@@ -1,7 +1,9 @@
 This is the base page interface. All pages implement this interface.
 
-{% import "github.com/kyleu/projectforge/app" %}
-{% import "github.com/kyleu/projectforge/app/controller/cutil" %}
+{% import (
+  "github.com/kyleu/projectforge/app"
+  "github.com/kyleu/projectforge/app/controller/cutil"
+) %}
 
 {% interface
   Page {

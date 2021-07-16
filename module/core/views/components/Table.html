@@ -1,8 +1,10 @@
-{% import "fmt" %}
-{% import "github.com/valyala/fasthttp" %}
-{% import "$PF_PACKAGE$/app/controller/cutil" %}
-{% import "$PF_PACKAGE$/app/filter" %}
-{% import "$PF_PACKAGE$/views/vutil" %}
+{% import (
+  "fmt"
+  "github.com/valyala/fasthttp"
+  "$PF_PACKAGE$/app/controller/cutil"
+  "$PF_PACKAGE$/app/filter"
+  "$PF_PACKAGE$/views/vutil"
+) %}
 
 {% func TableHeader(section string, key string, title string, locs cutil.Locations, params *filter.Params, icon string, u *fasthttp.URI, tooltip string, sortable bool, cls string, ps *cutil.PageState) %}{% stripspace %}
   {% if cls != "" %}

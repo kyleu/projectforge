@@ -5,157 +5,157 @@
 package layout
 
 //line views/layout/Basic.html:1
-import "github.com/kyleu/projectforge/app"
+import (
+	"github.com/kyleu/projectforge/app"
+	"github.com/kyleu/projectforge/app/controller/cutil"
+)
 
-//line views/layout/Basic.html:2
-import "github.com/kyleu/projectforge/app/controller/cutil"
-
-//line views/layout/Basic.html:4
+//line views/layout/Basic.html:6
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/layout/Basic.html:4
+//line views/layout/Basic.html:6
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/layout/Basic.html:5
+//line views/layout/Basic.html:7
 type Basic struct{}
 
 var _ Page = (*Basic)(nil)
 
-//line views/layout/Basic.html:8
+//line views/layout/Basic.html:10
 func (p *Basic) StreamHead(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/layout/Basic.html:8
+//line views/layout/Basic.html:10
 	StreamHead(qw422016, as, ps)
-//line views/layout/Basic.html:8
+//line views/layout/Basic.html:10
 }
 
-//line views/layout/Basic.html:8
+//line views/layout/Basic.html:10
 func (p *Basic) WriteHead(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/layout/Basic.html:8
+//line views/layout/Basic.html:10
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/layout/Basic.html:8
+//line views/layout/Basic.html:10
 	p.StreamHead(qw422016, as, ps)
-//line views/layout/Basic.html:8
+//line views/layout/Basic.html:10
 	qt422016.ReleaseWriter(qw422016)
-//line views/layout/Basic.html:8
+//line views/layout/Basic.html:10
 }
 
-//line views/layout/Basic.html:8
+//line views/layout/Basic.html:10
 func (p *Basic) Head(as *app.State, ps *cutil.PageState) string {
-//line views/layout/Basic.html:8
+//line views/layout/Basic.html:10
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/layout/Basic.html:8
+//line views/layout/Basic.html:10
 	p.WriteHead(qb422016, as, ps)
-//line views/layout/Basic.html:8
+//line views/layout/Basic.html:10
 	qs422016 := string(qb422016.B)
-//line views/layout/Basic.html:8
+//line views/layout/Basic.html:10
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/layout/Basic.html:8
+//line views/layout/Basic.html:10
 	return qs422016
-//line views/layout/Basic.html:8
+//line views/layout/Basic.html:10
 }
 
-//line views/layout/Basic.html:9
+//line views/layout/Basic.html:11
 func (p *Basic) StreamNav(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/layout/Basic.html:9
+//line views/layout/Basic.html:11
 	StreamNav(qw422016, as, ps)
-//line views/layout/Basic.html:9
+//line views/layout/Basic.html:11
 }
 
-//line views/layout/Basic.html:9
+//line views/layout/Basic.html:11
 func (p *Basic) WriteNav(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/layout/Basic.html:9
+//line views/layout/Basic.html:11
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/layout/Basic.html:9
+//line views/layout/Basic.html:11
 	p.StreamNav(qw422016, as, ps)
-//line views/layout/Basic.html:9
+//line views/layout/Basic.html:11
 	qt422016.ReleaseWriter(qw422016)
-//line views/layout/Basic.html:9
+//line views/layout/Basic.html:11
 }
 
-//line views/layout/Basic.html:9
+//line views/layout/Basic.html:11
 func (p *Basic) Nav(as *app.State, ps *cutil.PageState) string {
-//line views/layout/Basic.html:9
+//line views/layout/Basic.html:11
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/layout/Basic.html:9
+//line views/layout/Basic.html:11
 	p.WriteNav(qb422016, as, ps)
-//line views/layout/Basic.html:9
+//line views/layout/Basic.html:11
 	qs422016 := string(qb422016.B)
-//line views/layout/Basic.html:9
+//line views/layout/Basic.html:11
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/layout/Basic.html:9
+//line views/layout/Basic.html:11
 	return qs422016
-//line views/layout/Basic.html:9
+//line views/layout/Basic.html:11
 }
 
-//line views/layout/Basic.html:10
+//line views/layout/Basic.html:12
 func (p *Basic) StreamMenu(qw422016 *qt422016.Writer, ps *cutil.PageState) {
-//line views/layout/Basic.html:10
+//line views/layout/Basic.html:12
 	StreamMenu(qw422016, ps)
-//line views/layout/Basic.html:10
+//line views/layout/Basic.html:12
 }
 
-//line views/layout/Basic.html:10
+//line views/layout/Basic.html:12
 func (p *Basic) WriteMenu(qq422016 qtio422016.Writer, ps *cutil.PageState) {
-//line views/layout/Basic.html:10
+//line views/layout/Basic.html:12
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/layout/Basic.html:10
+//line views/layout/Basic.html:12
 	p.StreamMenu(qw422016, ps)
-//line views/layout/Basic.html:10
+//line views/layout/Basic.html:12
 	qt422016.ReleaseWriter(qw422016)
-//line views/layout/Basic.html:10
+//line views/layout/Basic.html:12
 }
 
-//line views/layout/Basic.html:10
+//line views/layout/Basic.html:12
 func (p *Basic) Menu(ps *cutil.PageState) string {
-//line views/layout/Basic.html:10
+//line views/layout/Basic.html:12
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/layout/Basic.html:10
+//line views/layout/Basic.html:12
 	p.WriteMenu(qb422016, ps)
-//line views/layout/Basic.html:10
+//line views/layout/Basic.html:12
 	qs422016 := string(qb422016.B)
-//line views/layout/Basic.html:10
+//line views/layout/Basic.html:12
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/layout/Basic.html:10
+//line views/layout/Basic.html:12
 	return qs422016
-//line views/layout/Basic.html:10
+//line views/layout/Basic.html:12
 }
 
-//line views/layout/Basic.html:11
+//line views/layout/Basic.html:13
 func (p *Basic) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/layout/Basic.html:11
+//line views/layout/Basic.html:13
 	qw422016.N().S(`default body`)
-//line views/layout/Basic.html:11
+//line views/layout/Basic.html:13
 }
 
-//line views/layout/Basic.html:11
+//line views/layout/Basic.html:13
 func (p *Basic) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/layout/Basic.html:11
+//line views/layout/Basic.html:13
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/layout/Basic.html:11
+//line views/layout/Basic.html:13
 	p.StreamBody(qw422016, as, ps)
-//line views/layout/Basic.html:11
+//line views/layout/Basic.html:13
 	qt422016.ReleaseWriter(qw422016)
-//line views/layout/Basic.html:11
+//line views/layout/Basic.html:13
 }
 
-//line views/layout/Basic.html:11
+//line views/layout/Basic.html:13
 func (p *Basic) Body(as *app.State, ps *cutil.PageState) string {
-//line views/layout/Basic.html:11
+//line views/layout/Basic.html:13
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/layout/Basic.html:11
+//line views/layout/Basic.html:13
 	p.WriteBody(qb422016, as, ps)
-//line views/layout/Basic.html:11
+//line views/layout/Basic.html:13
 	qs422016 := string(qb422016.B)
-//line views/layout/Basic.html:11
+//line views/layout/Basic.html:13
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/layout/Basic.html:11
+//line views/layout/Basic.html:13
 	return qs422016
-//line views/layout/Basic.html:11
+//line views/layout/Basic.html:13
 }

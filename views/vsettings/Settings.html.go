@@ -5,47 +5,41 @@
 package vsettings
 
 //line views/vsettings/Settings.html:1
-import "github.com/kyleu/projectforge/app"
+import (
+	"github.com/kyleu/projectforge/app"
+	"github.com/kyleu/projectforge/app/controller/cutil"
+	"github.com/kyleu/projectforge/app/settings"
+	"github.com/kyleu/projectforge/views/components"
+	"github.com/kyleu/projectforge/views/layout"
+)
 
-//line views/vsettings/Settings.html:2
-import "github.com/kyleu/projectforge/app/controller/cutil"
-
-//line views/vsettings/Settings.html:3
-import "github.com/kyleu/projectforge/app/settings"
-
-//line views/vsettings/Settings.html:4
-import "github.com/kyleu/projectforge/views/components"
-
-//line views/vsettings/Settings.html:5
-import "github.com/kyleu/projectforge/views/layout"
-
-//line views/vsettings/Settings.html:7
+//line views/vsettings/Settings.html:9
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vsettings/Settings.html:7
+//line views/vsettings/Settings.html:9
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vsettings/Settings.html:7
+//line views/vsettings/Settings.html:9
 type Settings struct {
 	layout.Basic
 	Settings *settings.Settings
 }
 
-//line views/vsettings/Settings.html:12
+//line views/vsettings/Settings.html:14
 func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsettings/Settings.html:12
+//line views/vsettings/Settings.html:14
 	qw422016.N().S(`
   `)
-//line views/vsettings/Settings.html:13
+//line views/vsettings/Settings.html:15
 	StreamAbout(qw422016, as)
-//line views/vsettings/Settings.html:13
+//line views/vsettings/Settings.html:15
 	qw422016.N().S(`
   <div class="card">
     <div class="right"><a href="#modal-settings"><button type="button">JSON</button></a></div>
@@ -56,41 +50,41 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
     <p><a href="/theme">Edit Themes</a></p>
   </div>
   `)
-//line views/vsettings/Settings.html:22
+//line views/vsettings/Settings.html:24
 	StreamAuthentication(qw422016, as)
-//line views/vsettings/Settings.html:22
+//line views/vsettings/Settings.html:24
 	qw422016.N().S(`
   `)
-//line views/vsettings/Settings.html:23
+//line views/vsettings/Settings.html:25
 	components.StreamJSONModal(qw422016, "settings", "Settings JSON", p.Settings, 1)
-//line views/vsettings/Settings.html:23
+//line views/vsettings/Settings.html:25
 	qw422016.N().S(`
 `)
-//line views/vsettings/Settings.html:24
+//line views/vsettings/Settings.html:26
 }
 
-//line views/vsettings/Settings.html:24
+//line views/vsettings/Settings.html:26
 func (p *Settings) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsettings/Settings.html:24
+//line views/vsettings/Settings.html:26
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsettings/Settings.html:24
+//line views/vsettings/Settings.html:26
 	p.StreamBody(qw422016, as, ps)
-//line views/vsettings/Settings.html:24
+//line views/vsettings/Settings.html:26
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsettings/Settings.html:24
+//line views/vsettings/Settings.html:26
 }
 
-//line views/vsettings/Settings.html:24
+//line views/vsettings/Settings.html:26
 func (p *Settings) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsettings/Settings.html:24
+//line views/vsettings/Settings.html:26
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsettings/Settings.html:24
+//line views/vsettings/Settings.html:26
 	p.WriteBody(qb422016, as, ps)
-//line views/vsettings/Settings.html:24
+//line views/vsettings/Settings.html:26
 	qs422016 := string(qb422016.B)
-//line views/vsettings/Settings.html:24
+//line views/vsettings/Settings.html:26
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsettings/Settings.html:24
+//line views/vsettings/Settings.html:26
 	return qs422016
-//line views/vsettings/Settings.html:24
+//line views/vsettings/Settings.html:26
 }

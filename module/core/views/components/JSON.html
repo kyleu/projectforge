@@ -1,5 +1,7 @@
-{% import "$PF_PACKAGE$/app/controller/cutil" %}
-{% import "$PF_PACKAGE$/app/util" %}
+{% import (
+  "$PF_PACKAGE$/app/controller/cutil"
+  "$PF_PACKAGE$/app/util"
+) %}
 
 {% func JSONModal(key string, title string, item interface{}, indent int) %}{% stripspace %}
   <div id="modal-{%s key %}" class="modal" style="display: none;">

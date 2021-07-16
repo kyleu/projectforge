@@ -5,126 +5,120 @@
 package vhelp
 
 //line views/vhelp/Help.html:1
-import "github.com/kyleu/projectforge/app"
+import (
+	"github.com/kyleu/projectforge/app"
+	"github.com/kyleu/projectforge/app/controller/cutil"
+	"github.com/kyleu/projectforge/app/util"
+	"github.com/kyleu/projectforge/views/layout"
+	"github.com/kyleu/projectforge/views/vsettings"
+)
 
-//line views/vhelp/Help.html:2
-import "github.com/kyleu/projectforge/app/controller/cutil"
-
-//line views/vhelp/Help.html:3
-import "github.com/kyleu/projectforge/app/util"
-
-//line views/vhelp/Help.html:4
-import "github.com/kyleu/projectforge/views/layout"
-
-//line views/vhelp/Help.html:5
-import "github.com/kyleu/projectforge/views/vsettings"
-
-//line views/vhelp/Help.html:7
+//line views/vhelp/Help.html:9
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vhelp/Help.html:7
+//line views/vhelp/Help.html:9
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vhelp/Help.html:7
+//line views/vhelp/Help.html:9
 type Help struct{ layout.Basic }
 
-//line views/vhelp/Help.html:9
+//line views/vhelp/Help.html:11
 func (p *Help) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vhelp/Help.html:9
+//line views/vhelp/Help.html:11
 	qw422016.N().S(`
   `)
-//line views/vhelp/Help.html:10
+//line views/vhelp/Help.html:12
 	vsettings.StreamAbout(qw422016, as)
-//line views/vhelp/Help.html:10
+//line views/vhelp/Help.html:12
 	qw422016.N().S(`
   <div class="card">
     <h3>Help</h3>
     <p>Coming soon...</p>
   </div>
   `)
-//line views/vhelp/Help.html:15
+//line views/vhelp/Help.html:17
 	StreamFeedback(qw422016)
-//line views/vhelp/Help.html:15
+//line views/vhelp/Help.html:17
 	qw422016.N().S(`
 `)
-//line views/vhelp/Help.html:16
+//line views/vhelp/Help.html:18
 }
 
-//line views/vhelp/Help.html:16
+//line views/vhelp/Help.html:18
 func (p *Help) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vhelp/Help.html:16
+//line views/vhelp/Help.html:18
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vhelp/Help.html:16
+//line views/vhelp/Help.html:18
 	p.StreamBody(qw422016, as, ps)
-//line views/vhelp/Help.html:16
+//line views/vhelp/Help.html:18
 	qt422016.ReleaseWriter(qw422016)
-//line views/vhelp/Help.html:16
+//line views/vhelp/Help.html:18
 }
 
-//line views/vhelp/Help.html:16
+//line views/vhelp/Help.html:18
 func (p *Help) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vhelp/Help.html:16
+//line views/vhelp/Help.html:18
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vhelp/Help.html:16
+//line views/vhelp/Help.html:18
 	p.WriteBody(qb422016, as, ps)
-//line views/vhelp/Help.html:16
+//line views/vhelp/Help.html:18
 	qs422016 := string(qb422016.B)
-//line views/vhelp/Help.html:16
+//line views/vhelp/Help.html:18
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vhelp/Help.html:16
+//line views/vhelp/Help.html:18
 	return qs422016
-//line views/vhelp/Help.html:16
+//line views/vhelp/Help.html:18
 }
 
-//line views/vhelp/Help.html:18
+//line views/vhelp/Help.html:20
 func StreamFeedback(qw422016 *qt422016.Writer) {
-//line views/vhelp/Help.html:18
+//line views/vhelp/Help.html:20
 	qw422016.N().S(`
   <div class="card">
     <h3>Feedback</h3>
     <p>For now, email <a href="mailto:`)
-//line views/vhelp/Help.html:21
+//line views/vhelp/Help.html:23
 	qw422016.E().S(util.AppContact)
-//line views/vhelp/Help.html:21
+//line views/vhelp/Help.html:23
 	qw422016.N().S(`">`)
-//line views/vhelp/Help.html:21
+//line views/vhelp/Help.html:23
 	qw422016.E().S(util.AppContact)
-//line views/vhelp/Help.html:21
+//line views/vhelp/Help.html:23
 	qw422016.N().S(`</a></p>
   </div>
 `)
-//line views/vhelp/Help.html:23
+//line views/vhelp/Help.html:25
 }
 
-//line views/vhelp/Help.html:23
+//line views/vhelp/Help.html:25
 func WriteFeedback(qq422016 qtio422016.Writer) {
-//line views/vhelp/Help.html:23
+//line views/vhelp/Help.html:25
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vhelp/Help.html:23
+//line views/vhelp/Help.html:25
 	StreamFeedback(qw422016)
-//line views/vhelp/Help.html:23
+//line views/vhelp/Help.html:25
 	qt422016.ReleaseWriter(qw422016)
-//line views/vhelp/Help.html:23
+//line views/vhelp/Help.html:25
 }
 
-//line views/vhelp/Help.html:23
+//line views/vhelp/Help.html:25
 func Feedback() string {
-//line views/vhelp/Help.html:23
+//line views/vhelp/Help.html:25
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vhelp/Help.html:23
+//line views/vhelp/Help.html:25
 	WriteFeedback(qb422016)
-//line views/vhelp/Help.html:23
+//line views/vhelp/Help.html:25
 	qs422016 := string(qb422016.B)
-//line views/vhelp/Help.html:23
+//line views/vhelp/Help.html:25
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vhelp/Help.html:23
+//line views/vhelp/Help.html:25
 	return qs422016
-//line views/vhelp/Help.html:23
+//line views/vhelp/Help.html:25
 }

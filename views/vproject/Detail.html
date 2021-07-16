@@ -1,8 +1,11 @@
-{% import "github.com/kyleu/projectforge/app" %}
-{% import "github.com/kyleu/projectforge/app/controller/cutil" %}
-{% import "github.com/kyleu/projectforge/app/project" %}
-{% import "github.com/kyleu/projectforge/views/components" %}
-{% import "github.com/kyleu/projectforge/views/layout" %}
+{% import (
+  "strings"
+  "github.com/kyleu/projectforge/app"
+  "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/app/project"
+  "github.com/kyleu/projectforge/views/components"
+  "github.com/kyleu/projectforge/views/layout"
+) %}
 
 {% code type Detail struct {
   layout.Basic
@@ -11,9 +14,87 @@
 
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
   {%- code prj := p.Project -%}
+  {%- code info := prj.Info -%}
   <div class="card">
     <div class="right"><a href="#modal-project"><button type="button">JSON</button></a></div>
     <h3>Project [{%s prj.Key %}]</h3>
+    <table class="mt">
+      <tbody>
+        <tr>
+          <th>Key</th>
+          <td>{%s prj.Key %}</td>
+        </tr>
+        <tr>
+          <th>Type</th>
+          <td>{%s prj.Type %}</td>
+        </tr>
+        <tr>
+          <th>Name</th>
+          <td>{%s prj.Name %}</td>
+        </tr>
+        <tr>
+          <th>Version</th>
+          <td>{%s prj.Version %}</td>
+        </tr>
+        <tr>
+          <th>Package</th>
+          <td>{%s prj.Package %}</td>
+        </tr>
+        <tr>
+          <th>Port</th>
+          <td>{%d prj.Port %}</td>
+        </tr>
+        <tr>
+          <th>Modules</th>
+          <td>{%s strings.Join(prj.Modules, ", ") %}</td>
+        </tr>
+        <tr>
+          <th>Ignore</th>
+          <td>{%s strings.Join(prj.Ignore, ", ") %}</td>
+        </tr>
+
+        <tr>
+          <th>Organization</th>
+          <td>{%s info.Org %}</td>
+        </tr>
+        <tr>
+          <th>Author Name</th>
+          <td>{%s info.AuthorName %}</td>
+        </tr>
+        <tr>
+          <th>Author Email</th>
+          <td>{%s info.AuthorEmail %}</td>
+        </tr>
+        <tr>
+          <th>License</th>
+          <td>{%s info.License %}</td>
+        </tr>
+        <tr>
+          <th>Bundle</th>
+          <td>{%s info.Bundle %}</td>
+        </tr>
+        <tr>
+          <th>Signing Identity</th>
+          <td>{%s info.SigningIdentity %}</td>
+        </tr>
+        <tr>
+          <th>Homepage</th>
+          <td>{%s info.Homepage %}</td>
+        </tr>
+        <tr>
+          <th>Source Code</th>
+          <td>{%s info.Sourcecode %}</td>
+        </tr>
+        <tr>
+          <th>Summary</th>
+          <td>{%s info.Summary %}</td>
+        </tr>
+        <tr>
+          <th>Description</th>
+          <td>{%s info.Description %}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
   {%= components.JSONModal("project", "Project JSON", prj, 1) %}
 {% endfunc %}

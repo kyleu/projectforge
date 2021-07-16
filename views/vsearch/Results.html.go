@@ -5,140 +5,138 @@
 package vsearch
 
 //line views/vsearch/Results.html:1
-import "github.com/kyleu/projectforge/app"
+import (
+	"github.com/kyleu/projectforge/app"
+	"github.com/kyleu/projectforge/app/controller/cutil"
+	"github.com/kyleu/projectforge/views/layout"
+)
 
-//line views/vsearch/Results.html:2
-import "github.com/kyleu/projectforge/app/controller/cutil"
-
-//line views/vsearch/Results.html:3
-import "github.com/kyleu/projectforge/views/layout"
-
-//line views/vsearch/Results.html:5
+//line views/vsearch/Results.html:7
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vsearch/Results.html:5
+//line views/vsearch/Results.html:7
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vsearch/Results.html:5
+//line views/vsearch/Results.html:7
 type Results struct {
 	layout.Basic
 	Q       string
 	Results []string
 }
 
-//line views/vsearch/Results.html:11
+//line views/vsearch/Results.html:13
 func (p *Results) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsearch/Results.html:11
+//line views/vsearch/Results.html:13
 	qw422016.N().S(`
   <div class="card">
     <h3>`)
-//line views/vsearch/Results.html:13
+//line views/vsearch/Results.html:15
 	if p.Q == "" {
-//line views/vsearch/Results.html:13
+//line views/vsearch/Results.html:15
 		qw422016.N().S(`Search`)
-//line views/vsearch/Results.html:13
+//line views/vsearch/Results.html:15
 	} else {
-//line views/vsearch/Results.html:13
+//line views/vsearch/Results.html:15
 		qw422016.N().S(`[`)
-//line views/vsearch/Results.html:13
+//line views/vsearch/Results.html:15
 		qw422016.E().S(p.Q)
-//line views/vsearch/Results.html:13
+//line views/vsearch/Results.html:15
 		qw422016.N().S(`] search results`)
-//line views/vsearch/Results.html:13
+//line views/vsearch/Results.html:15
 	}
-//line views/vsearch/Results.html:13
+//line views/vsearch/Results.html:15
 	qw422016.N().S(`</h3>
     <form action="`)
-//line views/vsearch/Results.html:14
+//line views/vsearch/Results.html:16
 	qw422016.E().S(ps.SearchPath)
-//line views/vsearch/Results.html:14
+//line views/vsearch/Results.html:16
 	qw422016.N().S(`">
       <input name="q" value="`)
-//line views/vsearch/Results.html:15
+//line views/vsearch/Results.html:17
 	qw422016.E().S(p.Q)
-//line views/vsearch/Results.html:15
+//line views/vsearch/Results.html:17
 	qw422016.N().S(`" />
     </form>
   </div>
   `)
-//line views/vsearch/Results.html:18
+//line views/vsearch/Results.html:20
 	if p.Q != "" {
-//line views/vsearch/Results.html:18
+//line views/vsearch/Results.html:20
 		qw422016.N().S(`
   <div class="card">
     <h3>Results</h3>
     `)
-//line views/vsearch/Results.html:21
+//line views/vsearch/Results.html:23
 		if len(p.Results) == 0 {
-//line views/vsearch/Results.html:21
+//line views/vsearch/Results.html:23
 			qw422016.N().S(`
     <em>no results</em>
     `)
-//line views/vsearch/Results.html:23
+//line views/vsearch/Results.html:25
 		} else {
-//line views/vsearch/Results.html:23
+//line views/vsearch/Results.html:25
 			qw422016.N().S(`
     <ul>
       `)
-//line views/vsearch/Results.html:25
+//line views/vsearch/Results.html:27
 			for _, res := range p.Results {
-//line views/vsearch/Results.html:25
+//line views/vsearch/Results.html:27
 				qw422016.N().S(`
       <li>Coming soon: `)
-//line views/vsearch/Results.html:26
+//line views/vsearch/Results.html:28
 				qw422016.E().S(res)
-//line views/vsearch/Results.html:26
+//line views/vsearch/Results.html:28
 				qw422016.N().S(`</li>
       `)
-//line views/vsearch/Results.html:27
+//line views/vsearch/Results.html:29
 			}
-//line views/vsearch/Results.html:27
+//line views/vsearch/Results.html:29
 			qw422016.N().S(`
     </ul>
     `)
-//line views/vsearch/Results.html:29
+//line views/vsearch/Results.html:31
 		}
-//line views/vsearch/Results.html:29
+//line views/vsearch/Results.html:31
 		qw422016.N().S(`
   </div>
   `)
-//line views/vsearch/Results.html:31
+//line views/vsearch/Results.html:33
 	}
-//line views/vsearch/Results.html:31
+//line views/vsearch/Results.html:33
 	qw422016.N().S(`
 `)
-//line views/vsearch/Results.html:32
+//line views/vsearch/Results.html:34
 }
 
-//line views/vsearch/Results.html:32
+//line views/vsearch/Results.html:34
 func (p *Results) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsearch/Results.html:32
+//line views/vsearch/Results.html:34
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsearch/Results.html:32
+//line views/vsearch/Results.html:34
 	p.StreamBody(qw422016, as, ps)
-//line views/vsearch/Results.html:32
+//line views/vsearch/Results.html:34
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsearch/Results.html:32
+//line views/vsearch/Results.html:34
 }
 
-//line views/vsearch/Results.html:32
+//line views/vsearch/Results.html:34
 func (p *Results) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsearch/Results.html:32
+//line views/vsearch/Results.html:34
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsearch/Results.html:32
+//line views/vsearch/Results.html:34
 	p.WriteBody(qb422016, as, ps)
-//line views/vsearch/Results.html:32
+//line views/vsearch/Results.html:34
 	qs422016 := string(qb422016.B)
-//line views/vsearch/Results.html:32
+//line views/vsearch/Results.html:34
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsearch/Results.html:32
+//line views/vsearch/Results.html:34
 	return qs422016
-//line views/vsearch/Results.html:32
+//line views/vsearch/Results.html:34
 }

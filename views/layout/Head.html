@@ -1,6 +1,8 @@
-{% import "github.com/kyleu/projectforge/app" %}
-{% import "github.com/kyleu/projectforge/app/controller/cutil" %}
-{% import "github.com/kyleu/projectforge/app/util" %}
+{% import (
+  "github.com/kyleu/projectforge/app"
+  "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/app/util"
+) %}
 
 {% func Head(as *app.State, ps *cutil.PageState) %}
   <meta charset="UTF-8">

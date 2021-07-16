@@ -5,43 +5,31 @@
 package vauth
 
 //line views/vauth/Profile.html:1
-import "github.com/kyleu/projectforge/app"
+import (
+	"github.com/kyleu/projectforge/app"
+	"github.com/kyleu/projectforge/app/auth"
+	"github.com/kyleu/projectforge/app/controller/cutil"
+	"github.com/kyleu/projectforge/app/theme"
+	"github.com/kyleu/projectforge/app/user"
+	"github.com/kyleu/projectforge/views/components"
+	"github.com/kyleu/projectforge/views/layout"
+	"github.com/kyleu/projectforge/views/vtheme"
+)
 
-//line views/vauth/Profile.html:2
-import "github.com/kyleu/projectforge/app/auth"
-
-//line views/vauth/Profile.html:3
-import "github.com/kyleu/projectforge/app/controller/cutil"
-
-//line views/vauth/Profile.html:4
-import "github.com/kyleu/projectforge/app/theme"
-
-//line views/vauth/Profile.html:5
-import "github.com/kyleu/projectforge/app/user"
-
-//line views/vauth/Profile.html:6
-import "github.com/kyleu/projectforge/views/components"
-
-//line views/vauth/Profile.html:7
-import "github.com/kyleu/projectforge/views/layout"
-
-//line views/vauth/Profile.html:8
-import "github.com/kyleu/projectforge/views/vtheme"
-
-//line views/vauth/Profile.html:10
+//line views/vauth/Profile.html:12
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vauth/Profile.html:10
+//line views/vauth/Profile.html:12
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vauth/Profile.html:10
+//line views/vauth/Profile.html:12
 type Profile struct {
 	layout.Basic
 	Profile   *user.Profile
@@ -50,14 +38,14 @@ type Profile struct {
 	Referrer  string
 }
 
-//line views/vauth/Profile.html:18
+//line views/vauth/Profile.html:20
 func (p *Profile) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vauth/Profile.html:18
+//line views/vauth/Profile.html:20
 	qw422016.N().S(`
   `)
-//line views/vauth/Profile.html:19
+//line views/vauth/Profile.html:21
 	StreamSigninTable(qw422016, p.Providers, p.Referrer, as, ps)
-//line views/vauth/Profile.html:19
+//line views/vauth/Profile.html:21
 	qw422016.N().S(`
   <form action="" method="post">
     <div class="card">
@@ -69,62 +57,62 @@ func (p *Profile) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
       <table class="mt">
         <tbody>
           `)
-//line views/vauth/Profile.html:29
+//line views/vauth/Profile.html:31
 	components.StreamTableInput(qw422016, "name", "Name", p.Profile.Name, 5)
-//line views/vauth/Profile.html:29
+//line views/vauth/Profile.html:31
 	qw422016.N().S(`
           <tr>
             <th class="shrink"><label>Mode</label></th>
             <td>
               <label>
 `)
-//line views/vauth/Profile.html:34
+//line views/vauth/Profile.html:36
 	if p.Profile.Mode == "" {
-//line views/vauth/Profile.html:34
+//line views/vauth/Profile.html:36
 		qw422016.N().S(`                <input type="radio" class="mode-input" name="mode" value="" checked="checked" />
 `)
-//line views/vauth/Profile.html:36
+//line views/vauth/Profile.html:38
 	} else {
-//line views/vauth/Profile.html:36
+//line views/vauth/Profile.html:38
 		qw422016.N().S(`                <input type="radio" class="mode-input" name="mode" value="" />
 `)
-//line views/vauth/Profile.html:38
+//line views/vauth/Profile.html:40
 	}
-//line views/vauth/Profile.html:38
+//line views/vauth/Profile.html:40
 	qw422016.N().S(`                System Default
               </label>
               <label>
 `)
-//line views/vauth/Profile.html:42
+//line views/vauth/Profile.html:44
 	if p.Profile.Mode == "light" {
-//line views/vauth/Profile.html:42
+//line views/vauth/Profile.html:44
 		qw422016.N().S(`                <input type="radio" class="mode-input" name="mode" value="light" checked="checked" />
 `)
-//line views/vauth/Profile.html:44
+//line views/vauth/Profile.html:46
 	} else {
-//line views/vauth/Profile.html:44
+//line views/vauth/Profile.html:46
 		qw422016.N().S(`                <input type="radio" class="mode-input" name="mode" value="light" />
 `)
-//line views/vauth/Profile.html:46
+//line views/vauth/Profile.html:48
 	}
-//line views/vauth/Profile.html:46
+//line views/vauth/Profile.html:48
 	qw422016.N().S(`                Light
               </label>
               <label>
 `)
-//line views/vauth/Profile.html:50
+//line views/vauth/Profile.html:52
 	if p.Profile.Mode == "dark" {
-//line views/vauth/Profile.html:50
+//line views/vauth/Profile.html:52
 		qw422016.N().S(`                <input type="radio" class="mode-input" name="mode" value="dark" checked="checked" />
 `)
-//line views/vauth/Profile.html:52
+//line views/vauth/Profile.html:54
 	} else {
-//line views/vauth/Profile.html:52
+//line views/vauth/Profile.html:54
 		qw422016.N().S(`                <input type="radio" class="mode-input" name="mode" value="dark" />
 `)
-//line views/vauth/Profile.html:54
+//line views/vauth/Profile.html:56
 	}
-//line views/vauth/Profile.html:54
+//line views/vauth/Profile.html:56
 	qw422016.N().S(`                Dark
               </label>
             </td>
@@ -136,17 +124,17 @@ func (p *Profile) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
                 <a href="/theme">Edit Themes</a>
               </div>
 `)
-//line views/vauth/Profile.html:66
+//line views/vauth/Profile.html:68
 	sel := ps.Profile.Theme
 	if sel == "" {
 		sel = "default"
 	}
 
-//line views/vauth/Profile.html:70
+//line views/vauth/Profile.html:72
 	qw422016.N().S(`              `)
-//line views/vauth/Profile.html:71
+//line views/vauth/Profile.html:73
 	vtheme.StreamChoice(qw422016, as.Themes.All(), sel, 3, ps)
-//line views/vauth/Profile.html:71
+//line views/vauth/Profile.html:73
 	qw422016.N().S(`
             </td>
           </tr>
@@ -160,41 +148,41 @@ func (p *Profile) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
   </form>
 
   `)
-//line views/vauth/Profile.html:83
+//line views/vauth/Profile.html:85
 	components.StreamJSONModal(qw422016, "profile", "Profile JSON", p.Profile, 1)
-//line views/vauth/Profile.html:83
+//line views/vauth/Profile.html:85
 	qw422016.N().S(`
   `)
-//line views/vauth/Profile.html:84
+//line views/vauth/Profile.html:86
 	components.StreamJSONModal(qw422016, "theme", "Theme JSON", p.Theme, 1)
-//line views/vauth/Profile.html:84
+//line views/vauth/Profile.html:86
 	qw422016.N().S(`
 `)
-//line views/vauth/Profile.html:85
+//line views/vauth/Profile.html:87
 }
 
-//line views/vauth/Profile.html:85
+//line views/vauth/Profile.html:87
 func (p *Profile) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vauth/Profile.html:85
+//line views/vauth/Profile.html:87
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vauth/Profile.html:85
+//line views/vauth/Profile.html:87
 	p.StreamBody(qw422016, as, ps)
-//line views/vauth/Profile.html:85
+//line views/vauth/Profile.html:87
 	qt422016.ReleaseWriter(qw422016)
-//line views/vauth/Profile.html:85
+//line views/vauth/Profile.html:87
 }
 
-//line views/vauth/Profile.html:85
+//line views/vauth/Profile.html:87
 func (p *Profile) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vauth/Profile.html:85
+//line views/vauth/Profile.html:87
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vauth/Profile.html:85
+//line views/vauth/Profile.html:87
 	p.WriteBody(qb422016, as, ps)
-//line views/vauth/Profile.html:85
+//line views/vauth/Profile.html:87
 	qs422016 := string(qb422016.B)
-//line views/vauth/Profile.html:85
+//line views/vauth/Profile.html:87
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vauth/Profile.html:85
+//line views/vauth/Profile.html:87
 	return qs422016
-//line views/vauth/Profile.html:85
+//line views/vauth/Profile.html:87
 }

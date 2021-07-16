@@ -1,9 +1,11 @@
-{% import "github.com/kyleu/projectforge/app" %}
-{% import "github.com/kyleu/projectforge/app/controller/cutil" %}
-{% import "github.com/kyleu/projectforge/app/action" %}
-{% import "github.com/kyleu/projectforge/app/util" %}
-{% import "github.com/kyleu/projectforge/views/components" %}
-{% import "github.com/kyleu/projectforge/views/layout" %}
+{% import (
+  "github.com/kyleu/projectforge/app"
+  "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/app/action"
+  "github.com/kyleu/projectforge/app/util"
+  "github.com/kyleu/projectforge/views/components"
+  "github.com/kyleu/projectforge/views/layout"
+) %}
 
 {% code type Result struct {
   layout.Basic

@@ -5,64 +5,62 @@
 package vsite
 
 //line views/vsite/Installation.html:1
-import "github.com/kyleu/projectforge/app"
+import (
+	"github.com/kyleu/projectforge/app"
+	"github.com/kyleu/projectforge/app/controller/cutil"
+	"github.com/kyleu/projectforge/views/layout"
+)
 
-//line views/vsite/Installation.html:2
-import "github.com/kyleu/projectforge/app/controller/cutil"
-
-//line views/vsite/Installation.html:3
-import "github.com/kyleu/projectforge/views/layout"
-
-//line views/vsite/Installation.html:5
+//line views/vsite/Installation.html:7
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vsite/Installation.html:5
+//line views/vsite/Installation.html:7
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vsite/Installation.html:5
+//line views/vsite/Installation.html:7
 type Installation struct{ layout.Basic }
 
-//line views/vsite/Installation.html:7
+//line views/vsite/Installation.html:9
 func (p *Installation) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsite/Installation.html:7
+//line views/vsite/Installation.html:9
 	qw422016.N().S(`
   <div class="card">
     <h3>Installation</h3>
     <p>TODO</p>
   </div>
 `)
-//line views/vsite/Installation.html:12
+//line views/vsite/Installation.html:14
 }
 
-//line views/vsite/Installation.html:12
+//line views/vsite/Installation.html:14
 func (p *Installation) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsite/Installation.html:12
+//line views/vsite/Installation.html:14
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsite/Installation.html:12
+//line views/vsite/Installation.html:14
 	p.StreamBody(qw422016, as, ps)
-//line views/vsite/Installation.html:12
+//line views/vsite/Installation.html:14
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsite/Installation.html:12
+//line views/vsite/Installation.html:14
 }
 
-//line views/vsite/Installation.html:12
+//line views/vsite/Installation.html:14
 func (p *Installation) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsite/Installation.html:12
+//line views/vsite/Installation.html:14
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsite/Installation.html:12
+//line views/vsite/Installation.html:14
 	p.WriteBody(qb422016, as, ps)
-//line views/vsite/Installation.html:12
+//line views/vsite/Installation.html:14
 	qs422016 := string(qb422016.B)
-//line views/vsite/Installation.html:12
+//line views/vsite/Installation.html:14
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsite/Installation.html:12
+//line views/vsite/Installation.html:14
 	return qs422016
-//line views/vsite/Installation.html:12
+//line views/vsite/Installation.html:14
 }

@@ -5,74 +5,53 @@
 package vauth
 
 //line views/vauth/Form.html:1
-import "github.com/kyleu/projectforge/app"
+import (
+	"github.com/kyleu/projectforge/app"
+	"github.com/kyleu/projectforge/app/auth"
+	"github.com/kyleu/projectforge/app/controller/cutil"
+	"github.com/kyleu/projectforge/app/util"
+)
 
-//line views/vauth/Form.html:2
-import "github.com/kyleu/projectforge/app/auth"
-
-//line views/vauth/Form.html:3
-import "github.com/kyleu/projectforge/app/controller/cutil"
-
-//line views/vauth/Form.html:4
-import "github.com/kyleu/projectforge/app/util"
-
-//line views/vauth/Form.html:6
+//line views/vauth/Form.html:8
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vauth/Form.html:6
+//line views/vauth/Form.html:8
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vauth/Form.html:6
+//line views/vauth/Form.html:8
 func StreamSigninTable(qw422016 *qt422016.Writer, prvs auth.Providers, referrer string, as *app.State, ps *cutil.PageState) {
-//line views/vauth/Form.html:6
+//line views/vauth/Form.html:8
 	qw422016.N().S(`
 `)
-//line views/vauth/Form.html:7
+//line views/vauth/Form.html:9
 	if len(prvs) > 0 {
-//line views/vauth/Form.html:7
+//line views/vauth/Form.html:9
 		qw422016.N().S(`  <div class="card">
     <h3>Sign in to `)
-//line views/vauth/Form.html:9
+//line views/vauth/Form.html:11
 		qw422016.E().S(util.AppName)
-//line views/vauth/Form.html:9
+//line views/vauth/Form.html:11
 		qw422016.N().S(`</h3>
     <ul>
 `)
-//line views/vauth/Form.html:11
+//line views/vauth/Form.html:13
 		for _, prv := range prvs {
-//line views/vauth/Form.html:11
+//line views/vauth/Form.html:13
 			qw422016.N().S(`      <li>
 `)
-//line views/vauth/Form.html:13
+//line views/vauth/Form.html:15
 			if referrer == "" {
-//line views/vauth/Form.html:13
-				qw422016.N().S(`        <a href="/auth/`)
-//line views/vauth/Form.html:14
-				qw422016.E().S(prv.ID)
-//line views/vauth/Form.html:14
-				qw422016.N().S(`">`)
-//line views/vauth/Form.html:14
-				qw422016.E().S(prv.Title)
-//line views/vauth/Form.html:14
-				qw422016.N().S(`</a>
-`)
-//line views/vauth/Form.html:15
-			} else {
 //line views/vauth/Form.html:15
 				qw422016.N().S(`        <a href="/auth/`)
 //line views/vauth/Form.html:16
 				qw422016.E().S(prv.ID)
-//line views/vauth/Form.html:16
-				qw422016.N().S(`?refer=`)
-//line views/vauth/Form.html:16
-				qw422016.N().U(referrer)
 //line views/vauth/Form.html:16
 				qw422016.N().S(`">`)
 //line views/vauth/Form.html:16
@@ -81,75 +60,92 @@ func StreamSigninTable(qw422016 *qt422016.Writer, prvs auth.Providers, referrer 
 				qw422016.N().S(`</a>
 `)
 //line views/vauth/Form.html:17
-			}
+			} else {
+//line views/vauth/Form.html:17
+				qw422016.N().S(`        <a href="/auth/`)
 //line views/vauth/Form.html:18
+				qw422016.E().S(prv.ID)
+//line views/vauth/Form.html:18
+				qw422016.N().S(`?refer=`)
+//line views/vauth/Form.html:18
+				qw422016.N().U(referrer)
+//line views/vauth/Form.html:18
+				qw422016.N().S(`">`)
+//line views/vauth/Form.html:18
+				qw422016.E().S(prv.Title)
+//line views/vauth/Form.html:18
+				qw422016.N().S(`</a>
+`)
+//line views/vauth/Form.html:19
+			}
+//line views/vauth/Form.html:20
 			as := ps.Auth.GetByProvider(prv.ID)
 
-//line views/vauth/Form.html:19
+//line views/vauth/Form.html:21
 			if len(as) > 0 {
-//line views/vauth/Form.html:19
+//line views/vauth/Form.html:21
 				qw422016.N().S(`        <ul>
 `)
-//line views/vauth/Form.html:21
+//line views/vauth/Form.html:23
 				for _, a := range as {
-//line views/vauth/Form.html:21
+//line views/vauth/Form.html:23
 					qw422016.N().S(`          <li>`)
-//line views/vauth/Form.html:22
+//line views/vauth/Form.html:24
 					qw422016.E().S(a.Email)
-//line views/vauth/Form.html:22
+//line views/vauth/Form.html:24
 					qw422016.N().S(` (<a href="/auth/`)
-//line views/vauth/Form.html:22
+//line views/vauth/Form.html:24
 					qw422016.N().U(a.Provider)
-//line views/vauth/Form.html:22
+//line views/vauth/Form.html:24
 					qw422016.N().S(`/logout?email=`)
-//line views/vauth/Form.html:22
+//line views/vauth/Form.html:24
 					qw422016.N().U(a.Email)
-//line views/vauth/Form.html:22
+//line views/vauth/Form.html:24
 					qw422016.N().S(`">sign out</a>)</li>
 `)
-//line views/vauth/Form.html:23
+//line views/vauth/Form.html:25
 				}
-//line views/vauth/Form.html:23
+//line views/vauth/Form.html:25
 				qw422016.N().S(`        </ul>
 `)
-//line views/vauth/Form.html:25
+//line views/vauth/Form.html:27
 			}
-//line views/vauth/Form.html:25
+//line views/vauth/Form.html:27
 			qw422016.N().S(`      </li>
 `)
-//line views/vauth/Form.html:27
+//line views/vauth/Form.html:29
 		}
-//line views/vauth/Form.html:27
+//line views/vauth/Form.html:29
 		qw422016.N().S(`    </ul>
   </div>
 `)
-//line views/vauth/Form.html:30
+//line views/vauth/Form.html:32
 	}
-//line views/vauth/Form.html:31
+//line views/vauth/Form.html:33
 }
 
-//line views/vauth/Form.html:31
+//line views/vauth/Form.html:33
 func WriteSigninTable(qq422016 qtio422016.Writer, prvs auth.Providers, referrer string, as *app.State, ps *cutil.PageState) {
-//line views/vauth/Form.html:31
+//line views/vauth/Form.html:33
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vauth/Form.html:31
+//line views/vauth/Form.html:33
 	StreamSigninTable(qw422016, prvs, referrer, as, ps)
-//line views/vauth/Form.html:31
+//line views/vauth/Form.html:33
 	qt422016.ReleaseWriter(qw422016)
-//line views/vauth/Form.html:31
+//line views/vauth/Form.html:33
 }
 
-//line views/vauth/Form.html:31
+//line views/vauth/Form.html:33
 func SigninTable(prvs auth.Providers, referrer string, as *app.State, ps *cutil.PageState) string {
-//line views/vauth/Form.html:31
+//line views/vauth/Form.html:33
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vauth/Form.html:31
+//line views/vauth/Form.html:33
 	WriteSigninTable(qb422016, prvs, referrer, as, ps)
-//line views/vauth/Form.html:31
+//line views/vauth/Form.html:33
 	qs422016 := string(qb422016.B)
-//line views/vauth/Form.html:31
+//line views/vauth/Form.html:33
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vauth/Form.html:31
+//line views/vauth/Form.html:33
 	return qs422016
-//line views/vauth/Form.html:31
+//line views/vauth/Form.html:33
 }

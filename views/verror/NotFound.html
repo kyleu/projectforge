@@ -1,6 +1,8 @@
-{% import "github.com/kyleu/projectforge/app" %}
-{% import "github.com/kyleu/projectforge/app/controller/cutil" %}
-{% import "github.com/kyleu/projectforge/views/layout" %}
+{% import (
+  "github.com/kyleu/projectforge/app"
+  "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/views/layout"
+) %}
 
 {% code type NotFound struct { layout.Basic } %}
 

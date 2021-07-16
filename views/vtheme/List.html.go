@@ -5,98 +5,92 @@
 package vtheme
 
 //line views/vtheme/List.html:1
-import "github.com/kyleu/projectforge/app"
+import (
+	"github.com/kyleu/projectforge/app"
+	"github.com/kyleu/projectforge/app/controller/cutil"
+	"github.com/kyleu/projectforge/app/theme"
+	"github.com/kyleu/projectforge/views/components"
+	"github.com/kyleu/projectforge/views/layout"
+)
 
-//line views/vtheme/List.html:2
-import "github.com/kyleu/projectforge/app/controller/cutil"
-
-//line views/vtheme/List.html:3
-import "github.com/kyleu/projectforge/app/theme"
-
-//line views/vtheme/List.html:4
-import "github.com/kyleu/projectforge/views/components"
-
-//line views/vtheme/List.html:5
-import "github.com/kyleu/projectforge/views/layout"
-
-//line views/vtheme/List.html:7
+//line views/vtheme/List.html:9
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vtheme/List.html:7
+//line views/vtheme/List.html:9
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vtheme/List.html:7
+//line views/vtheme/List.html:9
 type List struct {
 	layout.Basic
 	Themes theme.Themes
 }
 
-//line views/vtheme/List.html:12
+//line views/vtheme/List.html:14
 func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vtheme/List.html:12
+//line views/vtheme/List.html:14
 	qw422016.N().S(`
   <div class="card">
     <div class="right"><a href="/theme/new" title="add new theme">`)
-//line views/vtheme/List.html:14
+//line views/vtheme/List.html:16
 	components.StreamSVGRef(qw422016, `plus`, 20, 20, `icon`, ps)
-//line views/vtheme/List.html:14
+//line views/vtheme/List.html:16
 	qw422016.N().S(`</a></div>
     <h3>Themes</h3>
     <div class="theme-container mt">
 `)
-//line views/vtheme/List.html:17
+//line views/vtheme/List.html:19
 	for _, t := range p.Themes {
-//line views/vtheme/List.html:17
+//line views/vtheme/List.html:19
 		qw422016.N().S(`      <div class="theme-item">
         <a href="/theme/`)
-//line views/vtheme/List.html:19
+//line views/vtheme/List.html:21
 		qw422016.E().S(t.Key)
-//line views/vtheme/List.html:19
+//line views/vtheme/List.html:21
 		qw422016.N().S(`">`)
-//line views/vtheme/List.html:19
+//line views/vtheme/List.html:21
 		StreamMockupTheme(qw422016, t, 3, ps)
-//line views/vtheme/List.html:19
+//line views/vtheme/List.html:21
 		qw422016.N().S(`</a>
       </div>
 `)
-//line views/vtheme/List.html:21
+//line views/vtheme/List.html:23
 	}
-//line views/vtheme/List.html:21
+//line views/vtheme/List.html:23
 	qw422016.N().S(`    </div>
   </div>
 `)
-//line views/vtheme/List.html:24
+//line views/vtheme/List.html:26
 }
 
-//line views/vtheme/List.html:24
+//line views/vtheme/List.html:26
 func (p *List) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vtheme/List.html:24
+//line views/vtheme/List.html:26
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vtheme/List.html:24
+//line views/vtheme/List.html:26
 	p.StreamBody(qw422016, as, ps)
-//line views/vtheme/List.html:24
+//line views/vtheme/List.html:26
 	qt422016.ReleaseWriter(qw422016)
-//line views/vtheme/List.html:24
+//line views/vtheme/List.html:26
 }
 
-//line views/vtheme/List.html:24
+//line views/vtheme/List.html:26
 func (p *List) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vtheme/List.html:24
+//line views/vtheme/List.html:26
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vtheme/List.html:24
+//line views/vtheme/List.html:26
 	p.WriteBody(qb422016, as, ps)
-//line views/vtheme/List.html:24
+//line views/vtheme/List.html:26
 	qs422016 := string(qb422016.B)
-//line views/vtheme/List.html:24
+//line views/vtheme/List.html:26
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vtheme/List.html:24
+//line views/vtheme/List.html:26
 	return qs422016
-//line views/vtheme/List.html:24
+//line views/vtheme/List.html:26
 }

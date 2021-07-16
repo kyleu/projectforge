@@ -1,8 +1,10 @@
-{% import "strings" %}
-{% import "$PF_PACKAGE$/app/controller/cutil" %}
-{% import "$PF_PACKAGE$/app/menu" %}
-{% import "$PF_PACKAGE$/views/components" %}
-{% import "$PF_PACKAGE$/views/vutil" %}
+{% import (
+  "strings"
+  "$PF_PACKAGE$/app/controller/cutil"
+  "$PF_PACKAGE$/app/menu"
+  "$PF_PACKAGE$/views/components"
+  "$PF_PACKAGE$/views/vutil"
+) %}
 
 {% func Menu(ps *cutil.PageState) %}{% stripspace %}
   <div class="menu-container">

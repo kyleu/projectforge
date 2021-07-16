@@ -5,39 +5,35 @@
 package vhelp
 
 //line views/vhelp/Modules.html:1
-import "github.com/kyleu/projectforge/app"
+import (
+	"github.com/kyleu/projectforge/app"
+	"github.com/kyleu/projectforge/app/controller/cutil"
+	"github.com/kyleu/projectforge/views/layout"
+	"runtime/debug"
+)
 
-//line views/vhelp/Modules.html:2
-import "github.com/kyleu/projectforge/app/controller/cutil"
-
-//line views/vhelp/Modules.html:3
-import "github.com/kyleu/projectforge/views/layout"
-
-//line views/vhelp/Modules.html:4
-import "runtime/debug"
-
-//line views/vhelp/Modules.html:6
+//line views/vhelp/Modules.html:8
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vhelp/Modules.html:6
+//line views/vhelp/Modules.html:8
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vhelp/Modules.html:6
+//line views/vhelp/Modules.html:8
 type Modules struct {
 	layout.Basic
 	Mods []*debug.Module
 }
 
-//line views/vhelp/Modules.html:11
+//line views/vhelp/Modules.html:13
 func (p *Modules) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vhelp/Modules.html:11
+//line views/vhelp/Modules.html:13
 	qw422016.N().S(`
   <table>
     <thead>
@@ -48,63 +44,63 @@ func (p *Modules) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
     </thead>
     <tbody>
       `)
-//line views/vhelp/Modules.html:20
+//line views/vhelp/Modules.html:22
 	for _, m := range p.Mods {
-//line views/vhelp/Modules.html:20
+//line views/vhelp/Modules.html:22
 		qw422016.N().S(`
       <tr>
         <td><a target="_blank" rel="noopener noreferrer" href="https://`)
-//line views/vhelp/Modules.html:22
+//line views/vhelp/Modules.html:24
 		qw422016.E().S(m.Path)
-//line views/vhelp/Modules.html:22
+//line views/vhelp/Modules.html:24
 		qw422016.N().S(`">`)
-//line views/vhelp/Modules.html:22
+//line views/vhelp/Modules.html:24
 		qw422016.E().S(m.Path)
-//line views/vhelp/Modules.html:22
+//line views/vhelp/Modules.html:24
 		qw422016.N().S(`</a></td>
         <td title="`)
-//line views/vhelp/Modules.html:23
+//line views/vhelp/Modules.html:25
 		qw422016.E().S(m.Sum)
-//line views/vhelp/Modules.html:23
+//line views/vhelp/Modules.html:25
 		qw422016.N().S(`">`)
-//line views/vhelp/Modules.html:23
+//line views/vhelp/Modules.html:25
 		qw422016.E().S(m.Version)
-//line views/vhelp/Modules.html:23
+//line views/vhelp/Modules.html:25
 		qw422016.N().S(`</td>
       </tr>
       `)
-//line views/vhelp/Modules.html:25
+//line views/vhelp/Modules.html:27
 	}
-//line views/vhelp/Modules.html:25
+//line views/vhelp/Modules.html:27
 	qw422016.N().S(`
     </tbody>
   </table>
 `)
-//line views/vhelp/Modules.html:28
+//line views/vhelp/Modules.html:30
 }
 
-//line views/vhelp/Modules.html:28
+//line views/vhelp/Modules.html:30
 func (p *Modules) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vhelp/Modules.html:28
+//line views/vhelp/Modules.html:30
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vhelp/Modules.html:28
+//line views/vhelp/Modules.html:30
 	p.StreamBody(qw422016, as, ps)
-//line views/vhelp/Modules.html:28
+//line views/vhelp/Modules.html:30
 	qt422016.ReleaseWriter(qw422016)
-//line views/vhelp/Modules.html:28
+//line views/vhelp/Modules.html:30
 }
 
-//line views/vhelp/Modules.html:28
+//line views/vhelp/Modules.html:30
 func (p *Modules) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vhelp/Modules.html:28
+//line views/vhelp/Modules.html:30
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vhelp/Modules.html:28
+//line views/vhelp/Modules.html:30
 	p.WriteBody(qb422016, as, ps)
-//line views/vhelp/Modules.html:28
+//line views/vhelp/Modules.html:30
 	qs422016 := string(qb422016.B)
-//line views/vhelp/Modules.html:28
+//line views/vhelp/Modules.html:30
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vhelp/Modules.html:28
+//line views/vhelp/Modules.html:30
 	return qs422016
-//line views/vhelp/Modules.html:28
+//line views/vhelp/Modules.html:30
 }

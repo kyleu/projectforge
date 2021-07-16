@@ -5,64 +5,62 @@
 package verror
 
 //line views/verror/NotFound.html:1
-import "github.com/kyleu/projectforge/app"
+import (
+	"github.com/kyleu/projectforge/app"
+	"github.com/kyleu/projectforge/app/controller/cutil"
+	"github.com/kyleu/projectforge/views/layout"
+)
 
-//line views/verror/NotFound.html:2
-import "github.com/kyleu/projectforge/app/controller/cutil"
-
-//line views/verror/NotFound.html:3
-import "github.com/kyleu/projectforge/views/layout"
-
-//line views/verror/NotFound.html:5
+//line views/verror/NotFound.html:7
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/verror/NotFound.html:5
+//line views/verror/NotFound.html:7
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/verror/NotFound.html:5
+//line views/verror/NotFound.html:7
 type NotFound struct{ layout.Basic }
 
-//line views/verror/NotFound.html:7
+//line views/verror/NotFound.html:9
 func (p *NotFound) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/verror/NotFound.html:7
+//line views/verror/NotFound.html:9
 	qw422016.N().S(`
   <div class="card">
     <h3>404 not found</h3>
     <p>Sorry about that</p>
   </div>
 `)
-//line views/verror/NotFound.html:12
+//line views/verror/NotFound.html:14
 }
 
-//line views/verror/NotFound.html:12
+//line views/verror/NotFound.html:14
 func (p *NotFound) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/verror/NotFound.html:12
+//line views/verror/NotFound.html:14
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/verror/NotFound.html:12
+//line views/verror/NotFound.html:14
 	p.StreamBody(qw422016, as, ps)
-//line views/verror/NotFound.html:12
+//line views/verror/NotFound.html:14
 	qt422016.ReleaseWriter(qw422016)
-//line views/verror/NotFound.html:12
+//line views/verror/NotFound.html:14
 }
 
-//line views/verror/NotFound.html:12
+//line views/verror/NotFound.html:14
 func (p *NotFound) Body(as *app.State, ps *cutil.PageState) string {
-//line views/verror/NotFound.html:12
+//line views/verror/NotFound.html:14
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/verror/NotFound.html:12
+//line views/verror/NotFound.html:14
 	p.WriteBody(qb422016, as, ps)
-//line views/verror/NotFound.html:12
+//line views/verror/NotFound.html:14
 	qs422016 := string(qb422016.B)
-//line views/verror/NotFound.html:12
+//line views/verror/NotFound.html:14
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/verror/NotFound.html:12
+//line views/verror/NotFound.html:14
 	return qs422016
-//line views/verror/NotFound.html:12
+//line views/verror/NotFound.html:14
 }

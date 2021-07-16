@@ -5,59 +5,59 @@
 package components
 
 //line views/components/ExpandCollapse.html:1
-import "github.com/kyleu/projectforge/app/controller/cutil"
+import (
+	"github.com/kyleu/projectforge/app/controller/cutil"
+	"github.com/kyleu/projectforge/views/vutil"
+)
 
-//line views/components/ExpandCollapse.html:2
-import "github.com/kyleu/projectforge/views/vutil"
-
-//line views/components/ExpandCollapse.html:4
+//line views/components/ExpandCollapse.html:6
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/components/ExpandCollapse.html:4
+//line views/components/ExpandCollapse.html:6
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/components/ExpandCollapse.html:4
-func StreamExpandCollapse(qw422016 *qt422016.Writer, indent int, ps *cutil.PageState) {
-//line views/components/ExpandCollapse.html:5
-	vutil.StreamIndent(qw422016, true, indent)
 //line views/components/ExpandCollapse.html:6
-	StreamSVGRef(qw422016, `right`, 15, 15, `expand`, ps)
+func StreamExpandCollapse(qw422016 *qt422016.Writer, indent int, ps *cutil.PageState) {
 //line views/components/ExpandCollapse.html:7
 	vutil.StreamIndent(qw422016, true, indent)
 //line views/components/ExpandCollapse.html:8
+	StreamSVGRef(qw422016, `right`, 15, 15, `expand`, ps)
+//line views/components/ExpandCollapse.html:9
+	vutil.StreamIndent(qw422016, true, indent)
+//line views/components/ExpandCollapse.html:10
 	StreamSVGRef(qw422016, `down`, 15, 15, `collapse`, ps)
-//line views/components/ExpandCollapse.html:9
+//line views/components/ExpandCollapse.html:11
 }
 
-//line views/components/ExpandCollapse.html:9
+//line views/components/ExpandCollapse.html:11
 func WriteExpandCollapse(qq422016 qtio422016.Writer, indent int, ps *cutil.PageState) {
-//line views/components/ExpandCollapse.html:9
+//line views/components/ExpandCollapse.html:11
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/ExpandCollapse.html:9
+//line views/components/ExpandCollapse.html:11
 	StreamExpandCollapse(qw422016, indent, ps)
-//line views/components/ExpandCollapse.html:9
+//line views/components/ExpandCollapse.html:11
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/ExpandCollapse.html:9
+//line views/components/ExpandCollapse.html:11
 }
 
-//line views/components/ExpandCollapse.html:9
+//line views/components/ExpandCollapse.html:11
 func ExpandCollapse(indent int, ps *cutil.PageState) string {
-//line views/components/ExpandCollapse.html:9
+//line views/components/ExpandCollapse.html:11
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/ExpandCollapse.html:9
+//line views/components/ExpandCollapse.html:11
 	WriteExpandCollapse(qb422016, indent, ps)
-//line views/components/ExpandCollapse.html:9
+//line views/components/ExpandCollapse.html:11
 	qs422016 := string(qb422016.B)
-//line views/components/ExpandCollapse.html:9
+//line views/components/ExpandCollapse.html:11
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/ExpandCollapse.html:9
+//line views/components/ExpandCollapse.html:11
 	return qs422016
-//line views/components/ExpandCollapse.html:9
+//line views/components/ExpandCollapse.html:11
 }

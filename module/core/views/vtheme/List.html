@@ -1,8 +1,10 @@
-{% import "$PF_PACKAGE$/app" %}
-{% import "$PF_PACKAGE$/app/controller/cutil" %}
-{% import "$PF_PACKAGE$/app/theme" %}
-{% import "$PF_PACKAGE$/views/components" %}
-{% import "$PF_PACKAGE$/views/layout" %}
+{% import (
+  "$PF_PACKAGE$/app"
+  "$PF_PACKAGE$/app/controller/cutil"
+  "$PF_PACKAGE$/app/theme"
+  "$PF_PACKAGE$/views/components"
+  "$PF_PACKAGE$/views/layout"
+) %}
 
 {% code type List struct {
   layout.Basic

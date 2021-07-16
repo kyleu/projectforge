@@ -1,5 +1,7 @@
-{% import "$PF_PACKAGE$/app" %}
-{% import "$PF_PACKAGE$/app/auth" %}
+{% import (
+  "$PF_PACKAGE$/app"
+  "$PF_PACKAGE$/app/auth"
+) %}
 
 {% func Authentication(as *app.State) %}
   {%- code

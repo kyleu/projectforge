@@ -1,6 +1,8 @@
-{% import "github.com/kyleu/projectforge/app/controller/cutil" %}
-{% import "github.com/kyleu/projectforge/app/theme" %}
-{% import "github.com/kyleu/projectforge/views/vutil" %}
+{% import (
+  "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/app/theme"
+  "github.com/kyleu/projectforge/views/vutil"
+) %}
 
 {% func Choice(themes theme.Themes, selected string, indent int, ps *cutil.PageState) %}{% stripspace %}
   {%= vutil.Indent(true, indent) %}

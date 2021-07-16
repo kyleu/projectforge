@@ -1,7 +1,9 @@
 This is the base page interface. All pages implement this interface.
 
-{% import "$PF_PACKAGE$/app" %}
-{% import "$PF_PACKAGE$/app/controller/cutil" %}
+{% import (
+  "$PF_PACKAGE$/app"
+  "$PF_PACKAGE$/app/controller/cutil"
+) %}
 
 {% interface
   Page {

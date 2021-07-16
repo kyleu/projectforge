@@ -5,83 +5,79 @@
 package vsvg
 
 //line views/vsvg/View.html:1
-import "github.com/kyleu/projectforge/app"
+import (
+	"github.com/kyleu/projectforge/app"
+	"github.com/kyleu/projectforge/app/controller/cutil"
+	"github.com/kyleu/projectforge/app/svg"
+	"github.com/kyleu/projectforge/views/layout"
+)
 
-//line views/vsvg/View.html:2
-import "github.com/kyleu/projectforge/app/controller/cutil"
-
-//line views/vsvg/View.html:3
-import "github.com/kyleu/projectforge/app/svg"
-
-//line views/vsvg/View.html:4
-import "github.com/kyleu/projectforge/views/layout"
-
-//line views/vsvg/View.html:6
+//line views/vsvg/View.html:8
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vsvg/View.html:6
+//line views/vsvg/View.html:8
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vsvg/View.html:6
+//line views/vsvg/View.html:8
 type View struct {
 	layout.Basic
 	SVG *svg.SVG
 }
 
-//line views/vsvg/View.html:11
+//line views/vsvg/View.html:13
 func (p *View) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsvg/View.html:11
+//line views/vsvg/View.html:13
 	qw422016.N().S(`
   <div class="card">
     <h3>SVG Icon [`)
-//line views/vsvg/View.html:13
+//line views/vsvg/View.html:15
 	qw422016.E().S(p.SVG.Key)
-//line views/vsvg/View.html:13
+//line views/vsvg/View.html:15
 	qw422016.N().S(`]</h3>
     <p>`)
-//line views/vsvg/View.html:14
+//line views/vsvg/View.html:16
 	qw422016.N().S(p.SVG.Markup)
-//line views/vsvg/View.html:14
+//line views/vsvg/View.html:16
 	qw422016.N().S(`</p>
     <pre>`)
-//line views/vsvg/View.html:15
+//line views/vsvg/View.html:17
 	qw422016.E().S(p.SVG.Markup)
-//line views/vsvg/View.html:15
+//line views/vsvg/View.html:17
 	qw422016.N().S(`</pre>
   </div>
 `)
-//line views/vsvg/View.html:17
+//line views/vsvg/View.html:19
 }
 
-//line views/vsvg/View.html:17
+//line views/vsvg/View.html:19
 func (p *View) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsvg/View.html:17
+//line views/vsvg/View.html:19
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsvg/View.html:17
+//line views/vsvg/View.html:19
 	p.StreamBody(qw422016, as, ps)
-//line views/vsvg/View.html:17
+//line views/vsvg/View.html:19
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsvg/View.html:17
+//line views/vsvg/View.html:19
 }
 
-//line views/vsvg/View.html:17
+//line views/vsvg/View.html:19
 func (p *View) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsvg/View.html:17
+//line views/vsvg/View.html:19
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsvg/View.html:17
+//line views/vsvg/View.html:19
 	p.WriteBody(qb422016, as, ps)
-//line views/vsvg/View.html:17
+//line views/vsvg/View.html:19
 	qs422016 := string(qb422016.B)
-//line views/vsvg/View.html:17
+//line views/vsvg/View.html:19
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsvg/View.html:17
+//line views/vsvg/View.html:19
 	return qs422016
-//line views/vsvg/View.html:17
+//line views/vsvg/View.html:19
 }

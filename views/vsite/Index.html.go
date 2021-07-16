@@ -5,72 +5,68 @@
 package vsite
 
 //line views/vsite/Index.html:1
-import "github.com/kyleu/projectforge/app"
+import (
+	"github.com/kyleu/projectforge/app"
+	"github.com/kyleu/projectforge/app/controller/cutil"
+	"github.com/kyleu/projectforge/app/util"
+	"github.com/kyleu/projectforge/views/layout"
+)
 
-//line views/vsite/Index.html:2
-import "github.com/kyleu/projectforge/app/util"
-
-//line views/vsite/Index.html:3
-import "github.com/kyleu/projectforge/app/controller/cutil"
-
-//line views/vsite/Index.html:4
-import "github.com/kyleu/projectforge/views/layout"
-
-//line views/vsite/Index.html:6
+//line views/vsite/Index.html:8
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vsite/Index.html:6
+//line views/vsite/Index.html:8
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vsite/Index.html:6
+//line views/vsite/Index.html:8
 type Index struct{ layout.Basic }
 
-//line views/vsite/Index.html:8
+//line views/vsite/Index.html:10
 func (p *Index) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsite/Index.html:8
+//line views/vsite/Index.html:10
 	qw422016.N().S(`
   <div class="card">
     <h3>Marketing Site!</h3>
     <em>TODO</em>
     <pre>`)
-//line views/vsite/Index.html:12
+//line views/vsite/Index.html:14
 	qw422016.E().S(util.ToJSON(ps.Data))
-//line views/vsite/Index.html:12
+//line views/vsite/Index.html:14
 	qw422016.N().S(`</pre>
   </div>
 `)
-//line views/vsite/Index.html:14
+//line views/vsite/Index.html:16
 }
 
-//line views/vsite/Index.html:14
+//line views/vsite/Index.html:16
 func (p *Index) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsite/Index.html:14
+//line views/vsite/Index.html:16
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsite/Index.html:14
+//line views/vsite/Index.html:16
 	p.StreamBody(qw422016, as, ps)
-//line views/vsite/Index.html:14
+//line views/vsite/Index.html:16
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsite/Index.html:14
+//line views/vsite/Index.html:16
 }
 
-//line views/vsite/Index.html:14
+//line views/vsite/Index.html:16
 func (p *Index) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsite/Index.html:14
+//line views/vsite/Index.html:16
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsite/Index.html:14
+//line views/vsite/Index.html:16
 	p.WriteBody(qb422016, as, ps)
-//line views/vsite/Index.html:14
+//line views/vsite/Index.html:16
 	qs422016 := string(qb422016.B)
-//line views/vsite/Index.html:14
+//line views/vsite/Index.html:16
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsite/Index.html:14
+//line views/vsite/Index.html:16
 	return qs422016
-//line views/vsite/Index.html:14
+//line views/vsite/Index.html:16
 }

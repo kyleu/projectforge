@@ -5,75 +5,75 @@
 package vsettings
 
 //line views/vsettings/Authentication.html:1
-import "github.com/kyleu/projectforge/app"
+import (
+	"github.com/kyleu/projectforge/app"
+	"github.com/kyleu/projectforge/app/auth"
+)
 
-//line views/vsettings/Authentication.html:2
-import "github.com/kyleu/projectforge/app/auth"
-
-//line views/vsettings/Authentication.html:4
+//line views/vsettings/Authentication.html:6
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vsettings/Authentication.html:4
+//line views/vsettings/Authentication.html:6
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vsettings/Authentication.html:4
+//line views/vsettings/Authentication.html:6
 func StreamAuthentication(qw422016 *qt422016.Writer, as *app.State) {
-//line views/vsettings/Authentication.html:4
+//line views/vsettings/Authentication.html:6
 	qw422016.N().S(`
 `)
-//line views/vsettings/Authentication.html:6
+//line views/vsettings/Authentication.html:8
 	prvs, err := as.Auth.Providers()
 	if err != nil {
 		panic(err)
 	}
 
-//line views/vsettings/Authentication.html:10
+//line views/vsettings/Authentication.html:12
 	qw422016.N().S(`  <div class="card">
     <div class="right"><a href="#modal-available"><button type="button">Available</button></a></div>
     <h3>Authentication</h3>
 `)
-//line views/vsettings/Authentication.html:14
+//line views/vsettings/Authentication.html:16
 	if len(prvs) == 0 {
-//line views/vsettings/Authentication.html:14
+//line views/vsettings/Authentication.html:16
 		qw422016.N().S(`      <em>no authentication providers configured, why not <a href="#modal-available">add one</a>?</em>
 `)
-//line views/vsettings/Authentication.html:16
+//line views/vsettings/Authentication.html:18
 	} else {
-//line views/vsettings/Authentication.html:16
+//line views/vsettings/Authentication.html:18
 		qw422016.N().S(`    <ul>
 `)
-//line views/vsettings/Authentication.html:18
+//line views/vsettings/Authentication.html:20
 		for _, prv := range prvs {
-//line views/vsettings/Authentication.html:18
+//line views/vsettings/Authentication.html:20
 			qw422016.N().S(`      <li><a href="/auth/`)
-//line views/vsettings/Authentication.html:19
+//line views/vsettings/Authentication.html:21
 			qw422016.E().S(prv.ID)
-//line views/vsettings/Authentication.html:19
+//line views/vsettings/Authentication.html:21
 			qw422016.N().S(`?refer=`)
-//line views/vsettings/Authentication.html:19
+//line views/vsettings/Authentication.html:21
 			qw422016.N().U(`/settings`)
-//line views/vsettings/Authentication.html:19
+//line views/vsettings/Authentication.html:21
 			qw422016.N().S(`">`)
-//line views/vsettings/Authentication.html:19
+//line views/vsettings/Authentication.html:21
 			qw422016.E().S(auth.AvailableProviderNames[prv.ID])
-//line views/vsettings/Authentication.html:19
+//line views/vsettings/Authentication.html:21
 			qw422016.N().S(`</a></li>
 `)
-//line views/vsettings/Authentication.html:20
+//line views/vsettings/Authentication.html:22
 		}
-//line views/vsettings/Authentication.html:20
+//line views/vsettings/Authentication.html:22
 		qw422016.N().S(`    </ul>
 `)
-//line views/vsettings/Authentication.html:22
+//line views/vsettings/Authentication.html:24
 	}
-//line views/vsettings/Authentication.html:22
+//line views/vsettings/Authentication.html:24
 	qw422016.N().S(`  </div>
 
   <div id="modal-available" class="modal" style="display: none;">
@@ -86,71 +86,71 @@ func StreamAuthentication(qw422016 *qt422016.Writer, as *app.State) {
       <div class="modal-body">
         <ul>
 `)
-//line views/vsettings/Authentication.html:34
+//line views/vsettings/Authentication.html:36
 	for _, x := range auth.AvailableProviderKeys {
-//line views/vsettings/Authentication.html:34
+//line views/vsettings/Authentication.html:36
 		qw422016.N().S(`          <li title="`)
-//line views/vsettings/Authentication.html:35
+//line views/vsettings/Authentication.html:37
 		qw422016.E().S(auth.ProviderUsage(x, prvs.Contains(x)))
-//line views/vsettings/Authentication.html:35
+//line views/vsettings/Authentication.html:37
 		qw422016.N().S(`">
 `)
-//line views/vsettings/Authentication.html:36
+//line views/vsettings/Authentication.html:38
 		if prvs.Contains(x) {
-//line views/vsettings/Authentication.html:36
+//line views/vsettings/Authentication.html:38
 			qw422016.N().S(`            `)
-//line views/vsettings/Authentication.html:37
+//line views/vsettings/Authentication.html:39
 			qw422016.E().S(auth.AvailableProviderNames[x])
-//line views/vsettings/Authentication.html:37
+//line views/vsettings/Authentication.html:39
 			qw422016.N().S(`
 `)
-//line views/vsettings/Authentication.html:38
+//line views/vsettings/Authentication.html:40
 		} else {
-//line views/vsettings/Authentication.html:38
+//line views/vsettings/Authentication.html:40
 			qw422016.N().S(`            <em>`)
-//line views/vsettings/Authentication.html:39
+//line views/vsettings/Authentication.html:41
 			qw422016.E().S(auth.AvailableProviderNames[x])
-//line views/vsettings/Authentication.html:39
+//line views/vsettings/Authentication.html:41
 			qw422016.N().S(`</em>
 `)
-//line views/vsettings/Authentication.html:40
+//line views/vsettings/Authentication.html:42
 		}
-//line views/vsettings/Authentication.html:40
+//line views/vsettings/Authentication.html:42
 		qw422016.N().S(`          </li>
 `)
-//line views/vsettings/Authentication.html:42
+//line views/vsettings/Authentication.html:44
 	}
-//line views/vsettings/Authentication.html:42
+//line views/vsettings/Authentication.html:44
 	qw422016.N().S(`        </ul>
       </div>
     </div>
   </div>
 `)
-//line views/vsettings/Authentication.html:47
+//line views/vsettings/Authentication.html:49
 }
 
-//line views/vsettings/Authentication.html:47
+//line views/vsettings/Authentication.html:49
 func WriteAuthentication(qq422016 qtio422016.Writer, as *app.State) {
-//line views/vsettings/Authentication.html:47
+//line views/vsettings/Authentication.html:49
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsettings/Authentication.html:47
+//line views/vsettings/Authentication.html:49
 	StreamAuthentication(qw422016, as)
-//line views/vsettings/Authentication.html:47
+//line views/vsettings/Authentication.html:49
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsettings/Authentication.html:47
+//line views/vsettings/Authentication.html:49
 }
 
-//line views/vsettings/Authentication.html:47
+//line views/vsettings/Authentication.html:49
 func Authentication(as *app.State) string {
-//line views/vsettings/Authentication.html:47
+//line views/vsettings/Authentication.html:49
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsettings/Authentication.html:47
+//line views/vsettings/Authentication.html:49
 	WriteAuthentication(qb422016, as)
-//line views/vsettings/Authentication.html:47
+//line views/vsettings/Authentication.html:49
 	qs422016 := string(qb422016.B)
-//line views/vsettings/Authentication.html:47
+//line views/vsettings/Authentication.html:49
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsettings/Authentication.html:47
+//line views/vsettings/Authentication.html:49
 	return qs422016
-//line views/vsettings/Authentication.html:47
+//line views/vsettings/Authentication.html:49
 }

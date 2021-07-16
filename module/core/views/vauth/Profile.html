@@ -1,11 +1,13 @@
-{% import "$PF_PACKAGE$/app" %}
-{% import "$PF_PACKAGE$/app/auth" %}
-{% import "$PF_PACKAGE$/app/controller/cutil" %}
-{% import "$PF_PACKAGE$/app/theme" %}
-{% import "$PF_PACKAGE$/app/user" %}
-{% import "$PF_PACKAGE$/views/components" %}
-{% import "$PF_PACKAGE$/views/layout" %}
-{% import "$PF_PACKAGE$/views/vtheme" %}
+{% import (
+  "$PF_PACKAGE$/app"
+  "$PF_PACKAGE$/app/auth"
+  "$PF_PACKAGE$/app/controller/cutil"
+  "$PF_PACKAGE$/app/theme"
+  "$PF_PACKAGE$/app/user"
+  "$PF_PACKAGE$/views/components"
+  "$PF_PACKAGE$/views/layout"
+  "$PF_PACKAGE$/views/vtheme"
+) %}
 
 {% code type Profile struct {
   layout.Basic

@@ -1,8 +1,10 @@
-{% import "fmt" %}
-{% import "github.com/valyala/fasthttp" %}
-{% import "github.com/kyleu/projectforge/app/controller/cutil" %}
-{% import "github.com/kyleu/projectforge/app/filter" %}
-{% import "github.com/kyleu/projectforge/views/vutil" %}
+{% import (
+  "fmt"
+  "github.com/valyala/fasthttp"
+  "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/app/filter"
+  "github.com/kyleu/projectforge/views/vutil"
+) %}
 
 {% func TableHeader(section string, key string, title string, locs cutil.Locations, params *filter.Params, icon string, u *fasthttp.URI, tooltip string, sortable bool, cls string, ps *cutil.PageState) %}{% stripspace %}
   {% if cls != "" %}

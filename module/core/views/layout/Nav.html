@@ -1,9 +1,11 @@
-{% import "strings" %}
-{% import "$PF_PACKAGE$/app" %}
-{% import "$PF_PACKAGE$/app/controller/cutil" %}
-{% import "$PF_PACKAGE$/app/menu" %}
-{% import "$PF_PACKAGE$/views/components" %}
-{% import "$PF_PACKAGE$/views/vutil" %}
+{% import (
+  "strings"
+  "$PF_PACKAGE$/app"
+  "$PF_PACKAGE$/app/controller/cutil"
+  "$PF_PACKAGE$/app/menu"
+  "$PF_PACKAGE$/views/components"
+  "$PF_PACKAGE$/views/vutil"
+) %}
 
 {% func Nav(as *app.State, ps *cutil.PageState) %}<nav id="navbar">
   <a class="logo" href="{%s ps.RootPath %}" title="{%s ps.RootTitle %} {%s as.BuildInfo.String() %}">{%= components.SVGRef(ps.RootIcon, 32, 32, ``, ps) %}</a>

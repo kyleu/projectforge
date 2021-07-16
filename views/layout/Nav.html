@@ -1,9 +1,11 @@
-{% import "strings" %}
-{% import "github.com/kyleu/projectforge/app" %}
-{% import "github.com/kyleu/projectforge/app/controller/cutil" %}
-{% import "github.com/kyleu/projectforge/app/menu" %}
-{% import "github.com/kyleu/projectforge/views/components" %}
-{% import "github.com/kyleu/projectforge/views/vutil" %}
+{% import (
+  "strings"
+  "github.com/kyleu/projectforge/app"
+  "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/app/menu"
+  "github.com/kyleu/projectforge/views/components"
+  "github.com/kyleu/projectforge/views/vutil"
+) %}
 
 {% func Nav(as *app.State, ps *cutil.PageState) %}<nav id="navbar">
   <a class="logo" href="{%s ps.RootPath %}" title="{%s ps.RootTitle %} {%s as.BuildInfo.String() %}">{%= components.SVGRef(ps.RootIcon, 32, 32, ``, ps) %}</a>

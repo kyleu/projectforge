@@ -5,31 +5,27 @@
 package vsandbox
 
 //line views/vsandbox/Run.html:1
-import "github.com/kyleu/projectforge/app"
+import (
+	"github.com/kyleu/projectforge/app"
+	"github.com/kyleu/projectforge/app/controller/cutil"
+	"github.com/kyleu/projectforge/views/components"
+	"github.com/kyleu/projectforge/views/layout"
+)
 
-//line views/vsandbox/Run.html:2
-import "github.com/kyleu/projectforge/app/controller/cutil"
-
-//line views/vsandbox/Run.html:3
-import "github.com/kyleu/projectforge/views/components"
-
-//line views/vsandbox/Run.html:4
-import "github.com/kyleu/projectforge/views/layout"
-
-//line views/vsandbox/Run.html:6
+//line views/vsandbox/Run.html:8
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vsandbox/Run.html:6
+//line views/vsandbox/Run.html:8
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vsandbox/Run.html:6
+//line views/vsandbox/Run.html:8
 type Run struct {
 	layout.Basic
 	Key    string
@@ -37,48 +33,48 @@ type Run struct {
 	Result interface{}
 }
 
-//line views/vsandbox/Run.html:13
+//line views/vsandbox/Run.html:15
 func (p *Run) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsandbox/Run.html:13
+//line views/vsandbox/Run.html:15
 	qw422016.N().S(`
   <div class="card">
     <h3>`)
-//line views/vsandbox/Run.html:15
+//line views/vsandbox/Run.html:17
 	qw422016.E().S(p.Title)
-//line views/vsandbox/Run.html:15
+//line views/vsandbox/Run.html:17
 	qw422016.N().S(`</h3>
     `)
-//line views/vsandbox/Run.html:16
+//line views/vsandbox/Run.html:18
 	components.StreamJSON(qw422016, p.Result)
-//line views/vsandbox/Run.html:16
+//line views/vsandbox/Run.html:18
 	qw422016.N().S(`
   </div>
 `)
-//line views/vsandbox/Run.html:18
+//line views/vsandbox/Run.html:20
 }
 
-//line views/vsandbox/Run.html:18
+//line views/vsandbox/Run.html:20
 func (p *Run) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsandbox/Run.html:18
+//line views/vsandbox/Run.html:20
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsandbox/Run.html:18
+//line views/vsandbox/Run.html:20
 	p.StreamBody(qw422016, as, ps)
-//line views/vsandbox/Run.html:18
+//line views/vsandbox/Run.html:20
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsandbox/Run.html:18
+//line views/vsandbox/Run.html:20
 }
 
-//line views/vsandbox/Run.html:18
+//line views/vsandbox/Run.html:20
 func (p *Run) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsandbox/Run.html:18
+//line views/vsandbox/Run.html:20
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsandbox/Run.html:18
+//line views/vsandbox/Run.html:20
 	p.WriteBody(qb422016, as, ps)
-//line views/vsandbox/Run.html:18
+//line views/vsandbox/Run.html:20
 	qs422016 := string(qb422016.B)
-//line views/vsandbox/Run.html:18
+//line views/vsandbox/Run.html:20
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsandbox/Run.html:18
+//line views/vsandbox/Run.html:20
 	return qs422016
-//line views/vsandbox/Run.html:18
+//line views/vsandbox/Run.html:20
 }

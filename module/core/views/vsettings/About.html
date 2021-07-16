@@ -1,5 +1,7 @@
-{% import "$PF_PACKAGE$/app" %}
-{% import "$PF_PACKAGE$/app/util" %}
+{% import (
+  "$PF_PACKAGE$/app"
+  "$PF_PACKAGE$/app/util"
+) %}
 
 {% func About(as *app.State) %}
   <div class="card">

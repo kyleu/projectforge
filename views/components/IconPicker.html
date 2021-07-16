@@ -1,6 +1,8 @@
-{% import "github.com/kyleu/projectforge/app/controller/cutil" %}
-{% import "github.com/kyleu/projectforge/app/util" %}
-{% import "github.com/kyleu/projectforge/views/vutil" %}
+{% import (
+  "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/app/util"
+  "github.com/kyleu/projectforge/views/vutil"
+) %}
 
 {% func IconPicker(selected string, name string, ps *cutil.PageState, indent int) %}{% stripspace %}
   {%= vutil.Indent(true, indent) %}

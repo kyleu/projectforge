@@ -5,115 +5,115 @@
 package components
 
 //line views/components/JSON.html:1
-import "github.com/kyleu/projectforge/app/controller/cutil"
+import (
+	"github.com/kyleu/projectforge/app/controller/cutil"
+	"github.com/kyleu/projectforge/app/util"
+)
 
-//line views/components/JSON.html:2
-import "github.com/kyleu/projectforge/app/util"
-
-//line views/components/JSON.html:4
+//line views/components/JSON.html:6
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/components/JSON.html:4
+//line views/components/JSON.html:6
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/components/JSON.html:4
+//line views/components/JSON.html:6
 func StreamJSONModal(qw422016 *qt422016.Writer, key string, title string, item interface{}, indent int) {
-//line views/components/JSON.html:4
+//line views/components/JSON.html:6
 	qw422016.N().S(`<div id="modal-`)
-//line views/components/JSON.html:5
+//line views/components/JSON.html:7
 	qw422016.E().S(key)
-//line views/components/JSON.html:5
+//line views/components/JSON.html:7
 	qw422016.N().S(`" class="modal" style="display: none;"><a class="backdrop" href="#"></a><div class="modal-content"><div class="modal-header"><a href="#" class="modal-close">×</a><h2>`)
-//line views/components/JSON.html:10
+//line views/components/JSON.html:12
 	qw422016.E().S(title)
-//line views/components/JSON.html:10
+//line views/components/JSON.html:12
 	qw422016.N().S(`</h2></div><div class="modal-body">`)
-//line views/components/JSON.html:13
+//line views/components/JSON.html:15
 	StreamJSON(qw422016, item)
-//line views/components/JSON.html:13
+//line views/components/JSON.html:15
 	qw422016.N().S(`</div></div></div>`)
-//line views/components/JSON.html:17
-}
-
-//line views/components/JSON.html:17
-func WriteJSONModal(qq422016 qtio422016.Writer, key string, title string, item interface{}, indent int) {
-//line views/components/JSON.html:17
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/JSON.html:17
-	StreamJSONModal(qw422016, key, title, item, indent)
-//line views/components/JSON.html:17
-	qt422016.ReleaseWriter(qw422016)
-//line views/components/JSON.html:17
-}
-
-//line views/components/JSON.html:17
-func JSONModal(key string, title string, item interface{}, indent int) string {
-//line views/components/JSON.html:17
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/JSON.html:17
-	WriteJSONModal(qb422016, key, title, item, indent)
-//line views/components/JSON.html:17
-	qs422016 := string(qb422016.B)
-//line views/components/JSON.html:17
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/JSON.html:17
-	return qs422016
-//line views/components/JSON.html:17
+//line views/components/JSON.html:19
 }
 
 //line views/components/JSON.html:19
-func StreamJSON(qw422016 *qt422016.Writer, v interface{}) {
+func WriteJSONModal(qq422016 qtio422016.Writer, key string, title string, item interface{}, indent int) {
+//line views/components/JSON.html:19
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/components/JSON.html:19
+	StreamJSONModal(qw422016, key, title, item, indent)
+//line views/components/JSON.html:19
+	qt422016.ReleaseWriter(qw422016)
+//line views/components/JSON.html:19
+}
+
+//line views/components/JSON.html:19
+func JSONModal(key string, title string, item interface{}, indent int) string {
+//line views/components/JSON.html:19
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/components/JSON.html:19
+	WriteJSONModal(qb422016, key, title, item, indent)
+//line views/components/JSON.html:19
+	qs422016 := string(qb422016.B)
+//line views/components/JSON.html:19
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/components/JSON.html:19
+	return qs422016
+//line views/components/JSON.html:19
+}
+
 //line views/components/JSON.html:21
+func StreamJSON(qw422016 *qt422016.Writer, v interface{}) {
+//line views/components/JSON.html:23
 	b, ok := v.([]byte)
 	if ok {
 		_ = util.FromJSON(b, &v)
 	}
 
-//line views/components/JSON.html:26
+//line views/components/JSON.html:28
 	out, err := cutil.Format(v, `json`)
 
-//line views/components/JSON.html:27
-	if err == nil {
-//line views/components/JSON.html:28
-		qw422016.N().S(out)
 //line views/components/JSON.html:29
-	} else {
+	if err == nil {
 //line views/components/JSON.html:30
-		qw422016.E().S(err.Error())
+		qw422016.N().S(out)
 //line views/components/JSON.html:31
+	} else {
+//line views/components/JSON.html:32
+		qw422016.E().S(err.Error())
+//line views/components/JSON.html:33
 	}
-//line views/components/JSON.html:32
+//line views/components/JSON.html:34
 }
 
-//line views/components/JSON.html:32
+//line views/components/JSON.html:34
 func WriteJSON(qq422016 qtio422016.Writer, v interface{}) {
-//line views/components/JSON.html:32
+//line views/components/JSON.html:34
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/JSON.html:32
+//line views/components/JSON.html:34
 	StreamJSON(qw422016, v)
-//line views/components/JSON.html:32
+//line views/components/JSON.html:34
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/JSON.html:32
+//line views/components/JSON.html:34
 }
 
-//line views/components/JSON.html:32
+//line views/components/JSON.html:34
 func JSON(v interface{}) string {
-//line views/components/JSON.html:32
+//line views/components/JSON.html:34
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/JSON.html:32
+//line views/components/JSON.html:34
 	WriteJSON(qb422016, v)
-//line views/components/JSON.html:32
+//line views/components/JSON.html:34
 	qs422016 := string(qb422016.B)
-//line views/components/JSON.html:32
+//line views/components/JSON.html:34
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/JSON.html:32
+//line views/components/JSON.html:34
 	return qs422016
-//line views/components/JSON.html:32
+//line views/components/JSON.html:34
 }

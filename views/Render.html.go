@@ -5,42 +5,32 @@
 package views
 
 //line views/Render.html:1
-import "fmt"
+import (
+	"fmt"
+	"github.com/kyleu/projectforge/app"
+	"github.com/kyleu/projectforge/app/controller/cutil"
+	"github.com/kyleu/projectforge/app/util"
+	"github.com/kyleu/projectforge/views/components"
+	"github.com/kyleu/projectforge/views/layout"
+	"sort"
+)
 
-//line views/Render.html:2
-import "sort"
-
-//line views/Render.html:3
-import "github.com/kyleu/projectforge/app"
-
-//line views/Render.html:4
-import "github.com/kyleu/projectforge/app/controller/cutil"
-
-//line views/Render.html:5
-import "github.com/kyleu/projectforge/app/util"
-
-//line views/Render.html:6
-import "github.com/kyleu/projectforge/views/components"
-
-//line views/Render.html:7
-import "github.com/kyleu/projectforge/views/layout"
-
-//line views/Render.html:9
+//line views/Render.html:11
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/Render.html:9
+//line views/Render.html:11
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/Render.html:9
+//line views/Render.html:11
 func StreamRender(qw422016 *qt422016.Writer, page layout.Page, as *app.State, ps *cutil.PageState) {
-//line views/Render.html:10
+//line views/Render.html:12
 	defer func() {
 		x := recover()
 		if x != nil {
@@ -49,165 +39,165 @@ func StreamRender(qw422016 *qt422016.Writer, page layout.Page, as *app.State, ps
 		}
 	}()
 
-//line views/Render.html:17
+//line views/Render.html:19
 	qw422016.N().S(`<!DOCTYPE html>
 <html lang="en">
 <!-- `)
-//line views/Render.html:19
+//line views/Render.html:21
 	qw422016.E().S(cutil.PageComment)
-//line views/Render.html:19
+//line views/Render.html:21
 	qw422016.N().S(` -->
 <head>`)
-//line views/Render.html:20
+//line views/Render.html:22
 	page.StreamHead(qw422016, as, ps)
-//line views/Render.html:20
+//line views/Render.html:22
 	qw422016.N().S(`</head>
 `)
-//line views/Render.html:21
+//line views/Render.html:23
 	if ps.Profile.Mode != "" {
-//line views/Render.html:21
+//line views/Render.html:23
 		qw422016.N().S(`<body class="`)
-//line views/Render.html:21
+//line views/Render.html:23
 		qw422016.E().S(ps.Profile.ModeClass())
-//line views/Render.html:21
+//line views/Render.html:23
 		qw422016.N().S(`">`)
-//line views/Render.html:21
+//line views/Render.html:23
 	} else {
-//line views/Render.html:21
+//line views/Render.html:23
 		qw422016.N().S(`<body>`)
-//line views/Render.html:21
+//line views/Render.html:23
 	}
-//line views/Render.html:22
+//line views/Render.html:24
 	if len(ps.Flashes) > 0 {
-//line views/Render.html:22
+//line views/Render.html:24
 		streamrenderFlashes(qw422016, ps.Flashes)
-//line views/Render.html:22
+//line views/Render.html:24
 	}
-//line views/Render.html:23
+//line views/Render.html:25
 	page.StreamNav(qw422016, as, ps)
-//line views/Render.html:23
+//line views/Render.html:25
 	qw422016.N().S(`
 <main id="content">`)
-//line views/Render.html:24
+//line views/Render.html:26
 	page.StreamBody(qw422016, as, ps)
-//line views/Render.html:24
+//line views/Render.html:26
 	qw422016.N().S(`</main>
 `)
-//line views/Render.html:25
+//line views/Render.html:27
 	sort.Strings(ps.Icons)
 
-//line views/Render.html:26
+//line views/Render.html:28
 	if len(ps.Icons) > 0 {
-//line views/Render.html:26
+//line views/Render.html:28
 		qw422016.N().S(`<div class="icon-list" style="display: none;">`)
-//line views/Render.html:26
+//line views/Render.html:28
 		for _, icon := range ps.Icons {
-//line views/Render.html:26
+//line views/Render.html:28
 			qw422016.N().S(`
   `)
-//line views/Render.html:27
+//line views/Render.html:29
 			components.StreamSVG(qw422016, icon)
-//line views/Render.html:27
+//line views/Render.html:29
 		}
-//line views/Render.html:27
+//line views/Render.html:29
 		qw422016.N().S(`
 </div>
 `)
-//line views/Render.html:29
+//line views/Render.html:31
 	}
-//line views/Render.html:29
+//line views/Render.html:31
 	qw422016.N().S(`</body>
 </html>
 `)
-//line views/Render.html:31
-}
-
-//line views/Render.html:31
-func WriteRender(qq422016 qtio422016.Writer, page layout.Page, as *app.State, ps *cutil.PageState) {
-//line views/Render.html:31
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/Render.html:31
-	StreamRender(qw422016, page, as, ps)
-//line views/Render.html:31
-	qt422016.ReleaseWriter(qw422016)
-//line views/Render.html:31
-}
-
-//line views/Render.html:31
-func Render(page layout.Page, as *app.State, ps *cutil.PageState) string {
-//line views/Render.html:31
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/Render.html:31
-	WriteRender(qb422016, page, as, ps)
-//line views/Render.html:31
-	qs422016 := string(qb422016.B)
-//line views/Render.html:31
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/Render.html:31
-	return qs422016
-//line views/Render.html:31
+//line views/Render.html:33
 }
 
 //line views/Render.html:33
+func WriteRender(qq422016 qtio422016.Writer, page layout.Page, as *app.State, ps *cutil.PageState) {
+//line views/Render.html:33
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/Render.html:33
+	StreamRender(qw422016, page, as, ps)
+//line views/Render.html:33
+	qt422016.ReleaseWriter(qw422016)
+//line views/Render.html:33
+}
+
+//line views/Render.html:33
+func Render(page layout.Page, as *app.State, ps *cutil.PageState) string {
+//line views/Render.html:33
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/Render.html:33
+	WriteRender(qb422016, page, as, ps)
+//line views/Render.html:33
+	qs422016 := string(qb422016.B)
+//line views/Render.html:33
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/Render.html:33
+	return qs422016
+//line views/Render.html:33
+}
+
+//line views/Render.html:35
 func streamrenderFlashes(qw422016 *qt422016.Writer, flashes []string) {
-//line views/Render.html:34
-	if len(flashes) > 0 {
-//line views/Render.html:34
-		qw422016.N().S(`<div id="flash-container">`)
 //line views/Render.html:36
+	if len(flashes) > 0 {
+//line views/Render.html:36
+		qw422016.N().S(`<div id="flash-container">`)
+//line views/Render.html:38
 		for idx, f := range flashes {
-//line views/Render.html:37
+//line views/Render.html:39
 			level, msg := util.SplitString(f, ':', true)
 
-//line views/Render.html:37
+//line views/Render.html:39
 			qw422016.N().S(`<div class="flash"><input type="radio" style="display:none;" id="hide-flash-`)
-//line views/Render.html:39
+//line views/Render.html:41
 			qw422016.N().D(idx)
-//line views/Render.html:39
+//line views/Render.html:41
 			qw422016.N().S(`"><label for="hide-flash-`)
-//line views/Render.html:40
+//line views/Render.html:42
 			qw422016.N().D(idx)
-//line views/Render.html:40
+//line views/Render.html:42
 			qw422016.N().S(`"><span>×</span></label><div class="content flash-`)
-//line views/Render.html:41
+//line views/Render.html:43
 			qw422016.E().S(level)
-//line views/Render.html:41
+//line views/Render.html:43
 			qw422016.N().S(`">`)
-//line views/Render.html:42
+//line views/Render.html:44
 			qw422016.E().S(msg)
-//line views/Render.html:42
+//line views/Render.html:44
 			qw422016.N().S(`</div></div>`)
-//line views/Render.html:45
-		}
-//line views/Render.html:45
-		qw422016.N().S(`</div>`)
 //line views/Render.html:47
+		}
+//line views/Render.html:47
+		qw422016.N().S(`</div>`)
+//line views/Render.html:49
 	}
-//line views/Render.html:48
+//line views/Render.html:50
 }
 
-//line views/Render.html:48
+//line views/Render.html:50
 func writerenderFlashes(qq422016 qtio422016.Writer, flashes []string) {
-//line views/Render.html:48
+//line views/Render.html:50
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/Render.html:48
+//line views/Render.html:50
 	streamrenderFlashes(qw422016, flashes)
-//line views/Render.html:48
+//line views/Render.html:50
 	qt422016.ReleaseWriter(qw422016)
-//line views/Render.html:48
+//line views/Render.html:50
 }
 
-//line views/Render.html:48
+//line views/Render.html:50
 func renderFlashes(flashes []string) string {
-//line views/Render.html:48
+//line views/Render.html:50
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/Render.html:48
+//line views/Render.html:50
 	writerenderFlashes(qb422016, flashes)
-//line views/Render.html:48
+//line views/Render.html:50
 	qs422016 := string(qb422016.B)
-//line views/Render.html:48
+//line views/Render.html:50
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/Render.html:48
+//line views/Render.html:50
 	return qs422016
-//line views/Render.html:48
+//line views/Render.html:50
 }

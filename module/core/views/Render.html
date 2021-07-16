@@ -1,10 +1,12 @@
-{% import "fmt" %}
-{% import "sort" %}
-{% import "$PF_PACKAGE$/app" %}
-{% import "$PF_PACKAGE$/app/controller/cutil" %}
-{% import "$PF_PACKAGE$/app/util" %}
-{% import "$PF_PACKAGE$/views/components" %}
-{% import "$PF_PACKAGE$/views/layout" %}
+{% import (
+  "fmt"
+  "sort"
+  "$PF_PACKAGE$/app"
+  "$PF_PACKAGE$/app/controller/cutil"
+  "$PF_PACKAGE$/app/util"
+  "$PF_PACKAGE$/views/components"
+  "$PF_PACKAGE$/views/layout"
+) %}
 
 {% func Render(page layout.Page, as *app.State, ps *cutil.PageState) %}{%code
 	defer func() {

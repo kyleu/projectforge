@@ -1,5 +1,7 @@
-{% import "github.com/valyala/fasthttp" %}
-{% import "$PF_PACKAGE$/app/filter" %}
+{% import (
+  "github.com/valyala/fasthttp"
+  "$PF_PACKAGE$/app/filter"
+) %}
 
 {% func Pagination(section string, count int, params *filter.Params, u *fasthttp.URI) %}{% stripspace %}
   {% if params != nil %}

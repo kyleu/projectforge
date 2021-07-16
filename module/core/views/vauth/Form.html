@@ -1,7 +1,9 @@
-{% import "$PF_PACKAGE$/app" %}
-{% import "$PF_PACKAGE$/app/auth" %}
-{% import "$PF_PACKAGE$/app/controller/cutil" %}
-{% import "$PF_PACKAGE$/app/util" %}
+{% import (
+  "$PF_PACKAGE$/app"
+  "$PF_PACKAGE$/app/auth"
+  "$PF_PACKAGE$/app/controller/cutil"
+  "$PF_PACKAGE$/app/util"
+) %}
 
 {% func SigninTable(prvs auth.Providers, referrer string, as *app.State, ps *cutil.PageState) %}
   {%- if len(prvs) > 0 -%}

@@ -2,6 +2,7 @@ package file
 
 import (
 	"fmt"
+	"net/url"
 	"strings"
 
 	"github.com/kyleu/projectforge/app/filesystem"
@@ -43,6 +44,10 @@ func (f *File) Diff(tgt *File) *Diff {
 		patches := dmp.PatchMake(tgt.Content, diffs)
 		if len(patches) > 0 {
 			ret.Patch = dmp.PatchToText(patches)
+			pte, err := url.QueryUnescape(ret.Patch)
+			if err == nil {
+				ret.Patch = pte
+			}
 			ret.Status = StatusDifferent
 		} else {
 			ret.Status = StatusIdentical

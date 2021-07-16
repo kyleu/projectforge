@@ -1,5 +1,7 @@
-{% import "$PF_PACKAGE$/app/util" %}
-{% import "$PF_PACKAGE$/views/vutil" %}
+{% import (
+  "$PF_PACKAGE$/app/util"
+  "$PF_PACKAGE$/views/vutil"
+) %}
 
 {% func FormInput(key string, id string, value string) %}{% stripspace %}
   {% if id == "" %}
