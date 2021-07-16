@@ -64,7 +64,6 @@ func Admin(ctx *fasthttp.RequestCtx) {
 	})
 }
 
-
 func startCPUProfile() error {
 	f, err := os.Create("./tmp/cpu.pprof")
 	if err != nil {

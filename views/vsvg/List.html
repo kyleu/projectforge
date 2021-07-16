@@ -1,7 +1,6 @@
 {% import (
   "github.com/kyleu/projectforge/app"
   "github.com/kyleu/projectforge/app/controller/cutil"
-  "github.com/kyleu/projectforge/app/util"
   "github.com/kyleu/projectforge/views/components"
   "github.com/kyleu/projectforge/views/layout"
 ) %}
@@ -38,17 +37,7 @@
     </form>
   </div>
   <div class="card">
-    {%= IconGallery(as, ps) %}
+    {%= components.IconGallery(as, ps) %}
   </div>
 {% endfunc %}
 
-{%- func IconGallery(as *app.State, ps *cutil.PageState) -%}
-  <div class="flex-wrap mt">
-    {%- for _, k := range util.SVGIconKeys -%}
-    <div style="text-align: center; margin: 6px 12px 6px 0; padding: 6px; border: var(--border);">
-      <div style="color: var(--color-foreground-muted);">{%= components.SVGRef(k, 64, 64, "icon", ps) %}</div>
-      <div style="font-size: 75%;">{%s k %}</div>
-    </div>
-    {%- endfor -%}
-  </div>
-{%- endfunc -%}

@@ -44,8 +44,8 @@ func RunProcess(cmd string, path string, logger *zap.SugaredLogger, in io.Reader
 	}
 	err = c.Wait()
 	if err != nil {
-		var ec *exec.ExitError
-		if errors.As(err, ec) {
+		ec, ok := err.(*exec.ExitError) // nolint
+		if ok {
 			return ec.ExitCode(), nil
 		}
 		return -1, errors.Wrap(err, fmt.Sprintf("unable to run [%v] (%T)", cmd, err))

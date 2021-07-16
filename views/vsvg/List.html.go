@@ -8,30 +8,29 @@ package vsvg
 import (
 	"github.com/kyleu/projectforge/app"
 	"github.com/kyleu/projectforge/app/controller/cutil"
-	"github.com/kyleu/projectforge/app/util"
 	"github.com/kyleu/projectforge/views/components"
 	"github.com/kyleu/projectforge/views/layout"
 )
 
-//line views/vsvg/List.html:9
+//line views/vsvg/List.html:8
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vsvg/List.html:9
+//line views/vsvg/List.html:8
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vsvg/List.html:9
+//line views/vsvg/List.html:8
 type List struct{ layout.Basic }
 
-//line views/vsvg/List.html:11
+//line views/vsvg/List.html:10
 func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsvg/List.html:11
+//line views/vsvg/List.html:10
 	qw422016.N().S(`
   <div class="card">
     <h3>SVG icons</h3>
@@ -63,92 +62,37 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
   </div>
   <div class="card">
     `)
-//line views/vsvg/List.html:41
-	StreamIconGallery(qw422016, as, ps)
-//line views/vsvg/List.html:41
+//line views/vsvg/List.html:40
+	components.StreamIconGallery(qw422016, as, ps)
+//line views/vsvg/List.html:40
 	qw422016.N().S(`
   </div>
 `)
-//line views/vsvg/List.html:43
+//line views/vsvg/List.html:42
 }
 
-//line views/vsvg/List.html:43
+//line views/vsvg/List.html:42
 func (p *List) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsvg/List.html:43
+//line views/vsvg/List.html:42
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsvg/List.html:43
+//line views/vsvg/List.html:42
 	p.StreamBody(qw422016, as, ps)
-//line views/vsvg/List.html:43
+//line views/vsvg/List.html:42
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsvg/List.html:43
+//line views/vsvg/List.html:42
 }
 
-//line views/vsvg/List.html:43
+//line views/vsvg/List.html:42
 func (p *List) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsvg/List.html:43
+//line views/vsvg/List.html:42
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsvg/List.html:43
+//line views/vsvg/List.html:42
 	p.WriteBody(qb422016, as, ps)
-//line views/vsvg/List.html:43
+//line views/vsvg/List.html:42
 	qs422016 := string(qb422016.B)
-//line views/vsvg/List.html:43
+//line views/vsvg/List.html:42
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsvg/List.html:43
+//line views/vsvg/List.html:42
 	return qs422016
-//line views/vsvg/List.html:43
-}
-
-//line views/vsvg/List.html:45
-func StreamIconGallery(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsvg/List.html:45
-	qw422016.N().S(`  <div class="flex-wrap mt">
-`)
-//line views/vsvg/List.html:47
-	for _, k := range util.SVGIconKeys {
-//line views/vsvg/List.html:47
-		qw422016.N().S(`    <div style="text-align: center; margin: 6px 12px 6px 0; padding: 6px; border: var(--border);">
-      <div style="color: var(--color-foreground-muted);">`)
-//line views/vsvg/List.html:49
-		components.StreamSVGRef(qw422016, k, 64, 64, "icon", ps)
-//line views/vsvg/List.html:49
-		qw422016.N().S(`</div>
-      <div style="font-size: 75%;">`)
-//line views/vsvg/List.html:50
-		qw422016.E().S(k)
-//line views/vsvg/List.html:50
-		qw422016.N().S(`</div>
-    </div>
-`)
-//line views/vsvg/List.html:52
-	}
-//line views/vsvg/List.html:52
-	qw422016.N().S(`  </div>
-`)
-//line views/vsvg/List.html:54
-}
-
-//line views/vsvg/List.html:54
-func WriteIconGallery(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsvg/List.html:54
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsvg/List.html:54
-	StreamIconGallery(qw422016, as, ps)
-//line views/vsvg/List.html:54
-	qt422016.ReleaseWriter(qw422016)
-//line views/vsvg/List.html:54
-}
-
-//line views/vsvg/List.html:54
-func IconGallery(as *app.State, ps *cutil.PageState) string {
-//line views/vsvg/List.html:54
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsvg/List.html:54
-	WriteIconGallery(qb422016, as, ps)
-//line views/vsvg/List.html:54
-	qs422016 := string(qb422016.B)
-//line views/vsvg/List.html:54
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsvg/List.html:54
-	return qs422016
-//line views/vsvg/List.html:54
+//line views/vsvg/List.html:42
 }
