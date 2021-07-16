@@ -28,7 +28,7 @@ func toChangeset(p *project.Project) *file.Changeset {
 	if p.Port > 0 {
 		port = fmt.Sprintf("%d", p.Port)
 	}
-	args := ""
+	args := " -v --addr=0.0.0.0 all"
 	if p.Args != "" {
 		args = " " + p.Args
 	}

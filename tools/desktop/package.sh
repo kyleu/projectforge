@@ -10,7 +10,7 @@ go-embed -input assets -output app/assets/assets.go
 
 cd tools/desktop
 
-go mod download
+go mod tidy
 
 echo "starting macOS desktop build..."
 GOOS=darwin GOARCH=amd64 CC=o64-clang CXX=o64-clang++ go build -o ../../dist/darwin_amd64/projectforge

@@ -4,7 +4,6 @@
   "version": "0.0.0",
   "name": "Project Forge",
   "package": "github.com/kyleu/projectforge",
-  "args": "-v --addr=0.0.0.0 all",
   "port": 40000,
   "modules": ["core"],
   "ignore": ["module", "testproject"],

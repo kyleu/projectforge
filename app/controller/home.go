@@ -11,7 +11,7 @@ import (
 
 func Home(ctx *fasthttp.RequestCtx) {
 	act("home", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := as.Services.Projects.Load("")
+		prj, err := as.Services.Projects.Root()
 		if err != nil {
 			return "", errors.Wrap(err, "unable to load root project")
 		}

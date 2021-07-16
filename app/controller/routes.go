@@ -28,6 +28,9 @@ func AppRoutes() *router.Router {
 	r.GET("/help/{path:*}", w(Help))
 
 	// $PF_SECTION(routes)
+	r.GET("/p", w(RootProjectDetail))
+	r.GET("/p/{key}", w(ProjectDetail))
+
 	r.GET("/run", w(Run))
 	r.GET("/run/{tgt}/{act}", w(RunAction))
 

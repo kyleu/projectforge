@@ -12,6 +12,8 @@ import (
 
 func MenuFor(as *app.State) menu.Items {
 	return menu.Items{
+		&menu.Item{Key: "root", Title: "Main Project", Description: "Details for the default project", Icon: "star", Route: "/p"},
+		menu.Separator,
 		actionMenu(as),
 		menu.Separator,
 		toolsMenu(),

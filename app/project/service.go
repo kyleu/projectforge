@@ -33,6 +33,10 @@ func (s *Service) GetFilesystem(prj *Project) filesystem.FileLoader {
 	return fs
 }
 
+func (s *Service) Root() (*Project, error) {
+	return s.Load("")
+}
+
 func (s *Service) Load(path string) (*Project, error) {
 	b, err := ioutil.ReadFile(filepath.Join(path, ConfigFilename))
 	if err != nil {

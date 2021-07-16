@@ -1,0 +1,19 @@
+{% import "github.com/kyleu/projectforge/app" %}
+{% import "github.com/kyleu/projectforge/app/controller/cutil" %}
+{% import "github.com/kyleu/projectforge/app/project" %}
+{% import "github.com/kyleu/projectforge/views/components" %}
+{% import "github.com/kyleu/projectforge/views/layout" %}
+
+{% code type Detail struct {
+  layout.Basic
+  Project *project.Project
+} %}
+
+{% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
+  {%- code prj := p.Project -%}
+  <div class="card">
+    <div class="right"><a href="#modal-project"><button type="button">JSON</button></a></div>
+    <h3>Project [{%s prj.Key %}]</h3>
+  </div>
+  {%= components.JSONModal("project", "Project JSON", prj, 1) %}
+{% endfunc %}

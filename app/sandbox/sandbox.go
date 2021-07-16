@@ -27,6 +27,6 @@ func (s Sandboxes) Get(key string) *Sandbox {
 
 var AllSandboxes = Sandboxes{example, testbed}
 
-var example = &Sandbox{Key: "example", Title: "Example", Icon: "start", Run: func(st *app.State, logger *zap.SugaredLogger) (interface{}, error) {
+var example = &Sandbox{Key: "example", Title: "Example", Icon: "play", Run: func(st *app.State, logger *zap.SugaredLogger) (interface{}, error) {
 	return "a work in progress...", nil
 }}
