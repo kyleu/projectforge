@@ -17,7 +17,7 @@ func onCreate(cfg util.ValueMap, mSvc *module.Service, pSvc *project.Service, lo
 	ret := newResult(cfg, logger)
 	path, _ := cfg.GetString("path", true)
 	if path == "" {
-		return errorResult(errors.New("must provide [path] as an argument"), cfg, logger)
+		path = "."
 	}
 	if wipe, _ := cfg.GetBool("wipe"); wipe {
 		fs := filesystem.NewFileSystem(".", logger)
@@ -34,7 +34,7 @@ func onCreate(cfg util.ValueMap, mSvc *module.Service, pSvc *project.Service, lo
 		return ret.WithError(err)
 	}
 
-	res, err := slam(prj, module.Bootstrap, false, mSvc, pSvc)
+	res, err := slam(prj, module.Bootstrap, false, mSvc, pSvc, logger)
 	if err != nil {
 		return ret.WithError(err)
 	}
@@ -50,6 +50,7 @@ func onCreate(cfg util.ValueMap, mSvc *module.Service, pSvc *project.Service, lo
 	if err != nil {
 		return errorResult(err, cfg, logger)
 	}
+	cfg["skipHeader"] = false
 	retS := onSlam(prj, mods, cfg, mSvc, pSvc, logger)
 	ret = ret.Merge(retS)
 	if ret.HasErrors() {

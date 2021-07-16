@@ -46,7 +46,7 @@ func Apply(t Type, cfg util.ValueMap, mSvc *module.Service, pSvc *project.Servic
 func prjAndMods(cfg util.ValueMap, mSvc *module.Service, pSvc *project.Service) (*project.Project, module.Modules, error) {
 	path, _ := cfg.GetString("path", true)
 	if path == "" {
-		return nil, nil, errors.New("must provide [path] as an argument")
+		path = "."
 	}
 	prj, err := pSvc.Load(path)
 	if err != nil {

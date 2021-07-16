@@ -8,9 +8,10 @@ import (
 	"github.com/kyleu/projectforge/app/module"
 	"github.com/kyleu/projectforge/app/project"
 	"github.com/kyleu/projectforge/app/util"
+	"go.uber.org/zap"
 )
 
-func diffs(prj *project.Project, mod *module.Module, mSvc *module.Service, pSvc *project.Service, addHeader bool) (file.Files, []*file.Diff, error) {
+func diffs(prj *project.Project, mod *module.Module, addHeader bool, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) (file.Files, []*file.Diff, error) {
 	cs := toChangeset(prj)
 	srcFiles, err := mSvc.GetFiles(mod, cs, addHeader)
 	if err != nil {
@@ -18,7 +19,7 @@ func diffs(prj *project.Project, mod *module.Module, mSvc *module.Service, pSvc 
 	}
 
 	tgt := pSvc.GetFilesystem(prj)
-	diffs := srcFiles.DiffFileLoader(tgt, false)
+	diffs := srcFiles.DiffFileLoader(tgt, false, logger)
 
 	return srcFiles, diffs, nil
 }

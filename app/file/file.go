@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 
 	"github.com/kyleu/projectforge/app/util"
+	"go.uber.org/zap"
 )
 
 type File struct {
@@ -16,7 +17,7 @@ type File struct {
 	fullPath string
 }
 
-func NewFile(path string, mode os.FileMode, b []byte, addHeader bool) *File {
+func NewFile(path string, mode os.FileMode, b []byte, addHeader bool, logger *zap.SugaredLogger) *File {
 	p, n := util.SplitStringLast(path, '/', true)
 	if n == "" {
 		n = p
@@ -25,7 +26,7 @@ func NewFile(path string, mode os.FileMode, b []byte, addHeader bool) *File {
 	t := getType(n)
 	c := string(b)
 	if addHeader {
-		c = contentWithHeader(t, c)
+		c = contentWithHeader(t, c, logger)
 	}
 	return &File{Type: t, Path: util.SplitAndTrim(p, "/"), Name: n, Mode: mode, Content: c}
 }
@@ -38,8 +39,8 @@ func (f *File) FullPath() string {
 }
 
 const (
-	prefix        = "$PF_"
-	suffix        = "$"
+	prefix = "$PF_"
+	suffix = "$"
 )
 
 func (f *File) Apply(cs *Changeset) *File {

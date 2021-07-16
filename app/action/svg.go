@@ -13,7 +13,7 @@ func onSVG(prj *project.Project, cfg util.ValueMap, logger *zap.SugaredLogger) *
 	ret := newResult(cfg, logger)
 
 	src := fmt.Sprintf("%s/client/src/svg", prj.Path)
-	tgt := ""
+	tgt := fmt.Sprintf("%s/app/util/svg.go", prj.Path)
 
 	count, err := svg.Run(src, tgt)
 	if err != nil {

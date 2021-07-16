@@ -10,11 +10,10 @@ import (
 )
 
 func onSlam(prj *project.Project, mods module.Modules, cfg util.ValueMap, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) *Result {
-	addHeader, _ := cfg.GetBool("addHeader")
 	ret := newResult(cfg, logger)
 	var res module.Results
 	for _, mod := range mods {
-		r, err := slam(prj, mod, addHeader, mSvc, pSvc)
+		r, err := slam(prj, mod, true, mSvc, pSvc, logger)
 		if err != nil {
 			return ret.WithError(err)
 		}
@@ -25,9 +24,9 @@ func onSlam(prj *project.Project, mods module.Modules, cfg util.ValueMap, mSvc *
 	return ret
 }
 
-func slam(prj *project.Project, mod *module.Module, addHeader bool, mSvc *module.Service, pSvc *project.Service) (*module.Result, error) {
+func slam(prj *project.Project, mod *module.Module, addHeader bool, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) (*module.Result, error) {
 	start := util.TimerStart()
-	srcFiles, diffs, err := diffs(prj, mod, mSvc, pSvc, addHeader)
+	srcFiles, diffs, err := diffs(prj, mod, addHeader, mSvc, pSvc, logger)
 	if err != nil {
 		return nil, err
 	}

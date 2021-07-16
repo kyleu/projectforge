@@ -48,7 +48,7 @@ func (s *Service) GetFiles(mod *Module, changes *file.Changeset, addHeader bool)
 		if err != nil {
 			return nil, err
 		}
-		fl := file.NewFile(f, mode, b, addHeader)
+		fl := file.NewFile(f, mode, b, addHeader, s.logger)
 		fl = fl.Apply(changes)
 		ret = append(ret, fl)
 	}

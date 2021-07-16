@@ -11,7 +11,7 @@ func onPreview(prj *project.Project, mods module.Modules, cfg util.ValueMap, mSv
 	ret := newResult(cfg, logger)
 	var res module.Results
 	for _, mod := range mods {
-		r, err := preview(prj, mod, mSvc, pSvc)
+		r, err := preview(prj, mod, mSvc, pSvc, logger)
 		if err != nil {
 			return ret.WithError(err)
 		}
@@ -22,9 +22,9 @@ func onPreview(prj *project.Project, mods module.Modules, cfg util.ValueMap, mSv
 	return ret
 }
 
-func preview(prj *project.Project, mod *module.Module, mSvc *module.Service, pSvc *project.Service) (*module.Result, error) {
+func preview(prj *project.Project, mod *module.Module, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) (*module.Result, error) {
 	start := util.TimerStart()
-	_, diffs, err := diffs(prj, mod, mSvc, pSvc, true)
+	_, diffs, err := diffs(prj, mod, true, mSvc, pSvc, logger)
 	if err != nil {
 		return nil, err
 	}

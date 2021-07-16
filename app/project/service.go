@@ -34,7 +34,7 @@ func (s *Service) GetFilesystem(prj *Project) filesystem.FileLoader {
 }
 
 func (s *Service) Root() (*Project, error) {
-	return s.Load("")
+	return s.Load(".")
 }
 
 func (s *Service) Load(path string) (*Project, error) {

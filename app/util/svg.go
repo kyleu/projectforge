@@ -1,4 +1,4 @@
-// Code generated from files in [client/src/svg]. DO NOT EDIT.
+// Code generated from files in [./client/src/svg]. See https://projectforge.dev for details. DO NOT EDIT.
 package util
 
 var SVGLibrary = map[string]string{

@@ -81,7 +81,7 @@ func (s *Service) load() error {
 		return errors.New("called [load] twice")
 	}
 	if s.baseURL == "" {
-		s.baseURL = "http://localhost:14000"
+		s.baseURL = "http://localhost:$PF_PORT$"
 	}
 	s.baseURL = strings.TrimSuffix(s.baseURL, "/")
 

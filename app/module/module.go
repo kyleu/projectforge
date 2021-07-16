@@ -34,7 +34,6 @@ func (m *Module) FileContent(files filesystem.FileLoader, path string) (os.FileM
 	return stat.Mode(), b, nil
 }
 
-
 type Modules map[string]*Module
 
 func (i Modules) Get(key string) *Module {

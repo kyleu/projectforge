@@ -22,8 +22,10 @@ var (
 	TypeTest    = Type{Key: "test", Title: "Test", Icon: "star", Description: "Runs internal tests, you probably don't want this"}
 )
 
-var AllTypes = []Type{TypeBuild, TypeCreate, TypeDebug, TypeMerge, TypePreview, TypeSlam, TypeSVG, TypeTest}
-var ProjectTypes = []Type{TypePreview, TypeDebug, TypeMerge, TypeSlam, TypeSVG, TypeBuild}
+var (
+	AllTypes     = []Type{TypeBuild, TypeCreate, TypeDebug, TypeMerge, TypePreview, TypeSlam, TypeSVG, TypeTest}
+	ProjectTypes = []Type{TypePreview, TypeDebug, TypeMerge, TypeSlam, TypeSVG, TypeBuild}
+)
 
 func TypeFromString(s string) Type {
 	for _, t := range AllTypes {

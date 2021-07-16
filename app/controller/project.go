@@ -23,6 +23,7 @@ func RootProjectDetail(ctx *fasthttp.RequestCtx) {
 		return render(ctx, as, &vproject.Detail{Project: prj}, ps, "root")
 	})
 }
+
 func ProjectDetail(ctx *fasthttp.RequestCtx) {
 	act("project.detail", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
 		key, err := ctxRequiredString(ctx, "key", true)

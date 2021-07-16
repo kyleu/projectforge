@@ -7,6 +7,7 @@ import (
 
 	"github.com/kyleu/projectforge/app/filesystem"
 	"github.com/sergi/go-diff/diffmatchpatch"
+	"go.uber.org/zap"
 )
 
 var dmp = diffmatchpatch.New()
@@ -69,7 +70,7 @@ func (f Files) Diff(tgt Files, includeUnchanged bool) []*Diff {
 	return ret
 }
 
-func (f Files) DiffFileLoader(tgt filesystem.FileLoader, includeUnchanged bool) []*Diff {
+func (f Files) DiffFileLoader(tgt filesystem.FileLoader, includeUnchanged bool, logger *zap.SugaredLogger) []*Diff {
 	var ret []*Diff
 	for _, file := range f {
 		p := file.FullPath()
@@ -92,7 +93,7 @@ func (f Files) DiffFileLoader(tgt filesystem.FileLoader, includeUnchanged bool) 
 					skip = true
 				}
 			}
-			tgtFile = NewFile(p, t.Mode(), b, false)
+			tgtFile = NewFile(p, t.Mode(), b, false, logger)
 		}
 		var d *Diff
 		if skip {

@@ -11,7 +11,7 @@ func onDebug(prj *project.Project, mods module.Modules, cfg util.ValueMap, mSvc 
 	ret := newResult(cfg, logger)
 	var res module.Results
 	for _, mod := range mods {
-		x, err := debug(prj, mod, mSvc, pSvc)
+		x, err := debug(prj, mod, mSvc, pSvc, logger)
 		if err != nil {
 			return ret.WithError(err)
 		}
@@ -21,9 +21,9 @@ func onDebug(prj *project.Project, mods module.Modules, cfg util.ValueMap, mSvc 
 	return ret
 }
 
-func debug(prj *project.Project, mod *module.Module, mSvc *module.Service, pSvc *project.Service) (*module.Result, error) {
+func debug(prj *project.Project, mod *module.Module, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) (*module.Result, error) {
 	start := util.TimerStart()
-	_, diffs, err := diffs(prj, mod, mSvc, pSvc, true)
+	_, diffs, err := diffs(prj, mod, true, mSvc, pSvc, logger)
 	if err != nil {
 		return nil, err
 	}

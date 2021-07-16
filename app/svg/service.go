@@ -8,6 +8,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/kyleu/projectforge/app/util"
 	"github.com/pkg/errors"
 )
 
@@ -84,7 +85,7 @@ func template(src string, svgs []*SVG) string {
 		}
 	}
 
-	w("// Code generated from files in [" + src + "]. DO NOT EDIT.")
+	w("// Code generated from files in [" + src + "]. See " + util.AppURL + " for details. DO NOT EDIT.")
 	w("package util")
 	w("")
 	w("var SVGLibrary = map[string]string{")
