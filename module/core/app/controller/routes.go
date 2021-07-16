@@ -23,10 +23,17 @@ func AppRoutes() *router.Router {
 	r.GET("/auth/{key}/callback", w(AuthCallback))
 	r.GET("/auth/{key}/logout", w(AuthLogout))
 
+	r.GET("/admin", w(Admin))
+	r.GET("/admin/{path:*}", w(Admin))
+
 	r.GET("/help", w(Help))
 	r.GET("/help/{path:*}", w(Help))
 
-	r.GET("/modules", w(Modules))
+	// $PF_SECTION_START(routes)$
+	// $PF_SECTION_END(routes)$
+
+	r.GET("/sandbox", w(SandboxList))
+	r.GET("/sandbox/{key}", w(SandboxRun))
 
 	r.GET("/favicon.ico", Favicon)
 	r.GET("/robots.txt", RobotsTxt)

@@ -9,7 +9,6 @@ import (
 	"github.com/kyleu/projectforge/app/filesystem"
 	"github.com/kyleu/projectforge/app/theme"
 	"github.com/kyleu/projectforge/app/util"
-	"github.com/pkg/errors"
 	"go.uber.org/zap"
 )
 
@@ -41,21 +40,7 @@ type State struct {
 
 func NewState(debug bool, bi *BuildInfo, r *router.Router, f filesystem.FileLoader, log *zap.SugaredLogger) (*State, error) {
 	rl := log.With(zap.String("service", "router"))
-	ret := &State{
-		Debug:     debug,
-		BuildInfo: bi,
-		Router:    r,
-		Files:     f,
-		Auth:      auth.NewService("", log),
-		Themes:    theme.NewService(f, log),
-		Logger:    rl,
-	}
-
-	svcs, err := NewServices(ret)
-	if err != nil {
-		return nil, errors.Wrap(err, "error creating services")
-	}
-	ret.Services = svcs
-
-	return ret, nil
+	a := auth.NewService("", log)
+	t := theme.NewService(f, log)
+	return &State{Debug: debug, BuildInfo: bi, Router: r, Files: f, Auth: a, Themes: t, Logger: rl}, nil
 }

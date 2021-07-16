@@ -3,6 +3,7 @@ package module
 import (
 	"path/filepath"
 	"strings"
+	"unicode/utf8"
 
 	"github.com/kyleu/projectforge/app/file"
 	"github.com/kyleu/projectforge/app/filesystem"
@@ -32,7 +33,7 @@ func (s *Service) GetFilesystem(mod *Module) filesystem.FileLoader {
 	return fs
 }
 
-func (s *Service) GetFiles(mod *Module, changes *file.Changeset, addHeader bool) (file.Files, error) {
+func (s *Service) GetFiles(mod *Module, changes *file.Changeset, addHeader bool, tgt filesystem.FileLoader) (file.Files, error) {
 	loader := s.GetFilesystem(mod)
 	fs, err := loader.ListFilesRecursive("", nil)
 	if err != nil {
@@ -49,6 +50,16 @@ func (s *Service) GetFiles(mod *Module, changes *file.Changeset, addHeader bool)
 			return nil, err
 		}
 		fl := file.NewFile(f, mode, b, addHeader, s.logger)
+		if strings.Contains(fl.Content, file.SectionPrefix) && tgt.Exists(f) {
+				tgtBytes, _ := tgt.ReadFile(f)
+				if utf8.Valid(tgtBytes) {
+					newContent, err := file.CopySections(string(tgtBytes), fl.Content)
+					if err != nil {
+						return nil, errors.Wrapf(err, "error reading sections from [%s]", f)
+					}
+					fl.Content = newContent
+				}
+		}
 		fl = fl.Apply(changes)
 		ret = append(ret, fl)
 	}

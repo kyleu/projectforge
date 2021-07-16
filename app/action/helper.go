@@ -13,12 +13,13 @@ import (
 
 func diffs(prj *project.Project, mod *module.Module, addHeader bool, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) (file.Files, []*file.Diff, error) {
 	cs := toChangeset(prj)
-	srcFiles, err := mSvc.GetFiles(mod, cs, addHeader)
+	tgt := pSvc.GetFilesystem(prj)
+
+	srcFiles, err := mSvc.GetFiles(mod, cs, addHeader, tgt)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	tgt := pSvc.GetFilesystem(prj)
 	diffs := srcFiles.DiffFileLoader(tgt, false, logger)
 
 	return srcFiles, diffs, nil

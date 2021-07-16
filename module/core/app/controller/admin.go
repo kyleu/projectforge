@@ -1,0 +1,82 @@
+package controller
+
+import (
+	"os"
+	"runtime/debug"
+	"runtime/pprof"
+	"strings"
+
+	"github.com/valyala/fasthttp"
+
+	"$PF_PACKAGE$/app"
+	"$PF_PACKAGE$/app/controller/cutil"
+	"$PF_PACKAGE$/app/util"
+	"$PF_PACKAGE$/views/vadmin"
+	"github.com/pkg/errors"
+)
+
+func Admin(ctx *fasthttp.RequestCtx) {
+	act("admin", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
+		path := util.SplitAndTrim(strings.TrimPrefix(string(ctx.URI().Path()), "/admin"), "/")
+		if len(path) == 0 {
+			ps.Title = "Administration"
+			return render(ctx, as, &vadmin.List{}, ps, "Administration")
+		}
+		switch path[0] {
+		case "modules":
+			mods, ok := debug.ReadBuildInfo()
+			if !ok {
+				return "", errors.New("unable to gather modules")
+			}
+			ps.Title = "Modules"
+			ps.Data = mods.Deps
+			return render(ctx, as, &vadmin.Modules{Mods: mods.Deps}, ps, "Administration||/admin", "Modules")
+		case "session":
+			err := takeHeapProfile()
+			if err != nil {
+				return "", err
+			}
+			ps.Title = "Session Debug"
+			return render(ctx, as, &vadmin.Session{}, ps, "Administration||/admin", "Session")
+		case "cpu":
+			switch path[1] {
+			case "start":
+				err := startCPUProfile()
+				if err != nil {
+					return "", err
+				}
+				return flashAndRedir(true, "started CPU profile", "/admin", ctx, ps)
+			case "stop":
+				pprof.StopCPUProfile()
+				return flashAndRedir(true, "stopped CPU profile", "/admin", ctx, ps)
+			default:
+				return "", errors.Errorf("unhandled CPU profile action [%s]", path[1])
+			}
+		case "heap":
+			err := takeHeapProfile()
+			if err != nil {
+				return "", err
+			}
+			return flashAndRedir(true, "wrote heap profile", "/admin", ctx, ps)
+		default:
+			return "", errors.Errorf("unhandled admin action [%s]", path[0])
+		}
+	})
+}
+
+
+func startCPUProfile() error {
+	f, err := os.Create("./tmp/cpu.pprof")
+	if err != nil {
+		return err
+	}
+	return pprof.StartCPUProfile(f)
+}
+
+func takeHeapProfile() error {
+	f, err := os.Create("./tmp/mem.pprof")
+	if err != nil {
+		return err
+	}
+	return pprof.WriteHeapProfile(f)
+}

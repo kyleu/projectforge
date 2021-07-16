@@ -2,15 +2,11 @@
 package controller
 
 import (
-	"runtime/debug"
-
 	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/projectforge/app"
 	"github.com/kyleu/projectforge/app/controller/cutil"
 	"github.com/kyleu/projectforge/views/verror"
-	"github.com/kyleu/projectforge/views/vhelp"
-	"github.com/pkg/errors"
 )
 
 func Options(ctx *fasthttp.RequestCtx) {
@@ -29,17 +25,5 @@ func NotFound(ctx *fasthttp.RequestCtx) {
 		}
 		ps.Data = "404 not found"
 		return render(ctx, as, &verror.NotFound{}, ps, "Not Found")
-	})
-}
-
-func Modules(ctx *fasthttp.RequestCtx) {
-	act("modules", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
-		mods, ok := debug.ReadBuildInfo()
-		if !ok {
-			return "", errors.New("unable to gather modules")
-		}
-		ps.Title = "Modules"
-		ps.Data = mods.Deps
-		return render(ctx, as, &vhelp.Modules{Mods: mods.Deps}, ps, "modules")
 	})
 }

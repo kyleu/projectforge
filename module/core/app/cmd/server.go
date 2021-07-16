@@ -48,6 +48,12 @@ func loadServer(flags *Flags, logger *zap.SugaredLogger) (*router.Router, *zap.S
 		return nil, logger, err
 	}
 
+	svcs, err := app.NewServices(st)
+	if err != nil {
+		return nil, nil, errors.Wrap(err, "error creating services")
+	}
+	st.Services = svcs
+
 	controller.SetAppState(st, logger)
 
 	logger.Infof("started %s using address [%s:%d] on %s:%s", util.AppName, flags.Address, flags.Port, runtime.GOOS, runtime.GOARCH)
