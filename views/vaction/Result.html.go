@@ -193,7 +193,7 @@ func (p *Result) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 			qw422016.N().S(`</td>
             <td><pre>`)
 //line views/vaction/Result.html:92
-			qw422016.N().S(diff.Patch)
+			qw422016.E().S(diff.Patch)
 //line views/vaction/Result.html:92
 			qw422016.N().S(`</pre></td>
           </tr>

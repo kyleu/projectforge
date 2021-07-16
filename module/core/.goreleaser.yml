@@ -55,6 +55,10 @@ release:
   header: |
     ## {{ .Version }} ({{ .Date }})
     See $PF_HOMEPAGE$ for download links and documentation
+    ## Main downloads
+    - [Linux Intel 64 bit]($PF_SOURCECODE$/releases/download/{{ .Version }}/{{ .ProjectName }}_{{ .Version }}_linux_x86_64.zip)
+    - [MacOS Intel 64 bit]($PF_SOURCECODE$/releases/download/{{ .Version }}/{{ .ProjectName }}_{{ .Version }}_macos_x86_64.zip)
+    - [Windows Intel 64 bit]($PF_SOURCECODE$/releases/download/{{ .Version }}/{{ .ProjectName }}_{{ .Version }}_windows_x86_64.zip)
 
   extra_files:
     - glob: "./build/dist/*_notarized.zip"

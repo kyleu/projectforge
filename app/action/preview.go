@@ -24,7 +24,7 @@ func onPreview(prj *project.Project, mods module.Modules, cfg util.ValueMap, mSv
 
 func preview(prj *project.Project, mod *module.Module, mSvc *module.Service, pSvc *project.Service) (*module.Result, error) {
 	start := util.TimerStart()
-	_, diffs, err := diffs(prj, mod, mSvc, pSvc)
+	_, diffs, err := diffs(prj, mod, mSvc, pSvc, true)
 	if err != nil {
 		return nil, err
 	}

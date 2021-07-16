@@ -23,6 +23,7 @@ var (
 )
 
 var AllTypes = []Type{TypeBuild, TypeCreate, TypeDebug, TypeMerge, TypePreview, TypeSlam, TypeSVG, TypeTest}
+var ProjectTypes = []Type{TypePreview, TypeDebug, TypeMerge, TypeSlam, TypeSVG, TypeBuild}
 
 func TypeFromString(s string) Type {
 	for _, t := range AllTypes {
@@ -30,7 +31,7 @@ func TypeFromString(s string) Type {
 			return t
 		}
 	}
-	return errorType("No action type available with type [" + s + "]")
+	return errorType("No action type available with key [" + s + "]")
 }
 
 func errorType(msg string) Type {

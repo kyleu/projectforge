@@ -92,7 +92,7 @@ func (f Files) DiffFileLoader(tgt filesystem.FileLoader, includeUnchanged bool) 
 					skip = true
 				}
 			}
-			tgtFile = NewFile(p, t.Mode(), b)
+			tgtFile = NewFile(p, t.Mode(), b, false)
 		}
 		var d *Diff
 		if skip {

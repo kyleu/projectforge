@@ -1,6 +1,7 @@
 {% import (
   "strings"
   "github.com/kyleu/projectforge/app"
+  "github.com/kyleu/projectforge/app/action"
   "github.com/kyleu/projectforge/app/controller/cutil"
   "github.com/kyleu/projectforge/app/project"
   "github.com/kyleu/projectforge/views/components"
@@ -17,7 +18,15 @@
   {%- code info := prj.Info -%}
   <div class="card">
     <div class="right"><a href="#modal-project"><button type="button">JSON</button></a></div>
-    <h3>Project [{%s prj.Key %}]</h3>
+    <h3>{%s prj.Name %}</h3>
+    <div class="mt">
+      {%- for _, t := range action.ProjectTypes -%}
+      <a href="/run/self/{%s t.Key %}" title="{%s t.Description %}"><button>{%s t.Title %}</button></a>
+      {%- endfor -%}
+    </div>
+  </div>
+  <div class="card">
+    <h3>Details</h3>
     <table class="mt">
       <tbody>
         <tr>
@@ -42,28 +51,23 @@
         </tr>
         <tr>
           <th>Port</th>
-          <td>{%d prj.Port %}</td>
-        </tr>
-        <tr>
-          <th>Modules</th>
-          <td>{%s strings.Join(prj.Modules, ", ") %}</td>
+          <td><a href="http://localhost:{%d prj.Port %}" target="_blank">{%d prj.Port %}</a></td>
         </tr>
         <tr>
           <th>Ignore</th>
           <td>{%s strings.Join(prj.Ignore, ", ") %}</td>
         </tr>
-
+        <tr>
+          <th>Path</th>
+          <td>{%s prj.Path %}</td>
+        </tr>
         <tr>
           <th>Organization</th>
           <td>{%s info.Org %}</td>
         </tr>
         <tr>
-          <th>Author Name</th>
-          <td>{%s info.AuthorName %}</td>
-        </tr>
-        <tr>
-          <th>Author Email</th>
-          <td>{%s info.AuthorEmail %}</td>
+          <th>Author</th>
+          <td>{%s info.AuthorName %} &lt;<a href="mailto:{%s info.AuthorEmail %}">{%s info.AuthorEmail %}</a>&gt;</td>
         </tr>
         <tr>
           <th>License</th>
@@ -93,6 +97,19 @@
           <th>Description</th>
           <td>{%s info.Description %}</td>
         </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="card">
+    <div class="right"><a href="#modal-project"><button type="button">JSON</button></a></div>
+    <h3>Modules</h3>
+    <table class="mt">
+      <tbody>
+        {%- for _, mKey := range prj.Modules -%}
+        <tr>
+          <th>{%s mKey %}</th>
+        </tr>
+        {%- endfor -%}
       </tbody>
     </table>
   </div>

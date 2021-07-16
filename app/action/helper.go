@@ -10,9 +10,9 @@ import (
 	"github.com/kyleu/projectforge/app/util"
 )
 
-func diffs(prj *project.Project, mod *module.Module, mSvc *module.Service, pSvc *project.Service) (file.Files, []*file.Diff, error) {
+func diffs(prj *project.Project, mod *module.Module, mSvc *module.Service, pSvc *project.Service, addHeader bool) (file.Files, []*file.Diff, error) {
 	cs := toChangeset(prj)
-	srcFiles, err := mSvc.GetFiles(mod, cs)
+	srcFiles, err := mSvc.GetFiles(mod, cs, addHeader)
 	if err != nil {
 		return nil, nil, err
 	}

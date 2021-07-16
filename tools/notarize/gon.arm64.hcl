@@ -7,7 +7,7 @@ apple_id {
 }
 
 sign {
-  application_identity = "Developer ID Application: Kyle Unverferth (C6S478FYLD)"
+  application_identity = "C6S478FYLD"
 }
 
 dmg {

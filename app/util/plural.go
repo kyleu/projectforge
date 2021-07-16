@@ -51,3 +51,10 @@ func Plural(count int, s string) string {
 	}
 	return fmt.Sprintf("%d %s", count, x)
 }
+
+func PluralMaybe(s string, count int) string {
+	if count == 1 || count == -1 {
+		return ToSingular(s)
+	}
+	return ToPlural(s)
+}

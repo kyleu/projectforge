@@ -32,7 +32,7 @@ func (s *Service) GetFilesystem(mod *Module) filesystem.FileLoader {
 	return fs
 }
 
-func (s *Service) GetFiles(mod *Module, changes *file.Changeset) (file.Files, error) {
+func (s *Service) GetFiles(mod *Module, changes *file.Changeset, addHeader bool) (file.Files, error) {
 	loader := s.GetFilesystem(mod)
 	fs, err := loader.ListFilesRecursive("", nil)
 	if err != nil {
@@ -48,7 +48,7 @@ func (s *Service) GetFiles(mod *Module, changes *file.Changeset) (file.Files, er
 		if err != nil {
 			return nil, err
 		}
-		fl := file.NewFile(f, mode, b)
+		fl := file.NewFile(f, mode, b, addHeader)
 		fl = fl.Apply(changes)
 		ret = append(ret, fl)
 	}

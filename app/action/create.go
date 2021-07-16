@@ -34,7 +34,7 @@ func onCreate(cfg util.ValueMap, mSvc *module.Service, pSvc *project.Service, lo
 		return ret.WithError(err)
 	}
 
-	res, err := slam(prj, module.Bootstrap, mSvc, pSvc)
+	res, err := slam(prj, module.Bootstrap, false, mSvc, pSvc)
 	if err != nil {
 		return ret.WithError(err)
 	}
