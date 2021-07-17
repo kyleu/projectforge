@@ -16,6 +16,8 @@ func MenuFor(as *app.State) (menu.Items, error) {
 		menu.Separator,
 		projectMenu(as.Services.Projects.Projects()),
 		menu.Separator,
+		testsMenu(),
+		menu.Separator,
 		toolsMenu(),
 		menu.Separator,
 		&menu.Item{Key: "sandbox", Title: "Sandboxes", Description: "Playgrounds for testing new features", Icon: "star", Route: "/sandbox", Children: sandboxItems()},
@@ -31,6 +33,14 @@ func projectMenu(prjs project.Projects) *menu.Item {
 		i := &menu.Item{Key: key, Title: prj.Name, Icon: "star", Route: "/p/" + prj.Key}
 		ret.Children = append(ret.Children, i)
 	}
+	return ret
+}
+
+func testsMenu() *menu.Item {
+	desc := "System tests, mostly internal sandboxes"
+	ret := &menu.Item{Key: "tests", Title: "Tests", Description: desc, Icon: "star", Route: "/test", Children: menu.Items{
+		&menu.Item{Key: "bootstrap", Title: "Bootstrap", Description: "Creates and build a test application", Icon: "question", Route: "/test/bootstrap"},
+	}}
 	return ret
 }
 

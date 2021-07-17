@@ -83,7 +83,7 @@ func (s *Service) Get(key string) (*Project, error) {
 
 func (s *Service) Keys() []string {
 	keys := make([]string, 0, len(s.cache))
-	for k, _ := range s.cache {
+	for k := range s.cache {
 		keys = append(keys, k)
 	}
 	sort.Strings(keys)

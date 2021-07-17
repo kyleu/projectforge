@@ -36,6 +36,9 @@ func AppRoutes() *router.Router {
 
 	r.GET("/run/{tgt}/{act}", w(RunAction))
 
+	r.GET("/test", w(TestList))
+	r.GET("/test/{key}", w(TestRun))
+
 	r.GET("/tools", w(ToolList))
 	r.GET("/tools/svg", w(SVGList))
 	r.GET("/tools/svg/add", w(SVGAdd))

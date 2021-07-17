@@ -25,5 +25,5 @@ func initSite() {
 
 // Configure marketing site data for each request.
 func initSiteRequest(as *app.State, ps *cutil.PageState) error {
-  return nil
+	return nil
 }

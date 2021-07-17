@@ -51,14 +51,14 @@ func (s *Service) GetFiles(mod *Module, changes *file.Changeset, addHeader bool,
 		}
 		fl := file.NewFile(f, mode, b, addHeader, s.logger)
 		if strings.Contains(fl.Content, file.SectionPrefix) && tgt.Exists(f) {
-				tgtBytes, _ := tgt.ReadFile(f)
-				if utf8.Valid(tgtBytes) {
-					newContent, err := file.CopySections(string(tgtBytes), fl.Content)
-					if err != nil {
-						return nil, errors.Wrapf(err, "error reading sections from [%s]", f)
-					}
-					fl.Content = newContent
+			tgtBytes, _ := tgt.ReadFile(f)
+			if utf8.Valid(tgtBytes) {
+				newContent, err := file.CopySections(string(tgtBytes), fl.Content)
+				if err != nil {
+					return nil, errors.Wrapf(err, "error reading sections from [%s]", f)
 				}
+				fl.Content = newContent
+			}
 		}
 		fl = fl.Apply(changes)
 		ret = append(ret, fl)
