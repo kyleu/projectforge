@@ -23,14 +23,14 @@ func Run(bi *app.BuildInfo) (*zap.SugaredLogger, error) {
 	return _logger, nil
 }
 
-func runToCompletion(t action.Type, cfg util.ValueMap) error {
+func runToCompletion(projectKey string, t action.Type, cfg util.ValueMap) error {
 	logger, err := log.InitLogging(true, false)
 	if err != nil {
 		return err
 	}
 	mSvc := module.NewService(logger)
 	pSvc := project.NewService(logger)
-	result := action.Apply(t, cfg, mSvc, pSvc, logger.With("service", "runner"))
+	result := action.Apply(projectKey, t, cfg, mSvc, pSvc, logger.With("service", "runner"))
 	if len(result.Errors) > 0 {
 		return result.AsError()
 	}

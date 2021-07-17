@@ -19,27 +19,27 @@ const keySite = "site"
 
 func siteCmd() *cobra.Command {
 	short := fmt.Sprintf("Starts the marketing site on port %d (by default)", util.AppPort)
-	f := func(*cobra.Command, []string) error { return startSite(_flags.Port) }
+	f := func(*cobra.Command, []string) error { return startSite(_flags) }
 	ret := &cobra.Command{Use: keySite, Short: short, RunE: f}
 	return ret
 }
 
-func startSite(port uint16) error {
+func startSite(flags *Flags) error {
 	err := initIfNeeded()
 	if err != nil {
 		return errors.Wrap(err, "error initializing application")
 	}
 
-	r, _, err := loadSite(_flags, port, _logger)
+	r, _, err := loadSite(flags, _logger)
 	if err != nil {
 		return err
 	}
 
-	_, err = listenandserve(util.AppName, _flags.Address, port, r)
+	_, err = listenandserve(util.AppName, flags.Address, flags.Port, r)
 	return err
 }
 
-func loadSite(flags *Flags, port uint16, logger *zap.SugaredLogger) (*router.Router, *zap.SugaredLogger, error) {
+func loadSite(flags *Flags, logger *zap.SugaredLogger) (*router.Router, *zap.SugaredLogger, error) {
 	r := controller.SiteRoutes()
 
 	f := filesystem.NewFileSystem(flags.ConfigDir, logger)
@@ -51,7 +51,7 @@ func loadSite(flags *Flags, port uint16, logger *zap.SugaredLogger) (*router.Rou
 
 	controller.SetSiteState(st, logger)
 
-	logger.Infof("started marketing site using address [%s:%d] on %s:%s", flags.Address, port, runtime.GOOS, runtime.GOARCH)
+	logger.Infof("started marketing site using address [%s:%d] on %s:%s", flags.Address, flags.Port, runtime.GOOS, runtime.GOARCH)
 
 	return r, logger, nil
 }

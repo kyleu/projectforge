@@ -56,7 +56,7 @@ func AuthLogout(ctx *fasthttp.RequestCtx) {
 			return "", err
 		}
 
-		return defaultProfilePath, nil
+		return ps.ProfilePath, nil
 	})
 }
 

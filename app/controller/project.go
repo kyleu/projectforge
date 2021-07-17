@@ -1,7 +1,8 @@
 package controller
 
 import (
-	"github.com/kyleu/projectforge/views"
+	"fmt"
+
 	"github.com/kyleu/projectforge/views/vproject"
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
@@ -31,10 +32,13 @@ func ProjectDetail(ctx *fasthttp.RequestCtx) {
 			return "", err
 		}
 
-		results := key
+		prj, err := as.Services.Projects.Get(key)
+		if err != nil {
+			return "", err
+		}
 
-		ps.Title = "Project [" + key + "]"
-		ps.Data = results
-		return render(ctx, as, &views.Debug{}, ps, "project", key)
+		ps.Title = fmt.Sprintf("%s (project %s)", prj.Name, prj.Key)
+		ps.Data = prj
+		return render(ctx, as, &vproject.Detail{Project: prj}, ps, "projects", prj.Key)
 	})
 }

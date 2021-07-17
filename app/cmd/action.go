@@ -7,7 +7,9 @@ import (
 
 func actionF(t action.Type, args []string) error {
 	_, cfg := extractConfig(args)
-	return runToCompletion(t, cfg)
+	projectKey := "TODO"
+
+	return runToCompletion(projectKey, t, cfg)
 }
 
 func actionCmd(t action.Type) *cobra.Command {

@@ -1,7 +1,6 @@
 {% import (
   "github.com/kyleu/projectforge/app"
   "github.com/kyleu/projectforge/app/controller/cutil"
-  "github.com/kyleu/projectforge/app/sandbox"
   "github.com/kyleu/projectforge/views/components"
   "github.com/kyleu/projectforge/views/layout"
 ) %}
@@ -26,10 +25,10 @@
   <div class="card">
     <h3>Tabs</h3>
     <div class="tabs">
-      {%- for _, o := range sandbox.AllSandboxes -%}
-      <input name="type" type="radio" id="sandbox-{%s o.Key %}" class="input"/>
-      <label for="sandbox-{%s o.Key %}" class="label">{%s o.Title %}</label>
-      <div class="panel"><p>This is a sandbox named {%s o.Title %}</p></div>
+      {%- for _, o := range []string{"Alpha", "Beta", "Gamma", "Delta", "Epsilon"} -%}
+      <input name="type" type="radio" id="tab-{%s o %}" class="input"/>
+      <label for="tab-{%s o %}" class="label">{%s o %}</label>
+      <div class="panel"><p>This is a tab named {%s o %}</p></div>
       {%- endfor -%}
     </div>
   </div>

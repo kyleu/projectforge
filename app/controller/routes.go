@@ -34,7 +34,6 @@ func AppRoutes() *router.Router {
 	r.GET("/p", w(RootProjectDetail))
 	r.GET("/p/{key}", w(ProjectDetail))
 
-	r.GET("/run", w(Run))
 	r.GET("/run/{tgt}/{act}", w(RunAction))
 
 	r.GET("/tools", w(ToolList))

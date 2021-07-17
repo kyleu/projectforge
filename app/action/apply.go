@@ -8,15 +8,15 @@ import (
 	"go.uber.org/zap"
 )
 
-func Apply(t Type, cfg util.ValueMap, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) *Result {
+func Apply(projectKey string, t Type, cfg util.ValueMap, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) *Result {
 	switch t {
 	case TypeCreate:
-		return onCreate(cfg, mSvc, pSvc, logger)
+		return onCreate(projectKey, cfg, mSvc, pSvc, logger)
 	case TypeTest:
 		return onTest(cfg, mSvc, pSvc, logger)
 	}
 
-	prj, mods, err := prjAndMods(cfg, mSvc, pSvc)
+	prj, mods, err := prjAndMods(projectKey, mSvc, pSvc)
 	if err != nil {
 		return errorResult(err, cfg, logger)
 	}
@@ -24,8 +24,6 @@ func Apply(t Type, cfg util.ValueMap, mSvc *module.Service, pSvc *project.Servic
 	switch t {
 	case TypeBuild:
 		return onBuild(prj, cfg, logger)
-	case TypeCreate:
-		return onCreate(cfg, mSvc, pSvc, logger)
 	case TypeDebug:
 		return onDebug(prj, mods, cfg, mSvc, pSvc, logger)
 	case TypeMerge:
@@ -36,21 +34,15 @@ func Apply(t Type, cfg util.ValueMap, mSvc *module.Service, pSvc *project.Servic
 		return onSlam(prj, mods, cfg, mSvc, pSvc, logger)
 	case TypeSVG:
 		return onSVG(prj, cfg, logger)
-	case TypeTest:
-		return onTest(cfg, mSvc, pSvc, logger)
 	default:
 		return errorResult(errors.Errorf("invalid action type [%s]", t), cfg, logger)
 	}
 }
 
-func prjAndMods(cfg util.ValueMap, mSvc *module.Service, pSvc *project.Service) (*project.Project, module.Modules, error) {
-	path, _ := cfg.GetString("path", true)
-	if path == "" {
-		path = "."
-	}
-	prj, err := pSvc.Load(path)
+func prjAndMods(key string, mSvc *module.Service, pSvc *project.Service) (*project.Project, module.Modules, error) {
+	prj, err := pSvc.Get(key)
 	if err != nil {
-		return nil, nil, errors.Wrap(err, "unable to load newly created project")
+		return nil, nil, errors.Wrapf(err, "unable to load project [%s]", key)
 	}
 	mods, err := mSvc.GetModules(prj.Modules...)
 	if err != nil {

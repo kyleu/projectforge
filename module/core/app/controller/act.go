@@ -21,29 +21,36 @@ import (
 const (
 	defaultSearchPath  = "/search"
 	defaultProfilePath = "/profile"
-	defaultKey         = "app"
-	defaultIcon        = defaultKey
+	defaultIcon        = "app"
 )
 
 func act(key string, ctx *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
-	mode := defaultKey
-	as, ps := actPrepare(mode, ctx)
-	clean(as, ps)
+	as := _currentAppState
+	ps := loadPageState(ctx)
+	err := initAppRequest(as, ps)
+	if err != nil {
+		as.Logger.Warnf("%+v", err)
+	}
+	err = clean(as, ps)
+	if err != nil {
+		as.Logger.Warnf("%+v", err)
+	}
 	actComplete(key, as, ps, ctx, f)
 }
 
 func actSite(key string, ctx *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
-	as, ps := actPrepare("site", ctx)
+	as := _currentSiteState
+	ps := loadPageState(ctx)
 	ps.Menu = site.Menu(ps.Profile, ps.Auth)
-	clean(as, ps)
-	actComplete(key, as, ps, ctx, f)
-}
-
-func actPrepare(mode string, ctx *fasthttp.RequestCtx) (*app.State, *cutil.PageState) {
-	if mode == "site" {
-		return _currentSiteState, loadPageState(ctx)
+	err := initSiteRequest(as, ps)
+	if err != nil {
+		as.Logger.Warnf("%+v", err)
 	}
-	return _currentAppState, loadPageState(ctx)
+	err = clean(as, ps)
+	if err != nil {
+		as.Logger.Warnf("%+v", err)
+	}
+	actComplete(key, as, ps, ctx, f)
 }
 
 func loadPageState(ctx *fasthttp.RequestCtx) *cutil.PageState {
@@ -111,10 +118,18 @@ func actComplete(key string, as *app.State, ps *cutil.PageState, ctx *fasthttp.R
 		errDetail := util.GetErrorDetail(err)
 		page := &verror.Error{Err: errDetail}
 
-		clean(as, ps)
+		err := clean(as, ps)
+		if err != nil {
+			as.Logger.Error(err)
+			msg := fmt.Sprintf("error while cleaning request: %+v", err)
+			as.Logger.Error(msg)
+			_, _ = ctx.Write([]byte(msg))
+		}
 		redir, err = render(ctx, as, page, ps)
 		if err != nil {
-			_, _ = ctx.Write([]byte(fmt.Sprintf("error while running error handler: %+v", err)))
+			msg := fmt.Sprintf("error while running error handler: %+v", err)
+			as.Logger.Error(msg)
+			_, _ = ctx.Write([]byte(msg))
 		}
 	}
 	if redir != "" {
@@ -127,7 +142,7 @@ func actComplete(key string, as *app.State, ps *cutil.PageState, ctx *fasthttp.R
 	l.Debugf("processed request in [%.3fms] (render: %.3fms)", elapsedMillis, ps.RenderElapsed)
 }
 
-func clean(as *app.State, ps *cutil.PageState) {
+func clean(as *app.State, ps *cutil.PageState) error {
 	if ps.Profile != nil && ps.Profile.Theme == "" {
 		ps.Profile.Theme = theme.ThemeDefault.Key
 	}
@@ -147,6 +162,11 @@ func clean(as *app.State, ps *cutil.PageState) {
 		ps.ProfilePath = defaultProfilePath
 	}
 	if len(ps.Menu) == 0 {
-		ps.Menu = MenuFor(as)
+		m, err := MenuFor(as)
+		if err != nil {
+			return err
+		}
+		ps.Menu = m
 	}
+	return nil
 }

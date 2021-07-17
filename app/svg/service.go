@@ -85,7 +85,7 @@ func template(src string, svgs []*SVG) string {
 		}
 	}
 
-	w("// Code generated from files in [" + src + "]. See " + util.AppURL + " for details. DO NOT EDIT.")
+	w("// Code generated from files in [client/src/svg]. See " + util.AppURL + " for details. DO NOT EDIT.")
 	w("package util")
 	w("")
 	w("var SVGLibrary = map[string]string{")

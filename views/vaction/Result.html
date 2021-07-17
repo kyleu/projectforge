@@ -2,18 +2,25 @@
   "github.com/kyleu/projectforge/app"
   "github.com/kyleu/projectforge/app/controller/cutil"
   "github.com/kyleu/projectforge/app/action"
+  "github.com/kyleu/projectforge/app/project"
   "github.com/kyleu/projectforge/app/util"
   "github.com/kyleu/projectforge/views/components"
   "github.com/kyleu/projectforge/views/layout"
+  "github.com/kyleu/projectforge/views/vproject"
 ) %}
 
 {% code type Result struct {
   layout.Basic
+  Project *project.Project
   Cfg util.ValueMap
   Result *action.Result
 } %}
 
 {% func (p *Result) Body(as *app.State, ps *cutil.PageState) %}
+  {%- if p.Project != nil -%}
+  {%= vproject.Summary(p.Project) %}
+  {%- endif -%}
+
   <div class="card">
     <div class="right">
       <a href="#modal-cfg"><button type="button">Config</button></a>

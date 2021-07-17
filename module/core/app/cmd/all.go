@@ -23,9 +23,9 @@ func allF() error {
 	}
 
 	go func() {
-		if err := startSite(_flags.Port + 1); err != nil {
+		if err := startSite(_flags.Clone(_flags.Port+1)); err != nil {
 			_logger.Errorf("unable to start marketing site: %+v", err)
 		}
 	}()
-	return startServer()
+	return startServer(_flags)
 }

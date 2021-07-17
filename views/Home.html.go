@@ -8,68 +8,85 @@ package views
 import (
 	"github.com/kyleu/projectforge/app"
 	"github.com/kyleu/projectforge/app/controller/cutil"
+	"github.com/kyleu/projectforge/app/project"
 	"github.com/kyleu/projectforge/app/util"
 	"github.com/kyleu/projectforge/views/components"
 	"github.com/kyleu/projectforge/views/layout"
 )
 
-//line views/Home.html:9
+//line views/Home.html:10
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/Home.html:9
+//line views/Home.html:10
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/Home.html:9
+//line views/Home.html:10
 type Home struct {
 	layout.Basic
+	Projects project.Projects
 }
 
-//line views/Home.html:13
+//line views/Home.html:15
 func (p *Home) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/Home.html:13
+//line views/Home.html:15
 	qw422016.N().S(`
   <div class="card">
     <h3>`)
-//line views/Home.html:15
+//line views/Home.html:17
 	components.StreamSVGRef(qw422016, `app`, 20, 20, `icon`, ps)
-//line views/Home.html:15
+//line views/Home.html:17
 	qw422016.E().S(util.AppName)
-//line views/Home.html:15
+//line views/Home.html:17
 	qw422016.N().S(`</h3>
+    <ul>
+`)
+//line views/Home.html:19
+	for _, p := range p.Projects {
+//line views/Home.html:19
+		qw422016.N().S(`      <li>`)
+//line views/Home.html:20
+		qw422016.E().S(p.Key)
+//line views/Home.html:20
+		qw422016.N().S(`</li>
+`)
+//line views/Home.html:21
+	}
+//line views/Home.html:21
+	qw422016.N().S(`    </ul>
   </div>
 `)
-//line views/Home.html:17
+//line views/Home.html:24
 }
 
-//line views/Home.html:17
+//line views/Home.html:24
 func (p *Home) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/Home.html:17
+//line views/Home.html:24
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/Home.html:17
+//line views/Home.html:24
 	p.StreamBody(qw422016, as, ps)
-//line views/Home.html:17
+//line views/Home.html:24
 	qt422016.ReleaseWriter(qw422016)
-//line views/Home.html:17
+//line views/Home.html:24
 }
 
-//line views/Home.html:17
+//line views/Home.html:24
 func (p *Home) Body(as *app.State, ps *cutil.PageState) string {
-//line views/Home.html:17
+//line views/Home.html:24
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/Home.html:17
+//line views/Home.html:24
 	p.WriteBody(qb422016, as, ps)
-//line views/Home.html:17
+//line views/Home.html:24
 	qs422016 := string(qb422016.B)
-//line views/Home.html:17
+//line views/Home.html:24
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/Home.html:17
+//line views/Home.html:24
 	return qs422016
-//line views/Home.html:17
+//line views/Home.html:24
 }

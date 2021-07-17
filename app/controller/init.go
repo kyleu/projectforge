@@ -1,24 +1,29 @@
 package controller
 
 import (
-	"github.com/kyleu/projectforge/app/module"
-	"github.com/kyleu/projectforge/app/project"
-	"go.uber.org/zap"
+	"github.com/kyleu/projectforge/app"
+	"github.com/kyleu/projectforge/app/controller/cutil"
+	"github.com/pkg/errors"
 )
 
-var (
-	controllerLogger     *zap.SugaredLogger
-	controllerModuleSvc  *module.Service
-	controllerProjectSvc *project.Service
-)
-
-// This method is where you'll initialize app-specific dependencies.
+// Initialize app-specific system dependencies.
 func initApp() {
-	controllerLogger = _currentAppState.Logger
-	controllerModuleSvc = module.NewService(_currentAppState.Logger)
-	controllerProjectSvc = project.NewService(_currentAppState.Logger)
 }
 
-// This method is where you'll initialize dependencies for the marketing site.
+// Configure app-specific data for each request.
+func initAppRequest(as *app.State, ps *cutil.PageState) error {
+	_, err := as.Services.Projects.Refresh()
+	if err != nil {
+		return errors.Wrap(err, "can't load projects")
+	}
+	return nil
+}
+
+// Initialize system dependencies for the marketing site.
 func initSite() {
+}
+
+// Configure marketing site data for each request.
+func initSiteRequest(as *app.State, ps *cutil.PageState) error {
+  return nil
 }

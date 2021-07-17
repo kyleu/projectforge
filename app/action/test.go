@@ -23,20 +23,20 @@ func onTest(cfg util.ValueMap, mSvc *module.Service, pSvc *project.Service, logg
 }
 
 func bootstrap(cfg util.ValueMap, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) *Result {
-	err := wipeIfNeeded(cfg, logger)
-	if err != nil {
-		return errorResult(err, cfg, logger)
-	}
-
 	cfg.Add(
 		"path", "./testproject",
-		"key", "testproject",
 		"name", "Test Project",
 		"summary", "A Test Project!",
 		"package", "github.com/kyleu/projectforge/testproject",
 		"homepage", "https://projectforge.dev",
 	)
-	return onCreate(cfg, mSvc, pSvc, logger)
+
+	err := wipeIfNeeded(cfg, logger)
+	if err != nil {
+		return errorResult(err, cfg, logger)
+	}
+
+	return onCreate("testproject", cfg, mSvc, pSvc, logger)
 }
 
 func wipeIfNeeded(cfg util.ValueMap, logger *zap.SugaredLogger) error {

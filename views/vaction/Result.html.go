@@ -9,34 +9,51 @@ import (
 	"github.com/kyleu/projectforge/app"
 	"github.com/kyleu/projectforge/app/action"
 	"github.com/kyleu/projectforge/app/controller/cutil"
+	"github.com/kyleu/projectforge/app/project"
 	"github.com/kyleu/projectforge/app/util"
 	"github.com/kyleu/projectforge/views/components"
 	"github.com/kyleu/projectforge/views/layout"
+	"github.com/kyleu/projectforge/views/vproject"
 )
 
-//line views/vaction/Result.html:10
+//line views/vaction/Result.html:12
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vaction/Result.html:10
+//line views/vaction/Result.html:12
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vaction/Result.html:10
+//line views/vaction/Result.html:12
 type Result struct {
 	layout.Basic
-	Cfg    util.ValueMap
-	Result *action.Result
+	Project *project.Project
+	Cfg     util.ValueMap
+	Result  *action.Result
 }
 
-//line views/vaction/Result.html:16
+//line views/vaction/Result.html:19
 func (p *Result) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vaction/Result.html:16
+//line views/vaction/Result.html:19
+	qw422016.N().S(`
+`)
+//line views/vaction/Result.html:20
+	if p.Project != nil {
+//line views/vaction/Result.html:20
+		qw422016.N().S(`  `)
+//line views/vaction/Result.html:21
+		vproject.StreamSummary(qw422016, p.Project)
+//line views/vaction/Result.html:21
+		qw422016.N().S(`
+`)
+//line views/vaction/Result.html:22
+	}
+//line views/vaction/Result.html:22
 	qw422016.N().S(`
   <div class="card">
     <div class="right">
@@ -45,9 +62,9 @@ func (p *Result) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     </div>
     <h3>Result</h3>
     <p>`)
-//line views/vaction/Result.html:23
+//line views/vaction/Result.html:30
 	qw422016.E().S(p.Result.Status)
-//line views/vaction/Result.html:23
+//line views/vaction/Result.html:30
 	qw422016.N().S(`</p>
   </div>
 
@@ -56,25 +73,25 @@ func (p *Result) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <table>
       <tbody>
 `)
-//line views/vaction/Result.html:30
+//line views/vaction/Result.html:37
 	for _, k := range p.Cfg.Keys() {
-//line views/vaction/Result.html:30
+//line views/vaction/Result.html:37
 		qw422016.N().S(`        <tr>
           <td>`)
-//line views/vaction/Result.html:32
+//line views/vaction/Result.html:39
 		qw422016.E().S(k)
-//line views/vaction/Result.html:32
+//line views/vaction/Result.html:39
 		qw422016.N().S(`</td>
           <td>`)
-//line views/vaction/Result.html:33
+//line views/vaction/Result.html:40
 		qw422016.E().V(p.Cfg[k])
-//line views/vaction/Result.html:33
+//line views/vaction/Result.html:40
 		qw422016.N().S(`</td>
         </tr>
 `)
-//line views/vaction/Result.html:35
+//line views/vaction/Result.html:42
 	}
-//line views/vaction/Result.html:35
+//line views/vaction/Result.html:42
 	qw422016.N().S(`      </tbody>
     </table>
   </div>
@@ -82,89 +99,89 @@ func (p *Result) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
   <div class="card">
     <h3>Errors</h3>
 `)
-//line views/vaction/Result.html:42
+//line views/vaction/Result.html:49
 	if len(p.Result.Errors) == 0 {
-//line views/vaction/Result.html:42
+//line views/vaction/Result.html:49
 		qw422016.N().S(`    <p>no errors</p>
 `)
-//line views/vaction/Result.html:44
+//line views/vaction/Result.html:51
 	} else {
-//line views/vaction/Result.html:44
+//line views/vaction/Result.html:51
 		qw422016.N().S(`    <table>
       <tbody>
 `)
-//line views/vaction/Result.html:47
+//line views/vaction/Result.html:54
 		for _, e := range p.Result.Errors {
-//line views/vaction/Result.html:47
+//line views/vaction/Result.html:54
 			qw422016.N().S(`        <tr>
           <td>`)
-//line views/vaction/Result.html:49
+//line views/vaction/Result.html:56
 			qw422016.E().S(e)
-//line views/vaction/Result.html:49
+//line views/vaction/Result.html:56
 			qw422016.N().S(`</td>
         </tr>
 `)
-//line views/vaction/Result.html:51
+//line views/vaction/Result.html:58
 		}
-//line views/vaction/Result.html:51
+//line views/vaction/Result.html:58
 		qw422016.N().S(`      </tbody>
     </table>
 `)
-//line views/vaction/Result.html:54
+//line views/vaction/Result.html:61
 	}
-//line views/vaction/Result.html:54
+//line views/vaction/Result.html:61
 	qw422016.N().S(`  </div>
 
   <div class="card">
     <h3>Logs</h3>
 `)
-//line views/vaction/Result.html:59
+//line views/vaction/Result.html:66
 	if len(p.Result.Logs) == 0 {
-//line views/vaction/Result.html:59
+//line views/vaction/Result.html:66
 		qw422016.N().S(`    <p>no logs</p>
 `)
-//line views/vaction/Result.html:61
+//line views/vaction/Result.html:68
 	} else {
-//line views/vaction/Result.html:61
+//line views/vaction/Result.html:68
 		qw422016.N().S(`    <table>
       <tbody>
 `)
-//line views/vaction/Result.html:64
+//line views/vaction/Result.html:71
 		for _, l := range p.Result.Logs {
-//line views/vaction/Result.html:64
+//line views/vaction/Result.html:71
 			qw422016.N().S(`        <tr>
           <td><pre>`)
-//line views/vaction/Result.html:66
+//line views/vaction/Result.html:73
 			qw422016.E().S(l)
-//line views/vaction/Result.html:66
+//line views/vaction/Result.html:73
 			qw422016.N().S(`</pre></td>
         </tr>
 `)
-//line views/vaction/Result.html:68
+//line views/vaction/Result.html:75
 		}
-//line views/vaction/Result.html:68
+//line views/vaction/Result.html:75
 		qw422016.N().S(`      </tbody>
     </table>
 `)
-//line views/vaction/Result.html:71
+//line views/vaction/Result.html:78
 	}
-//line views/vaction/Result.html:71
+//line views/vaction/Result.html:78
 	qw422016.N().S(`  </div>
 
 `)
-//line views/vaction/Result.html:74
+//line views/vaction/Result.html:81
 	for _, mr := range p.Result.Modules {
-//line views/vaction/Result.html:74
+//line views/vaction/Result.html:81
 		qw422016.N().S(`    <div class="card">
       <div class="right">`)
-//line views/vaction/Result.html:76
+//line views/vaction/Result.html:83
 		qw422016.E().S(mr.Status)
-//line views/vaction/Result.html:76
+//line views/vaction/Result.html:83
 		qw422016.N().S(`</div>
       <h3>Module [`)
-//line views/vaction/Result.html:77
+//line views/vaction/Result.html:84
 		qw422016.E().S(mr.Key)
-//line views/vaction/Result.html:77
+//line views/vaction/Result.html:84
 		qw422016.N().S(`]</h3>
       <h4>Diffs</h4>
       <table>
@@ -177,74 +194,74 @@ func (p *Result) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
         </thead>
         <tbody>
 `)
-//line views/vaction/Result.html:88
+//line views/vaction/Result.html:95
 		for _, diff := range mr.Diffs {
-//line views/vaction/Result.html:88
+//line views/vaction/Result.html:95
 			qw422016.N().S(`          <tr>
             <td>`)
-//line views/vaction/Result.html:90
+//line views/vaction/Result.html:97
 			qw422016.E().S(diff.Path)
-//line views/vaction/Result.html:90
+//line views/vaction/Result.html:97
 			qw422016.N().S(`</td>
             <td>`)
-//line views/vaction/Result.html:91
+//line views/vaction/Result.html:98
 			qw422016.E().S(diff.Status)
-//line views/vaction/Result.html:91
+//line views/vaction/Result.html:98
 			qw422016.N().S(`</td>
             <td><pre>`)
-//line views/vaction/Result.html:92
+//line views/vaction/Result.html:99
 			qw422016.E().S(diff.Patch)
-//line views/vaction/Result.html:92
+//line views/vaction/Result.html:99
 			qw422016.N().S(`</pre></td>
           </tr>
 `)
-//line views/vaction/Result.html:94
+//line views/vaction/Result.html:101
 		}
-//line views/vaction/Result.html:94
+//line views/vaction/Result.html:101
 		qw422016.N().S(`        </tbody>
       </table>
     </div>
 `)
-//line views/vaction/Result.html:98
+//line views/vaction/Result.html:105
 	}
-//line views/vaction/Result.html:98
+//line views/vaction/Result.html:105
 	qw422016.N().S(`
   `)
-//line views/vaction/Result.html:100
+//line views/vaction/Result.html:107
 	components.StreamJSONModal(qw422016, "cfg", "Config JSON", p.Cfg, 1)
-//line views/vaction/Result.html:100
+//line views/vaction/Result.html:107
 	qw422016.N().S(`
   `)
-//line views/vaction/Result.html:101
+//line views/vaction/Result.html:108
 	components.StreamJSONModal(qw422016, "result", "Result JSON", p.Result, 1)
-//line views/vaction/Result.html:101
+//line views/vaction/Result.html:108
 	qw422016.N().S(`
 `)
-//line views/vaction/Result.html:102
+//line views/vaction/Result.html:109
 }
 
-//line views/vaction/Result.html:102
+//line views/vaction/Result.html:109
 func (p *Result) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vaction/Result.html:102
+//line views/vaction/Result.html:109
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vaction/Result.html:102
+//line views/vaction/Result.html:109
 	p.StreamBody(qw422016, as, ps)
-//line views/vaction/Result.html:102
+//line views/vaction/Result.html:109
 	qt422016.ReleaseWriter(qw422016)
-//line views/vaction/Result.html:102
+//line views/vaction/Result.html:109
 }
 
-//line views/vaction/Result.html:102
+//line views/vaction/Result.html:109
 func (p *Result) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vaction/Result.html:102
+//line views/vaction/Result.html:109
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vaction/Result.html:102
+//line views/vaction/Result.html:109
 	p.WriteBody(qb422016, as, ps)
-//line views/vaction/Result.html:102
+//line views/vaction/Result.html:109
 	qs422016 := string(qb422016.B)
-//line views/vaction/Result.html:102
+//line views/vaction/Result.html:109
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vaction/Result.html:102
+//line views/vaction/Result.html:109
 	return qs422016
-//line views/vaction/Result.html:102
+//line views/vaction/Result.html:109
 }

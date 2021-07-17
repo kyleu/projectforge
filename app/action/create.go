@@ -13,7 +13,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func onCreate(cfg util.ValueMap, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) *Result {
+func onCreate(key string, cfg util.ValueMap, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) *Result {
 	ret := newResult(cfg, logger)
 	path, _ := cfg.GetString("path", true)
 	if path == "" {
@@ -27,7 +27,7 @@ func onCreate(cfg util.ValueMap, mSvc *module.Service, pSvc *project.Service, lo
 		}
 	}
 
-	prj := projectFromCfg(project.NewProject("new", path), cfg)
+	prj := projectFromCfg(project.NewProject(key, path), cfg)
 
 	err := writeConfig(prj, pSvc)
 	if err != nil {
@@ -40,13 +40,14 @@ func onCreate(cfg util.ValueMap, mSvc *module.Service, pSvc *project.Service, lo
 	}
 	ret.Modules = append(ret.Modules, res)
 
-	_, err = pSvc.Load(path)
+	_, err = pSvc.Refresh()
 	if err != nil {
 		msg := fmt.Sprintf("unable to load newly created project from path [%s]", path)
 		return errorResult(errors.Wrap(err, msg), cfg, logger)
 	}
 
-	prj, mods, err := prjAndMods(cfg, mSvc, pSvc)
+	var mods module.Modules
+	prj, mods, err = prjAndMods(prj.Key, mSvc, pSvc)
 	if err != nil {
 		return errorResult(err, cfg, logger)
 	}

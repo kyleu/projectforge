@@ -19,23 +19,23 @@ const keyServer = "server"
 
 func serverCmd() *cobra.Command {
 	short := fmt.Sprintf("Starts the http server on port %d (by default)", util.AppPort)
-	f := func(*cobra.Command, []string) error { return startServer() }
+	f := func(*cobra.Command, []string) error { return startServer(_flags) }
 	ret := &cobra.Command{Use: keyServer, Short: short, RunE: f}
 	return ret
 }
 
-func startServer() error {
+func startServer(flags *Flags) error {
 	err := initIfNeeded()
 	if err != nil {
 		return errors.Wrap(err, "error initializing application")
 	}
 
-	r, _, err := loadServer(_flags, _logger)
+	r, _, err := loadServer(flags, _logger)
 	if err != nil {
 		return err
 	}
 
-	_, err = listenandserve(util.AppName, _flags.Address, _flags.Port, r)
+	_, err = listenandserve(util.AppName, flags.Address, flags.Port, r)
 	return err
 }
 

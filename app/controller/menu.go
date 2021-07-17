@@ -4,24 +4,34 @@ import (
 	"fmt"
 
 	"github.com/kyleu/projectforge/app"
-	"github.com/kyleu/projectforge/app/action"
 	"github.com/kyleu/projectforge/app/menu"
+	"github.com/kyleu/projectforge/app/project"
 	"github.com/kyleu/projectforge/app/sandbox"
 	"github.com/kyleu/projectforge/app/util"
 )
 
-func MenuFor(as *app.State) menu.Items {
+func MenuFor(as *app.State) (menu.Items, error) {
 	return menu.Items{
 		&menu.Item{Key: "root", Title: "Main Project", Description: "Details for the default project", Icon: "star", Route: "/p"},
 		menu.Separator,
-		actionMenu(as),
+		projectMenu(as.Services.Projects.Projects()),
 		menu.Separator,
 		toolsMenu(),
 		menu.Separator,
 		&menu.Item{Key: "sandbox", Title: "Sandboxes", Description: "Playgrounds for testing new features", Icon: "star", Route: "/sandbox", Children: sandboxItems()},
 		menu.Separator,
 		&menu.Item{Key: "about", Title: "About", Description: "Get assistance and advice for using " + util.AppName, Icon: "question", Route: "/about"},
+	}, nil
+}
+
+func projectMenu(prjs project.Projects) *menu.Item {
+	ret := &menu.Item{Key: "projects", Title: "Projects", Description: "View all of the projects managed by this application", Icon: "star", Route: "/p"}
+	for _, prj := range prjs {
+		key := prj.Key
+		i := &menu.Item{Key: key, Title: prj.Name, Icon: "star", Route: "/p/" + prj.Key}
+		ret.Children = append(ret.Children, i)
 	}
+	return ret
 }
 
 func toolsMenu() *menu.Item {
@@ -29,21 +39,6 @@ func toolsMenu() *menu.Item {
 	ret := &menu.Item{Key: "tools", Title: "Tools", Description: desc, Icon: "star", Route: "/tools", Children: menu.Items{
 		&menu.Item{Key: "svg", Title: "SVG Icons", Description: "Configures SVG image assets", Icon: "question", Route: "/tools/svg"},
 	}}
-	return ret
-}
-
-func actionMenu(as *app.State) *menu.Item {
-	ret := &menu.Item{Key: "actions", Title: "Actions", Description: "Run the actions of " + util.AppName, Icon: "star", Route: "/run"}
-	for _, tgt := range []string{"self", "admini"} {
-		for _, at := range []action.Type{action.TypePreview, action.TypeDebug, action.TypeMerge, action.TypeSlam} {
-			key := tgt + "-" + at.String()
-			route := fmt.Sprintf("/run/%s/%s", tgt, at.String())
-			i := &menu.Item{Key: key, Title: util.ToTitle(at.String()) + " " + util.ToTitle(tgt), Icon: "star", Route: route}
-			ret.Children = append(ret.Children, i)
-		}
-	}
-	bs := &menu.Item{Key: "test-bootstrap", Title: "Bootstrap", Icon: "star", Route: "/run/test/bootstrap"}
-	ret.Children = append(ret.Children, bs)
 	return ret
 }
 
