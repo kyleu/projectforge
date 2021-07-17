@@ -11,10 +11,10 @@ sign {
 }
 
 dmg {
-  output_path = "./build/dist/$PF_EXECUTABLE$_0.0.0_macos_arm64.dmg"
+  output_path = "./build/dist/$PF_EXECUTABLE$_$PF_VERSION$_macos_arm64.dmg"
   volume_name = "$PF_NAME$"
 }
 
 zip {
-  output_path = "./build/dist/$PF_EXECUTABLE$_0.0.0_macos_arm64_notarized.zip"
+  output_path = "./build/dist/$PF_EXECUTABLE$_$PF_VERSION$_macos_arm64_notarized.zip"
 }

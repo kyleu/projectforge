@@ -9,8 +9,8 @@ cd $dir/..
 TGT=$1
 [ "$TGT" ] || (echo "must provide one argument, like \"0.0.1\"" && exit)
 
-find . -type f -name "main.go" -print0 | xargs -0 sed -i '' -e "s/[0-9]*[0-9]\.[0-9]*[0-9]\.[0-9]*[0-9]/${TGT}/g"
-find . -type f -name ".projectforge.json" -print0 | xargs -0 sed -i '' -e "s/[0-9]*[0-9]\.[0-9]*[0-9]\.[0-9]*[0-9]/${TGT}/g"
+find . -type f -name "main.go" -print0 | xargs -0 sed -i '' -e "s/version = \\\"[0-9]*[0-9]\.[0-9]*[0-9]\.[0-9]*[0-9]\\\"/version = \"${TGT}\"/g"
+find . -type f -name ".projectforge.json" -print0 | xargs -0 sed -i '' -e "s/\\\"version\\\": \\\"[0-9]*[0-9]\.[0-9]*[0-9]\.[0-9]*[0-9]\\\"/\"version\": \"${TGT}\"/g"
 
 make build
 

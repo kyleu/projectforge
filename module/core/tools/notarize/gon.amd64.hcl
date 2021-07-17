@@ -2,7 +2,7 @@ source = ["./build/dist/darwin_amd64_darwin_amd64/$PF_EXECUTABLE$"]
 bundle_id = "$PF_BUNDLE$"
 
 //notarize {
-//  path = "./build/dist/$PF_EXECUTABLE$_desktop_0.0.0_macos_x86_64.dmg"
+//  path = "./build/dist/$PF_EXECUTABLE$_desktop_$PF_VERSION$_macos_x86_64.dmg"
 //  bundle_id = "$PF_BUNDLE$"
 //}
 
@@ -16,10 +16,10 @@ sign {
 }
 
 dmg {
-  output_path = "./build/dist/$PF_EXECUTABLE$_0.0.0_macos_x86_64.dmg"
+  output_path = "./build/dist/$PF_EXECUTABLE$_$PF_VERSION$_macos_x86_64.dmg"
   volume_name = "$PF_NAME$"
 }
 
 zip {
-  output_path = "./build/dist/$PF_EXECUTABLE$_0.0.0_macos_x86_64_notarized.zip"
+  output_path = "./build/dist/$PF_EXECUTABLE$_$PF_VERSION$_macos_x86_64_notarized.zip"
 }
