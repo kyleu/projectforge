@@ -49,10 +49,6 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
             <th><label for="input-tgt">Target Key</label></th>
             <td><input id="input-tgt" name="tgt" value="" /></td>
           </tr>
-          <tr>
-            <th><label for="input-url">URL</label></th>
-            <td><input id="input-url" name="url" value="" /></td>
-          </tr>
         </tbody>
       </table>
       <div class="mt">
@@ -62,37 +58,37 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
   </div>
   <div class="card">
     `)
-//line views/vsvg/List.html:40
+//line views/vsvg/List.html:36
 	components.StreamIconGallery(qw422016, as, ps)
-//line views/vsvg/List.html:40
+//line views/vsvg/List.html:36
 	qw422016.N().S(`
   </div>
 `)
-//line views/vsvg/List.html:42
+//line views/vsvg/List.html:38
 }
 
-//line views/vsvg/List.html:42
+//line views/vsvg/List.html:38
 func (p *List) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsvg/List.html:42
+//line views/vsvg/List.html:38
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsvg/List.html:42
+//line views/vsvg/List.html:38
 	p.StreamBody(qw422016, as, ps)
-//line views/vsvg/List.html:42
+//line views/vsvg/List.html:38
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsvg/List.html:42
+//line views/vsvg/List.html:38
 }
 
-//line views/vsvg/List.html:42
+//line views/vsvg/List.html:38
 func (p *List) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsvg/List.html:42
+//line views/vsvg/List.html:38
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsvg/List.html:42
+//line views/vsvg/List.html:38
 	p.WriteBody(qb422016, as, ps)
-//line views/vsvg/List.html:42
+//line views/vsvg/List.html:38
 	qs422016 := string(qb422016.B)
-//line views/vsvg/List.html:42
+//line views/vsvg/List.html:38
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsvg/List.html:42
+//line views/vsvg/List.html:38
 	return qs422016
-//line views/vsvg/List.html:42
+//line views/vsvg/List.html:38
 }

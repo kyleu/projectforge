@@ -2,6 +2,7 @@ package svg
 
 import (
 	"os"
+	"strings"
 
 	"github.com/kyleu/projectforge/app/filesystem"
 	"github.com/pkg/errors"
@@ -9,7 +10,10 @@ import (
 )
 
 func Load(src string, tgt string) (*SVG, error) {
-	url := "https://raw.githubusercontent.com/icons8/line-awesome/master/svg/" + src + ".svg"
+	url := src
+	if !strings.HasPrefix(url, "http") {
+		url = "https://raw.githubusercontent.com/icons8/line-awesome/master/svg/" + src + ".svg"
+	}
 	var b []byte
 	cl := &fasthttp.Client{}
 	status, b, err := cl.Get(b, url)
