@@ -1,7 +1,7 @@
 {
   "key": "projectforge",
   "type": "projectforge.dev",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "name": "Project Forge",
   "package": "github.com/kyleu/projectforge",
   "port": 40000,
