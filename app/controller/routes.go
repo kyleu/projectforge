@@ -31,10 +31,13 @@ func AppRoutes() *router.Router {
 	r.GET("/help/{path:*}", w(Help))
 
 	// $PF_SECTION_START(routes)$
-	r.GET("/p", w(RootProjectDetail))
+	r.GET("/p", w(ProjectList))
 	r.GET("/p/{key}", w(ProjectDetail))
 
 	r.GET("/run/{tgt}/{act}", w(RunAction))
+
+	r.GET("/m", w(ModuleList))
+	r.GET("/m/{key}", w(ModuleDetail))
 
 	r.GET("/test", w(TestList))
 	r.GET("/test/{key}", w(TestRun))

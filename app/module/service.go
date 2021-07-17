@@ -2,78 +2,81 @@ package module
 
 import (
 	"path/filepath"
-	"strings"
-	"unicode/utf8"
+	"sort"
 
-	"github.com/kyleu/projectforge/app/file"
 	"github.com/kyleu/projectforge/app/filesystem"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 )
 
 type Service struct {
+	cache map[string]*Module
 	filesystems map[string]filesystem.FileLoader
 	logger      *zap.SugaredLogger
 }
 
 func NewService(logger *zap.SugaredLogger) *Service {
-	return &Service{filesystems: map[string]filesystem.FileLoader{}, logger: logger}
+	ret := &Service{cache: map[string]*Module{}, filesystems: map[string]filesystem.FileLoader{}, logger: logger}
+
+	_, err := ret.Load("bootstrap")
+	if err != nil {
+		logger.Errorf("unable to load [bootstrap] module: %+v", err)
+	}
+	_, err = ret.Load("core")
+	if err != nil {
+		logger.Errorf("unable to load [core] module: %+v", err)
+	}
+	return ret
 }
 
-func (s *Service) GetFilesystem(mod *Module) filesystem.FileLoader {
-	curr, ok := s.filesystems[mod.Key]
+func (s *Service) GetFilesystem(key string) filesystem.FileLoader {
+	curr, ok := s.filesystems[key]
 	if ok {
 		return curr
 	}
 
-	p := filepath.Join("module", mod.Key)
+	p := filepath.Join("module", key)
 	fs := filesystem.NewFileSystem(p, s.logger)
 
-	s.filesystems[mod.Key] = fs
+	s.filesystems[key] = fs
 	return fs
 }
 
-func (s *Service) GetFiles(mod *Module, changes *file.Changeset, addHeader bool, tgt filesystem.FileLoader) (file.Files, error) {
-	loader := s.GetFilesystem(mod)
-	fs, err := loader.ListFilesRecursive("", nil)
-	if err != nil {
-		return nil, err
-	}
-	ret := make(file.Files, 0, len(fs))
-	for _, f := range fs {
-		if f == ".module.json" {
-			continue
-		}
-		f = strings.TrimPrefix(strings.TrimPrefix(f, mod.Path()), "/")
-		mode, b, err := mod.FileContent(loader, f)
-		if err != nil {
-			return nil, err
-		}
-		fl := file.NewFile(f, mode, b, addHeader, s.logger)
-		if strings.Contains(fl.Content, file.SectionPrefix) && tgt.Exists(f) {
-			tgtBytes, _ := tgt.ReadFile(f)
-			if utf8.Valid(tgtBytes) {
-				newContent, err := file.CopySections(string(tgtBytes), fl.Content)
-				if err != nil {
-					return nil, errors.Wrapf(err, "error reading sections from [%s]", f)
-				}
-				fl.Content = newContent
-			}
-		}
-		fl = fl.Apply(changes)
-		ret = append(ret, fl)
+func (s *Service) Get(key string) (*Module, error) {
+	ret, ok := s.cache[key]
+	if !ok {
+		return nil, errors.New("no module available with key [" + key + "]")
 	}
 	return ret, nil
 }
 
 func (s *Service) GetModules(keys ...string) (Modules, error) {
-	ret := Modules{}
+	var ret Modules
 	for _, m := range keys {
-		mod, ok := AvailableModules[m]
-		if !ok {
-			return nil, errors.New("no module available with key [" + m + "]")
+		mod, err := s.Get(m)
+		if err != nil {
+			return nil, err
 		}
-		ret[m] = mod
+		ret = append(ret, mod)
 	}
 	return ret, nil
+}
+
+func (s *Service) Keys() []string {
+	keys := make([]string, 0, len(s.cache))
+	for k := range s.cache {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	return keys
+}
+
+func (s *Service) Modules() Modules {
+	keys := s.Keys()
+	ret := make(Modules, 0, len(keys))
+	for _, key := range keys {
+		p, _ := s.Get(key)
+		ret = append(ret, p)
+	}
+	return ret
 }

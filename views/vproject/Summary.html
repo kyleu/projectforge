@@ -7,7 +7,7 @@
 {% func Summary(prj *project.Project) %}
   <div class="card">
     <div class="right"><a href="#modal-project"><button type="button">JSON</button></a></div>
-    <h3>{%s prj.Name %}</h3>
+    <h3>{%s prj.Title() %}</h3>
     <div class="mt">
       {%- for _, t := range action.ProjectTypes -%}
       <a href="/run/{%s prj.Key %}/{%s t.Key %}" title="{%s t.Description %}"><button>{%s t.Title %}</button></a>

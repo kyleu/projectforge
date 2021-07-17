@@ -1,0 +1,12 @@
+{% import (
+  "github.com/kyleu/projectforge/app/module"
+  "github.com/kyleu/projectforge/views/components"
+) %}
+
+{% func Summary(mod *module.Module) %}
+  <div class="card">
+    <div class="right"><a href="#modal-module"><button type="button">JSON</button></a></div>
+    <h3>{%s mod.Title() %}</h3>
+  </div>
+  {%= components.JSONModal("module", "Module JSON", mod, 1) %}
+{% endfunc %}

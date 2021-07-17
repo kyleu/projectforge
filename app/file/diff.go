@@ -12,18 +12,10 @@ import (
 
 var dmp = diffmatchpatch.New()
 
-const (
-	StatusDifferent = "different"
-	StatusIdentical = "identical"
-	StatusMissing   = "missing"
-	StatusNew       = "new"
-	StatusSkipped   = "skipped"
-)
-
 type Diff struct {
-	Path   string `json:"path"`
-	Status string `json:"status"`
-	Patch  string `json:"patch,omitempty"`
+	Path   string  `json:"path"`
+	Status *Status `json:"status"`
+	Patch  string  `json:"patch,omitempty"`
 }
 
 func (d *Diff) String() string {
@@ -82,7 +74,8 @@ func (f Files) DiffFileLoader(tgt filesystem.FileLoader, includeUnchanged bool, 
 		if t != nil {
 			b, err := tgt.ReadFile(p)
 			if err != nil {
-				ret = append(ret, &Diff{Path: p, Status: fmt.Sprintf("error: %+v", err)})
+				msg := "An error was encountered: %+v"
+				ret = append(ret, &Diff{Path: p, Status: &Status{Key: "error", Title: fmt.Sprintf(msg, err)}})
 			}
 
 			content := string(b)

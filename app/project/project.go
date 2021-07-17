@@ -21,6 +21,13 @@ type Project struct {
 	Parent   string   `json:"-"`
 }
 
+func (p *Project) Title() string {
+	if p.Name == "" {
+		return p.Key
+	}
+	return p.Name
+}
+
 func NewProject(key string, path string) *Project {
 	return &Project{Key: key, Type: defaultType, Version: currentVersion, Path: path}
 }

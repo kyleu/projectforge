@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/kyleu/projectforge/views/vproject"
-	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/projectforge/app/controller/cutil"
@@ -12,16 +11,12 @@ import (
 	"github.com/kyleu/projectforge/app"
 )
 
-func RootProjectDetail(ctx *fasthttp.RequestCtx) {
+func ProjectList(ctx *fasthttp.RequestCtx) {
 	act("project.root", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := as.Services.Projects.Root()
-		if err != nil {
-			return "", errors.Wrap(err, "unable to load root project")
-		}
-		results := prj
-		ps.Title = "Project [" + prj.Key + "]"
-		ps.Data = results
-		return render(ctx, as, &vproject.Detail{Project: prj}, ps, "root")
+		prjs := as.Services.Projects.Projects()
+		ps.Title = "Project Listing"
+		ps.Data = prjs
+		return render(ctx, as, &vproject.List{Projects: prjs}, ps, "projects")
 	})
 }
 
@@ -37,7 +32,7 @@ func ProjectDetail(ctx *fasthttp.RequestCtx) {
 			return "", err
 		}
 
-		ps.Title = fmt.Sprintf("%s (project %s)", prj.Name, prj.Key)
+		ps.Title = fmt.Sprintf("%s (project %s)", prj.Title(), prj.Key)
 		ps.Data = prj
 		return render(ctx, as, &vproject.Detail{Project: prj}, ps, "projects", prj.Key)
 	})

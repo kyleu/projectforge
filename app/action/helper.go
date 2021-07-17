@@ -51,7 +51,7 @@ func toChangeset(p *project.Project) *file.Changeset {
 
 	add("KEY", p.Key)
 	add("EXECUTABLE", p.Key)
-	add("NAME", p.Name)
+	add("NAME", p.Title())
 	add("VERSION", p.Version)
 	add("PACKAGE", p.Package)
 	add("IGNORE", ignore)

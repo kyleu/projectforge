@@ -1,4 +1,8 @@
 {
-  "title": "Core module",
-  "description": "Provides common utilities for a Go application"
+  "name": "Core",
+  "description": "Provides common utilities for a Go application",
+  "authorName": "Kyle U",
+  "authorEmail": "kyle@kyleu.com",
+  "license": "Proprietary",
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/core"
 }

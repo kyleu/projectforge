@@ -32,7 +32,7 @@ func StreamSummary(qw422016 *qt422016.Writer, prj *project.Project) {
     <div class="right"><a href="#modal-project"><button type="button">JSON</button></a></div>
     <h3>`)
 //line views/vproject/Summary.html:10
-	qw422016.E().S(prj.Name)
+	qw422016.E().S(prj.Title())
 //line views/vproject/Summary.html:10
 	qw422016.N().S(`</h3>
     <div class="mt">

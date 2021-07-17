@@ -1,0 +1,31 @@
+{% import (
+  "github.com/kyleu/projectforge/app"
+  "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/app/module"
+  "github.com/kyleu/projectforge/views/layout"
+) %}
+
+{% code type Detail struct {
+  layout.Basic
+  Module *module.Module
+} %}
+
+{% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
+  {%- code mod := p.Module -%}
+  {%= Summary(mod) %}
+  <div class="card">
+    <h3>Details</h3>
+    <table class="mt">
+      <tbody>
+        <tr>
+          <th>Key</th>
+          <td>{%s mod.Key %}</td>
+        </tr>
+        <tr>
+          <th>Name</th>
+          <td>{%s mod.Name %}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+{% endfunc %}

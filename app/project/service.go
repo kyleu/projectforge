@@ -69,10 +69,6 @@ func (s *Service) Refresh() (Projects, error) {
 	return s.Projects(), nil
 }
 
-func (s *Service) Root() (*Project, error) {
-	return s.load(".")
-}
-
 func (s *Service) Get(key string) (*Project, error) {
 	ret, ok := s.cache[key]
 	if ok {
