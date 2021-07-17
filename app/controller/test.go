@@ -5,6 +5,7 @@ import (
 	"github.com/kyleu/projectforge/app/action"
 	"github.com/kyleu/projectforge/app/util"
 	"github.com/kyleu/projectforge/views"
+	"github.com/kyleu/projectforge/views/vaction"
 	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/projectforge/app/controller/cutil"
@@ -29,9 +30,23 @@ func TestRun(ctx *fasthttp.RequestCtx) {
 		ps.Title = "Test [" + key + "]"
 		ps.Data = key
 		cfg := util.ValueMap{}
-		cfg.Add("path", "./testproject", "method", key)
+		cfg.Add("path", "./testproject", "method", key, "wipe", true)
 		res := action.Apply("testproject", action.TypeTest, cfg, as.Services.Modules, as.Services.Projects, ps.Logger)
 		ps.Data = res
+
+		_, err = as.Services.Projects.Refresh()
+		if err != nil {
+			return "", err
+		}
+
+		prj, err := as.Services.Projects.Get("testproject")
+		if err != nil {
+			return "", err
+		}
+
+		page := &vaction.Result{Project: prj, Cfg: cfg, Result: res}
+		return render(ctx, as, page, ps, "projects", prj.Key, "Bootstrap")
+
 		return render(ctx, as, &views.Debug{}, ps, "Bootstrap")
 	})
 }
