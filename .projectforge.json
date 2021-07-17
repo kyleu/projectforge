@@ -14,7 +14,7 @@
     "authorEmail": "kyle@kyleu.com",
     "license": "Proprietary",
     "bundle": "com.kyleu.projectforge",
-    "signingIdentity": "C6S478FYLD",
+    "signingIdentity": "Developer ID Application: Kyle Unverferth (C6S478FYLD)",
     "homepage": "https://projectforge.dev",
     "sourcecode": "https://github.com/kyleu/projectforge",
     "summary": "Build cool stuff with projectforge",
