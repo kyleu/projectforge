@@ -48,7 +48,7 @@ source:
   format: "zip"
 
 snapshot:
-  name_template: "{{ .Tag }}-SNAPSHOT"
+  name_template: "{{ .Tag }}"
 
 release:
   draft: true
@@ -79,6 +79,7 @@ dockers:
       - "ghcr.io/{{ .Env.XORG }}/{{.ProjectName}}:v{{ .Major }}"
       - "ghcr.io/{{ .Env.XORG }}/{{.ProjectName}}:v{{ .Major }}.{{ .Minor }}"
       - "ghcr.io/{{ .Env.XORG }}/{{.ProjectName}}:latest"
+    dockerfile: ./tools/release/Dockerfile
 
 nfpms:
   -

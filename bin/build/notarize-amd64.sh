@@ -12,5 +12,4 @@ if [ "$XSKIP_NOTARIZE" != "true" ]
 then
   sed -i '' "s/[v]*[01]\.[0-9]*[0-9]\.[0-9]*[0-9][-SNAPSHOT]*/$TGT/g" ./tools/notarize/gon.amd64.hcl
   time gon ./tools/notarize/gon.amd64.hcl
-  sed -i '' "s/[v]*[01]\.[0-9]*[0-9]\.[0-9]*[0-9][-SNAPSHOT]*/0.0.0/g" ./tools/notarize/gon.amd64.hcl
 fi

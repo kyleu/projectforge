@@ -3,7 +3,7 @@ package assets
 import (
 	"bytes"
 	"compress/gzip"
-	"crypto/md5"
+	"crypto/md5" // nolint
 	"encoding/hex"
 	"io/ioutil"
 	"mime"
