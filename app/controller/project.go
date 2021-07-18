@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/kyleu/projectforge/app/project"
+	"github.com/kyleu/projectforge/app/util"
 	"github.com/kyleu/projectforge/views/vproject"
 	"github.com/valyala/fasthttp"
 
@@ -34,6 +35,31 @@ func ProjectDetail(ctx *fasthttp.RequestCtx) {
 	})
 }
 
+func ProjectEdit(ctx *fasthttp.RequestCtx) {
+	act("project.edit", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, err := getProject(ctx, as)
+		if err != nil {
+			return "", err
+		}
+
+		ps.Title = fmt.Sprintf("%s (project %s)", prj.Title(), prj.Key)
+		ps.Data = prj
+		return render(ctx, as, &vproject.Edit{Project: prj}, ps, "projects", prj.Key)
+	})
+}
+
+func ProjectSave(ctx *fasthttp.RequestCtx) {
+	act("project.save", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, err := getProject(ctx, as)
+		if err != nil {
+			return "", err
+		}
+
+		msg := "Saved changes"
+		return flashAndRedir(true, msg, "/p/" + prj.Key, ctx, ps)
+	})
+}
+
 func ProjectFileRoot(ctx *fasthttp.RequestCtx) {
 	act("project.file.root", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prj, err := getProject(ctx, as)
@@ -54,9 +80,19 @@ func ProjectFile(ctx *fasthttp.RequestCtx) {
 			return "", err
 		}
 
-		ps.Title = fmt.Sprintf("%s (project %s)", prj.Title(), prj.Key)
-		ps.Data = prj
-		return render(ctx, as, &vproject.Files{Project: prj}, ps, "projects", prj.Key)
+		pathS, err := ctxRequiredString(ctx, "path", false)
+		if err != nil {
+			return "", err
+		}
+		path := util.SplitAndTrim(pathS, "/")
+		bcAppend := "||/p/" + prj.Key + "/fs"
+		bc := []string{"projects", prj.Key, "Files" + bcAppend}
+		for _, x := range path {
+			bcAppend += "/" + x
+			b := x + bcAppend
+			bc = append(bc, b)
+		}
+		return render(ctx, as, &vproject.Files{Project: prj, Path: path}, ps, bc...)
 	})
 }
 

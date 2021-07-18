@@ -17,9 +17,21 @@
   {%- code
     prj := p.Project
     fs := as.Services.Projects.GetFilesystem(prj)
-    files := fs.ListFiles(filepath.Join(p.Path...), nil)
-    u := "/p/" + p.Project.Key + "/fs"
+    u := "/p/" + prj.Key + "/fs"
   -%}
+
   {%= Summary(prj) %}
+
+  {%- if fs.IsDir(filepath.Join(p.Path...)) -%}
+  {%- code files := fs.ListFiles(filepath.Join(p.Path...), nil) -%}
   {%= vfile.List(p.Path, files, fs, u, as, ps) %}
+  {%- else -%}
+  {%- code
+    b, err := fs.ReadFile(filepath.Join(p.Path...))
+    if err != nil {
+      panic(err)
+    }
+  -%}
+  {%= vfile.Detail(p.Path, b, u, as, ps) %}
+  {%- endif -%}
 {% endfunc %}

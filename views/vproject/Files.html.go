@@ -42,46 +42,71 @@ func (p *Files) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
 //line views/vproject/Files.html:18
 	prj := p.Project
 	fs := as.Services.Projects.GetFilesystem(prj)
-	files := fs.ListFiles(filepath.Join(p.Path...), nil)
-	u := "/p/" + p.Project.Key + "/fs"
+	u := "/p/" + prj.Key + "/fs"
 
-//line views/vproject/Files.html:22
-	qw422016.N().S(`  `)
+//line views/vproject/Files.html:21
+	qw422016.N().S(`
+  `)
 //line views/vproject/Files.html:23
 	StreamSummary(qw422016, prj)
 //line views/vproject/Files.html:23
 	qw422016.N().S(`
-  `)
-//line views/vproject/Files.html:24
-	vfile.StreamList(qw422016, p.Path, files, fs, u, as, ps)
-//line views/vproject/Files.html:24
-	qw422016.N().S(`
+
 `)
 //line views/vproject/Files.html:25
+	if fs.IsDir(filepath.Join(p.Path...)) {
+//line views/vproject/Files.html:26
+		files := fs.ListFiles(filepath.Join(p.Path...), nil)
+
+//line views/vproject/Files.html:26
+		qw422016.N().S(`  `)
+//line views/vproject/Files.html:27
+		vfile.StreamList(qw422016, p.Path, files, fs, u, as, ps)
+//line views/vproject/Files.html:27
+		qw422016.N().S(`
+`)
+//line views/vproject/Files.html:28
+	} else {
+//line views/vproject/Files.html:30
+		b, err := fs.ReadFile(filepath.Join(p.Path...))
+		if err != nil {
+			panic(err)
+		}
+
+//line views/vproject/Files.html:34
+		qw422016.N().S(`  `)
+//line views/vproject/Files.html:35
+		vfile.StreamDetail(qw422016, p.Path, b, u, as, ps)
+//line views/vproject/Files.html:35
+		qw422016.N().S(`
+`)
+//line views/vproject/Files.html:36
+	}
+//line views/vproject/Files.html:37
 }
 
-//line views/vproject/Files.html:25
+//line views/vproject/Files.html:37
 func (p *Files) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vproject/Files.html:25
+//line views/vproject/Files.html:37
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/Files.html:25
+//line views/vproject/Files.html:37
 	p.StreamBody(qw422016, as, ps)
-//line views/vproject/Files.html:25
+//line views/vproject/Files.html:37
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/Files.html:25
+//line views/vproject/Files.html:37
 }
 
-//line views/vproject/Files.html:25
+//line views/vproject/Files.html:37
 func (p *Files) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vproject/Files.html:25
+//line views/vproject/Files.html:37
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/Files.html:25
+//line views/vproject/Files.html:37
 	p.WriteBody(qb422016, as, ps)
-//line views/vproject/Files.html:25
+//line views/vproject/Files.html:37
 	qs422016 := string(qb422016.B)
-//line views/vproject/Files.html:25
+//line views/vproject/Files.html:37
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/Files.html:25
+//line views/vproject/Files.html:37
 	return qs422016
-//line views/vproject/Files.html:25
+//line views/vproject/Files.html:37
 }
