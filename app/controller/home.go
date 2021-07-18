@@ -11,6 +11,6 @@ func Home(ctx *fasthttp.RequestCtx) {
 	act("home", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prjs := as.Services.Projects.Projects()
 		ps.Data = prjs
-		return render(ctx, as, &views.Home{Projects: prjs}, ps)
+		return render(ctx, as, &views.Home{Projects: prjs, Modules: as.Services.Modules.Modules()}, ps)
 	})
 }

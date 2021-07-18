@@ -12,6 +12,7 @@ func AppRoutes() *router.Router {
 	r := router.New()
 
 	r.GET("/", w(Home))
+	r.GET("/about", w(About))
 	r.GET("/settings", w(Settings))
 	r.GET("/theme", w(ThemeList))
 	r.GET("/theme/{key}", w(ThemeEdit))

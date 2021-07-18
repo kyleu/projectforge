@@ -1,0 +1,17 @@
+{% import (
+  "github.com/kyleu/projectforge/app"
+  "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/app/project"
+) %}
+
+{% func Table(prjs project.Projects, as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <div class="right"><a href="/p/_new"><button>New</button></a></div>
+    <h3>Available Projects</h3>
+    <ul>
+      {%- for _, prj := range prjs -%}
+      <li><a href="/p/{%s prj.Key %}">{%s prj.Title() %}</a></li>
+      {%- endfor -%}
+    </ul>
+  </div>
+{% endfunc %}

@@ -1,0 +1,16 @@
+{% import (
+  "github.com/kyleu/projectforge/app"
+  "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/app/module"
+) %}
+
+{% func Table(mods module.Modules, as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>Available Modules</h3>
+    <ul>
+      {%- for _, mod := range mods -%}
+      <li><a href="/m/{%s mod.Key %}">{%s mod.Title() %}</a></li>
+      {%- endfor -%}
+    </ul>
+  </div>
+{% endfunc %}

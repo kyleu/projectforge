@@ -1,24 +1,25 @@
 {% import (
   "github.com/kyleu/projectforge/app"
   "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/app/module"
   "github.com/kyleu/projectforge/app/project"
   "github.com/kyleu/projectforge/app/util"
   "github.com/kyleu/projectforge/views/components"
   "github.com/kyleu/projectforge/views/layout"
+  "github.com/kyleu/projectforge/views/vmodule"
+  "github.com/kyleu/projectforge/views/vproject"
 ) %}
 
 {% code type Home struct {
   layout.Basic
   Projects project.Projects
+  Modules module.Modules
 } %}
 
 {% func (p *Home) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>{%= components.SVGRef(`app`, 20, 20, `icon`, ps) %}{%s util.AppName %}</h3>
-    <ul>
-      {%- for _, p := range p.Projects -%}
-      <li>{%s p.Key %}</li>
-      {%- endfor -%}
-    </ul>
   </div>
+  {%= vproject.Table(p.Projects, as, ps) %}
+  {%= vmodule.Table(p.Modules, as, ps) %}
 {% endfunc %}
