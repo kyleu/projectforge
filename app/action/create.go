@@ -29,7 +29,7 @@ func onCreate(key string, cfg util.ValueMap, mSvc *module.Service, pSvc *project
 
 	prj := projectFromCfg(project.NewProject(key, path), cfg)
 
-	err := writeConfig(prj, pSvc)
+	err := pSvc.Save(prj)
 	if err != nil {
 		return ret.WithError(err)
 	}
@@ -158,11 +158,3 @@ func projectFromCfg(proto *project.Project, cfg util.ValueMap) *project.Project 
 	}
 }
 
-func writeConfig(prj *project.Project, pSvc *project.Service) error {
-	tgtFS := pSvc.GetFilesystem(prj)
-	err := tgtFS.WriteFile(project.ConfigFilename, util.ToJSONBytes(prj, true), filesystem.DefaultMode, true)
-	if err != nil {
-		return errors.Wrapf(err, "unable to write config file to [%s]", project.ConfigFilename)
-	}
-	return nil
-}

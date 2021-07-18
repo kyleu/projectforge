@@ -2,6 +2,8 @@ package controller
 
 import (
 	"fmt"
+	"strconv"
+	"strings"
 
 	"github.com/kyleu/projectforge/app/project"
 	"github.com/kyleu/projectforge/app/util"
@@ -55,44 +57,42 @@ func ProjectSave(ctx *fasthttp.RequestCtx) {
 			return "", err
 		}
 
+		frm, err := cutil.ParseFormAsChanges(ctx)
+		if err != nil {
+			return "", err
+		}
+		get := func(k string, def string) string {
+			x, _ := frm.GetString(k, true)
+			if x == "" {
+				return def
+			}
+			return x
+		}
+		prj.Name = get("name", prj.Name)
+		prj.Version = get("version", prj.Version)
+		prj.Package = get("package", prj.Package)
+		prj.Args = get("args", prj.Args)
+		prj.Port, _ = strconv.Atoi(get("port", fmt.Sprintf("%d", prj.Port)))
+		prj.Modules = util.SplitAndTrim(get("modules", strings.Join(prj.Modules, ",")), ",")
+		prj.Ignore = util.SplitAndTrim(get("ignore", strings.Join(prj.Ignore, ",")), ",")
+		prj.Children = util.SplitAndTrim(get("children", strings.Join(prj.Children, ",")), ",")
+		prj.Info.AuthorName = get("authorName", prj.Info.AuthorName)
+		prj.Info.AuthorEmail = get("authorEmail", prj.Info.AuthorEmail)
+		prj.Info.License = get("license", prj.Info.License)
+		prj.Info.Bundle = get("bundle", prj.Info.Bundle)
+		prj.Info.SigningIdentity = get("signingIdentity", prj.Info.SigningIdentity)
+		prj.Info.Homepage = get("homepage", prj.Info.Homepage)
+		prj.Info.Sourcecode = get("sourcecode", prj.Info.Sourcecode)
+		prj.Info.Summary = get("summary", prj.Info.Summary)
+		prj.Info.Description = get("description", prj.Info.Description)
+
+		err = as.Services.Projects.Save(prj)
+		if err != nil {
+			return ersp("unable to save project: %+v", err)
+		}
+
 		msg := "Saved changes"
 		return flashAndRedir(true, msg, "/p/" + prj.Key, ctx, ps)
-	})
-}
-
-func ProjectFileRoot(ctx *fasthttp.RequestCtx) {
-	act("project.file.root", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(ctx, as)
-		if err != nil {
-			return "", err
-		}
-
-		ps.Title = fmt.Sprintf("%s (project %s)", prj.Title(), prj.Key)
-		ps.Data = prj
-		return render(ctx, as, &vproject.Files{Project: prj}, ps, "projects", prj.Key)
-	})
-}
-
-func ProjectFile(ctx *fasthttp.RequestCtx) {
-	act("project.file", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(ctx, as)
-		if err != nil {
-			return "", err
-		}
-
-		pathS, err := ctxRequiredString(ctx, "path", false)
-		if err != nil {
-			return "", err
-		}
-		path := util.SplitAndTrim(pathS, "/")
-		bcAppend := "||/p/" + prj.Key + "/fs"
-		bc := []string{"projects", prj.Key, "Files" + bcAppend}
-		for _, x := range path {
-			bcAppend += "/" + x
-			b := x + bcAppend
-			bc = append(bc, b)
-		}
-		return render(ctx, as, &vproject.Files{Project: prj, Path: path}, ps, bc...)
 	})
 }
 
@@ -102,9 +102,12 @@ func getProject(ctx *fasthttp.RequestCtx, as *app.State) (*project.Project, erro
 		return nil, err
 	}
 
-	mod, err := as.Services.Projects.Get(key)
+	prj, err := as.Services.Projects.Get(key)
 	if err != nil {
 		return nil, err
 	}
-	return mod, nil
+	if prj.Info == nil {
+		prj.Info = &project.Info{}
+	}
+	return prj, nil
 }

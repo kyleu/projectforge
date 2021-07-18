@@ -79,114 +79,119 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	qw422016.N().S(`
           `)
 //line views/vproject/Edit.html:34
-	components.StreamTableInputNumber(qw422016, "port", "Port", prj.Port, 5)
+	components.StreamTableInput(qw422016, "args", "Args", prj.Args, 5)
 //line views/vproject/Edit.html:34
+	qw422016.N().S(`
+          `)
+//line views/vproject/Edit.html:35
+	components.StreamTableInputNumber(qw422016, "port", "Port", prj.Port, 5)
+//line views/vproject/Edit.html:35
 	qw422016.N().S(`
           <tr>
             <th class="shrink">Modules</th>
             <td>
 `)
-//line views/vproject/Edit.html:38
+//line views/vproject/Edit.html:39
 	for _, mod := range as.Services.Modules.Modules() {
-//line views/vproject/Edit.html:38
+//line views/vproject/Edit.html:39
 		qw422016.N().S(`              <label title="`)
-//line views/vproject/Edit.html:39
+//line views/vproject/Edit.html:40
 		qw422016.E().S(mod.Description)
-//line views/vproject/Edit.html:39
+//line views/vproject/Edit.html:40
 		qw422016.N().S(`">
 `)
-//line views/vproject/Edit.html:40
+//line views/vproject/Edit.html:41
 		if util.StringArrayContains(prj.Modules, mod.Key) {
-//line views/vproject/Edit.html:40
+//line views/vproject/Edit.html:41
 			qw422016.N().S(`                <input type="checkbox" name="modules" value="`)
-//line views/vproject/Edit.html:41
+//line views/vproject/Edit.html:42
 			qw422016.E().S(mod.Key)
-//line views/vproject/Edit.html:41
+//line views/vproject/Edit.html:42
 			qw422016.N().S(`" checked="checked" />
 `)
-//line views/vproject/Edit.html:42
+//line views/vproject/Edit.html:43
 		} else {
-//line views/vproject/Edit.html:42
+//line views/vproject/Edit.html:43
 			qw422016.N().S(`                <input type="checkbox" name="modules" value="`)
-//line views/vproject/Edit.html:43
+//line views/vproject/Edit.html:44
 			qw422016.E().S(mod.Key)
-//line views/vproject/Edit.html:43
+//line views/vproject/Edit.html:44
 			qw422016.N().S(`" />
 `)
-//line views/vproject/Edit.html:44
+//line views/vproject/Edit.html:45
 		}
-//line views/vproject/Edit.html:44
+//line views/vproject/Edit.html:45
 		qw422016.N().S(`                `)
-//line views/vproject/Edit.html:45
+//line views/vproject/Edit.html:46
 		qw422016.E().S(mod.Title())
-//line views/vproject/Edit.html:45
+//line views/vproject/Edit.html:46
 		qw422016.N().S(`
               </label>
 `)
-//line views/vproject/Edit.html:47
+//line views/vproject/Edit.html:48
 	}
-//line views/vproject/Edit.html:47
+//line views/vproject/Edit.html:48
 	qw422016.N().S(`            </td>
           </tr>
           `)
-//line views/vproject/Edit.html:50
+//line views/vproject/Edit.html:51
 	components.StreamTableInput(qw422016, "ignore", "Ignore", strings.Join(prj.Ignore, ", "), 5)
-//line views/vproject/Edit.html:50
+//line views/vproject/Edit.html:51
 	qw422016.N().S(`
           `)
-//line views/vproject/Edit.html:51
+//line views/vproject/Edit.html:52
 	components.StreamTableInput(qw422016, "children", "Children", strings.Join(prj.Children, ", "), 5)
-//line views/vproject/Edit.html:51
+//line views/vproject/Edit.html:52
 	qw422016.N().S(`
           `)
-//line views/vproject/Edit.html:52
+//line views/vproject/Edit.html:53
 	components.StreamTableInput(qw422016, "org", "Organization", info.Org, 5)
-//line views/vproject/Edit.html:52
+//line views/vproject/Edit.html:53
 	qw422016.N().S(`
           `)
-//line views/vproject/Edit.html:53
+//line views/vproject/Edit.html:54
 	components.StreamTableInput(qw422016, "authorName", "Author Name", info.AuthorName, 5)
-//line views/vproject/Edit.html:53
+//line views/vproject/Edit.html:54
 	qw422016.N().S(`
           `)
-//line views/vproject/Edit.html:54
+//line views/vproject/Edit.html:55
 	components.StreamTableInput(qw422016, "authorEmail", "Author Email", info.AuthorEmail, 5)
-//line views/vproject/Edit.html:54
+//line views/vproject/Edit.html:55
 	qw422016.N().S(`
           `)
-//line views/vproject/Edit.html:55
+//line views/vproject/Edit.html:56
 	components.StreamTableInput(qw422016, "license", "License", info.License, 5)
-//line views/vproject/Edit.html:55
+//line views/vproject/Edit.html:56
 	qw422016.N().S(`
           `)
-//line views/vproject/Edit.html:56
+//line views/vproject/Edit.html:57
 	components.StreamTableInput(qw422016, "bundle", "Bundle", info.Bundle, 5)
-//line views/vproject/Edit.html:56
+//line views/vproject/Edit.html:57
 	qw422016.N().S(`
           `)
-//line views/vproject/Edit.html:57
+//line views/vproject/Edit.html:58
 	components.StreamTableInput(qw422016, "signingIdentity", "Signing Identity", info.SigningIdentity, 5)
-//line views/vproject/Edit.html:57
+//line views/vproject/Edit.html:58
 	qw422016.N().S(`
           `)
-//line views/vproject/Edit.html:58
+//line views/vproject/Edit.html:59
 	components.StreamTableInput(qw422016, "homepage", "Homepage", info.Homepage, 5)
-//line views/vproject/Edit.html:58
+//line views/vproject/Edit.html:59
 	qw422016.N().S(`
           `)
-//line views/vproject/Edit.html:59
+//line views/vproject/Edit.html:60
 	components.StreamTableInput(qw422016, "sourcecode", "Source Code", info.Sourcecode, 5)
-//line views/vproject/Edit.html:59
+//line views/vproject/Edit.html:60
 	qw422016.N().S(`
           `)
-//line views/vproject/Edit.html:60
+//line views/vproject/Edit.html:61
 	components.StreamTableInput(qw422016, "summary", "Summary", info.Summary, 5)
-//line views/vproject/Edit.html:60
+//line views/vproject/Edit.html:61
 	qw422016.N().S(`
           `)
-//line views/vproject/Edit.html:61
+//line views/vproject/Edit.html:62
 	components.StreamTableTextarea(qw422016, "description", "Description", info.Description, 5)
-//line views/vproject/Edit.html:61
+//line views/vproject/Edit.html:62
 	qw422016.N().S(`
         </tbody>
       </table>
@@ -197,31 +202,31 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
     </form>
   </div>
 `)
-//line views/vproject/Edit.html:70
+//line views/vproject/Edit.html:71
 }
 
-//line views/vproject/Edit.html:70
+//line views/vproject/Edit.html:71
 func (p *Edit) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vproject/Edit.html:70
+//line views/vproject/Edit.html:71
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/Edit.html:70
+//line views/vproject/Edit.html:71
 	p.StreamBody(qw422016, as, ps)
-//line views/vproject/Edit.html:70
+//line views/vproject/Edit.html:71
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/Edit.html:70
+//line views/vproject/Edit.html:71
 }
 
-//line views/vproject/Edit.html:70
+//line views/vproject/Edit.html:71
 func (p *Edit) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vproject/Edit.html:70
+//line views/vproject/Edit.html:71
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/Edit.html:70
+//line views/vproject/Edit.html:71
 	p.WriteBody(qb422016, as, ps)
-//line views/vproject/Edit.html:70
+//line views/vproject/Edit.html:71
 	qs422016 := string(qb422016.B)
-//line views/vproject/Edit.html:70
+//line views/vproject/Edit.html:71
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/Edit.html:70
+//line views/vproject/Edit.html:71
 	return qs422016
-//line views/vproject/Edit.html:70
+//line views/vproject/Edit.html:71
 }

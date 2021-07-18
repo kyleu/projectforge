@@ -1,13 +1,22 @@
 {
   "key": "projectforge",
   "type": "projectforge.dev",
-  "version": "0.0.3",
   "name": "Project Forge",
+  "version": "0.0.3",
   "package": "github.com/kyleu/projectforge",
   "port": 40000,
-  "modules": ["core"],
-  "ignore": ["module", "testproject"],
-  "children": ["./testproject", "../admini", "../k8sinsights"],
+  "modules": [
+    "core"
+  ],
+  "ignore": [
+    "module",
+    "testproject"
+  ],
+  "children": [
+    "./testproject",
+    "../admini",
+    "../k8sinsights"
+  ],
   "info": {
     "org": "kyleu",
     "authorName": "Kyle U",
