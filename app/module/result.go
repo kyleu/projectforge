@@ -1,13 +1,13 @@
 package module
 
 import (
-	"github.com/kyleu/projectforge/app/file"
+	"github.com/kyleu/projectforge/app/diff"
 )
 
 type Result struct {
 	Key      string       `json:"key"`
 	Status   string       `json:"status"`
-	Diffs    []*file.Diff `json:"diffs,omitempty"`
+	Diffs    []*diff.Diff `json:"diffs,omitempty"`
 	Duration int          `json:"duration,omitempty"`
 }
 

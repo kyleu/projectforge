@@ -79,7 +79,7 @@ func StreamJSON(qw422016 *qt422016.Writer, v interface{}) {
 	}
 
 //line views/components/JSON.html:29
-	out, err := cutil.Format(v, `json`)
+	out, err := cutil.FormatJSON(v)
 
 //line views/components/JSON.html:30
 	if err == nil {

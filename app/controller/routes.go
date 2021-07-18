@@ -33,11 +33,15 @@ func AppRoutes() *router.Router {
 	// $PF_SECTION_START(routes)$
 	r.GET("/p", w(ProjectList))
 	r.GET("/p/{key}", w(ProjectDetail))
+	r.GET("/p/{key}/fs", w(ProjectFileRoot))
+	r.GET("/p/{key}/fs/{path:*}", w(ProjectFile))
 
 	r.GET("/run/{tgt}/{act}", w(RunAction))
 
 	r.GET("/m", w(ModuleList))
 	r.GET("/m/{key}", w(ModuleDetail))
+	r.GET("/m/{key}/fs", w(ModuleFileRoot))
+	r.GET("/m/{key}/fs/{path:*}", w(ModuleFile))
 
 	r.GET("/test", w(TestList))
 	r.GET("/test/{key}", w(TestRun))

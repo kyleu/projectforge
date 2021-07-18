@@ -1,10 +1,11 @@
 {% import (
+  "strings"
   "github.com/kyleu/projectforge/app/action"
   "github.com/kyleu/projectforge/app/project"
   "github.com/kyleu/projectforge/views/components"
 ) %}
 
-{% func Summary(prj *project.Project) %}
+{% func Summary(prj *project.Project, path ...string) %}
   <div class="card">
     <div class="right"><a href="#modal-project"><button type="button">JSON</button></a></div>
     <h3>{%s prj.Title() %}</h3>
@@ -12,6 +13,17 @@
       {%- for _, t := range action.ProjectTypes -%}
       <a href="/run/{%s prj.Key %}/{%s t.Key %}" title="{%s t.Description %}"><button>{%s t.Title %}</button></a>
       {%- endfor -%}
+    </div>
+    <div class="mt">
+      {%- if len(path) == 0 -%}
+      <a href="/p/{%s prj.Key %}/fs"><button>Filesystem</button></a>
+      {%- else -%}
+      {%- code var ctx []string -%}
+      {%- for _, pth := range path -%}
+      {%- code ctx = append(ctx, pth) -%}
+      <a href="/p/{%s prj.Key %}/fs/{%s strings.Join(ctx, `/`) %}"><button>{%s pth %}}</button></a>
+      {%- endfor -%}
+      {%- endif -%}
     </div>
   </div>
   {%= components.JSONModal("project", "Project JSON", prj, 1) %}

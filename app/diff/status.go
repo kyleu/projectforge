@@ -1,4 +1,4 @@
-package file
+package diff
 
 import (
 	"github.com/kyleu/projectforge/app/util"

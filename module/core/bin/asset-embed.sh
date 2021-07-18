@@ -8,4 +8,4 @@ cd $dir/..
 
 echo "Embedding assets..."
 go-embed -input assets -output app/assets/assets.go
-git update-index --assume-unchanged app/assets/assets.go
+git update-index --assume-unchanged app/assets/assets.go || true

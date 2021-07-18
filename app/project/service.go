@@ -2,6 +2,7 @@ package project
 
 import (
 	"io/ioutil"
+	"os"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -97,7 +98,18 @@ func (s *Service) Projects() Projects {
 }
 
 func (s *Service) load(path string) (*Project, error) {
-	b, err := ioutil.ReadFile(filepath.Join(path, ConfigFilename))
+	cfgPath := filepath.Join(path, ConfigFilename)
+	curr, _ := os.Stat(cfgPath)
+	if curr == nil {
+		l, r := util.SplitStringLast(path, '/', true)
+		if r == "" {
+			r = l
+		}
+		ret := NewProject(r, path)
+		ret.Name = r + " (missing)"
+		return ret, nil
+	}
+	b, err := ioutil.ReadFile(cfgPath)
 	if err != nil {
 		return nil, err
 	}

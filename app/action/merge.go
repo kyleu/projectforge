@@ -1,7 +1,7 @@
 package action
 
 import (
-	"github.com/kyleu/projectforge/app/file"
+	"github.com/kyleu/projectforge/app/diff"
 	"github.com/kyleu/projectforge/app/module"
 	"github.com/kyleu/projectforge/app/project"
 	"github.com/kyleu/projectforge/app/util"
@@ -33,9 +33,9 @@ func merge(prj *project.Project, mod *module.Module, mSvc *module.Service, pSvc 
 
 	for _, f := range diffs {
 		switch f.Status {
-		case file.StatusIdentical, file.StatusMissing, file.StatusSkipped:
+		case diff.StatusIdentical, diff.StatusMissing, diff.StatusSkipped:
 			// noop
-		case file.StatusDifferent, file.StatusNew:
+		case diff.StatusDifferent, diff.StatusNew:
 			// noop
 		default:
 			return nil, errors.Errorf("unhandled diff status [%s]", f.Status)

@@ -1,0 +1,25 @@
+{% import (
+  "path/filepath"
+  "github.com/kyleu/projectforge/app"
+  "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/app/project"
+  "github.com/kyleu/projectforge/views/layout"
+  "github.com/kyleu/projectforge/views/vfile"
+) %}
+
+{% code type Files struct {
+  layout.Basic
+  Project *project.Project
+  Path []string
+} %}
+
+{% func (p *Files) Body(as *app.State, ps *cutil.PageState) %}
+  {%- code
+    prj := p.Project
+    fs := as.Services.Projects.GetFilesystem(prj)
+    files := fs.ListFiles(filepath.Join(p.Path...), nil)
+    u := "/p/" + p.Project.Key + "/fs"
+  -%}
+  {%= Summary(prj) %}
+  {%= vfile.List(p.Path, files, fs, u, as, ps) %}
+{% endfunc %}

@@ -51,6 +51,7 @@
           <th>Children</th>
           <td>{%s strings.Join(prj.Children, ", ") %}</td>
         </tr>
+        {%- if info != nil -%}
         <tr>
           <th>Organization</th>
           <td>{%s info.Org %}</td>
@@ -87,6 +88,7 @@
           <th>Description</th>
           <td>{%s info.Description %}</td>
         </tr>
+        {%- endif -%}
         <tr>
           <th>Path</th>
           <td>{%s prj.Path %}</td>
@@ -96,7 +98,6 @@
   </div>
 
   <div class="card">
-    <div class="right"><a href="#modal-project"><button type="button">JSON</button></a></div>
     <h3>Modules</h3>
     <table class="mt">
       <tbody>

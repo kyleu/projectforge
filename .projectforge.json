@@ -7,7 +7,7 @@
   "port": 40000,
   "modules": ["core"],
   "ignore": ["module", "testproject"],
-  "children": ["./testproject", "../admini"],
+  "children": ["./testproject", "../admini", "../k8sinsights"],
   "info": {
     "org": "kyleu",
     "authorName": "Kyle U",

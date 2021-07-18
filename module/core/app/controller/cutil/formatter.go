@@ -3,6 +3,7 @@ package cutil
 import (
 	"strings"
 
+	"github.com/alecthomas/chroma"
 	"github.com/pkg/errors"
 
 	"github.com/alecthomas/chroma/formatters/html"
@@ -16,13 +17,28 @@ var (
 	noLineNums *html.Formatter
 )
 
-func Format(v interface{}, lang string) (string, error) {
-	return FormatString(util.ToJSON(v), lang)
+func FormatJSON(v interface{}) (string, error) {
+	return FormatLang(util.ToJSON(v), "json")
 }
 
-func FormatString(content string, lang string) (string, error) {
-	s := styles.MonokaiLight
+func FormatLang(content string, lang string) (string, error) {
 	l := lexers.Get(lang)
+	return FormatString(content, l)
+}
+
+func FormatFilename(content string, filename string) (string, error) {
+	l := lexers.Match(filename)
+	if l == nil {
+		l = lexers.Fallback
+	}
+	return FormatString(content, l)
+}
+
+func FormatString(content string, l chroma.Lexer) (string, error) {
+	if l == nil {
+		return "", errors.New("no lexer available for this content")
+	}
+	s := styles.MonokaiLight
 	var f *html.Formatter
 	if strings.Contains(content, "\n") {
 		if lineNums == nil {
@@ -49,6 +65,6 @@ func FormatString(content string, lang string) (string, error) {
 	ret = strings.ReplaceAll(ret, "\n</span>", "<br /></span>")
 	ret = strings.ReplaceAll(ret, "</span>\n", "</span><br />")
 	ret = strings.ReplaceAll(ret, "\n<span", "<br /><span")
-	ret = strings.ReplaceAll(ret, "\n", "")
+	ret = strings.ReplaceAll(ret, ">\n", ">")
 	return ret, nil
 }

@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 
+	"github.com/kyleu/projectforge/app/project"
 	"github.com/kyleu/projectforge/views/vproject"
 	"github.com/valyala/fasthttp"
 
@@ -22,12 +23,7 @@ func ProjectList(ctx *fasthttp.RequestCtx) {
 
 func ProjectDetail(ctx *fasthttp.RequestCtx) {
 	act("project.detail", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := ctxRequiredString(ctx, "key", true)
-		if err != nil {
-			return "", err
-		}
-
-		prj, err := as.Services.Projects.Get(key)
+		prj, err := getProject(ctx, as)
 		if err != nil {
 			return "", err
 		}
@@ -36,4 +32,43 @@ func ProjectDetail(ctx *fasthttp.RequestCtx) {
 		ps.Data = prj
 		return render(ctx, as, &vproject.Detail{Project: prj}, ps, "projects", prj.Key)
 	})
+}
+
+func ProjectFileRoot(ctx *fasthttp.RequestCtx) {
+	act("project.file.root", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, err := getProject(ctx, as)
+		if err != nil {
+			return "", err
+		}
+
+		ps.Title = fmt.Sprintf("%s (project %s)", prj.Title(), prj.Key)
+		ps.Data = prj
+		return render(ctx, as, &vproject.Files{Project: prj}, ps, "projects", prj.Key)
+	})
+}
+
+func ProjectFile(ctx *fasthttp.RequestCtx) {
+	act("project.file", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, err := getProject(ctx, as)
+		if err != nil {
+			return "", err
+		}
+
+		ps.Title = fmt.Sprintf("%s (project %s)", prj.Title(), prj.Key)
+		ps.Data = prj
+		return render(ctx, as, &vproject.Files{Project: prj}, ps, "projects", prj.Key)
+	})
+}
+
+func getProject(ctx *fasthttp.RequestCtx, as *app.State) (*project.Project, error) {
+	key, err := ctxRequiredString(ctx, "key", true)
+	if err != nil {
+		return nil, err
+	}
+
+	mod, err := as.Services.Projects.Get(key)
+	if err != nil {
+		return nil, err
+	}
+	return mod, nil
 }

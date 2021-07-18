@@ -9,91 +9,134 @@ import (
 	"github.com/kyleu/projectforge/app/action"
 	"github.com/kyleu/projectforge/app/project"
 	"github.com/kyleu/projectforge/views/components"
+	"strings"
 )
 
-//line views/vproject/Summary.html:7
+//line views/vproject/Summary.html:8
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vproject/Summary.html:7
+//line views/vproject/Summary.html:8
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vproject/Summary.html:7
-func StreamSummary(qw422016 *qt422016.Writer, prj *project.Project) {
-//line views/vproject/Summary.html:7
+//line views/vproject/Summary.html:8
+func StreamSummary(qw422016 *qt422016.Writer, prj *project.Project, path ...string) {
+//line views/vproject/Summary.html:8
 	qw422016.N().S(`
   <div class="card">
     <div class="right"><a href="#modal-project"><button type="button">JSON</button></a></div>
     <h3>`)
-//line views/vproject/Summary.html:10
+//line views/vproject/Summary.html:11
 	qw422016.E().S(prj.Title())
-//line views/vproject/Summary.html:10
+//line views/vproject/Summary.html:11
 	qw422016.N().S(`</h3>
     <div class="mt">
 `)
-//line views/vproject/Summary.html:12
+//line views/vproject/Summary.html:13
 	for _, t := range action.ProjectTypes {
-//line views/vproject/Summary.html:12
+//line views/vproject/Summary.html:13
 		qw422016.N().S(`      <a href="/run/`)
-//line views/vproject/Summary.html:13
+//line views/vproject/Summary.html:14
 		qw422016.E().S(prj.Key)
-//line views/vproject/Summary.html:13
+//line views/vproject/Summary.html:14
 		qw422016.N().S(`/`)
-//line views/vproject/Summary.html:13
+//line views/vproject/Summary.html:14
 		qw422016.E().S(t.Key)
-//line views/vproject/Summary.html:13
+//line views/vproject/Summary.html:14
 		qw422016.N().S(`" title="`)
-//line views/vproject/Summary.html:13
+//line views/vproject/Summary.html:14
 		qw422016.E().S(t.Description)
-//line views/vproject/Summary.html:13
+//line views/vproject/Summary.html:14
 		qw422016.N().S(`"><button>`)
-//line views/vproject/Summary.html:13
+//line views/vproject/Summary.html:14
 		qw422016.E().S(t.Title)
-//line views/vproject/Summary.html:13
+//line views/vproject/Summary.html:14
 		qw422016.N().S(`</button></a>
 `)
-//line views/vproject/Summary.html:14
+//line views/vproject/Summary.html:15
 	}
-//line views/vproject/Summary.html:14
+//line views/vproject/Summary.html:15
+	qw422016.N().S(`    </div>
+    <div class="mt">
+`)
+//line views/vproject/Summary.html:18
+	if len(path) == 0 {
+//line views/vproject/Summary.html:18
+		qw422016.N().S(`      <a href="/p/`)
+//line views/vproject/Summary.html:19
+		qw422016.E().S(prj.Key)
+//line views/vproject/Summary.html:19
+		qw422016.N().S(`/fs"><button>Filesystem</button></a>
+`)
+//line views/vproject/Summary.html:20
+	} else {
+//line views/vproject/Summary.html:21
+		var ctx []string
+
+//line views/vproject/Summary.html:22
+		for _, pth := range path {
+//line views/vproject/Summary.html:23
+			ctx = append(ctx, pth)
+
+//line views/vproject/Summary.html:23
+			qw422016.N().S(`      <a href="/p/`)
+//line views/vproject/Summary.html:24
+			qw422016.E().S(prj.Key)
+//line views/vproject/Summary.html:24
+			qw422016.N().S(`/fs/`)
+//line views/vproject/Summary.html:24
+			qw422016.E().S(strings.Join(ctx, `/`))
+//line views/vproject/Summary.html:24
+			qw422016.N().S(`"><button>`)
+//line views/vproject/Summary.html:24
+			qw422016.E().S(pth)
+//line views/vproject/Summary.html:24
+			qw422016.N().S(`}</button></a>
+`)
+//line views/vproject/Summary.html:25
+		}
+//line views/vproject/Summary.html:26
+	}
+//line views/vproject/Summary.html:26
 	qw422016.N().S(`    </div>
   </div>
   `)
-//line views/vproject/Summary.html:17
+//line views/vproject/Summary.html:29
 	components.StreamJSONModal(qw422016, "project", "Project JSON", prj, 1)
-//line views/vproject/Summary.html:17
+//line views/vproject/Summary.html:29
 	qw422016.N().S(`
 `)
-//line views/vproject/Summary.html:18
+//line views/vproject/Summary.html:30
 }
 
-//line views/vproject/Summary.html:18
-func WriteSummary(qq422016 qtio422016.Writer, prj *project.Project) {
-//line views/vproject/Summary.html:18
+//line views/vproject/Summary.html:30
+func WriteSummary(qq422016 qtio422016.Writer, prj *project.Project, path ...string) {
+//line views/vproject/Summary.html:30
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/Summary.html:18
-	StreamSummary(qw422016, prj)
-//line views/vproject/Summary.html:18
+//line views/vproject/Summary.html:30
+	StreamSummary(qw422016, prj, path...)
+//line views/vproject/Summary.html:30
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/Summary.html:18
+//line views/vproject/Summary.html:30
 }
 
-//line views/vproject/Summary.html:18
-func Summary(prj *project.Project) string {
-//line views/vproject/Summary.html:18
+//line views/vproject/Summary.html:30
+func Summary(prj *project.Project, path ...string) string {
+//line views/vproject/Summary.html:30
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/Summary.html:18
-	WriteSummary(qb422016, prj)
-//line views/vproject/Summary.html:18
+//line views/vproject/Summary.html:30
+	WriteSummary(qb422016, prj, path...)
+//line views/vproject/Summary.html:30
 	qs422016 := string(qb422016.B)
-//line views/vproject/Summary.html:18
+//line views/vproject/Summary.html:30
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/Summary.html:18
+//line views/vproject/Summary.html:30
 	return qs422016
-//line views/vproject/Summary.html:18
+//line views/vproject/Summary.html:30
 }

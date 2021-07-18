@@ -46,9 +46,8 @@ func (f *FileSystem) Stat(path string) os.FileInfo {
 }
 
 func (f *FileSystem) Exists(path string) bool {
-	p := f.getPath(path)
-	_, err := os.Stat(p)
-	return err == nil
+	x := f.Stat(path)
+	return x != nil
 }
 
 func (f *FileSystem) IsDir(path string) bool {

@@ -1,7 +1,7 @@
 package action
 
 import (
-	"github.com/kyleu/projectforge/app/file"
+	"github.com/kyleu/projectforge/app/diff"
 	"github.com/kyleu/projectforge/app/module"
 	"github.com/kyleu/projectforge/app/project"
 	"github.com/kyleu/projectforge/app/util"
@@ -33,9 +33,9 @@ func slam(prj *project.Project, mod *module.Module, addHeader bool, mSvc *module
 
 	for _, f := range diffs {
 		switch f.Status {
-		case file.StatusIdentical, file.StatusMissing, file.StatusSkipped:
+		case diff.StatusIdentical, diff.StatusMissing, diff.StatusSkipped:
 			// noop
-		case file.StatusDifferent, file.StatusNew:
+		case diff.StatusDifferent, diff.StatusNew:
 			src := srcFiles.Get(f.Path)
 			tgtFS := pSvc.GetFilesystem(prj)
 			err := tgtFS.WriteFile(f.Path, []byte(src.Content), src.Mode, true)

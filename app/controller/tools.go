@@ -6,8 +6,8 @@ import (
 
 	"github.com/kyleu/projectforge/app/svg"
 	"github.com/kyleu/projectforge/app/util"
-	"github.com/kyleu/projectforge/views"
 	"github.com/kyleu/projectforge/views/vsvg"
+	"github.com/kyleu/projectforge/views/vtools"
 	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/projectforge/app/controller/cutil"
@@ -21,7 +21,7 @@ func ToolList(ctx *fasthttp.RequestCtx) {
 		ps.Data = util.ValueMap{
 			"svg": "/tools/svg",
 		}
-		return render(ctx, as, &views.Debug{}, ps, "tools")
+		return render(ctx, as, &vtools.List{}, ps, "tools")
 	})
 }
 

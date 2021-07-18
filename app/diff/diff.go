@@ -1,10 +1,11 @@
-package file
+package diff
 
 import (
 	"fmt"
 	"net/url"
 	"strings"
 
+	"github.com/kyleu/projectforge/app/file"
 	"github.com/kyleu/projectforge/app/filesystem"
 	"github.com/sergi/go-diff/diffmatchpatch"
 	"go.uber.org/zap"
@@ -22,15 +23,15 @@ func (d *Diff) String() string {
 	return fmt.Sprintf("%s:%s", d.Path, d.Status)
 }
 
-func (f *File) Diff(tgt *File) *Diff {
-	ret := &Diff{Path: f.FullPath()}
+func File(src *file.File, tgt *file.File) *Diff {
+	ret := &Diff{Path: src.FullPath()}
 	switch {
-	case f == nil:
+	case src == nil:
 		ret.Status = StatusMissing
 	case tgt == nil:
 		ret.Status = StatusNew
 	default:
-		t1, t2, a := dmp.DiffLinesToChars(tgt.Content, f.Content)
+		t1, t2, a := dmp.DiffLinesToChars(tgt.Content, src.Content)
 		diffs := dmp.DiffMain(t1, t2, true)
 		diffs = dmp.DiffCharsToLines(diffs, a)
 		diffs = dmp.DiffCleanupSemantic(diffs)
@@ -49,12 +50,12 @@ func (f *File) Diff(tgt *File) *Diff {
 	return ret
 }
 
-func (f Files) Diff(tgt Files, includeUnchanged bool) []*Diff {
+func Files(src file.Files, tgt file.Files, includeUnchanged bool) []*Diff {
 	var ret []*Diff
-	for _, file := range f {
-		p := file.FullPath()
+	for _, s := range src {
+		p := s.FullPath()
 		t := tgt.Get(p)
-		d := file.Diff(t)
+		d := File(s, t)
 		if includeUnchanged || d.Status != StatusIdentical {
 			ret = append(ret, d)
 		}
@@ -62,15 +63,14 @@ func (f Files) Diff(tgt Files, includeUnchanged bool) []*Diff {
 	return ret
 }
 
-func (f Files) DiffFileLoader(tgt filesystem.FileLoader, includeUnchanged bool, logger *zap.SugaredLogger) []*Diff {
+func FileLoader(src file.Files, tgt filesystem.FileLoader, includeUnchanged bool, logger *zap.SugaredLogger) []*Diff {
 	var ret []*Diff
-	for _, file := range f {
-		p := file.FullPath()
+	for _, s := range src {
+		p := s.FullPath()
 		t := tgt.Stat(p)
 
 		skip := false
-		var tgtFile *File
-
+		var tgtFile *file.File
 		if t != nil {
 			b, err := tgt.ReadFile(p)
 			if err != nil {
@@ -78,21 +78,21 @@ func (f Files) DiffFileLoader(tgt filesystem.FileLoader, includeUnchanged bool, 
 				ret = append(ret, &Diff{Path: p, Status: &Status{Key: "error", Title: fmt.Sprintf(msg, err)}})
 			}
 
-			content := string(b)
-			linefeed := strings.Index(content, "\n")
+			tgtFile = file.NewFile(p, t.Mode(), b, false, logger)
+
+			linefeed := strings.Index(tgtFile.Content, "\n")
 			if linefeed > -1 {
-				firstLine := content[:linefeed]
+				firstLine := tgtFile.Content[:linefeed]
 				if strings.Contains(firstLine, "$PF_IGNORE$") {
 					skip = true
 				}
 			}
-			tgtFile = NewFile(p, t.Mode(), b, false, logger)
 		}
 		var d *Diff
 		if skip {
-			d = &Diff{Path: file.FullPath(), Status: StatusSkipped}
+			d = &Diff{Path: s.FullPath(), Status: StatusSkipped}
 		} else {
-			d = file.Diff(tgtFile)
+			d = File(s, tgtFile)
 		}
 		if includeUnchanged || d.Status != StatusIdentical {
 			ret = append(ret, d)

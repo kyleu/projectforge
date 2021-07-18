@@ -26,7 +26,7 @@
       _ = util.FromJSON(b, &v)
     }
   %}
-  {% code out, err := cutil.Format(v, `json`) %}
+  {% code out, err := cutil.FormatJSON(v) %}
   {% if err == nil %}
     {%s= out %}
   {% else %}

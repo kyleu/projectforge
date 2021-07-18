@@ -2,22 +2,34 @@
 package filesystem
 
 import (
-	"io/fs"
 	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strings"
 )
 
 var defaultIgnore = []string{".git", ".DS_Store"}
 
-func (f *FileSystem) ListFiles(path string) []string {
-	infos, err := ioutil.ReadDir(path)
+func (f *FileSystem) ListFiles(path string, ignore []string) []os.FileInfo {
+	if ignore == nil {
+		ignore = defaultIgnore
+	}
+	infos, err := ioutil.ReadDir(filepath.Join(f.root, path))
 	if err != nil {
 		f.logger.Warnf("cannot list files in path [%s]: %+v", path, err)
 	}
-	matches := make([]string, 0, len(infos))
+	matches := make([]os.FileInfo, 0, len(infos))
 	for _, info := range infos {
-		matches = append(matches, info.Name())
+		ignored := false
+		for _, i := range ignore {
+			if i == info.Name() {
+				ignored = true
+				break
+			}
+		}
+		if !ignored {
+			matches = append(matches, info)
+		}
 	}
 	return matches
 }
@@ -67,7 +79,7 @@ func (f *FileSystem) ListFilesRecursive(path string, ignore []string) ([]string,
 	}
 	p := f.getPath(path)
 	var ret []string
-	err := filepath.Walk(p, func(fp string, info fs.FileInfo, err error) error {
+	err := filepath.Walk(p, func(fp string, info os.FileInfo, err error) error {
 		for _, i := range ignore {
 			if strings.HasPrefix(fp, i) || strings.HasSuffix(fp, i) {
 				return nil

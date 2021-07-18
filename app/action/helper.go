@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/kyleu/projectforge/app/diff"
 	"github.com/kyleu/projectforge/app/file"
 	"github.com/kyleu/projectforge/app/module"
 	"github.com/kyleu/projectforge/app/project"
@@ -11,7 +12,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func diffs(prj *project.Project, mod *module.Module, addHeader bool, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) (file.Files, []*file.Diff, error) {
+func diffs(prj *project.Project, mod *module.Module, addHeader bool, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) (file.Files, []*diff.Diff, error) {
 	cs := toChangeset(prj)
 	tgt := pSvc.GetFilesystem(prj)
 
@@ -20,7 +21,7 @@ func diffs(prj *project.Project, mod *module.Module, addHeader bool, mSvc *modul
 		return nil, nil, err
 	}
 
-	diffs := srcFiles.DiffFileLoader(tgt, false, logger)
+	diffs := diff.FileLoader(srcFiles, tgt, false, logger)
 
 	return srcFiles, diffs, nil
 }
