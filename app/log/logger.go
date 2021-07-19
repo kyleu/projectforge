@@ -2,6 +2,9 @@
 package log
 
 import (
+	"os"
+	"strings"
+
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -9,17 +12,16 @@ import (
 
 const keyCustom = "custom"
 
-func InitLogging(debug bool, json bool) (*zap.SugaredLogger, error) {
+func InitLogging(debug bool) (*zap.SugaredLogger, error) {
 	var logger *zap.Logger
 	var err error
-	if json {
+	switch {
+	case strings.ToLower(os.Getenv("LOGGING_FORMAT")) == "json":
 		logger, err = initJSONLogging()
-	} else {
-		if debug {
-			logger, err = initDevLogging()
-		} else {
-			logger, err = initSimpleLogging()
-		}
+	case debug:
+		logger, err = initDevLogging()
+	default:
+		logger, err = initSimpleLogging()
 	}
 	if err != nil {
 		return nil, errors.Wrap(err, "error initializing logging")

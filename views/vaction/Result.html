@@ -36,7 +36,7 @@
       <tbody>
         {%- for _, k := range p.Cfg.Keys() -%}
         <tr>
-          <td>{%s k %}</td>
+          <th class="shrink">{%s k %}</th>
           <td>{%v p.Cfg[k] %}</td>
         </tr>
         {%- endfor -%}
@@ -86,15 +86,15 @@
       <table>
         <thead>
           <tr>
-            <th>Path</th>
-            <th>Status</th>
-            <th>Patch</th>
+            <th class="shrink">Path</th>
+            <th class="shrink">Status</th>
+            <th class="shrink">Patch</th>
           </tr>
         </thead>
         <tbody>
           {%- for _, diff := range mr.Diffs -%}
           <tr>
-            <td>{%s diff.Path %}</td>
+            <td class="shrink">{%s diff.Path %}</td>
             <td>{%s diff.Status.String() %}</td>
             <td><pre>{%s diff.Patch %}</pre></td>
           </tr>

@@ -2,10 +2,10 @@
 package sandbox
 
 import (
-	"github.com/kyleu/projectforge/app/util"
-	"go.uber.org/zap"
+	"$PF_PACKAGE$/app"
+	"$PF_PACKAGE$/app/util"
 
-	"github.com/kyleu/projectforge/app"
+	"go.uber.org/zap"
 )
 
 var testbed = &Sandbox{Key: "testbed", Title: "Testbed", Icon: "star", Run: onTestbed}

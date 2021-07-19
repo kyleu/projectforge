@@ -28,7 +28,6 @@ type Flags struct {
 	Port      uint16
 	ConfigDir string
 	Debug     bool
-	JSON      bool
 }
 
 func (f *Flags) Addr() string {
@@ -44,7 +43,6 @@ func (f *Flags) Clone(port uint16) *Flags {
 		Port:      port,
 		ConfigDir: f.ConfigDir,
 		Debug:     f.Debug,
-		JSON:      f.JSON,
 	}
 }
 
@@ -61,7 +59,7 @@ func initIfNeeded() error {
 		_ = configdir.MakePath(_flags.ConfigDir)
 	}
 
-	l, err := log.InitLogging(_flags.Debug, _flags.JSON)
+	l, err := log.InitLogging(_flags.Debug)
 	if err != nil {
 		return err
 	}

@@ -1,0 +1,18 @@
+<!-- $PF_IGNORE$ -->
+{% import (
+  "$PF_PACKAGE$/app"
+  "$PF_PACKAGE$/app/controller/cutil"
+  "$PF_PACKAGE$/app/util"
+  "$PF_PACKAGE$/views/components"
+  "$PF_PACKAGE$/views/layout"
+) %}
+
+{% code type Home struct {
+  layout.Basic
+} %}
+
+{% func (p *Home) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>{%= components.SVGRef(`app`, 20, 20, `icon`, ps) %}{%s util.AppName %}</h3>
+  </div>
+{% endfunc %}

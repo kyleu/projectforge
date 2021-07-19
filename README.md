@@ -1,3 +1,4 @@
+<!-- $PF_IGNORE$ -->
 # Project Forge
 
 [Project Forge](https://projectforge.dev) helps you build stuff

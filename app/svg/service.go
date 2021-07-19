@@ -85,6 +85,7 @@ func template(src string, svgs []*SVG) string {
 		}
 	}
 
+	w("// Package util $PF_IGNORE$")
 	w("// Code generated from files in [client/src/svg]. See " + util.AppURL + " for details. DO NOT EDIT.")
 	w("package util")
 	w("")

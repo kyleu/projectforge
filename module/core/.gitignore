@@ -5,9 +5,7 @@
 /build
 /tmp
 
-# **/*.html.go
-# **/*.sql.go
+**/*.html.go
+**/*.sql.go
 
 /client/node_modules
-
-/testproject
