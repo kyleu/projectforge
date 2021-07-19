@@ -27,9 +27,6 @@ func AppRoutes() *router.Router {
 	r.GET("/admin", w(Admin))
 	r.GET("/admin/{path:*}", w(Admin))
 
-	r.GET("/help", w(Help))
-	r.GET("/help/{path:*}", w(Help))
-
 	// $PF_SECTION_START(routes)$
 	// $PF_SECTION_END(routes)$
 

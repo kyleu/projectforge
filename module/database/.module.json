@@ -1,0 +1,8 @@
+{
+  "name": "Database",
+  "description": "Provides an API for accessing PostgreSQL or SQLite databases",
+  "authorName": "Kyle U",
+  "authorEmail": "kyle@kyleu.com",
+  "license": "Proprietary",
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/database"
+}

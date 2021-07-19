@@ -25,6 +25,18 @@ func (m *Module) FileContent(files filesystem.FileLoader, path string) (os.FileM
 	return stat.Mode(), b, nil
 }
 
+func (s *Service) LoadAll(keys ...string) (Modules, error) {
+	var ret Modules
+	for _, key := range keys {
+		m, err := s.Load(key)
+		if err != nil {
+			return nil, err
+		}
+		ret = append(ret, m)
+	}
+	return ret, nil
+}
+
 func (s *Service) Load(key string) (*Module, error) {
 	fs := s.GetFilesystem(key)
 	if !fs.Exists(configFilename) {
