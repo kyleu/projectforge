@@ -4,13 +4,12 @@ package controller
 import (
 	"fmt"
 
-	"github.com/kyleu/projectforge/app/auth"
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 
-	"github.com/kyleu/projectforge/app/controller/cutil"
-
 	"github.com/kyleu/projectforge/app"
+	"github.com/kyleu/projectforge/app/auth"
+	"github.com/kyleu/projectforge/app/controller/cutil"
 )
 
 const signinMsg = "signed in to %s as [%s]"

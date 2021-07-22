@@ -33,7 +33,7 @@ func Apply(projectKey string, t Type, cfg util.ValueMap, mSvc *module.Service, p
 	case TypeSlam:
 		return onSlam(prj, mods, cfg, mSvc, pSvc, logger)
 	case TypeSVG:
-		return onSVG(prj, cfg, logger)
+		return onSVG(prj, cfg, pSvc, logger)
 	default:
 		return errorResult(errors.Errorf("invalid action type [%s]", t), cfg, logger)
 	}

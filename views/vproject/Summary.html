@@ -17,6 +17,7 @@
     <div class="mt">
       {%- if len(path) == 0 -%}
       <a href="/p/{%s prj.Key %}/fs"><button>Filesystem</button></a>
+      <a href="/p/{%s prj.Key %}/svg"><button>Manage SVGs</button></a>
       {%- else -%}
       {%- code var ctx []string -%}
       {%- for _, pth := range path -%}

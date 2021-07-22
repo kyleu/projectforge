@@ -6,13 +6,14 @@ import (
 	"runtime"
 
 	"github.com/fasthttp/router"
+	"github.com/pkg/errors"
+	"github.com/spf13/cobra"
+	"go.uber.org/zap"
+
 	"github.com/kyleu/projectforge/app"
 	"github.com/kyleu/projectforge/app/controller"
 	"github.com/kyleu/projectforge/app/filesystem"
 	"github.com/kyleu/projectforge/app/util"
-	"github.com/pkg/errors"
-	"github.com/spf13/cobra"
-	"go.uber.org/zap"
 )
 
 const keyServer = "server"
@@ -55,7 +56,7 @@ func loadServer(flags *Flags, logger *zap.SugaredLogger) (*router.Router, *zap.S
 	}
 	st.Services = svcs
 
-	controller.SetAppState(st, logger)
+	controller.SetAppState(st)
 
 	logger.Infof("started %s using address [%s:%d] on %s:%s", util.AppName, flags.Address, flags.Port, runtime.GOOS, runtime.GOARCH)
 

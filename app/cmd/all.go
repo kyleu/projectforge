@@ -4,9 +4,10 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/kyleu/projectforge/app/util"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
+
+	"github.com/kyleu/projectforge/app/util"
 )
 
 const keyAll = "all"

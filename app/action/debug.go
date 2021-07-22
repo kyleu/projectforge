@@ -9,23 +9,13 @@ import (
 
 func onDebug(prj *project.Project, mods module.Modules, cfg util.ValueMap, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) *Result {
 	ret := newResult(cfg, logger)
-	var res module.Results
-	for _, mod := range mods {
-		x, err := debug(prj, mod, mSvc, pSvc, logger)
-		if err != nil {
-			return ret.WithError(err)
-		}
-		res = append(res, x)
-	}
-	ret.Modules = res
-	return ret
-}
-
-func debug(prj *project.Project, mod *module.Module, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) (*module.Result, error) {
 	start := util.TimerStart()
-	_, diffs, err := diffs(prj, mod, true, mSvc, pSvc, logger)
+	_, diffs, err := diffs(prj, mods, true, mSvc, pSvc, logger)
 	if err != nil {
-		return nil, err
+		return ret.WithError(err)
 	}
-	return &module.Result{Key: mod.Key, Status: "OK", Diffs: diffs, Duration: util.TimerEnd(start)}, nil
+
+	mr := &module.Result{Keys: mods.Keys(), Status: "OK", Diffs: diffs, Duration: util.TimerEnd(start)}
+	ret.Modules = append(ret.Modules, mr)
+	return ret
 }

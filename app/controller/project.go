@@ -92,7 +92,7 @@ func ProjectSave(ctx *fasthttp.RequestCtx) {
 		}
 
 		msg := "Saved changes"
-		return flashAndRedir(true, msg, "/p/" + prj.Key, ctx, ps)
+		return flashAndRedir(true, msg, "/p/"+prj.Key, ctx, ps)
 	})
 }
 

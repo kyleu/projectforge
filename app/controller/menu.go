@@ -19,8 +19,6 @@ func MenuFor(as *app.State) (menu.Items, error) {
 		menu.Separator,
 		moduleMenu(as.Services.Modules.Modules()),
 		menu.Separator,
-		toolsMenu(),
-		menu.Separator,
 		sandboxMenu(),
 		menu.Separator,
 		&menu.Item{Key: "settings", Title: "Settings", Description: "System-wide settings and preferences", Icon: "cog", Route: "/settings"},
@@ -45,14 +43,6 @@ func moduleMenu(mods module.Modules) *menu.Item {
 		i := &menu.Item{Key: key, Title: prj.Name, Icon: "star", Route: "/m/" + prj.Key}
 		ret.Children = append(ret.Children, i)
 	}
-	return ret
-}
-
-func toolsMenu() *menu.Item {
-	desc := "Standalone tools for configuring projects and generating code"
-	ret := &menu.Item{Key: "tools", Title: "Tools", Description: desc, Icon: "star", Route: "/tools", Children: menu.Items{
-		&menu.Item{Key: "svg", Title: "SVG Icons", Description: "Configures SVG image assets", Icon: "question", Route: "/tools/svg"},
-	}}
 	return ret
 }
 

@@ -2,8 +2,9 @@
 package sandbox
 
 import (
-	"github.com/kyleu/projectforge/app"
 	"go.uber.org/zap"
+
+	"github.com/kyleu/projectforge/app"
 )
 
 type runFn func(st *app.State, logger *zap.SugaredLogger) (interface{}, error)

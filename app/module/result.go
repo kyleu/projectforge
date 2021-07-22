@@ -5,7 +5,7 @@ import (
 )
 
 type Result struct {
-	Key      string       `json:"key"`
+	Keys     []string     `json:"keys"`
 	Status   string       `json:"status"`
 	Diffs    []*diff.Diff `json:"diffs,omitempty"`
 	Duration int          `json:"duration,omitempty"`

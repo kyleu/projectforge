@@ -16,7 +16,8 @@ type Project struct {
 	Modules  []string `json:"modules"`
 	Ignore   []string `json:"ignore,omitempty"`
 	Children []string `json:"children"`
-	Info     *Info    `json:"info"`
+	Info     *Info    `json:"info,omitempty"`
+	Build    *Build   `json:"build,omitempty"`
 	Path     string   `json:"-"`
 	Parent   string   `json:"-"`
 }

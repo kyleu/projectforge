@@ -35,6 +35,9 @@ func AppRoutes() *router.Router {
 	r.POST("/p/{key}/edit", w(ProjectSave))
 	r.GET("/p/{key}/fs", w(ProjectFileRoot))
 	r.GET("/p/{key}/fs/{path:*}", w(ProjectFile))
+	r.GET("/p/{key}/svg", w(SVGList))
+	r.GET("/p/{key}/svg/add", w(SVGAdd))
+	r.GET("/p/{key}/svg/build", w(SVGBuild))
 
 	r.GET("/run/{tgt}/{act}", w(RunAction))
 
@@ -46,10 +49,6 @@ func AppRoutes() *router.Router {
 	r.GET("/test", w(TestList))
 	r.GET("/test/{key}", w(TestRun))
 
-	r.GET("/tools", w(ToolList))
-	r.GET("/tools/svg", w(SVGList))
-	r.GET("/tools/svg/add", w(SVGAdd))
-	r.GET("/tools/svg/build", w(SVGBuild))
 	// $PF_SECTION_END(routes)$
 
 	r.GET("/sandbox", w(SandboxList))

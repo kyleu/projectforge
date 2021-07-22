@@ -151,4 +151,3 @@ func projectFromCfg(proto *project.Project, cfg util.ValueMap) *project.Project 
 		Path: proto.Path,
 	}
 }
-

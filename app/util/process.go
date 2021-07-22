@@ -40,7 +40,7 @@ func RunProcess(cmd string, path string, logger *zap.SugaredLogger, in io.Reader
 	c := exec.Cmd{Path: firstArg, Args: args, Stdin: in, Stdout: out, Stderr: er, Dir: path}
 	err = c.Start()
 	if err != nil {
-		return -1, errors.Wrap(err, fmt.Sprintf("unable to start [%v] (%T)", cmd, err))
+		return -1, errors.Wrap(err, fmt.Sprintf("unable to start [%s] (%T)", cmd, err))
 	}
 	err = c.Wait()
 	if err != nil {
@@ -48,7 +48,7 @@ func RunProcess(cmd string, path string, logger *zap.SugaredLogger, in io.Reader
 		if ok {
 			return ec.ExitCode(), nil
 		}
-		return -1, errors.Wrap(err, fmt.Sprintf("unable to run [%v] (%T)", cmd, err))
+		return -1, errors.Wrap(err, fmt.Sprintf("unable to run [%s] (%T)", cmd, err))
 	}
 	return 0, nil
 }

@@ -10,7 +10,7 @@ import (
 )
 
 type Service struct {
-	cache map[string]*Module
+	cache       map[string]*Module
 	filesystems map[string]filesystem.FileLoader
 	logger      *zap.SugaredLogger
 }
@@ -18,7 +18,7 @@ type Service struct {
 func NewService(logger *zap.SugaredLogger) *Service {
 	ret := &Service{cache: map[string]*Module{}, filesystems: map[string]filesystem.FileLoader{}, logger: logger}
 
-	_, err := ret.LoadAll("core", "database")
+	_, err := ret.LoadAll("core", "database", "desktop")
 	if err != nil {
 		logger.Errorf("unable to load [core] module: %+v", err)
 	}
@@ -26,16 +26,19 @@ func NewService(logger *zap.SugaredLogger) *Service {
 }
 
 func (s *Service) GetFilesystem(key string) filesystem.FileLoader {
-	curr, ok := s.filesystems[key]
-	if ok {
-		return curr
+	return filesystem.NewFileSystem(filepath.Join("module", key), s.logger)
+}
+
+func (s *Service) getNestedFilesystem(mods Modules) filesystem.FileLoader {
+	var ret filesystem.FileLoader
+	for _, mod := range mods {
+		curr := s.GetFilesystem(mod.Key)
+		if ret != nil {
+			curr.AddChildren(ret)
+		}
+		ret = curr
 	}
-
-	p := filepath.Join("module", key)
-	fs := filesystem.NewFileSystem(p, s.logger)
-
-	s.filesystems[key] = fs
-	return fs
+	return ret
 }
 
 func (s *Service) Get(key string) (*Module, error) {

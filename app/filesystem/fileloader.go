@@ -7,6 +7,7 @@ import (
 
 type FileLoader interface {
 	Root() string
+	AddChildren(fls ...FileLoader)
 	ReadFile(path string) ([]byte, error)
 	CreateDirectory(path string) error
 	WriteFile(path string, content []byte, mode os.FileMode, overwrite bool) error
@@ -15,10 +16,10 @@ type FileLoader interface {
 	Move(src string, tgt string) error
 	ListFiles(path string, ignore []string) []os.FileInfo
 	ListFilesRecursive(path string, ignore []string) ([]string, error)
-	ListJSON(path string) []string
-	ListExtension(path string, ext string) []string
+	ListJSON(path string, trimExtension bool) []string
+	ListExtension(path string, ext string, trimExtension bool) []string
 	ListDirectories(path string) []string
-	Stat(path string) os.FileInfo
+	Stat(path string) (os.FileInfo, error)
 	Exists(path string) bool
 	IsDir(path string) bool
 	Remove(path string) error

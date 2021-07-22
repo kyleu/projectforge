@@ -5,9 +5,8 @@ import (
 	"strings"
 
 	"github.com/kyleu/projectforge/app/svg"
-	"github.com/kyleu/projectforge/app/util"
 	"github.com/kyleu/projectforge/views/vsvg"
-	"github.com/kyleu/projectforge/views/vtools"
+	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/projectforge/app/controller/cutil"
@@ -15,27 +14,33 @@ import (
 	"github.com/kyleu/projectforge/app"
 )
 
-func ToolList(ctx *fasthttp.RequestCtx) {
-	act("tool.list", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ps.Title = "Tools"
-		ps.Data = util.ValueMap{
-			"svg": "/tools/svg",
-		}
-		return render(ctx, as, &vtools.List{}, ps, "tools")
-	})
-}
-
 func SVGList(ctx *fasthttp.RequestCtx) {
 	act("svg.list", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, err := getProject(ctx, as)
+		if err != nil {
+			return "", err
+		}
+		fs := as.Services.Projects.GetFilesystem(prj)
+
+		icons, err := svg.List(fs)
+		if err != nil {
+			return "", errors.Wrap(err, "unable to list project SVGs")
+		}
+
 		ps.Title = "SVG Tools"
-		ps.Data = util.ValueMap{"available": util.SVGIconKeys}
-		return render(ctx, as, &vsvg.List{}, ps, "tools", "svg")
+		ps.Data = icons
+		return render(ctx, as, &vsvg.List{Project: prj}, ps, "projects", prj.Key, "SVG Tools")
 	})
 }
 
 func SVGBuild(ctx *fasthttp.RequestCtx) {
 	act("svg.build", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
-		count, err := svg.Run("client/src/svg", "app/util/svg.go")
+		prj, err := getProject(ctx, as)
+		if err != nil {
+			return "", err
+		}
+		fs := as.Services.Projects.GetFilesystem(prj)
+		count, err := svg.Run(fs, "client/src/svg", "app/util/svg.go")
 		if err != nil {
 			return "", err
 		}
@@ -56,7 +61,14 @@ func SVGAdd(ctx *fasthttp.RequestCtx) {
 		if tgt == "" {
 			tgt = strings.TrimSuffix(src, "-solid")
 		}
-		x, err := svg.Save(src, tgt)
+
+		prj, err := getProject(ctx, as)
+		if err != nil {
+			return "", err
+		}
+		fs := as.Services.Projects.GetFilesystem(prj)
+
+		x, err := svg.AddToProject(fs, src, tgt)
 		if err != nil {
 			return "", err
 		}

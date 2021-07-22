@@ -2,16 +2,15 @@
 package controller
 
 import (
+	"github.com/pkg/errors"
+	"github.com/valyala/fasthttp"
+
+	"github.com/kyleu/projectforge/app"
+	"github.com/kyleu/projectforge/app/controller/cutil"
 	"github.com/kyleu/projectforge/app/theme"
 	"github.com/kyleu/projectforge/app/user"
 	"github.com/kyleu/projectforge/app/util"
 	"github.com/kyleu/projectforge/views/vtheme"
-	"github.com/pkg/errors"
-	"github.com/valyala/fasthttp"
-
-	"github.com/kyleu/projectforge/app/controller/cutil"
-
-	"github.com/kyleu/projectforge/app"
 )
 
 func ThemeList(ctx *fasthttp.RequestCtx) {

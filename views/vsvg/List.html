@@ -1,28 +1,38 @@
 {% import (
   "github.com/kyleu/projectforge/app"
   "github.com/kyleu/projectforge/app/controller/cutil"
-  "github.com/kyleu/projectforge/views/components"
+  "github.com/kyleu/projectforge/app/project"
   "github.com/kyleu/projectforge/views/layout"
+  "github.com/kyleu/projectforge/views/vproject"
 ) %}
 
-{% code type List struct { layout.Basic } %}
+{% code type List struct {
+  layout.Basic
+  Project *project.Project
+} %}
 
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
+  {%= vproject.Summary(p.Project) %}
   <div class="card">
     <h3>SVG icons</h3>
-    <a href="/tools/svg/build"><button>Rebuild</button></a>
+    <a href="/p/{%s p.Project.Key %}/svg/build"><button>Rebuild</button></a>
   </div>
   <div class="card">
     <h3>Add a new icon</h3>
-    <form action="/tools/svg/add" method="get">
+    <p>
+      To add an icon to your application, enter a key from <a href="https://icons8.com/line-awesome" target="_blank">Line Awesome</a>.
+      Instead of an icon key, you may also provide a URL to any SVG.
+      The SVG will be rewritten with attribution.
+    </p>
+    <form action="/p/{%s p.Project.Key %}/svg/add" method="get">
       <table>
         <tbody>
           <tr>
-            <th><label for="input-src">Source Key</label></th>
+            <th class="shrink"><label for="input-src">Source Key</label></th>
             <td><input id="input-src" name="src" value="" /></td>
           </tr>
           <tr>
-            <th><label for="input-tgt">Target Key</label></th>
+            <th class="shrink"><label for="input-tgt">Target Key</label></th>
             <td><input id="input-tgt" name="tgt" value="" /></td>
           </tr>
         </tbody>
@@ -33,7 +43,7 @@
     </form>
   </div>
   <div class="card">
-    {%= components.IconGallery(as, ps) %}
+    TODO: Show SVGs
   </div>
 {% endfunc %}
 

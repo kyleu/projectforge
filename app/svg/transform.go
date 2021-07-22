@@ -8,7 +8,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-func Transform(tgt string, b []byte) (*SVG, error) {
+func Transform(tgt string, b []byte, url string) (*SVG, error) {
 	x := &xmlNode{}
 	if err := xml.Unmarshal(b, x); err != nil {
 		return nil, errors.Wrapf(err, "unable to parse XML from [%s]", string(b))
@@ -26,6 +26,7 @@ func Transform(tgt string, b []byte) (*SVG, error) {
 		markup += s + "\n"
 	}
 
+	add("<!-- imported from " + url + " -->")
 	add(`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">`)
 	add(fmt.Sprintf(`  <symbol id="svg-%s" viewBox="%s">`, tgt, vb))
 

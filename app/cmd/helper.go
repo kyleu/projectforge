@@ -21,7 +21,6 @@ func runToCompletion(projectKey string, t action.Type, cfg util.ValueMap) error 
 	if len(result.Errors) > 0 {
 		return result.AsError()
 	}
-	// println(util.ToJSON(result))
 	return nil
 }
 
@@ -40,4 +39,3 @@ func extractConfig(args []string) ([]string, util.ValueMap) {
 	}
 	return retArgs, retMap
 }
-

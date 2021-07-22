@@ -4,7 +4,6 @@ package auth
 import (
 	"os"
 
-	"github.com/kyleu/projectforge/app/auth/msfix"
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/providers/amazon"
 	"github.com/markbates/goth/providers/apple"
@@ -61,6 +60,8 @@ import (
 	"github.com/markbates/goth/providers/yammer"
 	"github.com/markbates/goth/providers/yandex"
 	"github.com/pkg/errors"
+
+	"github.com/kyleu/projectforge/app/auth/msfix"
 )
 
 // nolint

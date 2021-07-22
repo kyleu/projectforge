@@ -6,7 +6,8 @@
   "package": "github.com/kyleu/projectforge",
   "port": 40000,
   "modules": [
-    "core"
+    "core",
+    "desktop"
   ],
   "ignore": [
     "module",
@@ -15,7 +16,10 @@
   "children": [
     "./testproject",
     "../admini",
-    "../k8sinsights"
+    "../../fevo-tech/fevotools",
+    "../../fevo-tech/messagebot.next",
+    "../../fevo-tech/nuevo.next",
+    "../../fevo-tech/oldworld"
   ],
   "info": {
     "org": "kyleu",

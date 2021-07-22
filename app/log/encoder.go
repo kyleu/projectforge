@@ -5,10 +5,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/kyleu/projectforge/app/util"
 	"github.com/pkg/errors"
 	"go.uber.org/zap/buffer"
 	"go.uber.org/zap/zapcore"
+
+	"github.com/kyleu/projectforge/app/util"
 )
 
 const timeFormat = "15:04:05.000000"

@@ -6,9 +6,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/valyala/fasthttp"
-
 	"github.com/pkg/errors"
+	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/projectforge/app/util"
 )

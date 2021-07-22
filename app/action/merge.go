@@ -11,24 +11,10 @@ import (
 
 func onMerge(prj *project.Project, mods module.Modules, cfg util.ValueMap, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) *Result {
 	ret := newResult(cfg, logger)
-	var res module.Results
-	for _, mod := range mods {
-		r, err := merge(prj, mod, mSvc, pSvc, logger)
-		if err != nil {
-			return ret.WithError(err)
-		}
-		res = append(res, r)
-		logger.Info("applied module [" + mod.Key + "]")
-	}
-	ret.Modules = res
-	return ret
-}
-
-func merge(prj *project.Project, mod *module.Module, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) (*module.Result, error) {
 	start := util.TimerStart()
-	_, diffs, err := diffs(prj, mod, true, mSvc, pSvc, logger)
+	_, diffs, err := diffs(prj, mods, true, mSvc, pSvc, logger)
 	if err != nil {
-		return nil, err
+		return ret.WithError(err)
 	}
 
 	for _, f := range diffs {
@@ -38,9 +24,11 @@ func merge(prj *project.Project, mod *module.Module, mSvc *module.Service, pSvc 
 		case diff.StatusDifferent, diff.StatusNew:
 			// noop
 		default:
-			return nil, errors.Errorf("unhandled diff status [%s]", f.Status)
+			return ret.WithError(errors.Errorf("unhandled diff status [%s]", f.Status))
 		}
 	}
 
-	return &module.Result{Key: mod.Key, Status: "OK", Diffs: diffs, Duration: util.TimerEnd(start)}, nil
+	mr := &module.Result{Keys: mods.Keys(), Status: "OK", Diffs: diffs, Duration: util.TimerEnd(start)}
+	ret.Modules = append(ret.Modules, mr)
+	return ret
 }

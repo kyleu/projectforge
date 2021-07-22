@@ -6,9 +6,10 @@ import (
 	"os"
 	"strings"
 
-	"github.com/kyleu/projectforge/app/util"
 	"github.com/markbates/goth"
 	"github.com/pkg/errors"
+
+	"github.com/kyleu/projectforge/app/util"
 )
 
 type Provider struct {

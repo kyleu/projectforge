@@ -67,7 +67,7 @@ func FileLoader(src file.Files, tgt filesystem.FileLoader, includeUnchanged bool
 	var ret []*Diff
 	for _, s := range src {
 		p := s.FullPath()
-		t := tgt.Stat(p)
+		t, _ := tgt.Stat(p)
 
 		skip := false
 		var tgtFile *file.File

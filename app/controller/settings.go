@@ -4,10 +4,9 @@ package controller
 import (
 	"github.com/valyala/fasthttp"
 
+	"github.com/kyleu/projectforge/app"
 	"github.com/kyleu/projectforge/app/controller/cutil"
 	"github.com/kyleu/projectforge/app/settings"
-
-	"github.com/kyleu/projectforge/app"
 	"github.com/kyleu/projectforge/views/vsettings"
 )
 

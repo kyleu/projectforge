@@ -7,13 +7,13 @@ import (
 	"runtime/pprof"
 	"strings"
 
+	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/projectforge/app"
 	"github.com/kyleu/projectforge/app/controller/cutil"
 	"github.com/kyleu/projectforge/app/util"
 	"github.com/kyleu/projectforge/views/vadmin"
-	"github.com/pkg/errors"
 )
 
 func Admin(ctx *fasthttp.RequestCtx) {

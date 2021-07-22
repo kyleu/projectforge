@@ -8,7 +8,7 @@ cd $dir/../..
 TGT=$1
 [ "$TGT" ] || TGT="v0.0.0"
 
-if [ "$XSKIP_MOBILE" != "true" ]
+if [ "$XSKIP_IOS" != "true" ]
 then
   echo "building gomobile for iOS..."
   time gomobile bind -o build/dist/mobile_ios_arm64/projectforge.framework -target=ios github.com/kyleu/projectforge/app/cmd

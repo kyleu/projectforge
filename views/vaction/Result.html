@@ -1,4 +1,6 @@
 {% import (
+  "strings"
+
   "github.com/kyleu/projectforge/app"
   "github.com/kyleu/projectforge/app/controller/cutil"
   "github.com/kyleu/projectforge/app/action"
@@ -81,7 +83,7 @@
   {%- for _, mr := range p.Result.Modules -%}
     <div class="card">
       <div class="right">{%s mr.Status %}</div>
-      <h3>Module [{%s mr.Key %}]</h3>
+      <h3>{%s util.PluralMaybe("Module", len(mr.Keys)) %} [{%s strings.Join(mr.Keys, `, `) %}]</h3>
       <h4>Diffs</h4>
       <table>
         <thead>

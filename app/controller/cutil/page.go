@@ -4,14 +4,13 @@ package cutil
 import (
 	"fmt"
 
-	"github.com/kyleu/projectforge/app/auth"
-	"github.com/kyleu/projectforge/app/user"
-
+	"github.com/go-gem/sessions"
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
 
-	"github.com/go-gem/sessions"
+	"github.com/kyleu/projectforge/app/auth"
 	"github.com/kyleu/projectforge/app/menu"
+	"github.com/kyleu/projectforge/app/user"
 	"github.com/kyleu/projectforge/app/util"
 )
 

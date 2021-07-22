@@ -36,5 +36,4 @@ function check {
   fi
 }
 
-check "queries" "sql"
 check "views" "html"

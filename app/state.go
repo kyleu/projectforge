@@ -5,11 +5,12 @@ import (
 	"fmt"
 
 	"github.com/fasthttp/router"
+	"go.uber.org/zap"
+
 	"github.com/kyleu/projectforge/app/auth"
 	"github.com/kyleu/projectforge/app/filesystem"
 	"github.com/kyleu/projectforge/app/theme"
 	"github.com/kyleu/projectforge/app/util"
-	"go.uber.org/zap"
 )
 
 type BuildInfo struct {

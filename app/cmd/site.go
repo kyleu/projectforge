@@ -6,13 +6,14 @@ import (
 	"runtime"
 
 	"github.com/fasthttp/router"
+	"github.com/pkg/errors"
+	"github.com/spf13/cobra"
+	"go.uber.org/zap"
+
 	"github.com/kyleu/projectforge/app"
 	"github.com/kyleu/projectforge/app/controller"
 	"github.com/kyleu/projectforge/app/filesystem"
 	"github.com/kyleu/projectforge/app/util"
-	"github.com/pkg/errors"
-	"github.com/spf13/cobra"
-	"go.uber.org/zap"
 )
 
 const keySite = "site"
@@ -49,7 +50,7 @@ func loadSite(flags *Flags, logger *zap.SugaredLogger) (*router.Router, *zap.Sug
 		return nil, logger, err
 	}
 
-	controller.SetSiteState(st, logger)
+	controller.SetSiteState(st)
 
 	logger.Infof("started marketing site using address [%s:%d] on %s:%s", flags.Address, flags.Port, runtime.GOOS, runtime.GOARCH)
 

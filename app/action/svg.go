@@ -9,13 +9,14 @@ import (
 	"go.uber.org/zap"
 )
 
-func onSVG(prj *project.Project, cfg util.ValueMap, logger *zap.SugaredLogger) *Result {
+func onSVG(prj *project.Project, cfg util.ValueMap, pSvc *project.Service, logger *zap.SugaredLogger) *Result {
 	ret := newResult(cfg, logger)
 
 	src := fmt.Sprintf("%s/client/src/svg", prj.Path)
 	tgt := fmt.Sprintf("%s/app/util/svg.go", prj.Path)
 
-	count, err := svg.Run(src, tgt)
+	fs := pSvc.GetFilesystem(prj)
+	count, err := svg.Run(fs, src, tgt)
 	if err != nil {
 		return errorResult(err, cfg, logger)
 	}

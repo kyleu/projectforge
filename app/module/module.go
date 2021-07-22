@@ -35,3 +35,11 @@ func (i Modules) Get(key string) *Module {
 	}
 	return nil
 }
+
+func (i Modules) Keys() []string {
+	var ret []string
+	for _, x := range i {
+		ret = append(ret, x.Key)
+	}
+	return ret
+}

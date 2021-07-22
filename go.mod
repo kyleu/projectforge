@@ -1,4 +1,4 @@
-//$PF_IGNORE$
+// $PF_IGNORE$
 module github.com/kyleu/projectforge
 
 go 1.16
@@ -8,6 +8,7 @@ require (
 	github.com/fasthttp/router v1.4.0
 	github.com/gertd/go-pluralize v0.1.7
 	github.com/go-gem/sessions v0.0.0-20170522023159-6f6fd65f2530
+	github.com/google/uuid v1.2.0
 	github.com/gorilla/pat v1.0.1 // indirect
 	github.com/gorilla/securecookie v1.1.1
 	github.com/iancoleman/strcase v0.2.0

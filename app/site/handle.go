@@ -2,6 +2,8 @@
 package site
 
 import (
+	"github.com/valyala/fasthttp"
+
 	"github.com/kyleu/projectforge/app"
 	"github.com/kyleu/projectforge/app/controller/cutil"
 	"github.com/kyleu/projectforge/app/site/download"
@@ -9,7 +11,6 @@ import (
 	"github.com/kyleu/projectforge/views"
 	"github.com/kyleu/projectforge/views/layout"
 	"github.com/kyleu/projectforge/views/vsite"
-	"github.com/valyala/fasthttp"
 )
 
 func siteData(result string, kvs ...string) map[string]interface{} {

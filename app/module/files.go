@@ -13,10 +13,10 @@ import (
 
 const configFilename = ".module.json"
 
-func (m *Module) FileContent(files filesystem.FileLoader, path string) (os.FileMode, []byte, error) {
-	stat := files.Stat(path)
-	if stat == nil {
-		return 0, nil, errors.Errorf("file [%s] not found", path)
+func fileContent(files filesystem.FileLoader, path string) (os.FileMode, []byte, error) {
+	stat, err := files.Stat(path)
+	if err != nil {
+		return 0, nil, errors.Wrapf(err, "file [%s] not found", path)
 	}
 	b, err := files.ReadFile(path)
 	if err != nil {
@@ -59,8 +59,8 @@ func (s *Service) Load(key string) (*Module, error) {
 	return ret, nil
 }
 
-func (s *Service) GetFiles(mod *Module, changes *file.Changeset, addHeader bool, tgt filesystem.FileLoader) (file.Files, error) {
-	loader := s.GetFilesystem(mod.Key)
+func (s *Service) GetFiles(mods Modules, changes *file.Changeset, addHeader bool, tgt filesystem.FileLoader) (file.Files, error) {
+	loader := s.getNestedFilesystem(mods)
 	fs, err := loader.ListFilesRecursive("", nil)
 	if err != nil {
 		return nil, err
@@ -70,8 +70,8 @@ func (s *Service) GetFiles(mod *Module, changes *file.Changeset, addHeader bool,
 		if f == configFilename {
 			continue
 		}
-		f = strings.TrimPrefix(strings.TrimPrefix(f, mod.Path()), "/")
-		mode, b, err := mod.FileContent(loader, f)
+		// f = strings.TrimPrefix(strings.TrimPrefix(f, mod.Path()), "/")
+		mode, b, err := fileContent(loader, f)
 		if err != nil {
 			return nil, err
 		}

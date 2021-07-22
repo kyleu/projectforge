@@ -4,9 +4,9 @@ package util_test
 import (
 	"testing"
 
-	"github.com/kyleu/projectforge/app/util"
-
 	"github.com/pkg/errors"
+
+	"github.com/kyleu/projectforge/app/util"
 )
 
 type ToTitleTest struct {

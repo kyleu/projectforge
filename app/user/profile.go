@@ -5,11 +5,12 @@ import (
 	"fmt"
 
 	"github.com/go-gem/sessions"
-	"github.com/kyleu/projectforge/app/auth"
-	"github.com/kyleu/projectforge/app/util"
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
+
+	"github.com/kyleu/projectforge/app/auth"
+	"github.com/kyleu/projectforge/app/util"
 )
 
 type Profile struct {
