@@ -5,9 +5,10 @@ import (
 	"os"
 	"strings"
 
-	"$PF_PACKAGE$/app/util"
 	"github.com/markbates/goth"
 	"github.com/pkg/errors"
+
+	"$PF_PACKAGE$/app/util"
 )
 
 type Provider struct {

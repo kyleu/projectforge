@@ -4,10 +4,11 @@ import (
 	"fmt"
 	"strings"
 
-	"$PF_PACKAGE$/app/util"
 	"github.com/pkg/errors"
 	"go.uber.org/zap/buffer"
 	"go.uber.org/zap/zapcore"
+
+	"$PF_PACKAGE$/app/util"
 )
 
 const timeFormat = "15:04:05.000000"

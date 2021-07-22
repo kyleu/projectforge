@@ -1,10 +1,10 @@
 package cutil
 
 import (
+	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 
 	"$PF_PACKAGE$/app/util"
-	"github.com/pkg/errors"
 )
 
 func ParseForm(ctx *fasthttp.RequestCtx) (util.ValueMap, error) {

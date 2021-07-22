@@ -3,14 +3,13 @@ package cutil
 import (
 	"fmt"
 
-	"$PF_PACKAGE$/app/auth"
-	"$PF_PACKAGE$/app/user"
-
+	"github.com/go-gem/sessions"
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
 
-	"github.com/go-gem/sessions"
+	"$PF_PACKAGE$/app/auth"
 	"$PF_PACKAGE$/app/menu"
+	"$PF_PACKAGE$/app/user"
 	"$PF_PACKAGE$/app/util"
 )
 

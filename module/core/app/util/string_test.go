@@ -3,9 +3,9 @@ package util_test
 import (
 	"testing"
 
-	"$PF_PACKAGE$/app/util"
-
 	"github.com/pkg/errors"
+
+	"$PF_PACKAGE$/app/util"
 )
 
 type ToTitleTest struct {

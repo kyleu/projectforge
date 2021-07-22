@@ -1,8 +1,9 @@
 package sandbox
 
 import (
-	"$PF_PACKAGE$/app"
 	"go.uber.org/zap"
+
+	"$PF_PACKAGE$/app"
 )
 
 type runFn func(st *app.State, logger *zap.SugaredLogger) (interface{}, error)
@@ -27,4 +28,5 @@ func (s Sandboxes) Get(key string) *Sandbox {
 
 // $PF_SECTION_START(sandboxes)$
 var AllSandboxes = Sandboxes{testbed}
+
 // $PF_SECTION_END(sandboxes)$

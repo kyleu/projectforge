@@ -4,11 +4,12 @@ import (
 	"fmt"
 
 	"github.com/go-gem/sessions"
-	"$PF_PACKAGE$/app/auth"
-	"$PF_PACKAGE$/app/util"
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
+
+	"$PF_PACKAGE$/app/auth"
+	"$PF_PACKAGE$/app/util"
 )
 
 type Profile struct {

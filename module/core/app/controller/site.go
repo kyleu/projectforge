@@ -2,12 +2,12 @@ package controller
 
 import (
 	"github.com/fasthttp/router"
-	"$PF_PACKAGE$/app/controller/cutil"
-	"$PF_PACKAGE$/app/site"
-	"$PF_PACKAGE$/app/util"
 	"github.com/valyala/fasthttp"
 
 	"$PF_PACKAGE$/app"
+	"$PF_PACKAGE$/app/controller/cutil"
+	"$PF_PACKAGE$/app/site"
+	"$PF_PACKAGE$/app/util"
 )
 
 func SiteRoutes() *router.Router {

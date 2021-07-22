@@ -1,6 +1,8 @@
 package site
 
 import (
+	"github.com/valyala/fasthttp"
+
 	"$PF_PACKAGE$/app"
 	"$PF_PACKAGE$/app/controller/cutil"
 	"$PF_PACKAGE$/app/site/download"
@@ -8,7 +10,6 @@ import (
 	"$PF_PACKAGE$/views"
 	"$PF_PACKAGE$/views/layout"
 	"$PF_PACKAGE$/views/vsite"
-	"github.com/valyala/fasthttp"
 )
 
 func siteData(result string, kvs ...string) map[string]interface{} {

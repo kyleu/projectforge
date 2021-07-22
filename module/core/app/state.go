@@ -4,11 +4,12 @@ import (
 	"fmt"
 
 	"github.com/fasthttp/router"
+	"go.uber.org/zap"
+
 	"$PF_PACKAGE$/app/auth"
 	"$PF_PACKAGE$/app/filesystem"
 	"$PF_PACKAGE$/app/theme"
 	"$PF_PACKAGE$/app/util"
-	"go.uber.org/zap"
 )
 
 type BuildInfo struct {

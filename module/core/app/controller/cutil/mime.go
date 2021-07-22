@@ -5,9 +5,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/valyala/fasthttp"
-
 	"github.com/pkg/errors"
+	"github.com/valyala/fasthttp"
 
 	"$PF_PACKAGE$/app/util"
 )

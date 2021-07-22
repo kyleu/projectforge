@@ -1,11 +1,12 @@
 package controller
 
 import (
+	"github.com/valyala/fasthttp"
+
 	"$PF_PACKAGE$/app"
 	"$PF_PACKAGE$/app/controller/cutil"
 	"$PF_PACKAGE$/app/util"
 	"$PF_PACKAGE$/views"
-	"github.com/valyala/fasthttp"
 )
 
 func About(ctx *fasthttp.RequestCtx) {
@@ -14,4 +15,3 @@ func About(ctx *fasthttp.RequestCtx) {
 		return render(ctx, as, &views.About{}, ps)
 	})
 }
-

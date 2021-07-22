@@ -4,18 +4,16 @@ import (
 	"fmt"
 	"time"
 
-	"$PF_PACKAGE$/app/auth"
-	"$PF_PACKAGE$/app/site"
-	"$PF_PACKAGE$/app/theme"
 	"github.com/valyala/fasthttp"
-
 	"go.uber.org/zap"
 
-	"$PF_PACKAGE$/views/verror"
-
 	"$PF_PACKAGE$/app"
+	"$PF_PACKAGE$/app/auth"
 	"$PF_PACKAGE$/app/controller/cutil"
+	"$PF_PACKAGE$/app/site"
+	"$PF_PACKAGE$/app/theme"
 	"$PF_PACKAGE$/app/util"
+	"$PF_PACKAGE$/views/verror"
 )
 
 const (
@@ -26,7 +24,7 @@ const (
 
 func act(key string, ctx *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
 	as := _currentAppState
-	ps := loadPageState(ctx)
+	ps := loadPageState(ctx, as.Logger)
 	err := initAppRequest(as, ps)
 	if err != nil {
 		as.Logger.Warnf("%+v", err)
@@ -40,7 +38,7 @@ func act(key string, ctx *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.P
 
 func actSite(key string, ctx *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
 	as := _currentSiteState
-	ps := loadPageState(ctx)
+	ps := loadPageState(ctx, as.Logger)
 	ps.Menu = site.Menu(ps.Profile, ps.Auth)
 	err := initSiteRequest(as, ps)
 	if err != nil {
@@ -53,8 +51,8 @@ func actSite(key string, ctx *fasthttp.RequestCtx, f func(as *app.State, ps *cut
 	actComplete(key, as, ps, ctx, f)
 }
 
-func loadPageState(ctx *fasthttp.RequestCtx) *cutil.PageState {
-	logger := _rootLogger.With(zap.String("path", string(ctx.Request.URI().Path())))
+func loadPageState(ctx *fasthttp.RequestCtx, logger *zap.SugaredLogger) *cutil.PageState {
+	logger = logger.With(zap.String("path", string(ctx.Request.URI().Path())))
 
 	if store == nil {
 		store = initStore([]byte(sessionKey))

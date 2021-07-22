@@ -3,10 +3,11 @@ package theme
 import (
 	"path/filepath"
 
-	"$PF_PACKAGE$/app/filesystem"
-	"$PF_PACKAGE$/app/util"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
+
+	"$PF_PACKAGE$/app/filesystem"
+	"$PF_PACKAGE$/app/util"
 )
 
 const KeyNew = "new"
@@ -59,7 +60,7 @@ func (s *Service) Save(t *Theme) error {
 func (s *Service) loadIfNeeded() {
 	if s.cache == nil {
 		s.cache = Themes{ThemeDefault}
-		for _, key := range s.files.ListJSON(s.root) {
+		for _, key := range s.files.ListJSON(s.root, true) {
 			t := &Theme{}
 			b, err := s.files.ReadFile(filepath.Join(s.root, key+".json"))
 			if err != nil {

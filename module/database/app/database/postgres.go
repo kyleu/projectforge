@@ -2,6 +2,8 @@ package database
 
 import (
 	"fmt"
+	"os"
+	"strconv"
 
 	"go.uber.org/zap"
 
@@ -20,7 +22,44 @@ type PostgresParams struct {
 	Password string `json:"password,omitempty"`
 	Database string `json:"database,omitempty"`
 	Schema   string `json:"schema,omitempty"`
+	MaxConns int    `json:"maxConns,omitempty"`
 	Debug    bool   `json:"debug,omitempty"`
+}
+
+func PostgresParamsFromEnv(key string, defaultUser string, prefix string) *PostgresParams {
+	h := "localhost"
+	if x := os.Getenv(prefix + "DB_HOST"); x != "" {
+		h = x
+	}
+	p := 0
+	if x := os.Getenv(prefix + "DB_PORT"); x != "" {
+		p, _ = strconv.Atoi(x)
+	}
+	u := defaultUser
+	if x := os.Getenv(prefix + "DB_USER"); x != "" {
+		u = x
+	}
+	pw := ""
+	if x := os.Getenv(prefix + "DB_PASSWORD"); x != "" {
+		pw = x
+	}
+	d := key
+	if x := os.Getenv(prefix + "DB_DATABASE"); x != "" {
+		d = x
+	}
+	s := "public"
+	if x := os.Getenv(prefix + "DB_SCHEMA"); x != "" {
+		s = x
+	}
+	mc := 16
+	if x := os.Getenv(prefix + "DB_MAX_CONNECTIONS"); x != "" {
+		mc, _ = strconv.Atoi(x)
+	}
+	debug := false
+	if x := os.Getenv(prefix + "DB_DEBUG"); x != "" {
+		debug = x != "false"
+	}
+	return &PostgresParams{Host: h, Port: p, Username: u, Password: pw, Database: d, Schema: s, MaxConns: mc, Debug: debug}
 }
 
 func OpenPostgresDatabase(params *PostgresParams, logger *zap.SugaredLogger) (*Service, error) {

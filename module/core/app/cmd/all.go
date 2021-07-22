@@ -3,9 +3,10 @@ package cmd
 import (
 	"fmt"
 
-	"$PF_PACKAGE$/app/util"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
+
+	"$PF_PACKAGE$/app/util"
 )
 
 const keyAll = "all"

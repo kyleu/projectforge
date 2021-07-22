@@ -18,7 +18,7 @@ func (f *FileSystem) CopyFile(src string, tgt string) error {
 	}
 
 	var mode os.FileMode
-	if stat := f.Stat(src); stat != nil {
+	if stat, e := f.Stat(src); stat != nil && e == nil {
 		mode = stat.Mode()
 	}
 

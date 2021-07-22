@@ -4,10 +4,11 @@ import (
 	"encoding/base64"
 	"net/url"
 
-	"$PF_PACKAGE$/app/util"
 	"github.com/markbates/goth"
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
+
+	"$PF_PACKAGE$/app/util"
 )
 
 func setState(ctx *fasthttp.RequestCtx) string {

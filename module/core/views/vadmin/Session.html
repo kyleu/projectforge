@@ -1,5 +1,6 @@
 {% import (
   "fmt"
+
   "$PF_PACKAGE$/app"
   "$PF_PACKAGE$/app/controller/cutil"
   "$PF_PACKAGE$/app/util"
@@ -19,7 +20,7 @@
     <h3>Session values</h3>
     <ul>
       {%- for k, v := range ps.Session.Values -%}
-        <li>{%v k %}: {%s fmt.Sprintf("%v", v) %}</li>
+        <li>{%v k %}: {%s fmt.Sprint(v) %}</li>
       {%- endfor -%}
     </ul>
   </div>

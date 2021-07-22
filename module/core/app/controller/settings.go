@@ -3,10 +3,9 @@ package controller
 import (
 	"github.com/valyala/fasthttp"
 
+	"$PF_PACKAGE$/app"
 	"$PF_PACKAGE$/app/controller/cutil"
 	"$PF_PACKAGE$/app/settings"
-
-	"$PF_PACKAGE$/app"
 	"$PF_PACKAGE$/views/vsettings"
 )
 

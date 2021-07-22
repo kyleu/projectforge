@@ -4,14 +4,14 @@ import (
 	"net/url"
 
 	"github.com/go-gem/sessions"
-	"$PF_PACKAGE$/app/controller/cutil"
-	"$PF_PACKAGE$/app/theme"
-	"$PF_PACKAGE$/app/user"
-	"$PF_PACKAGE$/app/util"
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 
 	"$PF_PACKAGE$/app"
+	"$PF_PACKAGE$/app/controller/cutil"
+	"$PF_PACKAGE$/app/theme"
+	"$PF_PACKAGE$/app/user"
+	"$PF_PACKAGE$/app/util"
 	"$PF_PACKAGE$/views/vauth"
 )
 

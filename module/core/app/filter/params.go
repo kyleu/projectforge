@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"strings"
 
-	"$PF_PACKAGE$/app/util"
 	"github.com/valyala/fasthttp"
-
 	"go.uber.org/zap"
+
+	"$PF_PACKAGE$/app/util"
 )
 
 const MaxRowsDefault = 100

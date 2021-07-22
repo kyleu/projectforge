@@ -1,4 +1,4 @@
-//$PF_IGNORE$
+// $PF_IGNORE$
 module $PF_PACKAGE$
 
 go 1.16
@@ -8,6 +8,7 @@ require (
 	github.com/fasthttp/router v1.4.0
 	github.com/gertd/go-pluralize v0.1.7
 	github.com/go-gem/sessions v0.0.0-20170522023159-6f6fd65f2530
+	github.com/google/uuid v1.2.0
 	github.com/gorilla/pat v1.0.1 // indirect
 	github.com/gorilla/securecookie v1.1.1
 	github.com/iancoleman/strcase v0.2.0
@@ -19,6 +20,6 @@ require (
 	github.com/valyala/fasthttp v1.28.0
 	github.com/valyala/quicktemplate v1.6.3
 	go.uber.org/zap v1.18.1
-	golang.org/x/mobile v0.0.0-20210710064935-76c259c465ba // indirect
+	golang.org/x/mobile v0.0.0-20210710064935-76c259c465ba
 	golang.org/x/oauth2 v0.0.0-20210628180205-a41e5a781914
 )

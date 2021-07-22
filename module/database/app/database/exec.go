@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"strings"
 
-	"$PF_PACKAGE$/app/util"
+	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
 
-	"github.com/jmoiron/sqlx"
+	"$PF_PACKAGE$/app/util"
 )
 
 func (s *Service) Insert(q string, tx *sqlx.Tx, values ...interface{}) error {
@@ -71,7 +71,7 @@ func (s *Service) execUnknown(q string, tx *sqlx.Tx, values ...interface{}) (int
 }
 
 func (s *Service) process(key string, past string, q string, tx *sqlx.Tx, expected int, values ...interface{}) (int, error) {
-	if s.debug != nil {
+	if s.logger != nil {
 		s.logQuery(fmt.Sprintf("%s [%d] rows", key, expected), q, values)
 	}
 

@@ -1,6 +1,8 @@
 {% import (
   "fmt"
+
   "github.com/valyala/fasthttp"
+
   "$PF_PACKAGE$/app/controller/cutil"
   "$PF_PACKAGE$/app/filter"
   "$PF_PACKAGE$/views/vutil"
@@ -88,7 +90,7 @@
 {% endstripspace %}{% endfunc %}
 
 {% func TableBoolean(key string, title string, value bool, indent int) %}{% stripspace %}
-  {%= TableRadio(key, title, fmt.Sprintf("%v", value), []string{"true", "false"}, []string{"True", "False"}, indent) %}
+  {%= TableRadio(key, title, fmt.Sprint(value), []string{"true", "false"}, []string{"True", "False"}, indent) %}
 {% endstripspace %}{% endfunc %}
 
 {% func TableCheckbox(key string, title string, values []string, opts []string, titles []string, indent int) %}{% stripspace %}

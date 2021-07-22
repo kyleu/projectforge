@@ -3,13 +3,12 @@ package controller
 import (
 	"fmt"
 
-	"$PF_PACKAGE$/app/auth"
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 
-	"$PF_PACKAGE$/app/controller/cutil"
-
 	"$PF_PACKAGE$/app"
+	"$PF_PACKAGE$/app/auth"
+	"$PF_PACKAGE$/app/controller/cutil"
 )
 
 const signinMsg = "signed in to %s as [%s]"

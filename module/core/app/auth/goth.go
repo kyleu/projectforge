@@ -3,7 +3,6 @@ package auth
 import (
 	"os"
 
-	"$PF_PACKAGE$/app/auth/msfix"
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/providers/amazon"
 	"github.com/markbates/goth/providers/apple"
@@ -60,6 +59,8 @@ import (
 	"github.com/markbates/goth/providers/yammer"
 	"github.com/markbates/goth/providers/yandex"
 	"github.com/pkg/errors"
+
+	"$PF_PACKAGE$/app/auth/msfix"
 )
 
 // nolint

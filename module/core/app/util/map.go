@@ -1,8 +1,11 @@
 package util
 
 import (
+	"encoding/csv"
 	"fmt"
+	"net/url"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -16,30 +19,30 @@ func ValueMapFor(kvs ...interface{}) ValueMap {
 	return ret
 }
 
-func (c ValueMap) KeysAndValues() ([]string, []interface{}) {
-	cols := make([]string, 0, len(c))
-	vals := make([]interface{}, 0, len(c))
-	for k := range c {
+func (m ValueMap) KeysAndValues() ([]string, []interface{}) {
+	cols := make([]string, 0, len(m))
+	vals := make([]interface{}, 0, len(m))
+	for k := range m {
 		cols = append(cols, k)
 	}
 	sort.Strings(cols)
 	for _, col := range cols {
-		vals = append(vals, c[col])
+		vals = append(vals, m[col])
 	}
 	return cols, vals
 }
 
-func (c ValueMap) GetRequired(k string) (interface{}, error) {
-	v, ok := c[k]
+func (m ValueMap) GetRequired(k string) (interface{}, error) {
+	v, ok := m[k]
 	if !ok {
 		msg := "no value [%s] among candidates [%s]"
-		return nil, errors.Errorf(msg, k, OxfordComma(c.Keys(), "and"))
+		return nil, errors.Errorf(msg, k, OxfordComma(m.Keys(), "and"))
 	}
 	return v, nil
 }
 
-func (c ValueMap) GetBool(k string) (bool, error) {
-	v, err := c.GetRequired(k)
+func (m ValueMap) GetBool(k string) (bool, error) {
+	v, err := m.GetRequired(k)
 	if err != nil {
 		return false, err
 	}
@@ -53,13 +56,13 @@ func (c ValueMap) GetBool(k string) (bool, error) {
 	case nil:
 		ret = false
 	default:
-		return false, errors.Errorf("expected boolean or string, encountered %T: %v", t, t)
+		return false, errors.Errorf("expected boolean or string, encountered %T", t)
 	}
 	return ret, nil
 }
 
-func (c ValueMap) GetString(k string, allowEmpty bool) (string, error) {
-	v, err := c.GetRequired(k)
+func (m ValueMap) GetString(k string, allowEmpty bool) (string, error) {
+	v, err := m.GetRequired(k)
 	if err != nil {
 		return "", err
 	}
@@ -73,7 +76,7 @@ func (c ValueMap) GetString(k string, allowEmpty bool) (string, error) {
 	case nil:
 		ret = ""
 	default:
-		return "", errors.Errorf("expected string or array of strings, encountered %T: %v", t, t)
+		return "", errors.Errorf("expected string or array of strings, encountered %T", t)
 	}
 	if !allowEmpty && ret == "" {
 		return "", errors.Errorf("field [%s] may not be empty", k)
@@ -81,13 +84,13 @@ func (c ValueMap) GetString(k string, allowEmpty bool) (string, error) {
 	return ret, nil
 }
 
-func (c ValueMap) GetStringOpt(k string) string {
-	ret, _ := c.GetString(k, true)
+func (m ValueMap) GetStringOpt(k string) string {
+	ret, _ := m.GetString(k, true)
 	return ret
 }
 
-func (c ValueMap) GetStringArray(k string, allowMissing bool) ([]string, error) {
-	v, err := c.GetRequired(k)
+func (m ValueMap) GetStringArray(k string, allowMissing bool) ([]string, error) {
+	v, err := m.GetRequired(k)
 	if err != nil {
 		if allowMissing {
 			return nil, nil
@@ -101,24 +104,24 @@ func (c ValueMap) GetStringArray(k string, allowMissing bool) ([]string, error) 
 	case string:
 		return []string{t}, nil
 	default:
-		return nil, errors.Errorf("expected array of strings, encountered %T: %v", t, t)
+		return nil, errors.Errorf("expected array of strings, encountered %T", t)
 	}
 }
 
 const selectedSuffix = "--selected"
 
-func (c ValueMap) AsChanges() (ValueMap, error) {
+func (m ValueMap) AsChanges() (ValueMap, error) {
 	var keys []string
 	vals := ValueMap{}
 
-	for k, v := range c {
+	for k, v := range m {
 		if strings.HasSuffix(k, selectedSuffix) {
 			key := strings.TrimSuffix(k, selectedSuffix)
 			keys = append(keys, key)
 		} else {
 			curr, ok := vals[k]
 			if ok {
-				return nil, errors.Errorf("multiple values presented for [%s] (%v/%v)", k, curr, v)
+				return nil, errors.Errorf("multiple values presented for [%s] (%T/%T)", k, curr, v)
 			}
 			vals[k] = v
 		}
@@ -131,18 +134,18 @@ func (c ValueMap) AsChanges() (ValueMap, error) {
 	return ret, nil
 }
 
-func (c ValueMap) Keys() []string {
-	ret := make([]string, 0, len(c))
-	for k := range c {
+func (m ValueMap) Keys() []string {
+	ret := make([]string, 0, len(m))
+	for k := range m {
 		ret = append(ret, k)
 	}
 	sort.Strings(ret)
 	return ret
 }
 
-func (c ValueMap) Merge(args ValueMap) ValueMap {
-	ret := make(ValueMap, len(c)+len(args))
-	for k, v := range c {
+func (m ValueMap) Merge(args ValueMap) ValueMap {
+	ret := make(ValueMap, len(m)+len(args))
+	for k, v := range m {
 		ret[k] = v
 	}
 	for k, v := range args {
@@ -151,12 +154,113 @@ func (c ValueMap) Merge(args ValueMap) ValueMap {
 	return ret
 }
 
-func (c ValueMap) Add(kvs ...interface{}) {
+func (m ValueMap) Add(kvs ...interface{}) {
 	for i := 0; i < len(kvs); i += 2 {
 		k, ok := kvs[i].(string)
 		if !ok {
 			k = fmt.Sprintf("error-invalid-type:%T", kvs[i])
 		}
-		c[k] = kvs[i+1]
+		m[k] = kvs[i+1]
 	}
+}
+
+func (m ValueMap) Clone() ValueMap {
+	ret := make(ValueMap, len(m))
+	for k, v := range m {
+		ret[k] = v
+	}
+	return ret
+}
+
+func (m ValueMap) ToQueryString() string {
+	params := url.Values{}
+	for k, v := range m {
+		params.Add(k, fmt.Sprint(v))
+	}
+	return params.Encode()
+}
+
+func (m ValueMap) GetPath(path string) interface{} {
+	r := csv.NewReader(strings.NewReader(path))
+	r.Comma = '.'
+	fields, err := r.Read()
+	if err != nil {
+		return err
+	}
+	return getPath(m, fields)
+}
+
+func getPath(i interface{}, path []string) interface{} {
+	if len(path) == 0 {
+		return i
+	}
+	k := path[0]
+	switch t := i.(type) {
+	case ValueMap:
+		ret, ok := t[k]
+		if !ok {
+			return nil
+		}
+		return getPath(ret, path[1:])
+	case map[string]interface{}:
+		ret, ok := t[k]
+		if !ok {
+			return nil
+		}
+		return getPath(ret, path[1:])
+	case []interface{}:
+		i, err := strconv.Atoi(k)
+		if err != nil {
+			return nil
+		}
+		var ret interface{}
+		if len(t) > i {
+			ret = t[i]
+		}
+		return getPath(ret, path[1:])
+	default:
+		return nil
+	}
+}
+
+func (m ValueMap) SetPath(path string, val interface{}) interface{} {
+	r := csv.NewReader(strings.NewReader(path))
+	r.Comma = '.'
+	fields, err := r.Read()
+	if err != nil {
+		return err
+	}
+	return setPath(m, fields, val)
+}
+
+func (m ValueMap) Unset(s string) {
+	delete(m, s)
+}
+
+func setPath(i interface{}, path []string, val interface{}) error {
+	work := i
+	for idx, p := range path {
+		if idx == len(path)-1 {
+			switch t := work.(type) {
+			case ValueMap:
+				t[p] = val
+			case map[string]interface{}:
+				t[p] = val
+			default:
+				return errors.New(fmt.Sprintf("unhandled [%T]", t))
+			}
+		} else {
+			switch t := work.(type) {
+			case ValueMap:
+				t[p] = map[string]interface{}{}
+				work = t[p]
+			case map[string]interface{}:
+				t[p] = map[string]interface{}{}
+				work = t[p]
+			default:
+				return errors.New(fmt.Sprintf("unhandled [%T]", t))
+			}
+		}
+	}
+	return nil
 }

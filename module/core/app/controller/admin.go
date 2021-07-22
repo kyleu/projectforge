@@ -6,13 +6,13 @@ import (
 	"runtime/pprof"
 	"strings"
 
+	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 
 	"$PF_PACKAGE$/app"
 	"$PF_PACKAGE$/app/controller/cutil"
 	"$PF_PACKAGE$/app/util"
 	"$PF_PACKAGE$/views/vadmin"
-	"github.com/pkg/errors"
 )
 
 func Admin(ctx *fasthttp.RequestCtx) {

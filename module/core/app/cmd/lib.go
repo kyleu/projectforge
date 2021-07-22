@@ -1,9 +1,10 @@
 package cmd
 
 import (
+	"github.com/pkg/errors"
+
 	"$PF_PACKAGE$/app"
 	"$PF_PACKAGE$/app/util"
-	"github.com/pkg/errors"
 )
 
 // Lib starts the application as a library, returning the actual TCP port the server is listening on (as an int32 to make interop easier).
@@ -27,7 +28,7 @@ func Lib() (int32, error) {
 		return 0, err
 	}
 
-	logger.Infof("%v library started on port [%v]", util.AppName, port)
+	logger.Infof("%v library started on port [%d]", util.AppName, port)
 
 	go func() {
 		e := serve(util.AppKey, listener, r)
