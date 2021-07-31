@@ -7,7 +7,7 @@ import (
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
 
-	"$PF_PACKAGE$/app/util"
+	"{{{ .Package }}}/app/util"
 )
 
 const MaxRowsDefault = 100

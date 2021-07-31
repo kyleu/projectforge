@@ -2,7 +2,6 @@ package diff
 
 import (
 	"fmt"
-	"net/url"
 	"strings"
 
 	"github.com/kyleu/projectforge/app/file"
@@ -37,11 +36,13 @@ func File(src *file.File, tgt *file.File) *Diff {
 		diffs = dmp.DiffCleanupSemantic(diffs)
 		patches := dmp.PatchMake(tgt.Content, diffs)
 		if len(patches) > 0 {
-			ret.Patch = dmp.PatchToText(patches)
-			pte, err := url.QueryUnescape(ret.Patch)
-			if err == nil {
-				ret.Patch = pte
-			}
+			// TODO: Figure out what works
+			ret.Patch = dmp.DiffPrettyHtml(diffs)
+			//ret.Patch = dmp.PatchToText(patches)
+			//pte, err := url.QueryUnescape(ret.Patch)
+			//if err == nil {
+			//	ret.Patch = pte
+			//}
 			ret.Status = StatusDifferent
 		} else {
 			ret.Status = StatusIdentical

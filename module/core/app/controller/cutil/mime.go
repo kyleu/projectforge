@@ -8,7 +8,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 
-	"$PF_PACKAGE$/app/util"
+	"{{{ .Package }}}/app/util"
 )
 
 const (

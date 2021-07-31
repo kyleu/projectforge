@@ -8,7 +8,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
 
-	"$PF_PACKAGE$/app/util"
+	"{{{ .Package }}}/app/util"
 )
 
 func (s *Service) Insert(q string, tx *sqlx.Tx, values ...interface{}) error {

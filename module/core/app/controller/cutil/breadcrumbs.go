@@ -1,7 +1,7 @@
 package cutil
 
 import (
-	"$PF_PACKAGE$/app/menu"
+	"{{{ .Package }}}/app/menu"
 )
 
 type Breadcrumbs []string

@@ -1,7 +1,7 @@
 {% import (
-  "$PF_PACKAGE$/app/controller/cutil"
-  "$PF_PACKAGE$/app/theme"
-  "$PF_PACKAGE$/views/vutil"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/theme"
+  "{{{ .Package }}}/views/vutil"
 ) %}
 
 {% func Choice(themes theme.Themes, selected string, indent int, ps *cutil.PageState) %}{% stripspace %}

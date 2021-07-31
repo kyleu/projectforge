@@ -20,7 +20,9 @@ func actionCmd(t action.Type) *cobra.Command {
 func actionCommands() []*cobra.Command {
 	ret := make([]*cobra.Command, 0, len(action.AllTypes))
 	for _, a := range action.AllTypes {
-		ret = append(ret, actionCmd(a))
+		if !a.Hidden {
+			ret = append(ret, actionCmd(a))
+		}
 	}
 	return ret
 }

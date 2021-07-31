@@ -7,13 +7,13 @@ import (
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
 
-	"$PF_PACKAGE$/app"
-	"$PF_PACKAGE$/app/auth"
-	"$PF_PACKAGE$/app/controller/cutil"
-	"$PF_PACKAGE$/app/site"
-	"$PF_PACKAGE$/app/theme"
-	"$PF_PACKAGE$/app/util"
-	"$PF_PACKAGE$/views/verror"
+	"{{{ .Package }}}/app"
+	"{{{ .Package }}}/app/auth"
+	"{{{ .Package }}}/app/controller/cutil"
+	"{{{ .Package }}}/app/site"
+	"{{{ .Package }}}/app/theme"
+	"{{{ .Package }}}/app/util"
+	"{{{ .Package }}}/views/verror"
 )
 
 const (

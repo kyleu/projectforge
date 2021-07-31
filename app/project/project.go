@@ -9,6 +9,7 @@ type Project struct {
 	Key      string   `json:"key"`
 	Type     string   `json:"type"`
 	Name     string   `json:"name,omitempty"`
+	Exec     string   `json:"exec,omitempty"`
 	Version  string   `json:"version"`
 	Package  string   `json:"package,omitempty"`
 	Args     string   `json:"args,omitempty"`
@@ -27,6 +28,13 @@ func (p *Project) Title() string {
 		return p.Key
 	}
 	return p.Name
+}
+
+func (p *Project) Executable() string {
+	if p.Exec == "" {
+		return p.Key
+	}
+	return p.Exec
 }
 
 func NewProject(key string, path string) *Project {

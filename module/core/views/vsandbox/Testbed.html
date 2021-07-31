@@ -1,9 +1,9 @@
 <!-- $PF_IGNORE$ -->
 {% import (
-  "$PF_PACKAGE$/app"
-  "$PF_PACKAGE$/app/controller/cutil"
-  "$PF_PACKAGE$/views/components"
-  "$PF_PACKAGE$/views/layout"
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/views/components"
+  "{{{ .Package }}}/views/layout"
 ) %}
 
 {% code type Testbed struct { layout.Basic } %}

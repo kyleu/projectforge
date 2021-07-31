@@ -4,12 +4,12 @@ import (
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 
-	"$PF_PACKAGE$/app"
-	"$PF_PACKAGE$/app/controller/cutil"
-	"$PF_PACKAGE$/app/theme"
-	"$PF_PACKAGE$/app/user"
-	"$PF_PACKAGE$/app/util"
-	"$PF_PACKAGE$/views/vtheme"
+	"{{{ .Package }}}/app"
+	"{{{ .Package }}}/app/controller/cutil"
+	"{{{ .Package }}}/app/theme"
+	"{{{ .Package }}}/app/user"
+	"{{{ .Package }}}/app/util"
+	"{{{ .Package }}}/views/vtheme"
 )
 
 func ThemeList(ctx *fasthttp.RequestCtx) {

@@ -8,8 +8,8 @@ import (
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
 
-	"$PF_PACKAGE$/app/auth"
-	"$PF_PACKAGE$/app/util"
+	"{{{ .Package }}}/app/auth"
+	"{{{ .Package }}}/app/util"
 )
 
 type Profile struct {

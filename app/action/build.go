@@ -11,7 +11,7 @@ func onBuild(prj *project.Project, cfg util.ValueMap, logger *zap.SugaredLogger)
 	ret := newResult(cfg, logger)
 	ret.AddLog("building project [%s] in [%s]", prj.Key, prj.Path)
 
-	exitCode, out, err := util.RunProcessSimple("make build", prj.Path, logger)
+	exitCode, out, err := util.RunProcessSimple("make build", prj.Path)
 	if err != nil {
 		return ret.WithError(err)
 	}

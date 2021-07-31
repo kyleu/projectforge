@@ -1,29 +1,29 @@
 # http://goreleaser.com
 env:
-  - XNAME=$PF_AUTHOR_NAME$
-  - XEMAIL=$PF_AUTHOR_EMAIL$
-  - XORG=$PF_ORG$
-  - XHOMEPAGE=$PF_HOMEPAGE$
-  - XLICENSE=$PF_LICENSE$
-  - XSUMMARY=$PF_SUMMARY$
-  - XDESCRIPTION=$PF_DESCRIPTION$
-  - XSKIP_DESKTOP=$PF_BUILD_SKIP_DESKTOP$
-  - XSKIP_ANDROID=$PF_BUILD_SKIP_ANDROID$
-  - XSKIP_IOS=$PF_BUILD_SKIP_IOS$
-  - XSKIP_NOTARIZE=$PF_BUILD_SKIP_NOTARIZE$
+  - XNAME={{{ .AuthorName }}}
+  - XEMAIL={{{ .AuthorEmail }}}
+  - XORG={{{ .Org }}}
+  - XHOMEPAGE={{{ .Homepage }}}
+  - XLICENSE={{{ .License }}}
+  - XSUMMARY={{{ .Summary }}}
+  - XDESCRIPTION={{{ .Description }}}
+  - XSKIP_DESKTOP={{{ .SkipDesktop }}}
+  - XSKIP_ANDROID={{{ .SkipAndroid }}}
+  - XSKIP_IOS={{{ .SkipIOS }}}
+  - XSKIP_NOTARIZE={{{ .SkipNotarize }}}
 brews:
   -
     tap:
-      owner: "$PF_ORG$"
-      name: "homebrew-$PF_ORG$"
+      owner: "{{{ .Org }}}"
+      name: "homebrew-{{{ .Org }}}"
     commit_author:
-      name: "$PF_AUTHOR_NAME$"
-      email: "$PF_AUTHOR_EMAIL$"
+      name: "{{{ .AuthorName }}}"
+      email: "{{{ .AuthorEmail }}}"
     folder: Formula
     homepage: "{{ .Env.XHOMEPAGE }}"
     description: "{{ .Env.XDESCRIPTION }}"
     license: "{{ .Env.XLICENSE }}"
-    skip_upload: $PF_BUILD_SKIP_HOMEBREW$
+    skip_upload: {{{ .SkipHomebrew }}}
 
 signs:
   - artifacts: checksum
@@ -54,11 +54,11 @@ release:
   draft: true
   header: |
     ## {{ .Version }} ({{ .Date }})
-    See $PF_HOMEPAGE$ for download links and documentation
+    See {{{ .Homepage }}} for download links and documentation
     ## Main downloads
-    - [Linux Intel 64 bit]($PF_SOURCECODE$/releases/download/{{ .Version }}/{{ .ProjectName }}_{{ .Version }}_linux_x86_64.zip)
-    - [MacOS Intel 64 bit]($PF_SOURCECODE$/releases/download/{{ .Version }}/{{ .ProjectName }}_{{ .Version }}_macos_x86_64.zip)
-    - [Windows Intel 64 bit]($PF_SOURCECODE$/releases/download/{{ .Version }}/{{ .ProjectName }}_{{ .Version }}_windows_x86_64.zip)
+    - [Linux Intel 64 bit]({{{ .Sourcecode }}}/releases/download/{{ .Version }}/{{ .ProjectName }}_{{ .Version }}_linux_x86_64.zip)
+    - [MacOS Intel 64 bit]({{{ .Sourcecode }}}/releases/download/{{ .Version }}/{{ .ProjectName }}_{{ .Version }}_macos_x86_64.zip)
+    - [Windows Intel 64 bit]({{{ .Sourcecode }}}/releases/download/{{ .Version }}/{{ .ProjectName }}_{{ .Version }}_windows_x86_64.zip)
 
   extra_files:
     - glob: "./build/dist/*_notarized.zip"
@@ -115,7 +115,7 @@ snapcrafts:
     description: "{{ .Env.XDESCRIPTION }}"
     grade: stable
     confinement: strict
-    license: "$PF_LICENSE$"
+    license: "{{{ .License }}}"
 
 builds:
   - id: "darwin_amd64"
@@ -160,7 +160,7 @@ builds:
       - 6
       - 7
     mod_timestamp: "{{ .CommitTimestamp }}"
-    skip: $PF_BUILD_SKIP_LINUX_ARM$
+    skip: {{{ .SkipLinuxArm }}}
 
   - id: "linux-mips"
     goos:
@@ -174,7 +174,7 @@ builds:
       - hardfloat
       - softfloat
     mod_timestamp: "{{ .CommitTimestamp }}"
-    skip: $PF_BUILD_SKIP_LINUX_MIPS$
+    skip: {{{ .SkipLinuxMips }}}
 
   - id: "linux-odd"
     goos:
@@ -185,7 +185,7 @@ builds:
       - riscv64
       - s390x
     mod_timestamp: "{{ .CommitTimestamp }}"
-    skip: $PF_BUILD_SKIP_LINUX_ODD$
+    skip: {{{ .SkipLinuxOdd }}}
 
 
   - id: "windows"
@@ -208,7 +208,7 @@ builds:
     goarch:
       - wasm
     mod_timestamp: "{{ .CommitTimestamp }}"
-    skip: $PF_BUILD_SKIP_WASM$
+    skip: {{{ .SkipWASM }}}
 
   - id: "aix"
     goos:
@@ -216,7 +216,7 @@ builds:
     goarch:
       - ppc64
     mod_timestamp: "{{ .CommitTimestamp }}"
-    skip: $PF_BUILD_SKIP_AIX$
+    skip: {{{ .SkipAIX }}}
 
   - id: "dragonfly"
     goos:
@@ -224,7 +224,7 @@ builds:
     goarch:
       - amd64
     mod_timestamp: "{{ .CommitTimestamp }}"
-    skip: $PF_BUILD_SKIP_DRAGONFLY$
+    skip: {{{ .SkipDragonfly }}}
 
   - id: "illumos"
     goos:
@@ -232,7 +232,7 @@ builds:
     goarch:
       - amd64
     mod_timestamp: "{{ .CommitTimestamp }}"
-    skip: $PF_BUILD_SKIP_ILLUMOS$
+    skip: {{{ .SkipIllumos }}}
 
   - id: "freebsd"
     goos:
@@ -247,7 +247,7 @@ builds:
       - 6
       - 7
     mod_timestamp: "{{ .CommitTimestamp }}"
-    skip: $PF_BUILD_SKIP_FREEBSD$
+    skip: {{{ .SkipFreeBSD }}}
 
   - id: "netbsd"
     goos:
@@ -260,7 +260,7 @@ builds:
     goarm:
       - 7
     mod_timestamp: "{{ .CommitTimestamp }}"
-    skip: $PF_BUILD_SKIP_NETBSD$
+    skip: {{{ .SkipNetBSD }}}
 
   - id: "openbsd"
     goos:
@@ -275,7 +275,7 @@ builds:
       - 6
       - 7
     mod_timestamp: "{{ .CommitTimestamp }}"
-    skip: $PF_BUILD_SKIP_OPENBSD$
+    skip: {{{ .SkipOpenBSD }}}
 
   - id: "plan9"
     goos:
@@ -289,7 +289,7 @@ builds:
       - 6
       - 7
     mod_timestamp: "{{ .CommitTimestamp }}"
-    skip: $PF_BUILD_SKIP_PLAN9$
+    skip: {{{ .SkipPlan9 }}}
 
   - id: "solaris"
     goos:
@@ -297,4 +297,4 @@ builds:
     goarch:
       - amd64
     mod_timestamp: "{{ .CommitTimestamp }}"
-    skip: $PF_BUILD_SKIP_SOLARIS$
+    skip: {{{ .SkipSolaris }}}

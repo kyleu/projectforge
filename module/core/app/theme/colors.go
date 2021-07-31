@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"$PF_PACKAGE$/app/util"
+	"{{{ .Package }}}/app/util"
 )
 
 type Colors struct {

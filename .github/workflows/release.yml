@@ -61,9 +61,6 @@ jobs:
           OWNER: "${{ secrets.REPO_OWNER }}"
           TOKEN: "${{ secrets.PERSONAL_TOKEN }}"
       -
-        name: "Assets"
-        run: "bin/asset-embed.sh"
-      -
         name: "Release"
         uses: "goreleaser/goreleaser-action@v2"
         with:

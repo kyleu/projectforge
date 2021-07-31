@@ -1,0 +1,88 @@
+{% import (
+  "strings"
+
+  "github.com/kyleu/projectforge/app"
+  "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/app/action"
+  "github.com/kyleu/projectforge/app/diff"
+  "github.com/kyleu/projectforge/app/util"
+) %}
+
+{% func Detail(cfg util.ValueMap, res *action.Result, incSkipped bool, as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>Config</h3>
+    <table>
+      <tbody>
+        {%- for _, k := range cfg.Keys() -%}
+        <tr>
+          <th class="shrink">{%s k %}</th>
+          <td>{%v cfg[k] %}</td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Errors</h3>
+    {%- if len(res.Errors) == 0 -%}
+    <p>no errors</p>
+    {%- else -%}
+    <table>
+      <tbody>
+        {%- for _, e := range res.Errors -%}
+        <tr>
+          <td>{%s e %}</td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+    {%- endif -%}
+  </div>
+
+  <div class="card">
+    <h3>Logs</h3>
+    {%- if len(res.Logs) == 0 -%}
+    <p>no logs</p>
+    {%- else -%}
+    <table>
+      <tbody>
+        {%- for _, l := range res.Logs -%}
+        <tr>
+          <td><pre>{%s l %}</pre></td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+    {%- endif -%}
+  </div>
+
+  {%- for _, mr := range res.Modules -%}
+    <div class="card">
+      <div class="right">{%s util.MicrosToMillis(mr.Duration) %}</div>
+      <h3>{%s util.PluralMaybe("Module", len(mr.Keys)) %} [{%s strings.Join(mr.Keys, `, `) %}]</h3>
+      <em>{%s mr.Status %}</em>
+      <h4>Diffs</h4>
+      <table>
+        <thead>
+          <tr>
+            <th class="shrink">Path</th>
+            <th class="shrink">Status</th>
+            <th class="shrink">Patch</th>
+          </tr>
+        </thead>
+        <tbody>
+        {%- for _, d := range mr.Diffs -%}
+          {%- if incSkipped || d.Status != diff.StatusSkipped -%}
+          <tr>
+            <td class="shrink">{%s d.Path %}</td>
+            <td>{%s d.Status.String() %}</td>
+            <td>{%s= d.Patch %}</td>
+          </tr>
+          {%- endif -%}
+        {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
+  {%- endfor -%}
+{% endfunc %}

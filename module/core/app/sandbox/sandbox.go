@@ -3,7 +3,7 @@ package sandbox
 import (
 	"go.uber.org/zap"
 
-	"$PF_PACKAGE$/app"
+	"{{{ .Package }}}/app"
 )
 
 type runFn func(st *app.State, logger *zap.SugaredLogger) (interface{}, error)

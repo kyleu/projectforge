@@ -4,7 +4,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 
-	"$PF_PACKAGE$/app/util"
+	"{{{ .Package }}}/app/util"
 )
 
 func ParseForm(ctx *fasthttp.RequestCtx) (util.ValueMap, error) {

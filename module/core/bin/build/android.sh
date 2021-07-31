@@ -11,8 +11,8 @@ if [ "$XSKIP_ANDROID" != "true" ]
 then
   echo "building gomobile for Android..."
   mkdir -p build/dist/mobile_android_arm64
-  time gomobile bind -o build/dist/mobile_android_arm64/$PF_EXECUTABLE$.aar -target=android $PF_PACKAGE$/app/cmd
+  time gomobile bind -o build/dist/mobile_android_arm64/{{{ .Exec }}}.aar -target=android {{{ .Package }}}/app/cmd
   echo "gomobile for Android completed successfully, building distribution..."
   cd "build/dist/mobile_android_arm64"
-  zip -r "../$PF_KEY$_${TGT}_mobile_android.zip" .
+  zip -r "../{{{ .Key }}}_${TGT}_mobile_android.zip" .
 fi

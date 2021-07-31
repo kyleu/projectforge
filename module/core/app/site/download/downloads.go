@@ -3,7 +3,7 @@ package download
 import (
 	"fmt"
 
-	"$PF_PACKAGE$/app/util"
+	"{{{ .Package }}}/app/util"
 )
 
 // nolint

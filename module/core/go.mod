@@ -1,5 +1,5 @@
 // $PF_IGNORE$
-module $PF_PACKAGE$
+module {{{ .Package }}}
 
 go 1.16
 

@@ -17,14 +17,9 @@ templates:
 build: templates ## Build all binaries
 	go build -gcflags "all=-N -l" -o build/debug/ .
 
-.PHONY: build-release-ci
-build-release-ci: templates ## Build all binaries without debug information
-	@bin/asset-embed.sh
-	go build -ldflags '-s -w' -trimpath -o build/release/ .
-
 .PHONY: build-release
-build-release: templates build-release-ci ## Build all binaries without debug information, clean up after
-	@bin/asset-reset.sh
+build-release: templates ## Build all binaries without debug information, clean up after
+	go build -ldflags '-s -w' -trimpath -o build/release/ .
 
 .PHONY: lint
 lint: ## Run linter

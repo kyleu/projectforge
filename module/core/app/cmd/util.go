@@ -11,9 +11,9 @@ import (
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
 
-	"$PF_PACKAGE$/app"
-	"$PF_PACKAGE$/app/log"
-	"$PF_PACKAGE$/app/util"
+	"{{{ .Package }}}/app"
+	"{{{ .Package }}}/app/log"
+	"{{{ .Package }}}/app/util"
 )
 
 var (

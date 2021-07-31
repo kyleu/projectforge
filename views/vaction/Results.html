@@ -1,0 +1,41 @@
+{% import (
+  "github.com/kyleu/projectforge/app"
+  "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/app/action"
+  "github.com/kyleu/projectforge/views/components"
+  "github.com/kyleu/projectforge/views/layout"
+  "github.com/kyleu/projectforge/views/vproject"
+) %}
+
+{% code type Results struct {
+  layout.Basic
+  T action.Type
+  Ctxs []*action.ResultContext
+} %}
+
+{% func (p *Results) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>All Projects: {%s p.T.Title %}</h3>
+    <div class="mt">
+      {%- for _, t := range action.ProjectTypes -%}
+      <a href="/run/{%s t.Key %}" title="{%s t.Description %}"><button>{%s t.Title %}</button></a>
+      {%- endfor -%}
+    </div>
+    <ul class="accordion mt">
+      {%- for _, x := range p.Ctxs -%}
+      <li>
+        <input id="accordion-{%s x.Prj.Key %}" type="checkbox" hidden />
+        <label for="accordion-{%s x.Prj.Key %}">
+          <em class="right">{%s x.Status() %}</em>
+          {%= components.ExpandCollapse(3, ps) %} {%s x.Prj.Title() %}
+        </label>
+        <div class="bd">
+          {%= vproject.Summary(x.Prj) %}
+          {%= Detail(x.Cfg, x.Res, false, as, ps) %}
+        </div>
+      </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+  {%= components.JSONModal("json", "JSON", p.Ctxs, 1) %}
+{% endfunc %}

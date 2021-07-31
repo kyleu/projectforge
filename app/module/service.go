@@ -5,6 +5,7 @@ import (
 	"sort"
 
 	"github.com/kyleu/projectforge/app/filesystem"
+	"github.com/kyleu/projectforge/app/util"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 )
@@ -26,13 +27,39 @@ func NewService(logger *zap.SugaredLogger) *Service {
 }
 
 func (s *Service) GetFilesystem(key string) filesystem.FileLoader {
-	return filesystem.NewFileSystem(filepath.Join("module", key), s.logger)
+	mod, err := s.Get(key)
+	if err != nil {
+		return filesystem.NewFileSystem(filepath.Join("module", key), s.logger)
+	}
+	return mod.Files
+}
+
+func (s *Service) AddIfNeeded(key string, path string) (*Module, bool, error) {
+	ret, ok := s.cache[key]
+	if ok {
+		return ret, false, nil
+	}
+	if path == "" {
+		m, err := s.Load(key)
+		if err != nil {
+			return nil, false, err
+		}
+		return m, true, nil
+	}
+	fs := filesystem.NewFileSystem(path, s.logger)
+	m, err := s.load(key, fs)
+	if err != nil {
+		return nil, false, err
+	}
+	s.cache[key] = m
+	return m, true, nil
 }
 
 func (s *Service) getNestedFilesystem(mods Modules) filesystem.FileLoader {
 	var ret filesystem.FileLoader
 	for _, mod := range mods {
 		curr := s.GetFilesystem(mod.Key)
+		curr = curr.Clone()
 		if ret != nil {
 			curr.AddChildren(ret)
 		}
@@ -42,6 +69,7 @@ func (s *Service) getNestedFilesystem(mods Modules) filesystem.FileLoader {
 }
 
 func (s *Service) Get(key string) (*Module, error) {
+	key, _ = util.SplitString(key, '@', true)
 	ret, ok := s.cache[key]
 	if !ok {
 		return nil, errors.New("no module available with key [" + key + "]")

@@ -5,9 +5,9 @@ import (
 
 	"github.com/valyala/fasthttp"
 
-	"$PF_PACKAGE$/app"
-	"$PF_PACKAGE$/app/controller/cutil"
-	"$PF_PACKAGE$/views/vsearch"
+	"{{{ .Package }}}/app"
+	"{{{ .Package }}}/app/controller/cutil"
+	"{{{ .Package }}}/views/vsearch"
 )
 
 func Search(ctx *fasthttp.RequestCtx) {

@@ -1,6 +1,6 @@
 {% import (
-  "$PF_PACKAGE$/app/controller/cutil"
-  "$PF_PACKAGE$/app/util"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/util"
 ) %}
 
 {% func JSONModal(key string, title string, item interface{}, indent int) %}{% stripspace %}

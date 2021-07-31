@@ -2,8 +2,8 @@
 package controller
 
 import (
-	"$PF_PACKAGE$/app"
-	"$PF_PACKAGE$/app/controller/cutil"
+	"{{{ .Package }}}/app"
+	"{{{ .Package }}}/app/controller/cutil"
 )
 
 // Initialize app-specific system dependencies.

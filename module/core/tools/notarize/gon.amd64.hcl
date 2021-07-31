@@ -1,25 +1,25 @@
-source = ["./build/dist/darwin_amd64_darwin_amd64/$PF_EXECUTABLE$"]
-bundle_id = "$PF_BUNDLE$"
+source = ["./build/dist/darwin_amd64_darwin_amd64/{{{ .Exec }}}"]
+bundle_id = "{{{ .Bundle }}}"
 
 //notarize {
-//  path = "./build/dist/$PF_EXECUTABLE$_desktop_$PF_VERSION$_macos_x86_64.dmg"
-//  bundle_id = "$PF_BUNDLE$"
+//  path = "./build/dist/{{{ .Exec }}}_desktop_{{{ .Version }}}_macos_x86_64.dmg"
+//  bundle_id = "{{{ .Bundle }}}"
 //}
 
 apple_id {
-  username = "$PF_AUTHOR_EMAIL$"
+  username = "{{{ .AuthorEmail }}}"
   password = "@env:APPLE_PASSWORD"
 }
 
 sign {
-  application_identity = "$PF_SIGNING_IDENTITY$"
+  application_identity = "{{{ .SigningIdentity }}}"
 }
 
 dmg {
-  output_path = "./build/dist/$PF_EXECUTABLE$_$PF_VERSION$_macos_x86_64.dmg"
-  volume_name = "$PF_NAME$"
+  output_path = "./build/dist/{{{ .Exec }}}_{{{ .Version }}}_macos_x86_64.dmg"
+  volume_name = "{{{ .Name }}}"
 }
 
 zip {
-  output_path = "./build/dist/$PF_EXECUTABLE$_$PF_VERSION$_macos_x86_64_notarized.zip"
+  output_path = "./build/dist/{{{ .Exec }}}_{{{ .Version }}}_macos_x86_64_notarized.zip"
 }

@@ -7,28 +7,24 @@ import (
 
 	"github.com/valyala/fasthttp"
 
-	"github.com/kyleu/projectforge/app/assets"
+	"github.com/kyleu/projectforge/assets"
 )
 
-const assetBase = "assets"
-
 func Favicon(ctx *fasthttp.RequestCtx) {
-	data, hash, contentType, err := assets.Asset(assetBase, "/favicon.ico")
+	data, hash, contentType, err := assets.EmbedAsset("favicon.ico")
 	ZipResponse(ctx, data, hash, contentType, err)
 }
 
 func RobotsTxt(ctx *fasthttp.RequestCtx) {
-	data, hash, contentType, err := assets.Asset(assetBase, "/robots.txt")
+	data, hash, contentType, err := assets.EmbedAsset("robots.txt")
 	ZipResponse(ctx, data, hash, contentType, err)
 }
 
 func Static(ctx *fasthttp.RequestCtx) {
 	path, err := filepath.Abs(strings.TrimPrefix(string(ctx.Request.URI().Path()), "/assets"))
 	if err == nil {
-		if !strings.HasPrefix(path, "/") {
-			path = "/" + path
-		}
-		data, hash, contentType, e := assets.Asset(assetBase, path)
+		path = strings.TrimPrefix(path, "/")
+		data, hash, contentType, e := assets.EmbedAsset(path)
 		ZipResponse(ctx, data, hash, contentType, e)
 	} else {
 		ctx.Error(err.Error(), fasthttp.StatusBadRequest)

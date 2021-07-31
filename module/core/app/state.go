@@ -6,10 +6,10 @@ import (
 	"github.com/fasthttp/router"
 	"go.uber.org/zap"
 
-	"$PF_PACKAGE$/app/auth"
-	"$PF_PACKAGE$/app/filesystem"
-	"$PF_PACKAGE$/app/theme"
-	"$PF_PACKAGE$/app/util"
+	"{{{ .Package }}}/app/auth"
+	"{{{ .Package }}}/app/filesystem"
+	"{{{ .Package }}}/app/theme"
+	"{{{ .Package }}}/app/util"
 )
 
 type BuildInfo struct {

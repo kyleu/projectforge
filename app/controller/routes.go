@@ -22,13 +22,15 @@ func AppRoutes() *router.Router {
 	r.GET(defaultProfilePath, w(Profile))
 	r.POST(defaultProfilePath, w(ProfileSave))
 	r.GET("/auth/{key}", w(AuthDetail))
-	r.GET("/auth/{key}/callback", w(AuthCallback))
-	r.GET("/auth/{key}/logout", w(AuthLogout))
+	r.GET("/auth/callback/{key}", w(AuthCallback))
+	r.GET("/auth/logout/{key}", w(AuthLogout))
 
 	r.GET("/admin", w(Admin))
 	r.GET("/admin/{path:*}", w(Admin))
 
 	// $PF_SECTION_START(routes)$
+	r.GET("/doctor", w(Doctor))
+
 	r.GET("/p", w(ProjectList))
 	r.GET("/p/{key}", w(ProjectDetail))
 	r.GET("/p/{key}/edit", w(ProjectEdit))
@@ -39,6 +41,7 @@ func AppRoutes() *router.Router {
 	r.GET("/p/{key}/svg/add", w(SVGAdd))
 	r.GET("/p/{key}/svg/build", w(SVGBuild))
 
+	r.GET("/run/{act}", w(RunAllActions))
 	r.GET("/run/{tgt}/{act}", w(RunAction))
 
 	r.GET("/m", w(ModuleList))

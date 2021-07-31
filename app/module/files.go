@@ -39,9 +39,13 @@ func (s *Service) LoadAll(keys ...string) (Modules, error) {
 
 func (s *Service) Load(key string) (*Module, error) {
 	fs := s.GetFilesystem(key)
+	return s.load(key, fs)
+}
+
+func (s *Service) load(key string, fs filesystem.FileLoader) (*Module, error) {
 	if !fs.Exists(configFilename) {
-		msg := "file [%s] does not exist in path for module [%s]"
-		return nil, errors.Errorf(msg, configFilename, key)
+		msg := "file [%s] does not exist in path for module [%s] using root [%s]"
+		return nil, errors.Errorf(msg, configFilename, key, fs.Root())
 	}
 
 	b, err := fs.ReadFile(configFilename)
@@ -55,11 +59,13 @@ func (s *Service) Load(key string) (*Module, error) {
 		return nil, errors.Wrapf(err, "unable to parse [%s] as module with key [%s]", configFilename, key)
 	}
 	ret.Key = key
+	ret.Files = fs
+
 	s.cache[key] = ret
 	return ret, nil
 }
 
-func (s *Service) GetFiles(mods Modules, changes *file.Changeset, addHeader bool, tgt filesystem.FileLoader) (file.Files, error) {
+func (s *Service) GetFiles(mods Modules, addHeader bool, tgt filesystem.FileLoader) (file.Files, error) {
 	loader := s.getNestedFilesystem(mods)
 	fs, err := loader.ListFilesRecursive("", nil)
 	if err != nil {
@@ -86,7 +92,6 @@ func (s *Service) GetFiles(mods Modules, changes *file.Changeset, addHeader bool
 				fl.Content = newContent
 			}
 		}
-		fl = fl.Apply(changes)
 		ret = append(ret, fl)
 	}
 	return ret, nil

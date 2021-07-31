@@ -10,7 +10,7 @@ import {modeInit} from "./mode";
 import {appInit} from "./app";
 
 export function init(): void {
-  (window as any).$PF_KEY$ = {
+  (window as any).{{{ .Key }}} = {
     "sortableEdit": sortableEdit,
     "setSiblingToNull": setSiblingToNull
   };

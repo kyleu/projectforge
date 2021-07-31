@@ -5,7 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"$PF_PACKAGE$/app/util"
+	"{{{ .Package }}}/app/util"
 )
 
 func rootF(*cobra.Command, []string) error {

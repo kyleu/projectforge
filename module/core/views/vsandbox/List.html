@@ -1,8 +1,8 @@
 {% import (
-  "$PF_PACKAGE$/app"
-  "$PF_PACKAGE$/app/controller/cutil"
-  "$PF_PACKAGE$/app/sandbox"
-  "$PF_PACKAGE$/views/layout"
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/sandbox"
+  "{{{ .Package }}}/views/layout"
 ) %}
 
 {% code type List struct { layout.Basic } %}

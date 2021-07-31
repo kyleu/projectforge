@@ -5,8 +5,8 @@ import (
 
 	"github.com/webview/webview"
 
-	"$PF_PACKAGE$/app/cmd"
-	"$PF_PACKAGE$/app/util"
+	"{{{ .Package }}}/app/cmd"
+	"{{{ .Package }}}/app/util"
 )
 
 func main() {

@@ -3,9 +3,9 @@ package controller
 import (
 	"github.com/valyala/fasthttp"
 
-	"$PF_PACKAGE$/app"
-	"$PF_PACKAGE$/app/controller/cutil"
-	"$PF_PACKAGE$/views/verror"
+	"{{{ .Package }}}/app"
+	"{{{ .Package }}}/app/controller/cutil"
+	"{{{ .Package }}}/views/verror"
 )
 
 func Options(ctx *fasthttp.RequestCtx) {

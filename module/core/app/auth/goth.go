@@ -60,7 +60,7 @@ import (
 	"github.com/markbates/goth/providers/yandex"
 	"github.com/pkg/errors"
 
-	"$PF_PACKAGE$/app/auth/msfix"
+	"{{{ .Package }}}/app/auth/msfix"
 )
 
 // nolint

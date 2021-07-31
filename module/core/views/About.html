@@ -1,9 +1,9 @@
 {% import (
-  "$PF_PACKAGE$/app"
-  "$PF_PACKAGE$/app/controller/cutil"
-  "$PF_PACKAGE$/app/util"
-  "$PF_PACKAGE$/views/components"
-  "$PF_PACKAGE$/views/layout"
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/util"
+  "{{{ .Package }}}/views/components"
+  "{{{ .Package }}}/views/layout"
 ) %}
 
 {% code type About struct { layout.Basic } %}
@@ -25,6 +25,6 @@
 {% func Feedback() %}
 <div class="card">
   <h3>Feedback</h3>
-  <p>For now, email <a href="mailto:$PF_AUTHOR_EMAIL$">$PF_AUTHOR_NAME$</a></p>
+  <p>For now, email <a href="mailto:{{{ .AuthorEmail }}}">{{{ .AuthorName }}}</a></p>
 </div>
 {% endfunc %}

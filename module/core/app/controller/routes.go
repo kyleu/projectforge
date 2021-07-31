@@ -21,8 +21,8 @@ func AppRoutes() *router.Router {
 	r.GET(defaultProfilePath, w(Profile))
 	r.POST(defaultProfilePath, w(ProfileSave))
 	r.GET("/auth/{key}", w(AuthDetail))
-	r.GET("/auth/{key}/callback", w(AuthCallback))
-	r.GET("/auth/{key}/logout", w(AuthLogout))
+	r.GET("/auth/callback/{key}", w(AuthCallback))
+	r.GET("/auth/logout/{key}", w(AuthLogout))
 
 	r.GET("/admin", w(Admin))
 	r.GET("/admin/{path:*}", w(Admin))

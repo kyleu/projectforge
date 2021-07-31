@@ -1,12 +1,16 @@
 package action
 
 import (
+	"github.com/kyleu/projectforge/app/doctor"
 	"github.com/kyleu/projectforge/app/util"
 	"go.uber.org/zap"
 )
 
 func onDoctor(cfg util.ValueMap, logger *zap.SugaredLogger) *Result {
 	ret := newResult(cfg, logger)
-	ret.AddLog("Doctor doctor, gimme the news")
+	prgs := doctor.Check()
+	for _, prg := range prgs {
+		ret.AddLog(prg.String())
+	}
 	return ret
 }

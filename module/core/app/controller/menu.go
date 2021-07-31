@@ -2,9 +2,9 @@
 package controller
 
 import (
-	"$PF_PACKAGE$/app"
-	"$PF_PACKAGE$/app/menu"
-	"$PF_PACKAGE$/app/util"
+	"{{{ .Package }}}/app"
+	"{{{ .Package }}}/app/menu"
+	"{{{ .Package }}}/app/util"
 )
 
 func MenuFor(as *app.State) (menu.Items, error) {

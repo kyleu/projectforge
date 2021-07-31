@@ -28,7 +28,31 @@ func RunAction(ctx *fasthttp.RequestCtx) {
 		cfg["path"] = prj.Path
 		result := action.Apply(tgt, actT, cfg, as.Services.Modules, as.Services.Projects, ps.Logger)
 		ps.Data = result
-		page := &vaction.Result{Project: prj, Cfg: cfg, Result: result}
+		page := &vaction.Result{Ctx: &action.ResultContext{Prj: prj, Cfg: cfg, Res: result}}
 		return render(ctx, as, page, ps, "projects", prj.Key, actT.Title)
+	})
+}
+
+func RunAllActions(ctx *fasthttp.RequestCtx) {
+	act("run.all.actions", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
+		actS, err := ctxRequiredString(ctx, "act", false)
+		if err != nil {
+			return "", err
+		}
+		cfg := util.ValueMap{}
+		actT := action.TypeFromString(actS)
+		prjs := as.Services.Projects.Projects()
+
+		var results = []*action.ResultContext{}
+		for _, prj := range prjs {
+			c := cfg.Clone()
+			c["path"] = prj.Path
+			result := action.Apply(prj.Key, actT, c, as.Services.Modules, as.Services.Projects, ps.Logger)
+			rc := &action.ResultContext{Prj: prj, Cfg: c, Res: result}
+			results = append(results, rc)
+		}
+		ps.Data = results
+		page := &vaction.Results{T: actT, Ctxs: results}
+		return render(ctx, as, page, ps, "projects", actT.Title)
 	})
 }

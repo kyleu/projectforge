@@ -9,12 +9,9 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
 )
 
-func RunProcess(cmd string, path string, logger *zap.SugaredLogger, in io.Reader, out io.Writer, er io.Writer) (int, error) {
-	logger.Info(fmt.Sprintf("Running [" + cmd + "] in [" + path + "]"))
-
+func RunProcess(cmd string, path string, in io.Reader, out io.Writer, er io.Writer) (int, error) {
 	args := strings.Split(cmd, " ")
 	firstArg := args[0]
 
@@ -52,9 +49,9 @@ func RunProcess(cmd string, path string, logger *zap.SugaredLogger, in io.Reader
 	return 0, nil
 }
 
-func RunProcessSimple(cmd string, path string, logger *zap.SugaredLogger) (int, string, error) {
+func RunProcessSimple(cmd string, path string) (int, string, error) {
 	var buf bytes.Buffer
-	ec, err := RunProcess(cmd, path, logger, nil, &buf, &buf)
+	ec, err := RunProcess(cmd, path, nil, &buf, &buf)
 	if err != nil {
 		return -1, "", err
 	}

@@ -1,7 +1,7 @@
 {% import (
-  "$PF_PACKAGE$/app/controller/cutil"
-  "$PF_PACKAGE$/app/util"
-  "$PF_PACKAGE$/views/vutil"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/util"
+  "{{{ .Package }}}/views/vutil"
 ) %}
 
 {% func IconPicker(selected string, name string, ps *cutil.PageState, indent int) %}{% stripspace %}

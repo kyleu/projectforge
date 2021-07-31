@@ -10,8 +10,8 @@ TGT=$1
 if [ "$XSKIP_IOS" != "true" ]
 then
   echo "building gomobile for iOS..."
-  time gomobile bind -o build/dist/mobile_ios_arm64/$PF_EXECUTABLE$.framework -target=ios $PF_PACKAGE$/app/cmd
+  time gomobile bind -o build/dist/mobile_ios_arm64/{{{ .Exec }}}.framework -target=ios {{{ .Package }}}/app/cmd
   echo "gomobile for iOS completed successfully, building distribution..."
-  cd "build/dist/mobile_ios_arm64/$PF_KEY$.framework"
-  zip --symlinks -r "../../$PF_KEY$_${TGT}_mobile_ios.zip" .
+  cd "build/dist/mobile_ios_arm64/{{{ .Key }}}.framework"
+  zip --symlinks -r "../../{{{ .Key }}}_${TGT}_mobile_ios.zip" .
 fi

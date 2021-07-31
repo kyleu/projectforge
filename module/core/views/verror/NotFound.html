@@ -1,7 +1,7 @@
 {% import (
-  "$PF_PACKAGE$/app"
-  "$PF_PACKAGE$/app/controller/cutil"
-  "$PF_PACKAGE$/views/layout"
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/views/layout"
 ) %}
 
 {% code type NotFound struct { layout.Basic } %}

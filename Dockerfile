@@ -32,7 +32,7 @@ ADD ./views         /app/views
 
 RUN go mod download
 
-RUN set -xe && bash -c 'make build-release-ci'
+RUN set -xe && bash -c 'make build-release'
 
 RUN mv build/release /build
 

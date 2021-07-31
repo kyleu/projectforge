@@ -10,7 +10,7 @@ import (
 )
 
 func Run(fs filesystem.FileLoader, src string, tgt string) (int, error) {
-	svgs, err := loadSVGs(fs, src)
+	svgs, err := loadSVGs(fs)
 	if err != nil {
 		return 0, err
 	}
@@ -42,7 +42,7 @@ func markup(key string, bytes []byte) string {
 	return replaced
 }
 
-func loadSVGs(fs filesystem.FileLoader, src string) ([]*SVG, error) {
+func loadSVGs(fs filesystem.FileLoader) ([]*SVG, error) {
 	files := fs.ListExtension(svgPath, "svg", false)
 	var svgs []*SVG
 	for _, f := range files {

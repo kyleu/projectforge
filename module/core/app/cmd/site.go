@@ -9,10 +9,10 @@ import (
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 
-	"$PF_PACKAGE$/app"
-	"$PF_PACKAGE$/app/controller"
-	"$PF_PACKAGE$/app/filesystem"
-	"$PF_PACKAGE$/app/util"
+	"{{{ .Package }}}/app"
+	"{{{ .Package }}}/app/controller"
+	"{{{ .Package }}}/app/filesystem"
+	"{{{ .Package }}}/app/util"
 )
 
 const keySite = "site"

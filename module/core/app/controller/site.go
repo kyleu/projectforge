@@ -4,10 +4,10 @@ import (
 	"github.com/fasthttp/router"
 	"github.com/valyala/fasthttp"
 
-	"$PF_PACKAGE$/app"
-	"$PF_PACKAGE$/app/controller/cutil"
-	"$PF_PACKAGE$/app/site"
-	"$PF_PACKAGE$/app/util"
+	"{{{ .Package }}}/app"
+	"{{{ .Package }}}/app/controller/cutil"
+	"{{{ .Package }}}/app/site"
+	"{{{ .Package }}}/app/util"
 )
 
 func SiteRoutes() *router.Router {
@@ -19,8 +19,8 @@ func SiteRoutes() *router.Router {
 	r.GET(defaultProfilePath, w(ProfileSite))
 	r.POST(defaultProfilePath, w(ProfileSave))
 	r.GET("/auth/{key}", w(AuthDetail))
-	r.GET("/auth/{key}/callback", w(AuthCallback))
-	r.GET("/auth/{key}/logout", w(AuthLogout))
+	r.GET("/auth/callback/{key}", w(AuthCallback))
+	r.GET("/auth/logout/{key}", w(AuthLogout))
 
 	r.GET("/favicon.ico", Favicon)
 	r.GET("/assets/{_:*}", Static)

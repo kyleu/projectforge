@@ -9,10 +9,10 @@ import (
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 
-	"$PF_PACKAGE$/app"
-	"$PF_PACKAGE$/app/controller/cutil"
-	"$PF_PACKAGE$/app/util"
-	"$PF_PACKAGE$/views/vadmin"
+	"{{{ .Package }}}/app"
+	"{{{ .Package }}}/app/controller/cutil"
+	"{{{ .Package }}}/app/util"
+	"{{{ .Package }}}/views/vadmin"
 )
 
 func Admin(ctx *fasthttp.RequestCtx) {

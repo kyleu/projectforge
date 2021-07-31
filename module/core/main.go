@@ -3,13 +3,13 @@ package main
 import (
 	"os"
 
-	"$PF_PACKAGE$/app"
-	"$PF_PACKAGE$/app/cmd"
-	"$PF_PACKAGE$/app/log"
+	"{{{ .Package }}}/app"
+	"{{{ .Package }}}/app/cmd"
+	"{{{ .Package }}}/app/log"
 )
 
 var (
-	version = "$PF_VERSION$" // updated by bin/tag.sh and ldflags
+	version = "{{{ .Version }}}" // updated by bin/tag.sh and ldflags
 	commit  = ""
 	date    = "unknown"
 )

@@ -6,14 +6,6 @@ import (
 
 type Files []*File
 
-func (f Files) Apply(m *Changeset) (Files, error) {
-	ret := make(Files, 0, len(f))
-	for _, file := range f {
-		file.Apply(m)
-	}
-	return ret, nil
-}
-
 func (f Files) String() string {
 	var sb strings.Builder
 	for _, file := range f {

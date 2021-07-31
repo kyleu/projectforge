@@ -9,7 +9,7 @@ import (
 	"github.com/alecthomas/chroma/styles"
 	"github.com/pkg/errors"
 
-	"$PF_PACKAGE$/app/util"
+	"{{{ .Package }}}/app/util"
 )
 
 var (

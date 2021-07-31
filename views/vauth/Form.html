@@ -22,7 +22,7 @@
         {%- if len(as) > 0 -%}
         <ul>
         {%- for _, a := range as -%}
-          <li>{%s a.Email %} (<a href="/auth/{%u a.Provider %}/logout?email={%u a.Email %}">sign out</a>)</li>
+          <li>{%s a.Email %} (<a href="/auth/logout/{%u a.Provider %}?email={%u a.Email %}">sign out</a>)</li>
         {%- endfor -%}
         </ul>
         {%- endif -%}

@@ -5,7 +5,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"$PF_PACKAGE$/app/util"
+	"{{{ .Package }}}/app/util"
 )
 
 type ToTitleTest struct {

@@ -3,7 +3,7 @@ package cmd
 import (
 	"go.uber.org/zap"
 
-	"$PF_PACKAGE$/app"
+	"{{{ .Package }}}/app"
 )
 
 func Run(bi *app.BuildInfo) (*zap.SugaredLogger, error) {

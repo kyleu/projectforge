@@ -4,7 +4,7 @@ import (
 	"sort"
 	"strings"
 
-	"$PF_PACKAGE$/app/util"
+	"{{{ .Package }}}/app/util"
 )
 
 type Session struct {

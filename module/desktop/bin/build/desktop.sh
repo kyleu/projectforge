@@ -14,4 +14,4 @@ make build
 echo "build complete, starting desktop application"
 
 cd $dir/../..
-build/debug/$PF_EXECUTABLE$-desktop
+build/debug/{{{ .Exec }}}-desktop

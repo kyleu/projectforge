@@ -44,7 +44,7 @@ func TestRun(ctx *fasthttp.RequestCtx) {
 			return "", err
 		}
 
-		page := &vaction.Result{Project: prj, Cfg: cfg, Result: res}
+		page := &vaction.Result{Ctx: &action.ResultContext{Prj: prj, Cfg: cfg, Res: res}}
 		return render(ctx, as, page, ps, "Bootstrap")
 	})
 }

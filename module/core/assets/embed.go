@@ -4,20 +4,21 @@ import (
 	"bytes"
 	"compress/gzip"
 	"crypto/md5" // nolint
+	"embed"
 	"encoding/hex"
-	"io/ioutil"
 	"mime"
 	"path/filepath"
 
 	"github.com/pkg/errors"
 )
 
-func Asset(base, path string) ([]byte, string, string, error) {
+//go:embed *
+var assetFS embed.FS
+
+func EmbedAsset(path string) ([]byte, string, string, error) {
 	var b bytes.Buffer
 
-	file := base + path
-
-	data, err := ioutil.ReadFile(file)
+	data, err := assetFS.ReadFile(path)
 	if err != nil {
 		return nil, "", "", errors.Wrapf(err, "error reading asset at [%s]", path)
 	}
@@ -32,5 +33,5 @@ func Asset(base, path string) ([]byte, string, string, error) {
 	// nolint
 	sum := md5.Sum(data)
 
-	return data, hex.EncodeToString(sum[1:]), mime.TypeByExtension(filepath.Ext(file)), nil
+	return data, hex.EncodeToString(sum[1:]), mime.TypeByExtension(filepath.Ext(path)), nil
 }

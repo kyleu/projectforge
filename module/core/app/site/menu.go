@@ -1,9 +1,9 @@
 package site
 
 import (
-	"$PF_PACKAGE$/app/auth"
-	"$PF_PACKAGE$/app/menu"
-	"$PF_PACKAGE$/app/user"
+	"{{{ .Package }}}/app/auth"
+	"{{{ .Package }}}/app/menu"
+	"{{{ .Package }}}/app/user"
 )
 
 const (

@@ -1,4 +1,4 @@
 FROM scratch
-ENTRYPOINT ["/$PF_EXECUTABLE$", "-a", "0.0.0.0"]
-EXPOSE $PF_PORT$
-COPY $PF_EXECUTABLE$ /
+ENTRYPOINT ["/{{{ .Exec }}}", "-a", "0.0.0.0"]
+EXPOSE {{{ .Port }}}
+COPY {{{ .Exec }}} /

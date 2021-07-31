@@ -118,6 +118,7 @@ func (s *Service) load(path string) (*Project, error) {
 		return nil, errors.Wrapf(err, "can't load project from [%s]", ConfigFilename)
 	}
 	ret.Path = path
+
 	return ret, nil
 }
 

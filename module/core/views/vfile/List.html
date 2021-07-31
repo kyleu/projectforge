@@ -2,15 +2,15 @@
   "os"
   "path/filepath"
 
-  "$PF_PACKAGE$/app"
-  "$PF_PACKAGE$/app/filesystem"
-  "$PF_PACKAGE$/app/controller/cutil"
-  "$PF_PACKAGE$/views/components"
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/filesystem"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/views/components"
 ) %}
 
 {% func List(path []string, files []os.FileInfo, fs filesystem.FileLoader, urlPrefix string, as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>Files!</h3>
+    <h3>{%- for idx, p := range path -%}/<a href="{%s urlPrefix %}/{%s filepath.Join(path[:idx + 1]...) %}">{%s p %}</a>{%- endfor -%}</h3>
     <div class="mt">
     {%- for _, f := range files -%}
       {%- code

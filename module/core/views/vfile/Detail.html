@@ -1,11 +1,13 @@
 {% import (
-  "$PF_PACKAGE$/app"
-  "$PF_PACKAGE$/app/controller/cutil"
+  "path/filepath"
+
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/controller/cutil"
 ) %}
 
 {% func Detail(path []string, b []byte, urlPrefix string, as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>File!</h3>
+    <h3>{%- for idx, p := range path -%}/<a href="{%s urlPrefix %}/{%s filepath.Join(path[:idx + 1]...) %}">{%s p %}</a>{%- endfor -%}</h3>
     <div class="mt">
       {%- code
         out, _ := cutil.FormatFilename(string(b), path[len(path)-1])

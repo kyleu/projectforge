@@ -42,11 +42,3 @@ const (
 	prefix = "$PF_"
 	suffix = "$"
 )
-
-func (f *File) Apply(cs *Changeset) *File {
-	if cs != nil {
-		r := cs.Replacements.ToReplacer(prefix, suffix)
-		f.Content = r.Replace(f.Content)
-	}
-	return &File{Type: f.Type, Path: f.Path, Name: f.Name, Mode: f.Mode, Content: f.Content}
-}

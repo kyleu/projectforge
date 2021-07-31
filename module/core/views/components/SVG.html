@@ -1,9 +1,9 @@
 {% import (
   "fmt"
 
-  "$PF_PACKAGE$/app"
-  "$PF_PACKAGE$/app/controller/cutil"
-  "$PF_PACKAGE$/app/util"
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/util"
 ) %}
 
 {% func SVG(k string) %}{%s= util.SVGLibrary[k] %}{% endfunc %}

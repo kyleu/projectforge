@@ -8,7 +8,7 @@ cd $dir/..
 
 os=${1:-darwin}
 arch=${2:-amd64}
-fn=${3:-$PF_EXECUTABLE$}
+fn=${3:-{{{ .Exec }}}}
 
 echo "Building [$os $arch]..."
 env GOOS=$os GOARCH=$arch make build-release

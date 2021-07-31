@@ -7,4 +7,4 @@ dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $dir/..
 
 echo "=== formatting ==="
-gofumpt -w $(find . -type f -name "*.go"$PF_IGNORE_FILES_GREP$ | grep -v .html.go | grep -v .sql.go)
+gofumpt -w $(find . -type f -name "*.go"{{{ .IgnoreGrep}}} | grep -v .html.go | grep -v .sql.go)

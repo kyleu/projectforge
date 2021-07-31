@@ -6,8 +6,8 @@ import (
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
-	"$PF_PACKAGE$/app/filesystem"
-	"$PF_PACKAGE$/app/util"
+	"{{{ .Package }}}/app/filesystem"
+	"{{{ .Package }}}/app/util"
 )
 
 const KeyNew = "new"

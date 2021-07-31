@@ -7,10 +7,10 @@ import (
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
 
-	"$PF_PACKAGE$/app/auth"
-	"$PF_PACKAGE$/app/menu"
-	"$PF_PACKAGE$/app/user"
-	"$PF_PACKAGE$/app/util"
+	"{{{ .Package }}}/app/auth"
+	"{{{ .Package }}}/app/menu"
+	"{{{ .Package }}}/app/user"
+	"{{{ .Package }}}/app/util"
 )
 
 type PageState struct {

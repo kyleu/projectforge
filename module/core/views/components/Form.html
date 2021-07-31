@@ -1,6 +1,6 @@
 {% import (
-  "$PF_PACKAGE$/app/util"
-  "$PF_PACKAGE$/views/vutil"
+  "{{{ .Package }}}/app/util"
+  "{{{ .Package }}}/views/vutil"
 ) %}
 
 {% func FormInput(key string, id string, value string) %}{% stripspace %}

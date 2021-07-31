@@ -20,8 +20,8 @@ func SiteRoutes() *router.Router {
 	r.GET(defaultProfilePath, w(ProfileSite))
 	r.POST(defaultProfilePath, w(ProfileSave))
 	r.GET("/auth/{key}", w(AuthDetail))
-	r.GET("/auth/{key}/callback", w(AuthCallback))
-	r.GET("/auth/{key}/logout", w(AuthLogout))
+	r.GET("/auth/callback/{key}", w(AuthCallback))
+	r.GET("/auth/logout/{key}", w(AuthLogout))
 
 	r.GET("/favicon.ico", Favicon)
 	r.GET("/assets/{_:*}", Static)

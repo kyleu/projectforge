@@ -60,7 +60,7 @@ func onCreate(key string, cfg util.ValueMap, mSvc *module.Service, pSvc *project
 func fullBuild(prj *project.Project, r *Result, logger *zap.SugaredLogger) *Result {
 	r.AddLog("building project [%s] in [%s]", prj.Key, prj.Path)
 
-	exitCode, out, err := util.RunProcessSimple("bin/templates.sh", prj.Path, logger)
+	exitCode, out, err := util.RunProcessSimple("bin/templates.sh", prj.Path)
 	if err != nil {
 		return r.WithError(err)
 	}
@@ -69,7 +69,7 @@ func fullBuild(prj *project.Project, r *Result, logger *zap.SugaredLogger) *Resu
 		return r.WithError(errors.Errorf("templates.sh failed with exit code [%d]", exitCode))
 	}
 
-	exitCode, out, err = util.RunProcessSimple("go mod tidy", prj.Path, logger)
+	exitCode, out, err = util.RunProcessSimple("go mod tidy", prj.Path)
 	if err != nil {
 		return r.WithError(err)
 	}
@@ -78,7 +78,7 @@ func fullBuild(prj *project.Project, r *Result, logger *zap.SugaredLogger) *Resu
 		return r.WithError(errors.Errorf("\"go mod tidy\" failed with exit code [%d]", exitCode))
 	}
 
-	exitCode, out, err = util.RunProcessSimple("npm install", filepath.Join(prj.Path, "client"), logger)
+	exitCode, out, err = util.RunProcessSimple("npm install", filepath.Join(prj.Path, "client"))
 	if err != nil {
 		return r.WithError(err)
 	}
@@ -87,7 +87,7 @@ func fullBuild(prj *project.Project, r *Result, logger *zap.SugaredLogger) *Resu
 		r.WithError(errors.Errorf("npm install failed with exit code [%d]", exitCode))
 	}
 
-	exitCode, out, err = util.RunProcessSimple("bin/build/client.sh", prj.Path, logger)
+	exitCode, out, err = util.RunProcessSimple("bin/build/client.sh", prj.Path)
 	if err != nil {
 		return r.WithError(err)
 	}
@@ -96,7 +96,7 @@ func fullBuild(prj *project.Project, r *Result, logger *zap.SugaredLogger) *Resu
 		r.WithError(errors.Errorf("client build failed with exit code [%d]", exitCode))
 	}
 
-	exitCode, out, err = util.RunProcessSimple("make build", prj.Path, logger)
+	exitCode, out, err = util.RunProcessSimple("make build", prj.Path)
 	if err != nil {
 		return r.WithError(err)
 	}

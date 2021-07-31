@@ -3,15 +3,15 @@
 <plist version="1.0">
 <dict>
     <key>CFBundleExecutable</key>
-    <string>$PF_EXECUTABLE$</string>
+    <string>{{{ .Exec }}}</string>
     <key>CFBundleGetInfoString</key>
-    <string>$PF_EXECUTABLE$</string>
+    <string>{{{ .Exec }}}</string>
     <key>CFBundleIconFile</key>
     <string>icons</string>
     <key>CFBundleIdentifier</key>
-    <string>$PF_BUNDLE$</string>
+    <string>{{{ .Bundle }}}</string>
     <key>CFBundleName</key>
-    <string>$PF_NAME$</string>
+    <string>{{{ .Name }}}</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>NSAppTransportSecurity</key>

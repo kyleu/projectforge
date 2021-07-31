@@ -1,7 +1,7 @@
 <!-- $PF_IGNORE$ -->
-# $PF_NAME$
+# {{{ .Name }}}
 
-$PF_SUMMARY$
+{{{ .Summary }}}
 
-- $PF_HOMEPAGE$
-- https://$PF_PACKAGE$
+- {{{ .Homepage }}}
+- https://{{{ .Package }}}

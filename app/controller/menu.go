@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"github.com/kyleu/projectforge/app"
+	"github.com/kyleu/projectforge/app/action"
 	"github.com/kyleu/projectforge/app/menu"
 	"github.com/kyleu/projectforge/app/module"
 	"github.com/kyleu/projectforge/app/project"
@@ -22,8 +23,13 @@ func MenuFor(as *app.State) (menu.Items, error) {
 		sandboxMenu(),
 		menu.Separator,
 		&menu.Item{Key: "settings", Title: "Settings", Description: "System-wide settings and preferences", Icon: "cog", Route: "/settings"},
+		itemFor(action.TypeDoctor, "first-aid", "/doctor"),
 		&menu.Item{Key: "about", Title: "About", Description: "Get assistance and advice for using " + util.AppName, Icon: "question", Route: "/about"},
 	}, nil
+}
+
+func itemFor(t action.Type, i string, r string) *menu.Item {
+	return &menu.Item{Key: t.Key, Title: t.Title, Description: t.Description, Icon: i, Route: r}
 }
 
 func projectMenu(prjs project.Projects) *menu.Item {

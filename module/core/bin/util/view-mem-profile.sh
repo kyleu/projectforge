@@ -7,4 +7,4 @@ dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $dir/../..
 
 echo "=== launching profiler for mem.pprof ==="
-go tool pprof -http=":8000" ./build/debug/$PF_EXECUTABLE$ ./tmp/mem.pprof
+go tool pprof -http=":8000" ./build/debug/{{{ .Exec }}} ./tmp/mem.pprof

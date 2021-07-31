@@ -3,13 +3,13 @@ package site
 import (
 	"github.com/valyala/fasthttp"
 
-	"$PF_PACKAGE$/app"
-	"$PF_PACKAGE$/app/controller/cutil"
-	"$PF_PACKAGE$/app/site/download"
-	"$PF_PACKAGE$/app/util"
-	"$PF_PACKAGE$/views"
-	"$PF_PACKAGE$/views/layout"
-	"$PF_PACKAGE$/views/vsite"
+	"{{{ .Package }}}/app"
+	"{{{ .Package }}}/app/controller/cutil"
+	"{{{ .Package }}}/app/site/download"
+	"{{{ .Package }}}/app/util"
+	"{{{ .Package }}}/views"
+	"{{{ .Package }}}/views/layout"
+	"{{{ .Package }}}/views/vsite"
 )
 
 func siteData(result string, kvs ...string) map[string]interface{} {

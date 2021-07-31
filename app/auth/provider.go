@@ -24,7 +24,13 @@ func (p *Provider) Goth(proto string, host string) (goth.Provider, error) {
 	if proto == "" {
 		proto = "http"
 	}
-	cb := fmt.Sprintf("%s://%s/auth/%s/callback", proto, host, p.ID)
+	u := fmt.Sprintf("%s://%s", proto, host)
+
+	env := os.Getenv(util.AppKey + "_oauth_redirect")
+	if(env != "") {
+		u = env
+	}
+	cb := fmt.Sprintf("%s/auth/callback/%s", u, p.ID)
 	if g, ok := p.cache[cb]; ok {
 		return g, nil
 	}
@@ -83,7 +89,10 @@ func (s *Service) load() error {
 		return errors.New("called [load] twice")
 	}
 	if s.baseURL == "" {
-		s.baseURL = "http://localhost:40000"
+		s.baseURL = os.Getenv(util.AppKey + "_oauth_redirect")
+	}
+	if s.baseURL == "" {
+		s.baseURL = fmt.Sprintf("http://localhost:%d", util.AppPort)
 	}
 	s.baseURL = strings.TrimSuffix(s.baseURL, "/")
 
@@ -103,7 +112,8 @@ func (s *Service) load() error {
 	if len(ret) == 0 {
 		s.logger.Debug("authentication disabled, no providers configured in environment")
 	} else {
-		s.logger.Debugf("authentication enabled for [%s]", util.OxfordComma(ret.Titles(), "and"))
+		msg := "authentication enabled for [%s], using [%s] as a base URL"
+		s.logger.Debugf(msg, util.OxfordComma(ret.Titles(), "and"), s.baseURL)
 	}
 
 	return nil

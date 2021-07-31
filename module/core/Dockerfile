@@ -31,7 +31,7 @@ ADD ./views         /app/views
 
 RUN go mod download
 
-RUN set -xe && bash -c 'make build-release-ci'
+RUN set -xe && bash -c 'make build-release'
 
 RUN mv build/release /build
 
@@ -44,4 +44,4 @@ COPY --from=builder /build/* /
 # $PF_SECTION_END(dockerimage)$
 
 EXPOSE 40000
-ENTRYPOINT ["/$PF_EXECUTABLE$", "-a", "0.0.0.0"]
+ENTRYPOINT ["/{{{ .Exec }}}", "-a", "0.0.0.0"]

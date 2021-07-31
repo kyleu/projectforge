@@ -1,10 +1,10 @@
 .PHONY: build
 build: ## Build all binaries
-	go build -gcflags "all=-N -l" -o ../../build/debug/$PF_EXECUTABLE$-desktop .
+	go build -gcflags "all=-N -l" -o ../../build/debug/{{{ .Exec }}}-desktop .
 
 .PHONY: build-release
 build-release: ## Build all binaries without debug information, clean up after
-	go build -ldflags '-s -w' -trimpath -o ../../build/release/$PF_EXECUTABLE$-desktop .
+	go build -ldflags '-s -w' -trimpath -o ../../build/release/{{{ .Exec }}}-desktop .
 
 .PHONY: help
 help:

@@ -11,13 +11,13 @@ import (
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 
-	"$PF_PACKAGE$/app"
-	"$PF_PACKAGE$/app/auth"
-	"$PF_PACKAGE$/app/controller/cutil"
-	"$PF_PACKAGE$/app/util"
-	"$PF_PACKAGE$/views"
-	"$PF_PACKAGE$/views/layout"
-	"$PF_PACKAGE$/views/verror"
+	"{{{ .Package }}}/app"
+	"{{{ .Package }}}/app/auth"
+	"{{{ .Package }}}/app/controller/cutil"
+	"{{{ .Package }}}/app/util"
+	"{{{ .Package }}}/views"
+	"{{{ .Package }}}/views/layout"
+	"{{{ .Package }}}/views/verror"
 )
 
 var (

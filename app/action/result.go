@@ -3,19 +3,23 @@ package action
 import (
 	"fmt"
 
+	"github.com/kyleu/projectforge/app/diff"
 	"github.com/kyleu/projectforge/app/module"
+	"github.com/kyleu/projectforge/app/project"
 	"github.com/kyleu/projectforge/app/util"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 )
 
 type Result struct {
-	Status   string         `json:"status"`
-	Args     util.ValueMap  `json:"args,omitempty"`
-	Modules  module.Results `json:"modules,omitempty"`
-	Logs     []string       `json:"logs,omitempty"`
-	Errors   []string       `json:"errors,omitempty"`
-	Duration int            `json:"duration,omitempty"`
+	ID       string           `json:"id"`
+	Project  *project.Project `json:"project"`
+	Status   string           `json:"status"`
+	Args     util.ValueMap    `json:"args,omitempty"`
+	Modules  module.Results   `json:"modules,omitempty"`
+	Logs     []string         `json:"logs,omitempty"`
+	Errors   []string         `json:"errors,omitempty"`
+	Duration int              `json:"duration,omitempty"`
 	logger   *zap.SugaredLogger
 }
 
@@ -82,4 +86,28 @@ func (r *Result) Merge(tgt *Result) *Result {
 
 func (r *Result) HasErrors() bool {
 	return len(r.Errors) > 0
+}
+
+type ResultContext struct {
+	Prj *project.Project `json:"prj"`
+	Cfg util.ValueMap `json:"cfg"`
+	Res *Result `json:"res"`
+}
+
+func (c *ResultContext) Status() string {
+	if c.Res == nil {
+		return "Missing!"
+	}
+	fileCount := 0
+	for _, m := range c.Res.Modules {
+		for _, d := range m.Diffs {
+			if d.Status != diff.StatusSkipped {
+				fileCount++
+			}
+		}
+	}
+  if fileCount == 0 {
+		return "ok"
+	}
+	return fmt.Sprintf("%d changes", fileCount)
 }

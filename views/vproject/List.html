@@ -11,5 +11,10 @@
 } %}
 
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
-{%= Table(p.Projects, as, ps) %}
+  {%= Table(p.Projects, as, ps) %}
+
+  <div class="card">
+    <h3>Actions for all Projects</h3>
+    <p><a href="/run/preview"><button>Preview All</button></a></p>
+  </div>
 {% endfunc %}

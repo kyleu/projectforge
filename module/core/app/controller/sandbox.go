@@ -4,10 +4,10 @@ import (
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
 
-	"$PF_PACKAGE$/app"
-	"$PF_PACKAGE$/app/controller/cutil"
-	"$PF_PACKAGE$/app/sandbox"
-	"$PF_PACKAGE$/views/vsandbox"
+	"{{{ .Package }}}/app"
+	"{{{ .Package }}}/app/controller/cutil"
+	"{{{ .Package }}}/app/sandbox"
+	"{{{ .Package }}}/views/vsandbox"
 )
 
 func SandboxList(ctx *fasthttp.RequestCtx) {

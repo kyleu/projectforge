@@ -1,2 +1,2 @@
-export const appKey = "$PF_KEY$";
-export const appName = "$PF_NAME$";
+export const appKey = "{{{ .Key }}}";
+export const appName = "{{{ .Name }}}";

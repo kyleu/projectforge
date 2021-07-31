@@ -3,9 +3,9 @@
 
   "github.com/valyala/fasthttp"
 
-  "$PF_PACKAGE$/app/controller/cutil"
-  "$PF_PACKAGE$/app/filter"
-  "$PF_PACKAGE$/views/vutil"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/filter"
+  "{{{ .Package }}}/views/vutil"
 ) %}
 
 {% func TableHeader(section string, key string, title string, locs cutil.Locations, params *filter.Params, icon string, u *fasthttp.URI, tooltip string, sortable bool, cls string, ps *cutil.PageState) %}{% stripspace %}

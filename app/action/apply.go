@@ -14,6 +14,8 @@ func Apply(projectKey string, t Type, cfg util.ValueMap, mSvc *module.Service, p
 		return onCreate(projectKey, cfg, mSvc, pSvc, logger)
 	case TypeTest:
 		return onTest(cfg, mSvc, pSvc, logger)
+	case TypeDoctor:
+		return onDoctor(cfg, logger)
 	}
 
 	prj, mods, err := prjAndMods(projectKey, mSvc, pSvc)

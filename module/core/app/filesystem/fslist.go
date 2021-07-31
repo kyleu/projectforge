@@ -7,7 +7,7 @@ import (
 	"sort"
 	"strings"
 
-	"$PF_PACKAGE$/app/util"
+	"{{{ .Package }}}/app/util"
 )
 
 var defaultIgnore = []string{".git", ".DS_Store"}

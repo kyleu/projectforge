@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"sort"
 
-	"$PF_PACKAGE$/app/util"
+	"{{{ .Package }}}/app/util"
 )
 
 var (

@@ -42,6 +42,10 @@ func (f *FileSystem) Root() string {
 	return f.root
 }
 
+func (f *FileSystem) Clone() FileLoader {
+	return NewFileSystem(f.root, f.logger)
+}
+
 func (f *FileSystem) Stat(path string) (os.FileInfo, error) {
 	p := f.getPath(path)
 	s, err := os.Stat(p)
@@ -68,7 +72,7 @@ func (f *FileSystem) Exists(path string) bool {
 
 func (f *FileSystem) IsDir(path string) bool {
 	s, err := f.Stat(path)
-	if s == nil || err == nil {
+	if s == nil || err != nil {
 		return false
 	}
 	return s.IsDir()
