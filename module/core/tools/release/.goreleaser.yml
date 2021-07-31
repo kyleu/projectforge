@@ -7,10 +7,10 @@ env:
   - XLICENSE={{{ .License }}}
   - XSUMMARY={{{ .Summary }}}
   - XDESCRIPTION={{{ .Description }}}
-  - XSKIP_DESKTOP={{{ .SkipDesktop }}}
-  - XSKIP_ANDROID={{{ .SkipAndroid }}}
-  - XSKIP_IOS={{{ .SkipIOS }}}
-  - XSKIP_NOTARIZE={{{ .SkipNotarize }}}
+  - XSKIP_DESKTOP={{{ .Build.SkipDesktop }}}
+  - XSKIP_ANDROID={{{ .Build.SkipAndroid }}}
+  - XSKIP_IOS={{{ .Build.SkipIOS }}}
+  - XSKIP_NOTARIZE={{{ .Build.SkipNotarize }}}
 brews:
   -
     tap:
@@ -23,7 +23,7 @@ brews:
     homepage: "{{ .Env.XHOMEPAGE }}"
     description: "{{ .Env.XDESCRIPTION }}"
     license: "{{ .Env.XLICENSE }}"
-    skip_upload: {{{ .SkipHomebrew }}}
+    skip_upload: {{{ .Build.SkipHomebrew }}}
 
 signs:
   - artifacts: checksum
@@ -160,7 +160,7 @@ builds:
       - 6
       - 7
     mod_timestamp: "{{ .CommitTimestamp }}"
-    skip: {{{ .SkipLinuxArm }}}
+    skip: {{{ .Build.SkipLinuxArm }}}
 
   - id: "linux-mips"
     goos:
@@ -174,7 +174,7 @@ builds:
       - hardfloat
       - softfloat
     mod_timestamp: "{{ .CommitTimestamp }}"
-    skip: {{{ .SkipLinuxMips }}}
+    skip: {{{ .Build.SkipLinuxMips }}}
 
   - id: "linux-odd"
     goos:
@@ -185,7 +185,7 @@ builds:
       - riscv64
       - s390x
     mod_timestamp: "{{ .CommitTimestamp }}"
-    skip: {{{ .SkipLinuxOdd }}}
+    skip: {{{ .Build.SkipLinuxOdd }}}
 
 
   - id: "windows"
@@ -208,7 +208,7 @@ builds:
     goarch:
       - wasm
     mod_timestamp: "{{ .CommitTimestamp }}"
-    skip: {{{ .SkipWASM }}}
+    skip: {{{ .Build.SkipWASM }}}
 
   - id: "aix"
     goos:
@@ -216,7 +216,7 @@ builds:
     goarch:
       - ppc64
     mod_timestamp: "{{ .CommitTimestamp }}"
-    skip: {{{ .SkipAIX }}}
+    skip: {{{ .Build.SkipAIX }}}
 
   - id: "dragonfly"
     goos:
@@ -224,7 +224,7 @@ builds:
     goarch:
       - amd64
     mod_timestamp: "{{ .CommitTimestamp }}"
-    skip: {{{ .SkipDragonfly }}}
+    skip: {{{ .Build.SkipDragonfly }}}
 
   - id: "illumos"
     goos:
@@ -232,7 +232,7 @@ builds:
     goarch:
       - amd64
     mod_timestamp: "{{ .CommitTimestamp }}"
-    skip: {{{ .SkipIllumos }}}
+    skip: {{{ .Build.SkipIllumos }}}
 
   - id: "freebsd"
     goos:
@@ -247,7 +247,7 @@ builds:
       - 6
       - 7
     mod_timestamp: "{{ .CommitTimestamp }}"
-    skip: {{{ .SkipFreeBSD }}}
+    skip: {{{ .Build.SkipFreeBSD }}}
 
   - id: "netbsd"
     goos:
@@ -260,7 +260,7 @@ builds:
     goarm:
       - 7
     mod_timestamp: "{{ .CommitTimestamp }}"
-    skip: {{{ .SkipNetBSD }}}
+    skip: {{{ .Build.SkipNetBSD }}}
 
   - id: "openbsd"
     goos:
@@ -275,7 +275,7 @@ builds:
       - 6
       - 7
     mod_timestamp: "{{ .CommitTimestamp }}"
-    skip: {{{ .SkipOpenBSD }}}
+    skip: {{{ .Build.SkipOpenBSD }}}
 
   - id: "plan9"
     goos:
@@ -289,7 +289,7 @@ builds:
       - 6
       - 7
     mod_timestamp: "{{ .CommitTimestamp }}"
-    skip: {{{ .SkipPlan9 }}}
+    skip: {{{ .Build.SkipPlan9 }}}
 
   - id: "solaris"
     goos:
@@ -297,4 +297,4 @@ builds:
     goarch:
       - amd64
     mod_timestamp: "{{ .CommitTimestamp }}"
-    skip: {{{ .SkipSolaris }}}
+    skip: {{{ .Build.SkipSolaris }}}

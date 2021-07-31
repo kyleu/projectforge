@@ -43,7 +43,7 @@ func RunAllActions(ctx *fasthttp.RequestCtx) {
 		actT := action.TypeFromString(actS)
 		prjs := as.Services.Projects.Projects()
 
-		var results = []*action.ResultContext{}
+		var results action.ResultContexts
 		for _, prj := range prjs {
 			c := cfg.Clone()
 			c["path"] = prj.Path

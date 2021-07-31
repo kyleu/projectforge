@@ -11,26 +11,17 @@ import (
 	"github.com/kyleu/projectforge/app/util"
 )
 
-var defaultIgnore = []string{".git", ".DS_Store"}
+var defaultIgnore = []string{".DS_Store", ".git", ".idea", "build", ".html.go", ".sql.go"}
 
-func (f *FileSystem) ListFiles(path string, ignore []string) []os.FileInfo {
-	if ignore == nil {
-		ignore = defaultIgnore
-	}
+func (f *FileSystem) ListFiles(path string, ign []string) []os.FileInfo {
+	ignore := buildIgnore(ign)
 	infos, err := ioutil.ReadDir(filepath.Join(f.root, path))
 	if err != nil {
 		f.logger.Warnf("cannot list files in path [%s]: %+v", path, err)
 	}
 	ret := make([]os.FileInfo, 0, len(infos))
 	for _, info := range infos {
-		ignored := false
-		for _, i := range ignore {
-			if i == info.Name() {
-				ignored = true
-				break
-			}
-		}
-		if !ignored {
+		if !checkIgnore(ignore, info.Name()) {
 			ret = append(ret, info)
 		}
 	}
@@ -117,20 +108,17 @@ func (f *FileSystem) ListDirectories(path string) []string {
 	return ret
 }
 
-func (f *FileSystem) ListFilesRecursive(path string, ignore []string) ([]string, error) {
-	if ignore == nil {
-		ignore = defaultIgnore
-	}
+func (f *FileSystem) ListFilesRecursive(path string, ign []string) ([]string, error) {
+	ignore := buildIgnore(ign)
 	p := f.getPath(path)
 	var ret []string
 	err := filepath.Walk(p, func(fp string, info os.FileInfo, err error) error {
-		for _, i := range ignore {
-			if strings.HasPrefix(fp, i) || strings.HasSuffix(fp, i) {
-				return nil
-			}
+		m := strings.TrimPrefix(fp, p + "/")
+		if checkIgnore(ignore, m) {
+			return nil
 		}
-		if !info.IsDir() {
-			ret = append(ret, strings.TrimPrefix(strings.TrimPrefix(fp, p), "/"))
+		if !info.IsDir() && strings.Contains(fp, "/") {
+			ret = append(ret, m)
 		}
 		return nil
 	})
@@ -152,4 +140,19 @@ func (f *FileSystem) ListFilesRecursive(path string, ignore []string) ([]string,
 
 	sort.Strings(ret)
 	return ret, nil
+}
+
+func buildIgnore(ign []string) []string {
+	ret := append([]string{}, defaultIgnore...)
+	ret = append(ret, ign...)
+	return ret
+}
+
+func checkIgnore(ignore []string, fp string) bool {
+	for _, i := range ignore {
+		if strings.HasPrefix(fp, i) || strings.HasSuffix(fp, i) {
+			return true
+		}
+	}
+	return false
 }

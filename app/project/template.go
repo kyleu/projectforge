@@ -31,26 +31,7 @@ type TemplateContext struct {
 	Summary         string `json:"summary,omitempty"`
 	Description     string `json:"description,omitempty"`
 
-	SkipDesktop  bool `json:"skipDesktop,omitempty"`
-	SkipNotarize bool `json:"skipNotarize,omitempty"`
-	SkipHomebrew bool `json:"skipHomebrew,omitempty"`
-
-	SkipWASM    bool `json:"skipWASM,omitempty"`
-	SkipIOS     bool `json:"skipIOS,omitempty"`
-	SkipAndroid bool `json:"skipAndroid,omitempty"`
-
-	SkipLinuxArm  bool `json:"skipLinuxArm,omitempty"`
-	SkipLinuxMips bool `json:"skipLinuxMips,omitempty"`
-	SkipLinuxOdd  bool `json:"skipLinuxOdd,omitempty"`
-
-	SkipAIX       bool `json:"skipAIX,omitempty"`
-	SkipDragonfly bool `json:"skipDragonfly,omitempty"`
-	SkipIllumos   bool `json:"skipIllumos,omitempty"`
-	SkipFreeBSD   bool `json:"skipFreeBSD,omitempty"`
-	SkipNetBSD    bool `json:"skipNetBSD,omitempty"`
-	SkipOpenBSD   bool `json:"skipOpenBSD,omitempty"`
-	SkipPlan9     bool `json:"skipPlan9,omitempty"`
-	SkipSolaris   bool `json:"skipSolaris,omitempty"`
+	Build *Build `json:"build,omitempty"`
 }
 
 func (p *Project) ToTemplateContext() *TemplateContext {
@@ -81,10 +62,7 @@ func (p *Project) ToTemplateContext() *TemplateContext {
 		Org: i.Org, AuthorName: i.AuthorName, AuthorEmail: i.AuthorEmail, License: i.License, Bundle: i.Bundle, SigningIdentity: i.SigningIdentity,
 		Homepage: i.Homepage, Sourcecode: i.Sourcecode, Summary: i.Summary, Description: i.Description,
 
-		SkipDesktop: b.SkipDesktop, SkipNotarize: b.SkipNotarize, SkipHomebrew: b.SkipHomebrew, SkipWASM: b.SkipWASM,
-		SkipIOS: b.SkipIOS, SkipAndroid: b.SkipAndroid, SkipLinuxArm: b.SkipLinuxArm, SkipLinuxMips: b.SkipLinuxMips, SkipLinuxOdd: b.SkipLinuxOdd,
-		SkipAIX: b.SkipAIX, SkipDragonfly: b.SkipDragonfly, SkipIllumos: b.SkipIllumos,
-		SkipFreeBSD: b.SkipFreeBSD, SkipNetBSD: b.SkipNetBSD, SkipOpenBSD: b.SkipOpenBSD, SkipPlan9: b.SkipPlan9, SkipSolaris: b.SkipSolaris,
+		Build: b,
 	}
 
 	if ret.Name == "" {

@@ -111,3 +111,15 @@ func (c *ResultContext) Status() string {
 	}
 	return fmt.Sprintf("%d changes", fileCount)
 }
+
+type ResultContexts []*ResultContext
+
+func (x ResultContexts) Errors() []string {
+	var ret []string
+	for _, c := range x {
+		if c.Res != nil {
+			ret = append(ret, c.Res.Errors...)
+		}
+	}
+	return ret
+}

@@ -10,7 +10,7 @@
 {% code type Results struct {
   layout.Basic
   T action.Type
-  Ctxs []*action.ResultContext
+  Ctxs action.ResultContexts
 } %}
 
 {% func (p *Results) Body(as *app.State, ps *cutil.PageState) %}
@@ -26,7 +26,7 @@
       <li>
         <input id="accordion-{%s x.Prj.Key %}" type="checkbox" hidden />
         <label for="accordion-{%s x.Prj.Key %}">
-          <em class="right">{%s x.Status() %}</em>
+          <em class="right">{%s x.Status() %}{% if x.Res != nil && len(x.Res.Errors) > 0 %} ({%d len(x.Res.Errors) %} errors){% endif %}</em>
           {%= components.ExpandCollapse(3, ps) %} {%s x.Prj.Title() %}
         </label>
         <div class="bd">

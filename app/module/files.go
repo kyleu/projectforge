@@ -66,7 +66,7 @@ func (s *Service) load(key string, fs filesystem.FileLoader) (*Module, error) {
 }
 
 func (s *Service) GetFiles(mods Modules, addHeader bool, tgt filesystem.FileLoader) (file.Files, error) {
-	loader := s.getNestedFilesystem(mods)
+	loader := s.GetNestedFilesystem(mods)
 	fs, err := loader.ListFilesRecursive("", nil)
 	if err != nil {
 		return nil, err

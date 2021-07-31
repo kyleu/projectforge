@@ -11,7 +11,8 @@
   ],
   "ignore": [
     "module",
-    "testproject"
+    "testproject",
+    "tmp"
   ],
   "children": [
     "./testproject",

@@ -5,6 +5,7 @@
   "github.com/kyleu/projectforge/app/settings"
   "github.com/kyleu/projectforge/views/components"
   "github.com/kyleu/projectforge/views/layout"
+  "github.com/kyleu/projectforge/views/vauth"
 ) %}
 
 {% code type Settings struct {
@@ -22,6 +23,6 @@
     <h3>Themes</h3>
     <p><a href="/theme">Edit Themes</a></p>
   </div>
-  {%= Authentication(as) %}
+  {%= vauth.Authentication(as) %}
   {%= components.JSONModal("settings", "Settings JSON", p.Settings, 1) %}
 {% endfunc %}
