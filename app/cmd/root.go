@@ -16,8 +16,8 @@ func rootF(*cobra.Command, []string) error {
 func rootCmd() *cobra.Command {
 	ret := &cobra.Command{Use: util.AppKey, Short: util.AppSummary, RunE: rootF}
 
-	// $PF_SECTION_START(cmds)$
 	ret.AddCommand(serverCmd(), siteCmd(), allCmd())
+	// $PF_SECTION_START(cmds)$
 	ret.AddCommand(actionCommands()...)
 	// $PF_SECTION_END(cmds)$
 

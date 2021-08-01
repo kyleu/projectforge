@@ -10,12 +10,26 @@ import (
 )
 
 func applyInheritance(fl *file.File, inh *file.Inheritiance, addHeader bool, loader filesystem.FileLoader, logger *zap.SugaredLogger) error {
-	prior, err := getPrior(fl, loader)
+	cand, prior, err := getPrior(fl, loader)
 	if err != nil {
 		return err
 	}
 	newFile := file.NewFile(fl.FullPath(), fl.Mode, prior, addHeader, logger)
 	nc := newFile.Content
+
+	newInh, err := file.InheritanceContent(fl)
+	if err != nil {
+		return err
+	}
+
+	if newInh != nil {
+		return applyInheritance(newFile, newInh, addHeader, cand, logger)
+	}
+
+	if prior == nil {
+		return errors.Errorf("missing nested file [%s] for inheritance in [%s]", fl.FullPath(), loader.Root())
+	}
+
 	pIdx := 0
 	if inh.Prefix != "" {
 		pIdx = strings.Index(nc, inh.Prefix)
@@ -41,23 +55,22 @@ func applyInheritance(fl *file.File, inh *file.Inheritiance, addHeader bool, loa
 	return nil
 }
 
-func getPrior(fl *file.File, loader filesystem.FileLoader) ([]byte, error) {
+func getPrior(fl *file.File, loader filesystem.FileLoader) (filesystem.FileLoader, []byte, error) {
+	var candidate filesystem.FileLoader
 	var prior []byte
 	for _, fs := range loader.GetChildren() {
 		if fs.Exists(fl.FullPath()) {
 			if prior != nil {
-				return nil, errors.Errorf("multiple nested inheritance files [%s]", fl.FullPath())
+				return nil, nil, errors.Errorf("multiple nested inheritance files [%s] in [%s]", fl.FullPath(), loader.Root())
 			}
 			var err error
 			prior, err = fs.ReadFile(fl.FullPath())
 			if err != nil {
-				return nil, errors.Wrapf(err, "unable to read nested file [%s]", fl.FullPath())
+				return nil, nil, errors.Wrapf(err, "unable to read nested file [%s] in [%s]", fl.FullPath(), loader.Root())
 			}
+			candidate = fs
 		}
 	}
-	if prior == nil {
-		return nil, errors.Errorf("missing nested file [%s] for inheritance", fl.FullPath())
-	}
-	return prior, nil
+	return candidate, prior, nil
 }
 
