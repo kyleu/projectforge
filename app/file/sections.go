@@ -3,18 +3,35 @@ package file
 import (
 	"sort"
 	"strings"
+	"unicode/utf8"
 
+	"github.com/kyleu/projectforge/app/filesystem"
 	"github.com/pkg/errors"
 )
 
 const (
-	SectionPrefix = prefix + "SECTION"
+	sectionPrefix = prefix + "SECTION"
 	startPattern  = "_START("
 	endPattern    = "_END("
 	closePattern  = ")$"
 )
 
-func CopySections(src string, tgt string) (string, error) {
+func ReplaceSections(fl *File, tgt filesystem.FileLoader) error {
+	f := fl.FullPath()
+	if strings.Contains(fl.Content, sectionPrefix) && tgt.Exists(f) {
+		tgtBytes, _ := tgt.ReadFile(f)
+		if utf8.Valid(tgtBytes) {
+			newContent, err := copySections(string(tgtBytes), fl.Content)
+			if err != nil {
+				return errors.Wrapf(err, "error reading sections from [%s]", f)
+			}
+			fl.Content = newContent
+		}
+	}
+	return nil
+}
+
+func copySections(src string, tgt string) (string, error) {
 	srcSections, err := sectionIndexes(src)
 	if err != nil {
 		return "", errors.Wrap(err, "unable to read sections from source content")
@@ -78,7 +95,7 @@ func sectionIndexes(s string) (sections, error) {
 			if curr.Key != sec {
 				return errors.Errorf("encountered nested section patterns (%s within %s)", sec, curr.Key)
 			}
-			curr.End = idx - len(SectionPrefix) - len(text)
+			curr.End = idx - len(sectionPrefix) - len(text)
 		} else {
 			return errors.Errorf("invalid section pattern [%s]", text)
 		}
@@ -86,18 +103,18 @@ func sectionIndexes(s string) (sections, error) {
 	}
 
 	for idx, c := range s {
-		if c == '$' && len(s) > idx+len(SectionPrefix) {
-			candidate := s[idx : idx+len(SectionPrefix)]
-			if candidate == SectionPrefix {
-				nextDollar := strings.Index(s[idx+len(SectionPrefix):], closePattern)
+		if c == '$' && len(s) > idx+len(sectionPrefix) {
+			candidate := s[idx : idx+len(sectionPrefix)]
+			if candidate == sectionPrefix {
+				nextDollar := strings.Index(s[idx+len(sectionPrefix):], closePattern)
 				if nextDollar == -1 {
 					return nil, errors.New("found section, but no closing delimiter")
 				}
 				if nextDollar > 256 {
 					return nil, errors.Errorf("found section, but no closing delimiter within [%d] bytes", nextDollar)
 				}
-				endIdx := idx + len(SectionPrefix) + nextDollar + len(closePattern)
-				text := s[idx+len(SectionPrefix) : endIdx]
+				endIdx := idx + len(sectionPrefix) + nextDollar + len(closePattern)
+				text := s[idx+len(sectionPrefix) : endIdx]
 				err := parseText(endIdx, text)
 				if err != nil {
 					return nil, errors.Wrapf(err, "unable to parse text [%s]", text)

@@ -24,6 +24,10 @@ func NewFileSystem(root string, logger *zap.SugaredLogger) *FileSystem {
 	return &FileSystem{root: root, logger: logger.With(zap.String("service", "filesystem"))}
 }
 
+func (f *FileSystem) GetChildren() []FileLoader {
+	return append([]FileLoader{}, f.children...)
+}
+
 func (f *FileSystem) AddChildren(fls ...FileLoader) {
 	f.children = append(f.children, fls...)
 }

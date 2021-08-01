@@ -2,8 +2,6 @@ package module
 
 import (
 	"os"
-	"strings"
-	"unicode/utf8"
 
 	"github.com/kyleu/projectforge/app/file"
 	"github.com/kyleu/projectforge/app/filesystem"
@@ -76,21 +74,24 @@ func (s *Service) GetFiles(mods Modules, addHeader bool, tgt filesystem.FileLoad
 		if f == configFilename {
 			continue
 		}
-		// f = strings.TrimPrefix(strings.TrimPrefix(f, mod.Path()), "/")
 		mode, b, err := fileContent(loader, f)
 		if err != nil {
 			return nil, err
 		}
 		fl := file.NewFile(f, mode, b, addHeader, s.logger)
-		if strings.Contains(fl.Content, file.SectionPrefix) && tgt.Exists(f) {
-			tgtBytes, _ := tgt.ReadFile(f)
-			if utf8.Valid(tgtBytes) {
-				newContent, err := file.CopySections(string(tgtBytes), fl.Content)
-				if err != nil {
-					return nil, errors.Wrapf(err, "error reading sections from [%s]", f)
-				}
-				fl.Content = newContent
+		inh, err := file.InheritanceContent(fl)
+		if err != nil {
+			return nil, err
+		}
+		if inh != nil {
+			err = applyInheritance(fl, inh, addHeader, loader, s.logger)
+			if err != nil {
+				return nil, err
 			}
+		}
+		err = file.ReplaceSections(fl, tgt)
+		if err != nil {
+			return nil, err
 		}
 		ret = append(ret, fl)
 	}

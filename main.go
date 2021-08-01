@@ -24,6 +24,7 @@ func main() {
 			println(log.Red.Add(msg))         //nolint
 		} else {
 			logger.Error(err)
+      println("Inheritance worked!")
 			logger.Error(msg)
 		}
 		os.Exit(1)
