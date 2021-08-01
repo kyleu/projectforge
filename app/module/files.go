@@ -2,6 +2,7 @@ package module
 
 import (
 	"os"
+	"sort"
 
 	"github.com/kyleu/projectforge/app/file"
 	"github.com/kyleu/projectforge/app/filesystem"
@@ -63,37 +64,69 @@ func (s *Service) load(key string, fs filesystem.FileLoader) (*Module, error) {
 	return ret, nil
 }
 
-func (s *Service) GetFiles(mods Modules, addHeader bool, tgt filesystem.FileLoader) (file.Files, error) {
-	loader := s.GetNestedFilesystem(mods)
-	fs, err := loader.ListFilesRecursive("", nil)
-	if err != nil {
-		return nil, err
+func (s *Service) GetFilenames(mods Modules) ([]string, error) {
+	ret := map[string]bool{}
+	for _, mod := range mods {
+		loader := s.GetFilesystem(mod.Key)
+		fs, err := loader.ListFilesRecursive("", nil)
+		if err != nil {
+			return nil, err
+		}
+		for _, f := range fs {
+			ret[f] = true
+		}
 	}
-	ret := make(file.Files, 0, len(fs))
-	for _, f := range fs {
-		if f == configFilename {
-			continue
-		}
-		mode, b, err := fileContent(loader, f)
+	keys := make([]string, 0, len(ret))
+	for k, _ := range ret {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	return keys, nil
+}
+
+func (s *Service) GetFiles(mods Modules, addHeader bool, tgt filesystem.FileLoader) (file.Files, error) {
+	ret := map[string]*file.File{}
+	for _, mod := range mods {
+		loader := s.GetFilesystem(mod.Key)
+		fs, err := loader.ListFilesRecursive("", nil)
 		if err != nil {
 			return nil, err
 		}
-		fl := file.NewFile(f, mode, b, addHeader, s.logger)
-		inh, err := file.InheritanceContent(fl)
-		if err != nil {
-			return nil, err
-		}
-		if inh != nil {
-			err = applyInheritance(fl, inh, addHeader, loader, s.logger)
+		for _, f := range fs {
+			if f == configFilename {
+				continue
+			}
+			mode, b, err := fileContent(loader, f)
 			if err != nil {
 				return nil, err
 			}
+			fl := file.NewFile(f, mode, b, addHeader, s.logger)
+
+			curr, exists := ret[fl.FullPath()]
+			if exists {
+				inh, err := file.InheritanceContent(fl)
+				if err != nil {
+					return nil, err
+				}
+				if inh != nil {
+					err = applyInheritance(fl, inh, curr.Content)
+					if err != nil {
+						return nil, err
+					}
+				}
+			}
+			ret[fl.FullPath()] = fl
 		}
-		err = file.ReplaceSections(fl, tgt)
-		if err != nil {
-			return nil, err
-		}
-		ret = append(ret, fl)
 	}
-	return ret, nil
+	keys := make([]string, 0, len(ret))
+	for k, _ := range ret {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+
+	files := make(file.Files, 0, len(ret))
+	for _, k := range keys {
+		files = append(files, ret[k])
+	}
+	return files, nil
 }

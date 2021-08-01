@@ -21,6 +21,13 @@ func diffs(prj *project.Project, mods module.Modules, addHeader bool, mSvc *modu
 		return nil, nil, err
 	}
 
+	for _, fl := range srcFiles {
+		err = file.ReplaceSections(fl, tgt)
+		if err != nil {
+			return nil, nil, err
+		}
+	}
+
 	ctx := prj.ToTemplateContext()
 	for _, f := range srcFiles {
 		f.Content, err = runTemplate(f, ctx)

@@ -10,6 +10,7 @@ import (
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/auth"
 	"{{{ .Package }}}/app/controller/cutil"
+	"{{{ .Package }}}/app/site"
 	"{{{ .Package }}}/app/theme"
 	"{{{ .Package }}}/app/util"
 	"{{{ .Package }}}/views/verror"
@@ -25,6 +26,21 @@ func act(key string, ctx *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.P
 	as := _currentAppState
 	ps := loadPageState(ctx, as.Logger)
 	err := initAppRequest(as, ps)
+	if err != nil {
+		as.Logger.Warnf("%+v", err)
+	}
+	err = clean(as, ps)
+	if err != nil {
+		as.Logger.Warnf("%+v", err)
+	}
+	actComplete(key, as, ps, ctx, f)
+}
+
+func actSite(key string, ctx *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
+	as := _currentSiteState
+	ps := loadPageState(ctx, as.Logger)
+	ps.Menu = site.Menu(ps.Profile, ps.Auth)
+	err := initSiteRequest(as, ps)
 	if err != nil {
 		as.Logger.Warnf("%+v", err)
 	}

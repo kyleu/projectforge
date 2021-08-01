@@ -55,19 +55,6 @@ func (s *Service) AddIfNeeded(key string, path string) (*Module, bool, error) {
 	return m, true, nil
 }
 
-func (s *Service) GetNestedFilesystem(mods Modules) filesystem.FileLoader {
-	var ret filesystem.FileLoader
-	for _, mod := range mods {
-		curr := s.GetFilesystem(mod.Key)
-		curr = curr.Clone()
-		if ret != nil {
-			curr.AddChildren(ret)
-		}
-		ret = curr
-	}
-	return ret
-}
-
 func (s *Service) Get(key string) (*Module, error) {
 	key, _ = util.SplitString(key, '@', true)
 	ret, ok := s.cache[key]

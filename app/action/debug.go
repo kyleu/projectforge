@@ -32,8 +32,7 @@ func onDebug(prj *project.Project, mods module.Modules, cfg util.ValueMap, mSvc 
 		}
 	}
 
-	var srcFS = mSvc.GetNestedFilesystem(mods)
-	src, err := srcFS.ListFilesRecursive("", nil)
+	src, err := mSvc.GetFilenames(mods)
 	if err != nil {
 		return errorResult(err, cfg, logger)
 	}

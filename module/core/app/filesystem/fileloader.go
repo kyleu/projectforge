@@ -7,8 +7,6 @@ import (
 type FileLoader interface {
 	Root() string
 	Clone() FileLoader
-	GetChildren() []FileLoader
-	AddChildren(fls ...FileLoader)
 	PeekFile(path string, maxSize int) ([]byte, error)
 	ReadFile(path string) ([]byte, error)
 	CreateDirectory(path string) error

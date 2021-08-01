@@ -7,8 +7,6 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
-
-	"github.com/kyleu/projectforge/app/util"
 )
 
 var defaultIgnore = []string{".DS_Store", ".git", ".idea", "build", ".html.go", ".sql.go"}
@@ -25,22 +23,6 @@ func (f *FileSystem) ListFiles(path string, ign []string) []os.FileInfo {
 			ret = append(ret, info)
 		}
 	}
-
-	for _, c := range f.children {
-		kids := c.ListFiles(path, ignore)
-		for _, kid := range kids {
-			present := false
-			for _, match := range ret {
-				if match.Name() == kid.Name() {
-					present = true
-				}
-			}
-			if !present {
-				ret = append(ret, kid)
-			}
-		}
-	}
-
 	return ret
 }
 
@@ -65,16 +47,6 @@ func (f *FileSystem) ListExtension(path string, ext string, trimExtension bool) 
 		}
 		ret = append(ret, j)
 	}
-
-	for _, c := range f.children {
-		kids := c.ListExtension(path, ext, trimExtension)
-		for _, kid := range kids {
-			if !util.StringArrayContains(ret, kid) {
-				ret = append(ret, kid)
-			}
-		}
-	}
-
 	sort.Strings(ret)
 	return ret
 }
@@ -94,16 +66,6 @@ func (f *FileSystem) ListDirectories(path string) []string {
 			ret = append(ret, f.Name())
 		}
 	}
-
-	for _, c := range f.children {
-		kids := c.ListDirectories(path)
-		for _, kid := range kids {
-			if !util.StringArrayContains(ret, kid) {
-				ret = append(ret, kid)
-			}
-		}
-	}
-
 	sort.Strings(ret)
 	return ret
 }
@@ -125,19 +87,6 @@ func (f *FileSystem) ListFilesRecursive(path string, ign []string) ([]string, er
 	if err != nil {
 		return nil, err
 	}
-
-	for _, c := range f.children {
-		kids, err := c.ListFilesRecursive(path, ignore)
-		if err != nil {
-			return nil, err
-		}
-		for _, kid := range kids {
-			if !util.StringArrayContains(ret, kid) {
-				ret = append(ret, kid)
-			}
-		}
-	}
-
 	sort.Strings(ret)
 	return ret, nil
 }
