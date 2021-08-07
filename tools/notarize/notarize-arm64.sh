@@ -3,10 +3,10 @@
 
 set -eo pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd $dir
+cd $dir/../..
 
 TGT=$1
 [ "$TGT" ] || (echo "must provide one argument, like \"0.0.1\"" && exit)
 
-sed -i '' "s/[v]*[01]\.[0-9]*[0-9]\.[0-9]*[0-9][-SNAPSHOT]*/$TGT/g" ./gon.arm64.hcl
-time gon ./gon.arm64.hcl
+sed -i '' "s/[v]*[01]\.[0-9]*[0-9]\.[0-9]*[0-9][-SNAPSHOT]*/$TGT/g" ./tools/notarize/gon.arm64.hcl
+time gon ./tools/notarize/gon.arm64.hcl
