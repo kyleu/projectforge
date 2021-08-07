@@ -123,7 +123,8 @@ func (s *Service) load(path string) (*Project, error) {
 
 func (s *Service) Save(prj *Project) error {
 	tgtFS := s.GetFilesystem(prj)
-	err := tgtFS.WriteFile(ConfigFilename, util.ToJSONBytes(prj, true), filesystem.DefaultMode, true)
+	j := util.ToJSON(prj) + "\n"
+	err := tgtFS.WriteFile(ConfigFilename, []byte(j), filesystem.DefaultMode, true)
 	if err != nil {
 		return errors.Wrapf(err, "unable to write config file to [%s]", ConfigFilename)
 	}

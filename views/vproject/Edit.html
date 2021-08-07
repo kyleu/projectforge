@@ -20,52 +20,77 @@
     if info == nil {
       info = &project.Info{}
     }
+    build := prj.Build
+    if build == nil {
+      build = &project.Build{}
+    }
+    buildMap := build.ToMap()
   -%}
-  <div class="card">
-    <h3>Edit Project</h3>
-    <form action="" method="post">
-      <table class="mt">
+  <form action="" method="post">
+    <div class="card">
+      <h3>Project Details</h3>
+      <table class="mt min-200">
         <tbody>
-          {%= components.TableInput("key", "Key", prj.Key, 5) %}
-          {%= components.TableInput("type", "Type", prj.Type, 5) %}
-          {%= components.TableInput("name", "Name", prj.Name, 5) %}
-          {%= components.TableInput("version", "Version", prj.Version, 5) %}
-          {%= components.TableInput("package", "Package", prj.Package, 5) %}
-          {%= components.TableInput("args", "Args", prj.Args, 5) %}
-          {%= components.TableInputNumber("port", "Port", prj.Port, 5) %}
-          <tr>
-            <th class="shrink">Modules</th>
-            <td>
-              {%- for _, mod := range as.Services.Modules.Modules() -%}
-              <label title="{%s mod.Description %}">
-                {%- if util.StringArrayContains(prj.Modules, mod.Key) -%}
-                <input type="checkbox" name="modules" value="{%s mod.Key %}" checked="checked" />
-                {%- else -%}
-                <input type="checkbox" name="modules" value="{%s mod.Key %}" />
-                {%- endif -%}
-                {%s mod.Title() %}
-              </label>
-              {%- endfor -%}
-            </td>
-          </tr>
-          {%= components.TableInput("ignore", "Ignore", strings.Join(prj.Ignore, ", "), 5) %}
-          {%= components.TableInput("children", "Children", strings.Join(prj.Children, ", "), 5) %}
-          {%= components.TableInput("org", "Organization", info.Org, 5) %}
-          {%= components.TableInput("authorName", "Author Name", info.AuthorName, 5) %}
-          {%= components.TableInput("authorEmail", "Author Email", info.AuthorEmail, 5) %}
-          {%= components.TableInput("license", "License", info.License, 5) %}
-          {%= components.TableInput("bundle", "Bundle", info.Bundle, 5) %}
-          {%= components.TableInput("signingIdentity", "Signing Identity", info.SigningIdentity, 5) %}
-          {%= components.TableInput("homepage", "Homepage", info.Homepage, 5) %}
-          {%= components.TableInput("sourcecode", "Source Code", info.Sourcecode, 5) %}
-          {%= components.TableInput("summary", "Summary", info.Summary, 5) %}
-          {%= components.TableTextarea("description", "Description", info.Description, 5) %}
+        {%= components.TableInput("key", "Key", prj.Key, 5) %}
+        {%= components.TableInput("type", "Type", prj.Type, 5) %}
+        {%= components.TableInput("name", "Name", prj.Name, 5) %}
+        {%= components.TableInput("version", "Version", prj.Version, 5) %}
+        {%= components.TableInput("package", "Package", prj.Package, 5) %}
+        {%= components.TableInput("args", "Args", prj.Args, 5) %}
+        {%= components.TableInputNumber("port", "Port", prj.Port, 5) %}
+        <tr>
+          <th class="shrink">Modules</th>
+          <td>
+            {%- for _, mod := range as.Services.Modules.Modules() -%}
+            <label title="{%s mod.Description %}">
+              {%- if util.StringArrayContains(prj.Modules, mod.Key) -%}
+              <input type="checkbox" name="modules" value="{%s mod.Key %}" checked="checked"/>
+              {%- else -%}
+              <input type="checkbox" name="modules" value="{%s mod.Key %}"/>
+              {%- endif -%}
+              {%s mod.Title() %}
+            </label>
+            {%- endfor -%}
+          </td>
+        </tr>
+        {%= components.TableInput("ignore", "Ignore", strings.Join(prj.Ignore, ", "), 5) %}
+        {%= components.TableInput("children", "Children", strings.Join(prj.Children, ", "), 5) %}
         </tbody>
       </table>
-      <div>
-        <button type="submit">Save</button>
-        <button type="reset">Reset</button>
-      </div>
-    </form>
-  </div>
+    </div>
+    <div class="card">
+      <h3>Metadata</h3>
+      <table class="mt min-200">
+        <tbody>
+        {%= components.TableInput("org", "Organization", info.Org, 5) %}
+        {%= components.TableInput("authorName", "Author Name", info.AuthorName, 5) %}
+        {%= components.TableInput("authorEmail", "Author Email", info.AuthorEmail, 5) %}
+        {%= components.TableInput("license", "License", info.License, 5) %}
+        {%= components.TableInput("bundle", "Bundle", info.Bundle, 5) %}
+        {%= components.TableInput("signingIdentity", "Signing Identity", info.SigningIdentity, 5) %}
+        {%= components.TableInput("homepage", "Homepage", info.Homepage, 5) %}
+        {%= components.TableInput("sourcecode", "Source Code", info.Sourcecode, 5) %}
+        {%= components.TableInput("summary", "Summary", info.Summary, 5) %}
+        {%= components.TableTextarea("description", "Description", info.Description, 5) %}
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Builds</h3>
+      <table class="mt min-200">
+        <tbody>
+        {%- for _, o := range project.AllBuildOptions -%}
+        <tr>
+          <th class="shrink">{%s o.Title %}</th>
+          <td><label><input type="checkbox" name="build-{%s o.Key %}" value="true" {% if buildMap[o.Key] %} checked="checked" {% endif %}/> {%s o.Description %}</label></td>
+        </tr>
+        {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <button type="submit">Save</button>
+      <button type="reset">Reset</button>
+    </div>
+  </form>
 {% endfunc %}

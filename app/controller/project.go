@@ -57,7 +57,7 @@ func ProjectSave(ctx *fasthttp.RequestCtx) {
 			return "", err
 		}
 
-		frm, err := cutil.ParseFormAsChanges(ctx)
+		frm, err := cutil.ParseForm(ctx)
 		if err != nil {
 			return "", err
 		}
@@ -73,9 +73,11 @@ func ProjectSave(ctx *fasthttp.RequestCtx) {
 		prj.Package = get("package", prj.Package)
 		prj.Args = get("args", prj.Args)
 		prj.Port, _ = strconv.Atoi(get("port", fmt.Sprintf("%d", prj.Port)))
-		prj.Modules = util.SplitAndTrim(get("modules", strings.Join(prj.Modules, ",")), ",")
+		prj.Modules = util.SplitAndTrim(get("modules", strings.Join(prj.Modules, "|")), "|")
 		prj.Ignore = util.SplitAndTrim(get("ignore", strings.Join(prj.Ignore, ",")), ",")
 		prj.Children = util.SplitAndTrim(get("children", strings.Join(prj.Children, ",")), ",")
+
+		prj.Info.Org = get("org", prj.Info.Org)
 		prj.Info.AuthorName = get("authorName", prj.Info.AuthorName)
 		prj.Info.AuthorEmail = get("authorEmail", prj.Info.AuthorEmail)
 		prj.Info.License = get("license", prj.Info.License)
@@ -86,6 +88,8 @@ func ProjectSave(ctx *fasthttp.RequestCtx) {
 		prj.Info.Summary = get("summary", prj.Info.Summary)
 		prj.Info.Description = get("description", prj.Info.Description)
 
+		prj.Build = buildFrom(frm)
+
 		err = as.Services.Projects.Save(prj)
 		if err != nil {
 			return ersp("unable to save project: %+v", err)
@@ -94,6 +98,41 @@ func ProjectSave(ctx *fasthttp.RequestCtx) {
 		msg := "Saved changes"
 		return flashAndRedir(true, msg, "/p/"+prj.Key, ctx, ps)
 	})
+}
+
+func buildFrom(frm util.ValueMap) *project.Build {
+	buildMap := map[string]bool{}
+	for k, v := range frm {
+		if strings.HasPrefix(k, "build-") {
+			buildMap[strings.TrimPrefix(k, "build-")] = v == "true"
+		}
+	}
+	b := &project.Build{}
+	b.SkipDesktop = !buildMap["desktop"]
+	b.SkipNotarize = !buildMap[""]
+	b.SkipSigning = !buildMap[""]
+	b.SkipAndroid = !buildMap[""]
+	b.SkipIOS = !buildMap[""]
+	b.SkipWASM = !buildMap[""]
+	b.SkipLinuxARM = !buildMap[""]
+	b.SkipLinuxMIPS = !buildMap[""]
+	b.SkipLinuxOdd = !buildMap[""]
+	b.SkipAIX = !buildMap[""]
+	b.SkipDragonfly = !buildMap[""]
+	b.SkipIllumos = !buildMap[""]
+	b.SkipFreeBSD = !buildMap[""]
+	b.SkipNetBSD = !buildMap[""]
+	b.SkipOpenBSD = !buildMap[""]
+	b.SkipPlan9 = !buildMap[""]
+	b.SkipSolaris = !buildMap[""]
+	b.SkipHomebrew = !buildMap[""]
+	b.SkipNFPMS = !buildMap[""]
+	b.SkipScoop = !buildMap[""]
+	b.SkipSnapcraft = !buildMap[""]
+	if b.Empty() {
+		return nil
+	}
+	return b
 }
 
 func getProject(ctx *fasthttp.RequestCtx, as *app.State) (*project.Project, error) {

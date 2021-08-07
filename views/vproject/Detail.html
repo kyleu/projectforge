@@ -12,13 +12,23 @@
 } %}
 
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
-  {%- code prj := p.Project -%}
-  {%- code info := prj.Info -%}
+  {%- code
+    prj := p.Project
+    info := prj.Info
+    if info == nil {
+      info = &project.Info{}
+    }
+    build := prj.Build
+    if build == nil {
+      build = &project.Build{}
+    }
+    buildMap := build.ToMap()
+  -%}
   {%= Summary(prj) %}
   <div class="card">
     <div class="right"><a href="/p/{%s p.Project.Key %}/edit"><button>Edit</button></a></div>
     <h3>Details</h3>
-    <table class="mt">
+    <table class="mt min-200">
       <tbody>
         <tr>
           <th>Key</th>
@@ -104,7 +114,7 @@
 
   <div class="card">
     <h3>Modules</h3>
-    <table class="mt">
+    <table class="mt min-200">
       <tbody>
         {%- for _, mKey := range prj.Modules -%}
         <tr>
@@ -117,7 +127,7 @@
 
   <div class="card">
     <h3>Children</h3>
-    <table class="mt">
+    <table class="mt min-200">
       <tbody>
         {%- for _, mKey := range prj.Children -%}
         <tr>
@@ -127,4 +137,21 @@
       </tbody>
     </table>
   </div>
+
+  <div class="card">
+    <h3>Builds</h3>
+    <table class="mt min-200">
+      <tbody>
+      {%- for _, o := range project.AllBuildOptions -%}
+      {%- if buildMap[o.Key] -%}
+      <tr>
+        <th class="shrink">{%s o.Title %}</th>
+        <td>{%s o.Description %}</td>
+      </tr>
+      {%- endif -%}
+      {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
+
 {% endfunc %}
