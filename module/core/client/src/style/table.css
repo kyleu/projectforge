@@ -37,6 +37,10 @@ table .shrink {
   white-space: nowrap;
 }
 
+.min-200 th {
+  min-width: 200px;
+}
+
 table .resize {
   padding: var(--padding-small);
   resize: horizontal;

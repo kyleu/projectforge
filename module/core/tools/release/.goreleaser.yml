@@ -135,7 +135,7 @@ builds:
       - amd64
       - arm64
     mod_timestamp: "{{ .CommitTimestamp }}"
-{{{if .Build.SkipLinuxArm}}}{{{else}}}
+{{{if .Build.SkipLinuxARM}}}{{{else}}}
   - id: "linux-arm"
     goos:
       - linux
@@ -146,7 +146,7 @@ builds:
       - 6
       - 7
     mod_timestamp: "{{ .CommitTimestamp }}"
-{{{ end }}}{{{if .Build.SkipLinuxMips}}}{{{else}}}
+{{{ end }}}{{{if .Build.SkipLinuxMIPS}}}{{{else}}}
   - id: "linux-mips"
     goos:
       - linux

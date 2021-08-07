@@ -23,13 +23,13 @@ func DownloadLinks(version string) Links {
 			}
 			add(u, mode, os, arch)
 		}
-		addArms := func(mode string, os string) {
+		addARMs := func(mode string, os string) {
 			for _, arm := range []string{archARMV5, archARMV6, archARMV7} {
 				addDefault(mode, os, arm)
 			}
 		}
 		addWeird := func(mode string, os string) {
-			for _, weird := range []string{archMips64Hard, archMips64LEHard, archMips64LESoft, archMips64Soft, archMipsHard, archMipsLEHard, archMipsLESoft, archMipsSoft} {
+			for _, weird := range []string{archMIPS64Hard, archMIPS64LEHard, archMIPS64LESoft, archMIPS64Soft, archMIPSHard, archMIPSLEHard, archMIPSLESoft, archMIPSSoft} {
 				addDefault(mode, os, weird)
 			}
 		}
@@ -38,7 +38,7 @@ func DownloadLinks(version string) Links {
 		addDefault(modeServer, osDragonfly, archAMD64)
 
 		addDefault(modeServer, osFreeBSD, archARM64)
-		addArms(modeServer, osFreeBSD)
+		addARMs(modeServer, osFreeBSD)
 		addDefault(modeServer, osFreeBSD, archI386)
 		addDefault(modeServer, osFreeBSD, archAMD64)
 
@@ -47,7 +47,7 @@ func DownloadLinks(version string) Links {
 		addDefault(modeServer, osJS, archWASM)
 
 		addDefault(modeServer, osLinux, archARM64)
-		addArms(modeServer, osLinux)
+		addARMs(modeServer, osLinux)
 		addDefault(modeServer, osLinux, archI386)
 		addDefault(modeServer, osLinux, archAMD64)
 		addDefault(modeServer, osLinux, archPPC64)
@@ -69,17 +69,17 @@ func DownloadLinks(version string) Links {
 		addDefault(modeServer, osNetBSD, archAMD64)
 
 		addDefault(modeServer, osOpenBSD, archARM64)
-		addArms(modeServer, osOpenBSD)
+		addARMs(modeServer, osOpenBSD)
 		addDefault(modeServer, osOpenBSD, archI386)
 		addDefault(modeServer, osOpenBSD, archAMD64)
 
-		addArms(modeServer, osPlan9)
+		addARMs(modeServer, osPlan9)
 		addDefault(modeServer, osPlan9, archI386)
 		addDefault(modeServer, osPlan9, archAMD64)
 
 		addDefault(modeServer, osSolaris, archAMD64)
 
-		addArms(modeServer, osWindows)
+		addARMs(modeServer, osWindows)
 		addDefault(modeServer, osWindows, archI386)
 		addDefault(modeServer, osWindows, archAMD64)
 		addDefault(modeDesktop, osWindows, archAMD64)
