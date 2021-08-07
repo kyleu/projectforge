@@ -1,24 +1,25 @@
 {% import (
-  "{{{ .Package }}}/app"
-  "{{{ .Package }}}/app/auth"
+  "{{{ .Package }}}/app"{{{ if .HasModule "oauth" }}}
+  "{{{ .Package }}}/app/auth"{{{ end }}}
   "{{{ .Package }}}/app/controller/cutil"
   "{{{ .Package }}}/app/theme"
   "{{{ .Package }}}/app/user"
   "{{{ .Package }}}/views/components"
-  "{{{ .Package }}}/views/layout"
+  "{{{ .Package }}}/views/layout"{{{ if .HasModule "oauth" }}}
+  "{{{ .Package }}}/views/vauth"{{{ end }}}
   "{{{ .Package }}}/views/vtheme"
 ) %}
 
 {% code type Profile struct {
   layout.Basic
   Profile *user.Profile
-  Theme *theme.Theme
-  Providers auth.Providers
+  Theme *theme.Theme{{{ if .HasModule "oauth" }}}
+  Providers auth.Providers{{{ end }}}
   Referrer string
 } %}
 
-{% func (p *Profile) Body(as *app.State, ps *cutil.PageState) %}
-  {%= SigninTable(p.Providers, p.Referrer, as, ps) %}
+{% func (p *Profile) Body(as *app.State, ps *cutil.PageState) %}{{{ if .HasModule "oauth" }}}
+  {%= vauth.SigninTable(p.Providers, p.Referrer, as, ps) %}{{{ end }}}
   <form action="" method="post">
     <div class="card">
       <div class="right">

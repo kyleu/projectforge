@@ -11,8 +11,6 @@ import (
 	"github.com/kyleu/projectforge/app/web"
 )
 
-const ReferKey = "auth-refer"
-
 func BeginAuthHandler(prv *Provider, ctx *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger) (string, error) {
 	u, err := getAuthURL(prv, ctx, websess, logger)
 	if err != nil {
@@ -20,7 +18,7 @@ func BeginAuthHandler(prv *Provider, ctx *fasthttp.RequestCtx, websess *sessions
 	}
 	refer := string(ctx.Request.URI().QueryArgs().Peek("refer"))
 	if refer != "" && refer != "/profile" {
-		_ = web.StoreInSession(ReferKey, refer, ctx, websess, logger)
+		_ = web.StoreInSession(web.ReferKey, refer, ctx, websess, logger)
 	}
 	return u, nil
 }

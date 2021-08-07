@@ -7,7 +7,10 @@ import (
 	"go.uber.org/zap"
 )
 
-const WebSessKey = "auth"
+const (
+	WebSessKey = "auth"
+	ReferKey = "refer"
+)
 
 var webSessOpts = &sessions.Options{Path: "/", HttpOnly: true, MaxAge: 365 * 24 * 60 * 60 /* , SameSite: http.SameSiteStrictMode */}
 

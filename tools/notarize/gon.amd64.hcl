@@ -3,7 +3,7 @@ source = ["./build/dist/darwin_amd64_darwin_amd64/projectforge"]
 bundle_id = "com.kyleu.projectforge"
 
 //notarize {
-//  path = "./build/dist/projectforge_desktop__macos_x86_64.dmg"
+//  path = "./build/dist/projectforge_desktop_0.0.5_macos_x86_64.dmg"
 //  bundle_id = "com.kyleu.projectforge"
 //}
 

@@ -12,7 +12,8 @@ import (
 	"{{{ .Package }}}/app/theme"
 	"{{{ .Package }}}/app/user"
 	"{{{ .Package }}}/app/util"
-	"{{{ .Package }}}/views/vauth"
+	"{{{ .Package }}}/app/web"
+	"{{{ .Package }}}/views/vprofile"
 )
 
 func Profile(ctx *fasthttp.RequestCtx) {
@@ -31,12 +32,12 @@ func profileAction(ctx *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState)
 	ps.Title = "Profile"
 	ps.Data = ps.Profile
 	thm := as.Themes.Get(ps.Profile.Theme)
-
+	{{{ if .HasModule "oauth" }}}
 	prvs, err := as.Auth.Providers()
 	if err != nil {
 		return "", errors.Wrap(err, "can't load providers")
 	}
-
+	{{{ end }}}
 	redir := "/"
 	ref := string(ctx.Request.Header.Peek("Referer"))
 	if ref != "" {
@@ -46,7 +47,7 @@ func profileAction(ctx *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState)
 		}
 	}
 
-	page := &vauth.Profile{Profile: ps.Profile, Theme: thm, Providers: prvs, Referrer: redir}
+	page := &vprofile.Profile{Profile: ps.Profile, Theme: thm, {{{ if .HasModule "oauth" }}}Providers: prvs, {{{ end }}}Referrer: redir}
 	return render(ctx, as, page, ps, "Profile")
 }
 
@@ -91,4 +92,19 @@ func loadProfile(session *sessions.Session) (*user.Profile, error) {
 		return nil, err
 	}
 	return p, nil
+}
+
+func returnToReferrer(msg string, dflt string, ctx *fasthttp.RequestCtx, ps *cutil.PageState) (string, error) {
+	refer := ""
+	referX, ok := ps.Session.Values[web.ReferKey]
+	if ok {
+		refer, ok = referX.(string)
+		if ok {
+			_ = web.RemoveFromSession(web.ReferKey, ctx, ps.Session, ps.Logger)
+		}
+	}
+	if refer == "" {
+		refer = dflt
+	}
+	return flashAndRedir(true, msg, refer, ctx, ps)
 }

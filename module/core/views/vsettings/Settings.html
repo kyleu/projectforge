@@ -3,8 +3,8 @@
   "{{{ .Package }}}/app/controller/cutil"
   "{{{ .Package }}}/app/settings"
   "{{{ .Package }}}/views/components"
-  "{{{ .Package }}}/views/layout"
-  "{{{ .Package }}}/views/vauth"
+  "{{{ .Package }}}/views/layout"{{{ if .HasModule "oauth" }}}
+  "{{{ .Package }}}/views/vauth"{{{ end }}}
 ) %}
 
 {% code type Settings struct {
@@ -21,7 +21,7 @@
   <div class="card">
     <h3>Themes</h3>
     <p><a href="/theme">Edit Themes</a></p>
-  </div>
-  {%= vauth.Authentication(as) %}
+  </div>{{{ if .HasModule "oauth" }}}
+  {%= vauth.Authentication(as) %}{{{ end }}}
   {%= components.JSONModal("settings", "Settings JSON", p.Settings, 1) %}
 {% endfunc %}

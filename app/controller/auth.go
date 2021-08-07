@@ -10,7 +10,6 @@ import (
 	"github.com/kyleu/projectforge/app"
 	"github.com/kyleu/projectforge/app/auth"
 	"github.com/kyleu/projectforge/app/controller/cutil"
-	"github.com/kyleu/projectforge/app/web"
 )
 
 const signinMsg = "signed in to %s as [%s]"
@@ -58,21 +57,6 @@ func AuthLogout(ctx *fasthttp.RequestCtx) {
 
 		return ps.ProfilePath, nil
 	})
-}
-
-func returnToReferrer(msg string, dflt string, ctx *fasthttp.RequestCtx, ps *cutil.PageState) (string, error) {
-	refer := ""
-	referX, ok := ps.Session.Values[auth.ReferKey]
-	if ok {
-		refer, ok = referX.(string)
-		if ok {
-			_ = web.RemoveFromSession(auth.ReferKey, ctx, ps.Session, ps.Logger)
-		}
-	}
-	if refer == "" {
-		refer = dflt
-	}
-	return flashAndRedir(true, msg, refer, ctx, ps)
 }
 
 func getProvider(as *app.State, ctx *fasthttp.RequestCtx) (*auth.Provider, error) {
