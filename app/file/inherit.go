@@ -7,9 +7,9 @@ import (
 )
 
 const (
-	inheritPrefix = prefix + "INHERIT$"
-	prefixPattern = prefix + "PREFIX$"
-	suffixPattern = prefix + "SUFFIX$"
+	inheritPrefix = prefix + "INHERIT" + suffix
+	prefixPattern = prefix + "PREFIX" + suffix
+	suffixPattern = prefix + "SUFFIX" + suffix
 )
 
 type Inheritiance struct {

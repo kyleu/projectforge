@@ -37,7 +37,7 @@ func Apply(projectKey string, t Type, cfg util.ValueMap, mSvc *module.Service, p
 	case TypeSVG:
 		return onSVG(prj, cfg, pSvc, logger)
 	default:
-		return errorResult(errors.Errorf("invalid action type [%s]", t), cfg, logger)
+		return errorResult(errors.Errorf("invalid action type [%s]", t.String()), cfg, logger)
 	}
 }
 

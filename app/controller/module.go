@@ -1,8 +1,6 @@
 package controller
 
 import (
-	"fmt"
-
 	"github.com/kyleu/projectforge/app/module"
 	"github.com/kyleu/projectforge/views/vmodule"
 	"github.com/valyala/fasthttp"
@@ -42,7 +40,7 @@ func getModule(ctx *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*m
 		return nil, err
 	}
 
-	ps.Title = fmt.Sprintf("%s", mod.Title())
+	ps.Title = mod.Title()
 	ps.Data = mod
 
 	return mod, nil

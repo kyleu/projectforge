@@ -10,7 +10,7 @@ import (
 )
 
 func runTemplate(f *file.File, ctx *project.TemplateContext) (string, error) {
-	t, err := template.New(f.FullPath()).Delims(delimStart, delimEnd).Parse(string(f.Content))
+	t, err := template.New(f.FullPath()).Delims(delimStart, delimEnd).Parse(f.Content)
 	if err != nil {
 		return "", errors.Wrapf(err, "unable to create template for [%s]", f.FullPath())
 	}

@@ -37,7 +37,7 @@ func (m Modules) Get(key string) *Module {
 }
 
 func (m Modules) Keys() []string {
-	var ret []string
+	ret := make([]string, 0, len(m))
 	for _, x := range m {
 		ret = append(ret, x.Key)
 	}

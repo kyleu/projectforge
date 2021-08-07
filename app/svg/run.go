@@ -44,7 +44,7 @@ func markup(key string, bytes []byte) string {
 
 func loadSVGs(fs filesystem.FileLoader) ([]*SVG, error) {
 	files := fs.ListExtension(svgPath, "svg", false)
-	var svgs []*SVG
+	svgs := make([]*SVG, 0, len(files))
 	for _, f := range files {
 		b, err := fs.ReadFile(filepath.Join(svgPath, f))
 		if err != nil {

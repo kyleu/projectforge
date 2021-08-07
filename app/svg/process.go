@@ -37,12 +37,12 @@ func load(src string, tgt string) (*SVG, error) {
 			origErr := err
 			origURL := url
 			url = "https://raw.githubusercontent.com/icons8/line-awesome/master/svg/" + src + "-solid.svg"
-			status, b, err = cl.Get(b, url)
+			_, _, err = cl.Get(b, url)
 			if err != nil {
 				return nil, errors.Wrapf(origErr, "unable to call URL [%s]", origURL)
 			}
 		}
-		return nil, errors.Wrapf(err, "unable to call URL [%s]", url)
+		return nil, errors.Wrapf(err, "unable to call URL [%s]: %d", url, status)
 	}
 	if status != 200 {
 		return nil, errors.Errorf("received status [%d] while calling URL [%s]", status, url)

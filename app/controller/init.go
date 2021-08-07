@@ -23,16 +23,17 @@ func initAppRequest(as *app.State, ps *cutil.PageState) error {
 	}
 	for _, prj := range prjs {
 		for _, m := range prj.Modules {
-			if strings.Contains(m, "@") {
-				key, path := util.SplitStringLast(m, '@', true)
-				destination := filepath.Join(prj.Path, path)
-				_, added, err := as.Services.Modules.AddIfNeeded(key, destination)
-				if err != nil {
-					return errors.Wrapf(err, "unable to load referenced module [%s] from [%s]", key, destination)
-				}
-				if added {
-					ps.Logger.Infof("added module [%s] using files in [%s]", key, destination)
-				}
+			if !strings.Contains(m, "@") {
+				continue
+			}
+			key, path := util.SplitStringLast(m, '@', true)
+			destination := filepath.Join(prj.Path, path)
+			_, added, err := as.Services.Modules.AddIfNeeded(key, destination)
+			if err != nil {
+				return errors.Wrapf(err, "unable to load referenced module [%s] from [%s]", key, destination)
+			}
+			if added {
+				ps.Logger.Infof("added module [%s] using files in [%s]", key, destination)
 			}
 		}
 	}

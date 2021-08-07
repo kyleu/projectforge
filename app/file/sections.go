@@ -80,13 +80,14 @@ func (s sections) Sort() {
 func sectionIndexes(s string) (sections, error) {
 	var ret sections
 	parseText := func(idx int, text string) error {
-		if strings.HasPrefix(text, startPattern) {
+		switch {
+		case strings.HasPrefix(text, startPattern):
 			currSection := text[len(startPattern) : len(text)-len(closePattern)]
 			if ret.Get(currSection) != nil {
 				return errors.Errorf("multiple sections found with key [%s]", currSection)
 			}
 			ret = append(ret, &section{Key: currSection, Start: idx})
-		} else if strings.HasPrefix(text, endPattern) {
+		case strings.HasPrefix(text, endPattern):
 			if len(ret) == 0 {
 				return errors.New("encountered end section pattern before start")
 			}
@@ -96,7 +97,7 @@ func sectionIndexes(s string) (sections, error) {
 				return errors.Errorf("encountered nested section patterns (%s within %s)", sec, curr.Key)
 			}
 			curr.End = idx - len(sectionPrefix) - len(text)
-		} else {
+		default:
 			return errors.Errorf("invalid section pattern [%s]", text)
 		}
 		return nil

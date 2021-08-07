@@ -23,7 +23,8 @@ func onDebug(prj *project.Project, mods module.Modules, cfg util.ValueMap, mSvc 
 
 	var generated []string
 	for _, fn := range filenames {
-		b, err := tgt.PeekFile(fn, 1024)
+		var b []byte
+		b, err = tgt.PeekFile(fn, 1024)
 		if err != nil {
 			return errorResult(err, cfg, logger)
 		}

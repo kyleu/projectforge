@@ -38,11 +38,11 @@ func File(src *file.File, tgt *file.File) *Diff {
 		if len(patches) > 0 {
 			// TODO: Figure out what works
 			ret.Patch = dmp.DiffPrettyHtml(diffs)
-			//ret.Patch = dmp.PatchToText(patches)
-			//pte, err := url.QueryUnescape(ret.Patch)
-			//if err == nil {
-			//	ret.Patch = pte
-			//}
+			// ret.Patch = dmp.PatchToText(patches)
+			// pte, err := url.QueryUnescape(ret.Patch)
+			// if err == nil {
+			// 	ret.Patch = pte
+			// }
 			ret.Status = StatusDifferent
 		} else {
 			ret.Status = StatusIdentical
