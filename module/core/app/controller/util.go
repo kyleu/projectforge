@@ -12,9 +12,9 @@ import (
 	"github.com/valyala/fasthttp"
 
 	"{{{ .Package }}}/app"
-	"{{{ .Package }}}/app/auth"
 	"{{{ .Package }}}/app/controller/cutil"
 	"{{{ .Package }}}/app/util"
+	"{{{ .Package }}}/app/web"
 	"{{{ .Package }}}/views"
 	"{{{ .Package }}}/views/layout"
 	"{{{ .Package }}}/views/verror"
@@ -95,7 +95,7 @@ func flashAndRedir(success bool, msg string, redir string, ctx *fasthttp.Request
 		status = "success"
 	}
 	ps.Session.AddFlash(fmt.Sprintf("%s:%s", status, msg))
-	if err := auth.SaveSession(ctx, ps.Session, ps.Logger); err != nil {
+	if err := web.SaveSession(ctx, ps.Session, ps.Logger); err != nil {
 		return "", errors.Wrap(err, "unable to save flash session")
 	}
 

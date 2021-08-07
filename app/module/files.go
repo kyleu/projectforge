@@ -77,7 +77,7 @@ func (s *Service) GetFilenames(mods Modules) ([]string, error) {
 		}
 	}
 	keys := make([]string, 0, len(ret))
-	for k, _ := range ret {
+	for k := range ret {
 		keys = append(keys, k)
 	}
 	sort.Strings(keys)
@@ -119,7 +119,7 @@ func (s *Service) GetFiles(mods Modules, addHeader bool, tgt filesystem.FileLoad
 		}
 	}
 	keys := make([]string, 0, len(ret))
-	for k, _ := range ret {
+	for k := range ret {
 		keys = append(keys, k)
 	}
 	sort.Strings(keys)

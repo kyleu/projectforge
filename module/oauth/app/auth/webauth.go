@@ -4,6 +4,8 @@ import (
 	"github.com/go-gem/sessions"
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
+
+	"{{{ .Package }}}/app/web"
 )
 
 func getAuthURL(prv *Provider, ctx *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger) (string, error) {
@@ -22,7 +24,7 @@ func getAuthURL(prv *Provider, ctx *fasthttp.RequestCtx, websess *sessions.Sessi
 		return "", err
 	}
 
-	err = StoreInSession(prv.ID, sess.Marshal(), ctx, websess, logger)
+	err = web.StoreInSession(prv.ID, sess.Marshal(), ctx, websess, logger)
 	if err != nil {
 		return "", err
 	}
@@ -31,7 +33,7 @@ func getAuthURL(prv *Provider, ctx *fasthttp.RequestCtx, websess *sessions.Sessi
 }
 
 func getCurrentAuths(websess *sessions.Session) Sessions {
-	authS, err := getFromSession(WebSessKey, websess)
+	authS, err := web.GetFromSession(WebSessKey, websess)
 	var ret Sessions
 	if err == nil && authS != "" {
 		ret = SessionsFromString(authS)
@@ -42,7 +44,7 @@ func getCurrentAuths(websess *sessions.Session) Sessions {
 func setCurrentAuths(s Sessions, ctx *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger) error {
 	s.Sort()
 	if len(s) == 0 {
-		return RemoveFromSession(WebSessKey, ctx, websess, logger)
+		return web.RemoveFromSession(WebSessKey, ctx, websess, logger)
 	}
-	return StoreInSession(WebSessKey, s.String(), ctx, websess, logger)
+	return web.StoreInSession(WebSessKey, s.String(), ctx, websess, logger)
 }

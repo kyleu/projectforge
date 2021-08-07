@@ -13,9 +13,9 @@ import (
 	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/projectforge/app"
-	"github.com/kyleu/projectforge/app/auth"
 	"github.com/kyleu/projectforge/app/controller/cutil"
 	"github.com/kyleu/projectforge/app/util"
+	"github.com/kyleu/projectforge/app/web"
 	"github.com/kyleu/projectforge/views"
 	"github.com/kyleu/projectforge/views/layout"
 	"github.com/kyleu/projectforge/views/verror"
@@ -96,7 +96,7 @@ func flashAndRedir(success bool, msg string, redir string, ctx *fasthttp.Request
 		status = "success"
 	}
 	ps.Session.AddFlash(fmt.Sprintf("%s:%s", status, msg))
-	if err := auth.SaveSession(ctx, ps.Session, ps.Logger); err != nil {
+	if err := web.SaveSession(ctx, ps.Session, ps.Logger); err != nil {
 		return "", errors.Wrap(err, "unable to save flash session")
 	}
 

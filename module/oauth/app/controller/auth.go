@@ -9,6 +9,7 @@ import (
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/auth"
 	"{{{ .Package }}}/app/controller/cutil"
+	"{{{ .Package }}}/app/web"
 )
 
 const signinMsg = "signed in to %s as [%s]"
@@ -64,7 +65,7 @@ func returnToReferrer(msg string, dflt string, ctx *fasthttp.RequestCtx, ps *cut
 	if ok {
 		refer, ok = referX.(string)
 		if ok {
-			_ = auth.RemoveFromSession(auth.ReferKey, ctx, ps.Session, ps.Logger)
+			_ = web.RemoveFromSession(auth.ReferKey, ctx, ps.Session, ps.Logger)
 		}
 	}
 	if refer == "" {

@@ -8,13 +8,13 @@ import (
 
 const (
 	inheritPrefix = prefix + "INHERIT$"
-	prefixPattern  = prefix + "PREFIX$"
-	suffixPattern    = prefix + "SUFFIX$"
+	prefixPattern = prefix + "PREFIX$"
+	suffixPattern = prefix + "SUFFIX$"
 )
 
 type Inheritiance struct {
-	Prefix string `json:"prefix"`
-	Suffix string `json:"suffix"`
+	Prefix  string `json:"prefix"`
+	Suffix  string `json:"suffix"`
 	Content string `json:"content"`
 }
 
@@ -38,14 +38,14 @@ func InheritanceContent(fl *File) (*Inheritiance, error) {
 		}
 		prefixIdx := strings.Index(line, prefixPattern)
 		if prefixIdx > -1 {
-			ret.Prefix = line[prefixIdx + len(prefixPattern):]
+			ret.Prefix = line[prefixIdx+len(prefixPattern):]
 			ret.Prefix = strings.TrimSpace(ret.Prefix)
 			ret.Prefix = strings.TrimPrefix(strings.TrimSuffix(ret.Prefix, `]`), `[`)
 			continue
 		}
 		suffixIdx := strings.Index(line, suffixPattern)
 		if suffixIdx > -1 {
-			ret.Suffix = line[suffixIdx + len(suffixPattern):]
+			ret.Suffix = line[suffixIdx+len(suffixPattern):]
 			ret.Suffix = strings.TrimSpace(ret.Suffix)
 			ret.Suffix = strings.TrimPrefix(strings.TrimSuffix(ret.Suffix, `]`), `[`)
 			continue

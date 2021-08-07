@@ -13,8 +13,8 @@ import (
 var DefaultMode = os.FileMode(0o755)
 
 type FileSystem struct {
-	root     string
-	logger   *zap.SugaredLogger
+	root   string
+	logger *zap.SugaredLogger
 }
 
 var _ FileLoader = (*FileSystem)(nil)

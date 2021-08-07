@@ -27,7 +27,7 @@ func (p *Provider) Goth(proto string, host string) (goth.Provider, error) {
 	u := fmt.Sprintf("%s://%s", proto, host)
 
 	env := os.Getenv(util.AppKey + "_oauth_redirect")
-	if(env != "") {
+	if env != "" {
 		u = env
 	}
 	cb := fmt.Sprintf("%s/auth/callback/%s", u, p.ID)

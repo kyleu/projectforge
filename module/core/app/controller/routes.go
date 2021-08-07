@@ -19,10 +19,10 @@ func AppRoutes() *router.Router {
 	r.GET(defaultSearchPath, w(Search))
 
 	r.GET(defaultProfilePath, w(Profile))
-	r.POST(defaultProfilePath, w(ProfileSave))
+	r.POST(defaultProfilePath, w(ProfileSave)){{{ if .HasModule "oauth" }}}
 	r.GET("/auth/{key}", w(AuthDetail))
 	r.GET("/auth/callback/{key}", w(AuthCallback))
-	r.GET("/auth/logout/{key}", w(AuthLogout))
+	r.GET("/auth/logout/{key}", w(AuthLogout)){{{ end }}}
 
 	r.GET("/admin", w(Admin))
 	r.GET("/admin/{path:*}", w(Admin))

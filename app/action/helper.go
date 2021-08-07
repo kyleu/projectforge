@@ -10,7 +10,7 @@ import (
 
 const (
 	delimStart = "{{{"
-	delimEnd = "}}}"
+	delimEnd   = "}}}"
 )
 
 func diffs(prj *project.Project, mods module.Modules, addHeader bool, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) (file.Files, []*diff.Diff, error) {

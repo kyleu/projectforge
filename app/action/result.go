@@ -90,8 +90,8 @@ func (r *Result) HasErrors() bool {
 
 type ResultContext struct {
 	Prj *project.Project `json:"prj"`
-	Cfg util.ValueMap `json:"cfg"`
-	Res *Result `json:"res"`
+	Cfg util.ValueMap    `json:"cfg"`
+	Res *Result          `json:"res"`
 }
 
 func (c *ResultContext) Status() string {
@@ -106,7 +106,7 @@ func (c *ResultContext) Status() string {
 			}
 		}
 	}
-  if fileCount == 0 {
+	if fileCount == 0 {
 		return "ok"
 	}
 	return fmt.Sprintf("%d changes", fileCount)

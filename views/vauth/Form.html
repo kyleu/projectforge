@@ -18,7 +18,7 @@
         {%- else -%}
         <a href="/auth/{%s prv.ID %}?refer={%u referrer %}">{%s prv.Title %}</a>
         {%- endif -%}
-        {%- code as := ps.Auth.GetByProvider(prv.ID) -%}
+        {%- code as := ps.Accounts.GetByProvider(prv.ID) -%}
         {%- if len(as) > 0 -%}
         <ul>
         {%- for _, a := range as -%}

@@ -5,8 +5,8 @@ import (
 
 	"github.com/fasthttp/router"
 	"go.uber.org/zap"
-
-	"{{{ .Package }}}/app/auth"
+{{{ if .HasModule "oauth" }}}
+	"{{{ .Package }}}/app/auth"{{{ end }}}
 	"{{{ .Package }}}/app/filesystem"
 	"{{{ .Package }}}/app/theme"
 	"{{{ .Package }}}/app/util"
@@ -31,16 +31,16 @@ type State struct {
 	Debug     bool
 	BuildInfo *BuildInfo
 	Router    *router.Router
-	Files     filesystem.FileLoader
-	Auth      *auth.Service
+	Files     filesystem.FileLoader{{{ if .HasModule "oauth" }}}
+	Auth      *auth.Service{{{ end }}}
 	Themes    *theme.Service
 	Logger    *zap.SugaredLogger
 	Services  *Services
 }
 
 func NewState(debug bool, bi *BuildInfo, r *router.Router, f filesystem.FileLoader, log *zap.SugaredLogger) (*State, error) {
-	rl := log.With(zap.String("service", "router"))
-	a := auth.NewService("", log)
+	rl := log.With(zap.String("service", "router")){{{ if .HasModule "oauth" }}}
+	a := auth.NewService("", log){{{ end }}}
 	t := theme.NewService(f, log)
-	return &State{Debug: debug, BuildInfo: bi, Router: r, Files: f, Auth: a, Themes: t, Logger: rl}, nil
+	return &State{Debug: debug, BuildInfo: bi, Router: r, Files: f{{{ if .HasModule "oauth" }}}, Auth: a{{{ end }}}, Themes: t, Logger: rl}, nil
 }

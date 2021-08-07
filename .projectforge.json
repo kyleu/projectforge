@@ -9,7 +9,8 @@
     "core",
     "desktop",
     "marketing",
-    "mobile"
+    "mobile",
+    "oauth"
   ],
   "ignore": [
     "module",

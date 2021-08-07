@@ -8,11 +8,11 @@ import (
 	"go.uber.org/zap"
 
 	"{{{ .Package }}}/app"
-	"{{{ .Package }}}/app/auth"
 	"{{{ .Package }}}/app/controller/cutil"
-	{{{ if .HasModule "marketing" }}}"{{{ .Package }}}/app/site"
+	{{{ if.HasModule "marketing" }}}"{{{ .Package }}}/app/site"
 	{{{ end }}}"{{{ .Package }}}/app/theme"
 	"{{{ .Package }}}/app/util"
+	"{{{ .Package }}}/app/web"
 	"{{{ .Package }}}/views/verror"
 )
 
@@ -35,11 +35,11 @@ func act(key string, ctx *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.P
 	}
 	actComplete(key, as, ps, ctx, f)
 }
-{{{ if .HasModule "marketing" }}}
+{{{ if.HasModule "marketing" }}}
 func actSite(key string, ctx *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
 	as := _currentSiteState
 	ps := loadPageState(ctx, as.Logger)
-	ps.Menu = site.Menu(ps.Profile, ps.Auth)
+	ps.Menu = site.Menu(ps.Profile, ps.Accounts)
 	err := initSiteRequest(as, ps)
 	if err != nil {
 		as.Logger.Warnf("%+v", err)
@@ -67,7 +67,7 @@ func loadPageState(ctx *fasthttp.RequestCtx, logger *zap.SugaredLogger) *cutil.P
 	}
 	flashes := util.StringArrayFromInterfaces(session.Flashes())
 	if len(flashes) > 0 {
-		err = auth.SaveSession(ctx, session, logger)
+		err = web.SaveSession(ctx, session, logger)
 		if err != nil {
 			logger.Warnf("can't save session: %+v", err)
 		}
@@ -78,24 +78,24 @@ func loadPageState(ctx *fasthttp.RequestCtx, logger *zap.SugaredLogger) *cutil.P
 		logger.Warnf("can't load profile: %+v", err)
 	}
 
-	var a auth.Sessions
+	var a web.Accounts
 	authX, ok := session.Values["auth"]
 	if ok {
 		authS, ok := authX.(string)
 		if ok {
-			a = auth.SessionsFromString(authS)
+			a = web.AccountsFromString(authS)
 		}
 	}
 
 	return &cutil.PageState{
-		Method:  string(ctx.Method()),
-		URI:     ctx.Request.URI(),
-		Flashes: flashes,
-		Session: session,
-		Profile: prof,
-		Auth:    a,
-		Icons:   initialIcons,
-		Logger:  logger,
+		Method:   string(ctx.Method()),
+		URI:      ctx.Request.URI(),
+		Flashes:  flashes,
+		Session:  session,
+		Profile:  prof,
+		Accounts: a,
+		Icons:    initialIcons,
+		Logger:   logger,
 	}
 }
 

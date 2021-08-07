@@ -2,9 +2,9 @@
 package site
 
 import (
-	"github.com/kyleu/projectforge/app/auth"
 	"github.com/kyleu/projectforge/app/menu"
 	"github.com/kyleu/projectforge/app/user"
+	"github.com/kyleu/projectforge/app/web"
 )
 
 const (
@@ -15,7 +15,7 @@ const (
 	keyContrib    = "contrib"
 )
 
-func Menu(p *user.Profile, s auth.Sessions) menu.Items {
+func Menu(p *user.Profile, a web.Accounts) menu.Items {
 	return menu.Items{
 		{Key: keyIntro, Title: "Introduction", Icon: "heart", Route: "/intro"},
 		{Key: keyInstall, Title: "Install", Icon: "code", Route: "/install"},

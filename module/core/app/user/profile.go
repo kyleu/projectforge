@@ -8,8 +8,8 @@ import (
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
 
-	"{{{ .Package }}}/app/auth"
 	"{{{ .Package }}}/app/util"
+	"{{{ .Package }}}/app/web"
 )
 
 type Profile struct {
@@ -35,7 +35,7 @@ func (p *Profile) ModeClass() string {
 	return "mode-" + p.Mode
 }
 
-func (p *Profile) AuthString(a auth.Sessions) string {
+func (p *Profile) AuthString(a web.Accounts) string {
 	msg := fmt.Sprintf("signed in as %s", p.String())
 	if len(a) == 0 {
 		if p.Name == DefaultProfile.Name {
@@ -52,13 +52,13 @@ func (p *Profile) Equals(x *Profile) bool {
 
 func SaveProfile(n *Profile, ctx *fasthttp.RequestCtx, sess *sessions.Session, logger *zap.SugaredLogger) error {
 	if n == nil || n.Equals(DefaultProfile) {
-		err := auth.RemoveFromSession("profile", ctx, sess, logger)
+		err := web.RemoveFromSession("profile", ctx, sess, logger)
 		if err != nil {
 			return errors.Wrap(err, "unable to remove profile from session")
 		}
 		return nil
 	}
-	err := auth.StoreInSession("profile", util.ToJSON(n), ctx, sess, logger)
+	err := web.StoreInSession("profile", util.ToJSON(n), ctx, sess, logger)
 	if err != nil {
 		return errors.Wrap(err, "unable to save profile in session")
 	}

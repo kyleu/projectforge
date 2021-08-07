@@ -7,6 +7,8 @@ import (
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
+
+	"github.com/kyleu/projectforge/app/web"
 )
 
 const ReferKey = "auth-refer"
@@ -18,13 +20,13 @@ func BeginAuthHandler(prv *Provider, ctx *fasthttp.RequestCtx, websess *sessions
 	}
 	refer := string(ctx.Request.URI().QueryArgs().Peek("refer"))
 	if refer != "" && refer != "/profile" {
-		_ = StoreInSession(ReferKey, refer, ctx, websess, logger)
+		_ = web.StoreInSession(ReferKey, refer, ctx, websess, logger)
 	}
 	return u, nil
 }
 
 func CompleteUserAuth(prv *Provider, ctx *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger) (*Session, Sessions, error) {
-	value, err := getFromSession(prv.ID, websess)
+	value, err := web.GetFromSession(prv.ID, websess)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -58,7 +60,7 @@ func CompleteUserAuth(prv *Provider, ctx *fasthttp.RequestCtx, websess *sessions
 		return nil, nil, err
 	}
 
-	err = StoreInSession(prv.ID, sess.Marshal(), ctx, websess, logger)
+	err = web.StoreInSession(prv.ID, sess.Marshal(), ctx, websess, logger)
 	if err != nil {
 		return nil, nil, err
 	}

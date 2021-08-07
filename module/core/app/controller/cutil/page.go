@@ -7,10 +7,10 @@ import (
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
 
-	"{{{ .Package }}}/app/auth"
 	"{{{ .Package }}}/app/menu"
 	"{{{ .Package }}}/app/user"
 	"{{{ .Package }}}/app/util"
+	"{{{ .Package }}}/app/web"
 )
 
 type PageState struct {
@@ -23,7 +23,7 @@ type PageState struct {
 	Flashes       []string           `json:"flashes"`
 	Session       *sessions.Session  `json:"-"`
 	Profile       *user.Profile      `json:"profile"`
-	Auth          auth.Sessions      `json:"auth"`
+	Accounts      web.Accounts       `json:"accounts"`
 	Icons         []string           `json:"icons"`
 	RootIcon      string             `json:"rootIcon"`
 	RootPath      string             `json:"rootPath"`
