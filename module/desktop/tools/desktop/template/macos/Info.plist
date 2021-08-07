@@ -9,7 +9,7 @@
     <key>CFBundleIconFile</key>
     <string>icons</string>
     <key>CFBundleIdentifier</key>
-    <string>{{{ .Bundle }}}</string>
+    <string>{{{ .Info.Bundle }}}</string>
     <key>CFBundleName</key>
     <string>{{{ .Name }}}</string>
     <key>CFBundlePackageType</key>

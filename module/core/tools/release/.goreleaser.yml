@@ -1,33 +1,4 @@
 # http://goreleaser.com
-env:
-  - XNAME={{{ .AuthorName }}}
-  - XEMAIL={{{ .AuthorEmail }}}
-  - XORG={{{ .Org }}}
-  - XHOMEPAGE={{{ .Homepage }}}
-  - XLICENSE={{{ .License }}}
-  - XSUMMARY={{{ .Summary }}}
-  - XDESCRIPTION={{{ .Description }}}
-  - XSKIP_DESKTOP={{{ .Build.SkipDesktop }}}
-  - XSKIP_ANDROID={{{ .Build.SkipAndroid }}}
-  - XSKIP_IOS={{{ .Build.SkipIOS }}}
-  - XSKIP_NOTARIZE={{{ .Build.SkipNotarize }}}
-brews:
-  -
-    tap:
-      owner: "{{{ .Org }}}"
-      name: "homebrew-{{{ .Org }}}"
-    commit_author:
-      name: "{{{ .AuthorName }}}"
-      email: "{{{ .AuthorEmail }}}"
-    folder: Formula
-    homepage: "{{ .Env.XHOMEPAGE }}"
-    description: "{{ .Env.XDESCRIPTION }}"
-    license: "{{ .Env.XLICENSE }}"
-    skip_upload: {{{ .Build.SkipHomebrew }}}
-
-signs:
-  - artifacts: checksum
-
 archives:
   - format: zip
     wrap_in_directory: false
@@ -38,33 +9,19 @@ archives:
     files:
       - none*
 
-# Everything below this line is generic
-
-dist: "build/dist"
-
-source:
-  enabled: true
-  name_template: "{{ .ProjectName }}_{{ .Version }}_source"
-  format: "zip"
-
-snapshot:
-  name_template: "{{ .Tag }}"
-
-release:
-  draft: true
-  header: |
-    ## {{ .Version }} ({{ .Date }})
-    See {{{ .Homepage }}} for download links and documentation
-    ## Main downloads
-    - [Linux Intel 64 bit]({{{ .Sourcecode }}}/releases/download/{{ .Version }}/{{ .ProjectName }}_{{ .Version }}_linux_x86_64.zip)
-    - [MacOS Intel 64 bit]({{{ .Sourcecode }}}/releases/download/{{ .Version }}/{{ .ProjectName }}_{{ .Version }}_macos_x86_64.zip)
-    - [Windows Intel 64 bit]({{{ .Sourcecode }}}/releases/download/{{ .Version }}/{{ .ProjectName }}_{{ .Version }}_windows_x86_64.zip)
-
-  extra_files:
-    - glob: "./build/dist/*_notarized.zip"
-    - glob: "./build/dist/*.dmg"
-    - glob: "./build/dist/*_desktop_*.zip"
-    - glob: "./build/dist/*_mobile_*.zip"
+brews:
+  -
+    tap:
+      owner: "{{{ .Info.Org }}}"
+      name: "homebrew-{{{ .Info.Org }}}"
+    commit_author:
+      name: "{{{ .Info.AuthorName }}}"
+      email: "{{{ .Info.AuthorEmail }}}"
+    folder: Formula
+    homepage: "{{{ .Info.Homepage }}}"
+    description: "{{{ .Info.Description }}}"
+    license: "{{{ .Info.License }}}"
+    skip_upload: {{{ .Build.SkipHomebrew }}}
 
 changelog:
   skip: true
@@ -75,47 +32,76 @@ checksum:
 dockers:
   -
     image_templates:
-      - "ghcr.io/{{ .Env.XORG }}/{{.ProjectName}}:{{ .Tag }}"
-      - "ghcr.io/{{ .Env.XORG }}/{{.ProjectName}}:v{{ .Major }}"
-      - "ghcr.io/{{ .Env.XORG }}/{{.ProjectName}}:v{{ .Major }}.{{ .Minor }}"
-      - "ghcr.io/{{ .Env.XORG }}/{{.ProjectName}}:latest"
+      - "ghcr.io/{{{ .Info.Org }}}/{{.ProjectName}}:{{ .Tag }}"
+      - "ghcr.io/{{{ .Info.Org }}}/{{.ProjectName}}:v{{ .Major }}"
+      - "ghcr.io/{{{ .Info.Org }}}/{{.ProjectName}}:v{{ .Major }}.{{ .Minor }}"
+      - "ghcr.io/{{{ .Info.Org }}}/{{.ProjectName}}:latest"
     dockerfile: ./tools/release/Dockerfile
 
+dist: "build/dist"
+{{{if .Build.SkipNFPMS}}}{{{else}}}
 nfpms:
   -
-    vendor: "{{ .Env.XNAME }}"
-    homepage: "{{ .Env.XHOMEPAGE }}"
-    maintainer: "{{ .Env.XNAME }} <{{ .Env.XEMAIL }}>"
-    description: "{{ .Env.XDESCRIPTION }}"
-    license: "{{ .Env.XLICENSE }}"
+    vendor: "{{{ .Info.AuthorName }}}"
+    homepage: "{{{ .Info.Homepage }}}}"
+    maintainer: "{{{ .Info.AuthorName }}} <{{{ .Info.AuthorEmail }}}>"
+    description: "{{{ .Info.Description }}}"
+    license: "{{{ .Info.License }}}"
     replacements: *replacements
     formats:
       - apk
       - deb
       - rpm
+{{{end}}}
+release:
+  draft: true
+  header: |
+    ## {{ .Version }} ({{ .Date }})
+    See {{{ .Info.Homepage }}} for download links and documentation
+    ## Main downloads
+    - [Linux Intel 64 bit]({{{ .Info.Sourcecode }}}/releases/download/{{ .Version }}/{{ .ProjectName }}_{{ .Version }}_linux_x86_64.zip)
+    - [MacOS Intel 64 bit]({{{ .Info.Sourcecode }}}/releases/download/{{ .Version }}/{{ .ProjectName }}_{{ .Version }}_macos_x86_64.zip)
+    - [Windows Intel 64 bit]({{{ .Info.Sourcecode }}}/releases/download/{{ .Version }}/{{ .ProjectName }}_{{ .Version }}_windows_x86_64.zip)
 
+  extra_files:{{{ if .Build.SkipNotarize }}}{{{ else }}}
+    - glob: "./build/dist/*_notarized.zip"{{{ end }}}
+    - glob: "./build/dist/*.dmg"{{{ if .Build.SkipDesktop }}}{{{ else }}}
+    - glob: "./build/dist/*_desktop_*.zip"{{{ end }}}
+    - glob: "./build/dist/*_mobile_*.zip"
+{{{if .Build.SkipScoop}}}{{{else}}}
 scoop:
   bucket:
-    owner: "{{ .Env.XORG }}"
+    owner: "{{{ .Info.Org }}}"
     name: "{{ .ProjectName }}"
   commit_author:
-    name: "{{ .Env.XNAME }}"
-    email: "{{ .Env.XEMAIL }}"
+    name: "{{{ .Info.AuthorName }}}"
+    email: "{{{ .Info.AuthorEmail }}}"
   commit_msg_template: "Scoop update for {{ .ProjectName }} version {{ .Tag }}"
-  homepage: "{{ .Env.XHOMEPAGE }}"
-  description: "{{ .Env.XSUMMARY }}"
-  license: "{{ .Env.XLICENSE }}"
+  homepage: "{{{ .Info.Homepage }}}"
+  description: "{{{ .Info.Summary }}}"
+  license: "{{{ .Info.License }}}"
   skip_upload: false
-
+{{{end}}}{{{if .Build.SkipSigning}}}{{{else}}}
+signs:
+  - artifacts: checksum
+{{{ end }}}{{{if .Build.SkipSnapcraft}}}{{{else}}}
 snapcrafts:
   -
     publish: false
     replacements: *replacements
-    summary: "{{ .Env.XSUMMARY }}"
-    description: "{{ .Env.XDESCRIPTION }}"
+    summary: "{{{ .Info.Summary }}}"
+    description: "{{{ .Info.Description }}}"
     grade: stable
     confinement: strict
-    license: "{{{ .License }}}"
+    license: "{{{ .Info.License }}}"
+{{{end}}}
+snapshot:
+  name_template: "{{ .Tag }}"
+
+source:
+  enabled: true
+  name_template: "{{ .ProjectName }}_{{ .Version }}_source"
+  format: "zip"
 
 builds:
   - id: "darwin_amd64"
@@ -125,21 +111,21 @@ builds:
       - amd64
     mod_timestamp: "{{ .CommitTimestamp }}"
     hooks:
-      post:
-        - "./bin/build/desktop.release.sh {{ .Version }}"
-        - "./bin/build/notarize-amd64.sh {{ .Version }}"
-        - "./bin/build/android.sh {{ .Version }}"
-        - "./bin/build/ios.sh {{ .Version }}"
+      post:{{{ if .Build.SkipDesktop }}}{{{ else }}}
+        - "./bin/build/desktop.release.sh {{ .Version }}"{{{ end }}}{{{ if .Build.SkipNotarize }}}{{{ else }}}
+        - "./tools/notarize/notarize-amd64.sh {{ .Version }}"{{{ end }}}{{{ if .BuildAndroid }}}
+        - "./bin/build/android.sh {{ .Version }}"{{{ end }}}{{{ if .BuildIOS }}}
+        - "./bin/build/ios.sh {{ .Version }}"{{{ end }}}
 
   - id: "darwin_arm64"
     goos:
       - darwin
     goarch:
       - arm64
-    mod_timestamp: "{{ .CommitTimestamp }}"
+    mod_timestamp: "{{ .CommitTimestamp }}"{{{ if .Build.SkipNotarize }}}{{{ else }}}
     hooks:
       post:
-        - "./bin/build/notarize-arm64.sh {{ .Version }}"
+        - "./tools/notarize/notarize-arm64.sh {{ .Version }}"{{{ end }}}
 
   - id: "linux"
     goos:
@@ -149,7 +135,7 @@ builds:
       - amd64
       - arm64
     mod_timestamp: "{{ .CommitTimestamp }}"
-
+{{{if .Build.SkipLinuxArm}}}{{{else}}}
   - id: "linux-arm"
     goos:
       - linux
@@ -160,8 +146,7 @@ builds:
       - 6
       - 7
     mod_timestamp: "{{ .CommitTimestamp }}"
-    skip: {{{ .Build.SkipLinuxArm }}}
-
+{{{ end }}}{{{if .Build.SkipLinuxMips}}}{{{else}}}
   - id: "linux-mips"
     goos:
       - linux
@@ -174,8 +159,7 @@ builds:
       - hardfloat
       - softfloat
     mod_timestamp: "{{ .CommitTimestamp }}"
-    skip: {{{ .Build.SkipLinuxMips }}}
-
+{{{ end }}}{{{if .Build.SkipLinuxOdd}}}{{{else}}}
   - id: "linux-odd"
     goos:
       - linux
@@ -185,9 +169,7 @@ builds:
       - riscv64
       - s390x
     mod_timestamp: "{{ .CommitTimestamp }}"
-    skip: {{{ .Build.SkipLinuxOdd }}}
-
-
+{{{ end }}}
   - id: "windows"
     goos:
       - windows
@@ -201,39 +183,35 @@ builds:
       - 6
       - 7
     mod_timestamp: "{{ .CommitTimestamp }}"
-
+{{{if .Build.SkipWASM}}}{{{else}}}
   - id: "js"
     goos:
       - js
     goarch:
       - wasm
     mod_timestamp: "{{ .CommitTimestamp }}"
-    skip: {{{ .Build.SkipWASM }}}
-
+{{{ end }}}{{{if .Build.SkipAIX}}}{{{else}}}
   - id: "aix"
     goos:
       - aix
     goarch:
       - ppc64
     mod_timestamp: "{{ .CommitTimestamp }}"
-    skip: {{{ .Build.SkipAIX }}}
-
+{{{ end }}}{{{if .Build.SkipDragonfly}}}{{{else}}}
   - id: "dragonfly"
     goos:
       - dragonfly
     goarch:
       - amd64
     mod_timestamp: "{{ .CommitTimestamp }}"
-    skip: {{{ .Build.SkipDragonfly }}}
-
+{{{ end }}}{{{if .Build.SkipIllumos}}}{{{else}}}
   - id: "illumos"
     goos:
       - illumos
     goarch:
       - amd64
     mod_timestamp: "{{ .CommitTimestamp }}"
-    skip: {{{ .Build.SkipIllumos }}}
-
+{{{ end }}}{{{if .Build.SkipFreeBSD}}}{{{else}}}
   - id: "freebsd"
     goos:
       - freebsd
@@ -247,8 +225,7 @@ builds:
       - 6
       - 7
     mod_timestamp: "{{ .CommitTimestamp }}"
-    skip: {{{ .Build.SkipFreeBSD }}}
-
+{{{ end }}}{{{if .Build.SkipNetBSD}}}{{{else}}}
   - id: "netbsd"
     goos:
       - netbsd
@@ -260,8 +237,7 @@ builds:
     goarm:
       - 7
     mod_timestamp: "{{ .CommitTimestamp }}"
-    skip: {{{ .Build.SkipNetBSD }}}
-
+{{{ end }}}{{{if .Build.SkipOpenBSD}}}{{{else}}}
   - id: "openbsd"
     goos:
       - openbsd
@@ -275,8 +251,7 @@ builds:
       - 6
       - 7
     mod_timestamp: "{{ .CommitTimestamp }}"
-    skip: {{{ .Build.SkipOpenBSD }}}
-
+{{{ end }}}{{{if .Build.SkipPlan9}}}{{{else}}}
   - id: "plan9"
     goos:
       - plan9
@@ -289,12 +264,11 @@ builds:
       - 6
       - 7
     mod_timestamp: "{{ .CommitTimestamp }}"
-    skip: {{{ .Build.SkipPlan9 }}}
-
+{{{ end }}}{{{if .Build.SkipSolaris}}}{{{else}}}
   - id: "solaris"
     goos:
       - solaris
     goarch:
       - amd64
     mod_timestamp: "{{ .CommitTimestamp }}"
-    skip: {{{ .Build.SkipSolaris }}}
+{{{ end -}}}

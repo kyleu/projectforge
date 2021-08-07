@@ -25,6 +25,6 @@
 {% func Feedback() %}
 <div class="card">
   <h3>Feedback</h3>
-  <p>For now, email <a href="mailto:{{{ .AuthorEmail }}}">{{{ .AuthorName }}}</a></p>
+  <p>For now, email <a href="mailto:{{{ .Info.AuthorEmail }}}">{{{ .Info.AuthorName }}}</a></p>
 </div>
 {% endfunc %}

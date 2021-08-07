@@ -3,10 +3,10 @@ package util
 const (
 	AppKey     = "{{{ .Key }}}"
 	AppName    = "{{{ .Name }}}"
-	AppSummary = "{{{ .Summary }}}"
+	AppSummary = "{{{ .Info.Summary }}}"
 	AppPort    = {{{ .Port }}}
-	AppContact = "{{{ .AuthorName }}} <{{{ .AuthorEmail }}}>"
-	AppURL     = "{{{ .Homepage }}}"
-	AppSource  = "{{{ .Sourcecode }}}"
-	AppLegal   = `Built by <a href="mailto:{{{ .AuthorEmail }}}">{{{ .AuthorName }}}</a>, all rights reserved`
+	AppContact = "{{{ .Info.AuthorName }}} <{{{ .Info.AuthorEmail }}}>"
+	AppURL     = "{{{ .Info.Homepage }}}"
+	AppSource  = "{{{ .Info.Sourcecode }}}"
+	AppLegal   = `Built by <a href="mailto:{{{ .Info.AuthorEmail }}}">{{{ .Info.AuthorName }}}</a>, all rights reserved`
 )

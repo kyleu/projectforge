@@ -19,7 +19,7 @@ require (
 	github.com/spf13/cobra v1.2.1
 	github.com/valyala/fasthttp v1.28.0
 	github.com/valyala/quicktemplate v1.6.3
-	go.uber.org/zap v1.18.1
-	golang.org/x/mobile v0.0.0-20210710064935-76c259c465ba
+	go.uber.org/zap v1.18.1{{{ if .HasModule "mobile" }}}
+	golang.org/x/mobile v0.0.0-20210710064935-76c259c465ba{{{ end }}}
 	golang.org/x/oauth2 v0.0.0-20210628180205-a41e5a781914
 )

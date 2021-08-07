@@ -1,6 +1,8 @@
 package module
 
 import (
+	"sort"
+
 	"github.com/kyleu/projectforge/app/filesystem"
 )
 
@@ -12,6 +14,7 @@ type Module struct {
 	AuthorEmail string                `json:"authorEmail,omitempty"`
 	License     string                `json:"license,omitempty"`
 	Sourcecode  string                `json:"sourcecode,omitempty"`
+	Priority    int                   `json:"priority,omitempty"`
 	Files       filesystem.FileLoader `json:"-"`
 }
 
@@ -24,8 +27,8 @@ func (m *Module) Title() string {
 
 type Modules []*Module
 
-func (i Modules) Get(key string) *Module {
-	for _, item := range i {
+func (m Modules) Get(key string) *Module {
+	for _, item := range m {
 		if item.Key == key {
 			return item
 		}
@@ -33,10 +36,17 @@ func (i Modules) Get(key string) *Module {
 	return nil
 }
 
-func (i Modules) Keys() []string {
+func (m Modules) Keys() []string {
 	var ret []string
-	for _, x := range i {
+	for _, x := range m {
 		ret = append(ret, x.Key)
 	}
 	return ret
+}
+
+func (m Modules) Sort() Modules {
+	sort.Slice(m, func(i, j int) bool {
+		return m[i].Priority < m[j].Priority
+	})
+	return m
 }

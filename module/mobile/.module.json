@@ -1,0 +1,9 @@
+{
+  "name": "Mobile App",
+  "description": "Configures a webview based application for Android and iOS",
+  "authorName": "Kyle U",
+  "authorEmail": "kyle@kyleu.com",
+  "license": "Proprietary",
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/mobile",
+  "priority": 30
+}

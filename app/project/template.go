@@ -17,21 +17,25 @@ type TemplateContext struct {
 	Args    string `json:"args,omitempty"`
 	Port    int    `json:"port,omitempty"`
 
+	Modules []string `json:"modules,omitempty"`
+	Info    *Info    `json:"info,omitempty"`
+	Build   *Build   `json:"build,omitempty"`
+
 	Ignore     string `json:"ignore,omitempty"`
 	IgnoreGrep string `json:"ignoreGrep,omitempty"`
+}
 
-	Org             string `json:"org,omitempty"`
-	AuthorName      string `json:"authorName,omitempty"`
-	AuthorEmail     string `json:"authorEmail,omitempty"`
-	License         string `json:"license,omitempty"`
-	Bundle          string `json:"bundle,omitempty"`
-	SigningIdentity string `json:"signingIdentity,omitempty"`
-	Homepage        string `json:"homepage,omitempty"`
-	Sourcecode      string `json:"sourcecode,omitempty"`
-	Summary         string `json:"summary,omitempty"`
-	Description     string `json:"description,omitempty"`
+func (t *TemplateContext) HasModule(m string) bool {
+	return util.StringArrayContains(t.Modules, m)
+}
 
-	Build *Build `json:"build,omitempty"`
+func (t *TemplateContext) BuildAndroid() bool {
+	ret := t.HasModule("mobile") && !t.Build.SkipAndroid
+	return ret
+}
+
+func (t *TemplateContext) BuildIOS() bool {
+	return t.HasModule("mobile") && !t.Build.SkipIOS
 }
 
 func (p *Project) ToTemplateContext() *TemplateContext {
@@ -56,13 +60,7 @@ func (p *Project) ToTemplateContext() *TemplateContext {
 
 	ret := &TemplateContext{
 		Key: p.Key, Type: p.Type, Name: p.Name, Exec: p.Exec, Version: p.Version, Package: p.Package, Args: p.Args, Port: p.Port,
-
-		Ignore: ignore, IgnoreGrep: ignoreGrep,
-
-		Org: i.Org, AuthorName: i.AuthorName, AuthorEmail: i.AuthorEmail, License: i.License, Bundle: i.Bundle, SigningIdentity: i.SigningIdentity,
-		Homepage: i.Homepage, Sourcecode: i.Sourcecode, Summary: i.Summary, Description: i.Description,
-
-		Build: b,
+		Modules: p.Modules, Info: i, Build: b, Ignore: ignore, IgnoreGrep: ignoreGrep,
 	}
 
 	if ret.Name == "" {

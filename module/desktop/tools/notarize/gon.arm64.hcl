@@ -1,13 +1,13 @@
 source = ["./build/dist/darwin_arm64_darwin_arm64/{{{ .Exec }}}"]
-bundle_id = "{{{ .Bundle }}}"
+bundle_id = "{{{ .Info.Bundle }}}"
 
 apple_id {
-  username = "{{{ .AuthorEmail }}}"
+  username = "{{{ .Info.AuthorEmail }}}"
   password = "@env:APPLE_PASSWORD"
 }
 
 sign {
-  application_identity = "{{{ .SigningIdentity }}}"
+  application_identity = "{{{ .Info.SigningIdentity }}}"
 }
 
 dmg {

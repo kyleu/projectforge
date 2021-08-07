@@ -35,4 +35,5 @@ function check {
   fi
 }
 
-check "views" "html"
+{{{ if .HasModule "database" }}}check "queries" "sql"
+{{{ end }}}check "views" "html"

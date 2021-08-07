@@ -17,7 +17,7 @@
     <h3>Download {%s util.AppName %}</h3>
   </div>
 
-  <div class="card">
+{{{ if .HasModule "desktop" }}}  <div class="card">
     <h3>Desktop Version</h3>
     <em>Standalone application using your platform's native web viewer</em>
     <ul>
@@ -44,7 +44,7 @@
       </li>
     </ul>
   </div>
-
+{{{ end }}}
   <div class="card">
     <h3>Server Version</h3>
     <em>A command line interface exposing a multiuser web server</em>

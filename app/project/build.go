@@ -21,4 +21,9 @@ type Build struct {
 	SkipOpenBSD   bool `json:"skipOpenBSD,omitempty"`
 	SkipPlan9     bool `json:"skipPlan9,omitempty"`
 	SkipSolaris   bool `json:"skipSolaris,omitempty"`
+
+	SkipSigning   bool `json:"skipSigning,omitempty"`
+	SkipNFPMS     bool `json:"skipNFPMS,omitempty"`
+	SkipScoop     bool `json:"skipScoop,omitempty"`
+	SkipSnapcraft bool `json:"skipSnapcraft,omitempty"`
 }

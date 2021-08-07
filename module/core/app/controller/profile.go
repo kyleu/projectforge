@@ -20,7 +20,13 @@ func Profile(ctx *fasthttp.RequestCtx) {
 		return profileAction(ctx, as, ps)
 	})
 }
-
+{{{ if .HasModule "marketing" }}}
+func ProfileSite(ctx *fasthttp.RequestCtx) {
+	actSite("profile", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
+		return profileAction(ctx, as, ps)
+	})
+}
+{{{ end }}}
 func profileAction(ctx *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (string, error) {
 	ps.Title = "Profile"
 	ps.Data = ps.Profile
