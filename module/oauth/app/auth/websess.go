@@ -10,9 +10,9 @@ import (
 
 const WebSessKey = "auth"
 
-func addToSession(provider string, email string, ctx *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger) (*Session, Sessions, error) {
+func addToSession(provider string, email string, ctx *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger) (*web.Account, web.Accounts, error) {
 	ret := getCurrentAuths(websess)
-	s := &Session{Provider: provider, Email: email}
+	s := &web.Account{Provider: provider, Email: email}
 	for _, x := range ret {
 		if x.Provider == s.Provider && x.Email == s.Email {
 			return s, ret, nil

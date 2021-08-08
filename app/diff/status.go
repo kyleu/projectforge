@@ -12,7 +12,7 @@ type Status struct {
 var (
 	StatusDifferent = &Status{Key: "different", Title: "The files are different"}
 	StatusIdentical = &Status{Key: "identical", Title: "The files are identical"}
-	StatusMissing   = &Status{Key: "missing", Title: "Somehow the source file is missing, this must be a bug"}
+	StatusMissing   = &Status{Key: "missing", Title: "File is not present in the source"}
 	StatusNew       = &Status{Key: "new", Title: "File is not present in the target"}
 	StatusSkipped   = &Status{Key: "skipped", Title: "File was ignored"}
 )

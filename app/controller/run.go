@@ -26,6 +26,9 @@ func RunAction(ctx *fasthttp.RequestCtx) {
 			return "", err
 		}
 		cfg["path"] = prj.Path
+		ctx.QueryArgs().VisitAll(func(k []byte, v []byte) {
+			cfg[string(k)] = string(v)
+		})
 		result := action.Apply(tgt, actT, cfg, as.Services.Modules, as.Services.Projects, ps.Logger)
 		ps.Data = result
 		page := &vaction.Result{Ctx: &action.ResultContext{Prj: prj, Cfg: cfg, Res: result}}

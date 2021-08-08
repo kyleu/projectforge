@@ -2,12 +2,9 @@ package controller
 
 import (
 	"fmt"
-	"os"
 	"strings"
 	"time"
 
-	"github.com/go-gem/sessions"
-	"github.com/gorilla/securecookie"
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 
@@ -25,16 +22,6 @@ var (
 	_currentSiteState *app.State
 	initialIcons      = []string{"search"}
 )
-
-var sessionKey = func() string {
-	x := os.Getenv("SESSION_KEY")
-	if x == "" {
-		x = util.AppKey + "_random_secret_key"
-	}
-	return x
-}()
-
-var store *sessions.CookieStore
 
 func SetAppState(a *app.State) {
 	_currentAppState = a
@@ -107,15 +94,4 @@ func flashAndRedir(success bool, msg string, redir string, ctx *fasthttp.Request
 		return "/", nil
 	}
 	return redir, nil
-}
-
-func initStore(keyPairs ...[]byte) *sessions.CookieStore {
-	ret := sessions.NewCookieStore(keyPairs...)
-	for _, x := range ret.Codecs {
-		c, ok := x.(*securecookie.SecureCookie)
-		if ok {
-			c.MaxLength(65536)
-		}
-	}
-	return ret
 }

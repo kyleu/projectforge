@@ -22,7 +22,7 @@ func BeginAuthHandler(prv *Provider, ctx *fasthttp.RequestCtx, websess *sessions
 	return u, nil
 }
 
-func CompleteUserAuth(prv *Provider, ctx *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger) (*Session, Sessions, error) {
+func CompleteUserAuth(prv *Provider, ctx *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger) (*web.Account, web.Accounts, error) {
 	value, err := web.GetFromSession(prv.ID, websess)
 	if err != nil {
 		return nil, nil, err

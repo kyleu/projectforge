@@ -12,6 +12,42 @@ import (
 )
 
 func onDebug(prj *project.Project, mods module.Modules, cfg util.ValueMap, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) *Result {
+	if removePath, _ := cfg.GetString("remove", true); removePath != "" {
+		if removePath == "*" {
+			return removeAll(prj, mods, cfg, mSvc, pSvc, logger)
+		}
+		return remove(removePath, prj, mods, cfg, pSvc, logger)
+	}
+
+	return calculateMissing(prj, mods, cfg, mSvc, pSvc, logger)
+}
+
+func removeAll(prj *project.Project, mods module.Modules, cfg util.ValueMap, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) *Result {
+	ret := newResult(cfg, logger)
+	start := util.TimerStart()
+	removeCount := 0
+	ret.AddLog("removed [%d] %s", removeCount, util.PluralMaybe("file", removeCount))
+	mr := &module.Result{Keys: mods.Keys(), Status: "OK", Duration: util.TimerEnd(start)}
+	ret.Modules = append(ret.Modules, mr)
+	return ret
+}
+
+func remove(path string, prj *project.Project, mods module.Modules, cfg util.ValueMap, pSvc *project.Service, logger *zap.SugaredLogger) *Result {
+	ret := newResult(cfg, logger)
+	start := util.TimerStart()
+
+	tgt := pSvc.GetFilesystem(prj)
+	err := tgt.Remove(path)
+	if err != nil {
+		return errorResult(err, cfg, logger)
+	}
+	ret.AddLog("removed [%s]", path)
+	mr := &module.Result{Keys: mods.Keys(), Status: "OK", Duration: util.TimerEnd(start)}
+	ret.Modules = append(ret.Modules, mr)
+	return ret
+}
+
+func calculateMissing(prj *project.Project, mods module.Modules, cfg util.ValueMap, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) *Result {
 	ret := newResult(cfg, logger)
 	start := util.TimerStart()
 
@@ -47,7 +83,19 @@ func onDebug(prj *project.Project, mods module.Modules, cfg util.ValueMap, mSvc 
 		}
 	}
 
-	mr := &module.Result{Keys: mods.Keys(), Status: "OK", Diffs: audits, Duration: util.TimerEnd(start)}
+	var actions module.Resolutions
+	if len(audits) > 0 {
+		resFor := func(title string, path string) *module.Resolution {
+			return &module.Resolution{Title: title, Project: prj.Key, Action: "debug", Args: map[string]string{"remove": path}}
+		}
+		for _, a := range audits {
+			actions = append(actions, resFor("Remove [" + a.Path + "]", a.Path))
+		}
+		actions = append(actions, resFor("Remove all invalid files", "*"))
+	}
+
+	mr := &module.Result{Keys: mods.Keys(), Status: "OK", Diffs: audits, Actions: actions, Duration: util.TimerEnd(start)}
 	ret.Modules = append(ret.Modules, mr)
 	return ret
 }
+

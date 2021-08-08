@@ -51,7 +51,6 @@ func AppRoutes() *router.Router {
 
 	r.GET("/test", w(TestList))
 	r.GET("/test/{key}", w(TestRun))
-
 	// $PF_SECTION_END(routes)$
 
 	r.GET("/sandbox", w(SandboxList))

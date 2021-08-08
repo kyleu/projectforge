@@ -13,9 +13,9 @@ import (
 var dmp = diffmatchpatch.New()
 
 type Diff struct {
-	Path   string  `json:"path"`
-	Status *Status `json:"status"`
-	Patch  string  `json:"patch,omitempty"`
+	Path    string   `json:"path"`
+	Status  *Status  `json:"status"`
+	Patch   string   `json:"patch,omitempty"`
 }
 
 func (d *Diff) String() string {

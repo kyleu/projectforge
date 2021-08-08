@@ -12,7 +12,6 @@ import (
 	{{{ if.HasModule "marketing" }}}"{{{ .Package }}}/app/site"
 	{{{ end }}}"{{{ .Package }}}/app/theme"
 	"{{{ .Package }}}/app/util"
-	"{{{ .Package }}}/app/web"
 	"{{{ .Package }}}/views/verror"
 )
 
@@ -29,10 +28,6 @@ func act(key string, ctx *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.P
 	if err != nil {
 		as.Logger.Warnf("%+v", err)
 	}
-	err = clean(as, ps)
-	if err != nil {
-		as.Logger.Warnf("%+v", err)
-	}
 	actComplete(key, as, ps, ctx, f)
 }
 {{{ if.HasModule "marketing" }}}
@@ -44,91 +39,20 @@ func actSite(key string, ctx *fasthttp.RequestCtx, f func(as *app.State, ps *cut
 	if err != nil {
 		as.Logger.Warnf("%+v", err)
 	}
-	err = clean(as, ps)
-	if err != nil {
-		as.Logger.Warnf("%+v", err)
-	}
 	actComplete(key, as, ps, ctx, f)
 }
 {{{ end }}}
-func loadPageState(ctx *fasthttp.RequestCtx, logger *zap.SugaredLogger) *cutil.PageState {
-	logger = logger.With(zap.String("path", string(ctx.Request.URI().Path())))
-
-	if store == nil {
-		store = initStore([]byte(sessionKey))
-	}
-	session, err := store.Get(ctx, util.AppKey)
-	if err != nil {
-		logger.Warnf("error retrieving session: %+v", err)
-		session, err = store.New(ctx, util.AppKey)
-		if err != nil {
-			logger.Warnf("error creating new session: %+v", err)
-		}
-	}
-	flashes := util.StringArrayFromInterfaces(session.Flashes())
-	if len(flashes) > 0 {
-		err = web.SaveSession(ctx, session, logger)
-		if err != nil {
-			logger.Warnf("can't save session: %+v", err)
-		}
-	}
-
-	prof, err := loadProfile(session)
-	if err != nil {
-		logger.Warnf("can't load profile: %+v", err)
-	}
-
-	var a web.Accounts
-	authX, ok := session.Values["auth"]
-	if ok {
-		authS, ok := authX.(string)
-		if ok {
-			a = web.AccountsFromString(authS)
-		}
-	}
-
-	return &cutil.PageState{
-		Method:   string(ctx.Method()),
-		URI:      ctx.Request.URI(),
-		Flashes:  flashes,
-		Session:  session,
-		Profile:  prof,
-		Accounts: a,
-		Icons:    initialIcons,
-		Logger:   logger,
-	}
-}
-
 func actComplete(key string, as *app.State, ps *cutil.PageState, ctx *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
+	err := clean(as, ps)
+	if err != nil {
+		as.Logger.Warnf("error while cleaning request, somehow: %+v", err)
+	}
 	status := fasthttp.StatusOK
 	cutil.WriteCORS(ctx)
 	startNanos := time.Now().UnixNano()
 	redir, err := f(as, ps)
 	if err != nil {
-		status = fasthttp.StatusInternalServerError
-		ctx.SetStatusCode(status)
-
-		ps.Logger.Errorf("error running action [%s]: %+v", key, err)
-
-		if len(ps.Breadcrumbs) == 0 {
-			ps.Breadcrumbs = cutil.Breadcrumbs{"Error"}
-		}
-		errDetail := util.GetErrorDetail(err)
-		page := &verror.Error{Err: errDetail}
-
-		err := clean(as, ps)
-		if err != nil {
-			as.Logger.Error(err)
-			msg := fmt.Sprintf("error while cleaning request: %+v", err)
-			as.Logger.Error(msg)
-			_, _ = ctx.Write([]byte(msg))
-		}
-		redir, err = render(ctx, as, page, ps)
-		if err != nil {
-			msg := fmt.Sprintf("error while running error handler: %+v", err)
-			as.Logger.Error(msg)
-			_, _ = ctx.Write([]byte(msg))
-		}
+		redir, err = handleError(key, as, ps, ctx, err)
 	}
 	if redir != "" {
 		ctx.Response.Header.Set("Location", redir)
@@ -138,6 +62,33 @@ func actComplete(key string, as *app.State, ps *cutil.PageState, ctx *fasthttp.R
 	elapsedMillis := float64((time.Now().UnixNano()-startNanos)/int64(time.Microsecond)) / float64(1000)
 	l := ps.Logger.With(zap.String("method", ps.Method), zap.Int("status", status), zap.Float64("elapsed", elapsedMillis))
 	l.Debugf("processed request in [%.3fms] (render: %.3fms)", elapsedMillis, ps.RenderElapsed)
+}
+
+func handleError(key string, as *app.State, ps *cutil.PageState, ctx *fasthttp.RequestCtx, err error) (string, error) {
+	ctx.SetStatusCode(fasthttp.StatusInternalServerError)
+
+	ps.Logger.Errorf("error running action [%s]: %+v", key, err)
+
+	if len(ps.Breadcrumbs) == 0 {
+		ps.Breadcrumbs = cutil.Breadcrumbs{"Error"}
+	}
+	errDetail := util.GetErrorDetail(err)
+	page := &verror.Error{Err: errDetail}
+
+	err = clean(as, ps)
+	if err != nil {
+		as.Logger.Error(err)
+		msg := fmt.Sprintf("error while cleaning request: %+v", err)
+		as.Logger.Error(msg)
+		_, _ = ctx.Write([]byte(msg))
+	}
+	redir, err := render(ctx, as, page, ps)
+	if err != nil {
+		msg := fmt.Sprintf("error while running error handler: %+v", err)
+		as.Logger.Error(msg)
+		_, _ = ctx.Write([]byte(msg))
+	}
+	return redir, err
 }
 
 func clean(as *app.State, ps *cutil.PageState) error {

@@ -52,6 +52,10 @@ func (a Accounts) GetByProvider(p string) Accounts {
 	return ret
 }
 
+func (a Accounts) Matches(m string) bool {
+	return true
+}
+
 func (a Accounts) Purge(keys ...string) Accounts {
 	ret := make(Accounts, 0, len(a))
 	for _, ss := range a {

@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+	"sync"
 
 	"github.com/kyleu/projectforge/app/filesystem"
 	"github.com/kyleu/projectforge/app/util"
@@ -18,7 +19,9 @@ const ConfigFilename = ".projectforge.json"
 type Service struct {
 	rootProject string
 	cache       map[string]*Project
+	cacheLock   sync.RWMutex
 	filesystems map[string]filesystem.FileLoader
+	fsLock   sync.RWMutex
 	logger      *zap.SugaredLogger
 }
 
@@ -32,7 +35,9 @@ func (s *Service) GetFilesystem(prj *Project) filesystem.FileLoader {
 		return curr
 	}
 	fs := filesystem.NewFileSystem(prj.Path, s.logger)
+	s.fsLock.Lock()
 	s.filesystems[prj.Key] = fs
+	s.fsLock.Unlock()
 	return fs
 }
 
@@ -48,7 +53,9 @@ func (s *Service) add(path string, parent *Project) (*Project, error) {
 	if ok {
 		return nil, errors.Errorf("can't overwrite cache entry for project [%s] located at [%s]", curr.Key, curr.Path)
 	}
+	s.cacheLock.Lock()
 	s.cache[p.Key] = p
+	s.cacheLock.Unlock()
 	for _, kidKey := range p.Children {
 		_, err := s.add(kidKey, p)
 		if err != nil {

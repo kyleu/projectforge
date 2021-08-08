@@ -1,6 +1,4 @@
 {% import (
-  "strings"
-
   "github.com/kyleu/projectforge/app"
   "github.com/kyleu/projectforge/app/controller/cutil"
   "github.com/kyleu/projectforge/app/action"
@@ -22,12 +20,9 @@
       </tbody>
     </table>
   </div>
-
+  {%- if len(res.Errors) > 0 -%}
   <div class="card">
     <h3>Errors</h3>
-    {%- if len(res.Errors) == 0 -%}
-    <p>no errors</p>
-    {%- else -%}
     <table>
       <tbody>
         {%- for _, e := range res.Errors -%}
@@ -37,14 +32,11 @@
         {%- endfor -%}
       </tbody>
     </table>
-    {%- endif -%}
   </div>
-
+  {%- endif -%}
+  {%- if len(res.Logs) > 0 -%}
   <div class="card">
     <h3>Logs</h3>
-    {%- if len(res.Logs) == 0 -%}
-    <p>no logs</p>
-    {%- else -%}
     <table>
       <tbody>
         {%- for _, l := range res.Logs -%}
@@ -54,14 +46,29 @@
         {%- endfor -%}
       </tbody>
     </table>
-    {%- endif -%}
   </div>
-
+  {%- endif -%}
   {%- for _, mr := range res.Modules -%}
+    {%- code
+      links := ""
+      for mIdx, mk := range mr.Keys {
+        if mIdx > 0 {
+          links += ", "
+        }
+        links += `<a href="/m/` + mk + `">` + mk + `</a>`
+      }
+    -%}
     <div class="card">
       <div class="right">{%s util.MicrosToMillis(mr.Duration) %}</div>
-      <h3>{%s util.PluralMaybe("Module", len(mr.Keys)) %} [{%s strings.Join(mr.Keys, `, `) %}]</h3>
+      <h3>{%s util.PluralMaybe("Module", len(mr.Keys)) %} [{%s= links %}]</h3>
       <em>{%s mr.Status %}</em>
+      {%- if len(mr.Actions) > 0 -%}
+      <h4>Actions</h4>
+      {%- for _, a := range mr.Actions -%}
+        <a href="{%s a.URL() %}"><button>{%s a.Title %}</button></a>
+      {%- endfor -%}
+      {%- endif -%}
+      {%- if len(mr.Diffs) > 0 -%}
       <h4>Diffs</h4>
       <table>
         <thead>
@@ -83,6 +90,7 @@
         {%- endfor -%}
         </tbody>
       </table>
+      {%- endif -%}
     </div>
   {%- endfor -%}
 {% endfunc %}

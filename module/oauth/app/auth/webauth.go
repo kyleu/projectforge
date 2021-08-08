@@ -32,16 +32,16 @@ func getAuthURL(prv *Provider, ctx *fasthttp.RequestCtx, websess *sessions.Sessi
 	return u, err
 }
 
-func getCurrentAuths(websess *sessions.Session) Sessions {
+func getCurrentAuths(websess *sessions.Session) web.Accounts {
 	authS, err := web.GetFromSession(WebSessKey, websess)
-	var ret Sessions
+	var ret web.Accounts
 	if err == nil && authS != "" {
-		ret = SessionsFromString(authS)
+		ret = web.AccountsFromString(authS)
 	}
 	return ret
 }
 
-func setCurrentAuths(s Sessions, ctx *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger) error {
+func setCurrentAuths(s web.Accounts, ctx *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger) error {
 	s.Sort()
 	if len(s) == 0 {
 		return web.RemoveFromSession(WebSessKey, ctx, websess, logger)
