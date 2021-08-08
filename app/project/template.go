@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/kyleu/projectforge/app/theme"
 	"github.com/kyleu/projectforge/app/util"
 )
 
@@ -17,9 +18,10 @@ type TemplateContext struct {
 	Args    string `json:"args,omitempty"`
 	Port    int    `json:"port,omitempty"`
 
-	Modules []string `json:"modules,omitempty"`
-	Info    *Info    `json:"info,omitempty"`
-	Build   *Build   `json:"build,omitempty"`
+	Modules []string     `json:"modules,omitempty"`
+	Info    *Info        `json:"info,omitempty"`
+	Build   *Build       `json:"build,omitempty"`
+	Theme   *theme.Theme `json:"theme,omitempty"`
 
 	Ignore     string `json:"ignore,omitempty"`
 	IgnoreGrep string `json:"ignoreGrep,omitempty"`
@@ -47,6 +49,10 @@ func (p *Project) ToTemplateContext() *TemplateContext {
 	if b == nil {
 		b = &Build{}
 	}
+	t := p.Theme
+	if t == nil {
+		t = theme.ThemeDefault
+	}
 
 	ignore := strings.Join(util.StringArrayQuoted(p.Ignore), ", ")
 	if ignore != "" {
@@ -60,7 +66,7 @@ func (p *Project) ToTemplateContext() *TemplateContext {
 
 	ret := &TemplateContext{
 		Key: p.Key, Type: p.Type, Name: p.Name, Exec: p.Exec, Version: p.Version, Package: p.Package, Args: p.Args, Port: p.Port,
-		Modules: p.Modules, Info: i, Build: b, Ignore: ignore, IgnoreGrep: ignoreGrep,
+		Modules: p.Modules, Info: i, Build: b, Theme: t, Ignore: ignore, IgnoreGrep: ignoreGrep,
 	}
 
 	if ret.Name == "" {

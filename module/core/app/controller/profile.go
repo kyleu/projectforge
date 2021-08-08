@@ -32,22 +32,22 @@ func profileAction(ctx *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState)
 	ps.Title = "Profile"
 	ps.Data = ps.Profile
 	thm := as.Themes.Get(ps.Profile.Theme)
-	{{{ if .HasModule "oauth" }}}
+
 	prvs, err := as.Auth.Providers()
 	if err != nil {
 		return "", errors.Wrap(err, "can't load providers")
 	}
-	{{{ end }}}
+
 	redir := "/"
 	ref := string(ctx.Request.Header.Peek("Referer"))
 	if ref != "" {
 		u, err := url.Parse(ref)
-		if err == nil && u != nil {
+		if err == nil && u != nil && u.Path != "/profile" {
 			redir = u.Path
 		}
 	}
 
-	page := &vprofile.Profile{Profile: ps.Profile, Theme: thm, {{{ if .HasModule "oauth" }}}Providers: prvs, {{{ end }}}Referrer: redir}
+	page := &vprofile.Profile{Profile: ps.Profile, Theme: thm, Providers: prvs, Referrer: redir}
 	return render(ctx, as, page, ps, "Profile")
 }
 
@@ -59,6 +59,11 @@ func ProfileSave(ctx *fasthttp.RequestCtx) {
 		}
 
 		n := ps.Profile.Clone()
+
+		referrer, _ := frm.GetString("referrer", true)
+		if referrer == "" {
+			referrer = "/profile"
+		}
 
 		n.Name, _ = frm.GetString("name", true)
 		n.Mode, _ = frm.GetString("mode", true)
@@ -73,7 +78,7 @@ func ProfileSave(ctx *fasthttp.RequestCtx) {
 		}
 
 		msg := "profile save"
-		return returnToReferrer(msg, "/profile", ctx, ps)
+		return returnToReferrer(msg, referrer, ctx, ps)
 	})
 }
 

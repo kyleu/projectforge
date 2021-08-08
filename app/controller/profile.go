@@ -33,17 +33,17 @@ func profileAction(ctx *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState)
 	ps.Title = "Profile"
 	ps.Data = ps.Profile
 	thm := as.Themes.Get(ps.Profile.Theme)
-	
+
 	prvs, err := as.Auth.Providers()
 	if err != nil {
 		return "", errors.Wrap(err, "can't load providers")
 	}
-	
+
 	redir := "/"
 	ref := string(ctx.Request.Header.Peek("Referer"))
 	if ref != "" {
 		u, err := url.Parse(ref)
-		if err == nil && u != nil {
+		if err == nil && u != nil && u.Path != "/profile" {
 			redir = u.Path
 		}
 	}
@@ -61,6 +61,11 @@ func ProfileSave(ctx *fasthttp.RequestCtx) {
 
 		n := ps.Profile.Clone()
 
+		referrer, _ := frm.GetString("referrer", true)
+		if referrer == "" {
+			referrer = "/profile"
+		}
+
 		n.Name, _ = frm.GetString("name", true)
 		n.Mode, _ = frm.GetString("mode", true)
 		n.Theme, _ = frm.GetString("theme", true)
@@ -74,7 +79,7 @@ func ProfileSave(ctx *fasthttp.RequestCtx) {
 		}
 
 		msg := "profile save"
-		return returnToReferrer(msg, "/profile", ctx, ps)
+		return returnToReferrer(msg, referrer, ctx, ps)
 	})
 }
 

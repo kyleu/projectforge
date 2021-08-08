@@ -22,6 +22,7 @@
 {% func (p *Profile) Body(as *app.State, ps *cutil.PageState) %}
   {%= vauth.SigninTable(p.Providers, p.Referrer, as, ps) %}
   <form action="" method="post">
+    <input name="referrer" type="hidden" value="{%s p.Referrer %}" />
     <div class="card">
       <div class="right">
         <a href="#modal-profile"><button type="button">Profile</button></a>

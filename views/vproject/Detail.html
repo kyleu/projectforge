@@ -31,7 +31,7 @@
     <table class="mt min-200">
       <tbody>
         <tr>
-          <th>Key</th>
+          <th class="shrink">Key</th>
           <td>{%s prj.Key %}</td>
         </tr>
         <tr>
@@ -66,8 +66,19 @@
           <th>Children</th>
           <td>{%s strings.Join(prj.Children, ", ") %}</td>
         </tr>
-        {%- if info != nil -%}
         <tr>
+          <th>Path</th>
+          <td>{%s prj.Path %}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  {%- if info != nil -%}
+  <div class="card">
+    <h3>Metadata</h3>
+    <table class="mt min-200">
+      <tbody>
+        <tr class="shrink">
           <th>Organization</th>
           <td>{%s info.Org %}</td>
         </tr>
@@ -103,15 +114,10 @@
           <th>Description</th>
           <td>{%s info.Description %}</td>
         </tr>
-        {%- endif -%}
-        <tr>
-          <th>Path</th>
-          <td>{%s prj.Path %}</td>
-        </tr>
       </tbody>
     </table>
   </div>
-
+  {%- endif -%}
   <div class="card">
     <h3>Modules</h3>
     <table class="mt min-200">
@@ -124,7 +130,13 @@
       </tbody>
     </table>
   </div>
-
+  {%- if prj.Theme != nil -%}
+  <div class="card">
+    <h3>Theme</h3>
+    <p>???</p>
+  </div>
+  {%- endif -%}
+  {%- if len(prj.Children) > 0 -%}
   <div class="card">
     <h3>Children</h3>
     <table class="mt min-200">
@@ -137,7 +149,7 @@
       </tbody>
     </table>
   </div>
-
+  {%- endif -%}
   <div class="card">
     <h3>Builds</h3>
     <table class="mt min-200">
@@ -153,5 +165,4 @@
       </tbody>
     </table>
   </div>
-
 {% endfunc %}
