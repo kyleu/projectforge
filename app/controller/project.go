@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/kyleu/projectforge/app/project"
+	"github.com/kyleu/projectforge/app/theme"
 	"github.com/kyleu/projectforge/app/util"
 	"github.com/kyleu/projectforge/views/vproject"
 	"github.com/valyala/fasthttp"
@@ -89,6 +90,7 @@ func ProjectSave(ctx *fasthttp.RequestCtx) {
 		prj.Info.Description = get("description", prj.Info.Description)
 
 		prj.Build = buildFrom(frm)
+		prj.Theme = themeFrom(frm)
 
 		err = as.Services.Projects.Save(prj)
 		if err != nil {
@@ -98,6 +100,19 @@ func ProjectSave(ctx *fasthttp.RequestCtx) {
 		msg := "Saved changes"
 		return flashAndRedir(true, msg, "/p/"+prj.Key, ctx, ps)
 	})
+}
+
+func themeFrom(frm util.ValueMap) *theme.Theme {
+	orig := theme.ThemeDefault
+
+	l := orig.Light.Clone().ApplyMap(frm, "light-")
+	d := orig.Dark.Clone().ApplyMap(frm, "dark-")
+
+	ret := &theme.Theme{Light: l, Dark: d}
+	if ret.Equals(theme.ThemeDefault) {
+		return nil
+	}
+	return ret
 }
 
 func buildFrom(frm util.ValueMap) *project.Build {

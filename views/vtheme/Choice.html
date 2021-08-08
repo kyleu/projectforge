@@ -16,7 +16,7 @@
         {% else %}
           <input type="radio" name="theme" value="{%s t.Key %}" />
         {% endif %}
-        {%= MockupTheme(t, indent + 2, ps) %}
+        {%= MockupTheme(t, true, indent + 2, ps) %}
       </label>
     {% endfor %}
   {%= vutil.Indent(true, indent) %}

@@ -8,13 +8,13 @@
   "{{{ .Package }}}/views/vutil"
 ) %}
 
-{% func MockupTheme(t *theme.Theme, indent int, ps *cutil.PageState) %}{% stripspace %}
-  {%= MockupColors(util.AppName, "light", t.Light, indent, ps) %}
-  {%= MockupColors(util.AppName, "dark", t.Dark, indent, ps) %}
+{% func MockupTheme(t *theme.Theme, pointer bool, indent int, ps *cutil.PageState) %}{% stripspace %}
+  {%= MockupColors(util.AppName, "light", t.Light, pointer, indent, ps) %}
+  {%= MockupColors(util.AppName, "dark", t.Dark, pointer, indent, ps) %}
   <div class="title">{%s t.Key %}</div>
 {% endstripspace %}{% endfunc %}
 
-{% func MockupColors(navTitle string, mode string, c *theme.Colors, indent int, ps *cutil.PageState) %}{% stripspace %}
+{% func MockupColors(navTitle string, mode string, c *theme.Colors, pointer bool, indent int, ps *cutil.PageState) %}{% stripspace %}
   {% code
     navStyle := fmt.Sprintf("color: %s; background-color: %s;", c.NavForeground, c.NavBackground)
 
@@ -30,6 +30,9 @@
     cls := "mockup"
     if mode != "" {
       cls += " only-" + mode
+    }
+    if pointer {
+      cls += " pointer"
     }
   %}
   {%= vutil.Indent(true, indent) %}

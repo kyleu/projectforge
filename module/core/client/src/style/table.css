@@ -61,3 +61,7 @@ table .tfill {
 table.centered th, table.centered td {
   text-align: center;
 }
+
+table.centered th.left-align, table.centered td.left-align {
+  text-align: left;
+}

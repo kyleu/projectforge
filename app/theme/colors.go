@@ -111,3 +111,14 @@ func (c *Colors) ApplyMap(m util.ValueMap, prefix string) *Colors {
 	c.Error = get("error", c.Error)
 	return c
 }
+
+func (c *Colors) Equals(x *Colors) bool {
+	return c.Border == x.Border && c.LinkDecoration == x.LinkDecoration &&
+			c.Foreground == x.Foreground && c.ForegroundMuted == x.ForegroundMuted &&
+			c.Background == x.Background && c.BackgroundMuted == x.BackgroundMuted &&
+			c.LinkForeground == x.LinkForeground && c.LinkVisitedForeground == x.LinkVisitedForeground &&
+			c.NavForeground == x.NavForeground && c.NavBackground == x.NavBackground &&
+			c.MenuForeground == x.MenuForeground && c.MenuBackground == x.MenuBackground &&
+			c.MenuSelectedForeground == x.MenuSelectedForeground && c.MenuSelectedBackground == x.MenuSelectedBackground &&
+			c.ModalBackdrop == x.ModalBackdrop && c.Success == x.Success && c.Error == x.Error
+}

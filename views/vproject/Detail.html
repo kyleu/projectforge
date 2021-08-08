@@ -3,7 +3,9 @@
   "github.com/kyleu/projectforge/app"
   "github.com/kyleu/projectforge/app/controller/cutil"
   "github.com/kyleu/projectforge/app/project"
+  "github.com/kyleu/projectforge/app/theme"
   "github.com/kyleu/projectforge/views/layout"
+  "github.com/kyleu/projectforge/views/vtheme"
 ) %}
 
 {% code type Detail struct {
@@ -118,6 +120,29 @@
     </table>
   </div>
   {%- endif -%}
+  {%- code
+    t := prj.Theme
+    if t == nil {
+      t = theme.ThemeDefault
+    }
+  -%}
+  <div class="card">
+    <h3>Theme</h3>
+    <table class="centered">
+      <tbody>
+        <tr>
+          <th>
+            <div>Light</div>
+            <div id="mockup-light">{%= vtheme.MockupColors(prj.Title(), "", t.Light, false, 6, ps) %}</div>
+          </th>
+          <th>
+            <div>Dark</div>
+            <div id="mockup-dark">{%= vtheme.MockupColors(prj.Title(), "", t.Dark, false, 6, ps) %}</div>
+          </th>
+        </tr>
+      </tbody>
+    </table>
+  </div>
   <div class="card">
     <h3>Modules</h3>
     <table class="mt min-200">
@@ -130,12 +155,6 @@
       </tbody>
     </table>
   </div>
-  {%- if prj.Theme != nil -%}
-  <div class="card">
-    <h3>Theme</h3>
-    <p>???</p>
-  </div>
-  {%- endif -%}
   {%- if len(prj.Children) > 0 -%}
   <div class="card">
     <h3>Children</h3>

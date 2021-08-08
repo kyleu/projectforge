@@ -3,9 +3,11 @@
   "github.com/kyleu/projectforge/app"
   "github.com/kyleu/projectforge/app/controller/cutil"
   "github.com/kyleu/projectforge/app/project"
+  "github.com/kyleu/projectforge/app/theme"
   "github.com/kyleu/projectforge/app/util"
   "github.com/kyleu/projectforge/views/components"
   "github.com/kyleu/projectforge/views/layout"
+  "github.com/kyleu/projectforge/views/vtheme"
 ) %}
 
 {% code type Edit struct {
@@ -75,6 +77,13 @@
         </tbody>
       </table>
     </div>
+    {%- code
+      t := prj.Theme
+      if t == nil {
+        t = theme.ThemeDefault
+      }
+    -%}
+    {%= vtheme.Editor(prj.Title(), t, as, ps) %}
     <div class="card">
       <h3>Builds</h3>
       <table class="mt min-200">

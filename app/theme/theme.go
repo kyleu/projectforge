@@ -37,6 +37,10 @@ func (t *Theme) Clone(key string) *Theme {
 	return &Theme{Key: key, Light: t.Light.Clone(), Dark: t.Dark.Clone()}
 }
 
+func (t *Theme) Equals(x *Theme) bool {
+	return t.Light.Equals(x.Light) && t.Dark.Equals(x.Dark)
+}
+
 type Themes []*Theme
 
 func (t Themes) Sort() {
