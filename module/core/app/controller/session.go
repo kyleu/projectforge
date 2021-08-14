@@ -8,7 +8,9 @@ import (
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
 
+	"{{{ .Package}}}/app"
 	"{{{ .Package}}}/app/controller/cutil"
+	"{{{ .Package}}}/app/telemetry"
 	"{{{ .Package}}}/app/util"
 	"{{{ .Package}}}/app/web"
 )
@@ -34,8 +36,13 @@ func initStore(keyPairs ...[]byte) *sessions.CookieStore {
 	return ret
 }
 
-func loadPageState(ctx *fasthttp.RequestCtx, logger *zap.SugaredLogger) *cutil.PageState {
-	logger = logger.With(zap.String("path", string(ctx.Request.URI().Path())))
+func loadPageState(ctx *fasthttp.RequestCtx, key string, as *app.State) *cutil.PageState {
+	path := string(ctx.Request.URI().Path())
+	logger := as.Logger.With(zap.String("path", path))
+
+	ctx = telemetry.ExtractHeaders(ctx, logger)
+	traceCtx, span := as.Telemetry.StartSpan(ctx, "pagestate", "http:"+key)
+	telemetry.InjectHTTP(ctx, span)
 
 	if store == nil {
 		store = initStore([]byte(sessionKey))
@@ -78,6 +85,8 @@ func loadPageState(ctx *fasthttp.RequestCtx, logger *zap.SugaredLogger) *cutil.P
 		Profile:  prof,
 		Accounts: a,
 		Icons:    initialIcons,
+		Context:  traceCtx,
+		Span:     &span,
 		Logger:   logger,
 	}
 }

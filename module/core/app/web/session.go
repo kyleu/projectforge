@@ -9,7 +9,7 @@ import (
 
 const (
 	WebSessKey = "auth"
-	ReferKey = "refer"
+	ReferKey   = "refer"
 )
 
 var webSessOpts = &sessions.Options{Path: "/", HttpOnly: true, MaxAge: 365 * 24 * 60 * 60 /* , SameSite: http.SameSiteStrictMode */}
