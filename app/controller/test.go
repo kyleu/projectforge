@@ -30,7 +30,7 @@ func TestRun(ctx *fasthttp.RequestCtx) {
 		ps.Data = key
 		cfg := util.ValueMap{}
 		cfg.Add("path", "./testproject", "method", key, "wipe", true)
-		nc, span := as.Telemetry.StartSpan(ctx, "action", "test.run")
+		nc, span := as.Telemetry.StartSpan(ps.Context, "action", "test.run")
 		res := action.Apply(nc, span, "testproject", action.TypeTest, cfg, as.Services.Modules, as.Services.Projects, ps.Logger)
 		ps.Data = res
 

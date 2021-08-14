@@ -11,14 +11,14 @@ import (
 	"github.com/kyleu/projectforge/app/util"
 )
 
-func runToCompletion(projectKey string, t action.Type, cfg util.ValueMap) error {
+func runToCompletion(ctx context.Context, projectKey string, t action.Type, cfg util.ValueMap) error {
 	logger, err := log.InitLogging(true)
 	if err != nil {
 		return err
 	}
 	mSvc := module.NewService(logger)
 	pSvc := project.NewService(logger)
-	result := action.Apply(context.Background(), nil, projectKey, t, cfg, mSvc, pSvc, logger.With("service", "runner"))
+	result := action.Apply(ctx, nil, projectKey, t, cfg, mSvc, pSvc, logger.With("service", "runner"))
 	if len(result.Errors) > 0 {
 		return result.AsError()
 	}

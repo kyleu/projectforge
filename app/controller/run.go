@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"sync"
+
 	"github.com/kyleu/projectforge/app"
 	"github.com/kyleu/projectforge/app/action"
 	"github.com/kyleu/projectforge/app/controller/cutil"
@@ -30,7 +32,7 @@ func RunAction(ctx *fasthttp.RequestCtx) {
 		ctx.QueryArgs().VisitAll(func(k []byte, v []byte) {
 			cfg[string(k)] = string(v)
 		})
-		nc, span := as.Telemetry.StartSpan(ctx, "action", "run.action")
+		nc, span := as.Telemetry.StartSpan(ps.Context, "action", "action." + actT.String())
 		result := action.Apply(nc, span, tgt, actT, cfg, as.Services.Modules, as.Services.Projects, ps.Logger)
 		ps.Data = result
 		page := &vaction.Result{Ctx: &action.ResultContext{Prj: prj, Cfg: cfg, Res: result}}
@@ -49,14 +51,24 @@ func RunAllActions(ctx *fasthttp.RequestCtx) {
 		prjs := as.Services.Projects.Projects()
 
 		var results action.ResultContexts
+		var mutex sync.Mutex
+		var wg sync.WaitGroup
+		wg.Add(len(prjs))
 		for _, prj := range prjs {
-			c := cfg.Clone()
-			c["path"] = prj.Path
-			nc, span := as.Telemetry.StartSpan(ctx, "action", "run.action")
-			result := action.Apply(nc, span, prj.Key, actT, c, as.Services.Modules, as.Services.Projects, ps.Logger)
-			rc := &action.ResultContext{Prj: prj, Cfg: c, Res: result}
-			results = append(results, rc)
+			p := prj
+			go func() {
+				c := cfg.Clone()
+				c["path"] = p.Path
+				nc, span := as.Telemetry.StartSpan(ps.Context, "action", "action."+actT.String())
+				result := action.Apply(nc, span, p.Key, actT, c, as.Services.Modules, as.Services.Projects, ps.Logger)
+				rc := &action.ResultContext{Prj: p, Cfg: c, Res: result}
+				mutex.Lock()
+				results = append(results, rc)
+				wg.Done()
+				mutex.Unlock()
+			}()
 		}
+		wg.Wait()
 		ps.Data = results
 		page := &vaction.Results{T: actT, Ctxs: results}
 		return render(ctx, as, page, ps, "projects", actT.Title)
