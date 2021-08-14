@@ -1,18 +1,18 @@
 package database
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"strconv"
 
-	"go.uber.org/zap"
-
-	"github.com/pkg/errors"
-
 	// load postgres driver.
 	_ "github.com/jackc/pgx/v4/stdlib"
-
 	"github.com/jmoiron/sqlx"
+	"github.com/pkg/errors"
+	"go.uber.org/zap"
+
+	"{{{ .Package }}}/app/telemetry"
 )
 
 type PostgresParams struct {
@@ -62,7 +62,9 @@ func PostgresParamsFromEnv(key string, defaultUser string, prefix string) *Postg
 	return &PostgresParams{Host: h, Port: p, Username: u, Password: pw, Database: d, Schema: s, MaxConns: mc, Debug: debug}
 }
 
-func OpenPostgresDatabase(params *PostgresParams, logger *zap.SugaredLogger) (*Service, error) {
+func OpenPostgresDatabase(ctx context.Context, params *PostgresParams, tel *telemetry.Service, logger *zap.SugaredLogger) (*Service, error) {
+	ctx, span := tel.StartSpan(ctx, "database", "open")
+	defer span.End()
 	host := params.Host
 	if host == "" {
 		host = "localhost"
@@ -85,7 +87,7 @@ func OpenPostgresDatabase(params *PostgresParams, logger *zap.SugaredLogger) (*S
 		log = logger
 	}
 
-	svc := NewService(params.Database, params.Schema, log, db)
+	svc := NewService(params.Database, params.Schema, params.Username, tel, log, db)
 
 	return svc, nil
 }

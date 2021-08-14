@@ -2,10 +2,12 @@
 package cutil
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/go-gem/sessions"
 	"github.com/valyala/fasthttp"
+	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 
 	"github.com/kyleu/projectforge/app/menu"
@@ -33,6 +35,8 @@ type PageState struct {
 	ProfilePath   string             `json:"profilePath"`
 	Data          interface{}        `json:"data"`
 	Logger        *zap.SugaredLogger `json:"-"`
+	Context       context.Context    `json:"-"`
+	Span          *trace.Span        `json:"-"`
 	RenderElapsed float64            `json:"renderElapsed"`
 }
 
@@ -50,4 +54,10 @@ func (p *PageState) TitleString() string {
 		return util.AppName
 	}
 	return fmt.Sprintf("%s - %s", p.Title, util.AppName)
+}
+
+func (p *PageState) Close() {
+	if p.Span != nil {
+		(*p.Span).End()
+	}
 }

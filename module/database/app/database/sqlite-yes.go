@@ -3,19 +3,23 @@
 package database
 
 import (
-	"go.uber.org/zap"
+	"context"
 
+	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
+	"go.uber.org/zap"
 
 	// load sqlite driver.
 	_ "modernc.org/sqlite"
 
-	"github.com/jmoiron/sqlx"
+	"{{{ .Package }}}/app/telemetry"
 )
 
 const SQLiteEnabled = true
 
-func OpenSQLiteDatabase(params *SQLiteParams, logger *zap.SugaredLogger) (*Service, error) {
+func OpenSQLiteDatabase(ctx context.Context, params *SQLiteParams, tel *telemetry.Service, logger *zap.SugaredLogger) (*Service, error) {
+	ctx, span := tel.StartSpan(ctx, "database", "open")
+	defer span.End()
 	if params.File == "" {
 		return nil, errors.New("need filename for SQLite database")
 	}
@@ -23,13 +27,9 @@ func OpenSQLiteDatabase(params *SQLiteParams, logger *zap.SugaredLogger) (*Servi
 	if err != nil {
 		return nil, errors.Wrap(err, "error opening database")
 	}
-
 	var log *zap.SugaredLogger
 	if params.Debug {
 		log = logger
 	}
-
-	svc := NewService(params.File, params.Schema, log, db)
-
-	return svc, nil
+	return NewService(params.File, params.Schema, "sqlite", tel, log, db), nil
 }

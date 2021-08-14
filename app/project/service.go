@@ -21,7 +21,7 @@ type Service struct {
 	cache       map[string]*Project
 	cacheLock   sync.RWMutex
 	filesystems map[string]filesystem.FileLoader
-	fsLock   sync.RWMutex
+	fsLock      sync.RWMutex
 	logger      *zap.SugaredLogger
 }
 

@@ -77,3 +77,12 @@ func (s *Service) loadIfNeeded() {
 		s.cache.Sort()
 	}
 }
+
+func ApplyMap(frm util.ValueMap) *Theme {
+	orig := ThemeDefault
+
+	l := orig.Light.Clone().ApplyMap(frm, "light-")
+	d := orig.Dark.Clone().ApplyMap(frm, "dark-")
+
+	return &Theme{Light: l, Dark: d}
+}

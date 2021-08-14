@@ -89,8 +89,14 @@ func ProjectSave(ctx *fasthttp.RequestCtx) {
 		prj.Info.Summary = get("summary", prj.Info.Summary)
 		prj.Info.Description = get("description", prj.Info.Description)
 
-		prj.Build = buildFrom(frm)
-		prj.Theme = themeFrom(frm)
+		prj.Build = project.BuildFromMap(frm)
+		if prj.Build.Empty() {
+			prj.Build = nil
+		}
+		prj.Theme = theme.ApplyMap(frm)
+		if prj.Theme.Equals(theme.ThemeDefault) {
+			prj.Theme = nil
+		}
 
 		err = as.Services.Projects.Save(prj)
 		if err != nil {
@@ -100,54 +106,6 @@ func ProjectSave(ctx *fasthttp.RequestCtx) {
 		msg := "Saved changes"
 		return flashAndRedir(true, msg, "/p/"+prj.Key, ctx, ps)
 	})
-}
-
-func themeFrom(frm util.ValueMap) *theme.Theme {
-	orig := theme.ThemeDefault
-
-	l := orig.Light.Clone().ApplyMap(frm, "light-")
-	d := orig.Dark.Clone().ApplyMap(frm, "dark-")
-
-	ret := &theme.Theme{Light: l, Dark: d}
-	if ret.Equals(theme.ThemeDefault) {
-		return nil
-	}
-	return ret
-}
-
-func buildFrom(frm util.ValueMap) *project.Build {
-	buildMap := map[string]bool{}
-	for k, v := range frm {
-		if strings.HasPrefix(k, "build-") {
-			buildMap[strings.TrimPrefix(k, "build-")] = v == "true"
-		}
-	}
-	b := &project.Build{}
-	b.SkipDesktop = !buildMap["desktop"]
-	b.SkipNotarize = !buildMap[""]
-	b.SkipSigning = !buildMap[""]
-	b.SkipAndroid = !buildMap[""]
-	b.SkipIOS = !buildMap[""]
-	b.SkipWASM = !buildMap[""]
-	b.SkipLinuxARM = !buildMap[""]
-	b.SkipLinuxMIPS = !buildMap[""]
-	b.SkipLinuxOdd = !buildMap[""]
-	b.SkipAIX = !buildMap[""]
-	b.SkipDragonfly = !buildMap[""]
-	b.SkipIllumos = !buildMap[""]
-	b.SkipFreeBSD = !buildMap[""]
-	b.SkipNetBSD = !buildMap[""]
-	b.SkipOpenBSD = !buildMap[""]
-	b.SkipPlan9 = !buildMap[""]
-	b.SkipSolaris = !buildMap[""]
-	b.SkipHomebrew = !buildMap[""]
-	b.SkipNFPMS = !buildMap[""]
-	b.SkipScoop = !buildMap[""]
-	b.SkipSnapcraft = !buildMap[""]
-	if b.Empty() {
-		return nil
-	}
-	return b
 }
 
 func getProject(ctx *fasthttp.RequestCtx, as *app.State) (*project.Project, error) {

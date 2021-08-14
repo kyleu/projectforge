@@ -2,12 +2,14 @@
 package sandbox
 
 import (
+	"context"
+
 	"go.uber.org/zap"
 
 	"github.com/kyleu/projectforge/app"
 )
 
-type runFn func(st *app.State, logger *zap.SugaredLogger) (interface{}, error)
+type runFn func(ctx context.Context, st *app.State, logger *zap.SugaredLogger) (interface{}, error)
 
 type Sandbox struct {
 	Key   string `json:"key,omitempty"`

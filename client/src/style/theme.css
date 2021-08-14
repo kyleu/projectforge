@@ -45,3 +45,12 @@
   margin-top: var(--padding-small);
 }
 
+.icon-container {
+  margin: --padding;
+  width: 80px;
+  text-align: center;
+}
+.icon-container svg {
+  width: 64px;
+  height: 64px
+}

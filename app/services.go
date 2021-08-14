@@ -2,6 +2,8 @@
 package app
 
 import (
+	"context"
+
 	"github.com/kyleu/projectforge/app/module"
 	"github.com/kyleu/projectforge/app/project"
 )
@@ -11,7 +13,7 @@ type Services struct {
 	Projects *project.Service
 }
 
-func NewServices(st *State) (*Services, error) {
+func NewServices(_ context.Context, st *State) (*Services, error) {
 	return &Services{
 		Modules:  module.NewService(st.Logger),
 		Projects: project.NewService(st.Logger),

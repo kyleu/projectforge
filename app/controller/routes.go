@@ -38,8 +38,11 @@ func AppRoutes() *router.Router {
 	r.GET("/p/{key}/fs", w(ProjectFileRoot))
 	r.GET("/p/{key}/fs/{path:*}", w(ProjectFile))
 	r.GET("/p/{key}/svg", w(SVGList))
-	r.GET("/p/{key}/svg/add", w(SVGAdd))
-	r.GET("/p/{key}/svg/build", w(SVGBuild))
+	r.GET("/p/{key}/svg/x/add", w(SVGAdd))
+	r.GET("/p/{key}/svg/x/build", w(SVGBuild))
+	r.GET("/p/{key}/svg/{icon}", w(SVGDetail))
+	r.GET("/p/{key}/svg/{icon}/setapp", w(SVGSetApp))
+	r.GET("/p/{key}/svg/{icon}/remove", w(SVGRemove))
 
 	r.GET("/run/{act}", w(RunAllActions))
 	r.GET("/run/{tgt}/{act}", w(RunAction))

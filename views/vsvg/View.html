@@ -1,19 +1,34 @@
 {% import (
   "github.com/kyleu/projectforge/app"
   "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/app/project"
   "github.com/kyleu/projectforge/app/svg"
   "github.com/kyleu/projectforge/views/layout"
 ) %}
 
 {% code type View struct {
   layout.Basic
+  Project *project.Project
   SVG *svg.SVG
 } %}
 
 {% func (p *View) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>SVG Icon [{%s p.SVG.Key %}]</h3>
-    <p>{%s= p.SVG.Markup %}</p>
-    <pre>{%s p.SVG.Markup %}</pre>
+
+    <div class="two-pane mt">
+      <div class="l" style="max-width: 128px">{%s= p.SVG.Markup %}</div>
+      <div class="r">
+        <ul>
+          <li><a href="/p/{%s p.Project.Key %}/svg/{%s p.SVG.Key %}/setapp" title="Overwrite the current app icon and favicon assets"><button>Set app icon</button></a></li>
+          <li class="mt"><a href="/p/{%s p.Project.Key %}/svg/{%s p.SVG.Key %}/remove" title="Remove this icon from the application" onclick="return confirm('Are you sure you want to remove this icon?')"><button>Remove</button></a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Source</h3>
+    {%- code out, _ := cutil.FormatLang(p.SVG.Markup, "svg") -%}
+    {%s= out %}
   </div>
 {% endfunc %}

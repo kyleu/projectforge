@@ -1,5 +1,11 @@
 package project
 
+import (
+	"fmt"
+
+	"github.com/kyleu/projectforge/app/util"
+)
+
 type Build struct {
 	SkipDesktop  bool `json:"skipDesktop,omitempty"`
 	SkipNotarize bool `json:"skipNotarize,omitempty"`
@@ -28,6 +34,12 @@ type Build struct {
 	SkipSnapcraft bool `json:"skipSnapcraft,omitempty"`
 }
 
+func (b *Build) Empty() bool {
+	return !(b.SkipDesktop || b.SkipNotarize || b.SkipSigning || b.SkipAndroid || b.SkipIOS || b.SkipWASM || b.SkipLinuxARM ||
+		b.SkipLinuxMIPS || b.SkipLinuxOdd || b.SkipAIX || b.SkipDragonfly || b.SkipIllumos || b.SkipFreeBSD || b.SkipNetBSD ||
+		b.SkipOpenBSD || b.SkipPlan9 || b.SkipSolaris || b.SkipHomebrew || b.SkipNFPMS || b.SkipScoop || b.SkipSnapcraft)
+}
+
 func (b *Build) ToMap() map[string]bool {
 	return map[string]bool{
 		"desktop": !b.SkipDesktop, "notarize": !b.SkipNotarize, "signing": !b.SkipSigning,
@@ -39,16 +51,10 @@ func (b *Build) ToMap() map[string]bool {
 	}
 }
 
-func (b *Build) Empty() bool {
-	return b.SkipDesktop || b.SkipNotarize || b.SkipSigning || b.SkipAndroid || b.SkipIOS || b.SkipWASM || b.SkipLinuxARM ||
-		b.SkipLinuxMIPS || b.SkipLinuxOdd || b.SkipAIX || b.SkipDragonfly || b.SkipIllumos || b.SkipFreeBSD || b.SkipNetBSD ||
-		b.SkipOpenBSD || b.SkipPlan9 || b.SkipSolaris || b.SkipHomebrew || b.SkipNFPMS || b.SkipScoop || b.SkipSnapcraft
-}
-
-func BuildFromMap(m map[string]bool) *Build {
+func BuildFromMap(frm util.ValueMap) *Build {
 	x := func(k string) bool {
-		v, _ := m[k]
-		return v
+		v := fmt.Sprint(frm[k])
+		return v == "true"
 	}
 	return &Build{
 		SkipDesktop: x("desktop"), SkipNotarize: x("notarize"), SkipSigning: x("signing"),

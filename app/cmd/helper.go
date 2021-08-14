@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"strings"
 
 	"github.com/kyleu/projectforge/app/action"
@@ -17,7 +18,7 @@ func runToCompletion(projectKey string, t action.Type, cfg util.ValueMap) error 
 	}
 	mSvc := module.NewService(logger)
 	pSvc := project.NewService(logger)
-	result := action.Apply(projectKey, t, cfg, mSvc, pSvc, logger.With("service", "runner"))
+	result := action.Apply(context.Background(), nil, projectKey, t, cfg, mSvc, pSvc, logger.With("service", "runner"))
 	if len(result.Errors) > 0 {
 		return result.AsError()
 	}

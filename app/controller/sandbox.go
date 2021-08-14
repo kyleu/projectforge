@@ -29,7 +29,7 @@ func SandboxRun(ctx *fasthttp.RequestCtx) {
 		if sb == nil {
 			return ersp("no sandbox with key [%s]", key)
 		}
-		ret, err := sb.Run(as, ps.Logger.With(zap.String("sandbox", key)))
+		ret, err := sb.Run(ps.Context, as, ps.Logger.With(zap.String("sandbox", key)))
 		if err != nil {
 			return "", err
 		}

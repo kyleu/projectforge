@@ -2,6 +2,7 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"runtime"
 
@@ -50,7 +51,7 @@ func loadServer(flags *Flags, logger *zap.SugaredLogger) (*router.Router, *zap.S
 		return nil, logger, err
 	}
 
-	svcs, err := app.NewServices(st)
+	svcs, err := app.NewServices(context.Background(), st)
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "error creating services")
 	}

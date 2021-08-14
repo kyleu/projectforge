@@ -24,7 +24,7 @@ const (
 
 func act(key string, ctx *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
 	as := _currentAppState
-	ps := loadPageState(ctx, as.Logger)
+	ps := loadPageState(ctx, key, as)
 	err := initAppRequest(as, ps)
 	if err != nil {
 		as.Logger.Warnf("%+v", err)
@@ -34,7 +34,7 @@ func act(key string, ctx *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.P
 
 func actSite(key string, ctx *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
 	as := _currentSiteState
-	ps := loadPageState(ctx, as.Logger)
+	ps := loadPageState(ctx, key, as)
 	ps.Menu = site.Menu(ps.Profile, ps.Accounts)
 	err := initSiteRequest(as, ps)
 	if err != nil {
@@ -61,6 +61,7 @@ func actComplete(key string, as *app.State, ps *cutil.PageState, ctx *fasthttp.R
 		ctx.SetStatusCode(status)
 	}
 	elapsedMillis := float64((time.Now().UnixNano()-startNanos)/int64(time.Microsecond)) / float64(1000)
+	defer ps.Close()
 	l := ps.Logger.With(zap.String("method", ps.Method), zap.Int("status", status), zap.Float64("elapsed", elapsedMillis))
 	l.Debugf("processed request in [%.3fms] (render: %.3fms)", elapsedMillis, ps.RenderElapsed)
 }

@@ -1,4 +1,6 @@
 {% import (
+  "strings"
+
   "github.com/kyleu/projectforge/app"
   "github.com/kyleu/projectforge/app/controller/cutil"
   "github.com/kyleu/projectforge/app/project"
@@ -9,13 +11,15 @@
 {% code type List struct {
   layout.Basic
   Project *project.Project
+  Keys []string
+  Contents map[string]string
 } %}
 
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
   {%= vproject.Summary(p.Project) %}
   <div class="card">
     <h3>SVG icons</h3>
-    <a href="/p/{%s p.Project.Key %}/svg/build"><button>Rebuild</button></a>
+    <a href="/p/{%s p.Project.Key %}/svg/x/build"><button>Rebuild</button></a>
   </div>
   <div class="card">
     <h3>Add a new icon</h3>
@@ -24,7 +28,7 @@
       Instead of an icon key, you may also provide a URL to any SVG.
       The SVG will be rewritten with attribution.
     </p>
-    <form action="/p/{%s p.Project.Key %}/svg/add" method="get">
+    <form action="/p/{%s p.Project.Key %}/svg/x/add" method="get">
       <table>
         <tbody>
           <tr>
@@ -43,7 +47,17 @@
     </form>
   </div>
   <div class="card">
-    TODO: Show SVGs
+    <h3>Current Icons</h3>
+    <div class="flex-wrap">
+      {%- for _, k := range p.Keys -%}
+      <div class="icon-container">
+        <a href="/p/{%s p.Project.Key %}/svg/{%s k %}">
+          <div>{%s= strings.ReplaceAll(p.Contents[k], "svg-" + k, "svg-" + k + "_adhoc") %}</div>
+          <div>{%s k %}</div>
+        </a>
+      </div>
+      {%- endfor -%}
+    </div>
   </div>
 {% endfunc %}
 

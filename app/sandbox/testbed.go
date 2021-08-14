@@ -2,6 +2,8 @@
 package sandbox
 
 import (
+	"context"
+
 	"github.com/kyleu/projectforge/app/util"
 	"go.uber.org/zap"
 
@@ -10,7 +12,7 @@ import (
 
 var testbed = &Sandbox{Key: "testbed", Title: "Testbed", Icon: "star", Run: onTestbed}
 
-func onTestbed(st *app.State, logger *zap.SugaredLogger) (interface{}, error) {
+func onTestbed(ctx context.Context, st *app.State, logger *zap.SugaredLogger) (interface{}, error) {
 	ret := util.ValueMap{"status": "ok"}
 	return ret, nil
 }

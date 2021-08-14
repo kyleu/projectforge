@@ -19,6 +19,7 @@ func RunAction(ctx *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
+
 		cfg := util.ValueMap{}
 		actT := action.TypeFromString(actS)
 		prj, err := as.Services.Projects.Get(tgt)
@@ -29,7 +30,8 @@ func RunAction(ctx *fasthttp.RequestCtx) {
 		ctx.QueryArgs().VisitAll(func(k []byte, v []byte) {
 			cfg[string(k)] = string(v)
 		})
-		result := action.Apply(tgt, actT, cfg, as.Services.Modules, as.Services.Projects, ps.Logger)
+		nc, span := as.Telemetry.StartSpan(ctx, "action", "run.action")
+		result := action.Apply(nc, span, tgt, actT, cfg, as.Services.Modules, as.Services.Projects, ps.Logger)
 		ps.Data = result
 		page := &vaction.Result{Ctx: &action.ResultContext{Prj: prj, Cfg: cfg, Res: result}}
 		return render(ctx, as, page, ps, "projects", prj.Key, actT.Title)
@@ -50,7 +52,8 @@ func RunAllActions(ctx *fasthttp.RequestCtx) {
 		for _, prj := range prjs {
 			c := cfg.Clone()
 			c["path"] = prj.Path
-			result := action.Apply(prj.Key, actT, c, as.Services.Modules, as.Services.Projects, ps.Logger)
+			nc, span := as.Telemetry.StartSpan(ctx, "action", "run.action")
+			result := action.Apply(nc, span, prj.Key, actT, c, as.Services.Modules, as.Services.Projects, ps.Logger)
 			rc := &action.ResultContext{Prj: prj, Cfg: c, Res: result}
 			results = append(results, rc)
 		}
