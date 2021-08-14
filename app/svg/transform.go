@@ -27,7 +27,7 @@ func Transform(tgt string, b []byte, url string) (*SVG, error) {
 	}
 
 	add("<!-- imported from " + url + " -->")
-	add(`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">`)
+	add(`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 128 128">`)
 	add(fmt.Sprintf(`  <symbol id="svg-%s" viewBox="%s">`, tgt, vb))
 
 	content, err := transformNodes(x.Nodes)

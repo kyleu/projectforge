@@ -9,6 +9,10 @@ import (
 	"github.com/kyleu/projectforge/app/filesystem"
 )
 
+func Build(fs filesystem.FileLoader) (int, error) {
+	return Run(fs, "client/src/svg", "app/util/svg.go")
+}
+
 func Run(fs filesystem.FileLoader, src string, tgt string) (int, error) {
 	svgs, err := loadSVGs(fs)
 	if err != nil {
