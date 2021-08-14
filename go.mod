@@ -16,6 +16,7 @@ require (
 	github.com/markbates/going v1.0.3
 	github.com/markbates/goth v1.67.1
 	github.com/pkg/errors v0.9.1
+	github.com/prometheus/client_golang v1.11.0
 	github.com/sergi/go-diff v1.1.0
 	github.com/spf13/cobra v1.2.1
 	github.com/valyala/fasthttp v1.28.0

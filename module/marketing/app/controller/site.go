@@ -7,20 +7,21 @@ import (
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller/cutil"
 	"{{{ .Package }}}/app/site"
+	"{{{ .Package }}}/app/telemetry"
 	"{{{ .Package }}}/app/util"
 )
 
-func SiteRoutes() *router.Router {
+func SiteRoutes() (*telemetry.Metrics, fasthttp.RequestHandler) {
 	w := fasthttp.CompressHandler
 	r := router.New()
 
 	r.GET("/", w(Site))
 
 	r.GET(defaultProfilePath, w(ProfileSite))
-	r.POST(defaultProfilePath, w(ProfileSave)){{{ if .HasModule "oauth" }}}
+	r.POST(defaultProfilePath, w(ProfileSave))
 	r.GET("/auth/{key}", w(AuthDetail))
 	r.GET("/auth/callback/{key}", w(AuthCallback))
-	r.GET("/auth/logout/{key}", w(AuthLogout)){{{ end }}}
+	r.GET("/auth/logout/{key}", w(AuthLogout))
 
 	r.GET("/favicon.ico", Favicon)
 	r.GET("/assets/{_:*}", Static)
@@ -31,7 +32,8 @@ func SiteRoutes() *router.Router {
 	r.OPTIONS("/{_:*}", w(Options))
 	r.NotFound = NotFound
 
-	return r
+	m := telemetry.NewMetrics("marketing_site")
+	return m, m.WrapHandler(r)
 }
 
 func Site(ctx *fasthttp.RequestCtx) {

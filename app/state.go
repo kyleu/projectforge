@@ -4,7 +4,6 @@ package app
 import (
 	"fmt"
 
-	"github.com/fasthttp/router"
 	"go.uber.org/zap"
 
 	"github.com/kyleu/projectforge/app/auth"
@@ -32,7 +31,6 @@ func (b *BuildInfo) String() string {
 type State struct {
 	Debug     bool
 	BuildInfo *BuildInfo
-	Router    *router.Router
 	Files     filesystem.FileLoader
 	Auth      *auth.Service
 	Themes    *theme.Service
@@ -41,15 +39,14 @@ type State struct {
 	Services  *Services
 }
 
-func NewState(debug bool, bi *BuildInfo, r *router.Router, f filesystem.FileLoader, log *zap.SugaredLogger) (*State, error) {
+func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, m *telemetry.Metrics, log *zap.SugaredLogger) (*State, error) {
 	return &State{
 		Debug:     debug,
 		BuildInfo: bi,
-		Router:    r,
 		Files:     f,
 		Auth:      auth.NewService("", log),
 		Themes:    theme.NewService(f, log),
-		Telemetry: telemetry.NewService(log),
+		Telemetry: telemetry.NewService(m, log),
 		Logger:    log.With(zap.String("service", "router")),
 	}, nil
 }

@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"runtime"
 
-	"github.com/fasthttp/router"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
+	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
 
 	"github.com/kyleu/projectforge/app"
@@ -40,19 +40,16 @@ func startSite(flags *Flags) error {
 	return err
 }
 
-func loadSite(flags *Flags, logger *zap.SugaredLogger) (*router.Router, *zap.SugaredLogger, error) {
-	r := controller.SiteRoutes()
-
+func loadSite(flags *Flags, logger *zap.SugaredLogger) (fasthttp.RequestHandler, *zap.SugaredLogger, error) {
+	m, r := controller.SiteRoutes()
 	f := filesystem.NewFileSystem(flags.ConfigDir, logger)
 
-	st, err := app.NewState(flags.Debug, _buildInfo, r, f, logger)
+	st, err := app.NewState(flags.Debug, _buildInfo, f, m, logger)
 	if err != nil {
 		return nil, logger, err
 	}
 
 	controller.SetSiteState(st)
-
 	logger.Infof("started marketing site using address [%s:%d] on %s:%s", flags.Address, flags.Port, runtime.GOOS, runtime.GOARCH)
-
 	return r, logger, nil
 }

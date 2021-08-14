@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"runtime"
 
-	"github.com/fasthttp/router"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
+	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
 
 	"{{{ .Package }}}/app"
@@ -40,12 +40,10 @@ func startServer(flags *Flags) error {
 	return err
 }
 
-func loadServer(flags *Flags, logger *zap.SugaredLogger) (*router.Router, *zap.SugaredLogger, error) {
-	r := controller.AppRoutes()
-
+func loadServer(flags *Flags, logger *zap.SugaredLogger) (fasthttp.RequestHandler, *zap.SugaredLogger, error) {
+	m, r := controller.AppRoutes()
 	f := filesystem.NewFileSystem(flags.ConfigDir, logger)
-
-	st, err := app.NewState(flags.Debug, _buildInfo, r, f, logger)
+	st, err := app.NewState(flags.Debug, _buildInfo, f, m, logger)
 	if err != nil {
 		return nil, logger, err
 	}

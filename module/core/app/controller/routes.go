@@ -3,10 +3,13 @@ package controller
 import (
 	"github.com/fasthttp/router"
 	"github.com/valyala/fasthttp"
+
+	"{{{ .Package }}}/app/telemetry"
+	"{{{ .Package }}}/app/util"
 )
 
 //nolint
-func AppRoutes() *router.Router {
+func AppRoutes() (*telemetry.Metrics, fasthttp.RequestHandler) {
 	w := fasthttp.CompressHandler
 	r := router.New()
 
@@ -19,10 +22,10 @@ func AppRoutes() *router.Router {
 	r.GET(defaultSearchPath, w(Search))
 
 	r.GET(defaultProfilePath, w(Profile))
-	r.POST(defaultProfilePath, w(ProfileSave)){{{ if .HasModule "oauth" }}}
+	r.POST(defaultProfilePath, w(ProfileSave))
 	r.GET("/auth/{key}", w(AuthDetail))
 	r.GET("/auth/callback/{key}", w(AuthCallback))
-	r.GET("/auth/logout/{key}", w(AuthLogout)){{{ end }}}
+	r.GET("/auth/logout/{key}", w(AuthLogout))
 
 	r.GET("/admin", w(Admin))
 	r.GET("/admin/{path:*}", w(Admin))
@@ -41,5 +44,7 @@ func AppRoutes() *router.Router {
 	r.OPTIONS("/{_:*}", w(Options))
 	r.NotFound = NotFound
 
-	return r
+	p := telemetry.NewMetrics(util.AppKey)
+
+	return p, p.WrapHandler(r)
 }

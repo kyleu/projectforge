@@ -18,20 +18,19 @@ import (
 
 type Service struct {
 	enabled bool
+	metrics *Metrics
 	tp      *sdktrace.TracerProvider
 	logger  *zap.SugaredLogger
 }
 
-func NewService(logger *zap.SugaredLogger) *Service {
+func NewService(m *Metrics, logger *zap.SugaredLogger) *Service {
 	tp, err := buildTP("localhost:55681")
 	if err != nil {
 		return &Service{enabled: false, logger: logger}
 	}
-
 	p := propagation.NewCompositeTextMapPropagator(propagation.Baggage{}, propagation.TraceContext{})
 	otel.SetTextMapPropagator(p)
-
-	return &Service{enabled: true, tp: tp, logger: logger}
+	return &Service{enabled: true, metrics: m, tp: tp, logger: logger}
 }
 
 func buildTP(endpoint string) (*sdktrace.TracerProvider, error) {

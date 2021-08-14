@@ -57,10 +57,3 @@ func InjectHTTP(ctx *fasthttp.RequestCtx, span trace.Span) {
 	span.SetAttributes(semconv.HTTPAttributesFromHTTPStatusCode(ctx.Response.StatusCode())...)
 	span.SetStatus(semconv.SpanStatusFromHTTPStatusCode(ctx.Response.StatusCode()))
 }
-
-func InjectStuff(ctx *fasthttp.RequestCtx, span *trace.Span) {
-	_ = semconv.CodeFunctionKey
-	_ = semconv.CodeFilepathKey
-	_ = semconv.CodeLineNumberKey
-	_ = semconv.HostNameKey
-}

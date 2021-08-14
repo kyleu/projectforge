@@ -5,7 +5,6 @@ import (
 	"net"
 	"strconv"
 
-	"github.com/fasthttp/router"
 	"github.com/kirsle/configdir"
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
@@ -86,8 +85,8 @@ func listen(address string, port uint16) (uint16, net.Listener, error) {
 	return port, l, nil
 }
 
-func serve(name string, listener net.Listener, r *router.Router) error {
-	x := &fasthttp.Server{Handler: r.Handler, Name: name, ReadBufferSize: 65536, NoDefaultServerHeader: true}
+func serve(name string, listener net.Listener, h fasthttp.RequestHandler) error {
+	x := &fasthttp.Server{Handler: h, Name: name, ReadBufferSize: 65536, NoDefaultServerHeader: true}
 	err := x.Serve(listener)
 	if err != nil {
 		return errors.Wrap(err, "unable to run http server")
@@ -95,12 +94,12 @@ func serve(name string, listener net.Listener, r *router.Router) error {
 	return nil
 }
 
-func listenandserve(name string, addr string, port uint16, r *router.Router) (uint16, error) {
+func listenandserve(name string, addr string, port uint16, h fasthttp.RequestHandler) (uint16, error) {
 	p, l, err := listen(addr, port)
 	if err != nil {
 		return p, err
 	}
-	err = serve(name, l, r)
+	err = serve(name, l, h)
 	if err != nil {
 		return p, err
 	}

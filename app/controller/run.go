@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"sort"
 	"sync"
 
 	"github.com/kyleu/projectforge/app"
@@ -69,6 +70,9 @@ func RunAllActions(ctx *fasthttp.RequestCtx) {
 			}()
 		}
 		wg.Wait()
+		sort.Slice(results, func(i, j int) bool {
+			return results[i].Prj.Key < results[j].Prj.Key
+		})
 		ps.Data = results
 		page := &vaction.Results{T: actT, Ctxs: results}
 		return render(ctx, as, page, ps, "projects", actT.Title)
