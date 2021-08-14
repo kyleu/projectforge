@@ -3,16 +3,14 @@ package action
 import (
 	"github.com/kyleu/projectforge/app/diff"
 	"github.com/kyleu/projectforge/app/module"
-	"github.com/kyleu/projectforge/app/project"
 	"github.com/kyleu/projectforge/app/util"
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
 )
 
-func onMerge(prj *project.Project, mods module.Modules, cfg util.ValueMap, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) *Result {
-	ret := newResult(cfg, logger)
+func onMerge(pm *PrjAndMods) *Result {
+	ret := newResult(pm.Cfg, pm.Logger)
 	start := util.TimerStart()
-	_, diffs, err := diffs(prj, mods, true, mSvc, pSvc, logger)
+	_, diffs, err := diffs(pm, true)
 	if err != nil {
 		return ret.WithError(err)
 	}
@@ -28,7 +26,7 @@ func onMerge(prj *project.Project, mods module.Modules, cfg util.ValueMap, mSvc 
 		}
 	}
 
-	mr := &module.Result{Keys: mods.Keys(), Status: "OK", Diffs: diffs, Duration: util.TimerEnd(start)}
+	mr := &module.Result{Keys: pm.Mods.Keys(), Status: "OK", Diffs: diffs, Duration: util.TimerEnd(start)}
 	ret.Modules = append(ret.Modules, mr)
 	return ret
 }

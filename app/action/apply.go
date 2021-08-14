@@ -1,54 +1,73 @@
 package action
 
 import (
+	"context"
+
 	"github.com/kyleu/projectforge/app/module"
 	"github.com/kyleu/projectforge/app/project"
 	"github.com/kyleu/projectforge/app/util"
 	"github.com/pkg/errors"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 )
 
-func Apply(projectKey string, t Type, cfg util.ValueMap, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) *Result {
-	switch t {
-	case TypeCreate:
-		return onCreate(projectKey, cfg, mSvc, pSvc, logger)
-	case TypeTest:
-		return onTest(cfg, mSvc, pSvc, logger)
-	case TypeDoctor:
-		return onDoctor(cfg, logger)
+func Apply(ctx context.Context, span trace.Span, projectKey string, t Type, cfg util.ValueMap, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) *Result {
+	if span != nil {
+		span.SetAttributes(attribute.String("project", projectKey), attribute.String("action", t.String()))
+		defer span.End()
 	}
 
-	prj, mods, err := prjAndMods(projectKey, mSvc, pSvc)
+	switch t {
+	case TypeCreate:
+		return onCreate(ctx, projectKey, cfg, mSvc, pSvc, logger)
+	case TypeTest:
+		return onTest(ctx, cfg, mSvc, pSvc, logger)
+	case TypeDoctor:
+		return onDoctor(ctx, cfg, logger)
+	}
+
+	pm, err := getPrjAndMods(ctx, projectKey, cfg, mSvc, pSvc, logger)
 	if err != nil {
 		return errorResult(err, cfg, logger)
 	}
 
 	switch t {
 	case TypeBuild:
-		return onBuild(prj, cfg, logger)
+		return onBuild(pm)
 	case TypeDebug:
-		return onDebug(prj, mods, cfg, mSvc, pSvc, logger)
+		return onDebug(pm)
 	case TypeMerge:
-		return onMerge(prj, mods, cfg, mSvc, pSvc, logger)
+		return onMerge(pm)
 	case TypePreview:
-		return onPreview(prj, mods, cfg, mSvc, pSvc, logger)
+		return onPreview(pm)
 	case TypeSlam:
-		return onSlam(prj, mods, cfg, mSvc, pSvc, logger)
+		return onSlam(pm)
 	case TypeSVG:
-		return onSVG(prj, cfg, pSvc, logger)
+		return onSVG(pm)
 	default:
 		return errorResult(errors.Errorf("invalid action type [%s]", t.String()), cfg, logger)
 	}
 }
 
-func prjAndMods(key string, mSvc *module.Service, pSvc *project.Service) (*project.Project, module.Modules, error) {
+type PrjAndMods struct {
+	Ctx    context.Context
+	Cfg    util.ValueMap
+	Prj    *project.Project
+	Mods   module.Modules
+	MSvc   *module.Service
+	PSvc   *project.Service
+	Logger *zap.SugaredLogger
+}
+
+func getPrjAndMods(ctx context.Context, key string, cfg util.ValueMap, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) (*PrjAndMods, error) {
 	prj, err := pSvc.Get(key)
 	if err != nil {
-		return nil, nil, errors.Wrapf(err, "unable to load project [%s]", key)
+		return nil, errors.Wrapf(err, "unable to load project [%s]", key)
 	}
 	mods, err := mSvc.GetModules(prj.Modules...)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
-	return prj, mods, nil
+	return &PrjAndMods{Ctx: ctx, Cfg: cfg, Prj: prj, Mods: mods, MSvc: mSvc, PSvc: pSvc, Logger: logger}, nil
 }

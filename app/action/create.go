@@ -1,6 +1,7 @@
 package action
 
 import (
+	"context"
 	"fmt"
 	"path/filepath"
 	"strconv"
@@ -13,7 +14,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func onCreate(key string, cfg util.ValueMap, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) *Result {
+func onCreate(ctx context.Context, key string, cfg util.ValueMap, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) *Result {
 	ret := newResult(cfg, logger)
 	path, _ := cfg.GetString("path", true)
 	if path == "" {
@@ -40,13 +41,12 @@ func onCreate(key string, cfg util.ValueMap, mSvc *module.Service, pSvc *project
 		return errorResult(errors.Wrap(err, msg), cfg, logger)
 	}
 
-	var mods module.Modules
-	prj, mods, err = prjAndMods(prj.Key, mSvc, pSvc)
+	pm, err := getPrjAndMods(ctx, prj.Key, cfg, mSvc, pSvc, logger)
 	if err != nil {
 		return errorResult(err, cfg, logger)
 	}
 	cfg["skipHeader"] = false
-	retS := onSlam(prj, mods, cfg, mSvc, pSvc, logger)
+	retS := onSlam(pm)
 	ret = ret.Merge(retS)
 	if ret.HasErrors() {
 		return ret

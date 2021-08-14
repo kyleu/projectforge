@@ -3,9 +3,6 @@ package action
 import (
 	"github.com/kyleu/projectforge/app/diff"
 	"github.com/kyleu/projectforge/app/file"
-	"github.com/kyleu/projectforge/app/module"
-	"github.com/kyleu/projectforge/app/project"
-	"go.uber.org/zap"
 )
 
 const (
@@ -13,10 +10,10 @@ const (
 	delimEnd   = "}}}"
 )
 
-func diffs(prj *project.Project, mods module.Modules, addHeader bool, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) (file.Files, []*diff.Diff, error) {
-	tgt := pSvc.GetFilesystem(prj)
+func diffs(pm *PrjAndMods, addHeader bool) (file.Files, []*diff.Diff, error) {
+	tgt := pm.PSvc.GetFilesystem(pm.Prj)
 
-	srcFiles, err := mSvc.GetFiles(mods, addHeader, tgt)
+	srcFiles, err := pm.MSvc.GetFiles(pm.Mods, addHeader, tgt)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -28,7 +25,7 @@ func diffs(prj *project.Project, mods module.Modules, addHeader bool, mSvc *modu
 		}
 	}
 
-	ctx := prj.ToTemplateContext()
+	ctx := pm.Prj.ToTemplateContext()
 	for _, f := range srcFiles {
 		f.Content, err = runTemplate(f, ctx)
 		if err != nil {
@@ -36,7 +33,7 @@ func diffs(prj *project.Project, mods module.Modules, addHeader bool, mSvc *modu
 		}
 	}
 
-	diffs := diff.FileLoader(srcFiles, tgt, false, logger)
+	diffs := diff.FileLoader(srcFiles, tgt, false, pm.Logger)
 
 	return srcFiles, diffs, nil
 }

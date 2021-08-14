@@ -3,16 +3,14 @@ package action
 import (
 	"github.com/kyleu/projectforge/app/diff"
 	"github.com/kyleu/projectforge/app/module"
-	"github.com/kyleu/projectforge/app/project"
 	"github.com/kyleu/projectforge/app/util"
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
 )
 
-func onSlam(prj *project.Project, mods module.Modules, cfg util.ValueMap, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) *Result {
-	ret := newResult(cfg, logger)
+func onSlam(pm *PrjAndMods) *Result {
+	ret := newResult(pm.Cfg, pm.Logger)
 	start := util.TimerStart()
-	srcFiles, diffs, err := diffs(prj, mods, true, mSvc, pSvc, logger)
+	srcFiles, diffs, err := diffs(pm, true)
 	if err != nil {
 		return ret.WithError(err)
 	}
@@ -23,7 +21,7 @@ func onSlam(prj *project.Project, mods module.Modules, cfg util.ValueMap, mSvc *
 			// noop
 		case diff.StatusDifferent, diff.StatusNew:
 			src := srcFiles.Get(f.Path)
-			tgtFS := pSvc.GetFilesystem(prj)
+			tgtFS := pm.PSvc.GetFilesystem(pm.Prj)
 			err := tgtFS.WriteFile(f.Path, []byte(src.Content), src.Mode, true)
 			if err != nil {
 				return ret.WithError(errors.Wrapf(err, "unable to write updated content to [%s]", f.Path))
@@ -33,7 +31,7 @@ func onSlam(prj *project.Project, mods module.Modules, cfg util.ValueMap, mSvc *
 		}
 	}
 
-	mr := &module.Result{Keys: mods.Keys(), Status: "OK", Diffs: diffs, Duration: util.TimerEnd(start)}
+	mr := &module.Result{Keys: pm.Mods.Keys(), Status: "OK", Diffs: diffs, Duration: util.TimerEnd(start)}
 	ret.Modules = append(ret.Modules, mr)
 	return ret
 }

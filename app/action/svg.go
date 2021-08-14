@@ -3,25 +3,22 @@ package action
 import (
 	"fmt"
 
-	"github.com/kyleu/projectforge/app/project"
 	"github.com/kyleu/projectforge/app/svg"
-	"github.com/kyleu/projectforge/app/util"
-	"go.uber.org/zap"
 )
 
-func onSVG(prj *project.Project, cfg util.ValueMap, pSvc *project.Service, logger *zap.SugaredLogger) *Result {
-	ret := newResult(cfg, logger)
+func onSVG(pm *PrjAndMods) *Result {
+	ret := newResult(pm.Cfg, pm.Logger)
 
-	src := fmt.Sprintf("%s/client/src/svg", prj.Path)
-	tgt := fmt.Sprintf("%s/app/util/svg.go", prj.Path)
+	src := fmt.Sprintf("%s/client/src/svg", pm.Prj.Path)
+	tgt := fmt.Sprintf("%s/app/util/svg.go", pm.Prj.Path)
 
-	fs := pSvc.GetFilesystem(prj)
+	fs := pm.PSvc.GetFilesystem(pm.Prj)
 	count, err := svg.Run(fs, src, tgt)
 	if err != nil {
-		return errorResult(err, cfg, logger)
+		return errorResult(err, pm.Cfg, pm.Logger)
 	}
 
-	ret.AddLog("creating [%d] SVGs for project [%s]", count, prj.Key)
+	ret.AddLog("creating [%d] SVGs for project [%s]", count, pm.Prj.Key)
 
 	return ret
 }
