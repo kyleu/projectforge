@@ -6,13 +6,14 @@
 
   "github.com/kyleu/projectforge/app"
   "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/app/telemetry"
   "github.com/kyleu/projectforge/app/util"
   "github.com/kyleu/projectforge/views/components"
   "github.com/kyleu/projectforge/views/layout"
 ) %}
 
 {% func Render(page layout.Page, as *app.State, ps *cutil.PageState) %}{% code
-  ctx, span := as.Telemetry.StartSpan(ps.Context, "template", strings.TrimPrefix(fmt.Sprintf("%T", page), "*"))
+  ctx, span := telemetry.StartSpan(ps.Context, "template", strings.TrimPrefix(fmt.Sprintf("%T", page), "*"))
   ps.Context = ctx
 	defer func() {
     span.End()

@@ -11,6 +11,7 @@ import (
 	"{{{ .Package}}}/app"
 	"{{{ .Package}}}/app/controller/cutil"
 	"{{{ .Package}}}/app/telemetry"
+	"{{{ .Package}}}/app/telemetry/httpmetrics"
 	"{{{ .Package}}}/app/util"
 	"{{{ .Package}}}/app/web"
 )
@@ -40,9 +41,9 @@ func loadPageState(ctx *fasthttp.RequestCtx, key string, as *app.State) *cutil.P
 	path := string(ctx.Request.URI().Path())
 	logger := as.Logger.With(zap.String("path", path))
 
-	ctx = telemetry.ExtractHeaders(ctx, logger)
-	traceCtx, span := as.Telemetry.StartSpan(ctx, "pagestate", "http:"+key)
-	telemetry.InjectHTTP(ctx, span)
+	ctx = httpmetrics.ExtractHeaders(ctx, logger)
+	traceCtx, span := telemetry.StartSpan(ctx, "pagestate", "http:"+key)
+	httpmetrics.InjectHTTP(ctx, span)
 
 	if store == nil {
 		store = initStore([]byte(sessionKey))

@@ -15,21 +15,37 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-type Service struct {
-	enabled bool
-	metrics *Metrics
-	tp      *sdktrace.TracerProvider
-	logger  *zap.SugaredLogger
+var (
+	initialized    = false
+	tracerProvider *sdktrace.TracerProvider
+	logger         *zap.SugaredLogger
+)
+
+func InitizalizeIfNeeded(enabled bool, logger *zap.SugaredLogger) bool {
+	if initialized {
+		return false
+	}
+	initialized = true
+	if enabled {
+		Initialize(logger)
+	}
+	return true
 }
 
-func NewService(m *Metrics, logger *zap.SugaredLogger) *Service {
+func Initialize(logger *zap.SugaredLogger) {
+	if initialized {
+		logger.Warn("double telemetry initialization")
+		return
+	}
+
 	tp, err := buildTP("localhost:55681")
 	if err != nil {
-		return &Service{enabled: false, logger: logger}
+		logger.Errorf("unable to create tracing provider: %+v", err)
+		return
 	}
+	tracerProvider = tp
 	p := propagation.NewCompositeTextMapPropagator(propagation.Baggage{}, propagation.TraceContext{})
 	otel.SetTextMapPropagator(p)
-	return &Service{enabled: true, metrics: m, tp: tp, logger: logger}
 }
 
 func buildTP(endpoint string) (*sdktrace.TracerProvider, error) {
@@ -49,11 +65,11 @@ func buildTP(endpoint string) (*sdktrace.TracerProvider, error) {
 	return tp, nil
 }
 
-func (s *Service) Close() error {
-	return s.tp.Shutdown(context.Background())
+func Close() error {
+	return tracerProvider.Shutdown(context.Background())
 }
 
-func (s *Service) StartSpan(ctx context.Context, tracerKey string, spanName string) (context.Context, trace.Span) {
+func StartSpan(ctx context.Context, tracerKey string, spanName string) (context.Context, trace.Span) {
 	tr := otel.GetTracerProvider().Tracer(tracerKey)
 	return tr.Start(ctx, spanName, trace.WithSpanKind(trace.SpanKindServer))
 }

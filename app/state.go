@@ -8,7 +8,6 @@ import (
 
 	"github.com/kyleu/projectforge/app/auth"
 	"github.com/kyleu/projectforge/app/filesystem"
-	"github.com/kyleu/projectforge/app/telemetry"
 	"github.com/kyleu/projectforge/app/theme"
 	"github.com/kyleu/projectforge/app/util"
 )
@@ -34,19 +33,17 @@ type State struct {
 	Files     filesystem.FileLoader
 	Auth      *auth.Service
 	Themes    *theme.Service
-	Telemetry *telemetry.Service
 	Logger    *zap.SugaredLogger
 	Services  *Services
 }
 
-func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, m *telemetry.Metrics, log *zap.SugaredLogger) (*State, error) {
+func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, log *zap.SugaredLogger) (*State, error) {
 	return &State{
 		Debug:     debug,
 		BuildInfo: bi,
 		Files:     f,
 		Auth:      auth.NewService("", log),
 		Themes:    theme.NewService(f, log),
-		Telemetry: telemetry.NewService(m, log),
 		Logger:    log.With(zap.String("service", "router")),
 	}, nil
 }

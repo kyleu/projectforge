@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/jmoiron/sqlx"
 	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
@@ -11,19 +12,21 @@ import (
 	"go.uber.org/zap"
 
 	"{{{ .Package }}}/app/telemetry"
+	"{{{ .Package }}}/app/telemetry/dbmetrics"
 )
 
 type Service struct {
 	DatabaseName string
 	SchemaName   string
 	Username     string
-	telemetry    *telemetry.Service
-	logger       *zap.SugaredLogger
 	db           *sqlx.DB
+	metrics      *dbmetrics.Metrics
+	logger       *zap.SugaredLogger
 }
 
-func NewService(dbName string, schName string, username string, telemetry *telemetry.Service, logger *zap.SugaredLogger, db *sqlx.DB) *Service {
-	return &Service{DatabaseName: dbName, SchemaName: schName, Username: username, telemetry: telemetry, logger: logger, db: db}
+func NewService(dbName string, schName string, username string, db *sqlx.DB, logger *zap.SugaredLogger) *Service {
+	m := dbmetrics.NewMetrics(dbName, db)
+	return &Service{DatabaseName: dbName, SchemaName: schName, Username: username, db: db, metrics: m, logger: logger}
 }
 
 func (s *Service) StartTransaction() (*sqlx.Tx, error) {
@@ -43,13 +46,19 @@ func (s *Service) logQuery(msg string, q string, values []interface{}) {
 	}
 }
 
-func (s *Service) newSpan(ctx context.Context, name string, q string) (context.Context, trace.Span) {
-	nc, span := s.telemetry.StartSpan(ctx, "database", name)
+func (s *Service) newSpan(ctx context.Context, name string, q string) (time.Time, context.Context, trace.Span) {
+	s.metrics.IncStmt(q, name)
+	nc, span := telemetry.StartSpan(ctx, "database", name)
 	span.SetAttributes(
 		semconv.DBStatementKey.String(q),
 		semconv.DBSystemPostgreSQL,
 		semconv.DBNameKey.String(s.DatabaseName),
 		semconv.DBUserKey.String(s.Username),
 	)
-	return nc, span
+	return time.Now(), nc, span
+}
+
+func (s *Service) complete(q string, op string, span trace.Span, started time.Time, err error) {
+	span.End()
+	s.metrics.CompleteStmt(q, op, started, err)
 }

@@ -50,9 +50,10 @@ func (s *Service) Exec(ctx context.Context, q string, tx *sqlx.Tx, expected int,
 }
 
 func (s *Service) execUnknown(ctx context.Context, q string, tx *sqlx.Tx, values ...interface{}) (int, error) {
-	ctx, span := s.newSpan(ctx, "exec-unknown", q)
-	defer span.End()
+	op := "exec-unknown"
+	now, ctx, span := s.newSpan(ctx, op, q)
 	var err error
+	defer s.complete(q, op, span, now, err)
 	var ret sql.Result
 	if tx == nil {
 		ret, err = s.db.ExecContext(ctx, q, values...)
@@ -60,12 +61,9 @@ func (s *Service) execUnknown(ctx context.Context, q string, tx *sqlx.Tx, values
 		ret, err = tx.ExecContext(ctx, q, values...)
 	}
 	if err != nil {
-		return 0, errors.Wrap(err, errMessage("exec", q, values)+"")
+		return 0, errors.Wrap(err, errMessage(op, q, values)+"")
 	}
 	aff, _ := ret.RowsAffected()
-	// if err != nil {
-	// 	return 0, err
-	// }
 	return int(aff), nil
 }
 

@@ -64,7 +64,6 @@ func (p *Provider) BeginAuth(state string) (goth.Session, error) {
 	return &Session{AuthURL: au}, nil
 }
 
-// FetchUser will go to MicrosoftOnline and access basic information about the user.
 func (p *Provider) FetchUser(session goth.Session) (goth.User, error) {
 	msSession, ok := session.(*Session)
 	if !ok {

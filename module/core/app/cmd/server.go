@@ -41,9 +41,9 @@ func startServer(flags *Flags) error {
 }
 
 func loadServer(flags *Flags, logger *zap.SugaredLogger) (fasthttp.RequestHandler, *zap.SugaredLogger, error) {
-	m, r := controller.AppRoutes()
+	r := controller.AppRoutes()
 	f := filesystem.NewFileSystem(flags.ConfigDir, logger)
-	st, err := app.NewState(flags.Debug, _buildInfo, f, m, logger)
+	st, err := app.NewState(flags.Debug, _buildInfo, f, logger)
 	if err != nil {
 		return nil, logger, err
 	}

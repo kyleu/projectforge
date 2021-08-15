@@ -1,11 +1,9 @@
-package telemetry
+package httpmetrics
 
 import (
 	"github.com/valyala/fasthttp"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/propagation"
-	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
-	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 )
 
@@ -39,21 +37,4 @@ func ExtractHeaders(ctx *fasthttp.RequestCtx, logger *zap.SugaredLogger) *fastht
 		return ctx
 	}
 	return http
-}
-
-func InjectHTTP(ctx *fasthttp.RequestCtx, span trace.Span) {
-	span.SetAttributes(
-		semconv.HTTPHostKey.String(string(ctx.Request.Host())),
-		semconv.HTTPMethodKey.String(string(ctx.Method())),
-		semconv.HTTPURLKey.String(string(ctx.Request.RequestURI())),
-		semconv.HTTPSchemeKey.String(string(ctx.Request.URI().Scheme())),
-	)
-	if b := ctx.Request.Header.Peek("User-Agent"); len(b) > 0 {
-		span.SetAttributes(semconv.HTTPUserAgentKey.String(string(b)))
-	}
-	if b := ctx.Request.Header.Peek("Content-Length"); len(b) > 0 {
-		span.SetAttributes(semconv.HTTPRequestContentLengthKey.String(string(b)))
-	}
-	span.SetAttributes(semconv.HTTPAttributesFromHTTPStatusCode(ctx.Response.StatusCode())...)
-	span.SetStatus(semconv.SpanStatusFromHTTPStatusCode(ctx.Response.StatusCode()))
 }

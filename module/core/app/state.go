@@ -7,7 +7,6 @@ import (
 {{{ if .HasModule "oauth" }}}
 	"{{{ .Package }}}/app/auth"{{{ end }}}
 	"{{{ .Package }}}/app/filesystem"
-	"{{{ .Package }}}/app/telemetry"
 	"{{{ .Package }}}/app/theme"
 	"{{{ .Package }}}/app/util"
 )
@@ -33,19 +32,17 @@ type State struct {
 	Files     filesystem.FileLoader{{{ if .HasModule "oauth" }}}
 	Auth      *auth.Service{{{ end }}}
 	Themes    *theme.Service
-	Telemetry *telemetry.Service
 	Logger    *zap.SugaredLogger
 	Services  *Services
 }
 
-func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, m *telemetry.Metrics, log *zap.SugaredLogger) (*State, error) {
+func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, log *zap.SugaredLogger) (*State, error) {
 	return &State{
 		Debug:     debug,
 		BuildInfo: bi,
 		Files:     f,
 		Auth:      auth.NewService("", log),
 		Themes:    theme.NewService(f, log),
-		Telemetry: telemetry.NewService(m, log),
 		Logger:    log.With(zap.String("service", "router")),
 	}, nil
 }

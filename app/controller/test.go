@@ -2,6 +2,7 @@ package controller
 
 import (
 	"github.com/kyleu/projectforge/app/action"
+	"github.com/kyleu/projectforge/app/telemetry"
 	"github.com/kyleu/projectforge/app/util"
 	"github.com/kyleu/projectforge/views"
 	"github.com/kyleu/projectforge/views/vaction"
@@ -30,7 +31,7 @@ func TestRun(ctx *fasthttp.RequestCtx) {
 		ps.Data = key
 		cfg := util.ValueMap{}
 		cfg.Add("path", "./testproject", "method", key, "wipe", true)
-		nc, span := as.Telemetry.StartSpan(ps.Context, "action", "test.run")
+		nc, span := telemetry.StartSpan(ps.Context, "action", "test.run")
 		res := action.Apply(nc, span, "testproject", action.TypeTest, cfg, as.Services.Modules, as.Services.Projects, ps.Logger)
 		ps.Data = res
 

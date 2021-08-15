@@ -62,8 +62,8 @@ func PostgresParamsFromEnv(key string, defaultUser string, prefix string) *Postg
 	return &PostgresParams{Host: h, Port: p, Username: u, Password: pw, Database: d, Schema: s, MaxConns: mc, Debug: debug}
 }
 
-func OpenPostgresDatabase(ctx context.Context, params *PostgresParams, tel *telemetry.Service, logger *zap.SugaredLogger) (*Service, error) {
-	ctx, span := tel.StartSpan(ctx, "database", "open")
+func OpenPostgresDatabase(ctx context.Context, params *PostgresParams, logger *zap.SugaredLogger) (*Service, error) {
+	ctx, span := telemetry.StartSpan(ctx, "database", "open")
 	defer span.End()
 	host := params.Host
 	if host == "" {
@@ -87,7 +87,6 @@ func OpenPostgresDatabase(ctx context.Context, params *PostgresParams, tel *tele
 		log = logger
 	}
 
-	svc := NewService(params.Database, params.Schema, params.Username, tel, log, db)
-
+	svc := NewService(params.Database, params.Schema, params.Username, db, log)
 	return svc, nil
 }

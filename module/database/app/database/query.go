@@ -10,13 +10,18 @@ import (
 )
 
 func (s *Service) Query(ctx context.Context, q string, tx *sqlx.Tx, values ...interface{}) (*sqlx.Rows, error) {
-	ctx, span := s.newSpan(ctx, "query", q)
-	defer span.End()
+	op := "query"
+	now, ctx, span := s.newSpan(ctx, op, q)
+	var ret *sqlx.Rows
+	var err error
+	defer s.complete(q, op, span, now, err)
 	s.logQuery("running raw query", q, values)
 	if tx == nil {
-		return s.db.QueryxContext(ctx, q, values...)
+		ret, err = s.db.QueryxContext(ctx, q, values...)
+		return ret, err
 	}
-	return tx.QueryxContext(ctx, q, values...)
+	ret, err = tx.QueryxContext(ctx, q, values...)
+	return ret, err
 }
 
 func (s *Service) QueryRows(ctx context.Context, q string, tx *sqlx.Tx, values ...interface{}) ([]map[string]interface{}, error) {
@@ -56,23 +61,31 @@ func (s *Service) QuerySingleRow(ctx context.Context, q string, tx *sqlx.Tx, val
 }
 
 func (s *Service) Select(ctx context.Context, dest interface{}, q string, tx *sqlx.Tx, values ...interface{}) error {
-	ctx, span := s.newSpan(ctx, "select", q)
-	defer span.End()
+	op := "select"
+	now, ctx, span := s.newSpan(ctx, op, q)
+	var err error
+	defer s.complete(q, op, span, now, err)
 	s.logQuery(fmt.Sprintf("selecting rows of type [%T]", dest), q, values)
 	if tx == nil {
-		return s.db.SelectContext(ctx, dest, q, values...)
+		err = s.db.SelectContext(ctx, dest, q, values...)
+		return err
 	}
-	return tx.SelectContext(ctx, dest, q, values...)
+	err = tx.SelectContext(ctx, dest, q, values...)
+	return err
 }
 
 func (s *Service) Get(ctx context.Context, dto interface{}, q string, tx *sqlx.Tx, values ...interface{}) error {
-	ctx, span := s.newSpan(ctx, "get", q)
-	defer span.End()
+	op := "get"
+	now, ctx, span := s.newSpan(ctx, op, q)
+	var err error
+	defer s.complete(q, op, span, now, err)
 	s.logQuery(fmt.Sprintf("getting single row of type [%T]", dto), q, values)
 	if tx == nil {
-		return s.db.GetContext(ctx, dto, q, values...)
+		err = s.db.GetContext(ctx, dto, q, values...)
+		return err
 	}
-	return tx.GetContext(ctx, dto, q, values...)
+	err = tx.GetContext(ctx, dto, q, values...)
+	return err
 }
 
 type singleIntResult struct {
@@ -80,10 +93,12 @@ type singleIntResult struct {
 }
 
 func (s *Service) SingleInt(ctx context.Context, q string, tx *sqlx.Tx, values ...interface{}) (int64, error) {
-	ctx, span := s.newSpan(ctx, "single-int", q)
-	defer span.End()
+	op := "single-int"
+	now, ctx, span := s.newSpan(ctx, op, q)
+	var err error
+	defer s.complete(q, op, span, now, err)
 	x := &singleIntResult{}
-	err := s.Get(ctx, x, q, tx, values...)
+	err = s.Get(ctx, x, q, tx, values...)
 	if err != nil {
 		return -1, errors.Wrap(err, "returned value is not an integer")
 	}

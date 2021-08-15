@@ -23,8 +23,20 @@ func onDebug(pm *PrjAndMods) *Result {
 func removeAll(pm *PrjAndMods) *Result {
 	ret := newResult(pm.Cfg, pm.Logger)
 	start := util.TimerStart()
-	removeCount := 0
-	ret.AddLog("removed [%d] %s", removeCount, util.PluralMaybe("file", removeCount))
+
+	audits, err := auditsFor(pm)
+	if err != nil {
+		return errorResult(err, pm.Cfg, pm.Logger)
+	}
+
+	tgt := pm.PSvc.GetFilesystem(pm.Prj)
+	for _, a := range audits {
+		if err := tgt.Remove(a.Path); err != nil {
+			return errorResult(err, pm.Cfg, pm.Logger)
+		}
+		ret.AddLog("removed [%s]", a.Path)
+	}
+
 	mr := &module.Result{Keys: pm.Mods.Keys(), Status: "OK", Duration: util.TimerEnd(start)}
 	ret.Modules = append(ret.Modules, mr)
 	return ret
@@ -48,36 +60,9 @@ func calculateMissing(pm *PrjAndMods) *Result {
 	ret := newResult(pm.Cfg, pm.Logger)
 	start := util.TimerStart()
 
-	tgt := pm.PSvc.GetFilesystem(pm.Prj)
-	filenames, err := tgt.ListFilesRecursive("", pm.Prj.Ignore)
+	audits, err := auditsFor(pm)
 	if err != nil {
 		return errorResult(err, pm.Cfg, pm.Logger)
-	}
-
-	var generated []string
-	for _, fn := range filenames {
-		var b []byte
-		b, err = tgt.PeekFile(fn, 1024)
-		if err != nil {
-			return errorResult(err, pm.Cfg, pm.Logger)
-		}
-		if file.ContainsHeader(string(b)) {
-			generated = append(generated, fn)
-		}
-	}
-
-	src, err := pm.MSvc.GetFilenames(pm.Mods)
-	if err != nil {
-		return errorResult(err, pm.Cfg, pm.Logger)
-	}
-
-	var audits []*diff.Diff
-	for _, g := range generated {
-		if !util.StringArrayContains(src, g) {
-			if (!strings.HasSuffix(g, "client.js.map")) && (!strings.HasSuffix(g, "file/header.go")) {
-				audits = append(audits, &diff.Diff{Path: g, Status: diff.StatusMissing})
-			}
-		}
 	}
 
 	var actions module.Resolutions
@@ -94,4 +79,39 @@ func calculateMissing(pm *PrjAndMods) *Result {
 	mr := &module.Result{Keys: pm.Mods.Keys(), Status: "OK", Diffs: audits, Actions: actions, Duration: util.TimerEnd(start)}
 	ret.Modules = append(ret.Modules, mr)
 	return ret
+}
+
+func auditsFor(pm *PrjAndMods) ([]*diff.Diff, error) {
+	tgt := pm.PSvc.GetFilesystem(pm.Prj)
+	filenames, err := tgt.ListFilesRecursive("", pm.Prj.Ignore)
+	if err != nil {
+		return nil, err
+	}
+
+	var generated []string
+	for _, fn := range filenames {
+		var b []byte
+		b, err = tgt.PeekFile(fn, 1024)
+		if err != nil {
+			return nil, err
+		}
+		if file.ContainsHeader(string(b)) {
+			generated = append(generated, fn)
+		}
+	}
+
+	src, err := pm.MSvc.GetFilenames(pm.Mods)
+	if err != nil {
+		return nil, err
+	}
+
+	var audits []*diff.Diff
+	for _, g := range generated {
+		if !util.StringArrayContains(src, g) {
+			if (!strings.HasSuffix(g, "client.js.map")) && (!strings.HasSuffix(g, "file/header.go")) {
+				audits = append(audits, &diff.Diff{Path: g, Status: diff.StatusMissing})
+			}
+		}
+	}
+	return audits, nil
 }

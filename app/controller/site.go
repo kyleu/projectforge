@@ -8,11 +8,11 @@ import (
 	"github.com/kyleu/projectforge/app"
 	"github.com/kyleu/projectforge/app/controller/cutil"
 	"github.com/kyleu/projectforge/app/site"
-	"github.com/kyleu/projectforge/app/telemetry"
+	"github.com/kyleu/projectforge/app/telemetry/httpmetrics"
 	"github.com/kyleu/projectforge/app/util"
 )
 
-func SiteRoutes() (*telemetry.Metrics, fasthttp.RequestHandler) {
+func SiteRoutes() fasthttp.RequestHandler {
 	w := fasthttp.CompressHandler
 	r := router.New()
 
@@ -33,8 +33,8 @@ func SiteRoutes() (*telemetry.Metrics, fasthttp.RequestHandler) {
 	r.OPTIONS("/{_:*}", w(Options))
 	r.NotFound = NotFound
 
-	m := telemetry.NewMetrics("marketing_site")
-	return m, m.WrapHandler(r)
+	m := httpmetrics.NewMetrics("marketing_site")
+	return m.WrapHandler(r)
 }
 
 func Site(ctx *fasthttp.RequestCtx) {

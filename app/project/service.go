@@ -30,14 +30,14 @@ func NewService(logger *zap.SugaredLogger) *Service {
 }
 
 func (s *Service) GetFilesystem(prj *Project) filesystem.FileLoader {
+	s.fsLock.Lock()
+	defer s.fsLock.Unlock()
 	curr, ok := s.filesystems[prj.Key]
 	if ok {
 		return curr
 	}
 	fs := filesystem.NewFileSystem(prj.Path, s.logger)
-	s.fsLock.Lock()
 	s.filesystems[prj.Key] = fs
-	s.fsLock.Unlock()
 	return fs
 }
 
@@ -49,7 +49,9 @@ func (s *Service) add(path string, parent *Project) (*Project, error) {
 	if parent != nil {
 		p.Parent = parent.Key
 	}
+	s.cacheLock.Lock()
 	curr, ok := s.cache[p.Key]
+	s.cacheLock.Unlock()
 	if ok {
 		return nil, errors.Errorf("can't overwrite cache entry for project [%s] located at [%s]", curr.Key, curr.Path)
 	}
@@ -76,7 +78,9 @@ func (s *Service) Refresh() (Projects, error) {
 }
 
 func (s *Service) Get(key string) (*Project, error) {
+	s.cacheLock.Lock()
 	ret, ok := s.cache[key]
+	s.cacheLock.Unlock()
 	if ok {
 		return ret, nil
 	}
@@ -85,9 +89,11 @@ func (s *Service) Get(key string) (*Project, error) {
 
 func (s *Service) Keys() []string {
 	keys := make([]string, 0, len(s.cache))
+	s.cacheLock.Lock()
 	for k := range s.cache {
 		keys = append(keys, k)
 	}
+	s.cacheLock.Unlock()
 	sort.Strings(keys)
 	return keys
 }

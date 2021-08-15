@@ -7,6 +7,7 @@ import (
 	"github.com/kyleu/projectforge/app"
 	"github.com/kyleu/projectforge/app/action"
 	"github.com/kyleu/projectforge/app/controller/cutil"
+	"github.com/kyleu/projectforge/app/telemetry"
 	"github.com/kyleu/projectforge/app/util"
 	"github.com/kyleu/projectforge/views/vaction"
 	"github.com/valyala/fasthttp"
@@ -33,7 +34,7 @@ func RunAction(ctx *fasthttp.RequestCtx) {
 		ctx.QueryArgs().VisitAll(func(k []byte, v []byte) {
 			cfg[string(k)] = string(v)
 		})
-		nc, span := as.Telemetry.StartSpan(ps.Context, "action", "action." + actT.String())
+		nc, span := telemetry.StartSpan(ps.Context, "action", "action." + actT.String())
 		result := action.Apply(nc, span, tgt, actT, cfg, as.Services.Modules, as.Services.Projects, ps.Logger)
 		ps.Data = result
 		page := &vaction.Result{Ctx: &action.ResultContext{Prj: prj, Cfg: cfg, Res: result}}
@@ -60,7 +61,7 @@ func RunAllActions(ctx *fasthttp.RequestCtx) {
 			go func() {
 				c := cfg.Clone()
 				c["path"] = p.Path
-				nc, span := as.Telemetry.StartSpan(ps.Context, "action", "action."+actT.String())
+				nc, span := telemetry.StartSpan(ps.Context, "action", "action."+actT.String())
 				result := action.Apply(nc, span, p.Key, actT, c, as.Services.Modules, as.Services.Projects, ps.Logger)
 				rc := &action.ResultContext{Prj: p, Cfg: c, Res: result}
 				mutex.Lock()

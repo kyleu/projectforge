@@ -41,10 +41,10 @@ func startSite(flags *Flags) error {
 }
 
 func loadSite(flags *Flags, logger *zap.SugaredLogger) (fasthttp.RequestHandler, *zap.SugaredLogger, error) {
-	m, r := controller.SiteRoutes()
+	r := controller.SiteRoutes()
 	f := filesystem.NewFileSystem(flags.ConfigDir, logger)
 
-	st, err := app.NewState(flags.Debug, _buildInfo, f, m, logger)
+	st, err := app.NewState(flags.Debug, _buildInfo, f, logger)
 	if err != nil {
 		return nil, logger, err
 	}

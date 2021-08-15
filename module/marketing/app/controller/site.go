@@ -7,11 +7,11 @@ import (
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller/cutil"
 	"{{{ .Package }}}/app/site"
-	"{{{ .Package }}}/app/telemetry"
+	"{{{ .Package }}}/app/telemetry/httpmetrics"
 	"{{{ .Package }}}/app/util"
 )
 
-func SiteRoutes() (*telemetry.Metrics, fasthttp.RequestHandler) {
+func SiteRoutes() fasthttp.RequestHandler {
 	w := fasthttp.CompressHandler
 	r := router.New()
 
@@ -32,8 +32,8 @@ func SiteRoutes() (*telemetry.Metrics, fasthttp.RequestHandler) {
 	r.OPTIONS("/{_:*}", w(Options))
 	r.NotFound = NotFound
 
-	m := telemetry.NewMetrics("marketing_site")
-	return m, m.WrapHandler(r)
+	m := httpmetrics.NewMetrics("marketing_site")
+	return m.WrapHandler(r)
 }
 
 func Site(ctx *fasthttp.RequestCtx) {
