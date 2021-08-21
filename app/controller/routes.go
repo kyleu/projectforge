@@ -11,65 +11,64 @@ import (
 
 //nolint
 func AppRoutes() fasthttp.RequestHandler {
-	w := fasthttp.CompressHandler
 	r := router.New()
 
-	r.GET("/", w(Home))
-	r.GET("/about", w(About))
-	r.GET("/settings", w(Settings))
-	r.GET("/theme", w(ThemeList))
-	r.GET("/theme/{key}", w(ThemeEdit))
-	r.POST("/theme/{key}", w(ThemeSave))
-	r.GET(defaultSearchPath, w(Search))
+	r.GET("/", Home)
+	r.GET("/about", About)
+	r.GET("/settings", Settings)
+	r.GET("/theme", ThemeList)
+	r.GET("/theme/{key}", ThemeEdit)
+	r.POST("/theme/{key}", ThemeSave)
+	r.GET(defaultSearchPath, Search)
 
-	r.GET(defaultProfilePath, w(Profile))
-	r.POST(defaultProfilePath, w(ProfileSave))
-	r.GET("/auth/{key}", w(AuthDetail))
-	r.GET("/auth/callback/{key}", w(AuthCallback))
-	r.GET("/auth/logout/{key}", w(AuthLogout))
+	r.GET(defaultProfilePath, Profile)
+	r.POST(defaultProfilePath, ProfileSave)
+	r.GET("/auth/{key}", AuthDetail)
+	r.GET("/auth/callback/{key}", AuthCallback)
+	r.GET("/auth/logout/{key}", AuthLogout)
 
-	r.GET("/admin", w(Admin))
-	r.GET("/admin/{path:*}", w(Admin))
+	r.GET("/admin", Admin)
+	r.GET("/admin/{path:*}", Admin)
 
 	// $PF_SECTION_START(routes)$
-	r.GET("/doctor", w(Doctor))
+	r.GET("/doctor", Doctor)
 
-	r.GET("/p", w(ProjectList))
-	r.GET("/p/{key}", w(ProjectDetail))
-	r.GET("/p/{key}/edit", w(ProjectEdit))
-	r.POST("/p/{key}/edit", w(ProjectSave))
-	r.GET("/p/{key}/fs", w(ProjectFileRoot))
-	r.GET("/p/{key}/fs/{path:*}", w(ProjectFile))
-	r.GET("/p/{key}/svg", w(SVGList))
-	r.GET("/p/{key}/svg/x/add", w(SVGAdd))
-	r.GET("/p/{key}/svg/x/build", w(SVGBuild))
-	r.GET("/p/{key}/svg/{icon}", w(SVGDetail))
-	r.GET("/p/{key}/svg/{icon}/setapp", w(SVGSetApp))
-	r.GET("/p/{key}/svg/{icon}/remove", w(SVGRemove))
+	r.GET("/p", ProjectList)
+	r.GET("/p/{key}", ProjectDetail)
+	r.GET("/p/{key}/edit", ProjectEdit)
+	r.POST("/p/{key}/edit", ProjectSave)
+	r.GET("/p/{key}/fs", ProjectFileRoot)
+	r.GET("/p/{key}/fs/{path:*}", ProjectFile)
+	r.GET("/p/{key}/svg", SVGList)
+	r.GET("/p/{key}/svg/x/add", SVGAdd)
+	r.GET("/p/{key}/svg/x/build", SVGBuild)
+	r.GET("/p/{key}/svg/{icon}", SVGDetail)
+	r.GET("/p/{key}/svg/{icon}/setapp", SVGSetApp)
+	r.GET("/p/{key}/svg/{icon}/remove", SVGRemove)
 
-	r.GET("/run/{act}", w(RunAllActions))
-	r.GET("/run/{tgt}/{act}", w(RunAction))
+	r.GET("/run/{act}", RunAllActions)
+	r.GET("/run/{tgt}/{act}", RunAction)
 
-	r.GET("/m", w(ModuleList))
-	r.GET("/m/{key}", w(ModuleDetail))
-	r.GET("/m/{key}/fs", w(ModuleFileRoot))
-	r.GET("/m/{key}/fs/{path:*}", w(ModuleFile))
+	r.GET("/m", ModuleList)
+	r.GET("/m/{key}", ModuleDetail)
+	r.GET("/m/{key}/fs", ModuleFileRoot)
+	r.GET("/m/{key}/fs/{path:*}", ModuleFile)
 
-	r.GET("/test", w(TestList))
-	r.GET("/test/{key}", w(TestRun))
+	r.GET("/test", TestList)
+	r.GET("/test/{key}", TestRun)
 	// $PF_SECTION_END(routes)$
 
-	r.GET("/sandbox", w(SandboxList))
-	r.GET("/sandbox/{key}", w(SandboxRun))
+	r.GET("/sandbox", SandboxList)
+	r.GET("/sandbox/{key}", SandboxRun)
 
 	r.GET("/favicon.ico", Favicon)
 	r.GET("/robots.txt", RobotsTxt)
 	r.GET("/assets/{_:*}", Static)
 
-	r.OPTIONS("/", w(Options))
-	r.OPTIONS("/{_:*}", w(Options))
+	r.OPTIONS("/", Options)
+	r.OPTIONS("/{_:*}", Options)
 	r.NotFound = NotFound
 
 	p := httpmetrics.NewMetrics(util.AppKey)
-	return p.WrapHandler(r)
+	return fasthttp.CompressHandler(p.WrapHandler(r))
 }
