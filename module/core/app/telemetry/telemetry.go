@@ -18,14 +18,12 @@ import (
 var (
 	initialized    = false
 	tracerProvider *sdktrace.TracerProvider
-	logger         *zap.SugaredLogger
 )
 
-func InitizalizeIfNeeded(enabled bool, logger *zap.SugaredLogger) bool {
+func InitializeIfNeeded(enabled bool, logger *zap.SugaredLogger) bool {
 	if initialized {
 		return false
 	}
-	initialized = true
 	if enabled {
 		Initialize(logger)
 	}
@@ -37,6 +35,8 @@ func Initialize(logger *zap.SugaredLogger) {
 		logger.Warn("double telemetry initialization")
 		return
 	}
+	initialized = true
+	logger.Debug("initializing tracing telemetry")
 
 	tp, err := buildTP("localhost:55681")
 	if err != nil {

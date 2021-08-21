@@ -7,6 +7,7 @@ import (
 {{{ if .HasModule "oauth" }}}
 	"{{{ .Package }}}/app/auth"{{{ end }}}
 	"{{{ .Package }}}/app/filesystem"
+	"{{{ .Package }}}/app/telemetry"
 	"{{{ .Package }}}/app/theme"
 	"{{{ .Package }}}/app/util"
 )
@@ -37,6 +38,7 @@ type State struct {
 }
 
 func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, log *zap.SugaredLogger) (*State, error) {
+	_ = telemetry.InitializeIfNeeded(true, log)
 	return &State{
 		Debug:     debug,
 		BuildInfo: bi,
