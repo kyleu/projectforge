@@ -11,7 +11,7 @@ type StatsGetter interface {
 }
 
 type StatsCollector struct {
-	sg StatsGetter
+	sg                    StatsGetter
 	maxOpenDesc           *prometheus.Desc
 	openDesc              *prometheus.Desc
 	inUseDesc             *prometheus.Desc
@@ -27,14 +27,14 @@ func newStatsCollector(subsystem string, dbName string, sg StatsGetter) *StatsCo
 	namespace := ""
 	labels := prometheus.Labels{"db_name": dbName}
 	return &StatsCollector{
-		sg: sg,
-		maxOpenDesc: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "max_open"), "Maximum number of open connections to the database.", nil, labels),
-		openDesc: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "open"), "The number of established connections both in use and idle.", nil, labels),
-		inUseDesc: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "in_use"), "The number of connections currently in use.", nil, labels),
-		idleDesc: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "idle"), "The number of idle connections.", nil, labels),
-		waitedForDesc: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "waited_for"), "The total number of connections waited for.", nil, labels),
-		blockedSecondsDesc: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "blocked_seconds"), "The total time blocked waiting for a new connection.", nil, labels),
-		closedMaxIdleDesc: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "closed_max_idle"), "The total number of connections closed due to SetMaxIdleConns.", nil, labels),
+		sg:                    sg,
+		maxOpenDesc:           prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "max_open"), "Maximum number of open connections to the database.", nil, labels),
+		openDesc:              prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "open"), "The number of established connections both in use and idle.", nil, labels),
+		inUseDesc:             prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "in_use"), "The number of connections currently in use.", nil, labels),
+		idleDesc:              prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "idle"), "The number of idle connections.", nil, labels),
+		waitedForDesc:         prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "waited_for"), "The total number of connections waited for.", nil, labels),
+		blockedSecondsDesc:    prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "blocked_seconds"), "The total time blocked waiting for a new connection.", nil, labels),
+		closedMaxIdleDesc:     prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "closed_max_idle"), "The total number of connections closed due to SetMaxIdleConns.", nil, labels),
 		closedMaxLifetimeDesc: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "closed_max_lifetime"), "The total number of connections closed due to SetConnMaxLifetime.", nil, labels),
 		closedMaxIdleTimeDesc: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "closed_max_idle_time"), "The total number of connections closed due to SetConnMaxIdleTime.", nil, labels),
 	}

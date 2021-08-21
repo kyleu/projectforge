@@ -9,7 +9,7 @@ import (
 
 type Metrics struct {
 	stmtCnt *prometheus.CounterVec
-	stmtDur  *prometheus.HistogramVec
+	stmtDur *prometheus.HistogramVec
 }
 
 func NewMetrics(dbName string, db StatsGetter) *Metrics {
