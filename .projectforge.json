@@ -21,6 +21,7 @@
     "./testproject",
     "../admini",
     "../../fevo-tech/fevotools",
+    "../../fevo-tech/knapsack",
     "../../fevo-tech/messagebot.next",
     "../../fevo-tech/nuevo.next",
     "../../fevo-tech/oldworld"

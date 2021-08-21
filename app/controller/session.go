@@ -51,7 +51,6 @@ func loadPageState(ctx *fasthttp.RequestCtx, key string, as *app.State) *cutil.P
 	}
 	session, err := store.Get(ctx, util.AppKey)
 	if err != nil {
-		logger.Warnf("error retrieving session: %+v", err)
 		session, err = store.New(ctx, util.AppKey)
 		if err != nil {
 			logger.Warnf("error creating new session: %+v", err)

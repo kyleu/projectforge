@@ -22,6 +22,18 @@ type Params struct {
 	Offset    int       `json:"offset,omitempty"`
 }
 
+func ParamsWithDefaultOrdering(key string, params *Params, orderings ...*Ordering) *Params {
+	if params == nil {
+		params = &Params{Key: key}
+	}
+
+	if len(params.Orderings) == 0 {
+		params.Orderings = orderings
+	}
+
+	return params
+}
+
 func (p *Params) CloneOrdering(orderings ...*Ordering) *Params {
 	if p == nil {
 		return nil

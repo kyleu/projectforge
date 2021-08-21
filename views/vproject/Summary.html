@@ -7,7 +7,7 @@
 
 {% func Summary(prj *project.Project, path ...string) %}
   <div class="card">
-    <div class="right"><a href="#modal-project"><button type="button">JSON</button></a></div>
+    <div class="right"><a href="#modal-project-{%s prj.Key %}"><button type="button">JSON</button></a></div>
     <h3>{%s prj.Title() %}</h3>
     <div class="mt">
       {%- for _, t := range action.ProjectTypes -%}
@@ -27,5 +27,5 @@
       {%- endif -%}
     </div>
   </div>
-  {%= components.JSONModal("project", "Project JSON", prj, 1) %}
+  {%= components.JSONModal("project-" + prj.Key, "Project JSON", prj, 1) %}
 {% endfunc %}

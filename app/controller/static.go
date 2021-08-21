@@ -11,38 +11,31 @@ import (
 )
 
 func Favicon(ctx *fasthttp.RequestCtx) {
-	data, hash, contentType, err := assets.EmbedAsset("favicon.ico")
-	ZipResponse(ctx, data, hash, contentType, err)
+	data, contentType, err := assets.EmbedAsset("favicon.ico")
+	assetResponse(ctx, data, contentType, err)
 }
 
 func RobotsTxt(ctx *fasthttp.RequestCtx) {
-	data, hash, contentType, err := assets.EmbedAsset("robots.txt")
-	ZipResponse(ctx, data, hash, contentType, err)
+	data, contentType, err := assets.EmbedAsset("robots.txt")
+	assetResponse(ctx, data, contentType, err)
 }
 
 func Static(ctx *fasthttp.RequestCtx) {
 	path, err := filepath.Abs(strings.TrimPrefix(string(ctx.Request.URI().Path()), "/assets"))
 	if err == nil {
 		path = strings.TrimPrefix(path, "/")
-		data, hash, contentType, e := assets.EmbedAsset(path)
-		ZipResponse(ctx, data, hash, contentType, e)
+		data, contentType, e := assets.EmbedAsset(path)
+		assetResponse(ctx, data, contentType, e)
 	} else {
 		ctx.Error(err.Error(), fasthttp.StatusBadRequest)
 	}
 }
 
-func ZipResponse(ctx *fasthttp.RequestCtx, data []byte, hash string, contentType string, err error) {
+func assetResponse(ctx *fasthttp.RequestCtx, data []byte, contentType string, err error) {
 	if err == nil {
-		ctx.Response.Header.Set("Content-Encoding", "gzip")
 		ctx.Response.Header.SetContentType(contentType)
-		// ctx.Response.Header.Add("Cache-Control", "public, max-age=31536000")
-		ctx.Response.Header.Add("ETag", hash)
-		if string(ctx.Request.Header.Peek("If-None-Match")) == hash {
-			ctx.SetStatusCode(fasthttp.StatusNotModified)
-		} else {
-			ctx.SetStatusCode(fasthttp.StatusOK)
-			_, _ = ctx.Write(data)
-		}
+		ctx.SetStatusCode(fasthttp.StatusOK)
+		_, _ = ctx.Write(data)
 	} else {
 		ctx.Error(err.Error(), fasthttp.StatusNotFound)
 	}

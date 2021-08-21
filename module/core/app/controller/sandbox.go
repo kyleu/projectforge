@@ -37,6 +37,6 @@ func SandboxRun(ctx *fasthttp.RequestCtx) {
 		if sb.Key == "testbed" {
 			return render(ctx, as, &vsandbox.Testbed{}, ps, "sandbox", sb.Key)
 		}
-		return render(ctx, as, &vsandbox.Run{Key: key, Title: sb.Title, Result: ret}, ps, "sandbox", sb.Key)
+		return render(ctx, as, &vsandbox.Run{Key: key, Title: sb.Title, Result: ret}, ps, "sandbox||/sandbox", sb.Key)
 	})
 }

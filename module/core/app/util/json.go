@@ -27,6 +27,12 @@ func FromJSON(msg json.RawMessage, tgt interface{}) error {
 	return json.Unmarshal(msg, tgt)
 }
 
+func FromJSONInterface(msg json.RawMessage) (interface{}, error) {
+	var tgt interface{}
+	err := FromJSON(msg, &tgt)
+	return tgt, err
+}
+
 func FromJSONReader(r io.Reader, tgt interface{}) error {
 	return json.NewDecoder(r).Decode(tgt)
 }
