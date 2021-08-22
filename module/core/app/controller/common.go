@@ -8,21 +8,21 @@ import (
 	"{{{ .Package }}}/views/verror"
 )
 
-func Options(ctx *fasthttp.RequestCtx) {
-	cutil.WriteCORS(ctx)
-	ctx.SetStatusCode(fasthttp.StatusOK)
+func Options(rc *fasthttp.RequestCtx) {
+	cutil.WriteCORS(rc)
+	rc.SetStatusCode(fasthttp.StatusOK)
 }
 
-func NotFound(ctx *fasthttp.RequestCtx) {
-	act("notfound", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
-		cutil.WriteCORS(ctx)
-		ctx.Response.Header.Set("Content-Type", "text/html; charset=utf-8")
-		ctx.SetStatusCode(fasthttp.StatusNotFound)
-		ps.Logger.Warnf("%s %s returned [%d]", string(ctx.Method()), string(ctx.Request.URI().Path()), fasthttp.StatusNotFound)
+func NotFound(rc *fasthttp.RequestCtx) {
+	act("notfound", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		cutil.WriteCORS(rc)
+		rc.Response.Header.Set("Content-Type", "text/html; charset=utf-8")
+		rc.SetStatusCode(fasthttp.StatusNotFound)
+		ps.Logger.Warnf("%s %s returned [%d]", string(rc.Method()), string(rc.Request.URI().Path()), fasthttp.StatusNotFound)
 		if ps.Title == "" {
 			ps.Title = "404"
 		}
 		ps.Data = "404 not found"
-		return render(ctx, as, &verror.NotFound{}, ps, "Not Found")
+		return render(rc, as, &verror.NotFound{}, ps, "Not Found")
 	})
 }

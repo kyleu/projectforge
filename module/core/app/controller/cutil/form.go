@@ -7,32 +7,32 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-func ParseForm(ctx *fasthttp.RequestCtx) (util.ValueMap, error) {
-	if ct := GetContentType(ctx); IsContentTypeJSON(ct) {
-		return parseJSONForm(ctx)
+func ParseForm(rc *fasthttp.RequestCtx) (util.ValueMap, error) {
+	if ct := GetContentType(rc); IsContentTypeJSON(ct) {
+		return parseJSONForm(rc)
 	}
-	return parseHTTPForm(ctx)
+	return parseHTTPForm(rc)
 }
 
-func ParseFormAsChanges(ctx *fasthttp.RequestCtx) (util.ValueMap, error) {
-	ret, err := ParseForm(ctx)
+func ParseFormAsChanges(rc *fasthttp.RequestCtx) (util.ValueMap, error) {
+	ret, err := ParseForm(rc)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
 	return ret.AsChanges()
 }
 
-func parseJSONForm(ctx *fasthttp.RequestCtx) (util.ValueMap, error) {
+func parseJSONForm(rc *fasthttp.RequestCtx) (util.ValueMap, error) {
 	ret := util.ValueMap{}
-	err := util.FromJSON(ctx.Request.Body(), &ret)
+	err := util.FromJSON(rc.Request.Body(), &ret)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't parse JSON body")
 	}
 	return ret, nil
 }
 
-func parseHTTPForm(ctx *fasthttp.RequestCtx) (util.ValueMap, error) {
-	f := ctx.PostArgs()
+func parseHTTPForm(rc *fasthttp.RequestCtx) (util.ValueMap, error) {
+	f := rc.PostArgs()
 	ret := make(util.ValueMap, f.Len())
 	f.VisitAll(func(key []byte, value []byte) {
 		k := string(key)

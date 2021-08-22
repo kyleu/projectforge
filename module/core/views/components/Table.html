@@ -8,13 +8,9 @@
   "{{{ .Package }}}/views/vutil"
 ) %}
 
-{% func TableHeader(section string, key string, title string, locs cutil.Locations, params *filter.Params, icon string, u *fasthttp.URI, tooltip string, sortable bool, cls string, ps *cutil.PageState) %}{% stripspace %}
-  {% if cls != "" %}
-    <th class="{%s cls %}{% space %}no-padding" scope="col">
-  {% else %}
-    <th class="no-padding" scope="col">
-  {% endif %}
-  <div class="resize">
+{% func TableHeader(section string, key string, title string, params *filter.Params, icon string, u *fasthttp.URI, tooltip string, sortable bool, cls string, resizable bool, ps *cutil.PageState) %}{% stripspace %}
+  <th class="{% if cls != `` %}{%s cls %}{% space %}{% endif %}no-padding" scope="col">
+  <div class="{% if resizable %}resize{% else %}noresize{% endif %}">
     {% if !sortable %}
       <div title="{%s tooltip %}">
         {% if icon != "" %}
@@ -34,6 +30,10 @@
       {% endif %}
     {% endif %}
   </div></th>
+{% endstripspace %}{% endfunc %}
+
+{% func TableHeaderSimple(section string, key string, title string, params *filter.Params, u *fasthttp.URI, ps *cutil.PageState) %}{% stripspace %}
+  {%= TableHeader(section, key, title, params, "", u, "", true, "", false, ps) %}
 {% endstripspace %}{% endfunc %}
 
 {% func TableInput(key string, title string, value string, indent int) %}{% stripspace %}

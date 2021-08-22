@@ -10,9 +10,9 @@ import (
 	"github.com/kyleu/projectforge/app/filter"
 )
 
-func ParamSetFromRequest(ctx *fasthttp.RequestCtx) filter.ParamSet {
+func ParamSetFromRequest(rc *fasthttp.RequestCtx) filter.ParamSet {
 	ret := filter.ParamSet{}
-	args := ctx.URI().QueryArgs()
+	args := rc.URI().QueryArgs()
 	args.VisitAll(func(key []byte, value []byte) {
 		qk := string(key)
 		if strings.Contains(qk, ".") {

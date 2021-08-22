@@ -23,46 +23,46 @@ func prometheusHandler() fasthttp.RequestHandler {
 func (p *Metrics) WrapHandler(r *router.Router) fasthttp.RequestHandler {
 	r.GET(p.MetricsPath, prometheusHandler())
 
-	return func(ctx *fasthttp.RequestCtx) {
-		if string(ctx.Request.URI().Path()) == defaultMetricPath {
-			r.Handler(ctx)
+	return func(rc *fasthttp.RequestCtx) {
+		if string(rc.Request.URI().Path()) == defaultMetricPath {
+			r.Handler(rc)
 			return
 		}
 
 		reqSize := make(chan int)
 		frc := acquireRequestFromPool()
-		ctx.Request.CopyTo(frc)
+		rc.Request.CopyTo(frc)
 		go computeApproximateRequestSize(frc, reqSize)
 
 		start := time.Now()
-		r.Handler(ctx)
+		r.Handler(rc)
 
-		status := strconv.Itoa(ctx.Response.StatusCode())
+		status := strconv.Itoa(rc.Response.StatusCode())
 		elapsed := float64(time.Since(start)) / float64(time.Second)
-		rspSize := float64(len(ctx.Response.Body()))
+		rspSize := float64(len(rc.Response.Body()))
 
 		p.reqDur.WithLabelValues(status).Observe(elapsed)
-		p.reqCnt.WithLabelValues(status, string(ctx.Method())).Inc()
+		p.reqCnt.WithLabelValues(status, string(rc.Method())).Inc()
 		p.reqSize.Observe(float64(<-reqSize))
 		p.rspSize.Observe(rspSize)
 	}
 }
 
-func computeApproximateRequestSize(ctx *fasthttp.Request, out chan int) {
+func computeApproximateRequestSize(rc *fasthttp.Request, out chan int) {
 	s := 0
-	if ctx.URI() != nil {
-		s += len(ctx.URI().Path())
-		s += len(ctx.URI().Host())
+	if rc.URI() != nil {
+		s += len(rc.URI().Path())
+		s += len(rc.URI().Host())
 	}
-	s += len(ctx.Header.Method())
+	s += len(rc.Header.Method())
 	s += len("HTTP/1.1")
-	ctx.Header.VisitAll(func(key, value []byte) {
+	rc.Header.VisitAll(func(key, value []byte) {
 		if string(key) != "Host" {
 			s += len(key) + len(value)
 		}
 	})
-	if ctx.Header.ContentLength() != -1 {
-		s += ctx.Header.ContentLength()
+	if rc.Header.ContentLength() != -1 {
+		s += rc.Header.ContentLength()
 	}
 	out <- s
 }

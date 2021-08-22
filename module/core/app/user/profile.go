@@ -50,15 +50,15 @@ func (p *Profile) Equals(x *Profile) bool {
 	return p.Name == x.Name && p.Mode == x.Mode && p.Theme == x.Theme
 }
 
-func SaveProfile(n *Profile, ctx *fasthttp.RequestCtx, sess *sessions.Session, logger *zap.SugaredLogger) error {
+func SaveProfile(n *Profile, rc *fasthttp.RequestCtx, sess *sessions.Session, logger *zap.SugaredLogger) error {
 	if n == nil || n.Equals(DefaultProfile) {
-		err := web.RemoveFromSession("profile", ctx, sess, logger)
+		err := web.RemoveFromSession("profile", rc, sess, logger)
 		if err != nil {
 			return errors.Wrap(err, "unable to remove profile from session")
 		}
 		return nil
 	}
-	err := web.StoreInSession("profile", util.ToJSON(n), ctx, sess, logger)
+	err := web.StoreInSession("profile", util.ToJSON(n), rc, sess, logger)
 	if err != nil {
 		return errors.Wrap(err, "unable to save profile in session")
 	}

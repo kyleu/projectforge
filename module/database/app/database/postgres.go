@@ -17,7 +17,7 @@ import (
 
 type PostgresParams struct {
 	Host     string `json:"host"`
-	Port     int    `json:"port"`
+	Port     int    `json:"port,omitempty"`
 	Username string `json:"username"`
 	Password string `json:"password,omitempty"`
 	Database string `json:"database,omitempty"`

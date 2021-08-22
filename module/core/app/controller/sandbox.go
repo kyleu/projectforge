@@ -10,17 +10,17 @@ import (
 	"{{{ .Package }}}/views/vsandbox"
 )
 
-func SandboxList(ctx *fasthttp.RequestCtx) {
-	act("sandbox.list", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
+func SandboxList(rc *fasthttp.RequestCtx) {
+	act("sandbox.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ps.Title = "Sandboxes"
 		ps.Data = sandbox.AllSandboxes
-		return render(ctx, as, &vsandbox.List{}, ps, "sandbox")
+		return render(rc, as, &vsandbox.List{}, ps, "sandbox")
 	})
 }
 
-func SandboxRun(ctx *fasthttp.RequestCtx) {
-	act("sandbox.run", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := ctxRequiredString(ctx, "key", false)
+func SandboxRun(rc *fasthttp.RequestCtx) {
+	act("sandbox.run", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		key, err := rcRequiredString(rc, "key", false)
 		if err != nil {
 			return "", err
 		}
@@ -35,8 +35,8 @@ func SandboxRun(ctx *fasthttp.RequestCtx) {
 		ps.Title = sb.Title
 		ps.Data = ret
 		if sb.Key == "testbed" {
-			return render(ctx, as, &vsandbox.Testbed{}, ps, "sandbox", sb.Key)
+			return render(rc, as, &vsandbox.Testbed{}, ps, "sandbox", sb.Key)
 		}
-		return render(ctx, as, &vsandbox.Run{Key: key, Title: sb.Title, Result: ret}, ps, "sandbox||/sandbox", sb.Key)
+		return render(rc, as, &vsandbox.Run{Key: key, Title: sb.Title, Result: ret}, ps, "sandbox||/sandbox", sb.Key)
 	})
 }

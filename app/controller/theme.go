@@ -13,18 +13,18 @@ import (
 	"github.com/kyleu/projectforge/views/vtheme"
 )
 
-func ThemeList(ctx *fasthttp.RequestCtx) {
-	act("theme.list", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
+func ThemeList(rc *fasthttp.RequestCtx) {
+	act("theme.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ps.Title = "Themes"
 		x := as.Themes.All()
 		ps.Data = x
-		return render(ctx, as, &vtheme.List{Themes: x}, ps, "settings", "Themes||/theme")
+		return render(rc, as, &vtheme.List{Themes: x}, ps, "settings", "Themes||/theme")
 	})
 }
 
-func ThemeEdit(ctx *fasthttp.RequestCtx) {
-	act("theme.edit", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := ctxRequiredString(ctx, "key", false)
+func ThemeEdit(rc *fasthttp.RequestCtx) {
+	act("theme.edit", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		key, err := rcRequiredString(rc, "key", false)
 		if err != nil {
 			return "", err
 		}
@@ -40,17 +40,17 @@ func ThemeEdit(ctx *fasthttp.RequestCtx) {
 		ps.Data = t
 		ps.Title = "Edit theme [" + t.Key + "]"
 		page := &vtheme.Edit{Theme: t}
-		return render(ctx, as, page, ps, "settings", "Themes||/theme", t.Key)
+		return render(rc, as, page, ps, "settings", "Themes||/theme", t.Key)
 	})
 }
 
-func ThemeSave(ctx *fasthttp.RequestCtx) {
-	act("theme.save", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := ctxRequiredString(ctx, "key", false)
+func ThemeSave(rc *fasthttp.RequestCtx) {
+	act("theme.save", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		key, err := rcRequiredString(rc, "key", false)
 		if err != nil {
 			return "", err
 		}
-		frm, err := cutil.ParseForm(ctx)
+		frm, err := cutil.ParseForm(rc)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse form")
 		}
@@ -76,12 +76,12 @@ func ThemeSave(ctx *fasthttp.RequestCtx) {
 		}
 
 		ps.Profile.Theme = newKey
-		err = user.SaveProfile(ps.Profile, ctx, ps.Session, ps.Logger)
+		err = user.SaveProfile(ps.Profile, rc, ps.Session, ps.Logger)
 		if err != nil {
 			return "", err
 		}
 
 		msg := "saved changes to theme [" + newKey + "]"
-		return returnToReferrer(msg, "/", ctx, ps)
+		return returnToReferrer(msg, "/", rc, ps)
 	})
 }

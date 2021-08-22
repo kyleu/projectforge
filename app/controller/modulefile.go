@@ -10,24 +10,24 @@ import (
 	"github.com/kyleu/projectforge/app"
 )
 
-func ModuleFileRoot(ctx *fasthttp.RequestCtx) {
-	act("module.file.root", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
-		mod, err := getModule(ctx, as, ps)
+func ModuleFileRoot(rc *fasthttp.RequestCtx) {
+	act("module.file.root", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		mod, err := getModule(rc, as, ps)
 		if err != nil {
 			return "", err
 		}
-		return render(ctx, as, &vmodule.Files{Module: mod}, ps, "modules", mod.Key, "Files")
+		return render(rc, as, &vmodule.Files{Module: mod}, ps, "modules", mod.Key, "Files")
 	})
 }
 
-func ModuleFile(ctx *fasthttp.RequestCtx) {
-	act("module.file", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
-		mod, err := getModule(ctx, as, ps)
+func ModuleFile(rc *fasthttp.RequestCtx) {
+	act("module.file", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		mod, err := getModule(rc, as, ps)
 		if err != nil {
 			return "", err
 		}
 
-		pathS, err := ctxRequiredString(ctx, "path", false)
+		pathS, err := rcRequiredString(rc, "path", false)
 		if err != nil {
 			return "", err
 		}
@@ -39,6 +39,6 @@ func ModuleFile(ctx *fasthttp.RequestCtx) {
 			b := x + bcAppend
 			bc = append(bc, b)
 		}
-		return render(ctx, as, &vmodule.Files{Module: mod, Path: path}, ps, bc...)
+		return render(rc, as, &vmodule.Files{Module: mod, Path: path}, ps, bc...)
 	})
 }

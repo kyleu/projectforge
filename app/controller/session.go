@@ -38,27 +38,27 @@ func initStore(keyPairs ...[]byte) *sessions.CookieStore {
 	return ret
 }
 
-func loadPageState(ctx *fasthttp.RequestCtx, key string, as *app.State) *cutil.PageState {
-	path := string(ctx.Request.URI().Path())
+func loadPageState(rc *fasthttp.RequestCtx, key string, as *app.State) *cutil.PageState {
+	path := string(rc.Request.URI().Path())
 	logger := as.Logger.With(zap.String("path", path))
 
-	ctx = httpmetrics.ExtractHeaders(ctx, logger)
-	traceCtx, span := telemetry.StartSpan(ctx, "pagestate", "http:"+key)
-	httpmetrics.InjectHTTP(ctx, span)
+	rc = httpmetrics.ExtractHeaders(rc, logger)
+	traceCtx, span := telemetry.StartSpan(rc, "pagestate", "http:"+key)
+	httpmetrics.InjectHTTP(rc, span)
 
 	if store == nil {
 		store = initStore([]byte(sessionKey))
 	}
-	session, err := store.Get(ctx, util.AppKey)
+	session, err := store.Get(rc, util.AppKey)
 	if err != nil {
-		session, err = store.New(ctx, util.AppKey)
+		session, err = store.New(rc, util.AppKey)
 		if err != nil {
 			logger.Warnf("error creating new session: %+v", err)
 		}
 	}
 	flashes := util.StringArrayFromInterfaces(session.Flashes())
 	if len(flashes) > 0 {
-		err = web.SaveSession(ctx, session, logger)
+		err = web.SaveSession(rc, session, logger)
 		if err != nil {
 			logger.Warnf("can't save session: %+v", err)
 		}
@@ -79,8 +79,8 @@ func loadPageState(ctx *fasthttp.RequestCtx, key string, as *app.State) *cutil.P
 	}
 
 	return &cutil.PageState{
-		Method:   string(ctx.Method()),
-		URI:      ctx.Request.URI(),
+		Method:   string(rc.Method()),
+		URI:      rc.Request.URI(),
 		Flashes:  flashes,
 		Session:  session,
 		Profile:  prof,

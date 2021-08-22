@@ -9,9 +9,9 @@ import (
 	"{{{ .Package }}}/views"
 )
 
-func About(ctx *fasthttp.RequestCtx) {
-	act("about", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
+func About(rc *fasthttp.RequestCtx) {
+	act("about", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ps.Data = util.AppName + " v" + as.BuildInfo.Version
-		return render(ctx, as, &views.About{}, ps, "about")
+		return render(rc, as, &views.About{}, ps, "about")
 	})
 }

@@ -29,12 +29,12 @@ func (hc headerCarrier) Keys() []string {
 	return keys
 }
 
-func ExtractHeaders(ctx *fasthttp.RequestCtx, logger *zap.SugaredLogger) *fasthttp.RequestCtx {
-	nc := otel.GetTextMapPropagator().Extract(ctx, headerCarrier{h: &ctx.Request.Header})
+func ExtractHeaders(rc *fasthttp.RequestCtx, logger *zap.SugaredLogger) *fasthttp.RequestCtx {
+	nc := otel.GetTextMapPropagator().Extract(rc, headerCarrier{h: &rc.Request.Header})
 	http, ok := nc.(*fasthttp.RequestCtx)
 	if !ok {
 		logger.Warnf("unable to extract http tracing headers")
-		return ctx
+		return rc
 	}
 	return http
 }

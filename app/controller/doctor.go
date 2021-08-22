@@ -8,10 +8,10 @@ import (
 	"github.com/valyala/fasthttp"
 )
 
-func Doctor(ctx *fasthttp.RequestCtx) {
-	act("doctor", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
+func Doctor(rc *fasthttp.RequestCtx) {
+	act("doctor", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		res := doctor.Check()
 		ps.Data = res
-		return render(ctx, as, &views.Debug{}, ps, "doctor")
+		return render(rc, as, &views.Debug{}, ps, "doctor")
 	})
 }

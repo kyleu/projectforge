@@ -15,12 +15,12 @@ import (
 	"{{{ .Package }}}/views/vadmin"
 )
 
-func Admin(ctx *fasthttp.RequestCtx) {
-	act("admin", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
-		path := util.SplitAndTrim(strings.TrimPrefix(string(ctx.URI().Path()), "/admin"), "/")
+func Admin(rc *fasthttp.RequestCtx) {
+	act("admin", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		path := util.SplitAndTrim(strings.TrimPrefix(string(rc.URI().Path()), "/admin"), "/")
 		if len(path) == 0 {
 			ps.Title = "Administration"
-			return render(ctx, as, &vadmin.List{}, ps, "Administration")
+			return render(rc, as, &vadmin.List{}, ps, "Administration")
 		}
 		switch path[0] {
 		case "modules":
@@ -30,14 +30,14 @@ func Admin(ctx *fasthttp.RequestCtx) {
 			}
 			ps.Title = "Modules"
 			ps.Data = mods.Deps
-			return render(ctx, as, &vadmin.Modules{Mods: mods.Deps}, ps, "Administration||/admin", "Modules")
+			return render(rc, as, &vadmin.Modules{Mods: mods.Deps}, ps, "Administration||/admin", "Modules")
 		case "session":
 			err := takeHeapProfile()
 			if err != nil {
 				return "", err
 			}
 			ps.Title = "Session Debug"
-			return render(ctx, as, &vadmin.Session{}, ps, "Administration||/admin", "Session")
+			return render(rc, as, &vadmin.Session{}, ps, "Administration||/admin", "Session")
 		case "cpu":
 			switch path[1] {
 			case "start":
@@ -45,10 +45,10 @@ func Admin(ctx *fasthttp.RequestCtx) {
 				if err != nil {
 					return "", err
 				}
-				return flashAndRedir(true, "started CPU profile", "/admin", ctx, ps)
+				return flashAndRedir(true, "started CPU profile", "/admin", rc, ps)
 			case "stop":
 				pprof.StopCPUProfile()
-				return flashAndRedir(true, "stopped CPU profile", "/admin", ctx, ps)
+				return flashAndRedir(true, "stopped CPU profile", "/admin", rc, ps)
 			default:
 				return "", errors.Errorf("unhandled CPU profile action [%s]", path[1])
 			}
@@ -57,7 +57,7 @@ func Admin(ctx *fasthttp.RequestCtx) {
 			if err != nil {
 				return "", err
 			}
-			return flashAndRedir(true, "wrote heap profile", "/admin", ctx, ps)
+			return flashAndRedir(true, "wrote heap profile", "/admin", rc, ps)
 		default:
 			return "", errors.Errorf("unhandled admin action [%s]", path[0])
 		}

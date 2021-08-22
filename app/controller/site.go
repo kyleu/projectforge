@@ -36,16 +36,16 @@ func SiteRoutes() fasthttp.RequestHandler {
 	return fasthttp.CompressHandler(m.WrapHandler(r))
 }
 
-func Site(ctx *fasthttp.RequestCtx) {
-	actSite("site", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
-		path := util.SplitAndTrim(string(ctx.Request.URI().Path()), "/")
-		redir, page, bc, err := site.Handle(path, ctx, as, ps)
+func Site(rc *fasthttp.RequestCtx) {
+	actSite("site", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		path := util.SplitAndTrim(string(rc.Request.URI().Path()), "/")
+		redir, page, bc, err := site.Handle(path, rc, as, ps)
 		if err != nil {
 			return "", err
 		}
 		if redir != "" {
 			return redir, nil
 		}
-		return render(ctx, as, page, ps, bc...)
+		return render(rc, as, page, ps, bc...)
 	})
 }

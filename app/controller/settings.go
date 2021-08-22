@@ -10,11 +10,11 @@ import (
 	"github.com/kyleu/projectforge/views/vsettings"
 )
 
-func Settings(ctx *fasthttp.RequestCtx) {
-	act("settings", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
+func Settings(rc *fasthttp.RequestCtx) {
+	act("settings", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		current := &settings.Settings{}
 		ps.Title = "Settings"
 		ps.Data = current
-		return render(ctx, as, &vsettings.Settings{Settings: current}, ps, "settings")
+		return render(rc, as, &vsettings.Settings{Settings: current}, ps, "settings")
 	})
 }

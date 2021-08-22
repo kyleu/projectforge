@@ -3,8 +3,6 @@
 package controller
 
 import (
-	"fmt"
-
 	"github.com/kyleu/projectforge/app"
 	"github.com/kyleu/projectforge/app/action"
 	"github.com/kyleu/projectforge/app/menu"
@@ -20,7 +18,7 @@ func MenuFor(as *app.State) (menu.Items, error) {
 		menu.Separator,
 		moduleMenu(as.Services.Modules.Modules()),
 		menu.Separator,
-		sandboxMenu(),
+		sandbox.Menu(),
 		menu.Separator,
 		&menu.Item{Key: "settings", Title: "Settings", Description: "System-wide settings and preferences", Icon: "cog", Route: "/settings"},
 		itemFor(action.TypeDoctor, "first-aid", "/doctor"),
@@ -50,19 +48,4 @@ func moduleMenu(mods module.Modules) *menu.Item {
 		ret.Children = append(ret.Children, i)
 	}
 	return ret
-}
-
-func sandboxMenu() *menu.Item {
-	ret := make(menu.Items, 0, len(sandbox.AllSandboxes))
-	for _, s := range sandbox.AllSandboxes {
-		ret = append(ret, &menu.Item{
-			Key:         s.Key,
-			Title:       s.Title,
-			Icon:        s.Icon,
-			Description: fmt.Sprintf("Sandbox [%s]", s.Key),
-			Route:       fmt.Sprintf("/sandbox/%s", s.Key),
-		})
-	}
-	desc := "Playgrounds for testing new features"
-	return &menu.Item{Key: "sandbox", Title: "Sandboxes", Description: desc, Icon: "star", Route: "/sandbox", Children: ret}
 }

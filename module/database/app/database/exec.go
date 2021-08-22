@@ -51,7 +51,7 @@ func (s *Service) Exec(ctx context.Context, q string, tx *sqlx.Tx, expected int,
 
 func (s *Service) execUnknown(ctx context.Context, q string, tx *sqlx.Tx, values ...interface{}) (int, error) {
 	op := "exec-unknown"
-	now, ctx, span := s.newSpan(ctx, op, q)
+	now, ctx, span := s.newSpan(ctx, "db:" + op, q)
 	var err error
 	defer s.complete(q, op, span, now, err)
 	var ret sql.Result

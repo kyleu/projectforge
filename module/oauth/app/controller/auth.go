@@ -13,43 +13,43 @@ import (
 
 const signinMsg = "signed in to %s as [%s]"
 
-func AuthDetail(ctx *fasthttp.RequestCtx) {
-	act("auth.detail", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prv, err := getProvider(as, ctx)
+func AuthDetail(rc *fasthttp.RequestCtx) {
+	act("auth.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prv, err := getProvider(as, rc)
 		if err != nil {
 			return "", err
 		}
-		u, _, err := auth.CompleteUserAuth(prv, ctx, ps.Session, ps.Logger)
+		u, _, err := auth.CompleteUserAuth(prv, rc, ps.Session, ps.Logger)
 		if err == nil {
 			msg := fmt.Sprintf(signinMsg, auth.AvailableProviderNames[prv.ID], u.Email)
-			return returnToReferrer(msg, "/profile", ctx, ps)
+			return returnToReferrer(msg, "/profile", rc, ps)
 		}
-		return auth.BeginAuthHandler(prv, ctx, ps.Session, ps.Logger)
+		return auth.BeginAuthHandler(prv, rc, ps.Session, ps.Logger)
 	})
 }
 
-func AuthCallback(ctx *fasthttp.RequestCtx) {
-	act("auth.callback", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prv, err := getProvider(as, ctx)
+func AuthCallback(rc *fasthttp.RequestCtx) {
+	act("auth.callback", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prv, err := getProvider(as, rc)
 		if err != nil {
 			return "", err
 		}
-		u, _, err := auth.CompleteUserAuth(prv, ctx, ps.Session, ps.Logger)
+		u, _, err := auth.CompleteUserAuth(prv, rc, ps.Session, ps.Logger)
 		if err != nil {
 			return "", err
 		}
 		msg := fmt.Sprintf(signinMsg, auth.AvailableProviderNames[prv.ID], u.Email)
-		return returnToReferrer(msg, "/profile", ctx, ps)
+		return returnToReferrer(msg, "/profile", rc, ps)
 	})
 }
 
-func AuthLogout(ctx *fasthttp.RequestCtx) {
-	act("auth.logout", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := ctxRequiredString(ctx, "key", false)
+func AuthLogout(rc *fasthttp.RequestCtx) {
+	act("auth.logout", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		key, err := rcRequiredString(rc, "key", false)
 		if err != nil {
 			return "", err
 		}
-		err = auth.Logout(ctx, ps.Session, ps.Logger, key)
+		err = auth.Logout(rc, ps.Session, ps.Logger, key)
 		if err != nil {
 			return "", err
 		}
@@ -58,8 +58,8 @@ func AuthLogout(ctx *fasthttp.RequestCtx) {
 	})
 }
 
-func getProvider(as *app.State, ctx *fasthttp.RequestCtx) (*auth.Provider, error) {
-	key, err := ctxRequiredString(ctx, "key", false)
+func getProvider(as *app.State, rc *fasthttp.RequestCtx) (*auth.Provider, error) {
+	key, err := rcRequiredString(rc, "key", false)
 	if err != nil {
 		return nil, err
 	}

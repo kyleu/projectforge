@@ -22,43 +22,43 @@ const (
 	defaultIcon        = "app"
 )
 
-func act(key string, ctx *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
+func act(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
 	as := _currentAppState
-	ps := loadPageState(ctx, key, as)
+	ps := loadPageState(rc, key, as)
 	err := initAppRequest(as, ps)
 	if err != nil {
 		as.Logger.Warnf("%+v", err)
 	}
-	actComplete(key, as, ps, ctx, f)
+	actComplete(key, as, ps, rc, f)
 }
 
-func actSite(key string, ctx *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
+func actSite(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
 	as := _currentSiteState
-	ps := loadPageState(ctx, key, as)
+	ps := loadPageState(rc, key, as)
 	ps.Menu = site.Menu(ps.Profile, ps.Accounts)
 	err := initSiteRequest(as, ps)
 	if err != nil {
 		as.Logger.Warnf("%+v", err)
 	}
-	actComplete(key, as, ps, ctx, f)
+	actComplete(key, as, ps, rc, f)
 }
 
-func actComplete(key string, as *app.State, ps *cutil.PageState, ctx *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
+func actComplete(key string, as *app.State, ps *cutil.PageState, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
 	err := clean(as, ps)
 	if err != nil {
 		as.Logger.Warnf("error while cleaning request, somehow: %+v", err)
 	}
 	status := fasthttp.StatusOK
-	cutil.WriteCORS(ctx)
+	cutil.WriteCORS(rc)
 	startNanos := time.Now().UnixNano()
 	redir, err := f(as, ps)
 	if err != nil {
-		redir, err = handleError(key, as, ps, ctx, err)
+		redir, err = handleError(key, as, ps, rc, err)
 	}
 	if redir != "" {
-		ctx.Response.Header.Set("Location", redir)
+		rc.Response.Header.Set("Location", redir)
 		status = fasthttp.StatusFound
-		ctx.SetStatusCode(status)
+		rc.SetStatusCode(status)
 	}
 	elapsedMillis := float64((time.Now().UnixNano()-startNanos)/int64(time.Microsecond)) / float64(1000)
 	defer ps.Close()
@@ -66,8 +66,8 @@ func actComplete(key string, as *app.State, ps *cutil.PageState, ctx *fasthttp.R
 	l.Debugf("processed request in [%.3fms] (render: %.3fms)", elapsedMillis, ps.RenderElapsed)
 }
 
-func handleError(key string, as *app.State, ps *cutil.PageState, ctx *fasthttp.RequestCtx, err error) (string, error) {
-	ctx.SetStatusCode(fasthttp.StatusInternalServerError)
+func handleError(key string, as *app.State, ps *cutil.PageState, rc *fasthttp.RequestCtx, err error) (string, error) {
+	rc.SetStatusCode(fasthttp.StatusInternalServerError)
 
 	ps.Logger.Errorf("error running action [%s]: %+v", key, err)
 
@@ -82,13 +82,13 @@ func handleError(key string, as *app.State, ps *cutil.PageState, ctx *fasthttp.R
 		as.Logger.Error(err)
 		msg := fmt.Sprintf("error while cleaning request: %+v", err)
 		as.Logger.Error(msg)
-		_, _ = ctx.Write([]byte(msg))
+		_, _ = rc.Write([]byte(msg))
 	}
-	redir, err := render(ctx, as, page, ps)
+	redir, err := render(rc, as, page, ps)
 	if err != nil {
 		msg := fmt.Sprintf("error while running error handler: %+v", err)
 		as.Logger.Error(msg)
-		_, _ = ctx.Write([]byte(msg))
+		_, _ = rc.Write([]byte(msg))
 	}
 	return redir, err
 }

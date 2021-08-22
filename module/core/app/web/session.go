@@ -14,20 +14,20 @@ const (
 
 var webSessOpts = &sessions.Options{Path: "/", HttpOnly: true, MaxAge: 365 * 24 * 60 * 60 /* , SameSite: http.SameSiteStrictMode */}
 
-func StoreInSession(k string, v string, ctx *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger) error {
+func StoreInSession(k string, v string, rc *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger) error {
 	websess.Values[k] = v
-	return SaveSession(ctx, websess, logger)
+	return SaveSession(rc, websess, logger)
 }
 
-func RemoveFromSession(k string, ctx *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger) error {
+func RemoveFromSession(k string, rc *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger) error {
 	delete(websess.Values, k)
-	return SaveSession(ctx, websess, logger)
+	return SaveSession(rc, websess, logger)
 }
 
-func SaveSession(ctx *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger) error {
+func SaveSession(rc *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger) error {
 	// logger.Debugf("saving session with [%d] keys", len(websess.Values))
 	websess.Options = webSessOpts
-	return websess.Save(ctx)
+	return websess.Save(rc)
 }
 
 func GetFromSession(key string, websess *sessions.Session) (string, error) {

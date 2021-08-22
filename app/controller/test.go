@@ -13,17 +13,17 @@ import (
 	"github.com/kyleu/projectforge/app"
 )
 
-func TestList(ctx *fasthttp.RequestCtx) {
-	act("test.list", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
+func TestList(rc *fasthttp.RequestCtx) {
+	act("test.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ps.Title = "Tests"
 		ps.Data = "TODO"
-		return render(ctx, as, &views.Debug{}, ps, "Search")
+		return render(rc, as, &views.Debug{}, ps, "Search")
 	})
 }
 
-func TestRun(ctx *fasthttp.RequestCtx) {
-	act("test.run", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := ctxRequiredString(ctx, "key", false)
+func TestRun(rc *fasthttp.RequestCtx) {
+	act("test.run", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		key, err := rcRequiredString(rc, "key", false)
 		if err != nil {
 			return "", err
 		}
@@ -46,6 +46,6 @@ func TestRun(ctx *fasthttp.RequestCtx) {
 		}
 
 		page := &vaction.Result{Ctx: &action.ResultContext{Prj: prj, Cfg: cfg, Res: res}}
-		return render(ctx, as, page, ps, "Bootstrap")
+		return render(rc, as, page, ps, "Bootstrap")
 	})
 }

@@ -25,21 +25,21 @@ func NewMetrics(subsystem string) *Metrics {
 	return m
 }
 
-func InjectHTTP(ctx *fasthttp.RequestCtx, span trace.Span) {
+func InjectHTTP(rc *fasthttp.RequestCtx, span trace.Span) {
 	span.SetAttributes(
-		semconv.HTTPHostKey.String(string(ctx.Request.Host())),
-		semconv.HTTPMethodKey.String(string(ctx.Method())),
-		semconv.HTTPURLKey.String(string(ctx.Request.RequestURI())),
-		semconv.HTTPSchemeKey.String(string(ctx.Request.URI().Scheme())),
+		semconv.HTTPHostKey.String(string(rc.Request.Host())),
+		semconv.HTTPMethodKey.String(string(rc.Method())),
+		semconv.HTTPURLKey.String(string(rc.Request.RequestURI())),
+		semconv.HTTPSchemeKey.String(string(rc.Request.URI().Scheme())),
 	)
-	if b := ctx.Request.Header.Peek("User-Agent"); len(b) > 0 {
+	if b := rc.Request.Header.Peek("User-Agent"); len(b) > 0 {
 		span.SetAttributes(semconv.HTTPUserAgentKey.String(string(b)))
 	}
-	if b := ctx.Request.Header.Peek("Content-Length"); len(b) > 0 {
+	if b := rc.Request.Header.Peek("Content-Length"); len(b) > 0 {
 		span.SetAttributes(semconv.HTTPRequestContentLengthKey.String(string(b)))
 	}
-	span.SetAttributes(semconv.HTTPAttributesFromHTTPStatusCode(ctx.Response.StatusCode())...)
-	span.SetStatus(semconv.SpanStatusFromHTTPStatusCode(ctx.Response.StatusCode()))
+	span.SetAttributes(semconv.HTTPAttributesFromHTTPStatusCode(rc.Response.StatusCode())...)
+	span.SetStatus(semconv.SpanStatusFromHTTPStatusCode(rc.Response.StatusCode()))
 }
 
 func (p *Metrics) registerHTTPMetrics(subsystem string) {

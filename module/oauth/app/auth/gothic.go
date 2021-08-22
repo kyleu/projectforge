@@ -10,29 +10,29 @@ import (
 	"{{{ .Package }}}/app/web"
 )
 
-func BeginAuthHandler(prv *Provider, ctx *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger) (string, error) {
-	u, err := getAuthURL(prv, ctx, websess, logger)
+func BeginAuthHandler(prv *Provider, rc *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger) (string, error) {
+	u, err := getAuthURL(prv, rc, websess, logger)
 	if err != nil {
 		return "", err
 	}
-	refer := string(ctx.Request.URI().QueryArgs().Peek("refer"))
+	refer := string(rc.Request.URI().QueryArgs().Peek("refer"))
 	if refer != "" && refer != "/profile" {
-		_ = web.StoreInSession(web.ReferKey, refer, ctx, websess, logger)
+		_ = web.StoreInSession(web.ReferKey, refer, rc, websess, logger)
 	}
 	return u, nil
 }
 
-func CompleteUserAuth(prv *Provider, ctx *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger) (*web.Account, web.Accounts, error) {
+func CompleteUserAuth(prv *Provider, rc *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger) (*web.Account, web.Accounts, error) {
 	value, err := web.GetFromSession(prv.ID, websess)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	defer func() {
-		_ = removeProviderData(ctx, websess, logger)
+		_ = removeProviderData(rc, websess, logger)
 	}()
 
-	g, err := gothFor(ctx, prv)
+	g, err := gothFor(rc, prv)
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "unable to create oauth provider")
 	}
@@ -42,22 +42,22 @@ func CompleteUserAuth(prv *Provider, ctx *fasthttp.RequestCtx, websess *sessions
 		return nil, nil, err
 	}
 
-	err = validateState(ctx, sess)
+	err = validateState(rc, sess)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	user, err := g.FetchUser(sess)
 	if err == nil {
-		return addToSession(user.Provider, user.Email, ctx, websess, logger)
+		return addToSession(user.Provider, user.Email, rc, websess, logger)
 	}
 
-	_, err = sess.Authorize(g, &params{q: ctx.Request.URI().QueryArgs()})
+	_, err = sess.Authorize(g, &params{q: rc.Request.URI().QueryArgs()})
 	if err != nil {
 		return nil, nil, err
 	}
 
-	err = web.StoreInSession(prv.ID, sess.Marshal(), ctx, websess, logger)
+	err = web.StoreInSession(prv.ID, sess.Marshal(), rc, websess, logger)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -67,20 +67,20 @@ func CompleteUserAuth(prv *Provider, ctx *fasthttp.RequestCtx, websess *sessions
 		return nil, nil, err
 	}
 
-	return addToSession(gu.Provider, gu.Email, ctx, websess, logger)
+	return addToSession(gu.Provider, gu.Email, rc, websess, logger)
 }
 
-func gothFor(ctx *fasthttp.RequestCtx, prv *Provider) (goth.Provider, error) {
-	proto := string(ctx.URI().Scheme())
-	host := string(ctx.URI().Host())
+func gothFor(rc *fasthttp.RequestCtx, prv *Provider) (goth.Provider, error) {
+	proto := string(rc.URI().Scheme())
+	host := string(rc.URI().Host())
 	if host == "" {
 		host = "localhost"
 	}
 	return prv.Goth(proto, host)
 }
 
-func Logout(ctx *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger, prvKeys ...string) error {
+func Logout(rc *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger, prvKeys ...string) error {
 	a := getCurrentAuths(websess)
 	n := a.Purge(prvKeys...)
-	return setCurrentAuths(n, ctx, websess, logger)
+	return setCurrentAuths(n, rc, websess, logger)
 }

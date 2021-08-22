@@ -10,27 +10,27 @@ import (
 	"github.com/kyleu/projectforge/app"
 )
 
-func ModuleList(ctx *fasthttp.RequestCtx) {
-	act("module.root", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
+func ModuleList(rc *fasthttp.RequestCtx) {
+	act("module.root", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		mods := as.Services.Modules.Modules()
 		ps.Title = "Module Listing"
 		ps.Data = mods
-		return render(ctx, as, &vmodule.List{Modules: mods}, ps, "modules")
+		return render(rc, as, &vmodule.List{Modules: mods}, ps, "modules")
 	})
 }
 
-func ModuleDetail(ctx *fasthttp.RequestCtx) {
-	act("module.detail", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
-		mod, err := getModule(ctx, as, ps)
+func ModuleDetail(rc *fasthttp.RequestCtx) {
+	act("module.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		mod, err := getModule(rc, as, ps)
 		if err != nil {
 			return "", err
 		}
-		return render(ctx, as, &vmodule.Detail{Module: mod}, ps, "modules", mod.Key)
+		return render(rc, as, &vmodule.Detail{Module: mod}, ps, "modules", mod.Key)
 	})
 }
 
-func getModule(ctx *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*module.Module, error) {
-	key, err := ctxRequiredString(ctx, "key", true)
+func getModule(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*module.Module, error) {
+	key, err := rcRequiredString(rc, "key", true)
 	if err != nil {
 		return nil, err
 	}

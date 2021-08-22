@@ -11,7 +11,7 @@ import (
 
 const WebSessKey = "auth"
 
-func addToSession(provider string, email string, ctx *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger) (*web.Account, web.Accounts, error) {
+func addToSession(provider string, email string, rc *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger) (*web.Account, web.Accounts, error) {
 	ret := getCurrentAuths(websess)
 	s := &web.Account{Provider: provider, Email: email}
 	for _, x := range ret {
@@ -20,14 +20,14 @@ func addToSession(provider string, email string, ctx *fasthttp.RequestCtx, webse
 		}
 	}
 	ret = append(ret, s)
-	err := setCurrentAuths(ret, ctx, websess, logger)
+	err := setCurrentAuths(ret, rc, websess, logger)
 	if err != nil {
 		return nil, nil, err
 	}
 	return s, ret, nil
 }
 
-func removeProviderData(ctx *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger) error {
+func removeProviderData(rc *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger) error {
 	dirty := false
 	for k := range websess.Values {
 		s, ok := k.(string)
@@ -41,7 +41,7 @@ func removeProviderData(ctx *fasthttp.RequestCtx, websess *sessions.Session, log
 		}
 	}
 	if dirty {
-		return web.SaveSession(ctx, websess, logger)
+		return web.SaveSession(rc, websess, logger)
 	}
 	return nil
 }

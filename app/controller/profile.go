@@ -17,19 +17,19 @@ import (
 	"github.com/kyleu/projectforge/views/vprofile"
 )
 
-func Profile(ctx *fasthttp.RequestCtx) {
-	act("profile", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
-		return profileAction(ctx, as, ps)
+func Profile(rc *fasthttp.RequestCtx) {
+	act("profile", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		return profileAction(rc, as, ps)
 	})
 }
 
-func ProfileSite(ctx *fasthttp.RequestCtx) {
-	actSite("profile", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
-		return profileAction(ctx, as, ps)
+func ProfileSite(rc *fasthttp.RequestCtx) {
+	actSite("profile", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		return profileAction(rc, as, ps)
 	})
 }
 
-func profileAction(ctx *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (string, error) {
+func profileAction(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (string, error) {
 	ps.Title = "Profile"
 	ps.Data = ps.Profile
 	thm := as.Themes.Get(ps.Profile.Theme)
@@ -40,7 +40,7 @@ func profileAction(ctx *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState)
 	}
 
 	redir := "/"
-	ref := string(ctx.Request.Header.Peek("Referer"))
+	ref := string(rc.Request.Header.Peek("Referer"))
 	if ref != "" {
 		u, err := url.Parse(ref)
 		if err == nil && u != nil && u.Path != "/profile" {
@@ -49,12 +49,12 @@ func profileAction(ctx *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState)
 	}
 
 	page := &vprofile.Profile{Profile: ps.Profile, Theme: thm, Providers: prvs, Referrer: redir}
-	return render(ctx, as, page, ps, "Profile")
+	return render(rc, as, page, ps, "Profile")
 }
 
-func ProfileSave(ctx *fasthttp.RequestCtx) {
-	act("profile.save", ctx, func(as *app.State, ps *cutil.PageState) (string, error) {
-		frm, err := cutil.ParseForm(ctx)
+func ProfileSave(rc *fasthttp.RequestCtx) {
+	act("profile.save", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		frm, err := cutil.ParseForm(rc)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse form")
 		}
@@ -73,13 +73,13 @@ func ProfileSave(ctx *fasthttp.RequestCtx) {
 			n.Theme = ""
 		}
 
-		err = user.SaveProfile(n, ctx, ps.Session, ps.Logger)
+		err = user.SaveProfile(n, rc, ps.Session, ps.Logger)
 		if err != nil {
 			return "", err
 		}
 
 		msg := "profile save"
-		return returnToReferrer(msg, referrer, ctx, ps)
+		return returnToReferrer(msg, referrer, rc, ps)
 	})
 }
 
@@ -100,17 +100,17 @@ func loadProfile(session *sessions.Session) (*user.Profile, error) {
 	return p, nil
 }
 
-func returnToReferrer(msg string, dflt string, ctx *fasthttp.RequestCtx, ps *cutil.PageState) (string, error) {
+func returnToReferrer(msg string, dflt string, rc *fasthttp.RequestCtx, ps *cutil.PageState) (string, error) {
 	refer := ""
 	referX, ok := ps.Session.Values[web.ReferKey]
 	if ok {
 		refer, ok = referX.(string)
 		if ok {
-			_ = web.RemoveFromSession(web.ReferKey, ctx, ps.Session, ps.Logger)
+			_ = web.RemoveFromSession(web.ReferKey, rc, ps.Session, ps.Logger)
 		}
 	}
 	if refer == "" {
 		refer = dflt
 	}
-	return flashAndRedir(true, msg, refer, ctx, ps)
+	return flashAndRedir(true, msg, refer, rc, ps)
 }
