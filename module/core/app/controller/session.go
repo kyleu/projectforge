@@ -38,12 +38,13 @@ func initStore(keyPairs ...[]byte) *sessions.CookieStore {
 }
 
 func loadPageState(rc *fasthttp.RequestCtx, key string, as *app.State) *cutil.PageState {
-	path := string(rc.Request.URI().Path())
-	logger := as.Logger.With(zap.String("path", path))
-
-	rc = httpmetrics.ExtractHeaders(rc, logger)
+	rc = httpmetrics.ExtractHeaders(rc, as.Logger)
 	traceCtx, span := telemetry.StartSpan(rc, "pagestate", "http:"+key)
 	httpmetrics.InjectHTTP(rc, span)
+
+	path := string(rc.Request.URI().Path())
+	sc := span.SpanContext()
+	logger := as.Logger.With(zap.String("path", path), zap.String("trace", sc.TraceID().String()), zap.String("span", sc.SpanID().String()))
 
 	if store == nil {
 		store = initStore([]byte(sessionKey))

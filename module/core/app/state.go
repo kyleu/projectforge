@@ -39,12 +39,7 @@ type State struct {
 
 func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, log *zap.SugaredLogger) (*State, error) {
 	_ = telemetry.InitializeIfNeeded(true, log)
-	return &State{
-		Debug:     debug,
-		BuildInfo: bi,
-		Files:     f,
-		Auth:      auth.NewService("", log),
-		Themes:    theme.NewService(f, log),
-		Logger:    log.With(zap.String("service", "router")),
-	}, nil
+	as := auth.NewService("", log)
+	ts := theme.NewService(f, log)
+	return &State{Debug: debug, BuildInfo: bi, Files: f, Auth: as, Themes: ts, Logger: log}, nil
 }
