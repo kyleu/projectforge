@@ -100,7 +100,7 @@ func (s *Service) SingleInt(ctx context.Context, q string, tx *sqlx.Tx, values .
 	x := &singleIntResult{}
 	err = s.Get(ctx, x, q, tx, values...)
 	if err != nil {
-		return -1, errors.Wrap(err, "returned value is not an integer")
+		return -1, err
 	}
 	if x.X == nil {
 		return 0, nil
