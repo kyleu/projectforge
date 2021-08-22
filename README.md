@@ -1,5 +1,6 @@
 <!-- $PF_IGNORE$ -->
 # Project Forge
+![app logo](./assets/favicon.png)
 
 [Project Forge](https://projectforge.dev) helps you build stuff
 

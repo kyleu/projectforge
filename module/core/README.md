@@ -1,5 +1,6 @@
 <!-- $PF_IGNORE$ -->
 # {{{ .Name }}}
+![app logo](./assets/favicon.png)
 
 {{{ .Info.Summary }}}
 
