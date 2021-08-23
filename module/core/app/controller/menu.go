@@ -2,13 +2,15 @@
 package controller
 
 import (
+	"context"
+
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/menu"
 	"{{{ .Package }}}/app/sandbox"
 	"{{{ .Package }}}/app/util"
 )
 
-func MenuFor(as *app.State) (menu.Items, error) {
+func MenuFor(ctx context.Context, as *app.State) (menu.Items, error) {
 	return menu.Items{
 		&menu.Item{Key: "quickstart", Title: "Quickstart", Description: "Check out your fancy app!", Icon: "star", Route: "/quickstart"},
 		menu.Separator,

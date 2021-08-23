@@ -25,6 +25,10 @@
   {% endif %}
 {% endstripspace %}{% endfunc %}
 
+{% func SVGRefIcon(k string, ps *cutil.PageState) %}{% stripspace %}
+  {%= SVGRef(k, 20, 20, "icon", ps) %}
+{% endstripspace %}{% endfunc %}
+
 {%- func IconGallery(as *app.State, ps *cutil.PageState) -%}
   <div class="flex-wrap mt">
     {%- for _, k := range util.SVGIconKeys -%}

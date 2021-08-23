@@ -14,7 +14,7 @@
 
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <div class="right"><a href="/theme/new" title="add new theme">{%= components.SVGRef(`plus`, 20, 20, `icon`, ps) %}</a></div>
+    <div class="right"><a href="/theme/new" title="add new theme">{%= components.SVGRefIcon(`plus`, ps) %}</a></div>
     <h3>Themes</h3>
     <div class="theme-container mt">
       {%- for _, t := range p.Themes -%}

@@ -113,7 +113,7 @@ func clean(as *app.State, ps *cutil.PageState) error {
 		ps.ProfilePath = defaultProfilePath
 	}
 	if len(ps.Menu) == 0 {
-		m, err := MenuFor(as)
+		m, err := MenuFor(ps.Context, as)
 		if err != nil {
 			return err
 		}

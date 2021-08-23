@@ -3,6 +3,8 @@
 package controller
 
 import (
+	"context"
+
 	"github.com/kyleu/projectforge/app"
 	"github.com/kyleu/projectforge/app/action"
 	"github.com/kyleu/projectforge/app/menu"
@@ -12,7 +14,7 @@ import (
 	"github.com/kyleu/projectforge/app/util"
 )
 
-func MenuFor(as *app.State) (menu.Items, error) {
+func MenuFor(ctx context.Context, as *app.State) (menu.Items, error) {
 	return menu.Items{
 		projectMenu(as.Services.Projects.Projects()),
 		menu.Separator,
