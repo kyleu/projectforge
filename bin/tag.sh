@@ -13,8 +13,9 @@ TGT=$1
 find . -type f -name "main.go" -print0 | xargs -0 sed -i '' -e "s/version = \\\"[v]*[0-9]*[0-9]\.[0-9]*[0-9]\.[0-9]*[0-9]\\\"/version = \"${TGT}\"/g"
 find . -type f -name ".projectforge.json" -print0 | xargs -0 sed -i '' -e "s/\\\"version\\\": \\\"[v]*[0-9]*[0-9]\.[0-9]*[0-9]\.[0-9]*[0-9]\\\"/\"version\": \"${TGT}\"/g"
 
-find . -type f -name "tools/notarize/gon.amd64.hcl" -print0 | xargs -0 sed -i '' -e "s/_[v]*[0-9]*[0-9]\.[0-9]*[0-9]\.[0-9]*[0-9]_/_${TGT}_/g"
-find . -type f -name "tools/notarize/gon.arm64.hcl" -print0 | xargs -0 sed -i '' -e "s/_[v]*[0-9]*[0-9]\.[0-9]*[0-9]\.[0-9]*[0-9]_/_${TGT}_/g"
+cd tools/notarize
+find . -type f -name "gon.*.hcl" -print0 | xargs -0 sed -i '' -e "s/_[v]*[0-9]*[0-9]\.[0-9]*[0-9]\.[0-9]*[0-9]_/_${TGT}_/g"
+cd ../..
 
 make build
 
