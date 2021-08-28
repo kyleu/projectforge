@@ -14,7 +14,7 @@ import (
 
 func (s *Service) Insert(ctx context.Context, q string, tx *sqlx.Tx, values ...interface{}) error {
 	s.logQuery("inserting row", q, values)
-	aff, err := s.execUnknown(ctx, q, tx, values...)
+	aff, err := s.execUnknown(ctx, "insert", q, tx, values...)
 	if err != nil {
 		return err
 	}
@@ -25,7 +25,7 @@ func (s *Service) Insert(ctx context.Context, q string, tx *sqlx.Tx, values ...i
 }
 
 func (s *Service) Update(ctx context.Context, q string, tx *sqlx.Tx, expected int, values ...interface{}) (int, error) {
-	return s.process(ctx, "updating", "updated", q, tx, expected, values...)
+	return s.process(ctx, "update", "updating", "updated", q, tx, expected, values...)
 }
 
 func (s *Service) UpdateOne(ctx context.Context, q string, tx *sqlx.Tx, values ...interface{}) error {
@@ -34,7 +34,7 @@ func (s *Service) UpdateOne(ctx context.Context, q string, tx *sqlx.Tx, values .
 }
 
 func (s *Service) Delete(ctx context.Context, q string, tx *sqlx.Tx, expected int, values ...interface{}) (int, error) {
-	return s.process(ctx, "deleting", "deleted", q, tx, expected, values...)
+	return s.process(ctx, "delete", "deleting", "deleted", q, tx, expected, values...)
 }
 
 func (s *Service) DeleteOne(ctx context.Context, q string, tx *sqlx.Tx, values ...interface{}) error {
@@ -46,12 +46,14 @@ func (s *Service) DeleteOne(ctx context.Context, q string, tx *sqlx.Tx, values .
 }
 
 func (s *Service) Exec(ctx context.Context, q string, tx *sqlx.Tx, expected int, values ...interface{}) (int, error) {
-	return s.process(ctx, "executing", "executed", q, tx, expected, values...)
+	return s.process(ctx, "exec", "executing", "executed", q, tx, expected, values...)
 }
 
-func (s *Service) execUnknown(ctx context.Context, q string, tx *sqlx.Tx, values ...interface{}) (int, error) {
-	op := "exec-unknown"
-	now, ctx, span := s.newSpan(ctx, "db:" + op, q)
+func (s *Service) execUnknown(ctx context.Context, op string, q string, tx *sqlx.Tx, values ...interface{}) (int, error) {
+	if op == "" {
+		op = "unknown"
+	}
+	now, ctx, span := s.newSpan(ctx, "db:"+op, q)
 	var err error
 	defer s.complete(q, op, span, now, err)
 	var ret sql.Result
@@ -67,12 +69,12 @@ func (s *Service) execUnknown(ctx context.Context, q string, tx *sqlx.Tx, values
 	return int(aff), nil
 }
 
-func (s *Service) process(ctx context.Context, key string, past string, q string, tx *sqlx.Tx, expected int, values ...interface{}) (int, error) {
+func (s *Service) process(ctx context.Context, op string, key string, past string, q string, tx *sqlx.Tx, expected int, values ...interface{}) (int, error) {
 	if s.logger != nil {
 		s.logQuery(fmt.Sprintf("%s [%d] rows", key, expected), q, values)
 	}
 
-	aff, err := s.execUnknown(ctx, q, tx, values...)
+	aff, err := s.execUnknown(ctx, op, q, tx, values...)
 	if err != nil {
 		return 0, errors.Wrap(err, errMessage(past, q, values))
 	}

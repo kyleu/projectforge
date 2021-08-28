@@ -17,6 +17,7 @@ import (
 )
 
 type Service struct {
+	Key          string
 	DatabaseName string
 	SchemaName   string
 	Username     string
@@ -25,9 +26,9 @@ type Service struct {
 	logger       *zap.SugaredLogger
 }
 
-func NewService(dbName string, schName string, username string, db *sqlx.DB, logger *zap.SugaredLogger) *Service {
-	m := dbmetrics.NewMetrics(dbName, db)
-	return &Service{DatabaseName: dbName, SchemaName: schName, Username: username, db: db, metrics: m, logger: logger}
+func NewService(key string, dbName string, schName string, username string, db *sqlx.DB, logger *zap.SugaredLogger) *Service {
+	m := dbmetrics.NewMetrics(key, db)
+	return &Service{Key: key, DatabaseName: dbName, SchemaName: schName, Username: username, db: db, metrics: m, logger: logger}
 }
 
 func (s *Service) StartTransaction() (*sqlx.Tx, error) {
@@ -66,4 +67,9 @@ func (s *Service) newSpan(ctx context.Context, name string, q string) (time.Time
 func (s *Service) complete(q string, op string, span trace.Span, started time.Time, err error) {
 	span.End()
 	s.metrics.CompleteStmt(q, op, started, err)
+}
+
+func (s *Service) Close() error {
+	_ = s.metrics.Close()
+	return s.db.Close()
 }

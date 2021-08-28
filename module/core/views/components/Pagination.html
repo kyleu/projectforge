@@ -4,7 +4,7 @@
   "{{{ .Package }}}/app/filter"
 ) %}
 
-{% func Pagination(section string, count int, params *filter.Params, u *fasthttp.URI) %}{% stripspace %}
+{% func Pagination(count int, params *filter.Params, u *fasthttp.URI) %}{% stripspace %}
   {% if params != nil %}
     {% if params.HasNextPage(count) %}
       <div class="right">

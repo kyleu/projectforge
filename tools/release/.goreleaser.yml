@@ -55,7 +55,7 @@ nfpms:
       - rpm
 
 release:
-  draft: true
+  draft: false
   header: |
     ## {{ .Version }} ({{ .Date }})
     See https://projectforge.dev for download links and documentation

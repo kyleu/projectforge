@@ -33,7 +33,7 @@ em {
   color: var(--color-foreground-muted);
 }
 
-input, button {
+input, button, textarea, select {
   border: var(--border);
   color: var(--color-foreground);
   background-color: var(--color-background);

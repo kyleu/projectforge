@@ -17,7 +17,7 @@ import (
 
 const SQLiteEnabled = true
 
-func OpenSQLiteDatabase(ctx context.Context, params *SQLiteParams, logger *zap.SugaredLogger) (*Service, error) {
+func OpenSQLiteDatabase(ctx context.Context, key string, params *SQLiteParams, logger *zap.SugaredLogger) (*Service, error) {
 	ctx, span := telemetry.StartSpan(ctx, "database", "open")
 	defer span.End()
 	if params.File == "" {
@@ -31,5 +31,5 @@ func OpenSQLiteDatabase(ctx context.Context, params *SQLiteParams, logger *zap.S
 	if params.Debug {
 		log = logger
 	}
-	return NewService(params.File, params.Schema, "sqlite", db, log), nil
+	return NewService(params.File, key, params.Schema, "sqlite", db, log), nil
 }

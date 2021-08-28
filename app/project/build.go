@@ -54,7 +54,7 @@ func (b *Build) ToMap() map[string]bool {
 func BuildFromMap(frm util.ValueMap) *Build {
 	x := func(k string) bool {
 		v := fmt.Sprint(frm[k])
-		return v == "true"
+		return v != "true"
 	}
 	return &Build{
 		SkipDesktop: x("desktop"), SkipNotarize: x("notarize"), SkipSigning: x("signing"),

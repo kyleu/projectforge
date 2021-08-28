@@ -27,11 +27,11 @@
   {% endif %}
 {% endstripspace %}{% endfunc %}
 
-{% func FormTextarea(key string, id string, value string) %}{% stripspace %}
+{% func FormTextarea(key string, id string, rows int, value string) %}{% stripspace %}
   {% if id == "" %}
-    <textarea name="{%s key %}">{%s value %}</textarea>
+    <textarea rows="{%d rows %}" name="{%s key %}">{%s value %}</textarea>
   {% else %}
-    <textarea id="{%s id %}" name="{%s key %}">{%s value %}</textarea>
+    <textarea rows="{%d rows %}" id="{%s id %}" name="{%s key %}">{%s value %}</textarea>
   {% endif %}
 {% endstripspace %}{% endfunc %}
 

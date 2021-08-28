@@ -2,6 +2,7 @@
 package cutil
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/alecthomas/chroma"
@@ -25,6 +26,14 @@ func FormatJSON(v interface{}) (string, error) {
 func FormatLang(content string, lang string) (string, error) {
 	l := lexers.Get(lang)
 	return FormatString(content, l)
+}
+
+func FormatLangIgnoreErrors(content string, lang string) string {
+	ret, err := FormatLang(content, lang)
+	if err != nil {
+		return fmt.Sprintf("encoding error: %s\n%s", err.Error(), content)
+	}
+	return ret
 }
 
 func FormatFilename(content string, filename string) (string, error) {

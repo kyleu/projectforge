@@ -16,9 +16,9 @@ var ThemeDefault = &Theme{
 		Border: "1px solid #666666", LinkDecoration: "none",
 		Foreground: "#ffffff", ForegroundMuted: "#999999",
 		Background: "#121212", BackgroundMuted: "#333333",
-		LinkForeground: "#dddddd", LinkVisitedForeground: "#aaaaaa",
+		LinkForeground: "#2d414e", LinkVisitedForeground: "#aaaaaa",
 		NavForeground: "#ffffff", NavBackground: "#2d414e",
-		MenuForeground: "#dddddd", MenuBackground: "#171f24", MenuSelectedBackground: "#333333", MenuSelectedForeground: "#ffffff",
+		MenuForeground: "#eeeeee", MenuBackground: "#171f24", MenuSelectedBackground: "#333333", MenuSelectedForeground: "#ffffff",
 		ModalBackdrop: "rgba(33, 33, 33, .7)", Success: "#008000", Error: "#FF0000",
 	},
 }

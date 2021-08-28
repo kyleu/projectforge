@@ -21,7 +21,7 @@ func Migrate(ctx context.Context, s *database.Service, logger *zap.SugaredLogger
 	maxIdx := maxMigrationIdx(ctx, s, logger)
 
 	if len(databaseMigrations) > maxIdx+1 {
-		c := len(databaseMigrations)-maxIdx
+		c := len(databaseMigrations) - maxIdx
 		logger.Info(fmt.Sprintf("applying [%v] database %s...", c, util.PluralMaybe("migration", c)))
 	}
 

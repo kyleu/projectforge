@@ -56,12 +56,12 @@
   </tr>
 {% endstripspace %}{% endfunc %}
 
-{% func TableTextarea(key string, title string, value string, indent int) %}{% stripspace %}
+{% func TableTextarea(key string, title string, rows int, value string, indent int) %}{% stripspace %}
   <tr>
     {%= vutil.Indent(true, indent + 1) %}
     <th class="shrink"><label for="input-{%s key %}">{%s title %}</label></th>
     {%= vutil.Indent(true, indent + 1) %}
-    <td>{%= FormTextarea(key, "input-" + key, value) %}</td>
+    <td>{%= FormTextarea(key, "input-" + key, rows, value) %}</td>
   {%= vutil.Indent(true, indent) %}
   </tr>
 {% endstripspace %}{% endfunc %}

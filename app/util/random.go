@@ -28,6 +28,22 @@ func RandomInt(maxInclusive int) int {
 	return int(ret.Int64())
 }
 
+func RandomBool() bool {
+	ret, err := rand.Int(rand.Reader, big.NewInt(1))
+	if err != nil {
+		panic(errMsg(err))
+	}
+	return ret.Int64() == 1
+}
+
+func RandomValueMap(keys int) ValueMap {
+	ret := ValueMap{}
+	for i := 0; i < keys; i++ {
+		ret[RandomString(4)] = RandomString(10)
+	}
+	return ret
+}
+
 func RandomBytes(size int) []byte {
 	b := make([]byte, size)
 	_, err := io.ReadFull(rand.Reader, b)

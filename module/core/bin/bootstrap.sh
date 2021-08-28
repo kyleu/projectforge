@@ -13,5 +13,3 @@ go get -u github.com/valyala/quicktemplate/qtc
 go mod download
 
 brew install goreleaser/tap/goreleaser
-brew install snapcraft
-brew install gnupg

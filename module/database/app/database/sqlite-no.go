@@ -8,6 +8,6 @@ import (
 
 const SQLiteEnabled = false
 
-func OpenSQLiteDatabase(params *SQLiteParams, logger *zap.SugaredLogger) (*Service, error) {
+func OpenSQLiteDatabase(ctx context.Context, key string, params *SQLiteParams, logger *zap.SugaredLogger) (*Service, error) {
 	return nil, nil
 }

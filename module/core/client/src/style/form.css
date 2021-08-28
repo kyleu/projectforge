@@ -17,7 +17,6 @@ input[type='week'],
 input:not([type]),
 textarea,
 select {
-  border: 0.1rem solid #d1d1d1;
   padding: 6px 12px;
   width: 100%;
 }

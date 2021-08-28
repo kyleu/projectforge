@@ -12,11 +12,11 @@ type Metrics struct {
 	stmtDur *prometheus.HistogramVec
 }
 
-func NewMetrics(dbName string, db StatsGetter) *Metrics {
-	ss := strings.ReplaceAll(strings.ReplaceAll(dbName, "/", "_"), ".", "_")
+func NewMetrics(key string, db StatsGetter) *Metrics {
+	ss := strings.ReplaceAll(strings.ReplaceAll(key, "/", "_"), ".", "_")
 	m := &Metrics{}
 	m.registerDatabaseMetrics(ss)
-	prometheus.MustRegister(newStatsCollector(ss, dbName, db))
+	prometheus.MustRegister(newStatsCollector(ss, key, db))
 	return m
 }
 
@@ -38,4 +38,10 @@ func (p *Metrics) IncStmt(sql string, method string) {
 func (p *Metrics) CompleteStmt(q string, op string, started time.Time, err error) {
 	elapsed := float64(time.Since(started)) / float64(time.Second)
 	p.stmtDur.WithLabelValues(q, op).Observe(elapsed)
+}
+
+func (p *Metrics) Close() error {
+	prometheus.Unregister(p.stmtCnt)
+	prometheus.Unregister(p.stmtDur)
+	return nil
 }
