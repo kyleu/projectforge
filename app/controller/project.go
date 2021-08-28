@@ -76,7 +76,7 @@ func ProjectSave(rc *fasthttp.RequestCtx) {
 		prj.Port, _ = strconv.Atoi(get("port", fmt.Sprintf("%d", prj.Port)))
 		prj.Modules = util.SplitAndTrim(get("modules", strings.Join(prj.Modules, "|")), "|")
 		prj.Ignore = util.SplitAndTrim(get("ignore", strings.Join(prj.Ignore, ",")), ",")
-		prj.Children = util.SplitAndTrim(get("children", strings.Join(prj.Children, ",")), ",")
+		prj.Children = util.SplitAndTrim(get("children", strings.Join(prj.Children, "\n")), "\n")
 
 		prj.Info.Org = get("org", prj.Info.Org)
 		prj.Info.AuthorName = get("authorName", prj.Info.AuthorName)

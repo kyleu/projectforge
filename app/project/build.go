@@ -7,7 +7,9 @@ import (
 )
 
 type Build struct {
-	SkipDesktop  bool `json:"skipDesktop,omitempty"`
+	SkipPublish bool `json:"skipPublish,omitempty"`
+
+	SkipDesktop bool `json:"skipDesktop,omitempty"`
 	SkipNotarize bool `json:"skipNotarize,omitempty"`
 	SkipSigning  bool `json:"skipSigning,omitempty"`
 
@@ -35,14 +37,14 @@ type Build struct {
 }
 
 func (b *Build) Empty() bool {
-	return !(b.SkipDesktop || b.SkipNotarize || b.SkipSigning || b.SkipAndroid || b.SkipIOS || b.SkipWASM || b.SkipLinuxARM ||
+	return !(b.SkipPublish || b.SkipDesktop || b.SkipNotarize || b.SkipSigning || b.SkipAndroid || b.SkipIOS || b.SkipWASM || b.SkipLinuxARM ||
 		b.SkipLinuxMIPS || b.SkipLinuxOdd || b.SkipAIX || b.SkipDragonfly || b.SkipIllumos || b.SkipFreeBSD || b.SkipNetBSD ||
 		b.SkipOpenBSD || b.SkipPlan9 || b.SkipSolaris || b.SkipHomebrew || b.SkipNFPMS || b.SkipScoop || b.SkipSnapcraft)
 }
 
 func (b *Build) ToMap() map[string]bool {
 	return map[string]bool{
-		"desktop": !b.SkipDesktop, "notarize": !b.SkipNotarize, "signing": !b.SkipSigning,
+		"publish": !b.SkipPublish, "desktop": !b.SkipDesktop, "notarize": !b.SkipNotarize, "signing": !b.SkipSigning,
 		"android": !b.SkipAndroid, "ios": !b.SkipIOS, "wasm": !b.SkipWASM,
 		"linux-arm": !b.SkipLinuxARM, "linux-mips": !b.SkipLinuxMIPS, "linux-odd": !b.SkipLinuxOdd,
 		"aix": !b.SkipAIX, "dragonfly": !b.SkipDragonfly, "illumos": !b.SkipIllumos, "freebsd": !b.SkipFreeBSD,
@@ -53,11 +55,11 @@ func (b *Build) ToMap() map[string]bool {
 
 func BuildFromMap(frm util.ValueMap) *Build {
 	x := func(k string) bool {
-		v := fmt.Sprint(frm[k])
+		v := fmt.Sprint(frm["build-" + k])
 		return v != "true"
 	}
 	return &Build{
-		SkipDesktop: x("desktop"), SkipNotarize: x("notarize"), SkipSigning: x("signing"),
+		SkipPublish: x("publish"), SkipDesktop: x("desktop"), SkipNotarize: x("notarize"), SkipSigning: x("signing"),
 		SkipAndroid: x("android"), SkipIOS: x("ios"), SkipWASM: x("wasm"),
 		SkipLinuxARM: x("linux-arm"), SkipLinuxMIPS: x("linux-mips"), SkipLinuxOdd: x("linux-odd"),
 		SkipAIX: x("aix"), SkipDragonfly: x("dragonfly"), SkipIllumos: x("illumos"), SkipFreeBSD: x("freebsd"),
@@ -73,6 +75,8 @@ type BuildOption struct {
 }
 
 var AllBuildOptions = []*BuildOption{
+	{Key: "publish", Title: "Publish", Description: "The release process will publish a full release"},
+
 	{Key: "desktop", Title: "Desktop", Description: "Webview-based applications for the three major operating systems"},
 	{Key: "notarize", Title: "Notarize", Description: "Sends build artifacts to Apple for notarization"},
 	{Key: "signing", Title: "Signing", Description: "Signs the checksums using gpg"},

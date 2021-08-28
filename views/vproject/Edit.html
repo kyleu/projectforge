@@ -56,7 +56,7 @@
           </td>
         </tr>
         {%= components.TableInput("ignore", "Ignore", strings.Join(prj.Ignore, ", "), 5) %}
-        {%= components.TableInput("children", "Children", strings.Join(prj.Children, ", "), 5) %}
+        {%= components.TableTextarea("children", "Children", len(prj.Children), strings.Join(prj.Children, "\n"), 5) %}
         </tbody>
       </table>
     </div>

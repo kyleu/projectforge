@@ -64,10 +64,16 @@
           <th>Ignore</th>
           <td>{%s strings.Join(prj.Ignore, ", ") %}</td>
         </tr>
+        {%- if len(prj.Children) > 0 -%}
         <tr>
           <th>Children</th>
-          <td>{%s strings.Join(prj.Children, ", ") %}</td>
+          <td>
+            {%- for _, x := range prj.Children -%}
+            <div>{%s x %}</div>
+            {%- endfor -%}
+          </td>
         </tr>
+        {%- endif -%}
         <tr>
           <th>Path</th>
           <td>{%s prj.Path %}</td>
@@ -149,7 +155,7 @@
       <tbody>
         {%- for _, mKey := range prj.Modules -%}
         <tr>
-          <th>{%s mKey %}</th>
+          <td>{%s mKey %}</td>
         </tr>
         {%- endfor -%}
       </tbody>
@@ -162,7 +168,7 @@
       <tbody>
         {%- for _, mKey := range prj.Children -%}
         <tr>
-          <th>{%s mKey %}</th>
+          <td>{%s mKey %}</td>
         </tr>
         {%- endfor -%}
       </tbody>

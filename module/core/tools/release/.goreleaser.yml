@@ -54,7 +54,7 @@ nfpms:
       - rpm
 {{{end}}}
 release:
-  draft: false
+  draft: {{{if .Build.SkipPublish}}}true{{{else}}}false{{{ end }}}
   header: |
     ## {{ .Version }} ({{ .Date }})
     See {{{ .Info.Homepage }}} for download links and documentation
