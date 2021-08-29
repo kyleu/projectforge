@@ -12,7 +12,6 @@ import (
 	"{{{ .Package }}}/app/theme"
 	"{{{ .Package }}}/app/user"
 	"{{{ .Package }}}/app/util"
-	"{{{ .Package }}}/app/web"
 	"{{{ .Package }}}/views/vprofile"
 )
 
@@ -72,7 +71,7 @@ func ProfileSave(rc *fasthttp.RequestCtx) {
 			n.Theme = ""
 		}
 
-		err = user.SaveProfile(n, rc, ps.Session, ps.Logger)
+		err = cutil.SaveProfile(n, rc, ps.Session, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -101,11 +100,11 @@ func loadProfile(session *sessions.Session) (*user.Profile, error) {
 
 func returnToReferrer(msg string, dflt string, rc *fasthttp.RequestCtx, ps *cutil.PageState) (string, error) {
 	refer := ""
-	referX, ok := ps.Session.Values[web.ReferKey]
+	referX, ok := ps.Session.Values[cutil.ReferKey]
 	if ok {
 		refer, ok = referX.(string)
 		if ok {
-			_ = web.RemoveFromSession(web.ReferKey, rc, ps.Session, ps.Logger)
+			_ = cutil.RemoveFromSession(cutil.ReferKey, rc, ps.Session, ps.Logger)
 		}
 	}
 	if refer == "" {

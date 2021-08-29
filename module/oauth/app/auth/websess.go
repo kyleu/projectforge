@@ -5,14 +5,15 @@ import (
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
 
-	"{{{ .Package }}}/app/web"
+	"{{{ .Package }}}/app/controller/cutil"
+	"{{{ .Package }}}/app/user"
 )
 
 const WebSessKey = "auth"
 
-func addToSession(provider string, email string, rc *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger) (*web.Account, web.Accounts, error) {
+func addToSession(provider string, email string, rc *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger) (*user.Account, user.Accounts, error) {
 	ret := getCurrentAuths(websess)
-	s := &web.Account{Provider: provider, Email: email}
+	s := &user.Account{Provider: provider, Email: email}
 	for _, x := range ret {
 		if x.Provider == s.Provider && x.Email == s.Email {
 			return s, ret, nil
@@ -40,7 +41,7 @@ func removeProviderData(rc *fasthttp.RequestCtx, websess *sessions.Session, logg
 		}
 	}
 	if dirty {
-		return web.SaveSession(rc, websess, logger)
+		return cutil.SaveSession(rc, websess, logger)
 	}
 	return nil
 }

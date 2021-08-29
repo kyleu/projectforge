@@ -9,7 +9,7 @@ import (
 type Build struct {
 	SkipPublish bool `json:"skipPublish,omitempty"`
 
-	SkipDesktop bool `json:"skipDesktop,omitempty"`
+	SkipDesktop  bool `json:"skipDesktop,omitempty"`
 	SkipNotarize bool `json:"skipNotarize,omitempty"`
 	SkipSigning  bool `json:"skipSigning,omitempty"`
 
@@ -55,7 +55,7 @@ func (b *Build) ToMap() map[string]bool {
 
 func BuildFromMap(frm util.ValueMap) *Build {
 	x := func(k string) bool {
-		v := fmt.Sprint(frm["build-" + k])
+		v := fmt.Sprint(frm["build-"+k])
 		return v != "true"
 	}
 	return &Build{

@@ -7,7 +7,8 @@ import (
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
 
-	"{{{ .Package }}}/app/web"
+	"{{{ .Package }}}/app/controller/cutil"
+	"{{{ .Package }}}/app/user"
 )
 
 func BeginAuthHandler(prv *Provider, rc *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger) (string, error) {
@@ -17,13 +18,13 @@ func BeginAuthHandler(prv *Provider, rc *fasthttp.RequestCtx, websess *sessions.
 	}
 	refer := string(rc.Request.URI().QueryArgs().Peek("refer"))
 	if refer != "" && refer != "/profile" {
-		_ = web.StoreInSession(web.ReferKey, refer, rc, websess, logger)
+		_ = cutil.StoreInSession(cutil.ReferKey, refer, rc, websess, logger)
 	}
 	return u, nil
 }
 
-func CompleteUserAuth(prv *Provider, rc *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger) (*web.Account, web.Accounts, error) {
-	value, err := web.GetFromSession(prv.ID, websess)
+func CompleteUserAuth(prv *Provider, rc *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger) (*user.Account, user.Accounts, error) {
+	value, err := cutil.GetFromSession(prv.ID, websess)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -57,7 +58,7 @@ func CompleteUserAuth(prv *Provider, rc *fasthttp.RequestCtx, websess *sessions.
 		return nil, nil, err
 	}
 
-	err = web.StoreInSession(prv.ID, sess.Marshal(), rc, websess, logger)
+	err = cutil.StoreInSession(prv.ID, sess.Marshal(), rc, websess, logger)
 	if err != nil {
 		return nil, nil, err
 	}

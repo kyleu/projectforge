@@ -12,8 +12,8 @@ import (
 	"{{{ .Package}}}/app/controller/cutil"
 	"{{{ .Package}}}/app/telemetry"
 	"{{{ .Package}}}/app/telemetry/httpmetrics"
+	"{{{ .Package}}}/app/user"
 	"{{{ .Package}}}/app/util"
-	"{{{ .Package}}}/app/web"
 )
 
 var sessionKey = func() string {
@@ -58,7 +58,7 @@ func loadPageState(rc *fasthttp.RequestCtx, key string, as *app.State) *cutil.Pa
 	}
 	flashes := util.StringArrayFromInterfaces(session.Flashes())
 	if len(flashes) > 0 {
-		err = web.SaveSession(rc, session, logger)
+		err = cutil.SaveSession(rc, session, logger)
 		if err != nil {
 			logger.Warnf("can't save session: %+v", err)
 		}
@@ -69,12 +69,12 @@ func loadPageState(rc *fasthttp.RequestCtx, key string, as *app.State) *cutil.Pa
 		logger.Warnf("can't load profile: %+v", err)
 	}
 
-	var a web.Accounts
+	var a user.Accounts
 	authX, ok := session.Values["auth"]
 	if ok {
 		authS, ok := authX.(string)
 		if ok {
-			a = web.AccountsFromString(authS)
+			a = user.AccountsFromString(authS)
 		}
 	}
 

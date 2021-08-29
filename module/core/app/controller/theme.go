@@ -7,7 +7,6 @@ import (
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller/cutil"
 	"{{{ .Package }}}/app/theme"
-	"{{{ .Package }}}/app/user"
 	"{{{ .Package }}}/app/util"
 	"{{{ .Package }}}/views/vtheme"
 )
@@ -75,7 +74,7 @@ func ThemeSave(rc *fasthttp.RequestCtx) {
 		}
 
 		ps.Profile.Theme = newKey
-		err = user.SaveProfile(ps.Profile, rc, ps.Session, ps.Logger)
+		err = cutil.SaveProfile(ps.Profile, rc, ps.Session, ps.Logger)
 		if err != nil {
 			return "", err
 		}

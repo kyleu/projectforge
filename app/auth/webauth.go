@@ -6,7 +6,8 @@ import (
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
 
-	"github.com/kyleu/projectforge/app/web"
+	"github.com/kyleu/projectforge/app/controller/cutil"
+	"github.com/kyleu/projectforge/app/user"
 )
 
 func getAuthURL(prv *Provider, rc *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger) (string, error) {
@@ -25,7 +26,7 @@ func getAuthURL(prv *Provider, rc *fasthttp.RequestCtx, websess *sessions.Sessio
 		return "", err
 	}
 
-	err = web.StoreInSession(prv.ID, sess.Marshal(), rc, websess, logger)
+	err = cutil.StoreInSession(prv.ID, sess.Marshal(), rc, websess, logger)
 	if err != nil {
 		return "", err
 	}
@@ -33,19 +34,19 @@ func getAuthURL(prv *Provider, rc *fasthttp.RequestCtx, websess *sessions.Sessio
 	return u, err
 }
 
-func getCurrentAuths(websess *sessions.Session) web.Accounts {
-	authS, err := web.GetFromSession(WebSessKey, websess)
-	var ret web.Accounts
+func getCurrentAuths(websess *sessions.Session) user.Accounts {
+	authS, err := cutil.GetFromSession(WebSessKey, websess)
+	var ret user.Accounts
 	if err == nil && authS != "" {
-		ret = web.AccountsFromString(authS)
+		ret = user.AccountsFromString(authS)
 	}
 	return ret
 }
 
-func setCurrentAuths(s web.Accounts, rc *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger) error {
+func setCurrentAuths(s user.Accounts, rc *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger) error {
 	s.Sort()
 	if len(s) == 0 {
-		return web.RemoveFromSession(WebSessKey, rc, websess, logger)
+		return cutil.RemoveFromSession(WebSessKey, rc, websess, logger)
 	}
-	return web.StoreInSession(WebSessKey, s.String(), rc, websess, logger)
+	return cutil.StoreInSession(WebSessKey, s.String(), rc, websess, logger)
 }

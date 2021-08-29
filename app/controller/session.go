@@ -13,8 +13,8 @@ import (
 	"github.com/kyleu/projectforge/app/controller/cutil"
 	"github.com/kyleu/projectforge/app/telemetry"
 	"github.com/kyleu/projectforge/app/telemetry/httpmetrics"
+	"github.com/kyleu/projectforge/app/user"
 	"github.com/kyleu/projectforge/app/util"
-	"github.com/kyleu/projectforge/app/web"
 )
 
 var sessionKey = func() string {
@@ -59,7 +59,7 @@ func loadPageState(rc *fasthttp.RequestCtx, key string, as *app.State) *cutil.Pa
 	}
 	flashes := util.StringArrayFromInterfaces(session.Flashes())
 	if len(flashes) > 0 {
-		err = web.SaveSession(rc, session, logger)
+		err = cutil.SaveSession(rc, session, logger)
 		if err != nil {
 			logger.Warnf("can't save session: %+v", err)
 		}
@@ -70,12 +70,12 @@ func loadPageState(rc *fasthttp.RequestCtx, key string, as *app.State) *cutil.Pa
 		logger.Warnf("can't load profile: %+v", err)
 	}
 
-	var a web.Accounts
+	var a user.Accounts
 	authX, ok := session.Values["auth"]
 	if ok {
 		authS, ok := authX.(string)
 		if ok {
-			a = web.AccountsFromString(authS)
+			a = user.AccountsFromString(authS)
 		}
 	}
 

@@ -3,14 +3,6 @@ package user
 
 import (
 	"fmt"
-
-	"github.com/go-gem/sessions"
-	"github.com/pkg/errors"
-	"github.com/valyala/fasthttp"
-	"go.uber.org/zap"
-
-	"github.com/kyleu/projectforge/app/util"
-	"github.com/kyleu/projectforge/app/web"
 )
 
 type Profile struct {
@@ -36,7 +28,7 @@ func (p *Profile) ModeClass() string {
 	return "mode-" + p.Mode
 }
 
-func (p *Profile) AuthString(a web.Accounts) string {
+func (p *Profile) AuthString(a Accounts) string {
 	msg := fmt.Sprintf("signed in as %s", p.String())
 	if len(a) == 0 {
 		if p.Name == DefaultProfile.Name {
@@ -49,19 +41,4 @@ func (p *Profile) AuthString(a web.Accounts) string {
 
 func (p *Profile) Equals(x *Profile) bool {
 	return p.Name == x.Name && p.Mode == x.Mode && p.Theme == x.Theme
-}
-
-func SaveProfile(n *Profile, rc *fasthttp.RequestCtx, sess *sessions.Session, logger *zap.SugaredLogger) error {
-	if n == nil || n.Equals(DefaultProfile) {
-		err := web.RemoveFromSession("profile", rc, sess, logger)
-		if err != nil {
-			return errors.Wrap(err, "unable to remove profile from session")
-		}
-		return nil
-	}
-	err := web.StoreInSession("profile", util.ToJSON(n), rc, sess, logger)
-	if err != nil {
-		return errors.Wrap(err, "unable to save profile in session")
-	}
-	return nil
 }

@@ -8,7 +8,6 @@ import (
 	"github.com/kyleu/projectforge/app"
 	"github.com/kyleu/projectforge/app/controller/cutil"
 	"github.com/kyleu/projectforge/app/theme"
-	"github.com/kyleu/projectforge/app/user"
 	"github.com/kyleu/projectforge/app/util"
 	"github.com/kyleu/projectforge/views/vtheme"
 )
@@ -76,7 +75,7 @@ func ThemeSave(rc *fasthttp.RequestCtx) {
 		}
 
 		ps.Profile.Theme = newKey
-		err = user.SaveProfile(ps.Profile, rc, ps.Session, ps.Logger)
+		err = cutil.SaveProfile(ps.Profile, rc, ps.Session, ps.Logger)
 		if err != nil {
 			return "", err
 		}

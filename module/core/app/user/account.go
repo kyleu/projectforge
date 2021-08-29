@@ -1,10 +1,10 @@
-package web
+package user
 
 import (
 	"sort"
 	"strings"
 
-	"{{{ .Package}}}/app/util"
+	"{{{ .Package }}}/app/util"
 )
 
 type Account struct {

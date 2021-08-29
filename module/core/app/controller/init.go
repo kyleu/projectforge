@@ -15,11 +15,11 @@ func initAppRequest(*app.State, *cutil.PageState) error {
 	return nil
 }
 
-// Initialize system dependencies for the marketing site.
+{{{ if.HasModule "marketing" }}}// Initialize system dependencies for the marketing site.
 func initSite(*app.State) {
 }
 
 // Configure marketing site data for each request.
 func initSiteRequest(*app.State, *cutil.PageState) error {
 	return nil
-}
+}{{{ end }}}

@@ -34,7 +34,7 @@ func RunAction(rc *fasthttp.RequestCtx) {
 		rc.QueryArgs().VisitAll(func(k []byte, v []byte) {
 			cfg[string(k)] = string(v)
 		})
-		nc, span := telemetry.StartSpan(ps.Context, "action", "action." + actT.String())
+		nc, span := telemetry.StartSpan(ps.Context, "action", "action."+actT.String())
 		result := action.Apply(nc, span, tgt, actT, cfg, as.Services.Modules, as.Services.Projects, ps.Logger)
 		ps.Data = result
 		page := &vaction.Result{Ctx: &action.ResultContext{Prj: prj, Cfg: cfg, Res: result}}
