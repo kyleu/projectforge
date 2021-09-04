@@ -12,4 +12,14 @@ type Result struct {
 	Duration int          `json:"duration,omitempty"`
 }
 
+func (r *Result) DiffsFiltered(includeSkipped bool) []*diff.Diff {
+	ret := make([]*diff.Diff, 0, len(r.Diffs))
+	for _, d := range r.Diffs {
+		if includeSkipped || d.Status != diff.StatusSkipped {
+			ret = append(ret, d)
+		}
+	}
+	return ret
+}
+
 type Results []*Result

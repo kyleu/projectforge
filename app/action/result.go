@@ -88,6 +88,21 @@ func (r *Result) HasErrors() bool {
 	return len(r.Errors) > 0
 }
 
+func (r *Result) StatusLog() string {
+	fileCount := 0
+	for _, m := range r.Modules {
+		for _, d := range m.Diffs {
+			if d.Status != diff.StatusSkipped {
+				fileCount++
+			}
+		}
+	}
+	if fileCount == 0 {
+		return "no changes"
+	}
+	return fmt.Sprintf("%d %s", fileCount, util.PluralMaybe("change", fileCount))
+}
+
 type ResultContext struct {
 	Prj *project.Project `json:"prj"`
 	Cfg util.ValueMap    `json:"cfg"`
@@ -98,18 +113,7 @@ func (c *ResultContext) Status() string {
 	if c.Res == nil {
 		return "Missing!"
 	}
-	fileCount := 0
-	for _, m := range c.Res.Modules {
-		for _, d := range m.Diffs {
-			if d.Status != diff.StatusSkipped {
-				fileCount++
-			}
-		}
-	}
-	if fileCount == 0 {
-		return "ok"
-	}
-	return fmt.Sprintf("%d changes", fileCount)
+	return c.Res.StatusLog()
 }
 
 type ResultContexts []*ResultContext

@@ -2,11 +2,10 @@
   "github.com/kyleu/projectforge/app"
   "github.com/kyleu/projectforge/app/controller/cutil"
   "github.com/kyleu/projectforge/app/action"
-  "github.com/kyleu/projectforge/app/diff"
   "github.com/kyleu/projectforge/app/util"
 ) %}
 
-{% func Detail(cfg util.ValueMap, res *action.Result, incSkipped bool, as *app.State, ps *cutil.PageState) %}
+{% func Detail(cfg util.ValueMap, res *action.Result, includeSkipped bool, as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>Config</h3>
     <table>
@@ -61,6 +60,7 @@
     <div class="card">
       <div class="right">{%s util.MicrosToMillis(mr.Duration) %}</div>
       <h3>{%s util.PluralMaybe("Module", len(mr.Keys)) %} [{%s= links %}]</h3>
+      <div class="right"><em>{%s res.StatusLog() %}</em></div>
       <em>{%s mr.Status %}</em>
       {%- if len(mr.Actions) > 0 -%}
       <h4>Actions</h4>
@@ -68,7 +68,8 @@
         <a href="{%s a.URL() %}"><button>{%s a.Title %}</button></a>
       {%- endfor -%}
       {%- endif -%}
-      {%- if len(mr.Diffs) > 0 -%}
+      {%- code diffs := mr.DiffsFiltered(includeSkipped) -%}
+      {%- if len(diffs) > 0 -%}
       <h4>Diffs</h4>
       <table>
         <thead>
@@ -79,14 +80,12 @@
           </tr>
         </thead>
         <tbody>
-        {%- for _, d := range mr.Diffs -%}
-          {%- if incSkipped || d.Status != diff.StatusSkipped -%}
+        {%- for _, d := range diffs -%}
           <tr>
             <td class="shrink">{%s d.Path %}</td>
             <td>{%s d.Status.String() %}</td>
             <td>{%s= d.Patch %}</td>
           </tr>
-          {%- endif -%}
         {%- endfor -%}
         </tbody>
       </table>
