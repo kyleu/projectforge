@@ -17,7 +17,6 @@ type Provider struct {
 	Title  string `json:"title"`
 	Key    string `json:"-"`
 	Secret string `json:"-"`
-	cache  map[string]goth.Provider
 }
 
 func (p *Provider) Goth(proto string, host string) (goth.Provider, error) {
@@ -30,16 +29,13 @@ func (p *Provider) Goth(proto string, host string) (goth.Provider, error) {
 	if env != "" {
 		u = env
 	}
+	u = strings.TrimSuffix(u, "/")
 	cb := fmt.Sprintf("%s/auth/callback/%s", u, p.ID)
-	if g, ok := p.cache[cb]; ok {
-		return g, nil
-	}
 	gothPrv, err := toGoth(p.ID, p.Key, p.Secret, cb)
 	if err != nil {
 		return nil, err
 	}
 	goth.UseProviders(gothPrv)
-	p.cache[cb] = gothPrv
 	return gothPrv, nil
 }
 
@@ -103,7 +99,7 @@ func (s *Service) load() error {
 		envKey := os.Getenv(k + "_key")
 		envSecret := os.Getenv(k + "_secret")
 		if envKey != "" {
-			ret = append(ret, &Provider{ID: k, Title: AvailableProviderNames[k], Key: envKey, Secret: envSecret, cache: map[string]goth.Provider{}})
+			ret = append(ret, &Provider{ID: k, Title: AvailableProviderNames[k], Key: envKey, Secret: envSecret})
 		}
 	}
 

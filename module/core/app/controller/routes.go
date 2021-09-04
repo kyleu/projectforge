@@ -14,7 +14,6 @@ func AppRoutes() fasthttp.RequestHandler {
 
 	r.GET("/", Home)
 	r.GET("/about", About)
-	r.GET("/settings", Settings)
 	r.GET("/theme", ThemeList)
 	r.GET("/theme/{key}", ThemeEdit)
 	r.POST("/theme/{key}", ThemeSave)
@@ -26,14 +25,14 @@ func AppRoutes() fasthttp.RequestHandler {
 	r.GET("/auth/callback/{key}", AuthCallback)
 	r.GET("/auth/logout/{key}", AuthLogout)
 
-	r.GET("/admin", Admin)
-	r.GET("/admin/{path:*}", Admin)
-
 	// $PF_SECTION_START(routes)$
 	// $PF_SECTION_END(routes)$
 
-	r.GET("/sandbox", SandboxList)
-	r.GET("/sandbox/{key}", SandboxRun)
+	r.GET("/admin", Admin)
+	r.GET("/admin/sandbox", SandboxList)
+	r.GET("/admin/sandbox/{key}", SandboxRun)
+	r.GET("/admin/settings", Settings)
+	r.GET("/admin/{path:*}", Admin)
 
 	r.GET("/favicon.ico", Favicon)
 	r.GET("/robots.txt", RobotsTxt)

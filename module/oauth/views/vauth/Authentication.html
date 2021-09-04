@@ -18,7 +18,7 @@
     {%- else -%}
     <ul>
       {%- for _, prv := range prvs -%}
-      <li><a href="/auth/{%s prv.ID %}?refer={%u `/settings` %}">{%s auth.AvailableProviderNames[prv.ID] %}</a></li>
+      <li><a href="/auth/{%s prv.ID %}?refer={%u `/admin/settings` %}">{%s auth.AvailableProviderNames[prv.ID] %}</a></li>
       {%- endfor -%}
     </ul>
     {%- endif -%}

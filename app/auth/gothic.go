@@ -49,9 +49,9 @@ func CompleteUserAuth(prv *Provider, rc *fasthttp.RequestCtx, websess *sessions.
 		return nil, nil, err
 	}
 
-	user, err := g.FetchUser(sess)
+	u, err := g.FetchUser(sess)
 	if err == nil {
-		return addToSession(user.Provider, user.Email, rc, websess, logger)
+		return addToSession(u.Provider, u.Email, rc, websess, logger)
 	}
 
 	_, err = sess.Authorize(g, &params{q: rc.Request.URI().QueryArgs()})

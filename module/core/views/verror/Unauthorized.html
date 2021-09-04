@@ -4,16 +4,18 @@
   "{{{ .Package }}}/views/layout"
 ) %}
 
-{% code type NotFound struct {
+{% code type Unauthorized struct {
   layout.Basic
   Path string
+  Message string
 } %}
 
-{% func (p *NotFound) Body(as *app.State, ps *cutil.PageState) %}
+{% func (p *Unauthorized) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>404</h3>
-    <em>Page not found</em>
+    <h3>Unauthorized</h3>
+    <em>{%s p.Message %}</em>
     <p>We can't find anything at <code>{%s p.Path %}</code></p>
-    <p>Sorry about that, maybe try the <a href="/">home page</a>?</p>
+    <p>Sorry about that, maybe try <a href="/profile">logging in</a>?</p>
   </div>
 {% endfunc %}
+

@@ -78,6 +78,8 @@ func loadPageState(rc *fasthttp.RequestCtx, key string, as *app.State) *cutil.Pa
 			a = user.AccountsFromString(authS)
 		}
 	}
+	isAuthed, _ := user.Check("/", a)
+	isAdmin, _ := user.Check("/admin", a)
 
 	return &cutil.PageState{
 		Method:   string(rc.Method()),
@@ -86,6 +88,8 @@ func loadPageState(rc *fasthttp.RequestCtx, key string, as *app.State) *cutil.Pa
 		Session:  session,
 		Profile:  prof,
 		Accounts: a,
+		Authed:   isAuthed,
+		Admin:    isAdmin,
 		Icons:    initialIcons,
 		Context:  traceCtx,
 		Span:     &span,

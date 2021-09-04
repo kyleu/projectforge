@@ -28,7 +28,7 @@ func Lib() (int32, error) {
 		return 0, err
 	}
 
-	logger.Infof("%v library started on port [%d]", util.AppName, port)
+	logger.Infof("%s library started on port [%d]", util.AppName, port)
 
 	go func() {
 		e := serve(util.AppKey, listener, r)

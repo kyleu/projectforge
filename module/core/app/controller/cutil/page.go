@@ -15,27 +15,29 @@ import (
 )
 
 type PageState struct {
-	Title         string             `json:"title"`
-	Description   string             `json:"description"`
-	Method        string             `json:"method"`
+	Title         string             `json:"title,omitempty"`
+	Description   string             `json:"description,omitempty"`
+	Method        string             `json:"method,omitempty"`
 	URI           *fasthttp.URI      `json:"-"`
-	Menu          menu.Items         `json:"menu"`
-	Breadcrumbs   Breadcrumbs        `json:"breadcrumbs"`
-	Flashes       []string           `json:"flashes"`
+	Menu          menu.Items         `json:"menu,omitempty"`
+	Breadcrumbs   Breadcrumbs        `json:"breadcrumbs,omitempty"`
+	Flashes       []string           `json:"flashes,omitempty"`
 	Session       *sessions.Session  `json:"-"`
-	Profile       *user.Profile      `json:"profile"`
-	Accounts      user.Accounts      `json:"accounts"`
-	Icons         []string           `json:"icons"`
-	RootIcon      string             `json:"rootIcon"`
-	RootPath      string             `json:"rootPath"`
-	RootTitle     string             `json:"rootTitle"`
-	SearchPath    string             `json:"searchPath"`
-	ProfilePath   string             `json:"profilePath"`
-	Data          interface{}        `json:"data"`
+	Profile       *user.Profile      `json:"profile,omitempty"`
+	Accounts      user.Accounts      `json:"accounts,omitempty"`
+	Authed        bool               `json:"authed,omitempty"`
+	Admin         bool               `json:"admin,omitempty"`
+	Icons         []string           `json:"icons,omitempty"`
+	RootIcon      string             `json:"rootIcon,omitempty"`
+	RootPath      string             `json:"rootPath,omitempty"`
+	RootTitle     string             `json:"rootTitle,omitempty"`
+	SearchPath    string             `json:"searchPath,omitempty"`
+	ProfilePath   string             `json:"profilePath,omitempty"`
+	Data          interface{}        `json:"data,omitempty"`
 	Logger        *zap.SugaredLogger `json:"-"`
 	Context       context.Context    `json:"-"`
 	Span          *trace.Span        `json:"-"`
-	RenderElapsed float64            `json:"renderElapsed"`
+	RenderElapsed float64            `json:"renderElapsed,omitempty"`
 }
 
 func (p *PageState) AddIcon(n string) {

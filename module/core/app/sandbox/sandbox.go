@@ -39,9 +39,9 @@ func Menu() *menu.Item {
 	ret := make(menu.Items, 0, len(AllSandboxes))
 	for _, s := range AllSandboxes {
 		desc := fmt.Sprintf("Sandbox [%s]", s.Key)
-		rt := fmt.Sprintf("/sandbox/%s", s.Key)
+		rt := fmt.Sprintf("/admin/sandbox/%s", s.Key)
 		ret = append(ret, &menu.Item{Key: s.Key, Title: s.Title, Icon: s.Icon, Description: desc, Route: rt})
 	}
 	desc := "Playgrounds for testing new features"
-	return &menu.Item{Key: "sandbox", Title: "Sandboxes", Description: desc, Icon: "star", Route: "/sandbox", Children: ret}
+	return &menu.Item{Key: "sandbox", Title: "Sandboxes", Description: desc, Icon: "star", Route: "/admin/sandbox", Children: ret}
 }

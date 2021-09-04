@@ -2,8 +2,36 @@
 package user
 
 import (
+	"fmt"
+	"sort"
 	"strings"
+
+	"go.uber.org/zap"
 )
+
+const permPrefix = "perm: "
+
+var (
+	PermissionsLogger *zap.SugaredLogger
+	perms             Permissions
+)
+
+func SetPermissions(allowDefault bool, ps ...*Permission) {
+	perms = make(Permissions, 0, len(ps)+4)
+	perms = append(perms, Perm("/auth", "*", true))
+	perms = append(perms, Perm("/profile", "*", true))
+	perms = append(perms, ps...)
+	perms = append(perms, Perm("/admin", "*", false))
+	perms = append(perms, Perm("/", "*", allowDefault))
+}
+
+func GetPermissions() Permissions {
+	ret := make(Permissions, 0, len(perms))
+	for _, x := range perms {
+		ret = append(ret, x)
+	}
+	return ret
+}
 
 type Permission struct {
 	Path  string `json:"path"`
@@ -11,23 +39,59 @@ type Permission struct {
 	Allow bool   `json:"allow"`
 }
 
+func Check(path string, accounts Accounts) (bool, string) {
+	return perms.Check(path, accounts)
+}
+
+func Perm(p string, m string, a bool) *Permission {
+	return &Permission{Path: p, Match: m, Allow: a}
+}
+
 func (p Permission) Matches(path string) bool {
 	return strings.HasPrefix(path, p.Path)
 }
 
+func (p Permission) String() string {
+	return fmt.Sprintf("%s [%s::%t]", p.Path, p.Match, p.Allow)
+}
+
 type Permissions []*Permission
 
-func (p Permissions) Check(path string, accounts Accounts) bool {
-	if p == nil {
-		return true
+func (p Permissions) Sort() {
+	sort.Slice(p, func(i, j int) bool {
+		l, r := p[i], p[j]
+		if l.Path == r.Path {
+			return l.Match < r.Match
+		}
+		return l.Path < r.Path
+	})
+}
+
+func (p Permissions) Check(path string, accounts Accounts) (bool, string) {
+	if PermissionsLogger != nil {
+		PermissionsLogger.Debugf(permPrefix+"checking [%d] permissions for [%s]", len(p), accounts.String())
+	}
+	if len(p) == 0 {
+		msg := "no permissions configured"
+		if PermissionsLogger != nil {
+			PermissionsLogger.Debug(permPrefix + msg)
+		}
+		return true, msg
 	}
 	for _, perm := range p {
-		if accounts.Matches(perm.Match) {
-			if perm.Matches(path) {
-				println("####", perm.Path, "::", perm.Allow)
-				return true
+		if perm.Matches(path) {
+			if accounts.Matches(perm.Match) {
+				msg := fmt.Sprintf("matched [%s], result [%t]", perm.Match, perm.Allow)
+				if PermissionsLogger != nil {
+					PermissionsLogger.Debug(permPrefix + msg)
+				}
+				return perm.Allow, msg
 			}
 		}
 	}
-	return false
+	msg := fmt.Sprintf("no matches among [%d] permissions", len(p))
+	if PermissionsLogger != nil {
+		PermissionsLogger.Debug(permPrefix + msg)
+	}
+	return false, msg
 }

@@ -12,5 +12,7 @@ type Service struct {
 }
 
 func NewService(baseURL string, logger *zap.SugaredLogger) *Service {
-	return &Service{baseURL: baseURL, logger: logger}
+	ret := &Service{baseURL: baseURL, logger: logger}
+	_ = ret.load()
+	return ret
 }

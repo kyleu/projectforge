@@ -2,6 +2,7 @@
   "{{{ .Package }}}/app"
   "{{{ .Package }}}/app/controller/cutil"
   "{{{ .Package }}}/app/settings"
+  "{{{ .Package }}}/app/user"
   "{{{ .Package }}}/views/components"
   "{{{ .Package }}}/views/layout"{{{ if .HasModule "oauth" }}}
   "{{{ .Package }}}/views/vauth"{{{ end }}}
@@ -10,6 +11,7 @@
 {% code type Settings struct {
   layout.Basic
   Settings *settings.Settings
+  Perms user.Permissions
 } %}
 
 {% func (p *Settings) Body(as *app.State, ps *cutil.PageState) %}
@@ -23,5 +25,6 @@
     <p><a href="/theme">Edit Themes</a></p>
   </div>{{{ if .HasModule "oauth" }}}
   {%= vauth.Authentication(as) %}{{{ end }}}
+  {%= vauth.Permissions(p.Perms, as) %}
   {%= components.JSONModal("settings", "Settings JSON", p.Settings, 1) %}
 {% endfunc %}

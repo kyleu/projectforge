@@ -3,6 +3,7 @@
   "github.com/kyleu/projectforge/app"
   "github.com/kyleu/projectforge/app/controller/cutil"
   "github.com/kyleu/projectforge/app/settings"
+  "github.com/kyleu/projectforge/app/user"
   "github.com/kyleu/projectforge/views/components"
   "github.com/kyleu/projectforge/views/layout"
   "github.com/kyleu/projectforge/views/vauth"
@@ -11,6 +12,7 @@
 {% code type Settings struct {
   layout.Basic
   Settings *settings.Settings
+  Perms user.Permissions
 } %}
 
 {% func (p *Settings) Body(as *app.State, ps *cutil.PageState) %}
@@ -24,5 +26,6 @@
     <p><a href="/theme">Edit Themes</a></p>
   </div>
   {%= vauth.Authentication(as) %}
+  {%= vauth.Permissions(p.Perms, as) %}
   {%= components.JSONModal("settings", "Settings JSON", p.Settings, 1) %}
 {% endfunc %}

@@ -13,7 +13,7 @@
     <h3>Sandboxes</h3>
     <ul>
       {% for _, s := range sandbox.AllSandboxes %}
-        <li><a href="/sandbox/{%s s.Key %}">{%s s.Title %}</a></li>
+        <li><a href="/admin/sandbox/{%s s.Key %}">{%s s.Title %}</a></li>
       {% endfor %}
     </ul>
   </div>

@@ -32,10 +32,6 @@ func Admin(rc *fasthttp.RequestCtx) {
 			ps.Data = mods.Deps
 			return render(rc, as, &vadmin.Modules{Mods: mods.Deps}, ps, "Administration||/admin", "Modules")
 		case "session":
-			err := takeHeapProfile()
-			if err != nil {
-				return "", err
-			}
 			ps.Title = "Session Debug"
 			return render(rc, as, &vadmin.Session{}, ps, "Administration||/admin", "Session")
 		case "cpu":

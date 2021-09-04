@@ -75,7 +75,7 @@ func clean(as *app.State, ps *cutil.PageState) error {
 		ps.ProfilePath = defaultProfilePath
 	}
 	if len(ps.Menu) == 0 {
-		m, err := MenuFor(ps.Context, as)
+		m, err := MenuFor(ps.Context, ps.Authed, ps.Admin, as)
 		if err != nil {
 			return err
 		}

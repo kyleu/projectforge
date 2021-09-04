@@ -14,18 +14,26 @@ import (
 	"github.com/kyleu/projectforge/app/util"
 )
 
-func MenuFor(ctx context.Context, as *app.State) (menu.Items, error) {
-	return menu.Items{
-		projectMenu(as.Services.Projects.Projects()),
-		menu.Separator,
-		moduleMenu(as.Services.Modules.Modules()),
-		menu.Separator,
-		sandbox.Menu(),
-		menu.Separator,
-		&menu.Item{Key: "settings", Title: "Settings", Description: "System-wide settings and preferences", Icon: "cog", Route: "/settings"},
-		itemFor(action.TypeDoctor, "first-aid", "/doctor"),
-		&menu.Item{Key: "about", Title: "About", Description: "Get assistance and advice for using " + util.AppName, Icon: "question", Route: "/about"},
-	}, nil
+func MenuFor(ctx context.Context, isAuthed bool, isAdmin bool, as *app.State) (menu.Items, error) {
+	var ret menu.Items
+	if isAuthed {
+		ret = append(ret,
+			projectMenu(as.Services.Projects.Projects()),
+			menu.Separator,
+			moduleMenu(as.Services.Modules.Modules()),
+			menu.Separator,
+		)
+	}
+	if isAdmin {
+		ret = append(ret,
+			sandbox.Menu(),
+			menu.Separator,
+			&menu.Item{Key: "settings", Title: "Settings", Description: "System-wide settings and preferences", Icon: "cog", Route: "/admin/settings"},
+			itemFor(action.TypeDoctor, "first-aid", "/doctor"),
+		)
+	}
+	ret = append(ret, &menu.Item{Key: "about", Title: "About", Description: "Get assistance and advice for using " + util.AppName, Icon: "question", Route: "/about"})
+	return ret, nil
 }
 
 func itemFor(t action.Type, i string, r string) *menu.Item {

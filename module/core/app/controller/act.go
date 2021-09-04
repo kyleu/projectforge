@@ -9,6 +9,7 @@ import (
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller/cutil"{{{ if.HasModule "marketing" }}}
 	"{{{ .Package }}}/app/site"{{{ end }}}
+	"{{{ .Package }}}/app/user"
 )
 
 const (
@@ -18,12 +19,11 @@ const (
 )
 
 func act(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
-	actNoAuth(key, rc, f)
-}
-
-func actNoAuth(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
 	as := _currentAppState
 	ps := loadPageState(rc, key, as)
+	if allowed, reason := user.Check(string(ps.URI.Path()), ps.Accounts); !allowed {
+		f = Unauthorized(rc, reason)
+	}
 	err := initAppRequest(as, ps)
 	if err != nil {
 		as.Logger.Warnf("%+v", err)
@@ -32,13 +32,12 @@ func actNoAuth(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cu
 }
 {{{ if.HasModule "marketing" }}}
 func actSite(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
-	actSiteNoAuth(key, rc, f)
-}
-
-func actSiteNoAuth(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
 	as := _currentSiteState
 	ps := loadPageState(rc, key, as)
 	ps.Menu = site.Menu(ps.Profile, ps.Accounts)
+	if allowed, reason := user.Check(string(ps.URI.Path()), ps.Accounts); !allowed {
+		f = Unauthorized(rc, reason)
+	}
 	err := initSiteRequest(as, ps)
 	if err != nil {
 		as.Logger.Warnf("%+v", err)

@@ -52,8 +52,29 @@ func (a Accounts) GetByProvider(p string) Accounts {
 	return ret
 }
 
-func (a Accounts) Matches(m string) bool {
-	return true
+func (a Accounts) Matches(match string) bool {
+	if match == "" || match == "*" {
+		return true
+	}
+	if strings.Contains(match, ",") {
+		xs := util.SplitAndTrim(match, ",")
+		for _, x := range xs {
+			if a.Matches(x) {
+				return true
+			}
+		}
+		return false
+	}
+	prv, acct := util.SplitString(match, ':', true)
+	for _, x := range a {
+		if x.Provider == prv {
+			if acct == "" {
+				return true
+			}
+			return strings.HasSuffix(x.Email, acct)
+		}
+	}
+	return false
 }
 
 func (a Accounts) Purge(keys ...string) Accounts {

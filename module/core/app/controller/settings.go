@@ -6,6 +6,7 @@ import (
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller/cutil"
 	"{{{ .Package }}}/app/settings"
+	"{{{ .Package }}}/app/user"
 	"{{{ .Package }}}/views/vsettings"
 )
 
@@ -14,6 +15,6 @@ func Settings(rc *fasthttp.RequestCtx) {
 		current := &settings.Settings{}
 		ps.Title = "Settings"
 		ps.Data = current
-		return render(rc, as, &vsettings.Settings{Settings: current}, ps, "settings")
+		return render(rc, as, &vsettings.Settings{Settings: current, Perms: user.GetPermissions()}, ps, "settings")
 	})
 }
