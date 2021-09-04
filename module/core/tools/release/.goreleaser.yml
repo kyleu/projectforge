@@ -75,21 +75,7 @@ release:
     - glob: "./build/dist/*.dmg"{{{ if .Build.SkipDesktop }}}{{{ else }}}
     - glob: "./build/dist/*_desktop_*.zip"{{{ end }}}
     - glob: "./build/dist/*_mobile_*.zip"
-{{{if .Build.SkipScoop}}}{{{else}}}
-scoop:
-  bucket:
-    owner: "{{{ .Info.Org }}}"
-    name: "{{{ .Key }}}"
-  commit_author:
-    name: "{{{ .Info.AuthorName }}}"
-    email: "{{{ .Info.AuthorEmail }}}"
-  folder: tools/release
-  commit_msg_template: "Scoop update for {{ .ProjectName }} version {{ .Tag }}"
-  homepage: "{{{ .Info.Homepage }}}"
-  description: "{{{ .Info.Summary }}}"
-  license: "{{{ .Info.License }}}"
-  skip_upload: false
-{{{end}}}{{{if .Build.SkipSigning}}}{{{else}}}
+{{{if .Build.SkipSigning}}}{{{else}}}
 signs:
   - artifacts: checksum
 {{{ end }}}{{{if .Build.SkipSnapcraft}}}{{{else}}}

@@ -77,19 +77,6 @@ release:
     - glob: "./build/dist/*_desktop_*.zip"
     - glob: "./build/dist/*_mobile_*.zip"
 
-scoop:
-  bucket:
-    owner: "kyleu"
-    name: "projectforge"
-  commit_author:
-    name: "Kyle U"
-    email: "kyle@kyleu.com"
-  commit_msg_template: "Scoop update for {{ .ProjectName }} version {{ .Tag }}"
-  homepage: "https://projectforge.dev"
-  description: "Build cool stuff with projectforge"
-  license: "Proprietary"
-  skip_upload: false
-
 signs:
   - artifacts: checksum
 
