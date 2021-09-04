@@ -5,6 +5,7 @@ import (
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller/cutil"
+	"{{{ .Package }}}/app/user"
 	"{{{ .Package }}}/views/verror"
 )
 
@@ -28,7 +29,7 @@ func NotFound(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func Unauthorized(rc *fasthttp.RequestCtx, reason string) func(as *app.State, ps *cutil.PageState) (string, error) {
+func Unauthorized(rc *fasthttp.RequestCtx, reason string, accounts user.Accounts) func(as *app.State, ps *cutil.PageState) (string, error) {
 	return func(as *app.State, ps *cutil.PageState) (string, error) {
 		cutil.WriteCORS(rc)
 		rc.Response.Header.Set("Content-Type", "text/html; charset=utf-8")
@@ -39,6 +40,6 @@ func Unauthorized(rc *fasthttp.RequestCtx, reason string) func(as *app.State, ps
 			ps.Title = "Unauthorized"
 		}
 		ps.Data = ps.Title
-		return render(rc, as, &verror.Unauthorized{Path: path, Message: reason}, ps, "Unauthorized")
+		return render(rc, as, &verror.Unauthorized{Path: path, Message: reason, Accounts: accounts}, ps, "Unauthorized")
 	}
 }

@@ -2,6 +2,7 @@
 {% import (
   "github.com/kyleu/projectforge/app"
   "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/app/user"
   "github.com/kyleu/projectforge/views/layout"
 ) %}
 
@@ -9,14 +10,17 @@
   layout.Basic
   Path string
   Message string
+  Accounts user.Accounts
 } %}
 
 {% func (p *Unauthorized) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>Unauthorized</h3>
     <em>{%s p.Message %}</em>
-    <p>We can't find anything at <code>{%s p.Path %}</code></p>
+    <p>Your not authorized to view <code>{%s p.Path %}</code></p>
+    {%- if len(p.Accounts) == 0 -%}
     <p>Sorry about that, maybe try <a href="/profile">logging in</a>?</p>
+    {%- endif -%}
   </div>
 {% endfunc %}
 

@@ -23,7 +23,7 @@ func act(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.Pa
 	as := _currentAppState
 	ps := loadPageState(rc, key, as)
 	if allowed, reason := user.Check(string(ps.URI.Path()), ps.Accounts); !allowed {
-		f = Unauthorized(rc, reason)
+		f = Unauthorized(rc, reason, ps.Accounts)
 	}
 	err := initAppRequest(as, ps)
 	if err != nil {
@@ -37,7 +37,7 @@ func actSite(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cuti
 	ps := loadPageState(rc, key, as)
 	ps.Menu = site.Menu(ps.Profile, ps.Accounts)
 	if allowed, reason := user.Check(string(ps.URI.Path()), ps.Accounts); !allowed {
-		f = Unauthorized(rc, reason)
+		f = Unauthorized(rc, reason, ps.Accounts)
 	}
 	err := initSiteRequest(as, ps)
 	if err != nil {

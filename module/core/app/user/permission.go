@@ -21,6 +21,7 @@ func SetPermissions(allowDefault bool, ps ...*Permission) {
 	perms = append(perms, Perm("/profile", "*", true))
 	perms = append(perms, ps...)
 	perms = append(perms, Perm("/admin", "*", false))
+	perms = append(perms, Perm("/about", "*", true))
 	perms = append(perms, Perm("/", "*", allowDefault))
 }
 
