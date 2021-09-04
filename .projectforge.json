@@ -2,7 +2,7 @@
   "key": "projectforge",
   "type": "projectforge.dev",
   "name": "Project Forge",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "package": "github.com/kyleu/projectforge",
   "port": 40000,
   "modules": [
