@@ -3,6 +3,8 @@ package telemetry
 
 import (
 	"context"
+	"os"
+	"strings"
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp"
@@ -36,10 +38,15 @@ func Initialize(logger *zap.SugaredLogger) {
 		logger.Warn("double telemetry initialization")
 		return
 	}
+	otel.SetErrorHandler(&ErrHandler{logger: logger})
 	initialized = true
 	logger.Debug("initializing tracing telemetry")
 
-	tp, err := buildTP("localhost:55681")
+	endpoint := "localhost:55681"
+	if env := os.Getenv(util.AppKey + "_telemetry_endpoint"); env != "" {
+		endpoint = env
+	}
+	tp, err := buildTP(endpoint)
 	if err != nil {
 		logger.Errorf("unable to create tracing provider: %+v", err)
 		return
@@ -73,4 +80,28 @@ func Close() error {
 func StartSpan(ctx context.Context, tracerKey string, spanName string) (context.Context, trace.Span) {
 	tr := otel.GetTracerProvider().Tracer(tracerKey)
 	return tr.Start(ctx, spanName, trace.WithSpanKind(trace.SpanKindServer))
+}
+
+type ErrHandler struct {
+	logger     *zap.SugaredLogger
+	hasPrinted bool
+}
+
+func (e *ErrHandler) Handle(err error) {
+	if err == nil {
+		return
+	}
+	msg := err.Error()
+	if strings.HasPrefix(msg, "Post \"") {
+		if e.hasPrinted {
+			return
+		}
+		if idx := strings.Index(msg, "\":"); idx > -1 {
+			msg = strings.TrimSpace(msg[idx + 2:])
+		}
+		e.logger.Warn("telemetry seems to be unavailable: [" + msg + "] (this message will appear only once)")
+		e.hasPrinted = true
+		return
+	}
+	e.logger.Warnf("telemetry error: %+v", err)
 }

@@ -83,6 +83,7 @@ scoop:
   commit_author:
     name: "{{{ .Info.AuthorName }}}"
     email: "{{{ .Info.AuthorEmail }}}"
+  folder: tools/release
   commit_msg_template: "Scoop update for {{ .ProjectName }} version {{ .Tag }}"
   homepage: "{{{ .Info.Homepage }}}"
   description: "{{{ .Info.Summary }}}"
