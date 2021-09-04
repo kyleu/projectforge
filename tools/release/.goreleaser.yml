@@ -38,6 +38,13 @@ dockers:
       - "ghcr.io/kyleu/projectforge:v{{ .Major }}.{{ .Minor }}"
       - "ghcr.io/kyleu/projectforge:latest"
     dockerfile: ./tools/release/Dockerfile
+  -
+    image_templates:
+      - "ghcr.io/kyleu/projectforge:{{ .Tag }}-debug"
+      - "ghcr.io/kyleu/projectforge:v{{ .Major }}-debug"
+      - "ghcr.io/kyleu/projectforge:v{{ .Major }}.{{ .Minor }}-debug"
+      - "ghcr.io/kyleu/projectforge:latest-debug"
+    dockerfile: ./tools/release/debug.Dockerfile
 
 dist: "build/dist"
 

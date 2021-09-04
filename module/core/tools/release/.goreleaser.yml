@@ -37,6 +37,13 @@ dockers:
       - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:v{{ .Major }}.{{ .Minor }}"
       - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:latest"
     dockerfile: ./tools/release/Dockerfile
+  -
+    image_templates:
+      - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:{{ .Tag }}-debug"
+      - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:v{{ .Major }}-debug"
+      - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:v{{ .Major }}.{{ .Minor }}-debug"
+      - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:latest-debug"
+    dockerfile: ./tools/release/debug.Dockerfile
 
 dist: "build/dist"
 {{{if .Build.SkipNFPMS}}}{{{else}}}
