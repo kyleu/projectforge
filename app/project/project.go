@@ -2,12 +2,16 @@ package project
 
 import (
 	"github.com/kyleu/projectforge/app/theme"
+	"github.com/kyleu/projectforge/app/util"
 )
+
+var DefaultIcon = "code"
 
 type Project struct {
 	Key      string       `json:"key"`
 	Type     string       `json:"type"`
 	Name     string       `json:"name,omitempty"`
+	Icon     string       `json:"icon,omitempty"`
 	Exec     string       `json:"exec,omitempty"`
 	Version  string       `json:"version"`
 	Package  string       `json:"package,omitempty"`
@@ -36,6 +40,14 @@ func (p *Project) Executable() string {
 		return p.Key
 	}
 	return p.Exec
+}
+
+func (p *Project) SafeIcon() string {
+	_, ok := util.SVGLibrary[p.Icon]
+	if !ok {
+		return DefaultIcon
+	}
+	return p.Icon
 }
 
 func NewProject(key string, path string) *Project {

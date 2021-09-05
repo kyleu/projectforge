@@ -1,5 +1,6 @@
 {
   "name": "Desktop",
+  "icon": "desktop",
   "description": "Provides a desktop application using the system's webview",
   "authorName": "Kyle U",
   "authorEmail": "kyle@kyleu.com",

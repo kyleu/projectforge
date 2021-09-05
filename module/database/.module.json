@@ -1,5 +1,6 @@
 {
   "name": "Database",
+  "icon": "database",
   "description": "Provides an API for accessing PostgreSQL or SQLite databases",
   "authorName": "Kyle U",
   "authorEmail": "kyle@kyleu.com",

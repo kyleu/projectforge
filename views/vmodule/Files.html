@@ -20,7 +20,7 @@
     u := "/m/" + mod.Key + "/fs"
   -%}
 
-  {%= Summary(mod) %}
+  {%= Summary(mod, ps) %}
 
   {%- if fs.IsDir(filepath.Join(p.Path...)) -%}
   {%- code files := fs.ListFiles(filepath.Join(p.Path...), nil) -%}

@@ -12,7 +12,7 @@
 
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
   {%- code mod := p.Module -%}
-  {%= Summary(mod) %}
+  {%= Summary(mod, ps) %}
   <div class="card">
     <h3>Details</h3>
     <table class="mt">

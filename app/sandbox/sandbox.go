@@ -44,5 +44,5 @@ func Menu() *menu.Item {
 		ret = append(ret, &menu.Item{Key: s.Key, Title: s.Title, Icon: s.Icon, Description: desc, Route: rt})
 	}
 	desc := "Playgrounds for testing new features"
-	return &menu.Item{Key: "sandbox", Title: "Sandboxes", Description: desc, Icon: "star", Route: "/admin/sandbox", Children: ret}
+	return &menu.Item{Key: "sandbox", Title: "Sandboxes", Description: desc, Icon: "play", Route: "/admin/sandbox", Children: ret}
 }

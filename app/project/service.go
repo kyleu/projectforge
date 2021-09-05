@@ -135,6 +135,9 @@ func (s *Service) load(path string) (*Project, error) {
 }
 
 func (s *Service) Save(prj *Project) error {
+	if prj.Icon == DefaultIcon {
+		prj.Icon = ""
+	}
 	tgtFS := s.GetFilesystem(prj)
 	j := util.ToJSON(prj) + "\n"
 	err := tgtFS.WriteFile(ConfigFilename, []byte(j), filesystem.DefaultMode, true)

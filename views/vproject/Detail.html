@@ -26,7 +26,7 @@
     }
     buildMap := build.ToMap()
   -%}
-  {%= Summary(prj) %}
+  {%= Summary(prj, ps) %}
   <div class="card">
     <div class="right"><a href="/p/{%s p.Project.Key %}/edit"><button>Edit</button></a></div>
     <h3>Details</h3>

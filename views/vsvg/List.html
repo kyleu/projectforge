@@ -16,7 +16,7 @@
 } %}
 
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
-  {%= vproject.Summary(p.Project) %}
+  {%= vproject.Summary(p.Project, ps) %}
   <div class="card">
     <h3>SVG icons</h3>
     <a href="/p/{%s p.Project.Key %}/svg/x/build"><button>Rebuild</button></a>

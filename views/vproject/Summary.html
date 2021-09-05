@@ -1,14 +1,15 @@
 {% import (
   "strings"
   "github.com/kyleu/projectforge/app/action"
+  "github.com/kyleu/projectforge/app/controller/cutil"
   "github.com/kyleu/projectforge/app/project"
   "github.com/kyleu/projectforge/views/components"
 ) %}
 
-{% func Summary(prj *project.Project, path ...string) %}
+{% func Summary(prj *project.Project, ps *cutil.PageState, path ...string) %}
   <div class="card">
     <div class="right"><a href="#modal-project-{%s prj.Key %}"><button type="button">JSON</button></a></div>
-    <h3>{%s prj.Title() %}</h3>
+    <h3>{%= components.SVGRefIcon(prj.SafeIcon(), ps) %} {%s prj.Title() %}</h3>
     <div class="mt">
       {%- for _, t := range action.ProjectTypes -%}
       <a href="/run/{%s prj.Key %}/{%s t.Key %}" title="{%s t.Description %}"><button>{%s t.Title %}</button></a>

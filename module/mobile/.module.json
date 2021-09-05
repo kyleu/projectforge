@@ -1,5 +1,6 @@
 {
   "name": "Mobile App",
+  "icon": "mobile",
   "description": "Configures a webview based application for Android and iOS",
   "authorName": "Kyle U",
   "authorEmail": "kyle@kyleu.com",

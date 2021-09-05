@@ -1,5 +1,6 @@
 {
   "name": "OAuth",
+  "icon": "fingerprint",
   "description": "Provides logins and session management for many OAuth providers",
   "authorName": "Kyle U",
   "authorEmail": "kyle@kyleu.com",

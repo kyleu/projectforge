@@ -41,20 +41,20 @@ func itemFor(t action.Type, i string, r string) *menu.Item {
 }
 
 func projectMenu(prjs project.Projects) *menu.Item {
-	ret := &menu.Item{Key: "projects", Title: "Projects", Description: "View all of the projects managed by this application", Icon: "star", Route: "/p"}
+	ret := &menu.Item{Key: "projects", Title: "Projects", Description: "View all of the projects managed by this application", Icon: "code", Route: "/p"}
 	for _, prj := range prjs {
 		key := prj.Key
-		i := &menu.Item{Key: key, Title: prj.Title(), Icon: "star", Route: "/p/" + prj.Key}
+		i := &menu.Item{Key: key, Title: prj.Title(), Icon: prj.SafeIcon(), Route: "/p/" + prj.Key}
 		ret.Children = append(ret.Children, i)
 	}
 	return ret
 }
 
 func moduleMenu(mods module.Modules) *menu.Item {
-	ret := &menu.Item{Key: "modules", Title: "Modules", Description: "View all of the modules managed by this application", Icon: "star", Route: "/m"}
-	for _, prj := range mods {
-		key := prj.Key
-		i := &menu.Item{Key: key, Title: prj.Name, Icon: "star", Route: "/m/" + prj.Key}
+	ret := &menu.Item{Key: "modules", Title: "Modules", Description: "View all of the modules managed by this application", Icon: "archive", Route: "/m"}
+	for _, mod := range mods {
+		key := mod.Key
+		i := &menu.Item{Key: key, Title: mod.Name, Icon: mod.SafeIcon(), Route: "/m/" + mod.Key}
 		ret.Children = append(ret.Children, i)
 	}
 	return ret

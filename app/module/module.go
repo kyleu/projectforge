@@ -4,11 +4,13 @@ import (
 	"sort"
 
 	"github.com/kyleu/projectforge/app/filesystem"
+	"github.com/kyleu/projectforge/app/util"
 )
 
 type Module struct {
 	Key         string                `json:"-"`
 	Name        string                `json:"name,omitempty"`
+	Icon        string                `json:"icon,omitempty"`
 	Description string                `json:"description,omitempty"`
 	AuthorName  string                `json:"authorName,omitempty"`
 	AuthorEmail string                `json:"authorEmail,omitempty"`
@@ -24,6 +26,15 @@ func (m *Module) Title() string {
 	}
 	return m.Name
 }
+
+func (m *Module) SafeIcon() string {
+	_, ok := util.SVGLibrary[m.Icon]
+	if !ok {
+		return "compass"
+	}
+	return m.Icon
+}
+
 
 type Modules []*Module
 

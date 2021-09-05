@@ -2,6 +2,7 @@
   "github.com/kyleu/projectforge/app"
   "github.com/kyleu/projectforge/app/controller/cutil"
   "github.com/kyleu/projectforge/app/project"
+  "github.com/kyleu/projectforge/views/components"
 ) %}
 
 {% func Table(prjs project.Projects, as *app.State, ps *cutil.PageState) %}
@@ -10,7 +11,7 @@
     <h3>Available Projects</h3>
     <ul>
       {%- for _, prj := range prjs -%}
-      <li><a href="/p/{%s prj.Key %}">{%s prj.Title() %}</a></li>
+      <li><a href="/p/{%s prj.Key %}">{%= components.SVGRef(prj.SafeIcon(), 16, 16, "icon", ps) %} {%s prj.Title() %}</a></li>
       {%- endfor -%}
     </ul>
   </div>
