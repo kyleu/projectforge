@@ -6,11 +6,8 @@ import (
 
 	"github.com/kyleu/projectforge/app/file"
 	"github.com/kyleu/projectforge/app/filesystem"
-	"github.com/sergi/go-diff/diffmatchpatch"
 	"go.uber.org/zap"
 )
-
-var dmp = diffmatchpatch.New()
 
 type Diff struct {
 	Path   string  `json:"path"`
@@ -30,19 +27,9 @@ func File(src *file.File, tgt *file.File) *Diff {
 	case tgt == nil:
 		ret.Status = StatusNew
 	default:
-		t1, t2, a := dmp.DiffLinesToChars(tgt.Content, src.Content)
-		diffs := dmp.DiffMain(t1, t2, true)
-		diffs = dmp.DiffCharsToLines(diffs, a)
-		diffs = dmp.DiffCleanupSemantic(diffs)
-		patches := dmp.PatchMake(tgt.Content, diffs)
-		if len(patches) > 0 {
-			// TODO: Figure out what works
-			ret.Patch = dmp.DiffPrettyHtml(diffs)
-			// ret.Patch = dmp.PatchToText(patches)
-			// pte, err := url.QueryUnescape(ret.Patch)
-			// if err == nil {
-			// 	ret.Patch = pte
-			// }
+		d := Calc(ret.Path, src.Content, tgt.Content)
+		if len(d.Changes) > 0 {
+			ret.Patch = d.Patch
 			ret.Status = StatusDifferent
 		} else {
 			ret.Status = StatusIdentical
@@ -93,7 +80,7 @@ func FileLoader(src file.Files, tgt filesystem.FileLoader, includeUnchanged bool
 		if skip {
 			d = &Diff{Path: s.FullPath(), Status: StatusSkipped}
 		} else {
-			d = File(s, tgtFile)
+			d = File(tgtFile, s)
 		}
 		if includeUnchanged || d.Status != StatusIdentical {
 			ret = append(ret, d)

@@ -69,5 +69,5 @@ func AppRoutes() fasthttp.RequestHandler {
 	r.NotFound = NotFound
 
 	p := httpmetrics.NewMetrics(util.AppKey)
-	return fasthttp.CompressHandler(p.WrapHandler(r))
+	return fasthttp.CompressHandlerBrotliLevel(p.WrapHandler(r), fasthttp.CompressBrotliBestSpeed, fasthttp.CompressBestSpeed)
 }

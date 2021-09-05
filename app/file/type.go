@@ -29,13 +29,14 @@ var (
 	TypePList      = Type{Key: "plist", Suffixes: []string{".plist"}, Title: "Apple configuration plist"}
 	TypeShell      = Type{Key: "shell", Suffixes: []string{".sh"}, Title: "Shell script"}
 	TypeSVG        = Type{Key: "svg", Suffixes: []string{".svg"}, Title: "Simple Vector Graphics file"}
+	TypeText       = Type{Key: "text", Suffixes: []string{".txt"}, Title: "Plaintext"}
 	TypeTypeScript = Type{Key: "typescript", Suffixes: []string{".ts"}, Title: "TypeScript source"}
 	TypeYAML       = Type{Key: "yaml", Suffixes: []string{".yml", ".yaml"}, Title: "YAML configuration source"}
 )
 
 var AllTypes = []Type{
 	TypeConf, TypeCSS, TypeDocker, TypeGo, TypeGoMod, TypeHCL, TypeHTML, TypeIcons, TypeIgnore, TypeJavaScript, TypeJSON,
-	TypeMakefile, TypeMarkdown, TypePList, TypeShell, TypeSVG, TypeTypeScript, TypeYAML,
+	TypeMakefile, TypeMarkdown, TypePList, TypeShell, TypeSVG, TypeText, TypeTypeScript, TypeYAML,
 }
 
 func TypeFromString(s string) Type {

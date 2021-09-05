@@ -49,6 +49,8 @@ func contentWithHeader(t Type, c string, logger *zap.SugaredLogger) string {
 		return secondLine(c, "# "+headerContent)
 	case TypeSVG.Key:
 		return c
+	case TypeText.Key:
+		return "# " + headerContent + "\n" + c
 	case TypeTypeScript.Key:
 		return "// " + headerContent + "\n" + c
 	case TypeYAML.Key:
