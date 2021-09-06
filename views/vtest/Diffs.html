@@ -2,7 +2,7 @@
   "fmt"
 
   "github.com/kyleu/projectforge/app"
-  "github.com/kyleu/projectforge/app/diffnew"
+  "github.com/kyleu/projectforge/app/diff"
   "github.com/kyleu/projectforge/app/controller/cutil"
   "github.com/kyleu/projectforge/app/util"
   "github.com/kyleu/projectforge/views/layout"
@@ -10,7 +10,7 @@
 
 {% code type Diffs struct {
   layout.Basic
-  Results []*diffnew.Result
+  Results []*diff.Result
 } %}
 
 {% func (p *Diffs) Body(as *app.State, ps *cutil.PageState) %}

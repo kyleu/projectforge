@@ -7,12 +7,17 @@
 
 {% func Table(prjs project.Projects, as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <div class="right"><a href="/p/_new"><button>New</button></a></div>
+    <div class="right"><a href="/p/new"><button>New</button></a></div>
     <h3>Available Projects</h3>
-    <ul>
-      {%- for _, prj := range prjs -%}
-      <li><a href="/p/{%s prj.Key %}">{%= components.SVGRef(prj.SafeIcon(), 16, 16, "icon", ps) %} {%s prj.Title() %}</a></li>
-      {%- endfor -%}
-    </ul>
+    <table class="mt">
+      <tbody>
+        {%- for _, prj := range prjs -%}
+        <tr>
+          <td><a href="/p/{%s prj.Key %}">{%= components.SVGRef(prj.SafeIcon(), 16, 16, "icon", ps) %} {%s prj.Title() %}</a></td>
+          <td>{%s prj.Package %}</td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
   </div>
 {% endfunc %}

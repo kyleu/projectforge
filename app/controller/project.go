@@ -2,12 +2,8 @@ package controller
 
 import (
 	"fmt"
-	"strconv"
-	"strings"
 
 	"github.com/kyleu/projectforge/app/project"
-	"github.com/kyleu/projectforge/app/theme"
-	"github.com/kyleu/projectforge/app/util"
 	"github.com/kyleu/projectforge/views/vproject"
 	"github.com/valyala/fasthttp"
 
@@ -38,66 +34,28 @@ func ProjectDetail(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func ProjectEdit(rc *fasthttp.RequestCtx) {
-	act("project.edit", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(rc, as)
-		if err != nil {
-			return "", err
-		}
-
-		ps.Title = fmt.Sprintf("%s (project %s)", prj.Title(), prj.Key)
+func ProjectForm(rc *fasthttp.RequestCtx) {
+	act("project.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj := project.NewProject("", "")
+		ps.Title = "New Project"
 		ps.Data = prj
-		return render(rc, as, &vproject.Edit{Project: prj}, ps, "projects", prj.Key)
+		return render(rc, as, &vproject.Edit{Project: prj}, ps, "projects", "New")
 	})
 }
 
-func ProjectSave(rc *fasthttp.RequestCtx) {
-	act("project.save", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(rc, as)
-		if err != nil {
-			return "", err
-		}
-
+func ProjectCreate(rc *fasthttp.RequestCtx) {
+	act("project.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		frm, err := cutil.ParseForm(rc)
 		if err != nil {
 			return "", err
 		}
-		get := func(k string, def string) string {
-			x, _ := frm.GetString(k, true)
-			if x == "" {
-				return def
-			}
-			return x
+		prj := project.NewProject("", "")
+		err = projectFromForm(frm, prj)
+		if err != nil {
+			return "", err
 		}
-		prj.Name = get("name", prj.Name)
-		prj.Version = get("version", prj.Version)
-		prj.Package = get("package", prj.Package)
-		prj.Args = get("args", prj.Args)
-		prj.Port, _ = strconv.Atoi(get("port", fmt.Sprintf("%d", prj.Port)))
-		prj.Modules = util.SplitAndTrim(get("modules", strings.Join(prj.Modules, "|")), "|")
-		prj.Ignore = util.SplitAndTrim(get("ignore", strings.Join(prj.Ignore, ",")), ",")
-		prj.Children = util.SplitAndTrim(get("children", strings.Join(prj.Children, "\n")), "\n")
-
-		prj.Info.Org = get("org", prj.Info.Org)
-		prj.Info.AuthorName = get("authorName", prj.Info.AuthorName)
-		prj.Info.AuthorEmail = get("authorEmail", prj.Info.AuthorEmail)
-		prj.Info.License = get("license", prj.Info.License)
-		prj.Info.Bundle = get("bundle", prj.Info.Bundle)
-		prj.Info.SigningIdentity = get("signingIdentity", prj.Info.SigningIdentity)
-		prj.Info.Homepage = get("homepage", prj.Info.Homepage)
-		prj.Info.Sourcecode = get("sourcecode", prj.Info.Sourcecode)
-		prj.Info.Summary = get("summary", prj.Info.Summary)
-		prj.Info.Description = get("description", prj.Info.Description)
-
-		prj.Build = project.BuildFromMap(frm)
-		if prj.Build.Empty() {
-			prj.Build = nil
-		}
-		prj.Theme = theme.ApplyMap(frm)
-		if prj.Theme.Equals(theme.ThemeDefault) {
-			prj.Theme = nil
-		}
-
+		key := frm.GetStringOpt("key")
+		prj.Key = key
 		err = as.Services.Projects.Save(prj)
 		if err != nil {
 			return ersp("unable to save project: %+v", err)
@@ -108,18 +66,38 @@ func ProjectSave(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func getProject(rc *fasthttp.RequestCtx, as *app.State) (*project.Project, error) {
-	key, err := rcRequiredString(rc, "key", true)
-	if err != nil {
-		return nil, err
-	}
+func ProjectEdit(rc *fasthttp.RequestCtx) {
+	act("project.edit", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, err := getProject(rc, as)
+		if err != nil {
+			return "", err
+		}
+		ps.Title = fmt.Sprintf("%s (project %s)", prj.Title(), prj.Key)
+		ps.Data = prj
+		return render(rc, as, &vproject.Edit{Project: prj}, ps, "projects", prj.Key)
+	})
+}
 
-	prj, err := as.Services.Projects.Get(key)
-	if err != nil {
-		return nil, err
-	}
-	if prj.Info == nil {
-		prj.Info = &project.Info{}
-	}
-	return prj, nil
+func ProjectSave(rc *fasthttp.RequestCtx) {
+	act("project.save", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		frm, err := cutil.ParseForm(rc)
+		if err != nil {
+			return "", err
+		}
+		prj, err := getProject(rc, as)
+		if err != nil {
+			return "", err
+		}
+		err = projectFromForm(frm, prj)
+		if err != nil {
+			return "", err
+		}
+		err = as.Services.Projects.Save(prj)
+		if err != nil {
+			return ersp("unable to save project: %+v", err)
+		}
+
+		msg := "Saved changes"
+		return flashAndRedir(true, msg, "/p/"+prj.Key, rc, ps)
+	})
 }

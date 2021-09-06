@@ -1,6 +1,5 @@
 {
   "key": "projectforge",
-  "type": "projectforge.dev",
   "name": "Project Forge",
   "icon": "app",
   "version": "0.0.11",

@@ -12,7 +12,7 @@ import (
 )
 
 func onTest(ctx context.Context, cfg util.ValueMap, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) *Result {
-	methodName, _ := cfg.GetString("method", true)
+	methodName := cfg.GetStringOpt("method")
 	logger.Infof("running test method [%s]...", methodName)
 	switch methodName {
 	case "":
@@ -45,7 +45,7 @@ func wipeIfNeeded(cfg util.ValueMap, logger *zap.SugaredLogger) error {
 	shouldWipe, _ := cfg.GetBool("wipe")
 	if shouldWipe {
 		fs := filesystem.NewFileSystem(".", logger)
-		path, _ := cfg.GetString("path", true)
+		path := cfg.GetStringOpt("path")
 		if path == "" {
 			return errors.New("must provide [path] as an argument")
 		}

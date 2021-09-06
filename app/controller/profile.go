@@ -60,14 +60,14 @@ func ProfileSave(rc *fasthttp.RequestCtx) {
 
 		n := ps.Profile.Clone()
 
-		referrer, _ := frm.GetString("referrer", true)
+		referrer := frm.GetStringOpt("referrer")
 		if referrer == "" {
 			referrer = "/profile"
 		}
 
-		n.Name, _ = frm.GetString("name", true)
-		n.Mode, _ = frm.GetString("mode", true)
-		n.Theme, _ = frm.GetString("theme", true)
+		n.Name = frm.GetStringOpt("name")
+		n.Mode = frm.GetStringOpt("mode")
+		n.Theme = frm.GetStringOpt("theme")
 		if n.Theme == theme.ThemeDefault.Key {
 			n.Theme = ""
 		}

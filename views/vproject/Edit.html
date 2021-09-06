@@ -33,8 +33,9 @@
       <h3>Project Details</h3>
       <table class="mt min-200">
         <tbody>
+        {%- if prj.Key == "" -%}
         {%= components.TableInput("key", "Key", prj.Key, 5) %}
-        {%= components.TableInput("type", "Type", prj.Type, 5) %}
+        {%- endif -%}
         {%= components.TableInput("name", "Name", prj.Name, 5) %}
         {%= components.TableInput("icon", "Icon", prj.Icon, 5) %}
         {%= components.TableInput("version", "Version", prj.Version, 5) %}
@@ -58,6 +59,7 @@
         </tr>
         {%= components.TableInput("ignore", "Ignore", strings.Join(prj.Ignore, ", "), 5) %}
         {%= components.TableTextarea("children", "Children", len(prj.Children), strings.Join(prj.Children, "\n"), 5) %}
+        {%= components.TableInput("path", "Path", prj.Path, 5) %}
         </tbody>
       </table>
     </div>

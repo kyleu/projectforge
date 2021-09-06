@@ -16,7 +16,7 @@ import (
 
 func onCreate(ctx context.Context, key string, cfg util.ValueMap, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) *Result {
 	ret := newResult(cfg, logger)
-	path, _ := cfg.GetString("path", true)
+	path := cfg.GetStringOpt("path")
 	if path == "" {
 		path = "."
 	}
@@ -110,7 +110,7 @@ func fullBuild(prj *project.Project, r *Result, logger *zap.SugaredLogger) *Resu
 
 func projectFromCfg(proto *project.Project, cfg util.ValueMap) *project.Project {
 	str := func(key string, def ...string) string {
-		ret, _ := cfg.GetString(key, true)
+		ret := cfg.GetStringOpt(key)
 		if ret == "" && len(def) > 0 {
 			ret = def[0]
 		}
@@ -130,7 +130,6 @@ func projectFromCfg(proto *project.Project, cfg util.ValueMap) *project.Project 
 	}
 	return &project.Project{
 		Key:     str("key", proto.Key),
-		Type:    proto.Type,
 		Version: proto.Version,
 		Name:    str("name", proto.Name),
 		Package: str("package", proto.Package),

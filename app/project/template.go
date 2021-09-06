@@ -10,7 +10,6 @@ import (
 
 type TemplateContext struct {
 	Key     string `json:"key"`
-	Type    string `json:"type"`
 	Name    string `json:"name,omitempty"`
 	Exec    string `json:"exec,omitempty"`
 	Version string `json:"version"`
@@ -65,7 +64,7 @@ func (p *Project) ToTemplateContext() *TemplateContext {
 	}
 
 	ret := &TemplateContext{
-		Key: p.Key, Type: p.Type, Name: p.Name, Exec: p.Exec, Version: p.Version, Package: p.Package, Args: p.Args, Port: p.Port,
+		Key: p.Key, Name: p.Name, Exec: p.Exec, Version: p.Version, Package: p.Package, Args: p.Args, Port: p.Port,
 		Modules: p.Modules, Info: i, Build: b, Theme: t, Ignore: ignore, IgnoreGrep: ignoreGrep,
 	}
 

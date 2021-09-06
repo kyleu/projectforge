@@ -30,6 +30,8 @@ func AppRoutes() fasthttp.RequestHandler {
 	r.GET("/doctor", Doctor)
 
 	r.GET("/p", ProjectList)
+	r.GET("/p/new", ProjectForm)
+	r.POST("/p/new", ProjectCreate)
 	r.GET("/p/{key}", ProjectDetail)
 	r.GET("/p/{key}/edit", ProjectEdit)
 	r.POST("/p/{key}/edit", ProjectSave)

@@ -2,15 +2,21 @@
   "github.com/kyleu/projectforge/app"
   "github.com/kyleu/projectforge/app/controller/cutil"
   "github.com/kyleu/projectforge/app/module"
+  "github.com/kyleu/projectforge/views/components"
 ) %}
 
 {% func Table(mods module.Modules, as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>Available Modules</h3>
-    <ul>
-      {%- for _, mod := range mods -%}
-      <li><a href="/m/{%s mod.Key %}">{%s mod.Title() %}</a></li>
-      {%- endfor -%}
-    </ul>
+    <table class="mt">
+      <tbody>
+        {%- for _, mod := range mods -%}
+        <tr>
+          <td><a href="/m/{%s mod.Key %}">{%= components.SVGRef(mod.SafeIcon(), 16, 16, "icon", ps) %} {%s mod.Title() %}</a></td>
+          <td>{%s mod.Description %}</td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
   </div>
 {% endfunc %}

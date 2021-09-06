@@ -10,7 +10,7 @@ import (
 )
 
 func onDebug(pm *PrjAndMods) *Result {
-	if removePath, _ := pm.Cfg.GetString("remove", true); removePath != "" {
+	if removePath := pm.Cfg.GetStringOpt("remove"); removePath != "" {
 		if removePath == "*" {
 			return removeAll(pm)
 		}

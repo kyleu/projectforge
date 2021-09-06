@@ -9,7 +9,6 @@ var DefaultIcon = "code"
 
 type Project struct {
 	Key      string       `json:"key"`
-	Type     string       `json:"type"`
 	Name     string       `json:"name,omitempty"`
 	Icon     string       `json:"icon,omitempty"`
 	Exec     string       `json:"exec,omitempty"`
@@ -51,7 +50,7 @@ func (p *Project) SafeIcon() string {
 }
 
 func NewProject(key string, path string) *Project {
-	return &Project{Key: key, Type: "projectforge.dev", Version: "0.0.0", Path: path}
+	return &Project{Key: key, Version: "0.0.0", Path: path}
 }
 
 type Projects []*Project
