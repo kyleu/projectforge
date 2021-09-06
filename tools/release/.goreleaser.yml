@@ -165,7 +165,7 @@ builds:
       - s390x
     mod_timestamp: "{{ .CommitTimestamp }}"
 
-    - id: "windows"
+  - id: "windows"
     goos:
       - windows
     goarch:

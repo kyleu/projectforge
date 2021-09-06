@@ -22,7 +22,7 @@
     <em>Standalone application using your platform's native web viewer</em>
     <ul>
       {%- for _, link := range p.Links.GetByMode("desktop") -%}
-      <li><a href="https://github.com/kyleu/projectforge/releases/download/v0.0.11/{%s link.URL %}">{%s link.OSString() %}</a></li>
+      <li><a href="https://github.com/kyleu/projectforge/releases/download/v{%s as.BuildInfo.Version %}/{%s link.URL %}">{%s link.OSString() %}</a></li>
       {%- endfor -%}
     </ul>
   </div>
@@ -44,7 +44,7 @@
           <td>{%s link.OSString() %}</td>
           <td>
         {%- endif -%}
-            <a href="https://github.com/kyleu/projectforge/releases/download/v0.0.11/{%s link.URL %}">{%s link.Arch %}</a>
+            <a href="https://github.com/kyleu/projectforge/releases/download/v{%s as.BuildInfo.Version %}/{%s link.URL %}">{%s link.Arch %}</a>
         {%- endfor -%}
           </td>
         </tr>
