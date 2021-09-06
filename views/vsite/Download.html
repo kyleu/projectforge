@@ -13,7 +13,6 @@
 } %}
 
 {% func (p *Download) Body(as *app.State, ps *cutil.PageState) %}
-  {% code var l *download.Link %}
   <div class="card">
     <h3>Download {%s util.AppName %}</h3>
   </div>
@@ -22,55 +21,34 @@
     <h3>Desktop Version</h3>
     <em>Standalone application using your platform's native web viewer</em>
     <ul>
-      <li>
-        macOS
-        <ul>
-          {% code l = p.Links.Get("desktop", "macos", "x86_64") %}
-          <li><a href="{%s l.URL %}">{%s l.URL %}</a></li>
-        </ul>
-      </li>
-      <li>
-        Linux
-        <ul>
-          {% code l = p.Links.Get("desktop", "linux", "x86_64") %}
-          <li><a href="{%s l.URL %}">{%s l.URL %}</a></li>
-        </ul>
-      </li>
-      <li>
-        Windows
-        <ul>
-          {% code l = p.Links.Get("desktop", "windows", "x86_64") %}
-          <li><a href="{%s l.URL %}">{%s l.URL %}</a></li>
-        </ul>
-      </li>
+      {%- for _, link := range p.Links.GetByMode("desktop") -%}
+      <li><a href="{%s link.URL %}">{%s link.OSString() %}</a></li>
+      {%- endfor -%}
     </ul>
   </div>
 
   <div class="card">
     <h3>Server Version</h3>
     <em>A command line interface exposing a multiuser web server</em>
-    <ul>
-      <li>
-        macOS
-        <ul>
-          {% code l = p.Links.Get("server", "macos", "x86_64") %}
-          <li><a href="{%s l.URL %}">{%s l.URL %}</a></li>
-        </ul>
-      </li>
-      <li>
-        Linux
-        <ul>
-          {% code l = p.Links.Get("server", "linux", "x86_64") %}
-          <li><a href="{%s l.URL %}">{%s l.URL %}</a></li>
-        </ul>
-      </li>
-      <li>
-        Windows
-        <ul>
-          {% code l = p.Links.Get("server", "windows", "x86_64") %}
-          <li><a href="{%s l.URL %}">{%s l.URL %}</a></li>
-        </ul>
-      </li>
-    </ul>
+    <table class="mt">
+      <tbody>
+        {%- code var currentOS string -%}
+        {%- for _, link := range p.Links.GetByMode("server") -%}
+        {%- if currentOS != link.OS -%}
+        {%- if currentOS != "" -%}
+          </td>
+        </tr>
+        {%- endif -%}
+        {%- code currentOS = link.OS -%}
+        <tr>
+          <td>{%s link.OSString() %}</td>
+          <td>
+        {%- endif -%}
+            <a href="{%s link.URL %}">{%s link.Arch %}</a>
+        {%- endfor -%}
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 {% endfunc %}

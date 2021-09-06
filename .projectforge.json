@@ -37,5 +37,29 @@
     "sourcecode": "https://github.com/kyleu/projectforge",
     "summary": "Build cool stuff with projectforge",
     "description": "Helps you build and maintain lightning-fast Golang projects"
+  },
+  "build": {
+    "publish": true,
+    "desktop": true,
+    "notarize": true,
+    "signing": true,
+    "android": true,
+    "iOS": true,
+    "wasm": true,
+    "windowsARM": true,
+    "linuxARM": true,
+    "linuxMIPS": true,
+    "linuxOdd": true,
+    "aix": true,
+    "dragonfly": true,
+    "illumos": true,
+    "freeBSD": true,
+    "netBSD": true,
+    "openBSD": true,
+    "plan9": true,
+    "solaris": true,
+    "homebrew": true,
+    "nfpms": true,
+    "snapcraft": true
   }
 }

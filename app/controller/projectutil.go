@@ -31,6 +31,9 @@ func projectFromForm(frm util.ValueMap, prj *project.Project) error {
 	prj.Children = util.SplitAndTrim(get("children", strings.Join(prj.Children, "\n")), "\n")
 	prj.Path = get("path", prj.Path)
 
+	if prj.Info == nil {
+		prj.Info = &project.Info{}
+	}
 	prj.Info.Org = get("org", prj.Info.Org)
 	prj.Info.AuthorName = get("authorName", prj.Info.AuthorName)
 	prj.Info.AuthorEmail = get("authorEmail", prj.Info.AuthorEmail)

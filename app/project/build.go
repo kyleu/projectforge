@@ -7,63 +7,64 @@ import (
 )
 
 type Build struct {
-	SkipPublish bool `json:"skipPublish,omitempty"`
+	Publish bool `json:"publish,omitempty"`
 
-	SkipDesktop  bool `json:"skipDesktop,omitempty"`
-	SkipNotarize bool `json:"skipNotarize,omitempty"`
-	SkipSigning  bool `json:"skipSigning,omitempty"`
+	Desktop  bool `json:"desktop,omitempty"`
+	Notarize bool `json:"notarize,omitempty"`
+	Signing  bool `json:"signing,omitempty"`
 
-	SkipAndroid bool `json:"skipAndroid,omitempty"`
-	SkipIOS     bool `json:"skipIOS,omitempty"`
-	SkipWASM    bool `json:"skipWASM,omitempty"`
+	Android bool `json:"android,omitempty"`
+	IOS     bool `json:"iOS,omitempty"`
+	WASM    bool `json:"wasm,omitempty"`
 
-	SkipLinuxARM  bool `json:"skipLinuxARM,omitempty"`
-	SkipLinuxMIPS bool `json:"skipLinuxMIPS,omitempty"`
-	SkipLinuxOdd  bool `json:"skipLinuxOdd,omitempty"`
+	WindowsARM bool `json:"windowsARM,omitempty"`
+	LinuxARM   bool `json:"linuxARM,omitempty"`
+	LinuxMIPS  bool `json:"linuxMIPS,omitempty"`
+	LinuxOdd   bool `json:"linuxOdd,omitempty"`
 
-	SkipAIX       bool `json:"skipAIX,omitempty"`
-	SkipDragonfly bool `json:"skipDragonfly,omitempty"`
-	SkipIllumos   bool `json:"skipIllumos,omitempty"`
-	SkipFreeBSD   bool `json:"skipFreeBSD,omitempty"`
-	SkipNetBSD    bool `json:"skipNetBSD,omitempty"`
-	SkipOpenBSD   bool `json:"skipOpenBSD,omitempty"`
-	SkipPlan9     bool `json:"skipPlan9,omitempty"`
-	SkipSolaris   bool `json:"skipSolaris,omitempty"`
+	AIX       bool `json:"aix,omitempty"`
+	Dragonfly bool `json:"dragonfly,omitempty"`
+	Illumos   bool `json:"illumos,omitempty"`
+	FreeBSD   bool `json:"freeBSD,omitempty"`
+	NetBSD    bool `json:"netBSD,omitempty"`
+	OpenBSD   bool `json:"openBSD,omitempty"`
+	Plan9     bool `json:"plan9,omitempty"`
+	Solaris   bool `json:"solaris,omitempty"`
 
-	SkipHomebrew  bool `json:"skipHomebrew,omitempty"`
-	SkipNFPMS     bool `json:"skipNFPMS,omitempty"`
-	SkipSnapcraft bool `json:"skipSnapcraft,omitempty"`
+	Homebrew  bool `json:"homebrew,omitempty"`
+	NFPMS     bool `json:"nfpms,omitempty"`
+	Snapcraft bool `json:"snapcraft,omitempty"`
 }
 
 func (b *Build) Empty() bool {
-	return !(b.SkipPublish || b.SkipDesktop || b.SkipNotarize || b.SkipSigning || b.SkipAndroid || b.SkipIOS || b.SkipWASM || b.SkipLinuxARM ||
-		b.SkipLinuxMIPS || b.SkipLinuxOdd || b.SkipAIX || b.SkipDragonfly || b.SkipIllumos || b.SkipFreeBSD || b.SkipNetBSD ||
-		b.SkipOpenBSD || b.SkipPlan9 || b.SkipSolaris || b.SkipHomebrew || b.SkipNFPMS || b.SkipSnapcraft)
+	return !(b.Publish || b.Desktop || b.Notarize || b.Signing || b.Android || b.IOS || b.WASM || b.WindowsARM ||
+		b.LinuxARM || b.LinuxMIPS || b.LinuxOdd || b.AIX || b.Dragonfly || b.Illumos || b.FreeBSD || b.NetBSD ||
+		b.OpenBSD || b.Plan9 || b.Solaris || b.Homebrew || b.NFPMS || b.Snapcraft)
 }
 
 func (b *Build) ToMap() map[string]bool {
 	return map[string]bool{
-		"publish": !b.SkipPublish, "desktop": !b.SkipDesktop, "notarize": !b.SkipNotarize, "signing": !b.SkipSigning,
-		"android": !b.SkipAndroid, "ios": !b.SkipIOS, "wasm": !b.SkipWASM,
-		"linux-arm": !b.SkipLinuxARM, "linux-mips": !b.SkipLinuxMIPS, "linux-odd": !b.SkipLinuxOdd,
-		"aix": !b.SkipAIX, "dragonfly": !b.SkipDragonfly, "illumos": !b.SkipIllumos, "freebsd": !b.SkipFreeBSD,
-		"netbsd": !b.SkipNetBSD, "openbsd": !b.SkipOpenBSD, "plan9": !b.SkipPlan9, "solaris": !b.SkipSolaris,
-		"homebrew": !b.SkipHomebrew, "nfpms": !b.SkipNFPMS, "snapcraft": !b.SkipSnapcraft,
+		"publish": b.Publish, "desktop": b.Desktop, "notarize": b.Notarize, "signing": b.Signing,
+		"android": b.Android, "ios": b.IOS, "wasm": b.WASM, "windows-arm": b.WindowsARM,
+		"linux-arm": b.LinuxARM, "linux-mips": b.LinuxMIPS, "linux-odd": b.LinuxOdd,
+		"aix": b.AIX, "dragonfly": b.Dragonfly, "illumos": b.Illumos, "freebsd": b.FreeBSD,
+		"netbsd": b.NetBSD, "openbsd": b.OpenBSD, "plan9": b.Plan9, "solaris": b.Solaris,
+		"homebrew": b.Homebrew, "nfpms": b.NFPMS, "snapcraft": b.Snapcraft,
 	}
 }
 
 func BuildFromMap(frm util.ValueMap) *Build {
 	x := func(k string) bool {
 		v := fmt.Sprint(frm["build-"+k])
-		return v != "true"
+		return v == "true"
 	}
 	return &Build{
-		SkipPublish: x("publish"), SkipDesktop: x("desktop"), SkipNotarize: x("notarize"), SkipSigning: x("signing"),
-		SkipAndroid: x("android"), SkipIOS: x("ios"), SkipWASM: x("wasm"),
-		SkipLinuxARM: x("linux-arm"), SkipLinuxMIPS: x("linux-mips"), SkipLinuxOdd: x("linux-odd"),
-		SkipAIX: x("aix"), SkipDragonfly: x("dragonfly"), SkipIllumos: x("illumos"), SkipFreeBSD: x("freebsd"),
-		SkipNetBSD: x("netbsd"), SkipOpenBSD: x("openbsd"), SkipPlan9: x("plan9"), SkipSolaris: x("solaris"),
-		SkipHomebrew: x("homebrew"), SkipNFPMS: x("nfpms"), SkipSnapcraft: x("snapcraft"),
+		Publish: x("publish"), Desktop: x("desktop"), Notarize: x("notarize"), Signing: x("signing"),
+		Android: x("android"), IOS: x("ios"), WASM: x("wasm"), WindowsARM: x("windows-arm"),
+		LinuxARM: x("linux-arm"), LinuxMIPS: x("linux-mips"), LinuxOdd: x("linux-odd"),
+		AIX: x("aix"), Dragonfly: x("dragonfly"), Illumos: x("illumos"), FreeBSD: x("freebsd"),
+		NetBSD: x("netbsd"), OpenBSD: x("openbsd"), Plan9: x("plan9"), Solaris: x("solaris"),
+		Homebrew: x("homebrew"), NFPMS: x("nfpms"), Snapcraft: x("snapcraft"),
 	}
 }
 
@@ -84,7 +85,8 @@ var AllBuildOptions = []*BuildOption{
 	{Key: "ios", Title: "iOS", Description: "Builds the application as an iOS framework "},
 	{Key: "wasm", Title: "WASM", Description: "Builds the application for WebAssembly"},
 
-	{Key: "linux-arm", Title: "Linux ARM", Description: "Builds the application for Linux on ARM architectures"},
+	{Key: "windows-arm", Title: "Windows ARM", Description: "Builds the application for Windows on ARM and ARM64 architectures"},
+	{Key: "linux-arm", Title: "Linux ARM", Description: "Builds the application for Linux on ARM and ARM64 architectures"},
 	{Key: "linux-mips", Title: "Linux MIPS", Description: "Builds the application for Linux on MIPS architectures"},
 	{Key: "linux-odd", Title: "Linux Odd", Description: "Builds the application for Linux using ppc64, ppc64le, riscv64, and s390x"},
 

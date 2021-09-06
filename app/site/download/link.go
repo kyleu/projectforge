@@ -8,6 +8,38 @@ type Link struct {
 	Arch string `json:"arch"`
 }
 
+func (l *Link) OSString() string {
+	switch l.OS {
+	case osAIX:
+		return "AIX"
+	case osDragonfly:
+		return "Dragonfly"
+	case osFreeBSD:
+		return "FreeBSD"
+	case osIllumos:
+		return "Illumos"
+	case osJS:
+		return "JavaScript"
+	case osLinux:
+		return "Linux"
+	case osMac:
+		return "macOS"
+	case osMobile:
+		return "Mobile"
+	case osNetBSD:
+		return "NetBSD"
+	case osOpenBSD:
+		return "OpenBSD"
+	case osPlan9:
+		return "Plan9"
+	case osSolaris:
+		return "Solaris"
+	case osWindows:
+		return "Windows"
+	}
+	return "Unknown"
+}
+
 type Links []*Link
 
 func (l Links) Get(mode string, os string, arch string) *Link {
@@ -17,6 +49,16 @@ func (l Links) Get(mode string, os string, arch string) *Link {
 		}
 	}
 	return nil
+}
+
+func (l Links) GetByMode(mode string) Links {
+	var ret Links
+	for _, link := range l {
+		if link.Mode == mode {
+			ret = append(ret, link)
+		}
+	}
+	return ret
 }
 
 func (l Links) GetByOS(os string) Links {

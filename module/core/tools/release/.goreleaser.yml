@@ -21,7 +21,7 @@ brews:
     homepage: "{{{ .Info.Homepage }}}"
     description: "{{{ .Info.Description }}}"
     license: "{{{ .Info.License }}}"
-    skip_upload: {{{ .Build.SkipHomebrew }}}
+    skip_upload: {{{ if .Build.Homebrew }}}false{{{ else }}}true{{{ end }}}
 
 changelog:
   skip: true
@@ -46,7 +46,7 @@ dockers:
     dockerfile: ./tools/release/debug.Dockerfile
 
 dist: "build/dist"
-{{{if .Build.SkipNFPMS}}}{{{else}}}
+{{{ if .Build.NFPMS }}}
 nfpms:
   -
     vendor: "{{{ .Info.AuthorName }}}"
@@ -59,9 +59,9 @@ nfpms:
       - apk
       - deb
       - rpm
-{{{end}}}
+{{{ end }}}
 release:
-  draft: {{{if .Build.SkipPublish}}}true{{{else}}}false{{{ end }}}
+  draft: {{{ if .Build.Publish }}}false{{{ else }}}true{{{ end }}}
   header: |
     ## {{ .Version }} ({{ .Date }})
     See {{{ .Info.Homepage }}} for download links and documentation
@@ -70,15 +70,15 @@ release:
     - [MacOS Intel 64 bit]({{{ .Info.Sourcecode }}}/releases/download/{{ .Version }}/{{{ .Key }}}_{{ .Version }}_macos_x86_64.zip)
     - [Windows Intel 64 bit]({{{ .Info.Sourcecode }}}/releases/download/{{ .Version }}/{{{ .Key }}}_{{ .Version }}_windows_x86_64.zip)
 
-  extra_files:{{{ if .Build.SkipNotarize }}}{{{ else }}}
+  extra_files:{{{ if .Build.Notarize }}}
     - glob: "./build/dist/*_notarized.zip"{{{ end }}}
-    - glob: "./build/dist/*.dmg"{{{ if .Build.SkipDesktop }}}{{{ else }}}
+    - glob: "./build/dist/*.dmg"{{{ if .Build.Desktop }}}
     - glob: "./build/dist/*_desktop_*.zip"{{{ end }}}
     - glob: "./build/dist/*_mobile_*.zip"
-{{{if .Build.SkipSigning}}}{{{else}}}
+{{{ if .Build.Signing }}}
 signs:
   - artifacts: checksum
-{{{ end }}}{{{if .Build.SkipSnapcraft}}}{{{else}}}
+{{{ end }}}{{{ if .Build.Snapcraft }}}
 snapcrafts:
   -
     publish: false
@@ -88,7 +88,7 @@ snapcrafts:
     grade: stable
     confinement: strict
     license: "{{{ .Info.License }}}"
-{{{end}}}
+{{{ end }}}
 snapshot:
   name_template: "{{ .Tag }}"
 
@@ -105,8 +105,8 @@ builds:
       - amd64
     mod_timestamp: "{{ .CommitTimestamp }}"
     hooks:
-      post:{{{ if .Build.SkipDesktop }}}{{{ else }}}
-        - "./bin/build/desktop.release.sh {{ .Version }}"{{{ end }}}{{{ if .Build.SkipNotarize }}}{{{ else }}}
+      post:{{{ if .Build.Desktop }}}
+        - "./bin/build/desktop.release.sh {{ .Version }}"{{{ end }}}{{{ if .Build.Notarize }}}
         - "./tools/notarize/notarize-amd64.sh {{ .Version }}"{{{ end }}}{{{ if .BuildAndroid }}}
         - "./bin/build/android.sh {{ .Version }}"{{{ end }}}{{{ if .BuildIOS }}}
         - "./bin/build/ios.sh {{ .Version }}"{{{ end }}}
@@ -116,7 +116,7 @@ builds:
       - darwin
     goarch:
       - arm64
-    mod_timestamp: "{{ .CommitTimestamp }}"{{{ if .Build.SkipNotarize }}}{{{ else }}}
+    mod_timestamp: "{{ .CommitTimestamp }}"{{{ if .Build.Notarize }}}
     hooks:
       post:
         - "./tools/notarize/notarize-arm64.sh {{ .Version }}"{{{ end }}}
@@ -129,7 +129,7 @@ builds:
       - amd64
       - arm64
     mod_timestamp: "{{ .CommitTimestamp }}"
-{{{if .Build.SkipLinuxARM}}}{{{else}}}
+{{{ if .Build.LinuxARM }}}
   - id: "linux-arm"
     goos:
       - linux
@@ -140,7 +140,7 @@ builds:
       - 6
       - 7
     mod_timestamp: "{{ .CommitTimestamp }}"
-{{{ end }}}{{{if .Build.SkipLinuxMIPS}}}{{{else}}}
+{{{ end }}}{{{ if .Build.LinuxMIPS }}}
   - id: "linux-mips"
     goos:
       - linux
@@ -153,7 +153,7 @@ builds:
       - hardfloat
       - softfloat
     mod_timestamp: "{{ .CommitTimestamp }}"
-{{{ end }}}{{{if .Build.SkipLinuxOdd}}}{{{else}}}
+{{{ end }}}{{{ if .Build.LinuxOdd }}}
   - id: "linux-odd"
     goos:
       - linux
@@ -164,12 +164,18 @@ builds:
       - s390x
     mod_timestamp: "{{ .CommitTimestamp }}"
 {{{ end }}}
-  - id: "windows"
+    - id: "windows"
     goos:
       - windows
     goarch:
       - 386
       - amd64
+    mod_timestamp: "{{ .CommitTimestamp }}"
+{{{ if .Build.WindowsARM }}}
+  - id: "windows-arm"
+    goos:
+      - windows
+    goarch:
       - arm
       - arm64
     goarm:
@@ -177,35 +183,35 @@ builds:
       - 6
       - 7
     mod_timestamp: "{{ .CommitTimestamp }}"
-{{{if .Build.SkipWASM}}}{{{else}}}
+{{{ end }}}{{{ if .Build.WASM }}}
   - id: "js"
     goos:
       - js
     goarch:
       - wasm
     mod_timestamp: "{{ .CommitTimestamp }}"
-{{{ end }}}{{{if .Build.SkipAIX}}}{{{else}}}
+{{{ end }}}{{{ if .Build.AIX }}}
   - id: "aix"
     goos:
       - aix
     goarch:
       - ppc64
     mod_timestamp: "{{ .CommitTimestamp }}"
-{{{ end }}}{{{if .Build.SkipDragonfly}}}{{{else}}}
+{{{ end }}}{{{ if .Build.Dragonfly }}}
   - id: "dragonfly"
     goos:
       - dragonfly
     goarch:
       - amd64
     mod_timestamp: "{{ .CommitTimestamp }}"
-{{{ end }}}{{{if .Build.SkipIllumos}}}{{{else}}}
+{{{ end }}}{{{ if .Build.Illumos }}}
   - id: "illumos"
     goos:
       - illumos
     goarch:
       - amd64
     mod_timestamp: "{{ .CommitTimestamp }}"
-{{{ end }}}{{{if .Build.SkipFreeBSD}}}{{{else}}}
+{{{ end }}}{{{ if .Build.FreeBSD }}}
   - id: "freebsd"
     goos:
       - freebsd
@@ -219,7 +225,7 @@ builds:
       - 6
       - 7
     mod_timestamp: "{{ .CommitTimestamp }}"
-{{{ end }}}{{{if .Build.SkipNetBSD}}}{{{else}}}
+{{{ end }}}{{{ if .Build.NetBSD }}}
   - id: "netbsd"
     goos:
       - netbsd
@@ -231,7 +237,7 @@ builds:
     goarm:
       - 7
     mod_timestamp: "{{ .CommitTimestamp }}"
-{{{ end }}}{{{if .Build.SkipOpenBSD}}}{{{else}}}
+{{{ end }}}{{{ if .Build.OpenBSD }}}
   - id: "openbsd"
     goos:
       - openbsd
@@ -245,7 +251,7 @@ builds:
       - 6
       - 7
     mod_timestamp: "{{ .CommitTimestamp }}"
-{{{ end }}}{{{if .Build.SkipPlan9}}}{{{else}}}
+{{{ end }}}{{{ if .Build.Plan9 }}}
   - id: "plan9"
     goos:
       - plan9
@@ -258,7 +264,7 @@ builds:
       - 6
       - 7
     mod_timestamp: "{{ .CommitTimestamp }}"
-{{{ end }}}{{{if .Build.SkipSolaris}}}{{{else}}}
+{{{ end }}}{{{ if .Build.Solaris }}}
   - id: "solaris"
     goos:
       - solaris
