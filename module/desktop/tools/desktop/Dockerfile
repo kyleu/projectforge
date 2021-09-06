@@ -64,10 +64,6 @@ ENV CGO_ENABLED=1
 
 WORKDIR /src
 
-RUN git init
-
-RUN go get -u github.com/pyros2097/go-embed
-
 ADD "./go.mod" "/src/go.mod"
 ADD "./go.sum" "/src/go.sum"
 

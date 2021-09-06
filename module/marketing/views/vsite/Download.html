@@ -21,7 +21,7 @@
     <em>Standalone application using your platform's native web viewer</em>
     <ul>
       {%- for _, link := range p.Links.GetByMode("desktop") -%}
-      <li><a href="{%s link.URL %}">{%s link.OSString() %}</a></li>
+      <li><a href="{{{ .Info.Sourcecode }}}/releases/download/v{{{ .Version }}}/{%s link.URL %}">{%s link.OSString() %}</a></li>
       {%- endfor -%}
     </ul>
   </div>
@@ -43,7 +43,7 @@
           <td>{%s link.OSString() %}</td>
           <td>
         {%- endif -%}
-            <a href="{%s link.URL %}">{%s link.Arch %}</a>
+            <a href="{{{ .Info.Sourcecode }}}/releases/download/v{{{ .Version }}}/{%s link.URL %}">{%s link.Arch %}</a>
         {%- endfor -%}
           </td>
         </tr>
