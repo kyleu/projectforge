@@ -33,12 +33,12 @@ func calcDownloadLinks(version string) Links {
 		for _, arm := range []string{archARMV5, archARMV6, archARMV7} {
 			addDefault(mode, os, arm)
 		}
-	}
+	}{{{ if .Build.LinuxMIPS }}}
 	addMIPS := func(mode string, os string) {
 		for _, weird := range []string{archMIPS64Hard, archMIPS64LEHard, archMIPS64LESoft, archMIPS64Soft, archMIPSHard, archMIPSLEHard, archMIPSLESoft, archMIPSSoft} {
 			addDefault(mode, os, weird)
 		}
-	}
+	}{{{ end }}}
 {{{ if .Build.Desktop }}}
 	addDefault(modeDesktop, osMac, archAMD64){{{ end }}}
 	addDefault(modeServer, osMac, archAMD64)

@@ -29,12 +29,12 @@ func ProfileSite(rc *fasthttp.RequestCtx) {
 func profileAction(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (string, error) {
 	ps.Title = "Profile"
 	ps.Data = ps.Profile
-	thm := as.Themes.Get(ps.Profile.Theme)
+	thm := as.Themes.Get(ps.Profile.Theme){{{ if .HasModule "oauth" }}}
 
 	prvs, err := as.Auth.Providers()
 	if err != nil {
 		return "", errors.Wrap(err, "can't load providers")
-	}
+	}{{{ end }}}
 
 	redir := "/"
 	ref := string(rc.Request.Header.Peek("Referer"))
@@ -45,7 +45,7 @@ func profileAction(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) 
 		}
 	}
 
-	page := &vprofile.Profile{Profile: ps.Profile, Theme: thm, Providers: prvs, Referrer: redir}
+	page := &vprofile.Profile{Profile: ps.Profile, Theme: thm, {{{ if .HasModule "oauth" }}}Providers: prvs, {{{ end }}}Referrer: redir}
 	return render(rc, as, page, ps, "Profile")
 }
 

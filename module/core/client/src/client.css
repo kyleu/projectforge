@@ -13,8 +13,8 @@
 @import "./style/tabs.css";
 @import "./style/formatter.css";
 
-@import "./style/nav.css";
-@import "./style/search.css";
+@import "./style/nav.css";{{{ if .HasModule "search" }}}
+@import "./style/search.css";{{{ end }}}
 @import "./style/menu.css";
 @import "./style/flash.css";
 

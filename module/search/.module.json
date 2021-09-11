@@ -1,0 +1,10 @@
+{
+  "name": "Search",
+  "icon": "search",
+  "description": "Adds search facilities to the top-level navigation bar",
+  "authorName": "Kyle U",
+  "authorEmail": "kyle@kyleu.com",
+  "license": "Proprietary",
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/search",
+  "priority": 30
+}

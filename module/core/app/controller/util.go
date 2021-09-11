@@ -16,7 +16,7 @@ import (
 	"{{{ .Package }}}/views/verror"
 )
 
-var initialIcons = []string{"search"}
+var initialIcons = {{{ if .HasModule "search" }}}[]string{"searchbox"}{{{ else }}}[]string{}{{{ end }}}
 
 func rcRequiredString(rc *fasthttp.RequestCtx, key string, allowEmpty bool) (string, error) {
 	v, ok := rc.UserValue(key).(string)

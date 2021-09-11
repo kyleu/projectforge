@@ -66,10 +66,10 @@ func clean(as *app.State, ps *cutil.PageState) error {
 	}
 	if ps.RootTitle == "" {
 		ps.RootTitle = util.AppName
-	}
+	}{{{ if .HasModule "search" }}}
 	if ps.SearchPath == "" {
 		ps.SearchPath = defaultSearchPath
-	}
+	}{{{ end }}}
 	if ps.ProfilePath == "" {
 		ps.ProfilePath = defaultProfilePath
 	}

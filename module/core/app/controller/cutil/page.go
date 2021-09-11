@@ -29,8 +29,8 @@ type PageState struct {
 	Icons         []string           `json:"icons,omitempty"`
 	RootIcon      string             `json:"rootIcon,omitempty"`
 	RootPath      string             `json:"rootPath,omitempty"`
-	RootTitle     string             `json:"rootTitle,omitempty"`
-	SearchPath    string             `json:"searchPath,omitempty"`
+	RootTitle     string             `json:"rootTitle,omitempty"`{{{ if .HasModule "search" }}}
+	SearchPath    string             `json:"searchPath,omitempty"`{{{ end }}}
 	ProfilePath   string             `json:"profilePath,omitempty"`
 	Data          interface{}        `json:"data,omitempty"`
 	Logger        *zap.SugaredLogger `json:"-"`

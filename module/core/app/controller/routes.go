@@ -16,14 +16,14 @@ func AppRoutes() fasthttp.RequestHandler {
 	r.GET("/about", About)
 	r.GET("/theme", ThemeList)
 	r.GET("/theme/{key}", ThemeEdit)
-	r.POST("/theme/{key}", ThemeSave)
-	r.GET(defaultSearchPath, Search)
+	r.POST("/theme/{key}", ThemeSave){{{ if .HasModule "search" }}}
+	r.GET(defaultSearchPath, Search){{{ end }}}
 
 	r.GET(defaultProfilePath, Profile)
-	r.POST(defaultProfilePath, ProfileSave)
+	r.POST(defaultProfilePath, ProfileSave){{{ if .HasModule "oauth" }}}
 	r.GET("/auth/{key}", AuthDetail)
 	r.GET("/auth/callback/{key}", AuthCallback)
-	r.GET("/auth/logout/{key}", AuthLogout)
+	r.GET("/auth/logout/{key}", AuthLogout){{{ end }}}
 
 	// $PF_SECTION_START(routes)$
 	// $PF_SECTION_END(routes)$

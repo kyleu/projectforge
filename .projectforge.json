@@ -10,7 +10,8 @@
     "desktop",
     "marketing",
     "mobile",
-    "oauth"
+    "oauth",
+    "search"
   ],
   "ignore": [
     "module",

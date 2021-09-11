@@ -41,8 +41,8 @@ type State struct {
 }
 
 func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, logger *zap.SugaredLogger) (*State, error) {
-	_ = telemetry.InitializeIfNeeded(true, logger)
-	as := auth.NewService("", logger)
+	_ = telemetry.InitializeIfNeeded(true, logger){{{ if .HasModule "oauth" }}}
+	as := auth.NewService("", logger){{{ end }}}
 	ts := theme.NewService(f, logger){{{ if .HasModule "migration" }}}
 
 	db, err := database.OpenDefaultPostgres(logger)
@@ -50,5 +50,5 @@ func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, logger *zap.Su
 		return nil, errors.Wrap(err, "unable to open database")
 	}{{{ end }}}
 
-	return &State{Debug: debug, BuildInfo: bi, Files: f, Auth: as{{{ if .HasModule "migration" }}}, DB: db{{{ end }}}, Themes: ts, Logger: logger}, nil
+	return &State{Debug: debug, BuildInfo: bi, Files: f{{{ if .HasModule "oauth" }}}, Auth: as{{{ end }}}{{{ if .HasModule "migration" }}}, DB: db{{{ end }}}, Themes: ts, Logger: logger}, nil
 }

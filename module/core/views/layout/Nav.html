@@ -13,11 +13,11 @@
   <a class="logo" href="{%s ps.RootPath %}" title="{%s ps.RootTitle %} {%s as.BuildInfo.String() %}">{%= components.SVGRef(ps.RootIcon, 32, 32, ``, ps) %}</a>
   <div class="breadcrumbs">
     <a class="link" href="{%s ps.RootPath %}">{%s ps.RootTitle %}</a>{%= NavItems(ps.Menu, ps.Breadcrumbs) %}
-  </div>
+  </div>{{{ if .HasModule "search" }}}
   <form action="{%s ps.SearchPath %}" class="search" title="search">
     <input type="search" name="q" placeholder=" " />
-    <div class="search-image" style="display: none;"><svg><use xlink:href="#svg-search" /></svg></div>
-  </form>
+    <div class="search-image" style="display: none;"><svg><use xlink:href="#svg-searchbox" /></svg></div>
+  </form>{{{ end }}}
   <a class="profile" title="{%s ps.Profile.AuthString(ps.Accounts) %}" href="{%s ps.ProfilePath %}">{%= components.SVGRef(`profile`, 24, 24, ``, ps) %}</a>
 
   <input type="checkbox" id="menu-toggle-input" style="display: none;" />

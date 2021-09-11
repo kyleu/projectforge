@@ -24,7 +24,7 @@
     <h3>Themes</h3>
     <p><a href="/theme">Edit Themes</a></p>
   </div>{{{ if .HasModule "oauth" }}}
-  {%= vauth.Authentication(as) %}{{{ end }}}
-  {%= vauth.Permissions(p.Perms, as) %}
+  {%= vauth.Authentication(as) %}
+  {%= vauth.Permissions(p.Perms, as) %}{{{ end }}}
   {%= components.JSONModal("settings", "Settings JSON", p.Settings, 1) %}
 {% endfunc %}

@@ -17,7 +17,7 @@ import (
 	"github.com/kyleu/projectforge/views/verror"
 )
 
-var initialIcons = []string{"search"}
+var initialIcons = []string{"searchbox"}
 
 func rcRequiredString(rc *fasthttp.RequestCtx, key string, allowEmpty bool) (string, error) {
 	v, ok := rc.UserValue(key).(string)

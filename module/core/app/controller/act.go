@@ -12,8 +12,8 @@ import (
 	"{{{ .Package }}}/app/user"
 )
 
-const (
-	defaultSearchPath  = "/search"
+const ({{{ if .HasModule "search" }}}
+	defaultSearchPath  = "/search"{{{ end }}}
 	defaultProfilePath = "/profile"
 	defaultIcon        = "app"
 )

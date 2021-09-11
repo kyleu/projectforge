@@ -17,10 +17,10 @@ func SiteRoutes() fasthttp.RequestHandler {
 	r.GET("/", Site)
 
 	r.GET(defaultProfilePath, ProfileSite)
-	r.POST(defaultProfilePath, ProfileSave)
+	r.POST(defaultProfilePath, ProfileSave){{{ if .HasModule "oauth" }}}
 	r.GET("/auth/{key}", AuthDetail)
 	r.GET("/auth/callback/{key}", AuthCallback)
-	r.GET("/auth/logout/{key}", AuthLogout)
+	r.GET("/auth/logout/{key}", AuthLogout){{{ end }}}
 
 	r.GET("/favicon.ico", Favicon)
 	r.GET("/assets/{_:*}", Static)
