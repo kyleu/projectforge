@@ -17,23 +17,25 @@ function tmpl {
 }
 
 function check {
-  fsrc="tmp/$1.hashcode"
-  ftgt="tmp/$1.hashcode.tmp"
+  if [[ -d "$1" ]]; then
+    fsrc="tmp/$1.hashcode"
+    ftgt="tmp/$1.hashcode.tmp"
 
-  mkdir -p tmp/
+    mkdir -p tmp/
 
-  find "$1" -type f | grep "\.$2$" | xargs md5sum > "$ftgt"
+    find "$1" -type f | grep "\.$2$" | xargs md5sum > "$ftgt"
 
-  if cmp -s "$fsrc" "$ftgt"; then
-    if [ "$FORCE" = "force" ]; then
-      tmpl $1 $2
+    if cmp -s "$fsrc" "$ftgt"; then
+      if [ "$FORCE" = "force" ]; then
+        tmpl $1 $2
+      else
+        rm "$ftgt"
+      fi
     else
-      rm "$ftgt"
+      tmpl $1 $2
     fi
-  else
-    tmpl $1 $2
   fi
 }
 
-{{{ if .HasModule "database" }}}check "queries" "sql"
+{{{ if .HasModule "migration" }}}check "queries" "sql"
 {{{ end }}}check "views" "html"

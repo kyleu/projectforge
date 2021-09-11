@@ -97,7 +97,7 @@ func (e *ErrHandler) Handle(err error) {
 			return
 		}
 		if idx := strings.Index(msg, "\":"); idx > -1 {
-			msg = strings.TrimSpace(msg[idx + 2:])
+			msg = strings.TrimSpace(msg[idx+2:])
 		}
 		e.logger.Warn("telemetry seems to be unavailable: [" + msg + "] (this message will appear only once)")
 		e.hasPrinted = true

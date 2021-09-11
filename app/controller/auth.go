@@ -12,7 +12,7 @@ import (
 	"github.com/kyleu/projectforge/app/controller/cutil"
 )
 
-const signinMsg = "signed in to %s as [%s]"
+const signinMsg = "signed in using %s as [%s]"
 
 func AuthDetail(rc *fasthttp.RequestCtx) {
 	act("auth.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {

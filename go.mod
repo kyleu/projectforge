@@ -7,9 +7,7 @@ require (
 	github.com/alecthomas/chroma v0.9.2
 	github.com/fasthttp/router v1.4.2
 	github.com/gertd/go-pluralize v0.1.7
-	github.com/go-gem/sessions v0.0.0-20170522023159-6f6fd65f2530
 	github.com/google/uuid v1.3.0
-	github.com/gorilla/securecookie v1.1.1
 	github.com/hexops/gotextdiff v1.0.3
 	github.com/iancoleman/strcase v0.2.0
 	github.com/kirsle/configdir v0.0.0-20170128060238-e45d2f54772f
@@ -18,7 +16,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.11.0
 	github.com/spf13/cobra v1.2.1
-	github.com/valyala/fasthttp v1.29.0
+	github.com/valyala/fasthttp v1.30.0
 	github.com/valyala/quicktemplate v1.6.3
 	go.opentelemetry.io/otel v1.0.0-RC3
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp v1.0.0-RC3

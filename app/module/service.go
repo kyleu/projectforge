@@ -19,7 +19,7 @@ type Service struct {
 func NewService(logger *zap.SugaredLogger) *Service {
 	ret := &Service{cache: map[string]*Module{}, filesystems: map[string]filesystem.FileLoader{}, logger: logger}
 
-	_, err := ret.LoadAll("core", "database", "desktop", "marketing", "mobile", "oauth")
+	_, err := ret.LoadAll("core", "database", "desktop", "marketing", "migration", "mobile", "oauth")
 	if err != nil {
 		logger.Errorf("unable to load [core] module: %+v", err)
 	}

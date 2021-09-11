@@ -35,7 +35,6 @@ func (m *Module) SafeIcon() string {
 	return m.Icon
 }
 
-
 type Modules []*Module
 
 func (m Modules) Get(key string) *Module {
