@@ -13,6 +13,7 @@ import (
 	"go.uber.org/zap"
 
 	"{{{ .Package }}}/app/telemetry"
+	"{{{ .Package }}}/app/util"
 )
 
 type PostgresParams struct {
@@ -84,9 +85,14 @@ func OpenPostgresDatabase(ctx context.Context, key string, params *PostgresParam
 
 	var log *zap.SugaredLogger
 	if params.Debug {
-		log = logger
+		log = logger.With("svc", "database", "db", key)
 	}
 
 	svc := NewService(key, params.Database, params.Schema, params.Username, db, log)
 	return svc, nil
+}
+
+func OpenDefaultPostgres(logger *zap.SugaredLogger) (*Service, error) {
+	params := PostgresParamsFromEnv(util.AppKey, util.AppKey, "")
+	return OpenPostgresDatabase(context.Background(), util.AppKey, params, logger)
 }

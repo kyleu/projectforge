@@ -10,7 +10,8 @@
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>{%s util.AppName %} Admin Functions</h3>
-    <ul>
+    <ul>{{{ if .HasModule "migration" }}}
+      <li><a href="/admin/migrations">View database migrations</a></li>{{{ end }}}
       <li><a href="/admin/modules">View Go modules</a></li>
       <li><a href="/admin/session">Parse and display session</a></li>
       <li><a href="/admin/cpu/start">Start CPU profile</a></li>

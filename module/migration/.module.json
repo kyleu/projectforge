@@ -1,0 +1,10 @@
+{
+  "name": "Migration",
+  "icon": "migration",
+  "description": "Database migrations and a common PostgreSQL or SQLite database",
+  "authorName": "Kyle U",
+  "authorEmail": "kyle@kyleu.com",
+  "license": "Proprietary",
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/migration",
+  "priority": 10
+}

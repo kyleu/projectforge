@@ -21,7 +21,7 @@ type MigrationFiles []*MigrationFile
 var databaseMigrations = MigrationFiles{}
 
 func ClearMigrations() {
-	databaseMigrations = []*MigrationFile{}
+	databaseMigrations = MigrationFiles{}
 }
 
 func AddMigration(mf *MigrationFile) {
@@ -30,6 +30,14 @@ func AddMigration(mf *MigrationFile) {
 
 func RegisterMigration(title string, content string) {
 	AddMigration(&MigrationFile{Title: title, Content: content})
+}
+
+func GetMigrations() MigrationFiles {
+	ret := make(MigrationFiles, 0, len(databaseMigrations))
+	for _, x := range databaseMigrations {
+		ret = append(ret, &MigrationFile{Title: x.Title, Content: x.Content})
+	}
+	return ret
 }
 
 func exec(ctx context.Context, file *MigrationFile, s *database.Service, logger *zap.SugaredLogger) (string, error) {

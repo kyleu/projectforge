@@ -13,6 +13,7 @@ import (
 )
 
 func Migrate(ctx context.Context, s *database.Service, logger *zap.SugaredLogger) error {
+	logger = logger.With("svc", "migrate")
 	err := createMigrationTableIfNeeded(ctx, s, logger)
 	if err != nil {
 		return errors.Wrap(err, "unable to create migration table")
@@ -22,7 +23,7 @@ func Migrate(ctx context.Context, s *database.Service, logger *zap.SugaredLogger
 
 	if len(databaseMigrations) > maxIdx+1 {
 		c := len(databaseMigrations) - maxIdx
-		logger.Info(fmt.Sprintf("applying [%v] database %s...", c, util.PluralMaybe("migration", c)))
+		logger.Info(fmt.Sprintf("applying [%d] database %s...", c, util.PluralMaybe("migration", c)))
 	}
 
 	for i, file := range databaseMigrations {
@@ -34,7 +35,7 @@ func Migrate(ctx context.Context, s *database.Service, logger *zap.SugaredLogger
 				continue
 			}
 			if m.Title != file.Title {
-				logger.Info(fmt.Sprintf("migration [%v] name has changed from [%v] to [%v]", idx, m.Title, file.Title))
+				logger.Info(fmt.Sprintf("migration [%d] name has changed from [%s] to [%s]", idx, m.Title, file.Title))
 				err = removeMigrationByIdx(ctx, s, idx)
 				if err != nil {
 					return err
@@ -47,7 +48,7 @@ func Migrate(ctx context.Context, s *database.Service, logger *zap.SugaredLogger
 			}
 			nc := file.Content
 			if nc != m.Src {
-				logger.Info(fmt.Sprintf("migration [%v:%v] content has changed from [%vB] to [%vB]", idx, file.Title, len(nc), len(m.Src)))
+				logger.Info(fmt.Sprintf("migration [%d:%s] content has changed from [%dB] to [%dB]", idx, file.Title, len(nc), len(m.Src)))
 				err = removeMigrationByIdx(ctx, s, idx)
 				if err != nil {
 					return err
@@ -67,13 +68,13 @@ func Migrate(ctx context.Context, s *database.Service, logger *zap.SugaredLogger
 		}
 	}
 
-	logger.Info(fmt.Sprintf("verified [%v] database %s", maxIdx, util.PluralMaybe("migration", maxIdx)))
+	logger.Info(fmt.Sprintf("verified [%d] database %s", maxIdx, util.PluralMaybe("migration", maxIdx)))
 
 	return errors.Wrap(err, "error running database migration")
 }
 
 func applyMigration(ctx context.Context, s *database.Service, idx int, file *MigrationFile, logger *zap.SugaredLogger) error {
-	logger.Info(fmt.Sprintf("applying database migration [%v]: %v", idx, file.Title))
+	logger.Info(fmt.Sprintf("applying database migration [%d]: %s", idx, file.Title))
 	sql, err := exec(ctx, file, s, logger)
 	if err != nil {
 		return err

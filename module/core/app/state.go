@@ -2,10 +2,12 @@ package app
 
 import (
 	"fmt"
-
+{{{ if .HasModule "migration" }}}
+	"github.com/pkg/errors"{{{ end }}}
 	"go.uber.org/zap"
 {{{ if .HasModule "oauth" }}}
-	"{{{ .Package }}}/app/auth"{{{ end }}}
+	"{{{ .Package }}}/app/auth"{{{ end }}}{{{ if .HasModule "migration" }}}
+	"{{{ .Package }}}/app/database"{{{ end }}}
 	"{{{ .Package }}}/app/filesystem"
 	"{{{ .Package }}}/app/telemetry"
 	"{{{ .Package }}}/app/theme"
@@ -31,15 +33,22 @@ type State struct {
 	Debug     bool
 	BuildInfo *BuildInfo
 	Files     filesystem.FileLoader{{{ if .HasModule "oauth" }}}
-	Auth      *auth.Service{{{ end }}}
+	Auth      *auth.Service{{{ end }}}{{{ if .HasModule "migration" }}}
+	DB        *database.Service{{{ end }}}
 	Themes    *theme.Service
 	Logger    *zap.SugaredLogger
 	Services  *Services
 }
 
-func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, log *zap.SugaredLogger) (*State, error) {
-	_ = telemetry.InitializeIfNeeded(true, log)
-	as := auth.NewService("", log)
-	ts := theme.NewService(f, log)
-	return &State{Debug: debug, BuildInfo: bi, Files: f, Auth: as, Themes: ts, Logger: log}, nil
+func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, logger *zap.SugaredLogger) (*State, error) {
+	_ = telemetry.InitializeIfNeeded(true, logger)
+	as := auth.NewService("", logger)
+	ts := theme.NewService(f, logger){{{ if .HasModule "migration" }}}
+
+	db, err := database.OpenDefaultPostgres(logger)
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to open database")
+	}{{{ end }}}
+
+	return &State{Debug: debug, BuildInfo: bi, Files: f, Auth: as{{{ if .HasModule "migration" }}}, DB: db{{{ end }}}, Themes: ts, Logger: logger}, nil
 }

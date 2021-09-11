@@ -27,15 +27,6 @@ func (dto *migrationDTO) toMigration() *Migration {
 	}
 }
 
-type Count struct {
-	C int64 `db:"c"`
-}
-
-type Index struct {
-	Name       string `db:"n"`
-	Definition string `db:"d"`
-}
-
 func toMigrations(dtos []migrationDTO) Migrations {
 	ret := make(Migrations, 0, len(dtos))
 	for _, dto := range dtos {

@@ -10,7 +10,8 @@ import (
 	"github.com/valyala/fasthttp"
 
 	"{{{ .Package }}}/app"
-	"{{{ .Package }}}/app/controller/cutil"
+	"{{{ .Package }}}/app/controller/cutil"{{{ if .HasModule "migration" }}}
+	"{{{ .Package }}}/app/database/migrate"{{{ end }}}
 	"{{{ .Package }}}/app/util"
 	"{{{ .Package }}}/views/vadmin"
 )
@@ -33,6 +34,7 @@ func Admin(rc *fasthttp.RequestCtx) {
 			return render(rc, as, &vadmin.Modules{Mods: mods.Deps}, ps, "Administration||/admin", "Modules")
 		case "session":
 			ps.Title = "Session Debug"
+			ps.Data = ps.Session
 			return render(rc, as, &vadmin.Session{}, ps, "Administration||/admin", "Session")
 		case "cpu":
 			switch path[1] {
@@ -53,7 +55,15 @@ func Admin(rc *fasthttp.RequestCtx) {
 			if err != nil {
 				return "", err
 			}
-			return flashAndRedir(true, "wrote heap profile", "/admin", rc, ps)
+			return flashAndRedir(true, "wrote heap profile", "/admin", rc, ps){{{ if .HasModule "migration" }}}
+		case "migrations":
+			ms := migrate.GetMigrations()
+			ps.Data = ms
+			return render(rc, as, &vadmin.Migrations{Migrations: ms}, ps, "Administration||/admin", "Migrations"){{{ end }}}
+
+		// $PF_SECTION_START(admin-actions)$
+		// $PF_SECTION_END(admin-actions)$
+
 		default:
 			return "", errors.Errorf("unhandled admin action [%s]", path[0])
 		}
