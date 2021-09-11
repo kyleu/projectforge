@@ -12,16 +12,15 @@
 
 {% func (p *Session) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>Session {%s ps.Session.Name() %} ({%s ps.Session.ID %})</h3>
-    <em>{%d len(ps.Session.Values) %} values</em>
-    <pre>{%s util.ToJSON(ps.Session.Options) %}</pre>
+    <h3>Session</h3>
+    <em>{%d len(ps.Session) %} values</em>
   </div>
-  {%- if len(ps.Session.Values) > 0 -%}
+  {%- if len(ps.Session) > 0 -%}
   <div class="card">
-    <h3>Session values</h3>
+    <h3>Values</h3>
     <ul>
-      {%- for k, v := range ps.Session.Values -%}
-        <li>{%v k %}: {%s fmt.Sprint(v) %}</li>
+      {%- for k, v := range ps.Session -%}
+        <li>{%s k %}: {%s fmt.Sprint(v) %}</li>
       {%- endfor -%}
     </ul>
   </div>

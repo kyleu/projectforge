@@ -12,10 +12,10 @@ import (
 type Result struct {
 	Filename string    `json:"filename"`
 	Src      string    `json:"src"`
-	Tgt     string    `json:"tgt"`
-	Diffs   Diffs     `json:"diffs"`
-	Changes []*Change `json:"changes"`
-	Patch   string    `json:"patch"`
+	Tgt      string    `json:"tgt"`
+	Diffs    Diffs     `json:"diffs"`
+	Changes  []*Change `json:"changes"`
+	Patch    string    `json:"patch"`
 }
 
 type Line struct {
@@ -30,8 +30,8 @@ type Change struct {
 }
 
 func Calc(fn string, src string, tgt string) *Result {
-	diffs := myers.ComputeEdits(span.URIFromPath(""), src, tgt)
-	p, c := changes(src, diffs)
+	diffs := myers.ComputeEdits(span.URIFromPath(""), tgt, src)
+	p, c := changes(tgt, diffs)
 	return &Result{Filename: fn, Src: src, Tgt: tgt, Diffs: diffs, Changes: c, Patch: p}
 }
 

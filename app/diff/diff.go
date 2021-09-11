@@ -80,7 +80,7 @@ func FileLoader(src file.Files, tgt filesystem.FileLoader, includeUnchanged bool
 		if skip {
 			d = &Diff{Path: s.FullPath(), Status: StatusSkipped}
 		} else {
-			d = File(tgtFile, s)
+			d = File(s, tgtFile)
 		}
 		if includeUnchanged || d.Status != StatusIdentical {
 			ret = append(ret, d)

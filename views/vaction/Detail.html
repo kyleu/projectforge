@@ -1,4 +1,6 @@
 {% import (
+  "strings"
+
   "github.com/kyleu/projectforge/app"
   "github.com/kyleu/projectforge/app/controller/cutil"
   "github.com/kyleu/projectforge/app/action"
@@ -84,7 +86,7 @@
           <tr>
             <td class="shrink">{%s d.Path %}</td>
             <td>{%s d.Status.String() %}</td>
-            <td><pre>{%s d.Patch %}</pre></td>
+            <td>{%= renderPatch(d.Patch, as, ps) %}</td>
           </tr>
         {%- endfor -%}
         </tbody>
@@ -93,3 +95,23 @@
     </div>
   {%- endfor -%}
 {% endfunc %}
+
+{% func renderPatch(patch string, as *app.State, ps *cutil.PageState) %}{% stripspace %}
+  {% code lines := strings.Split(patch, "\n") %}
+  <pre>
+    {% for _, line := range lines %}
+      {% if len(line) > 0 %}
+        {% switch line[0] %}
+        {% case ' ' %}
+        <div style="color: grey;">{%s line[1:] %}</div>
+        {% case '+' %}
+        <div style="color: green;">{%s line[1:] %}{% if len(line) == 1 %}&nbsp;{% endif %}</div>
+        {% case '-' %}
+        <div style="color: red;">{%s line[1:] %}{% if len(line) == 1 %}&nbsp;{% endif %}</div>
+        {% default %}
+        {%s line %}
+        {% endswitch %}
+      {% endif %}
+    {% endfor %}
+  </pre>
+{% endstripspace %}{% endfunc %}

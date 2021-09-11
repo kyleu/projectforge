@@ -7,8 +7,8 @@ import (
 type Diffs []gotextdiff.TextEdit
 
 type Example struct {
-	File string `json:"title"`
-	Src  string `json:"src"`
+	File     string `json:"title"`
+	Src      string `json:"src"`
 	Tgt      string `json:"tgt"`
 	Expected Diffs  `json:"expected"`
 }
@@ -22,14 +22,15 @@ func (e *Example) Calc() *Result {
 }
 
 const src = "header\nbody\nfooter\n"
+
 var (
-	matching = NewExample("matching", src, src)
-	added = NewExample("added", src, "header\nbody\nadded\nfooter\n")
-	removed = NewExample("removed", src, "header\nfooter\n")
-	startChange = NewExample("startChange", src, "hdr\nbody\nfooter\n")
+	matching     = NewExample("matching", src, src)
+	added        = NewExample("added", src, "header\nbody\nadded\nfooter\n")
+	removed      = NewExample("removed", src, "header\nfooter\n")
+	startChange  = NewExample("startChange", src, "hdr\nbody\nfooter\n")
 	middleChange = NewExample("middleChange", src, "header\nb\nfooter\n")
-	endChange = NewExample("endChange", src, "header\nbody\nft\n")
-	noIntersect = NewExample("noIntersect", src, "x\ny\nz\n")
+	endChange    = NewExample("endChange", src, "header\nbody\nft\n")
+	noIntersect  = NewExample("noIntersect", src, "x\ny\nz\n")
 )
 
 var AllExamples = []*Example{matching, added, removed, startChange, middleChange, endChange, noIntersect}
