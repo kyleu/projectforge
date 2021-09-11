@@ -6,12 +6,13 @@ import (
 )
 
 type Result struct {
-	ID    string      `json:"id"`
-	Type  string      `json:"type"`
-	Title string      `json:"title"`
-	URL   string      `json:"url"`
-	Match string      `json:"match"`
-	Data  interface{} `json:"data"`
+	ID    string      `json:"id,omitempty"`
+	Type  string      `json:"type,omitempty"`
+	Title string      `json:"title,omitempty"`
+	Icon  string      `json:"icon,omitempty"`
+	URL   string      `json:"url,omitempty"`
+	Match string      `json:"match,omitempty"`
+	Data  interface{} `json:"data,omitempty"`
 	HTML  string      `json:"-"`
 }
 

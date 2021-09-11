@@ -2,22 +2,29 @@
 package search
 
 import (
+	"context"
 	"strings"
 	"sync"
 
 	"github.com/pkg/errors"
+
+	"github.com/kyleu/projectforge/app"
 )
 
-type Provider func(*Params) (Results, error)
+type Provider func(context.Context, *app.State, *Params) (Results, error)
 
-func Search(params *Params) (Results, []error) {
+func Search(ctx context.Context, as *app.State, params *Params) (Results, []error) {
 	var allProviders []Provider
 	// $PF_SECTION_START(search_functions)$
-	testFunc := func(p *Params) (Results, error) {
+	testFunc := func(ctx context.Context, as *app.State, p *Params) (Results, error) {
 		return Results{{URL: "/search?q=test", Title: "Test Result", Match: p.Q + "!!!"}}, errors.New("!!!")
 	}
 	allProviders = append(allProviders, testFunc)
 	// $PF_SECTION_END(search_functions)$
+
+	if len(allProviders) == 0 {
+		return nil, []error{errors.New("no search providers configured")}
+	}
 
 	ret := Results{}
 	var errs []error
@@ -29,7 +36,7 @@ func Search(params *Params) (Results, []error) {
 	for _, p := range allProviders {
 		f := p
 		go func() {
-			res, err := f(params)
+			res, err := f(ctx, as, params)
 			mu.Lock()
 			if err != nil {
 				errs = append(errs, err)

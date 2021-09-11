@@ -21,25 +21,14 @@
       <div class="mt"><button type="submit">Search Again</button></div>
     </form>
   </div>
-  {% if p.Params.Q != "" %}
+  {%- if p.Params.Q != "" && len(p.Results) == 0 -%}
   <div class="card">
-    <h3>{%s util.PluralMaybe("Result", len(p.Results)) %}</h3>
-    {% if len(p.Results) == 0 %}
-    <div class="mt"><em>no results</em></div>
-    {% else %}
-    <table class="mt">
-      <tbody>
-        {% for _, res := range p.Results %}
-        <tr>
-          <td class="shrink"><a href="{%s res.URL %}">{% if res.Title == "" %}{%s res.URL %}{% else %}{%s res.Title %}{% endif %}</a></td>
-          <td>{%= Match(p.Params) %}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    {% endif %}
+    <h3>No results</h3>
   </div>
-  {% endif %}
+  {%- endif -%}
+  {%- for _, res := range p.Results -%}
+  {%= Result(res, p.Params, as, ps) %}
+  {%- endfor -%}
   {% if len(p.Errors) > 0 %}
   <div class="card">
     <h3>{%s util.PluralMaybe("Error", len(p.Errors)) %}</h3>
@@ -50,8 +39,4 @@
     </ul>
   </div>
   {% endif %}
-{% endfunc %}
-
-{% func Match(params *search.Params) %}
-  {%s params.Q %}!!!
 {% endfunc %}

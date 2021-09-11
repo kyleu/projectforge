@@ -1,0 +1,17 @@
+{% import (
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/search"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/views/components"
+) %}
+
+{% func Result(res *search.Result, params *search.Params, as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3><a href="{%s res.URL %}">{% if res.Icon != "" %}{%= components.SVGRefIcon(res.Icon, ps) %}{% endif %}{% if res.Title == "" %}{%s res.URL %}{% else %}{%s res.Title %}{% endif %}</a></h3>
+    <p>{%= Match(params) %}</p>
+  </div>
+{% endfunc %}
+
+{% func Match(params *search.Params) %}
+  {%s params.Q %}!!!
+{% endfunc %}
