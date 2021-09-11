@@ -1,6 +1,8 @@
 package project
 
 import (
+	"sort"
+
 	"github.com/kyleu/projectforge/app/theme"
 	"github.com/kyleu/projectforge/app/util"
 )
@@ -54,3 +56,23 @@ func NewProject(key string, path string) *Project {
 }
 
 type Projects []*Project
+
+func (p Projects) AllModules() []string {
+	var ret []string
+	for _, prj := range p {
+		for _, mod := range prj.Modules {
+			hit := false
+			for _, x := range ret {
+				if x == mod {
+					hit = true
+					break
+				}
+			}
+			if !hit {
+				ret = append(ret, mod)
+			}
+		}
+	}
+	sort.Strings(ret)
+	return ret
+}

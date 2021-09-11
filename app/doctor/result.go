@@ -5,7 +5,8 @@ import (
 	"strings"
 )
 
-type Prognosis struct {
+type Result struct {
+	Check   *Check   `json:"-"`
 	Key     string   `json:"key"`
 	Title   string   `json:"title"`
 	Status  string   `json:"status,omitempty"`
@@ -14,22 +15,22 @@ type Prognosis struct {
 	Logs    []string `json:"logs,omitempty"`
 }
 
-func NewPrognosis(key string, title string, summary string) *Prognosis {
-	return &Prognosis{Key: key, Title: title, Status: "ok", Summary: summary}
+func NewResult(check *Check, key string, title string, summary string) *Result {
+	return &Result{Check: check, Key: key, Title: title, Status: "ok", Summary: summary}
 }
 
-func (p *Prognosis) AddLog(msg string) *Prognosis {
+func (p *Result) AddLog(msg string) *Result {
 	p.Logs = append(p.Logs, msg)
 	return p
 }
 
-func (p *Prognosis) WithError(err *Error) *Prognosis {
+func (p *Result) WithError(err *Error) *Result {
 	p.Status = "error"
 	p.Errors = append(p.Errors, err)
 	return p
 }
 
-func (p *Prognosis) String() string {
+func (p *Result) String() string {
 	logs := strings.Builder{}
 	for _, l := range p.Logs {
 		logs.WriteString("\n- ")
@@ -38,4 +39,4 @@ func (p *Prognosis) String() string {
 	return fmt.Sprintf("%s: %s\n[%s]%s", p.Title, p.Status, p.Summary, logs.String())
 }
 
-type Prognoses []*Prognosis
+type Results []*Result

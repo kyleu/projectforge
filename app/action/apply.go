@@ -24,7 +24,7 @@ func Apply(ctx context.Context, span trace.Span, projectKey string, t Type, cfg 
 	case TypeTest:
 		return onTest(ctx, cfg, mSvc, pSvc, logger)
 	case TypeDoctor:
-		return onDoctor(ctx, cfg, logger)
+		return onDoctor(ctx, cfg, pSvc, logger)
 	}
 
 	pm, err := getPrjAndMods(ctx, projectKey, cfg, mSvc, pSvc, logger)
