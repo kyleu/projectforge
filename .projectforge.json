@@ -21,6 +21,7 @@
     "./testproject",
     "../admini",
     "../../fevo-tech/arbiter",
+    "../../fevo-tech/fevorder",
     "../../fevo-tech/fevotools",
     "../../fevo-tech/messagebot.next",
     "../../fevo-tech/nuevo.next",
