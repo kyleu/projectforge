@@ -4,7 +4,6 @@ package controller
 import (
 	"net/url"
 
-	"github.com/go-gem/sessions"
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 
@@ -77,13 +76,13 @@ func ProfileSave(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 
-		msg := "profile save"
+		msg := "Saved profile"
 		return returnToReferrer(msg, referrer, rc, ps)
 	})
 }
 
-func loadProfile(session *sessions.Session) (*user.Profile, error) {
-	x, ok := session.Values["profile"]
+func loadProfile(session util.ValueMap) (*user.Profile, error) {
+	x, ok := session["profile"]
 	if !ok {
 		return user.DefaultProfile.Clone(), nil
 	}
@@ -101,7 +100,7 @@ func loadProfile(session *sessions.Session) (*user.Profile, error) {
 
 func returnToReferrer(msg string, dflt string, rc *fasthttp.RequestCtx, ps *cutil.PageState) (string, error) {
 	refer := ""
-	referX, ok := ps.Session.Values[cutil.ReferKey]
+	referX, ok := ps.Session[cutil.ReferKey]
 	if ok {
 		refer, ok = referX.(string)
 		if ok {

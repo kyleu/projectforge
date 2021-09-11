@@ -1,10 +1,6 @@
 package controller
 
 import (
-	"os"
-
-	"github.com/go-gem/sessions"
-	"github.com/gorilla/securecookie"
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
 
@@ -16,27 +12,6 @@ import (
 	"{{{ .Package}}}/app/util"
 )
 
-var sessionKey = func() string {
-	x := os.Getenv("SESSION_KEY")
-	if x == "" {
-		x = util.AppKey + "_random_secret_key"
-	}
-	return x
-}()
-
-var store *sessions.CookieStore
-
-func initStore(keyPairs ...[]byte) *sessions.CookieStore {
-	ret := sessions.NewCookieStore(keyPairs...)
-	for _, x := range ret.Codecs {
-		c, ok := x.(*securecookie.SecureCookie)
-		if ok {
-			c.MaxLength(65536)
-		}
-	}
-	return ret
-}
-
 func loadPageState(rc *fasthttp.RequestCtx, key string, as *app.State) *cutil.PageState {
 	rc = httpmetrics.ExtractHeaders(rc, as.Logger)
 	traceCtx, span := telemetry.StartSpan(rc, "pagestate", "http:"+key)
@@ -46,19 +21,45 @@ func loadPageState(rc *fasthttp.RequestCtx, key string, as *app.State) *cutil.Pa
 	sc := span.SpanContext()
 	logger := as.Logger.With(zap.String("path", path), zap.String("trace", sc.TraceID().String()), zap.String("span", sc.SpanID().String()))
 
-	if store == nil {
-		store = initStore([]byte(sessionKey))
+	session, flashes, prof, accts := loadSession(rc, logger)
+
+	isAuthed, _ := user.Check("/", accts)
+	isAdmin, _ := user.Check("/admin", accts)
+
+	return &cutil.PageState{
+		Method:   string(rc.Method()),
+		URI:      rc.Request.URI(),
+		Flashes:  flashes,
+		Session:  session,
+		Profile:  prof,
+		Accounts: accts,
+		Authed:   isAuthed,
+		Admin:    isAdmin,
+		Icons:    initialIcons,
+		Context:  traceCtx,
+		Span:     &span,
+		Logger:   logger,
 	}
-	session, err := store.Get(rc, util.AppKey)
-	if err != nil {
-		session, err = store.New(rc, util.AppKey)
+}
+
+func loadSession(rc *fasthttp.RequestCtx, logger *zap.SugaredLogger) (util.ValueMap, []string, *user.Profile, user.Accounts) {
+	sessionBytes := rc.Request.Header.Cookie(util.AppKey)
+	session := util.ValueMap{}
+	if len(sessionBytes) > 0 {
+		dec, err := cutil.DecryptMessage(string(sessionBytes), logger)
 		if err != nil {
-			logger.Warnf("error creating new session: %+v", err)
+			logger.Warnf("error decrypting session: %+v", err)
+		}
+		err = util.FromJSON([]byte(dec), &session)
+		if err != nil {
+			logger.Warnf("error parsing session: %+v", err)
 		}
 	}
-	flashes := util.StringArrayFromInterfaces(session.Flashes())
+
+	flashes := util.SplitAndTrim(session.GetStringOpt(cutil.WebFlashKey), ",")
 	if len(flashes) > 0 {
-		err = cutil.SaveSession(rc, session, logger)
+		delete(session, cutil.WebFlashKey)
+		err := cutil.SaveSession(rc, session, logger)
 		if err != nil {
 			logger.Warnf("can't save session: %+v", err)
 		}
@@ -69,29 +70,14 @@ func loadPageState(rc *fasthttp.RequestCtx, key string, as *app.State) *cutil.Pa
 		logger.Warnf("can't load profile: %+v", err)
 	}
 
-	var a user.Accounts
-	authX, ok := session.Values["auth"]
+	var accts user.Accounts
+	authX, ok := session[cutil.WebAuthKey]
 	if ok {
 		authS, ok := authX.(string)
 		if ok {
-			a = user.AccountsFromString(authS)
+			accts = user.AccountsFromString(authS)
 		}
 	}
-	isAuthed, _ := user.Check("/", a)
-	isAdmin, _ := user.Check("/admin", a)
 
-	return &cutil.PageState{
-		Method:   string(rc.Method()),
-		URI:      rc.Request.URI(),
-		Flashes:  flashes,
-		Session:  session,
-		Profile:  prof,
-		Accounts: a,
-		Authed:   isAuthed,
-		Admin:    isAdmin,
-		Icons:    initialIcons,
-		Context:  traceCtx,
-		Span:     &span,
-		Logger:   logger,
-	}
+	return session, flashes, prof, accts
 }

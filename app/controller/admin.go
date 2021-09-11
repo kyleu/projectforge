@@ -34,6 +34,7 @@ func Admin(rc *fasthttp.RequestCtx) {
 			return render(rc, as, &vadmin.Modules{Mods: mods.Deps}, ps, "Administration||/admin", "Modules")
 		case "session":
 			ps.Title = "Session Debug"
+			ps.Data = ps.Session
 			return render(rc, as, &vadmin.Session{}, ps, "Administration||/admin", "Session")
 		case "cpu":
 			switch path[1] {
@@ -55,6 +56,10 @@ func Admin(rc *fasthttp.RequestCtx) {
 				return "", err
 			}
 			return flashAndRedir(true, "wrote heap profile", "/admin", rc, ps)
+
+		// $PF_SECTION_START(admin-actions)$
+		// $PF_SECTION_END(admin-actions)$
+
 		default:
 			return "", errors.Errorf("unhandled admin action [%s]", path[0])
 		}

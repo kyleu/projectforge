@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/go-gem/sessions"
 	"github.com/valyala/fasthttp"
 	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
@@ -22,7 +21,7 @@ type PageState struct {
 	Menu          menu.Items         `json:"menu,omitempty"`
 	Breadcrumbs   Breadcrumbs        `json:"breadcrumbs,omitempty"`
 	Flashes       []string           `json:"flashes,omitempty"`
-	Session       *sessions.Session  `json:"-"`
+	Session       util.ValueMap      `json:"-"`
 	Profile       *user.Profile      `json:"profile,omitempty"`
 	Accounts      user.Accounts      `json:"accounts,omitempty"`
 	Authed        bool               `json:"authed,omitempty"`

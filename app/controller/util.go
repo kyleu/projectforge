@@ -67,7 +67,16 @@ func flashAndRedir(success bool, msg string, redir string, rc *fasthttp.RequestC
 	if success {
 		status = "success"
 	}
-	ps.Session.AddFlash(fmt.Sprintf("%s:%s", status, msg))
+	msgFmt := fmt.Sprintf("%s:%s", status, msg)
+	currStr := ps.Session.GetStringOpt(cutil.WebFlashKey)
+	if len(currStr) == 0 {
+		currStr = msgFmt
+	} else {
+		curr := util.SplitAndTrim(currStr, ",")
+		curr = append(curr, msgFmt)
+		currStr = strings.Join(curr, ",")
+	}
+	ps.Session[cutil.WebFlashKey] = currStr
 	if err := cutil.SaveSession(rc, ps.Session, ps.Logger); err != nil {
 		return "", errors.Wrap(err, "unable to save flash session")
 	}

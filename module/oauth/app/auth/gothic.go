@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"github.com/go-gem/sessions"
 	"github.com/markbates/goth"
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
@@ -9,9 +8,10 @@ import (
 
 	"{{{ .Package }}}/app/controller/cutil"
 	"{{{ .Package }}}/app/user"
+	"{{{ .Package }}}/app/util"
 )
 
-func BeginAuthHandler(prv *Provider, rc *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger) (string, error) {
+func BeginAuthHandler(prv *Provider, rc *fasthttp.RequestCtx, websess util.ValueMap, logger *zap.SugaredLogger) (string, error) {
 	u, err := getAuthURL(prv, rc, websess, logger)
 	if err != nil {
 		return "", err
@@ -23,7 +23,7 @@ func BeginAuthHandler(prv *Provider, rc *fasthttp.RequestCtx, websess *sessions.
 	return u, nil
 }
 
-func CompleteUserAuth(prv *Provider, rc *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger) (*user.Account, user.Accounts, error) {
+func CompleteUserAuth(prv *Provider, rc *fasthttp.RequestCtx, websess util.ValueMap, logger *zap.SugaredLogger) (*user.Account, user.Accounts, error) {
 	value, err := cutil.GetFromSession(prv.ID, websess)
 	if err != nil {
 		return nil, nil, err
@@ -80,7 +80,7 @@ func gothFor(rc *fasthttp.RequestCtx, prv *Provider) (goth.Provider, error) {
 	return prv.Goth(proto, host)
 }
 
-func Logout(rc *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger, prvKeys ...string) error {
+func Logout(rc *fasthttp.RequestCtx, websess util.ValueMap, logger *zap.SugaredLogger, prvKeys ...string) error {
 	a := getCurrentAuths(websess)
 	n := a.Purge(prvKeys...)
 	return setCurrentAuths(n, rc, websess, logger)

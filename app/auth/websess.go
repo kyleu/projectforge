@@ -2,17 +2,17 @@
 package auth
 
 import (
-	"github.com/go-gem/sessions"
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
 
 	"github.com/kyleu/projectforge/app/controller/cutil"
 	"github.com/kyleu/projectforge/app/user"
+	"github.com/kyleu/projectforge/app/util"
 )
 
-const WebSessKey = "auth"
+const WebAuthKey = "auth"
 
-func addToSession(provider string, email string, rc *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger) (*user.Account, user.Accounts, error) {
+func addToSession(provider string, email string, rc *fasthttp.RequestCtx, websess util.ValueMap, logger *zap.SugaredLogger) (*user.Account, user.Accounts, error) {
 	ret := getCurrentAuths(websess)
 	s := &user.Account{Provider: provider, Email: email}
 	for _, x := range ret {
@@ -28,17 +28,13 @@ func addToSession(provider string, email string, rc *fasthttp.RequestCtx, webses
 	return s, ret, nil
 }
 
-func removeProviderData(rc *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger) error {
+func removeProviderData(rc *fasthttp.RequestCtx, websess util.ValueMap, logger *zap.SugaredLogger) error {
 	dirty := false
-	for k := range websess.Values {
-		s, ok := k.(string)
-		if !ok {
-			logger.Error("unable to parse session key [%s] of type [%T]", k, k)
-		}
+	for s := range websess {
 		if isProvider(s) {
 			logger.Debug("removing auth info for provider [" + s + "]")
 			dirty = true
-			delete(websess.Values, k)
+			delete(websess, s)
 		}
 	}
 	if dirty {

@@ -2,15 +2,15 @@
 package auth
 
 import (
-	"github.com/go-gem/sessions"
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
 
 	"github.com/kyleu/projectforge/app/controller/cutil"
 	"github.com/kyleu/projectforge/app/user"
+	"github.com/kyleu/projectforge/app/util"
 )
 
-func getAuthURL(prv *Provider, rc *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger) (string, error) {
+func getAuthURL(prv *Provider, rc *fasthttp.RequestCtx, websess util.ValueMap, logger *zap.SugaredLogger) (string, error) {
 	g, err := gothFor(rc, prv)
 	if err != nil {
 		return "", err
@@ -34,8 +34,8 @@ func getAuthURL(prv *Provider, rc *fasthttp.RequestCtx, websess *sessions.Sessio
 	return u, err
 }
 
-func getCurrentAuths(websess *sessions.Session) user.Accounts {
-	authS, err := cutil.GetFromSession(WebSessKey, websess)
+func getCurrentAuths(websess util.ValueMap) user.Accounts {
+	authS, err := cutil.GetFromSession(WebAuthKey, websess)
 	var ret user.Accounts
 	if err == nil && authS != "" {
 		ret = user.AccountsFromString(authS)
@@ -43,10 +43,10 @@ func getCurrentAuths(websess *sessions.Session) user.Accounts {
 	return ret
 }
 
-func setCurrentAuths(s user.Accounts, rc *fasthttp.RequestCtx, websess *sessions.Session, logger *zap.SugaredLogger) error {
+func setCurrentAuths(s user.Accounts, rc *fasthttp.RequestCtx, websess util.ValueMap, logger *zap.SugaredLogger) error {
 	s.Sort()
 	if len(s) == 0 {
-		return cutil.RemoveFromSession(WebSessKey, rc, websess, logger)
+		return cutil.RemoveFromSession(WebAuthKey, rc, websess, logger)
 	}
-	return cutil.StoreInSession(WebSessKey, s.String(), rc, websess, logger)
+	return cutil.StoreInSession(WebAuthKey, s.String(), rc, websess, logger)
 }
