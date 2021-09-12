@@ -6,19 +6,22 @@ import (
 
 	"github.com/kyleu/projectforge/app/filesystem"
 	"github.com/kyleu/projectforge/app/project"
-	"github.com/kyleu/projectforge/app/util"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 )
 
 type Service struct {
+	local       filesystem.FileLoader
+	config      filesystem.FileLoader
 	cache       map[string]*Module
 	filesystems map[string]filesystem.FileLoader
 	logger      *zap.SugaredLogger
 }
 
-func NewService(logger *zap.SugaredLogger) *Service {
-	ret := &Service{cache: map[string]*Module{}, filesystems: map[string]filesystem.FileLoader{}, logger: logger}
+func NewService(config filesystem.FileLoader, logger *zap.SugaredLogger) *Service {
+	local := filesystem.NewFileSystem("module", logger)
+	config = filesystem.NewFileSystem(filepath.Join(config.Root(), "module"), logger)
+	ret := &Service{local: local, config: config, cache: map[string]*Module{}, filesystems: map[string]filesystem.FileLoader{}, logger: logger}
 
 	_, err := ret.LoadNative("core", "database", "desktop", "marketing", "migration", "mobile", "oauth", "search")
 	if err != nil {
@@ -30,7 +33,10 @@ func NewService(logger *zap.SugaredLogger) *Service {
 func (s *Service) GetFilesystem(key string) filesystem.FileLoader {
 	mod, err := s.Get(key)
 	if err != nil {
-		return filesystem.NewFileSystem(filepath.Join("module", key), s.logger)
+		if s.local.IsDir(key) {
+			return s.local
+		}
+		return s.config
 	}
 	return mod.Files
 }
@@ -43,15 +49,7 @@ func (s *Service) AddIfNeeded(key string, path string, url string) (*Module, boo
 		}
 		return ret, false, nil
 	}
-	if path == "" {
-		m, err := s.Load(key, url)
-		if err != nil {
-			return nil, false, err
-		}
-		return m, true, nil
-	}
-	fs := filesystem.NewFileSystem(path, s.logger)
-	m, err := s.load(key, fs, url)
+	m, err := s.load(key, path, url)
 	if err != nil {
 		return nil, false, err
 	}
@@ -60,7 +58,6 @@ func (s *Service) AddIfNeeded(key string, path string, url string) (*Module, boo
 }
 
 func (s *Service) Get(key string) (*Module, error) {
-	key, _ = util.SplitString(key, '@', true)
 	ret, ok := s.cache[key]
 	if !ok {
 		return nil, errors.New("no module available with key [" + key + "]")

@@ -4,10 +4,15 @@ import (
 	"context"
 
 	"github.com/kyleu/projectforge/app/action"
+	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
 
 func actionF(ctx context.Context, t action.Type, args []string) error {
+	if err := initIfNeeded(); err != nil {
+		return errors.Wrap(err, "error initializing application")
+	}
+
 	_, cfg := extractConfig(args)
 	projectKey := "TODO"
 

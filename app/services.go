@@ -15,7 +15,7 @@ type Services struct {
 
 func NewServices(_ context.Context, st *State) (*Services, error) {
 	return &Services{
-		Modules:  module.NewService(st.Logger),
+		Modules:  module.NewService(st.Files, st.Logger),
 		Projects: project.NewService(st.Logger),
 	}, nil
 }

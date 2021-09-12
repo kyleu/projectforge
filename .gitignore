@@ -3,6 +3,7 @@
 /.idea
 /.scannerwork
 /build
+/data
 /tmp
 
 **/*.html.go

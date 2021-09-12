@@ -5,20 +5,17 @@ import (
 	"strings"
 
 	"github.com/kyleu/projectforge/app/action"
-	"github.com/kyleu/projectforge/app/log"
+	"github.com/kyleu/projectforge/app/filesystem"
 	"github.com/kyleu/projectforge/app/module"
 	"github.com/kyleu/projectforge/app/project"
 	"github.com/kyleu/projectforge/app/util"
 )
 
 func runToCompletion(ctx context.Context, projectKey string, t action.Type, cfg util.ValueMap) error {
-	logger, err := log.InitLogging(true)
-	if err != nil {
-		return err
-	}
-	mSvc := module.NewService(logger)
-	pSvc := project.NewService(logger)
-	result := action.Apply(ctx, nil, projectKey, t, cfg, mSvc, pSvc, logger.With("service", "runner"))
+	fs := filesystem.NewFileSystem(_flags.ConfigDir, _logger)
+	mSvc := module.NewService(fs, _logger)
+	pSvc := project.NewService(_logger)
+	result := action.Apply(ctx, nil, projectKey, t, cfg, mSvc, pSvc, _logger.With("service", "runner"))
 	if len(result.Errors) > 0 {
 		return result.AsError()
 	}
