@@ -2,12 +2,14 @@
   "github.com/kyleu/projectforge/app"
   "github.com/kyleu/projectforge/app/controller/cutil"
   "github.com/kyleu/projectforge/app/module"
+  "github.com/kyleu/projectforge/app/project"
   "github.com/kyleu/projectforge/views/layout"
 ) %}
 
 {% code type Detail struct {
   layout.Basic
   Module *module.Module
+  Usages project.Projects
 } %}
 
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
@@ -43,5 +45,16 @@
         </tr>
       </tbody>
     </table>
+  </div>
+  <div class="card">
+    <h3>Project Usages</h3>
+    <ul>
+      {%- if len(p.Usages) == 0 -%}
+      <li><em>not referenced</em></li>
+      {%- endif -%}
+      {%- for _, x := range p.Usages -%}
+      <li><a href="/p/{%s x.Key %}">{%s x.Title() %}</a></li>
+      {%- endfor -%}
+    </ul>
   </div>
 {% endfunc %}

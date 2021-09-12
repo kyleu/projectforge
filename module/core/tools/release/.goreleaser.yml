@@ -28,6 +28,12 @@ changelog:
 
 checksum:
   name_template: "checksums.txt"
+  extra_files:{{{ if .Build.Notarize }}}
+    - glob: "./*_notarized.zip"{{{ end }}}{{{ if .Build.Desktop }}}
+    - glob: "./*_desktop_*_macos_x86_64.dmg"
+    - glob: "./*_desktop_*_x86_64.zip"{{{ end }}}
+    # $PF_SECTION_START(checksums)$
+    # $PF_SECTION_END(checksums)$
 
 dockers:
   -
@@ -73,8 +79,10 @@ release:
   extra_files:{{{ if .Build.Notarize }}}
     - glob: "./build/dist/*_notarized.zip"{{{ end }}}
     - glob: "./build/dist/*.dmg"{{{ if .Build.Desktop }}}
-    - glob: "./build/dist/*_desktop_*.zip"{{{ end }}}
-    - glob: "./build/dist/*_mobile_*.zip"
+    - glob: "./build/dist/*_desktop_*.zip"{{{ end }}}{{{ if .Build.Mobile }}}
+    - glob: "./build/dist/*_mobile_*.zip"{{{ end }}}
+    # $PF_SECTION_START(releasefiles)$
+    # $PF_SECTION_END(releasefiles)$
 {{{ if .Build.Signing }}}
 signs:
   - artifacts: checksum
@@ -110,6 +118,8 @@ builds:
         - "./tools/notarize/notarize-amd64.sh {{ .Version }}"{{{ end }}}{{{ if .BuildAndroid }}}
         - "./bin/build/android.sh {{ .Version }}"{{{ end }}}{{{ if .BuildIOS }}}
         - "./bin/build/ios.sh {{ .Version }}"{{{ end }}}
+        # $PF_SECTION_START(extrascripts)$
+        # $PF_SECTION_END(extrascripts)$
 
   - id: "darwin_arm64"
     goos:

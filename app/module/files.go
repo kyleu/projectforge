@@ -24,10 +24,10 @@ func fileContent(files filesystem.FileLoader, path string) (os.FileMode, []byte,
 	return stat.Mode(), b, nil
 }
 
-func (s *Service) LoadAll(keys ...string) (Modules, error) {
+func (s *Service) LoadNative(keys ...string) (Modules, error) {
 	var ret Modules
 	for _, key := range keys {
-		m, err := s.Load(key)
+		m, err := s.Load(key, "")
 		if err != nil {
 			return nil, err
 		}
@@ -36,13 +36,14 @@ func (s *Service) LoadAll(keys ...string) (Modules, error) {
 	return ret, nil
 }
 
-func (s *Service) Load(key string) (*Module, error) {
+func (s *Service) Load(key string, url string) (*Module, error) {
 	fs := s.GetFilesystem(key)
-	return s.load(key, fs)
+	return s.load(key, fs, url)
 }
 
-func (s *Service) load(key string, fs filesystem.FileLoader) (*Module, error) {
+func (s *Service) load(key string, fs filesystem.FileLoader, url string) (*Module, error) {
 	if !fs.Exists(configFilename) {
+		// TODO load from URL
 		msg := "file [%s] does not exist in path for module [%s] using root [%s]"
 		return nil, errors.Errorf(msg, configFilename, key, fs.Root())
 	}

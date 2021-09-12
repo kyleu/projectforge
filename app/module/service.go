@@ -5,6 +5,7 @@ import (
 	"sort"
 
 	"github.com/kyleu/projectforge/app/filesystem"
+	"github.com/kyleu/projectforge/app/project"
 	"github.com/kyleu/projectforge/app/util"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
@@ -19,7 +20,7 @@ type Service struct {
 func NewService(logger *zap.SugaredLogger) *Service {
 	ret := &Service{cache: map[string]*Module{}, filesystems: map[string]filesystem.FileLoader{}, logger: logger}
 
-	_, err := ret.LoadAll("core", "database", "desktop", "marketing", "migration", "mobile", "oauth", "search")
+	_, err := ret.LoadNative("core", "database", "desktop", "marketing", "migration", "mobile", "oauth", "search")
 	if err != nil {
 		logger.Errorf("unable to load [core] module: %+v", err)
 	}
@@ -34,20 +35,23 @@ func (s *Service) GetFilesystem(key string) filesystem.FileLoader {
 	return mod.Files
 }
 
-func (s *Service) AddIfNeeded(key string, path string) (*Module, bool, error) {
+func (s *Service) AddIfNeeded(key string, path string, url string) (*Module, bool, error) {
 	ret, ok := s.cache[key]
 	if ok {
+		if ret.URL != url {
+			s.logger.Warnf("module [%s] is loaded with url [%s] but there is another reference with url [%s]", ret.Key, ret.URL, url)
+		}
 		return ret, false, nil
 	}
 	if path == "" {
-		m, err := s.Load(key)
+		m, err := s.Load(key, url)
 		if err != nil {
 			return nil, false, err
 		}
 		return m, true, nil
 	}
 	fs := filesystem.NewFileSystem(path, s.logger)
-	m, err := s.load(key, fs)
+	m, err := s.load(key, fs, url)
 	if err != nil {
 		return nil, false, err
 	}
@@ -93,4 +97,18 @@ func (s *Service) Modules() Modules {
 		ret = append(ret, p)
 	}
 	return ret
+}
+
+func (s *Service) Register(path string, defs ...*project.ModuleDef) ([]string, error) {
+	var ret []string
+	for _, def := range defs {
+		_, added, err := s.AddIfNeeded(def.Key, filepath.Join(path, def.Path), def.URL)
+		if err != nil {
+			return nil, err
+		}
+		if added {
+			ret = append(ret, def.Key)
+		}
+	}
+	return ret, nil
 }

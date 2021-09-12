@@ -2,6 +2,8 @@ package controller
 
 import (
 	"github.com/kyleu/projectforge/app/module"
+	"github.com/kyleu/projectforge/app/project"
+	"github.com/kyleu/projectforge/app/util"
 	"github.com/kyleu/projectforge/views/vmodule"
 	"github.com/valyala/fasthttp"
 
@@ -25,7 +27,13 @@ func ModuleDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return render(rc, as, &vmodule.Detail{Module: mod}, ps, "modules", mod.Key)
+		var usages project.Projects
+		for _, p := range as.Services.Projects.Projects() {
+			if util.StringArrayContains(p.Modules, mod.Key) {
+				usages = append(usages, p)
+			}
+		}
+		return render(rc, as, &vmodule.Detail{Module: mod, Usages: usages}, ps, "modules", mod.Key)
 	})
 }
 

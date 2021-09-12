@@ -18,6 +18,7 @@ type Module struct {
 	Sourcecode  string                `json:"sourcecode,omitempty"`
 	Priority    int                   `json:"priority,omitempty"`
 	Files       filesystem.FileLoader `json:"-"`
+	URL         string                `json:"-"`
 }
 
 func (m *Module) Title() string {
