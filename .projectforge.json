@@ -2,7 +2,7 @@
   "key": "projectforge",
   "name": "Project Forge",
   "icon": "app",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "package": "github.com/kyleu/projectforge",
   "port": 40000,
   "modules": [
