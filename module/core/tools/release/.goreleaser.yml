@@ -29,9 +29,9 @@ changelog:
 checksum:
   name_template: "checksums.txt"
   extra_files:{{{ if .Build.Notarize }}}
-    - glob: "./*_notarized.zip"{{{ end }}}{{{ if .Build.Desktop }}}
-    - glob: "./*_desktop_*_macos_x86_64.dmg"
-    - glob: "./*_desktop_*_x86_64.zip"{{{ end }}}
+    - glob: "./build/dist/*_notarized.zip"{{{ end }}}{{{ if .Build.Desktop }}}
+    - glob: "./build/dist/*_desktop_*.dmg"
+    - glob: "./build/dist/*_desktop_*.zip"{{{ end }}}
     # $PF_SECTION_START(checksums)$
     # $PF_SECTION_END(checksums)$
 
@@ -77,8 +77,8 @@ release:
     - [Windows Intel 64 bit]({{{ .Info.Sourcecode }}}/releases/download/{{ .Version }}/{{{ .Key }}}_{{ .Version }}_windows_x86_64.zip)
 
   extra_files:{{{ if .Build.Notarize }}}
-    - glob: "./build/dist/*_notarized.zip"{{{ end }}}
-    - glob: "./build/dist/*.dmg"{{{ if .Build.Desktop }}}
+    - glob: "./build/dist/*_notarized.zip"{{{ end }}}{{{ if .Build.Desktop }}}
+    - glob: "./build/dist/*.dmg"
     - glob: "./build/dist/*_desktop_*.zip"{{{ end }}}{{{ if .Build.Mobile }}}
     - glob: "./build/dist/*_mobile_*.zip"{{{ end }}}
     # $PF_SECTION_START(releasefiles)$

@@ -20,7 +20,7 @@ func (s *Service) Download(key string, url string) error {
 		if o := os.Getenv("projectforge_update_url"); o != "" {
 			base = o
 		}
-		url = fmt.Sprintf(base+ "/projectforge.module.%s.zip", key)
+		url = fmt.Sprintf(base+ "/projectforge_module_%s.zip", key)
 	}
 	s.logger.Infof("downloading module [%s] from URL [%s]", key, url)
 	req, err := http.NewRequestWithContext(context.Background(), "GET", url, nil)

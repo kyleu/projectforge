@@ -15,7 +15,7 @@ mkdir -p build/dist/module
 function z {
   echo "updating [$1] module"
   cd module/$1
-  zip -r "../../build/dist/projectforge.module.$1.zip" .
+  zip -r "../../build/dist/projectforge_module_$1.zip" .
   cd ../..
 }
 

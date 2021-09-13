@@ -30,11 +30,11 @@ changelog:
 checksum:
   name_template: "checksums.txt"
   extra_files:
-    - glob: "./*_notarized.zip"
-    - glob: "./*_desktop_*_macos_x86_64.dmg"
-    - glob: "./*_desktop_*_x86_64.zip"
+    - glob: "./build/dist/*_notarized.zip"
+    - glob: "./build/dist/*_desktop_*.dmg"
+    - glob: "./build/dist/*_desktop_*.zip"
     # $PF_SECTION_START(checksums)$
-    - glob: "./projectforge.module.*.zip"
+    - glob: "./build/dist/projectforge_module_*.zip"
     # $PF_SECTION_END(checksums)$
 
 dockers:
@@ -84,7 +84,7 @@ release:
     - glob: "./build/dist/*_desktop_*.zip"
     - glob: "./build/dist/*_mobile_*.zip"
     # $PF_SECTION_START(releasefiles)$
-    - glob: "./build/dist/projectforge.module.*.zip"
+    - glob: "./build/dist/projectforge_module_*.zip"
     # $PF_SECTION_END(releasefiles)$
 
 signs:
