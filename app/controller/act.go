@@ -54,9 +54,14 @@ func actComplete(key string, as *app.State, ps *cutil.PageState, rc *fasthttp.Re
 	status := fasthttp.StatusOK
 	cutil.WriteCORS(rc)
 	startNanos := time.Now().UnixNano()
-	redir, err := f(as, ps)
-	if err != nil {
-		redir, err = handleError(key, as, ps, rc, err)
+	var redir string
+	if ps.ForceRedirect == "" || ps.ForceRedirect == string(rc.URI().Path()) {
+		redir, err = f(as, ps)
+		if err != nil {
+			redir, err = handleError(key, as, ps, rc, err)
+		}
+	} else {
+		redir = ps.ForceRedirect
 	}
 	if redir != "" {
 		rc.Response.Header.Set("Location", redir)

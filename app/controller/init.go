@@ -6,6 +6,7 @@ import (
 
 	"github.com/kyleu/projectforge/app"
 	"github.com/kyleu/projectforge/app/controller/cutil"
+	"github.com/kyleu/projectforge/app/project"
 	"github.com/pkg/errors"
 )
 
@@ -20,7 +21,11 @@ func initAppRequest(as *app.State, ps *cutil.PageState) error {
 		return errors.Wrap(err, "can't load projects")
 	}
 	for _, prj := range prjs {
-		keys, err := as.Services.Modules.Register(prj.Path, prj.Info.ModuleDefs...)
+		var mods []*project.ModuleDef
+		if prj.Info != nil {
+			mods = prj.Info.ModuleDefs
+		}
+		keys, err := as.Services.Modules.Register(prj.Path, mods...)
 		if err != nil {
 			return errors.Wrap(err, "unable to register module definitions")
 		}
@@ -28,6 +33,12 @@ func initAppRequest(as *app.State, ps *cutil.PageState) error {
 			as.Logger.Debugf("Loaded modules for [%s]: %s", prj.Key, strings.Join(keys, ", "))
 		}
 	}
+
+	root := as.Services.Projects.ByPath(".")
+	if root.Info == nil {
+		ps.ForceRedirect = "/p/" + root.Key + "/edit"
+	}
+
 	return nil
 }
 

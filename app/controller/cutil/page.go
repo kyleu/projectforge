@@ -33,6 +33,7 @@ type PageState struct {
 	RootTitle     string             `json:"rootTitle,omitempty"`
 	SearchPath    string             `json:"searchPath,omitempty"`
 	ProfilePath   string             `json:"profilePath,omitempty"`
+	ForceRedirect string             `json:"forceRedirect,omitempty"`
 	Data          interface{}        `json:"data,omitempty"`
 	Logger        *zap.SugaredLogger `json:"-"`
 	Context       context.Context    `json:"-"`

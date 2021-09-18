@@ -7,5 +7,4 @@ dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $dir
 
 go get -u github.com/cosmtrek/air
-go get -u github.com/valyala/quicktemplate
 go get -u github.com/valyala/quicktemplate/qtc

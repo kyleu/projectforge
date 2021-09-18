@@ -39,12 +39,12 @@ func Initialize(logger *zap.SugaredLogger) {
 	}
 	otel.SetErrorHandler(&ErrHandler{logger: logger})
 	initialized = true
-	logger.Debug("initializing tracing telemetry")
 
 	endpoint := "localhost:55681"
 	if env := os.Getenv(util.AppKey + "_telemetry_endpoint"); env != "" {
 		endpoint = env
 	}
+	logger.Debugf("initializing OpenTelemetry tracing using endpoint [%s]", endpoint)
 	tp, err := buildTP(endpoint)
 	if err != nil {
 		logger.Errorf("unable to create tracing provider: %+v", err)

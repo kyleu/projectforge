@@ -17,7 +17,6 @@ import (
 const ConfigFilename = ".projectforge.json"
 
 type Service struct {
-	rootProject string
 	cache       map[string]*Project
 	cacheLock   sync.RWMutex
 	filesystems map[string]filesystem.FileLoader
@@ -69,11 +68,10 @@ func (s *Service) add(path string, parent *Project) (*Project, error) {
 
 func (s *Service) Refresh() (Projects, error) {
 	s.cache = map[string]*Project{}
-	p, err := s.add(".", nil)
+	_, err := s.add(".", nil)
 	if err != nil {
 		return nil, err
 	}
-	s.rootProject = p.Key
 	return s.Projects(), nil
 }
 
@@ -115,6 +113,9 @@ func (s *Service) load(path string) (*Project, error) {
 		if r == "" {
 			r = l
 		}
+		if r == "." {
+			r = "root"
+		}
 		ret := NewProject(r, path)
 		ret.Name = r + " (missing)"
 		return ret, nil
@@ -144,5 +145,20 @@ func (s *Service) Save(prj *Project) error {
 	if err != nil {
 		return errors.Wrapf(err, "unable to write config file to [%s]", ConfigFilename)
 	}
+	return nil
+}
+
+func (s *Service) ByPath(path string) *Project {
+	s.cacheLock.Lock()
+	defer s.cacheLock.Unlock()
+	for _, v := range s.cache {
+		if v.Path == path {
+			return v
+		}
+	}
+	return nil
+}
+
+func (s *Service) Init() error {
 	return nil
 }

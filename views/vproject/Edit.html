@@ -16,8 +16,14 @@
 } %}
 
 {% func (p *Edit) Body(as *app.State, ps *cutil.PageState) %}
+  {%- code prj := p.Project -%}
+  {%- if prj.Info == nil -%}
+  <div class="card">
+    <h3>Project Not Initialized!</h3>
+    <p>TODO: explain initialization</p>
+  </div>
+  {%- endif -%}
   {%- code
-    prj := p.Project
     info := prj.Info
     if info == nil {
       info = &project.Info{}
@@ -36,7 +42,7 @@
         {%- if prj.Key == "" -%}
         {%= components.TableInput("key", "Key", prj.Key, 5) %}
         {%- endif -%}
-        {%= components.TableInput("name", "Name", prj.Name, 5) %}
+        {%= components.TableInput("name", "Name", strings.TrimSuffix(prj.Name, " (missing)"), 5) %}
         {%= components.TableInput("icon", "Icon", prj.Icon, 5) %}
         {%= components.TableInput("version", "Version", prj.Version, 5) %}
         {%= components.TableInput("package", "Package", prj.Package, 5) %}

@@ -24,9 +24,18 @@ func projectFromForm(frm util.ValueMap, prj *project.Project) error {
 	prj.Name = get("name", prj.Name)
 	prj.Version = get("version", prj.Version)
 	prj.Package = get("package", prj.Package)
+	if prj.Package == "" {
+		prj.Package = "github.com/org/" + prj.Key
+	}
 	prj.Args = get("args", prj.Args)
 	prj.Port, _ = strconv.Atoi(get("port", fmt.Sprintf("%d", prj.Port)))
+	if prj.Port == 0 {
+		prj.Port = 10000
+	}
 	prj.Modules = util.SplitAndTrim(get("modules", strings.Join(prj.Modules, "|")), "|")
+	if len(prj.Modules) == 0 {
+		prj.Modules = []string{"core"}
+	}
 	prj.Ignore = util.SplitAndTrim(get("ignore", strings.Join(prj.Ignore, ",")), ",")
 	prj.Children = util.SplitAndTrim(get("children", strings.Join(prj.Children, "\n")), "\n")
 	prj.Path = get("path", prj.Path)
@@ -66,8 +75,8 @@ func getProject(rc *fasthttp.RequestCtx, as *app.State) (*project.Project, error
 	if err != nil {
 		return nil, err
 	}
-	if prj.Info == nil {
-		prj.Info = &project.Info{}
-	}
+	//if prj.Info == nil {
+	//	prj.Info = &project.Info{}
+	//}
 	return prj, nil
 }

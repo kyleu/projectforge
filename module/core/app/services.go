@@ -2,14 +2,14 @@
 package app
 
 import (
-	"context"
+	"context"{{{ if .HasModule "database" }}}
 
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
 	"{{{ .Package }}}/app/database"
 	"{{{ .Package }}}/app/database/migrate"
-	"{{{ .Package }}}/app/log"
+	"{{{ .Package }}}/app/log"{{{ end }}}
 )
 
 type Services struct {
@@ -19,7 +19,7 @@ type Services struct {
 func NewServices(ctx context.Context, st *State) (*Services, error) {
 	return &Services{}, nil
 }
-
+{{{ if .HasModule "database" }}}
 func RunMigrations(context.Context, *zap.SugaredLogger) (*database.Service, error) {
 	logger, _ := log.InitLogging(false)
 
@@ -34,4 +34,4 @@ func RunMigrations(context.Context, *zap.SugaredLogger) (*database.Service, erro
 	}
 
 	return db, nil
-}
+}{{{ end }}}
