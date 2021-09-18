@@ -20,7 +20,7 @@ func (s *Service) Download(key string, url string) error {
 		if o := os.Getenv("projectforge_update_url"); o != "" {
 			base = o
 		}
-		url = fmt.Sprintf(base+ "/projectforge_module_%s.zip", key)
+		url = fmt.Sprintf(base+"/projectforge_module_%s.zip", key)
 	}
 	s.logger.Infof("downloading module [%s] from URL [%s]", key, url)
 	req, err := http.NewRequestWithContext(context.Background(), "GET", url, nil)
@@ -49,7 +49,7 @@ func (s *Service) Download(key string, url string) error {
 	}
 
 	for _, f := range r.File {
-		fn := filepath.Join(key, f.Name)
+		fn := filepath.Join(key, f.Name) // nolint
 		if f.FileInfo().IsDir() {
 			err = s.config.CreateDirectory(fn)
 			if err != nil {
@@ -62,6 +62,9 @@ func (s *Service) Download(key string, url string) error {
 			return errors.Errorf("unable to read file [%s] from module [%s] from [%s]", fn, key, url)
 		}
 		content, err := io.ReadAll(o)
+		if err != nil {
+			return errors.Errorf("unable to read content of [%s] for module [%s] from [%s]", fn, key, url)
+		}
 		err = s.config.WriteFile(fn, content, filesystem.DefaultMode, false)
 		if err != nil {
 			return errors.Errorf("unable to write file [%s] for module [%s] from [%s]", fn, key, url)
@@ -70,4 +73,3 @@ func (s *Service) Download(key string, url string) error {
 
 	return nil
 }
-

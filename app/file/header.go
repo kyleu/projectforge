@@ -12,6 +12,7 @@ func ContainsHeader(s string) bool {
 	return strings.Contains(s, headerContent)
 }
 
+// nolint
 func contentWithHeader(t Type, c string, logger *zap.SugaredLogger) string {
 	if strings.Contains(c, "$PF_IGNORE$") {
 		return c

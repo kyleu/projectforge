@@ -43,11 +43,11 @@ func changes(src string, diffs []gotextdiff.TextEdit) (string, []*Change) {
 		for _, l := range h.Lines {
 			t := "unknown"
 			switch l.Kind {
-			case 0:
+			case gotextdiff.Delete:
 				t = "deleted"
-			case 1:
+			case gotextdiff.Insert:
 				t = "added"
-			case 2:
+			case gotextdiff.Equal:
 				t = "context"
 			}
 			lines = append(lines, &Line{T: t, V: l.Content})

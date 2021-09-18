@@ -9,8 +9,9 @@ import (
 )
 
 func TestErr(t *testing.T) {
+	t.Parallel()
 	for _, x := range diff.AllExamples {
 		diffs := x.Calc()
-		println(fmt.Sprintf("%s: %s", x.File, util.ToJSON(diffs)))
+		t.Log(fmt.Sprintf("%s: %s", x.File, util.ToJSON(diffs)))
 	}
 }

@@ -61,7 +61,7 @@ func ProjectCreate(rc *fasthttp.RequestCtx) {
 			return ersp("unable to save project: %+v", err)
 		}
 
-		msg := "Saved changes"
+		msg := "Created project [" + prj.Title() + "]"
 		return flashAndRedir(true, msg, "/p/"+prj.Key, rc, ps)
 	})
 }

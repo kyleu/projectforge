@@ -40,6 +40,7 @@ func (b *Build) Mobile() bool {
 	return b.IOS || b.Android
 }
 
+// nolint
 func (b *Build) Empty() bool {
 	return !(b.Publish || b.Desktop || b.Notarize || b.Signing || b.Android || b.IOS || b.WASM || b.WindowsARM ||
 		b.LinuxARM || b.LinuxMIPS || b.LinuxOdd || b.AIX || b.Dragonfly || b.Illumos || b.FreeBSD || b.NetBSD ||

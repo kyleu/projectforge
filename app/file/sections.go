@@ -79,29 +79,6 @@ func (s sections) Sort() {
 
 func sectionIndexes(s string) (sections, error) {
 	var ret sections
-	parseText := func(idx int, text string) error {
-		switch {
-		case strings.HasPrefix(text, startPattern):
-			currSection := text[len(startPattern) : len(text)-len(closePattern)]
-			if ret.Get(currSection) != nil {
-				return errors.Errorf("multiple sections found with key [%s]", currSection)
-			}
-			ret = append(ret, &section{Key: currSection, Start: idx})
-		case strings.HasPrefix(text, endPattern):
-			if len(ret) == 0 {
-				return errors.New("encountered end section pattern before start")
-			}
-			curr := ret[len(ret)-1]
-			sec := text[len(endPattern) : len(text)-len(closePattern)]
-			if curr.Key != sec {
-				return errors.Errorf("encountered nested section patterns (%s within %s)", sec, curr.Key)
-			}
-			curr.End = idx - len(sectionPrefix) - len(text)
-		default:
-			return errors.Errorf("invalid section pattern [%s]", text)
-		}
-		return nil
-	}
 
 	for idx, c := range s {
 		if c == '$' && len(s) > idx+len(sectionPrefix) {
@@ -116,7 +93,8 @@ func sectionIndexes(s string) (sections, error) {
 				}
 				endIdx := idx + len(sectionPrefix) + nextDollar + len(closePattern)
 				text := s[idx+len(sectionPrefix) : endIdx]
-				err := parseText(endIdx, text)
+				var err error
+				ret, err = parseText(ret, endIdx, text)
 				if err != nil {
 					return nil, errors.Wrapf(err, "unable to parse text [%s]", text)
 				}
@@ -125,4 +103,29 @@ func sectionIndexes(s string) (sections, error) {
 	}
 	ret.Sort()
 	return ret, nil
+}
+
+func parseText(ret sections, idx int, text string) (sections, error) {
+	switch {
+	case strings.HasPrefix(text, startPattern):
+		currSection := text[len(startPattern) : len(text)-len(closePattern)]
+		if ret.Get(currSection) != nil {
+			return nil, errors.Errorf("multiple sections found with key [%s]", currSection)
+		}
+		ret = append(ret, &section{Key: currSection, Start: idx})
+		return ret, nil
+	case strings.HasPrefix(text, endPattern):
+		if len(ret) == 0 {
+			return nil, errors.New("encountered end section pattern before start")
+		}
+		curr := ret[len(ret)-1]
+		sec := text[len(endPattern) : len(text)-len(closePattern)]
+		if curr.Key != sec {
+			return nil, errors.Errorf("encountered nested section patterns (%s within %s)", sec, curr.Key)
+		}
+		curr.End = idx - len(sectionPrefix) - len(text)
+		return ret, nil
+	default:
+		return nil, errors.Errorf("invalid section pattern [%s]", text)
+	}
 }
