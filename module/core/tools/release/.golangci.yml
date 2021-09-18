@@ -1,3 +1,10 @@
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
+
+output:
+  sort-results: true
+
 linters-settings:
   depguard:
     list-type: blacklist
@@ -48,7 +55,7 @@ linters-settings:
           - (github.com/golangci/golangci-lint/pkg/logutils.Log).Errorf
           - (github.com/golangci/golangci-lint/pkg/logutils.Log).Fatalf
   lll:
-    line-length: 140
+    line-length: 160
   maligned:
     suggest-new: true
   misspell:
@@ -69,15 +76,16 @@ linters:
     - depguard
     - dogsled
     # - dupl
+    - durationcheck
     - errcheck
     - errorlint
-    - exportloopref
     - exhaustive
     # - exhaustivestruct
     - exportloopref
     - forbidigo
     - forcetypeassert
     - funlen
+    # - gci
     # - gochecknoglobals
     - gochecknoinits
     - gocognit
@@ -92,7 +100,7 @@ linters:
     - goheader
     - goimports
     # - gomnd
-    - gomoddirectives
+    # - gomoddirectives
     - gomodguard
     - goprintffuncname
     - gosec
@@ -101,8 +109,7 @@ linters:
     - ifshort
     - importas
     - ineffassign
-    # - interfacer
-    # - lll
+    - lll
     - makezero
     - misspell
     - nakedret
@@ -112,13 +119,14 @@ linters:
     - paralleltest
     - prealloc
     - predeclared
+    - promlinter
     - revive
     - rowserrcheck
-    # - scopelint
     - sqlclosecheck
     - staticcheck
     - structcheck
     - stylecheck
+    # - tagliatelle
     - testpackage
     - thelper
     - tparallel
