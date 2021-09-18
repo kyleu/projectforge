@@ -15,7 +15,9 @@ func runToCompletion(ctx context.Context, projectKey string, t action.Type, cfg 
 	fs := filesystem.NewFileSystem(_flags.ConfigDir, _logger)
 	mSvc := module.NewService(fs, _logger)
 	pSvc := project.NewService(_logger)
-	result := action.Apply(ctx, nil, projectKey, t, cfg, mSvc, pSvc, _logger.With("service", "runner"))
+	logger := _logger.With("service", "runner")
+	p := &action.Params{Span: nil, ProjectKey: projectKey, T: t, Cfg: cfg, MSvc: mSvc, PSvc: pSvc, Logger: logger}
+	result := action.Apply(ctx, p)
 	if len(result.Errors) > 0 {
 		return result.AsError()
 	}

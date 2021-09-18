@@ -41,7 +41,7 @@ func onCreate(ctx context.Context, key string, cfg util.ValueMap, mSvc *module.S
 		return errorResult(errors.Wrap(err, msg), cfg, logger)
 	}
 
-	pm, err := getPrjAndMods(ctx, prj.Key, cfg, mSvc, pSvc, logger)
+	pm, err := getPrjAndMods(ctx, &Params{ProjectKey: prj.Key, Cfg: cfg, MSvc: mSvc, PSvc: pSvc, Logger: logger})
 	if err != nil {
 		return errorResult(err, cfg, logger)
 	}

@@ -35,7 +35,10 @@ func RunAction(rc *fasthttp.RequestCtx) {
 			cfg[string(k)] = string(v)
 		})
 		nc, span := telemetry.StartSpan(ps.Context, "action", "action."+actT.String())
-		result := action.Apply(nc, span, tgt, actT, cfg, as.Services.Modules, as.Services.Projects, ps.Logger)
+		result := action.Apply(nc, &action.Params{
+			Span: span, ProjectKey: tgt, T: actT, Cfg: cfg,
+			MSvc: as.Services.Modules, PSvc: as.Services.Projects, Logger: ps.Logger,
+		})
 		ps.Data = result
 		page := &vaction.Result{Ctx: &action.ResultContext{Prj: prj, Cfg: cfg, Res: result}}
 		return render(rc, as, page, ps, "projects", prj.Key, actT.Title)
@@ -62,7 +65,10 @@ func RunAllActions(rc *fasthttp.RequestCtx) {
 				c := cfg.Clone()
 				c["path"] = p.Path
 				nc, span := telemetry.StartSpan(ps.Context, "action", "action."+actT.String())
-				result := action.Apply(nc, span, p.Key, actT, c, as.Services.Modules, as.Services.Projects, ps.Logger)
+				result := action.Apply(nc, &action.Params{
+					Span: span, ProjectKey: p.Key, T: actT, Cfg: c,
+					MSvc: as.Services.Modules, PSvc: as.Services.Projects, Logger: ps.Logger,
+				})
 				rc := &action.ResultContext{Prj: p, Cfg: c, Res: result}
 				mutex.Lock()
 				results = append(results, rc)

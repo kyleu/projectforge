@@ -47,7 +47,10 @@ func TestRun(rc *fasthttp.RequestCtx) {
 			cfg := util.ValueMap{}
 			cfg.Add("path", "./testproject", "method", key, "wipe", true)
 			nc, span := telemetry.StartSpan(ps.Context, "action", "test.run")
-			res := action.Apply(nc, span, "testproject", action.TypeTest, cfg, as.Services.Modules, as.Services.Projects, ps.Logger)
+			res := action.Apply(nc, &action.Params{
+				Span: span, ProjectKey: "testproject", T: action.TypeTest, Cfg: cfg,
+				MSvc: as.Services.Modules, PSvc: as.Services.Projects, Logger: ps.Logger,
+			})
 			ps.Data = res
 
 			_, err = as.Services.Projects.Refresh()
