@@ -29,9 +29,6 @@ func AppRoutes() fasthttp.RequestHandler {
 	// $PF_SECTION_START(routes)$
 	r.GET("/doctor", Doctor)
 
-	r.GET("/init", ProjectInitWarning)
-	r.POST("/init", ProjectInit)
-
 	r.GET("/p", ProjectList)
 	r.GET("/p/new", ProjectForm)
 	r.POST("/p/new", ProjectCreate)
