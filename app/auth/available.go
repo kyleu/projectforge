@@ -3,6 +3,7 @@ package auth
 
 import (
 	"fmt"
+	"os"
 	"sort"
 
 	"github.com/kyleu/projectforge/app/util"
@@ -14,13 +15,18 @@ var (
 )
 
 const (
-	auth0Key     = "auth0"
-	microsoftKey = "microsoft"
-	nextcloudKey = "nextcloud"
+	auth0Key         = "auth0"
+	microsoftKey     = "microsoft"
+	nextcloudKey     = "nextcloud"
+	OpenIDConnectKey = "openid_connect"
 )
 
 func initAvailable() {
 	if AvailableProviderNames == nil {
+		openIDConnectName := os.Getenv(OpenIDConnectKey+"_name")
+		if openIDConnectName == "" {
+			openIDConnectName = "OpenID Connect"
+		}
 		AvailableProviderNames = map[string]string{
 			"amazon": "Amazon", "apple": "Apple", auth0Key: "Auth0", "azuread": "Azure AD",
 			"battlenet": "Battlenet", "bitbucket": "Bitbucket", "box": "Box",
@@ -34,7 +40,7 @@ func initAvailable() {
 			"lastfm": "Last FM", "line": "LINE", "linkedin": "Linkedin",
 			"mastodon": "Mastodon", "meetup": "Meetup.com", microsoftKey: "Microsoft", "microsoftonline": "Microsoft Online",
 			"naver": "Naver", nextcloudKey: "NextCloud",
-			"okta": "Okta", "onedrive": "Onedrive", "openid-connect": "OpenID Connect",
+			"okta": "Okta", "onedrive": "Onedrive", OpenIDConnectKey: openIDConnectName,
 			"paypal":     "Paypal",
 			"salesforce": "Salesforce", "seatalk": "SeaTalk", "shopify": "Shopify", "slack": "Slack",
 			"soundcloud": "SoundCloud", "spotify": "Spotify", "steam": "Steam", "strava": "Strava", "stripe": "Stripe",
@@ -45,7 +51,6 @@ func initAvailable() {
 			"xero":  "Xero",
 			"yahoo": "Yahoo", "yammer": "Yammer", "yandex": "Yandex",
 		}
-
 		AvailableProviderKeys = nil
 		for k := range AvailableProviderNames {
 			AvailableProviderKeys = append(AvailableProviderKeys, k)
@@ -70,6 +75,8 @@ func ProviderUsage(id string, enabled bool) string {
 		keys = append(keys, "\"microsoft_tenant\"")
 	case nextcloudKey:
 		keys = append(keys, "\"nextcloud_url\"")
+	case OpenIDConnectKey:
+		keys = append(keys, "\"openid_connect_url\"", "\"openid_connect_name\"")
 	}
 	return fmt.Sprintf("To enable %s, set %s as environment variables", n, util.OxfordComma(keys, "and"))
 }

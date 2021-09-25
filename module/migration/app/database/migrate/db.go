@@ -22,10 +22,8 @@ const (
 );`
 )
 
-var defaultCreatedOrdering = filter.Orderings{{Column: "created", Asc: false}}
-
 func ListMigrations(ctx context.Context, s *database.Service, params *filter.Params, logger *zap.SugaredLogger) Migrations {
-	params = filter.ParamsWithDefaultOrdering(migrationTable, params, defaultCreatedOrdering...)
+	params = filter.ParamsWithDefaultOrdering(migrationTable, params, &filter.Ordering{Column: "created", Asc: false})
 	var dtos []migrationDTO
 	q := database.SQLSelect("*", migrationTable, "", params.OrderByString(), params.Limit, params.Offset)
 	err := s.Select(ctx, &dtos, q, nil)

@@ -18,10 +18,10 @@ require (
 	github.com/spf13/cobra v1.2.1
 	github.com/valyala/fasthttp v1.30.0
 	github.com/valyala/quicktemplate v1.6.3
-	go.opentelemetry.io/otel v1.0.0-RC3
-	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp v1.0.0-RC3
-	go.opentelemetry.io/otel/sdk v1.0.0-RC3
-	go.opentelemetry.io/otel/trace v1.0.0-RC3
+	go.opentelemetry.io/otel v1.0.0
+	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp v1.0.0
+	go.opentelemetry.io/otel/sdk v1.0.0
+	go.opentelemetry.io/otel/trace v1.0.0
 	go.uber.org/zap v1.19.0
 	golang.org/x/mobile v0.0.0-20210902104108-5d9a33257ab5
 	golang.org/x/oauth2 v0.0.0-20210819190943-2bc19b11175f
@@ -50,7 +50,7 @@ require (
 	github.com/savsgio/gotils v0.0.0-20210617111740-97865ed5a873 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
-	go.opentelemetry.io/otel/exporters/otlp/otlptrace v1.0.0-RC3 // indirect
+	go.opentelemetry.io/otel/exporters/otlp/otlptrace v1.0.0 // indirect
 	go.opentelemetry.io/proto/otlp v0.9.0 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.7.0 // indirect

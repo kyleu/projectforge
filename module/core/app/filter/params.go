@@ -23,13 +23,11 @@ type Params struct {
 
 func ParamsWithDefaultOrdering(key string, params *Params, orderings ...*Ordering) *Params {
 	if params == nil {
-		params = &Params{Key: key}
+		return ParamsWithDefaultOrdering(key, &Params{Key: key}, orderings...)
 	}
-
 	if len(params.Orderings) == 0 {
 		params.Orderings = orderings
 	}
-
 	return params
 }
 
@@ -38,6 +36,13 @@ func (p *Params) CloneOrdering(orderings ...*Ordering) *Params {
 		return nil
 	}
 	return &Params{Key: p.Key, Orderings: orderings, Limit: p.Limit, Offset: p.Offset}
+}
+
+func (p *Params) CloneLimit(limit int) *Params {
+	if p == nil {
+		return nil
+	}
+	return &Params{Key: p.Key, Orderings: p.Orderings, Limit: limit, Offset: p.Offset}
 }
 
 func (p *Params) HasNextPage(count int) bool {
@@ -152,7 +157,8 @@ func (p *Params) ToQueryString(u *fasthttp.URI) string {
 		return ""
 	}
 
-	ret := u.QueryArgs()
+	ret := &fasthttp.Args{}
+	u.QueryArgs().CopyTo(ret)
 
 	ret.Del(p.Key + ".o")
 	ret.Del(p.Key + ".l")

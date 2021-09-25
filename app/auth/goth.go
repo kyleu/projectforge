@@ -39,6 +39,7 @@ import (
 	"github.com/markbates/goth/providers/nextcloud"
 	"github.com/markbates/goth/providers/okta"
 	"github.com/markbates/goth/providers/onedrive"
+	"github.com/markbates/goth/providers/openidConnect"
 	"github.com/markbates/goth/providers/paypal"
 	"github.com/markbates/goth/providers/salesforce"
 	"github.com/markbates/goth/providers/seatalk"
@@ -137,6 +138,8 @@ func toGoth(id string, k string, s string, c string) (goth.Provider, error) {
 		return okta.New(k, s, c, "openid", "profile", "email"), nil
 	case "onedrive":
 		return onedrive.New(k, s, c), nil
+	case OpenIDConnectKey:
+		return openidConnect.New(k, s, c, os.Getenv("openid_connect_url"), "profile", "email")
 	case "paypal":
 		return paypal.New(k, s, c), nil
 	case "salesforce":

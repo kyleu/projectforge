@@ -15,7 +15,19 @@ func NewDiff(p string, o string, n string) *Diff {
 	return &Diff{Path: p, Old: o, New: n}
 }
 
+func (d Diff) String() string {
+	return d.Path
+}
+
 type Diffs []*Diff
+
+func (d Diffs) String() string {
+	var sb []string
+	for _, x := range d {
+		sb = append(sb, x.String())
+	}
+	return strings.Join(sb, "; ")
+}
 
 func DiffObjects(l interface{}, r interface{}, path ...string) Diffs {
 	var ret Diffs
@@ -48,6 +60,16 @@ func DiffObjects(l interface{}, r interface{}, path ...string) Diffs {
 		for k, v := range t {
 			rv := rm[k]
 			ret = append(ret, DiffObjects(v, rv, append(append([]string{}, path...), k)...)...)
+		}
+	case map[string]int:
+		rm := r.(map[string]int)
+		for k, v := range t {
+			rv := rm[k]
+			ret = append(ret, DiffObjects(v, rv, append(append([]string{}, path...), k)...)...)
+		}
+	case int:
+		if t != r.(int) {
+			ret = append(ret, NewDiff(strings.Join(path, "."), fmt.Sprint(t), fmt.Sprint(r.(int))))
 		}
 	case string:
 		if t != r.(string) {
