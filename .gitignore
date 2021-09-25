@@ -9,6 +9,8 @@
 **/*.html.go
 **/*.sql.go
 
+xcuserdata
+
 /client/node_modules
 
 /testproject

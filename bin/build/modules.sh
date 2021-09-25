@@ -26,6 +26,6 @@ z marketing
 z migration
 z mobile
 z oauth
+z postgres
 z search
-
-# zip -r "../projectforge_${TGT}_mobile_android.zip" .
+z sqlite
