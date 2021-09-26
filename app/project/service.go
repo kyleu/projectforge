@@ -41,6 +41,9 @@ func (s *Service) GetFilesystem(prj *Project) filesystem.FileLoader {
 }
 
 func (s *Service) add(path string, parent *Project) (*Project, error) {
+	if parent != nil {
+		path = filepath.Join(parent.Path, path)
+	}
 	p, err := s.load(path)
 	if err != nil {
 		return nil, err
@@ -117,6 +120,7 @@ func (s *Service) load(path string) (*Project, error) {
 			r = "root"
 		}
 		ret := NewProject(r, path)
+		println("#### " + path)
 		ret.Name = r + " (missing)"
 		return ret, nil
 	}

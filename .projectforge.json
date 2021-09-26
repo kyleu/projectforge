@@ -21,14 +21,7 @@
   "children": [
     "./testproject",
     "../admini",
-    "../../fevo-tech/arbiter",
-    "../../fevo-tech/commercehub",
-    "../../fevo-tech/fevorder",
-    "../../fevo-tech/fevotools",
-    "../../fevo-tech/messagebot.next",
-    "../../fevo-tech/nuevo.next",
-    "../../fevo-tech/oldworld",
-    "../../fevo-tech/silverparakeet"
+    "../../fevo-tech/modules"
   ],
   "info": {
     "org": "kyleu",
