@@ -50,6 +50,8 @@ func contentWithHeader(t Type, c string, logger *zap.SugaredLogger) string {
 		return secondLine(c, "# "+headerContent)
 	case TypeSVG.Key:
 		return c
+	case TypeSwift.Key:
+		return "// " + headerContent + "\n" + c
 	case TypeText.Key:
 		return "# " + headerContent + "\n" + c
 	case TypeTypeScript.Key:

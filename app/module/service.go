@@ -23,7 +23,7 @@ func NewService(config filesystem.FileLoader, logger *zap.SugaredLogger) *Servic
 	config = filesystem.NewFileSystem(filepath.Join(config.Root(), "module"), logger)
 	ret := &Service{local: local, config: config, cache: map[string]*Module{}, filesystems: map[string]filesystem.FileLoader{}, logger: logger}
 
-	_, err := ret.LoadNative("core", "database", "desktop", "marketing", "migration", "mobile", "oauth", "postgres", "search", "sqlite")
+	_, err := ret.LoadNative("android", "core", "database", "desktop", "ios", "marketing", "migration", "oauth", "postgres", "search", "sqlite")
 	if err != nil {
 		logger.Errorf("unable to load [core] module: %+v", err)
 	}

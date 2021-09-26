@@ -1,0 +1,10 @@
+{
+  "name": "Android App",
+  "icon": "mobile",
+  "description": "Webview-based application and Android build",
+  "authorName": "Kyle U",
+  "authorEmail": "kyle@kyleu.com",
+  "license": "Proprietary",
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/android",
+  "priority": 30
+}

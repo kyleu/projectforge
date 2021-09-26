@@ -6,10 +6,11 @@
   "package": "github.com/kyleu/projectforge",
   "port": 40000,
   "modules": [
+    "android",
     "core",
     "desktop",
+    "ios",
     "marketing",
-    "mobile",
     "oauth",
     "search"
   ],

@@ -31,12 +31,12 @@ func (t *TemplateContext) HasModule(m string) bool {
 }
 
 func (t *TemplateContext) BuildAndroid() bool {
-	ret := t.HasModule("mobile") && t.Build.Android
+	ret := t.HasModule("android") && t.Build.Android
 	return ret
 }
 
 func (t *TemplateContext) BuildIOS() bool {
-	return t.HasModule("mobile") && t.Build.IOS
+	return t.HasModule("ios") && t.Build.IOS
 }
 
 func (p *Project) ToTemplateContext() *TemplateContext {

@@ -12,4 +12,16 @@ echo "building gomobile for iOS..."
 time gomobile bind -o build/dist/mobile_ios_arm64/projectforge.framework -target=ios github.com/kyleu/projectforge/app/cmd
 echo "gomobile for iOS completed successfully, building distribution..."
 cd "build/dist/mobile_ios_arm64/projectforge.framework"
-zip --symlinks -r "../../projectforge_${TGT}_mobile_ios.zip" .
+zip --symlinks -r "../../projectforge_${TGT}_mobile_ios_framework.zip" .
+
+echo "Building iOS app..."
+cd $dir/../../tools/ios
+
+rm -rf projectforge.framework
+cp -R ../../build/dist/mobile_ios_arm64/projectforge.framework ./projectforge.framework
+
+xcodebuild -project app.xcodeproj
+
+cd build/Release-iphoneos/
+
+zip -r "$dir/../../build/dist/projectforge_${TGT}_mobile_ios_app.zip" "projectforge.app"

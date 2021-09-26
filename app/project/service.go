@@ -71,8 +71,7 @@ func (s *Service) add(path string, parent *Project) (*Project, error) {
 
 func (s *Service) Refresh() (Projects, error) {
 	s.cache = map[string]*Project{}
-	_, err := s.add(".", nil)
-	if err != nil {
+	if _, err := s.add(".", nil); err != nil {
 		return nil, err
 	}
 	return s.Projects(), nil
@@ -120,7 +119,6 @@ func (s *Service) load(path string) (*Project, error) {
 			r = "root"
 		}
 		ret := NewProject(r, path)
-		println("#### " + path)
 		ret.Name = r + " (missing)"
 		return ret, nil
 	}

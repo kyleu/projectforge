@@ -29,6 +29,7 @@ var (
 	TypePList      = Type{Key: "plist", Suffixes: []string{".plist"}, Title: "Apple configuration plist"}
 	TypeShell      = Type{Key: "shell", Suffixes: []string{".sh"}, Title: "Shell script"}
 	TypeSVG        = Type{Key: "svg", Suffixes: []string{".svg"}, Title: "Simple Vector Graphics file"}
+	TypeSwift      = Type{Key: "swift", Suffixes: []string{".swift"}, Title: "Swift source code file"}
 	TypeText       = Type{Key: "text", Suffixes: []string{".txt"}, Title: "Plaintext"}
 	TypeTypeScript = Type{Key: "typescript", Suffixes: []string{".ts"}, Title: "TypeScript source"}
 	TypeYAML       = Type{Key: "yaml", Suffixes: []string{".yml", ".yaml"}, Title: "YAML configuration source"}

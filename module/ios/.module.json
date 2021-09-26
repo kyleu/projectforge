@@ -1,0 +1,10 @@
+{
+  "name": "iOS App",
+  "icon": "mobile",
+  "description": "Webview-based application and iOS build",
+  "authorName": "Kyle U",
+  "authorEmail": "kyle@kyleu.com",
+  "license": "Proprietary",
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/ios",
+  "priority": 10
+}

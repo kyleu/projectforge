@@ -7,5 +7,10 @@
 
 **/*.html.go{{{ if .HasModule "database" }}}
 **/*.sql.go{{{ end }}}
-
+{{{ if .HasModule "ios" }}}
+/tools/ios/app.xcodeproj/xcuserdata
+/tools/ios/app.xcodeproj/*.xcworkspace
+/tools/ios/build
+/tools/ios/*.framework
+{{{ end }}}
 /client/node_modules

@@ -22,7 +22,7 @@ const (
 
 func initAvailable() {
 	if AvailableProviderNames == nil {
-		openIDConnectName := os.Getenv(OpenIDConnectKey+"_name")
+		openIDConnectName := os.Getenv(OpenIDConnectKey + "_name")
 		if openIDConnectName == "" {
 			openIDConnectName = "OpenID Connect"
 		}

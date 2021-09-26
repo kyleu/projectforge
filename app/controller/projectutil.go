@@ -75,8 +75,5 @@ func getProject(rc *fasthttp.RequestCtx, as *app.State) (*project.Project, error
 	if err != nil {
 		return nil, err
 	}
-	//if prj.Info == nil {
-	//	prj.Info = &project.Info{}
-	//}
 	return prj, nil
 }
