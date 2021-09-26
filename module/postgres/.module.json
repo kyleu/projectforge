@@ -1,10 +1,10 @@
 {
-  "name": "Database",
+  "name": "PostgreSQL",
   "icon": "database",
-  "description": "Provides an API for accessing PostgreSQL or SQLite databases",
+  "description": "Provides an API for accessing PostgreSQL databases",
   "authorName": "Kyle U",
   "authorEmail": "kyle@kyleu.com",
   "license": "Proprietary",
-  "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/database",
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/postgres",
   "priority": 10
 }
