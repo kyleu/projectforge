@@ -26,6 +26,7 @@ var (
 	TypeJSON       = Type{Key: "json", Suffixes: []string{".json"}, Title: "JavaScript Object Notation"}
 	TypeMakefile   = Type{Key: "makefile", Suffixes: []string{"Makefile", "makefile"}, Title: "Build file"}
 	TypeMarkdown   = Type{Key: "markdown", Suffixes: []string{".md", ".markdown"}, Title: "Markdown document"}
+	TypePBXProject = Type{Key: "pbxproject", Suffixes: []string{".pbxproj"}, Title: "Apple project configuration"}
 	TypePList      = Type{Key: "plist", Suffixes: []string{".plist"}, Title: "Apple configuration plist"}
 	TypeShell      = Type{Key: "shell", Suffixes: []string{".sh"}, Title: "Shell script"}
 	TypeSVG        = Type{Key: "svg", Suffixes: []string{".svg"}, Title: "Simple Vector Graphics file"}
@@ -37,7 +38,7 @@ var (
 
 var AllTypes = []Type{
 	TypeConf, TypeCSS, TypeDocker, TypeGo, TypeGoMod, TypeHCL, TypeHTML, TypeIcons, TypeIgnore, TypeJavaScript, TypeJSON,
-	TypeMakefile, TypeMarkdown, TypePList, TypeShell, TypeSVG, TypeText, TypeTypeScript, TypeYAML,
+	TypeMakefile, TypeMarkdown, TypePBXProject, TypePList, TypeShell, TypeSVG, TypeSwift, TypeText, TypeTypeScript, TypeYAML,
 }
 
 func TypeFromString(s string) Type {

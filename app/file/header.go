@@ -44,6 +44,8 @@ func contentWithHeader(t Type, c string, logger *zap.SugaredLogger) string {
 		return "# " + headerContent + "\n" + c
 	case TypeMarkdown.Key:
 		return "<!--- " + headerContent + " -->\n" + c
+	case TypePBXProject.Key:
+		return c
 	case TypePList.Key:
 		return c
 	case TypeShell.Key:
