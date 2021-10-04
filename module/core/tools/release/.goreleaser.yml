@@ -38,16 +38,16 @@ checksum:
 dockers:
   -
     image_templates:
-      - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:{{ .Tag }}"
-      - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:v{{ .Major }}"
-      - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:v{{ .Major }}.{{ .Minor }}"
+      - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:{{ .Major }}"
+      - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:{{ .Major }}.{{ .Minor }}"
+      - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:{{ .Major }}.{{ .Minor }}.{{ .Patch }}"
       - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:latest"
     dockerfile: ./tools/release/Dockerfile
   -
     image_templates:
-      - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:{{ .Tag }}-debug"
-      - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:v{{ .Major }}-debug"
-      - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:v{{ .Major }}.{{ .Minor }}-debug"
+      - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:{{ .Major }}-debug"
+      - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:{{ .Major }}.{{ .Minor }}-debug"
+      - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:{{ .Major }}.{{ .Minor }}.{{ .Patch }}-debug"
       - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:latest-debug"
     dockerfile: ./tools/release/debug.Dockerfile
 

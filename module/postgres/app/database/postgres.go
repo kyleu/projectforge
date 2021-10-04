@@ -83,6 +83,9 @@ func OpenPostgresDatabase(ctx context.Context, key string, params *PostgresParam
 		return nil, errors.Wrap(err, "error opening database")
 	}
 
+	db.SetMaxOpenConns(params.MaxConns)
+	db.SetMaxIdleConns(0)
+
 	var log *zap.SugaredLogger
 	if params.Debug {
 		log = logger.With("svc", "database", "db", key)
