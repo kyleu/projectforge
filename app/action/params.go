@@ -1,6 +1,7 @@
 package action
 
 import (
+	"github.com/kyleu/projectforge/app/filesystem"
 	"github.com/kyleu/projectforge/app/module"
 	"github.com/kyleu/projectforge/app/project"
 	"github.com/kyleu/projectforge/app/util"
@@ -13,6 +14,7 @@ type Params struct {
 	ProjectKey string
 	T          Type
 	Cfg        util.ValueMap
+	RootFiles  filesystem.FileLoader
 	MSvc       *module.Service
 	PSvc       *project.Service
 	Logger     *zap.SugaredLogger

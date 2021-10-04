@@ -19,11 +19,6 @@
     "testproject",
     "tmp"
   ],
-  "children": [
-    "./testproject",
-    "../admini",
-    "../../fevo-tech/modules"
-  ],
   "info": {
     "org": "kyleu",
     "authorName": "Kyle U",

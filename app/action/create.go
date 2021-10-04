@@ -14,7 +14,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func onCreate(ctx context.Context, key string, cfg util.ValueMap, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) *Result {
+func onCreate(ctx context.Context, key string, cfg util.ValueMap, rootFiles filesystem.FileLoader, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) *Result {
 	ret := newResult(cfg, logger)
 	path := cfg.GetStringOpt("path")
 	if path == "" {
@@ -35,7 +35,7 @@ func onCreate(ctx context.Context, key string, cfg util.ValueMap, mSvc *module.S
 		return ret.WithError(err)
 	}
 
-	_, err = pSvc.Refresh()
+	_, err = pSvc.Refresh(rootFiles)
 	if err != nil {
 		msg := fmt.Sprintf("unable to load newly created project from path [%s]", path)
 		return errorResult(errors.Wrap(err, msg), cfg, logger)

@@ -69,10 +69,28 @@ func (s *Service) add(path string, parent *Project) (*Project, error) {
 	return p, nil
 }
 
-func (s *Service) Refresh() (Projects, error) {
+func (s *Service) Refresh(rootFiles filesystem.FileLoader) (Projects, error) {
 	s.cache = map[string]*Project{}
-	if _, err := s.add(".", nil); err != nil {
+	root, err := s.add(".", nil)
+	if err != nil {
 		return nil, err
+	}
+	additionalFilename := "additional-projects.json"
+	if rootFiles.Exists(additionalFilename) {
+		additionalContent, err := rootFiles.ReadFile(additionalFilename)
+		if err != nil {
+			s.logger.Warnf("unable to load additional projects from [%s]", filepath.Join(rootFiles.Root(), additionalFilename))
+		}
+		var additional []string
+		err = util.FromJSON(additionalContent, &additional)
+		if err != nil {
+			s.logger.Warnf("unable to parse additional projects from [%s]: %+v", filepath.Join(rootFiles.Root(), additionalFilename), err)
+		}
+		for _, a := range additional {
+			if _, err := s.add(a, root); err != nil {
+				return nil, err
+			}
+		}
 	}
 	return s.Projects(), nil
 }

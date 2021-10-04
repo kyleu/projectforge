@@ -36,7 +36,7 @@ func RunAction(rc *fasthttp.RequestCtx) {
 		})
 		nc, span := telemetry.StartSpan(ps.Context, "action", "action."+actT.String())
 		result := action.Apply(nc, &action.Params{
-			Span: span, ProjectKey: tgt, T: actT, Cfg: cfg,
+			Span: span, ProjectKey: tgt, T: actT, Cfg: cfg, RootFiles: as.Files,
 			MSvc: as.Services.Modules, PSvc: as.Services.Projects, Logger: ps.Logger,
 		})
 		ps.Data = result
@@ -66,7 +66,7 @@ func RunAllActions(rc *fasthttp.RequestCtx) {
 				c["path"] = p.Path
 				nc, span := telemetry.StartSpan(ps.Context, "action", "action."+actT.String())
 				result := action.Apply(nc, &action.Params{
-					Span: span, ProjectKey: p.Key, T: actT, Cfg: c,
+					Span: span, ProjectKey: p.Key, T: actT, Cfg: c, RootFiles: as.Files,
 					MSvc: as.Services.Modules, PSvc: as.Services.Projects, Logger: ps.Logger,
 				})
 				rc := &action.ResultContext{Prj: p, Cfg: c, Res: result}

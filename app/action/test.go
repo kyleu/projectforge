@@ -11,20 +11,20 @@ import (
 	"go.uber.org/zap"
 )
 
-func onTest(ctx context.Context, cfg util.ValueMap, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) *Result {
+func onTest(ctx context.Context, cfg util.ValueMap, rootFiles filesystem.FileLoader, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) *Result {
 	methodName := cfg.GetStringOpt("method")
 	logger.Infof("running test method [%s]...", methodName)
 	switch methodName {
 	case "":
 		return errorResult(errors.New("must provide test method"), cfg, logger)
 	case "bootstrap":
-		return bootstrap(ctx, cfg, mSvc, pSvc, logger)
+		return bootstrap(ctx, cfg, rootFiles, mSvc, pSvc, logger)
 	default:
 		return errorResult(errors.Errorf("invalid test method [%s]", methodName), cfg, logger)
 	}
 }
 
-func bootstrap(ctx context.Context, cfg util.ValueMap, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) *Result {
+func bootstrap(ctx context.Context, cfg util.ValueMap, rootFiles filesystem.FileLoader, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) *Result {
 	cfg.Add(
 		"path", "./testproject",
 		"name", "Test Project",
@@ -38,7 +38,7 @@ func bootstrap(ctx context.Context, cfg util.ValueMap, mSvc *module.Service, pSv
 		return errorResult(err, cfg, logger)
 	}
 
-	return onCreate(ctx, "testproject", cfg, mSvc, pSvc, logger)
+	return onCreate(ctx, "testproject", cfg, rootFiles, mSvc, pSvc, logger)
 }
 
 func wipeIfNeeded(cfg util.ValueMap, logger *zap.SugaredLogger) error {

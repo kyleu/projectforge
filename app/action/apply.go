@@ -19,9 +19,9 @@ func Apply(ctx context.Context, p *Params) *Result {
 
 	switch p.T {
 	case TypeCreate:
-		return onCreate(ctx, p.ProjectKey, p.Cfg, p.MSvc, p.PSvc, p.Logger)
+		return onCreate(ctx, p.ProjectKey, p.Cfg, p.RootFiles, p.MSvc, p.PSvc, p.Logger)
 	case TypeTest:
-		return onTest(ctx, p.Cfg, p.MSvc, p.PSvc, p.Logger)
+		return onTest(ctx, p.Cfg, p.RootFiles, p.MSvc, p.PSvc, p.Logger)
 	case TypeDoctor:
 		return onDoctor(ctx, p.Cfg, p.PSvc, p.Logger)
 	}
