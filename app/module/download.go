@@ -16,7 +16,7 @@ import (
 
 func (s *Service) Download(key string, url string) error {
 	if url == "" {
-		base := "https://projectforge.dev/modules"
+		base := "https://update.projectforge.dev/module/latest"
 		if o := os.Getenv("projectforge_update_url"); o != "" {
 			base = o
 		}

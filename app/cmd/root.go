@@ -18,6 +18,7 @@ func rootCmd() *cobra.Command {
 	ret.AddCommand(serverCmd(), siteCmd(), allCmd())
 	// $PF_SECTION_START(cmds)$
 	ret.AddCommand(actionCommands()...)
+	ret.AddCommand(updateCmd())
 	// $PF_SECTION_END(cmds)$
 
 	ret.PersistentFlags().StringVarP(&_flags.ConfigDir, "dir", "d", "", "directory for configuration, defaults to system config dir")

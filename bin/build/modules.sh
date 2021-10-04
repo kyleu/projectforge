@@ -19,12 +19,13 @@ function z {
   cd ../..
 }
 
+z android
 z core
 z database
 z desktop
+z ios
 z marketing
 z migration
-z mobile
 z oauth
 z postgres
 z search
