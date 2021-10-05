@@ -1,0 +1,29 @@
+name: "{{{ .Name }}}"
+options:
+  bundleIdPrefix: com.kyleu
+targets:
+  {{{ .NameCompressed }}}:
+    type: application
+    platform: iOS
+    deploymentTarget: "14.0"
+    sources: [app]
+    dependencies:
+      - framework: ../mobile_ios_arm64/{{{ .Key }}}Server.framework
+        embed: false
+    info:
+      path: Info.plist
+      properties:
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait, UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight]
+        UILaunchStoryboardName: LaunchScreen
+    settings:
+      CODE_SIGN_ENTITLEMENTS: app.entitlements
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: {{{ .Info.Bundle }}}
+        CODE_SIGN_STYLE: Automatic
+        DEVELOPMENT_TEAM: "{{{ .Info.SigningIdentityTrimmed }}}"
+        VALIDATE_WORKSPACE: NO
+      configs:
+        Debug:
+          CODE_SIGN_IDENTITY: Apple Development
+        Release:
+          CODE_SIGN_IDENTITY: Apple Development

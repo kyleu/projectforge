@@ -1,5 +1,9 @@
 package project
 
+import (
+	"strings"
+)
+
 type ModuleDef struct {
 	Key  string `json:"key"`
 	Path string `json:"path"`
@@ -18,4 +22,11 @@ type Info struct {
 	Summary         string       `json:"summary,omitempty"`
 	Description     string       `json:"description,omitempty"`
 	ModuleDefs      []*ModuleDef `json:"moduleDefs,omitempty"`
+}
+
+func (i *Info) SigningIdentityTrimmed() string {
+	if strings.Contains(i.SigningIdentity, "(") && strings.Contains(i.SigningIdentity, ")") {
+		return i.SigningIdentity[strings.LastIndex(i.SigningIdentity, "(")+1:strings.LastIndex(i.SigningIdentity, ")")]
+	}
+	return i.SigningIdentity
 }

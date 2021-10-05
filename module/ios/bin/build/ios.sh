@@ -5,22 +5,23 @@ dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $dir/../..
 
 TGT=$1
-[ "$TGT" ] || TGT="v0.0.0"
+[ "$TGT" ] || TGT="0.0.0"
 
 echo "building gomobile for iOS..."
-time gomobile bind -o build/dist/mobile_ios_arm64/{{{ .Key }}}.framework -target=ios {{{ .Package }}}/app/cmd
+time gomobile bind -o build/dist/mobile_ios_arm64/{{{ .Key }}}Server.framework -target=ios {{{ .Package }}}/app/cmd
 echo "gomobile for iOS completed successfully, building distribution..."
-cd "build/dist/mobile_ios_arm64/{{{ .Key }}}.framework"
+cd "build/dist/mobile_ios_arm64/{{{ .Key }}}Server.framework"
 zip --symlinks -r "../../{{{ .Key }}}_${TGT}_mobile_ios_framework.zip" .
 
 echo "Building iOS app..."
 cd $dir/../../tools/ios
 
-rm -rf {{{ .Key }}}.framework
-cp -R ../../build/dist/mobile_ios_arm64/{{{ .Key }}}.framework ./{{{ .Key }}}.framework
+rm -rf ../../build/dist/mobile_ios_app_arm64
+mkdir -p ../../build/dist/mobile_ios_app_arm64
 
-xcodebuild -project app.xcodeproj
+xcodegen generate --spec xcodegen.yml --project ../../build/dist/mobile_ios_app_arm64
 
-cd build/Release-iphoneos/
+mv Info.plist ../../build/dist/mobile_ios_app_arm64
+cd ../../build/dist/mobile_ios_app_arm64
 
-zip -r "$dir/../../build/dist/{{{ .Key }}}_${TGT}_mobile_ios_app.zip" "{{{ .Key }}}.app"
+xcodebuild -project "{{{ .Name }}}.xcodeproj" -allowProvisioningUpdates

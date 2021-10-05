@@ -6,22 +6,23 @@ dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $dir/../..
 
 TGT=$1
-[ "$TGT" ] || TGT="v0.0.0"
+[ "$TGT" ] || TGT="0.0.0"
 
 echo "building gomobile for iOS..."
-time gomobile bind -o build/dist/mobile_ios_arm64/projectforge.framework -target=ios github.com/kyleu/projectforge/app/cmd
+time gomobile bind -o build/dist/mobile_ios_arm64/projectforgeServer.framework -target=ios github.com/kyleu/projectforge/app/cmd
 echo "gomobile for iOS completed successfully, building distribution..."
-cd "build/dist/mobile_ios_arm64/projectforge.framework"
+cd "build/dist/mobile_ios_arm64/projectforgeServer.framework"
 zip --symlinks -r "../../projectforge_${TGT}_mobile_ios_framework.zip" .
 
 echo "Building iOS app..."
 cd $dir/../../tools/ios
 
-rm -rf projectforge.framework
-cp -R ../../build/dist/mobile_ios_arm64/projectforge.framework ./projectforge.framework
+rm -rf ../../build/dist/mobile_ios_app_arm64
+mkdir -p ../../build/dist/mobile_ios_app_arm64
 
-xcodebuild -project app.xcodeproj
+xcodegen generate --spec xcodegen.yml --project ../../build/dist/mobile_ios_app_arm64
 
-cd build/Release-iphoneos/
+mv Info.plist ../../build/dist/mobile_ios_app_arm64
+cd ../../build/dist/mobile_ios_app_arm64
 
-zip -r "$dir/../../build/dist/projectforge_${TGT}_mobile_ios_app.zip" "projectforge.app"
+xcodebuild -project "Project Forge.xcodeproj" -allowProvisioningUpdates

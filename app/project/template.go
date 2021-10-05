@@ -26,6 +26,14 @@ type TemplateContext struct {
 	IgnoreGrep string `json:"ignoreGrep,omitempty"`
 }
 
+func (t *TemplateContext) KeyProper() string {
+	return strings.ToUpper(t.Key[:1]) + t.Key[1:]
+}
+
+func (t *TemplateContext) NameCompressed() string {
+	return strings.ReplaceAll(t.Name, " ", "")
+}
+
 func (t *TemplateContext) HasModule(m string) bool {
 	return util.StringArrayContains(t.Modules, m)
 }
