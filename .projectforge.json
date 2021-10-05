@@ -24,12 +24,13 @@
     "authorName": "Kyle U",
     "authorEmail": "kyle@kyleu.com",
     "license": "Proprietary",
-    "bundle": "com.kyleu.projectforge",
-    "signingIdentity": "Developer ID Application: Kyle Unverferth (C6S478FYLD)",
     "homepage": "https://projectforge.dev",
     "sourcecode": "https://github.com/kyleu/projectforge",
     "summary": "Build cool stuff with projectforge",
-    "description": "Helps you build and maintain lightning-fast Golang projects"
+    "description": "Helps you build and maintain lightning-fast Golang projects",
+    "bundle": "com.kyleu.projectforge",
+    "signingIdentity": "Developer ID Application: Kyle Unverferth (C6S478FYLD)",
+    "javaPackage": "dev.projectforge"
   },
   "build": {
     "publish": true,
