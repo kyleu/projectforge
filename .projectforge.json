@@ -1,7 +1,7 @@
 {
   "key": "projectforge",
   "name": "Project Forge",
-  "icon": "app",
+  "icon": "projectforge",
   "version": "0.0.16",
   "package": "github.com/kyleu/projectforge",
   "port": 40000,
