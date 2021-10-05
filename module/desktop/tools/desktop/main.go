@@ -16,10 +16,7 @@ func main() {
 }
 
 func run(debug bool) error {
-	port, err := cmd.Lib()
-	if err != nil {
-		return err
-	}
+	port := cmd.Lib("")
 	loadWebview(debug, int(port))
 	return nil
 }
