@@ -13,3 +13,16 @@ time gomobile bind -o build/dist/mobile_android_arm64/{{{ .Key }}}.aar -target=a
 echo "gomobile for Android completed successfully, building distribution..."
 cd "build/dist/mobile_android_arm64"
 zip -r "../{{{ .Key }}}_${TGT}_mobile_android.zip" .
+
+echo "creating Android project..."
+cd $dir/../..
+mkdir -p build/dist/mobile_android_app_arm64
+cp -R tools/android/* build/dist/mobile_android_app_arm64
+
+echo "building Android project..."
+cd build/dist/mobile_android_app_arm64
+rm -rf ./app/libs/{{{ .Key }}}.aar ./app/libs/{{{ .Key }}}-sources.jar
+cp ../mobile_android_arm64/{{{ .Key }}}.aar ./app/libs
+cp ../mobile_android_arm64/{{{ .Key }}}-sources.jar ./app/libs
+
+gradle assembleDebug
