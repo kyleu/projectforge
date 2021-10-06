@@ -7,54 +7,51 @@ import (
 	"strconv"
 
 	"github.com/kyleu/projectforge/app/filesystem"
-	"github.com/kyleu/projectforge/app/module"
 	"github.com/kyleu/projectforge/app/project"
 	"github.com/kyleu/projectforge/app/util"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 )
 
-func onCreate(ctx context.Context, key string, cfg util.ValueMap, rootFiles filesystem.FileLoader, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) *Result {
-	ret := newResult(cfg, logger)
-	path := cfg.GetStringOpt("path")
+func onCreate(ctx context.Context, params *Params) *Result {
+	ret := newResult(params.Cfg, params.Logger)
+	path := params.Cfg.GetStringOpt("path")
 	if path == "" {
 		path = "."
 	}
-	if wipe, _ := cfg.GetBool("wipe"); wipe {
-		fs := filesystem.NewFileSystem(".", logger)
+	if wipe, _ := params.Cfg.GetBool("wipe"); wipe {
+		fs := filesystem.NewFileSystem(".", params.Logger)
 		if fs.Exists(path) {
 			ret.AddLog("removing existing directory [%s]", path)
 			_ = fs.RemoveRecursive(path)
 		}
 	}
 
-	prj := projectFromCfg(project.NewProject(key, path), cfg)
+	prj := projectFromCfg(project.NewProject(params.ProjectKey, path), params.Cfg)
 
-	err := pSvc.Save(prj)
+	err := params.PSvc.Save(prj)
 	if err != nil {
 		return ret.WithError(err)
 	}
 
-	_, err = pSvc.Refresh(rootFiles)
+	_, err = params.PSvc.Refresh(params.RootFiles)
 	if err != nil {
 		msg := fmt.Sprintf("unable to load newly created project from path [%s]", path)
-		return errorResult(errors.Wrap(err, msg), cfg, logger)
+		return errorResult(errors.Wrap(err, msg), params.Cfg, params.Logger)
 	}
 
-	pm, err := getPrjAndMods(ctx, &Params{ProjectKey: prj.Key, Cfg: cfg, MSvc: mSvc, PSvc: pSvc, Logger: logger})
+	pm, err := getPrjAndMods(ctx, params)
 	if err != nil {
-		return errorResult(err, cfg, logger)
+		return errorResult(err, params.Cfg, params.Logger)
 	}
-	cfg["skipHeader"] = false
+	params.Cfg["skipHeader"] = false
 	retS := onSlam(pm)
 	ret = ret.Merge(retS)
 	if ret.HasErrors() {
 		return ret
 	}
 
-	ret = fullBuild(prj, ret, logger)
-
-	return ret
+	return fullBuild(prj, ret, params.Logger)
 }
 
 func fullBuild(prj *project.Project, r *Result, logger *zap.SugaredLogger) *Result {

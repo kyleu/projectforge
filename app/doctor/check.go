@@ -4,8 +4,10 @@ import (
 	"github.com/kyleu/projectforge/app/util"
 )
 
-type checkFn func(r *Result) *Result
-type solveFn func(r *Result) (*Result, error)
+type (
+	checkFn func(r *Result) *Result
+	solveFn func(r *Result) (*Result, error)
+)
 
 type Check struct {
 	Key     string   `json:"key"`

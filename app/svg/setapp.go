@@ -11,6 +11,17 @@ import (
 	"go.uber.org/zap"
 )
 
+func proc(cmd string, path string) error {
+	exit, out, err := util.RunProcessSimple(cmd, path)
+	if err != nil {
+		return errors.Wrap(err, "unable to convert [logo.png]")
+	}
+	if exit != 0 {
+		return errors.Wrapf(errors.Errorf("bad output: %s", out), "unable to convert [logo.png], exit code [%d]", exit)
+	}
+	return nil
+}
+
 func SetAppIcon(fs filesystem.FileLoader, x *SVG, logger *zap.SugaredLogger) error {
 	orig := x.Markup
 	for strings.Contains(orig, "<!--") {
@@ -22,27 +33,8 @@ func SetAppIcon(fs filesystem.FileLoader, x *SVG, logger *zap.SugaredLogger) err
 		orig = strings.TrimPrefix(orig[:startIdx]+orig[endIdx+3:], "\n")
 	}
 
-	proc := func(cmd string, path string) error {
-		exit, out, err := util.RunProcessSimple(cmd, path)
-		if err != nil {
-			return errors.Wrap(err, "unable to convert [logo.png]")
-		}
-		if exit != 0 {
-			return errors.Wrapf(errors.Errorf("bad output: %s", out), "unable to convert [logo.png], exit code [%d]", exit)
-		}
-		return nil
-	}
-
 	logoResize := func(size int, fn string, p string) {
 		msg := "convert -density 1000 -background none -resize %dx%d logo.svg %s"
-		err := proc(fmt.Sprintf(msg, size, size, fn), p)
-		if err != nil {
-			logger.Warnf("error processing icon [%s]: %+v", fn, err)
-		}
-	}
-
-	iOSResize := func(size int, fn string, p string) {
-		msg := "convert -density 1000 -background #888888 -resize %dx%d logo.svg %s"
 		err := proc(fmt.Sprintf(msg, size, size, fn), p)
 		if err != nil {
 			logger.Warnf("error processing icon [%s]: %+v", fn, err)
@@ -64,7 +56,7 @@ func SetAppIcon(fs filesystem.FileLoader, x *SVG, logger *zap.SugaredLogger) err
 
 	// Android assets
 	androidLogoPath := "tools/android/app/src/main/res/logo.svg"
-	androidPath := filepath.Join(fs.Root(), "tools/android/app/src/main/res")
+	androidPath := filepath.Join(fs.Root(), "tools", "android", "app", "src", "main", "res")
 	err = fs.WriteFile(androidLogoPath, []byte(orig), filesystem.DefaultMode, true)
 	if err != nil {
 		return errors.Wrap(err, "unable to write temporary Android [logo.svg]")
@@ -79,10 +71,40 @@ func SetAppIcon(fs filesystem.FileLoader, x *SVG, logger *zap.SugaredLogger) err
 		return errors.Wrap(err, "unable to remove temporary Android [logo.svg]")
 	}
 
+	err = iOSAssets(orig, fs, logger)
+	if err != nil {
+		return err
+	}
+
+	// app icon
+	appIconContent := strings.ReplaceAll(orig, "svg-"+x.Key, "svg-app")
+	appIconContent = "<!-- $PF_IGNORE$ -->\n" + appIconContent
+	err = fs.WriteFile("client/src/svg/app.svg", []byte(appIconContent), filesystem.DefaultMode, true)
+	if err != nil {
+		return errors.Wrap(err, "unable to write initial [logo.svg]")
+	}
+
+	_, err = Build(fs)
+	if err != nil {
+		return errors.Wrap(err, "unable to build SVG library")
+	}
+
+	return nil
+}
+
+func iOSAssets(orig string, fs filesystem.FileLoader, logger *zap.SugaredLogger) error {
+	iOSResize := func(size int, fn string, p string) {
+		msg := "convert -density 1000 -background #888888 -resize %dx%d logo.svg %s"
+		err := proc(fmt.Sprintf(msg, size, size, fn), p)
+		if err != nil {
+			logger.Warnf("error processing icon [%s]: %+v", fn, err)
+		}
+	}
+
 	// iOS assets
 	iOSLogoPath := "tools/ios/Assets.xcassets/AppIcon.appiconset/logo.svg"
-	iOSPath := filepath.Join(fs.Root(), "tools/ios/Assets.xcassets/AppIcon.appiconset")
-	err = fs.WriteFile(iOSLogoPath, []byte(orig), filesystem.DefaultMode, true)
+	iOSPath := filepath.Join(fs.Root(), "tools", "ios", "Assets.xcassets", "AppIcon.appiconset")
+	err := fs.WriteFile(iOSLogoPath, []byte(orig), filesystem.DefaultMode, true)
 	if err != nil {
 		return errors.Wrap(err, "unable to write temporary iOS [logo.svg]")
 	}
@@ -121,19 +143,5 @@ func SetAppIcon(fs filesystem.FileLoader, x *SVG, logger *zap.SugaredLogger) err
 	if err != nil {
 		return errors.Wrap(err, "unable to remove temporary iOS [logo.svg]")
 	}
-
-	// app icon
-	appIconContent := strings.ReplaceAll(orig, "svg-"+x.Key, "svg-app")
-	appIconContent = "<!-- $PF_IGNORE$ -->\n" + appIconContent
-	err = fs.WriteFile("client/src/svg/app.svg", []byte(appIconContent), filesystem.DefaultMode, true)
-	if err != nil {
-		return errors.Wrap(err, "unable to write initial [logo.svg]")
-	}
-
-	_, err = Build(fs)
-	if err != nil {
-		return errors.Wrap(err, "unable to build SVG library")
-	}
-
 	return nil
 }

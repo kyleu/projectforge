@@ -15,10 +15,10 @@ func updateF(ctx context.Context, args []string) error {
 		return errors.Wrap(err, "error initializing application")
 	}
 
-	println("updating " + util.AppName + " modules...")
+	_logger.Infof("updating " + util.AppName + " modules...")
 	fs := filesystem.NewFileSystem(_flags.ConfigDir, _logger)
 	mSvc := module.NewService(fs, _logger)
-  for _, mod := range mSvc.Modules() {
+	for _, mod := range mSvc.Modules() {
 		err := mSvc.Download(mod.Key, mod.URL)
 		if err != nil {
 			return err

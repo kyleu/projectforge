@@ -4,28 +4,26 @@ import (
 	"context"
 
 	"github.com/kyleu/projectforge/app/filesystem"
-	"github.com/kyleu/projectforge/app/module"
-	"github.com/kyleu/projectforge/app/project"
 	"github.com/kyleu/projectforge/app/util"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 )
 
-func onTest(ctx context.Context, cfg util.ValueMap, rootFiles filesystem.FileLoader, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) *Result {
-	methodName := cfg.GetStringOpt("method")
-	logger.Infof("running test method [%s]...", methodName)
+func onTest(ctx context.Context, params *Params) *Result {
+	methodName := params.Cfg.GetStringOpt("method")
+	params.Logger.Infof("running test method [%s]...", methodName)
 	switch methodName {
 	case "":
-		return errorResult(errors.New("must provide test method"), cfg, logger)
+		return errorResult(errors.New("must provide test method"), params.Cfg, params.Logger)
 	case "bootstrap":
-		return bootstrap(ctx, cfg, rootFiles, mSvc, pSvc, logger)
+		return bootstrap(ctx, params)
 	default:
-		return errorResult(errors.Errorf("invalid test method [%s]", methodName), cfg, logger)
+		return errorResult(errors.Errorf("invalid test method [%s]", methodName), params.Cfg, params.Logger)
 	}
 }
 
-func bootstrap(ctx context.Context, cfg util.ValueMap, rootFiles filesystem.FileLoader, mSvc *module.Service, pSvc *project.Service, logger *zap.SugaredLogger) *Result {
-	cfg.Add(
+func bootstrap(ctx context.Context, params *Params) *Result {
+	params.Cfg.Add(
 		"path", "./testproject",
 		"name", "Test Project",
 		"summary", "A Test Project!",
@@ -33,12 +31,12 @@ func bootstrap(ctx context.Context, cfg util.ValueMap, rootFiles filesystem.File
 		"homepage", "https://projectforge.dev",
 	)
 
-	err := wipeIfNeeded(cfg, logger)
+	err := wipeIfNeeded(params.Cfg, params.Logger)
 	if err != nil {
-		return errorResult(err, cfg, logger)
+		return errorResult(err, params.Cfg, params.Logger)
 	}
 
-	return onCreate(ctx, "testproject", cfg, rootFiles, mSvc, pSvc, logger)
+	return onCreate(ctx, params)
 }
 
 func wipeIfNeeded(cfg util.ValueMap, logger *zap.SugaredLogger) error {

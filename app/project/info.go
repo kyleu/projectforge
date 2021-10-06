@@ -27,7 +27,7 @@ type Info struct {
 
 func (i *Info) SigningIdentityTrimmed() string {
 	if strings.Contains(i.SigningIdentity, "(") && strings.Contains(i.SigningIdentity, ")") {
-		return i.SigningIdentity[strings.LastIndex(i.SigningIdentity, "(")+1:strings.LastIndex(i.SigningIdentity, ")")]
+		return i.SigningIdentity[strings.LastIndex(i.SigningIdentity, "(")+1 : strings.LastIndex(i.SigningIdentity, ")")]
 	}
 	return i.SigningIdentity
 }
