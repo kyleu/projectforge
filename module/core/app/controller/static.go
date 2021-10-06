@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"path/filepath"
 	"strings"
 
 	"github.com/valyala/fasthttp"
@@ -20,13 +19,13 @@ func RobotsTxt(rc *fasthttp.RequestCtx) {
 }
 
 func Static(rc *fasthttp.RequestCtx) {
-	path, err := filepath.Abs(strings.TrimPrefix(string(rc.Request.URI().Path()), "/assets"))
-	if err == nil {
-		path = strings.TrimPrefix(path, "/")
-		data, contentType, e := assets.EmbedAsset(path)
-		assetResponse(rc, data, contentType, e)
+	p := strings.TrimPrefix(string(rc.Request.URI().Path()), "/assets")
+	p = strings.TrimPrefix(p, "/")
+	if strings.Contains(p, "../") {
+		rc.Error("invalid path", fasthttp.StatusNotFound)
 	} else {
-		rc.Error(err.Error(), fasthttp.StatusBadRequest)
+		data, contentType, e := assets.EmbedAsset(p)
+		assetResponse(rc, data, contentType, e)
 	}
 }
 

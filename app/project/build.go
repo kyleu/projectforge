@@ -40,6 +40,10 @@ func (b *Build) Mobile() bool {
 	return b.IOS || b.Android
 }
 
+func (b *Build) HasArm() bool {
+	return b.WindowsARM || b.LinuxARM || b.FreeBSD || b.OpenBSD
+}
+
 // nolint
 func (b *Build) Empty() bool {
 	return !(b.Publish || b.Desktop || b.Notarize || b.Signing || b.Android || b.IOS || b.WASM || b.WindowsARM ||

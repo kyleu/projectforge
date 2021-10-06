@@ -28,12 +28,12 @@ func calcDownloadLinks(version string) Links {
 			u = fmt.Sprintf("%s_%s_%s_%s_desktop.zip", util.AppKey, version, os, arch)
 		}
 		add(u, mode, os, arch)
-	}
+	}{{{ if .Build.HasArm }}}
 	addARMs := func(mode string, os string) {
 		for _, arm := range []string{archARMV5, archARMV6, archARMV7} {
 			addDefault(mode, os, arm)
 		}
-	}{{{ if .Build.LinuxMIPS }}}
+	}{{{ end }}}{{{ if .Build.LinuxMIPS }}}
 	addMIPS := func(mode string, os string) {
 		for _, weird := range []string{archMIPS64Hard, archMIPS64LEHard, archMIPS64LESoft, archMIPS64Soft, archMIPSHard, archMIPSLEHard, archMIPSLESoft, archMIPSSoft} {
 			addDefault(mode, os, weird)
@@ -75,7 +75,7 @@ func calcDownloadLinks(version string) Links {
 	addDefault(modeServer, osOpenBSD, archAMD64)
 	addDefault(modeServer, osOpenBSD, archARM64)
 	addDefault(modeServer, osOpenBSD, archI386)
-	addARMs(modeServer, osOpenBSD){{{ end }}}{{{ if .Build.FreeBSD }}}
+	addARMs(modeServer, osOpenBSD){{{ end }}}{{{ if .Build.Plan9 }}}
 	addDefault(modeServer, osPlan9, archAMD64)
 	addDefault(modeServer, osPlan9, archI386)
 	addARMs(modeServer, osPlan9){{{ end }}}{{{ if .Build.Solaris }}}
