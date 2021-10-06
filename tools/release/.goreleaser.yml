@@ -31,9 +31,12 @@ checksum:
   name_template: "checksums.txt"
   extra_files:
     - glob: "./build/dist/*_notarized.zip"
-    - glob: "./build/dist/*_desktop_*.dmg"
-    - glob: "./build/dist/*_desktop_*.zip"
-    - glob: "./build/dist/*_mobile_*.zip"
+    - glob: "./build/dist/*_desktop.dmg"
+    - glob: "./build/dist/*_desktop.zip"
+    - glob: "./build/dist/*_aar.zip"
+    - glob: "./build/dist/*_apk.zip"
+    - glob: "./build/dist/*_framework.zip"
+    - glob: "./build/dist/*_app.zip"
     # $PF_SECTION_START(checksums)$
     - glob: "./build/dist/projectforge_module_*.zip"
     # $PF_SECTION_END(checksums)$
@@ -82,8 +85,11 @@ release:
   extra_files:
     - glob: "./build/dist/*_notarized.zip"
     - glob: "./build/dist/*.dmg"
-    - glob: "./build/dist/*_desktop_*.zip"
-    - glob: "./build/dist/*_mobile_*.zip"
+    - glob: "./build/dist/*_desktop.zip"
+    - glob: "./build/dist/*_aar.zip"
+    - glob: "./build/dist/*_apk.zip"
+    - glob: "./build/dist/*_framework.zip"
+    - glob: "./build/dist/*_app.zip"
     # $PF_SECTION_START(releasefiles)$
     - glob: "./build/dist/projectforge_module_*.zip"
     # $PF_SECTION_END(releasefiles)$

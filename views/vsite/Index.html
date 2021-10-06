@@ -3,6 +3,7 @@
   "github.com/kyleu/projectforge/app"
   "github.com/kyleu/projectforge/app/util"
   "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/views/components"
   "github.com/kyleu/projectforge/views/layout"
 ) %}
 
@@ -10,8 +11,8 @@
 
 {% func (p *Index) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>Marketing Site!</h3>
-    <em>TODO</em>
+    <h3>{%= components.SVGRefIcon(`app`, ps) %}{%s util.AppName %}</h3>
+    <em>Helps you build and maintain lightning-fast Golang projects</em>
     <pre>{%s util.ToJSON(ps.Data) %}</pre>
   </div>
 {% endfunc %}

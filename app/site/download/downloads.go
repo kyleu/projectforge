@@ -23,10 +23,10 @@ func calcDownloadLinks(version string) Links {
 	addDefault := func(mode string, os string, arch string) {
 		var u string
 		switch mode {
-		case modeServer:
+		case modeServer, modeMobile:
 			u = fmt.Sprintf("%s_%s_%s_%s.zip", util.AppKey, version, os, arch)
 		case modeDesktop:
-			u = fmt.Sprintf("%s_desktop_%s_%s_%s.zip", util.AppKey, version, os, arch)
+			u = fmt.Sprintf("%s_%s_%s_%s_desktop.zip", util.AppKey, version, os, arch)
 		}
 		add(u, mode, os, arch)
 	}
@@ -59,15 +59,17 @@ func calcDownloadLinks(version string) Links {
 	addDefault(modeServer, osLinux, archS390X)
 	addMIPS(modeServer, osLinux)
 	addDefault(modeServer, osAIX, archPPC64)
+	addDefault(modeMobile, osAndroid, "apk")
+	addDefault(modeMobile, osAndroid, "aar")
 	addDefault(modeServer, osDragonfly, archAMD64)
 	addDefault(modeServer, osFreeBSD, archAMD64)
 	addDefault(modeServer, osFreeBSD, archI386)
 	addDefault(modeServer, osFreeBSD, archARM64)
 	addARMs(modeServer, osFreeBSD)
 	addDefault(modeServer, osIllumos, archAMD64)
+	addDefault(modeMobile, osIOS, "app")
+	addDefault(modeMobile, osIOS, "framework")
 	addDefault(modeServer, osJS, archWASM)
-	addDefault(modeServer, osMobile, archAndroid)
-	addDefault(modeServer, osMobile, archIOS)
 	addDefault(modeServer, osNetBSD, archAMD64)
 	addDefault(modeServer, osNetBSD, archI386)
 	addDefault(modeServer, osNetBSD, archARMV7)

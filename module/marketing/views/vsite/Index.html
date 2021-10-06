@@ -2,6 +2,7 @@
   "{{{ .Package }}}/app"
   "{{{ .Package }}}/app/util"
   "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/views/components"
   "{{{ .Package }}}/views/layout"
 ) %}
 
@@ -9,8 +10,8 @@
 
 {% func (p *Index) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>Marketing Site!</h3>
-    <em>TODO</em>
+    <h3>{%= components.SVGRefIcon(`app`, ps) %}{%s util.AppName %}</h3>
+    <em>{{{ .Info.Description }}}</em>
     <pre>{%s util.ToJSON(ps.Data) %}</pre>
   </div>
 {% endfunc %}

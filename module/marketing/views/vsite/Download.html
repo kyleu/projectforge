@@ -13,14 +13,14 @@
 
 {% func (p *Download) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>Download {%s util.AppName %}</h3>
+    <h3>Download {%s util.AppName %} {%s as.BuildInfo.Version %}</h3>
   </div>
 
   <div class="card">
     <h3>Desktop Version</h3>
     <em>Standalone application using your platform's native web viewer</em>
     <ul>
-      {%- for _, link := range p.Links.GetByMode("desktop") -%}
+      {%- for _, link := range p.Links.GetByModes("desktop") -%}
       <li><a href="{{{ .Info.Sourcecode }}}/releases/download/v{%s as.BuildInfo.Version %}/{%s link.URL %}">{%s link.OSString() %}</a></li>
       {%- endfor -%}
     </ul>
@@ -28,11 +28,11 @@
 
   <div class="card">
     <h3>Server Version</h3>
-    <em>A command line interface exposing a multiuser web server</em>
+    <em>A command line interface that can launch a web server</em>
     <table class="mt">
       <tbody>
         {%- code var currentOS string -%}
-        {%- for _, link := range p.Links.GetByMode("server") -%}
+        {%- for _, link := range p.Links.GetByModes("server", "mobile") -%}
         {%- if currentOS != link.OS -%}
         {%- if currentOS != "" -%}
           </td>

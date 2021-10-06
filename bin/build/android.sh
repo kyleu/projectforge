@@ -13,7 +13,7 @@ mkdir -p build/dist/mobile_android_arm64
 time gomobile bind -o build/dist/mobile_android_arm64/projectforge.aar -target=android github.com/kyleu/projectforge/app/cmd
 echo "gomobile for Android completed successfully, building distribution..."
 cd "build/dist/mobile_android_arm64"
-zip -r "../projectforge_${TGT}_mobile_android_aar.zip" .
+zip -r "../projectforge_${TGT}_android_aar.zip" .
 
 echo "creating Android project..."
 cd $dir/../..
@@ -29,4 +29,4 @@ cp ../mobile_android_arm64/projectforge-sources.jar ./app/libs/
 
 gradle assembleDebug
 cd app/build/outputs/apk/debug
-zip -r "$dir/../../build/dist/projectforge_${TGT}_mobile_android_apk.zip" .
+zip -r "$dir/../../build/dist/projectforge_${TGT}_android_apk.zip" .

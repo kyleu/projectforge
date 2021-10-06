@@ -30,9 +30,12 @@ checksum:
   name_template: "checksums.txt"
   extra_files:{{{ if .Build.Notarize }}}
     - glob: "./build/dist/*_notarized.zip"{{{ end }}}{{{ if .Build.Desktop }}}
-    - glob: "./build/dist/*_desktop_*.dmg"
-    - glob: "./build/dist/*_desktop_*.zip"{{{ end }}}{{{ if .Build.Mobile }}}
-    - glob: "./build/dist/*_mobile_*.zip"{{{ end }}}
+    - glob: "./build/dist/*_desktop.dmg"
+    - glob: "./build/dist/*_desktop.zip"{{{ end }}}{{{ if .Build.Android }}}
+    - glob: "./build/dist/*_aar.zip"
+    - glob: "./build/dist/*_apk.zip"{{{ end }}}{{{ if .Build.IOS }}}
+    - glob: "./build/dist/*_framework.zip"
+    - glob: "./build/dist/*_app.zip"{{{ end }}}
     # $PF_SECTION_START(checksums)$
     # $PF_SECTION_END(checksums)$
 
@@ -80,8 +83,11 @@ release:
   extra_files:{{{ if .Build.Notarize }}}
     - glob: "./build/dist/*_notarized.zip"{{{ end }}}{{{ if .Build.Desktop }}}
     - glob: "./build/dist/*.dmg"
-    - glob: "./build/dist/*_desktop_*.zip"{{{ end }}}{{{ if .Build.Mobile }}}
-    - glob: "./build/dist/*_mobile_*.zip"{{{ end }}}
+    - glob: "./build/dist/*_desktop.zip"{{{ end }}}{{{ if .Build.Android }}}
+    - glob: "./build/dist/*_aar.zip"
+    - glob: "./build/dist/*_apk.zip"{{{ end }}}{{{ if .Build.IOS }}}
+    - glob: "./build/dist/*_framework.zip"
+    - glob: "./build/dist/*_app.zip"{{{ end }}}
     # $PF_SECTION_START(releasefiles)$
     # $PF_SECTION_END(releasefiles)$
 {{{ if .Build.Signing }}}

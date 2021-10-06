@@ -2,7 +2,7 @@ source = ["./build/dist/darwin_amd64_darwin_amd64/{{{ .Exec }}}"]
 bundle_id = "{{{ .Info.Bundle }}}"
 
 //notarize {
-//  path = "./build/dist/{{{ .Exec }}}_desktop_{{{ .Version }}}_macos_x86_64.dmg"
+//  path = "./build/dist/{{{ .Exec }}}_{{{ .Version }}}_macos_x86_64_desktop.dmg"
 //  bundle_id = "{{{ .Info.Bundle }}}"
 //}
 

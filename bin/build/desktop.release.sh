@@ -44,19 +44,19 @@ codesign  -f --options=runtime --verbose=4 --deep --force --strict -s 'Developer
 cp "./template/macos/appdmg.config.json" "./appdmg.config.json"
 
 echo "building macOS DMG..."
-appdmg "appdmg.config.json" "./projectforge_desktop_${TGT}_macos_x86_64.dmg"
-zip -r "projectforge_desktop_${TGT}_macos_x86_64.zip" "./Project Forge.app"
+appdmg "appdmg.config.json" "./projectforge_${TGT}_macos_x86_64_desktop.dmg"
+zip -r "projectforge_${TGT}_macos_x86_64_desktop.zip" "./Project Forge.app"
 
 echo "building Linux zip..."
-zip "projectforge_desktop_${TGT}_linux_x86_64.zip" "./projectforge"
+zip "projectforge_${TGT}_linux_x86_64_desktop.zip" "./projectforge"
 
 echo "building Windows zip..."
 curl -o webview.dll https://github.com/webview/webview/raw/master/dll/x64/webview.dll
 curl -o WebView2Loader.dll https://github.com/webview/webview/raw/master/dll/x64/WebView2Loader.dll
-zip "projectforge_desktop_${TGT}_windows_x86_64.zip" "./projectforge.exe" "./webview.dll" "./WebView2Loader.dll"
+zip "projectforge_${TGT}_windows_x86_64_desktop.zip" "./projectforge.exe" "./webview.dll" "./WebView2Loader.dll"
 
 mkdir -p "../../build/dist"
-mv "./projectforge_desktop_${TGT}_macos_x86_64.dmg" "../../build/dist"
-mv "./projectforge_desktop_${TGT}_macos_x86_64.zip" "../../build/dist"
-mv "./projectforge_desktop_${TGT}_linux_x86_64.zip" "../../build/dist"
-mv "./projectforge_desktop_${TGT}_windows_x86_64.zip" "../../build/dist"
+mv "./projectforge_${TGT}_macos_x86_64_desktop.dmg" "../../build/dist"
+mv "./projectforge_${TGT}_macos_x86_64_desktop.zip" "../../build/dist"
+mv "./projectforge_${TGT}_linux_x86_64_desktop.zip" "../../build/dist"
+mv "./projectforge_${TGT}_windows_x86_64_desktop.zip" "../../build/dist"

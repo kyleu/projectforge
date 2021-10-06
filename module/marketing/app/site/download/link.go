@@ -11,20 +11,22 @@ func (l *Link) OSString() string {
 	switch l.OS {
 	case osAIX:
 		return "AIX"
+	case osAndroid:
+		return "Android"
 	case osDragonfly:
 		return "Dragonfly"
 	case osFreeBSD:
 		return "FreeBSD"
 	case osIllumos:
 		return "Illumos"
+	case osIOS:
+		return "iOS"
 	case osJS:
 		return "JavaScript"
 	case osLinux:
 		return "Linux"
 	case osMac:
 		return "macOS"
-	case osMobile:
-		return "Mobile"
 	case osNetBSD:
 		return "NetBSD"
 	case osOpenBSD:
@@ -50,11 +52,14 @@ func (l Links) Get(mode string, os string, arch string) *Link {
 	return nil
 }
 
-func (l Links) GetByMode(mode string) Links {
+func (l Links) GetByModes(modes ...string) Links {
 	var ret Links
 	for _, link := range l {
-		if link.Mode == mode {
-			ret = append(ret, link)
+		for _, m := range modes {
+			if link.Mode == m {
+				ret = append(ret, link)
+				break
+			}
 		}
 	}
 	return ret
@@ -75,15 +80,17 @@ var availableLinks Links
 const (
 	modeServer  = "server"
 	modeDesktop = "desktop"
+	modeMobile  = "mobile"
 
 	osAIX       = "aix"
+	osAndroid   = "android"
 	osDragonfly = "dragonfly"
 	osFreeBSD   = "freebsd"
 	osIllumos   = "illumos"
+	osIOS       = "ios"
 	osJS        = "js"
 	osLinux     = "linux"
 	osMac       = "macos"
-	osMobile    = "mobile"
 	osNetBSD    = "netbsd"
 	osOpenBSD   = "openbsd"
 	osPlan9     = "plan9"
@@ -91,13 +98,11 @@ const (
 	osWindows   = "windows"
 
 	archAMD64        = "x86_64"
-	archAndroid      = "android"
 	archARM64        = "arm64"
 	archARMV5        = "armv5"
 	archARMV6        = "armv6"
 	archARMV7        = "armv7"
 	archI386         = "i386"
-	archIOS          = "ios"
 	archMIPS64Hard   = "mips64_hardfloat"
 	archMIPS64LEHard = "mips64le_hardfloat"
 	archMIPS64LESoft = "mips64le_softfloat"

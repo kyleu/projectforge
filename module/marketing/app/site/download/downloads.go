@@ -22,10 +22,10 @@ func calcDownloadLinks(version string) Links {
 	addDefault := func(mode string, os string, arch string) {
 		var u string
 		switch mode {
-		case modeServer:
+		case modeServer, modeMobile:
 			u = fmt.Sprintf("%s_%s_%s_%s.zip", util.AppKey, version, os, arch)
 		case modeDesktop:
-			u = fmt.Sprintf("%s_desktop_%s_%s_%s.zip", util.AppKey, version, os, arch)
+			u = fmt.Sprintf("%s_%s_%s_%s_desktop.zip", util.AppKey, version, os, arch)
 		}
 		add(u, mode, os, arch)
 	}
@@ -57,16 +57,18 @@ func calcDownloadLinks(version string) Links {
 	addDefault(modeServer, osLinux, archRISCV64)
 	addDefault(modeServer, osLinux, archS390X){{{ end }}}{{{ if .Build.LinuxMIPS }}}
 	addMIPS(modeServer, osLinux){{{ end }}}{{{ if .Build.AIX }}}
-	addDefault(modeServer, osAIX, archPPC64){{{ end }}}{{{ if .Build.Dragonfly }}}
+	addDefault(modeServer, osAIX, archPPC64){{{ end }}}{{{ if .Build.Android }}}
+	addDefault(modeMobile, osAndroid, "apk")
+	addDefault(modeMobile, osAndroid, "aar"){{{ end }}}{{{ if .Build.Dragonfly }}}
 	addDefault(modeServer, osDragonfly, archAMD64){{{ end }}}{{{ if .Build.FreeBSD }}}
 	addDefault(modeServer, osFreeBSD, archAMD64)
 	addDefault(modeServer, osFreeBSD, archI386)
 	addDefault(modeServer, osFreeBSD, archARM64)
 	addARMs(modeServer, osFreeBSD){{{ end }}}{{{ if .Build.Illumos }}}
-	addDefault(modeServer, osIllumos, archAMD64){{{ end }}}{{{ if .Build.WASM }}}
-	addDefault(modeServer, osJS, archWASM){{{ end }}}{{{ if .Build.IOS }}}
-	addDefault(modeServer, osMobile, archAndroid){{{ end }}}{{{ if .Build.IOS }}}
-	addDefault(modeServer, osMobile, archIOS){{{ end }}}{{{ if .Build.NetBSD }}}
+	addDefault(modeServer, osIllumos, archAMD64){{{ end }}}{{{ if .Build.IOS }}}
+	addDefault(modeMobile, osIOS, "app")
+	addDefault(modeMobile, osIOS, "framework"){{{ end }}}{{{ if .Build.WASM }}}
+	addDefault(modeServer, osJS, archWASM){{{ end }}}{{{ if .Build.NetBSD }}}
 	addDefault(modeServer, osNetBSD, archAMD64)
 	addDefault(modeServer, osNetBSD, archI386)
 	addDefault(modeServer, osNetBSD, archARMV7){{{ end }}}{{{ if .Build.OpenBSD }}}
