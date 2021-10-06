@@ -31,10 +31,8 @@ checksum:
   extra_files:{{{ if .Build.Notarize }}}
     - glob: "./build/dist/*_notarized.zip"{{{ end }}}{{{ if .Build.Desktop }}}
     - glob: "./build/dist/*_desktop_*.dmg"
-    - glob: "./build/dist/*_desktop_*.zip"{{{ end }}}{{{ if .Build.IOS }}}
-    - glob: "./build/dist/*_app_*.zip"{{{ end }}}{{{ if .Build.Android }}}
-    - glob: "./build/dist/*_aar_*.zip"
-    - glob: "./build/dist/*_apk_*.zip"{{{ end }}}
+    - glob: "./build/dist/*_desktop_*.zip"{{{ end }}}{{{ if .Build.Mobile }}}
+    - glob: "./build/dist/*_mobile_*.zip"{{{ end }}}
     # $PF_SECTION_START(checksums)$
     # $PF_SECTION_END(checksums)$
 

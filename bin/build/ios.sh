@@ -26,3 +26,4 @@ mv Info.plist ../../build/dist/mobile_ios_app_arm64
 cd ../../build/dist/mobile_ios_app_arm64
 
 xcodebuild -project "Project Forge.xcodeproj" -allowProvisioningUpdates
+zip -r "$dir/../../build/dist/projectforge_${TGT}_mobile_ios_app.zip" .

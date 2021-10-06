@@ -4,4 +4,7 @@ set -eo pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $dir/../..
 
-time gon ./tools/notarize/gon.amd64.hcl
+if [ "$PUBLISH_TEST" != "true" ]
+then
+  time gon ./tools/notarize/gon.amd64.hcl
+fi

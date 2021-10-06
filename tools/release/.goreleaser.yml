@@ -33,9 +33,7 @@ checksum:
     - glob: "./build/dist/*_notarized.zip"
     - glob: "./build/dist/*_desktop_*.dmg"
     - glob: "./build/dist/*_desktop_*.zip"
-    - glob: "./build/dist/*_app_*.zip"
-    - glob: "./build/dist/*_aar_*.zip"
-    - glob: "./build/dist/*_apk_*.zip"
+    - glob: "./build/dist/*_mobile_*.zip"
     # $PF_SECTION_START(checksums)$
     - glob: "./build/dist/projectforge_module_*.zip"
     # $PF_SECTION_END(checksums)$

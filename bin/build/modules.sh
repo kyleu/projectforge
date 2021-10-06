@@ -26,6 +26,7 @@ z desktop
 z ios
 z marketing
 z migration
+z notarize
 z oauth
 z postgres
 z search
