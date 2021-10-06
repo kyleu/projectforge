@@ -28,6 +28,8 @@ func AppRoutes() fasthttp.RequestHandler {
 
 	// $PF_SECTION_START(routes)$
 	r.GET("/doctor", Doctor)
+	r.GET("/doctor/all", DoctorRunAll)
+	r.GET("/doctor/{key}", DoctorRun)
 
 	r.GET("/p", ProjectList)
 	r.GET("/p/new", ProjectForm)

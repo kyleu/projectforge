@@ -34,9 +34,9 @@
   <div class="card">
     <h3>{%s util.PluralMaybe("Error", len(p.Errors)) %}</h3>
     <ul>
-      {% for _, e := range p.Errors %}
+      {%- for _, e := range p.Errors -%}
       <li>{%s e.Error() %}</li>
-      {% endfor %}
+      {%- endfor -%}
     </ul>
   </div>
   {% endif %}
