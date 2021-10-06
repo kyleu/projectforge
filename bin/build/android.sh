@@ -22,8 +22,8 @@ cp -R tools/android/* build/dist/mobile_android_app_arm64
 
 echo "building Android project..."
 cd build/dist/mobile_android_app_arm64
+rm -rf ./app/libs
 mkdir -p ./app/libs
-rm -rf ./app/libs/projectforge.aar ./app/libs/projectforge-sources.jar
 cp ../mobile_android_arm64/projectforge.aar ./app/libs/
 cp ../mobile_android_arm64/projectforge-sources.jar ./app/libs/
 

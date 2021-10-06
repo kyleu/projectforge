@@ -21,8 +21,8 @@ cp -R tools/android/* build/dist/mobile_android_app_arm64
 
 echo "building Android project..."
 cd build/dist/mobile_android_app_arm64
+rm -rf ./app/libs
 mkdir -p ./app/libs
-rm -rf ./app/libs/{{{ .Key }}}.aar ./app/libs/{{{ .Key }}}-sources.jar
 cp ../mobile_android_arm64/{{{ .Key }}}.aar ./app/libs/
 cp ../mobile_android_arm64/{{{ .Key }}}-sources.jar ./app/libs/
 
