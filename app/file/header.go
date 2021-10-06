@@ -24,10 +24,16 @@ func contentWithHeader(t Type, c string, logger *zap.SugaredLogger) string {
 		return "/* " + headerContent + " */\n" + c
 	case TypeDocker.Key:
 		return "# " + headerContent + "\n" + c
+	case TypeEntitlements.Key:
+		return c
+	case TypeGitIgnore.Key:
+		return c
 	case TypeGo.Key:
 		return "// " + headerContent + "\n" + c
 	case TypeGoMod.Key:
 		return "// " + headerContent + "\n" + c
+	case TypeGradle.Key:
+		return c
 	case TypeHCL.Key:
 		return "# " + headerContent + "\n" + c
 	case TypeHTML.Key:
@@ -40,6 +46,8 @@ func contentWithHeader(t Type, c string, logger *zap.SugaredLogger) string {
 		return "// " + headerContent + "\n" + c
 	case TypeJSON.Key:
 		return c
+	case TypeKotlin.Key:
+		return "// " + headerContent + "\n" + c
 	case TypeMakefile.Key:
 		return "# " + headerContent + "\n" + c
 	case TypeMarkdown.Key:
@@ -47,6 +55,8 @@ func contentWithHeader(t Type, c string, logger *zap.SugaredLogger) string {
 	case TypePBXProject.Key:
 		return c
 	case TypePList.Key:
+		return c
+	case TypeProperties.Key:
 		return c
 	case TypeShell.Key:
 		return secondLine(c, "# "+headerContent)
@@ -58,6 +68,11 @@ func contentWithHeader(t Type, c string, logger *zap.SugaredLogger) string {
 		return "# " + headerContent + "\n" + c
 	case TypeTypeScript.Key:
 		return "// " + headerContent + "\n" + c
+	case TypeXML.Key:
+		if strings.HasPrefix(c, "<?") {
+			return secondLine(c, "<!-- "+headerContent+" -->")
+		}
+		return "<!-- " + headerContent + " -->\n" + c
 	case TypeYAML.Key:
 		return "# " + headerContent + "\n" + c
 	default:

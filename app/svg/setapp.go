@@ -1,16 +1,17 @@
 package svg
 
 import (
+	"fmt"
 	"path/filepath"
 	"strings"
 
 	"github.com/kyleu/projectforge/app/filesystem"
 	"github.com/kyleu/projectforge/app/util"
 	"github.com/pkg/errors"
+	"go.uber.org/zap"
 )
 
-func SetAppIcon(fs filesystem.FileLoader, x *SVG) error {
-
+func SetAppIcon(fs filesystem.FileLoader, x *SVG, logger *zap.SugaredLogger) error {
 	orig := x.Markup
 	for strings.Contains(orig, "<!--") {
 		startIdx := strings.Index(orig, "<!--")
@@ -32,55 +33,93 @@ func SetAppIcon(fs filesystem.FileLoader, x *SVG) error {
 		return nil
 	}
 
+	logoResize := func(size int, fn string, p string) {
+		msg := "convert -density 1000 -background none -resize %dx%d logo.svg %s"
+		err := proc(fmt.Sprintf(msg, size, size, fn), p)
+		if err != nil {
+			logger.Warnf("error processing icon [%s]: %+v", fn, err)
+		}
+	}
+
+	iOSResize := func(size int, fn string, p string) {
+		msg := "convert -density 1000 -background #888888 -resize %dx%d logo.svg %s"
+		err := proc(fmt.Sprintf(msg, size, size, fn), p)
+		if err != nil {
+			logger.Warnf("error processing icon [%s]: %+v", fn, err)
+		}
+	}
+
 	// web assets
 	webPath := filepath.Join(fs.Root(), "assets")
 	err := fs.WriteFile("assets/logo.svg", []byte(orig), filesystem.DefaultMode, true)
 	if err != nil {
 		return errors.Wrap(err, "unable to write initial [logo.svg]")
 	}
-	err = proc("convert -density 1000 -background none -resize 256x256 logo.svg logo.png", webPath)
-	if err != nil {
-		return errors.Wrap(err, "unable to convert [logo.png]")
-	}
-	err = proc("convert -density 1000 -background none -resize 64x64 logo.svg favicon.png", webPath)
-	if err != nil {
-		return errors.Wrap(err, "unable to convert [favicon.png]")
-	}
+	logoResize(256, "logo.png", webPath)
+	logoResize(64, "favicon.png", webPath)
 	err = proc("convert -density 1000 -background none logo.svg -define icon:auto-resize=128,64,32 favicon.ico", webPath)
 	if err != nil {
 		return errors.Wrap(err, "unable to convert [favicon.ico]")
 	}
 
-	// android assets
-	tempPath := "tools/android/app/src/main/res/logo.svg"
+	// Android assets
+	androidLogoPath := "tools/android/app/src/main/res/logo.svg"
 	androidPath := filepath.Join(fs.Root(), "tools/android/app/src/main/res")
-	err = fs.WriteFile(tempPath, []byte(orig), filesystem.DefaultMode, true)
+	err = fs.WriteFile(androidLogoPath, []byte(orig), filesystem.DefaultMode, true)
 	if err != nil {
-		return errors.Wrap(err, "unable to write temporary [logo.svg]")
+		return errors.Wrap(err, "unable to write temporary Android [logo.svg]")
 	}
-	err = proc("convert -density 1000 -background none -resize 48x48 logo.svg mipmap-mdpi/ic_launcher.png", androidPath)
+	logoResize(48, "mipmap-mdpi/ic_launcher.png", androidPath)
+	logoResize(72, "mipmap-hdpi/ic_launcher.png", androidPath)
+	logoResize(96, "mipmap-xhdpi/ic_launcher.png", androidPath)
+	logoResize(144, "mipmap-xxhdpi/ic_launcher.png", androidPath)
+	logoResize(192, "mipmap-xxxhdpi/ic_launcher.png", androidPath)
+	err = fs.Remove(androidLogoPath)
 	if err != nil {
-		return errors.Wrap(err, "unable to convert [mipmap-mdpi]")
+		return errors.Wrap(err, "unable to remove temporary Android [logo.svg]")
 	}
-	err = proc("convert -density 1000 -background none -resize 72x72 logo.svg mipmap-hdpi/ic_launcher.png", androidPath)
+
+	// iOS assets
+	iOSLogoPath := "tools/ios/Assets.xcassets/AppIcon.appiconset/logo.svg"
+	iOSPath := filepath.Join(fs.Root(), "tools/ios/Assets.xcassets/AppIcon.appiconset")
+	err = fs.WriteFile(iOSLogoPath, []byte(orig), filesystem.DefaultMode, true)
 	if err != nil {
-		return errors.Wrap(err, "unable to convert [mipmap-hdpi]")
+		return errors.Wrap(err, "unable to write temporary iOS [logo.svg]")
 	}
-	err = proc("convert -density 1000 -background none -resize 96x96 logo.svg mipmap-xhdpi/ic_launcher.png", androidPath)
+	iOSResize(16, "16.png", iOSPath)
+	iOSResize(20, "20.png", iOSPath)
+	iOSResize(29, "29.png", iOSPath)
+	iOSResize(32, "32.png", iOSPath)
+	iOSResize(40, "40.png", iOSPath)
+	iOSResize(48, "48.png", iOSPath)
+	iOSResize(50, "50.png", iOSPath)
+	iOSResize(55, "55.png", iOSPath)
+	iOSResize(57, "57.png", iOSPath)
+	iOSResize(58, "58.png", iOSPath)
+	iOSResize(60, "60.png", iOSPath)
+	iOSResize(64, "64.png", iOSPath)
+	iOSResize(72, "72.png", iOSPath)
+	iOSResize(76, "76.png", iOSPath)
+	iOSResize(80, "80.png", iOSPath)
+	iOSResize(87, "87.png", iOSPath)
+	iOSResize(88, "88.png", iOSPath)
+	iOSResize(100, "100.png", iOSPath)
+	iOSResize(114, "114.png", iOSPath)
+	iOSResize(120, "120.png", iOSPath)
+	iOSResize(128, "128.png", iOSPath)
+	iOSResize(144, "144.png", iOSPath)
+	iOSResize(152, "152.png", iOSPath)
+	iOSResize(167, "167.png", iOSPath)
+	iOSResize(172, "172.png", iOSPath)
+	iOSResize(180, "180.png", iOSPath)
+	iOSResize(196, "196.png", iOSPath)
+	iOSResize(216, "216.png", iOSPath)
+	iOSResize(256, "256.png", iOSPath)
+	iOSResize(512, "512.png", iOSPath)
+	iOSResize(1024, "1024.png", iOSPath)
+	err = fs.Remove(iOSLogoPath)
 	if err != nil {
-		return errors.Wrap(err, "unable to convert [mipmap-xhdpi]")
-	}
-	err = proc("convert -density 1000 -background none -resize 144x144 logo.svg mipmap-xxhdpi/ic_launcher.png", androidPath)
-	if err != nil {
-		return errors.Wrap(err, "unable to convert [mipmap-xxhdpi]")
-	}
-	err = proc("convert -density 1000 -background none -resize 192x192 logo.svg mipmap-xxxhdpi/ic_launcher.png", androidPath)
-	if err != nil {
-		return errors.Wrap(err, "unable to convert [mipmap-xxxhdpi]")
-	}
-	err = fs.Remove(tempPath)
-	if err != nil {
-		return errors.Wrap(err, "unable to remove temporary [logo.svg]")
+		return errors.Wrap(err, "unable to remove temporary iOS [logo.svg]")
 	}
 
 	// app icon
