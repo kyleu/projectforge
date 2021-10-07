@@ -10,7 +10,9 @@ import (
 	"go.uber.org/zap"
 )
 
-var nativeModuleKeys = []string{"android", "core", "database", "desktop", "ios", "marketing", "migration", "notarize", "oauth", "postgres", "search", "sqlite"}
+var nativeModuleKeys = []string{
+	"android", "core", "database", "desktop", "ios", "marketing", "migration", "mysql", "notarize", "oauth", "postgres", "search", "sqlite",
+}
 
 type Service struct {
 	local       filesystem.FileLoader

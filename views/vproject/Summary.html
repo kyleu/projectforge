@@ -10,22 +10,33 @@
   <div class="card">
     <div class="right"><a href="#modal-project-{%s prj.Key %}"><button type="button">JSON</button></a></div>
     <h3>{%= components.SVGRefIcon(prj.SafeIcon(), ps) %} {%s prj.Title() %}</h3>
-    <div class="mt">
-      {%- for _, t := range action.ProjectTypes -%}
-      <a href="/run/{%s prj.Key %}/{%s t.Key %}" title="{%s t.Description %}"><button>{%s t.Title %}</button></a>
-      {%- endfor -%}
-    </div>
-    <div class="mt">
-      {%- if len(path) == 0 -%}
-      <a href="/p/{%s prj.Key %}/fs"><button>Filesystem</button></a>
-      <a href="/p/{%s prj.Key %}/svg"><button>Manage SVGs</button></a>
-      {%- else -%}
-      {%- code var ctx []string -%}
-      {%- for _, pth := range path -%}
-      {%- code ctx = append(ctx, pth) -%}
-      <a href="/p/{%s prj.Key %}/fs/{%s strings.Join(ctx, `/`) %}"><button>{%s pth %}}</button></a>
-      {%- endfor -%}
-      {%- endif -%}
+    <div style="display: flex;">
+      <div style="flex-grow: 1;">
+        <h4>Generate</h4>
+        {%- for _, t := range action.ProjectTypes -%}
+        <a href="/run/{%s prj.Key %}/{%s t.Key %}" title="{%s t.Description %}"><button>{%s t.Title %}</button></a>
+        {%- endfor -%}
+      </div>
+      <div style="flex-grow: 1;">
+        {%- if len(path) == 0 -%}
+        <h4>Maintain</h4>
+        <a href="/p/{%s prj.Key %}/fs" title="Explore the project's files"><button>Filesystem</button></a>
+        <a href="/p/{%s prj.Key %}/svg" title="Add new SVGs and set the app icon"><button>Manage SVGs</button></a>
+        {%- else -%}
+        <h4>Files</h4>
+        {%- code var ctx []string -%}
+        {%- for _, pth := range path -%}
+        {%- code ctx = append(ctx, pth) -%}
+        <a href="/p/{%s prj.Key %}/fs/{%s strings.Join(ctx, `/`) %}"><button>{%s pth %}}</button></a>
+        {%- endfor -%}
+        {%- endif -%}
+      </div>
+      <div style="flex-grow: 1;">
+        <h4>Build</h4>
+        {%- for _, b := range action.AllBuilds -%}
+        <a href="/run/{%s prj.Key %}/build?phase={%s b.Key %}" title="{%s b.Description %}"><button>{%s b.Title %}</button></a>
+        {%- endfor -%}
+      </div>
     </div>
   </div>
   {%= components.JSONModal("project-" + prj.Key, "Project JSON", prj, 1) %}

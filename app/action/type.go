@@ -26,7 +26,7 @@ var (
 
 var (
 	AllTypes     = []Type{TypeBuild, TypeCreate, TypeDebug, TypeDoctor, TypeMerge, TypePreview, TypeSlam, TypeSVG, TypeTest}
-	ProjectTypes = []Type{TypePreview, TypeDebug, TypeMerge, TypeSlam, TypeSVG, TypeBuild}
+	ProjectTypes = []Type{TypePreview, TypeDebug, TypeMerge, TypeSlam, TypeSVG}
 )
 
 func TypeFromString(s string) Type {
