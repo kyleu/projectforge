@@ -1,7 +1,8 @@
 .PHONY: clean
 clean: ## Removes builds and compiled templates
 	rm -rf tmp/*.hashcode
-	rm -rf out
+	rm -rf out{{{ if .HasModule "database" }}}
+	find ./queries -type f -name '*.sql.go' -exec rm {} +{{{ end }}}
 	find ./views -type f -name '*.html.go' -exec rm {} +
 
 .PHONY: dev

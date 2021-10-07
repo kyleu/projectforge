@@ -1,0 +1,10 @@
+{
+  "name": "MySQL",
+  "icon": "database",
+  "description": "Provides an API for accessing MySQL databases",
+  "authorName": "Kyle U",
+  "authorEmail": "kyle@kyleu.com",
+  "license": "Proprietary",
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/mysql",
+  "priority": 10
+}

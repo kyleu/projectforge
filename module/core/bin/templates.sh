@@ -37,5 +37,5 @@ function check {
   fi
 }
 
-{{{ if .HasModule "migration" }}}check "queries" "sql"
+{{{ if .HasModule "database" }}}check "queries" "sql"
 {{{ end }}}check "views" "html"

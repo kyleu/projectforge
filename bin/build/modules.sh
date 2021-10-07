@@ -14,20 +14,14 @@ mkdir -p build/dist/module
 
 function z {
   echo "updating [$1] module"
-  cd module/$1
+  cd $1
   zip -r "../../build/dist/projectforge_module_$1.zip" .
-  cd ../..
+  cd ..
 }
 
-z android
-z core
-z database
-z desktop
-z ios
-z marketing
-z migration
-z notarize
-z oauth
-z postgres
-z search
-z sqlite
+cd module
+for d in * ; do
+  if [ -d "$d" ]; then
+    z "$d"
+  fi
+done
