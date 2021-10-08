@@ -75,7 +75,7 @@ func OpenMySQLDatabase(ctx context.Context, key string, params *MySQLParams, log
 		port = 3306
 	}
 
-	const template = "%s:%s@%s:%d/%s"
+	const template = "%s:%s@tcp(%s:%d)/%s"
 	url := fmt.Sprintf(template, params.Username, params.Password, host, port, params.Database)
 
 	db, err := sqlx.Open("mysql", url)
