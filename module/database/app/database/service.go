@@ -16,19 +16,26 @@ import (
 	"{{{ .Package }}}/app/telemetry/dbmetrics"
 )
 
+type DBType struct {
+	Key   string `json:"key"`
+	Title string `json:"title"`
+	Quote string `json:"-"`
+}
+
 type Service struct {
-	Key          string
-	DatabaseName string
-	SchemaName   string
-	Username     string
+	Key          string  `json:"key"`
+	DatabaseName string  `json:"database,omitempty"`
+	SchemaName   string  `json:"schema,omitempty"`
+	Username     string  `json:"username,omitempty"`
+	Type         *DBType `json:"type"`
 	db           *sqlx.DB
 	metrics      *dbmetrics.Metrics
 	logger       *zap.SugaredLogger
 }
 
-func NewService(key string, dbName string, schName string, username string, db *sqlx.DB, logger *zap.SugaredLogger) *Service {
+func NewService(typ *DBType, key string, dbName string, schName string, username string, db *sqlx.DB, logger *zap.SugaredLogger) *Service {
 	m := dbmetrics.NewMetrics(key, db)
-	return &Service{Key: key, DatabaseName: dbName, SchemaName: schName, Username: username, db: db, metrics: m, logger: logger}
+	return &Service{Key: key, DatabaseName: dbName, SchemaName: schName, Username: username, Type: typ, db: db, metrics: m, logger: logger}
 }
 
 func (s *Service) StartTransaction() (*sqlx.Tx, error) {

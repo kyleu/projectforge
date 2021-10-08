@@ -16,6 +16,8 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
+var typePostgres = &DBType{Key: "postgres", Title: "PostgreSQL", Quote: `"`}
+
 type PostgresParams struct {
 	Host     string `json:"host"`
 	Port     int    `json:"port,omitempty"`
@@ -91,7 +93,7 @@ func OpenPostgresDatabase(ctx context.Context, key string, params *PostgresParam
 		log = logger.With("svc", "database", "db", key)
 	}
 
-	svc := NewService(key, params.Database, params.Schema, params.Username, db, log)
+	svc := NewService(typePostgres, key, params.Database, params.Schema, params.Username, db, log)
 	return svc, nil
 }
 
