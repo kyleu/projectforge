@@ -27,8 +27,8 @@
     "license": "Proprietary",
     "homepage": "https://projectforge.dev",
     "sourcecode": "https://github.com/kyleu/projectforge",
-    "summary": "Build cool stuff with projectforge",
-    "description": "Helps you build and maintain lightning-fast Golang projects",
+    "summary": "Build and maintain feature-rich applications using Golang",
+    "description": "Project Forge helps you build and maintain feature-rich applications written in the Go programming language.",
     "bundle": "com.kyleu.projectforge",
     "signingIdentity": "Developer ID Application: Kyle Unverferth (C6S478FYLD)",
     "javaPackage": "dev.projectforge"

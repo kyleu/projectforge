@@ -14,7 +14,7 @@ import (
 )
 
 func siteData(result string, kvs ...string) map[string]interface{} {
-	ret := map[string]interface{}{"app": util.AppName, "result": result}
+	ret := map[string]interface{}{"app": util.AppName, "url": util.AppURL, "result": result}
 	for i := 0; i < len(kvs); i += 2 {
 		ret[kvs[i]] = kvs[i+1]
 	}
@@ -30,20 +30,20 @@ func Handle(path []string, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.Pag
 	switch path[0] {
 	case keyIntro:
 		ps.Data = siteData("This static page is an introduction to " + util.AppName)
-		page = &views.Debug{}
+		page = &vsite.Intro{}
 	case keyDownload:
 		dls := download.DownloadLinks(as.BuildInfo.Version)
-		ps.Data = dls
+		ps.Data = map[string]interface{}{"base": "https://github.com/kyleu/projectforge/releases/download/v" + as.BuildInfo.Version, "links": dls}
 		page = &vsite.Download{Links: dls}
 	case keyInstall:
 		ps.Data = siteData("This static page contains installation instructions")
 		page = &vsite.Installation{}
 	case keyQuickStart:
 		ps.Data = siteData("This static page show how to get started with " + util.AppName)
-		page = &views.Debug{}
+		page = &vsite.QuickStart{}
 	case keyContrib:
 		ps.Data = siteData("This static page describes how to build " + util.AppName)
-		page = &views.Debug{}
+		page = &vsite.Contrib{}
 	default:
 		ps.Data = "TODO!"
 		page = &views.Debug{}

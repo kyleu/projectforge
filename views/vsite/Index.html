@@ -12,7 +12,7 @@
 {% func (p *Index) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`app`, ps) %}{%s util.AppName %}</h3>
-    <em>Helps you build and maintain lightning-fast Golang projects</em>
+    <p>Project Forge helps you build and maintain feature-rich applications written in the Go programming language.</p>
     <pre>{%s util.ToJSON(ps.Data) %}</pre>
   </div>
 {% endfunc %}

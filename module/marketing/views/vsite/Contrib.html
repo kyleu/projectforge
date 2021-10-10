@@ -1,0 +1,14 @@
+{% import (
+  "github.com/kyleu/projectforge/app"
+  "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/views/layout"
+) %}
+
+{% code type Contrib struct { layout.Basic } %}
+
+{% func (p *Contrib) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>Contribute</h3>
+    <p>TODO</p>
+  </div>
+{% endfunc %}
