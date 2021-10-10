@@ -20,7 +20,7 @@ brews:
       email: "kyle@kyleu.com"
     folder: Formula
     homepage: "https://projectforge.dev"
-    description: "Helps you build and maintain lightning-fast Golang projects"
+    description: "Project Forge helps you build and maintain feature-rich applications written in the Go programming language."
     license: "Proprietary"
     skip_upload: false
 
@@ -64,7 +64,7 @@ nfpms:
     vendor: "Kyle U"
     homepage: "https://projectforge.dev}"
     maintainer: "Kyle U <kyle@kyleu.com>"
-    description: "Helps you build and maintain lightning-fast Golang projects"
+    description: "Project Forge helps you build and maintain feature-rich applications written in the Go programming language."
     license: "Proprietary"
     replacements: *replacements
     formats:
@@ -101,8 +101,8 @@ snapcrafts:
   -
     publish: false
     replacements: *replacements
-    summary: "Build cool stuff with projectforge"
-    description: "Helps you build and maintain lightning-fast Golang projects"
+    summary: "Build and maintain feature-rich applications using Golang"
+    description: "Project Forge helps you build and maintain feature-rich applications written in the Go programming language."
     grade: stable
     confinement: strict
     license: "Proprietary"

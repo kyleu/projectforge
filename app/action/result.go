@@ -28,7 +28,7 @@ func newResult(cfg util.ValueMap, logger *zap.SugaredLogger) *Result {
 }
 
 func (r *Result) WithError(err error) *Result {
-	msg := fmt.Sprintf("%+v", err)
+	msg := fmt.Sprint(err)
 	if r.logger != nil {
 		r.logger.Errorf("%+v", err)
 	}

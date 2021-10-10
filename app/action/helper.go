@@ -13,7 +13,7 @@ const (
 func diffs(pm *PrjAndMods, addHeader bool) (file.Files, []*diff.Diff, error) {
 	tgt := pm.PSvc.GetFilesystem(pm.Prj)
 
-	srcFiles, err := pm.MSvc.GetFiles(pm.Mods, addHeader, tgt)
+	srcFiles, err := pm.MSvc.GetFiles(pm.Mods, addHeader)
 	if err != nil {
 		return nil, nil, err
 	}

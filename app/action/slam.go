@@ -10,12 +10,12 @@ import (
 func onSlam(pm *PrjAndMods) *Result {
 	ret := newResult(pm.Cfg, pm.Logger)
 	start := util.TimerStart()
-	srcFiles, diffs, err := diffs(pm, true)
+	srcFiles, dfs, err := diffs(pm, true)
 	if err != nil {
 		return ret.WithError(err)
 	}
 
-	for _, f := range diffs {
+	for _, f := range dfs {
 		switch f.Status {
 		case diff.StatusIdentical, diff.StatusMissing, diff.StatusSkipped:
 			// noop
@@ -31,7 +31,7 @@ func onSlam(pm *PrjAndMods) *Result {
 		}
 	}
 
-	mr := &module.Result{Keys: pm.Mods.Keys(), Status: "OK", Diffs: diffs, Duration: util.TimerEnd(start)}
+	mr := &module.Result{Keys: pm.Mods.Keys(), Status: "OK", Diffs: dfs, Duration: util.TimerEnd(start)}
 	ret.Modules = append(ret.Modules, mr)
 	return ret
 }

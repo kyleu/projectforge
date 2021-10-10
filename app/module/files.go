@@ -29,7 +29,7 @@ func (s *Service) GetFilenames(mods Modules) ([]string, error) {
 	return keys, nil
 }
 
-func (s *Service) GetFiles(mods Modules, addHeader bool, tgt filesystem.FileLoader) (file.Files, error) {
+func (s *Service) GetFiles(mods Modules, addHeader bool) (file.Files, error) {
 	ret := map[string]*file.File{}
 	for _, mod := range mods {
 		loader := s.GetFilesystem(mod.Key)

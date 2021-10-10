@@ -39,6 +39,9 @@ func RunAction(rc *fasthttp.RequestCtx) {
 			Span: span, ProjectKey: tgt, T: actT, Cfg: cfg, RootFiles: as.Files,
 			MSvc: as.Services.Modules, PSvc: as.Services.Projects, Logger: ps.Logger,
 		})
+		if result.Project == nil {
+			result.Project = prj
+		}
 		ps.Data = result
 		page := &vaction.Result{Ctx: &action.ResultContext{Prj: prj, Cfg: cfg, Res: result}}
 		return render(rc, as, page, ps, "projects", prj.Key, actT.Title)
@@ -69,6 +72,9 @@ func RunAllActions(rc *fasthttp.RequestCtx) {
 					Span: span, ProjectKey: p.Key, T: actT, Cfg: c, RootFiles: as.Files,
 					MSvc: as.Services.Modules, PSvc: as.Services.Projects, Logger: ps.Logger,
 				})
+				if result.Project == nil {
+					result.Project = p
+				}
 				rc := &action.ResultContext{Prj: p, Cfg: c, Res: result}
 				mutex.Lock()
 				results = append(results, rc)

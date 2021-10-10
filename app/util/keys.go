@@ -4,7 +4,7 @@ package util
 const (
 	AppKey     = "projectforge"
 	AppName    = "Project Forge"
-	AppSummary = "Build cool stuff with projectforge"
+	AppSummary = "Build and maintain feature-rich applications using Golang"
 	AppPort    = 40000
 	AppContact = "Kyle U <kyle@kyleu.com>"
 	AppURL     = "https://projectforge.dev"
