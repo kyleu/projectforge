@@ -23,6 +23,14 @@
   margin-bottom: var(--padding);
 }
 
+.error {
+  color: var(--color-error);
+}
+
+.success {
+  color: var(--color-success);
+}
+
 .pointer {
   cursor: pointer;
 }
