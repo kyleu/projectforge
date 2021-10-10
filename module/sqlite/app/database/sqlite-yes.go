@@ -17,7 +17,7 @@ import (
 
 const SQLiteEnabled = true
 
-var typeSQLite = &DBType{Key: "sqlite", Title: "SQLite", Quote: `"`}
+var typeSQLite = &DBType{Key: "sqlite", Title: "SQLite", Quote: `"`, Placeholder: "$", SupportsReturning: true}
 
 func OpenSQLiteDatabase(ctx context.Context, key string, params *SQLiteParams, logger *zap.SugaredLogger) (*Service, error) {
 	ctx, span := telemetry.StartSpan(ctx, "database", "open")

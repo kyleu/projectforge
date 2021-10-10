@@ -39,7 +39,7 @@ func SQLSelectSimple(columns string, tables string, where ...string) string {
 	return SQLSelect(columns, tables, strings.Join(where, " and "), "", 0, 0)
 }
 
-func SQLInsert(table string, columns []string, rows int) string {
+func SQLInsert(table string, columns []string, rows int, placeholder string) string {
 	if rows <= 0 {
 		rows = 1
 	}
@@ -48,22 +48,26 @@ func SQLInsert(table string, columns []string, rows int) string {
 	for i := 0; i < rows; i++ {
 		var ph []string
 		for idx := range columns {
-			ph = append(ph, fmt.Sprintf("$%d", (i*len(columns))+idx+1))
+			if placeholder == "?" {
+				ph = append(ph, "?")
+			} else {
+				ph = append(ph, fmt.Sprintf("$%d", (i*len(columns))+idx+1))
+			}
 		}
 		placeholders = append(placeholders, "("+strings.Join(ph, ", ")+")")
 	}
 	return fmt.Sprintf("insert into %s (%s) values %s", table, colString, strings.Join(placeholders, ", "))
 }
 
-func SQLInsertReturning(table string, columns []string, rows int, returning []string) string {
-	q := SQLInsert(table, columns, rows)
+func SQLInsertReturning(table string, columns []string, rows int, returning []string, placeholder string) string {
+	q := SQLInsert(table, columns, rows, placeholder)
 	if len(returning) > 0 {
 		q += " returning " + strings.Join(returning, ", ")
 	}
 	return q
 }
 
-func SQLUpdate(table string, columns []string, where string) string {
+func SQLUpdate(table string, columns []string, where string, placeholder string) string {
 	whereClause := ""
 	if len(where) > 0 {
 		whereClause = whereSpaces + where
@@ -71,13 +75,17 @@ func SQLUpdate(table string, columns []string, where string) string {
 
 	stmts := make([]string, 0, len(columns))
 	for i, col := range columns {
-		stmts = append(stmts, fmt.Sprintf("%s = $%d", col, i+1))
+		if placeholder == "?" {
+			stmts = append(stmts, fmt.Sprintf("%s = ?", col))
+		} else {
+			stmts = append(stmts, fmt.Sprintf("%s = $%d", col, i+1))
+		}
 	}
 	return fmt.Sprintf("update %s set %s%s", table, strings.Join(stmts, ", "), whereClause)
 }
 
-func SQLUpdateReturning(table string, columns []string, where string, returned []string) string {
-	q := SQLUpdate(table, columns, where)
+func SQLUpdateReturning(table string, columns []string, where string, returned []string, placeholder string) string {
+	q := SQLUpdate(table, columns, where, placeholder)
 	if len(returned) > 0 {
 		q += " returning " + strings.Join(returned, ", ")
 	}

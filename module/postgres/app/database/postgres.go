@@ -16,7 +16,7 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-var typePostgres = &DBType{Key: "postgres", Title: "PostgreSQL", Quote: `"`}
+var typePostgres = &DBType{Key: "postgres", Title: "PostgreSQL", Quote: `"`, Placeholder: "$", SupportsReturning: true}
 
 type PostgresParams struct {
 	Host     string `json:"host"`

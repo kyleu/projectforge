@@ -17,9 +17,11 @@ import (
 )
 
 type DBType struct {
-	Key   string `json:"key"`
-	Title string `json:"title"`
-	Quote string `json:"-"`
+	Key               string `json:"key"`
+	Title             string `json:"title"`
+	Quote             string `json:"-"`
+	Placeholder       string `json:"-"`
+	SupportsReturning bool   `json:"-"`
 }
 
 type Service struct {

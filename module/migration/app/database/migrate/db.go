@@ -35,7 +35,7 @@ func ListMigrations(ctx context.Context, s *database.Service, params *filter.Par
 }
 
 func createMigrationTableIfNeeded(ctx context.Context, s *database.Service, logger *zap.SugaredLogger) error {
-	q := database.SQLSelectSimple("count(*) as x", migrationTable, "")
+	q := database.SQLSelectSimple("count(*) as x", migrationTable)
 	_, err := s.SingleInt(ctx, q, nil)
 	if err != nil {
 		logger.Info("first run, creating migration table")
@@ -71,7 +71,7 @@ func removeMigrationByIdx(ctx context.Context, s *database.Service, idx int) err
 }
 
 func newMigration(ctx context.Context, s *database.Service, e *Migration) error {
-	q := database.SQLInsert("migration", []string{"idx", "title", "src"}, 1)
+	q := database.SQLInsert("migration", []string{"idx", "title", "src"}, 1, s.Type.Placeholder)
 	return s.Insert(ctx, q, nil, e.Idx, e.Title, e.Src)
 }
 

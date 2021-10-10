@@ -16,7 +16,7 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-var typeMySQL = &DBType{Key: "mysql", Title: "MySQL", Quote: "`"}
+var typeMySQL = &DBType{Key: "mysql", Title: "MySQL", Quote: "`", Placeholder: "?", SupportsReturning: false}
 
 type MySQLParams struct {
 	Host     string `json:"host"`
