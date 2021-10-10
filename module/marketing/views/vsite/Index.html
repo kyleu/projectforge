@@ -11,7 +11,7 @@
 {% func (p *Index) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`app`, ps) %}{%s util.AppName %}</h3>
-    <em>{{{ .Info.Description }}}</em>
+    <p>{{{ .Info.Description }}}</p>
     <pre>{%s util.ToJSON(ps.Data) %}</pre>
   </div>
 {% endfunc %}

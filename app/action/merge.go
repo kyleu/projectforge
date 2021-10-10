@@ -1,7 +1,12 @@
 package action
 
 import (
+	"bytes"
+	"fmt"
+	"strings"
+
 	"github.com/kyleu/projectforge/app/diff"
+	"github.com/kyleu/projectforge/app/filesystem"
 	"github.com/kyleu/projectforge/app/module"
 	"github.com/kyleu/projectforge/app/util"
 	"github.com/pkg/errors"
@@ -65,15 +70,41 @@ func onMerge(pm *PrjAndMods) *Result {
 	return ret
 }
 
-func mergeLeft(pm *PrjAndMods, f *diff.Diff, ret *Result) *Result {
-	if err := pm.MSvc.UpdateFile(pm.Mods, f); err != nil {
+func mergeLeft(pm *PrjAndMods, d *diff.Diff, ret *Result) *Result {
+	logs, err := pm.MSvc.UpdateFile(pm.Mods, d);
+	if err != nil {
 		return ret.WithError(err)
 	}
-	ret.AddLog("merged [%s] from project to module", f.Path)
+	ret.AddLog("merged [%s] from project to module: %s", d.Path, strings.Join(logs, ", "))
 	return ret
 }
 
-func mergeRight(pm *PrjAndMods, f *diff.Diff, ret *Result) *Result {
-	ret.AddLog("merged [%s] from module to project", f.Path)
+func mergeRight(pm *PrjAndMods, d *diff.Diff, ret *Result) *Result {
+	loader := pm.PSvc.GetFilesystem(pm.Prj);
+	if !loader.Exists(d.Path) {
+		return ret.WithError(errors.Errorf("no file found at path [%s] for project [%s]", d.Path, pm.Prj.Key))
+	}
+	b, err := loader.ReadFile(d.Path)
+	if err != nil {
+		return ret.WithError(err)
+	}
+
+	newContent, err := diff.Apply(b, d)
+	if err != nil {
+		return ret.WithError(err)
+	}
+	msg := ""
+	if len(newContent) > 0 {
+		if bytes.Equal(b, newContent) {
+			msg = fmt.Sprintf("no changes required to [%s] for project [%s]", d.Path, pm.Prj.Key)
+		} else {
+			msg = fmt.Sprintf("wrote [%d] bytes to [%s] for project [%s]", len(newContent), d.Path, pm.Prj.Key)
+			err = loader.WriteFile(d.Path, newContent, filesystem.DefaultMode, true)
+			if err != nil {
+				return ret.WithError(err)
+			}
+		}
+	}
+	ret.AddLog("merged [%s] from module to project: %s", d.Path, msg)
 	return ret
 }

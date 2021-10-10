@@ -1,41 +1,39 @@
 package module
 
 import (
+	"bytes"
+	"fmt"
+
 	"github.com/kyleu/projectforge/app/diff"
 )
 
-func (s *Service) UpdateFile(mods Modules, d *diff.Diff) (error) {
+func (s *Service) UpdateFile(mods Modules, d *diff.Diff) ([]string, error) {
+	var ret []string
 	for _, mod := range mods {
 		loader := s.GetFilesystem(mod.Key)
-		fs, err := loader.ListFilesRecursive("", nil)
-		if err != nil {
-			return err
+		if !loader.Exists(d.Path) {
+			continue
 		}
-		for _, f := range fs {
-			if f == configFilename {
-				continue
-			}
-			if f != d.Path {
-				continue
-			}
-			mode, b, err := fileContent(loader, f)
-			if err != nil {
-				return err
-			}
+		mode, b, err := fileContent(loader, d.Path)
+		if err != nil {
+			return nil, err
+		}
 
-			newContent, err := applyDiff(b, d)
-			if len(newContent) > 0 {
+		newContent, err := diff.ApplyInverse(b, d)
+		if err != nil {
+			return nil, err
+		}
+		if len(newContent) > 0 {
+			if bytes.Equal(b, newContent) {
+				ret = append(ret, fmt.Sprintf("no changes required to [%s] for module [%s]", d.Path, mod.Key))
+			} else {
+				ret = append(ret, fmt.Sprintf("wrote [%d] bytes to [%s] for module [%s]", len(newContent), d.Path, mod.Key))
 				err = loader.WriteFile(d.Path, newContent, mode, true)
 				if err != nil {
-					return err
+					return nil, err
 				}
 			}
 		}
 	}
-
-	return nil
-}
-
-func applyDiff(b []byte, d *diff.Diff) ([]byte, error) {
-	return nil, nil
+	return ret, nil
 }

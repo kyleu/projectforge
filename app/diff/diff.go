@@ -10,9 +10,10 @@ import (
 )
 
 type Diff struct {
-	Path   string  `json:"path"`
-	Status *Status `json:"status"`
-	Patch  string  `json:"patch,omitempty"`
+	Path    string    `json:"path"`
+	Status  *Status   `json:"status"`
+	Patch   string    `json:"patch,omitempty"`
+	Changes []*Change `json:"changes,omitempty"`
 }
 
 func (d *Diff) String() string {
@@ -31,6 +32,7 @@ func File(src *file.File, tgt *file.File) *Diff {
 		if len(d.Changes) > 0 {
 			ret.Patch = d.Patch
 			ret.Status = StatusDifferent
+			ret.Changes = d.Changes
 		} else {
 			ret.Status = StatusIdentical
 		}
@@ -62,8 +64,7 @@ func FileLoader(src file.Files, tgt filesystem.FileLoader, includeUnchanged bool
 		if t != nil {
 			b, err := tgt.ReadFile(p)
 			if err != nil {
-				msg := "An error was encountered: %+v"
-				ret = append(ret, &Diff{Path: p, Status: &Status{Key: "error", Title: fmt.Sprintf(msg, err)}})
+				ret = append(ret, &Diff{Path: p, Status: &Status{Key: "error", Title: fmt.Sprintf("An error was encountered: %+v", err)}})
 			}
 
 			tgtFile = file.NewFile(p, t.Mode(), b, false, logger)
