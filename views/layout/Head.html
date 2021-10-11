@@ -6,6 +6,7 @@
 ) %}
 
 {% func Head(as *app.State, ps *cutil.PageState) %}
+  {%- code thm := as.Themes.Get(ps.Profile.Theme) -%}
   <meta charset="UTF-8">
   <title>{%s ps.TitleString() %}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -14,9 +15,11 @@
   <meta property="og:type" content="website">
   <meta property="og:image" content="/assets/{%s util.AppKey %}.svg">
   <meta property="og:locale" content="en_US">
+  <meta name="theme-color" content="{%s thm.Light.NavBackground %}" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="{%s thm.Dark.NavBackground %}" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
   <style>
-    {%s= as.Themes.Get(ps.Profile.Theme).CSS(2) %}  </style>
+    {%s= thm.CSS(2) %}  </style>
   <link rel="stylesheet" media="screen" href="/assets/client.css">
   <script type="text/javascript" src="/assets/client.js"></script>
 {% endfunc %}
