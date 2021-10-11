@@ -1,2 +1,2 @@
-go get -u github.com/cosmtrek/air
-go get -u github.com/valyala/quicktemplate/qtc
+go install github.com/cosmtrek/air@latest
+go install github.com/valyala/quicktemplate/qtc@latest
