@@ -1,0 +1,17 @@
+{% import (
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/views/layout"
+) %}
+
+{% code type MarkdownPage struct {
+  layout.Basic
+  Title string
+  HTML string
+} %}
+
+{% func (p *MarkdownPage) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card markdown">
+    {%s= p.HTML %}
+  </div>
+{% endfunc %}

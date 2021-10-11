@@ -10,8 +10,9 @@
 - [goth][5]
 - [zap][6]{{{ if .HasModule "database" }}}
 - [sqlx][7]{{{ end }}}{{{ if .HasModule "postgres" }}}
-- [pgx][8]{{{ end }}}{{{ if .HasModule "sqlite" }}}
-- [sqlite][9]{{{ end }}}
+- [pgx][8]{{{ end }}}{{{ if .HasModule "mysql" }}}
+- [mysql][9]{{{ end }}}{{{ if .HasModule "sqlite" }}}
+- [sqlite][10]{{{ end }}}
 
 
 [1]: https://golang.org "What a great contribution to the world of engineering"
@@ -21,5 +22,6 @@
 [5]: https://github.com/markbates/goth "Handles OAuth for dozens of providers, works every time"
 [6]: https://go.uber.org/zap "Crazy fast logging, with a custom encoder to dump tons of debug info"{{{ if .HasModule "database" }}}
 [7]: https://github.com/jmoiron/sqlx "Provides enhancements to the stdlib's sql package, super handy"{{{ end }}}{{{ if .HasModule "postgres" }}}
-[8]: https://github.com/jackc/pgx "Handles (most of) the crazy types that PostgreSQL supports"{{{ end }}}{{{ if .HasModule "sqlite" }}}
-[9]: https://modernc.org/sqlite "A version of SQLite that was compiled to Go by a machine"{{{ end }}}
+[8]: https://github.com/jackc/pgx "Handles (most of) the crazy types that PostgreSQL supports"{{{ end }}}{{{ if .HasModule "mysql" }}}
+[9]: https://github.com/go-sql-driver/mysql "The Golang MySQL driver, does what it says on the tin"{{{ end }}}{{{ if .HasModule "sqlite" }}}
+[10]: https://modernc.org/sqlite "A version of SQLite that was compiled to Go by a machine"{{{ end }}}

@@ -33,6 +33,14 @@ em {
   color: var(--color-foreground-muted);
 }
 
+h1, h2 {
+  margin-top: 0;
+}
+
+h3 {
+  margin: 0;
+}
+
 input, button, textarea, select {
   border: var(--border);
   color: var(--color-foreground);

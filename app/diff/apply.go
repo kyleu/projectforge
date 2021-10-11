@@ -50,7 +50,7 @@ func applyCmds(lines []string, cmds ...*cmd) ([]string, error) {
 	currIdx := 0
 
 	for _, c := range cmds {
-		for ; currIdx <= c.From; currIdx++ {
+		for ; currIdx <= c.From + 1; currIdx++ {
 			ret = append(ret, lines[currIdx])
 		}
 		for _, a := range c.Added {

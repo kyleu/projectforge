@@ -5,11 +5,14 @@
   "github.com/kyleu/projectforge/views/layout"
 ) %}
 
-{% code type Intro struct { layout.Basic } %}
+{% code type MarkdownPage struct {
+  layout.Basic
+  Title string
+  HTML string
+} %}
 
-{% func (p *Intro) Body(as *app.State, ps *cutil.PageState) %}
-  <div class="card">
-    <h3>Introduction</h3>
-    <p>TODO</p>
+{% func (p *MarkdownPage) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card markdown">
+    {%s= p.HTML %}
   </div>
 {% endfunc %}

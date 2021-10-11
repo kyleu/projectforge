@@ -58,10 +58,6 @@
   height: 100%;
 }
 
-.modal-content h1, h2, h3 {
-  margin: 0;
-}
-
 a.modal-close {
   float: right;
   font-size: 150%;
