@@ -15,6 +15,7 @@ type Result struct {
 	Summary  string   `json:"summary,omitempty"`
 	Errors   Errors   `json:"errors,omitempty"`
 	Duration int      `json:"duration,omitempty"`
+	Solution string   `json:"solution,omitempty"`
 	Logs     []string `json:"logs,omitempty"`
 }
 
@@ -53,8 +54,7 @@ func SimpleOut(path string, cmd string, args []string, outCheck func(r *Result, 
 			return r.WithError(NewError("missing", msg, cmd))
 		}
 		if exitCode != 0 {
-			msg := fmt.Sprintf("[%s] returned [%d] as an exit code", cmd, exitCode)
-			return r.WithError(NewError("exitcode", msg, "rsvg", fmt.Sprint(exitCode), out))
+			return r.WithError(NewError("exitcode", "[%s] returned [%d] as an exit code", fullCmd, exitCode))
 		}
 		return outCheck(r, out)
 	}

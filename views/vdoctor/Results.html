@@ -3,7 +3,6 @@
   "github.com/kyleu/projectforge/app/controller/cutil"
   "github.com/kyleu/projectforge/app/doctor"
   "github.com/kyleu/projectforge/app/util"
-  "github.com/kyleu/projectforge/views/components"
   "github.com/kyleu/projectforge/views/layout"
 ) %}
 
@@ -16,30 +15,33 @@
   <div class="card">
     <h3>Doctor Results</h3>
 
-    <ul class="accordion">
-      {%- for _, r := range p.Results -%}
-      <li>
-        <input id="accordion-{%s r.Key %}" type="checkbox" hidden {% if len(p.Results) == 1 || len(r.Errors) > 0 %} checked="checked"{% endif %}/>
-        <label for="accordion-{%s r.Key %}">
-          <div class="right">{%s r.Status %}</div>
-          {%= components.ExpandCollapse(3, ps) %} {%s r.Title %}
-        </label>
-        <div class="bd">
-          <div class="right">{%s util.MicrosToMillis(r.Duration) %}</div>
-          <em>{%s r.Summary %}</em>
-          {%- if len(r.Errors) == 0 -%}
-          <div>{%s r.Status %}, no errors</div>
-          {%- else -%}
-          <h4>Errors</h4>
-          <ul>
+    <table>
+      <thead>
+        <tr>
+          <th>Check</th>
+          <th>Summary</th>
+          <th>Duration</th>
+          <th>Status</th>
+          <th>Errors</th>
+          <th>Solution</th>
+        </tr>
+      </thead>
+      <tbody>
+        {%- for _, r := range p.Results -%}
+        <tr>
+          <td>{%s r.Title %}</td>
+          <td><em>{%s r.Summary %}</em></td>
+          <td>{%s util.MicrosToMillis(r.Duration) %}</td>
+          <td>{%s r.Status %}</td>
+          <td>
             {%- for _, e := range r.Errors -%}
-            <li>{%s e.String() %}</li>
+            <div>{%s e.String() %}</div>
             {%- endfor -%}
-          </ul>
-          {%- endif -%}
-        </div>
-      </li>
-      {%- endfor -%}
-    </ul>
+          </td>
+          <td>{%s r.Solution %}</td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
   </div>
 {% endfunc %}

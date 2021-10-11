@@ -15,7 +15,17 @@ func NewError(code string, message string, args ...interface{}) *Error {
 }
 
 func (e *Error) String() string {
-	return fmt.Sprintf("%s: %s", e.Code, fmt.Sprintf(e.Message, e.Args...))
+	msg := fmt.Sprintf(e.Message, e.Args...)
+	return e.Code + ": " + msg
 }
 
 type Errors []*Error
+
+func (e Errors) Find(code string) *Error {
+	for _, x := range e {
+		if x.Code == code {
+			return x
+		}
+	}
+	return nil
+}

@@ -23,7 +23,12 @@ function check {
 
     mkdir -p tmp/
 
-    find "$1" -type f | grep "\.$2$" | xargs md5sum > "$ftgt"
+    m="md5sum"
+    if ! [ -x "$(command -v $m)" ]; then
+      m="md5"
+    fi
+
+    find "$1" -type f | grep "\.$2$" | xargs $m > "$ftgt"
 
     if cmp -s "$fsrc" "$ftgt"; then
       if [ "$FORCE" = "force" ]; then

@@ -8,8 +8,11 @@ import (
 
 var imagemagick = &doctor.Check{
 	Key:     "imagemagick",
+	Section: "icons",
 	Title:   "ImageMagick",
 	Summary: "Renders SVGs for the icon pipeline",
+	URL:     "https://imagemagick.org",
+	UsedBy:  "SVG icon pipeline",
 	Fn:      doctor.SimpleOut(".", "convert", []string{"-version"}, checkImageMagick),
 	Solve:   solveImageMagick,
 }
@@ -21,6 +24,9 @@ func checkImageMagick(r *doctor.Result, out string) *doctor.Result {
 	return r
 }
 
-func solveImageMagick(r *doctor.Result) (*doctor.Result, error) {
-	return r, nil
+func solveImageMagick(r *doctor.Result) *doctor.Result {
+	if r.Errors.Find("missing") != nil || r.Errors.Find("exitcode") != nil {
+		r.Solution = "Install [imagemagick] using your platform's package manager"
+	}
+	return r
 }
