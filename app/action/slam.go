@@ -10,7 +10,7 @@ import (
 func onSlam(pm *PrjAndMods) *Result {
 	ret := newResult(pm.Cfg, pm.Logger)
 	start := util.TimerStart()
-	srcFiles, dfs, err := diffs(pm, true)
+	srcFiles, dfs, err := diffs(pm)
 	if err != nil {
 		return ret.WithError(err)
 	}

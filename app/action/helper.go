@@ -10,10 +10,10 @@ const (
 	delimEnd   = "}}}"
 )
 
-func diffs(pm *PrjAndMods, addHeader bool) (file.Files, []*diff.Diff, error) {
+func diffs(pm *PrjAndMods) (file.Files, []*diff.Diff, error) {
 	tgt := pm.PSvc.GetFilesystem(pm.Prj)
 
-	srcFiles, err := pm.MSvc.GetFiles(pm.Mods, addHeader)
+	srcFiles, err := pm.MSvc.GetFiles(pm.Mods)
 	if err != nil {
 		return nil, nil, err
 	}

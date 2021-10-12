@@ -28,10 +28,6 @@ func InheritanceContent(fl *File) (*Inheritiance, error) {
 		if line == "" {
 			continue
 		}
-		hIdx := strings.Index(line, HeaderContent)
-		if hIdx > -1 {
-			continue
-		}
 		inhIdx := strings.Index(line, inheritPrefix)
 		if inhIdx > -1 {
 			continue

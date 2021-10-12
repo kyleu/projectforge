@@ -9,7 +9,6 @@ import (
 )
 
 type File struct {
-	Type     Type        `json:"type"`
 	Path     []string    `json:"path,omitempty"`
 	Name     string      `json:"name"`
 	Mode     os.FileMode `json:"mode,omitempty"`
@@ -17,18 +16,14 @@ type File struct {
 	fullPath string
 }
 
-func NewFile(path string, mode os.FileMode, b []byte, header string, logger *zap.SugaredLogger) *File {
+func NewFile(path string, mode os.FileMode, b []byte, logger *zap.SugaredLogger) *File {
 	p, n := util.SplitStringLast(path, '/', true)
 	if n == "" {
 		n = p
 		p = ""
 	}
-	t := getType(n)
 	c := string(b)
-	if header != "" {
-		c = contentWithHeader(t, header, c, logger)
-	}
-	return &File{Type: t, Path: util.SplitAndTrim(p, "/"), Name: n, Mode: mode, Content: c}
+	return &File{Path: util.SplitAndTrim(p, "/"), Name: n, Mode: mode, Content: c}
 }
 
 func (f *File) FullPath() string {

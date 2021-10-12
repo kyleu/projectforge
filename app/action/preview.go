@@ -8,7 +8,7 @@ import (
 func onPreview(pm *PrjAndMods) *Result {
 	ret := newResult(pm.Cfg, pm.Logger)
 	start := util.TimerStart()
-	_, dfs, err := diffs(pm, true)
+	_, dfs, err := diffs(pm)
 	if err != nil {
 		return ret.WithError(err)
 	}

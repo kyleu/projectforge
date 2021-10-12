@@ -34,8 +34,6 @@ func Apply(ctx context.Context, p *Params) *Result {
 	switch p.T {
 	case TypeBuild:
 		return onBuild(pm, p.Cfg)
-	case TypeDebug:
-		return onDebug(pm)
 	case TypeMerge:
 		return onMerge(pm)
 	case TypePreview:

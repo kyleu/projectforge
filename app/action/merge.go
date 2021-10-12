@@ -22,7 +22,7 @@ func onMerge(pm *PrjAndMods) *Result {
 	file, _ := pm.Cfg.GetString("file", true)
 
 	start := util.TimerStart()
-	_, dfs, err := diffs(pm, true)
+	_, dfs, err := diffs(pm)
 	if err != nil {
 		return ret.WithError(err)
 	}

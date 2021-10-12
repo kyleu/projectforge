@@ -67,7 +67,7 @@ func FileLoader(src file.Files, tgt filesystem.FileLoader, includeUnchanged bool
 				ret = append(ret, &Diff{Path: p, Status: &Status{Key: "error", Title: fmt.Sprintf("An error was encountered: %+v", err)}})
 			}
 
-			tgtFile = file.NewFile(p, t.Mode(), b, "", logger)
+			tgtFile = file.NewFile(p, t.Mode(), b, logger)
 
 			linefeed := strings.Index(tgtFile.Content, "\n")
 			if linefeed > -1 {
