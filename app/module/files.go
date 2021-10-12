@@ -45,7 +45,11 @@ func (s *Service) GetFiles(mods Modules, addHeader bool) (file.Files, error) {
 			if err != nil {
 				return nil, err
 			}
-			fl := file.NewFile(f, mode, b, addHeader, s.logger)
+			header := ""
+			if addHeader {
+				header = file.HeaderContent + " using code from the [" + mod.Key + "] module, which is under license [" + mod.License + "]"
+			}
+			fl := file.NewFile(f, mode, b, header, s.logger)
 
 			curr, exists := ret[fl.FullPath()]
 			if exists {

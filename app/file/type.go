@@ -13,6 +13,7 @@ type Type struct {
 }
 
 var (
+	TypeBat          = Type{Key: "bat", Suffixes: []string{".bat"}, Title: "Windows batch file"}
 	TypeConf         = Type{Key: "conf", Suffixes: []string{".conf"}, Title: "Configuration file"}
 	TypeCSS          = Type{Key: "css", Suffixes: []string{".css"}, Title: "Cascading Stylesheet"}
 	TypeDocker       = Type{Key: "docker", Suffixes: []string{"Dockerfile"}, Title: "Docker build configuration"}
@@ -43,7 +44,7 @@ var (
 )
 
 var AllTypes = []Type{
-	TypeConf, TypeCSS, TypeDocker, TypeEntitlements, TypeGitIgnore, TypeGo, TypeGoMod, TypeGradle, TypeHCL, TypeHTML, TypeIcons, TypeIgnore,
+	TypeBat, TypeConf, TypeCSS, TypeDocker, TypeEntitlements, TypeGitIgnore, TypeGo, TypeGoMod, TypeGradle, TypeHCL, TypeHTML, TypeIcons, TypeIgnore,
 	TypeJavaScript, TypeJSON, TypeKotlin, TypeMakefile, TypeMarkdown, TypePBXProject, TypePList, TypeProperties,
 	TypeShell, TypeSVG, TypeSwift, TypeText, TypeTypeScript, TypeXML, TypeYAML,
 }

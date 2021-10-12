@@ -17,7 +17,7 @@ type File struct {
 	fullPath string
 }
 
-func NewFile(path string, mode os.FileMode, b []byte, addHeader bool, logger *zap.SugaredLogger) *File {
+func NewFile(path string, mode os.FileMode, b []byte, header string, logger *zap.SugaredLogger) *File {
 	p, n := util.SplitStringLast(path, '/', true)
 	if n == "" {
 		n = p
@@ -25,8 +25,8 @@ func NewFile(path string, mode os.FileMode, b []byte, addHeader bool, logger *za
 	}
 	t := getType(n)
 	c := string(b)
-	if addHeader {
-		c = contentWithHeader(t, c, logger)
+	if header != "" {
+		c = contentWithHeader(t, header, c, logger)
 	}
 	return &File{Type: t, Path: util.SplitAndTrim(p, "/"), Name: n, Mode: mode, Content: c}
 }
