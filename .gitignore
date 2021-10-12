@@ -6,9 +6,6 @@
 /data
 /tmp
 
-**/*.html.go
-**/*.sql.go
-
 /tools/ios.bak/app.xcodeproj/xcuserdata
 /tools/ios.bak/build
 /tools/ios/*.framework
