@@ -10,6 +10,8 @@ Project Forge relies on a ton of open source projects. First among them is the [
 - [chroma][4]
 - [goth][5]
 - [zap][6]
+- [goreleaser][7]
+- [xcodegen][12]
 
 
 [1]: https://golang.org "What a great contribution to the world of engineering"
@@ -18,3 +20,5 @@ Project Forge relies on a ton of open source projects. First among them is the [
 [4]: https://github.com/alecthomas/chroma "Renders a syntax-highlighted table in a surprisingly small amount of time"
 [5]: https://github.com/markbates/goth "Handles OAuth for dozens of providers, works every time"
 [6]: https://go.uber.org/zap "Crazy fast logging, with a custom encoder to dump tons of debug info"
+[7]: https://goreleaser.com "Builds projects in all sorts of formats"
+[12]: https://github.com/yonaskolb/XcodeGen "Generates messy iOS XCode projects"
