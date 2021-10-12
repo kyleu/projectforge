@@ -43,6 +43,9 @@
           <td>{%s link.OSString() %}</td>
           <td>
         {%- endif -%}
+            {%- if link.OS == "linux" && (link.Arch == "ppc64" || link.Arch == "mips64_hardfloat" || link.Arch == "mips_hardfloat") -%}
+            <br />
+            {%- endif -%}
             <a href="{{{ .Info.Sourcecode }}}/releases/download/v{%s as.BuildInfo.Version %}/{%s link.URL %}">{%s link.Arch %}</a>
         {%- endfor -%}
           </td>

@@ -12,6 +12,9 @@
   <div class="card">
     <h3>{%= components.SVGRefIcon(`app`, ps) %}{%s util.AppName %}</h3>
     <p>{{{ .Info.Description }}}</p>
-    <pre>{%s util.ToJSON(ps.Data) %}</pre>
+    <p>
+      <a href="/download"><button>Download</button></a>
+      <a href="{{{ .Info.Sourcecode }}}"><button>Source Code</button></a>
+    </p>
   </div>
 {% endfunc %}

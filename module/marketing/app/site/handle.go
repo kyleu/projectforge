@@ -33,6 +33,8 @@ func Handle(path []string, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.Pag
 		page, err = mdTemplate("Quick Start", "This static page shows how to get started with "+util.AppName, "quickstart.md", ps)
 	case keyContrib:
 		page, err = mdTemplate("Contributing", "This static page describes how to build "+util.AppName, "contributing.md", ps)
+	case keyTech:
+		page, err = mdTemplate("Technology", "This static page describes the technology used in "+util.AppName, "technology.md", ps)
 	default:
 		page, err = mdTemplate("Documentation", "Documentation for "+util.AppName, path[0]+".md", ps)
 	}
@@ -49,6 +51,7 @@ func siteData(result string, kvs ...string) map[string]interface{} {
 
 func mdTemplate(title string, description string, path string, ps *cutil.PageState) (layout.Page, error) {
 	ps.Data = siteData(title, "description", description)
+	ps.Title = title
 	html, err := doc.DocHTML(path)
 	if err != nil {
 		return nil, err
