@@ -4,7 +4,7 @@
   "description": "Provides logins and session management for many OAuth providers",
   "authorName": "Kyle U",
   "authorEmail": "kyle@kyleu.com",
-  "license": "Proprietary",
+  "license": "CC0",
   "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/oauth",
   "priority": 30
 }

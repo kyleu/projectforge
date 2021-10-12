@@ -4,7 +4,7 @@
   "description": "Sends files to Apple for notarization",
   "authorName": "Kyle U",
   "authorEmail": "kyle@kyleu.com",
-  "license": "Proprietary",
+  "license": "CC0",
   "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/notarize",
   "priority": 20
 }
