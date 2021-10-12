@@ -48,6 +48,7 @@ func (s *Service) Download(key string, url string) error {
 		return errors.Errorf("unable to unzip body from module [%s] load request to [%s]", key, url)
 	}
 
+	_ = s.config.RemoveRecursive(key)
 	for _, f := range r.File {
 		fn := filepath.Join(key, f.Name) // nolint
 		if f.FileInfo().IsDir() {
