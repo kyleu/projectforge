@@ -11,19 +11,23 @@ import (
 	"github.com/kyleu/projectforge/app/util"
 )
 
+func clilog(s string) {
+	print(s) // nolint
+}
+
 func cliProject(p *project.Project, modKeys []string) error {
 	reader := bufio.NewReader(os.Stdin)
 
 	promptString := func(query string, curr string) string {
-		print(query)
+		clilog(query)
 		if curr != "" {
-			print(" (default: " + curr + ")")
+			clilog(" (default: " + curr + ")")
 		}
-		println()
-		print(" > ")
+		clilog("\n")
+		clilog(" > ")
 		text, err := reader.ReadString('\n')
 		if err != nil {
-			println("error: " + err.Error())
+			clilog("error: " + err.Error() + "\n")
 		}
 		text = strings.TrimSuffix(text, "\n")
 		if text == "" {

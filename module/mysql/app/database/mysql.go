@@ -30,7 +30,7 @@ type MySQLParams struct {
 }
 
 func MySQLParamsFromEnv(key string, defaultUser string, prefix string) *MySQLParams {
-	h := "localhost"
+	h := localhost
 	if x := os.Getenv(prefix + "DB_HOST"); x != "" {
 		h = x
 	}
@@ -50,7 +50,7 @@ func MySQLParamsFromEnv(key string, defaultUser string, prefix string) *MySQLPar
 	if x := os.Getenv(prefix + "DB_DATABASE"); x != "" {
 		d = x
 	}
-	s := "public"
+	s := ""
 	if x := os.Getenv(prefix + "DB_SCHEMA"); x != "" {
 		s = x
 	}
@@ -66,11 +66,11 @@ func MySQLParamsFromEnv(key string, defaultUser string, prefix string) *MySQLPar
 }
 
 func OpenMySQLDatabase(ctx context.Context, key string, params *MySQLParams, logger *zap.SugaredLogger) (*Service, error) {
-	ctx, span := telemetry.StartSpan(ctx, "database", "open")
+	_, span := telemetry.StartSpan(ctx, "database", "open")
 	defer span.End()
 	host := params.Host
 	if host == "" {
-		host = "localhost"
+		host = localhost
 	}
 	port := params.Port
 	if port == 0 {

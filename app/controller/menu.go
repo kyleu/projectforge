@@ -31,7 +31,8 @@ func MenuFor(ctx context.Context, isAuthed bool, isAdmin bool, as *app.State) (m
 			itemFor(action.TypeDoctor, "first-aid", "/doctor"),
 		)
 	}
-	ret = append(ret, &menu.Item{Key: "about", Title: "About", Description: "Get assistance and advice for using " + util.AppName, Icon: "question", Route: "/about"})
+	desc := "Get assistance and advice for using " + util.AppName
+	ret = append(ret, &menu.Item{Key: "about", Title: "About", Description: desc, Icon: "question", Route: "/about"})
 	return ret, nil
 }
 

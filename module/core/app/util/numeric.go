@@ -6,10 +6,9 @@ import (
 
 func MicrosToMillis(i int) string {
 	div := 1000
-	min := 20
 
 	ms := i / div
-	if ms >= min {
+	if ms >= 20 {
 		return fmt.Sprintf("%dms", ms)
 	}
 

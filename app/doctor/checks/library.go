@@ -5,7 +5,7 @@ import (
 	"github.com/kyleu/projectforge/app/util"
 )
 
-var AllChecks = doctor.Checks{air, golang, imagemagick, make, node, qtc}
+var AllChecks = doctor.Checks{air, golang, imagemagick, mke, node, qtc}
 
 func GetCheck(key string) *doctor.Check {
 	for _, x := range AllChecks {

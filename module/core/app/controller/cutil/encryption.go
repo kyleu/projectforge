@@ -5,10 +5,10 @@ import (
 	"crypto/cipher"
 	"crypto/rand"
 	"encoding/base64"
-	"fmt"
 	"io"
 	"os"
 
+	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
 	"{{{ .Package }}}/app/util"
@@ -20,13 +20,13 @@ func EncryptMessage(message string, logger *zap.SugaredLogger) (string, error) {
 	byteMsg := []byte(message)
 	block, err := aes.NewCipher(getKey(logger))
 	if err != nil {
-		return "", fmt.Errorf("could not create new cipher: %v", err)
+		return "", errors.Wrap(err, "could not create new cipher")
 	}
 
 	cipherText := make([]byte, aes.BlockSize+len(byteMsg))
 	iv := cipherText[:aes.BlockSize]
 	if _, err = io.ReadFull(rand.Reader, iv); err != nil {
-		return "", fmt.Errorf("could not encrypt: %v", err)
+		return "", errors.Wrap(err, "could not encrypt")
 	}
 
 	stream := cipher.NewCFBEncrypter(block, iv)
@@ -38,16 +38,16 @@ func EncryptMessage(message string, logger *zap.SugaredLogger) (string, error) {
 func DecryptMessage(message string, logger *zap.SugaredLogger) (string, error) {
 	cipherText, err := base64.StdEncoding.DecodeString(message)
 	if err != nil {
-		return "", fmt.Errorf("could not base64 decode: %v", err)
+		return "", errors.Wrap(err, "could not base64 decode")
 	}
 
 	block, err := aes.NewCipher(getKey(logger))
 	if err != nil {
-		return "", fmt.Errorf("could not create new cipher: %v", err)
+		return "", errors.Wrap(err, "could not create new cipher")
 	}
 
 	if len(cipherText) < aes.BlockSize {
-		return "", fmt.Errorf("invalid ciphertext block size")
+		return "", errors.New("invalid ciphertext block size")
 	}
 
 	iv := cipherText[:aes.BlockSize]

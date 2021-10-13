@@ -11,7 +11,9 @@ import (
 
 const WebAuthKey = "auth"
 
-func addToSession(provider string, email string, rc *fasthttp.RequestCtx, websess util.ValueMap, logger *zap.SugaredLogger) (*user.Account, user.Accounts, error) {
+func addToSession(
+	provider string, email string, rc *fasthttp.RequestCtx, websess util.ValueMap, logger *zap.SugaredLogger,
+) (*user.Account, user.Accounts, error) {
 	ret := getCurrentAuths(websess)
 	s := &user.Account{Provider: provider, Email: email}
 	for _, x := range ret {

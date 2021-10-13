@@ -17,20 +17,14 @@ var (
 
 func SetPermissions(allowDefault bool, ps ...*Permission) {
 	perms = make(Permissions, 0, len(ps)+4)
-	perms = append(perms, Perm("/auth", "*", true))
-	perms = append(perms, Perm("/profile", "*", true))
+	perms = append(perms, Perm("/auth", "*", true), Perm("/profile", "*", true))
 	perms = append(perms, ps...)
-	perms = append(perms, Perm("/admin", "*", false))
-	perms = append(perms, Perm("/about", "*", true))
-	perms = append(perms, Perm("/", "*", allowDefault))
+	perms = append(perms, Perm("/admin", "*", false), Perm("/about", "*", true), Perm("/", "*", allowDefault))
 }
 
 func GetPermissions() Permissions {
 	ret := make(Permissions, 0, len(perms))
-	for _, x := range perms {
-		ret = append(ret, x)
-	}
-	return ret
+	return append(ret, perms...)
 }
 
 type Permission struct {

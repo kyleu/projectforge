@@ -5,7 +5,6 @@ import (
 
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/providers/amazon"
-	// "github.com/markbates/goth/providers/apple"
 	"github.com/markbates/goth/providers/auth0"
 	"github.com/markbates/goth/providers/azuread"
 	"github.com/markbates/goth/providers/battlenet"

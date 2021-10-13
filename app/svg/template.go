@@ -32,6 +32,7 @@ func template(src string, svgs []*SVG) string {
 	w("// Code generated from files in [client/src/svg]. See " + util.AppURL + " for details. DO NOT EDIT.")
 	w("package util")
 	w("")
+	w("// nolint")
 	w("var SVGLibrary = map[string]string{")
 	msg := "\t%-" + fmt.Sprintf("%d", maxKeyLength+3) + "s `%s`,"
 	for _, fn := range svgs {
@@ -39,6 +40,7 @@ func template(src string, svgs []*SVG) string {
 	}
 	w("}")
 	w("")
+	w("// nolint")
 	w("var SVGIconKeys = []string{" + strings.Join(keys, ", ") + "}")
 
 	return out.String()

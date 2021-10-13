@@ -111,6 +111,7 @@ func (c *Colors) ApplyMap(m util.ValueMap, prefix string) *Colors {
 	return c
 }
 
+// nolint
 func (c *Colors) Equals(x *Colors) bool {
 	return c.Border == x.Border && c.LinkDecoration == x.LinkDecoration &&
 		c.Foreground == x.Foreground && c.ForegroundMuted == x.ForegroundMuted &&

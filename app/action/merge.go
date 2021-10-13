@@ -12,12 +12,14 @@ import (
 	"github.com/pkg/errors"
 )
 
+var projectKey = "project"
+
 func onMerge(pm *PrjAndMods) *Result {
 	ret := newResult(pm.Cfg, pm.Logger)
 
 	to, _ := pm.Cfg.GetString("to", true)
 	if to == "" {
-		to = "project"
+		to = projectKey
 	}
 	file, _ := pm.Cfg.GetString("file", true)
 
@@ -51,7 +53,7 @@ func onMerge(pm *PrjAndMods) *Result {
 			default:
 				return ret.WithError(errors.Errorf("unhandled diff status [%s]", f.Status))
 			}
-		case "project":
+		case projectKey:
 			switch f.Status {
 			case diff.StatusIdentical, diff.StatusSkipped, diff.StatusMissing:
 				// noop
@@ -71,7 +73,7 @@ func onMerge(pm *PrjAndMods) *Result {
 }
 
 func mergeLeft(pm *PrjAndMods, d *diff.Diff, ret *Result) *Result {
-	logs, err := pm.MSvc.UpdateFile(pm.Mods, d);
+	logs, err := pm.MSvc.UpdateFile(pm.Mods, d)
 	if err != nil {
 		return ret.WithError(err)
 	}
@@ -80,7 +82,7 @@ func mergeLeft(pm *PrjAndMods, d *diff.Diff, ret *Result) *Result {
 }
 
 func mergeRight(pm *PrjAndMods, d *diff.Diff, ret *Result) *Result {
-	loader := pm.PSvc.GetFilesystem(pm.Prj);
+	loader := pm.PSvc.GetFilesystem(pm.Prj)
 	if !loader.Exists(d.Path) {
 		return ret.WithError(errors.Errorf("no file found at path [%s] for project [%s]", d.Path, pm.Prj.Key))
 	}

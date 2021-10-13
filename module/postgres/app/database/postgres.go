@@ -30,7 +30,7 @@ type PostgresParams struct {
 }
 
 func PostgresParamsFromEnv(key string, defaultUser string, prefix string) *PostgresParams {
-	h := "localhost"
+	h := localhost
 	if x := os.Getenv(prefix + "DB_HOST"); x != "" {
 		h = x
 	}
@@ -66,11 +66,11 @@ func PostgresParamsFromEnv(key string, defaultUser string, prefix string) *Postg
 }
 
 func OpenPostgresDatabase(ctx context.Context, key string, params *PostgresParams, logger *zap.SugaredLogger) (*Service, error) {
-	ctx, span := telemetry.StartSpan(ctx, "database", "open")
+	_, span := telemetry.StartSpan(ctx, "database", "open")
 	defer span.End()
 	host := params.Host
 	if host == "" {
-		host = "localhost"
+		host = localhost
 	}
 	port := params.Port
 	if port == 0 {

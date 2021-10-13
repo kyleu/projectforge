@@ -13,6 +13,11 @@ import (
 	"go.uber.org/zap"
 )
 
+const (
+	pngMsg = "convert -density 1000 -resize %dx%d -define png:exclude-chunks=date,time logo.svg %s"
+	noBG   = "convert -density 1000 -background none -resize %dx%d -define png:exclude-chunks=date,time logo.svg %s"
+)
+
 func proc(cmd string, path string) error {
 	exit, out, err := util.RunProcessSimple(cmd, path)
 	if err != nil {
@@ -74,8 +79,7 @@ func SetAppIcon(prj *project.Project, fs filesystem.FileLoader, x *SVG, logger *
 
 func webAssets(prj *project.Project, orig string, fs filesystem.FileLoader, logger *zap.SugaredLogger) error {
 	webResize := func(size int, fn string, p string) {
-		msg := "convert -density 1000 -background none -resize %dx%d -define png:exclude-chunks=date,time logo.svg %s"
-		err := proc(fmt.Sprintf(msg, size, size, fn), p)
+		err := proc(fmt.Sprintf(noBG, size, size, fn), p)
 		if err != nil {
 			logger.Warnf("error processing icon [%s]: %+v", fn, err)
 		}

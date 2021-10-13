@@ -68,7 +68,7 @@ func flashAndRedir(success bool, msg string, redir string, rc *fasthttp.RequestC
 	}
 	msgFmt := fmt.Sprintf("%s:%s", status, msg)
 	currStr := ps.Session.GetStringOpt(cutil.WebFlashKey)
-	if len(currStr) == 0 {
+	if currStr == "" {
 		currStr = msgFmt
 	} else {
 		curr := util.SplitAndTrim(currStr, ",")

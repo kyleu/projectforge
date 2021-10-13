@@ -9,6 +9,12 @@ import (
 	"github.com/hexops/gotextdiff/span"
 )
 
+const (
+	addedKey   = "added"
+	deletedKey = "deleted"
+	contextKey = "context"
+)
+
 type Result struct {
 	Filename string    `json:"filename"`
 	Src      string    `json:"src"`
@@ -44,11 +50,11 @@ func changes(src string, diffs []gotextdiff.TextEdit) (string, []*Change) {
 			t := "unknown"
 			switch l.Kind {
 			case gotextdiff.Delete:
-				t = "deleted"
+				t = deletedKey
 			case gotextdiff.Insert:
-				t = "added"
+				t = addedKey
 			case gotextdiff.Equal:
-				t = "context"
+				t = contextKey
 			}
 			lines = append(lines, &Line{T: t, V: l.Content})
 		}

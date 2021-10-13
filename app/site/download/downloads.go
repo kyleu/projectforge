@@ -6,7 +6,7 @@ import (
 	"github.com/kyleu/projectforge/app/util"
 )
 
-func DownloadLinks(version string) Links {
+func GetLinks(version string) Links {
 	if availableLinks == nil {
 		availableLinks = calcDownloadLinks(version)
 	}

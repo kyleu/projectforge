@@ -24,7 +24,7 @@ func Handle(path []string, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.Pag
 	case keyIntro:
 		page, err = mdTemplate("Introduction", "This static page is an introduction to "+util.AppName, "introduction.md", ps)
 	case keyDownload:
-		dls := download.DownloadLinks(as.BuildInfo.Version)
+		dls := download.GetLinks(as.BuildInfo.Version)
 		ps.Data = map[string]interface{}{"base": "https://github.com/kyleu/projectforge/releases/download/v" + as.BuildInfo.Version, "links": dls}
 		page = &vsite.Download{Links: dls}
 	case keyInstall:
@@ -52,7 +52,7 @@ func siteData(result string, kvs ...string) map[string]interface{} {
 func mdTemplate(title string, description string, path string, ps *cutil.PageState) (layout.Page, error) {
 	ps.Data = siteData(title, "description", description)
 	ps.Title = title
-	html, err := doc.DocHTML(path)
+	html, err := doc.HTML(path)
 	if err != nil {
 		return nil, err
 	}

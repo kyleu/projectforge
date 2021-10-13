@@ -15,7 +15,7 @@ func InitLogging(debug bool) (*zap.SugaredLogger, error) {
 	var logger *zap.Logger
 	var err error
 	switch {
-	case strings.ToLower(os.Getenv("LOGGING_FORMAT")) == "json":
+	case strings.EqualFold(os.Getenv("LOGGING_FORMAT"), "json"):
 		logger, err = initJSONLogging()
 	case debug:
 		logger, err = initDevLogging()

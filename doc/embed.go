@@ -10,7 +10,7 @@ import (
 //go:embed *
 var assetFS embed.FS
 
-func DocContent(path string) ([]byte, error) {
+func Content(path string) ([]byte, error) {
 	data, err := assetFS.ReadFile(path)
 	if err != nil {
 		return nil, errors.Wrapf(err, "error reading doc asset at [%s]", path)
@@ -19,13 +19,13 @@ func DocContent(path string) ([]byte, error) {
 	return data, nil
 }
 
-var htmlCache = make(map[string]string, 0)
+var htmlCache = map[string]string{}
 
-func DocHTML(path string) (string, error) {
+func HTML(path string) (string, error) {
 	if curr, ok := htmlCache[path]; ok {
 		return curr, nil
 	}
-	data, err := DocContent(path)
+	data, err := Content(path)
 	if err != nil {
 		return "", err
 	}

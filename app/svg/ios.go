@@ -15,8 +15,7 @@ func iOSAssets(prj *project.Project, orig string, fs filesystem.FileLoader, logg
 		return nil
 	}
 	iOSResize := func(size int, fn string, p string) {
-		msg := "convert -density 1000 -resize %dx%d -define png:exclude-chunks=date,time logo.svg %s"
-		err := proc(fmt.Sprintf(msg, size, size, fn), p)
+		err := proc(fmt.Sprintf(pngMsg, size, size, fn), p)
 		if err != nil {
 			logger.Warnf("error processing icon [%s]: %+v", fn, err)
 		}

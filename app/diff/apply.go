@@ -18,7 +18,7 @@ type cmd struct {
 func Apply(b []byte, d *Diff) ([]byte, error) {
 	lines := strings.Split(string(b), "\n")
 
-	var cmds []*cmd
+	cmds := make([]*cmd, 0, len(d.Changes))
 	for _, c := range d.Changes {
 		cmds = append(cmds, loadCmd(c, false))
 	}
@@ -33,7 +33,7 @@ func Apply(b []byte, d *Diff) ([]byte, error) {
 func ApplyInverse(b []byte, d *Diff) ([]byte, error) {
 	lines := strings.Split(string(b), "\n")
 
-	var cmds []*cmd
+	cmds := make([]*cmd, 0, len(d.Changes))
 	for _, c := range d.Changes {
 		cmds = append(cmds, loadCmd(c, true))
 	}
@@ -50,12 +50,10 @@ func applyCmds(lines []string, cmds ...*cmd) ([]string, error) {
 	currIdx := 0
 
 	for _, c := range cmds {
-		for ; currIdx <= c.From + 1; currIdx++ {
+		for ; currIdx <= c.From+1; currIdx++ {
 			ret = append(ret, lines[currIdx])
 		}
-		for _, a := range c.Added {
-			ret = append(ret, a)
-		}
+		ret = append(ret, c.Added...)
 		currIdx += len(c.Deleted)
 	}
 	for ; currIdx < len(lines); currIdx++ {
@@ -69,22 +67,20 @@ func loadCmd(c *Change, inverse bool) *cmd {
 	for _, l := range c.Lines {
 		lv := strings.TrimSuffix(l.V, "\n")
 		switch l.T {
-		case "context":
+		case contextKey:
 			if len(x.Deleted) == 0 && len(x.Added) == 0 {
 				x.PreCtx = append(x.PreCtx, lv)
 			} else {
 				x.PostCtx = append(x.PostCtx, lv)
 			}
-		case "deleted":
+		case deletedKey:
 			x.Deleted = append(x.Deleted, lv)
-		case "added":
+		case addedKey:
 			x.Added = append(x.Added, lv)
 		}
 	}
 	if inverse {
-		a := x.Added
-		x.Added = x.Deleted
-		x.Deleted = a
+		x.Added, x.Deleted = x.Deleted, x.Added
 	}
 	return x
 }

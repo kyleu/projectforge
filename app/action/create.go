@@ -59,4 +59,3 @@ func onCreate(ctx context.Context, params *Params) *Result {
 
 	return fullBuild(prj, ret, params.Logger)
 }
-

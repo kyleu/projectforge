@@ -22,7 +22,7 @@ func (d Diff) String() string {
 type Diffs []*Diff
 
 func (d Diffs) String() string {
-	var sb []string
+	sb := make([]string, 0, len(d))
 	for _, x := range d {
 		sb = append(sb, x.String())
 	}
@@ -39,10 +39,7 @@ func DiffObjects(l interface{}, r interface{}, path ...string) Diffs {
 		ret = append(ret, NewDiff(strings.Join(path, "."), fmt.Sprint(l), ""))
 	}
 
-	lt := fmt.Sprintf("%T", l)
-	rt := fmt.Sprintf("%T", r)
-
-	if lt != rt {
+	if lt, rt := fmt.Sprintf("%T", l), fmt.Sprintf("%T", r); lt != rt {
 		lj := ToJSON(l) //nolint
 		rj := ToJSON(r) //nolint
 		ret = append(ret, NewDiff(strings.Join(path, "."), lj, rj))
@@ -50,30 +47,32 @@ func DiffObjects(l interface{}, r interface{}, path ...string) Diffs {
 
 	switch t := l.(type) {
 	case ValueMap:
-		rm := r.(ValueMap)
+		rm, _ := r.(ValueMap)
 		for k, v := range t {
 			rv := rm[k]
 			ret = append(ret, DiffObjects(v, rv, append(append([]string{}, path...), k)...)...)
 		}
 	case map[string]interface{}:
-		rm := r.(map[string]interface{})
+		rm, _ := r.(map[string]interface{})
 		for k, v := range t {
 			rv := rm[k]
 			ret = append(ret, DiffObjects(v, rv, append(append([]string{}, path...), k)...)...)
 		}
 	case map[string]int:
-		rm := r.(map[string]int)
+		rm, _ := r.(map[string]int)
 		for k, v := range t {
 			rv := rm[k]
 			ret = append(ret, DiffObjects(v, rv, append(append([]string{}, path...), k)...)...)
 		}
 	case int:
-		if t != r.(int) {
-			ret = append(ret, NewDiff(strings.Join(path, "."), fmt.Sprint(t), fmt.Sprint(r.(int))))
+		i, _ := r.(int)
+		if t != i {
+			ret = append(ret, NewDiff(strings.Join(path, "."), fmt.Sprint(t), fmt.Sprint(i)))
 		}
 	case string:
-		if t != r.(string) {
-			ret = append(ret, NewDiff(strings.Join(path, "."), t, r.(string)))
+		s, _ := r.(string)
+		if t != s {
+			ret = append(ret, NewDiff(strings.Join(path, "."), t, s))
 		}
 	default:
 		if lj, rj := ToJSON(l), ToJSON(r); lj != rj {

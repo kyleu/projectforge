@@ -72,6 +72,6 @@ func acquireRequestFromPool() *fasthttp.Request {
 	if rp == nil {
 		return &fasthttp.Request{}
 	}
-	frc := rp.(*fasthttp.Request)
+	frc, _ := rp.(*fasthttp.Request)
 	return frc
 }

@@ -270,7 +270,7 @@ func setPath(i interface{}, path []string, val interface{}) error {
 			case map[string]interface{}:
 				t[p] = val
 			default:
-				return errors.New(fmt.Sprintf("unhandled [%T]", t))
+				return errors.Errorf("unhandled [%T]", t)
 			}
 		} else {
 			switch t := work.(type) {
@@ -281,7 +281,7 @@ func setPath(i interface{}, path []string, val interface{}) error {
 				t[p] = map[string]interface{}{}
 				work = t[p]
 			default:
-				return errors.New(fmt.Sprintf("unhandled [%T]", t))
+				return errors.Errorf("unhandled [%T]", t)
 			}
 		}
 	}

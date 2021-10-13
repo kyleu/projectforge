@@ -4,7 +4,7 @@ import (
 	"github.com/kyleu/projectforge/app/doctor"
 )
 
-var make = &doctor.Check{
+var mke = &doctor.Check{
 	Key:     "make",
 	Section: "build",
 	Title:   "Make",

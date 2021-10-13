@@ -25,7 +25,7 @@ func ReplaceEnvVars(s string, logger *zap.SugaredLogger) string {
 
 			o := os.Getenv(n)
 			// logger.Debug(fmt.Sprintf("Replacing [%v] in address (original: %v, env[%v]: (%v), default: %v)", s, orig, n, o, d))
-			if len(o) == 0 {
+			if o == "" {
 				o = d
 			}
 			return ReplaceEnvVars(strings.Replace(s, orig, o, 1), logger)

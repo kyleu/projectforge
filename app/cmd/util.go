@@ -87,8 +87,7 @@ func listen(address string, port uint16) (uint16, net.Listener, error) {
 
 func serve(name string, listener net.Listener, h fasthttp.RequestHandler) error {
 	x := &fasthttp.Server{Handler: h, Name: name, ReadBufferSize: 65536, NoDefaultServerHeader: true}
-	err := x.Serve(listener)
-	if err != nil {
+	if err := x.Serve(listener); err != nil {
 		return errors.Wrap(err, "unable to run http server")
 	}
 	return nil

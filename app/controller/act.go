@@ -24,8 +24,7 @@ func act(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.Pa
 	if allowed, reason := user.Check(string(ps.URI.Path()), ps.Accounts); !allowed {
 		f = Unauthorized(rc, reason, ps.Accounts)
 	}
-	err := initAppRequest(as, ps)
-	if err != nil {
+	if err := initAppRequest(as, ps); err != nil {
 		as.Logger.Warnf("%+v", err)
 	}
 	actComplete(key, as, ps, rc, f)
@@ -38,8 +37,7 @@ func actSite(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cuti
 	if allowed, reason := user.Check(string(ps.URI.Path()), ps.Accounts); !allowed {
 		f = Unauthorized(rc, reason, ps.Accounts)
 	}
-	err := initSiteRequest(as, ps)
-	if err != nil {
+	if err := initSiteRequest(as, ps); err != nil {
 		as.Logger.Warnf("%+v", err)
 	}
 	actComplete(key, as, ps, rc, f)
@@ -58,6 +56,9 @@ func actComplete(key string, as *app.State, ps *cutil.PageState, rc *fasthttp.Re
 		redir, err = f(as, ps)
 		if err != nil {
 			redir, err = handleError(key, as, ps, rc, err)
+			if err != nil {
+				as.Logger.Warnf("unable to handle error: %+v", err)
+			}
 		}
 	} else {
 		redir = ps.ForceRedirect

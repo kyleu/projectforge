@@ -40,7 +40,7 @@ func profileAction(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) 
 	ref := string(rc.Request.Header.Peek("Referer"))
 	if ref != "" {
 		u, err := url.Parse(ref)
-		if err == nil && u != nil && u.Path != "/profile" {
+		if err == nil && u != nil && u.Path != defaultProfilePath {
 			redir = u.Path
 		}
 	}
