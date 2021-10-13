@@ -29,7 +29,7 @@ func (s *Service) GetFilenames(mods Modules) ([]string, error) {
 	return keys, nil
 }
 
-func (s *Service) GetFiles(mods Modules, addHeader bool) (file.Files, error) {
+func (s *Service) GetFiles(mods Modules) (file.Files, error) {
 	ret := map[string]*file.File{}
 	for _, mod := range mods {
 		loader := s.GetFilesystem(mod.Key)
@@ -45,11 +45,7 @@ func (s *Service) GetFiles(mods Modules, addHeader bool) (file.Files, error) {
 			if err != nil {
 				return nil, err
 			}
-			header := ""
-			if addHeader {
-				header = file.HeaderContent + " using code from the [" + mod.Key + "] module, which is under license [" + mod.License + "]"
-			}
-			fl := file.NewFile(f, mode, b, header, s.logger)
+			fl := file.NewFile(f, mode, b, s.logger)
 
 			curr, exists := ret[fl.FullPath()]
 			if exists {
