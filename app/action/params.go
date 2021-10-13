@@ -17,5 +17,6 @@ type Params struct {
 	RootFiles  filesystem.FileLoader
 	MSvc       *module.Service
 	PSvc       *project.Service
+	CLI        bool
 	Logger     *zap.SugaredLogger
 }

@@ -37,10 +37,18 @@ func (p *Result) WithError(err *Error) *Result {
 func (p *Result) String() string {
 	logs := strings.Builder{}
 	for _, l := range p.Logs {
-		logs.WriteString("\n- ")
+		logs.WriteString("\n - ")
 		logs.WriteString(l)
 	}
-	return fmt.Sprintf("%s: %s\n[%s]%s", p.Title, p.Status, p.Summary, logs.String())
+	for _, e := range p.Errors {
+		logs.WriteString("\n - ")
+		logs.WriteString(e.String())
+	}
+	if p.Solution != "" {
+		logs.WriteString("\n - FIX: ")
+		logs.WriteString(p.Solution)
+	}
+	return fmt.Sprintf("%s: %s%s", p.Title, p.Status, logs.String())
 }
 
 type Results []*Result

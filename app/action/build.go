@@ -3,8 +3,11 @@ package action
 import (
 	"path/filepath"
 
-	"github.com/kyleu/projectforge/app/util"
 	"github.com/pkg/errors"
+	"go.uber.org/zap"
+
+	"github.com/kyleu/projectforge/app/project"
+	"github.com/kyleu/projectforge/app/util"
 )
 
 type Build struct {
@@ -72,4 +75,55 @@ func onBuild(pm *PrjAndMods, cfg util.ValueMap) *Result {
 	ret = phase.Run(pm, ret)
 	ret.Duration = util.TimerEnd(start)
 	return ret
+}
+
+func fullBuild(prj *project.Project, r *Result, logger *zap.SugaredLogger) *Result {
+	r.AddLog("building project [%s] in [%s]", prj.Key, prj.Path)
+
+	exitCode, out, err := util.RunProcessSimple("bin/templates.sh", prj.Path)
+	if err != nil {
+		return r.WithError(err)
+	}
+	r.AddLog("templates.sh output for [" + prj.Key + "]:\n" + out)
+	if exitCode != 0 {
+		return r.WithError(errors.Errorf("templates.sh failed with exit code [%d]", exitCode))
+	}
+
+	exitCode, out, err = util.RunProcessSimple("go mod tidy", prj.Path)
+	if err != nil {
+		return r.WithError(err)
+	}
+	r.AddLog("go mod output for [" + prj.Key + "]:\n" + out)
+	if exitCode != 0 {
+		return r.WithError(errors.Errorf("\"go mod tidy\" failed with exit code [%d]", exitCode))
+	}
+
+	exitCode, out, err = util.RunProcessSimple("npm install", filepath.Join(prj.Path, "client"))
+	if err != nil {
+		return r.WithError(err)
+	}
+	r.AddLog("npm output for [" + prj.Key + "]:\n" + out)
+	if exitCode != 0 {
+		r.WithError(errors.Errorf("npm install failed with exit code [%d]", exitCode))
+	}
+
+	exitCode, out, err = util.RunProcessSimple("bin/build/client.sh", prj.Path)
+	if err != nil {
+		return r.WithError(err)
+	}
+	r.AddLog("client build output for [" + prj.Key + "]:\n" + out)
+	if exitCode != 0 {
+		r.WithError(errors.Errorf("client build failed with exit code [%d]", exitCode))
+	}
+
+	exitCode, out, err = util.RunProcessSimple("make build", prj.Path)
+	if err != nil {
+		return r.WithError(err)
+	}
+	r.AddLog("build output for [" + prj.Key + "]:\n" + out)
+	if exitCode != 0 {
+		r.WithError(errors.Errorf("build failed with exit code [%d]", exitCode))
+	}
+
+	return r
 }

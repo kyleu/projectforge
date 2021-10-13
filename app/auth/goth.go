@@ -5,7 +5,7 @@ import (
 
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/providers/amazon"
-	"github.com/markbates/goth/providers/apple"
+	// "github.com/markbates/goth/providers/apple"
 	"github.com/markbates/goth/providers/auth0"
 	"github.com/markbates/goth/providers/azuread"
 	"github.com/markbates/goth/providers/battlenet"
@@ -69,8 +69,8 @@ func toGoth(id string, k string, s string, c string) (goth.Provider, error) {
 	switch id {
 	case "amazon":
 		return amazon.New(k, s, c), nil
-	case "apple":
-		return apple.New(k, s, c, nil, apple.ScopeName, apple.ScopeEmail), nil
+	// case "apple":
+	//	 return apple.New(k, s, c, nil, apple.ScopeName, apple.ScopeEmail), nil
 	case auth0Key:
 		return auth0.New(k, s, c, os.Getenv("auth0_domain")), nil
 	case "azuread":

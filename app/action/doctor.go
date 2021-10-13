@@ -13,8 +13,8 @@ func onDoctor(ctx context.Context, cfg util.ValueMap, pSvc *project.Service, log
 	ret := newResult(cfg, logger)
 	prjs := pSvc.Projects()
 	res := checks.CheckAll(prjs.AllModules())
-	for _, prg := range res {
-		ret.AddLog(prg.String())
+	for _, r := range res {
+		ret.AddLog(r.String())
 	}
 	return ret
 }
