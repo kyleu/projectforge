@@ -60,7 +60,7 @@ func MySQLParamsFromEnv(key string, defaultUser string, prefix string) *MySQLPar
 	}
 	debug := false
 	if x := os.Getenv(prefix + "DB_DEBUG"); x != "" {
-		debug = x != "false"
+		debug = x != falseKey
 	}
 	return &MySQLParams{Host: h, Port: p, Username: u, Password: pw, Database: d, Schema: s, MaxConns: mc, Debug: debug}
 }

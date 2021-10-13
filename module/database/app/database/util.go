@@ -4,7 +4,10 @@ import (
 	"strings"
 )
 
-const localhost = "localhost"
+const (
+	localhost = "localhost"
+	falseKey  = "false"
+)
 
 func ArrayToString(a []string) string {
 	return "{" + strings.Join(a, ",") + "}"

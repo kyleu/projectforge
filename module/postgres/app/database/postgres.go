@@ -60,7 +60,7 @@ func PostgresParamsFromEnv(key string, defaultUser string, prefix string) *Postg
 	}
 	debug := false
 	if x := os.Getenv(prefix + "DB_DEBUG"); x != "" {
-		debug = x != "false"
+		debug = x != falseKey
 	}
 	return &PostgresParams{Host: h, Port: p, Username: u, Password: pw, Database: d, Schema: s, MaxConns: mc, Debug: debug}
 }
