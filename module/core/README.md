@@ -1,4 +1,4 @@
-<!-- $PF_IGNORE$ -->
+<!--- $PF_IGNORE$ -->
 # {{{ .Name }}}
 ![app logo](./assets/favicon.png)
 

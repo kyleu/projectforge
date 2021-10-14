@@ -1,4 +1,6 @@
 # http://goreleaser.com
+project_name: projectforge
+
 archives:
   - format: zip
     wrap_in_directory: false

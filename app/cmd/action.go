@@ -45,12 +45,6 @@ func logResult(t action.Type, r *action.Result) {
 			_logger.Info(" - " + e)
 		}
 	}
-	if len(r.Logs) > 0 {
-		_logger.Info("Logs:")
-		for _, l := range r.Logs {
-			_logger.Info(" - " + l)
-		}
-	}
 	if r.Modules.DiffCount(false) > 0 {
 		for _, m := range r.Modules {
 			for _, d := range m.DiffsFiltered(false) {
@@ -62,7 +56,5 @@ func logResult(t action.Type, r *action.Result) {
 				}
 			}
 		}
-	} else {
-		_logger.Info("No changes")
 	}
 }

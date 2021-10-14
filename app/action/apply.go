@@ -28,6 +28,10 @@ func Apply(ctx context.Context, p *Params) *Result {
 	case TypeDoctor:
 		ret = onDoctor(ctx, p.Cfg, p.PSvc, p.Logger)
 	}
+	if ret != nil {
+		ret.Duration = util.TimerEnd(start)
+		return ret
+	}
 
 	if len(p.PSvc.Projects()) == 0 {
 		_, err := p.PSvc.Refresh()

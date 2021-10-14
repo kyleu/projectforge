@@ -68,9 +68,12 @@ func cliProject(p *project.Project, modKeys []string) error {
 	}
 	p.Port, _ = strconv.Atoi(promptString("Enter the default port your http server will run on", fmt.Sprint(p.Port)))
 
-	modPromptString := "Enter the modules your project will use as a comma-separated list from choices [" + strings.Join(modKeys, ", ") + "]"
+	modPromptString := "Enter the modules your project will use as a comma-separated list (or \"all\") from choices:\n  " + strings.Join(modKeys, ", ")
 	mods := promptString(modPromptString, strings.Join(p.Modules, ", "))
 	p.Modules = util.SplitAndTrim(mods, ",")
+	if len(p.Modules) == 1 && p.Modules[0] == "all" {
+		p.Modules = modKeys
+	}
 
 	if p.Info.License == "" {
 		p.Info.License = "Proprietary"
