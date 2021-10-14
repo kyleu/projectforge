@@ -91,6 +91,10 @@ func (x *Wrapped) UnmarshalJSON(data []byte) error {
 		tgt := &Date{}
 		err = util.FromJSON(wu.T, &tgt)
 		t = tgt
+	case KeyEnum:
+		tgt := &Enum{}
+		err = util.FromJSON(wu.T, &tgt)
+		t = tgt
 	case KeyEnumValue:
 		tgt := &EnumValue{}
 		err = util.FromJSON(wu.T, &tgt)
@@ -188,4 +192,12 @@ func (x *Wrapped) UnmarshalJSON(data []byte) error {
 func (x *Wrapped) IsOption() bool {
 	_, ok := x.T.(*Option)
 	return ok
+}
+
+func (x *Wrapped) EnumKey() string {
+	e, ok := x.T.(*Enum)
+	if !ok {
+		return ""
+	}
+	return e.Ref
 }
