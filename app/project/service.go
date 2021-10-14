@@ -69,22 +69,23 @@ func (s *Service) add(path string, parent *Project) (*Project, error) {
 	return p, nil
 }
 
-func (s *Service) Refresh(rootFiles filesystem.FileLoader) (Projects, error) {
+func (s *Service) Refresh() (Projects, error) {
 	s.cache = map[string]*Project{}
 	root, err := s.add(".", nil)
 	if err != nil {
 		return nil, err
 	}
+	fs := s.GetFilesystem(root)
 	additionalFilename := "additional-projects.json"
-	if rootFiles.Exists(additionalFilename) {
-		additionalContent, err := rootFiles.ReadFile(additionalFilename)
+	if fs.Exists(additionalFilename) {
+		additionalContent, err := fs.ReadFile(additionalFilename)
 		if err != nil {
-			s.logger.Warnf("unable to load additional projects from [%s]", filepath.Join(rootFiles.Root(), additionalFilename))
+			s.logger.Warnf("unable to load additional projects from [%s]", filepath.Join(fs.Root(), additionalFilename))
 		}
 		var additional []string
 		err = util.FromJSON(additionalContent, &additional)
 		if err != nil {
-			s.logger.Warnf("unable to parse additional projects from [%s]: %+v", filepath.Join(rootFiles.Root(), additionalFilename), err)
+			s.logger.Warnf("unable to parse additional projects from [%s]: %+v", filepath.Join(fs.Root(), additionalFilename), err)
 		}
 		for _, a := range additional {
 			if _, err := s.add(a, root); err != nil {

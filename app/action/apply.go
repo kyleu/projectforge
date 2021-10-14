@@ -17,13 +17,27 @@ func Apply(ctx context.Context, p *Params) *Result {
 		defer p.Span.End()
 	}
 
+	start := util.TimerStart()
+
+	var ret *Result
 	switch p.T {
 	case TypeCreate:
-		return onCreate(ctx, p)
+		ret = onCreate(ctx, p)
 	case TypeTest:
-		return onTest(ctx, p)
+		ret = onTest(ctx, p)
 	case TypeDoctor:
-		return onDoctor(ctx, p.Cfg, p.PSvc, p.Logger)
+		ret = onDoctor(ctx, p.Cfg, p.PSvc, p.Logger)
+	}
+
+	if len(p.PSvc.Projects()) == 0 {
+		_, err := p.PSvc.Refresh()
+		if err != nil {
+			return errorResult(err, p.Cfg, p.Logger)
+		}
+	}
+	if p.ProjectKey == "" {
+		prj := p.PSvc.ByPath(".")
+		p.ProjectKey = prj.Key
 	}
 
 	pm, err := getPrjAndMods(ctx, p)
@@ -33,18 +47,21 @@ func Apply(ctx context.Context, p *Params) *Result {
 
 	switch p.T {
 	case TypeBuild:
-		return onBuild(pm, p.Cfg)
+		ret = onBuild(pm, p.Cfg)
 	case TypeMerge:
-		return onMerge(pm)
+		ret = onMerge(pm)
 	case TypePreview:
-		return onPreview(pm)
+		ret = onPreview(pm)
 	case TypeSlam:
-		return onSlam(pm)
+		ret = onSlam(pm)
 	case TypeSVG:
-		return onSVG(pm)
+		ret = onSVG(pm)
 	default:
-		return errorResult(errors.Errorf("invalid action type [%s]", p.T.String()), p.Cfg, p.Logger)
+		ret = errorResult(errors.Errorf("invalid action type [%s]", p.T.String()), p.Cfg, p.Logger)
 	}
+
+	ret.Duration = util.TimerEnd(start)
+	return ret
 }
 
 type PrjAndMods struct {
@@ -58,6 +75,13 @@ type PrjAndMods struct {
 }
 
 func getPrjAndMods(ctx context.Context, p *Params) (*PrjAndMods, error) {
+	if p.ProjectKey == "" {
+		prj := p.PSvc.ByPath("")
+		if prj != nil {
+			p.ProjectKey = prj.Key
+		}
+	}
+
 	prj, err := p.PSvc.Get(p.ProjectKey)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to load project [%s]", p.ProjectKey)

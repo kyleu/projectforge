@@ -29,6 +29,19 @@ type Line struct {
 	V string `json:"v"`
 }
 
+func (l Line) String() string {
+	switch l.T {
+	case addedKey:
+		return " + " + l.V
+	case deletedKey:
+		return " - " + l.V
+	case contextKey:
+		return " . " + l.V
+	default:
+		return " ? " + l.V
+	}
+}
+
 type Change struct {
 	From  int `json:"from"`
 	To    int `json:"to"`

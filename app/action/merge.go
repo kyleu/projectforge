@@ -12,7 +12,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-var projectKey = "project"
+const projectKey = "project"
 
 func onMerge(pm *PrjAndMods) *Result {
 	ret := newResult(pm.Cfg, pm.Logger)

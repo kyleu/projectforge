@@ -16,7 +16,7 @@ func initApp(*app.State) {
 
 // Configure app-specific data for each request.
 func initAppRequest(as *app.State, ps *cutil.PageState) error {
-	prjs, err := as.Services.Projects.Refresh(as.Files)
+	prjs, err := as.Services.Projects.Refresh()
 	if err != nil {
 		return errors.Wrap(err, "can't load projects")
 	}

@@ -36,7 +36,7 @@ func RunAction(rc *fasthttp.RequestCtx) {
 		})
 		nc, span := telemetry.StartSpan(ps.Context, "action", "action."+actT.String())
 		result := action.Apply(nc, &action.Params{
-			Span: span, ProjectKey: tgt, T: actT, Cfg: cfg, RootFiles: as.Files,
+			Span: span, ProjectKey: tgt, T: actT, Cfg: cfg,
 			MSvc: as.Services.Modules, PSvc: as.Services.Projects, Logger: ps.Logger,
 		})
 		if result.Project == nil {
@@ -69,7 +69,7 @@ func RunAllActions(rc *fasthttp.RequestCtx) {
 				c["path"] = p.Path
 				nc, span := telemetry.StartSpan(ps.Context, "action", "action."+actT.String())
 				result := action.Apply(nc, &action.Params{
-					Span: span, ProjectKey: p.Key, T: actT, Cfg: c, RootFiles: as.Files,
+					Span: span, ProjectKey: p.Key, T: actT, Cfg: c,
 					MSvc: as.Services.Modules, PSvc: as.Services.Projects, Logger: ps.Logger,
 				})
 				if result.Project == nil {

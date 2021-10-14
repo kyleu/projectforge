@@ -23,3 +23,11 @@ func (r *Result) DiffsFiltered(includeSkipped bool) []*diff.Diff {
 }
 
 type Results []*Result
+
+func (r Results) DiffCount(includeSkipped bool) int {
+	ret := 0
+	for _, m := range r {
+		ret += len(m.DiffsFiltered(includeSkipped))
+	}
+	return ret
+}

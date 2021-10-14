@@ -7,12 +7,10 @@ import (
 	"github.com/kyleu/projectforge/app/module"
 	"github.com/kyleu/projectforge/app/project"
 	"github.com/kyleu/projectforge/app/util"
-	"github.com/pkg/errors"
 	"go.uber.org/zap"
 )
 
 type Result struct {
-	ID       string           `json:"id"`
 	Project  *project.Project `json:"project"`
 	Status   string           `json:"status"`
 	Args     util.ValueMap    `json:"args,omitempty"`
@@ -47,21 +45,6 @@ func (r *Result) AddLog(msg string, args ...interface{}) {
 		r.logger.Info(ret)
 	}
 	r.Logs = append(r.Logs, ret)
-}
-
-func (r *Result) AsError() error {
-	if len(r.Errors) == 0 {
-		return nil
-	}
-	var ret error
-	for _, e := range r.Errors {
-		if ret == nil {
-			ret = errors.New(e)
-		} else {
-			ret = errors.Wrap(ret, e)
-		}
-	}
-	return ret
 }
 
 func (r *Result) Merge(tgt *Result) *Result {

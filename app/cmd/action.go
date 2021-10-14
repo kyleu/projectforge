@@ -2,8 +2,10 @@ package cmd
 
 import (
 	"context"
+	"strings"
 
 	"github.com/kyleu/projectforge/app/action"
+	"github.com/kyleu/projectforge/app/util"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
@@ -14,9 +16,9 @@ func actionF(ctx context.Context, t action.Type, args []string) error {
 	}
 
 	_, cfg := extractConfig(args)
-	projectKey := "TODO"
+	logResult(t, runToCompletion(ctx, "", t, cfg))
 
-	return runToCompletion(ctx, projectKey, t, cfg)
+	return nil
 }
 
 func actionCmd(ctx context.Context, t action.Type) *cobra.Command {
@@ -33,4 +35,34 @@ func actionCommands() []*cobra.Command {
 		}
 	}
 	return ret
+}
+
+func logResult(t action.Type, r *action.Result) {
+	_logger.Infof("%s [%s]: %s in [%s]", util.AppName, t.String(), r.Status, util.MicrosToMillis(r.Duration))
+	if len(r.Errors) > 0 {
+		_logger.Warnf("Errors:")
+		for _, e := range r.Errors {
+			_logger.Info(" - " + e)
+		}
+	}
+	if len(r.Logs) > 0 {
+		_logger.Info("Logs:")
+		for _, l := range r.Logs {
+			_logger.Info(" - " + l)
+		}
+	}
+	if r.Modules.DiffCount(false) > 0 {
+		for _, m := range r.Modules {
+			for _, d := range m.DiffsFiltered(false) {
+				_logger.Infof("%s [%s]:", d.Path, d.Status)
+				for _, c := range d.Changes {
+					for _, l := range c.Lines {
+						_logger.Info(strings.TrimSuffix(l.String(), "\n"))
+					}
+				}
+			}
+		}
+	} else {
+		_logger.Info("No changes")
+	}
 }

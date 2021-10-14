@@ -41,7 +41,7 @@ func onCreate(ctx context.Context, params *Params) *Result {
 		return ret.WithError(err)
 	}
 
-	_, err = params.PSvc.Refresh(params.RootFiles)
+	_, err = params.PSvc.Refresh()
 	if err != nil {
 		msg := fmt.Sprintf("unable to load newly created project from path [%s]", path)
 		return errorResult(errors.Wrap(err, msg), params.Cfg, params.Logger)
