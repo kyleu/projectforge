@@ -83,7 +83,7 @@ func (p *Project) ToTemplateContext() *TemplateContext {
 		ret.Exec = ret.Key
 	}
 	if ret.Args == "" {
-		if util.StringArrayContains(p.Modules, "marketing") {
+		if p.HasModule("marketing") {
 			ret.Args = " -v --addr=0.0.0.0 all"
 		} else {
 			ret.Args = " -v --addr=0.0.0.0 server"

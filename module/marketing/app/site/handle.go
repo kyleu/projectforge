@@ -21,8 +21,6 @@ func Handle(path []string, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.Pag
 	var page layout.Page
 	var err error
 	switch path[0] {
-	case keyIntro:
-		page, err = mdTemplate("Introduction", "This static page is an introduction to "+util.AppName, "introduction.md", ps)
 	case keyDownload:
 		dls := download.GetLinks(as.BuildInfo.Version)
 		ps.Data = map[string]interface{}{"base": "https://github.com/kyleu/projectforge/releases/download/v" + as.BuildInfo.Version, "links": dls}

@@ -1,0 +1,27 @@
+{% import (
+  "github.com/kyleu/projectforge/app"
+  "github.com/kyleu/projectforge/app/module"
+  "github.com/kyleu/projectforge/app/util"
+  "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/views/components"
+  "github.com/kyleu/projectforge/views/layout"
+) %}
+
+{% code type FeatureList struct {
+  layout.Basic
+  Modules module.Modules
+} %}
+
+{% func (p *FeatureList) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`app`, ps) %}{%s util.AppName %} Features</h3>
+    <ul>
+      {%- for _, mod := range p.Modules -%}
+      <li>
+        <a href="/features/{%s mod.Key %}">{%= components.SVGRefIcon(mod.Icon, ps) %}{%s mod.Title() %}</a>
+        <div><em>{%s mod.Description %}</em></div>
+      </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+{% endfunc %}

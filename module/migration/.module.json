@@ -1,6 +1,6 @@
 {
   "name": "Migration",
-  "icon": "migration",
+  "icon": "database",
   "description": "Database migrations and a common PostgreSQL or SQLite database",
   "authorName": "Kyle U",
   "authorEmail": "kyle@kyleu.com",

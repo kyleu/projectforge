@@ -1,3 +1,4 @@
+// Package site $PF_IGNORE$
 package site
 
 import (
@@ -21,16 +22,18 @@ func Handle(path []string, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.Pag
 	var page layout.Page
 	var err error
 	switch path[0] {
-	case keyIntro:
-		page, err = mdTemplate("Introduction", "This static page is an introduction to "+util.AppName, "introduction.md", ps)
+	case keyFeatures:
+		if len(path) == 1 {
+			page, err = featureList(as, ps)
+		} else {
+			page, err = featureDetail(path[1], as, ps)
+		}
 	case keyDownload:
 		dls := download.GetLinks(as.BuildInfo.Version)
 		ps.Data = map[string]interface{}{"base": "https://github.com/kyleu/projectforge/releases/download/v" + as.BuildInfo.Version, "links": dls}
 		page = &vsite.Download{Links: dls}
 	case keyInstall:
 		page, err = mdTemplate("Installation", "This static page contains installation instructions", "installation.md", ps)
-	case keyQuickStart:
-		page, err = mdTemplate("Quick Start", "This static page shows how to get started with "+util.AppName, "quickstart.md", ps)
 	case keyContrib:
 		page, err = mdTemplate("Contributing", "This static page describes how to build "+util.AppName, "contributing.md", ps)
 	case keyTech:

@@ -51,6 +51,10 @@ func (p *Project) SafeIcon() string {
 	return p.Icon
 }
 
+func (p *Project) HasModule(key string) bool {
+	return util.StringArrayContains(p.Modules, key)
+}
+
 func NewProject(key string, path string) *Project {
 	return &Project{Key: key, Version: "0.0.0", Path: path}
 }

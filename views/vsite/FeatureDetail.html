@@ -1,0 +1,20 @@
+{% import (
+  "github.com/kyleu/projectforge/app"
+  "github.com/kyleu/projectforge/app/module"
+  "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/views/components"
+  "github.com/kyleu/projectforge/views/layout"
+) %}
+
+{% code type FeatureDetail struct {
+  layout.Basic
+  Module *module.Module
+} %}
+
+{% func (p *FeatureDetail) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(p.Module.Icon, ps) %}{%s p.Module.Title() %}</h3>
+    <em>{%s p.Module.Description %}</em>
+    {%= components.JSON(p.Module) %}
+  </div>
+{% endfunc %}

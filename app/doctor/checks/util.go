@@ -44,21 +44,13 @@ func loadProject(r *doctor.Result, logger *zap.SugaredLogger) (*project.Project,
 }
 
 func checkMods(p *project.Project, r *doctor.Result) *doctor.Result {
-	hasMod := func(key string) bool {
-		for _, m := range p.Modules {
-			if m == key {
-				return true
-			}
-		}
-		return false
-	}
-	if hasMod("desktop") && (!p.Build.Desktop) {
+	if p.HasModule("desktop") && (!p.Build.Desktop) {
 		r = r.WithError(doctor.NewError("config", "desktop module is enabled, but desktop build isn't set"))
 	}
-	if hasMod("ios") && (!p.Build.IOS) {
+	if p.HasModule("ios") && (!p.Build.IOS) {
 		r = r.WithError(doctor.NewError("config", "iOS module is enabled, but iOS build isn't set"))
 	}
-	if hasMod("android") && (!p.Build.Android) {
+	if p.HasModule("android") && (!p.Build.Android) {
 		r = r.WithError(doctor.NewError("config", "Android module is enabled, but Android build isn't set"))
 	}
 	return r
