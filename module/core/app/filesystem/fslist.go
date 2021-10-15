@@ -8,8 +8,10 @@ import (
 	"strings"
 )
 
-var defaultIgnoreExact = []string{".DS_Store", ".git", ".idea", "build"}
-var defaultIgnoreSuffix = []string{".html.go", ".sql.go"}
+var (
+	defaultIgnoreExact  = []string{".DS_Store", ".git", ".idea", "build"}
+	defaultIgnoreSuffix = []string{".html.go", ".sql.go"}
+)
 
 func (f *FileSystem) ListFiles(path string, ignExact []string, ignSuffix []string) []os.FileInfo {
 	ignoreExact, ignoreSuffix := buildIgnore(ignExact, ignSuffix)

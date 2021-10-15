@@ -46,26 +46,12 @@ func checkProject(r *doctor.Result, logger *zap.SugaredLogger) *doctor.Result {
 		r = r.WithError(doctor.NewError("config", "No modules enabled?!"))
 	}
 
-	hasMod := func(key string) bool {
-		for _, m := range p.Modules {
-			if m == key {
-				return true
-			}
-		}
-		return false
-	}
 	if p.Build == nil {
 		p.Build = &project.Build{}
 	}
-	if hasMod("desktop") && (!p.Build.Desktop) {
-		r = r.WithError(doctor.NewError("config", "desktop module is enabled, but desktop build isn't set"))
-	}
-	if hasMod("ios") && (!p.Build.IOS) {
-		r = r.WithError(doctor.NewError("config", "iOS module is enabled, but iOS build isn't set"))
-	}
-	if hasMod("android") && (!p.Build.Android) {
-		r = r.WithError(doctor.NewError("config", "Android module is enabled, but Android build isn't set"))
-	}
+
+	r = checkMods(p, r)
+
 	if p.Build.Notarize && p.Info.SigningIdentity == "" {
 		r = r.WithError(doctor.NewError("config", "Notarizing is enabled, but [Signing Idenitity] isn't set"))
 	}
@@ -84,8 +70,29 @@ func checkProject(r *doctor.Result, logger *zap.SugaredLogger) *doctor.Result {
 	return r
 }
 
+func checkMods(p *project.Project, r *doctor.Result) *doctor.Result {
+	hasMod := func(key string) bool {
+		for _, m := range p.Modules {
+			if m == key {
+				return true
+			}
+		}
+		return false
+	}
+	if hasMod("desktop") && (!p.Build.Desktop) {
+		r = r.WithError(doctor.NewError("config", "desktop module is enabled, but desktop build isn't set"))
+	}
+	if hasMod("ios") && (!p.Build.IOS) {
+		r = r.WithError(doctor.NewError("config", "iOS module is enabled, but iOS build isn't set"))
+	}
+	if hasMod("android") && (!p.Build.Android) {
+		r = r.WithError(doctor.NewError("config", "Android module is enabled, but Android build isn't set"))
+	}
+	return r
+}
+
 func solveProject(r *doctor.Result, logger *zap.SugaredLogger) *doctor.Result {
-	addSol:= func(s string) {
+	addSol := func(s string) {
 		if r.Solution != "" {
 			r.Solution += "\n"
 		}
