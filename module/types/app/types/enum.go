@@ -6,7 +6,7 @@ import (
 
 const KeyEnum = "enum"
 
-type Enum struct{
+type Enum struct {
 	Ref string `json:"ref"`
 }
 

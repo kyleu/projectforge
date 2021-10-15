@@ -6,7 +6,7 @@ import (
 	"go.uber.org/zap"
 )
 
-var AllChecks = doctor.Checks{pf, prj, air, golang, imagemagick, mke, node, qtc}
+var AllChecks = doctor.Checks{pf, prj, repo, air, git, golang, imagemagick, mke, node, qtc}
 
 func GetCheck(key string) *doctor.Check {
 	for _, x := range AllChecks {

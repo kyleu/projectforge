@@ -6,8 +6,8 @@ import (
 )
 
 type (
-	checkFn func(r *Result, logger *zap.SugaredLogger) *Result
-	solveFn func(r *Result, logger *zap.SugaredLogger) *Result
+	CheckFn func(r *Result, logger *zap.SugaredLogger) *Result
+	SolveFn func(r *Result, logger *zap.SugaredLogger) *Result
 )
 
 type Check struct {
@@ -18,8 +18,8 @@ type Check struct {
 	URL     string   `json:"url,omitempty"`
 	UsedBy  string   `json:"usedBy,omitempty"`
 	Modules []string `json:"modules,omitempty"`
-	Fn      checkFn  `json:"-"`
-	Solve   solveFn  `json:"-"`
+	Fn      CheckFn  `json:"-"`
+	Solve   SolveFn  `json:"-"`
 }
 
 func (c *Check) Check(logger *zap.SugaredLogger) *Result {

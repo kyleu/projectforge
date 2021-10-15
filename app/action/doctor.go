@@ -21,8 +21,8 @@ func onDoctor(ctx context.Context, cfg util.ValueMap, pSvc *project.Service, log
 		for _, e := range r.Errors {
 			ret.AddWarn(" - %s", e.String())
 		}
-		if r.Solution != "" {
-			ret.AddDebug(" - %s", r.Solution)
+		for _, s := range r.Solution {
+			ret.AddDebug(" - %s", s)
 		}
 	}
 	return ret

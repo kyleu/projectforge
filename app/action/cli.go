@@ -58,6 +58,8 @@ func cliProject(p *project.Project, modKeys []string) error {
 
 	p.Info.Org = promptString("Enter the github organization that owns this project", p.Info.Org)
 
+	p.Info.Homepage = promptString("Enter this project's home page", p.Info.Homepage)
+
 	if p.Package == "" {
 		p.Package = "github.com/" + p.Info.Org + "/" + p.Key
 	}

@@ -12,13 +12,13 @@ var mke = &doctor.Check{
 	Summary: "Compiles the project",
 	URL:     "https://www.gnu.org/software/make",
 	UsedBy:  "Main server build",
-	Fn:      doctor.SimpleOut(".", "make", []string{"--version"}, noop),
+	Fn:      simpleOut(".", "make", []string{"--version"}, noop),
 	Solve:   solveMake,
 }
 
 func solveMake(r *doctor.Result, logger *zap.SugaredLogger) *doctor.Result {
 	if r.Errors.Find("missing") != nil || r.Errors.Find("exitcode") != nil {
-		r.Solution = "You should really have make installed"
+		r.AddSolution("You should really have make installed")
 	}
 	return r
 }

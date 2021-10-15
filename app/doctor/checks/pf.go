@@ -13,13 +13,13 @@ var pf = &doctor.Check{
 	Summary: "Confirms that [" + util.AppKey + "] is available on the path",
 	URL:     util.AppURL,
 	UsedBy:  util.AppName,
-	Fn:      doctor.SimpleOut(".", "projectforge", []string{"--help"}, noop),
+	Fn:      simpleOut(".", "projectforge", []string{"--help"}, noop),
 	Solve:   solvePF,
 }
 
 func solvePF(r *doctor.Result, logger *zap.SugaredLogger) *doctor.Result {
 	if r.Errors.Find("missing") != nil || r.Errors.Find("exitcode") != nil {
-		r.Solution = "Install [" + util.AppName + "] by following the instructions at [" + util.AppURL + "]"
+		r.AddSolution("Install [" + util.AppName + "] by following the instructions at [" + util.AppURL + "]")
 	}
 	return r
 }

@@ -38,7 +38,11 @@
             <div>{%s e.String() %}</div>
             {%- endfor -%}
           </td>
-          <td>{%s r.Solution %}</td>
+          <td>
+            {%- for _, s := range r.Solution -%}
+            <div>{%s s %}</div>
+            {%- endfor -%}
+          </td>
         </tr>
         {%- endfor -%}
       </tbody>

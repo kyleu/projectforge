@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/kyleu/projectforge/app/doctor"
-	"github.com/kyleu/projectforge/app/filesystem"
 	"github.com/kyleu/projectforge/app/project"
 	"github.com/kyleu/projectforge/app/util"
 	"go.uber.org/zap"
@@ -22,19 +21,9 @@ var prj = &doctor.Check{
 }
 
 func checkProject(r *doctor.Result, logger *zap.SugaredLogger) *doctor.Result {
-	dir := "."
-	fs := filesystem.NewFileSystem(dir, logger)
-	if !fs.Exists(project.ConfigFilename) {
-		return r.WithError(doctor.NewError("missing", "no project found in [%s]", dir))
-	}
-	b, err := fs.ReadFile(project.ConfigFilename)
-	if err != nil {
-		return r.WithError(doctor.NewError("missing", "unable to read project from [%s]", dir))
-	}
-	p := &project.Project{}
-	err = util.FromJSON(b, p)
-	if err != nil {
-		return r.WithError(doctor.NewError("invalid", "unable to parse project JSON from [%s]", dir))
+	p, r := loadProject(r, logger)
+	if len(r.Errors) > 0 {
+		return r
 	}
 	if p.Port == 0 {
 		r = r.WithError(doctor.NewError("config", "port must be a non-zero integer"))
@@ -70,42 +59,15 @@ func checkProject(r *doctor.Result, logger *zap.SugaredLogger) *doctor.Result {
 	return r
 }
 
-func checkMods(p *project.Project, r *doctor.Result) *doctor.Result {
-	hasMod := func(key string) bool {
-		for _, m := range p.Modules {
-			if m == key {
-				return true
-			}
-		}
-		return false
-	}
-	if hasMod("desktop") && (!p.Build.Desktop) {
-		r = r.WithError(doctor.NewError("config", "desktop module is enabled, but desktop build isn't set"))
-	}
-	if hasMod("ios") && (!p.Build.IOS) {
-		r = r.WithError(doctor.NewError("config", "iOS module is enabled, but iOS build isn't set"))
-	}
-	if hasMod("android") && (!p.Build.Android) {
-		r = r.WithError(doctor.NewError("config", "Android module is enabled, but Android build isn't set"))
-	}
-	return r
-}
-
 func solveProject(r *doctor.Result, logger *zap.SugaredLogger) *doctor.Result {
-	addSol := func(s string) {
-		if r.Solution != "" {
-			r.Solution += "\n"
-		}
-		r.Solution += s
-	}
 	if r.Errors.Find("missing") != nil {
-		addSol("run [projectforge create] in this directory")
+		r.AddSolution("run [projectforge create] in this directory")
 	}
 	if r.Errors.Find("invalid") != nil {
-		addSol("the project file isn't valid JSON, not sure what you can do")
+		r.AddSolution("the project file isn't valid JSON, not sure what you can do")
 	}
 	if r.Errors.Find("config") != nil {
-		addSol(fmt.Sprintf("use the %s UI to configure your project", util.AppName))
+		r.AddSolution(fmt.Sprintf("use the %s UI to configure your project", util.AppName))
 	}
 	return r
 }

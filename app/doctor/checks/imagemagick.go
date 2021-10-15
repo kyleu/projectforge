@@ -14,7 +14,7 @@ var imagemagick = &doctor.Check{
 	Summary: "Renders SVGs for the icon pipeline",
 	URL:     "https://imagemagick.org",
 	UsedBy:  "SVG icon pipeline",
-	Fn:      doctor.SimpleOut(".", "convert", []string{"-version"}, checkImageMagick),
+	Fn:      simpleOut(".", "convert", []string{"-version"}, checkImageMagick),
 	Solve:   solveImageMagick,
 }
 
@@ -27,7 +27,7 @@ func checkImageMagick(r *doctor.Result, out string) *doctor.Result {
 
 func solveImageMagick(r *doctor.Result, logger *zap.SugaredLogger) *doctor.Result {
 	if r.Errors.Find("missing") != nil || r.Errors.Find("exitcode") != nil {
-		r.Solution = "Install [imagemagick] using your platform's package manager"
+		r.AddSolution("Install [imagemagick] using your platform's package manager")
 	}
 	return r
 }

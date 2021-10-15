@@ -12,13 +12,13 @@ var golang = &doctor.Check{
 	Summary: "The main programming language",
 	URL:     "https://golang.org",
 	UsedBy:  "All builds",
-	Fn:      doctor.SimpleOut(".", "go", []string{"version"}, noop),
+	Fn:      simpleOut(".", "go", []string{"version"}, noop),
 	Solve:   solveGo,
 }
 
 func solveGo(r *doctor.Result, logger *zap.SugaredLogger) *doctor.Result {
 	if r.Errors.Find("missing") != nil || r.Errors.Find("exitcode") != nil {
-		r.Solution = "Download Go for your platform"
+		r.AddSolution("Download Go for your platform")
 	}
 	return r
 }
