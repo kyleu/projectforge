@@ -23,7 +23,7 @@
   {%= Summary(mod, ps) %}
 
   {%- if fs.IsDir(filepath.Join(p.Path...)) -%}
-  {%- code files := fs.ListFiles(filepath.Join(p.Path...), nil) -%}
+  {%- code files := fs.ListFiles(filepath.Join(p.Path...), nil, nil) -%}
   {%= vfile.List(p.Path, files, fs, u, as, ps) %}
   {%- else -%}
   {%- code

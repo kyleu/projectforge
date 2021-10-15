@@ -14,7 +14,16 @@ func onDoctor(ctx context.Context, cfg util.ValueMap, pSvc *project.Service, log
 	prjs := pSvc.Projects()
 	res := checks.CheckAll(prjs.AllModules(), logger)
 	for _, r := range res {
-		ret.AddLog(r.String())
+		ret.AddLog("%s: %s", r.Title, r.Status)
+		for _, l := range r.Logs {
+			ret.AddLog(" - %s", l)
+		}
+		for _, e := range r.Errors {
+			ret.AddWarn(" - %s", e.String())
+		}
+		if r.Solution != "" {
+			ret.AddDebug(" - %s", r.Solution)
+		}
 	}
 	return ret
 }

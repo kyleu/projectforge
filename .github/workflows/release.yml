@@ -12,55 +12,44 @@ jobs:
   build:
     runs-on: "ubuntu-latest"
     steps:
-      -
-        name: "Checkout"
+      - name: "Checkout"
         uses: "actions/checkout@v2"
         with:
           fetch-depth: 0
-      -
-        name: "Golang"
+      - name: "Golang"
         uses: "actions/setup-go@v2"
         with:
-          go-version: "1.16"
-      -
-        name: "Cache"
+          go-version: "1.17"
+      - name: "Cache"
         uses: "actions/cache@v2"
         with:
           path: "~/go/pkg/mod"
           key: "${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}"
           restore-keys: |
             ${{ runner.os }}-go-
-      -
-        name: "Dependencies"
+      - name: "Dependencies"
         run: "bin/bootstrap.sh"
-      -
-        name: "Snapcraft"
+      - name: "Snapcraft"
         run: "sudo snap install snapcraft --classic"
-      -
-        name: "Snapcraft Fix"
+      - name: "Snapcraft Fix"
         run: "mkdir -p /home/runner/.cache/snapcraft/download; mkdir -p /home/runner/.cache/snapcraft/stage-packages"
-      -
-        name: "nfpms"
+      - name: "nfpms"
         run: "go install github.com/goreleaser/nfpm/v2/cmd/nfpm@latest"
-      -
-        name: "Config"
+      - name: "Config"
         env:
           OWNER: "${{ secrets.REPO_OWNER }}"
           TOKEN: "${{ secrets.PERSONAL_TOKEN }}"
         run: "git config --global url.\"https://${OWNER}:${TOKEN}@github.com\".insteadOf \"https://github.com\""
-      -
-        name: "Templates"
+      - name: "Templates"
         run: "bin/templates.sh"
-      -
-        name: "Modules"
+      - name: "Modules"
         run: "go mod download"
         env:
           GOPRIVATE: "github.com/${{ secrets.REPO_OWNER }}"
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           OWNER: "${{ secrets.REPO_OWNER }}"
           TOKEN: "${{ secrets.PERSONAL_TOKEN }}"
-      -
-        name: "Release"
+      - name: "Release"
         uses: "goreleaser/goreleaser-action@v2"
         with:
           distribution: "goreleaser"

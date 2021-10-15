@@ -12,10 +12,10 @@ type FileLoader interface {
 	CreateDirectory(path string) error
 	WriteFile(path string, content []byte, mode os.FileMode, overwrite bool) error
 	CopyFile(src string, tgt string) error
-	CopyRecursive(src string, tgt string, ignore []string) error
+	CopyRecursive(src string, tgt string, ignoreExact []string, ignoreSuffix []string) error
 	Move(src string, tgt string) error
-	ListFiles(path string, ignore []string) []os.FileInfo
-	ListFilesRecursive(path string, ignore []string) ([]string, error)
+	ListFiles(path string, ignoreExact []string, ignoreSuffix []string) []os.FileInfo
+	ListFilesRecursive(path string, ignoreExact []string, ignoreSuffix []string) ([]string, error)
 	ListJSON(path string, trimExtension bool) []string
 	ListExtension(path string, ext string, trimExtension bool) []string
 	ListDirectories(path string) []string

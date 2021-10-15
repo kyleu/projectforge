@@ -39,10 +39,26 @@ func errorResult(err error, cfg util.ValueMap, logger *zap.SugaredLogger) *Resul
 	return newResult(cfg, logger).WithError(err)
 }
 
+func (r *Result) AddDebug(msg string, args ...interface{}) {
+	ret := fmt.Sprintf(msg, args...)
+	if r.logger != nil {
+		r.logger.Debug(ret)
+	}
+	r.Logs = append(r.Logs, ret)
+}
+
 func (r *Result) AddLog(msg string, args ...interface{}) {
 	ret := fmt.Sprintf(msg, args...)
 	if r.logger != nil {
 		r.logger.Info(ret)
+	}
+	r.Logs = append(r.Logs, ret)
+}
+
+func (r *Result) AddWarn(msg string, args ...interface{}) {
+	ret := fmt.Sprintf(msg, args...)
+	if r.logger != nil {
+		r.logger.Warn(ret)
 	}
 	r.Logs = append(r.Logs, ret)
 }

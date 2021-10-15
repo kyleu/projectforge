@@ -13,7 +13,7 @@ func (s *Service) GetFilenames(mods Modules) ([]string, error) {
 	ret := map[string]bool{}
 	for _, mod := range mods {
 		loader := s.GetFilesystem(mod.Key)
-		fs, err := loader.ListFilesRecursive("", nil)
+		fs, err := loader.ListFilesRecursive("", nil, nil)
 		if err != nil {
 			return nil, err
 		}
@@ -33,7 +33,7 @@ func (s *Service) GetFiles(mods Modules) (file.Files, error) {
 	ret := map[string]*file.File{}
 	for _, mod := range mods {
 		loader := s.GetFilesystem(mod.Key)
-		fs, err := loader.ListFilesRecursive("", nil)
+		fs, err := loader.ListFilesRecursive("", nil, nil)
 		if err != nil {
 			return nil, err
 		}

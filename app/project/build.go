@@ -90,8 +90,8 @@ var AllBuildOptions = []*BuildOption{
 	{Key: "notarize", Title: "Notarize", Description: "Sends build artifacts to Apple for notarization"},
 	{Key: "signing", Title: "Signing", Description: "Signs the checksums using gpg"},
 
-	{Key: "android", Title: "Android", Description: "Builds the application as an Android library"},
-	{Key: "ios", Title: "iOS", Description: "Builds the application as an iOS framework "},
+	{Key: "android", Title: "Android", Description: "Builds the application as an Android library and webview-based APK"},
+	{Key: "ios", Title: "iOS", Description: "Builds the application as an iOS framework and webview-based app"},
 	{Key: "wasm", Title: "WASM", Description: "Builds the application for WebAssembly"},
 
 	{Key: "windows-arm", Title: "Windows ARM", Description: "Builds the application for Windows on ARM and ARM64 architectures"},

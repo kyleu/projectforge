@@ -8,7 +8,7 @@
 
 {% func Summary(prj *project.Project, ps *cutil.PageState, path ...string) %}
   <div class="card">
-    <div class="right"><a href="#modal-project-{%s prj.Key %}"><button type="button">JSON</button></a></div>
+    <div class="right"><a href="/p/{%s prj.Key %}/edit"><button>Edit</button></a></div>
     <h3>{%= components.SVGRefIcon(prj.SafeIcon(), ps) %} {%s prj.Title() %}</h3>
     <div style="display: flex;">
       <div style="flex-grow: 1;">
@@ -39,5 +39,4 @@
       </div>
     </div>
   </div>
-  {%= components.JSONModal("project-" + prj.Key, "Project JSON", prj, 1) %}
 {% endfunc %}

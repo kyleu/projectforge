@@ -42,7 +42,7 @@ func logResult(t action.Type, r *action.Result) {
 	if len(r.Errors) > 0 {
 		_logger.Warnf("Errors:")
 		for _, e := range r.Errors {
-			_logger.Info(" - " + e)
+			_logger.Warn(" - " + e)
 		}
 	}
 	if r.Modules.DiffCount(false) > 0 {

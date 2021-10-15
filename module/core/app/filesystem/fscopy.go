@@ -26,8 +26,8 @@ func (f *FileSystem) CopyFile(src string, tgt string) error {
 	return err
 }
 
-func (f *FileSystem) CopyRecursive(src string, tgt string, ignore []string) error {
-	srcFiles, err := f.ListFilesRecursive(src, ignore)
+func (f *FileSystem) CopyRecursive(src string, tgt string, ignoreExact []string, ignoreSuffix []string) error {
+	srcFiles, err := f.ListFilesRecursive(src, ignoreExact, ignoreSuffix)
 	if err != nil {
 		return err
 	}
