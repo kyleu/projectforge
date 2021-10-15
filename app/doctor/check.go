@@ -2,11 +2,12 @@ package doctor
 
 import (
 	"github.com/kyleu/projectforge/app/util"
+	"go.uber.org/zap"
 )
 
 type (
-	checkFn func(r *Result) *Result
-	solveFn func(r *Result) *Result
+	checkFn func(r *Result, logger *zap.SugaredLogger) *Result
+	solveFn func(r *Result, logger *zap.SugaredLogger) *Result
 )
 
 type Check struct {
@@ -21,12 +22,12 @@ type Check struct {
 	Solve   solveFn  `json:"-"`
 }
 
-func (c *Check) Check() *Result {
+func (c *Check) Check(logger *zap.SugaredLogger) *Result {
 	r := NewResult(c, c.Key, c.Title, c.Summary)
 	start := util.TimerStart()
-	r = c.Fn(r)
+	r = c.Fn(r, logger)
 	r.Duration = util.TimerEnd(start)
-	r = c.Solve(r)
+	r = c.Solve(r, logger)
 	return r
 }
 

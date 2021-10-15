@@ -24,6 +24,7 @@ brews:
     description: "Project Forge helps you build and maintain feature-rich applications written in the Go programming language."
     license: "Proprietary"
     skip_upload: false
+    url_template: "https://update.projectforge.dev/release/{{ .Tag }}/{{ .ArtifactName }}"
 
 changelog:
   skip: true

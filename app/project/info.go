@@ -19,6 +19,7 @@ type Info struct {
 	Sourcecode      string       `json:"sourcecode,omitempty"`
 	Summary         string       `json:"summary,omitempty"`
 	Description     string       `json:"description,omitempty"`
+	Homebrew        string       `json:"homebrew,omitempty"`
 	Bundle          string       `json:"bundle,omitempty"`
 	SigningIdentity string       `json:"signingIdentity,omitempty"`
 	JavaPackage     string       `json:"javaPackage,omitempty"`

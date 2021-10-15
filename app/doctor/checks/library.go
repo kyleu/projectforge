@@ -3,9 +3,10 @@ package checks
 import (
 	"github.com/kyleu/projectforge/app/doctor"
 	"github.com/kyleu/projectforge/app/util"
+	"go.uber.org/zap"
 )
 
-var AllChecks = doctor.Checks{air, golang, imagemagick, mke, node, qtc}
+var AllChecks = doctor.Checks{pf, prj, air, golang, imagemagick, mke, node, qtc}
 
 func GetCheck(key string) *doctor.Check {
 	for _, x := range AllChecks {
@@ -34,10 +35,14 @@ func ForModules(modules []string) doctor.Checks {
 	return ret
 }
 
-func CheckAll(modules []string) doctor.Results {
+func CheckAll(modules []string, logger *zap.SugaredLogger) doctor.Results {
 	var ret doctor.Results
 	for _, c := range ForModules(modules) {
-		ret = append(ret, c.Check())
+		ret = append(ret, c.Check(logger))
 	}
 	return ret
+}
+
+func noop(r *doctor.Result, out string) *doctor.Result {
+	return r
 }

@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/kyleu/projectforge/app/doctor"
+	"go.uber.org/zap"
 )
 
 var imagemagick = &doctor.Check{
@@ -24,7 +25,7 @@ func checkImageMagick(r *doctor.Result, out string) *doctor.Result {
 	return r
 }
 
-func solveImageMagick(r *doctor.Result) *doctor.Result {
+func solveImageMagick(r *doctor.Result, logger *zap.SugaredLogger) *doctor.Result {
 	if r.Errors.Find("missing") != nil || r.Errors.Find("exitcode") != nil {
 		r.Solution = "Install [imagemagick] using your platform's package manager"
 	}

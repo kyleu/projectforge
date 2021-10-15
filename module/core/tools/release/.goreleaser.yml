@@ -23,7 +23,8 @@ brews:
     homepage: "{{{ .Info.Homepage }}}"
     description: "{{{ .Info.Description }}}"
     license: "{{{ .Info.License }}}"
-    skip_upload: {{{ if .Build.Homebrew }}}false{{{ else }}}true{{{ end }}}
+    skip_upload: {{{ if .Build.Homebrew }}}false{{{ else }}}true{{{ end }}}{{{ if .Info.Homebrew }}}
+    url_template: "{{{ .Info.Homebrew }}}/{{ .Tag }}/{{ .ArtifactName }}"{{{ end }}}
 
 changelog:
   skip: true

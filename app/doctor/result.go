@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/kyleu/projectforge/app/util"
+	"go.uber.org/zap"
 )
 
 type Result struct {
@@ -53,8 +54,8 @@ func (p *Result) String() string {
 
 type Results []*Result
 
-func SimpleOut(path string, cmd string, args []string, outCheck func(r *Result, out string) *Result) func(r *Result) *Result {
-	return func(r *Result) *Result {
+func SimpleOut(path string, cmd string, args []string, outCheck func(r *Result, out string) *Result) func(r *Result, logger *zap.SugaredLogger) *Result {
+	return func(r *Result, logger *zap.SugaredLogger) *Result {
 		fullCmd := strings.Join(append([]string{cmd}, args...), " ")
 		exitCode, out, err := util.RunProcessSimple(fullCmd, path)
 		if err != nil {

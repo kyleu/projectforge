@@ -47,6 +47,7 @@ func projectFromForm(frm util.ValueMap, prj *project.Project) error {
 	prj.Info.AuthorName = get("authorName", prj.Info.AuthorName)
 	prj.Info.AuthorEmail = get("authorEmail", prj.Info.AuthorEmail)
 	prj.Info.License = get("license", prj.Info.License)
+	prj.Info.Homebrew = get("homebrew", prj.Info.Homebrew)
 	prj.Info.Bundle = get("bundle", prj.Info.Bundle)
 	prj.Info.SigningIdentity = get("signingIdentity", prj.Info.SigningIdentity)
 	prj.Info.JavaPackage = get("javaPackage", prj.Info.JavaPackage)
