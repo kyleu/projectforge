@@ -9,6 +9,7 @@ import (
 )
 
 const configFilename = ".module.json"
+const summaryFilename = ".module.md"
 
 func (s *Service) LoadNative(keys ...string) (Modules, error) {
 	var ret Modules
@@ -61,6 +62,13 @@ func (s *Service) load(key string, path string, url string) (*Module, error) {
 	ret.Files = fs
 	ret.URL = url
 
+	if fs.Exists(summaryFilename) {
+		b, err = fs.ReadFile(summaryFilename)
+		if err != nil {
+			return nil, errors.Wrapf(err, "unable to read [%s]", configFilename)
+		}
+		ret.UsageMD = string(b)
+	}
 	s.cache[key] = ret
 	return ret, nil
 }

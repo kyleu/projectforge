@@ -3,6 +3,7 @@ package module
 import (
 	"sort"
 
+	"github.com/gomarkdown/markdown"
 	"github.com/kyleu/projectforge/app/filesystem"
 	"github.com/kyleu/projectforge/app/util"
 )
@@ -19,6 +20,8 @@ type Module struct {
 	Priority    int                   `json:"priority,omitempty"`
 	Files       filesystem.FileLoader `json:"-"`
 	URL         string                `json:"-"`
+	UsageMD     string                `json:"-"`
+	usageHTML   string                `json:"-"`
 }
 
 func (m *Module) Title() string {
@@ -34,6 +37,13 @@ func (m *Module) SafeIcon() string {
 		return "compass"
 	}
 	return m.Icon
+}
+
+func (m *Module) UsageHTML() string {
+	if m.usageHTML == "" {
+		m.usageHTML = string(markdown.ToHTML([]byte(m.UsageMD), nil, nil))
+	}
+	return m.usageHTML
 }
 
 type Modules []*Module
