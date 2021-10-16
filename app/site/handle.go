@@ -21,12 +21,15 @@ func Handle(path []string, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.Pag
 
 	var page layout.Page
 	var err error
+	bc := path
 	switch path[0] {
 	case keyFeatures:
 		if len(path) == 1 {
 			page, err = featureList(as, ps)
-		} else {
+		} else if len(path) == 2 {
 			page, err = featureDetail(path[1], as, ps)
+		} else {
+			bc, page, err = featureFiles(path, as, ps)
 		}
 	case keyDownload:
 		dls := download.GetLinks(as.BuildInfo.Version)
@@ -41,7 +44,7 @@ func Handle(path []string, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.Pag
 	default:
 		page, err = mdTemplate("Documentation", "Documentation for "+util.AppName, path[0]+".md", ps)
 	}
-	return "", page, path, err
+	return "", page, bc, err
 }
 
 func siteData(result string, kvs ...string) map[string]interface{} {

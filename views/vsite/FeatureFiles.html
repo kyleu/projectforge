@@ -7,20 +7,19 @@
   "github.com/kyleu/projectforge/views/vfile"
 ) %}
 
-{% code type Files struct {
+{% code type FeatureFiles struct {
   layout.Basic
   Module *module.Module
   Path []string
 } %}
 
-{% func (p *Files) Body(as *app.State, ps *cutil.PageState) %}
+{% func (p *FeatureFiles) Body(as *app.State, ps *cutil.PageState) %}
   {%- code
     mod := p.Module
     fs := as.Services.Modules.GetFilesystem(mod.Key)
-    u := "/m/" + mod.Key + "/fs"
+    u := "/features/" + mod.Key + "/files"
+    println(filepath.Join(p.Path...))
   -%}
-
-  {%= Summary(mod, ps) %}
 
   {%- if fs.IsDir(filepath.Join(p.Path...)) -%}
   {%- code files := fs.ListFiles(filepath.Join(p.Path...), nil) -%}

@@ -15,6 +15,11 @@
   <div class="card">
     <h3>{%= components.SVGRefIcon(p.Module.Icon, ps) %}{%s p.Module.Title() %}</h3>
     <em>{%s p.Module.Description %}</em>
-    {%= components.JSON(p.Module) %}
+    <div class="mt"><a href="/features/{%s p.Module.Key %}/files"><button>Files</button></a></div>
   </div>
+  {%- if p.Module.UsageHTML() != "" -%}
+  <div class="card">
+    {%s= p.Module.UsageHTML() %}
+  </div>
+  {%- endif -%}
 {% endfunc %}

@@ -8,20 +8,17 @@ import (
 	"strings"
 )
 
-var (
-	defaultIgnoreExact  = []string{".DS_Store", ".git", ".idea", "build"}
-	defaultIgnoreSuffix = []string{".html.go", ".sql.go"}
-)
+var defaultIgnore = []string{".DS_Store$", ".git", ".idea", ".html.go$", ".sql.go$"}
 
-func (f *FileSystem) ListFiles(path string, ignExact []string, ignSuffix []string) []os.FileInfo {
-	ignoreExact, ignoreSuffix := buildIgnore(ignExact, ignSuffix)
+func (f *FileSystem) ListFiles(path string, ign []string) []os.FileInfo {
+	ignore := buildIgnore(ign)
 	infos, err := ioutil.ReadDir(filepath.Join(f.root, path))
 	if err != nil {
 		f.logger.Warnf("cannot list files in path [%s]: %+v", path, err)
 	}
 	ret := make([]os.FileInfo, 0, len(infos))
 	for _, info := range infos {
-		if !checkIgnore(ignoreExact, ignoreSuffix, info.Name()) {
+		if !checkIgnore(ignore, info.Name()) {
 			ret = append(ret, info)
 		}
 	}
@@ -72,13 +69,13 @@ func (f *FileSystem) ListDirectories(path string) []string {
 	return ret
 }
 
-func (f *FileSystem) ListFilesRecursive(path string, ignExact []string, ignSuffix []string) ([]string, error) {
-	ignoreExact, ignoreSuffix := buildIgnore(ignExact, ignSuffix)
+func (f *FileSystem) ListFilesRecursive(path string, ign []string) ([]string, error) {
+	ignore := buildIgnore(ign)
 	p := f.getPath(path)
 	var ret []string
 	err := filepath.Walk(p, func(fp string, info os.FileInfo, err error) error {
 		m := strings.TrimPrefix(fp, p+"/")
-		if checkIgnore(ignoreExact, ignoreSuffix, m) {
+		if checkIgnore(ignore, m) {
 			return nil
 		}
 		if !info.IsDir() && strings.Contains(fp, "/") {
@@ -93,26 +90,28 @@ func (f *FileSystem) ListFilesRecursive(path string, ignExact []string, ignSuffi
 	return ret, nil
 }
 
-func buildIgnore(exact []string, suffix []string) ([]string, []string) {
-	e := append([]string{}, defaultIgnoreExact...)
-	e = append(e, exact...)
-	s := append([]string{}, defaultIgnoreSuffix...)
-	s = append(s, suffix...)
-	return e, s
+func buildIgnore(ign []string) []string {
+	ret := append([]string{}, defaultIgnore...)
+	ret = append(ret, ign...)
+	return ret
 }
 
-func checkIgnore(ignoreExact []string, ignoreSuffix []string, fp string) bool {
-	fn := fp
-	if fni := strings.LastIndex(fp, "/"); fni > -1 {
-		fn = fp[fni+1:]
-	}
-	for _, i := range ignoreExact {
-		if fn == i {
-			return true
-		}
-	}
-	for _, i := range ignoreSuffix {
-		if strings.HasSuffix(fp, i) {
+const (
+	keyPrefix = "^"
+	keySuffix = "$"
+)
+
+func checkIgnore(ignore []string, fp string) bool {
+	for _, i := range ignore {
+		if strings.HasPrefix(i, keyPrefix) {
+			if strings.HasPrefix(fp, strings.TrimPrefix(i, keyPrefix)) {
+				return true
+			}
+		} else if strings.HasSuffix(i, keySuffix) {
+			if strings.HasSuffix(fp, strings.TrimSuffix(i, keySuffix)) {
+				return true
+			}
+		} else if fp == i {
 			return true
 		}
 	}

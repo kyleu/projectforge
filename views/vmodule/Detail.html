@@ -46,6 +46,11 @@
       </tbody>
     </table>
   </div>
+  {%- if p.Module.UsageHTML() != "" -%}
+  <div class="card">
+    {%s= p.Module.UsageHTML() %}
+  </div>
+  {%- endif -%}
   <div class="card">
     <h3>Project Usages</h3>
     <ul>
