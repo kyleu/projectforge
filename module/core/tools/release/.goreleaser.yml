@@ -116,7 +116,7 @@ source:
   format: "zip"
 
 universal_binaries:
-  replace: false
+- replace: false
 
 builds:
   - id: "darwin_amd64"
