@@ -11,7 +11,7 @@ import (
 )
 
 func androidAssets(prj *project.Project, orig string, fs filesystem.FileLoader, logger *zap.SugaredLogger) error {
-	if !prj.Build.Android {
+	if prj.Build == nil || (!prj.Build.Android) {
 		return nil
 	}
 	androidResize := func(size int, fn string, p string) {

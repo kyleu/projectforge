@@ -36,8 +36,12 @@ func cliProject(p *project.Project, modKeys []string) error {
 		return text
 	}
 
-	if p.Key == "TODO" {
-		p.Key = ""
+	if p.Key == "" || p.Key == "TODO" {
+		path, _ := os.Getwd()
+		if strings.Contains(path, "/") {
+			path = path[strings.LastIndex(path, "/")+1:]
+		}
+		p.Key = path
 	}
 	p.Key = promptString("Enter a project key; must only contain alphanumerics", p.Key)
 
@@ -56,14 +60,20 @@ func cliProject(p *project.Project, modKeys []string) error {
 
 	p.Version = promptString("Enter a version, such as 0.0.0", p.Version)
 
+	if p.Info.Org == "" {
+		p.Info.Org = "todo"
+	}
 	p.Info.Org = promptString("Enter the github organization that owns this project", p.Info.Org)
-
-	p.Info.Homepage = promptString("Enter this project's home page", p.Info.Homepage)
 
 	if p.Package == "" {
 		p.Package = "github.com/" + p.Info.Org + "/" + p.Key
 	}
 	p.Package = promptString("Enter your project's package", p.Package)
+
+	if p.Info.Homepage == "" {
+		p.Info.Homepage = "https://" + p.Package
+	}
+	p.Info.Homepage = promptString("Enter this project's home page", p.Info.Homepage)
 
 	if p.Port == 0 {
 		p.Port = 20000

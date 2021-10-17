@@ -11,7 +11,7 @@ import (
 )
 
 func iOSAssets(prj *project.Project, orig string, fs filesystem.FileLoader, logger *zap.SugaredLogger) error {
-	if !prj.Build.IOS {
+	if prj.Build == nil || (!prj.Build.IOS) {
 		return nil
 	}
 	iOSResize := func(size int, fn string, p string) {

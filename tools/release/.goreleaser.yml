@@ -117,6 +117,9 @@ source:
   name_template: "{{ .ProjectName }}_{{ .Version }}_source"
   format: "zip"
 
+universal_binaries:
+  replace: false
+
 builds:
   - id: "darwin_amd64"
     goos:

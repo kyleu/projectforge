@@ -11,7 +11,7 @@ import (
 )
 
 func macOSAssets(prj *project.Project, orig string, fs filesystem.FileLoader, logger *zap.SugaredLogger) error {
-	if !prj.Build.Desktop {
+	if prj.Build == nil || (!prj.Build.Desktop) {
 		return nil
 	}
 	macOSResize := func(size int, fn string, p string) {

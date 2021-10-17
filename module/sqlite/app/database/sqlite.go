@@ -2,7 +2,6 @@ package database
 
 import (
 	"os"
-	"strconv"
 )
 
 type SQLiteParams struct {
