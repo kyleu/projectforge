@@ -20,9 +20,7 @@ func NewServices(ctx context.Context, st *State) (*Services, error) {
 	return &Services{}, nil
 }
 {{{ if .HasModule "database" }}}
-func RunMigrations(context.Context, *zap.SugaredLogger) (*database.Service, error) {
-	logger, _ := log.InitLogging(false)
-
+func RunMigrations(ctx context.Context, logger *zap.SugaredLogger) (*database.Service, error) {
 	db, err := database.OpenDefaultPostgres(logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to open database")

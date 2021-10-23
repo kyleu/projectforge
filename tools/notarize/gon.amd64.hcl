@@ -1,4 +1,4 @@
-source = ["./build/dist/darwin_amd64_darwin_amd64/projectforge"]
+source = ["./build/dist/darwin_darwin_amd64/projectforge"]
 bundle_id = "com.kyleu.projectforge"
 
 //notarize {

@@ -23,7 +23,7 @@ func Handle(path []string, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.Pag
 	switch path[0] {
 	case keyDownload:
 		dls := download.GetLinks(as.BuildInfo.Version)
-		ps.Data = map[string]interface{}{"base": "https://github.com/kyleu/projectforge/releases/download/v" + as.BuildInfo.Version, "links": dls}
+		ps.Data = map[string]interface{}{"base": "https://{{{ .Package }}}/releases/download/v" + as.BuildInfo.Version, "links": dls}
 		page = &vsite.Download{Links: dls}
 	case keyInstall:
 		page, err = mdTemplate("Installation", "This static page contains installation instructions", "installation.md", ps)

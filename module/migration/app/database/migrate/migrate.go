@@ -27,50 +27,55 @@ func Migrate(ctx context.Context, s *database.Service, logger *zap.SugaredLogger
 	}
 
 	for i, file := range databaseMigrations {
-		idx := i + 1
-		switch {
-		case idx == maxIdx:
-			m := getMigrationByIdx(ctx, s, maxIdx, logger)
-			if m == nil {
-				continue
-			}
-			if m.Title != file.Title {
-				logger.Info(fmt.Sprintf("migration [%d] name has changed from [%s] to [%s]", idx, m.Title, file.Title))
-				err = removeMigrationByIdx(ctx, s, idx)
-				if err != nil {
-					return err
-				}
-				err = applyMigration(ctx, s, idx, file, logger)
-				if err != nil {
-					return err
-				}
-				continue
-			}
-			nc := file.Content
-			if nc != m.Src {
-				logger.Info(fmt.Sprintf("migration [%d:%s] content has changed from [%dB] to [%dB]", idx, file.Title, len(nc), len(m.Src)))
-				err = removeMigrationByIdx(ctx, s, idx)
-				if err != nil {
-					return err
-				}
-				err = applyMigration(ctx, s, idx, file, logger)
-				if err != nil {
-					return err
-				}
-			}
-		case idx > maxIdx:
-			err = applyMigration(ctx, s, idx, file, logger)
-			if err != nil {
-				return err
-			}
-		default:
-			// noop
-		}
+		err = run(ctx, maxIdx, i, file, s, logger)
 	}
 
 	logger.Info(fmt.Sprintf("verified [%d] database %s", maxIdx, util.PluralMaybe("migration", maxIdx)))
 
 	return errors.Wrap(err, "error running database migration")
+}
+
+func run(ctx context.Context, maxIdx int, i int, file *MigrationFile, s *database.Service, logger *zap.SugaredLogger) error {
+	idx := i + 1
+	switch {
+	case idx == maxIdx:
+		m := getMigrationByIdx(ctx, s, maxIdx, logger)
+		if m == nil {
+			return nil
+		}
+		if m.Title != file.Title {
+			logger.Info(fmt.Sprintf("migration [%d] name has changed from [%s] to [%s]", idx, m.Title, file.Title))
+			err := removeMigrationByIdx(ctx, s, idx)
+			if err != nil {
+				return err
+			}
+			err = applyMigration(ctx, s, idx, file, logger)
+			if err != nil {
+				return err
+			}
+			return nil
+		}
+		nc := file.Content
+		if nc != m.Src {
+			logger.Info(fmt.Sprintf("migration [%d:%s] content has changed from [%dB] to [%dB]", idx, file.Title, len(nc), len(m.Src)))
+			err := removeMigrationByIdx(ctx, s, idx)
+			if err != nil {
+				return err
+			}
+			err = applyMigration(ctx, s, idx, file, logger)
+			if err != nil {
+				return err
+			}
+		}
+	case idx > maxIdx:
+		err := applyMigration(ctx, s, idx, file, logger)
+		if err != nil {
+			return err
+		}
+	default:
+		// noop
+	}
+	return nil
 }
 
 func applyMigration(ctx context.Context, s *database.Service, idx int, file *MigrationFile, logger *zap.SugaredLogger) error {

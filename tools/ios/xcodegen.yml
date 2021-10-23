@@ -1,6 +1,6 @@
 name: "Project Forge"
 options:
-  bundleIdPrefix: com.kyleu
+  bundleIdPrefix: com.kyleu.projectforge
 targets:
   ProjectForge:
     type: application

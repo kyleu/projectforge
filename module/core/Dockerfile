@@ -37,5 +37,6 @@ COPY --from=builder /build/* /
 # $PF_SECTION_START(dockerimage)$
 # $PF_SECTION_END(dockerimage)$
 
-EXPOSE 40000
+EXPOSE {{{ .Port }}}{{{ if.HasModule "nuevoProvider" }}}
+EXPOSE {{{ .GRPCPort }}}{{{ end }}}
 ENTRYPOINT ["/{{{ .Exec }}}", "-a", "0.0.0.0"]

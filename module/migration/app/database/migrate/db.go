@@ -25,7 +25,7 @@ const (
 func ListMigrations(ctx context.Context, s *database.Service, params *filter.Params, logger *zap.SugaredLogger) Migrations {
 	params = filter.ParamsWithDefaultOrdering(migrationTable, params, &filter.Ordering{Column: "created", Asc: false})
 	var dtos []migrationDTO
-	q := database.SQLSelect("*", migrationTable, "", params.OrderByString(), params.Limit, params.Offset)
+	q := database.SQLSelect("*", migrationTable, "", "", params.OrderByString(), params.Limit, params.Offset)
 	err := s.Select(ctx, &dtos, q, nil)
 	if err != nil {
 		logger.Error(fmt.Sprintf("error retrieving migrations: %+v", err))
@@ -52,7 +52,7 @@ func getMigrationByIdx(ctx context.Context, s *database.Service, idx int, logger
 	q := database.SQLSelectSimple("*", "migration", "idx = $1")
 	err := s.Get(ctx, dto, q, nil, idx)
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if errors.Is(err, sql.ErrNoRows) {
 			return nil
 		}
 		logger.Error(fmt.Sprintf("error getting migration by idx [%v]: %+v", idx, err))

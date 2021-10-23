@@ -12,11 +12,12 @@ import (
 	"{{{ .Package }}}/views/verror"
 )
 
-var (
+{{{ if.HasModule "marketing" }}}var (
 	_currentAppState  *app.State
 	_currentSiteState *app.State
 )
-
+{{{ else }}}var _currentAppState *app.State
+{{{ end }}}
 func SetAppState(a *app.State) {
 	_currentAppState = a
 	initApp(a)

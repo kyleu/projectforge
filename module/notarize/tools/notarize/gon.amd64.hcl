@@ -1,4 +1,4 @@
-source = ["./build/dist/darwin_amd64_darwin_amd64/{{{ .Exec }}}"]
+source = ["./build/dist/darwin_darwin_amd64/{{{ .Exec }}}"]
 bundle_id = "{{{ .Info.Bundle }}}"
 
 //notarize {

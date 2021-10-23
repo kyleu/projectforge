@@ -1,4 +1,4 @@
-source = ["./build/dist/darwin_arm64_darwin_arm64/{{{ .Exec }}}"]
+source = ["./build/dist/darwin_darwin_arm64/{{{ .Exec }}}"]
 bundle_id = "{{{ .Info.Bundle }}}"
 
 apple_id {

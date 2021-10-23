@@ -1,11 +1,16 @@
 {% import (
+  "runtime"
   "github.com/kyleu/projectforge/app"
   "github.com/kyleu/projectforge/app/controller/cutil"
   "github.com/kyleu/projectforge/app/util"
+  "github.com/kyleu/projectforge/views/components"
   "github.com/kyleu/projectforge/views/layout"
 ) %}
 
-{% code type List struct { layout.Basic } %}
+{% code type List struct {
+  layout.Basic
+  Mem *runtime.MemStats
+} %}
 
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
@@ -16,6 +21,11 @@
       <li><a href="/admin/cpu/start">Start CPU profile</a></li>
       <li><a href="/admin/cpu/stop">Stop CPU profile</a></li>
       <li><a href="/admin/heap">Write memory dump</a></li>
+      <li><a href="/admin/gc">Collect garbage</a></li>
     </ul>
+  </div>
+  <div class="card">
+    <h3>Memory Usage</h3>
+    {%= components.JSON(p.Mem) %}
   </div>
 {% endfunc %}

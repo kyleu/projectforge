@@ -103,15 +103,16 @@ const (
 
 func checkIgnore(ignore []string, fp string) bool {
 	for _, i := range ignore {
-		if strings.HasPrefix(i, keyPrefix) {
+		switch {
+		case strings.HasPrefix(i, keyPrefix):
 			if strings.HasPrefix(fp, strings.TrimPrefix(i, keyPrefix)) {
 				return true
 			}
-		} else if strings.HasSuffix(i, keySuffix) {
+		case strings.HasSuffix(i, keySuffix):
 			if strings.HasSuffix(fp, strings.TrimSuffix(i, keySuffix)) {
 				return true
 			}
-		} else if fp == i {
+		case fp == i:
 			return true
 		}
 	}

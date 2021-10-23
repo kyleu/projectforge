@@ -7,7 +7,7 @@ import (
 )
 
 func versionF(context.Context, []string) error {
-	println(_buildInfo.Version)
+	println(_buildInfo.Version) // nolint
 	return nil
 }
 

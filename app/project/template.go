@@ -38,6 +38,10 @@ func (t *TemplateContext) HasModule(m string) bool {
 	return util.StringArrayContains(t.Modules, m)
 }
 
+func (t *TemplateContext) GRPCPort() int {
+	return t.Port + 1
+}
+
 func (t *TemplateContext) BuildAndroid() bool {
 	ret := t.HasModule("android") && t.Build.Android
 	return ret

@@ -1,4 +1,4 @@
-source = ["./build/dist/darwin_arm64_darwin_arm64/projectforge"]
+source = ["./build/dist/darwin_darwin_arm64/projectforge"]
 bundle_id = "com.kyleu.projectforge"
 
 apple_id {

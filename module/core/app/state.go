@@ -50,5 +50,13 @@ func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, logger *zap.Su
 		return nil, errors.Wrap(err, "unable to open database")
 	}{{{ end }}}
 
-	return &State{Debug: debug, BuildInfo: bi, Files: f{{{ if .HasModule "oauth" }}}, Auth: as{{{ end }}}{{{ if .HasModule "migration" }}}, DB: db{{{ end }}}, Themes: ts, Logger: logger}, nil
+	return &State{
+		Debug:     debug,
+		BuildInfo: bi,
+		Files:     f{{{ if .HasModule "oauth" }}},
+		Auth:      as{{{ end }}}{{{ if .HasModule "migration" }}},
+		DB:        db{{{ end }}},
+		Themes:    ts,
+		Logger:    logger,
+	}, nil
 }

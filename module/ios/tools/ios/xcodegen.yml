@@ -1,6 +1,6 @@
 name: "{{{ .Name }}}"
 options:
-  bundleIdPrefix: com.kyleu
+  bundleIdPrefix: {{{ .Info.Bundle }}}
 targets:
   {{{ .NameCompressed }}}:
     type: application

@@ -1,7 +1,9 @@
 package controller
 
 import (
+	"fmt"
 	"os"
+	"runtime"
 	"runtime/debug"
 	"runtime/pprof"
 	"strings"
@@ -20,7 +22,9 @@ func Admin(rc *fasthttp.RequestCtx) {
 		path := util.SplitAndTrim(strings.TrimPrefix(string(rc.URI().Path()), "/admin"), "/")
 		if len(path) == 0 {
 			ps.Title = "Administration"
-			return render(rc, as, &vadmin.List{}, ps, "Administration")
+			x := &runtime.MemStats{}
+			runtime.ReadMemStats(x)
+			return render(rc, as, &vadmin.List{Mem: x}, ps, "Administration")
 		}
 		switch path[0] {
 		case "modules":
@@ -55,7 +59,11 @@ func Admin(rc *fasthttp.RequestCtx) {
 				return "", err
 			}
 			return flashAndRedir(true, "wrote heap profile", "/admin", rc, ps)
-
+		case "gc":
+			start := util.TimerStart()
+			runtime.GC()
+			msg := fmt.Sprintf("ran garbage collection in [%s]", util.MicrosToMillis(util.TimerEnd(start)))
+			return flashAndRedir(true, msg, "/admin", rc, ps)
 		// $PF_SECTION_START(admin-actions)$
 		// $PF_SECTION_END(admin-actions)$
 
