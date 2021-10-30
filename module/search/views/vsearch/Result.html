@@ -7,11 +7,31 @@
 
 {% func Result(res *search.Result, params *search.Params, as *app.State, ps *cutil.PageState) %}
   <div class="card">
+    <div class="right">
+      {%- if res.Data == nil -%}
+      <em>{%s res.Type %}</em>
+      {%- elseif res.ID != "" -%}
+      <a href="#modal-{%s res.Type %}-{%s res.ID %}"><button type="button">{%s res.Type %}</button></a>
+      {%= components.JSONModal(res.Type + "-" + res.ID, res.Type, res.Data, 3) %}
+      {%- endif -%}
+    </div>
     <h3><a href="{%s res.URL %}">{% if res.Icon != "" %}{%= components.SVGRefIcon(res.Icon, ps) %}{% endif %}{% if res.Title == "" %}{%s res.URL %}{% else %}{%s res.Title %}{% endif %}</a></h3>
-    <p>{%= Match(params) %}</p>
+    <p>{%= Match(params, res.Matches) %}</p>
   </div>
 {% endfunc %}
 
-{% func Match(params *search.Params) %}
-  {%s params.Q %}!!!
+{% func Match(params *search.Params, matches search.Matches) %}
+  {%- if len(matches) == 0 -%}
+  <em>Matched {%s params.Q %}</em>
+  {%- else -%}
+  <ul>
+    {%- for _, m := range matches -%}
+    <li>
+      Matched [{%s m.Key %}]:
+      {%- code split := m.ValueSplit(params.Q) -%}
+      {%- for idx, x := range split -%}{%s x %}{% if idx > 0 && idx < (len(split) - 1) %}<strong>{%s params.Q %}</strong>{% endif %}{%- endfor -%}
+    </li>
+    {%- endfor -%}
+  </ul>
+  {%- endif -%}
 {% endfunc %}

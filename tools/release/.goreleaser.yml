@@ -123,40 +123,6 @@ universal_binaries:
   name_template: '{{ .ProjectName }}_{{ .Version }}'
 
 builds:
-  - id: "windows"
-    goos:
-      - windows
-    goarch:
-      - amd64
-    mod_timestamp: "{{ .CommitTimestamp }}"
-    hooks:
-      post:
-        - "./bin/build/desktop.release.sh {{ .Version }}"
-        - "./bin/build/android.sh {{ .Version }}"
-        - "./bin/build/ios.sh {{ .Version }}"
-        # $PF_SECTION_START(extrascripts)$
-        - "./bin/build/modules.sh"
-        # $PF_SECTION_END(extrascripts)$
-
-  - id: "windows_i386"
-    goos:
-      - windows
-    goarch:
-      - 386
-    mod_timestamp: "{{ .CommitTimestamp }}"
-
-  - id: "windows-arm"
-    goos:
-      - windows
-    goarch:
-      - arm
-      - arm64
-    goarm:
-      - 5
-      - 6
-      - 7
-    mod_timestamp: "{{ .CommitTimestamp }}"
-
   - id: "darwin"
     goos:
       - darwin
@@ -164,9 +130,6 @@ builds:
       - amd64
       - arm64
     mod_timestamp: "{{ .CommitTimestamp }}"
-    hooks:
-      post:
-        - "./tools/notarize/notarize.sh {{ .Arch }}"
 
   - id: "linux"
     goos:
@@ -209,6 +172,42 @@ builds:
       - ppc64le
       - riscv64
       - s390x
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+  - id: "windows"
+    goos:
+      - windows
+    goarch:
+      - amd64
+    mod_timestamp: "{{ .CommitTimestamp }}"
+    hooks:
+      # This build uses only one architecture, and is a good place to put one-time use scripts
+      post:
+        - "./bin/build/desktop.release.sh {{ .Version }}"
+        - "./bin/build/android.sh {{ .Version }}"
+        - "./bin/build/ios.sh {{ .Version }}"
+        - "./tools/notarize/notarize.sh"
+        # $PF_SECTION_START(extrascripts)$
+        - "./bin/build/modules.sh"
+        # $PF_SECTION_END(extrascripts)$
+
+  - id: "windows_i386"
+    goos:
+      - windows
+    goarch:
+      - 386
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+  - id: "windows-arm"
+    goos:
+      - windows
+    goarch:
+      - arm
+      - arm64
+    goarm:
+      - 5
+      - 6
+      - 7
     mod_timestamp: "{{ .CommitTimestamp }}"
 
   - id: "js"

@@ -6,5 +6,6 @@ cd $dir/../..
 
 if [ "$PUBLISH_TEST" != "true" ]
 then
-  time gon "./tools/notarize/gon.$1.hcl"
+  time gon "./tools/notarize/gon.amd64.hcl"
+  time gon "./tools/notarize/gon.arm64.hcl"
 fi

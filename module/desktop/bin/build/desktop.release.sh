@@ -29,46 +29,46 @@ rm -rf "dist"
 # macOS x86_64
 cp -R "../../tools/desktop/template" .
 
-mkdir -p "./Project Forge.app/Contents/Resources"
-mkdir -p "./Project Forge.app/Contents/MacOS"
+mkdir -p "./{{{ .Name }}}.app/Contents/Resources"
+mkdir -p "./{{{ .Name }}}.app/Contents/MacOS"
 
-cp -R "./template/macos/Info.plist" "./Project Forge.app/Contents/Info.plist"
-cp -R "./template/macOS/icons.icns" "./Project Forge.app/Contents/Resources/icons.icns"
+cp -R "./template/macos/Info.plist" "./{{{ .Name }}}.app/Contents/Info.plist"
+cp -R "./template/macOS/icons.icns" "./{{{ .Name }}}.app/Contents/Resources/icons.icns"
 
-cp "{{{ .Key }}}.macos" "./Project Forge.app/Contents/MacOS/{{{ .Key }}}"
+cp "{{{ .Key }}}.macos" "./{{{ .Name }}}.app/Contents/MacOS/{{{ .Key }}}"
 
 echo "signing amd64 desktop binary..."
-codesign -f --options=runtime --verbose=4 --deep --force --strict -s '{{{ .Info.SigningIdentity }}}' "./Project Forge.app/Contents/MacOS/{{{ .Key }}}"
-codesign -f --options=runtime --verbose=4 --deep --force --strict -s '{{{ .Info.SigningIdentity }}}' "./Project Forge.app"
+codesign -f --options=runtime --verbose=4 --deep --force --strict -s '{{{ .Info.SigningIdentity }}}' "./{{{ .Name }}}.app/Contents/MacOS/{{{ .Key }}}"
+codesign -f --options=runtime --verbose=4 --deep --force --strict -s '{{{ .Info.SigningIdentity }}}' "./{{{ .Name }}}.app"
 
 cp "./template/macos/appdmg.config.json" "./appdmg.config.json"
 
 echo "building macOS amd64 DMG..."
 appdmg "appdmg.config.json" "./{{{ .Key }}}_${TGT}_macos_x86_64_desktop.dmg"
-zip -r "{{{ .Key }}}_${TGT}_macos_x86_64_desktop.zip" "./Project Forge.app"
+zip -r "{{{ .Key }}}_${TGT}_macos_x86_64_desktop.zip" "./{{{ .Name }}}.app"
 
 # macOS arm64
-cp "{{{ .Key }}}.macos.arm64" "./Project Forge.app/Contents/MacOS/{{{ .Key }}}"
+cp "{{{ .Key }}}.macos.arm64" "./{{{ .Name }}}.app/Contents/MacOS/{{{ .Key }}}"
 
 echo "signing arm64 desktop binary..."
-codesign -f --options=runtime --verbose=4 --deep --force --strict -s '{{{ .Info.SigningIdentity }}}' "./Project Forge.app/Contents/MacOS/{{{ .Key }}}"
-codesign -f --options=runtime --verbose=4 --deep --force --strict -s '{{{ .Info.SigningIdentity }}}' "./Project Forge.app"
+codesign -f --options=runtime --verbose=4 --deep --force --strict -s '{{{ .Info.SigningIdentity }}}' "./{{{ .Name }}}.app/Contents/MacOS/{{{ .Key }}}"
+codesign -f --options=runtime --verbose=4 --deep --force --strict -s '{{{ .Info.SigningIdentity }}}' "./{{{ .Name }}}.app"
 
 echo "building macOS arm64 DMG..."
 appdmg "appdmg.config.json" "./{{{ .Key }}}_${TGT}_macos_arm64_desktop.dmg"
-zip -r "{{{ .Key }}}_${TGT}_macos_arm64_desktop.zip" "./Project Forge.app"
+zip -r "{{{ .Key }}}_${TGT}_macos_arm64_desktop.zip" "./{{{ .Name }}}.app"
 
 # macOS universal
-rm "./Project Forge.app/Contents/MacOS/{{{ .Key }}}"
-lipo -create -output "./Project Forge.app/Contents/MacOS/{{{ .Key }}}" {{{ .Key }}}.macos {{{ .Key }}}.macos.arm64
+rm "./{{{ .Name }}}.app/Contents/MacOS/{{{ .Key }}}"
+lipo -create -output "./{{{ .Name }}}.app/Contents/MacOS/{{{ .Key }}}" {{{ .Key }}}.macos {{{ .Key }}}.macos.arm64
 
 echo "signing universal desktop binary..."
-codesign -f --options=runtime --verbose=4 --deep --force --strict -s '{{{ .Info.SigningIdentity }}}' "./Project Forge.app/Contents/MacOS/{{{ .Key }}}"
-codesign -f --options=runtime --verbose=4 --deep --force --strict -s '{{{ .Info.SigningIdentity }}}' "./Project Forge.app"
+codesign -f --options=runtime --verbose=4 --deep --force --strict -s '{{{ .Info.SigningIdentity }}}' "./{{{ .Name }}}.app/Contents/MacOS/{{{ .Key }}}"
+codesign -f --options=runtime --verbose=4 --deep --force --strict -s '{{{ .Info.SigningIdentity }}}' "./{{{ .Name }}}.app"
 
 echo "building macOS universal DMG..."
 appdmg "appdmg.config.json" "./{{{ .Key }}}_${TGT}_macos_all_desktop.dmg"
-zip -r "{{{ .Key }}}_${TGT}_macos_all_desktop.zip" "./Project Forge.app"
+zip -r "{{{ .Key }}}_${TGT}_macos_all_desktop.zip" "./{{{ .Name }}}.app"
 
 # linux
 echo "building Linux zip..."

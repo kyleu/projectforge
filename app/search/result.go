@@ -2,6 +2,7 @@ package search
 
 import (
 	"sort"
+	"strings"
 
 	"github.com/kyleu/projectforge/app/util"
 )
@@ -9,6 +10,28 @@ import (
 type Match struct {
 	Key   string `json:"k"`
 	Value string `json:"v"`
+}
+
+func (m *Match) ValueSplit(q string) []string {
+	ql := strings.ToLower(q)
+	vl := strings.ToLower(m.Value)
+	idx := 0
+	var ret []string
+	for idx > -1 {
+		nIdx := strings.Index(vl[idx:], ql)
+		if nIdx == -1 {
+			ret = append(ret, m.Value[idx:])
+			break
+		} else {
+			if idx == 0 {
+				ret = append(ret, "")
+			}
+			nIdx += idx
+			ret = append(ret, m.Value[idx:nIdx])
+		}
+		idx = nIdx + len(q)
+	}
+	return ret
 }
 
 type Matches []*Match
@@ -30,7 +53,6 @@ type Result struct {
 	URL     string      `json:"url,omitempty"`
 	Matches []*Match    `json:"matches,omitempty"`
 	Data    interface{} `json:"data,omitempty"`
-	HTML    string      `json:"-"`
 }
 
 type Results []*Result
