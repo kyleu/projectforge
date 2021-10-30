@@ -166,7 +166,7 @@ builds:
     mod_timestamp: "{{ .CommitTimestamp }}"
     hooks:
       post:
-        - "./tools/notarize/notarize-{{ .Arch }}.sh {{ .Version }}"
+        - "./tools/notarize/notarize.sh {{ .Arch }}"
 
   - id: "linux"
     goos:
