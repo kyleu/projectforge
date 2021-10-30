@@ -51,6 +51,22 @@ func (t *TemplateContext) BuildIOS() bool {
 	return t.HasModule("ios") && t.Build.IOS
 }
 
+func (t *TemplateContext) CIContent() string {
+	if t.Info == nil {
+		return ""
+	}
+	switch t.Info.CI {
+	case "all":
+		return "on: push"
+	case "tags":
+		return "on:\n  push:\n    tags"
+	case "versions":
+		return "on:\n  push:\n    tags:\n      - 'v*'"
+	default:
+		return "on:\n  push:\n    tags:\n      - 'DISABLED_v*'"
+	}
+}
+
 func (p *Project) ToTemplateContext() *TemplateContext {
 	i := p.Info
 	if i == nil {

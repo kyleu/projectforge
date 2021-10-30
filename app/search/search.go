@@ -15,10 +15,6 @@ type Provider func(context.Context, *app.State, *Params) (Results, error)
 func Search(ctx context.Context, as *app.State, params *Params) (Results, []error) {
 	var allProviders []Provider
 	// $PF_SECTION_START(search_functions)$
-	testFunc := func(ctx context.Context, as *app.State, p *Params) (Results, error) {
-		return Results{{URL: "/search?q=test", Title: "Test Result", Match: p.Q + "!!!"}}, nil
-	}
-	allProviders = append(allProviders, testFunc)
 	// $PF_SECTION_END(search_functions)$
 
 	if len(allProviders) == 0 {

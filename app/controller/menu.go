@@ -27,7 +27,7 @@ func MenuFor(ctx context.Context, isAuthed bool, isAdmin bool, as *app.State) (m
 		ret = append(ret,
 			sandbox.Menu(),
 			menu.Separator,
-			&menu.Item{Key: "settings", Title: "Settings", Description: "System-wide settings and preferences", Icon: "cog", Route: "/admin/settings"},
+			&menu.Item{Key: "admin", Title: "Settings", Description: "System-wide settings and preferences", Icon: "cog", Route: "/admin"},
 			itemFor(action.TypeDoctor, "first-aid", "/doctor"),
 		)
 	}

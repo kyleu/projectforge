@@ -41,7 +41,7 @@ func Initialize(logger *zap.SugaredLogger) {
 	initialized = true
 
 	endpoint := "localhost:55681"
-	if env := os.Getenv(util.AppKey + "_telemetry_endpoint"); env != "" {
+	if env := os.Getenv("telemetry_endpoint"); env != "" {
 		endpoint = env
 	}
 	logger.Debugf("initializing OpenTelemetry tracing using endpoint [%s]", endpoint)

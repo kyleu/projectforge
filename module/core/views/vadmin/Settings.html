@@ -1,0 +1,56 @@
+{% import (
+  "runtime"
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/user"
+  "{{{ .Package }}}/app/util"
+  "{{{ .Package }}}/views/components"
+  "{{{ .Package }}}/views/layout"
+  "{{{ .Package }}}/views/vauth"
+) %}
+
+{% code type Settings struct {
+  layout.Basic
+  Perms user.Permissions
+  Mem *runtime.MemStats
+} %}
+
+{% func (p *Settings) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    {%- if util.AppSource != "" -%}
+    <div class="right"><a href="{%s util.AppSource %}"><button>Github</button></a></div>
+    {%- endif -%}
+    <h3 title="github:{%s as.BuildInfo.Commit %}">{%s util.AppName %} {%s as.BuildInfo.String() %}</h3>
+    {%- if util.AppLegal != "" -%}
+    <div>{%s= util.AppLegal %}</div>
+    {%- endif -%}
+    {%- if util.AppURL != "" -%}
+    <p><a href="{%s= util.AppURL %}">{%s= util.AppURL %}</a></p>
+    {%- endif -%}
+  </div>
+
+  <div class="card">
+    <div class="right"><a href="#modal-mem"><button type="button">Memory Usage</button></a></div>
+    {%= components.JSONModal("mem", "Memory Usage", p.Mem, 1) %}
+    <h3>Admin Functions</h3>
+    <ul>
+      <li><a href="/admin/migrations">View database migrations</a></li>
+      <li><a href="/admin/modules">View Go modules</a></li>
+      <li><a href="/admin/session">Parse and display session</a></li>
+      <li><a href="/admin/request">Debug HTTP request</a></li>
+      <li><a href="/admin/cpu/start">Start CPU profile</a></li>
+      <li><a href="/admin/cpu/stop">Stop CPU profile</a></li>
+      <li><a href="/admin/heap">Write memory dump</a></li>
+      <li><a href="/admin/gc">Collect garbage</a></li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Themes</h3>
+    <p><a href="/theme">Edit Themes</a></p>
+  </div>
+
+  {%= vauth.Authentication(as) %}
+
+  {%= vauth.Permissions(p.Perms, as) %}
+{% endfunc %}

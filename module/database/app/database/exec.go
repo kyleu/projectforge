@@ -86,6 +86,6 @@ func (s *Service) process(ctx context.Context, op string, key string, past strin
 }
 
 func valueStrings(values []interface{}) string {
-	ret := util.StringArrayFromInterfaces(values)
+	ret := util.StringArrayFromInterfaces(values, 256)
 	return strings.Join(ret, ", ")
 }

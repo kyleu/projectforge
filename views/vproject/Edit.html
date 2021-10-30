@@ -76,6 +76,11 @@
         {%= components.TableInput("authorName", "Author Name", info.AuthorName, 5) %}
         {%= components.TableInput("authorEmail", "Author Email", info.AuthorEmail, 5) %}
         {%= components.TableInput("license", "License", info.License, 5) %}
+        {%= components.TableInput("homepage", "Homepage", info.Homepage, 5) %}
+        {%= components.TableInput("sourcecode", "Source Code", info.Sourcecode, 5) %}
+        {%= components.TableInput("summary", "Summary", info.Summary, 5) %}
+        {%= components.TableTextarea("description", "Description", 8, info.Description, 5) %}
+        {%= components.TableSelect("ci", "CI", info.CI, []string{"all", "tags", "versions", ""}, []string{"All pushes", "All tags", "Version tags", "No CI"}, 5) %}
         {%= components.TableInput("homebrew", "Homebrew", info.Homebrew, 5) %}
         {%- if prj.HasModule("notarize") || prj.HasModule("desktop") || prj.HasModule("ios") -%}
         {%= components.TableInput("bundle", "Bundle", info.Bundle, 5) %}
@@ -92,10 +97,6 @@
         {%- else -%}
         <input type="hidden" name="javaPackage" value="{%s info.JavaPackage %}" />
         {%- endif -%}
-        {%= components.TableInput("homepage", "Homepage", info.Homepage, 5) %}
-        {%= components.TableInput("sourcecode", "Source Code", info.Sourcecode, 5) %}
-        {%= components.TableInput("summary", "Summary", info.Summary, 5) %}
-        {%= components.TableTextarea("description", "Description", 8, info.Description, 5) %}
         </tbody>
       </table>
     </div>

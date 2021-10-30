@@ -48,6 +48,8 @@ func render(rc *fasthttp.RequestCtx, as *app.State, page layout.Page, ps *cutil.
 			return cutil.RespondJSON(rc, "", ps.Data)
 		} else if cutil.IsContentTypeXML(ct) {
 			return cutil.RespondXML(rc, "", ps.Data)
+		} else if ct == "debug" {
+			return cutil.RespondDebug(rc, "", ps.Data)
 		}
 	}
 	startNanos := time.Now().UnixNano()

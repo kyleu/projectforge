@@ -3,7 +3,6 @@
 
   "github.com/kyleu/projectforge/app"
   "github.com/kyleu/projectforge/app/controller/cutil"
-  "github.com/kyleu/projectforge/app/util"
   "github.com/kyleu/projectforge/views/layout"
 ) %}
 
@@ -18,14 +17,14 @@
   <div class="card">
     <h3>Values</h3>
     <ul>
-      {%- for k, v := range ps.Session -%}
-        <li>{%s k %}: {%s fmt.Sprint(v) %}</li>
-      {%- endfor -%}
+    {%- for k, v := range ps.Session -%}
+      <li>{%s k %}: {%s fmt.Sprint(v) %}</li>
+    {%- endfor -%}
     </ul>
   </div>
-  {%- endif -%}
+  {%- else -%}
   <div class="card">
-    <h3>Page state</h3>
-    <pre>{%s util.ToJSON(ps) %}</pre>
+    <em>Empty session</em>
   </div>
+  {%- endif -%}
 {% endfunc %}

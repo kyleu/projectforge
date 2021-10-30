@@ -60,7 +60,6 @@ func AppRoutes() fasthttp.RequestHandler {
 	r.GET("/admin", Admin)
 	r.GET("/admin/sandbox", SandboxList)
 	r.GET("/admin/sandbox/{key}", SandboxRun)
-	r.GET("/admin/settings", Settings)
 	r.GET("/admin/{path:*}", Admin)
 
 	r.GET("/favicon.ico", Favicon)

@@ -42,5 +42,12 @@ func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, logger *zap.Su
 	as := auth.NewService("", logger)
 	ts := theme.NewService(f, logger)
 
-	return &State{Debug: debug, BuildInfo: bi, Files: f, Auth: as, Themes: ts, Logger: logger}, nil
+	return &State{
+		Debug:     debug,
+		BuildInfo: bi,
+		Files:     f,
+		Auth:      as,
+		Themes:    ts,
+		Logger:    logger,
+	}, nil
 }

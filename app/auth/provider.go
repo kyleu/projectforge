@@ -19,13 +19,18 @@ type Provider struct {
 }
 
 func (p *Provider) Goth(proto string, host string) (goth.Provider, error) {
+	if p := os.Getenv("oauth_protocol"); p != "" {
+		proto = p
+	}
 	if proto == "" {
 		proto = "http"
 	}
 	u := fmt.Sprintf("%s://%s", proto, host)
 
-	env := os.Getenv(util.AppKey + "_oauth_redirect")
-	if env != "" {
+	if env := os.Getenv(util.AppKey + "_oauth_redirect"); env != "" {
+		u = env
+	}
+	if env := os.Getenv("oauth_redirect"); env != "" {
 		u = env
 	}
 	u = strings.TrimSuffix(u, "/")

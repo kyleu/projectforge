@@ -23,6 +23,10 @@ func WriteCORS(rc *fasthttp.RequestCtx) {
 	rc.Response.Header.Set("Access-Control-Allow-Credentials", "true")
 }
 
+func RespondDebug(rc *fasthttp.RequestCtx, filename string, body interface{}) (string, error) {
+	return RespondJSON(rc, filename, requestCtxToMap(rc, body))
+}
+
 func RespondJSON(rc *fasthttp.RequestCtx, filename string, body interface{}) (string, error) {
 	b := util.ToJSONBytes(body, true)
 	return RespondMIME(filename, mimeJSON, "json", b, rc)
@@ -67,6 +71,8 @@ func GetContentType(rc *fasthttp.RequestCtx) string {
 	}
 	t := string(rc.URI().QueryArgs().Peek("t"))
 	switch t {
+	case "debug":
+		return t
 	case "json":
 		return mimeJSON
 	case "xml":

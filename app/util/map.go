@@ -2,6 +2,7 @@ package util
 
 import (
 	"encoding/csv"
+	"encoding/json"
 	"fmt"
 	"net/url"
 	"sort"
@@ -84,6 +85,29 @@ func (m ValueMap) GetInteger(k string, allowEmpty bool) (int, error) {
 	}
 }
 
+func (m ValueMap) GetInt64(k string, allowEmpty bool) (int64, error) {
+	v, err := m.GetRequired(k)
+	if err != nil {
+		return 0, err
+	}
+
+	switch t := v.(type) {
+	case int:
+		return int64(t), nil
+	case int32:
+		return int64(t), nil
+	case int64:
+		return t, nil
+	case nil:
+		if allowEmpty {
+			return 0, nil
+		}
+		return 0, errors.New(k + " is nil, not integer")
+	default:
+		return 0, errors.Errorf("expected integer, encountered %T", t)
+	}
+}
+
 func (m ValueMap) GetString(k string, allowEmpty bool) (string, error) {
 	v, err := m.GetRequired(k)
 	if err != nil {
@@ -155,6 +179,25 @@ func (m ValueMap) AsChanges() (ValueMap, error) {
 		ret[k] = vals[k]
 	}
 	return ret, nil
+}
+
+func (m ValueMap) GetType(k string, ret interface{}) error {
+	v, err := m.GetRequired(k)
+	if err != nil {
+		return err
+	}
+
+	switch t := v.(type) {
+	case []byte:
+		err = json.Unmarshal(t, ret)
+		if err != nil {
+			return errors.Wrap(err, "failed to unmarshal to expected type")
+		}
+		return nil
+
+	default:
+		return errors.Errorf("expected binary json data, encountered %T", t)
+	}
 }
 
 func (m ValueMap) Keys() []string {

@@ -14,6 +14,7 @@ import (
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller/cutil"{{{ if .HasModule "migration" }}}
 	"{{{ .Package }}}/app/database/migrate"{{{ end }}}
+	"{{{ .Package }}}/app/user"
 	"{{{ .Package }}}/app/util"
 	"{{{ .Package }}}/views/vadmin"
 )
@@ -25,7 +26,7 @@ func Admin(rc *fasthttp.RequestCtx) {
 			ps.Title = "Administration"
 			x := &runtime.MemStats{}
 			runtime.ReadMemStats(x)
-			return render(rc, as, &vadmin.List{Mem: x}, ps, "Administration")
+			return render(rc, as, &vadmin.Settings{Perms: user.GetPermissions(), Mem: x}, ps, "admin")
 		}
 		switch path[0] {
 		case "modules":
@@ -35,11 +36,15 @@ func Admin(rc *fasthttp.RequestCtx) {
 			}
 			ps.Title = "Modules"
 			ps.Data = mods.Deps
-			return render(rc, as, &vadmin.Modules{Mods: mods.Deps}, ps, "Administration||/admin", "Modules")
+			return render(rc, as, &vadmin.Modules{Mods: mods.Deps}, ps, "admin", "Modules")
+		case "request":
+			ps.Title = "Request Debug"
+			ps.Data = rc
+			return render(rc, as, &vadmin.Request{RC: rc}, ps, "admin", "Request")
 		case "session":
 			ps.Title = "Session Debug"
 			ps.Data = ps.Session
-			return render(rc, as, &vadmin.Session{}, ps, "Administration||/admin", "Session")
+			return render(rc, as, &vadmin.Session{}, ps, "admin", "Session")
 		case "cpu":
 			switch path[1] {
 			case "start":
@@ -63,7 +68,7 @@ func Admin(rc *fasthttp.RequestCtx) {
 		case "migrations":
 			ms := migrate.GetMigrations()
 			ps.Data = ms
-			return render(rc, as, &vadmin.Migrations{Migrations: ms}, ps, "Administration||/admin", "Migrations"){{{ end }}}
+			return render(rc, as, &vadmin.Migrations{Migrations: ms}, ps, "admin", "Migrations"){{{ end }}}
 		case "gc":
 			start := util.TimerStart()
 			runtime.GC()

@@ -188,7 +188,7 @@ func (m ValueMap) GetType(k string, ret interface{}) error {
 	}
 
 	switch t := v.(type) {
-	case []uint8:
+	case []byte:
 		err = json.Unmarshal(t, ret)
 		if err != nil {
 			return errors.Wrap(err, "failed to unmarshal to expected type")
@@ -199,7 +199,6 @@ func (m ValueMap) GetType(k string, ret interface{}) error {
 		return errors.Errorf("expected binary json data, encountered %T", t)
 	}
 }
-
 
 func (m ValueMap) Keys() []string {
 	ret := make([]string, 0, len(m))

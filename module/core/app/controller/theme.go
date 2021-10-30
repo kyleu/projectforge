@@ -16,7 +16,7 @@ func ThemeList(rc *fasthttp.RequestCtx) {
 		ps.Title = "Themes"
 		x := as.Themes.All()
 		ps.Data = x
-		return render(rc, as, &vtheme.List{Themes: x}, ps, "settings", "Themes||/theme")
+		return render(rc, as, &vtheme.List{Themes: x}, ps, "admin", "Themes")
 	})
 }
 
@@ -38,7 +38,7 @@ func ThemeEdit(rc *fasthttp.RequestCtx) {
 		ps.Data = t
 		ps.Title = "Edit theme [" + t.Key + "]"
 		page := &vtheme.Edit{Theme: t}
-		return render(rc, as, page, ps, "settings", "Themes||/theme", t.Key)
+		return render(rc, as, page, ps, "admin", "Themes||/admin/theme", t.Key)
 	})
 }
 

@@ -1,0 +1,86 @@
+{% import (
+  "github.com/valyala/fasthttp"
+
+  "github.com/kyleu/projectforge/app"
+  "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/views/components"
+  "github.com/kyleu/projectforge/views/layout"
+) %}
+
+{% code type Request struct {
+  layout.Basic
+  RC *fasthttp.RequestCtx
+} %}
+
+{% func (p *Request) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <div class="right"><a href="#modal-ps"><button type="button">Page State</button></a></div>
+    <h3>Request Debug</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>ID</td>
+          <td>{%dul p.RC.ID() %}</td>
+        </tr>
+        <tr>
+          <td>URL</td>
+          <td>{%s p.RC.URI().String() %}</td>
+        </tr>
+        <tr>
+          <td>Protocol</td>
+          <td>{%s string(p.RC.Request.URI().Scheme()) %}</td>
+        </tr>
+        <tr>
+          <td>Host</td>
+          <td>{%s string(p.RC.Request.URI().Host()) %}</td>
+        </tr>
+        <tr>
+          <td>Path</td>
+          <td>{%s string(p.RC.Request.URI().Path()) %}</td>
+        </tr>
+        <tr>
+          <td>Query String</td>
+          <td>{%s string(p.RC.Request.URI().QueryString()) %}</td>
+        </tr>
+        <tr>
+          <td>Body Size</td>
+          <td>{%d len(p.RC.Request.Body()) %}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  {%- if p.RC.Request.Header.Len() > 0 -%}
+  {%- code
+    hd := make(map[string]string, p.RC.Request.Header.Len())
+    p.RC.Request.Header.VisitAll(func(k, v []byte) {
+      hd[string(k)] = string(v)
+    })
+  -%}
+  <div class="card">
+    <h3>Headers</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        {%- for k, v := range hd -%}
+        <tr>
+          <td style="white-space: nowrap;">{%s k %}</td>
+          <td>{%s v %}</td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
+  {%- endif -%}
+  {%= components.JSONModal("ps", "Page State", ps, 1) %}
+{% endfunc %}

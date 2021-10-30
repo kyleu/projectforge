@@ -10,12 +10,13 @@ TGT=$1
 [ "$TGT" ] || TGT="v0.0.0"
 
 echo "packaging modules..."
-mkdir -p build/dist/module
 
 function z {
   echo "updating [$1] module"
   cd $1
-  zip -r "../../build/dist/projectforge_module_$1.zip" .
+  touch *
+  touch .*
+  zip -r -X "../../build/dist/projectforge_module_$1.zip" .
   cd ..
 }
 

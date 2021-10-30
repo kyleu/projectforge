@@ -1,9 +1,6 @@
 name: ci
 
-on:
-  push:
-    tags:
-      - 'DO_NOT_RUN_v*'
+{{{ .CIContent }}}
 
 permissions:
   contents: write
@@ -28,13 +25,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
       - name: "Dependencies"
-        run: "bin/bootstrap.sh"
+        run: "bin/bootstrap.sh"{{{ if .Build.Snapcraft }}}
       - name: "Snapcraft"
         run: "sudo snap install snapcraft --classic"
       - name: "Snapcraft Fix"
-        run: "mkdir -p /home/runner/.cache/snapcraft/download; mkdir -p /home/runner/.cache/snapcraft/stage-packages"
+        run: "mkdir -p /home/runner/.cache/snapcraft/download; mkdir -p /home/runner/.cache/snapcraft/stage-packages"{{{ end }}}{{{ if .Build.NFPMS }}}
       - name: "nfpms"
-        run: "go install github.com/goreleaser/nfpm/v2/cmd/nfpm@latest"
+        run: "go install github.com/goreleaser/nfpm/v2/cmd/nfpm@latest"{{{ end }}}
       - name: "Config"
         env:
           OWNER: "${{ secrets.REPO_OWNER }}"
@@ -56,6 +53,7 @@ jobs:
           version: "latest"
           args: "--snapshot --skip-publish --rm-dist"
         env:
+          PUBLISH_TEST: "true"
           GOPRIVATE: "github.com/${{ secrets.REPO_OWNER }}"
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           HOMEBREW_GITHUB_API_TOKEN: "${{ secrets.HOMEBREW_TOKEN }}"
