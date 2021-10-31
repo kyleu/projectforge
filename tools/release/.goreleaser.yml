@@ -120,7 +120,7 @@ source:
 universal_binaries:
 - id: "darwin"
   replace: false
-  name_template: '{{ .ProjectName }}_{{ .Version }}'
+  name_template: '{{ .ProjectName }}'
 
 builds:
   - id: "darwin"
