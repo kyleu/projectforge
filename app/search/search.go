@@ -15,7 +15,7 @@ type Provider func(context.Context, *app.State, *Params) (Results, error)
 func Search(ctx context.Context, as *app.State, params *Params) (Results, []error) {
 	var allProviders []Provider
 	// $PF_SECTION_START(search_functions)$
-	allProviders = append(allProviders, searchProjects)
+	allProviders = append(allProviders, searchModules, searchProjects)
 	// $PF_SECTION_END(search_functions)$
 
 	if len(allProviders) == 0 {
