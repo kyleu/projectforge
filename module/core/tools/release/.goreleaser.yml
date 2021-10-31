@@ -1,6 +1,10 @@
 # http://goreleaser.com
 project_name: {{{ .Key }}}
-
+{{{ if .Build.Slack }}}
+announce:
+  slack:
+    enabled: true
+{{{ end }}}
 archives:
   - format: zip
     wrap_in_directory: false

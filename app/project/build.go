@@ -12,6 +12,7 @@ type Build struct {
 	Desktop  bool `json:"desktop,omitempty"`
 	Notarize bool `json:"notarize,omitempty"`
 	Signing  bool `json:"signing,omitempty"`
+	Slack    bool `json:"slack,omitempty"`
 
 	Android bool `json:"android,omitempty"`
 	IOS     bool `json:"iOS,omitempty"`
@@ -46,14 +47,14 @@ func (b *Build) HasArm() bool {
 
 // nolint
 func (b *Build) Empty() bool {
-	return !(b.Publish || b.Desktop || b.Notarize || b.Signing || b.Android || b.IOS || b.WASM || b.WindowsARM ||
+	return !(b.Publish || b.Desktop || b.Notarize || b.Signing || b.Slack || b.Android || b.IOS || b.WASM || b.WindowsARM ||
 		b.LinuxARM || b.LinuxMIPS || b.LinuxOdd || b.AIX || b.Dragonfly || b.Illumos || b.FreeBSD || b.NetBSD ||
 		b.OpenBSD || b.Plan9 || b.Solaris || b.Homebrew || b.NFPMS || b.Snapcraft)
 }
 
 func (b *Build) ToMap() map[string]bool {
 	return map[string]bool{
-		"publish": b.Publish, "desktop": b.Desktop, "notarize": b.Notarize, "signing": b.Signing,
+		"publish": b.Publish, "desktop": b.Desktop, "notarize": b.Notarize, "signing": b.Signing, "slack": b.Slack,
 		"android": b.Android, "ios": b.IOS, "wasm": b.WASM, "windows-arm": b.WindowsARM,
 		"linux-arm": b.LinuxARM, "linux-mips": b.LinuxMIPS, "linux-odd": b.LinuxOdd,
 		"aix": b.AIX, "dragonfly": b.Dragonfly, "illumos": b.Illumos, "freebsd": b.FreeBSD,
@@ -68,7 +69,7 @@ func BuildFromMap(frm util.ValueMap) *Build {
 		return v == "true"
 	}
 	return &Build{
-		Publish: x("publish"), Desktop: x("desktop"), Notarize: x("notarize"), Signing: x("signing"),
+		Publish: x("publish"), Desktop: x("desktop"), Notarize: x("notarize"), Signing: x("signing"), Slack: x("slack"),
 		Android: x("android"), IOS: x("ios"), WASM: x("wasm"), WindowsARM: x("windows-arm"),
 		LinuxARM: x("linux-arm"), LinuxMIPS: x("linux-mips"), LinuxOdd: x("linux-odd"),
 		AIX: x("aix"), Dragonfly: x("dragonfly"), Illumos: x("illumos"), FreeBSD: x("freebsd"),
@@ -89,6 +90,7 @@ var AllBuildOptions = []*BuildOption{
 	{Key: "desktop", Title: "Desktop", Description: "Webview-based applications for the three major operating systems"},
 	{Key: "notarize", Title: "Notarize", Description: "Sends build artifacts to Apple for notarization"},
 	{Key: "signing", Title: "Signing", Description: "Signs the checksums using gpg"},
+	{Key: "slack", Title: "Slack", Description: "Announces the release in Slack"},
 
 	{Key: "android", Title: "Android", Description: "Builds the application as an Android library and webview-based APK"},
 	{Key: "ios", Title: "iOS", Description: "Builds the application as an iOS framework and webview-based app"},
