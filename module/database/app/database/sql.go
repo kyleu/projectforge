@@ -7,7 +7,15 @@ import (
 
 const whereSpaces = " where "
 
-func SQLSelect(columns string, tables string, where string, groupBy string, orderBy string, limit int, offset int) string {
+func SQLSelect(columns string, tables string, where string, orderBy string, limit int, offset int) string {
+	return SQLSelectGrouped(columns, tables, where, "", orderBy, limit, offset)
+}
+
+func SQLSelectSimple(columns string, tables string, where ...string) string {
+	return SQLSelectGrouped(columns, tables, strings.Join(where, " and "), "", "", 0, 0)
+}
+
+func SQLSelectGrouped(columns string, tables string, where string, groupBy string, orderBy string, limit int, offset int) string {
 	if columns == "" {
 		columns = "*"
 	}
@@ -38,10 +46,6 @@ func SQLSelect(columns string, tables string, where string, groupBy string, orde
 	}
 
 	return "select " + columns + " from " + tables + whereClause + groupByClause + orderByClause + limitClause + offsetClause
-}
-
-func SQLSelectSimple(columns string, tables string, where ...string) string {
-	return SQLSelect(columns, tables, strings.Join(where, " and "), "", "", 0, 0)
 }
 
 func SQLInsert(table string, columns []string, rows int, placeholder string) string {
