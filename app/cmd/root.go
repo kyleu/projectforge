@@ -17,7 +17,7 @@ func rootF(*cobra.Command, []string) error {
 func rootCmd() *cobra.Command {
 	short := fmt.Sprintf("%s %s - %s", util.AppName, _buildInfo.Version, util.AppSummary)
 	ret := &cobra.Command{Use: util.AppKey, Short: short, RunE: rootF}
-	ret.AddCommand(serverCmd(), siteCmd(), allCmd())
+	ret.AddCommand(serverCmd(), siteCmd(), allCmd(), upgradeCmd())
 	// $PF_SECTION_START(cmds)$
 	ret.AddCommand(actionCommands()...)
 	ret.AddCommand(updateCmd())

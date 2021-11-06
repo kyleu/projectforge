@@ -17,7 +17,7 @@ func rootF(*cobra.Command, []string) error {
 func rootCmd() *cobra.Command {
 	short := fmt.Sprintf("%s %s - %s", util.AppName, _buildInfo.Version, util.AppSummary)
 	ret := &cobra.Command{Use: util.AppKey, Short: short, RunE: rootF}
-	ret.AddCommand(serverCmd(){{{ if .HasModule "marketing" }}}, siteCmd(), allCmd(){{{ end }}}{{{ if .HasModule "migration" }}}, migrateCmd(){{{ end }}})
+	ret.AddCommand(serverCmd(){{{ if .HasModule "marketing" }}}, siteCmd(), allCmd(){{{ end }}}{{{ if .HasModule "migration" }}}, migrateCmd(){{{ end }}}{{{ if .HasModule "upgrade" }}}, upgradeCmd(){{{ end }}})
 	// $PF_SECTION_START(cmds)$ - Add your commands here by calling ret.AddCommand
 	// $PF_SECTION_END(cmds)$
 	ret.AddCommand(versionCmd())

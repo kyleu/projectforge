@@ -12,7 +12,7 @@ import (
 
 var nativeModuleKeys = []string{
 	"android", "core", "database", "desktop", "ios", "marketing", "migration",
-	"mysql", "notarize", "oauth", "postgres", "search", "sqlite", "types",
+	"mysql", "notarize", "oauth", "postgres", "search", "sqlite", "types", "upgrade",
 }
 
 type Service struct {

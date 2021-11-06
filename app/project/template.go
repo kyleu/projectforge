@@ -51,6 +51,10 @@ func (t *TemplateContext) BuildIOS() bool {
 	return t.HasModule("ios") && t.Build.IOS
 }
 
+func (t *TemplateContext) UsesLib() bool {
+	return t.BuildIOS() || t.BuildAndroid() || t.Build.Desktop
+}
+
 func (t *TemplateContext) CIContent() string {
 	if t.Info == nil {
 		return ""
