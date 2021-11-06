@@ -92,6 +92,7 @@
         {%- else -%}
         <input type="hidden" name="signingIdentity" value="{%s info.SigningIdentity %}" />
         {%- endif -%}
+        {%= components.TableInput("slack", "Slack Webhook", info.Slack, 5) %}
         {%- if prj.HasModule("android") -%}
         {%= components.TableInput("javaPackage", "Java Package", info.JavaPackage, 5) %}
         {%- else -%}

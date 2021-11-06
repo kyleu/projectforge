@@ -1,9 +1,10 @@
 # http://goreleaser.com
 project_name: {{{ .Key }}}
-{{{ if .Build.Slack }}}
+{{{ if .HasSlack }}}
 announce:
   slack:
     enabled: true
+    message_template: "{{{ .Name }}} `{{ .Tag }}` has been released from the `{{ .Branch }}` branch at commit `{{ .ShortCommit }}` ({{ .CommitDate }})\n{{{ .Info.Sourcecode }}}/releases/tag/{{ .Tag }}\n\n{{ .ReleaseNotes }}"
 {{{ end }}}
 archives:
   - format: zip
@@ -84,7 +85,7 @@ release:
     See {{{ .Info.Homepage }}} for download links and documentation
     ## Main downloads
     - [Linux Intel 64 bit]({{{ .Info.Sourcecode }}}/releases/download/{{ .Tag }}/{{{ .Key }}}_{{ .Version }}_linux_x86_64.zip)
-    - [MacOS Intel 64 bit]({{{ .Info.Sourcecode }}}/releases/download/{{ .Tag }}/{{{ .Key }}}_{{ .Version }}_macos_x86_64.zip)
+    - [MacOS Universal]({{{ .Info.Sourcecode }}}/releases/download/{{ .Tag }}/{{{ .Key }}}_{{ .Version }}_macos_all.zip)
     - [Windows Intel 64 bit]({{{ .Info.Sourcecode }}}/releases/download/{{ .Tag }}/{{{ .Key }}}_{{ .Version }}_windows_x86_64.zip)
 
   extra_files:{{{ if .Build.Notarize }}}

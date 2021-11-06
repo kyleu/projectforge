@@ -44,11 +44,12 @@ func render(rc *fasthttp.RequestCtx, as *app.State, page layout.Page, ps *cutil.
 	ps.Breadcrumbs = append(ps.Breadcrumbs, breadcrumbs...)
 	ct := cutil.GetContentType(rc)
 	if ps.Data != nil {
-		if cutil.IsContentTypeJSON(ct) {
+		switch {
+		case cutil.IsContentTypeJSON(ct):
 			return cutil.RespondJSON(rc, "", ps.Data)
-		} else if cutil.IsContentTypeXML(ct) {
+		case cutil.IsContentTypeXML(ct):
 			return cutil.RespondXML(rc, "", ps.Data)
-		} else if ct == "debug" {
+		case ct == "debug":
 			return cutil.RespondDebug(rc, "", ps.Data)
 		}
 	}

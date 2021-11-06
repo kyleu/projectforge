@@ -23,6 +23,7 @@ type Info struct {
 	Homebrew        string       `json:"homebrew,omitempty"`
 	Bundle          string       `json:"bundle,omitempty"`
 	SigningIdentity string       `json:"signingIdentity,omitempty"`
+	Slack           string       `json:"slack,omitempty"`
 	JavaPackage     string       `json:"javaPackage,omitempty"`
 	ModuleDefs      []*ModuleDef `json:"moduleDefs,omitempty"`
 }

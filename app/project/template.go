@@ -67,6 +67,10 @@ func (t *TemplateContext) CIContent() string {
 	}
 }
 
+func (t *TemplateContext) HasSlack() bool {
+	return t.Info.Slack != ""
+}
+
 func (p *Project) ToTemplateContext() *TemplateContext {
 	i := p.Info
 	if i == nil {

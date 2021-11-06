@@ -53,6 +53,7 @@ type Result struct {
 	URL     string      `json:"url,omitempty"`
 	Matches []*Match    `json:"matches,omitempty"`
 	Data    interface{} `json:"data,omitempty"`
+	HTML    string      `json:"-"`
 }
 
 type Results []*Result

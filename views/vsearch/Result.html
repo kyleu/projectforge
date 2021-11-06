@@ -17,14 +17,17 @@
     </div>
     <h3><a href="{%s res.URL %}">{% if res.Icon != "" %}{%= components.SVGRefIcon(res.Icon, ps) %}{% endif %}{% if res.Title == "" %}{%s res.URL %}{% else %}{%s res.Title %}{% endif %}</a></h3>
     <p>{%= Match(params, res.Matches) %}</p>
+    {%- if res.HTML != "" -%}
+    <div>{%s= res.HTML %}</div>
+    {%- endif -%}
   </div>
 {% endfunc %}
 
 {% func Match(params *search.Params, matches search.Matches) %}
-  {%- if len(matches) == 0 -%}
-  <em>Matched {%s params.Q %}</em>
-  {%- else -%}
   <ul>
+    {%- if len(matches) == 0 -%}
+    <li>Matched [{%s params.Q %}]</li>
+    {%- endif -%}
     {%- for _, m := range matches -%}
     <li>
       Matched [{%s m.Key %}]:
@@ -33,5 +36,4 @@
     </li>
     {%- endfor -%}
   </ul>
-  {%- endif -%}
 {% endfunc %}

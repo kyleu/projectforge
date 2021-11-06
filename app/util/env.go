@@ -34,3 +34,10 @@ func ReplaceEnvVars(s string, logger *zap.SugaredLogger) string {
 
 	return s
 }
+
+func GetEnvStringWithDefault(envName string, defaultValue string) string {
+	if envValue, exists := os.LookupEnv(envName); exists {
+		return envValue
+	}
+	return defaultValue
+}

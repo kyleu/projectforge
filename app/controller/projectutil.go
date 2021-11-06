@@ -55,6 +55,7 @@ func projectFromForm(frm util.ValueMap, prj *project.Project) error {
 	prj.Info.Homebrew = get("homebrew", prj.Info.Homebrew)
 	prj.Info.Bundle = get("bundle", prj.Info.Bundle)
 	prj.Info.SigningIdentity = get("signingIdentity", prj.Info.SigningIdentity)
+	prj.Info.Slack = get("slack", prj.Info.Slack)
 	prj.Info.JavaPackage = get("javaPackage", prj.Info.JavaPackage)
 
 	prj.Build = project.BuildFromMap(frm)

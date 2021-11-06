@@ -8,8 +8,7 @@ import (
 	"go.uber.org/zap"
 
 	"{{{ .Package }}}/app/database"
-	"{{{ .Package }}}/app/database/migrate"
-	"{{{ .Package }}}/app/log"{{{ end }}}
+	"{{{ .Package }}}/app/database/migrate"{{{ end }}}
 )
 
 type Services struct {

@@ -9,7 +9,9 @@ import (
 )
 
 func rootF(*cobra.Command, []string) error {
+	// $PF_SECTION_START(rootAction)$
 	return startServer(_flags)
+	// $PF_SECTION_END(rootAction)$
 }
 
 func rootCmd() *cobra.Command {

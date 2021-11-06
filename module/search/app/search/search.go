@@ -16,7 +16,7 @@ func Search(ctx context.Context, as *app.State, params *Params) (Results, []erro
 	var allProviders []Provider
 	// $PF_SECTION_START(search_functions)$
 	testFunc := func(ctx context.Context, as *app.State, p *Params) (Results, error) {
-		return Results{{URL: "/search?q=test", Title: "Test Result", Icon: "star", Match: p.Q + "!!!"}}, nil
+		return Results{{URL: "/search?q=test", Title: "Test Result", Icon: "star", Matches: nil}}, nil
 	}
 	allProviders = append(allProviders, testFunc)
 	// $PF_SECTION_END(search_functions)$
