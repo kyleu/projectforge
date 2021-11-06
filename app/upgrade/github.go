@@ -7,20 +7,14 @@ import (
 
 	"github.com/google/go-github/v39/github"
 	"github.com/pkg/errors"
-	"github.com/tcnksm/go-gitconfig"
 	"golang.org/x/oauth2"
 
 	"github.com/kyleu/projectforge/app/util"
 )
 
 func createGithubClient() *github.Client {
-	token := os.Getenv("GITHUB_TOKEN")
-	if token == "" {
-		token, _ = gitconfig.GithubToken()
-	}
-
 	client := http.DefaultClient
-	if token != "" {
+	if token := os.Getenv("GITHUB_TOKEN"); token != "" {
 		src := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: token})
 		client = oauth2.NewClient(context.Background(), src)
 	}

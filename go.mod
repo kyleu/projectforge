@@ -19,7 +19,6 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.11.0
 	github.com/spf13/cobra v1.2.1
-	github.com/tcnksm/go-gitconfig v0.1.2
 	github.com/valyala/fasthttp v1.30.0
 	github.com/valyala/quicktemplate v1.6.3
 	go.opentelemetry.io/otel v1.0.0
