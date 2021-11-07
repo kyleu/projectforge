@@ -28,7 +28,9 @@ brews:
     homepage: "{{{ .Info.Homepage }}}"
     description: "{{{ .Info.Description }}}"
     license: "{{{ .Info.License }}}"
-    skip_upload: false{{{ if .Info.Homebrew }}}
+    skip_upload: false{{{ if .Build.Private }}}
+    download_strategy: "GitHubPrivateRepositoryReleaseDownloadStrategy"
+    custom_require: "lib/private_strategy"{{{ end }}}{{{ if .Info.Homebrew }}}
     url_template: "{{{ .Info.Homebrew }}}/{{ .Tag }}/{{ .ArtifactName }}"{{{ end }}}
 {{{ end }}}
 changelog:
