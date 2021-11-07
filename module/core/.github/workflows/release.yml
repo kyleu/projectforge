@@ -62,6 +62,6 @@ jobs:
           SLACK_WEBHOOK: "{{{ .Info.Slack }}}"{{{ end }}}
           GOPRIVATE: "github.com/${{ github.repository_owner }}"
           GITHUB_TOKEN: "${{ secrets.CR_PAT }}"{{{ if .Build.Homebrew }}}
-          HOMEBREW_GITHUB_API_TOKEN: "${{ secrets.HOMEBREW_TOKEN }}"{{{ end }}}
+          HOMEBREW_GITHUB_API_TOKEN: "${{ secrets.CR_PAT }}"{{{ end }}}
           OWNER: "${{ github.repository_owner }}"
           TOKEN: "${{ secrets.CR_PAT }}"

@@ -64,6 +64,6 @@ jobs:
         env:
           GOPRIVATE: "github.com/${{ github.repository_owner }}"
           GITHUB_TOKEN: "${{ secrets.CR_PAT }}"
-          HOMEBREW_GITHUB_API_TOKEN: "${{ secrets.HOMEBREW_TOKEN }}"
+          HOMEBREW_GITHUB_API_TOKEN: "${{ secrets.CR_PAT }}"
           OWNER: "${{ github.repository_owner }}"
           TOKEN: "${{ secrets.CR_PAT }}"
