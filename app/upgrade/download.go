@@ -3,9 +3,9 @@ package upgrade
 import (
 	"archive/zip"
 	"bytes"
+	"context"
 	"fmt"
 	"io/ioutil"
-	"net/http"
 	"runtime"
 
 	"github.com/coreos/go-semver/semver"
@@ -27,7 +27,7 @@ func assetFor(version semver.Version) string {
 	return fmt.Sprintf("%s_%s_%s_%s.zip", util.AppKey, version.String(), o, arch)
 }
 
-func downloadAsset(version semver.Version, release *github.RepositoryRelease) ([]byte, error) {
+func (s *Service) downloadAsset(version semver.Version, release *github.RepositoryRelease) ([]byte, error) {
 	candidate := assetFor(version)
 	var match *github.ReleaseAsset
 	for _, a := range release.Assets {
@@ -39,15 +39,20 @@ func downloadAsset(version semver.Version, release *github.RepositoryRelease) ([
 	if match == nil {
 		return nil, errors.Errorf("no asset available for version [%s] with name [%s]", version.String(), candidate)
 	}
-	if match.BrowserDownloadURL == nil {
+	if match.BrowserDownloadURL == nil || *match.BrowserDownloadURL == "" {
 		return nil, errors.Errorf("no asset url available in asset [%s]", candidate)
 	}
-	rsp, err := http.DefaultClient.Get(*match.BrowserDownloadURL)
+
+	org, repo, err := parseSource()
+	if err != nil {
+		return nil, err
+	}
+
+	rsp, _, err := s.client.Repositories.DownloadReleaseAsset(context.Background(), org, repo, *match.ID, s.client.Client())
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to download asset from [%s]", match.BrowserDownloadURL)
 	}
-	defer func() { _ = rsp.Body.Close() }()
-	return ioutil.ReadAll(rsp.Body)
+	return ioutil.ReadAll(rsp)
 }
 
 func unzip(zipped []byte) ([]byte, error) {

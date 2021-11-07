@@ -13,42 +13,42 @@ import (
 )
 
 type Service struct {
-	logger *zap.SugaredLogger
-	client *github.Client
+	logger     *zap.SugaredLogger
+	client     *github.Client
 }
 
 func NewService(logger *zap.SugaredLogger) *Service {
-	return &Service{logger: logger, client: createGithubClient()}
+	return &Service{logger: logger, client: createGithubClient(logger)}
 }
 
-func (s *Service) UpgradeIfNeeded(ctx context.Context, version string, force bool) error {
-	currVersion, err := semver.NewVersion(version)
+func (s *Service) UpgradeIfNeeded(ctx context.Context, o string, n string, force bool) error {
+	currVersion, err := semver.NewVersion(o)
 	if err != nil {
-		return errors.Wrapf(err, "unable to parse current version from [%s]", version)
+		return errors.Wrapf(err, "unable to parse current version from [%s]", o)
 	}
-	latestRelease, err := s.latestRelease(ctx)
+	tgtRelease, err := s.getRelease(ctx, n)
 	if err != nil {
 		return err
 	}
-	latestVersion, err := semver.NewVersion(strings.TrimPrefix(*latestRelease.TagName, "v"))
+	tgtVersion, err := semver.NewVersion(strings.TrimPrefix(*tgtRelease.TagName, "v"))
 	if err != nil {
-		return errors.Wrapf(err, "unable to parse version of latest release from [%s]", *latestRelease.TagName)
+		return errors.Wrapf(err, "unable to parse version of latest release from [%s]", *tgtRelease.TagName)
 	}
 	if !force {
-		if latestVersion.Equal(*currVersion) {
+		if tgtVersion.Equal(*currVersion) {
 			msg := "no action needed, already using [%s], the latest version"
 			s.logger.Infof(msg, currVersion.String())
 			return nil
 		}
-		if latestVersion.LessThan(*currVersion) {
+		if tgtVersion.LessThan(*currVersion) {
 			msg := "no action needed, you're using [%s], which is somehow higher than [%s], the latest version"
-			s.logger.Infof(msg, currVersion.String(), latestVersion.String())
+			s.logger.Infof(msg, currVersion.String(), tgtVersion.String())
 			return nil
 		}
 	}
 
-	s.logger.Infof("upgrading from [%s] to [%s]...", currVersion.String(), latestVersion.String())
-	zipped, err := downloadAsset(*latestVersion, latestRelease)
+	s.logger.Infof("upgrading from [%s] to [%s]...", currVersion.String(), tgtVersion.String())
+	zipped, err := s.downloadAsset(*tgtVersion, tgtRelease)
 	if err != nil {
 		return err
 	}
@@ -62,6 +62,6 @@ func (s *Service) UpgradeIfNeeded(ctx context.Context, version string, force boo
 	if err != nil {
 		return errors.Wrap(err, "unable to overwrite binary installation")
 	}
-	s.logger.Infof("successfully upgraded [%s] to version [%s]", util.AppKey, latestVersion.String())
+	s.logger.Infof("successfully upgraded [%s] to version [%s]", util.AppKey, tgtVersion.String())
 	return nil
 }
