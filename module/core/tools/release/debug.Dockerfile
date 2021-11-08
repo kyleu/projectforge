@@ -9,6 +9,11 @@ RUN apk add --no-cache ca-certificates dpkg gcc git musl-dev \
 
 SHELL ["/bin/bash", "-c"]
 
+# main http port
+EXPOSE {{{ .Port }}}{{{$inc := .}}}{{{ range $k, $v := .PortOffsets }}}
+# {{{ $k }}} port
+EXPOSE {{{ $inc.PortIncremented $v }}}{{{ end }}}
+
 ENTRYPOINT ["/{{{ .Exec }}}", "-a", "0.0.0.0"]
-EXPOSE {{{ .Port }}}
+
 COPY {{{ .Exec }}} /

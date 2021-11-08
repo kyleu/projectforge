@@ -24,11 +24,12 @@ func Handle(path []string, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.Pag
 	bc := path
 	switch path[0] {
 	case keyFeatures:
-		if len(path) == 1 {
+		switch {
+		case len(path) == 1:
 			page, err = featureList(as, ps)
-		} else if len(path) == 2 {
+		case len(path) == 2:
 			page, err = featureDetail(path[1], as, ps)
-		} else {
+		default:
 			bc, page, err = featureFiles(path, as, ps)
 		}
 	case keyDownload:

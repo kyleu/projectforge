@@ -8,8 +8,10 @@ import (
 	"github.com/pkg/errors"
 )
 
-const configFilename = ".module.json"
-const summaryFilename = ".module.md"
+const (
+	configFilename  = ".module.json"
+	summaryFilename = ".module.md"
+)
 
 func (s *Service) LoadNative(keys ...string) (Modules, error) {
 	var ret Modules

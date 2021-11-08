@@ -36,5 +36,9 @@ COPY --from=builder /build/* /
 # $PF_SECTION_START(dockerimage)$
 # $PF_SECTION_END(dockerimage)$
 
+# main http port
 EXPOSE 40000
+# marketing port
+EXPOSE 40001
+
 ENTRYPOINT ["/projectforge", "-a", "0.0.0.0"]

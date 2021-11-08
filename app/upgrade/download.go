@@ -50,7 +50,7 @@ func (s *Service) downloadAsset(version semver.Version, release *github.Reposito
 
 	rsp, _, err := s.client.Repositories.DownloadReleaseAsset(context.Background(), org, repo, *match.ID, s.client.Client())
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to download asset from [%s]", match.BrowserDownloadURL)
+		return nil, errors.Wrapf(err, "unable to download asset from [%s]", *match.BrowserDownloadURL)
 	}
 	return ioutil.ReadAll(rsp)
 }

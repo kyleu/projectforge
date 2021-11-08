@@ -1,8 +1,6 @@
 package site
 
 import (
-	"path/filepath"
-
 	"github.com/kyleu/projectforge/app"
 	"github.com/kyleu/projectforge/app/controller/cutil"
 	"github.com/kyleu/projectforge/app/menu"
@@ -15,7 +13,7 @@ import (
 func featuresMenu(as *app.State) menu.Items {
 	if as.Services == nil {
 		as.Services = &app.Services{
-			Modules:  module.NewService(as.Files, as.Logger),
+			Modules: module.NewService(as.Files, as.Logger),
 		}
 	}
 	ms := as.Services.Modules.Modules()
@@ -50,13 +48,13 @@ func featureFiles(path []string, as *app.State, ps *cutil.PageState) ([]string, 
 	}
 	u := "/features/" + path[1] + "/files"
 	bc := append([]string{}, path[:2]...)
-	bc = append(bc, "Files||" + u)
+	bc = append(bc, "Files||"+u)
 	for _, x := range path[3:] {
 		u += "/" + x
-		bc = append(bc, x + "||" + u)
-		println(bc)
+		bc = append(bc, x+"||"+u)
+		// println(bc)
 	}
-	println(filepath.Join(path...))
+	// println(filepath.Join(path...))
 	mod, err := as.Services.Modules.Get(path[1])
 	if err != nil {
 		return path, nil, err

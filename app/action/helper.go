@@ -25,7 +25,14 @@ func diffs(pm *PrjAndMods) (file.Files, []*diff.Diff, error) {
 		}
 	}
 
-	ctx := pm.Prj.ToTemplateContext()
+	portOffsets := map[string]int{}
+	for _, m := range pm.Prj.Modules {
+		for k, v := range pm.Mods.Get(m).PortOffsets {
+			portOffsets[k] = v
+		}
+	}
+
+	ctx := pm.Prj.ToTemplateContext(portOffsets)
 	for _, f := range srcFiles {
 		f.Content, err = runTemplate(f, ctx)
 		if err != nil {

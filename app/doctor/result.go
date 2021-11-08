@@ -33,4 +33,3 @@ func (p *Result) AddSolution(msg string) *Result {
 }
 
 type Results []*Result
-

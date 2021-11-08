@@ -9,6 +9,11 @@ RUN apk add --no-cache ca-certificates dpkg gcc git musl-dev \
 
 SHELL ["/bin/bash", "-c"]
 
-ENTRYPOINT ["/projectforge", "-a", "0.0.0.0"]
+# main http port
 EXPOSE 40000
+# marketing port
+EXPOSE 40001
+
+ENTRYPOINT ["/projectforge", "-a", "0.0.0.0"]
+
 COPY projectforge /

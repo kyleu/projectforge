@@ -40,9 +40,10 @@ func overwrite(content []byte) error {
 		return errors.Wrapf(err, "unable to read file [%s]", cmdFN)
 	}
 	if stat.Mode()&os.ModeSymlink != 0 {
-		p, err := filepath.EvalSymlinks(cmdFN)
+		var p string
+		p, err = filepath.EvalSymlinks(cmdFN)
 		if err != nil {
-			return fmt.Errorf("unable to resolve symlink [%s] for executable [%s]", cmdFN, err)
+			return errors.Wrapf(err, "unable to resolve symlink [%s] for executable [%s]", p, cmdFN)
 		}
 		cmdFN = p
 	}

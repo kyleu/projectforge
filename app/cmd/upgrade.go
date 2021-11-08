@@ -12,7 +12,7 @@ import (
 
 var (
 	_version = ""
-	_force = false
+	_force   = false
 )
 
 func upgradeF(ctx context.Context, _ []string) error {

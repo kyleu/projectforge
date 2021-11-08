@@ -13,8 +13,8 @@ import (
 )
 
 type Service struct {
-	logger     *zap.SugaredLogger
-	client     *github.Client
+	logger *zap.SugaredLogger
+	client *github.Client
 }
 
 func NewService(logger *zap.SugaredLogger) *Service {

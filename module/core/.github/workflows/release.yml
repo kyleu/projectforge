@@ -8,7 +8,15 @@ permissions:
 jobs:
   build:
     runs-on: "ubuntu-latest"
-    steps:
+    steps:{{{ if .HasSlack }}}
+      - name: "Slack"
+        uses: ravsamhq/notify-slack-action@v1
+        if: always()
+        with:
+          status: ${{ job.status }}
+          notify_when: 'failure'
+        env:
+          SLACK_WEBHOOK_URL: "{{{ .Info.Slack }}}"{{{ end }}}
       - name: "Checkout"
         uses: "actions/checkout@v2"
         with:

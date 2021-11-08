@@ -47,6 +47,31 @@ func (s *Service) QueryRows(ctx context.Context, q string, tx *sqlx.Tx, values .
 	return ret, nil
 }
 
+func (s *Service) QueryKVMap(ctx context.Context, q string, tx *sqlx.Tx, values ...interface{}) (util.ValueMap, error) {
+	msg := `must provide two columns, a string key named "k" and value "v"`
+	maps, err := s.QueryRows(ctx, q, tx, values...)
+	if err != nil {
+		return nil, err
+	}
+	ret := make(util.ValueMap, len(maps))
+	for _, m := range maps {
+		kx, ok := m["k"]
+		if !ok {
+			return nil, errors.New(msg)
+		}
+		k, ok := kx.(string)
+		if !ok {
+			return nil, errors.New(msg)
+		}
+		v, ok := m["v"]
+		if !ok {
+			return nil, errors.New(msg)
+		}
+		ret[k] = v
+	}
+	return ret, nil
+}
+
 func (s *Service) QuerySingleRow(ctx context.Context, q string, tx *sqlx.Tx, values ...interface{}) (util.ValueMap, error) {
 	rows, err := s.QueryRows(ctx, q, tx, values...)
 	if err != nil {

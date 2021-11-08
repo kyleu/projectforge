@@ -37,7 +37,7 @@ func checkRepo(r *doctor.Result, logger *zap.SugaredLogger) *doctor.Result {
 	if out = strings.TrimSpace(out); out == "" {
 		return r.WithError(doctor.NewError("noremote", "no git remote configured", out))
 	}
-	exitCode, out, err = util.RunProcessSimple("git log -1", ".")
+	exitCode, _, err = util.RunProcessSimple("git log -1", ".")
 	if err != nil {
 		return r.WithError(doctor.NewError("error", "can't run [git log]: %+v", err))
 	}
@@ -53,8 +53,8 @@ func solveRepo(r *doctor.Result, logger *zap.SugaredLogger) *doctor.Result {
 		r.AddSolution("run [git init] in this directory")
 	}
 	if r.Errors.Find("noremote") != nil {
-		p, r := loadProject(r, logger)
-		r.AddSolution("run [git remote add origin " + p.Info.Sourcecode + ".git]")
+		p, dr := loadProject(r, logger)
+		dr.AddSolution("run [git remote add origin " + p.Info.Sourcecode + ".git]")
 	}
 	if r.Errors.Find("nocommit") != nil {
 		r.AddSolution("run [git commit -am \"initial commit\"] in this directory")

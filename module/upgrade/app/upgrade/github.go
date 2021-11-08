@@ -25,6 +25,10 @@ func createGithubClient(logger *zap.SugaredLogger) *github.Client {
 
 func (s *Service) getRelease(ctx context.Context, n string) (*github.RepositoryRelease, error) {
 	org, repo, err := parseSource()
+	if err != nil {
+		return nil, err
+	}
+
 	var rel *github.RepositoryRelease
 	var res *github.Response
 	if n == "" {
@@ -37,7 +41,6 @@ func (s *Service) getRelease(ctx context.Context, n string) (*github.RepositoryR
 	}
 	if err != nil {
 		if res != nil && res.StatusCode == 404 {
-			err = nil
 			return nil, errors.Errorf("can't access repository at [%s]", util.AppSource)
 		}
 	}

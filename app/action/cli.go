@@ -16,26 +16,6 @@ func clilog(s string) {
 }
 
 func cliProject(p *project.Project, modKeys []string) error {
-	reader := bufio.NewReader(os.Stdin)
-
-	promptString := func(query string, curr string) string {
-		clilog(query)
-		if curr != "" {
-			clilog(" (default: " + curr + ")")
-		}
-		clilog("\n")
-		clilog(" > ")
-		text, err := reader.ReadString('\n')
-		if err != nil {
-			clilog("error: " + err.Error() + "\n")
-		}
-		text = strings.TrimSuffix(text, "\n")
-		if text == "" {
-			text = curr
-		}
-		return text
-	}
-
 	if p.Key == "" || p.Key == "TODO" {
 		path, _ := os.Getwd()
 		if strings.Contains(path, "/") {
@@ -93,4 +73,22 @@ func cliProject(p *project.Project, modKeys []string) error {
 	p.Info.License = promptString("Enter the license used by this project", p.Info.License)
 
 	return nil
+}
+
+func promptString(query string, curr string) string {
+	clilog(query)
+	if curr != "" {
+		clilog(" (default: " + curr + ")")
+	}
+	clilog("\n")
+	clilog(" > ")
+	text, err := bufio.NewReader(os.Stdin).ReadString('\n')
+	if err != nil {
+		clilog("error: " + err.Error() + "\n")
+	}
+	text = strings.TrimSuffix(text, "\n")
+	if text == "" {
+		text = curr
+	}
+	return text
 }

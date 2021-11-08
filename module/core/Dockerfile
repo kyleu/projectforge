@@ -37,6 +37,9 @@ COPY --from=builder /build/* /
 # $PF_SECTION_START(dockerimage)$
 # $PF_SECTION_END(dockerimage)$
 
-EXPOSE {{{ .Port }}}{{{ if.HasModule "nuevoProvider" }}}
-EXPOSE {{{ .GRPCPort }}}{{{ end }}}
+# main http port
+EXPOSE {{{ .Port }}}{{{$inc := .}}}{{{ range $k, $v := .PortOffsets }}}
+# {{{ $k }}} port
+EXPOSE {{{ $inc.PortIncremented $v }}}{{{ end }}}
+
 ENTRYPOINT ["/{{{ .Exec }}}", "-a", "0.0.0.0"]

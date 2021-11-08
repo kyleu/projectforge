@@ -33,8 +33,9 @@ brews:
     custom_require: "lib/private_strategy"{{{ end }}}{{{ if .Info.Homebrew }}}
     url_template: "{{{ .Info.Homebrew }}}/{{ .Tag }}/{{ .ArtifactName }}"{{{ end }}}
 {{{ end }}}
-changelog:
-  skip: true
+changelog:{{{ if .Build.Changelog }}}
+  use: "github"{{{ else }}}
+  skip: true{{{ end }}}
 
 checksum:
   name_template: "checksums.txt"
