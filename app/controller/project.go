@@ -28,9 +28,11 @@ func ProjectDetail(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 
+		mods := as.Services.Modules.Modules()
+
 		ps.Title = fmt.Sprintf("%s (project %s)", prj.Title(), prj.Key)
 		ps.Data = prj
-		return render(rc, as, &vproject.Detail{Project: prj}, ps, "projects", prj.Key)
+		return render(rc, as, &vproject.Detail{Project: prj, Modules: mods}, ps, "projects", prj.Key)
 	})
 }
 

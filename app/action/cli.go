@@ -40,20 +40,12 @@ func cliProject(p *project.Project, modKeys []string) error {
 
 	p.Version = promptString("Enter a version, such as 0.0.0", p.Version)
 
-	if p.Info.Org == "" {
-		p.Info.Org = "todo"
-	}
-	p.Info.Org = promptString("Enter the github organization that owns this project", p.Info.Org)
+	gatherProjectInfo(p)
 
-	if p.Package == "" {
-		p.Package = "github.com/" + p.Info.Org + "/" + p.Key
+	if p.Info.Summary == "" {
+		p.Info.Summary = "A simple project"
 	}
-	p.Package = promptString("Enter your project's package", p.Package)
-
-	if p.Info.Homepage == "" {
-		p.Info.Homepage = "https://" + p.Package
-	}
-	p.Info.Homepage = promptString("Enter this project's home page", p.Info.Homepage)
+	p.Info.Summary = promptString("Enter a one-line description of this project", p.Info.Summary)
 
 	if p.Port == 0 {
 		p.Port = 20000
@@ -73,6 +65,28 @@ func cliProject(p *project.Project, modKeys []string) error {
 	p.Info.License = promptString("Enter the license used by this project", p.Info.License)
 
 	return nil
+}
+
+func gatherProjectInfo(p *project.Project) {
+	if p.Info.Org == "" {
+		p.Info.Org = "todo"
+	}
+	p.Info.Org = promptString("Enter the github organization that owns this project", p.Info.Org)
+
+	if p.Package == "" {
+		p.Package = "github.com/" + p.Info.Org + "/" + p.Key
+	}
+	p.Package = promptString("Enter your project's package", p.Package)
+
+	if p.Info.Homepage == "" {
+		p.Info.Homepage = "https://" + p.Package
+	}
+	p.Info.Homepage = promptString("Enter this project's home page", p.Info.Homepage)
+
+	if p.Info.Sourcecode == "" {
+		p.Info.Sourcecode = "https://" + p.Package
+	}
+	p.Info.Sourcecode = promptString("Enter this project's source repository", p.Info.Sourcecode)
 }
 
 func promptString(query string, curr string) string {

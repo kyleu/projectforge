@@ -3,10 +3,13 @@ package cmd
 import (
 	"context"
 
+	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 
-	"{{{ .Package }}}/app"
+	"{{{ .Package }}}/app/database"
+	"{{{ .Package }}}/app/database/migrate"
 	"{{{ .Package }}}/app/log"
+	"{{{ .Package }}}/queries/migrations"
 )
 
 func migrateCmd() *cobra.Command {
@@ -17,6 +20,14 @@ func migrateCmd() *cobra.Command {
 
 func runMigrations() error {
 	logger, _ := log.InitLogging(false)
-	_, err := app.RunMigrations(context.Background(), logger)
-	return err
+	db, err := database.OpenDefaultPostgres(logger)
+	if err != nil {
+		return errors.Wrap(err, "unable to open database")
+	}
+	migrations.LoadMigrations()
+	err = migrate.Migrate(context.Background(), db, logger)
+	if err != nil {
+		return errors.Wrap(err, "unable to run database migrations")
+	}
+	return nil
 }

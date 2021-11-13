@@ -1,6 +1,6 @@
 FROM golang:alpine
 
-RUN apk add --update --no-cache ca-certificates tzdata bash curl htop
+RUN apk add --update --no-cache ca-certificates tzdata bash curl htop libc6-compat
 
 RUN apk add --no-cache ca-certificates dpkg gcc git musl-dev \
     && mkdir -p "$GOPATH/src" "$GOPATH/bin" \

@@ -93,8 +93,7 @@ func OpenPostgresDatabase(ctx context.Context, key string, params *PostgresParam
 		log = logger.With("svc", "database", "db", key)
 	}
 
-	svc := NewService(typePostgres, key, params.Database, params.Schema, params.Username, db, log)
-	return svc, nil
+	return NewService(typePostgres, key, params.Database, params.Schema, params.Username, db, log)
 }
 
 func OpenDefaultPostgres(logger *zap.SugaredLogger) (*Service, error) {

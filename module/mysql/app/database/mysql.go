@@ -93,8 +93,7 @@ func OpenMySQLDatabase(ctx context.Context, key string, params *MySQLParams, log
 		log = logger.With("svc", "database", "db", key)
 	}
 
-	svc := NewService(typeMySQL, key, params.Database, params.Schema, params.Username, db, log)
-	return svc, nil
+	return NewService(typeMySQL, key, params.Database, params.Schema, params.Username, db, log)
 }
 
 func OpenDefaultMySQL(logger *zap.SugaredLogger) (*Service, error) {

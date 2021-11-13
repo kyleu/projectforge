@@ -11,7 +11,8 @@ import (
 	"go.uber.org/zap"
 
 	"{{{ .Package }}}/app"
-	"{{{ .Package }}}/app/controller"
+	"{{{ .Package }}}/app/controller"{{{ if .HasModule "migration" }}}
+	"{{{ .Package }}}/app/database"{{{ end }}}
 	"{{{ .Package }}}/app/filesystem"
 	"{{{ .Package }}}/app/util"
 )
@@ -46,7 +47,13 @@ func loadServer(flags *Flags, logger *zap.SugaredLogger) (fasthttp.RequestHandle
 	st, err := app.NewState(flags.Debug, _buildInfo, f, logger)
 	if err != nil {
 		return nil, logger, err
+	}{{{ if .HasModule "migration" }}}
+
+	db, err := database.OpenDefaultPostgres(logger)
+	if err != nil {
+		return nil, logger, errors.Wrap(err, "unable to open database")
 	}
+	st.DB = db{{{ end }}}
 
 	svcs, err := app.NewServices(context.Background(), st)
 	if err != nil {
@@ -56,7 +63,7 @@ func loadServer(flags *Flags, logger *zap.SugaredLogger) (fasthttp.RequestHandle
 
 	controller.SetAppState(st)
 
-	logger.Infof("started %s using address [%s:%d] on %s:%s", util.AppName, flags.Address, flags.Port, runtime.GOOS, runtime.GOARCH)
+	logger.Infof("started %s v%s using address [%s:%d] on %s:%s", util.AppName, _buildInfo.Version, flags.Address, flags.Port, runtime.GOOS, runtime.GOARCH)
 
 	return r, logger, nil
 }

@@ -2,6 +2,7 @@ package controller
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/valyala/fasthttp"
 
@@ -12,12 +13,18 @@ import (
 	"{{{ .Package }}}/views/verror"
 )
 
-{{{ if.HasModule "marketing" }}}var (
-	_currentAppState  *app.State
-	_currentSiteState *app.State
+var (
+	_currentAppState *app.State{{{ if.HasModule "marketing" }}}
+	_currentSiteState *app.State{{{ end }}}
+	defaultRootTitle = func() string {
+		if tmp := os.Getenv("app_display_name"); tmp != "" {
+			return tmp
+		}
+		return util.AppName
+	}()
+	defaultRootTitleAppend = os.Getenv("app_display_name_append")
 )
-{{{ else }}}var _currentAppState *app.State
-{{{ end }}}
+
 func SetAppState(a *app.State) {
 	_currentAppState = a
 	initApp(a)
@@ -66,7 +73,10 @@ func clean(as *app.State, ps *cutil.PageState) error {
 		ps.RootPath = "/"
 	}
 	if ps.RootTitle == "" {
-		ps.RootTitle = util.AppName
+		ps.RootTitle = defaultRootTitle
+	}
+	if defaultRootTitleAppend != "" {
+		ps.RootTitle += " " + defaultRootTitleAppend
 	}{{{ if .HasModule "search" }}}
 	if ps.SearchPath == "" {
 		ps.SearchPath = defaultSearchPath

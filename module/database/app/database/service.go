@@ -35,9 +35,12 @@ type Service struct {
 	logger       *zap.SugaredLogger
 }
 
-func NewService(typ *DBType, key string, dbName string, schName string, username string, db *sqlx.DB, logger *zap.SugaredLogger) *Service {
-	m := dbmetrics.NewMetrics(key, db)
-	return &Service{Key: key, DatabaseName: dbName, SchemaName: schName, Username: username, Type: typ, db: db, metrics: m, logger: logger}
+func NewService(typ *DBType, key string, dbName string, schName string, username string, db *sqlx.DB, logger *zap.SugaredLogger) (*Service, error) {
+	m, err := dbmetrics.NewMetrics(key, db)
+	if err != nil {
+		return nil, err
+	}
+	return &Service{Key: key, DatabaseName: dbName, SchemaName: schName, Username: username, Type: typ, db: db, metrics: m, logger: logger}, nil
 }
 
 func (s *Service) StartTransaction() (*sqlx.Tx, error) {

@@ -49,3 +49,11 @@ func StringArrayFromInterfaces(a []interface{}, maxLength int) []string {
 	}
 	return ret
 }
+
+func InterfaceArrayFromStrings(s []string) []interface{} {
+	ret := make([]interface{}, len(s))
+	for idx, item := range s {
+		ret[idx] = item
+	}
+	return ret
+}

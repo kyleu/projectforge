@@ -2,6 +2,7 @@
   "strings"
   "github.com/kyleu/projectforge/app"
   "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/app/module"
   "github.com/kyleu/projectforge/app/project"
   "github.com/kyleu/projectforge/app/theme"
   "github.com/kyleu/projectforge/views/layout"
@@ -11,6 +12,7 @@
 {% code type Detail struct {
   layout.Basic
   Project *project.Project
+  Modules module.Modules
 } %}
 
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
@@ -162,15 +164,12 @@
   </div>
   <div class="card">
     <h3>Modules</h3>
-    <table class="mt min-200">
-      <tbody>
-        {%- for _, mKey := range prj.Modules -%}
-        <tr>
-          <td>{%s mKey %}</td>
-        </tr>
-        {%- endfor -%}
-      </tbody>
-    </table>
+    <div class="mt">
+      {%- for idx, mKey := range prj.Modules -%}
+      {%- code mod := p.Modules.Get(mKey) -%}
+      <a href="/m/{%s mod.Key %}">{%s mod.Title() %}</a>{% if idx < len(prj.Modules) - 1 %}, {% endif %}
+      {%- endfor -%}
+    </div>
   </div>
   {%- if len(prj.Children) > 0 -%}
   <div class="card">

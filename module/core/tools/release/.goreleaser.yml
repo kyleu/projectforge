@@ -4,7 +4,7 @@ project_name: {{{ .Key }}}
 announce:
   slack:
     enabled: true
-    message_template: "{{{ .Name }}} `{{ .Tag }}` has been released from the `{{ .Branch }}` branch at commit `{{ .ShortCommit }}` ({{ .CommitDate }})\n{{{ .Info.Sourcecode }}}/releases/tag/{{ .Tag }}\n\n{{ .ReleaseNotes }}"
+    message_template: "*{{{ .Name }}}* `{{ .Tag }}` has been released from the `{{ .Branch }}` branch at commit `{{ .ShortCommit }}` ({{ .CommitDate }})\n{{{ .Info.Sourcecode }}}/releases/tag/{{ .Tag }}\n\n{{ .ReleaseNotes }}"
 {{{ end }}}
 archives:
   - format: zip
