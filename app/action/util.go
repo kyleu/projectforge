@@ -23,18 +23,24 @@ func projectFromCfg(proto *project.Project, cfg util.ValueMap) *project.Project 
 		}
 		return i
 	}
+
+	mods, _ := cfg.GetStringArray("modules", true)
+	if len(mods) == 0 {
+		mods = []string{"core"}
+	}
+
 	i := proto.Info
 	if i == nil {
 		i = &project.Info{License: "Proprietary"}
 	}
 	return &project.Project{
 		Key:     str("key", proto.Key),
-		Version: proto.Version,
+		Version: str("version", proto.Version),
 		Name:    str("name", proto.Name),
 		Package: str("package", proto.Package),
 		Args:    str("args", proto.Args),
 		Port:    integer("port", proto.Port),
-		Modules: []string{"core"},
+		Modules: mods,
 		Ignore:  proto.Ignore,
 		Info: &project.Info{
 			Org:             str("org", i.Org),

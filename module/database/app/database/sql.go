@@ -101,6 +101,18 @@ func SQLUpdateReturning(table string, columns []string, where string, returned [
 	return q
 }
 
+func SQLUpsert(table string, columns []string, rows int, conflicts []string, updates []string, placeholder string) string {
+	q := SQLInsert(table, columns, rows, placeholder)
+	q += " on conflict (" + strings.Join(conflicts, ", ") + ") do update set "
+	for idx, x := range updates {
+		if idx > 0 {
+			q += ", "
+		}
+		q += fmt.Sprintf("%s = excluded.%s", x, x)
+	}
+	return q
+}
+
 func SQLDelete(table string, where string) string {
 	if strings.TrimSpace(where) == "" {
 		return fmt.Sprintf("attempt to delete from [%s] with empty where clause", table)

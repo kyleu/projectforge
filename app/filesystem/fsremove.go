@@ -2,7 +2,6 @@ package filesystem
 
 import (
 	"io/fs"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -28,8 +27,8 @@ func (f *FileSystem) RemoveRecursive(path string) error {
 		return errors.Wrapf(err, "unable to stat file [%s]", path)
 	}
 	if s.IsDir() {
-		var files []fs.FileInfo
-		files, err = ioutil.ReadDir(p)
+		var files []fs.DirEntry
+		files, err = os.ReadDir(p)
 		if err != nil {
 			f.logger.Warnf("cannot read path [%s] for removal: %+v", path, err)
 		}

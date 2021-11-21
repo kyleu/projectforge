@@ -7,8 +7,8 @@ import (
 )
 
 type Build struct {
-	Publish bool `json:"publish,omitempty"`
-	Private bool `json:"private,omitempty"`
+	Publish   bool `json:"publish,omitempty"`
+	Private   bool `json:"private,omitempty"`
 	Changelog bool `json:"changelog,omitempty"`
 
 	Desktop  bool `json:"desktop,omitempty"`

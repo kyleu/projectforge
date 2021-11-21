@@ -7,7 +7,7 @@ import (
 	"github.com/pkg/errors"
 
 	"{{{ .Package }}}/app/database/migrate"
-	"{{{ .Package }}}/app/queries/migrations"{{{ end }}}
+	"{{{ .Package }}}/queries/migrations"{{{ end }}}
 )
 
 type Services struct {
@@ -15,8 +15,7 @@ type Services struct {
 }
 
 func NewServices(ctx context.Context, st *State) (*Services, error) {
-	{{{ if .HasModule "migration" }}}
-	migrations.LoadMigrations()
+	{{{ if .HasModule "migration" }}}migrations.LoadMigrations()
 	err := migrate.Migrate(ctx, st.DB, st.Logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to run database migrations")

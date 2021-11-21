@@ -14,7 +14,7 @@ type FileLoader interface {
 	CopyFile(src string, tgt string) error
 	CopyRecursive(src string, tgt string, ignore []string) error
 	Move(src string, tgt string) error
-	ListFiles(path string, ignore []string) []os.FileInfo
+	ListFiles(path string, ignore []string) []os.DirEntry
 	ListFilesRecursive(path string, ignore []string) ([]string, error)
 	ListJSON(path string, trimExtension bool) []string
 	ListExtension(path string, ext string, trimExtension bool) []string

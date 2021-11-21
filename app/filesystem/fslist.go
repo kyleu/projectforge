@@ -1,7 +1,6 @@
 package filesystem
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"sort"
@@ -10,13 +9,13 @@ import (
 
 var defaultIgnore = []string{".DS_Store$", ".git", ".idea", ".html.go$", ".sql.go$"}
 
-func (f *FileSystem) ListFiles(path string, ign []string) []os.FileInfo {
+func (f *FileSystem) ListFiles(path string, ign []string) []os.DirEntry {
 	ignore := buildIgnore(ign)
-	infos, err := ioutil.ReadDir(filepath.Join(f.root, path))
+	infos, err := os.ReadDir(filepath.Join(f.root, path))
 	if err != nil {
 		f.logger.Warnf("cannot list files in path [%s]: %+v", path, err)
 	}
-	ret := make([]os.FileInfo, 0, len(infos))
+	ret := make([]os.DirEntry, 0, len(infos))
 	for _, info := range infos {
 		if !checkIgnore(ignore, info.Name()) {
 			ret = append(ret, info)
@@ -55,7 +54,7 @@ func (f *FileSystem) ListDirectories(path string) []string {
 		return nil
 	}
 	p := f.getPath(path)
-	files, err := ioutil.ReadDir(p)
+	files, err := os.ReadDir(p)
 	if err != nil {
 		f.logger.Warnf("cannot list path [%s]: %+v", path, err)
 	}

@@ -3,7 +3,6 @@ package migrate
 import (
 	"context"
 	"database/sql"
-	"fmt"
 
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
@@ -28,7 +27,7 @@ func ListMigrations(ctx context.Context, s *database.Service, params *filter.Par
 	q := database.SQLSelect("*", migrationTable, "", params.OrderByString(), params.Limit, params.Offset)
 	err := s.Select(ctx, &dtos, q, nil)
 	if err != nil {
-		logger.Error(fmt.Sprintf("error retrieving migrations: %+v", err))
+		logger.Errorf("error retrieving migrations: %+v", err)
 		return nil
 	}
 	return toMigrations(dtos)
@@ -41,7 +40,7 @@ func createMigrationTableIfNeeded(ctx context.Context, s *database.Service, logg
 		logger.Info("first run, creating migration table")
 		_, err = s.Exec(ctx, migrationTableSQL, nil, -1)
 		if err != nil {
-			return errors.Wrap(err, fmt.Sprintf("error creating migration table: %+v", err))
+			return errors.Wrapf(err, "error creating migration table: %+v", err)
 		}
 	}
 	return nil
@@ -55,7 +54,7 @@ func getMigrationByIdx(ctx context.Context, s *database.Service, idx int, logger
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil
 		}
-		logger.Error(fmt.Sprintf("error getting migration by idx [%v]: %+v", idx, err))
+		logger.Errorf("error getting migration by idx [%v]: %+v", idx, err)
 		return nil
 	}
 	return dto.toMigration()
@@ -79,7 +78,7 @@ func maxMigrationIdx(ctx context.Context, s *database.Service, logger *zap.Sugar
 	q := database.SQLSelectSimple("max(idx) as x", "migration")
 	max, err := s.SingleInt(ctx, q, nil)
 	if err != nil {
-		logger.Error(fmt.Sprintf("error getting migrations: %+v", err))
+		logger.Errorf("error getting migrations: %+v", err)
 		return -1
 	}
 	return int(max)

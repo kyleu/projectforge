@@ -191,6 +191,19 @@ func (m ValueMap) GetType(k string, ret interface{}) error {
 	}
 }
 
+func (m ValueMap) GetMap(key string, allowEmpty bool) (ValueMap, error) {
+	switch t := m.GetPath(key).(type) {
+	case map[string]interface{}:
+		return t, nil
+	case ValueMap:
+		return t, nil
+	case nil:
+		return nil, nil
+	default:
+		return nil, errors.Errorf("unhandled type [%T] for key [%s], expected map", t, key)
+	}
+}
+
 const selectedSuffix = "--selected"
 
 func (m ValueMap) AsChanges() (ValueMap, error) {

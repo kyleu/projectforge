@@ -1,5 +1,11 @@
 FROM golang:alpine
 
+LABEL "org.opencontainers.image.authors"="{{{ .Info.AuthorName }}}"
+LABEL "org.opencontainers.image.source"="{{{ .Info.Sourcecode }}}"
+LABEL "org.opencontainers.image.vendor"="{{{ .Info.Org }}}"
+LABEL "org.opencontainers.image.title"="{{{ .Title }}}"
+LABEL "org.opencontainers.image.description"="{{{ .Info.Summary }}}"
+
 RUN apk add --update --no-cache ca-certificates tzdata bash curl htop libc6-compat
 
 RUN apk add --no-cache ca-certificates dpkg gcc git musl-dev \

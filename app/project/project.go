@@ -55,6 +55,14 @@ func (p *Project) HasModule(key string) bool {
 	return util.StringArrayContains(p.Modules, key)
 }
 
+func (p *Project) ToMap() util.ValueMap {
+	return util.ValueMap{
+		"key": p.Key, "name": p.Name, "icon": p.Icon, "exec": p.Exec,
+		"version": p.Version, "package": p.Package, "args": p.Key, "port": p.Port,
+		"modules": p.Modules, "path": p.Path,
+	}
+}
+
 func NewProject(key string, path string) *Project {
 	return &Project{Key: key, Version: "0.0.0", Path: path}
 }

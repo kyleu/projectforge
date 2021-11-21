@@ -5,13 +5,12 @@ import (
 	"testing"
 
 	"github.com/kyleu/projectforge/app/diff"
-	"github.com/kyleu/projectforge/app/util"
 )
 
-func TestErr(t *testing.T) {
+func TestDiffs(t *testing.T) {
 	t.Parallel()
 	for _, x := range diff.AllExamples {
 		diffs := x.Calc()
-		t.Log(fmt.Sprintf("%s: %s", x.File, util.ToJSON(diffs)))
+		t.Log(fmt.Sprintf("%s: %d diffs", x.File, len(diffs.Diffs)))
 	}
 }

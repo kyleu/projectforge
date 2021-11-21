@@ -18,8 +18,8 @@ func RandomString(length int) string {
 	return string(b)
 }
 
-func RandomInt(maxInclusive int) int {
-	max := big.NewInt(int64(maxInclusive))
+func RandomInt(maxExclusive int) int {
+	max := big.NewInt(int64(maxExclusive))
 	ret, err := rand.Int(rand.Reader, max)
 	if err != nil {
 		panic(errMsg(err))

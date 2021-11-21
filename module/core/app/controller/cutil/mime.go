@@ -51,7 +51,7 @@ func RespondMIME(filename string, mime string, ext string, ba []byte, rc *fastht
 		if !strings.HasSuffix(filename, "."+ext) {
 			filename = filename + "." + ext
 		}
-		rc.Response.Header.Set("Content-Disposition", fmt.Sprintf(`attachment; filename="%s"`, filename))
+		rc.Response.Header.Set("Content-Disposition", fmt.Sprintf(`attachment; filename=%q`, filename))
 	}
 	WriteCORS(rc)
 	if len(ba) == 0 {

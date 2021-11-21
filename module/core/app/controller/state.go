@@ -14,15 +14,15 @@ import (
 )
 
 var (
-	_currentAppState *app.State{{{ if.HasModule "marketing" }}}
-	_currentSiteState *app.State{{{ end }}}
-	defaultRootTitle = func() string {
+	_currentAppState       *app.State{{{ if.HasModule "marketing" }}}
+	_currentSiteState      *app.State{{{ end }}}
+	defaultRootTitleAppend = os.Getenv("app_display_name_append")
+	defaultRootTitle       = func() string {
 		if tmp := os.Getenv("app_display_name"); tmp != "" {
 			return tmp
 		}
 		return util.AppName
 	}()
-	defaultRootTitleAppend = os.Getenv("app_display_name_append")
 )
 
 func SetAppState(a *app.State) {
@@ -51,13 +51,13 @@ func handleError(key string, as *app.State, ps *cutil.PageState, rc *fasthttp.Re
 		as.Logger.Error(err)
 		msg := fmt.Sprintf("error while cleaning request: %+v", err)
 		as.Logger.Error(msg)
-		_, _ = rc.Write([]byte(msg))
+		_, _ = rc.WriteString(msg)
 	}
 	redir, err := render(rc, as, page, ps)
 	if err != nil {
 		msg := fmt.Sprintf("error while running error handler: %+v", err)
 		as.Logger.Error(msg)
-		_, _ = rc.Write([]byte(msg))
+		_, _ = rc.WriteString(msg)
 	}
 	return redir, err
 }

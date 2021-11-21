@@ -34,7 +34,7 @@ func (s *Service) QueryRows(ctx context.Context, q string, tx *sqlx.Tx, values .
 		_ = rows.Close()
 	}()
 
-	ret := []util.ValueMap{}
+	var ret []util.ValueMap
 	for rows.Next() {
 		x := map[string]interface{}{}
 		err = rows.MapScan(x)
@@ -107,11 +107,9 @@ func (s *Service) Get(ctx context.Context, dto interface{}, q string, tx *sqlx.T
 	defer s.complete(q, op, span, now, err)
 	s.logQuery(fmt.Sprintf("getting single row of type [%T]", dto), q, values)
 	if tx == nil {
-		err = s.db.GetContext(ctx, dto, q, values...)
-		return err
+		return s.db.GetContext(ctx, dto, q, values...)
 	}
-	err = tx.GetContext(ctx, dto, q, values...)
-	return err
+	return tx.GetContext(ctx, dto, q, values...)
 }
 
 type singleIntResult struct {

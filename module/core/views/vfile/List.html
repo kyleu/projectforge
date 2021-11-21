@@ -8,7 +8,7 @@
   "{{{ .Package }}}/views/components"
 ) %}
 
-{% func List(path []string, files []os.FileInfo, fs filesystem.FileLoader, urlPrefix string, as *app.State, ps *cutil.PageState) %}
+{% func List(path []string, files []os.DirEntry, fs filesystem.FileLoader, urlPrefix string, as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>{%- for idx, p := range path -%}/<a href="{%s urlPrefix %}/{%s filepath.Join(path[:idx + 1]...) %}">{%s p %}</a>{%- endfor -%}</h3>
     <div class="mt">

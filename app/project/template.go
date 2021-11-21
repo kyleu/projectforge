@@ -27,6 +27,13 @@ type TemplateContext struct {
 	IgnoreGrep string `json:"ignoreGrep,omitempty"`
 }
 
+func (t *TemplateContext) Title() string {
+	if t.Name != "" {
+		return t.Name
+	}
+	return t.Key
+}
+
 func (t *TemplateContext) KeyProper() string {
 	return strings.ToUpper(t.Key[:1]) + t.Key[1:]
 }

@@ -2,7 +2,6 @@ package migrate
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
@@ -49,6 +48,6 @@ func exec(ctx context.Context, file *MigrationFile, s *database.Service, logger 
 		return "", errors.Wrap(err, "cannot execute ["+file.Title+"]")
 	}
 	ms := util.MicrosToMillis(util.TimerEnd(startNanos))
-	logger.Debug(fmt.Sprintf("ran query [%s] in [%v]", file.Title, ms))
+	logger.Debugf("ran query [%s] in [%v]", file.Title, ms)
 	return sql, nil
 }

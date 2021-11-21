@@ -5,7 +5,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"runtime"
 
 	"github.com/coreos/go-semver/semver"
@@ -52,7 +52,7 @@ func (s *Service) downloadAsset(version semver.Version, release *github.Reposito
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to download asset from [%s]", *match.BrowserDownloadURL)
 	}
-	return ioutil.ReadAll(rsp)
+	return io.ReadAll(rsp)
 }
 
 func unzip(zipped []byte) ([]byte, error) {
@@ -69,7 +69,7 @@ func unzip(zipped []byte) ([]byte, error) {
 		if err != nil {
 			return nil, errors.Wrapf(err, "unable to open file [%s] from zip", f.Name)
 		}
-		ret, err = ioutil.ReadAll(reader)
+		ret, err = io.ReadAll(reader)
 		if err != nil {
 			return nil, errors.Wrapf(err, "unable to read file [%s] from zip", f.Name)
 		}
