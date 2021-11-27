@@ -32,6 +32,7 @@ type PageState struct {
 	RootTitle     string             `json:"rootTitle,omitempty"`{{{ if .HasModule "search" }}}
 	SearchPath    string             `json:"searchPath,omitempty"`{{{ end }}}
 	ProfilePath   string             `json:"profilePath,omitempty"`
+	HideMenu      bool               `json:"hideMenu,omitempty"`
 	ForceRedirect string             `json:"forceRedirect,omitempty"`
 	Data          interface{}        `json:"data,omitempty"`
 	Logger        *zap.SugaredLogger `json:"-"`

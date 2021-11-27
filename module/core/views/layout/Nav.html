@@ -18,11 +18,11 @@
     <input type="search" name="q" placeholder=" " />
     <div class="search-image" style="display: none;"><svg><use xlink:href="#svg-searchbox" /></svg></div>
   </form>{{{ end }}}
-  <a class="profile" title="{%s ps.Profile.AuthString(ps.Accounts) %}" href="{%s ps.ProfilePath %}">{%= components.SVGRef(`profile`, 24, 24, ``, ps) %}</a>
+  <a class="profile" title="{%s ps.Profile.AuthString(ps.Accounts) %}" href="{%s ps.ProfilePath %}">{%= components.SVGRef(`profile`, 24, 24, ``, ps) %}</a>{% if !ps.HideMenu %}
 
   <input type="checkbox" id="menu-toggle-input" style="display: none;" />
   <label class="menu-toggle" for="menu-toggle-input"><div class="spinner diagonal part-1"></div><div class="spinner horizontal"></div><div class="spinner diagonal part-2"></div></label>
-  {%= Menu(ps) %}
+  {%= Menu(ps) %}{% endif %}
 </nav>{% endfunc %}
 
 {% func NavItems(m menu.Items, breadcrumbs cutil.Breadcrumbs) %}{% stripspace %}

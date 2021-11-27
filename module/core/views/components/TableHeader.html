@@ -1,0 +1,69 @@
+{% import (
+  "github.com/valyala/fasthttp"
+
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/filter"
+) %}
+
+{% func TableHeader(section string, key string, title string, params *filter.Params, icon string, u *fasthttp.URI, tooltip string, sortable bool, cls string, resizable bool, ps *cutil.PageState) %}{% stripspace %}
+  <th class="{% if cls != `` %}{%s cls %}{% space %}{% endif %}no-padding" scope="col">
+    <div class="{% if resizable %}resize{% else %}noresize{% endif %}">
+      {% if !sortable %}
+        <div title="{%s tooltip %}">
+          {% if icon != "" %}
+            {% space %}
+            {%= SVGRef(icon, 16, 16, "icon-block", ps) %}
+          {% endif %}
+          {%s title %}
+        </div>
+      {% elseif params == nil %}
+        {%= thNormal(section, key, title, params, icon, u, tooltip, ps) %}
+      {% else %}
+        {%code o := params.GetOrdering(key) %}
+        {% if o == nil %}
+          {%= thNormal(section, key, title, params, icon, u, tooltip, ps) %}
+        {% else %}
+          {%= thSorted(o.Asc, section, key, title, params, icon, u, tooltip, ps) %}
+        {% endif %}
+      {% endif %}
+    </div>
+  </th>
+{% endstripspace %}{% endfunc %}
+
+{% func TableHeaderSimple(section string, key string, title string, params *filter.Params, u *fasthttp.URI, ps *cutil.PageState) %}{% stripspace %}
+  {%= TableHeader(section, key, title, params, "", u, "", true, "", false, ps) %}
+{% endstripspace %}{% endfunc %}
+
+{% func thNormal(section string, key string, title string, params *filter.Params, icon string, u *fasthttp.URI, tooltip string, ps *cutil.PageState) %}{% stripspace %}
+  <a class="sort-hover" href="?{%s= params.CloneOrdering(&filter.Ordering{Column: key, Asc: true}).ToQueryString(u) %}" title="{%s tooltip %}">
+    <div class="sort-icon" title="click to sort by this column, ascending">{%= SVGRef(`down`, 0, 0, ``, ps) %}</div>
+    <div class="sort-title">
+      {% if icon != "" %}
+        {% space %}
+        {%= SVGRef(icon, 16, 16, "icon-block", ps) %}
+      {% endif %}
+      {%s title %}
+    </div>
+  </a>
+{% endstripspace %}{% endfunc %}
+
+{% func thSorted(asc bool, section string, key string, title string, params *filter.Params, icon string, u *fasthttp.URI, tooltip string, ps *cutil.PageState) %}{% stripspace %}
+  {% code
+    ascStr := "ascending"
+    dirStr := "up"
+    if(asc) {
+      ascStr = "descending"
+      dirStr = "down"
+    }
+  %}
+  <a href="?{%s= params.CloneOrdering(&filter.Ordering{Column: key, Asc: !asc}).ToQueryString(u) %}" title="{%s tooltip %}">
+    <div class="sort-icon" title="click to sort by this column,{% space %}{%s ascStr %}">{%= SVGRef(dirStr, 0, 0, ``, ps) %}</div>
+    <div class="sort-title">
+      {% if icon != "" %}
+        {% space %}
+        {%= SVGRef(icon, 16, 16, "icon-block", ps) %}
+      {% endif %}
+      {%s title %}
+    </div>
+  </a>
+{% endstripspace %}{% endfunc %}

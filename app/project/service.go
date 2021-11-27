@@ -135,6 +135,12 @@ func (s *Service) load(path string) (*Project, error) {
 			r = l
 		}
 		if r == "." {
+			r, _ = os.Getwd()
+			if strings.Contains(r, "/") {
+				r = r[strings.LastIndex(r, "/")+1:]
+			}
+		}
+		if r == "" {
 			r = "root"
 		}
 		ret := NewProject(r, path)

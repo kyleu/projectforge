@@ -1,85 +1,55 @@
 {% import (
   "fmt"
-
-  "github.com/valyala/fasthttp"
+  "strings"
 
   "{{{ .Package }}}/app/controller/cutil"
-  "{{{ .Package }}}/app/filter"
   "{{{ .Package }}}/views/vutil"
 ) %}
 
-{% func TableHeader(section string, key string, title string, params *filter.Params, icon string, u *fasthttp.URI, tooltip string, sortable bool, cls string, resizable bool, ps *cutil.PageState) %}{% stripspace %}
-  <th class="{% if cls != `` %}{%s cls %}{% space %}{% endif %}no-padding" scope="col">
-  <div class="{% if resizable %}resize{% else %}noresize{% endif %}">
-    {% if !sortable %}
-      <div title="{%s tooltip %}">
-        {% if icon != "" %}
-          {% space %}
-          {%= SVGRef(icon, 16, 16, "icon-block", ps) %}
-        {% endif %}
-        {%s title %}
-      </div>
-    {% elseif params == nil %}
-      {%= thNormal(section, key, title, params, icon, u, tooltip, ps) %}
-    {% else %}
-      {%code o := params.GetOrdering(key) %}
-      {% if o == nil %}
-        {%= thNormal(section, key, title, params, icon, u, tooltip, ps) %}
-      {% else %}
-        {%= thSorted(o.Asc, section, key, title, params, icon, u, tooltip, ps) %}
-      {% endif %}
-    {% endif %}
-  </div></th>
-{% endstripspace %}{% endfunc %}
-
-{% func TableHeaderSimple(section string, key string, title string, params *filter.Params, u *fasthttp.URI, ps *cutil.PageState) %}{% stripspace %}
-  {%= TableHeader(section, key, title, params, "", u, "", true, "", false, ps) %}
-{% endstripspace %}{% endfunc %}
-
-{% func TableInput(key string, title string, value string, indent int) %}{% stripspace %}
+{% func TableInput(key string, title string, value string, indent int, help ...string) %}{% stripspace %}
   <tr>
     {%= vutil.Indent(true, indent + 1) %}
-    <th class="shrink"><label for="input-{%s key %}">{%s title %}</label></th>
+    <th class="shrink"><label for="input-{%s key %}"{%= titleFor(help) %}>{%s title %}</label></th>
     {%= vutil.Indent(true, indent + 1) %}
     <td>{%= FormInput(key, "input-" + key, value) %}</td>
   {%= vutil.Indent(true, indent) %}
   </tr>
 {% endstripspace %}{% endfunc %}
 
-{% func TableInputNumber(key string, title string, value int, indent int) %}{% stripspace %}
+{% func TableInputNumber(key string, title string, value int, indent int, help ...string) %}{% stripspace %}
   <tr>
     {%= vutil.Indent(true, indent + 1) %}
-    <th class="shrink"><label for="input-{%s key %}">{%s title %}</label></th>
+    <th class="shrink"><label for="input-{%s key %}"{%= titleFor(help) %}>{%s title %}</label></th>
     {%= vutil.Indent(true, indent + 1) %}
     <td>{%= FormInputNumber(key, "input-" + key, value) %}</td>
   {%= vutil.Indent(true, indent) %}
   </tr>
 {% endstripspace %}{% endfunc %}
 
-{% func TableTextarea(key string, title string, rows int, value string, indent int) %}{% stripspace %}
+{% func TableTextarea(key string, title string, rows int, value string, indent int, help ...string) %}{% stripspace %}
   <tr>
     {%= vutil.Indent(true, indent + 1) %}
-    <th class="shrink"><label for="input-{%s key %}">{%s title %}</label></th>
+    <th class="shrink"><label for="input-{%s key %}"{%= titleFor(help) %}>{%s title %}</label></th>
     {%= vutil.Indent(true, indent + 1) %}
     <td>{%= FormTextarea(key, "input-" + key, rows, value) %}</td>
   {%= vutil.Indent(true, indent) %}
   </tr>
 {% endstripspace %}{% endfunc %}
 
-{% func TableSelect(key string, title string, value string, opts []string, titles []string, indent int) %}{% stripspace %}
+{% func TableSelect(key string, title string, value string, opts []string, titles []string, indent int, help ...string) %}{% stripspace %}
   <tr>
     {%= vutil.Indent(true, indent + 1) %}
-    <th class="shrink"><label for="input-{%s key %}">{%s title %}</label></th>
+    <th class="shrink"><label for="input-{%s key %}"{%= titleFor(help) %}>{%s title %}</label></th>
     {%= vutil.Indent(true, indent + 1) %}
     <td>{%= FormSelect(key, "input-" + key, value, opts, titles, indent) %}</td>
   {%= vutil.Indent(true, indent) %}
   </tr>
 {% endstripspace %}{% endfunc %}
 
-{% func TableRadio(key string, title string, value string, opts []string, titles []string, indent int) %}{% stripspace %}
+{% func TableRadio(key string, title string, value string, opts []string, titles []string, indent int, help ...string) %}{% stripspace %}
   <tr>
     {%= vutil.Indent(true, indent + 1) %}
-    <th class="shrink"><label>{%s title %}</label></th>
+    <th class="shrink"><label{%= titleFor(help) %}>{%s title %}</label></th>
     {%= vutil.Indent(true, indent + 1) %}
     <td>
       {%= FormRadio(key, value, opts, titles, indent + 2) %}
@@ -89,11 +59,11 @@
   </tr>
 {% endstripspace %}{% endfunc %}
 
-{% func TableBoolean(key string, title string, value bool, indent int) %}{% stripspace %}
+{% func TableBoolean(key string, title string, value bool, indent int, help ...string) %}{% stripspace %}
   {%= TableRadio(key, title, fmt.Sprint(value), []string{"true", "false"}, []string{"True", "False"}, indent) %}
 {% endstripspace %}{% endfunc %}
 
-{% func TableCheckbox(key string, title string, values []string, opts []string, titles []string, indent int) %}{% stripspace %}
+{% func TableCheckbox(key string, title string, values []string, opts []string, titles []string, indent int, help ...string) %}{% stripspace %}
   <tr>
     {%= vutil.Indent(true, indent + 1) %}
     <th class="shrink"><label>{%s title %}</label></th>
@@ -106,7 +76,7 @@
   </tr>
 {% endstripspace %}{% endfunc %}
 
-{% func TableIcons(key string, title string, value string, ps *cutil.PageState, indent int) %}{% stripspace %}
+{% func TableIcons(key string, title string, value string, ps *cutil.PageState, indent int, help ...string) %}{% stripspace %}
   <tr>
     {%= vutil.Indent(true, indent + 1) %}
     <th class="shrink"><label>{%s title %}</label></th>
@@ -117,36 +87,6 @@
   </tr>
 {% endstripspace %}{% endfunc %}
 
-{% func thNormal(section string, key string, title string, params *filter.Params, icon string, u *fasthttp.URI, tooltip string, ps *cutil.PageState) %}{% stripspace %}
-  <a class="sort-hover" href="?{%s= params.CloneOrdering(&filter.Ordering{Column: key, Asc: true}).ToQueryString(u) %}" title="{%s tooltip %}">
-    <div class="sort-icon" title="click to sort by this column, ascending">{%= SVGRef(`down`, 0, 0, ``, ps) %}</div>
-    <div class="sort-title">
-      {% if icon != "" %}
-        {% space %}
-        {%= SVGRef(icon, 16, 16, "icon-block", ps) %}
-      {% endif %}
-      {%s title %}
-    </div>
-  </a>
-{% endstripspace %}{% endfunc %}
-
-{% func thSorted(asc bool, section string, key string, title string, params *filter.Params, icon string, u *fasthttp.URI, tooltip string, ps *cutil.PageState) %}{% stripspace %}
-  {% code
-    ascStr := "ascending"
-    dirStr := "up"
-    if(asc) {
-      ascStr = "descending"
-      dirStr = "down"
-    }
-  %}
-  <a href="?{%s= params.CloneOrdering(&filter.Ordering{Column: key, Asc: !asc}).ToQueryString(u) %}" title="{%s tooltip %}">
-    <div class="sort-icon" title="click to sort by this column,{% space %}{%s ascStr %}">{%= SVGRef(dirStr, 0, 0, ``, ps) %}</div>
-    <div class="sort-title">
-      {% if icon != "" %}
-        {% space %}
-        {%= SVGRef(icon, 16, 16, "icon-block", ps) %}
-      {% endif %}
-      {%s title %}
-    </div>
-  </a>
+{% func titleFor(help []string) %}{% stripspace %}
+  {% if len(help) > 0 %}{% space %}title="{%s strings.Join(help, "; ") %}"{% endif %}
 {% endstripspace %}{% endfunc %}

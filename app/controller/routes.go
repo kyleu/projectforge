@@ -26,6 +26,9 @@ func AppRoutes() fasthttp.RequestHandler {
 	r.GET("/auth/logout/{key}", AuthLogout)
 
 	// $PF_SECTION_START(routes)$
+	r.GET("/welcome", Welcome)
+	r.POST("/welcome", WelcomeResult)
+
 	r.GET("/doctor", Doctor)
 	r.GET("/doctor/all", DoctorRunAll)
 	r.GET("/doctor/{key}", DoctorRun)
