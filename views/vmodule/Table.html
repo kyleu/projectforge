@@ -8,11 +8,11 @@
 {% func Table(mods module.Modules, as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>Available Modules</h3>
-    <table class="mt">
+    <table class="mt min-200">
       <tbody>
         {%- for _, mod := range mods -%}
         <tr>
-          <td><a href="/m/{%s mod.Key %}">{%= components.SVGRef(mod.SafeIcon(), 16, 16, "icon", ps) %} {%s mod.Title() %}</a></td>
+          <td class="shrink"><a href="/m/{%s mod.Key %}">{%= components.SVGRef(mod.SafeIcon(), 16, 16, "icon", ps) %} {%s mod.Title() %}</a></td>
           <td>{%s mod.Description %}</td>
         </tr>
         {%- endfor -%}

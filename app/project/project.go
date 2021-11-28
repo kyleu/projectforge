@@ -2,6 +2,7 @@ package project
 
 import (
 	"sort"
+	"strings"
 
 	"github.com/kyleu/projectforge/app/theme"
 	"github.com/kyleu/projectforge/app/util"
@@ -41,6 +42,13 @@ func (p *Project) Executable() string {
 		return p.Key
 	}
 	return p.Exec
+}
+
+func (p *Project) CleanKey() string {
+	if x := strings.Index(p.Key, "-"); x > -1 {
+
+	}
+	return p.Key
 }
 
 func (p *Project) SafeIcon() string {
