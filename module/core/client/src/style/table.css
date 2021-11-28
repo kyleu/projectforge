@@ -37,7 +37,7 @@ table .shrink {
   white-space: nowrap;
 }
 
-.min-200 th {
+.min-200 th, .min-200 td {
   min-width: 200px;
 }
 

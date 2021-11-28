@@ -7,13 +7,16 @@ import (
 	"strings"
 	"time"
 
-	"github.com/jmoiron/sqlx"
+	"github.com/jmoiron/sqlx"{{{ if.HasModule "migration" }}}
+	"github.com/pkg/errors"	{{{ end }}}
 	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
 	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 
 	"{{{ .Package }}}/app/telemetry"
-	"{{{ .Package }}}/app/telemetry/dbmetrics"
+	"{{{ .Package }}}/app/telemetry/dbmetrics"{{{ if.HasModule "migration" }}}
+	"{{{ .Package }}}/queries"
+	"{{{ .Package }}}/queries/schema"{{{ end }}}
 )
 
 type DBType struct {
@@ -39,7 +42,17 @@ func NewService(typ *DBType, key string, dbName string, schName string, username
 	m, err := dbmetrics.NewMetrics(key, db)
 	if err != nil {
 		return nil, err
+	}{{{ if.HasModule "migration" }}}
+
+	res, err := db.Query(queries.Healthcheck())
+	if err != nil {
+		if strings.Contains(err.Error(), "does not exist") {
+			return nil, errors.Wrapf(err, "database does not exist; run the following:\n" + schema.CreateDatabase())
+		}
+		return nil, errors.Wrapf(err, "unable to run healthcheck [%s]", queries.Healthcheck())
 	}
+	_ = res.Close(){{{ end }}}
+
 	return &Service{Key: key, DatabaseName: dbName, SchemaName: schName, Username: username, Type: typ, db: db, metrics: m, logger: logger}, nil
 }
 
