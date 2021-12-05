@@ -29,12 +29,9 @@ func InitLogging(debug bool) (*zap.SugaredLogger, error) {
 }
 
 func initDevLogging(lvl zapcore.Level) (*zap.Logger, error) {
-	err := zap.RegisterEncoder(keyCustom, func(cfg zapcore.EncoderConfig) (zapcore.Encoder, error) {
+	_ = zap.RegisterEncoder(keyCustom, func(cfg zapcore.EncoderConfig) (zapcore.Encoder, error) {
 		return NewEncoder(cfg), nil
 	})
-	if err != nil {
-		return nil, errors.Wrap(err, "error registering dev encoder")
-	}
 	config := zap.NewDevelopmentConfig()
 	config.EncoderConfig = zapcore.EncoderConfig{}
 	config.Level = zap.NewAtomicLevelAt(lvl)
@@ -50,12 +47,9 @@ func initJSONLogging(lvl zapcore.Level) (*zap.Logger, error) {
 }
 
 func initSimpleLogging(lvl zapcore.Level) (*zap.Logger, error) {
-	err := zap.RegisterEncoder(keyCustom, func(cfg zapcore.EncoderConfig) (zapcore.Encoder, error) {
+	_ = zap.RegisterEncoder(keyCustom, func(cfg zapcore.EncoderConfig) (zapcore.Encoder, error) {
 		return SimpleEncoder(cfg), nil
 	})
-	if err != nil {
-		return nil, errors.Wrap(err, "error registering simple encoder")
-	}
 	config := zap.NewDevelopmentConfig()
 	config.EncoderConfig = zapcore.EncoderConfig{}
 	config.Level = zap.NewAtomicLevelAt(lvl)

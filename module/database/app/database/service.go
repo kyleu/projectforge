@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"{{{ if.HasModule "migration" }}}
-	"github.com/pkg/errors"	{{{ end }}}
+	"github.com/pkg/errors"{{{ end }}}
 	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
 	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
@@ -47,11 +47,11 @@ func NewService(typ *DBType, key string, dbName string, schName string, username
 	res, err := db.Query(queries.Healthcheck())
 	if err != nil {
 		if strings.Contains(err.Error(), "does not exist") {
-			return nil, errors.Wrapf(err, "database does not exist; run the following:\n" + schema.CreateDatabase())
+			return nil, errors.Wrapf(err, "database does not exist; run the following:\n"+schema.CreateDatabase())
 		}
 		return nil, errors.Wrapf(err, "unable to run healthcheck [%s]", queries.Healthcheck())
 	}
-	_ = res.Close(){{{ end }}}
+	defer func() { _ = res.Close() }(){{{ end }}}
 
 	return &Service{Key: key, DatabaseName: dbName, SchemaName: schName, Username: username, Type: typ, db: db, metrics: m, logger: logger}, nil
 }
@@ -61,6 +61,10 @@ func (s *Service) StartTransaction() (*sqlx.Tx, error) {
 		s.logger.Info("opening transaction")
 	}
 	return s.db.Beginx()
+}
+
+func (s *Service) Conn(ctx context.Context) (*sql.Conn, error) {
+	return s.db.Conn(ctx)
 }
 
 func (s *Service) Stats() sql.DBStats {

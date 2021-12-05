@@ -67,6 +67,22 @@ func PostgresParamsFromEnv(key string, defaultUser string, prefix string) *Postg
 	return &PostgresParams{Host: h, Port: p, Username: u, Password: pw, Database: d, Schema: s, MaxConns: mc, Debug: debug}
 }
 
+func OpenPostgres(ctx context.Context, prefix string, logger *zap.SugaredLogger) (*Service, error) {
+	envParams := PostgresParamsFromEnv(util.AppKey, util.AppKey, prefix)
+	if os.Getenv("DB_SSL") == "true" {
+		serviceParams, err := PostgresParamsFromService()
+		if err != nil {
+			return nil, err
+		}
+		return OpenPostgresDatabaseSSL(ctx, util.AppKey, envParams, serviceParams, logger)
+	}
+	return OpenPostgresDatabase(ctx, util.AppKey, envParams, logger)
+}
+
+func OpenDefaultPostgres(logger *zap.SugaredLogger) (*Service, error) {
+	return OpenPostgres(context.Background(), "", logger)
+}
+
 func OpenPostgresDatabase(ctx context.Context, key string, params *PostgresParams, logger *zap.SugaredLogger) (*Service, error) {
 	_, span := telemetry.StartSpan(ctx, "database", "open")
 	defer span.End()
@@ -102,19 +118,17 @@ func OpenPostgresDatabase(ctx context.Context, key string, params *PostgresParam
 	return NewService(typePostgres, key, params.Database, params.Schema, params.Username, db, log)
 }
 
-func openPostgresDatabaseSSL(
-	ctx context.Context, key string, envParams *PostgresParams, serviceParams *PostgresServiceParams, logger *zap.SugaredLogger,
-) (*Service, error) {
+func OpenPostgresDatabaseSSL(ctx context.Context, key string, ep *PostgresParams, sp *PostgresServiceParams, logger *zap.SugaredLogger) (*Service, error) {
 	_, span := telemetry.StartSpan(ctx, "database", "open")
 	defer span.End()
 
-	dbname := serviceParams.Database
+	dbname := sp.Database
 	if dbname == "" {
-		dbname = envParams.Database
+		dbname = ep.Database
 	}
-	schema := serviceParams.Schema
+	schema := sp.Schema
 	if schema == "" {
-		schema = envParams.Schema
+		schema = ep.Schema
 	}
 	if schema == "" {
 		schema = defaultSchema
@@ -123,16 +137,16 @@ func openPostgresDatabaseSSL(
 	const template = "postgres://%s:%d/%s?search_path=%s&application_name=%s&user=%s&sslmode=%s&sslcert=%s&sslrootcert=%s&sslkey=%s"
 	url := fmt.Sprintf(
 		template,
-		serviceParams.Host,
-		serviceParams.Port,
+		sp.Host,
+		sp.Port,
 		dbname,
 		schema,
 		key,
-		serviceParams.Username,
-		serviceParams.SSLMode,
-		serviceParams.SSLCert,
-		serviceParams.SSLRootCert,
-		serviceParams.SSLKey,
+		sp.Username,
+		sp.SSLMode,
+		sp.SSLCert,
+		sp.SSLRootCert,
+		sp.SSLKey,
 	)
 
 	db, err := sqlx.Open("pgx", url)
@@ -140,25 +154,13 @@ func openPostgresDatabaseSSL(
 		return nil, errors.Wrap(err, "error opening database")
 	}
 
-	db.SetMaxOpenConns(envParams.MaxConns)
+	db.SetMaxOpenConns(ep.MaxConns)
 	db.SetMaxIdleConns(0)
 
 	var log *zap.SugaredLogger
-	if envParams.Debug {
+	if ep.Debug {
 		log = logger.With("svc", "database", "db", key)
 	}
 
-	return NewService(typePostgres, key, dbname, envParams.Schema, serviceParams.Username, db, log)
-}
-
-func OpenDefaultPostgres(logger *zap.SugaredLogger) (*Service, error) {
-	envParams := PostgresParamsFromEnv(util.AppKey, util.AppKey, "")
-	if os.Getenv("DB_SSL") == "true" {
-		serviceParams, err := PostgresParamsFromService()
-		if err != nil {
-			return nil, err
-		}
-		return openPostgresDatabaseSSL(context.Background(), util.AppKey, envParams, serviceParams, logger)
-	}
-	return OpenPostgresDatabase(context.Background(), util.AppKey, envParams, logger)
+	return NewService(typePostgres, key, dbname, ep.Schema, sp.Username, db, log)
 }

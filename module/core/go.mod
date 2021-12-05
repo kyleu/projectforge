@@ -24,4 +24,5 @@ require (
 	go.uber.org/zap v1.19.0{{{ if .HasModule "mobile" }}}
 	golang.org/x/mobile v0.0.0-20210902104108-5d9a33257ab5{{{ end }}}
 	golang.org/x/oauth2 v0.0.0-20210819190943-2bc19b11175f
+	gopkg.in/yaml.v2 v2.4.0
 )

@@ -7,6 +7,7 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
+	"gopkg.in/yaml.v2"
 
 	"github.com/kyleu/projectforge/app/util"
 )
@@ -14,6 +15,7 @@ import (
 const (
 	mimeJSON = "application/json"
 	mimeXML  = "text/xml"
+	mimeYAML = "application/x-yaml"
 )
 
 func WriteCORS(rc *fasthttp.RequestCtx) {
@@ -43,6 +45,14 @@ func RespondXML(rc *fasthttp.RequestCtx, filename string, body interface{}) (str
 		return "", errors.Wrapf(err, "can't serialize response of type [%T] to XML", body)
 	}
 	return RespondMIME(filename, mimeXML, "xml", b, rc)
+}
+
+func RespondYAML(rc *fasthttp.RequestCtx, filename string, body interface{}) (string, error) {
+	b, err := yaml.Marshal(body)
+	if err != nil {
+		return "", err
+	}
+	return RespondMIME(filename, mimeYAML, "yaml", b, rc)
 }
 
 func RespondMIME(filename string, mime string, ext string, ba []byte, rc *fasthttp.RequestCtx) (string, error) {
@@ -77,6 +87,8 @@ func GetContentType(rc *fasthttp.RequestCtx) string {
 		return mimeJSON
 	case "xml":
 		return mimeXML
+	case "yaml", "yml":
+		return mimeYAML
 	default:
 		return strings.TrimSpace(ret)
 	}
@@ -88,4 +100,8 @@ func IsContentTypeJSON(c string) bool {
 
 func IsContentTypeXML(c string) bool {
 	return c == "application/xml" || c == mimeXML
+}
+
+func IsContentTypeYAML(c string) bool {
+	return c == "application/x-yaml" || c == "text/yaml"
 }

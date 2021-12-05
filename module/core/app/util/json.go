@@ -42,3 +42,7 @@ func FromJSONStrict(msg json.RawMessage, tgt interface{}) error {
 	dec.DisallowUnknownFields()
 	return dec.Decode(tgt)
 }
+
+func CycleJSON(src interface{}, tgt interface{}) error {
+	return FromJSON(ToJSONBytes(src, true), tgt)
+}

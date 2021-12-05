@@ -3,6 +3,7 @@ package util
 import (
 	"encoding/csv"
 	"encoding/json"
+	"encoding/xml"
 	"fmt"
 	"net/url"
 	"sort"
@@ -331,6 +332,26 @@ func (m ValueMap) SetPath(path string, val interface{}) interface{} {
 
 func (m ValueMap) Unset(s string) {
 	delete(m, s)
+}
+
+func (m ValueMap) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
+	tokens := []xml.Token{start}
+	for key, value := range m {
+		t := xml.StartElement{Name: xml.Name{"", key}}
+		x, err := xml.Marshal(value)
+		if err != nil {
+			return err
+		}
+		tokens = append(tokens, t, xml.CharData(x), xml.EndElement{t.Name})
+	}
+	tokens = append(tokens, xml.EndElement{start.Name})
+	for _, t := range tokens {
+		err := e.EncodeToken(t)
+		if err != nil {
+			return err
+		}
+	}
+	return e.Flush()
 }
 
 func setPath(i interface{}, path []string, val interface{}) error {

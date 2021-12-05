@@ -49,6 +49,8 @@ func render(rc *fasthttp.RequestCtx, as *app.State, page layout.Page, ps *cutil.
 			return cutil.RespondJSON(rc, "", ps.Data)
 		case cutil.IsContentTypeXML(ct):
 			return cutil.RespondXML(rc, "", ps.Data)
+		case cutil.IsContentTypeYAML(ct):
+			return cutil.RespondYAML(rc, "", ps.Data)
 		case ct == "debug":
 			return cutil.RespondDebug(rc, "", ps.Data)
 		}
