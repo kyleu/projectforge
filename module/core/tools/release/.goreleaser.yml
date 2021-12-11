@@ -10,8 +10,8 @@ archives:
   - format: zip
     wrap_in_directory: false
     replacements: &replacements
-      darwin: macos
-      386: i386
+      darwin: macos{{{ if .Build.X86 }}}
+      386: i386{{{ end }}}
       amd64: x86_64
     files:
       - none*
@@ -140,8 +140,8 @@ builds:
   - id: "linux"
     goos:
       - linux
-    goarch:
-      - 386
+    goarch:{{{ if .Build.X86 }}}
+      - 386{{{ end }}}
       - amd64
       - arm64
     mod_timestamp: "{{ .CommitTimestamp }}"
@@ -195,14 +195,14 @@ builds:
         - "./tools/notarize/notarize.sh"{{{ end }}}
         # $PF_SECTION_START(extrascripts)$
         # $PF_SECTION_END(extrascripts)$
-
+{{{ if .Build.X86 }}}
   - id: "windows_i386"
     goos:
       - windows
     goarch:
       - 386
     mod_timestamp: "{{ .CommitTimestamp }}"
-{{{ if .Build.WindowsARM }}}
+{{{ end }}}{{{ if .Build.WindowsARM }}}
   - id: "windows-arm"
     goos:
       - windows
@@ -246,8 +246,8 @@ builds:
   - id: "freebsd"
     goos:
       - freebsd
-    goarch:
-      - 386
+    goarch:{{{ if .Build.X86 }}}
+      - 386{{{ end }}}
       - amd64
       - arm
       - arm64
@@ -260,8 +260,8 @@ builds:
   - id: "netbsd"
     goos:
       - netbsd
-    goarch:
-      - 386
+    goarch:{{{ if .Build.X86 }}}
+      - 386{{{ end }}}
       - amd64
       - arm
       - arm64
@@ -272,8 +272,8 @@ builds:
   - id: "openbsd"
     goos:
       - openbsd
-    goarch:
-      - 386
+    goarch:{{{ if .Build.X86 }}}
+      - 386{{{ end }}}
       - amd64
       - arm
       - arm64
@@ -286,8 +286,8 @@ builds:
   - id: "plan9"
     goos:
       - plan9
-    goarch:
-      - 386
+    goarch:{{{ if .Build.X86 }}}
+      - 386{{{ end }}}
       - amd64
       - arm
     goarm:

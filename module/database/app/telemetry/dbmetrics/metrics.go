@@ -14,7 +14,7 @@ type Metrics struct {
 }
 
 func NewMetrics(key string, db StatsGetter) (*Metrics, error) {
-	ss := strings.ReplaceAll(strings.ReplaceAll(key, "/", "_"), ".", "_")
+	ss := strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(key, "-", "_"), "/", "_"), ".", "_")
 	m := &Metrics{}
 	err := m.registerDatabaseMetrics(ss)
 	if err != nil {

@@ -22,7 +22,7 @@ func AuthDetail(rc *fasthttp.RequestCtx) {
 		u, _, err := auth.CompleteUserAuth(prv, rc, ps.Session, ps.Logger)
 		if err == nil {
 			msg := fmt.Sprintf(signinMsg, auth.AvailableProviderNames[prv.ID], u.Email)
-			return returnToReferrer(msg, "/profile", rc, ps)
+			return returnToReferrer(msg, defaultProfilePath, rc, ps)
 		}
 		return auth.BeginAuthHandler(prv, rc, ps.Session, ps.Logger)
 	})
@@ -39,7 +39,7 @@ func AuthCallback(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		msg := fmt.Sprintf(signinMsg, auth.AvailableProviderNames[prv.ID], u.Email)
-		return returnToReferrer(msg, "/profile", rc, ps)
+		return returnToReferrer(msg, defaultProfilePath, rc, ps)
 	})
 }
 

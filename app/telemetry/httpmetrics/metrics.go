@@ -19,7 +19,7 @@ type Metrics struct {
 }
 
 func NewMetrics(subsystem string) *Metrics {
-	ss := strings.ReplaceAll(strings.ReplaceAll(subsystem, "/", "_"), ".", "_")
+	ss := strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(subsystem, "-", "_"), "/", "_"), ".", "_")
 	m := &Metrics{MetricsPath: defaultMetricPath}
 	m.registerHTTPMetrics(ss)
 	return m

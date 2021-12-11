@@ -60,7 +60,7 @@ func ProfileSave(rc *fasthttp.RequestCtx) {
 
 		referrer := frm.GetStringOpt("referrer")
 		if referrer == "" {
-			referrer = "/profile"
+			referrer = defaultProfilePath
 		}
 
 		n.Name = frm.GetStringOpt("name")

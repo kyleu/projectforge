@@ -16,8 +16,7 @@ func initApp(*app.State) {
 
 // Configure app-specific data for each request.
 func initAppRequest(as *app.State, ps *cutil.PageState) error {
-	err := initProjects(as)
-	if err != nil {
+	if err := initProjects(as); err != nil {
 		return errors.Wrap(err, "unable to initialize projects")
 	}
 

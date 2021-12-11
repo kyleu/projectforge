@@ -18,7 +18,7 @@
     <em>{%s p.Message %}</em>
     <p>You're not authorized to view <code>{%s p.Path %}</code></p>
     {%- if len(p.Accounts) == 0 -%}
-    <p>Sorry about that, maybe try <a href="/profile">logging in</a>?</p>
+    <p>Sorry about that, maybe try <a href="{%s as.Auth.LoginURL() %}">logging in</a>?</p>
     {%- endif -%}
   </div>
 {% endfunc %}

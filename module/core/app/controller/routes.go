@@ -13,6 +13,7 @@ func AppRoutes() fasthttp.RequestHandler {
 	r := router.New()
 
 	r.GET("/", Home)
+	r.GET("/healthcheck", Healthcheck)
 	r.GET("/about", About)
 	r.GET("/theme", ThemeList)
 	r.GET("/theme/{key}", ThemeEdit)

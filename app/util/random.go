@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"math/big"
+	"time"
 )
 
 const charset = "abcdefghijklmnopqrstuvwxyz0123456789"
@@ -50,6 +51,18 @@ func RandomBytes(size int) []byte {
 		panic(errMsg(err))
 	}
 	return b
+}
+
+func RandomDate() time.Time {
+	from := time.Now().Unix()
+	to := time.Now().AddDate(2, 0, 0).Unix()
+
+	rnd, err := rand.Int(rand.Reader, big.NewInt(to-from))
+	if err != nil {
+		panic(errMsg(err))
+	}
+
+	return time.Unix(from+rnd.Int64(), 0)
 }
 
 func errMsg(err error) string {

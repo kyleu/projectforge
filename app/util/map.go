@@ -337,14 +337,14 @@ func (m ValueMap) Unset(s string) {
 func (m ValueMap) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 	tokens := []xml.Token{start}
 	for key, value := range m {
-		t := xml.StartElement{Name: xml.Name{"", key}}
+		t := xml.StartElement{Name: xml.Name{Space: "", Local: key}}
 		x, err := xml.Marshal(value)
 		if err != nil {
 			return err
 		}
-		tokens = append(tokens, t, xml.CharData(x), xml.EndElement{t.Name})
+		tokens = append(tokens, t, xml.CharData(x), xml.EndElement{Name: t.Name})
 	}
-	tokens = append(tokens, xml.EndElement{start.Name})
+	tokens = append(tokens, xml.EndElement{Name: start.Name})
 	for _, t := range tokens {
 		err := e.EncodeToken(t)
 		if err != nil {

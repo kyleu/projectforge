@@ -12,5 +12,10 @@ cd $dir/..
 [[ -f "$HOME/bin/oauth" ]] && . $HOME/bin/oauth
 export projectforge_encryption_key=TEMP_SECRET_KEY
 
+# include env file
+if [ -f ".env" ]; then
+	export $(cat .env | grep -v "#" | xargs)
+fi
+
 ulimit -n 2048
 air

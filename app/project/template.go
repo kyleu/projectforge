@@ -34,6 +34,10 @@ func (t *TemplateContext) Title() string {
 	return t.Key
 }
 
+func (t *TemplateContext) CleanKey() string {
+	return clean(t.Key)
+}
+
 func (t *TemplateContext) KeyProper() string {
 	return strings.ToUpper(t.Key[:1]) + t.Key[1:]
 }

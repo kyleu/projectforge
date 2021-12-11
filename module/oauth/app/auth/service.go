@@ -15,3 +15,10 @@ func NewService(baseURL string, logger *zap.SugaredLogger) *Service {
 	_ = ret.load()
 	return ret
 }
+
+func (s *Service) LoginURL() string {
+	if len(s.providers) == 1 {
+		return "/auth/" + s.providers[0].ID
+	}
+	return defaultProfilePath
+}

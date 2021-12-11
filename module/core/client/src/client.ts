@@ -10,7 +10,7 @@ import {modeInit} from "./mode";
 import {appInit} from "./app";
 
 export function init(): void {
-  (window as any).{{{ .Key }}} = {
+  (window as any).{{{ .CleanKey }}} = {
     "sortableEdit": sortableEdit,
     "setSiblingToNull": setSiblingToNull
   };

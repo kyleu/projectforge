@@ -42,19 +42,30 @@ func NewService(typ *DBType, key string, dbName string, schName string, username
 	m, err := dbmetrics.NewMetrics(key, db)
 	if err != nil {
 		return nil, err
-	}{{{ if.HasModule "migration" }}}
-
-	res, err := db.Query(queries.Healthcheck())
-	if err != nil {
-		if strings.Contains(err.Error(), "does not exist") {
-			return nil, errors.Wrapf(err, "database does not exist; run the following:\n"+schema.CreateDatabase())
-		}
-		return nil, errors.Wrapf(err, "unable to run healthcheck [%s]", queries.Healthcheck())
 	}
-	defer func() { _ = res.Close() }(){{{ end }}}
 
-	return &Service{Key: key, DatabaseName: dbName, SchemaName: schName, Username: username, Type: typ, db: db, metrics: m, logger: logger}, nil
-}
+	ret := &Service{Key: key, DatabaseName: dbName, SchemaName: schName, Username: username, Type: typ, db: db, metrics: m, logger: logger}{{{ if.HasModule "migration" }}}
+	err = ret.Healthcheck(db)
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to run healthcheck")
+	}{{{ end }}}
+	return ret, nil
+}{{{ if.HasModule "migration" }}}
+
+func (s *Service) Healthcheck(db *sqlx.DB) error {
+	res, err := db.Query(queries.Healthcheck())
+	if err != nil || res.Err() != nil {
+		if err == nil {
+			err = res.Err()
+		}
+		if strings.Contains(err.Error(), "does not exist") {
+			return errors.Wrapf(err, "database does not exist; run the following:\n"+schema.CreateDatabase())
+		}
+		return errors.Wrapf(err, "unable to run healthcheck [%s]", queries.Healthcheck())
+	}
+	defer func() { _ = res.Close() }()
+	return nil
+}{{{ end }}}
 
 func (s *Service) StartTransaction() (*sqlx.Tx, error) {
 	if s.logger != nil {

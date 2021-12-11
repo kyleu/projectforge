@@ -26,7 +26,7 @@
     {%= Editor(util.AppName, p.Theme, as, ps) %}
     <div class="card">
       <button type="submit">Save All Changes</button>
-      <a href="/theme/{%s p.Theme.Key %}"><button type="button">Reset</button></a>
+      <a href="/theme/{%u p.Theme.Key %}"><button type="button">Reset</button></a>
     </div>
   </form>
   {%= components.JSONModal("theme", "Theme JSON", p.Theme, 1) %}

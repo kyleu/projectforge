@@ -11,13 +11,15 @@ import (
 	"github.com/kyleu/projectforge/app/util"
 )
 
+const defaultProfilePath = "/profile"
+
 func BeginAuthHandler(prv *Provider, rc *fasthttp.RequestCtx, websess util.ValueMap, logger *zap.SugaredLogger) (string, error) {
 	u, err := getAuthURL(prv, rc, websess, logger)
 	if err != nil {
 		return "", err
 	}
 	refer := string(rc.Request.URI().QueryArgs().Peek("refer"))
-	if refer != "" && refer != "/profile" {
+	if refer != "" && refer != defaultProfilePath {
 		_ = cutil.StoreInSession(cutil.ReferKey, refer, rc, websess, logger)
 	}
 	return u, nil

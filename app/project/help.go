@@ -1,8 +1,12 @@
 package project
 
+import (
+	"strings"
+)
+
 var Helpers = func() map[string][]string {
 	ret := map[string][]string{}
-	var add = func(k string, v string) {
+	add := func(k string, v string) {
 		ret[k] = []string{v}
 	}
 
@@ -36,3 +40,7 @@ var Helpers = func() map[string][]string {
 
 	return ret
 }()
+
+func clean(key string) string {
+	return strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(key, "-", "_"), "/", "_"), ".", "_")
+}
