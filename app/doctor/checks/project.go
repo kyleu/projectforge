@@ -50,6 +50,9 @@ func checkProject(r *doctor.Result, logger *zap.SugaredLogger) *doctor.Result {
 	if p.Info.License == "" {
 		r = r.WithError(doctor.NewError("config", "No license set"))
 	}
+	if p.Info.AuthorID == "" {
+		r = r.WithError(doctor.NewError("config", "No author ID set"))
+	}
 	if p.Info.AuthorName == "" {
 		r = r.WithError(doctor.NewError("config", "No author name set"))
 	}

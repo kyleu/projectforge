@@ -1,7 +1,6 @@
 package project
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"sort"
@@ -147,7 +146,7 @@ func (s *Service) load(path string) (*Project, error) {
 		ret.Name = r + " (missing)"
 		return ret, nil
 	}
-	b, err := ioutil.ReadFile(cfgPath)
+	b, err := os.ReadFile(cfgPath)
 	if err != nil {
 		return nil, err
 	}

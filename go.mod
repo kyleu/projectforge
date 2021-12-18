@@ -6,6 +6,7 @@ go 1.17
 require (
 	github.com/alecthomas/chroma v0.9.2
 	github.com/coreos/go-semver v0.3.0
+	github.com/dustin/go-humanize v1.0.0
 	github.com/fasthttp/router v1.4.2
 	github.com/gertd/go-pluralize v0.1.7
 	github.com/gomarkdown/markdown v0.0.0-20210918233619-6c1113f12c4a

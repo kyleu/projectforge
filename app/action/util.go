@@ -44,6 +44,7 @@ func projectFromCfg(proto *project.Project, cfg util.ValueMap) *project.Project 
 		Ignore:  proto.Ignore,
 		Info: &project.Info{
 			Org:             str("org", i.Org),
+			AuthorID:        str("author_id", i.AuthorID),
 			AuthorName:      str("author_name", i.AuthorName),
 			AuthorEmail:     str("author_email", i.AuthorEmail),
 			License:         str("license", i.License),

@@ -47,6 +47,30 @@ func (s *Service) QueryRows(ctx context.Context, q string, tx *sqlx.Tx, values .
 	return ret, nil
 }
 
+func (s *Service) Query2DArray(ctx context.Context, q string, tx *sqlx.Tx, values ...interface{}) ([][]interface{}, error) {
+	var err error
+	var slice []interface{}
+
+	rows, err := s.Query(ctx, q, tx, values...)
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		_ = rows.Close()
+	}()
+
+	var ret [][]interface{}
+	for rows.Next() {
+		slice, err = rows.SliceScan()
+		if err != nil {
+			return nil, errors.Wrap(err, "unable to scan output row")
+		}
+		ret = append(ret, slice)
+	}
+
+	return ret, nil
+}
+
 func (s *Service) QueryKVMap(ctx context.Context, q string, tx *sqlx.Tx, values ...interface{}) (util.ValueMap, error) {
 	msg := `must provide two columns, a string key named "k" and value "v"`
 	maps, err := s.QueryRows(ctx, q, tx, values...)

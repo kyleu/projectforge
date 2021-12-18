@@ -27,8 +27,7 @@ func serverCmd() *cobra.Command {
 }
 
 func startServer(flags *Flags) error {
-	err := initIfNeeded()
-	if err != nil {
+	if err := initIfNeeded(); err != nil {
 		return errors.Wrap(err, "error initializing application")
 	}
 

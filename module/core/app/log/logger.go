@@ -28,9 +28,13 @@ func InitLogging(debug bool) (*zap.SugaredLogger, error) {
 	return logger.Sugar(), nil
 }
 
+func CreateTestLogger() (*zap.SugaredLogger, error) {
+	return InitLogging(false)
+}
+
 func initDevLogging(lvl zapcore.Level) (*zap.Logger, error) {
 	_ = zap.RegisterEncoder(keyCustom, func(cfg zapcore.EncoderConfig) (zapcore.Encoder, error) {
-		return NewEncoder(cfg), nil
+		return newEncoder(cfg), nil
 	})
 	config := zap.NewDevelopmentConfig()
 	config.EncoderConfig = zapcore.EncoderConfig{}

@@ -7,6 +7,7 @@ import (
 	"encoding/base64"
 	"io"
 	"os"
+	"strings"
 
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
@@ -61,7 +62,7 @@ func DecryptMessage(message string, logger *zap.SugaredLogger) (string, error) {
 
 func getKey(logger *zap.SugaredLogger) []byte {
 	if key == "" {
-		env := util.AppKey + "_encryption_key"
+		env := strings.ReplaceAll(util.AppKey, "-", "_") + "_encryption_key"
 		key = os.Getenv(env)
 		if key == "" {
 			logger.Warnf("using default encryption key\nset environment variable [%s] to save sessions between restarts", env)

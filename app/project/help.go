@@ -24,6 +24,7 @@ var Helpers = func() map[string][]string {
 
 	// info
 	add("org", "The Github organization responsible for this project")
+	add("authorID", "The GitHub handle of the author of this project")
 	add("authorName", "The full name of the author of this project")
 	add("authorEmail", "The email address of the author of this project")
 	add("license", "The software license used by this project")

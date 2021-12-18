@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+	"time"
 
 	"go.uber.org/zap"
 {{{ if .HasModule "oauth" }}}
@@ -37,6 +38,7 @@ type State struct {
 	Themes    *theme.Service
 	Logger    *zap.SugaredLogger
 	Services  *Services
+	Started   time.Time
 }
 
 func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, logger *zap.SugaredLogger) (*State, error) {
@@ -51,5 +53,6 @@ func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, logger *zap.Su
 		Auth:      as{{{ end }}},
 		Themes:    ts,
 		Logger:    logger,
+		Started:   time.Now(),
 	}, nil
 }

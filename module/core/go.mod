@@ -5,6 +5,7 @@ go 1.17
 
 require (
 	github.com/alecthomas/chroma v0.9.2
+	github.com/dustin/go-humanize v1.0.0
 	github.com/fasthttp/router v1.4.2
 	github.com/gertd/go-pluralize v0.1.7
 	github.com/google/uuid v1.3.0

@@ -12,6 +12,7 @@ type ModuleDef struct {
 
 type Info struct {
 	Org             string       `json:"org,omitempty"`
+	AuthorID        string       `json:"authorID,omitempty"`
 	AuthorName      string       `json:"authorName,omitempty"`
 	AuthorEmail     string       `json:"authorEmail,omitempty"`
 	License         string       `json:"license,omitempty"`
@@ -33,4 +34,17 @@ func (i *Info) SigningIdentityTrimmed() string {
 		return i.SigningIdentity[strings.LastIndex(i.SigningIdentity, "(")+1 : strings.LastIndex(i.SigningIdentity, ")")]
 	}
 	return i.SigningIdentity
+}
+
+func (i *Info) AuthorIDSafe() string {
+	if i.AuthorID == "" {
+		if !strings.Contains(i.AuthorEmail, "@") {
+			return "no_owner"
+		}
+		return i.AuthorEmail
+	}
+	if strings.Contains(i.AuthorID, "@") {
+		return i.AuthorID
+	}
+	return "@" + i.AuthorID
 }

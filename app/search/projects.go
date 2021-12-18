@@ -33,6 +33,7 @@ func projectMatches(prj *project.Project, q string) []string {
 	f("version", prj.Version)
 	f("package", prj.Package)
 	if prj.Info != nil {
+		f("authorID", prj.Info.AuthorID)
 		f("authorName", prj.Info.AuthorName)
 		f("authorEmail", prj.Info.AuthorEmail)
 		f("license", prj.Info.License)

@@ -23,7 +23,7 @@ func (s *Service) Download(key string, url string) error {
 		url = fmt.Sprintf(base+"/projectforge_module_%s.zip", key)
 	}
 	s.logger.Infof("downloading module [%s] from URL [%s]", key, url)
-	req, err := http.NewRequestWithContext(context.Background(), "GET", url, nil)
+	req, err := http.NewRequestWithContext(context.Background(), "GET", url, http.NoBody)
 	if err != nil {
 		return errors.Wrapf(err, "invalid URL [%s] for module [%s]", url, key)
 	}

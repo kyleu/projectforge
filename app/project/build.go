@@ -10,6 +10,7 @@ type Build struct {
 	Publish   bool `json:"publish,omitempty"`
 	Private   bool `json:"private,omitempty"`
 	Changelog bool `json:"changelog,omitempty"`
+	TestsFail bool `json:"testsFail,omitempty"`
 
 	Desktop  bool `json:"desktop,omitempty"`
 	Notarize bool `json:"notarize,omitempty"`
@@ -49,14 +50,16 @@ func (b *Build) HasArm() bool {
 
 // nolint
 func (b *Build) Empty() bool {
-	return !(b.Publish || b.Private || b.Changelog || b.Desktop || b.Notarize || b.Signing || b.Android || b.IOS || b.WASM || b.X86 || b.WindowsARM ||
+	return !(b.Publish || b.Private || b.Changelog || b.TestsFail ||
+		b.Desktop || b.Notarize || b.Signing ||
+		b.Android || b.IOS || b.WASM || b.X86 || b.WindowsARM ||
 		b.LinuxARM || b.LinuxMIPS || b.LinuxOdd || b.AIX || b.Dragonfly || b.Illumos || b.FreeBSD || b.NetBSD ||
 		b.OpenBSD || b.Plan9 || b.Solaris || b.Homebrew || b.NFPMS || b.Snapcraft)
 }
 
 func (b *Build) ToMap() map[string]bool {
 	return map[string]bool{
-		"publish": b.Publish, "private": b.Private, "changelog": b.Changelog,
+		"publish": b.Publish, "private": b.Private, "changelog": b.Changelog, "testsFail": b.TestsFail,
 		"desktop": b.Desktop, "notarize": b.Notarize, "signing": b.Signing,
 		"android": b.Android, "ios": b.IOS, "wasm": b.WASM, "build-x86": b.X86, "windows-arm": b.WindowsARM,
 		"linux-arm": b.LinuxARM, "linux-mips": b.LinuxMIPS, "linux-odd": b.LinuxOdd,
@@ -72,7 +75,7 @@ func BuildFromMap(frm util.ValueMap) *Build {
 		return v == "true"
 	}
 	return &Build{
-		Publish: x("publish"), Private: x("private"), Changelog: x("changelog"),
+		Publish: x("publish"), Private: x("private"), Changelog: x("changelog"), TestsFail: x("testsFail"),
 		Desktop: x("desktop"), Notarize: x("notarize"), Signing: x("signing"),
 		Android: x("android"), IOS: x("ios"), WASM: x("wasm"), X86: x("x86"), WindowsARM: x("windows-arm"),
 		LinuxARM: x("linux-arm"), LinuxMIPS: x("linux-mips"), LinuxOdd: x("linux-odd"),
@@ -92,6 +95,7 @@ var AllBuildOptions = []*BuildOption{
 	{Key: "publish", Title: "Publish", Description: "The release process will publish a full release"},
 	{Key: "private", Title: "Private", Description: "This project is not public (affects publishing)"},
 	{Key: "changelog", Title: "Changelog", Description: "Generate changelogs from Github commits"},
+	{Key: "testsFail", Title: "Tests Fail", Description: "If set, Docker build will fail unless all tests pass"},
 
 	{Key: "desktop", Title: "Desktop", Description: "Webview-based applications for the three major operating systems"},
 	{Key: "notarize", Title: "Notarize", Description: "Sends build artifacts to Apple for notarization"},

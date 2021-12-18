@@ -19,7 +19,7 @@ type customEncoder struct {
 }
 
 // nolint
-func NewEncoder(cfg zapcore.EncoderConfig) *customEncoder {
+func newEncoder(cfg zapcore.EncoderConfig) *customEncoder {
 	return &customEncoder{Encoder: zapcore.NewJSONEncoder(cfg), pool: buffer.NewPool()}
 }
 

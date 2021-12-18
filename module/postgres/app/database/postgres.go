@@ -135,19 +135,7 @@ func OpenPostgresDatabaseSSL(ctx context.Context, key string, ep *PostgresParams
 	}
 
 	const template = "postgres://%s:%d/%s?search_path=%s&application_name=%s&user=%s&sslmode=%s&sslcert=%s&sslrootcert=%s&sslkey=%s"
-	url := fmt.Sprintf(
-		template,
-		sp.Host,
-		sp.Port,
-		dbname,
-		schema,
-		key,
-		sp.Username,
-		sp.SSLMode,
-		sp.SSLCert,
-		sp.SSLRootCert,
-		sp.SSLKey,
-	)
+	url := fmt.Sprintf(template, sp.Host, sp.Port, dbname, schema, key, sp.Username, sp.SSLMode, sp.SSLCert, sp.SSLRootCert, sp.SSLKey)
 
 	db, err := sqlx.Open("pgx", url)
 	if err != nil {
