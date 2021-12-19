@@ -32,7 +32,7 @@ func (m *Module) Title() string {
 	return m.Name
 }
 
-func (m *Module) SafeIcon() string {
+func (m *Module) IconSafe() string {
 	_, ok := util.SVGLibrary[m.Icon]
 	if !ok {
 		return "compass"

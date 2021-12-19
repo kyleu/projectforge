@@ -24,6 +24,7 @@ type Service struct {
 }
 
 func NewService(config filesystem.FileLoader, logger *zap.SugaredLogger) *Service {
+	logger = logger.With("svc", "module")
 	local := filesystem.NewFileSystem("module", logger)
 	config = filesystem.NewFileSystem(filepath.Join(config.Root(), "module"), logger)
 	ret := &Service{local: local, config: config, cache: map[string]*Module{}, filesystems: map[string]filesystem.FileLoader{}, logger: logger}

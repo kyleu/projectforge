@@ -47,7 +47,7 @@ func (p *Project) CleanKey() string {
 	return clean(p.Key)
 }
 
-func (p *Project) SafeIcon() string {
+func (p *Project) IconSafe() string {
 	_, ok := util.SVGLibrary[p.Icon]
 	if !ok {
 		return DefaultIcon

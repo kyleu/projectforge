@@ -20,6 +20,7 @@
       {%- for _, t := range action.ProjectTypes -%}
       <a href="/run/{%s t.Key %}" title="{%s t.Description %}"><button>{%s t.Title %}</button></a>
       {%- endfor -%}
+      <a href="/build" title="Build dashboard for all projects"><button>Build</button></a>
     </div>
     <div class="mt">
       <ul class="accordion">
@@ -28,7 +29,7 @@
           <input id="accordion-{%s x.Prj.Key %}" type="checkbox" hidden />
           <label for="accordion-{%s x.Prj.Key %}">
             <em class="right">{%s x.Status() %}{% if x.Res != nil && len(x.Res.Errors) > 0 %} ({%d len(x.Res.Errors) %} errors){% endif %}</em>
-            {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef(x.Prj.SafeIcon(), 16, 16, "icon", ps) %} {%s x.Prj.Title() %}
+            {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef(x.Prj.IconSafe(), 16, 16, "icon", ps) %} {%s x.Prj.Title() %}
           </label>
           <div class="bd">
             {%= vproject.Summary(x.Prj, ps) %}

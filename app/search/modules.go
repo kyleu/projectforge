@@ -12,7 +12,7 @@ func searchModules(ctx context.Context, st *app.State, p *Params) (Results, erro
 	var ret Results
 	for _, mod := range st.Services.Modules.Modules() {
 		if m := moduleMatches(mod, p.Q); len(m) > 0 {
-			res := &Result{ID: mod.Key, Type: "module", Title: mod.Title(), Icon: mod.SafeIcon(), URL: "/m/" + mod.Key, Matches: MatchesFrom(m), Data: mod}
+			res := &Result{ID: mod.Key, Type: "module", Title: mod.Title(), Icon: mod.IconSafe(), URL: "/m/" + mod.Key, Matches: MatchesFrom(m), Data: mod}
 			ret = append(ret, res)
 		}
 	}

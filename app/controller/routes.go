@@ -49,6 +49,7 @@ func AppRoutes() fasthttp.RequestHandler {
 	r.GET("/p/{key}/svg/{icon}/setapp", SVGSetApp)
 	r.GET("/p/{key}/svg/{icon}/remove", SVGRemove)
 
+	r.GET("/build", BuildList)
 	r.GET("/run/{act}", RunAllActions)
 	r.GET("/run/{tgt}/{act}", RunAction)
 

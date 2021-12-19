@@ -9,7 +9,7 @@
 {% func Summary(prj *project.Project, ps *cutil.PageState, path ...string) %}
   <div class="card">
     <div class="right"><a href="/p/{%s prj.Key %}/edit"><button>Edit</button></a></div>
-    <h3>{%= components.SVGRefIcon(prj.SafeIcon(), ps) %} {%s prj.Title() %}</h3>
+    <h3>{%= components.SVGRefIcon(prj.IconSafe(), ps) %} {%s prj.Title() %}</h3>
     <div style="display: flex;">
       <div style="flex-grow: 1;">
         <h4>Generate</h4>

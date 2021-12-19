@@ -12,7 +12,7 @@ func searchProjects(ctx context.Context, st *app.State, p *Params) (Results, err
 	var ret Results
 	for _, prj := range st.Services.Projects.Projects() {
 		if m := projectMatches(prj, p.Q); len(m) > 0 {
-			res := &Result{ID: prj.Key, Type: "project", Title: prj.Title(), Icon: prj.SafeIcon(), URL: "/p/" + prj.Key, Matches: MatchesFrom(m), Data: prj}
+			res := &Result{ID: prj.Key, Type: "project", Title: prj.Title(), Icon: prj.IconSafe(), URL: "/p/" + prj.Key, Matches: MatchesFrom(m), Data: prj}
 			ret = append(ret, res)
 		}
 	}

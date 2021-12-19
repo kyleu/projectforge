@@ -1,0 +1,37 @@
+{% import (
+  "github.com/kyleu/projectforge/app"
+  "github.com/kyleu/projectforge/app/build"
+  "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/views/components"
+  "github.com/kyleu/projectforge/views/layout"
+) %}
+
+{% code type StatusAll struct {
+  layout.Basic
+  Statuses build.Statuses
+} %}
+
+{% func (p *StatusAll) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>Build Status</h3>
+    <div class="mt">
+      <a href="/build/all/build" title="Build all projects"><button>Build All</button></a>
+    </div>
+    <div class="mt">
+      <ul class="accordion">
+        {%- for _, x := range p.Statuses -%}
+        <li>
+          <input id="accordion-{%s x.Project.Key %}" type="checkbox" hidden />
+          <label for="accordion-{%s x.Project.Key %}">
+            <em class="right">{%s x.Status() %}{% if x.Error != "" %} (error){% endif %}</em>
+            {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef(x.Project.IconSafe(), 16, 16, "icon", ps) %} {%s x.Project.Title() %}
+          </label>
+          <div class="bd">
+            {%= components.JSON(x) %}
+          </div>
+        </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+{% endfunc %}
