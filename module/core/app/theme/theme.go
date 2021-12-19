@@ -43,7 +43,7 @@ func (t *Theme) Equals(x *Theme) bool {
 type Themes []*Theme
 
 func (t Themes) Sort() {
-	sort.Slice(t, func(i, j int) bool {
+	sort.Slice(t, func(i int, j int) bool {
 		if t[i].Key == ThemeDefault.Key {
 			return true
 		}

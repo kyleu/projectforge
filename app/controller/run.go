@@ -2,6 +2,7 @@ package controller
 
 import (
 	"sort"
+	"strings"
 	"sync"
 
 	"github.com/kyleu/projectforge/app"
@@ -83,8 +84,8 @@ func RunAllActions(rc *fasthttp.RequestCtx) {
 			}()
 		}
 		wg.Wait()
-		sort.Slice(results, func(i, j int) bool {
-			return results[i].Prj.Key < results[j].Prj.Key
+		sort.Slice(results, func(i int, j int) bool {
+			return strings.ToLower(results[i].Prj.Key) < strings.ToLower(results[j].Prj.Key)
 		})
 		ps.Data = results
 		page := &vaction.Results{T: actT, Ctxs: results}

@@ -7,7 +7,7 @@
   "github.com/kyleu/projectforge/views/components"
 ) %}
 
-{% func Summary(prj *project.Project, status *git.Status, ps *cutil.PageState, path ...string) %}
+{% func Summary(prj *project.Project, gitResult *git.Result, ps *cutil.PageState, path ...string) %}
   <div class="card">
     <div class="right"><a href="/p/{%s prj.Key %}/edit"><button>Edit</button></a></div>
     <h3>{%= components.SVGRefIcon(prj.IconSafe(), ps) %} {%s prj.Title() %}</h3>
@@ -40,10 +40,10 @@
       </div>
       <div style="flex-grow: 1;">
         <h4>Source Control</h4>
-        {%- if status == nil -%}
+        {%- if gitResult == nil -%}
         <a href="/git/{%s prj.Key %}" title="Source control status for this project"><button>Status</button></a>
         {%- else -%}
-        {%- for _, t := range status.Actions() -%}
+        {%- for _, t := range gitResult.Actions() -%}
         <a href="/git/{%s prj.Key %}/{%s t.Key %}" title="{%s t.Description %}"><button>{%s t.Title %}</button></a>
         {%- endfor -%}
         {%- endif -%}

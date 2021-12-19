@@ -26,6 +26,21 @@ func gitBranch(path string) string {
 	return strings.TrimSpace(out)
 }
 
+func gitFetch(path string, dryRun bool) (string, error) {
+	cmd := "fetch"
+	if dryRun {
+		cmd += " --dry-run"
+	}
+	out, err := gitCmd(cmd, path)
+	if err != nil {
+		if errors.Is(err, noRepo) {
+			return "", nil
+		}
+		return "", err
+	}
+	return out, nil
+}
+
 func gitStatus(path string) ([]string, error) {
 	out, err := gitCmd("status --porcelain", path)
 	if err != nil {

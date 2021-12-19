@@ -7,29 +7,32 @@
   "github.com/kyleu/projectforge/views/layout"
 ) %}
 
-{% code type StatusAll struct {
+{% code type Results struct {
   layout.Basic
-  Statuses git.Statuses
+  Results git.Results
 } %}
 
-{% func (p *StatusAll) Body(as *app.State, ps *cutil.PageState) %}
+{% func (p *Results) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>Source Control</h3>
     <div class="mt">
       <a href="/run/{%s action.TypePreview.Key %}" title="{%s action.TypePreview.Description %}"><button>{%s action.TypePreview.Title %}</button></a>
       <a href="/git" title="Build status for all projects"><button>Status</button></a>
       <a href="/git/all/magic" title="Runs the magic for all projects"><button>Magic</button></a>
+      <a href="/git/all/fetch" title="Fetches updates for all projects"><button>Fetch</button></a>
     </div>
     <div class="mt">
       <ul class="accordion">
-        {%- for _, x := range p.Statuses -%}
+        {%- for _, x := range p.Results -%}
         <li>
           <input id="accordion-{%s x.Project.Key %}" type="checkbox" hidden />
           <label for="accordion-{%s x.Project.Key %}">
-            <em class="right">{%s x.Status() %}{% if x.Error != "" %} (error){% endif %}</em>
+            <em class="right">{%s x.Status %}{% if x.Error != "" %} (error){% endif %}</em>
             {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef(x.Project.IconSafe(), 16, 16, "icon", ps) %}
             {%s x.Project.Title() %}
-            <em>({%s x.Branch %})</em>
+            {%- if x.Branch() != "" -%}
+            <em>({%s x.Branch() %})</em>
+            {%- endif -%}
           </label>
           <div class="bd">
             {%= statusActions(x) %}

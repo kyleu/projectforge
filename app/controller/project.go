@@ -29,11 +29,11 @@ func ProjectDetail(rc *fasthttp.RequestCtx) {
 		}
 
 		mods := as.Services.Modules.Modules()
-		gitStatus, _ := as.Services.Git.GetStatus(prj)
+		gitStatus, _ := as.Services.Git.Status(prj)
 
 		ps.Title = fmt.Sprintf("%s (project %s)", prj.Title(), prj.Key)
 		ps.Data = prj
-		return render(rc, as, &vproject.Detail{Project: prj, Modules: mods, Status: gitStatus}, ps, "projects", prj.Key)
+		return render(rc, as, &vproject.Detail{Project: prj, Modules: mods, GitResult: gitStatus}, ps, "projects", prj.Key)
 	})
 }
 

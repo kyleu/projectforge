@@ -52,7 +52,7 @@ func (p Permission) String() string {
 type Permissions []*Permission
 
 func (p Permissions) Sort() {
-	sort.Slice(p, func(i, j int) bool {
+	sort.Slice(p, func(i int, j int) bool {
 		l, r := p[i], p[j]
 		if l.Path == r.Path {
 			return l.Match < r.Match

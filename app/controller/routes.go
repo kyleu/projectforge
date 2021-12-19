@@ -49,11 +49,11 @@ func AppRoutes() fasthttp.RequestHandler {
 	r.GET("/p/{key}/svg/{icon}/setapp", SVGSetApp)
 	r.GET("/p/{key}/svg/{icon}/remove", SVGRemove)
 
-	r.GET("/git", GitStatusAll)
-	r.GET("/git/all/status", GitStatusAll)
+	r.GET("/git", GitActionAll)
+	r.GET("/git/all/{act}", GitActionAll)
 
-	r.GET("/git/{key}", GitStatus)
-	r.GET("/git/{key}/status", GitStatus)
+	r.GET("/git/{key}", GitAction)
+	r.GET("/git/{key}/{act}", GitAction)
 
 	r.GET("/run/{act}", RunAllActions)
 	r.GET("/run/{tgt}/{act}", RunAction)

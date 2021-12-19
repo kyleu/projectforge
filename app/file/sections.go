@@ -72,7 +72,7 @@ func (s sections) Get(key string) *section {
 }
 
 func (s sections) Sort() {
-	sort.Slice(s, func(i, j int) bool {
+	sort.Slice(s, func(i int, j int) bool {
 		return s[i].Start > s[j].Start
 	})
 }

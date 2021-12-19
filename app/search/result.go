@@ -59,10 +59,10 @@ type Result struct {
 type Results []*Result
 
 func (rs Results) Sort() {
-	sort.Slice(rs, func(i, j int) bool {
+	sort.Slice(rs, func(i int, j int) bool {
 		l, r := rs[i], rs[j]
 		if l.Type == r.Type {
-			return l.Title < r.Title
+			return strings.ToLower(l.Title) < strings.ToLower(r.Title)
 		}
 		return l.Type < r.Type
 	})

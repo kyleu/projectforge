@@ -32,11 +32,11 @@ func (a Accounts) String() string {
 }
 
 func (a Accounts) Sort() {
-	sort.Slice(a, func(i, j int) bool {
+	sort.Slice(a, func(i int, j int) bool {
 		l := a[i]
 		r := a[j]
 		if l.Provider == r.Provider {
-			return l.Email < r.Email
+			return strings.ToLower(l.Email) < strings.ToLower(r.Email)
 		}
 		return l.Provider < r.Provider
 	})

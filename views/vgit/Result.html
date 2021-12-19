@@ -6,31 +6,31 @@
   "github.com/kyleu/projectforge/views/layout"
 ) %}
 
-{% code type Status struct {
+{% code type Result struct {
   layout.Basic
-  Status *git.Status
+Result *git.Result
 } %}
 
-{% func (p *Status) Body(as *app.State, ps *cutil.PageState) %}
-  {%- code prj := p.Status.Project -%}
+{% func (p *Result) Body(as *app.State, ps *cutil.PageState) %}
+  {%- code prj := p.Result.Project -%}
   <div class="card">
-    <div class="right"><em>{%s p.Status.Status() %}</em></div>
-    <h3>{%s prj.Title() %} <em>({%s p.Status.Branch %})</em></h3>
+    <div class="right"><em>{%s p.Result.Status %}</em></div>
+    <h3>{%s prj.Title() %} <em>({%s p.Result.Branch() %})</em></h3>
     <div class="mt">
-      {%= statusActions(p.Status) %}
+      {%= statusActions(p.Result) %}
     </div>
-    {%= statusDetail(p.Status) %}
+    {%= statusDetail(p.Result) %}
   </div>
 {% endfunc %}
 
-{% func statusActions(status *git.Status) %}
+{% func statusActions(status *git.Result) %}
   {%- code prj := status.Project -%}
   {%- for _, t := range status.Actions() -%}
   <a href="/git/{%s prj.Key %}/{%s t.Key %}" title="{%s t.Description %}"><button>{%s t.Title %}</button></a>
   {%- endfor -%}
 {% endfunc %}
 
-{% func statusDetail(status *git.Status) %}
+{% func statusDetail(status *git.Result) %}
   <div class="mt">
     {%= components.JSON(status) %}
   </div>

@@ -67,7 +67,7 @@ func (m Modules) Keys() []string {
 }
 
 func (m Modules) Sort() Modules {
-	sort.Slice(m, func(i, j int) bool {
+	sort.Slice(m, func(i int, j int) bool {
 		return m[i].Priority < m[j].Priority
 	})
 	return m

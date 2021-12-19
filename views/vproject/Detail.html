@@ -14,7 +14,7 @@
   layout.Basic
   Project *project.Project
   Modules module.Modules
-  Status *git.Status
+  GitResult *git.Result
 } %}
 
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
@@ -30,7 +30,7 @@
     }
     buildMap := build.ToMap()
   -%}
-  {%= Summary(prj, p.Status, ps) %}
+  {%= Summary(prj, p.GitResult, ps) %}
   <div class="card">
     <h3>Details</h3>
     <table class="mt min-200">
