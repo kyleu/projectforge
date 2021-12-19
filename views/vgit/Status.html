@@ -1,0 +1,37 @@
+{% import (
+  "github.com/kyleu/projectforge/app"
+  "github.com/kyleu/projectforge/app/git"
+  "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/views/components"
+  "github.com/kyleu/projectforge/views/layout"
+) %}
+
+{% code type Status struct {
+  layout.Basic
+  Status *git.Status
+} %}
+
+{% func (p *Status) Body(as *app.State, ps *cutil.PageState) %}
+  {%- code prj := p.Status.Project -%}
+  <div class="card">
+    <div class="right"><em>{%s p.Status.Status() %}</em></div>
+    <h3>{%s prj.Title() %} <em>({%s p.Status.Branch %})</em></h3>
+    <div class="mt">
+      {%= statusActions(p.Status) %}
+    </div>
+    {%= statusDetail(p.Status) %}
+  </div>
+{% endfunc %}
+
+{% func statusActions(status *git.Status) %}
+  {%- code prj := status.Project -%}
+  {%- for _, t := range status.Actions() -%}
+  <a href="/git/{%s prj.Key %}/{%s t.Key %}" title="{%s t.Description %}"><button>{%s t.Title %}</button></a>
+  {%- endfor -%}
+{% endfunc %}
+
+{% func statusDetail(status *git.Status) %}
+  <div class="mt">
+    {%= components.JSON(status) %}
+  </div>
+{% endfunc %}

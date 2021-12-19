@@ -1,4 +1,4 @@
-package build
+package git
 
 import (
 	"github.com/kyleu/projectforge/app/project"
@@ -20,8 +20,8 @@ func (s Service) GetStatus(prj *project.Project) (*Status, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to find git status")
 	}
-
-	return &Status{Key: prj.Key, Project: prj, Git: x}, nil
+	branch := gitBranch(prj.Path)
+	return &Status{Key: prj.Key, Project: prj, Branch: branch, Dirty: x}, nil
 }
 
 func (s Service) GetStatusAll(prjs project.Projects) (Statuses, error) {

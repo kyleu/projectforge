@@ -2,11 +2,12 @@
   "strings"
   "github.com/kyleu/projectforge/app/action"
   "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/app/git"
   "github.com/kyleu/projectforge/app/project"
   "github.com/kyleu/projectforge/views/components"
 ) %}
 
-{% func Summary(prj *project.Project, ps *cutil.PageState, path ...string) %}
+{% func Summary(prj *project.Project, status *git.Status, ps *cutil.PageState, path ...string) %}
   <div class="card">
     <div class="right"><a href="/p/{%s prj.Key %}/edit"><button>Edit</button></a></div>
     <h3>{%= components.SVGRefIcon(prj.IconSafe(), ps) %} {%s prj.Title() %}</h3>
@@ -34,8 +35,18 @@
       <div style="flex-grow: 1;">
         <h4>Build</h4>
         {%- for _, b := range action.AllBuilds -%}
-        <a href="/run/{%s prj.Key %}/build?phase={%s b.Key %}" title="{%s b.Description %}"><button>{%s b.Title %}</button></a>
+        <a href="/build/{%s prj.Key %}/{%s b.Key %}" title="{%s b.Description %}"><button>{%s b.Title %}</button></a>
         {%- endfor -%}
+      </div>
+      <div style="flex-grow: 1;">
+        <h4>Source Control</h4>
+        {%- if status == nil -%}
+        <a href="/git/{%s prj.Key %}" title="Source control status for this project"><button>Status</button></a>
+        {%- else -%}
+        {%- for _, t := range status.Actions() -%}
+        <a href="/git/{%s prj.Key %}/{%s t.Key %}" title="{%s t.Description %}"><button>{%s t.Title %}</button></a>
+        {%- endfor -%}
+        {%- endif -%}
       </div>
     </div>
   </div>

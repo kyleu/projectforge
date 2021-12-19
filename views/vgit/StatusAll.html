@@ -1,6 +1,7 @@
 {% import (
   "github.com/kyleu/projectforge/app"
-  "github.com/kyleu/projectforge/app/build"
+  "github.com/kyleu/projectforge/app/action"
+  "github.com/kyleu/projectforge/app/git"
   "github.com/kyleu/projectforge/app/controller/cutil"
   "github.com/kyleu/projectforge/views/components"
   "github.com/kyleu/projectforge/views/layout"
@@ -8,14 +9,16 @@
 
 {% code type StatusAll struct {
   layout.Basic
-  Statuses build.Statuses
+  Statuses git.Statuses
 } %}
 
 {% func (p *StatusAll) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>Build Status</h3>
+    <h3>Source Control</h3>
     <div class="mt">
-      <a href="/build/all/build" title="Build all projects"><button>Build All</button></a>
+      <a href="/run/{%s action.TypePreview.Key %}" title="{%s action.TypePreview.Description %}"><button>{%s action.TypePreview.Title %}</button></a>
+      <a href="/git" title="Build status for all projects"><button>Status</button></a>
+      <a href="/git/all/magic" title="Runs the magic for all projects"><button>Magic</button></a>
     </div>
     <div class="mt">
       <ul class="accordion">
@@ -24,10 +27,13 @@
           <input id="accordion-{%s x.Project.Key %}" type="checkbox" hidden />
           <label for="accordion-{%s x.Project.Key %}">
             <em class="right">{%s x.Status() %}{% if x.Error != "" %} (error){% endif %}</em>
-            {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef(x.Project.IconSafe(), 16, 16, "icon", ps) %} {%s x.Project.Title() %}
+            {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef(x.Project.IconSafe(), 16, 16, "icon", ps) %}
+            {%s x.Project.Title() %}
+            <em>({%s x.Branch %})</em>
           </label>
           <div class="bd">
-            {%= components.JSON(x) %}
+            {%= statusActions(x) %}
+            {%= statusDetail(x) %}
           </div>
         </li>
         {%- endfor -%}

@@ -47,6 +47,13 @@ func cliProject(p *project.Project, modKeys []string) error {
 	}
 	p.Info.Summary = promptString("Enter a one-line description of this project", p.Info.Summary)
 
+	p.Info.AuthorName = promptString("Enter the name of this project's owner", p.Info.AuthorName)
+	if p.Info.AuthorEmail == "" {
+		p.Info.AuthorEmail = fmt.Sprintf("dev@%s.com", p.Key)
+	}
+	p.Info.AuthorEmail = promptString("Enter the email address of this project's owner", p.Info.AuthorEmail)
+	p.Info.AuthorID = promptString("Enter the GitHub username of this project's owner", p.Info.AuthorID)
+
 	if p.Port == 0 {
 		p.Port = 20000
 	}
@@ -91,7 +98,9 @@ func gatherProjectInfo(p *project.Project) {
 
 func promptString(query string, curr string) string {
 	clilog(query)
-	if curr != "" {
+	if curr == "" {
+		clilog(" (optional)")
+	} else {
 		clilog(" (default: " + curr + ")")
 	}
 	clilog("\n")

@@ -1,7 +1,7 @@
 {% import (
   "github.com/kyleu/projectforge/app"
-  "github.com/kyleu/projectforge/app/controller/cutil"
   "github.com/kyleu/projectforge/app/action"
+  "github.com/kyleu/projectforge/app/controller/cutil"
   "github.com/kyleu/projectforge/views/components"
   "github.com/kyleu/projectforge/views/layout"
   "github.com/kyleu/projectforge/views/vproject"
@@ -20,7 +20,7 @@
       {%- for _, t := range action.ProjectTypes -%}
       <a href="/run/{%s t.Key %}" title="{%s t.Description %}"><button>{%s t.Title %}</button></a>
       {%- endfor -%}
-      <a href="/build" title="Build dashboard for all projects"><button>Build</button></a>
+      <a href="/git" title="Git dashboard for all projects"><button>Git</button></a>
     </div>
     <div class="mt">
       <ul class="accordion">
@@ -32,7 +32,7 @@
             {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef(x.Prj.IconSafe(), 16, 16, "icon", ps) %} {%s x.Prj.Title() %}
           </label>
           <div class="bd">
-            {%= vproject.Summary(x.Prj, ps) %}
+            {%= vproject.Summary(x.Prj, nil, ps) %}
             {%= Detail(x.Cfg, x.Res, false, as, ps) %}
           </div>
         </li>

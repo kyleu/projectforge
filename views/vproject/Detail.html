@@ -2,6 +2,7 @@
   "strings"
   "github.com/kyleu/projectforge/app"
   "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/app/git"
   "github.com/kyleu/projectforge/app/module"
   "github.com/kyleu/projectforge/app/project"
   "github.com/kyleu/projectforge/app/theme"
@@ -13,6 +14,7 @@
   layout.Basic
   Project *project.Project
   Modules module.Modules
+  Status *git.Status
 } %}
 
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
@@ -28,7 +30,7 @@
     }
     buildMap := build.ToMap()
   -%}
-  {%= Summary(prj, ps) %}
+  {%= Summary(prj, p.Status, ps) %}
   <div class="card">
     <h3>Details</h3>
     <table class="mt min-200">

@@ -19,7 +19,7 @@
     fs := as.Services.Projects.GetFilesystem(prj)
     u := "/p/" + prj.Key + "/fs"
   -%}
-  {%= Summary(prj, ps) %}
+  {%= Summary(prj, nil, ps) %}
   {%- if fs.IsDir(filepath.Join(p.Path...)) -%}
   {%- code files := fs.ListFiles(filepath.Join(p.Path...), nil) -%}
   {%= vfile.List(p.Path, files, fs, u, as, ps) %}

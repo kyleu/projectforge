@@ -16,10 +16,10 @@
   <div class="card">
     <h3>Unauthorized</h3>
     <em>{%s p.Message %}</em>
-    <p>You're not authorized to view <code>{%s p.Path %}</code></p>
+    <p>You're not authorized to view <code>{%s p.Path %}</code></p>{{{ if.HasModule "oauth" }}}
     {%- if len(p.Accounts) == 0 -%}
     <p>Sorry about that, maybe try <a href="{%s as.Auth.LoginURL() %}">logging in</a>?</p>
-    {%- endif -%}
+    {%- endif -%}{{{ end }}}
   </div>
 {% endfunc %}
 
