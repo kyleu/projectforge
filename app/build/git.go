@@ -14,8 +14,11 @@ func gitStatus(path string) (interface{}, error) {
 		return nil, errors.Wrapf(err, "unable to open git repo from path [%s]", path)
 	}
 
-	_, _ = repo.Notes()
+	cfg, err := repo.Config()
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to get repo config")
+	}
 
-	ret := map[string]interface{}{"repo": repo}
+	ret := map[string]interface{}{"repo": repo, "cfg": cfg}
 	return ret, nil
 }

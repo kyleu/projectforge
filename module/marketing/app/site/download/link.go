@@ -9,8 +9,6 @@ type Link struct {
 
 func (l *Link) OSString() string {
 	switch l.OS {
-	case osAIX:
-		return "AIX"
 	case osAndroid:
 		return "Android"
 	case osDragonfly:
@@ -82,7 +80,6 @@ const (
 	modeDesktop = "desktop"
 	modeMobile  = "mobile"
 
-	osAIX       = "aix"
 	osAndroid   = "android"
 	osDragonfly = "dragonfly"
 	osFreeBSD   = "freebsd"

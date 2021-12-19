@@ -26,7 +26,6 @@ type Build struct {
 	LinuxMIPS  bool `json:"linuxMIPS,omitempty"`
 	LinuxOdd   bool `json:"linuxOdd,omitempty"`
 
-	AIX       bool `json:"aix,omitempty"`
 	Dragonfly bool `json:"dragonfly,omitempty"`
 	Illumos   bool `json:"illumos,omitempty"`
 	FreeBSD   bool `json:"freeBSD,omitempty"`
@@ -53,7 +52,7 @@ func (b *Build) Empty() bool {
 	return !(b.Publish || b.Private || b.Changelog || b.TestsFail ||
 		b.Desktop || b.Notarize || b.Signing ||
 		b.Android || b.IOS || b.WASM || b.X86 || b.WindowsARM ||
-		b.LinuxARM || b.LinuxMIPS || b.LinuxOdd || b.AIX || b.Dragonfly || b.Illumos || b.FreeBSD || b.NetBSD ||
+		b.LinuxARM || b.LinuxMIPS || b.LinuxOdd || b.Dragonfly || b.Illumos || b.FreeBSD || b.NetBSD ||
 		b.OpenBSD || b.Plan9 || b.Solaris || b.Homebrew || b.NFPMS || b.Snapcraft)
 }
 
@@ -63,7 +62,7 @@ func (b *Build) ToMap() map[string]bool {
 		"desktop": b.Desktop, "notarize": b.Notarize, "signing": b.Signing,
 		"android": b.Android, "ios": b.IOS, "wasm": b.WASM, "build-x86": b.X86, "windows-arm": b.WindowsARM,
 		"linux-arm": b.LinuxARM, "linux-mips": b.LinuxMIPS, "linux-odd": b.LinuxOdd,
-		"aix": b.AIX, "dragonfly": b.Dragonfly, "illumos": b.Illumos, "freebsd": b.FreeBSD,
+		"dragonfly": b.Dragonfly, "illumos": b.Illumos, "freebsd": b.FreeBSD,
 		"netbsd": b.NetBSD, "openbsd": b.OpenBSD, "plan9": b.Plan9, "solaris": b.Solaris,
 		"homebrew": b.Homebrew, "nfpms": b.NFPMS, "snapcraft": b.Snapcraft,
 	}
@@ -79,7 +78,7 @@ func BuildFromMap(frm util.ValueMap) *Build {
 		Desktop: x("desktop"), Notarize: x("notarize"), Signing: x("signing"),
 		Android: x("android"), IOS: x("ios"), WASM: x("wasm"), X86: x("x86"), WindowsARM: x("windows-arm"),
 		LinuxARM: x("linux-arm"), LinuxMIPS: x("linux-mips"), LinuxOdd: x("linux-odd"),
-		AIX: x("aix"), Dragonfly: x("dragonfly"), Illumos: x("illumos"), FreeBSD: x("freebsd"),
+		Dragonfly: x("dragonfly"), Illumos: x("illumos"), FreeBSD: x("freebsd"),
 		NetBSD: x("netbsd"), OpenBSD: x("openbsd"), Plan9: x("plan9"), Solaris: x("solaris"),
 		Homebrew: x("homebrew"), NFPMS: x("nfpms"), Snapcraft: x("snapcraft"),
 	}
@@ -111,7 +110,6 @@ var AllBuildOptions = []*BuildOption{
 	{Key: "linux-mips", Title: "Linux MIPS", Description: "Builds the application for Linux on MIPS architectures"},
 	{Key: "linux-odd", Title: "Linux Odd", Description: "Builds the application for Linux using ppc64, ppc64le, riscv64, and s390x"},
 
-	{Key: "aix", Title: "AIX", Description: "Builds the application for AIX"},
 	{Key: "dragonfly", Title: "Dragonfly", Description: "Builds the application for Dragonfly"},
 	{Key: "illumos", Title: "Illumos", Description: "Builds the application for Illumos"},
 	{Key: "freebsd", Title: "FreeBSD", Description: "Builds the application for FreeBSD"},
