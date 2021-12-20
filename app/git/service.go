@@ -25,7 +25,10 @@ func (s Service) Status(prj *project.Project) (*Result, error) {
 		return nil, errors.Wrap(err, "unable to find git status")
 	}
 	branch := gitBranch(prj.Path)
-	data := util.ValueMap{"branch": branch, "dirty": dirty}
+	data := util.ValueMap{"branch": branch}
+	if len(dirty) > 0 {
+		data["dirty"] = dirty
+	}
 	status := "OK"
 	if len(dirty) > 0 {
 		status = fmt.Sprintf("[%d] changes", len(dirty))
@@ -64,5 +67,10 @@ func (s Service) Fetch(prj *project.Project) (*Result, error) {
 }
 
 func (s Service) Commit(prj *project.Project, msg string) (*Result, error) {
-	return NewResult(prj, "TODO", util.ValueMap{"TODO": "Commit"}), nil
+	result, err := gitCommit(prj.Path, msg)
+	if err != nil {
+		return nil, err
+	}
+
+	return NewResult(prj, "OK", util.ValueMap{"commit": result}), nil
 }

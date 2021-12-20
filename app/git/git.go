@@ -16,7 +16,7 @@ func gitCmd(args string, path string) (string, error) {
 		return "", errors.Wrapf(noRepo, "path [%s] is not a git repo", path)
 	}
 	if exit != 0 {
-		return "", errors.Errorf("git status returned exit code [%d] for path [%s]", exit, path)
+		return "", errors.Errorf("git status returned exit code [%d] for path [%s]: %s", exit, path, out)
 	}
 	return out, nil
 }

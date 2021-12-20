@@ -1,6 +1,7 @@
 package git
 
 import (
+	"fmt"
 	"sort"
 	"strings"
 
@@ -14,6 +15,29 @@ const (
 	gitDeleted = "D "
 	gitMoved   = "AM "
 )
+
+func gitStatus(path string) ([]string, error) {
+	out, err := gitCmd("status --porcelain", path)
+	if err != nil {
+		if errors.Is(err, noRepo) {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	lines := util.SplitAndTrim(out, "\n")
+
+	dirty := make([]string, 0, len(lines))
+	for _, line := range lines {
+		if i := strings.Index(line, " "); i > -1 {
+			line = line[i+1:]
+		}
+		dirty = append(dirty, strings.TrimSpace(line))
+	}
+	sort.Strings(dirty)
+
+	return dirty, nil
+}
 
 func gitBranch(path string) string {
 	out, err := gitCmd("branch --show-current", path)
@@ -41,25 +65,17 @@ func gitFetch(path string, dryRun bool) (string, error) {
 	return out, nil
 }
 
-func gitStatus(path string) ([]string, error) {
-	out, err := gitCmd("status --porcelain", path)
+func gitCommit(path string, message string) (string, error) {
+	_, err := gitCmd("add .", path)
 	if err != nil {
 		if errors.Is(err, noRepo) {
-			return nil, nil
+			return "", nil
 		}
-		return nil, err
+		return "", err
 	}
-
-	lines := util.SplitAndTrim(out, "\n")
-
-	dirty := make([]string, 0, len(lines))
-	for _, line := range lines {
-		if i := strings.Index(line, " "); i > -1 {
-			line = line[i+1:]
-		}
-		dirty = append(dirty, strings.TrimSpace(line))
+	out, err := gitCmd(fmt.Sprintf(`commit -m "%s"`, message), path)
+	if err != nil {
+		return "", err
 	}
-	sort.Strings(dirty)
-
-	return dirty, nil
+	return out, nil
 }

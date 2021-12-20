@@ -1,0 +1,29 @@
+{% import (
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/views/components"
+  "{{{ .Package }}}/views/layout"
+) %}
+
+{% code type Args struct {
+  layout.Basic
+  URL string
+  Directions string
+  ArgRes *cutil.ArgResults
+} %}
+
+{% func (p *Args) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>{% if p.Directions == "" %}Enter Data{% else %}{%s p.Directions %}{% endif %}</h3>
+    <form action="{%s p.URL %}" method="get">
+      <table class="mt min-200">
+        <tbody>
+          {%- for _, arg := range p.ArgRes.Args -%}
+          {%= components.TableInput(arg.Key, arg.Title, p.ArgRes.Values[arg.Key], 5, arg.Description) %}
+          {%- endfor -%}
+        </tbody>
+      </table>
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+{% endfunc %}

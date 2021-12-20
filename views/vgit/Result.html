@@ -8,14 +8,19 @@
 
 {% code type Result struct {
   layout.Basic
-Result *git.Result
+  Result *git.Result
 } %}
 
 {% func (p *Result) Body(as *app.State, ps *cutil.PageState) %}
   {%- code prj := p.Result.Project -%}
   <div class="card">
     <div class="right"><em>{%s p.Result.Status %}</em></div>
-    <h3>{%s prj.Title() %} <em>({%s p.Result.Branch() %})</em></h3>
+    <h3>
+      {%s prj.Title() %}
+      {%- if p.Result.Branch() != "" -%}
+      <em>({%s p.Result.Branch() %})</em>
+      {%- endif -%}
+    </h3>
     <div class="mt">
       {%= statusActions(p.Result) %}
     </div>
