@@ -1,6 +1,7 @@
 {% import (
   "fmt"
   "strings"
+  "time"
 
   "{{{ .Package }}}/app/controller/cutil"
   "{{{ .Package }}}/views/vutil"
@@ -16,12 +17,32 @@
   </tr>
 {% endstripspace %}{% endfunc %}
 
+{% func TableInputPassword(key string, title string, value string, indent int, help ...string) %}{% stripspace %}
+  <tr>
+    {%= vutil.Indent(true, indent + 1) %}
+    <th class="shrink"><label for="input-{%s key %}"{%= titleFor(help) %}>{%s title %}</label></th>
+    {%= vutil.Indent(true, indent + 1) %}
+    <td>{%= FormInputPassword(key, "input-" + key, value) %}</td>
+  {%= vutil.Indent(true, indent) %}
+  </tr>
+{% endstripspace %}{% endfunc %}
+
 {% func TableInputNumber(key string, title string, value int, indent int, help ...string) %}{% stripspace %}
   <tr>
     {%= vutil.Indent(true, indent + 1) %}
     <th class="shrink"><label for="input-{%s key %}"{%= titleFor(help) %}>{%s title %}</label></th>
     {%= vutil.Indent(true, indent + 1) %}
     <td>{%= FormInputNumber(key, "input-" + key, value) %}</td>
+  {%= vutil.Indent(true, indent) %}
+  </tr>
+{% endstripspace %}{% endfunc %}
+
+{% func TableInputTimestamp(key string, title string, value *time.Time, indent int, help ...string) %}{% stripspace %}
+  <tr>
+    {%= vutil.Indent(true, indent + 1) %}
+    <th class="shrink"><label for="input-{%s key %}"{%= titleFor(help) %}>{%s title %}</label></th>
+    {%= vutil.Indent(true, indent + 1) %}
+    <td>{%= FormInputTimestamp(key, "input-" + key, value) %}</td>
   {%= vutil.Indent(true, indent) %}
   </tr>
 {% endstripspace %}{% endfunc %}

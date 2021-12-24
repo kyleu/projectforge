@@ -38,6 +38,7 @@ var Helpers = func() map[string][]string {
 	add("signingIdentity", "Keychain identity to use for signing binaries")
 	add("slack", "Slack webhook for notifying after successful releases")
 	add("javaPackage", "The Java package used by the Android application")
+	add("moduleArgs", "Arguments for custom modules")
 
 	return ret
 }()

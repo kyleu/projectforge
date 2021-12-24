@@ -15,6 +15,7 @@ import (
 
 var (
 	gitCommitArgs = cutil.Args{{Key: "message", Title: "Message", Description: "The message to used for the commit"}}
+	gitBranchArgs = cutil.Args{{Key: "name", Title: "Branch Name", Description: "The name to used for the new branch"}}
 )
 
 func GitAction(rc *fasthttp.RequestCtx) {
@@ -44,6 +45,14 @@ func GitAction(rc *fasthttp.RequestCtx) {
 				url := fmt.Sprintf("/git/%s/commit", prj.Key)
 				ps.Data = argRes
 				return render(rc, as, &verror.Args{URL: url, Directions: "Enter your commit message", ArgRes: argRes}, ps, "projects", prj.Key, "Git")
+			}
+			result, err = as.Services.Git.Commit(prj, argRes.Values["message"])
+		case git.ActionBranch.Key:
+			argRes := cutil.CollectArgs(rc, gitBranchArgs)
+			if len(argRes.Missing) > 0 {
+				url := fmt.Sprintf("/git/%s/branch", prj.Key)
+				ps.Data = argRes
+				return render(rc, as, &verror.Args{URL: url, Directions: "Enter your branch name", ArgRes: argRes}, ps, "projects", prj.Key, "Git")
 			}
 			result, err = as.Services.Git.Commit(prj, argRes.Values["message"])
 		default:

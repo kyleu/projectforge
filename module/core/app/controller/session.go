@@ -19,7 +19,12 @@ func loadPageState(rc *fasthttp.RequestCtx, key string, as *app.State) *cutil.Pa
 
 	path := string(rc.Request.URI().Path())
 	sc := span.SpanContext()
-	logger := as.Logger.With(zap.String("path", path), zap.String("trace", sc.TraceID().String()), zap.String("span", sc.SpanID().String()))
+	tid, sid := sc.TraceID().String(), sc.SpanID().String()
+	logger := as.Logger.With(
+		zap.String("path", path),
+		zap.String("trace", tid), zap.String("dd.trace_id", tid),
+		zap.String("span", sid), zap.String("dd.span_id", sid),
+	)
 
 	session, flashes, prof, accts := loadSession(rc, logger)
 
@@ -27,18 +32,9 @@ func loadPageState(rc *fasthttp.RequestCtx, key string, as *app.State) *cutil.Pa
 	isAdmin, _ := user.Check("/admin", accts)
 
 	return &cutil.PageState{
-		Method:   string(rc.Method()),
-		URI:      rc.Request.URI(),
-		Flashes:  flashes,
-		Session:  session,
-		Profile:  prof,
-		Accounts: accts,
-		Authed:   isAuthed,
-		Admin:    isAdmin,
-		Icons:    initialIcons,
-		Context:  traceCtx,
-		Span:     &span,
-		Logger:   logger,
+		Method: string(rc.Method()), URI: rc.Request.URI(), Flashes: flashes, Session: session,
+		Profile: prof, Accounts: accts, Authed: isAuthed, Admin: isAdmin,
+		Icons: initialIcons, Context: traceCtx, Span: span, Logger: logger,
 	}
 }
 
@@ -46,7 +42,7 @@ func loadSession(rc *fasthttp.RequestCtx, logger *zap.SugaredLogger) (util.Value
 	sessionBytes := rc.Request.Header.Cookie(util.AppKey)
 	session := util.ValueMap{}
 	if len(sessionBytes) > 0 {
-		dec, err := cutil.DecryptMessage(string(sessionBytes), logger)
+		dec, err := util.DecryptMessage(nil, string(sessionBytes), logger)
 		if err != nil {
 			logger.Warnf("error decrypting session: %+v", err)
 		}

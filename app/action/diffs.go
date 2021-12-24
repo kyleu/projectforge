@@ -1,6 +1,9 @@
 package action
 
 import (
+	"path"
+	"strings"
+
 	"github.com/kyleu/projectforge/app/diff"
 	"github.com/kyleu/projectforge/app/file"
 )
@@ -18,13 +21,6 @@ func diffs(pm *PrjAndMods) (file.Files, []*diff.Diff, error) {
 		return nil, nil, err
 	}
 
-	for _, fl := range srcFiles {
-		err = file.ReplaceSections(fl, tgt)
-		if err != nil {
-			return nil, nil, err
-		}
-	}
-
 	portOffsets := map[string]int{}
 	for _, m := range pm.Prj.Modules {
 		for k, v := range pm.Mods.Get(m).PortOffsets {
@@ -33,8 +29,26 @@ func diffs(pm *PrjAndMods) (file.Files, []*diff.Diff, error) {
 	}
 
 	ctx := pm.Prj.ToTemplateContext(portOffsets)
+
 	for _, f := range srcFiles {
-		f.Content, err = runTemplate(f, ctx)
+		origPath := f.FullPath()
+		if strings.Contains(origPath, delimStart) {
+			newPath, err := runTemplate("filename", origPath, ctx)
+			if err != nil {
+				return nil, nil, err
+			}
+			p, n := path.Split(newPath)
+			f.Path = strings.Split(p, "/")
+			f.Name = n
+		}
+		err = file.ReplaceSections(f, tgt)
+		if err != nil {
+			return nil, nil, err
+		}
+	}
+
+	for _, f := range srcFiles {
+		f.Content, err = runTemplateFile(f, ctx)
 		if err != nil {
 			return nil, nil, err
 		}

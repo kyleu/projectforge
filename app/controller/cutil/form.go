@@ -1,15 +1,25 @@
 package cutil
 
 import (
+	"encoding/xml"
+
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
+	"gopkg.in/yaml.v2"
 
 	"github.com/kyleu/projectforge/app/util"
 )
 
 func ParseForm(rc *fasthttp.RequestCtx) (util.ValueMap, error) {
-	if ct := GetContentType(rc); IsContentTypeJSON(ct) {
+	ct := GetContentType(rc)
+	if IsContentTypeJSON(ct) {
 		return parseJSONForm(rc)
+	}
+	if IsContentTypeXML(ct) {
+		return parseXMLForm(rc)
+	}
+	if IsContentTypeYAML(ct) {
+		return parseYAMLForm(rc)
 	}
 	return parseHTTPForm(rc)
 }
@@ -27,6 +37,24 @@ func parseJSONForm(rc *fasthttp.RequestCtx) (util.ValueMap, error) {
 	err := util.FromJSON(rc.Request.Body(), &ret)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't parse JSON body")
+	}
+	return ret, nil
+}
+
+func parseXMLForm(rc *fasthttp.RequestCtx) (util.ValueMap, error) {
+	ret := util.ValueMap{}
+	err := xml.Unmarshal(rc.Request.Body(), &ret)
+	if err != nil {
+		return nil, errors.Wrap(err, "can't parse XML body")
+	}
+	return ret, nil
+}
+
+func parseYAMLForm(rc *fasthttp.RequestCtx) (util.ValueMap, error) {
+	ret := util.ValueMap{}
+	err := yaml.Unmarshal(rc.Request.Body(), &ret)
+	if err != nil {
+		return nil, errors.Wrap(err, "can't parse YAML body")
 	}
 	return ret, nil
 }

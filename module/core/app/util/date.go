@@ -10,34 +10,9 @@ import (
 const (
 	dateFmtYMD  = "2006-01-02"
 	dateFmtFull = "2006-01-02 15:04:05"
+	dateFmtHTML = "2006-01-02T15:04:05"
 	dateFmtJS   = "2006-01-02T15:04:05Z"
 )
-
-func TimeToYMD(d *time.Time) string {
-	if d == nil {
-		return ""
-	}
-	return d.Format(dateFmtYMD)
-}
-
-func TimeFromYMD(s string) (*time.Time, error) {
-	return load(s, dateFmtYMD)
-}
-
-func TimeToString(d *time.Time) string {
-	if d == nil {
-		return ""
-	}
-	return d.Format(dateFmtFull)
-}
-
-func TimeFromString(s string) (*time.Time, error) {
-	return load(s, dateFmtFull)
-}
-
-func TimeFromJS(s string) (*time.Time, error) {
-	return load(s, dateFmtJS)
-}
 
 func TimeCurrentMillis() int64 {
 	return time.Now().UnixMilli()
@@ -50,13 +25,52 @@ func TimeRelative(t *time.Time) string {
 	return humanize.Time(*t)
 }
 
-func load(s string, f string) (*time.Time, error) {
+func TimeToString(d *time.Time, fmt string) string {
+	if d == nil {
+		return ""
+	}
+	return d.Format(fmt)
+}
+
+func TimeToYMD(d *time.Time) string {
+	return TimeToString(d, dateFmtYMD)
+}
+
+func TimeToFull(d *time.Time) string {
+	return TimeToString(d, dateFmtFull)
+}
+
+func TimeToHTML(d *time.Time) string {
+	return TimeToString(d, dateFmtHTML)
+}
+
+func TimeToJS(d *time.Time) string {
+	return TimeToString(d, dateFmtJS)
+}
+
+func TimeFromString(s string, fmt string) (*time.Time, error) {
 	if s == "" {
 		return nil, nil
 	}
-	ret, err := time.Parse(f, s)
+	ret, err := time.Parse(fmt, s)
 	if err != nil {
-		return nil, errors.New("invalid date string [" + s + "], expected [" + f + "]")
+		return nil, errors.New("invalid date string [" + s + "], expected [" + fmt + "]")
 	}
 	return &ret, nil
+}
+
+func TimeFromYMD(s string) (*time.Time, error) {
+	return TimeFromString(s, dateFmtYMD)
+}
+
+func TimeFromFull(s string) (*time.Time, error) {
+	return TimeFromString(s, dateFmtFull)
+}
+
+func TimeFromHTML(s string) (*time.Time, error) {
+	return TimeFromString(s, dateFmtHTML)
+}
+
+func TimeFromJS(s string) (*time.Time, error) {
+	return TimeFromString(s, dateFmtJS)
 }

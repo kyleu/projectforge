@@ -33,6 +33,12 @@ func projectFromCfg(proto *project.Project, cfg util.ValueMap) *project.Project 
 	if i == nil {
 		i = &project.Info{License: "Proprietary"}
 	}
+
+	var moduleArgs util.ValueMap
+	if ma, err := cfg.GetMap("moduleArgs", false); ma != nil && err == nil {
+		moduleArgs = ma
+	}
+
 	return &project.Project{
 		Key:     str("key", proto.Key),
 		Version: str("version", proto.Version),
@@ -58,6 +64,7 @@ func projectFromCfg(proto *project.Project, cfg util.ValueMap) *project.Project 
 			SigningIdentity: str("signingIdentity", i.Description),
 			Slack:           str("slack", i.Description),
 			JavaPackage:     str("javaPackage", i.Description),
+			ModuleArgs:      moduleArgs,
 		},
 		Path: proto.Path,
 	}

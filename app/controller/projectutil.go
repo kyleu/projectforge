@@ -8,6 +8,7 @@ import (
 	"github.com/kyleu/projectforge/app/project"
 	"github.com/kyleu/projectforge/app/theme"
 	"github.com/kyleu/projectforge/app/util"
+	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/projectforge/app"
@@ -59,6 +60,12 @@ func projectFromForm(frm util.ValueMap, prj *project.Project) error {
 	prj.Info.Slack = get("slack", prj.Info.Slack)
 	prj.Info.JavaPackage = get("javaPackage", prj.Info.JavaPackage)
 
+	var err error
+	prj.Info.ModuleArgs, err = getModuleArgs(frm)
+	if err != nil {
+		return err
+	}
+
 	prj.Build = project.BuildFromMap(frm)
 	if prj.Build.Empty() {
 		prj.Build = nil
@@ -68,6 +75,19 @@ func projectFromForm(frm util.ValueMap, prj *project.Project) error {
 		prj.Theme = nil
 	}
 	return nil
+}
+
+func getModuleArgs(frm util.ValueMap) (util.ValueMap, error) {
+	ma := frm.GetStringOpt("moduleArgs")
+	if ma == "" {
+		return nil, nil
+	} else {
+		moduleArgs := util.ValueMap{}
+		if err := util.FromJSON([]byte(ma), &moduleArgs); err != nil {
+			return nil, errors.Wrap(err, "invalid module args JSON")
+		}
+		return moduleArgs, nil
+	}
 }
 
 func getProject(rc *fasthttp.RequestCtx, as *app.State) (*project.Project, error) {

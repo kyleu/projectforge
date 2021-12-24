@@ -6,6 +6,7 @@
   "github.com/kyleu/projectforge/app/module"
   "github.com/kyleu/projectforge/app/project"
   "github.com/kyleu/projectforge/app/theme"
+  "github.com/kyleu/projectforge/views/components"
   "github.com/kyleu/projectforge/views/layout"
   "github.com/kyleu/projectforge/views/vtheme"
 ) %}
@@ -86,7 +87,7 @@
     <table class="mt min-200">
       <tbody>
         <tr class="shrink">
-          <th>Organization</th>
+          <th class="shrink">Organization</th>
           <td>{%s info.Org %}</td>
         </tr>
         <tr>
@@ -141,6 +142,22 @@
           <th>Java Package</th>
           <td>{%s info.JavaPackage %}</td>
         </tr>
+        {%- if len(info.ModuleDefs) > 0 -%}
+        <tr>
+          <th>Module Definitions</th>
+          <td>
+            {%- for _, x := range info.ModuleDefs -%}
+            <a href="/m/{%s x.Key %}">{%s x.Key %}</a> <em>({%s x.Path %})</em><br />
+            {%- endfor -%}
+          </td>
+        </tr>
+        {%- endif -%}
+        {%- if len(info.ModuleArgs) > 0 -%}
+        <tr>
+          <th>Module Arguments</th>
+          <td>{%= components.JSON(info.ModuleArgs) %}</td>
+        </tr>
+        {%- endif -%}
       </tbody>
     </table>
   </div>

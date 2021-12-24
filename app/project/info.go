@@ -2,6 +2,8 @@ package project
 
 import (
 	"strings"
+
+	"github.com/kyleu/projectforge/app/util"
 )
 
 type ModuleDef struct {
@@ -11,22 +13,23 @@ type ModuleDef struct {
 }
 
 type Info struct {
-	Org             string       `json:"org,omitempty"`
-	AuthorID        string       `json:"authorID,omitempty"`
-	AuthorName      string       `json:"authorName,omitempty"`
-	AuthorEmail     string       `json:"authorEmail,omitempty"`
-	License         string       `json:"license,omitempty"`
-	Homepage        string       `json:"homepage,omitempty"`
-	Sourcecode      string       `json:"sourcecode,omitempty"`
-	Summary         string       `json:"summary,omitempty"`
-	Description     string       `json:"description,omitempty"`
-	CI              string       `json:"ci,omitempty"`
-	Homebrew        string       `json:"homebrew,omitempty"`
-	Bundle          string       `json:"bundle,omitempty"`
-	SigningIdentity string       `json:"signingIdentity,omitempty"`
-	Slack           string       `json:"slack,omitempty"`
-	JavaPackage     string       `json:"javaPackage,omitempty"`
-	ModuleDefs      []*ModuleDef `json:"moduleDefs,omitempty"`
+	Org             string        `json:"org,omitempty"`
+	AuthorID        string        `json:"authorID,omitempty"`
+	AuthorName      string        `json:"authorName,omitempty"`
+	AuthorEmail     string        `json:"authorEmail,omitempty"`
+	License         string        `json:"license,omitempty"`
+	Homepage        string        `json:"homepage,omitempty"`
+	Sourcecode      string        `json:"sourcecode,omitempty"`
+	Summary         string        `json:"summary,omitempty"`
+	Description     string        `json:"description,omitempty"`
+	CI              string        `json:"ci,omitempty"`
+	Homebrew        string        `json:"homebrew,omitempty"`
+	Bundle          string        `json:"bundle,omitempty"`
+	SigningIdentity string        `json:"signingIdentity,omitempty"`
+	Slack           string        `json:"slack,omitempty"`
+	JavaPackage     string        `json:"javaPackage,omitempty"`
+	ModuleDefs      []*ModuleDef  `json:"moduleDefs,omitempty"`
+	ModuleArgs      util.ValueMap `json:"moduleArgs,omitempty"`
 }
 
 func (i *Info) SigningIdentityTrimmed() string {
@@ -47,4 +50,11 @@ func (i *Info) AuthorIDSafe() string {
 		return i.AuthorID
 	}
 	return "@" + i.AuthorID
+}
+
+func (i *Info) ModuleArgString(key string) string {
+	if i.ModuleArgs == nil {
+		return ""
+	}
+	return i.ModuleArgs.GetStringOpt(key)
 }

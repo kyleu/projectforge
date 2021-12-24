@@ -4,6 +4,7 @@
   "github.com/kyleu/projectforge/app/controller/cutil"
   "github.com/kyleu/projectforge/app/project"
   "github.com/kyleu/projectforge/app/theme"
+  "github.com/kyleu/projectforge/app/util"
   "github.com/kyleu/projectforge/views/components"
   "github.com/kyleu/projectforge/views/layout"
   "github.com/kyleu/projectforge/views/vtheme"
@@ -44,6 +45,7 @@
           {%= components.TableInput("ignore", "Ignore", strings.Join(prj.Ignore, ", "), 5, project.Helpers["ignore"]...) %}
           {%= components.TableTextarea("children", "Children", len(prj.Children), strings.Join(prj.Children, "\n"), 5, project.Helpers["children"]...) %}
           {%= components.TableInput("path", "Path", prj.Path, 5, project.Helpers["path"]...) %}
+          {%= components.TableTextarea("moduleArgs", "Module Args", len(prj.Info.ModuleArgs) + 2, util.ToJSON(prj.Info.ModuleArgs), 5, project.Helpers["moduleArgs"]...) %}
         </tbody>
       </table>
     </div>

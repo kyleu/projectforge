@@ -37,7 +37,7 @@ type PageState struct {
 	Data          interface{}        `json:"data,omitempty"`
 	Logger        *zap.SugaredLogger `json:"-"`
 	Context       context.Context    `json:"-"`
-	Span          *trace.Span        `json:"-"`
+	Span          trace.Span         `json:"-"`
 	RenderElapsed float64            `json:"renderElapsed,omitempty"`
 }
 
@@ -59,6 +59,6 @@ func (p *PageState) TitleString() string {
 
 func (p *PageState) Close() {
 	if p.Span != nil {
-		(*p.Span).End()
+		p.Span.End()
 	}
 }

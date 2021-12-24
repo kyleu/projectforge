@@ -14,4 +14,5 @@ var (
 	ActionMagic      = &Action{Key: "magic", Title: "Magic", Description: "Does everything it can to bring the repo up to date"}
 	ActionFetch      = &Action{Key: "fetch", Title: "Fetch", Description: "Fetches the latest changes from the repository"}
 	ActionCommit     = &Action{Key: "commit", Title: "Commit", Description: "Adds all files, commits with the provided message"}
+	ActionBranch     = &Action{Key: "branch", Title: "Branch", Description: "Switch to a new branch"}
 )

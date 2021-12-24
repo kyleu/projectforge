@@ -8,11 +8,15 @@ import (
 	"os/exec"
 	"strings"
 
+	"github.com/kballard/go-shellquote"
 	"github.com/pkg/errors"
 )
 
 func RunProcess(cmd string, path string, in io.Reader, out io.Writer, er io.Writer) (int, error) {
-	args := strings.Split(cmd, " ")
+	args, _ := shellquote.Split(cmd)
+	if len(args) == 0 {
+		return -1, errors.New("no arguments provided")
+	}
 	firstArg := args[0]
 
 	var err error

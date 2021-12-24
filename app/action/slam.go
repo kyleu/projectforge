@@ -15,13 +15,13 @@ func onSlam(pm *PrjAndMods) *Result {
 		return ret.WithError(err)
 	}
 
+	tgtFS := pm.PSvc.GetFilesystem(pm.Prj)
 	for _, f := range dfs {
 		switch f.Status {
 		case diff.StatusIdentical, diff.StatusMissing, diff.StatusSkipped:
 			// noop
 		case diff.StatusDifferent, diff.StatusNew:
 			src := srcFiles.Get(f.Path)
-			tgtFS := pm.PSvc.GetFilesystem(pm.Prj)
 			err := tgtFS.WriteFile(f.Path, []byte(src.Content), src.Mode, true)
 			if err != nil {
 				return ret.WithError(errors.Wrapf(err, "unable to write updated content to [%s]", f.Path))

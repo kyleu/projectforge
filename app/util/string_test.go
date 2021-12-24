@@ -20,7 +20,7 @@ func (t *ToTitleTest) Test() error {
 	return nil
 }
 
-var tests = []*ToTitleTest{
+var titleTests = []*ToTitleTest{
 	{TestValue: "SimpleCamelCase", Expected: "Simple Camel Case"},
 	{TestValue: "CSVFilesAreCoolButTXTRules", Expected: "CSV Files Are Cool But TXT Rules"},
 	{TestValue: "MediaTypes", Expected: "Media Types"},
@@ -28,7 +28,7 @@ var tests = []*ToTitleTest{
 
 func TestToTitle(t *testing.T) {
 	t.Parallel()
-	for _, test := range tests {
+	for _, test := range titleTests {
 		err := test.Test()
 		if err != nil {
 			t.Error(err)

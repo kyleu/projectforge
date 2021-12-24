@@ -1,4 +1,6 @@
 {% import (
+  "time"
+
   "github.com/kyleu/projectforge/app/util"
   "github.com/kyleu/projectforge/views/vutil"
 ) %}
@@ -11,6 +13,14 @@
   {% endif %}
 {% endstripspace %}{% endfunc %}
 
+{% func FormInputPassword(key string, id string, value string) %}{% stripspace %}
+  {% if id == "" %}
+    <input name="{%s key %}" type="password" value="{%s value %}" />
+  {% else %}
+    <input id="{%s id %}" name="{%s key %}" type="password" value="{%s value %}" />
+  {% endif %}
+{% endstripspace %}{% endfunc %}
+
 {% func FormInputNumber(key string, id string, value interface{}) %}{% stripspace %}
   {% if id == "" %}
     <input name="{%s key %}" type="number" value="{%v value %}" />
@@ -19,11 +29,11 @@
   {% endif %}
 {% endstripspace %}{% endfunc %}
 
-{% func FormInputTimestamp(key string, id string, value interface{}) %}{% stripspace %}
+{% func FormInputTimestamp(key string, id string, value *time.Time) %}{% stripspace %}
   {% if id == "" %}
-    <input name="{%s key %}" type="datetime-local" value="{%v value %}" />
+    <input name="{%s key %}" type="text" value="{%s util.TimeToJS(value) %}" />
   {% else %}
-    <input id="{%s id %}" name="{%s key %}" type="datetime-local" value="{%v value %}" />
+    <input id="{%s id %}" name="{%s key %}" type="text" value="{%s util.TimeToJS(value) %}" />
   {% endif %}
 {% endstripspace %}{% endfunc %}
 

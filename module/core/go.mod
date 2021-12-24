@@ -10,6 +10,7 @@ require (
 	github.com/gertd/go-pluralize v0.1.7
 	github.com/google/uuid v1.3.0
 	github.com/iancoleman/strcase v0.2.0
+	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
 	github.com/kirsle/configdir v0.0.0-20170128060238-e45d2f54772f
 	github.com/markbates/going v1.0.3
 	github.com/markbates/goth v1.68.0
