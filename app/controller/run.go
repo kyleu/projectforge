@@ -92,6 +92,6 @@ func RunAllActions(rc *fasthttp.RequestCtx) {
 func actionParams(span trace.Span, tgt string, t action.Type, cfg util.ValueMap, as *app.State, logger *zap.SugaredLogger) *action.Params {
 	return &action.Params{
 		Span: span, ProjectKey: tgt, T: t, Cfg: cfg,
-		MSvc: as.Services.Modules, PSvc: as.Services.Projects, CSvc: as.Services.Codegen, Logger: logger,
+		MSvc: as.Services.Modules, PSvc: as.Services.Projects, Logger: logger,
 	}
 }

@@ -60,9 +60,6 @@ func AppRoutes() fasthttp.RequestHandler {
 	r.GET("/run/{act}", RunAllActions)
 	r.GET("/run/{key}/{act}", RunAction)
 
-	r.GET("/codegen/{key}", Codegen)
-	r.GET("/codegen/{key}/{act}", CodegenAct)
-
 	r.GET("/m", ModuleList)
 	r.GET("/m/{key}", ModuleDetail)
 	r.GET("/m/{key}/fs", ModuleFileRoot)

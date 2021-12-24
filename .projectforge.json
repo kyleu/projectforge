@@ -14,7 +14,6 @@
     "notarize",
     "oauth",
     "search",
-    "types",
     "upgrade"
   ],
   "ignore": [

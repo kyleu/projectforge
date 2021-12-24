@@ -17,7 +17,6 @@ type Result struct {
 	Modules  module.Results   `json:"modules,omitempty"`
 	Logs     []string         `json:"logs,omitempty"`
 	Errors   []string         `json:"errors,omitempty"`
-	HTML     []string         `json:"html,omitempty"`
 	Duration int              `json:"duration,omitempty"`
 	logger   *zap.SugaredLogger
 }

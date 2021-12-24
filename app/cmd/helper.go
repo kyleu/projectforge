@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/kyleu/projectforge/app/action"
-	"github.com/kyleu/projectforge/app/codegen"
 	"github.com/kyleu/projectforge/app/filesystem"
 	"github.com/kyleu/projectforge/app/module"
 	"github.com/kyleu/projectforge/app/project"
@@ -16,9 +15,8 @@ func runToCompletion(ctx context.Context, projectKey string, t action.Type, cfg 
 	fs := filesystem.NewFileSystem(_flags.ConfigDir, _logger)
 	mSvc := module.NewService(fs, _logger)
 	pSvc := project.NewService(_logger)
-	cSvc := codegen.NewService(_logger)
 	logger := _logger.With("service", "runner")
-	p := &action.Params{Span: nil, ProjectKey: projectKey, T: t, Cfg: cfg, MSvc: mSvc, PSvc: pSvc, CSvc: cSvc, CLI: true, Logger: logger}
+	p := &action.Params{Span: nil, ProjectKey: projectKey, T: t, Cfg: cfg, MSvc: mSvc, PSvc: pSvc, CLI: true, Logger: logger}
 	return action.Apply(ctx, p)
 }
 
