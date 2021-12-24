@@ -9,17 +9,10 @@ import (
 	"github.com/pkg/errors"
 )
 
-const (
-	gitUnknown = "?? "
-	gitMerge   = "M "
-	gitDeleted = "D "
-	gitMoved   = "AM "
-)
-
 func gitStatus(path string) ([]string, error) {
 	out, err := gitCmd("status --porcelain", path)
 	if err != nil {
-		if errors.Is(err, noRepo) {
+		if errors.Is(err, errNoRepo) {
 			return nil, nil
 		}
 		return nil, err
@@ -42,7 +35,7 @@ func gitStatus(path string) ([]string, error) {
 func gitBranch(path string) string {
 	out, err := gitCmd("branch --show-current", path)
 	if err != nil {
-		if errors.Is(err, noRepo) {
+		if errors.Is(err, errNoRepo) {
 			return "norepo"
 		}
 		return "error: " + err.Error()
@@ -57,7 +50,7 @@ func gitFetch(path string, dryRun bool) (string, error) {
 	}
 	out, err := gitCmd(cmd, path)
 	if err != nil {
-		if errors.Is(err, noRepo) {
+		if errors.Is(err, errNoRepo) {
 			return "", nil
 		}
 		return "", err
@@ -68,12 +61,12 @@ func gitFetch(path string, dryRun bool) (string, error) {
 func gitCommit(path string, message string) (string, error) {
 	_, err := gitCmd("add .", path)
 	if err != nil {
-		if errors.Is(err, noRepo) {
+		if errors.Is(err, errNoRepo) {
 			return "", nil
 		}
 		return "", err
 	}
-	out, err := gitCmd(fmt.Sprintf(`commit -m "%s"`, message), path)
+	out, err := gitCmd(fmt.Sprintf(`commit -m %q`, message), path)
 	if err != nil {
 		return "", err
 	}

@@ -14,8 +14,8 @@ type Field struct {
 	Plural   string         `json:"-"` // override only
 	Hidden   bool           `json:"-"` // override only
 	Default  interface{}    `json:"default,omitempty"`
-	ReadOnly bool      `json:"readOnly,omitempty"`
-	Metadata *Metadata `json:"metadata,omitempty"`
+	ReadOnly bool           `json:"readOnly,omitempty"`
+	Metadata *Metadata      `json:"metadata,omitempty"`
 }
 
 func (f *Field) Name() string {

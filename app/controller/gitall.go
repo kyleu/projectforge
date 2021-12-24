@@ -83,7 +83,7 @@ func gitFetchAll(prjs project.Projects, rc *fasthttp.RequestCtx, as *app.State, 
 				errs = append(errs, errors.Wrapf(err, "can't fetch project [%s]", p.Key))
 			}
 			mu.Unlock()
-			wg.Add(-1)
+			wg.Done()
 		}()
 	}
 	wg.Wait()

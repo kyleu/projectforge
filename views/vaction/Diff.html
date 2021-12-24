@@ -3,10 +3,38 @@
 
   "github.com/kyleu/projectforge/app"
   "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/app/diff"
 ) %}
 
-{% func renderDiffs(patch string, as *app.State, ps *cutil.PageState) %}{% stripspace %}
-
+{% func renderDiffs(prjKey string, diffs diff.Diffs, as *app.State, ps *cutil.PageState) %}{% stripspace %}
+    <h4>Diffs</h4>
+    <table>
+      <thead>
+        <tr>
+          <th class="shrink">Path</th>
+          <th class="shrink">Status</th>
+          <th class="shrink">Patch</th>
+        </tr>
+      </thead>
+      <tbody>
+      {%- for _, d := range diffs -%}
+        <tr>
+          <td class="shrink">{%s d.Path %}</td>
+          <td>
+            {%s d.Status.String() %}
+            {%- if true -%}
+            <form action="/run/{%s prjKey %}/merge" method="get">
+              <input type="hidden" name="file" value="{%s d.Path %}" />
+              <button type="submit" name="to" value="module" title="Incorporate change into module">&lt;-</button>
+              <button type="submit" name="to" value="project" title="Overwrite project changes with module version">-&gt;</button>
+            </form>
+            {%- endif -%}
+          </td>
+          <td>{%= renderPatch(d.Patch, as, ps) %}</td>
+        </tr>
+      {%- endfor -%}
+      </tbody>
+    </table>
 {% endstripspace %}{% endfunc %}
 
 {% func renderPatch(patch string, as *app.State, ps *cutil.PageState) %}{% stripspace %}

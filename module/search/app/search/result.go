@@ -51,7 +51,7 @@ type Result struct {
 	Title   string      `json:"title,omitempty"`
 	Icon    string      `json:"icon,omitempty"`
 	URL     string      `json:"url,omitempty"`
-	Matches []*Match    `json:"matches,omitempty"`
+	Matches Matches     `json:"matches,omitempty"`
 	Data    interface{} `json:"data,omitempty"`
 	HTML    string      `json:"-"`
 }

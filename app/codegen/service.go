@@ -13,6 +13,6 @@ func NewService(logger *zap.SugaredLogger) *Service {
 	return &Service{logger: logger}
 }
 
-func (s *Service) Test(project *project.Project) (interface{}, error) {
+func (s *Service) Test(prj *project.Project) (interface{}, error) {
 	return "Codegen!", nil
 }

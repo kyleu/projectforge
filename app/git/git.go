@@ -5,7 +5,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-var noRepo = errors.New("not a git repository")
+var errNoRepo = errors.New("not a git repository")
 
 func gitCmd(args string, path string) (string, error) {
 	exit, out, err := util.RunProcessSimple("git "+args, path)
@@ -13,7 +13,7 @@ func gitCmd(args string, path string) (string, error) {
 		return "", errors.Wrap(err, "can't read git status for path ["+path+"]")
 	}
 	if exit == 128 {
-		return "", errors.Wrapf(noRepo, "path [%s] is not a git repo", path)
+		return "", errors.Wrapf(errNoRepo, "path [%s] is not a git repo", path)
 	}
 	if exit != 0 {
 		return "", errors.Errorf("git status returned exit code [%d] for path [%s]: %s", exit, path, out)

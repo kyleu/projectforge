@@ -81,13 +81,12 @@ func getModuleArgs(frm util.ValueMap) (util.ValueMap, error) {
 	ma := frm.GetStringOpt("moduleArgs")
 	if ma == "" {
 		return nil, nil
-	} else {
-		moduleArgs := util.ValueMap{}
-		if err := util.FromJSON([]byte(ma), &moduleArgs); err != nil {
-			return nil, errors.Wrap(err, "invalid module args JSON")
-		}
-		return moduleArgs, nil
 	}
+	moduleArgs := util.ValueMap{}
+	if err := util.FromJSON([]byte(ma), &moduleArgs); err != nil {
+		return nil, errors.Wrap(err, "invalid module args JSON")
+	}
+	return moduleArgs, nil
 }
 
 func getProject(rc *fasthttp.RequestCtx, as *app.State) (*project.Project, error) {

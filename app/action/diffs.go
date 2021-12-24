@@ -33,9 +33,9 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 	for _, f := range srcFiles {
 		origPath := f.FullPath()
 		if strings.Contains(origPath, delimStart) {
-			newPath, err := runTemplate("filename", origPath, ctx)
-			if err != nil {
-				return nil, nil, err
+			newPath, e := runTemplate("filename", origPath, ctx)
+			if e != nil {
+				return nil, nil, e
 			}
 			p, n := path.Split(newPath)
 			f.Path = strings.Split(p, "/")

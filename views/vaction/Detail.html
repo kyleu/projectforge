@@ -67,34 +67,7 @@
       {%- endif -%}
       {%- code diffs := mr.DiffsFiltered(includeSkipped) -%}
       {%- if len(diffs) > 0 -%}
-      <h4>Diffs</h4>
-      <table>
-        <thead>
-          <tr>
-            <th class="shrink">Path</th>
-            <th class="shrink">Status</th>
-            <th class="shrink">Patch</th>
-          </tr>
-        </thead>
-        <tbody>
-        {%- for _, d := range diffs -%}
-          <tr>
-            <td class="shrink">{%s d.Path %}</td>
-            <td>
-              {%s d.Status.String() %}
-              {%- if true -%}
-              <form action="/run/{%s res.Project.Key %}/merge" method="get">
-                <input type="hidden" name="file" value="{%s d.Path %}" />
-                <button type="submit" name="to" value="module" title="Incorporate change into module">&lt;-</button>
-                <button type="submit" name="to" value="project" title="Overwrite project changes with module version">-&gt;</button>
-              </form>
-              {%- endif -%}
-            </td>
-            <td>{%= renderPatch(d.Patch, as, ps) %}</td>
-          </tr>
-        {%- endfor -%}
-        </tbody>
-      </table>
+      {%= renderDiffs(res.Project.Key, diffs, as, ps) %}
       {%- endif -%}
     </div>
   {%- endfor -%}

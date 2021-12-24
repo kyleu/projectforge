@@ -7,10 +7,10 @@ import (
 )
 
 type Schema struct {
-	Paths           []string      `json:"paths,omitempty"`
-	Scalars         Scalars       `json:"scalars,omitempty"`
+	Paths           []string     `json:"paths,omitempty"`
+	Scalars         Scalars      `json:"scalars,omitempty"`
 	Models          model.Models `json:"models,omitempty"`
-	Metadata        *Metadata     `json:"metadata,omitempty"`
+	Metadata        *Metadata    `json:"metadata,omitempty"`
 	modelsByPackage *model.Package
 }
 

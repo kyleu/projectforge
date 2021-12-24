@@ -15,13 +15,13 @@ type Model struct {
 	Type          Type          `json:"type"`
 	Title         string        `json:"-"` // override only
 	Plural        string        `json:"-"` // override only
-	Interfaces []string     `json:"interfaces,omitempty"`
-	Fields     field.Fields `json:"fields,omitempty"`
-	Indexes    Indexes      `json:"indexes,omitempty"`
+	Interfaces    []string      `json:"interfaces,omitempty"`
+	Fields        field.Fields  `json:"fields,omitempty"`
+	Indexes       Indexes       `json:"indexes,omitempty"`
 	Relationships Relationships `json:"relationships,omitempty"`
 	References    References    `json:"-"` // internal cache
 	Metadata      *Metadata     `json:"metadata,omitempty"`
-	pk            []string  // internal cache
+	pk            []string      // internal cache
 }
 
 func NewModel(pkg util.Pkg, key string) *Model {

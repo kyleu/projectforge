@@ -19,56 +19,59 @@ func Apply(ctx context.Context, p *Params) *Result {
 	}
 
 	start := util.TimerStart()
+	ret := applyBasic(ctx, p)
+	if ret == nil {
+		if len(p.PSvc.Projects()) == 0 {
+			_, err := p.PSvc.Refresh()
+			if err != nil {
+				return errorResult(err, p.Cfg, p.Logger)
+			}
+		}
+		if p.ProjectKey == "" {
+			prj := p.PSvc.ByPath(".")
+			p.ProjectKey = prj.Key
+		}
 
-	var ret *Result
-	switch p.T {
-	case TypeCreate:
-		ret = onCreate(ctx, p)
-	case TypeTest:
-		ret = onTest(ctx, p)
-	case TypeDoctor:
-		ret = onDoctor(ctx, p.Cfg, p.PSvc, p.Logger)
-	}
-	if ret != nil {
-		ret.Duration = util.TimerEnd(start)
-		return ret
-	}
-
-	if len(p.PSvc.Projects()) == 0 {
-		_, err := p.PSvc.Refresh()
+		pm, err := getPrjAndMods(ctx, p)
 		if err != nil {
 			return errorResult(err, p.Cfg, p.Logger)
 		}
-	}
-	if p.ProjectKey == "" {
-		prj := p.PSvc.ByPath(".")
-		p.ProjectKey = prj.Key
-	}
 
-	pm, err := getPrjAndMods(ctx, p)
-	if err != nil {
-		return errorResult(err, p.Cfg, p.Logger)
+		ret = applyPrj(ctx, pm, p.T)
 	}
-
-	switch p.T {
-	case TypeBuild:
-		ret = onBuild(pm)
-	case TypeCodegen:
-		ret = onCodegen(pm)
-	case TypeMerge:
-		ret = onMerge(pm)
-	case TypePreview:
-		ret = onPreview(pm)
-	case TypeSlam:
-		ret = onSlam(pm)
-	case TypeSVG:
-		ret = onSVG(pm)
-	default:
-		ret = errorResult(errors.Errorf("invalid action type [%s]", p.T.String()), p.Cfg, p.Logger)
-	}
-
 	ret.Duration = util.TimerEnd(start)
 	return ret
+}
+
+func applyBasic(ctx context.Context, p *Params) *Result {
+	switch p.T {
+	case TypeCreate:
+		return onCreate(ctx, p)
+	case TypeTest:
+		return onTest(ctx, p)
+	case TypeDoctor:
+		return onDoctor(ctx, p.Cfg, p.PSvc, p.Logger)
+	}
+	return nil
+}
+
+func applyPrj(ctx context.Context, pm *PrjAndMods, t Type) *Result {
+	switch t {
+	case TypeBuild:
+		return onBuild(pm)
+	case TypeCodegen:
+		return onCodegen(pm)
+	case TypeMerge:
+		return onMerge(pm)
+	case TypePreview:
+		return onPreview(pm)
+	case TypeSlam:
+		return onSlam(pm)
+	case TypeSVG:
+		return onSVG(pm)
+	default:
+		return errorResult(errors.Errorf("invalid action type [%s]", t.String()), pm.Cfg, pm.Logger)
+	}
 }
 
 type PrjAndMods struct {

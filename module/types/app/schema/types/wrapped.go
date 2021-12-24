@@ -50,7 +50,7 @@ type wrappedUnmarshal struct {
 
 func (x *Wrapped) MarshalJSON() ([]byte, error) {
 	b := util.ToJSONBytes(x.T, false)
-	// TODO better detection
+	// needs better detection
 	if len(b) == 2 {
 		return util.ToJSONBytes(x.K, false), nil
 	}

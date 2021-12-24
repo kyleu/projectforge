@@ -61,7 +61,7 @@ func GitAction(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		statusResult, err := as.Services.Git.Status(prj)
+		statusResult, _ := as.Services.Git.Status(prj)
 		if result == nil {
 			result = statusResult
 		} else {

@@ -10,6 +10,8 @@ import (
 	"go.uber.org/zap"
 )
 
+const ok = "OK"
+
 type Service struct {
 	logger *zap.SugaredLogger
 }
@@ -29,7 +31,7 @@ func (s Service) Status(prj *project.Project) (*Result, error) {
 	if len(dirty) > 0 {
 		data["dirty"] = dirty
 	}
-	status := "OK"
+	status := ok
 	if len(dirty) > 0 {
 		status = fmt.Sprintf("[%d] changes", len(dirty))
 	}
@@ -53,10 +55,10 @@ func (s Service) Fetch(prj *project.Project) (*Result, error) {
 	lines := strings.Split(x, "\n")
 	for _, line := range lines {
 		if strings.HasPrefix(line, "   ") {
-			count += 1
+			count++
 		}
 	}
-	status := "OK"
+	status := ok
 	fetched := "no updates"
 	if count > 0 {
 		status = fmt.Sprintf("[%d] %s fetched", count, util.PluralMaybe("update", count))
@@ -72,5 +74,5 @@ func (s Service) Commit(prj *project.Project, msg string) (*Result, error) {
 		return nil, err
 	}
 
-	return NewResult(prj, "OK", util.ValueMap{"commit": result}), nil
+	return NewResult(prj, ok, util.ValueMap{"commit": result}), nil
 }

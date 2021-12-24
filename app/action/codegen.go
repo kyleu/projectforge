@@ -17,7 +17,7 @@ func onCodegen(pm *PrjAndMods) *Result {
 	}
 
 	sch := &schema.Schema{}
-	err = util.FromJSON([]byte(schemaJSON), sch)
+	err = util.FromJSON(schemaJSON, sch)
 	if err != nil {
 		return errorResult(errors.Wrapf(err, "project [%s] has an invalid schema", pm.Prj.Key), pm.Cfg, pm.Logger)
 	}
