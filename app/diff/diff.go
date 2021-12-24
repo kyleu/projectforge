@@ -10,15 +10,17 @@ import (
 )
 
 type Diff struct {
-	Path    string    `json:"path"`
-	Status  *Status   `json:"status"`
-	Patch   string    `json:"patch,omitempty"`
-	Changes []*Change `json:"changes,omitempty"`
+	Path    string  `json:"path"`
+	Status  *Status `json:"status"`
+	Patch   string  `json:"patch,omitempty"`
+	Changes Changes `json:"changes,omitempty"`
 }
 
 func (d *Diff) String() string {
 	return fmt.Sprintf("%s:%s", d.Path, d.Status)
 }
+
+type Diffs []*Diff
 
 func File(src *file.File, tgt *file.File) *Diff {
 	ret := &Diff{Path: src.FullPath()}
@@ -40,8 +42,8 @@ func File(src *file.File, tgt *file.File) *Diff {
 	return ret
 }
 
-func Files(src file.Files, tgt file.Files, includeUnchanged bool) []*Diff {
-	var ret []*Diff
+func Files(src file.Files, tgt file.Files, includeUnchanged bool) Diffs {
+	var ret Diffs
 	for _, s := range src {
 		p := s.FullPath()
 		t := tgt.Get(p)
@@ -53,8 +55,8 @@ func Files(src file.Files, tgt file.Files, includeUnchanged bool) []*Diff {
 	return ret
 }
 
-func FileLoader(src file.Files, tgt filesystem.FileLoader, includeUnchanged bool, logger *zap.SugaredLogger) []*Diff {
-	var ret []*Diff
+func FileLoader(src file.Files, tgt filesystem.FileLoader, includeUnchanged bool, logger *zap.SugaredLogger) Diffs {
+	var ret Diffs
 	for _, s := range src {
 		p := s.FullPath()
 		t, _ := tgt.Stat(p)

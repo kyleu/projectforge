@@ -12,11 +12,13 @@ import (
 	"github.com/kyleu/projectforge/app/util"
 	"github.com/kyleu/projectforge/views/vaction"
 	"github.com/valyala/fasthttp"
+	"go.opentelemetry.io/otel/trace"
+	"go.uber.org/zap"
 )
 
 func RunAction(rc *fasthttp.RequestCtx) {
 	act("run.action", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		tgt, err := rcRequiredString(rc, "tgt", false)
+		tgt, err := rcRequiredString(rc, "key", false)
 		if err != nil {
 			return "", err
 		}
@@ -36,10 +38,7 @@ func RunAction(rc *fasthttp.RequestCtx) {
 			cfg[string(k)] = string(v)
 		})
 		nc, span := telemetry.StartSpan(ps.Context, "action", "action."+actT.String())
-		result := action.Apply(nc, &action.Params{
-			Span: span, ProjectKey: tgt, T: actT, Cfg: cfg,
-			MSvc: as.Services.Modules, PSvc: as.Services.Projects, Logger: ps.Logger,
-		})
+		result := action.Apply(nc, actionParams(span, tgt, actT, cfg, as, ps.Logger))
 		if result.Project == nil {
 			result.Project = prj
 		}
@@ -69,10 +68,7 @@ func RunAllActions(rc *fasthttp.RequestCtx) {
 				c := cfg.Clone()
 				c["path"] = p.Path
 				nc, span := telemetry.StartSpan(ps.Context, "action", "action."+actT.String())
-				result := action.Apply(nc, &action.Params{
-					Span: span, ProjectKey: p.Key, T: actT, Cfg: c,
-					MSvc: as.Services.Modules, PSvc: as.Services.Projects, Logger: ps.Logger,
-				})
+				result := action.Apply(nc, actionParams(span, p.Key, actT, c, as, ps.Logger))
 				if result.Project == nil {
 					result.Project = p
 				}
@@ -91,4 +87,11 @@ func RunAllActions(rc *fasthttp.RequestCtx) {
 		page := &vaction.Results{T: actT, Ctxs: results}
 		return render(rc, as, page, ps, "projects", actT.Title)
 	})
+}
+
+func actionParams(span trace.Span, tgt string, t action.Type, cfg util.ValueMap, as *app.State, logger *zap.SugaredLogger) *action.Params {
+	return &action.Params{
+		Span: span, ProjectKey: tgt, T: t, Cfg: cfg,
+		MSvc: as.Services.Modules, PSvc: as.Services.Projects, CSvc: as.Services.Codegen, Logger: logger,
+	}
 }

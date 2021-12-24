@@ -4,13 +4,13 @@ import (
 	"github.com/hexops/gotextdiff"
 )
 
-type Diffs []gotextdiff.TextEdit
+type Edits []gotextdiff.TextEdit
 
 type Example struct {
 	File     string `json:"title"`
 	Src      string `json:"src"`
 	Tgt      string `json:"tgt"`
-	Expected Diffs  `json:"expected"`
+	Expected Edits  `json:"expected"`
 }
 
 func NewExample(fn string, src string, tgt string) *Example {

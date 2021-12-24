@@ -30,7 +30,7 @@ func onMerge(pm *PrjAndMods) *Result {
 	}
 
 	if file != "" {
-		var matched []*diff.Diff
+		var matched diff.Diffs
 		for _, d := range dfs {
 			if d.Path == file {
 				matched = append(matched, d)

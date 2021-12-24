@@ -12,6 +12,8 @@ type ModuleDef struct {
 	URL  string `json:"url"`
 }
 
+type ModuleDefs []*ModuleDef
+
 type Info struct {
 	Org             string        `json:"org,omitempty"`
 	AuthorID        string        `json:"authorID,omitempty"`
@@ -28,7 +30,7 @@ type Info struct {
 	SigningIdentity string        `json:"signingIdentity,omitempty"`
 	Slack           string        `json:"slack,omitempty"`
 	JavaPackage     string        `json:"javaPackage,omitempty"`
-	ModuleDefs      []*ModuleDef  `json:"moduleDefs,omitempty"`
+	ModuleDefs      ModuleDefs    `json:"moduleDefs,omitempty"`
 	ModuleArgs      util.ValueMap `json:"moduleArgs,omitempty"`
 }
 

@@ -75,7 +75,7 @@ func SVGAdd(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		ps.Data = x
-		return render(rc, as, &vsvg.View{SVG: x}, ps, "tools", "svg")
+		return render(rc, as, &vsvg.View{Project: prj, SVG: x}, ps, "projects", prj.Key, "SVG||/p/"+prj.Key+"/svg", x.Key)
 	})
 }
 

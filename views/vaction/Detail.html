@@ -1,6 +1,4 @@
 {% import (
-  "strings"
-
   "github.com/kyleu/projectforge/app"
   "github.com/kyleu/projectforge/app/controller/cutil"
   "github.com/kyleu/projectforge/app/action"
@@ -101,23 +99,3 @@
     </div>
   {%- endfor -%}
 {% endfunc %}
-
-{% func renderPatch(patch string, as *app.State, ps *cutil.PageState) %}{% stripspace %}
-  {% code lines := strings.Split(patch, "\n") %}
-  <pre>
-    {% for _, line := range lines %}
-      {% if len(line) > 0 %}
-        {% switch line[0] %}
-        {% case ' ' %}
-        <div title="unchanged" style="color: grey;">{%s line[1:] %}{% if len(line) == 1 %}&nbsp;{% endif %}</div>
-        {% case '+' %}
-        <div title="added" style="color: green;">{%s line[1:] %}{% if len(line) == 1 %}&nbsp;{% endif %}</div>
-        {% case '-' %}
-        <div title="removed" style="color: red;">{%s line[1:] %}{% if len(line) == 1 %}&nbsp;{% endif %}</div>
-        {% default %}
-        {%s line %}
-        {% endswitch %}
-      {% endif %}
-    {% endfor %}
-  </pre>
-{% endstripspace %}{% endfunc %}

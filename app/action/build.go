@@ -38,7 +38,9 @@ func simpleBuild(key string, title string, cmd string) *Build {
 
 const ciDesc = "Installs dependencies for the TypeScript client"
 
-var AllBuilds = []*Build{
+type Builds []*Build
+
+var AllBuilds = Builds{
 	simpleBuild("build", "Build", "make build"),
 	simpleBuild("clean", "Clean", "make clean"),
 	simpleBuild("tidy", "Tidy", "go mod tidy"),
@@ -53,8 +55,8 @@ var AllBuilds = []*Build{
 	}},
 }
 
-func onBuild(pm *PrjAndMods, cfg util.ValueMap) *Result {
-	phaseStr, _ := cfg.GetString("phase", true)
+func onBuild(pm *PrjAndMods) *Result {
+	phaseStr, _ := pm.Cfg.GetString("phase", true)
 	if phaseStr == "" {
 		phaseStr = "make"
 	}

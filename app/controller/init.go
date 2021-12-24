@@ -43,7 +43,7 @@ func initProjects(as *app.State) error {
 		return errors.Wrap(err, "can't load projects")
 	}
 	for _, prj := range prjs {
-		var mods []*project.ModuleDef
+		var mods project.ModuleDefs
 		if prj.Info != nil {
 			mods = prj.Info.ModuleDefs
 		}

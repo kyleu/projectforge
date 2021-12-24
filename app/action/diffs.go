@@ -13,7 +13,7 @@ const (
 	delimEnd   = "}}}"
 )
 
-func diffs(pm *PrjAndMods) (file.Files, []*diff.Diff, error) {
+func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 	tgt := pm.PSvc.GetFilesystem(pm.Prj)
 
 	srcFiles, err := pm.MSvc.GetFiles(pm.Mods)

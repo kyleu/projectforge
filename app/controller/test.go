@@ -36,7 +36,7 @@ func TestRun(rc *fasthttp.RequestCtx) {
 		var page layout.Page
 		switch key {
 		case "diff":
-			ret := []*diff.Result{}
+			ret := diff.Results{}
 			for _, x := range diff.AllExamples {
 				res := x.Calc()
 				ret = append(ret, res)
@@ -47,10 +47,7 @@ func TestRun(rc *fasthttp.RequestCtx) {
 			cfg := util.ValueMap{}
 			cfg.Add("path", "./testproject", "method", key, "wipe", true)
 			nc, span := telemetry.StartSpan(ps.Context, "action", "test.run")
-			res := action.Apply(nc, &action.Params{
-				Span: span, ProjectKey: "testproject", T: action.TypeTest, Cfg: cfg,
-				MSvc: as.Services.Modules, PSvc: as.Services.Projects, Logger: ps.Logger,
-			})
+			res := action.Apply(nc, actionParams(span, "testproject", action.TypeTest, cfg, as, ps.Logger))
 			ps.Data = res
 
 			_, err = as.Services.Projects.Refresh()

@@ -16,18 +16,22 @@ const (
 )
 
 type Result struct {
-	Filename string    `json:"filename"`
-	Src      string    `json:"src"`
-	Tgt      string    `json:"tgt"`
-	Diffs    Diffs     `json:"diffs"`
-	Changes  []*Change `json:"changes"`
-	Patch    string    `json:"patch"`
+	Filename string  `json:"filename"`
+	Src      string  `json:"src"`
+	Tgt      string  `json:"tgt"`
+	Edits    Edits   `json:"edits"`
+	Changes  Changes `json:"changes"`
+	Patch    string  `json:"patch"`
 }
+
+type Results []*Result
 
 type Line struct {
 	T string `json:"t"`
 	V string `json:"v"`
 }
+
+type Lines []*Line
 
 func (l Line) String() string {
 	switch l.T {
@@ -45,20 +49,22 @@ func (l Line) String() string {
 type Change struct {
 	From  int `json:"from"`
 	To    int `json:"to"`
-	Lines []*Line
+	Lines Lines
 }
+
+type Changes []*Change
 
 func Calc(fn string, src string, tgt string) *Result {
-	diffs := myers.ComputeEdits(span.URIFromPath(""), tgt, src)
-	p, c := changes(tgt, diffs)
-	return &Result{Filename: fn, Src: src, Tgt: tgt, Diffs: diffs, Changes: c, Patch: p}
+	edits := myers.ComputeEdits(span.URIFromPath(""), tgt, src)
+	p, c := changes(tgt, edits)
+	return &Result{Filename: fn, Src: src, Tgt: tgt, Edits: edits, Changes: c, Patch: p}
 }
 
-func changes(src string, diffs []gotextdiff.TextEdit) (string, []*Change) {
-	u := gotextdiff.ToUnified("", "", src, diffs)
-	ret := make([]*Change, 0, len(u.Hunks))
+func changes(src string, edits []gotextdiff.TextEdit) (string, Changes) {
+	u := gotextdiff.ToUnified("", "", src, edits)
+	ret := make(Changes, 0, len(u.Hunks))
 	for _, h := range u.Hunks {
-		lines := make([]*Line, 0, len(h.Lines))
+		lines := make(Lines, 0, len(h.Lines))
 		for _, l := range h.Lines {
 			t := "unknown"
 			switch l.Kind {

@@ -3,6 +3,7 @@ package action
 import (
 	"context"
 
+	"github.com/kyleu/projectforge/app/codegen"
 	"github.com/kyleu/projectforge/app/module"
 	"github.com/kyleu/projectforge/app/project"
 	"github.com/kyleu/projectforge/app/util"
@@ -51,7 +52,9 @@ func Apply(ctx context.Context, p *Params) *Result {
 
 	switch p.T {
 	case TypeBuild:
-		ret = onBuild(pm, p.Cfg)
+		ret = onBuild(pm)
+	case TypeCodegen:
+		ret = onCodegen(pm)
 	case TypeMerge:
 		ret = onMerge(pm)
 	case TypePreview:
@@ -75,6 +78,7 @@ type PrjAndMods struct {
 	Mods   module.Modules
 	MSvc   *module.Service
 	PSvc   *project.Service
+	CSvc   *codegen.Service
 	Logger *zap.SugaredLogger
 }
 
@@ -94,5 +98,5 @@ func getPrjAndMods(ctx context.Context, p *Params) (*PrjAndMods, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &PrjAndMods{Ctx: ctx, Cfg: p.Cfg, Prj: prj, Mods: mods, MSvc: p.MSvc, PSvc: p.PSvc, Logger: p.Logger}, nil
+	return &PrjAndMods{Ctx: ctx, Cfg: p.Cfg, Prj: prj, Mods: mods, MSvc: p.MSvc, PSvc: p.PSvc, CSvc: p.CSvc, Logger: p.Logger}, nil
 }

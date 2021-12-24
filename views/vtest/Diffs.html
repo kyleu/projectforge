@@ -10,7 +10,7 @@
 
 {% code type Diffs struct {
   layout.Basic
-  Results []*diff.Result
+  Results diff.Results
 } %}
 
 {% func (p *Diffs) Body(as *app.State, ps *cutil.PageState) %}
@@ -22,7 +22,7 @@
           <th>Filename</th>
           <th>Source</th>
           <th>Target</th>
-          <th>Diffs</th>
+          <th>Edits</th>
           <th>Changes</th>
           <th>Patch</th>
         </tr>
@@ -33,7 +33,7 @@
           <td>{%s r.Filename %}</td>
           <td>{%s r.Src %}</td>
           <td>{%s r.Tgt %}</td>
-          <td><pre>{%s util.ToJSON(r.Diffs) %}</pre></td>
+          <td><pre>{%s util.ToJSON(r.Edits) %}</pre></td>
           <td><pre>{%s util.ToJSON(r.Changes) %}</pre></td>
           <td><pre>{%s fmt.Sprint(r.Patch) %}</pre></td>
         </tr>

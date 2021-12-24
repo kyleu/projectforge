@@ -1,6 +1,7 @@
 package action
 
 import (
+	"github.com/kyleu/projectforge/app/codegen"
 	"github.com/kyleu/projectforge/app/filesystem"
 	"github.com/kyleu/projectforge/app/module"
 	"github.com/kyleu/projectforge/app/project"
@@ -17,6 +18,7 @@ type Params struct {
 	RootFiles  filesystem.FileLoader
 	MSvc       *module.Service
 	PSvc       *project.Service
+	CSvc       *codegen.Service
 	CLI        bool
 	Logger     *zap.SugaredLogger
 }
