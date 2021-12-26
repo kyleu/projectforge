@@ -16,10 +16,6 @@ func MenuFor(ctx context.Context, isAuthed bool, isAdmin bool, as *app.State) (m
 
 	var ret menu.Items
 	// $PF_SECTION_START(routes_start)$
-	itemFor := func(t action.Type, i string, r string) *menu.Item {
-		return &menu.Item{Key: t.Key, Title: t.Title, Description: t.Description, Icon: i, Route: r}
-	}
-
 	if isAuthed {
 		ret = append(ret,
 			projectMenu(as.Services.Projects.Projects()),
@@ -37,7 +33,7 @@ func MenuFor(ctx context.Context, isAuthed bool, isAdmin bool, as *app.State) (m
 			sandbox.Menu(),
 			menu.Separator,
 			&menu.Item{Key: "admin", Title: "Settings", Description: "System-wide settings and preferences", Icon: "cog", Route: "/admin"},
-			itemFor(action.TypeDoctor, "first-aid", "/doctor"),
+			DoctorMenu("first-aid", "/doctor"),
 		)
 	}
 	desc := "Get assistance and advice for using " + util.AppName

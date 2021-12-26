@@ -2,12 +2,18 @@ package controller
 
 import (
 	"github.com/kyleu/projectforge/app"
+	"github.com/kyleu/projectforge/app/action"
 	"github.com/kyleu/projectforge/app/controller/cutil"
 	"github.com/kyleu/projectforge/app/doctor"
 	"github.com/kyleu/projectforge/app/doctor/checks"
+	"github.com/kyleu/projectforge/app/menu"
 	"github.com/kyleu/projectforge/views/vdoctor"
 	"github.com/valyala/fasthttp"
 )
+
+func DoctorMenu(i string, r string) *menu.Item {
+	return &menu.Item{Key: action.TypeDoctor.Key, Title: action.TypeDoctor.Title, Description: action.TypeDoctor.Description, Icon: i, Route: r}
+}
 
 func Doctor(rc *fasthttp.RequestCtx) {
 	act("doctor", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
