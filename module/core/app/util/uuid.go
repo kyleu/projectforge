@@ -4,7 +4,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func GetUUIDFromString(s string) *uuid.UUID {
+func UUIDFromString(s string) *uuid.UUID {
 	var retID *uuid.UUID
 
 	if len(s) > 0 {

@@ -80,6 +80,7 @@ type PrjAndMods struct {
 	MSvc   *module.Service
 	PSvc   *project.Service
 	ESvc   *export.Service
+	EArgs  *export.Args
 	Logger *zap.SugaredLogger
 }
 
@@ -99,5 +100,15 @@ func getPrjAndMods(ctx context.Context, p *Params) (*PrjAndMods, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &PrjAndMods{Ctx: ctx, Cfg: p.Cfg, Prj: prj, Mods: mods, MSvc: p.MSvc, PSvc: p.PSvc, ESvc: p.ESvc, Logger: p.Logger}, nil
+
+	args := &export.Args{}
+	if argsX := prj.Info.ModuleArg("export"); argsX != nil {
+		err := util.CycleJSON(argsX, &args)
+		if err != nil {
+			return nil, errors.Wrap(err, "export module arguments are invalid")
+		}
+	}
+	args.Modules = mods.Keys()
+
+	return &PrjAndMods{Ctx: ctx, Cfg: p.Cfg, Prj: prj, Mods: mods, MSvc: p.MSvc, PSvc: p.PSvc, ESvc: p.ESvc, EArgs: args, Logger: p.Logger}, nil
 }

@@ -24,7 +24,10 @@ func AppRoutes() fasthttp.RequestHandler {
 	r.POST(defaultProfilePath, ProfileSave){{{ if .HasModule "oauth" }}}
 	r.GET("/auth/{key}", AuthDetail)
 	r.GET("/auth/callback/{key}", AuthCallback)
-	r.GET("/auth/logout/{key}", AuthLogout){{{ end }}}
+	r.GET("/auth/logout/{key}", AuthLogout){{{ end }}}{{{ if.HasModule "oauth" }}}
+
+	// $PF_INJECT_START(codegen)$
+	// $PF_INJECT_END(codegen)${{{ end }}}
 
 	// $PF_SECTION_START(routes)$
 	// $PF_SECTION_END(routes)$

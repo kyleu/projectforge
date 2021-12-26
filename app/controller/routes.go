@@ -26,6 +26,9 @@ func AppRoutes() fasthttp.RequestHandler {
 	r.GET("/auth/callback/{key}", AuthCallback)
 	r.GET("/auth/logout/{key}", AuthLogout)
 
+	// $PF_INJECT_START(codegen)$
+	// $PF_INJECT_END(codegen)$
+
 	// $PF_SECTION_START(routes)$
 	r.GET("/welcome", Welcome)
 	r.POST("/welcome", WelcomeResult)

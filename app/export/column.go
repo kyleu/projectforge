@@ -23,6 +23,15 @@ func (c Column) proper() string {
 
 type Columns []*Column
 
+func (c Columns) Get(name string) *Column {
+	for _, x := range c {
+		if x.Name == name {
+			return x
+		}
+	}
+	return nil
+}
+
 func (c Columns) PKs() Columns {
 	var ret Columns
 	for _, x := range c {

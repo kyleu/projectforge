@@ -74,7 +74,7 @@ func FileLoader(src file.Files, tgt filesystem.FileLoader, includeUnchanged bool
 			linefeed := strings.Index(tgtFile.Content, "\n")
 			if linefeed > -1 {
 				firstLine := tgtFile.Content[:linefeed]
-				if strings.Contains(firstLine, "$PF_IGNORE$") {
+				if strings.Contains(firstLine, file.IgnorePattern) {
 					skip = true
 				}
 			}
@@ -85,7 +85,7 @@ func FileLoader(src file.Files, tgt filesystem.FileLoader, includeUnchanged bool
 		} else {
 			d = File(s, tgtFile)
 		}
-		if includeUnchanged || d.Status != StatusIdentical {
+		if includeUnchanged || (d.Status != StatusIdentical && d.Status != StatusSkipped) {
 			ret = append(ret, d)
 		}
 	}

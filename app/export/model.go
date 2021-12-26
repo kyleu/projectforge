@@ -5,17 +5,21 @@ import (
 )
 
 type Model struct {
-	Key     string  `json:"key"`
-	Pkg     string  `json:"pkg"`
-	Columns Columns `json:"columns"`
+	Name        string   `json:"name"`
+	Package     string   `json:"package"`
+	Description string   `json:"description"`
+	Icon        string   `json:"icon"`
+	Ordering    string   `json:"ordering"`
+	Search      []string `json:"search"`
+	Columns     Columns  `json:"columns"`
 }
 
 func (m Model) camel() string {
-	return util.StringToLowerCamel(m.Key)
+	return util.StringToLowerCamel(m.Name)
 }
 
 func (m Model) proper() string {
-	return util.StringToCamel(m.Key)
+	return util.StringToCamel(m.Name)
 }
 
 func (m Model) properPlural() string {
@@ -23,7 +27,18 @@ func (m Model) properPlural() string {
 }
 
 func (m Model) firstLetter() string {
-	return m.Key[0:1]
+	return m.Name[0:1]
+}
+
+func (m Model) packageProper() string {
+	return util.StringToCamel(m.Package)
+}
+
+func (m Model) IconSafe() string {
+	if m.Icon == "" {
+		return "star"
+	}
+	return m.Icon
 }
 
 type Models []*Model

@@ -38,6 +38,10 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 			return nil, nil, errors.Wrap(err, "unable to export code")
 		}
 		srcFiles = append(srcFiles, files...)
+		err = pm.ESvc.Inject(args, srcFiles)
+		if err != nil {
+			return nil, nil, errors.Wrap(err, "unable to inject code")
+		}
 	}
 
 	portOffsets := map[string]int{}
@@ -73,7 +77,6 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 		}
 	}
 
-	diffs := diff.FileLoader(srcFiles, tgt, false, pm.Logger)
-
-	return srcFiles, diffs, nil
+	dfs := diff.FileLoader(srcFiles, tgt, false, pm.Logger)
+	return srcFiles, dfs, nil
 }

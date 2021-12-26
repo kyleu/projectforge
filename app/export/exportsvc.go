@@ -8,7 +8,7 @@ import (
 )
 
 func exportServiceFile(m *Model, args *Args) *file.File {
-	g := NewGoFile(m.Pkg, []string{"app", m.Pkg}, "service")
+	g := NewGoFile(m.Package, []string{"app", m.Package}, "service")
 	for _, imp := range m.Columns.PKs().Types().Imports() {
 		g.AddImport(imp.Type, imp.Value)
 	}
@@ -31,6 +31,10 @@ func exportServiceFile(m *Model, args *Args) *file.File {
 		for _, pkCol := range m.Columns.PKs() {
 			g.AddBlocks(serviceGetBy("GetBy"+pkCol.proper(), m, Columns{pkCol}, true))
 		}
+	}
+	if len(m.Search) > 0 {
+		g.AddImport(ImportTypeInternal, "strings")
+		g.AddBlocks(serviceSearch(m))
 	}
 	return g.Render()
 }
@@ -66,14 +70,58 @@ func serviceNew(m *Model, args *Args) *Block {
 func serviceList(m *Model) *Block {
 	ret := NewBlock("List", "func")
 
-	ret.W("func (s *Service) List(ctx context.Context, tx *sqlx.Tx, params *filter.Params) (%s, error) {", m.properPlural())
+	ret.WF("func (s *Service) List(ctx context.Context, tx *sqlx.Tx, params *filter.Params) (%s, error) {", m.properPlural())
 	ret.W("\tret := dtos{}")
-	ret.W("\tq := database.SQLSelect(ColumnsString, Table, \"\", params.OrderByString(), params.Limit, params.Offset)")
-	ret.W("\terr := s.db.Select(ctx, ret, q, tx)")
+	ret.W("\tsql := database.SQLSelect(ColumnsString, Table, \"\", params.OrderByString(), params.Limit, params.Offset)")
+	ret.W("\terr := s.db.Select(ctx, ret, sql, tx)")
 	ret.W("\tif err != nil {")
-	ret.W("\t\treturn nil, errors.Wrap(err, \"unable to get %s\")", m.properPlural())
+	ret.WF("\t\treturn nil, errors.Wrap(err, \"unable to get %s\")", m.properPlural())
 	ret.W("\t}")
-	ret.W("\treturn ret.To%s(), nil", m.properPlural())
+	ret.WF("\treturn ret.To%s(), nil", m.properPlural())
+	ret.W("}")
+	return ret
+}
+
+func serviceSearch(m *Model) *Block {
+	ret := NewBlock("search", "func")
+	ret.WF("func (s *Service) Search(ctx context.Context, q string, tx *sqlx.Tx, params *filter.Params) (%s, error) {", m.properPlural())
+	ret.W("\tret := dtos{}")
+
+	var clauses []string
+	hasEqual, hasLike := false, false
+	for _, s := range m.Search {
+		if strings.HasPrefix(s, "=") {
+			hasEqual = true
+		} else {
+			hasLike = true
+		}
+	}
+	eq := "$1"
+	like := "$2"
+	var params []string
+	if hasEqual {
+		params = append(params, "strings.ToLower(q)")
+	}
+	if hasLike {
+		params = append(params, `"%%"+strings.ToLower(q)+"%%"`)
+		if !hasEqual {
+			like = "$1"
+		}
+	}
+	for _, s := range m.Search {
+		if strings.HasPrefix(s, "=") {
+			clauses = append(clauses, s+" = "+eq)
+		} else {
+			clauses = append(clauses, s+" like "+like)
+		}
+	}
+	wc := strings.Join(clauses, " and ")
+	ret.W("\tsql := database.SQLSelect(ColumnsString, Table, \"" + wc + "\", params.OrderByString(), params.Limit, params.Offset)")
+	ret.W("\terr := s.db.Select(ctx, ret, sql, tx, " + strings.Join(params, ", ") + ")")
+	ret.W("\tif err != nil {")
+	ret.W("\t\treturn nil, err")
+	ret.W("\t}")
+	ret.WF("\treturn ret.To%s(), nil", m.properPlural())
 	ret.W("}")
 	return ret
 }
@@ -94,15 +142,14 @@ func serviceGetOne(key string, m *Model, cols Columns) *Block {
 		key = "GetBy" + cols.Smushed()
 	}
 	ret := NewBlock(key, "func")
-
-	ret.W("func (s *Service) %s(ctx context.Context, tx *sqlx.Tx, %s) (*%s, error) {", key, cols.Args(), m.proper())
+	ret.WF("func (s *Service) %s(ctx context.Context, tx *sqlx.Tx, %s) (*%s, error) {", key, cols.Args(), m.proper())
 	ret.W("\tret := &dto{}")
-	ret.W("\tq := database.SQLSelectSimple(ColumnsString, Table, %q)", cols.WhereClause())
-	ret.W("\terr := s.db.Get(ctx, ret, q, tx, %s)", strings.Join(cols.camelNames(), ", "))
+	ret.WF("\tsql := database.SQLSelectSimple(ColumnsString, Table, %q)", cols.WhereClause())
+	ret.WF("\terr := s.db.Get(ctx, ret, sql, tx, %s)", strings.Join(cols.camelNames(), ", "))
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, err")
 	ret.W("\t}")
-	ret.W("\treturn ret.To%s(), nil", m.proper())
+	ret.WF("\treturn ret.To%s(), nil", m.proper())
 	ret.W("}")
 	return ret
 }
@@ -112,15 +159,14 @@ func serviceGetMultiple(key string, m *Model, cols Columns) *Block {
 		key = "GetBy" + cols.Smushed()
 	}
 	ret := NewBlock(key, "func")
-
-	ret.W("func (s *Service) %s(ctx context.Context, tx *sqlx.Tx, %s, params *filter.Params) (%s, error) {", key, cols.Args(), m.properPlural())
+	ret.WF("func (s *Service) %s(ctx context.Context, tx *sqlx.Tx, %s, params *filter.Params) (%s, error) {", key, cols.Args(), m.properPlural())
 	ret.W("\tret := dtos{}")
-	ret.W("\tq := database.SQLSelect(ColumnsString, Table, %q, params.OrderByString(), params.Limit, params.Offset)", cols.WhereClause())
-	ret.W("\terr := s.db.Select(ctx, ret, q, tx, %s)", strings.Join(cols.camelNames(), ", "))
+	ret.WF("\tsql := database.SQLSelect(ColumnsString, Table, %q, params.OrderByString(), params.Limit, params.Offset)", cols.WhereClause())
+	ret.WF("\terr := s.db.Select(ctx, ret, sql, tx, %s)", strings.Join(cols.camelNames(), ", "))
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, err")
 	ret.W("\t}")
-	ret.W("\treturn ret.To%s(), nil", m.properPlural())
+	ret.WF("\treturn ret.To%s(), nil", m.properPlural())
 	ret.W("}")
 	return ret
 }

@@ -22,8 +22,12 @@ func (b *Block) Priority() int {
 	}
 }
 
-func (b *Block) W(l string, args ...interface{}) {
-	b.Lines = append(b.Lines, fmt.Sprintf(l, args...))
+func (b *Block) W(l string) {
+	b.Lines = append(b.Lines, l)
+}
+
+func (b *Block) WF(l string, args ...interface{}) {
+	b.W(fmt.Sprintf(l, args...))
 }
 
 func (b *Block) Render() string {
