@@ -20,7 +20,7 @@ type Field struct {
 
 func (f *Field) Name() string {
 	if f.Title == "" {
-		return util.ToSingular(util.ToTitle(f.Key))
+		return util.StringToSingular(util.StringToTitle(f.Key))
 	}
 	return f.Title
 }
@@ -28,7 +28,7 @@ func (f *Field) Name() string {
 func (f *Field) PluralName() string {
 	if f.Plural == "" {
 		ret := f.Name()
-		return util.ToPlural(ret)
+		return util.StringToPlural(ret)
 	}
 	return f.Plural
 }

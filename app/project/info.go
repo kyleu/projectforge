@@ -54,9 +54,9 @@ func (i *Info) AuthorIDSafe() string {
 	return "@" + i.AuthorID
 }
 
-func (i *Info) ModuleArgString(key string) string {
+func (i *Info) ModuleArg(mod string) interface{} {
 	if i.ModuleArgs == nil {
-		return ""
+		return nil
 	}
-	return i.ModuleArgs.GetStringOpt(key)
+	return i.ModuleArgs[mod]
 }

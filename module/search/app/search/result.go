@@ -39,7 +39,7 @@ type Matches []*Match
 func MatchesFrom(a []string) Matches {
 	ret := make(Matches, 0, len(a))
 	for _, x := range a {
-		k, v := util.SplitString(x, ':', true)
+		k, v := util.StringSplit(x, ':', true)
 		ret = append(ret, &Match{Key: k, Value: v})
 	}
 	return ret

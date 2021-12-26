@@ -22,14 +22,14 @@ func Migrate(ctx context.Context, s *database.Service, logger *zap.SugaredLogger
 
 	if len(databaseMigrations) > maxIdx+1 {
 		c := len(databaseMigrations) - maxIdx
-		logger.Infof("applying [%d] database %s...", c, util.PluralMaybe("migration", c))
+		logger.Infof("applying [%d] database %s...", c, util.StringPluralMaybe("migration", c))
 	}
 
 	for i, file := range databaseMigrations {
 		err = run(ctx, maxIdx, i, file, s, logger)
 	}
 
-	logger.Infof("verified [%d] database %s", maxIdx, util.PluralMaybe("migration", maxIdx))
+	logger.Infof("verified [%d] database %s", maxIdx, util.StringPluralMaybe("migration", maxIdx))
 
 	return errors.Wrap(err, "error running database migration")
 }

@@ -75,7 +75,7 @@ func listen(address string, port uint16) (uint16, net.Listener, error) {
 	}
 	if port == 0 {
 		addr := l.Addr().String()
-		_, portStr := util.SplitStringLast(addr, ':', true)
+		_, portStr := util.StringSplitLast(addr, ':', true)
 		actualPort, err := strconv.Atoi(portStr)
 		if err != nil {
 			return 0, nil, errors.Wrap(err, "invalid port ["+portStr+"]")

@@ -61,7 +61,7 @@ func cliProject(p *project.Project, modKeys []string) error {
 
 	modPromptString := "Enter the modules your project will use as a comma-separated list (or \"all\") from choices:\n  " + strings.Join(modKeys, ", ")
 	mods := promptString(modPromptString, strings.Join(p.Modules, ", "))
-	p.Modules = util.SplitAndTrim(mods, ",")
+	p.Modules = util.StringSplitAndTrim(mods, ",")
 	if len(p.Modules) == 1 && p.Modules[0] == "all" {
 		p.Modules = modKeys
 	}

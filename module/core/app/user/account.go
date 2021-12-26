@@ -13,7 +13,7 @@ type Account struct {
 }
 
 func accountFromString(s string) *Account {
-	p, e := util.SplitString(s, ':', true)
+	p, e := util.StringSplit(s, ':', true)
 	return &Account{Provider: p, Email: e}
 }
 
@@ -57,7 +57,7 @@ func (a Accounts) Matches(match string) bool {
 		return true
 	}
 	if strings.Contains(match, ",") {
-		xs := util.SplitAndTrim(match, ",")
+		xs := util.StringSplitAndTrim(match, ",")
 		for _, x := range xs {
 			if a.Matches(x) {
 				return true
@@ -65,7 +65,7 @@ func (a Accounts) Matches(match string) bool {
 		}
 		return false
 	}
-	prv, acct := util.SplitString(match, ':', true)
+	prv, acct := util.StringSplit(match, ':', true)
 	for _, x := range a {
 		if x.Provider == prv {
 			if acct == "" {
@@ -94,7 +94,7 @@ func (a Accounts) Purge(keys ...string) Accounts {
 }
 
 func AccountsFromString(s string) Accounts {
-	split := util.SplitAndTrim(s, ",")
+	split := util.StringSplitAndTrim(s, ",")
 	ret := make(Accounts, 0, len(split))
 	for _, x := range split {
 		ret = append(ret, accountFromString(x))

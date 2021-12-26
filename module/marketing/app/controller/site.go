@@ -37,7 +37,7 @@ func SiteRoutes() fasthttp.RequestHandler {
 
 func Site(rc *fasthttp.RequestCtx) {
 	actSite("site", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		path := util.SplitAndTrim(string(rc.Request.URI().Path()), "/")
+		path := util.StringSplitAndTrim(string(rc.Request.URI().Path()), "/")
 		redir, page, bc, err := site.Handle(path, rc, as, ps)
 		if err != nil {
 			return "", err

@@ -3,6 +3,7 @@ package action
 import (
 	"context"
 
+	"github.com/kyleu/projectforge/app/export"
 	"github.com/kyleu/projectforge/app/module"
 	"github.com/kyleu/projectforge/app/project"
 	"github.com/kyleu/projectforge/app/util"
@@ -78,6 +79,7 @@ type PrjAndMods struct {
 	Mods   module.Modules
 	MSvc   *module.Service
 	PSvc   *project.Service
+	ESvc   *export.Service
 	Logger *zap.SugaredLogger
 }
 
@@ -97,5 +99,5 @@ func getPrjAndMods(ctx context.Context, p *Params) (*PrjAndMods, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &PrjAndMods{Ctx: ctx, Cfg: p.Cfg, Prj: prj, Mods: mods, MSvc: p.MSvc, PSvc: p.PSvc, Logger: p.Logger}, nil
+	return &PrjAndMods{Ctx: ctx, Cfg: p.Cfg, Prj: prj, Mods: mods, MSvc: p.MSvc, PSvc: p.PSvc, ESvc: p.ESvc, Logger: p.Logger}, nil
 }

@@ -15,7 +15,7 @@ func plrlSvc() {
 	}
 }
 
-func ToPlural(s string) string {
+func StringToPlural(s string) string {
 	plrlSvc()
 	ret := plrl.Plural(s)
 	if len(ret) < 3 {
@@ -33,28 +33,28 @@ func ToPlural(s string) string {
 	return ret
 }
 
-func ToSingular(s string) string {
+func StringToSingular(s string) string {
 	plrlSvc()
 	return plrl.Singular(s)
 }
 
 func StringForms(s string) (string, string) {
-	return ToSingular(s), ToPlural(s)
+	return StringToSingular(s), StringToPlural(s)
 }
 
-func Plural(count int, s string) string {
+func StringPlural(count int, s string) string {
 	var x string
 	if count == 1 {
-		x = ToSingular(s)
+		x = StringToSingular(s)
 	} else {
-		x = ToPlural(s)
+		x = StringToPlural(s)
 	}
 	return fmt.Sprintf("%d %s", count, x)
 }
 
-func PluralMaybe(s string, count int) string {
+func StringPluralMaybe(s string, count int) string {
 	if count == 1 || count == -1 {
-		return ToSingular(s)
+		return StringToSingular(s)
 	}
-	return ToPlural(s)
+	return StringToPlural(s)
 }

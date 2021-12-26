@@ -4,6 +4,7 @@ import (
 	"path/filepath"
 	"sort"
 
+	"github.com/kyleu/projectforge/app/export"
 	"github.com/kyleu/projectforge/app/filesystem"
 	"github.com/kyleu/projectforge/app/project"
 	"github.com/pkg/errors"
@@ -12,7 +13,7 @@ import (
 
 var nativeModuleKeys = []string{
 	"android", "core", "database", "desktop", "ios", "marketing", "migration",
-	"mysql", "notarize", "oauth", "postgres", "search", "sqlite", "types", "upgrade",
+	"mysql", "notarize", "oauth", "postgres", "search", "sqlite", "types", "upgrade", "export",
 }
 
 type Service struct {
@@ -20,6 +21,7 @@ type Service struct {
 	config      filesystem.FileLoader
 	cache       map[string]*Module
 	filesystems map[string]filesystem.FileLoader
+	expSvc      *export.Service
 	logger      *zap.SugaredLogger
 }
 
@@ -27,7 +29,9 @@ func NewService(config filesystem.FileLoader, logger *zap.SugaredLogger) *Servic
 	logger = logger.With("svc", "module")
 	local := filesystem.NewFileSystem("module", logger)
 	config = filesystem.NewFileSystem(filepath.Join(config.Root(), "module"), logger)
-	ret := &Service{local: local, config: config, cache: map[string]*Module{}, filesystems: map[string]filesystem.FileLoader{}, logger: logger}
+	fs := map[string]filesystem.FileLoader{}
+	es := export.NewService(logger)
+	ret := &Service{local: local, config: config, cache: map[string]*Module{}, filesystems: fs, expSvc: es, logger: logger}
 
 	_, err := ret.LoadNative(nativeModuleKeys...)
 	if err != nil {

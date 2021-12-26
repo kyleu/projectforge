@@ -14,8 +14,8 @@ type ToTitleTest struct {
 }
 
 func (t *ToTitleTest) Test() error {
-	if res := util.ToTitle(t.TestValue); res != t.Expected {
-		return errors.Errorf("ToTitle returned [%s], not expected [%s]", res, t.Expected)
+	if res := util.StringToTitle(t.TestValue); res != t.Expected {
+		return errors.Errorf("StringToTitle returned [%s], not expected [%s]", res, t.Expected)
 	}
 	return nil
 }

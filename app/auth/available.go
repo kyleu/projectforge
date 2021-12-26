@@ -77,5 +77,5 @@ func ProviderUsage(id string, enabled bool) string {
 	case OpenIDConnectKey:
 		keys = append(keys, "\"openid_connect_url\"", "\"openid_connect_name\"")
 	}
-	return fmt.Sprintf("To enable %s, set %s as environment variables", n, util.OxfordComma(keys, "and"))
+	return fmt.Sprintf("To enable %s, set %s as environment variables", n, util.StringArrayOxfordComma(keys, "and"))
 }

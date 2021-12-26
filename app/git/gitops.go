@@ -18,7 +18,7 @@ func gitStatus(path string) ([]string, error) {
 		return nil, err
 	}
 
-	lines := util.SplitAndTrim(out, "\n")
+	lines := util.StringSplitAndTrim(out, "\n")
 
 	dirty := make([]string, 0, len(lines))
 	for _, line := range lines {

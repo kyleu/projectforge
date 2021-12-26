@@ -152,12 +152,12 @@
           </td>
         </tr>
         {%- endif -%}
-        {%- if len(info.ModuleArgs) > 0 -%}
+        {%- for k, arg := range info.ModuleArgs -%}
         <tr>
-          <th>Module Arguments</th>
-          <td>{%= components.JSON(info.ModuleArgs) %}</td>
+          <th>[{%s k %}] Config</th>
+          <td>{%= components.JSON(arg) %}</td>
         </tr>
-        {%- endif -%}
+        {%- endfor -%}
       </tbody>
     </table>
   </div>

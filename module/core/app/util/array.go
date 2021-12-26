@@ -17,6 +17,17 @@ func StringArrayIndexOf(a []string, str string) int {
 	return -1
 }
 
+func StringArrayMaxLength(a []string) int {
+	ret := 0
+	for _, x := range a {
+		l := len(x)
+		if l > ret {
+			ret = l
+		}
+	}
+	return ret
+}
+
 func StringArrayCopy(a []string) []string {
 	ret := make([]string, 0, len(a))
 	return append(ret, a...)
@@ -54,6 +65,24 @@ func InterfaceArrayFromStrings(s []string) []interface{} {
 	ret := make([]interface{}, len(s))
 	for idx, item := range s {
 		ret[idx] = item
+	}
+	return ret
+}
+
+func StringArrayOxfordComma(names []string, separator string) string {
+	ret := ""
+	for idx, name := range names {
+		if idx > 0 {
+			if idx == (len(names) - 1) {
+				if idx > 1 {
+					ret += ","
+				}
+				ret += " " + separator + " "
+			} else {
+				ret += ", "
+			}
+		}
+		ret += name
 	}
 	return ret
 }

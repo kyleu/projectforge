@@ -130,7 +130,7 @@ func (s *Service) Projects() Projects {
 func (s *Service) load(path string) (*Project, error) {
 	cfgPath := filepath.Join(path, ConfigFilename)
 	if curr, _ := os.Stat(cfgPath); curr == nil {
-		l, r := util.SplitStringLast(path, '/', true)
+		l, r := util.StringSplitLast(path, '/', true)
 		if r == "" {
 			r = l
 		}

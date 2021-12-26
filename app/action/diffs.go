@@ -5,7 +5,10 @@ import (
 	"strings"
 
 	"github.com/kyleu/projectforge/app/diff"
+	"github.com/kyleu/projectforge/app/export"
 	"github.com/kyleu/projectforge/app/file"
+	"github.com/kyleu/projectforge/app/util"
+	"github.com/pkg/errors"
 )
 
 const (
@@ -18,7 +21,23 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 
 	srcFiles, err := pm.MSvc.GetFiles(pm.Mods)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, errors.Wrapf(err, "unable to get files from [%d] modules", len(pm.Mods))
+	}
+
+	if pm.Mods.Get("export") != nil {
+		args := &export.Args{}
+		if argsX := pm.Prj.Info.ModuleArg("export"); argsX != nil {
+			err := util.CycleJSON(argsX, &args)
+			if err != nil {
+				return nil, nil, errors.Wrap(err, "export module arguments are invalid")
+			}
+		}
+		args.Modules = pm.Mods.Keys()
+		files, err := pm.ESvc.Export(args)
+		if err != nil {
+			return nil, nil, errors.Wrap(err, "unable to export code")
+		}
+		srcFiles = append(srcFiles, files...)
 	}
 
 	portOffsets := map[string]int{}

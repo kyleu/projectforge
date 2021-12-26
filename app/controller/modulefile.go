@@ -31,7 +31,7 @@ func ModuleFile(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		path := util.SplitAndTrim(pathS, "/")
+		path := util.StringSplitAndTrim(pathS, "/")
 		bcAppend := "||/m/" + mod.Key + "/fs"
 		bc := []string{"modules", mod.Key, "Files" + bcAppend}
 		for _, x := range path {

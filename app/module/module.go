@@ -22,7 +22,7 @@ type Module struct {
 	Files       filesystem.FileLoader `json:"-"`
 	URL         string                `json:"-"`
 	UsageMD     string                `json:"-"`
-	usageHTML   string                `json:"-"`
+	usageHTML   string
 }
 
 func (m *Module) Title() string {

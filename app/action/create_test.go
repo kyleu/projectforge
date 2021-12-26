@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/kyleu/projectforge/app/action"
+	"github.com/kyleu/projectforge/app/export"
 	"github.com/kyleu/projectforge/app/filesystem"
 	"github.com/kyleu/projectforge/app/log"
 	"github.com/kyleu/projectforge/app/module"
@@ -40,11 +41,12 @@ func TestFoo(t *testing.T) {
 	fs := filesystem.NewFileSystem("../../tmp/test/cfg", logger)
 	mSvc := module.NewService(fs, logger)
 	pSvc := project.NewService(logger)
+	eSvc := export.NewService(logger)
 
 	for _, c := range cases {
 		t.Log("Testing [" + c.project.Name + "]")
 		cfg := c.project.ToMap()
-		params := &action.Params{Span: nil, ProjectKey: c.project.Key, T: action.TypeCreate, Cfg: cfg, MSvc: mSvc, PSvc: pSvc, Logger: logger}
+		params := &action.Params{Span: nil, ProjectKey: c.project.Key, T: action.TypeCreate, Cfg: cfg, MSvc: mSvc, PSvc: pSvc, ESvc: eSvc, Logger: logger}
 		res := action.Apply(context.Background(), params)
 		t.Log(res.Status)
 	}

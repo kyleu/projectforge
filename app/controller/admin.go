@@ -20,7 +20,7 @@ import (
 
 func Admin(rc *fasthttp.RequestCtx) {
 	act("admin", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		path := util.SplitAndTrim(strings.TrimPrefix(string(rc.URI().Path()), "/admin"), "/")
+		path := util.StringSplitAndTrim(strings.TrimPrefix(string(rc.URI().Path()), "/admin"), "/")
 		if len(path) == 0 {
 			ps.Title = "Administration"
 			x := &runtime.MemStats{}

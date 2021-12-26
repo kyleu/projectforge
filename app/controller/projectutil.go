@@ -33,12 +33,12 @@ func projectFromForm(frm util.ValueMap, prj *project.Project) error {
 	if prj.Port == 0 {
 		prj.Port = 10000
 	}
-	prj.Modules = util.SplitAndTrim(get("modules", strings.Join(prj.Modules, "|")), "|")
+	prj.Modules = util.StringSplitAndTrim(get("modules", strings.Join(prj.Modules, "|")), "|")
 	if len(prj.Modules) == 0 {
 		prj.Modules = []string{"core"}
 	}
-	prj.Ignore = util.SplitAndTrim(get("ignore", strings.Join(prj.Ignore, ",")), ",")
-	prj.Children = util.SplitAndTrim(get("children", strings.Join(prj.Children, "\n")), "\n")
+	prj.Ignore = util.StringSplitAndTrim(get("ignore", strings.Join(prj.Ignore, ",")), ",")
+	prj.Children = util.StringSplitAndTrim(get("children", strings.Join(prj.Children, "\n")), "\n")
 	prj.Path = get("path", prj.Path)
 
 	if prj.Info == nil {

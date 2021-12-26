@@ -16,13 +16,13 @@ type File struct {
 }
 
 func NewFile(path string, mode os.FileMode, b []byte, logger *zap.SugaredLogger) *File {
-	p, n := util.SplitStringLast(path, '/', true)
+	p, n := util.StringSplitLast(path, '/', true)
 	if n == "" {
 		n = p
 		p = ""
 	}
 	c := string(b)
-	return &File{Path: util.SplitAndTrim(p, "/"), Name: n, Mode: mode, Content: c}
+	return &File{Path: util.StringSplitAndTrim(p, "/"), Name: n, Mode: mode, Content: c}
 }
 
 func (f *File) FullPath() string {

@@ -30,7 +30,7 @@ func (x *List) Sortable() bool {
 func (x *List) From(v interface{}) interface{} {
 	switch t := v.(type) {
 	case string:
-		lt := util.SplitAndTrim(t, ",")
+		lt := util.StringSplitAndTrim(t, ",")
 		return lt
 	default:
 		return invalidInput(x.Key(), t)

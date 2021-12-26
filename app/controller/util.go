@@ -76,7 +76,7 @@ func flashAndRedir(success bool, msg string, redir string, rc *fasthttp.RequestC
 	if currStr == "" {
 		currStr = msgFmt
 	} else {
-		curr := util.SplitAndTrim(currStr, ",")
+		curr := util.StringSplitAndTrim(currStr, ",")
 		curr = append(curr, msgFmt)
 		currStr = strings.Join(curr, ",")
 	}

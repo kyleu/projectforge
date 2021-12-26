@@ -61,7 +61,7 @@ func (s Service) Fetch(prj *project.Project) (*Result, error) {
 	status := ok
 	fetched := "no updates"
 	if count > 0 {
-		status = fmt.Sprintf("[%d] %s fetched", count, util.PluralMaybe("update", count))
+		status = fmt.Sprintf("[%d] %s fetched", count, util.StringPluralMaybe("update", count))
 		fetched = status
 	}
 

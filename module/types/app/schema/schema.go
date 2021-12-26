@@ -29,7 +29,7 @@ func (s Schemata) GetWithError(key string) (*Schema, error) {
 	for k := range s {
 		keys = append(keys, k)
 	}
-	return nil, errors.Errorf("no schema [%s] available among candidates [%s]", key, util.OxfordComma(keys, "and"))
+	return nil, errors.Errorf("no schema [%s] available among candidates [%s]", key, util.StringArrayOxfordComma(keys, "and"))
 }
 
 func (s *Schema) AddPath(path string) bool {
