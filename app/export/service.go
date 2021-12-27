@@ -19,7 +19,13 @@ func (s *Service) Export(args *Args) (file.Files, error) {
 	var ret file.Files
 
 	for _, m := range args.Models {
-		fs := file.Files{exportModelFile(m, args), exportServiceFile(m, args), exportControllerFile(m, args)}
+		fs := file.Files{
+			exportModelFile(m, args),
+			exportServiceFile(m, args),
+			exportControllerFile(m, args),
+			exportViewList(m, args),
+			exportViewDetail(m, args),
+		}
 		ret = append(ret, fs...)
 	}
 

@@ -49,6 +49,34 @@ func (i GoImports) Render() string {
 	return strings.Join(ret, "\n")
 }
 
+func (i GoImports) RenderHTML() string {
+	if len(i) == 1 {
+		return fmt.Sprintf("{%% import %q %%}", i[0].Value)
+	}
+	ret := []string{"{%% import ("}
+
+	add := func(x []string, lf bool) {
+		if len(x) > 0 {
+			if lf {
+				ret = append(ret, "")
+			}
+			for _, x := range x {
+				ret = append(ret, fmt.Sprintf("  %q", x))
+			}
+		}
+	}
+
+	internal := i.ByType(ImportTypeInternal)
+	external := i.ByType(ImportTypeExternal)
+	app := i.ByType(ImportTypeApp)
+	add(internal, false)
+	add(external, len(internal) > 0)
+	add(app, len(external) > 0 || len(internal) > 0)
+
+	ret = append(ret, ") %%}")
+	return strings.Join(ret, "\n")
+}
+
 func (i GoImports) ByType(t GoImportType) []string {
 	var ret []string
 	for _, x := range i {
