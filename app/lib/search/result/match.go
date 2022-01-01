@@ -47,6 +47,7 @@ func (m Matches) Sort() {
 	})
 }
 
+// nolint
 func MatchesFor(key string, x interface{}, q string) Matches {
 	v := reflect.ValueOf(x)
 	if v.Kind() == reflect.Ptr {
@@ -72,10 +73,13 @@ func MatchesFor(key string, x interface{}, q string) Matches {
 	switch v.Kind() {
 	case reflect.Bool:
 		return nil
-	case reflect.Int:
+	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 		i := fmt.Sprint(v.Int())
 		return maybe(strings.Contains(i, q), i)
-	case reflect.Float64:
+	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+		i := fmt.Sprint(v.Uint())
+		return maybe(strings.Contains(i, q), i)
+	case reflect.Float32, reflect.Float64:
 		f := fmt.Sprint(v.Float())
 		return maybe(strings.Contains(f, q), f)
 	case reflect.Map:
@@ -85,7 +89,7 @@ func MatchesFor(key string, x interface{}, q string) Matches {
 			ret = append(ret, MatchesFor(appendKey(x.Key().String()), x.Value().Interface(), q)...)
 		}
 		return ret
-	case reflect.Slice:
+	case reflect.Array, reflect.Slice:
 		var ret Matches
 		for idx := 0; idx < v.Len(); idx++ {
 			ret = append(ret, MatchesFor(appendKey(fmt.Sprint(idx)), v.Index(idx), q)...)

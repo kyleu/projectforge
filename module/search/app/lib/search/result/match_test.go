@@ -3,8 +3,8 @@ package result_test
 import (
 	"testing"
 
-	"github.com/kyleu/projectforge/app/lib/search/result"
-	"github.com/kyleu/projectforge/app/util"
+	"{{{ .Package }}}/app/lib/search/result"
+	"{{{ .Package }}}/app/util"
 )
 
 var splitTests = []struct {
