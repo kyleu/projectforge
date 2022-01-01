@@ -32,7 +32,7 @@ func GRPC(m *model.Model, args *model.Args) (*file.File, error) {
 	grpcRet := fmt.Sprintf("(*%sTransaction, error)", grpcClass)
 
 	g.AddBlocks(
-		grpcList(m, grpcArgs, grpcRet), grpcDetail(m, grpcArgs, grpcRet), grpcCall("Add", m, grpcArgs, grpcRet),
+		grpcList(m, grpcArgs, grpcRet), grpcSearch(m, grpcArgs, grpcRet), grpcDetail(m, grpcArgs, grpcRet), grpcCall("Add", m, grpcArgs, grpcRet),
 		grpcCall("Update", m, grpcArgs, grpcRet), grpcCall("Save", m, grpcArgs, grpcRet), grpcDelete(m, grpcArgs, grpcRet),
 		grpcFromRequest(m), grpcParamsFromRequest(m, cPkg),
 	)
@@ -43,6 +43,23 @@ func grpcList(m *model.Model, grpcArgs string, grpcRet string) *golang.Block {
 	ret := golang.NewBlock("grpcList", "func")
 	ret.W("func %sList(%s) %s {", m.Proper(), grpcArgs, grpcRet)
 	ret.W("\tret, err := appState.Services.%s.List(p.Ctx, nil, nil)", m.Proper())
+	ret.W("\tif err != nil {")
+	ret.W("\t\treturn nil, err")
+	ret.W("\t}")
+	ret.W("\tprovider.SetOutput(p.TX, ret)")
+	ret.W("\treturn p.TX, nil")
+	ret.W("}")
+	return ret
+}
+
+func grpcSearch(m *model.Model, grpcArgs string, grpcRet string) *golang.Block {
+	ret := golang.NewBlock("grpcSearch", "func")
+	ret.W("func %sSearch(%s) %s {", m.Proper(), grpcArgs, grpcRet)
+	ret.W("\tq := provider.GetString(p.R, p.TX, \"q\")")
+	ret.W("\tif q == \"\" {")
+	ret.W("\t\treturn nil, errors.New(\"must provide [q] in request data\")")
+	ret.W("\t}")
+	ret.W("\tret, err := appState.Services.%s.Search(p.Ctx, q, nil, nil)", m.Proper())
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, err")
 	ret.W("\t}")

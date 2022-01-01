@@ -14,7 +14,7 @@ func GRPC(f *file.File, args *model.Args) error {
 	}
 	out := make([]string, 0, len(args.Models)*6)
 	for _, m := range args.Models {
-		out = append(out, grpcList(m), grpcDetail(m), grpcAdd(m), grpcUpdate(m), grpcSave(m), grpcDelete(m))
+		out = append(out, grpcList(m), grpcSearch(m), grpcDetail(m), grpcAdd(m), grpcUpdate(m), grpcSave(m), grpcDelete(m))
 	}
 	content := map[string]string{"codegen": "\n" + strings.Join(out, "\n") + "\n\t// "}
 	return file.Inject(f, content)
@@ -24,6 +24,13 @@ func grpcList(m *model.Model) string {
 	f := golang.NewBlock("list", "inject")
 	f.W("\tcase \"%s.list\":", m.Package)
 	f.W("\t\treturn %sList(p)", m.PackageProper())
+	return f.Render()
+}
+
+func grpcSearch(m *model.Model) string {
+	f := golang.NewBlock("search", "inject")
+	f.W("\tcase \"%s.search\":", m.Package)
+	f.W("\t\treturn %sSearch(p)", m.PackageProper())
 	return f.Render()
 }
 
