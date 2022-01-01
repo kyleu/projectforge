@@ -6,7 +6,7 @@ import (
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller/cutil"
-	"{{{ .Package }}}/app/theme"
+	"{{{ .Package }}}/app/lib/theme"
 	"{{{ .Package }}}/app/util"
 	"{{{ .Package }}}/views/vtheme"
 )

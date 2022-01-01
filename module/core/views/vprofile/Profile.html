@@ -1,9 +1,9 @@
 {% import (
   "{{{ .Package }}}/app"{{{ if .HasModule "oauth" }}}
-  "{{{ .Package }}}/app/auth"{{{ end }}}
+  "{{{ .Package }}}/app/lib/auth"{{{ end }}}
   "{{{ .Package }}}/app/controller/cutil"
-  "{{{ .Package }}}/app/theme"
-  "{{{ .Package }}}/app/user"
+  "{{{ .Package }}}/app/lib/theme"
+  "{{{ .Package }}}/app/lib/user"
   "{{{ .Package }}}/views/components"
   "{{{ .Package }}}/views/layout"{{{ if .HasModule "oauth" }}}
   "{{{ .Package }}}/views/vauth"{{{ end }}}

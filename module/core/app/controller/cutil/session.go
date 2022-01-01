@@ -5,7 +5,7 @@ import (
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
 
-	"{{{ .Package }}}/app/user"
+	"{{{ .Package }}}/app/lib/user"
 	"{{{ .Package }}}/app/util"
 )
 

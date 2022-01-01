@@ -3,7 +3,7 @@ package project
 import (
 	"sort"
 
-	"github.com/kyleu/projectforge/app/theme"
+	"github.com/kyleu/projectforge/app/lib/theme"
 	"github.com/kyleu/projectforge/app/util"
 )
 
@@ -65,6 +65,10 @@ func (p *Project) ToMap() util.ValueMap {
 		"version": p.Version, "package": p.Package, "args": p.Key, "port": p.Port,
 		"modules": p.Modules, "path": p.Path,
 	}
+}
+
+func (p *Project) WebPath() string {
+	return "/p/" + p.Key
 }
 
 func NewProject(key string, path string) *Project {

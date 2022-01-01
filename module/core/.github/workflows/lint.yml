@@ -6,6 +6,8 @@ on:
     branches:
       - master
       - main
+  pull_request:
+    branches: [ master ]
 permissions:
   contents: read
 jobs:
@@ -42,4 +44,4 @@ jobs:
           skip-go-installation: true
           skip-pkg-cache: true
           skip-build-cache: true
-          args: "-c ./tools/release/.golangci.yml --timeout=10m --issues-exit-code=0 --max-issues-per-linter=0 --sort-results ./..."
+          args: "--timeout=10m --issues-exit-code=0 --max-issues-per-linter=0 --sort-results ./..."

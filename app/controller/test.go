@@ -3,7 +3,7 @@ package controller
 import (
 	"github.com/kyleu/projectforge/app/action"
 	"github.com/kyleu/projectforge/app/diff"
-	"github.com/kyleu/projectforge/app/telemetry"
+	"github.com/kyleu/projectforge/app/lib/telemetry"
 	"github.com/kyleu/projectforge/app/util"
 	"github.com/kyleu/projectforge/views/layout"
 	"github.com/kyleu/projectforge/views/vaction"

@@ -5,7 +5,7 @@ import (
 
 	"github.com/kyleu/projectforge/app"
 	"github.com/kyleu/projectforge/app/cmd"
-	"github.com/kyleu/projectforge/app/log"
+	"github.com/kyleu/projectforge/app/lib/log"
 )
 
 var (

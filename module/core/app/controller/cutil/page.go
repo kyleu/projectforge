@@ -8,8 +8,8 @@ import (
 	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 
-	"{{{ .Package }}}/app/menu"
-	"{{{ .Package }}}/app/user"
+	"{{{ .Package }}}/app/lib/menu"
+	"{{{ .Package }}}/app/lib/user"
 	"{{{ .Package }}}/app/util"
 )
 

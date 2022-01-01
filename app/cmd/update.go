@@ -3,7 +3,7 @@ package cmd
 import (
 	"context"
 
-	"github.com/kyleu/projectforge/app/filesystem"
+	"github.com/kyleu/projectforge/app/lib/filesystem"
 	"github.com/kyleu/projectforge/app/module"
 	"github.com/kyleu/projectforge/app/util"
 	"github.com/pkg/errors"

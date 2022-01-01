@@ -3,8 +3,8 @@ package site
 
 import (
 	"github.com/kyleu/projectforge/app"
-	"github.com/kyleu/projectforge/app/menu"
-	"github.com/kyleu/projectforge/app/user"
+	"github.com/kyleu/projectforge/app/lib/menu"
+	"github.com/kyleu/projectforge/app/lib/user"
 )
 
 const (

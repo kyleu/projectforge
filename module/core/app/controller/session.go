@@ -6,9 +6,9 @@ import (
 
 	"{{{ .Package}}}/app"
 	"{{{ .Package}}}/app/controller/cutil"
-	"{{{ .Package}}}/app/telemetry"
-	"{{{ .Package}}}/app/telemetry/httpmetrics"
-	"{{{ .Package}}}/app/user"
+	"{{{ .Package}}}/app/lib/telemetry"
+	"{{{ .Package}}}/app/lib/telemetry/httpmetrics"
+	"{{{ .Package}}}/app/lib/user"
 	"{{{ .Package}}}/app/util"
 )
 

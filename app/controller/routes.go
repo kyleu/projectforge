@@ -4,7 +4,7 @@ import (
 	"github.com/fasthttp/router"
 	"github.com/valyala/fasthttp"
 
-	"github.com/kyleu/projectforge/app/telemetry/httpmetrics"
+	"github.com/kyleu/projectforge/app/lib/telemetry/httpmetrics"
 	"github.com/kyleu/projectforge/app/util"
 )
 

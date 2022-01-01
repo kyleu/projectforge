@@ -6,9 +6,9 @@ import (
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 
-	"{{{ .Package }}}/app/database"
-	"{{{ .Package }}}/app/database/migrate"
-	"{{{ .Package }}}/app/log"
+	"{{{ .Package }}}/app/lib/database"
+	"{{{ .Package }}}/app/lib/database/migrate"
+	"{{{ .Package }}}/app/lib/log"
 	"{{{ .Package }}}/queries/migrations"
 )
 

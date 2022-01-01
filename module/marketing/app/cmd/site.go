@@ -11,7 +11,7 @@ import (
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller"
-	"{{{ .Package }}}/app/filesystem"
+	"{{{ .Package }}}/app/lib/filesystem"
 	"{{{ .Package }}}/app/util"
 )
 

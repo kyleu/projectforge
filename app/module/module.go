@@ -4,7 +4,7 @@ import (
 	"sort"
 
 	"github.com/gomarkdown/markdown"
-	"github.com/kyleu/projectforge/app/filesystem"
+	"github.com/kyleu/projectforge/app/lib/filesystem"
 	"github.com/kyleu/projectforge/app/util"
 )
 
@@ -45,6 +45,10 @@ func (m *Module) UsageHTML() string {
 		m.usageHTML = string(markdown.ToHTML([]byte(m.UsageMD), nil, nil))
 	}
 	return m.usageHTML
+}
+
+func (m *Module) WebPath() string {
+	return "/m/" + m.Key
 }
 
 type Modules []*Module

@@ -13,8 +13,8 @@ import (
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller/cutil"{{{ if .HasModule "migration" }}}
-	"{{{ .Package }}}/app/database/migrate"{{{ end }}}
-	"{{{ .Package }}}/app/user"
+	"{{{ .Package }}}/app/lib/database/migrate"{{{ end }}}
+	"{{{ .Package }}}/app/lib/user"
 	"{{{ .Package }}}/app/util"
 	"{{{ .Package }}}/views/vadmin"
 )

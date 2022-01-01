@@ -4,7 +4,7 @@ import (
 	"github.com/fasthttp/router"
 	"github.com/valyala/fasthttp"
 
-	"{{{ .Package }}}/app/telemetry/httpmetrics"
+	"{{{ .Package }}}/app/lib/telemetry/httpmetrics"
 	"{{{ .Package }}}/app/util"
 )
 

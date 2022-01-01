@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/kyleu/projectforge/app/controller/cutil"
-	"github.com/kyleu/projectforge/app/log"
+	"github.com/kyleu/projectforge/app/lib/log"
 )
 
 func TestEncryptDecrypt(t *testing.T) {

@@ -2,8 +2,8 @@ package site
 
 import (
 	"{{{ .Package }}}/app"
-	"{{{ .Package }}}/app/menu"
-	"{{{ .Package }}}/app/user"
+	"{{{ .Package }}}/app/lib/menu"
+	"{{{ .Package }}}/app/lib/user"
 )
 
 const (

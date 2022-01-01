@@ -6,7 +6,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/kyleu/projectforge/app/filesystem"
+	"github.com/kyleu/projectforge/app/lib/filesystem"
 	"github.com/kyleu/projectforge/app/project"
 )
 

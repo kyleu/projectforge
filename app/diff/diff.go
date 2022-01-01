@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/kyleu/projectforge/app/file"
-	"github.com/kyleu/projectforge/app/filesystem"
+	"github.com/kyleu/projectforge/app/lib/filesystem"
 	"go.uber.org/zap"
 )
 

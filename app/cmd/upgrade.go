@@ -5,8 +5,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/kyleu/projectforge/app/log"
-	"github.com/kyleu/projectforge/app/upgrade"
+	"github.com/kyleu/projectforge/app/lib/log"
+	"github.com/kyleu/projectforge/app/lib/upgrade"
 	"github.com/kyleu/projectforge/app/util"
 )
 

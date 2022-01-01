@@ -12,8 +12,8 @@ import (
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller"{{{ if .HasModule "migration" }}}
-	"{{{ .Package }}}/app/database"{{{ end }}}
-	"{{{ .Package }}}/app/filesystem"
+	"{{{ .Package }}}/app/lib/database"{{{ end }}}
+	"{{{ .Package }}}/app/lib/filesystem"
 	"{{{ .Package }}}/app/util"
 )
 

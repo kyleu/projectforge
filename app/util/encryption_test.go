@@ -3,7 +3,7 @@ package util_test
 import (
 	"testing"
 
-	"github.com/kyleu/projectforge/app/log"
+	"github.com/kyleu/projectforge/app/lib/log"
 	"github.com/kyleu/projectforge/app/util"
 )
 

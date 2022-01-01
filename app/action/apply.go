@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/kyleu/projectforge/app/export"
+	"github.com/kyleu/projectforge/app/export/model"
 	"github.com/kyleu/projectforge/app/module"
 	"github.com/kyleu/projectforge/app/project"
 	"github.com/kyleu/projectforge/app/util"
@@ -80,7 +81,7 @@ type PrjAndMods struct {
 	MSvc   *module.Service
 	PSvc   *project.Service
 	ESvc   *export.Service
-	EArgs  *export.Args
+	EArgs  *model.Args
 	Logger *zap.SugaredLogger
 }
 
@@ -101,7 +102,7 @@ func getPrjAndMods(ctx context.Context, p *Params) (*PrjAndMods, error) {
 		return nil, err
 	}
 
-	args := &export.Args{}
+	args := &model.Args{}
 	if argsX := prj.Info.ModuleArg("export"); argsX != nil {
 		err := util.CycleJSON(argsX, &args)
 		if err != nil {

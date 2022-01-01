@@ -6,7 +6,7 @@ import (
 
 	"github.com/valyala/fasthttp"
 
-	"{{{ .Package }}}/app/filter"
+	"{{{ .Package }}}/app/lib/filter"
 )
 
 func ParamSetFromRequest(rc *fasthttp.RequestCtx) filter.ParamSet {

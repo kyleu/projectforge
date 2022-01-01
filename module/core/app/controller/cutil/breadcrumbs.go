@@ -1,7 +1,7 @@
 package cutil
 
 import (
-	"{{{ .Package }}}/app/menu"
+	"{{{ .Package }}}/app/lib/menu"
 )
 
 type Breadcrumbs []string

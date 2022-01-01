@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/kyleu/projectforge/app/filesystem"
+	"github.com/kyleu/projectforge/app/lib/filesystem"
 	"github.com/kyleu/projectforge/app/project"
 	"github.com/kyleu/projectforge/app/svg"
 	"github.com/kyleu/projectforge/views/vsvg"

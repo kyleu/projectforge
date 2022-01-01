@@ -5,14 +5,15 @@ import (
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller/cutil"
-	"{{{ .Package }}}/app/search"
+	"{{{ .Package }}}/app/lib/search"
 	"{{{ .Package }}}/views/vsearch"
 )
 
 func Search(rc *fasthttp.RequestCtx) {
 	act("search", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		q := string(rc.URI().QueryArgs().Peek("q"))
-		params := &search.Params{Q: q}
+		paramSet := cutil.ParamSetFromRequest(rc)
+		params := &search.Params{Q: q, PS: paramSet}
 		results, errs := search.Search(ps.Context, as, params)
 		ps.Title = "Search Results"
 		ps.Data = results

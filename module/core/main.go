@@ -5,7 +5,7 @@ import (
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/cmd"
-	"{{{ .Package }}}/app/log"
+	"{{{ .Package }}}/app/lib/log"
 )
 
 var (

@@ -5,8 +5,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/kyleu/projectforge/app/lib/theme"
 	"github.com/kyleu/projectforge/app/project"
-	"github.com/kyleu/projectforge/app/theme"
 	"github.com/kyleu/projectforge/app/util"
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"

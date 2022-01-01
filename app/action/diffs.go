@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/kyleu/projectforge/app/diff"
-	"github.com/kyleu/projectforge/app/export"
+	"github.com/kyleu/projectforge/app/export/model"
 	"github.com/kyleu/projectforge/app/file"
 	"github.com/kyleu/projectforge/app/util"
 	"github.com/pkg/errors"
@@ -25,22 +25,22 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 	}
 
 	if pm.Mods.Get("export") != nil {
-		args := &export.Args{}
+		args := &model.Args{}
 		if argsX := pm.Prj.Info.ModuleArg("export"); argsX != nil {
-			err := util.CycleJSON(argsX, &args)
-			if err != nil {
-				return nil, nil, errors.Wrap(err, "export module arguments are invalid")
+			e := util.CycleJSON(argsX, &args)
+			if e != nil {
+				return nil, nil, errors.Wrap(e, "export module arguments are invalid")
 			}
 		}
 		args.Modules = pm.Mods.Keys()
-		files, err := pm.ESvc.Export(args)
-		if err != nil {
-			return nil, nil, errors.Wrap(err, "unable to export code")
+		files, e := pm.ESvc.Files(args)
+		if e != nil {
+			return nil, nil, errors.Wrap(e, "unable to export code")
 		}
 		srcFiles = append(srcFiles, files...)
-		err = pm.ESvc.Inject(args, srcFiles)
-		if err != nil {
-			return nil, nil, errors.Wrap(err, "unable to inject code")
+		e = pm.ESvc.Inject(args, srcFiles)
+		if e != nil {
+			return nil, nil, errors.Wrap(e, "unable to inject code")
 		}
 	}
 

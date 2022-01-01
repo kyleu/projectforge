@@ -52,7 +52,7 @@ func cliProject(p *project.Project, modKeys []string) error {
 		p.Info.AuthorEmail = fmt.Sprintf("dev@%s.com", p.Key)
 	}
 	p.Info.AuthorEmail = promptString("Enter the email address of this project's owner", p.Info.AuthorEmail)
-	p.Info.AuthorID = promptString("Enter the GitHub username of this project's owner", p.Info.AuthorID)
+	p.Info.AuthorID = promptString("Enter the GitHub username(s) of this project's owner", p.Info.AuthorID)
 
 	if p.Port == 0 {
 		p.Port = 20000

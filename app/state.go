@@ -6,10 +6,10 @@ import (
 
 	"go.uber.org/zap"
 
-	"github.com/kyleu/projectforge/app/auth"
-	"github.com/kyleu/projectforge/app/filesystem"
-	"github.com/kyleu/projectforge/app/telemetry"
-	"github.com/kyleu/projectforge/app/theme"
+	"github.com/kyleu/projectforge/app/lib/auth"
+	"github.com/kyleu/projectforge/app/lib/filesystem"
+	"github.com/kyleu/projectforge/app/lib/telemetry"
+	"github.com/kyleu/projectforge/app/lib/theme"
 	"github.com/kyleu/projectforge/app/util"
 )
 

@@ -11,7 +11,7 @@ import (
 
 	"github.com/kyleu/projectforge/app"
 	"github.com/kyleu/projectforge/app/controller"
-	"github.com/kyleu/projectforge/app/filesystem"
+	"github.com/kyleu/projectforge/app/lib/filesystem"
 	"github.com/kyleu/projectforge/app/util"
 )
 

@@ -6,7 +6,7 @@ import (
 
 	"github.com/valyala/fasthttp"
 
-	"github.com/kyleu/projectforge/app/filter"
+	"github.com/kyleu/projectforge/app/lib/filter"
 )
 
 func ParamSetFromRequest(rc *fasthttp.RequestCtx) filter.ParamSet {

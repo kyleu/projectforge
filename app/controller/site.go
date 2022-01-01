@@ -6,8 +6,8 @@ import (
 
 	"github.com/kyleu/projectforge/app"
 	"github.com/kyleu/projectforge/app/controller/cutil"
+	"github.com/kyleu/projectforge/app/lib/telemetry/httpmetrics"
 	"github.com/kyleu/projectforge/app/site"
-	"github.com/kyleu/projectforge/app/telemetry/httpmetrics"
 	"github.com/kyleu/projectforge/app/util"
 )
 

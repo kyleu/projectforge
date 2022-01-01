@@ -6,7 +6,7 @@ import (
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller/cutil"
-	"{{{ .Package }}}/app/sandbox"
+	"{{{ .Package }}}/app/lib/sandbox"
 	"{{{ .Package }}}/views/vsandbox"
 )
 

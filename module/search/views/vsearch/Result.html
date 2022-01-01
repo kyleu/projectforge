@@ -1,11 +1,14 @@
 {% import (
+  "strings"
+
   "{{{ .Package }}}/app"
-  "{{{ .Package }}}/app/search"
+  "{{{ .Package }}}/app/lib/search"
+  "{{{ .Package }}}/app/lib/search/result"
   "{{{ .Package }}}/app/controller/cutil"
   "{{{ .Package }}}/views/components"
 ) %}
 
-{% func Result(res *search.Result, params *search.Params, as *app.State, ps *cutil.PageState) %}
+{% func Result(res *result.Result, params *search.Params, as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <div class="right">
       {%- if res.Data == nil -%}
@@ -23,7 +26,7 @@
   </div>
 {% endfunc %}
 
-{% func Match(params *search.Params, matches search.Matches) %}
+{% func Match(params *search.Params, matches result.Matches) %}
   <ul>
     {%- if len(matches) == 0 -%}
     <li>Matched [{%s params.Q %}]</li>
@@ -32,7 +35,7 @@
     <li>
       Matched [{%s m.Key %}]:
       {%- code split := m.ValueSplit(params.Q) -%}
-      {%- for idx, x := range split -%}{%s x %}{% if idx > 0 && idx < (len(split) - 1) %}<strong>{%s params.Q %}</strong>{% endif %}{%- endfor -%}
+      {%- for _, x := range split -%}{% if strings.ToLower(x) == strings.ToLower(params.Q) %}<strong>{%s x %}</strong>{% else %}{%s x %}{% endif %}{%- endfor -%}
     </li>
     {%- endfor -%}
   </ul>

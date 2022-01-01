@@ -3,7 +3,7 @@ package site
 import (
 	"github.com/kyleu/projectforge/app"
 	"github.com/kyleu/projectforge/app/controller/cutil"
-	"github.com/kyleu/projectforge/app/menu"
+	"github.com/kyleu/projectforge/app/lib/menu"
 	"github.com/kyleu/projectforge/app/module"
 	"github.com/kyleu/projectforge/views/layout"
 	"github.com/kyleu/projectforge/views/vsite"

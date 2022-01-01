@@ -6,8 +6,8 @@ import (
 
 	"github.com/pkg/errors"
 
-	"{{{ .Package }}}/app/database/migrate"
 	"{{{ .Package }}}/queries/migrations"{{{ end }}}
+	"{{{ .Package }}}/app/lib/database/migrate"
 )
 
 type Services struct {

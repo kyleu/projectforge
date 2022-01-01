@@ -5,7 +5,7 @@ import (
 	"sort"
 
 	"github.com/kyleu/projectforge/app/file"
-	"github.com/kyleu/projectforge/app/filesystem"
+	"github.com/kyleu/projectforge/app/lib/filesystem"
 	"github.com/pkg/errors"
 )
 
@@ -65,20 +65,6 @@ func (s *Service) loadFiles(mod *Module, ret map[string]*file.File) error {
 			return err
 		}
 		fl := file.NewFile(f, mode, b, s.logger)
-
-		curr, exists := ret[fl.FullPath()]
-		if exists {
-			inh, err := file.InheritanceContent(fl)
-			if err != nil {
-				return err
-			}
-			if inh != nil {
-				err = applyInheritance(fl, inh, curr.Content)
-				if err != nil {
-					return err
-				}
-			}
-		}
 		ret[fl.FullPath()] = fl
 	}
 	return nil

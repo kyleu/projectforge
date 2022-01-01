@@ -8,8 +8,8 @@ import (
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller/cutil"
-	"{{{ .Package }}}/app/theme"
-	"{{{ .Package }}}/app/user"
+	"{{{ .Package }}}/app/lib/theme"
+	"{{{ .Package }}}/app/lib/user"
 	"{{{ .Package }}}/app/util"
 	"{{{ .Package }}}/views/vprofile"
 )

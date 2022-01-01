@@ -1,12 +1,14 @@
 package controller
 
 import (
-	"github.com/kyleu/projectforge/app/menu"
+	"context"
+
+	"github.com/kyleu/projectforge/app/lib/menu"
 	"github.com/kyleu/projectforge/app/module"
 	"github.com/kyleu/projectforge/app/project"
 )
 
-func projectMenu(prjs project.Projects) *menu.Item {
+func projectMenu(ctx context.Context, prjs project.Projects) *menu.Item {
 	ret := &menu.Item{Key: "projects", Title: "Projects", Description: "View all of the projects managed by this application", Icon: "code", Route: "/p"}
 	for _, prj := range prjs {
 		key := prj.Key

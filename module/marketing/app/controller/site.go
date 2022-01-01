@@ -6,8 +6,8 @@ import (
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller/cutil"
+	"{{{ .Package }}}/app/lib/telemetry/httpmetrics"
 	"{{{ .Package }}}/app/site"
-	"{{{ .Package }}}/app/telemetry/httpmetrics"
 	"{{{ .Package }}}/app/util"
 )
 

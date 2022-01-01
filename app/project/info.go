@@ -48,10 +48,16 @@ func (i *Info) AuthorIDSafe() string {
 		}
 		return i.AuthorEmail
 	}
-	if strings.Contains(i.AuthorID, "@") {
-		return i.AuthorID
+	spl := util.StringSplitAndTrim(i.AuthorID, " ")
+	ret := make([]string, 0, len(spl))
+	for _, x := range spl {
+		x = strings.ReplaceAll(x, ",", "")
+		if !strings.Contains(x, "@") {
+			x = "@" + x
+		}
+		ret = append(ret, x)
 	}
-	return "@" + i.AuthorID
+	return strings.Join(ret, " ")
 }
 
 func (i *Info) ModuleArg(mod string) interface{} {

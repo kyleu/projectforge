@@ -6,8 +6,8 @@ import (
 
 	"github.com/kyleu/projectforge/app/action"
 	"github.com/kyleu/projectforge/app/export"
-	"github.com/kyleu/projectforge/app/filesystem"
-	"github.com/kyleu/projectforge/app/log"
+	"github.com/kyleu/projectforge/app/lib/filesystem"
+	"github.com/kyleu/projectforge/app/lib/log"
 	"github.com/kyleu/projectforge/app/module"
 	"github.com/kyleu/projectforge/app/project"
 )

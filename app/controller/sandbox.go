@@ -6,7 +6,7 @@ import (
 
 	"github.com/kyleu/projectforge/app"
 	"github.com/kyleu/projectforge/app/controller/cutil"
-	"github.com/kyleu/projectforge/app/sandbox"
+	"github.com/kyleu/projectforge/app/lib/sandbox"
 	"github.com/kyleu/projectforge/views/vsandbox"
 )
 

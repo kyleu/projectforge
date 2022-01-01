@@ -6,7 +6,7 @@ import (
 	"github.com/kyleu/projectforge/app/controller/cutil"
 	"github.com/kyleu/projectforge/app/doctor"
 	"github.com/kyleu/projectforge/app/doctor/checks"
-	"github.com/kyleu/projectforge/app/menu"
+	"github.com/kyleu/projectforge/app/lib/menu"
 	"github.com/kyleu/projectforge/views/vdoctor"
 	"github.com/valyala/fasthttp"
 )

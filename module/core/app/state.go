@@ -6,11 +6,11 @@ import (
 
 	"go.uber.org/zap"
 {{{ if .HasModule "oauth" }}}
-	"{{{ .Package }}}/app/auth"{{{ end }}}{{{ if .HasModule "migration" }}}
-	"{{{ .Package }}}/app/database"{{{ end }}}
-	"{{{ .Package }}}/app/filesystem"
-	"{{{ .Package }}}/app/telemetry"
-	"{{{ .Package }}}/app/theme"
+	"{{{ .Package }}}/app/lib/auth"{{{ end }}}{{{ if .HasModule "migration" }}}
+	"{{{ .Package }}}/app/lib/database"{{{ end }}}
+	"{{{ .Package }}}/app/lib/filesystem"
+	"{{{ .Package }}}/app/lib/telemetry"
+	"{{{ .Package }}}/app/lib/theme"
 	"{{{ .Package }}}/app/util"
 )
 

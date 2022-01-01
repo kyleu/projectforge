@@ -11,7 +11,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/kyleu/projectforge/app"
-	"github.com/kyleu/projectforge/app/log"
+	"github.com/kyleu/projectforge/app/lib/log"
 	"github.com/kyleu/projectforge/app/util"
 )
 

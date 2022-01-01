@@ -6,4 +6,12 @@ set -euo pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $dir/..
 
+if [ -f "test.env" ]; then
+	export $(cat test.env | grep -v "#" | xargs)
+fi
+
+if [ -f "./bin/test-setup.sh" ]; then
+	./bin/test-setup.sh
+fi
+
 go test -v ./app/... | grep -v ^\?

@@ -5,8 +5,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"{{{ .Package }}}/app/log"
-	"{{{ .Package }}}/app/upgrade"
+	"{{{ .Package }}}/app/lib/log"
+	"{{{ .Package }}}/app/lib/upgrade"
 	"{{{ .Package }}}/app/util"
 )
 

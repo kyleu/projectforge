@@ -11,7 +11,7 @@ import (
 	"go.uber.org/zap"
 
 	"{{{ .Package }}}/app"
-	"{{{ .Package }}}/app/log"
+	"{{{ .Package }}}/app/lib/log"
 	"{{{ .Package }}}/app/util"
 )
 

@@ -2,7 +2,7 @@
 package migrations
 
 import (
-	"{{{ .Package }}}/app/database/migrate"
+	"{{{ .Package }}}/app/lib/database/migrate"
 )
 
 func LoadMigrations() {

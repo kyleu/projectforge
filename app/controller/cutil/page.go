@@ -8,8 +8,8 @@ import (
 	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 
-	"github.com/kyleu/projectforge/app/menu"
-	"github.com/kyleu/projectforge/app/user"
+	"github.com/kyleu/projectforge/app/lib/menu"
+	"github.com/kyleu/projectforge/app/lib/user"
 	"github.com/kyleu/projectforge/app/util"
 )
 

@@ -3,7 +3,7 @@ package util_test
 import (
 	"testing"
 
-	"{{{ .Package }}}/app/log"
+	"{{{ .Package }}}/app/lib/log"
 	"{{{ .Package }}}/app/util"
 )
 

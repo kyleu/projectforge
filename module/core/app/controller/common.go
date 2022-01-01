@@ -5,7 +5,7 @@ import (
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller/cutil"
-	"{{{ .Package }}}/app/user"
+	"{{{ .Package }}}/app/lib/user"
 	"{{{ .Package }}}/views/verror"
 )
 

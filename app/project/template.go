@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/kyleu/projectforge/app/theme"
+	"github.com/kyleu/projectforge/app/lib/theme"
 	"github.com/kyleu/projectforge/app/util"
 )
 
@@ -23,8 +23,8 @@ type TemplateContext struct {
 	Build   *Build       `json:"build,omitempty"`
 	Theme   *theme.Theme `json:"theme,omitempty"`
 
-	Ignore     string `json:"ignore,omitempty"`
-	IgnoreGrep string `json:"ignoreGrep,omitempty"`
+	Ignore     []string `json:"ignore,omitempty"`
+	IgnoreGrep string   `json:"ignoreGrep,omitempty"`
 }
 
 func (t *TemplateContext) Title() string {
@@ -44,6 +44,28 @@ func (t *TemplateContext) KeyProper() string {
 
 func (t *TemplateContext) NameCompressed() string {
 	return strings.ReplaceAll(t.Name, " ", "")
+}
+
+func (t *TemplateContext) IgnoredSetting() string {
+	if len(t.Ignore) == 0 {
+		return ""
+	}
+	ret := make([]string, 0, len(t.Ignore))
+	for _, i := range t.Ignore {
+		ret = append(ret, "/"+i)
+	}
+	return " --skip-dirs \"" + strings.Join(ret, "|") + "\""
+}
+
+func (t *TemplateContext) IgnoredQuoted() string {
+	if len(t.Ignore) == 0 {
+		return ""
+	}
+	ret := make([]string, 0, len(t.Ignore))
+	for _, i := range t.Ignore {
+		ret = append(ret, fmt.Sprintf(", %q", i))
+	}
+	return strings.Join(ret, "")
 }
 
 func (t *TemplateContext) HasModule(m string) bool {
@@ -101,11 +123,6 @@ func (p *Project) ToTemplateContext(portOffsets map[string]int) *TemplateContext
 		t = theme.ThemeDefault
 	}
 
-	ignore := strings.Join(util.StringArrayQuoted(p.Ignore), ", ")
-	if ignore != "" {
-		ignore = ", " + ignore
-	}
-
 	var ignoreGrep string
 	for _, ig := range p.Ignore {
 		ignoreGrep += fmt.Sprintf(" | grep -v \\\\./%s", ig)
@@ -114,7 +131,7 @@ func (p *Project) ToTemplateContext(portOffsets map[string]int) *TemplateContext
 	ret := &TemplateContext{
 		Key: p.Key, Name: p.Name, Exec: p.Exec, Version: p.Version,
 		Package: p.Package, Args: p.Args, Port: p.Port, PortOffsets: portOffsets,
-		Modules: p.Modules, Info: i, Build: b, Theme: t, Ignore: ignore, IgnoreGrep: ignoreGrep,
+		Modules: p.Modules, Info: i, Build: b, Theme: t, Ignore: p.Ignore, IgnoreGrep: ignoreGrep,
 	}
 
 	if ret.Name == "" {

@@ -8,8 +8,8 @@ import (
 
 	"github.com/kyleu/projectforge/app"
 	"github.com/kyleu/projectforge/app/controller/cutil"
+	"github.com/kyleu/projectforge/app/lib/user"
 	"github.com/kyleu/projectforge/app/site"
-	"github.com/kyleu/projectforge/app/user"
 )
 
 const (

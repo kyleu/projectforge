@@ -5,7 +5,8 @@ import (
 	"sort"
 
 	"github.com/kyleu/projectforge/app/export"
-	"github.com/kyleu/projectforge/app/filesystem"
+	"github.com/kyleu/projectforge/app/lib/filesystem"
+	"github.com/kyleu/projectforge/app/lib/search/result"
 	"github.com/kyleu/projectforge/app/project"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
@@ -115,6 +116,16 @@ func (s *Service) Register(path string, defs ...*project.ModuleDef) ([]string, e
 		}
 		if added {
 			ret = append(ret, def.Key)
+		}
+	}
+	return ret, nil
+}
+
+func (s *Service) Search(q string) (result.Results, error) {
+	ret := result.Results{}
+	for _, mod := range s.Modules() {
+		if res := result.NewResult("module", mod.Key, mod.WebPath(), mod.Title(), mod.IconSafe(), mod, q); len(res.Matches) > 0 {
+			ret = append(ret, res)
 		}
 	}
 	return ret, nil

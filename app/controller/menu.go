@@ -4,9 +4,9 @@ import (
 	"context"
 
 	"github.com/kyleu/projectforge/app"
-	"github.com/kyleu/projectforge/app/menu"
-	"github.com/kyleu/projectforge/app/sandbox"
-	"github.com/kyleu/projectforge/app/telemetry"
+	"github.com/kyleu/projectforge/app/lib/menu"
+	"github.com/kyleu/projectforge/app/lib/sandbox"
+	"github.com/kyleu/projectforge/app/lib/telemetry"
 	"github.com/kyleu/projectforge/app/util"
 )
 
@@ -18,7 +18,7 @@ func MenuFor(ctx context.Context, isAuthed bool, isAdmin bool, as *app.State) (m
 	// $PF_SECTION_START(routes_start)$
 	if isAuthed {
 		ret = append(ret,
-			projectMenu(as.Services.Projects.Projects()),
+			projectMenu(ctx, as.Services.Projects.Projects()),
 			menu.Separator,
 			moduleMenu(as.Services.Modules.Modules()),
 			menu.Separator,
@@ -30,7 +30,7 @@ func MenuFor(ctx context.Context, isAuthed bool, isAdmin bool, as *app.State) (m
 	// $PF_SECTION_START(routes_end)$
 	if isAdmin {
 		ret = append(ret,
-			sandbox.Menu(),
+			sandbox.Menu(ctx),
 			menu.Separator,
 			&menu.Item{Key: "admin", Title: "Settings", Description: "System-wide settings and preferences", Icon: "cog", Route: "/admin"},
 			DoctorMenu("first-aid", "/doctor"),

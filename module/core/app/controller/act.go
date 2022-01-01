@@ -7,9 +7,9 @@ import (
 	"go.uber.org/zap"
 
 	"{{{ .Package }}}/app"
-	"{{{ .Package }}}/app/controller/cutil"{{{ if.HasModule "marketing" }}}
+	"{{{ .Package }}}/app/controller/cutil"
+	"{{{ .Package }}}/app/lib/user"{{{ if.HasModule "marketing" }}}
 	"{{{ .Package }}}/app/site"{{{ end }}}
-	"{{{ .Package }}}/app/user"
 )
 
 const ({{{ if .HasModule "search" }}}
