@@ -55,7 +55,7 @@ func grpcList(m *model.Model, grpcArgs string, grpcRet string) *golang.Block {
 func grpcSearch(m *model.Model, grpcArgs string, grpcRet string) *golang.Block {
 	ret := golang.NewBlock("grpcSearch", "func")
 	ret.W("func %sSearch(%s) %s {", m.Proper(), grpcArgs, grpcRet)
-	ret.W("\tq := provider.GetString(p.R, p.TX, \"q\")")
+	ret.W("\tq, _ := provider.GetString(p.R, p.TX, \"q\")")
 	ret.W("\tif q == \"\" {")
 	ret.W("\t\treturn nil, errors.New(\"must provide [q] in request data\")")
 	ret.W("\t}")
