@@ -1,7 +1,15 @@
+# [mysql]
+
+This is a module for [Project Forge](https://projectforge.dev). It provides an API for accessing MySQL databases.
+
+https://github.com/kyleu/projectforge/tree/master/module/mysql
+
 ### License
+
 Licensed under [CC0](https://creativecommons.org/share-your-work/public-domain/cc0)
 
 ### Usage
+
 - To configure a MySQL connection pool, call `database.OpenMySQLDatabase`, passing `MySQLParams`
 - You can load the params from the environment by calling `MySQLParamsFromEnv` (with optional prefix), this will read the following by default:
   - `DB_HOST` - hostname to use, defaults to `localhost`

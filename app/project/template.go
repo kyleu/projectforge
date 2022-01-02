@@ -72,6 +72,14 @@ func (t *TemplateContext) HasModule(m string) bool {
 	return util.StringArrayContains(t.Modules, m)
 }
 
+func (t *TemplateContext) ModuleMarkdown() string {
+	ret := make([]string, 0, len(t.Modules))
+	for _, m := range t.Modules {
+		ret = append(ret, fmt.Sprintf("- [%s](./doc/module/%s.md)", m, m))
+	}
+	return strings.Join(ret, "\n")
+}
+
 func (t *TemplateContext) PortIncremented(i int) int {
 	return t.Port + i
 }

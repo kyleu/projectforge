@@ -100,14 +100,11 @@ func modelString(m *model.Model) *golang.Block {
 		}
 	} else {
 		s := "\treturn fmt.Sprintf(\""
-		for idx, pk := range m.Columns.PKs() {
+		for idx := range m.Columns.PKs() {
 			if idx > 0 {
 				s += "::"
 			}
-			switch pk.Type.Key {
-			default:
-				s += "%%s"
-			}
+			s += "%%s"
 		}
 		s += "\""
 		for _, c := range m.Columns.PKs() {

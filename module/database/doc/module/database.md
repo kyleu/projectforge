@@ -1,4 +1,11 @@
+# [database]
+
+This is a module for [Project Forge](https://projectforge.dev). It provides an API for accessing relational databases.
+
+https://github.com/kyleu/projectforge/tree/master/module/database
+
 ### License
+
 Licensed under [CC0](https://creativecommons.org/share-your-work/public-domain/cc0)
 
 ### Usage

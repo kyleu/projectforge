@@ -28,7 +28,7 @@ func GRPC(m *model.Model, args *model.Args) (*file.File, error) {
 	g.AddImport(golang.ImportTypeApp, "{{{ .Package }}}/app/lib/"+cPkg)
 	g.AddImport(golang.ImportTypeApp, "{{{ .Package }}}/app/"+m.Package)
 
-	grpcArgs := fmt.Sprintf("p *provider.Params")
+	grpcArgs := fmt.Sprintf("p *%s.Params", cPkg)
 	grpcRet := fmt.Sprintf("(*%sTransaction, error)", grpcClass)
 
 	g.AddBlocks(

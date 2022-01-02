@@ -1,7 +1,15 @@
+# [notarize]
+
+This is a module for [Project Forge](https://projectforge.dev). It sends files to Apple for notarization.
+
+https://github.com/kyleu/projectforge/tree/master/module/notarize
+
 ### License
+
 Licensed under [CC0](https://creativecommons.org/share-your-work/public-domain/cc0)
 
 ### Usage
+
 - Notarizes built artifacts using Apple's services
 - To function, your project's `SigningIdentity` must be set and the `Notarize` build option must be enabled
 - It takes forever and sends you multiple emails, so use cautiously

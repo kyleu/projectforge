@@ -57,7 +57,7 @@ func (s *Service) loadFiles(mod *Module, ret map[string]*file.File) error {
 		return err
 	}
 	for _, f := range fs {
-		if f == configFilename || f == summaryFilename {
+		if f == configFilename {
 			continue
 		}
 		mode, b, err := fileContent(loader, f)

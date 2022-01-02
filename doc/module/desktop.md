@@ -1,4 +1,11 @@
+# [desktop]
+
+This is a module for [Project Forge](https://projectforge.dev). It provides a desktop application using the system's webview
+
+https://github.com/kyleu/projectforge/tree/master/module/desktop
+
 ### License
+
 Licensed under [CC0](https://creativecommons.org/share-your-work/public-domain/cc0)
 
 ### Usage

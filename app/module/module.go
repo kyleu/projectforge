@@ -51,6 +51,10 @@ func (m *Module) WebPath() string {
 	return "/m/" + m.Key
 }
 
+func (m *Module) DocPath() string {
+	return "doc/module/" + m.Key + ".md"
+}
+
 type Modules []*Module
 
 func (m Modules) Get(key string) *Module {

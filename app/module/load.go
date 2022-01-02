@@ -8,10 +8,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-const (
-	configFilename  = ".module.json"
-	summaryFilename = ".module.md"
-)
+const configFilename = ".module.json"
 
 func (s *Service) LoadNative(keys ...string) (Modules, error) {
 	var ret Modules
@@ -64,8 +61,8 @@ func (s *Service) load(key string, path string, url string) (*Module, error) {
 	ret.Files = fs
 	ret.URL = url
 
-	if fs.Exists(summaryFilename) {
-		b, err = fs.ReadFile(summaryFilename)
+	if fs.Exists(ret.DocPath()) {
+		b, err = fs.ReadFile(ret.DocPath())
 		if err != nil {
 			return nil, errors.Wrapf(err, "unable to read [%s]", configFilename)
 		}
