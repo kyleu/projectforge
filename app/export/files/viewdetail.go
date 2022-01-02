@@ -36,7 +36,7 @@ func exportViewDetailBody(m *model.Model) *golang.Block {
 	ret.W("      <tbody>")
 	for _, col := range m.Columns {
 		ret.W("        <tr>")
-		ret.W("          <th class=\"shrink\">" + col.Proper() + "</th>")
+		ret.W("          <th class=\"shrink\" title=\"" + col.Help() + "\">" + col.Proper() + "</th>")
 		ret.W("          <td>" + col.ToGoViewString("p.Model.") + "</td>")
 		ret.W("        </tr>")
 	}

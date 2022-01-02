@@ -40,6 +40,12 @@ type State struct {
 }
 
 func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, logger *zap.SugaredLogger) (*State, error) {
+	loc, err := time.LoadLocation("UTC")
+	if err != nil {
+		return nil, err
+	}
+	time.Local = loc
+
 	_ = telemetry.InitializeIfNeeded(true, logger)
 	as := auth.NewService("", logger)
 	ts := theme.NewService(f, logger)

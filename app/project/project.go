@@ -55,6 +55,16 @@ func (p *Project) IconSafe() string {
 	return p.Icon
 }
 
+func (p *Project) DescriptionSafe() string {
+	if p.Info == nil {
+		return ""
+	}
+	if p.Info.Description == "" {
+		return p.Info.Summary
+	}
+	return p.Info.Description
+}
+
 func (p *Project) HasModule(key string) bool {
 	return util.StringArrayContains(p.Modules, key)
 }

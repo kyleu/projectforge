@@ -61,8 +61,11 @@ func (m ValueMap) ParseTimeOpt(path string) (*time.Time, error) {
 	case *time.Time:
 		return t, nil
 	case string:
-		ret, err := TimeFromJS(t)
-		return ret, decorateError(m, path, "time", err)
+		ret, err := TimeFromString(t)
+		if err != nil {
+			return nil, decorateError(m, path, "time", err)
+		}
+		return ret, nil
 	default:
 		return nil, invalidTypeError(path, "time", t)
 	}
@@ -70,7 +73,7 @@ func (m ValueMap) ParseTimeOpt(path string) (*time.Time, error) {
 
 func (m ValueMap) ParseUUID(path string) (uuid.UUID, error) {
 	ret, err := m.ParseUUIDOpt(path)
-	if err != nil {
+	if ret == nil || err != nil {
 		return uuid.UUID{}, err
 	}
 	return *ret, nil

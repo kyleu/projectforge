@@ -14,31 +14,31 @@ type Column struct {
 	Search   bool   `json:"search,omitempty"`
 }
 
-func (c Column) Camel() string {
+func (c *Column) Camel() string {
 	return util.StringToLowerCamel(c.Name)
 }
 
-func (c Column) Proper() string {
+func (c *Column) Proper() string {
 	return util.StringToCamel(c.Name)
 }
 
-func (c Column) ToGoString(prefix string) string {
+func (c *Column) ToGoString(prefix string) string {
 	return c.Type.ToGoString(prefix + c.Proper())
 }
 
-func (c Column) ToGoViewString(prefix string) string {
+func (c *Column) ToGoViewString(prefix string) string {
 	return c.Type.ToGoViewString(prefix+c.Proper(), c.Nullable)
 }
 
-func (c Column) ToGoType() string {
+func (c *Column) ToGoType() string {
 	return c.Type.ToGoType(c.Nullable)
 }
 
-func (c Column) ToGoDTOType() string {
+func (c *Column) ToGoDTOType() string {
 	return c.Type.ToGoDTOType(c.Nullable)
 }
 
-func (c Column) ToGoEditString(prefix string) string {
+func (c *Column) ToGoEditString(prefix string) string {
 	switch c.Type.Key {
 	case TypeInt.Key:
 		return fmt.Sprintf(`{%%%%= components.TableInputNumber(%q, %q, %s, 5) %%%%}`, c.Camel(), c.Proper(), prefix+c.Proper())
@@ -55,7 +55,7 @@ func (c Column) ToGoEditString(prefix string) string {
 	}
 }
 
-func (c Column) ToGoMapParse() string {
+func (c *Column) ToGoMapParse() string {
 	suffix := ""
 	if c.Nullable {
 		suffix = "Opt"
@@ -78,7 +78,7 @@ func (c Column) ToGoMapParse() string {
 
 const nilStr = "nil"
 
-func (c Column) ZeroVal() string {
+func (c *Column) ZeroVal() string {
 	if c.Nullable {
 		return nilStr
 	}

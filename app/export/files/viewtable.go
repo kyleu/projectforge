@@ -29,7 +29,7 @@ func exportViewTableFunc(m *model.Model) *golang.Block {
 	ret.W("    <thead>")
 	ret.W("      <tr>")
 	for _, col := range m.Columns {
-		call := fmt.Sprintf("components.TableHeaderSimple(%q, %q, %q, prms, ps.URI, ps)", m.Package, col.Name, util.StringToTitle(col.Name))
+		call := fmt.Sprintf("components.TableHeaderSimple(%q, %q, %q, %q, prms, ps.URI, ps)", m.Package, col.Name, col.Help(), util.StringToTitle(col.Name))
 		ret.W("        {%%= " + call + " %%}")
 	}
 	ret.W("      </tr>")

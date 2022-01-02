@@ -3,6 +3,7 @@ package util
 import (
 	"time"
 
+	"github.com/araddon/dateparse"
 	"github.com/dustin/go-humanize"
 	"github.com/pkg/errors"
 )
@@ -48,7 +49,18 @@ func TimeToJS(d *time.Time) string {
 	return TimeToString(d, dateFmtJS)
 }
 
-func TimeFromString(s string, fmt string) (*time.Time, error) {
+func TimeFromString(s string) (*time.Time, error) {
+	if s == "" {
+		return nil, nil
+	}
+	ret, err := dateparse.ParseLocal(s)
+	if err != nil {
+		return nil, errors.New("invalid date string [" + s + "]")
+	}
+	return &ret, nil
+}
+
+func TimeFromStringFmt(s string, fmt string) (*time.Time, error) {
 	if s == "" {
 		return nil, nil
 	}
@@ -60,17 +72,17 @@ func TimeFromString(s string, fmt string) (*time.Time, error) {
 }
 
 func TimeFromYMD(s string) (*time.Time, error) {
-	return TimeFromString(s, dateFmtYMD)
+	return TimeFromStringFmt(s, dateFmtYMD)
 }
 
 func TimeFromFull(s string) (*time.Time, error) {
-	return TimeFromString(s, dateFmtFull)
+	return TimeFromStringFmt(s, dateFmtFull)
 }
 
 func TimeFromHTML(s string) (*time.Time, error) {
-	return TimeFromString(s, dateFmtHTML)
+	return TimeFromStringFmt(s, dateFmtHTML)
 }
 
 func TimeFromJS(s string) (*time.Time, error) {
-	return TimeFromString(s, dateFmtJS)
+	return TimeFromStringFmt(s, dateFmtJS)
 }

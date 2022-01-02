@@ -12,7 +12,7 @@ func projectMenu(ctx context.Context, prjs project.Projects) *menu.Item {
 	ret := &menu.Item{Key: "projects", Title: "Projects", Description: "View all of the projects managed by this application", Icon: "code", Route: "/p"}
 	for _, prj := range prjs {
 		key := prj.Key
-		i := &menu.Item{Key: key, Title: prj.Title(), Icon: prj.IconSafe(), Route: "/p/" + prj.Key}
+		i := &menu.Item{Key: key, Title: prj.Title(), Description: prj.DescriptionSafe(), Icon: prj.IconSafe(), Route: "/p/" + prj.Key}
 		ret.Children = append(ret.Children, i)
 	}
 	return ret

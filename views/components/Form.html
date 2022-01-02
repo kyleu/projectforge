@@ -33,7 +33,7 @@
   {% if id == "" %}
     <input name="{%s key %}" type="text" value="{%s util.TimeToJS(value) %}" />
   {% else %}
-    <input id="{%s id %}" name="{%s key %}" type="text" value="{%s util.TimeToJS(value) %}" />
+    <input id="{%s id %}" name="{%s key %}" type="text" value="{%s util.TimeToFull(value) %}" />
   {% endif %}
 {% endstripspace %}{% endfunc %}
 

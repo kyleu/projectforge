@@ -68,12 +68,12 @@ func controllerEdit(m *model.Model) *golang.Block {
 	for _, pk := range m.Columns.PKs() {
 		ret.W("\t\tfrm.%s = ret.%s", pk.Proper(), pk.Proper())
 	}
-	ret.W("\t\terr = as.Services.%s.Update(ps.Context, nil, ret)", m.PackageProper())
+	ret.W("\t\terr = as.Services.%s.Update(ps.Context, nil, frm)", m.PackageProper())
 	ret.W("\t\tif err != nil {")
 	ret.W("\t\t\treturn \"\", errors.Wrapf(err, \"unable to update %s [%%%%s]\", frm.String())", m.Proper())
 	ret.W("\t\t}")
-	ret.W("\t\tmsg := fmt.Sprintf(\"" + m.Proper() + " [%%s] updated\", ret.String())")
-	ret.W("\t\treturn flashAndRedir(true, msg, ret.WebPath(), rc, ps)")
+	ret.W("\t\tmsg := fmt.Sprintf(\"" + m.Proper() + " [%%s] updated\", frm.String())")
+	ret.W("\t\treturn flashAndRedir(true, msg, frm.WebPath(), rc, ps)")
 	ret.W("\t})")
 	ret.W("}")
 	return ret
