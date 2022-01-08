@@ -15,7 +15,7 @@ type Services struct {
 }
 
 func NewServices(ctx context.Context, st *State) (*Services, error) {
-	{{{ if .HasModule "migration" }}}migrations.LoadMigrations()
+	{{{ if .HasModule "migration" }}}migrations.LoadMigrations(st.Debug)
 	err := migrate.Migrate(ctx, st.DB, st.Logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to run database migrations")

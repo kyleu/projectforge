@@ -41,7 +41,7 @@ type Service struct {
 func NewService(typ *DBType, key string, dbName string, schName string, username string, db *sqlx.DB, logger *zap.SugaredLogger) (*Service, error) {
 	m, err := dbmetrics.NewMetrics(key, db)
 	if err != nil {
-		return nil, err
+		logger.Warnf("unable to register database metrics for [%s]: %+v", key, err)
 	}
 
 	ret := &Service{Key: key, DatabaseName: dbName, SchemaName: schName, Username: username, Type: typ, db: db, metrics: m, logger: logger}{{{ if.HasModule "migration" }}}
@@ -93,7 +93,9 @@ func (s *Service) logQuery(msg string, q string, values []interface{}) {
 }
 
 func (s *Service) newSpan(ctx context.Context, name string, q string) (time.Time, context.Context, trace.Span) {
-	s.metrics.IncStmt(q, name)
+	if s.metrics != nil {
+		s.metrics.IncStmt(q, name)
+	}
 	nc, span := telemetry.StartSpan(ctx, "database", name)
 	span.SetAttributes(
 		semconv.DBStatementKey.String(q),
@@ -105,11 +107,18 @@ func (s *Service) newSpan(ctx context.Context, name string, q string) (time.Time
 }
 
 func (s *Service) complete(q string, op string, span trace.Span, started time.Time, err error) {
+	if err != nil {
+		span.RecordError(err)
+	}
 	span.End()
-	s.metrics.CompleteStmt(q, op, started, err)
+	if s.metrics != nil {
+		s.metrics.CompleteStmt(q, op, started)
+	}
 }
 
 func (s *Service) Close() error {
-	_ = s.metrics.Close()
+	if s.metrics != nil {
+		_ = s.metrics.Close()
+	}
 	return s.db.Close()
 }

@@ -14,6 +14,8 @@ func (m ValueMap) ParseInt(path string) (int, error) {
 	switch t := m.GetPath(path).(type) {
 	case int:
 		return t, nil
+	case float64:
+		return int(t), nil
 	case string:
 		return strconv.Atoi(t)
 	default:
@@ -43,13 +45,23 @@ func (m ValueMap) ParseMap(path string) (ValueMap, error) {
 }
 
 func (m ValueMap) ParseString(path string) (string, error) {
-	return fmt.Sprint(m.GetPath(path)), nil
+	switch t := m.GetPath(path).(type) {
+	case string:
+		return t, nil
+	case nil:
+		return "", nil
+	default:
+		return fmt.Sprint(t), nil
+	}
 }
 
 func (m ValueMap) ParseTime(path string) (time.Time, error) {
 	ret, err := m.ParseTimeOpt(path)
 	if err != nil {
 		return time.Time{}, err
+	}
+	if ret == nil {
+		return time.Time{}, missingRequiredError(path, "time")
 	}
 	return *ret, nil
 }
@@ -97,6 +109,10 @@ func decorateError(m ValueMap, path string, t string, err error) error {
 		return nil
 	}
 	return errors.Wrapf(err, "error parsing [%s] as [%s] from map with fields [%s]", path, t, strings.Join(m.Keys(), ", "))
+}
+
+func missingRequiredError(path string, t string) error {
+	return errors.Errorf("unable to parse required [%s] at path [%s]", t, path)
 }
 
 func invalidTypeError(path string, t string, observed interface{}) error {

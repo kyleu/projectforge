@@ -86,3 +86,8 @@ func TimeFromHTML(s string) (*time.Time, error) {
 func TimeFromJS(s string) (*time.Time, error) {
 	return TimeFromStringFmt(s, dateFmtJS)
 }
+
+func NowPointer() *time.Time {
+	ret := time.Now()
+	return &ret
+}

@@ -17,10 +17,14 @@ fi
 
 echo $TGT
 
-find . -type f -name "main.go" -print0 | xargs -0 sed -i '' -e "s/version = \\\"[v]*[0-9]*[0-9]\.[0-9]*[0-9]\.[0-9]*[0-9]\\\"/version = \"${TGT}\"/g"{{{ if .UsesLib }}}
-find . -type f -name "lib.go" -print0 | xargs -0 sed -i '' -e "s/Version: \\\"[v]*[0-9]*[0-9]\.[0-9]*[0-9]\.[0-9]*[0-9]\\\"/Version: \"${TGT}\"/g"{{{ end }}}{{{ if .Build.Notarize }}}
-find . -type f -name "gon.*.hcl" -print0 | xargs -0 sed -i '' -e "s/\\_[v]*[0-9]*[0-9]\.[0-9]*[0-9]\.[0-9]*[0-9]_/_${TGT}\\_/g"{{{ end }}}
-find . -type f -name ".projectforge.json" -print0 | xargs -0 sed -i '' -e "s/\\\"version\\\": \\\"[v]*[0-9]*[0-9]\.[0-9]*[0-9]\.[0-9]*[0-9]\\\"/\"version\": \"${TGT}\"/g"
+sed -i.bak -e "s/version = \\\"[v]*[0-9]*[0-9]\.[0-9]*[0-9]\.[0-9]*[0-9]\\\"/version = \"${TGT}\"/g" ./main.go
+rm -f "./main.go.bak"{{{ if .UsesLib }}}
+sed -i.bak -e "s/Version: \\\"[v]*[0-9]*[0-9]\.[0-9]*[0-9]\.[0-9]*[0-9]\\\"/Version: \"${TGT}\"/g" ./app/cmd/lib.go
+rm -f ./app/cmd/lib.go.bak{{{ end }}}{{{ if .Build.Notarize }}}
+find . -type f -name "gon.*.hcl" -print0 | xargs -0 sed -i.bak -e "s/\\_[v]*[0-9]*[0-9]\.[0-9]*[0-9]\.[0-9]*[0-9]_/_${TGT}\\_/g"
+rm ./tools/notarize/*.hcl.bak{{{ end }}}
+sed -i.bak -e "s/\\\"version\\\": \\\"[v]*[0-9]*[0-9]\.[0-9]*[0-9]\.[0-9]*[0-9]\\\"/\"version\": \"${TGT}\"/g" ./.projectforge.json
+rm -f "./.projectforge.json.bak"
 
 make build
 

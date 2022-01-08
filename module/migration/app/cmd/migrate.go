@@ -24,7 +24,7 @@ func runMigrations() error {
 	if err != nil {
 		return errors.Wrap(err, "unable to open database")
 	}
-	migrations.LoadMigrations()
+	migrations.LoadMigrations(_flags.Debug)
 	err = migrate.Migrate(context.Background(), db, logger)
 	if err != nil {
 		return errors.Wrap(err, "unable to run database migrations")

@@ -13,8 +13,7 @@ func (s ParamSet) Get(key string, allowed []string, logger *zap.SugaredLogger) *
 	if !ok {
 		return &Params{Key: key}
 	}
-
-	return x.Filtered(allowed, logger)
+	return x.Filtered(allowed, logger).Sanitize(key)
 }
 
 func (s ParamSet) String() string {

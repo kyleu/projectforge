@@ -12,7 +12,7 @@ import (
 
 var testbed = &Sandbox{Key: "testbed", Title: "Testbed", Icon: "star", Run: onTestbed}
 
-func onTestbed(ctx context.Context, st *app.State, logger *zap.SugaredLogger) (interface{}, error) {
+func onTestbed(_ context.Context, _ *app.State, _ *zap.SugaredLogger) (interface{}, error) {
 	ret := util.ValueMap{"status": "ok"}
 	return ret, nil
 }

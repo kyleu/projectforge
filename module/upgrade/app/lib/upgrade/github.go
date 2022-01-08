@@ -8,13 +8,12 @@ import (
 
 	"github.com/google/go-github/v39/github"
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
 	"golang.org/x/oauth2"
 
 	"{{{ .Package }}}/app/util"
 )
 
-func createGithubClient(logger *zap.SugaredLogger) *github.Client {
+func createGithubClient() *github.Client {
 	client := http.DefaultClient
 	if token := os.Getenv("GITHUB_TOKEN"); token != "" {
 		src := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: token})

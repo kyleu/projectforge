@@ -56,7 +56,7 @@ func (p *Provider) Client() *http.Client {
 	return goth.HTTPClientWithFallBack(p.HTTPClient)
 }
 
-func (p *Provider) Debug(debug bool) {}
+func (p *Provider) Debug(_ bool) {}
 
 func (p *Provider) BeginAuth(state string) (goth.Session, error) {
 	au := p.config.AuthCodeURL(state)

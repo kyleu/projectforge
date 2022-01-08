@@ -22,7 +22,7 @@ func ThemeList(rc *fasthttp.RequestCtx) {
 
 func ThemeEdit(rc *fasthttp.RequestCtx) {
 	act("theme.edit", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := rcRequiredString(rc, "key", false)
+		key, err := RCRequiredString(rc, "key", false)
 		if err != nil {
 			return "", err
 		}
@@ -44,7 +44,7 @@ func ThemeEdit(rc *fasthttp.RequestCtx) {
 
 func ThemeSave(rc *fasthttp.RequestCtx) {
 	act("theme.save", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := rcRequiredString(rc, "key", false)
+		key, err := RCRequiredString(rc, "key", false)
 		if err != nil {
 			return "", err
 		}

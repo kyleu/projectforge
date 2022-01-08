@@ -83,6 +83,29 @@ func (m ValueMap) GetInt64(k string, allowEmpty bool) (int64, error) {
 	}
 }
 
+func (m ValueMap) GetFloat64(k string, allowEmpty bool) (float64, error) {
+	v, err := m.GetRequired(k)
+	if err != nil {
+		return 0, err
+	}
+
+	switch t := v.(type) {
+	case int:
+		return float64(t), nil
+	case int32:
+		return float64(t), nil
+	case float64:
+		return t, nil
+	case nil:
+		if allowEmpty {
+			return 0, nil
+		}
+		return 0, errors.New(k + " is nil, not float")
+	default:
+		return 0, errors.Errorf("expected float, encountered %T", t)
+	}
+}
+
 func (m ValueMap) GetString(k string, allowEmpty bool) (string, error) {
 	v, err := m.GetRequired(k)
 	if err != nil {
@@ -165,7 +188,7 @@ func (m ValueMap) GetType(k string, ret interface{}) error {
 	}
 }
 
-func (m ValueMap) GetMap(key string, allowEmpty bool) (ValueMap, error) {
+func (m ValueMap) GetMap(key string) (ValueMap, error) {
 	switch t := m.GetPath(key).(type) {
 	case map[string]interface{}:
 		return t, nil
@@ -175,5 +198,19 @@ func (m ValueMap) GetMap(key string, allowEmpty bool) (ValueMap, error) {
 		return nil, nil
 	default:
 		return nil, errors.Errorf("unhandled type [%T] for key [%s], expected map", t, key)
+	}
+}
+
+func (m ValueMap) GetArray(key string, allowEmpty bool) ([]interface{}, error) {
+	switch t := m.GetPath(key).(type) {
+	case []interface{}:
+		return t, nil
+	case nil:
+		if !allowEmpty {
+			return nil, errors.Errorf("could not find array for key [%s]", key)
+		}
+		return nil, nil
+	default:
+		return nil, errors.Errorf("unhandled type [%T] for key [%s], expected array", t, key)
 	}
 }

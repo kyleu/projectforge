@@ -5,6 +5,6 @@ import (
 	"{{{ .Package }}}/app/lib/database/migrate"
 )
 
-func LoadMigrations() {
-	migrate.RegisterMigration("create initial database", Migration1InitialDatabase())
+func LoadMigrations(debug bool) {
+	migrate.RegisterMigration("create initial database", Migration1InitialDatabase(debug))
 }

@@ -18,7 +18,7 @@ type Service struct {
 }
 
 func NewService(logger *zap.SugaredLogger) *Service {
-	return &Service{logger: logger, client: createGithubClient(logger)}
+	return &Service{logger: logger, client: createGithubClient()}
 }
 
 func (s *Service) UpgradeIfNeeded(ctx context.Context, o string, n string, force bool) error {

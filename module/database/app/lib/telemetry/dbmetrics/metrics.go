@@ -52,7 +52,7 @@ func (p *Metrics) IncStmt(sql string, method string) {
 	p.stmtCnt.WithLabelValues(sql, method).Inc()
 }
 
-func (p *Metrics) CompleteStmt(q string, op string, started time.Time, err error) {
+func (p *Metrics) CompleteStmt(q string, op string, started time.Time) {
 	elapsed := float64(time.Since(started)) / float64(time.Second)
 	p.stmtDur.WithLabelValues(q, op).Observe(elapsed)
 }
