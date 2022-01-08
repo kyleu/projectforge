@@ -65,7 +65,7 @@ func modelFromMap(m *model.Model) *golang.Block {
 	ret.W("\tif setPK {")
 	cols := m.Columns.WithoutTag("created").WithoutTag("updated").WithoutTag(model.RevisionType)
 	for _, col := range cols.PKs() {
-		ret.W("\t\tret.%s, err = m.Parse%s(%q)", col.Proper(), col.ToGoMapParse(), col.Camel())
+		ret.W("\t\tret.%s, err = m.Parse%s(%q, true, true)", col.Proper(), col.ToGoMapParse(), col.Camel())
 		ret.W("\t\tif err != nil {")
 		ret.W("\t\t\treturn nil, err")
 		ret.W("\t\t}")
@@ -73,7 +73,7 @@ func modelFromMap(m *model.Model) *golang.Block {
 	ret.W("\t}")
 	for _, col := range cols {
 		if !col.PK {
-			ret.W("\tret.%s, err = m.Parse%s(%q)", col.Proper(), col.ToGoMapParse(), col.Camel())
+			ret.W("\tret.%s, err = m.Parse%s(%q, true, true)", col.Proper(), col.ToGoMapParse(), col.Camel())
 			ret.W("\tif err != nil {")
 			ret.W("\t\treturn nil, err")
 			ret.W("\t}")

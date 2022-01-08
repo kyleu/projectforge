@@ -39,7 +39,7 @@ func GetGRPCFileArgs(m *model.Model, args *model.Args) ([]*GRPCFileArgs, error) 
 		return nil, errors.New("must provide [grpcClass] in the export config")
 	}
 	cPkg, _ := util.StringSplitLast(grpcClass, '.', true)
-	grpcGroups, _ := args.Config.GetMap("grpcGroups")
+	grpcGroups, _ := args.Config.ParseMap("grpcGroups", true, true)
 	if len(grpcGroups) == 0 {
 		grpcGroups = util.ValueMap{"*": "*"}
 	}

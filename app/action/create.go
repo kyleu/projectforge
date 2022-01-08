@@ -17,7 +17,7 @@ func onCreate(ctx context.Context, params *Params) *Result {
 	if path == "" {
 		path = "."
 	}
-	if wipe, _ := params.Cfg.GetBool("wipe"); wipe {
+	if wipe, _ := params.Cfg.ParseBool("wipe", true, true); wipe {
 		fs := filesystem.NewFileSystem(".", params.Logger)
 		if fs.Exists(path) {
 			ret.AddLog("removing existing directory [%s]", path)

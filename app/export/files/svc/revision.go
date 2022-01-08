@@ -43,19 +43,10 @@ func serviceGetAllRevisions(m *model.Model) (*golang.Block, error) {
 	if m.IsSoftDelete() {
 		ret.W("\twc = addDeletedClause(wc, includeDeleted)")
 	}
-	joinClause := fmt.Sprintf("%%%%q %s join %%%%q %sr on ", m.FirstLetter(), m.FirstLetter())
-	var joins []string
-	for idx, col := range hc.Const {
-		if col.PK {
-			rCol := hc.Var[idx]
-			if !(rCol.PK || rCol.HasTag(model.RevisionType)) {
-				return nil, errors.Errorf("invalid revision column [%s] at index [%d]", rCol.Name, idx)
-			}
-			joins = append(joins, fmt.Sprintf("%s.%s = %sr.%s", m.FirstLetter(), col.Name, m.FirstLetter(), rCol.Name))
-		}
+	err := addJoinClause(ret, m, hc)
+	if err != nil {
+		return nil, err
 	}
-	joinClause += strings.Join(joins, " and ")
-	ret.W("\ttablesJoinedParam := fmt.Sprintf(%q, table, tableRevision)", joinClause)
 	ret.W("\tsql := database.SQLSelect(columnsString, tablesJoinedParam, wc, params.OrderByString(), params.Limit, params.Offset)")
 	ret.W("\tret := dtos{}")
 	ret.W("\terr := s.db.Select(ctx, &ret, sql, tx, %s)", strings.Join(pks.Names(), ", "))
@@ -78,7 +69,11 @@ func serviceGetRevision(m *model.Model) (*golang.Block, error) {
 	}
 	ret.W("\twc := \"%s and %s = $%d\"", strings.Join(placeholders, " and "), revCol.Name, len(m.PKs())+1)
 	ret.W("\tret := &dto{}")
-	ret.W("\tsql := database.SQLSelectSimple(columnsString, tablesJoined, wc)")
+	err := addJoinClause(ret, m, m.HistoryColumns(true))
+	if err != nil {
+		return nil, err
+	}
+	ret.W("\tsql := database.SQLSelectSimple(columnsString, tablesJoinedParam, wc)")
 	ret.W("\terr := s.db.Get(ctx, ret, sql, tx, %s, %s)", strings.Join(m.PKs().Names(), ", "), revCol.Camel())
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, err")
@@ -147,4 +142,21 @@ func serviceGetCurrentRevisions(m *model.Model) (*golang.Block, error) {
 	ret.W("\treturn ret, nil")
 	ret.W("}")
 	return ret, nil
+}
+
+func addJoinClause(ret *golang.Block, m *model.Model, hc *model.HistoryMap) error {
+	joinClause := fmt.Sprintf("%%%%q %s join %%%%q %sr on ", m.FirstLetter(), m.FirstLetter())
+	var joins []string
+	for idx, col := range hc.Const {
+		if col.PK {
+			rCol := hc.Var[idx]
+			if !(rCol.PK || rCol.HasTag(model.RevisionType)) {
+				return errors.Errorf("invalid revision column [%s] at index [%d]", rCol.Name, idx)
+			}
+			joins = append(joins, fmt.Sprintf("%s.%s = %sr.%s", m.FirstLetter(), col.Name, m.FirstLetter(), rCol.Name))
+		}
+	}
+	joinClause += strings.Join(joins, " and ")
+	ret.W("\ttablesJoinedParam := fmt.Sprintf(%q, table, tableRevision)", joinClause)
+	return nil
 }

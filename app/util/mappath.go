@@ -8,46 +8,63 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (m ValueMap) GetPath(path string) interface{} {
-	r := csv.NewReader(strings.NewReader(path))
+func (m ValueMap) GetPath(path string, allowMissing bool) (interface{}, error) {
+	r := csv.NewReader(strings.NewReader(path)) // to support quoted strings like files."readme.txt".size
 	r.Comma = '.'
 	fields, err := r.Read()
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return getPath(m, fields...)
+	ret, err := getPath(m, allowMissing, fields...)
+	if err != nil {
+		return nil, errors.Wrapf(err, "invalid path [%s]", path)
+	}
+	return ret, nil
 }
 
-func getPath(i interface{}, path ...string) interface{} {
+func getPath(i interface{}, allowMissing bool, path ...string) (interface{}, error) {
 	if len(path) == 0 {
-		return i
+		return i, nil
 	}
 	k := path[0]
 	switch t := i.(type) {
 	case ValueMap:
 		ret, ok := t[k]
 		if !ok {
-			return nil
+			if allowMissing {
+				return nil, nil
+			}
+			return nil, errors.Errorf("map does not have key [%s] among candidates [%s]", k, strings.Join(t.Keys(), ", "))
 		}
-		return getPath(ret, path[1:]...)
+		return getPath(ret, allowMissing, path[1:]...)
 	case map[string]interface{}:
 		ret, ok := t[k]
 		if !ok {
-			return nil
+			if allowMissing {
+				return nil, nil
+			}
+			keys := make([]string, 0, len(t))
+			for k := range t {
+				keys = append(keys, k)
+			}
+			return nil, errors.Errorf("map does not have key [%s] among candidates [%s]", k, strings.Join(keys, ", "))
 		}
-		return getPath(ret, path[1:]...)
+		return getPath(ret, allowMissing, path[1:]...)
 	case []interface{}:
 		i, err := strconv.Atoi(k)
 		if err != nil {
-			return nil
+			return nil, errors.Errorf("path [%s] refers to an slice, but can't be parsed as an index", k)
 		}
 		var ret interface{}
 		if len(t) > i {
 			ret = t[i]
 		}
-		return getPath(ret, path[1:]...)
+		return getPath(ret, allowMissing, path[1:]...)
 	default:
-		return nil
+		if allowMissing {
+			return nil, nil
+		}
+		return nil, errors.Errorf("unhandled type [%T] for path [%s]", k, strings.Join(path, "."))
 	}
 }
 

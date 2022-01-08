@@ -2,6 +2,7 @@ package controller
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
@@ -32,6 +33,14 @@ func RCRequiredBool(rc *fasthttp.RequestCtx, key string) (bool, error) {
 		return false, err
 	}
 	return ret == "true", nil
+}
+
+func RCRequiredInt(rc *fasthttp.RequestCtx, key string) (int, error) {
+	s, err := RCRequiredString(rc, key, true)
+	if err != nil {
+		return 0, err
+	}
+	return strconv.Atoi(s)
 }
 
 func render(rc *fasthttp.RequestCtx, as *app.State, page layout.Page, ps *cutil.PageState, breadcrumbs ...string) (string, error) {

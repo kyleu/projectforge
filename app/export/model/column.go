@@ -82,9 +82,6 @@ func (c *Column) ToGoEditString(prefix string) string {
 
 func (c *Column) ToGoMapParse() string {
 	suffix := ""
-	if c.Nullable {
-		suffix = "Opt"
-	}
 	switch c.Type.Key {
 	case TypeInt.Key:
 		return "Int" + suffix

@@ -15,7 +15,7 @@ import (
 	"go.uber.org/zap"
 )
 
-var key string
+var _encryptKey string
 
 func EncryptMessage(key []byte, message string, logger *zap.SugaredLogger) (string, error) {
 	block, err := newCipher(key, logger)
@@ -84,17 +84,17 @@ func HashSHA256(s string) string {
 }
 
 func getKey(logger *zap.SugaredLogger) []byte {
-	if key == "" {
+	if _encryptKey == "" {
 		env := strings.ReplaceAll(AppKey, "-", "_") + "_encryption_key"
-		key = os.Getenv(env)
-		if key == "" {
+		_encryptKey = os.Getenv(env)
+		if _encryptKey == "" {
 			logger.Warnf("using default encryption key\nset environment variable [%s] to save sessions between restarts", env)
-			key = AppKey + "_secret"
+			_encryptKey = AppKey + "_secret"
 		}
-		for i := len(key); i < 16; i++ {
-			key += " "
+		for i := len(_encryptKey); i < 16; i++ {
+			_encryptKey += " "
 		}
-		key = key[:16]
+		_encryptKey = _encryptKey[:16]
 	}
-	return []byte(key)
+	return []byte(_encryptKey)
 }

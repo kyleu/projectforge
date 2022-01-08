@@ -40,7 +40,7 @@ func bootstrap(ctx context.Context, params *Params) *Result {
 }
 
 func wipeIfNeeded(cfg util.ValueMap, logger *zap.SugaredLogger) error {
-	shouldWipe, _ := cfg.GetBool("wipe")
+	shouldWipe, _ := cfg.ParseBool("wipe", true, true)
 	if shouldWipe {
 		fs := filesystem.NewFileSystem(".", logger)
 		path := cfg.GetStringOpt("path")
