@@ -45,7 +45,7 @@
 }
 
 .icon-container {
-  margin: --padding;
+  margin: var(--padding);
   width: 80px;
   text-align: center;
 }
