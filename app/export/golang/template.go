@@ -9,26 +9,25 @@ import (
 )
 
 type Template struct {
-	Package string   `json:"package,omitempty"`
 	Path    []string `json:"path,omitempty"`
 	Name    string   `json:"name"`
 	Imports Imports  `json:"imports"`
 	Blocks  Blocks   `json:"blocks"`
 }
 
-func NewGoTemplate(pkg string, path []string, fn string) *Template {
-	return &Template{Package: pkg, Path: path, Name: fn}
+func NewGoTemplate(path []string, fn string) *Template {
+	return &Template{Path: path, Name: fn}
 }
 
-func (f *Template) AddImport(t ImportType, v string) {
-	f.Imports = append(f.Imports, &Import{Type: t, Value: v})
+func (f *Template) AddImport(i ...*Import) {
+	f.Imports = append(f.Imports, i...)
 }
 
 func (f *Template) AddBlocks(b ...*Block) {
 	f.Blocks = append(f.Blocks, b...)
 }
 
-func (f *Template) Render() *file.File {
+func (f *Template) Render() (*file.File, error) {
 	var content []string
 	add := func(s string, args ...interface{}) {
 		content = append(content, fmt.Sprintf(s+"\n", args...))
@@ -43,5 +42,5 @@ func (f *Template) Render() *file.File {
 	}
 
 	n := f.Name
-	return &file.File{Path: f.Path, Name: n, Mode: filesystem.DefaultMode, Content: strings.Join(content, "\n")}
+	return &file.File{Path: f.Path, Name: n, Mode: filesystem.DefaultMode, Content: strings.Join(content, "\n")}, nil
 }

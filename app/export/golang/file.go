@@ -20,15 +20,15 @@ func NewFile(pkg string, path []string, fn string) *File {
 	return &File{Package: pkg, Path: path, Name: fn}
 }
 
-func (f *File) AddImport(t ImportType, v string) {
-	f.Imports = f.Imports.Add(&Import{Type: t, Value: v})
+func (f *File) AddImport(i ...*Import) {
+	f.Imports = f.Imports.Add(i...)
 }
 
 func (f *File) AddBlocks(b ...*Block) {
 	f.Blocks = append(f.Blocks, b...)
 }
 
-func (f *File) Render() *file.File {
+func (f *File) Render() (*file.File, error) {
 	var content []string
 	add := func(s string, args ...interface{}) {
 		content = append(content, fmt.Sprintf(s+"\n", args...))
@@ -48,5 +48,5 @@ func (f *File) Render() *file.File {
 	if !strings.HasSuffix(f.Name, ".go") {
 		n += ".go"
 	}
-	return &file.File{Path: f.Path, Name: n, Mode: filesystem.DefaultMode, Content: strings.Join(content, "\n")}
+	return &file.File{Path: f.Path, Name: n, Mode: filesystem.DefaultMode, Content: strings.Join(content, "\n")}, nil
 }

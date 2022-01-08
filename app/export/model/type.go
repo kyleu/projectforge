@@ -70,3 +70,20 @@ func (t *Type) ToGoViewString(prop string, nullable bool) string {
 		return "{%%s " + t.ToGoString(prop) + " %%}"
 	}
 }
+
+func (t *Type) ToSQLType() string {
+	switch t.Key {
+	case TypeInt.Key:
+		return "int"
+	case TypeMap.Key:
+		return "jsonb"
+	case TypeString.Key:
+		return "text"
+	case TypeTimestamp.Key:
+		return "timestamp"
+	case TypeUUID.Key:
+		return "uuid"
+	default:
+		return "sql-error-invalid-type"
+	}
+}

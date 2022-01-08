@@ -93,6 +93,9 @@ func (i Imports) ByType(t ImportType) []string {
 }
 
 func (i Imports) Add(imports ...*Import) Imports {
+	if i == nil {
+		return append(Imports{}, imports...)
+	}
 	for _, imp := range imports {
 		hit := false
 		for _, x := range i {

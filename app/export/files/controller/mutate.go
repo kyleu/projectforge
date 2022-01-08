@@ -1,32 +1,42 @@
-package files
+package controller
 
 import (
+	"fmt"
+	"strings"
+
 	"github.com/kyleu/projectforge/app/export/golang"
 	"github.com/kyleu/projectforge/app/export/model"
 )
 
-func controllerCreateForm(m *model.Model) *golang.Block {
-	ret := golang.NewBlock(m.PackageProper()+"CreateForm", "func")
-	ret.W("func %sCreateForm(rc *fasthttp.RequestCtx) {", m.PackageProper())
-	ret.W("\tact(\"%s.create.form\", rc, func(as *app.State, ps *cutil.PageState) (string, error) {", m.Package)
-	ret.W("\t\tret := &%s{}", m.ClassRef())
+func controllerCreateForm(m *model.Model, grp *model.Column) *golang.Block {
+	ret := blockFor(m, grp, "create", "form")
+	if grp != nil {
+		controllerArgFor(grp, ret, "\"\"", 2)
+	}
+	var decls []string
+	if grp != nil {
+		decls = append(decls, fmt.Sprintf("%s: %sArg", grp.Proper(), grp.Camel()))
+	}
+	ret.W("\t\tret := &%s{%s}", m.ClassRef(), strings.Join(decls, ", "))
 	ret.W("\t\tps.Title = \"Create [" + m.Proper() + "]\"")
 	ret.W("\t\tps.Data = ret")
-	ret.W("\t\treturn render(rc, as, &v%s.Edit{Model: ret, IsNew: true}, ps, %q, \"Create\")", m.Package, m.Package)
+	ret.W("\t\treturn render(rc, as, &v%s.Edit{Model: ret, IsNew: true}, ps, %q%s, \"Create\")", m.Package, m.Package, grp.BC())
 	ret.W("\t})")
 	ret.W("}")
 	return ret
 }
 
-func controllerCreate(m *model.Model) *golang.Block {
-	ret := golang.NewBlock(m.PackageProper()+"Create", "func")
-	ret.W("func %sCreate(rc *fasthttp.RequestCtx) {", m.PackageProper())
-	ret.W("\tact(\"%s.create\", rc, func(as *app.State, ps *cutil.PageState) (string, error) {", m.Package)
+func controllerCreate(m *model.Model, g *golang.File, grp *model.Column) *golang.Block {
+	ret := blockFor(m, grp, "create")
+	if grp != nil {
+		controllerArgFor(grp, ret, "\"\"", 2)
+	}
 	ret.W("\t\tret, err := %sFromForm(rc, true)", m.Package)
 	ret.W("\t\tif err != nil {")
 	ret.W("\t\t\treturn \"\", errors.Wrap(err, \"unable to parse %s from form\")", m.Proper())
 	ret.W("\t\t}")
-	ret.W("\t\terr = as.Services.%s.Add(ps.Context, nil, ret)", m.PackageProper())
+	checkGrp(ret, grp)
+	ret.W("\t\terr = as.Services.%s.Create(ps.Context, nil, ret)", m.PackageProper())
 	ret.W("\t\tif err != nil {")
 	ret.W("\t\t\treturn \"\", errors.Wrap(err, \"unable to save newly-created %s\")", m.Proper())
 	ret.W("\t\t}")
@@ -37,35 +47,46 @@ func controllerCreate(m *model.Model) *golang.Block {
 	return ret
 }
 
-func controllerEditForm(m *model.Model) *golang.Block {
-	ret := golang.NewBlock(m.PackageProper()+"EditForm", "func")
-	ret.W("func %sEditForm(rc *fasthttp.RequestCtx) {", m.PackageProper())
-	ret.W("\tact(\"%s.edit.form\", rc, func(as *app.State, ps *cutil.PageState) (string, error) {", m.Package)
+func controllerEditForm(m *model.Model, grp *model.Column) *golang.Block {
+	ret := blockFor(m, grp, "edit", "form")
+	if m.IsRevision() {
+		ret.W("\t\trc.SetUserValue(\"includeDeleted\", true)")
+	}
+	if grp != nil {
+		controllerArgFor(grp, ret, "\"\"", 2)
+	}
 	ret.W("\t\tret, err := %sFromPath(rc, as, ps)", m.Package)
 	ret.W("\t\tif err != nil {")
 	ret.W("\t\t\treturn \"\", err")
 	ret.W("\t\t}")
+	checkGrp(ret, grp)
 	ret.W("\t\tps.Title = \"Edit [\" + ret.String() + \"]\"")
 	ret.W("\t\tps.Data = ret")
-	ret.W("\t\treturn render(rc, as, &v%s.Edit{Model: ret}, ps, %q, ret.String())", m.Package, m.Package)
+	ret.W("\t\treturn render(rc, as, &v%s.Edit{Model: ret}, ps, %q%s, ret.String())", m.Package, m.Package, grp.BC())
 	ret.W("\t})")
 	ret.W("}")
 	return ret
 }
 
-func controllerEdit(m *model.Model) *golang.Block {
-	ret := golang.NewBlock(m.PackageProper()+"Edit", "func")
-	ret.W("func %sEdit(rc *fasthttp.RequestCtx) {", m.PackageProper())
-	ret.W("\tact(\"%s.edit\", rc, func(as *app.State, ps *cutil.PageState) (string, error) {", m.Package)
+func controllerEdit(m *model.Model, g *golang.File, grp *model.Column) *golang.Block {
+	ret := blockFor(m, grp, "edit")
+	if m.IsRevision() {
+		ret.W("\t\trc.SetUserValue(\"includeDeleted\", true)")
+	}
+	if grp != nil {
+		controllerArgFor(grp, ret, "\"\"", 2)
+	}
 	ret.W("\t\tret, err := %sFromPath(rc, as, ps)", m.Package)
 	ret.W("\t\tif err != nil {")
 	ret.W("\t\t\treturn \"\", err")
 	ret.W("\t\t}")
+	checkGrp(ret, grp)
 	ret.W("\t\tfrm, err := %sFromForm(rc, false)", m.Package)
 	ret.W("\t\tif err != nil {")
 	ret.W("\t\t\treturn \"\", errors.Wrap(err, \"unable to parse %s from form\")", m.Proper())
 	ret.W("\t\t}")
-	for _, pk := range m.Columns.PKs() {
+	checkGrp(ret, grp, "frm")
+	for _, pk := range m.PKs() {
 		ret.W("\t\tfrm.%s = ret.%s", pk.Proper(), pk.Proper())
 	}
 	ret.W("\t\terr = as.Services.%s.Update(ps.Context, nil, frm)", m.PackageProper())

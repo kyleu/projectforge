@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/kyleu/projectforge/app/util"
+	"github.com/pkg/errors"
 )
 
 type Columns []*Column
@@ -16,6 +17,37 @@ func (c Columns) Get(name string) *Column {
 		}
 	}
 	return nil
+}
+
+func (c Columns) OneWithTag(t string) (*Column, error) {
+	ret := c.WithTag(t)
+	if len(ret) == 0 {
+		return nil, errors.Errorf("must have one [%s], but found none", t)
+	}
+	if len(ret) > 1 {
+		return nil, errors.Errorf("may only have one [%s], but found [%d]", t, len(ret))
+	}
+	return ret[0], nil
+}
+
+func (c Columns) WithTag(t string) Columns {
+	var ret Columns
+	for _, col := range c {
+		if col.HasTag(t) {
+			ret = append(ret, col)
+		}
+	}
+	return ret
+}
+
+func (c Columns) WithoutTag(t string) Columns {
+	var ret Columns
+	for _, col := range c {
+		if !col.HasTag(t) {
+			ret = append(ret, col)
+		}
+	}
+	return ret
 }
 
 func (c Columns) PKs() Columns {
@@ -102,10 +134,10 @@ func (c Columns) Refs() string {
 	return strings.Join(refs, ", ")
 }
 
-func (c Columns) WhereClause() interface{} {
+func (c Columns) WhereClause(offset int) string {
 	wc := make([]string, 0, len(c))
 	for idx, col := range c {
-		wc = append(wc, fmt.Sprintf("%s = $%d", col.Name, idx+1))
+		wc = append(wc, fmt.Sprintf("%s = $%d", col.Name, idx+offset+1))
 	}
 	return strings.Join(wc, " and ")
 }

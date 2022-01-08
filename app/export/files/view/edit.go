@@ -1,23 +1,21 @@
-package files
+package view
 
 import (
 	"fmt"
 
+	"github.com/kyleu/projectforge/app/export/files/helper"
 	"github.com/kyleu/projectforge/app/export/golang"
 	"github.com/kyleu/projectforge/app/export/model"
 	"github.com/kyleu/projectforge/app/file"
 )
 
-func ViewEdit(m *model.Model, args *model.Args) *file.File {
-	g := golang.NewGoTemplate(m.Package, []string{"views", "v" + m.Package}, "Edit.html")
-	for _, imp := range importsForTypes("webedit", m.Columns.Types()...) {
-		g.AddImport(imp.Type, imp.Value)
+func edit(m *model.Model, args *model.Args) (*file.File, error) {
+	g := golang.NewGoTemplate([]string{"views", "v" + m.Package}, "Edit.html")
+	for _, imp := range helper.ImportsForTypes("webedit", m.Columns.Types()...) {
+		g.AddImport(imp)
 	}
-	g.AddImport(golang.ImportTypeApp, "{{{ .Package }}}/app")
-	g.AddImport(golang.ImportTypeApp, "{{{ .Package }}}/app/"+m.Package)
-	g.AddImport(golang.ImportTypeApp, "{{{ .Package }}}/app/controller/cutil")
-	g.AddImport(golang.ImportTypeApp, "{{{ .Package }}}/views/components")
-	g.AddImport(golang.ImportTypeApp, "{{{ .Package }}}/views/layout")
+	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpLayout)
+	g.AddImport(helper.AppImport("app/" + m.Package))
 	g.AddBlocks(exportViewEditClass(m), exportViewEditBody(m))
 	return g.Render()
 }
@@ -34,7 +32,7 @@ func exportViewEditClass(m *model.Model) *golang.Block {
 
 func exportViewEditBody(m *model.Model) *golang.Block {
 	editURL := "/" + m.Package
-	for _, pk := range m.Columns.PKs() {
+	for _, pk := range m.PKs() {
 		editURL += "/{%% " + pk.ToGoString("p.Model.") + " %%}"
 	}
 
@@ -52,7 +50,8 @@ func exportViewEditBody(m *model.Model) *golang.Block {
 	ret.W("    <form action=\"\" method=\"post\">")
 	ret.W("      <table>")
 	ret.W("        <tbody>")
-	for _, col := range m.Columns {
+	editCols := m.Columns.WithoutTag("created").WithoutTag("updated")
+	for _, col := range editCols {
 		call := col.ToGoEditString("p.Model.")
 		if col.PK {
 			ret.W("          {%% if p.IsNew %%}" + call + "{%% endif %%}")

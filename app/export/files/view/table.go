@@ -1,21 +1,19 @@
-package files
+package view
 
 import (
 	"fmt"
 
+	"github.com/kyleu/projectforge/app/export/files/helper"
 	"github.com/kyleu/projectforge/app/export/golang"
 	"github.com/kyleu/projectforge/app/export/model"
 	"github.com/kyleu/projectforge/app/file"
 	"github.com/kyleu/projectforge/app/util"
 )
 
-func ViewTable(m *model.Model, args *model.Args) *file.File {
-	g := golang.NewGoTemplate(m.Package, []string{"views", "v" + m.Package}, "Table.html")
-	g.AddImport(golang.ImportTypeApp, "{{{ .Package }}}/app")
-	g.AddImport(golang.ImportTypeApp, "{{{ .Package }}}/app/lib/filter")
-	g.AddImport(golang.ImportTypeApp, "{{{ .Package }}}/app/"+m.Package)
-	g.AddImport(golang.ImportTypeApp, "{{{ .Package }}}/app/controller/cutil")
-	g.AddImport(golang.ImportTypeApp, "{{{ .Package }}}/views/components")
+func table(m *model.Model, args *model.Args) (*file.File, error) {
+	g := golang.NewGoTemplate([]string{"views", "v" + m.Package}, "Table.html")
+	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpFilter)
+	g.AddImport(helper.AppImport("app/" + m.Package))
 	g.AddBlocks(exportViewTableFunc(m))
 	return g.Render()
 }
@@ -29,7 +27,7 @@ func exportViewTableFunc(m *model.Model) *golang.Block {
 	ret.W("    <thead>")
 	ret.W("      <tr>")
 	for _, col := range m.Columns {
-		call := fmt.Sprintf("components.TableHeaderSimple(%q, %q, %q, %q, prms, ps.URI, ps)", m.Package, col.Name, col.Help(), util.StringToTitle(col.Name))
+		call := fmt.Sprintf("components.TableHeaderSimple(%q, %q, %q, %q, prms, ps.URI, ps)", m.Package, col.Name, util.StringToTitle(col.Name), col.Help())
 		ret.W("        {%%= " + call + " %%}")
 	}
 	ret.W("      </tr>")

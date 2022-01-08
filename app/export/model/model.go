@@ -1,17 +1,23 @@
 package model
 
 import (
+	"github.com/kyleu/projectforge/app/lib/filter"
 	"github.com/kyleu/projectforge/app/util"
 )
 
 type Model struct {
-	Name        string   `json:"name"`
-	Package     string   `json:"package"`
-	Description string   `json:"description"`
-	Icon        string   `json:"icon"`
-	Ordering    string   `json:"ordering"`
-	Search      []string `json:"search"`
-	Columns     Columns  `json:"columns"`
+	Name         string           `json:"name"`
+	Package      string           `json:"package"`
+	Description  string           `json:"description,omitempty"`
+	Icon         string           `json:"icon,omitempty"`
+	Ordering     filter.Orderings `json:"ordering,omitempty"`
+	Search       []string         `json:"search,omitempty"`
+	History      string           `json:"history,omitempty"`
+	Tags         []string         `json:"tags,omitempty"`
+	Config       util.ValueMap    `json:"config,omitempty"`
+	Columns      Columns          `json:"columns"`
+	historyMap   *HistoryMap
+	historyMapDB *HistoryMap
 }
 
 func (m *Model) Camel() string {
@@ -20,6 +26,10 @@ func (m *Model) Camel() string {
 
 func (m *Model) Proper() string {
 	return util.StringToCamel(m.Name)
+}
+
+func (m *Model) Plural() string {
+	return util.StringToPlural(m.Name)
 }
 
 func (m *Model) ProperPlural() string {
@@ -35,7 +45,8 @@ func (m *Model) PackageProper() string {
 }
 
 func (m *Model) IconSafe() string {
-	if m.Icon == "" {
+	_, ok := util.SVGLibrary[m.Icon]
+	if !ok {
 		return "star"
 	}
 	return m.Icon
@@ -43,7 +54,7 @@ func (m *Model) IconSafe() string {
 
 func (m *Model) URLPath(prefix string) string {
 	url := "\"/" + m.Package + "\""
-	for _, pk := range m.Columns.PKs() {
+	for _, pk := range m.PKs() {
 		url += "+\"/\"+" + pk.ToGoString(prefix)
 	}
 	return url
@@ -54,12 +65,46 @@ func (m *Model) ClassRef() string {
 }
 
 func (m *Model) LinkURL(prefix string) string {
-	pks := m.Columns.PKs()
+	pks := m.PKs()
 	linkURL := "/" + m.Package
 	for _, pk := range pks {
 		linkURL += "/" + pk.ToGoViewString(prefix)
 	}
 	return linkURL
+}
+
+func (m *Model) HasTag(t string) bool {
+	return util.StringArrayContains(m.Tags, t)
+}
+
+func (m *Model) IsSoftDelete() bool {
+	return m.HasTag("softDelete")
+}
+
+func (m *Model) PKs() Columns {
+	return m.Columns.PKs()
+}
+
+func (m *Model) GroupedColumns() Columns {
+	return m.Columns.WithTag("grouped")
+}
+
+func (m *Model) IsRevision() bool {
+	return m.History == RevisionType
+}
+
+func (m *Model) Validate() error {
+	if m.IsRevision() {
+		hc := m.HistoryColumns(true)
+		if hc.Err != nil {
+			return hc.Err
+		}
+		hc = m.HistoryColumns(false)
+		if hc.Err != nil {
+			return hc.Err
+		}
+	}
+	return nil
 }
 
 type Models []*Model
