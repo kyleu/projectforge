@@ -45,7 +45,7 @@ func AuthCallback(rc *fasthttp.RequestCtx) {
 
 func AuthLogout(rc *fasthttp.RequestCtx) {
 	act("auth.logout", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := rcRequiredString(rc, "key", false)
+		key, err := RCRequiredString(rc, "key", false)
 		if err != nil {
 			return "", err
 		}
@@ -59,7 +59,7 @@ func AuthLogout(rc *fasthttp.RequestCtx) {
 }
 
 func getProvider(as *app.State, rc *fasthttp.RequestCtx) (*auth.Provider, error) {
-	key, err := rcRequiredString(rc, "key", false)
+	key, err := RCRequiredString(rc, "key", false)
 	if err != nil {
 		return nil, err
 	}

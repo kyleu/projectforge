@@ -37,7 +37,7 @@ func ModuleDetail(rc *fasthttp.RequestCtx) {
 }
 
 func getModule(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*module.Module, error) {
-	key, err := rcRequiredString(rc, "key", true)
+	key, err := RCRequiredString(rc, "key", true)
 	if err != nil {
 		return nil, err
 	}

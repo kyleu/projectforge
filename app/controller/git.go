@@ -19,9 +19,9 @@ var (
 )
 
 func GitAction(rc *fasthttp.RequestCtx) {
-	a, _ := rcRequiredString(rc, "act", false)
+	a, _ := RCRequiredString(rc, "act", false)
 	act("git.action."+a, rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := rcRequiredString(rc, "key", false)
+		key, err := RCRequiredString(rc, "key", false)
 		if err != nil {
 			return "", err
 		}

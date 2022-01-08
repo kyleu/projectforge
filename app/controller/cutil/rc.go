@@ -32,3 +32,7 @@ func requestCtxToMap(rc *fasthttp.RequestCtx, data interface{}) map[string]inter
 	}
 	return map[string]interface{}{"data": data, "request": req, "response": rsp}
 }
+
+func RequestCtxBool(rc *fasthttp.RequestCtx, key string) bool {
+	return string(rc.URI().QueryArgs().Peek(key)) == "true"
+}

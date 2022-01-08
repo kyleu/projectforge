@@ -18,12 +18,20 @@ import (
 
 var initialIcons = []string{"searchbox"}
 
-func rcRequiredString(rc *fasthttp.RequestCtx, key string, allowEmpty bool) (string, error) {
+func RCRequiredString(rc *fasthttp.RequestCtx, key string, allowEmpty bool) (string, error) {
 	v, ok := rc.UserValue(key).(string)
 	if !ok || ((!allowEmpty) && v == "") {
 		return v, errors.Errorf("must provide [%s] in path", key)
 	}
 	return v, nil
+}
+
+func RCRequiredBool(rc *fasthttp.RequestCtx, key string) (bool, error) {
+	ret, err := RCRequiredString(rc, key, true)
+	if err != nil {
+		return false, err
+	}
+	return ret == "true", nil
 }
 
 func render(rc *fasthttp.RequestCtx, as *app.State, page layout.Page, ps *cutil.PageState, breadcrumbs ...string) (string, error) {

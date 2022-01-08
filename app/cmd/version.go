@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func versionF(context.Context, []string) error {
+func versionF(_ context.Context, _ []string) error {
 	println(_buildInfo.Version) // nolint
 	return nil
 }

@@ -35,7 +35,7 @@ func projectFromCfg(proto *project.Project, cfg util.ValueMap) *project.Project 
 	}
 
 	var moduleArgs util.ValueMap
-	if ma, err := cfg.GetMap("moduleArgs", false); ma != nil && err == nil {
+	if ma, err := cfg.GetMap("moduleArgs"); ma != nil && err == nil {
 		moduleArgs = ma
 	}
 

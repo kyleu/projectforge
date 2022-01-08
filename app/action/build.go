@@ -12,8 +12,8 @@ import (
 
 type Build struct {
 	Key         string `json:"key"`
-	Title       string `json:"title"`
-	Description string `json:"description"`
+	Title       string `json:"title,omitempty"`
+	Description string `json:"description,omitempty"`
 
 	Run func(pm *PrjAndMods, ret *Result) *Result `json:"-"`
 }

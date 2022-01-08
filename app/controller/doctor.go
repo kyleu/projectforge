@@ -35,7 +35,7 @@ func DoctorRunAll(rc *fasthttp.RequestCtx) {
 
 func DoctorRun(rc *fasthttp.RequestCtx) {
 	act("doctor.run", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := rcRequiredString(rc, "key", false)
+		key, err := RCRequiredString(rc, "key", false)
 		if err != nil {
 			return "", err
 		}

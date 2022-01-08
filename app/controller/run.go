@@ -18,11 +18,11 @@ import (
 
 func RunAction(rc *fasthttp.RequestCtx) {
 	act("run.action", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		tgt, err := rcRequiredString(rc, "key", false)
+		tgt, err := RCRequiredString(rc, "key", false)
 		if err != nil {
 			return "", err
 		}
-		actS, err := rcRequiredString(rc, "act", false)
+		actS, err := RCRequiredString(rc, "act", false)
 		if err != nil {
 			return "", err
 		}
@@ -50,7 +50,7 @@ func RunAction(rc *fasthttp.RequestCtx) {
 
 func RunAllActions(rc *fasthttp.RequestCtx) {
 	act("run.all.actions", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		actS, err := rcRequiredString(rc, "act", false)
+		actS, err := RCRequiredString(rc, "act", false)
 		if err != nil {
 			return "", err
 		}

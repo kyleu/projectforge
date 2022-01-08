@@ -16,7 +16,7 @@ import (
 )
 
 func GitActionAll(rc *fasthttp.RequestCtx) {
-	a, _ := rcRequiredString(rc, "act", false)
+	a, _ := RCRequiredString(rc, "act", false)
 	act("git.all."+a, rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prjs := as.Services.Projects.Projects()
 		var results git.Results

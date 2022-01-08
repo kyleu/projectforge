@@ -103,9 +103,9 @@ func (r *Result) StatusLog() string {
 }
 
 type ResultContext struct {
-	Prj *project.Project `json:"prj"`
-	Cfg util.ValueMap    `json:"cfg"`
-	Res *Result          `json:"res"`
+	Prj *project.Project `json:"prj,omitempty"`
+	Cfg util.ValueMap    `json:"cfg,omitempty"`
+	Res *Result          `json:"res,omitempty"`
 }
 
 func (c *ResultContext) Status() string {

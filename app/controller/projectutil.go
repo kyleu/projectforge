@@ -38,7 +38,6 @@ func projectFromForm(frm util.ValueMap, prj *project.Project) error {
 		prj.Modules = []string{"core"}
 	}
 	prj.Ignore = util.StringSplitAndTrim(get("ignore", strings.Join(prj.Ignore, ",")), ",")
-	prj.Children = util.StringSplitAndTrim(get("children", strings.Join(prj.Children, "\n")), "\n")
 	prj.Path = get("path", prj.Path)
 
 	if prj.Info == nil {
@@ -90,7 +89,7 @@ func getModuleArgs(frm util.ValueMap) (util.ValueMap, error) {
 }
 
 func getProject(rc *fasthttp.RequestCtx, as *app.State) (*project.Project, error) {
-	key, err := rcRequiredString(rc, "key", true)
+	key, err := RCRequiredString(rc, "key", true)
 	if err != nil {
 		return nil, err
 	}

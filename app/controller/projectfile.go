@@ -32,7 +32,7 @@ func ProjectFile(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 
-		pathS, err := rcRequiredString(rc, "path", false)
+		pathS, err := RCRequiredString(rc, "path", false)
 		if err != nil {
 			return "", err
 		}
