@@ -1,0 +1,51 @@
+{% import (
+  "strings"
+
+  "github.com/kyleu/projectforge/app"
+  "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/app/export/model"
+  "github.com/kyleu/projectforge/views/components"
+) %}
+
+{% func DetailExportModel(model *model.Model, as *app.State, ps *cutil.PageState) %}
+  <table class="min-200 full-width">
+    <tbody>
+      <tr><td>Name</td><td>{%s model.Name %}</td></tr>
+      <tr><td>Package</td><td>{%s model.Package %}</td></tr>
+      <tr><td>Description</td><td>{%s model.Description %}</td></tr>
+      <tr>
+        <td>Ordering</td>
+        <td>
+          {%- for _, x := range model.Ordering -%}
+          <div>{%s x.String() %}</div>
+          {%- endfor -%}
+        </td>
+        </tr>
+      {%- if len(model.GroupedColumns()) > 0 -%}
+      <tr><td>Groupings</td><td>{%s strings.Join(model.GroupedColumns().Names(), ", ") %}</td></tr>
+      {%- endif -%}
+      {%- if len(model.Search) > 0 -%}
+      <tr><td>Search</td><td>{%s strings.Join(model.Search, ", ") %}</td></tr>
+      {%- endif -%}
+      {%- if len(model.History) > 0 -%}
+      <tr><td>History</td><td>{%s model.History %}</td></tr>
+      {%- endif -%}
+      {%- if len(model.Config) > 0 -%}
+      <tr><td>Config</td><td>{%= components.JSON(model.Config) %}</td></tr>
+      {%- endif -%}
+    </tbody>
+  </table>
+  <div class="card">
+    <h3>Columns</h3>
+    <table class="mt min-200 full-width">
+      <tbody>
+        {%- for _, col := range model.Columns -%}
+        <tr>
+          <td>{%s col.Name %}</td>
+          <td>{%s col.Type.String() %}</td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
+{% endfunc %}

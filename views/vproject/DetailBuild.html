@@ -1,0 +1,21 @@
+{% import (
+  "github.com/kyleu/projectforge/app"
+  "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/app/project"
+) %}
+
+{% func DetailBuild(build *project.Build, as *app.State, ps *cutil.PageState) %}
+  {%- code buildMap := build.ToMap() -%}
+  <table class="min-200 full-width">
+    <tbody>
+    {%- for _, o := range project.AllBuildOptions -%}
+    {%- if buildMap[o.Key] -%}
+    <tr>
+      <th class="shrink">{%s o.Title %}</th>
+      <td>{%s o.Description %}</td>
+    </tr>
+    {%- endif -%}
+    {%- endfor -%}
+    </tbody>
+  </table>
+{% endfunc %}

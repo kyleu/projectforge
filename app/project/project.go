@@ -10,20 +10,19 @@ import (
 var DefaultIcon = "code"
 
 type Project struct {
-	Key      string       `json:"key"`
-	Name     string       `json:"name,omitempty"`
-	Icon     string       `json:"icon,omitempty"`
-	Exec     string       `json:"exec,omitempty"`
-	Version  string       `json:"version"`
-	Package  string       `json:"package,omitempty"`
-	Args     string       `json:"args,omitempty"`
-	Port     int          `json:"port,omitempty"`
-	Modules  []string     `json:"modules"`
-	Ignore   []string     `json:"ignore,omitempty"`
-	Children []string     `json:"children,omitempty"`
-	Info     *Info        `json:"info,omitempty"`
-	Theme    *theme.Theme `json:"theme,omitempty"`
-	Build    *Build       `json:"build,omitempty"`
+	Key     string       `json:"key"`
+	Name    string       `json:"name,omitempty"`
+	Icon    string       `json:"icon,omitempty"`
+	Exec    string       `json:"exec,omitempty"`
+	Version string       `json:"version"`
+	Package string       `json:"package,omitempty"`
+	Args    string       `json:"args,omitempty"`
+	Port    int          `json:"port,omitempty"`
+	Modules []string     `json:"modules"`
+	Ignore  []string     `json:"ignore,omitempty"`
+	Info    *Info        `json:"info,omitempty"`
+	Theme   *theme.Theme `json:"theme,omitempty"`
+	Build   *Build       `json:"build,omitempty"`
 
 	Path   string `json:"-"`
 	Parent string `json:"-"`

@@ -1,0 +1,40 @@
+{% import (
+  "github.com/kyleu/projectforge/app"
+  "github.com/kyleu/projectforge/app/action"
+  "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/app/git"
+  "github.com/kyleu/projectforge/app/project"
+  "github.com/kyleu/projectforge/views/layout"
+  "github.com/kyleu/projectforge/views/vproject"
+) %}
+
+{% code type BuildResult struct {
+  layout.Basic
+  Project *project.Project
+  GitResult *git.Result
+} %}
+
+{% func (p *BuildResult) Body(as *app.State, ps *cutil.PageState) %}
+  {%- code prj := p.Project -%}
+  {%= vproject.Summary(prj, p.GitResult, ps) %}
+
+  <div class="card">
+    <h3>Build your project</h3>
+    <table class="mt">
+      <thead>
+        <tr>
+          <th>Action</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        {%- for _, b := range action.AllBuilds -%}
+        <tr>
+          <td><a href="/build/{%s prj.Key %}/{%s b.Key %}" title="{%s b.Description %}"><button>{%s b.Title %}</button></a></td>
+          <td>{%s b.Description %}</td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
+{% endfunc %}

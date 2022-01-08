@@ -61,12 +61,6 @@ func (s *Service) add(path string, parent *Project) (*Project, error) {
 	s.cacheLock.Lock()
 	s.cache[p.Key] = p
 	s.cacheLock.Unlock()
-	for _, kidKey := range p.Children {
-		_, err := s.add(kidKey, p)
-		if err != nil {
-			return nil, errors.Wrapf(err, "error loading child [%s]", kidKey)
-		}
-	}
 	return p, nil
 }
 

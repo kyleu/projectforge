@@ -1,0 +1,28 @@
+{% import (
+  "github.com/kyleu/projectforge/app"
+  "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/app/lib/theme"
+  "github.com/kyleu/projectforge/views/vtheme"
+) %}
+
+{% func DetailTheme(t *theme.Theme, title string, as *app.State, ps *cutil.PageState) %}
+  {%- code
+    if t == nil {
+      t = theme.ThemeDefault
+    }
+  -%}
+  <table class="centered full-width">
+    <tbody>
+      <tr>
+        <th>
+          <div>Light</div>
+          <div id="mockup-light">{%= vtheme.MockupColors(title, "", t.Light, false, 6, ps) %}</div>
+        </th>
+        <th>
+          <div>Dark</div>
+          <div id="mockup-dark">{%= vtheme.MockupColors(title, "", t.Dark, false, 6, ps) %}</div>
+        </th>
+      </tr>
+    </tbody>
+  </table>
+{% endfunc %}

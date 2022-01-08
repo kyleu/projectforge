@@ -1,0 +1,14 @@
+{% import (
+  "github.com/kyleu/projectforge/app"
+  "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/app/module"
+) %}
+
+{% func DetailModules(modKeys []string, mods module.Modules, as *app.State, ps *cutil.PageState) %}
+  <ul>
+    {%- for _, mKey := range modKeys -%}
+    {%- code mod := mods.Get(mKey) -%}
+    <li><a href="/m/{%s mod.Key %}">{%s mod.Title() %}</a></li>
+    {%- endfor -%}
+  </ul>
+{% endfunc %}

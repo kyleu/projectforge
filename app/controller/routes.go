@@ -47,12 +47,15 @@ func AppRoutes() fasthttp.RequestHandler {
 	r.GET("/p/{key}/fs", ProjectFileRoot)
 	r.GET("/p/{key}/fs/{path:*}", ProjectFile)
 
-	r.GET("/p/{key}/svg", SVGList)
-	r.GET("/p/{key}/svg/x/add", SVGAdd)
-	r.GET("/p/{key}/svg/x/build", SVGBuild)
-	r.GET("/p/{key}/svg/{icon}", SVGDetail)
-	r.GET("/p/{key}/svg/{icon}/setapp", SVGSetApp)
-	r.GET("/p/{key}/svg/{icon}/remove", SVGRemove)
+	r.GET("/svg/{key}", SVGList)
+	r.GET("/svg/{key}/x/add", SVGAdd)
+	r.GET("/svg/{key}/x/build", SVGBuild)
+	r.GET("/svg/{key}/{icon}", SVGDetail)
+	r.GET("/svg/{key}/{icon}/setapp", SVGSetApp)
+	r.GET("/svg/{key}/{icon}/remove", SVGRemove)
+
+	r.GET("/build/{key}", BuildIndex)
+	r.GET("/build/{key}/{act}", BuildIndex)
 
 	r.GET("/git", GitActionAll)
 	r.GET("/git/all/{act}", GitActionAll)

@@ -1,14 +1,11 @@
 {% import (
-  "strings"
   "github.com/kyleu/projectforge/app"
   "github.com/kyleu/projectforge/app/controller/cutil"
   "github.com/kyleu/projectforge/app/git"
   "github.com/kyleu/projectforge/app/module"
   "github.com/kyleu/projectforge/app/project"
-  "github.com/kyleu/projectforge/app/lib/theme"
   "github.com/kyleu/projectforge/views/components"
   "github.com/kyleu/projectforge/views/layout"
-  "github.com/kyleu/projectforge/views/vtheme"
 ) %}
 
 {% code type Detail struct {
@@ -19,208 +16,45 @@
 } %}
 
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
-  {%- code
-    prj := p.Project
-    info := prj.Info
-    if info == nil {
-      info = &project.Info{}
-    }
-    build := prj.Build
-    if build == nil {
-      build = &project.Build{}
-    }
-    buildMap := build.ToMap()
-  -%}
+  {%- code prj := p.Project -%}
   {%= Summary(prj, p.GitResult, ps) %}
-  <div class="card">
-    <h3>Details</h3>
-    <table class="mt min-200">
-      <tbody>
-        <tr>
-          <th class="shrink">Key</th>
-          <td>{%s prj.Key %}</td>
-        </tr>
-        <tr>
-          <th>Name</th>
-          <td>{%s prj.Name %}</td>
-        </tr>
-        <tr>
-          <th>Version</th>
-          <td>{%s prj.Version %}</td>
-        </tr>
-        <tr>
-          <th>Package</th>
-          <td>{%s prj.Package %}</td>
-        </tr>
-        <tr>
-          <th>Args</th>
-          <td>{%s prj.Args %}</td>
-        </tr>
-        <tr>
-          <th>Port</th>
-          <td><a href="http://localhost:{%d prj.Port %}" target="_blank">{%d prj.Port %}</a></td>
-        </tr>
-        <tr>
-          <th>Ignore</th>
-          <td>{%s strings.Join(prj.Ignore, ", ") %}</td>
-        </tr>
-        {%- if len(prj.Children) > 0 -%}
-        <tr>
-          <th>Children</th>
-          <td>
-            {%- for _, x := range prj.Children -%}
-            <div>{%s x %}</div>
-            {%- endfor -%}
-          </td>
-        </tr>
-        {%- endif -%}
-        <tr>
-          <th>Path</th>
-          <td>{%s prj.Path %}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  {%- if info != nil -%}
-  <div class="card">
-    <h3>Metadata</h3>
-    <table class="mt min-200">
-      <tbody>
-        <tr class="shrink">
-          <th class="shrink">Organization</th>
-          <td>{%s info.Org %}</td>
-        </tr>
-        <tr>
-          <th>Author ID</th>
-          <td>{%s info.AuthorID %}</td>
-        </tr>
-        <tr>
-          <th>Author</th>
-          <td>{%s info.AuthorName %} &lt;<a href="mailto:{%s info.AuthorEmail %}">{%s info.AuthorEmail %}</a>&gt;</td>
-        </tr>
-        <tr>
-          <th>License</th>
-          <td>{%s info.License %}</td>
-        </tr>
-        <tr>
-          <th>Homepage</th>
-          <td>{%s info.Homepage %}</td>
-        </tr>
-        <tr>
-          <th>Source Code</th>
-          <td>{%s info.Sourcecode %}</td>
-        </tr>
-        <tr>
-          <th>Summary</th>
-          <td>{%s info.Summary %}</td>
-        </tr>
-        <tr>
-          <th>Description</th>
-          <td>{%s info.Description %}</td>
-        </tr>
-        <tr>
-          <th>CI</th>
-          <td>{%s info.CI %}</td>
-        </tr>
-        <tr>
-          <th>Homebrew</th>
-          <td>{%s info.Homebrew %}</td>
-        </tr>
-        <tr>
-          <th>Bundle</th>
-          <td>{%s info.Bundle %}</td>
-        </tr>
-        <tr>
-          <th>Signing Identity</th>
-          <td>{%s info.SigningIdentity %}</td>
-        </tr>
-        <tr>
-          <th>Slack Webhook</th>
-          <td>{%s info.Slack %}</td>
-        </tr>
-        <tr>
-          <th>Java Package</th>
-          <td>{%s info.JavaPackage %}</td>
-        </tr>
-        {%- if len(info.ModuleDefs) > 0 -%}
-        <tr>
-          <th>Module Definitions</th>
-          <td>
-            {%- for _, x := range info.ModuleDefs -%}
-            <a href="/m/{%s x.Key %}">{%s x.Key %}</a> <em>({%s x.Path %})</em><br />
-            {%- endfor -%}
-          </td>
-        </tr>
-        {%- endif -%}
-        {%- for k, arg := range info.ModuleArgs -%}
-        <tr>
-          <th>[{%s k %}] Config</th>
-          <td>{%= components.JSON(arg) %}</td>
-        </tr>
-        {%- endfor -%}
-      </tbody>
-    </table>
-  </div>
-  {%- endif -%}
-  {%- code
-    t := prj.Theme
-    if t == nil {
-      t = theme.ThemeDefault
-    }
-  -%}
-  <div class="card">
-    <h3>Theme</h3>
-    <table class="centered">
-      <tbody>
-        <tr>
-          <th>
-            <div>Light</div>
-            <div id="mockup-light">{%= vtheme.MockupColors(prj.Title(), "", t.Light, false, 6, ps) %}</div>
-          </th>
-          <th>
-            <div>Dark</div>
-            <div id="mockup-dark">{%= vtheme.MockupColors(prj.Title(), "", t.Dark, false, 6, ps) %}</div>
-          </th>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="card">
-    <h3>Modules</h3>
-    <div class="mt">
-      {%- for idx, mKey := range prj.Modules -%}
-      {%- code mod := p.Modules.Get(mKey) -%}
-      <a href="/m/{%s mod.Key %}">{%s mod.Title() %}</a>{% if idx < len(prj.Modules) - 1 %}, {% endif %}
-      {%- endfor -%}
-    </div>
-  </div>
-  {%- if len(prj.Children) > 0 -%}
-  <div class="card">
-    <h3>Children</h3>
-    <table class="mt min-200">
-      <tbody>
-        {%- for _, mKey := range prj.Children -%}
-        <tr>
-          <td>{%s mKey %}</td>
-        </tr>
-        {%- endfor -%}
-      </tbody>
-    </table>
-  </div>
-  {%- endif -%}
-  <div class="card">
-    <h3>Builds</h3>
-    <table class="mt min-200">
-      <tbody>
-      {%- for _, o := range project.AllBuildOptions -%}
-      {%- if buildMap[o.Key] -%}
-      <tr>
-        <th class="shrink">{%s o.Title %}</th>
-        <td>{%s o.Description %}</td>
-      </tr>
-      {%- endif -%}
-      {%- endfor -%}
-      </tbody>
-    </table>
+
+  <div class="tabs padded">
+    <input name="type" type="radio" id="tab-settings" class="input" checked="checked" />
+    <label for="tab-settings" class="label">Settings</label>
+    <div class="panel">{%= DetailSettings(prj, as, ps) %}</div>
+
+    {%- if prj.Info != nil -%}
+    <input name="type" type="radio" id="tab-metadata" class="input"/>
+    <label for="tab-metadata" class="label">Metadata</label>
+    <div class="panel">{%= DetailMetadata(prj.Info, as, ps) %}</div>
+
+    {%- for k, arg := range prj.Info.ModuleArgs -%}
+    {%- code
+      argTitle := k
+      argMod := p.Modules.Get(k)
+      if argMod != nil {
+        argTitle = argMod.Title()
+      }
+    -%}
+    <input name="type" type="radio" id="tab-modulearg-{%s k %}" class="input"/>
+    <label for="tab-modulearg-{%s k %}" class="label">{%s argTitle %}</label>
+    <div class="panel">{% if argMod == nil %}{%= components.JSON(arg) %}{% else %}{%= DetailModuleArg(argMod, arg, as, ps) %}{% endif %}</div>
+    {%- endfor -%}
+    {%- endif -%}
+
+    <input name="type" type="radio" id="tab-theme" class="input"/>
+    <label for="tab-theme" class="label">Theme</label>
+    <div class="panel">{%= DetailTheme(prj.Theme, prj.Title(), as, ps) %}</div>
+
+    <input name="type" type="radio" id="tab-modules" class="input"/>
+    <label for="tab-modules" class="label">Modules</label>
+    <div class="panel">{%= DetailModules(prj.Modules, p.Modules, as, ps) %}</div>
+
+    {%- if prj.Build != nil && !prj.Build.Empty() -%}
+    <input name="type" type="radio" id="tab-builds" class="input"/>
+    <label for="tab-builds" class="label">Builds</label>
+    <div class="panel">{%= DetailBuild(prj.Build, as, ps) %}</div>
+    {%- endif -%}
   </div>
 {% endfunc %}

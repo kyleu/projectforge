@@ -31,6 +31,22 @@ func ParamsWithDefaultOrdering(key string, params *Params, orderings ...*Orderin
 	return params
 }
 
+func (p *Params) Sanitize(key string, defaultOrderings ...*Ordering) *Params {
+	if p == nil {
+		p = &Params{Key: key}
+	}
+	if p.Limit > 1000 {
+		p.Limit = 1000
+	}
+	if p.Offset < 0 {
+		p.Offset = 0
+	}
+	if len(p.Orderings) == 0 {
+		p = p.CloneOrdering(defaultOrderings...)
+	}
+	return p
+}
+
 func (p *Params) CloneOrdering(orderings ...*Ordering) *Params {
 	if p == nil {
 		return nil

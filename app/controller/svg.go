@@ -48,7 +48,7 @@ func SVGBuild(rc *fasthttp.RequestCtx) {
 		}
 
 		msg := fmt.Sprintf("Parsed [%d] SVG files", count)
-		return flashAndRedir(true, msg, "/p/"+prj.Key+"/svg", rc, ps)
+		return flashAndRedir(true, msg, "/svg/"+prj.Key, rc, ps)
 	})
 }
 
@@ -75,7 +75,7 @@ func SVGAdd(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		ps.Data = x
-		return render(rc, as, &vsvg.View{Project: prj, SVG: x}, ps, "projects", prj.Key, "SVG||/p/"+prj.Key+"/svg", x.Key)
+		return render(rc, as, &vsvg.View{Project: prj, SVG: x}, ps, "projects", prj.Key, "SVG||/svg/"+prj.Key, x.Key)
 	})
 }
 
@@ -92,7 +92,7 @@ func SVGDetail(rc *fasthttp.RequestCtx) {
 		x := &svg.SVG{Key: key, Markup: content}
 		ps.Title = "SVG [" + key + "]"
 		ps.Data = x
-		return render(rc, as, &vsvg.View{Project: prj, SVG: x}, ps, "projects", prj.Key, "SVG||/p/"+prj.Key+"/svg", key)
+		return render(rc, as, &vsvg.View{Project: prj, SVG: x}, ps, "projects", prj.Key, "SVG||/svg/"+prj.Key, key)
 	})
 }
 
@@ -116,7 +116,7 @@ func SVGSetApp(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to set app icon to ["+key+"]")
 		}
 		msg := "set SVG [" + key + "] as app icon"
-		return flashAndRedir(true, msg, "/p/"+prj.Key+"/svg", rc, ps)
+		return flashAndRedir(true, msg, "/svg/"+prj.Key, rc, ps)
 	})
 }
 
@@ -134,7 +134,7 @@ func SVGRemove(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to remove SVG ["+key+"]")
 		}
 		msg := "removed SVG [" + key + "]"
-		return flashAndRedir(true, msg, "/p/"+prj.Key+"/svg", rc, ps)
+		return flashAndRedir(true, msg, "/svg/"+prj.Key, rc, ps)
 	})
 }
 
@@ -145,7 +145,7 @@ func prjAndIcon(rc *fasthttp.RequestCtx, as *app.State) (*project.Project, files
 	}
 	fs := as.Services.Projects.GetFilesystem(prj)
 
-	key, err := rcRequiredString(rc, "icon", false)
+	key, err := RCRequiredString(rc, "icon", false)
 	if err != nil {
 		return nil, nil, "", err
 	}

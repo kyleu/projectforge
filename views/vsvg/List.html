@@ -19,7 +19,7 @@
   {%= vproject.Summary(p.Project, nil, ps) %}
   <div class="card">
     <h3>SVG icons</h3>
-    <a href="/p/{%s p.Project.Key %}/svg/x/build"><button>Rebuild</button></a>
+    <a href="/svg/{%s p.Project.Key %}/x/build"><button>Rebuild</button></a>
   </div>
   <div class="card">
     <h3>Add a new icon</h3>
@@ -28,7 +28,7 @@
       Instead of an icon key, you may also provide a URL to any SVG.
       The SVG will be rewritten with attribution.
     </p>
-    <form action="/p/{%s p.Project.Key %}/svg/x/add" method="get">
+    <form action="/svg/{%s p.Project.Key %}/x/add" method="get">
       <table>
         <tbody>
           <tr>
@@ -51,7 +51,7 @@
     <div class="flex-wrap">
       {%- for _, k := range p.Keys -%}
       <div class="icon-container">
-        <a href="/p/{%s p.Project.Key %}/svg/{%s k %}">
+        <a href="/svg/{%s p.Project.Key %}/{%s k %}">
           <div>{%s= strings.ReplaceAll(p.Contents[k], "svg-" + k, "svg-" + k + "_adhoc") %}</div>
           <div>{%s k %}</div>
         </a>
