@@ -1,0 +1,10 @@
+{
+  "name": "SQL Editor",
+  "icon": "search",
+  "description": "Provides a SQL editor for running ad-hoc queries",
+  "authorName": "Kyle U",
+  "authorEmail": "kyle@kyleu.com",
+  "license": "CC0",
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/sqleditor",
+  "priority": 30
+}

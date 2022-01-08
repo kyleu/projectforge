@@ -1,0 +1,61 @@
+{% import (
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/util"
+  "{{{ .Package }}}/views/layout"
+) %}
+
+{% code type SQLEditor struct {
+  layout.Basic
+  SQL string
+  Columns []string
+  Results [][]interface{}
+  Timing int
+  Commit bool
+} %}
+
+{% func (p *SQLEditor) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>SQL Editor</h3>
+    <form method="post" action="">
+      <div class="mt">
+        <textarea name="sql">{%s p.SQL %}</textarea>
+      </div>
+      <div class="mt">
+        <label><input type="checkbox" name="commit" value="true" {% if p.Commit %}checked="checked"{% endif %}/> Commit Changes</label>
+      </div>
+      <div class="mt">
+        <button type="submit">Run</button>
+      </div>
+    </form>
+  </div>
+  {%- if p.Results != nil -%}
+  <div class="card">
+    <div class="right">{%s util.MicrosToMillis(p.Timing) %}</div>
+    <h3>Results</h3>
+    {%- if len(p.Results) == 0 -%}
+      <em>No rows returned</em>
+    {%- else -%}
+      <table class="mt">
+        <thead>
+          <tr>
+            {%- for _, c := range p.Columns -%}
+            <th>{%s c %}</th>
+            {%- endfor -%}
+          </tr>
+        </thead>
+        <tbody>
+          {%- for _, row := range p.Results -%}
+            <tr>
+              {%- for _, x := range row -%}
+              <td>{%v x %}</td>
+              {%- endfor -%}
+            </tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+    {%- endif -%}
+  </div>
+  {%- endif -%}
+{% endfunc %}
+
