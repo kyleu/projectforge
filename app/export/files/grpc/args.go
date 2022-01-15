@@ -9,7 +9,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-type GRPCFileArgs struct {
+type FileArgs struct {
 	Class string
 	Pkg   string
 	CPkg  string
@@ -17,33 +17,34 @@ type GRPCFileArgs struct {
 	Grp   *model.Column
 }
 
-func (a GRPCFileArgs) APISuffix() string {
+func (a FileArgs) APISuffix() string {
 	if a.API == "*" {
 		return ""
 	}
 	return "By" + util.StringToTitle(a.API)
 }
 
-func (a GRPCFileArgs) KeySuffix() string {
+func (a FileArgs) KeySuffix() string {
 	if a.API == "*" {
 		return ""
 	}
 	return "." + a.API
 }
 
-func (a GRPCFileArgs) GrpSuffix() string {
+func (a FileArgs) GrpSuffix() string {
 	if a.Grp == nil {
 		return ""
 	}
 	return "By" + a.Grp.Proper()
 }
 
-func (a GRPCFileArgs) AddStaticCheck(ref string, ret *golang.Block, grp *model.Column) {
+func (a FileArgs) AddStaticCheck(ref string, ret *golang.Block, m *model.Model, grp *model.Column, act string) {
 	if grp == nil {
 		return
 	}
 	ret.W("\tif %s.%s != %s {", ref, grp.Proper(), grp.Camel())
-	ret.W("\t\treturn nil, errors.New(\"unauthorized\")")
+	msg := "\t\treturn nil, errors.Errorf(\"unauthorized - user acting on behalf of [%%%%s] cannot %s a %s for [%%%%s]\", %s, %s.%s)"
+	ret.W(msg, act, m.Camel(), grp.Camel(), ref, grp.Proper())
 	ret.W("\t}")
 }
 

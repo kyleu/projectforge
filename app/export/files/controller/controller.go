@@ -24,7 +24,7 @@ func Controller(m *model.Model, args *model.Args) (*file.File, error) {
 	}
 	g.AddBlocks(
 		controllerCreateForm(m, nil), controllerCreate(m, g, nil),
-		controllerEditForm(m, nil), controllerEdit(m, g, nil),
+		controllerEditForm(m, nil), controllerEdit(m, g, nil), controllerDelete(m, g, nil),
 		controllerModelFromPath(m), controllerModelFromForm(m),
 	)
 	return g.Render()
@@ -73,7 +73,7 @@ func blockFor(m *model.Model, grp *model.Column, keys ...string) *golang.Block {
 	for _, k := range keys {
 		properKeys = append(properKeys, util.StringToTitle(k))
 	}
-	name := m.PackageProper() + withGroupName(strings.Join(properKeys, ""), grp)
+	name := m.Proper() + withGroupName(strings.Join(properKeys, ""), grp)
 	ret := golang.NewBlock(name, "func")
 	ret.W("func %s(rc *fasthttp.RequestCtx) {", name)
 	grpStr := ""

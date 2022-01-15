@@ -115,7 +115,7 @@ func serviceGetOne(key string, m *model.Model, cols model.Columns) *golang.Block
 	ret.W("\tsql := database.SQLSelectSimple(columnsString, %s, wc)", tableClauseFor(m))
 	ret.W("\terr := s.db.Get(ctx, ret, sql, tx, %s)", strings.Join(cols.CamelNames(), ", "))
 	ret.W("\tif err != nil {")
-	sj := strings.Join(cols.Names(), ", ")
+	sj := strings.Join(cols.CamelNames(), ", ")
 	decls := make([]string, 0, len(cols))
 	for _, c := range cols {
 		decls = append(decls, c.Camel()+" [%%s]")
@@ -142,7 +142,7 @@ func serviceGetMultiple(key string, m *model.Model, cols model.Columns) *golang.
 	ret.W("\tret := dtos{}")
 	ret.W("\terr := s.db.Select(ctx, &ret, sql, tx, %s)", strings.Join(cols.CamelNames(), ", "))
 	ret.W("\tif err != nil {")
-	sj := strings.Join(cols.Names(), ", ")
+	sj := strings.Join(cols.CamelNames(), ", ")
 	decls := make([]string, 0, len(cols))
 	for _, c := range cols {
 		decls = append(decls, c.Camel()+" [%%s]")

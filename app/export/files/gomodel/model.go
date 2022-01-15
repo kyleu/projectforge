@@ -70,6 +70,8 @@ func modelFromMap(m *model.Model) *golang.Block {
 		ret.W("\t\t\treturn nil, err")
 		ret.W("\t\t}")
 	}
+	ret.W("\t\t// $PF_SECTION_START(pkchecks)$")
+	ret.W("\t\t// $PF_SECTION_END(pkchecks)$")
 	ret.W("\t}")
 	for _, col := range cols {
 		if !col.PK {
@@ -79,6 +81,8 @@ func modelFromMap(m *model.Model) *golang.Block {
 			ret.W("\t}")
 		}
 	}
+	ret.W("\t// $PF_SECTION_START(extrachecks)$")
+	ret.W("\t// $PF_SECTION_END(extrachecks)$")
 	ret.W("\treturn ret, nil")
 	ret.W("}")
 

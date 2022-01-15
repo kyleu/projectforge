@@ -4,10 +4,10 @@ package app
 import (
 	"context"{{{ if .HasModule "migration" }}}
 
-	"github.com/pkg/errors"
+	"github.com/pkg/errors"{{{ end }}}
 
+	"{{{ .Package }}}/app/lib/database/migrate"{{{ if .HasModule "migration" }}}
 	"{{{ .Package }}}/queries/migrations"{{{ end }}}
-	"{{{ .Package }}}/app/lib/database/migrate"
 )
 
 type Services struct {

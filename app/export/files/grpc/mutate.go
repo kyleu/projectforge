@@ -7,15 +7,15 @@ import (
 	"github.com/kyleu/projectforge/app/export/model"
 )
 
-func grpcCall(k string, m *model.Model, grpcArgs string, grpcRet string, ga *GRPCFileArgs) *golang.Block {
+func grpcCall(k string, m *model.Model, isUpdate bool, grpcArgs string, grpcRet string, ga *FileArgs) *golang.Block {
 	ret := golang.NewBlock("grpc"+k, "func")
 	ret.W("func %s%s%s(%s) %s {", m.Proper(), k, ga.APISuffix(), grpcArgs, grpcRet)
-	ret.W("\tmodel, err := %sFromRequest(p.R)", m.Camel())
+	ret.W("\tmodel, err := %sFromRequest(p.R, %t)", m.Camel(), isUpdate)
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, err")
 	ret.W("\t}")
 	grpcAddSection(ret, strings.ToLower(k), 1)
-	ga.AddStaticCheck("model", ret, ga.Grp)
+	ga.AddStaticCheck("model", ret, m, ga.Grp, strings.ToLower(k))
 	ret.W("\terr = appState.Services.%s.%s(p.Ctx, nil, model)", m.Proper(), k)
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, err")
@@ -26,7 +26,7 @@ func grpcCall(k string, m *model.Model, grpcArgs string, grpcRet string, ga *GRP
 	return ret
 }
 
-func grpcDelete(m *model.Model, grpcArgs string, grpcRet string, ga *GRPCFileArgs) *golang.Block {
+func grpcDelete(m *model.Model, grpcArgs string, grpcRet string, ga *FileArgs) *golang.Block {
 	pks := m.PKs()
 	ret := golang.NewBlock("grpcDelete", "func")
 	ret.W("func %sDelete%s(%s) %s {", m.Proper(), ga.APISuffix(), grpcArgs, grpcRet)
@@ -43,7 +43,7 @@ func grpcDelete(m *model.Model, grpcArgs string, grpcRet string, ga *GRPCFileArg
 	ret.W("\t\treturn nil, err")
 	ret.W("\t}")
 	grpcAddSection(ret, "delete", 1)
-	ga.AddStaticCheck("orig", ret, ga.Grp)
+	ga.AddStaticCheck("orig", ret, m, ga.Grp, "delete")
 	ret.W("\terr = appState.Services.%s.Delete(p.Ctx, nil, %s)", m.Proper(), strings.Join(pks.Names(), ", "))
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, err")
@@ -56,7 +56,7 @@ func grpcDelete(m *model.Model, grpcArgs string, grpcRet string, ga *GRPCFileArg
 
 func grpcFromRequest(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("grpcFromRequest", "func")
-	ret.W("func %sFromRequest(r *provider.NuevoRequest) (*%s, error) {", m.Package, m.ClassRef())
+	ret.W("func %sFromRequest(r *provider.NuevoRequest, isUpdate bool) (*%s, error) {", m.Package, m.ClassRef())
 	ret.W("\tinput := provider.GetRequest(r, \"%s\")", m.Camel())
 	ret.W("\tif input == nil {")
 	ret.W("\t\treturn nil, errors.New(\"must provide [%s] in request data\")", m.Camel())
@@ -71,6 +71,8 @@ func grpcFromRequest(m *model.Model) *golang.Block {
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, errors.Wrap(err, \"unable to parse input data as %s\")", m.Camel())
 	ret.W("\t}")
+	ret.W("\t// $PF_SECTION_START(validate)$")
+	ret.W("\t// $PF_SECTION_END(validate)$")
 	ret.W("\treturn ret, nil")
 	ret.W("}")
 	return ret

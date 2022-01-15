@@ -45,7 +45,7 @@ func exportViewGroupedBody(m *model.Model, grp *model.Column) *golang.Block {
 	ret.W("          {%%- for _, x := range p." + grp.ProperPlural() + " -%%}")
 	ret.W("          <tr>")
 	ret.W("            <td><a href=\"/" + m.Camel() + "/" + grp.Camel() + "/{%%s x.Key %%}\">{%%s x.Key %%}</a></td>")
-	ret.W("            <td>{%%v x.Count %%}</td>")
+	ret.W("            <td>{%%d x.Count %%}</td>")
 	ret.W("          </tr>")
 	ret.W("          {%%- endfor -%%}")
 	ret.W("        </tbody>")

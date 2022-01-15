@@ -21,22 +21,22 @@ func Grouping(m *model.Model, args *model.Args, grp *model.Column) (*file.File, 
 	g.AddBlocks(
 		controllerGrouped(m, grp), controllerList(m, grp), controllerDetail(m, grp),
 		controllerCreateForm(m, grp), controllerCreate(m, g, grp),
-		controllerEditForm(m, grp), controllerEdit(m, g, grp),
+		controllerEditForm(m, grp), controllerEdit(m, g, grp), controllerDelete(m, g, grp),
 	)
 	return g.Render()
 }
 
 func controllerGrouped(m *model.Model, grp *model.Column) *golang.Block {
-	name := fmt.Sprintf("%s%sList", m.PackageProper(), grp.Proper())
+	name := fmt.Sprintf("%s%sList", m.Proper(), grp.Proper())
 	ret := golang.NewBlock(name, "func")
 	ret.W("func %s(rc *fasthttp.RequestCtx) {", name)
 	ret.W("\tact(\"%s.%s.list\", rc, func(as *app.State, ps *cutil.PageState) (string, error) {", m.Package, grp.Camel())
 	ret.W("\t\tps.Title = %q", grp.ProperPlural())
 	suffix := ""
 	if m.IsSoftDelete() {
-		suffix = ", cutil.RequestCtxBool(rc, \"includeDeleted\")"
+		suffix = ", " + incDel
 	}
-	ret.W("\t\tret, err := as.Services.%s.Get%s(ps.Context, nil%s)", m.PackageProper(), grp.ProperPlural(), suffix)
+	ret.W("\t\tret, err := as.Services.%s.Get%s(ps.Context, nil%s)", m.Proper(), grp.ProperPlural(), suffix)
 	ret.W("\t\tif err != nil {")
 	ret.W("\t\t\treturn \"\", err")
 	ret.W("\t\t}")

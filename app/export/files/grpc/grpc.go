@@ -29,7 +29,7 @@ func GRPC(m *model.Model, args *model.Args) (file.Files, error) {
 	return ret, nil
 }
 
-func GetGRPCFileArgs(m *model.Model, args *model.Args) ([]*GRPCFileArgs, error) {
+func GetGRPCFileArgs(m *model.Model, args *model.Args) ([]*FileArgs, error) {
 	grpcPackage := args.Config.GetStringOpt("grpcPackage")
 	if grpcPackage == "" {
 		return nil, errors.New("must provide [grpcPackage] in the export config")
@@ -44,23 +44,24 @@ func GetGRPCFileArgs(m *model.Model, args *model.Args) ([]*GRPCFileArgs, error) 
 		grpcGroups = util.ValueMap{"*": "*"}
 	}
 
-	var ret []*GRPCFileArgs
+	var ret []*FileArgs
 	for k, grpIface := range grpcGroups {
 		grp, ok := grpIface.(string)
 		if !ok {
 			return nil, errors.New("grpcGroups values must be strings")
 		}
 		if grp == "*" {
-			ret = append(ret, &GRPCFileArgs{Class: grpcClass, Pkg: grpcPackage, CPkg: cPkg, API: k, Grp: nil})
+			ret = append(ret, &FileArgs{Class: grpcClass, Pkg: grpcPackage, CPkg: cPkg, API: k, Grp: nil})
 		} else {
 			g := m.Columns.Get(grp)
 			if g == nil {
-				return nil, errors.Errorf("grpcGroups references missing column [%s]", grp)
+				continue
+				// return nil, errors.Errorf("grpcGroups references missing column [%s]", grp)
 			}
 			if !g.HasTag("grouped") {
 				return nil, errors.Errorf("grpcGroups references non-grouped column [%s]", grp)
 			}
-			ret = append(ret, &GRPCFileArgs{Class: grpcClass, Pkg: grpcPackage, CPkg: cPkg, API: k, Grp: g})
+			ret = append(ret, &FileArgs{Class: grpcClass, Pkg: grpcPackage, CPkg: cPkg, API: k, Grp: g})
 		}
 	}
 	sort.Slice(ret, func(i, j int) bool {
@@ -70,13 +71,13 @@ func GetGRPCFileArgs(m *model.Model, args *model.Args) ([]*GRPCFileArgs, error) 
 	return ret, nil
 }
 
-func grpcFile(m *model.Model, args *model.Args, ga *GRPCFileArgs) (*file.File, error) {
+func grpcFile(m *model.Model, args *model.Args, ga *FileArgs) (*file.File, error) {
 	fn := m.Package
 	if ga.API != "*" {
 		fn += "by" + ga.API
 	}
 	g := golang.NewFile(ga.Pkg, []string{"app", ga.Pkg}, fn)
-	g.AddImport(helper.ImpErrors, helper.ImpFilter)
+	g.AddImport(helper.ImpErrors, helper.ImpFilter, helper.ImpAppUtil)
 	g.AddImport(helper.AppImport("app/lib/" + ga.CPkg))
 	if ga.Grp == nil {
 		g.AddImport(helper.AppImport("app/" + m.Package))
@@ -89,9 +90,9 @@ func grpcFile(m *model.Model, args *model.Args, ga *GRPCFileArgs) (*file.File, e
 		grpcList(m, grpcArgs, grpcRet, ga),
 		grpcSearch(m, grpcArgs, grpcRet, ga),
 		grpcDetail(m, grpcArgs, grpcRet, ga),
-		grpcCall("Create", m, grpcArgs, grpcRet, ga),
-		grpcCall("Update", m, grpcArgs, grpcRet, ga),
-		grpcCall("Save", m, grpcArgs, grpcRet, ga),
+		grpcCall("Create", m, false, grpcArgs, grpcRet, ga),
+		grpcCall("Update", m, true, grpcArgs, grpcRet, ga),
+		grpcCall("Save", m, true, grpcArgs, grpcRet, ga),
 		grpcDelete(m, grpcArgs, grpcRet, ga),
 	)
 	if ga.Grp == nil {

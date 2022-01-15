@@ -33,7 +33,7 @@ func searchModel(m *model.Model) string {
 	if m.IsSoftDelete() {
 		suffix = ", true"
 	}
-	f.W("\t\tmodels, err := as.Services.%s.Search(ctx, params.Q, nil, params.PS.Get(%q, nil, as.Logger)%s)", m.PackageProper(), m.Package, suffix)
+	f.W("\t\tmodels, err := as.Services.%s.Search(ctx, params.Q, nil, params.PS.Get(%q, nil, as.Logger)%s)", m.Proper(), m.Package, suffix)
 	f.W("\t\tif err != nil {")
 	f.W("\t\t\treturn nil, errors.Wrap(err, \"\")")
 	f.W("\t\t}")

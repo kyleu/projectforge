@@ -37,7 +37,7 @@
     {%= vutil.Indent(true, indent + 1) %}
     {% if active %}<li class="active">{% else %}<li>{% endif %}
       {%= vutil.Indent(true, indent + 2) %}
-      <input id="{%s itemID %}-input" type="checkbox"{% if active %} checked="checked"{% endif %} hidden />
+      <input id="{%s itemID %}-input" type="checkbox"{% if active %}{% space %}checked="checked"{% endif %}{% space %}hidden />
       {%= vutil.Indent(true, indent + 2) %}
       {% if final %}<label class="final" for="{%s itemID %}-input" title="{%s i.Description %}">{% else %}<label for="{%s itemID %}-input" title="{%s i.Description %}">{% endif %}
         {% if i.Route != "" %}

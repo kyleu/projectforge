@@ -54,6 +54,8 @@ func exportViewDetailBody(m *model.Model) *golang.Block {
 	if m.IsRevision() {
 		exportViewDetailRevisions(ret, m)
 	}
+	ret.W("  {%%- comment %%}$PF_SECTION_START(extra)${%% endcomment -%%}")
+	ret.W("  {%%- comment %%}$PF_SECTION_END(extra)${%% endcomment -%%}")
 	ret.W("{%% endfunc %%}")
 	return ret
 }

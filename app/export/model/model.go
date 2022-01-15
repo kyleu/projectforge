@@ -6,18 +6,19 @@ import (
 )
 
 type Model struct {
-	Name         string           `json:"name"`
-	Package      string           `json:"package"`
-	Description  string           `json:"description,omitempty"`
-	Icon         string           `json:"icon,omitempty"`
-	Ordering     filter.Orderings `json:"ordering,omitempty"`
-	Search       []string         `json:"search,omitempty"`
-	History      string           `json:"history,omitempty"`
-	Tags         []string         `json:"tags,omitempty"`
-	Config       util.ValueMap    `json:"config,omitempty"`
-	Columns      Columns          `json:"columns"`
-	historyMap   *HistoryMap
-	historyMapDB *HistoryMap
+	Name           string           `json:"name"`
+	Package        string           `json:"package"`
+	Description    string           `json:"description,omitempty"`
+	Icon           string           `json:"icon,omitempty"`
+	Ordering       filter.Orderings `json:"ordering,omitempty"`
+	Search         []string         `json:"search,omitempty"`
+	History        string           `json:"history,omitempty"`
+	Tags           []string         `json:"tags,omitempty"`
+	ProperOverride string           `json:"proper,omitempty"`
+	Config         util.ValueMap    `json:"config,omitempty"`
+	Columns        Columns          `json:"columns"`
+	historyMap     *HistoryMap
+	historyMapDB   *HistoryMap
 }
 
 func (m *Model) Camel() string {
@@ -25,7 +26,10 @@ func (m *Model) Camel() string {
 }
 
 func (m *Model) Proper() string {
-	return util.StringToCamel(m.Name)
+	if m.ProperOverride == "" {
+		return util.StringToCamel(m.Name)
+	}
+	return util.StringToCamel(m.ProperOverride)
 }
 
 func (m *Model) Plural() string {
@@ -38,10 +42,6 @@ func (m *Model) ProperPlural() string {
 
 func (m *Model) FirstLetter() string {
 	return m.Name[0:1]
-}
-
-func (m *Model) PackageProper() string {
-	return util.StringToCamel(m.Package)
 }
 
 func (m *Model) IconSafe() string {

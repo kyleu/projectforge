@@ -9,6 +9,8 @@ import (
 	"github.com/kyleu/projectforge/app/util"
 )
 
+const incDel = "cutil.RequestCtxBool(rc, \"includeDeleted\")"
+
 func controllerList(m *model.Model, grp *model.Column) *golang.Block {
 	ret := blockFor(m, grp, "list")
 	meth := "List"
@@ -19,14 +21,14 @@ func controllerList(m *model.Model, grp *model.Column) *golang.Block {
 		controllerArgFor(grp, ret, "\"\"", 2)
 	}
 
-	ret.W("\t\tps.Title = %q", util.StringToPlural(m.PackageProper()))
+	ret.W("\t\tps.Title = %q", util.StringToPlural(m.Proper()))
 	ret.W("\t\tparams := cutil.ParamSetFromRequest(rc)")
 	suffix := ""
 	if m.IsSoftDelete() {
-		suffix = ", cutil.RequestCtxBool(rc, \"includeDeleted\")"
+		suffix = ", " + incDel
 	}
 	msg := "\t\tret, err := as.Services.%s.%s(ps.Context, nil%s, params.Get(%q, nil, ps.Logger)%s)"
-	ret.W(msg, m.PackageProper(), meth, grpArgs, m.Package, suffix)
+	ret.W(msg, m.Proper(), meth, grpArgs, m.Package, suffix)
 	ret.W("\t\tif err != nil {")
 	ret.W("\t\t\treturn \"\", err")
 	ret.W("\t\t}")
@@ -57,7 +59,7 @@ func controllerDetail(m *model.Model, grp *model.Column) *golang.Block {
 		}
 		prmsStr := strings.Join(prms, ", ")
 		msg := "\t\trevisions, err := as.Services.%s.GetAllRevisions(ps.Context, nil, %s, params.Get(%q, nil, ps.Logger), false)"
-		ret.W(msg, m.PackageProper(), prmsStr, m.Package)
+		ret.W(msg, m.Proper(), prmsStr, m.Package)
 	}
 	ret.W("\t\tps.Title = ret.String()")
 	ret.W("\t\tps.Data = ret")
@@ -86,7 +88,7 @@ func checkGrp(ret *golang.Block, grp *model.Column, override ...string) {
 }
 
 func controllerModelFromPath(m *model.Model) *golang.Block {
-	ret := golang.NewBlock(m.PackageProper()+"FromPath", "func")
+	ret := golang.NewBlock(m.Proper()+"FromPath", "func")
 	ret.W("func %sFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*%s, error) {", m.Package, m.ClassRef())
 	pks := m.PKs()
 	for _, col := range pks {
@@ -99,9 +101,9 @@ func controllerModelFromPath(m *model.Model) *golang.Block {
 	suffix := ""
 	if m.IsSoftDelete() {
 		suffix = ", includeDeleted"
-		ret.W("\tincludeDeleted := rc.UserValue(\"includeDeleted\") != nil || cutil.RequestCtxBool(rc, \"includeDeleted\")")
+		ret.W("\tincludeDeleted := rc.UserValue(\"includeDeleted\") != nil || " + incDel)
 	}
-	ret.W("\treturn as.Services.%s.Get(ps.Context, nil, %s%s)", m.PackageProper(), strings.Join(args, ", "), suffix)
+	ret.W("\treturn as.Services.%s.Get(ps.Context, nil, %s%s)", m.Proper(), strings.Join(args, ", "), suffix)
 	ret.W("}")
 
 	return ret

@@ -7,13 +7,14 @@ import (
 	"github.com/kyleu/projectforge/app/export/model"
 )
 
-func grpcList(m *model.Model, grpcArgs string, grpcRet string, ga *GRPCFileArgs) *golang.Block {
+func grpcList(m *model.Model, grpcArgs string, grpcRet string, ga *FileArgs) *golang.Block {
 	ret := golang.NewBlock("grpcList", "func")
 	ret.W("func %sList%s(%s) %s {", m.Proper(), ga.APISuffix(), grpcArgs, grpcRet)
 	idClause, suffix := idClauseFor(m)
 	if idClause != "" {
 		ret.W(idClause)
 	}
+	ret.W("\tout := util.ValueMap{}")
 	grpcAddSection(ret, "list", 1)
 	if ga.Grp == nil {
 		ret.W("\tret, err := appState.Services.%s.List(p.Ctx, nil, &filter.Params{}%s)", m.Proper(), suffix)
@@ -23,13 +24,14 @@ func grpcList(m *model.Model, grpcArgs string, grpcRet string, ga *GRPCFileArgs)
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, err")
 	ret.W("\t}")
-	ret.W("\tprovider.SetOutput(p.TX, ret)")
+	ret.W("\tout[%q] = ret", "results")
+	ret.W("\tprovider.SetOutput(p.TX, out)")
 	ret.W("\treturn p.TX, nil")
 	ret.W("}")
 	return ret
 }
 
-func grpcSearch(m *model.Model, grpcArgs string, grpcRet string, ga *GRPCFileArgs) *golang.Block {
+func grpcSearch(m *model.Model, grpcArgs string, grpcRet string, ga *FileArgs) *golang.Block {
 	ret := golang.NewBlock("grpcSearch", "func")
 	ret.W("func %sSearch%s(%s) %s {", m.Proper(), ga.APISuffix(), grpcArgs, grpcRet)
 	idClause, suffix := idClauseFor(m)
@@ -55,7 +57,7 @@ func grpcSearch(m *model.Model, grpcArgs string, grpcRet string, ga *GRPCFileArg
 	return ret
 }
 
-func grpcDetail(m *model.Model, grpcArgs string, grpcRet string, ga *GRPCFileArgs) *golang.Block {
+func grpcDetail(m *model.Model, grpcArgs string, grpcRet string, ga *FileArgs) *golang.Block {
 	ret := golang.NewBlock("grpcDetail", "func")
 	ret.W("func %sDetail%s(%s) %s {", m.Proper(), ga.APISuffix(), grpcArgs, grpcRet)
 	idClause, suffix := idClauseFor(m)
@@ -72,7 +74,7 @@ func grpcDetail(m *model.Model, grpcArgs string, grpcRet string, ga *GRPCFileArg
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, err")
 	ret.W("\t}")
-	ga.AddStaticCheck("ret", ret, ga.Grp)
+	ga.AddStaticCheck("ret", ret, m, ga.Grp, "retrieve")
 	ret.W("\tprovider.SetOutput(p.TX, ret)")
 	ret.W("\treturn p.TX, nil")
 	ret.W("}")

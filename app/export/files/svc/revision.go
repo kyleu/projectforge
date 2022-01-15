@@ -51,9 +51,9 @@ func serviceGetAllRevisions(m *model.Model) (*golang.Block, error) {
 	ret.W("\tret := dtos{}")
 	ret.W("\terr := s.db.Select(ctx, &ret, sql, tx, %s)", strings.Join(pks.Names(), ", "))
 	ret.W("\tif err != nil {")
-	ret.W("\t\treturn nil, errors.Wrap(err, \"unable to get %s\")", util.StringToPlural(m.PackageProper()))
+	ret.W("\t\treturn nil, errors.Wrap(err, \"unable to get %s\")", util.StringToPlural(m.Proper()))
 	ret.W("\t}")
-	ret.W("\treturn ret.To%s(), nil", util.StringToPlural(m.PackageProper()))
+	ret.W("\treturn ret.To%s(), nil", util.StringToPlural(m.Proper()))
 	ret.W("}")
 	return ret, nil
 }
@@ -62,7 +62,7 @@ func serviceGetRevision(m *model.Model) (*golang.Block, error) {
 	revCol := m.HistoryColumn()
 	ret := golang.NewBlock(fmt.Sprintf("Get%s", revCol.Proper()), "func")
 	decl := "func (s *Service) Get%s(ctx context.Context, tx *sqlx.Tx, %s, %s int) (*%s, error) {"
-	ret.W(decl, revCol.Proper(), m.PKs().Args(), revCol.Camel(), m.PackageProper())
+	ret.W(decl, revCol.Proper(), m.PKs().Args(), revCol.Camel(), m.Proper())
 	placeholders := make([]string, 0, len(m.PKs()))
 	for idx, pk := range m.PKs() {
 		placeholders = append(placeholders, fmt.Sprintf("%s = $%d", pk.Name, idx+1))
@@ -78,7 +78,7 @@ func serviceGetRevision(m *model.Model) (*golang.Block, error) {
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, err")
 	ret.W("\t}")
-	ret.W("\treturn ret.To%s(), nil", m.PackageProper())
+	ret.W("\treturn ret.To%s(), nil", m.Proper())
 	ret.W("}")
 	return ret, nil
 }

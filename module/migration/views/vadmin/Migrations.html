@@ -4,20 +4,30 @@
   "{{{ .Package }}}/app"
   "{{{ .Package }}}/app/lib/database/migrate"
   "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/views/components"
   "{{{ .Package }}}/views/layout"
 ) %}
 
 {% code type Migrations struct {
   layout.Basic
-  Migrations migrate.MigrationFiles
+  Available migrate.MigrationFiles
+  Applied migrate.Migrations
 } %}
 
 {% func (p *Migrations) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>Database Migrations</h3>
   </div>
-  {%- for _, mf := range p.Migrations -%}
+  {%- for idx, mf := range p.Available -%}
   <div class="card">
+    <div class="right">
+      {%- code curr := p.Applied.GetByIndex(idx+1) -%}
+      {%- if curr == nil -%}
+      <em>Not Applied</em>
+      {%- else -%}
+      Applied {%= components.DisplayTimestamp(&curr.Created) %}
+      {%- endif -%}
+    </div>
     <h3>{%s mf.Title %}</h3>
     {%s= cutil.FormatLangIgnoreErrors(strings.TrimSpace(mf.Content), "sql") %}
   </div>

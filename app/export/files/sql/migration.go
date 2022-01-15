@@ -35,7 +35,7 @@ func Migration(m *model.Model, args *model.Args) (*file.File, error) {
 
 func sqlDrop(m *model.Model) (*golang.Block, error) {
 	ret := golang.NewBlock("SQLDrop", "sql")
-	ret.W("-- {%% func " + m.PackageProper() + "Drop() %%}")
+	ret.W("-- {%% func " + m.Proper() + "Drop() %%}")
 	if m.IsRevision() {
 		ret.W("drop table if exists %q;", fmt.Sprintf("%s_%s", m.Package, m.HistoryColumn().Name))
 	}
@@ -46,7 +46,7 @@ func sqlDrop(m *model.Model) (*golang.Block, error) {
 
 func sqlCreate(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("SQLCreate", "sql")
-	ret.W("-- {%% func " + m.PackageProper() + "Create() %%}")
+	ret.W("-- {%% func " + m.Proper() + "Create() %%}")
 	ret.W("create table if not exists %q (", m.Package)
 	for _, col := range m.Columns {
 		ret.W("  %q %s,", col.Name, col.ToSQLType())
@@ -65,7 +65,7 @@ func sqlCreate(m *model.Model) *golang.Block {
 
 func addIndex(ret *golang.Block, tbl string, names ...string) {
 	name := fmt.Sprintf("%s__%s_idx", tbl, strings.Join(names, "_"))
-	msg := "create index if not exists %q on %q (%q);"
+	msg := "create index if not exists %q on %q(%q);"
 	ret.W("")
 	ret.W(msg, name, tbl, strings.Join(names, ", "))
 }

@@ -36,7 +36,7 @@ func controllerCreate(m *model.Model, g *golang.File, grp *model.Column) *golang
 	ret.W("\t\t\treturn \"\", errors.Wrap(err, \"unable to parse %s from form\")", m.Proper())
 	ret.W("\t\t}")
 	checkGrp(ret, grp)
-	ret.W("\t\terr = as.Services.%s.Create(ps.Context, nil, ret)", m.PackageProper())
+	ret.W("\t\terr = as.Services.%s.Create(ps.Context, nil, ret)", m.Proper())
 	ret.W("\t\tif err != nil {")
 	ret.W("\t\t\treturn \"\", errors.Wrap(err, \"unable to save newly-created %s\")", m.Proper())
 	ret.W("\t\t}")
@@ -89,12 +89,37 @@ func controllerEdit(m *model.Model, g *golang.File, grp *model.Column) *golang.B
 	for _, pk := range m.PKs() {
 		ret.W("\t\tfrm.%s = ret.%s", pk.Proper(), pk.Proper())
 	}
-	ret.W("\t\terr = as.Services.%s.Update(ps.Context, nil, frm)", m.PackageProper())
+	ret.W("\t\terr = as.Services.%s.Update(ps.Context, nil, frm)", m.Proper())
 	ret.W("\t\tif err != nil {")
 	ret.W("\t\t\treturn \"\", errors.Wrapf(err, \"unable to update %s [%%%%s]\", frm.String())", m.Proper())
 	ret.W("\t\t}")
 	ret.W("\t\tmsg := fmt.Sprintf(\"" + m.Proper() + " [%%s] updated\", frm.String())")
 	ret.W("\t\treturn flashAndRedir(true, msg, frm.WebPath(), rc, ps)")
+	ret.W("\t})")
+	ret.W("}")
+	return ret
+}
+
+func controllerDelete(m *model.Model, g *golang.File, grp *model.Column) *golang.Block {
+	ret := blockFor(m, grp, "delete")
+	if grp != nil {
+		controllerArgFor(grp, ret, "\"\"", 2)
+	}
+	ret.W("\t\tret, err := %sFromPath(rc, as, ps)", m.Package)
+	ret.W("\t\tif err != nil {")
+	ret.W("\t\t\treturn \"\", err")
+	ret.W("\t\t}")
+	checkGrp(ret, grp)
+	pkCamels := make([]string, 0, len(m.PKs()))
+	for _, pk := range m.PKs() {
+		pkCamels = append(pkCamels, "ret."+pk.Proper())
+	}
+	ret.W("\t\terr = as.Services.%s.Delete(ps.Context, nil, %s)", m.Proper(), strings.Join(pkCamels, ", "))
+	ret.W("\t\tif err != nil {")
+	ret.W("\t\t\treturn \"\", errors.Wrapf(err, \"unable to delete %s [%%%%s]\", ret.String())", m.Proper())
+	ret.W("\t\t}")
+	ret.W("\t\tmsg := fmt.Sprintf(\"" + m.Proper() + " [%%s] deleted\", ret.String())")
+	ret.W("\t\treturn flashAndRedir(true, msg, \"/%s\", rc, ps)", m.Camel())
 	ret.W("\t})")
 	ret.W("}")
 	return ret

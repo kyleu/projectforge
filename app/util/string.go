@@ -74,6 +74,13 @@ func StringToLowerCamel(s string) string {
 	return acr(strcase.ToLowerCamel(s))
 }
 
+func TruncateText(s string, max int) string {
+	if max > len(s) {
+		return s
+	}
+	return s[:strings.LastIndex(s[:max], " ")]
+}
+
 func acr(ret string) string {
 	for _, a := range acronyms {
 		for {

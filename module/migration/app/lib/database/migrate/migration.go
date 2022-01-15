@@ -9,8 +9,6 @@ type Migration struct {
 	Created time.Time `json:"created"`
 }
 
-type Migrations []*Migration
-
 type migrationDTO struct {
 	Idx     int       `db:"idx"`
 	Title   string    `db:"title"`
@@ -33,4 +31,15 @@ func toMigrations(dtos []migrationDTO) Migrations {
 		ret = append(ret, dto.toMigration())
 	}
 	return ret
+}
+
+type Migrations []*Migration
+
+func (m Migrations) GetByIndex(idx int) *Migration {
+	for _, x := range m {
+		if x.Idx == idx {
+			return x
+		}
+	}
+	return nil
 }

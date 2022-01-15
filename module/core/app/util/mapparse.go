@@ -18,20 +18,20 @@ func (m ValueMap) ParseArray(path string, allowMissing bool, allowEmpty bool) ([
 	switch t := result.(type) {
 	case []interface{}:
 		if (!allowEmpty) && len(t) == 0 {
-			return nil, errors.Wrap(err, "empty array")
+			return nil, errors.New("empty array")
 		}
 		return t, nil
 	case []string:
 		if (!allowEmpty) && len(t) == 0 {
-			return nil, errors.Wrap(err, "empty array")
+			return nil, errors.New("empty array")
 		}
 		return InterfaceArrayFromStrings(t), nil
 	case []int:
 		if (!allowEmpty) && len(t) == 0 {
-			return nil, errors.Wrap(err, "empty array")
+			return nil, errors.New("empty array")
 		}
 		a := make([]interface{}, 0, len(t))
-		for _, x := range a {
+		for _, x := range t {
 			a = append(a, x)
 		}
 		return a, nil
@@ -121,12 +121,12 @@ func (m ValueMap) ParseMap(path string, allowMissing bool, allowEmpty bool) (Val
 	switch t := result.(type) {
 	case ValueMap:
 		if (!allowEmpty) && len(t) == 0 {
-			return nil, errors.Wrap(err, "empty map")
+			return nil, errors.New("empty map")
 		}
 		return t, nil
 	case map[string]interface{}:
 		if (!allowEmpty) && len(t) == 0 {
-			return nil, errors.Wrap(err, "empty map")
+			return nil, errors.New("empty map")
 		}
 		return t, nil
 	case string:
@@ -157,9 +157,14 @@ func (m ValueMap) ParseString(path string, allowMissing bool, allowEmpty bool) (
 	switch t := result.(type) {
 	case string:
 		if (!allowEmpty) && t == "" {
-			return "", errors.Wrap(err, "empty string")
+			return "", errors.New("empty string")
 		}
 		return t, nil
+	case []string:
+		if (!allowEmpty) && len(t) == 0 || t[0] == "" {
+			return "", errors.New("empty string")
+		}
+		return strings.Join(t, "|"), nil
 	case nil:
 		if !allowEmpty {
 			return "", errors.Errorf("could not find string for path [%s]", path)

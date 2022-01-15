@@ -28,58 +28,58 @@ func GRPC(f *file.File, args *model.Args) error {
 	return file.Inject(f, content)
 }
 
-func grpcAll(m *model.Model, fa *grpc.GRPCFileArgs) []string {
+func grpcAll(m *model.Model, fa *grpc.FileArgs) []string {
 	return []string{
 		grpcList(m, fa), grpcSearch(m, fa), grpcDetail(m, fa),
 		grpcCreate(m, fa), grpcUpdate(m, fa), grpcSave(m, fa), grpcDelete(m, fa),
 	}
 }
 
-func grpcList(m *model.Model, fa *grpc.GRPCFileArgs) string {
+func grpcList(m *model.Model, fa *grpc.FileArgs) string {
 	f := golang.NewBlock("list", "inject")
 	f.W("\tcase \"%s.list%s\":", m.Package, fa.KeySuffix())
-	f.W("\t\treturn %sList%s(p)", m.PackageProper(), fa.APISuffix())
+	f.W("\t\treturn %sList%s(p)", m.Proper(), fa.APISuffix())
 	return f.Render()
 }
 
-func grpcSearch(m *model.Model, fa *grpc.GRPCFileArgs) string {
+func grpcSearch(m *model.Model, fa *grpc.FileArgs) string {
 	f := golang.NewBlock("search", "inject")
 	f.W("\tcase \"%s.search%s\":", m.Package, fa.KeySuffix())
-	f.W("\t\treturn %sSearch%s(p)", m.PackageProper(), fa.APISuffix())
+	f.W("\t\treturn %sSearch%s(p)", m.Proper(), fa.APISuffix())
 	return f.Render()
 }
 
-func grpcDetail(m *model.Model, fa *grpc.GRPCFileArgs) string {
+func grpcDetail(m *model.Model, fa *grpc.FileArgs) string {
 	f := golang.NewBlock("detail", "inject")
 	f.W("\tcase \"%s.detail%s\":", m.Package, fa.KeySuffix())
-	f.W("\t\treturn %sDetail%s(p)", m.PackageProper(), fa.APISuffix())
+	f.W("\t\treturn %sDetail%s(p)", m.Proper(), fa.APISuffix())
 	return f.Render()
 }
 
-func grpcCreate(m *model.Model, fa *grpc.GRPCFileArgs) string {
+func grpcCreate(m *model.Model, fa *grpc.FileArgs) string {
 	f := golang.NewBlock("create", "inject")
 	f.W("\tcase \"%s.create%s\":", m.Package, fa.KeySuffix())
-	f.W("\t\treturn %sCreate%s(p)", m.PackageProper(), fa.APISuffix())
+	f.W("\t\treturn %sCreate%s(p)", m.Proper(), fa.APISuffix())
 	return f.Render()
 }
 
-func grpcUpdate(m *model.Model, fa *grpc.GRPCFileArgs) string {
+func grpcUpdate(m *model.Model, fa *grpc.FileArgs) string {
 	f := golang.NewBlock("update", "inject")
 	f.W("\tcase \"%s.update%s\":", m.Package, fa.KeySuffix())
-	f.W("\t\treturn %sUpdate%s(p)", m.PackageProper(), fa.APISuffix())
+	f.W("\t\treturn %sUpdate%s(p)", m.Proper(), fa.APISuffix())
 	return f.Render()
 }
 
-func grpcSave(m *model.Model, fa *grpc.GRPCFileArgs) string {
+func grpcSave(m *model.Model, fa *grpc.FileArgs) string {
 	f := golang.NewBlock("save", "inject")
 	f.W("\tcase \"%s.save%s\":", m.Package, fa.KeySuffix())
-	f.W("\t\treturn %sSave%s(p)", m.PackageProper(), fa.APISuffix())
+	f.W("\t\treturn %sSave%s(p)", m.Proper(), fa.APISuffix())
 	return f.Render()
 }
 
-func grpcDelete(m *model.Model, fa *grpc.GRPCFileArgs) string {
+func grpcDelete(m *model.Model, fa *grpc.FileArgs) string {
 	f := golang.NewBlock("delete", "inject")
 	f.W("\tcase \"%s.delete%s\":", m.Package, fa.KeySuffix())
-	f.W("\t\treturn %sDelete%s(p)", m.PackageProper(), fa.APISuffix())
+	f.W("\t\treturn %sDelete%s(p)", m.Proper(), fa.APISuffix())
 	return f.Render()
 }
