@@ -1,10 +1,10 @@
 package model
 
 import (
-	"{{{ .Package }}}/app/lib/schema/field"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
+	"{{{ .Package }}}/app/lib/schema/field"
 	"{{{ .Package }}}/app/util"
 )
 

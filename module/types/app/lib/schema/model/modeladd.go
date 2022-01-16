@@ -3,8 +3,9 @@ package model
 import (
 	"fmt"
 
-	"{{{ .Package }}}/app/lib/schema/field"
 	"github.com/pkg/errors"
+
+	"{{{ .Package }}}/app/lib/schema/field"
 )
 
 func (m *Model) AddField(f *field.Field) error {

@@ -5,9 +5,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"go.uber.org/zap"
-
 	"github.com/pkg/errors"
+	"go.uber.org/zap"
 )
 
 var DefaultMode = os.FileMode(0o755)

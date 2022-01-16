@@ -9,10 +9,9 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/pkg/errors"
-
 	"github.com/markbates/going/defaults"
 	"github.com/markbates/goth"
+	"github.com/pkg/errors"
 	"golang.org/x/oauth2"
 )
 

@@ -4,9 +4,8 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/pkg/errors"
-
 	"github.com/go-ini/ini"
+	"github.com/pkg/errors"
 )
 
 // Valid parameters supported in reading `PGSERVICEFILE`.

@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/pkg/errors"
+
 	"{{{ .Package }}}/app/lib/schema/model"
 	"{{{ .Package }}}/app/lib/schema/types"
-	"github.com/pkg/errors"
 )
 
 const (

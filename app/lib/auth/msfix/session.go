@@ -4,9 +4,8 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/pkg/errors"
-
 	"github.com/markbates/goth"
+	"github.com/pkg/errors"
 )
 
 type Session struct {

@@ -5,10 +5,11 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/pkg/errors"
+
 	"{{{ .Package }}}/app/lib/schema/field"
 	"{{{ .Package }}}/app/lib/schema/model"
 	"{{{ .Package }}}/app/util"
-	"github.com/pkg/errors"
 )
 
 const (

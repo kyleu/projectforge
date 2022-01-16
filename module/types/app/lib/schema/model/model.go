@@ -5,7 +5,6 @@ import (
 	"sort"
 
 	"{{{ .Package }}}/app/lib/schema/field"
-
 	"{{{ .Package }}}/app/util"
 )
 
