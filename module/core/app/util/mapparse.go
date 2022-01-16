@@ -10,7 +10,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (m ValueMap) ParseArray(path string, allowMissing bool, allowEmpty bool) ([]interface{}, error) {
+func (m ValueMap) ParseArray(path string, allowMissing bool, allowEmpty bool, allowNonArray bool) ([]interface{}, error) {
 	result, err := m.GetPath(path, allowMissing)
 	if err != nil {
 		return nil, errors.Wrap(err, "invalid array")
@@ -41,6 +41,9 @@ func (m ValueMap) ParseArray(path string, allowMissing bool, allowEmpty bool) ([
 		}
 		return nil, nil
 	default:
+		if allowNonArray {
+			return []interface{}{t}, nil
+		}
 		return nil, invalidTypeError(path, "array", t)
 	}
 }

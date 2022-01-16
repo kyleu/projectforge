@@ -17,8 +17,8 @@ func (m ValueMap) GetRequired(k string) (interface{}, error) {
 	return v, nil
 }
 
-func (m ValueMap) GetArray(key string, allowEmpty bool) ([]interface{}, error) {
-	return m.ParseArray(key, false, allowEmpty)
+func (m ValueMap) GetArray(key string, allowEmpty bool, allowNonArray bool) ([]interface{}, error) {
+	return m.ParseArray(key, false, allowEmpty, allowNonArray)
 }
 
 func (m ValueMap) GetBool(key string, allowEmpty bool) (bool, error) {
@@ -55,7 +55,7 @@ func (m ValueMap) GetStringOpt(key string) string {
 }
 
 func (m ValueMap) GetStringArray(key string, allowEmpty bool) ([]string, error) {
-	ret, err := m.ParseArray(key, false, allowEmpty)
+	ret, err := m.ParseArray(key, false, allowEmpty, true)
 	if err != nil {
 		return nil, err
 	}

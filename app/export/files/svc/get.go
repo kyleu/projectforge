@@ -58,9 +58,9 @@ func serviceGrouped(m *model.Model, grp *model.Column) *golang.Block {
 		ret.W("\t}")
 	}
 	cols := fmt.Sprintf("%q as key, count(*) as val", grp.Name)
-	ret.W("\tsql := database.SQLSelectGrouped(%q, %s, wc, %q, %q, 0, 0)", cols, tableClauseFor(m), `"`+grp.Name+`"`, `"`+grp.Name+`"`)
+	ret.W("\tq := database.SQLSelectGrouped(%q, %s, wc, %q, %q, 0, 0)", cols, tableClauseFor(m), `"`+grp.Name+`"`, `"`+grp.Name+`"`)
 	ret.W("\tvar ret []*util.KeyValInt")
-	ret.W("\terr := s.db.Select(ctx, &ret, sql, tx)")
+	ret.W("\terr := s.db.Select(ctx, &ret, q, tx)")
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, errors.Wrap(err, \"unable to get %s by %s\")", m.TitlePluralLower(), grp.TitleLower())
 	ret.W("\t}")
@@ -80,9 +80,9 @@ func serviceList(m *model.Model) *golang.Block {
 		ret.W("\t\twc = %q", delCols[0].NameQuoted()+" is null")
 		ret.W("\t}")
 	}
-	ret.W("\tsql := database.SQLSelect(columnsString, %s, wc, params.OrderByString(), params.Limit, params.Offset)", tableClauseFor(m))
+	ret.W("\tq := database.SQLSelect(columnsString, %s, wc, params.OrderByString(), params.Limit, params.Offset)", tableClauseFor(m))
 	ret.W("\tret := dtos{}")
-	ret.W("\terr := s.db.Select(ctx, &ret, sql, tx)")
+	ret.W("\terr := s.db.Select(ctx, &ret, q, tx)")
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, errors.Wrap(err, \"unable to get %s\")", m.TitlePluralLower())
 	ret.W("\t}")
@@ -113,13 +113,13 @@ func serviceGetOne(key string, m *model.Model, cols model.Columns) *golang.Block
 		ret.W("\twc = addDeletedClause(wc, includeDeleted)")
 	}
 	ret.W("\tret := &dto{}")
-	ret.W("\tsql := database.SQLSelectSimple(columnsString, %s, wc)", tableClauseFor(m))
-	ret.W("\terr := s.db.Get(ctx, ret, sql, tx, %s)", strings.Join(cols.CamelNames(), ", "))
+	ret.W("\tq := database.SQLSelectSimple(columnsString, %s, wc)", tableClauseFor(m))
+	ret.W("\terr := s.db.Get(ctx, ret, q, tx, %s)", strings.Join(cols.CamelNames(), ", "))
 	ret.W("\tif err != nil {")
 	sj := strings.Join(cols.CamelNames(), ", ")
 	decls := make([]string, 0, len(cols))
 	for _, c := range cols {
-		decls = append(decls, c.Camel()+" [%%s]")
+		decls = append(decls, c.Camel()+" [%%v]")
 	}
 	ret.W("\t\treturn nil, errors.Wrapf(err, \"unable to get %s by %s\", %s)", m.Camel(), strings.Join(decls, ", "), sj)
 	ret.W("\t}")
@@ -139,9 +139,9 @@ func serviceGetMultiple(key string, m *model.Model, cols model.Columns) *golang.
 	if m.IsSoftDelete() {
 		ret.W("\twc = addDeletedClause(wc, includeDeleted)")
 	}
-	ret.W("\tsql := database.SQLSelect(columnsString, %s, wc, params.OrderByString(), params.Limit, params.Offset)", tableClauseFor(m))
+	ret.W("\tq := database.SQLSelect(columnsString, %s, wc, params.OrderByString(), params.Limit, params.Offset)", tableClauseFor(m))
 	ret.W("\tret := dtos{}")
-	ret.W("\terr := s.db.Select(ctx, &ret, sql, tx, %s)", strings.Join(cols.CamelNames(), ", "))
+	ret.W("\terr := s.db.Select(ctx, &ret, q, tx, %s)", strings.Join(cols.CamelNames(), ", "))
 	ret.W("\tif err != nil {")
 	sj := strings.Join(cols.CamelNames(), ", ")
 	decls := make([]string, 0, len(cols))

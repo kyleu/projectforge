@@ -51,9 +51,9 @@ func serviceGetAllRevisions(m *model.Model) (*golang.Block, error) {
 	if err != nil {
 		return nil, err
 	}
-	ret.W("\tsql := database.SQLSelect(columnsString, tablesJoinedParam, wc, params.OrderByString(), params.Limit, params.Offset)")
+	ret.W("\tq := database.SQLSelect(columnsString, tablesJoinedParam, wc, params.OrderByString(), params.Limit, params.Offset)")
 	ret.W("\tret := dtos{}")
-	ret.W("\terr := s.db.Select(ctx, &ret, sql, tx, %s)", strings.Join(pks.Names(), ", "))
+	ret.W("\terr := s.db.Select(ctx, &ret, q, tx, %s)", strings.Join(pks.Names(), ", "))
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, errors.Wrap(err, \"unable to get %s\")", util.StringToPlural(m.Proper()))
 	ret.W("\t}")
@@ -77,8 +77,8 @@ func serviceGetRevision(m *model.Model) (*golang.Block, error) {
 	if err != nil {
 		return nil, err
 	}
-	ret.W("\tsql := database.SQLSelectSimple(columnsString, tablesJoinedParam, wc)")
-	ret.W("\terr := s.db.Get(ctx, ret, sql, tx, %s, %s)", strings.Join(m.PKs().Names(), ", "), revCol.Camel())
+	ret.W("\tq := database.SQLSelectSimple(columnsString, tablesJoinedParam, wc)")
+	ret.W("\terr := s.db.Get(ctx, ret, q, tx, %s, %s)", strings.Join(m.PKs().Names(), ", "), revCol.Camel())
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, err")
 	ret.W("\t}")

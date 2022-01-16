@@ -8,7 +8,7 @@ import (
 
 func modelRandom(m *model.Model) *golang.Block {
 	ret := golang.NewBlock(m.Proper()+"Random", "struct")
-	ret.W("func Random%s() *%s {", m.Proper(), m.Proper())
+	ret.W("func Random() *%s {", m.Proper())
 	ret.W("\treturn &%s{", m.Proper())
 	maxColLength := m.Columns.MaxCamelLength() + 1
 	for _, col := range m.Columns {
@@ -23,6 +23,10 @@ func randFor(col *model.Column) string {
 	switch col.Type.Key {
 	case model.TypeString.Key:
 		return "util.RandomString(12)"
+	case model.TypeInt.Key:
+		return "util.RandomInt(10000)"
+	case model.TypeUUID.Key:
+		return "util.UUID()"
 	case model.TypeMap.Key:
 		return "util.RandomValueMap(4)"
 	case model.TypeTimestamp.Key:

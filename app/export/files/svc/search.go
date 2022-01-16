@@ -26,10 +26,10 @@ func serviceSearch(m *model.Model, grp *model.Column) *golang.Block {
 	like := "$2"
 	var params []string
 	if hasEqual {
-		params = append(params, "strings.ToLower(q)")
+		params = append(params, "strings.ToLower(query)")
 	}
 	if hasLike {
-		params = append(params, `"%%"+strings.ToLower(q)+"%%"`)
+		params = append(params, `"%%"+strings.ToLower(query)+"%%"`)
 		if !hasEqual {
 			like = eq
 		}
@@ -51,7 +51,7 @@ func serviceSearch(m *model.Model, grp *model.Column) *golang.Block {
 	} else {
 		grpTxt = fmt.Sprintf(", %s %s", grp.Camel(), grp.ToGoType())
 	}
-	decl := "func (s *Service) Search%s(ctx context.Context%s, q string, tx *sqlx.Tx, params *filter.Params%s) (%s, error) {"
+	decl := "func (s *Service) Search%s(ctx context.Context%s, query string, tx *sqlx.Tx, params *filter.Params%s) (%s, error) {"
 	ret.W(decl, prefix, grpTxt, getSuffix(m), m.ProperPlural())
 	ret.W("\tparams = filters(params)")
 	if m.IsSoftDelete() {
@@ -59,9 +59,9 @@ func serviceSearch(m *model.Model, grp *model.Column) *golang.Block {
 	} else {
 		ret.W("\twc := searchClause")
 	}
-	ret.W("\tsql := database.SQLSelect(columnsString, %s, wc, params.OrderByString(), params.Limit, params.Offset)", tableClauseFor(m))
+	ret.W("\tq := database.SQLSelect(columnsString, %s, wc, params.OrderByString(), params.Limit, params.Offset)", tableClauseFor(m))
 	ret.W("\tret := dtos{}")
-	ret.W("\terr := s.db.Select(ctx, &ret, sql, tx, " + strings.Join(params, ", ") + ")")
+	ret.W("\terr := s.db.Select(ctx, &ret, q, tx, " + strings.Join(params, ", ") + ")")
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, err")
 	ret.W("\t}")
