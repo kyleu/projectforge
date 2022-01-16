@@ -4,6 +4,8 @@ import (
 	"io"
 	"sort"
 	"strings"
+
+	"github.com/kyleu/projectforge/app/util"
 )
 
 type Theme struct {
@@ -68,9 +70,6 @@ func (t Themes) Replace(n *Theme) Themes {
 }
 
 func addLine(sb io.StringWriter, s string, indent int) {
-	indention := ""
-	for i := 0; i < indent; i++ {
-		indention += "  "
-	}
+	indention := util.StringRepeat("  ", indent)
 	_, _ = sb.WriteString(indention + s + "\n")
 }

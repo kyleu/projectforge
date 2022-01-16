@@ -60,6 +60,16 @@ func (c Columns) PKs() Columns {
 	return ret
 }
 
+func (c Columns) NonPKs() Columns {
+	var ret Columns
+	for _, x := range c {
+		if !x.PK {
+			ret = append(ret, x)
+		}
+	}
+	return ret
+}
+
 func (c Columns) Searches() Columns {
 	var ret Columns
 	for _, x := range c {
@@ -79,11 +89,7 @@ func (c Columns) Names() []string {
 }
 
 func (c Columns) NamesQuoted() []string {
-	ret := make([]string, 0, len(c))
-	for _, x := range c {
-		ret = append(ret, fmt.Sprintf("%q", x.Name))
-	}
-	return ret
+	return util.StringArrayQuoted(c.Names())
 }
 
 func (c Columns) CamelNames() []string {
@@ -137,7 +143,7 @@ func (c Columns) Refs() string {
 func (c Columns) WhereClause(offset int) string {
 	wc := make([]string, 0, len(c))
 	for idx, col := range c {
-		wc = append(wc, fmt.Sprintf("%s = $%d", col.Name, idx+offset+1))
+		wc = append(wc, fmt.Sprintf("%q = $%d", col.Name, idx+offset+1))
 	}
 	return strings.Join(wc, " and ")
 }

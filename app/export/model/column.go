@@ -2,6 +2,7 @@ package model
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/kyleu/projectforge/app/util"
 )
@@ -14,6 +15,10 @@ type Column struct {
 	Search     bool     `json:"search,omitempty"`
 	SQLDefault string   `json:"sqlDefault,omitempty"`
 	Tags       []string `json:"tags,omitempty"`
+}
+
+func (c *Column) NameQuoted() string {
+	return fmt.Sprintf("%q", c.Name)
 }
 
 func (c *Column) Camel() string {
@@ -122,6 +127,10 @@ func (c *Column) ZeroVal() string {
 
 func (c *Column) Title() string {
 	return util.StringToTitle(c.Name)
+}
+
+func (c *Column) TitleLower() string {
+	return strings.ToLower(c.Title())
 }
 
 func (c *Column) BC() string {

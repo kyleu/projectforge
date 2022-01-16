@@ -57,38 +57,6 @@ func modelConstructor(m *model.Model) *golang.Block {
 	return ret
 }
 
-func modelFromMap(m *model.Model) *golang.Block {
-	ret := golang.NewBlock(m.Package+"FromForm", "func")
-	ret.W("func FromMap(m util.ValueMap, setPK bool) (*%s, error) {", m.Proper())
-	ret.W("\tret := &%s{}", m.Proper())
-	ret.W("\tvar err error")
-	ret.W("\tif setPK {")
-	cols := m.Columns.WithoutTag("created").WithoutTag("updated").WithoutTag(model.RevisionType)
-	for _, col := range cols.PKs() {
-		ret.W("\t\tret.%s, err = m.Parse%s(%q, true, true)", col.Proper(), col.ToGoMapParse(), col.Camel())
-		ret.W("\t\tif err != nil {")
-		ret.W("\t\t\treturn nil, err")
-		ret.W("\t\t}")
-	}
-	ret.W("\t\t// $PF_SECTION_START(pkchecks)$")
-	ret.W("\t\t// $PF_SECTION_END(pkchecks)$")
-	ret.W("\t}")
-	for _, col := range cols {
-		if !col.PK {
-			ret.W("\tret.%s, err = m.Parse%s(%q, true, true)", col.Proper(), col.ToGoMapParse(), col.Camel())
-			ret.W("\tif err != nil {")
-			ret.W("\t\treturn nil, err")
-			ret.W("\t}")
-		}
-	}
-	ret.W("\t// $PF_SECTION_START(extrachecks)$")
-	ret.W("\t// $PF_SECTION_END(extrachecks)$")
-	ret.W("\treturn ret, nil")
-	ret.W("}")
-
-	return ret
-}
-
 func modelString(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("String", "func")
 	ret.W("func (%s *%s) String() string {", m.FirstLetter(), m.Proper())

@@ -116,7 +116,7 @@ func controllerDelete(m *model.Model, g *golang.File, grp *model.Column) *golang
 	}
 	ret.W("\t\terr = as.Services.%s.Delete(ps.Context, nil, %s)", m.Proper(), strings.Join(pkCamels, ", "))
 	ret.W("\t\tif err != nil {")
-	ret.W("\t\t\treturn \"\", errors.Wrapf(err, \"unable to delete %s [%%%%s]\", ret.String())", m.Proper())
+	ret.W("\t\t\treturn \"\", errors.Wrapf(err, \"unable to delete %s [%%%%s]\", ret.String())", m.TitleLower())
 	ret.W("\t\t}")
 	ret.W("\t\tmsg := fmt.Sprintf(\"" + m.Proper() + " [%%s] deleted\", ret.String())")
 	ret.W("\t\treturn flashAndRedir(true, msg, \"/%s\", rc, ps)", m.Camel())

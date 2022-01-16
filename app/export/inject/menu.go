@@ -15,7 +15,7 @@ func Menu(f *file.File, args *model.Args) error {
 	out := make([]string, 0, len(args.Models))
 	msg := `Key: %q, Title: %q, Description: %q, Icon: %q, Route: "/%s"`
 	for _, m := range args.Models {
-		l := fmt.Sprintf(msg, m.Package, m.ProperPlural(), m.Description, m.Icon, m.Package)
+		l := fmt.Sprintf(msg, m.Package, m.TitlePlural(), m.Description, m.Icon, m.Package)
 		if len(m.GroupedColumns()) == 0 {
 			out = append(out, "&menu.Item{"+l+"},")
 		} else {

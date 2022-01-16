@@ -74,11 +74,19 @@ func StringToLowerCamel(s string) string {
 	return acr(strcase.ToLowerCamel(s))
 }
 
-func TruncateText(s string, max int) string {
+func StringTruncate(s string, max int) string {
 	if max > len(s) {
 		return s
 	}
 	return s[:strings.LastIndex(s[:max], " ")]
+}
+
+func StringRepeat(s string, n int) string {
+	ret := strings.Builder{}
+	for i := 0; i < n; i++ {
+		ret.WriteString(s)
+	}
+	return ret.String()
 }
 
 func acr(ret string) string {

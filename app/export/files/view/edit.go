@@ -36,16 +36,16 @@ func exportViewEditBody(m *model.Model) *golang.Block {
 		editURL += "/{%% " + pk.ToGoString("p.Model.") + " %%}"
 	}
 
-	delMsg := fmt.Sprintf("Are you sure you wish to delete %s [{%%%%s p.Model.String() %%%%}]?", m.Proper())
+	delMsg := fmt.Sprintf("Are you sure you wish to delete %s [{%%%%s p.Model.String() %%%%}]?", m.TitleLower())
 
 	ret := golang.NewBlock("EditBody", "func")
 	ret.W("{%% func (p *Edit) Body(as *app.State, ps *cutil.PageState) %%}")
 	ret.W("  <div class=\"card\">")
 	ret.W("    {%%- if p.IsNew -%%}")
-	ret.W("    <h3>{%%= components.SVGRefIcon(`" + m.Icon + "`, ps) %%} New " + m.Proper() + "</h3>")
+	ret.W("    <h3>{%%= components.SVGRefIcon(`" + m.Icon + "`, ps) %%} New " + m.Title() + "</h3>")
 	ret.W("    {%%- else -%%}")
 	ret.W("    <div class=\"right\"><a href=\"{%%s p.Model.WebPath() %%}/delete\" onclick=\"return confirm('" + delMsg + "')\"><button>Delete</button></a></div>")
-	ret.W("    <h3>{%%= components.SVGRefIcon(`" + m.Icon + "`, ps) %%} Edit " + m.Proper() + " [{%%s p.Model.String() %%}]</h3>")
+	ret.W("    <h3>{%%= components.SVGRefIcon(`" + m.Icon + "`, ps) %%} Edit " + m.Title() + " [{%%s p.Model.String() %%}]</h3>")
 	ret.W("    {%%- endif -%%}")
 	ret.W("    <form action=\"\" class=\"mt\" method=\"post\">")
 	ret.W("      <table>")

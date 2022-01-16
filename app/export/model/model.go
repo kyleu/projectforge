@@ -1,6 +1,8 @@
 package model
 
 import (
+	"strings"
+
 	"github.com/kyleu/projectforge/app/lib/filter"
 	"github.com/kyleu/projectforge/app/util"
 )
@@ -14,6 +16,7 @@ type Model struct {
 	Search         []string         `json:"search,omitempty"`
 	History        string           `json:"history,omitempty"`
 	Tags           []string         `json:"tags,omitempty"`
+	TitleOverride  string           `json:"title,omitempty"`
 	ProperOverride string           `json:"proper,omitempty"`
 	Config         util.ValueMap    `json:"config,omitempty"`
 	Columns        Columns          `json:"columns"`
@@ -30,6 +33,25 @@ func (m *Model) Proper() string {
 		return util.StringToCamel(m.Name)
 	}
 	return util.StringToCamel(m.ProperOverride)
+}
+
+func (m *Model) Title() string {
+	if m.TitleOverride == "" {
+		return m.Proper()
+	}
+	return m.TitleOverride
+}
+
+func (m *Model) TitleLower() string {
+	return strings.ToLower(m.Title())
+}
+
+func (m *Model) TitlePlural() string {
+	return util.StringToPlural(m.Title())
+}
+
+func (m *Model) TitlePluralLower() string {
+	return util.StringToPlural(m.TitleLower())
 }
 
 func (m *Model) Plural() string {

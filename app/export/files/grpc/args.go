@@ -49,10 +49,7 @@ func (a FileArgs) AddStaticCheck(ref string, ret *golang.Block, m *model.Model, 
 }
 
 func grpcAddSection(b *golang.Block, key string, indent int) {
-	ind := ""
-	for i := 0; i < indent; i++ {
-		ind += "\t"
-	}
+	ind := util.StringRepeat("\t", indent)
 	b.W(ind+"// $PF_SECTION_START(%s)$", key)
 	b.W(ind+"// $PF_SECTION_END(%s)$", key)
 }

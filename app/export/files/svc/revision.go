@@ -39,7 +39,11 @@ func serviceGetAllRevisions(m *model.Model) (*golang.Block, error) {
 	decl := "func (s *Service) GetAll%s(ctx context.Context, tx *sqlx.Tx, %s, params *filter.Params, includeDeleted bool) (%s, error) {"
 	ret.W(decl, hc.Col.ProperPlural(), pks.Args(), m.ProperPlural())
 	ret.W("\tparams = filters(params)")
-	ret.W("\twc := \"id = $1\"")
+	placeholders := make([]string, 0, len(m.PKs()))
+	for idx, pk := range m.PKs() {
+		placeholders = append(placeholders, fmt.Sprintf("\\\"%s\\\" = $%d", pk.Name, idx+1))
+	}
+	ret.W("\twc := \"%s\"", strings.Join(placeholders, " and "))
 	if m.IsSoftDelete() {
 		ret.W("\twc = addDeletedClause(wc, includeDeleted)")
 	}
@@ -65,9 +69,9 @@ func serviceGetRevision(m *model.Model) (*golang.Block, error) {
 	ret.W(decl, revCol.Proper(), m.PKs().Args(), revCol.Camel(), m.Proper())
 	placeholders := make([]string, 0, len(m.PKs()))
 	for idx, pk := range m.PKs() {
-		placeholders = append(placeholders, fmt.Sprintf("%s = $%d", pk.Name, idx+1))
+		placeholders = append(placeholders, fmt.Sprintf("\\\"%s\\\" = $%d", pk.Name, idx+1))
 	}
-	ret.W("\twc := \"%s and %s = $%d\"", strings.Join(placeholders, " and "), revCol.Name, len(m.PKs())+1)
+	ret.W("\twc := \"%s and \\\"%s\\\" = $%d\"", strings.Join(placeholders, " and "), revCol.Name, len(m.PKs())+1)
 	ret.W("\tret := &dto{}")
 	err := addJoinClause(ret, m, m.HistoryColumns(true))
 	if err != nil {
@@ -108,7 +112,7 @@ func serviceGetCurrentRevisions(m *model.Model) (*golang.Block, error) {
 	ret.W("\tfor i := range models {")
 	ret.W("\t\tstmts = append(stmts, fmt.Sprintf(%q, %s))", strings.Join(pkWCStr, " and "), strings.Join(pkWCIdx, ", "))
 	ret.W("\t}")
-	ret.W("\tq := database.SQLSelectSimple(\"%s, current_%s\", table, strings.Join(stmts, \" or \"))", strings.Join(pks.Names(), ", "), revCol.Name)
+	ret.W("\tq := database.SQLSelectSimple(\"%s, current_%s\", tableQuoted, strings.Join(stmts, \" or \"))", strings.Join(pks.Names(), ", "), revCol.Name)
 	ret.W("\tvals := make([]interface{}, 0, len(models))")
 	ret.W("\tfor _, model := range models {")
 	ret.W("\t\tvals = append(vals, %s)", strings.Join(pkModelRefs, ", "))

@@ -39,7 +39,7 @@ func exportViewDetailBody(m *model.Model) *golang.Block {
 	ret.W("{%% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %%}")
 	ret.W("  <div class=\"card\">")
 	ret.W("    <div class=\"right\"><a href=\"{%%s p.Model.WebPath() %%}/edit\"><button>Edit</button></a></div>")
-	ret.W("    <h3>{%%= components.SVGRefIcon(`" + m.Icon + "`, ps) %%} " + m.Proper() + " [{%%s p.Model.String() %%}]</h3>")
+	ret.W("    <h3>{%%= components.SVGRefIcon(`" + m.Icon + "`, ps) %%} " + m.Title() + " [{%%s p.Model.String() %%}]</h3>")
 	ret.W("    <table>")
 	ret.W("      <tbody>")
 	for _, col := range m.Columns {

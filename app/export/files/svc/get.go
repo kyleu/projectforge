@@ -1,6 +1,7 @@
 package svc
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/kyleu/projectforge/app/export/files/helper"
@@ -53,15 +54,15 @@ func serviceGrouped(m *model.Model, grp *model.Column) *golang.Block {
 	if m.IsSoftDelete() {
 		delCols := m.Columns.WithTag("deleted")
 		ret.W("\tif !includeDeleted {")
-		ret.W("\t\twc = %q", delCols[0].Name+" is null")
+		ret.W("\t\twc = %q", delCols[0].NameQuoted()+" is null")
 		ret.W("\t}")
 	}
-	cols := "vendor as key, count(*) as val"
-	ret.W("\tsql := database.SQLSelectGrouped(%q, %s, wc, %q, %q, 0, 0)", cols, tableClauseFor(m), grp.Camel(), grp.Camel())
+	cols := fmt.Sprintf("%q as key, count(*) as val", grp.Name)
+	ret.W("\tsql := database.SQLSelectGrouped(%q, %s, wc, %q, %q, 0, 0)", cols, tableClauseFor(m), `"`+grp.Name+`"`, `"`+grp.Name+`"`)
 	ret.W("\tvar ret []*util.KeyValInt")
 	ret.W("\terr := s.db.Select(ctx, &ret, sql, tx)")
 	ret.W("\tif err != nil {")
-	ret.W("\t\treturn nil, errors.Wrap(err, \"unable to get %s\")", m.ProperPlural())
+	ret.W("\t\treturn nil, errors.Wrap(err, \"unable to get %s by %s\")", m.TitlePluralLower(), grp.TitleLower())
 	ret.W("\t}")
 	ret.W("\treturn ret, nil")
 	ret.W("}")
@@ -76,14 +77,14 @@ func serviceList(m *model.Model) *golang.Block {
 	if m.IsSoftDelete() {
 		delCols := m.Columns.WithTag("deleted")
 		ret.W("\tif !includeDeleted {")
-		ret.W("\t\twc = %q", delCols[0].Name+" is null")
+		ret.W("\t\twc = %q", delCols[0].NameQuoted()+" is null")
 		ret.W("\t}")
 	}
 	ret.W("\tsql := database.SQLSelect(columnsString, %s, wc, params.OrderByString(), params.Limit, params.Offset)", tableClauseFor(m))
 	ret.W("\tret := dtos{}")
 	ret.W("\terr := s.db.Select(ctx, &ret, sql, tx)")
 	ret.W("\tif err != nil {")
-	ret.W("\t\treturn nil, errors.Wrap(err, \"unable to get %s\")", m.ProperPlural())
+	ret.W("\t\treturn nil, errors.Wrap(err, \"unable to get %s\")", m.TitlePluralLower())
 	ret.W("\t}")
 	ret.W("\treturn ret.To%s(), nil", m.ProperPlural())
 	ret.W("}")
@@ -158,5 +159,5 @@ func tableClauseFor(m *model.Model) string {
 	if m.IsRevision() {
 		return "tablesJoined"
 	}
-	return "table"
+	return "tableQuoted"
 }

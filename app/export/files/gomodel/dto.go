@@ -17,7 +17,7 @@ func DTO(m *model.Model, args *model.Args) (*file.File, error) {
 	for _, imp := range helper.ImportsForTypes("dto", m.Columns.Types()...) {
 		g.AddImport(imp)
 	}
-	g.AddImport(helper.ImpStrings)
+	g.AddImport(helper.ImpStrings, helper.ImpAppUtil, helper.ImpFmt)
 	if tc, err := modelTableCols(m, g); err == nil {
 		g.AddBlocks(tc)
 	} else {
@@ -31,17 +31,19 @@ func modelTableCols(m *model.Model, g *golang.File) (*golang.Block, error) {
 	ret := golang.NewBlock("Columns", "procedural")
 	ret.W("var (")
 	ret.W("\ttable         = %q", m.Name)
-	ret.W("\tcolumns       = []string{%s}", strings.Join(util.StringArrayQuoted(m.Columns.Names()), ", "))
-	ret.W("\tcolumnsString = strings.Join(columns, \", \")")
+	ret.W("\ttableQuoted   = fmt.Sprintf(\"%%q\", table)")
+	ret.W("\tcolumns       = []string{%s}", strings.Join(m.Columns.NamesQuoted(), ", "))
+	ret.W("\tcolumnsQuoted = util.StringArrayQuoted(columns)")
+	ret.W("\tcolumnsString = strings.Join(columnsQuoted, \", \")")
 	if m.IsRevision() {
-		g.AddImport(helper.ImpFmt)
 		hc := m.HistoryColumns(true)
 		ret.W("")
-		ret.W("\tcolumnsCore     = []string{%s}", strings.Join(hc.Const.NamesQuoted(), ", "))
-		ret.W("\tcolumns%s = []string{%s}", hc.Col.Proper(), strings.Join(hc.Var.NamesQuoted(), ", "))
+		ret.W("\tcolumnsCore     = util.StringArrayQuoted([]string{%s})", strings.Join(hc.Const.NamesQuoted(), ", "))
+		ret.W("\tcolumns%s = util.StringArrayQuoted([]string{%s})", hc.Col.Proper(), strings.Join(hc.Var.NamesQuoted(), ", "))
 		ret.W("")
-		ret.W("\ttable%s = table + \"_%s\"", hc.Col.Proper(), hc.Col.Name)
-		joinClause := fmt.Sprintf("%%%%q %s join %%%%q %sr on ", m.FirstLetter(), m.FirstLetter())
+		ret.W("\ttable%s       = table + \"_%s\"", hc.Col.Proper(), hc.Col.Name)
+		ret.W("\ttable%sQuoted = fmt.Sprintf(\"%%%%q\", table%s)", hc.Col.Proper(), hc.Col.Proper())
+		joinClause := fmt.Sprintf("%%%%s %s join %%%%s %sr on ", m.FirstLetter(), m.FirstLetter())
 		var joins []string
 		for idx, col := range hc.Const {
 			if col.PK || col.HasTag("current_revision") {
@@ -49,11 +51,11 @@ func modelTableCols(m *model.Model, g *golang.File) (*golang.Block, error) {
 				if !(rCol.PK || rCol.HasTag(model.RevisionType)) {
 					return nil, errors.Errorf("invalid revision column [%s] at index [%d]", rCol.Name, idx)
 				}
-				joins = append(joins, fmt.Sprintf("%s.%s = %sr.%s", m.FirstLetter(), col.Name, m.FirstLetter(), rCol.Name))
+				joins = append(joins, fmt.Sprintf("%s.%s = %sr.%s", m.FirstLetter(), col.NameQuoted(), m.FirstLetter(), rCol.NameQuoted()))
 			}
 		}
 		joinClause += strings.Join(joins, " and ")
-		ret.W("\ttablesJoined  = fmt.Sprintf(%q, table, table%s)", joinClause, hc.Col.Proper())
+		ret.W("\ttablesJoined        = fmt.Sprintf(`%s`, tableQuoted, table%sQuoted)", joinClause, hc.Col.Proper())
 	}
 	ret.W(")")
 	return ret, nil

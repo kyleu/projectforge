@@ -87,3 +87,12 @@ func (t *Type) ToSQLType() string {
 		return "sql-error-invalid-type"
 	}
 }
+
+func (t *Type) IsScalar() bool {
+	switch t.Key {
+	case TypeInt.Key, TypeMap.Key, TypeString.Key:
+		return true
+	default:
+		return false
+	}
+}

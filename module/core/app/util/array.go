@@ -36,7 +36,7 @@ func StringArrayCopy(a []string) []string {
 func StringArrayQuoted(a []string) []string {
 	ret := make([]string, 0, len(a))
 	for _, x := range a {
-		ret = append(ret, `"`+x+`"`)
+		ret = append(ret, fmt.Sprintf("%q", x))
 	}
 	return ret
 }
