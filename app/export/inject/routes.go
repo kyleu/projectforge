@@ -31,13 +31,14 @@ func Routes(f *file.File, args *model.Args) error {
 		}
 
 		l := fmt.Sprintf("\tr.GET(\"/%s\", %sList)", m.Package, m.Proper())
+		nr := fmt.Sprintf("\tr.GET(\"/%s/random\", %sCreateFormRandom)", m.Package, m.Proper())
 		nf := fmt.Sprintf("\tr.GET(\"/%s/new\", %sCreateForm)", m.Package, m.Proper())
 		ns := fmt.Sprintf("\tr.POST(\"/%s/new\", %sCreate)", m.Package, m.Proper())
 		d := fmt.Sprintf("\tr.GET(\"/%s/%s\", %sDetail)", m.Package, strings.Join(pkNames, "/"), m.Proper())
 		ef := fmt.Sprintf("\tr.GET(\"/%s/%s/edit\", %sEditForm)", m.Package, strings.Join(pkNames, "/"), m.Proper())
 		es := fmt.Sprintf("\tr.POST(\"/%s/%s/edit\", %sEdit)", m.Package, strings.Join(pkNames, "/"), m.Proper())
 		dl := fmt.Sprintf("\tr.GET(\"/%s/%s/delete\", %sDelete)", m.Package, strings.Join(pkNames, "/"), m.Proper())
-		out = append(out, l, nf, ns, d, ef, es, dl)
+		out = append(out, l, nr, nf, ns, d, ef, es, dl)
 		if m.IsRevision() {
 			rc := m.HistoryColumn()
 			msg := "\tr.GET(\"/%s/%s/%s/{%s}\", %s%s)"

@@ -156,12 +156,28 @@ func (c Columns) GoTypeKeys() []string {
 	return ret
 }
 
+func (c Columns) GoTypes() []string {
+	ret := make([]string, 0, len(c))
+	for _, x := range c {
+		ret = append(ret, x.ToGoType())
+	}
+	return ret
+}
+
 func (c Columns) GoDTOTypeKeys() []string {
 	ret := make([]string, 0, len(c))
 	for _, x := range c {
 		ret = append(ret, x.Type.ToGoDTOType(x.Nullable))
 	}
 	return ret
+}
+
+func (c Columns) MaxCamelLength() int {
+	return util.StringArrayMaxLength(c.CamelNames())
+}
+
+func (c Columns) MaxGoTypeLength() int {
+	return util.StringArrayMaxLength(c.GoTypes())
 }
 
 func (c Columns) MaxGoKeyLength() int {

@@ -26,6 +26,17 @@ func controllerCreateForm(m *model.Model, grp *model.Column) *golang.Block {
 	return ret
 }
 
+func controllerCreateFormRandom(m *model.Model) *golang.Block {
+	ret := blockFor(m, nil, "create", "form", "random")
+	ret.W("\t\tret := %s.Random%s()", m.Package, m.Proper())
+	ret.W("\t\tps.Title = \"Create Random [" + m.Proper() + "]\"")
+	ret.W("\t\tps.Data = ret")
+	ret.W("\t\treturn render(rc, as, &v%s.Edit{Model: ret, IsNew: true}, ps, %q, \"Create\")", m.Package, m.Package)
+	ret.W("\t})")
+	ret.W("}")
+	return ret
+}
+
 func controllerCreate(m *model.Model, g *golang.File, grp *model.Column) *golang.Block {
 	ret := blockFor(m, grp, "create")
 	if grp != nil {

@@ -52,14 +52,16 @@ func controllerDetail(m *model.Model, grp *model.Column) *golang.Block {
 	ret.W("\t\t}")
 	checkGrp(ret, grp)
 	if m.IsRevision() {
+		hc := m.HistoryColumn()
+
 		ret.W("\t\tparams := cutil.ParamSetFromRequest(rc)")
 		var prms []string
 		for _, pk := range m.PKs() {
 			prms = append(prms, "ret."+pk.Proper())
 		}
 		prmsStr := strings.Join(prms, ", ")
-		msg := "\t\trevisions, err := as.Services.%s.GetAllRevisions(ps.Context, nil, %s, params.Get(%q, nil, ps.Logger), false)"
-		ret.W(msg, m.Proper(), prmsStr, m.Package)
+		msg := "\t\t%s, err := as.Services.%s.GetAll%s(ps.Context, nil, %s, params.Get(%q, nil, ps.Logger), false)"
+		ret.W(msg, util.StringToPlural(hc.Camel()), m.Proper(), hc.ProperPlural(), prmsStr, m.Package)
 	}
 	ret.W("\t\tps.Title = ret.String()")
 	ret.W("\t\tps.Data = ret")

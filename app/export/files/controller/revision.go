@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"strings"
+
 	"github.com/kyleu/projectforge/app/export/golang"
 	"github.com/kyleu/projectforge/app/export/model"
 )
@@ -15,7 +17,12 @@ func controllerRevision(m *model.Model) *golang.Block {
 	ret.W("\t\t\treturn \"\", err")
 	ret.W("\t\t}")
 	ret.W("\t\t%s, err := RCRequiredInt(rc, %q)", hc.Col.Camel(), hc.Col.Camel())
-	ret.W("\t\tret, err := as.Services.%s.Get%s(ps.Context, nil, latest.ID, %s)", m.Proper(), hc.Col.Proper(), hc.Col.Camel())
+	pkRefs := make([]string, 0, len(m.PKs()))
+	for _, pk := range m.PKs() {
+		pkRefs = append(pkRefs, "latest."+pk.Proper())
+	}
+	pkStuff := strings.Join(pkRefs, ", ")
+	ret.W("\t\tret, err := as.Services.%s.Get%s(ps.Context, nil, %s, %s)", m.Proper(), hc.Col.Proper(), pkStuff, hc.Col.Camel())
 	ret.W("\t\tif err != nil {")
 	ret.W("\t\t\treturn \"\", err")
 	ret.W("\t\t}")

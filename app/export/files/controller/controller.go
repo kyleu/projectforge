@@ -23,7 +23,7 @@ func Controller(m *model.Model, args *model.Args) (*file.File, error) {
 		g.AddBlocks(controllerRevision(m))
 	}
 	g.AddBlocks(
-		controllerCreateForm(m, nil), controllerCreate(m, g, nil),
+		controllerCreateForm(m, nil), controllerCreateFormRandom(m), controllerCreate(m, g, nil),
 		controllerEditForm(m, nil), controllerEdit(m, g, nil), controllerDelete(m, g, nil),
 		controllerModelFromPath(m), controllerModelFromForm(m),
 	)

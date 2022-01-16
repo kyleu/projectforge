@@ -115,18 +115,4 @@ func (m *Model) IsRevision() bool {
 	return m.History == RevisionType
 }
 
-func (m *Model) Validate() error {
-	if m.IsRevision() {
-		hc := m.HistoryColumns(true)
-		if hc.Err != nil {
-			return hc.Err
-		}
-		hc = m.HistoryColumns(false)
-		if hc.Err != nil {
-			return hc.Err
-		}
-	}
-	return nil
-}
-
 type Models []*Model

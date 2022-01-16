@@ -23,7 +23,7 @@ func Model(m *model.Model, args *model.Args) (*file.File, error) {
 		g.AddImport(helper.ImpFmt)
 	}
 	g.AddImport(helper.ImpAppUtil)
-	g.AddBlocks(modelStruct(m), modelConstructor(m), modelFromMap(m))
+	g.AddBlocks(modelStruct(m), modelConstructor(m), modelRandom(m), modelFromMap(m))
 	g.AddBlocks(modelString(m), modelWebPath(m), modelToData(m, m.Columns, ""))
 	if m.IsRevision() {
 		hc := m.HistoryColumns(false)
@@ -57,36 +57,6 @@ func modelConstructor(m *model.Model) *golang.Block {
 	return ret
 }
 
-func modelString(m *model.Model) *golang.Block {
-	ret := golang.NewBlock("String", "func")
-	ret.W("func (%s *%s) String() string {", m.FirstLetter(), m.Proper())
-	if pks := m.PKs(); len(pks) == 1 {
-		switch pks[0].Type.Key {
-		case model.TypeString.Key:
-			ret.W("\treturn %s.%s", m.FirstLetter(), pks[0].Proper())
-		case model.TypeUUID.Key:
-			ret.W("\treturn %s.%s.String()", m.FirstLetter(), pks[0].Proper())
-		default:
-			ret.W("\treturn fmt.Sprint(%s.%s)", m.FirstLetter(), pks[0].Proper())
-		}
-	} else {
-		s := "\treturn fmt.Sprintf(\""
-		for idx := range m.PKs() {
-			if idx > 0 {
-				s += "::"
-			}
-			s += "%%s"
-		}
-		s += "\""
-		for _, c := range m.PKs() {
-			s += ", " + c.ToGoString(m.FirstLetter()+".")
-		}
-		ret.W(s + ")")
-	}
-	ret.W("}")
-	return ret
-}
-
 func modelToData(m *model.Model, cols model.Columns, suffix string) *golang.Block {
 	ret := golang.NewBlock(m.Proper(), "func")
 	ret.W("func (%s *%s) ToData%s() []interface{} {", m.FirstLetter(), m.Proper(), suffix)
@@ -95,19 +65,6 @@ func modelToData(m *model.Model, cols model.Columns, suffix string) *golang.Bloc
 		refs = append(refs, fmt.Sprintf("%s.%s", m.FirstLetter(), c.Proper()))
 	}
 	ret.W("\treturn []interface{}{%s}", strings.Join(refs, ", "))
-	ret.W("}")
-	return ret
-}
-
-func modelWebPath(m *model.Model) *golang.Block {
-	ret := golang.NewBlock("WebPath", "type")
-	ret.W("func (%s *%s) WebPath() string {", m.FirstLetter(), m.Proper())
-	p := "\"/" + m.Package + "\""
-	for _, pk := range m.PKs() {
-		p += " + \"/\" + "
-		p += pk.ToGoString(m.FirstLetter() + ".")
-	}
-	ret.W("\treturn " + p)
 	ret.W("}")
 	return ret
 }

@@ -1,0 +1,31 @@
+package model
+
+import (
+	"github.com/kyleu/projectforge/app/util"
+	"github.com/pkg/errors"
+)
+
+var goKeywords = []string{
+	"break", "case", "chan", "const", "continue", "default", "defer", "else",
+	"fallthrough", "for", "func", "go", "goto", "if", "import", "interface",
+	"map", "package", "range", "return", "select", "struct", "switch", "type", "var",
+}
+
+func (m *Model) Validate() error {
+	if m.IsRevision() {
+		hc := m.HistoryColumns(true)
+		if hc.Err != nil {
+			return hc.Err
+		}
+		hc = m.HistoryColumns(false)
+		if hc.Err != nil {
+			return hc.Err
+		}
+	}
+	for _, col := range m.Columns {
+		if util.StringArrayContains(goKeywords, col.Name) {
+			return errors.Errorf("column [%s] uses reserved keyword", col.Name)
+		}
+	}
+	return nil
+}

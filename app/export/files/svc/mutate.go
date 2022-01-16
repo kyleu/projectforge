@@ -13,9 +13,6 @@ import (
 
 func ServiceMutate(m *model.Model, args *model.Args) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.Package}, "servicemutate")
-	for _, imp := range helper.ImportsForTypes("string", m.PKs().Types()...) {
-		g.AddImport(imp)
-	}
 	for _, imp := range helper.ImportsForTypes("go", m.PKs().Types()...) {
 		g.AddImport(imp)
 	}
@@ -37,9 +34,10 @@ func ServiceMutate(m *model.Model, args *model.Args) (*file.File, error) {
 		return nil, err
 	}
 	if m.IsRevision() {
-		g.AddBlocks(serviceUpsertCore(m), serviceInsertRevision(m))
+		g.AddBlocks(serviceUpsertCore(m, g), serviceInsertRevision(m))
 	}
 	if m.IsSoftDelete() {
+		g.AddImport(helper.ImpTime)
 		softDel, err := serviceSoftDelete(m)
 		if err != nil {
 			return nil, err
@@ -181,10 +179,12 @@ func serviceSave(m *model.Model, g *golang.File) (*golang.Block, error) {
 	return ret, nil
 }
 
-func serviceUpsertCore(m *model.Model) *golang.Block {
+func serviceUpsertCore(m *model.Model, g *golang.File) *golang.Block {
+	g.AddImport(helper.ImpAppUtil)
 	ret := golang.NewBlock("UpsertCore", "func")
 	ret.W("func (s *Service) upsertCore(ctx context.Context, tx *sqlx.Tx, models ...*%s) error {", m.Proper())
-	ret.W("\tq := database.SQLUpsert(tableQuoted, columnsCore, len(models), []string{%s}, columnsCore, \"\")", strings.Join(m.PKs().NamesQuoted(), ", "))
+	ret.W("\tconflicts := util.StringArrayQuoted([]string{%s})", strings.Join(m.PKs().NamesQuoted(), ", "))
+	ret.W("\tq := database.SQLUpsert(tableQuoted, columnsCore, len(models), conflicts, columnsCore, \"\")")
 	ret.W("\tdata := make([]interface{}, 0, len(columnsCore)*len(models))")
 	ret.W("\tfor _, model := range models {")
 	ret.W("\t\tdata = append(data, model.ToDataCore()...)")

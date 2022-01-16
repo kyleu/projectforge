@@ -95,11 +95,11 @@ func serviceGetCurrentRevisions(m *model.Model) (*golang.Block, error) {
 	pkModelRefs := make([]string, 0, len(pks))
 	pkComps := make([]string, 0, len(pks))
 	for idx, pk := range pks {
-		pkWCStr = append(pkWCStr, fmt.Sprintf("%s = $%%%%d", pk.Name))
+		pkWCStr = append(pkWCStr, fmt.Sprintf("%q = $%%%%d", pk.Name))
 		if len(pks) == 1 {
 			pkWCIdx = append(pkWCIdx, "i+1")
 		} else {
-			pkWCIdx = append(pkWCIdx, fmt.Sprintf("(i * %d)+%d", len(pks), idx+1))
+			pkWCIdx = append(pkWCIdx, fmt.Sprintf("(i*%d)+%d", len(pks), idx+1))
 		}
 		pkModelRefs = append(pkModelRefs, fmt.Sprintf("model.%s", pk.Proper()))
 		pkComps = append(pkComps, fmt.Sprintf("x.%s == model.%s", pk.Proper(), pk.Proper()))
@@ -110,21 +110,22 @@ func serviceGetCurrentRevisions(m *model.Model) (*golang.Block, error) {
 	ret.W(decl, revCol.ProperPlural(), m.Proper(), revCol.Type.ToGoType(false))
 	ret.W("\tstmts := make([]string, 0, len(models))")
 	ret.W("\tfor i := range models {")
-	ret.W("\t\tstmts = append(stmts, fmt.Sprintf(%q, %s))", strings.Join(pkWCStr, " and "), strings.Join(pkWCIdx, ", "))
+	ret.W("\t\tstmts = append(stmts, fmt.Sprintf(`%s`, %s))", strings.Join(pkWCStr, " and "), strings.Join(pkWCIdx, ", "))
 	ret.W("\t}")
-	ret.W("\tq := database.SQLSelectSimple(\"%s, current_%s\", tableQuoted, strings.Join(stmts, \" or \"))", strings.Join(pks.Names(), ", "), revCol.Name)
+	ret.W("\tq := database.SQLSelectSimple(`%s, \"current_%s\"`, tableQuoted, strings.Join(stmts, \" or \"))", strings.Join(pks.NamesQuoted(), ", "), revCol.Name)
 	ret.W("\tvals := make([]interface{}, 0, len(models))")
 	ret.W("\tfor _, model := range models {")
 	ret.W("\t\tvals = append(vals, %s)", strings.Join(pkModelRefs, ", "))
 	ret.W("\t}")
 	ret.W("\tvar results []*struct {")
 	maxColLength := pks.MaxGoKeyLength()
+	maxTypeLength := pks.MaxGoTypeLength()
 	currRevStr := fmt.Sprintf("Current%s", revCol.Proper())
 	if maxColLength < len(currRevStr) {
 		maxColLength = len(currRevStr)
 	}
 	for _, pk := range pks {
-		ret.W("\t\t%s string `db:%q`", util.StringPad(pk.Proper(), maxColLength), pk.Name)
+		ret.W("\t\t%s %s `db:%q`", util.StringPad(pk.Proper(), maxColLength), util.StringPad(pk.ToGoType(), maxTypeLength), pk.Name)
 	}
 	ret.W("\t\t%s int    `db:\"current_%s\"`", currRevStr, revCol.Name)
 	ret.W("\t}")
@@ -161,6 +162,6 @@ func addJoinClause(ret *golang.Block, m *model.Model, hc *model.HistoryMap) erro
 		}
 	}
 	joinClause += strings.Join(joins, " and ")
-	ret.W("\ttablesJoinedParam := fmt.Sprintf(%q, table, tableRevision)", joinClause)
+	ret.W("\ttablesJoinedParam := fmt.Sprintf(%q, table, table%s)", joinClause, hc.Col.Proper())
 	return nil
 }
