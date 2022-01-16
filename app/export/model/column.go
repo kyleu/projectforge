@@ -25,6 +25,10 @@ func (c *Column) Camel() string {
 	return util.StringToLowerCamel(c.Name)
 }
 
+func (c *Column) CamelPlural() string {
+	return util.StringToPlural(c.Camel())
+}
+
 func (c *Column) Proper() string {
 	return util.StringToCamel(c.Name)
 }

@@ -12,7 +12,7 @@ import (
 func Migration(m *model.Model, args *model.Args) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"queries", "ddl"}, m.Package+".sql")
 	if m.IsRevision() {
-		drop, err := sqlDropRevision(m)
+		drop, err := sqlDrop(m)
 		if err != nil {
 			return nil, err
 		}
@@ -37,9 +37,9 @@ func sqlDrop(m *model.Model) (*golang.Block, error) {
 	ret := golang.NewBlock("SQLDrop", "sql")
 	ret.W("-- {%% func " + m.Proper() + "Drop() %%}")
 	if m.IsRevision() {
-		ret.W("drop table if exists %q;", fmt.Sprintf("%s_%s", m.Package, m.HistoryColumn().Name))
+		ret.W("drop table if exists %q;", fmt.Sprintf("%s_%s", m.Name, m.HistoryColumn().Name))
 	}
-	ret.W("drop table if exists %q;", m.Package)
+	ret.W("drop table if exists %q;", m.Name)
 	ret.W("-- {%% endfunc %%}")
 	return ret, nil
 }
@@ -47,7 +47,7 @@ func sqlDrop(m *model.Model) (*golang.Block, error) {
 func sqlCreate(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("SQLCreate", "sql")
 	ret.W("-- {%% func " + m.Proper() + "Create() %%}")
-	ret.W("create table if not exists %q (", m.Package)
+	ret.W("create table if not exists %q (", m.Name)
 	for _, col := range m.Columns {
 		ret.W("  %q %s,", col.Name, col.ToSQLType())
 	}
@@ -56,7 +56,7 @@ func sqlCreate(m *model.Model) *golang.Block {
 
 	if pks := m.PKs(); len(pks) > 1 {
 		for _, pk := range pks {
-			addIndex(ret, m.Package, pk.Name)
+			addIndex(ret, m.Name, pk.Name)
 		}
 	}
 	ret.W("-- {%% endfunc %%}")

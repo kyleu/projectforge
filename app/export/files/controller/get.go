@@ -6,7 +6,6 @@ import (
 
 	"github.com/kyleu/projectforge/app/export/golang"
 	"github.com/kyleu/projectforge/app/export/model"
-	"github.com/kyleu/projectforge/app/util"
 )
 
 const incDel = "cutil.RequestCtxBool(rc, \"includeDeleted\")"
@@ -21,7 +20,7 @@ func controllerList(m *model.Model, grp *model.Column) *golang.Block {
 		controllerArgFor(grp, ret, "\"\"", 2)
 	}
 
-	ret.W("\t\tps.Title = %q", util.StringToPlural(m.Proper()))
+	ret.W("\t\tps.Title = %q", m.ProperPlural())
 	ret.W("\t\tparams := cutil.ParamSetFromRequest(rc)")
 	suffix := ""
 	if m.IsSoftDelete() {
@@ -61,14 +60,14 @@ func controllerDetail(m *model.Model, grp *model.Column) *golang.Block {
 		}
 		prmsStr := strings.Join(prms, ", ")
 		msg := "\t\t%s, err := as.Services.%s.GetAll%s(ps.Context, nil, %s, params.Get(%q, nil, ps.Logger), false)"
-		ret.W(msg, util.StringToPlural(hc.Camel()), m.Proper(), hc.ProperPlural(), prmsStr, m.Package)
+		ret.W(msg, hc.CamelPlural(), m.Proper(), hc.ProperPlural(), prmsStr, m.Package)
 	}
 	ret.W("\t\tps.Title = ret.String()")
 	ret.W("\t\tps.Data = ret")
 	suffix := ""
 	if m.IsRevision() {
 		revCol := m.HistoryColumn()
-		suffix = fmt.Sprintf(", %s: %s, Params: params", revCol.ProperPlural(), revCol.Plural())
+		suffix = fmt.Sprintf(", %s: %s, Params: params", revCol.ProperPlural(), revCol.CamelPlural())
 	}
 	ret.W("\t\treturn render(rc, as, &v%s.Detail{Model: ret%s}, ps, %q%s, ret.String())", m.Package, suffix, m.Package, grpHistory)
 	ret.W("\t})")
