@@ -65,7 +65,7 @@ func sqlCreate(m *model.Model) *golang.Block {
 
 func addIndex(ret *golang.Block, tbl string, names ...string) {
 	name := fmt.Sprintf("%s__%s_idx", tbl, strings.Join(names, "_"))
-	msg := "create index if not exists %q on %q(%q);"
+	msg := "create index if not exists %q on %q (%q);"
 	ret.W("")
 	ret.W(msg, name, tbl, strings.Join(names, ", "))
 }

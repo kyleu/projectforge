@@ -24,10 +24,6 @@ type Model struct {
 	historyMapDB   *HistoryMap
 }
 
-func (m *Model) NameLower() string {
-	return strings.ToLower(m.Name)
-}
-
 func (m *Model) Camel() string {
 	return util.StringToLowerCamel(m.Name)
 }

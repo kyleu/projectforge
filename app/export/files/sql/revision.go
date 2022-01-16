@@ -26,7 +26,7 @@ func sqlCreateRevision(m *model.Model) (*golang.Block, error) {
 	if len(pks) > 1 {
 		for _, pk := range pks {
 			ret.W("")
-			ret.W("create index if not exists %q on %q(%q);", fmt.Sprintf("%s__%s_idx", m.Name, pk.Name), m.Name, pk.Name)
+			ret.W("create index if not exists %q on %q (%q);", fmt.Sprintf("%s__%s_idx", m.Name, pk.Name), m.Name, pk.Name)
 		}
 	}
 
@@ -43,12 +43,12 @@ func sqlCreateRevision(m *model.Model) (*golang.Block, error) {
 	revPKsWithRev = append(revPKsWithRev, hc.Col)
 
 	bareRefs := strings.Join(revPKs.NamesQuoted(), ", ")
-	ret.W("  foreign key (%s) references %s(%s),", bareRefs, m.Name, strings.Join(pks.NamesQuoted(), ", "))
+	ret.W("  foreign key (%s) references %q (%s),", bareRefs, m.Name, strings.Join(pks.NamesQuoted(), ", "))
 
 	ret.W("  primary key (%s)", strings.Join(revPKsWithRev.NamesQuoted(), ", "))
 	ret.W(");")
 
-	msg := "create index if not exists \"%s__%s_idx\" on %q(%s);"
+	msg := "create index if not exists \"%s__%s_idx\" on %q (%s);"
 	ret.W(msg, revTblName, strings.Join(revPKs.Names(), "_"), revTblName, strings.Join(revPKs.NamesQuoted(), ", "))
 
 	for _, pk := range revPKsWithRev {
