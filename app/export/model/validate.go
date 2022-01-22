@@ -12,6 +12,9 @@ var goKeywords = []string{
 }
 
 func (m *Model) Validate() error {
+	if len(m.PKs()) == 0 {
+		return errors.Errorf("model [%s] has no primary key", m.Name)
+	}
 	if m.IsRevision() {
 		hc := m.HistoryColumns(true)
 		if hc.Err != nil {

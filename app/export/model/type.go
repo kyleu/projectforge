@@ -29,7 +29,7 @@ func (t *Type) ToGoType(nullable bool) string {
 	default:
 		return "ERROR:Unhandled[" + t.Key + "]"
 	}
-	if nullable {
+	if nullable && !t.IsScalar() {
 		return "*" + ret
 	}
 	return ret
