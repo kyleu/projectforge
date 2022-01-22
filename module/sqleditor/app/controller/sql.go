@@ -42,17 +42,23 @@ func SQLRun(rc *fasthttp.RequestCtx) {
 
 		start := util.TimerStart()
 		result, err := as.DB.Query(ps.Context, sql, tx)
+		if err != nil {
+			return "", err
+		}
+
 		elapsed := util.TimerEnd(start)
 
-		for result.Next() {
-			if columns == nil {
-				columns, _ = result.Columns()
+		if result != nil {
+			for result.Next() {
+				if columns == nil {
+					columns, _ = result.Columns()
+				}
+				row, err := result.SliceScan()
+				if err != nil {
+					return "", errors.Wrap(err, "unable to read row")
+				}
+				results = append(results, row)
 			}
-			row, err := result.SliceScan()
-			if err != nil {
-				return "", errors.Wrap(err, "unable to read row")
-			}
-			results = append(results, row)
 		}
 
 		if commit {

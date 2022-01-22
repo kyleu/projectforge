@@ -31,6 +31,13 @@ func ServiceAll(m *model.Model, args *model.Args, addHeader bool) (file.Files, e
 		}
 		ret = append(ret, r)
 	}
+	if m.IsHistory() {
+		r, err := ServiceHistory(m, args, addHeader)
+		if err != nil {
+			return nil, err
+		}
+		ret = append(ret, r)
+	}
 	return ret, nil
 }
 

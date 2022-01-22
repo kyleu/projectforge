@@ -116,7 +116,7 @@ func (p *Params) OrderByString() string {
 		if !o.Asc {
 			dir = " desc"
 		}
-		ret = append(ret, o.Column+dir)
+		ret = append(ret, fmt.Sprintf("%q%s", o.Column, dir))
 	}
 	return strings.Join(ret, ", ")
 }

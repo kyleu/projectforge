@@ -17,7 +17,7 @@ func History(m *model.Model, args *model.Args, addHeader bool) (*file.File, erro
 		g.AddImport(imp)
 	}
 	g.AddImport(helper.ImpJSON, helper.ImpUUID)
-	g.AddBlocks(modelHistory(m), modelHistoryToData(m), modelHistoryDTO(m), modelHistoryDTOToHistory(m))
+	g.AddBlocks(modelHistory(m), modelHistoryToData(m), modelHistories(m), modelHistoryDTO(m), modelHistoryDTOToHistory(m), modelHistoryDTOs(m))
 	return g.Render(addHeader)
 }
 
@@ -55,6 +55,12 @@ func modelHistoryToData(m *model.Model) *golang.Block {
 	return ret
 }
 
+func modelHistories(m *model.Model) *golang.Block {
+	ret := golang.NewBlock(m.Proper()+"Histories", "struct")
+	ret.W("type %sHistories []*%sHistory", m.Proper(), m.Proper())
+	return ret
+}
+
 func modelHistoryDTO(m *model.Model) *golang.Block {
 	ret := golang.NewBlock(m.Proper()+"HistoryDTO", "struct")
 	ret.W("type historyDTO struct {")
@@ -86,6 +92,20 @@ func modelHistoryDTOToHistory(m *model.Model) *golang.Block {
 		pkCalls = append(pkCalls, fmt.Sprintf("%s%s: h.%s%s", m.Proper(), pk.Proper(), m.Proper(), pk.Proper()))
 	}
 	ret.W("\treturn &HistoryHistory{ID: h.ID, %s, Old: o, New: n, Changes: c, Created: h.Created}", strings.Join(pkCalls, ", "))
+	ret.W("}")
+	return ret
+}
+
+func modelHistoryDTOs(m *model.Model) *golang.Block {
+	ret := golang.NewBlock(m.Proper()+"HistoryDTOs", "func")
+	ret.W("type historyDTOs []*historyDTO")
+	ret.W("")
+	ret.W("func (h historyDTOs) ToHistories() %sHistories {", m.Proper())
+	ret.W("\tret := make(%sHistories, 0, len(h))", m.Proper())
+	ret.W("\tfor _, x := range h {")
+	ret.W("\t\tret = append(ret, x.ToHistory())")
+	ret.W("\t}")
+	ret.W("\treturn ret")
 	ret.W("}")
 	return ret
 }
