@@ -79,8 +79,11 @@ func controllerDetail(models model.Models, m *model.Model, grp *model.Column) *g
 		lCols := rel.SrcColumns(m)
 		rCols := rel.TgtColumns(rm)
 		rNames := strings.Join(rCols.ProperNames(), "")
-		msg := "\t\t%sBy%s, _ := as.Services.%s.GetBy%s(ps.Context, nil, %s, params.Get(%q, nil, ps.Logger))"
+		msg := "\t\t%sBy%s, err := as.Services.%s.GetBy%s(ps.Context, nil, %s, params.Get(%q, nil, ps.Logger))"
 		ret.W(msg, rm.Plural(), rNames, rm.Proper(), rNames, lCols.ToGoStrings("ret."), rm.Camel())
+		ret.W("\t\tif err != nil {")
+		ret.W("\t\t\treturn \"\", errors.Wrap(err, \"unable to retrieve child %s\")", rm.TitlePluralLower())
+		ret.W("\t\t}")
 		suffix += fmt.Sprintf(", %sBy%s: %sBy%s", rm.ProperPlural(), rNames, rm.Plural(), rNames)
 	}
 	if m.IsRevision() {

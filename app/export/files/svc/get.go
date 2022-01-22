@@ -135,7 +135,7 @@ func serviceGetMultiple(key string, m *model.Model, cols model.Columns) *golang.
 	ret := golang.NewBlock(key, "func")
 	ret.W("func (s *Service) %s(ctx context.Context, tx *sqlx.Tx, %s, params *filter.Params%s) (%s, error) {", key, cols.Args(), getSuffix(m), m.ProperPlural())
 	ret.W("\tparams = filters(params)")
-	ret.W("\twc := defaultWC")
+	ret.W("\twc := %q", cols.WhereClause(0))
 	if m.IsSoftDelete() {
 		ret.W("\twc = addDeletedClause(wc, includeDeleted)")
 	}

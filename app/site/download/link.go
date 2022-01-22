@@ -112,5 +112,6 @@ const (
 	archPPC64        = "ppc64"
 	archRISCV64      = "riscv64"
 	archS390X        = "s390x"
+	archUniversal    = "all"
 	archWASM         = "wasm"
 )

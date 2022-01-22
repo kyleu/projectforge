@@ -1,0 +1,91 @@
+package gomodel
+
+import (
+	"fmt"
+	"strings"
+
+	"github.com/kyleu/projectforge/app/export/files/helper"
+	"github.com/kyleu/projectforge/app/export/golang"
+	"github.com/kyleu/projectforge/app/export/model"
+	"github.com/kyleu/projectforge/app/file"
+	"github.com/kyleu/projectforge/app/util"
+)
+
+func History(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
+	g := golang.NewFile(m.Package, []string{"app", m.Package}, m.Camel()+"history")
+	for _, imp := range helper.ImportsForTypes("go", m.Columns.Types()...) {
+		g.AddImport(imp)
+	}
+	g.AddImport(helper.ImpJSON, helper.ImpUUID)
+	g.AddBlocks(modelHistory(m), modelHistoryToData(m), modelHistoryDTO(m), modelHistoryDTOToHistory(m))
+	return g.Render(addHeader)
+}
+
+func modelHistory(m *model.Model) *golang.Block {
+	ret := golang.NewBlock(m.Proper()+"History", "struct")
+	ret.W("type %sHistory struct {", m.Proper())
+	max := m.PKs().MaxCamelLength() + len(m.Camel())
+	tmax := 13
+	ret.W("\t%s %s `json:\"id\"`", util.StringPad("ID", max), util.StringPad("uuid.UUID", tmax))
+	for _, pk := range m.PKs() {
+		ret.W("\t%s %s `json:\"%s%s\"`", util.StringPad(m.Proper()+pk.Proper(), max), util.StringPad(pk.ToGoType(), tmax), m.Camel(), pk.Proper())
+	}
+	ret.W("\t%s util.ValueMap `json:\"o,omitempty\"`", util.StringPad("Old", max))
+	ret.W("\t%s util.ValueMap `json:\"n,omitempty\"`", util.StringPad("New", max))
+	ret.W("\t%s util.Diffs    `json:\"c,omitempty\"`", util.StringPad("Changes", max))
+	ret.W("\t%s time.Time     `json:\"created\"`", util.StringPad("Created", max))
+	ret.W("}")
+	return ret
+}
+
+func modelHistoryToData(m *model.Model) *golang.Block {
+	ret := golang.NewBlock(m.Proper()+"HistoryToData", "func")
+	ret.W("func (h *%sHistory) ToData() []interface{} {", m.Proper())
+	ret.W("\treturn []interface{}{")
+	ret.W("\t\th.ID,")
+	for _, pk := range m.PKs() {
+		ret.W("\t\th.%s%s,", m.Proper(), pk.Proper())
+	}
+	ret.W("\t\tutil.ToJSONBytes(h.Old, true),")
+	ret.W("\t\tutil.ToJSONBytes(h.New, true),")
+	ret.W("\t\tutil.ToJSONBytes(h.Changes, true),")
+	ret.W("\t\th.Created,")
+	ret.W("\t}")
+	ret.W("}")
+	return ret
+}
+
+func modelHistoryDTO(m *model.Model) *golang.Block {
+	ret := golang.NewBlock(m.Proper()+"HistoryDTO", "struct")
+	ret.W("type historyDTO struct {")
+	max := m.PKs().MaxCamelLength() + len(m.Camel())
+	tmax := 15
+	ret.W("\t%s %s `db:\"id\"`", util.StringPad("ID", max), util.StringPad("uuid.UUID", tmax))
+	for _, pk := range m.PKs() {
+		ret.W("\t%s %s `db:\"%s_%s\"`", util.StringPad(m.Proper()+pk.Proper(), max), util.StringPad(pk.ToGoType(), tmax), m.Name, pk.Name)
+	}
+	ret.W("\t%s json.RawMessage `db:\"o\"`", util.StringPad("Old", max))
+	ret.W("\t%s json.RawMessage `db:\"n\"`", util.StringPad("New", max))
+	ret.W("\t%s json.RawMessage `db:\"c\"`", util.StringPad("Changes", max))
+	ret.W("\t%s time.Time       `db:\"created\"`", util.StringPad("Created", max))
+	ret.W("}")
+	return ret
+}
+
+func modelHistoryDTOToHistory(m *model.Model) *golang.Block {
+	ret := golang.NewBlock(m.Proper()+"HistoryDTOToHistory", "func")
+	ret.W("func (h *historyDTO) ToHistory() *%sHistory {", m.Proper())
+	ret.W("\to := util.ValueMap{}")
+	ret.W("\t_ = util.FromJSON(h.Old, &o)")
+	ret.W("\tn := util.ValueMap{}")
+	ret.W("\t_ = util.FromJSON(h.New, &n)")
+	ret.W("\tc := util.Diffs{}")
+	ret.W("\t_ = util.FromJSON(h.Changes, &c)")
+	pkCalls := make([]string, 0, len(m.PKs()))
+	for _, pk := range m.PKs() {
+		pkCalls = append(pkCalls, fmt.Sprintf("%s%s: h.%s%s", m.Proper(), pk.Proper(), m.Proper(), pk.Proper()))
+	}
+	ret.W("\treturn &HistoryHistory{ID: h.ID, %s, Old: o, New: n, Changes: c, Created: h.Created}", strings.Join(pkCalls, ", "))
+	ret.W("}")
+	return ret
+}

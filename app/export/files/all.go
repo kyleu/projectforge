@@ -78,6 +78,14 @@ func basics(m *model.Model, args *model.Args, addHeader bool) (file.Files, error
 	}
 	calls = append(calls, f)
 
+	if m.IsHistory() {
+		f, err = gomodel.History(m, args, addHeader)
+		if err != nil {
+			return nil, errors.Wrap(err, "can't render History")
+		}
+		calls = append(calls, f)
+	}
+
 	f, err = gomodel.DTO(m, args, addHeader)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't render DTO")

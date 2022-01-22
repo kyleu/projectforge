@@ -6,7 +6,10 @@ import (
 	"github.com/pkg/errors"
 )
 
-var RevisionType = "revision"
+const (
+	HistoryType  = "history"
+	RevisionType = "revision"
+)
 
 type HistoryMap struct {
 	Col   *Column `json:"col"`

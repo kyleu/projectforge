@@ -36,6 +36,9 @@ func Migration(m *model.Model, args *model.Args, addHeader bool) (*file.File, er
 func sqlDrop(m *model.Model) (*golang.Block, error) {
 	ret := golang.NewBlock("SQLDrop", "sql")
 	ret.W("-- {%% func " + m.Proper() + "Drop() %%}")
+	if m.IsHistory() {
+		ret.W("drop table if exists %q;", fmt.Sprintf("%s_history", m.Name))
+	}
 	if m.IsRevision() {
 		ret.W("drop table if exists %q;", fmt.Sprintf("%s_%s", m.Name, m.HistoryColumn().Name))
 	}
@@ -60,6 +63,7 @@ func sqlCreate(m *model.Model) *golang.Block {
 			addIndex(ret, m.Name, pk.Name)
 		}
 	}
+	sqlHistory(ret, m)
 	ret.W("-- {%% endfunc %%}")
 	return ret
 }

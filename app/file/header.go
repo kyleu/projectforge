@@ -19,60 +19,24 @@ func contentWithHeader(t Type, c string, logger *zap.SugaredLogger) string {
 	switch t.Key {
 	case TypeBatch.Key:
 		return "rem " + HeaderContent + "\n" + c
-	case TypeCodeowners.Key:
+	case TypeCodeowners.Key, TypeDocker.Key, TypeYAML.Key, TypeProperties.Key, TypeMakefile.Key, TypeHCL.Key:
 		return "# " + HeaderContent + "\n" + c
-	case TypeConf.Key:
+	case TypeConf.Key, TypeIcons.Key, TypeIgnore.Key, TypeGitIgnore.Key, TypePList.Key, TypeJSON.Key, TypeSVG.Key:
 		return c
 	case TypeCSS.Key:
 		return "/* " + HeaderContent + " */\n" + c
-	case TypeDocker.Key:
-		return "# " + HeaderContent + "\n" + c
-	case TypeEntitlements.Key:
-		return secondLine(c, "<!-- "+HeaderContent+" -->")
-	case TypeGitIgnore.Key:
-		return c
-	case TypeGo.Key:
+	case TypeGo.Key, TypeGoMod.Key, TypeGradle.Key, TypeJavaScript.Key, TypeKotlin.Key, TypeSwift.Key, TypeTypeScript.Key:
 		return "// " + HeaderContent + "\n" + c
-	case TypeGoMod.Key:
-		return "// " + HeaderContent + "\n" + c
-	case TypeGradle.Key:
-		return "// " + HeaderContent + "\n" + c
-	case TypeHCL.Key:
-		return "# " + HeaderContent + "\n" + c
 	case TypeHTML.Key:
 		return "<!-- " + HeaderContent + " -->\n" + c
-	case TypeIcons.Key:
-		return c
-	case TypeIgnore.Key:
-		return c
-	case TypeJavaScript.Key:
-		return "// " + HeaderContent + "\n" + c
-	case TypeJSON.Key:
-		return c
-	case TypeKotlin.Key:
-		return "// " + HeaderContent + "\n" + c
-	case TypeMakefile.Key:
-		return "# " + HeaderContent + "\n" + c
 	case TypeMarkdown.Key:
 		return "<!--- " + HeaderContent + " -->\n" + c
-	case TypePList.Key:
-		return c
-	case TypeProperties.Key:
-		return "# " + HeaderContent + "\n" + c
-	case TypeShell.Key:
-		return secondLine(c, "# "+HeaderContent)
 	case TypeSQL.Key:
 		return "-- " + HeaderContent + "\n" + c
-	case TypeSVG.Key:
-		return c
-	case TypeSwift.Key:
-		return "// " + HeaderContent + "\n" + c
-	case TypeTypeScript.Key:
-		return "// " + HeaderContent + "\n" + c
-	case TypeXML.Key:
+	case TypeShell.Key:
+		return secondLine(c, "# "+HeaderContent)
+	case TypeEntitlements.Key, TypeXML.Key:
 		return secondLine(c, "<!-- "+HeaderContent+" -->")
-	case TypeYAML.Key:
-		return "# " + HeaderContent + "\n" + c
 	default:
 		logger.Warnf("unhandled header for file type [%s]", t.Title)
 		return c

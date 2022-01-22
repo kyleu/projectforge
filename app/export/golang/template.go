@@ -34,7 +34,11 @@ func (f *Template) Render(addHeader bool) (*file.File, error) {
 	}
 
 	if addHeader {
-		content = append(content, fmt.Sprintf("<!-- %s -->", file.HeaderContent))
+		if strings.HasSuffix(f.Name, ".sql") {
+			content = append(content, fmt.Sprintf("-- %s", file.HeaderContent))
+		} else {
+			content = append(content, fmt.Sprintf("<!-- %s -->", file.HeaderContent))
+		}
 	}
 	if len(f.Imports) > 0 {
 		add(f.Imports.RenderHTML())

@@ -8,11 +8,14 @@ import (
 	"go.uber.org/zap"
 
 	"{{{ .Package }}}/app/lib/database"
+	"{{{ .Package }}}/app/lib/telemetry"
 	"{{{ .Package }}}/app/util"
 )
 
 func Migrate(ctx context.Context, s *database.Service, logger *zap.SugaredLogger) error {
-	logger = logger.With("svc", "migrate")
+	ctx, span := telemetry.StartSpan(ctx, util.AppKey, "migrate")
+	logger = telemetry.LoggerFor(logger.With("svc", "migrate"), span)
+
 	err := createMigrationTableIfNeeded(ctx, s, logger)
 	if err != nil {
 		return errors.Wrap(err, "unable to create migration table")

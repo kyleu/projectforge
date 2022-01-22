@@ -14,6 +14,7 @@ import (
 	"{{{ .Package }}}/app/controller"{{{ if .HasModule "migration" }}}
 	"{{{ .Package }}}/app/lib/database"{{{ end }}}
 	"{{{ .Package }}}/app/lib/filesystem"
+	"{{{ .Package }}}/app/lib/telemetry"
 	"{{{ .Package }}}/app/util"
 )
 
@@ -46,15 +47,18 @@ func loadServer(flags *Flags, logger *zap.SugaredLogger) (fasthttp.RequestHandle
 	st, err := app.NewState(flags.Debug, _buildInfo, f, logger)
 	if err != nil {
 		return nil, logger, err
-	}{{{ if .HasModule "migration" }}}
+	}
 
-	db, err := database.OpenDefaultPostgres(logger)
+	ctx, span := telemetry.StartSpan(context.Background(), util.AppKey, "appinit")
+	defer span.Complete(){{{ if .HasModule "migration" }}}
+
+	db, err := database.OpenDefaultPostgres(ctx, logger)
 	if err != nil {
 		return nil, logger, errors.Wrap(err, "unable to open database")
 	}
 	st.DB = db{{{ end }}}
 
-	svcs, err := app.NewServices(context.Background(), st)
+	svcs, err := app.NewServices(ctx, st)
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "error creating services")
 	}

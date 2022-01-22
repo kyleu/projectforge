@@ -24,7 +24,7 @@ func Model(m *model.Model, args *model.Args, addHeader bool) (*file.File, error)
 	}
 	g.AddImport(helper.ImpAppUtil)
 	g.AddBlocks(modelStruct(m), modelConstructor(m), modelRandom(m), modelFromMap(m))
-	g.AddBlocks(modelClone(m), modelString(m), modelWebPath(m), modelToData(m, m.Columns, ""))
+	g.AddBlocks(modelClone(m), modelString(m), modelWebPath(m), modelDiff(m, g), modelToData(m, m.Columns, ""))
 	if m.IsRevision() {
 		hc := m.HistoryColumns(false)
 		g.AddBlocks(modelToData(m, hc.Const, "Core"), modelToData(m, hc.Var, hc.Col.Proper()))
@@ -53,6 +53,43 @@ func modelConstructor(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("New"+m.Proper(), "func")
 	ret.W("func New(%s) *%s {", m.PKs().Args(), m.Proper())
 	ret.W("\treturn &%s{%s}", m.Proper(), m.PKs().Refs())
+	ret.W("}")
+	return ret
+}
+
+func modelDiff(m *model.Model, g *golang.File) *golang.Block {
+	ret := golang.NewBlock("Diff"+m.Proper(), "func")
+	ret.W("func (%s *%s) Diff(%sx *%s) util.Diffs {", m.FirstLetter(), m.Proper(), m.FirstLetter(), m.Proper())
+	ret.W("\tvar diffs util.Diffs")
+	for _, col := range m.Columns {
+		l := fmt.Sprintf("%s.%s", m.FirstLetter(), col.Proper())
+		r := fmt.Sprintf("%sx.%s", m.FirstLetter(), col.Proper())
+		switch col.Type.Key {
+		case model.TypeInt.Key:
+			g.AddImport(helper.ImpFmt)
+			ret.W("\tif %s != %s {", l, r)
+			ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, fmt.Sprint(%s), fmt.Sprint(%s)))", col.Camel(), l, r)
+			ret.W("\t}")
+		case model.TypeMap.Key:
+			ret.W("\tdiffs = append(diffs, util.DiffObjects(%s, %s, %q)...)", l, r, col.Camel())
+		case model.TypeString.Key:
+			ret.W("\tif %s != %s {", l, r)
+			ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, %s, %s))", col.Camel(), l, r)
+			ret.W("\t}")
+		case model.TypeTimestamp.Key:
+			g.AddImport(helper.ImpFmt)
+			ret.W("\tif %s != %s {", l, r)
+			ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, fmt.Sprint(%s), fmt.Sprint(%s)))", col.Camel(), l, r)
+			ret.W("\t}")
+		case model.TypeUUID.Key:
+			ret.W("\tif %s != %s {", l, r)
+			ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, %s.String(), %s.String()))", col.Camel(), l, r)
+			ret.W("\t}")
+		default:
+			ret.W("\tTODO: %s", col.Type.Key)
+		}
+	}
+	ret.W("\treturn diffs")
 	ret.W("}")
 	return ret
 }

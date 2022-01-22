@@ -20,7 +20,7 @@ func migrateCmd() *cobra.Command {
 
 func runMigrations() error {
 	logger, _ := log.InitLogging(false)
-	db, err := database.OpenDefaultPostgres(logger)
+	db, err := database.OpenDefaultPostgres(context.Background(), logger)
 	if err != nil {
 		return errors.Wrap(err, "unable to open database")
 	}

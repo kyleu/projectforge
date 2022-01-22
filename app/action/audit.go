@@ -22,9 +22,9 @@ func onAudit(pm *PrjAndMods) *Result {
 
 	var generated []string
 	for _, fn := range filenames {
-		b, err := tgt.PeekFile(fn, 1024)
-		if err != nil {
-			return errorResult(err, pm.Cfg, pm.Logger)
+		b, e := tgt.PeekFile(fn, 1024)
+		if e != nil {
+			return errorResult(e, pm.Cfg, pm.Logger)
 		}
 		if file.ContainsHeader(string(b)) {
 			generated = append(generated, fn)

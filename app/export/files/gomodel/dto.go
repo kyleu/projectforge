@@ -66,7 +66,7 @@ func modelTableCols(m *model.Model, g *golang.File) (*golang.Block, error) {
 }
 
 func modelDTO(m *model.Model) *golang.Block {
-	ret := golang.NewBlock(m.Proper(), "struct")
+	ret := golang.NewBlock(m.Proper()+"DTO", "struct")
 	ret.W("type dto struct {")
 	maxColLength := util.StringArrayMaxLength(m.Columns.CamelNames())
 	maxTypeLength := m.Columns.MaxGoDTOKeyLength()

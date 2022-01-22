@@ -124,6 +124,10 @@ func (m *Model) IsRevision() bool {
 	return m.History == RevisionType
 }
 
+func (m *Model) IsHistory() bool {
+	return m.History == HistoryType
+}
+
 func (m *Model) RelationsFor(col *Column) Relations {
 	var ret Relations
 	for _, r := range m.Relations {

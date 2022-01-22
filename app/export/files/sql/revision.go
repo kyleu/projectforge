@@ -57,6 +57,7 @@ func sqlCreateRevision(m *model.Model) (*golang.Block, error) {
 		}
 	}
 
+	sqlHistory(ret, m)
 	ret.W("-- {%% endfunc %%}")
 	return ret, nil
 }
