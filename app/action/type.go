@@ -13,6 +13,7 @@ type Type struct {
 }
 
 var (
+	TypeAudit   = Type{Key: "audit", Title: "Audit", Icon: "star", Description: "Audits the project files"}
 	TypeBuild   = Type{Key: "build", Title: "Build", Icon: "star", Description: "Builds the project"}
 	TypeCreate  = Type{Key: "create", Title: "Create", Icon: "star", Description: "Creates a new project"}
 	TypeDoctor  = Type{Key: "doctor", Title: "Doctor", Icon: "star", Description: "Makes sure your machine has the required dependencies"}
@@ -24,8 +25,8 @@ var (
 )
 
 var (
-	AllTypes     = []Type{TypeBuild, TypeCreate, TypeDoctor, TypeMerge, TypePreview, TypeSlam, TypeSVG, TypeTest}
-	ProjectTypes = []Type{TypePreview, TypeMerge, TypeSlam}
+	AllTypes     = []Type{TypeAudit, TypeBuild, TypeCreate, TypeDoctor, TypeMerge, TypePreview, TypeSlam, TypeSVG, TypeTest}
+	ProjectTypes = []Type{TypePreview, TypeMerge, TypeSlam, TypeAudit}
 )
 
 func TypeFromString(s string) Type {

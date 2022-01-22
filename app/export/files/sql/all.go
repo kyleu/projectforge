@@ -6,10 +6,10 @@ import (
 	"github.com/kyleu/projectforge/app/file"
 )
 
-func MigrationAll(models model.Models) (*file.File, error) {
+func MigrationAll(models model.Models, addHeader bool) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"queries", "ddl"}, "all.sql")
 	g.AddBlocks(sqlDropAll(models), sqlCreateAll(models))
-	return g.Render()
+	return g.Render(addHeader)
 }
 
 func sqlDropAll(models model.Models) *golang.Block {

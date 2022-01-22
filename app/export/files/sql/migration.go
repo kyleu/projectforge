@@ -9,7 +9,7 @@ import (
 	"github.com/kyleu/projectforge/app/file"
 )
 
-func Migration(m *model.Model, args *model.Args) (*file.File, error) {
+func Migration(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"queries", "ddl"}, m.Package+".sql")
 	if m.IsRevision() {
 		drop, err := sqlDrop(m)
@@ -30,7 +30,7 @@ func Migration(m *model.Model, args *model.Args) (*file.File, error) {
 		g.AddBlocks(drop)
 		g.AddBlocks(sqlCreate(m))
 	}
-	return g.Render()
+	return g.Render(addHeader)
 }
 
 func sqlDrop(m *model.Model) (*golang.Block, error) {
@@ -51,6 +51,7 @@ func sqlCreate(m *model.Model) *golang.Block {
 	for _, col := range m.Columns {
 		ret.W("  %q %s,", col.Name, col.ToSQLType())
 	}
+	sqlRelations(ret, m)
 	ret.W("  primary key (%s)", strings.Join(m.PKs().NamesQuoted(), ", "))
 	ret.W(");")
 

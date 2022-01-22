@@ -1,4 +1,5 @@
 #!/bin/bash
+# Content managed by Project Forge, see [projectforge.md] for details.
 
 ## Uses `esbuild` to compile the scripts in `client`
 ## Requires esbuild and watchexec available on the path

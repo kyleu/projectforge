@@ -17,8 +17,10 @@
         panic(err)
       }
     -%}
+    {%- if ea.Config != nil -%}
     <h3>Config Settings</h3>
     {%= components.JSON(ea.Config) %}
+    {%- endif -%}
     <h3 class="mt">Models</h3>
     <ul class="accordion">
       {%- for _, m := range ea.Models -%}

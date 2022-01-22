@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-var defaultIgnore = []string{".DS_Store$", ".git", ".idea", ".html.go$", ".sql.go$"}
+var defaultIgnore = []string{".DS_Store$", "^.git/", "^.idea/", "^build/", ".html.go$", ".sql.go$"}
 
 func (f *FileSystem) ListFiles(path string, ign []string) []os.DirEntry {
 	ignore := buildIgnore(ign)

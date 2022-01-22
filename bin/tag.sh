@@ -1,4 +1,5 @@
 #!/bin/bash
+# Content managed by Project Forge, see [projectforge.md] for details.
 
 ## Tags the git repo using the first argument or the incremented minor version
 

@@ -3,6 +3,7 @@ package grpc
 import (
 	"strings"
 
+	"github.com/kyleu/projectforge/app/export/files/helper"
 	"github.com/kyleu/projectforge/app/export/golang"
 	"github.com/kyleu/projectforge/app/export/model"
 	"github.com/kyleu/projectforge/app/util"
@@ -61,13 +62,13 @@ func idClauseFor(m *model.Model) (string, string) {
 	return "", ""
 }
 
-func grpcParamsFromRequest(m *model.Model, cPkg string) (*golang.Block, error) {
+func grpcParamsFromRequest(m *model.Model, cPkg string, g *golang.File) (*golang.Block, error) {
 	ret := golang.NewBlock("grpcParamsFromRequest", "func")
 	pks := m.PKs()
 	ret.W("func %sParamsFromRequest(r *provider.NuevoRequest) (%s, error) {", m.Camel(), strings.Join(pks.GoTypeKeys(), ", "))
 	zeroVals := strings.Join(pks.ZeroVals(), ", ")
 	for _, col := range pks {
-		err := grpcArgFor(col, ret, zeroVals)
+		err := grpcArgFor(col, ret, zeroVals, g)
 		if err != nil {
 			return nil, errors.Wrap(err, "")
 		}
@@ -77,7 +78,7 @@ func grpcParamsFromRequest(m *model.Model, cPkg string) (*golang.Block, error) {
 	return ret, nil
 }
 
-func grpcArgFor(col *model.Column, b *golang.Block, zeroVals string) error {
+func grpcArgFor(col *model.Column, b *golang.Block, zeroVals string, g *golang.File) error {
 	switch col.Type.Key {
 	case model.TypeInt.Key:
 		b.W("\t%s, err := provider.GetRequestInt(r, %q)", col.Camel(), col.Camel())
@@ -89,6 +90,17 @@ func grpcArgFor(col *model.Column, b *golang.Block, zeroVals string) error {
 		b.W("\tif err != nil {")
 		b.W("\t\treturn %s, err", zeroVals)
 		b.W("\t}")
+	case model.TypeUUID.Key:
+		g.AddImport(helper.ImpUUID)
+		b.W("\t%sString, err := provider.GetRequestString(r, %q)", col.Camel(), col.Camel())
+		b.W("\tif err != nil {")
+		b.W("\t\treturn %s, err", zeroVals)
+		b.W("\t}")
+		b.W("\t%sParsed := util.UUIDFromString(%sString)", col.Camel(), col.Camel())
+		b.W("\tif %sParsed == nil {", col.Camel())
+		b.W("\t\treturn %s, errors.New(\"field [%s] must be a uuid\")", zeroVals, col.Camel())
+		b.W("\t}")
+		b.W("\t%s := *%sParsed", col.Camel(), col.Camel())
 	default:
 		return errors.Errorf("unhandled gRPC arg type [%s]", col.Type.String())
 	}

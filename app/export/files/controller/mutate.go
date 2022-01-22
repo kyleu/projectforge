@@ -18,7 +18,11 @@ func controllerCreateForm(m *model.Model, grp *model.Column) *golang.Block {
 		decls = append(decls, fmt.Sprintf("%s: %sArg", grp.Proper(), grp.Camel()))
 	}
 	ret.W("\t\tret := &%s{%s}", m.ClassRef(), strings.Join(decls, ", "))
-	ret.W("\t\tps.Title = \"Create [" + m.Proper() + "]\"")
+	if grp == nil {
+		ret.W("\t\tps.Title = \"Create [" + m.Proper() + "]\"")
+	} else {
+		ret.W("\t\tps.Title = fmt.Sprintf(\"Create ["+m.Proper()+"] for %s [%%%%s]\", %sArg)", grp.TitleLower(), grp.Camel())
+	}
 	ret.W("\t\tps.Data = ret")
 	ret.W("\t\treturn render(rc, as, &v%s.Edit{Model: ret, IsNew: true}, ps, %q%s, \"Create\")", m.Package, m.Package, grp.BC())
 	ret.W("\t})")

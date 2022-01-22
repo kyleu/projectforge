@@ -15,14 +15,14 @@ func Menu(f *file.File, args *model.Args) error {
 	out := make([]string, 0, len(args.Models))
 	msg := `Key: %q, Title: %q, Description: %q, Icon: %q, Route: "/%s"`
 	for _, m := range args.Models {
-		l := fmt.Sprintf(msg, m.Package, m.TitlePlural(), m.Description, m.Icon, m.Package)
+		l := fmt.Sprintf(msg, m.Package, m.TitlePlural(), m.Description, m.Icon, m.Route())
 		if len(m.GroupedColumns()) == 0 {
 			out = append(out, "&menu.Item{"+l+"},")
 		} else {
 			out = append(out, "&menu.Item{"+l+", Children: menu.Items{")
 			for _, g := range m.GroupedColumns() {
 				desc := fmt.Sprintf("%s from %s", g.ProperPlural(), m.Plural())
-				gl := fmt.Sprintf(msg, g.Camel(), g.ProperPlural(), desc, m.Icon, m.Package+"/"+g.Camel())
+				gl := fmt.Sprintf(msg, g.Camel(), g.ProperPlural(), desc, m.Icon, m.Route()+"/"+g.Camel())
 				out = append(out, "\t&menu.Item{"+gl+"},")
 			}
 			out = append(out, "}},")

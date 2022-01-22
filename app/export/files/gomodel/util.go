@@ -3,7 +3,21 @@ package gomodel
 import (
 	"github.com/kyleu/projectforge/app/export/golang"
 	"github.com/kyleu/projectforge/app/export/model"
+	"github.com/kyleu/projectforge/app/util"
 )
+
+func modelClone(m *model.Model) *golang.Block {
+	ret := golang.NewBlock("Clone", "func")
+	ret.W("func (%s *%s) Clone() *%s {", m.FirstLetter(), m.Proper(), m.Proper())
+	ret.W("\treturn &%s{", m.Proper())
+	max := m.Columns.MaxCamelLength() + 1
+	for _, col := range m.Columns {
+		ret.W("\t\t%s %s.%s,", util.StringPad(col.Proper()+":", max), m.FirstLetter(), col.Proper())
+	}
+	ret.W("\t}")
+	ret.W("}")
+	return ret
+}
 
 func modelString(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("String", "func")
@@ -38,7 +52,7 @@ func modelString(m *model.Model) *golang.Block {
 func modelWebPath(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("WebPath", "type")
 	ret.W("func (%s *%s) WebPath() string {", m.FirstLetter(), m.Proper())
-	p := "\"/" + m.Package + "\""
+	p := "\"/" + m.Route() + "\""
 	for _, pk := range m.PKs() {
 		p += " + \"/\" + "
 		p += pk.ToGoString(m.FirstLetter() + ".")

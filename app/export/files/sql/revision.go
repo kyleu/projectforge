@@ -44,7 +44,7 @@ func sqlCreateRevision(m *model.Model) (*golang.Block, error) {
 
 	bareRefs := strings.Join(revPKs.NamesQuoted(), ", ")
 	ret.W("  foreign key (%s) references %q (%s),", bareRefs, m.Name, strings.Join(pks.NamesQuoted(), ", "))
-
+	sqlRelations(ret, m)
 	ret.W("  primary key (%s)", strings.Join(revPKsWithRev.NamesQuoted(), ", "))
 	ret.W(");")
 

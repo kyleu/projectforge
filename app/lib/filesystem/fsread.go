@@ -1,3 +1,4 @@
+// Content managed by Project Forge, see [projectforge.md] for details.
 package filesystem
 
 import (
@@ -12,6 +13,10 @@ func (f *FileSystem) PeekFile(path string, maxSize int) ([]byte, error) {
 		return nil, errors.Wrapf(err, "unable to open file [%s]", path)
 	}
 	defer func() { _ = file.Close() }()
+
+	if stat, _ := file.Stat(); stat.Size() == 0 {
+		return nil, nil
+	}
 
 	b := make([]byte, maxSize)
 

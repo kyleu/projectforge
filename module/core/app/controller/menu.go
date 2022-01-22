@@ -12,7 +12,7 @@ import (
 
 func MenuFor(ctx context.Context, isAuthed bool, isAdmin bool, as *app.State) (menu.Items, error) {
 	ctx, span := telemetry.StartSpan(ctx, "menu", "menu:generate")
-	defer span.End()
+	defer span.Complete()
 
 	var ret menu.Items
 	// $PF_SECTION_START(routes_start)$

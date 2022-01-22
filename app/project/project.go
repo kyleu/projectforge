@@ -86,6 +86,15 @@ func NewProject(key string, path string) *Project {
 
 type Projects []*Project
 
+func (p Projects) Root() *Project {
+	for _, x := range p {
+		if x.Path == "." {
+			return x
+		}
+	}
+	return nil
+}
+
 func (p Projects) AllModules() []string {
 	var ret []string
 	for _, prj := range p {

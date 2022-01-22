@@ -9,7 +9,7 @@ import (
 	"github.com/kyleu/projectforge/app/file"
 )
 
-func edit(m *model.Model, args *model.Args) (*file.File, error) {
+func edit(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"views", "v" + m.Package}, "Edit.html")
 	for _, imp := range helper.ImportsForTypes("webedit", m.Columns.Types()...) {
 		g.AddImport(imp)
@@ -17,7 +17,7 @@ func edit(m *model.Model, args *model.Args) (*file.File, error) {
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpLayout)
 	g.AddImport(helper.AppImport("app/" + m.Package))
 	g.AddBlocks(exportViewEditClass(m), exportViewEditBody(m))
-	return g.Render()
+	return g.Render(addHeader)
 }
 
 func exportViewEditClass(m *model.Model) *golang.Block {
@@ -31,7 +31,7 @@ func exportViewEditClass(m *model.Model) *golang.Block {
 }
 
 func exportViewEditBody(m *model.Model) *golang.Block {
-	editURL := "/" + m.Package
+	editURL := "/" + m.Route()
 	for _, pk := range m.PKs() {
 		editURL += "/{%% " + pk.ToGoString("p.Model.") + " %%}"
 	}
@@ -42,15 +42,15 @@ func exportViewEditBody(m *model.Model) *golang.Block {
 	ret.W("{%% func (p *Edit) Body(as *app.State, ps *cutil.PageState) %%}")
 	ret.W("  <div class=\"card\">")
 	ret.W("    {%%- if p.IsNew -%%}")
-	ret.W("    <div class=\"right\"><a href=\"/%s/random\"><button>Random</button></a></div>", m.Camel())
+	ret.W("    <div class=\"right\"><a href=\"/%s/random\"><button>Random</button></a></div>", m.Route())
 	ret.W("    <h3>{%%= components.SVGRefIcon(`" + m.Icon + "`, ps) %%} New " + m.Title() + "</h3>")
-	ret.W("    <form action=\"/%s/new\" class=\"mt\" method=\"post\">", m.Package)
+	ret.W("    <form action=\"/%s/new\" class=\"mt\" method=\"post\">", m.Route())
 	ret.W("    {%%- else -%%}")
 	ret.W("    <div class=\"right\"><a href=\"{%%s p.Model.WebPath() %%}/delete\" onclick=\"return confirm('" + delMsg + "')\"><button>Delete</button></a></div>")
 	ret.W("    <h3>{%%= components.SVGRefIcon(`" + m.Icon + "`, ps) %%} Edit " + m.Title() + " [{%%s p.Model.String() %%}]</h3>")
 	ret.W("    <form action=\"\" class=\"mt\" method=\"post\">")
 	ret.W("    {%%- endif -%%}")
-	ret.W("      <table>")
+	ret.W("      <table class=\"mt\">")
 	ret.W("        <tbody>")
 	editCols := m.Columns.WithoutTag("created").WithoutTag("updated")
 	for _, col := range editCols {

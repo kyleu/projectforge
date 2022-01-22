@@ -1,3 +1,4 @@
+// Content managed by Project Forge, see [projectforge.md] for details.
 module github.com/kyleu/projectforge/tools/desktop
 
 go 1.15

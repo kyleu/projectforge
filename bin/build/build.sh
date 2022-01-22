@@ -1,4 +1,5 @@
 #!/bin/bash
+# Content managed by Project Forge, see [projectforge.md] for details.
 
 ## Builds the app (or just use make build)
 

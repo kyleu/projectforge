@@ -1,3 +1,4 @@
+// Content managed by Project Forge, see [projectforge.md] for details.
 package controller
 
 import (
@@ -54,8 +55,8 @@ func AppRoutes() fasthttp.RequestHandler {
 	r.GET("/svg/{key}/{icon}/setapp", SVGSetApp)
 	r.GET("/svg/{key}/{icon}/remove", SVGRemove)
 
-	r.GET("/build/{key}", BuildIndex)
-	r.GET("/build/{key}/{act}", BuildIndex)
+	r.GET("/b/{key}", Build)
+	r.GET("/b/{key}/{act}", Build)
 
 	r.GET("/git", GitActionAll)
 	r.GET("/git/all/{act}", GitActionAll)

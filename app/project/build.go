@@ -11,6 +11,7 @@ type Build struct {
 	Private   bool `json:"private,omitempty"`
 	Changelog bool `json:"changelog,omitempty"`
 	TestsFail bool `json:"testsFail,omitempty"`
+	Headers   bool `json:"headers,omitempty"`
 
 	Desktop  bool `json:"desktop,omitempty"`
 	Notarize bool `json:"notarize,omitempty"`
@@ -49,8 +50,7 @@ func (b *Build) HasArm() bool {
 
 // nolint
 func (b *Build) Empty() bool {
-	return !(b.Publish || b.Private || b.Changelog || b.TestsFail ||
-		b.Desktop || b.Notarize || b.Signing ||
+	return !(b.Publish || b.Private || b.Changelog || b.TestsFail || b.Desktop || b.Notarize || b.Signing ||
 		b.Android || b.IOS || b.WASM || b.X86 || b.WindowsARM ||
 		b.LinuxARM || b.LinuxMIPS || b.LinuxOdd || b.Dragonfly || b.Illumos || b.FreeBSD || b.NetBSD ||
 		b.OpenBSD || b.Plan9 || b.Solaris || b.Homebrew || b.NFPMS || b.Snapcraft)

@@ -1,4 +1,5 @@
 #!/usr/bin/osascript
+# Content managed by Project Forge, see [projectforge.md] for details.
 tell application "iTerm2"
     tell current session of current tab of current window
         write text "cd ~/go/src/github.com/kyleu/projectforge"

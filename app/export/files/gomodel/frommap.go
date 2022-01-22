@@ -28,18 +28,18 @@ func modelFromMap(m *model.Model) *golang.Block {
 
 func forCols(ret *golang.Block, indent int, cols ...*model.Column) {
 	ind := util.StringRepeat("\t", indent)
-	catchErr := func() {
-		ret.W(ind + "if err != nil {")
-		ret.W(ind + "\treturn nil, err")
+	catchErr := func(s string) {
+		ret.W(ind + "if " + s + " != nil {")
+		ret.W(ind + "\treturn nil, " + s)
 		ret.W(ind + "}")
 	}
 	for _, col := range cols {
 		if col.Nullable || col.Type.IsScalar() {
 			ret.W(ind+"ret.%s, err = m.Parse%s(%q, true, true)", col.Proper(), col.ToGoMapParse(), col.Camel())
-			catchErr()
+			catchErr("err")
 		} else {
-			ret.W(ind+"ret%s, err := m.Parse%s(%q, true, true)", col.Proper(), col.ToGoMapParse(), col.Camel())
-			catchErr()
+			ret.W(ind+"ret%s, e := m.Parse%s(%q, true, true)", col.Proper(), col.ToGoMapParse(), col.Camel())
+			catchErr("e")
 			ret.W(ind+"ret.%s = *ret%s", col.Proper(), col.Proper())
 		}
 	}

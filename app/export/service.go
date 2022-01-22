@@ -18,8 +18,8 @@ func NewService(logger *zap.SugaredLogger) *Service {
 	return &Service{logger: logger}
 }
 
-func (s *Service) Files(args *model.Args) (file.Files, error) {
-	return files.All(args)
+func (s *Service) Files(args *model.Args, addHeader bool) (file.Files, error) {
+	return files.All(args, addHeader)
 }
 
 func (s *Service) Inject(args *model.Args, fs file.Files) error {

@@ -10,7 +10,7 @@ import (
 	"github.com/kyleu/projectforge/app/file"
 )
 
-func ServiceGet(m *model.Model, args *model.Args) (*file.File, error) {
+func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.Package}, "serviceget")
 	for _, imp := range helper.ImportsForTypes("go", m.PKs().Types()...) {
 		g.AddImport(imp)
@@ -43,7 +43,7 @@ func ServiceGet(m *model.Model, args *model.Args) (*file.File, error) {
 			}
 		}
 	}
-	return g.Render()
+	return g.Render(addHeader)
 }
 
 func serviceGrouped(m *model.Model, grp *model.Column) *golang.Block {
@@ -108,7 +108,7 @@ func serviceGetOne(key string, m *model.Model, cols model.Columns) *golang.Block
 	}
 	ret := golang.NewBlock(key, "func")
 	ret.W("func (s *Service) %s(ctx context.Context, tx *sqlx.Tx, %s%s) (*%s, error) {", key, cols.Args(), getSuffix(m), m.Proper())
-	ret.W("\twc := %q", cols.WhereClause(0))
+	ret.W("\twc := defaultWC")
 	if m.IsSoftDelete() {
 		ret.W("\twc = addDeletedClause(wc, includeDeleted)")
 	}
@@ -135,7 +135,7 @@ func serviceGetMultiple(key string, m *model.Model, cols model.Columns) *golang.
 	ret := golang.NewBlock(key, "func")
 	ret.W("func (s *Service) %s(ctx context.Context, tx *sqlx.Tx, %s, params *filter.Params%s) (%s, error) {", key, cols.Args(), getSuffix(m), m.ProperPlural())
 	ret.W("\tparams = filters(params)")
-	ret.W("\twc := %q", cols.WhereClause(0))
+	ret.W("\twc := defaultWC")
 	if m.IsSoftDelete() {
 		ret.W("\twc = addDeletedClause(wc, includeDeleted)")
 	}
@@ -146,7 +146,7 @@ func serviceGetMultiple(key string, m *model.Model, cols model.Columns) *golang.
 	sj := strings.Join(cols.CamelNames(), ", ")
 	decls := make([]string, 0, len(cols))
 	for _, c := range cols {
-		decls = append(decls, c.Camel()+" [%%s]")
+		decls = append(decls, c.Camel()+" [%%v]")
 	}
 	ret.W("\t\treturn nil, errors.Wrapf(err, \"unable to get %s by %s\", %s)", m.Plural(), strings.Join(decls, ", "), sj)
 	ret.W("\t}")

@@ -1,24 +1,25 @@
+# Content managed by Project Forge, see [projectforge.md] for details.
 .PHONY: clean
 clean: ## Removes builds and compiled templates
-	rm -rf tmp/*.hashcode
-	rm -rf out
-	find ./views -type f -name '*.html.go' -exec rm {} +
+	@rm -rf tmp/*.hashcode
+	@rm -rf out
+	@find ./views -type f -name '*.html.go' -exec rm {} +
 
 .PHONY: dev
 dev: ## Start the project, reloading on changes
-	bash bin/dev.sh
+	@bash bin/dev.sh
 
 .PHONY: templates
 templates:
-	bin/templates.sh
+	@bin/templates.sh
 
 .PHONY: build
 build: templates ## Build all binaries
-	go build -gcflags "all=-N -l" -o build/debug/ .
+	@go build -gcflags "all=-N -l" -o build/debug/ .
 
 .PHONY: build-release
 build-release: templates ## Build all binaries without debug information, clean up after
-	go build -ldflags '-s -w' -trimpath -o build/release/ .
+	@go build -ldflags '-s -w' -trimpath -o build/release/ .
 
 .PHONY: lint
 lint: ## Run linter

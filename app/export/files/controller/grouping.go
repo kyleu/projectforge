@@ -9,7 +9,7 @@ import (
 	"github.com/kyleu/projectforge/app/file"
 )
 
-func Grouping(m *model.Model, args *model.Args, grp *model.Column) (*file.File, error) {
+func Grouping(m *model.Model, args *model.Args, grp *model.Column, addHeader bool) (*file.File, error) {
 	name := m.Package + "by" + grp.Name
 	g := golang.NewFile("controller", []string{"app", "controller"}, name)
 	for _, imp := range helper.ImportsForTypes("parse", m.PKs().Types()...) {
@@ -19,11 +19,11 @@ func Grouping(m *model.Model, args *model.Args, grp *model.Column) (*file.File, 
 	g.AddImport(helper.AppImport("app/" + m.Package))
 	g.AddImport(helper.AppImport("views/v" + m.Package))
 	g.AddBlocks(
-		controllerGrouped(m, grp), controllerList(m, grp), controllerDetail(m, grp),
+		controllerGrouped(m, grp), controllerList(m, grp), controllerDetail(args.Models, m, grp),
 		controllerCreateForm(m, grp), controllerCreate(m, g, grp),
 		controllerEditForm(m, grp), controllerEdit(m, g, grp), controllerDelete(m, g, grp),
 	)
-	return g.Render()
+	return g.Render(addHeader)
 }
 
 func controllerGrouped(m *model.Model, grp *model.Column) *golang.Block {
@@ -31,7 +31,7 @@ func controllerGrouped(m *model.Model, grp *model.Column) *golang.Block {
 	ret := golang.NewBlock(name, "func")
 	ret.W("func %s(rc *fasthttp.RequestCtx) {", name)
 	ret.W("\tact(\"%s.%s.list\", rc, func(as *app.State, ps *cutil.PageState) (string, error) {", m.Package, grp.Camel())
-	ret.W("\t\tps.Title = %q", grp.ProperPlural())
+	ret.W("\t\tps.Title = \"[%s] by %s\"", m.ProperPlural(), grp.TitleLower())
 	suffix := ""
 	if m.IsSoftDelete() {
 		suffix = ", " + incDel

@@ -17,6 +17,9 @@ func controllerRevision(m *model.Model) *golang.Block {
 	ret.W("\t\t\treturn \"\", err")
 	ret.W("\t\t}")
 	ret.W("\t\t%s, err := RCRequiredInt(rc, %q)", hc.Col.Camel(), hc.Col.Camel())
+	ret.W("\t\tif err != nil {")
+	ret.W("\t\t\treturn \"\", err")
+	ret.W("\t\t}")
 	pkRefs := make([]string, 0, len(m.PKs()))
 	for _, pk := range m.PKs() {
 		pkRefs = append(pkRefs, "latest."+pk.Proper())

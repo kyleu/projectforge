@@ -12,7 +12,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-func GRPC(m *model.Model, args *model.Args) (file.Files, error) {
+func GRPC(m *model.Model, args *model.Args, addHeader bool) (file.Files, error) {
 	fileArgs, err := GetGRPCFileArgs(m, args)
 	if err != nil {
 		return nil, errors.Wrap(err, "invalid arguments")
@@ -20,7 +20,7 @@ func GRPC(m *model.Model, args *model.Args) (file.Files, error) {
 
 	var ret file.Files
 	for _, fa := range fileArgs {
-		g, err := grpcFile(m, args, fa)
+		g, err := grpcFile(m, args, fa, addHeader)
 		if err != nil {
 			return nil, errors.Wrap(err, "")
 		}
@@ -71,7 +71,7 @@ func GetGRPCFileArgs(m *model.Model, args *model.Args) ([]*FileArgs, error) {
 	return ret, nil
 }
 
-func grpcFile(m *model.Model, args *model.Args, ga *FileArgs) (*file.File, error) {
+func grpcFile(m *model.Model, args *model.Args, ga *FileArgs, addHeader bool) (*file.File, error) {
 	fn := m.Package
 	if ga.API != "*" {
 		fn += "by" + ga.API
@@ -86,9 +86,11 @@ func grpcFile(m *model.Model, args *model.Args, ga *FileArgs) (*file.File, error
 	grpcArgs := fmt.Sprintf("p *%s.Params", ga.CPkg)
 	grpcRet := fmt.Sprintf("(*%sTransaction, error)", ga.Class)
 
+	g.AddBlocks(grpcList(m, grpcArgs, grpcRet, ga))
+	if len(m.Search) > 0 {
+		g.AddBlocks(grpcSearch(m, grpcArgs, grpcRet, ga))
+	}
 	g.AddBlocks(
-		grpcList(m, grpcArgs, grpcRet, ga),
-		grpcSearch(m, grpcArgs, grpcRet, ga),
 		grpcDetail(m, grpcArgs, grpcRet, ga),
 		grpcCall("Create", m, false, grpcArgs, grpcRet, ga),
 		grpcCall("Update", m, true, grpcArgs, grpcRet, ga),
@@ -96,11 +98,11 @@ func grpcFile(m *model.Model, args *model.Args, ga *FileArgs) (*file.File, error
 		grpcDelete(m, grpcArgs, grpcRet, ga),
 	)
 	if ga.Grp == nil {
-		b, err := grpcParamsFromRequest(m, ga.CPkg)
+		b, err := grpcParamsFromRequest(m, ga.CPkg, g)
 		if err != nil {
 			return nil, err
 		}
 		g.AddBlocks(grpcFromRequest(m), b)
 	}
-	return g.Render()
+	return g.Render(addHeader)
 }

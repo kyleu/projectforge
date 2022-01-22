@@ -5,8 +5,8 @@ import (
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/valyala/fasthttp"
-	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
-	"go.opentelemetry.io/otel/trace"
+
+	"{{{ .Package}}}/app/lib/telemetry"
 )
 
 type Metrics struct {
@@ -25,21 +25,20 @@ func NewMetrics(subsystem string) *Metrics {
 	return m
 }
 
-func InjectHTTP(rc *fasthttp.RequestCtx, span trace.Span) {
-	span.SetAttributes(
-		semconv.HTTPHostKey.String(string(rc.Request.Host())),
-		semconv.HTTPMethodKey.String(string(rc.Method())),
-		semconv.HTTPURLKey.String(string(rc.Request.RequestURI())),
-		semconv.HTTPSchemeKey.String(string(rc.Request.URI().Scheme())),
+func InjectHTTP(rc *fasthttp.RequestCtx, span *telemetry.Span) {
+	span.Attributes(
+		&telemetry.Attribute{Key: "http.host", Value: string(rc.Request.Host())},
+		&telemetry.Attribute{Key: "http.method", Value: string(rc.Method())},
+		&telemetry.Attribute{Key: "http.url", Value: string(rc.Request.RequestURI())},
+		&telemetry.Attribute{Key: "http.scheme", Value: string(rc.Request.URI().Scheme())},
 	)
 	if b := rc.Request.Header.Peek("User-Agent"); len(b) > 0 {
-		span.SetAttributes(semconv.HTTPUserAgentKey.String(string(b)))
+		span.Attribute("http.user_agent", string(b))
 	}
 	if b := rc.Request.Header.Peek("Content-Length"); len(b) > 0 {
-		span.SetAttributes(semconv.HTTPRequestContentLengthKey.String(string(b)))
+		span.Attribute("http.request_content_length", string(b))
 	}
-	span.SetAttributes(semconv.HTTPAttributesFromHTTPStatusCode(rc.Response.StatusCode())...)
-	span.SetStatus(semconv.SpanStatusFromHTTPStatusCode(rc.Response.StatusCode()))
+	span.SetHTTPStatus(rc.Response.StatusCode())
 }
 
 func (p *Metrics) registerHTTPMetrics(subsystem string) {

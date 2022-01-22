@@ -12,7 +12,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-func ServiceRevision(m *model.Model, args *model.Args) (*file.File, error) {
+func ServiceRevision(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.Package}, "servicerevision")
 	g.AddImport(helper.ImpFmt, helper.ImpStrings, helper.ImpContext, helper.ImpFilter, helper.ImpSQLx, helper.ImpErrors, helper.ImpDatabase)
 	ar, err := serviceGetAllRevisions(m)
@@ -28,7 +28,7 @@ func ServiceRevision(m *model.Model, args *model.Args) (*file.File, error) {
 		return nil, err
 	}
 	g.AddBlocks(ar, gr, gnr)
-	return g.Render()
+	return g.Render(addHeader)
 }
 
 func serviceGetAllRevisions(m *model.Model) (*golang.Block, error) {
@@ -90,33 +90,14 @@ func serviceGetRevision(m *model.Model) (*golang.Block, error) {
 func serviceGetCurrentRevisions(m *model.Model) (*golang.Block, error) {
 	revCol := m.HistoryColumn()
 	pks := m.PKs()
-	pkWCStr := make([]string, 0, len(pks))
-	pkWCIdx := make([]string, 0, len(pks))
-	pkModelRefs := make([]string, 0, len(pks))
+	ret := golang.NewBlock(fmt.Sprintf("GetCurrent%s", revCol.ProperPlural()), "func")
+	serviceGetCurrentRevisionsBlock(m, ret, revCol, pks)
+
 	pkComps := make([]string, 0, len(pks))
-	for idx, pk := range pks {
-		pkWCStr = append(pkWCStr, fmt.Sprintf("%q = $%%%%d", pk.Name))
-		if len(pks) == 1 {
-			pkWCIdx = append(pkWCIdx, "i+1")
-		} else {
-			pkWCIdx = append(pkWCIdx, fmt.Sprintf("(i*%d)+%d", len(pks), idx+1))
-		}
-		pkModelRefs = append(pkModelRefs, fmt.Sprintf("model.%s", pk.Proper()))
+	for _, pk := range pks {
 		pkComps = append(pkComps, fmt.Sprintf("x.%s == model.%s", pk.Proper(), pk.Proper()))
 	}
 
-	ret := golang.NewBlock(fmt.Sprintf("GetCurrent%s", revCol.ProperPlural()), "func")
-	decl := "func (s *Service) getCurrent%s(ctx context.Context, tx *sqlx.Tx, models ...*%s) (map[string]%s, error) {"
-	ret.W(decl, revCol.ProperPlural(), m.Proper(), revCol.Type.ToGoType(false))
-	ret.W("\tstmts := make([]string, 0, len(models))")
-	ret.W("\tfor i := range models {")
-	ret.W("\t\tstmts = append(stmts, fmt.Sprintf(`%s`, %s))", strings.Join(pkWCStr, " and "), strings.Join(pkWCIdx, ", "))
-	ret.W("\t}")
-	ret.W("\tq := database.SQLSelectSimple(`%s, \"current_%s\"`, tableQuoted, strings.Join(stmts, \" or \"))", strings.Join(pks.NamesQuoted(), ", "), revCol.Name)
-	ret.W("\tvals := make([]interface{}, 0, len(models))")
-	ret.W("\tfor _, model := range models {")
-	ret.W("\t\tvals = append(vals, %s)", strings.Join(pkModelRefs, ", "))
-	ret.W("\t}")
 	ret.W("\tvar results []*struct {")
 	maxColLength := pks.MaxGoKeyLength()
 	maxTypeLength := pks.MaxGoTypeLength()
@@ -149,6 +130,33 @@ func serviceGetCurrentRevisions(m *model.Model) (*golang.Block, error) {
 	return ret, nil
 }
 
+func serviceGetCurrentRevisionsBlock(m *model.Model, ret *golang.Block, revCol *model.Column, pks model.Columns) {
+	pkWCStr := make([]string, 0, len(pks))
+	pkWCIdx := make([]string, 0, len(pks))
+	pkModelRefs := make([]string, 0, len(pks))
+	for idx, pk := range pks {
+		pkWCStr = append(pkWCStr, fmt.Sprintf("%q = $%%%%d", pk.Name))
+		if len(pks) == 1 {
+			pkWCIdx = append(pkWCIdx, "i+1")
+		} else {
+			pkWCIdx = append(pkWCIdx, fmt.Sprintf("(i*%d)+%d", len(pks), idx+1))
+		}
+		pkModelRefs = append(pkModelRefs, fmt.Sprintf("model.%s", pk.Proper()))
+	}
+
+	decl := "func (s *Service) getCurrent%s(ctx context.Context, tx *sqlx.Tx, models ...*%s) (map[string]%s, error) {"
+	ret.W(decl, revCol.ProperPlural(), m.Proper(), revCol.Type.ToGoType(false))
+	ret.W("\tstmts := make([]string, 0, len(models))")
+	ret.W("\tfor i := range models {")
+	ret.W("\t\tstmts = append(stmts, fmt.Sprintf(`%s`, %s))", strings.Join(pkWCStr, " and "), strings.Join(pkWCIdx, ", "))
+	ret.W("\t}")
+	ret.W("\tq := database.SQLSelectSimple(`%s, \"current_%s\"`, tableQuoted, strings.Join(stmts, \" or \"))", strings.Join(pks.NamesQuoted(), ", "), revCol.Name)
+	ret.W("\tvals := make([]interface{}, 0, len(models))")
+	ret.W("\tfor _, model := range models {")
+	ret.W("\t\tvals = append(vals, %s)", strings.Join(pkModelRefs, ", "))
+	ret.W("\t}")
+}
+
 func addJoinClause(ret *golang.Block, m *model.Model, hc *model.HistoryMap) error {
 	joinClause := fmt.Sprintf("%%%%q %s join %%%%q %sr on ", m.FirstLetter(), m.FirstLetter())
 	var joins []string
@@ -158,7 +166,7 @@ func addJoinClause(ret *golang.Block, m *model.Model, hc *model.HistoryMap) erro
 			if !(rCol.PK || rCol.HasTag(model.RevisionType)) {
 				return errors.Errorf("invalid revision column [%s] at index [%d]", rCol.Name, idx)
 			}
-			joins = append(joins, fmt.Sprintf("%s.%s = %sr.%s", m.FirstLetter(), col.Name, m.FirstLetter(), rCol.Name))
+			joins = append(joins, fmt.Sprintf("%s.%q = %sr.%q", m.FirstLetter(), col.Name, m.FirstLetter(), rCol.Name))
 		}
 	}
 	joinClause += strings.Join(joins, " and ")

@@ -18,14 +18,23 @@ type Model struct {
 	Tags           []string         `json:"tags,omitempty"`
 	TitleOverride  string           `json:"title,omitempty"`
 	ProperOverride string           `json:"proper,omitempty"`
+	RouteOverride  string           `json:"route,omitempty"`
 	Config         util.ValueMap    `json:"config,omitempty"`
 	Columns        Columns          `json:"columns"`
+	Relations      Relations        `json:"relations,omitempty"`
 	historyMap     *HistoryMap
 	historyMapDB   *HistoryMap
 }
 
 func (m *Model) Camel() string {
 	return util.StringToLowerCamel(m.Name)
+}
+
+func (m *Model) Title() string {
+	if m.TitleOverride == "" {
+		return m.Proper()
+	}
+	return m.TitleOverride
 }
 
 func (m *Model) Proper() string {
@@ -35,11 +44,11 @@ func (m *Model) Proper() string {
 	return util.StringToCamel(m.ProperOverride)
 }
 
-func (m *Model) Title() string {
-	if m.TitleOverride == "" {
-		return m.Proper()
+func (m *Model) Route() string {
+	if m.RouteOverride == "" {
+		return m.Package
 	}
-	return m.TitleOverride
+	return m.RouteOverride
 }
 
 func (m *Model) TitleLower() string {
@@ -63,7 +72,7 @@ func (m *Model) ProperPlural() string {
 }
 
 func (m *Model) FirstLetter() string {
-	return m.Name[0:1]
+	return strings.ToLower(m.Name[0:1])
 }
 
 func (m *Model) IconSafe() string {
@@ -75,7 +84,7 @@ func (m *Model) IconSafe() string {
 }
 
 func (m *Model) URLPath(prefix string) string {
-	url := "\"/" + m.Package + "\""
+	url := "\"/" + m.Route() + "\""
 	for _, pk := range m.PKs() {
 		url += "+\"/\"+" + pk.ToGoString(prefix)
 	}
@@ -88,7 +97,7 @@ func (m *Model) ClassRef() string {
 
 func (m *Model) LinkURL(prefix string) string {
 	pks := m.PKs()
-	linkURL := "/" + m.Package
+	linkURL := "/" + m.Route()
 	for _, pk := range pks {
 		linkURL += "/" + pk.ToGoViewString(prefix)
 	}
@@ -115,4 +124,12 @@ func (m *Model) IsRevision() bool {
 	return m.History == RevisionType
 }
 
-type Models []*Model
+func (m *Model) RelationsFor(col *Column) Relations {
+	var ret Relations
+	for _, r := range m.Relations {
+		if util.StringArrayContains(r.Src, col.Name) {
+			ret = append(ret, r)
+		}
+	}
+	return ret
+}

@@ -67,7 +67,7 @@ func MySQLParamsFromEnv(key string, defaultUser string, prefix string) *MySQLPar
 
 func OpenMySQLDatabase(ctx context.Context, key string, params *MySQLParams, logger *zap.SugaredLogger) (*Service, error) {
 	_, span := telemetry.StartSpan(ctx, "database", "open")
-	defer span.End()
+	defer span.Complete()
 	host := params.Host
 	if host == "" {
 		host = localhost

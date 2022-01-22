@@ -1,4 +1,5 @@
 #!/bin/bash
+# Content managed by Project Forge, see [projectforge.md] for details.
 
 ## Downloads and installs the Go libraries and tools needed in other scripts
 

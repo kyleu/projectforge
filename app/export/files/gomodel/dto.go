@@ -12,7 +12,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-func DTO(m *model.Model, args *model.Args) (*file.File, error) {
+func DTO(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.Package}, "dto")
 	for _, imp := range helper.ImportsForTypes("dto", m.Columns.Types()...) {
 		g.AddImport(imp)
@@ -24,7 +24,7 @@ func DTO(m *model.Model, args *model.Args) (*file.File, error) {
 		return nil, err
 	}
 	g.AddBlocks(modelDTO(m), modelDTOToModel(m), modelDTOArray(), modelDTOArrayTransformer(m))
-	return g.Render()
+	return g.Render(addHeader)
 }
 
 func modelTableCols(m *model.Model, g *golang.File) (*golang.Block, error) {
@@ -35,15 +35,19 @@ func modelTableCols(m *model.Model, g *golang.File) (*golang.Block, error) {
 	ret.W("\tcolumns       = []string{%s}", strings.Join(m.Columns.NamesQuoted(), ", "))
 	ret.W("\tcolumnsQuoted = util.StringArrayQuoted(columns)")
 	ret.W("\tcolumnsString = strings.Join(columnsQuoted, \", \")")
+	ret.W("\tdefaultWC     = %q", m.PKs().WhereClause(0))
 	if m.IsRevision() {
 		hc := m.HistoryColumns(true)
+		hcp := hc.Col.Proper()
 		ret.W("")
-		ret.W("\tcolumnsCore     = util.StringArrayQuoted([]string{%s})", strings.Join(hc.Const.NamesQuoted(), ", "))
-		ret.W("\tcolumns%s = util.StringArrayQuoted([]string{%s})", hc.Col.Proper(), strings.Join(hc.Var.NamesQuoted(), ", "))
+		constCols := strings.Join(hc.Const.NamesQuoted(), ", ")
+		ret.W("\tcolumns%s = util.StringArrayQuoted([]string{%s})", util.StringPad("Core", len(hcp)), constCols)
+		varCols := strings.Join(hc.Var.NamesQuoted(), ", ")
+		ret.W("\tcolumns%s = util.StringArrayQuoted([]string{%s})", hcp, varCols)
 		ret.W("")
-		ret.W("\ttable%s       = table + \"_%s\"", hc.Col.Proper(), hc.Col.Name)
-		ret.W("\ttable%sQuoted = fmt.Sprintf(\"%%%%q\", table%s)", hc.Col.Proper(), hc.Col.Proper())
-		joinClause := fmt.Sprintf("%%%%s %s join %%%%s %sr on ", m.FirstLetter(), m.FirstLetter())
+		ret.W("\ttable%s       = table + \"_%s\"", hcp, hc.Col.Name)
+		ret.W("\ttable%sQuoted = fmt.Sprintf(\"%%%%q\", table%s)", hcp, hcp)
+		joinClause := fmt.Sprintf("%%%%q %s join %%%%q %sr on ", m.FirstLetter(), m.FirstLetter())
 		var joins []string
 		for idx, col := range hc.Const {
 			if col.PK || col.HasTag("current_revision") {
@@ -55,7 +59,7 @@ func modelTableCols(m *model.Model, g *golang.File) (*golang.Block, error) {
 			}
 		}
 		joinClause += strings.Join(joins, " and ")
-		ret.W("\ttablesJoined        = fmt.Sprintf(`%s`, tableQuoted, table%sQuoted)", joinClause, hc.Col.Proper())
+		ret.W("\ttables%s = fmt.Sprintf(`%s`, table, table%s) // nolint", util.StringPad("Joined", len(hcp)+5), joinClause, hcp)
 	}
 	ret.W(")")
 	return ret, nil

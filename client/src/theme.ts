@@ -1,3 +1,4 @@
+// Content managed by Project Forge, see [projectforge.md] for details.
 const keys: string[] = []
 
 export function themeInit() {

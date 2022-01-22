@@ -5,10 +5,10 @@ import (
 	"fmt"
 
 	"github.com/valyala/fasthttp"
-	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 
 	"{{{ .Package }}}/app/lib/menu"
+	"{{{ .Package }}}/app/lib/telemetry"
 	"{{{ .Package }}}/app/lib/user"
 	"{{{ .Package }}}/app/util"
 )
@@ -37,7 +37,7 @@ type PageState struct {
 	Data          interface{}        `json:"data,omitempty"`
 	Logger        *zap.SugaredLogger `json:"-"`
 	Context       context.Context    `json:"-"`
-	Span          trace.Span         `json:"-"`
+	Span          *telemetry.Span    `json:"-"`
 	RenderElapsed float64            `json:"renderElapsed,omitempty"`
 }
 
@@ -59,6 +59,6 @@ func (p *PageState) TitleString() string {
 
 func (p *PageState) Close() {
 	if p.Span != nil {
-		p.Span.End()
+		p.Span.Complete()
 	}
 }

@@ -9,8 +9,6 @@ import (
 
 	"github.com/jmoiron/sqlx"{{{ if.HasModule "migration" }}}
 	"github.com/pkg/errors"{{{ end }}}
-	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
-	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 
 	"{{{ .Package }}}/app/lib/telemetry"
@@ -92,25 +90,25 @@ func (s *Service) logQuery(msg string, q string, values []interface{}) {
 	}
 }
 
-func (s *Service) newSpan(ctx context.Context, name string, q string) (time.Time, context.Context, trace.Span) {
+func (s *Service) newSpan(ctx context.Context, name string, q string) (time.Time, context.Context, *telemetry.Span) {
 	if s.metrics != nil {
 		s.metrics.IncStmt(q, name)
 	}
 	nc, span := telemetry.StartSpan(ctx, "database", name)
-	span.SetAttributes(
-		semconv.DBStatementKey.String(q),
-		semconv.DBSystemPostgreSQL,
-		semconv.DBNameKey.String(s.DatabaseName),
-		semconv.DBUserKey.String(s.Username),
+	span.Attributes(
+		&telemetry.Attribute{Key: "db.statement", Value: q},
+		&telemetry.Attribute{Key: "db.system", Value: "postgresql"},
+		&telemetry.Attribute{Key: "db.name", Value: s.DatabaseName},
+		&telemetry.Attribute{Key: "db.user", Value: s.Username},
 	)
 	return time.Now(), nc, span
 }
 
-func (s *Service) complete(q string, op string, span trace.Span, started time.Time, err error) {
+func (s *Service) complete(q string, op string, span *telemetry.Span, started time.Time, err error) {
 	if err != nil {
-		span.RecordError(err)
+		span.OnError(err)
 	}
-	span.End()
+	span.Complete()
 	if s.metrics != nil {
 		s.metrics.CompleteStmt(q, op, started)
 	}

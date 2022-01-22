@@ -20,6 +20,7 @@
 {% func (p *Home) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`app`, ps) %}{%s util.AppName %}</h3>
+    <div class="mt">Project Forge helps you build and maintain feature-rich applications written in the Go programming language</div>
   </div>
   {%= vproject.Table(p.Projects, as, ps) %}
   {%= vmodule.Table(p.Modules, as, ps) %}

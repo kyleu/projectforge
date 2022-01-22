@@ -19,7 +19,7 @@ const (
 func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 	tgt := pm.PSvc.GetFilesystem(pm.Prj)
 
-	srcFiles, err := pm.MSvc.GetFiles(pm.Mods)
+	srcFiles, err := pm.MSvc.GetFiles(pm.Mods, true)
 	if err != nil {
 		return nil, nil, errors.Wrapf(err, "unable to get files from [%d] modules", len(pm.Mods))
 	}
@@ -33,7 +33,7 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 			}
 		}
 		args.Modules = pm.Mods.Keys()
-		files, e := pm.ESvc.Files(args)
+		files, e := pm.ESvc.Files(args, true)
 		if e != nil {
 			return nil, nil, errors.Wrap(e, "unable to export code")
 		}

@@ -1,3 +1,4 @@
+# Content managed by Project Forge, see [projectforge.md] for details.
 FROM golang:alpine
 
 LABEL "org.opencontainers.image.authors"="Kyle U"

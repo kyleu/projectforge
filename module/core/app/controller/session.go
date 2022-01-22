@@ -15,16 +15,9 @@ import (
 func loadPageState(rc *fasthttp.RequestCtx, key string, as *app.State) *cutil.PageState {
 	rc = httpmetrics.ExtractHeaders(rc, as.Logger)
 	traceCtx, span := telemetry.StartSpan(rc, "pagestate", "http:"+key)
+	span.Attribute("path", rc.Request.URI().Path())
 	httpmetrics.InjectHTTP(rc, span)
-
-	path := string(rc.Request.URI().Path())
-	sc := span.SpanContext()
-	tid, sid := sc.TraceID().String(), sc.SpanID().String()
-	logger := as.Logger.With(
-		zap.String("path", path),
-		zap.String("trace", tid), zap.String("dd.trace_id", tid),
-		zap.String("span", sid), zap.String("dd.span_id", sid),
-	)
+	logger := telemetry.LoggerFor(as.Logger, span)
 
 	session, flashes, prof, accts := loadSession(rc, logger)
 

@@ -20,7 +20,7 @@ func controllerList(m *model.Model, grp *model.Column) *golang.Block {
 		controllerArgFor(grp, ret, "\"\"", 2)
 	}
 
-	ret.W("\t\tps.Title = %q", m.ProperPlural())
+	ret.W("\t\tps.Title = %sDefaultTitle", m.Camel())
 	ret.W("\t\tparams := cutil.ParamSetFromRequest(rc)")
 	suffix := ""
 	if m.IsSoftDelete() {
@@ -38,12 +38,16 @@ func controllerList(m *model.Model, grp *model.Column) *golang.Block {
 	return ret
 }
 
-func controllerDetail(m *model.Model, grp *model.Column) *golang.Block {
+func controllerDetail(models model.Models, m *model.Model, grp *model.Column) *golang.Block {
+	rrels := models.ReverseRelations(m.Name)
 	ret := blockFor(m, grp, "detail")
 	grpHistory := ""
 	if grp != nil {
 		controllerArgFor(grp, ret, "\"\"", 2)
 		grpHistory = fmt.Sprintf(", %q", grp.Camel())
+	}
+	if m.IsRevision() || len(rrels) > 0 {
+		ret.W("\t\tparams := cutil.ParamSetFromRequest(rc)")
 	}
 	ret.W("\t\tret, err := %sFromPath(rc, as, ps)", m.Package)
 	ret.W("\t\tif err != nil {")
@@ -53,7 +57,6 @@ func controllerDetail(m *model.Model, grp *model.Column) *golang.Block {
 	if m.IsRevision() {
 		hc := m.HistoryColumn()
 
-		ret.W("\t\tparams := cutil.ParamSetFromRequest(rc)")
 		var prms []string
 		for _, pk := range m.PKs() {
 			prms = append(prms, "ret."+pk.Proper())
@@ -61,13 +64,28 @@ func controllerDetail(m *model.Model, grp *model.Column) *golang.Block {
 		prmsStr := strings.Join(prms, ", ")
 		msg := "\t\t%s, err := as.Services.%s.GetAll%s(ps.Context, nil, %s, params.Get(%q, nil, ps.Logger), false)"
 		ret.W(msg, hc.CamelPlural(), m.Proper(), hc.ProperPlural(), prmsStr, m.Package)
+		ret.W("\t\tif err != nil {")
+		ret.W("\t\t\treturn \"\", err")
+		ret.W("\t\t}")
 	}
 	ret.W("\t\tps.Title = ret.String()")
 	ret.W("\t\tps.Data = ret")
 	suffix := ""
+	if m.IsRevision() || len(rrels) > 0 {
+		suffix += ", Params: params"
+	}
+	for _, rel := range rrels {
+		rm := models.Get(rel.Table)
+		lCols := rel.SrcColumns(m)
+		rCols := rel.TgtColumns(rm)
+		rNames := strings.Join(rCols.ProperNames(), "")
+		msg := "\t\t%sBy%s, _ := as.Services.%s.GetBy%s(ps.Context, nil, %s, params.Get(%q, nil, ps.Logger))"
+		ret.W(msg, rm.Plural(), rNames, rm.Proper(), rNames, lCols.ToGoStrings("ret."), rm.Camel())
+		suffix += fmt.Sprintf(", %sBy%s: %sBy%s", rm.ProperPlural(), rNames, rm.Plural(), rNames)
+	}
 	if m.IsRevision() {
 		revCol := m.HistoryColumn()
-		suffix = fmt.Sprintf(", %s: %s, Params: params", revCol.ProperPlural(), revCol.CamelPlural())
+		suffix = fmt.Sprintf(", %s: %s", revCol.ProperPlural(), revCol.CamelPlural())
 	}
 	ret.W("\t\treturn render(rc, as, &v%s.Detail{Model: ret%s}, ps, %q%s, ret.String())", m.Package, suffix, m.Package, grpHistory)
 	ret.W("\t})")

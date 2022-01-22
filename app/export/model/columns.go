@@ -100,6 +100,30 @@ func (c Columns) CamelNames() []string {
 	return ret
 }
 
+func (c Columns) ProperNames() []string {
+	ret := make([]string, 0, len(c))
+	for _, x := range c {
+		ret = append(ret, x.Proper())
+	}
+	return ret
+}
+
+func (c Columns) TitlesLower() []string {
+	ret := make([]string, 0, len(c))
+	for _, x := range c {
+		ret = append(ret, x.TitleLower())
+	}
+	return ret
+}
+
+func (c Columns) ToGoStrings(prefix string) string {
+	ret := make([]string, 0, len(c))
+	for _, x := range c {
+		ret = append(ret, x.Type.ToGoString(prefix+x.Proper()))
+	}
+	return strings.Join(ret, ", ")
+}
+
 func (c Columns) Types() Types {
 	var ret Types
 	for _, x := range c {

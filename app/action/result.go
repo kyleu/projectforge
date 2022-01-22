@@ -2,6 +2,7 @@ package action
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/kyleu/projectforge/app/diff"
 	"github.com/kyleu/projectforge/app/module"
@@ -33,10 +34,6 @@ func (r *Result) WithError(err error) *Result {
 	r.Status = "error"
 	r.Errors = append(r.Errors, msg)
 	return r
-}
-
-func errorResult(err error, cfg util.ValueMap, logger *zap.SugaredLogger) *Result {
-	return newResult(cfg, logger).WithError(err)
 }
 
 func (r *Result) AddDebug(msg string, args ...interface{}) {
@@ -102,6 +99,13 @@ func (r *Result) StatusLog() string {
 	return fmt.Sprintf("%d %s", fileCount, util.StringPluralMaybe("change", fileCount))
 }
 
+func (r *Result) LogBlock(delim string) string {
+	var ret []string
+	ret = append(ret, r.Logs...)
+	ret = append(ret, fmt.Sprintf(" :: Completed [%s] in [%s]", r.Status, util.MicrosToMillis(r.Duration)))
+	return strings.Join(ret, delim)
+}
+
 type ResultContext struct {
 	Prj *project.Project `json:"prj,omitempty"`
 	Cfg util.ValueMap    `json:"cfg,omitempty"`
@@ -125,4 +129,8 @@ func (x ResultContexts) Errors() []string {
 		}
 	}
 	return ret
+}
+
+func errorResult(err error, cfg util.ValueMap, logger *zap.SugaredLogger) *Result {
+	return newResult(cfg, logger).WithError(err)
 }

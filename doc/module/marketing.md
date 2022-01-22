@@ -1,3 +1,4 @@
+<!--- Content managed by Project Forge, see [projectforge.md] for details. -->
 # [marketing]
 
 This is a module for [Project Forge](https://projectforge.dev). It provides a website for downloads, tutorials, and marketing

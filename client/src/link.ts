@@ -1,3 +1,4 @@
+// Content managed by Project Forge, see [projectforge.md] for details.
 export function linkInit() {
   for (const l of Array.from(document.getElementsByClassName("link-confirm"))) {
     const el = (l as HTMLAnchorElement);

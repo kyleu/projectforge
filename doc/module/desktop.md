@@ -1,3 +1,4 @@
+<!--- Content managed by Project Forge, see [projectforge.md] for details. -->
 # [desktop]
 
 This is a module for [Project Forge](https://projectforge.dev). It provides a desktop application using the system's webview

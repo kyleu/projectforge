@@ -1,4 +1,5 @@
 #!/bin/bash
+# Content managed by Project Forge, see [projectforge.md] for details.
 
 ## Starts a pprof server using the (previously-recorded) heap dump at ./tmp/mem.pprof
 

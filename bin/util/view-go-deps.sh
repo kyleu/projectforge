@@ -1,4 +1,5 @@
 #!/bin/bash
+# Content managed by Project Forge, see [projectforge.md] for details.
 
 ## Uses gomod to visualize the module graph
 ## Requires gomod available on the path

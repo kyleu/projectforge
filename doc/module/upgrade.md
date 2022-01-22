@@ -1,3 +1,4 @@
+<!--- Content managed by Project Forge, see [projectforge.md] for details. -->
 # [upgrade]
 
 This is a module for [Project Forge](https://projectforge.dev). It provides in-place version upgrades using Github Releases.

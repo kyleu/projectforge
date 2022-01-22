@@ -10,7 +10,7 @@ import (
 	"github.com/kyleu/projectforge/app/util"
 )
 
-func Controller(m *model.Model, args *model.Args) (*file.File, error) {
+func Controller(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	g := golang.NewFile("controller", []string{"app", "controller"}, m.Package)
 	for _, imp := range helper.ImportsForTypes("parse", m.PKs().Types()...) {
 		g.AddImport(imp)
@@ -18,7 +18,7 @@ func Controller(m *model.Model, args *model.Args) (*file.File, error) {
 	g.AddImport(helper.ImpFmt, helper.ImpErrors, helper.ImpFastHTTP, helper.ImpApp, helper.ImpCutil)
 	g.AddImport(helper.AppImport("app/" + m.Package))
 	g.AddImport(helper.AppImport("views/v" + m.Package))
-	g.AddBlocks(controllerList(m, nil), controllerDetail(m, nil))
+	g.AddBlocks(controllerTitle(m), controllerList(m, nil), controllerDetail(args.Models, m, nil))
 	if m.IsRevision() {
 		g.AddBlocks(controllerRevision(m))
 	}
@@ -27,7 +27,7 @@ func Controller(m *model.Model, args *model.Args) (*file.File, error) {
 		controllerEditForm(m, nil), controllerEdit(m, g, nil), controllerDelete(m, g, nil),
 		controllerModelFromPath(m), controllerModelFromForm(m),
 	)
-	return g.Render()
+	return g.Render(addHeader)
 }
 
 func controllerArgFor(col *model.Column, b *golang.Block, retVal string, indent int) {
@@ -89,4 +89,10 @@ func withGroupName(s string, grp *model.Column) string {
 		return s
 	}
 	return s + "By" + grp.Proper()
+}
+
+func controllerTitle(m *model.Model) *golang.Block {
+	ret := golang.NewBlock("Title", "func")
+	ret.W("const %sDefaultTitle = \"%s\"", m.Camel(), m.TitlePlural())
+	return ret
 }

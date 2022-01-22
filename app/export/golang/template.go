@@ -27,12 +27,15 @@ func (f *Template) AddBlocks(b ...*Block) {
 	f.Blocks = append(f.Blocks, b...)
 }
 
-func (f *Template) Render() (*file.File, error) {
+func (f *Template) Render(addHeader bool) (*file.File, error) {
 	var content []string
 	add := func(s string, args ...interface{}) {
 		content = append(content, fmt.Sprintf(s+"\n", args...))
 	}
 
+	if addHeader {
+		content = append(content, fmt.Sprintf("<!-- %s -->", file.HeaderContent))
+	}
 	if len(f.Imports) > 0 {
 		add(f.Imports.RenderHTML())
 	}

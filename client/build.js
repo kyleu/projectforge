@@ -1,3 +1,4 @@
+// Content managed by Project Forge, see [projectforge.md] for details.
 const esbuild = require('esbuild');
 
 esbuild.build({

@@ -3,7 +3,6 @@ package telemetry
 import (
 	"context"
 	"os"
-	"strings"
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp"
@@ -76,31 +75,8 @@ func Close() error {
 	return tracerProvider.Shutdown(context.Background())
 }
 
-func StartSpan(ctx context.Context, tracerKey string, spanName string) (context.Context, trace.Span) {
+func StartSpan(ctx context.Context, tracerKey string, spanName string, opts ...interface{}) (context.Context, *Span) {
 	tr := otel.GetTracerProvider().Tracer(tracerKey)
-	return tr.Start(ctx, spanName, trace.WithSpanKind(trace.SpanKindServer))
-}
-
-type ErrHandler struct {
-	logger     *zap.SugaredLogger
-	hasPrinted bool
-}
-
-func (e *ErrHandler) Handle(err error) {
-	if err == nil {
-		return
-	}
-	msg := err.Error()
-	if strings.HasPrefix(msg, "Post \"") {
-		if e.hasPrinted {
-			return
-		}
-		if idx := strings.Index(msg, "\":"); idx > -1 {
-			msg = strings.TrimSpace(msg[idx+2:])
-		}
-		e.logger.Warn("telemetry seems to be unavailable: [" + msg + "] (this message will appear only once)")
-		e.hasPrinted = true
-		return
-	}
-	e.logger.Warnf("telemetry error: %+v", err)
+	ctx, ot := tr.Start(ctx, spanName, trace.WithSpanKind(trace.SpanKindServer))
+	return ctx, &Span{OT: ot}
 }

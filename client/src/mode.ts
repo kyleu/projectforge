@@ -1,3 +1,4 @@
+// Content managed by Project Forge, see [projectforge.md] for details.
 const l = "mode-light"
 const d = "mode-dark"
 

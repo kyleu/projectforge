@@ -11,7 +11,7 @@ import (
 	"github.com/kyleu/projectforge/app/util"
 )
 
-func Model(m *model.Model, args *model.Args) (*file.File, error) {
+func Model(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.Package}, m.Camel())
 	for _, imp := range helper.ImportsForTypes("go", m.Columns.Types()...) {
 		g.AddImport(imp)
@@ -24,13 +24,13 @@ func Model(m *model.Model, args *model.Args) (*file.File, error) {
 	}
 	g.AddImport(helper.ImpAppUtil)
 	g.AddBlocks(modelStruct(m), modelConstructor(m), modelRandom(m), modelFromMap(m))
-	g.AddBlocks(modelString(m), modelWebPath(m), modelToData(m, m.Columns, ""))
+	g.AddBlocks(modelClone(m), modelString(m), modelWebPath(m), modelToData(m, m.Columns, ""))
 	if m.IsRevision() {
 		hc := m.HistoryColumns(false)
 		g.AddBlocks(modelToData(m, hc.Const, "Core"), modelToData(m, hc.Var, hc.Col.Proper()))
 	}
 	g.AddBlocks(modelArray(m))
-	return g.Render()
+	return g.Render(addHeader)
 }
 
 func modelStruct(m *model.Model) *golang.Block {

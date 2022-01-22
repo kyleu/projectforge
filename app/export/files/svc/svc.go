@@ -10,22 +10,22 @@ import (
 	"github.com/kyleu/projectforge/app/file"
 )
 
-func ServiceAll(m *model.Model, args *model.Args) (file.Files, error) {
-	x, err := Service(m, args)
+func ServiceAll(m *model.Model, args *model.Args, addHeader bool) (file.Files, error) {
+	x, err := Service(m, args, addHeader)
 	if err != nil {
 		return nil, err
 	}
-	g, err := ServiceGet(m, args)
+	g, err := ServiceGet(m, args, addHeader)
 	if err != nil {
 		return nil, err
 	}
-	mt, err := ServiceMutate(m, args)
+	mt, err := ServiceMutate(m, args, addHeader)
 	if err != nil {
 		return nil, err
 	}
 	ret := file.Files{x, g, mt}
 	if m.IsRevision() {
-		r, err := ServiceRevision(m, args)
+		r, err := ServiceRevision(m, args, addHeader)
 		if err != nil {
 			return nil, err
 		}
@@ -34,12 +34,12 @@ func ServiceAll(m *model.Model, args *model.Args) (file.Files, error) {
 	return ret, nil
 }
 
-func Service(m *model.Model, args *model.Args) (*file.File, error) {
+func Service(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.Package}, "service")
 	g.AddImport(helper.ImpLogging, helper.ImpFilter, helper.ImpDatabase)
 
 	g.AddBlocks(serviceStruct(args), serviceNew(m, args), serviceDefaultFilters(m))
-	return g.Render()
+	return g.Render(addHeader)
 }
 
 func serviceStruct(args *model.Args) *golang.Block {

@@ -56,7 +56,7 @@ func grpcDelete(m *model.Model, grpcArgs string, grpcRet string, ga *FileArgs) *
 
 func grpcFromRequest(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("grpcFromRequest", "func")
-	ret.W("func %sFromRequest(r *provider.NuevoRequest, isUpdate bool) (*%s, error) {", m.Package, m.ClassRef())
+	ret.W("func %sFromRequest(r *provider.NuevoRequest, isUpdate bool) (*%s, error) {", m.Camel(), m.ClassRef())
 	ret.W("\tinput := provider.GetRequest(r, \"%s\")", m.Camel())
 	ret.W("\tif input == nil {")
 	ret.W("\t\treturn nil, errors.New(\"must provide [%s] in request data\")", m.Camel())
@@ -67,7 +67,7 @@ func grpcFromRequest(m *model.Model) *golang.Block {
 	ret.W("\t\treturn nil, errors.New(\"field [%s] must be an object\")", m.Camel())
 	ret.W("\t}")
 
-	ret.W("\tret, err := %s.FromMap(m, true)", m.Camel())
+	ret.W("\tret, err := %s.FromMap(m, true)", m.Package)
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, errors.Wrap(err, \"unable to parse input data as %s\")", m.Camel())
 	ret.W("\t}")

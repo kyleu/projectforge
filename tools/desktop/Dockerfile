@@ -1,3 +1,4 @@
+# Content managed by Project Forge, see [projectforge.md] for details.
 FROM ghcr.io/gythialy/golang-cross:v1.17.1-1 AS builder
 
 LABEL maintainer="kyle@kyleu.com"

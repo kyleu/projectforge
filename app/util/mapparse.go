@@ -1,3 +1,4 @@
+// Content managed by Project Forge, see [projectforge.md] for details.
 package util
 
 import (
@@ -167,7 +168,7 @@ func (m ValueMap) ParseString(path string, allowMissing bool, allowEmpty bool) (
 		if (!allowEmpty) && len(t) == 0 || t[0] == "" {
 			return "", errors.New("empty string")
 		}
-		return strings.Join(t, "|"), nil
+		return strings.Join(t, "||"), nil
 	case nil:
 		if !allowEmpty {
 			return "", errors.Errorf("could not find string for path [%s]", path)

@@ -1,3 +1,4 @@
+// Content managed by Project Forge, see [projectforge.md] for details.
 package cutil
 
 import (
@@ -5,10 +6,10 @@ import (
 	"fmt"
 
 	"github.com/valyala/fasthttp"
-	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 
 	"github.com/kyleu/projectforge/app/lib/menu"
+	"github.com/kyleu/projectforge/app/lib/telemetry"
 	"github.com/kyleu/projectforge/app/lib/user"
 	"github.com/kyleu/projectforge/app/util"
 )
@@ -37,7 +38,7 @@ type PageState struct {
 	Data          interface{}        `json:"data,omitempty"`
 	Logger        *zap.SugaredLogger `json:"-"`
 	Context       context.Context    `json:"-"`
-	Span          trace.Span         `json:"-"`
+	Span          *telemetry.Span    `json:"-"`
 	RenderElapsed float64            `json:"renderElapsed,omitempty"`
 }
 
@@ -59,6 +60,6 @@ func (p *PageState) TitleString() string {
 
 func (p *PageState) Close() {
 	if p.Span != nil {
-		p.Span.End()
+		p.Span.Complete()
 	}
 }

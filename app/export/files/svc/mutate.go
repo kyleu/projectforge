@@ -11,7 +11,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-func ServiceMutate(m *model.Model, args *model.Args) (*file.File, error) {
+func ServiceMutate(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.Package}, "servicemutate")
 	for _, imp := range helper.ImportsForTypes("go", m.PKs().Types()...) {
 		g.AddImport(imp)
@@ -46,7 +46,7 @@ func ServiceMutate(m *model.Model, args *model.Args) (*file.File, error) {
 	} else {
 		g.AddBlocks(serviceDelete(m))
 	}
-	return g.Render()
+	return g.Render(addHeader)
 }
 
 func serviceCreate(m *model.Model, g *golang.File) (*golang.Block, error) {
@@ -128,7 +128,7 @@ func serviceUpdate(m *model.Model, g *golang.File) (*golang.Block, error) {
 		ret.W("\t}")
 		ret.W("\treturn nil")
 	} else {
-		ret.W("\tq := database.SQLUpdate(tableQuoted, columnsQuoted, %q, \"\")", pks.WhereClause(len(m.Columns)))
+		ret.W("\tq := database.SQLUpdate(tableQuoted, columnsQuoted, defaultWC, \"\")")
 		ret.W("\tdata := model.ToData()")
 		ret.W("\tdata = append(data, %s)", strings.Join(pkVals, ", "))
 		ret.W("\t_, ret := s.db.Update(ctx, q, tx, 1, data...)")

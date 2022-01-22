@@ -1,3 +1,4 @@
+<!--- Content managed by Project Forge, see [projectforge.md] for details. -->
 # [search]
 
 This is a module for [Project Forge](https://projectforge.dev). It adds search facilities to the top-level navigation bar.

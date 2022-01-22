@@ -1,3 +1,4 @@
+// Content managed by Project Forge, see [projectforge.md] for details.
 export function setSiblingToNull(el: HTMLElement) {
   const i = el.parentElement!.parentElement!.querySelector("input");
   if (!i) {

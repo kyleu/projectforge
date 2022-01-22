@@ -12,7 +12,6 @@ import (
 	"github.com/kyleu/projectforge/app/util"
 	"github.com/kyleu/projectforge/views/vaction"
 	"github.com/valyala/fasthttp"
-	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 )
 
@@ -89,7 +88,7 @@ func RunAllActions(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func actionParams(span trace.Span, tgt string, t action.Type, cfg util.ValueMap, as *app.State, logger *zap.SugaredLogger) *action.Params {
+func actionParams(span *telemetry.Span, tgt string, t action.Type, cfg util.ValueMap, as *app.State, logger *zap.SugaredLogger) *action.Params {
 	return &action.Params{
 		Span: span, ProjectKey: tgt, T: t, Cfg: cfg,
 		MSvc: as.Services.Modules, PSvc: as.Services.Projects, ESvc: as.Services.Export, Logger: logger,

@@ -9,14 +9,14 @@ import (
 	"github.com/kyleu/projectforge/app/project"
 	"github.com/kyleu/projectforge/app/util"
 	"github.com/pkg/errors"
-	"go.opentelemetry.io/otel/attribute"
 	"go.uber.org/zap"
 )
 
 func Apply(ctx context.Context, p *Params) *Result {
 	if p.Span != nil {
-		p.Span.SetAttributes(attribute.String("project", p.ProjectKey), attribute.String("action", p.T.String()))
-		defer p.Span.End()
+		p.Span.Attribute("project", p.ProjectKey)
+		p.Span.Attribute("action", p.T.String())
+		defer p.Span.Complete()
 	}
 
 	start := util.TimerStart()
@@ -58,6 +58,8 @@ func applyBasic(ctx context.Context, p *Params) *Result {
 
 func applyPrj(ctx context.Context, pm *PrjAndMods, t Type) *Result {
 	switch t {
+	case TypeAudit:
+		return onAudit(pm)
 	case TypeBuild:
 		return onBuild(pm)
 	case TypeMerge:

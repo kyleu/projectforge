@@ -58,7 +58,7 @@ var AllBuilds = Builds{
 func onBuild(pm *PrjAndMods) *Result {
 	phaseStr, _ := pm.Cfg.GetString("phase", true)
 	if phaseStr == "" {
-		phaseStr = "make"
+		phaseStr = "build"
 	}
 
 	ret := newResult(pm.Cfg, pm.Logger)

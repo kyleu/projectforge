@@ -13,6 +13,10 @@ func (f *FileSystem) PeekFile(path string, maxSize int) ([]byte, error) {
 	}
 	defer func() { _ = file.Close() }()
 
+	if stat, _ := file.Stat(); stat.Size() == 0 {
+		return nil, nil
+	}
+
 	b := make([]byte, maxSize)
 
 	size, err := file.Read(b)

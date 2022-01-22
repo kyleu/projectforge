@@ -2,50 +2,66 @@ package view
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/kyleu/projectforge/app/export/files/helper"
 	"github.com/kyleu/projectforge/app/export/golang"
 	"github.com/kyleu/projectforge/app/export/model"
 	"github.com/kyleu/projectforge/app/file"
-	"github.com/kyleu/projectforge/app/util"
 )
 
-func detail(m *model.Model, args *model.Args) (*file.File, error) {
+func detail(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"views", "v" + m.Package}, "Detail.html")
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpLayout)
 	g.AddImport(helper.AppImport("app/" + m.Package))
+	rrs := args.Models.ReverseRelations(m.Name)
+	if len(rrs) > 0 {
+		g.AddImport(helper.ImpFilter)
+	}
+	for _, rel := range rrs {
+		rm := args.Models.Get(rel.Table)
+		g.AddImport(helper.AppImport("views/v"+rm.Package), helper.AppImport("app/"+rm.Package))
+	}
 	if m.IsRevision() {
 		g.AddImport(helper.ImpFilter)
 	}
-	g.AddBlocks(exportViewDetailClass(m), exportViewDetailBody(m))
-	return g.Render()
+	g.AddBlocks(exportViewDetailClass(args.Models, m), exportViewDetailBody(m, args.Models))
+	return g.Render(addHeader)
 }
 
-func exportViewDetailClass(m *model.Model) *golang.Block {
+func exportViewDetailClass(models model.Models, m *model.Model) *golang.Block {
 	ret := golang.NewBlock("Detail", "struct")
 	ret.W("{%% code type Detail struct {")
 	ret.W("  layout.Basic")
 	ret.W("  Model *%s.%s", m.Package, m.Proper())
+	rrs := models.ReverseRelations(m.Name)
+	if len(rrs) > 0 || m.IsRevision() {
+		ret.W("  Params filter.ParamSet")
+	}
+	for _, rel := range rrs {
+		rm := models.Get(rel.Table)
+		rCols := rel.TgtColumns(rm)
+		ret.W("  %sBy%s %s.%s", rm.ProperPlural(), strings.Join(rCols.ProperNames(), ""), rm.Package, rm.ProperPlural())
+	}
 	if m.IsRevision() {
 		ret.W("  %s %s.%s", m.HistoryColumn().ProperPlural(), m.Package, m.ProperPlural())
-		ret.W("  Params filter.ParamSet")
 	}
 	ret.W("} %%}")
 	return ret
 }
 
-func exportViewDetailBody(m *model.Model) *golang.Block {
+func exportViewDetailBody(m *model.Model, models model.Models) *golang.Block {
 	ret := golang.NewBlock("DetailBody", "func")
 	ret.W("{%% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %%}")
 	ret.W("  <div class=\"card\">")
 	ret.W("    <div class=\"right\"><a href=\"{%%s p.Model.WebPath() %%}/edit\"><button>Edit</button></a></div>")
 	ret.W("    <h3>{%%= components.SVGRefIcon(`" + m.Icon + "`, ps) %%} " + m.Title() + " [{%%s p.Model.String() %%}]</h3>")
-	ret.W("    <table>")
+	ret.W("    <table class=\"mt\">")
 	ret.W("      <tbody>")
 	for _, col := range m.Columns {
 		ret.W("        <tr>")
 		ret.W(`          <th class="shrink" title="%s">%s</th>`, col.Help(), col.Title())
-		ret.W("          <td>" + col.ToGoViewString("p.Model.") + "</td>")
+		viewTableColumn(ret, models, m, false, col, "p.Model.", 5)
 		ret.W("        </tr>")
 	}
 	ret.W("      </tbody>")
@@ -56,54 +72,22 @@ func exportViewDetailBody(m *model.Model) *golang.Block {
 	}
 	ret.W("  {%%- comment %%}$PF_SECTION_START(extra)${%% endcomment -%%}")
 	ret.W("  {%%- comment %%}$PF_SECTION_END(extra)${%% endcomment -%%}")
+	exportViewDetailRelations(ret, m, models)
 	ret.W("{%% endfunc %%}")
 	return ret
 }
 
-func exportViewDetailRevisions(ret *golang.Block, m *model.Model) {
-	hc := m.HistoryColumns(false)
-	ret.W("  {%%%%- if len(p.%s) > 1 -%%%%}", hc.Col.ProperPlural())
-	ret.W("  <div class=\"card\">")
-	ret.W("    <h3>%s</h3>", hc.Col.ProperPlural())
-	ret.W("    {%%%%- code prms := p.Params.Get(%q, nil, ps.Logger) -%%%%}", m.Package)
-	ret.W("    <table>")
-	ret.W("      <thead>")
-	ret.W("        <tr>")
-	addHeader := func(col *model.Column) {
-		call := fmt.Sprintf("components.TableHeaderSimple(%q, %q, %q, %q, prms, ps.URI, ps)", m.Package, col.Name, util.StringToTitle(col.Name), col.Help())
-		ret.W("          {%%= " + call + " %%}")
+func exportViewDetailRelations(ret *golang.Block, m *model.Model, models model.Models) {
+	for _, rel := range models.ReverseRelations(m.Name) {
+		tgt := models.Get(rel.Table)
+		tgtCols := rel.TgtColumns(tgt)
+		tgtName := fmt.Sprintf("%sBy%s", tgt.ProperPlural(), strings.Join(tgtCols.ProperNames(), ""))
+		ret.W("  {%%%%- if len(p.%s) > 0 -%%%%}", tgtName)
+		ret.W("  <div class=\"card\">")
+		msg := "    <h3>{%%%%= components.SVGRefIcon(`%s`, ps) %%%%} Related %s by [%s]</h3>"
+		ret.W(msg, tgt.IconSafe(), tgt.TitlePluralLower(), strings.Join(rel.TgtColumns(tgt).TitlesLower(), ", "))
+		ret.W("    {%%%%= v%s.Table(p.%s, p.Params, as, ps) %%%%}", tgt.Package, tgtName)
+		ret.W("  </div>")
+		ret.W("  {%%- endif -%%}")
 	}
-	for _, pk := range m.PKs() {
-		addHeader(pk)
-	}
-	addHeader(hc.Col)
-	for _, c := range m.Columns.WithTag("created") {
-		addHeader(c)
-	}
-	ret.W("        </tr>")
-	ret.W("      </thead>")
-	ret.W("      <tbody>")
-	ret.W("        {%%- for _, model := range p." + hc.Col.ProperPlural() + " -%%}")
-	ret.W("        <tr>")
-	linkURL := m.LinkURL("model.") + "/" + hc.Col.Camel() + "/" + hc.Col.ToGoViewString("model.")
-	addView := func(col *model.Column) {
-		if col.PK || col.HasTag(model.RevisionType) {
-			ret.W("          <td><a href=\"" + linkURL + "\">" + col.ToGoViewString("model.") + "</a></td>")
-		} else {
-			ret.W("          <td>" + col.ToGoViewString("model.") + "</td>")
-		}
-	}
-	for _, pk := range m.PKs() {
-		addView(pk)
-	}
-	addView(hc.Col)
-	for _, c := range m.Columns.WithTag("created") {
-		addView(c)
-	}
-	ret.W("        </tr>")
-	ret.W("        {%%- endfor -%%}")
-	ret.W("      </tbody>")
-	ret.W("    </table>")
-	ret.W("  </div>")
-	ret.W("  {%%- endif -%%}")
 }

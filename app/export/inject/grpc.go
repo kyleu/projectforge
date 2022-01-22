@@ -29,10 +29,12 @@ func GRPC(f *file.File, args *model.Args) error {
 }
 
 func grpcAll(m *model.Model, fa *grpc.FileArgs) []string {
-	return []string{
-		grpcList(m, fa), grpcSearch(m, fa), grpcDetail(m, fa),
-		grpcCreate(m, fa), grpcUpdate(m, fa), grpcSave(m, fa), grpcDelete(m, fa),
+	ret := []string{grpcList(m, fa)}
+	if len(m.Search) > 0 {
+		ret = append(ret, grpcSearch(m, fa))
 	}
+	ret = append(ret, grpcDetail(m, fa), grpcCreate(m, fa), grpcUpdate(m, fa), grpcSave(m, fa), grpcDelete(m, fa))
+	return ret
 }
 
 func grpcList(m *model.Model, fa *grpc.FileArgs) string {

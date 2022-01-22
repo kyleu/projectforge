@@ -29,10 +29,10 @@ func (s *Service) GetFilenames(mods Modules) ([]string, error) {
 	return keys, nil
 }
 
-func (s *Service) GetFiles(mods Modules) (file.Files, error) {
+func (s *Service) GetFiles(mods Modules, addHeader bool) (file.Files, error) {
 	ret := map[string]*file.File{}
 	for _, mod := range mods {
-		err := s.loadFiles(mod, ret)
+		err := s.loadFiles(mod, addHeader, ret)
 		if err != nil {
 			return nil, errors.Wrapf(err, "unable to load module [%s]", mod.Key)
 		}
@@ -50,7 +50,7 @@ func (s *Service) GetFiles(mods Modules) (file.Files, error) {
 	return files, nil
 }
 
-func (s *Service) loadFiles(mod *Module, ret map[string]*file.File) error {
+func (s *Service) loadFiles(mod *Module, addHeader bool, ret map[string]*file.File) error {
 	loader := s.GetFilesystem(mod.Key)
 	fs, err := loader.ListFilesRecursive("", nil)
 	if err != nil {
@@ -64,7 +64,7 @@ func (s *Service) loadFiles(mod *Module, ret map[string]*file.File) error {
 		if err != nil {
 			return err
 		}
-		fl := file.NewFile(f, mode, b, s.logger)
+		fl := file.NewFile(f, mode, b, addHeader, s.logger)
 		ret[fl.FullPath()] = fl
 	}
 	return nil
