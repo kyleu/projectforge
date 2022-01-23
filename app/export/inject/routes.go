@@ -27,7 +27,7 @@ func Routes(f *file.File, args *model.Args) error {
 			d := fmt.Sprintf("\tr.GET(\"/%s%s/%s\", %sDetail%s)", m.Route(), pathExtra, strings.Join(pkNames, "/"), m.Proper(), callSuffix)
 			ef := fmt.Sprintf("\tr.GET(\"/%s%s/%s/edit\", %sEditForm%s)", m.Route(), pathExtra, strings.Join(pkNames, "/"), m.Proper(), callSuffix)
 			es := fmt.Sprintf("\tr.POST(\"/%s%s/%s/edit\", %sEdit%s)", m.Route(), pathExtra, strings.Join(pkNames, "/"), m.Proper(), callSuffix)
-			out = append(out, g, l, nf, ns, d, ef, es, "")
+			out = append(out, g, l, nf, ns, d, ef, es)
 		}
 
 		l := fmt.Sprintf("\tr.GET(\"/%s\", %sList)", m.Route(), m.Proper())
@@ -39,6 +39,10 @@ func Routes(f *file.File, args *model.Args) error {
 		es := fmt.Sprintf("\tr.POST(\"/%s/%s/edit\", %sEdit)", m.Route(), strings.Join(pkNames, "/"), m.Proper())
 		dl := fmt.Sprintf("\tr.GET(\"/%s/%s/delete\", %sDelete)", m.Route(), strings.Join(pkNames, "/"), m.Proper())
 		out = append(out, l, nr, nf, ns, d, ef, es, dl)
+		if m.IsHistory() {
+			msg := "\tr.GET(\"/%s/%s/history/{historyID}\", %sHistory)"
+			out = append(out, fmt.Sprintf(msg, m.Route(), strings.Join(pkNames, "/"), m.Proper()))
+		}
 		if m.IsRevision() {
 			rc := m.HistoryColumn()
 			msg := "\tr.GET(\"/%s/%s/%s/{%s}\", %s%s)"

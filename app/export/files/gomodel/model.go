@@ -62,6 +62,9 @@ func modelDiff(m *model.Model, g *golang.File) *golang.Block {
 	ret.W("func (%s *%s) Diff(%sx *%s) util.Diffs {", m.FirstLetter(), m.Proper(), m.FirstLetter(), m.Proper())
 	ret.W("\tvar diffs util.Diffs")
 	for _, col := range m.Columns {
+		if col.HasTag("updated") {
+			continue
+		}
 		l := fmt.Sprintf("%s.%s", m.FirstLetter(), col.Proper())
 		r := fmt.Sprintf("%sx.%s", m.FirstLetter(), col.Proper())
 		switch col.Type.Key {

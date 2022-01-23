@@ -124,6 +124,14 @@ func (c Columns) ToGoStrings(prefix string) string {
 	return strings.Join(ret, ", ")
 }
 
+func (c Columns) ToRefs(prefix string) string {
+	ret := make([]string, 0, len(c))
+	for _, x := range c {
+		ret = append(ret, prefix+x.Proper())
+	}
+	return strings.Join(ret, ", ")
+}
+
 func (c Columns) Types() Types {
 	var ret Types
 	for _, x := range c {

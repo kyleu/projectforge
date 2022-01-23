@@ -22,7 +22,7 @@ func detail(m *model.Model, args *model.Args, addHeader bool) (*file.File, error
 		rm := args.Models.Get(rel.Table)
 		g.AddImport(helper.AppImport("views/v"+rm.Package), helper.AppImport("app/"+rm.Package))
 	}
-	if m.IsRevision() {
+	if m.IsRevision() || m.IsHistory() {
 		g.AddImport(helper.ImpFilter)
 	}
 	g.AddBlocks(exportViewDetailClass(args.Models, m), exportViewDetailBody(m, args.Models))
@@ -35,7 +35,10 @@ func exportViewDetailClass(models model.Models, m *model.Model) *golang.Block {
 	ret.W("  layout.Basic")
 	ret.W("  Model *%s.%s", m.Package, m.Proper())
 	rrs := models.ReverseRelations(m.Name)
-	if len(rrs) > 0 || m.IsRevision() {
+	if m.IsHistory() {
+		ret.W("  Histories %s.%sHistories", m.Package, m.Proper())
+	}
+	if len(rrs) > 0 || m.IsRevision() || m.IsHistory() {
 		ret.W("  Params filter.ParamSet")
 	}
 	for _, rel := range rrs {
@@ -69,6 +72,14 @@ func exportViewDetailBody(m *model.Model, models model.Models) *golang.Block {
 	ret.W("  </div>")
 	if m.IsRevision() {
 		exportViewDetailRevisions(ret, m)
+	}
+	if m.IsHistory() {
+		ret.W("  {%%- if len(p.Histories) > 0 -%%}")
+		ret.W("  <div class=\"card\">")
+		ret.W("    <h3>Histories</h3>")
+		ret.W("    {%%= HistoryTable(p.Model, p.Histories, p.Params, as, ps) %%}")
+		ret.W("  </div>")
+		ret.W("  {%%- endif -%%}")
 	}
 	ret.W("  {%%- comment %%}$PF_SECTION_START(extra)${%% endcomment -%%}")
 	ret.W("  {%%- comment %%}$PF_SECTION_END(extra)${%% endcomment -%%}")

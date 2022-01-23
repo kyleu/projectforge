@@ -46,7 +46,7 @@ func controllerDetail(models model.Models, m *model.Model, grp *model.Column) *g
 		controllerArgFor(grp, ret, "\"\"", 2)
 		grpHistory = fmt.Sprintf(", %q", grp.Camel())
 	}
-	if m.IsRevision() || len(rrels) > 0 {
+	if m.IsRevision() || m.IsHistory() || len(rrels) > 0 {
 		ret.W("\t\tparams := cutil.ParamSetFromRequest(rc)")
 	}
 	ret.W("\t\tret, err := %sFromPath(rc, as, ps)", m.Package)
@@ -68,10 +68,16 @@ func controllerDetail(models model.Models, m *model.Model, grp *model.Column) *g
 		ret.W("\t\t\treturn \"\", err")
 		ret.W("\t\t}")
 	}
+	if m.IsHistory() {
+		ret.W("\t\thist, err := as.Services.%s.GetHistories(ps.Context, nil, %s)", m.Proper(), m.PKs().ToRefs("ret."))
+		ret.W("\t\tif err != nil {")
+		ret.W("\t\t\treturn \"\", err")
+		ret.W("\t\t}")
+	}
 	ret.W("\t\tps.Title = ret.String()")
 	ret.W("\t\tps.Data = ret")
 	suffix := ""
-	if m.IsRevision() || len(rrels) > 0 {
+	if m.IsRevision() || m.IsHistory() || len(rrels) > 0 {
 		suffix += ", Params: params"
 	}
 	for _, rel := range rrels {
@@ -80,7 +86,7 @@ func controllerDetail(models model.Models, m *model.Model, grp *model.Column) *g
 		rCols := rel.TgtColumns(rm)
 		rNames := strings.Join(rCols.ProperNames(), "")
 		msg := "\t\t%sBy%s, err := as.Services.%s.GetBy%s(ps.Context, nil, %s, params.Get(%q, nil, ps.Logger))"
-		ret.W(msg, rm.Plural(), rNames, rm.Proper(), rNames, lCols.ToGoStrings("ret."), rm.Camel())
+		ret.W(msg, rm.Plural(), rNames, rm.Proper(), rNames, lCols.ToRefs("ret."), rm.Camel())
 		ret.W("\t\tif err != nil {")
 		ret.W("\t\t\treturn \"\", errors.Wrap(err, \"unable to retrieve child %s\")", rm.TitlePluralLower())
 		ret.W("\t\t}")
@@ -89,6 +95,9 @@ func controllerDetail(models model.Models, m *model.Model, grp *model.Column) *g
 	if m.IsRevision() {
 		revCol := m.HistoryColumn()
 		suffix = fmt.Sprintf(", %s: %s", revCol.ProperPlural(), revCol.CamelPlural())
+	}
+	if m.IsHistory() {
+		suffix += ", Histories: hist"
 	}
 	ret.W("\t\treturn render(rc, as, &v%s.Detail{Model: ret%s}, ps, %q%s, ret.String())", m.Package, suffix, m.Package, grpHistory)
 	ret.W("\t})")

@@ -16,16 +16,19 @@ func All(m *model.Model, args *model.Args, addHeader bool) (file.Files, error) {
 		return nil, errors.Wrap(err, "can't render list template")
 	}
 	calls = append(calls, f)
+
 	f, err = table(m, args, addHeader)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't render table template")
 	}
 	calls = append(calls, f)
+
 	f, err = detail(m, args, addHeader)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't render detail template")
 	}
 	calls = append(calls, f)
+
 	f, err = edit(m, args, addHeader)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't render edit template")
@@ -36,6 +39,14 @@ func All(m *model.Model, args *model.Args, addHeader bool) (file.Files, error) {
 		f, err = Grouping(m, grp, addHeader)
 		if err != nil {
 			return nil, errors.Wrap(err, "can't view controller for group ["+grp.Title()+"]")
+		}
+		calls = append(calls, f)
+	}
+
+	if m.IsHistory() {
+		f, err = history(m, args, addHeader)
+		if err != nil {
+			return nil, errors.Wrap(err, "can't render history template")
 		}
 		calls = append(calls, f)
 	}

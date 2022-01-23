@@ -6,5 +6,22 @@
 ) %}
 
 {% func DisplayTimestamp(value *time.Time) %}{% stripspace %}
-    {%s util.TimeToFull(value) %}
+  {%s util.TimeToFull(value) %}
+{% endstripspace %}{% endfunc %}
+
+{% func DisplayDiffs(value util.Diffs) %}{% stripspace %}
+  {%- if len(value) == 0 -%}
+  <em>no changes</em>
+  {%- else -%}
+  <ul>
+    {%- for _, d := range value -%}
+    <li>
+      <code>{%s d.Path %}</code>
+      <ul>
+        <li>Old: <code>{%s d.Old %}</code></li>
+        <li>New: <code>{%s d.New %}</code></li>
+      </ul>
+    {%- endfor -%}
+  </ul>
+  {%- endif -%}
 {% endstripspace %}{% endfunc %}

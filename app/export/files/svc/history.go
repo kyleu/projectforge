@@ -37,7 +37,7 @@ func serviceHistoryGetHistory(m *model.Model) *golang.Block {
 	ret.W("func (s *Service) GetHistory(ctx context.Context, tx *sqlx.Tx, id uuid.UUID) (*HistoryHistory, error) {")
 	ret.W("\tq := database.SQLSelectSimple(historyColumnsString, historyTableQuoted, \"id = $1\")")
 	ret.W("\tret := historyDTO{}")
-	ret.W("\terr := s.db.Get(ctx, &ret, q, tx)")
+	ret.W("\terr := s.db.Get(ctx, &ret, q, tx, id)")
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, errors.Wrapf(err, \"unable to get %s history [%%%%s]\", id.String())", m.TitleLower())
 	ret.W("\t}")

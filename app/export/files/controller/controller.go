@@ -25,8 +25,11 @@ func Controller(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 	g.AddBlocks(
 		controllerCreateForm(m, nil), controllerCreateFormRandom(m), controllerCreate(m, g, nil),
 		controllerEditForm(m, nil), controllerEdit(m, g, nil), controllerDelete(m, g, nil),
-		controllerModelFromPath(m), controllerModelFromForm(m),
 	)
+	if m.IsHistory() {
+		g.AddBlocks(controllerHistory(m))
+	}
+	g.AddBlocks(controllerModelFromPath(m), controllerModelFromForm(m))
 	return g.Render(addHeader)
 }
 

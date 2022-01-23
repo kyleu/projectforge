@@ -63,7 +63,7 @@ func serviceCreate(m *model.Model, g *golang.File) (*golang.Block, error) {
 		ret.W("\t\treturn err")
 		ret.W("\t}")
 
-		if err := serviceAddCreatedUpdated(m, ret, g); err != nil {
+		if err := serviceAddCreatedUpdated(m, ret, g, false); err != nil {
 			return nil, err
 		}
 
@@ -78,7 +78,7 @@ func serviceCreate(m *model.Model, g *golang.File) (*golang.Block, error) {
 		ret.W("\t}")
 		ret.W("\treturn nil")
 	} else {
-		if err := serviceAddCreatedUpdated(m, ret, g); err != nil {
+		if err := serviceAddCreatedUpdated(m, ret, g, false); err != nil {
 			return nil, err
 		}
 
@@ -104,12 +104,37 @@ func serviceUpdate(m *model.Model, g *golang.File) (*golang.Block, error) {
 		ret.W("\t}")
 		ret.W("\tmodel.%s = revs[model.String()] + 1", revCol.Proper())
 	}
+
+	if cc := m.Columns.WithTag("created"); len(cc) > 0 {
+		g.AddImport(helper.ImpErrors)
+		suffix := ""
+		if m.IsSoftDelete() {
+			suffix = ", true"
+		}
+		ret.W("\tcurr, err := s.Get(ctx, tx, %s%s)", m.PKs().ToRefs("model."), suffix)
+		ret.W("\tif err != nil {")
+		ret.W("\t\treturn errors.Wrap(err, \"can't get original history\")")
+		ret.W("\t}")
+		for _, c := range cc {
+			ret.W("\tmodel.%s = curr.%s", c.Proper(), c.Proper())
+		}
+	}
+
 	for _, updated := range m.Columns.WithTag("updated") {
 		err := serviceSetVal(updated, g, ret, 1)
 		if err != nil {
 			return nil, errors.Wrap(err, "")
 		}
 	}
+
+	if m.IsHistory() {
+		ret.W("")
+		ret.W("\t_, err = s.SaveHistory(ctx, tx, curr, model)")
+		ret.W("\tif err != nil {")
+		ret.W("\t\treturn errors.Wrap(err, \"unable to save history\")")
+		ret.W("\t}")
+	}
+
 	pks := m.PKs()
 	pkVals := make([]string, 0, len(pks))
 	for _, pk := range pks {
@@ -152,7 +177,7 @@ func serviceSave(m *model.Model, g *golang.File) (*golang.Block, error) {
 		ret.W("\t}")
 	}
 
-	if err := serviceAddCreatedUpdated(m, ret, g); err != nil {
+	if err := serviceAddCreatedUpdated(m, ret, g, true); err != nil {
 		return nil, err
 	}
 	if m.IsRevision() {
@@ -209,25 +234,54 @@ func serviceInsertRevision(m *model.Model) *golang.Block {
 	return ret
 }
 
-func serviceAddCreatedUpdated(m *model.Model, ret *golang.Block, g *golang.File, additional ...string) error {
+func serviceAddCreatedUpdated(m *model.Model, ret *golang.Block, g *golang.File, loadCurr bool, additional ...string) error {
 	createdCols := m.Columns.WithTag("created")
 	updatedCols := m.Columns.WithTag("updated")
 	if len(createdCols) > 0 || len(updatedCols) > 0 || m.IsRevision() {
 		ret.W("\tfor _, model := range models {")
+		if len(createdCols) > 0 {
+			if loadCurr {
+				suffix := ""
+				if m.IsSoftDelete() {
+					suffix = ", true"
+				}
+				ret.W("\t\tcurr, err := s.Get(ctx, tx, %s%s)", m.PKs().ToRefs("model."), suffix)
+				ret.W("\t\tif err == nil && curr != nil {")
+				for _, created := range createdCols {
+					ret.W("\t\t\tmodel.%s = curr.%s", created.Proper(), created.Proper())
+				}
+				ret.W("\t\t} else {")
+				for _, created := range createdCols {
+					err := serviceSetVal(created, g, ret, 3)
+					if err != nil {
+						return err
+					}
+				}
+				ret.W("\t\t}")
+			} else {
+				for _, created := range createdCols {
+					err := serviceSetVal(created, g, ret, 2)
+					if err != nil {
+						return err
+					}
+				}
+			}
+		}
 		if m.IsRevision() {
 			ret.W("\t\tmodel.%s = revs[model.String()] + 1", m.HistoryColumn().Proper())
-		}
-		for _, created := range createdCols {
-			err := serviceSetVal(created, g, ret, 2)
-			if err != nil {
-				return err
-			}
 		}
 		for _, updated := range updatedCols {
 			err := serviceSetVal(updated, g, ret, 2)
 			if err != nil {
 				return err
 			}
+		}
+		if m.IsHistory() && loadCurr {
+			ret.W("")
+			ret.W("\t\t_, err = s.SaveHistory(ctx, tx, curr, model)")
+			ret.W("\t\tif err != nil {")
+			ret.W("\t\t\treturn errors.Wrap(err, \"unable to save history\")")
+			ret.W("\t\t}")
 		}
 		ret.W("\t}")
 	}

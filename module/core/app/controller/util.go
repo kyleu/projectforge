@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 
@@ -41,6 +42,14 @@ func RCRequiredInt(rc *fasthttp.RequestCtx, key string) (int, error) {
 		return 0, err
 	}
 	return strconv.Atoi(s)
+}
+
+func RCRequiredUUID(rc *fasthttp.RequestCtx, key string) (*uuid.UUID, error) {
+	ret, err := RCRequiredString(rc, key, true)
+	if err != nil {
+		return nil, err
+	}
+	return util.UUIDFromString(ret), nil
 }
 
 func render(rc *fasthttp.RequestCtx, as *app.State, page layout.Page, ps *cutil.PageState, breadcrumbs ...string) (string, error) {
