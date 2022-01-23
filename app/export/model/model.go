@@ -112,6 +112,13 @@ func (m *Model) IsSoftDelete() bool {
 	return m.HasTag("softDelete")
 }
 
+func (m *Model) SoftDeleteSuffix() string {
+	if m.IsSoftDelete() {
+		return ", true"
+	}
+	return ""
+}
+
 func (m *Model) PKs() Columns {
 	return m.Columns.PKs()
 }

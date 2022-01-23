@@ -54,20 +54,7 @@ func controllerDetail(models model.Models, m *model.Model, grp *model.Column) *g
 	ret.W("\t\t\treturn \"\", err")
 	ret.W("\t\t}")
 	checkGrp(ret, grp)
-	if m.IsRevision() {
-		hc := m.HistoryColumn()
-
-		var prms []string
-		for _, pk := range m.PKs() {
-			prms = append(prms, "ret."+pk.Proper())
-		}
-		prmsStr := strings.Join(prms, ", ")
-		msg := "\t\t%s, err := as.Services.%s.GetAll%s(ps.Context, nil, %s, params.Get(%q, nil, ps.Logger), false)"
-		ret.W(msg, hc.CamelPlural(), m.Proper(), hc.ProperPlural(), prmsStr, m.Package)
-		ret.W("\t\tif err != nil {")
-		ret.W("\t\t\treturn \"\", err")
-		ret.W("\t\t}")
-	}
+	checkRev(ret, m)
 	if m.IsHistory() {
 		ret.W("\t\thist, err := as.Services.%s.GetHistories(ps.Context, nil, %s)", m.Proper(), m.PKs().ToRefs("ret."))
 		ret.W("\t\tif err != nil {")
@@ -103,6 +90,20 @@ func controllerDetail(models model.Models, m *model.Model, grp *model.Column) *g
 	ret.W("\t})")
 	ret.W("}")
 	return ret
+}
+
+func checkRev(ret *golang.Block, m *model.Model) {
+	if !m.IsRevision() {
+		return
+	}
+	hc := m.HistoryColumn()
+
+	prmsStr := m.PKs().ToRefs("ret.")
+	msg := "\t\t%s, err := as.Services.%s.GetAll%s(ps.Context, nil, %s, params.Get(%q, nil, ps.Logger), false)"
+	ret.W(msg, hc.CamelPlural(), m.Proper(), hc.ProperPlural(), prmsStr, m.Package)
+	ret.W("\t\tif err != nil {")
+	ret.W("\t\t\treturn \"\", err")
+	ret.W("\t\t}")
 }
 
 func checkGrp(ret *golang.Block, grp *model.Column, override ...string) {

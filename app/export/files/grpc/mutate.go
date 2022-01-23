@@ -34,11 +34,7 @@ func grpcDelete(m *model.Model, grpcArgs string, grpcRet string, ga *FileArgs) *
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, err")
 	ret.W("\t}")
-	suffix := ""
-	if m.IsSoftDelete() {
-		suffix = ", true"
-	}
-	ret.W("\torig, err := appState.Services.%s.Get(p.Ctx, nil, %s%s)", m.Proper(), strings.Join(pks.Names(), ", "), suffix)
+	ret.W("\torig, err := appState.Services.%s.Get(p.Ctx, nil, %s%s)", m.Proper(), strings.Join(pks.Names(), ", "), m.SoftDeleteSuffix())
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, err")
 	ret.W("\t}")

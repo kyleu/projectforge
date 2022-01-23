@@ -107,11 +107,7 @@ func serviceUpdate(m *model.Model, g *golang.File) (*golang.Block, error) {
 
 	if cc := m.Columns.WithTag("created"); len(cc) > 0 {
 		g.AddImport(helper.ImpErrors)
-		suffix := ""
-		if m.IsSoftDelete() {
-			suffix = ", true"
-		}
-		ret.W("\tcurr, err := s.Get(ctx, tx, %s%s)", m.PKs().ToRefs("model."), suffix)
+		ret.W("\tcurr, err := s.Get(ctx, tx, %s%s)", m.PKs().ToRefs("model."), m.SoftDeleteSuffix())
 		ret.W("\tif err != nil {")
 		ret.W("\t\treturn errors.Wrap(err, \"can't get original history\")")
 		ret.W("\t}")
@@ -239,33 +235,9 @@ func serviceAddCreatedUpdated(m *model.Model, ret *golang.Block, g *golang.File,
 	updatedCols := m.Columns.WithTag("updated")
 	if len(createdCols) > 0 || len(updatedCols) > 0 || m.IsRevision() {
 		ret.W("\tfor _, model := range models {")
-		if len(createdCols) > 0 {
-			if loadCurr {
-				suffix := ""
-				if m.IsSoftDelete() {
-					suffix = ", true"
-				}
-				ret.W("\t\tcurr, err := s.Get(ctx, tx, %s%s)", m.PKs().ToRefs("model."), suffix)
-				ret.W("\t\tif err == nil && curr != nil {")
-				for _, created := range createdCols {
-					ret.W("\t\t\tmodel.%s = curr.%s", created.Proper(), created.Proper())
-				}
-				ret.W("\t\t} else {")
-				for _, created := range createdCols {
-					err := serviceSetVal(created, g, ret, 3)
-					if err != nil {
-						return err
-					}
-				}
-				ret.W("\t\t}")
-			} else {
-				for _, created := range createdCols {
-					err := serviceSetVal(created, g, ret, 2)
-					if err != nil {
-						return err
-					}
-				}
-			}
+		err := serviceLoadCreated(g, ret, m, createdCols, loadCurr)
+		if err != nil {
+			return err
 		}
 		if m.IsRevision() {
 			ret.W("\t\tmodel.%s = revs[model.String()] + 1", m.HistoryColumn().Proper())
@@ -284,6 +256,34 @@ func serviceAddCreatedUpdated(m *model.Model, ret *golang.Block, g *golang.File,
 			ret.W("\t\t}")
 		}
 		ret.W("\t}")
+	}
+	return nil
+}
+
+func serviceLoadCreated(g *golang.File, ret *golang.Block, m *model.Model, createdCols model.Columns, loadCurr bool) error {
+	if len(createdCols) > 0 {
+		if loadCurr {
+			ret.W("\t\tcurr, err := s.Get(ctx, tx, %s%s)", m.PKs().ToRefs("model."), m.SoftDeleteSuffix())
+			ret.W("\t\tif err == nil && curr != nil {")
+			for _, created := range createdCols {
+				ret.W("\t\t\tmodel.%s = curr.%s", created.Proper(), created.Proper())
+			}
+			ret.W("\t\t} else {")
+			for _, created := range createdCols {
+				err := serviceSetVal(created, g, ret, 3)
+				if err != nil {
+					return err
+				}
+			}
+			ret.W("\t\t}")
+		} else {
+			for _, created := range createdCols {
+				err := serviceSetVal(created, g, ret, 2)
+				if err != nil {
+					return err
+				}
+			}
+		}
 	}
 	return nil
 }
