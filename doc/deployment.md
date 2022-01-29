@@ -1,5 +1,0 @@
-# Deployment
-
-## Database configuration
-
-

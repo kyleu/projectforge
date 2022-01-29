@@ -71,12 +71,8 @@ func FileLoader(src file.Files, tgt filesystem.FileLoader, includeUnchanged bool
 
 			tgtFile = file.NewFile(p, t.Mode(), b, false, logger)
 
-			linefeed := strings.Index(tgtFile.Content, "\n")
-			if linefeed > -1 {
-				firstLine := tgtFile.Content[:linefeed]
-				if strings.Contains(firstLine, file.IgnorePattern) {
-					skip = true
-				}
+			if strings.Contains(tgtFile.Content, file.IgnorePattern) {
+				skip = true
 			}
 		}
 		var d *Diff

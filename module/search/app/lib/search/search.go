@@ -23,9 +23,9 @@ func Search(ctx context.Context, as *app.State, params *Params) (result.Results,
 		return result.Results{{URL: "/search?q=test", Title: "Test Result", Icon: "star", Matches: nil}}, nil
 	}
 	allProviders = append(allProviders, testFunc)
-	// $PF_SECTION_END(search_functions)$
+	// $PF_SECTION_END(search_functions)${{{ if.HasModule "export" }}}
 	// $PF_INJECT_START(codegen)$
-	// $PF_INJECT_END(codegen)$
+	// $PF_INJECT_END(codegen)${{{ end }}}
 
 	if len(allProviders) == 0 {
 		return nil, []error{errors.New("no search providers configured")}

@@ -38,9 +38,11 @@ func exportViewHistoryBody(m *model.Model) *golang.Block {
 	ret.W("          <td>{%%s p.History.ID.String() %%}</td>")
 	ret.W("        </tr>")
 	for _, pk := range m.PKs() {
+		x := pk.Clone()
+		x.Name = m.Proper() + x.Proper()
 		ret.W("        <tr>")
-		ret.W("          <th class=\"shrink\">%s %s</th>", m.Title(), pk.Title())
-		ret.W("          <td><a href=\"{%%%%s p.Model.WebPath() %%%%}\">{%%%%s p.History.%s%s %%%%}</a></td>", m.Proper(), pk.Proper())
+		ret.W("          <th class=\"shrink\">%s</th>", x.Title())
+		ret.W("          <td><a href=\"{%%%%s p.Model.WebPath() %%%%}\">%s</a></td>", x.ToGoViewString("p.History."))
 		ret.W("        </tr>")
 	}
 	ret.W("        <tr>")
@@ -68,7 +70,8 @@ func exportViewHistoryBody(m *model.Model) *golang.Block {
 
 func exportViewHistoryTable(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("HistoryTable", "struct")
-	ret.W("{%% func HistoryTable(model *history.History, histories history.HistoryHistories, params filter.ParamSet, as *app.State, ps *cutil.PageState) %%}")
+	decl := "{%%%% func HistoryTable(model *%s.%s, histories %s.%sHistories, params filter.ParamSet, as *app.State, ps *cutil.PageState) %%%%}"
+	ret.W(decl, m.Package, m.Proper(), m.Package, m.Proper())
 	ret.W("  {%%- code prms := params.Get(\"history_history\", nil, ps.Logger) -%%}")
 	ret.W("  <table class=\"mt\">")
 	ret.W("    <thead>")
@@ -89,7 +92,11 @@ func exportViewHistoryTable(m *model.Model) *golang.Block {
 	ret.W("      {%%- for _, h := range histories -%%}")
 	ret.W("      <tr>")
 	ret.W("        <td><a href=\"{%%s model.WebPath() %%}/history/{%%s h.ID.String() %%}\">{%%s h.ID.String() %%}</a></td>")
-	ret.W("        <td><a href=\"{%%s model.WebPath() %%}\">{%%s h.HistoryID %%}</a></td>")
+	for _, pk := range m.PKs() {
+		x := pk.Clone()
+		x.Name = m.Proper() + x.Proper()
+		ret.W("        <td><a href=\"{%%s model.WebPath() %%}\">" + x.ToGoViewString("h.") + "</a></td>")
+	}
 	ret.W("        <td>{%%= components.DisplayDiffs(h.Changes) %%}</td>")
 	ret.W("        <td>{%%= components.DisplayTimestamp(&h.Created) %%}</td>")
 	ret.W("      </tr>")

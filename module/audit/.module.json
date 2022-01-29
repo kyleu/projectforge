@@ -1,0 +1,10 @@
+{
+  "name": "Audit",
+  "icon": "search",
+  "description": "Using the database module, provides an audit framework for tracking changes",
+  "authorName": "Kyle U",
+  "authorEmail": "kyle@kyleu.com",
+  "license": "CC0",
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/audit",
+  "priority": 20
+}

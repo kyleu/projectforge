@@ -1,0 +1,38 @@
+{% import (
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/lib/audit"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/lib/filter"
+  "{{{ .Package }}}/views/components"
+) %}
+
+{% func RecordTable(models audit.Records, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
+  {%- code prms := params.Get("audit_record", nil, ps.Logger) -%}
+  <table class="mt">
+    <thead>
+      <tr>
+        {%= components.TableHeaderSimple("audit_record", "id", "ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("audit_record", "audit_id", "Audit ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("audit_record", "t", "T", "String text", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("audit_record", "pk", "Pk", "String text", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("audit_record", "changes", "Changes", "JSON object", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("audit_record", "occurred", "Occurred", "Date and time, in almost any format", prms, ps.URI, ps) %}
+      </tr>
+    </thead>
+    <tbody>
+      {%- for _, model := range models -%}
+      <tr>
+        <td><a href="/admin/record/{%= components.DisplayUUID(&model.ID) %}">{%= components.DisplayUUID(&model.ID) %}</a></td>
+        <td>
+          <div class="icon">{%= components.DisplayUUID(&model.AuditID) %}</div>
+          <a title="Audit" href="{%s `/admin/audit/`+model.AuditID.String() %}">{%= components.SVGRefIcon("cog", ps) %}</a>
+        </td>
+        <td>{%s model.T %}</td>
+        <td>{%s model.Pk %}</td>
+        <td>{%= components.JSON(model.Changes) %}</td>
+        <td>{%= components.DisplayTimestamp(&model.Occurred) %}</td>
+      </tr>
+      {%- endfor -%}
+    </tbody>
+  </table>
+{% endfunc %}

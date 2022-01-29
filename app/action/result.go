@@ -27,9 +27,12 @@ func newResult(cfg util.ValueMap, logger *zap.SugaredLogger) *Result {
 }
 
 func (r *Result) WithError(err error) *Result {
-	msg := err.Error()
+	msg := "error"
+	if err != nil {
+		msg = err.Error()
+	}
 	if r.logger != nil {
-		r.logger.Errorf("%+v", err)
+		r.logger.Errorf("error: %+v", err)
 	}
 	r.Status = "error"
 	r.Errors = append(r.Errors, msg)

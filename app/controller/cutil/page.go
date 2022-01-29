@@ -58,6 +58,13 @@ func (p *PageState) TitleString() string {
 	return fmt.Sprintf("%s - %s", p.Title, util.AppName)
 }
 
+func (p *PageState) User() string {
+	if len(p.Accounts) == 0 {
+		return "anonymous"
+	}
+	return p.Accounts[0].Email
+}
+
 func (p *PageState) Close() {
 	if p.Span != nil {
 		p.Span.Complete()

@@ -11,7 +11,10 @@ import (
 )
 
 type Services struct {
-  // add your stuff here
+	{{{ if.HasModule "export" }}}
+	// $PF_INJECT_START(services)$
+	// $PF_INJECT_END(services)$
+	{{{ end }}}// add your dependencies here
 }
 
 func NewServices(ctx context.Context, st *State) (*Services, error) {
@@ -20,5 +23,8 @@ func NewServices(ctx context.Context, st *State) (*Services, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to run database migrations")
 	}
-	{{{ end }}}return &Services{}, nil
+	{{{ end }}}return &Services{
+	{{{ if.HasModule "export" }}}	// $PF_INJECT_START(refs)$
+		// $PF_INJECT_END(refs)${{{ end }}}
+	}, nil
 }

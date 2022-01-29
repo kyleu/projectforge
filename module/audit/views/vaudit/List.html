@@ -1,0 +1,26 @@
+{% import (
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/lib/audit"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/lib/filter"
+  "{{{ .Package }}}/views/components"
+  "{{{ .Package }}}/views/layout"
+) %}
+
+{% code type List struct {
+  layout.Basic
+  Models audit.Audits
+  Params filter.ParamSet
+} %}
+
+{% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <div class="right"><a href="/admin/audit/new"><button>New</button></a></div>
+    <h3>{%= components.SVGRefIcon(`cog`, ps) %} Audits</h3>
+    {%- if len(p.Models) == 0 -%}
+    <div class="mt"><em>No audits available</em></div>
+    {%- else -%}
+    {%= Table(p.Models, p.Params, as, ps) %}
+    {%- endif -%}
+  </div>
+{% endfunc %}

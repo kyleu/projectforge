@@ -44,7 +44,7 @@ func PostgresParamsFromEnv(key string, defaultUser string, prefix string) *Postg
 	if x := os.Getenv(prefix + "DB_USER"); x != "" {
 		u = x
 	}
-	pw := ""
+	pw := defaultUser
 	if x := os.Getenv(prefix + "DB_PASSWORD"); x != "" {
 		pw = x
 	}

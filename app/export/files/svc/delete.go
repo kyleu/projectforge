@@ -3,9 +3,10 @@ package svc
 import (
 	"strings"
 
+	"github.com/pkg/errors"
+
 	"github.com/kyleu/projectforge/app/export/golang"
 	"github.com/kyleu/projectforge/app/export/model"
-	"github.com/pkg/errors"
 )
 
 func serviceDelete(m *model.Model) *golang.Block {

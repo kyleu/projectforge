@@ -2,6 +2,7 @@ package svc
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 
 	"github.com/kyleu/projectforge/app/export/files/helper"
@@ -20,18 +21,33 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 	if len(m.PKs()) > 0 {
 		g.AddBlocks(serviceGetByPK(m))
 	}
+	getBys := map[string]model.Columns{}
 	if len(m.PKs()) > 1 {
 		for _, pkCol := range m.PKs() {
-			g.AddBlocks(serviceGetBy("GetBy"+pkCol.Proper(), m, model.Columns{pkCol}, true))
+			getBys[pkCol.Name] = model.Columns{pkCol}
 		}
 	}
 	for _, grp := range m.GroupedColumns() {
-		g.AddBlocks(serviceGrouped(m, grp))
 		g.AddImport(helper.ImpAppUtil)
-		if !grp.PK {
-			g.AddBlocks(serviceGetBy("GetBy"+grp.Proper(), m, model.Columns{grp}, true))
-		}
+		g.AddBlocks(serviceGrouped(m, grp))
+		getBys[grp.Name] = model.Columns{grp}
 	}
+	for _, rel := range m.Relations {
+		cols := rel.SrcColumns(m)
+		colStr := strings.Join(cols.Names(), ",")
+		getBys[colStr] = cols
+	}
+	keys := make([]string, 0, len(getBys))
+	for k := range getBys {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	for _, key := range keys {
+		cols := getBys[key]
+		name := "GetBy" + strings.Join(cols.ProperNames(), "")
+		g.AddBlocks(serviceGetBy(name, m, cols, true))
+	}
+
 	if len(m.Search) > 0 {
 		g.AddImport(helper.ImpStrings)
 		g.AddBlocks(serviceSearch(m, nil))

@@ -28,8 +28,6 @@ func Search(ctx context.Context, as *app.State, params *Params) (result.Results,
 	}
 	allProviders = append(allProviders, projectFunc, moduleFunc)
 	// $PF_SECTION_END(search_functions)$
-	// $PF_INJECT_START(codegen)$
-	// $PF_INJECT_END(codegen)$
 
 	if len(allProviders) == 0 {
 		return nil, []error{errors.New("no search providers configured")}

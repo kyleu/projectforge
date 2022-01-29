@@ -38,11 +38,19 @@
   <div class="card">
     <h3>Columns</h3>
     <table class="mt min-200 full-width">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Tags</th>
+        </tr>
+      </thead>
       <tbody>
         {%- for _, col := range model.Columns -%}
         <tr>
           <td>{%s col.Name %}</td>
           <td>{%s col.Type.String() %}</td>
+          <td>{%s strings.Join(col.Tags, ", ") %}</td>
         </tr>
         {%- endfor -%}
       </tbody>

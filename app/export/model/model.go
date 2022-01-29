@@ -22,12 +22,17 @@ type Model struct {
 	Config         util.ValueMap    `json:"config,omitempty"`
 	Columns        Columns          `json:"columns"`
 	Relations      Relations        `json:"relations,omitempty"`
+	Indexes        Indexes          `json:"indexes,omitempty"`
 	historyMap     *HistoryMap
 	historyMapDB   *HistoryMap
 }
 
 func (m *Model) Camel() string {
 	return util.StringToLowerCamel(m.Name)
+}
+
+func (m *Model) CamelPlural() interface{} {
+	return util.StringToPlural(m.Camel())
 }
 
 func (m *Model) Title() string {
@@ -64,11 +69,19 @@ func (m *Model) TitlePluralLower() string {
 }
 
 func (m *Model) Plural() string {
-	return util.StringToPlural(m.Name)
+	ret := util.StringToPlural(m.Name)
+	if ret == m.Name {
+		return ret + "Set"
+	}
+	return ret
 }
 
 func (m *Model) ProperPlural() string {
-	return util.StringToPlural(m.Proper())
+	ret := util.StringToPlural(m.Proper())
+	if ret == m.Proper() {
+		return ret + "Set"
+	}
+	return ret
 }
 
 func (m *Model) FirstLetter() string {

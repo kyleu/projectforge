@@ -6,8 +6,12 @@ import (
 
 func (t *Type) Help() string {
 	switch t.Key {
+	case TypeBool.Key:
+		return "Value [true] or [false]"
 	case TypeInt.Key:
 		return "Integer"
+	case TypeInterface.Key:
+		return "Interface, could be anything"
 	case TypeMap.Key:
 		return "JSON object"
 	case TypeString.Key:

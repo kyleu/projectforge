@@ -16,8 +16,12 @@ func newType(names ...string) *Type {
 func (t *Type) ToGoType(nullable bool) string {
 	var ret string
 	switch t.Key {
+	case TypeBool.Key:
+		ret = TypeBool.Key
 	case TypeInt.Key:
 		ret = TypeInt.Key
+	case TypeInterface.Key:
+		ret = "interface{}"
 	case TypeMap.Key:
 		ret = "util.ValueMap"
 	case TypeString.Key:
@@ -37,6 +41,8 @@ func (t *Type) ToGoType(nullable bool) string {
 
 func (t *Type) ToGoDTOType(nullable bool) string {
 	switch t.Key {
+	case TypeInterface.Key:
+		return "json.RawMessage"
 	case TypeMap.Key:
 		return "json.RawMessage"
 	default:
@@ -46,7 +52,11 @@ func (t *Type) ToGoDTOType(nullable bool) string {
 
 func (t *Type) ToGoString(prop string) string {
 	switch t.Key {
+	case TypeBool.Key:
+		return fmt.Sprintf("fmt.Sprint(%s)", prop)
 	case TypeInt.Key:
+		return fmt.Sprintf("fmt.Sprint(%s)", prop)
+	case TypeInterface.Key:
 		return fmt.Sprintf("fmt.Sprint(%s)", prop)
 	case TypeUUID.Key:
 		return fmt.Sprintf("%s.String()", prop)
@@ -57,8 +67,12 @@ func (t *Type) ToGoString(prop string) string {
 
 func (t *Type) ToGoViewString(prop string, nullable bool) string {
 	switch t.Key {
+	case TypeBool.Key:
+		return "{%%v " + prop + " %%}"
 	case TypeInt.Key:
 		return "{%%d " + prop + " %%}"
+	case TypeInterface.Key:
+		return "{%%= components.JSON(" + prop + ") %%}"
 	case TypeMap.Key:
 		return "{%%= components.JSON(" + prop + ") %%}"
 	case TypeTimestamp.Key:
@@ -66,6 +80,11 @@ func (t *Type) ToGoViewString(prop string, nullable bool) string {
 			return "{%%= components.DisplayTimestamp(" + prop + ") %%}"
 		}
 		return "{%%= components.DisplayTimestamp(&" + prop + ") %%}"
+	case TypeUUID.Key:
+		if nullable {
+			return "{%%= components.DisplayUUID(" + prop + ") %%}"
+		}
+		return "{%%= components.DisplayUUID(&" + prop + ") %%}"
 	default:
 		return "{%%s " + t.ToGoString(prop) + " %%}"
 	}
@@ -73,8 +92,12 @@ func (t *Type) ToGoViewString(prop string, nullable bool) string {
 
 func (t *Type) ToSQLType() string {
 	switch t.Key {
+	case TypeBool.Key:
+		return "boolean"
 	case TypeInt.Key:
 		return "int"
+	case TypeInterface.Key:
+		return "jsonb"
 	case TypeMap.Key:
 		return "jsonb"
 	case TypeString.Key:
@@ -90,7 +113,7 @@ func (t *Type) ToSQLType() string {
 
 func (t *Type) IsScalar() bool {
 	switch t.Key {
-	case TypeInt.Key, TypeMap.Key, TypeString.Key:
+	case TypeBool.Key, TypeInt.Key, TypeInterface.Key, TypeMap.Key, TypeString.Key:
 		return true
 	default:
 		return false

@@ -1,6 +1,8 @@
 package files
 
 import (
+	"github.com/pkg/errors"
+
 	"github.com/kyleu/projectforge/app/export/files/controller"
 	"github.com/kyleu/projectforge/app/export/files/gomodel"
 	"github.com/kyleu/projectforge/app/export/files/grpc"
@@ -9,7 +11,6 @@ import (
 	"github.com/kyleu/projectforge/app/export/files/view"
 	"github.com/kyleu/projectforge/app/export/model"
 	"github.com/kyleu/projectforge/app/file"
-	"github.com/pkg/errors"
 )
 
 func All(args *model.Args, addHeader bool) (file.Files, error) {

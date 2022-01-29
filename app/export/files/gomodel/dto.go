@@ -4,12 +4,13 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/pkg/errors"
+
 	"github.com/kyleu/projectforge/app/export/files/helper"
 	"github.com/kyleu/projectforge/app/export/golang"
 	"github.com/kyleu/projectforge/app/export/model"
 	"github.com/kyleu/projectforge/app/file"
 	"github.com/kyleu/projectforge/app/util"
-	"github.com/pkg/errors"
 )
 
 func DTO(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
@@ -86,6 +87,10 @@ func modelDTOToModel(m *model.Model) *golang.Block {
 	refs := make([]string, 0, len(m.Columns))
 	for _, c := range m.Columns {
 		switch c.Type.Key {
+		case model.TypeInterface.Key:
+			ret.W("\tvar %sArg interface{}", c.Camel())
+			ret.W("\t_ = util.FromJSON(d.%s, &%sArg)", c.Proper(), c.Camel())
+			refs = append(refs, fmt.Sprintf("%s: %sArg", c.Proper(), c.Camel()))
 		case model.TypeMap.Key:
 			ret.W("\t%sArg := util.ValueMap{}", c.Camel())
 			ret.W("\t_ = util.FromJSON(d.%s, &%sArg)", c.Proper(), c.Camel())

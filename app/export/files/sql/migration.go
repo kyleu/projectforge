@@ -55,6 +55,11 @@ func sqlCreate(m *model.Model) *golang.Block {
 		ret.W("  %q %s,", col.Name, col.ToSQLType())
 	}
 	sqlRelations(ret, m)
+	for _, col := range m.Columns {
+		if col.HasTag("unique") {
+			ret.W("  unique (%q),", col.Name)
+		}
+	}
 	ret.W("  primary key (%s)", strings.Join(m.PKs().NamesQuoted(), ", "))
 	ret.W(");")
 
@@ -63,6 +68,13 @@ func sqlCreate(m *model.Model) *golang.Block {
 			addIndex(ret, m.Name, pk.Name)
 		}
 	}
+	for _, rel := range m.Relations {
+		cols := rel.SrcColumns(m)
+		if len(cols) == 1 && cols[0].PK {
+			continue
+		}
+		addIndex(ret, m.Name, cols.Names()...)
+	}
 	sqlHistory(ret, m)
 	ret.W("-- {%% endfunc %%}")
 	return ret
@@ -70,7 +82,11 @@ func sqlCreate(m *model.Model) *golang.Block {
 
 func addIndex(ret *golang.Block, tbl string, names ...string) {
 	name := fmt.Sprintf("%s__%s_idx", tbl, strings.Join(names, "_"))
-	msg := "create index if not exists %q on %q (%q);"
+	quoted := make([]string, 0, len(names))
+	for _, n := range names {
+		quoted = append(quoted, fmt.Sprintf("%q", n))
+	}
 	ret.W("")
-	ret.W(msg, name, tbl, strings.Join(names, ", "))
+	msg := "create index if not exists %q on %q (%s);"
+	ret.W(msg, name, tbl, strings.Join(quoted, ", "))
 }

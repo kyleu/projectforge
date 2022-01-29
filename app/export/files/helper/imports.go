@@ -72,6 +72,8 @@ func importsForTypeCtxGo(t *model.Type) golang.Imports {
 
 func importsForTypeCtxDTO(t *model.Type) golang.Imports {
 	switch t.Key {
+	case model.TypeInterface.Key:
+		return golang.Imports{ImpJSON}
 	case model.TypeMap.Key:
 		return golang.Imports{ImpJSON, ImpAppUtil}
 	case model.TypeTimestamp.Key:
@@ -107,6 +109,8 @@ func importsForTypeCtxParse(t *model.Type) golang.Imports {
 
 func importsForTypeCtxWebEdit(t *model.Type) golang.Imports {
 	switch t.Key {
+	case model.TypeInterface.Key:
+		return golang.Imports{ImpAppUtil, ImpFmt}
 	case model.TypeMap.Key:
 		return golang.Imports{ImpAppUtil}
 	default:

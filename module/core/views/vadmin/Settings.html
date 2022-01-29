@@ -27,7 +27,14 @@
     {%- if util.AppURL != "" -%}
     <p><a href="{%s= util.AppURL %}">{%s= util.AppURL %}</a></p>
     {%- endif -%}
-  </div>
+  </div>{{{ if.HasModule "audit" }}}
+
+  <div class="card">
+    <h3>Audits</h3>
+    <ul>
+      <li><a href="/admin/audit">View audit logs</a></li>
+    </ul>
+  </div>{{{ end }}}
 
   <div class="card">
     <div class="right"><a href="#modal-mem"><button type="button">Memory Usage</button></a></div>
@@ -47,7 +54,9 @@
 
   <div class="card">
     <h3>Themes</h3>
-    <p><a href="/theme">Edit Themes</a></p>
+    <ul>
+      <li><a href="/theme">Edit Themes</a></li>
+    </ul>
   </div>{{{ if.HasModule "oauth" }}}
 
   {%= vauth.Authentication(as) %}

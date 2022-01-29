@@ -34,13 +34,17 @@ func forCols(ret *golang.Block, indent int, cols ...*model.Column) {
 		ret.W(ind + "}")
 	}
 	for _, col := range cols {
-		if col.Nullable || col.Type.IsScalar() {
+		if col.Type.Key == model.TypeInterface.Key {
+			ret.W(ind+"ret.%s = m[%q]", col.Proper(), col.Camel())
+		} else if col.Nullable || col.Type.IsScalar() {
 			ret.W(ind+"ret.%s, err = m.Parse%s(%q, true, true)", col.Proper(), col.ToGoMapParse(), col.Camel())
 			catchErr("err")
 		} else {
 			ret.W(ind+"ret%s, e := m.Parse%s(%q, true, true)", col.Proper(), col.ToGoMapParse(), col.Camel())
 			catchErr("e")
-			ret.W(ind+"ret.%s = *ret%s", col.Proper(), col.Proper())
+			ret.W(ind+"if ret%s != nil {", col.Proper())
+			ret.W(ind+"\tret.%s = *ret%s", col.Proper(), col.Proper())
+			ret.W(ind + "}")
 		}
 	}
 }

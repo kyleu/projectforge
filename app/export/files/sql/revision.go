@@ -1,7 +1,6 @@
 package sql
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/kyleu/projectforge/app/export/golang"
@@ -25,14 +24,13 @@ func sqlCreateRevision(m *model.Model) (*golang.Block, error) {
 
 	if len(pks) > 1 {
 		for _, pk := range pks {
-			ret.W("")
-			ret.W("create index if not exists %q on %q (%q);", fmt.Sprintf("%s__%s_idx", m.Name, pk.Name), m.Name, pk.Name)
+			addIndex(ret, m.Name, pk.Name)
 		}
 	}
 
 	// revision
-	revTblName := m.Name + "_" + hc.Col.Name
 	ret.W("")
+	revTblName := m.Name + "_" + hc.Col.Name
 	ret.W("create table if not exists %q (", revTblName)
 	for _, col := range hc.Var {
 		ret.W("  %q %s,", col.Name, col.ToSQLType())
@@ -48,13 +46,18 @@ func sqlCreateRevision(m *model.Model) (*golang.Block, error) {
 	ret.W("  primary key (%s)", strings.Join(revPKsWithRev.NamesQuoted(), ", "))
 	ret.W(");")
 
-	msg := "create index if not exists \"%s__%s_idx\" on %q (%s);"
-	ret.W(msg, revTblName, strings.Join(revPKs.Names(), "_"), revTblName, strings.Join(revPKs.NamesQuoted(), ", "))
+	if len(revPKs) > 1 {
+		addIndex(ret, revTblName, revPKs.Names()...)
+	}
 
 	for _, pk := range revPKsWithRev {
 		if !pk.HasTag(model.RevisionType) {
 			addIndex(ret, revTblName, pk.Name)
 		}
+	}
+
+	for _, idx := range m.Indexes {
+		ret.W("create index if not exists %q on %s;", idx.Name, idx.Decl)
 	}
 
 	sqlHistory(ret, m)

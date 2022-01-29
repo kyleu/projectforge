@@ -11,9 +11,14 @@ var goKeywords = []string{
 	"map", "package", "range", "return", "select", "struct", "switch", "type", "var",
 }
 
+var reservedNames = []string{"audit", "audit_record"}
+
 func (m *Model) Validate() error {
 	if len(m.PKs()) == 0 {
 		return errors.Errorf("model [%s] has no primary key", m.Name)
+	}
+	if util.StringArrayContains(reservedNames, m.Name) {
+		return errors.Errorf("model [%s] uses a reserved name", m.Name)
 	}
 	if m.IsRevision() {
 		hc := m.HistoryColumns(true)

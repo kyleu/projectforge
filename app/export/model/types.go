@@ -1,17 +1,20 @@
 package model
 
 import (
-	"github.com/kyleu/projectforge/app/util"
 	"github.com/pkg/errors"
+
+	"github.com/kyleu/projectforge/app/util"
 )
 
 var (
+	TypeBool      = newType("bool", "boolean")
 	TypeInt       = newType("int")
+	TypeInterface = newType("iface", "interface")
 	TypeMap       = newType("map", "json", "jsonb")
 	TypeString    = newType("string", "text")
 	TypeTimestamp = newType("timestamp", "datetime")
 	TypeUUID      = newType("uuid")
-	AllTypes      = []*Type{TypeInt, TypeMap, TypeString, TypeTimestamp, TypeUUID}
+	AllTypes      = []*Type{TypeBool, TypeInt, TypeInterface, TypeMap, TypeString, TypeTimestamp, TypeUUID}
 )
 
 type Types []*Type

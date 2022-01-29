@@ -26,8 +26,6 @@ func MenuFor(ctx context.Context, isAuthed bool, isAdmin bool, as *app.State) (m
 		)
 	}
 	// $PF_SECTION_END(routes_start)$
-	// $PF_INJECT_START(codegen)$
-	// $PF_INJECT_END(codegen)$
 	// $PF_SECTION_START(routes_end)$
 	if isAdmin {
 		ret = append(ret,

@@ -24,7 +24,7 @@ func AppRoutes() fasthttp.RequestHandler {
 	r.POST(defaultProfilePath, ProfileSave){{{ if .HasModule "oauth" }}}
 	r.GET("/auth/{key}", AuthDetail)
 	r.GET("/auth/callback/{key}", AuthCallback)
-	r.GET("/auth/logout/{key}", AuthLogout){{{ end }}}{{{ if.HasModule "oauth" }}}
+	r.GET("/auth/logout/{key}", AuthLogout){{{ end }}}{{{ if.HasModule "export" }}}
 
 	// $PF_INJECT_START(codegen)$
 	// $PF_INJECT_END(codegen)${{{ end }}}
@@ -34,7 +34,17 @@ func AppRoutes() fasthttp.RequestHandler {
 
 	r.GET("/admin", Admin)
 	r.GET("/admin/sandbox", SandboxList)
-	r.GET("/admin/sandbox/{key}", SandboxRun)
+	r.GET("/admin/sandbox/{key}", SandboxRun){{{ if.HasModule "audit" }}}
+	r.GET("/admin/audit", AuditList)
+	r.GET("/admin/audit/random", AuditCreateFormRandom)
+	r.GET("/admin/audit/new", AuditCreateForm)
+	r.POST("/admin/audit/new", AuditCreate)
+	r.GET("/admin/audit/record/{id}", RecordDetail)
+	r.GET("/admin/audit/{id}", AuditDetail)
+	r.GET("/admin/audit/{id}/edit", AuditEditForm)
+	r.POST("/admin/audit/{id}/edit", AuditEdit)
+	r.GET("/admin/audit/{id}/delete", AuditDelete)
+	{{{ end }}}
 	r.GET("/admin/{path:*}", Admin)
 
 	r.GET("/favicon.ico", Favicon)

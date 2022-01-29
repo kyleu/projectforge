@@ -102,14 +102,21 @@ func (s *Service) Get(key string) (*Project, error) {
 }
 
 func (s *Service) Keys() []string {
-	keys := make([]string, 0, len(s.cache))
 	s.cacheLock.Lock()
-	for k := range s.cache {
-		keys = append(keys, k)
+	keys := make(map[string]string, len(s.cache))
+	titles := make([]string, 0, len(s.cache))
+	for k, v := range s.cache {
+		tl := strings.ToLower(v.Title())
+		keys[tl] = k
+		titles = append(titles, tl)
 	}
 	s.cacheLock.Unlock()
-	sort.Strings(keys)
-	return keys
+	sort.Strings(titles)
+	ret := make([]string, 0, len(titles))
+	for _, title := range titles {
+		ret = append(ret, keys[title])
+	}
+	return ret
 }
 
 func (s *Service) Projects() Projects {

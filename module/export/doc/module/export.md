@@ -10,4 +10,6 @@ Licensed under [CC0](https://creativecommons.org/share-your-work/public-domain/c
 
 ### Usage
 
-This is a special module that, when enabled, will generate Go code based on the project's schema
+This is a special module that, when enabled, will generate Go code based on the project's schema. 
+
+Documentation coming soon.

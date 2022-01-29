@@ -57,7 +57,10 @@ func exportViewDetailBody(m *model.Model, models model.Models) *golang.Block {
 	ret := golang.NewBlock("DetailBody", "func")
 	ret.W("{%% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %%}")
 	ret.W("  <div class=\"card\">")
-	ret.W("    <div class=\"right\"><a href=\"{%%s p.Model.WebPath() %%}/edit\"><button>Edit</button></a></div>")
+	ret.W("    <div class=\"right\">")
+	ret.W("      <a href=\"#modal-%s\"><button type=\"button\">JSON</button></a>", m.Camel())
+	ret.W("      <a href=\"{%%s p.Model.WebPath() %%}/edit\"><button>Edit</button></a>")
+	ret.W("    </div>")
 	ret.W("    <h3>{%%= components.SVGRefIcon(`" + m.Icon + "`, ps) %%} " + m.Title() + " [{%%s p.Model.String() %%}]</h3>")
 	ret.W("    <table class=\"mt\">")
 	ret.W("      <tbody>")
@@ -84,6 +87,7 @@ func exportViewDetailBody(m *model.Model, models model.Models) *golang.Block {
 	ret.W("  {%%- comment %%}$PF_SECTION_START(extra)${%% endcomment -%%}")
 	ret.W("  {%%- comment %%}$PF_SECTION_END(extra)${%% endcomment -%%}")
 	exportViewDetailRelations(ret, m, models)
+	ret.W("  {%%%%= components.JSONModal(%q, \"%s JSON\", p.Model, 1) %%%%}", m.Camel(), m.Title())
 	ret.W("{%% endfunc %%}")
 	return ret
 }

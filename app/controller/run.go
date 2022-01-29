@@ -80,7 +80,7 @@ func RunAllActions(rc *fasthttp.RequestCtx) {
 		}
 		wg.Wait()
 		sort.Slice(results, func(i int, j int) bool {
-			return strings.ToLower(results[i].Prj.Key) < strings.ToLower(results[j].Prj.Key)
+			return strings.ToLower(results[i].Prj.Title()) < strings.ToLower(results[j].Prj.Title())
 		})
 		ps.Data = results
 		page := &vaction.Results{T: actT, Ctxs: results}

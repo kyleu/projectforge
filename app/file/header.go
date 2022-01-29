@@ -13,7 +13,7 @@ func ContainsHeader(s string) bool {
 }
 
 func contentWithHeader(t Type, c string, logger *zap.SugaredLogger) string {
-	if strings.Contains(c, "$PF_IGNORE$") {
+	if strings.Contains(c, IgnorePattern) {
 		return c
 	}
 	switch t.Key {

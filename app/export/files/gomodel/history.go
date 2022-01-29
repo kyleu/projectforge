@@ -16,7 +16,7 @@ func History(m *model.Model, args *model.Args, addHeader bool) (*file.File, erro
 	for _, imp := range helper.ImportsForTypes("go", m.Columns.Types()...) {
 		g.AddImport(imp)
 	}
-	g.AddImport(helper.ImpJSON, helper.ImpUUID)
+	g.AddImport(helper.ImpJSON, helper.ImpUUID, helper.ImpAppUtil)
 	g.AddBlocks(modelHistory(m), modelHistoryToData(m), modelHistories(m), modelHistoryDTO(m), modelHistoryDTOToHistory(m), modelHistoryDTOs(m))
 	return g.Render(addHeader)
 }
@@ -91,7 +91,7 @@ func modelHistoryDTOToHistory(m *model.Model) *golang.Block {
 	for _, pk := range m.PKs() {
 		pkCalls = append(pkCalls, fmt.Sprintf("%s%s: h.%s%s", m.Proper(), pk.Proper(), m.Proper(), pk.Proper()))
 	}
-	ret.W("\treturn &HistoryHistory{ID: h.ID, %s, Old: o, New: n, Changes: c, Created: h.Created}", strings.Join(pkCalls, ", "))
+	ret.W("\treturn &%sHistory{ID: h.ID, %s, Old: o, New: n, Changes: c, Created: h.Created}", m.Proper(), strings.Join(pkCalls, ", "))
 	ret.W("}")
 	return ret
 }

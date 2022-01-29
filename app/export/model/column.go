@@ -17,6 +17,10 @@ type Column struct {
 	Tags       []string `json:"tags,omitempty"`
 }
 
+func (c *Column) Clone() *Column {
+	return &Column{Name: c.Name, Type: c.Type, PK: c.PK, Nullable: c.Nullable, Search: c.Search, SQLDefault: c.SQLDefault, Tags: c.Tags}
+}
+
 func (c *Column) NameQuoted() string {
 	return fmt.Sprintf("%q", c.Name)
 }
@@ -34,7 +38,11 @@ func (c *Column) Proper() string {
 }
 
 func (c *Column) Plural() string {
-	return util.StringToPlural(c.Name)
+	ret := util.StringToPlural(c.Name)
+	if ret == c.Name {
+		return ret + "Set"
+	}
+	return ret
 }
 
 func (c *Column) ProperPlural() string {
@@ -74,8 +82,12 @@ func (c *Column) ToSQLType() string {
 
 func (c *Column) ToGoEditString(prefix string) string {
 	switch c.Type.Key {
+	case TypeBool.Key:
+		return fmt.Sprintf(`{%%%%= components.TableBoolean(%q, %q, %s, 5, %q) %%%%}`, c.Camel(), c.Title(), prefix+c.Proper(), c.Help())
 	case TypeInt.Key:
 		return fmt.Sprintf(`{%%%%= components.TableInputNumber(%q, %q, %s, 5, %q) %%%%}`, c.Camel(), c.Title(), prefix+c.Proper(), c.Help())
+	case TypeInterface.Key:
+		return fmt.Sprintf(`{%%%%= components.TableTextarea(%q, %q, 8, util.ToJSON(%s), 5, %q) %%%%}`, c.Camel(), c.Title(), c.ToGoString(prefix), c.Help())
 	case TypeMap.Key:
 		return fmt.Sprintf(`{%%%%= components.TableTextarea(%q, %q, 8, util.ToJSON(%s), 5, %q) %%%%}`, c.Camel(), c.Title(), c.ToGoString(prefix), c.Help())
 	case TypeTimestamp.Key:
@@ -90,18 +102,21 @@ func (c *Column) ToGoEditString(prefix string) string {
 }
 
 func (c *Column) ToGoMapParse() string {
-	suffix := ""
 	switch c.Type.Key {
+	case TypeBool.Key:
+		return "Bool"
 	case TypeInt.Key:
-		return "Int" + suffix
+		return "Int"
+	case TypeInterface.Key:
+		return "Interface"
 	case TypeMap.Key:
-		return "Map" + suffix
+		return "Map"
 	case TypeString.Key:
-		return "String" + suffix
+		return "String"
 	case TypeTimestamp.Key:
-		return "Time" + suffix
+		return "Time"
 	case TypeUUID.Key:
-		return "UUID" + suffix
+		return "UUID"
 	default:
 		return "ERROR:unhandled map parse for type [" + c.Type.Key + "]"
 	}
@@ -114,8 +129,12 @@ func (c *Column) ZeroVal() string {
 		return nilStr
 	}
 	switch c.Type.Key {
+	case TypeBool.Key:
+		return "false"
 	case TypeInt.Key:
 		return "0"
+	case TypeInterface.Key:
+		return nilStr
 	case TypeMap.Key:
 		return nilStr
 	case TypeString.Key:

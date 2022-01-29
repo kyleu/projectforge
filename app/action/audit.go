@@ -47,7 +47,7 @@ func onAudit(pm *PrjAndMods) *Result {
 		args.Modules = pm.Mods.Keys()
 		files, e := pm.ESvc.Files(args, true)
 		if e != nil {
-			return errorResult(err, pm.Cfg, pm.Logger)
+			return errorResult(e, pm.Cfg, pm.Logger)
 		}
 		for _, f := range files {
 			src = append(src, f.FullPath())

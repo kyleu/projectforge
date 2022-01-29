@@ -20,6 +20,8 @@ func All(args *model.Args, files file.Files) error {
 	for _, f := range files {
 		var err error
 		switch f.FullPath() {
+		case "app/services.go":
+			err = Services(f, args)
 		case "app/controller/routes.go":
 			err = Routes(f, args)
 		case "app/controller/menu.go":

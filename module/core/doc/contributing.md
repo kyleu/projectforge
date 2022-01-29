@@ -1,3 +1,3 @@
 # Contributing
 
-TODO
+Source code is available at [GitHub]({{{ .Info.Sourcecode }}}).

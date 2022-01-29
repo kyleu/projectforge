@@ -22,7 +22,13 @@ func ServiceHistory(m *model.Model, args *model.Args, addHeader bool) (*file.Fil
 func serviceHistoryVars(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("HistoryVars", "func")
 	ret.W("var (")
-	ret.W("\thistoryColumns       = " + `[]string{"id", "history_id", "o", "n", "c", "created"}`)
+	xx := make(model.Columns, 0, len(m.PKs()))
+	for _, pk := range m.PKs() {
+		x := pk.Clone()
+		x.Name = m.Name + "_" + x.Name
+		xx = append(xx, x)
+	}
+	ret.W("\thistoryColumns       = "+`[]string{"id", %s, "o", "n", "c", "created"}`, strings.Join(xx.NamesQuoted(), ", "))
 	ret.W("\thistoryColumnsQuoted = util.StringArrayQuoted(historyColumns)")
 	ret.W("\thistoryColumnsString = strings.Join(historyColumnsQuoted, \", \")")
 	ret.W("")
@@ -34,7 +40,7 @@ func serviceHistoryVars(m *model.Model) *golang.Block {
 
 func serviceHistoryGetHistory(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("GetHistory", "func")
-	ret.W("func (s *Service) GetHistory(ctx context.Context, tx *sqlx.Tx, id uuid.UUID) (*HistoryHistory, error) {")
+	ret.W("func (s *Service) GetHistory(ctx context.Context, tx *sqlx.Tx, id uuid.UUID) (*%sHistory, error) {", m.Proper())
 	ret.W("\tq := database.SQLSelectSimple(historyColumnsString, historyTableQuoted, \"id = $1\")")
 	ret.W("\tret := historyDTO{}")
 	ret.W("\terr := s.db.Get(ctx, &ret, q, tx, id)")
@@ -48,7 +54,7 @@ func serviceHistoryGetHistory(m *model.Model) *golang.Block {
 
 func serviceHistoryGetHistories(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("GetHistories", "func")
-	ret.W("func (s *Service) GetHistories(ctx context.Context, tx *sqlx.Tx, id string) (HistoryHistories, error) {")
+	ret.W("func (s *Service) GetHistories(ctx context.Context, tx *sqlx.Tx, %s) (%sHistories, error) {", m.PKs().Args(), m.Proper())
 	pks := m.PKs()
 	joins := make([]string, 0, len(pks))
 	logs := make([]string, 0, len(pks))

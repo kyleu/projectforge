@@ -40,7 +40,7 @@ func modelStruct(m *model.Model) *golang.Block {
 	maxTypeLength := m.Columns.MaxGoKeyLength()
 	for _, c := range m.Columns {
 		suffix := ""
-		if c.Nullable {
+		if c.Nullable || c.HasTag("omitempty") {
 			suffix = ",omitempty"
 		}
 		ret.W("\t%s %s `json:%q`", util.StringPad(c.Proper(), maxColLength), util.StringPad(c.ToGoType(), maxTypeLength), c.Camel()+suffix)
@@ -68,11 +68,18 @@ func modelDiff(m *model.Model, g *golang.File) *golang.Block {
 		l := fmt.Sprintf("%s.%s", m.FirstLetter(), col.Proper())
 		r := fmt.Sprintf("%sx.%s", m.FirstLetter(), col.Proper())
 		switch col.Type.Key {
+		case model.TypeBool.Key:
+			g.AddImport(helper.ImpFmt)
+			ret.W("\tif %s != %s {", l, r)
+			ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, fmt.Sprint(%s), fmt.Sprint(%s)))", col.Camel(), l, r)
+			ret.W("\t}")
 		case model.TypeInt.Key:
 			g.AddImport(helper.ImpFmt)
 			ret.W("\tif %s != %s {", l, r)
 			ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, fmt.Sprint(%s), fmt.Sprint(%s)))", col.Camel(), l, r)
 			ret.W("\t}")
+		case model.TypeInterface.Key:
+			ret.W("\tdiffs = append(diffs, util.DiffObjects(%s, %s, %q)...)", l, r, col.Camel())
 		case model.TypeMap.Key:
 			ret.W("\tdiffs = append(diffs, util.DiffObjects(%s, %s, %q)...)", l, r, col.Camel())
 		case model.TypeString.Key:
@@ -102,7 +109,13 @@ func modelToData(m *model.Model, cols model.Columns, suffix string) *golang.Bloc
 	ret.W("func (%s *%s) ToData%s() []interface{} {", m.FirstLetter(), m.Proper(), suffix)
 	refs := make([]string, 0, len(cols))
 	for _, c := range cols {
-		refs = append(refs, fmt.Sprintf("%s.%s", m.FirstLetter(), c.Proper()))
+		switch c.Type.Key {
+		//case model.TypeMap.Key, model.TypeInterface.Key:
+		//ret.W("\t%sArg := util.ToJSONBytes(%s.%s, true)", c.Camel(), m.FirstLetter(), c.Proper())
+		//refs = append(refs, fmt.Sprintf("%sArg", c.Camel()))
+		default:
+			refs = append(refs, fmt.Sprintf("%s.%s", m.FirstLetter(), c.Proper()))
+		}
 	}
 	ret.W("\treturn []interface{}{%s}", strings.Join(refs, ", "))
 	ret.W("}")

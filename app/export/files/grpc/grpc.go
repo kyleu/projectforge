@@ -4,12 +4,13 @@ import (
 	"fmt"
 	"sort"
 
+	"github.com/pkg/errors"
+
 	"github.com/kyleu/projectforge/app/export/files/helper"
 	"github.com/kyleu/projectforge/app/export/golang"
 	"github.com/kyleu/projectforge/app/export/model"
 	"github.com/kyleu/projectforge/app/file"
 	"github.com/kyleu/projectforge/app/util"
-	"github.com/pkg/errors"
 )
 
 func GRPC(m *model.Model, args *model.Args, addHeader bool) (file.Files, error) {

@@ -1,0 +1,57 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/lib/audit"
+  "{{{ .Package }}}/views/components"
+  "{{{ .Package }}}/views/layout"
+) %}
+
+{% code type RecordDetail struct {
+  layout.Basic
+  Model *audit.Record
+} %}
+
+{% func (p *RecordDetail) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <div class="right">
+      <a href="#modal-record"><button type="button">JSON</button></a>
+      <a href="{%s p.Model.WebPath() %}/edit"><button>Edit</button></a>
+    </div>
+    <h3>{%= components.SVGRefIcon(`cog`, ps) %} Audit Record [{%s p.Model.String() %}]</h3>
+    <table class="mt">
+      <tbody>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">ID</th>
+          <td>{%= components.DisplayUUID(&p.Model.ID) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Audit ID</th>
+          <td>
+            <div class="icon">{%= components.DisplayUUID(&p.Model.AuditID) %}</div>
+            <a title="Audit" href="{%s `/audit`+`/`+p.Model.AuditID.String() %}">{%= components.SVGRefIcon("cog", ps) %}</a>
+          </td>
+        </tr>
+        <tr>
+          <th class="shrink" title="String text">T</th>
+          <td>{%s p.Model.T %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="String text">Pk</th>
+          <td>{%s p.Model.Pk %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="JSON object">Changes</th>
+          <td>{%= components.JSON(p.Model.Changes) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Date and time, in almost any format">Occurred</th>
+          <td>{%= components.DisplayTimestamp(&p.Model.Occurred) %}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  {%- comment %}$PF_SECTION_START(extra)${% endcomment -%}
+  {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
+  {%= components.JSONModal("record", "Audit Record JSON", p.Model, 1) %}
+{% endfunc %}
