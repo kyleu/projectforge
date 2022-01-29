@@ -13,10 +13,10 @@ import (
 
 var (
 	recordTable         = "audit_record"
-	recordTableQuoted   = fmt.Sprintf("%q", table)
+	recordTableQuoted   = fmt.Sprintf("%q", recordTable)
 	recordColumns       = []string{"id", "audit_id", "t", "pk", "changes", "occurred"}
 	recordColumnsQuoted = util.StringArrayQuoted(recordColumns)
-	recordColumnsString = strings.Join(columnsQuoted, ", ")
+	recordColumnsString = strings.Join(recordColumnsQuoted, ", ")
 	recordDefaultWC     = "\"id\" = $1"
 )
 
