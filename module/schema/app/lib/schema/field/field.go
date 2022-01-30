@@ -1,9 +1,10 @@
 package field
 
 import (
+	"reflect"
 	"time"
 
-	"{{{ .Package }}}/app/lib/schema/types"
+	"{{{ .Package }}}/app/lib/types"
 	"{{{ .Package }}}/app/util"
 )
 
@@ -16,6 +17,10 @@ type Field struct {
 	Default  interface{}    `json:"default,omitempty"`
 	ReadOnly bool           `json:"readOnly,omitempty"`
 	Metadata *Metadata      `json:"metadata,omitempty"`
+}
+
+func NewFieldByType(key string, t reflect.Type, ro bool, md *Metadata) *Field {
+	return &Field{Key: key, Type: types.FromReflect(t), ReadOnly: ro, Metadata: md}
 }
 
 func (f *Field) Name() string {

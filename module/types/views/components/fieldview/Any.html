@@ -1,0 +1,69 @@
+{% import (
+  "fmt"
+
+  "{{{ .Package }}}/app/lib/types"
+) %}
+
+{% func Any(x interface{}, t *types.Wrapped) %}{% stripspace %}
+  {% switch t.Key() %}
+  {% case types.KeyBit %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeyBool %}
+    {%= Boolean(x.(bool)) %}
+  {% case types.KeyByte %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeyChar %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeyDate %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeyEnum %}
+    <span title="enum:{%s t.T.(*types.Enum).Ref %}">{%v x %}</span>
+  {% case types.KeyEnumValue %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeyError %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeyFloat %}
+    {%= Float(x) %}
+  {% case types.KeyInt %}
+    {%= Int(x) %}
+  {% case types.KeyJSON %}
+    {%= JSONInline(x) %}
+  {% case types.KeyList %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeyMap %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeyMethod %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeyNil %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeyOption %}
+    {%= Option(x, t.T.(*types.Option)) %}
+  {% case types.KeyRange %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeyReference %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeySet %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeyString %}
+    {%= String(x.(string)) %}
+  {% case types.KeyTime %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeyTimestamp %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeyTimestampZoned %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeyUnknown %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeyUUID %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeyXML %}
+    {%= Default(x, t.String()) %}
+  {% default %}
+    {%= Default(x, t.String()) %}
+  {% endswitch %}
+{% endstripspace %}{% endfunc %}
+
+{% func Default(x interface{}, t string) %}{% stripspace %}
+  {% code msg := fmt.Sprintf("unhandled type: %s (%T)", t, x) %}
+  <span title="{%s msg %}">{%v x %}</span>
+{% endstripspace %}{% endfunc %}

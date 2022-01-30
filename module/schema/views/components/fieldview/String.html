@@ -1,0 +1,13 @@
+{% import (
+  "strings"
+) %}
+
+{% func String(v string) %}{% stripspace %}
+  {% if len(v) == 0 %}
+    <em>empty string</em>
+  {% elseif strings.Contains(v, "\n") %}
+    <div class="pre">{%s strings.TrimSpace(v) %}</div>
+  {% else %}
+    {%s v %}
+  {% endif %}
+{% endstripspace %}{% endfunc %}

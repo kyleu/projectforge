@@ -7,7 +7,7 @@ import (
 	"github.com/pkg/errors"
 
 	"{{{ .Package }}}/app/lib/schema/model"
-	"{{{ .Package }}}/app/lib/schema/types"
+	"{{{ .Package }}}/app/lib/types"
 )
 
 const (

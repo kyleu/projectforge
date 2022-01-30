@@ -1,0 +1,9 @@
+{% import (
+  "fmt"
+
+  "{{{ .Package }}}/views/components"
+) %}
+
+{% func String(x interface{}, k string) %}{% stripspace %}
+  {%= components.FormInput(k, "", fmt.Sprintf("%v", x)) %}
+{% endstripspace %}{% endfunc %}
