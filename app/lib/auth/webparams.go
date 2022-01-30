@@ -10,8 +10,7 @@ type params struct {
 }
 
 func (p *params) Get(key string) string {
-	b := p.q.Peek(key)
-	if len(b) > 0 {
+	if b := p.q.Peek(key); len(b) > 0 {
 		return string(b)
 	}
 	return ""

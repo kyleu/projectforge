@@ -1,6 +1,6 @@
 -- {% func AuditDrop() %}
-drop table if exists "audit";
 drop table if exists "audit_record";
+drop table if exists "audit";
 -- {% endfunc %}
 
 -- {% func AuditCreate() %}

@@ -15,7 +15,7 @@ import (
 
 const auditDefaultTitle = "Audits"
 
-var auditBreadcrumb = "Audit"
+var auditBreadcrumb = "Audit||/admin/audit"
 
 func AuditList(rc *fasthttp.RequestCtx) {
 	act("audit.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
@@ -123,7 +123,7 @@ func AuditDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete audit [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Audit [%s] deleted", ret.String())
-		return flashAndRedir(true, msg, "/audit", rc, ps)
+		return flashAndRedir(true, msg, "/admin/audit", rc, ps)
 	})
 }
 

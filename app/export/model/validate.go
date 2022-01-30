@@ -11,14 +11,16 @@ var goKeywords = []string{
 	"map", "package", "range", "return", "select", "struct", "switch", "type", "var",
 }
 
-var reservedNames = []string{"audit", "audit_record"}
+var reservedNames = map[string][]string{"audit": []string{"audit", "audit_record"}}
 
-func (m *Model) Validate() error {
+func (m *Model) Validate(mods []string) error {
 	if len(m.PKs()) == 0 {
 		return errors.Errorf("model [%s] has no primary key", m.Name)
 	}
-	if util.StringArrayContains(reservedNames, m.Name) {
-		return errors.Errorf("model [%s] uses a reserved name", m.Name)
+	for _, mod := range mods {
+		if util.StringArrayContains(reservedNames[mod], m.Name) {
+			return errors.Errorf("model [%s] uses name which is reserved by [%s]", m.Name, mod)
+		}
 	}
 	if m.IsRevision() {
 		hc := m.HistoryColumns(true)
