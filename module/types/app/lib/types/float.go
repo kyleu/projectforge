@@ -12,12 +12,16 @@ func (x *Float) Key() string {
 	return KeyFloat
 }
 
-func (x *Float) String() string {
-	return x.Key()
-}
-
 func (x *Float) Sortable() bool {
 	return true
+}
+
+func (x *Float) Scalar() bool {
+	return true
+}
+
+func (x *Float) String() string {
+	return x.Key()
 }
 
 func (x *Float) From(v interface{}) interface{} {

@@ -6,8 +6,11 @@ import (
 
 type Type interface {
 	Key() string
-	fmt.Stringer
 	Sortable() bool
+	Scalar() bool
+	fmt.Stringer
 	From(v interface{}) interface{}
 	Default(key string) interface{}
 }
+
+type Types []Type

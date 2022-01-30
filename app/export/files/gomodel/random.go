@@ -3,6 +3,7 @@ package gomodel
 import (
 	"github.com/kyleu/projectforge/app/export/golang"
 	"github.com/kyleu/projectforge/app/export/model"
+	"github.com/kyleu/projectforge/app/lib/types"
 	"github.com/kyleu/projectforge/app/util"
 )
 
@@ -20,18 +21,18 @@ func modelRandom(m *model.Model) *golang.Block {
 }
 
 func randFor(col *model.Column) string {
-	switch col.Type.Key {
-	case model.TypeBool.Key:
-		return "util.RandomBool()"
-	case model.TypeInt.Key:
-		return "util.RandomInt(10000)"
-	case model.TypeInterface.Key:
+	switch col.Type.Key() {
+	case types.KeyAny:
 		return "nil"
-	case model.TypeMap.Key:
+	case types.KeyBool:
+		return "util.RandomBool()"
+	case types.KeyInt:
+		return "util.RandomInt(10000)"
+	case types.KeyMap:
 		return "util.RandomValueMap(4)"
-	case model.TypeString.Key:
+	case types.KeyString:
 		return "util.RandomString(12)"
-	case model.TypeTimestamp.Key:
+	case types.KeyTimestamp:
 		if col.HasTag("deleted") {
 			return "nil"
 		}
@@ -39,7 +40,7 @@ func randFor(col *model.Column) string {
 			return "util.NowPointer()"
 		}
 		return "time.Now()"
-	case model.TypeUUID.Key:
+	case types.KeyUUID:
 		if col.Nullable {
 			return "util.UUIDP()"
 		}

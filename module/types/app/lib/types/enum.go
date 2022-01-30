@@ -16,12 +16,16 @@ func (x *Enum) Key() string {
 	return KeyEnum
 }
 
-func (x *Enum) String() string {
-	return fmt.Sprintf("%s(%s)", x.Key(), x.Ref)
-}
-
 func (x *Enum) Sortable() bool {
 	return true
+}
+
+func (x *Enum) Scalar() bool {
+	return false
+}
+
+func (x *Enum) String() string {
+	return fmt.Sprintf("%s(%s)", x.Key(), x.Ref)
 }
 
 func (x *Enum) From(v interface{}) interface{} {

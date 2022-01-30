@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/kyleu/projectforge/app/lib/types"
 	"github.com/kyleu/projectforge/app/util"
 	"github.com/pkg/errors"
 )
@@ -119,7 +120,7 @@ func (c Columns) TitlesLower() []string {
 func (c Columns) ToGoStrings(prefix string) string {
 	ret := make([]string, 0, len(c))
 	for _, x := range c {
-		ret = append(ret, x.Type.ToGoString(prefix+x.Proper()))
+		ret = append(ret, ToGoString(x.Type, prefix+x.Proper()))
 	}
 	return strings.Join(ret, ", ")
 }
@@ -132,8 +133,8 @@ func (c Columns) ToRefs(prefix string) string {
 	return strings.Join(ret, ", ")
 }
 
-func (c Columns) Types() Types {
-	var ret Types
+func (c Columns) Types() types.Types {
+	var ret types.Types
 	for _, x := range c {
 		ret = append(ret, x.Type)
 	}
@@ -183,7 +184,7 @@ func (c Columns) WhereClause(offset int) string {
 func (c Columns) GoTypeKeys() []string {
 	ret := make([]string, 0, len(c))
 	for _, x := range c {
-		ret = append(ret, x.Type.ToGoType(x.Nullable))
+		ret = append(ret, ToGoType(x.Type, x.Nullable))
 	}
 	return ret
 }
@@ -199,7 +200,7 @@ func (c Columns) GoTypes() []string {
 func (c Columns) GoDTOTypeKeys() []string {
 	ret := make([]string, 0, len(c))
 	for _, x := range c {
-		ret = append(ret, x.Type.ToGoDTOType(x.Nullable))
+		ret = append(ret, ToGoDTOType(x.Type, x.Nullable))
 	}
 	return ret
 }

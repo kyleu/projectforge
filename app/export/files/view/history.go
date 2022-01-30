@@ -80,12 +80,12 @@ func exportViewHistoryTable(m *model.Model) *golang.Block {
 		msg := "        {%%%%= components.TableHeaderSimple(\"%s_history\", \"%s\", \"%s\", \"%s\", prms, ps.URI, ps) %%%%}"
 		ret.W(msg, m.Name, key, title, help)
 	}
-	addHeader("id", "ID", model.TypeUUID.Help())
+	addHeader("id", "ID", "System-generated history UUID identifier")
 	for _, pk := range m.PKs() {
-		addHeader(m.Package+"_"+pk.Name, m.Title()+" "+pk.Title(), pk.Type.Help())
+		addHeader(m.Package+"_"+pk.Name, m.Title()+" "+pk.Title(), model.Help(pk.Type))
 	}
 	addHeader("c", "Changes", "Object changes")
-	addHeader("created", "Created", model.TypeTimestamp.Help())
+	addHeader("created", "Created", "Time when history was created")
 	ret.W("      </tr>")
 	ret.W("    </thead>")
 	ret.W("    <tbody>")

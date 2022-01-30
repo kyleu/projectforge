@@ -31,6 +31,10 @@ func (x *Wrapped) Sortable() bool {
 	return x.T.Sortable()
 }
 
+func (x *Wrapped) Scalar() bool {
+	return x.T.Scalar()
+}
+
 func (x *Wrapped) String() string {
 	return x.T.String()
 }
@@ -71,6 +75,10 @@ func (x *Wrapped) UnmarshalJSON(data []byte) error {
 	}
 	var t Type
 	switch wu.K {
+	case KeyAny:
+		tgt := &Any{}
+		err = util.FromJSON(wu.T, &tgt)
+		t = tgt
 	case KeyBit:
 		tgt := &Bit{}
 		err = util.FromJSON(wu.T, &tgt)
@@ -169,6 +177,10 @@ func (x *Wrapped) UnmarshalJSON(data []byte) error {
 		t = tgt
 	case KeyUUID:
 		tgt := &UUID{}
+		err = util.FromJSON(wu.T, &tgt)
+		t = tgt
+	case KeyValueMap:
+		tgt := &ValueMap{}
 		err = util.FromJSON(wu.T, &tgt)
 		t = tgt
 	case KeyXML:

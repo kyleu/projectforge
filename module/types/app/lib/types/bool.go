@@ -12,12 +12,16 @@ func (x *Bool) Key() string {
 	return KeyBool
 }
 
-func (x *Bool) String() string {
-	return x.Key()
-}
-
 func (x *Bool) Sortable() bool {
 	return true
+}
+
+func (x *Bool) Scalar() bool {
+	return true
+}
+
+func (x *Bool) String() string {
+	return x.Key()
 }
 
 func (x *Bool) From(v interface{}) interface{} {

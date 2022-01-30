@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/kyleu/projectforge/app/export/golang"
-	"github.com/kyleu/projectforge/app/export/model"
+	"github.com/kyleu/projectforge/app/lib/types"
 )
 
 var (
@@ -32,7 +32,7 @@ func AppImport(path string) *golang.Import {
 	return &golang.Import{Type: golang.ImportTypeApp, Value: "{{{ .Package }}}/" + path}
 }
 
-func ImportsForTypes(ctx string, types ...*model.Type) golang.Imports {
+func ImportsForTypes(ctx string, types ...types.Type) golang.Imports {
 	var ret golang.Imports
 	for _, t := range types {
 		ret = ret.Add(importsForType(ctx, t)...)
@@ -40,7 +40,7 @@ func ImportsForTypes(ctx string, types ...*model.Type) golang.Imports {
 	return ret
 }
 
-func importsForType(ctx string, t *model.Type) golang.Imports {
+func importsForType(ctx string, t types.Type) golang.Imports {
 	switch ctx {
 	case "go":
 		return importsForTypeCtxGo(t)
@@ -57,61 +57,61 @@ func importsForType(ctx string, t *model.Type) golang.Imports {
 	}
 }
 
-func importsForTypeCtxGo(t *model.Type) golang.Imports {
-	switch t.Key {
-	case model.TypeMap.Key:
+func importsForTypeCtxGo(t types.Type) golang.Imports {
+	switch t.Key() {
+	case types.KeyMap:
 		return golang.Imports{ImpAppUtil}
-	case model.TypeTimestamp.Key:
+	case types.KeyTimestamp:
 		return golang.Imports{ImpTime}
-	case model.TypeUUID.Key:
+	case types.KeyUUID:
 		return golang.Imports{ImpUUID}
 	default:
 		return nil
 	}
 }
 
-func importsForTypeCtxDTO(t *model.Type) golang.Imports {
-	switch t.Key {
-	case model.TypeInterface.Key:
+func importsForTypeCtxDTO(t types.Type) golang.Imports {
+	switch t.Key() {
+	case types.KeyAny:
 		return golang.Imports{ImpJSON}
-	case model.TypeMap.Key:
+	case types.KeyMap:
 		return golang.Imports{ImpJSON, ImpAppUtil}
-	case model.TypeTimestamp.Key:
+	case types.KeyTimestamp:
 		return golang.Imports{ImpTime}
-	case model.TypeUUID.Key:
+	case types.KeyUUID:
 		return golang.Imports{ImpUUID}
 	default:
 		return nil
 	}
 }
 
-func importsForTypeCtxString(t *model.Type) golang.Imports {
-	switch t.Key {
-	case model.TypeInt.Key:
+func importsForTypeCtxString(t types.Type) golang.Imports {
+	switch t.Key() {
+	case types.KeyInt:
 		return golang.Imports{ImpFmt}
-	case model.TypeMap.Key:
+	case types.KeyMap:
 		return golang.Imports{ImpAppUtil}
 	default:
 		return nil
 	}
 }
 
-func importsForTypeCtxParse(t *model.Type) golang.Imports {
-	switch t.Key {
-	case model.TypeInt.Key:
+func importsForTypeCtxParse(t types.Type) golang.Imports {
+	switch t.Key() {
+	case types.KeyInt:
 		return golang.Imports{ImpStrconv}
-	case model.TypeUUID.Key:
+	case types.KeyUUID:
 		return golang.Imports{ImpAppUtil}
 	default:
 		return nil
 	}
 }
 
-func importsForTypeCtxWebEdit(t *model.Type) golang.Imports {
-	switch t.Key {
-	case model.TypeInterface.Key:
+func importsForTypeCtxWebEdit(t types.Type) golang.Imports {
+	switch t.Key() {
+	case types.KeyAny:
 		return golang.Imports{ImpAppUtil, ImpFmt}
-	case model.TypeMap.Key:
+	case types.KeyMap:
 		return golang.Imports{ImpAppUtil}
 	default:
 		return nil

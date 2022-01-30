@@ -146,7 +146,7 @@ func serviceGetCurrentRevisionsBlock(m *model.Model, ret *golang.Block, revCol *
 	}
 
 	decl := "func (s *Service) getCurrent%s(ctx context.Context, tx *sqlx.Tx, models ...*%s) (map[string]%s, error) {"
-	ret.W(decl, revCol.ProperPlural(), m.Proper(), revCol.Type.ToGoType(false))
+	ret.W(decl, revCol.ProperPlural(), m.Proper(), model.ToGoType(revCol.Type, false))
 	ret.W("\tstmts := make([]string, 0, len(models))")
 	ret.W("\tfor i := range models {")
 	ret.W("\t\tstmts = append(stmts, fmt.Sprintf(`%s`, %s))", strings.Join(pkWCStr, " and "), strings.Join(pkWCIdx, ", "))

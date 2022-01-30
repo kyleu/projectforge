@@ -12,12 +12,16 @@ func (x *Error) Key() string {
 	return KeyError
 }
 
-func (x *Error) String() string {
-	return "error(" + x.Message + ")"
-}
-
 func (x *Error) Sortable() bool {
 	return false
+}
+
+func (x *Error) Scalar() bool {
+	return false
+}
+
+func (x *Error) String() string {
+	return "error(" + x.Message + ")"
 }
 
 func (x *Error) From(v interface{}) interface{} {

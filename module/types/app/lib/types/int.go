@@ -18,15 +18,19 @@ func (x *Int) Key() string {
 	return KeyInt
 }
 
+func (x *Int) Sortable() bool {
+	return true
+}
+
+func (x *Int) Scalar() bool {
+	return true
+}
+
 func (x *Int) String() string {
 	if x.Bits > 0 {
 		return fmt.Sprintf("%s%d", x.Key(), x.Bits)
 	}
 	return x.Key()
-}
-
-func (x *Int) Sortable() bool {
-	return true
 }
 
 func (x *Int) From(v interface{}) interface{} {

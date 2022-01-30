@@ -1,0 +1,8 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "github.com/kyleu/projectforge/views/components"
+) %}
+
+{% func Int(x interface{}, k string) %}{% stripspace %}
+  {%= components.FormInputNumber(k, "", x) %}
+{% endstripspace %}{% endfunc %}

@@ -12,12 +12,16 @@ func (x *TimestampZoned) Key() string {
 	return KeyTimestampZoned
 }
 
-func (x *TimestampZoned) String() string {
-	return x.Key()
-}
-
 func (x *TimestampZoned) Sortable() bool {
 	return true
+}
+
+func (x *TimestampZoned) Scalar() bool {
+	return false
+}
+
+func (x *TimestampZoned) String() string {
+	return x.Key()
 }
 
 func (x *TimestampZoned) From(v interface{}) interface{} {

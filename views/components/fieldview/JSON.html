@@ -1,0 +1,30 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/app/util"
+) %}
+
+{% func JSON(v interface{}) %}{% stripspace %}
+  {% code
+    b, ok := v.([]byte)
+    if ok {
+      _ = util.FromJSON(b, &v)
+    }
+  %}
+  {% code out, err := cutil.FormatJSON(v) %}
+  {% if err == nil %}
+    {%s= out %}
+  {% else %}
+    {%s err.Error() %}
+  {% endif %}
+{% endstripspace %}{% endfunc %}
+
+{% func JSONInline(v interface{}) %}{% stripspace %}
+  {% code
+    b, ok := v.([]byte)
+    if ok {
+      _ = util.FromJSON(b, &v)
+    }
+  %}
+  {%s util.ToJSON(v) %}
+{% endstripspace %}{% endfunc %}

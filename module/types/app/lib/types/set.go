@@ -16,12 +16,16 @@ func (x *Set) Key() string {
 	return KeySet
 }
 
-func (x *Set) String() string {
-	return fmt.Sprintf("%s[%s]", x.Key(), x.V.String())
-}
-
 func (x *Set) Sortable() bool {
 	return x.V.Sortable()
+}
+
+func (x *Set) Scalar() bool {
+	return false
+}
+
+func (x *Set) String() string {
+	return fmt.Sprintf("%s[%s]", x.Key(), x.V.String())
 }
 
 func (x *Set) From(v interface{}) interface{} {

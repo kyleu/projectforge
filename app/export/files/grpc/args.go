@@ -3,6 +3,7 @@ package grpc
 import (
 	"strings"
 
+	"github.com/kyleu/projectforge/app/lib/types"
 	"github.com/pkg/errors"
 
 	"github.com/kyleu/projectforge/app/export/files/helper"
@@ -80,23 +81,23 @@ func grpcParamsFromRequest(m *model.Model, cPkg string, g *golang.File) (*golang
 }
 
 func grpcArgFor(col *model.Column, b *golang.Block, zeroVals string, g *golang.File) error {
-	switch col.Type.Key {
-	case model.TypeBool.Key:
+	switch col.Type.Key() {
+	case types.KeyBool:
 		b.W("\t%s, err := provider.GetRequestBool(r, %q)", col.Camel(), col.Camel())
 		b.W("\tif err != nil {")
 		b.W("\t\treturn %s, err", zeroVals)
 		b.W("\t}")
-	case model.TypeInt.Key:
+	case types.KeyInt:
 		b.W("\t%s, err := provider.GetRequestInt(r, %q)", col.Camel(), col.Camel())
 		b.W("\tif err != nil {")
 		b.W("\t\treturn %s, err", zeroVals)
 		b.W("\t}")
-	case model.TypeString.Key:
+	case types.KeyString:
 		b.W("\t%s, err := provider.GetRequestString(r, %q)", col.Camel(), col.Camel())
 		b.W("\tif err != nil {")
 		b.W("\t\treturn %s, err", zeroVals)
 		b.W("\t}")
-	case model.TypeUUID.Key:
+	case types.KeyUUID:
 		g.AddImport(helper.ImpUUID)
 		b.W("\t%sString, err := provider.GetRequestString(r, %q)", col.Camel(), col.Camel())
 		b.W("\tif err != nil {")

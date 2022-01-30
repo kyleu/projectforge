@@ -3,6 +3,7 @@ package gomodel
 import (
 	"github.com/kyleu/projectforge/app/export/golang"
 	"github.com/kyleu/projectforge/app/export/model"
+	"github.com/kyleu/projectforge/app/lib/types"
 	"github.com/kyleu/projectforge/app/util"
 )
 
@@ -34,9 +35,9 @@ func forCols(ret *golang.Block, indent int, cols ...*model.Column) {
 		ret.W(ind + "}")
 	}
 	for _, col := range cols {
-		if col.Type.Key == model.TypeInterface.Key {
+		if col.Type.Key() == types.KeyAny {
 			ret.W(ind+"ret.%s = m[%q]", col.Proper(), col.Camel())
-		} else if col.Nullable || col.Type.IsScalar() {
+		} else if col.Nullable || col.Type.Scalar() {
 			ret.W(ind+"ret.%s, err = m.Parse%s(%q, true, true)", col.Proper(), col.ToGoMapParse(), col.Camel())
 			catchErr("err")
 		} else {

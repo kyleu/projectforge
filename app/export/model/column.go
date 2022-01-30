@@ -4,17 +4,18 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/kyleu/projectforge/app/lib/types"
 	"github.com/kyleu/projectforge/app/util"
 )
 
 type Column struct {
-	Name       string   `json:"name"`
-	Type       *Type    `json:"type"`
-	PK         bool     `json:"pk,omitempty"`
-	Nullable   bool     `json:"nullable,omitempty"`
-	Search     bool     `json:"search,omitempty"`
-	SQLDefault string   `json:"sqlDefault,omitempty"`
-	Tags       []string `json:"tags,omitempty"`
+	Name       string         `json:"name"`
+	Type       *types.Wrapped `json:"type"`
+	PK         bool           `json:"pk,omitempty"`
+	Nullable   bool           `json:"nullable,omitempty"`
+	Search     bool           `json:"search,omitempty"`
+	SQLDefault string         `json:"sqlDefault,omitempty"`
+	Tags       []string       `json:"tags,omitempty"`
 }
 
 func (c *Column) Clone() *Column {
@@ -54,23 +55,23 @@ func (c *Column) HasTag(t string) bool {
 }
 
 func (c *Column) ToGoString(prefix string) string {
-	return c.Type.ToGoString(prefix + c.Proper())
+	return ToGoString(c.Type, prefix+c.Proper())
 }
 
 func (c *Column) ToGoViewString(prefix string) string {
-	return c.Type.ToGoViewString(prefix+c.Proper(), c.Nullable)
+	return ToGoViewString(c.Type, prefix+c.Proper(), c.Nullable)
 }
 
 func (c *Column) ToGoType() string {
-	return c.Type.ToGoType(c.Nullable)
+	return ToGoType(c.Type, c.Nullable)
 }
 
 func (c *Column) ToGoDTOType() string {
-	return c.Type.ToGoDTOType(c.Nullable)
+	return ToGoDTOType(c.Type, c.Nullable)
 }
 
 func (c *Column) ToSQLType() string {
-	ret := c.Type.ToSQLType()
+	ret := ToSQLType(c.Type)
 	if !c.Nullable {
 		ret += " not null"
 	}
@@ -81,16 +82,16 @@ func (c *Column) ToSQLType() string {
 }
 
 func (c *Column) ToGoEditString(prefix string) string {
-	switch c.Type.Key {
-	case TypeBool.Key:
+	switch c.Type.Key() {
+	case types.KeyAny:
+		return fmt.Sprintf(`{%%%%= components.TableTextarea(%q, %q, 8, util.ToJSON(%s), 5, %q) %%%%}`, c.Camel(), c.Title(), c.ToGoString(prefix), c.Help())
+	case types.KeyBool:
 		return fmt.Sprintf(`{%%%%= components.TableBoolean(%q, %q, %s, 5, %q) %%%%}`, c.Camel(), c.Title(), prefix+c.Proper(), c.Help())
-	case TypeInt.Key:
+	case types.KeyInt:
 		return fmt.Sprintf(`{%%%%= components.TableInputNumber(%q, %q, %s, 5, %q) %%%%}`, c.Camel(), c.Title(), prefix+c.Proper(), c.Help())
-	case TypeInterface.Key:
+	case types.KeyMap:
 		return fmt.Sprintf(`{%%%%= components.TableTextarea(%q, %q, 8, util.ToJSON(%s), 5, %q) %%%%}`, c.Camel(), c.Title(), c.ToGoString(prefix), c.Help())
-	case TypeMap.Key:
-		return fmt.Sprintf(`{%%%%= components.TableTextarea(%q, %q, 8, util.ToJSON(%s), 5, %q) %%%%}`, c.Camel(), c.Title(), c.ToGoString(prefix), c.Help())
-	case TypeTimestamp.Key:
+	case types.KeyTimestamp:
 		gs := c.ToGoString(prefix)
 		if !c.Nullable {
 			gs = "&" + gs
@@ -102,23 +103,23 @@ func (c *Column) ToGoEditString(prefix string) string {
 }
 
 func (c *Column) ToGoMapParse() string {
-	switch c.Type.Key {
-	case TypeBool.Key:
-		return "Bool"
-	case TypeInt.Key:
-		return "Int"
-	case TypeInterface.Key:
+	switch c.Type.Key() {
+	case types.KeyAny:
 		return "Interface"
-	case TypeMap.Key:
+	case types.KeyBool:
+		return "Bool"
+	case types.KeyInt:
+		return "Int"
+	case types.KeyMap:
 		return "Map"
-	case TypeString.Key:
+	case types.KeyString:
 		return "String"
-	case TypeTimestamp.Key:
+	case types.KeyTimestamp:
 		return "Time"
-	case TypeUUID.Key:
+	case types.KeyUUID:
 		return "UUID"
 	default:
-		return "ERROR:unhandled map parse for type [" + c.Type.Key + "]"
+		return "ERROR:unhandled map parse for type [" + c.Type.Key() + "]"
 	}
 }
 
@@ -128,23 +129,23 @@ func (c *Column) ZeroVal() string {
 	if c.Nullable {
 		return nilStr
 	}
-	switch c.Type.Key {
-	case TypeBool.Key:
+	switch c.Type.Key() {
+	case types.KeyAny:
+		return nilStr
+	case types.KeyBool:
 		return "false"
-	case TypeInt.Key:
+	case types.KeyInt:
 		return "0"
-	case TypeInterface.Key:
+	case types.KeyMap:
 		return nilStr
-	case TypeMap.Key:
-		return nilStr
-	case TypeString.Key:
+	case types.KeyString:
 		return "\"\""
-	case TypeTimestamp.Key:
+	case types.KeyTimestamp:
 		return "time.Time{}"
-	case TypeUUID.Key:
+	case types.KeyUUID:
 		return "uuid.UUID{}"
 	default:
-		return "ERROR:unhandled zero value for type [" + c.Type.Key + "]"
+		return "ERROR:unhandled zero value for type [" + c.Type.Key() + "]"
 	}
 }
 

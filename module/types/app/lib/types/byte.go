@@ -10,12 +10,16 @@ func (x *Byte) Key() string {
 	return KeyByte
 }
 
-func (x *Byte) String() string {
-	return x.Key()
-}
-
 func (x *Byte) Sortable() bool {
 	return true
+}
+
+func (x *Byte) Scalar() bool {
+	return true
+}
+
+func (x *Byte) String() string {
+	return x.Key()
 }
 
 func (x *Byte) From(v interface{}) interface{} {

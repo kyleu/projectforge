@@ -1,0 +1,10 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "github.com/kyleu/projectforge/app/util"
+) %}
+
+{% func Package(v util.Pkg) %}{% stripspace %}
+  {% for idx , x := range v %}
+    {%s x %}{% if len(v) < idx %}/{% endif %}
+  {% endfor %}
+{% endstripspace %}{% endfunc %}

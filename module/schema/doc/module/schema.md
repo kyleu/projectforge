@@ -2,7 +2,7 @@
 
 This is a module for [Project Forge](https://projectforge.dev). It provides classes for representing common data types
 
-https://github.com/kyleu/projectforge/tree/master/module/types
+https://github.com/kyleu/projectforge/tree/master/module/schema
 
 ~~~~### License
 
@@ -10,5 +10,4 @@ Licensed under [CC0](https://creativecommons.org/share-your-work/public-domain/c
 
 ### Usage
 
-- Provides a bunch of structs representing types
-- There's not much to this module, you probably don't need it
+- Provides a bunch of structs representing scalars, models, and schemata

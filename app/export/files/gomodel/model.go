@@ -8,6 +8,7 @@ import (
 	"github.com/kyleu/projectforge/app/export/golang"
 	"github.com/kyleu/projectforge/app/export/model"
 	"github.com/kyleu/projectforge/app/file"
+	"github.com/kyleu/projectforge/app/lib/types"
 	"github.com/kyleu/projectforge/app/util"
 )
 
@@ -67,36 +68,36 @@ func modelDiff(m *model.Model, g *golang.File) *golang.Block {
 		}
 		l := fmt.Sprintf("%s.%s", m.FirstLetter(), col.Proper())
 		r := fmt.Sprintf("%sx.%s", m.FirstLetter(), col.Proper())
-		switch col.Type.Key {
-		case model.TypeBool.Key:
+		switch col.Type.Key() {
+		case types.KeyAny:
+			ret.W("\tdiffs = append(diffs, util.DiffObjects(%s, %s, %q)...)", l, r, col.Camel())
+		case types.KeyBool:
 			g.AddImport(helper.ImpFmt)
 			ret.W("\tif %s != %s {", l, r)
 			ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, fmt.Sprint(%s), fmt.Sprint(%s)))", col.Camel(), l, r)
 			ret.W("\t}")
-		case model.TypeInt.Key:
+		case types.KeyInt:
 			g.AddImport(helper.ImpFmt)
 			ret.W("\tif %s != %s {", l, r)
 			ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, fmt.Sprint(%s), fmt.Sprint(%s)))", col.Camel(), l, r)
 			ret.W("\t}")
-		case model.TypeInterface.Key:
+		case types.KeyMap:
 			ret.W("\tdiffs = append(diffs, util.DiffObjects(%s, %s, %q)...)", l, r, col.Camel())
-		case model.TypeMap.Key:
-			ret.W("\tdiffs = append(diffs, util.DiffObjects(%s, %s, %q)...)", l, r, col.Camel())
-		case model.TypeString.Key:
+		case types.KeyString:
 			ret.W("\tif %s != %s {", l, r)
 			ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, %s, %s))", col.Camel(), l, r)
 			ret.W("\t}")
-		case model.TypeTimestamp.Key:
+		case types.KeyTimestamp:
 			g.AddImport(helper.ImpFmt)
 			ret.W("\tif %s != %s {", l, r)
 			ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, fmt.Sprint(%s), fmt.Sprint(%s)))", col.Camel(), l, r)
 			ret.W("\t}")
-		case model.TypeUUID.Key:
+		case types.KeyUUID:
 			ret.W("\tif %s != %s {", l, r)
 			ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, %s.String(), %s.String()))", col.Camel(), l, r)
 			ret.W("\t}")
 		default:
-			ret.W("\tTODO: %s", col.Type.Key)
+			ret.W("\tTODO: %s", col.Type.Key())
 		}
 	}
 	ret.W("\treturn diffs")
@@ -109,8 +110,8 @@ func modelToData(m *model.Model, cols model.Columns, suffix string) *golang.Bloc
 	ret.W("func (%s *%s) ToData%s() []interface{} {", m.FirstLetter(), m.Proper(), suffix)
 	refs := make([]string, 0, len(cols))
 	for _, c := range cols {
-		switch c.Type.Key {
-		//case model.TypeMap.Key, model.TypeInterface.Key:
+		switch c.Type.Key() {
+		//case types.KeyAny, types.KeyMap:
 		//ret.W("\t%sArg := util.ToJSONBytes(%s.%s, true)", c.Camel(), m.FirstLetter(), c.Proper())
 		//refs = append(refs, fmt.Sprintf("%sArg", c.Camel()))
 		default:

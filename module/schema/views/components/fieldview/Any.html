@@ -6,6 +6,8 @@
 
 {% func Any(x interface{}, t *types.Wrapped) %}{% stripspace %}
   {% switch t.Key() %}
+  {% case types.KeyAny %}
+    {%= Default(x, t.String()) %}
   {% case types.KeyBit %}
     {%= Default(x, t.String()) %}
   {% case types.KeyBool %}
@@ -55,6 +57,8 @@
   {% case types.KeyUnknown %}
     {%= Default(x, t.String()) %}
   {% case types.KeyUUID %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeyValueMap %}
     {%= Default(x, t.String()) %}
   {% case types.KeyXML %}
     {%= Default(x, t.String()) %}

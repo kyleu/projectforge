@@ -10,12 +10,16 @@ func (x *Nil) Key() string {
 	return KeyNil
 }
 
-func (x *Nil) String() string {
-	return x.Key()
-}
-
 func (x *Nil) Sortable() bool {
 	return false
+}
+
+func (x *Nil) Scalar() bool {
+	return false
+}
+
+func (x *Nil) String() string {
+	return x.Key()
 }
 
 func (x *Nil) From(v interface{}) interface{} {

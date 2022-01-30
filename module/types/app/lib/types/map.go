@@ -17,12 +17,16 @@ func (x *Map) Key() string {
 	return KeyMap
 }
 
-func (x *Map) String() string {
-	return fmt.Sprintf("%s[%s]%s", x.Key(), x.K.String(), x.V.String())
+func (x *Map) Sortable() bool {
+	return x.K.Sortable()
 }
 
-func (x *Map) Sortable() bool {
-	return x.K.Sortable() && x.V.Sortable()
+func (x *Map) Scalar() bool {
+	return true
+}
+
+func (x *Map) String() string {
+	return fmt.Sprintf("%s[%s]%s", x.Key(), x.K.String(), x.V.String())
 }
 
 func (x *Map) From(v interface{}) interface{} {

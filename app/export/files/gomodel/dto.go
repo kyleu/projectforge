@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/kyleu/projectforge/app/lib/types"
 	"github.com/pkg/errors"
 
 	"github.com/kyleu/projectforge/app/export/files/helper"
@@ -86,12 +87,12 @@ func modelDTOToModel(m *model.Model) *golang.Block {
 	ret.W("\t}")
 	refs := make([]string, 0, len(m.Columns))
 	for _, c := range m.Columns {
-		switch c.Type.Key {
-		case model.TypeInterface.Key:
+		switch c.Type.Key() {
+		case types.KeyAny:
 			ret.W("\tvar %sArg interface{}", c.Camel())
 			ret.W("\t_ = util.FromJSON(d.%s, &%sArg)", c.Proper(), c.Camel())
 			refs = append(refs, fmt.Sprintf("%s: %sArg", c.Proper(), c.Camel()))
-		case model.TypeMap.Key:
+		case types.KeyMap:
 			ret.W("\t%sArg := util.ValueMap{}", c.Camel())
 			ret.W("\t_ = util.FromJSON(d.%s, &%sArg)", c.Proper(), c.Camel())
 			refs = append(refs, fmt.Sprintf("%s: %sArg", c.Proper(), c.Camel()))

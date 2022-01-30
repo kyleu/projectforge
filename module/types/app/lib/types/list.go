@@ -19,12 +19,16 @@ func (x *List) Key() string {
 	return KeyList
 }
 
-func (x *List) String() string {
-	return fmt.Sprintf("[]%s", x.V.String())
-}
-
 func (x *List) Sortable() bool {
 	return x.V.Sortable()
+}
+
+func (x *List) Scalar() bool {
+	return false
+}
+
+func (x *List) String() string {
+	return fmt.Sprintf("[]%s", x.V.String())
 }
 
 func (x *List) From(v interface{}) interface{} {

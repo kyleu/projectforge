@@ -15,4 +15,5 @@ The following modules were used to build this project:
 - [notarize](./doc/module/notarize.md)
 - [oauth](./doc/module/oauth.md)
 - [search](./doc/module/search.md)
+- [types](./doc/module/types.md)
 - [upgrade](./doc/module/upgrade.md)

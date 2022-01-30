@@ -2,31 +2,33 @@ package model
 
 import (
 	"strings"
+
+	"github.com/kyleu/projectforge/app/lib/types"
 )
 
-func (t *Type) Help() string {
-	switch t.Key {
-	case TypeBool.Key:
-		return "Value [true] or [false]"
-	case TypeInt.Key:
-		return "Integer"
-	case TypeInterface.Key:
+func Help(t types.Type) string {
+	switch t.Key() {
+	case types.KeyAny:
 		return "Interface, could be anything"
-	case TypeMap.Key:
+	case types.KeyBool:
+		return "Value [true] or [false]"
+	case types.KeyInt:
+		return "Integer"
+	case types.KeyMap:
 		return "JSON object"
-	case TypeString.Key:
+	case types.KeyString:
 		return "String text"
-	case TypeTimestamp.Key:
+	case types.KeyTimestamp:
 		return "Date and time, in almost any format"
-	case TypeUUID.Key:
+	case types.KeyUUID:
 		return "UUID in format (00000000-0000-0000-0000-000000000000)"
 	default:
-		return t.Key
+		return t.Key()
 	}
 }
 
 func (c *Column) Help() string {
-	ret := c.Type.Help()
+	ret := Help(c.Type)
 	if c.Nullable {
 		ret += " (optional)"
 	}

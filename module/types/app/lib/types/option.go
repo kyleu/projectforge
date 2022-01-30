@@ -12,12 +12,16 @@ func (x *Option) Key() string {
 	return KeyOption
 }
 
-func (x *Option) String() string {
-	return "*" + x.V.String()
-}
-
 func (x *Option) Sortable() bool {
 	return x.V.Sortable()
+}
+
+func (x *Option) Scalar() bool {
+	return false
+}
+
+func (x *Option) String() string {
+	return "*" + x.V.String()
 }
 
 func (x *Option) From(v interface{}) interface{} {

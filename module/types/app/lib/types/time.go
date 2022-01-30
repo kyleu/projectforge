@@ -16,6 +16,10 @@ func (x *Time) Sortable() bool {
 	return true
 }
 
+func (x *Time) Scalar() bool {
+	return false
+}
+
 func (x *Time) String() string {
 	return x.Key()
 }

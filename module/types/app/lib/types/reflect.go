@@ -48,7 +48,7 @@ func FromReflect(t reflect.Type) *Wrapped {
 	case reflect.Func:
 		return NewError("can't reflect functions")
 	case reflect.Interface:
-		return NewError("can't reflect interfaces")
+		return NewAny()
 	case reflect.Map:
 		return NewMap(FromReflect(t.Key()), FromReflect(t.Elem()))
 	case reflect.Ptr:

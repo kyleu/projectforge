@@ -10,12 +10,16 @@ func (x *EnumValue) Key() string {
 	return KeyEnumValue
 }
 
-func (x *EnumValue) String() string {
-	return x.Key()
-}
-
 func (x *EnumValue) Sortable() bool {
 	return true
+}
+
+func (x *EnumValue) Scalar() bool {
+	return true
+}
+
+func (x *EnumValue) String() string {
+	return x.Key()
 }
 
 func (x *EnumValue) From(v interface{}) interface{} {

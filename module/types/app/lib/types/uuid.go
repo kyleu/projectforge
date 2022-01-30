@@ -14,6 +14,10 @@ func (x *UUID) Sortable() bool {
 	return true
 }
 
+func (x *UUID) Scalar() bool {
+	return false
+}
+
 func (x *UUID) String() string {
 	return x.Key()
 }

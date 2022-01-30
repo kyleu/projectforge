@@ -7,6 +7,7 @@ import (
 	"github.com/kyleu/projectforge/app/export/golang"
 	"github.com/kyleu/projectforge/app/export/model"
 	"github.com/kyleu/projectforge/app/file"
+	"github.com/kyleu/projectforge/app/lib/types"
 	"github.com/kyleu/projectforge/app/util"
 )
 
@@ -41,8 +42,8 @@ func controllerArgFor(col *model.Column, b *golang.Block, retVal string, indent 
 	add := func(s string, args ...interface{}) {
 		b.W(ind+s, args...)
 	}
-	switch col.Type.Key {
-	case model.TypeBool.Key:
+	switch col.Type.Key() {
+	case types.KeyBool:
 		add("%sArg, err := RCRequiredBool(rc, %q)", col.Camel(), col.Camel())
 		add("if err != nil {")
 		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as an argument\")", retVal, col.Camel())
@@ -50,7 +51,7 @@ func controllerArgFor(col *model.Column, b *golang.Block, retVal string, indent 
 		add("if err != nil {")
 		add("\treturn %s, errors.Wrap(err, \"field [%s] must be a valid a valid boolean\")", retVal, col.Camel())
 		add("}")
-	case model.TypeInt.Key:
+	case types.KeyInt:
 		add("%sArgStr, err := RCRequiredString(rc, %q, false)", col.Camel(), col.Camel())
 		add("if err != nil {")
 		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as an argument\")", retVal, col.Camel())
@@ -59,12 +60,12 @@ func controllerArgFor(col *model.Column, b *golang.Block, retVal string, indent 
 		add("if err != nil {")
 		add("\treturn %s, errors.Wrap(err, \"field [%s] must be a valid a valid integer\")", retVal, col.Camel())
 		add("}")
-	case model.TypeString.Key:
+	case types.KeyString:
 		add("%sArg, err := RCRequiredString(rc, %q, false)", col.Camel(), col.Camel())
 		add("if err != nil {")
 		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as an argument\")", retVal, col.Camel())
 		add("}")
-	case model.TypeUUID.Key:
+	case types.KeyUUID:
 		add("%sArgStr, err := RCRequiredString(rc, %q, false)", col.Camel(), col.Camel())
 		add("if err != nil {")
 		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as an argument\")", retVal, col.Camel())

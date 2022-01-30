@@ -1,7 +1,0 @@
-{% import (
-  "{{{ .Package }}}/app/lib/types"
-) %}
-
-{% func Type(v types.Type) %}{% stripspace %}
-  {%s v.String() %}
-{% endstripspace %}{% endfunc %}

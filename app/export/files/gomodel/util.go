@@ -3,6 +3,7 @@ package gomodel
 import (
 	"github.com/kyleu/projectforge/app/export/golang"
 	"github.com/kyleu/projectforge/app/export/model"
+	"github.com/kyleu/projectforge/app/lib/types"
 	"github.com/kyleu/projectforge/app/util"
 )
 
@@ -23,10 +24,10 @@ func modelString(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("String", "func")
 	ret.W("func (%s *%s) String() string {", m.FirstLetter(), m.Proper())
 	if pks := m.PKs(); len(pks) == 1 {
-		switch pks[0].Type.Key {
-		case model.TypeString.Key:
+		switch pks[0].Type.Key() {
+		case types.KeyString:
 			ret.W("\treturn %s.%s", m.FirstLetter(), pks[0].Proper())
-		case model.TypeUUID.Key:
+		case types.KeyUUID:
 			ret.W("\treturn %s.%s.String()", m.FirstLetter(), pks[0].Proper())
 		default:
 			ret.W("\treturn fmt.Sprint(%s.%s)", m.FirstLetter(), pks[0].Proper())

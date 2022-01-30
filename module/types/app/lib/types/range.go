@@ -16,12 +16,16 @@ func (x *Range) Key() string {
 	return KeyRange
 }
 
-func (x *Range) String() string {
-	return fmt.Sprintf("range[%s]", x.V.String())
-}
-
 func (x *Range) Sortable() bool {
 	return x.V.Sortable()
+}
+
+func (x *Range) Scalar() bool {
+	return false
+}
+
+func (x *Range) String() string {
+	return fmt.Sprintf("range[%s]", x.V.String())
 }
 
 func (x *Range) From(v interface{}) interface{} {

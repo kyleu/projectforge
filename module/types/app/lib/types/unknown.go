@@ -12,12 +12,16 @@ func (x *Unknown) Key() string {
 	return KeyUnknown
 }
 
-func (x *Unknown) String() string {
-	return x.Key() + "(" + x.X + ")"
-}
-
 func (x *Unknown) Sortable() bool {
 	return false
+}
+
+func (x *Unknown) Scalar() bool {
+	return false
+}
+
+func (x *Unknown) String() string {
+	return x.Key() + "(" + x.X + ")"
 }
 
 func (x *Unknown) From(v interface{}) interface{} {

@@ -1,0 +1,23 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% func Boolean(x interface{}, nullable bool, k string) %}{% stripspace %}
+  {% code b, isBool := x.(bool) %}
+  {% if isBool && b %}
+    <label class="radiolabel"><input value="true" name="{%s k %}" type="radio" checked="checked" /> true</label>
+  {% else %}
+    <label class="radiolabel"><input value="true" name="{%s k %}" type="radio" /> true</label>
+  {% endif %}
+
+  {% if isBool && !b %}
+    <label class="radiolabel"><input value="false" name="{%s k %}" type="radio" checked="checked" /> false</label>
+  {% else %}
+    <label class="radiolabel"><input value="false" name="{%s k %}" type="radio" /> false</label>
+  {% endif %}
+
+  {% if nullable %}
+    {% if x == nil %}
+      <label class="radiolabel"><input value="∅" name="{%s k %}" type="radio" checked="checked" /> nil</label>
+    {% else %}
+      <label class="radiolabel"><input value="∅" name="{%s k %}" type="radio" /> nil</label>
+    {% endif %}
+  {% endif %}
+{% endstripspace %}{% endfunc %}

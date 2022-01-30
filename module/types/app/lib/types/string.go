@@ -18,15 +18,19 @@ func (x *String) Key() string {
 	return KeyString
 }
 
+func (x *String) Sortable() bool {
+	return true
+}
+
+func (x *String) Scalar() bool {
+	return true
+}
+
 func (x *String) String() string {
 	if x.MaxLength > 0 {
 		return fmt.Sprintf("%s(%d)", x.Key(), x.MaxLength)
 	}
 	return x.Key()
-}
-
-func (x *String) Sortable() bool {
-	return true
 }
 
 func (x *String) From(v interface{}) interface{} {
