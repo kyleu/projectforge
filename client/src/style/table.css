@@ -65,6 +65,7 @@ table.full-width {
 
 table .tfill {
   width: 99%;
+  border-bottom: none;
 }
 
 table.centered th, table.centered td {

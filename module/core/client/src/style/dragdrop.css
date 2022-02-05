@@ -1,3 +1,7 @@
+.drag-container {
+  padding: 0;
+}
+
 .drag-container .item {
   border: var(--border);
   margin-top: 12px;

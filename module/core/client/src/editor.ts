@@ -1,6 +1,16 @@
 const selected = "--selected";
 
+export function setSiblingToNull(el: HTMLElement) {
+  const i = el.parentElement!.parentElement!.querySelector("input");
+  if (!i) {
+    throw "no associated input found";
+  }
+  i.value = "∅";
+}
+
 export function editorInit() {
+  (window as any).admini.setSiblingToNull = setSiblingToNull;
+
   let editorCache: { [key: string]: string; } = {};
   let selectedCache: { [key: string]: HTMLInputElement; } = {};
   for (const n of Array.from(document.querySelectorAll(".editor"))) {
