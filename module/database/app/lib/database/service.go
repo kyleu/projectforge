@@ -94,7 +94,7 @@ func (s *Service) newSpan(ctx context.Context, name string, q string) (time.Time
 	if s.metrics != nil {
 		s.metrics.IncStmt(q, name)
 	}
-	nc, span := telemetry.StartSpan(ctx, "database", name)
+	nc, span, _ := telemetry.StartSpan(ctx, "database"+name, s.logger)
 	span.Attributes(
 		&telemetry.Attribute{Key: "db.statement", Value: q},
 		&telemetry.Attribute{Key: "db.system", Value: "postgresql"},

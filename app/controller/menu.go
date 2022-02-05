@@ -12,7 +12,7 @@ import (
 )
 
 func MenuFor(ctx context.Context, isAuthed bool, isAdmin bool, as *app.State) (menu.Items, error) {
-	ctx, span := telemetry.StartSpan(ctx, "menu", "menu:generate")
+	ctx, span, _ := telemetry.StartSpan(ctx, "menu:generate", nil)
 	defer span.Complete()
 
 	var ret menu.Items

@@ -22,7 +22,7 @@ const SQLiteEnabled = true
 var typeSQLite = &DBType{Key: "sqlite", Title: "SQLite", Quote: `"`, Placeholder: "$", SupportsReturning: true}
 
 func OpenSQLiteDatabase(ctx context.Context, key string, params *SQLiteParams, logger *zap.SugaredLogger) (*Service, error) {
-	_, span := telemetry.StartSpan(ctx, "database", "open")
+	_, span, logger := telemetry.StartSpan(ctx, "database:open", logger)
 	defer span.Complete()
 	if params.File == "" {
 		return nil, errors.New("need filename for SQLite database")

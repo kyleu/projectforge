@@ -76,8 +76,12 @@ func Close() error {
 	return tracerProvider.Shutdown(context.Background())
 }
 
-func StartSpan(ctx context.Context, tracerKey string, spanName string, opts ...interface{}) (context.Context, *Span) {
-	tr := otel.GetTracerProvider().Tracer(tracerKey)
+func StartSpan(ctx context.Context, spanName string, logger *zap.SugaredLogger, opts ...interface{}) (context.Context, *Span, *zap.SugaredLogger) {
+	tr := otel.GetTracerProvider().Tracer(util.AppKey)
 	ctx, ot := tr.Start(ctx, spanName, trace.WithSpanKind(trace.SpanKindServer))
-	return ctx, &Span{OT: ot}
+	sp := &Span{OT: ot}
+	if logger != nil {
+		logger = LoggerFor(logger, sp)
+	}
+	return ctx, sp, logger
 }

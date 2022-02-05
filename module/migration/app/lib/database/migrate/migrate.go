@@ -13,9 +13,9 @@ import (
 )
 
 func Migrate(ctx context.Context, s *database.Service, logger *zap.SugaredLogger) error {
-	ctx, span := telemetry.StartSpan(ctx, util.AppKey, "migrate")
+	logger = logger.With("svc", "migrate")
+	ctx, span, logger := telemetry.StartSpan(ctx, "database:migrate", logger)
 	defer span.Complete()
-	logger = telemetry.LoggerFor(logger.With("svc", "migrate"), span)
 
 	err := createMigrationTableIfNeeded(ctx, s, logger)
 	if err != nil {

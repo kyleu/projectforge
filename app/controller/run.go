@@ -36,8 +36,8 @@ func RunAction(rc *fasthttp.RequestCtx) {
 		rc.QueryArgs().VisitAll(func(k []byte, v []byte) {
 			cfg[string(k)] = string(v)
 		})
-		nc, span := telemetry.StartSpan(ps.Context, "action", "action."+actT.String())
-		result := action.Apply(nc, actionParams(span, tgt, actT, cfg, as, ps.Logger))
+		nc, span, logger := telemetry.StartSpan(ps.Context, "action:"+actT.String(), ps.Logger)
+		result := action.Apply(nc, actionParams(span, tgt, actT, cfg, as, logger))
 		if result.Project == nil {
 			result.Project = prj
 		}
@@ -66,8 +66,8 @@ func RunAllActions(rc *fasthttp.RequestCtx) {
 			go func() {
 				c := cfg.Clone()
 				c["path"] = p.Path
-				nc, span := telemetry.StartSpan(ps.Context, "action", "action."+actT.String())
-				result := action.Apply(nc, actionParams(span, p.Key, actT, c, as, ps.Logger))
+				nc, span, logger := telemetry.StartSpan(ps.Context, "action:"+actT.String(), ps.Logger)
+				result := action.Apply(nc, actionParams(span, p.Key, actT, c, as, logger))
 				if result.Project == nil {
 					result.Project = p
 				}

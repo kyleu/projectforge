@@ -12,7 +12,7 @@
 ) %}
 
 {% func Render(page layout.Page, as *app.State, ps *cutil.PageState) %}{% code
-  ctx, span := telemetry.StartSpan(ps.Context, "template", "html:" + strings.TrimPrefix(fmt.Sprintf("%T", page), "*"))
+  ctx, span, _ := telemetry.StartSpan(ps.Context, "html:" + strings.TrimPrefix(fmt.Sprintf("%T", page), "*"), ps.Logger)
   ps.Context = ctx
 	defer func() {
     span.Complete()

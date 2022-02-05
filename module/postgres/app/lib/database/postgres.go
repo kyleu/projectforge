@@ -84,7 +84,7 @@ func OpenDefaultPostgres(ctx context.Context, logger *zap.SugaredLogger) (*Servi
 }
 
 func OpenPostgresDatabase(ctx context.Context, key string, params *PostgresParams, logger *zap.SugaredLogger) (*Service, error) {
-	_, span := telemetry.StartSpan(ctx, "database", "open")
+	_, span, logger := telemetry.StartSpan(ctx, "database:open", logger)
 	defer span.Complete()
 	host := params.Host
 	if host == "" {
@@ -119,7 +119,7 @@ func OpenPostgresDatabase(ctx context.Context, key string, params *PostgresParam
 }
 
 func OpenPostgresDatabaseSSL(ctx context.Context, key string, ep *PostgresParams, sp *PostgresServiceParams, logger *zap.SugaredLogger) (*Service, error) {
-	_, span := telemetry.StartSpan(ctx, "database", "openssl")
+	_, span, logger := telemetry.StartSpan(ctx, "database:openssl", logger)
 	defer span.Complete()
 
 	dbname := sp.Database
