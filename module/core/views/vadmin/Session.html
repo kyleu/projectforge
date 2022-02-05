@@ -16,7 +16,7 @@
   {%- if len(ps.Session) > 0 -%}
   <div class="card">
     <h3>Values</h3>
-    <ul>
+    <ul class="mt">
     {%- for k, v := range ps.Session -%}
       <li>{%s k %}: {%s fmt.Sprint(v) %}</li>
     {%- endfor -%}

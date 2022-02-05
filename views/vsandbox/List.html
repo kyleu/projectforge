@@ -11,7 +11,7 @@
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>Sandboxes</h3>
-    <ul>
+    <ul class="mt">
       {%- for _, s := range sandbox.AllSandboxes -%}
         <li><a href="/admin/sandbox/{%u s.Key %}">{%s s.Title %}</a></li>
       {%- endfor -%}

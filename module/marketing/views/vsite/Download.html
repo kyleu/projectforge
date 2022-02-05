@@ -19,7 +19,7 @@
   <div class="card">
     <h3>Desktop Version</h3>
     <em>Standalone application using your platform's native web viewer</em>
-    <ul>
+    <ul class="mt">
       {%- for _, link := range p.Links.GetByModes("desktop") -%}
       <li><a href="{{{ .Info.Sourcecode }}}/releases/download/v{%s as.BuildInfo.Version %}/{%s link.URL %}">{%s link.OSString() %}</a></li>
       {%- endfor -%}

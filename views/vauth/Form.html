@@ -10,7 +10,7 @@
   {%- if len(prvs) > 0 -%}
   <div class="card">
     <h3>Sign in to {%s util.AppName %}</h3>
-    <ul>
+    <ul class="mt">
       {%- for _, prv := range prvs -%}
       <li>
         {%- if referrer == "" -%}

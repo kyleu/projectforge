@@ -15,9 +15,9 @@
     <div class="right"><a href="#modal-available"><button type="button">Available</button></a></div>
     <h3>Authentication</h3>
     {%- if len(prvs) == 0 -%}
-      <em>no authentication providers configured, why not <a href="#modal-available">add one</a>?</em>
+    <em class="mt">no authentication providers configured, why not <a href="#modal-available">add one</a>?</em>
     {%- else -%}
-    <ul>
+    <ul class="mt">
       {%- for _, prv := range prvs -%}
       <li><a href="/auth/{%u prv.ID %}?refer={%u `/admin` %}">{%s auth.AvailableProviderNames[prv.ID] %}</a></li>
       {%- endfor -%}
