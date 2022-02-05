@@ -39,7 +39,10 @@ func (d *dto) ToAudit() *Audit {
 	}
 	metadataArg := util.ValueMap{}
 	_ = util.FromJSON(d.Metadata, &metadataArg)
-	return &Audit{ID: d.ID, App: d.App, Act: d.Act, Client: d.Client, Server: d.Server, User: d.User, Metadata: metadataArg, Message: d.Message, Started: d.Started, Completed: d.Completed}
+	return &Audit{
+		ID: d.ID, App: d.App, Act: d.Act, Client: d.Client, Server: d.Server, User: d.User,
+		Metadata: metadataArg, Message: d.Message, Started: d.Started, Completed: d.Completed,
+	}
 }
 
 type dtos []*dto

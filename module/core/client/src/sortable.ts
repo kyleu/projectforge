@@ -87,11 +87,15 @@ function update(dd: Element) {
 
 interface Item {
   k: string
+  t: string
   p: string
   c?: Item[]
 }
 
 function readContainer(c: Element): [Item[], number] {
+  if (c.children.length === 0) {
+    return [[], 0];
+  }
   let count = 0;
   const ret: Item[] = [];
   for (const i of Array.from(c.children)) {
@@ -110,6 +114,7 @@ function readItem(i: HTMLElement): [Item | undefined, number] {
   let count = 1;
   let ret: Item = {
     k: i.dataset.key as string,
+    t: i.dataset.title as string,
     p: i.dataset.originalPath as string
   };
   for (const x of Array.from(i.children)) {

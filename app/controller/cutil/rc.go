@@ -3,6 +3,8 @@ package cutil
 
 import (
 	"github.com/valyala/fasthttp"
+
+	"github.com/kyleu/projectforge/app/util"
 )
 
 func requestCtxToMap(rc *fasthttp.RequestCtx, data interface{}) map[string]interface{} {
@@ -35,5 +37,5 @@ func requestCtxToMap(rc *fasthttp.RequestCtx, data interface{}) map[string]inter
 }
 
 func RequestCtxBool(rc *fasthttp.RequestCtx, key string) bool {
-	return string(rc.URI().QueryArgs().Peek(key)) == "true"
+	return string(rc.URI().QueryArgs().Peek(key)) == util.BoolTrue
 }

@@ -33,7 +33,7 @@ func RCRequiredBool(rc *fasthttp.RequestCtx, key string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	return ret == "true", nil
+	return ret == util.BoolTrue, nil
 }
 
 func RCRequiredInt(rc *fasthttp.RequestCtx, key string) (int, error) {

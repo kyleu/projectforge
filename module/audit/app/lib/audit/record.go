@@ -1,7 +1,6 @@
 package audit
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -125,7 +124,7 @@ func (a *Record) Diff(ax *Record) util.Diffs {
 	diffs = append(diffs, util.DiffObjects(a.Metadata, ax.Metadata, "metadata")...)
 	diffs = append(diffs, util.DiffObjects(a.Changes, ax.Changes, "changes")...)
 	if a.Occurred != ax.Occurred {
-		diffs = append(diffs, util.NewDiff("occurred", fmt.Sprint(a.Occurred), fmt.Sprint(ax.Occurred)))
+		diffs = append(diffs, util.NewDiff("occurred", a.Occurred.String(), ax.Occurred.String()))
 	}
 	return diffs
 }

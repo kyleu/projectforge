@@ -2,6 +2,7 @@
 package util
 
 const (
+	BoolTrue   = "true"
 	AppKey     = "projectforge"
 	AppName    = "Project Forge"
 	AppSummary = "Build and maintain feature-rich applications using Golang"

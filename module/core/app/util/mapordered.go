@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"encoding/xml"
-	"fmt"
 	"sort"
 )
 
@@ -37,17 +36,17 @@ func (o OrderedMap) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 	}
 
 	for _, key := range o.Order {
-		n := xml.Name{"", key}
+		n := xml.Name{Local: key}
 		t := xml.StartElement{Name: n}
 
 		v := o.Map[key]
-		err := e.EncodeElement(v, t)
-		if err != nil {
-			return err
+		e := e.EncodeElement(v, t)
+		if e != nil {
+			return e
 		}
 	}
 
-	err = e.EncodeToken(xml.EndElement{start.Name})
+	err = e.EncodeToken(xml.EndElement{Name: start.Name})
 	if err != nil {
 		return err
 	}
@@ -64,7 +63,7 @@ func (o *OrderedMap) UnmarshalJSON(b []byte) error {
 	index := make(map[string]int)
 	for key := range o.Map {
 		o.Order = append(o.Order, key)
-		esc, _ := json.Marshal(key) //Escape the key
+		esc, _ := json.Marshal(key) // Escape the key
 		index[key] = bytes.Index(b, esc)
 	}
 
@@ -77,7 +76,7 @@ func (o *OrderedMap) UnmarshalJSON(b []byte) error {
 func (o OrderedMap) MarshalJSON() ([]byte, error) {
 	var b []byte
 	buf := bytes.NewBuffer(b)
-	buf.WriteRune('{')
+	buf.WriteByte('{')
 	l := len(o.Order)
 	for i, key := range o.Order {
 		km, err := json.Marshal(key)
@@ -85,18 +84,16 @@ func (o OrderedMap) MarshalJSON() ([]byte, error) {
 			return nil, err
 		}
 		buf.Write(km)
-		buf.WriteRune(':')
+		buf.WriteByte(':')
 		vm, err := json.Marshal(o.Map[key])
 		if err != nil {
 			return nil, err
 		}
 		buf.Write(vm)
 		if i != l-1 {
-			buf.WriteRune(',')
+			buf.WriteByte(',')
 		}
-		fmt.Println(buf.String())
 	}
-	buf.WriteRune('}')
-	fmt.Println(buf.String())
+	buf.WriteByte('}')
 	return buf.Bytes(), nil
 }

@@ -22,7 +22,7 @@ func WriteCORS(rc *fasthttp.RequestCtx) {
 	rc.Response.Header.Set("Access-Control-Allow-Headers", "*")
 	rc.Response.Header.Set("Access-Control-Allow-Method", "GET,POST,DELETE,PUT,PATCH,OPTIONS,HEAD")
 	rc.Response.Header.Set("Access-Control-Allow-Origin", "*")
-	rc.Response.Header.Set("Access-Control-Allow-Credentials", "true")
+	rc.Response.Header.Set("Access-Control-Allow-Credentials", util.BoolTrue)
 }
 
 func RespondDebug(rc *fasthttp.RequestCtx, filename string, body interface{}) (string, error) {

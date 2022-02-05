@@ -1,7 +1,6 @@
 package audit
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -150,10 +149,10 @@ func (a *Audit) Diff(ax *Audit) util.Diffs {
 		diffs = append(diffs, util.NewDiff("message", a.Message, ax.Message))
 	}
 	if a.Started != ax.Started {
-		diffs = append(diffs, util.NewDiff("started", fmt.Sprint(a.Started), fmt.Sprint(ax.Started)))
+		diffs = append(diffs, util.NewDiff("started", a.Started.String(), ax.Started.String()))
 	}
 	if a.Completed != ax.Completed {
-		diffs = append(diffs, util.NewDiff("completed", fmt.Sprint(a.Completed), fmt.Sprint(ax.Completed)))
+		diffs = append(diffs, util.NewDiff("completed", a.Completed.String(), ax.Completed.String()))
 	}
 	return diffs
 }

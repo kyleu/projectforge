@@ -1,6 +1,7 @@
 package util
 
 const (
+	BoolTrue   = "true"
 	AppKey     = "{{{ .Key }}}"
 	AppName    = "{{{ .Name }}}"
 	AppSummary = "{{{ .Info.Summary }}}"

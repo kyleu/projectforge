@@ -69,7 +69,7 @@ func PostgresParamsFromEnv(key string, defaultUser string, prefix string) *Postg
 
 func OpenPostgres(ctx context.Context, prefix string, logger *zap.SugaredLogger) (*Service, error) {
 	envParams := PostgresParamsFromEnv(util.AppKey, util.AppKey, prefix)
-	if os.Getenv("DB_SSL") == "true" {
+	if os.Getenv("DB_SSL") == util.BoolTrue {
 		serviceParams, err := PostgresParamsFromService()
 		if err != nil {
 			return nil, err

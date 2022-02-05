@@ -29,7 +29,7 @@ func SQLRun(rc *fasthttp.RequestCtx) {
 			f := rc.PostArgs()
 			sql = string(f.Peek("sql"))
 			c := string(f.Peek("commit"))
-			commit = c == "true"
+			commit = c == util.BoolTrue
 		}
 
 		tx, err := as.DB.StartTransaction()
@@ -45,6 +45,7 @@ func SQLRun(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
+		defer func() { _ = result.Close() }()
 
 		elapsed := util.TimerEnd(start)
 
@@ -53,9 +54,9 @@ func SQLRun(rc *fasthttp.RequestCtx) {
 				if columns == nil {
 					columns, _ = result.Columns()
 				}
-				row, err := result.SliceScan()
-				if err != nil {
-					return "", errors.Wrap(err, "unable to read row")
+				row, e := result.SliceScan()
+				if e != nil {
+					return "", errors.Wrap(e, "unable to read row")
 				}
 				results = append(results, row)
 			}

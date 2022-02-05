@@ -58,7 +58,7 @@ func (m ValueMap) ParseBool(path string, allowMissing bool, allowEmpty bool) (bo
 	case bool:
 		return t, nil
 	case string:
-		return t == "true", nil
+		return t == BoolTrue, nil
 	case nil:
 		if !allowEmpty {
 			return false, errors.Errorf("could not find bool for path [%s]", path)
