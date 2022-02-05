@@ -4,18 +4,18 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/muesli/coral"
 	"github.com/pkg/errors"
-	"github.com/spf13/cobra"
 
 	"github.com/kyleu/projectforge/app/util"
 )
 
 const keyAll = "all"
 
-func allCmd() *cobra.Command {
+func allCmd() *coral.Command {
 	short := fmt.Sprintf("Starts the main http server on port %d and the marketing site on port %d", util.AppPort, util.AppPort+1)
-	f := func(*cobra.Command, []string) error { return allF() }
-	ret := &cobra.Command{Use: keyAll, Short: short, RunE: f}
+	f := func(*coral.Command, []string) error { return allF() }
+	ret := &coral.Command{Use: keyAll, Short: short, RunE: f}
 	return ret
 }
 

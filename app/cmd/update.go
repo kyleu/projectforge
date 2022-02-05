@@ -3,11 +3,12 @@ package cmd
 import (
 	"context"
 
+	"github.com/muesli/coral"
+	"github.com/pkg/errors"
+
 	"github.com/kyleu/projectforge/app/lib/filesystem"
 	"github.com/kyleu/projectforge/app/module"
 	"github.com/kyleu/projectforge/app/util"
-	"github.com/pkg/errors"
-	"github.com/spf13/cobra"
 )
 
 func updateF(ctx context.Context, args []string) error {
@@ -28,7 +29,7 @@ func updateF(ctx context.Context, args []string) error {
 	return nil
 }
 
-func updateCmd() *cobra.Command {
-	f := func(cmd *cobra.Command, args []string) error { return updateF(context.Background(), args) }
-	return &cobra.Command{Use: "update", Short: "Refreshes downloaded assets such as modules", RunE: f}
+func updateCmd() *coral.Command {
+	f := func(cmd *coral.Command, args []string) error { return updateF(context.Background(), args) }
+	return &coral.Command{Use: "update", Short: "Refreshes downloaded assets such as modules", RunE: f}
 }

@@ -3,7 +3,7 @@ package cmd
 import (
 	"context"
 
-	"github.com/spf13/cobra"
+	"github.com/muesli/coral"
 )
 
 func versionF(_ context.Context, _ []string) error {
@@ -11,7 +11,7 @@ func versionF(_ context.Context, _ []string) error {
 	return nil
 }
 
-func versionCmd() *cobra.Command {
-	f := func(cmd *cobra.Command, args []string) error { return versionF(context.Background(), args) }
-	return &cobra.Command{Use: "version", Short: "Displays the version and exits", RunE: f}
+func versionCmd() *coral.Command {
+	f := func(cmd *coral.Command, args []string) error { return versionF(context.Background(), args) }
+	return &coral.Command{Use: "version", Short: "Displays the version and exits", RunE: f}
 }

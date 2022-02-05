@@ -4,7 +4,7 @@ package cmd
 import (
 	"context"
 
-	"github.com/spf13/cobra"
+	"github.com/muesli/coral"
 
 	"github.com/kyleu/projectforge/app/lib/log"
 	"github.com/kyleu/projectforge/app/lib/upgrade"
@@ -27,9 +27,9 @@ func upgradeF(ctx context.Context, _ []string) error {
 	return upgrade.NewService(l).UpgradeIfNeeded(ctx, _buildInfo.Version, _version, _force)
 }
 
-func upgradeCmd() *cobra.Command {
-	f := func(cmd *cobra.Command, args []string) error { return upgradeF(context.Background(), args) }
-	ret := &cobra.Command{Use: "upgrade", Short: "Upgrades " + util.AppKey + " to the latest published version", RunE: f}
+func upgradeCmd() *coral.Command {
+	f := func(cmd *coral.Command, args []string) error { return upgradeF(context.Background(), args) }
+	ret := &coral.Command{Use: "upgrade", Short: "Upgrades " + util.AppKey + " to the latest published version", RunE: f}
 	ret.PersistentFlags().StringVar(&_version, "version", "", "version number to update to")
 	ret.PersistentFlags().BoolVarP(&_force, "force", "f", false, "force update, even if same or earlier")
 	return ret

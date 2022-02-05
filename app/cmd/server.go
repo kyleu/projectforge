@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"runtime"
 
+	"github.com/muesli/coral"
 	"github.com/pkg/errors"
-	"github.com/spf13/cobra"
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
 
@@ -20,10 +20,10 @@ import (
 
 const keyServer = "server"
 
-func serverCmd() *cobra.Command {
+func serverCmd() *coral.Command {
 	short := fmt.Sprintf("Starts the http server on port %d (by default)", util.AppPort)
-	f := func(*cobra.Command, []string) error { return startServer(_flags) }
-	ret := &cobra.Command{Use: keyServer, Short: short, RunE: f}
+	f := func(*coral.Command, []string) error { return startServer(_flags) }
+	ret := &coral.Command{Use: keyServer, Short: short, RunE: f}
 	return ret
 }
 
@@ -49,7 +49,7 @@ func loadServer(flags *Flags, logger *zap.SugaredLogger) (fasthttp.RequestHandle
 		return nil, logger, err
 	}
 
-	ctx, span := telemetry.StartSpan(context.Background(), util.AppKey, "appinit")
+	ctx, span, logger := telemetry.StartSpan(context.Background(), "app:init", logger)
 	defer span.Complete()
 
 	svcs, err := app.NewServices(ctx, st)

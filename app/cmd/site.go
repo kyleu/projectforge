@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"runtime"
 
+	"github.com/muesli/coral"
 	"github.com/pkg/errors"
-	"github.com/spf13/cobra"
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
 
@@ -18,10 +18,10 @@ import (
 
 const keySite = "site"
 
-func siteCmd() *cobra.Command {
+func siteCmd() *coral.Command {
 	short := fmt.Sprintf("Starts the marketing site on port %d (by default)", util.AppPort)
-	f := func(*cobra.Command, []string) error { return startSite(_flags) }
-	ret := &cobra.Command{Use: keySite, Short: short, RunE: f}
+	f := func(*coral.Command, []string) error { return startSite(_flags) }
+	ret := &coral.Command{Use: keySite, Short: short, RunE: f}
 	return ret
 }
 

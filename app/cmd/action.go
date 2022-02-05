@@ -4,10 +4,11 @@ import (
 	"context"
 	"strings"
 
+	"github.com/muesli/coral"
+	"github.com/pkg/errors"
+
 	"github.com/kyleu/projectforge/app/action"
 	"github.com/kyleu/projectforge/app/util"
-	"github.com/pkg/errors"
-	"github.com/spf13/cobra"
 )
 
 func actionF(ctx context.Context, t action.Type, args []string) error {
@@ -21,14 +22,14 @@ func actionF(ctx context.Context, t action.Type, args []string) error {
 	return nil
 }
 
-func actionCmd(ctx context.Context, t action.Type) *cobra.Command {
-	f := func(cmd *cobra.Command, args []string) error { return actionF(ctx, t, args) }
-	return &cobra.Command{Use: t.Key, Short: t.Description, RunE: f}
+func actionCmd(ctx context.Context, t action.Type) *coral.Command {
+	f := func(cmd *coral.Command, args []string) error { return actionF(ctx, t, args) }
+	return &coral.Command{Use: t.Key, Short: t.Description, RunE: f}
 }
 
-func actionCommands() []*cobra.Command {
+func actionCommands() []*coral.Command {
 	ctx := context.Background()
-	ret := make([]*cobra.Command, 0, len(action.AllTypes))
+	ret := make([]*coral.Command, 0, len(action.AllTypes))
 	for _, a := range action.AllTypes {
 		if !a.Hidden {
 			ret = append(ret, actionCmd(ctx, a))
