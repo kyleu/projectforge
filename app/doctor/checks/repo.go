@@ -53,7 +53,7 @@ func solveRepo(r *doctor.Result, logger *zap.SugaredLogger) *doctor.Result {
 		r.AddSolution("run [git init] in this directory")
 	}
 	if r.Errors.Find("noremote") != nil {
-		p, dr := loadProject(r, logger)
+		p, dr := loadRootProject(r, logger)
 		dr.AddSolution("run [git remote add origin " + p.Info.Sourcecode + ".git]")
 	}
 	if r.Errors.Find("nocommit") != nil {

@@ -87,6 +87,5 @@ func addIndex(ret *golang.Block, tbl string, names ...string) {
 		quoted = append(quoted, fmt.Sprintf("%q", n))
 	}
 	ret.W("")
-	msg := "create index if not exists %q on %q (%s);"
-	ret.W(msg, name, tbl, strings.Join(quoted, ", "))
+	ret.W("create index if not exists %q on %q (%s);", name, tbl, strings.Join(quoted, ", "))
 }

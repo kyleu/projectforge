@@ -26,7 +26,7 @@ func controllerList(m *model.Model, grp *model.Column) *golang.Block {
 	if m.IsSoftDelete() {
 		suffix = ", " + incDel
 	}
-	msg := "\t\tret, err := as.Services.%s.%s(ps.Context, nil%s, params.Get(%q, nil, ps.Logger)%s)"
+	const msg = "\t\tret, err := as.Services.%s.%s(ps.Context, nil%s, params.Get(%q, nil, ps.Logger)%s)"
 	ret.W(msg, m.Proper(), meth, grpArgs, m.Package, suffix)
 	ret.W("\t\tif err != nil {")
 	ret.W("\t\t\treturn \"\", err")
@@ -72,7 +72,7 @@ func controllerDetail(models model.Models, m *model.Model, grp *model.Column) *g
 		lCols := rel.SrcColumns(m)
 		rCols := rel.TgtColumns(rm)
 		rNames := strings.Join(rCols.ProperNames(), "")
-		msg := "\t\t%sBy%s, err := as.Services.%s.GetBy%s(ps.Context, nil, %s, params.Get(%q, nil, ps.Logger))"
+		const msg = "\t\t%sBy%s, err := as.Services.%s.GetBy%s(ps.Context, nil, %s, params.Get(%q, nil, ps.Logger))"
 		ret.W(msg, rm.CamelPlural(), rNames, rm.Proper(), rNames, lCols.ToRefs("ret."), rm.Camel())
 		ret.W("\t\tif err != nil {")
 		ret.W("\t\t\treturn \"\", errors.Wrap(err, \"unable to retrieve child %s\")", rm.TitlePluralLower())
@@ -99,7 +99,7 @@ func checkRev(ret *golang.Block, m *model.Model) {
 	hc := m.HistoryColumn()
 
 	prmsStr := m.PKs().ToRefs("ret.")
-	msg := "\t\t%s, err := as.Services.%s.GetAll%s(ps.Context, nil, %s, params.Get(%q, nil, ps.Logger), false)"
+	const msg = "\t\t%s, err := as.Services.%s.GetAll%s(ps.Context, nil, %s, params.Get(%q, nil, ps.Logger), false)"
 	ret.W(msg, hc.CamelPlural(), m.Proper(), hc.ProperPlural(), prmsStr, m.Package)
 	ret.W("\t\tif err != nil {")
 	ret.W("\t\t\treturn \"\", err")

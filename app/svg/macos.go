@@ -21,7 +21,7 @@ func macOSAssets(prj *project.Project, orig string, fs filesystem.FileLoader, lo
 		}
 	}
 
-	macOSLogoPath := "tools/desktop/template/macos/icons.iconset/logo.svg"
+	const macOSLogoPath = "tools/desktop/template/macos/icons.iconset/logo.svg"
 	macOSPath := filepath.Join(fs.Root(), "tools", "desktop", "template", "macos", "icons.iconset")
 	err := fs.WriteFile(macOSLogoPath, []byte(orig), filesystem.DefaultMode, true)
 	if err != nil {

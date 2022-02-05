@@ -83,7 +83,7 @@
   {% endfor %}
 {% endstripspace %}{% endfunc %}
 
-{% func FormCheckbox(key string, values []string, opts []string, titles []string, indent int) %}{% stripspace %}
+{% func FormCheckbox(key string, values []string, opts []string, titles []string, linebreaks bool, indent int) %}{% stripspace %}
   {% for idx, opt := range opts %}
     {% code
       title := opt
@@ -96,6 +96,9 @@
       <label><input type="checkbox" name="{%s key %}" value="{%s opt %}" checked="checked" />{% space %}{%s title %}</label>
     {% else %}
       <label><input type="checkbox" name="{%s key %}" value="{%s opt %}" />{% space %}{%s title %}</label>
+    {% endif %}
+    {% if util.StringArrayContains(values, opt) %}
+      <br />
     {% endif %}
   {% endfor %}
 {% endstripspace %}{% endfunc %}

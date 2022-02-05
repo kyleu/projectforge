@@ -35,7 +35,7 @@ func MenuFor(ctx context.Context, isAuthed bool, isAdmin bool, as *app.State) (m
 			DoctorMenu("first-aid", "/doctor"),
 		)
 	}
-	desc := "Get assistance and advice for using " + util.AppName
+	const desc = "Get assistance and advice for using " + util.AppName
 	ret = append(ret, &menu.Item{Key: "about", Title: "About", Description: desc, Icon: "question", Route: "/about"})
 	// $PF_SECTION_END(routes_end)$
 	return ret, nil

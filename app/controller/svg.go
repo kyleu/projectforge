@@ -115,8 +115,7 @@ func SVGSetApp(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to set app icon to ["+key+"]")
 		}
-		msg := "set SVG [" + key + "] as app icon"
-		return flashAndRedir(true, msg, "/svg/"+prj.Key, rc, ps)
+		return flashAndRedir(true, "set SVG ["+key+"] as app icon", "/svg/"+prj.Key, rc, ps)
 	})
 }
 
@@ -133,8 +132,7 @@ func SVGRemove(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to remove SVG ["+key+"]")
 		}
-		msg := "removed SVG [" + key + "]"
-		return flashAndRedir(true, msg, "/svg/"+prj.Key, rc, ps)
+		return flashAndRedir(true, "removed SVG ["+key+"]", "/svg/"+prj.Key, rc, ps)
 	})
 }
 

@@ -67,7 +67,7 @@ func (p Permissions) Check(path string, accounts Accounts) (bool, string) {
 		PermissionsLogger.Debugf(permPrefix+"checking [%d] permissions for [%s]", len(p), accounts.String())
 	}
 	if len(p) == 0 {
-		msg := "no permissions configured"
+		const msg = "no permissions configured"
 		if PermissionsLogger != nil {
 			PermissionsLogger.Debug(permPrefix + msg)
 		}

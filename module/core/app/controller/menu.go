@@ -28,7 +28,7 @@ func MenuFor(ctx context.Context, isAuthed bool, isAdmin bool, as *app.State) (m
 		admin := &menu.Item{Key: "admin", Title: "Settings", Description: "System-wide settings and preferences", Icon: "cog", Route: "/admin"}
 		ret = append(ret, sandbox.Menu(ctx), menu.Separator, admin)
 	}
-	aboutDesc := "Get assistance and advice for using " + util.AppName
+	const aboutDesc = "Get assistance and advice for using " + util.AppName
 	ret = append(ret, &menu.Item{Key: "about", Title: "About", Description: aboutDesc, Icon: "question", Route: "/about"})
 	// $PF_SECTION_END(routes_end)$
 	return ret, nil

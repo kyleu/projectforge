@@ -11,7 +11,7 @@ import (
 func (m ValueMap) GetRequired(k string) (interface{}, error) {
 	v, ok := m[k]
 	if !ok {
-		msg := "no value [%s] among candidates [%s]"
+		const msg = "no value [%s] among candidates [%s]"
 		return nil, errors.Errorf(msg, k, StringArrayOxfordComma(m.Keys(), "and"))
 	}
 	return v, nil

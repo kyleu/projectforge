@@ -66,7 +66,7 @@ func serviceHistoryGetHistories(m *model.Model) *golang.Block {
 	ret.W("\tret := historyDTOs{}")
 	ret.W("\terr := s.db.Select(ctx, &ret, q, tx, %s)", strings.Join(pks.CamelNames(), ", "))
 	ret.W("\tif err != nil {")
-	msg := "\t\treturn nil, errors.Wrapf(err, \"unable to get %s by %s\", %s)"
+	const msg = "\t\treturn nil, errors.Wrapf(err, \"unable to get %s by %s\", %s)"
 	ret.W(msg, m.TitlePluralLower(), strings.Join(logs, ", "), strings.Join(pks.CamelNames(), ", "))
 	ret.W("\t}")
 	ret.W("\treturn ret.ToHistories(), nil")
@@ -76,7 +76,7 @@ func serviceHistoryGetHistories(m *model.Model) *golang.Block {
 
 func serviceHistorySaveHistory(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("SaveHistory", "func")
-	decl := "func (s *Service) SaveHistory(ctx context.Context, tx *sqlx.Tx, o *%s, n *%s) (*%sHistory, error) {"
+	const decl = "func (s *Service) SaveHistory(ctx context.Context, tx *sqlx.Tx, o *%s, n *%s) (*%sHistory, error) {"
 	ret.W(decl, m.Proper(), m.Proper(), m.Proper())
 	ret.W("\tq := database.SQLInsert(historyTableQuoted, historyColumns, 1, \"\")")
 	ret.W("\th := &historyDTO{")

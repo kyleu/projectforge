@@ -14,8 +14,7 @@ import (
 
 func (s *Service) List(ctx context.Context, tx *sqlx.Tx, params *filter.Params) (Audits, error) {
 	params = filters(params)
-	wc := ""
-	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
+	q := database.SQLSelect(columnsString, tableQuoted, "", params.OrderByString(), params.Limit, params.Offset)
 	ret := dtos{}
 	err := s.db.Select(ctx, &ret, q, tx)
 	if err != nil {

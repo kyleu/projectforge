@@ -18,7 +18,7 @@ var (
 func main() {
 	logger, err := cmd.Run(&app.BuildInfo{Version: version, Commit: commit, Date: date})
 	if err != nil {
-		msg := "exiting due to error"
+		const msg = "exiting due to error"
 		if logger == nil {
 			println(log.Red.Add(err.Error())) //nolint
 			println(log.Red.Add(msg))         //nolint

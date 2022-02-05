@@ -43,7 +43,7 @@ func (s *Service) load(key string, path string, url string) (*Module, error) {
 		fs = filesystem.NewFileSystem(filepath.Join(s.config.Root(), key), s.logger)
 	}
 	if !fs.Exists(configFilename) {
-		msg := "file [%s] does not exist in path for module [%s] using root [%s]"
+		const msg = "file [%s] does not exist in path for module [%s] using root [%s]"
 		return nil, errors.Errorf(msg, configFilename, key, fs.Root())
 	}
 

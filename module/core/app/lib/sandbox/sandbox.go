@@ -43,6 +43,6 @@ func Menu(_ context.Context) *menu.Item {
 		rt := fmt.Sprintf("/admin/sandbox/%s", s.Key)
 		ret = append(ret, &menu.Item{Key: s.Key, Title: s.Title, Icon: s.Icon, Description: desc, Route: rt})
 	}
-	desc := "Playgrounds for testing new features"
+	const desc = "Playgrounds for testing new features"
 	return &menu.Item{Key: "sandbox", Title: "Sandboxes", Description: desc, Icon: "play", Route: "/admin/sandbox", Children: ret}
 }

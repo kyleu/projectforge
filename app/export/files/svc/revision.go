@@ -37,7 +37,7 @@ func serviceGetAllRevisions(m *model.Model) (*golang.Block, error) {
 	pks := m.PKs()
 
 	ret := golang.NewBlock(fmt.Sprintf("GetAll%s", hc.Col.ProperPlural()), "func")
-	decl := "func (s *Service) GetAll%s(ctx context.Context, tx *sqlx.Tx, %s, params *filter.Params, includeDeleted bool) (%s, error) {"
+	const decl = "func (s *Service) GetAll%s(ctx context.Context, tx *sqlx.Tx, %s, params *filter.Params, includeDeleted bool) (%s, error) {"
 	ret.W(decl, hc.Col.ProperPlural(), pks.Args(), m.ProperPlural())
 	ret.W("\tparams = filters(params)")
 	placeholders := make([]string, 0, len(m.PKs()))
@@ -66,7 +66,7 @@ func serviceGetAllRevisions(m *model.Model) (*golang.Block, error) {
 func serviceGetRevision(m *model.Model) (*golang.Block, error) {
 	revCol := m.HistoryColumn()
 	ret := golang.NewBlock(fmt.Sprintf("Get%s", revCol.Proper()), "func")
-	decl := "func (s *Service) Get%s(ctx context.Context, tx *sqlx.Tx, %s, %s int) (*%s, error) {"
+	const decl = "func (s *Service) Get%s(ctx context.Context, tx *sqlx.Tx, %s, %s int) (*%s, error) {"
 	ret.W(decl, revCol.Proper(), m.PKs().Args(), revCol.Camel(), m.Proper())
 	placeholders := make([]string, 0, len(m.PKs()))
 	for idx, pk := range m.PKs() {
@@ -145,7 +145,7 @@ func serviceGetCurrentRevisionsBlock(m *model.Model, ret *golang.Block, revCol *
 		pkModelRefs = append(pkModelRefs, fmt.Sprintf("model.%s", pk.Proper()))
 	}
 
-	decl := "func (s *Service) getCurrent%s(ctx context.Context, tx *sqlx.Tx, models ...*%s) (map[string]%s, error) {"
+	const decl = "func (s *Service) getCurrent%s(ctx context.Context, tx *sqlx.Tx, models ...*%s) (map[string]%s, error) {"
 	ret.W(decl, revCol.ProperPlural(), m.Proper(), model.ToGoType(revCol.Type, false))
 	ret.W("\tstmts := make([]string, 0, len(models))")
 	ret.W("\tfor i := range models {")

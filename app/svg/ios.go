@@ -21,7 +21,7 @@ func iOSAssets(prj *project.Project, orig string, fs filesystem.FileLoader, logg
 		}
 	}
 
-	iOSLogoPath := "tools/ios/Assets.xcassets/AppIcon.appiconset/logo.svg"
+	const iOSLogoPath = "tools/ios/Assets.xcassets/AppIcon.appiconset/logo.svg"
 	iOSPath := filepath.Join(fs.Root(), "tools", "ios", "Assets.xcassets", "AppIcon.appiconset")
 	err := fs.WriteFile(iOSLogoPath, []byte(orig), filesystem.DefaultMode, true)
 	if err != nil {

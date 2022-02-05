@@ -79,7 +79,6 @@ func ThemeSave(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 
-		msg := "saved changes to theme [" + newKey + "]"
-		return returnToReferrer(msg, "/", rc, ps)
+		return returnToReferrer("saved changes to theme [" + newKey + "]", "/", rc, ps)
 	})
 }

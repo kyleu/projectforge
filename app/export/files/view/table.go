@@ -62,7 +62,7 @@ func viewTableColumn(ret *golang.Block, models model.Models, m *model.Model, lin
 	} else {
 		ret.W(ind + "  <div class=\"icon\">" + col.ToGoViewString(prefix) + "</div>")
 	}
-	msg := "%s  <a title=%q href=\"{%%%%s %s %%%%}\">{%%%%= components.SVGRefIcon(%q, ps) %%%%}</a>"
+	const msg = "%s  <a title=%q href=\"{%%%%s %s %%%%}\">{%%%%= components.SVGRefIcon(%q, ps) %%%%}</a>"
 	for _, rel := range m.Relations {
 		relModel := models.Get(rel.Table)
 		ret.W(msg, ind, relModel.Title(), rel.WebPath(m, relModel, prefix), relModel.IconSafe())

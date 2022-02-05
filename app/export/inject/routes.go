@@ -40,12 +40,12 @@ func Routes(f *file.File, args *model.Args) error {
 		dl := fmt.Sprintf("\tr.GET(\"/%s/%s/delete\", %sDelete)", m.Route(), strings.Join(pkNames, "/"), m.Proper())
 		out = append(out, l, nr, nf, ns, d, ef, es, dl)
 		if m.IsHistory() {
-			msg := "\tr.GET(\"/%s/%s/history/{historyID}\", %sHistory)"
+			const msg = "\tr.GET(\"/%s/%s/history/{historyID}\", %sHistory)"
 			out = append(out, fmt.Sprintf(msg, m.Route(), strings.Join(pkNames, "/"), m.Proper()))
 		}
 		if m.IsRevision() {
 			rc := m.HistoryColumn()
-			msg := "\tr.GET(\"/%s/%s/%s/{%s}\", %s%s)"
+			const msg = "\tr.GET(\"/%s/%s/%s/{%s}\", %s%s)"
 			out = append(out, fmt.Sprintf(msg, m.Route(), strings.Join(pkNames, "/"), rc.Name, rc.Name, m.Proper(), rc.Proper()))
 		}
 	}

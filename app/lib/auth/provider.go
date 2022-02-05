@@ -113,7 +113,7 @@ func (s *Service) load() error {
 	if len(ret) == 0 {
 		s.logger.Debug("authentication disabled, no providers configured in environment")
 	} else {
-		msg := "authentication enabled for [%s], using [%s] as a base URL"
+		const msg = "authentication enabled for [%s], using [%s] as a base URL"
 		s.logger.Debugf(msg, util.StringArrayOxfordComma(ret.Titles(), "and"), s.baseURL)
 	}
 

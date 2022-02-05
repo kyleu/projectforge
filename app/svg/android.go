@@ -21,7 +21,7 @@ func androidAssets(prj *project.Project, orig string, fs filesystem.FileLoader, 
 		}
 	}
 
-	androidLogoPath := "tools/android/app/src/main/res/logo.svg"
+	const androidLogoPath = "tools/android/app/src/main/res/logo.svg"
 	androidPath := filepath.Join(fs.Root(), "tools", "android", "app", "src", "main", "res")
 	err := fs.WriteFile(androidLogoPath, []byte(orig), filesystem.DefaultMode, true)
 	if err != nil {

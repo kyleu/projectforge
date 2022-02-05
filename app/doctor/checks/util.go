@@ -15,8 +15,7 @@ func simpleOut(path string, cmd string, args []string, outCheck func(r *doctor.R
 		fullCmd := strings.Join(append([]string{cmd}, args...), " ")
 		exitCode, out, err := util.RunProcessSimple(fullCmd, path)
 		if err != nil {
-			msg := "[%s] is not present on your computer"
-			return r.WithError(doctor.NewError("missing", msg, cmd))
+			return r.WithError(doctor.NewError("missing", "[%s] is not present on your computer", cmd))
 		}
 		if exitCode != 0 {
 			return r.WithError(doctor.NewError("exitcode", "[%s] returned [%d] as an exit code", fullCmd, exitCode))
@@ -25,8 +24,8 @@ func simpleOut(path string, cmd string, args []string, outCheck func(r *doctor.R
 	}
 }
 
-func loadProject(r *doctor.Result, logger *zap.SugaredLogger) (*project.Project, *doctor.Result) {
-	dir := "."
+func loadRootProject(r *doctor.Result, logger *zap.SugaredLogger) (*project.Project, *doctor.Result) {
+	const dir = "."
 	fs := filesystem.NewFileSystem(dir, logger)
 	if !fs.Exists(project.ConfigFilename) {
 		return nil, r.WithError(doctor.NewError("missing", "no project found in [%s]", dir))

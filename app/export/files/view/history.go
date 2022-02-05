@@ -70,14 +70,14 @@ func exportViewHistoryBody(m *model.Model) *golang.Block {
 
 func exportViewHistoryTable(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("HistoryTable", "struct")
-	decl := "{%%%% func HistoryTable(model *%s.%s, histories %s.%sHistories, params filter.ParamSet, as *app.State, ps *cutil.PageState) %%%%}"
+	const decl = "{%%%% func HistoryTable(model *%s.%s, histories %s.%sHistories, params filter.ParamSet, as *app.State, ps *cutil.PageState) %%%%}"
 	ret.W(decl, m.Package, m.Proper(), m.Package, m.Proper())
 	ret.W("  {%%- code prms := params.Get(\"history_history\", nil, ps.Logger) -%%}")
 	ret.W("  <table class=\"mt\">")
 	ret.W("    <thead>")
 	ret.W("      <tr>")
 	addHeader := func(key string, title string, help string) {
-		msg := "        {%%%%= components.TableHeaderSimple(\"%s_history\", \"%s\", \"%s\", \"%s\", prms, ps.URI, ps) %%%%}"
+		const msg = "        {%%%%= components.TableHeaderSimple(\"%s_history\", \"%s\", \"%s\", \"%s\", prms, ps.URI, ps) %%%%}"
 		ret.W(msg, m.Name, key, title, help)
 	}
 	addHeader("id", "ID", "System-generated history UUID identifier")

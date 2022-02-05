@@ -99,7 +99,7 @@ func exportViewDetailRelations(ret *golang.Block, m *model.Model, models model.M
 		tgtName := fmt.Sprintf("%sBy%s", tgt.ProperPlural(), strings.Join(tgtCols.ProperNames(), ""))
 		ret.W("  {%%%%- if len(p.%s) > 0 -%%%%}", tgtName)
 		ret.W("  <div class=\"card\">")
-		msg := "    <h3>{%%%%= components.SVGRefIcon(`%s`, ps) %%%%} Related %s by [%s]</h3>"
+		const msg = "    <h3>{%%%%= components.SVGRefIcon(`%s`, ps) %%%%} Related %s by [%s]</h3>"
 		ret.W(msg, tgt.IconSafe(), tgt.TitlePluralLower(), strings.Join(rel.TgtColumns(tgt).TitlesLower(), ", "))
 		ret.W("    {%%%%= v%s.Table(p.%s, p.Params, as, ps) %%%%}", tgt.Package, tgtName)
 		ret.W("  </div>")

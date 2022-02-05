@@ -21,7 +21,7 @@ var prj = &doctor.Check{
 }
 
 func checkProject(r *doctor.Result, logger *zap.SugaredLogger) *doctor.Result {
-	p, r := loadProject(r, logger)
+	p, r := loadRootProject(r, logger)
 	if len(r.Errors) > 0 {
 		return r
 	}

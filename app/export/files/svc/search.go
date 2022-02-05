@@ -22,8 +22,7 @@ func serviceSearch(m *model.Model, grp *model.Column) *golang.Block {
 			hasLike = true
 		}
 	}
-	eq := "$1"
-	like := "$2"
+	eq, like := "$1", "$2"
 	var params []string
 	if hasEqual {
 		params = append(params, "strings.ToLower(query)")
@@ -41,17 +40,17 @@ func serviceSearch(m *model.Model, grp *model.Column) *golang.Block {
 			clauses = append(clauses, s+" like "+like)
 		}
 	}
-	wc := "(" + strings.Join(clauses, " or ") + ")"
 
 	ret := golang.NewBlock("search", "func")
 	grpTxt := ""
 	if grp == nil {
+		wc := "(" + strings.Join(clauses, " or ") + ")"
 		ret.W("const searchClause = %q", wc)
 		ret.W("")
 	} else {
 		grpTxt = fmt.Sprintf(", %s %s", grp.Camel(), grp.ToGoType())
 	}
-	decl := "func (s *Service) Search%s(ctx context.Context%s, query string, tx *sqlx.Tx, params *filter.Params%s) (%s, error) {"
+	const decl = "func (s *Service) Search%s(ctx context.Context%s, query string, tx *sqlx.Tx, params *filter.Params%s) (%s, error) {"
 	ret.W(decl, prefix, grpTxt, getSuffix(m), m.ProperPlural())
 	ret.W("\tparams = filters(params)")
 	if m.IsSoftDelete() {

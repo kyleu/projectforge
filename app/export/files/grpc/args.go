@@ -46,7 +46,7 @@ func (a FileArgs) AddStaticCheck(ref string, ret *golang.Block, m *model.Model, 
 		return
 	}
 	ret.W("\tif %s.%s != %s {", ref, grp.Proper(), grp.Camel())
-	msg := "\t\treturn nil, errors.Errorf(\"unauthorized - user acting on behalf of [%%%%s] cannot %s a %s for [%%%%s]\", %s, %s.%s)"
+	const msg = "\t\treturn nil, errors.Errorf(\"unauthorized - user acting on behalf of [%%%%s] cannot %s a %s for [%%%%s]\", %s, %s.%s)"
 	ret.W(msg, act, m.Camel(), grp.Camel(), ref, grp.Proper())
 	ret.W("\t}")
 }

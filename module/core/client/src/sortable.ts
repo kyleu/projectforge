@@ -61,15 +61,16 @@ function update(dd: Element) {
   const [i, count] = readContainer(trackedEl);
   const js = JSON.stringify(i);
   if (origEl) {
+    const changed = origEl.value !== js
     if (origEl.value.length === 0) {
       origEl.value = js;
     }
     const aEl = document.querySelector(".drag-actions") as HTMLElement;
     if (aEl) {
-      if (origEl.value === js) {
-        aEl.classList.add('no-changes');
-      } else {
+      if (changed) {
         aEl.classList.remove('no-changes');
+      } else {
+        aEl.classList.add('no-changes');
       }
     }
     const sEl = document.querySelector(".drag-tracked-size") as HTMLElement;
@@ -79,6 +80,13 @@ function update(dd: Element) {
       } else {
         sEl.innerText = count.toString(10) + (sEl.dataset.plur ? " " + sEl.dataset.plur: "");
       }
+    }
+    if (changed) {
+      window.onbeforeunload = function() {
+        return true;
+      };
+    } else {
+      window.onbeforeunload = null;
     }
   }
 

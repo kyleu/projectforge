@@ -76,8 +76,7 @@ func ProfileSave(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 
-		msg := "Saved profile"
-		return returnToReferrer(msg, referrer, rc, ps)
+		return returnToReferrer("Saved profile", referrer, rc, ps)
 	})
 }
 

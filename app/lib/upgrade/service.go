@@ -37,12 +37,12 @@ func (s *Service) UpgradeIfNeeded(ctx context.Context, o string, n string, force
 	}
 	if !force {
 		if tgtVersion.Equal(*currVersion) {
-			msg := "no action needed, already using [%s], the latest version"
+			const msg = "no action needed, already using [%s], the latest version"
 			s.logger.Infof(msg, currVersion.String())
 			return nil
 		}
 		if tgtVersion.LessThan(*currVersion) {
-			msg := "no action needed, you're using [%s], which is somehow higher than [%s], the latest version"
+			const msg = "no action needed, you're using [%s], which is somehow higher than [%s], the latest version"
 			s.logger.Infof(msg, currVersion.String(), tgtVersion.String())
 			return nil
 		}

@@ -71,7 +71,7 @@ func (s *Service) Refresh() (Projects, error) {
 		return nil, err
 	}
 	fs := s.GetFilesystem(root)
-	additionalFilename := "additional-projects.json"
+	const additionalFilename = "additional-projects.json"
 	if fs.Exists(additionalFilename) {
 		additionalContent, err := fs.ReadFile(additionalFilename)
 		if err != nil {

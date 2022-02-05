@@ -30,8 +30,7 @@ func (f *FileSystem) ListJSON(path string, trimExtension bool) []string {
 }
 
 func (f *FileSystem) ListExtension(path string, ext string, trimExtension bool) []string {
-	glob := "*." + ext
-	matches, err := filepath.Glob(f.getPath(path, glob))
+	matches, err := filepath.Glob(f.getPath(path, "*."+ext))
 	if err != nil {
 		f.logger.Warnf("cannot list [%s] in path [%s]: %+v", ext, path, err)
 	}
