@@ -10,7 +10,8 @@ import (
 )
 
 type Span struct {
-	OT trace.Span
+	OT        trace.Span
+	statusSet bool
 }
 
 func (s *Span) TraceID() string {
@@ -26,13 +27,14 @@ func (s *Span) SetName(name string) {
 }
 
 func (s *Span) SetStatus(status string, description string) {
+	s.statusSet = true
 	switch strings.ToLower(status) {
 	case "ok":
 		s.OT.SetStatus(codes.Ok, description)
 	case "error":
 		s.OT.SetStatus(codes.Error, description)
 	default:
-		s.OT.SetStatus(codes.Unset, description)
+		s.OT.SetStatus(codes.Ok, status + ": " + description)
 	}
 }
 
@@ -58,6 +60,9 @@ func (s *Span) OnError(err error) {
 
 // Complete must be called, usually through a `defer` block.
 func (s *Span) Complete() {
+	if !s.statusSet {
+		s.SetStatus("ok", "complete")
+	}
 	s.OT.End()
 }
 
