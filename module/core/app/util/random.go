@@ -65,6 +65,14 @@ func RandomDate() time.Time {
 	return time.Unix(from+rnd.Int64(), 0)
 }
 
+func RandomDiffs(size int) Diffs {
+	ret := make(Diffs, 0, size)
+	for i := 0; i < size; i++ {
+		ret = append(ret, &Diff{Path: RandomString(8), Old: RandomString(12), New: RandomString(12)})
+	}
+	return ret
+}
+
 func errMsg(err error) string {
 	return fmt.Sprintf("source of randomness unavailable: %+v", err.Error())
 }

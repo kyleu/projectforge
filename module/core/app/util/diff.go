@@ -33,36 +33,29 @@ func DiffObjects(l interface{}, r interface{}, path ...string) Diffs {
 	var ret Diffs
 
 	if l == nil {
-		ret = append(ret, NewDiff(strings.Join(path, "."), "", fmt.Sprint(r)))
+		return append(ret, NewDiff(strings.Join(path, "."), "", fmt.Sprint(r)))
 	}
 	if r == nil {
-		ret = append(ret, NewDiff(strings.Join(path, "."), fmt.Sprint(l), ""))
+		return append(ret, NewDiff(strings.Join(path, "."), fmt.Sprint(l), ""))
 	}
-
 	if lt, rt := fmt.Sprintf("%T", l), fmt.Sprintf("%T", r); lt != rt {
-		lj := ToJSON(l) //nolint
-		rj := ToJSON(r) //nolint
-		ret = append(ret, NewDiff(strings.Join(path, "."), lj, rj))
+		return append(ret, NewDiff(strings.Join(path, "."), ToJSONCompact(l), ToJSONCompact(r)))
 	}
 
 	switch t := l.(type) {
 	case ValueMap:
-		rm, _ := r.(ValueMap)
-		for k, v := range t {
-			rv := rm[k]
-			ret = append(ret, DiffObjects(v, rv, append(append([]string{}, path...), k)...)...)
-		}
+		ret = append(ret, diffMaps(t, r, path...)...)
 	case map[string]interface{}:
-		rm, _ := r.(map[string]interface{})
-		for k, v := range t {
-			rv := rm[k]
-			ret = append(ret, DiffObjects(v, rv, append(append([]string{}, path...), k)...)...)
-		}
+		ret = append(ret, diffMaps(t, r, path...)...)
 	case map[string]int:
-		rm, _ := r.(map[string]int)
-		for k, v := range t {
-			rv := rm[k]
-			ret = append(ret, DiffObjects(v, rv, append(append([]string{}, path...), k)...)...)
+		ret = append(ret, diffIntMaps(t, r, path...)...)
+	case []interface{}:
+		ret = append(ret, diffArrays(t, r, path...)...)
+	case Diffs:
+		rm, _ := r.(Diffs)
+		for idx, v := range t {
+			rv := rm[idx]
+			ret = append(ret, DiffObjects(v, rv, append([]string{}, path...)...)...)
 		}
 	case int:
 		i, _ := r.(int)
@@ -75,10 +68,62 @@ func DiffObjects(l interface{}, r interface{}, path ...string) Diffs {
 			ret = append(ret, NewDiff(strings.Join(path, "."), t, s))
 		}
 	default:
-		if lj, rj := ToJSON(l), ToJSON(r); lj != rj {
+		if lj, rj := ToJSONCompact(l), ToJSONCompact(r); lj != rj {
 			ret = append(ret, NewDiff(strings.Join(path, "."), lj, rj))
 		}
 	}
 
+	return ret
+}
+
+func diffArrays(l []interface{}, r interface{}, path ...string) Diffs {
+	var ret Diffs
+	rm, _ := r.([]interface{})
+	for idx, v := range l {
+		if len(rm) > idx {
+			rv := rm[idx]
+			ret = append(ret, DiffObjects(v, rv, append(append([]string{}, path...), fmt.Sprint(idx))...)...)
+		} else {
+			ret = append(ret, DiffObjects(v, nil, append(append([]string{}, path...), fmt.Sprint(idx))...)...)
+		}
+	}
+	if len(rm) > len(l) {
+		for i := len(l); i < len(rm); i++ {
+			ret = append(ret, DiffObjects(nil, rm[i], append(append([]string{}, path...), fmt.Sprint(i))...)...)
+		}
+	}
+	return ret
+}
+
+func diffMaps(l map[string]interface{}, r interface{}, path ...string) Diffs {
+	var ret Diffs
+	rm, ok := r.(map[string]interface{})
+	if !ok {
+		rm, _ = r.(ValueMap)
+	}
+	for k, v := range l {
+		rv := rm[k]
+		ret = append(ret, DiffObjects(v, rv, append(append([]string{}, path...), k)...)...)
+	}
+	for k, v := range rm {
+		if _, exists := l[k]; !exists {
+			ret = append(ret, DiffObjects(nil, v, append(append([]string{}, path...), k)...)...)
+		}
+	}
+	return ret
+}
+
+func diffIntMaps(l map[string]int, r interface{}, path ...string) Diffs {
+	var ret Diffs
+	rm, _ := r.(map[string]int)
+	for k, v := range l {
+		rv := rm[k]
+		ret = append(ret, DiffObjects(v, rv, append(append([]string{}, path...), k)...)...)
+	}
+	for k, v := range rm {
+		if _, exists := l[k]; !exists {
+			ret = append(ret, DiffObjects(nil, v, append(append([]string{}, path...), k)...)...)
+		}
+	}
 	return ret
 }

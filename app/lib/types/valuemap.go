@@ -7,8 +7,7 @@ const KeyValueMap = "valuemap"
 
 var _ Type = (*ValueMap)(nil)
 
-type ValueMap struct {
-}
+type ValueMap struct{}
 
 func (x *ValueMap) Key() string {
 	return KeyValueMap
