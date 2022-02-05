@@ -1,4 +1,4 @@
-// Package app $PF_IGNORE$
+// Package app - $PF_IGNORE$
 package app
 
 import (

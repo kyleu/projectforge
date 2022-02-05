@@ -4,6 +4,8 @@
 
 [Project Forge](https://projectforge.dev) helps you build and maintain feature-rich applications written in the Go programming language.
 
+The projects that are managed by Project Forge are built for developer experience and runtime performance.
+
 ## Download
 
 https://projectforge.dev/download
