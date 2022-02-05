@@ -34,9 +34,7 @@ func ToGoType(t types.Type, nullable bool) string {
 
 func ToGoDTOType(t types.Type, nullable bool) string {
 	switch t.Key() {
-	case types.KeyAny:
-		return "json.RawMessage"
-	case types.KeyMap:
+	case types.KeyAny, types.KeyMap:
 		return "json.RawMessage"
 	default:
 		return ToGoType(t, nullable)
@@ -83,16 +81,18 @@ func ToGoViewString(t types.Type, prop string, nullable bool) string {
 	}
 }
 
+const keyJSONB = "jsonb"
+
 func ToSQLType(t types.Type) string {
 	switch t.Key() {
 	case types.KeyAny:
-		return "jsonb"
+		return keyJSONB
 	case types.KeyBool:
 		return "boolean"
 	case types.KeyInt:
 		return "int"
 	case types.KeyMap:
-		return "jsonb"
+		return keyJSONB
 	case types.KeyString:
 		return "text"
 	case types.KeyTimestamp:

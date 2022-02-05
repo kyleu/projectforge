@@ -45,25 +45,38 @@ func Service(m *model.Model, args *model.Args, addHeader bool) (*file.File, erro
 	g := golang.NewFile(m.Package, []string{"app", m.Package}, "service")
 	g.AddImport(helper.ImpLogging, helper.ImpFilter, helper.ImpDatabase)
 
-	g.AddBlocks(serviceStruct(args), serviceNew(m, args), serviceDefaultFilters(m))
+	isAudit := args.HasModule("audit") && m.HasTag("audit")
+	if isAudit {
+		g.AddImport(helper.ImpAudit)
+	}
+
+	g.AddBlocks(serviceStruct(isAudit), serviceNew(m, isAudit), serviceDefaultFilters(m))
 	return g.Render(addHeader)
 }
 
-func serviceStruct(args *model.Args) *golang.Block {
+func serviceStruct(isAudit bool) *golang.Block {
 	ret := golang.NewBlock("Service", "struct")
 	ret.W("type Service struct {")
 	ret.W("\tdb     *database.Service")
+	if isAudit {
+		ret.W("\taudit  *audit.Service")
+	}
 	ret.W("\tlogger *zap.SugaredLogger")
 	ret.W("}")
 	return ret
 }
 
-func serviceNew(m *model.Model, args *model.Args) *golang.Block {
+func serviceNew(m *model.Model, isAudit bool) *golang.Block {
 	ret := golang.NewBlock("NewService", "func")
-	ret.W("func NewService(db *database.Service, logger *zap.SugaredLogger) *Service {")
+	newSuffix, callSuffix := "", ""
+	if isAudit {
+		newSuffix = "aud *audit.Service, "
+		callSuffix = "audit: aud, "
+	}
+	ret.W("func NewService(db *database.Service, %slogger *zap.SugaredLogger) *Service {", newSuffix)
 	ret.W("\tlogger = logger.With(\"svc\", %q)", m.Camel())
 	ret.W("\tfilter.AllowedColumns[\"%s\"] = columns", m.Package)
-	ret.W("\treturn &Service{db: db, logger: logger}")
+	ret.W("\treturn &Service{db: db, %slogger: logger}", callSuffix)
 	ret.W("}")
 	return ret
 }

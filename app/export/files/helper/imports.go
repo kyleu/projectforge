@@ -8,6 +8,7 @@ import (
 )
 
 var (
+	ImpAudit      = AppImport("app/lib/audit")
 	ImpApp        = AppImport("app")
 	ImpAppUtil    = AppImport("app/util")
 	ImpContext    = golang.NewImport(golang.ImportTypeInternal, "context")
@@ -32,9 +33,9 @@ func AppImport(path string) *golang.Import {
 	return &golang.Import{Type: golang.ImportTypeApp, Value: "{{{ .Package }}}/" + path}
 }
 
-func ImportsForTypes(ctx string, types ...types.Type) golang.Imports {
+func ImportsForTypes(ctx string, ts ...types.Type) golang.Imports {
 	var ret golang.Imports
-	for _, t := range types {
+	for _, t := range ts {
 		ret = ret.Add(importsForType(ctx, t)...)
 	}
 	return ret

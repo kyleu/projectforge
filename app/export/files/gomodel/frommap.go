@@ -35,12 +35,13 @@ func forCols(ret *golang.Block, indent int, cols ...*model.Column) {
 		ret.W(ind + "}")
 	}
 	for _, col := range cols {
-		if col.Type.Key() == types.KeyAny {
+		switch {
+		case col.Type.Key() == types.KeyAny:
 			ret.W(ind+"ret.%s = m[%q]", col.Proper(), col.Camel())
-		} else if col.Nullable || col.Type.Scalar() {
+		case col.Nullable || col.Type.Scalar():
 			ret.W(ind+"ret.%s, err = m.Parse%s(%q, true, true)", col.Proper(), col.ToGoMapParse(), col.Camel())
 			catchErr("err")
-		} else {
+		default:
 			ret.W(ind+"ret%s, e := m.Parse%s(%q, true, true)", col.Proper(), col.ToGoMapParse(), col.Camel())
 			catchErr("e")
 			ret.W(ind+"if ret%s != nil {", col.Proper())

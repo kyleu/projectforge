@@ -57,7 +57,7 @@
     <div class="card">
       <div class="right">{%s util.MicrosToMillis(mr.Duration) %}</div>
       <h3>{%s util.StringPluralMaybe("Module", len(mr.Keys)) %} [{%s= links %}]</h3>
-      <div class="right"><em>{%s res.StatusLog() %}</em></div>
+      <div class="right">{%s= res.StatusLog() %}</div>
       <em>{%s mr.Status %}</em>
       {%- if len(mr.Actions) > 0 -%}
       <h4>Actions</h4>

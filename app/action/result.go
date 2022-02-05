@@ -27,7 +27,7 @@ func newResult(cfg util.ValueMap, logger *zap.SugaredLogger) *Result {
 }
 
 func (r *Result) WithError(err error) *Result {
-	msg := "error"
+	msg := "error encountered"
 	if err != nil {
 		msg = err.Error()
 	}
@@ -97,7 +97,7 @@ func (r *Result) StatusLog() string {
 		}
 	}
 	if fileCount == 0 {
-		return "no changes"
+		return "<em>no changes</em>"
 	}
 	return fmt.Sprintf("%d %s", fileCount, util.StringPluralMaybe("change", fileCount))
 }
@@ -117,7 +117,7 @@ type ResultContext struct {
 
 func (c *ResultContext) Status() string {
 	if c.Res == nil {
-		return "Missing!"
+		return "<strong>missing</strong>"
 	}
 	return c.Res.StatusLog()
 }

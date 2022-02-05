@@ -23,7 +23,7 @@ func modelRandom(m *model.Model) *golang.Block {
 func randFor(col *model.Column) string {
 	switch col.Type.Key() {
 	case types.KeyAny:
-		return "nil"
+		return types.KeyNil
 	case types.KeyBool:
 		return "util.RandomBool()"
 	case types.KeyInt:
@@ -34,7 +34,7 @@ func randFor(col *model.Column) string {
 		return "util.RandomString(12)"
 	case types.KeyTimestamp:
 		if col.HasTag("deleted") {
-			return "nil"
+			return types.KeyNil
 		}
 		if col.Nullable {
 			return "util.NowPointer()"

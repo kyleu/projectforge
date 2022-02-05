@@ -111,7 +111,7 @@ func serviceUpdate(m *model.Model, g *golang.File) (*golang.Block, error) {
 		g.AddImport(helper.ImpErrors)
 		ret.W("\tcurr, err := s.Get(ctx, tx, %s%s)", m.PKs().ToRefs("model."), m.SoftDeleteSuffix())
 		ret.W("\tif err != nil {")
-		ret.W("\t\treturn errors.Wrap(err, \"can't get original history\")")
+		ret.W("\t\treturn errors.Wrapf(err, \"can't get original %s [%%%%s]\", model.String())", m.TitleLower())
 		ret.W("\t}")
 		for _, c := range cc {
 			ret.W("\tmodel.%s = curr.%s", c.Proper(), c.Proper())
@@ -154,8 +154,15 @@ func serviceUpdate(m *model.Model, g *golang.File) (*golang.Block, error) {
 		ret.W("\tq := database.SQLUpdate(tableQuoted, columnsQuoted, %q, \"\")", pks.WhereClause(len(m.Columns)))
 		ret.W("\tdata := model.ToData()")
 		ret.W("\tdata = append(data, %s)", strings.Join(pkVals, ", "))
-		ret.W("\t_, ret := s.db.Update(ctx, q, tx, 1, data...)")
-		ret.W("\treturn ret")
+		token := "="
+		if len(m.Columns.WithTag("created")) == 0 {
+			token = ":="
+		}
+		ret.W("\t_, err %s s.db.Update(ctx, q, tx, 1, data...)", token)
+		ret.W("\tif err != nil {")
+		ret.W("\t\treturn err")
+		ret.W("\t}")
+		ret.W("\treturn nil")
 	}
 	ret.W("}")
 	return ret, nil

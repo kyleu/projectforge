@@ -21,8 +21,8 @@ func Services(f *file.File, args *model.Args) error {
 		}
 	}
 
-	var svcs []string
-	var refs []string
+	svcs := make([]string, 0, len(args.Models))
+	refs := make([]string, 0, len(args.Models))
 	for _, m := range args.Models {
 		svcs = append(svcs, fmt.Sprintf("%s *%s.Service", util.StringPad(m.Proper(), svcSize), m.Package))
 		refs = append(refs, fmt.Sprintf("%s %s.NewService(st.DB, st.Logger),", util.StringPad(m.Proper()+":", svcSize+1), m.Package))

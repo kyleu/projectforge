@@ -88,9 +88,13 @@ func modelDiff(m *model.Model, g *golang.File) *golang.Block {
 			ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, %s, %s))", col.Camel(), l, r)
 			ret.W("\t}")
 		case types.KeyTimestamp:
-			g.AddImport(helper.ImpFmt)
 			ret.W("\tif %s != %s {", l, r)
-			ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, fmt.Sprint(%s), fmt.Sprint(%s)))", col.Camel(), l, r)
+			if col.Nullable {
+				g.AddImport(helper.ImpFmt)
+				ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, fmt.Sprint(%s), fmt.Sprint(%s)))", col.Camel(), l, r)
+			} else {
+				ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, %s.String(), %s.String()))", col.Camel(), l, r)
+			}
 			ret.W("\t}")
 		case types.KeyUUID:
 			ret.W("\tif %s != %s {", l, r)
@@ -110,13 +114,13 @@ func modelToData(m *model.Model, cols model.Columns, suffix string) *golang.Bloc
 	ret.W("func (%s *%s) ToData%s() []interface{} {", m.FirstLetter(), m.Proper(), suffix)
 	refs := make([]string, 0, len(cols))
 	for _, c := range cols {
-		switch c.Type.Key() {
-		//case types.KeyAny, types.KeyMap:
-		//ret.W("\t%sArg := util.ToJSONBytes(%s.%s, true)", c.Camel(), m.FirstLetter(), c.Proper())
-		//refs = append(refs, fmt.Sprintf("%sArg", c.Camel()))
-		default:
-			refs = append(refs, fmt.Sprintf("%s.%s", m.FirstLetter(), c.Proper()))
-		}
+		// switch c.Type.Key() {
+		//   case types.KeyAny, types.KeyMap:
+		//     ret.W("\t%sArg := util.ToJSONBytes(%s.%s, true)", c.Camel(), m.FirstLetter(), c.Proper())
+		//     refs = append(refs, fmt.Sprintf("%sArg", c.Camel()))
+		//   default:
+		refs = append(refs, fmt.Sprintf("%s.%s", m.FirstLetter(), c.Proper()))
+		// }
 	}
 	ret.W("\treturn []interface{}{%s}", strings.Join(refs, ", "))
 	ret.W("}")

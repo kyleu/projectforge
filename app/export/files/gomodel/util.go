@@ -13,7 +13,12 @@ func modelClone(m *model.Model) *golang.Block {
 	ret.W("\treturn &%s{", m.Proper())
 	max := m.Columns.MaxCamelLength() + 1
 	for _, col := range m.Columns {
-		ret.W("\t\t%s %s.%s,", util.StringPad(col.Proper()+":", max), m.FirstLetter(), col.Proper())
+		decl := col.Proper()
+		switch col.Type.Key() {
+		case types.KeyMap, types.KeyValueMap:
+			decl += ".Clone()"
+		}
+		ret.W("\t\t%s %s.%s,", util.StringPad(col.Proper()+":", max), m.FirstLetter(), decl)
 	}
 	ret.W("\t}")
 	ret.W("}")

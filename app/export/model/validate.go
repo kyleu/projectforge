@@ -11,7 +11,7 @@ var goKeywords = []string{
 	"map", "package", "range", "return", "select", "struct", "switch", "type", "var",
 }
 
-var reservedNames = map[string][]string{"audit": []string{"audit", "audit_record"}}
+var reservedNames = map[string][]string{"audit": {"audit", "audit_record"}}
 
 func (m *Model) Validate(mods []string) error {
 	if len(m.PKs()) == 0 {

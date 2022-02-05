@@ -86,21 +86,27 @@ func modelDTOToModel(m *model.Model) *golang.Block {
 	ret.W("\t\treturn nil")
 	ret.W("\t}")
 	refs := make([]string, 0, len(m.Columns))
+	pad := m.Columns.MaxCamelLength() + 1
 	for _, c := range m.Columns {
+		k := util.StringPad(c.Proper()+":", pad)
 		switch c.Type.Key() {
 		case types.KeyAny:
 			ret.W("\tvar %sArg interface{}", c.Camel())
 			ret.W("\t_ = util.FromJSON(d.%s, &%sArg)", c.Proper(), c.Camel())
-			refs = append(refs, fmt.Sprintf("%s: %sArg", c.Proper(), c.Camel()))
+			refs = append(refs, fmt.Sprintf("%s %sArg", k, c.Camel()))
 		case types.KeyMap:
 			ret.W("\t%sArg := util.ValueMap{}", c.Camel())
 			ret.W("\t_ = util.FromJSON(d.%s, &%sArg)", c.Proper(), c.Camel())
-			refs = append(refs, fmt.Sprintf("%s: %sArg", c.Proper(), c.Camel()))
+			refs = append(refs, fmt.Sprintf("%s %sArg", k, c.Camel()))
 		default:
-			refs = append(refs, fmt.Sprintf("%s: d.%s", c.Proper(), c.Proper()))
+			refs = append(refs, fmt.Sprintf("%s d.%s", k, c.Proper()))
 		}
 	}
-	ret.W("\treturn &%s{%s}", m.Proper(), strings.Join(refs, ", "))
+	ret.W("\treturn &%s{", m.Proper())
+	for _, ref := range refs {
+		ret.W("\t\t%s,", ref)
+	}
+	ret.W("\t}")
 	ret.W("}")
 	return ret
 }

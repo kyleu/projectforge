@@ -123,21 +123,19 @@ func (c *Column) ToGoMapParse() string {
 	}
 }
 
-const nilStr = "nil"
-
 func (c *Column) ZeroVal() string {
 	if c.Nullable {
-		return nilStr
+		return types.KeyNil
 	}
 	switch c.Type.Key() {
 	case types.KeyAny:
-		return nilStr
+		return types.KeyNil
 	case types.KeyBool:
 		return "false"
 	case types.KeyInt:
 		return "0"
 	case types.KeyMap:
-		return nilStr
+		return types.KeyNil
 	case types.KeyString:
 		return "\"\""
 	case types.KeyTimestamp:
