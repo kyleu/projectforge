@@ -127,9 +127,9 @@ func serviceUpdate(m *model.Model, g *golang.File) (*golang.Block, error) {
 
 	if m.IsHistory() {
 		ret.W("")
-		ret.W("\t_, err = s.SaveHistory(ctx, tx, curr, model)")
-		ret.W("\tif err != nil {")
-		ret.W("\t\treturn errors.Wrap(err, \"unable to save history\")")
+		ret.W("\t_, hErr := s.SaveHistory(ctx, tx, curr, model)")
+		ret.W("\tif hErr != nil {")
+		ret.W("\t\treturn errors.Wrap(hErr, \"unable to save history\")")
 		ret.W("\t}")
 	}
 
@@ -259,9 +259,9 @@ func serviceAddCreatedUpdated(m *model.Model, ret *golang.Block, g *golang.File,
 		}
 		if m.IsHistory() && loadCurr {
 			ret.W("")
-			ret.W("\t\t_, err = s.SaveHistory(ctx, tx, curr, model)")
-			ret.W("\t\tif err != nil {")
-			ret.W("\t\t\treturn errors.Wrap(err, \"unable to save history\")")
+			ret.W("\t\t_, hErr := s.SaveHistory(ctx, tx, curr, model)")
+			ret.W("\t\tif hErr != nil {")
+			ret.W("\t\t\treturn errors.Wrap(hErr, \"unable to save history\")")
 			ret.W("\t\t}")
 		}
 		ret.W("\t}")
@@ -272,8 +272,8 @@ func serviceAddCreatedUpdated(m *model.Model, ret *golang.Block, g *golang.File,
 func serviceLoadCreated(g *golang.File, ret *golang.Block, m *model.Model, createdCols model.Columns, loadCurr bool) error {
 	if len(createdCols) > 0 {
 		if loadCurr {
-			ret.W("\t\tcurr, err := s.Get(ctx, tx, %s%s)", m.PKs().ToRefs("model."), m.SoftDeleteSuffix())
-			ret.W("\t\tif err == nil && curr != nil {")
+			ret.W("\t\tcurr, e := s.Get(ctx, tx, %s%s)", m.PKs().ToRefs("model."), m.SoftDeleteSuffix())
+			ret.W("\t\tif e == nil && curr != nil {")
 			for _, created := range createdCols {
 				ret.W("\t\t\tmodel.%s = curr.%s", created.Proper(), created.Proper())
 			}
