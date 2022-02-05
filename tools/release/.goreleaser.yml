@@ -4,11 +4,11 @@ project_name: projectforge
 
 archives:
   - format: zip
-    wrap_in_directory: false
+    wrap_in_directory: "false"
     replacements: &replacements
-      darwin: macos
-      386: i386
-      amd64: x86_64
+      darwin: "macos"
+      386: "i386"
+      amd64: "x86_64"
     files:
       - none*
 
@@ -24,7 +24,7 @@ brews:
     homepage: "https://projectforge.dev"
     description: "Project Forge helps you build and maintain feature-rich applications written in the Go programming language."
     license: "Proprietary"
-    skip_upload: false
+    skip_upload: "false"
     url_template: "https://update.projectforge.dev/release/{{ .Tag }}/{{ .ArtifactName }}"
 
 changelog:
@@ -128,58 +128,58 @@ builds:
     goos:
       - darwin
     goarch:
-      - amd64
-      - arm64
+      - "amd64"
+      - "arm64"
     mod_timestamp: "{{ .CommitTimestamp }}"
 
   - id: "linux"
     goos:
-      - linux
+      - "linux"
     goarch:
-      - 386
-      - amd64
-      - arm64
+      - "386"
+      - "amd64"
+      - "arm64"
     mod_timestamp: "{{ .CommitTimestamp }}"
 
   - id: "linux-arm"
     goos:
-      - linux
+      - "linux"
     goarch:
-      - arm
+      - "arm"
     goarm:
-      - 5
-      - 6
-      - 7
+      - "5"
+      - "6"
+      - "7"
     mod_timestamp: "{{ .CommitTimestamp }}"
 
   - id: "linux-mips"
     goos:
-      - linux
+      - "linux"
     goarch:
-      - mips
-      - mipsle
-      - mips64
-      - mips64le
+      - "mips"
+      - "mipsle"
+      - "mips64"
+      - "mips64le"
     gomips:
-      - hardfloat
-      - softfloat
+      - "hardfloat"
+      - "softfloat"
     mod_timestamp: "{{ .CommitTimestamp }}"
 
   - id: "linux-odd"
     goos:
-      - linux
+      - "linux"
     goarch:
-      - ppc64
-      - ppc64le
-      - riscv64
-      - s390x
+      - "ppc64"
+      - "ppc64le"
+      - "riscv64"
+      - "s390x"
     mod_timestamp: "{{ .CommitTimestamp }}"
 
   - id: "windows"
     goos:
-      - windows
+      - "windows"
     goarch:
-      - amd64
+      - "amd64"
     mod_timestamp: "{{ .CommitTimestamp }}"
     hooks:
       # This build uses only one architecture, and is a good place to put one-time use scripts
@@ -194,100 +194,100 @@ builds:
 
   - id: "windows_i386"
     goos:
-      - windows
+      - "windows"
     goarch:
-      - 386
+      - "386"
     mod_timestamp: "{{ .CommitTimestamp }}"
 
   - id: "windows-arm"
     goos:
-      - windows
+      - "windows"
     goarch:
-      - arm
-      - arm64
+      - "arm"
+      - "arm64"
     goarm:
-      - 5
-      - 6
-      - 7
+      - "5"
+      - "6"
+      - "7"
     mod_timestamp: "{{ .CommitTimestamp }}"
 
   - id: "js"
     goos:
-      - js
+      - "js"
     goarch:
-      - wasm
+      - "wasm"
     mod_timestamp: "{{ .CommitTimestamp }}"
 
   - id: "dragonfly"
     goos:
-      - dragonfly
+      - "dragonfly"
     goarch:
-      - amd64
+      - "amd64"
     mod_timestamp: "{{ .CommitTimestamp }}"
 
   - id: "illumos"
     goos:
-      - illumos
+      - "illumos"
     goarch:
-      - amd64
+      - "amd64"
     mod_timestamp: "{{ .CommitTimestamp }}"
 
   - id: "freebsd"
     goos:
-      - freebsd
+      - "freebsd"
     goarch:
-      - 386
-      - amd64
-      - arm
-      - arm64
+      - "386"
+      - "amd64"
+      - "arm"
+      - "arm64"
     goarm:
-      - 5
-      - 6
-      - 7
+      - "5"
+      - "6"
+      - "7"
     mod_timestamp: "{{ .CommitTimestamp }}"
 
   - id: "netbsd"
     goos:
-      - netbsd
+      - "netbsd"
     goarch:
-      - 386
-      - amd64
-      - arm
-      - arm64
+      - "386"
+      - "amd64"
+      - "arm"
+      - "arm64"
     goarm:
-      - 7
+      - "7"
     mod_timestamp: "{{ .CommitTimestamp }}"
 
   - id: "openbsd"
     goos:
-      - openbsd
+      - "openbsd"
     goarch:
-      - 386
-      - amd64
-      - arm
-      - arm64
+      - "386"
+      - "amd64"
+      - "arm"
+      - "arm64"
     goarm:
-      - 5
-      - 6
-      - 7
+      - "5"
+      - "6"
+      - "7"
     mod_timestamp: "{{ .CommitTimestamp }}"
 
   - id: "plan9"
     goos:
-      - plan9
+      - "plan9"
     goarch:
-      - 386
-      - amd64
-      - arm
+      - "386"
+      - "amd64"
+      - "arm"
     goarm:
-      - 5
-      - 6
-      - 7
+      - "5"
+      - "6"
+      - "7"
     mod_timestamp: "{{ .CommitTimestamp }}"
 
   - id: "solaris"
     goos:
-      - solaris
+      - "solaris"
     goarch:
-      - amd64
+      - "amd64"
     mod_timestamp: "{{ .CommitTimestamp }}"

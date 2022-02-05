@@ -17,6 +17,8 @@ type Build struct {
 	Notarize bool `json:"notarize,omitempty"`
 	Signing  bool `json:"signing,omitempty"`
 
+	Simple bool `json:"simple,omitempty"`
+
 	Android bool `json:"android,omitempty"`
 	IOS     bool `json:"iOS,omitempty"`
 	WASM    bool `json:"wasm,omitempty"`
@@ -48,10 +50,9 @@ func (b *Build) HasArm() bool {
 	return b.WindowsARM || b.LinuxARM || b.FreeBSD || b.OpenBSD
 }
 
-// nolint
 func (b *Build) Empty() bool {
 	return !(b.Publish || b.Private || b.Changelog || b.TestsFail || b.Desktop || b.Notarize || b.Signing ||
-		b.Android || b.IOS || b.WASM || b.X86 || b.WindowsARM ||
+		b.Simple || b.Android || b.IOS || b.WASM || b.X86 || b.WindowsARM ||
 		b.LinuxARM || b.LinuxMIPS || b.LinuxOdd || b.Dragonfly || b.Illumos || b.FreeBSD || b.NetBSD ||
 		b.OpenBSD || b.Plan9 || b.Solaris || b.Homebrew || b.NFPMS || b.Snapcraft)
 }
@@ -59,7 +60,7 @@ func (b *Build) Empty() bool {
 func (b *Build) ToMap() map[string]bool {
 	return map[string]bool{
 		"publish": b.Publish, "private": b.Private, "changelog": b.Changelog, "testsFail": b.TestsFail,
-		"desktop": b.Desktop, "notarize": b.Notarize, "signing": b.Signing,
+		"desktop": b.Desktop, "notarize": b.Notarize, "signing": b.Signing, "simple": b.Simple,
 		"android": b.Android, "ios": b.IOS, "wasm": b.WASM, "build-x86": b.X86, "windows-arm": b.WindowsARM,
 		"linux-arm": b.LinuxARM, "linux-mips": b.LinuxMIPS, "linux-odd": b.LinuxOdd,
 		"dragonfly": b.Dragonfly, "illumos": b.Illumos, "freebsd": b.FreeBSD,
@@ -76,7 +77,7 @@ func BuildFromMap(frm util.ValueMap) *Build {
 	return &Build{
 		Publish: x("publish"), Private: x("private"), Changelog: x("changelog"), TestsFail: x("testsFail"),
 		Desktop: x("desktop"), Notarize: x("notarize"), Signing: x("signing"),
-		Android: x("android"), IOS: x("ios"), WASM: x("wasm"), X86: x("x86"), WindowsARM: x("windows-arm"),
+		Simple: x("simple"), Android: x("android"), IOS: x("ios"), WASM: x("wasm"), X86: x("x86"), WindowsARM: x("windows-arm"),
 		LinuxARM: x("linux-arm"), LinuxMIPS: x("linux-mips"), LinuxOdd: x("linux-odd"),
 		Dragonfly: x("dragonfly"), Illumos: x("illumos"), FreeBSD: x("freebsd"),
 		NetBSD: x("netbsd"), OpenBSD: x("openbsd"), Plan9: x("plan9"), Solaris: x("solaris"),
@@ -99,6 +100,8 @@ var AllBuildOptions = []*BuildOption{
 	{Key: "desktop", Title: "Desktop", Description: "Webview-based applications for the three major operating systems"},
 	{Key: "notarize", Title: "Notarize", Description: "Sends build artifacts to Apple for notarization"},
 	{Key: "signing", Title: "Signing", Description: "Signs the checksums using gpg"},
+
+	{Key: "simple", Title: "Simple", Description: "Only build Linux amd64 and a single Docker image"},
 
 	{Key: "android", Title: "Android", Description: "Builds the application as an Android library and webview-based APK"},
 	{Key: "ios", Title: "iOS", Description: "Builds the application as an iOS framework and webview-based app"},

@@ -8,11 +8,11 @@ announce:
 {{{ end }}}
 archives:
   - format: zip
-    wrap_in_directory: false
+    wrap_in_directory: "false"
     replacements: &replacements
-      darwin: macos{{{ if .Build.X86 }}}
-      386: i386{{{ end }}}
-      amd64: x86_64
+      darwin: "macos"{{{ if .Build.X86 }}}
+      386: "i386"{{{ end }}}
+      amd64: "x86_64"
     files:
       - none*
 {{{ if .Build.Homebrew }}}
@@ -28,7 +28,7 @@ brews:
     homepage: "{{{ .Info.Homepage }}}"
     description: "{{{ .Info.Description }}}"
     license: "{{{ .Info.License }}}"
-    skip_upload: false{{{ if .Build.Private }}}
+    skip_upload: "false"{{{ if .Build.Private }}}
     download_strategy: "GitHubPrivateRepositoryReleaseDownloadStrategy"
     custom_require: "lib/private_strategy"{{{ end }}}{{{ if .Info.Homebrew }}}
     url_template: "{{{ .Info.Homebrew }}}/{{ .Tag }}/{{ .ArtifactName }}"{{{ end }}}
@@ -57,14 +57,14 @@ dockers:
       - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:{{ .Major }}.{{ .Minor }}"
       - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:{{ .Major }}.{{ .Minor }}.{{ .Patch }}"
       - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:latest"
-    dockerfile: ./tools/release/Dockerfile
+    dockerfile: ./tools/release/Dockerfile{{{ if .Build.Simple }}}{{{ else }}}
   -
     image_templates:
       - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:{{ .Major }}-debug"
       - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:{{ .Major }}.{{ .Minor }}-debug"
       - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:{{ .Major }}.{{ .Minor }}.{{ .Patch }}-debug"
       - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:latest-debug"
-    dockerfile: ./tools/release/debug.Dockerfile
+    dockerfile: ./tools/release/debug.Dockerfile{{{ end }}}
 
 dist: "build/dist"
 {{{ if .Build.NFPMS }}}
@@ -121,70 +121,78 @@ snapshot:
 source:
   enabled: true
   name_template: "{{ .ProjectName }}_{{ .Version }}_source"
-  format: "zip"
+  format: "zip"{{{ if .Build.Simple }}}{{{ else }}}
 
 universal_binaries:
 - id: "darwin"
   replace: false
-  name_template: '{{ .ProjectName }}'
-
+  name_template: '{{ .ProjectName }}'{{{ end }}}
+{{{ if .Build.Simple }}}
+builds:
+  - id: "linux"
+    goos:
+      - "linux"
+    goarch:
+      - "amd64"
+    mod_timestamp: "{{ .CommitTimestamp }}"
+{{{ else }}}
 builds:
   - id: "darwin"
     goos:
       - darwin
     goarch:
-      - amd64
-      - arm64
+      - "amd64"
+      - "arm64"
     mod_timestamp: "{{ .CommitTimestamp }}"
 
   - id: "linux"
     goos:
-      - linux
+      - "linux"
     goarch:{{{ if .Build.X86 }}}
-      - 386{{{ end }}}
-      - amd64
-      - arm64
+      - "386"{{{ end }}}
+      - "amd64"
+      - "arm64"
     mod_timestamp: "{{ .CommitTimestamp }}"
 {{{ if .Build.LinuxARM }}}
   - id: "linux-arm"
     goos:
-      - linux
+      - "linux"
     goarch:
-      - arm
+      - "arm"
     goarm:
-      - 5
-      - 6
-      - 7
+      - "5"
+      - "6"
+      - "7"
     mod_timestamp: "{{ .CommitTimestamp }}"
 {{{ end }}}{{{ if .Build.LinuxMIPS }}}
   - id: "linux-mips"
     goos:
-      - linux
+      - "linux"
     goarch:
-      - mips
-      - mipsle
-      - mips64
-      - mips64le
+      - "mips"
+      - "mipsle"
+      - "mips64"
+      - "mips64le"
     gomips:
-      - hardfloat
-      - softfloat
+      - "hardfloat"
+      - "softfloat"
     mod_timestamp: "{{ .CommitTimestamp }}"
 {{{ end }}}{{{ if .Build.LinuxOdd }}}
   - id: "linux-odd"
     goos:
-      - linux
+      - "linux"
     goarch:
-      - ppc64
-      - ppc64le
-      - riscv64
-      - s390x
+      - "ppc64"
+      - "ppc64le"
+      - "riscv64"
+      - "s390x"
     mod_timestamp: "{{ .CommitTimestamp }}"
 {{{ end }}}
   - id: "windows"
     goos:
-      - windows
+      - "windows"
     goarch:
-      - amd64
+      - "amd64"
     mod_timestamp: "{{ .CommitTimestamp }}"
     hooks:
       # This build uses only one architecture, and is a good place to put one-time use scripts
@@ -198,101 +206,102 @@ builds:
 {{{ if .Build.X86 }}}
   - id: "windows_i386"
     goos:
-      - windows
+      - "windows"
     goarch:
-      - 386
+      - "386"
     mod_timestamp: "{{ .CommitTimestamp }}"
 {{{ end }}}{{{ if .Build.WindowsARM }}}
   - id: "windows-arm"
     goos:
-      - windows
+      - "windows"
     goarch:
-      - arm
-      - arm64
+      - "arm"
+      - "arm64"
     goarm:
-      - 5
-      - 6
-      - 7
+      - "5"
+      - "6"
+      - "7"
     mod_timestamp: "{{ .CommitTimestamp }}"
 {{{ end }}}{{{ if .Build.WASM }}}
   - id: "js"
     goos:
-      - js
+      - "js"
     goarch:
-      - wasm
+      - "wasm"
     mod_timestamp: "{{ .CommitTimestamp }}"
 {{{ end }}}{{{ if .Build.Dragonfly }}}
   - id: "dragonfly"
     goos:
-      - dragonfly
+      - "dragonfly"
     goarch:
-      - amd64
+      - "amd64"
     mod_timestamp: "{{ .CommitTimestamp }}"
 {{{ end }}}{{{ if .Build.Illumos }}}
   - id: "illumos"
     goos:
-      - illumos
+      - "illumos"
     goarch:
-      - amd64
+      - "amd64"
     mod_timestamp: "{{ .CommitTimestamp }}"
 {{{ end }}}{{{ if .Build.FreeBSD }}}
   - id: "freebsd"
     goos:
-      - freebsd
+      - "freebsd"
     goarch:{{{ if .Build.X86 }}}
-      - 386{{{ end }}}
-      - amd64
-      - arm
-      - arm64
+      - "386"{{{ end }}}
+      - "amd64"
+      - "arm"
+      - "arm64"
     goarm:
-      - 5
-      - 6
-      - 7
+      - "5"
+      - "6"
+      - "7"
     mod_timestamp: "{{ .CommitTimestamp }}"
 {{{ end }}}{{{ if .Build.NetBSD }}}
   - id: "netbsd"
     goos:
-      - netbsd
+      - "netbsd"
     goarch:{{{ if .Build.X86 }}}
-      - 386{{{ end }}}
-      - amd64
-      - arm
-      - arm64
+      - "386"{{{ end }}}
+      - "amd64"
+      - "arm"
+      - "arm64"
     goarm:
-      - 7
+      - "7"
     mod_timestamp: "{{ .CommitTimestamp }}"
 {{{ end }}}{{{ if .Build.OpenBSD }}}
   - id: "openbsd"
     goos:
-      - openbsd
+      - "openbsd"
     goarch:{{{ if .Build.X86 }}}
-      - 386{{{ end }}}
-      - amd64
-      - arm
-      - arm64
+      - "386"{{{ end }}}
+      - "amd64"
+      - "arm"
+      - "arm64"
     goarm:
-      - 5
-      - 6
-      - 7
+      - "5"
+      - "6"
+      - "7"
     mod_timestamp: "{{ .CommitTimestamp }}"
 {{{ end }}}{{{ if .Build.Plan9 }}}
   - id: "plan9"
     goos:
-      - plan9
+      - "plan9"
     goarch:{{{ if .Build.X86 }}}
-      - 386{{{ end }}}
-      - amd64
-      - arm
+      - "386"{{{ end }}}
+      - "amd64"
+      - "arm"
     goarm:
-      - 5
-      - 6
-      - 7
+      - "5"
+      - "6"
+      - "7"
     mod_timestamp: "{{ .CommitTimestamp }}"
 {{{ end }}}{{{ if .Build.Solaris }}}
   - id: "solaris"
     goos:
-      - solaris
+      - "solaris"
     goarch:
-      - amd64
+      - "amd64"
     mod_timestamp: "{{ .CommitTimestamp }}"
+{{{ end -}}}
 {{{ end -}}}
