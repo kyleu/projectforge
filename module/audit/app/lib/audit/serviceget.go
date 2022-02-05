@@ -52,3 +52,7 @@ func (s *Service) Search(ctx context.Context, query string, tx *sqlx.Tx, params 
 	}
 	return ret.ToAudits(), nil
 }
+
+func filters(orig *filter.Params) *filter.Params {
+	return orig.Sanitize("audit", &filter.Ordering{Column: "started"})
+}

@@ -30,6 +30,7 @@ create table if not exists "audit_record" (
   "t" text not null,
   "pk" text not null,
   "changes" jsonb not null,
+  "metadata" jsonb not null,
   "occurred" timestamp not null default now(),
   foreign key ("audit_id") references "audit" ("id"),
   primary key ("id")
@@ -38,6 +39,7 @@ create table if not exists "audit_record" (
 create index if not exists "audit_record__t" on "audit_record" using btree ("t" asc nulls last);
 create index if not exists "audit_record__pk" on "audit_record" using btree ("pk" asc nulls last);
 create index if not exists "audit_record__changes" on "audit_record" using gin ("changes");
+create index if not exists "audit_record__metadata" on "audit_record" using gin ("metadata");
 
 create index if not exists "audit_record__audit_id_idx" on "audit_record" ("audit_id");
 -- {% endfunc %}

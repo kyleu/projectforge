@@ -13,12 +13,10 @@
       <tr>
         {%= components.TableHeaderSimple("audit", "id", "ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("audit", "app", "App", "String text", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("audit", "act", "Act", "String text", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("audit", "act", "Action", "String text", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("audit", "client", "Client", "String text", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("audit", "server", "Server", "String text", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("audit", "user", "User", "String text", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("audit", "metadata", "Metadata", "JSON object", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("audit", "message", "Message", "String text", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("audit", "started", "Started", "Date and time, in almost any format", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("audit", "completed", "Completed", "Date and time, in almost any format", prms, ps.URI, ps) %}
       </tr>
@@ -32,8 +30,6 @@
         <td>{%s model.Client %}</td>
         <td>{%s model.Server %}</td>
         <td>{%s model.User %}</td>
-        <td>{%= components.JSON(model.Metadata) %}</td>
-        <td>{%s model.Message %}</td>
         <td>{%= components.DisplayTimestamp(&model.Started) %}</td>
         <td>{%= components.DisplayTimestamp(&model.Completed) %}</td>
       </tr>

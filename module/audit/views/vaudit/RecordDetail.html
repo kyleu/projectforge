@@ -37,11 +37,15 @@
         </tr>
         <tr>
           <th class="shrink" title="String text">Pk</th>
-          <td>{%s p.Model.Pk %}</td>
+          <td>{%s p.Model.PK %}</td>
         </tr>
         <tr>
           <th class="shrink" title="JSON object">Changes</th>
-          <td>{%= components.JSON(p.Model.Changes) %}</td>
+          <td>{%= components.DisplayDiffs(p.Model.Changes) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="JSON object">Metadata</th>
+          <td>{%= components.JSON(p.Model.Metadata) %}</td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format">Occurred</th>

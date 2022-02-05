@@ -13,22 +13,24 @@ type Record struct {
 	ID       uuid.UUID     `json:"id"`
 	AuditID  uuid.UUID     `json:"auditID"`
 	T        string        `json:"t"`
-	Pk       string        `json:"pk"`
-	Changes  util.ValueMap `json:"changes"`
+	PK       string        `json:"pk"`
+	Changes  util.Diffs    `json:"changes"`
+	Metadata util.ValueMap `json:"metadata,omitempty"`
 	Occurred time.Time     `json:"occurred"`
 }
 
-func NewRecord(id uuid.UUID) *Record {
-	return &Record{ID: id}
+func NewRecord(auditID uuid.UUID, t string, pk string, changes util.Diffs, md util.ValueMap) *Record {
+	return &Record{ID: util.UUID(), AuditID: auditID, T: t, PK: pk, Changes: changes, Metadata: md, Occurred: time.Now()}
 }
 
 func RandomRecord() *Record {
 	return &Record{
 		ID:       util.UUID(),
 		AuditID:  util.UUID(),
-		T:        util.RandomString(12),
-		Pk:       util.RandomString(12),
-		Changes:  util.RandomValueMap(4),
+		T:        util.RandomString(8),
+		PK:       util.RandomString(12),
+		Changes:  util.RandomDiffs(2),
+		Metadata: util.RandomValueMap(4),
 		Occurred: time.Now(),
 	}
 }
@@ -58,11 +60,19 @@ func RecordFromMap(m util.ValueMap, setPK bool) (*Record, error) {
 	if err != nil {
 		return nil, err
 	}
-	ret.Pk, err = m.ParseString("pk", true, true)
+	ret.PK, err = m.ParseString("pk", true, true)
 	if err != nil {
 		return nil, err
 	}
-	ret.Changes, err = m.ParseMap("changes", true, true)
+	if currChanges := m["changes"]; currChanges != nil {
+		changesArg := util.Diffs{}
+		err = util.CycleJSON(currChanges, &changesArg)
+		if err != nil {
+			return nil, err
+		}
+		ret.Changes = changesArg
+	}
+	ret.Metadata, err = m.ParseMap("metadata", true, true)
 	if err != nil {
 		return nil, err
 	}
@@ -83,8 +93,9 @@ func (a *Record) Clone() *Record {
 		ID:       a.ID,
 		AuditID:  a.AuditID,
 		T:        a.T,
-		Pk:       a.Pk,
+		PK:       a.PK,
 		Changes:  a.Changes,
+		Metadata: a.Metadata,
 		Occurred: a.Occurred,
 	}
 }
@@ -108,9 +119,10 @@ func (a *Record) Diff(ax *Record) util.Diffs {
 	if a.T != ax.T {
 		diffs = append(diffs, util.NewDiff("t", a.T, ax.T))
 	}
-	if a.Pk != ax.Pk {
-		diffs = append(diffs, util.NewDiff("pk", a.Pk, ax.Pk))
+	if a.PK != ax.PK {
+		diffs = append(diffs, util.NewDiff("pk", a.PK, ax.PK))
 	}
+	diffs = append(diffs, util.DiffObjects(a.Metadata, ax.Metadata, "metadata")...)
 	diffs = append(diffs, util.DiffObjects(a.Changes, ax.Changes, "changes")...)
 	if a.Occurred != ax.Occurred {
 		diffs = append(diffs, util.NewDiff("occurred", fmt.Sprint(a.Occurred), fmt.Sprint(ax.Occurred)))
@@ -119,7 +131,7 @@ func (a *Record) Diff(ax *Record) util.Diffs {
 }
 
 func (a *Record) ToData() []interface{} {
-	return []interface{}{a.ID, a.AuditID, a.T, a.Pk, a.Changes, a.Occurred}
+	return []interface{}{a.ID, a.AuditID, a.T, a.PK, a.Changes, a.Metadata, a.Occurred}
 }
 
 type Records []*Record

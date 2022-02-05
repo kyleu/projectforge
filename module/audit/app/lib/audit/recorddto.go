@@ -14,18 +14,18 @@ import (
 var (
 	recordTable         = "audit_record"
 	recordTableQuoted   = fmt.Sprintf("%q", recordTable)
-	recordColumns       = []string{"id", "audit_id", "t", "pk", "changes", "occurred"}
+	recordColumns       = []string{"id", "audit_id", "t", "pk", "changes", "metadata", "occurred"}
 	recordColumnsQuoted = util.StringArrayQuoted(recordColumns)
 	recordColumnsString = strings.Join(recordColumnsQuoted, ", ")
-	recordDefaultWC     = "\"id\" = $1"
 )
 
 type recordDTO struct {
 	ID       uuid.UUID       `db:"id"`
 	AuditID  uuid.UUID       `db:"audit_id"`
 	T        string          `db:"t"`
-	Pk       string          `db:"pk"`
+	PK       string          `db:"pk"`
 	Changes  json.RawMessage `db:"changes"`
+	Metadata json.RawMessage `db:"metadata"`
 	Occurred time.Time       `db:"occurred"`
 }
 
@@ -33,9 +33,11 @@ func (d *recordDTO) ToRecord() *Record {
 	if d == nil {
 		return nil
 	}
-	changesArg := util.ValueMap{}
+	changesArg := util.Diffs{}
 	_ = util.FromJSON(d.Changes, &changesArg)
-	return &Record{ID: d.ID, AuditID: d.AuditID, T: d.T, Pk: d.Pk, Changes: changesArg, Occurred: d.Occurred}
+	metadataArg := util.ValueMap{}
+	_ = util.FromJSON(d.Metadata, &metadataArg)
+	return &Record{ID: d.ID, AuditID: d.AuditID, T: d.T, PK: d.PK, Changes: changesArg, Metadata: metadataArg, Occurred: d.Occurred}
 }
 
 type recordDTOs []*recordDTO
