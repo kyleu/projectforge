@@ -137,7 +137,7 @@ func (p *Project) ToTemplateContext(portOffsets map[string]int) *TemplateContext
 	}
 
 	ret := &TemplateContext{
-		Key: p.Key, Name: p.Name, Exec: p.Exec, Version: p.Version,
+		Key: p.Key, Name: p.Name, Exec: p.Executable(), Version: p.Version,
 		Package: p.Package, Args: p.Args, Port: p.Port, PortOffsets: portOffsets,
 		Modules: p.Modules, Info: i, Build: b, Theme: t, Ignore: p.Ignore, IgnoreGrep: ignoreGrep,
 	}

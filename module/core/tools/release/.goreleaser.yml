@@ -32,7 +32,7 @@ brews:
     download_strategy: "GitHubPrivateRepositoryReleaseDownloadStrategy"
     custom_require: "lib/private_strategy"{{{ end }}}{{{ if .Info.Homebrew }}}
     url_template: "{{{ .Info.Homebrew }}}/{{ .Tag }}/{{ .ArtifactName }}"{{{ end }}}
-    install: "bin.install \"program\""
+    install: "bin.install \"{{{ .Exec }}}\""
 {{{ end }}}
 changelog:{{{ if .Build.Changelog }}}
   use: "github"{{{ else }}}

@@ -26,7 +26,7 @@ brews:
     license: "Proprietary"
     skip_upload: "false"
     url_template: "https://update.projectforge.dev/release/{{ .Tag }}/{{ .ArtifactName }}"
-    install: "bin.install \"program\""
+    install: "bin.install \"projectforge\""
 
 changelog:
   skip: true
