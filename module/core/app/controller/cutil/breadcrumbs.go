@@ -12,5 +12,20 @@ func (b Breadcrumbs) Active(i *menu.Item, path []string) (bool, bool) {
 			return false, false
 		}
 	}
-	return true, len(i.Children) == 0 || len(path) == len(b)
+	if len(i.Children) == 0 {
+		return true, true
+	}
+	if len(path) == len(b) {
+		return true, true
+	}
+	if len(path) < len(b) {
+		next := b[len(path)]
+		for _, kid := range i.Children {
+			if kid.Key == next {
+				return true, false
+			}
+		}
+		println(next)
+	}
+	return true, true
 }

@@ -2,7 +2,8 @@ package model
 
 import (
 	"fmt"
-	"sort"
+
+	"github.com/pkg/errors"
 
 	"{{{ .Package }}}/app/lib/schema/field"
 	"{{{ .Package }}}/app/util"
@@ -61,27 +62,13 @@ func (m *Model) PathString() string {
 	return m.Pkg.ToPath(m.Key)
 }
 
-type Models []*Model
-
-func (m Models) Get(pkg util.Pkg, key string) *Model {
-	for _, x := range m {
-		if x.Pkg.Equals(pkg) && x.Key == key {
-			return x
-		}
+func (m *Model) OrderedMap(data []interface{}) (*util.OrderedMap, error) {
+	if len(data) != len(m.Fields) {
+		return nil, errors.Errorf("expected [%d] data elements, found [%d]", len(m.Fields), len(data))
 	}
-	return nil
-}
-
-func (m Models) Sort() {
-	sort.Slice(m, func(l int, r int) bool {
-		return m[l].Key < m[r].Key
-	})
-}
-
-func (m Models) Names() []string {
-	ret := make([]string, 0, len(m))
-	for _, md := range m {
-		ret = append(ret, md.Key)
+	ret := util.NewOrderedMap(false, len(m.Fields))
+	for idx, f := range m.Fields {
+		ret.Append(f.Key, data[idx])
 	}
-	return ret
+	return ret, nil
 }

@@ -103,9 +103,9 @@ func flashAndRedir(success bool, msg string, redir string, rc *fasthttp.RequestC
 	if currStr == "" {
 		currStr = msgFmt
 	} else {
-		curr := util.StringSplitAndTrim(currStr, ",")
+		curr := util.StringSplitAndTrim(currStr, ";")
 		curr = append(curr, msgFmt)
-		currStr = strings.Join(curr, ",")
+		currStr = strings.Join(curr, ";")
 	}
 	ps.Session[cutil.WebFlashKey] = currStr
 	if err := cutil.SaveSession(rc, ps.Session, ps.Logger); err != nil {

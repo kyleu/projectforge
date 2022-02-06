@@ -45,7 +45,7 @@ func loadSession(rc *fasthttp.RequestCtx, logger *zap.SugaredLogger) (util.Value
 		}
 	}
 
-	flashes := util.StringSplitAndTrim(session.GetStringOpt(cutil.WebFlashKey), ",")
+	flashes := util.StringSplitAndTrim(session.GetStringOpt(cutil.WebFlashKey), ";")
 	if len(flashes) > 0 {
 		delete(session, cutil.WebFlashKey)
 		err := cutil.SaveSession(rc, session, logger)

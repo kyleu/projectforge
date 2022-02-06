@@ -97,7 +97,7 @@ func (s *Service) newSpan(ctx context.Context, name string, q string) (time.Time
 	nc, span, _ := telemetry.StartSpan(ctx, "database"+name, s.logger)
 	span.Attributes(
 		&telemetry.Attribute{Key: "db.statement", Value: q},
-		&telemetry.Attribute{Key: "db.system", Value: "postgresql"},
+		&telemetry.Attribute{Key: "db.system", Value: s.db.DriverName()},
 		&telemetry.Attribute{Key: "db.name", Value: s.DatabaseName},
 		&telemetry.Attribute{Key: "db.user", Value: s.Username},
 	)

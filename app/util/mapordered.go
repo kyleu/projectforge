@@ -14,8 +14,8 @@ type OrderedMap struct {
 	Map     map[string]interface{}
 }
 
-func NewOrderedMap(lexical bool, capacity int) OrderedMap {
-	return OrderedMap{Lexical: lexical, Order: make([]string, 0, capacity), Map: make(map[string]interface{}, capacity)}
+func NewOrderedMap(lexical bool, capacity int) *OrderedMap {
+	return &OrderedMap{Lexical: lexical, Order: make([]string, 0, capacity), Map: make(map[string]interface{}, capacity)}
 }
 
 func (o *OrderedMap) Append(k string, v interface{}) {
