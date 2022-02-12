@@ -14,6 +14,7 @@ The following modules were used to build this project:
 - [marketing](./doc/module/marketing.md)
 - [notarize](./doc/module/notarize.md)
 - [oauth](./doc/module/oauth.md)
+- [sandbox](./doc/module/sandbox.md)
 - [search](./doc/module/search.md)
 - [types](./doc/module/types.md)
 - [upgrade](./doc/module/upgrade.md)

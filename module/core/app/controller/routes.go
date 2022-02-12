@@ -32,9 +32,9 @@ func AppRoutes() fasthttp.RequestHandler {
 	// $PF_SECTION_START(routes)$
 	// $PF_SECTION_END(routes)$
 
-	r.GET("/admin", Admin)
+	r.GET("/admin", Admin){{{ if .HasModule "sandbox" }}}
 	r.GET("/admin/sandbox", SandboxList)
-	r.GET("/admin/sandbox/{key}", SandboxRun){{{ if.HasModule "audit" }}}
+	r.GET("/admin/sandbox/{key}", SandboxRun){{{ end }}}{{{ if.HasModule "audit" }}}
 	r.GET("/admin/audit", AuditList)
 	r.GET("/admin/audit/random", AuditCreateFormRandom)
 	r.GET("/admin/audit/new", AuditCreateForm)

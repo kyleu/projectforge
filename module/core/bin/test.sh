@@ -14,4 +14,5 @@ if [ -f "./bin/test-setup.sh" ]; then
 	./bin/test-setup.sh
 fi
 
-go test -v ./app/... | grep -v ^\?
+# go test -v ./app/... | grep -v ^\?
+gotestsum ./app/...

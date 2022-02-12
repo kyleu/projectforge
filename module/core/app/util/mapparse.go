@@ -142,6 +142,16 @@ func (m ValueMap) ParseMap(path string, allowMissing bool, allowEmpty bool) (Val
 			return nil, decorateError(m, path, "time", errors.Wrap(err, "invalid JSON"))
 		}
 		return ret, err
+	case []byte:
+		if len(t) == 0 {
+			return nil, nil
+		}
+		ret := ValueMap{}
+		err := FromJSON([]byte(t), &ret)
+		if err != nil {
+			return nil, decorateError(m, path, "time", errors.Wrap(err, "invalid JSON"))
+		}
+		return ret, err
 	case nil:
 		if !allowEmpty {
 			return nil, errors.Errorf("could not find time for path [%s]", path)

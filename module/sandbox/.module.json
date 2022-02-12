@@ -1,0 +1,10 @@
+{
+  "name": "sandbox",
+  "icon": "futbol",
+  "description": "Useful playgrounds for testing custom functions",
+  "authorName": "Kyle U",
+  "authorEmail": "kyle@kyleu.com",
+  "license": "CC0",
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/sandbox",
+  "priority": 20
+}

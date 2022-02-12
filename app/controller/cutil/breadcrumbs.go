@@ -26,7 +26,6 @@ func (b Breadcrumbs) Active(i *menu.Item, path []string) (bool, bool) {
 				return true, false
 			}
 		}
-		println(next)
 	}
 	return true, true
 }

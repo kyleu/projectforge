@@ -77,7 +77,7 @@ func HashFNV32(s string) uint32 {
 	return h.Sum32()
 }
 
-// Returns a Base64-encoded string representing the SHA-256 hash of the argument.
+// HashSHA256 returns a Base64-encoded string representing the SHA-256 hash of the argument.
 func HashSHA256(s string) string {
 	h := sha256.New()
 	ret := h.Sum([]byte(s))
@@ -89,7 +89,9 @@ func getKey(logger *zap.SugaredLogger) []byte {
 		env := strings.ReplaceAll(AppKey, "-", "_") + "_encryption_key"
 		_encryptKey = os.Getenv(env)
 		if _encryptKey == "" {
-			logger.Warnf("using default encryption key\nset environment variable [%s] to save sessions between restarts", env)
+			if logger != nil {
+				logger.Warnf("using default encryption key\nset environment variable [%s] to save sessions between restarts", env)
+			}
 			_encryptKey = AppKey + "_secret"
 		}
 		for i := len(_encryptKey); i < 16; i++ {

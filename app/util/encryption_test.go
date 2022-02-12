@@ -4,7 +4,6 @@ package util_test
 import (
 	"testing"
 
-	"github.com/kyleu/projectforge/app/lib/log"
 	"github.com/kyleu/projectforge/app/util"
 )
 
@@ -20,15 +19,13 @@ var hashTests = []struct {
 func TestEncryptDecrypt(t *testing.T) {
 	t.Parallel()
 
-	logger, _ := log.InitLogging(true)
-
 	for _, tt := range hashTests {
-		ciphertext, err := util.EncryptMessage(nil, tt.plaintext, logger)
+		ciphertext, err := util.EncryptMessage(nil, tt.plaintext, nil)
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		plaintext, err := util.DecryptMessage(nil, ciphertext, logger)
+		plaintext, err := util.DecryptMessage(nil, ciphertext, nil)
 		if err != nil {
 			t.Fatal(err)
 		}
