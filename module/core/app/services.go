@@ -4,9 +4,9 @@ package app
 import (
 	"context"{{{ if .HasModule "migration" }}}
 
-	"github.com/pkg/errors"{{{ end }}}
+	"github.com/pkg/errors"
 
-	"{{{ .Package }}}/app/lib/database/migrate"{{{ if .HasModule "migration" }}}
+	"{{{ .Package }}}/app/lib/database/migrate"
 	"{{{ .Package }}}/queries/migrations"{{{ end }}}
 )
 
