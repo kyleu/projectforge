@@ -131,6 +131,10 @@
   border: 3px solid var(--color-foreground-muted);
 }
 
+.small-text {
+  font-size: 80%;
+}
+
 .border-left {
   border-left: var(--border);
 }

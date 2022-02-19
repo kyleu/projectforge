@@ -23,8 +23,13 @@
   height: 18px;
 }
 
+.mockup .mock-nav .icon {
+  margin-left: 2px;
+}
+
 .mockup .mock-muted {
-  margin: 0 6px;
+  margin: 2px 6px;
+  padding: 2px;
 }
 
 .mockup .mock-menu {
@@ -42,6 +47,11 @@
 }
 .mockup .mock-main ul {
   margin-top: var(--padding-small);
+}
+
+.mockup .mock-list {
+  margin-left: 2px;
+  padding-left: 4px;
 }
 
 .icon-container {

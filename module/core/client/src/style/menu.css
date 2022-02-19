@@ -34,6 +34,11 @@
   user-select: none;
 }
 
+.menu-container .item {
+  height: 28px;
+  overflow: hidden;
+}
+
 .menu-container .final {
   color: var(--color-menu-selected-foreground);
   background-color: var(--color-menu-selected-background);

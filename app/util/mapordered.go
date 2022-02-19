@@ -26,6 +26,11 @@ func (o *OrderedMap) Append(k string, v interface{}) {
 	}
 }
 
+func (o *OrderedMap) Get(k string) (interface{}, bool) {
+	ret, ok := o.Map[k]
+	return ret, ok
+}
+
 func (o OrderedMap) MarshalYAML() (interface{}, error) {
 	return o.Map, nil
 }

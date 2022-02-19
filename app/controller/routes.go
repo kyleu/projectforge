@@ -71,6 +71,10 @@ func AppRoutes() fasthttp.RequestHandler {
 
 	r.GET("/test", TestList)
 	r.GET("/test/{key}", TestRun)
+
+	r.GET("/theme/palette/{palette}", ThemePalette)
+	r.GET("/theme/preview/{color}", ThemePreview)
+	r.GET("/theme/preview/{palette}/{key}", ThemePreview)
 	// $PF_SECTION_END(routes)$
 
 	r.GET("/admin", Admin)

@@ -21,7 +21,7 @@ func contentWithHeader(t Type, c string, logger *zap.SugaredLogger) string {
 		return "rem " + HeaderContent + "\n" + c
 	case TypeCodeowners.Key, TypeDocker.Key, TypeYAML.Key, TypeProperties.Key, TypeMakefile.Key, TypeHCL.Key:
 		return "# " + HeaderContent + "\n" + c
-	case TypeConf.Key, TypeIcons.Key, TypeIgnore.Key, TypeGitIgnore.Key, TypePList.Key, TypeJSON.Key, TypeSVG.Key:
+	case TypeConf.Key, TypeIcons.Key, TypeIgnore.Key, TypeGitIgnore.Key, TypePList.Key, TypeProtobuf.Key, TypeJSON.Key, TypeSVG.Key:
 		return c
 	case TypeCSS.Key:
 		return "/* " + HeaderContent + " */\n" + c

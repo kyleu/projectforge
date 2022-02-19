@@ -110,12 +110,9 @@ func OpenPostgresDatabase(ctx context.Context, key string, params *PostgresParam
 	db.SetMaxOpenConns(params.MaxConns)
 	db.SetMaxIdleConns(0)
 
-	var log *zap.SugaredLogger
-	if params.Debug {
-		log = logger.With("svc", "database", "db", key)
-	}
+	logger = logger.With("svc", "database", "db", key)
 
-	return NewService(typePostgres, key, params.Database, params.Schema, params.Username, db, log)
+	return NewService(typePostgres, key, params.Database, params.Schema, params.Username, params.Debug, db, logger)
 }
 
 func OpenPostgresDatabaseSSL(ctx context.Context, key string, ep *PostgresParams, sp *PostgresServiceParams, logger *zap.SugaredLogger) (*Service, error) {
@@ -150,5 +147,5 @@ func OpenPostgresDatabaseSSL(ctx context.Context, key string, ep *PostgresParams
 		log = logger.With("svc", "database", "db", key)
 	}
 
-	return NewService(typePostgres, key, dbname, ep.Schema, sp.Username, db, log)
+	return NewService(typePostgres, key, dbname, ep.Schema, sp.Username, ep.Debug, db, log)
 }

@@ -1,0 +1,35 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "github.com/kyleu/projectforge/app"
+  "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/app/lib/theme"
+  "github.com/kyleu/projectforge/app/util"
+  "github.com/kyleu/projectforge/views/layout"
+) %}
+
+{% code type Add struct {
+  layout.Basic
+  Palette string
+  Themes theme.Themes
+} %}
+
+{% func (p *Add) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>Add Themes</h3>
+    <form action="/theme" method="post">
+      <input type="hidden" name="palette" value="{%s p.Palette %}" />
+      <table class="mt">
+        <tbody>
+          {%- for _, t := range p.Themes -%}
+          <tr>
+            <th class="shrink"><input type="checkbox" id="{%s t.Key %}" name="{%s t.Key %}" value="true" /></th>
+            <th><label for="{%s t.Key %}">{%s t.Key %}</label> <a href="/theme/preview/{%s p.Palette %}/{%s t.Key %}">Preview</a></th>
+            <th class="shrink" style="background-color: #ffffff; padding: 12px 36px;">{%= MockupColors(util.AppName, "", t.Light, true, 5, ps) %}</th>
+            <th class="shrink" style="background-color: #121212; padding: 12px 36px;">{%= MockupColors(util.AppName, "", t.Dark, true, 5, ps) %}</th>
+          </tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+    </form>
+  </div>
+{% endfunc %}

@@ -35,7 +35,10 @@ brews:
     install: "bin.install \"{{{ .Exec }}}\""
 {{{ end }}}
 changelog:{{{ if .Build.Changelog }}}
-  use: "github"{{{ else }}}
+  use: "github"
+  filters:
+    exclude:
+      - "^V2:"{{{ else }}}
   skip: true{{{ end }}}
 
 checksum:

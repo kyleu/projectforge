@@ -3,6 +3,7 @@ package controller
 
 import (
 	"fmt"
+	"net/url"
 	"strconv"
 	"strings"
 	"time"
@@ -25,6 +26,10 @@ func RCRequiredString(rc *fasthttp.RequestCtx, key string, allowEmpty bool) (str
 	v, ok := rc.UserValue(key).(string)
 	if !ok || ((!allowEmpty) && v == "") {
 		return v, errors.Errorf("must provide [%s] in path", key)
+	}
+	v, err := url.QueryUnescape(v)
+	if err != nil {
+		return "", err
 	}
 	return v, nil
 }

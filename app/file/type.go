@@ -34,6 +34,7 @@ var (
 	TypeMarkdown     = Type{Key: "markdown", Suffixes: []string{".md", ".markdown"}, Title: "Markdown document"}
 	TypePList        = Type{Key: "plist", Suffixes: []string{".plist"}, Title: "Apple configuration plist"}
 	TypeProperties   = Type{Key: "properties", Suffixes: []string{".properties"}, Title: "Java properties file"}
+	TypeProtobuf     = Type{Key: "protobuf", Suffixes: []string{".proto"}, Title: "Protobuf definition"}
 	TypeShell        = Type{Key: "shell", Suffixes: []string{".sh"}, Title: "Shell script"}
 	TypeSQL          = Type{Key: "sql", Suffixes: []string{".sql"}, Title: "SQL query file"}
 	TypeSVG          = Type{Key: "svg", Suffixes: []string{".svg"}, Title: "Simple Vector Graphics file"}
@@ -47,7 +48,7 @@ var AllTypes = []Type{
 	TypeBatch, TypeCodeowners, TypeConf, TypeCSS, TypeDocker, TypeEntitlements, TypeGitIgnore,
 	TypeGo, TypeGoMod, TypeGradle, TypeHCL, TypeHTML, TypeIcons, TypeIgnore,
 	TypeJavaScript, TypeJSON, TypeKotlin, TypeMakefile, TypeMarkdown, TypePList, TypeProperties,
-	TypeShell, TypeSQL, TypeSVG, TypeSwift, TypeTypeScript, TypeXML, TypeYAML,
+	TypeProtobuf, TypeShell, TypeSQL, TypeSVG, TypeSwift, TypeTypeScript, TypeXML, TypeYAML,
 }
 
 func TypeFromString(s string) Type {

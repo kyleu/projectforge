@@ -9,7 +9,7 @@ export function setSiblingToNull(el: HTMLElement) {
 }
 
 export function editorInit() {
-  (window as any).admini.setSiblingToNull = setSiblingToNull;
+  (window as any).{{{ .CleanKey }}}.setSiblingToNull = setSiblingToNull;
 
   let editorCache: { [key: string]: string; } = {};
   let selectedCache: { [key: string]: HTMLInputElement; } = {};

@@ -7,7 +7,7 @@ import (
 	"github.com/kyleu/projectforge/app/util"
 )
 
-func requestCtxToMap(rc *fasthttp.RequestCtx, data interface{}) map[string]interface{} {
+func RequestCtxToMap(rc *fasthttp.RequestCtx, data interface{}) map[string]interface{} {
 	reqHeaders := make(map[string]string, rc.Request.Header.Len())
 	rc.Request.Header.VisitAll(func(k, v []byte) {
 		reqHeaders[string(k)] = string(v)

@@ -26,7 +26,7 @@ func WriteCORS(rc *fasthttp.RequestCtx) {
 }
 
 func RespondDebug(rc *fasthttp.RequestCtx, filename string, body interface{}) (string, error) {
-	return RespondJSON(rc, filename, requestCtxToMap(rc, body))
+	return RespondJSON(rc, filename, RequestCtxToMap(rc, body))
 }
 
 func RespondJSON(rc *fasthttp.RequestCtx, filename string, body interface{}) (string, error) {

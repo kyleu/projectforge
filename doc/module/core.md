@@ -16,7 +16,6 @@ Licensed under [CC0](https://creativecommons.org/share-your-work/public-domain/c
 - `lib/filter` is used by the UI for sorting and filtering
 - `lib/log` contains custom zap loggers and appenders
 - `lib/menu` is used by the UI to draw the leftnav and breadcrumbs
-- `lib/sandbox` is for one-off ad-hoc functions
 - `lib/telemetry` allows tracing and metrics, used everywhere
 - `lib/theme` contains UI themes for controlling the UI look and feel
 - `lib/user` defines user, accounts, and permissions

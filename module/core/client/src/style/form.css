@@ -18,5 +18,5 @@ input:not([type]),
 textarea,
 select {
   padding: 6px 12px;
-  width: 100%;
+  /* width: 100%; */
 }

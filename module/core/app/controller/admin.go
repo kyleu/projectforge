@@ -39,7 +39,7 @@ func Admin(rc *fasthttp.RequestCtx) {
 			return render(rc, as, &vadmin.Modules{Mods: mods.Deps}, ps, "admin", "Modules")
 		case "request":
 			ps.Title = "Request Debug"
-			ps.Data = rc
+			ps.Data = cutil.RequestCtxToMap(rc, nil)
 			return render(rc, as, &vadmin.Request{RC: rc}, ps, "admin", "Request")
 		case "session":
 			ps.Title = "Session Debug"

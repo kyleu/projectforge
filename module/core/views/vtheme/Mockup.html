@@ -9,9 +9,9 @@
 ) %}
 
 {% func MockupTheme(t *theme.Theme, pointer bool, indent int, ps *cutil.PageState) %}{% stripspace %}
+  <div class="title small-text">{%s t.Key %}</div>
   {%= MockupColors(util.AppName, "light", t.Light, pointer, indent, ps) %}
   {%= MockupColors(util.AppName, "dark", t.Dark, pointer, indent, ps) %}
-  <div class="title">{%s t.Key %}</div>
 {% endstripspace %}{% endfunc %}
 
 {% func MockupColors(navTitle string, mode string, c *theme.Colors, pointer bool, indent int, ps *cutil.PageState) %}{% stripspace %}
@@ -45,9 +45,9 @@
       <div class="mock-link" style="{%s menuLinkStyle %}">D</div>
     </div>
     <div class="mock-main" style="{%s mainStyle %}">
-      <div>Welcome!</div>
+      <div class="mock-muted" style="{%s mutedStyle %}">Welcome!</div>
       <div>
-        <div class="mock-muted" style="{%s mutedStyle %}">Here's some links:</div>
+        <div class="mock-list">Here's some links:</div>
         <ul>
           <li class="mock-link" style="{%s linkStyle %}">New</li>
           <li class="mock-link" style="{%s linkStyle %}">Also New</li>
@@ -55,6 +55,5 @@
         </ul>
       </div>
     </div>
-  {%= vutil.Indent(true, indent) %}
   </div>
 {% endstripspace %}{% endfunc %}
