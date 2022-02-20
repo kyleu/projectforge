@@ -2,12 +2,20 @@
   "strings"
   "github.com/kyleu/projectforge/app/controller/cutil"
   "github.com/kyleu/projectforge/app/module"
+  "github.com/kyleu/projectforge/app/util"
   "github.com/kyleu/projectforge/views/components"
+  "github.com/kyleu/projectforge/views/vsearch"
 ) %}
 
-{% func Summary(mod *module.Module, ps *cutil.PageState, path ...string) %}
+{% func Summary(mod *module.Module, args util.ValueMap, ps *cutil.PageState, path ...string) %}
   <div class="card">
-    <div class="right"><a href="#modal-module"><button type="button">JSON</button></a></div>
+    {%- code
+      q := ""
+      if args != nil {
+        q = args.GetStringOpt(`q`)
+      }
+    -%}
+    {%= vsearch.Form("/m/" + mod.Key + "/search", q, ps) %}
     <h3>{%= components.SVGRefIcon(mod.IconSafe(), ps) %} {%s mod.Title() %}</h3>
     <div class="mt">
       {%- if len(path) == 0 -%}
@@ -19,6 +27,7 @@
       <a href="/m/{%s mod.Key %}/fs/{%s strings.Join(ctx, `/`) %}"><button>{%s pth %}}</button></a>
       {%- endfor -%}
       {%- endif -%}
+      <a href="#modal-module"><button type="button">JSON</button></a>
     </div>
   </div>
   {%= components.JSONModal("module", "Module JSON", mod, 1) %}

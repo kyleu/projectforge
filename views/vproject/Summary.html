@@ -3,11 +3,20 @@
   "github.com/kyleu/projectforge/app/controller/cutil"
   "github.com/kyleu/projectforge/app/git"
   "github.com/kyleu/projectforge/app/project"
+  "github.com/kyleu/projectforge/app/util"
   "github.com/kyleu/projectforge/views/components"
+  "github.com/kyleu/projectforge/views/vsearch"
 ) %}
 
-{% func Summary(prj *project.Project, gitResult *git.Result, ps *cutil.PageState, path ...string) %}
+{% func Summary(prj *project.Project, gitResult *git.Result, args util.ValueMap, ps *cutil.PageState, path ...string) %}
   <div class="card">
+    {%- code
+      q := ""
+      if args != nil {
+        q = args.GetStringOpt(`q`)
+      }
+    -%}
+    {%= vsearch.Form("/p/" + prj.Key + "/search", q, ps) %}
     <h3><a href="/p/{%s prj.Key %}">{%= components.SVGRefIcon(prj.IconSafe(), ps) %} {%s prj.Title() %}</a></h3>
     <div class="mt">
       {%- for _, t := range action.ProjectTypes -%}

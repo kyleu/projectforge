@@ -17,7 +17,7 @@
 
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
   {%- code prj := p.Project -%}
-  {%= Summary(prj, p.GitResult, ps) %}
+  {%= Summary(prj, p.GitResult, nil, ps) %}
 
   <div class="tabs padded">
     <input name="type" type="radio" id="tab-settings" class="input" checked="checked" />

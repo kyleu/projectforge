@@ -1,0 +1,13 @@
+{% import (
+  "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/views/components"
+) %}
+
+{% func Form(act string, q string, ps *cutil.PageState) %}
+  <form action="{%s act %}" method="get">
+    <div class="right">
+      <button class="right" type="submit">{%= components.SVGRef("search", 22, 22, `icon`, ps) %}</button>
+      <input class="right" type="text" name="q" style="border-right: 0;" value="{%s q %}" placeholder="Search" />
+    </div>
+  </form>
+{% endfunc %}

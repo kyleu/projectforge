@@ -1,48 +1,49 @@
 <!-- Content managed by Project Forge, see [projectforge.md] for details. -->
 {% import (
+  "strings"
   "time"
 
   "github.com/kyleu/projectforge/app/util"
   "github.com/kyleu/projectforge/views/vutil"
 ) %}
 
-{% func FormInput(key string, id string, value string) %}{% stripspace %}
+{% func FormInput(key string, id string, value string, placeholder ...string) %}{% stripspace %}
   {% if id == "" %}
-    <input name="{%s key %}" value="{%s value %}" />
+    <input name="{%s key %}" value="{%s value %}"{%= phFor(placeholder) %} />
   {% else %}
-    <input id="{%s id %}" name="{%s key %}" value="{%s value %}" />
+    <input id="{%s id %}" name="{%s key %}" value="{%s value %}"{%= phFor(placeholder) %} />
   {% endif %}
 {% endstripspace %}{% endfunc %}
 
-{% func FormInputPassword(key string, id string, value string) %}{% stripspace %}
+{% func FormInputPassword(key string, id string, value string, placeholder ...string) %}{% stripspace %}
   {% if id == "" %}
-    <input name="{%s key %}" type="password" value="{%s value %}" />
+    <input name="{%s key %}" type="password" value="{%s value %}"{%= phFor(placeholder) %} />
   {% else %}
-    <input id="{%s id %}" name="{%s key %}" type="password" value="{%s value %}" />
+    <input id="{%s id %}" name="{%s key %}" type="password" value="{%s value %}"{%= phFor(placeholder) %} />
   {% endif %}
 {% endstripspace %}{% endfunc %}
 
-{% func FormInputNumber(key string, id string, value interface{}) %}{% stripspace %}
+{% func FormInputNumber(key string, id string, value interface{}, placeholder ...string) %}{% stripspace %}
   {% if id == "" %}
-    <input name="{%s key %}" type="number" value="{%v value %}" />
+    <input name="{%s key %}" type="number" value="{%v value %}"{%= phFor(placeholder) %} />
   {% else %}
-    <input id="{%s id %}" name="{%s key %}" type="number" value="{%v value %}" />
+    <input id="{%s id %}" name="{%s key %}" type="number" value="{%v value %}"{%= phFor(placeholder) %} />
   {% endif %}
 {% endstripspace %}{% endfunc %}
 
-{% func FormInputTimestamp(key string, id string, value *time.Time) %}{% stripspace %}
+{% func FormInputTimestamp(key string, id string, value *time.Time, placeholder ...string) %}{% stripspace %}
   {% if id == "" %}
-    <input name="{%s key %}" type="text" value="{%s util.TimeToJS(value) %}" />
+    <input name="{%s key %}" type="text" value="{%s util.TimeToJS(value) %}"{%= phFor(placeholder) %} />
   {% else %}
-    <input id="{%s id %}" name="{%s key %}" type="text" value="{%s util.TimeToFull(value) %}" />
+    <input id="{%s id %}" name="{%s key %}" type="text" value="{%s util.TimeToFull(value) %}"{%= phFor(placeholder) %} />
   {% endif %}
 {% endstripspace %}{% endfunc %}
 
-{% func FormTextarea(key string, id string, rows int, value string) %}{% stripspace %}
+{% func FormTextarea(key string, id string, rows int, value string, placeholder ...string) %}{% stripspace %}
   {% if id == "" %}
-    <textarea rows="{%d rows %}" name="{%s key %}">{%s value %}</textarea>
+    <textarea rows="{%d rows %}" name="{%s key %}"{%= phFor(placeholder) %}>{%s value %}</textarea>
   {% else %}
-    <textarea rows="{%d rows %}" id="{%s id %}" name="{%s key %}">{%s value %}</textarea>
+    <textarea rows="{%d rows %}" id="{%s id %}" name="{%s key %}"{%= phFor(placeholder) %}>{%s value %}</textarea>
   {% endif %}
 {% endstripspace %}{% endfunc %}
 
@@ -76,9 +77,9 @@
     %}
     {%= vutil.Indent(true, indent) %}
     {% if opt == value %}
-      <label><input type="radio" name="{%s key %}" value="{%s opt %}" checked="checked" />{% space %}{%s title %}</label>
+      <label class="radio-label"><input type="radio" name="{%s key %}" value="{%s opt %}" checked="checked" />{% space %}{%s title %}</label>
     {% else %}
-      <label><input type="radio" name="{%s key %}" value="{%s opt %}" />{% space %}{%s title %}</label>
+      <label class="radio-label"><input type="radio" name="{%s key %}" value="{%s opt %}" />{% space %}{%s title %}</label>
     {% endif %}
   {% endfor %}
 {% endstripspace %}{% endfunc %}
@@ -101,4 +102,8 @@
       <br />
     {% endif %}
   {% endfor %}
+{% endstripspace %}{% endfunc %}
+
+{% func phFor(phs []string) %}{% stripspace %}
+{% if len(phs) > 0 %}{% space %}placeholder="{%s strings.Join(phs, "; ") %}"{% endif %}
 {% endstripspace %}{% endfunc %}

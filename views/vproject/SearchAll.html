@@ -1,0 +1,49 @@
+{% import (
+  "github.com/kyleu/projectforge/app"
+  "github.com/kyleu/projectforge/app/action"
+  "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/app/lib/search"
+  "github.com/kyleu/projectforge/app/lib/search/result"
+  "github.com/kyleu/projectforge/app/project"
+  "github.com/kyleu/projectforge/views/components"
+  "github.com/kyleu/projectforge/views/layout"
+  "github.com/kyleu/projectforge/views/vsearch"
+) %}
+
+{% code type SearchAll struct {
+  layout.Basic
+  Params *search.Params
+  Projects project.Projects
+  Results map[string]result.Results
+} %}
+
+{% func (p *SearchAll) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    {%= vsearch.Form("/p/search", p.Params.Q, ps) %}
+    <h3>All Projects: Search</h3>
+    <div class="mt">
+      {%- for _, t := range action.ProjectTypes -%}
+      <a href="/run/{%s t.Key %}" title="{%s t.Description %}"><button>{%s t.Title %}</button></a>
+      {%- endfor -%}
+      <a href="/git" title="Git dashboard for all projects"><button>Git</button></a>
+    </div>
+    <div class="mt">
+      <ul class="accordion">
+        {%- for _, prj := range p.Projects -%}
+        {%- code res := p.Results[prj.Key] -%}
+        <li>
+          <input id="accordion-{%s prj.Key %}" type="checkbox" hidden />
+          <label for="accordion-{%s prj.Key %}">
+            <div class="right">{%d len(res) %} matches</div>
+            {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef(prj.IconSafe(), 16, 16, "icon", ps) %} {%s prj.Title() %}
+          </label>
+          <div class="bd">
+            {%= Summary(prj, nil, nil, ps) %}
+            {%= searchResults(prj, p.Params, res, nil, as, ps) %}
+          </div>
+        </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+{% endfunc %}

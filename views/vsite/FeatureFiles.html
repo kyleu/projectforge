@@ -18,7 +18,6 @@
     mod := p.Module
     fs := as.Services.Modules.GetFilesystem(mod.Key)
     u := "/features/" + mod.Key + "/files"
-    println(filepath.Join(p.Path...))
   -%}
 
   {%- if fs.IsDir(filepath.Join(p.Path...)) -%}

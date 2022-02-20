@@ -3,6 +3,7 @@
   "github.com/kyleu/projectforge/app"
   "github.com/kyleu/projectforge/app/controller/cutil"
   "github.com/kyleu/projectforge/app/project"
+  "github.com/kyleu/projectforge/views/components"
 ) %}
 
 {% func DetailSettings(prj *project.Project, as *app.State, ps *cutil.PageState) %}
@@ -40,6 +41,11 @@
         <th>Path</th>
         <td>{%s prj.Path %}</td>
       </tr>
+      <tr>
+        <th>JSON</th>
+        <td><a href="#modal-{%s prj.Key %}"><button type="button">JSON</button></a></td>
+      </tr>
     </tbody>
   </table>
+  {%= components.JSONModal(prj.Key, "Project JSON", prj, 1) %}
 {% endfunc %}

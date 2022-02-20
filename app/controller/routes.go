@@ -36,14 +36,15 @@ func AppRoutes() fasthttp.RequestHandler {
 	r.GET("/doctor/{key}", DoctorRun)
 
 	r.GET("/p", ProjectList)
+	r.GET("/p/search", ProjectSearchAll)
 	r.GET("/p/new", ProjectForm)
 	r.POST("/p/new", ProjectCreate)
 	r.GET("/p/{key}", ProjectDetail)
 	r.GET("/p/{key}/edit", ProjectEdit)
 	r.POST("/p/{key}/edit", ProjectSave)
-
 	r.GET("/p/{key}/fs", ProjectFileRoot)
 	r.GET("/p/{key}/fs/{path:*}", ProjectFile)
+	r.GET("/p/{key}/search", ProjectSearch)
 
 	r.GET("/svg/{key}", SVGList)
 	r.GET("/svg/{key}/x/add", SVGAdd)
@@ -68,6 +69,7 @@ func AppRoutes() fasthttp.RequestHandler {
 	r.GET("/m/{key}", ModuleDetail)
 	r.GET("/m/{key}/fs", ModuleFileRoot)
 	r.GET("/m/{key}/fs/{path:*}", ModuleFile)
+	r.GET("/m/{key}/search", ModuleSearch)
 
 	r.GET("/test", TestList)
 	r.GET("/test/{key}", TestRun)

@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-var defaultIgnore = []string{".DS_Store$", "^.git/", "^.idea/", "^build/", ".html.go$", ".sql.go$"}
+var defaultIgnore = []string{".DS_Store$", "^.git/", "^.idea/", "^build/", "^client/node_modules", ".html.go$", ".sql.go$"}
 
 func (f *FileSystem) ListFiles(path string, ign []string) []os.DirEntry {
 	ignore := buildIgnore(ign)
@@ -87,6 +87,19 @@ func (f *FileSystem) ListFilesRecursive(path string, ign []string) ([]string, er
 	}
 	sort.Strings(ret)
 	return ret, nil
+}
+
+func (f *FileSystem) Walk(path string, ign []string, fn func(fp string, info os.FileInfo, err error) error) error {
+	ignore := buildIgnore(ign)
+	p := f.getPath(path)
+	err := filepath.Walk(p, func(fp string, info os.FileInfo, err error) error {
+		m := strings.TrimPrefix(fp, p+"/")
+		if checkIgnore(ignore, m) {
+			return nil
+		}
+		return fn(fp, info, err)
+	})
+	return err
 }
 
 func buildIgnore(ign []string) []string {

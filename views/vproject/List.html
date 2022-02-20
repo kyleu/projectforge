@@ -3,6 +3,7 @@
   "github.com/kyleu/projectforge/app/controller/cutil"
   "github.com/kyleu/projectforge/app/project"
   "github.com/kyleu/projectforge/views/layout"
+  "github.com/kyleu/projectforge/views/vsearch"
 ) %}
 
 {% code type List struct {
@@ -12,6 +13,7 @@
 
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
+    {%= vsearch.Form("/p/search", "", ps) %}
     <h3>Actions for all Projects</h3>
     <p><a href="/run/preview"><button>Preview All</button></a></p>
   </div>

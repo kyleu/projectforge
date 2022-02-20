@@ -12,7 +12,7 @@
     {%= vutil.Indent(true, indent + 1) %}
     <th class="shrink"><label for="input-{%s key %}"{%= titleFor(help) %}>{%s title %}</label></th>
     {%= vutil.Indent(true, indent + 1) %}
-    <td>{%= FormInput(key, "input-" + key, value) %}</td>
+    <td>{%= FormInput(key, "input-" + key, value, help...) %}</td>
   {%= vutil.Indent(true, indent) %}
   </tr>
 {% endstripspace %}{% endfunc %}
@@ -22,7 +22,7 @@
     {%= vutil.Indent(true, indent + 1) %}
     <th class="shrink"><label for="input-{%s key %}"{%= titleFor(help) %}>{%s title %}</label></th>
     {%= vutil.Indent(true, indent + 1) %}
-    <td>{%= FormInputPassword(key, "input-" + key, value) %}</td>
+    <td>{%= FormInputPassword(key, "input-" + key, value, help...) %}</td>
   {%= vutil.Indent(true, indent) %}
   </tr>
 {% endstripspace %}{% endfunc %}
@@ -32,7 +32,7 @@
     {%= vutil.Indent(true, indent + 1) %}
     <th class="shrink"><label for="input-{%s key %}"{%= titleFor(help) %}>{%s title %}</label></th>
     {%= vutil.Indent(true, indent + 1) %}
-    <td>{%= FormInputNumber(key, "input-" + key, value) %}</td>
+    <td>{%= FormInputNumber(key, "input-" + key, value, help...) %}</td>
   {%= vutil.Indent(true, indent) %}
   </tr>
 {% endstripspace %}{% endfunc %}
@@ -42,7 +42,7 @@
     {%= vutil.Indent(true, indent + 1) %}
     <th class="shrink"><label for="input-{%s key %}"{%= titleFor(help) %}>{%s title %}</label></th>
     {%= vutil.Indent(true, indent + 1) %}
-    <td>{%= FormInputTimestamp(key, "input-" + key, value) %}</td>
+    <td>{%= FormInputTimestamp(key, "input-" + key, value, help...) %}</td>
   {%= vutil.Indent(true, indent) %}
   </tr>
 {% endstripspace %}{% endfunc %}
@@ -52,7 +52,7 @@
     {%= vutil.Indent(true, indent + 1) %}
     <th class="shrink"><label for="input-{%s key %}"{%= titleFor(help) %}>{%s title %}</label></th>
     {%= vutil.Indent(true, indent + 1) %}
-    <td>{%= FormTextarea(key, "input-" + key, rows, value) %}</td>
+    <td>{%= FormTextarea(key, "input-" + key, rows, value, help...) %}</td>
   {%= vutil.Indent(true, indent) %}
   </tr>
 {% endstripspace %}{% endfunc %}

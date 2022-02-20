@@ -29,11 +29,11 @@
 {% func Match(params *search.Params, matches result.Matches) %}
   <ul>
     {%- if len(matches) == 0 -%}
-    <li>Matched [{%s params.Q %}]</li>
+    <li><em>{%s params.Q %}</em></li>
     {%- endif -%}
     {%- for _, m := range matches -%}
     <li>
-      Matched [{%s m.Key %}]:
+      <em>{%s m.Key %}</em>:
       {%- code split := m.ValueSplit(params.Q) -%}
       {%- for _, x := range split -%}{% if strings.ToLower(x) == strings.ToLower(params.Q) %}<strong>{%s x %}</strong>{% else %}{%s x %}{% endif %}{%- endfor -%}
     </li>

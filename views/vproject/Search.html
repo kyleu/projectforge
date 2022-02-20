@@ -1,0 +1,45 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "github.com/kyleu/projectforge/app"
+  "github.com/kyleu/projectforge/app/lib/search"
+  "github.com/kyleu/projectforge/app/lib/search/result"
+  "github.com/kyleu/projectforge/app/project"
+  "github.com/kyleu/projectforge/app/util"
+  "github.com/kyleu/projectforge/app/controller/cutil"
+  "github.com/kyleu/projectforge/views/layout"
+  "github.com/kyleu/projectforge/views/vsearch"
+) %}
+
+{% code type Search struct {
+  layout.Basic
+  Params *search.Params
+  Project *project.Project
+  Results result.Results
+  Errors []error
+} %}
+
+{% func (p *Search) Body(as *app.State, ps *cutil.PageState) %}
+  {%= Summary(p.Project, nil, util.ValueMap{"q": p.Params.Q}, ps) %}
+  {%= searchResults(p.Project, p.Params, p.Results, p.Errors, as, ps) %}
+{% endfunc %}
+
+{% func searchResults(prj *project.Project, params *search.Params, results result.Results, errors []error, as *app.State, ps *cutil.PageState) %}
+  {%- if len(results) == 0 -%}
+  <div class="card">
+    <h3>No results</h3>
+  </div>
+  {%- endif -%}
+  {%- for _, res := range results -%}
+  {%= vsearch.Result(res, params, as, ps) %}
+  {%- endfor -%}
+  {% if len(errors) > 0 %}
+  <div class="card">
+    <h3>{%s util.StringPluralMaybe("Error", len(errors)) %}</h3>
+    <ul class="mt">
+      {%- for _, e := range errors -%}
+      <li>{%s e.Error() %}</li>
+      {%- endfor -%}
+    </ul>
+  </div>
+  {% endif %}
+{% endfunc %}

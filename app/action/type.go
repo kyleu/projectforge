@@ -35,11 +35,7 @@ func TypeFromString(s string) Type {
 			return t
 		}
 	}
-	return errorType("No action type available with key [" + s + "]")
-}
-
-func errorType(msg string) Type {
-	return Type{Key: "error", Title: "Error", Icon: "star", Description: msg}
+	return Type{Key: s, Title: "Error", Icon: "star", Description: "No action type available with key [" + s + "]"}
 }
 
 func (t *Type) String() string {

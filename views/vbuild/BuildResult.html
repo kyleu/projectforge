@@ -19,7 +19,7 @@
 
 {% func (p *BuildResult) Body(as *app.State, ps *cutil.PageState) %}
   {%- code prj := p.Project -%}
-  {%= vproject.Summary(prj, p.GitResult, ps) %}
+  {%= vproject.Summary(prj, p.GitResult, nil, ps) %}
 
   <div class="card">
     <h3>Build your project</h3>

@@ -20,6 +20,7 @@ type FileLoader interface {
 	ListJSON(path string, trimExtension bool) []string
 	ListExtension(path string, ext string, trimExtension bool) []string
 	ListDirectories(path string) []string
+	Walk(path string, ign []string, fn func(fp string, info os.FileInfo, err error) error) error
 	Stat(path string) (os.FileInfo, error)
 	Exists(path string) bool
 	IsDir(path string) bool
