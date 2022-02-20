@@ -35,18 +35,33 @@ func SVGList(rc *fasthttp.RequestCtx) {
 	})
 }
 
+func SVGDetail(rc *fasthttp.RequestCtx) {
+	act("svg.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, fs, key, err := prjAndIcon(rc, as)
+		if err != nil {
+			return "", err
+		}
+		content, err := svg.Content(fs, key)
+		if err != nil {
+			return "", errors.Wrap(err, "unable to read SVG ["+key+"]")
+		}
+		x := &svg.SVG{Key: key, Markup: content}
+		ps.Title = "SVG [" + key + "]"
+		ps.Data = x
+		return render(rc, as, &vsvg.View{Project: prj, SVG: x}, ps, "projects", prj.Key, "SVG||/svg/"+prj.Key, key)
+	})
+}
+
 func SVGBuild(rc *fasthttp.RequestCtx) {
 	act("svg.build", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prj, err := getProject(rc, as)
 		if err != nil {
 			return "", err
 		}
-		fs := as.Services.Projects.GetFilesystem(prj)
-		count, err := svg.Build(fs)
+		count, err := svg.Build(as.Services.Projects.GetFilesystem(prj))
 		if err != nil {
 			return "", err
 		}
-
 		msg := fmt.Sprintf("Parsed [%d] SVG files", count)
 		return flashAndRedir(true, msg, "/svg/"+prj.Key, rc, ps)
 	})
@@ -63,7 +78,6 @@ func SVGAdd(rc *fasthttp.RequestCtx) {
 		if tgt == "" {
 			tgt = strings.TrimSuffix(src, "-solid")
 		}
-
 		prj, err := getProject(rc, as)
 		if err != nil {
 			return "", err
@@ -74,25 +88,12 @@ func SVGAdd(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Data = x
-		return render(rc, as, &vsvg.View{Project: prj, SVG: x}, ps, "projects", prj.Key, "SVG||/svg/"+prj.Key, x.Key)
-	})
-}
-
-func SVGDetail(rc *fasthttp.RequestCtx) {
-	act("svg.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, fs, key, err := prjAndIcon(rc, as)
+		_, err = svg.Build(as.Services.Projects.GetFilesystem(prj))
 		if err != nil {
 			return "", err
 		}
-		content, err := svg.Content(fs, key)
-		if err != nil {
-			return "", errors.Wrap(err, "unable to read SVG ["+key+"]")
-		}
-		x := &svg.SVG{Key: key, Markup: content}
-		ps.Title = "SVG [" + key + "]"
 		ps.Data = x
-		return render(rc, as, &vsvg.View{Project: prj, SVG: x}, ps, "projects", prj.Key, "SVG||/svg/"+prj.Key, key)
+		return render(rc, as, &vsvg.View{Project: prj, SVG: x}, ps, "projects", prj.Key, "SVG||/svg/"+prj.Key, x.Key)
 	})
 }
 
@@ -115,6 +116,10 @@ func SVGSetApp(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to set app icon to ["+key+"]")
 		}
+		_, err = svg.Build(fs)
+		if err != nil {
+			return "", err
+		}
 		return flashAndRedir(true, "set SVG ["+key+"] as app icon", "/svg/"+prj.Key, rc, ps)
 	})
 }
@@ -131,6 +136,10 @@ func SVGRemove(rc *fasthttp.RequestCtx) {
 		err = svg.Remove(fs, key)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to remove SVG ["+key+"]")
+		}
+		_, err = svg.Build(fs)
+		if err != nil {
+			return "", err
 		}
 		return flashAndRedir(true, "removed SVG ["+key+"]", "/svg/"+prj.Key, rc, ps)
 	})
