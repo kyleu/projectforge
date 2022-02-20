@@ -13,13 +13,26 @@ type Reference struct {
 	SourcePkg    util.Pkg `json:"sourcePackage"`
 	SourceModel  string   `json:"sourceModel"`
 	SourceFields []string `json:"srcFields"`
+	str          string
 }
 
 func ReferenceFromRelation(rel *Relationship, m *Model) *Reference {
-	return &Reference{Key: rel.Key, TargetFields: rel.TargetFields, SourcePkg: m.Pkg, SourceModel: m.Key, SourceFields: rel.SourceFields}
+	fields := make([]string, 0, len(rel.SourceFields))
+	for _, x := range rel.SourceFields {
+		_, col := m.Fields.Get(x)
+		if col != nil {
+			fields = append(fields, col.Name())
+		}
+	}
+	str := fmt.Sprintf("%s by %s", m.PluralName(), strings.Join(fields, ", "))
+	return &Reference{Key: rel.Key, TargetFields: rel.TargetFields, SourcePkg: m.Pkg, SourceModel: m.Key, SourceFields: rel.SourceFields, str: str}
 }
 
 func (r *Reference) String() string {
+	return r.str
+}
+
+func (r *Reference) Debug() string {
 	return fmt.Sprintf("%s: [%s] -> %s[%s]", r.Key, strings.Join(r.TargetFields, ", "), r.SourceModel, strings.Join(r.SourceFields, ", "))
 }
 
