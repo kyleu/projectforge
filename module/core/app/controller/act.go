@@ -3,6 +3,7 @@ package controller
 import (
 	"time"
 
+	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
 
@@ -53,7 +54,7 @@ func actComplete(key string, as *app.State, ps *cutil.PageState, rc *fasthttp.Re
 	startNanos := time.Now().UnixNano()
 	var redir string
 	if ps.ForceRedirect == "" || ps.ForceRedirect == string(rc.URI().Path()) {
-		redir, err = f(as, ps)
+		redir, err = safeRun(f, as, ps)
 		if err != nil {
 			redir, err = handleError(key, as, ps, rc, err)
 			if err != nil {
@@ -72,4 +73,18 @@ func actComplete(key string, as *app.State, ps *cutil.PageState, rc *fasthttp.Re
 	defer ps.Close()
 	l := ps.Logger.With(zap.String("method", ps.Method), zap.Int("status", status), zap.Float64("elapsed", elapsedMillis))
 	l.Debugf("processed request in [%.3fms] (render: %.3fms)", elapsedMillis, ps.RenderElapsed)
+}
+
+func safeRun(f func(as *app.State, ps *cutil.PageState) (string, error), as *app.State, ps *cutil.PageState) (s string, e error) {
+	defer func() {
+		if rec := recover(); rec != nil {
+			if recoverErr, ok := rec.(error); ok {
+				e = errors.Wrap(recoverErr, "panic")
+			} else {
+				e = errors.Errorf("controller encountered panic recovery of type [%T]", rec)
+			}
+		}
+	}()
+	s, e = f(as, ps)
+	return
 }

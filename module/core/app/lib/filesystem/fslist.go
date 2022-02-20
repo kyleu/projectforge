@@ -76,7 +76,7 @@ func (f *FileSystem) ListFilesRecursive(path string, ign []string) ([]string, er
 		if checkIgnore(ignore, m) {
 			return nil
 		}
-		if !info.IsDir() && strings.Contains(fp, "/") {
+		if info != nil && (!info.IsDir()) && strings.Contains(fp, "/") {
 			ret = append(ret, m)
 		}
 		return nil

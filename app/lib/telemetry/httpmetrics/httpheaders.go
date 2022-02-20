@@ -34,7 +34,8 @@ func ExtractHeaders(rc *fasthttp.RequestCtx, logger *zap.SugaredLogger) *fasthtt
 	nc := otel.GetTextMapPropagator().Extract(rc, headerCarrier{h: &rc.Request.Header})
 	http, ok := nc.(*fasthttp.RequestCtx)
 	if !ok {
-		logger.Warnf("unable to extract http tracing headers")
+		// no need to log, this'll happen on top-level request
+		// logger.Warnf("unable to extract http tracing headers")
 		return rc
 	}
 	return http

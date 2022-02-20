@@ -88,12 +88,7 @@ func OpenMySQLDatabase(ctx context.Context, key string, params *MySQLParams, log
 	db.SetMaxOpenConns(params.MaxConns)
 	db.SetMaxIdleConns(0)
 
-	var log *zap.SugaredLogger
-	if params.Debug {
-		log = logger.With("svc", "database", "db", key)
-	}
-
-	return NewService(typeMySQL, key, params.Database, params.Schema, params.Username, params.Debug, db, log)
+	return NewService(typeMySQL, key, params.Database, params.Schema, params.Username, params.Debug, db, logger)
 }
 
 func OpenDefaultMySQL(logger *zap.SugaredLogger) (*Service, error) {

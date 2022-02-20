@@ -42,7 +42,9 @@ func handleError(key string, as *app.State, ps *cutil.PageState, rc *fasthttp.Re
 	ps.Logger.Errorf("error running action [%s]: %+v", key, err)
 
 	if len(ps.Breadcrumbs) == 0 {
-		ps.Breadcrumbs = cutil.Breadcrumbs{"Error"}
+		bc := util.StringSplitAndTrim(string(rc.URI().Path()), "/")
+		bc = append(bc, "Error")
+		ps.Breadcrumbs = bc
 	}
 	errDetail := util.GetErrorDetail(err)
 	page := &verror.Error{Err: errDetail}

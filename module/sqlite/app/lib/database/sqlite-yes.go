@@ -31,9 +31,5 @@ func OpenSQLiteDatabase(ctx context.Context, key string, params *SQLiteParams, l
 	if err != nil {
 		return nil, errors.Wrap(err, "error opening database")
 	}
-	var log *zap.SugaredLogger
-	if params.Debug {
-		log = logger
-	}
-	return NewService(typeSQLite, key, key, params.Schema, "sqlite", params.Debug, db, log)
+	return NewService(typeSQLite, key, key, params.Schema, "sqlite", params.Debug, db, logger)
 }
