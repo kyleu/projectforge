@@ -64,10 +64,10 @@ func idClauseFor(m *model.Model) (string, string) {
 	return "", ""
 }
 
-func grpcParamsFromRequest(m *model.Model, cPkg string, g *golang.File) (*golang.Block, error) {
+func grpcParamsFromRequest(m *model.Model, args string, g *golang.File) (*golang.Block, error) {
 	ret := golang.NewBlock("grpcParamsFromRequest", "func")
 	pks := m.PKs()
-	ret.W("func %sParamsFromRequest(r *provider.NuevoRequest) (%s, error) {", m.Camel(), strings.Join(pks.GoTypeKeys(), ", "))
+	ret.W("func %sParamsFromRequest(%s) (%s, error) {", m.Camel(), args, strings.Join(pks.GoTypeKeys(), ", "))
 	zeroVals := strings.Join(pks.ZeroVals(), ", ")
 	for _, col := range pks {
 		err := grpcArgFor(col, ret, zeroVals, g)
@@ -83,23 +83,23 @@ func grpcParamsFromRequest(m *model.Model, cPkg string, g *golang.File) (*golang
 func grpcArgFor(col *model.Column, b *golang.Block, zeroVals string, g *golang.File) error {
 	switch col.Type.Key() {
 	case types.KeyBool:
-		b.W("\t%s, err := provider.GetRequestBool(r, %q)", col.Camel(), col.Camel())
+		b.W("\t%s, err := provider.GetRequestBool(p.R, %q)", col.Camel(), col.Camel())
 		b.W("\tif err != nil {")
 		b.W("\t\treturn %s, err", zeroVals)
 		b.W("\t}")
 	case types.KeyInt:
-		b.W("\t%s, err := provider.GetRequestInt(r, %q)", col.Camel(), col.Camel())
+		b.W("\t%s, err := provider.GetRequestInt(p.R, %q)", col.Camel(), col.Camel())
 		b.W("\tif err != nil {")
 		b.W("\t\treturn %s, err", zeroVals)
 		b.W("\t}")
 	case types.KeyString:
-		b.W("\t%s, err := provider.GetRequestString(r, %q)", col.Camel(), col.Camel())
+		b.W("\t%s, err := provider.GetRequestString(p.R, %q)", col.Camel(), col.Camel())
 		b.W("\tif err != nil {")
 		b.W("\t\treturn %s, err", zeroVals)
 		b.W("\t}")
 	case types.KeyUUID:
 		g.AddImport(helper.ImpUUID)
-		b.W("\t%sString, err := provider.GetRequestString(r, %q)", col.Camel(), col.Camel())
+		b.W("\t%sString, err := provider.GetRequestString(p.R, %q)", col.Camel(), col.Camel())
 		b.W("\tif err != nil {")
 		b.W("\t\treturn %s, err", zeroVals)
 		b.W("\t}")

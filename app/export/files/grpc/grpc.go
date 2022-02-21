@@ -99,11 +99,11 @@ func grpcFile(m *model.Model, args *model.Args, ga *FileArgs, addHeader bool) (*
 		grpcDelete(m, grpcArgs, grpcRet, ga),
 	)
 	if ga.Grp == nil {
-		b, err := grpcParamsFromRequest(m, ga.CPkg, g)
+		b, err := grpcParamsFromRequest(m, grpcArgs, g)
 		if err != nil {
 			return nil, err
 		}
-		g.AddBlocks(grpcFromRequest(m), b)
+		g.AddBlocks(grpcFromRequest(m, grpcArgs), b)
 	}
 	return g.Render(addHeader)
 }

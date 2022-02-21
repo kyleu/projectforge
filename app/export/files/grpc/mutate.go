@@ -10,7 +10,7 @@ import (
 func grpcCall(k string, m *model.Model, isUpdate bool, grpcArgs string, grpcRet string, ga *FileArgs) *golang.Block {
 	ret := golang.NewBlock("grpc"+k, "func")
 	ret.W("func %s%s%s(%s) %s {", m.Proper(), k, ga.APISuffix(), grpcArgs, grpcRet)
-	ret.W("\tmodel, err := %sFromRequest(p.R, %t)", m.Camel(), isUpdate)
+	ret.W("\tmodel, err := %sFromRequest(p, %t)", m.Camel(), isUpdate)
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, err")
 	ret.W("\t}")
@@ -33,7 +33,7 @@ func grpcDelete(m *model.Model, grpcArgs string, grpcRet string, ga *FileArgs) *
 	pks := m.PKs()
 	ret := golang.NewBlock("grpcDelete", "func")
 	ret.W("func %sDelete%s(%s) %s {", m.Proper(), ga.APISuffix(), grpcArgs, grpcRet)
-	ret.W("\t%s, err := %sParamsFromRequest(p.R)", strings.Join(pks.CamelNames(), ", "), m.Camel())
+	ret.W("\t%s, err := %sParamsFromRequest(p)", strings.Join(pks.CamelNames(), ", "), m.Camel())
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, err")
 	ret.W("\t}")
@@ -53,10 +53,10 @@ func grpcDelete(m *model.Model, grpcArgs string, grpcRet string, ga *FileArgs) *
 	return ret
 }
 
-func grpcFromRequest(m *model.Model) *golang.Block {
+func grpcFromRequest(m *model.Model, args string) *golang.Block {
 	ret := golang.NewBlock("grpcFromRequest", "func")
-	ret.W("func %sFromRequest(r *provider.NuevoRequest, isUpdate bool) (*%s, error) {", m.Camel(), m.ClassRef())
-	ret.W("\tinput := provider.GetRequest(r, \"%s\")", m.Camel())
+	ret.W("func %sFromRequest(%s, isUpdate bool) (*%s, error) {", m.Camel(), args, m.ClassRef())
+	ret.W("\tinput := provider.GetRequest(p.R, \"%s\")", m.Camel())
 	ret.W("\tif input == nil {")
 	ret.W("\t\treturn nil, errors.New(\"must provide [%s] in request data\")", m.Camel())
 	ret.W("\t}")

@@ -65,7 +65,7 @@ func grpcDetail(m *model.Model, grpcArgs string, grpcRet string, ga *FileArgs) *
 		ret.W(idClause)
 	}
 	pks := m.PKs()
-	ret.W("\t%s, err := %sParamsFromRequest(p.R)", strings.Join(pks.CamelNames(), ", "), m.Camel())
+	ret.W("\t%s, err := %sParamsFromRequest(p)", strings.Join(pks.CamelNames(), ", "), m.Camel())
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, err")
 	ret.W("\t}")
