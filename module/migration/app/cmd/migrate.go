@@ -19,8 +19,9 @@ func migrateCmd() *coral.Command {
 }
 
 func runMigrations() error {
-	logger, _ := log.InitLogging(false)
-	db, err := database.OpenDefaultPostgres(context.Background(), logger)
+	logger, _ := log.InitLogging(false){{{ if .HasModule "postgres" }}}
+	db, err := database.OpenDefaultPostgres(context.Background(), logger){{{ else }}}{{{ if .HasModule "sqlite" }}}
+	db, err := database.OpenDefaultSQLite(context.Background(), logger){{{ end }}}{{{ end }}}
 	if err != nil {
 		return errors.Wrap(err, "unable to open database")
 	}

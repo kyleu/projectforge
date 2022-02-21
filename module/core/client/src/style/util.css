@@ -22,6 +22,14 @@
   margin-bottom: var(--padding);
 }
 
+.ml {
+  margin-left: var(--padding);
+}
+
+.mr {
+  margin-right: var(--padding);
+}
+
 .error {
   color: var(--color-error);
 }

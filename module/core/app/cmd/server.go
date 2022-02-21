@@ -50,9 +50,10 @@ func loadServer(flags *Flags, logger *zap.SugaredLogger) (fasthttp.RequestHandle
 	}
 
 	ctx, span, logger := telemetry.StartSpan(context.Background(), "app:init", logger)
-	defer span.Complete(){{{ if .HasModule "migration" }}}
+	defer span.Complete(){{{ if .HasModule "migration" }}}{{{ if .HasModule "postgres" }}}
 
-	db, err := database.OpenDefaultPostgres(ctx, logger)
+	db, err := database.OpenDefaultPostgres(ctx, logger){{{ else }}}{{{ if .HasModule "sqlite" }}}
+	db, err := database.OpenDefaultSQLite(ctx, logger){{{ end }}}{{{ end }}}
 	if err != nil {
 		return nil, logger, errors.Wrap(err, "unable to open database")
 	}

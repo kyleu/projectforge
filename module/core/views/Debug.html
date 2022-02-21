@@ -1,7 +1,7 @@
 {% import (
   "{{{ .Package }}}/app"
-  "{{{ .Package }}}/app/util"
   "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/views/components"
   "{{{ .Package }}}/views/layout"
 ) %}
 
@@ -10,6 +10,6 @@
 {% func (p *Debug) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>{%s ps.Title %}</h3>
-    <pre>{%s util.ToJSON(ps.Data) %}</pre>
+    {%s= components.JSON(ps.Data) %}
   </div>
 {% endfunc %}

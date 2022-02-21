@@ -3,6 +3,7 @@ package migrate
 import (
 	"context"
 	"database/sql"
+	"time"
 
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
@@ -15,9 +16,9 @@ const (
 	migrationTable    = "migration"
 	migrationTableSQL = `create table if not exists "migration" (
   "idx" int not null primary key,
-  "title" varchar(1024) not null,
+  "title" text not null,
   "src" text not null,
-  "created" timestamp not null default now()
+  "created" timestamp not null
 );`
 )
 
@@ -70,8 +71,8 @@ func removeMigrationByIdx(ctx context.Context, s *database.Service, idx int) err
 }
 
 func newMigration(ctx context.Context, s *database.Service, e *Migration) error {
-	q := database.SQLInsert("migration", []string{"idx", "title", "src"}, 1, s.Type.Placeholder)
-	return s.Insert(ctx, q, nil, e.Idx, e.Title, e.Src)
+	q := database.SQLInsert("migration", []string{"idx", "title", "src", "created"}, 1, s.Type.Placeholder)
+	return s.Insert(ctx, q, nil, e.Idx, e.Title, e.Src, time.Now())
 }
 
 func maxMigrationIdx(ctx context.Context, s *database.Service, logger *zap.SugaredLogger) int {
