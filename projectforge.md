@@ -13,7 +13,6 @@ The following modules were used to build this project:
 - [ios](./doc/module/ios.md)
 - [marketing](./doc/module/marketing.md)
 - [notarize](./doc/module/notarize.md)
-- [oauth](./doc/module/oauth.md)
 - [sandbox](./doc/module/sandbox.md)
 - [search](./doc/module/search.md)
 - [types](./doc/module/types.md)

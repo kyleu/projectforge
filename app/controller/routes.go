@@ -23,9 +23,6 @@ func AppRoutes() fasthttp.RequestHandler {
 
 	r.GET(defaultProfilePath, Profile)
 	r.POST(defaultProfilePath, ProfileSave)
-	r.GET("/auth/{key}", AuthDetail)
-	r.GET("/auth/callback/{key}", AuthCallback)
-	r.GET("/auth/logout/{key}", AuthLogout)
 
 	// $PF_SECTION_START(routes)$
 	r.GET("/welcome", Welcome)

@@ -19,9 +19,6 @@ func SiteRoutes() fasthttp.RequestHandler {
 
 	r.GET(defaultProfilePath, ProfileSite)
 	r.POST(defaultProfilePath, ProfileSave)
-	r.GET("/auth/{key}", AuthDetail)
-	r.GET("/auth/callback/{key}", AuthCallback)
-	r.GET("/auth/logout/{key}", AuthLogout)
 
 	r.GET("/favicon.ico", Favicon)
 	r.GET("/assets/{_:*}", Static)

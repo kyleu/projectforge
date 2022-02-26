@@ -7,7 +7,6 @@ import (
 
 	"go.uber.org/zap"
 
-	"github.com/kyleu/projectforge/app/lib/auth"
 	"github.com/kyleu/projectforge/app/lib/filesystem"
 	"github.com/kyleu/projectforge/app/lib/telemetry"
 	"github.com/kyleu/projectforge/app/lib/theme"
@@ -33,7 +32,6 @@ type State struct {
 	Debug     bool
 	BuildInfo *BuildInfo
 	Files     filesystem.FileLoader
-	Auth      *auth.Service
 	Themes    *theme.Service
 	Logger    *zap.SugaredLogger
 	Services  *Services
@@ -48,14 +46,12 @@ func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, logger *zap.Su
 	time.Local = loc
 
 	_ = telemetry.InitializeIfNeeded(true, logger)
-	as := auth.NewService("", logger)
 	ts := theme.NewService(f, logger)
 
 	return &State{
 		Debug:     debug,
 		BuildInfo: bi,
 		Files:     f,
-		Auth:      as,
 		Themes:    ts,
 		Logger:    logger,
 		Started:   time.Now(),
