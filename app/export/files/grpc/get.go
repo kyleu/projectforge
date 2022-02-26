@@ -75,6 +75,7 @@ func grpcDetail(m *model.Model, grpcArgs string, grpcRet string, ga *FileArgs) *
 	ret.W("\t\treturn nil, err")
 	ret.W("\t}")
 	ga.AddStaticCheck("ret", ret, m, ga.Grp, "retrieve")
+	grpcAddSection(ret, "postdetail", 1)
 	ret.W("\tprovider.SetOutput(p.TX, ret)")
 	ret.W("\treturn p.TX, nil")
 	ret.W("}")

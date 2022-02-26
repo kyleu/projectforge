@@ -71,3 +71,7 @@ func (s *Span) SetHTTPStatus(code int) {
 	x, desc := semconv.SpanStatusFromHTTPStatusCode(code)
 	s.SetStatus(x.String(), desc)
 }
+
+func (s *Span) String() string {
+	return s.SpanID() + "::" + s.TraceID()
+}
