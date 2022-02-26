@@ -7,7 +7,7 @@
 
 {% func Choice(themes theme.Themes, selected string, indent int, ps *cutil.PageState) %}{% stripspace %}
   {%= vutil.Indent(true, indent) %}
-  <div class="choice mt">
+  <div class="choice">
     {% for _, t := range themes %}
       {%= vutil.Indent(true, indent + 1) %}
       <label title="{%s t.Key %}">

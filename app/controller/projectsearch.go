@@ -36,7 +36,7 @@ func ProjectSearch(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to search project [%s]", prj.Key)
 		}
 
-		ps.Title = fmt.Sprintf("[%s] Search Results", prj.Title())
+		ps.Title = fmt.Sprintf("[%s] Project Results", prj.Title())
 		ps.Data = res
 		// page := &vsearch.Results{Params: params, Results: res, SearchPath: fmt.Sprintf("/p/%s/search", prj.Key)}
 		page := &vproject.Search{Project: prj, Params: params, Results: res}
@@ -64,7 +64,7 @@ func ProjectSearchAll(rc *fasthttp.RequestCtx) {
 
 			ret[prj.Key] = res
 		}
-		ps.Title = "Search Results"
+		ps.Title = "Project Search Results"
 		ps.Data = ret
 		page := &vproject.SearchAll{Params: params, Projects: prjs, Results: ret}
 		return render(rc, as, page, ps, "projects", "Search")

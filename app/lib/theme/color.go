@@ -16,9 +16,8 @@ func themeColors(c color.Color) (*Colors, *Colors) {
 
 	const threshold = (65535 * 3) / 2
 	r, g, b, _ := c.RGBA()
-	total := r + g + b
 
-	if total < threshold {
+	if total := r + g + b; total < threshold {
 		light = gamut.Lighter(c, 0.4)
 	} else {
 		dark = gamut.Darker(c, 0.6)
@@ -36,8 +35,8 @@ func themeColors(c color.Color) (*Colors, *Colors) {
 	l.NavBackground = hex(light)
 	l.MenuBackground = hex(lightTints[1])
 	l.MenuSelectedBackground = hex(light)
-	l.LinkForeground = hex(lightShades[2])
-	l.LinkVisitedForeground = hex(lightShades[3])
+	l.LinkForeground = hex(lightShades[1])
+	l.LinkVisitedForeground = hex(lightShades[2])
 	l.BackgroundMuted = hex(lightTints[3])
 	l.ForegroundMuted = hex(lightShades[3])
 
@@ -45,8 +44,8 @@ func themeColors(c color.Color) (*Colors, *Colors) {
 	d.NavBackground = hex(dark)
 	d.MenuBackground = hex(darkShades[1])
 	d.MenuSelectedBackground = hex(dark)
-	d.LinkForeground = hex(darkTints[2])
-	d.LinkVisitedForeground = hex(darkTints[3])
+	d.LinkForeground = hex(darkTints[1])
+	d.LinkVisitedForeground = hex(darkTints[2])
 	d.BackgroundMuted = hex(darkShades[2])
 	d.ForegroundMuted = hex(darkTints[3])
 

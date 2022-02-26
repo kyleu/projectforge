@@ -1,11 +1,10 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
 package controller
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/kyleu/projectforge/app/lib/telemetry"
-	"github.com/kyleu/projectforge/views"
 	"github.com/muesli/gamut"
 	"github.com/valyala/fasthttp"
 
@@ -14,6 +13,23 @@ import (
 	"github.com/kyleu/projectforge/app/lib/theme"
 	"github.com/kyleu/projectforge/views/vtheme"
 )
+
+func ThemeColor(rc *fasthttp.RequestCtx) {
+	act("theme.color", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		col, err := RCRequiredString(rc, "color", false)
+		if err != nil {
+			return "", err
+		}
+		col = strings.ToLower(col)
+		if !strings.HasPrefix(col, "#") {
+			col = "#" + col
+		}
+		ps.Title = fmt.Sprintf("[%s] Theme", col)
+		x := theme.ColorTheme(col, gamut.Hex(col))
+		ps.Data = x
+		return render(rc, as, &vtheme.Edit{Theme: x}, ps, "admin", "Themes", col)
+	})
+}
 
 func ThemePalette(rc *fasthttp.RequestCtx) {
 	act("theme.palette", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
@@ -43,7 +59,7 @@ func ThemePreview(rc *fasthttp.RequestCtx) {
 		ps.Title = fmt.Sprintf("Preview [%s]", thm.Key)
 
 		ps.Data = thm
-		page := &views.Debug{} // &vtheme.Preview{Theme: thm}
+		page := &vtheme.Edit{Theme: thm}
 		return render(rc, as, page, ps, "admin", "Themes||/admin/theme", thm.Key)
 	})
 }

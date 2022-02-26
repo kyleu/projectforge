@@ -220,3 +220,13 @@ func (c Columns) MaxGoKeyLength() int {
 func (c Columns) MaxGoDTOKeyLength() int {
 	return util.StringArrayMaxLength(c.GoDTOTypeKeys())
 }
+
+func (c Columns) ForDisplay(k string) Columns {
+	ret := make(Columns, 0, len(c))
+	for _, x := range c {
+		if x.ShouldDisplay(k) {
+			ret = append(ret, x)
+		}
+	}
+	return ret
+}

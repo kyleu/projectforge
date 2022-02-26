@@ -2,6 +2,7 @@ package telemetry
 
 import (
 	"context"
+	"net/http"
 	"os"
 
 	"go.opentelemetry.io/otel"
@@ -83,4 +84,8 @@ func StartSpan(ctx context.Context, spanName string, logger *zap.SugaredLogger, 
 		logger = LoggerFor(logger, sp)
 	}
 	return ctx, sp, logger
+}
+
+func AddHeaders(span *Span, req *http.Request) error {
+	return nil
 }

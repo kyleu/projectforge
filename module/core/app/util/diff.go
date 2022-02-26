@@ -30,8 +30,14 @@ func (d Diffs) String() string {
 }
 
 func DiffObjects(l interface{}, r interface{}, path ...string) Diffs {
-	var ret Diffs
+	return DiffObjectsIgnoring(l, r, nil, path...)
+}
 
+func DiffObjectsIgnoring(l interface{}, r interface{}, ignored []string, path ...string) Diffs {
+	var ret Diffs
+	if StringArrayContains(ignored, path[len(path)-1]) {
+		return ret
+	}
 	if l == nil {
 		return append(ret, NewDiff(strings.Join(path, "."), "", fmt.Sprint(r)))
 	}
@@ -44,18 +50,18 @@ func DiffObjects(l interface{}, r interface{}, path ...string) Diffs {
 
 	switch t := l.(type) {
 	case ValueMap:
-		ret = append(ret, diffMaps(t, r, path...)...)
+		ret = append(ret, diffMaps(t, r, ignored, path...)...)
 	case map[string]interface{}:
-		ret = append(ret, diffMaps(t, r, path...)...)
+		ret = append(ret, diffMaps(t, r, ignored, path...)...)
 	case map[string]int:
-		ret = append(ret, diffIntMaps(t, r, path...)...)
+		ret = append(ret, diffIntMaps(t, r, ignored, path...)...)
 	case []interface{}:
-		ret = append(ret, diffArrays(t, r, path...)...)
+		ret = append(ret, diffArrays(t, r, ignored, path...)...)
 	case Diffs:
 		rm, _ := r.(Diffs)
 		for idx, v := range t {
 			rv := rm[idx]
-			ret = append(ret, DiffObjects(v, rv, append([]string{}, path...)...)...)
+			ret = append(ret, DiffObjectsIgnoring(v, rv, ignored, append([]string{}, path...)...)...)
 		}
 	case int:
 		i, _ := r.(int)
@@ -76,53 +82,65 @@ func DiffObjects(l interface{}, r interface{}, path ...string) Diffs {
 	return ret
 }
 
-func diffArrays(l []interface{}, r interface{}, path ...string) Diffs {
+func diffArrays(l []interface{}, r interface{}, ignored []string, path ...string) Diffs {
 	var ret Diffs
 	rm, _ := r.([]interface{})
 	for idx, v := range l {
 		if len(rm) > idx {
 			rv := rm[idx]
-			ret = append(ret, DiffObjects(v, rv, append(append([]string{}, path...), fmt.Sprint(idx))...)...)
+			ret = append(ret, DiffObjectsIgnoring(v, rv, ignored, append(append([]string{}, path...), fmt.Sprint(idx))...)...)
 		} else {
-			ret = append(ret, DiffObjects(v, nil, append(append([]string{}, path...), fmt.Sprint(idx))...)...)
+			ret = append(ret, DiffObjectsIgnoring(v, nil, ignored, append(append([]string{}, path...), fmt.Sprint(idx))...)...)
 		}
 	}
 	if len(rm) > len(l) {
 		for i := len(l); i < len(rm); i++ {
-			ret = append(ret, DiffObjects(nil, rm[i], append(append([]string{}, path...), fmt.Sprint(i))...)...)
+			ret = append(ret, DiffObjectsIgnoring(nil, rm[i], ignored, append(append([]string{}, path...), fmt.Sprint(i))...)...)
 		}
 	}
 	return ret
 }
 
-func diffMaps(l map[string]interface{}, r interface{}, path ...string) Diffs {
+func diffMaps(l map[string]interface{}, r interface{}, ignored []string, path ...string) Diffs {
 	var ret Diffs
 	rm, ok := r.(map[string]interface{})
 	if !ok {
 		rm, _ = r.(ValueMap)
 	}
 	for k, v := range l {
+		if StringArrayContains(ignored, k) {
+			continue
+		}
 		rv := rm[k]
-		ret = append(ret, DiffObjects(v, rv, append(append([]string{}, path...), k)...)...)
+		ret = append(ret, DiffObjectsIgnoring(v, rv, ignored, append(append([]string{}, path...), k)...)...)
 	}
 	for k, v := range rm {
+		if StringArrayContains(ignored, k) {
+			continue
+		}
 		if _, exists := l[k]; !exists {
-			ret = append(ret, DiffObjects(nil, v, append(append([]string{}, path...), k)...)...)
+			ret = append(ret, DiffObjectsIgnoring(nil, v, ignored, append(append([]string{}, path...), k)...)...)
 		}
 	}
 	return ret
 }
 
-func diffIntMaps(l map[string]int, r interface{}, path ...string) Diffs {
+func diffIntMaps(l map[string]int, r interface{}, ignored []string, path ...string) Diffs {
 	var ret Diffs
 	rm, _ := r.(map[string]int)
 	for k, v := range l {
+		if StringArrayContains(ignored, k) {
+			continue
+		}
 		rv := rm[k]
-		ret = append(ret, DiffObjects(v, rv, append(append([]string{}, path...), k)...)...)
+		ret = append(ret, DiffObjectsIgnoring(v, rv, ignored, append(append([]string{}, path...), k)...)...)
 	}
 	for k, v := range rm {
+		if StringArrayContains(ignored, k) {
+			continue
+		}
 		if _, exists := l[k]; !exists {
-			ret = append(ret, DiffObjects(nil, v, append(append([]string{}, path...), k)...)...)
+			ret = append(ret, DiffObjectsIgnoring(nil, v, ignored, append(append([]string{}, path...), k)...)...)
 		}
 	}
 	return ret

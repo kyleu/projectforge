@@ -34,7 +34,7 @@ func (s *Span) SetStatus(status string, description string) {
 	case "error":
 		s.OT.SetStatus(codes.Error, description)
 	default:
-		s.OT.SetStatus(codes.Ok, status + ": " + description)
+		s.OT.SetStatus(codes.Ok, status+": "+description)
 	}
 }
 

@@ -24,7 +24,7 @@
     <h3>{%= components.SVGRefIcon(`cog`, ps) %} Edit Audit [{%s p.Model.String() %}]</h3>
     <form action="" class="mt" method="post">
     {%- endif -%}
-      <table class="mt">
+      <table class="mt expanded">
         <tbody>
           {% if p.IsNew %}{%= components.TableInput("id", "ID", p.Model.ID.String(), 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}{% endif %}
           {%= components.TableInput("app", "App", p.Model.App, 5, "String text") %}

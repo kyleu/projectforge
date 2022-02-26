@@ -7,7 +7,6 @@
   "github.com/kyleu/projectforge/app/util"
   "github.com/kyleu/projectforge/views/components"
   "github.com/kyleu/projectforge/views/layout"
-  "github.com/kyleu/projectforge/views/vauth"
 ) %}
 
 {% code type Settings struct {
@@ -51,8 +50,4 @@
       <li><a href="/theme">Edit Themes</a></li>
     </ul>
   </div>
-
-  {%= vauth.Authentication(as) %}
-
-  {%= vauth.Permissions(p.Perms, as) %}
 {% endfunc %}

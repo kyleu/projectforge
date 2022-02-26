@@ -15,6 +15,10 @@
   opacity: 0;
 }
 
+.margin {
+  margin: var(--padding);
+}
+
 .mt {
   margin-top: var(--padding);
 }
@@ -116,27 +120,6 @@
 
 .icon-block {
   margin-right: 4px;
-}
-
-.choice {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.choice input {
-  display: none;
-}
-
-.choice .title {
-  text-align: center;
-  cursor: pointer;
-}
-
-.choice input ~ * {
-  border: 3px solid transparent;
-}
-.choice input:checked ~ * {
-  border: 3px solid var(--color-foreground-muted);
 }
 
 .small-text {

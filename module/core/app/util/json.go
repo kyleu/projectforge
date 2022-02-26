@@ -4,7 +4,11 @@ import (
 	"bytes"
 	"encoding/json"
 	"io"
+
+	jsoniter "github.com/json-iterator/go"
 )
+
+var jsoniterParser = jsoniter.ConfigCompatibleWithStandardLibrary
 
 func ToJSON(x interface{}) string {
 	return string(ToJSONBytes(x, true))
@@ -24,7 +28,7 @@ func ToJSONBytes(x interface{}, indent bool) []byte {
 }
 
 func FromJSON(msg json.RawMessage, tgt interface{}) error {
-	return json.Unmarshal(msg, tgt)
+	return jsoniterParser.Unmarshal(msg, tgt)
 }
 
 func FromJSONInterface(msg json.RawMessage) (interface{}, error) {
@@ -38,11 +42,18 @@ func FromJSONReader(r io.Reader, tgt interface{}) error {
 }
 
 func FromJSONStrict(msg json.RawMessage, tgt interface{}) error {
-	dec := json.NewDecoder(bytes.NewReader(msg))
+	dec := jsoniterParser.NewDecoder(bytes.NewReader(msg))
 	dec.DisallowUnknownFields()
 	return dec.Decode(tgt)
 }
 
 func CycleJSON(src interface{}, tgt interface{}) error {
-	return FromJSON(ToJSONBytes(src, true), tgt)
+	b, _ := jsoniterParser.Marshal(src)
+	return FromJSON(b, tgt)
+}
+
+func JSONToMap(i interface{}) map[string]interface{} {
+	var m map[string]interface{}
+	_ = CycleJSON(i, &m)
+	return m
 }

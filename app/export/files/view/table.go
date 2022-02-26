@@ -19,13 +19,14 @@ func table(m *model.Model, args *model.Args, addHeader bool) (*file.File, error)
 }
 
 func exportViewTableFunc(m *model.Model, models model.Models) *golang.Block {
+	summCols := m.Columns.ForDisplay("summary")
 	ret := golang.NewBlock("Table", "func")
 	ret.W("{%% func Table(models " + m.Package + "." + m.ProperPlural() + ", params filter.ParamSet, as *app.State, ps *cutil.PageState) %%}")
 	ret.W("  {%%- code prms := params.Get(\"" + m.Package + "\", nil, ps.Logger) -%%}")
 	ret.W("  <table class=\"mt\">")
 	ret.W("    <thead>")
 	ret.W("      <tr>")
-	for _, col := range m.Columns {
+	for _, col := range summCols {
 		call := fmt.Sprintf("components.TableHeaderSimple(%q, %q, %q, %q, prms, ps.URI, ps)", m.Package, col.Name, util.StringToTitle(col.Name), col.Help())
 		ret.W("        {%%= " + call + " %%}")
 	}
@@ -34,7 +35,7 @@ func exportViewTableFunc(m *model.Model, models model.Models) *golang.Block {
 	ret.W("    <tbody>")
 	ret.W("      {%%- for _, model := range models -%%}")
 	ret.W("      <tr>")
-	for _, col := range m.Columns {
+	for _, col := range summCols {
 		viewTableColumn(ret, models, m, true, col, "model.", 4)
 	}
 	ret.W("      </tr>")

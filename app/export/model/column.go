@@ -15,11 +15,12 @@ type Column struct {
 	Nullable   bool           `json:"nullable,omitempty"`
 	Search     bool           `json:"search,omitempty"`
 	SQLDefault string         `json:"sqlDefault,omitempty"`
+	Display    string         `json:"display,omitempty"`
 	Tags       []string       `json:"tags,omitempty"`
 }
 
 func (c *Column) Clone() *Column {
-	return &Column{Name: c.Name, Type: c.Type, PK: c.PK, Nullable: c.Nullable, Search: c.Search, SQLDefault: c.SQLDefault, Tags: c.Tags}
+	return &Column{Name: c.Name, Type: c.Type, PK: c.PK, Nullable: c.Nullable, Search: c.Search, SQLDefault: c.SQLDefault, Display: c.Display, Tags: c.Tags}
 }
 
 func (c *Column) NameQuoted() string {
@@ -153,6 +154,15 @@ func (c *Column) Title() string {
 
 func (c *Column) TitleLower() string {
 	return strings.ToLower(c.Title())
+}
+
+func (c *Column) ShouldDisplay(k string) bool {
+	switch c.Display {
+	case "detail":
+		return k == c.Display
+	default:
+		return true
+	}
 }
 
 func (c *Column) BC() string {

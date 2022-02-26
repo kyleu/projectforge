@@ -36,7 +36,7 @@
     {%- if len(p.Results) == 0 -%}
       <em>No rows returned</em>
     {%- else -%}
-      <table class="mt">
+      <table class="mt expanded">
         <thead>
           <tr>
             {%- for _, c := range p.Columns -%}

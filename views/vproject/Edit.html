@@ -31,7 +31,7 @@
   <form action="" method="post">
     <div class="card">
       <h3>Project Details</h3>
-      <table class="mt min-200">
+      <table class="mt min-200 expanded">
         <tbody>
           {%- if prj.Key == "" -%}
           {%= components.TableInput("key", "Key", prj.Key, 5, project.Helpers["key"]...) %}
@@ -68,7 +68,7 @@
     </div>
     <div class="card">
       <h3>Metadata</h3>
-      <table class="mt min-200">
+      <table class="mt min-200 expanded">
         <tbody>
           {%= components.TableInput("org", "Organization", info.Org, 5, project.Helpers["org"]...) %}
           {%= components.TableInput("authorID", "Author ID", info.AuthorID, 5, project.Helpers["authorID"]...) %}

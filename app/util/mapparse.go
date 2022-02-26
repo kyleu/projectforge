@@ -148,7 +148,7 @@ func (m ValueMap) ParseMap(path string, allowMissing bool, allowEmpty bool) (Val
 			return nil, nil
 		}
 		ret := ValueMap{}
-		err := FromJSON([]byte(t), &ret)
+		err := FromJSON(t, &ret)
 		if err != nil {
 			return nil, decorateError(m, path, "time", errors.Wrap(err, "invalid JSON"))
 		}

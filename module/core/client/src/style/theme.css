@@ -63,3 +63,28 @@
   width: 64px;
   height: 64px
 }
+
+.choice label {
+  display: block;
+  float: left;
+  margin-right: var(--padding);
+}
+
+.choice input {
+  display: none;
+}
+
+.choice .title {
+  text-align: center;
+  cursor: pointer;
+}
+
+.choice input ~ * {
+  border: 3px solid transparent;
+}
+.choice input:checked ~ * {
+  border: 3px solid var(--color-background-muted);
+}
+.choice input:checked ~ .title {
+  background-color: var(--color-background-muted);
+}

@@ -52,7 +52,7 @@ func ModuleSearch(rc *fasthttp.RequestCtx) {
 			}
 		}
 
-		ps.Title = fmt.Sprintf("[%s] Search Results", mod.Title())
+		ps.Title = fmt.Sprintf("[%s] Module Results", mod.Title())
 		ps.Data = mod
 		// page := &vsearch.Results{Params: params, Results: res, SearchPath: fmt.Sprintf("/p/%s/search", mod.Key)}
 		page := &vmodule.Search{Module: mod, Params: params, Results: res}

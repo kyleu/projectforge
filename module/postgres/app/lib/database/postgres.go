@@ -142,10 +142,7 @@ func OpenPostgresDatabaseSSL(ctx context.Context, key string, ep *PostgresParams
 	db.SetMaxOpenConns(ep.MaxConns)
 	db.SetMaxIdleConns(0)
 
-	var log *zap.SugaredLogger
-	if ep.Debug {
-		log = logger.With("svc", "database", "db", key)
-	}
+	logger = logger.With("svc", "database", "db", key)
 
-	return NewService(typePostgres, key, dbname, ep.Schema, sp.Username, ep.Debug, db, log)
+	return NewService(typePostgres, key, dbname, ep.Schema, sp.Username, ep.Debug, db, logger)
 }

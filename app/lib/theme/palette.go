@@ -65,7 +65,7 @@ func getPalette(pal string) (*gamut.Palette, error) {
 }
 
 func paletteColors(p gamut.Palette) gamut.Colors {
-	var ret = p.Colors()
+	ret := p.Colors()
 	sort.Slice(ret, func(i, j int) bool {
 		return ret[i].Name < ret[j].Name
 	})
