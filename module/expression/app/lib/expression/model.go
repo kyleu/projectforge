@@ -36,19 +36,19 @@ func (e *Expression) Compile(eng *Engine) error {
 	return nil
 }
 
-func (e *Expression) Run(params map[string]interface{}) (interface{}, error, int64) {
+func (e *Expression) Run(params map[string]interface{}) (interface{}, int64, error) {
 	if e.Program == nil {
-		return nil, errors.New("no program"), 0
+		return nil, 0, errors.New("no program")
 	}
 
 	startNanos := util.TimerStart()
 	out, _, err := e.Program.Eval(params)
 	if err != nil {
-		return nil, errors.Wrap(err, "cannot run program"), 0
+		return nil, 0, errors.Wrap(err, "cannot run program")
 	}
 	duration := (time.Now().UnixNano() - startNanos) / int64(time.Microsecond)
 
-	return out.Value(), nil, duration
+	return out.Value(), duration, nil
 }
 
 func CheckResult(x interface{}, logger *zap.SugaredLogger) bool {

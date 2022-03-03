@@ -21,6 +21,8 @@ EXPOSE 40000
 # marketing port
 EXPOSE 40001
 
+WORKDIR /
+
 ENTRYPOINT ["/projectforge", "-a", "0.0.0.0"]
 
 COPY projectforge /

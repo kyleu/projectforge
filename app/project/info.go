@@ -30,6 +30,7 @@ type Info struct {
 	SigningIdentity string        `json:"signingIdentity,omitempty"`
 	Slack           string        `json:"slack,omitempty"`
 	JavaPackage     string        `json:"javaPackage,omitempty"`
+	ExtraFiles      []string      `json:"extraFiles,omitempty"`
 	ModuleDefs      ModuleDefs    `json:"moduleDefs,omitempty"`
 	ModuleArgs      util.ValueMap `json:"moduleArgs,omitempty"`
 }
@@ -61,7 +62,7 @@ func (i *Info) AuthorIDSafe() string {
 }
 
 func (i *Info) ModuleArg(mod string) interface{} {
-	if i.ModuleArgs == nil {
+	if i == nil || i.ModuleArgs == nil {
 		return nil
 	}
 	return i.ModuleArgs[mod]

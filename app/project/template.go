@@ -113,6 +113,28 @@ func (t *TemplateContext) CIContent() string {
 	}
 }
 
+func (t *TemplateContext) ExtraFilesContent() string {
+	if t.Info == nil || len(t.Info.ExtraFiles) == 0 {
+		return ""
+	}
+	ret := []string{"\n    extra_files:"}
+	for _, ef := range t.Info.ExtraFiles {
+		ret = append(ret, "      - "+ef)
+	}
+	return strings.Join(ret, "\n")
+}
+
+func (t *TemplateContext) ExtraFilesDocker() string {
+	if t.Info == nil || len(t.Info.ExtraFiles) == 0 {
+		return ""
+	}
+	ret := make([]string, 0, len(t.Info.ExtraFiles))
+	for _, ef := range t.Info.ExtraFiles {
+		ret = append(ret, "\nCOPY "+ef+" /")
+	}
+	return strings.Join(ret, "")
+}
+
 func (t *TemplateContext) HasSlack() bool {
 	return t.Info.Slack != ""
 }

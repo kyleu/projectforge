@@ -1,4 +1,6 @@
 {% import (
+  "strings"
+
   "github.com/kyleu/projectforge/app"
   "github.com/kyleu/projectforge/app/controller/cutil"
   "github.com/kyleu/projectforge/app/project"
@@ -62,6 +64,10 @@
       <tr>
         <th>Java Package</th>
         <td>{%s info.JavaPackage %}</td>
+      </tr>
+      <tr>
+        <th>Extra Files</th>
+        <td>{%s strings.Join(info.ExtraFiles, ", ") %}</td>
       </tr>
       {%- if len(info.ModuleDefs) > 0 -%}
       <tr>

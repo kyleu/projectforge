@@ -2,6 +2,7 @@ package action
 
 import (
 	"strconv"
+	"strings"
 
 	"github.com/kyleu/projectforge/app/project"
 	"github.com/kyleu/projectforge/app/util"
@@ -64,6 +65,7 @@ func projectFromCfg(proto *project.Project, cfg util.ValueMap) *project.Project 
 			SigningIdentity: str("signingIdentity", i.SigningIdentity),
 			Slack:           str("slack", i.Slack),
 			JavaPackage:     str("javaPackage", i.JavaPackage),
+			ExtraFiles:      util.StringSplitAndTrim(str("extraFiles", strings.Join(i.ExtraFiles, ", ")), ","),
 			ModuleArgs:      moduleArgs,
 		},
 		Path: proto.Path,

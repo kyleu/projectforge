@@ -13,6 +13,8 @@ EXPOSE {{{ .Port }}}{{{$inc := .}}}{{{ range $k, $v := .PortOffsets }}}
 # {{{ $k }}} port
 EXPOSE {{{ $inc.PortIncremented $v }}}{{{ end }}}
 
+WORKDIR /
+
 ENTRYPOINT ["/{{{ .Exec }}}", "-a", "0.0.0.0"]
 
-COPY {{{ .Exec }}} /
+COPY {{{ .Exec }}} /{{{ .ExtraFilesDocker }}}

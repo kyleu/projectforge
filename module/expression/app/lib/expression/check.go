@@ -8,8 +8,10 @@ import (
 	"go.uber.org/zap"
 )
 
-var expressionMU = &sync.Mutex{}
-var expressionCache = make(map[string]*Expression)
+var (
+	expressionMU    = &sync.Mutex{}
+	expressionCache = make(map[string]*Expression)
+)
 
 type Engine struct {
 	env *cel.Env
@@ -38,7 +40,7 @@ func (e *Engine) Check(as string, params map[string]interface{}, logger *zap.Sug
 		expressionMU.Unlock()
 	}
 
-	rsp, err, _ := ex.Run(params)
+	rsp, _, err := ex.Run(params)
 	if err != nil {
 		logger.Debug(fmt.Sprintf("error running expression [%v]: %v", as, err.Error()))
 		return false

@@ -58,6 +58,7 @@ func projectFromForm(frm util.ValueMap, prj *project.Project) error {
 	prj.Info.SigningIdentity = get("signingIdentity", prj.Info.SigningIdentity)
 	prj.Info.Slack = get("slack", prj.Info.Slack)
 	prj.Info.JavaPackage = get("javaPackage", prj.Info.JavaPackage)
+	prj.Info.ExtraFiles = util.StringSplitAndTrim(get("extraFiles", strings.Join(prj.Info.ExtraFiles, ", ")), ",")
 
 	var err error
 	prj.Info.ModuleArgs, err = getModuleArgs(frm)

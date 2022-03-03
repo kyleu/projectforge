@@ -61,14 +61,14 @@ dockers:
       - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:{{ .Major }}.{{ .Minor }}"
       - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:{{ .Major }}.{{ .Minor }}.{{ .Patch }}"
       - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:latest"
-    dockerfile: ./tools/release/Dockerfile{{{ if .Build.Simple }}}{{{ else }}}
+    dockerfile: ./tools/release/Dockerfile{{{ .ExtraFilesContent }}}{{{ if .Build.Simple }}}{{{ else }}}
   -
     image_templates:
       - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:{{ .Major }}-debug"
       - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:{{ .Major }}.{{ .Minor }}-debug"
       - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:{{ .Major }}.{{ .Minor }}.{{ .Patch }}-debug"
       - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:latest-debug"
-    dockerfile: ./tools/release/debug.Dockerfile{{{ end }}}
+    dockerfile: ./tools/release/debug.Dockerfile{{{ .ExtraFilesContent }}}{{{ end }}}
 
 dist: "build/dist"
 {{{ if .Build.NFPMS }}}
@@ -139,6 +139,8 @@ builds:
     goarch:
       - "amd64"
     mod_timestamp: "{{ .CommitTimestamp }}"
+    # $PF_SECTION_START(simplescripts)$
+    # $PF_SECTION_END(simplescripts)$
 {{{ else }}}
 builds:
   - id: "darwin"

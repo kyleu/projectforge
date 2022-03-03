@@ -18,7 +18,7 @@
 {% func (p *Results) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>{% if p.Params.Q == "" %}Search{% else %}[{%s p.Params.Q %}] search results{% endif %}</h3>
-    <form class="mt" action="{%s ps.SearchPath %}">
+    <form class="mt expanded" action="{%s ps.SearchPath %}">
       <input name="q" value="{%s p.Params.Q %}" />
       <div class="mt"><button type="submit">Search Again</button></div>
     </form>

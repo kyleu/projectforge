@@ -3,7 +3,6 @@ package telemetry
 
 import (
 	"context"
-	"net/http"
 	"os"
 
 	"go.opentelemetry.io/otel"
@@ -78,15 +77,28 @@ func Close() error {
 }
 
 func StartSpan(ctx context.Context, spanName string, logger *zap.SugaredLogger, opts ...interface{}) (context.Context, *Span, *zap.SugaredLogger) {
+	return spanCreate(ctx, spanName, logger, opts...)
+}
+
+func StartAsyncSpan(ctx context.Context, spanName string, logger *zap.SugaredLogger, opts ...interface{}) (context.Context, *Span, *zap.SugaredLogger) {
+	parentSpan := trace.SpanFromContext(ctx)
+	asyncChildCtx := trace.ContextWithSpan(context.Background(), parentSpan)
+	return spanCreate(asyncChildCtx, spanName, logger, opts...)
+}
+
+func spanCreate(ctx context.Context, spanName string, logger *zap.SugaredLogger, opts ...interface{}) (context.Context, *Span, *zap.SugaredLogger) {
 	tr := otel.GetTracerProvider().Tracer(util.AppKey)
-	ctx, ot := tr.Start(ctx, spanName, trace.WithSpanKind(trace.SpanKindServer))
+	ssos := []trace.SpanStartOption{trace.WithSpanKind(trace.SpanKindServer)}
+	for _, opt := range opts {
+		o, ok := opt.(trace.SpanStartOption)
+		if ok {
+			ssos = append(ssos, o)
+		}
+	}
+	ctx, ot := tr.Start(ctx, spanName, ssos...)
 	sp := &Span{OT: ot}
 	if logger != nil {
 		logger = LoggerFor(logger, sp)
 	}
 	return ctx, sp, logger
-}
-
-func AddHeaders(span *Span, req *http.Request) error {
-	return nil
 }
