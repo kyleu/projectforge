@@ -3,6 +3,7 @@
   "{{{ .Package }}}/app/site/download"
   "{{{ .Package }}}/app/util"
   "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/views/components"
   "{{{ .Package }}}/views/layout"
 ) %}
 
@@ -13,7 +14,7 @@
 
 {% func (p *Download) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>Download {%s util.AppName %} {%s as.BuildInfo.Version %}</h3>
+    <h3>{%= components.SVGRefIcon("download", ps) %} Download {%s util.AppName %} {%s as.BuildInfo.Version %}</h3>
   </div>
 
   <div class="card">
@@ -21,7 +22,12 @@
     <em>Standalone application using your platform's native web viewer</em>
     <ul class="mt">
       {%- for _, link := range p.Links.GetByModes("desktop") -%}
-      <li><a href="{{{ .Info.Sourcecode }}}/releases/download/v{%s as.BuildInfo.Version %}/{%s link.URL %}">{%s link.OSString() %}</a></li>
+      <li>
+        <a href="https://github.com/kyleu/projectforge/releases/download/v{%s as.BuildInfo.Version %}/{%s link.URL %}">
+          {%= components.SVGRef(link.OSIcon(), 20, 20, "icon", ps) %} {%s link.OSString() %}
+        </a>
+        <div class="clear"></div>
+      </li>
       {%- endfor -%}
     </ul>
   </div>

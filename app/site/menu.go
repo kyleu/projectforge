@@ -23,6 +23,6 @@ func Menu(as *app.State, _ *user.Profile, _ user.Accounts) menu.Items {
 		{Key: keyFeatures, Title: "Features", Icon: "bolt", Route: "/" + keyFeatures, Children: featuresMenu(as)},
 		{Key: keyCustomizing, Title: "Customizing", Icon: "code", Route: "/" + keyCustomizing},
 		{Key: keyContrib, Title: "Contributing", Icon: "cog", Route: "/" + keyContrib},
-		{Key: keyTech, Title: "Technology", Icon: "cog", Route: "/" + keyTech},
+		{Key: keyTech, Title: "Technology", Icon: "shield", Route: "/" + keyTech},
 	}
 }

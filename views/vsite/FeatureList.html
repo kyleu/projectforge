@@ -15,7 +15,7 @@
 {% func (p *FeatureList) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`app`, ps) %}{%s util.AppName %} Features</h3>
-    <ul>
+    <ul class="mt">
       {%- for _, mod := range p.Modules -%}
       <li>
         <a href="/features/{%s mod.Key %}">{%= components.SVGRefIcon(mod.Icon, ps) %}{%s mod.Title() %}</a>

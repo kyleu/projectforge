@@ -29,7 +29,7 @@
   <form action="" method="post">
     <div class="card">
       <h3>Create your project</h3>
-      <table class="mt min-200">
+      <table class="mt min-200 expanded">
         <tbody>
           {%= components.TableInput("key", "Key", prj.Key, 5, project.Helpers["key"]...) %}
           {%= components.TableInput("name", "Name", strings.TrimSuffix(prj.Name, " (missing)"), 5, project.Helpers["name"]...) %}

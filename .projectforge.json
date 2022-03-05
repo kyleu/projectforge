@@ -32,7 +32,7 @@
     "homepage": "https://projectforge.dev",
     "sourcecode": "https://github.com/kyleu/projectforge",
     "summary": "Build and maintain feature-rich applications using Golang",
-    "description": "Project Forge helps you build and maintain feature-rich applications written in the Go programming language.",
+    "description": "Project Forge creates and manages web projects written in the Go language. Using code generation, the latest technology, and a strong standard library, Project Forge will manage your project's code, assets, UI and UX.",
     "homebrew": "https://update.projectforge.dev/release",
     "bundle": "com.kyleu.projectforge",
     "signingIdentity": "Developer ID Application: Kyle Unverferth (C6S478FYLD)",

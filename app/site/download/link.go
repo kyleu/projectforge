@@ -40,6 +40,13 @@ func (l *Link) OSString() string {
 	return "Unknown"
 }
 
+func (l *Link) OSIcon() string {
+	if l.OS == osMac {
+		return "apple"
+	}
+	return l.OS
+}
+
 type Links []*Link
 
 func (l Links) Get(mode string, os string, arch string) *Link {

@@ -38,7 +38,7 @@ func Apply(ctx context.Context, p *Params) *Result {
 			return errorResult(err, p.Cfg, p.Logger)
 		}
 
-		ret = applyPrj(ctx, pm, p.T)
+		ret = applyPrj(pm, p.T)
 	}
 	ret.Duration = util.TimerEnd(start)
 	return ret
@@ -56,12 +56,14 @@ func applyBasic(ctx context.Context, p *Params) *Result {
 	return nil
 }
 
-func applyPrj(ctx context.Context, pm *PrjAndMods, t Type) *Result {
+func applyPrj(pm *PrjAndMods, t Type) *Result {
 	switch t {
 	case TypeAudit:
 		return onAudit(pm)
 	case TypeBuild:
 		return onBuild(pm)
+	case TypeDebug:
+		return onDebug(pm)
 	case TypeMerge:
 		return onMerge(pm)
 	case TypePreview:
@@ -99,6 +101,13 @@ func getPrjAndMods(ctx context.Context, p *Params) (*PrjAndMods, error) {
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to load project [%s]", p.ProjectKey)
 	}
+	if prj.Info != nil {
+		_, err := p.MSvc.Register(prj.Path, prj.Info.ModuleDefs...)
+		if err != nil {
+			return nil, errors.Wrap(err, "unable to register modules")
+		}
+	}
+
 	mods, err := p.MSvc.GetModules(prj.Modules...)
 	if err != nil {
 		return nil, err

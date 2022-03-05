@@ -1,7 +1,7 @@
 {
   "name": "Schema",
-  "icon": "schema",
-  "description": "Classes for representing a collection of models",
+  "icon": "server",
+  "description": "Classes for representing a collection of models; depends on the types module",
   "authorName": "Kyle U",
   "authorEmail": "kyle@kyleu.com",
   "license": "CC0",
