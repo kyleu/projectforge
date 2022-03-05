@@ -38,7 +38,7 @@
     "signingIdentity": "Developer ID Application: Kyle Unverferth (C6S478FYLD)",
     "javaPackage": "dev.projectforge",
     "goVersion": "1.18",
-    "goBinary": "go1.18beta2"
+    "goBinary": "go1.18rc1"
   },
   "build": {
     "publish": true,

@@ -132,7 +132,7 @@ builds:
       - "amd64"
       - "arm64"
     mod_timestamp: "{{ .CommitTimestamp }}"
-    gobinary: "go1.18beta2"
+    gobinary: "go1.18rc1"
 
   - id: "linux"
     goos:
@@ -142,7 +142,7 @@ builds:
       - "amd64"
       - "arm64"
     mod_timestamp: "{{ .CommitTimestamp }}"
-    gobinary: "go1.18beta2"
+    gobinary: "go1.18rc1"
 
   - id: "linux-arm"
     goos:
@@ -154,7 +154,7 @@ builds:
       - "6"
       - "7"
     mod_timestamp: "{{ .CommitTimestamp }}"
-    gobinary: "go1.18beta2"
+    gobinary: "go1.18rc1"
 
   - id: "linux-mips"
     goos:
@@ -168,7 +168,7 @@ builds:
       - "hardfloat"
       - "softfloat"
     mod_timestamp: "{{ .CommitTimestamp }}"
-    gobinary: "go1.18beta2"
+    gobinary: "go1.18rc1"
 
   - id: "linux-odd"
     goos:
@@ -179,7 +179,7 @@ builds:
       - "riscv64"
       - "s390x"
     mod_timestamp: "{{ .CommitTimestamp }}"
-    gobinary: "go1.18beta2"
+    gobinary: "go1.18rc1"
 
   - id: "windows"
     goos:
@@ -187,7 +187,7 @@ builds:
     goarch:
       - "amd64"
     mod_timestamp: "{{ .CommitTimestamp }}"
-    gobinary: "go1.18beta2"
+    gobinary: "go1.18rc1"
     hooks:
       # This build uses only one architecture, and is a good place to put one-time use scripts
       post:
@@ -205,7 +205,7 @@ builds:
     goarch:
       - "386"
     mod_timestamp: "{{ .CommitTimestamp }}"
-    gobinary: "go1.18beta2"
+    gobinary: "go1.18rc1"
 
   - id: "windows-arm"
     goos:
@@ -218,7 +218,7 @@ builds:
       - "6"
       - "7"
     mod_timestamp: "{{ .CommitTimestamp }}"
-    gobinary: "go1.18beta2"
+    gobinary: "go1.18rc1"
 
   - id: "js"
     goos:
@@ -226,7 +226,7 @@ builds:
     goarch:
       - "wasm"
     mod_timestamp: "{{ .CommitTimestamp }}"
-    gobinary: "go1.18beta2"
+    gobinary: "go1.18rc1"
 
   - id: "dragonfly"
     goos:
@@ -234,7 +234,7 @@ builds:
     goarch:
       - "amd64"
     mod_timestamp: "{{ .CommitTimestamp }}"
-    gobinary: "go1.18beta2"
+    gobinary: "go1.18rc1"
 
   - id: "illumos"
     goos:
@@ -242,7 +242,7 @@ builds:
     goarch:
       - "amd64"
     mod_timestamp: "{{ .CommitTimestamp }}"
-    gobinary: "go1.18beta2"
+    gobinary: "go1.18rc1"
 
   - id: "freebsd"
     goos:
@@ -257,7 +257,7 @@ builds:
       - "6"
       - "7"
     mod_timestamp: "{{ .CommitTimestamp }}"
-    gobinary: "go1.18beta2"
+    gobinary: "go1.18rc1"
 
   - id: "netbsd"
     goos:
@@ -270,7 +270,7 @@ builds:
     goarm:
       - "7"
     mod_timestamp: "{{ .CommitTimestamp }}"
-    gobinary: "go1.18beta2"
+    gobinary: "go1.18rc1"
 
   - id: "openbsd"
     goos:
@@ -285,7 +285,7 @@ builds:
       - "6"
       - "7"
     mod_timestamp: "{{ .CommitTimestamp }}"
-    gobinary: "go1.18beta2"
+    gobinary: "go1.18rc1"
 
   - id: "plan9"
     goos:
@@ -299,7 +299,7 @@ builds:
       - "6"
       - "7"
     mod_timestamp: "{{ .CommitTimestamp }}"
-    gobinary: "go1.18beta2"
+    gobinary: "go1.18rc1"
 
   - id: "solaris"
     goos:
@@ -307,4 +307,4 @@ builds:
     goarch:
       - "amd64"
     mod_timestamp: "{{ .CommitTimestamp }}"
-    gobinary: "go1.18beta2"
+    gobinary: "go1.18rc1"
