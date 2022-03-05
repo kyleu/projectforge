@@ -17,8 +17,7 @@ jobs:
       - name: "Golang"
         uses: "actions/setup-go@v2"
         with:
-          go-version: "1.18.0-rc1"
-          stable: false
+          go-version: "1.17"
       - name: "Login"
         uses: "docker/login-action@v1"
         with:

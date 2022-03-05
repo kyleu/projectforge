@@ -36,9 +36,7 @@
     "homebrew": "https://update.projectforge.dev/release",
     "bundle": "com.kyleu.projectforge",
     "signingIdentity": "Developer ID Application: Kyle Unverferth (C6S478FYLD)",
-    "javaPackage": "dev.projectforge",
-    "goVersion": "1.18",
-    "goBinary": "go1.18rc1"
+    "javaPackage": "dev.projectforge"
   },
   "build": {
     "publish": true,
