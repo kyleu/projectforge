@@ -97,6 +97,8 @@
           {%- else -%}
           <input type="hidden" name="javaPackage" value="{%s info.JavaPackage %}" />
           {%- endif -%}
+          {%= components.TableInput("goVersion", "Go Version", info.GoVersion, 5, project.Helpers["goVersion"]...) %}
+          {%= components.TableInput("goBinary", "Go Binary", info.GoBinary, 5, project.Helpers["goBinary"]...) %}
           {%= components.TableInput("extraFiles", "Extra Files", strings.Join(info.ExtraFiles, ", "), 5, project.Helpers["extraFiles"]...) %}
         </tbody>
       </table>

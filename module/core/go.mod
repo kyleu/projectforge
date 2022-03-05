@@ -1,7 +1,7 @@
 // $PF_IGNORE$
 module {{{ .Package }}}
 
-go 1.17
+go {{{ .GoVersionSafe }}}
 
 require (
 	github.com/alecthomas/chroma v0.9.2

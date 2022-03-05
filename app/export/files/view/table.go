@@ -51,7 +51,10 @@ func viewTableColumn(ret *golang.Block, models model.Models, m *model.Model, lin
 	rels := m.RelationsFor(col)
 	if len(rels) == 0 {
 		if col.PK && link {
-			ret.W("        <td><a href=\"" + m.LinkURL(prefix) + "\">" + col.ToGoViewString(prefix) + "</a></td>")
+			ret.W(ind+"<td><a href=%q>%s</a></td>", m.LinkURL(prefix), col.ToGoViewString(prefix))
+		} else if col.HasTag("grouped") {
+			u := fmt.Sprintf("/%s/%s/%s", m.Route(), col.TitleLower(), col.ToGoViewString(prefix))
+			ret.W(ind+"<td><a href=%q>%s</a></td>", u, col.ToGoViewString(prefix))
 		} else {
 			ret.W(ind + "<td>" + col.ToGoViewString(prefix) + "</td>")
 		}

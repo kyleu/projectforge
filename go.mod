@@ -1,7 +1,7 @@
 // $PF_IGNORE$
 module github.com/kyleu/projectforge
 
-go 1.17
+go 1.18
 
 require (
 	github.com/alecthomas/chroma v0.9.2

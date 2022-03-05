@@ -65,6 +65,8 @@ func projectFromCfg(proto *project.Project, cfg util.ValueMap) *project.Project 
 			SigningIdentity: str("signingIdentity", i.SigningIdentity),
 			Slack:           str("slack", i.Slack),
 			JavaPackage:     str("javaPackage", i.JavaPackage),
+			GoVersion:       str("goVersion", i.GoBinary),
+			GoBinary:        str("goBinary", i.GoBinary),
 			ExtraFiles:      util.StringSplitAndTrim(str("extraFiles", strings.Join(i.ExtraFiles, ", ")), ","),
 			ModuleArgs:      moduleArgs,
 		},

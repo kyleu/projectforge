@@ -138,7 +138,7 @@ builds:
       - "linux"
     goarch:
       - "amd64"
-    mod_timestamp: "{{ .CommitTimestamp }}"
+    mod_timestamp: "{{ .CommitTimestamp }}"{{{ .GoBinaryContent }}}
     # $PF_SECTION_START(simplescripts)$
     # $PF_SECTION_END(simplescripts)$
 {{{ else }}}
@@ -149,7 +149,7 @@ builds:
     goarch:
       - "amd64"
       - "arm64"
-    mod_timestamp: "{{ .CommitTimestamp }}"
+    mod_timestamp: "{{ .CommitTimestamp }}"{{{ .GoBinaryContent }}}
 
   - id: "linux"
     goos:
@@ -158,7 +158,7 @@ builds:
       - "386"{{{ end }}}
       - "amd64"
       - "arm64"
-    mod_timestamp: "{{ .CommitTimestamp }}"
+    mod_timestamp: "{{ .CommitTimestamp }}"{{{ .GoBinaryContent }}}
 {{{ if .Build.LinuxARM }}}
   - id: "linux-arm"
     goos:
@@ -169,7 +169,7 @@ builds:
       - "5"
       - "6"
       - "7"
-    mod_timestamp: "{{ .CommitTimestamp }}"
+    mod_timestamp: "{{ .CommitTimestamp }}"{{{ .GoBinaryContent }}}
 {{{ end }}}{{{ if .Build.LinuxMIPS }}}
   - id: "linux-mips"
     goos:
@@ -182,7 +182,7 @@ builds:
     gomips:
       - "hardfloat"
       - "softfloat"
-    mod_timestamp: "{{ .CommitTimestamp }}"
+    mod_timestamp: "{{ .CommitTimestamp }}"{{{ .GoBinaryContent }}}
 {{{ end }}}{{{ if .Build.LinuxOdd }}}
   - id: "linux-odd"
     goos:
@@ -192,14 +192,14 @@ builds:
       - "ppc64le"
       - "riscv64"
       - "s390x"
-    mod_timestamp: "{{ .CommitTimestamp }}"
+    mod_timestamp: "{{ .CommitTimestamp }}"{{{ .GoBinaryContent }}}
 {{{ end }}}
   - id: "windows"
     goos:
       - "windows"
     goarch:
       - "amd64"
-    mod_timestamp: "{{ .CommitTimestamp }}"
+    mod_timestamp: "{{ .CommitTimestamp }}"{{{ .GoBinaryContent }}}
     hooks:
       # This build uses only one architecture, and is a good place to put one-time use scripts
       post:{{{ if .Build.Desktop }}}
@@ -215,7 +215,7 @@ builds:
       - "windows"
     goarch:
       - "386"
-    mod_timestamp: "{{ .CommitTimestamp }}"
+    mod_timestamp: "{{ .CommitTimestamp }}"{{{ .GoBinaryContent }}}
 {{{ end }}}{{{ if .Build.WindowsARM }}}
   - id: "windows-arm"
     goos:
@@ -227,28 +227,28 @@ builds:
       - "5"
       - "6"
       - "7"
-    mod_timestamp: "{{ .CommitTimestamp }}"
+    mod_timestamp: "{{ .CommitTimestamp }}"{{{ .GoBinaryContent }}}
 {{{ end }}}{{{ if .Build.WASM }}}
   - id: "js"
     goos:
       - "js"
     goarch:
       - "wasm"
-    mod_timestamp: "{{ .CommitTimestamp }}"
+    mod_timestamp: "{{ .CommitTimestamp }}"{{{ .GoBinaryContent }}}
 {{{ end }}}{{{ if .Build.Dragonfly }}}
   - id: "dragonfly"
     goos:
       - "dragonfly"
     goarch:
       - "amd64"
-    mod_timestamp: "{{ .CommitTimestamp }}"
+    mod_timestamp: "{{ .CommitTimestamp }}"{{{ .GoBinaryContent }}}
 {{{ end }}}{{{ if .Build.Illumos }}}
   - id: "illumos"
     goos:
       - "illumos"
     goarch:
       - "amd64"
-    mod_timestamp: "{{ .CommitTimestamp }}"
+    mod_timestamp: "{{ .CommitTimestamp }}"{{{ .GoBinaryContent }}}
 {{{ end }}}{{{ if .Build.FreeBSD }}}
   - id: "freebsd"
     goos:
@@ -262,7 +262,7 @@ builds:
       - "5"
       - "6"
       - "7"
-    mod_timestamp: "{{ .CommitTimestamp }}"
+    mod_timestamp: "{{ .CommitTimestamp }}"{{{ .GoBinaryContent }}}
 {{{ end }}}{{{ if .Build.NetBSD }}}
   - id: "netbsd"
     goos:
@@ -274,7 +274,7 @@ builds:
       - "arm64"
     goarm:
       - "7"
-    mod_timestamp: "{{ .CommitTimestamp }}"
+    mod_timestamp: "{{ .CommitTimestamp }}"{{{ .GoBinaryContent }}}
 {{{ end }}}{{{ if .Build.OpenBSD }}}
   - id: "openbsd"
     goos:
@@ -288,7 +288,7 @@ builds:
       - "5"
       - "6"
       - "7"
-    mod_timestamp: "{{ .CommitTimestamp }}"
+    mod_timestamp: "{{ .CommitTimestamp }}"{{{ .GoBinaryContent }}}
 {{{ end }}}{{{ if .Build.Plan9 }}}
   - id: "plan9"
     goos:
@@ -301,13 +301,13 @@ builds:
       - "5"
       - "6"
       - "7"
-    mod_timestamp: "{{ .CommitTimestamp }}"
+    mod_timestamp: "{{ .CommitTimestamp }}"{{{ .GoBinaryContent }}}
 {{{ end }}}{{{ if .Build.Solaris }}}
   - id: "solaris"
     goos:
       - "solaris"
     goarch:
       - "amd64"
-    mod_timestamp: "{{ .CommitTimestamp }}"
+    mod_timestamp: "{{ .CommitTimestamp }}"{{{ .GoBinaryContent }}}
 {{{ end -}}}
 {{{ end -}}}

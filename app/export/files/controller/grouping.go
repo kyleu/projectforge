@@ -12,9 +12,6 @@ import (
 func Grouping(m *model.Model, args *model.Args, grp *model.Column, addHeader bool) (*file.File, error) {
 	name := m.Package + "by" + grp.Name
 	g := golang.NewFile("controller", []string{"app", "controller"}, name)
-	for _, imp := range helper.ImportsForTypes("parse", m.PKs().Types()...) {
-		g.AddImport(imp)
-	}
 	g.AddImport(helper.ImpFmt, helper.ImpErrors, helper.ImpFastHTTP, helper.ImpApp, helper.ImpCutil)
 	g.AddImport(helper.AppImport("app/" + m.Package))
 	g.AddImport(helper.AppImport("views/v" + m.Package))

@@ -6,6 +6,8 @@ import (
 	"github.com/kyleu/projectforge/app/util"
 )
 
+const defaultGoVersion = "1.17"
+
 type ModuleDef struct {
 	Key  string `json:"key"`
 	Path string `json:"path"`
@@ -30,6 +32,8 @@ type Info struct {
 	SigningIdentity string        `json:"signingIdentity,omitempty"`
 	Slack           string        `json:"slack,omitempty"`
 	JavaPackage     string        `json:"javaPackage,omitempty"`
+	GoVersion       string        `json:"goVersion,omitempty"`
+	GoBinary        string        `json:"goBinary,omitempty"`
 	ExtraFiles      []string      `json:"extraFiles,omitempty"`
 	ModuleDefs      ModuleDefs    `json:"moduleDefs,omitempty"`
 	ModuleArgs      util.ValueMap `json:"moduleArgs,omitempty"`
