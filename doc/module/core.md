@@ -7,7 +7,7 @@ https://github.com/kyleu/projectforge/tree/master/module/core
 
 ### License
 
-Licensed under [CC0](https://creativecommons.org/share-your-work/public-domain/cc0)
+Licensed under [CC0](https://creativecommons.org/publicdomain/zero/1.0)
 
 ### Packages
 - `cmd` contains the main CLI actions; start at `run.go`
