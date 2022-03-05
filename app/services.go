@@ -17,9 +17,9 @@ type Services struct {
 	Git      *git.Service
 }
 
-func NewServices(_ context.Context, st *State) (*Services, error) {
+func NewServices(ctx context.Context, st *State) (*Services, error) {
 	return &Services{
-		Modules:  module.NewService(st.Files, st.Logger),
+		Modules:  module.NewService(ctx, st.Files, st.Logger),
 		Projects: project.NewService(st.Logger),
 		Export:   export.NewService(st.Logger),
 		Git:      git.NewService(st.Logger),

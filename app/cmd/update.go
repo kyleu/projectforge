@@ -18,9 +18,17 @@ func updateF(ctx context.Context, args []string) error {
 
 	_logger.Infof("updating " + util.AppName + " modules...")
 	fs := filesystem.NewFileSystem(_flags.ConfigDir, _logger)
-	mSvc := module.NewService(fs, _logger)
+	mSvc := module.NewService(ctx, fs, _logger)
 	for _, mod := range mSvc.Modules() {
-		err := mSvc.Download(mod.Key, mod.URL)
+		url := mod.URL
+		var err error
+		if url == "" {
+			url, err = mSvc.AssetURL(ctx, mod.Key)
+			if err != nil {
+				return err
+			}
+		}
+		err = mSvc.Download(mod.Key, url)
 		if err != nil {
 			return err
 		}

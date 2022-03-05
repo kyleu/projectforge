@@ -102,7 +102,7 @@ func getPrjAndMods(ctx context.Context, p *Params) (*PrjAndMods, error) {
 		return nil, errors.Wrapf(err, "unable to load project [%s]", p.ProjectKey)
 	}
 	if prj.Info != nil {
-		_, err := p.MSvc.Register(prj.Path, prj.Info.ModuleDefs...)
+		_, err := p.MSvc.Register(ctx, prj.Path, prj.Info.ModuleDefs...)
 		if err != nil {
 			return nil, errors.Wrap(err, "unable to register modules")
 		}

@@ -2,6 +2,7 @@
 package controller
 
 import (
+	"context"
 	"strings"
 
 	"github.com/kyleu/projectforge/app"
@@ -16,7 +17,7 @@ func initApp(*app.State) {
 
 // Configure app-specific data for each request.
 func initAppRequest(as *app.State, ps *cutil.PageState) error {
-	if err := initProjects(as); err != nil {
+	if err := initProjects(ps.Context, as); err != nil {
 		return errors.Wrap(err, "unable to initialize projects")
 	}
 
@@ -37,7 +38,7 @@ func initSiteRequest(*app.State, *cutil.PageState) error {
 	return nil
 }
 
-func initProjects(as *app.State) error {
+func initProjects(ctx context.Context, as *app.State) error {
 	prjs, err := as.Services.Projects.Refresh()
 	if err != nil {
 		return errors.Wrap(err, "can't load projects")
@@ -47,7 +48,7 @@ func initProjects(as *app.State) error {
 		if prj.Info != nil {
 			mods = prj.Info.ModuleDefs
 		}
-		keys, err := as.Services.Modules.Register(prj.Path, mods...)
+		keys, err := as.Services.Modules.Register(ctx, prj.Path, mods...)
 		if err != nil {
 			return errors.Wrap(err, "unable to register module definitions")
 		}

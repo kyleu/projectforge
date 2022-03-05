@@ -1,6 +1,8 @@
 package site
 
 import (
+	"context"
+
 	"github.com/kyleu/projectforge/app"
 	"github.com/kyleu/projectforge/app/controller/cutil"
 	"github.com/kyleu/projectforge/app/lib/menu"
@@ -10,10 +12,10 @@ import (
 	"github.com/pkg/errors"
 )
 
-func featuresMenu(as *app.State) menu.Items {
+func featuresMenu(ctx context.Context, as *app.State) menu.Items {
 	if as.Services == nil {
 		as.Services = &app.Services{
-			Modules: module.NewService(as.Files, as.Logger),
+			Modules: module.NewService(ctx, as.Files, as.Logger),
 		}
 	}
 	ms := as.Services.Modules.Modules()

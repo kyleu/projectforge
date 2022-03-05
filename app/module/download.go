@@ -4,10 +4,8 @@ import (
 	"archive/zip"
 	"bytes"
 	"context"
-	"fmt"
 	"io"
 	"net/http"
-	"os"
 	"path/filepath"
 
 	"github.com/kyleu/projectforge/app/lib/filesystem"
@@ -16,11 +14,7 @@ import (
 
 func (s *Service) Download(key string, url string) error {
 	if url == "" {
-		base := "https://update.projectforge.dev/module/latest"
-		if o := os.Getenv("projectforge_update_url"); o != "" {
-			base = o
-		}
-		url = fmt.Sprintf(base+"/projectforge_module_%s.zip", key)
+		return errors.New("must provide URL")
 	}
 	s.logger.Infof("downloading module [%s] from URL [%s]", key, url)
 	req, err := http.NewRequestWithContext(context.Background(), "GET", url, http.NoBody)

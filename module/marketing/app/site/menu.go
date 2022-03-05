@@ -1,6 +1,8 @@
 package site
 
 import (
+	"context"
+
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/lib/menu"
 	"{{{ .Package }}}/app/lib/user"
@@ -15,7 +17,7 @@ const (
 	keyTech        = "technology"
 )
 
-func Menu(as *app.State, _ *user.Profile, _ user.Accounts) menu.Items {
+func Menu(ctx context.Context, as *app.State, _ *user.Profile, _ user.Accounts) menu.Items {
 	return menu.Items{
 		{Key: keyInstall, Title: "Install", Icon: "code", Route: "/" + keyInstall},
 		{Key: keyDownload, Title: "Download", Icon: "download", Route: "/" + keyDownload},

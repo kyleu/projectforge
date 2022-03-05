@@ -1,6 +1,7 @@
 package module
 
 import (
+	"context"
 	"path/filepath"
 	"sort"
 
@@ -28,7 +29,7 @@ type Service struct {
 	logger      *zap.SugaredLogger
 }
 
-func NewService(config filesystem.FileLoader, logger *zap.SugaredLogger) *Service {
+func NewService(ctx context.Context, config filesystem.FileLoader, logger *zap.SugaredLogger) *Service {
 	logger = logger.With("svc", "module")
 	local := filesystem.NewFileSystem("module", logger)
 	config = filesystem.NewFileSystem(filepath.Join(config.Root(), "module"), logger)
@@ -36,7 +37,7 @@ func NewService(config filesystem.FileLoader, logger *zap.SugaredLogger) *Servic
 	es := export.NewService(logger)
 	ret := &Service{local: local, config: config, cache: map[string]*Module{}, filesystems: fs, expSvc: es, logger: logger}
 
-	_, err := ret.LoadNative(nativeModuleKeys...)
+	_, err := ret.LoadNative(ctx, nativeModuleKeys...)
 	if err != nil {
 		logger.Errorf("unable to load [core] module: %+v", err)
 	}
@@ -54,7 +55,7 @@ func (s *Service) GetFilesystem(key string) filesystem.FileLoader {
 	return mod.Files
 }
 
-func (s *Service) AddIfNeeded(key string, path string, url string) (*Module, bool, error) {
+func (s *Service) AddIfNeeded(ctx context.Context, key string, path string, url string) (*Module, bool, error) {
 	ret, ok := s.cache[key]
 	if ok {
 		if ret.URL != url {
@@ -62,7 +63,7 @@ func (s *Service) AddIfNeeded(key string, path string, url string) (*Module, boo
 		}
 		return ret, false, nil
 	}
-	m, err := s.load(key, path, url)
+	m, err := s.load(ctx, key, path, url)
 	if err != nil {
 		return nil, false, err
 	}
@@ -109,10 +110,10 @@ func (s *Service) Modules() Modules {
 	return ret
 }
 
-func (s *Service) Register(path string, defs ...*project.ModuleDef) ([]string, error) {
+func (s *Service) Register(ctx context.Context, path string, defs ...*project.ModuleDef) ([]string, error) {
 	var ret []string
 	for _, def := range defs {
-		_, added, err := s.AddIfNeeded(def.Key, filepath.Join(path, def.Path), def.URL)
+		_, added, err := s.AddIfNeeded(ctx, def.Key, filepath.Join(path, def.Path), def.URL)
 		if err != nil {
 			return nil, err
 		}

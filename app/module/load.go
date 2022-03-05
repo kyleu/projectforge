@@ -1,6 +1,7 @@
 package module
 
 import (
+	"context"
 	"path/filepath"
 
 	"github.com/kyleu/projectforge/app/lib/filesystem"
@@ -10,10 +11,10 @@ import (
 
 const configFilename = ".module.json"
 
-func (s *Service) LoadNative(keys ...string) (Modules, error) {
+func (s *Service) LoadNative(ctx context.Context, keys ...string) (Modules, error) {
 	var ret Modules
 	for _, key := range keys {
-		m, err := s.Load(key, "")
+		m, err := s.Load(ctx, key, "")
 		if err != nil {
 			return nil, err
 		}
@@ -22,11 +23,11 @@ func (s *Service) LoadNative(keys ...string) (Modules, error) {
 	return ret, nil
 }
 
-func (s *Service) Load(key string, url string) (*Module, error) {
-	return s.load(key, "", url)
+func (s *Service) Load(ctx context.Context, key string, url string) (*Module, error) {
+	return s.load(ctx, key, "", url)
 }
 
-func (s *Service) load(key string, path string, url string) (*Module, error) {
+func (s *Service) load(ctx context.Context, key string, path string, url string) (*Module, error) {
 	var fs filesystem.FileLoader
 	switch {
 	case s.local.IsDir(key):
@@ -36,7 +37,14 @@ func (s *Service) load(key string, path string, url string) (*Module, error) {
 	case path != "":
 		fs = filesystem.NewFileSystem(path, s.logger)
 	default:
-		err := s.Download(key, url)
+		var err error
+		if url == "" {
+			url, err = s.AssetURL(ctx, key)
+			if err != nil {
+				return nil, errors.Wrapf(err, "error downloading module [%s]", key)
+			}
+		}
+		err = s.Download(key, url)
 		if err != nil {
 			return nil, errors.Wrapf(err, "error downloading module [%s]", key)
 		}

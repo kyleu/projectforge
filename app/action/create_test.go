@@ -39,7 +39,7 @@ func TestFoo(t *testing.T) {
 
 	logger, _ := log.InitLogging(true)
 	fs := filesystem.NewFileSystem("../../tmp/test/cfg", logger)
-	mSvc := module.NewService(fs, logger)
+	mSvc := module.NewService(context.Background(), fs, logger)
 	pSvc := project.NewService(logger)
 	eSvc := export.NewService(logger)
 
