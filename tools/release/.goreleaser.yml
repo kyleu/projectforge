@@ -25,7 +25,6 @@ brews:
     description: "Project Forge creates and manages web projects written in the Go language. Using code generation, the latest technology, and a strong standard library, Project Forge will manage your project's code, assets, UI and UX."
     license: "Proprietary"
     skip_upload: "false"
-    url_template: "https://update.projectforge.dev/release/{{ .Tag }}/{{ .ArtifactName }}"
     install: "bin.install \"projectforge\""
 
 changelog:
