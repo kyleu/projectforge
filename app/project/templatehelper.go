@@ -28,6 +28,10 @@ func (t *TemplateContext) NameCompressed() string {
 	return strings.ReplaceAll(t.Name, " ", "")
 }
 
+func (t *TemplateContext) SourceTrimmed() string {
+	return strings.TrimPrefix(strings.TrimPrefix(t.Info.Sourcecode, "http://"), "https://")
+}
+
 func (t *TemplateContext) IgnoredSetting() string {
 	if len(t.Ignore) == 0 {
 		return ""
