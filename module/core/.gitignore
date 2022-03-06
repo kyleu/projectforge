@@ -5,7 +5,4 @@
 /build
 /tmp
 
-**/*.html.go{{{ if .HasModule "database" }}}
-**/*.sql.go{{{ end }}}
-
 /client/node_modules

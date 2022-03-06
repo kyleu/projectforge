@@ -6,8 +6,6 @@
 /data
 /tmp
 
-**/*.html.go
-
 /client/node_modules
 
 additional-projects.json
