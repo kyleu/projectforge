@@ -64,8 +64,7 @@ func (o OrderedMap) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 }
 
 func (o *OrderedMap) UnmarshalJSON(b []byte) error {
-	err := FromJSON(b, &o.Map)
-	if err != nil {
+	if err := FromJSON(b, &o.Map); err != nil {
 		return err
 	}
 

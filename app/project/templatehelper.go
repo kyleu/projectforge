@@ -7,6 +7,8 @@ import (
 	"github.com/kyleu/projectforge/app/util"
 )
 
+const goStdBin = "go"
+
 func (t *TemplateContext) Title() string {
 	if t.Name != "" {
 		return t.Name
@@ -90,7 +92,7 @@ func (t *TemplateContext) GoVersionSafe() string {
 
 func (t *TemplateContext) GoBinarySafe() string {
 	if t.Info.GoBinary == "" {
-		return "go"
+		return goStdBin
 	}
 	return t.Info.GoBinary
 }

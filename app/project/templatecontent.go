@@ -44,7 +44,7 @@ func (t *TemplateContext) ExtraFilesDocker() string {
 }
 
 func (t *TemplateContext) GoBinaryContent() string {
-	if t.Info == nil || t.Info.GoBinary == "" || t.Info.GoBinary == "go" {
+	if t.Info == nil || t.Info.GoBinary == "" || t.Info.GoBinary == goStdBin {
 		return ""
 	}
 	return fmt.Sprintf("\n    gobinary: %q", t.Info.GoBinary)
