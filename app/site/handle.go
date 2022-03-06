@@ -19,8 +19,10 @@ import (
 
 func Handle(path []string, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (string, layout.Page, []string, error) {
 	if len(path) == 0 {
-		msg := "\n  <meta name=\"go-source\" content=\"projectforge.dev %s %s/tree/master{/dir} %s/blob/master{/dir}/{file}#L{line}\">"
-		ps.HeaderContent = fmt.Sprintf(msg, util.AppSource, util.AppSource, util.AppSource)
+		msg := "\n  " +
+			"<meta name=\"go-import\" content=\"projectforge.dev git %s\">\n  " +
+			"<meta name=\"go-source\" content=\"projectforge.dev %s %s/tree/master{/dir} %s/blob/master{/dir}/{file}#L{line}\">"
+		ps.HeaderContent = fmt.Sprintf(msg, util.AppSource, util.AppSource, util.AppSource, util.AppSource)
 		ps.Data = siteData("Welcome to the marketing site!")
 		return "", &vsite.Index{}, path, nil
 	}
