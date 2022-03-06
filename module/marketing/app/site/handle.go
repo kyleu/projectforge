@@ -27,8 +27,6 @@ func Handle(path []string, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.Pag
 		page = &vsite.Download{Links: dls}
 	case keyInstall:
 		page, err = mdTemplate("Installation", "This static page contains installation instructions", "installation.md", ps)
-	case keyQuickStart:
-		page, err = mdTemplate("Quick Start", "This static page shows how to get started with "+util.AppName, "quickstart.md", ps)
 	case keyContrib:
 		page, err = mdTemplate("Contributing", "This static page describes how to build "+util.AppName, "contributing.md", ps)
 	case keyTech:

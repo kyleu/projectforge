@@ -1,3 +1,0 @@
-# Project Forge Projects
-
-The projects you create and maintain with Project Forge can...

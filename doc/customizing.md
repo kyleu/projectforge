@@ -10,7 +10,12 @@ It contains `initApp`, for system startup logic, and `initAppRequest`, which is 
 
 ## Services
 
-The main dependencies of the project are in `app/state.go`, which deines a `State` object that should almost always be in scope. 
+The main dependencies of the project are in `app/state.go`, which defines a `State` object that should almost always be in scope. 
 It contains a `Services` instance which is where we'll add all our project-specific dependencies. 
 You can find it in `app/services.go`.
 
+## HTTP Controllers
+
+- All controller actions live in `app/controller`. Normal HTTP actions should use the `act` helper method, which extracts a session and injects dependencies.
+- Your method is provided an `cutil.PageState` which contains user and session information, and includes `Title` and `Data` fields, used for HTML title and data repsonses.
+- Every action supports content negotiation, you can pass a `Content-Type` header, or add [`?t=json`, `?t=yaml`, or `?t=xml`], to any URL.

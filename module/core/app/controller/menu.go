@@ -16,9 +16,6 @@ func MenuFor(ctx context.Context, isAuthed bool, isAdmin bool, as *app.State) (m
 
 	var ret menu.Items
 	// $PF_SECTION_START(routes_start)$
-	ret = append(ret,
-		&menu.Item{Key: "quickstart", Title: "Quickstart", Description: "Check out your fancy app!", Icon: "star", Route: "/quickstart"},
-	)
 	// $PF_SECTION_END(routes_start)${{{ if.HasModule "export" }}}
 	// $PF_INJECT_START(codegen)$
 	// $PF_INJECT_END(codegen)${{{ end }}}
