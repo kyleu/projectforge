@@ -3,11 +3,14 @@
   "github.com/kyleu/projectforge/views/components"
 ) %}
 
-{% func Form(act string, q string, ps *cutil.PageState) %}
+{% func Form(act string, q string, placeholder string, ps *cutil.PageState) %}
+  {%- code if placeholder == "" {
+    placeholder = "Search"
+  } -%}
   <form action="{%s act %}" method="get">
     <div class="right">
       <button class="right" type="submit">{%= components.SVGRef("search", 22, 22, `icon`, ps) %}</button>
-      <input class="right" type="text" name="q" style="border-right: 0;" value="{%s q %}" placeholder="Search" />
+      <input class="right" type="text" name="q" style="border-right: 0;" value="{%s q %}" placeholder="{%s placeholder %}" />
     </div>
   </form>
 {% endfunc %}

@@ -16,7 +16,7 @@
 
 {% func (p *Results) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    {%= vsearch.Form("/p/search", "", ps) %}
+    {%= vsearch.Form("/p/search", "", "Search Files", ps) %}
     <h3>All Projects: {%s p.T.Title %}</h3>
     <div class="mt">
       {%- for _, t := range action.ProjectTypes -%}

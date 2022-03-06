@@ -13,7 +13,7 @@
 
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    {%= vsearch.Form("/p/search", "", ps) %}
+    {%= vsearch.Form("/p/search", "", "Search All Files", ps) %}
     <h3>Actions for all Projects</h3>
     <p><a href="/run/preview"><button>Preview All</button></a></p>
   </div>

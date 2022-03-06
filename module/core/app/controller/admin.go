@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"runtime"
-	"runtime/debug"
 	"runtime/pprof"
 	"strings"
 
@@ -30,13 +29,13 @@ func Admin(rc *fasthttp.RequestCtx) {
 		}
 		switch path[0] {
 		case "modules":
-			mods, ok := debug.ReadBuildInfo()
-			if !ok {
-				return "", errors.New("unable to gather modules")
+			di, err := util.GetDebugInfo()
+			if err != nil {
+				return "", err
 			}
 			ps.Title = "Modules"
-			ps.Data = mods.Deps
-			return render(rc, as, &vadmin.Modules{Mods: mods.Deps}, ps, "admin", "Modules")
+			ps.Data = di
+			return render(rc, as, &vadmin.Modules{Info: di}, ps, "admin", "Modules")
 		case "request":
 			ps.Title = "Request Debug"
 			ps.Data = cutil.RequestCtxToMap(rc, nil)

@@ -2,16 +2,33 @@
   "runtime/debug"
 
   "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/util"
   "{{{ .Package }}}/app/controller/cutil"
   "{{{ .Package }}}/views/layout"
 ) %}
 
 {% code type Modules struct {
   layout.Basic
-  Mods []*debug.Module
+  Info *util.DebugInfo
 } %}
 
 {% func (p *Modules) Body(as *app.State, ps *cutil.PageState) %}
+  {%= buildInfo(p.Info.Tags, as) %}
+  {%= moduleList(p.Info.Mods) %}
+{% endfunc %}
+
+{% func buildInfo(tags *util.OrderedMap, as *app.State) %}
+  <div class="card">
+    <h3>{%s util.AppName %} v{%s as.BuildInfo.Version %}</h3>
+    <ul class="mt">
+      {%- for _, k := range tags.Order -%}
+      <li><strong>{%s k %}</strong>: {%s tags.GetSimple(k).(string) %}</li>
+      {%- endfor -%}
+    </ul>
+  </div>
+{% endfunc %}
+
+{% func moduleList(Mods []*debug.Module) %}
   <div class="card">
     <h3>Go Modules</h3>
     <table class="mt">
@@ -22,7 +39,7 @@
         </tr>
       </thead>
       <tbody>
-        {%- for _, m := range p.Mods -%}
+        {%- for _, m := range Mods -%}
         <tr>
           <td><a target="_blank" rel="noopener noreferrer" href="https://{%s m.Path %}">{%s m.Path %}</a></td>
           <td title="{%s m.Sum %}">{%s m.Version %}</td>
@@ -32,4 +49,3 @@
     </table>
   </div>
 {% endfunc %}
-

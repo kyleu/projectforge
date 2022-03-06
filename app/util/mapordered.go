@@ -31,6 +31,10 @@ func (o *OrderedMap) Get(k string) (interface{}, bool) {
 	return ret, ok
 }
 
+func (o *OrderedMap) GetSimple(k string) interface{} {
+	return o.Map[k]
+}
+
 func (o OrderedMap) MarshalYAML() (interface{}, error) {
 	return o.Map, nil
 }
@@ -61,7 +65,7 @@ func (o OrderedMap) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 }
 
 func (o *OrderedMap) UnmarshalJSON(b []byte) error {
-	err := json.Unmarshal(b, &o.Map)
+	err := FromJSON(b, &o.Map)
 	if err != nil {
 		return err
 	}

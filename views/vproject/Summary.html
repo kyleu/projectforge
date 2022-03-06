@@ -16,7 +16,7 @@
         q = args.GetStringOpt(`q`)
       }
     -%}
-    {%= vsearch.Form("/p/" + prj.Key + "/search", q, ps) %}
+    {%= vsearch.Form("/p/" + prj.Key + "/search", q, "Search Files", ps) %}
     <h3><a href="/p/{%s prj.Key %}">{%= components.SVGRefIcon(prj.IconSafe(), ps) %} {%s prj.Title() %}</a></h3>
     <div class="mt">
       {%- for _, t := range action.ProjectTypes -%}

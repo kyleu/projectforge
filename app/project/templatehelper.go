@@ -85,7 +85,7 @@ func (t *TemplateContext) GoVersionSafe() string {
 	if t.Info.GoVersion == "" {
 		return defaultGoVersion
 	}
-	return t.Info.GoVersion
+	return t.Info.GoVersion + "\n          stable: false"
 }
 
 func (t *TemplateContext) GoBinarySafe() string {
