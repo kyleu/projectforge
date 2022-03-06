@@ -5,14 +5,14 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/kyleu/projectforge/app"
-	"github.com/kyleu/projectforge/app/action"
-	"github.com/kyleu/projectforge/app/controller/cutil"
-	"github.com/kyleu/projectforge/app/lib/telemetry"
-	"github.com/kyleu/projectforge/app/util"
-	"github.com/kyleu/projectforge/views/vaction"
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
+	"projectforge.dev/app"
+	"projectforge.dev/app/action"
+	"projectforge.dev/app/controller/cutil"
+	"projectforge.dev/app/lib/telemetry"
+	"projectforge.dev/app/util"
+	"projectforge.dev/views/vaction"
 )
 
 func RunAction(rc *fasthttp.RequestCtx) {

@@ -3,12 +3,12 @@ package site
 import (
 	"context"
 
-	"github.com/kyleu/projectforge/app"
-	"github.com/kyleu/projectforge/app/controller/cutil"
-	"github.com/kyleu/projectforge/app/lib/menu"
-	"github.com/kyleu/projectforge/app/module"
-	"github.com/kyleu/projectforge/views/layout"
-	"github.com/kyleu/projectforge/views/vsite"
+	"projectforge.dev/app"
+	"projectforge.dev/app/controller/cutil"
+	"projectforge.dev/app/lib/menu"
+	"projectforge.dev/app/module"
+	"projectforge.dev/views/layout"
+	"projectforge.dev/views/vsite"
 	"github.com/pkg/errors"
 )
 

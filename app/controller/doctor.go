@@ -1,14 +1,14 @@
 package controller
 
 import (
-	"github.com/kyleu/projectforge/app"
-	"github.com/kyleu/projectforge/app/action"
-	"github.com/kyleu/projectforge/app/controller/cutil"
-	"github.com/kyleu/projectforge/app/doctor"
-	"github.com/kyleu/projectforge/app/doctor/checks"
-	"github.com/kyleu/projectforge/app/lib/menu"
-	"github.com/kyleu/projectforge/views/vdoctor"
 	"github.com/valyala/fasthttp"
+	"projectforge.dev/app"
+	"projectforge.dev/app/action"
+	"projectforge.dev/app/controller/cutil"
+	"projectforge.dev/app/doctor"
+	"projectforge.dev/app/doctor/checks"
+	"projectforge.dev/app/lib/menu"
+	"projectforge.dev/views/vdoctor"
 )
 
 func DoctorMenu(i string, r string) *menu.Item {

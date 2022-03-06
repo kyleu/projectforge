@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/kyleu/projectforge/app/diff"
-	"github.com/kyleu/projectforge/app/module"
-	"github.com/kyleu/projectforge/app/project"
-	"github.com/kyleu/projectforge/app/util"
 	"go.uber.org/zap"
+	"projectforge.dev/app/diff"
+	"projectforge.dev/app/module"
+	"projectforge.dev/app/project"
+	"projectforge.dev/app/util"
 )
 
 type Result struct {

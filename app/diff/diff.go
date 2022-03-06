@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/kyleu/projectforge/app/file"
-	"github.com/kyleu/projectforge/app/lib/filesystem"
 	"go.uber.org/zap"
+	"projectforge.dev/app/file"
+	"projectforge.dev/app/lib/filesystem"
 )
 
 type Diff struct {

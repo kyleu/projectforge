@@ -5,14 +5,14 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/kyleu/projectforge/app/git"
-	"github.com/kyleu/projectforge/app/project"
-	"github.com/kyleu/projectforge/views/vgit"
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
+	"projectforge.dev/app/git"
+	"projectforge.dev/app/project"
+	"projectforge.dev/views/vgit"
 
-	"github.com/kyleu/projectforge/app"
-	"github.com/kyleu/projectforge/app/controller/cutil"
+	"projectforge.dev/app"
+	"projectforge.dev/app/controller/cutil"
 )
 
 func GitActionAll(rc *fasthttp.RequestCtx) {

@@ -1,8 +1,8 @@
 package inject
 
 import (
-	"github.com/kyleu/projectforge/app/export/model"
-	"github.com/kyleu/projectforge/app/file"
+	"projectforge.dev/app/export/model"
+	"projectforge.dev/app/file"
 )
 
 func All(args *model.Args, files file.Files) error {

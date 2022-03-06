@@ -4,9 +4,9 @@ import (
 	"context"
 	"path/filepath"
 
-	"github.com/kyleu/projectforge/app/lib/filesystem"
-	"github.com/kyleu/projectforge/app/util"
 	"github.com/pkg/errors"
+	"projectforge.dev/app/lib/filesystem"
+	"projectforge.dev/app/util"
 )
 
 const configFilename = ".module.json"

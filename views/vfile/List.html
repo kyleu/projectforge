@@ -3,10 +3,10 @@
   "os"
   "path/filepath"
 
-  "github.com/kyleu/projectforge/app"
-  "github.com/kyleu/projectforge/app/lib/filesystem"
-  "github.com/kyleu/projectforge/app/controller/cutil"
-  "github.com/kyleu/projectforge/views/components"
+  "projectforge.dev/app"
+  "projectforge.dev/app/lib/filesystem"
+  "projectforge.dev/app/controller/cutil"
+  "projectforge.dev/views/components"
 ) %}
 
 {% func List(path []string, files []os.DirEntry, fs filesystem.FileLoader, urlPrefix string, as *app.State, ps *cutil.PageState) %}

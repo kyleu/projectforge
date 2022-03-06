@@ -8,8 +8,8 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/kyleu/projectforge/app"
-	"github.com/kyleu/projectforge/app/lib/search/result"
+	"projectforge.dev/app"
+	"projectforge.dev/app/lib/search/result"
 )
 
 type Provider func(context.Context, *app.State, *Params) (result.Results, error)

@@ -10,7 +10,7 @@ import (
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
-	"github.com/kyleu/projectforge/app/util"
+	"projectforge.dev/app/util"
 )
 
 type Service struct {

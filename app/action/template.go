@@ -4,9 +4,9 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/kyleu/projectforge/app/file"
-	"github.com/kyleu/projectforge/app/project"
+	"projectforge.dev/app/project"
 	"github.com/pkg/errors"
+	"projectforge.dev/app/file"
 )
 
 func runTemplate(path string, content string, ctx *project.TemplateContext) (string, error) {

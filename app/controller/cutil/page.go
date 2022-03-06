@@ -8,10 +8,10 @@ import (
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
 
-	"github.com/kyleu/projectforge/app/lib/menu"
-	"github.com/kyleu/projectforge/app/lib/telemetry"
-	"github.com/kyleu/projectforge/app/lib/user"
-	"github.com/kyleu/projectforge/app/util"
+	"projectforge.dev/app/lib/menu"
+	"projectforge.dev/app/lib/telemetry"
+	"projectforge.dev/app/lib/user"
+	"projectforge.dev/app/util"
 )
 
 type PageState struct {
@@ -35,6 +35,7 @@ type PageState struct {
 	ProfilePath   string             `json:"profilePath,omitempty"`
 	HideMenu      bool               `json:"hideMenu,omitempty"`
 	ForceRedirect string             `json:"forceRedirect,omitempty"`
+	HeaderContent string             `json:"headerContent,omitempty"`
 	Data          interface{}        `json:"data,omitempty"`
 	Logger        *zap.SugaredLogger `json:"-"`
 	Context       context.Context    `json:"-"`

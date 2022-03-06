@@ -5,20 +5,21 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/kyleu/projectforge/views/verror"
 	"github.com/valyala/fasthttp"
+	"projectforge.dev/views/verror"
 
-	"github.com/kyleu/projectforge/app"
-	"github.com/kyleu/projectforge/app/controller/cutil"
-	"github.com/kyleu/projectforge/app/site/download"
-	"github.com/kyleu/projectforge/app/util"
-	"github.com/kyleu/projectforge/doc"
-	"github.com/kyleu/projectforge/views/layout"
-	"github.com/kyleu/projectforge/views/vsite"
+	"projectforge.dev/app"
+	"projectforge.dev/app/controller/cutil"
+	"projectforge.dev/app/site/download"
+	"projectforge.dev/app/util"
+	"projectforge.dev/doc"
+	"projectforge.dev/views/layout"
+	"projectforge.dev/views/vsite"
 )
 
 func Handle(path []string, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (string, layout.Page, []string, error) {
 	if len(path) == 0 {
+		ps.HeaderContent = "\n  <meta name=\"go-source\" content=\"projectforge.dev https://github.com/kyleu/projectforge https://github.com/kyleu/projectforge/tree/master{/dir} https://github.com/kyleu/projectforge/blob/master{/dir}/{file}#L{line}\">"
 		ps.Data = siteData("Welcome to the marketing site!")
 		return "", &vsite.Index{}, path, nil
 	}

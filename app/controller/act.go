@@ -8,10 +8,10 @@ import (
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
 
-	"github.com/kyleu/projectforge/app"
-	"github.com/kyleu/projectforge/app/controller/cutil"
-	"github.com/kyleu/projectforge/app/lib/user"
-	"github.com/kyleu/projectforge/app/site"
+	"projectforge.dev/app"
+	"projectforge.dev/app/controller/cutil"
+	"projectforge.dev/app/lib/user"
+	"projectforge.dev/app/site"
 )
 
 const (

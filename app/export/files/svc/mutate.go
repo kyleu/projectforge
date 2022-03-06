@@ -3,14 +3,14 @@ package svc
 import (
 	"strings"
 
-	"github.com/kyleu/projectforge/app/lib/types"
 	"github.com/pkg/errors"
+	"projectforge.dev/app/lib/types"
 
-	"github.com/kyleu/projectforge/app/export/files/helper"
-	"github.com/kyleu/projectforge/app/export/golang"
-	"github.com/kyleu/projectforge/app/export/model"
-	"github.com/kyleu/projectforge/app/file"
-	"github.com/kyleu/projectforge/app/util"
+	"projectforge.dev/app/export/files/helper"
+	"projectforge.dev/app/export/golang"
+	"projectforge.dev/app/export/model"
+	"projectforge.dev/app/file"
+	"projectforge.dev/app/util"
 )
 
 func ServiceMutate(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {

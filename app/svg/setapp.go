@@ -6,11 +6,11 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/kyleu/projectforge/app/lib/filesystem"
-	"github.com/kyleu/projectforge/app/project"
-	"github.com/kyleu/projectforge/app/util"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
+	"projectforge.dev/app/lib/filesystem"
+	"projectforge.dev/app/project"
+	"projectforge.dev/app/util"
 )
 
 const (

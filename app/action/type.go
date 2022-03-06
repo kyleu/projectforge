@@ -1,7 +1,7 @@
 package action
 
 import (
-	"github.com/kyleu/projectforge/app/util"
+	"projectforge.dev/app/util"
 )
 
 type Type struct {

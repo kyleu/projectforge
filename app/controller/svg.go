@@ -4,16 +4,16 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/kyleu/projectforge/app/lib/filesystem"
-	"github.com/kyleu/projectforge/app/project"
-	"github.com/kyleu/projectforge/app/svg"
-	"github.com/kyleu/projectforge/views/vsvg"
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
+	"projectforge.dev/app/lib/filesystem"
+	"projectforge.dev/app/project"
+	"projectforge.dev/app/svg"
+	"projectforge.dev/views/vsvg"
 
-	"github.com/kyleu/projectforge/app/controller/cutil"
+	"projectforge.dev/app/controller/cutil"
 
-	"github.com/kyleu/projectforge/app"
+	"projectforge.dev/app"
 )
 
 func SVGList(rc *fasthttp.RequestCtx) {

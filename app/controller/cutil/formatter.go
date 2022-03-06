@@ -11,7 +11,7 @@ import (
 	"github.com/alecthomas/chroma/styles"
 	"github.com/pkg/errors"
 
-	"github.com/kyleu/projectforge/app/util"
+	"projectforge.dev/app/util"
 )
 
 var (

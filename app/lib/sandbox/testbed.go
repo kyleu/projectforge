@@ -6,8 +6,8 @@ import (
 
 	"go.uber.org/zap"
 
-	"github.com/kyleu/projectforge/app"
-	"github.com/kyleu/projectforge/app/util"
+	"projectforge.dev/app"
+	"projectforge.dev/app/util"
 )
 
 var testbed = &Sandbox{Key: "testbed", Title: "Testbed", Icon: "star", Run: onTestbed}

@@ -4,12 +4,12 @@ import (
 	"context"
 	"strings"
 
-	"github.com/kyleu/projectforge/app/action"
-	"github.com/kyleu/projectforge/app/export"
-	"github.com/kyleu/projectforge/app/lib/filesystem"
-	"github.com/kyleu/projectforge/app/module"
-	"github.com/kyleu/projectforge/app/project"
-	"github.com/kyleu/projectforge/app/util"
+	"projectforge.dev/app/export"
+	"projectforge.dev/app/lib/filesystem"
+	"projectforge.dev/app/module"
+	"projectforge.dev/app/project"
+	"projectforge.dev/app/util"
+	"projectforge.dev/app/action"
 )
 
 func runToCompletion(ctx context.Context, projectKey string, t action.Type, cfg util.ValueMap) *action.Result {

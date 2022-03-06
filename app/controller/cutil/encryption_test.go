@@ -3,8 +3,8 @@ package cutil_test
 import (
 	"testing"
 
-	"github.com/kyleu/projectforge/app/controller/cutil"
-	"github.com/kyleu/projectforge/app/lib/log"
+	"projectforge.dev/app/controller/cutil"
+	"projectforge.dev/app/lib/log"
 )
 
 func TestEncryptDecrypt(t *testing.T) {

@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/kyleu/projectforge/app/lib/types"
-	"github.com/kyleu/projectforge/app/util"
 	"github.com/pkg/errors"
+	"projectforge.dev/app/lib/types"
+	"projectforge.dev/app/util"
 )
 
 type Columns []*Column

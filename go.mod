@@ -1,5 +1,5 @@
 // $PF_IGNORE$
-module github.com/kyleu/projectforge
+module projectforge.dev
 
 go 1.17
 

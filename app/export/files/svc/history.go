@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/kyleu/projectforge/app/export/files/helper"
-	"github.com/kyleu/projectforge/app/export/golang"
-	"github.com/kyleu/projectforge/app/export/model"
-	"github.com/kyleu/projectforge/app/file"
-	"github.com/kyleu/projectforge/app/util"
+	"projectforge.dev/app/export/model"
+	"projectforge.dev/app/util"
+	"projectforge.dev/app/export/files/helper"
+	"projectforge.dev/app/export/golang"
+	"projectforge.dev/app/file"
 )
 
 func ServiceHistory(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {

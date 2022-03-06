@@ -7,7 +7,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/valyala/fasthttp"
 
-	"github.com/kyleu/projectforge/app/lib/telemetry"
+	"projectforge.dev/app/lib/telemetry"
 )
 
 type Metrics struct {

@@ -7,8 +7,8 @@ import (
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
-	"github.com/kyleu/projectforge/app/lib/filesystem"
-	"github.com/kyleu/projectforge/app/util"
+	"projectforge.dev/app/lib/filesystem"
+	"projectforge.dev/app/util"
 )
 
 const KeyNew = "new"

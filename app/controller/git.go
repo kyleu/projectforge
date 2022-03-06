@@ -3,14 +3,14 @@ package controller
 import (
 	"fmt"
 
-	"github.com/kyleu/projectforge/app/git"
-	"github.com/kyleu/projectforge/views/verror"
-	"github.com/kyleu/projectforge/views/vgit"
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
+	"projectforge.dev/app/git"
+	"projectforge.dev/views/verror"
+	"projectforge.dev/views/vgit"
 
-	"github.com/kyleu/projectforge/app"
-	"github.com/kyleu/projectforge/app/controller/cutil"
+	"projectforge.dev/app"
+	"projectforge.dev/app/controller/cutil"
 )
 
 var (

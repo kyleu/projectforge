@@ -6,7 +6,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/kyleu/projectforge/app/lib/filesystem"
+	"projectforge.dev/app/lib/filesystem"
 )
 
 func Build(fs filesystem.FileLoader) (int, error) {

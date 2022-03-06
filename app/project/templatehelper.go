@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/kyleu/projectforge/app/util"
+	"projectforge.dev/app/util"
 )
 
 const goStdBin = "go"
@@ -26,6 +26,10 @@ func (t *TemplateContext) KeyProper() string {
 
 func (t *TemplateContext) NameCompressed() string {
 	return strings.ReplaceAll(t.Name, " ", "")
+}
+
+func (t *TemplateContext) SourcecodePath() string {
+	return strings.TrimPrefix(strings.TrimPrefix(t.Info.Sourcecode, "http://"), "https://")
 }
 
 func (t *TemplateContext) IgnoredSetting() string {

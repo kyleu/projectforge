@@ -5,8 +5,8 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/kyleu/projectforge/app/lib/filesystem"
 	"github.com/pkg/errors"
+	"projectforge.dev/app/lib/filesystem"
 )
 
 const (

@@ -34,6 +34,7 @@ type PageState struct {
 	ProfilePath   string             `json:"profilePath,omitempty"`
 	HideMenu      bool               `json:"hideMenu,omitempty"`
 	ForceRedirect string             `json:"forceRedirect,omitempty"`
+	HeaderContent string             `json:"headerContent,omitempty"`
 	Data          interface{}        `json:"data,omitempty"`
 	Logger        *zap.SugaredLogger `json:"-"`
 	Context       context.Context    `json:"-"`

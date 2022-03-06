@@ -4,8 +4,8 @@ package cmd
 import (
 	"github.com/pkg/errors"
 
-	"github.com/kyleu/projectforge/app"
-	"github.com/kyleu/projectforge/app/util"
+	"projectforge.dev/app"
+	"projectforge.dev/app/util"
 )
 
 // Lib starts the application as a library, returning the actual TCP port the server is listening on (as an int32 to make interop easier).

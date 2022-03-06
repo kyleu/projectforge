@@ -4,9 +4,9 @@ import (
 	"os"
 	"sort"
 
-	"github.com/kyleu/projectforge/app/file"
-	"github.com/kyleu/projectforge/app/lib/filesystem"
 	"github.com/pkg/errors"
+	"projectforge.dev/app/file"
+	"projectforge.dev/app/lib/filesystem"
 )
 
 func (s *Service) GetFilenames(mods Modules) ([]string, error) {

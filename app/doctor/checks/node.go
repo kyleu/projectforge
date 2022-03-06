@@ -1,8 +1,8 @@
 package checks
 
 import (
-	"github.com/kyleu/projectforge/app/doctor"
 	"go.uber.org/zap"
+	"projectforge.dev/app/doctor"
 )
 
 var node = &doctor.Check{

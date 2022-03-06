@@ -10,7 +10,7 @@ TGT=$1
 
 echo "building gomobile for Android..."
 mkdir -p build/dist/mobile_android_arm64
-time gomobile bind -o build/dist/mobile_android_arm64/projectforge.aar -target=android github.com/kyleu/projectforge/app/cmd
+time gomobile bind -o build/dist/mobile_android_arm64/projectforge.aar -target=android projectforge.dev/app/cmd
 echo "gomobile for Android completed successfully, building distribution..."
 cd "build/dist/mobile_android_arm64"
 zip -r "../projectforge_${TGT}_android_aar.zip" .

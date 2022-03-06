@@ -1,14 +1,14 @@
 package controller
 
 import (
-	"github.com/kyleu/projectforge/app/module"
-	"github.com/kyleu/projectforge/app/project"
-	"github.com/kyleu/projectforge/views/vmodule"
 	"github.com/valyala/fasthttp"
+	"projectforge.dev/app/module"
+	"projectforge.dev/app/project"
+	"projectforge.dev/views/vmodule"
 
-	"github.com/kyleu/projectforge/app/controller/cutil"
+	"projectforge.dev/app/controller/cutil"
 
-	"github.com/kyleu/projectforge/app"
+	"projectforge.dev/app"
 )
 
 func ModuleList(rc *fasthttp.RequestCtx) {

@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/kyleu/projectforge/app/export/files/helper"
-	"github.com/kyleu/projectforge/app/export/golang"
-	"github.com/kyleu/projectforge/app/export/model"
-	"github.com/kyleu/projectforge/app/file"
+	"projectforge.dev/app/export/files/helper"
+	"projectforge.dev/app/export/golang"
+	"projectforge.dev/app/export/model"
+	"projectforge.dev/app/file"
 )
 
 func ServiceAll(m *model.Model, args *model.Args, addHeader bool) (file.Files, error) {

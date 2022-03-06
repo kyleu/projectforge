@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/kyleu/projectforge/app/export/golang"
-	"github.com/kyleu/projectforge/app/export/model"
-	"github.com/kyleu/projectforge/app/file"
+	"projectforge.dev/app/export/golang"
+	"projectforge.dev/app/export/model"
+	"projectforge.dev/app/file"
 )
 
 func Migration(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {

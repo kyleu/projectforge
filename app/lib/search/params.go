@@ -2,7 +2,7 @@
 package search
 
 import (
-	"github.com/kyleu/projectforge/app/lib/filter"
+	"projectforge.dev/app/lib/filter"
 )
 
 type Params struct {

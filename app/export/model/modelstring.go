@@ -3,7 +3,7 @@ package model
 import (
 	"strings"
 
-	"github.com/kyleu/projectforge/app/util"
+	"projectforge.dev/app/util"
 )
 
 func (m *Model) Camel() string {

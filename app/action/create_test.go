@@ -4,12 +4,12 @@ import (
 	"context"
 	"testing"
 
-	"github.com/kyleu/projectforge/app/action"
-	"github.com/kyleu/projectforge/app/export"
-	"github.com/kyleu/projectforge/app/lib/filesystem"
-	"github.com/kyleu/projectforge/app/lib/log"
-	"github.com/kyleu/projectforge/app/module"
-	"github.com/kyleu/projectforge/app/project"
+	"projectforge.dev/app/export"
+	"projectforge.dev/app/lib/filesystem"
+	"projectforge.dev/app/lib/log"
+	"projectforge.dev/app/module"
+	"projectforge.dev/app/project"
+	"projectforge.dev/app/action"
 )
 
 func prj(key string, modules ...string) *project.Project {
@@ -17,7 +17,7 @@ func prj(key string, modules ...string) *project.Project {
 		Key:     key,
 		Name:    "[" + key + "] Test",
 		Version: "0.0.1",
-		Package: "github.com/kyleu/projectforge/test/" + key,
+		Package: "projectforge.dev/test/" + key,
 		Port:    11100,
 		Modules: modules,
 		Info:    &project.Info{},

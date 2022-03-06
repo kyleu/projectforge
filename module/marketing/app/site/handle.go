@@ -14,6 +14,7 @@ import (
 
 func Handle(path []string, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (string, layout.Page, []string, error) {
 	if len(path) == 0 {
+		ps.HeaderContent = "\n  <meta name=\"go-source\" content=\"{{{ .Package }}} {{{ .Info.Sourcecode }}} {{{ .Info.Sourcecode }}}/tree/master{/dir} {{{ .Info.Sourcecode }}}/blob/master{/dir}/{file}#L{line}\">"
 		ps.Data = siteData("Welcome to the marketing site!")
 		return "", &vsite.Index{}, path, nil
 	}

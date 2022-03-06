@@ -4,9 +4,9 @@ package site
 import (
 	"context"
 
-	"github.com/kyleu/projectforge/app"
-	"github.com/kyleu/projectforge/app/lib/menu"
-	"github.com/kyleu/projectforge/app/lib/user"
+	"projectforge.dev/app"
+	"projectforge.dev/app/lib/menu"
+	"projectforge.dev/app/lib/user"
 )
 
 const (

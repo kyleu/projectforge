@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/kyleu/projectforge/app/file"
-	"github.com/kyleu/projectforge/app/lib/filesystem"
+	"projectforge.dev/app/file"
+	"projectforge.dev/app/lib/filesystem"
 )
 
 type File struct {

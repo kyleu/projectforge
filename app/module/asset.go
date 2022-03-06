@@ -7,8 +7,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/kyleu/projectforge/app/lib/telemetry"
-	"github.com/kyleu/projectforge/app/util"
+	"projectforge.dev/app/lib/telemetry"
+	"projectforge.dev/app/util"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 )

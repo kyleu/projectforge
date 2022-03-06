@@ -5,17 +5,17 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/kyleu/projectforge/app/lib/search"
-	"github.com/kyleu/projectforge/app/lib/search/result"
-	"github.com/kyleu/projectforge/app/project"
-	"github.com/kyleu/projectforge/app/util"
-	"github.com/kyleu/projectforge/views/vproject"
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
+	"projectforge.dev/app/lib/search"
+	"projectforge.dev/app/lib/search/result"
+	"projectforge.dev/app/project"
+	"projectforge.dev/app/util"
+	"projectforge.dev/views/vproject"
 
-	"github.com/kyleu/projectforge/app/controller/cutil"
+	"projectforge.dev/app/controller/cutil"
 
-	"github.com/kyleu/projectforge/app"
+	"projectforge.dev/app"
 )
 
 func ProjectSearch(rc *fasthttp.RequestCtx) {

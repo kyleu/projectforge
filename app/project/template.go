@@ -3,7 +3,7 @@ package project
 import (
 	"fmt"
 
-	"github.com/kyleu/projectforge/app/lib/theme"
+	"projectforge.dev/app/lib/theme"
 )
 
 type TemplateContext struct {

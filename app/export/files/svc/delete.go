@@ -5,8 +5,8 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/kyleu/projectforge/app/export/golang"
-	"github.com/kyleu/projectforge/app/export/model"
+	"projectforge.dev/app/export/golang"
+	"projectforge.dev/app/export/model"
 )
 
 func serviceDelete(m *model.Model) *golang.Block {

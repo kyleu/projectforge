@@ -1,8 +1,8 @@
 package model
 
 import (
-	"github.com/kyleu/projectforge/app/lib/filter"
-	"github.com/kyleu/projectforge/app/util"
+	"projectforge.dev/app/lib/filter"
+	"projectforge.dev/app/util"
 )
 
 type Model struct {

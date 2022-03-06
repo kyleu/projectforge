@@ -4,7 +4,7 @@ package util_test
 import (
 	"testing"
 
-	"github.com/kyleu/projectforge/app/util"
+	"projectforge.dev/app/util"
 )
 
 var (

@@ -3,7 +3,7 @@
   "name": "Project Forge",
   "icon": "projectforge",
   "version": "0.2.3",
-  "package": "github.com/kyleu/projectforge",
+  "package": "projectforge.dev",
   "port": 40000,
   "modules": [
     "android",

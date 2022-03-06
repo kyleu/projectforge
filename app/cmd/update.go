@@ -6,9 +6,9 @@ import (
 	"github.com/muesli/coral"
 	"github.com/pkg/errors"
 
-	"github.com/kyleu/projectforge/app/lib/filesystem"
-	"github.com/kyleu/projectforge/app/module"
-	"github.com/kyleu/projectforge/app/util"
+	"projectforge.dev/app/module"
+	"projectforge.dev/app/util"
+	"projectforge.dev/app/lib/filesystem"
 )
 
 func updateF(ctx context.Context, args []string) error {

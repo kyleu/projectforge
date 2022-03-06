@@ -6,7 +6,7 @@ import (
 
 	"github.com/valyala/fasthttp"
 
-	"github.com/kyleu/projectforge/assets"
+	"projectforge.dev/assets"
 )
 
 func Favicon(rc *fasthttp.RequestCtx) {

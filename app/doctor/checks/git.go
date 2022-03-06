@@ -1,7 +1,7 @@
 package checks
 
 import (
-	"github.com/kyleu/projectforge/app/doctor"
+	"projectforge.dev/app/doctor"
 	"go.uber.org/zap"
 )
 

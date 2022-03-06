@@ -3,10 +3,10 @@ package action
 import (
 	"context"
 
-	"github.com/kyleu/projectforge/app/doctor/checks"
-	"github.com/kyleu/projectforge/app/project"
-	"github.com/kyleu/projectforge/app/util"
 	"go.uber.org/zap"
+	"projectforge.dev/app/doctor/checks"
+	"projectforge.dev/app/project"
+	"projectforge.dev/app/util"
 )
 
 func onDoctor(ctx context.Context, cfg util.ValueMap, pSvc *project.Service, logger *zap.SugaredLogger) *Result {

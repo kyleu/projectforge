@@ -3,13 +3,13 @@ package controller
 import (
 	"fmt"
 
-	"github.com/kyleu/projectforge/app/project"
-	"github.com/kyleu/projectforge/views/vproject"
 	"github.com/valyala/fasthttp"
+	"projectforge.dev/app/project"
+	"projectforge.dev/views/vproject"
 
-	"github.com/kyleu/projectforge/app/controller/cutil"
+	"projectforge.dev/app/controller/cutil"
 
-	"github.com/kyleu/projectforge/app"
+	"projectforge.dev/app"
 )
 
 func ProjectList(rc *fasthttp.RequestCtx) {

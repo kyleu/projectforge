@@ -1,8 +1,8 @@
 package git
 
 import (
-	"github.com/kyleu/projectforge/app/project"
-	"github.com/kyleu/projectforge/app/util"
+	"projectforge.dev/app/project"
+	"projectforge.dev/app/util"
 )
 
 type Result struct {

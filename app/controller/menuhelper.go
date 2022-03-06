@@ -3,9 +3,9 @@ package controller
 import (
 	"context"
 
-	"github.com/kyleu/projectforge/app/lib/menu"
-	"github.com/kyleu/projectforge/app/module"
-	"github.com/kyleu/projectforge/app/project"
+	"projectforge.dev/app/lib/menu"
+	"projectforge.dev/app/module"
+	"projectforge.dev/app/project"
 )
 
 func projectMenu(ctx context.Context, prjs project.Projects) *menu.Item {

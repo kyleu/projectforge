@@ -2,8 +2,8 @@
 {% import (
   "github.com/valyala/fasthttp"
 
-  "github.com/kyleu/projectforge/app/controller/cutil"
-  "github.com/kyleu/projectforge/app/lib/filter"
+  "projectforge.dev/app/controller/cutil"
+  "projectforge.dev/app/lib/filter"
 ) %}
 
 {% func TableHeader(section string, key string, title string, params *filter.Params, icon string, u *fasthttp.URI, tooltip string, sortable bool, cls string, resizable bool, ps *cutil.PageState) %}{% stripspace %}

@@ -3,8 +3,8 @@ package grpc
 import (
 	"strings"
 
-	"github.com/kyleu/projectforge/app/export/golang"
-	"github.com/kyleu/projectforge/app/export/model"
+	"projectforge.dev/app/export/golang"
+	"projectforge.dev/app/export/model"
 )
 
 func grpcCall(k string, m *model.Model, isUpdate bool, grpcArgs string, grpcRet string, ga *FileArgs) *golang.Block {

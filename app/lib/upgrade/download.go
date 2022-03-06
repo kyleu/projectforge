@@ -13,7 +13,7 @@ import (
 	"github.com/google/go-github/v39/github"
 	"github.com/pkg/errors"
 
-	"github.com/kyleu/projectforge/app/util"
+	"projectforge.dev/app/util"
 )
 
 func assetFor(version semver.Version) string {

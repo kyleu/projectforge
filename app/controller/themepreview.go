@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/kyleu/projectforge/app/lib/telemetry"
 	"github.com/muesli/gamut"
 	"github.com/valyala/fasthttp"
+	"projectforge.dev/app/lib/telemetry"
 
-	"github.com/kyleu/projectforge/app"
-	"github.com/kyleu/projectforge/app/controller/cutil"
-	"github.com/kyleu/projectforge/app/lib/theme"
-	"github.com/kyleu/projectforge/views/vtheme"
+	"projectforge.dev/app"
+	"projectforge.dev/app/controller/cutil"
+	"projectforge.dev/app/lib/theme"
+	"projectforge.dev/views/vtheme"
 )
 
 func ThemeColor(rc *fasthttp.RequestCtx) {

@@ -11,9 +11,9 @@ import (
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
 
-	"github.com/kyleu/projectforge/app"
-	"github.com/kyleu/projectforge/app/lib/log"
-	"github.com/kyleu/projectforge/app/util"
+	"projectforge.dev/app"
+	"projectforge.dev/app/lib/log"
+	"projectforge.dev/app/util"
 )
 
 var (

@@ -6,8 +6,8 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/kyleu/projectforge/app/lib/filesystem"
-	"github.com/kyleu/projectforge/app/project"
+	"projectforge.dev/app/project"
+	"projectforge.dev/app/lib/filesystem"
 )
 
 func onCreate(ctx context.Context, params *Params) *Result {

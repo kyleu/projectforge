@@ -4,8 +4,8 @@ package result_test
 import (
 	"testing"
 
-	"github.com/kyleu/projectforge/app/lib/search/result"
-	"github.com/kyleu/projectforge/app/util"
+	"projectforge.dev/app/lib/search/result"
+	"projectforge.dev/app/util"
 )
 
 var splitTests = []struct {

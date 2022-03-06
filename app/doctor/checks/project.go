@@ -3,10 +3,10 @@ package checks
 import (
 	"fmt"
 
-	"github.com/kyleu/projectforge/app/doctor"
-	"github.com/kyleu/projectforge/app/project"
-	"github.com/kyleu/projectforge/app/util"
 	"go.uber.org/zap"
+	"projectforge.dev/app/doctor"
+	"projectforge.dev/app/project"
+	"projectforge.dev/app/util"
 )
 
 var prj = &doctor.Check{

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/kyleu/projectforge/app/export/golang"
-	"github.com/kyleu/projectforge/app/export/model"
+	"projectforge.dev/app/export/golang"
+	"projectforge.dev/app/export/model"
 )
 
 func sqlHistory(ret *golang.Block, m *model.Model) {

@@ -3,7 +3,7 @@ package theme
 import (
 	"sort"
 
-	"github.com/kyleu/projectforge/app/util"
+	"projectforge.dev/app/util"
 	"github.com/muesli/gamut"
 	"github.com/muesli/gamut/palette"
 	"github.com/pkg/errors"

@@ -1,8 +1,8 @@
 <!-- Content managed by Project Forge, see [projectforge.md] for details. -->
 {% import (
-  "github.com/kyleu/projectforge/app"
-  "github.com/kyleu/projectforge/app/controller/cutil"
-  "github.com/kyleu/projectforge/app/util"
+  "projectforge.dev/app"
+  "projectforge.dev/app/controller/cutil"
+  "projectforge.dev/app/util"
 ) %}
 
 {% func Head(as *app.State, ps *cutil.PageState) %}
@@ -16,7 +16,7 @@
   <meta property="og:image" content="/assets/{%u util.AppKey %}.svg">
   <meta property="og:locale" content="en_US">
   <meta name="theme-color" content="{%s thm.Light.NavBackground %}" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="{%s thm.Dark.NavBackground %}" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="{%s thm.Dark.NavBackground %}" media="(prefers-color-scheme: dark)">{%s= ps.HeaderContent %}
   <link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
   <style>
     {%s= thm.CSS(2) %}  </style>

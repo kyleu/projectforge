@@ -5,10 +5,10 @@ import (
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
 
-	"github.com/kyleu/projectforge/app"
-	"github.com/kyleu/projectforge/app/controller/cutil"
-	"github.com/kyleu/projectforge/app/lib/sandbox"
-	"github.com/kyleu/projectforge/views/vsandbox"
+	"projectforge.dev/app"
+	"projectforge.dev/app/controller/cutil"
+	"projectforge.dev/app/lib/sandbox"
+	"projectforge.dev/views/vsandbox"
 )
 
 func SandboxList(rc *fasthttp.RequestCtx) {

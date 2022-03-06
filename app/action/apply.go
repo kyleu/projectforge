@@ -3,13 +3,13 @@ package action
 import (
 	"context"
 
-	"github.com/kyleu/projectforge/app/export"
-	"github.com/kyleu/projectforge/app/export/model"
-	"github.com/kyleu/projectforge/app/module"
-	"github.com/kyleu/projectforge/app/project"
-	"github.com/kyleu/projectforge/app/util"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
+	"projectforge.dev/app/export"
+	"projectforge.dev/app/export/model"
+	"projectforge.dev/app/module"
+	"projectforge.dev/app/project"
+	"projectforge.dev/app/util"
 )
 
 func Apply(ctx context.Context, p *Params) *Result {

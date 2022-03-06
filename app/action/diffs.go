@@ -4,11 +4,11 @@ import (
 	"path"
 	"strings"
 
-	"github.com/kyleu/projectforge/app/diff"
-	"github.com/kyleu/projectforge/app/export/model"
-	"github.com/kyleu/projectforge/app/file"
-	"github.com/kyleu/projectforge/app/util"
 	"github.com/pkg/errors"
+	"projectforge.dev/app/diff"
+	"projectforge.dev/app/export/model"
+	"projectforge.dev/app/file"
+	"projectforge.dev/app/util"
 )
 
 const (

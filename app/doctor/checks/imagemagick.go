@@ -3,8 +3,8 @@ package checks
 import (
 	"strings"
 
-	"github.com/kyleu/projectforge/app/doctor"
 	"go.uber.org/zap"
+	"projectforge.dev/app/doctor"
 )
 
 var imagemagick = &doctor.Check{

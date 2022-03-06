@@ -1,9 +1,9 @@
 {% import (
   "strings"
 
-  "github.com/kyleu/projectforge/app"
-  "github.com/kyleu/projectforge/app/controller/cutil"
-  "github.com/kyleu/projectforge/app/diff"
+  "projectforge.dev/app"
+  "projectforge.dev/app/controller/cutil"
+  "projectforge.dev/app/diff"
 ) %}
 
 {% func renderDiffs(prjKey string, diffs diff.Diffs, as *app.State, ps *cutil.PageState) %}{% stripspace %}

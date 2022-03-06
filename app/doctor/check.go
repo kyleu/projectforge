@@ -1,8 +1,8 @@
 package doctor
 
 import (
-	"github.com/kyleu/projectforge/app/util"
 	"go.uber.org/zap"
+	"projectforge.dev/app/util"
 )
 
 type (

@@ -1,10 +1,10 @@
 package action
 
 import (
-	"github.com/kyleu/projectforge/app/diff"
-	"github.com/kyleu/projectforge/app/module"
-	"github.com/kyleu/projectforge/app/util"
+	"projectforge.dev/app/module"
+	"projectforge.dev/app/util"
 	"github.com/pkg/errors"
+	"projectforge.dev/app/diff"
 )
 
 func onSlam(pm *PrjAndMods) *Result {

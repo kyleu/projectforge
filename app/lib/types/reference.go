@@ -4,7 +4,7 @@ package types
 import (
 	"strings"
 
-	"github.com/kyleu/projectforge/app/util"
+	"projectforge.dev/app/util"
 )
 
 const KeyReference = "reference"

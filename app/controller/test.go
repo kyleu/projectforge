@@ -1,19 +1,19 @@
 package controller
 
 import (
-	"github.com/kyleu/projectforge/app/action"
-	"github.com/kyleu/projectforge/app/diff"
-	"github.com/kyleu/projectforge/app/lib/telemetry"
-	"github.com/kyleu/projectforge/app/util"
-	"github.com/kyleu/projectforge/views/layout"
-	"github.com/kyleu/projectforge/views/vaction"
-	"github.com/kyleu/projectforge/views/vtest"
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
+	"projectforge.dev/app/action"
+	"projectforge.dev/app/diff"
+	"projectforge.dev/app/lib/telemetry"
+	"projectforge.dev/app/util"
+	"projectforge.dev/views/layout"
+	"projectforge.dev/views/vaction"
+	"projectforge.dev/views/vtest"
 
-	"github.com/kyleu/projectforge/app/controller/cutil"
+	"projectforge.dev/app/controller/cutil"
 
-	"github.com/kyleu/projectforge/app"
+	"projectforge.dev/app"
 )
 
 func TestList(rc *fasthttp.RequestCtx) {

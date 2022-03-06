@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/kyleu/projectforge/app/diff"
-	"github.com/kyleu/projectforge/app/lib/filesystem"
-	"github.com/kyleu/projectforge/app/module"
-	"github.com/kyleu/projectforge/app/util"
 	"github.com/pkg/errors"
+	"projectforge.dev/app/diff"
+	"projectforge.dev/app/lib/filesystem"
+	"projectforge.dev/app/module"
+	"projectforge.dev/app/util"
 )
 
 const projectKey = "project"

@@ -3,8 +3,8 @@ package project
 import (
 	"sort"
 
-	"github.com/kyleu/projectforge/app/lib/theme"
-	"github.com/kyleu/projectforge/app/util"
+	"projectforge.dev/app/lib/theme"
+	"projectforge.dev/app/util"
 )
 
 var DefaultIcon = "code"

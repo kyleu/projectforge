@@ -2,10 +2,10 @@
 package controller
 
 import (
-	"github.com/kyleu/projectforge/app"
-	"github.com/kyleu/projectforge/app/controller/cutil"
-	"github.com/kyleu/projectforge/views"
 	"github.com/valyala/fasthttp"
+	"projectforge.dev/app"
+	"projectforge.dev/app/controller/cutil"
+	"projectforge.dev/views"
 )
 
 func Home(rc *fasthttp.RequestCtx) {

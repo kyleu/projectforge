@@ -3,11 +3,11 @@ package checks
 import (
 	"strings"
 
-	"github.com/kyleu/projectforge/app/doctor"
-	"github.com/kyleu/projectforge/app/lib/filesystem"
-	"github.com/kyleu/projectforge/app/project"
-	"github.com/kyleu/projectforge/app/util"
 	"go.uber.org/zap"
+	"projectforge.dev/app/doctor"
+	"projectforge.dev/app/lib/filesystem"
+	"projectforge.dev/app/project"
+	"projectforge.dev/app/util"
 )
 
 func simpleOut(path string, cmd string, args []string, outCheck func(r *doctor.Result, out string) *doctor.Result) doctor.CheckFn {

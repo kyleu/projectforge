@@ -3,11 +3,11 @@ package action
 import (
 	"strings"
 
-	"github.com/kyleu/projectforge/app/diff"
-	"github.com/kyleu/projectforge/app/export/model"
-	"github.com/kyleu/projectforge/app/file"
-	"github.com/kyleu/projectforge/app/module"
-	"github.com/kyleu/projectforge/app/util"
+	"projectforge.dev/app/diff"
+	"projectforge.dev/app/export/model"
+	"projectforge.dev/app/file"
+	"projectforge.dev/app/module"
+	"projectforge.dev/app/util"
 )
 
 func onAudit(pm *PrjAndMods) *Result {

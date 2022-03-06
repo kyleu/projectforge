@@ -3,11 +3,11 @@ package inject
 import (
 	"strings"
 
-	"github.com/kyleu/projectforge/app/export/files/grpc"
-	"github.com/kyleu/projectforge/app/export/golang"
-	"github.com/kyleu/projectforge/app/export/model"
-	"github.com/kyleu/projectforge/app/file"
 	"github.com/pkg/errors"
+	"projectforge.dev/app/export/files/grpc"
+	"projectforge.dev/app/export/golang"
+	"projectforge.dev/app/export/model"
+	"projectforge.dev/app/file"
 )
 
 func GRPC(f *file.File, args *model.Args) error {

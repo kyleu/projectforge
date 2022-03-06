@@ -1,7 +1,7 @@
 package project
 
 import (
-	"github.com/kyleu/projectforge/app/lib/search/result"
+	"projectforge.dev/app/lib/search/result"
 )
 
 func (s *Service) Search(q string) (result.Results, error) {

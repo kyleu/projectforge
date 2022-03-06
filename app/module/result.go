@@ -1,7 +1,7 @@
 package module
 
 import (
-	"github.com/kyleu/projectforge/app/diff"
+	"projectforge.dev/app/diff"
 )
 
 type Result struct {

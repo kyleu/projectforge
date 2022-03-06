@@ -1,8 +1,8 @@
 package model
 
 import (
-	"github.com/kyleu/projectforge/app/util"
 	"github.com/pkg/errors"
+	"projectforge.dev/app/util"
 )
 
 type Args struct {

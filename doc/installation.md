@@ -22,7 +22,7 @@ docker run -p 40000:40000 ghcr.io/kyleu/projectforge:latest-debug
 
 ### go install
 ```shell
-go install github.com/kyleu/projectforge@latest
+go install projectforge.dev@latest
 ```
 
 ### Source code

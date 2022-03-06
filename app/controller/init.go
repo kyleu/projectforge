@@ -5,10 +5,10 @@ import (
 	"context"
 	"strings"
 
-	"github.com/kyleu/projectforge/app"
-	"github.com/kyleu/projectforge/app/controller/cutil"
-	"github.com/kyleu/projectforge/app/project"
 	"github.com/pkg/errors"
+	"projectforge.dev/app"
+	"projectforge.dev/app/controller/cutil"
+	"projectforge.dev/app/project"
 )
 
 // Initialize app-specific system dependencies.

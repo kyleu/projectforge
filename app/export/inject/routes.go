@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/kyleu/projectforge/app/export/model"
-	"github.com/kyleu/projectforge/app/file"
+	"projectforge.dev/app/export/model"
+	"projectforge.dev/app/file"
 )
 
 func Routes(f *file.File, args *model.Args) error {

@@ -5,8 +5,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/kyleu/projectforge/app/util"
 	"github.com/pkg/errors"
+	"projectforge.dev/app/util"
 )
 
 func gitStatus(path string) ([]string, error) {

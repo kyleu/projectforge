@@ -1,12 +1,12 @@
 package export
 
 import (
-	"github.com/kyleu/projectforge/app/export/files"
-	"github.com/kyleu/projectforge/app/export/inject"
-	"github.com/kyleu/projectforge/app/export/model"
 	"go.uber.org/zap"
+	"projectforge.dev/app/export/files"
+	"projectforge.dev/app/export/inject"
+	"projectforge.dev/app/export/model"
 
-	"github.com/kyleu/projectforge/app/file"
+	"projectforge.dev/app/file"
 )
 
 type Service struct {

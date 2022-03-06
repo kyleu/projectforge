@@ -4,10 +4,10 @@ package controller
 import (
 	"github.com/valyala/fasthttp"
 
-	"github.com/kyleu/projectforge/app"
-	"github.com/kyleu/projectforge/app/controller/cutil"
-	"github.com/kyleu/projectforge/app/util"
-	"github.com/kyleu/projectforge/views"
+	"projectforge.dev/app"
+	"projectforge.dev/app/controller/cutil"
+	"projectforge.dev/app/util"
+	"projectforge.dev/views"
 )
 
 func About(rc *fasthttp.RequestCtx) {

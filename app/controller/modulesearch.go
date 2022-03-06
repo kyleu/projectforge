@@ -5,15 +5,15 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/kyleu/projectforge/app/lib/search"
-	"github.com/kyleu/projectforge/app/lib/search/result"
-	"github.com/kyleu/projectforge/app/util"
-	"github.com/kyleu/projectforge/views/vmodule"
 	"github.com/valyala/fasthttp"
+	"projectforge.dev/app/lib/search"
+	"projectforge.dev/app/lib/search/result"
+	"projectforge.dev/app/util"
+	"projectforge.dev/views/vmodule"
 
-	"github.com/kyleu/projectforge/app/controller/cutil"
+	"projectforge.dev/app/controller/cutil"
 
-	"github.com/kyleu/projectforge/app"
+	"projectforge.dev/app"
 )
 
 func ModuleSearch(rc *fasthttp.RequestCtx) {

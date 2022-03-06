@@ -5,13 +5,13 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/kyleu/projectforge/app/lib/theme"
-	"github.com/kyleu/projectforge/app/project"
-	"github.com/kyleu/projectforge/app/util"
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
+	"projectforge.dev/app/lib/theme"
+	"projectforge.dev/app/project"
+	"projectforge.dev/app/util"
 
-	"github.com/kyleu/projectforge/app"
+	"projectforge.dev/app"
 )
 
 func projectFromForm(frm util.ValueMap, prj *project.Project) error {

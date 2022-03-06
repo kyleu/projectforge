@@ -3,14 +3,14 @@ package files
 import (
 	"github.com/pkg/errors"
 
-	"github.com/kyleu/projectforge/app/export/files/controller"
-	"github.com/kyleu/projectforge/app/export/files/gomodel"
-	"github.com/kyleu/projectforge/app/export/files/grpc"
-	"github.com/kyleu/projectforge/app/export/files/sql"
-	"github.com/kyleu/projectforge/app/export/files/svc"
-	"github.com/kyleu/projectforge/app/export/files/view"
-	"github.com/kyleu/projectforge/app/export/model"
-	"github.com/kyleu/projectforge/app/file"
+	"projectforge.dev/app/export/files/controller"
+	"projectforge.dev/app/export/files/gomodel"
+	"projectforge.dev/app/export/files/grpc"
+	"projectforge.dev/app/export/files/sql"
+	"projectforge.dev/app/export/files/svc"
+	"projectforge.dev/app/export/files/view"
+	"projectforge.dev/app/export/model"
+	"projectforge.dev/app/file"
 )
 
 func All(args *model.Args, addHeader bool) (file.Files, error) {

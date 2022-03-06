@@ -7,12 +7,12 @@ import (
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 
-	"github.com/kyleu/projectforge/app"
-	"github.com/kyleu/projectforge/app/controller/cutil"
-	"github.com/kyleu/projectforge/app/lib/theme"
-	"github.com/kyleu/projectforge/app/lib/user"
-	"github.com/kyleu/projectforge/app/util"
-	"github.com/kyleu/projectforge/views/vprofile"
+	"projectforge.dev/app"
+	"projectforge.dev/app/controller/cutil"
+	"projectforge.dev/app/lib/theme"
+	"projectforge.dev/app/lib/user"
+	"projectforge.dev/app/util"
+	"projectforge.dev/views/vprofile"
 )
 
 func Profile(rc *fasthttp.RequestCtx) {

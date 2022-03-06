@@ -6,7 +6,7 @@ import (
 
 	"github.com/muesli/coral"
 
-	"github.com/kyleu/projectforge/app/util"
+	"projectforge.dev/app/util"
 )
 
 func rootF(*coral.Command, []string) error {

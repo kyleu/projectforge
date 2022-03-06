@@ -3,9 +3,9 @@ package checks
 import (
 	"strings"
 
-	"github.com/kyleu/projectforge/app/doctor"
-	"github.com/kyleu/projectforge/app/util"
 	"go.uber.org/zap"
+	"projectforge.dev/app/doctor"
+	"projectforge.dev/app/util"
 )
 
 var repo = &doctor.Check{

@@ -1,13 +1,13 @@
 package action
 
 import (
-	"github.com/kyleu/projectforge/app/export"
-	"github.com/kyleu/projectforge/app/lib/filesystem"
-	"github.com/kyleu/projectforge/app/lib/telemetry"
-	"github.com/kyleu/projectforge/app/module"
-	"github.com/kyleu/projectforge/app/project"
-	"github.com/kyleu/projectforge/app/util"
+	"projectforge.dev/app/lib/filesystem"
+	"projectforge.dev/app/lib/telemetry"
+	"projectforge.dev/app/module"
+	"projectforge.dev/app/project"
+	"projectforge.dev/app/util"
 	"go.uber.org/zap"
+	"projectforge.dev/app/export"
 )
 
 type Params struct {

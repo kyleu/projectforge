@@ -7,8 +7,8 @@ import (
 	"github.com/muesli/coral"
 	"github.com/pkg/errors"
 
-	"github.com/kyleu/projectforge/app/action"
-	"github.com/kyleu/projectforge/app/util"
+	"projectforge.dev/app/action"
+	"projectforge.dev/app/util"
 )
 
 func actionF(ctx context.Context, t action.Type, args []string) error {

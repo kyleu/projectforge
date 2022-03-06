@@ -1,8 +1,8 @@
 package action
 
 import (
-	"github.com/kyleu/projectforge/app/module"
-	"github.com/kyleu/projectforge/app/util"
+	"projectforge.dev/app/util"
+	"projectforge.dev/app/module"
 )
 
 func onPreview(pm *PrjAndMods) *Result {

@@ -3,7 +3,7 @@ package action
 import (
 	"fmt"
 
-	"github.com/kyleu/projectforge/app/svg"
+	"projectforge.dev/app/svg"
 )
 
 func onSVG(pm *PrjAndMods) *Result {

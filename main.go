@@ -4,9 +4,9 @@ package main
 import (
 	"os"
 
-	"github.com/kyleu/projectforge/app"
-	"github.com/kyleu/projectforge/app/cmd"
-	"github.com/kyleu/projectforge/app/lib/log"
+	"projectforge.dev/app"
+	"projectforge.dev/app/cmd"
+	"projectforge.dev/app/lib/log"
 )
 
 var (
