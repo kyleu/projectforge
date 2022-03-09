@@ -6,9 +6,9 @@ package vtest
 
 //line views/vtest/List.html:1
 import (
-	"projectforge.dev/app"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/views/layout"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/views/layout"
 )
 
 //line views/vtest/List.html:7

@@ -5,8 +5,8 @@ import (
 	"github.com/fasthttp/router"
 	"github.com/valyala/fasthttp"
 
-	"projectforge.dev/app/lib/telemetry/httpmetrics"
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/lib/telemetry/httpmetrics"
+	"projectforge.dev/projectforge/app/util"
 )
 
 //nolint

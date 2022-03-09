@@ -1,8 +1,8 @@
 package model
 
 import (
-	"projectforge.dev/app/lib/filter"
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/lib/filter"
+	"projectforge.dev/projectforge/app/util"
 )
 
 type Model struct {

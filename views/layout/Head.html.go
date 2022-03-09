@@ -8,9 +8,9 @@ package layout
 
 //line views/layout/Head.html:2
 import (
-	"projectforge.dev/app"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/util"
 )
 
 //line views/layout/Head.html:8

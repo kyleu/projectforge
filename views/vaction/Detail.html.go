@@ -6,10 +6,10 @@ package vaction
 
 //line views/vaction/Detail.html:1
 import (
-	"projectforge.dev/app"
-	"projectforge.dev/app/action"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/action"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/util"
 )
 
 //line views/vaction/Detail.html:8

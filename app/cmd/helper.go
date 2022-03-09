@@ -4,12 +4,12 @@ import (
 	"context"
 	"strings"
 
-	"projectforge.dev/app/export"
-	"projectforge.dev/app/lib/filesystem"
-	"projectforge.dev/app/module"
-	"projectforge.dev/app/project"
-	"projectforge.dev/app/util"
-	"projectforge.dev/app/action"
+	"projectforge.dev/projectforge/app/action"
+	"projectforge.dev/projectforge/app/export"
+	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/module"
+	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func runToCompletion(ctx context.Context, projectKey string, t action.Type, cfg util.ValueMap) *action.Result {

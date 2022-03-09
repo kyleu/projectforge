@@ -2,7 +2,7 @@ package checks
 
 import (
 	"go.uber.org/zap"
-	"projectforge.dev/app/doctor"
+	"projectforge.dev/projectforge/app/doctor"
 )
 
 var node = &doctor.Check{

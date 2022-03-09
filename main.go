@@ -1,12 +1,12 @@
 // Content managed by Project Forge, see [projectforge.md] for details.
-package main
+package main // import projectforge.dev/projectforge
 
 import (
 	"os"
 
-	"projectforge.dev/app"
-	"projectforge.dev/app/cmd"
-	"projectforge.dev/app/lib/log"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/cmd"
+	"projectforge.dev/projectforge/app/lib/log"
 )
 
 var (

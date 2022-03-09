@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 
 	"github.com/pkg/errors"
-	"projectforge.dev/app/lib/filesystem"
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/util"
 )
 
 const configFilename = ".module.json"

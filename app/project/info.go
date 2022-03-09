@@ -3,7 +3,7 @@ package project
 import (
 	"strings"
 
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/util"
 )
 
 const defaultGoVersion = "1.17"

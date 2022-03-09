@@ -6,11 +6,11 @@ package vgit
 
 //line views/vgit/Result.html:1
 import (
-	"projectforge.dev/app"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/git"
-	"projectforge.dev/views/components"
-	"projectforge.dev/views/layout"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/git"
+	"projectforge.dev/projectforge/views/components"
+	"projectforge.dev/projectforge/views/layout"
 )
 
 //line views/vgit/Result.html:9

@@ -2,7 +2,7 @@
 package cutil
 
 import (
-	"projectforge.dev/app/lib/menu"
+	"projectforge.dev/projectforge/app/lib/menu"
 )
 
 type Breadcrumbs []string

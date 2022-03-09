@@ -4,7 +4,7 @@ package util_test
 import (
 	"testing"
 
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/util"
 )
 
 var hashTests = []struct {

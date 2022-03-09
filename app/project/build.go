@@ -3,7 +3,7 @@ package project
 import (
 	"fmt"
 
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/util"
 )
 
 type Build struct {

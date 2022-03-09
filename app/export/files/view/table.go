@@ -3,11 +3,11 @@ package view
 import (
 	"fmt"
 
-	"projectforge.dev/app/export/files/helper"
-	"projectforge.dev/app/export/golang"
-	"projectforge.dev/app/export/model"
-	"projectforge.dev/app/file"
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/export/files/helper"
+	"projectforge.dev/projectforge/app/export/golang"
+	"projectforge.dev/projectforge/app/export/model"
+	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func table(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {

@@ -6,12 +6,12 @@ import (
 
 	"github.com/muesli/gamut"
 	"github.com/valyala/fasthttp"
-	"projectforge.dev/app/lib/telemetry"
+	"projectforge.dev/projectforge/app/lib/telemetry"
 
-	"projectforge.dev/app"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/lib/theme"
-	"projectforge.dev/views/vtheme"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/lib/theme"
+	"projectforge.dev/projectforge/views/vtheme"
 )
 
 func ThemeColor(rc *fasthttp.RequestCtx) {

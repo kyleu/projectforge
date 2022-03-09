@@ -11,11 +11,11 @@ import (
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
 
-	"projectforge.dev/app"
-	"projectforge.dev/app/controller"
-	"projectforge.dev/app/lib/filesystem"
-	"projectforge.dev/app/lib/telemetry"
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller"
+	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/lib/telemetry"
+	"projectforge.dev/projectforge/app/util"
 )
 
 const keyServer = "server"

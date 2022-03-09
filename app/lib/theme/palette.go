@@ -3,10 +3,10 @@ package theme
 import (
 	"sort"
 
-	"projectforge.dev/app/util"
 	"github.com/muesli/gamut"
 	"github.com/muesli/gamut/palette"
 	"github.com/pkg/errors"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func PaletteTheme(pal string, key string) (*Theme, error) {

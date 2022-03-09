@@ -8,8 +8,8 @@ package components
 
 //line views/components/ExpandCollapse.html:2
 import (
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/views/vutil"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/views/vutil"
 )
 
 //line views/components/ExpandCollapse.html:7

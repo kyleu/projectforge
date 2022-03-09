@@ -6,9 +6,9 @@ import (
 
 	"github.com/muesli/coral"
 
-	"projectforge.dev/app/lib/log"
-	"projectforge.dev/app/lib/upgrade"
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/lib/log"
+	"projectforge.dev/projectforge/app/lib/upgrade"
+	"projectforge.dev/projectforge/app/util"
 )
 
 var (

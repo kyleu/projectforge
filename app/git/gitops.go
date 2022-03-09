@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func gitStatus(path string) ([]string, error) {

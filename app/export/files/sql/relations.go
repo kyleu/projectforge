@@ -1,8 +1,8 @@
 package sql
 
 import (
-	"projectforge.dev/app/export/golang"
-	"projectforge.dev/app/export/model"
+	"projectforge.dev/projectforge/app/export/golang"
+	"projectforge.dev/projectforge/app/export/model"
 )
 
 func sqlRelations(ret *golang.Block, m *model.Model) {

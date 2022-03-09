@@ -10,10 +10,10 @@ package layout
 import (
 	"strings"
 
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/lib/menu"
-	"projectforge.dev/views/components"
-	"projectforge.dev/views/vutil"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/lib/menu"
+	"projectforge.dev/projectforge/views/components"
+	"projectforge.dev/projectforge/views/vutil"
 )
 
 //line views/layout/Menu.html:11

@@ -5,8 +5,8 @@ import (
 	"sort"
 
 	"github.com/pkg/errors"
-	"projectforge.dev/app/file"
-	"projectforge.dev/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/lib/filesystem"
 )
 
 func (s *Service) GetFilenames(mods Modules) ([]string, error) {

@@ -8,13 +8,13 @@ package vprofile
 
 //line views/vprofile/Profile.html:2
 import (
-	"projectforge.dev/app"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/lib/theme"
-	"projectforge.dev/app/lib/user"
-	"projectforge.dev/views/components"
-	"projectforge.dev/views/layout"
-	"projectforge.dev/views/vtheme"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/lib/theme"
+	"projectforge.dev/projectforge/app/lib/user"
+	"projectforge.dev/projectforge/views/components"
+	"projectforge.dev/projectforge/views/layout"
+	"projectforge.dev/projectforge/views/vtheme"
 )
 
 //line views/vprofile/Profile.html:12

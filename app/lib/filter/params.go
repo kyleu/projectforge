@@ -8,7 +8,7 @@ import (
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
 
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/util"
 )
 
 const MaxRowsDefault = 100

@@ -3,10 +3,10 @@ package action
 import (
 	"context"
 
-	"projectforge.dev/app/util"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
-	"projectforge.dev/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func onTest(ctx context.Context, params *Params) *Result {
@@ -27,7 +27,7 @@ func bootstrap(ctx context.Context, params *Params) *Result {
 		"path", "./testproject",
 		"name", "Test Project",
 		"summary", "A Test Project!",
-		"package", "projectforge.dev/testproject",
+		"package", "projectforge.dev/projectforge/testproject",
 		"homepage", "https://projectforge.dev",
 	)
 

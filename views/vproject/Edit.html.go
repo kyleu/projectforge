@@ -6,14 +6,14 @@ package vproject
 
 //line views/vproject/Edit.html:1
 import (
-	"projectforge.dev/app"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/lib/theme"
-	"projectforge.dev/app/project"
-	"projectforge.dev/app/util"
-	"projectforge.dev/views/components"
-	"projectforge.dev/views/layout"
-	"projectforge.dev/views/vtheme"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/lib/theme"
+	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/app/util"
+	"projectforge.dev/projectforge/views/components"
+	"projectforge.dev/projectforge/views/layout"
+	"projectforge.dev/projectforge/views/vtheme"
 	"strings"
 )
 

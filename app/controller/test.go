@@ -3,17 +3,17 @@ package controller
 import (
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
-	"projectforge.dev/app/action"
-	"projectforge.dev/app/diff"
-	"projectforge.dev/app/lib/telemetry"
-	"projectforge.dev/app/util"
-	"projectforge.dev/views/layout"
-	"projectforge.dev/views/vaction"
-	"projectforge.dev/views/vtest"
+	"projectforge.dev/projectforge/app/action"
+	"projectforge.dev/projectforge/app/diff"
+	"projectforge.dev/projectforge/app/lib/telemetry"
+	"projectforge.dev/projectforge/app/util"
+	"projectforge.dev/projectforge/views/layout"
+	"projectforge.dev/projectforge/views/vaction"
+	"projectforge.dev/projectforge/views/vtest"
 
-	"projectforge.dev/app/controller/cutil"
+	"projectforge.dev/projectforge/app/controller/cutil"
 
-	"projectforge.dev/app"
+	"projectforge.dev/projectforge/app"
 )
 
 func TestList(rc *fasthttp.RequestCtx) {

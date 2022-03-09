@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/util"
 )
 
 type Colors struct {

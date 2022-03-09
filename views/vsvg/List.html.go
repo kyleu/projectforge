@@ -8,11 +8,11 @@ package vsvg
 import (
 	"strings"
 
-	"projectforge.dev/app"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/project"
-	"projectforge.dev/views/layout"
-	"projectforge.dev/views/vproject"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/views/layout"
+	"projectforge.dev/projectforge/views/vproject"
 )
 
 //line views/vsvg/List.html:11

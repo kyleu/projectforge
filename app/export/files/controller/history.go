@@ -1,8 +1,8 @@
 package controller
 
 import (
-	"projectforge.dev/app/export/golang"
-	"projectforge.dev/app/export/model"
+	"projectforge.dev/projectforge/app/export/golang"
+	"projectforge.dev/projectforge/app/export/model"
 )
 
 func controllerHistory(m *model.Model) *golang.Block {

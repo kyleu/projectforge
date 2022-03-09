@@ -5,11 +5,11 @@ import (
 	"github.com/fasthttp/router"
 	"github.com/valyala/fasthttp"
 
-	"projectforge.dev/app"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/lib/telemetry/httpmetrics"
-	"projectforge.dev/app/site"
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/lib/telemetry/httpmetrics"
+	"projectforge.dev/projectforge/app/site"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func SiteRoutes() fasthttp.RequestHandler {

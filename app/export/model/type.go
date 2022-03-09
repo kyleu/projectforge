@@ -3,7 +3,7 @@ package model
 import (
 	"fmt"
 
-	"projectforge.dev/app/lib/types"
+	"projectforge.dev/projectforge/app/lib/types"
 )
 
 func ToGoType(t types.Type, nullable bool) string {

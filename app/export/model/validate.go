@@ -2,7 +2,7 @@ package model
 
 import (
 	"github.com/pkg/errors"
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/util"
 )
 
 var goKeywords = []string{

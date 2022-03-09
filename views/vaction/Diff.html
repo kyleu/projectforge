@@ -1,9 +1,9 @@
 {% import (
   "strings"
 
-  "projectforge.dev/app"
-  "projectforge.dev/app/controller/cutil"
-  "projectforge.dev/app/diff"
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/diff"
 ) %}
 
 {% func renderDiffs(prjKey string, diffs diff.Diffs, as *app.State, ps *cutil.PageState) %}{% stripspace %}

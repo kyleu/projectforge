@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"projectforge.dev/app/lib/filesystem"
-	"projectforge.dev/app/project"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
+	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/project"
 )
 
 func iOSAssets(prj *project.Project, orig string, fs filesystem.FileLoader, logger *zap.SugaredLogger) error {

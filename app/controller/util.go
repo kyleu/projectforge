@@ -12,12 +12,12 @@ import (
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 
-	"projectforge.dev/app"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/util"
-	"projectforge.dev/views"
-	"projectforge.dev/views/layout"
-	"projectforge.dev/views/verror"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/util"
+	"projectforge.dev/projectforge/views"
+	"projectforge.dev/projectforge/views/layout"
+	"projectforge.dev/projectforge/views/verror"
 )
 
 var initialIcons = []string{"searchbox"}

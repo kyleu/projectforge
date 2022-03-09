@@ -4,12 +4,12 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	"projectforge.dev/app/lib/types"
+	"projectforge.dev/projectforge/app/lib/types"
 
-	"projectforge.dev/app/export/files/helper"
-	"projectforge.dev/app/export/golang"
-	"projectforge.dev/app/export/model"
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/export/files/helper"
+	"projectforge.dev/projectforge/app/export/golang"
+	"projectforge.dev/projectforge/app/export/model"
+	"projectforge.dev/projectforge/app/util"
 )
 
 type FileArgs struct {

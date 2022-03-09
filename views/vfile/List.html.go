@@ -11,10 +11,10 @@ import (
 	"os"
 	"path/filepath"
 
-	"projectforge.dev/app"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/lib/filesystem"
-	"projectforge.dev/views/components"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/views/components"
 )
 
 //line views/vfile/List.html:12

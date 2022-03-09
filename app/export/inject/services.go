@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	"projectforge.dev/app/export/model"
-	"projectforge.dev/app/file"
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/export/model"
+	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func Services(f *file.File, args *model.Args) error {

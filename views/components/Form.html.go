@@ -11,8 +11,8 @@ import (
 	"strings"
 	"time"
 
-	"projectforge.dev/app/util"
-	"projectforge.dev/views/vutil"
+	"projectforge.dev/projectforge/app/util"
+	"projectforge.dev/projectforge/views/vutil"
 )
 
 //line views/components/Form.html:10

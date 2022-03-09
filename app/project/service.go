@@ -9,8 +9,8 @@ import (
 
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
-	"projectforge.dev/app/lib/filesystem"
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/util"
 )
 
 const ConfigFilename = ".projectforge.json"

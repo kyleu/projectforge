@@ -8,10 +8,10 @@ package vsandbox
 
 //line views/vsandbox/List.html:2
 import (
-	"projectforge.dev/app"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/lib/sandbox"
-	"projectforge.dev/views/layout"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/lib/sandbox"
+	"projectforge.dev/projectforge/views/layout"
 )
 
 //line views/vsandbox/List.html:9

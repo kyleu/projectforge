@@ -12,12 +12,12 @@ import (
 	"sort"
 	"strings"
 
-	"projectforge.dev/app"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/lib/telemetry"
-	"projectforge.dev/app/util"
-	"projectforge.dev/views/components"
-	"projectforge.dev/views/layout"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/lib/telemetry"
+	"projectforge.dev/projectforge/app/util"
+	"projectforge.dev/projectforge/views/components"
+	"projectforge.dev/projectforge/views/layout"
 )
 
 //line views/Render.html:15

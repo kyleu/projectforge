@@ -2,11 +2,11 @@ package export
 
 import (
 	"go.uber.org/zap"
-	"projectforge.dev/app/export/files"
-	"projectforge.dev/app/export/inject"
-	"projectforge.dev/app/export/model"
+	"projectforge.dev/projectforge/app/export/files"
+	"projectforge.dev/projectforge/app/export/inject"
+	"projectforge.dev/projectforge/app/export/model"
 
-	"projectforge.dev/app/file"
+	"projectforge.dev/projectforge/app/file"
 )
 
 type Service struct {

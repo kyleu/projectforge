@@ -3,9 +3,9 @@ package view
 import (
 	"fmt"
 
-	"projectforge.dev/app/export/golang"
-	"projectforge.dev/app/export/model"
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/export/golang"
+	"projectforge.dev/projectforge/app/export/model"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func exportViewDetailRevisions(ret *golang.Block, m *model.Model) {

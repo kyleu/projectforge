@@ -5,7 +5,7 @@ import (
 	"sort"
 	"strings"
 
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/util"
 )
 
 type Account struct {

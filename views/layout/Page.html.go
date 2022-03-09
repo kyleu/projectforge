@@ -10,8 +10,8 @@ package layout
 
 //line views/layout/Page.html:4
 import (
-	"projectforge.dev/app"
-	"projectforge.dev/app/controller/cutil"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
 )
 
 //line views/layout/Page.html:9

@@ -8,9 +8,9 @@ package vtheme
 
 //line views/vtheme/Choice.html:2
 import (
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/lib/theme"
-	"projectforge.dev/views/vutil"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/lib/theme"
+	"projectforge.dev/projectforge/views/vutil"
 )
 
 //line views/vtheme/Choice.html:8

@@ -11,7 +11,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func parseSource() (string, string, error) {

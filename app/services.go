@@ -1,13 +1,13 @@
 // Package app $PF_IGNORE$
-package app // import "projectforge.dev/app"
+package app // import "projectforge.dev/projectforge/app"
 
 import (
 	"context"
 
-	"projectforge.dev/app/git"
-	"projectforge.dev/app/module"
-	"projectforge.dev/app/project"
-	"projectforge.dev/app/export"
+	"projectforge.dev/projectforge/app/export"
+	"projectforge.dev/projectforge/app/git"
+	"projectforge.dev/projectforge/app/module"
+	"projectforge.dev/projectforge/app/project"
 )
 
 type Services struct {

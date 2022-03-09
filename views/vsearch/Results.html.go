@@ -8,12 +8,12 @@ package vsearch
 
 //line views/vsearch/Results.html:2
 import (
-	"projectforge.dev/app"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/lib/search"
-	"projectforge.dev/app/lib/search/result"
-	"projectforge.dev/app/util"
-	"projectforge.dev/views/layout"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/lib/search"
+	"projectforge.dev/projectforge/app/lib/search/result"
+	"projectforge.dev/projectforge/app/util"
+	"projectforge.dev/projectforge/views/layout"
 )
 
 //line views/vsearch/Results.html:11

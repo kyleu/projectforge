@@ -3,8 +3,8 @@ package project
 import (
 	"sort"
 
-	"projectforge.dev/app/lib/theme"
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/lib/theme"
+	"projectforge.dev/projectforge/app/util"
 )
 
 var DefaultIcon = "code"

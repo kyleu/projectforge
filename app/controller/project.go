@@ -4,12 +4,12 @@ import (
 	"fmt"
 
 	"github.com/valyala/fasthttp"
-	"projectforge.dev/app/project"
-	"projectforge.dev/views/vproject"
+	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/views/vproject"
 
-	"projectforge.dev/app/controller/cutil"
+	"projectforge.dev/projectforge/app/controller/cutil"
 
-	"projectforge.dev/app"
+	"projectforge.dev/projectforge/app"
 )
 
 func ProjectList(rc *fasthttp.RequestCtx) {

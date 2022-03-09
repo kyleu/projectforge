@@ -12,7 +12,7 @@ import (
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/util"
 )
 
 var key string

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"projectforge.dev/app/lib/filesystem"
-	"projectforge.dev/app/project"
+	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/project"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 )

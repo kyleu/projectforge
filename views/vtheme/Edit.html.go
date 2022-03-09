@@ -8,12 +8,12 @@ package vtheme
 
 //line views/vtheme/Edit.html:2
 import (
-	"projectforge.dev/app"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/lib/theme"
-	"projectforge.dev/app/util"
-	"projectforge.dev/views/components"
-	"projectforge.dev/views/layout"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/lib/theme"
+	"projectforge.dev/projectforge/app/util"
+	"projectforge.dev/projectforge/views/components"
+	"projectforge.dev/projectforge/views/layout"
 )
 
 //line views/vtheme/Edit.html:11

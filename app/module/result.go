@@ -1,7 +1,7 @@
 package module
 
 import (
-	"projectforge.dev/app/diff"
+	"projectforge.dev/projectforge/app/diff"
 )
 
 type Result struct {

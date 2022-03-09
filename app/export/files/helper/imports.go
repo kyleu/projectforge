@@ -3,8 +3,8 @@ package helper
 import (
 	"fmt"
 
-	"projectforge.dev/app/export/golang"
-	"projectforge.dev/app/lib/types"
+	"projectforge.dev/projectforge/app/export/golang"
+	"projectforge.dev/projectforge/app/lib/types"
 )
 
 var (

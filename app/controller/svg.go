@@ -6,14 +6,14 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
-	"projectforge.dev/app/lib/filesystem"
-	"projectforge.dev/app/project"
-	"projectforge.dev/app/svg"
-	"projectforge.dev/views/vsvg"
+	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/app/svg"
+	"projectforge.dev/projectforge/views/vsvg"
 
-	"projectforge.dev/app/controller/cutil"
+	"projectforge.dev/projectforge/app/controller/cutil"
 
-	"projectforge.dev/app"
+	"projectforge.dev/projectforge/app"
 )
 
 func SVGList(rc *fasthttp.RequestCtx) {

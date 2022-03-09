@@ -4,7 +4,7 @@ package types
 import (
 	"fmt"
 
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/util"
 )
 
 const KeyList = "list"

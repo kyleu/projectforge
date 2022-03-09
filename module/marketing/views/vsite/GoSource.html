@@ -1,0 +1,19 @@
+{% import (
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/util"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/views/components"
+  "{{{ .Package }}}/views/layout"
+) %}
+
+{% code type GoSource struct { layout.Basic } %}
+
+{% func (p *GoSource) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`app`, ps) %} {%s util.AppName %}</h3>
+    <pre>go install {{{ .Package }}}@latest</pre>
+    <p>
+      <a href="{{{ .Info.Sourcecode }}}"><button>Source Code</button></a>
+    </p>
+  </div>
+{% endfunc %}

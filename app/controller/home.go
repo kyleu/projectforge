@@ -3,9 +3,9 @@ package controller
 
 import (
 	"github.com/valyala/fasthttp"
-	"projectforge.dev/app"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/views"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/views"
 )
 
 func Home(rc *fasthttp.RequestCtx) {

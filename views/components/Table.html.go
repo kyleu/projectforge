@@ -12,8 +12,8 @@ import (
 	"strings"
 	"time"
 
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/views/vutil"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/views/vutil"
 )
 
 //line views/components/Table.html:11

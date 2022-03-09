@@ -3,7 +3,7 @@ package model
 import (
 	"strings"
 
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/util"
 )
 
 type Relation struct {

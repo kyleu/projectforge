@@ -8,7 +8,7 @@ package fieldedit
 
 //line views/components/fieldedit/Int.html:2
 import (
-	"projectforge.dev/views/components"
+	"projectforge.dev/projectforge/views/components"
 )
 
 //line views/components/fieldedit/Int.html:6

@@ -12,7 +12,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/util"
 )
 
 //line views/components/Display.html:10

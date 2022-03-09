@@ -7,11 +7,11 @@ package vmodule
 //line views/vmodule/Files.html:1
 import (
 	"path/filepath"
-	"projectforge.dev/app"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/module"
-	"projectforge.dev/views/layout"
-	"projectforge.dev/views/vfile"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/module"
+	"projectforge.dev/projectforge/views/layout"
+	"projectforge.dev/projectforge/views/vfile"
 )
 
 //line views/vmodule/Files.html:10

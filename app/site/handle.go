@@ -6,23 +6,19 @@ import (
 	"strings"
 
 	"github.com/valyala/fasthttp"
-	"projectforge.dev/views/verror"
 
-	"projectforge.dev/app"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/site/download"
-	"projectforge.dev/app/util"
-	"projectforge.dev/doc"
-	"projectforge.dev/views/layout"
-	"projectforge.dev/views/vsite"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/site/download"
+	"projectforge.dev/projectforge/app/util"
+	"projectforge.dev/projectforge/doc"
+	"projectforge.dev/projectforge/views/layout"
+	"projectforge.dev/projectforge/views/verror"
+	"projectforge.dev/projectforge/views/vsite"
 )
 
 func Handle(path []string, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (string, layout.Page, []string, error) {
 	if len(path) == 0 {
-		msg := "\n  " +
-			"<meta name=\"go-import\" content=\"projectforge.dev git %s\">\n  " +
-			"<meta name=\"go-source\" content=\"projectforge.dev %s %s/tree/master{/dir} %s/blob/master{/dir}/{file}#L{line}\">"
-		ps.HeaderContent = fmt.Sprintf(msg, util.AppSource, util.AppSource, util.AppSource, util.AppSource)
 		ps.Data = siteData("Welcome to the marketing site!")
 		return "", &vsite.Index{}, path, nil
 	}
@@ -31,6 +27,12 @@ func Handle(path []string, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.Pag
 	var err error
 	bc := path
 	switch path[0] {
+	case util.AppKey:
+		msg := "\n  " +
+			"<meta name=\"go-import\" content=\"projectforge.dev/projectforge git %s\">\n  " +
+			"<meta name=\"go-source\" content=\"projectforge.dev/projectforge %s %s/tree/master{/dir} %s/blob/master{/dir}/{file}#L{line}\">"
+		ps.HeaderContent = fmt.Sprintf(msg, util.AppSource, util.AppSource, util.AppSource, util.AppSource)
+		return "", &vsite.GoSource{}, path, nil
 	case keyFeatures:
 		switch {
 		case len(path) == 1:

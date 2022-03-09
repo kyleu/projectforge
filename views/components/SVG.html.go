@@ -10,9 +10,9 @@ package components
 import (
 	"fmt"
 
-	"projectforge.dev/app"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/util"
 )
 
 //line views/components/SVG.html:10

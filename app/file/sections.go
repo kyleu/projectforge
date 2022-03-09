@@ -6,7 +6,7 @@ import (
 	"unicode/utf8"
 
 	"github.com/pkg/errors"
-	"projectforge.dev/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/lib/filesystem"
 )
 
 const (

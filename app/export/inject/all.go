@@ -1,8 +1,8 @@
 package inject
 
 import (
-	"projectforge.dev/app/export/model"
-	"projectforge.dev/app/file"
+	"projectforge.dev/projectforge/app/export/model"
+	"projectforge.dev/projectforge/app/file"
 )
 
 func All(args *model.Args, files file.Files) error {

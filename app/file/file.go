@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 
 	"go.uber.org/zap"
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/util"
 )
 
 type File struct {

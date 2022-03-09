@@ -4,7 +4,7 @@ package download
 import (
 	"fmt"
 
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func GetLinks(version string) Links {

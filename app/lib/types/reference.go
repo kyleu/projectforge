@@ -4,7 +4,7 @@ package types
 import (
 	"strings"
 
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/util"
 )
 
 const KeyReference = "reference"

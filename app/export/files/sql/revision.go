@@ -3,8 +3,8 @@ package sql
 import (
 	"strings"
 
-	"projectforge.dev/app/export/golang"
-	"projectforge.dev/app/export/model"
+	"projectforge.dev/projectforge/app/export/golang"
+	"projectforge.dev/projectforge/app/export/model"
 )
 
 func sqlCreateRevision(m *model.Model) (*golang.Block, error) {

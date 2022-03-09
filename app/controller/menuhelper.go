@@ -3,9 +3,9 @@ package controller
 import (
 	"context"
 
-	"projectforge.dev/app/lib/menu"
-	"projectforge.dev/app/module"
-	"projectforge.dev/app/project"
+	"projectforge.dev/projectforge/app/lib/menu"
+	"projectforge.dev/projectforge/app/module"
+	"projectforge.dev/projectforge/app/project"
 )
 
 func projectMenu(ctx context.Context, prjs project.Projects) *menu.Item {

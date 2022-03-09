@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 
 	"github.com/pkg/errors"
-	"projectforge.dev/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/lib/filesystem"
 )
 
 func (s *Service) Download(key string, url string) error {

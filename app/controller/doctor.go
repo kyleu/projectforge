@@ -2,13 +2,13 @@ package controller
 
 import (
 	"github.com/valyala/fasthttp"
-	"projectforge.dev/app"
-	"projectforge.dev/app/action"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/doctor"
-	"projectforge.dev/app/doctor/checks"
-	"projectforge.dev/app/lib/menu"
-	"projectforge.dev/views/vdoctor"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/action"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/doctor"
+	"projectforge.dev/projectforge/app/doctor/checks"
+	"projectforge.dev/projectforge/app/lib/menu"
+	"projectforge.dev/projectforge/views/vdoctor"
 )
 
 func DoctorMenu(i string, r string) *menu.Item {

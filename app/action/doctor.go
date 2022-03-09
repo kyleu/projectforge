@@ -4,9 +4,9 @@ import (
 	"context"
 
 	"go.uber.org/zap"
-	"projectforge.dev/app/doctor/checks"
-	"projectforge.dev/app/project"
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/doctor/checks"
+	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func onDoctor(ctx context.Context, cfg util.ValueMap, pSvc *project.Service, logger *zap.SugaredLogger) *Result {

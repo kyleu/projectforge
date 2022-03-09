@@ -7,7 +7,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func assert(t *testing.T, name string, a interface{}, b interface{}, err error, messages ...string) {

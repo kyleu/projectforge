@@ -4,7 +4,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"projectforge.dev/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/lib/filesystem"
 	"github.com/pkg/errors"
 )
 

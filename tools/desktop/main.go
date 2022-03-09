@@ -6,8 +6,8 @@ import (
 
 	"github.com/webview/webview"
 
-	"projectforge.dev/app/cmd"
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/cmd"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func main() {

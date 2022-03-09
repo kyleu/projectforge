@@ -8,7 +8,7 @@ package fieldview
 
 //line views/components/fieldview/Code.html:2
 import (
-	"projectforge.dev/app/controller/cutil"
+	"projectforge.dev/projectforge/app/controller/cutil"
 )
 
 //line views/components/fieldview/Code.html:6

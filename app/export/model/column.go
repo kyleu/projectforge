@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"projectforge.dev/app/lib/types"
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/lib/types"
+	"projectforge.dev/projectforge/app/util"
 )
 
 type Column struct {

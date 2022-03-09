@@ -4,9 +4,9 @@ package site
 import (
 	"context"
 
-	"projectforge.dev/app"
-	"projectforge.dev/app/lib/menu"
-	"projectforge.dev/app/lib/user"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/lib/menu"
+	"projectforge.dev/projectforge/app/lib/user"
 )
 
 const (

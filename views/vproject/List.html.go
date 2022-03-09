@@ -6,11 +6,11 @@ package vproject
 
 //line views/vproject/List.html:1
 import (
-	"projectforge.dev/app"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/project"
-	"projectforge.dev/views/layout"
-	"projectforge.dev/views/vsearch"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/views/layout"
+	"projectforge.dev/projectforge/views/vsearch"
 )
 
 //line views/vproject/List.html:9

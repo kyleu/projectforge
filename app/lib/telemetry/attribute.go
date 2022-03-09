@@ -4,7 +4,7 @@ package telemetry
 import (
 	"go.opentelemetry.io/otel/attribute"
 
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/util"
 )
 
 type Attribute struct {

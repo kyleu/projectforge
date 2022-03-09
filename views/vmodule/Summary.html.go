@@ -6,11 +6,11 @@ package vmodule
 
 //line views/vmodule/Summary.html:1
 import (
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/module"
-	"projectforge.dev/app/util"
-	"projectforge.dev/views/components"
-	"projectforge.dev/views/vsearch"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/module"
+	"projectforge.dev/projectforge/app/util"
+	"projectforge.dev/projectforge/views/components"
+	"projectforge.dev/projectforge/views/vsearch"
 	"strings"
 )
 

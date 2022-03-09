@@ -7,7 +7,7 @@ import (
 	"github.com/muesli/coral"
 	"github.com/pkg/errors"
 
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/util"
 )
 
 const keyAll = "all"

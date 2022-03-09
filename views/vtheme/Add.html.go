@@ -6,11 +6,11 @@ package vtheme
 
 //line views/vtheme/Add.html:1
 import (
-	"projectforge.dev/app"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/lib/theme"
-	"projectforge.dev/app/util"
-	"projectforge.dev/views/layout"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/lib/theme"
+	"projectforge.dev/projectforge/app/util"
+	"projectforge.dev/projectforge/views/layout"
 )
 
 //line views/vtheme/Add.html:9

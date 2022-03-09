@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"projectforge.dev/app/diff"
+	"projectforge.dev/projectforge/app/diff"
 )
 
 func TestDiffs(t *testing.T) {

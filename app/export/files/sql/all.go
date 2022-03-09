@@ -1,9 +1,9 @@
 package sql
 
 import (
-	"projectforge.dev/app/export/golang"
-	"projectforge.dev/app/export/model"
-	"projectforge.dev/app/file"
+	"projectforge.dev/projectforge/app/export/golang"
+	"projectforge.dev/projectforge/app/export/model"
+	"projectforge.dev/projectforge/app/file"
 )
 
 func MigrationAll(models model.Models, addHeader bool) (*file.File, error) {

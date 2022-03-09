@@ -3,8 +3,8 @@ package view
 import (
 	"github.com/pkg/errors"
 
-	"projectforge.dev/app/export/model"
-	"projectforge.dev/app/file"
+	"projectforge.dev/projectforge/app/export/model"
+	"projectforge.dev/projectforge/app/file"
 )
 
 func All(m *model.Model, args *model.Args, addHeader bool) (file.Files, error) {

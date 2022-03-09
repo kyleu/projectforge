@@ -8,9 +8,9 @@ package components
 
 //line views/components/IconPicker.html:2
 import (
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/util"
-	"projectforge.dev/views/vutil"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/util"
+	"projectforge.dev/projectforge/views/vutil"
 )
 
 //line views/components/IconPicker.html:8

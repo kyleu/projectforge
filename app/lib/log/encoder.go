@@ -9,7 +9,7 @@ import (
 	"go.uber.org/zap/buffer"
 	"go.uber.org/zap/zapcore"
 
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/util"
 )
 
 const timeFormat = "15:04:05.000000"

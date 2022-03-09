@@ -1,7 +1,7 @@
 package git
 
 import (
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/util"
 	"github.com/pkg/errors"
 )
 

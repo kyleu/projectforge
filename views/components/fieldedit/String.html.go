@@ -10,7 +10,7 @@ package fieldedit
 import (
 	"fmt"
 
-	"projectforge.dev/views/components"
+	"projectforge.dev/projectforge/views/components"
 )
 
 //line views/components/fieldedit/String.html:8

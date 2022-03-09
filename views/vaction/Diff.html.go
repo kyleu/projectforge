@@ -8,9 +8,9 @@ package vaction
 import (
 	"strings"
 
-	"projectforge.dev/app"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/diff"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/diff"
 )
 
 //line views/vaction/Diff.html:9

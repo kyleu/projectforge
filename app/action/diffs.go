@@ -5,10 +5,10 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	"projectforge.dev/app/diff"
-	"projectforge.dev/app/export/model"
-	"projectforge.dev/app/file"
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/diff"
+	"projectforge.dev/projectforge/app/export/model"
+	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/util"
 )
 
 const (

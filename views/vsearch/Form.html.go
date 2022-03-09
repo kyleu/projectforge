@@ -6,8 +6,8 @@ package vsearch
 
 //line views/vsearch/Form.html:1
 import (
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/views/components"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/views/components"
 )
 
 //line views/vsearch/Form.html:6

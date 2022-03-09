@@ -3,13 +3,13 @@ package site
 import (
 	"context"
 
-	"projectforge.dev/app"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/lib/menu"
-	"projectforge.dev/app/module"
-	"projectforge.dev/views/layout"
-	"projectforge.dev/views/vsite"
 	"github.com/pkg/errors"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/lib/menu"
+	"projectforge.dev/projectforge/app/module"
+	"projectforge.dev/projectforge/views/layout"
+	"projectforge.dev/projectforge/views/vsite"
 )
 
 func featuresMenu(ctx context.Context, as *app.State) menu.Items {

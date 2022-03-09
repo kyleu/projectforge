@@ -1,8 +1,8 @@
 package checks
 
 import (
-	"projectforge.dev/app/doctor"
 	"go.uber.org/zap"
+	"projectforge.dev/projectforge/app/doctor"
 )
 
 var qtc = &doctor.Check{

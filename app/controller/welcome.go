@@ -5,11 +5,11 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
-	"projectforge.dev/app"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/project"
-	"projectforge.dev/app/util"
-	"projectforge.dev/views/vwelcome"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/app/util"
+	"projectforge.dev/projectforge/views/vwelcome"
 )
 
 const welcomeMessage = "Welcome to " + util.AppName + "! View this page in a browser to get started."

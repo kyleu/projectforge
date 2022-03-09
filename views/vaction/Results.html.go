@@ -6,13 +6,13 @@ package vaction
 
 //line views/vaction/Results.html:1
 import (
-	"projectforge.dev/app"
-	"projectforge.dev/app/action"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/views/components"
-	"projectforge.dev/views/layout"
-	"projectforge.dev/views/vproject"
-	"projectforge.dev/views/vsearch"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/action"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/views/components"
+	"projectforge.dev/projectforge/views/layout"
+	"projectforge.dev/projectforge/views/vproject"
+	"projectforge.dev/projectforge/views/vsearch"
 )
 
 //line views/vaction/Results.html:11

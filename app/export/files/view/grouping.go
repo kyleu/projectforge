@@ -3,10 +3,10 @@ package view
 import (
 	"fmt"
 
-	"projectforge.dev/app/export/files/helper"
-	"projectforge.dev/app/export/golang"
-	"projectforge.dev/app/export/model"
-	"projectforge.dev/app/file"
+	"projectforge.dev/projectforge/app/export/files/helper"
+	"projectforge.dev/projectforge/app/export/golang"
+	"projectforge.dev/projectforge/app/export/model"
+	"projectforge.dev/projectforge/app/file"
 )
 
 func Grouping(m *model.Model, grp *model.Column, addHeader bool) (*file.File, error) {

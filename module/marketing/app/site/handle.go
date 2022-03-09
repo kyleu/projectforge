@@ -16,10 +16,6 @@ import (
 
 func Handle(path []string, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (string, layout.Page, []string, error) {
 	if len(path) == 0 {
-		msg := "\n  " +
-			"<meta name=\"go-import\" content=\"{{{ .Package }}} git %s\">\n  " +
-			"<meta name=\"go-source\" content=\"{{{ .Package }}} %s %s/tree/master{/dir} %s/blob/master{/dir}/{file}#L{line}\">"
-		ps.HeaderContent = fmt.Sprintf(msg, util.AppSource, util.AppSource, util.AppSource, util.AppSource)
 		ps.Data = siteData("Welcome to the marketing site!")
 		return "", &vsite.Index{}, path, nil
 	}
@@ -27,6 +23,12 @@ func Handle(path []string, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.Pag
 	var page layout.Page
 	var err error
 	switch path[0] {
+	case util.AppKey:
+		msg := "\n  " +
+			"<meta name=\"go-import\" content=\"{{{ .Package }}} git %s\">\n  " +
+			"<meta name=\"go-source\" content=\"{{{ .Package }}} %s %s/tree/master{/dir} %s/blob/master{/dir}/{file}#L{line}\">"
+		ps.HeaderContent = fmt.Sprintf(msg, util.AppSource, util.AppSource, util.AppSource, util.AppSource)
+		return "", &vsite.GoSource{}, path, nil
 	case keyDownload:
 		dls := download.GetLinks(as.BuildInfo.Version)
 		ps.Data = map[string]interface{}{"base": "https://{{{ .Package }}}/releases/download/v" + as.BuildInfo.Version, "links": dls}

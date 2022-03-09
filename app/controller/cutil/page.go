@@ -8,10 +8,10 @@ import (
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
 
-	"projectforge.dev/app/lib/menu"
-	"projectforge.dev/app/lib/telemetry"
-	"projectforge.dev/app/lib/user"
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/lib/menu"
+	"projectforge.dev/projectforge/app/lib/telemetry"
+	"projectforge.dev/projectforge/app/lib/user"
+	"projectforge.dev/projectforge/app/util"
 )
 
 type PageState struct {

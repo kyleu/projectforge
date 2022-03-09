@@ -6,10 +6,10 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	"projectforge.dev/app/diff"
-	"projectforge.dev/app/lib/filesystem"
-	"projectforge.dev/app/module"
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/diff"
+	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/module"
+	"projectforge.dev/projectforge/app/util"
 )
 
 const projectKey = "project"

@@ -10,9 +10,9 @@ package vadmin
 import (
 	"fmt"
 
-	"projectforge.dev/app"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/views/layout"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/views/layout"
 )
 
 //line views/vadmin/Session.html:10

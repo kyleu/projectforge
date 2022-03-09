@@ -4,7 +4,7 @@ package cutil
 import (
 	"github.com/valyala/fasthttp"
 
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func RequestCtxToMap(rc *fasthttp.RequestCtx, data interface{}) map[string]interface{} {

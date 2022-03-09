@@ -8,10 +8,10 @@ import (
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
-	"projectforge.dev/app/export"
-	"projectforge.dev/app/lib/filesystem"
-	"projectforge.dev/app/lib/search/result"
-	"projectforge.dev/app/project"
+	"projectforge.dev/projectforge/app/export"
+	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/lib/search/result"
+	"projectforge.dev/projectforge/app/project"
 )
 
 var nativeModuleKeys = []string{

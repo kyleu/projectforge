@@ -3,10 +3,10 @@
   "os"
   "path/filepath"
 
-  "projectforge.dev/app"
-  "projectforge.dev/app/lib/filesystem"
-  "projectforge.dev/app/controller/cutil"
-  "projectforge.dev/views/components"
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/lib/filesystem"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/views/components"
 ) %}
 
 {% func List(path []string, files []os.DirEntry, fs filesystem.FileLoader, urlPrefix string, as *app.State, ps *cutil.PageState) %}

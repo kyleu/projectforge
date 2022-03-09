@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"fmt"
 
-	"projectforge.dev/app/diff"
+	"projectforge.dev/projectforge/app/diff"
 )
 
 func (s *Service) UpdateFile(mods Modules, d *diff.Diff) ([]string, error) {

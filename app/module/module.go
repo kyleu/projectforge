@@ -4,8 +4,8 @@ import (
 	"sort"
 
 	"github.com/gomarkdown/markdown"
-	"projectforge.dev/app/lib/filesystem"
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/util"
 )
 
 type Module struct {

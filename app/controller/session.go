@@ -5,12 +5,12 @@ import (
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
 
-	"projectforge.dev/app"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/lib/telemetry"
-	"projectforge.dev/app/lib/telemetry/httpmetrics"
-	"projectforge.dev/app/lib/user"
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/lib/telemetry"
+	"projectforge.dev/projectforge/app/lib/telemetry/httpmetrics"
+	"projectforge.dev/projectforge/app/lib/user"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func loadPageState(rc *fasthttp.RequestCtx, key string, as *app.State) *cutil.PageState {

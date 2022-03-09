@@ -6,13 +6,13 @@ package vproject
 
 //line views/vproject/Summary.html:1
 import (
-	"projectforge.dev/app/action"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/git"
-	"projectforge.dev/app/project"
-	"projectforge.dev/app/util"
-	"projectforge.dev/views/components"
-	"projectforge.dev/views/vsearch"
+	"projectforge.dev/projectforge/app/action"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/git"
+	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/app/util"
+	"projectforge.dev/projectforge/views/components"
+	"projectforge.dev/projectforge/views/vsearch"
 )
 
 //line views/vproject/Summary.html:11

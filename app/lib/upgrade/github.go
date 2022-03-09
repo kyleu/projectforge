@@ -11,7 +11,7 @@ import (
 	"github.com/pkg/errors"
 	"golang.org/x/oauth2"
 
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func createGithubClient() *github.Client {

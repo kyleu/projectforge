@@ -7,12 +7,12 @@ import (
 
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
-	"projectforge.dev/app"
-	"projectforge.dev/app/action"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/lib/telemetry"
-	"projectforge.dev/app/util"
-	"projectforge.dev/views/vaction"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/action"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/lib/telemetry"
+	"projectforge.dev/projectforge/app/util"
+	"projectforge.dev/projectforge/views/vaction"
 )
 
 func RunAction(rc *fasthttp.RequestCtx) {

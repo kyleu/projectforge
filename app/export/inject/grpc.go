@@ -4,10 +4,10 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	"projectforge.dev/app/export/files/grpc"
-	"projectforge.dev/app/export/golang"
-	"projectforge.dev/app/export/model"
-	"projectforge.dev/app/file"
+	"projectforge.dev/projectforge/app/export/files/grpc"
+	"projectforge.dev/projectforge/app/export/golang"
+	"projectforge.dev/projectforge/app/export/model"
+	"projectforge.dev/projectforge/app/file"
 )
 
 func GRPC(f *file.File, args *model.Args) error {

@@ -2,12 +2,12 @@ package controller
 
 import (
 	"github.com/valyala/fasthttp"
-	"projectforge.dev/app/action"
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/action"
+	"projectforge.dev/projectforge/app/util"
 
-	"projectforge.dev/app"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/views/vbuild"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/views/vbuild"
 )
 
 func Build(rc *fasthttp.RequestCtx) {

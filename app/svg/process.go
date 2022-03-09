@@ -4,9 +4,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"projectforge.dev/app/lib/filesystem"
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
+	"projectforge.dev/projectforge/app/lib/filesystem"
 )
 
 const svgPath = "client/src/svg"

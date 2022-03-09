@@ -10,8 +10,8 @@ package components
 import (
 	"github.com/valyala/fasthttp"
 
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/lib/filter"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/lib/filter"
 )
 
 //line views/components/TableHeader.html:9

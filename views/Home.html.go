@@ -8,15 +8,15 @@ package views
 
 //line views/Home.html:2
 import (
-	"projectforge.dev/app"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/module"
-	"projectforge.dev/app/project"
-	"projectforge.dev/app/util"
-	"projectforge.dev/views/components"
-	"projectforge.dev/views/layout"
-	"projectforge.dev/views/vmodule"
-	"projectforge.dev/views/vproject"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/module"
+	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/app/util"
+	"projectforge.dev/projectforge/views/components"
+	"projectforge.dev/projectforge/views/layout"
+	"projectforge.dev/projectforge/views/vmodule"
+	"projectforge.dev/projectforge/views/vproject"
 )
 
 //line views/Home.html:14

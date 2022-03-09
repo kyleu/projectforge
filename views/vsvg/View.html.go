@@ -6,11 +6,11 @@ package vsvg
 
 //line views/vsvg/View.html:1
 import (
-	"projectforge.dev/app"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/project"
-	"projectforge.dev/app/svg"
-	"projectforge.dev/views/layout"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/app/svg"
+	"projectforge.dev/projectforge/views/layout"
 )
 
 //line views/vsvg/View.html:9

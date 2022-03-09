@@ -10,7 +10,7 @@ import (
 	"github.com/valyala/fasthttp"
 	"gopkg.in/yaml.v2"
 
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/util"
 )
 
 const (

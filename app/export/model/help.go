@@ -3,7 +3,7 @@ package model
 import (
 	"strings"
 
-	"projectforge.dev/app/lib/types"
+	"projectforge.dev/projectforge/app/lib/types"
 )
 
 func Help(t types.Type) string {

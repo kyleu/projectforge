@@ -1,13 +1,13 @@
 package action
 
 import (
-	"projectforge.dev/app/lib/filesystem"
-	"projectforge.dev/app/lib/telemetry"
-	"projectforge.dev/app/module"
-	"projectforge.dev/app/project"
-	"projectforge.dev/app/util"
 	"go.uber.org/zap"
-	"projectforge.dev/app/export"
+	"projectforge.dev/projectforge/app/export"
+	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/lib/telemetry"
+	"projectforge.dev/projectforge/app/module"
+	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/app/util"
 )
 
 type Params struct {

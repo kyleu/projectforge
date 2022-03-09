@@ -4,8 +4,8 @@ import (
 	"strings"
 
 	"go.uber.org/zap"
-	"projectforge.dev/app/doctor"
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/doctor"
+	"projectforge.dev/projectforge/app/util"
 )
 
 var repo = &doctor.Check{

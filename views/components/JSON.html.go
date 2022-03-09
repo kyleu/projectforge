@@ -8,8 +8,8 @@ package components
 
 //line views/components/JSON.html:2
 import (
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/util"
 )
 
 //line views/components/JSON.html:7

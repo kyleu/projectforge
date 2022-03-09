@@ -1,10 +1,10 @@
 package view
 
 import (
-	"projectforge.dev/app/export/files/helper"
-	"projectforge.dev/app/export/golang"
-	"projectforge.dev/app/export/model"
-	"projectforge.dev/app/file"
+	"projectforge.dev/projectforge/app/export/files/helper"
+	"projectforge.dev/projectforge/app/export/golang"
+	"projectforge.dev/projectforge/app/export/model"
+	"projectforge.dev/projectforge/app/file"
 )
 
 func history(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {

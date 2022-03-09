@@ -5,11 +5,11 @@ import (
 
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
-	"projectforge.dev/app/export"
-	"projectforge.dev/app/export/model"
-	"projectforge.dev/app/module"
-	"projectforge.dev/app/project"
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/export"
+	"projectforge.dev/projectforge/app/export/model"
+	"projectforge.dev/projectforge/app/module"
+	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func Apply(ctx context.Context, p *Params) *Result {

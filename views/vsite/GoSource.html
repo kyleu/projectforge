@@ -1,0 +1,20 @@
+<!-- $PF_IGNORE$ -->
+{% import (
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/layout"
+) %}
+
+{% code type GoSource struct { layout.Basic } %}
+
+{% func (p *GoSource) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`app`, ps) %} {%s util.AppName %}</h3>
+    <pre>go install projectforge.dev/projectforge@latest</pre>
+    <p>
+      <a href="https://github.com/kyleu/projectforge"><button>Source Code</button></a>
+    </p>
+  </div>
+{% endfunc %}

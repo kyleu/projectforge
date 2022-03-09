@@ -11,8 +11,8 @@ import (
 	"path/filepath"
 	"unicode/utf8"
 
-	"projectforge.dev/app"
-	"projectforge.dev/app/controller/cutil"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
 )
 
 //line views/vfile/Detail.html:10

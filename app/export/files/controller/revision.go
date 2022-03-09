@@ -3,8 +3,8 @@ package controller
 import (
 	"strings"
 
-	"projectforge.dev/app/export/golang"
-	"projectforge.dev/app/export/model"
+	"projectforge.dev/projectforge/app/export/golang"
+	"projectforge.dev/projectforge/app/export/model"
 )
 
 func controllerRevision(m *model.Model) *golang.Block {

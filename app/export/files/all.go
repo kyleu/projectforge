@@ -3,14 +3,14 @@ package files
 import (
 	"github.com/pkg/errors"
 
-	"projectforge.dev/app/export/files/controller"
-	"projectforge.dev/app/export/files/gomodel"
-	"projectforge.dev/app/export/files/grpc"
-	"projectforge.dev/app/export/files/sql"
-	"projectforge.dev/app/export/files/svc"
-	"projectforge.dev/app/export/files/view"
-	"projectforge.dev/app/export/model"
-	"projectforge.dev/app/file"
+	"projectforge.dev/projectforge/app/export/files/controller"
+	"projectforge.dev/projectforge/app/export/files/gomodel"
+	"projectforge.dev/projectforge/app/export/files/grpc"
+	"projectforge.dev/projectforge/app/export/files/sql"
+	"projectforge.dev/projectforge/app/export/files/svc"
+	"projectforge.dev/projectforge/app/export/files/view"
+	"projectforge.dev/projectforge/app/export/model"
+	"projectforge.dev/projectforge/app/file"
 )
 
 func All(args *model.Args, addHeader bool) (file.Files, error) {

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"projectforge.dev/app/export/model"
-	"projectforge.dev/app/file"
+	"projectforge.dev/projectforge/app/export/model"
+	"projectforge.dev/projectforge/app/file"
 )
 
 func Menu(f *file.File, args *model.Args) error {

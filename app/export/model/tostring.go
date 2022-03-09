@@ -1,7 +1,7 @@
 package model
 
 import (
-	"projectforge.dev/app/lib/types"
+	"projectforge.dev/projectforge/app/lib/types"
 )
 
 func ColToString(c *Column, prefix string) string {

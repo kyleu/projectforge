@@ -1,9 +1,9 @@
 package checks
 
 import (
-	"projectforge.dev/app/doctor"
-	"projectforge.dev/app/util"
 	"go.uber.org/zap"
+	"projectforge.dev/projectforge/app/doctor"
+	"projectforge.dev/projectforge/app/util"
 )
 
 var AllChecks = doctor.Checks{pf, prj, repo, air, git, golang, imagemagick, mke, node, qtc}

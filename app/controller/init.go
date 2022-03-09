@@ -6,9 +6,9 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	"projectforge.dev/app"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/project"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/project"
 )
 
 // Initialize app-specific system dependencies.

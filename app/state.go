@@ -7,10 +7,10 @@ import (
 
 	"go.uber.org/zap"
 
-	"projectforge.dev/app/lib/filesystem"
-	"projectforge.dev/app/lib/telemetry"
-	"projectforge.dev/app/lib/theme"
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/lib/telemetry"
+	"projectforge.dev/projectforge/app/lib/theme"
+	"projectforge.dev/projectforge/app/util"
 )
 
 type BuildInfo struct {

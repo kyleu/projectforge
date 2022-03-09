@@ -6,14 +6,14 @@ import (
 	"unicode/utf8"
 
 	"github.com/valyala/fasthttp"
-	"projectforge.dev/app/lib/search"
-	"projectforge.dev/app/lib/search/result"
-	"projectforge.dev/app/util"
-	"projectforge.dev/views/vmodule"
+	"projectforge.dev/projectforge/app/lib/search"
+	"projectforge.dev/projectforge/app/lib/search/result"
+	"projectforge.dev/projectforge/app/util"
+	"projectforge.dev/projectforge/views/vmodule"
 
-	"projectforge.dev/app/controller/cutil"
+	"projectforge.dev/projectforge/app/controller/cutil"
 
-	"projectforge.dev/app"
+	"projectforge.dev/projectforge/app"
 )
 
 func ModuleSearch(rc *fasthttp.RequestCtx) {

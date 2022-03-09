@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"projectforge.dev/app/export/golang"
-	"projectforge.dev/app/export/model"
+	"projectforge.dev/projectforge/app/export/golang"
+	"projectforge.dev/projectforge/app/export/model"
 )
 
 const incDel = "cutil.RequestCtxBool(rc, \"includeDeleted\")"

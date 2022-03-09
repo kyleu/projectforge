@@ -10,7 +10,7 @@ package components
 import (
 	"github.com/valyala/fasthttp"
 
-	"projectforge.dev/app/lib/filter"
+	"projectforge.dev/projectforge/app/lib/filter"
 )
 
 //line views/components/Pagination.html:8

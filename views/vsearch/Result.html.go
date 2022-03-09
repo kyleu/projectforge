@@ -10,11 +10,11 @@ package vsearch
 import (
 	"strings"
 
-	"projectforge.dev/app"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/lib/search"
-	"projectforge.dev/app/lib/search/result"
-	"projectforge.dev/views/components"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/lib/search"
+	"projectforge.dev/projectforge/app/lib/search/result"
+	"projectforge.dev/projectforge/views/components"
 )
 
 //line views/vsearch/Result.html:12

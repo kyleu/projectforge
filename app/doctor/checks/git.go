@@ -1,7 +1,7 @@
 package checks
 
 import (
-	"projectforge.dev/app/doctor"
+	"projectforge.dev/projectforge/app/doctor"
 	"go.uber.org/zap"
 )
 

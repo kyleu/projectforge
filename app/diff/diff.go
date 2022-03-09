@@ -5,8 +5,8 @@ import (
 	"strings"
 
 	"go.uber.org/zap"
-	"projectforge.dev/app/file"
-	"projectforge.dev/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/lib/filesystem"
 )
 
 type Diff struct {

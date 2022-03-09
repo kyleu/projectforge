@@ -4,11 +4,11 @@ package controller
 import (
 	"context"
 
-	"projectforge.dev/app"
-	"projectforge.dev/app/lib/menu"
-	"projectforge.dev/app/lib/sandbox"
-	"projectforge.dev/app/lib/telemetry"
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/lib/menu"
+	"projectforge.dev/projectforge/app/lib/sandbox"
+	"projectforge.dev/projectforge/app/lib/telemetry"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func MenuFor(ctx context.Context, isAuthed bool, isAdmin bool, as *app.State) (menu.Items, error) {

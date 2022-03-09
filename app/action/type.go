@@ -1,7 +1,7 @@
 package action
 
 import (
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/util"
 )
 
 type Type struct {

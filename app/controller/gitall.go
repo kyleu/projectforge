@@ -7,12 +7,12 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
-	"projectforge.dev/app/git"
-	"projectforge.dev/app/project"
-	"projectforge.dev/views/vgit"
+	"projectforge.dev/projectforge/app/git"
+	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/views/vgit"
 
-	"projectforge.dev/app"
-	"projectforge.dev/app/controller/cutil"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
 )
 
 func GitActionAll(rc *fasthttp.RequestCtx) {

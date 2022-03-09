@@ -8,10 +8,10 @@ package vproject
 import (
 	"strings"
 
-	"projectforge.dev/app"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/export/model"
-	"projectforge.dev/views/components"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/export/model"
+	"projectforge.dev/projectforge/views/components"
 )
 
 //line views/vproject/DetailExportModel.html:10

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func template(src string, svgs []*SVG) string {

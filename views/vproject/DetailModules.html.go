@@ -6,9 +6,9 @@ package vproject
 
 //line views/vproject/DetailModules.html:1
 import (
-	"projectforge.dev/app"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/module"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/module"
 )
 
 //line views/vproject/DetailModules.html:7

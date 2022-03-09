@@ -4,10 +4,10 @@ package controller
 import (
 	"github.com/valyala/fasthttp"
 
-	"projectforge.dev/app"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/lib/search"
-	"projectforge.dev/views/vsearch"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/lib/search"
+	"projectforge.dev/projectforge/views/vsearch"
 )
 
 func Search(rc *fasthttp.RequestCtx) {

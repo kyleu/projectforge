@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"strings"
 
-	"projectforge.dev/app/project"
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func clilog(s string) {

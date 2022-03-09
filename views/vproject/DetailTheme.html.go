@@ -6,10 +6,10 @@ package vproject
 
 //line views/vproject/DetailTheme.html:1
 import (
-	"projectforge.dev/app"
-	"projectforge.dev/app/controller/cutil"
-	"projectforge.dev/app/lib/theme"
-	"projectforge.dev/views/vtheme"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/lib/theme"
+	"projectforge.dev/projectforge/views/vtheme"
 )
 
 //line views/vproject/DetailTheme.html:8

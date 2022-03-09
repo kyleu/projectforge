@@ -7,11 +7,11 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
-	"projectforge.dev/app/lib/theme"
-	"projectforge.dev/app/project"
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/lib/theme"
+	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/app/util"
 
-	"projectforge.dev/app"
+	"projectforge.dev/projectforge/app"
 )
 
 func projectFromForm(frm util.ValueMap, prj *project.Project) error {

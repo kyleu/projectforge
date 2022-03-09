@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	"go.uber.org/zap"
-	"projectforge.dev/app/doctor"
+	"projectforge.dev/projectforge/app/doctor"
 )
 
 var imagemagick = &doctor.Check{

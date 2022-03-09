@@ -3,7 +3,7 @@ package file
 import (
 	"strings"
 
-	"projectforge.dev/app/util"
+	"projectforge.dev/projectforge/app/util"
 )
 
 type Type struct {
