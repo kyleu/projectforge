@@ -2,7 +2,6 @@ package auth
 
 import (
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/markbates/goth"
@@ -19,7 +18,7 @@ type Provider struct {
 }
 
 func (p *Provider) Goth(proto string, host string) (goth.Provider, error) {
-	if p := os.Getenv("oauth_protocol"); p != "" {
+	if p := util.GetEnv("oauth_protocol"); p != "" {
 		proto = p
 	}
 	if proto == "" {
@@ -27,10 +26,10 @@ func (p *Provider) Goth(proto string, host string) (goth.Provider, error) {
 	}
 	u := fmt.Sprintf("%s://%s", proto, host)
 
-	if env := os.Getenv(util.AppKey + "_oauth_redirect"); env != "" {
+	if env := util.GetEnv(util.AppKey + "_oauth_redirect"); env != "" {
 		u = env
 	}
-	if env := os.Getenv("oauth_redirect"); env != "" {
+	if env := util.GetEnv("oauth_redirect"); env != "" {
 		u = env
 	}
 	u = strings.TrimSuffix(u, "/")
@@ -89,7 +88,7 @@ func (s *Service) load() error {
 		return errors.New("called [load] twice")
 	}
 	if s.baseURL == "" {
-		s.baseURL = os.Getenv(util.AppKey + "_oauth_redirect")
+		s.baseURL = util.GetEnv(util.AppKey + "_oauth_redirect")
 	}
 	if s.baseURL == "" {
 		s.baseURL = fmt.Sprintf("http://localhost:%d", util.AppPort)
@@ -100,8 +99,8 @@ func (s *Service) load() error {
 
 	ret := Providers{}
 	for _, k := range AvailableProviderKeys {
-		envKey := os.Getenv(k + "_key")
-		envSecret := os.Getenv(k + "_secret")
+		envKey := util.GetEnv(k + "_key")
+		envSecret := util.GetEnv(k + "_secret")
 		if envKey != "" {
 			ret = append(ret, &Provider{ID: k, Title: AvailableProviderNames[k], Key: envKey, Secret: envSecret})
 		}

@@ -3,7 +3,6 @@ package controller
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/valyala/fasthttp"
 
@@ -17,9 +16,9 @@ import (
 var (
 	_currentAppState       *app.State
 	_currentSiteState      *app.State
-	defaultRootTitleAppend = os.Getenv("app_display_name_append")
+	defaultRootTitleAppend = util.GetEnv("app_display_name_append")
 	defaultRootTitle       = func() string {
-		if tmp := os.Getenv("app_display_name"); tmp != "" {
+		if tmp := util.GetEnv("app_display_name"); tmp != "" {
 			return tmp
 		}
 		return util.AppName

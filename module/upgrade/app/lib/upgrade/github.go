@@ -3,7 +3,6 @@ package upgrade
 import (
 	"context"
 	"net/http"
-	"os"
 	"strings"
 
 	"github.com/google/go-github/v39/github"
@@ -15,7 +14,7 @@ import (
 
 func createGithubClient() *github.Client {
 	client := http.DefaultClient
-	if token := os.Getenv("GITHUB_TOKEN"); token != "" {
+	if token := util.GetEnv("github_token"); token != "" {
 		src := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: token})
 		client = oauth2.NewClient(context.Background(), src)
 	}

@@ -3,6 +3,8 @@ package project
 import (
 	"fmt"
 	"strings"
+
+	"projectforge.dev/projectforge/app/util"
 )
 
 func (t *TemplateContext) CIContent() string {
@@ -19,6 +21,13 @@ func (t *TemplateContext) CIContent() string {
 	default:
 		return "on:\n  push:\n    tags:\n      - 'DISABLED_v*'"
 	}
+}
+func (t *TemplateContext) ConfigVarsContent() string {
+	ret, err := util.MarkdownTable([]string{"Name", "Type", "Description"}, t.ConfigVars.Array())
+	if err != nil {
+		return "ERROR: " + err.Error()
+	}
+	return ret
 }
 
 func (t *TemplateContext) ExtraFilesContent() string {

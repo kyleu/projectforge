@@ -1,16 +1,16 @@
 package theme
 
 import (
-	"os"
+	"{{{ .Package }}}/app/util"
 )
 
 var ThemeDefault = func() *Theme {
 	nbl := "{{{ .Theme.Light.NavBackground }}}"
-	if o := os.Getenv("app_nav_color_light"); o != "" {
+	if o := util.GetEnv("app_nav_color_light"); o != "" {
 		nbl = o
 	}
 	nbd := "{{{ .Theme.Dark.NavBackground }}}"
-	if o := os.Getenv("app_nav_color_dark"); o != "" {
+	if o := util.GetEnv("app_nav_color_dark"); o != "" {
 		nbd = o
 	}
 

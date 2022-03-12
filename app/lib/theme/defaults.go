@@ -2,16 +2,16 @@
 package theme
 
 import (
-	"os"
+	"projectforge.dev/projectforge/app/util"
 )
 
 var ThemeDefault = func() *Theme {
 	nbl := "#4f9abd"
-	if o := os.Getenv("app_nav_color_light"); o != "" {
+	if o := util.GetEnv("app_nav_color_light"); o != "" {
 		nbl = o
 	}
 	nbd := "#2d414e"
-	if o := os.Getenv("app_nav_color_dark"); o != "" {
+	if o := util.GetEnv("app_nav_color_dark"); o != "" {
 		nbd = o
 	}
 

@@ -9,7 +9,6 @@ import (
 	"encoding/base64"
 	"hash/fnv"
 	"io"
-	"os"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -87,7 +86,7 @@ func HashSHA256(s string) string {
 func getKey(logger *zap.SugaredLogger) []byte {
 	if _encryptKey == "" {
 		env := strings.ReplaceAll(AppKey, "-", "_") + "_encryption_key"
-		_encryptKey = os.Getenv(env)
+		_encryptKey = GetEnv(env)
 		if _encryptKey == "" {
 			if logger != nil {
 				logger.Warnf("using default encryption key\nset environment variable [%s] to save sessions between restarts", env)

@@ -17,6 +17,7 @@ type Module struct {
 	AuthorEmail string                `json:"authorEmail,omitempty"`
 	License     string                `json:"license,omitempty"`
 	Sourcecode  string                `json:"sourcecode,omitempty"`
+	ConfigVars  util.KeyTypeDescs     `json:"configVars,omitempty"`
 	PortOffsets map[string]int        `json:"portOffsets,omitempty"`
 	Priority    int                   `json:"priority,omitempty"`
 	Files       filesystem.FileLoader `json:"-"`

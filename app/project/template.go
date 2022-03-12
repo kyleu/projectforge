@@ -4,17 +4,19 @@ import (
 	"fmt"
 
 	"projectforge.dev/projectforge/app/lib/theme"
+	"projectforge.dev/projectforge/app/util"
 )
 
 type TemplateContext struct {
-	Key         string         `json:"key"`
-	Name        string         `json:"name,omitempty"`
-	Exec        string         `json:"exec,omitempty"`
-	Version     string         `json:"version"`
-	Package     string         `json:"package,omitempty"`
-	Args        string         `json:"args,omitempty"`
-	Port        int            `json:"port,omitempty"`
-	PortOffsets map[string]int `json:"portOffsets,omitempty"`
+	Key         string            `json:"key"`
+	Name        string            `json:"name,omitempty"`
+	Exec        string            `json:"exec,omitempty"`
+	Version     string            `json:"version"`
+	Package     string            `json:"package,omitempty"`
+	Args        string            `json:"args,omitempty"`
+	Port        int               `json:"port,omitempty"`
+	ConfigVars  util.KeyTypeDescs `json:"configVars,omitempty"`
+	PortOffsets map[string]int    `json:"portOffsets,omitempty"`
 
 	Modules []string     `json:"modules,omitempty"`
 	Info    *Info        `json:"info,omitempty"`
@@ -25,7 +27,7 @@ type TemplateContext struct {
 	IgnoreGrep string   `json:"ignoreGrep,omitempty"`
 }
 
-func (p *Project) ToTemplateContext(portOffsets map[string]int) *TemplateContext {
+func (p *Project) ToTemplateContext(configVars util.KeyTypeDescs, portOffsets map[string]int) *TemplateContext {
 	i := p.Info
 	if i == nil {
 		i = &Info{}
@@ -46,7 +48,7 @@ func (p *Project) ToTemplateContext(portOffsets map[string]int) *TemplateContext
 
 	ret := &TemplateContext{
 		Key: p.Key, Name: p.Name, Exec: p.Executable(), Version: p.Version,
-		Package: p.Package, Args: p.Args, Port: p.Port, PortOffsets: portOffsets,
+		Package: p.Package, Args: p.Args, Port: p.Port, ConfigVars: configVars, PortOffsets: portOffsets,
 		Modules: p.Modules, Info: i, Build: b, Theme: t, Ignore: p.Ignore, IgnoreGrep: ignoreGrep,
 	}
 

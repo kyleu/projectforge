@@ -2,7 +2,6 @@ package telemetry
 
 import (
 	"context"
-	"os"
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp"
@@ -40,7 +39,7 @@ func Initialize(logger *zap.SugaredLogger) {
 	initialized = true
 
 	endpoint := "localhost:55681"
-	if env := os.Getenv("telemetry_endpoint"); env != "" {
+	if env := util.GetEnv("telemetry_endpoint"); env != "" {
 		endpoint = env
 	}
 	logger.Debugf("initializing OpenTelemetry tracing using endpoint [%s]", endpoint)

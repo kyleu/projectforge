@@ -1,8 +1,6 @@
 package auth
 
 import (
-	"os"
-
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/providers/amazon"
 	"github.com/markbates/goth/providers/auth0"
@@ -61,6 +59,7 @@ import (
 	"github.com/pkg/errors"
 
 	"{{{ .Package }}}/app/lib/auth/msfix"
+	"{{{ .Package }}}/app/util"
 )
 
 // nolint
@@ -71,7 +70,7 @@ func toGoth(id string, k string, s string, c string) (goth.Provider, error) {
 	// case "apple":
 	//	 return apple.New(k, s, c, nil, apple.ScopeName, apple.ScopeEmail), nil
 	case auth0Key:
-		return auth0.New(k, s, c, os.Getenv("auth0_domain")), nil
+		return auth0.New(k, s, c, util.GetEnv("auth0_domain")), nil
 	case "azuread":
 		return azuread.New(k, s, c, nil), nil
 	case "battlenet":
@@ -125,19 +124,19 @@ func toGoth(id string, k string, s string, c string) (goth.Provider, error) {
 	case "meetup":
 		return meetup.New(k, s, c), nil
 	case microsoftKey:
-		return msfix.New(k, s, c, os.Getenv("microsoft_tenant")), nil
+		return msfix.New(k, s, c, util.GetEnv("microsoft_tenant")), nil
 	case "microsoftonline":
 		return microsoftonline.New(k, s, c), nil
 	case "naver":
 		return naver.New(k, s, c), nil
 	case nextcloudKey:
-		return nextcloud.NewCustomisedDNS(k, s, c, os.Getenv("nextcloud_url")), nil
+		return nextcloud.NewCustomisedDNS(k, s, c, util.GetEnv("nextcloud_url")), nil
 	case "okta":
 		return okta.New(k, s, c, "openid", "profile", "email"), nil
 	case "onedrive":
 		return onedrive.New(k, s, c), nil
 	case OpenIDConnectKey:
-		return openidConnect.New(k, s, c, os.Getenv("openid_connect_url"), "profile", "email")
+		return openidConnect.New(k, s, c, util.GetEnv("openid_connect_url"), "profile", "email")
 	case "paypal":
 		return paypal.New(k, s, c), nil
 	case "salesforce":

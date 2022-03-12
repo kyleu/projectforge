@@ -3,7 +3,6 @@ package database
 import (
 	"context"
 	"fmt"
-	"os"
 	"strconv"
 
 	// load postgres driver.
@@ -33,35 +32,35 @@ type PostgresParams struct {
 
 func PostgresParamsFromEnv(key string, defaultUser string, prefix string) *PostgresParams {
 	h := localhost
-	if x := os.Getenv(prefix + "DB_HOST"); x != "" {
+	if x := util.GetEnv(prefix + "db_host"); x != "" {
 		h = x
 	}
 	p := 0
-	if x := os.Getenv(prefix + "DB_PORT"); x != "" {
+	if x := util.GetEnv(prefix + "db_port"); x != "" {
 		p, _ = strconv.Atoi(x)
 	}
 	u := defaultUser
-	if x := os.Getenv(prefix + "DB_USER"); x != "" {
+	if x := util.GetEnv(prefix + "db_user"); x != "" {
 		u = x
 	}
 	pw := defaultUser
-	if x := os.Getenv(prefix + "DB_PASSWORD"); x != "" {
+	if x := util.GetEnv(prefix + "db_password"); x != "" {
 		pw = x
 	}
 	d := key
-	if x := os.Getenv(prefix + "DB_DATABASE"); x != "" {
+	if x := util.GetEnv(prefix + "db_database"); x != "" {
 		d = x
 	}
 	s := defaultSchema
-	if x := os.Getenv(prefix + "DB_SCHEMA"); x != "" {
+	if x := util.GetEnv(prefix + "db_schema"); x != "" {
 		s = x
 	}
 	mc := 16
-	if x := os.Getenv(prefix + "DB_MAX_CONNECTIONS"); x != "" {
+	if x := util.GetEnv(prefix + "db_max_connections"); x != "" {
 		mc, _ = strconv.Atoi(x)
 	}
 	debug := false
-	if x := os.Getenv(prefix + "DB_DEBUG"); x != "" {
+	if x := util.GetEnv(prefix + "db_debug"); x != "" {
 		debug = x != falseKey
 	}
 	return &PostgresParams{Host: h, Port: p, Username: u, Password: pw, Database: d, Schema: s, MaxConns: mc, Debug: debug}
@@ -69,7 +68,7 @@ func PostgresParamsFromEnv(key string, defaultUser string, prefix string) *Postg
 
 func OpenPostgres(ctx context.Context, prefix string, logger *zap.SugaredLogger) (*Service, error) {
 	envParams := PostgresParamsFromEnv(util.AppKey, util.AppKey, prefix)
-	if os.Getenv("DB_SSL") == util.BoolTrue {
+	if util.GetEnv("db_ssl") == util.BoolTrue {
 		serviceParams, err := PostgresParamsFromService()
 		if err != nil {
 			return nil, err

@@ -6,5 +6,22 @@
   "authorEmail": "kyle@kyleu.com",
   "license": "CC0",
   "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/sqlite",
+  "configVars": [
+    {
+      "key": "db_file",
+      "type": "string",
+      "description": "filename and path for the default SQLite connection"
+    },
+    {
+      "key": "db_schema",
+      "type": "string",
+      "description": "schema for the default SQLite connection"
+    },
+    {
+      "key": "db_debug",
+      "type": "bool",
+      "description": "when set, logs all database interactions"
+    }
+  ],
   "priority": 10
 }

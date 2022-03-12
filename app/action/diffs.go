@@ -45,13 +45,16 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 	}
 
 	portOffsets := map[string]int{}
+	var configVars util.KeyTypeDescs
 	for _, m := range pm.Prj.Modules {
-		for k, v := range pm.Mods.Get(m).PortOffsets {
+		mod := pm.Mods.Get(m)
+		configVars = append(configVars, mod.ConfigVars...)
+		for k, v := range mod.PortOffsets {
 			portOffsets[k] = v
 		}
 	}
 
-	ctx := pm.Prj.ToTemplateContext(portOffsets)
+	ctx := pm.Prj.ToTemplateContext(configVars, portOffsets)
 
 	for _, f := range srcFiles {
 		origPath := f.FullPath()

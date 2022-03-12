@@ -2,7 +2,6 @@ package database
 
 import (
 	"context"
-	"os"
 
 	"go.uber.org/zap"
 
@@ -26,15 +25,15 @@ func OpenDefaultSQLite(ctx context.Context, logger *zap.SugaredLogger) (*Service
 
 func SQLiteParamsFromEnv(key string, defaultUser string, prefix string) *SQLiteParams {
 	f := util.AppKey + ".sqlite"
-	if x := os.Getenv(prefix + "DB_FILE"); x != "" {
+	if x := util.GetEnv(prefix + "db_file"); x != "" {
 		f = x
 	}
 	s := "public"
-	if x := os.Getenv(prefix + "DB_SCHEMA"); x != "" {
+	if x := util.GetEnv(prefix + "db_schema"); x != "" {
 		s = x
 	}
 	debug := false
-	if x := os.Getenv(prefix + "DB_DEBUG"); x != "" {
+	if x := util.GetEnv(prefix + "db_debug"); x != "" {
 		debug = x != falseKey
 	}
 	return &SQLiteParams{File: f, Schema: s, Debug: debug}

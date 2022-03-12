@@ -6,5 +6,27 @@
   "authorEmail": "kyle@kyleu.com",
   "license": "CC0",
   "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/oauth",
+  "configVars": [
+    {
+      "key": "oauth_redirect",
+      "type": "string",
+      "description": "final URL to use for OAuth callbacks, overrides other options"
+    },
+    {
+      "key": "oauth_protocol",
+      "type": "string",
+      "description": "protocol to use for OAuth callbacks, defaults to the request's hostname"
+    },
+    {
+      "key": "openid_connect_name",
+      "type": "string",
+      "description": "when OpenID is enabled, this controls the display name"
+    },
+    {
+      "key": "openid_connect_url",
+      "type": "string",
+      "description": "when OpenID is enabled, this determines the URL"
+    }
+  ],
   "priority": 30
 }

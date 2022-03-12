@@ -2,12 +2,13 @@
 package log
 
 import (
-	"os"
 	"strings"
 
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
+
+	"projectforge.dev/projectforge/app/util"
 )
 
 const keyCustom = "custom"
@@ -15,8 +16,9 @@ const keyCustom = "custom"
 func InitLogging(debug bool) (*zap.SugaredLogger, error) {
 	var logger *zap.Logger
 	var err error
+	lf := util.GetEnv("logging_format")
 	switch {
-	case strings.EqualFold(os.Getenv("LOGGING_FORMAT"), "json"):
+	case strings.EqualFold(lf, "json"):
 		logger, err = initJSONLogging(getLevel(zap.InfoLevel))
 	case debug:
 		logger, err = initDevLogging(getLevel(zap.DebugLevel))
@@ -63,7 +65,7 @@ func initSimpleLogging(lvl zapcore.Level) (*zap.Logger, error) {
 }
 
 func getLevel(dflt zapcore.Level) zapcore.Level {
-	l := os.Getenv("LOGGING_LEVEL")
+	l := util.GetEnv("logging_level")
 	switch {
 	case strings.EqualFold(l, "debug"):
 		return zap.DebugLevel

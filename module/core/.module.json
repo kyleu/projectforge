@@ -6,5 +6,46 @@
   "authorEmail": "kyle@kyleu.com",
   "license": "CC0",
   "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/core",
-  "priority": 0
+  "configVars": [
+    {
+      "key": "app_display_name_append",
+      "type": "string",
+      "description": "added to the end of the UI title"
+    },
+    {
+      "key": "app_display_name",
+      "type": "string",
+      "description": "replaces the UI title"
+    },
+    {
+      "key": "logging_format",
+      "type": "string",
+      "description": "When set to `json`, forces the logging format"
+    },
+    {
+      "key": "logging_level",
+      "type": "string",
+      "description": "minimum logging level to display, one of [`debug`, `info`, `warn`, `error`]"
+    },
+    {
+      "key": "telemetry_endpoint",
+      "type": "string",
+      "description": "address of OpenTelemetry collector (when enabled), defaults to `localhost:55681`"
+    },
+    {
+      "key": "app_nav_color_light",
+      "type": "string",
+      "description": "sets the navigation color for users with light mode, defaults to theme color"
+    },
+    {
+      "key": "app_nav_color_dark",
+      "type": "string",
+      "description": "sets the navigation color for users with dark mode, defaults to theme color"
+    },
+    {
+      "key": "{key}_encryption_key",
+      "type": "string",
+      "description": "encryption key for web sessions, defaults to `{key}_secret`, warns if missing"
+    }
+  ]
 }

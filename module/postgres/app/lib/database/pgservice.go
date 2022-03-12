@@ -6,6 +6,8 @@ import (
 
 	"github.com/go-ini/ini"
 	"github.com/pkg/errors"
+
+	"{{{ .Package }}}/app/util"
 )
 
 // Valid parameters supported in reading `PGSERVICEFILE`.
@@ -37,13 +39,13 @@ type PostgresServiceParams struct {
 // PostgresParamsFromService parses connection service config from DB_SERVICE env var from file located at DB_SERVICEFILE.
 // If DB_SERVICEFILE is not provided, it searches for the pg service conf file in home directory.
 func PostgresParamsFromService() (*PostgresServiceParams, error) {
-	pgservice, ok := os.LookupEnv("DB_SERVICE")
-	if !ok {
+	pgservice := util.GetEnv("db_service")
+	if pgservice == "" {
 		return nil, errors.New("missing 'DB_SERVICE' env var")
 	}
 
-	pgservicefile, ok := os.LookupEnv("DB_SERVICEFILE")
-	if !ok {
+	pgservicefile := util.GetEnv("db_servicefile")
+	if pgservicefile == "" {
 		pgservicefile = os.ExpandEnv("${HOME}/.pg_service.conf")
 	}
 
