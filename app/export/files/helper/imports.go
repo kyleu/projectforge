@@ -60,7 +60,7 @@ func importsForType(ctx string, t types.Type) golang.Imports {
 
 func importsForTypeCtxGo(t types.Type) golang.Imports {
 	switch t.Key() {
-	case types.KeyMap:
+	case types.KeyMap, types.KeyValueMap:
 		return golang.Imports{ImpAppUtil}
 	case types.KeyTimestamp:
 		return golang.Imports{ImpTime}
@@ -75,7 +75,7 @@ func importsForTypeCtxDTO(t types.Type) golang.Imports {
 	switch t.Key() {
 	case types.KeyAny:
 		return golang.Imports{ImpJSON}
-	case types.KeyMap:
+	case types.KeyMap, types.KeyValueMap:
 		return golang.Imports{ImpJSON, ImpAppUtil}
 	case types.KeyTimestamp:
 		return golang.Imports{ImpTime}
@@ -90,7 +90,7 @@ func importsForTypeCtxString(t types.Type) golang.Imports {
 	switch t.Key() {
 	case types.KeyInt:
 		return golang.Imports{ImpFmt}
-	case types.KeyMap:
+	case types.KeyMap, types.KeyValueMap:
 		return golang.Imports{ImpAppUtil}
 	default:
 		return nil
@@ -112,7 +112,7 @@ func importsForTypeCtxWebEdit(t types.Type) golang.Imports {
 	switch t.Key() {
 	case types.KeyAny:
 		return golang.Imports{ImpAppUtil, ImpFmt}
-	case types.KeyMap:
+	case types.KeyMap, types.KeyValueMap:
 		return golang.Imports{ImpAppUtil}
 	default:
 		return nil

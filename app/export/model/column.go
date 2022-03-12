@@ -90,7 +90,7 @@ func (c *Column) ToGoEditString(prefix string) string {
 		return fmt.Sprintf(`{%%%%= components.TableBoolean(%q, %q, %s, 5, %q) %%%%}`, c.Camel(), c.Title(), prefix+c.Proper(), c.Help())
 	case types.KeyInt:
 		return fmt.Sprintf(`{%%%%= components.TableInputNumber(%q, %q, %s, 5, %q) %%%%}`, c.Camel(), c.Title(), prefix+c.Proper(), c.Help())
-	case types.KeyMap:
+	case types.KeyMap, types.KeyValueMap:
 		return fmt.Sprintf(`{%%%%= components.TableTextarea(%q, %q, 8, util.ToJSON(%s), 5, %q) %%%%}`, c.Camel(), c.Title(), c.ToGoString(prefix), c.Help())
 	case types.KeyTimestamp:
 		gs := c.ToGoString(prefix)
@@ -98,6 +98,12 @@ func (c *Column) ToGoEditString(prefix string) string {
 			gs = "&" + gs
 		}
 		return fmt.Sprintf(`{%%%%= components.TableInputTimestamp(%q, %q, %s, 5, %q) %%%%}`, c.Camel(), c.Title(), gs, c.Help())
+	case types.KeyUUID:
+		gs := prefix + c.Proper()
+		if !c.Nullable {
+			gs = "&" + gs
+		}
+		return fmt.Sprintf(`{%%%%= components.TableInputUUID(%q, %q, %s, 5, %q) %%%%}`, c.Camel(), c.Title(), gs, c.Help())
 	default:
 		return fmt.Sprintf(`{%%%%= components.TableInput(%q, %q, %s, 5, %q) %%%%}`, c.Camel(), c.Title(), c.ToGoString(prefix), c.Help())
 	}
@@ -111,7 +117,7 @@ func (c *Column) ToGoMapParse() string {
 		return "Bool"
 	case types.KeyInt:
 		return "Int"
-	case types.KeyMap:
+	case types.KeyMap, types.KeyValueMap:
 		return "Map"
 	case types.KeyString:
 		return "String"
@@ -135,7 +141,7 @@ func (c *Column) ZeroVal() string {
 		return "false"
 	case types.KeyInt:
 		return "0"
-	case types.KeyMap:
+	case types.KeyMap, types.KeyValueMap:
 		return types.KeyNil
 	case types.KeyString:
 		return "\"\""

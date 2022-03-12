@@ -4,6 +4,7 @@
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/export/model"
+  "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
 ) %}
 
@@ -49,6 +50,7 @@
         {%- for _, col := range model.Columns -%}
         <tr>
           <td>{%s col.Name %}</td>
+          {%- code println(util.ToJSON(col)) -%}
           <td>{%s col.Type.String() %}</td>
           <td>{%s strings.Join(col.Tags, ", ") %}</td>
         </tr>

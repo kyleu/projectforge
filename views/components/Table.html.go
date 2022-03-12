@@ -12,628 +12,691 @@ import (
 	"strings"
 	"time"
 
+	"github.com/google/uuid"
+
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/views/vutil"
 )
 
-//line views/components/Table.html:11
+//line views/components/Table.html:13
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/components/Table.html:11
+//line views/components/Table.html:13
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/components/Table.html:11
+//line views/components/Table.html:13
 func StreamTableInput(qw422016 *qt422016.Writer, key string, title string, value string, indent int, help ...string) {
-//line views/components/Table.html:11
+//line views/components/Table.html:13
 	qw422016.N().S(`<tr>`)
-//line views/components/Table.html:13
+//line views/components/Table.html:15
 	vutil.StreamIndent(qw422016, true, indent+1)
-//line views/components/Table.html:13
+//line views/components/Table.html:15
 	qw422016.N().S(`<th class="shrink"><label for="input-`)
-//line views/components/Table.html:14
-	qw422016.E().S(key)
-//line views/components/Table.html:14
-	qw422016.N().S(`"`)
-//line views/components/Table.html:14
-	streamtitleFor(qw422016, help)
-//line views/components/Table.html:14
-	qw422016.N().S(`>`)
-//line views/components/Table.html:14
-	qw422016.E().S(title)
-//line views/components/Table.html:14
-	qw422016.N().S(`</label></th>`)
-//line views/components/Table.html:15
-	vutil.StreamIndent(qw422016, true, indent+1)
-//line views/components/Table.html:15
-	qw422016.N().S(`<td>`)
 //line views/components/Table.html:16
+	qw422016.E().S(key)
+//line views/components/Table.html:16
+	qw422016.N().S(`"`)
+//line views/components/Table.html:16
+	streamtitleFor(qw422016, help)
+//line views/components/Table.html:16
+	qw422016.N().S(`>`)
+//line views/components/Table.html:16
+	qw422016.E().S(title)
+//line views/components/Table.html:16
+	qw422016.N().S(`</label></th>`)
+//line views/components/Table.html:17
+	vutil.StreamIndent(qw422016, true, indent+1)
+//line views/components/Table.html:17
+	qw422016.N().S(`<td>`)
+//line views/components/Table.html:18
 	StreamFormInput(qw422016, key, "input-"+key, value, help...)
-//line views/components/Table.html:16
+//line views/components/Table.html:18
 	qw422016.N().S(`</td>`)
-//line views/components/Table.html:17
-	vutil.StreamIndent(qw422016, true, indent)
-//line views/components/Table.html:17
-	qw422016.N().S(`</tr>`)
 //line views/components/Table.html:19
+	vutil.StreamIndent(qw422016, true, indent)
+//line views/components/Table.html:19
+	qw422016.N().S(`</tr>`)
+//line views/components/Table.html:21
 }
 
-//line views/components/Table.html:19
+//line views/components/Table.html:21
 func WriteTableInput(qq422016 qtio422016.Writer, key string, title string, value string, indent int, help ...string) {
-//line views/components/Table.html:19
+//line views/components/Table.html:21
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/Table.html:19
+//line views/components/Table.html:21
 	StreamTableInput(qw422016, key, title, value, indent, help...)
-//line views/components/Table.html:19
+//line views/components/Table.html:21
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/Table.html:19
+//line views/components/Table.html:21
 }
 
-//line views/components/Table.html:19
+//line views/components/Table.html:21
 func TableInput(key string, title string, value string, indent int, help ...string) string {
-//line views/components/Table.html:19
+//line views/components/Table.html:21
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/Table.html:19
+//line views/components/Table.html:21
 	WriteTableInput(qb422016, key, title, value, indent, help...)
-//line views/components/Table.html:19
+//line views/components/Table.html:21
 	qs422016 := string(qb422016.B)
-//line views/components/Table.html:19
+//line views/components/Table.html:21
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/Table.html:19
+//line views/components/Table.html:21
 	return qs422016
-//line views/components/Table.html:19
+//line views/components/Table.html:21
 }
 
-//line views/components/Table.html:21
+//line views/components/Table.html:23
 func StreamTableInputPassword(qw422016 *qt422016.Writer, key string, title string, value string, indent int, help ...string) {
-//line views/components/Table.html:21
+//line views/components/Table.html:23
 	qw422016.N().S(`<tr>`)
-//line views/components/Table.html:23
+//line views/components/Table.html:25
 	vutil.StreamIndent(qw422016, true, indent+1)
-//line views/components/Table.html:23
+//line views/components/Table.html:25
 	qw422016.N().S(`<th class="shrink"><label for="input-`)
-//line views/components/Table.html:24
-	qw422016.E().S(key)
-//line views/components/Table.html:24
-	qw422016.N().S(`"`)
-//line views/components/Table.html:24
-	streamtitleFor(qw422016, help)
-//line views/components/Table.html:24
-	qw422016.N().S(`>`)
-//line views/components/Table.html:24
-	qw422016.E().S(title)
-//line views/components/Table.html:24
-	qw422016.N().S(`</label></th>`)
-//line views/components/Table.html:25
-	vutil.StreamIndent(qw422016, true, indent+1)
-//line views/components/Table.html:25
-	qw422016.N().S(`<td>`)
 //line views/components/Table.html:26
+	qw422016.E().S(key)
+//line views/components/Table.html:26
+	qw422016.N().S(`"`)
+//line views/components/Table.html:26
+	streamtitleFor(qw422016, help)
+//line views/components/Table.html:26
+	qw422016.N().S(`>`)
+//line views/components/Table.html:26
+	qw422016.E().S(title)
+//line views/components/Table.html:26
+	qw422016.N().S(`</label></th>`)
+//line views/components/Table.html:27
+	vutil.StreamIndent(qw422016, true, indent+1)
+//line views/components/Table.html:27
+	qw422016.N().S(`<td>`)
+//line views/components/Table.html:28
 	StreamFormInputPassword(qw422016, key, "input-"+key, value, help...)
-//line views/components/Table.html:26
+//line views/components/Table.html:28
 	qw422016.N().S(`</td>`)
-//line views/components/Table.html:27
-	vutil.StreamIndent(qw422016, true, indent)
-//line views/components/Table.html:27
-	qw422016.N().S(`</tr>`)
 //line views/components/Table.html:29
+	vutil.StreamIndent(qw422016, true, indent)
+//line views/components/Table.html:29
+	qw422016.N().S(`</tr>`)
+//line views/components/Table.html:31
 }
 
-//line views/components/Table.html:29
+//line views/components/Table.html:31
 func WriteTableInputPassword(qq422016 qtio422016.Writer, key string, title string, value string, indent int, help ...string) {
-//line views/components/Table.html:29
+//line views/components/Table.html:31
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/Table.html:29
+//line views/components/Table.html:31
 	StreamTableInputPassword(qw422016, key, title, value, indent, help...)
-//line views/components/Table.html:29
+//line views/components/Table.html:31
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/Table.html:29
+//line views/components/Table.html:31
 }
 
-//line views/components/Table.html:29
+//line views/components/Table.html:31
 func TableInputPassword(key string, title string, value string, indent int, help ...string) string {
-//line views/components/Table.html:29
+//line views/components/Table.html:31
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/Table.html:29
+//line views/components/Table.html:31
 	WriteTableInputPassword(qb422016, key, title, value, indent, help...)
-//line views/components/Table.html:29
+//line views/components/Table.html:31
 	qs422016 := string(qb422016.B)
-//line views/components/Table.html:29
+//line views/components/Table.html:31
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/Table.html:29
+//line views/components/Table.html:31
 	return qs422016
-//line views/components/Table.html:29
+//line views/components/Table.html:31
 }
 
-//line views/components/Table.html:31
+//line views/components/Table.html:33
 func StreamTableInputNumber(qw422016 *qt422016.Writer, key string, title string, value int, indent int, help ...string) {
-//line views/components/Table.html:31
+//line views/components/Table.html:33
 	qw422016.N().S(`<tr>`)
-//line views/components/Table.html:33
+//line views/components/Table.html:35
 	vutil.StreamIndent(qw422016, true, indent+1)
-//line views/components/Table.html:33
+//line views/components/Table.html:35
 	qw422016.N().S(`<th class="shrink"><label for="input-`)
-//line views/components/Table.html:34
-	qw422016.E().S(key)
-//line views/components/Table.html:34
-	qw422016.N().S(`"`)
-//line views/components/Table.html:34
-	streamtitleFor(qw422016, help)
-//line views/components/Table.html:34
-	qw422016.N().S(`>`)
-//line views/components/Table.html:34
-	qw422016.E().S(title)
-//line views/components/Table.html:34
-	qw422016.N().S(`</label></th>`)
-//line views/components/Table.html:35
-	vutil.StreamIndent(qw422016, true, indent+1)
-//line views/components/Table.html:35
-	qw422016.N().S(`<td>`)
 //line views/components/Table.html:36
+	qw422016.E().S(key)
+//line views/components/Table.html:36
+	qw422016.N().S(`"`)
+//line views/components/Table.html:36
+	streamtitleFor(qw422016, help)
+//line views/components/Table.html:36
+	qw422016.N().S(`>`)
+//line views/components/Table.html:36
+	qw422016.E().S(title)
+//line views/components/Table.html:36
+	qw422016.N().S(`</label></th>`)
+//line views/components/Table.html:37
+	vutil.StreamIndent(qw422016, true, indent+1)
+//line views/components/Table.html:37
+	qw422016.N().S(`<td>`)
+//line views/components/Table.html:38
 	StreamFormInputNumber(qw422016, key, "input-"+key, value, help...)
-//line views/components/Table.html:36
+//line views/components/Table.html:38
 	qw422016.N().S(`</td>`)
-//line views/components/Table.html:37
-	vutil.StreamIndent(qw422016, true, indent)
-//line views/components/Table.html:37
-	qw422016.N().S(`</tr>`)
 //line views/components/Table.html:39
+	vutil.StreamIndent(qw422016, true, indent)
+//line views/components/Table.html:39
+	qw422016.N().S(`</tr>`)
+//line views/components/Table.html:41
 }
 
-//line views/components/Table.html:39
+//line views/components/Table.html:41
 func WriteTableInputNumber(qq422016 qtio422016.Writer, key string, title string, value int, indent int, help ...string) {
-//line views/components/Table.html:39
+//line views/components/Table.html:41
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/Table.html:39
+//line views/components/Table.html:41
 	StreamTableInputNumber(qw422016, key, title, value, indent, help...)
-//line views/components/Table.html:39
+//line views/components/Table.html:41
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/Table.html:39
+//line views/components/Table.html:41
 }
 
-//line views/components/Table.html:39
+//line views/components/Table.html:41
 func TableInputNumber(key string, title string, value int, indent int, help ...string) string {
-//line views/components/Table.html:39
+//line views/components/Table.html:41
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/Table.html:39
+//line views/components/Table.html:41
 	WriteTableInputNumber(qb422016, key, title, value, indent, help...)
-//line views/components/Table.html:39
+//line views/components/Table.html:41
 	qs422016 := string(qb422016.B)
-//line views/components/Table.html:39
+//line views/components/Table.html:41
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/Table.html:39
+//line views/components/Table.html:41
 	return qs422016
-//line views/components/Table.html:39
+//line views/components/Table.html:41
 }
 
-//line views/components/Table.html:41
+//line views/components/Table.html:43
 func StreamTableInputTimestamp(qw422016 *qt422016.Writer, key string, title string, value *time.Time, indent int, help ...string) {
-//line views/components/Table.html:41
+//line views/components/Table.html:43
 	qw422016.N().S(`<tr>`)
-//line views/components/Table.html:43
+//line views/components/Table.html:45
 	vutil.StreamIndent(qw422016, true, indent+1)
-//line views/components/Table.html:43
+//line views/components/Table.html:45
 	qw422016.N().S(`<th class="shrink"><label for="input-`)
-//line views/components/Table.html:44
-	qw422016.E().S(key)
-//line views/components/Table.html:44
-	qw422016.N().S(`"`)
-//line views/components/Table.html:44
-	streamtitleFor(qw422016, help)
-//line views/components/Table.html:44
-	qw422016.N().S(`>`)
-//line views/components/Table.html:44
-	qw422016.E().S(title)
-//line views/components/Table.html:44
-	qw422016.N().S(`</label></th>`)
-//line views/components/Table.html:45
-	vutil.StreamIndent(qw422016, true, indent+1)
-//line views/components/Table.html:45
-	qw422016.N().S(`<td>`)
 //line views/components/Table.html:46
+	qw422016.E().S(key)
+//line views/components/Table.html:46
+	qw422016.N().S(`"`)
+//line views/components/Table.html:46
+	streamtitleFor(qw422016, help)
+//line views/components/Table.html:46
+	qw422016.N().S(`>`)
+//line views/components/Table.html:46
+	qw422016.E().S(title)
+//line views/components/Table.html:46
+	qw422016.N().S(`</label></th>`)
+//line views/components/Table.html:47
+	vutil.StreamIndent(qw422016, true, indent+1)
+//line views/components/Table.html:47
+	qw422016.N().S(`<td>`)
+//line views/components/Table.html:48
 	StreamFormInputTimestamp(qw422016, key, "input-"+key, value, help...)
-//line views/components/Table.html:46
+//line views/components/Table.html:48
 	qw422016.N().S(`</td>`)
-//line views/components/Table.html:47
-	vutil.StreamIndent(qw422016, true, indent)
-//line views/components/Table.html:47
-	qw422016.N().S(`</tr>`)
 //line views/components/Table.html:49
+	vutil.StreamIndent(qw422016, true, indent)
+//line views/components/Table.html:49
+	qw422016.N().S(`</tr>`)
+//line views/components/Table.html:51
 }
 
-//line views/components/Table.html:49
+//line views/components/Table.html:51
 func WriteTableInputTimestamp(qq422016 qtio422016.Writer, key string, title string, value *time.Time, indent int, help ...string) {
-//line views/components/Table.html:49
+//line views/components/Table.html:51
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/Table.html:49
+//line views/components/Table.html:51
 	StreamTableInputTimestamp(qw422016, key, title, value, indent, help...)
-//line views/components/Table.html:49
+//line views/components/Table.html:51
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/Table.html:49
+//line views/components/Table.html:51
 }
 
-//line views/components/Table.html:49
+//line views/components/Table.html:51
 func TableInputTimestamp(key string, title string, value *time.Time, indent int, help ...string) string {
-//line views/components/Table.html:49
+//line views/components/Table.html:51
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/Table.html:49
+//line views/components/Table.html:51
 	WriteTableInputTimestamp(qb422016, key, title, value, indent, help...)
-//line views/components/Table.html:49
+//line views/components/Table.html:51
 	qs422016 := string(qb422016.B)
-//line views/components/Table.html:49
+//line views/components/Table.html:51
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/Table.html:49
+//line views/components/Table.html:51
 	return qs422016
-//line views/components/Table.html:49
+//line views/components/Table.html:51
 }
 
-//line views/components/Table.html:51
+//line views/components/Table.html:53
+func StreamTableInputUUID(qw422016 *qt422016.Writer, key string, title string, value *uuid.UUID, indent int, help ...string) {
+//line views/components/Table.html:53
+	qw422016.N().S(`<tr>`)
+//line views/components/Table.html:55
+	vutil.StreamIndent(qw422016, true, indent+1)
+//line views/components/Table.html:55
+	qw422016.N().S(`<th class="shrink"><label for="input-`)
+//line views/components/Table.html:56
+	qw422016.E().S(key)
+//line views/components/Table.html:56
+	qw422016.N().S(`"`)
+//line views/components/Table.html:56
+	streamtitleFor(qw422016, help)
+//line views/components/Table.html:56
+	qw422016.N().S(`>`)
+//line views/components/Table.html:56
+	qw422016.E().S(title)
+//line views/components/Table.html:56
+	qw422016.N().S(`</label></th>`)
+//line views/components/Table.html:57
+	vutil.StreamIndent(qw422016, true, indent+1)
+//line views/components/Table.html:57
+	qw422016.N().S(`<td>`)
+//line views/components/Table.html:58
+	StreamFormInputUUID(qw422016, key, "input-"+key, value, help...)
+//line views/components/Table.html:58
+	qw422016.N().S(`</td>`)
+//line views/components/Table.html:59
+	vutil.StreamIndent(qw422016, true, indent)
+//line views/components/Table.html:59
+	qw422016.N().S(`</tr>`)
+//line views/components/Table.html:61
+}
+
+//line views/components/Table.html:61
+func WriteTableInputUUID(qq422016 qtio422016.Writer, key string, title string, value *uuid.UUID, indent int, help ...string) {
+//line views/components/Table.html:61
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/components/Table.html:61
+	StreamTableInputUUID(qw422016, key, title, value, indent, help...)
+//line views/components/Table.html:61
+	qt422016.ReleaseWriter(qw422016)
+//line views/components/Table.html:61
+}
+
+//line views/components/Table.html:61
+func TableInputUUID(key string, title string, value *uuid.UUID, indent int, help ...string) string {
+//line views/components/Table.html:61
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/components/Table.html:61
+	WriteTableInputUUID(qb422016, key, title, value, indent, help...)
+//line views/components/Table.html:61
+	qs422016 := string(qb422016.B)
+//line views/components/Table.html:61
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/components/Table.html:61
+	return qs422016
+//line views/components/Table.html:61
+}
+
+//line views/components/Table.html:63
 func StreamTableTextarea(qw422016 *qt422016.Writer, key string, title string, rows int, value string, indent int, help ...string) {
-//line views/components/Table.html:51
+//line views/components/Table.html:63
 	qw422016.N().S(`<tr>`)
-//line views/components/Table.html:53
+//line views/components/Table.html:65
 	vutil.StreamIndent(qw422016, true, indent+1)
-//line views/components/Table.html:53
+//line views/components/Table.html:65
 	qw422016.N().S(`<th class="shrink"><label for="input-`)
-//line views/components/Table.html:54
+//line views/components/Table.html:66
 	qw422016.E().S(key)
-//line views/components/Table.html:54
+//line views/components/Table.html:66
 	qw422016.N().S(`"`)
-//line views/components/Table.html:54
+//line views/components/Table.html:66
 	streamtitleFor(qw422016, help)
-//line views/components/Table.html:54
+//line views/components/Table.html:66
 	qw422016.N().S(`>`)
-//line views/components/Table.html:54
+//line views/components/Table.html:66
 	qw422016.E().S(title)
-//line views/components/Table.html:54
+//line views/components/Table.html:66
 	qw422016.N().S(`</label></th>`)
-//line views/components/Table.html:55
+//line views/components/Table.html:67
 	vutil.StreamIndent(qw422016, true, indent+1)
-//line views/components/Table.html:55
+//line views/components/Table.html:67
 	qw422016.N().S(`<td>`)
-//line views/components/Table.html:56
+//line views/components/Table.html:68
 	StreamFormTextarea(qw422016, key, "input-"+key, rows, value, help...)
-//line views/components/Table.html:56
+//line views/components/Table.html:68
 	qw422016.N().S(`</td>`)
-//line views/components/Table.html:57
+//line views/components/Table.html:69
 	vutil.StreamIndent(qw422016, true, indent)
-//line views/components/Table.html:57
+//line views/components/Table.html:69
 	qw422016.N().S(`</tr>`)
-//line views/components/Table.html:59
+//line views/components/Table.html:71
 }
 
-//line views/components/Table.html:59
+//line views/components/Table.html:71
 func WriteTableTextarea(qq422016 qtio422016.Writer, key string, title string, rows int, value string, indent int, help ...string) {
-//line views/components/Table.html:59
+//line views/components/Table.html:71
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/Table.html:59
+//line views/components/Table.html:71
 	StreamTableTextarea(qw422016, key, title, rows, value, indent, help...)
-//line views/components/Table.html:59
+//line views/components/Table.html:71
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/Table.html:59
+//line views/components/Table.html:71
 }
 
-//line views/components/Table.html:59
+//line views/components/Table.html:71
 func TableTextarea(key string, title string, rows int, value string, indent int, help ...string) string {
-//line views/components/Table.html:59
+//line views/components/Table.html:71
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/Table.html:59
+//line views/components/Table.html:71
 	WriteTableTextarea(qb422016, key, title, rows, value, indent, help...)
-//line views/components/Table.html:59
+//line views/components/Table.html:71
 	qs422016 := string(qb422016.B)
-//line views/components/Table.html:59
+//line views/components/Table.html:71
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/Table.html:59
+//line views/components/Table.html:71
 	return qs422016
-//line views/components/Table.html:59
+//line views/components/Table.html:71
 }
 
-//line views/components/Table.html:61
+//line views/components/Table.html:73
 func StreamTableSelect(qw422016 *qt422016.Writer, key string, title string, value string, opts []string, titles []string, indent int, help ...string) {
-//line views/components/Table.html:61
+//line views/components/Table.html:73
 	qw422016.N().S(`<tr>`)
-//line views/components/Table.html:63
+//line views/components/Table.html:75
 	vutil.StreamIndent(qw422016, true, indent+1)
-//line views/components/Table.html:63
+//line views/components/Table.html:75
 	qw422016.N().S(`<th class="shrink"><label for="input-`)
-//line views/components/Table.html:64
+//line views/components/Table.html:76
 	qw422016.E().S(key)
-//line views/components/Table.html:64
+//line views/components/Table.html:76
 	qw422016.N().S(`"`)
-//line views/components/Table.html:64
+//line views/components/Table.html:76
 	streamtitleFor(qw422016, help)
-//line views/components/Table.html:64
+//line views/components/Table.html:76
 	qw422016.N().S(`>`)
-//line views/components/Table.html:64
+//line views/components/Table.html:76
 	qw422016.E().S(title)
-//line views/components/Table.html:64
+//line views/components/Table.html:76
 	qw422016.N().S(`</label></th>`)
-//line views/components/Table.html:65
-	vutil.StreamIndent(qw422016, true, indent+1)
-//line views/components/Table.html:65
-	qw422016.N().S(`<td>`)
-//line views/components/Table.html:66
-	StreamFormSelect(qw422016, key, "input-"+key, value, opts, titles, indent)
-//line views/components/Table.html:66
-	qw422016.N().S(`</td>`)
-//line views/components/Table.html:67
-	vutil.StreamIndent(qw422016, true, indent)
-//line views/components/Table.html:67
-	qw422016.N().S(`</tr>`)
-//line views/components/Table.html:69
-}
-
-//line views/components/Table.html:69
-func WriteTableSelect(qq422016 qtio422016.Writer, key string, title string, value string, opts []string, titles []string, indent int, help ...string) {
-//line views/components/Table.html:69
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/Table.html:69
-	StreamTableSelect(qw422016, key, title, value, opts, titles, indent, help...)
-//line views/components/Table.html:69
-	qt422016.ReleaseWriter(qw422016)
-//line views/components/Table.html:69
-}
-
-//line views/components/Table.html:69
-func TableSelect(key string, title string, value string, opts []string, titles []string, indent int, help ...string) string {
-//line views/components/Table.html:69
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/Table.html:69
-	WriteTableSelect(qb422016, key, title, value, opts, titles, indent, help...)
-//line views/components/Table.html:69
-	qs422016 := string(qb422016.B)
-//line views/components/Table.html:69
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/Table.html:69
-	return qs422016
-//line views/components/Table.html:69
-}
-
-//line views/components/Table.html:71
-func StreamTableRadio(qw422016 *qt422016.Writer, key string, title string, value string, opts []string, titles []string, indent int, help ...string) {
-//line views/components/Table.html:71
-	qw422016.N().S(`<tr>`)
-//line views/components/Table.html:73
-	vutil.StreamIndent(qw422016, true, indent+1)
-//line views/components/Table.html:73
-	qw422016.N().S(`<th class="shrink"><label`)
-//line views/components/Table.html:74
-	streamtitleFor(qw422016, help)
-//line views/components/Table.html:74
-	qw422016.N().S(`>`)
-//line views/components/Table.html:74
-	qw422016.E().S(title)
-//line views/components/Table.html:74
-	qw422016.N().S(`</label></th>`)
-//line views/components/Table.html:75
-	vutil.StreamIndent(qw422016, true, indent+1)
-//line views/components/Table.html:75
-	qw422016.N().S(`<td>`)
 //line views/components/Table.html:77
-	StreamFormRadio(qw422016, key, value, opts, titles, indent+2)
-//line views/components/Table.html:78
 	vutil.StreamIndent(qw422016, true, indent+1)
+//line views/components/Table.html:77
+	qw422016.N().S(`<td>`)
+//line views/components/Table.html:78
+	StreamFormSelect(qw422016, key, "input-"+key, value, opts, titles, indent)
 //line views/components/Table.html:78
 	qw422016.N().S(`</td>`)
-//line views/components/Table.html:80
+//line views/components/Table.html:79
 	vutil.StreamIndent(qw422016, true, indent)
-//line views/components/Table.html:80
+//line views/components/Table.html:79
 	qw422016.N().S(`</tr>`)
-//line views/components/Table.html:82
+//line views/components/Table.html:81
 }
 
-//line views/components/Table.html:82
-func WriteTableRadio(qq422016 qtio422016.Writer, key string, title string, value string, opts []string, titles []string, indent int, help ...string) {
-//line views/components/Table.html:82
+//line views/components/Table.html:81
+func WriteTableSelect(qq422016 qtio422016.Writer, key string, title string, value string, opts []string, titles []string, indent int, help ...string) {
+//line views/components/Table.html:81
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/Table.html:82
-	StreamTableRadio(qw422016, key, title, value, opts, titles, indent, help...)
-//line views/components/Table.html:82
+//line views/components/Table.html:81
+	StreamTableSelect(qw422016, key, title, value, opts, titles, indent, help...)
+//line views/components/Table.html:81
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/Table.html:82
+//line views/components/Table.html:81
 }
 
-//line views/components/Table.html:82
-func TableRadio(key string, title string, value string, opts []string, titles []string, indent int, help ...string) string {
-//line views/components/Table.html:82
+//line views/components/Table.html:81
+func TableSelect(key string, title string, value string, opts []string, titles []string, indent int, help ...string) string {
+//line views/components/Table.html:81
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/Table.html:82
-	WriteTableRadio(qb422016, key, title, value, opts, titles, indent, help...)
-//line views/components/Table.html:82
+//line views/components/Table.html:81
+	WriteTableSelect(qb422016, key, title, value, opts, titles, indent, help...)
+//line views/components/Table.html:81
 	qs422016 := string(qb422016.B)
-//line views/components/Table.html:82
+//line views/components/Table.html:81
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/Table.html:82
+//line views/components/Table.html:81
 	return qs422016
-//line views/components/Table.html:82
+//line views/components/Table.html:81
 }
 
-//line views/components/Table.html:84
-func StreamTableBoolean(qw422016 *qt422016.Writer, key string, title string, value bool, indent int, help ...string) {
+//line views/components/Table.html:83
+func StreamTableRadio(qw422016 *qt422016.Writer, key string, title string, value string, opts []string, titles []string, indent int, help ...string) {
+//line views/components/Table.html:83
+	qw422016.N().S(`<tr>`)
 //line views/components/Table.html:85
-	StreamTableRadio(qw422016, key, title, fmt.Sprint(value), []string{"true", "false"}, []string{"True", "False"}, indent)
-//line views/components/Table.html:86
-}
-
-//line views/components/Table.html:86
-func WriteTableBoolean(qq422016 qtio422016.Writer, key string, title string, value bool, indent int, help ...string) {
-//line views/components/Table.html:86
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/Table.html:86
-	StreamTableBoolean(qw422016, key, title, value, indent, help...)
-//line views/components/Table.html:86
-	qt422016.ReleaseWriter(qw422016)
-//line views/components/Table.html:86
-}
-
-//line views/components/Table.html:86
-func TableBoolean(key string, title string, value bool, indent int, help ...string) string {
-//line views/components/Table.html:86
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/Table.html:86
-	WriteTableBoolean(qb422016, key, title, value, indent, help...)
-//line views/components/Table.html:86
-	qs422016 := string(qb422016.B)
-//line views/components/Table.html:86
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/Table.html:86
-	return qs422016
-//line views/components/Table.html:86
-}
-
-//line views/components/Table.html:88
-func StreamTableCheckbox(qw422016 *qt422016.Writer, key string, title string, values []string, opts []string, titles []string, linebreaks bool, indent int, help ...string) {
-//line views/components/Table.html:88
-	qw422016.N().S(`<tr>`)
-//line views/components/Table.html:90
 	vutil.StreamIndent(qw422016, true, indent+1)
-//line views/components/Table.html:90
-	qw422016.N().S(`<th class="shrink"><label>`)
-//line views/components/Table.html:91
-	qw422016.E().S(title)
-//line views/components/Table.html:91
-	qw422016.N().S(`</label></th>`)
-//line views/components/Table.html:92
-	vutil.StreamIndent(qw422016, true, indent+1)
-//line views/components/Table.html:92
-	qw422016.N().S(`<td>`)
-//line views/components/Table.html:94
-	StreamFormCheckbox(qw422016, key, values, opts, titles, linebreaks, indent+2)
-//line views/components/Table.html:95
-	vutil.StreamIndent(qw422016, true, indent+1)
-//line views/components/Table.html:95
-	qw422016.N().S(`</td>`)
-//line views/components/Table.html:97
-	vutil.StreamIndent(qw422016, true, indent)
-//line views/components/Table.html:97
-	qw422016.N().S(`</tr>`)
-//line views/components/Table.html:99
-}
-
-//line views/components/Table.html:99
-func WriteTableCheckbox(qq422016 qtio422016.Writer, key string, title string, values []string, opts []string, titles []string, linebreaks bool, indent int, help ...string) {
-//line views/components/Table.html:99
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/Table.html:99
-	StreamTableCheckbox(qw422016, key, title, values, opts, titles, linebreaks, indent, help...)
-//line views/components/Table.html:99
-	qt422016.ReleaseWriter(qw422016)
-//line views/components/Table.html:99
-}
-
-//line views/components/Table.html:99
-func TableCheckbox(key string, title string, values []string, opts []string, titles []string, linebreaks bool, indent int, help ...string) string {
-//line views/components/Table.html:99
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/Table.html:99
-	WriteTableCheckbox(qb422016, key, title, values, opts, titles, linebreaks, indent, help...)
-//line views/components/Table.html:99
-	qs422016 := string(qb422016.B)
-//line views/components/Table.html:99
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/Table.html:99
-	return qs422016
-//line views/components/Table.html:99
-}
-
-//line views/components/Table.html:101
-func StreamTableIcons(qw422016 *qt422016.Writer, key string, title string, value string, ps *cutil.PageState, indent int, help ...string) {
-//line views/components/Table.html:101
-	qw422016.N().S(`<tr>`)
-//line views/components/Table.html:103
-	vutil.StreamIndent(qw422016, true, indent+1)
-//line views/components/Table.html:103
-	qw422016.N().S(`<th class="shrink"><label>`)
-//line views/components/Table.html:104
-	qw422016.E().S(title)
-//line views/components/Table.html:104
-	qw422016.N().S(`</label></th>`)
-//line views/components/Table.html:105
-	vutil.StreamIndent(qw422016, true, indent+1)
-//line views/components/Table.html:105
-	qw422016.N().S(`<td>`)
-//line views/components/Table.html:106
-	StreamIconPicker(qw422016, value, key, ps, indent+2)
-//line views/components/Table.html:106
-	qw422016.N().S(`</td>`)
-//line views/components/Table.html:108
-	vutil.StreamIndent(qw422016, true, indent)
-//line views/components/Table.html:108
-	qw422016.N().S(`</tr>`)
-//line views/components/Table.html:110
-}
-
-//line views/components/Table.html:110
-func WriteTableIcons(qq422016 qtio422016.Writer, key string, title string, value string, ps *cutil.PageState, indent int, help ...string) {
-//line views/components/Table.html:110
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/Table.html:110
-	StreamTableIcons(qw422016, key, title, value, ps, indent, help...)
-//line views/components/Table.html:110
-	qt422016.ReleaseWriter(qw422016)
-//line views/components/Table.html:110
-}
-
-//line views/components/Table.html:110
-func TableIcons(key string, title string, value string, ps *cutil.PageState, indent int, help ...string) string {
-//line views/components/Table.html:110
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/Table.html:110
-	WriteTableIcons(qb422016, key, title, value, ps, indent, help...)
-//line views/components/Table.html:110
-	qs422016 := string(qb422016.B)
-//line views/components/Table.html:110
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/Table.html:110
-	return qs422016
-//line views/components/Table.html:110
-}
-
-//line views/components/Table.html:112
-func streamtitleFor(qw422016 *qt422016.Writer, help []string) {
-//line views/components/Table.html:113
-	if len(help) > 0 {
-//line views/components/Table.html:113
-		qw422016.N().S(` `)
-//line views/components/Table.html:113
-		qw422016.N().S(`title="`)
-//line views/components/Table.html:113
-		qw422016.E().S(strings.Join(help, "; "))
-//line views/components/Table.html:113
-		qw422016.N().S(`"`)
-//line views/components/Table.html:113
-	}
-//line views/components/Table.html:114
-}
-
-//line views/components/Table.html:114
-func writetitleFor(qq422016 qtio422016.Writer, help []string) {
-//line views/components/Table.html:114
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/Table.html:114
+//line views/components/Table.html:85
+	qw422016.N().S(`<th class="shrink"><label`)
+//line views/components/Table.html:86
 	streamtitleFor(qw422016, help)
-//line views/components/Table.html:114
-	qt422016.ReleaseWriter(qw422016)
-//line views/components/Table.html:114
+//line views/components/Table.html:86
+	qw422016.N().S(`>`)
+//line views/components/Table.html:86
+	qw422016.E().S(title)
+//line views/components/Table.html:86
+	qw422016.N().S(`</label></th>`)
+//line views/components/Table.html:87
+	vutil.StreamIndent(qw422016, true, indent+1)
+//line views/components/Table.html:87
+	qw422016.N().S(`<td>`)
+//line views/components/Table.html:89
+	StreamFormRadio(qw422016, key, value, opts, titles, indent+2)
+//line views/components/Table.html:90
+	vutil.StreamIndent(qw422016, true, indent+1)
+//line views/components/Table.html:90
+	qw422016.N().S(`</td>`)
+//line views/components/Table.html:92
+	vutil.StreamIndent(qw422016, true, indent)
+//line views/components/Table.html:92
+	qw422016.N().S(`</tr>`)
+//line views/components/Table.html:94
 }
 
-//line views/components/Table.html:114
-func titleFor(help []string) string {
-//line views/components/Table.html:114
+//line views/components/Table.html:94
+func WriteTableRadio(qq422016 qtio422016.Writer, key string, title string, value string, opts []string, titles []string, indent int, help ...string) {
+//line views/components/Table.html:94
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/components/Table.html:94
+	StreamTableRadio(qw422016, key, title, value, opts, titles, indent, help...)
+//line views/components/Table.html:94
+	qt422016.ReleaseWriter(qw422016)
+//line views/components/Table.html:94
+}
+
+//line views/components/Table.html:94
+func TableRadio(key string, title string, value string, opts []string, titles []string, indent int, help ...string) string {
+//line views/components/Table.html:94
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/Table.html:114
-	writetitleFor(qb422016, help)
-//line views/components/Table.html:114
+//line views/components/Table.html:94
+	WriteTableRadio(qb422016, key, title, value, opts, titles, indent, help...)
+//line views/components/Table.html:94
 	qs422016 := string(qb422016.B)
-//line views/components/Table.html:114
+//line views/components/Table.html:94
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/Table.html:114
+//line views/components/Table.html:94
 	return qs422016
-//line views/components/Table.html:114
+//line views/components/Table.html:94
+}
+
+//line views/components/Table.html:96
+func StreamTableBoolean(qw422016 *qt422016.Writer, key string, title string, value bool, indent int, help ...string) {
+//line views/components/Table.html:97
+	StreamTableRadio(qw422016, key, title, fmt.Sprint(value), []string{"true", "false"}, []string{"True", "False"}, indent)
+//line views/components/Table.html:98
+}
+
+//line views/components/Table.html:98
+func WriteTableBoolean(qq422016 qtio422016.Writer, key string, title string, value bool, indent int, help ...string) {
+//line views/components/Table.html:98
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/components/Table.html:98
+	StreamTableBoolean(qw422016, key, title, value, indent, help...)
+//line views/components/Table.html:98
+	qt422016.ReleaseWriter(qw422016)
+//line views/components/Table.html:98
+}
+
+//line views/components/Table.html:98
+func TableBoolean(key string, title string, value bool, indent int, help ...string) string {
+//line views/components/Table.html:98
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/components/Table.html:98
+	WriteTableBoolean(qb422016, key, title, value, indent, help...)
+//line views/components/Table.html:98
+	qs422016 := string(qb422016.B)
+//line views/components/Table.html:98
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/components/Table.html:98
+	return qs422016
+//line views/components/Table.html:98
+}
+
+//line views/components/Table.html:100
+func StreamTableCheckbox(qw422016 *qt422016.Writer, key string, title string, values []string, opts []string, titles []string, linebreaks bool, indent int, help ...string) {
+//line views/components/Table.html:100
+	qw422016.N().S(`<tr>`)
+//line views/components/Table.html:102
+	vutil.StreamIndent(qw422016, true, indent+1)
+//line views/components/Table.html:102
+	qw422016.N().S(`<th class="shrink"><label>`)
+//line views/components/Table.html:103
+	qw422016.E().S(title)
+//line views/components/Table.html:103
+	qw422016.N().S(`</label></th>`)
+//line views/components/Table.html:104
+	vutil.StreamIndent(qw422016, true, indent+1)
+//line views/components/Table.html:104
+	qw422016.N().S(`<td>`)
+//line views/components/Table.html:106
+	StreamFormCheckbox(qw422016, key, values, opts, titles, linebreaks, indent+2)
+//line views/components/Table.html:107
+	vutil.StreamIndent(qw422016, true, indent+1)
+//line views/components/Table.html:107
+	qw422016.N().S(`</td>`)
+//line views/components/Table.html:109
+	vutil.StreamIndent(qw422016, true, indent)
+//line views/components/Table.html:109
+	qw422016.N().S(`</tr>`)
+//line views/components/Table.html:111
+}
+
+//line views/components/Table.html:111
+func WriteTableCheckbox(qq422016 qtio422016.Writer, key string, title string, values []string, opts []string, titles []string, linebreaks bool, indent int, help ...string) {
+//line views/components/Table.html:111
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/components/Table.html:111
+	StreamTableCheckbox(qw422016, key, title, values, opts, titles, linebreaks, indent, help...)
+//line views/components/Table.html:111
+	qt422016.ReleaseWriter(qw422016)
+//line views/components/Table.html:111
+}
+
+//line views/components/Table.html:111
+func TableCheckbox(key string, title string, values []string, opts []string, titles []string, linebreaks bool, indent int, help ...string) string {
+//line views/components/Table.html:111
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/components/Table.html:111
+	WriteTableCheckbox(qb422016, key, title, values, opts, titles, linebreaks, indent, help...)
+//line views/components/Table.html:111
+	qs422016 := string(qb422016.B)
+//line views/components/Table.html:111
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/components/Table.html:111
+	return qs422016
+//line views/components/Table.html:111
+}
+
+//line views/components/Table.html:113
+func StreamTableIcons(qw422016 *qt422016.Writer, key string, title string, value string, ps *cutil.PageState, indent int, help ...string) {
+//line views/components/Table.html:113
+	qw422016.N().S(`<tr>`)
+//line views/components/Table.html:115
+	vutil.StreamIndent(qw422016, true, indent+1)
+//line views/components/Table.html:115
+	qw422016.N().S(`<th class="shrink"><label>`)
+//line views/components/Table.html:116
+	qw422016.E().S(title)
+//line views/components/Table.html:116
+	qw422016.N().S(`</label></th>`)
+//line views/components/Table.html:117
+	vutil.StreamIndent(qw422016, true, indent+1)
+//line views/components/Table.html:117
+	qw422016.N().S(`<td>`)
+//line views/components/Table.html:118
+	StreamIconPicker(qw422016, value, key, ps, indent+2)
+//line views/components/Table.html:118
+	qw422016.N().S(`</td>`)
+//line views/components/Table.html:120
+	vutil.StreamIndent(qw422016, true, indent)
+//line views/components/Table.html:120
+	qw422016.N().S(`</tr>`)
+//line views/components/Table.html:122
+}
+
+//line views/components/Table.html:122
+func WriteTableIcons(qq422016 qtio422016.Writer, key string, title string, value string, ps *cutil.PageState, indent int, help ...string) {
+//line views/components/Table.html:122
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/components/Table.html:122
+	StreamTableIcons(qw422016, key, title, value, ps, indent, help...)
+//line views/components/Table.html:122
+	qt422016.ReleaseWriter(qw422016)
+//line views/components/Table.html:122
+}
+
+//line views/components/Table.html:122
+func TableIcons(key string, title string, value string, ps *cutil.PageState, indent int, help ...string) string {
+//line views/components/Table.html:122
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/components/Table.html:122
+	WriteTableIcons(qb422016, key, title, value, ps, indent, help...)
+//line views/components/Table.html:122
+	qs422016 := string(qb422016.B)
+//line views/components/Table.html:122
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/components/Table.html:122
+	return qs422016
+//line views/components/Table.html:122
+}
+
+//line views/components/Table.html:124
+func streamtitleFor(qw422016 *qt422016.Writer, help []string) {
+//line views/components/Table.html:125
+	if len(help) > 0 {
+//line views/components/Table.html:125
+		qw422016.N().S(` `)
+//line views/components/Table.html:125
+		qw422016.N().S(`title="`)
+//line views/components/Table.html:125
+		qw422016.E().S(strings.Join(help, "; "))
+//line views/components/Table.html:125
+		qw422016.N().S(`"`)
+//line views/components/Table.html:125
+	}
+//line views/components/Table.html:126
+}
+
+//line views/components/Table.html:126
+func writetitleFor(qq422016 qtio422016.Writer, help []string) {
+//line views/components/Table.html:126
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/components/Table.html:126
+	streamtitleFor(qw422016, help)
+//line views/components/Table.html:126
+	qt422016.ReleaseWriter(qw422016)
+//line views/components/Table.html:126
+}
+
+//line views/components/Table.html:126
+func titleFor(help []string) string {
+//line views/components/Table.html:126
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/components/Table.html:126
+	writetitleFor(qb422016, help)
+//line views/components/Table.html:126
+	qs422016 := string(qb422016.B)
+//line views/components/Table.html:126
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/components/Table.html:126
+	return qs422016
+//line views/components/Table.html:126
 }

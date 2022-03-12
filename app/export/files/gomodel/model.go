@@ -81,24 +81,21 @@ func modelDiff(m *model.Model, g *golang.File) *golang.Block {
 			ret.W("\tif %s != %s {", l, r)
 			ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, fmt.Sprint(%s), fmt.Sprint(%s)))", col.Camel(), l, r)
 			ret.W("\t}")
-		case types.KeyMap:
+		case types.KeyMap, types.KeyValueMap:
 			ret.W("\tdiffs = append(diffs, util.DiffObjects(%s, %s, %q)...)", l, r, col.Camel())
 		case types.KeyString:
 			ret.W("\tif %s != %s {", l, r)
 			ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, %s, %s))", col.Camel(), l, r)
 			ret.W("\t}")
-		case types.KeyTimestamp:
-			ret.W("\tif %s != %s {", l, r)
+		case types.KeyTimestamp, types.KeyUUID:
 			if col.Nullable {
+				ret.W("\tif (%s == nil && %s != nil) || (%s != nil && %s == nil) || (%s != nil && %s != nil && *%s != *%s) {", l, r, l, r, l, r, l, r)
 				g.AddImport(helper.ImpFmt)
 				ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, fmt.Sprint(%s), fmt.Sprint(%s))) // nolint:gocritic // it's nullable", col.Camel(), l, r)
 			} else {
+				ret.W("\tif %s != %s {", l, r)
 				ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, %s.String(), %s.String()))", col.Camel(), l, r)
 			}
-			ret.W("\t}")
-		case types.KeyUUID:
-			ret.W("\tif %s != %s {", l, r)
-			ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, %s.String(), %s.String()))", col.Camel(), l, r)
 			ret.W("\t}")
 		default:
 			ret.W("\tTODO: %s", col.Type.Key())

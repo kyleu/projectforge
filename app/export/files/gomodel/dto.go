@@ -94,7 +94,7 @@ func modelDTOToModel(m *model.Model) *golang.Block {
 			ret.W("\tvar %sArg interface{}", c.Camel())
 			ret.W("\t_ = util.FromJSON(d.%s, &%sArg)", c.Proper(), c.Camel())
 			refs = append(refs, fmt.Sprintf("%s %sArg", k, c.Camel()))
-		case types.KeyMap:
+		case types.KeyMap, types.KeyValueMap:
 			ret.W("\t%sArg := util.ValueMap{}", c.Camel())
 			ret.W("\t_ = util.FromJSON(d.%s, &%sArg)", c.Proper(), c.Camel())
 			refs = append(refs, fmt.Sprintf("%s %sArg", k, c.Camel()))

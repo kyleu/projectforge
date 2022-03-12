@@ -107,27 +107,27 @@ func StreamDisplayDiffs(qw422016 *qt422016.Writer, value util.Diffs) {
 //line views/components/Display.html:23
 	} else {
 //line views/components/Display.html:23
-		qw422016.N().S(`<ul>`)
+		qw422016.N().S(`<table>`)
 //line views/components/Display.html:25
 		for _, d := range value {
 //line views/components/Display.html:25
-			qw422016.N().S(`<li><code>`)
+			qw422016.N().S(`<tr><td><code>`)
 //line views/components/Display.html:27
 			qw422016.E().S(d.Path)
 //line views/components/Display.html:27
-			qw422016.N().S(`</code><ul><li>Old: <code>`)
-//line views/components/Display.html:29
+			qw422016.N().S(`</code></td><td><code class="error">`)
+//line views/components/Display.html:28
 			qw422016.E().S(d.Old)
-//line views/components/Display.html:29
-			qw422016.N().S(`</code></li><li>New: <code>`)
+//line views/components/Display.html:28
+			qw422016.N().S(`</code></td><td>→</td><td><code class="success">`)
 //line views/components/Display.html:30
 			qw422016.E().S(d.New)
 //line views/components/Display.html:30
-			qw422016.N().S(`</code></li></ul>`)
+			qw422016.N().S(`</code></td></tr>`)
 //line views/components/Display.html:32
 		}
 //line views/components/Display.html:32
-		qw422016.N().S(`</ul>`)
+		qw422016.N().S(`</table>`)
 //line views/components/Display.html:34
 	}
 //line views/components/Display.html:35

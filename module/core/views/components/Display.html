@@ -20,15 +20,15 @@
   {%- if len(value) == 0 -%}
   <em>no changes</em>
   {%- else -%}
-  <ul>
+  <table>
     {%- for _, d := range value -%}
-    <li>
-      <code>{%s d.Path %}</code>
-      <ul>
-        <li>Old: <code>{%s d.Old %}</code></li>
-        <li>New: <code>{%s d.New %}</code></li>
-      </ul>
+    <tr>
+      <td><code>{%s d.Path %}</code></td>
+      <td><code class="error">{%s d.Old %}</code></td>
+      <td>→</td>
+      <td><code class="success">{%s d.New %}</code></td>
+    </tr>
     {%- endfor -%}
-  </ul>
+  </table>
   {%- endif -%}
 {% endstripspace %}{% endfunc %}

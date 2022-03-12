@@ -2,6 +2,8 @@
   "strings"
   "time"
 
+  "github.com/google/uuid"
+
   "{{{ .Package }}}/app/util"
   "{{{ .Package }}}/views/vutil"
 ) %}
@@ -36,6 +38,16 @@
   {% else %}
     <input id="{%s id %}" name="{%s key %}" type="text" value="{%s util.TimeToFull(value) %}"{%= phFor(placeholder) %} />
   {% endif %}
+{% endstripspace %}{% endfunc %}
+
+{% func FormInputUUID(key string, id string, value *uuid.UUID, placeholder ...string) %}{% stripspace %}
+  {%- code
+    v := ""
+    if value != nil {
+      v = value.String()
+    }
+  -%}
+  {%= FormInput(key, id, v, placeholder...) %}
 {% endstripspace %}{% endfunc %}
 
 {% func FormTextarea(key string, id string, rows int, value string, placeholder ...string) %}{% stripspace %}

@@ -11,107 +11,108 @@ import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/export/model"
+	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/components"
 )
 
-//line views/vproject/DetailExportModel.html:10
+//line views/vproject/DetailExportModel.html:11
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vproject/DetailExportModel.html:10
+//line views/vproject/DetailExportModel.html:11
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vproject/DetailExportModel.html:10
+//line views/vproject/DetailExportModel.html:11
 func StreamDetailExportModel(qw422016 *qt422016.Writer, model *model.Model, as *app.State, ps *cutil.PageState) {
-//line views/vproject/DetailExportModel.html:10
+//line views/vproject/DetailExportModel.html:11
 	qw422016.N().S(`
   <table class="min-200 full-width">
     <tbody>
       <tr><td>Name</td><td>`)
-//line views/vproject/DetailExportModel.html:13
+//line views/vproject/DetailExportModel.html:14
 	qw422016.E().S(model.Name)
-//line views/vproject/DetailExportModel.html:13
+//line views/vproject/DetailExportModel.html:14
 	qw422016.N().S(`</td></tr>
       <tr><td>Package</td><td>`)
-//line views/vproject/DetailExportModel.html:14
+//line views/vproject/DetailExportModel.html:15
 	qw422016.E().S(model.Package)
-//line views/vproject/DetailExportModel.html:14
+//line views/vproject/DetailExportModel.html:15
 	qw422016.N().S(`</td></tr>
       <tr><td>Description</td><td>`)
-//line views/vproject/DetailExportModel.html:15
+//line views/vproject/DetailExportModel.html:16
 	qw422016.E().S(model.Description)
-//line views/vproject/DetailExportModel.html:15
+//line views/vproject/DetailExportModel.html:16
 	qw422016.N().S(`</td></tr>
       <tr>
         <td>Ordering</td>
         <td>
 `)
-//line views/vproject/DetailExportModel.html:19
+//line views/vproject/DetailExportModel.html:20
 	for _, x := range model.Ordering {
-//line views/vproject/DetailExportModel.html:19
+//line views/vproject/DetailExportModel.html:20
 		qw422016.N().S(`          <div>`)
-//line views/vproject/DetailExportModel.html:20
+//line views/vproject/DetailExportModel.html:21
 		qw422016.E().S(x.String())
-//line views/vproject/DetailExportModel.html:20
+//line views/vproject/DetailExportModel.html:21
 		qw422016.N().S(`</div>
 `)
-//line views/vproject/DetailExportModel.html:21
+//line views/vproject/DetailExportModel.html:22
 	}
-//line views/vproject/DetailExportModel.html:21
+//line views/vproject/DetailExportModel.html:22
 	qw422016.N().S(`        </td>
         </tr>
 `)
-//line views/vproject/DetailExportModel.html:24
+//line views/vproject/DetailExportModel.html:25
 	if len(model.GroupedColumns()) > 0 {
-//line views/vproject/DetailExportModel.html:24
+//line views/vproject/DetailExportModel.html:25
 		qw422016.N().S(`      <tr><td>Groupings</td><td>`)
-//line views/vproject/DetailExportModel.html:25
-		qw422016.E().S(strings.Join(model.GroupedColumns().Names(), ", "))
-//line views/vproject/DetailExportModel.html:25
-		qw422016.N().S(`</td></tr>
-`)
 //line views/vproject/DetailExportModel.html:26
-	}
+		qw422016.E().S(strings.Join(model.GroupedColumns().Names(), ", "))
+//line views/vproject/DetailExportModel.html:26
+		qw422016.N().S(`</td></tr>
+`)
 //line views/vproject/DetailExportModel.html:27
+	}
+//line views/vproject/DetailExportModel.html:28
 	if len(model.Search) > 0 {
-//line views/vproject/DetailExportModel.html:27
+//line views/vproject/DetailExportModel.html:28
 		qw422016.N().S(`      <tr><td>Search</td><td>`)
-//line views/vproject/DetailExportModel.html:28
-		qw422016.E().S(strings.Join(model.Search, ", "))
-//line views/vproject/DetailExportModel.html:28
-		qw422016.N().S(`</td></tr>
-`)
 //line views/vproject/DetailExportModel.html:29
-	}
+		qw422016.E().S(strings.Join(model.Search, ", "))
+//line views/vproject/DetailExportModel.html:29
+		qw422016.N().S(`</td></tr>
+`)
 //line views/vproject/DetailExportModel.html:30
+	}
+//line views/vproject/DetailExportModel.html:31
 	if len(model.History) > 0 {
-//line views/vproject/DetailExportModel.html:30
+//line views/vproject/DetailExportModel.html:31
 		qw422016.N().S(`      <tr><td>History</td><td>`)
-//line views/vproject/DetailExportModel.html:31
-		qw422016.E().S(model.History)
-//line views/vproject/DetailExportModel.html:31
-		qw422016.N().S(`</td></tr>
-`)
 //line views/vproject/DetailExportModel.html:32
-	}
-//line views/vproject/DetailExportModel.html:33
-	if len(model.Config) > 0 {
-//line views/vproject/DetailExportModel.html:33
-		qw422016.N().S(`      <tr><td>Config</td><td>`)
-//line views/vproject/DetailExportModel.html:34
-		components.StreamJSON(qw422016, model.Config)
-//line views/vproject/DetailExportModel.html:34
+		qw422016.E().S(model.History)
+//line views/vproject/DetailExportModel.html:32
 		qw422016.N().S(`</td></tr>
 `)
-//line views/vproject/DetailExportModel.html:35
+//line views/vproject/DetailExportModel.html:33
 	}
+//line views/vproject/DetailExportModel.html:34
+	if len(model.Config) > 0 {
+//line views/vproject/DetailExportModel.html:34
+		qw422016.N().S(`      <tr><td>Config</td><td>`)
 //line views/vproject/DetailExportModel.html:35
+		components.StreamJSON(qw422016, model.Config)
+//line views/vproject/DetailExportModel.html:35
+		qw422016.N().S(`</td></tr>
+`)
+//line views/vproject/DetailExportModel.html:36
+	}
+//line views/vproject/DetailExportModel.html:36
 	qw422016.N().S(`    </tbody>
   </table>
   <div class="card">
@@ -126,59 +127,64 @@ func StreamDetailExportModel(qw422016 *qt422016.Writer, model *model.Model, as *
       </thead>
       <tbody>
 `)
-//line views/vproject/DetailExportModel.html:49
+//line views/vproject/DetailExportModel.html:50
 	for _, col := range model.Columns {
-//line views/vproject/DetailExportModel.html:49
+//line views/vproject/DetailExportModel.html:50
 		qw422016.N().S(`        <tr>
           <td>`)
-//line views/vproject/DetailExportModel.html:51
+//line views/vproject/DetailExportModel.html:52
 		qw422016.E().S(col.Name)
-//line views/vproject/DetailExportModel.html:51
-		qw422016.N().S(`</td>
-          <td>`)
 //line views/vproject/DetailExportModel.html:52
+		qw422016.N().S(`</td>
+`)
+//line views/vproject/DetailExportModel.html:53
+		println(util.ToJSON(col))
+
+//line views/vproject/DetailExportModel.html:53
+		qw422016.N().S(`          <td>`)
+//line views/vproject/DetailExportModel.html:54
 		qw422016.E().S(col.Type.String())
-//line views/vproject/DetailExportModel.html:52
+//line views/vproject/DetailExportModel.html:54
 		qw422016.N().S(`</td>
           <td>`)
-//line views/vproject/DetailExportModel.html:53
+//line views/vproject/DetailExportModel.html:55
 		qw422016.E().S(strings.Join(col.Tags, ", "))
-//line views/vproject/DetailExportModel.html:53
+//line views/vproject/DetailExportModel.html:55
 		qw422016.N().S(`</td>
         </tr>
 `)
-//line views/vproject/DetailExportModel.html:55
+//line views/vproject/DetailExportModel.html:57
 	}
-//line views/vproject/DetailExportModel.html:55
+//line views/vproject/DetailExportModel.html:57
 	qw422016.N().S(`      </tbody>
     </table>
   </div>
 `)
-//line views/vproject/DetailExportModel.html:59
+//line views/vproject/DetailExportModel.html:61
 }
 
-//line views/vproject/DetailExportModel.html:59
+//line views/vproject/DetailExportModel.html:61
 func WriteDetailExportModel(qq422016 qtio422016.Writer, model *model.Model, as *app.State, ps *cutil.PageState) {
-//line views/vproject/DetailExportModel.html:59
+//line views/vproject/DetailExportModel.html:61
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/DetailExportModel.html:59
+//line views/vproject/DetailExportModel.html:61
 	StreamDetailExportModel(qw422016, model, as, ps)
-//line views/vproject/DetailExportModel.html:59
+//line views/vproject/DetailExportModel.html:61
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/DetailExportModel.html:59
+//line views/vproject/DetailExportModel.html:61
 }
 
-//line views/vproject/DetailExportModel.html:59
+//line views/vproject/DetailExportModel.html:61
 func DetailExportModel(model *model.Model, as *app.State, ps *cutil.PageState) string {
-//line views/vproject/DetailExportModel.html:59
+//line views/vproject/DetailExportModel.html:61
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/DetailExportModel.html:59
+//line views/vproject/DetailExportModel.html:61
 	WriteDetailExportModel(qb422016, model, as, ps)
-//line views/vproject/DetailExportModel.html:59
+//line views/vproject/DetailExportModel.html:61
 	qs422016 := string(qb422016.B)
-//line views/vproject/DetailExportModel.html:59
+//line views/vproject/DetailExportModel.html:61
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/DetailExportModel.html:59
+//line views/vproject/DetailExportModel.html:61
 	return qs422016
-//line views/vproject/DetailExportModel.html:59
+//line views/vproject/DetailExportModel.html:61
 }

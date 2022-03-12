@@ -44,7 +44,8 @@
       <li><a href="/admin/migrations">View database migrations</a></li>{{{ end }}}
       <li><a href="/admin/modules">View Go modules</a></li>
       <li><a href="/admin/session">Parse and display session</a></li>
-      <li><a href="/admin/request">Debug HTTP request</a></li>
+      <li><a href="/admin/request">Debug HTTP request</a></li>{{{ if .HasModule "queue" }}}
+      <li><a href="/admin/queue">Queue Statistics</a></li>{{{ end }}}
       <li><a href="/admin/cpu/start">Start CPU profile</a></li>
       <li><a href="/admin/cpu/stop">Stop CPU profile</a></li>
       <li><a href="/admin/heap">Write memory dump</a></li>

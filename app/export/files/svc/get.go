@@ -45,6 +45,9 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 	for _, key := range keys {
 		cols := getBys[key]
 		name := "GetBy" + strings.Join(cols.ProperNames(), "")
+		for _, imp := range helper.ImportsForTypes("go", cols.Types()...) {
+			g.AddImport(imp)
+		}
 		g.AddBlocks(serviceGetBy(name, m, cols, true))
 	}
 

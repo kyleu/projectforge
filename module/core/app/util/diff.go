@@ -35,7 +35,7 @@ func DiffObjects(l interface{}, r interface{}, path ...string) Diffs {
 
 func DiffObjectsIgnoring(l interface{}, r interface{}, ignored []string, path ...string) Diffs {
 	var ret Diffs
-	if StringArrayContains(ignored, path[len(path)-1]) {
+	if len(path) > 0 && StringArrayContains(ignored, path[len(path)-1]) {
 		return ret
 	}
 	if l == nil {

@@ -127,14 +127,26 @@ func (x *Wrapped) UnmarshalJSON(data []byte) error {
 	case KeyList:
 		tgt := &List{}
 		err = util.FromJSON(wu.T, &tgt)
+		if tgt.V == nil {
+			tgt.V = NewAny()
+		}
 		t = tgt
 	case KeyMap:
 		tgt := &Map{}
 		err = util.FromJSON(wu.T, &tgt)
+		if tgt.K == nil {
+			tgt.K = NewString()
+		}
+		if tgt.V == nil {
+			tgt.V = NewAny()
+		}
 		t = tgt
 	case KeyMethod:
 		tgt := &Method{}
 		err = util.FromJSON(wu.T, &tgt)
+		if tgt.Ret == nil {
+			tgt.Ret = NewAny()
+		}
 		t = tgt
 	case KeyNil:
 		tgt := &Nil{}
@@ -143,10 +155,16 @@ func (x *Wrapped) UnmarshalJSON(data []byte) error {
 	case KeyOption:
 		tgt := &Option{}
 		err = util.FromJSON(wu.T, &tgt)
+		if tgt.V == nil {
+			tgt.V = NewAny()
+		}
 		t = tgt
 	case KeyRange:
 		tgt := &Range{}
 		err = util.FromJSON(wu.T, &tgt)
+		if tgt.V == nil {
+			tgt.V = NewAny()
+		}
 		t = tgt
 	case KeyReference:
 		tgt := &Reference{}
@@ -155,6 +173,9 @@ func (x *Wrapped) UnmarshalJSON(data []byte) error {
 	case KeySet:
 		tgt := &Set{}
 		err = util.FromJSON(wu.T, &tgt)
+		if tgt.V == nil {
+			tgt.V = NewAny()
+		}
 		t = tgt
 	case KeyString:
 		tgt := &String{}

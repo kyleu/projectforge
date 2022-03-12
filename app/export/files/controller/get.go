@@ -6,6 +6,7 @@ import (
 
 	"projectforge.dev/projectforge/app/export/golang"
 	"projectforge.dev/projectforge/app/export/model"
+	"projectforge.dev/projectforge/app/util"
 )
 
 const incDel = "cutil.RequestCtxBool(rc, \"includeDeleted\")"
@@ -26,8 +27,9 @@ func controllerList(m *model.Model, grp *model.Column) *golang.Block {
 	if m.IsSoftDelete() {
 		suffix = ", " + incDel
 	}
-	const msg = "\t\tret, err := as.Services.%s.%s(ps.Context, nil%s, params.Get(%q, nil, ps.Logger)%s)"
-	ret.W(msg, m.Proper(), meth, grpArgs, m.Package, suffix)
+	ret.W("\t\tprms := params.Get(%q, nil, ps.Logger)", m.Package)
+	const msg = "\t\tret, err := as.Services.%s.%s(ps.Context, nil%s, prms%s)"
+	ret.W(msg, m.Proper(), meth, grpArgs, suffix)
 	ret.W("\t\tif err != nil {")
 	ret.W("\t\t\treturn \"\", err")
 	ret.W("\t\t}")
@@ -63,30 +65,70 @@ func controllerDetail(models model.Models, m *model.Model, grp *model.Column) *g
 	}
 	ret.W("\t\tps.Title = ret.String()")
 	ret.W("\t\tps.Data = ret")
-	suffix := ""
+
+	var shouldIncDel bool
+	for _, r := range rrels {
+		rm := models.Get(r.Table)
+		if rm.IsSoftDelete() {
+			shouldIncDel = true
+			break
+		}
+	}
+
+	if shouldIncDel {
+		ret.W("\t\tincDel := cutil.RequestCtxBool(rc, \"includeDeleted\")")
+	}
+
+	var argKeys []string
+	var argVals []string
+	argAdd := func(k string, v string) {
+		argKeys = append(argKeys, k)
+		argVals = append(argVals, v)
+	}
+	argAdd("Model", "ret")
+
 	if m.IsRevision() || m.IsHistory() || len(rrels) > 0 {
-		suffix += ", Params: params"
+		argAdd("Params", "params")
 	}
 	for _, rel := range rrels {
 		rm := models.Get(rel.Table)
+		delSuffix := ""
+		if rm.IsSoftDelete() {
+			delSuffix = ", incDel"
+		}
 		lCols := rel.SrcColumns(m)
 		rCols := rel.TgtColumns(rm)
 		rNames := strings.Join(rCols.ProperNames(), "")
-		const msg = "\t\t%sBy%s, err := as.Services.%s.GetBy%s(ps.Context, nil, %s, params.Get(%q, nil, ps.Logger))"
-		ret.W(msg, rm.CamelPlural(), rNames, rm.Proper(), rNames, lCols.ToRefs("ret."), rm.Camel())
+		ret.W("\t\t%sPrms := params.Get(%q, nil, ps.Logger)", rm.Camel(), rm.Camel())
+		const msg = "\t\t%sBy%s, err := as.Services.%s.GetBy%s(ps.Context, nil, %s, %sPrms%s)"
+		ret.W(msg, rm.CamelPlural(), rNames, rm.Proper(), rNames, lCols.ToRefs("ret."), rm.Camel(), delSuffix)
 		ret.W("\t\tif err != nil {")
 		ret.W("\t\t\treturn \"\", errors.Wrap(err, \"unable to retrieve child %s\")", rm.TitlePluralLower())
 		ret.W("\t\t}")
-		suffix += fmt.Sprintf(", %sBy%s: %sBy%s", rm.ProperPlural(), rNames, rm.CamelPlural(), rNames)
+		argAdd(fmt.Sprintf("%sBy%s", rm.ProperPlural(), rNames), fmt.Sprintf("%sBy%s", rm.CamelPlural(), rNames))
 	}
 	if m.IsRevision() {
 		revCol := m.HistoryColumn()
-		suffix = fmt.Sprintf(", %s: %s", revCol.ProperPlural(), revCol.CamelPlural())
+		argAdd(revCol.ProperPlural(), revCol.CamelPlural())
 	}
 	if m.IsHistory() {
-		suffix += ", Histories: hist"
+		argAdd("Histories", "hist")
 	}
-	ret.W("\t\treturn render(rc, as, &v%s.Detail{Model: ret%s}, ps, %q%s, ret.String())", m.Package, suffix, m.Package, grpHistory)
+	if len(argKeys) <= 2 {
+		args := make([]string, 0, len(argKeys))
+		for idx, k := range argKeys {
+			args = append(args, fmt.Sprintf("%s: %s", k, argVals[idx]))
+		}
+		argStr := strings.Join(args, ", ")
+		ret.W("\t\treturn render(rc, as, &v%s.Detail{%s}, ps, %q%s, ret.String())", m.Package, argStr, m.Package, grpHistory)
+	} else {
+		ret.W("\t\treturn render(rc, as, &v%s.Detail{", m.Package)
+		keyPad := util.StringArrayMaxLength(argKeys) + 1
+		for idx, k := range argKeys {
+			ret.W("\t\t\t%s %s,", util.StringPad(k+":", keyPad), argVals[idx])
+		}
+		ret.W("\t\t}, ps, %q%s, ret.String())", m.Package, grpHistory)
+	}
 	ret.W("\t})")
 	ret.W("}")
 	return ret

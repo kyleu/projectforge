@@ -20,7 +20,7 @@ func grpcCall(k string, m *model.Model, isUpdate bool, grpcArgs string, grpcRet 
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, err")
 	ret.W("\t}")
-	if k == "Create" {
+	if k == "Create" || k == "Update" {
 		grpcAddSection(ret, "post"+strings.ToLower(k), 1)
 	}
 	ret.W("\tprovider.SetOutput(p.TX, model)")

@@ -43,7 +43,11 @@ func Admin(rc *fasthttp.RequestCtx) {
 		case "session":
 			ps.Title = "Session Debug"
 			ps.Data = ps.Session
-			return render(rc, as, &vadmin.Session{}, ps, "admin", "Session")
+			return render(rc, as, &vadmin.Session{}, ps, "admin", "Session"){{{ if .HasModule "queue" }}}
+		case "queue":
+			ps.Title = "Queue Debug"
+			ps.Data = as.Services.Publisher
+			return render(rc, as, &vadmin.Queue{Con: as.Services.Consumer, Pub: as.Services.Publisher}, ps, "admin", "Queue"){{{ end }}}
 		case "cpu":
 			switch path[1] {
 			case "start":

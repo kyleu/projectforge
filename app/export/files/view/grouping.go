@@ -29,7 +29,7 @@ func exportViewGroupedBody(m *model.Model, grp *model.Column) *golang.Block {
 	ret := golang.NewBlock(fmt.Sprintf("%sBody", grp.ProperPlural()), "func")
 	ret.W("{%%%% func (p *%s) Body(as *app.State, ps *cutil.PageState) %%%%}", grp.ProperPlural())
 	ret.W("  <div class=\"card\">")
-	ret.W("    <h3>{%%%%= components.SVGRefIcon(`%s`, ps) %%%%} %s %s</h3>", m.IconSafe(), m.Title(), grp.ProperPlural())
+	ret.W("    <h3>{%%%%= components.SVGRefIcon(`%s`, ps) %%%%} %s %s</h3>", m.Icon, m.Title(), grp.ProperPlural())
 	ret.W("    <div class=\"mt\">")
 	ret.W("      {%%- if len(p." + grp.ProperPlural() + ") == 0 -%%}")
 	ret.W("      <em>No %s available</em>", grp.Plural())

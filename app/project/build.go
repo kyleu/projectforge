@@ -11,7 +11,6 @@ type Build struct {
 	Private   bool `json:"private,omitempty"`
 	Changelog bool `json:"changelog,omitempty"`
 	TestsFail bool `json:"testsFail,omitempty"`
-	Headers   bool `json:"headers,omitempty"`
 
 	Desktop  bool `json:"desktop,omitempty"`
 	Notarize bool `json:"notarize,omitempty"`

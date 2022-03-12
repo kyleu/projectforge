@@ -15,7 +15,7 @@ func ToGoType(t types.Type, nullable bool) string {
 		ret = types.KeyBool
 	case types.KeyInt:
 		ret = types.KeyInt
-	case types.KeyMap:
+	case types.KeyMap, types.KeyValueMap:
 		ret = "util.ValueMap"
 	case types.KeyString:
 		ret = types.KeyString
@@ -34,7 +34,7 @@ func ToGoType(t types.Type, nullable bool) string {
 
 func ToGoDTOType(t types.Type, nullable bool) string {
 	switch t.Key() {
-	case types.KeyAny, types.KeyMap:
+	case types.KeyAny, types.KeyMap, types.KeyValueMap:
 		return "json.RawMessage"
 	default:
 		return ToGoType(t, nullable)
@@ -64,7 +64,7 @@ func ToGoViewString(t types.Type, prop string, nullable bool) string {
 		return "{%%v " + prop + " %%}"
 	case types.KeyInt:
 		return "{%%d " + prop + " %%}"
-	case types.KeyMap:
+	case types.KeyMap, types.KeyValueMap:
 		return "{%%= components.JSON(" + prop + ") %%}"
 	case types.KeyTimestamp:
 		if nullable {
@@ -91,7 +91,7 @@ func ToSQLType(t types.Type) string {
 		return "boolean"
 	case types.KeyInt:
 		return "int"
-	case types.KeyMap:
+	case types.KeyMap, types.KeyValueMap:
 		return keyJSONB
 	case types.KeyString:
 		return "text"
