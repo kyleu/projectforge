@@ -40,6 +40,8 @@ func projectFromCfg(proto *project.Project, cfg util.ValueMap) *project.Project 
 		moduleArgs = ma
 	}
 
+	cfgVars := i.ConfigVars // TODO load
+
 	return &project.Project{
 		Key:     str("key", proto.Key),
 		Version: str("version", proto.Version),
@@ -67,6 +69,7 @@ func projectFromCfg(proto *project.Project, cfg util.ValueMap) *project.Project 
 			JavaPackage:     str("javaPackage", i.JavaPackage),
 			GoVersion:       str("goVersion", i.GoBinary),
 			GoBinary:        str("goBinary", i.GoBinary),
+			ConfigVars:      cfgVars,
 			ExtraFiles:      util.StringSplitAndTrim(str("extraFiles", strings.Join(i.ExtraFiles, ", ")), ","),
 			ModuleArgs:      moduleArgs,
 		},

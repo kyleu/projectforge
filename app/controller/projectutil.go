@@ -60,6 +60,7 @@ func projectFromForm(frm util.ValueMap, prj *project.Project) error {
 	prj.Info.JavaPackage = get("javaPackage", prj.Info.JavaPackage)
 	prj.Info.GoVersion = get("goVersion", prj.Info.GoBinary)
 	prj.Info.GoBinary = get("goBinary", prj.Info.GoBinary)
+	prj.Info.ConfigVars = prj.Info.ConfigVars // TODO
 	prj.Info.ExtraFiles = util.StringSplitAndTrim(get("extraFiles", strings.Join(prj.Info.ExtraFiles, ", ")), ",")
 
 	var err error

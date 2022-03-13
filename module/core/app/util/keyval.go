@@ -1,6 +1,7 @@
 package util
 
 import (
+	"fmt"
 	"sort"
 	"strings"
 )
@@ -18,6 +19,10 @@ type KeyTypeDesc struct {
 
 func (k *KeyTypeDesc) Array() []string {
 	return []string{strings.ReplaceAll("`"+k.Key+"`", "{key}", AppKey), k.Type, strings.ReplaceAll(k.Description, "{key}", AppKey)}
+}
+
+func (k *KeyTypeDesc) String() string {
+	return fmt.Sprintf("%s (%s): %s", k.Key, k.Type, k.Description)
 }
 
 type KeyTypeDescs []*KeyTypeDesc

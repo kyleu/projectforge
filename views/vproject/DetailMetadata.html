@@ -77,6 +77,33 @@
         <th>Extra Files</th>
         <td>{%s strings.Join(info.ExtraFiles, ", ") %}</td>
       </tr>
+      <tr>
+        <th>Config Vars</th>
+        <td>
+          {%- if len(info.ConfigVars) == 0 -%}
+          <em>no config vars</em>
+          {%- else -%}
+          <table>
+            <thead>
+              <tr>
+                <th>Key</th>
+                <th>Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              {%- for _, cv := range info.ConfigVars -%}
+              <tr>
+                <td><code>{%s cv.Key %}</code></td>
+                <td>{%s cv.Type %}</td>
+                <td>{%s cv.Description %}</td>
+              </tr>
+              {%- endfor -%}
+            </tbody>
+          </table>
+          {%- endif -%}
+        </td>
+      </tr>
       {%- if len(info.ModuleDefs) > 0 -%}
       <tr>
         <th>Module Definitions</th>

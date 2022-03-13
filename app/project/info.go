@@ -17,26 +17,27 @@ type ModuleDef struct {
 type ModuleDefs []*ModuleDef
 
 type Info struct {
-	Org             string        `json:"org,omitempty"`
-	AuthorID        string        `json:"authorID,omitempty"`
-	AuthorName      string        `json:"authorName,omitempty"`
-	AuthorEmail     string        `json:"authorEmail,omitempty"`
-	License         string        `json:"license,omitempty"`
-	Homepage        string        `json:"homepage,omitempty"`
-	Sourcecode      string        `json:"sourcecode,omitempty"`
-	Summary         string        `json:"summary,omitempty"`
-	Description     string        `json:"description,omitempty"`
-	CI              string        `json:"ci,omitempty"`
-	Homebrew        string        `json:"homebrew,omitempty"`
-	Bundle          string        `json:"bundle,omitempty"`
-	SigningIdentity string        `json:"signingIdentity,omitempty"`
-	Slack           string        `json:"slack,omitempty"`
-	JavaPackage     string        `json:"javaPackage,omitempty"`
-	GoVersion       string        `json:"goVersion,omitempty"`
-	GoBinary        string        `json:"goBinary,omitempty"`
-	ExtraFiles      []string      `json:"extraFiles,omitempty"`
-	ModuleDefs      ModuleDefs    `json:"moduleDefs,omitempty"`
-	ModuleArgs      util.ValueMap `json:"moduleArgs,omitempty"`
+	Org             string            `json:"org,omitempty"`
+	AuthorID        string            `json:"authorID,omitempty"`
+	AuthorName      string            `json:"authorName,omitempty"`
+	AuthorEmail     string            `json:"authorEmail,omitempty"`
+	License         string            `json:"license,omitempty"`
+	Homepage        string            `json:"homepage,omitempty"`
+	Sourcecode      string            `json:"sourcecode,omitempty"`
+	Summary         string            `json:"summary,omitempty"`
+	Description     string            `json:"description,omitempty"`
+	CI              string            `json:"ci,omitempty"`
+	Homebrew        string            `json:"homebrew,omitempty"`
+	Bundle          string            `json:"bundle,omitempty"`
+	SigningIdentity string            `json:"signingIdentity,omitempty"`
+	Slack           string            `json:"slack,omitempty"`
+	JavaPackage     string            `json:"javaPackage,omitempty"`
+	GoVersion       string            `json:"goVersion,omitempty"`
+	GoBinary        string            `json:"goBinary,omitempty"`
+	ConfigVars      util.KeyTypeDescs `json:"configVars"`
+	ExtraFiles      []string          `json:"extraFiles,omitempty"`
+	ModuleDefs      ModuleDefs        `json:"moduleDefs,omitempty"`
+	ModuleArgs      util.ValueMap     `json:"moduleArgs,omitempty"`
 }
 
 func (i *Info) SigningIdentityTrimmed() string {

@@ -21,7 +21,7 @@ func contentWithHeader(t Type, c string, logger *zap.SugaredLogger) string {
 		return "rem " + HeaderContent + "\n" + c
 	case TypeCodeowners.Key, TypeDocker.Key, TypeYAML.Key, TypeProperties.Key, TypeMakefile.Key, TypeHCL.Key:
 		return "# " + HeaderContent + "\n" + c
-	case TypeConf.Key, TypeIcons.Key, TypeIgnore.Key, TypeGitIgnore.Key, TypePList.Key, TypeProtobuf.Key, TypeJSON.Key, TypeSVG.Key:
+	case TypeConf.Key, TypeEditorConfig.Key, TypeGitIgnore.Key, TypeIcons.Key, TypeIgnore.Key, TypeJSON.Key, TypePList.Key, TypeProtobuf.Key, TypeSVG.Key:
 		return c
 	case TypeCSS.Key:
 		return "/* " + HeaderContent + " */\n" + c
@@ -38,7 +38,7 @@ func contentWithHeader(t Type, c string, logger *zap.SugaredLogger) string {
 	case TypeEntitlements.Key, TypeXML.Key:
 		return secondLine(c, "<!-- "+HeaderContent+" -->")
 	default:
-		logger.Warnf("unhandled header for file type [%s]", t.Title)
+		logger.Warnf("unhandled header for file type [%s]", t.Key)
 		return c
 	}
 }

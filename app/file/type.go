@@ -18,6 +18,7 @@ var (
 	TypeConf         = Type{Key: "conf", Suffixes: []string{".conf"}, Title: "Configuration file"}
 	TypeCSS          = Type{Key: "css", Suffixes: []string{".css"}, Title: "Cascading Stylesheet"}
 	TypeDocker       = Type{Key: "docker", Suffixes: []string{"Dockerfile"}, Title: "Docker build configuration"}
+	TypeEditorConfig = Type{Key: "editorconfig", Suffixes: []string{".editorconfig"}, Title: "IDE configuration and styling"}
 	TypeEntitlements = Type{Key: "entitlements", Suffixes: []string{".entitlements"}, Title: "Apple entitlements file"}
 	TypeGitIgnore    = Type{Key: "gitignore", Suffixes: []string{".gitignore"}, Title: "Git ignore file"}
 	TypeGo           = Type{Key: "go", Suffixes: []string{".go"}, Title: "Go source"}
@@ -45,8 +46,8 @@ var (
 )
 
 var AllTypes = []Type{
-	TypeBatch, TypeCodeowners, TypeConf, TypeCSS, TypeDocker, TypeEntitlements, TypeGitIgnore,
-	TypeGo, TypeGoMod, TypeGradle, TypeHCL, TypeHTML, TypeIcons, TypeIgnore,
+	TypeBatch, TypeCodeowners, TypeConf, TypeCSS, TypeDocker, TypeEditorConfig, TypeEntitlements,
+	TypeGitIgnore, TypeGo, TypeGoMod, TypeGradle, TypeHCL, TypeHTML, TypeIcons, TypeIgnore,
 	TypeJavaScript, TypeJSON, TypeKotlin, TypeMakefile, TypeMarkdown, TypePList, TypeProperties,
 	TypeProtobuf, TypeShell, TypeSQL, TypeSVG, TypeSwift, TypeTypeScript, TypeXML, TypeYAML,
 }

@@ -46,9 +46,14 @@ func (p *Project) ToTemplateContext(configVars util.KeyTypeDescs, portOffsets ma
 		ignoreGrep += fmt.Sprintf(" | grep -v \\\\./%s", ig)
 	}
 
+	cv := append(util.KeyTypeDescs{}, configVars...)
+	if p.Info != nil && len(p.Info.ConfigVars) > 0 {
+		cv = append(cv, p.Info.ConfigVars...)
+	}
+
 	ret := &TemplateContext{
 		Key: p.Key, Name: p.Name, Exec: p.Executable(), Version: p.Version,
-		Package: p.Package, Args: p.Args, Port: p.Port, ConfigVars: configVars, PortOffsets: portOffsets,
+		Package: p.Package, Args: p.Args, Port: p.Port, ConfigVars: cv, PortOffsets: portOffsets,
 		Modules: p.Modules, Info: i, Build: b, Theme: t, Ignore: p.Ignore, IgnoreGrep: ignoreGrep,
 	}
 

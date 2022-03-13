@@ -176,68 +176,122 @@ func StreamDetailMetadata(qw422016 *qt422016.Writer, info *project.Info, as *app
 //line views/vproject/DetailMetadata.html:78
 	qw422016.N().S(`</td>
       </tr>
+      <tr>
+        <th>Config Vars</th>
+        <td>
 `)
-//line views/vproject/DetailMetadata.html:80
+//line views/vproject/DetailMetadata.html:83
+	if len(info.ConfigVars) == 0 {
+//line views/vproject/DetailMetadata.html:83
+		qw422016.N().S(`          <em>no config vars</em>
+`)
+//line views/vproject/DetailMetadata.html:85
+	} else {
+//line views/vproject/DetailMetadata.html:85
+		qw422016.N().S(`          <table>
+            <thead>
+              <tr>
+                <th>Key</th>
+                <th>Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+`)
+//line views/vproject/DetailMetadata.html:95
+		for _, cv := range info.ConfigVars {
+//line views/vproject/DetailMetadata.html:95
+			qw422016.N().S(`              <tr>
+                <td><code>`)
+//line views/vproject/DetailMetadata.html:97
+			qw422016.E().S(cv.Key)
+//line views/vproject/DetailMetadata.html:97
+			qw422016.N().S(`</code></td>
+                <td>`)
+//line views/vproject/DetailMetadata.html:98
+			qw422016.E().S(cv.Type)
+//line views/vproject/DetailMetadata.html:98
+			qw422016.N().S(`</td>
+                <td>`)
+//line views/vproject/DetailMetadata.html:99
+			qw422016.E().S(cv.Description)
+//line views/vproject/DetailMetadata.html:99
+			qw422016.N().S(`</td>
+              </tr>
+`)
+//line views/vproject/DetailMetadata.html:101
+		}
+//line views/vproject/DetailMetadata.html:101
+		qw422016.N().S(`            </tbody>
+          </table>
+`)
+//line views/vproject/DetailMetadata.html:104
+	}
+//line views/vproject/DetailMetadata.html:104
+	qw422016.N().S(`        </td>
+      </tr>
+`)
+//line views/vproject/DetailMetadata.html:107
 	if len(info.ModuleDefs) > 0 {
-//line views/vproject/DetailMetadata.html:80
+//line views/vproject/DetailMetadata.html:107
 		qw422016.N().S(`      <tr>
         <th>Module Definitions</th>
         <td>
 `)
-//line views/vproject/DetailMetadata.html:84
+//line views/vproject/DetailMetadata.html:111
 		for _, x := range info.ModuleDefs {
-//line views/vproject/DetailMetadata.html:84
+//line views/vproject/DetailMetadata.html:111
 			qw422016.N().S(`          <a href="/m/`)
-//line views/vproject/DetailMetadata.html:85
+//line views/vproject/DetailMetadata.html:112
 			qw422016.E().S(x.Key)
-//line views/vproject/DetailMetadata.html:85
+//line views/vproject/DetailMetadata.html:112
 			qw422016.N().S(`">`)
-//line views/vproject/DetailMetadata.html:85
+//line views/vproject/DetailMetadata.html:112
 			qw422016.E().S(x.Key)
-//line views/vproject/DetailMetadata.html:85
+//line views/vproject/DetailMetadata.html:112
 			qw422016.N().S(`</a> <em>(`)
-//line views/vproject/DetailMetadata.html:85
+//line views/vproject/DetailMetadata.html:112
 			qw422016.E().S(x.Path)
-//line views/vproject/DetailMetadata.html:85
+//line views/vproject/DetailMetadata.html:112
 			qw422016.N().S(`)</em><br />
 `)
-//line views/vproject/DetailMetadata.html:86
+//line views/vproject/DetailMetadata.html:113
 		}
-//line views/vproject/DetailMetadata.html:86
+//line views/vproject/DetailMetadata.html:113
 		qw422016.N().S(`        </td>
       </tr>
 `)
-//line views/vproject/DetailMetadata.html:89
+//line views/vproject/DetailMetadata.html:116
 	}
-//line views/vproject/DetailMetadata.html:89
+//line views/vproject/DetailMetadata.html:116
 	qw422016.N().S(`    </tbody>
   </table>
 `)
-//line views/vproject/DetailMetadata.html:92
+//line views/vproject/DetailMetadata.html:119
 }
 
-//line views/vproject/DetailMetadata.html:92
+//line views/vproject/DetailMetadata.html:119
 func WriteDetailMetadata(qq422016 qtio422016.Writer, info *project.Info, as *app.State, ps *cutil.PageState) {
-//line views/vproject/DetailMetadata.html:92
+//line views/vproject/DetailMetadata.html:119
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/DetailMetadata.html:92
+//line views/vproject/DetailMetadata.html:119
 	StreamDetailMetadata(qw422016, info, as, ps)
-//line views/vproject/DetailMetadata.html:92
+//line views/vproject/DetailMetadata.html:119
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/DetailMetadata.html:92
+//line views/vproject/DetailMetadata.html:119
 }
 
-//line views/vproject/DetailMetadata.html:92
+//line views/vproject/DetailMetadata.html:119
 func DetailMetadata(info *project.Info, as *app.State, ps *cutil.PageState) string {
-//line views/vproject/DetailMetadata.html:92
+//line views/vproject/DetailMetadata.html:119
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/DetailMetadata.html:92
+//line views/vproject/DetailMetadata.html:119
 	WriteDetailMetadata(qb422016, info, as, ps)
-//line views/vproject/DetailMetadata.html:92
+//line views/vproject/DetailMetadata.html:119
 	qs422016 := string(qb422016.B)
-//line views/vproject/DetailMetadata.html:92
+//line views/vproject/DetailMetadata.html:119
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/DetailMetadata.html:92
+//line views/vproject/DetailMetadata.html:119
 	return qs422016
-//line views/vproject/DetailMetadata.html:92
+//line views/vproject/DetailMetadata.html:119
 }
