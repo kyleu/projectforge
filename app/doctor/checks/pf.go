@@ -1,9 +1,10 @@
 package checks
 
 import (
+	"go.uber.org/zap"
+
 	"projectforge.dev/projectforge/app/doctor"
 	"projectforge.dev/projectforge/app/util"
-	"go.uber.org/zap"
 )
 
 var pf = &doctor.Check{

@@ -12,7 +12,7 @@ import (
 
 func onAudit(pm *PrjAndMods) *Result {
 	ret := newResult(pm.Cfg, pm.Logger)
-	start := util.TimerStart()
+	timer := util.TimerStart()
 
 	tgt := pm.PSvc.GetFilesystem(pm.Prj)
 	filenames, err := tgt.ListFilesRecursive("", pm.Prj.Ignore)
@@ -63,7 +63,7 @@ func onAudit(pm *PrjAndMods) *Result {
 		}
 	}
 
-	mr := &module.Result{Keys: pm.Mods.Keys(), Status: "OK", Diffs: audits, Duration: util.TimerEnd(start)}
+	mr := &module.Result{Keys: pm.Mods.Keys(), Status: "OK", Diffs: audits, Duration: timer.End()}
 	ret.Modules = append(ret.Modules, mr)
 	return ret
 }

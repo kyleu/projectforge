@@ -41,13 +41,12 @@ func GetMigrations() MigrationFiles {
 
 func exec(ctx context.Context, file *MigrationFile, s *database.Service, logger *zap.SugaredLogger) (string, error) {
 	sql := file.Content
-	startNanos := util.TimerStart()
+	timer := util.TimerStart()
 	logger.Infof("migration running SQL: %v", sql)
 	_, err := s.Exec(ctx, sql, nil, -1)
 	if err != nil {
 		return "", errors.Wrap(err, "cannot execute ["+file.Title+"]")
 	}
-	ms := util.MicrosToMillis(util.TimerEnd(startNanos))
-	logger.Debugf("ran query [%s] in [%v]", file.Title, ms)
+	logger.Debugf("ran query [%s] in [%v]", file.Title, timer.EndString())
 	return sql, nil
 }

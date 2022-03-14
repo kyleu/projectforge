@@ -4,8 +4,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"projectforge.dev/projectforge/app/lib/filesystem"
 	"github.com/pkg/errors"
+
+	"projectforge.dev/projectforge/app/lib/filesystem"
 )
 
 func List(fs filesystem.FileLoader) ([]string, error) {

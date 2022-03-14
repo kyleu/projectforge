@@ -19,7 +19,7 @@ func Apply(ctx context.Context, p *Params) *Result {
 		defer p.Span.Complete()
 	}
 
-	start := util.TimerStart()
+	timer := util.TimerStart()
 	ret := applyBasic(ctx, p)
 	if ret == nil {
 		if len(p.PSvc.Projects()) == 0 {
@@ -40,7 +40,7 @@ func Apply(ctx context.Context, p *Params) *Result {
 
 		ret = applyPrj(pm, p.T)
 	}
-	ret.Duration = util.TimerEnd(start)
+	ret.Duration = timer.End()
 	return ret
 }
 

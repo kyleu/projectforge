@@ -23,7 +23,7 @@ func onMerge(pm *PrjAndMods) *Result {
 	}
 	file, _ := pm.Cfg.GetString("file", true)
 
-	start := util.TimerStart()
+	timer := util.TimerStart()
 	_, dfs, err := diffs(pm)
 	if err != nil {
 		return ret.WithError(err)
@@ -67,7 +67,7 @@ func onMerge(pm *PrjAndMods) *Result {
 		}
 	}
 
-	mr := &module.Result{Keys: pm.Mods.Keys(), Status: "OK", Duration: util.TimerEnd(start)}
+	mr := &module.Result{Keys: pm.Mods.Keys(), Status: "OK", Duration: timer.End()}
 	ret.Modules = append(ret.Modules, mr)
 	return ret
 }

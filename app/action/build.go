@@ -73,9 +73,9 @@ func onBuild(pm *PrjAndMods) *Result {
 	if phase == nil {
 		return ret.WithError(errors.Errorf("invalid phase [%s]", phaseStr))
 	}
-	start := util.TimerStart()
+	timer := util.TimerStart()
 	ret = phase.Run(pm, ret)
-	ret.Duration = util.TimerEnd(start)
+	ret.Duration = timer.End()
 	return ret
 }
 

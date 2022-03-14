@@ -22,6 +22,7 @@ func (t *TemplateContext) CIContent() string {
 		return "on:\n  push:\n    tags:\n      - 'DISABLED_v*'"
 	}
 }
+
 func (t *TemplateContext) ConfigVarsContent() string {
 	ret, err := util.MarkdownTable([]string{"Name", "Type", "Description"}, t.ConfigVars.Array())
 	if err != nil {

@@ -3,6 +3,8 @@ package grpc
 import (
 	"strings"
 
+	"github.com/pkg/errors"
+	"projectforge.dev/projectforge/app/export/files/helper"
 	"projectforge.dev/projectforge/app/export/golang"
 	"projectforge.dev/projectforge/app/export/model"
 )
@@ -57,7 +59,7 @@ func grpcSearch(m *model.Model, grpcArgs string, grpcRet string, ga *FileArgs) *
 	return ret
 }
 
-func grpcDetail(m *model.Model, grpcArgs string, grpcRet string, ga *FileArgs) *golang.Block {
+func grpcDetail(m *model.Model, grpcArgs string, grpcRet string, g *golang.File, ga *FileArgs) (*golang.Block, error) {
 	ret := golang.NewBlock("grpcDetail", "func")
 	ret.W("func %sDetail%s(%s) %s {", m.Proper(), ga.APISuffix(), grpcArgs, grpcRet)
 	idClause, suffix := idClauseFor(m)
@@ -70,7 +72,23 @@ func grpcDetail(m *model.Model, grpcArgs string, grpcRet string, ga *FileArgs) *
 	ret.W("\t\treturn nil, err")
 	ret.W("\t}")
 	grpcAddSection(ret, "detail", 1)
-	ret.W("\tret, err := appState.Services.%s.Get(p.Ctx, nil, %s%s)", m.Proper(), strings.Join(pks.CamelNames(), ", "), suffix)
+	if m.IsRevision() {
+		hc := m.HistoryColumn()
+		if hc == nil {
+			return nil, errors.New("invalid history column")
+		}
+		g.AddImport(helper.AppImport("app/" + m.Package))
+		ret.W("\tvar ret *%s.%s", m.Package, m.Proper())
+		ret.W("\t%s, err := provider.GetRequestInt(p.R, %q)", hc.Camel(), hc.Camel())
+		ret.W("\tif err == nil && %s > 0 {", hc.Camel())
+		xargs := strings.Join(pks.CamelNames(), ", ")
+		ret.W("\t\tret, err = appState.Services.%s.Get%s(p.Ctx, nil, %s, %s)", m.Proper(), hc.Proper(), xargs, hc.Camel())
+		ret.W("\t} else {")
+		ret.W("\t\tret, err = appState.Services.%s.Get(p.Ctx, nil, %s%s)", m.Proper(), strings.Join(pks.CamelNames(), ", "), suffix)
+		ret.W("\t}")
+	} else {
+		ret.W("\tret, err := appState.Services.%s.Get(p.Ctx, nil, %s%s)", m.Proper(), strings.Join(pks.CamelNames(), ", "), suffix)
+	}
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, err")
 	ret.W("\t}")
@@ -79,5 +97,5 @@ func grpcDetail(m *model.Model, grpcArgs string, grpcRet string, ga *FileArgs) *
 	ret.W("\tprovider.SetOutput(p.TX, ret)")
 	ret.W("\treturn p.TX, nil")
 	ret.W("}")
-	return ret
+	return ret, nil
 }

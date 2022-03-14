@@ -6,11 +6,11 @@ import (
 
 	"github.com/pkg/errors"
 
-	"projectforge.dev/projectforge/app/export/golang"
-	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/app/export/files/helper"
+	"projectforge.dev/projectforge/app/export/golang"
 	"projectforge.dev/projectforge/app/export/model"
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func ServiceRevision(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {

@@ -40,14 +40,14 @@ func SQLRun(rc *fasthttp.RequestCtx) {
 		var columns []string
 		results := [][]interface{}{}
 
-		start := util.TimerStart()
+		timer := util.TimerStart()
 		result, err := as.DB.Query(ps.Context, sql, tx)
 		if err != nil {
 			return "", err
 		}
 		defer func() { _ = result.Close() }()
 
-		elapsed := util.TimerEnd(start)
+		elapsed := timer.End()
 
 		if result != nil {
 			for result.Next() {

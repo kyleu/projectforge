@@ -91,8 +91,12 @@ func grpcFile(m *model.Model, args *model.Args, ga *FileArgs, addHeader bool) (*
 	if len(m.Search) > 0 {
 		g.AddBlocks(grpcSearch(m, grpcArgs, grpcRet, ga))
 	}
+	if detail, err := grpcDetail(m, grpcArgs, grpcRet, g, ga); err == nil {
+		g.AddBlocks(detail)
+	} else {
+		return nil, err
+	}
 	g.AddBlocks(
-		grpcDetail(m, grpcArgs, grpcRet, ga),
 		grpcCall("Create", m, false, grpcArgs, grpcRet, ga),
 		grpcCall("Update", m, true, grpcArgs, grpcRet, ga),
 		grpcCall("Save", m, true, grpcArgs, grpcRet, ga),

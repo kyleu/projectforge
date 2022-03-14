@@ -1,8 +1,9 @@
 package checks
 
 import (
-	"projectforge.dev/projectforge/app/doctor"
 	"go.uber.org/zap"
+
+	"projectforge.dev/projectforge/app/doctor"
 )
 
 var git = &doctor.Check{

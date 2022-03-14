@@ -2,7 +2,6 @@ package expression
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/google/cel-go/cel"
 	"github.com/pkg/errors"
@@ -36,19 +35,17 @@ func (e *Expression) Compile(eng *Engine) error {
 	return nil
 }
 
-func (e *Expression) Run(params map[string]interface{}) (interface{}, int64, error) {
+func (e *Expression) Run(params map[string]interface{}) (interface{}, int, error) {
 	if e.Program == nil {
 		return nil, 0, errors.New("no program")
 	}
 
-	startNanos := util.TimerStart()
+	timer := util.TimerStart()
 	out, _, err := e.Program.Eval(params)
 	if err != nil {
 		return nil, 0, errors.Wrap(err, "cannot run program")
 	}
-	duration := (time.Now().UnixNano() - startNanos) / int64(time.Microsecond)
-
-	return out.Value(), duration, nil
+	return out.Value(), timer.End(), nil
 }
 
 func CheckResult(x interface{}, logger *zap.SugaredLogger) bool {

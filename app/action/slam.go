@@ -9,7 +9,7 @@ import (
 
 func onSlam(pm *PrjAndMods) *Result {
 	ret := newResult(pm.Cfg, pm.Logger)
-	start := util.TimerStart()
+	timer := util.TimerStart()
 	srcFiles, dfs, err := diffs(pm)
 	if err != nil {
 		return ret.WithError(err)
@@ -31,7 +31,7 @@ func onSlam(pm *PrjAndMods) *Result {
 		}
 	}
 
-	mr := &module.Result{Keys: pm.Mods.Keys(), Status: "OK", Diffs: dfs, Duration: util.TimerEnd(start)}
+	mr := &module.Result{Keys: pm.Mods.Keys(), Status: "OK", Diffs: dfs, Duration: timer.End()}
 	ret.Modules = append(ret.Modules, mr)
 	return ret
 }

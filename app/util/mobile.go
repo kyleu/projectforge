@@ -1,4 +1,5 @@
 // Content managed by Project Forge, see [projectforge.md] for details.
+// go:build android
 // +build android
 
 package util

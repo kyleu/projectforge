@@ -74,9 +74,9 @@ func Admin(rc *fasthttp.RequestCtx) {
 			ps.Data = map[string]interface{}{"available": ms, "applied": am}
 			return render(rc, as, &vadmin.Migrations{Available: ms, Applied: am}, ps, "admin", "Migrations"){{{ end }}}
 		case "gc":
-			start := util.TimerStart()
+			timer := util.TimerStart()
 			runtime.GC()
-			msg := fmt.Sprintf("ran garbage collection in [%s]", util.MicrosToMillis(util.TimerEnd(start)))
+			msg := fmt.Sprintf("ran garbage collection in [%s]", timer.EndString())
 			return flashAndRedir(true, msg, "/admin", rc, ps)
 		// $PF_SECTION_START(admin-actions)$
 		// $PF_SECTION_END(admin-actions)$

@@ -1,8 +1,9 @@
 package git
 
 import (
-	"projectforge.dev/projectforge/app/util"
 	"github.com/pkg/errors"
+
+	"projectforge.dev/projectforge/app/util"
 )
 
 var errNoRepo = errors.New("not a git repository")

@@ -24,9 +24,9 @@ type Check struct {
 
 func (c *Check) Check(logger *zap.SugaredLogger) *Result {
 	r := NewResult(c, c.Key, c.Title, c.Summary)
-	start := util.TimerStart()
+	timer := util.TimerStart()
 	r = c.Fn(r, logger)
-	r.Duration = util.TimerEnd(start)
+	r.Duration = timer.End()
 	r = c.Solve(r, logger)
 	return r
 }

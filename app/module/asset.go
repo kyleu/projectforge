@@ -7,10 +7,11 @@ import (
 	"sort"
 	"strings"
 
-	"projectforge.dev/projectforge/app/lib/telemetry"
-	"projectforge.dev/projectforge/app/util"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
+
+	"projectforge.dev/projectforge/app/lib/telemetry"
+	"projectforge.dev/projectforge/app/util"
 )
 
 const (
