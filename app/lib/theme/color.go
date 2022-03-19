@@ -38,7 +38,7 @@ func themeColors(c color.Color) (*Colors, *Colors) {
 	l.LinkForeground = hex(lightShades[1])
 	l.LinkVisitedForeground = hex(lightShades[2])
 	l.BackgroundMuted = hex(lightTints[3])
-	l.ForegroundMuted = hex(lightShades[3])
+	// l.ForegroundMuted = hex(lightShades[3])
 
 	d := x.Dark
 	d.NavBackground = hex(dark)
@@ -47,7 +47,7 @@ func themeColors(c color.Color) (*Colors, *Colors) {
 	d.LinkForeground = hex(darkTints[1])
 	d.LinkVisitedForeground = hex(darkTints[2])
 	d.BackgroundMuted = hex(darkShades[2])
-	d.ForegroundMuted = hex(darkTints[3])
+	// d.ForegroundMuted = hex(darkTints[3])
 
 	return l, d
 }

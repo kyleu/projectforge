@@ -12,10 +12,23 @@
         <h2>{%s title %}</h2>
       </div>
       <div class="modal-body">
-        {%= JSON(item) %}
+        <div id="modal-{%s key %}-data" hidden="hidden" style="display:none;">{%s util.ToJSON(item) %}</div>
+        <button onclick="clip('{%s key %}');">Copy to clipboard</button>
+        <div class="mt">
+          {%= JSON(item) %}
+        </div>
       </div>
     </div>
   </div>
+  <script>
+    function clip(k) {
+      if (!navigator.clipboard) {
+        return;
+      }
+      const el = document.getElementById("modal-" + k + "-data");
+      navigator.clipboard.writeText(el.innerText);
+    }
+  </script>
 {% endstripspace %}{% endfunc %}
 
 {% func JSON(v any) %}{% stripspace %}

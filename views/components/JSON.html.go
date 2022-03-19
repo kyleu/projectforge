@@ -36,86 +36,98 @@ func StreamJSONModal(qw422016 *qt422016.Writer, key string, title string, item a
 //line views/components/JSON.html:13
 	qw422016.E().S(title)
 //line views/components/JSON.html:13
-	qw422016.N().S(`</h2></div><div class="modal-body">`)
+	qw422016.N().S(`</h2></div><div class="modal-body"><div id="modal-`)
 //line views/components/JSON.html:16
+	qw422016.E().S(key)
+//line views/components/JSON.html:16
+	qw422016.N().S(`-data" hidden="hidden" style="display:none;">`)
+//line views/components/JSON.html:16
+	qw422016.E().S(util.ToJSON(item))
+//line views/components/JSON.html:16
+	qw422016.N().S(`</div><button onclick="clip('`)
+//line views/components/JSON.html:17
+	qw422016.E().S(key)
+//line views/components/JSON.html:17
+	qw422016.N().S(`');">Copy to clipboard</button><div class="mt">`)
+//line views/components/JSON.html:19
 	StreamJSON(qw422016, item)
-//line views/components/JSON.html:16
-	qw422016.N().S(`</div></div></div>`)
-//line views/components/JSON.html:20
+//line views/components/JSON.html:19
+	qw422016.N().S(`</div></div></div></div><script>function clip(k) {if (!navigator.clipboard) {return;}const el = document.getElementById("modal-" + k + "-data");navigator.clipboard.writeText(el.innerText);}</script>`)
+//line views/components/JSON.html:33
 }
 
-//line views/components/JSON.html:20
+//line views/components/JSON.html:33
 func WriteJSONModal(qq422016 qtio422016.Writer, key string, title string, item any, indent int) {
-//line views/components/JSON.html:20
+//line views/components/JSON.html:33
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/JSON.html:20
+//line views/components/JSON.html:33
 	StreamJSONModal(qw422016, key, title, item, indent)
-//line views/components/JSON.html:20
+//line views/components/JSON.html:33
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/JSON.html:20
+//line views/components/JSON.html:33
 }
 
-//line views/components/JSON.html:20
+//line views/components/JSON.html:33
 func JSONModal(key string, title string, item any, indent int) string {
-//line views/components/JSON.html:20
+//line views/components/JSON.html:33
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/JSON.html:20
+//line views/components/JSON.html:33
 	WriteJSONModal(qb422016, key, title, item, indent)
-//line views/components/JSON.html:20
+//line views/components/JSON.html:33
 	qs422016 := string(qb422016.B)
-//line views/components/JSON.html:20
+//line views/components/JSON.html:33
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/JSON.html:20
+//line views/components/JSON.html:33
 	return qs422016
-//line views/components/JSON.html:20
+//line views/components/JSON.html:33
 }
 
-//line views/components/JSON.html:22
+//line views/components/JSON.html:35
 func StreamJSON(qw422016 *qt422016.Writer, v any) {
-//line views/components/JSON.html:24
+//line views/components/JSON.html:37
 	b, ok := v.([]byte)
 	if ok {
 		_ = util.FromJSON(b, &v)
 	}
 
-//line views/components/JSON.html:29
+//line views/components/JSON.html:42
 	out, err := cutil.FormatJSON(v)
 
-//line views/components/JSON.html:30
+//line views/components/JSON.html:43
 	if err == nil {
-//line views/components/JSON.html:31
+//line views/components/JSON.html:44
 		qw422016.N().S(out)
-//line views/components/JSON.html:32
+//line views/components/JSON.html:45
 	} else {
-//line views/components/JSON.html:33
+//line views/components/JSON.html:46
 		qw422016.E().S(err.Error())
-//line views/components/JSON.html:34
+//line views/components/JSON.html:47
 	}
-//line views/components/JSON.html:35
+//line views/components/JSON.html:48
 }
 
-//line views/components/JSON.html:35
+//line views/components/JSON.html:48
 func WriteJSON(qq422016 qtio422016.Writer, v any) {
-//line views/components/JSON.html:35
+//line views/components/JSON.html:48
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/JSON.html:35
+//line views/components/JSON.html:48
 	StreamJSON(qw422016, v)
-//line views/components/JSON.html:35
+//line views/components/JSON.html:48
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/JSON.html:35
+//line views/components/JSON.html:48
 }
 
-//line views/components/JSON.html:35
+//line views/components/JSON.html:48
 func JSON(v any) string {
-//line views/components/JSON.html:35
+//line views/components/JSON.html:48
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/JSON.html:35
+//line views/components/JSON.html:48
 	WriteJSON(qb422016, v)
-//line views/components/JSON.html:35
+//line views/components/JSON.html:48
 	qs422016 := string(qb422016.B)
-//line views/components/JSON.html:35
+//line views/components/JSON.html:48
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/JSON.html:35
+//line views/components/JSON.html:48
 	return qs422016
-//line views/components/JSON.html:35
+//line views/components/JSON.html:48
 }

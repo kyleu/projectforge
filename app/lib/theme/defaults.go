@@ -6,11 +6,11 @@ import (
 )
 
 var ThemeDefault = func() *Theme {
-	nbl := "#4f9abd"
+	nbl := "#50b3b3"
 	if o := util.GetEnv("app_nav_color_light"); o != "" {
 		nbl = o
 	}
-	nbd := "#2d414e"
+	nbd := "#008080"
 	if o := util.GetEnv("app_nav_color_dark"); o != "" {
 		nbd = o
 	}
@@ -19,21 +19,21 @@ var ThemeDefault = func() *Theme {
 		Key: "default",
 		Light: &Colors{
 			Border: "1px solid #dddddd", LinkDecoration: "none",
-			Foreground: "#000000", ForegroundMuted: "#999999",
-			Background: "#ffffff", BackgroundMuted: "#eeeeee",
-			LinkForeground: "#2d414e", LinkVisitedForeground: "#406379",
+			Foreground: "#000000", ForegroundMuted: "#777777",
+			Background: "#ffffff", BackgroundMuted: "#dff0ef",
+			LinkForeground: "#346867", LinkVisitedForeground: "#264545",
 			NavForeground: "#000000", NavBackground: nbl,
-			MenuForeground: "#000000", MenuBackground: "#f0f8ff", MenuSelectedBackground: "#faebd7", MenuSelectedForeground: "#000000",
-			ModalBackdrop: "rgba(77, 77, 77, .7)", Success: "#008000", Error: "#FF0000",
+			MenuForeground: "#000000", MenuBackground: "#9cd2d1", MenuSelectedBackground: "#50b3b3", MenuSelectedForeground: "#000000",
+			ModalBackdrop: "rgba(77, 77, 77, .7)", Success: "#008000", Error: "#ff0000",
 		},
 		Dark: &Colors{
 			Border: "1px solid #666666", LinkDecoration: "none",
-			Foreground: "#ffffff", ForegroundMuted: "#999999",
-			Background: "#121212", BackgroundMuted: "#333333",
-			LinkForeground: "#2d414e", LinkVisitedForeground: "#aaaaaa",
+			Foreground: "#ffffff", ForegroundMuted: "#777777",
+			Background: "#121212", BackgroundMuted: "#143433",
+			LinkForeground: "#7db2b1", LinkVisitedForeground: "#a9cbca",
 			NavForeground: "#ffffff", NavBackground: nbd,
-			MenuForeground: "#eeeeee", MenuBackground: "#171f24", MenuSelectedBackground: "#333333", MenuSelectedForeground: "#ffffff",
-			ModalBackdrop: "rgba(33, 33, 33, .7)", Success: "#008000", Error: "#FF0000",
+			MenuForeground: "#eeeeee", MenuBackground: "#154c4c", MenuSelectedBackground: "#008080", MenuSelectedForeground: "#ffffff",
+			ModalBackdrop: "rgba(33, 33, 33, .7)", Success: "#008000", Error: "#ff0000",
 		},
 	}
 }()
