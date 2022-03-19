@@ -108,7 +108,7 @@ func modelDiff(m *model.Model, g *golang.File) *golang.Block {
 
 func modelToData(m *model.Model, cols model.Columns, suffix string) *golang.Block {
 	ret := golang.NewBlock(m.Proper(), "func")
-	ret.W("func (%s *%s) ToData%s() []interface{} {", m.FirstLetter(), m.Proper(), suffix)
+	ret.W("func (%s *%s) ToData%s() []any {", m.FirstLetter(), m.Proper(), suffix)
 	refs := make([]string, 0, len(cols))
 	for _, c := range cols {
 		// switch c.Type.Key() {
@@ -119,7 +119,7 @@ func modelToData(m *model.Model, cols model.Columns, suffix string) *golang.Bloc
 		refs = append(refs, fmt.Sprintf("%s.%s", m.FirstLetter(), c.Proper()))
 		// }
 	}
-	ret.W("\treturn []interface{}{%s}", strings.Join(refs, ", "))
+	ret.W("\treturn []any{%s}", strings.Join(refs, ", "))
 	ret.W("}")
 	return ret
 }

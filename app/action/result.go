@@ -15,6 +15,7 @@ type Result struct {
 	Project  *project.Project `json:"project"`
 	Status   string           `json:"status"`
 	Args     util.ValueMap    `json:"args,omitempty"`
+	Data     any              `json:"data,omitempty"`
 	Modules  module.Results   `json:"modules,omitempty"`
 	Logs     []string         `json:"logs,omitempty"`
 	Errors   []string         `json:"errors,omitempty"`
@@ -39,7 +40,7 @@ func (r *Result) WithError(err error) *Result {
 	return r
 }
 
-func (r *Result) AddDebug(msg string, args ...interface{}) {
+func (r *Result) AddDebug(msg string, args ...any) {
 	ret := fmt.Sprintf(msg, args...)
 	if r.logger != nil {
 		r.logger.Debug(ret)
@@ -47,7 +48,7 @@ func (r *Result) AddDebug(msg string, args ...interface{}) {
 	r.Logs = append(r.Logs, ret)
 }
 
-func (r *Result) AddLog(msg string, args ...interface{}) {
+func (r *Result) AddLog(msg string, args ...any) {
 	ret := fmt.Sprintf(msg, args...)
 	if r.logger != nil {
 		r.logger.Info(ret)
@@ -55,7 +56,7 @@ func (r *Result) AddLog(msg string, args ...interface{}) {
 	r.Logs = append(r.Logs, ret)
 }
 
-func (r *Result) AddWarn(msg string, args ...interface{}) {
+func (r *Result) AddWarn(msg string, args ...any) {
 	ret := fmt.Sprintf(msg, args...)
 	if r.logger != nil {
 		r.logger.Warn(ret)

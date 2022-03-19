@@ -32,11 +32,11 @@ func (m *Model) IsPK(key string, logger *zap.SugaredLogger) bool {
 	return false
 }
 
-func GetValues(src field.Fields, tgt []string, vals []interface{}) ([]interface{}, error) {
+func GetValues(src field.Fields, tgt []string, vals []any) ([]any, error) {
 	if len(src) != len(vals) {
 		return nil, errors.Errorf("[%d] fields provided, but [%d] values expected", len(vals), len(src))
 	}
-	ret := make([]interface{}, 0, len(tgt))
+	ret := make([]any, 0, len(tgt))
 	for _, t := range tgt {
 		for idx, f := range src {
 			if f.Key == t {
@@ -48,7 +48,7 @@ func GetValues(src field.Fields, tgt []string, vals []interface{}) ([]interface{
 	return ret, nil
 }
 
-func GetStrings(src field.Fields, tgt []string, vals []interface{}) ([]string, error) {
+func GetStrings(src field.Fields, tgt []string, vals []any) ([]string, error) {
 	is, err := GetValues(src, tgt, vals)
 	if err != nil {
 		return nil, err

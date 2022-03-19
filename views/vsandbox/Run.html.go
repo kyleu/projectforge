@@ -32,51 +32,54 @@ type Run struct {
 	layout.Basic
 	Key    string
 	Title  string
-	Result interface{}
+	Icon   string
+	Result any
 }
 
-//line views/vsandbox/Run.html:16
+//line views/vsandbox/Run.html:17
 func (p *Run) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsandbox/Run.html:16
+//line views/vsandbox/Run.html:17
 	qw422016.N().S(`
   <div class="card">
     <h3>`)
-//line views/vsandbox/Run.html:18
+//line views/vsandbox/Run.html:19
+	components.StreamSVGRefIcon(qw422016, p.Icon, ps)
+//line views/vsandbox/Run.html:19
 	qw422016.E().S(p.Title)
-//line views/vsandbox/Run.html:18
+//line views/vsandbox/Run.html:19
 	qw422016.N().S(`</h3>
     `)
-//line views/vsandbox/Run.html:19
+//line views/vsandbox/Run.html:20
 	components.StreamJSON(qw422016, p.Result)
-//line views/vsandbox/Run.html:19
+//line views/vsandbox/Run.html:20
 	qw422016.N().S(`
   </div>
 `)
-//line views/vsandbox/Run.html:21
+//line views/vsandbox/Run.html:22
 }
 
-//line views/vsandbox/Run.html:21
+//line views/vsandbox/Run.html:22
 func (p *Run) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsandbox/Run.html:21
+//line views/vsandbox/Run.html:22
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsandbox/Run.html:21
+//line views/vsandbox/Run.html:22
 	p.StreamBody(qw422016, as, ps)
-//line views/vsandbox/Run.html:21
+//line views/vsandbox/Run.html:22
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsandbox/Run.html:21
+//line views/vsandbox/Run.html:22
 }
 
-//line views/vsandbox/Run.html:21
+//line views/vsandbox/Run.html:22
 func (p *Run) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsandbox/Run.html:21
+//line views/vsandbox/Run.html:22
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsandbox/Run.html:21
+//line views/vsandbox/Run.html:22
 	p.WriteBody(qb422016, as, ps)
-//line views/vsandbox/Run.html:21
+//line views/vsandbox/Run.html:22
 	qs422016 := string(qb422016.B)
-//line views/vsandbox/Run.html:21
+//line views/vsandbox/Run.html:22
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsandbox/Run.html:21
+//line views/vsandbox/Run.html:22
 	return qs422016
-//line views/vsandbox/Run.html:21
+//line views/vsandbox/Run.html:22
 }

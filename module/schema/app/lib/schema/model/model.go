@@ -62,11 +62,11 @@ func (m *Model) PathString() string {
 	return m.Pkg.ToPath(m.Key)
 }
 
-func (m *Model) OrderedMap(data []interface{}) (*util.OrderedMap, error) {
+func (m *Model) OrderedMap(data []any) (*util.OrderedMap[any], error) {
 	if len(data) != len(m.Fields) {
 		return nil, errors.Errorf("expected [%d] data elements, found [%d]", len(m.Fields), len(data))
 	}
-	ret := util.NewOrderedMap(false, len(m.Fields))
+	ret := util.NewOrderedMap[any](false, len(m.Fields))
 	for idx, f := range m.Fields {
 		ret.Append(f.Key, data[idx])
 	}

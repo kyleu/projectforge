@@ -10,17 +10,17 @@ import (
 	"github.com/pkg/errors"
 )
 
-type ValueMap map[string]interface{}
+type ValueMap map[string]any
 
-func ValueMapFor(kvs ...interface{}) ValueMap {
+func ValueMapFor(kvs ...any) ValueMap {
 	ret := make(ValueMap, len(kvs)/2)
 	ret.Add(kvs...)
 	return ret
 }
 
-func (m ValueMap) KeysAndValues() ([]string, []interface{}) {
+func (m ValueMap) KeysAndValues() ([]string, []any) {
 	cols := make([]string, 0, len(m))
-	vals := make([]interface{}, 0, len(m))
+	vals := make([]any, 0, len(m))
 	for k := range m {
 		cols = append(cols, k)
 	}
@@ -77,7 +77,7 @@ func (m ValueMap) Merge(args ValueMap) ValueMap {
 	return ret
 }
 
-func (m ValueMap) Add(kvs ...interface{}) {
+func (m ValueMap) Add(kvs ...any) {
 	for i := 0; i < len(kvs); i += 2 {
 		k, ok := kvs[i].(string)
 		if !ok {

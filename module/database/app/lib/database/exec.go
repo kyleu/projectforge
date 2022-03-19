@@ -12,7 +12,7 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-func (s *Service) Insert(ctx context.Context, q string, tx *sqlx.Tx, values ...interface{}) error {
+func (s *Service) Insert(ctx context.Context, q string, tx *sqlx.Tx, values ...any) error {
 	s.logQuery("inserting row", q, values)
 	aff, err := s.execUnknown(ctx, "insert", q, tx, values...)
 	if err != nil {
@@ -24,20 +24,20 @@ func (s *Service) Insert(ctx context.Context, q string, tx *sqlx.Tx, values ...i
 	return nil
 }
 
-func (s *Service) Update(ctx context.Context, q string, tx *sqlx.Tx, expected int, values ...interface{}) (int, error) {
+func (s *Service) Update(ctx context.Context, q string, tx *sqlx.Tx, expected int, values ...any) (int, error) {
 	return s.process(ctx, "update", "updating", "updated", q, tx, expected, values...)
 }
 
-func (s *Service) UpdateOne(ctx context.Context, q string, tx *sqlx.Tx, values ...interface{}) error {
+func (s *Service) UpdateOne(ctx context.Context, q string, tx *sqlx.Tx, values ...any) error {
 	_, err := s.Update(ctx, q, tx, 1, values...)
 	return err
 }
 
-func (s *Service) Delete(ctx context.Context, q string, tx *sqlx.Tx, expected int, values ...interface{}) (int, error) {
+func (s *Service) Delete(ctx context.Context, q string, tx *sqlx.Tx, expected int, values ...any) (int, error) {
 	return s.process(ctx, "delete", "deleting", "deleted", q, tx, expected, values...)
 }
 
-func (s *Service) DeleteOne(ctx context.Context, q string, tx *sqlx.Tx, values ...interface{}) error {
+func (s *Service) DeleteOne(ctx context.Context, q string, tx *sqlx.Tx, values ...any) error {
 	_, err := s.Delete(ctx, q, tx, 1, values...)
 	if err != nil {
 		return errors.Wrap(err, errMessage("delete", q, values)+"")
@@ -45,11 +45,11 @@ func (s *Service) DeleteOne(ctx context.Context, q string, tx *sqlx.Tx, values .
 	return err
 }
 
-func (s *Service) Exec(ctx context.Context, q string, tx *sqlx.Tx, expected int, values ...interface{}) (int, error) {
+func (s *Service) Exec(ctx context.Context, q string, tx *sqlx.Tx, expected int, values ...any) (int, error) {
 	return s.process(ctx, "exec", "executing", "executed", q, tx, expected, values...)
 }
 
-func (s *Service) execUnknown(ctx context.Context, op string, q string, tx *sqlx.Tx, values ...interface{}) (int, error) {
+func (s *Service) execUnknown(ctx context.Context, op string, q string, tx *sqlx.Tx, values ...any) (int, error) {
 	if op == "" {
 		op = "unknown"
 	}
@@ -69,7 +69,7 @@ func (s *Service) execUnknown(ctx context.Context, op string, q string, tx *sqlx
 	return int(aff), nil
 }
 
-func (s *Service) process(ctx context.Context, op string, key string, past string, q string, tx *sqlx.Tx, expected int, values ...interface{}) (int, error) {
+func (s *Service) process(ctx context.Context, op string, key string, past string, q string, tx *sqlx.Tx, expected int, values ...any) (int, error) {
 	if s.logger != nil {
 		s.logQuery(fmt.Sprintf("%s [%d] rows", key, expected), q, values)
 	}
@@ -85,7 +85,7 @@ func (s *Service) process(ctx context.Context, op string, key string, past strin
 	return aff, nil
 }
 
-func valueStrings(values []interface{}) string {
+func valueStrings(values []any) string {
 	ret := util.StringArrayFromInterfaces(values, 256)
 	return strings.Join(ret, ", ")
 }

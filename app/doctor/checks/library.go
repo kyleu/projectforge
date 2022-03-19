@@ -2,8 +2,9 @@ package checks
 
 import (
 	"go.uber.org/zap"
+	"golang.org/x/exp/slices"
+
 	"projectforge.dev/projectforge/app/doctor"
-	"projectforge.dev/projectforge/app/util"
 )
 
 var AllChecks = doctor.Checks{pf, prj, repo, air, git, golang, imagemagick, mke, node, qtc}
@@ -22,7 +23,7 @@ func ForModules(modules []string) doctor.Checks {
 	for _, c := range AllChecks {
 		hit := len(c.Modules) == 0
 		for _, mod := range c.Modules {
-			if util.StringArrayContains(modules, mod) {
+			if slices.Contains(modules, mod) {
 				hit = true
 				break
 			}

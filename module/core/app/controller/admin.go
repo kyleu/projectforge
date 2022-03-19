@@ -71,7 +71,7 @@ func Admin(rc *fasthttp.RequestCtx) {
 		case "migrations":
 			ms := migrate.GetMigrations()
 			am := migrate.ListMigrations(ps.Context, as.DB, nil, as.Logger)
-			ps.Data = map[string]interface{}{"available": ms, "applied": am}
+			ps.Data = map[string]any{"available": ms, "applied": am}
 			return render(rc, as, &vadmin.Migrations{Available: ms, Applied: am}, ps, "admin", "Migrations"){{{ end }}}
 		case "gc":
 			timer := util.TimerStart()

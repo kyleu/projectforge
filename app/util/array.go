@@ -5,19 +5,6 @@ import (
 	"fmt"
 )
 
-func StringArrayContains(a []string, str string) bool {
-	return StringArrayIndexOf(a, str) >= 0
-}
-
-func StringArrayIndexOf(a []string, str string) int {
-	for idx, x := range a {
-		if x == str {
-			return idx
-		}
-	}
-	return -1
-}
-
 func StringArrayMaxLength(a []string) int {
 	ret := 0
 	for _, x := range a {
@@ -29,11 +16,6 @@ func StringArrayMaxLength(a []string) int {
 	return ret
 }
 
-func StringArrayCopy(a []string) []string {
-	ret := make([]string, 0, len(a))
-	return append(ret, a...)
-}
-
 func StringArrayQuoted(a []string) []string {
 	ret := make([]string, 0, len(a))
 	for _, x := range a {
@@ -42,7 +24,7 @@ func StringArrayQuoted(a []string) []string {
 	return ret
 }
 
-func StringArrayFromInterfaces(a []interface{}, maxLength int) []string {
+func StringArrayFromInterfaces(a []any, maxLength int) []string {
 	ret := make([]string, 0, len(a))
 	for _, x := range a {
 		var v string
@@ -62,9 +44,9 @@ func StringArrayFromInterfaces(a []interface{}, maxLength int) []string {
 	return ret
 }
 
-func InterfaceArrayFromStrings(s []string) []interface{} {
-	ret := make([]interface{}, len(s))
-	for idx, item := range s {
+func InterfaceArrayFrom[T any](x ...T) []any {
+	ret := make([]any, len(x))
+	for idx, item := range x {
 		ret[idx] = item
 	}
 	return ret

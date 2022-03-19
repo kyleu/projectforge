@@ -29,11 +29,11 @@ func (x *Range) String() string {
 	return fmt.Sprintf("range[%s]", x.V.String())
 }
 
-func (x *Range) From(v interface{}) interface{} {
+func (x *Range) From(v any) any {
 	return invalidInput(x.Key(), v)
 }
 
-func (x *Range) Default(string) interface{} {
+func (x *Range) Default(string) any {
 	return ""
 }
 

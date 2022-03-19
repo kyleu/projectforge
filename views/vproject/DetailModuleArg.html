@@ -7,7 +7,7 @@
   "projectforge.dev/projectforge/views/components"
 ) %}
 
-{% func DetailModuleArg(mod *module.Module, arg interface{}, as *app.State, ps *cutil.PageState) %}
+{% func DetailModuleArg(mod *module.Module, arg any, as *app.State, ps *cutil.PageState) %}
   {%- switch mod.Key -%}
   {%- case "export" -%}
     {%- code

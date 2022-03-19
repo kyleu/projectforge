@@ -63,7 +63,7 @@ func (p *Package) Add(pkg util.Pkg, m *Model) {
 	}
 }
 
-func (p *Package) Get(paths []string) (interface{}, []string) {
+func (p *Package) Get(paths []string) (any, []string) {
 	if len(paths) == 0 {
 		return p, nil
 	}

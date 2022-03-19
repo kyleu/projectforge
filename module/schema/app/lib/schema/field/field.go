@@ -14,7 +14,7 @@ type Field struct {
 	Title    string         `json:"-"` // override only
 	Plural   string         `json:"-"` // override only
 	Hidden   bool           `json:"-"` // override only
-	Default  interface{}    `json:"default,omitempty"`
+	Default  any    `json:"default,omitempty"`
 	ReadOnly bool           `json:"readOnly,omitempty"`
 	Metadata *Metadata      `json:"metadata,omitempty"`
 }
@@ -49,7 +49,7 @@ func (f *Field) Description() string {
 	return f.Metadata.Description
 }
 
-func (f *Field) DefaultClean() interface{} {
+func (f *Field) DefaultClean() any {
 	switch f.Default {
 	case nil:
 		return f.Type.Default(f.Key)

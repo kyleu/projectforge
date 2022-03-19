@@ -30,6 +30,10 @@ func SQLRun(rc *fasthttp.RequestCtx) {
 			sql = string(f.Peek("sql"))
 			c := string(f.Peek("commit"))
 			commit = c == util.BoolTrue
+			action := string(f.Peek("action"))
+			if action == "analyze" {
+				sql = "explain analyze " + sql
+			}
 		}
 
 		tx, err := as.DB.StartTransaction()
@@ -38,7 +42,7 @@ func SQLRun(rc *fasthttp.RequestCtx) {
 		}
 
 		var columns []string
-		results := [][]interface{}{}
+		results := [][]any{}
 
 		timer := util.TimerStart()
 		result, err := as.DB.Query(ps.Context, sql, tx)

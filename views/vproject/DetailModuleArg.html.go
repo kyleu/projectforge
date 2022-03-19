@@ -28,7 +28,7 @@ var (
 )
 
 //line views/vproject/DetailModuleArg.html:10
-func StreamDetailModuleArg(qw422016 *qt422016.Writer, mod *module.Module, arg interface{}, as *app.State, ps *cutil.PageState) {
+func StreamDetailModuleArg(qw422016 *qt422016.Writer, mod *module.Module, arg any, as *app.State, ps *cutil.PageState) {
 //line views/vproject/DetailModuleArg.html:10
 	qw422016.N().S(`
 `)
@@ -118,7 +118,7 @@ func StreamDetailModuleArg(qw422016 *qt422016.Writer, mod *module.Module, arg in
 }
 
 //line views/vproject/DetailModuleArg.html:43
-func WriteDetailModuleArg(qq422016 qtio422016.Writer, mod *module.Module, arg interface{}, as *app.State, ps *cutil.PageState) {
+func WriteDetailModuleArg(qq422016 qtio422016.Writer, mod *module.Module, arg any, as *app.State, ps *cutil.PageState) {
 //line views/vproject/DetailModuleArg.html:43
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vproject/DetailModuleArg.html:43
@@ -129,7 +129,7 @@ func WriteDetailModuleArg(qq422016 qtio422016.Writer, mod *module.Module, arg in
 }
 
 //line views/vproject/DetailModuleArg.html:43
-func DetailModuleArg(mod *module.Module, arg interface{}, as *app.State, ps *cutil.PageState) string {
+func DetailModuleArg(mod *module.Module, arg any, as *app.State, ps *cutil.PageState) string {
 //line views/vproject/DetailModuleArg.html:43
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vproject/DetailModuleArg.html:43

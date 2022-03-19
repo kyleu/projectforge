@@ -9,12 +9,13 @@
   layout.Basic
   Key string
   Title string
-  Result interface{}
+  Icon string
+  Result any
 } %}
 
 {% func (p *Run) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%s p.Title %}</h3>
+    <h3>{%= components.SVGRefIcon(p.Icon, ps) %}{%s p.Title %}</h3>
     {%= components.JSON(p.Result) %}
   </div>
 {% endfunc %}

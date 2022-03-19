@@ -25,7 +25,7 @@ func (x *Error) String() string {
 	return "error(" + x.Message + ")"
 }
 
-func (x *Error) From(v interface{}) interface{} {
+func (x *Error) From(v any) any {
 	switch t := v.(type) {
 	case error:
 		return t
@@ -34,7 +34,7 @@ func (x *Error) From(v interface{}) interface{} {
 	}
 }
 
-func (x *Error) Default(string) interface{} {
+func (x *Error) Default(string) any {
 	return KeyError
 }
 

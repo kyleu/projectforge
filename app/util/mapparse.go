@@ -11,13 +11,13 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (m ValueMap) ParseArray(path string, allowMissing bool, allowEmpty bool, allowNonArray bool) ([]interface{}, error) {
+func (m ValueMap) ParseArray(path string, allowMissing bool, allowEmpty bool, allowNonArray bool) ([]any, error) {
 	result, err := m.GetPath(path, allowMissing)
 	if err != nil {
 		return nil, errors.Wrap(err, "invalid array")
 	}
 	switch t := result.(type) {
-	case []interface{}:
+	case []any:
 		if (!allowEmpty) && len(t) == 0 {
 			return nil, errors.New("empty array")
 		}
@@ -26,12 +26,12 @@ func (m ValueMap) ParseArray(path string, allowMissing bool, allowEmpty bool, al
 		if (!allowEmpty) && len(t) == 0 {
 			return nil, errors.New("empty array")
 		}
-		return InterfaceArrayFromStrings(t), nil
+		return InterfaceArrayFrom(t...), nil
 	case []int:
 		if (!allowEmpty) && len(t) == 0 {
 			return nil, errors.New("empty array")
 		}
-		a := make([]interface{}, 0, len(t))
+		a := make([]any, 0, len(t))
 		for _, x := range t {
 			a = append(a, x)
 		}
@@ -43,7 +43,7 @@ func (m ValueMap) ParseArray(path string, allowMissing bool, allowEmpty bool, al
 		return nil, nil
 	default:
 		if allowNonArray {
-			return []interface{}{t}, nil
+			return []any{t}, nil
 		}
 		return nil, invalidTypeError(path, "array", t)
 	}
@@ -128,7 +128,7 @@ func (m ValueMap) ParseMap(path string, allowMissing bool, allowEmpty bool) (Val
 			return nil, errors.New("empty map")
 		}
 		return t, nil
-	case map[string]interface{}:
+	case map[string]any:
 		if (!allowEmpty) && len(t) == 0 {
 			return nil, errors.New("empty map")
 		}
@@ -264,6 +264,6 @@ func decorateError(m ValueMap, path string, t string, err error) error {
 	return errors.Wrapf(err, "error parsing [%s] as [%s] from map with fields [%s]", path, t, strings.Join(m.Keys(), ", "))
 }
 
-func invalidTypeError(path string, t string, observed interface{}) error {
+func invalidTypeError(path string, t string, observed any) error {
 	return errors.Errorf("unable to parse [%s] at path [%s], invalid type [%T]", t, path, observed)
 }

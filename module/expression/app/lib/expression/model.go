@@ -35,7 +35,7 @@ func (e *Expression) Compile(eng *Engine) error {
 	return nil
 }
 
-func (e *Expression) Run(params map[string]interface{}) (interface{}, int, error) {
+func (e *Expression) Run(params map[string]any) (any, int, error) {
 	if e.Program == nil {
 		return nil, 0, errors.New("no program")
 	}
@@ -48,7 +48,7 @@ func (e *Expression) Run(params map[string]interface{}) (interface{}, int, error
 	return out.Value(), timer.End(), nil
 }
 
-func CheckResult(x interface{}, logger *zap.SugaredLogger) bool {
+func CheckResult(x any, logger *zap.SugaredLogger) bool {
 	switch t := x.(type) {
 	case bool:
 		return t

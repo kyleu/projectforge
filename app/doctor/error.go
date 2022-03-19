@@ -5,12 +5,12 @@ import (
 )
 
 type Error struct {
-	Code    string        `json:"code"`
-	Message string        `json:"message"`
-	Args    []interface{} `json:"args,omitempty"`
+	Code    string `json:"code"`
+	Message string `json:"message"`
+	Args    []any  `json:"args,omitempty"`
 }
 
-func NewError(code string, message string, args ...interface{}) *Error {
+func NewError(code string, message string, args ...any) *Error {
 	return &Error{Code: code, Message: message, Args: args}
 }
 

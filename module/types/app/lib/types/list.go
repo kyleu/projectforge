@@ -31,7 +31,7 @@ func (x *List) String() string {
 	return fmt.Sprintf("[]%s", x.V.String())
 }
 
-func (x *List) From(v interface{}) interface{} {
+func (x *List) From(v any) any {
 	switch t := v.(type) {
 	case string:
 		lt := util.StringSplitAndTrim(t, ",")
@@ -41,7 +41,7 @@ func (x *List) From(v interface{}) interface{} {
 	}
 }
 
-func (x *List) Default(string) interface{} {
+func (x *List) Default(string) any {
 	return emptyList
 }
 

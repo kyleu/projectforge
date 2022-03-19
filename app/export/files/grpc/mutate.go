@@ -61,7 +61,7 @@ func grpcFromRequest(m *model.Model, args string) *golang.Block {
 	ret.W("\t\treturn nil, errors.New(\"must provide [%s] in request data\")", m.Camel())
 	ret.W("\t}")
 
-	ret.W("\tm, ok := input.(map[string]interface{})")
+	ret.W("\tm, ok := input.(map[string]any)")
 	ret.W("\tif !ok {")
 	ret.W("\t\treturn nil, errors.New(\"field [%s] must be an object\")", m.Camel())
 	ret.W("\t}")

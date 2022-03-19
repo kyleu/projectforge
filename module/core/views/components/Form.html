@@ -3,6 +3,7 @@
   "time"
 
   "github.com/google/uuid"
+  "golang.org/x/exp/slices"
 
   "{{{ .Package }}}/app/util"
   "{{{ .Package }}}/views/vutil"
@@ -24,7 +25,7 @@
   {% endif %}
 {% endstripspace %}{% endfunc %}
 
-{% func FormInputNumber(key string, id string, value interface{}, placeholder ...string) %}{% stripspace %}
+{% func FormInputNumber(key string, id string, value any, placeholder ...string) %}{% stripspace %}
   {% if id == "" %}
     <input name="{%s key %}" type="number" value="{%v value %}"{%= phFor(placeholder) %} />
   {% else %}
@@ -104,12 +105,12 @@
       }
     %}
     {%= vutil.Indent(true, indent) %}
-    {% if util.StringArrayContains(values, opt) %}
+    {% if slices.Contains(values, opt) %}
       <label><input type="checkbox" name="{%s key %}" value="{%s opt %}" checked="checked" />{% space %}{%s title %}</label>
     {% else %}
       <label><input type="checkbox" name="{%s key %}" value="{%s opt %}" />{% space %}{%s title %}</label>
     {% endif %}
-    {% if util.StringArrayContains(values, opt) %}
+    {% if slices.Contains(values, opt) %}
       <br />
     {% endif %}
   {% endfor %}

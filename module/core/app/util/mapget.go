@@ -8,7 +8,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (m ValueMap) GetRequired(k string) (interface{}, error) {
+func (m ValueMap) GetRequired(k string) (any, error) {
 	v, ok := m[k]
 	if !ok {
 		const msg = "no value [%s] among candidates [%s]"
@@ -17,7 +17,7 @@ func (m ValueMap) GetRequired(k string) (interface{}, error) {
 	return v, nil
 }
 
-func (m ValueMap) GetArray(key string, allowEmpty bool, allowNonArray bool) ([]interface{}, error) {
+func (m ValueMap) GetArray(key string, allowEmpty bool, allowNonArray bool) ([]any, error) {
 	return m.ParseArray(key, false, allowEmpty, allowNonArray)
 }
 
@@ -74,7 +74,7 @@ func (m ValueMap) GetUUID(key string, allowEmpty bool) (*uuid.UUID, error) {
 	return m.ParseUUID(key, false, allowEmpty)
 }
 
-func (m ValueMap) GetType(key string, ret interface{}) error {
+func (m ValueMap) GetType(key string, ret any) error {
 	result, err := m.GetPath(key, false)
 	if err != nil {
 		return errors.Wrap(err, "invalid type")

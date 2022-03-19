@@ -34,7 +34,7 @@ func (x *Int) String() string {
 	return x.Key()
 }
 
-func (x *Int) From(v interface{}) interface{} {
+func (x *Int) From(v any) any {
 	switch t := v.(type) {
 	case string:
 		ret, _ := strconv.Atoi(t)
@@ -50,7 +50,7 @@ func (x *Int) From(v interface{}) interface{} {
 	}
 }
 
-func (x *Int) Default(string) interface{} {
+func (x *Int) Default(string) any {
 	return 0
 }
 

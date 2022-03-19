@@ -85,7 +85,7 @@ func serviceCreate(m *model.Model, g *golang.File) (*golang.Block, error) {
 		}
 
 		ret.W("\tq := database.SQLInsert(tableQuoted, columnsQuoted, len(models), \"\")")
-		ret.W("\tvals := make([]interface{}, 0, len(models)*len(columnsQuoted))")
+		ret.W("\tvals := make([]any, 0, len(models)*len(columnsQuoted))")
 		ret.W("\tfor _, arg := range models {")
 		ret.W("\t\tvals = append(vals, arg.ToData()...)")
 		ret.W("\t}")
@@ -199,7 +199,7 @@ func serviceSave(m *model.Model, g *golang.File) (*golang.Block, error) {
 	} else {
 		q := strings.Join(m.PKs().NamesQuoted(), ", ")
 		ret.W("\tq := database.SQLUpsert(tableQuoted, columnsQuoted, len(models), []string{%s}, columns, \"\")", q)
-		ret.W("\tvar data []interface{}")
+		ret.W("\tvar data []any")
 		ret.W("\tfor _, model := range models {")
 		ret.W("\t\tdata = append(data, model.ToData()...)")
 		ret.W("\t}")
@@ -215,7 +215,7 @@ func serviceUpsertCore(m *model.Model, g *golang.File) *golang.Block {
 	ret.W("func (s *Service) upsertCore(ctx context.Context, tx *sqlx.Tx, models ...*%s) error {", m.Proper())
 	ret.W("\tconflicts := util.StringArrayQuoted([]string{%s})", strings.Join(m.PKs().NamesQuoted(), ", "))
 	ret.W("\tq := database.SQLUpsert(tableQuoted, columnsCore, len(models), conflicts, columnsCore, \"\")")
-	ret.W("\tdata := make([]interface{}, 0, len(columnsCore)*len(models))")
+	ret.W("\tdata := make([]any, 0, len(columnsCore)*len(models))")
 	ret.W("\tfor _, model := range models {")
 	ret.W("\t\tdata = append(data, model.ToDataCore()...)")
 	ret.W("\t}")
@@ -230,7 +230,7 @@ func serviceInsertRevision(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("InsertRev", "func")
 	ret.W("func (s *Service) insert%s(ctx context.Context, tx *sqlx.Tx, models ...*%s) error {", m.HistoryColumn().Proper(), m.Proper())
 	ret.W("\tq := database.SQLInsert(table%sQuoted, columns%s, len(models), \"\")", revCol.Proper(), revCol.Proper())
-	ret.W("\tdata := make([]interface{}, 0, len(columns%s)*len(models))", revCol.Proper())
+	ret.W("\tdata := make([]any, 0, len(columns%s)*len(models))", revCol.Proper())
 	ret.W("\tfor _, model := range models {")
 	ret.W("\t\tdata = append(data, model.ToData%s()...)", m.HistoryColumn().Proper())
 	ret.W("\t}")

@@ -86,11 +86,11 @@ func (s *Service) Stats() sql.DBStats {
 	return s.db.Stats()
 }
 
-func errMessage(t string, q string, values []interface{}) string {
+func errMessage(t string, q string, values []any) string {
 	return fmt.Sprintf("error running %s sql [%s] with values [%s]", t, strings.TrimSpace(q), valueStrings(values))
 }
 
-func (s *Service) logQuery(msg string, q string, values []interface{}) {
+func (s *Service) logQuery(msg string, q string, values []any) {
 	if s.Debug {
 		s.logger.Debugf("%s {\n  SQL: %s\n  Values: %s\n}", msg, strings.TrimSpace(q), valueStrings(values))
 	}

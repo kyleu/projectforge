@@ -2,7 +2,7 @@ package model
 
 import (
 	"github.com/pkg/errors"
-	"projectforge.dev/projectforge/app/util"
+	"golang.org/x/exp/slices"
 )
 
 var goKeywords = []string{
@@ -18,7 +18,7 @@ func (m *Model) Validate(mods []string) error {
 		return errors.Errorf("model [%s] has no primary key", m.Name)
 	}
 	for _, mod := range mods {
-		if util.StringArrayContains(reservedNames[mod], m.Name) {
+		if slices.Contains(reservedNames[mod], m.Name) {
 			return errors.Errorf("model [%s] uses name which is reserved by [%s]", m.Name, mod)
 		}
 	}
@@ -33,7 +33,7 @@ func (m *Model) Validate(mods []string) error {
 		}
 	}
 	for _, col := range m.Columns {
-		if util.StringArrayContains(goKeywords, col.Name) {
+		if slices.Contains(goKeywords, col.Name) {
 			return errors.Errorf("column [%s] uses reserved keyword", col.Name)
 		}
 	}

@@ -13,19 +13,15 @@
 } %}
 
 {% func (p *Modules) Body(as *app.State, ps *cutil.PageState) %}
-  {%= buildInfo(p.Info.Tags, as) %}
-  {%= moduleList(p.Info.Mods) %}
-{% endfunc %}
-
-{% func buildInfo(tags *util.OrderedMap, as *app.State) %}
   <div class="card">
     <h3>{%s util.AppName %} v{%s as.BuildInfo.Version %}</h3>
     <ul class="mt">
-      {%- for _, k := range tags.Order -%}
-      <li><strong>{%s k %}</strong>: {%s tags.GetSimple(k).(string) %}</li>
+      {%- for _, k := range p.Info.Tags.Order -%}
+      <li><strong>{%s k %}</strong>: {%s p.Info.Tags.GetSimple(k) %}</li>
       {%- endfor -%}
     </ul>
   </div>
+  {%= moduleList(p.Info.Mods) %}
 {% endfunc %}
 
 {% func moduleList(Mods []*debug.Module) %}

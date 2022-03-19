@@ -38,7 +38,7 @@ func (s *Service) CreateRecords(ctx context.Context, tx *sqlx.Tx, models ...*Rec
 		return nil
 	}
 	q := database.SQLInsert(recordTableQuoted, recordColumnsQuoted, len(models), "")
-	vals := make([]interface{}, 0, len(models)*len(recordColumnsQuoted))
+	vals := make([]any, 0, len(models)*len(recordColumnsQuoted))
 	for _, arg := range models {
 		vals = append(vals, arg.ToData()...)
 	}

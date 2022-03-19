@@ -155,7 +155,7 @@ func userFromReader(r io.Reader, user *goth.User) error {
 		return err
 	}
 
-	raw := map[string]interface{}{}
+	raw := map[string]any{}
 	if err := json.NewDecoder(buf).Decode(&raw); err != nil {
 		return err
 	}

@@ -30,7 +30,7 @@ func (f *File) AddBlocks(b ...*Block) {
 
 func (f *File) Render(addHeader bool) (*file.File, error) {
 	var content []string
-	add := func(s string, args ...interface{}) {
+	add := func(s string, args ...any) {
 		content = append(content, fmt.Sprintf(s+"\n", args...))
 	}
 

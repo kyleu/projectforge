@@ -24,7 +24,7 @@ func (x *Option) String() string {
 	return "*" + x.V.String()
 }
 
-func (x *Option) From(v interface{}) interface{} {
+func (x *Option) From(v any) any {
 	return x.V.From(v)
 }
 
@@ -32,6 +32,6 @@ func NewOption(t *Wrapped) *Wrapped {
 	return Wrap(&Option{V: t})
 }
 
-func (x *Option) Default(string) interface{} {
+func (x *Option) Default(string) any {
 	return "∅"
 }

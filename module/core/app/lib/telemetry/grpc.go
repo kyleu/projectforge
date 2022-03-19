@@ -6,7 +6,7 @@ import (
 	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-	_ "google.golang.org/grpc/encoding/gzip" // nolint
+	_ "google.golang.org/grpc/encoding/gzip" // zip responses
 	"google.golang.org/grpc/keepalive"
 )
 

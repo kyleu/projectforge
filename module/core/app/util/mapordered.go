@@ -7,17 +7,17 @@ import (
 	"sort"
 )
 
-type OrderedMap struct {
+type OrderedMap[V any] struct {
 	Lexical bool
 	Order   []string
-	Map     map[string]interface{}
+	Map     map[string]V
 }
 
-func NewOrderedMap(lexical bool, capacity int) *OrderedMap {
-	return &OrderedMap{Lexical: lexical, Order: make([]string, 0, capacity), Map: make(map[string]interface{}, capacity)}
+func NewOrderedMap[V any](lexical bool, capacity int) *OrderedMap[V] {
+	return &OrderedMap[V]{Lexical: lexical, Order: make([]string, 0, capacity), Map: make(map[string]V, capacity)}
 }
 
-func (o *OrderedMap) Append(k string, v interface{}) {
+func (o *OrderedMap[V]) Append(k string, v V) {
 	o.Order = append(o.Order, k)
 	o.Map[k] = v
 	if o.Lexical {
@@ -25,22 +25,21 @@ func (o *OrderedMap) Append(k string, v interface{}) {
 	}
 }
 
-func (o *OrderedMap) Get(k string) (interface{}, bool) {
+func (o *OrderedMap[V]) Get(k string) (V, bool) {
 	ret, ok := o.Map[k]
 	return ret, ok
 }
 
-func (o *OrderedMap) GetSimple(k string) interface{} {
+func (o *OrderedMap[V]) GetSimple(k string) V {
 	return o.Map[k]
 }
 
-func (o OrderedMap) MarshalYAML() (interface{}, error) {
+func (o OrderedMap[V]) MarshalYAML() (any, error) {
 	return o.Map, nil
 }
 
-func (o OrderedMap) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
-	err := e.EncodeToken(start)
-	if err != nil {
+func (o OrderedMap[V]) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
+	if err := e.EncodeToken(start); err != nil {
 		return err
 	}
 
@@ -55,15 +54,14 @@ func (o OrderedMap) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 		}
 	}
 
-	err = e.EncodeToken(xml.EndElement{Name: start.Name})
-	if err != nil {
+	if err := e.EncodeToken(xml.EndElement{Name: start.Name}); err != nil {
 		return err
 	}
 
 	return e.Flush()
 }
 
-func (o *OrderedMap) UnmarshalJSON(b []byte) error {
+func (o *OrderedMap[V]) UnmarshalJSON(b []byte) error {
 	if err := FromJSON(b, &o.Map); err != nil {
 		return err
 	}
@@ -81,7 +79,7 @@ func (o *OrderedMap) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (o OrderedMap) MarshalJSON() ([]byte, error) {
+func (o OrderedMap[V]) MarshalJSON() ([]byte, error) {
 	var b []byte
 	buf := bytes.NewBuffer(b)
 	buf.WriteByte('{')

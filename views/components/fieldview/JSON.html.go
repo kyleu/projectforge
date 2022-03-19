@@ -26,7 +26,7 @@ var (
 )
 
 //line views/components/fieldview/JSON.html:7
-func StreamJSON(qw422016 *qt422016.Writer, v interface{}) {
+func StreamJSON(qw422016 *qt422016.Writer, v any) {
 //line views/components/fieldview/JSON.html:9
 	b, ok := v.([]byte)
 	if ok {
@@ -50,7 +50,7 @@ func StreamJSON(qw422016 *qt422016.Writer, v interface{}) {
 }
 
 //line views/components/fieldview/JSON.html:20
-func WriteJSON(qq422016 qtio422016.Writer, v interface{}) {
+func WriteJSON(qq422016 qtio422016.Writer, v any) {
 //line views/components/fieldview/JSON.html:20
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/components/fieldview/JSON.html:20
@@ -61,7 +61,7 @@ func WriteJSON(qq422016 qtio422016.Writer, v interface{}) {
 }
 
 //line views/components/fieldview/JSON.html:20
-func JSON(v interface{}) string {
+func JSON(v any) string {
 //line views/components/fieldview/JSON.html:20
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/components/fieldview/JSON.html:20
@@ -76,7 +76,7 @@ func JSON(v interface{}) string {
 }
 
 //line views/components/fieldview/JSON.html:22
-func StreamJSONInline(qw422016 *qt422016.Writer, v interface{}) {
+func StreamJSONInline(qw422016 *qt422016.Writer, v any) {
 //line views/components/fieldview/JSON.html:24
 	b, ok := v.([]byte)
 	if ok {
@@ -89,7 +89,7 @@ func StreamJSONInline(qw422016 *qt422016.Writer, v interface{}) {
 }
 
 //line views/components/fieldview/JSON.html:30
-func WriteJSONInline(qq422016 qtio422016.Writer, v interface{}) {
+func WriteJSONInline(qq422016 qtio422016.Writer, v any) {
 //line views/components/fieldview/JSON.html:30
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/components/fieldview/JSON.html:30
@@ -100,7 +100,7 @@ func WriteJSONInline(qq422016 qtio422016.Writer, v interface{}) {
 }
 
 //line views/components/fieldview/JSON.html:30
-func JSONInline(v interface{}) string {
+func JSONInline(v any) string {
 //line views/components/fieldview/JSON.html:30
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/components/fieldview/JSON.html:30

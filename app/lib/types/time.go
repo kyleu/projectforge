@@ -25,11 +25,11 @@ func (x *Time) String() string {
 	return x.Key()
 }
 
-func (x *Time) From(v interface{}) interface{} {
+func (x *Time) From(v any) any {
 	return invalidInput(x.Key(), x)
 }
 
-func (x *Time) Default(string) interface{} {
+func (x *Time) Default(string) any {
 	return time.Now().Format("15:04:05")
 }
 

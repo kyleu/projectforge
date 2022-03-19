@@ -3,6 +3,7 @@
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/doctor"
   "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/layout"
 ) %}
 
@@ -13,14 +14,14 @@
 
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>Doctor</h3>
+    <h3>{%= components.SVGRefIcon(`first-aid`, ps) %} Doctor</h3>
     <p>The {%s util.AppName %} doctor makes sure you're able to run all of the utilities required to work with a {%s util.AppName %} project.</p>
     <p>You can see the checks available for your projects in the list below, or you can <a href="/doctor/all">run all checks</a>.</p>
   </div>
   <div class="card">
+    <div class="right"><a href="/doctor/all"><button>Run All Checks</button></a></div>
     <h3>Checks</h3>
-    <div class="mt"><a href="/doctor/all"><button>Run All Checks</button></a></div>
-    <ul>
+    <ul class="mt">
       {%- for _, c := range p.Checks -%}
         <li>
           <div class="right"><em>{%s c.Summary %}</em></div>

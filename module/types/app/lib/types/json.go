@@ -25,11 +25,11 @@ func (x *JSON) String() string {
 	return x.Key()
 }
 
-func (x *JSON) From(v interface{}) interface{} {
+func (x *JSON) From(v any) any {
 	return invalidInput(x.Key(), x)
 }
 
-func (x *JSON) Default(string) interface{} {
+func (x *JSON) Default(string) any {
 	return "{}"
 }
 

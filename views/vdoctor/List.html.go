@@ -10,101 +10,106 @@ import (
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/doctor"
 	"projectforge.dev/projectforge/app/util"
+	"projectforge.dev/projectforge/views/components"
 	"projectforge.dev/projectforge/views/layout"
 )
 
-//line views/vdoctor/List.html:9
+//line views/vdoctor/List.html:10
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vdoctor/List.html:9
+//line views/vdoctor/List.html:10
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vdoctor/List.html:9
+//line views/vdoctor/List.html:10
 type List struct {
 	layout.Basic
 	Checks doctor.Checks
 }
 
-//line views/vdoctor/List.html:14
+//line views/vdoctor/List.html:15
 func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vdoctor/List.html:14
+//line views/vdoctor/List.html:15
 	qw422016.N().S(`
   <div class="card">
-    <h3>Doctor</h3>
+    <h3>`)
+//line views/vdoctor/List.html:17
+	components.StreamSVGRefIcon(qw422016, `first-aid`, ps)
+//line views/vdoctor/List.html:17
+	qw422016.N().S(` Doctor</h3>
     <p>The `)
-//line views/vdoctor/List.html:17
+//line views/vdoctor/List.html:18
 	qw422016.E().S(util.AppName)
-//line views/vdoctor/List.html:17
+//line views/vdoctor/List.html:18
 	qw422016.N().S(` doctor makes sure you're able to run all of the utilities required to work with a `)
-//line views/vdoctor/List.html:17
+//line views/vdoctor/List.html:18
 	qw422016.E().S(util.AppName)
-//line views/vdoctor/List.html:17
+//line views/vdoctor/List.html:18
 	qw422016.N().S(` project.</p>
     <p>You can see the checks available for your projects in the list below, or you can <a href="/doctor/all">run all checks</a>.</p>
   </div>
   <div class="card">
+    <div class="right"><a href="/doctor/all"><button>Run All Checks</button></a></div>
     <h3>Checks</h3>
-    <div class="mt"><a href="/doctor/all"><button>Run All Checks</button></a></div>
-    <ul>
+    <ul class="mt">
 `)
-//line views/vdoctor/List.html:24
+//line views/vdoctor/List.html:25
 	for _, c := range p.Checks {
-//line views/vdoctor/List.html:24
+//line views/vdoctor/List.html:25
 		qw422016.N().S(`        <li>
           <div class="right"><em>`)
-//line views/vdoctor/List.html:26
+//line views/vdoctor/List.html:27
 		qw422016.E().S(c.Summary)
-//line views/vdoctor/List.html:26
+//line views/vdoctor/List.html:27
 		qw422016.N().S(`</em></div>
           <a href="/doctor/`)
-//line views/vdoctor/List.html:27
+//line views/vdoctor/List.html:28
 		qw422016.E().S(c.Key)
-//line views/vdoctor/List.html:27
+//line views/vdoctor/List.html:28
 		qw422016.N().S(`">`)
-//line views/vdoctor/List.html:27
+//line views/vdoctor/List.html:28
 		qw422016.E().S(c.Title)
-//line views/vdoctor/List.html:27
+//line views/vdoctor/List.html:28
 		qw422016.N().S(`</a>
         </li>
 `)
-//line views/vdoctor/List.html:29
+//line views/vdoctor/List.html:30
 	}
-//line views/vdoctor/List.html:29
+//line views/vdoctor/List.html:30
 	qw422016.N().S(`    </ul>
   </div>
 `)
-//line views/vdoctor/List.html:32
+//line views/vdoctor/List.html:33
 }
 
-//line views/vdoctor/List.html:32
+//line views/vdoctor/List.html:33
 func (p *List) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vdoctor/List.html:32
+//line views/vdoctor/List.html:33
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vdoctor/List.html:32
+//line views/vdoctor/List.html:33
 	p.StreamBody(qw422016, as, ps)
-//line views/vdoctor/List.html:32
+//line views/vdoctor/List.html:33
 	qt422016.ReleaseWriter(qw422016)
-//line views/vdoctor/List.html:32
+//line views/vdoctor/List.html:33
 }
 
-//line views/vdoctor/List.html:32
+//line views/vdoctor/List.html:33
 func (p *List) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vdoctor/List.html:32
+//line views/vdoctor/List.html:33
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vdoctor/List.html:32
+//line views/vdoctor/List.html:33
 	p.WriteBody(qb422016, as, ps)
-//line views/vdoctor/List.html:32
+//line views/vdoctor/List.html:33
 	qs422016 := string(qb422016.B)
-//line views/vdoctor/List.html:32
+//line views/vdoctor/List.html:33
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vdoctor/List.html:32
+//line views/vdoctor/List.html:33
 	return qs422016
-//line views/vdoctor/List.html:32
+//line views/vdoctor/List.html:33
 }

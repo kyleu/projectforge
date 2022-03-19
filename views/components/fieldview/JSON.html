@@ -4,7 +4,7 @@
   "projectforge.dev/projectforge/app/util"
 ) %}
 
-{% func JSON(v interface{}) %}{% stripspace %}
+{% func JSON(v any) %}{% stripspace %}
   {% code
     b, ok := v.([]byte)
     if ok {
@@ -19,7 +19,7 @@
   {% endif %}
 {% endstripspace %}{% endfunc %}
 
-{% func JSONInline(v interface{}) %}{% stripspace %}
+{% func JSONInline(v any) %}{% stripspace %}
   {% code
     b, ok := v.([]byte)
     if ok {

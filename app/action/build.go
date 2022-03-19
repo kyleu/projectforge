@@ -40,12 +40,22 @@ const ciDesc = "Installs dependencies for the TypeScript client"
 
 type Builds []*Build
 
+func (b Builds) Get(key string) *Build {
+	for _, x := range b {
+		if x.Key == key {
+			return x
+		}
+	}
+	return nil
+}
+
 var AllBuilds = Builds{
 	simpleBuild("build", "Build", "make build"),
 	simpleBuild("clean", "Clean", "make clean"),
 	simpleBuild("tidy", "Tidy", "go mod tidy"),
 	simpleBuild("format", "Format", "bin/format.sh"),
 	simpleBuild("lint", "Lint", "bin/check.sh"),
+	{Key: "deps", Title: "Dependencies", Description: "Manages Go dependencies", Run: onDeps},
 	{Key: "clientInstall", Title: "Client Install", Description: ciDesc, Run: func(pm *PrjAndMods, ret *Result) *Result {
 		return simpleProc("npm install", filepath.Join(pm.Prj.Path, "client"), ret)
 	}},

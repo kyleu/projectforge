@@ -60,21 +60,7 @@
               </label>
             </td>
           </tr>
-          <tr>
-            <th class="shrink"><label>Theme</label></th>
-            <td>
-              <div class="right">
-                <a href="/theme">Edit Themes</a>
-              </div>
-              {%- code
-                sel := ps.Profile.Theme
-                if sel == "" {
-                  sel = "default"
-                }
-              -%}
-              {%= vtheme.Choice(as.Themes.All(), sel, 3, ps) %}
-            </td>
-          </tr>
+          {%= vtheme.ChoicePanel(as.Themes.All(), 5, ps) %}
         </tbody>
       </table>
       <div class="mt">

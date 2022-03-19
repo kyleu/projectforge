@@ -74,17 +74,17 @@ func Close() error {
 	return tracerProvider.Shutdown(context.Background())
 }
 
-func StartSpan(ctx context.Context, spanName string, logger *zap.SugaredLogger, opts ...interface{}) (context.Context, *Span, *zap.SugaredLogger) {
+func StartSpan(ctx context.Context, spanName string, logger *zap.SugaredLogger, opts ...any) (context.Context, *Span, *zap.SugaredLogger) {
 	return spanCreate(ctx, spanName, logger, opts...)
 }
 
-func StartAsyncSpan(ctx context.Context, spanName string, logger *zap.SugaredLogger, opts ...interface{}) (context.Context, *Span, *zap.SugaredLogger) {
+func StartAsyncSpan(ctx context.Context, spanName string, logger *zap.SugaredLogger, opts ...any) (context.Context, *Span, *zap.SugaredLogger) {
 	parentSpan := trace.SpanFromContext(ctx)
 	asyncChildCtx := trace.ContextWithSpan(context.Background(), parentSpan)
 	return spanCreate(asyncChildCtx, spanName, logger, opts...)
 }
 
-func spanCreate(ctx context.Context, spanName string, logger *zap.SugaredLogger, opts ...interface{}) (context.Context, *Span, *zap.SugaredLogger) {
+func spanCreate(ctx context.Context, spanName string, logger *zap.SugaredLogger, opts ...any) (context.Context, *Span, *zap.SugaredLogger) {
 	tr := otel.GetTracerProvider().Tracer(util.AppKey)
 	ssos := []trace.SpanStartOption{trace.WithSpanKind(trace.SpanKindServer)}
 	for _, opt := range opts {

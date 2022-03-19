@@ -21,10 +21,10 @@ type Override struct {
 	Type string      `json:"type,omitempty"`
 	Path util.Pkg    `json:"path,omitempty"`
 	Prop string      `json:"prop,omitempty"`
-	Val  interface{} `json:"val,omitempty"`
+	Val  any `json:"val,omitempty"`
 }
 
-func NewOverride(typ string, path util.Pkg, prop string, val interface{}) *Override {
+func NewOverride(typ string, path util.Pkg, prop string, val any) *Override {
 	return &Override{Type: typ, Path: path, Prop: prop, Val: val}
 }
 
@@ -93,7 +93,7 @@ func (o *Override) ApplyTo(s *Schema) error {
 	}
 }
 
-func applyModelProperty(m *model.Model, prop string, val interface{}) error {
+func applyModelProperty(m *model.Model, prop string, val any) error {
 	switch prop {
 	case KeyTitle:
 		m.Title = fmt.Sprintf("%v", val)
@@ -105,7 +105,7 @@ func applyModelProperty(m *model.Model, prop string, val interface{}) error {
 	return nil
 }
 
-func applyFieldProperty(m *model.Model, f *field.Field, prop string, val interface{}) error {
+func applyFieldProperty(m *model.Model, f *field.Field, prop string, val any) error {
 	switch prop {
 	case KeyTitle:
 		f.Title = fmt.Sprintf("%v", val)

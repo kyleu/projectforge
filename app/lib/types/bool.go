@@ -25,7 +25,7 @@ func (x *Bool) String() string {
 	return x.Key()
 }
 
-func (x *Bool) From(v interface{}) interface{} {
+func (x *Bool) From(v any) any {
 	switch t := v.(type) {
 	case bool:
 		return t
@@ -37,7 +37,7 @@ func (x *Bool) From(v interface{}) interface{} {
 	}
 }
 
-func (x *Bool) Default(string) interface{} {
+func (x *Bool) Default(string) any {
 	return false
 }
 

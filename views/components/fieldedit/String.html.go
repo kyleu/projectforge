@@ -27,14 +27,14 @@ var (
 )
 
 //line views/components/fieldedit/String.html:8
-func StreamString(qw422016 *qt422016.Writer, x interface{}, k string) {
+func StreamString(qw422016 *qt422016.Writer, x any, k string) {
 //line views/components/fieldedit/String.html:9
 	components.StreamFormInput(qw422016, k, "", fmt.Sprintf("%v", x))
 //line views/components/fieldedit/String.html:10
 }
 
 //line views/components/fieldedit/String.html:10
-func WriteString(qq422016 qtio422016.Writer, x interface{}, k string) {
+func WriteString(qq422016 qtio422016.Writer, x any, k string) {
 //line views/components/fieldedit/String.html:10
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/components/fieldedit/String.html:10
@@ -45,7 +45,7 @@ func WriteString(qq422016 qtio422016.Writer, x interface{}, k string) {
 }
 
 //line views/components/fieldedit/String.html:10
-func String(x interface{}, k string) string {
+func String(x any, k string) string {
 //line views/components/fieldedit/String.html:10
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/components/fieldedit/String.html:10

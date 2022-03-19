@@ -40,11 +40,11 @@ func (x *Wrapped) String() string {
 	return x.T.String()
 }
 
-func (x *Wrapped) From(v interface{}) interface{} {
+func (x *Wrapped) From(v any) any {
 	return x.T.From(v)
 }
 
-func (x *Wrapped) Default(key string) interface{} {
+func (x *Wrapped) Default(key string) any {
 	return x.T.Default(key)
 }
 

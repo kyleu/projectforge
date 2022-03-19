@@ -23,7 +23,7 @@ func (x *Nil) String() string {
 	return x.Key()
 }
 
-func (x *Nil) From(v interface{}) interface{} {
+func (x *Nil) From(v any) any {
 	switch v {
 	case nil:
 		return nil
@@ -32,6 +32,6 @@ func (x *Nil) From(v interface{}) interface{} {
 	}
 }
 
-func (x *Nil) Default(string) interface{} {
+func (x *Nil) Default(string) any {
 	return "<nil>"
 }

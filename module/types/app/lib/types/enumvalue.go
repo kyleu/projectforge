@@ -22,11 +22,11 @@ func (x *EnumValue) String() string {
 	return x.Key()
 }
 
-func (x *EnumValue) From(v interface{}) interface{} {
+func (x *EnumValue) From(v any) any {
 	return invalidInput(x.Key(), x)
 }
 
-func (x *EnumValue) Default(key string) interface{} {
+func (x *EnumValue) Default(key string) any {
 	return key
 }
 

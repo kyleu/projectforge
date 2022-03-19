@@ -22,11 +22,11 @@ func (x *UUID) String() string {
 	return x.Key()
 }
 
-func (x *UUID) From(v interface{}) interface{} {
+func (x *UUID) From(v any) any {
 	return invalidInput(x.Key(), x)
 }
 
-func (x *UUID) Default(string) interface{} {
+func (x *UUID) Default(string) any {
 	return "00000000-0000-0000-0000-000000000000"
 }
 

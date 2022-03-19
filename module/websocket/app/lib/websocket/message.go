@@ -16,7 +16,7 @@ type Message struct {
 }
 
 // Constructor.
-func NewMessage(userID *uuid.UUID, ch string, cmd string, param interface{}) *Message {
+func NewMessage(userID *uuid.UUID, ch string, cmd string, param any) *Message {
 	return &Message{From: userID, Channel: ch, Cmd: cmd, Param: util.ToJSONBytes(param, true)}
 }
 

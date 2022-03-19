@@ -157,8 +157,8 @@ func (a *Audit) Diff(ax *Audit) util.Diffs {
 	return diffs
 }
 
-func (a *Audit) ToData() []interface{} {
-	return []interface{}{a.ID, a.App, a.Act, a.Client, a.Server, a.User, a.Metadata, a.Message, a.Started, a.Completed}
+func (a *Audit) ToData() []any {
+	return []any{a.ID, a.App, a.Act, a.Client, a.Server, a.User, a.Metadata, a.Message, a.Started, a.Completed}
 }
 
 type Audits []*Audit

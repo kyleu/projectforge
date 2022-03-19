@@ -129,8 +129,8 @@ func (a *Record) Diff(ax *Record) util.Diffs {
 	return diffs
 }
 
-func (a *Record) ToData() []interface{} {
-	return []interface{}{a.ID, a.AuditID, a.T, a.PK, a.Changes, a.Metadata, a.Occurred}
+func (a *Record) ToData() []any {
+	return []any{a.ID, a.AuditID, a.T, a.PK, a.Changes, a.Metadata, a.Occurred}
 }
 
 type Records []*Record

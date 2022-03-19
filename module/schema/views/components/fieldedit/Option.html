@@ -2,7 +2,7 @@
   "{{{ .Package }}}/app/lib/types"
 ) %}
 
-{% func Option(x interface{}, t *types.Option, k string) %}{% stripspace %}
+{% func Option(x any, t *types.Option, k string) %}{% stripspace %}
   {% switch t.V.Key() %}
   {% case types.KeyBool %}
     {%= Boolean(x, true, k) %}

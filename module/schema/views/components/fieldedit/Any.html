@@ -4,7 +4,7 @@
   "{{{ .Package }}}/app/lib/types"
 ) %}
 
-{% func Any(x interface{}, t *types.Wrapped, k string) %}{% stripspace %}
+{% func Any(x any, t *types.Wrapped, k string) %}{% stripspace %}
   {% switch t.Key() %}
   {% case types.KeyAny %}
     {%= Default(x, t, k) %}
@@ -67,7 +67,7 @@
   {% endswitch %}
 {% endstripspace %}{% endfunc %}
 
-{% func Default(x interface{}, t types.Type, k string) %}{% stripspace %}
+{% func Default(x any, t types.Type, k string) %}{% stripspace %}
   {% code
     msg := fmt.Sprintf("unhandled type: %s (%T)", t.String(), x)
     if x == nil {

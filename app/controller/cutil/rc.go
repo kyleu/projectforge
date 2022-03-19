@@ -7,12 +7,12 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func RequestCtxToMap(rc *fasthttp.RequestCtx, data interface{}) map[string]interface{} {
+func RequestCtxToMap(rc *fasthttp.RequestCtx, data any) map[string]any {
 	reqHeaders := make(map[string]string, rc.Request.Header.Len())
 	rc.Request.Header.VisitAll(func(k, v []byte) {
 		reqHeaders[string(k)] = string(v)
 	})
-	req := map[string]interface{}{
+	req := map[string]any{
 		"id":          rc.ID(),
 		"url":         rc.URI().String(),
 		"protocol":    string(rc.Request.URI().Scheme()),
@@ -27,13 +27,13 @@ func RequestCtxToMap(rc *fasthttp.RequestCtx, data interface{}) map[string]inter
 	rc.Response.Header.VisitAll(func(k, v []byte) {
 		rspHeaders[string(k)] = string(v)
 	})
-	rsp := map[string]interface{}{
+	rsp := map[string]any{
 		"code":     rc.Response.StatusCode(),
 		"bodySize": len(rc.Response.Body()),
 		"headers":  rspHeaders,
 		"string":   rc.Response.String(),
 	}
-	return map[string]interface{}{"data": data, "request": req, "response": rsp}
+	return map[string]any{"data": data, "request": req, "response": rsp}
 }
 
 func RequestCtxBool(rc *fasthttp.RequestCtx, key string) bool {

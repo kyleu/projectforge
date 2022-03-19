@@ -26,7 +26,7 @@ var (
 )
 
 //line views/components/JSON.html:7
-func StreamJSONModal(qw422016 *qt422016.Writer, key string, title string, item interface{}, indent int) {
+func StreamJSONModal(qw422016 *qt422016.Writer, key string, title string, item any, indent int) {
 //line views/components/JSON.html:7
 	qw422016.N().S(`<div id="modal-`)
 //line views/components/JSON.html:8
@@ -45,7 +45,7 @@ func StreamJSONModal(qw422016 *qt422016.Writer, key string, title string, item i
 }
 
 //line views/components/JSON.html:20
-func WriteJSONModal(qq422016 qtio422016.Writer, key string, title string, item interface{}, indent int) {
+func WriteJSONModal(qq422016 qtio422016.Writer, key string, title string, item any, indent int) {
 //line views/components/JSON.html:20
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/components/JSON.html:20
@@ -56,7 +56,7 @@ func WriteJSONModal(qq422016 qtio422016.Writer, key string, title string, item i
 }
 
 //line views/components/JSON.html:20
-func JSONModal(key string, title string, item interface{}, indent int) string {
+func JSONModal(key string, title string, item any, indent int) string {
 //line views/components/JSON.html:20
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/components/JSON.html:20
@@ -71,7 +71,7 @@ func JSONModal(key string, title string, item interface{}, indent int) string {
 }
 
 //line views/components/JSON.html:22
-func StreamJSON(qw422016 *qt422016.Writer, v interface{}) {
+func StreamJSON(qw422016 *qt422016.Writer, v any) {
 //line views/components/JSON.html:24
 	b, ok := v.([]byte)
 	if ok {
@@ -95,7 +95,7 @@ func StreamJSON(qw422016 *qt422016.Writer, v interface{}) {
 }
 
 //line views/components/JSON.html:35
-func WriteJSON(qq422016 qtio422016.Writer, v interface{}) {
+func WriteJSON(qq422016 qtio422016.Writer, v any) {
 //line views/components/JSON.html:35
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/components/JSON.html:35
@@ -106,7 +106,7 @@ func WriteJSON(qq422016 qtio422016.Writer, v interface{}) {
 }
 
 //line views/components/JSON.html:35
-func JSON(v interface{}) string {
+func JSON(v any) string {
 //line views/components/JSON.html:35
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/components/JSON.html:35

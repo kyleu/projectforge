@@ -4,6 +4,8 @@ package types
 import (
 	"strings"
 
+	"golang.org/x/exp/slices"
+
 	"projectforge.dev/projectforge/app/util"
 )
 
@@ -30,16 +32,16 @@ func (x *Reference) String() string {
 	return "ref:" + strings.Join(x.Path(), ".")
 }
 
-func (x *Reference) From(v interface{}) interface{} {
+func (x *Reference) From(v any) any {
 	return invalidInput(x.Key(), x)
 }
 
 func (x *Reference) Path() util.Pkg {
-	ret := util.StringArrayCopy(x.Pkg)
+	ret := slices.Clone(x.Pkg)
 	return append(ret, x.K)
 }
 
-func (x *Reference) Default(string) interface{} {
+func (x *Reference) Default(string) any {
 	return ""
 }
 

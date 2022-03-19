@@ -91,7 +91,7 @@ func modelDTOToModel(m *model.Model) *golang.Block {
 		k := util.StringPad(c.Proper()+":", pad)
 		switch c.Type.Key() {
 		case types.KeyAny:
-			ret.W("\tvar %sArg interface{}", c.Camel())
+			ret.W("\tvar %sArg any", c.Camel())
 			ret.W("\t_ = util.FromJSON(d.%s, &%sArg)", c.Proper(), c.Camel())
 			refs = append(refs, fmt.Sprintf("%s %sArg", k, c.Camel()))
 		case types.KeyMap, types.KeyValueMap:

@@ -33,7 +33,7 @@ func (x *String) String() string {
 	return x.Key()
 }
 
-func (x *String) From(v interface{}) interface{} {
+func (x *String) From(v any) any {
 	switch t := v.(type) {
 	case string:
 		return t
@@ -42,7 +42,7 @@ func (x *String) From(v interface{}) interface{} {
 	}
 }
 
-func (x *String) Default(string) interface{} {
+func (x *String) Default(string) any {
 	return ""
 }
 

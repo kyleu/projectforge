@@ -6,7 +6,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-const defaultGoVersion = "1.17"
+const defaultGoVersion = "1.18"
 
 type ModuleDef struct {
 	Key  string `json:"key"`
@@ -66,7 +66,7 @@ func (i *Info) AuthorIDSafe() string {
 	return strings.Join(ret, " ")
 }
 
-func (i *Info) ModuleArg(mod string) interface{} {
+func (i *Info) ModuleArg(mod string) any {
 	if i == nil || i.ModuleArgs == nil {
 		return nil
 	}

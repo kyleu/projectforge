@@ -48,8 +48,7 @@ func exportViewTableFunc(m *model.Model, models model.Models) *golang.Block {
 
 func viewTableColumn(ret *golang.Block, models model.Models, m *model.Model, link bool, col *model.Column, prefix string, indent int) {
 	ind := util.StringRepeat("  ", indent)
-	rels := m.RelationsFor(col)
-	if len(rels) == 0 {
+	if rels := m.RelationsFor(col); len(rels) == 0 {
 		switch {
 		case col.PK && link:
 			ret.W(ind+"<td><a href=%q>%s</a></td>", m.LinkURL(prefix), col.ToGoViewString(prefix))

@@ -29,11 +29,11 @@ func (x *Map) String() string {
 	return fmt.Sprintf("%s[%s]%s", x.Key(), x.K.String(), x.V.String())
 }
 
-func (x *Map) From(v interface{}) interface{} {
+func (x *Map) From(v any) any {
 	return invalidInput(x.Key(), x)
 }
 
-func (x *Map) Default(string) interface{} {
+func (x *Map) Default(string) any {
 	return ""
 }
 

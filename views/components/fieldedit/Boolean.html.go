@@ -20,7 +20,7 @@ var (
 )
 
 //line views/components/fieldedit/Boolean.html:2
-func StreamBoolean(qw422016 *qt422016.Writer, x interface{}, nullable bool, k string) {
+func StreamBoolean(qw422016 *qt422016.Writer, x any, nullable bool, k string) {
 //line views/components/fieldedit/Boolean.html:3
 	b, isBool := x.(bool)
 
@@ -86,7 +86,7 @@ func StreamBoolean(qw422016 *qt422016.Writer, x interface{}, nullable bool, k st
 }
 
 //line views/components/fieldedit/Boolean.html:23
-func WriteBoolean(qq422016 qtio422016.Writer, x interface{}, nullable bool, k string) {
+func WriteBoolean(qq422016 qtio422016.Writer, x any, nullable bool, k string) {
 //line views/components/fieldedit/Boolean.html:23
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/components/fieldedit/Boolean.html:23
@@ -97,7 +97,7 @@ func WriteBoolean(qq422016 qtio422016.Writer, x interface{}, nullable bool, k st
 }
 
 //line views/components/fieldedit/Boolean.html:23
-func Boolean(x interface{}, nullable bool, k string) string {
+func Boolean(x any, nullable bool, k string) string {
 //line views/components/fieldedit/Boolean.html:23
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/components/fieldedit/Boolean.html:23

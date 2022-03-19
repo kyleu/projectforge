@@ -23,11 +23,11 @@ func (x *Bit) String() string {
 	return x.Key()
 }
 
-func (x *Bit) From(v interface{}) interface{} {
+func (x *Bit) From(v any) any {
 	return invalidInput(x.Key(), x)
 }
 
-func (x *Bit) Default(string) interface{} {
+func (x *Bit) Default(string) any {
 	return 0
 }
 

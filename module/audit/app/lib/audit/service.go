@@ -24,7 +24,7 @@ func NewService(db *database.Service, logger *zap.SugaredLogger) *Service {
 	return &Service{db: db, logger: logger}
 }
 
-func (s *Service) ApplyObj(ctx context.Context, a *Audit, l interface{}, r interface{}, md util.ValueMap) (*Audit, Records, error) {
+func (s *Service) ApplyObj(ctx context.Context, a *Audit, l any, r any, md util.ValueMap) (*Audit, Records, error) {
 	o := r
 	if o == nil {
 		o = l

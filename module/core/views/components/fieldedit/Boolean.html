@@ -1,4 +1,4 @@
-{% func Boolean(x interface{}, nullable bool, k string) %}{% stripspace %}
+{% func Boolean(x any, nullable bool, k string) %}{% stripspace %}
   {% code b, isBool := x.(bool) %}
   {% if isBool && b %}
     <label class="radio-label"><input value="true" name="{%s k %}" type="radio" checked="checked" /> true</label>

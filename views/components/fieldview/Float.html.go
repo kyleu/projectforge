@@ -20,14 +20,14 @@ var (
 )
 
 //line views/components/fieldview/Float.html:2
-func StreamFloat(qw422016 *qt422016.Writer, v interface{}) {
+func StreamFloat(qw422016 *qt422016.Writer, v any) {
 //line views/components/fieldview/Float.html:3
 	qw422016.E().V(v)
 //line views/components/fieldview/Float.html:4
 }
 
 //line views/components/fieldview/Float.html:4
-func WriteFloat(qq422016 qtio422016.Writer, v interface{}) {
+func WriteFloat(qq422016 qtio422016.Writer, v any) {
 //line views/components/fieldview/Float.html:4
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/components/fieldview/Float.html:4
@@ -38,7 +38,7 @@ func WriteFloat(qq422016 qtio422016.Writer, v interface{}) {
 }
 
 //line views/components/fieldview/Float.html:4
-func Float(v interface{}) string {
+func Float(v any) string {
 //line views/components/fieldview/Float.html:4
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/components/fieldview/Float.html:4

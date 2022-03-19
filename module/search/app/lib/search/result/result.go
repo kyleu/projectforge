@@ -6,17 +6,17 @@ import (
 )
 
 type Result struct {
-	Type    string      `json:"type,omitempty"`
-	ID      string      `json:"id,omitempty"`
-	Title   string      `json:"title,omitempty"`
-	Icon    string      `json:"icon,omitempty"`
-	URL     string      `json:"url,omitempty"`
-	Matches Matches     `json:"matches,omitempty"`
-	Data    interface{} `json:"data,omitempty"`
-	HTML    string      `json:"-"`
+	Type    string  `json:"type,omitempty"`
+	ID      string  `json:"id,omitempty"`
+	Title   string  `json:"title,omitempty"`
+	Icon    string  `json:"icon,omitempty"`
+	URL     string  `json:"url,omitempty"`
+	Matches Matches `json:"matches,omitempty"`
+	Data    any     `json:"data,omitempty"`
+	HTML    string  `json:"-"`
 }
 
-func NewResult(t string, id string, url string, title string, icon string, obj interface{}, q string) *Result {
+func NewResult(t string, id string, url string, title string, icon string, obj any, q string) *Result {
 	return &Result{Type: t, ID: id, URL: url, Title: title, Icon: icon, Matches: MatchesFor("", obj, q), Data: obj}
 }
 

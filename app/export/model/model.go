@@ -1,6 +1,8 @@
 package model
 
 import (
+	"golang.org/x/exp/slices"
+
 	"projectforge.dev/projectforge/app/lib/filter"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -26,7 +28,7 @@ type Model struct {
 }
 
 func (m *Model) HasTag(t string) bool {
-	return util.StringArrayContains(m.Tags, t)
+	return slices.Contains(m.Tags, t)
 }
 
 func (m *Model) PKs() Columns {
@@ -68,7 +70,7 @@ func (m *Model) LinkURL(prefix string) string {
 func (m *Model) RelationsFor(col *Column) Relations {
 	var ret Relations
 	for _, r := range m.Relations {
-		if util.StringArrayContains(r.Src, col.Name) {
+		if slices.Contains(r.Src, col.Name) {
 			ret = append(ret, r)
 		}
 	}

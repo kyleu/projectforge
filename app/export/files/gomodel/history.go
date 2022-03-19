@@ -40,8 +40,8 @@ func modelHistory(m *model.Model) *golang.Block {
 
 func modelHistoryToData(m *model.Model) *golang.Block {
 	ret := golang.NewBlock(m.Proper()+"HistoryToData", "func")
-	ret.W("func (h *%sHistory) ToData() []interface{} {", m.Proper())
-	ret.W("\treturn []interface{}{")
+	ret.W("func (h *%sHistory) ToData() []any {", m.Proper())
+	ret.W("\treturn []any{")
 	ret.W("\t\th.ID,")
 	for _, pk := range m.PKs() {
 		ret.W("\t\th.%s%s,", m.Proper(), pk.Proper())

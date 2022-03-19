@@ -28,11 +28,11 @@ type Service struct {
 	onOpen        ConnectEvent
 	handler       Handler
 	onClose       ConnectEvent
-	Context       interface{}
+	Context       any
 }
 
 // Creates a new service with the provided handler functions.
-func NewService(logger *zap.SugaredLogger, onOpen ConnectEvent, handler Handler, onClose ConnectEvent, ctx interface{}) *Service {
+func NewService(logger *zap.SugaredLogger, onOpen ConnectEvent, handler Handler, onClose ConnectEvent, ctx any) *Service {
 	return &Service{
 		connections: make(map[uuid.UUID]*Connection),
 		channels:    make(map[string]*Channel),

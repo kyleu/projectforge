@@ -44,7 +44,7 @@ func Handle(path []string, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.Pag
 		}
 	case keyDownload:
 		dls := download.GetLinks(as.BuildInfo.Version)
-		ps.Data = map[string]interface{}{"base": "https://github.com/kyleu/projectforge/releases/download/v" + as.BuildInfo.Version, "links": dls}
+		ps.Data = map[string]any{"base": "https://github.com/kyleu/projectforge/releases/download/v" + as.BuildInfo.Version, "links": dls}
 		page = &vsite.Download{Links: dls}
 	case keyInstall:
 		page, err = mdTemplate("Installation", "This static page contains installation instructions", "installation.md", "code", ps)
@@ -62,8 +62,8 @@ func Handle(path []string, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.Pag
 	return "", page, bc, err
 }
 
-func siteData(result string, kvs ...string) map[string]interface{} {
-	ret := map[string]interface{}{"app": util.AppName, "url": util.AppURL, "result": result}
+func siteData(result string, kvs ...string) map[string]any {
+	ret := map[string]any{"app": util.AppName, "url": util.AppURL, "result": result}
 	for i := 0; i < len(kvs); i += 2 {
 		ret[kvs[i]] = kvs[i+1]
 	}

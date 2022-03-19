@@ -10,7 +10,7 @@ func ToGoType(t types.Type, nullable bool) string {
 	var ret string
 	switch t.Key() {
 	case types.KeyAny:
-		ret = "interface{}"
+		ret = "any"
 	case types.KeyBool:
 		ret = types.KeyBool
 	case types.KeyInt:

@@ -25,11 +25,11 @@ func (x *Float) String() string {
 	return x.Key()
 }
 
-func (x *Float) From(v interface{}) interface{} {
+func (x *Float) From(v any) any {
 	return invalidInput(x.Key(), x)
 }
 
-func (x *Float) Default(string) interface{} {
+func (x *Float) Default(string) any {
 	return 1.0
 }
 

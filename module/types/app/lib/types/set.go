@@ -28,11 +28,11 @@ func (x *Set) String() string {
 	return fmt.Sprintf("%s[%s]", x.Key(), x.V.String())
 }
 
-func (x *Set) From(v interface{}) interface{} {
+func (x *Set) From(v any) any {
 	return invalidInput(x.Key(), x)
 }
 
-func (x *Set) Default(string) interface{} {
+func (x *Set) Default(string) any {
 	return emptyList
 }
 

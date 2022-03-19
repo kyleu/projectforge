@@ -10,7 +10,7 @@ func (m *Model) Camel() string {
 	return util.StringToLowerCamel(m.Name)
 }
 
-func (m *Model) CamelPlural() interface{} {
+func (m *Model) CamelPlural() any {
 	return util.StringToPlural(m.Camel())
 }
 
@@ -68,11 +68,10 @@ func (m *Model) Route() string {
 }
 
 func (m *Model) IconSafe() string {
-	_, ok := util.SVGLibrary[m.Icon]
-	if !ok {
-		return "star"
+	if _, ok := util.SVGLibrary[m.Icon]; ok {
+		return m.Icon
 	}
-	return m.Icon
+	return "star"
 }
 
 func (m *Model) URLPath(prefix string) string {

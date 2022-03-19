@@ -25,11 +25,11 @@ func (x *TimestampZoned) String() string {
 	return x.Key()
 }
 
-func (x *TimestampZoned) From(v interface{}) interface{} {
+func (x *TimestampZoned) From(v any) any {
 	return invalidInput(x.Key(), x)
 }
 
-func (x *TimestampZoned) Default(string) interface{} {
+func (x *TimestampZoned) Default(string) any {
 	return time.Now()
 }
 

@@ -3,6 +3,6 @@
   "projectforge.dev/projectforge/views/components"
 ) %}
 
-{% func Int(x interface{}, k string) %}{% stripspace %}
+{% func Int(x any, k string) %}{% stripspace %}
   {%= components.FormInputNumber(k, "", x) %}
 {% endstripspace %}{% endfunc %}

@@ -23,11 +23,11 @@ func (x *XML) String() string {
 	return x.Key()
 }
 
-func (x *XML) From(v interface{}) interface{} {
+func (x *XML) From(v any) any {
 	return invalidInput(x.Key(), x)
 }
 
-func (x *XML) Default(string) interface{} {
+func (x *XML) Default(string) any {
 	return "<todo />"
 }
 

@@ -10,7 +10,7 @@ import (
 	"{{{ .Package }}}/app/lib/menu"
 )
 
-type runFn func(ctx context.Context, st *app.State, logger *zap.SugaredLogger) (interface{}, error)
+type runFn func(ctx context.Context, st *app.State, logger *zap.SugaredLogger) (any, error)
 
 type Sandbox struct {
 	Key   string `json:"key,omitempty"`

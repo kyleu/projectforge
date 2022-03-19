@@ -17,7 +17,7 @@ func (r *Relation) SrcColumns(m *Model) Columns {
 	return colsFor(r.Src, m)
 }
 
-func (r *Relation) SrcQuoted() interface{} {
+func (r *Relation) SrcQuoted() any {
 	return strings.Join(util.StringArrayQuoted(r.Src), ", ")
 }
 
@@ -25,11 +25,11 @@ func (r *Relation) TgtColumns(m *Model) Columns {
 	return colsFor(r.Tgt, m)
 }
 
-func (r *Relation) TgtQuoted() interface{} {
+func (r *Relation) TgtQuoted() any {
 	return strings.Join(util.StringArrayQuoted(r.Tgt), ", ")
 }
 
-func (r *Relation) WebPath(src *Model, tgt *Model, prefix string) interface{} {
+func (r *Relation) WebPath(src *Model, tgt *Model, prefix string) any {
 	url := "`/" + tgt.Package + "`"
 	for _, s := range r.Src {
 		c := src.Columns.Get(s)

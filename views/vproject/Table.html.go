@@ -9,88 +9,93 @@ import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/components"
 )
 
-//line views/vproject/Table.html:8
+//line views/vproject/Table.html:9
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vproject/Table.html:8
+//line views/vproject/Table.html:9
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vproject/Table.html:8
+//line views/vproject/Table.html:9
 func StreamTable(qw422016 *qt422016.Writer, prjs project.Projects, as *app.State, ps *cutil.PageState) {
-//line views/vproject/Table.html:8
+//line views/vproject/Table.html:9
 	qw422016.N().S(`
   <div class="card">
     <div class="right"><a href="/p/new"><button>New</button></a></div>
-    <h3>Available Projects</h3>
+    <h3>`)
+//line views/vproject/Table.html:12
+	qw422016.E().S(util.StringPlural(len(prjs), "Available Project"))
+//line views/vproject/Table.html:12
+	qw422016.N().S(`</h3>
     <table class="mt min-200">
       <tbody>
 `)
-//line views/vproject/Table.html:14
+//line views/vproject/Table.html:15
 	for _, prj := range prjs {
-//line views/vproject/Table.html:14
+//line views/vproject/Table.html:15
 		qw422016.N().S(`        <tr>
           <td class="shrink"><a href="/p/`)
-//line views/vproject/Table.html:16
+//line views/vproject/Table.html:17
 		qw422016.E().S(prj.Key)
-//line views/vproject/Table.html:16
+//line views/vproject/Table.html:17
 		qw422016.N().S(`">`)
-//line views/vproject/Table.html:16
+//line views/vproject/Table.html:17
 		components.StreamSVGRef(qw422016, prj.IconSafe(), 16, 16, "icon", ps)
-//line views/vproject/Table.html:16
+//line views/vproject/Table.html:17
 		qw422016.N().S(` `)
-//line views/vproject/Table.html:16
+//line views/vproject/Table.html:17
 		qw422016.E().S(prj.Title())
-//line views/vproject/Table.html:16
+//line views/vproject/Table.html:17
 		qw422016.N().S(`</a></td>
           <td>`)
-//line views/vproject/Table.html:17
+//line views/vproject/Table.html:18
 		qw422016.E().S(prj.Package)
-//line views/vproject/Table.html:17
+//line views/vproject/Table.html:18
 		qw422016.N().S(`</td>
         </tr>
 `)
-//line views/vproject/Table.html:19
+//line views/vproject/Table.html:20
 	}
-//line views/vproject/Table.html:19
+//line views/vproject/Table.html:20
 	qw422016.N().S(`      </tbody>
     </table>
   </div>
 `)
-//line views/vproject/Table.html:23
+//line views/vproject/Table.html:24
 }
 
-//line views/vproject/Table.html:23
+//line views/vproject/Table.html:24
 func WriteTable(qq422016 qtio422016.Writer, prjs project.Projects, as *app.State, ps *cutil.PageState) {
-//line views/vproject/Table.html:23
+//line views/vproject/Table.html:24
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/Table.html:23
+//line views/vproject/Table.html:24
 	StreamTable(qw422016, prjs, as, ps)
-//line views/vproject/Table.html:23
+//line views/vproject/Table.html:24
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/Table.html:23
+//line views/vproject/Table.html:24
 }
 
-//line views/vproject/Table.html:23
+//line views/vproject/Table.html:24
 func Table(prjs project.Projects, as *app.State, ps *cutil.PageState) string {
-//line views/vproject/Table.html:23
+//line views/vproject/Table.html:24
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/Table.html:23
+//line views/vproject/Table.html:24
 	WriteTable(qb422016, prjs, as, ps)
-//line views/vproject/Table.html:23
+//line views/vproject/Table.html:24
 	qs422016 := string(qb422016.B)
-//line views/vproject/Table.html:23
+//line views/vproject/Table.html:24
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/Table.html:23
+//line views/vproject/Table.html:24
 	return qs422016
-//line views/vproject/Table.html:23
+//line views/vproject/Table.html:24
 }

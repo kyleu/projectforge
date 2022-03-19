@@ -3,6 +3,9 @@ issues:
   max-issues-per-linter: 0
   max-same-issues: 0
 
+run:
+  go: 1.18
+
 output:
   sort-results: true
 
@@ -30,6 +33,7 @@ linters-settings:
       - commentedOutCode
       - paramTypeCombine
       - unnamedResult
+      - hugeParam
   gocyclo:
     min-complexity: 30
   goimports:
@@ -72,6 +76,7 @@ linters:
   enable:
     - asciicheck
     - bodyclose
+    - contextcheck
     # - cyclop
     - deadcode
     - depguard
@@ -91,7 +96,7 @@ linters:
     - gochecknoinits
     - gocognit
     - goconst
-    - gocritic
+    ## go118 - gocritic
     - gocyclo
     - godot
     - godox
@@ -115,6 +120,7 @@ linters:
     - misspell
     - nakedret
     # - nestif
+    - nilerr
     - noctx
     - nolintlint
     - paralleltest

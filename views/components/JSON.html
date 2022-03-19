@@ -4,7 +4,7 @@
   "projectforge.dev/projectforge/app/util"
 ) %}
 
-{% func JSONModal(key string, title string, item interface{}, indent int) %}{% stripspace %}
+{% func JSONModal(key string, title string, item any, indent int) %}{% stripspace %}
   <div id="modal-{%s key %}" class="modal" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
@@ -19,7 +19,7 @@
   </div>
 {% endstripspace %}{% endfunc %}
 
-{% func JSON(v interface{}) %}{% stripspace %}
+{% func JSON(v any) %}{% stripspace %}
   {% code
     b, ok := v.([]byte)
     if ok {

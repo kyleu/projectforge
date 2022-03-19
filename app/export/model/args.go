@@ -2,6 +2,8 @@ package model
 
 import (
 	"github.com/pkg/errors"
+	"golang.org/x/exp/slices"
+
 	"projectforge.dev/projectforge/app/util"
 )
 
@@ -12,7 +14,7 @@ type Args struct {
 }
 
 func (a *Args) HasModule(key string) bool {
-	return util.StringArrayContains(a.Modules, key)
+	return slices.Contains(a.Modules, key)
 }
 
 func (a *Args) Validate() error {

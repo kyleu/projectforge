@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"projectforge.dev/projectforge/app/util"
+	"golang.org/x/exp/slices"
 )
 
 const goStdBin = "go"
@@ -55,7 +55,7 @@ func (t *TemplateContext) IgnoredQuoted() string {
 }
 
 func (t *TemplateContext) HasModule(m string) bool {
-	return util.StringArrayContains(t.Modules, m)
+	return slices.Contains(t.Modules, m)
 }
 
 func (t *TemplateContext) ModuleMarkdown() string {

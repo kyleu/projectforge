@@ -3,6 +3,8 @@ package action
 import (
 	"strings"
 
+	"golang.org/x/exp/slices"
+
 	"projectforge.dev/projectforge/app/diff"
 	"projectforge.dev/projectforge/app/export/model"
 	"projectforge.dev/projectforge/app/file"
@@ -56,7 +58,7 @@ func onAudit(pm *PrjAndMods) *Result {
 
 	var audits []*diff.Diff
 	for _, g := range generated {
-		if !util.StringArrayContains(src, g) {
+		if !slices.Contains(src, g) {
 			if (!strings.HasSuffix(g, "client.js.map")) && (!strings.HasSuffix(g, "file/header.go")) {
 				audits = append(audits, &diff.Diff{Path: g, Status: diff.StatusMissing})
 			}

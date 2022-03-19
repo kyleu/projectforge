@@ -5,6 +5,27 @@
   "projectforge.dev/projectforge/views/vutil"
 ) %}
 
+{% func ChoicePanel(themes theme.Themes, indent int, ps *cutil.PageState) %}{% stripspace %}
+  {%= vutil.Indent(true, indent) %}
+  <tr>
+    {%= vutil.Indent(true, indent + 1) %}
+    <th class="shrink"><label>Theme</label></th>
+    {%= vutil.Indent(true, indent + 1) %}
+    <td>
+      {%= vutil.Indent(true, indent + 2) %}
+      <div class="right"><a href="/theme">Edit Themes</a></div>
+      {% code
+        sel := ps.Profile.Theme
+        if sel == "" {
+          sel = "default"
+        }
+      %}
+      {%= Choice(themes, sel, indent + 2, ps) %}
+    </td>
+  {%= vutil.Indent(true, indent) %}
+  </tr>
+{% endstripspace %}{% endfunc %}
+
 {% func Choice(themes theme.Themes, selected string, indent int, ps *cutil.PageState) %}{% stripspace %}
   {%= vutil.Indent(true, indent) %}
   <div class="choice">

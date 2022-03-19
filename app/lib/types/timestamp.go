@@ -25,11 +25,11 @@ func (x *Timestamp) String() string {
 	return x.Key()
 }
 
-func (x *Timestamp) From(v interface{}) interface{} {
+func (x *Timestamp) From(v any) any {
 	return invalidInput(x.Key(), x)
 }
 
-func (x *Timestamp) Default(string) interface{} {
+func (x *Timestamp) Default(string) any {
 	return time.Now()
 }
 

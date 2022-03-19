@@ -24,11 +24,11 @@ func (x *Unknown) String() string {
 	return x.Key() + "(" + x.X + ")"
 }
 
-func (x *Unknown) From(v interface{}) interface{} {
+func (x *Unknown) From(v any) any {
 	return v
 }
 
-func (x *Unknown) Default(string) interface{} {
+func (x *Unknown) Default(string) any {
 	return x.X
 }
 

@@ -27,74 +27,135 @@ var (
 )
 
 //line views/vtheme/Choice.html:8
-func StreamChoice(qw422016 *qt422016.Writer, themes theme.Themes, selected string, indent int, ps *cutil.PageState) {
+func StreamChoicePanel(qw422016 *qt422016.Writer, themes theme.Themes, indent int, ps *cutil.PageState) {
 //line views/vtheme/Choice.html:9
 	vutil.StreamIndent(qw422016, true, indent)
 //line views/vtheme/Choice.html:9
-	qw422016.N().S(`<div class="choice">`)
+	qw422016.N().S(`<tr>`)
 //line views/vtheme/Choice.html:11
-	for _, t := range themes {
-//line views/vtheme/Choice.html:12
-		vutil.StreamIndent(qw422016, true, indent+1)
-//line views/vtheme/Choice.html:12
-		qw422016.N().S(`<label title="`)
+	vutil.StreamIndent(qw422016, true, indent+1)
+//line views/vtheme/Choice.html:11
+	qw422016.N().S(`<th class="shrink"><label>Theme</label></th>`)
 //line views/vtheme/Choice.html:13
-		qw422016.E().S(t.Key)
+	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/vtheme/Choice.html:13
-		qw422016.N().S(`">`)
-//line views/vtheme/Choice.html:14
-		if t.Key == selected {
-//line views/vtheme/Choice.html:14
-			qw422016.N().S(`<input type="radio" name="theme" value="`)
+	qw422016.N().S(`<td>`)
 //line views/vtheme/Choice.html:15
-			qw422016.E().S(t.Key)
+	vutil.StreamIndent(qw422016, true, indent+2)
 //line views/vtheme/Choice.html:15
-			qw422016.N().S(`" checked="checked" />`)
-//line views/vtheme/Choice.html:16
-		} else {
-//line views/vtheme/Choice.html:16
-			qw422016.N().S(`<input type="radio" name="theme" value="`)
-//line views/vtheme/Choice.html:17
-			qw422016.E().S(t.Key)
-//line views/vtheme/Choice.html:17
-			qw422016.N().S(`" />`)
+	qw422016.N().S(`<div class="right"><a href="/theme">Edit Themes</a></div>`)
 //line views/vtheme/Choice.html:18
-		}
-//line views/vtheme/Choice.html:19
-		StreamMockupTheme(qw422016, t, true, indent+2, ps)
-//line views/vtheme/Choice.html:19
-		qw422016.N().S(`</label>`)
-//line views/vtheme/Choice.html:21
+	sel := ps.Profile.Theme
+	if sel == "" {
+		sel = "default"
 	}
-//line views/vtheme/Choice.html:22
+
+//line views/vtheme/Choice.html:23
+	StreamChoice(qw422016, themes, sel, indent+2, ps)
+//line views/vtheme/Choice.html:23
+	qw422016.N().S(`</td>`)
+//line views/vtheme/Choice.html:25
 	vutil.StreamIndent(qw422016, true, indent)
-//line views/vtheme/Choice.html:22
-	qw422016.N().S(`</div>`)
-//line views/vtheme/Choice.html:24
+//line views/vtheme/Choice.html:25
+	qw422016.N().S(`</tr>`)
+//line views/vtheme/Choice.html:27
 }
 
-//line views/vtheme/Choice.html:24
-func WriteChoice(qq422016 qtio422016.Writer, themes theme.Themes, selected string, indent int, ps *cutil.PageState) {
-//line views/vtheme/Choice.html:24
+//line views/vtheme/Choice.html:27
+func WriteChoicePanel(qq422016 qtio422016.Writer, themes theme.Themes, indent int, ps *cutil.PageState) {
+//line views/vtheme/Choice.html:27
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vtheme/Choice.html:24
-	StreamChoice(qw422016, themes, selected, indent, ps)
-//line views/vtheme/Choice.html:24
+//line views/vtheme/Choice.html:27
+	StreamChoicePanel(qw422016, themes, indent, ps)
+//line views/vtheme/Choice.html:27
 	qt422016.ReleaseWriter(qw422016)
-//line views/vtheme/Choice.html:24
+//line views/vtheme/Choice.html:27
 }
 
-//line views/vtheme/Choice.html:24
-func Choice(themes theme.Themes, selected string, indent int, ps *cutil.PageState) string {
-//line views/vtheme/Choice.html:24
+//line views/vtheme/Choice.html:27
+func ChoicePanel(themes theme.Themes, indent int, ps *cutil.PageState) string {
+//line views/vtheme/Choice.html:27
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vtheme/Choice.html:24
-	WriteChoice(qb422016, themes, selected, indent, ps)
-//line views/vtheme/Choice.html:24
+//line views/vtheme/Choice.html:27
+	WriteChoicePanel(qb422016, themes, indent, ps)
+//line views/vtheme/Choice.html:27
 	qs422016 := string(qb422016.B)
-//line views/vtheme/Choice.html:24
+//line views/vtheme/Choice.html:27
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vtheme/Choice.html:24
+//line views/vtheme/Choice.html:27
 	return qs422016
-//line views/vtheme/Choice.html:24
+//line views/vtheme/Choice.html:27
+}
+
+//line views/vtheme/Choice.html:29
+func StreamChoice(qw422016 *qt422016.Writer, themes theme.Themes, selected string, indent int, ps *cutil.PageState) {
+//line views/vtheme/Choice.html:30
+	vutil.StreamIndent(qw422016, true, indent)
+//line views/vtheme/Choice.html:30
+	qw422016.N().S(`<div class="choice">`)
+//line views/vtheme/Choice.html:32
+	for _, t := range themes {
+//line views/vtheme/Choice.html:33
+		vutil.StreamIndent(qw422016, true, indent+1)
+//line views/vtheme/Choice.html:33
+		qw422016.N().S(`<label title="`)
+//line views/vtheme/Choice.html:34
+		qw422016.E().S(t.Key)
+//line views/vtheme/Choice.html:34
+		qw422016.N().S(`">`)
+//line views/vtheme/Choice.html:35
+		if t.Key == selected {
+//line views/vtheme/Choice.html:35
+			qw422016.N().S(`<input type="radio" name="theme" value="`)
+//line views/vtheme/Choice.html:36
+			qw422016.E().S(t.Key)
+//line views/vtheme/Choice.html:36
+			qw422016.N().S(`" checked="checked" />`)
+//line views/vtheme/Choice.html:37
+		} else {
+//line views/vtheme/Choice.html:37
+			qw422016.N().S(`<input type="radio" name="theme" value="`)
+//line views/vtheme/Choice.html:38
+			qw422016.E().S(t.Key)
+//line views/vtheme/Choice.html:38
+			qw422016.N().S(`" />`)
+//line views/vtheme/Choice.html:39
+		}
+//line views/vtheme/Choice.html:40
+		StreamMockupTheme(qw422016, t, true, indent+2, ps)
+//line views/vtheme/Choice.html:40
+		qw422016.N().S(`</label>`)
+//line views/vtheme/Choice.html:42
+	}
+//line views/vtheme/Choice.html:43
+	vutil.StreamIndent(qw422016, true, indent)
+//line views/vtheme/Choice.html:43
+	qw422016.N().S(`</div>`)
+//line views/vtheme/Choice.html:45
+}
+
+//line views/vtheme/Choice.html:45
+func WriteChoice(qq422016 qtio422016.Writer, themes theme.Themes, selected string, indent int, ps *cutil.PageState) {
+//line views/vtheme/Choice.html:45
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vtheme/Choice.html:45
+	StreamChoice(qw422016, themes, selected, indent, ps)
+//line views/vtheme/Choice.html:45
+	qt422016.ReleaseWriter(qw422016)
+//line views/vtheme/Choice.html:45
+}
+
+//line views/vtheme/Choice.html:45
+func Choice(themes theme.Themes, selected string, indent int, ps *cutil.PageState) string {
+//line views/vtheme/Choice.html:45
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vtheme/Choice.html:45
+	WriteChoice(qb422016, themes, selected, indent, ps)
+//line views/vtheme/Choice.html:45
+	qs422016 := string(qb422016.B)
+//line views/vtheme/Choice.html:45
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vtheme/Choice.html:45
+	return qs422016
+//line views/vtheme/Choice.html:45
 }

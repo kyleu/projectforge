@@ -28,20 +28,20 @@ func WriteCORS(rc *fasthttp.RequestCtx) {
 	rc.Response.Header.Set("Access-Control-Allow-Credentials", util.BoolTrue)
 }
 
-func RespondDebug(rc *fasthttp.RequestCtx, filename string, body interface{}) (string, error) {
+func RespondDebug(rc *fasthttp.RequestCtx, filename string, body any) (string, error) {
 	return RespondJSON(rc, filename, RequestCtxToMap(rc, body))
 }
 
-func RespondJSON(rc *fasthttp.RequestCtx, filename string, body interface{}) (string, error) {
+func RespondJSON(rc *fasthttp.RequestCtx, filename string, body any) (string, error) {
 	b := util.ToJSONBytes(body, true)
 	return RespondMIME(filename, mimeJSON, "json", b, rc)
 }
 
 type XMLResponse struct {
-	Result interface{} `xml:"result"`
+	Result any `xml:"result"`
 }
 
-func RespondXML(rc *fasthttp.RequestCtx, filename string, body interface{}) (string, error) {
+func RespondXML(rc *fasthttp.RequestCtx, filename string, body any) (string, error) {
 	body = XMLResponse{Result: body}
 	b, err := xml.Marshal(body)
 	if err != nil {
@@ -50,7 +50,7 @@ func RespondXML(rc *fasthttp.RequestCtx, filename string, body interface{}) (str
 	return RespondMIME(filename, mimeXML, "xml", b, rc)
 }
 
-func RespondYAML(rc *fasthttp.RequestCtx, filename string, body interface{}) (string, error) {
+func RespondYAML(rc *fasthttp.RequestCtx, filename string, body any) (string, error) {
 	b, err := yaml.Marshal(body)
 	if err != nil {
 		return "", err

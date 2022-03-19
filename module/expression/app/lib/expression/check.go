@@ -23,7 +23,7 @@ func NewEngine(opts ...cel.EnvOption) (*Engine, error) {
 	return &Engine{env: env}, err
 }
 
-func (e *Engine) Check(as string, params map[string]interface{}, logger *zap.SugaredLogger) bool {
+func (e *Engine) Check(as string, params map[string]any, logger *zap.SugaredLogger) bool {
 	expressionMU.Lock()
 	ex, ok := expressionCache[as]
 	expressionMU.Unlock()

@@ -20,14 +20,14 @@ var (
 )
 
 //line views/components/fieldview/Int.html:2
-func StreamInt(qw422016 *qt422016.Writer, v interface{}) {
+func StreamInt(qw422016 *qt422016.Writer, v any) {
 //line views/components/fieldview/Int.html:3
 	qw422016.E().V(v)
 //line views/components/fieldview/Int.html:4
 }
 
 //line views/components/fieldview/Int.html:4
-func WriteInt(qq422016 qtio422016.Writer, v interface{}) {
+func WriteInt(qq422016 qtio422016.Writer, v any) {
 //line views/components/fieldview/Int.html:4
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/components/fieldview/Int.html:4
@@ -38,7 +38,7 @@ func WriteInt(qq422016 qtio422016.Writer, v interface{}) {
 }
 
 //line views/components/fieldview/Int.html:4
-func Int(v interface{}) string {
+func Int(v any) string {
 //line views/components/fieldview/Int.html:4
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/components/fieldview/Int.html:4

@@ -1,0 +1,75 @@
+{% import (
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/action"
+  "projectforge.dev/projectforge/app/build"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/project"
+  "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/layout"
+  "projectforge.dev/projectforge/views/vproject"
+) %}
+
+{% code type Deps struct {
+  layout.Basic
+  Project *project.Project
+  BuildResult *action.Result
+  Dependencies build.Dependencies
+} %}
+
+{% func (p *Deps) Body(as *app.State, ps *cutil.PageState) %}
+  {%- code prj := p.Project -%}
+  {%= vproject.Summary(prj, nil, nil, ps) %}
+  {%= BuildOptions(prj.Key) %}
+
+  {%- if p.BuildResult != nil && len(p.BuildResult.Errors) > 0 -%}
+  <div class="card">
+    <h3>Error</h3>
+    {%- for _, e := range p.BuildResult.Errors -%}
+    <p class="error">{%s e %}</p>
+    {%- endfor -%}
+  </div>
+  {%- endif -%}
+
+  <div class="card">
+    <div class="right"><a href="?upgrade=all" onclick="return confirm('You sure about this?')"><button>Upgrade All</button></a></div>
+    <h3>Dependencies</h3>
+    {%- if len(p.Dependencies) == 0 -%}
+      <em>no dependencies, somehow</em>
+    {%- else -%}
+      <table class="mt">
+        <thead>
+        <tr>
+          <th>Dependency</th>
+          <th>Refs</th>
+          <th>Version</th>
+          <th>Available</th>
+          <th class="shrink"></th>
+        </tr>
+        </thead>
+        <tbody>
+        {%- for _, d := range p.Dependencies -%}
+        <tr>
+          <td>
+            <ul class="accordion">
+              <li>
+                <input id="accordion-{%s d.Key %}" type="checkbox" hidden />
+                <label for="accordion-{%s d.Key %}">{%= components.ExpandCollapse(3, ps) %} {%s d.Key %}</label>
+                <div class="bd">
+                  {%- for _, r := range d.References -%}
+                  <div>{%s r %}</div>
+                  {%- endfor -%}
+                </div>
+              </li>
+            </ul>
+          </td>
+          <td>{%d len(d.References) %}</td>
+          <td>{%s d.Version %}</td>
+          <td>{%s d.Available %}</td>
+          <td>{%- if d.Available != "" -%}<a href="?upgrade={%s d.Key %}&old={%s d.Version %}&new={%s d.Available %}"><button>Upgrade</button></a>{%- endif -%}</td>
+        </tr>
+        {%- endfor -%}
+        </tbody>
+      </table>
+    {%- endif -%}
+  </div>
+{% endfunc %}

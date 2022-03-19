@@ -2,12 +2,13 @@
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/module"
+  "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
 ) %}
 
 {% func Table(mods module.Modules, as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>Available Modules</h3>
+    <h3>{%s util.StringPlural(len(mods), "Available Module") %}</h3>
     <table class="mt min-200">
       <tbody>
         {%- for _, mod := range mods -%}

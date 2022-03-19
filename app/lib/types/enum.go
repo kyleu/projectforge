@@ -29,7 +29,7 @@ func (x *Enum) String() string {
 	return fmt.Sprintf("%s(%s)", x.Key(), x.Ref)
 }
 
-func (x *Enum) From(v interface{}) interface{} {
+func (x *Enum) From(v any) any {
 	switch t := v.(type) {
 	case string:
 		return t
@@ -38,7 +38,7 @@ func (x *Enum) From(v interface{}) interface{} {
 	}
 }
 
-func (x *Enum) Default(key string) interface{} {
+func (x *Enum) Default(key string) any {
 	return ""
 }
 

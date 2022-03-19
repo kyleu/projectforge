@@ -124,7 +124,7 @@ func SQLInClause(column string, numParams int, offset int) string {
 	resBuilder := strings.Builder{}
 	for index := 0; index < numParams; index++ {
 		if index == 0 {
-			resBuilder.WriteString(column)
+			resBuilder.WriteString(column + " in ")
 			resBuilder.WriteString(fmt.Sprintf("($%d", offset+1))
 		} else {
 			resBuilder.WriteString(fmt.Sprintf(", $%d", index+offset+1))

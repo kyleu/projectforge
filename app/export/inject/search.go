@@ -10,7 +10,14 @@ import (
 )
 
 func Search(f *file.File, args *model.Args) error {
-	if len(args.Models) == 0 {
+	var hasSearch bool
+	for _, m := range args.Models {
+		if len(m.Search) > 0 {
+			hasSearch = true
+			break
+		}
+	}
+	if !hasSearch {
 		return nil
 	}
 	out := make([]string, 0, len(args.Models))

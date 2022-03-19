@@ -9,8 +9,8 @@ type Type interface {
 	Sortable() bool
 	Scalar() bool
 	fmt.Stringer
-	From(v interface{}) interface{}
-	Default(key string) interface{}
+	From(v any) any
+	Default(key string) any
 }
 
 type Types []Type

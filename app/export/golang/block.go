@@ -15,7 +15,7 @@ func NewBlock(k string, t string) *Block {
 	return &Block{Key: k, Type: t}
 }
 
-func (b *Block) W(l string, args ...interface{}) {
+func (b *Block) W(l string, args ...any) {
 	if len(args) == 0 {
 		b.Lines = append(b.Lines, l)
 	} else {

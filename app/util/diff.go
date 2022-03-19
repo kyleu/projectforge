@@ -4,6 +4,8 @@ package util
 import (
 	"fmt"
 	"strings"
+
+	"golang.org/x/exp/slices"
 )
 
 type Diff struct {
@@ -30,13 +32,13 @@ func (d Diffs) String() string {
 	return strings.Join(sb, "; ")
 }
 
-func DiffObjects(l interface{}, r interface{}, path ...string) Diffs {
+func DiffObjects(l any, r any, path ...string) Diffs {
 	return DiffObjectsIgnoring(l, r, nil, path...)
 }
 
-func DiffObjectsIgnoring(l interface{}, r interface{}, ignored []string, path ...string) Diffs {
+func DiffObjectsIgnoring(l any, r any, ignored []string, path ...string) Diffs {
 	var ret Diffs
-	if len(path) > 0 && StringArrayContains(ignored, path[len(path)-1]) {
+	if len(path) > 0 && slices.Contains(ignored, path[len(path)-1]) {
 		return ret
 	}
 	if l == nil {
@@ -52,11 +54,11 @@ func DiffObjectsIgnoring(l interface{}, r interface{}, ignored []string, path ..
 	switch t := l.(type) {
 	case ValueMap:
 		ret = append(ret, diffMaps(t, r, ignored, path...)...)
-	case map[string]interface{}:
+	case map[string]any:
 		ret = append(ret, diffMaps(t, r, ignored, path...)...)
 	case map[string]int:
 		ret = append(ret, diffIntMaps(t, r, ignored, path...)...)
-	case []interface{}:
+	case []any:
 		ret = append(ret, diffArrays(t, r, ignored, path...)...)
 	case Diffs:
 		rm, _ := r.(Diffs)
@@ -83,9 +85,9 @@ func DiffObjectsIgnoring(l interface{}, r interface{}, ignored []string, path ..
 	return ret
 }
 
-func diffArrays(l []interface{}, r interface{}, ignored []string, path ...string) Diffs {
+func diffArrays(l []any, r any, ignored []string, path ...string) Diffs {
 	var ret Diffs
-	rm, _ := r.([]interface{})
+	rm, _ := r.([]any)
 	for idx, v := range l {
 		if len(rm) > idx {
 			rv := rm[idx]
@@ -102,21 +104,21 @@ func diffArrays(l []interface{}, r interface{}, ignored []string, path ...string
 	return ret
 }
 
-func diffMaps(l map[string]interface{}, r interface{}, ignored []string, path ...string) Diffs {
+func diffMaps(l map[string]any, r any, ignored []string, path ...string) Diffs {
 	var ret Diffs
-	rm, ok := r.(map[string]interface{})
+	rm, ok := r.(map[string]any)
 	if !ok {
 		rm, _ = r.(ValueMap)
 	}
 	for k, v := range l {
-		if StringArrayContains(ignored, k) {
+		if slices.Contains(ignored, k) {
 			continue
 		}
 		rv := rm[k]
 		ret = append(ret, DiffObjectsIgnoring(v, rv, ignored, append(append([]string{}, path...), k)...)...)
 	}
 	for k, v := range rm {
-		if StringArrayContains(ignored, k) {
+		if slices.Contains(ignored, k) {
 			continue
 		}
 		if _, exists := l[k]; !exists {
@@ -126,18 +128,18 @@ func diffMaps(l map[string]interface{}, r interface{}, ignored []string, path ..
 	return ret
 }
 
-func diffIntMaps(l map[string]int, r interface{}, ignored []string, path ...string) Diffs {
+func diffIntMaps(l map[string]int, r any, ignored []string, path ...string) Diffs {
 	var ret Diffs
 	rm, _ := r.(map[string]int)
 	for k, v := range l {
-		if StringArrayContains(ignored, k) {
+		if slices.Contains(ignored, k) {
 			continue
 		}
 		rv := rm[k]
 		ret = append(ret, DiffObjectsIgnoring(v, rv, ignored, append(append([]string{}, path...), k)...)...)
 	}
 	for k, v := range rm {
-		if StringArrayContains(ignored, k) {
+		if slices.Contains(ignored, k) {
 			continue
 		}
 		if _, exists := l[k]; !exists {

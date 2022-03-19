@@ -38,7 +38,7 @@ func (s *Span) SetStatus(status string, description string) {
 	}
 }
 
-func (s *Span) Attribute(k string, v interface{}) {
+func (s *Span) Attribute(k string, v any) {
 	s.Attributes(&Attribute{Key: k, Value: v})
 }
 

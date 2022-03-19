@@ -25,11 +25,11 @@ func (x *ValueMap) Scalar() bool {
 	return valueMapInst.Scalar()
 }
 
-func (x *ValueMap) From(v interface{}) interface{} {
+func (x *ValueMap) From(v any) any {
 	return valueMapInst.From(v)
 }
 
-func (x *ValueMap) Default(s string) interface{} {
+func (x *ValueMap) Default(s string) any {
 	return valueMapInst.Default(s)
 }
 

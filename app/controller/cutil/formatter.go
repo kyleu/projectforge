@@ -19,7 +19,7 @@ var (
 	noLineNums *html.Formatter
 )
 
-func FormatJSON(v interface{}) (string, error) {
+func FormatJSON(v any) (string, error) {
 	return FormatLang(util.ToJSON(v), "json")
 }
 

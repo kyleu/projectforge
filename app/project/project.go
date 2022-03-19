@@ -3,6 +3,8 @@ package project
 import (
 	"sort"
 
+	"golang.org/x/exp/slices"
+
 	"projectforge.dev/projectforge/app/lib/theme"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -47,11 +49,10 @@ func (p *Project) CleanKey() string {
 }
 
 func (p *Project) IconSafe() string {
-	_, ok := util.SVGLibrary[p.Icon]
-	if !ok {
-		return DefaultIcon
+	if _, ok := util.SVGLibrary[p.Icon]; ok {
+		return p.Icon
 	}
-	return p.Icon
+	return DefaultIcon
 }
 
 func (p *Project) DescriptionSafe() string {
@@ -65,7 +66,7 @@ func (p *Project) DescriptionSafe() string {
 }
 
 func (p *Project) HasModule(key string) bool {
-	return util.StringArrayContains(p.Modules, key)
+	return slices.Contains(p.Modules, key)
 }
 
 func (p *Project) ToMap() util.ValueMap {

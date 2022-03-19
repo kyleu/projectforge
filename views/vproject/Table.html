@@ -2,13 +2,14 @@
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/project"
+  "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
 ) %}
 
 {% func Table(prjs project.Projects, as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <div class="right"><a href="/p/new"><button>New</button></a></div>
-    <h3>Available Projects</h3>
+    <h3>{%s util.StringPlural(len(prjs), "Available Project") %}</h3>
     <table class="mt min-200">
       <tbody>
         {%- for _, prj := range prjs -%}

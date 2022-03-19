@@ -52,109 +52,68 @@ func (p *BuildResult) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *c
 	vproject.StreamSummary(qw422016, prj, p.GitResult, nil, ps)
 //line views/vbuild/BuildResult.html:22
 	qw422016.N().S(`
-
-  <div class="card">
-    <h3>Build your project</h3>
-    <table class="mt">
-      <thead>
-        <tr>
-          <th>Action</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
+  `)
+//line views/vbuild/BuildResult.html:23
+	StreamBuildOptions(qw422016, prj.Key)
+//line views/vbuild/BuildResult.html:23
+	qw422016.N().S(`
 `)
-//line views/vbuild/BuildResult.html:34
-	for _, b := range action.AllBuilds {
-//line views/vbuild/BuildResult.html:34
-		qw422016.N().S(`        <tr>
-          <td><a href="/b/`)
-//line views/vbuild/BuildResult.html:36
-		qw422016.E().S(prj.Key)
-//line views/vbuild/BuildResult.html:36
-		qw422016.N().S(`/`)
-//line views/vbuild/BuildResult.html:36
-		qw422016.E().S(b.Key)
-//line views/vbuild/BuildResult.html:36
-		qw422016.N().S(`" title="`)
-//line views/vbuild/BuildResult.html:36
-		qw422016.E().S(b.Description)
-//line views/vbuild/BuildResult.html:36
-		qw422016.N().S(`"><button>`)
-//line views/vbuild/BuildResult.html:36
-		qw422016.E().S(b.Title)
-//line views/vbuild/BuildResult.html:36
-		qw422016.N().S(`</button></a></td>
-          <td>`)
-//line views/vbuild/BuildResult.html:37
-		qw422016.E().S(b.Description)
-//line views/vbuild/BuildResult.html:37
-		qw422016.N().S(`</td>
-        </tr>
-`)
-//line views/vbuild/BuildResult.html:39
-	}
-//line views/vbuild/BuildResult.html:39
-	qw422016.N().S(`      </tbody>
-    </table>
-  </div>
-`)
-//line views/vbuild/BuildResult.html:43
+//line views/vbuild/BuildResult.html:24
 	if p.BuildResult != nil {
-//line views/vbuild/BuildResult.html:44
+//line views/vbuild/BuildResult.html:25
 		br := p.BuildResult
 
-//line views/vbuild/BuildResult.html:44
+//line views/vbuild/BuildResult.html:25
 		qw422016.N().S(`  <div class="card">
     <div class="right"><em>`)
-//line views/vbuild/BuildResult.html:46
+//line views/vbuild/BuildResult.html:27
 		qw422016.E().S(br.Status)
-//line views/vbuild/BuildResult.html:46
+//line views/vbuild/BuildResult.html:27
 		qw422016.N().S(` [`)
-//line views/vbuild/BuildResult.html:46
+//line views/vbuild/BuildResult.html:27
 		qw422016.E().S(util.MicrosToMillis(br.Duration))
-//line views/vbuild/BuildResult.html:46
+//line views/vbuild/BuildResult.html:27
 		qw422016.N().S(`]</em></div>
     <h3>Result</h3>
     <pre>`)
-//line views/vbuild/BuildResult.html:48
+//line views/vbuild/BuildResult.html:29
 		qw422016.E().S(br.LogBlock("\n"))
-//line views/vbuild/BuildResult.html:48
+//line views/vbuild/BuildResult.html:29
 		qw422016.N().S(`</pre>
     `)
-//line views/vbuild/BuildResult.html:49
+//line views/vbuild/BuildResult.html:30
 		components.StreamJSON(qw422016, br)
-//line views/vbuild/BuildResult.html:49
+//line views/vbuild/BuildResult.html:30
 		qw422016.N().S(`
   </div>
 `)
-//line views/vbuild/BuildResult.html:51
+//line views/vbuild/BuildResult.html:32
 	}
-//line views/vbuild/BuildResult.html:52
+//line views/vbuild/BuildResult.html:33
 }
 
-//line views/vbuild/BuildResult.html:52
+//line views/vbuild/BuildResult.html:33
 func (p *BuildResult) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vbuild/BuildResult.html:52
+//line views/vbuild/BuildResult.html:33
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vbuild/BuildResult.html:52
+//line views/vbuild/BuildResult.html:33
 	p.StreamBody(qw422016, as, ps)
-//line views/vbuild/BuildResult.html:52
+//line views/vbuild/BuildResult.html:33
 	qt422016.ReleaseWriter(qw422016)
-//line views/vbuild/BuildResult.html:52
+//line views/vbuild/BuildResult.html:33
 }
 
-//line views/vbuild/BuildResult.html:52
+//line views/vbuild/BuildResult.html:33
 func (p *BuildResult) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vbuild/BuildResult.html:52
+//line views/vbuild/BuildResult.html:33
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vbuild/BuildResult.html:52
+//line views/vbuild/BuildResult.html:33
 	p.WriteBody(qb422016, as, ps)
-//line views/vbuild/BuildResult.html:52
+//line views/vbuild/BuildResult.html:33
 	qs422016 := string(qb422016.B)
-//line views/vbuild/BuildResult.html:52
+//line views/vbuild/BuildResult.html:33
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vbuild/BuildResult.html:52
+//line views/vbuild/BuildResult.html:33
 	return qs422016
-//line views/vbuild/BuildResult.html:52
+//line views/vbuild/BuildResult.html:33
 }

@@ -10,7 +10,7 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-func (s *Service) Query(ctx context.Context, q string, tx *sqlx.Tx, values ...interface{}) (*sqlx.Rows, error) {
+func (s *Service) Query(ctx context.Context, q string, tx *sqlx.Tx, values ...any) (*sqlx.Rows, error) {
 	const op = "query"
 	now, ctx, span := s.newSpan(ctx, "db:"+op, q)
 	var ret *sqlx.Rows
@@ -25,7 +25,7 @@ func (s *Service) Query(ctx context.Context, q string, tx *sqlx.Tx, values ...in
 	return ret, err
 }
 
-func (s *Service) QueryRows(ctx context.Context, q string, tx *sqlx.Tx, values ...interface{}) ([]util.ValueMap, error) {
+func (s *Service) QueryRows(ctx context.Context, q string, tx *sqlx.Tx, values ...any) ([]util.ValueMap, error) {
 	rows, err := s.Query(ctx, q, tx, values...)
 	if err != nil {
 		return nil, err
@@ -36,7 +36,7 @@ func (s *Service) QueryRows(ctx context.Context, q string, tx *sqlx.Tx, values .
 
 	var ret []util.ValueMap
 	for rows.Next() {
-		x := map[string]interface{}{}
+		x := map[string]any{}
 		err = rows.MapScan(x)
 		if err != nil {
 			return nil, errors.Wrap(err, "unable to scan output row")
@@ -47,9 +47,9 @@ func (s *Service) QueryRows(ctx context.Context, q string, tx *sqlx.Tx, values .
 	return ret, nil
 }
 
-func (s *Service) Query2DArray(ctx context.Context, q string, tx *sqlx.Tx, values ...interface{}) ([][]interface{}, error) {
+func (s *Service) Query2DArray(ctx context.Context, q string, tx *sqlx.Tx, values ...any) ([][]any, error) {
 	var err error
-	var slice []interface{}
+	var slice []any
 
 	rows, err := s.Query(ctx, q, tx, values...)
 	if err != nil {
@@ -59,7 +59,7 @@ func (s *Service) Query2DArray(ctx context.Context, q string, tx *sqlx.Tx, value
 		_ = rows.Close()
 	}()
 
-	var ret [][]interface{}
+	var ret [][]any
 	for rows.Next() {
 		slice, err = rows.SliceScan()
 		if err != nil {
@@ -71,7 +71,7 @@ func (s *Service) Query2DArray(ctx context.Context, q string, tx *sqlx.Tx, value
 	return ret, nil
 }
 
-func (s *Service) QueryKVMap(ctx context.Context, q string, tx *sqlx.Tx, values ...interface{}) (util.ValueMap, error) {
+func (s *Service) QueryKVMap(ctx context.Context, q string, tx *sqlx.Tx, values ...any) (util.ValueMap, error) {
 	msg := `must provide two columns, a string key named "k" and value "v"`
 	maps, err := s.QueryRows(ctx, q, tx, values...)
 	if err != nil {
@@ -96,7 +96,7 @@ func (s *Service) QueryKVMap(ctx context.Context, q string, tx *sqlx.Tx, values 
 	return ret, nil
 }
 
-func (s *Service) QuerySingleRow(ctx context.Context, q string, tx *sqlx.Tx, values ...interface{}) (util.ValueMap, error) {
+func (s *Service) QuerySingleRow(ctx context.Context, q string, tx *sqlx.Tx, values ...any) (util.ValueMap, error) {
 	rows, err := s.QueryRows(ctx, q, tx, values...)
 	if err != nil {
 		return nil, err
@@ -110,7 +110,7 @@ func (s *Service) QuerySingleRow(ctx context.Context, q string, tx *sqlx.Tx, val
 	return rows[0], nil
 }
 
-func (s *Service) Select(ctx context.Context, dest interface{}, q string, tx *sqlx.Tx, values ...interface{}) error {
+func (s *Service) Select(ctx context.Context, dest any, q string, tx *sqlx.Tx, values ...any) error {
 	const op = "select"
 	now, ctx, span := s.newSpan(ctx, "db:"+op, q)
 	var err error
@@ -124,7 +124,7 @@ func (s *Service) Select(ctx context.Context, dest interface{}, q string, tx *sq
 	return err
 }
 
-func (s *Service) Get(ctx context.Context, dto interface{}, q string, tx *sqlx.Tx, values ...interface{}) error {
+func (s *Service) Get(ctx context.Context, dto any, q string, tx *sqlx.Tx, values ...any) error {
 	const op = "get"
 	now, ctx, span := s.newSpan(ctx, "db:"+op, q)
 	var err error
@@ -140,7 +140,7 @@ type singleIntResult struct {
 	X *int64 `db:"x"`
 }
 
-func (s *Service) SingleInt(ctx context.Context, q string, tx *sqlx.Tx, values ...interface{}) (int64, error) {
+func (s *Service) SingleInt(ctx context.Context, q string, tx *sqlx.Tx, values ...any) (int64, error) {
 	const op = "single-int"
 	now, ctx, span := s.newSpan(ctx, "db:"+op, q)
 	var err error

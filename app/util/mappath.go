@@ -9,7 +9,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (m ValueMap) GetPath(path string, allowMissing bool) (interface{}, error) {
+func (m ValueMap) GetPath(path string, allowMissing bool) (any, error) {
 	r := csv.NewReader(strings.NewReader(path)) // to support quoted strings like files."readme.txt".size
 	r.Comma = '.'
 	fields, err := r.Read()
@@ -23,7 +23,7 @@ func (m ValueMap) GetPath(path string, allowMissing bool) (interface{}, error) {
 	return ret, nil
 }
 
-func getPath(i interface{}, allowMissing bool, path ...string) (interface{}, error) {
+func getPath(i any, allowMissing bool, path ...string) (any, error) {
 	if len(path) == 0 {
 		return i, nil
 	}
@@ -38,7 +38,7 @@ func getPath(i interface{}, allowMissing bool, path ...string) (interface{}, err
 			return nil, errors.Errorf("map does not have key [%s] among candidates [%s]", k, strings.Join(t.Keys(), ", "))
 		}
 		return getPath(ret, allowMissing, path[1:]...)
-	case map[string]interface{}:
+	case map[string]any:
 		ret, ok := t[k]
 		if !ok {
 			if allowMissing {
@@ -51,12 +51,12 @@ func getPath(i interface{}, allowMissing bool, path ...string) (interface{}, err
 			return nil, errors.Errorf("map does not have key [%s] among candidates [%s]", k, strings.Join(keys, ", "))
 		}
 		return getPath(ret, allowMissing, path[1:]...)
-	case []interface{}:
+	case []any:
 		i, err := strconv.Atoi(k)
 		if err != nil {
 			return nil, errors.Errorf("path [%s] refers to an slice, but can't be parsed as an index", k)
 		}
-		var ret interface{}
+		var ret any
 		if len(t) > i {
 			ret = t[i]
 		}
@@ -69,7 +69,7 @@ func getPath(i interface{}, allowMissing bool, path ...string) (interface{}, err
 	}
 }
 
-func (m ValueMap) SetPath(path string, val interface{}) interface{} {
+func (m ValueMap) SetPath(path string, val any) any {
 	r := csv.NewReader(strings.NewReader(path))
 	r.Comma = '.'
 	fields, err := r.Read()
@@ -79,14 +79,14 @@ func (m ValueMap) SetPath(path string, val interface{}) interface{} {
 	return setPath(m, fields, val)
 }
 
-func setPath(i interface{}, path []string, val interface{}) error {
+func setPath(i any, path []string, val any) error {
 	work := i
 	for idx, p := range path {
 		if idx == len(path)-1 {
 			switch t := work.(type) {
 			case ValueMap:
 				t[p] = val
-			case map[string]interface{}:
+			case map[string]any:
 				t[p] = val
 			default:
 				return errors.Errorf("unhandled [%T]", t)
@@ -94,10 +94,10 @@ func setPath(i interface{}, path []string, val interface{}) error {
 		} else {
 			switch t := work.(type) {
 			case ValueMap:
-				t[p] = map[string]interface{}{}
+				t[p] = map[string]any{}
 				work = t[p]
-			case map[string]interface{}:
-				t[p] = map[string]interface{}{}
+			case map[string]any:
+				t[p] = map[string]any{}
 				work = t[p]
 			default:
 				return errors.Errorf("unhandled [%T]", t)

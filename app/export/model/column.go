@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"golang.org/x/exp/slices"
+
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -52,7 +54,7 @@ func (c *Column) ProperPlural() string {
 }
 
 func (c *Column) HasTag(t string) bool {
-	return util.StringArrayContains(c.Tags, t)
+	return slices.Contains(c.Tags, t)
 }
 
 func (c *Column) ToGoString(prefix string) string {

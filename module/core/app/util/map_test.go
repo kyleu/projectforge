@@ -9,7 +9,7 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-func assert(t *testing.T, name string, a interface{}, b interface{}, err error, messages ...string) {
+func assert(t *testing.T, name string, a any, b any, err error, messages ...string) {
 	t.Helper()
 	if a == b {
 		return
@@ -28,8 +28,8 @@ var tm = util.ValueMap{
 	"i":  42,
 	"b":  true,
 	"u":  util.UUIDFromString("00000000-0000-0000-0000-000000000042"),
-	"a":  []interface{}{"a", "b"},
-	"ae": []interface{}{},
+	"a":  []any{"a", "b"},
+	"ae": []any{},
 }
 
 func TestValueMap(t *testing.T) {

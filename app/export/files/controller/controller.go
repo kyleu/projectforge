@@ -39,7 +39,7 @@ func controllerArgFor(col *model.Column, b *golang.Block, retVal string, indent 
 	for i := 0; i < indent; i++ {
 		ind += "\t"
 	}
-	add := func(s string, args ...interface{}) {
+	add := func(s string, args ...any) {
 		b.W(ind+s, args...)
 	}
 	switch col.Type.Key() {

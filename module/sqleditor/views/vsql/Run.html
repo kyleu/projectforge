@@ -9,7 +9,7 @@
   layout.Basic
   SQL string
   Columns []string
-  Results [][]interface{}
+  Results [][]any
   Timing int
   Commit bool
 } %}
@@ -18,14 +18,15 @@
   <div class="card">
     <h3>SQL Editor</h3>
     <form method="post" action="">
-      <div class="mt">
-        <textarea name="sql">{%s p.SQL %}</textarea>
+      <div class="mt expanded">
+        <textarea name="sql" rows="12" placeholder="SQL statement">{%s p.SQL %}</textarea>
       </div>
       <div class="mt">
         <label><input type="checkbox" name="commit" value="true" {% if p.Commit %}checked="checked"{% endif %}/> Commit Changes</label>
       </div>
       <div class="mt">
-        <button type="submit">Run</button>
+        <button type="submit" name="action" value="run">Run</button>
+        <button type="submit" name="action" value="analyze">Analyze</button>
       </div>
     </form>
   </div>

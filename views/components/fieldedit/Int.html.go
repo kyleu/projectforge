@@ -25,14 +25,14 @@ var (
 )
 
 //line views/components/fieldedit/Int.html:6
-func StreamInt(qw422016 *qt422016.Writer, x interface{}, k string) {
+func StreamInt(qw422016 *qt422016.Writer, x any, k string) {
 //line views/components/fieldedit/Int.html:7
 	components.StreamFormInputNumber(qw422016, k, "", x)
 //line views/components/fieldedit/Int.html:8
 }
 
 //line views/components/fieldedit/Int.html:8
-func WriteInt(qq422016 qtio422016.Writer, x interface{}, k string) {
+func WriteInt(qq422016 qtio422016.Writer, x any, k string) {
 //line views/components/fieldedit/Int.html:8
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/components/fieldedit/Int.html:8
@@ -43,7 +43,7 @@ func WriteInt(qq422016 qtio422016.Writer, x interface{}, k string) {
 }
 
 //line views/components/fieldedit/Int.html:8
-func Int(x interface{}, k string) string {
+func Int(x any, k string) string {
 //line views/components/fieldedit/Int.html:8
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/components/fieldedit/Int.html:8

@@ -51,11 +51,11 @@ func (x *Method) String() string {
 	return fmt.Sprintf("fn(%s) %s", strings.Join(argStrings, ", "), x.Ret.String())
 }
 
-func (x *Method) From(v interface{}) interface{} {
+func (x *Method) From(v any) any {
 	return invalidInput(x.Key(), x)
 }
 
-func (x *Method) Default(key string) interface{} {
+func (x *Method) Default(key string) any {
 	return key + "()"
 }
 

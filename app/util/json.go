@@ -11,15 +11,15 @@ import (
 
 var jsoniterParser = jsoniter.ConfigCompatibleWithStandardLibrary
 
-func ToJSON(x interface{}) string {
+func ToJSON(x any) string {
 	return string(ToJSONBytes(x, true))
 }
 
-func ToJSONCompact(x interface{}) string {
+func ToJSONCompact(x any) string {
 	return string(ToJSONBytes(x, false))
 }
 
-func ToJSONBytes(x interface{}, indent bool) []byte {
+func ToJSONBytes(x any, indent bool) []byte {
 	if indent {
 		b, _ := json.MarshalIndent(x, "", "  ")
 		return b
@@ -28,33 +28,33 @@ func ToJSONBytes(x interface{}, indent bool) []byte {
 	return b
 }
 
-func FromJSON(msg json.RawMessage, tgt interface{}) error {
+func FromJSON(msg json.RawMessage, tgt any) error {
 	return jsoniterParser.Unmarshal(msg, tgt)
 }
 
-func FromJSONInterface(msg json.RawMessage) (interface{}, error) {
-	var tgt interface{}
+func FromJSONInterface(msg json.RawMessage) (any, error) {
+	var tgt any
 	err := FromJSON(msg, &tgt)
 	return tgt, err
 }
 
-func FromJSONReader(r io.Reader, tgt interface{}) error {
+func FromJSONReader(r io.Reader, tgt any) error {
 	return json.NewDecoder(r).Decode(tgt)
 }
 
-func FromJSONStrict(msg json.RawMessage, tgt interface{}) error {
+func FromJSONStrict(msg json.RawMessage, tgt any) error {
 	dec := jsoniterParser.NewDecoder(bytes.NewReader(msg))
 	dec.DisallowUnknownFields()
 	return dec.Decode(tgt)
 }
 
-func CycleJSON(src interface{}, tgt interface{}) error {
+func CycleJSON(src any, tgt any) error {
 	b, _ := jsoniterParser.Marshal(src)
 	return FromJSON(b, tgt)
 }
 
-func JSONToMap(i interface{}) map[string]interface{} {
-	var m map[string]interface{}
+func JSONToMap(i any) map[string]any {
+	var m map[string]any
 	_ = CycleJSON(i, &m)
 	return m
 }

@@ -18,11 +18,15 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 	}
 	g.AddImport(helper.ImpContext, helper.ImpErrors, helper.ImpSQLx, helper.ImpFilter, helper.ImpDatabase)
 	g.AddBlocks(serviceList(m))
-	if len(m.PKs()) > 0 {
+	pkLen := len(m.PKs())
+	if pkLen > 0 {
 		g.AddBlocks(serviceGetByPK(m))
 	}
+	if pkLen == 1 {
+		g.AddBlocks(serviceGetMultiple(m))
+	}
 	getBys := map[string]model.Columns{}
-	if len(m.PKs()) > 1 {
+	if pkLen > 1 {
 		for _, pkCol := range m.PKs() {
 			getBys[pkCol.Name] = model.Columns{pkCol}
 		}
@@ -114,14 +118,39 @@ func serviceGetByPK(m *model.Model) *golang.Block {
 	return serviceGetBy("Get", m, m.PKs(), false)
 }
 
-func serviceGetBy(key string, m *model.Model, cols model.Columns, returnMultiple bool) *golang.Block {
-	if returnMultiple {
-		return serviceGetMultiple(key, m, cols)
-	}
-	return serviceGetOne(key, m, cols)
+func serviceGetMultiple(m *model.Model) *golang.Block {
+	name := "GetMultiple"
+	ret := golang.NewBlock(name, "func")
+	pk := m.PKs()[0]
+	t := model.ToGoType(pk.Type, pk.Nullable)
+	ret.W("func (s *Service) %s(ctx context.Context, tx *sqlx.Tx%s, %s ...%s) (%s, error) {", name, getSuffix(m), pk.Plural(), t, m.ProperPlural())
+	ret.W("\tif len(%s) == 0 {", pk.Plural())
+	ret.W("\t\treturn %s{}, nil", m.ProperPlural())
+	ret.W("\t}")
+	ret.W("\twc := database.SQLInClause(%q, len(%s), 0)", pk.Name, pk.Plural())
+	ret.W("\tret := dtos{}")
+	ret.W("\tq := database.SQLSelectSimple(columnsString, tableQuoted, wc)")
+	ret.W("\tvals := make([]any, 0, len(%s))", pk.Plural())
+	ret.W("\tfor _, x := range %s {", pk.Plural())
+	ret.W("\t\tvals = append(vals, x)")
+	ret.W("\t}")
+	ret.W("\terr := s.db.Select(ctx, &ret, q, tx, vals...)")
+	ret.W("\tif err != nil {")
+	ret.W("\t\treturn nil, errors.Wrapf(err, \"unable to get %s for [%%%%d] %s\", len(%s))", m.ProperPlural(), pk.Plural(), pk.Plural())
+	ret.W("\t}")
+	ret.W("\treturn ret.To%s(), nil", m.ProperPlural())
+	ret.W("}")
+	return ret
 }
 
-func serviceGetOne(key string, m *model.Model, cols model.Columns) *golang.Block {
+func serviceGetBy(key string, m *model.Model, cols model.Columns, returnMultiple bool) *golang.Block {
+	if returnMultiple {
+		return serviceGetByCols(key, m, cols)
+	}
+	return serviceGet(key, m, cols)
+}
+
+func serviceGet(key string, m *model.Model, cols model.Columns) *golang.Block {
 	if key == "" {
 		key = "GetBy" + cols.Smushed()
 	}
@@ -147,7 +176,7 @@ func serviceGetOne(key string, m *model.Model, cols model.Columns) *golang.Block
 	return ret
 }
 
-func serviceGetMultiple(key string, m *model.Model, cols model.Columns) *golang.Block {
+func serviceGetByCols(key string, m *model.Model, cols model.Columns) *golang.Block {
 	if key == "" {
 		key = "GetBy" + cols.Smushed()
 	}
