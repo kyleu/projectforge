@@ -7,6 +7,7 @@ import (
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller/cutil"
 	"{{{ .Package }}}/app/lib/sandbox"
+	"{{{ .Package }}}/app/lib/telemetry"
 	"{{{ .Package }}}/views/vsandbox"
 )
 
@@ -24,11 +25,16 @@ func SandboxRun(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
+
 		sb := sandbox.AllSandboxes.Get(key)
 		if sb == nil {
 			return ersp("no sandbox with key [%s]", key)
 		}
-		ret, err := sb.Run(ps.Context, as, ps.Logger.With(zap.String("sandbox", key)))
+
+		ctx, span, logger := telemetry.StartSpan(ps.Context, "sandbox."+key, ps.Logger)
+		defer span.Complete()
+
+		ret, err := sb.Run(ctx, as, logger.With(zap.String("sandbox", key)))
 		if err != nil {
 			return "", err
 		}
