@@ -44,7 +44,7 @@
           {%= components.TableInputNumber("port", "Port", prj.Port, 5, project.Helpers["port"]...) %}
           {%= components.TableInput("ignore", "Ignore", strings.Join(prj.Ignore, ", "), 5, project.Helpers["ignore"]...) %}
           {%= components.TableInput("path", "Path", prj.Path, 5, project.Helpers["path"]...) %}
-          {%= components.TableTextarea("moduleArgs", "Module Args", len(prj.Info.ModuleArgs) + 2, util.ToJSON(prj.Info.ModuleArgs), 5, project.Helpers["moduleArgs"]...) %}
+          {%= components.TableTextarea("moduleArgs", "Module Args", len(info.ModuleArgs) + 2, util.ToJSON(info.ModuleArgs), 5, project.Helpers["moduleArgs"]...) %}
         </tbody>
       </table>
     </div>

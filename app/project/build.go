@@ -60,7 +60,7 @@ func (b *Build) ToMap() map[string]bool {
 	return map[string]bool{
 		"publish": b.Publish, "private": b.Private, "changelog": b.Changelog, "testsFail": b.TestsFail,
 		"desktop": b.Desktop, "notarize": b.Notarize, "signing": b.Signing, "simple": b.Simple,
-		"android": b.Android, "ios": b.IOS, "wasm": b.WASM, "build-x86": b.X86, "windows-arm": b.WindowsARM,
+		"android": b.Android, "ios": b.IOS, "wasm": b.WASM, "x86": b.X86, "windows-arm": b.WindowsARM,
 		"linux-arm": b.LinuxARM, "linux-mips": b.LinuxMIPS, "linux-odd": b.LinuxOdd,
 		"dragonfly": b.Dragonfly, "illumos": b.Illumos, "freebsd": b.FreeBSD,
 		"netbsd": b.NetBSD, "openbsd": b.OpenBSD, "plan9": b.Plan9, "solaris": b.Solaris,

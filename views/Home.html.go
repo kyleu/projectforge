@@ -53,45 +53,46 @@ func (p *Home) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	qw422016.N().S(`</h3>
     <div class="mt">
       <div>Project Forge manages web projects written in the Go language.</div>
-      <em>Using code generation, the latest technology, and a strong standard library, Project Forge will manage your project's code, assets, UI and UX.</em>
+      <p><em>Using code generation, the latest technology, and a strong standard library, Project Forge will manage your project's code, assets, UI and UX.</em></p>
+      <a href="/about"><button>Learn More</button></a>
     </div>
   </div>
   `)
-//line views/Home.html:28
+//line views/Home.html:29
 	vproject.StreamTable(qw422016, p.Projects, as, ps)
-//line views/Home.html:28
+//line views/Home.html:29
 	qw422016.N().S(`
   `)
-//line views/Home.html:29
+//line views/Home.html:30
 	vmodule.StreamTable(qw422016, p.Modules, as, ps)
-//line views/Home.html:29
+//line views/Home.html:30
 	qw422016.N().S(`
 `)
-//line views/Home.html:30
+//line views/Home.html:31
 }
 
-//line views/Home.html:30
+//line views/Home.html:31
 func (p *Home) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/Home.html:30
+//line views/Home.html:31
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/Home.html:30
+//line views/Home.html:31
 	p.StreamBody(qw422016, as, ps)
-//line views/Home.html:30
+//line views/Home.html:31
 	qt422016.ReleaseWriter(qw422016)
-//line views/Home.html:30
+//line views/Home.html:31
 }
 
-//line views/Home.html:30
+//line views/Home.html:31
 func (p *Home) Body(as *app.State, ps *cutil.PageState) string {
-//line views/Home.html:30
+//line views/Home.html:31
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/Home.html:30
+//line views/Home.html:31
 	p.WriteBody(qb422016, as, ps)
-//line views/Home.html:30
+//line views/Home.html:31
 	qs422016 := string(qb422016.B)
-//line views/Home.html:30
+//line views/Home.html:31
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/Home.html:30
+//line views/Home.html:31
 	return qs422016
-//line views/Home.html:30
+//line views/Home.html:31
 }

@@ -13,7 +13,10 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-const ConfigFilename = ".projectforge.json"
+const (
+	ConfigFilename     = ".projectforge.json"
+	additionalFilename = "additional-projects.json"
+)
 
 type Service struct {
 	cache       map[string]*Project
@@ -69,19 +72,8 @@ func (s *Service) Refresh() (Projects, error) {
 	if err != nil {
 		return nil, err
 	}
-	fs := s.GetFilesystem(root)
-	const additionalFilename = "additional-projects.json"
-	if fs.Exists(additionalFilename) {
-		additionalContent, err := fs.ReadFile(additionalFilename)
-		if err != nil {
-			s.logger.Warnf("unable to load additional projects from [%s]", filepath.Join(fs.Root(), additionalFilename))
-		}
-		var additional []string
-		err = util.FromJSON(additionalContent, &additional)
-		if err != nil {
-			s.logger.Warnf("unable to parse additional projects from [%s]: %+v", filepath.Join(fs.Root(), additionalFilename), err)
-		}
-		for _, a := range additional {
+	if add, ok := s.getAdditional(); ok {
+		for _, a := range add {
 			if _, err := s.add(a, root); err != nil {
 				return nil, err
 			}
@@ -173,6 +165,9 @@ func (s *Service) Save(prj *Project) error {
 	if err != nil {
 		return errors.Wrapf(err, "unable to write config file to [%s]", ConfigFilename)
 	}
+	if prj.Path != "" && prj.Path != "." {
+		s.addAdditional(prj.Path)
+	}
 	return nil
 }
 
@@ -189,4 +184,49 @@ func (s *Service) ByPath(path string) *Project {
 
 func (s *Service) Init() error {
 	return nil
+}
+
+func (s *Service) getAdditional() ([]string, bool) {
+	_, fs := s.root()
+	additionalContent, err := fs.ReadFile(additionalFilename)
+	if err != nil {
+		s.logger.Warnf("unable to load additional projects from [%s]", filepath.Join(fs.Root(), additionalFilename))
+	}
+	var additional []string
+	err = util.FromJSON(additionalContent, &additional)
+	if err != nil {
+		s.logger.Warnf("unable to parse additional projects from [%s]: %+v", filepath.Join(fs.Root(), additionalFilename), err)
+	}
+	return additional, true
+}
+
+func (s *Service) addAdditional(path string) {
+	add, ok := s.getAdditional()
+	if !ok {
+		return
+	}
+	hit := false
+	for _, a := range add {
+		if a == path {
+			hit = true
+			break
+		}
+	}
+	if !hit {
+		add = append(add, path)
+		_, fs := s.root()
+		_ = fs.WriteFile(additionalFilename, util.ToJSONBytes(add, true), filesystem.DefaultMode, true)
+	}
+}
+
+func (s *Service) root() (*Project, filesystem.FileLoader) {
+	root := s.ByPath(".")
+	if root == nil {
+		return nil, nil
+	}
+	fs := s.GetFilesystem(root)
+	if !fs.Exists(additionalFilename) {
+		return nil, nil
+	}
+	return root, fs
 }

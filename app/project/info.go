@@ -34,7 +34,7 @@ type Info struct {
 	JavaPackage     string            `json:"javaPackage,omitempty"`
 	GoVersion       string            `json:"goVersion,omitempty"`
 	GoBinary        string            `json:"goBinary,omitempty"`
-	ConfigVars      util.KeyTypeDescs `json:"configVars"`
+	ConfigVars      util.KeyTypeDescs `json:"configVars,omitempty"`
 	ExtraFiles      []string          `json:"extraFiles,omitempty"`
 	ModuleDefs      ModuleDefs        `json:"moduleDefs,omitempty"`
 	ModuleArgs      util.ValueMap     `json:"moduleArgs,omitempty"`

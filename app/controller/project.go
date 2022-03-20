@@ -39,7 +39,7 @@ func ProjectDetail(rc *fasthttp.RequestCtx) {
 
 func ProjectForm(rc *fasthttp.RequestCtx) {
 	act("project.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj := project.NewProject("", "")
+		prj := project.NewProject("", ".")
 		ps.Title = "New Project"
 		ps.Data = prj
 		return render(rc, as, &vproject.Edit{Project: prj}, ps, "projects", "New")

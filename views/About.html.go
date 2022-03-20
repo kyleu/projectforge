@@ -57,7 +57,7 @@ func (p *About) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
     <h3>Help</h3>
 `)
 //line views/About.html:19
-	qw422016.N().S(`    <p>Coming soon...</p>
+	qw422016.N().S(`    <p>Using code generation, the latest technology, and a strong standard library, Project Forge will manage your project's code, assets, UI and UX.</p>
 `)
 //line views/About.html:21
 	qw422016.N().S(`  </div>
@@ -102,7 +102,7 @@ func StreamFeedback(qw422016 *qt422016.Writer) {
 	qw422016.N().S(`
 <div class="card">
   <h3>Feedback</h3>
-  <p>For now, email <a href="mailto:kyle@kyleu.com">Kyle U</a></p>
+  <p>For now, email <a href="mailto:kyle@kyleu.com">Kyle</a></p>
 </div>
 `)
 //line views/About.html:31

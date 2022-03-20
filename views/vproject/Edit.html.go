@@ -114,7 +114,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	qw422016.N().S(`
           `)
 //line views/vproject/Edit.html:47
-	components.StreamTableTextarea(qw422016, "moduleArgs", "Module Args", len(prj.Info.ModuleArgs)+2, util.ToJSON(prj.Info.ModuleArgs), 5, project.Helpers["moduleArgs"]...)
+	components.StreamTableTextarea(qw422016, "moduleArgs", "Module Args", len(info.ModuleArgs)+2, util.ToJSON(info.ModuleArgs), 5, project.Helpers["moduleArgs"]...)
 //line views/vproject/Edit.html:47
 	qw422016.N().S(`
         </tbody>
