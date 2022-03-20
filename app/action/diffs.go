@@ -1,6 +1,7 @@
 package action
 
 import (
+	"context"
 	"path"
 	"strings"
 
@@ -16,7 +17,7 @@ const (
 	delimEnd   = "}}}"
 )
 
-func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
+func diffs(ctx context.Context, pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 	tgt := pm.PSvc.GetFilesystem(pm.Prj)
 
 	srcFiles, err := pm.MSvc.GetFiles(pm.Mods, true)
@@ -33,12 +34,12 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 			}
 		}
 		args.Modules = pm.Mods.Keys()
-		files, e := pm.ESvc.Files(args, true)
+		files, e := pm.ESvc.Files(ctx, args, true, pm.Logger)
 		if e != nil {
 			return nil, nil, errors.Wrap(e, "unable to export code")
 		}
 		srcFiles = append(srcFiles, files...)
-		e = pm.ESvc.Inject(args, srcFiles)
+		e = pm.ESvc.Inject(ctx, args, srcFiles, pm.Logger)
 		if e != nil {
 			return nil, nil, errors.Wrap(e, "unable to inject code")
 		}
@@ -54,12 +55,12 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 		}
 	}
 
-	ctx := pm.Prj.ToTemplateContext(configVars, portOffsets)
+	tCtx := pm.Prj.ToTemplateContext(configVars, portOffsets)
 
 	for _, f := range srcFiles {
 		origPath := f.FullPath()
 		if strings.Contains(origPath, delimStart) {
-			newPath, e := runTemplate("filename", origPath, ctx)
+			newPath, e := runTemplate("filename", origPath, tCtx)
 			if e != nil {
 				return nil, nil, e
 			}
@@ -74,7 +75,7 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 	}
 
 	for _, f := range srcFiles {
-		f.Content, err = runTemplateFile(f, ctx)
+		f.Content, err = runTemplateFile(f, tCtx)
 		if err != nil {
 			return nil, nil, err
 		}

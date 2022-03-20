@@ -10,7 +10,6 @@ import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/action"
 	"projectforge.dev/projectforge/app/controller/cutil"
-	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/vaction"
 )
@@ -36,8 +35,7 @@ func RunAction(rc *fasthttp.RequestCtx) {
 		rc.QueryArgs().VisitAll(func(k []byte, v []byte) {
 			cfg[string(k)] = string(v)
 		})
-		nc, span, logger := telemetry.StartSpan(ps.Context, "action:"+actT.String(), ps.Logger)
-		result := action.Apply(nc, actionParams(span, tgt, actT, cfg, as, logger))
+		result := action.Apply(ps.Context, actionParams(tgt, actT, cfg, as, ps.Logger))
 		if result.Project == nil {
 			result.Project = prj
 		}
@@ -66,8 +64,7 @@ func RunAllActions(rc *fasthttp.RequestCtx) {
 			go func() {
 				c := cfg.Clone()
 				c["path"] = p.Path
-				nc, span, logger := telemetry.StartSpan(ps.Context, "action:"+actT.String(), ps.Logger)
-				result := action.Apply(nc, actionParams(span, p.Key, actT, c, as, logger))
+				result := action.Apply(ps.Context, actionParams(p.Key, actT, c, as, ps.Logger))
 				if result.Project == nil {
 					result.Project = p
 				}
@@ -88,9 +85,9 @@ func RunAllActions(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func actionParams(span *telemetry.Span, tgt string, t action.Type, cfg util.ValueMap, as *app.State, logger *zap.SugaredLogger) *action.Params {
+func actionParams(tgt string, t action.Type, cfg util.ValueMap, as *app.State, logger *zap.SugaredLogger) *action.Params {
 	return &action.Params{
-		Span: span, ProjectKey: tgt, T: t, Cfg: cfg,
+		ProjectKey: tgt, T: t, Cfg: cfg,
 		MSvc: as.Services.Modules, PSvc: as.Services.Projects, ESvc: as.Services.Export, Logger: logger,
 	}
 }

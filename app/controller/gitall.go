@@ -45,7 +45,7 @@ func GitActionAll(rc *fasthttp.RequestCtx) {
 func gitStatusAll(prjs project.Projects, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (git.Results, error) {
 	results := make(git.Results, 0, len(prjs))
 	for _, prj := range prjs {
-		s, err := as.Services.Git.Status(prj)
+		s, err := as.Services.Git.Status(ps.Context, prj, ps.Logger)
 		if err != nil {
 			return nil, errors.Wrapf(err, "can't get status for project [%s]", prj.Key)
 		}

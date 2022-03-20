@@ -12,7 +12,7 @@ import (
 func onDoctor(ctx context.Context, cfg util.ValueMap, pSvc *project.Service, logger *zap.SugaredLogger) *Result {
 	ret := newResult(cfg, logger)
 	prjs := pSvc.Projects()
-	res := checks.CheckAll(prjs.AllModules(), logger)
+	res := checks.CheckAll(ctx, prjs.AllModules(), logger)
 	for _, r := range res {
 		ret.AddLog("%s: %s", r.Title, r.Status)
 		for _, l := range r.Logs {

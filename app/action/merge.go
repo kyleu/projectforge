@@ -2,6 +2,7 @@ package action
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"strings"
 
@@ -14,7 +15,7 @@ import (
 
 const projectKey = "project"
 
-func onMerge(pm *PrjAndMods) *Result {
+func onMerge(ctx context.Context, pm *PrjAndMods) *Result {
 	ret := newResult(pm.Cfg, pm.Logger)
 
 	to, _ := pm.Cfg.GetString("to", true)
@@ -24,7 +25,7 @@ func onMerge(pm *PrjAndMods) *Result {
 	file, _ := pm.Cfg.GetString("file", true)
 
 	timer := util.TimerStart()
-	_, dfs, err := diffs(pm)
+	_, dfs, err := diffs(ctx, pm)
 	if err != nil {
 		return ret.WithError(err)
 	}

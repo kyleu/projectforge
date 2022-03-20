@@ -1,7 +1,10 @@
 package doctor
 
 import (
+	"context"
+
 	"go.uber.org/zap"
+	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/util"
 )
 
@@ -22,7 +25,10 @@ type Check struct {
 	Solve   SolveFn  `json:"-"`
 }
 
-func (c *Check) Check(logger *zap.SugaredLogger) *Result {
+func (c *Check) Check(ctx context.Context, logger *zap.SugaredLogger) *Result {
+	ctx, span, logger := telemetry.StartSpan(ctx, "doctor:check:"+c.Key, logger)
+	defer span.Complete()
+
 	r := NewResult(c, c.Key, c.Title, c.Summary)
 	timer := util.TimerStart()
 	r = c.Fn(r, logger)

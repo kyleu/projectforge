@@ -124,7 +124,7 @@ func (s *Service) Register(ctx context.Context, path string, defs ...*project.Mo
 	return ret, nil
 }
 
-func (s *Service) Search(q string) (result.Results, error) {
+func (s *Service) Search(ctx context.Context, q string, logger *zap.SugaredLogger) (result.Results, error) {
 	ret := result.Results{}
 	for _, mod := range s.Modules() {
 		if res := result.NewResult("module", mod.Key, mod.WebPath(), mod.Title(), mod.IconSafe(), mod, q); len(res.Matches) > 0 {

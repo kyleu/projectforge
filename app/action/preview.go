@@ -1,14 +1,16 @@
 package action
 
 import (
+	"context"
+
 	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func onPreview(pm *PrjAndMods) *Result {
+func onPreview(ctx context.Context, pm *PrjAndMods) *Result {
 	ret := newResult(pm.Cfg, pm.Logger)
 	timer := util.TimerStart()
-	_, dfs, err := diffs(pm)
+	_, dfs, err := diffs(ctx, pm)
 	if err != nil {
 		return ret.WithError(err)
 	}

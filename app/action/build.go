@@ -1,10 +1,12 @@
 package action
 
 import (
+	"context"
 	"path/filepath"
 
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
+	"projectforge.dev/projectforge/app/lib/telemetry"
 
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
@@ -65,13 +67,17 @@ var AllBuilds = Builds{
 	}},
 }
 
-func onBuild(pm *PrjAndMods) *Result {
+func onBuild(ctx context.Context, pm *PrjAndMods) *Result {
 	phaseStr, _ := pm.Cfg.GetString("phase", true)
 	if phaseStr == "" {
 		phaseStr = "build"
 	}
 
-	ret := newResult(pm.Cfg, pm.Logger)
+	ctx, span, logger := telemetry.StartSpan(ctx, "build:"+phaseStr, pm.Logger)
+	defer span.Complete()
+	pm.Logger = logger
+
+	ret := newResult(pm.Cfg, logger)
 	ret.AddLog("building project [%s] in [%s] with phase [%s]", pm.Prj.Key, pm.Prj.Path, phaseStr)
 	var phase *Build
 	for _, x := range AllBuilds {

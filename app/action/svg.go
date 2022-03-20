@@ -1,12 +1,13 @@
 package action
 
 import (
+	"context"
 	"fmt"
 
 	"projectforge.dev/projectforge/app/svg"
 )
 
-func onSVG(pm *PrjAndMods) *Result {
+func onSVG(ctx context.Context, pm *PrjAndMods) *Result {
 	ret := newResult(pm.Cfg, pm.Logger)
 
 	src := fmt.Sprintf("%s/client/src/svg", pm.Prj.Path)

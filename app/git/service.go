@@ -1,11 +1,13 @@
 package git
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
+	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -21,7 +23,10 @@ func NewService(logger *zap.SugaredLogger) *Service {
 	return &Service{logger: logger}
 }
 
-func (s Service) Status(prj *project.Project) (*Result, error) {
+func (s Service) Status(ctx context.Context, prj *project.Project, logger *zap.SugaredLogger) (*Result, error) {
+	ctx, span, logger := telemetry.StartSpan(ctx, "git.status:"+prj.Key, logger)
+	defer span.Complete()
+
 	dirty, err := gitStatus(prj.Path)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to find git status")

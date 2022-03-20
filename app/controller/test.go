@@ -5,7 +5,6 @@ import (
 	"github.com/valyala/fasthttp"
 	"projectforge.dev/projectforge/app/action"
 	"projectforge.dev/projectforge/app/diff"
-	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/layout"
 	"projectforge.dev/projectforge/views/vaction"
@@ -46,8 +45,7 @@ func TestRun(rc *fasthttp.RequestCtx) {
 		case "bootstrap":
 			cfg := util.ValueMap{}
 			cfg.Add("path", "./testproject", "method", key, "wipe", true)
-			nc, span, logger := telemetry.StartSpan(ps.Context, "action:test.run", ps.Logger)
-			res := action.Apply(nc, actionParams(span, "testproject", action.TypeTest, cfg, as, logger))
+			res := action.Apply(ps.Context, actionParams("testproject", action.TypeTest, cfg, as, ps.Logger))
 			ps.Data = res
 
 			_, err = as.Services.Projects.Refresh()

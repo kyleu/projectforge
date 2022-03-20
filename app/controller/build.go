@@ -32,7 +32,7 @@ func Build(rc *fasthttp.RequestCtx) {
 			rc.URI().QueryArgs().VisitAll(func(key []byte, value []byte) {
 				args[string(key)] = string(value)
 			})
-			prms := actionParams(ps.Span, prj.Key, action.TypeBuild, args, as, ps.Logger)
+			prms := actionParams(prj.Key, action.TypeBuild, args, as, ps.Logger)
 			res = action.Apply(ps.Context, prms)
 			bc = append(bc, "Build||/b/"+prj.Key, phase.Title)
 			ps.Data = res
@@ -45,7 +45,7 @@ func Build(rc *fasthttp.RequestCtx) {
 			}
 			return render(rc, as, &vbuild.Deps{Project: prj, BuildResult: res, Dependencies: deps}, ps, bc...)
 		}
-		gitStatus, _ := as.Services.Git.Status(prj)
+		gitStatus, _ := as.Services.Git.Status(ps.Context, prj, ps.Logger)
 		return render(rc, as, &vbuild.BuildResult{Project: prj, BuildResult: res, GitResult: gitStatus}, ps, bc...)
 	})
 }

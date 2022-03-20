@@ -27,7 +27,7 @@ func Doctor(rc *fasthttp.RequestCtx) {
 func DoctorRunAll(rc *fasthttp.RequestCtx) {
 	act("doctor.run.all", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prjs := as.Services.Projects.Projects()
-		ret := checks.CheckAll(prjs.AllModules(), as.Logger)
+		ret := checks.CheckAll(ps.Context, prjs.AllModules(), as.Logger)
 		ps.Data = ret
 		return render(rc, as, &vdoctor.Results{Results: ret}, ps, "doctor", "All")
 	})
@@ -40,7 +40,7 @@ func DoctorRun(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		c := checks.GetCheck(key)
-		ret := c.Check(as.Logger)
+		ret := c.Check(ps.Context, as.Logger)
 		ps.Data = ret
 		return render(rc, as, &vdoctor.Results{Results: doctor.Results{ret}}, ps, "doctor", c.Title)
 	})

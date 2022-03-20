@@ -7,17 +7,17 @@ import (
 	"go.uber.org/zap"
 	"projectforge.dev/projectforge/app/export"
 	"projectforge.dev/projectforge/app/export/model"
+	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )
 
 func Apply(ctx context.Context, p *Params) *Result {
-	if p.Span != nil {
-		p.Span.Attribute("project", p.ProjectKey)
-		p.Span.Attribute("action", p.T.String())
-		defer p.Span.Complete()
-	}
+	ctx, span, logger := telemetry.StartSpan(ctx, "action:"+p.T.Key, p.Logger)
+	defer span.Complete()
+	span.Attribute("project", p.ProjectKey)
+	span.Attribute("action", p.T.String())
 
 	timer := util.TimerStart()
 	ret := applyBasic(ctx, p)
@@ -25,7 +25,7 @@ func Apply(ctx context.Context, p *Params) *Result {
 		if len(p.PSvc.Projects()) == 0 {
 			_, err := p.PSvc.Refresh()
 			if err != nil {
-				return errorResult(err, p.Cfg, p.Logger)
+				return errorResult(err, p.Cfg, logger)
 			}
 		}
 		if p.ProjectKey == "" {
@@ -33,12 +33,12 @@ func Apply(ctx context.Context, p *Params) *Result {
 			p.ProjectKey = prj.Key
 		}
 
-		pm, err := getPrjAndMods(ctx, p)
+		ctx, pm, err := getPrjAndMods(ctx, p)
 		if err != nil {
-			return errorResult(err, p.Cfg, p.Logger)
+			return errorResult(err, p.Cfg, logger)
 		}
 
-		ret = applyPrj(pm, p.T)
+		ret = applyPrj(ctx, pm, p.T)
 	}
 	ret.Duration = timer.End()
 	return ret
@@ -56,29 +56,28 @@ func applyBasic(ctx context.Context, p *Params) *Result {
 	return nil
 }
 
-func applyPrj(pm *PrjAndMods, t Type) *Result {
+func applyPrj(ctx context.Context, pm *PrjAndMods, t Type) *Result {
 	switch t {
 	case TypeAudit:
-		return onAudit(pm)
+		return onAudit(ctx, pm)
 	case TypeBuild:
-		return onBuild(pm)
+		return onBuild(ctx, pm)
 	case TypeDebug:
-		return onDebug(pm)
+		return onDebug(ctx, pm)
 	case TypeMerge:
-		return onMerge(pm)
+		return onMerge(ctx, pm)
 	case TypePreview:
-		return onPreview(pm)
+		return onPreview(ctx, pm)
 	case TypeSlam:
-		return onSlam(pm)
+		return onSlam(ctx, pm)
 	case TypeSVG:
-		return onSVG(pm)
+		return onSVG(ctx, pm)
 	default:
 		return errorResult(errors.Errorf("invalid action type [%s]", t.String()), pm.Cfg, pm.Logger)
 	}
 }
 
 type PrjAndMods struct {
-	Ctx    context.Context
 	Cfg    util.ValueMap
 	Prj    *project.Project
 	Mods   module.Modules
@@ -89,7 +88,7 @@ type PrjAndMods struct {
 	Logger *zap.SugaredLogger
 }
 
-func getPrjAndMods(ctx context.Context, p *Params) (*PrjAndMods, error) {
+func getPrjAndMods(ctx context.Context, p *Params) (context.Context, *PrjAndMods, error) {
 	if p.ProjectKey == "" {
 		prj := p.PSvc.ByPath("")
 		if prj != nil {
@@ -99,28 +98,29 @@ func getPrjAndMods(ctx context.Context, p *Params) (*PrjAndMods, error) {
 
 	prj, err := p.PSvc.Get(p.ProjectKey)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to load project [%s]", p.ProjectKey)
+		return nil, nil, errors.Wrapf(err, "unable to load project [%s]", p.ProjectKey)
 	}
 	if prj.Info != nil {
 		_, e := p.MSvc.Register(ctx, prj.Path, prj.Info.ModuleDefs...)
 		if e != nil {
-			return nil, errors.Wrap(e, "unable to register modules")
+			return nil, nil, errors.Wrap(e, "unable to register modules")
 		}
 	}
 
 	mods, err := p.MSvc.GetModules(prj.Modules...)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	args := &model.Args{}
 	if argsX := prj.Info.ModuleArg("export"); argsX != nil {
 		err := util.CycleJSON(argsX, args)
 		if err != nil {
-			return nil, errors.Wrap(err, "export module arguments are invalid")
+			return nil, nil, errors.Wrap(err, "export module arguments are invalid")
 		}
 	}
 	args.Modules = mods.Keys()
 
-	return &PrjAndMods{Ctx: ctx, Cfg: p.Cfg, Prj: prj, Mods: mods, MSvc: p.MSvc, PSvc: p.PSvc, ESvc: p.ESvc, EArgs: args, Logger: p.Logger}, nil
+	pm := &PrjAndMods{Cfg: p.Cfg, Prj: prj, Mods: mods, MSvc: p.MSvc, PSvc: p.PSvc, ESvc: p.ESvc, EArgs: args, Logger: p.Logger}
+	return ctx, pm, nil
 }

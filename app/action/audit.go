@@ -1,6 +1,7 @@
 package action
 
 import (
+	"context"
 	"strings"
 
 	"golang.org/x/exp/slices"
@@ -12,7 +13,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func onAudit(pm *PrjAndMods) *Result {
+func onAudit(ctx context.Context, pm *PrjAndMods) *Result {
 	ret := newResult(pm.Cfg, pm.Logger)
 	timer := util.TimerStart()
 
@@ -47,7 +48,7 @@ func onAudit(pm *PrjAndMods) *Result {
 			}
 		}
 		args.Modules = pm.Mods.Keys()
-		files, e := pm.ESvc.Files(args, true)
+		files, e := pm.ESvc.Files(ctx, args, true, pm.Logger)
 		if e != nil {
 			return errorResult(e, pm.Cfg, pm.Logger)
 		}

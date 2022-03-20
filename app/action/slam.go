@@ -1,16 +1,18 @@
 package action
 
 import (
+	"context"
+
 	"github.com/pkg/errors"
 	"projectforge.dev/projectforge/app/diff"
 	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func onSlam(pm *PrjAndMods) *Result {
+func onSlam(ctx context.Context, pm *PrjAndMods) *Result {
 	ret := newResult(pm.Cfg, pm.Logger)
 	timer := util.TimerStart()
-	srcFiles, dfs, err := diffs(pm)
+	srcFiles, dfs, err := diffs(ctx, pm)
 	if err != nil {
 		return ret.WithError(err)
 	}

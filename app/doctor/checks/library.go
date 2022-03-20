@@ -1,8 +1,11 @@
 package checks
 
 import (
+	"context"
+
 	"go.uber.org/zap"
 	"golang.org/x/exp/slices"
+	"projectforge.dev/projectforge/app/lib/telemetry"
 
 	"projectforge.dev/projectforge/app/doctor"
 )
@@ -36,10 +39,13 @@ func ForModules(modules []string) doctor.Checks {
 	return ret
 }
 
-func CheckAll(modules []string, logger *zap.SugaredLogger) doctor.Results {
+func CheckAll(ctx context.Context, modules []string, logger *zap.SugaredLogger) doctor.Results {
+	ctx, span, logger := telemetry.StartSpan(ctx, "doctor:checkall", logger)
+	defer span.Complete()
+
 	var ret doctor.Results
 	for _, c := range ForModules(modules) {
-		ret = append(ret, c.Check(logger))
+		ret = append(ret, c.Check(ctx, logger))
 	}
 	return ret
 }

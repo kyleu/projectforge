@@ -47,11 +47,11 @@ func onCreate(ctx context.Context, params *Params) *Result {
 		return errorResult(errors.Wrap(err, msg), params.Cfg, params.Logger)
 	}
 
-	pm, err := getPrjAndMods(ctx, params)
+	ctx, pm, err := getPrjAndMods(ctx, params)
 	if err != nil {
 		return errorResult(err, params.Cfg, params.Logger)
 	}
-	retS := onSlam(pm)
+	retS := onSlam(ctx, pm)
 	ret = ret.Merge(retS)
 	if ret.HasErrors() {
 		return ret
