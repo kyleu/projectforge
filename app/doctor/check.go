@@ -26,7 +26,7 @@ type Check struct {
 }
 
 func (c *Check) Check(ctx context.Context, logger *zap.SugaredLogger) *Result {
-	ctx, span, logger := telemetry.StartSpan(ctx, "doctor:check:"+c.Key, logger)
+	_, span, logger := telemetry.StartSpan(ctx, "doctor:check:"+c.Key, logger)
 	defer span.Complete()
 
 	r := NewResult(c, c.Key, c.Title, c.Summary)

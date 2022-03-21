@@ -21,17 +21,17 @@ var (
 	tracerProvider *sdktrace.TracerProvider
 )
 
-func InitializeIfNeeded(enabled bool, logger *zap.SugaredLogger) bool {
+func InitializeIfNeeded(enabled bool, version string, logger *zap.SugaredLogger) bool {
 	if initialized {
 		return false
 	}
 	if enabled {
-		Initialize(logger)
+		Initialize(version, logger)
 	}
 	return true
 }
 
-func Initialize(logger *zap.SugaredLogger) {
+func Initialize(version string, logger *zap.SugaredLogger) {
 	if initialized {
 		logger.Warn("double telemetry initialization")
 		return

@@ -45,7 +45,7 @@ func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, logger *zap.Su
 	}
 	time.Local = loc
 
-	_ = telemetry.InitializeIfNeeded(true, logger)
+	_ = telemetry.InitializeIfNeeded(true, bi.Version, logger)
 	ts := theme.NewService(f, logger)
 
 	return &State{

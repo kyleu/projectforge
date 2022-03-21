@@ -33,7 +33,9 @@ func Apply(ctx context.Context, p *Params) *Result {
 			p.ProjectKey = prj.Key
 		}
 
-		ctx, pm, err := getPrjAndMods(ctx, p)
+		var pm *PrjAndMods
+		var err error
+		ctx, pm, err = getPrjAndMods(ctx, p)
 		if err != nil {
 			return errorResult(err, p.Cfg, logger)
 		}

@@ -73,7 +73,7 @@ func onBuild(ctx context.Context, pm *PrjAndMods) *Result {
 		phaseStr = "build"
 	}
 
-	ctx, span, logger := telemetry.StartSpan(ctx, "build:"+phaseStr, pm.Logger)
+	_, span, logger := telemetry.StartSpan(ctx, "build:"+phaseStr, pm.Logger)
 	defer span.Complete()
 	pm.Logger = logger
 

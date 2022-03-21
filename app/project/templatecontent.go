@@ -48,7 +48,7 @@ func (t *TemplateContext) ExtraFilesDocker() string {
 	}
 	ret := make([]string, 0, len(t.Info.ExtraFiles))
 	for _, ef := range t.Info.ExtraFiles {
-		ret = append(ret, "\nCOPY "+ef+" /")
+		ret = append(ret, fmt.Sprintf("\nCOPY %s /%s", ef, ef))
 	}
 	return strings.Join(ret, "")
 }

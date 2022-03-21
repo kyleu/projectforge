@@ -24,6 +24,10 @@ func Inject(fl *File, content map[string]string) error {
 		return errors.Wrap(err, "can't read inject indexes")
 	}
 
+	if len(injectIndexes) < len(content) {
+		// return errors.Errorf("file contains [%d] injection points, but [%d] are required", len(injectIndexes), len(content))
+	}
+
 	for _, idx := range injectIndexes {
 		c, ok := content[idx.Key]
 		if !ok {

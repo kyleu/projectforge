@@ -35,7 +35,7 @@ func Search(f *file.File, args *model.Args) error {
 
 func searchModel(m *model.Model) string {
 	f := golang.NewBlock("search", "inject")
-	f.W("\t%sFunc := func(ctx context.Context, as *app.State, params *Params) (result.Results, error) {", m.Package)
+	f.W("\t%sFunc := func(ctx context.Context, as *app.State, params *Params, logger *zap.SugaredLogger) (result.Results, error) {", m.Package)
 	const msg = "\t\tmodels, err := as.Services.%s.Search(ctx, params.Q, nil, params.PS.Get(%q, nil, as.Logger)%s)"
 	f.W(msg, m.Proper(), m.Package, m.SoftDeleteSuffix())
 	f.W("\t\tif err != nil {")

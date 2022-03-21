@@ -24,7 +24,7 @@ func NewService(logger *zap.SugaredLogger) *Service {
 }
 
 func (s Service) Status(ctx context.Context, prj *project.Project, logger *zap.SugaredLogger) (*Result, error) {
-	ctx, span, logger := telemetry.StartSpan(ctx, "git.status:"+prj.Key, logger)
+	_, span, _ := telemetry.StartSpan(ctx, "git.status:"+prj.Key, logger)
 	defer span.Complete()
 
 	dirty, err := gitStatus(prj.Path)

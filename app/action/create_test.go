@@ -46,7 +46,7 @@ func TestFoo(t *testing.T) {
 	for _, c := range cases {
 		t.Log("Testing [" + c.project.Name + "]")
 		cfg := c.project.ToMap()
-		params := &action.Params{Span: nil, ProjectKey: c.project.Key, T: action.TypeCreate, Cfg: cfg, MSvc: mSvc, PSvc: pSvc, ESvc: eSvc, Logger: logger}
+		params := &action.Params{ProjectKey: c.project.Key, T: action.TypeCreate, Cfg: cfg, MSvc: mSvc, PSvc: pSvc, ESvc: eSvc, Logger: logger}
 		res := action.Apply(context.Background(), params)
 		t.Log(res.Status)
 	}
