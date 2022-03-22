@@ -3,6 +3,7 @@ package view
 import (
 	"fmt"
 
+	"golang.org/x/exp/slices"
 	"projectforge.dev/projectforge/app/export/files/helper"
 	"projectforge.dev/projectforge/app/export/golang"
 	"projectforge.dev/projectforge/app/export/model"
@@ -68,8 +69,10 @@ func viewTableColumn(ret *golang.Block, models model.Models, m *model.Model, lin
 	}
 	const msg = "%s  <a title=%q href=\"{%%%%s %s %%%%}\">{%%%%= components.SVGRefIcon(%q, ps) %%%%}</a>"
 	for _, rel := range m.Relations {
-		relModel := models.Get(rel.Table)
-		ret.W(msg, ind, relModel.Title(), rel.WebPath(m, relModel, prefix), relModel.Icon)
+		if slices.Contains(rel.Src, col.Name) {
+			relModel := models.Get(rel.Table)
+			ret.W(msg, ind, relModel.Title(), rel.WebPath(m, relModel, prefix), relModel.Icon)
+		}
 	}
 	ret.W(ind + "</td>")
 }
