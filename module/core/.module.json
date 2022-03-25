@@ -28,6 +28,11 @@
       "description": "minimum logging level to display, one of [`debug`, `info`, `warn`, `error`]"
     },
     {
+      "key": "telemetry_disabled",
+      "type": "bool",
+      "description": "when set, disables all telemetry"
+    },
+    {
       "key": "telemetry_endpoint",
       "type": "string",
       "description": "address of OpenTelemetry collector (when enabled), defaults to `localhost:55681`"

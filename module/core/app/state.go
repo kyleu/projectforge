@@ -41,14 +41,14 @@ type State struct {
 	Started   time.Time
 }
 
-func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, logger *zap.SugaredLogger) (*State, error) {
+func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, enableTelemetry bool, logger *zap.SugaredLogger) (*State, error) {
 	loc, err := time.LoadLocation("UTC")
 	if err != nil {
 		return nil, err
 	}
 	time.Local = loc
 
-	_ = telemetry.InitializeIfNeeded(true, bi.Version, logger){{{ if .HasModule "oauth" }}}
+	_ = telemetry.InitializeIfNeeded(enableTelemetry, bi.Version, logger){{{ if .HasModule "oauth" }}}
 	as := auth.NewService("", logger){{{ end }}}
 	ts := theme.NewService(f, logger)
 

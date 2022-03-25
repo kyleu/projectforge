@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"sort"
 	"strings"
 	"sync"
@@ -39,6 +40,7 @@ func RunAction(rc *fasthttp.RequestCtx) {
 		if result.Project == nil {
 			result.Project = prj
 		}
+		ps.Title = fmt.Sprintf("[%s] %s", actT.Title, prj.Title())
 		ps.Data = result
 		page := &vaction.Result{Ctx: &action.ResultContext{Prj: prj, Cfg: cfg, Res: result}}
 		return render(rc, as, page, ps, "projects", prj.Key, actT.Title)
@@ -79,6 +81,7 @@ func RunAllActions(rc *fasthttp.RequestCtx) {
 		sort.Slice(results, func(i int, j int) bool {
 			return strings.ToLower(results[i].Prj.Title()) < strings.ToLower(results[j].Prj.Title())
 		})
+		ps.Title = fmt.Sprintf("[%s] All Projects", actT.Title)
 		ps.Data = results
 		page := &vaction.Results{T: actT, Ctxs: results}
 		return render(rc, as, page, ps, "projects", actT.Title)

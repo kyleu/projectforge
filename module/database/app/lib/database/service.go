@@ -13,6 +13,7 @@ import (
 
 	"{{{ .Package }}}/app/lib/telemetry"
 	"{{{ .Package }}}/app/lib/telemetry/dbmetrics"{{{ if.HasModule "migration" }}}
+	"{{{ .Package }}}/app/util"
 	"{{{ .Package }}}/queries"
 	"{{{ .Package }}}/queries/schema"{{{ end }}}
 )
@@ -63,7 +64,11 @@ func (s *Service) Healthcheck(db *sqlx.DB) error {
 			err = res.Err()
 		}
 		if strings.Contains(err.Error(), "does not exist") {
-			{{{ if.HasModule "migration" }}}return errors.Wrapf(err, "database does not exist; run the following:\n"+schema.CreateDatabase()){{{ else }}}return errors.Wrapf(err, "database does not exist"){{{ end }}}
+			{{{ if.HasModule "migration" }}}if s.Key == util.AppKey {
+				return errors.Wrapf(err, "database does not exist; run the following:\n"+schema.CreateDatabase())
+			} else {
+				return errors.Wrapf(err, "database does not exist")
+			}{{{ else }}}return errors.Wrapf(err, "database does not exist"){{{ end }}}
 		}
 		return errors.Wrapf(err, "unable to run healthcheck [%s]", q)
 	}
@@ -90,9 +95,11 @@ func errMessage(t string, q string, values []any) string {
 	return fmt.Sprintf("error running %s sql [%s] with values [%s]", t, strings.TrimSpace(q), valueStrings(values))
 }
 
-func (s *Service) logQuery(msg string, q string, values []any) {
+func (s *Service) logQuery(ctx context.Context, msg string, q string, values []any) {
 	if s.Debug {
-		s.logger.Debugf("%s {\n  SQL: %s\n  Values: %s\n}", msg, strings.TrimSpace(q), valueStrings(values))
+		_, span, logger := telemetry.StartSpan(ctx, "query.debug", s.logger)
+		defer span.Complete()
+		logger.Debugf("%s {\n  SQL: %s\n  Values: %s\n}", msg, strings.TrimSpace(q), valueStrings(values))
 	}
 }
 

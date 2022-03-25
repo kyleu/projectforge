@@ -191,6 +191,7 @@ func (s *Service) getAdditional() ([]string, bool) {
 	additionalContent, err := fs.ReadFile(additionalFilename)
 	if err != nil {
 		s.logger.Warnf("unable to load additional projects from [%s]", filepath.Join(fs.Root(), additionalFilename))
+		return nil, false
 	}
 	var additional []string
 	err = util.FromJSON(additionalContent, &additional)

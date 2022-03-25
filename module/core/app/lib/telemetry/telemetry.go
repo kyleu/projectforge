@@ -17,6 +17,7 @@ import (
 
 var (
 	initialized    = false
+	enabled        = true
 	tracerProvider *sdktrace.TracerProvider
 )
 

@@ -44,7 +44,8 @@ func loadSite(flags *Flags, logger *zap.SugaredLogger) (fasthttp.RequestHandler,
 	r := controller.SiteRoutes()
 	f := filesystem.NewFileSystem(flags.ConfigDir, logger)
 
-	st, err := app.NewState(flags.Debug, _buildInfo, f, logger)
+	telemetryEnabled := util.GetEnv("disable_telemetry", "") == "true"
+	st, err := app.NewState(flags.Debug, _buildInfo, f, telemetryEnabled, logger)
 	if err != nil {
 		return nil, logger, err
 	}

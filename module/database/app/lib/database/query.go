@@ -16,7 +16,7 @@ func (s *Service) Query(ctx context.Context, q string, tx *sqlx.Tx, values ...an
 	var ret *sqlx.Rows
 	var err error
 	defer s.complete(q, op, span, now, err)
-	s.logQuery("running raw query", q, values)
+	s.logQuery(ctx, "running raw query", q, values)
 	if tx == nil {
 		ret, err = s.db.QueryxContext(ctx, q, values...)
 		return ret, err
@@ -115,7 +115,7 @@ func (s *Service) Select(ctx context.Context, dest any, q string, tx *sqlx.Tx, v
 	now, ctx, span := s.newSpan(ctx, "db:"+op, q)
 	var err error
 	defer s.complete(q, op, span, now, err)
-	s.logQuery(fmt.Sprintf("selecting rows of type [%T]", dest), q, values)
+	s.logQuery(ctx, fmt.Sprintf("selecting rows of type [%T]", dest), q, values)
 	if tx == nil {
 		err = s.db.SelectContext(ctx, dest, q, values...)
 		return err
@@ -129,7 +129,7 @@ func (s *Service) Get(ctx context.Context, dto any, q string, tx *sqlx.Tx, value
 	now, ctx, span := s.newSpan(ctx, "db:"+op, q)
 	var err error
 	defer s.complete(q, op, span, now, err)
-	s.logQuery(fmt.Sprintf("getting single row of type [%T]", dto), q, values)
+	s.logQuery(ctx, fmt.Sprintf("getting single row of type [%T]", dto), q, values)
 	if tx == nil {
 		return s.db.GetContext(ctx, dto, q, values...)
 	}
@@ -154,4 +154,21 @@ func (s *Service) SingleInt(ctx context.Context, q string, tx *sqlx.Tx, values .
 		return 0, nil
 	}
 	return *x.X, nil
+}
+
+type singleBoolResult struct {
+	X bool `db:"x"`
+}
+
+func (s *Service) SingleBool(ctx context.Context, q string, tx *sqlx.Tx, values ...any) (bool, error) {
+	const op = "single-bool"
+	now, ctx, span := s.newSpan(ctx, "db:"+op, q)
+	var err error
+	defer s.complete(q, op, span, now, err)
+	x := &singleBoolResult{}
+	err = s.Get(ctx, x, q, tx, values...)
+	if err != nil {
+		return false, err
+	}
+	return x.X, nil
 }

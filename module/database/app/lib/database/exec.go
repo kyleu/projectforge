@@ -13,7 +13,7 @@ import (
 )
 
 func (s *Service) Insert(ctx context.Context, q string, tx *sqlx.Tx, values ...any) error {
-	s.logQuery("inserting row", q, values)
+	s.logQuery(ctx, "inserting row", q, values)
 	aff, err := s.execUnknown(ctx, "insert", q, tx, values...)
 	if err != nil {
 		return err
@@ -71,7 +71,7 @@ func (s *Service) execUnknown(ctx context.Context, op string, q string, tx *sqlx
 
 func (s *Service) process(ctx context.Context, op string, key string, past string, q string, tx *sqlx.Tx, expected int, values ...any) (int, error) {
 	if s.logger != nil {
-		s.logQuery(fmt.Sprintf("%s [%d] rows", key, expected), q, values)
+		s.logQuery(ctx, fmt.Sprintf("%s [%d] rows", key, expected), q, values)
 	}
 
 	aff, err := s.execUnknown(ctx, op, q, tx, values...)
