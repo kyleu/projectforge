@@ -35,7 +35,7 @@ func (s *Service) ApplyObj(ctx context.Context, a *Audit, l any, r any, md util.
 }
 
 func (s *Service) Apply(ctx context.Context, a *Audit, r ...*Record) (*Audit, Records, error) {
-	tx, err := s.db.StartTransaction()
+	tx, err := s.db.StartTransaction(s.logger)
 	defer func() { _ = tx.Rollback() }()
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "unable to start transaction")

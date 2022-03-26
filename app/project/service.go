@@ -188,6 +188,9 @@ func (s *Service) Init() error {
 
 func (s *Service) getAdditional() ([]string, bool) {
 	_, fs := s.root()
+	if fs == nil {
+		return nil, false
+	}
 	additionalContent, err := fs.ReadFile(additionalFilename)
 	if err != nil {
 		s.logger.Warnf("unable to load additional projects from [%s]", filepath.Join(fs.Root(), additionalFilename))

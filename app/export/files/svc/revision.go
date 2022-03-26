@@ -54,7 +54,7 @@ func serviceGetAllRevisions(m *model.Model) (*golang.Block, error) {
 	}
 	ret.W("\tq := database.SQLSelect(columnsString, tablesJoinedParam, wc, params.OrderByString(), params.Limit, params.Offset)")
 	ret.W("\tret := dtos{}")
-	ret.W("\terr := s.db.Select(ctx, &ret, q, tx, %s)", strings.Join(pks.CamelNames(), ", "))
+	ret.W("\terr := s.db.Select(ctx, &ret, q, tx, s.logger, %s)", strings.Join(pks.CamelNames(), ", "))
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, errors.Wrap(err, \"unable to get %s\")", m.ProperPlural())
 	ret.W("\t}")
@@ -79,7 +79,7 @@ func serviceGetRevision(m *model.Model) (*golang.Block, error) {
 		return nil, err
 	}
 	ret.W("\tq := database.SQLSelectSimple(columnsString, tablesJoinedParam, wc)")
-	ret.W("\terr := s.db.Get(ctx, ret, q, tx, %s, %s)", strings.Join(m.PKs().CamelNames(), ", "), revCol.Camel())
+	ret.W("\terr := s.db.Get(ctx, ret, q, tx, s.logger, %s, %s)", strings.Join(m.PKs().CamelNames(), ", "), revCol.Camel())
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, err")
 	ret.W("\t}")
@@ -111,7 +111,7 @@ func serviceGetCurrentRevisions(m *model.Model) (*golang.Block, error) {
 	}
 	ret.W("\t\t%s int    `db:\"current_%s\"`", currRevStr, revCol.Name)
 	ret.W("\t}")
-	ret.W("\terr := s.db.Select(ctx, &results, q, tx, vals...)")
+	ret.W("\terr := s.db.Select(ctx, &results, q, tx, s.logger, vals...)")
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, errors.Wrap(err, \"unable to get %s\")", m.ProperPlural())
 	ret.W("\t}")

@@ -43,7 +43,7 @@ func serviceHistoryGetHistory(m *model.Model) *golang.Block {
 	ret.W("func (s *Service) GetHistory(ctx context.Context, tx *sqlx.Tx, id uuid.UUID) (*%sHistory, error) {", m.Proper())
 	ret.W("\tq := database.SQLSelectSimple(historyColumnsString, historyTableQuoted, \"id = $1\")")
 	ret.W("\tret := historyDTO{}")
-	ret.W("\terr := s.db.Get(ctx, &ret, q, tx, id)")
+	ret.W("\terr := s.db.Get(ctx, &ret, q, tx, s.logger, id)")
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, errors.Wrapf(err, \"unable to get %s history [%%%%s]\", id.String())", m.TitleLower())
 	ret.W("\t}")
@@ -64,7 +64,7 @@ func serviceHistoryGetHistories(m *model.Model) *golang.Block {
 	}
 	ret.W("\tq := database.SQLSelectSimple(historyColumnsString, historyTableQuoted, %q)", strings.Join(joins, " and "))
 	ret.W("\tret := historyDTOs{}")
-	ret.W("\terr := s.db.Select(ctx, &ret, q, tx, %s)", strings.Join(pks.CamelNames(), ", "))
+	ret.W("\terr := s.db.Select(ctx, &ret, q, tx, s.logger, %s)", strings.Join(pks.CamelNames(), ", "))
 	ret.W("\tif err != nil {")
 	const msg = "\t\treturn nil, errors.Wrapf(err, \"unable to get %s by %s\", %s)"
 	ret.W(msg, m.TitlePluralLower(), strings.Join(logs, ", "), strings.Join(pks.CamelNames(), ", "))
@@ -91,7 +91,7 @@ func serviceHistorySaveHistory(m *model.Model) *golang.Block {
 	ret.W("\t\t%s time.Now(),", util.StringPad("Created:", max))
 	ret.W("\t}")
 	ret.W("\thist := h.ToHistory()")
-	ret.W("\terr := s.db.Insert(ctx, q, tx, hist.ToData()...)")
+	ret.W("\terr := s.db.Insert(ctx, q, tx, s.logger, hist.ToData()...)")
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, errors.Wrap(err, \"unable to insert %s\")", m.TitleLower())
 	ret.W("\t}")

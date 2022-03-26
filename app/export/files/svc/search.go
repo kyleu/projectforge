@@ -60,7 +60,7 @@ func serviceSearch(m *model.Model, grp *model.Column) *golang.Block {
 	}
 	ret.W("\tq := database.SQLSelect(columnsString, %s, wc, params.OrderByString(), params.Limit, params.Offset)", tableClauseFor(m))
 	ret.W("\tret := dtos{}")
-	ret.W("\terr := s.db.Select(ctx, &ret, q, tx, " + strings.Join(params, ", ") + ")")
+	ret.W("\terr := s.db.Select(ctx, &ret, q, tx, s.logger, " + strings.Join(params, ", ") + ")")
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, err")
 	ret.W("\t}")

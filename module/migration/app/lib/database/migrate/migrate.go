@@ -50,7 +50,7 @@ func run(ctx context.Context, maxIdx int, i int, file *MigrationFile, s *databas
 		}
 		if m.Title != file.Title {
 			logger.Infof("migration [%d] name has changed from [%s] to [%s]", idx, m.Title, file.Title)
-			err := removeMigrationByIdx(ctx, s, idx)
+			err := removeMigrationByIdx(ctx, s, idx, logger)
 			if err != nil {
 				return err
 			}
@@ -63,7 +63,7 @@ func run(ctx context.Context, maxIdx int, i int, file *MigrationFile, s *databas
 		nc := file.Content
 		if nc != m.Src {
 			logger.Infof("migration [%d:%s] content has changed from [%dB] to [%dB]", idx, file.Title, len(nc), len(m.Src))
-			err := removeMigrationByIdx(ctx, s, idx)
+			err := removeMigrationByIdx(ctx, s, idx, logger)
 			if err != nil {
 				return err
 			}
@@ -90,5 +90,5 @@ func applyMigration(ctx context.Context, s *database.Service, idx int, file *Mig
 		return err
 	}
 	m := &Migration{Idx: idx, Title: file.Title, Src: sql, Created: time.Now()}
-	return newMigration(ctx, s, m)
+	return newMigration(ctx, s, m, logger)
 }

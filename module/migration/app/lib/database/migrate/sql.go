@@ -43,7 +43,7 @@ func exec(ctx context.Context, file *MigrationFile, s *database.Service, logger 
 	sql := file.Content
 	timer := util.TimerStart()
 	logger.Infof("migration running SQL: %v", sql)
-	_, err := s.Exec(ctx, sql, nil, -1)
+	_, err := s.Exec(ctx, sql, nil, -1, logger)
 	if err != nil {
 		return "", errors.Wrap(err, "cannot execute ["+file.Title+"]")
 	}

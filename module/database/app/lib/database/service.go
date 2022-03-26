@@ -35,7 +35,6 @@ type Service struct {
 	Type         *DBType `json:"type"`
 	db           *sqlx.DB
 	metrics      *dbmetrics.Metrics
-	logger       *zap.SugaredLogger
 }
 
 func NewService(typ *DBType, key string, dbName string, schName string, username string, debug bool, db *sqlx.DB, logger *zap.SugaredLogger) (*Service, error) {
@@ -43,12 +42,12 @@ func NewService(typ *DBType, key string, dbName string, schName string, username
 		return nil, errors.New("logger must be provided to database service")
 	}
 	logger = logger.With("database", dbName, "user", username)
-	m, err := dbmetrics.NewMetrics(key, db)
+	m, err := dbmetrics.NewMetrics(strings.ReplaceAll(key, "-", "_"), db)
 	if err != nil {
 		logger.Warnf(fmt.Sprintf("unable to register database metrics for [%s]: %+v", key, err))
 	}
 
-	ret := &Service{Key: key, DatabaseName: dbName, SchemaName: schName, Username: username, Debug: debug, Type: typ, db: db, metrics: m, logger: logger}
+	ret := &Service{Key: key, DatabaseName: dbName, SchemaName: schName, Username: username, Debug: debug, Type: typ, db: db, metrics: m}
 	err = ret.Healthcheck(db)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to run healthcheck")
@@ -76,9 +75,9 @@ func (s *Service) Healthcheck(db *sqlx.DB) error {
 	return nil
 }
 
-func (s *Service) StartTransaction() (*sqlx.Tx, error) {
+func (s *Service) StartTransaction(logger *zap.SugaredLogger) (*sqlx.Tx, error) {
 	if s.Debug {
-		s.logger.Debug("opening transaction")
+		logger.Debug("opening transaction")
 	}
 	return s.db.Beginx()
 }
@@ -95,29 +94,29 @@ func errMessage(t string, q string, values []any) string {
 	return fmt.Sprintf("error running %s sql [%s] with values [%s]", t, strings.TrimSpace(q), valueStrings(values))
 }
 
-func (s *Service) logQuery(ctx context.Context, msg string, q string, values []any) {
+func (s *Service) logQuery(ctx context.Context, msg string, q string, logger *zap.SugaredLogger, values []any) {
 	if s.Debug {
-		_, span, logger := telemetry.StartSpan(ctx, "query.debug", s.logger)
-		defer span.Complete()
 		logger.Debugf("%s {\n  SQL: %s\n  Values: %s\n}", msg, strings.TrimSpace(q), valueStrings(values))
 	}
 }
 
-func (s *Service) newSpan(ctx context.Context, name string, q string) (time.Time, context.Context, *telemetry.Span) {
+func (s *Service) newSpan(
+	ctx context.Context, name string, q string, logger *zap.SugaredLogger,
+) (time.Time, context.Context, *telemetry.Span, *zap.SugaredLogger) {
 	if s.metrics != nil {
 		s.metrics.IncStmt(q, name)
 	}
-	nc, span, _ := telemetry.StartSpan(ctx, "database"+name, s.logger)
+	nc, span, logger := telemetry.StartSpan(ctx, "database"+name, logger)
 	span.Attributes(
 		&telemetry.Attribute{Key: "db.statement", Value: q},
 		&telemetry.Attribute{Key: "db.system", Value: s.db.DriverName()},
 		&telemetry.Attribute{Key: "db.name", Value: s.DatabaseName},
 		&telemetry.Attribute{Key: "db.user", Value: s.Username},
 	)
-	return time.Now(), nc, span
+	return time.Now(), nc, span, logger
 }
 
-func (s *Service) complete(q string, op string, span *telemetry.Span, started time.Time, err error) {
+func (s *Service) complete(q string, op string, span *telemetry.Span, started time.Time, logger *zap.SugaredLogger, err error) {
 	if err != nil {
 		span.OnError(err)
 	}

@@ -89,7 +89,7 @@ func serviceCreate(m *model.Model, g *golang.File) (*golang.Block, error) {
 		ret.W("\tfor _, arg := range models {")
 		ret.W("\t\tvals = append(vals, arg.ToData()...)")
 		ret.W("\t}")
-		ret.W("\treturn s.db.Insert(ctx, q, tx, vals...)")
+		ret.W("\treturn s.db.Insert(ctx, q, tx, s.logger, vals...)")
 	}
 	ret.W("}")
 	return ret, nil
@@ -158,7 +158,7 @@ func serviceUpdate(m *model.Model, g *golang.File) (*golang.Block, error) {
 		if len(m.Columns.WithTag("created")) == 0 {
 			token = ":="
 		}
-		ret.W("\t_, err %s s.db.Update(ctx, q, tx, 1, data...)", token)
+		ret.W("\t_, err %s s.db.Update(ctx, q, tx, 1, s.logger, data...)", token)
 		ret.W("\tif err != nil {")
 		ret.W("\t\treturn err")
 		ret.W("\t}")
@@ -203,7 +203,7 @@ func serviceSave(m *model.Model, g *golang.File) (*golang.Block, error) {
 		ret.W("\tfor _, model := range models {")
 		ret.W("\t\tdata = append(data, model.ToData()...)")
 		ret.W("\t}")
-		ret.W("\treturn s.db.Insert(ctx, q, tx, data...)")
+		ret.W("\treturn s.db.Insert(ctx, q, tx, s.logger, data...)")
 	}
 	ret.W("}")
 	return ret, nil
@@ -219,7 +219,7 @@ func serviceUpsertCore(m *model.Model, g *golang.File) *golang.Block {
 	ret.W("\tfor _, model := range models {")
 	ret.W("\t\tdata = append(data, model.ToDataCore()...)")
 	ret.W("\t}")
-	ret.W("\t_, err := s.db.Update(ctx, q, tx, 1, data...)")
+	ret.W("\t_, err := s.db.Update(ctx, q, tx, 1, s.logger, data...)")
 	ret.W("\treturn err")
 	ret.W("}")
 	return ret
@@ -234,7 +234,7 @@ func serviceInsertRevision(m *model.Model) *golang.Block {
 	ret.W("\tfor _, model := range models {")
 	ret.W("\t\tdata = append(data, model.ToData%s()...)", m.HistoryColumn().Proper())
 	ret.W("\t}")
-	ret.W("\treturn s.db.Insert(ctx, q, tx, data...)")
+	ret.W("\treturn s.db.Insert(ctx, q, tx, s.logger, data...)")
 	ret.W("}")
 	return ret
 }

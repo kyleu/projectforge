@@ -18,14 +18,14 @@ func (s *Service) Create(ctx context.Context, tx *sqlx.Tx, models ...*Audit) err
 	for _, arg := range models {
 		vals = append(vals, arg.ToData()...)
 	}
-	return s.db.Insert(ctx, q, tx, vals...)
+	return s.db.Insert(ctx, q, tx, s.logger, vals...)
 }
 
 func (s *Service) Update(ctx context.Context, tx *sqlx.Tx, model *Audit) error {
 	q := database.SQLUpdate(tableQuoted, columnsQuoted, "\"id\" = $11", "")
 	data := model.ToData()
 	data = append(data, model.ID)
-	_, ret := s.db.Update(ctx, q, tx, 1, data...)
+	_, ret := s.db.Update(ctx, q, tx, 1, s.logger, data...)
 	return ret
 }
 
@@ -38,11 +38,11 @@ func (s *Service) Save(ctx context.Context, tx *sqlx.Tx, models ...*Audit) error
 	for _, model := range models {
 		data = append(data, model.ToData()...)
 	}
-	return s.db.Insert(ctx, q, tx, data...)
+	return s.db.Insert(ctx, q, tx, s.logger, data...)
 }
 
 func (s *Service) Delete(ctx context.Context, tx *sqlx.Tx, id uuid.UUID) error {
 	q := database.SQLDelete(tableQuoted, defaultWC)
-	_, err := s.db.Delete(ctx, q, tx, 1, id)
+	_, err := s.db.Delete(ctx, q, tx, 1, s.logger, id)
 	return err
 }

@@ -36,7 +36,7 @@ func SQLRun(rc *fasthttp.RequestCtx) {
 			}
 		}
 
-		tx, err := as.DB.StartTransaction()
+		tx, err := as.DB.StartTransaction(ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to start transaction")
 		}
@@ -45,7 +45,7 @@ func SQLRun(rc *fasthttp.RequestCtx) {
 		results := [][]any{}
 
 		timer := util.TimerStart()
-		result, err := as.DB.Query(ps.Context, sql, tx)
+		result, err := as.DB.Query(ps.Context, sql, tx, ps.Logger)
 		if err != nil {
 			return "", err
 		}

@@ -16,7 +16,7 @@ func (s *Service) RecordsForAudit(ctx context.Context, tx *sqlx.Tx, auditID uuid
 	wc := `"audit_id" = $1`
 	q := database.SQLSelect(recordColumnsString, recordTableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
 	ret := recordDTOs{}
-	err := s.db.Select(ctx, &ret, q, tx, auditID)
+	err := s.db.Select(ctx, &ret, q, tx, s.logger, auditID)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get audit records by audit [%s]", auditID.String())
 	}
@@ -26,7 +26,7 @@ func (s *Service) RecordsForAudit(ctx context.Context, tx *sqlx.Tx, auditID uuid
 func (s *Service) GetRecord(ctx context.Context, tx *sqlx.Tx, id uuid.UUID) (*Record, error) {
 	q := database.SQLSelectSimple(recordColumnsString, recordTableQuoted, "id = $1")
 	ret := &recordDTO{}
-	err := s.db.Get(ctx, ret, q, tx, id)
+	err := s.db.Get(ctx, ret, q, tx, s.logger, id)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get audit record by id [%s]", id.String())
 	}
@@ -42,5 +42,5 @@ func (s *Service) CreateRecords(ctx context.Context, tx *sqlx.Tx, models ...*Rec
 	for _, arg := range models {
 		vals = append(vals, arg.ToData()...)
 	}
-	return s.db.Insert(ctx, q, tx, vals...)
+	return s.db.Insert(ctx, q, tx, s.logger, vals...)
 }
