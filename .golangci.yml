@@ -1,10 +1,8 @@
 # Content managed by Project Forge, see [projectforge.md] for details.
+# Requires golangci-lint 1.45.2; `go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest`
 issues:
   max-issues-per-linter: 0
   max-same-issues: 0
-
-run:
-  go: 1.18
 
 output:
   sort-results: true
@@ -31,9 +29,11 @@ linters-settings:
       - style
     disabled-checks:
       - commentedOutCode
-      - paramTypeCombine
-      - unnamedResult
       - hugeParam
+      - paramTypeCombine
+      - rangeValCopy
+      - typeDefFirst
+      - unnamedResult
   gocyclo:
     min-complexity: 30
   goimports:
@@ -96,7 +96,7 @@ linters:
     - gochecknoinits
     - gocognit
     - goconst
-    ## go118 - gocritic
+    - gocritic
     - gocyclo
     - godot
     - godox

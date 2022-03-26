@@ -1,6 +1,7 @@
 package util
 
 import (
+	"fmt"
 	"os"
 	"strings"
 
@@ -50,4 +51,8 @@ func GetEnv(name string, defaultValue ...string) string {
 		}
 	}
 	return strings.Join(defaultValue, "")
+}
+
+func GetEnvBool(name string, defaultValue bool) bool {
+	return GetEnv(name, fmt.Sprint(defaultValue)) == BoolTrue
 }

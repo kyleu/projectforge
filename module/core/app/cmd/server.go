@@ -44,7 +44,7 @@ func startServer(flags *Flags) error {
 func loadServer(flags *Flags, logger *zap.SugaredLogger) (fasthttp.RequestHandler, *zap.SugaredLogger, error) {
 	r := controller.AppRoutes()
 	f := filesystem.NewFileSystem(flags.ConfigDir, logger)
-	telemetryEnabled := util.GetEnv("disable_telemetry", "") == "true"
+	telemetryEnabled := util.GetEnvBool("disable_telemetry", false)
 	st, err := app.NewState(flags.Debug, _buildInfo, f, telemetryEnabled, logger)
 	if err != nil {
 		return nil, logger, err

@@ -71,7 +71,7 @@ func (b *Build) ToMap() map[string]bool {
 func BuildFromMap(frm util.ValueMap) *Build {
 	x := func(k string) bool {
 		v := fmt.Sprint(frm["build-"+k])
-		return v == "true"
+		return v == util.BoolTrue
 	}
 	return &Build{
 		Publish: x("publish"), Private: x("private"), Changelog: x("changelog"), TestsFail: x("testsFail"),
