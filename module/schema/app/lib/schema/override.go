@@ -18,10 +18,10 @@ const (
 )
 
 type Override struct {
-	Type string      `json:"type,omitempty"`
-	Path util.Pkg    `json:"path,omitempty"`
-	Prop string      `json:"prop,omitempty"`
-	Val  any `json:"val,omitempty"`
+	Type string   `json:"type,omitempty"`
+	Path util.Pkg `json:"path,omitempty"`
+	Prop string   `json:"prop,omitempty"`
+	Val  any      `json:"val,omitempty"`
 }
 
 func NewOverride(typ string, path util.Pkg, prop string, val any) *Override {

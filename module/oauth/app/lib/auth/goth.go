@@ -3,11 +3,13 @@ package auth
 import (
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/providers/amazon"
+	"github.com/markbates/goth/providers/apple"
 	"github.com/markbates/goth/providers/auth0"
 	"github.com/markbates/goth/providers/azuread"
 	"github.com/markbates/goth/providers/battlenet"
 	"github.com/markbates/goth/providers/bitbucket"
 	"github.com/markbates/goth/providers/box"
+	"github.com/markbates/goth/providers/cloudfoundry"
 	"github.com/markbates/goth/providers/dailymotion"
 	"github.com/markbates/goth/providers/deezer"
 	"github.com/markbates/goth/providers/digitalocean"
@@ -22,12 +24,14 @@ import (
 	"github.com/markbates/goth/providers/google"
 	"github.com/markbates/goth/providers/gplus"
 	"github.com/markbates/goth/providers/heroku"
+	"github.com/markbates/goth/providers/influxcloud"
 	"github.com/markbates/goth/providers/instagram"
 	"github.com/markbates/goth/providers/intercom"
 	"github.com/markbates/goth/providers/kakao"
 	"github.com/markbates/goth/providers/lastfm"
 	"github.com/markbates/goth/providers/line"
 	"github.com/markbates/goth/providers/linkedin"
+	"github.com/markbates/goth/providers/mailru"
 	"github.com/markbates/goth/providers/mastodon"
 	"github.com/markbates/goth/providers/meetup"
 	"github.com/markbates/goth/providers/microsoftonline"
@@ -36,6 +40,7 @@ import (
 	"github.com/markbates/goth/providers/okta"
 	"github.com/markbates/goth/providers/onedrive"
 	"github.com/markbates/goth/providers/openidConnect"
+	"github.com/markbates/goth/providers/oura"
 	"github.com/markbates/goth/providers/paypal"
 	"github.com/markbates/goth/providers/salesforce"
 	"github.com/markbates/goth/providers/seatalk"
@@ -46,16 +51,19 @@ import (
 	"github.com/markbates/goth/providers/steam"
 	"github.com/markbates/goth/providers/strava"
 	"github.com/markbates/goth/providers/stripe"
+	"github.com/markbates/goth/providers/tumblr"
 	"github.com/markbates/goth/providers/twitch"
 	"github.com/markbates/goth/providers/twitter"
 	"github.com/markbates/goth/providers/typetalk"
 	"github.com/markbates/goth/providers/uber"
 	"github.com/markbates/goth/providers/vk"
+	"github.com/markbates/goth/providers/wecom"
 	"github.com/markbates/goth/providers/wepay"
 	"github.com/markbates/goth/providers/xero"
 	"github.com/markbates/goth/providers/yahoo"
 	"github.com/markbates/goth/providers/yammer"
 	"github.com/markbates/goth/providers/yandex"
+	"github.com/markbates/goth/providers/zoom"
 	"github.com/pkg/errors"
 
 	"{{{ .Package }}}/app/lib/auth/msfix"
@@ -67,8 +75,8 @@ func toGoth(id string, k string, s string, c string) (goth.Provider, error) {
 	switch id {
 	case "amazon":
 		return amazon.New(k, s, c), nil
-	// case "apple":
-	//	 return apple.New(k, s, c, nil, apple.ScopeName, apple.ScopeEmail), nil
+	case "apple":
+		return apple.New(k, s, c, nil, apple.ScopeName, apple.ScopeEmail), nil
 	case auth0Key:
 		return auth0.New(k, s, c, util.GetEnv("auth0_domain")), nil
 	case "azuread":
@@ -79,6 +87,8 @@ func toGoth(id string, k string, s string, c string) (goth.Provider, error) {
 		return bitbucket.New(k, s, c), nil
 	case "box":
 		return box.New(k, s, c), nil
+	case "cloudfoundry":
+		return cloudfoundry.New("", k, s, c), nil
 	case "dailymotion":
 		return dailymotion.New(k, s, c, "email"), nil
 	case "deezer":
@@ -107,6 +117,8 @@ func toGoth(id string, k string, s string, c string) (goth.Provider, error) {
 		return gplus.New(k, s, c), nil
 	case "heroku":
 		return heroku.New(k, s, c), nil
+	case "influxcloud":
+		return influxcloud.New(k, s, c), nil
 	case "instagram":
 		return instagram.New(k, s, c), nil
 	case "intercom":
@@ -119,6 +131,8 @@ func toGoth(id string, k string, s string, c string) (goth.Provider, error) {
 		return line.New(k, s, c, "profile", "openid", "email"), nil
 	case "linkedin":
 		return linkedin.New(k, s, c), nil
+	case "mailru":
+		return mailru.New(k, s, c, "read:accounts"), nil
 	case "mastodon":
 		return mastodon.New(k, s, c, "read:accounts"), nil
 	case "meetup":
@@ -137,6 +151,8 @@ func toGoth(id string, k string, s string, c string) (goth.Provider, error) {
 		return onedrive.New(k, s, c), nil
 	case OpenIDConnectKey:
 		return openidConnect.New(k, s, c, util.GetEnv("openid_connect_url"), "profile", "email")
+	case "oura":
+		return oura.New(k, s, c), nil
 	case "paypal":
 		return paypal.New(k, s, c), nil
 	case "salesforce":
@@ -157,6 +173,8 @@ func toGoth(id string, k string, s string, c string) (goth.Provider, error) {
 		return strava.New(k, s, c), nil
 	case "stripe":
 		return stripe.New(k, s, c), nil
+	case "tumblr":
+		return tumblr.New(k, s, c), nil
 	case "twitch":
 		return twitch.New(k, s, c), nil
 	case "twitter":
@@ -167,6 +185,8 @@ func toGoth(id string, k string, s string, c string) (goth.Provider, error) {
 		return uber.New(k, s, c), nil
 	case "vk":
 		return vk.New(k, s, c), nil
+	case "wecom":
+		return wecom.New(k, s, util.GetEnv("wecom_agent_id"), c), nil
 	case "wepay":
 		return wepay.New(k, s, c, "view_user"), nil
 	case "xero":
@@ -177,6 +197,8 @@ func toGoth(id string, k string, s string, c string) (goth.Provider, error) {
 		return yammer.New(k, s, c), nil
 	case "yandex":
 		return yandex.New(k, s, c), nil
+	case "zoom":
+		return zoom.New(k, s, c), nil
 	default:
 		return nil, errors.Errorf("invalid user provider [%s]", id)
 	}
