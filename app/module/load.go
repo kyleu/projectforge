@@ -2,6 +2,7 @@ package module
 
 import (
 	"context"
+	"path"
 	"path/filepath"
 
 	"github.com/pkg/errors"
@@ -18,16 +19,16 @@ func (s *Service) LoadNative(ctx context.Context, keys ...string) (Modules, erro
 		if err != nil {
 			return nil, err
 		}
-		ret = append(ret, m)
+		ret = append(ret, m...)
 	}
 	return ret, nil
 }
 
-func (s *Service) Load(ctx context.Context, key string, url string) (*Module, error) {
+func (s *Service) Load(ctx context.Context, key string, url string) (Modules, error) {
 	return s.load(ctx, key, "", url)
 }
 
-func (s *Service) load(ctx context.Context, key string, path string, url string) (*Module, error) {
+func (s *Service) load(ctx context.Context, key string, path string, url string) (Modules, error) {
 	var fs filesystem.FileLoader
 	switch {
 	case s.local.IsDir(key):
@@ -36,6 +37,9 @@ func (s *Service) load(ctx context.Context, key string, path string, url string)
 		fs = filesystem.NewFileSystem(filepath.Join(s.config.Root(), key), s.logger)
 	case path != "":
 		fs = filesystem.NewFileSystem(path, s.logger)
+		if key == "*" {
+			return s.loadDirectory(ctx, path, url, fs)
+		}
 	default:
 		var err error
 		if url == "" {
@@ -76,6 +80,28 @@ func (s *Service) load(ctx context.Context, key string, path string, url string)
 		}
 		ret.UsageMD = string(b)
 	}
+	s.cacheMu.Lock()
 	s.cache[key] = ret
+	s.cacheMu.Unlock()
+	return Modules{ret}, nil
+}
+
+func (s *Service) loadDirectory(ctx context.Context, pth string, u string, fs filesystem.FileLoader) (Modules, error) {
+	dirs := fs.ListDirectories(pth)
+	if len(dirs) == 0 {
+		return nil, errors.Errorf("directory at path [%s] does not contain module directories", pth)
+	}
+	ret := make(Modules, 0, len(dirs))
+	for _, dir := range dirs {
+		if !fs.Exists(path.Join(dir, configFilename)) {
+			continue
+		}
+		res, _, err := s.AddIfNeeded(ctx, dir, path.Join(pth, dir), u)
+		if err != nil {
+			return nil, errors.Wrapf(err, "unable to load external module [%s]", dir)
+		}
+		ret = append(ret, res...)
+	}
+
 	return ret, nil
 }

@@ -12,10 +12,11 @@ import (
 )
 
 func ServiceHistory(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
+	dbRef := args.DBRef()
 	g := golang.NewFile(m.Package, []string{"app", m.Package}, "servicehistory")
 	g.AddImport(helper.ImpContext, helper.ImpUUID, helper.ImpErrors, helper.ImpFmt, helper.ImpTime, helper.ImpStrings)
 	g.AddImport(helper.ImpSQLx, helper.ImpAppUtil, helper.ImpDatabase)
-	g.AddBlocks(serviceHistoryVars(m), serviceHistoryGetHistory(m), serviceHistoryGetHistories(m), serviceHistorySaveHistory(m))
+	g.AddBlocks(serviceHistoryVars(m), serviceHistoryGetHistory(m, dbRef), serviceHistoryGetHistories(m, dbRef), serviceHistorySaveHistory(m))
 	return g.Render(addHeader)
 }
 
@@ -38,12 +39,12 @@ func serviceHistoryVars(m *model.Model) *golang.Block {
 	return ret
 }
 
-func serviceHistoryGetHistory(m *model.Model) *golang.Block {
+func serviceHistoryGetHistory(m *model.Model, dbRef string) *golang.Block {
 	ret := golang.NewBlock("GetHistory", "func")
 	ret.W("func (s *Service) GetHistory(ctx context.Context, tx *sqlx.Tx, id uuid.UUID) (*%sHistory, error) {", m.Proper())
 	ret.W("\tq := database.SQLSelectSimple(historyColumnsString, historyTableQuoted, \"id = $1\")")
 	ret.W("\tret := historyDTO{}")
-	ret.W("\terr := s.db.Get(ctx, &ret, q, tx, s.logger, id)")
+	ret.W("\terr := s.%s.Get(ctx, &ret, q, tx, s.logger, id)", dbRef)
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, errors.Wrapf(err, \"unable to get %s history [%%%%s]\", id.String())", m.TitleLower())
 	ret.W("\t}")
@@ -52,7 +53,7 @@ func serviceHistoryGetHistory(m *model.Model) *golang.Block {
 	return ret
 }
 
-func serviceHistoryGetHistories(m *model.Model) *golang.Block {
+func serviceHistoryGetHistories(m *model.Model, dbRef string) *golang.Block {
 	ret := golang.NewBlock("GetHistories", "func")
 	ret.W("func (s *Service) GetHistories(ctx context.Context, tx *sqlx.Tx, %s) (%sHistories, error) {", m.PKs().Args(), m.Proper())
 	pks := m.PKs()
@@ -64,7 +65,7 @@ func serviceHistoryGetHistories(m *model.Model) *golang.Block {
 	}
 	ret.W("\tq := database.SQLSelectSimple(historyColumnsString, historyTableQuoted, %q)", strings.Join(joins, " and "))
 	ret.W("\tret := historyDTOs{}")
-	ret.W("\terr := s.db.Select(ctx, &ret, q, tx, s.logger, %s)", strings.Join(pks.CamelNames(), ", "))
+	ret.W("\terr := s.%s.Select(ctx, &ret, q, tx, s.logger, %s)", dbRef, strings.Join(pks.CamelNames(), ", "))
 	ret.W("\tif err != nil {")
 	const msg = "\t\treturn nil, errors.Wrapf(err, \"unable to get %s by %s\", %s)"
 	ret.W(msg, m.TitlePluralLower(), strings.Join(logs, ", "), strings.Join(pks.CamelNames(), ", "))

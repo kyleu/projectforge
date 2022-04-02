@@ -6,7 +6,7 @@
 
 The projects that are managed by Project Forge are built for developer experience and runtime performance.
 
-Project Forge was initially designed for my own personal projects, but over time has become generally useful. 
+Project Forge was initially designed for my own personal projects, but over time has become generally useful. Project Forge itself is also a generated project.
 
 ## Download
 
@@ -21,7 +21,7 @@ https://github.com/kyleu/projectforge
 A project managed by Project Forge...
 
 - Has a beautiful and fast HTML UI, no JavaScript required
-- Optimizes for speed and developer experience
+- Optimizes for speed and developer experience, sub-second turnaround times
 - Builds in seconds, live-reloads in dev mode when code or templates change
 - Builds to dozens of platforms; mobile, desktop, weird architectures, macOS universal apps
 - Produces a small self-contained binary, includes full REST server and command line interface

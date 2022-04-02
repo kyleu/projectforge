@@ -1,0 +1,10 @@
+{
+  "name": "Doc Browser",
+  "icon": "docbrowse",
+  "description": "Provides a UI for browsing the documentation",
+  "authorName": "Kyle U",
+  "authorEmail": "kyle@kyleu.com",
+  "license": "CC0",
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/docbrowse",
+  "priority": 30
+}

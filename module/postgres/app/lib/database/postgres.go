@@ -66,20 +66,23 @@ func PostgresParamsFromEnv(key string, defaultUser string, prefix string) *Postg
 	return &PostgresParams{Host: h, Port: p, Username: u, Password: pw, Database: d, Schema: s, MaxConns: mc, Debug: debug}
 }
 
-func OpenPostgres(ctx context.Context, prefix string, logger *zap.SugaredLogger) (*Service, error) {
-	envParams := PostgresParamsFromEnv(util.AppKey, util.AppKey, prefix)
+func OpenPostgres(ctx context.Context, key string, prefix string, logger *zap.SugaredLogger) (*Service, error) {
+	if key == "" {
+		key = util.AppKey
+	}
+	envParams := PostgresParamsFromEnv(key, util.AppKey, prefix)
 	if util.GetEnv("db_ssl") == util.BoolTrue {
 		serviceParams, err := PostgresParamsFromService()
 		if err != nil {
 			return nil, err
 		}
-		return OpenPostgresDatabaseSSL(ctx, util.AppKey, envParams, serviceParams, logger)
+		return OpenPostgresDatabaseSSL(ctx, key, envParams, serviceParams, logger)
 	}
-	return OpenPostgresDatabase(ctx, util.AppKey, envParams, logger)
+	return OpenPostgresDatabase(ctx, key, envParams, logger)
 }
 
 func OpenDefaultPostgres(ctx context.Context, logger *zap.SugaredLogger) (*Service, error) {
-	return OpenPostgres(ctx, "", logger)
+	return OpenPostgres(ctx, "", "", logger)
 }
 
 func OpenPostgresDatabase(ctx context.Context, key string, params *PostgresParams, logger *zap.SugaredLogger) (*Service, error) {

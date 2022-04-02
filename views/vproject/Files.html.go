@@ -47,7 +47,7 @@ func (p *Files) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
 //line views/vproject/Files.html:21
 	qw422016.N().S(`  `)
 //line views/vproject/Files.html:22
-	StreamSummary(qw422016, prj, nil, nil, ps)
+	StreamSummary(qw422016, prj, nil, nil, nil, ps)
 //line views/vproject/Files.html:22
 	qw422016.N().S(`
 `)

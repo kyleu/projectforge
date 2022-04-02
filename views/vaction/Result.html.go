@@ -43,7 +43,7 @@ func (p *Result) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vaction/Result.html:16
 		qw422016.N().S(`  `)
 //line views/vaction/Result.html:17
-		vproject.StreamSummary(qw422016, p.Ctx.Prj, nil, nil, ps)
+		vproject.StreamSummary(qw422016, p.Ctx.Prj, nil, nil, &p.Ctx.Res.Action, ps)
 //line views/vaction/Result.html:17
 		qw422016.N().S(`
 `)

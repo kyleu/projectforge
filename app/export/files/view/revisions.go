@@ -13,7 +13,7 @@ func exportViewDetailRevisions(ret *golang.Block, m *model.Model) {
 	ret.W("  {%%%%- if len(p.%s) > 1 -%%%%}", hc.Col.ProperPlural())
 	ret.W("  <div class=\"card\">")
 	ret.W("    <h3>%s</h3>", hc.Col.ProperPlural())
-	ret.W("    {%%%%- code prms := p.Params.Get(%q, nil, ps.Logger) -%%%%}", m.Package)
+	ret.W("    {%%%%- code prms := p.Params.Get(%q, nil, ps.Logger).Sanitize(%q) -%%%%}", m.Package, m.Package)
 	ret.W("    <table class=\"mt\">")
 	ret.W("      <thead>")
 	ret.W("        <tr>")

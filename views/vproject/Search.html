@@ -18,7 +18,7 @@
 } %}
 
 {% func (p *Search) Body(as *app.State, ps *cutil.PageState) %}
-  {%= Summary(p.Project, nil, util.ValueMap{"q": p.Params.Q}, ps) %}
+  {%= Summary(p.Project, nil, util.ValueMap{"q": p.Params.Q}, nil, ps) %}
   {%= searchResults(p.Project, p.Params, p.Results, p.Errors, as, ps) %}
 {% endfunc %}
 

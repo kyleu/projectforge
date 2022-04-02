@@ -10,10 +10,13 @@ import (
 )
 
 //go:embed *
-var assetFS embed.FS
+var FS embed.FS
 
 func EmbedAsset(path string) ([]byte, string, error) {
-	data, err := assetFS.ReadFile(path)
+	if path == "embed.go" {
+		return nil, "", errors.New("invalid asset")
+	}
+	data, err := FS.ReadFile(path)
 	if err != nil {
 		return nil, "", errors.Wrapf(err, "error reading asset at [%s]", path)
 	}

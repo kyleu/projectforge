@@ -4,6 +4,7 @@ import (
 	"context"
 	"path/filepath"
 	"sort"
+	"sync"
 
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
@@ -15,7 +16,7 @@ import (
 )
 
 var nativeModuleKeys = []string{
-	"android", "audit", "core", "database", "desktop", "export", "expression",
+	"android", "audit", "core", "database", "desktop", "docbrowse", "export", "expression",
 	"ios", "marketing", "migration", "mysql", "notarize", "oauth", "postgres",
 	"sandbox", "schema", "search", "sqleditor", "sqlite", "types", "upgrade", "websocket",
 }
@@ -24,6 +25,7 @@ type Service struct {
 	local       filesystem.FileLoader
 	config      filesystem.FileLoader
 	cache       map[string]*Module
+	cacheMu     sync.Mutex
 	filesystems map[string]filesystem.FileLoader
 	expSvc      *export.Service
 	logger      *zap.SugaredLogger
@@ -55,24 +57,32 @@ func (s *Service) GetFilesystem(key string) filesystem.FileLoader {
 	return mod.Files
 }
 
-func (s *Service) AddIfNeeded(ctx context.Context, key string, path string, url string) (*Module, bool, error) {
+func (s *Service) AddIfNeeded(ctx context.Context, key string, path string, url string) (Modules, bool, error) {
+	s.cacheMu.Lock()
 	ret, ok := s.cache[key]
+	s.cacheMu.Unlock()
 	if ok {
 		if ret.URL != url {
 			s.logger.Warnf("module [%s] is loaded with url [%s] but there is another reference with url [%s]", ret.Key, ret.URL, url)
 		}
-		return ret, false, nil
+		return Modules{ret}, false, nil
 	}
-	m, err := s.load(ctx, key, path, url)
+	mods, err := s.load(ctx, key, path, url)
 	if err != nil {
 		return nil, false, err
 	}
-	s.cache[key] = m
-	return m, true, nil
+	for _, mod := range mods {
+		s.cacheMu.Lock()
+		s.cache[mod.Key] = mod
+		s.cacheMu.Unlock()
+	}
+	return mods, true, nil
 }
 
 func (s *Service) Get(key string) (*Module, error) {
+	s.cacheMu.Lock()
 	ret, ok := s.cache[key]
+	s.cacheMu.Unlock()
 	if !ok {
 		return nil, errors.New("no module available with key [" + key + "]")
 	}
@@ -92,6 +102,8 @@ func (s *Service) GetModules(keys ...string) (Modules, error) {
 }
 
 func (s *Service) Keys() []string {
+	s.cacheMu.Lock()
+	defer s.cacheMu.Unlock()
 	keys := make([]string, 0, len(s.cache))
 	for k := range s.cache {
 		keys = append(keys, k)

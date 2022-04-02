@@ -6,7 +6,7 @@ import (
 
 	"go.uber.org/zap"
 {{{ if .HasModule "oauth" }}}
-	"{{{ .Package }}}/app/lib/auth"{{{ end }}}{{{ if .HasModule "migration" }}}
+	"{{{ .Package }}}/app/lib/auth"{{{ end }}}{{{ if .HasDatabaseModule }}}
 	"{{{ .Package }}}/app/lib/database"{{{ end }}}
 	"{{{ .Package }}}/app/lib/filesystem"
 	"{{{ .Package }}}/app/lib/telemetry"
@@ -34,7 +34,8 @@ type State struct {
 	BuildInfo *BuildInfo
 	Files     filesystem.FileLoader{{{ if .HasModule "oauth" }}}
 	Auth      *auth.Service{{{ end }}}{{{ if .HasModule "migration" }}}
-	DB        *database.Service{{{ end }}}
+	DB        *database.Service{{{ end }}}{{{ if .HasModule "readonlydb" }}}
+	DBRead    *database.Service{{{ end }}}
 	Themes    *theme.Service
 	Logger    *zap.SugaredLogger
 	Services  *Services

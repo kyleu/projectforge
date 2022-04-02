@@ -30,7 +30,10 @@ func AppRoutes() fasthttp.RequestHandler {
 	// $PF_INJECT_END(codegen)${{{ end }}}
 
 	// $PF_SECTION_START(routes)$
-	// $PF_SECTION_END(routes)$
+	// $PF_SECTION_END(routes)${{{ if .HasModule "docbrowse" }}}
+
+	r.GET("/docs", Docs)
+	r.GET("/docs/{path:*}", Docs){{{ end }}}
 
 	r.GET("/admin", Admin){{{ if .HasModule "sandbox" }}}
 	r.GET("/admin/sandbox", SandboxList)
@@ -56,5 +59,5 @@ func AppRoutes() fasthttp.RequestHandler {
 	r.NotFound = NotFound
 
 	p := httpmetrics.NewMetrics(util.AppKey)
-	return fasthttp.CompressHandlerBrotliLevel(p.WrapHandler(r), fasthttp.CompressBrotliBestSpeed, fasthttp.CompressBestSpeed)
+	return fasthttp.CompressHandlerLevel(p.WrapHandler(r), fasthttp.CompressBestSpeed)
 }

@@ -13,6 +13,7 @@ import (
 
 type Result struct {
 	Project  *project.Project `json:"project"`
+	Action   Type             `json:"action"`
 	Status   string           `json:"status"`
 	Args     util.ValueMap    `json:"args,omitempty"`
 	Data     any              `json:"data,omitempty"`
@@ -23,8 +24,8 @@ type Result struct {
 	logger   *zap.SugaredLogger
 }
 
-func newResult(cfg util.ValueMap, logger *zap.SugaredLogger) *Result {
-	return &Result{Args: cfg, Status: "OK", logger: logger}
+func newResult(act Type, cfg util.ValueMap, logger *zap.SugaredLogger) *Result {
+	return &Result{Action: act, Args: cfg, Status: "OK", logger: logger}
 }
 
 func (r *Result) WithError(err error) *Result {
@@ -135,6 +136,6 @@ func (x ResultContexts) Errors() []string {
 	return ret
 }
 
-func errorResult(err error, cfg util.ValueMap, logger *zap.SugaredLogger) *Result {
-	return newResult(cfg, logger).WithError(err)
+func errorResult(err error, t Type, cfg util.ValueMap, logger *zap.SugaredLogger) *Result {
+	return newResult(t, cfg, logger).WithError(err)
 }

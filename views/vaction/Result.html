@@ -14,7 +14,7 @@
 
 {% func (p *Result) Body(as *app.State, ps *cutil.PageState) %}
   {%- if p.Ctx.Prj != nil -%}
-  {%= vproject.Summary(p.Ctx.Prj, nil, nil, ps) %}
+  {%= vproject.Summary(p.Ctx.Prj, nil, nil, &p.Ctx.Res.Action, ps) %}
   {%- endif -%}
 
   <div class="card">

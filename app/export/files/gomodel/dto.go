@@ -25,7 +25,7 @@ func DTO(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	} else {
 		return nil, err
 	}
-	g.AddBlocks(modelDTO(m), modelDTOToModel(m), modelDTOArray(), modelDTOArrayTransformer(m))
+	g.AddBlocks(modelDTO(m), modelDTOToModel(m), modelDTOArray(), modelDTOArrayTransformer(m), defaultWC(m))
 	return g.Render(addHeader)
 }
 
@@ -37,7 +37,6 @@ func modelTableCols(m *model.Model, g *golang.File) (*golang.Block, error) {
 	ret.W("\tcolumns       = []string{%s}", strings.Join(m.Columns.NamesQuoted(), ", "))
 	ret.W("\tcolumnsQuoted = util.StringArrayQuoted(columns)")
 	ret.W("\tcolumnsString = strings.Join(columnsQuoted, \", \")")
-	ret.W("\tdefaultWC     = %q", m.PKs().WhereClause(0))
 	if m.IsRevision() {
 		hc := m.HistoryColumns(true)
 		hcp := hc.Col.Proper()
@@ -125,6 +124,22 @@ func modelDTOArrayTransformer(m *model.Model) *golang.Block {
 	ret.W("\t\tret = append(ret, d.To%s())", m.Proper())
 	ret.W("\t}")
 	ret.W("\treturn ret")
+	ret.W("}")
+	return ret
+}
+
+func defaultWC(m *model.Model) *golang.Block {
+	ret := golang.NewBlock("Columns", "procedural")
+	ret.W("")
+	ret.W("func defaultWC(idx int) string {")
+	c := m.PKs()
+	wc := make([]string, 0, len(c))
+	idxs := make([]string, 0, len(c))
+	for idx, col := range c {
+		wc = append(wc, fmt.Sprintf("%q = $%%%%d", col.Name))
+		idxs = append(idxs, fmt.Sprintf("idx + %d", idx+1))
+	}
+	ret.W("\treturn fmt.Sprintf(%q, %s)", strings.Join(wc, " and "), strings.Join(idxs, ","))
 	ret.W("}")
 	return ret
 }

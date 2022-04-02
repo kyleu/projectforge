@@ -23,7 +23,7 @@ func exportViewTableFunc(m *model.Model, models model.Models) *golang.Block {
 	summCols := m.Columns.ForDisplay("summary")
 	ret := golang.NewBlock("Table", "func")
 	ret.W("{%% func Table(models " + m.Package + "." + m.ProperPlural() + ", params filter.ParamSet, as *app.State, ps *cutil.PageState) %%}")
-	ret.W("  {%%- code prms := params.Get(\"" + m.Package + "\", nil, ps.Logger) -%%}")
+	ret.W("  {%%- code prms := params.Get(\"" + m.Package + "\", nil, ps.Logger).Sanitize(\"" + m.Package + "\") -%%}")
 	ret.W("  <table class=\"mt\">")
 	ret.W("    <thead>")
 	ret.W("      <tr>")

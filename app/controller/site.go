@@ -30,7 +30,7 @@ func SiteRoutes() fasthttp.RequestHandler {
 	r.NotFound = NotFound
 
 	p := httpmetrics.NewMetrics("marketing_site")
-	return fasthttp.CompressHandlerBrotliLevel(p.WrapHandler(r), fasthttp.CompressBrotliBestSpeed, fasthttp.CompressBestSpeed)
+	return fasthttp.CompressHandlerLevel(p.WrapHandler(r), fasthttp.CompressBestSpeed)
 }
 
 func Site(rc *fasthttp.RequestCtx) {

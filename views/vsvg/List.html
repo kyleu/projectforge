@@ -2,6 +2,7 @@
   "strings"
 
   "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/action"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/project"
   "projectforge.dev/projectforge/views/layout"
@@ -16,7 +17,7 @@
 } %}
 
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
-  {%= vproject.Summary(p.Project, nil, nil, ps) %}
+  {%= vproject.Summary(p.Project, nil, nil, &action.TypeSVG, ps) %}
   <div class="card">
     <h3>SVG icons</h3>
     <a href="/svg/{%s p.Project.Key %}/x/build"><button>Rebuild</button></a>

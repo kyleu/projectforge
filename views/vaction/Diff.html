@@ -2,17 +2,19 @@
   "strings"
 
   "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/action"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/diff"
 ) %}
 
-{% func renderDiffs(prjKey string, diffs diff.Diffs, as *app.State, ps *cutil.PageState) %}{% stripspace %}
+{% func renderDiffs(prjKey string, act action.Type, diffs diff.Diffs, as *app.State, ps *cutil.PageState) %}{% stripspace %}
     <h4>Diffs</h4>
     <table>
       <thead>
         <tr>
           <th class="shrink">Path</th>
           <th class="shrink">Status</th>
+          <th class="shrink">Actions</th>
           <th class="shrink">Patch</th>
         </tr>
       </thead>
@@ -20,9 +22,15 @@
       {%- for _, d := range diffs -%}
         <tr>
           <td class="shrink">{%s d.Path %}</td>
+          <td>{%s d.Status.String() %}</td>
           <td>
-            {%s d.Status.String() %}
-            {%- if true -%}
+            {%- if act.Key == "audit" -%}
+            <form action="/run/{%s prjKey %}/audit" method="get">
+              <input type="hidden" name="file" value="{%s d.Path %}" />
+              <button type="submit" name="fix" value="remove" title="Remove file from project">Purge</button>{% space %}
+              <button type="submit" name="fix" value="header" title="Remove header from file">Fix</button>
+            </form>
+            {%- else -%}
             <form action="/run/{%s prjKey %}/merge" method="get">
               <input type="hidden" name="file" value="{%s d.Path %}" />
               <button type="submit" name="to" value="module" title="Incorporate change into module">&lt;-</button>

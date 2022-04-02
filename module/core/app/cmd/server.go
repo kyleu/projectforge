@@ -11,7 +11,7 @@ import (
 	"go.uber.org/zap"
 
 	"{{{ .Package }}}/app"
-	"{{{ .Package }}}/app/controller"{{{ if .HasModule "migration" }}}
+	"{{{ .Package }}}/app/controller"{{{ if .HasDatabaseModule }}}
 	"{{{ .Package }}}/app/lib/database"{{{ end }}}
 	"{{{ .Package }}}/app/lib/filesystem"
 	"{{{ .Package }}}/app/lib/telemetry"
@@ -44,8 +44,8 @@ func startServer(flags *Flags) error {
 func loadServer(flags *Flags, logger *zap.SugaredLogger) (fasthttp.RequestHandler, *zap.SugaredLogger, error) {
 	r := controller.AppRoutes()
 	f := filesystem.NewFileSystem(flags.ConfigDir, logger)
-	telemetryEnabled := util.GetEnvBool("disable_telemetry", false)
-	st, err := app.NewState(flags.Debug, _buildInfo, f, telemetryEnabled, logger)
+	telemetryDisabled := util.GetEnvBool("disable_telemetry", false)
+	st, err := app.NewState(flags.Debug, _buildInfo, f, !telemetryDisabled, logger)
 	if err != nil {
 		return nil, logger, err
 	}
@@ -54,11 +54,27 @@ func loadServer(flags *Flags, logger *zap.SugaredLogger) (fasthttp.RequestHandle
 	defer span.Complete(){{{ if .HasModule "migration" }}}{{{ if .HasModule "postgres" }}}
 
 	db, err := database.OpenDefaultPostgres(ctx, logger){{{ else }}}{{{ if .HasModule "sqlite" }}}
+
 	db, err := database.OpenDefaultSQLite(ctx, logger){{{ end }}}{{{ end }}}
 	if err != nil {
 		return nil, logger, errors.Wrap(err, "unable to open database")
 	}
-	st.DB = db{{{ end }}}
+	st.DB = db{{{ end }}}{{{ if .HasModule "readonlydb" }}}
+
+	rKey := util.AppKey + "_readonly"
+	if x := util.GetEnv("read_db_host", ""); x != "" {
+		paramsR := database.PostgresParamsFromEnv(rKey, rKey, "read_")
+		logger.Infof("using [%s:%s] for read-only database pool", paramsR.Host, paramsR.Database)
+		st.DBRead, err = database.OpenPostgresDatabase(ctx, rKey, paramsR, logger)
+	} else {
+		paramsR := database.PostgresParamsFromEnv(rKey, util.AppKey, "")
+		paramsR.Database = util.AppKey
+		logger.Infof("using default database as read-only database pool")
+		st.DBRead, err = database.OpenPostgresDatabase(ctx, rKey, paramsR, logger)
+	}
+	if err != nil {
+		return nil, logger, errors.Wrap(err, "unable to open read-only database")
+	}{{{ end }}}
 
 	svcs, err := app.NewServices(ctx, st)
 	if err != nil {

@@ -93,7 +93,7 @@ func render(rc *fasthttp.RequestCtx, as *app.State, page layout.Page, ps *cutil.
 	return "", nil
 }
 
-// nolint:unused
+// nolint // sometimes unused
 func ersp(msg string, args ...any) (string, error) {
 	return "", errors.Errorf(msg, args...)
 }

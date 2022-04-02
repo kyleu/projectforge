@@ -77,7 +77,7 @@ func onBuild(ctx context.Context, pm *PrjAndMods) *Result {
 	defer span.Complete()
 	pm.Logger = logger
 
-	ret := newResult(pm.Cfg, logger)
+	ret := newResult(TypeBuild, pm.Cfg, logger)
 	ret.AddLog("building project [%s] in [%s] with phase [%s]", pm.Prj.Key, pm.Prj.Path, phaseStr)
 	var phase *Build
 	for _, x := range AllBuilds {

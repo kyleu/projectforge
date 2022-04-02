@@ -34,7 +34,7 @@
             {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef(x.Prj.IconSafe(), 16, 16, "icon", ps) %} {%s x.Prj.Title() %}
           </label>
           <div class="bd">
-            {%= vproject.Summary(x.Prj, nil, nil, ps) %}
+            {%= vproject.Summary(x.Prj, nil, nil, &x.Res.Action, ps) %}
             {%= Detail(x.Cfg, x.Res, false, as, ps) %}
           </div>
         </li>

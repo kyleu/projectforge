@@ -19,7 +19,7 @@
 
 {% func (p *BuildResult) Body(as *app.State, ps *cutil.PageState) %}
   {%- code prj := p.Project -%}
-  {%= vproject.Summary(prj, p.GitResult, nil, ps) %}
+  {%= vproject.Summary(prj, p.GitResult, nil, &action.TypeBuild, ps) %}
   {%= BuildOptions(prj.Key) %}
   {%- if p.BuildResult != nil -%}
   {%- code br := p.BuildResult -%}

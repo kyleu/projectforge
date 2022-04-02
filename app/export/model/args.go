@@ -17,6 +17,13 @@ func (a *Args) HasModule(key string) bool {
 	return slices.Contains(a.Modules, key)
 }
 
+func (a *Args) DBRef() string {
+	if a.HasModule("readonlydb") {
+		return "dbRead"
+	}
+	return "db"
+}
+
 func (a *Args) Validate() error {
 	packages := make(map[string]struct{}, len(a.Models))
 	for _, m := range a.Models {

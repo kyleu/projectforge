@@ -58,6 +58,10 @@ func (t *TemplateContext) HasModule(m string) bool {
 	return slices.Contains(t.Modules, m)
 }
 
+func (t *TemplateContext) HasDatabaseModule() bool {
+	return t.HasModule("migration") || t.HasModule("readonlydb")
+}
+
 func (t *TemplateContext) ModuleMarkdown() string {
 	ret := make([]string, 0, len(t.Modules))
 	for _, m := range t.Modules {

@@ -9,26 +9,27 @@ import (
 	"strings"
 
 	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/action"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/views/layout"
 	"projectforge.dev/projectforge/views/vproject"
 )
 
-//line views/vsvg/List.html:11
+//line views/vsvg/List.html:12
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vsvg/List.html:11
+//line views/vsvg/List.html:12
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vsvg/List.html:11
+//line views/vsvg/List.html:12
 type List struct {
 	layout.Basic
 	Project  *project.Project
@@ -36,21 +37,21 @@ type List struct {
 	Contents map[string]string
 }
 
-//line views/vsvg/List.html:18
+//line views/vsvg/List.html:19
 func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsvg/List.html:18
+//line views/vsvg/List.html:19
 	qw422016.N().S(`
   `)
-//line views/vsvg/List.html:19
-	vproject.StreamSummary(qw422016, p.Project, nil, nil, ps)
-//line views/vsvg/List.html:19
+//line views/vsvg/List.html:20
+	vproject.StreamSummary(qw422016, p.Project, nil, nil, &action.TypeSVG, ps)
+//line views/vsvg/List.html:20
 	qw422016.N().S(`
   <div class="card">
     <h3>SVG icons</h3>
     <a href="/svg/`)
-//line views/vsvg/List.html:22
+//line views/vsvg/List.html:23
 	qw422016.E().S(p.Project.Key)
-//line views/vsvg/List.html:22
+//line views/vsvg/List.html:23
 	qw422016.N().S(`/x/build"><button>Rebuild</button></a>
   </div>
   <div class="card">
@@ -61,9 +62,9 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
       The SVG will be rewritten with attribution.
     </p>
     <form action="/svg/`)
-//line views/vsvg/List.html:31
+//line views/vsvg/List.html:32
 	qw422016.E().S(p.Project.Key)
-//line views/vsvg/List.html:31
+//line views/vsvg/List.html:32
 	qw422016.N().S(`/x/add" method="get">
       <table>
         <tbody>
@@ -86,63 +87,63 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
     <h3>Current Icons</h3>
     <div class="flex-wrap">
 `)
-//line views/vsvg/List.html:52
+//line views/vsvg/List.html:53
 	for _, k := range p.Keys {
-//line views/vsvg/List.html:52
+//line views/vsvg/List.html:53
 		qw422016.N().S(`      <div class="icon-container">
         <a href="/svg/`)
-//line views/vsvg/List.html:54
+//line views/vsvg/List.html:55
 		qw422016.E().S(p.Project.Key)
-//line views/vsvg/List.html:54
+//line views/vsvg/List.html:55
 		qw422016.N().S(`/`)
-//line views/vsvg/List.html:54
+//line views/vsvg/List.html:55
 		qw422016.E().S(k)
-//line views/vsvg/List.html:54
+//line views/vsvg/List.html:55
 		qw422016.N().S(`">
           <div>`)
-//line views/vsvg/List.html:55
+//line views/vsvg/List.html:56
 		qw422016.N().S(strings.ReplaceAll(p.Contents[k], "svg-"+k, "svg-"+k+"_adhoc"))
-//line views/vsvg/List.html:55
+//line views/vsvg/List.html:56
 		qw422016.N().S(`</div>
           <div>`)
-//line views/vsvg/List.html:56
+//line views/vsvg/List.html:57
 		qw422016.E().S(k)
-//line views/vsvg/List.html:56
+//line views/vsvg/List.html:57
 		qw422016.N().S(`</div>
         </a>
       </div>
 `)
-//line views/vsvg/List.html:59
+//line views/vsvg/List.html:60
 	}
-//line views/vsvg/List.html:59
+//line views/vsvg/List.html:60
 	qw422016.N().S(`    </div>
   </div>
 `)
-//line views/vsvg/List.html:62
+//line views/vsvg/List.html:63
 }
 
-//line views/vsvg/List.html:62
+//line views/vsvg/List.html:63
 func (p *List) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsvg/List.html:62
+//line views/vsvg/List.html:63
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsvg/List.html:62
+//line views/vsvg/List.html:63
 	p.StreamBody(qw422016, as, ps)
-//line views/vsvg/List.html:62
+//line views/vsvg/List.html:63
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsvg/List.html:62
+//line views/vsvg/List.html:63
 }
 
-//line views/vsvg/List.html:62
+//line views/vsvg/List.html:63
 func (p *List) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsvg/List.html:62
+//line views/vsvg/List.html:63
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsvg/List.html:62
+//line views/vsvg/List.html:63
 	p.WriteBody(qb422016, as, ps)
-//line views/vsvg/List.html:62
+//line views/vsvg/List.html:63
 	qs422016 := string(qb422016.B)
-//line views/vsvg/List.html:62
+//line views/vsvg/List.html:63
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsvg/List.html:62
+//line views/vsvg/List.html:63
 	return qs422016
-//line views/vsvg/List.html:62
+//line views/vsvg/List.html:63
 }

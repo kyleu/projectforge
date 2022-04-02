@@ -11,7 +11,7 @@ import (
 )
 
 func onCreate(ctx context.Context, params *Params) *Result {
-	ret := newResult(params.Cfg, params.Logger)
+	ret := newResult(TypeCreate, params.Cfg, params.Logger)
 
 	path := params.Cfg.GetStringOpt("path")
 	if path == "" {
@@ -44,12 +44,12 @@ func onCreate(ctx context.Context, params *Params) *Result {
 	_, err = params.PSvc.Refresh()
 	if err != nil {
 		msg := fmt.Sprintf("unable to load newly created project from path [%s]", path)
-		return errorResult(errors.Wrap(err, msg), params.Cfg, params.Logger)
+		return errorResult(errors.Wrap(err, msg), TypeCreate, params.Cfg, params.Logger)
 	}
 
 	ctx, pm, err := getPrjAndMods(ctx, params)
 	if err != nil {
-		return errorResult(err, params.Cfg, params.Logger)
+		return errorResult(err, TypeCreate, params.Cfg, params.Logger)
 	}
 	retS := onSlam(ctx, pm)
 	ret = ret.Merge(retS)

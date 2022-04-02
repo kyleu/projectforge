@@ -8,7 +8,7 @@ import (
 )
 
 func onPreview(ctx context.Context, pm *PrjAndMods) *Result {
-	ret := newResult(pm.Cfg, pm.Logger)
+	ret := newResult(TypePreview, pm.Cfg, pm.Logger)
 	timer := util.TimerStart()
 	_, dfs, err := diffs(ctx, pm)
 	if err != nil {

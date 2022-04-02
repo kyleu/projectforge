@@ -14,11 +14,11 @@ func onTest(ctx context.Context, params *Params) *Result {
 	params.Logger.Infof("running test method [%s]...", methodName)
 	switch methodName {
 	case "":
-		return errorResult(errors.New("must provide test method"), params.Cfg, params.Logger)
+		return errorResult(errors.New("must provide test method"), TypeTest, params.Cfg, params.Logger)
 	case "bootstrap":
 		return bootstrap(ctx, params)
 	default:
-		return errorResult(errors.Errorf("invalid test method [%s]", methodName), params.Cfg, params.Logger)
+		return errorResult(errors.Errorf("invalid test method [%s]", methodName), TypeTest, params.Cfg, params.Logger)
 	}
 }
 
@@ -33,7 +33,7 @@ func bootstrap(ctx context.Context, params *Params) *Result {
 
 	err := wipeIfNeeded(params.Cfg, params.Logger)
 	if err != nil {
-		return errorResult(err, params.Cfg, params.Logger)
+		return errorResult(err, TypeTest, params.Cfg, params.Logger)
 	}
 
 	return onCreate(ctx, params)

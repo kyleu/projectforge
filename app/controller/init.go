@@ -53,7 +53,9 @@ func initProjects(ctx context.Context, as *app.State) error {
 			return errors.Wrap(err, "unable to register module definitions")
 		}
 		if len(keys) > 0 {
-			as.Logger.Debugf("Loaded modules for [%s]: %s", prj.Key, strings.Join(keys, ", "))
+			if len(keys) != 1 && keys[0] != "*" {
+				as.Logger.Debugf("Loaded modules for [%s]: %s", prj.Key, strings.Join(keys, ", "))
+			}
 		}
 	}
 	return nil

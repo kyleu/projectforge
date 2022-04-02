@@ -14,20 +14,20 @@ import (
 )
 
 func onAudit(ctx context.Context, pm *PrjAndMods) *Result {
-	ret := newResult(pm.Cfg, pm.Logger)
+	ret := newResult(TypeAudit, pm.Cfg, pm.Logger)
 	timer := util.TimerStart()
 
 	tgt := pm.PSvc.GetFilesystem(pm.Prj)
 	filenames, err := tgt.ListFilesRecursive("", pm.Prj.Ignore)
 	if err != nil {
-		return errorResult(err, pm.Cfg, pm.Logger)
+		return errorResult(err, TypeAudit, pm.Cfg, pm.Logger)
 	}
 
 	var generated []string
 	for _, fn := range filenames {
 		b, e := tgt.PeekFile(fn, 1024)
 		if e != nil {
-			return errorResult(e, pm.Cfg, pm.Logger)
+			return errorResult(e, TypeAudit, pm.Cfg, pm.Logger)
 		}
 		if file.ContainsHeader(string(b)) {
 			generated = append(generated, fn)
@@ -36,7 +36,7 @@ func onAudit(ctx context.Context, pm *PrjAndMods) *Result {
 
 	src, err := pm.MSvc.GetFilenames(pm.Mods)
 	if err != nil {
-		return errorResult(err, pm.Cfg, pm.Logger)
+		return errorResult(err, TypeAudit, pm.Cfg, pm.Logger)
 	}
 
 	if pm.Mods.Get("export") != nil {
@@ -44,13 +44,13 @@ func onAudit(ctx context.Context, pm *PrjAndMods) *Result {
 		if argsX := pm.Prj.Info.ModuleArg("export"); argsX != nil {
 			e := util.CycleJSON(argsX, &args)
 			if e != nil {
-				return errorResult(err, pm.Cfg, pm.Logger)
+				return errorResult(err, TypeAudit, pm.Cfg, pm.Logger)
 			}
 		}
 		args.Modules = pm.Mods.Keys()
 		files, e := pm.ESvc.Files(ctx, args, true, pm.Logger)
 		if e != nil {
-			return errorResult(e, pm.Cfg, pm.Logger)
+			return errorResult(e, TypeAudit, pm.Cfg, pm.Logger)
 		}
 		for _, f := range files {
 			src = append(src, f.FullPath())

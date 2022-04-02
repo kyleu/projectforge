@@ -16,7 +16,7 @@ import (
 const projectKey = "project"
 
 func onMerge(ctx context.Context, pm *PrjAndMods) *Result {
-	ret := newResult(pm.Cfg, pm.Logger)
+	ret := newResult(TypeMerge, pm.Cfg, pm.Logger)
 
 	to, _ := pm.Cfg.GetString("to", true)
 	if to == "" {

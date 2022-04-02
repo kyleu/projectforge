@@ -18,7 +18,7 @@
 
 {% func (p *Deps) Body(as *app.State, ps *cutil.PageState) %}
   {%- code prj := p.Project -%}
-  {%= vproject.Summary(prj, nil, nil, ps) %}
+  {%= vproject.Summary(prj, nil, nil, &action.TypeBuild, ps) %}
   {%= BuildOptions(prj.Key) %}
 
   {%- if p.BuildResult != nil && len(p.BuildResult.Errors) > 0 -%}

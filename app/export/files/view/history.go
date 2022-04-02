@@ -72,7 +72,7 @@ func exportViewHistoryTable(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("HistoryTable", "struct")
 	const decl = "{%%%% func HistoryTable(model *%s.%s, histories %s.%sHistories, params filter.ParamSet, as *app.State, ps *cutil.PageState) %%%%}"
 	ret.W(decl, m.Package, m.Proper(), m.Package, m.Proper())
-	ret.W("  {%%- code prms := params.Get(\"history_history\", nil, ps.Logger) -%%}")
+	ret.W("  {%%- code prms := params.Get(\"history_history\", nil, ps.Logger).Sanitize(\"history_history\") -%%}")
 	ret.W("  <table class=\"mt\">")
 	ret.W("    <thead>")
 	ret.W("      <tr>")

@@ -25,7 +25,7 @@ func Apply(ctx context.Context, p *Params) *Result {
 		if len(p.PSvc.Projects()) == 0 {
 			_, err := p.PSvc.Refresh()
 			if err != nil {
-				return errorResult(err, p.Cfg, logger)
+				return errorResult(err, p.T, p.Cfg, logger)
 			}
 		}
 		if p.ProjectKey == "" {
@@ -37,7 +37,7 @@ func Apply(ctx context.Context, p *Params) *Result {
 		var err error
 		ctx, pm, err = getPrjAndMods(ctx, p)
 		if err != nil {
-			return errorResult(err, p.Cfg, logger)
+			return errorResult(err, p.T, p.Cfg, logger)
 		}
 
 		ret = applyPrj(ctx, pm, p.T)
@@ -75,7 +75,7 @@ func applyPrj(ctx context.Context, pm *PrjAndMods, t Type) *Result {
 	case TypeSVG:
 		return onSVG(ctx, pm)
 	default:
-		return errorResult(errors.Errorf("invalid action type [%s]", t.String()), pm.Cfg, pm.Logger)
+		return errorResult(errors.Errorf("invalid action type [%s]", t.String()), t, pm.Cfg, pm.Logger)
 	}
 }
 

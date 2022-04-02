@@ -45,19 +45,23 @@ func Service(m *model.Model, args *model.Args, addHeader bool) (*file.File, erro
 	g := golang.NewFile(m.Package, []string{"app", m.Package}, "service")
 	g.AddImport(helper.ImpLogging, helper.ImpFilter, helper.ImpDatabase)
 
+	isRO := args.HasModule("readonlydb")
 	isAudit := args.HasModule("audit") && m.HasTag("audit")
 	if isAudit {
 		g.AddImport(helper.ImpAudit)
 	}
 
-	g.AddBlocks(serviceStruct(isAudit), serviceNew(m, isAudit), serviceDefaultFilters(m))
+	g.AddBlocks(serviceStruct(isRO, isAudit), serviceNew(m, isRO, isAudit), serviceDefaultFilters(m))
 	return g.Render(addHeader)
 }
 
-func serviceStruct(isAudit bool) *golang.Block {
+func serviceStruct(isRO bool, isAudit bool) *golang.Block {
 	ret := golang.NewBlock("Service", "struct")
 	ret.W("type Service struct {")
 	ret.W("\tdb     *database.Service")
+	if isRO {
+		ret.W("\tdbRead *database.Service")
+	}
 	if isAudit {
 		ret.W("\taudit  *audit.Service")
 	}
@@ -66,9 +70,13 @@ func serviceStruct(isAudit bool) *golang.Block {
 	return ret
 }
 
-func serviceNew(m *model.Model, isAudit bool) *golang.Block {
+func serviceNew(m *model.Model, isRO bool, isAudit bool) *golang.Block {
 	ret := golang.NewBlock("NewService", "func")
 	newSuffix, callSuffix := "", ""
+	if isRO {
+		newSuffix = "dbRead *database.Service, "
+		callSuffix = "dbRead: dbRead, "
+	}
 	if isAudit {
 		newSuffix = "aud *audit.Service, "
 		callSuffix = "audit: aud, "

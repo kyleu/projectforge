@@ -9,182 +9,201 @@ import (
 	"strings"
 
 	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/action"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/diff"
 )
 
-//line views/vaction/Diff.html:9
+//line views/vaction/Diff.html:10
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vaction/Diff.html:9
+//line views/vaction/Diff.html:10
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vaction/Diff.html:9
-func streamrenderDiffs(qw422016 *qt422016.Writer, prjKey string, diffs diff.Diffs, as *app.State, ps *cutil.PageState) {
-//line views/vaction/Diff.html:9
-	qw422016.N().S(`<h4>Diffs</h4><table><thead><tr><th class="shrink">Path</th><th class="shrink">Status</th><th class="shrink">Patch</th></tr></thead><tbody>`)
-//line views/vaction/Diff.html:20
+//line views/vaction/Diff.html:10
+func streamrenderDiffs(qw422016 *qt422016.Writer, prjKey string, act action.Type, diffs diff.Diffs, as *app.State, ps *cutil.PageState) {
+//line views/vaction/Diff.html:10
+	qw422016.N().S(`<h4>Diffs</h4><table><thead><tr><th class="shrink">Path</th><th class="shrink">Status</th><th class="shrink">Actions</th><th class="shrink">Patch</th></tr></thead><tbody>`)
+//line views/vaction/Diff.html:22
 	for _, d := range diffs {
-//line views/vaction/Diff.html:20
+//line views/vaction/Diff.html:22
 		qw422016.N().S(`<tr><td class="shrink">`)
-//line views/vaction/Diff.html:22
-		qw422016.E().S(d.Path)
-//line views/vaction/Diff.html:22
-		qw422016.N().S(`</td><td>`)
 //line views/vaction/Diff.html:24
+		qw422016.E().S(d.Path)
+//line views/vaction/Diff.html:24
+		qw422016.N().S(`</td><td>`)
+//line views/vaction/Diff.html:25
 		qw422016.E().S(d.Status.String())
 //line views/vaction/Diff.html:25
-		if true {
-//line views/vaction/Diff.html:25
-			qw422016.N().S(`<form action="/run/`)
-//line views/vaction/Diff.html:26
-			qw422016.E().S(prjKey)
-//line views/vaction/Diff.html:26
-			qw422016.N().S(`/merge" method="get"><input type="hidden" name="file" value="`)
-//line views/vaction/Diff.html:27
-			qw422016.E().S(d.Path)
-//line views/vaction/Diff.html:27
-			qw422016.N().S(`" /><button type="submit" name="to" value="module" title="Incorporate change into module">&lt;-</button><button type="submit" name="to" value="project" title="Overwrite project changes with module version">-&gt;</button></form>`)
-//line views/vaction/Diff.html:31
-		}
-//line views/vaction/Diff.html:31
 		qw422016.N().S(`</td><td>`)
+//line views/vaction/Diff.html:27
+		if act.Key == "audit" {
+//line views/vaction/Diff.html:27
+			qw422016.N().S(`<form action="/run/`)
+//line views/vaction/Diff.html:28
+			qw422016.E().S(prjKey)
+//line views/vaction/Diff.html:28
+			qw422016.N().S(`/audit" method="get"><input type="hidden" name="file" value="`)
+//line views/vaction/Diff.html:29
+			qw422016.E().S(d.Path)
+//line views/vaction/Diff.html:29
+			qw422016.N().S(`" /><button type="submit" name="fix" value="remove" title="Remove file from project">Purge</button>`)
+//line views/vaction/Diff.html:30
+			qw422016.N().S(` `)
+//line views/vaction/Diff.html:30
+			qw422016.N().S(`<button type="submit" name="fix" value="header" title="Remove header from file">Fix</button></form>`)
 //line views/vaction/Diff.html:33
-		streamrenderPatch(qw422016, d.Patch, as, ps)
+		} else {
 //line views/vaction/Diff.html:33
-		qw422016.N().S(`</td></tr>`)
+			qw422016.N().S(`<form action="/run/`)
+//line views/vaction/Diff.html:34
+			qw422016.E().S(prjKey)
+//line views/vaction/Diff.html:34
+			qw422016.N().S(`/merge" method="get"><input type="hidden" name="file" value="`)
 //line views/vaction/Diff.html:35
-	}
+			qw422016.E().S(d.Path)
 //line views/vaction/Diff.html:35
-	qw422016.N().S(`</tbody></table>`)
-//line views/vaction/Diff.html:38
-}
-
-//line views/vaction/Diff.html:38
-func writerenderDiffs(qq422016 qtio422016.Writer, prjKey string, diffs diff.Diffs, as *app.State, ps *cutil.PageState) {
-//line views/vaction/Diff.html:38
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vaction/Diff.html:38
-	streamrenderDiffs(qw422016, prjKey, diffs, as, ps)
-//line views/vaction/Diff.html:38
-	qt422016.ReleaseWriter(qw422016)
-//line views/vaction/Diff.html:38
-}
-
-//line views/vaction/Diff.html:38
-func renderDiffs(prjKey string, diffs diff.Diffs, as *app.State, ps *cutil.PageState) string {
-//line views/vaction/Diff.html:38
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vaction/Diff.html:38
-	writerenderDiffs(qb422016, prjKey, diffs, as, ps)
-//line views/vaction/Diff.html:38
-	qs422016 := string(qb422016.B)
-//line views/vaction/Diff.html:38
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vaction/Diff.html:38
-	return qs422016
-//line views/vaction/Diff.html:38
-}
-
-//line views/vaction/Diff.html:40
-func streamrenderPatch(qw422016 *qt422016.Writer, patch string, as *app.State, ps *cutil.PageState) {
+			qw422016.N().S(`" /><button type="submit" name="to" value="module" title="Incorporate change into module">&lt;-</button><button type="submit" name="to" value="project" title="Overwrite project changes with module version">-&gt;</button></form>`)
+//line views/vaction/Diff.html:39
+		}
+//line views/vaction/Diff.html:39
+		qw422016.N().S(`</td><td>`)
 //line views/vaction/Diff.html:41
+		streamrenderPatch(qw422016, d.Patch, as, ps)
+//line views/vaction/Diff.html:41
+		qw422016.N().S(`</td></tr>`)
+//line views/vaction/Diff.html:43
+	}
+//line views/vaction/Diff.html:43
+	qw422016.N().S(`</tbody></table>`)
+//line views/vaction/Diff.html:46
+}
+
+//line views/vaction/Diff.html:46
+func writerenderDiffs(qq422016 qtio422016.Writer, prjKey string, act action.Type, diffs diff.Diffs, as *app.State, ps *cutil.PageState) {
+//line views/vaction/Diff.html:46
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vaction/Diff.html:46
+	streamrenderDiffs(qw422016, prjKey, act, diffs, as, ps)
+//line views/vaction/Diff.html:46
+	qt422016.ReleaseWriter(qw422016)
+//line views/vaction/Diff.html:46
+}
+
+//line views/vaction/Diff.html:46
+func renderDiffs(prjKey string, act action.Type, diffs diff.Diffs, as *app.State, ps *cutil.PageState) string {
+//line views/vaction/Diff.html:46
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vaction/Diff.html:46
+	writerenderDiffs(qb422016, prjKey, act, diffs, as, ps)
+//line views/vaction/Diff.html:46
+	qs422016 := string(qb422016.B)
+//line views/vaction/Diff.html:46
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vaction/Diff.html:46
+	return qs422016
+//line views/vaction/Diff.html:46
+}
+
+//line views/vaction/Diff.html:48
+func streamrenderPatch(qw422016 *qt422016.Writer, patch string, as *app.State, ps *cutil.PageState) {
+//line views/vaction/Diff.html:49
 	lines := strings.Split(patch, "\n")
 
-//line views/vaction/Diff.html:41
+//line views/vaction/Diff.html:49
 	qw422016.N().S(`<pre>`)
-//line views/vaction/Diff.html:43
+//line views/vaction/Diff.html:51
 	for _, line := range lines {
-//line views/vaction/Diff.html:44
-		if len(line) > 0 {
-//line views/vaction/Diff.html:45
-			switch line[0] {
-//line views/vaction/Diff.html:46
-			case ' ':
-//line views/vaction/Diff.html:46
-				qw422016.N().S(`<div title="unchanged" style="color: grey;">`)
-//line views/vaction/Diff.html:47
-				qw422016.E().S(line[1:])
-//line views/vaction/Diff.html:47
-				if len(line) == 1 {
-//line views/vaction/Diff.html:47
-					qw422016.N().S(`&nbsp;`)
-//line views/vaction/Diff.html:47
-				}
-//line views/vaction/Diff.html:47
-				qw422016.N().S(`</div>`)
-//line views/vaction/Diff.html:48
-			case '+':
-//line views/vaction/Diff.html:48
-				qw422016.N().S(`<div title="added" style="color: green;">`)
-//line views/vaction/Diff.html:49
-				qw422016.E().S(line[1:])
-//line views/vaction/Diff.html:49
-				if len(line) == 1 {
-//line views/vaction/Diff.html:49
-					qw422016.N().S(`&nbsp;`)
-//line views/vaction/Diff.html:49
-				}
-//line views/vaction/Diff.html:49
-				qw422016.N().S(`</div>`)
-//line views/vaction/Diff.html:50
-			case '-':
-//line views/vaction/Diff.html:50
-				qw422016.N().S(`<div title="removed" style="color: red;">`)
-//line views/vaction/Diff.html:51
-				qw422016.E().S(line[1:])
-//line views/vaction/Diff.html:51
-				if len(line) == 1 {
-//line views/vaction/Diff.html:51
-					qw422016.N().S(`&nbsp;`)
-//line views/vaction/Diff.html:51
-				}
-//line views/vaction/Diff.html:51
-				qw422016.N().S(`</div>`)
 //line views/vaction/Diff.html:52
-			default:
+		if len(line) > 0 {
 //line views/vaction/Diff.html:53
-				qw422016.E().S(line)
+			switch line[0] {
 //line views/vaction/Diff.html:54
-			}
+			case ' ':
+//line views/vaction/Diff.html:54
+				qw422016.N().S(`<div title="unchanged" style="color: grey;">`)
 //line views/vaction/Diff.html:55
+				qw422016.E().S(line[1:])
+//line views/vaction/Diff.html:55
+				if len(line) == 1 {
+//line views/vaction/Diff.html:55
+					qw422016.N().S(`&nbsp;`)
+//line views/vaction/Diff.html:55
+				}
+//line views/vaction/Diff.html:55
+				qw422016.N().S(`</div>`)
+//line views/vaction/Diff.html:56
+			case '+':
+//line views/vaction/Diff.html:56
+				qw422016.N().S(`<div title="added" style="color: green;">`)
+//line views/vaction/Diff.html:57
+				qw422016.E().S(line[1:])
+//line views/vaction/Diff.html:57
+				if len(line) == 1 {
+//line views/vaction/Diff.html:57
+					qw422016.N().S(`&nbsp;`)
+//line views/vaction/Diff.html:57
+				}
+//line views/vaction/Diff.html:57
+				qw422016.N().S(`</div>`)
+//line views/vaction/Diff.html:58
+			case '-':
+//line views/vaction/Diff.html:58
+				qw422016.N().S(`<div title="removed" style="color: red;">`)
+//line views/vaction/Diff.html:59
+				qw422016.E().S(line[1:])
+//line views/vaction/Diff.html:59
+				if len(line) == 1 {
+//line views/vaction/Diff.html:59
+					qw422016.N().S(`&nbsp;`)
+//line views/vaction/Diff.html:59
+				}
+//line views/vaction/Diff.html:59
+				qw422016.N().S(`</div>`)
+//line views/vaction/Diff.html:60
+			default:
+//line views/vaction/Diff.html:61
+				qw422016.E().S(line)
+//line views/vaction/Diff.html:62
+			}
+//line views/vaction/Diff.html:63
 		}
-//line views/vaction/Diff.html:56
+//line views/vaction/Diff.html:64
 	}
-//line views/vaction/Diff.html:56
+//line views/vaction/Diff.html:64
 	qw422016.N().S(`</pre>`)
-//line views/vaction/Diff.html:58
+//line views/vaction/Diff.html:66
 }
 
-//line views/vaction/Diff.html:58
+//line views/vaction/Diff.html:66
 func writerenderPatch(qq422016 qtio422016.Writer, patch string, as *app.State, ps *cutil.PageState) {
-//line views/vaction/Diff.html:58
+//line views/vaction/Diff.html:66
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vaction/Diff.html:58
+//line views/vaction/Diff.html:66
 	streamrenderPatch(qw422016, patch, as, ps)
-//line views/vaction/Diff.html:58
+//line views/vaction/Diff.html:66
 	qt422016.ReleaseWriter(qw422016)
-//line views/vaction/Diff.html:58
+//line views/vaction/Diff.html:66
 }
 
-//line views/vaction/Diff.html:58
+//line views/vaction/Diff.html:66
 func renderPatch(patch string, as *app.State, ps *cutil.PageState) string {
-//line views/vaction/Diff.html:58
+//line views/vaction/Diff.html:66
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vaction/Diff.html:58
+//line views/vaction/Diff.html:66
 	writerenderPatch(qb422016, patch, as, ps)
-//line views/vaction/Diff.html:58
+//line views/vaction/Diff.html:66
 	qs422016 := string(qb422016.B)
-//line views/vaction/Diff.html:58
+//line views/vaction/Diff.html:66
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vaction/Diff.html:58
+//line views/vaction/Diff.html:66
 	return qs422016
-//line views/vaction/Diff.html:58
+//line views/vaction/Diff.html:66
 }

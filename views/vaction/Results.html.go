@@ -123,7 +123,7 @@ func (p *Results) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
           <div class="bd">
             `)
 //line views/vaction/Results.html:37
-		vproject.StreamSummary(qw422016, x.Prj, nil, nil, ps)
+		vproject.StreamSummary(qw422016, x.Prj, nil, nil, &x.Res.Action, ps)
 //line views/vaction/Results.html:37
 		qw422016.N().S(`
             `)
