@@ -2,10 +2,10 @@ package schema
 
 import (
 	"fmt"
-	"sort"
 	"strings"
 
 	"github.com/pkg/errors"
+	"golang.org/x/exp/slices"
 
 	"{{{ .Package }}}/app/lib/schema/field"
 	"{{{ .Package }}}/app/lib/schema/model"
