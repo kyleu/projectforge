@@ -28,7 +28,7 @@ func initAvailable() {
 			openIDConnectName = "OpenID Connect"
 		}
 		AvailableProviderNames = map[string]string{
-			"amazon": "Amazon", "apple": "Apple", auth0Key: "Auth0", "azuread": "Azure AD",
+			"amazon": "Amazon", auth0Key: "Auth0", "azuread": "Azure AD",
 			"battlenet": "Battlenet", "bitbucket": "Bitbucket", "box": "Box", "cloudfoundry": "Cloud Foundry",
 			"dailymotion": "Dailymotion", "deezer": "Deezer", "digitalocean": "Digital Ocean", "discord": "Discord", "dropbox": "Dropbox",
 			"eveonline": "Eve Online", "facebook": "Facebook", "fitbit": "Fitbit",
