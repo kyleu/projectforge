@@ -1,7 +1,7 @@
 package model
 
 import (
-	"sort"
+	"golang.org/x/exp/slices"
 
 	"{{{ .Package }}}/app/util"
 )
@@ -18,8 +18,8 @@ func (m Models) Get(pkg util.Pkg, key string) *Model {
 }
 
 func (m Models) Sort() {
-	sort.Slice(m, func(l int, r int) bool {
-		return m[l].Key < m[r].Key
+	slices.SortFunc(m, func(l *Model, r *Model) bool {
+		return l.Key < r.Key
 	})
 }
 

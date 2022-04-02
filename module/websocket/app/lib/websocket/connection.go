@@ -7,8 +7,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 
-	"github.com/fevo-tech/nuevo/app/lib/user"
-	"github.com/fevo-tech/nuevo/app/util"
+	"{{{ .Package }}}/app/lib/user"
+	"{{{ .Package }}}/app/util"
 )
 
 // Represents a user's WebSocket session.

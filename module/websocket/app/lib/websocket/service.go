@@ -3,13 +3,14 @@ package websocket
 import (
 	"encoding/json"
 	"fmt"
-	"sort"
 	"sync"
 
-	"github.com/fevo-tech/nuevo/app/lib/filter"
-	"github.com/fevo-tech/nuevo/app/util"
 	"github.com/google/uuid"
 	"go.uber.org/zap"
+	"golang.org/x/exp/slices"
+
+	"{{{ .Package }}}/app/lib/filter"
+	"{{{ .Package }}}/app/util"
 )
 
 // Function used to handle incoming messages.
@@ -74,7 +75,7 @@ func (s *Service) ChannelList(params *filter.Params) []string {
 		}
 		idx++
 	}
-	sort.Strings(ret)
+	slices.Sort(ret)
 	return ret
 }
 

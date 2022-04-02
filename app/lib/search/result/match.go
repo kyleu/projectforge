@@ -4,8 +4,9 @@ package result
 import (
 	"fmt"
 	"reflect"
-	"sort"
 	"strings"
+
+	"golang.org/x/exp/slices"
 )
 
 type Match struct {
@@ -42,8 +43,7 @@ func (m *Match) ValueSplit(q string) []string {
 type Matches []*Match
 
 func (m Matches) Sort() {
-	sort.Slice(m, func(i, j int) bool {
-		l, r := m[i], m[j]
+	slices.SortFunc(m, func(l *Match, r *Match) bool {
 		return l.Key < r.Key
 	})
 }

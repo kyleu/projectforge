@@ -1,8 +1,9 @@
 package result
 
 import (
-	"sort"
 	"strings"
+
+	"golang.org/x/exp/slices"
 )
 
 type Result struct {
@@ -23,8 +24,7 @@ func NewResult(t string, id string, url string, title string, icon string, obj a
 type Results []*Result
 
 func (rs Results) Sort() {
-	sort.Slice(rs, func(i int, j int) bool {
-		l, r := rs[i], rs[j]
+	slices.SortFunc(rs, func(l *Result, r *Result) bool {
 		if l.Type == r.Type {
 			return strings.ToLower(l.Title) < strings.ToLower(r.Title)
 		}

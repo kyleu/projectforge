@@ -1,8 +1,6 @@
 package build
 
 import (
-	"sort"
-
 	"golang.org/x/exp/slices"
 )
 
@@ -18,7 +16,7 @@ func (d *Dependency) AddRef(r string) {
 		return
 	}
 	d.References = append(d.References, r)
-	sort.Strings(d.References)
+	slices.Sort(d.References)
 }
 
 func (d *Dependency) String() string {

@@ -2,12 +2,12 @@ package controller
 
 import (
 	"fmt"
-	"sort"
 	"strings"
 	"sync"
 
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
+	"golang.org/x/exp/slices"
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/action"
 	"projectforge.dev/projectforge/app/controller/cutil"
@@ -54,6 +54,9 @@ func RunAllActions(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		cfg := util.ValueMap{}
+		rc.QueryArgs().VisitAll(func(k []byte, v []byte) {
+			cfg[string(k)] = string(v)
+		})
 		actT := action.TypeFromString(actS)
 		prjs := as.Services.Projects.Projects()
 
@@ -78,8 +81,8 @@ func RunAllActions(rc *fasthttp.RequestCtx) {
 			}()
 		}
 		wg.Wait()
-		sort.Slice(results, func(i int, j int) bool {
-			return strings.ToLower(results[i].Prj.Title()) < strings.ToLower(results[j].Prj.Title())
+		slices.SortFunc(results, func(l *action.ResultContext, r *action.ResultContext) bool {
+			return strings.ToLower(l.Prj.Title()) < strings.ToLower(r.Prj.Title())
 		})
 		ps.Title = fmt.Sprintf("[%s] All Projects", actT.Title)
 		ps.Data = results

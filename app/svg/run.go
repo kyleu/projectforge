@@ -3,9 +3,9 @@ package svg
 import (
 	"fmt"
 	"path/filepath"
-	"sort"
 	"strings"
 
+	"golang.org/x/exp/slices"
 	"projectforge.dev/projectforge/app/lib/filesystem"
 )
 
@@ -61,8 +61,8 @@ func loadSVGs(fs filesystem.FileLoader) ([]*SVG, error) {
 		})
 	}
 
-	sort.Slice(svgs, func(i int, j int) bool {
-		return svgs[i].Key < svgs[j].Key
+	slices.SortFunc(svgs, func(l *SVG, r *SVG) bool {
+		return l.Key < r.Key
 	})
 
 	return svgs, nil

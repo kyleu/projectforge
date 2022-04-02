@@ -1,8 +1,6 @@
 package project
 
 import (
-	"sort"
-
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/lib/theme"
@@ -112,6 +110,6 @@ func (p Projects) AllModules() []string {
 			}
 		}
 	}
-	sort.Strings(ret)
+	slices.Sort(ret)
 	return ret
 }

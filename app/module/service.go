@@ -3,11 +3,11 @@ package module
 import (
 	"context"
 	"path/filepath"
-	"sort"
 	"sync"
 
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
+	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/export"
 	"projectforge.dev/projectforge/app/lib/filesystem"
@@ -108,7 +108,7 @@ func (s *Service) Keys() []string {
 	for k := range s.cache {
 		keys = append(keys, k)
 	}
-	sort.Strings(keys)
+	slices.Sort(keys)
 	return keys
 }
 

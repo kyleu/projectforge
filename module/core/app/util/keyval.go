@@ -1,8 +1,9 @@
 package util
 
 import (
-	"sort"
 	"strings"
+
+	"golang.org/x/exp/slices"
 )
 
 type KeyValInt struct {
@@ -23,8 +24,7 @@ func (k *KeyTypeDesc) Array() []string {
 type KeyTypeDescs []*KeyTypeDesc
 
 func (k KeyTypeDescs) Sort() {
-	sort.Slice(k, func(i, j int) bool {
-		l, r := k[i], k[j]
+	slices.SortFunc(k, func(l *KeyTypeDesc, r *KeyTypeDesc) bool {
 		return strings.ToLower(l.Key) < strings.ToLower(r.Key)
 	})
 }

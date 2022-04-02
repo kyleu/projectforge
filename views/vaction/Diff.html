@@ -21,7 +21,7 @@
       <tbody>
       {%- for _, d := range diffs -%}
         <tr>
-          <td class="shrink">{%s d.Path %}</td>
+          <td class="shrink"><a href="/p/{%s prjKey %}/fs/{%s d.Path %}" target="_blank">{%s d.Path %}</a></td>
           <td>{%s d.Status.String() %}</td>
           <td>
             {%- if act.Key == "audit" -%}
@@ -33,7 +33,7 @@
             {%- else -%}
             <form action="/run/{%s prjKey %}/merge" method="get">
               <input type="hidden" name="file" value="{%s d.Path %}" />
-              <button type="submit" name="to" value="module" title="Incorporate change into module">&lt;-</button>
+              <button type="submit" name="to" value="module" title="Incorporate change into module">&lt;-</button>{% space %}
               <button type="submit" name="to" value="project" title="Overwrite project changes with module version">-&gt;</button>
             </form>
             {%- endif -%}

@@ -2,7 +2,8 @@ package auth
 
 import (
 	"fmt"
-	"sort"
+
+	"golang.org/x/exp/slices"
 
 	"{{{ .Package }}}/app/util"
 )
@@ -53,7 +54,7 @@ func initAvailable() {
 		for k := range AvailableProviderNames {
 			AvailableProviderKeys = append(AvailableProviderKeys, k)
 		}
-		sort.Strings(AvailableProviderKeys)
+		slices.Sort(AvailableProviderKeys)
 	}
 }
 

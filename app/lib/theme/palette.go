@@ -1,11 +1,10 @@
 package theme
 
 import (
-	"sort"
-
 	"github.com/muesli/gamut"
 	"github.com/muesli/gamut/palette"
 	"github.com/pkg/errors"
+	"golang.org/x/exp/slices"
 	"projectforge.dev/projectforge/app/util"
 )
 
@@ -66,8 +65,8 @@ func getPalette(pal string) (*gamut.Palette, error) {
 
 func paletteColors(p gamut.Palette) gamut.Colors {
 	ret := p.Colors()
-	sort.Slice(ret, func(i, j int) bool {
-		return ret[i].Name < ret[j].Name
+	slices.SortFunc(ret, func(l gamut.Color, r gamut.Color) bool {
+		return l.Name < r.Name
 	})
 	return ret
 }

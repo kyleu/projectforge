@@ -2,9 +2,9 @@ package module
 
 import (
 	"os"
-	"sort"
 
 	"github.com/pkg/errors"
+	"golang.org/x/exp/slices"
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/filesystem"
 )
@@ -25,7 +25,7 @@ func (s *Service) GetFilenames(mods Modules) ([]string, error) {
 	for k := range ret {
 		keys = append(keys, k)
 	}
-	sort.Strings(keys)
+	slices.Sort(keys)
 	return keys, nil
 }
 
@@ -41,7 +41,7 @@ func (s *Service) GetFiles(mods Modules, addHeader bool) (file.Files, error) {
 	for k := range ret {
 		keys = append(keys, k)
 	}
-	sort.Strings(keys)
+	slices.Sort(keys)
 
 	files := make(file.Files, 0, len(ret))
 	for _, k := range keys {

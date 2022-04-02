@@ -4,7 +4,7 @@ permissions:
   contents: write
 jobs:{{{ if .Build.TestsFail }}}
   test:
-    uses: "fevo-tech/{{{ .Key }}}/.github/workflows/test.yml@master"{{{ end }}}
+    uses: "{{{ .Info.Org }}}/{{{ .Key }}}/.github/workflows/test.yml@master"{{{ end }}}
   build:
     runs-on: "ubuntu-latest"
     steps:{{{ if .HasSlack }}}

@@ -4,11 +4,11 @@ import (
 	"context"
 	"io/fs"
 	"path"
-	"sort"
 	"strings"
 
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
+	"golang.org/x/exp/slices"
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller/cutil"
@@ -46,7 +46,7 @@ func docMenu(ctx context.Context, as *app.State) *menu.Item {
 	if err != nil {
 		as.Logger.Errorf("unable to build documentation menu: %+v", err)
 	}
-	sort.Strings(paths)
+	slices.Sort(paths)
 
 	ret := &menu.Item{Key: "docs", Title: "Documentation", Icon: "folder"}
 	for _, p := range paths {

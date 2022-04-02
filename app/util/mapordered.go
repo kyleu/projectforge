@@ -5,7 +5,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"encoding/xml"
-	"sort"
+
+	"golang.org/x/exp/slices"
 )
 
 type OrderedMap[V any] struct {
@@ -22,7 +23,7 @@ func (o *OrderedMap[V]) Append(k string, v V) {
 	o.Order = append(o.Order, k)
 	o.Map[k] = v
 	if o.Lexical {
-		sort.Strings(o.Order)
+		slices.Sort(o.Order)
 	}
 }
 
@@ -75,7 +76,7 @@ func (o *OrderedMap[V]) UnmarshalJSON(b []byte) error {
 	}
 
 	if o.Lexical {
-		sort.Slice(o.Order, func(i, j int) bool { return index[o.Order[i]] < index[o.Order[j]] })
+		slices.SortFunc(o.Order, func(l string, r string) bool { return index[l] < index[r] })
 	}
 	return nil
 }

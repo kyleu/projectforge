@@ -3,8 +3,9 @@ package filesystem
 import (
 	"os"
 	"path/filepath"
-	"sort"
 	"strings"
+
+	"golang.org/x/exp/slices"
 )
 
 var defaultIgnore = []string{".DS_Store$", "^.git/", "^.idea/", "^build/", "^client/node_modules", ".html.go$", ".sql.go$"}
@@ -44,7 +45,7 @@ func (f *FileSystem) ListExtension(path string, ext string, trimExtension bool) 
 		}
 		ret = append(ret, j)
 	}
-	sort.Strings(ret)
+	slices.Sort(ret)
 	return ret
 }
 
@@ -63,7 +64,7 @@ func (f *FileSystem) ListDirectories(path string) []string {
 			ret = append(ret, f.Name())
 		}
 	}
-	sort.Strings(ret)
+	slices.Sort(ret)
 	return ret
 }
 
@@ -84,7 +85,7 @@ func (f *FileSystem) ListFilesRecursive(path string, ign []string) ([]string, er
 	if err != nil {
 		return nil, err
 	}
-	sort.Strings(ret)
+	slices.Sort(ret)
 	return ret, nil
 }
 

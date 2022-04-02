@@ -3,12 +3,13 @@ package project
 import (
 	"os"
 	"path/filepath"
-	"sort"
 	"strings"
 	"sync"
 
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
+	"golang.org/x/exp/slices"
+
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -102,7 +103,7 @@ func (s *Service) Keys() []string {
 		titles = append(titles, tl)
 	}
 	s.cacheLock.Unlock()
-	sort.Strings(titles)
+	slices.Sort(titles)
 	ret := make([]string, 0, len(titles))
 	for _, title := range titles {
 		ret = append(ret, keys[title])

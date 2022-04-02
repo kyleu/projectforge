@@ -5,7 +5,7 @@ import (
 	"sync/atomic"
 
 	"github.com/fasthttp/websocket"
-	"github.com/fevo-tech/nuevo/app/util"
+	"{{{ .Package }}}/app/util"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 )

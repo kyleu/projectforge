@@ -1,8 +1,9 @@
 <!-- Content managed by Project Forge, see [projectforge.md] for details. -->
 {% import (
   "fmt"
-  "sort"
   "strings"
+
+  "golang.org/x/exp/slices"
 
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
@@ -31,7 +32,7 @@
 {%- if len(ps.Flashes) > 0 -%}{%= renderFlashes(ps.Flashes) %}{%- endif -%}
 {%= page.Nav(as, ps) %}
 <main id="content"{% if ps.HideMenu %} class="nomenu"{% endif %}>{%= page.Body(as, ps) %}</main>
-{%- code sort.Strings(ps.Icons) -%}
+{%- code slices.Sort(ps.Icons) -%}
 {% if len(ps.Icons) > 0 %}<div class="icon-list" style="display: none;">{% for _, icon := range ps.Icons %}
   {%= components.SVG(icon) %}{% endfor %}
 </div>

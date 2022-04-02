@@ -3,8 +3,9 @@ package theme
 
 import (
 	"io"
-	"sort"
 	"strings"
+
+	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/util"
 )
@@ -46,14 +47,14 @@ func (t *Theme) Equals(x *Theme) bool {
 type Themes []*Theme
 
 func (t Themes) Sort() {
-	sort.Slice(t, func(i int, j int) bool {
-		if t[i].Key == ThemeDefault.Key {
+	slices.SortFunc(t, func(l *Theme, r *Theme) bool {
+		if l.Key == ThemeDefault.Key {
 			return true
 		}
-		if t[j].Key == ThemeDefault.Key {
+		if r.Key == ThemeDefault.Key {
 			return false
 		}
-		return t[i].Key < t[j].Key
+		return l.Key < r.Key
 	})
 }
 

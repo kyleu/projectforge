@@ -45,9 +45,7 @@ func (o Overrides) Purge(path util.Pkg) Overrides {
 }
 
 func (o Overrides) Sort() {
-	sort.Slice(o, func(i, j int) bool {
-		l := o[i]
-		r := o[j]
+	slices.SortFunc(o, func(l *Override, r *Override) bool {
 		if !l.Path.Equals(r.Path) {
 			for idx, p := range l.Path {
 				if idx >= len(r.Path) {

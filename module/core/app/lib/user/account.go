@@ -1,8 +1,9 @@
 package user
 
 import (
-	"sort"
 	"strings"
+
+	"golang.org/x/exp/slices"
 
 	"{{{ .Package }}}/app/util"
 )
@@ -32,9 +33,7 @@ func (a Accounts) String() string {
 }
 
 func (a Accounts) Sort() {
-	sort.Slice(a, func(i int, j int) bool {
-		l := a[i]
-		r := a[j]
+	slices.SortFunc(a, func(l *Account, r *Account) bool {
 		if l.Provider == r.Provider {
 			return strings.ToLower(l.Email) < strings.ToLower(r.Email)
 		}

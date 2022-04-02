@@ -1,12 +1,12 @@
 package controller
 
 import (
-	"sort"
 	"strings"
 	"sync"
 
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
+	"golang.org/x/exp/slices"
 	"projectforge.dev/projectforge/app/git"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/views/vgit"
@@ -34,8 +34,8 @@ func GitActionAll(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		sort.Slice(results, func(i int, j int) bool {
-			return strings.ToLower(results[i].Project.Title()) < strings.ToLower(results[j].Project.Title())
+		slices.SortFunc(results, func(l *git.Result, r *git.Result) bool {
+			return strings.ToLower(l.Project.Title()) < strings.ToLower(r.Project.Title())
 		})
 		ps.Data = results
 		return render(rc, as, &vgit.Results{Results: results}, ps, "projects", "Git")

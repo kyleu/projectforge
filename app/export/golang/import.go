@@ -2,8 +2,9 @@ package golang
 
 import (
 	"fmt"
-	"sort"
 	"strings"
+
+	"golang.org/x/exp/slices"
 )
 
 type ImportType string
@@ -88,7 +89,7 @@ func (i Imports) ByType(t ImportType) []string {
 			ret = append(ret, x.Value)
 		}
 	}
-	sort.Strings(ret)
+	slices.Sort(ret)
 	return ret
 }
 

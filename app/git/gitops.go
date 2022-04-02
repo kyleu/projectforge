@@ -2,10 +2,10 @@ package git
 
 import (
 	"fmt"
-	"sort"
 	"strings"
 
 	"github.com/pkg/errors"
+	"golang.org/x/exp/slices"
 	"projectforge.dev/projectforge/app/util"
 )
 
@@ -27,7 +27,7 @@ func gitStatus(path string) ([]string, error) {
 		}
 		dirty = append(dirty, strings.TrimSpace(line))
 	}
-	sort.Strings(dirty)
+	slices.Sort(dirty)
 
 	return dirty, nil
 }

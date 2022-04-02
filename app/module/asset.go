@@ -4,11 +4,11 @@ import (
 	"context"
 	"io"
 	"net/http"
-	"sort"
 	"strings"
 
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
+	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/util"
@@ -35,7 +35,7 @@ func (s *Service) AssetURL(ctx context.Context, key string) (string, error) {
 		for k := range assetMap {
 			keys = append(keys, k)
 		}
-		sort.Strings(keys)
+		slices.Sort(keys)
 		return "", errors.Errorf(msg, key, strings.Join(keys, ", "))
 	}
 	return ret, nil

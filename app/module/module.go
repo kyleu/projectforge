@@ -1,9 +1,8 @@
 package module
 
 import (
-	"sort"
-
 	"github.com/gomarkdown/markdown"
+	"golang.org/x/exp/slices"
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -76,8 +75,8 @@ func (m Modules) Keys() []string {
 }
 
 func (m Modules) Sort() Modules {
-	sort.Slice(m, func(i int, j int) bool {
-		return m[i].Priority < m[j].Priority
+	slices.SortFunc(m, func(l *Module, r *Module) bool {
+		return l.Priority < r.Priority
 	})
 	return m
 }

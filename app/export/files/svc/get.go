@@ -2,9 +2,9 @@ package svc
 
 import (
 	"fmt"
-	"sort"
 	"strings"
 
+	"golang.org/x/exp/slices"
 	"projectforge.dev/projectforge/app/export/files/helper"
 	"projectforge.dev/projectforge/app/export/golang"
 	"projectforge.dev/projectforge/app/export/model"
@@ -46,7 +46,7 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 	for k := range getBys {
 		keys = append(keys, k)
 	}
-	sort.Strings(keys)
+	slices.Sort(keys)
 	for _, key := range keys {
 		cols := getBys[key]
 		name := "GetBy" + strings.Join(cols.ProperNames(), "")

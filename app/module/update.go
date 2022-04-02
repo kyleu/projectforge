@@ -7,7 +7,7 @@ import (
 	"projectforge.dev/projectforge/app/diff"
 )
 
-func (s *Service) UpdateFile(mods Modules, d *diff.Diff) ([]string, error) {
+func (s *Service) UpdateFile(mods Modules, srcContent string, d *diff.Diff) ([]string, error) {
 	var ret []string
 	for _, mod := range mods {
 		loader := s.GetFilesystem(mod.Key)

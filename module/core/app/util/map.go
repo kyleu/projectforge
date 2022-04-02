@@ -4,10 +4,10 @@ import (
 	"encoding/xml"
 	"fmt"
 	"net/url"
-	"sort"
 	"strings"
 
 	"github.com/pkg/errors"
+	"golang.org/x/exp/slices"
 )
 
 type ValueMap map[string]any
@@ -24,7 +24,7 @@ func (m ValueMap) KeysAndValues() ([]string, []any) {
 	for k := range m {
 		cols = append(cols, k)
 	}
-	sort.Strings(cols)
+	slices.Sort(cols)
 	for _, col := range cols {
 		vals = append(vals, m[col])
 	}
@@ -62,7 +62,7 @@ func (m ValueMap) Keys() []string {
 	for k := range m {
 		ret = append(ret, k)
 	}
-	sort.Strings(ret)
+	slices.Sort(ret)
 	return ret
 }
 

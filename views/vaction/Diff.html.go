@@ -34,11 +34,19 @@ func streamrenderDiffs(qw422016 *qt422016.Writer, prjKey string, act action.Type
 //line views/vaction/Diff.html:22
 	for _, d := range diffs {
 //line views/vaction/Diff.html:22
-		qw422016.N().S(`<tr><td class="shrink">`)
+		qw422016.N().S(`<tr><td class="shrink"><a href="/p/`)
+//line views/vaction/Diff.html:24
+		qw422016.E().S(prjKey)
+//line views/vaction/Diff.html:24
+		qw422016.N().S(`/fs/`)
 //line views/vaction/Diff.html:24
 		qw422016.E().S(d.Path)
 //line views/vaction/Diff.html:24
-		qw422016.N().S(`</td><td>`)
+		qw422016.N().S(`" target="_blank">`)
+//line views/vaction/Diff.html:24
+		qw422016.E().S(d.Path)
+//line views/vaction/Diff.html:24
+		qw422016.N().S(`</a></td><td>`)
 //line views/vaction/Diff.html:25
 		qw422016.E().S(d.Status.String())
 //line views/vaction/Diff.html:25
@@ -70,7 +78,11 @@ func streamrenderDiffs(qw422016 *qt422016.Writer, prjKey string, act action.Type
 //line views/vaction/Diff.html:35
 			qw422016.E().S(d.Path)
 //line views/vaction/Diff.html:35
-			qw422016.N().S(`" /><button type="submit" name="to" value="module" title="Incorporate change into module">&lt;-</button><button type="submit" name="to" value="project" title="Overwrite project changes with module version">-&gt;</button></form>`)
+			qw422016.N().S(`" /><button type="submit" name="to" value="module" title="Incorporate change into module">&lt;-</button>`)
+//line views/vaction/Diff.html:36
+			qw422016.N().S(` `)
+//line views/vaction/Diff.html:36
+			qw422016.N().S(`<button type="submit" name="to" value="project" title="Overwrite project changes with module version">-&gt;</button></form>`)
 //line views/vaction/Diff.html:39
 		}
 //line views/vaction/Diff.html:39

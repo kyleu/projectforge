@@ -1,11 +1,11 @@
 package file
 
 import (
-	"sort"
 	"strings"
 	"unicode/utf8"
 
 	"github.com/pkg/errors"
+	"golang.org/x/exp/slices"
 	"projectforge.dev/projectforge/app/lib/filesystem"
 )
 
@@ -94,8 +94,8 @@ func (s sections) Get(key string) *section {
 }
 
 func (s sections) Sort() {
-	sort.Slice(s, func(i int, j int) bool {
-		return s[i].Start > s[j].Start
+	slices.SortFunc(s, func(l *section, r *section) bool {
+		return l.Start > r.Start
 	})
 }
 

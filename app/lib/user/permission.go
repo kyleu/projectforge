@@ -3,10 +3,10 @@ package user
 
 import (
 	"fmt"
-	"sort"
 	"strings"
 
 	"go.uber.org/zap"
+	"golang.org/x/exp/slices"
 )
 
 const permPrefix = "perm: "
@@ -53,8 +53,7 @@ func (p Permission) String() string {
 type Permissions []*Permission
 
 func (p Permissions) Sort() {
-	sort.Slice(p, func(i int, j int) bool {
-		l, r := p[i], p[j]
+	slices.SortFunc(p, func(l *Permission, r *Permission) bool {
 		if l.Path == r.Path {
 			return l.Match < r.Match
 		}

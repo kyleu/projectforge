@@ -3,7 +3,7 @@ package websocket
 import (
 	"encoding/json"
 
-	"github.com/fevo-tech/nuevo/app/util"
+	"{{{ .Package }}}/app/util"
 	"github.com/google/uuid"
 )
 
