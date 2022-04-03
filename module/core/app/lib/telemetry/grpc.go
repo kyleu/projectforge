@@ -1,3 +1,4 @@
+// $PF_HAS_MODULE(grpc)$
 package telemetry
 
 import (

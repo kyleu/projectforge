@@ -56,38 +56,41 @@ func (p *Index) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
     <h3>A project managed by Project Forge...</h3>
     <ul class="mt">
       <li>Has a beautiful and fast HTML UI, no JavaScript required</li>
-      <li>Optimizes for speed and developer experience</li>
+      <li>Optimizes for speed and developer experience, sub-second turnaround times</li>
       <li>Builds in seconds, live-reloads in dev mode when code or templates change</li>
       <li>Builds to dozens of platforms; mobile, desktop, weird architectures, macOS universal apps</li>
+      <li>Produces a small self-contained binary, includes full REST server and command line interface</li>
+      <li>Optionally supports OAuth with dozens of providers, full theme and stateless session support</li>
+      <li>Provides a type-safe API for working with PostgreSQL, MySQL, and SQLite databases (or no database at all)</li>
       <li>Uses ESBuild for a TypeScript client with progressive enhancement, SVGs, and modern CSS</li>
     </ul>
   </div>
 `)
-//line views/vsite/Index.html:34
+//line views/vsite/Index.html:37
 }
 
-//line views/vsite/Index.html:34
+//line views/vsite/Index.html:37
 func (p *Index) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsite/Index.html:34
+//line views/vsite/Index.html:37
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsite/Index.html:34
+//line views/vsite/Index.html:37
 	p.StreamBody(qw422016, as, ps)
-//line views/vsite/Index.html:34
+//line views/vsite/Index.html:37
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsite/Index.html:34
+//line views/vsite/Index.html:37
 }
 
-//line views/vsite/Index.html:34
+//line views/vsite/Index.html:37
 func (p *Index) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsite/Index.html:34
+//line views/vsite/Index.html:37
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsite/Index.html:34
+//line views/vsite/Index.html:37
 	p.WriteBody(qb422016, as, ps)
-//line views/vsite/Index.html:34
+//line views/vsite/Index.html:37
 	qs422016 := string(qb422016.B)
-//line views/vsite/Index.html:34
+//line views/vsite/Index.html:37
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsite/Index.html:34
+//line views/vsite/Index.html:37
 	return qs422016
-//line views/vsite/Index.html:34
+//line views/vsite/Index.html:37
 }

@@ -4,9 +4,12 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/pkg/errors"
 	"go.uber.org/zap"
+	"golang.org/x/exp/slices"
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/util"
 )
 
 type Diff struct {
@@ -55,7 +58,7 @@ func Files(src file.Files, tgt file.Files, includeUnchanged bool) Diffs {
 	return ret
 }
 
-func FileLoader(src file.Files, tgt filesystem.FileLoader, includeUnchanged bool, logger *zap.SugaredLogger) Diffs {
+func FileLoader(mods []string, src file.Files, tgt filesystem.FileLoader, includeUnchanged bool, logger *zap.SugaredLogger) (Diffs, error) {
 	var ret Diffs
 	for _, s := range src {
 		p := s.FullPath()
@@ -75,6 +78,38 @@ func FileLoader(src file.Files, tgt filesystem.FileLoader, includeUnchanged bool
 				skip = true
 			}
 		}
+
+		if idx := strings.Index(s.Content, file.ModulePrefix); idx > 1 {
+			lines := strings.Split(s.Content, "\n")
+			lineIdx := -1
+			for idx, line := range lines {
+				if strings.Contains(line, file.ModulePrefix) {
+					lineIdx = idx
+					break
+				}
+			}
+			line := lines[lineIdx]
+			if !strings.Contains(line, file.ModulePrefix) {
+				return nil, errors.New("module requirement tag must be on first meaningful line of the file")
+			}
+
+			open, cl := strings.Index(line, "("), strings.Index(line, ")")
+			if open == -1 || cl == -1 {
+				return nil, errors.New("module requirement tag must contain parentheses")
+			}
+			var hasAllMods = true
+			for _, mod := range util.StringSplitAndTrim(line[open+1:cl], ",") {
+				if !slices.Contains(mods, mod) {
+					hasAllMods = false
+				}
+			}
+			if hasAllMods {
+				tgtFile.Content = strings.Join(slices.Delete(lines, lineIdx, lineIdx), "\n")
+			} else {
+				skip = true
+			}
+		}
+
 		var d *Diff
 		if skip {
 			d = &Diff{Path: s.FullPath(), Status: StatusSkipped}
@@ -85,5 +120,5 @@ func FileLoader(src file.Files, tgt filesystem.FileLoader, includeUnchanged bool
 			ret = append(ret, d)
 		}
 	}
-	return ret
+	return ret, nil
 }

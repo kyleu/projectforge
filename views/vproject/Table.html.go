@@ -32,11 +32,11 @@ func StreamTable(qw422016 *qt422016.Writer, prjs project.Projects, as *app.State
 	qw422016.N().S(`
   <div class="card">
     <div class="right"><a href="/p/new"><button>New</button></a></div>
-    <h3>`)
+    <h3><a href="/p">`)
 //line views/vproject/Table.html:12
 	qw422016.E().S(util.StringPlural(len(prjs), "Available Project"))
 //line views/vproject/Table.html:12
-	qw422016.N().S(`</h3>
+	qw422016.N().S(`</a></h3>
     <table class="mt min-200">
       <tbody>
 `)

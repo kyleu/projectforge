@@ -11,6 +11,7 @@ import (
 
 const (
 	InjectPrefix  = prefix + "INJECT"
+	ModulePrefix  = prefix + "HAS_MODULE"
 	sectionPrefix = prefix + "SECTION"
 	startPattern  = "_START("
 	endPattern    = "_END("

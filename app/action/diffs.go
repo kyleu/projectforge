@@ -81,6 +81,10 @@ func diffs(ctx context.Context, pm *PrjAndMods) (file.Files, diff.Diffs, error) 
 		}
 	}
 
-	dfs := diff.FileLoader(srcFiles, tgt, false, pm.Logger)
+	dfs, err := diff.FileLoader(pm.Mods.Keys(), srcFiles, tgt, false, pm.Logger)
+	if err != nil {
+		return nil, nil, err
+	}
+
 	return srcFiles, dfs, nil
 }

@@ -31,11 +31,11 @@ func StreamTable(qw422016 *qt422016.Writer, mods module.Modules, as *app.State, 
 //line views/vmodule/Table.html:9
 	qw422016.N().S(`
   <div class="card">
-    <h3>`)
+    <h3><a href="/m">`)
 //line views/vmodule/Table.html:11
 	qw422016.E().S(util.StringPlural(len(mods), "Available Module"))
 //line views/vmodule/Table.html:11
-	qw422016.N().S(`</h3>
+	qw422016.N().S(`</a></h3>
     <table class="mt min-200">
       <tbody>
 `)

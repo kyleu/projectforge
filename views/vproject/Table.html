@@ -9,7 +9,7 @@
 {% func Table(prjs project.Projects, as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <div class="right"><a href="/p/new"><button>New</button></a></div>
-    <h3>{%s util.StringPlural(len(prjs), "Available Project") %}</h3>
+    <h3><a href="/p">{%s util.StringPlural(len(prjs), "Available Project") %}</a></h3>
     <table class="mt min-200">
       <tbody>
         {%- for _, prj := range prjs -%}
