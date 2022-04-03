@@ -79,7 +79,8 @@ func reverseDiff(dest string, d *diff.Diff, logger *zap.SugaredLogger) ([]byte, 
 			}
 			return nil, errors.New("module file does not contain pre-content context lines")
 		}
-		postIdx := preIdx + len(pre) + strings.Index(dest[preIdx+len(pre):], post)
+		preIdx = preIdx + len(pre)
+		postIdx := preIdx + strings.Index(dest[preIdx:], post)
 		if postIdx == -1 {
 			if hasTemplate {
 				return nil, errors.New("module file with template does not contain post-content context lines")
@@ -87,10 +88,7 @@ func reverseDiff(dest string, d *diff.Diff, logger *zap.SugaredLogger) ([]byte, 
 			return nil, errors.New("module file does not contain post-content context lines")
 		}
 
-		destPre := preIdx + len(pre)
-		destPost := postIdx
-
-		dest = dest[:destPre] + deleted + dest[destPost:]
+		dest = dest[:preIdx] + deleted + dest[postIdx:]
 	}
 
 	return []byte(dest), nil
