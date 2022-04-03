@@ -74,15 +74,7 @@ func onMerge(ctx context.Context, pm *PrjAndMods) *Result {
 }
 
 func mergeLeft(pm *PrjAndMods, d *diff.Diff, ret *Result) *Result {
-	loader := pm.PSvc.GetFilesystem(pm.Prj)
-	if !loader.Exists(d.Path) {
-		return ret.WithError(errors.Errorf("no file found at path [%s] for project [%s]", d.Path, pm.Prj.Key))
-	}
-	b, err := loader.ReadFile(d.Path)
-	if err != nil {
-		return ret.WithError(err)
-	}
-	logs, err := pm.MSvc.UpdateFile(pm.Mods, string(b), d)
+	logs, err := pm.MSvc.UpdateFile(pm.Mods, d)
 	if err != nil {
 		return ret.WithError(err)
 	}

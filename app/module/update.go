@@ -3,11 +3,14 @@ package module
 import (
 	"bytes"
 	"fmt"
+	"strings"
 
+	"github.com/pkg/errors"
+	"go.uber.org/zap"
 	"projectforge.dev/projectforge/app/diff"
 )
 
-func (s *Service) UpdateFile(mods Modules, srcContent string, d *diff.Diff) ([]string, error) {
+func (s *Service) UpdateFile(mods Modules, d *diff.Diff) ([]string, error) {
 	var ret []string
 	for _, mod := range mods {
 		loader := s.GetFilesystem(mod.Key)
@@ -19,7 +22,7 @@ func (s *Service) UpdateFile(mods Modules, srcContent string, d *diff.Diff) ([]s
 			return nil, err
 		}
 
-		newContent, err := diff.ApplyInverse(b, d)
+		newContent, err := reverseDiff(string(b), d, s.logger)
 		if err != nil {
 			return nil, err
 		}
@@ -27,13 +30,65 @@ func (s *Service) UpdateFile(mods Modules, srcContent string, d *diff.Diff) ([]s
 			if bytes.Equal(b, newContent) {
 				ret = append(ret, fmt.Sprintf("no changes required to [%s] for module [%s]", d.Path, mod.Key))
 			} else {
-				ret = append(ret, fmt.Sprintf("wrote [%d] bytes to [%s] for module [%s]", len(newContent), d.Path, mod.Key))
+				_ = mode
 				err = loader.WriteFile(d.Path, newContent, mode, true)
 				if err != nil {
 					return nil, err
 				}
+				ret = append(ret, fmt.Sprintf("wrote [%d] bytes to [%s] for module [%s]", len(newContent), d.Path, mod.Key))
 			}
 		}
 	}
 	return ret, nil
+}
+
+func reverseDiff(dest string, d *diff.Diff, logger *zap.SugaredLogger) ([]byte, error) {
+	logger.Debugf("reversing [%d] changes for file [%s]", len(d.Changes), d.Path)
+	for _, ch := range d.Changes {
+		var preCtx, postCtx, addedCtx, deletedCtx []string
+		var isPost, hasTemplate bool
+		for _, chLine := range ch.Lines {
+			switch chLine.T {
+			case "context":
+				if strings.Contains(chLine.V, "{{{") {
+					hasTemplate = true
+				}
+				if isPost {
+					postCtx = append(postCtx, chLine.V)
+				} else {
+					preCtx = append(preCtx, chLine.V)
+				}
+			case "added":
+				isPost = true
+				addedCtx = append(addedCtx, chLine.V)
+			case "deleted":
+				isPost = true
+				deletedCtx = append(deletedCtx, chLine.V)
+			default:
+				return nil, errors.Errorf("unable to handle change with type [%s]", chLine.T)
+			}
+		}
+
+		pre, post := strings.Join(preCtx, ""), strings.Join(postCtx, "")
+		deleted := strings.Join(deletedCtx, "")
+
+		preIdx := strings.Index(dest, pre)
+		if preIdx == -1 {
+			if hasTemplate {
+				return nil, errors.New("module file with template does not contain pre-content context lines")
+			}
+			return nil, errors.New("module file does not contain pre-content context lines")
+		}
+		postIdx := strings.Index(dest, post)
+		if postIdx == -1 {
+			if hasTemplate {
+				return nil, errors.New("module file with template does not contain post-content context lines")
+			}
+			return nil, errors.New("module file does not contain post-content context lines")
+		}
+
+		dest = dest[:preIdx+len(pre)] + deleted + dest[postIdx:]
+	}
+
+	return []byte(dest), nil
 }
