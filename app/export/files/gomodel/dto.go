@@ -25,7 +25,12 @@ func DTO(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	} else {
 		return nil, err
 	}
-	g.AddBlocks(modelDTO(m), modelDTOToModel(m), modelDTOArray(), modelDTOArrayTransformer(m), defaultWC(m))
+	g.AddBlocks(modelDTO(m))
+	mdm, err := modelDTOToModel(g, m)
+	if err != nil {
+		return nil, err
+	}
+	g.AddBlocks(mdm, modelDTOArray(), modelDTOArrayTransformer(m), defaultWC(m))
 	return g.Render(addHeader)
 }
 
@@ -78,7 +83,7 @@ func modelDTO(m *model.Model) *golang.Block {
 	return ret
 }
 
-func modelDTOToModel(m *model.Model) *golang.Block {
+func modelDTOToModel(g *golang.File, m *model.Model) (*golang.Block, error) {
 	ret := golang.NewBlock(m.Proper(), "func")
 	ret.W("func (d *dto) To%s() *%s {", m.Proper(), m.Proper())
 	ret.W("\tif d == nil {")
@@ -97,6 +102,15 @@ func modelDTOToModel(m *model.Model) *golang.Block {
 			ret.W("\t%sArg := util.ValueMap{}", c.Camel())
 			ret.W("\t_ = util.FromJSON(d.%s, &%sArg)", c.Proper(), c.Camel())
 			refs = append(refs, fmt.Sprintf("%s %sArg", k, c.Camel()))
+		case types.KeyReference:
+			ref, err := model.AsRef(c.Type)
+			if err != nil {
+				return nil, errors.Wrap(err, "invalid ref")
+			}
+			g.AddImport(golang.NewImport(golang.ImportTypeApp, ref.Pkg.ToPath()))
+			ret.W("\t%sArg := &%s.%s{}", c.Camel(), ref.Pkg.Last(), ref.K)
+			ret.W("\t_ = util.FromJSON(d.%s, %sArg)", c.Proper(), c.Camel())
+			refs = append(refs, fmt.Sprintf("%s %sArg", k, c.Camel()))
 		default:
 			refs = append(refs, fmt.Sprintf("%s d.%s", k, c.Proper()))
 		}
@@ -107,7 +121,7 @@ func modelDTOToModel(m *model.Model) *golang.Block {
 	}
 	ret.W("\t}")
 	ret.W("}")
-	return ret
+	return ret, nil
 }
 
 func modelDTOArray() *golang.Block {

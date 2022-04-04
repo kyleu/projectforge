@@ -15,7 +15,7 @@ func modelClone(m *model.Model) *golang.Block {
 	for _, col := range m.Columns {
 		decl := col.Proper()
 		switch col.Type.Key() {
-		case types.KeyMap, types.KeyValueMap:
+		case types.KeyMap, types.KeyValueMap, types.KeyReference:
 			decl += ".Clone()"
 		}
 		ret.W("\t\t%s %s.%s,", util.StringPad(col.Proper()+":", max), m.FirstLetter(), decl)
@@ -32,7 +32,7 @@ func modelString(m *model.Model) *golang.Block {
 		switch pks[0].Type.Key() {
 		case types.KeyString:
 			ret.W("\treturn %s.%s", m.FirstLetter(), pks[0].Proper())
-		case types.KeyUUID:
+		case types.KeyUUID, types.KeyReference:
 			ret.W("\treturn %s.%s.String()", m.FirstLetter(), pks[0].Proper())
 		default:
 			ret.W("\treturn fmt.Sprint(%s.%s)", m.FirstLetter(), pks[0].Proper())

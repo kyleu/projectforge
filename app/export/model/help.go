@@ -16,6 +16,8 @@ func Help(t types.Type) string {
 		return "Integer"
 	case types.KeyMap, types.KeyValueMap:
 		return "JSON object"
+	case types.KeyReference:
+		return "[" + asRefK(t) + "], as a JSON object"
 	case types.KeyString:
 		return "String text"
 	case types.KeyTimestamp:

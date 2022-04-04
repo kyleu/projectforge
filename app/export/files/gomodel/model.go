@@ -24,6 +24,16 @@ func Model(m *model.Model, args *model.Args, addHeader bool) (*file.File, error)
 		g.AddImport(helper.ImpFmt)
 	}
 	g.AddImport(helper.ImpAppUtil)
+	for _, col := range m.Columns {
+		if col.Type.Key() == types.KeyReference {
+			ref, err := model.AsRef(col.Type)
+			if err != nil {
+				return nil, err
+			}
+			g.AddImport(golang.NewImport(golang.ImportTypeApp, ref.Pkg.ToPath()))
+		}
+	}
+
 	g.AddBlocks(modelStruct(m), modelConstructor(m), modelRandom(m), modelFromMap(m))
 	g.AddBlocks(modelClone(m), modelString(m), modelWebPath(m), modelDiff(m, g), modelToData(m, m.Columns, ""))
 	if m.IsRevision() {
@@ -81,7 +91,7 @@ func modelDiff(m *model.Model, g *golang.File) *golang.Block {
 			ret.W("\tif %s != %s {", l, r)
 			ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, fmt.Sprint(%s), fmt.Sprint(%s)))", col.Camel(), l, r)
 			ret.W("\t}")
-		case types.KeyMap, types.KeyValueMap:
+		case types.KeyMap, types.KeyValueMap, types.KeyReference:
 			ret.W("\tdiffs = append(diffs, util.DiffObjects(%s, %s, %q)...)", l, r, col.Camel())
 		case types.KeyString:
 			ret.W("\tif %s != %s {", l, r)

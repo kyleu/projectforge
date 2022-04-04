@@ -3,6 +3,7 @@ package model
 import (
 	"fmt"
 
+	"github.com/pkg/errors"
 	"projectforge.dev/projectforge/app/lib/types"
 )
 
@@ -17,6 +18,12 @@ func ToGoType(t types.Type, nullable bool) string {
 		ret = types.KeyInt
 	case types.KeyMap, types.KeyValueMap:
 		ret = "util.ValueMap"
+	case types.KeyReference:
+		ref, err := AsRef(t)
+		if err != nil {
+			return "ERROR:" + err.Error()
+		}
+		ret = fmt.Sprintf("*%s.%s", ref.Pkg.Last(), ref.K)
 	case types.KeyString:
 		ret = types.KeyString
 	case types.KeyTimestamp:
@@ -34,7 +41,7 @@ func ToGoType(t types.Type, nullable bool) string {
 
 func ToGoDTOType(t types.Type, nullable bool) string {
 	switch t.Key() {
-	case types.KeyAny, types.KeyMap, types.KeyValueMap:
+	case types.KeyAny, types.KeyMap, types.KeyValueMap, types.KeyReference:
 		return "json.RawMessage"
 	default:
 		return ToGoType(t, nullable)
@@ -64,7 +71,7 @@ func ToGoViewString(t types.Type, prop string, nullable bool) string {
 		return "{%%v " + prop + " %%}"
 	case types.KeyInt:
 		return "{%%d " + prop + " %%}"
-	case types.KeyMap, types.KeyValueMap:
+	case types.KeyMap, types.KeyValueMap, types.KeyReference:
 		return "{%%= components.JSON(" + prop + ") %%}"
 	case types.KeyTimestamp:
 		if nullable {
@@ -91,7 +98,7 @@ func ToSQLType(t types.Type) string {
 		return "boolean"
 	case types.KeyInt:
 		return "int"
-	case types.KeyMap, types.KeyValueMap:
+	case types.KeyMap, types.KeyValueMap, types.KeyReference:
 		return keyJSONB
 	case types.KeyString:
 		return "text"
@@ -102,4 +109,24 @@ func ToSQLType(t types.Type) string {
 	default:
 		return "sql-error-invalid-type"
 	}
+}
+
+func AsRef(t types.Type) (*types.Reference, error) {
+	w, ok := t.(*types.Wrapped)
+	if ok {
+		t = w.T
+	}
+	ref, ok := t.(*types.Reference)
+	if !ok {
+		return nil, errors.Errorf("InvalidType(%T)", w.T)
+	}
+	return ref, nil
+}
+
+func asRefK(t types.Type) string {
+	ref, err := AsRef(t)
+	if err != nil {
+		return fmt.Sprintf("ERROR:", err.Error())
+	}
+	return ref.K
 }

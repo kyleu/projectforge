@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"golang.org/x/exp/slices"
-
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -92,7 +91,7 @@ func (c *Column) ToGoEditString(prefix string) string {
 		return fmt.Sprintf(`{%%%%= components.TableBoolean(%q, %q, %s, 5, %q) %%%%}`, c.Camel(), c.Title(), prefix+c.Proper(), c.Help())
 	case types.KeyInt:
 		return fmt.Sprintf(`{%%%%= components.TableInputNumber(%q, %q, %s, 5, %q) %%%%}`, c.Camel(), c.Title(), prefix+c.Proper(), c.Help())
-	case types.KeyMap, types.KeyValueMap:
+	case types.KeyMap, types.KeyValueMap, types.KeyReference:
 		return fmt.Sprintf(`{%%%%= components.TableTextarea(%q, %q, 8, util.ToJSON(%s), 5, %q) %%%%}`, c.Camel(), c.Title(), c.ToGoString(prefix), c.Help())
 	case types.KeyTimestamp:
 		gs := c.ToGoString(prefix)
@@ -121,6 +120,8 @@ func (c *Column) ToGoMapParse() string {
 		return "Int"
 	case types.KeyMap, types.KeyValueMap:
 		return "Map"
+	case types.KeyReference:
+		return asRefK(c.Type)
 	case types.KeyString:
 		return "String"
 	case types.KeyTimestamp:
@@ -143,7 +144,7 @@ func (c *Column) ZeroVal() string {
 		return "false"
 	case types.KeyInt:
 		return "0"
-	case types.KeyMap, types.KeyValueMap:
+	case types.KeyMap, types.KeyValueMap, types.KeyReference:
 		return types.KeyNil
 	case types.KeyString:
 		return "\"\""

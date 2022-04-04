@@ -38,6 +38,11 @@ func forCols(ret *golang.Block, indent int, cols ...*model.Column) {
 		switch {
 		case col.Type.Key() == types.KeyAny:
 			ret.W(ind+"ret.%s = m[%q]", col.Proper(), col.Camel())
+		case col.Type.Key() == types.KeyReference:
+			ret.W(ind+"tmp%s, err := m.ParseMap(%q, true, true)", col.Proper(), col.Camel())
+			catchErr("err")
+			ret.W(ind+"err = util.CycleJSON(tmp%s, ret.%s)", col.Proper(), col.Proper())
+			catchErr("err")
 		case col.Nullable || col.Type.Scalar():
 			ret.W(ind+"ret.%s, err = m.Parse%s(%q, true, true)", col.Proper(), col.ToGoMapParse(), col.Camel())
 			catchErr("err")
