@@ -104,7 +104,9 @@ func FileLoader(mods []string, src file.Files, tgt filesystem.FileLoader, includ
 				}
 			}
 			if hasAllMods {
-				tgtFile.Content = strings.Join(slices.Delete(lines, lineIdx, lineIdx), "\n")
+				if tgtFile != nil {
+					tgtFile.Content = strings.Join(slices.Delete(lines, lineIdx, lineIdx), "\n")
+				}
 			} else {
 				skip = true
 			}
