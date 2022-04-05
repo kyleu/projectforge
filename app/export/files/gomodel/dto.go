@@ -107,7 +107,9 @@ func modelDTOToModel(g *golang.File, m *model.Model) (*golang.Block, error) {
 			if err != nil {
 				return nil, errors.Wrap(err, "invalid ref")
 			}
-			g.AddImport(golang.NewImport(golang.ImportTypeApp, ref.Pkg.ToPath()))
+			if ref.Pkg.ToPath() != m.Package {
+				g.AddImport(golang.NewImport(golang.ImportTypeApp, ref.Pkg.ToPath()))
+			}
 			ret.W("\t%sArg := &%s.%s{}", c.Camel(), ref.Pkg.Last(), ref.K)
 			ret.W("\t_ = util.FromJSON(d.%s, %sArg)", c.Proper(), c.Camel())
 			refs = append(refs, fmt.Sprintf("%s %sArg", k, c.Camel()))

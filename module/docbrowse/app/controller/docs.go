@@ -20,20 +20,20 @@ import (
 
 func Docs(rc *fasthttp.RequestCtx) {
 	act("docs", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		path, _ := RCRequiredString(rc, "path", false)
-		if path == "" {
+		pth, _ := RCRequiredString(rc, "path", false)
+		if pth == "" {
 			return "", errors.New("invalid path")
 		}
 
-		split := util.StringSplitAndTrim(path, "/")
+		split := util.StringSplitAndTrim(pth, "/")
 		bc := []string{"docs"}
 		bc = append(bc, split...)
 
-		x, err := doc.HTML(path + ".md")
+		x, err := doc.HTML(pth + ".md")
 		if err != nil {
-			return "", errors.Wrapf(err, "unable to load documentation from [%s]", path)
+			return "", errors.Wrapf(err, "unable to load documentation from [%s]", pth)
 		}
-		return render(rc, as, &vdoc.MarkdownPage{Title: path, HTML: x}, ps, bc...)
+		return render(rc, as, &vdoc.MarkdownPage{Title: pth, HTML: x}, ps, bc...)
 	})
 }
 

@@ -12,7 +12,6 @@ The following modules were used to build this project:
 - [desktop](./doc/module/desktop.md)
 - [ios](./doc/module/ios.md)
 - [marketing](./doc/module/marketing.md)
-- [notarize](./doc/module/notarize.md)
 - [sandbox](./doc/module/sandbox.md)
 - [search](./doc/module/search.md)
 - [types](./doc/module/types.md)

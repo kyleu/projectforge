@@ -75,7 +75,7 @@ func importsForTypeCtxDTO(t types.Type) golang.Imports {
 	switch t.Key() {
 	case types.KeyAny:
 		return golang.Imports{ImpJSON}
-	case types.KeyMap, types.KeyValueMap:
+	case types.KeyMap, types.KeyValueMap, types.KeyReference:
 		return golang.Imports{ImpJSON, ImpAppUtil}
 	case types.KeyTimestamp:
 		return golang.Imports{ImpTime}
