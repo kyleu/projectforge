@@ -64,12 +64,12 @@ func (c *Column) ToGoViewString(prefix string) string {
 	return ToGoViewString(c.Type, prefix+c.Proper(), c.Nullable)
 }
 
-func (c *Column) ToGoType() string {
-	return ToGoType(c.Type, c.Nullable)
+func (c *Column) ToGoType(pkg string) string {
+	return ToGoType(c.Type, c.Nullable, pkg)
 }
 
-func (c *Column) ToGoDTOType() string {
-	return ToGoDTOType(c.Type, c.Nullable)
+func (c *Column) ToGoDTOType(pkg string) string {
+	return ToGoDTOType(c.Type, c.Nullable, pkg)
 }
 
 func (c *Column) ToSQLType() string {

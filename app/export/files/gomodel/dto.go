@@ -75,9 +75,9 @@ func modelDTO(m *model.Model) *golang.Block {
 	ret := golang.NewBlock(m.Proper()+"DTO", "struct")
 	ret.W("type dto struct {")
 	maxColLength := util.StringArrayMaxLength(m.Columns.CamelNames())
-	maxTypeLength := m.Columns.MaxGoDTOKeyLength()
+	maxTypeLength := m.Columns.MaxGoDTOKeyLength(m.Package)
 	for _, c := range m.Columns {
-		ret.W("\t%s %s `db:%q`", util.StringPad(c.Proper(), maxColLength), util.StringPad(c.ToGoDTOType(), maxTypeLength), c.Name)
+		ret.W("\t%s %s `db:%q`", util.StringPad(c.Proper(), maxColLength), util.StringPad(c.ToGoDTOType(m.Package), maxTypeLength), c.Name)
 	}
 	ret.W("}")
 	return ret
@@ -107,10 +107,12 @@ func modelDTOToModel(g *golang.File, m *model.Model) (*golang.Block, error) {
 			if err != nil {
 				return nil, errors.Wrap(err, "invalid ref")
 			}
-			if ref.Pkg.ToPath() != m.Package {
+			if ref.Pkg.Last() == m.Package {
+				ret.W("\t%sArg := &%s{}", c.Camel(), ref.K)
+			} else {
+				ret.W("\t%sArg := &%s.%s{}", c.Camel(), ref.Pkg.Last(), ref.K)
 				g.AddImport(golang.NewImport(golang.ImportTypeApp, ref.Pkg.ToPath()))
 			}
-			ret.W("\t%sArg := &%s.%s{}", c.Camel(), ref.Pkg.Last(), ref.K)
 			ret.W("\t_ = util.FromJSON(d.%s, %sArg)", c.Proper(), c.Camel())
 			refs = append(refs, fmt.Sprintf("%s %sArg", k, c.Camel()))
 		default:
@@ -146,16 +148,15 @@ func modelDTOArrayTransformer(m *model.Model) *golang.Block {
 
 func defaultWC(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("Columns", "procedural")
-	ret.W("")
 	ret.W("func defaultWC(idx int) string {")
 	c := m.PKs()
 	wc := make([]string, 0, len(c))
 	idxs := make([]string, 0, len(c))
 	for idx, col := range c {
 		wc = append(wc, fmt.Sprintf("%q = $%%%%d", col.Name))
-		idxs = append(idxs, fmt.Sprintf("idx + %d", idx+1))
+		idxs = append(idxs, fmt.Sprintf("idx+%d", idx+1))
 	}
-	ret.W("\treturn fmt.Sprintf(%q, %s)", strings.Join(wc, " and "), strings.Join(idxs, ","))
+	ret.W("\treturn fmt.Sprintf(%q, %s)", strings.Join(wc, " and "), strings.Join(idxs, ", "))
 	ret.W("}")
 	return ret
 }

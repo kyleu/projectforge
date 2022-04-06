@@ -157,10 +157,10 @@ func (c Columns) Smushed() string {
 	return strings.Join(ret, "")
 }
 
-func (c Columns) Args() string {
+func (c Columns) Args(pkg string) string {
 	args := make([]string, 0, len(c))
 	for _, col := range c {
-		args = append(args, fmt.Sprintf("%s %s", col.Camel(), col.ToGoType()))
+		args = append(args, fmt.Sprintf("%s %s", col.Camel(), col.ToGoType(pkg)))
 	}
 	return strings.Join(args, ", ")
 }
@@ -181,26 +181,26 @@ func (c Columns) WhereClause(offset int) string {
 	return strings.Join(wc, " and ")
 }
 
-func (c Columns) GoTypeKeys() []string {
+func (c Columns) GoTypeKeys(pkg string) []string {
 	ret := make([]string, 0, len(c))
 	for _, x := range c {
-		ret = append(ret, ToGoType(x.Type, x.Nullable))
+		ret = append(ret, ToGoType(x.Type, x.Nullable, pkg))
 	}
 	return ret
 }
 
-func (c Columns) GoTypes() []string {
+func (c Columns) GoTypes(pkg string) []string {
 	ret := make([]string, 0, len(c))
 	for _, x := range c {
-		ret = append(ret, x.ToGoType())
+		ret = append(ret, x.ToGoType(pkg))
 	}
 	return ret
 }
 
-func (c Columns) GoDTOTypeKeys() []string {
+func (c Columns) GoDTOTypeKeys(pkg string) []string {
 	ret := make([]string, 0, len(c))
 	for _, x := range c {
-		ret = append(ret, ToGoDTOType(x.Type, x.Nullable))
+		ret = append(ret, ToGoDTOType(x.Type, x.Nullable, pkg))
 	}
 	return ret
 }
@@ -209,16 +209,16 @@ func (c Columns) MaxCamelLength() int {
 	return util.StringArrayMaxLength(c.CamelNames())
 }
 
-func (c Columns) MaxGoTypeLength() int {
-	return util.StringArrayMaxLength(c.GoTypes())
+func (c Columns) MaxGoTypeLength(pkg string) int {
+	return util.StringArrayMaxLength(c.GoTypes(pkg))
 }
 
-func (c Columns) MaxGoKeyLength() int {
-	return util.StringArrayMaxLength(c.GoTypeKeys())
+func (c Columns) MaxGoKeyLength(pkg string) int {
+	return util.StringArrayMaxLength(c.GoTypeKeys(pkg))
 }
 
-func (c Columns) MaxGoDTOKeyLength() int {
-	return util.StringArrayMaxLength(c.GoDTOTypeKeys())
+func (c Columns) MaxGoDTOKeyLength(pkg string) int {
+	return util.StringArrayMaxLength(c.GoDTOTypeKeys(pkg))
 }
 
 func (c Columns) ForDisplay(k string) Columns {

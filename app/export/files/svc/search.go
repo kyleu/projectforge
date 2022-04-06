@@ -48,7 +48,7 @@ func serviceSearch(m *model.Model, grp *model.Column, dbRef string) *golang.Bloc
 		ret.W("const searchClause = %q", wc)
 		ret.W("")
 	} else {
-		grpTxt = fmt.Sprintf(", %s %s", grp.Camel(), grp.ToGoType())
+		grpTxt = fmt.Sprintf(", %s %s", grp.Camel(), grp.ToGoType(m.Package))
 	}
 	const decl = "func (s *Service) Search%s(ctx context.Context%s, query string, tx *sqlx.Tx, params *filter.Params%s) (%s, error) {"
 	ret.W(decl, prefix, grpTxt, getSuffix(m), m.ProperPlural())

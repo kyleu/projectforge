@@ -39,7 +39,7 @@ func serviceGetAllRevisions(m *model.Model, dbRef string) (*golang.Block, error)
 
 	ret := golang.NewBlock(fmt.Sprintf("GetAll%s", hc.Col.ProperPlural()), "func")
 	const decl = "func (s *Service) GetAll%s(ctx context.Context, tx *sqlx.Tx, %s, params *filter.Params, includeDeleted bool) (%s, error) {"
-	ret.W(decl, hc.Col.ProperPlural(), pks.Args(), m.ProperPlural())
+	ret.W(decl, hc.Col.ProperPlural(), pks.Args(m.Package), m.ProperPlural())
 	ret.W("\tparams = filters(params)")
 	placeholders := make([]string, 0, len(m.PKs()))
 	for idx, pk := range m.PKs() {
@@ -68,7 +68,7 @@ func serviceGetRevision(m *model.Model, dbRef string) (*golang.Block, error) {
 	revCol := m.HistoryColumn()
 	ret := golang.NewBlock(fmt.Sprintf("Get%s", revCol.Proper()), "func")
 	const decl = "func (s *Service) Get%s(ctx context.Context, tx *sqlx.Tx, %s, %s int) (*%s, error) {"
-	ret.W(decl, revCol.Proper(), m.PKs().Args(), revCol.Camel(), m.Proper())
+	ret.W(decl, revCol.Proper(), m.PKs().Args(m.Package), revCol.Camel(), m.Proper())
 	placeholders := make([]string, 0, len(m.PKs()))
 	for idx, pk := range m.PKs() {
 		placeholders = append(placeholders, fmt.Sprintf("\\\"%s\\\" = $%d", pk.Name, idx+1))
@@ -101,14 +101,15 @@ func serviceGetCurrentRevisions(m *model.Model, dbRef string) (*golang.Block, er
 	}
 
 	ret.W("\tvar results []*struct {")
-	maxColLength := pks.MaxGoKeyLength()
-	maxTypeLength := pks.MaxGoTypeLength()
+	maxColLength := pks.MaxGoKeyLength(m.Package)
+	maxTypeLength := pks.MaxGoTypeLength(m.Package)
 	currRevStr := fmt.Sprintf("Current%s", revCol.Proper())
 	if maxColLength < len(currRevStr) {
 		maxColLength = len(currRevStr)
 	}
 	for _, pk := range pks {
-		ret.W("\t\t%s %s `db:%q`", util.StringPad(pk.Proper(), maxColLength), util.StringPad(pk.ToGoType(), maxTypeLength), pk.Name)
+		goType := util.StringPad(pk.ToGoType(m.Package), maxTypeLength)
+		ret.W("\t\t%s %s `db:%q`", util.StringPad(pk.Proper(), maxColLength), goType, pk.Name)
 	}
 	ret.W("\t\t%s int    `db:\"current_%s\"`", currRevStr, revCol.Name)
 	ret.W("\t}")
@@ -147,7 +148,7 @@ func serviceGetCurrentRevisionsBlock(m *model.Model, ret *golang.Block, revCol *
 	}
 
 	const decl = "func (s *Service) getCurrent%s(ctx context.Context, tx *sqlx.Tx, models ...*%s) (map[string]%s, error) {"
-	ret.W(decl, revCol.ProperPlural(), m.Proper(), model.ToGoType(revCol.Type, false))
+	ret.W(decl, revCol.ProperPlural(), m.Proper(), model.ToGoType(revCol.Type, false, m.Package))
 	ret.W("\tstmts := make([]string, 0, len(models))")
 	ret.W("\tfor i := range models {")
 	ret.W("\t\tstmts = append(stmts, fmt.Sprintf(`%s`, %s))", strings.Join(pkWCStr, " and "), strings.Join(pkWCIdx, ", "))

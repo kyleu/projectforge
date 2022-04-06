@@ -12,7 +12,7 @@ import (
 func serviceDelete(m *model.Model) *golang.Block {
 	pks := m.PKs()
 	ret := golang.NewBlock("Delete", "func")
-	ret.W("func (s *Service) Delete(ctx context.Context, tx *sqlx.Tx, %s) error {", pks.Args())
+	ret.W("func (s *Service) Delete(ctx context.Context, tx *sqlx.Tx, %s) error {", pks.Args(m.Package))
 	ret.W("\tq := database.SQLDelete(tableQuoted, defaultWC(0))")
 	ret.W("\t_, err := s.db.Delete(ctx, q, tx, 1, s.logger, %s)", strings.Join(pks.CamelNames(), ", "))
 	ret.W("\treturn err")
@@ -31,7 +31,7 @@ func serviceSoftDelete(m *model.Model) (*golang.Block, error) {
 	}
 	ret := golang.NewBlock("Delete", "func")
 	ret.W("// Delete doesn't actually delete, it only sets [" + strings.Join(delCols.Names(), ", ") + "].")
-	ret.W("func (s *Service) Delete(ctx context.Context, tx *sqlx.Tx, %s) error {", pks.Args())
+	ret.W("func (s *Service) Delete(ctx context.Context, tx *sqlx.Tx, %s) error {", pks.Args(m.Package))
 	ret.W("\tcols := []string{%s}", strings.Join(delCols.NamesQuoted(), ", "))
 	ret.W("\tq := database.SQLUpdate(tableQuoted, cols, defaultWC(len(cols)), \"\")")
 	ret.W("\t_, err := s.db.Update(ctx, q, tx, 1, s.logger, time.Now(), %s)", strings.Join(pks.CamelNames(), ", "))

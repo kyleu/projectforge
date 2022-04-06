@@ -112,7 +112,7 @@ func importsForTypeCtxWebEdit(t types.Type) golang.Imports {
 	switch t.Key() {
 	case types.KeyAny:
 		return golang.Imports{ImpAppUtil, ImpFmt}
-	case types.KeyMap, types.KeyValueMap:
+	case types.KeyMap, types.KeyValueMap, types.KeyReference:
 		return golang.Imports{ImpAppUtil}
 	default:
 		return nil

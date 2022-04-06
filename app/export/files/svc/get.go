@@ -123,7 +123,7 @@ func serviceGetMultiple(m *model.Model, dbRef string) *golang.Block {
 	name := "GetMultiple"
 	ret := golang.NewBlock(name, "func")
 	pk := m.PKs()[0]
-	t := model.ToGoType(pk.Type, pk.Nullable)
+	t := model.ToGoType(pk.Type, pk.Nullable, m.Package)
 	ret.W("func (s *Service) %s(ctx context.Context, tx *sqlx.Tx%s, %s ...%s) (%s, error) {", name, getSuffix(m), pk.Plural(), t, m.ProperPlural())
 	ret.W("\tif len(%s) == 0 {", pk.Plural())
 	ret.W("\t\treturn %s{}, nil", m.ProperPlural())
@@ -156,7 +156,7 @@ func serviceGet(key string, m *model.Model, cols model.Columns, dbRef string) *g
 		key = "GetBy" + cols.Smushed()
 	}
 	ret := golang.NewBlock(key, "func")
-	ret.W("func (s *Service) %s(ctx context.Context, tx *sqlx.Tx, %s%s) (*%s, error) {", key, cols.Args(), getSuffix(m), m.Proper())
+	ret.W("func (s *Service) %s(ctx context.Context, tx *sqlx.Tx, %s%s) (*%s, error) {", key, cols.Args(m.Package), getSuffix(m), m.Proper())
 	ret.W("\twc := defaultWC(0)")
 	if m.IsSoftDelete() {
 		ret.W("\twc = addDeletedClause(wc, includeDeleted)")
@@ -182,7 +182,8 @@ func serviceGetByCols(key string, m *model.Model, cols model.Columns, dbRef stri
 		key = "GetBy" + cols.Smushed()
 	}
 	ret := golang.NewBlock(key, "func")
-	ret.W("func (s *Service) %s(ctx context.Context, tx *sqlx.Tx, %s, params *filter.Params%s) (%s, error) {", key, cols.Args(), getSuffix(m), m.ProperPlural())
+	msg := "func (s *Service) %s(ctx context.Context, tx *sqlx.Tx, %s, params *filter.Params%s) (%s, error) {"
+	ret.W(msg, key, cols.Args(m.Package), getSuffix(m), m.ProperPlural())
 	ret.W("\tparams = filters(params)")
 	ret.W("\twc := %q", cols.WhereClause(0))
 	if m.IsSoftDelete() {

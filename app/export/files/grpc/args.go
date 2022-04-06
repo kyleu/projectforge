@@ -67,7 +67,7 @@ func idClauseFor(m *model.Model) (string, string) {
 func grpcParamsFromRequest(m *model.Model, args string, g *golang.File) (*golang.Block, error) {
 	ret := golang.NewBlock("grpcParamsFromRequest", "func")
 	pks := m.PKs()
-	ret.W("func %sParamsFromRequest(%s) (%s, error) {", m.Camel(), args, strings.Join(pks.GoTypeKeys(), ", "))
+	ret.W("func %sParamsFromRequest(%s) (%s, error) {", m.Camel(), args, strings.Join(pks.GoTypeKeys(m.Package), ", "))
 	zeroVals := strings.Join(pks.ZeroVals(), ", ")
 	for _, col := range pks {
 		err := grpcArgFor(col, ret, zeroVals, g)

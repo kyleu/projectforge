@@ -7,7 +7,7 @@ import (
 	"projectforge.dev/projectforge/app/lib/types"
 )
 
-func ToGoType(t types.Type, nullable bool) string {
+func ToGoType(t types.Type, nullable bool, pkg string) string {
 	var ret string
 	switch t.Key() {
 	case types.KeyAny:
@@ -23,7 +23,11 @@ func ToGoType(t types.Type, nullable bool) string {
 		if err != nil {
 			return "ERROR:" + err.Error()
 		}
-		ret = fmt.Sprintf("*%s.%s", ref.Pkg.Last(), ref.K)
+		if ref.Pkg.Last() == pkg {
+			ret = fmt.Sprintf("*%s", ref.K)
+		} else {
+			ret = fmt.Sprintf("*%s.%s", ref.Pkg.Last(), ref.K)
+		}
 	case types.KeyString:
 		ret = types.KeyString
 	case types.KeyTimestamp:
@@ -39,12 +43,12 @@ func ToGoType(t types.Type, nullable bool) string {
 	return ret
 }
 
-func ToGoDTOType(t types.Type, nullable bool) string {
+func ToGoDTOType(t types.Type, nullable bool, pkg string) string {
 	switch t.Key() {
 	case types.KeyAny, types.KeyMap, types.KeyValueMap, types.KeyReference:
 		return "json.RawMessage"
 	default:
-		return ToGoType(t, nullable)
+		return ToGoType(t, nullable, pkg)
 	}
 }
 

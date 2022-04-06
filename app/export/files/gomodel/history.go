@@ -28,7 +28,8 @@ func modelHistory(m *model.Model) *golang.Block {
 	tmax := 13
 	ret.W("\t%s %s `json:\"id\"`", util.StringPad("ID", max), util.StringPad("uuid.UUID", tmax))
 	for _, pk := range m.PKs() {
-		ret.W("\t%s %s `json:\"%s%s\"`", util.StringPad(m.Proper()+pk.Proper(), max), util.StringPad(pk.ToGoType(), tmax), m.Camel(), pk.Proper())
+		goType := util.StringPad(pk.ToGoType(m.Package), tmax)
+		ret.W("\t%s %s `json:\"%s%s\"`", util.StringPad(m.Proper()+pk.Proper(), max), goType, m.Camel(), pk.Proper())
 	}
 	ret.W("\t%s util.ValueMap `json:\"o,omitempty\"`", util.StringPad("Old", max))
 	ret.W("\t%s util.ValueMap `json:\"n,omitempty\"`", util.StringPad("New", max))
@@ -68,7 +69,8 @@ func modelHistoryDTO(m *model.Model) *golang.Block {
 	tmax := 15
 	ret.W("\t%s %s `db:\"id\"`", util.StringPad("ID", max), util.StringPad("uuid.UUID", tmax))
 	for _, pk := range m.PKs() {
-		ret.W("\t%s %s `db:\"%s_%s\"`", util.StringPad(m.Proper()+pk.Proper(), max), util.StringPad(pk.ToGoType(), tmax), m.Name, pk.Name)
+		goType := util.StringPad(pk.ToGoType(m.Package), tmax)
+		ret.W("\t%s %s `db:\"%s_%s\"`", util.StringPad(m.Proper()+pk.Proper(), max), goType, m.Name, pk.Name)
 	}
 	ret.W("\t%s json.RawMessage `db:\"o\"`", util.StringPad("Old", max))
 	ret.W("\t%s json.RawMessage `db:\"n\"`", util.StringPad("New", max))

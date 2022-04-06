@@ -55,7 +55,8 @@ func serviceHistoryGetHistory(m *model.Model, dbRef string) *golang.Block {
 
 func serviceHistoryGetHistories(m *model.Model, dbRef string) *golang.Block {
 	ret := golang.NewBlock("GetHistories", "func")
-	ret.W("func (s *Service) GetHistories(ctx context.Context, tx *sqlx.Tx, %s) (%sHistories, error) {", m.PKs().Args(), m.Proper())
+	msg := "func (s *Service) GetHistories(ctx context.Context, tx *sqlx.Tx, %s) (%sHistories, error) {"
+	ret.W(msg, m.PKs().Args(m.Package), m.Proper())
 	pks := m.PKs()
 	joins := make([]string, 0, len(pks))
 	logs := make([]string, 0, len(pks))
@@ -67,8 +68,8 @@ func serviceHistoryGetHistories(m *model.Model, dbRef string) *golang.Block {
 	ret.W("\tret := historyDTOs{}")
 	ret.W("\terr := s.%s.Select(ctx, &ret, q, tx, s.logger, %s)", dbRef, strings.Join(pks.CamelNames(), ", "))
 	ret.W("\tif err != nil {")
-	const msg = "\t\treturn nil, errors.Wrapf(err, \"unable to get %s by %s\", %s)"
-	ret.W(msg, m.TitlePluralLower(), strings.Join(logs, ", "), strings.Join(pks.CamelNames(), ", "))
+	const msg2 = "\t\treturn nil, errors.Wrapf(err, \"unable to get %s by %s\", %s)"
+	ret.W(msg2, m.TitlePluralLower(), strings.Join(logs, ", "), strings.Join(pks.CamelNames(), ", "))
 	ret.W("\t}")
 	ret.W("\treturn ret.ToHistories(), nil")
 	ret.W("}")

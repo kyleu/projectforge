@@ -30,7 +30,9 @@ func Model(m *model.Model, args *model.Args, addHeader bool) (*file.File, error)
 			if err != nil {
 				return nil, err
 			}
-			g.AddImport(golang.NewImport(golang.ImportTypeApp, ref.Pkg.ToPath()))
+			if ref.Pkg.Last() != m.Package {
+				g.AddImport(golang.NewImport(golang.ImportTypeApp, ref.Pkg.ToPath()))
+			}
 		}
 	}
 
@@ -48,13 +50,14 @@ func modelStruct(m *model.Model) *golang.Block {
 	ret := golang.NewBlock(m.Proper(), "struct")
 	ret.W("type %s struct {", m.Proper())
 	maxColLength := util.StringArrayMaxLength(m.Columns.CamelNames())
-	maxTypeLength := m.Columns.MaxGoKeyLength()
+	maxTypeLength := m.Columns.MaxGoKeyLength(m.Package)
 	for _, c := range m.Columns {
 		suffix := ""
 		if c.Nullable || c.HasTag("omitempty") {
 			suffix = ",omitempty"
 		}
-		ret.W("\t%s %s `json:%q`", util.StringPad(c.Proper(), maxColLength), util.StringPad(c.ToGoType(), maxTypeLength), c.Camel()+suffix)
+		goType := util.StringPad(c.ToGoType(m.Package), maxTypeLength)
+		ret.W("\t%s %s `json:%q`", util.StringPad(c.Proper(), maxColLength), goType, c.Camel()+suffix)
 	}
 	ret.W("}")
 	return ret
@@ -62,7 +65,7 @@ func modelStruct(m *model.Model) *golang.Block {
 
 func modelConstructor(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("New"+m.Proper(), "func")
-	ret.W("func New(%s) *%s {", m.PKs().Args(), m.Proper())
+	ret.W("func New(%s) *%s {", m.PKs().Args(m.Package), m.Proper())
 	ret.W("\treturn &%s{%s}", m.Proper(), m.PKs().Refs())
 	ret.W("}")
 	return ret
