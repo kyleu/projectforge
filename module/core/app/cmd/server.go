@@ -3,7 +3,8 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"runtime"
+	"runtime"{{{ if .HasModule "readonlydb" }}}
+	"strings"{{{ end }}}
 
 	"github.com/muesli/coral"
 	"github.com/pkg/errors"
@@ -60,15 +61,17 @@ func loadServer(flags *Flags, logger *zap.SugaredLogger) (fasthttp.RequestHandle
 		return nil, logger, errors.Wrap(err, "unable to open database")
 	}
 	st.DB = db{{{ end }}}{{{ if .HasModule "readonlydb" }}}
-
-	rKey := util.AppKey + "_readonly"
+	roSuffix := "_readonly"
+	rKey := util.AppKey + roSuffix
 	if x := util.GetEnv("read_db_host", ""); x != "" {
 		paramsR := database.PostgresParamsFromEnv(rKey, rKey, "read_")
 		logger.Infof("using [%s:%s] for read-only database pool", paramsR.Host, paramsR.Database)
 		st.DBRead, err = database.OpenPostgresDatabase(ctx, rKey, paramsR, logger)
 	} else {
 		paramsR := database.PostgresParamsFromEnv(rKey, util.AppKey, "")
-		paramsR.Database = util.AppKey
+		if strings.HasSuffix(paramsR.Database, roSuffix) {
+			paramsR.Database = util.AppKey
+		}
 		logger.Infof("using default database as read-only database pool")
 		st.DBRead, err = database.OpenPostgresDatabase(ctx, rKey, paramsR, logger)
 	}
