@@ -35,11 +35,7 @@ func DatabaseDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		sizes, err := svc.Sizes(ps.Context, ps.Logger)
-		if err != nil {
-			return "", errors.Wrapf(err, "unable to calculate sizes for database [%s]", svc.Key)
-		}
-		return render(rc, as, &vdatabase.Detail{Svc: svc, Sizes: sizes, SQL: "select 1;"}, ps, "admin", "Database||/admin/database", svc.Key)
+		return render(rc, as, &vdatabase.Detail{Mode: "", Svc: svc}, ps, "admin", "Database||/admin/database", svc.Key)
 	})
 }
 
@@ -54,12 +50,27 @@ func DatabaseAction(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		switch act {
+		case "enable":
+			_ = svc.EnableTracing(true, true, ps.Logger)
+			return "/admin/database/" + svc.Key + "/recent", nil
+		case "recent":
+			recent := database.GetDebugStatements(svc.Key)
+			return render(rc, as, &vdatabase.Detail{Mode: "recent", Svc: svc, Recent: recent}, ps, "admin", "Database||/admin/database", svc.Key)
+		case "tables":
+			sizes, err := svc.Sizes(ps.Context, ps.Logger)
+			if err != nil {
+				return "", errors.Wrapf(err, "unable to calculate sizes for database [%s]", svc.Key)
+			}
+			return render(rc, as, &vdatabase.Detail{Mode: "tables", Svc: svc, Sizes: sizes}, ps, "admin", "Database||/admin/database", svc.Key)
 		case "analyze":
-			_, err = svc.Exec(ps.Context, "analyze", nil, 0, ps.Logger)
+			var tmp []interface{}
+			err = svc.Select(ps.Context, &tmp, "analyze", nil, ps.Logger)
 			if err != nil {
 				return "", err
 			}
-			return "/admin/database/" + svc.Key, nil
+			return "/admin/database/" + svc.Key + "/tables", nil{{{ if .DatabaseUISQLEditor }}}
+		case "sql":
+			return render(rc, as, &vdatabase.Detail{Mode: "sql", Svc: svc, SQL: "select 1;"}, ps, "admin", "Database||/admin/database", svc.Key){{{ end }}}
 		default:
 			return "", errors.Errorf("invalid database action [%s]", act)
 		}
@@ -109,8 +120,7 @@ func DatabaseSQLRun(rc *fasthttp.RequestCtx) {
 				}
 				results = append(results, row)
 			}
-		}
-		{{{ if .DatabaseUIReadOnly }}}
+		}{{{ if .DatabaseUIReadOnly }}}
 		_ = tx.Rollback(){{{ else }}}
 		if commit {
 			err = tx.Commit()
@@ -123,7 +133,7 @@ func DatabaseSQLRun(rc *fasthttp.RequestCtx) {
 
 		ps.Title = "SQL Results"
 		ps.Data = results
-		page := &vdatabase.Detail{Svc: svc, SQL: sql, Columns: columns, Results: results, Timing: elapsed, Commit: commit}
+		page := &vdatabase.Detail{Mode: "sql", Svc: svc, SQL: sql, Columns: columns, Results: results, Timing: elapsed, Commit: commit}
 		return render(rc, as, page, ps, "admin", "Database||/admin/database", svc.Key+"||/admin/database/"+svc.Key, "Results")
 	})
 }{{{ end }}}

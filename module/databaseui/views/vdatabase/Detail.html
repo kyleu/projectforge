@@ -1,29 +1,48 @@
 {% import (
   "{{{ .Package }}}/app"
   "{{{ .Package }}}/app/controller/cutil"
-  "{{{ .Package }}}/app/lib/database"
-  "{{{ .Package }}}/app/util"
+  "{{{ .Package }}}/app/lib/database"{{{ if .DatabaseUISQLEditor }}}
+  "{{{ .Package }}}/app/util"{{{ end }}}
   "{{{ .Package }}}/views/components"
   "{{{ .Package }}}/views/layout"
 ) %}
 
 {% code type Detail struct {
   layout.Basic
+  Mode string
   Svc *database.Service
-  Sizes database.TableSizes
+  Recent database.DebugStatements
+  Sizes database.TableSizes{{{ if .DatabaseUISQLEditor }}}
   SQL string
   Columns []string
   Results [][]any
   Timing int
-  Commit bool
+  Commit bool{{{ end }}}
 } %}
 
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <div class="right"><a href="/admin/database/{%s p.Svc.Key %}/analyze"><button>Analyze</button></a></div>
-    <h3>{%= components.SVGRefIcon(`database`, ps) %}{%s p.Svc.Key %}</h3>
-    <em>{%d len(p.Sizes) %} {%s util.StringPluralMaybe("table", len(p.Sizes)) %}</em>
-  </div>{{{ if .DatabaseUISQLEditor }}}
+    <h3>{%= components.SVGRefIcon(`database`, ps) %}{%s p.Svc.Key %}</h3>{{{ if .HasModule "databaseui" }}}
+    {%- if p.Svc.Tracing() != "" -%}
+    <em>tracing is enabled in [{%s p.Svc.Tracing() %}] mode</em>
+    {%- endif -%}{{{ end }}}
+    <div class="mt">{{{ if .HasModule "databaseui" }}}
+      {%- if p.Svc.Tracing() == "" -%}
+      <a href="/admin/database/{%s p.Svc.Key %}/enable"><button>Enable Tracing</button></a>
+      {%- else -%}
+      <a href="/admin/database/{%s p.Svc.Key %}/recent"><button>Recent Activity</button></a>
+      {%- endif -%}{{{ end }}}
+      <a href="/admin/database/{%s p.Svc.Key %}/tables"><button>Tables</button></a>
+      <a href="/admin/database/{%s p.Svc.Key %}/analyze"><button>Analyze</button></a>{{{ if .DatabaseUISQLEditor }}}
+      <a href="/admin/database/{%s p.Svc.Key %}/sql"><button>SQL</button></a>{{{ end }}}
+    </div>
+  </div>
+  {%- switch p.Mode -%}
+  {%- case "recent" -%}
+  {%= recentStatements(as, ps, p.Recent, p.Svc) %}
+  {%- case "tables" -%}
+  {%= tableSizes(as, ps, p.Sizes) %}{{{ if .DatabaseUISQLEditor }}}
+  {%- case "sql" -%}
   <div class="card">
     <h3>SQL Editor{{{ if .DatabaseUIReadOnly }}} (read-only){{{ end }}}</h3>
     <form method="post" action="/admin/database/{%s p.Svc.Key %}/sql">
@@ -37,44 +56,13 @@
       <div class="mt">
         <label><input type="checkbox" name="commit" value="true" {% if p.Commit %}checked="checked"{% endif %}/> Commit Changes</label>
       </div>
-      {%- endif -%} {{{ end }}}
+      {%- endif -%}{{{ end }}}
       <div class="mt">
         <button type="submit" name="action" value="run">Run</button>
         <button type="submit" name="action" value="analyze">Analyze</button>
       </div>
     </form>
-  </div>{{{ end }}}
-  {%- if len(p.Sizes) > 0 -%}
-  <div class="card">
-    <h3>Table Sizes</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Schema</th>
-          <th>Name</th>
-          <th title="(estimated)">Rows*</th>
-          <th>Total</th>
-          <th>Index</th>
-          <th>Toast</th>
-          <th>Table</th>
-        </tr>
-      </thead>
-      <tbody>
-        {%- for _, size := range p.Sizes -%}
-        <tr>
-          <td>{%s size.Schema %}</td>
-          <td>{%s size.Name %}</td>
-          <td>{%s size.Rows %}</td>
-          <td>{%s size.Total.String %}</td>
-          <td>{%s size.Index.String %}</td>
-          <td>{%s size.Toast.String %}</td>
-          <td>{%s size.Table.String %}</td>
-        </tr>
-        {%- endfor -%}
-      </tbody>
-    </table>
   </div>
-  {%- endif -%}{{{ if .DatabaseUISQLEditor }}}
   {%- if p.Results != nil -%}
   <div class="card">
     <div class="right">{%s util.MicrosToMillis(p.Timing) %}</div>
@@ -103,4 +91,114 @@
     {%- endif -%}
   </div>
   {%- endif -%}{{{ end }}}
+  {%- endswitch -%}
+{% endfunc %}
+
+{% func recentStatements(as *app.State, ps *cutil.PageState, recent database.DebugStatements, svc *database.Service) %}
+  <div class="card">
+    <h3>Recent Activity</h3>
+    {%- if len(recent) == 0 -%}
+      {%- if svc.Tracing() == "" -%}
+      <em>Tracing is not enabled for this database</em>
+      {%- else -%}
+      <em>No recent statements</em>
+      {%- endif -%}
+    {%- else -%}
+    <table>
+      <thead>
+      <tr>
+        <th>SQL</th>
+        <th>Values</th>
+        <th>Duration</th>
+      </tr>
+      </thead>
+      <tbody>
+        {%- for idx, s := range recent -%}
+        {%= debugStatement(as, ps, idx, s) %}
+        {%- endfor -%}
+      </tbody>
+    </table>
+    {%- endif -%}
+  </div>
+{% endfunc %}
+
+{% func debugStatement(as *app.State, ps *cutil.PageState, idx int, s *database.DebugStatement) %}
+  {%- code
+    sql := s.SQL
+    if len(sql) > 100 {
+      sql = s.SQL[:100] + "..."
+    }
+  -%}
+        <tr>
+          <td>
+            <a href="#modal-activity-{%d idx %}">{%s sql %}</a>
+            <div id="modal-activity-{%d idx %}" class="modal" style="display: none;">
+              <a class="backdrop" href="#"></a>
+              <div class="modal-content">
+                <div class="modal-header">
+                  <a href="#" class="modal-close">×</a>
+                  <h2>Activity {%d idx %}</h2>
+                </div>
+                <div class="modal-body">
+                  <h4>SQL</h4>
+                  {%- code out, _ := cutil.FormatLang(s.SQL, "sql") -%}
+                  <pre>{%s= out %}</pre>
+                  {%- if len(s.Values) > 0 -%}
+                  <h4>Values</h4>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Values</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {%- for idx, v := range s.Values -%}
+                      <tr>
+                        <td>{%d idx %}</td>
+                        <td>{%v v %}</td>
+                      </tr>
+                      {%- endfor -%}
+                    </tbody>
+                  </table>
+                  {%- endif -%}
+                </div>
+              </div>
+            </div>
+          </td>
+          <td>{%d len(s.Values) %}</td>
+          <td>{%s util.MicrosToMillis(s.Timing) %}</td>
+        </tr>
+{% endfunc %}
+
+{% func tableSizes(as *app.State, ps *cutil.PageState, sizes database.TableSizes) %}
+  <div class="card">
+    <h3>Table Sizes</h3>
+    <table>
+      <thead>
+      <tr>
+        <th>Schema</th>
+        <th>Name</th>
+        <th title="(estimated)">Rows*</th>
+        <th>Total</th>
+        <th>Index</th>
+        <th>Toast</th>
+        <th>Table</th>
+      </tr>
+      </thead>
+      <tbody>
+      {%- for _, size := range sizes -%}
+      <tr>
+        <td>{%s size.Schema %}</td>
+        <td>{%s size.Name %}</td>
+        <td>{%s size.Rows %}</td>
+        <td>{%s size.Total.String %}</td>
+        <td>{%s size.Index.String %}</td>
+        <td>{%s size.Toast.String %}</td>
+        <td>{%s size.Table.String %}</td>
+      </tr>
+      {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
 {% endfunc %}

@@ -18,7 +18,7 @@ func (s *Service) Query(ctx context.Context, q string, tx *sqlx.Tx, logger *zap.
 	var ret *sqlx.Rows
 	var err error
 	defer s.complete(q, op, span, now, logger, err)
-	s.logQuery(ctx, "running raw query", q, logger, values)
+	defer s.logQuery(ctx, "running raw query", q, logger, values)()
 	if tx == nil {
 		ret, err = s.db.QueryxContext(ctx, q, values...)
 		return ret, err
@@ -117,7 +117,7 @@ func (s *Service) Select(ctx context.Context, dest any, q string, tx *sqlx.Tx, l
 	now, ctx, span, logger := s.newSpan(ctx, "db:"+op, q, logger)
 	var err error
 	defer s.complete(q, op, span, now, logger, err)
-	s.logQuery(ctx, fmt.Sprintf("selecting rows of type [%T]", dest), q, logger, values)
+	defer s.logQuery(ctx, fmt.Sprintf("selecting rows of type [%T]", dest), q, logger, values)()
 	if tx == nil {
 		err = s.db.SelectContext(ctx, dest, q, values...)
 		return err
@@ -131,7 +131,7 @@ func (s *Service) Get(ctx context.Context, dto any, q string, tx *sqlx.Tx, logge
 	now, ctx, span, logger := s.newSpan(ctx, "db:"+op, q, logger)
 	var err error
 	defer s.complete(q, op, span, now, logger, err)
-	s.logQuery(ctx, fmt.Sprintf("getting single row of type [%T]", dto), q, logger, values)
+	defer s.logQuery(ctx, fmt.Sprintf("getting single row of type [%T]", dto), q, logger, values)()
 	if tx == nil {
 		return s.db.GetContext(ctx, dto, q, values...)
 	}
@@ -147,6 +147,7 @@ func (s *Service) SingleInt(ctx context.Context, q string, tx *sqlx.Tx, logger *
 	now, ctx, span, logger := s.newSpan(ctx, "db:"+op, q, logger)
 	var err error
 	defer s.complete(q, op, span, now, logger, err)
+	defer s.logQuery(ctx, "getting single row of type [int]", q, logger, values)()
 	x := &singleIntResult{}
 	err = s.Get(ctx, x, q, tx, logger, values...)
 	if err != nil {
@@ -167,6 +168,7 @@ func (s *Service) SingleBool(ctx context.Context, q string, tx *sqlx.Tx, logger 
 	now, ctx, span, logger := s.newSpan(ctx, "db:"+op, q, logger)
 	var err error
 	defer s.complete(q, op, span, now, logger, err)
+	defer s.logQuery(ctx, "getting single row of type [bool]", q, logger, values)()
 	x := &singleBoolResult{}
 	err = s.Get(ctx, x, q, tx, logger, values...)
 	if err != nil {

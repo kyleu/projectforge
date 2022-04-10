@@ -4,20 +4,21 @@ import (
 	"context"
 	"sync"
 
-	"github.com/pkg/errors"
 	"go.uber.org/zap"
+	"golang.org/x/exp/slices"
 )
 
 const maxStatements = 100
 
 type DebugStatement struct {
 	SQL    string      `json:"sql"`
-	Values []any       `json:"values"`
-	Extra  interface{} `json:"extra"`
+	Values []any       `json:"values,omitempty"`
+	Extra  interface{} `json:"extra,omitempty"`
+	Timing int         `json:"timing,omitempty"`
 }
 
-func NewStatement(ctx context.Context, s *Service, q string, values []any) (*DebugStatement, error) {
-	ret := &DebugStatement{SQL: q}
+func NewStatement(ctx context.Context, s *Service, q string, values []any, timing int) (*DebugStatement, error) {
+	ret := &DebugStatement{SQL: q, Timing: timing}
 	if s.tracing == "values" || s.tracing == "analyze" {
 		ret.Values = values
 	}
@@ -42,6 +43,10 @@ var (
 	statementsMu = sync.Mutex{}
 )
 
+func (s *Service) Tracing() string {
+	return s.tracing
+}
+
 func (s *Service) EnableTracing(includeValues bool, analyze bool, logger *zap.SugaredLogger) error {
 	if analyze {
 		s.tracing = "analyze"
@@ -63,12 +68,10 @@ func (s *Service) DisableTracing(logger *zap.SugaredLogger) error {
 	return nil
 }
 
-func GetDebugStatements(key string) (DebugStatements, error) {
-	curr, ok := statements[key]
-	if !ok {
-		return nil, errors.Errorf("no statements tracked for database [%s]", key)
-	}
-	return curr, nil
+func GetDebugStatements(key string) DebugStatements {
+	statementsMu.Lock()
+	defer statementsMu.Unlock()
+	return slices.Clone(statements[key])
 }
 
 func (s *Service) addDebug(st *DebugStatement) {

@@ -12,7 +12,8 @@ import (
 	"go.uber.org/zap"
 
 	"{{{ .Package }}}/app/lib/telemetry"
-	"{{{ .Package }}}/app/lib/telemetry/dbmetrics"{{{ if.HasModule "migration" }}}
+	"{{{ .Package }}}/app/lib/telemetry/dbmetrics"{{{ if.HasModule "databaseui" }}}
+	"{{{ .Package }}}/app/util"{{{ end }}}{{{ if.HasModule "migration" }}}
 	"{{{ .Package }}}/queries"
 	"{{{ .Package }}}/queries/schema"{{{ end }}}
 )
@@ -92,20 +93,25 @@ func errMessage(t string, q string, values []any) string {
 	return fmt.Sprintf("error running %s sql [%s] with values [%s]", t, strings.TrimSpace(q), valueStrings(values))
 }
 
-func (s *Service) logQuery(ctx context.Context, msg string, q string, logger *zap.SugaredLogger, values []any) {
+func (s *Service) logQuery(ctx context.Context, msg string, q string, logger *zap.SugaredLogger, values []any) func() {
 	if s.Debug {
 		logger.Debugf("%s {\n  SQL: %s\n  Values: %s\n}", msg, strings.TrimSpace(q), valueStrings(values))
 	}{{{ if .HasModule "databaseui" }}}
-	if s.tracing != "" {
+	if s.tracing == "" {
+		return func() {}
+	}
+	t := util.TimerStart()
+	return func() {
 		go func() {
-			st, err := NewStatement(ctx, s, q, values)
+			st, err := NewStatement(ctx, s, q, values, t.End())
 			if err == nil {
 				s.addDebug(st)
 			} else {
 				logger.Warnf("error inserting trace history: %+v", err)
 			}
 		}()
-	}{{{ end }}}
+	}{{{ else }}}
+	return func() {}{{{ end }}}
 }
 
 func (s *Service) newSpan(
