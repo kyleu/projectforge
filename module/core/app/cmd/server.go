@@ -77,7 +77,8 @@ func loadServer(flags *Flags, logger *zap.SugaredLogger) (fasthttp.RequestHandle
 	}
 	if err != nil {
 		return nil, logger, errors.Wrap(err, "unable to open read-only database")
-	}{{{ end }}}
+	}
+	st.DBRead.ReadOnly = true{{{ end }}}
 
 	svcs, err := app.NewServices(ctx, st)
 	if err != nil {

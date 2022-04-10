@@ -14,6 +14,9 @@ import (
 )
 
 func (s *Service) Insert(ctx context.Context, q string, tx *sqlx.Tx, logger *zap.SugaredLogger, values ...any) error {
+	if s.ReadOnly {
+		return errors.Errorf("cannot run [insert] statements in read-only database [%s]", q)
+	}
 	s.logQuery(ctx, "inserting row", q, logger, values)
 	aff, err := s.execUnknown(ctx, "insert", q, tx, logger, values...)
 	if err != nil {
@@ -73,6 +76,9 @@ func (s *Service) execUnknown(ctx context.Context, op string, q string, tx *sqlx
 func (s *Service) process(
 	ctx context.Context, op string, key string, past string, q string, tx *sqlx.Tx, expected int, logger *zap.SugaredLogger, values ...any,
 ) (int, error) {
+	if s.ReadOnly {
+		return 0, errors.Errorf("cannot run [%q] statements in read-only database [%s]", op, q)
+	}
 	s.logQuery(ctx, fmt.Sprintf("%s [%d] rows", key, expected), q, logger, values)
 
 	aff, err := s.execUnknown(ctx, op, q, tx, logger, values...)

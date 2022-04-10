@@ -16,9 +16,9 @@ import (
 )
 
 var nativeModuleKeys = []string{
-	"android", "audit", "core", "database", "desktop", "docbrowse", "export", "expression",
+	"android", "audit", "core", "database", "databaseui", "desktop", "docbrowse", "export", "expression",
 	"ios", "marketing", "migration", "mysql", "notarize", "oauth", "postgres",
-	"sandbox", "schema", "search", "sqleditor", "sqlite", "types", "upgrade", "websocket",
+	"sandbox", "schema", "search", "sqlite", "types", "upgrade", "websocket",
 }
 
 type Service struct {

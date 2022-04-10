@@ -1,0 +1,26 @@
+{% import (
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/lib/database"
+  "{{{ .Package }}}/app/util"
+  "{{{ .Package }}}/views/components"
+  "{{{ .Package }}}/views/layout"
+) %}
+
+{% code type List struct {
+  layout.Basic
+  Keys []string
+  Services map[string]*database.Service
+} %}
+
+{% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`database`, ps) %}Databases</h3>
+    <em>{%d len(p.Keys) %} {%s util.StringPluralMaybe("database", len(p.Keys)) %} available</em>
+  </div>
+  {%- for _, key := range p.Keys -%}
+  <div class="card">
+    <h3><a href="/admin/database/{%s key %}">{%= components.SVGRefIcon(`database`, ps) %}{%s key %}</a></h3>
+  </div>
+  {%- endfor -%}
+{% endfunc %}

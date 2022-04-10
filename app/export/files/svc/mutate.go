@@ -198,7 +198,7 @@ func serviceSave(m *model.Model, g *golang.File) (*golang.Block, error) {
 		ret.W("\treturn nil")
 	} else {
 		q := strings.Join(m.PKs().NamesQuoted(), ", ")
-		ret.W("\tq := database.SQLUpsert(tableQuoted, columnsQuoted, len(models), []string{%s}, columns, \"\")", q)
+		ret.W("\tq := database.SQLUpsert(tableQuoted, columnsQuoted, len(models), []string{%s}, columnsQuoted, \"\")", q)
 		ret.W("\tvar data []any")
 		ret.W("\tfor _, model := range models {")
 		ret.W("\t\tdata = append(data, model.ToData()...)")

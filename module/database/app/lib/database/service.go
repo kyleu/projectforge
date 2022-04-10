@@ -32,6 +32,8 @@ type Service struct {
 	Username     string  `json:"username,omitempty"`
 	Debug        bool    `json:"debug,omitempty"`
 	Type         *DBType `json:"type"`
+	ReadOnly     bool    `json:"readonly,omitempty"`{{{ if .HasModule "databaseui" }}}
+	tracing      string{{{ end }}}
 	db           *sqlx.DB
 	metrics      *dbmetrics.Metrics
 }
@@ -51,6 +53,7 @@ func NewService(typ *DBType, key string, dbName string, schName string, username
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to run healthcheck")
 	}
+	register(ret, logger)
 	return ret, nil
 }
 
@@ -92,7 +95,17 @@ func errMessage(t string, q string, values []any) string {
 func (s *Service) logQuery(ctx context.Context, msg string, q string, logger *zap.SugaredLogger, values []any) {
 	if s.Debug {
 		logger.Debugf("%s {\n  SQL: %s\n  Values: %s\n}", msg, strings.TrimSpace(q), valueStrings(values))
-	}
+	}{{{ if .HasModule "databaseui" }}}
+	if s.tracing != "" {
+		go func() {
+			st, err := NewStatement(ctx, s, q, values)
+			if err == nil {
+				s.addDebug(st)
+			} else {
+				logger.Warnf("error inserting trace history: %+v", err)
+			}
+		}()
+	}{{{ end }}}
 }
 
 func (s *Service) newSpan(
@@ -125,5 +138,6 @@ func (s *Service) Close() error {
 	if s.metrics != nil {
 		_ = s.metrics.Close()
 	}
+	unregister(s)
 	return s.db.Close()
 }

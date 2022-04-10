@@ -32,28 +32,6 @@ func (t *TemplateContext) SourceTrimmed() string {
 	return strings.TrimPrefix(strings.TrimPrefix(t.Info.Sourcecode, "http://"), "https://")
 }
 
-func (t *TemplateContext) IgnoredSetting() string {
-	if len(t.Ignore) == 0 {
-		return ""
-	}
-	ret := make([]string, 0, len(t.Ignore))
-	for _, i := range t.Ignore {
-		ret = append(ret, "/"+i)
-	}
-	return " --skip-dirs \"" + strings.Join(ret, "|") + "\""
-}
-
-func (t *TemplateContext) IgnoredQuoted() string {
-	if len(t.Ignore) == 0 {
-		return ""
-	}
-	ret := make([]string, 0, len(t.Ignore))
-	for _, i := range t.Ignore {
-		ret = append(ret, fmt.Sprintf(", %q", i))
-	}
-	return strings.Join(ret, "")
-}
-
 func (t *TemplateContext) HasModule(m string) bool {
 	return slices.Contains(t.Modules, m)
 }
@@ -89,6 +67,26 @@ func (t *TemplateContext) UsesLib() bool {
 
 func (t *TemplateContext) HasSlack() bool {
 	return t.Info.Slack != ""
+}
+
+func (t *TemplateContext) DatabaseUIOpts() (bool, bool) {
+	cfg, _ := t.Info.ModuleArgs.GetMap("databaseui", true)
+	if len(cfg) == 0 {
+		return true, true
+	}
+	sqleditor, _ := cfg.GetBool("sqleditor", true)
+	readonly, _ := cfg.GetBool("readonly", true)
+	return sqleditor, readonly
+}
+
+func (t *TemplateContext) DatabaseUISQLEditor() bool {
+	sqleditor, _ := t.DatabaseUIOpts()
+	return sqleditor
+}
+
+func (t *TemplateContext) DatabaseUIReadOnly() bool {
+	_, readonly := t.DatabaseUIOpts()
+	return readonly
 }
 
 func (t *TemplateContext) GoVersionSafe() string {

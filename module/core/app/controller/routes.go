@@ -46,8 +46,11 @@ func AppRoutes() fasthttp.RequestHandler {
 	r.GET("/admin/audit/{id}", AuditDetail)
 	r.GET("/admin/audit/{id}/edit", AuditEditForm)
 	r.POST("/admin/audit/{id}/edit", AuditEdit)
-	r.GET("/admin/audit/{id}/delete", AuditDelete)
-	{{{ end }}}
+	r.GET("/admin/audit/{id}/delete", AuditDelete){{{ end }}}{{{ if .HasModule "databaseui" }}}
+	r.GET("/admin/database", DatabaseList)
+	r.GET("/admin/database/{key}", DatabaseDetail)
+	r.GET("/admin/database/{key}/{act}", DatabaseAction){{{ if .DatabaseUISQLEditor }}}
+	r.POST("/admin/database/{key}/sql", DatabaseSQLRun){{{ end }}}{{{ end }}}
 	r.GET("/admin/{path:*}", Admin)
 
 	r.GET("/favicon.ico", Favicon)

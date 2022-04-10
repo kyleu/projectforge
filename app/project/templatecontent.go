@@ -59,3 +59,25 @@ func (t *TemplateContext) GoBinaryContent() string {
 	}
 	return fmt.Sprintf("\n    gobinary: %q", t.Info.GoBinary)
 }
+
+func (t *TemplateContext) IgnoredSetting() string {
+	if len(t.Ignore) == 0 {
+		return ""
+	}
+	ret := make([]string, 0, len(t.Ignore))
+	for _, i := range t.Ignore {
+		ret = append(ret, "/"+i)
+	}
+	return " --skip-dirs \"" + strings.Join(ret, "|") + "\""
+}
+
+func (t *TemplateContext) IgnoredQuoted() string {
+	if len(t.Ignore) == 0 {
+		return ""
+	}
+	ret := make([]string, 0, len(t.Ignore))
+	for _, i := range t.Ignore {
+		ret = append(ret, fmt.Sprintf(", %q", i))
+	}
+	return strings.Join(ret, "")
+}

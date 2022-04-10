@@ -1,0 +1,106 @@
+{% import (
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/lib/database"
+  "{{{ .Package }}}/app/util"
+  "{{{ .Package }}}/views/components"
+  "{{{ .Package }}}/views/layout"
+) %}
+
+{% code type Detail struct {
+  layout.Basic
+  Svc *database.Service
+  Sizes database.TableSizes
+  SQL string
+  Columns []string
+  Results [][]any
+  Timing int
+  Commit bool
+} %}
+
+{% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <div class="right"><a href="/admin/database/{%s p.Svc.Key %}/analyze"><button>Analyze</button></a></div>
+    <h3>{%= components.SVGRefIcon(`database`, ps) %}{%s p.Svc.Key %}</h3>
+    <em>{%d len(p.Sizes) %} {%s util.StringPluralMaybe("table", len(p.Sizes)) %}</em>
+  </div>{{{ if .DatabaseUISQLEditor }}}
+  <div class="card">
+    <h3>SQL Editor{{{ if .DatabaseUIReadOnly }}} (read-only){{{ end }}}</h3>
+    <form method="post" action="/admin/database/{%s p.Svc.Key %}/sql">
+      <div class="mt expanded">
+        <textarea name="sql" rows="12" placeholder="SQL statement">{%s p.SQL %}</textarea>
+      </div>{{{ if .DatabaseUIReadOnly }}}
+      <input type="hidden" name="commit" value="false" />{{{ else }}}
+      {%- if p.Svc.ReadOnly -%}
+      <input type="hidden" name="commit" value="false" />
+      {%- else -%}
+      <div class="mt">
+        <label><input type="checkbox" name="commit" value="true" {% if p.Commit %}checked="checked"{% endif %}/> Commit Changes</label>
+      </div>
+      {%- endif -%} {{{ end }}}
+      <div class="mt">
+        <button type="submit" name="action" value="run">Run</button>
+        <button type="submit" name="action" value="analyze">Analyze</button>
+      </div>
+    </form>
+  </div>{{{ end }}}
+  {%- if len(p.Sizes) > 0 -%}
+  <div class="card">
+    <h3>Table Sizes</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Schema</th>
+          <th>Name</th>
+          <th title="(estimated)">Rows*</th>
+          <th>Total</th>
+          <th>Index</th>
+          <th>Toast</th>
+          <th>Table</th>
+        </tr>
+      </thead>
+      <tbody>
+        {%- for _, size := range p.Sizes -%}
+        <tr>
+          <td>{%s size.Schema %}</td>
+          <td>{%s size.Name %}</td>
+          <td>{%s size.Rows %}</td>
+          <td>{%s size.Total.String %}</td>
+          <td>{%s size.Index.String %}</td>
+          <td>{%s size.Toast.String %}</td>
+          <td>{%s size.Table.String %}</td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
+  {%- endif -%}{{{ if .DatabaseUISQLEditor }}}
+  {%- if p.Results != nil -%}
+  <div class="card">
+    <div class="right">{%s util.MicrosToMillis(p.Timing) %}</div>
+    <h3>Results</h3>
+    {%- if len(p.Results) == 0 -%}
+      <em>No rows returned</em>
+    {%- else -%}
+      <table class="mt expanded">
+        <thead>
+          <tr>
+            {%- for _, c := range p.Columns -%}
+            <th>{%s c %}</th>
+            {%- endfor -%}
+          </tr>
+        </thead>
+        <tbody>
+          {%- for _, row := range p.Results -%}
+            <tr>
+              {%- for _, x := range row -%}
+              <td>{%v x %}</td>
+              {%- endfor -%}
+            </tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+    {%- endif -%}
+  </div>
+  {%- endif -%}{{{ end }}}
+{% endfunc %}
