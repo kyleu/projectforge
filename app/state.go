@@ -2,6 +2,7 @@
 package app
 
 import (
+	"context"
 	"fmt"
 	"time"
 
@@ -36,6 +37,10 @@ type State struct {
 	Logger    *zap.SugaredLogger
 	Services  *Services
 	Started   time.Time
+}
+
+func (s State) Close(ctx context.Context) error {
+	return s.Services.Close(ctx)
 }
 
 func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, enableTelemetry bool, logger *zap.SugaredLogger) (*State, error) {

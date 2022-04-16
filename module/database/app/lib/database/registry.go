@@ -9,8 +9,10 @@ import (
 	"golang.org/x/exp/slices"
 )
 
-var serviceRegistry = map[string]*Service{}
-var serviceRegistryMu = sync.Mutex{}
+var (
+	serviceRegistry   = map[string]*Service{}
+	serviceRegistryMu = sync.Mutex{}
+)
 
 func register(s *Service, logger *zap.SugaredLogger) {
 	serviceRegistryMu.Lock()

@@ -130,7 +130,7 @@ func AsRef(t types.Type) (*types.Reference, error) {
 func asRefK(t types.Type) string {
 	ref, err := AsRef(t)
 	if err != nil {
-		return fmt.Sprintf("ERROR:", err.Error())
+		return fmt.Sprintf("ERROR: %s", err.Error())
 	}
 	return ref.K
 }

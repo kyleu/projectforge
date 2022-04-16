@@ -1,33 +1,40 @@
 package gomodel
 
 import (
+	"github.com/pkg/errors"
 	"projectforge.dev/projectforge/app/export/golang"
 	"projectforge.dev/projectforge/app/export/model"
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func modelFromMap(m *model.Model) *golang.Block {
+func modelFromMap(g *golang.File, m *model.Model) (*golang.Block, error) {
 	ret := golang.NewBlock(m.Package+"FromForm", "func")
 	ret.W("func FromMap(m util.ValueMap, setPK bool) (*%s, error) {", m.Proper())
 	ret.W("\tret := &%s{}", m.Proper())
 	ret.W("\tvar err error")
 	ret.W("\tif setPK {")
 	cols := m.Columns.WithoutTag("created").WithoutTag("updated").WithoutTag(model.RevisionType)
-	forCols(ret, 2, cols.PKs()...)
+	err := forCols(g, ret, 2, m, cols.PKs()...)
+	if err != nil {
+		return nil, err
+	}
 	ret.W("\t\t// $PF_SECTION_START(pkchecks)$")
 	ret.W("\t\t// $PF_SECTION_END(pkchecks)$")
 	ret.W("\t}")
-	forCols(ret, 1, cols.NonPKs()...)
+	err = forCols(g, ret, 1, m, cols.NonPKs()...)
+	if err != nil {
+		return nil, err
+	}
 	ret.W("\t// $PF_SECTION_START(extrachecks)$")
 	ret.W("\t// $PF_SECTION_END(extrachecks)$")
 	ret.W("\treturn ret, nil")
 	ret.W("}")
 
-	return ret
+	return ret, nil
 }
 
-func forCols(ret *golang.Block, indent int, cols ...*model.Column) {
+func forCols(g *golang.File, ret *golang.Block, indent int, m *model.Model, cols ...*model.Column) error {
 	ind := util.StringRepeat("\t", indent)
 	catchErr := func(s string) {
 		ret.W(ind + "if " + s + " != nil {")
@@ -39,10 +46,22 @@ func forCols(ret *golang.Block, indent int, cols ...*model.Column) {
 		case col.Type.Key() == types.KeyAny:
 			ret.W(ind+"ret.%s = m[%q]", col.Proper(), col.Camel())
 		case col.Type.Key() == types.KeyReference:
-			ret.W(ind+"tmp%s, err := m.ParseMap(%q, true, true)", col.Proper(), col.Camel())
+			ret.W(ind+"tmp%s, err := m.ParseString(%q, true, true)", col.Proper(), col.Camel())
 			catchErr("err")
-			ret.W(ind+"err = util.CycleJSON(tmp%s, ret.%s)", col.Proper(), col.Proper())
+
+			ref, err := model.AsRef(col.Type)
+			if err != nil {
+				return errors.Wrap(err, "invalid ref")
+			}
+			if ref.Pkg.Last() == m.Package {
+				ret.W("\t%sArg := &%s{}", col.Camel(), ref.K)
+			} else {
+				ret.W("\t%sArg := &%s.%s{}", col.Camel(), ref.Pkg.Last(), ref.K)
+				g.AddImport(golang.NewImport(golang.ImportTypeApp, ref.Pkg.ToPath()))
+			}
+			ret.W(ind+"err = util.FromJSON([]byte(tmp%s), %sArg)", col.Proper(), col.Camel())
 			catchErr("err")
+			ret.W(ind+"ret.%s = %sArg", col.Proper(), col.Camel())
 		case col.Nullable || col.Type.Scalar():
 			ret.W(ind+"ret.%s, err = m.Parse%s(%q, true, true)", col.Proper(), col.ToGoMapParse(), col.Camel())
 			catchErr("err")
@@ -54,4 +73,5 @@ func forCols(ret *golang.Block, indent int, cols ...*model.Column) {
 			ret.W(ind + "}")
 		}
 	}
+	return nil
 }

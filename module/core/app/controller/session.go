@@ -13,8 +13,8 @@ import (
 )
 
 func loadPageState(rc *fasthttp.RequestCtx, key string, as *app.State) *cutil.PageState {
-	rc = httpmetrics.ExtractHeaders(rc, as.Logger)
-	traceCtx, span, logger := telemetry.StartSpan(rc, "http:"+key, as.Logger)
+	ctx := httpmetrics.ExtractHeaders(rc, as.Logger)
+	traceCtx, span, logger := telemetry.StartSpan(ctx, "http:"+key, as.Logger)
 	span.Attribute("path", rc.Request.URI().Path())
 	httpmetrics.InjectHTTP(rc, span)
 

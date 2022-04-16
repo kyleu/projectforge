@@ -5,7 +5,7 @@ Download any package from the [release page]({{{ .Info.Sourcecode }}}/releases).
 
 ### Homebrew
 ```
-brew install {{{ .Info.Org }}}/{{{ .Info.Org }}}/{{{ .Key }}} 
+brew install {{{ .Info.Org }}}/{{{ .Info.Org }}}/{{{ .Key }}}
 ```
 
 ### deb, rpm and apk packages

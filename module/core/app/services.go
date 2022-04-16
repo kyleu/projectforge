@@ -28,3 +28,7 @@ func NewServices(ctx context.Context, st *State) (*Services, error) {
 		// $PF_INJECT_END(refs)${{{ end }}}
 	}, nil
 }
+
+func (s *Services) Close(_ context.Context) error {
+	return nil
+}

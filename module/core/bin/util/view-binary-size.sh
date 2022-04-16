@@ -8,4 +8,3 @@ cd $dir/../..
 
 make build-release
 go tool nm -size build/release/{{{ .Exec }}} | c++filt > ./tmp/nm.txt
-

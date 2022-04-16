@@ -25,3 +25,7 @@ func NewServices(ctx context.Context, st *State) (*Services, error) {
 		Git:      git.NewService(st.Logger),
 	}, nil
 }
+
+func (s *Services) Close(_ context.Context) error {
+	return nil
+}

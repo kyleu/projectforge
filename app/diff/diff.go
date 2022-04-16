@@ -97,7 +97,7 @@ func FileLoader(mods []string, src file.Files, tgt filesystem.FileLoader, includ
 			if open == -1 || cl == -1 {
 				return nil, errors.New("module requirement tag must contain parentheses")
 			}
-			var hasAllMods = true
+			hasAllMods := true
 			for _, mod := range util.StringSplitAndTrim(line[open+1:cl], ",") {
 				if !slices.Contains(mods, mod) {
 					hasAllMods = false

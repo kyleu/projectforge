@@ -6,7 +6,7 @@ Download any package from the [release page](https://github.com/kyleu/projectfor
 
 ### Homebrew
 ```
-brew install kyleu/kyleu/projectforge 
+brew install kyleu/kyleu/projectforge
 ```
 
 ### deb, rpm and apk packages

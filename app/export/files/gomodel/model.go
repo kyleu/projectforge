@@ -36,7 +36,12 @@ func Model(m *model.Model, args *model.Args, addHeader bool) (*file.File, error)
 		}
 	}
 
-	g.AddBlocks(modelStruct(m), modelConstructor(m), modelRandom(m), modelFromMap(m))
+	g.AddBlocks(modelStruct(m), modelConstructor(m), modelRandom(m))
+	if b, err := modelFromMap(g, m); err == nil {
+		g.AddBlocks(b)
+	} else {
+		return nil, err
+	}
 	g.AddBlocks(modelClone(m), modelString(m), modelWebPath(m), modelDiff(m, g), modelToData(m, m.Columns, ""))
 	if m.IsRevision() {
 		hc := m.HistoryColumns(false)

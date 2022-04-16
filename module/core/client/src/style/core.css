@@ -44,6 +44,11 @@ ul {
   margin: 0;
 }
 
+hr {
+  border: none;
+  border-top: var(--border);
+}
+
 input, button, textarea, select {
   border: var(--border);
   color: var(--color-foreground);

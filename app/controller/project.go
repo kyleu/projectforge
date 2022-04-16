@@ -2,6 +2,7 @@ package controller
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/valyala/fasthttp"
 	"projectforge.dev/projectforge/app/project"
@@ -17,6 +18,14 @@ func ProjectList(rc *fasthttp.RequestCtx) {
 		prjs := as.Services.Projects.Projects()
 		ps.Title = "Project Listing"
 		ps.Data = prjs
+		if x := string(rc.QueryArgs().Peek("fmt")); x == "ports" {
+			msgs := make([]string, 0, len(prjs))
+			for _, p := range prjs {
+				msgs = append(msgs, fmt.Sprintf("%s: %d", p.Key, p.Port))
+			}
+			rc.WriteString(strings.Join(msgs, "\n"))
+			return "", nil
+		}
 		return render(rc, as, &vproject.List{Projects: prjs}, ps, "projects")
 	})
 }

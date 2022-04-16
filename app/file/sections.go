@@ -70,6 +70,10 @@ func copySections(src string, tgt string) (string, error) {
 		if tgtSec == nil {
 			return "", errors.Errorf("no section [%s] found in target", sec.Key)
 		}
+		if sec.End == 0 {
+			return "", errors.Errorf("no section end for [%s] found in target", sec.Key)
+		}
+
 		content := src[sec.Start:sec.End]
 		ret = ret[0:tgtSec.Start] + content + ret[tgtSec.End:]
 	}

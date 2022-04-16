@@ -9,4 +9,3 @@ cd $dir/../..
 
 make build-release
 go tool nm -size build/release/projectforge | c++filt > ./tmp/nm.txt
-

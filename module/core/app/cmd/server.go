@@ -33,22 +33,31 @@ func startServer(flags *Flags) error {
 		return errors.Wrap(err, "error initializing application")
 	}
 
-	r, _, err := loadServer(flags, _logger)
+	st, r, _, err := loadServer(flags, _logger)
 	if err != nil {
 		return err
 	}
 
 	_, err = listenandserve(util.AppName, flags.Address, flags.Port, r)
-	return err
+	if err != nil {
+		return err
+	}
+
+	err = st.Close(context.Background())
+	if err != nil {
+		return errors.Wrap(err, "unable to close application")
+	}
+
+	return nil
 }
 
-func loadServer(flags *Flags, logger *zap.SugaredLogger) (fasthttp.RequestHandler, *zap.SugaredLogger, error) {
+func loadServer(flags *Flags, logger *zap.SugaredLogger) (*app.State, fasthttp.RequestHandler, *zap.SugaredLogger, error) {
 	r := controller.AppRoutes()
 	f := filesystem.NewFileSystem(flags.ConfigDir, logger)
 	telemetryDisabled := util.GetEnvBool("disable_telemetry", false)
 	st, err := app.NewState(flags.Debug, _buildInfo, f, !telemetryDisabled, logger)
 	if err != nil {
-		return nil, logger, err
+		return nil, nil, logger, err
 	}
 
 	ctx, span, logger := telemetry.StartSpan(context.Background(), "app:init", logger)
@@ -58,7 +67,7 @@ func loadServer(flags *Flags, logger *zap.SugaredLogger) (fasthttp.RequestHandle
 
 	db, err := database.OpenDefaultSQLite(ctx, logger){{{ end }}}{{{ end }}}
 	if err != nil {
-		return nil, logger, errors.Wrap(err, "unable to open database")
+		return nil, nil, logger, errors.Wrap(err, "unable to open database")
 	}
 	st.DB = db{{{ end }}}{{{ if .HasModule "readonlydb" }}}
 	roSuffix := "_readonly"
@@ -76,13 +85,13 @@ func loadServer(flags *Flags, logger *zap.SugaredLogger) (fasthttp.RequestHandle
 		st.DBRead, err = database.OpenPostgresDatabase(ctx, rKey, paramsR, logger)
 	}
 	if err != nil {
-		return nil, logger, errors.Wrap(err, "unable to open read-only database")
+		return nil, nil, logger, errors.Wrap(err, "unable to open read-only database")
 	}
 	st.DBRead.ReadOnly = true{{{ end }}}
 
 	svcs, err := app.NewServices(ctx, st)
 	if err != nil {
-		return nil, nil, errors.Wrap(err, "error creating services")
+		return nil, nil, nil, errors.Wrap(err, "error creating services")
 	}
 	st.Services = svcs
 
@@ -90,5 +99,5 @@ func loadServer(flags *Flags, logger *zap.SugaredLogger) (fasthttp.RequestHandle
 
 	logger.Infof("started %s v%s using address [%s:%d] on %s:%s", util.AppName, _buildInfo.Version, flags.Address, flags.Port, runtime.GOOS, runtime.GOARCH)
 
-	return r, logger, nil
+	return st, r, logger, nil
 }

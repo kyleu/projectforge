@@ -109,6 +109,8 @@
       <tr>
         <th>SQL</th>
         <th>Values</th>
+        <th>Count</th>
+        <th>Message</th>
         <th>Duration</th>
       </tr>
       </thead>
@@ -140,10 +142,18 @@
                   <h2>Activity {%d idx %}</h2>
                 </div>
                 <div class="modal-body">
+                  <div class="right">{%s util.MicrosToMillis(s.Timing) %} elapsed</div>
+                  <h3>{%s s.Message %}</h3>
+                  <hr class="clear" />
+                  <div class="right">{%d s.Count %} rows returned</div>
+                  <h4>Out</h4>
+                  <div class="mt">{%= components.JSON(s.Out) %}</div>
+                  <hr />
                   <h4>SQL</h4>
                   {%- code out, _ := cutil.FormatLang(s.SQL, "sql") -%}
                   <pre>{%s= out %}</pre>
                   {%- if len(s.Values) > 0 -%}
+                  <hr />
                   <h4>Values</h4>
                   <table>
                     <thead>
@@ -167,6 +177,8 @@
             </div>
           </td>
           <td>{%d len(s.Values) %}</td>
+          <td>{%d s.Count %}</td>
+          <td>{%s s.Message %}</td>
           <td>{%s util.MicrosToMillis(s.Timing) %}</td>
         </tr>
 {% endfunc %}

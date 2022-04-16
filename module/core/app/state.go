@@ -1,6 +1,7 @@
 package app
 
 import (
+	"context"
 	"fmt"
 	"time"
 
@@ -40,6 +41,16 @@ type State struct {
 	Logger    *zap.SugaredLogger
 	Services  *Services
 	Started   time.Time
+}
+
+func (s State) Close(ctx context.Context) error {
+	{{{ if .HasModule "migration" }}}if err := s.DB.Close(); err != nil {
+		s.Logger.Errorf("error closing database: %+v", err)
+	}
+	{{{ end }}}{{{ if .HasModule "readonlydb" }}}if err := s.DBRead.Close(); err != nil {
+		s.Logger.Errorf("error closing read-only database: %+v", err)
+	}
+	{{{ end }}}return s.Services.Close(ctx)
 }
 
 func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, enableTelemetry bool, logger *zap.SugaredLogger) (*State, error) {

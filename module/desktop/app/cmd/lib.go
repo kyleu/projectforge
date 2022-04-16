@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"context"
+
 	"github.com/pkg/errors"
 
 	"{{{ .Package }}}/app"
@@ -18,7 +20,7 @@ func Lib(path string) int32 {
 		panic(errors.WithStack(errors.Wrap(err, "error initializing application")))
 	}
 
-	r, logger, err := loadServer(f, _logger)
+	st, r, logger, err := loadServer(f, _logger)
 	if err != nil {
 		panic(errors.WithStack(err))
 	}
@@ -34,6 +36,10 @@ func Lib(path string) int32 {
 		e := serve(util.AppKey, listener, r)
 		if e != nil {
 			panic(errors.WithStack(e))
+		}
+		err = st.Close(context.Background())
+		if err != nil {
+			logger.Errorf("unable to close application: %s", err.Error())
 		}
 	}()
 

@@ -2,6 +2,8 @@
 package httpmetrics
 
 import (
+	"context"
+
 	"github.com/valyala/fasthttp"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/propagation"
@@ -30,13 +32,6 @@ func (hc headerCarrier) Keys() []string {
 	return keys
 }
 
-func ExtractHeaders(rc *fasthttp.RequestCtx, logger *zap.SugaredLogger) *fasthttp.RequestCtx {
-	nc := otel.GetTextMapPropagator().Extract(rc, headerCarrier{h: &rc.Request.Header})
-	http, ok := nc.(*fasthttp.RequestCtx)
-	if !ok {
-		// no need to log, this'll happen on top-level request
-		// logger.Warnf("unable to extract http tracing headers")
-		return rc
-	}
-	return http
+func ExtractHeaders(rc *fasthttp.RequestCtx, logger *zap.SugaredLogger) context.Context {
+	return otel.GetTextMapPropagator().Extract(rc, headerCarrier{h: &rc.Request.Header})
 }

@@ -11,10 +11,30 @@ import (
 const maxStatements = 100
 
 type DebugStatement struct {
-	SQL    string      `json:"sql"`
-	Values []any       `json:"values,omitempty"`
-	Extra  interface{} `json:"extra,omitempty"`
-	Timing int         `json:"timing,omitempty"`
+	SQL     string      `json:"sql"`
+	Values  []any       `json:"values,omitempty"`
+	Extra   interface{} `json:"extra,omitempty"`
+	Timing  int         `json:"timing,omitempty"`
+	Error   string      `json:"error"`
+	Message string      `json:"message,omitempty"`
+	Count   int         `json:"count,omitempty"`
+	Out     any         `json:"out,omitempty"`
+}
+
+func (s *DebugStatement) Complete(count int, msg string, err error, output ...any) {
+	s.Count = count
+	s.Message = msg
+	if err != nil {
+		s.Error = err.Error()
+	}
+	switch len(output) {
+	case 1:
+		s.Out = output[0]
+	case 0:
+		// noop
+	default:
+		s.Out = output
+	}
 }
 
 func NewStatement(ctx context.Context, s *Service, q string, values []any, timing int) (*DebugStatement, error) {

@@ -2,7 +2,7 @@
 
 ## Startup
 
-Your project has a full CLI interface, run `{{{ .Key }}} help` to see available options. 
+Your project has a full CLI interface, run `{{{ .Key }}} help` to see available options.
 
 When the main HTTP server starts, the code in `app/controller/init.go` is run. 
 It contains `initApp`, for system startup logic, and `initAppRequest`, which is run before each HTTP request. 
