@@ -72,7 +72,7 @@ func actComplete(key string, as *app.State, ps *cutil.PageState, rc *fasthttp.Re
 	}
 	elapsedMillis := float64((time.Now().UnixNano()-startNanos)/int64(time.Microsecond)) / float64(1000)
 	defer ps.Close()
-	l := ps.Logger.With(zap.String("method", ps.Method), zap.Int("status", status), zap.Float64("elapsed", elapsedMillis))
+	l := ps.Logger.With(zap.String("path", string(rc.URI().Path())), zap.String("method", ps.Method), zap.Int("status", status), zap.Float64("elapsed", elapsedMillis))
 	l.Debugf("processed request in [%.3fms] (render: %.3fms)", elapsedMillis, ps.RenderElapsed)
 }
 

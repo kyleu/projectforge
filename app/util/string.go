@@ -49,7 +49,7 @@ func StringPad(s string, size int) string {
 	return s
 }
 
-var acronyms = []string{"Id", "Api", "Json", "Html", "Xml"}
+var acronyms = []string{"Id", "Ip", "Api", "Json", "Html", "Xml", "Uri", "Url"}
 
 func StringToCamel(s string) string {
 	return acr(strcase.ToCamel(s))

@@ -34,12 +34,17 @@ func ParseFormAsChanges(rc *fasthttp.RequestCtx) (util.ValueMap, error) {
 }
 
 func parseJSONForm(rc *fasthttp.RequestCtx) (util.ValueMap, error) {
-	ret := util.ValueMap{}
+	var ret interface{}
 	err := util.FromJSON(rc.Request.Body(), &ret)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't parse JSON body")
 	}
-	return ret, nil
+	switch t := ret.(type) {
+	case map[string]any:
+		return t, nil
+	default:
+		return util.ValueMap{"resultArray": t}, nil
+	}
 }
 
 func parseXMLForm(rc *fasthttp.RequestCtx) (util.ValueMap, error) {
