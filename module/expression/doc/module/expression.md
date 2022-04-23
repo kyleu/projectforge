@@ -1,4 +1,4 @@
-# [expression]
+# Expression
 
 This is a module for [Project Forge](https://projectforge.dev). It provides utilities for working with CEL
 

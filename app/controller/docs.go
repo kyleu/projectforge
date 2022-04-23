@@ -1,3 +1,4 @@
+// Content managed by Project Forge, see [projectforge.md] for details.
 package controller
 
 import (
@@ -10,12 +11,12 @@ import (
 	"github.com/valyala/fasthttp"
 	"golang.org/x/exp/slices"
 
-	"{{{ .Package }}}/app"
-	"{{{ .Package }}}/app/controller/cutil"
-	"{{{ .Package }}}/app/lib/menu"
-	"{{{ .Package }}}/app/util"
-	"{{{ .Package }}}/doc"
-	"{{{ .Package }}}/views/vdoc"
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/lib/menu"
+	"projectforge.dev/projectforge/app/util"
+	"projectforge.dev/projectforge/doc"
+	"projectforge.dev/projectforge/views/vdoc"
 )
 
 func Docs(rc *fasthttp.RequestCtx) {

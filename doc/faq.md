@@ -1,4 +1,4 @@
-# Frequently Asked Questions
+# FAQ
 
 ## What is Project Forge?
 

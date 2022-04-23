@@ -1,4 +1,4 @@
-# [notarize]
+# Notarize
 
 This is a module for [Project Forge](https://projectforge.dev). It sends files to Apple for notarization.
 

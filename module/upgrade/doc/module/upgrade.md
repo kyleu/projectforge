@@ -1,4 +1,4 @@
-# [upgrade]
+# Upgrade
 
 This is a module for [Project Forge](https://projectforge.dev). It provides in-place version upgrades using Github Releases.
 

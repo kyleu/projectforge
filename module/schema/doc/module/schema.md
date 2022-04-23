@@ -1,4 +1,4 @@
-# [types]
+# Schema
 
 This is a module for [Project Forge](https://projectforge.dev). It provides classes for representing common data types
 

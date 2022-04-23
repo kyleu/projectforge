@@ -1,5 +1,5 @@
 <!--- Content managed by Project Forge, see [projectforge.md] for details. -->
-# [android]
+# Android
 
 This is a module for [Project Forge](https://projectforge.dev). It provides a webview-based application and Android build
 

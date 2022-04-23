@@ -28,6 +28,8 @@ func MenuFor(ctx context.Context, isAuthed bool, isAdmin bool, as *app.State) (m
 	// $PF_SECTION_START(routes_end)$
 	if isAdmin {
 		ret = append(ret,
+			docMenu(ctx, as),
+			menu.Separator,
 			&menu.Item{Key: "admin", Title: "Settings", Description: "System-wide settings and preferences", Icon: "cog", Route: "/admin"},
 			DoctorMenu("first-aid", "/doctor"),
 		)

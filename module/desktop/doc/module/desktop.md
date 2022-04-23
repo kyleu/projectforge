@@ -1,4 +1,4 @@
-# [desktop]
+# Desktop
 
 This is a module for [Project Forge](https://projectforge.dev). It provides a desktop application using the system's webview
 

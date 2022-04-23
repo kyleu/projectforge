@@ -1,6 +1,4 @@
-# Running {{{ .Name }}}
-
-### Environment Variables
+# Environment Variables
 
 All variable names can be set in uppercase or lowercase
 

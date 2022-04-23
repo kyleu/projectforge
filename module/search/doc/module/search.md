@@ -1,4 +1,4 @@
-# [search]
+# Search
 
 This is a module for [Project Forge](https://projectforge.dev). It adds search facilities to the top-level navigation bar.
 

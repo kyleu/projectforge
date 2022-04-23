@@ -61,8 +61,12 @@ func (t *TemplateContext) BuildIOS() bool {
 	return t.HasModule("ios") && t.Build.IOS
 }
 
+func (t *TemplateContext) BuildMobile() bool {
+	return t.BuildIOS() || t.BuildAndroid()
+}
+
 func (t *TemplateContext) UsesLib() bool {
-	return t.BuildIOS() || t.BuildAndroid() || t.Build.Desktop
+	return t.BuildMobile() || t.Build.Desktop
 }
 
 func (t *TemplateContext) HasSlack() bool {

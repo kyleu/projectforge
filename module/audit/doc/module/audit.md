@@ -1,4 +1,4 @@
-# [audit]
+# Audit
 
 This is a module for [Project Forge](https://projectforge.dev). It provides an audit framework for tracking changes.
 

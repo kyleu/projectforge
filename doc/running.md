@@ -1,7 +1,5 @@
 <!--- Content managed by Project Forge, see [projectforge.md] for details. -->
-# Running Project Forge
-
-### Environment Variables
+# Environment Variables
 
 All variable names can be set in uppercase or lowercase
 
