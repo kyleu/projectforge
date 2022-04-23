@@ -47,7 +47,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
   </div>
   `)
 //line views/vproject/List.html:20
-	StreamTable(qw422016, p.Projects, as, ps)
+	StreamTable(qw422016, p.Projects, true, as, ps)
 //line views/vproject/List.html:20
 	qw422016.N().S(`
 `)

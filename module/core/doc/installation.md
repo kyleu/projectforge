@@ -2,15 +2,15 @@
 
 ## Pre-built binaries
 Download any package from the [release page]({{{ .Info.Sourcecode }}}/releases).
-
+{{{ if .Build.Homebrew }}}
 ### Homebrew
 ```
 brew install {{{ .Info.Org }}}/{{{ .Info.Org }}}/{{{ .Key }}}
 ```
-
+{{{ end }}}{{{ if .Build.NFPMS }}}
 ### deb, rpm and apk packages
 Download the .deb, .rpm or .apk packages from the [release page]({{{ .Info.Sourcecode }}}/releases) and install them with the appropriate tools.
-
+{{{ end }}}
 ## Running with Docker
 ```shell
 docker run -p {{{ .Port }}}:{{{ .Port }}} ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:latest

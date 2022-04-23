@@ -6,10 +6,18 @@
   "projectforge.dev/projectforge/views/components"
 ) %}
 
-{% func Table(mods module.Modules, as *app.State, ps *cutil.PageState) %}
+{% func Table(mods module.Modules, full bool, as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3><a href="/m">{%s util.StringPlural(len(mods), "Available Module") %}</a></h3>
     <table class="mt min-200">
+      {%- if full -%}
+      <thead>
+        <tr>
+          <th class="shrink">Title</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      {%- endif -%}
       <tbody>
         {%- for _, mod := range mods -%}
         <tr>

@@ -43,7 +43,10 @@ func projectFromCfg(proto *project.Project, cfg util.ValueMap) *project.Project 
 		moduleArgs = ma
 	}
 
-	cfgVars := i.ConfigVars // TODO load
+	cfgVars := i.ConfigVars
+	if x, _ := cfg.GetString("configVars", true); x != "" {
+		_ = util.FromJSON([]byte(x), &cfgVars)
+	}
 
 	return &project.Project{
 		Key:     str("key", proto.Key),

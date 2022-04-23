@@ -60,7 +60,7 @@ func ProviderUsage(id string, enabled bool) string {
 	if enabled {
 		return n + " is already configured"
 	}
-	keys := []string{"\"" + id + "_key\"", "\"" + id + "_secret\""}
+	keys := []string{fmt.Sprintf(`"%s_key"`, id), fmt.Sprintf(`"%s_secret"`, id), fmt.Sprintf(`"%s_scopes"`, id)}
 	switch id {
 	case auth0Key:
 		keys = append(keys, "\"auth0_domain\"")

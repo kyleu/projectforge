@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/valyala/fasthttp"
+	"golang.org/x/exp/slices"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/views/vproject"
 
@@ -17,16 +18,30 @@ func ProjectList(rc *fasthttp.RequestCtx) {
 	act("project.root", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prjs := as.Services.Projects.Projects()
 		ps.Title = "Project Listing"
+
+		switch string(rc.QueryArgs().Peek("sort")) {
+		case "package":
+			slices.SortFunc(prjs, func(l *project.Project, r *project.Project) bool {
+				return l.Package < r.Package
+			})
+		case "port":
+			slices.SortFunc(prjs, func(l *project.Project, r *project.Project) bool {
+				return l.Port < r.Port
+			})
+		}
+
 		ps.Data = prjs
-		if x := string(rc.QueryArgs().Peek("fmt")); x == "ports" {
+		switch string(rc.QueryArgs().Peek("fmt")) {
+		case "ports":
 			msgs := make([]string, 0, len(prjs))
 			for _, p := range prjs {
 				msgs = append(msgs, fmt.Sprintf("%s: %d", p.Key, p.Port))
 			}
-			rc.WriteString(strings.Join(msgs, "\n"))
+			_, _ = rc.WriteString(strings.Join(msgs, "\n"))
 			return "", nil
+		default:
+			return render(rc, as, &vproject.List{Projects: prjs}, ps, "projects")
 		}
-		return render(rc, as, &vproject.List{Projects: prjs}, ps, "projects")
 	})
 }
 

@@ -6,7 +6,6 @@ import (
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/lib/menu"
-	"projectforge.dev/projectforge/app/lib/sandbox"
 	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -29,8 +28,6 @@ func MenuFor(ctx context.Context, isAuthed bool, isAdmin bool, as *app.State) (m
 	// $PF_SECTION_START(routes_end)$
 	if isAdmin {
 		ret = append(ret,
-			sandbox.Menu(ctx),
-			menu.Separator,
 			&menu.Item{Key: "admin", Title: "Settings", Description: "System-wide settings and preferences", Icon: "cog", Route: "/admin"},
 			DoctorMenu("first-aid", "/doctor"),
 		)

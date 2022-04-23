@@ -26,6 +26,6 @@
       <a href="/about"><button>Learn More</button></a>
     </div>
   </div>
-  {%= vproject.Table(p.Projects, as, ps) %}
-  {%= vmodule.Table(p.Modules, as, ps) %}
+  {%= vproject.Table(p.Projects, false, as, ps) %}
+  {%= vmodule.Table(p.Modules, false, as, ps) %}
 {% endfunc %}

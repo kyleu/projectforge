@@ -77,8 +77,6 @@ func AppRoutes() fasthttp.RequestHandler {
 	// $PF_SECTION_END(routes)$
 
 	r.GET("/admin", Admin)
-	r.GET("/admin/sandbox", SandboxList)
-	r.GET("/admin/sandbox/{key}", SandboxRun)
 	r.GET("/admin/{path:*}", Admin)
 
 	r.GET("/favicon.ico", Favicon)

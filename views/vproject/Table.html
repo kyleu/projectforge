@@ -6,16 +6,28 @@
   "projectforge.dev/projectforge/views/components"
 ) %}
 
-{% func Table(prjs project.Projects, as *app.State, ps *cutil.PageState) %}
+{% func Table(prjs project.Projects, full bool, as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <div class="right"><a href="/p/new"><button>New</button></a></div>
     <h3><a href="/p">{%s util.StringPlural(len(prjs), "Available Project") %}</a></h3>
     <table class="mt min-200">
+      {%- if full -%}
+      <thead>
+        <tr>
+          <th class="shrink"><a href="/p">Title</a></th>
+          <th><a href="/p?sort=package">Package</a></th>
+          <th class="shrink"><a href="/p?sort=port">Port</a></th>
+        </tr>
+      </thead>
+      {%- endif -%}
       <tbody>
         {%- for _, prj := range prjs -%}
         <tr>
           <td class="shrink"><a href="/p/{%s prj.Key %}">{%= components.SVGRef(prj.IconSafe(), 16, 16, "icon", ps) %} {%s prj.Title() %}</a></td>
           <td>{%s prj.Package %}</td>
+          {%- if full -%}
+          <td><a href="http://localhost:{%d prj.Port %}" title="browse to [http://localhost:{%d prj.Port %}]" target="_blank">{%d prj.Port %}</a></td>
+          {%- endif -%}
         </tr>
         {%- endfor -%}
       </tbody>

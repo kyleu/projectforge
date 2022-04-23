@@ -37,7 +37,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	qw422016.N().S(`
   `)
 //line views/vmodule/List.html:14
-	StreamTable(qw422016, p.Modules, as, ps)
+	StreamTable(qw422016, p.Modules, true, as, ps)
 //line views/vmodule/List.html:14
 	qw422016.N().S(`
 `)

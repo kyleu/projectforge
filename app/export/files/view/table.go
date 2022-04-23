@@ -41,6 +41,11 @@ func exportViewTableFunc(m *model.Model, models model.Models) *golang.Block {
 	}
 	ret.W("      </tr>")
 	ret.W("      {%%- endfor -%%}")
+	ret.W("      {%%- if prms.HasNextPage(len(models) + prms.Offset) || prms.HasPreviousPage() -%%}")
+	ret.W("      <tr>")
+	ret.W("        <td colspan=\"%d\">{%%%%= components.Pagination(len(models) + prms.Offset, prms, ps.URI) %%%%}</td>", len(summCols))
+	ret.W("      </tr>")
+	ret.W("      {%%- endif -%%}")
 	ret.W("    </tbody>")
 	ret.W("  </table>")
 	ret.W("{%% endfunc %%}")

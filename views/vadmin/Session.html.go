@@ -12,98 +12,175 @@ import (
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/layout"
 )
 
-//line views/vadmin/Session.html:10
+//line views/vadmin/Session.html:11
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vadmin/Session.html:10
+//line views/vadmin/Session.html:11
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vadmin/Session.html:10
+//line views/vadmin/Session.html:11
 type Session struct{ layout.Basic }
 
-//line views/vadmin/Session.html:12
+//line views/vadmin/Session.html:13
 func (p *Session) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vadmin/Session.html:12
+//line views/vadmin/Session.html:13
 	qw422016.N().S(`
   <div class="card">
     <h3>Session</h3>
     <em>`)
-//line views/vadmin/Session.html:15
+//line views/vadmin/Session.html:16
 	qw422016.N().D(len(ps.Session))
-//line views/vadmin/Session.html:15
+//line views/vadmin/Session.html:16
 	qw422016.N().S(` values</em>
   </div>
 `)
-//line views/vadmin/Session.html:17
+//line views/vadmin/Session.html:18
 	if len(ps.Session) > 0 {
-//line views/vadmin/Session.html:17
+//line views/vadmin/Session.html:18
 		qw422016.N().S(`  <div class="card">
     <h3>Values</h3>
     <ul class="mt">
 `)
-//line views/vadmin/Session.html:21
+//line views/vadmin/Session.html:22
 		for k, v := range ps.Session {
-//line views/vadmin/Session.html:21
-			qw422016.N().S(`      <li>`)
 //line views/vadmin/Session.html:22
+			qw422016.N().S(`      <li>
+        `)
+//line views/vadmin/Session.html:24
 			qw422016.E().S(k)
-//line views/vadmin/Session.html:22
-			qw422016.N().S(`: `)
-//line views/vadmin/Session.html:22
-			qw422016.E().S(fmt.Sprint(v))
-//line views/vadmin/Session.html:22
-			qw422016.N().S(`</li>
+//line views/vadmin/Session.html:24
+			qw422016.N().S(`:
 `)
-//line views/vadmin/Session.html:23
+//line views/vadmin/Session.html:25
+			if x, ok := v.(string); ok {
+//line views/vadmin/Session.html:25
+				qw422016.N().S(`        <ul>
+`)
+//line views/vadmin/Session.html:27
+				for _, line := range util.StringSplitAndTrim(x, ",") {
+//line views/vadmin/Session.html:27
+					qw422016.N().S(`
+          <li>`)
+//line views/vadmin/Session.html:28
+					qw422016.E().S(fmt.Sprint(line))
+//line views/vadmin/Session.html:28
+					qw422016.N().S(`</li>
+`)
+//line views/vadmin/Session.html:29
+				}
+//line views/vadmin/Session.html:29
+				qw422016.N().S(`        </ul>
+`)
+//line views/vadmin/Session.html:31
+			} else {
+//line views/vadmin/Session.html:31
+				qw422016.N().S(`        `)
+//line views/vadmin/Session.html:32
+				qw422016.E().S(fmt.Sprint(v))
+//line views/vadmin/Session.html:32
+				qw422016.N().S(`
+`)
+//line views/vadmin/Session.html:33
+			}
+//line views/vadmin/Session.html:33
+			qw422016.N().S(`      </li>
+`)
+//line views/vadmin/Session.html:35
 		}
-//line views/vadmin/Session.html:23
+//line views/vadmin/Session.html:35
 		qw422016.N().S(`    </ul>
   </div>
 `)
-//line views/vadmin/Session.html:26
+//line views/vadmin/Session.html:38
+		if len(ps.Accounts) > 0 {
+//line views/vadmin/Session.html:38
+			qw422016.N().S(`  <div class="card">
+    <h3>Accounts</h3>
+    <table class="mt">
+      <thead>
+        <tr>
+          <th>Provider</th>
+          <th>Email</th>
+          <th>Token</th>
+        </tr>
+      </thead>
+      <tbody>
+`)
+//line views/vadmin/Session.html:50
+			for _, acct := range ps.Accounts {
+//line views/vadmin/Session.html:50
+				qw422016.N().S(`      <tr>
+        <td>`)
+//line views/vadmin/Session.html:52
+				qw422016.E().S(acct.Provider)
+//line views/vadmin/Session.html:52
+				qw422016.N().S(`</td>
+        <td>`)
+//line views/vadmin/Session.html:53
+				qw422016.E().S(acct.Email)
+//line views/vadmin/Session.html:53
+				qw422016.N().S(`</td>
+        <td>`)
+//line views/vadmin/Session.html:54
+				qw422016.E().S(acct.Token)
+//line views/vadmin/Session.html:54
+				qw422016.N().S(`</td>
+      </tr>
+`)
+//line views/vadmin/Session.html:56
+			}
+//line views/vadmin/Session.html:56
+			qw422016.N().S(`      </tbody>
+    </table>
+  </div>
+`)
+//line views/vadmin/Session.html:60
+		}
+//line views/vadmin/Session.html:61
 	} else {
-//line views/vadmin/Session.html:26
+//line views/vadmin/Session.html:61
 		qw422016.N().S(`  <div class="card">
     <em>Empty session</em>
   </div>
 `)
-//line views/vadmin/Session.html:30
+//line views/vadmin/Session.html:65
 	}
-//line views/vadmin/Session.html:31
+//line views/vadmin/Session.html:66
 }
 
-//line views/vadmin/Session.html:31
+//line views/vadmin/Session.html:66
 func (p *Session) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vadmin/Session.html:31
+//line views/vadmin/Session.html:66
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vadmin/Session.html:31
+//line views/vadmin/Session.html:66
 	p.StreamBody(qw422016, as, ps)
-//line views/vadmin/Session.html:31
+//line views/vadmin/Session.html:66
 	qt422016.ReleaseWriter(qw422016)
-//line views/vadmin/Session.html:31
+//line views/vadmin/Session.html:66
 }
 
-//line views/vadmin/Session.html:31
+//line views/vadmin/Session.html:66
 func (p *Session) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vadmin/Session.html:31
+//line views/vadmin/Session.html:66
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vadmin/Session.html:31
+//line views/vadmin/Session.html:66
 	p.WriteBody(qb422016, as, ps)
-//line views/vadmin/Session.html:31
+//line views/vadmin/Session.html:66
 	qs422016 := string(qb422016.B)
-//line views/vadmin/Session.html:31
+//line views/vadmin/Session.html:66
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vadmin/Session.html:31
+//line views/vadmin/Session.html:66
 	return qs422016
-//line views/vadmin/Session.html:31
+//line views/vadmin/Session.html:66
 }

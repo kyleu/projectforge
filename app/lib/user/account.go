@@ -12,15 +12,31 @@ import (
 type Account struct {
 	Provider string `json:"provider"`
 	Email    string `json:"email"`
+	Token    string `json:"-"`
 }
 
 func accountFromString(s string) *Account {
 	p, e := util.StringSplit(s, ':', true)
-	return &Account{Provider: p, Email: e}
+	var t string
+	if strings.Contains(e, "|") {
+		e, t = util.StringSplit(e, '|', true)
+		if decr, err := util.DecryptMessage(nil, t, nil); err == nil {
+			t = decr
+		}
+	}
+	return &Account{Provider: p, Email: e, Token: t}
 }
 
 func (a Account) String() string {
-	return a.Provider + ":" + a.Email
+	ret := a.Provider + ":" + a.Email
+	if a.Token != "" {
+		if enc, err := util.EncryptMessage(nil, a.Token, nil); err == nil {
+			ret += "|" + enc
+		} else {
+			ret += "|" + a.Token
+		}
+	}
+	return ret
 }
 
 type Accounts []*Account

@@ -11,5 +11,5 @@
 } %}
 
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
-  {%= Table(p.Modules, as, ps) %}
+  {%= Table(p.Modules, true, as, ps) %}
 {% endfunc %}

@@ -4,6 +4,7 @@
 
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/layout"
 ) %}
 
@@ -19,10 +20,44 @@
     <h3>Values</h3>
     <ul class="mt">
     {%- for k, v := range ps.Session -%}
-      <li>{%s k %}: {%s fmt.Sprint(v) %}</li>
+      <li>
+        {%s k %}:
+        {%- if x, ok := v.(string); ok -%}
+        <ul>
+          {%- for _, line := range util.StringSplitAndTrim(x, ",") %}
+          <li>{%s fmt.Sprint(line) %}</li>
+          {%- endfor -%}
+        </ul>
+        {%- else -%}
+        {%s fmt.Sprint(v) %}
+        {%- endif -%}
+      </li>
     {%- endfor -%}
     </ul>
   </div>
+  {%- if len(ps.Accounts) > 0 -%}
+  <div class="card">
+    <h3>Accounts</h3>
+    <table class="mt">
+      <thead>
+        <tr>
+          <th>Provider</th>
+          <th>Email</th>
+          <th>Token</th>
+        </tr>
+      </thead>
+      <tbody>
+      {%- for _, acct := range ps.Accounts -%}
+      <tr>
+        <td>{%s acct.Provider %}</td>
+        <td>{%s acct.Email %}</td>
+        <td>{%s acct.Token %}</td>
+      </tr>
+      {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
+  {%- endif -%}
   {%- else -%}
   <div class="card">
     <em>Empty session</em>

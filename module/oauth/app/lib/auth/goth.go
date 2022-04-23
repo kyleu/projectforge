@@ -70,132 +70,132 @@ import (
 )
 
 // nolint
-func toGoth(id string, k string, s string, c string) (goth.Provider, error) {
+func toGoth(id string, k string, s string, c string, scopes ...string) (goth.Provider, error) {
 	switch id {
 	case "amazon":
-		return amazon.New(k, s, c), nil
+		return amazon.New(k, s, c, scopes...), nil
 	case auth0Key:
-		return auth0.New(k, s, c, util.GetEnv("auth0_domain")), nil
+		return auth0.New(k, s, c, util.GetEnv("auth0_domain"), scopes...), nil
 	case "azuread":
-		return azuread.New(k, s, c, nil), nil
+		return azuread.New(k, s, c, nil, scopes...), nil
 	case "battlenet":
-		return battlenet.New(k, s, c), nil
+		return battlenet.New(k, s, c, scopes...), nil
 	case "bitbucket":
-		return bitbucket.New(k, s, c), nil
+		return bitbucket.New(k, s, c, scopes...), nil
 	case "box":
-		return box.New(k, s, c), nil
+		return box.New(k, s, c, scopes...), nil
 	case "cloudfoundry":
-		return cloudfoundry.New("", k, s, c), nil
+		return cloudfoundry.New("", k, s, c, scopes...), nil
 	case "dailymotion":
-		return dailymotion.New(k, s, c, "email"), nil
+		return dailymotion.New(k, s, c, append([]string{"email"}, scopes...)...), nil
 	case "deezer":
-		return deezer.New(k, s, c, "email"), nil
+		return deezer.New(k, s, c, append([]string{"email"}, scopes...)...), nil
 	case "digitalocean":
-		return digitalocean.New(k, s, c, "read"), nil
+		return digitalocean.New(k, s, c, append([]string{"read"}, scopes...)...), nil
 	case "discord":
-		return discord.New(k, s, c, discord.ScopeIdentify, discord.ScopeEmail), nil
+		return discord.New(k, s, c, append([]string{discord.ScopeIdentify, discord.ScopeEmail}, scopes...)...), nil
 	case "dropbox":
-		return dropbox.New(k, s, c), nil
+		return dropbox.New(k, s, c, scopes...), nil
 	case "eveonline":
-		return eveonline.New(k, s, c), nil
+		return eveonline.New(k, s, c, scopes...), nil
 	case "facebook":
-		return facebook.New(k, s, c), nil
+		return facebook.New(k, s, c, scopes...), nil
 	case "fitbit":
-		return fitbit.New(k, s, c), nil
+		return fitbit.New(k, s, c, scopes...), nil
 	case "gitea":
-		return gitea.New(k, s, c), nil
+		return gitea.New(k, s, c, scopes...), nil
 	case "github":
-		return github.New(k, s, c), nil
+		return github.New(k, s, c, scopes...), nil
 	case "gitlab":
-		return gitlab.New(k, s, c), nil
+		return gitlab.New(k, s, c, scopes...), nil
 	case "google":
-		return google.New(k, s, c), nil
+		return google.New(k, s, c, scopes...), nil
 	case "gplus":
-		return gplus.New(k, s, c), nil
+		return gplus.New(k, s, c, scopes...), nil
 	case "heroku":
-		return heroku.New(k, s, c), nil
+		return heroku.New(k, s, c, scopes...), nil
 	case "influxcloud":
-		return influxcloud.New(k, s, c), nil
+		return influxcloud.New(k, s, c, scopes...), nil
 	case "instagram":
-		return instagram.New(k, s, c), nil
+		return instagram.New(k, s, c, scopes...), nil
 	case "intercom":
-		return intercom.New(k, s, c), nil
+		return intercom.New(k, s, c, scopes...), nil
 	case "kakao":
-		return kakao.New(k, s, c), nil
+		return kakao.New(k, s, c, scopes...), nil
 	case "lastfm":
 		return lastfm.New(k, s, c), nil
 	case "line":
-		return line.New(k, s, c, "profile", "openid", "email"), nil
+		return line.New(k, s, c, append([]string{"profile", "openid", "email"}, scopes...)...), nil
 	case "linkedin":
-		return linkedin.New(k, s, c), nil
+		return linkedin.New(k, s, c, scopes...), nil
 	case "mailru":
-		return mailru.New(k, s, c, "read:accounts"), nil
+		return mailru.New(k, s, c, append([]string{"read:accounts"}, scopes...)...), nil
 	case "mastodon":
-		return mastodon.New(k, s, c, "read:accounts"), nil
+		return mastodon.New(k, s, c, append([]string{"read:accounts"}, scopes...)...), nil
 	case "meetup":
-		return meetup.New(k, s, c), nil
+		return meetup.New(k, s, c, scopes...), nil
 	case microsoftKey:
-		return msfix.New(k, s, c, util.GetEnv("microsoft_tenant")), nil
+		return msfix.New(k, s, c, util.GetEnv("microsoft_tenant"), scopes...), nil
 	case "microsoftonline":
-		return microsoftonline.New(k, s, c), nil
+		return microsoftonline.New(k, s, c, scopes...), nil
 	case "naver":
 		return naver.New(k, s, c), nil
 	case nextcloudKey:
-		return nextcloud.NewCustomisedDNS(k, s, c, util.GetEnv("nextcloud_url")), nil
+		return nextcloud.NewCustomisedDNS(k, s, c, util.GetEnv("nextcloud_url"), scopes...), nil
 	case "okta":
-		return okta.New(k, s, c, "openid", "profile", "email"), nil
+		return okta.New(k, s, c, "openid", append([]string{"profile", "email"}, scopes...)...), nil
 	case "onedrive":
-		return onedrive.New(k, s, c), nil
+		return onedrive.New(k, s, c, scopes...), nil
 	case OpenIDConnectKey:
-		return openidConnect.New(k, s, c, util.GetEnv("openid_connect_url"), "profile", "email")
+		return openidConnect.New(k, s, c, util.GetEnv("openid_connect_url"), append([]string{"profile", "email"}, scopes...)...)
 	case "oura":
-		return oura.New(k, s, c), nil
+		return oura.New(k, s, c, scopes...), nil
 	case "paypal":
-		return paypal.New(k, s, c), nil
+		return paypal.New(k, s, c, scopes...), nil
 	case "salesforce":
-		return salesforce.New(k, s, c), nil
+		return salesforce.New(k, s, c, scopes...), nil
 	case "seatalk":
-		return seatalk.New(k, s, c), nil
+		return seatalk.New(k, s, c, scopes...), nil
 	case "shopify":
-		return shopify.New(k, s, c, shopify.ScopeReadCustomers, shopify.ScopeReadOrders), nil
+		return shopify.New(k, s, c, append([]string{shopify.ScopeReadCustomers, shopify.ScopeReadOrders}, scopes...)...), nil
 	case "slack":
-		return slack.New(k, s, c), nil
+		return slack.New(k, s, c, append([]string{slack.ScopeUserRead, "users:read.email"}, scopes...)...), nil
 	case "soundcloud":
-		return soundcloud.New(k, s, c), nil
+		return soundcloud.New(k, s, c, scopes...), nil
 	case "spotify":
-		return spotify.New(k, s, c), nil
+		return spotify.New(k, s, c, scopes...), nil
 	case "steam":
 		return steam.New(k, c), nil
 	case "strava":
-		return strava.New(k, s, c), nil
+		return strava.New(k, s, c, scopes...), nil
 	case "stripe":
-		return stripe.New(k, s, c), nil
+		return stripe.New(k, s, c, scopes...), nil
 	case "tumblr":
 		return tumblr.New(k, s, c), nil
 	case "twitch":
-		return twitch.New(k, s, c), nil
+		return twitch.New(k, s, c, scopes...), nil
 	case "twitter":
 		return twitter.New(k, s, c), nil
 	case "typetalk":
-		return typetalk.New(k, s, c, "my"), nil
+		return typetalk.New(k, s, c, append([]string{"my"}, scopes...)...), nil
 	case "uber":
-		return uber.New(k, s, c), nil
+		return uber.New(k, s, c, scopes...), nil
 	case "vk":
-		return vk.New(k, s, c), nil
+		return vk.New(k, s, c, scopes...), nil
 	case "wecom":
 		return wecom.New(k, s, util.GetEnv("wecom_agent_id"), c), nil
 	case "wepay":
-		return wepay.New(k, s, c, "view_user"), nil
+		return wepay.New(k, s, c, append([]string{"view_user"}, scopes...)...), nil
 	case "xero":
 		return xero.New(k, s, c), nil
 	case "yahoo":
-		return yahoo.New(k, s, c), nil
+		return yahoo.New(k, s, c, scopes...), nil
 	case "yammer":
-		return yammer.New(k, s, c), nil
+		return yammer.New(k, s, c, scopes...), nil
 	case "yandex":
-		return yandex.New(k, s, c), nil
+		return yandex.New(k, s, c, scopes...), nil
 	case "zoom":
-		return zoom.New(k, s, c), nil
+		return zoom.New(k, s, c, scopes...), nil
 	default:
 		return nil, errors.Errorf("invalid user provider [%s]", id)
 	}

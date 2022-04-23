@@ -65,7 +65,7 @@ func (p *Params) HasNextPage(count int) bool {
 	if p == nil || p.Limit == 0 {
 		return false
 	}
-	return count > (p.Offset + p.Limit)
+	return count >= (p.Offset + p.Limit)
 }
 
 func (p *Params) NextPage() *Params {

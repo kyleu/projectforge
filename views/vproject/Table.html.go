@@ -27,7 +27,7 @@ var (
 )
 
 //line views/vproject/Table.html:9
-func StreamTable(qw422016 *qt422016.Writer, prjs project.Projects, as *app.State, ps *cutil.PageState) {
+func StreamTable(qw422016 *qt422016.Writer, prjs project.Projects, full bool, as *app.State, ps *cutil.PageState) {
 //line views/vproject/Table.html:9
 	qw422016.N().S(`
   <div class="card">
@@ -38,64 +38,100 @@ func StreamTable(qw422016 *qt422016.Writer, prjs project.Projects, as *app.State
 //line views/vproject/Table.html:12
 	qw422016.N().S(`</a></h3>
     <table class="mt min-200">
-      <tbody>
 `)
-//line views/vproject/Table.html:15
+//line views/vproject/Table.html:14
+	if full {
+//line views/vproject/Table.html:14
+		qw422016.N().S(`      <thead>
+        <tr>
+          <th class="shrink"><a href="/p">Title</a></th>
+          <th><a href="/p?sort=package">Package</a></th>
+          <th class="shrink"><a href="/p?sort=port">Port</a></th>
+        </tr>
+      </thead>
+`)
+//line views/vproject/Table.html:22
+	}
+//line views/vproject/Table.html:22
+	qw422016.N().S(`      <tbody>
+`)
+//line views/vproject/Table.html:24
 	for _, prj := range prjs {
-//line views/vproject/Table.html:15
+//line views/vproject/Table.html:24
 		qw422016.N().S(`        <tr>
           <td class="shrink"><a href="/p/`)
-//line views/vproject/Table.html:17
+//line views/vproject/Table.html:26
 		qw422016.E().S(prj.Key)
-//line views/vproject/Table.html:17
+//line views/vproject/Table.html:26
 		qw422016.N().S(`">`)
-//line views/vproject/Table.html:17
+//line views/vproject/Table.html:26
 		components.StreamSVGRef(qw422016, prj.IconSafe(), 16, 16, "icon", ps)
-//line views/vproject/Table.html:17
+//line views/vproject/Table.html:26
 		qw422016.N().S(` `)
-//line views/vproject/Table.html:17
+//line views/vproject/Table.html:26
 		qw422016.E().S(prj.Title())
-//line views/vproject/Table.html:17
+//line views/vproject/Table.html:26
 		qw422016.N().S(`</a></td>
           <td>`)
-//line views/vproject/Table.html:18
+//line views/vproject/Table.html:27
 		qw422016.E().S(prj.Package)
-//line views/vproject/Table.html:18
+//line views/vproject/Table.html:27
 		qw422016.N().S(`</td>
-        </tr>
 `)
-//line views/vproject/Table.html:20
+//line views/vproject/Table.html:28
+		if full {
+//line views/vproject/Table.html:28
+			qw422016.N().S(`          <td><a href="http://localhost:`)
+//line views/vproject/Table.html:29
+			qw422016.N().D(prj.Port)
+//line views/vproject/Table.html:29
+			qw422016.N().S(`" title="browse to [http://localhost:`)
+//line views/vproject/Table.html:29
+			qw422016.N().D(prj.Port)
+//line views/vproject/Table.html:29
+			qw422016.N().S(`]" target="_blank">`)
+//line views/vproject/Table.html:29
+			qw422016.N().D(prj.Port)
+//line views/vproject/Table.html:29
+			qw422016.N().S(`</a></td>
+`)
+//line views/vproject/Table.html:30
+		}
+//line views/vproject/Table.html:30
+		qw422016.N().S(`        </tr>
+`)
+//line views/vproject/Table.html:32
 	}
-//line views/vproject/Table.html:20
+//line views/vproject/Table.html:32
 	qw422016.N().S(`      </tbody>
     </table>
   </div>
 `)
-//line views/vproject/Table.html:24
+//line views/vproject/Table.html:36
 }
 
-//line views/vproject/Table.html:24
-func WriteTable(qq422016 qtio422016.Writer, prjs project.Projects, as *app.State, ps *cutil.PageState) {
-//line views/vproject/Table.html:24
+//line views/vproject/Table.html:36
+func WriteTable(qq422016 qtio422016.Writer, prjs project.Projects, full bool, as *app.State, ps *cutil.PageState) {
+//line views/vproject/Table.html:36
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/Table.html:24
-	StreamTable(qw422016, prjs, as, ps)
-//line views/vproject/Table.html:24
+//line views/vproject/Table.html:36
+	StreamTable(qw422016, prjs, full, as, ps)
+//line views/vproject/Table.html:36
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/Table.html:24
+//line views/vproject/Table.html:36
 }
 
-//line views/vproject/Table.html:24
-func Table(prjs project.Projects, as *app.State, ps *cutil.PageState) string {
-//line views/vproject/Table.html:24
+//line views/vproject/Table.html:36
+func Table(prjs project.Projects, full bool, as *app.State, ps *cutil.PageState) string {
+//line views/vproject/Table.html:36
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/Table.html:24
-	WriteTable(qb422016, prjs, as, ps)
-//line views/vproject/Table.html:24
+//line views/vproject/Table.html:36
+	WriteTable(qb422016, prjs, full, as, ps)
+//line views/vproject/Table.html:36
 	qs422016 := string(qb422016.B)
-//line views/vproject/Table.html:24
+//line views/vproject/Table.html:36
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/Table.html:24
+//line views/vproject/Table.html:36
 	return qs422016
-//line views/vproject/Table.html:24
+//line views/vproject/Table.html:36
 }

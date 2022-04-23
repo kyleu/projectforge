@@ -79,37 +79,12 @@ func FileLoader(mods []string, src file.Files, tgt filesystem.FileLoader, includ
 			}
 		}
 
-		if idx := strings.Index(s.Content, file.ModulePrefix); idx > 1 {
-			lines := strings.Split(s.Content, "\n")
-			lineIdx := -1
-			for idx, line := range lines {
-				if strings.Contains(line, file.ModulePrefix) {
-					lineIdx = idx
-					break
-				}
-			}
-			line := lines[lineIdx]
-			if !strings.Contains(line, file.ModulePrefix) {
-				return nil, errors.New("module requirement tag must be on first meaningful line of the file")
-			}
-
-			open, cl := strings.Index(line, "("), strings.Index(line, ")")
-			if open == -1 || cl == -1 {
-				return nil, errors.New("module requirement tag must contain parentheses")
-			}
-			hasAllMods := true
-			for _, mod := range util.StringSplitAndTrim(line[open+1:cl], ",") {
-				if !slices.Contains(mods, mod) {
-					hasAllMods = false
-				}
-			}
-			if hasAllMods {
-				if tgtFile != nil {
-					tgtFile.Content = strings.Join(slices.Delete(lines, lineIdx, lineIdx), "\n")
-				}
-			} else {
-				skip = true
-			}
+		matches, err := matchesModules(s, mods, tgtFile)
+		if err != nil {
+			return nil, err
+		}
+		if !matches {
+			skip = true
 		}
 
 		var d *Diff
@@ -123,4 +98,40 @@ func FileLoader(mods []string, src file.Files, tgt filesystem.FileLoader, includ
 		}
 	}
 	return ret, nil
+}
+
+func matchesModules(s *file.File, mods []string, tgtFile *file.File) (bool, error) {
+	if idx := strings.Index(s.Content, file.ModulePrefix); idx > 1 {
+		lines := strings.Split(s.Content, "\n")
+		lineIdx := -1
+		for idx, line := range lines {
+			if strings.Contains(line, file.ModulePrefix) {
+				lineIdx = idx
+				break
+			}
+		}
+		line := lines[lineIdx]
+		if !strings.Contains(line, file.ModulePrefix) {
+			return false, errors.New("module requirement tag must be on first meaningful line of the file")
+		}
+
+		open, cl := strings.Index(line, "("), strings.Index(line, ")")
+		if open == -1 || cl == -1 {
+			return false, errors.New("module requirement tag must contain parentheses")
+		}
+		hasAllMods := true
+		for _, mod := range util.StringSplitAndTrim(line[open+1:cl], ",") {
+			if !slices.Contains(mods, mod) {
+				hasAllMods = false
+			}
+		}
+		if hasAllMods {
+			if tgtFile != nil {
+				tgtFile.Content = strings.Join(slices.Delete(lines, lineIdx, lineIdx), "\n")
+			}
+		} else {
+			return false, nil
+		}
+	}
+	return true, nil
 }
