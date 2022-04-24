@@ -95,6 +95,9 @@ release:
     - glob: "./build/dist/projectforge_module_*.zip"
     # $PF_SECTION_END(releasefiles)$
 
+sboms:
+  - artifacts: archive
+
 signs:
   - artifacts: checksum
 

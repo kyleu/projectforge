@@ -78,25 +78,7 @@ func docMenuCreate(ctx context.Context, as *app.State) *menu.Item {
 			}
 			if idx == len(split)-1 {
 				if strings.HasSuffix(comp, ".md") {
-					r := "/" + path.Join("docs", p)
-					title := util.StringToCamel(name)
-					b, err := doc.FS.ReadFile(p + ".md")
-					if err != nil {
-						panic(err)
-					}
-
-					lines := strings.Split(string(b), "\n")
-					for _, line := range lines {
-						if strings.HasPrefix(line, "#") {
-							for strings.HasPrefix(line, "#") {
-								line = line[1:]
-							}
-							title = strings.TrimSpace(line)
-							break
-						}
-					}
-
-					mi.Children = append(mi.Children, &menu.Item{Key: name, Title: title, Icon: "file", Route: r})
+					mi.Children = append(mi.Children, addChild(p, name))
 				} else {
 					addFolder()
 				}
@@ -114,4 +96,26 @@ func docMenuCreate(ctx context.Context, as *app.State) *menu.Item {
 	})
 
 	return ret
+}
+
+func addChild(p string, name string) *menu.Item {
+	r := "/" + path.Join("docs", p)
+	title := util.StringToCamel(name)
+	b, err := doc.FS.ReadFile(p + ".md")
+	if err != nil {
+		panic(err)
+	}
+
+	lines := strings.Split(string(b), "\n")
+	for _, line := range lines {
+		if strings.HasPrefix(line, "#") {
+			for strings.HasPrefix(line, "#") {
+				line = line[1:]
+			}
+			title = strings.TrimSpace(line)
+			break
+		}
+	}
+
+	return &menu.Item{Key: name, Title: title, Icon: "file", Route: r}
 }
