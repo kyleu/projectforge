@@ -7,12 +7,12 @@ import (
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 	"golang.org/x/exp/slices"
-	"projectforge.dev/projectforge/app/git"
-	"projectforge.dev/projectforge/app/project"
-	"projectforge.dev/projectforge/views/vgit"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/git"
+	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/views/vgit"
 )
 
 func GitActionAll(rc *fasthttp.RequestCtx) {

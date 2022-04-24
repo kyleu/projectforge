@@ -5,9 +5,10 @@ import (
 	"sync/atomic"
 
 	"github.com/fasthttp/websocket"
-	"{{{ .Package }}}/app/util"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
+
+	"{{{ .Package }}}/app/util"
 )
 
 var count int64

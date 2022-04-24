@@ -105,7 +105,10 @@ release:
     - glob: "./build/dist/*_app.zip"{{{ end }}}
     # $PF_SECTION_START(releasefiles)$
     # $PF_SECTION_END(releasefiles)$
-{{{ if .Build.Signing }}}
+{{{ if .Build.BOM }}}
+sboms:
+  - artifacts: archive
+{{{ end }}}{{{ if .Build.Signing }}}
 signs:
   - artifacts: checksum
 {{{ end }}}{{{ if .Build.Snapcraft }}}

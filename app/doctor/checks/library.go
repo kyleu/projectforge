@@ -5,9 +5,9 @@ import (
 
 	"go.uber.org/zap"
 	"golang.org/x/exp/slices"
-	"projectforge.dev/projectforge/app/lib/telemetry"
 
 	"projectforge.dev/projectforge/app/doctor"
+	"projectforge.dev/projectforge/app/lib/telemetry"
 )
 
 var AllChecks = doctor.Checks{pf, prj, repo, air, git, golang, imagemagick, mke, node, qtc}

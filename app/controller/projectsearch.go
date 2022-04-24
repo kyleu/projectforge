@@ -7,15 +7,14 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
+
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/search"
 	"projectforge.dev/projectforge/app/lib/search/result"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/vproject"
-
-	"projectforge.dev/projectforge/app/controller/cutil"
-
-	"projectforge.dev/projectforge/app"
 )
 
 func ProjectSearch(rc *fasthttp.RequestCtx) {

@@ -6,12 +6,11 @@ import (
 
 	"github.com/valyala/fasthttp"
 	"golang.org/x/exp/slices"
-	"projectforge.dev/projectforge/app/project"
-	"projectforge.dev/projectforge/views/vproject"
-
-	"projectforge.dev/projectforge/app/controller/cutil"
 
 	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/views/vproject"
 )
 
 func ProjectList(rc *fasthttp.RequestCtx) {

@@ -38,6 +38,7 @@ type Build struct {
 
 	Homebrew  bool `json:"homebrew,omitempty"`
 	NFPMS     bool `json:"nfpms,omitempty"`
+	BOM       bool `json:"bom,omitempty"`
 	Snapcraft bool `json:"snapcraft,omitempty"`
 }
 
@@ -53,7 +54,7 @@ func (b *Build) Empty() bool {
 	return !(b.Publish || b.Private || b.Changelog || b.TestsFail || b.Desktop || b.Notarize || b.Signing ||
 		b.Simple || b.Android || b.IOS || b.WASM || b.X86 || b.WindowsARM ||
 		b.LinuxARM || b.LinuxMIPS || b.LinuxOdd || b.Dragonfly || b.Illumos || b.FreeBSD || b.NetBSD ||
-		b.OpenBSD || b.Plan9 || b.Solaris || b.Homebrew || b.NFPMS || b.Snapcraft)
+		b.OpenBSD || b.Plan9 || b.Solaris || b.Homebrew || b.NFPMS || b.BOM || b.Snapcraft)
 }
 
 func (b *Build) ToMap() map[string]bool {
@@ -64,7 +65,7 @@ func (b *Build) ToMap() map[string]bool {
 		"linux-arm": b.LinuxARM, "linux-mips": b.LinuxMIPS, "linux-odd": b.LinuxOdd,
 		"dragonfly": b.Dragonfly, "illumos": b.Illumos, "freebsd": b.FreeBSD,
 		"netbsd": b.NetBSD, "openbsd": b.OpenBSD, "plan9": b.Plan9, "solaris": b.Solaris,
-		"homebrew": b.Homebrew, "nfpms": b.NFPMS, "snapcraft": b.Snapcraft,
+		"homebrew": b.Homebrew, "nfpms": b.NFPMS, "bom": b.BOM, "snapcraft": b.Snapcraft,
 	}
 }
 
@@ -80,7 +81,7 @@ func BuildFromMap(frm util.ValueMap) *Build {
 		LinuxARM: x("linux-arm"), LinuxMIPS: x("linux-mips"), LinuxOdd: x("linux-odd"),
 		Dragonfly: x("dragonfly"), Illumos: x("illumos"), FreeBSD: x("freebsd"),
 		NetBSD: x("netbsd"), OpenBSD: x("openbsd"), Plan9: x("plan9"), Solaris: x("solaris"),
-		Homebrew: x("homebrew"), NFPMS: x("nfpms"), Snapcraft: x("snapcraft"),
+		Homebrew: x("homebrew"), NFPMS: x("nfpms"), BOM: x("bom"), Snapcraft: x("snapcraft"),
 	}
 }
 
@@ -121,6 +122,7 @@ var AllBuildOptions = []*BuildOption{
 	{Key: "solaris", Title: "Solaris", Description: "Builds the application for Solaris"},
 
 	{Key: "homebrew", Title: "Homebrew", Description: "Publishes the builds to Homebrew"},
-	{Key: "nfpms", Title: "NFPMS", Description: "Builds the application as RPMs, DEBs, and APKs for various Linux flavors "},
+	{Key: "nfpms", Title: "NFPMS", Description: "Builds the application as RPMs, DEBs, and APKs for various Linux flavors"},
+	{Key: "bom", Title: "BOM", Description: "Creates a bill of materials for each binary produced by the build"},
 	{Key: "snapcraft", Title: "Snapcraft", Description: "Publishes the application as a Ubuntu Snap "},
 }

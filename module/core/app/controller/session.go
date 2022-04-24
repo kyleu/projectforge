@@ -4,12 +4,12 @@ import (
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
 
-	"{{{ .Package}}}/app"
-	"{{{ .Package}}}/app/controller/cutil"
-	"{{{ .Package}}}/app/lib/telemetry"
-	"{{{ .Package}}}/app/lib/telemetry/httpmetrics"
-	"{{{ .Package}}}/app/lib/user"
-	"{{{ .Package}}}/app/util"
+	"{{{ .Package }}}/app"
+	"{{{ .Package }}}/app/controller/cutil"
+	"{{{ .Package }}}/app/lib/telemetry"
+	"{{{ .Package }}}/app/lib/telemetry/httpmetrics"
+	"{{{ .Package }}}/app/lib/user"
+	"{{{ .Package }}}/app/util"
 )
 
 func loadPageState(rc *fasthttp.RequestCtx, key string, as *app.State) *cutil.PageState {

@@ -5,12 +5,12 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
-	"projectforge.dev/projectforge/app/git"
-	"projectforge.dev/projectforge/views/verror"
-	"projectforge.dev/projectforge/views/vgit"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/git"
+	"projectforge.dev/projectforge/views/verror"
+	"projectforge.dev/projectforge/views/vgit"
 )
 
 var (

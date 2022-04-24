@@ -25,6 +25,10 @@ Packages for macOS and Linux will be pushed to Homebrew at `{{{ .Info.Org }}}/ho
 ### NFPMS
 
 The build will produce `apk`, `deb`, and `rpm` packages for each supported Linux architecture
+{{{ end }}}{{{ if .Build.BOM }}}
+### BOM
+
+The build will create a bill of materials for each binary
 {{{ end }}}{{{ if .Build.Notarize }}}
 ### Notarization
 

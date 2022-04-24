@@ -3,8 +3,9 @@ package websocket
 import (
 	"encoding/json"
 
-	"{{{ .Package }}}/app/util"
 	"github.com/google/uuid"
+
+	"{{{ .Package }}}/app/util"
 )
 
 // Common message struct for passing a service, command and parameter.

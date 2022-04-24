@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"golang.org/x/exp/slices"
+
 	"projectforge.dev/projectforge/app/export/files/helper"
 	"projectforge.dev/projectforge/app/export/golang"
 	"projectforge.dev/projectforge/app/export/model"
@@ -19,6 +20,7 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 	}
 	g.AddImport(helper.ImpContext, helper.ImpErrors, helper.ImpSQLx, helper.ImpFilter, helper.ImpDatabase)
 	g.AddBlocks(serviceList(m, args.DBRef()))
+	g.AddBlocks(serviceCount(g, m, args.DBRef()))
 	pkLen := len(m.PKs())
 	if pkLen > 0 {
 		g.AddBlocks(serviceGetByPK(m, dbRef))
@@ -111,6 +113,33 @@ func serviceList(m *model.Model, dbRef string) *golang.Block {
 	ret.W("\t\treturn nil, errors.Wrap(err, \"unable to get %s\")", m.TitlePluralLower())
 	ret.W("\t}")
 	ret.W("\treturn ret.To%s(), nil", m.ProperPlural())
+	ret.W("}")
+	return ret
+}
+
+func serviceCount(g *golang.File, m *model.Model, dbRef string) *golang.Block {
+	g.AddImport(helper.ImpStrings)
+	ret := golang.NewBlock("Count", "func")
+	ret.W("func (s *Service) Count(ctx context.Context, tx *sqlx.Tx, whereClause string%s, args ...any) (int, error) {", getSuffix(m))
+	ret.W("\tif strings.Contains(whereClause, \"'\") || strings.Contains(whereClause, \";\") {")
+	ret.W("\t\treturn 0, errors.Errorf(\"invalid where clause [%%s]\", whereClause)")
+	ret.W("\t}")
+	if m.IsSoftDelete() {
+		delCols := m.Columns.WithTag("deleted")
+		ret.W("\tif !includeDeleted {")
+		ret.W("\t\tif whereClause == \"\" {")
+		ret.W("\t\t\twhereClause = %q", delCols[0].NameQuoted()+" is null")
+		ret.W("\t\t} else {")
+		ret.W("\t\t\twhereClause += \"and \" + %q", delCols[0].NameQuoted()+" is null")
+		ret.W("\t\t}")
+		ret.W("\t}")
+	}
+	ret.W("\tq := database.SQLSelectSimple(columnsString, %s, whereClause)", tableClauseFor(m))
+	ret.W("\tret, err := s.%s.SingleInt(ctx, q, tx, s.logger, args...)", dbRef)
+	ret.W("\tif err != nil {")
+	ret.W("\t\treturn 0, errors.Wrap(err, \"unable to get count of %s\")", m.TitlePluralLower())
+	ret.W("\t}")
+	ret.W("\treturn int(ret), nil")
 	ret.W("}")
 	return ret
 }

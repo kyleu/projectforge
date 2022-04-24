@@ -6,8 +6,10 @@ import (
 
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
-	"projectforge.dev/projectforge/app/lib/telemetry"
 
+	"projectforge.dev/projectforge/app/build"
+	"projectforge.dev/projectforge/app/lib/telemetry"
+	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -58,6 +60,7 @@ var AllBuilds = Builds{
 	simpleBuild("format", "Format", "bin/format.sh"),
 	simpleBuild("lint", "Lint", "bin/check.sh"),
 	{Key: "deps", Title: "Dependencies", Description: "Manages Go dependencies", Run: onDeps},
+	{Key: "imports", Title: "Imports", Description: "Cleans up your imports", Run: onImports},
 	{Key: "clientInstall", Title: "Client Install", Description: ciDesc, Run: func(pm *PrjAndMods, ret *Result) *Result {
 		return simpleProc("npm install", filepath.Join(pm.Prj.Path, "client"), ret)
 	}},
@@ -95,53 +98,42 @@ func onBuild(ctx context.Context, pm *PrjAndMods) *Result {
 	return ret
 }
 
+func onDeps(pm *PrjAndMods, ret *Result) *Result {
+	if up, _ := ret.Args.GetString("upgrade", true); up != "" {
+		o, _ := ret.Args.GetString("old", true)
+		n, _ := ret.Args.GetString("new", true)
+		err := build.OnDepsUpgrade(pm.Prj, up, o, n, pm.PSvc, pm.Logger)
+		if err != nil {
+			return ret.WithError(err)
+		}
+	}
+	deps, err := build.LoadDeps(pm.Prj.Path)
+	ret.Data = deps
+	if err != nil {
+		return ret.WithError(err)
+	}
+	return ret
+}
+
+func onImports(pm *PrjAndMods, r *Result) *Result {
+	fixStr, _ := r.Args.GetString("fix", true)
+	fix := fixStr == "true"
+	t := util.TimerStart()
+	diffs, err := build.Imports(pm.Prj.Package, fix, pm.PSvc.GetFilesystem(pm.Prj))
+	r.Modules = append(r.Modules, &module.Result{Keys: []string{"imports"}, Status: "OK", Diffs: diffs, Duration: t.End()})
+	if err != nil {
+		return r.WithError(err)
+	}
+	return r
+}
+
 func fullBuild(prj *project.Project, r *Result, logger *zap.SugaredLogger) *Result {
-	r.AddLog("building project [%s] in [%s]", prj.Key, prj.Path)
-
-	exitCode, out, err := util.RunProcessSimple("bin/templates.sh", prj.Path)
+	logs, err := build.Full(prj, logger)
+	for _, l := range logs {
+		r.AddLog(l)
+	}
 	if err != nil {
 		return r.WithError(err)
 	}
-	r.AddLog("templates.sh output for [" + prj.Key + "]:\n" + out)
-	if exitCode != 0 {
-		return r.WithError(errors.Errorf("templates.sh failed with exit code [%d]", exitCode))
-	}
-
-	exitCode, out, err = util.RunProcessSimple("go mod tidy", prj.Path)
-	if err != nil {
-		return r.WithError(err)
-	}
-	r.AddLog("go mod output for [" + prj.Key + "]:\n" + out)
-	if exitCode != 0 {
-		return r.WithError(errors.Errorf("\"go mod tidy\" failed with exit code [%d]", exitCode))
-	}
-
-	exitCode, out, err = util.RunProcessSimple("npm install", filepath.Join(prj.Path, "client"))
-	if err != nil {
-		return r.WithError(err)
-	}
-	r.AddLog("npm output for [" + prj.Key + "]:\n" + out)
-	if exitCode != 0 {
-		r.WithError(errors.Errorf("npm install failed with exit code [%d]", exitCode))
-	}
-
-	exitCode, out, err = util.RunProcessSimple("bin/build/client.sh", prj.Path)
-	if err != nil {
-		return r.WithError(err)
-	}
-	r.AddLog("client build output for [" + prj.Key + "]:\n" + out)
-	if exitCode != 0 {
-		r.WithError(errors.Errorf("client build failed with exit code [%d]", exitCode))
-	}
-
-	exitCode, out, err = util.RunProcessSimple("make build", prj.Path)
-	if err != nil {
-		return r.WithError(err)
-	}
-	r.AddLog("build output for [" + prj.Key + "]:\n" + out)
-	if exitCode != 0 {
-		r.WithError(errors.Errorf("build failed with exit code [%d]", exitCode))
-	}
-
 	return r
 }

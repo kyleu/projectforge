@@ -6,10 +6,10 @@ import (
 
 	"github.com/muesli/gamut"
 	"github.com/valyala/fasthttp"
-	"projectforge.dev/projectforge/app/lib/telemetry"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/lib/theme"
 	"projectforge.dev/projectforge/views/vtheme"
 )
