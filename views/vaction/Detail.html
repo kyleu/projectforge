@@ -6,6 +6,7 @@
 ) %}
 
 {% func Detail(cfg util.ValueMap, res *action.Result, includeSkipped bool, as *app.State, ps *cutil.PageState) %}
+  {%- if len(cfg) > 0 -%}
   <div class="card">
     <h3>Config</h3>
     <table>
@@ -19,6 +20,7 @@
       </tbody>
     </table>
   </div>
+  {%- endif -%}
   {%- if len(res.Errors) > 0 -%}
   <div class="card">
     <div class="right">{%d len(res.Errors) %} {%s util.StringPluralMaybe("error", len(res.Errors)) %}</div>

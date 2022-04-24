@@ -6,27 +6,17 @@ import (
 
 	"github.com/pkg/errors"
 
-	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/project"
 )
 
 func onCreate(ctx context.Context, params *Params) *Result {
-	ret := newResult(TypeCreate, params.Cfg, params.Logger)
-
 	path := params.Cfg.GetStringOpt("path")
 	if path == "" {
 		path = "."
 	}
-	if wipe, _ := params.Cfg.ParseBool("wipe", true, true); wipe {
-		fs := filesystem.NewFileSystem(".", params.Logger)
-		if fs.Exists(path) {
-			ret.AddLog("removing existing directory [%s]", path)
-			_ = fs.RemoveRecursive(path)
-		}
-	}
 
 	prj := projectFromCfg(project.NewProject(params.ProjectKey, path), params.Cfg)
-
+	ret := newResult(TypeCreate, prj, params.Cfg, params.Logger)
 	if params.CLI {
 		err := cliProject(prj, params.MSvc.Keys())
 		if err != nil {

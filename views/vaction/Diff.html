@@ -8,7 +8,18 @@
 ) %}
 
 {% func renderDiffs(prjKey string, act action.Type, diffs diff.Diffs, as *app.State, ps *cutil.PageState) %}{% stripspace %}
-    <h4>Diffs</h4>
+    <h4 class="mt">Diffs</h4>
+    {%- switch act.Key -%}
+    {%- case "audit" -%}
+    <div class="mt">
+      <a href="/run/{%s prjKey %}/audit?fix=remove" title="Remove all audited files from project"><button>Purge All</button></a>
+      <a href="/run/{%s prjKey %}/audit?fix=header" title="Remove header from all audited files"><button>Fix All</button></a>
+    </div>
+    {%- case "build" -%}
+    <div class="mt">
+      <a href="/b/{%s prjKey %}/imports?fix=true" title="Fix all imports for incorrect files"><button>Fix All</button></a>
+    </div>
+    {%- endswitch -%}
     <table>
       <thead>
         <tr>
@@ -24,19 +35,27 @@
           <td class="shrink"><a href="/p/{%s prjKey %}/fs/{%s d.Path %}" target="_blank">{%s d.Path %}</a></td>
           <td>{%s d.Status.String() %}</td>
           <td>
-            {%- if act.Key == "audit" -%}
+            {%- switch act.Key -%}
+            {%- case "audit" -%}
             <form action="/run/{%s prjKey %}/audit" method="get">
               <input type="hidden" name="file" value="{%s d.Path %}" />
               <button type="submit" name="fix" value="remove" title="Remove file from project">Purge</button>{% space %}
               <button type="submit" name="fix" value="header" title="Remove header from file">Fix</button>
             </form>
-            {%- else -%}
+            {%- case "preview" -%}
             <form action="/run/{%s prjKey %}/merge" method="get">
               <input type="hidden" name="file" value="{%s d.Path %}" />
               <button type="submit" name="to" value="module" title="Incorporate change into module">&lt;-</button>{% space %}
               <button type="submit" name="to" value="project" title="Overwrite project changes with module version">-&gt;</button>
             </form>
-            {%- endif -%}
+            {%- case "build" -%}
+            <form action="/b/{%s prjKey %}/imports" method="get">
+              <input type="hidden" name="fix" value="true" />
+              <input type="hidden" name="phase" value="imports" />
+              <input type="hidden" name="file" value="{%s d.Path %}" />
+              <button type="submit" title="Reorder modules">Fix</button>
+            </form>
+            {%- endswitch -%}
           </td>
           <td>{%= renderPatch(d.Patch, as, ps) %}</td>
         </tr>

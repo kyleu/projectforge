@@ -12,8 +12,8 @@ import (
 	"projectforge.dev/projectforge/app/git"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
-	"projectforge.dev/projectforge/views/components"
 	"projectforge.dev/projectforge/views/layout"
+	"projectforge.dev/projectforge/views/vaction"
 	"projectforge.dev/projectforge/views/vproject"
 )
 
@@ -75,45 +75,40 @@ func (p *BuildResult) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *c
 //line views/vbuild/BuildResult.html:27
 		qw422016.N().S(`]</em></div>
     <h3>Result</h3>
-    <pre>`)
-//line views/vbuild/BuildResult.html:29
-		qw422016.E().S(br.LogBlock("\n"))
-//line views/vbuild/BuildResult.html:29
-		qw422016.N().S(`</pre>
-    `)
+  </div>
+  `)
 //line views/vbuild/BuildResult.html:30
-		components.StreamJSON(qw422016, br)
+		vaction.StreamDetail(qw422016, nil, br, false, as, ps)
 //line views/vbuild/BuildResult.html:30
 		qw422016.N().S(`
-  </div>
 `)
-//line views/vbuild/BuildResult.html:32
+//line views/vbuild/BuildResult.html:31
 	}
-//line views/vbuild/BuildResult.html:33
+//line views/vbuild/BuildResult.html:32
 }
 
-//line views/vbuild/BuildResult.html:33
+//line views/vbuild/BuildResult.html:32
 func (p *BuildResult) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vbuild/BuildResult.html:33
+//line views/vbuild/BuildResult.html:32
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vbuild/BuildResult.html:33
+//line views/vbuild/BuildResult.html:32
 	p.StreamBody(qw422016, as, ps)
-//line views/vbuild/BuildResult.html:33
+//line views/vbuild/BuildResult.html:32
 	qt422016.ReleaseWriter(qw422016)
-//line views/vbuild/BuildResult.html:33
+//line views/vbuild/BuildResult.html:32
 }
 
-//line views/vbuild/BuildResult.html:33
+//line views/vbuild/BuildResult.html:32
 func (p *BuildResult) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vbuild/BuildResult.html:33
+//line views/vbuild/BuildResult.html:32
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vbuild/BuildResult.html:33
+//line views/vbuild/BuildResult.html:32
 	p.WriteBody(qb422016, as, ps)
-//line views/vbuild/BuildResult.html:33
+//line views/vbuild/BuildResult.html:32
 	qs422016 := string(qb422016.B)
-//line views/vbuild/BuildResult.html:33
+//line views/vbuild/BuildResult.html:32
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vbuild/BuildResult.html:33
+//line views/vbuild/BuildResult.html:32
 	return qs422016
-//line views/vbuild/BuildResult.html:33
+//line views/vbuild/BuildResult.html:32
 }

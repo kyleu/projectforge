@@ -10,7 +10,7 @@ import (
 )
 
 func onSlam(ctx context.Context, pm *PrjAndMods) *Result {
-	ret := newResult(TypeSlam, pm.Cfg, pm.Logger)
+	ret := newResult(TypeSlam, pm.Prj, pm.Cfg, pm.Logger)
 	timer := util.TimerStart()
 	srcFiles, dfs, err := diffs(ctx, pm)
 	if err != nil {

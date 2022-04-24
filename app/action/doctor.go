@@ -10,7 +10,7 @@ import (
 )
 
 func onDoctor(ctx context.Context, cfg util.ValueMap, pSvc *project.Service, logger *zap.SugaredLogger) *Result {
-	ret := newResult(TypeDoctor, cfg, logger)
+	ret := newResult(TypeDoctor, nil, cfg, logger)
 	prjs := pSvc.Projects()
 	res := checks.CheckAll(ctx, prjs.AllModules(), logger)
 	for _, r := range res {

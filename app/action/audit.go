@@ -15,7 +15,7 @@ import (
 )
 
 func onAudit(ctx context.Context, pm *PrjAndMods) *Result {
-	ret := newResult(TypeAudit, pm.Cfg, pm.Logger)
+	ret := newResult(TypeAudit, pm.Prj, pm.Cfg, pm.Logger)
 
 	var err error
 	switch f := pm.Cfg.GetStringOpt("fix"); f {

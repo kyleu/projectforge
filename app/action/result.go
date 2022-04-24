@@ -2,7 +2,6 @@ package action
 
 import (
 	"fmt"
-	"strings"
 
 	"go.uber.org/zap"
 	"projectforge.dev/projectforge/app/diff"
@@ -24,8 +23,8 @@ type Result struct {
 	logger   *zap.SugaredLogger
 }
 
-func newResult(act Type, cfg util.ValueMap, logger *zap.SugaredLogger) *Result {
-	return &Result{Action: act, Args: cfg, Status: "OK", logger: logger}
+func newResult(act Type, prj *project.Project, cfg util.ValueMap, logger *zap.SugaredLogger) *Result {
+	return &Result{Project: prj, Action: act, Args: cfg, Status: "OK", logger: logger}
 }
 
 func (r *Result) WithError(err error) *Result {
@@ -104,13 +103,6 @@ func (r *Result) StatusLog() string {
 	return fmt.Sprintf("%d %s", fileCount, util.StringPluralMaybe("change", fileCount))
 }
 
-func (r *Result) LogBlock(delim string) string {
-	var ret []string
-	ret = append(ret, r.Logs...)
-	ret = append(ret, fmt.Sprintf(" :: Completed [%s] in [%s]", r.Status, util.MicrosToMillis(r.Duration)))
-	return strings.Join(ret, delim)
-}
-
 type ResultContext struct {
 	Prj *project.Project `json:"prj,omitempty"`
 	Cfg util.ValueMap    `json:"cfg,omitempty"`
@@ -137,5 +129,5 @@ func (x ResultContexts) Errors() []string {
 }
 
 func errorResult(err error, t Type, cfg util.ValueMap, logger *zap.SugaredLogger) *Result {
-	return newResult(t, cfg, logger).WithError(err)
+	return newResult(t, nil, cfg, logger).WithError(err)
 }

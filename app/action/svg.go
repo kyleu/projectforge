@@ -8,7 +8,7 @@ import (
 )
 
 func onSVG(ctx context.Context, pm *PrjAndMods) *Result {
-	ret := newResult(TypeSVG, pm.Cfg, pm.Logger)
+	ret := newResult(TypeSVG, pm.Prj, pm.Cfg, pm.Logger)
 
 	src := fmt.Sprintf("%s/client/src/svg", pm.Prj.Path)
 	tgt := fmt.Sprintf("%s/app/util/svg.go", pm.Prj.Path)

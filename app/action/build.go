@@ -80,7 +80,7 @@ func onBuild(ctx context.Context, pm *PrjAndMods) *Result {
 	defer span.Complete()
 	pm.Logger = logger
 
-	ret := newResult(TypeBuild, pm.Cfg, logger)
+	ret := newResult(TypeBuild, pm.Prj, pm.Cfg, logger)
 	ret.AddLog("building project [%s] in [%s] with phase [%s]", pm.Prj.Key, pm.Prj.Path, phaseStr)
 	var phase *Build
 	for _, x := range AllBuilds {
@@ -118,9 +118,11 @@ func onDeps(pm *PrjAndMods, ret *Result) *Result {
 func onImports(pm *PrjAndMods, r *Result) *Result {
 	fixStr, _ := r.Args.GetString("fix", true)
 	fix := fixStr == "true"
+	fileStr, _ := r.Args.GetString("file", true)
 	t := util.TimerStart()
-	diffs, err := build.Imports(pm.Prj.Package, fix, pm.PSvc.GetFilesystem(pm.Prj))
+	logs, diffs, err := build.Imports(pm.Prj.Package, fix, fileStr, pm.PSvc.GetFilesystem(pm.Prj))
 	r.Modules = append(r.Modules, &module.Result{Keys: []string{"imports"}, Status: "OK", Diffs: diffs, Duration: t.End()})
+	r.Logs = append(r.Logs, logs...)
 	if err != nil {
 		return r.WithError(err)
 	}
