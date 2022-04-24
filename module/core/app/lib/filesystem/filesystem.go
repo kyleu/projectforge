@@ -9,7 +9,8 @@ import (
 	"go.uber.org/zap"
 )
 
-var DefaultMode = os.FileMode(0o755)
+var DirectoryMode = os.FileMode(0o755)
+var DefaultMode = os.FileMode(0o644)
 
 type FileSystem struct {
 	root   string
@@ -45,6 +46,11 @@ func (f *FileSystem) Stat(path string) (os.FileInfo, error) {
 		return s, nil
 	}
 	return nil, err
+}
+
+func (f *FileSystem) SetMode(path string, mode os.FileMode) error {
+	p := f.getPath(path)
+	return os.Chmod(p, mode)
 }
 
 func (f *FileSystem) Exists(path string) bool {

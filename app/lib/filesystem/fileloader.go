@@ -22,6 +22,7 @@ type FileLoader interface {
 	ListDirectories(path string) []string
 	Walk(path string, ign []string, fn func(fp string, info os.FileInfo, err error) error) error
 	Stat(path string) (os.FileInfo, error)
+	SetMode(path string, mode os.FileMode) error
 	Exists(path string) bool
 	IsDir(path string) bool
 	Remove(path string) error

@@ -54,13 +54,14 @@ func (b Builds) Get(key string) *Build {
 }
 
 var AllBuilds = Builds{
+	{Key: "deps", Title: "Dependencies", Description: "Manages Go dependencies", Run: onDeps},
+	{Key: "imports", Title: "Imports", Description: "Reorders the imports", Run: onImports},
+	{Key: "cleanup", Title: "Cleanup", Description: "Cleans up file permissions", Run: onCleanup},
 	simpleBuild("build", "Build", "make build"),
 	simpleBuild("clean", "Clean", "make clean"),
 	simpleBuild("tidy", "Tidy", "go mod tidy"),
 	simpleBuild("format", "Format", "bin/format.sh"),
 	simpleBuild("lint", "Lint", "bin/check.sh"),
-	{Key: "deps", Title: "Dependencies", Description: "Manages Go dependencies", Run: onDeps},
-	{Key: "imports", Title: "Imports", Description: "Cleans up your imports", Run: onImports},
 	{Key: "clientInstall", Title: "Client Install", Description: ciDesc, Run: func(pm *PrjAndMods, ret *Result) *Result {
 		return simpleProc("npm install", filepath.Join(pm.Prj.Path, "client"), ret)
 	}},
@@ -122,6 +123,17 @@ func onImports(pm *PrjAndMods, r *Result) *Result {
 	t := util.TimerStart()
 	logs, diffs, err := build.Imports(pm.Prj.Package, fix, fileStr, pm.PSvc.GetFilesystem(pm.Prj))
 	r.Modules = append(r.Modules, &module.Result{Keys: []string{"imports"}, Status: "OK", Diffs: diffs, Duration: t.End()})
+	r.Logs = append(r.Logs, logs...)
+	if err != nil {
+		return r.WithError(err)
+	}
+	return r
+}
+
+func onCleanup(pm *PrjAndMods, r *Result) *Result {
+	t := util.TimerStart()
+	logs, diffs, err := build.Cleanup(pm.PSvc.GetFilesystem(pm.Prj))
+	r.Modules = append(r.Modules, &module.Result{Keys: []string{"cleanup"}, Status: "OK", Diffs: diffs, Duration: t.End()})
 	r.Logs = append(r.Logs, logs...)
 	if err != nil {
 		return r.WithError(err)
