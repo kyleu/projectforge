@@ -13,7 +13,7 @@ import (
 func OnDepsUpgrade(prj *project.Project, up string, o string, n string, pSvc *project.Service, logger *zap.SugaredLogger) error {
 	var deps Dependencies
 	if up == "all" {
-		curr, err := LoadDeps(prj.Path)
+		curr, err := LoadDeps(prj.Path, true)
 		if err != nil {
 			return err
 		}

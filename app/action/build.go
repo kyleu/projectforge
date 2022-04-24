@@ -108,7 +108,8 @@ func onDeps(pm *PrjAndMods, ret *Result) *Result {
 			return ret.WithError(err)
 		}
 	}
-	deps, err := build.LoadDeps(pm.Prj.Path)
+	upd, _ := ret.Args.GetString("upd", true)
+	deps, err := build.LoadDeps(pm.Prj.Path, upd != "false")
 	ret.Data = deps
 	if err != nil {
 		return ret.WithError(err)

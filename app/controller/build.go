@@ -3,7 +3,6 @@ package controller
 import (
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
-
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/action"
 	"projectforge.dev/projectforge/app/build"
@@ -47,5 +46,18 @@ func Build(rc *fasthttp.RequestCtx) {
 		}
 		gitStatus, _ := as.Services.Git.Status(ps.Context, prj, ps.Logger)
 		return render(rc, as, &vbuild.BuildResult{Project: prj, BuildResult: res, GitResult: gitStatus}, ps, bc...)
+	})
+}
+
+func RunAllDeps(rc *fasthttp.RequestCtx) {
+	act("run.all.deps", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prjs := as.Services.Projects.Projects()
+		ret, err := build.LoadDepsMap(prjs, 2)
+		if err != nil {
+			return "", errors.Wrap(err, "")
+		}
+		ps.Data = ret
+		page := &vbuild.DepMap{Result: ret}
+		return render(rc, as, page, ps, "projects", "Dependencies")
 	})
 }

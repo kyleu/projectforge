@@ -6,9 +6,9 @@ import (
 
 type Dependency struct {
 	Key        string   `json:"key"`
-	Version    string   `json:"version"`
-	Available  string   `json:"available"`
-	References []string `json:"references"`
+	Version    string   `json:"version,omitempty"`
+	Available  string   `json:"available,omitempty"`
+	References []string `json:"references,omitempty"`
 }
 
 func (d *Dependency) AddRef(r string) {

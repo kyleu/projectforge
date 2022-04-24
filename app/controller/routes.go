@@ -59,6 +59,7 @@ func AppRoutes() fasthttp.RequestHandler {
 	r.GET("/git/{key}", GitAction)
 	r.GET("/git/{key}/{act}", GitAction)
 
+	r.GET("/run/deps", RunAllDeps)
 	r.GET("/run/{act}", RunAllActions)
 	r.GET("/run/{key}/{act}", RunAction)
 

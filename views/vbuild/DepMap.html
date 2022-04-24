@@ -1,0 +1,49 @@
+{% import (
+  "golang.org/x/exp/maps"
+  "golang.org/x/exp/slices"
+
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/layout"
+) %}
+
+{% code type DepMap struct {
+  layout.Basic
+  Result map[string]map[string][]string
+} %}
+
+{% func (p *DepMap) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>Dependency Conflicts</h3>
+    <ul class="accordion mt">
+      {%- code
+        depKeys := maps.Keys(p.Result)
+        slices.Sort(depKeys)
+      -%}
+      {%- for _, k := range depKeys -%}
+      {%- code v := p.Result[k] %}
+      <li>
+        <input id="accordion-{%s k %}" type="checkbox" hidden />
+        <label for="accordion-{%s k %}">
+          <div class="right">{%d len(v) %}</div>
+          {%= components.ExpandCollapse(3, ps) %} {%s k %}
+        </label>
+        <div class="bd">
+          <ul>
+            {%- for vers, prjs := range v -%}
+            <li>{%s vers %}:
+              <ul>
+                {%- for _, prj := range prjs -%}
+                <li>{%s prj %}</li>
+                {%- endfor -%}
+              </ul>
+            </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+{% endfunc %}
