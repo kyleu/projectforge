@@ -269,18 +269,6 @@ builds:
       - "7"
     mod_timestamp: "{{ .CommitTimestamp }}"
 
-  - id: "plan9"
-    goos:
-      - "plan9"
-    goarch:
-      - "386"
-      - "amd64"
-      - "arm"
-    goarm:
-      - "6"
-      - "7"
-    mod_timestamp: "{{ .CommitTimestamp }}"
-
   - id: "solaris"
     goos:
       - "solaris"

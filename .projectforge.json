@@ -53,7 +53,7 @@
     "freeBSD": true,
     "netBSD": true,
     "openBSD": true,
-    "plan9": true,
+    "plan9": false,
     "solaris": true,
     "homebrew": true,
     "nfpms": true,
