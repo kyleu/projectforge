@@ -277,7 +277,6 @@ builds:
       - "amd64"
       - "arm"
     goarm:
-      - "5"
       - "6"
       - "7"
     mod_timestamp: "{{ .CommitTimestamp }}"
