@@ -109,7 +109,8 @@ func onDeps(pm *PrjAndMods, ret *Result) *Result {
 		}
 	}
 	upd, _ := ret.Args.GetString("upd", true)
-	deps, err := build.LoadDeps(pm.Prj.Path, upd != "false")
+	showAll, _ := pm.Cfg.GetBool("showAll", true)
+	deps, err := build.LoadDeps(pm.Prj.Key, pm.Prj.Path, upd != "false", pm.PSvc.GetFilesystem(pm.Prj), showAll)
 	ret.Data = deps
 	if err != nil {
 		return ret.WithError(err)

@@ -39,7 +39,7 @@ func Initialize(version string, logger *zap.SugaredLogger) {
 	otel.SetErrorHandler(&ErrHandler{logger: logger})
 	initialized = true
 
-	endpoint := "localhost:55681"
+	endpoint := "localhost:4318"
 	if env := util.GetEnv("telemetry_endpoint"); env != "" {
 		endpoint = env
 	}

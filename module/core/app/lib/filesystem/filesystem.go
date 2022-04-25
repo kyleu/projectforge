@@ -9,8 +9,10 @@ import (
 	"go.uber.org/zap"
 )
 
-var DirectoryMode = os.FileMode(0o755)
-var DefaultMode = os.FileMode(0o644)
+var (
+	DirectoryMode = os.FileMode(0o755)
+	DefaultMode   = os.FileMode(0o644)
+)
 
 type FileSystem struct {
 	root   string
@@ -68,7 +70,7 @@ func (f *FileSystem) IsDir(path string) bool {
 
 func (f *FileSystem) CreateDirectory(path string) error {
 	p := f.getPath(path)
-	if err := os.MkdirAll(p, DefaultMode); err != nil {
+	if err := os.MkdirAll(p, DirectoryMode); err != nil {
 		return errors.Wrapf(err, "unable to create data directory [%s]", p)
 	}
 	return nil

@@ -3,7 +3,6 @@ package controller
 import (
 	"fmt"
 	"strings"
-	"sync"
 
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
@@ -11,6 +10,7 @@ import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/action"
 	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/vaction"
 )
@@ -60,27 +60,14 @@ func RunAllActions(rc *fasthttp.RequestCtx) {
 		actT := action.TypeFromString(actS)
 		prjs := as.Services.Projects.Projects()
 
-		var results action.ResultContexts
-		var mutex sync.Mutex
-		var wg sync.WaitGroup
-		wg.Add(len(prjs))
-		for _, prj := range prjs {
-			p := prj
-			go func() {
-				c := cfg.Clone()
-				c["path"] = p.Path
-				result := action.Apply(ps.Context, actionParams(p.Key, actT, c, as, ps.Logger))
-				if result.Project == nil {
-					result.Project = p
-				}
-				rc := &action.ResultContext{Prj: p, Cfg: c, Res: result}
-				mutex.Lock()
-				results = append(results, rc)
-				wg.Done()
-				mutex.Unlock()
-			}()
-		}
-		wg.Wait()
+		results, _ := util.AsyncCollect(prjs, func(item *project.Project) (*action.ResultContext, error) {
+			c := cfg.Clone()
+			result := action.Apply(ps.Context, actionParams(item.Key, actT, c, as, ps.Logger))
+			if result.Project == nil {
+				result.Project = item
+			}
+			return &action.ResultContext{Prj: item, Cfg: c, Res: result}, nil
+		})
 		slices.SortFunc(results, func(l *action.ResultContext, r *action.ResultContext) bool {
 			return strings.ToLower(l.Prj.Title()) < strings.ToLower(r.Prj.Title())
 		})

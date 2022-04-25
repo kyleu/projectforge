@@ -1,6 +1,7 @@
 package build
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -10,10 +11,12 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+const gomod = "go.mod"
+
 func OnDepsUpgrade(prj *project.Project, up string, o string, n string, pSvc *project.Service, logger *zap.SugaredLogger) error {
 	var deps Dependencies
 	if up == "all" {
-		curr, err := LoadDeps(prj.Path, true)
+		curr, err := LoadDeps(prj.Key, prj.Path, true, pSvc.GetFilesystem(prj), false)
 		if err != nil {
 			return err
 		}
@@ -50,7 +53,7 @@ func upgradeDeps(prj *project.Project, deps Dependencies, pSvc *project.Service,
 }
 
 func bumpGoMod(prj *project.Project, fs filesystem.FileLoader, deps Dependencies, logger *zap.SugaredLogger) error {
-	bts, err := fs.ReadFile("go.mod")
+	bts, err := fs.ReadFile(gomod)
 	if err != nil {
 		return errors.Wrap(err, "unable to read [go.mod]")
 	}
@@ -77,7 +80,7 @@ func bumpGoMod(prj *project.Project, fs filesystem.FileLoader, deps Dependencies
 	}
 
 	final := strings.Join(lines, "\n")
-	err = fs.WriteFile("go.mod", []byte(final), filesystem.DefaultMode, true)
+	err = fs.WriteFile(gomod, []byte(final), filesystem.DefaultMode, true)
 	if err != nil {
 		return errors.Wrap(err, "unable to write [go.mod]")
 	}
@@ -87,4 +90,61 @@ func bumpGoMod(prj *project.Project, fs filesystem.FileLoader, deps Dependencies
 		return errors.Wrap(err, "unable to run [go mod tidy]")
 	}
 	return nil
+}
+
+func SetDepsMap(projects project.Projects, dep *Dependency, pSvc *project.Service, logger *zap.SugaredLogger) (string, error) {
+	logger.Infof("upgrading dependency [%s] to [%s]", dep.Key, dep.Version)
+	var affected int
+
+	_, errs := util.AsyncCollect(projects, func(item *project.Project) (any, error) {
+		t := util.TimerStart()
+		fs := pSvc.GetFilesystem(item)
+		var matched bool
+		bytes, err := fs.ReadFile(gomod)
+		if err != nil {
+			return nil, errors.Wrapf(err, "unable to read [go.mod] for project [%s]", item.Key)
+		}
+		lines := strings.Split(string(bytes), "\n")
+		ret := make([]string, 0, len(lines))
+		for _, line := range lines {
+			if strings.Contains(line, dep.Key+" ") {
+				start := strings.Index(line, " v")
+				if start == -1 {
+					return nil, errors.Errorf("project [%s] does not contain a version in [%s]", item.Key, line)
+				}
+				start++
+				offset := strings.Index(line[start:], " ")
+				if offset == -1 {
+					offset = len(line) - start
+				}
+				curr := line[start : start+offset]
+				if curr == dep.Version {
+					ret = append(ret, line)
+				} else {
+					matched = true
+					ret = append(ret, strings.Replace(line, curr, dep.Version, 1))
+				}
+			} else {
+				ret = append(ret, line)
+			}
+		}
+		if matched {
+			affected++
+			content := strings.Join(ret, "\n")
+			err = fs.WriteFile(gomod, []byte(content), filesystem.DefaultMode, true)
+			if err != nil {
+				return nil, errors.Wrap(err, "unable to write [go.mod]")
+			}
+			_, _, err = util.RunProcessSimple("go mod tidy", item.Path)
+			if err != nil {
+				return nil, errors.Wrapf(err, "unable to run [go mod tidy] in path [%s]", item.Path)
+			}
+			logger.Infof("completed upgrade of [%s] in [%s]", item.Key, util.MicrosToMillis(t.End()))
+		}
+		return nil, nil
+	})
+	if len(errs) > 0 {
+		return "", errs[0]
+	}
+	return fmt.Sprintf("upgraded [%s] to [%s] in [%d] projects", dep.Key, dep.Version, affected), nil
 }

@@ -52,12 +52,24 @@ func Build(rc *fasthttp.RequestCtx) {
 func RunAllDeps(rc *fasthttp.RequestCtx) {
 	act("run.all.deps", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prjs := as.Services.Projects.Projects()
-		ret, err := build.LoadDepsMap(prjs, 2)
+		var msg string
+
+		key := string(rc.URI().QueryArgs().Peek("key"))
+		version := string(rc.URI().QueryArgs().Peek("version"))
+		if key != "" && version != "" {
+			result, err := build.SetDepsMap(prjs, &build.Dependency{Key: key, Version: version}, as.Services.Projects, ps.Logger)
+			if err != nil {
+				return "", err
+			}
+			msg = result
+		}
+
+		ret, err := build.LoadDepsMap(prjs, 2, as.Services.Projects)
 		if err != nil {
 			return "", errors.Wrap(err, "")
 		}
 		ps.Data = ret
-		page := &vbuild.DepMap{Result: ret}
+		page := &vbuild.DepMap{Message: msg, Result: ret}
 		return render(rc, as, page, ps, "projects", "Dependencies")
 	})
 }

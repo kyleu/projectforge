@@ -5,12 +5,44 @@ import (
 
 	"github.com/pkg/errors"
 	"golang.org/x/exp/slices"
+	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/project"
 
 	"projectforge.dev/projectforge/app/util"
 )
 
-func LoadDeps(path string, includeUpdates bool) (Dependencies, error) {
+func LoadDepsEasyMode(key string, fs filesystem.FileLoader) (Dependencies, error) {
+	bytes, err := fs.ReadFile(gomod)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to read [go.mod] for project [%s]", key)
+	}
+	lines := strings.Split(string(bytes), "\n")
+	ret := make(Dependencies, 0, len(lines))
+	for _, line := range lines {
+		if strings.HasPrefix(line, "\t") && strings.Contains(line, " v") {
+			start := strings.Index(line, " v")
+			if start == -1 {
+				return nil, errors.Errorf("project [%s] does not contain a version in [%s]", key, line)
+			}
+			dep := &Dependency{Key: strings.TrimSpace(line[:start])}
+			start++
+			offset := strings.Index(line[start:], " ")
+			if offset == -1 {
+				offset = len(line) - start
+			}
+			dep.Version = line[start : start+offset]
+			ret = append(ret, dep)
+		}
+	}
+	return ret, nil
+}
+
+func LoadDeps(key string, path string, includeUpdates bool, fs filesystem.FileLoader, showAll bool) (Dependencies, error) {
+	actual, err := LoadDepsEasyMode(key, fs)
+	if err != nil {
+		return nil, err
+	}
+
 	cmd := "go list -m all"
 	if includeUpdates {
 		cmd = "go list -m -u all"
@@ -41,7 +73,9 @@ func LoadDeps(path string, includeUpdates bool) (Dependencies, error) {
 		if len(parts) > 2 {
 			d.Available = strings.TrimSuffix(strings.TrimPrefix(parts[2], "["), "]")
 		}
-		ret = append(ret, d)
+		if actual.Get(d.Key) != nil || showAll {
+			ret = append(ret, d)
+		}
 	}
 	err = loadReferences(path, ret)
 	if err != nil {
@@ -65,20 +99,21 @@ func loadReferences(path string, deps Dependencies) error {
 		src, _ = util.StringSplit(src, '@', true)
 		dest, _ = util.StringSplit(dest, '@', true)
 		curr := deps.Get(dest)
-		if curr == nil {
-			return errors.Errorf("missing dependency entry for [%s]", dest)
+		if curr != nil {
+			curr.AddRef(src)
+		} else {
+			// return errors.Errorf("missing dependency entry for [%s] in path [%s]", dest, path)
 		}
-		curr.AddRef(src)
 	}
 	return nil
 }
 
-func LoadDepsMap(projects project.Projects, minVersions int) (map[string]map[string][]string, error) {
+func LoadDepsMap(projects project.Projects, minVersions int, pSvc *project.Service) (map[string]map[string][]string, error) {
 	ret := map[string]map[string][]string{}
 	for _, prj := range projects {
-		deps, err := LoadDeps(prj.Path, false)
+		deps, err := LoadDepsEasyMode(prj.Key, pSvc.GetFilesystem(prj))
 		if err != nil {
-			return nil, errors.Wrap(err, "")
+			return nil, err
 		}
 		for _, dep := range deps {
 			curr, ok := ret[dep.Key]

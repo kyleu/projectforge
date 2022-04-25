@@ -2,11 +2,11 @@ package controller
 
 import (
 	"strings"
-	"sync"
 
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 	"golang.org/x/exp/slices"
+	"projectforge.dev/projectforge/app/util"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
@@ -68,25 +68,10 @@ func gitMagicAll(prjs project.Projects, rc *fasthttp.RequestCtx, as *app.State, 
 
 func gitFetchAll(prjs project.Projects, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (git.Results, error) {
 	results := make(git.Results, 0, len(prjs))
-	var errs []error
-	mu := sync.Mutex{}
-	wg := sync.WaitGroup{}
-	wg.Add(len(prjs))
-	for _, prj := range prjs {
-		p := prj
-		go func() {
-			out, err := as.Services.Git.Fetch(p)
-			mu.Lock()
-			if err == nil {
-				results = append(results, out)
-			} else {
-				errs = append(errs, errors.Wrapf(err, "can't fetch project [%s]", p.Key))
-			}
-			mu.Unlock()
-			wg.Done()
-		}()
-	}
-	wg.Wait()
+
+	results, errs := util.AsyncCollect(prjs, func(item *project.Project) (*git.Result, error) {
+		return as.Services.Git.Fetch(item)
+	})
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}

@@ -16,14 +16,7 @@
 
 {% func (p *Results) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    {%= vsearch.Form("/p/search", "", "Search Files", ps) %}
-    <h3>All Projects: {%s p.T.Title %}</h3>
-    <div class="mt">
-      {%- for _, t := range action.ProjectTypes -%}
-      <a href="/run/{%s t.Key %}" title="{%s t.Description %}"><button>{%s t.Title %}</button></a>
-      {%- endfor -%}
-      <a href="/git" title="Git dashboard for all projects"><button>Git</button></a>
-    </div>
+    {%= SharedActions(p.T.Title, as, ps) %}
     <div class="mt">
       <ul class="accordion">
         {%- for _, x := range p.Ctxs -%}
@@ -41,5 +34,17 @@
         {%- endfor -%}
       </ul>
     </div>
+  </div>
+{% endfunc %}
+
+{% func SharedActions(title string, as *app.State, ps *cutil.PageState) %}
+  {%= vsearch.Form("/p/search", "", "Search Files", ps) %}
+  <h3>All Projects: {%s title %}</h3>
+  <div class="mt">
+    {%- for _, t := range action.ProjectTypes -%}
+    <a href="/run/{%s t.Key %}" title="{%s t.Description %}"><button>{%s t.Title %}</button></a>
+    {%- endfor -%}
+    <a href="/run/deps" title="Manage the dependencies of your project"><button>Dependencies</button></a>
+    <a href="/git" title="Git dashboard for all projects"><button>Git</button></a>
   </div>
 {% endfunc %}

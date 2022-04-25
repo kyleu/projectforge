@@ -4,7 +4,6 @@ package search
 import (
 	"context"
 	"strings"
-	"sync"
 
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
@@ -12,6 +11,7 @@ import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/lib/search/result"
 	"projectforge.dev/projectforge/app/lib/telemetry"
+	"projectforge.dev/projectforge/app/util"
 )
 
 type Provider func(context.Context, *app.State, *Params, *zap.SugaredLogger) (result.Results, error)
@@ -39,28 +39,17 @@ func Search(ctx context.Context, as *app.State, params *Params) (result.Results,
 		return nil, []error{errors.New("no search providers configured")}
 	}
 
-	ret := result.Results{}
-	var errs []error
-	mu := sync.Mutex{}
-	wg := sync.WaitGroup{}
-	wg.Add(len(allProviders))
 	params.Q = strings.TrimSpace(params.Q)
 
-	for _, p := range allProviders {
-		f := p
-		go func() {
-			res, err := f(ctx, as, params, logger)
-			mu.Lock()
-			if err != nil {
-				errs = append(errs, err)
-			}
-			ret = append(ret, res...)
-			mu.Unlock()
-			wg.Done()
-		}()
+	results, errs := util.AsyncCollect(allProviders, func(item Provider) (result.Results, error) {
+		return item(ctx, as, params, logger)
+	})
+
+	ret := make(result.Results, 0, len(results)*len(results))
+	for _, x := range results {
+		ret = append(ret, x...)
 	}
 
-	wg.Wait()
 	ret.Sort()
 	return ret, errs
 }
