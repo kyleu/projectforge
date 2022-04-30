@@ -53,7 +53,7 @@ func All(ctx context.Context, args *model.Args, addHeader bool, logger *zap.Suga
 		}
 		calls = append(calls, fs...)
 
-		if args.HasModule("grpc") {
+		if args.HasModule("grpc") && args.Config.GetStringOpt("grpcPackage") != "" {
 			fs, err := grpc.GRPC(m, args, addHeader)
 			if err != nil {
 				return nil, err

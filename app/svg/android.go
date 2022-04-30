@@ -1,6 +1,7 @@
 package svg
 
 import (
+	"context"
 	"fmt"
 	"path/filepath"
 
@@ -11,12 +12,12 @@ import (
 	"projectforge.dev/projectforge/app/project"
 )
 
-func androidAssets(prj *project.Project, orig string, fs filesystem.FileLoader, logger *zap.SugaredLogger) error {
+func androidAssets(ctx context.Context, prj *project.Project, orig string, fs filesystem.FileLoader, logger *zap.SugaredLogger) error {
 	if prj.Build == nil || (!prj.Build.Android) {
 		return nil
 	}
 	androidResize := func(size int, fn string, p string) {
-		err := proc(fmt.Sprintf(noBG, size, size, fn), p)
+		err := proc(ctx, fmt.Sprintf(noBG, size, size, fn), p, logger)
 		if err != nil {
 			logger.Warnf("error processing icon [%s]: %+v", fn, err)
 		}

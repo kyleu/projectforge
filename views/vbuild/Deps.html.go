@@ -83,7 +83,7 @@ func (p *Deps) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vbuild/Deps.html:31
 	qw422016.N().S(`
   <div class="card">
-    <div class="right"><a href="?upgrade=all" onclick="return confirm('You sure about this?')"><button>Upgrade All</button></a></div>
+    <div class="right"><a href="?phase=deps&upgrade=all" onclick="return confirm('You sure about this?')"><button>Upgrade All</button></a></div>
     <h3>Dependencies</h3>
 `)
 //line views/vbuild/Deps.html:36
@@ -168,17 +168,17 @@ func (p *Deps) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vbuild/Deps.html:68
 			if d.Available != "" {
 //line views/vbuild/Deps.html:68
-				qw422016.N().S(`<a href="?upgrade=`)
+				qw422016.N().S(`<a href="?phase=deps&upgrade=`)
 //line views/vbuild/Deps.html:68
-				qw422016.E().S(d.Key)
+				qw422016.N().U(d.Key)
 //line views/vbuild/Deps.html:68
 				qw422016.N().S(`&old=`)
 //line views/vbuild/Deps.html:68
-				qw422016.E().S(d.Version)
+				qw422016.N().U(d.Version)
 //line views/vbuild/Deps.html:68
 				qw422016.N().S(`&new=`)
 //line views/vbuild/Deps.html:68
-				qw422016.E().S(d.Available)
+				qw422016.N().U(d.Available)
 //line views/vbuild/Deps.html:68
 				qw422016.N().S(`"><button>Upgrade</button></a>`)
 //line views/vbuild/Deps.html:68

@@ -69,6 +69,7 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 			}
 		}
 	}
+	g.AddBlocks(serviceListSQL(m, args.DBRef()))
 	return g.Render(addHeader)
 }
 
@@ -228,6 +229,19 @@ func serviceGetByCols(key string, m *model.Model, cols model.Columns, dbRef stri
 		decls = append(decls, c.Camel()+" [%%v]")
 	}
 	ret.W("\t\treturn nil, errors.Wrapf(err, \"unable to get %s by %s\", %s)", m.Plural(), strings.Join(decls, ", "), sj)
+	ret.W("\t}")
+	ret.W("\treturn ret.To%s(), nil", m.ProperPlural())
+	ret.W("}")
+	return ret
+}
+
+func serviceListSQL(m *model.Model, dbRef string) *golang.Block {
+	ret := golang.NewBlock("ListSQL", "func")
+	ret.W("func (s *Service) ListSQL(ctx context.Context, tx *sqlx.Tx, sql string) (%s, error) {", m.ProperPlural())
+	ret.W("\tret := dtos{}")
+	ret.W("\terr := s.%s.Select(ctx, &ret, sql, tx, s.logger)", dbRef)
+	ret.W("\tif err != nil {")
+	ret.W("\t\treturn nil, errors.Wrap(err, \"unable to get %s using custom SQL\")", m.TitlePluralLower())
 	ret.W("\t}")
 	ret.W("\treturn ret.To%s(), nil", m.ProperPlural())
 	ret.W("}")

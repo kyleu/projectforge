@@ -47,5 +47,5 @@ func onCreate(ctx context.Context, params *Params) *Result {
 		return ret
 	}
 
-	return fullBuild(prj, ret, params.Logger)
+	return fullBuild(ctx, prj, ret, params.Logger)
 }

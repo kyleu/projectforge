@@ -1,6 +1,7 @@
 package checks
 
 import (
+	"context"
 	"fmt"
 
 	"go.uber.org/zap"
@@ -20,7 +21,7 @@ var prj = &doctor.Check{
 	Solve:   solveProject,
 }
 
-func checkProject(r *doctor.Result, logger *zap.SugaredLogger) *doctor.Result {
+func checkProject(ctx context.Context, r *doctor.Result, logger *zap.SugaredLogger) *doctor.Result {
 	p, r := loadRootProject(r, logger)
 	if len(r.Errors) > 0 {
 		return r
@@ -62,7 +63,7 @@ func checkProject(r *doctor.Result, logger *zap.SugaredLogger) *doctor.Result {
 	return r
 }
 
-func solveProject(r *doctor.Result, logger *zap.SugaredLogger) *doctor.Result {
+func solveProject(ctx context.Context, r *doctor.Result, logger *zap.SugaredLogger) *doctor.Result {
 	if r.Errors.Find("missing") != nil {
 		r.AddSolution("run [projectforge create] in this directory")
 	}

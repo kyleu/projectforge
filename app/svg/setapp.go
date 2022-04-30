@@ -1,6 +1,7 @@
 package svg
 
 import (
+	"context"
 	"fmt"
 	"path/filepath"
 	"strings"
@@ -8,9 +9,10 @@ import (
 
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
+
 	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/project"
-	"projectforge.dev/projectforge/app/util"
 )
 
 const (
@@ -18,8 +20,8 @@ const (
 	noBG   = "convert -density 1000 -background none -resize %dx%d -define png:exclude-chunks=date,time logo.svg %s"
 )
 
-func proc(cmd string, path string) error {
-	exit, out, err := util.RunProcessSimple(cmd, path)
+func proc(ctx context.Context, cmd string, path string, logger *zap.SugaredLogger) error {
+	exit, out, err := telemetry.RunProcessSimple(ctx, cmd, path, logger)
 	if err != nil {
 		return errors.Wrap(err, "unable to convert [logo.png]")
 	}
@@ -29,7 +31,7 @@ func proc(cmd string, path string) error {
 	return nil
 }
 
-func SetAppIcon(prj *project.Project, fs filesystem.FileLoader, x *SVG, logger *zap.SugaredLogger) error {
+func SetAppIcon(ctx context.Context, prj *project.Project, fs filesystem.FileLoader, x *SVG, logger *zap.SugaredLogger) error {
 	orig := x.Markup
 	for strings.Contains(orig, "<!--") {
 		startIdx := strings.Index(orig, "<!--")
@@ -44,8 +46,8 @@ func SetAppIcon(prj *project.Project, fs filesystem.FileLoader, x *SVG, logger *
 	wg.Add(4)
 	var errs []error
 
-	queue := func(f func(prj *project.Project, orig string, fs filesystem.FileLoader, logger *zap.SugaredLogger) error) {
-		err := f(prj, orig, fs, logger)
+	queue := func(f func(ctx context.Context, prj *project.Project, orig string, fs filesystem.FileLoader, logger *zap.SugaredLogger) error) {
+		err := f(ctx, prj, orig, fs, logger)
 		if err != nil {
 			errs = append(errs, err)
 		}
@@ -77,9 +79,9 @@ func SetAppIcon(prj *project.Project, fs filesystem.FileLoader, x *SVG, logger *
 	return nil
 }
 
-func webAssets(prj *project.Project, orig string, fs filesystem.FileLoader, logger *zap.SugaredLogger) error {
+func webAssets(ctx context.Context, prj *project.Project, orig string, fs filesystem.FileLoader, logger *zap.SugaredLogger) error {
 	webResize := func(size int, fn string, p string) {
-		err := proc(fmt.Sprintf(noBG, size, size, fn), p)
+		err := proc(ctx, fmt.Sprintf(noBG, size, size, fn), p, logger)
 		if err != nil {
 			logger.Warnf("error processing icon [%s]: %+v", fn, err)
 		}
@@ -93,7 +95,8 @@ func webAssets(prj *project.Project, orig string, fs filesystem.FileLoader, logg
 	}
 	webResize(256, "logo.png", webPath)
 	webResize(64, "favicon.png", webPath)
-	err = proc("convert -density 1000 -background none logo.svg -define icon:auto-resize=128,64,32 favicon.ico", webPath)
+	cmd := "convert -density 1000 -background none logo.svg -define icon:auto-resize=128,64,32 favicon.ico"
+	err = proc(ctx, cmd, webPath, logger)
 	if err != nil {
 		return errors.Wrap(err, "unable to convert [favicon.ico]")
 	}

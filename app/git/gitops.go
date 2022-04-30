@@ -1,16 +1,18 @@
 package git
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
 	"github.com/pkg/errors"
+	"go.uber.org/zap"
 	"golang.org/x/exp/slices"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func gitStatus(path string) ([]string, error) {
-	out, err := gitCmd("status --porcelain", path)
+func gitStatus(ctx context.Context, path string, logger *zap.SugaredLogger) ([]string, error) {
+	out, err := gitCmd(ctx, "status --porcelain", path, logger)
 	if err != nil {
 		if errors.Is(err, errNoRepo) {
 			return nil, nil
@@ -32,8 +34,8 @@ func gitStatus(path string) ([]string, error) {
 	return dirty, nil
 }
 
-func gitBranch(path string) string {
-	out, err := gitCmd("branch --show-current", path)
+func gitBranch(ctx context.Context, path string, logger *zap.SugaredLogger) string {
+	out, err := gitCmd(ctx, "branch --show-current", path, logger)
 	if err != nil {
 		if errors.Is(err, errNoRepo) {
 			return "norepo"
@@ -43,12 +45,12 @@ func gitBranch(path string) string {
 	return strings.TrimSpace(out)
 }
 
-func gitFetch(path string, dryRun bool) (string, error) {
+func gitFetch(ctx context.Context, path string, dryRun bool, logger *zap.SugaredLogger) (string, error) {
 	cmd := "fetch"
 	if dryRun {
 		cmd += " --dry-run"
 	}
-	out, err := gitCmd(cmd, path)
+	out, err := gitCmd(ctx, cmd, path, logger)
 	if err != nil {
 		if errors.Is(err, errNoRepo) {
 			return "", nil
@@ -58,15 +60,15 @@ func gitFetch(path string, dryRun bool) (string, error) {
 	return out, nil
 }
 
-func gitCommit(path string, message string) (string, error) {
-	_, err := gitCmd("add .", path)
+func gitCommit(ctx context.Context, path string, message string, logger *zap.SugaredLogger) (string, error) {
+	_, err := gitCmd(ctx, "add .", path, logger)
 	if err != nil {
 		if errors.Is(err, errNoRepo) {
 			return "", nil
 		}
 		return "", err
 	}
-	out, err := gitCmd(fmt.Sprintf(`commit -m %q`, message), path)
+	out, err := gitCmd(ctx, fmt.Sprintf(`commit -m %q`, message), path, logger)
 	if err != nil {
 		return "", err
 	}

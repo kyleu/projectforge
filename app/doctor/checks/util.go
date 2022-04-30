@@ -1,26 +1,28 @@
 package checks
 
 import (
+	"context"
 	"strings"
 
 	"go.uber.org/zap"
 	"projectforge.dev/projectforge/app/doctor"
 	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func simpleOut(path string, cmd string, args []string, outCheck func(r *doctor.Result, out string) *doctor.Result) doctor.CheckFn {
-	return func(r *doctor.Result, logger *zap.SugaredLogger) *doctor.Result {
+func simpleOut(path string, cmd string, args []string, outCheck func(ctx context.Context, r *doctor.Result, out string) *doctor.Result) doctor.CheckFn {
+	return func(ctx context.Context, r *doctor.Result, logger *zap.SugaredLogger) *doctor.Result {
 		fullCmd := strings.Join(append([]string{cmd}, args...), " ")
-		exitCode, out, err := util.RunProcessSimple(fullCmd, path)
+		exitCode, out, err := telemetry.RunProcessSimple(ctx, fullCmd, path, logger)
 		if err != nil {
 			return r.WithError(doctor.NewError("missing", "[%s] is not present on your computer", cmd))
 		}
 		if exitCode != 0 {
 			return r.WithError(doctor.NewError("exitcode", "[%s] returned [%d] as an exit code", fullCmd, exitCode))
 		}
-		return outCheck(r, out)
+		return outCheck(ctx, r, out)
 	}
 }
 

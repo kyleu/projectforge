@@ -2,6 +2,7 @@
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/action"
   "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/layout"
   "projectforge.dev/projectforge/views/vproject"
@@ -11,12 +12,23 @@
 {% code type Results struct {
   layout.Basic
   T action.Type
+  Cfg util.ValueMap
   Ctxs action.ResultContexts
+  IsBuild bool
 } %}
 
 {% func (p *Results) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    {%= SharedActions(p.T.Title, as, ps) %}
+    {%- code
+      title := p.T.Title
+      if phase := p.Cfg.GetStringOpt("phase"); phase != "" {
+        title += " [" + phase + "]"
+      }
+    -%}
+    {%= SharedActions(title, as, ps) %}
+    {%- if p.IsBuild -%}
+    {%= SharedBuildActions() %}
+    {%- endif -%}
     <div class="mt">
       <ul class="accordion">
         {%- for _, x := range p.Ctxs -%}
@@ -37,6 +49,25 @@
   </div>
 {% endfunc %}
 
+{% func SharedBuildActions() %}
+  <table class="mt">
+    <thead>
+      <tr>
+        <th>Action</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      {%- for _, b := range action.AllBuilds -%}
+      <tr>
+        <td><a href="/run/build?phase={%s b.Key %}" title="{%s b.Description %}"><button>{%s b.Title %}</button></a></td>
+        <td>{%s b.Description %}</td>
+      </tr>
+      {%- endfor -%}
+    </tbody>
+  </table>
+{% endfunc %}
+
 {% func SharedActions(title string, as *app.State, ps *cutil.PageState) %}
   {%= vsearch.Form("/p/search", "", "Search Files", ps) %}
   <h3>All Projects: {%s title %}</h3>
@@ -44,7 +75,6 @@
     {%- for _, t := range action.ProjectTypes -%}
     <a href="/run/{%s t.Key %}" title="{%s t.Description %}"><button>{%s t.Title %}</button></a>
     {%- endfor -%}
-    <a href="/run/deps" title="Manage the dependencies of your project"><button>Dependencies</button></a>
     <a href="/git" title="Git dashboard for all projects"><button>Git</button></a>
   </div>
 {% endfunc %}

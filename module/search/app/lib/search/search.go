@@ -24,13 +24,10 @@ func Search(ctx context.Context, as *app.State, params *Params) (result.Results,
 	}
 	var allProviders []Provider
 	// $PF_SECTION_START(search_functions)$
-	projectFunc := func(ctx context.Context, as *app.State, p *Params, logger *zap.SugaredLogger) (result.Results, error) {
-		return as.Services.Projects.Search(ctx, p.Q, logger)
+	testFunc := func(ctx context.Context, as *app.State, p *Params, logger *zap.SugaredLogger) (result.Results, error) {
+		return result.Results{{URL: "/search?q=test", Title: "Test Result", Icon: "star", Matches: nil}}, nil
 	}
-	moduleFunc := func(ctx context.Context, as *app.State, p *Params, logger *zap.SugaredLogger) (result.Results, error) {
-		return as.Services.Modules.Search(ctx, p.Q, logger)
-	}
-	allProviders = append(allProviders, projectFunc, moduleFunc)
+	allProviders = append(allProviders, testFunc)
 	// $PF_SECTION_END(search_functions)$
 	// $PF_INJECT_START(codegen)$
 	// $PF_INJECT_END(codegen)$

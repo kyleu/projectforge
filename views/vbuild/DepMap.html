@@ -24,34 +24,41 @@
     {%- if len(p.Result) == 0 -%}
     <div class="mt"><em>No dependency conflicts, nice work!</em></div>
     {%- endif -%}
-    <ul class="accordion mt">
-      {%- code
-        depKeys := maps.Keys(p.Result)
-        slices.Sort(depKeys)
-      -%}
-      {%- for _, k := range depKeys -%}
-      {%- code v := p.Result[k] %}
-      <li>
-        <input id="accordion-{%s k %}" type="checkbox" hidden />
-        <label for="accordion-{%s k %}">
-          <div class="right">{%d len(v) %}</div>
-          {%= components.ExpandCollapse(3, ps) %} {%s k %}
-        </label>
-        <div class="bd">
-          <ul>
-            {%- for vers, prjs := range v -%}
-            <li><a href="?key={%s k %}&version={%s vers %}">{%s vers %}</a>:
-              <ul>
-                {%- for _, prj := range prjs -%}
-                <li><a href="/p/{%s prj %}">{%s prj %}</a></li>
-                {%- endfor -%}
-              </ul>
-            </li>
-            {%- endfor -%}
-          </ul>
-        </div>
-      </li>
-      {%- endfor -%}
-    </ul>
+    <div class="mt">
+      <ul class="accordion">
+        {%- code
+          depKeys := maps.Keys(p.Result)
+          slices.Sort(depKeys)
+        -%}
+        {%- for _, k := range depKeys -%}
+        {%- code v := p.Result[k] %}
+        <li>
+          <input id="accordion-{%s k %}" type="checkbox" hidden />
+          <label for="accordion-{%s k %}">
+            <div class="right">{%d len(v) %}</div>
+            {%= components.ExpandCollapse(3, ps) %} {%s k %}
+          </label>
+          <div class="bd">
+            <ul>
+              {%- code
+                vKeys := maps.Keys(v)
+                slices.Sort(vKeys)
+              -%}
+              {%- for i := len(vKeys)-1; i >= 0; i-- -%}
+              {%- code vers := vKeys[i] -%}
+              <li><a href="?phase=deps&key={%u k %}&version={%u vers %}">{%s vers %}</a>:
+                <ul>
+                  {%- for _, prj := range v[vers] -%}
+                  <li><a href="/p/{%s prj %}">{%s prj %}</a></li>
+                  {%- endfor -%}
+                </ul>
+              </li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        </li>
+        {%- endfor -%}
+      </ul>
+    </div>
   </div>
 {% endfunc %}

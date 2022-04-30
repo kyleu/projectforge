@@ -7,75 +7,99 @@ package vproject
 //line views/vproject/List.html:1
 import (
 	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/action"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/views/layout"
 	"projectforge.dev/projectforge/views/vsearch"
 )
 
-//line views/vproject/List.html:9
+//line views/vproject/List.html:10
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vproject/List.html:9
+//line views/vproject/List.html:10
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vproject/List.html:9
+//line views/vproject/List.html:10
 type List struct {
 	layout.Basic
 	Projects project.Projects
 }
 
-//line views/vproject/List.html:14
+//line views/vproject/List.html:15
 func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vproject/List.html:14
+//line views/vproject/List.html:15
 	qw422016.N().S(`
   <div class="card">
     `)
-//line views/vproject/List.html:16
+//line views/vproject/List.html:17
 	vsearch.StreamForm(qw422016, "/p/search", "", "Search All Files", ps)
-//line views/vproject/List.html:16
+//line views/vproject/List.html:17
 	qw422016.N().S(`
     <h3>Actions for all Projects</h3>
-    <p><a href="/run/preview"><button>Preview All</button></a></p>
+    <div class="mt">
+`)
+//line views/vproject/List.html:20
+	for _, t := range action.ProjectTypes {
+//line views/vproject/List.html:20
+		qw422016.N().S(`      <a href="/run/`)
+//line views/vproject/List.html:21
+		qw422016.E().S(t.Key)
+//line views/vproject/List.html:21
+		qw422016.N().S(`" title="`)
+//line views/vproject/List.html:21
+		qw422016.E().S(t.Description)
+//line views/vproject/List.html:21
+		qw422016.N().S(`"><button>`)
+//line views/vproject/List.html:21
+		qw422016.E().S(t.Title)
+//line views/vproject/List.html:21
+		qw422016.N().S(`</button></a>
+`)
+//line views/vproject/List.html:22
+	}
+//line views/vproject/List.html:22
+	qw422016.N().S(`      <a href="/git" title="Git dashboard for all projects"><button>Git</button></a>
+    </div>
   </div>
   `)
-//line views/vproject/List.html:20
+//line views/vproject/List.html:26
 	StreamTable(qw422016, p.Projects, true, as, ps)
-//line views/vproject/List.html:20
+//line views/vproject/List.html:26
 	qw422016.N().S(`
 `)
-//line views/vproject/List.html:21
+//line views/vproject/List.html:27
 }
 
-//line views/vproject/List.html:21
+//line views/vproject/List.html:27
 func (p *List) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vproject/List.html:21
+//line views/vproject/List.html:27
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/List.html:21
+//line views/vproject/List.html:27
 	p.StreamBody(qw422016, as, ps)
-//line views/vproject/List.html:21
+//line views/vproject/List.html:27
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/List.html:21
+//line views/vproject/List.html:27
 }
 
-//line views/vproject/List.html:21
+//line views/vproject/List.html:27
 func (p *List) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vproject/List.html:21
+//line views/vproject/List.html:27
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/List.html:21
+//line views/vproject/List.html:27
 	p.WriteBody(qb422016, as, ps)
-//line views/vproject/List.html:21
+//line views/vproject/List.html:27
 	qs422016 := string(qb422016.B)
-//line views/vproject/List.html:21
+//line views/vproject/List.html:27
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/List.html:21
+//line views/vproject/List.html:27
 	return qs422016
-//line views/vproject/List.html:21
+//line views/vproject/List.html:27
 }

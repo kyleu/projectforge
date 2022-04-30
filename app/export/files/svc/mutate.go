@@ -182,7 +182,7 @@ func serviceSave(m *model.Model, g *golang.File) (*golang.Block, error) {
 		ret.W("\t}")
 	}
 
-	if err := serviceAddCreatedUpdated(m, ret, g, true); err != nil {
+	if err := serviceAddCreatedUpdated(m, ret, g, false); err != nil {
 		return nil, err
 	}
 	if m.IsRevision() {

@@ -1,16 +1,18 @@
 package build
 
 import (
+	"context"
 	"fmt"
 	"path/filepath"
 
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
+
+	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/project"
-	"projectforge.dev/projectforge/app/util"
 )
 
-func Full(prj *project.Project, logger *zap.SugaredLogger) ([]string, error) {
+func Full(ctx context.Context, prj *project.Project, logger *zap.SugaredLogger) ([]string, error) {
 	var logs []string
 	addLog := func(msg string, args ...any) {
 		ret := fmt.Sprintf(msg, args...)
@@ -19,7 +21,7 @@ func Full(prj *project.Project, logger *zap.SugaredLogger) ([]string, error) {
 
 	addLog("building project [%s] in [%s]", prj.Key, prj.Path)
 
-	exitCode, out, err := util.RunProcessSimple("bin/templates.sh", prj.Path)
+	exitCode, out, err := telemetry.RunProcessSimple(ctx, "bin/templates.sh", prj.Path, logger)
 	if err != nil {
 		return logs, err
 	}
@@ -28,7 +30,7 @@ func Full(prj *project.Project, logger *zap.SugaredLogger) ([]string, error) {
 		return logs, errors.Errorf("templates.sh failed with exit code [%d]", exitCode)
 	}
 
-	exitCode, out, err = util.RunProcessSimple("go mod tidy", prj.Path)
+	exitCode, out, err = telemetry.RunProcessSimple(ctx, "go mod tidy", prj.Path, logger)
 	if err != nil {
 		return logs, err
 	}
@@ -37,7 +39,7 @@ func Full(prj *project.Project, logger *zap.SugaredLogger) ([]string, error) {
 		return logs, errors.Errorf("\"go mod tidy\" failed with exit code [%d]", exitCode)
 	}
 
-	exitCode, out, err = util.RunProcessSimple("npm install", filepath.Join(prj.Path, "client"))
+	exitCode, out, err = telemetry.RunProcessSimple(ctx, "npm install", filepath.Join(prj.Path, "client"), logger)
 	if err != nil {
 		return logs, err
 	}
@@ -46,7 +48,7 @@ func Full(prj *project.Project, logger *zap.SugaredLogger) ([]string, error) {
 		return logs, errors.Errorf("npm install failed with exit code [%d]", exitCode)
 	}
 
-	exitCode, out, err = util.RunProcessSimple("bin/build/client.sh", prj.Path)
+	exitCode, out, err = telemetry.RunProcessSimple(ctx, "bin/build/client.sh", prj.Path, logger)
 	if err != nil {
 		return logs, err
 	}
@@ -55,7 +57,7 @@ func Full(prj *project.Project, logger *zap.SugaredLogger) ([]string, error) {
 		return logs, errors.Errorf("client build failed with exit code [%d]", exitCode)
 	}
 
-	exitCode, out, err = util.RunProcessSimple("make build", prj.Path)
+	exitCode, out, err = telemetry.RunProcessSimple(ctx, "make build", prj.Path, logger)
 	if err != nil {
 		return logs, err
 	}

@@ -19,11 +19,11 @@ type Build struct {
 	Title       string `json:"title,omitempty"`
 	Description string `json:"description,omitempty"`
 
-	Run func(pm *PrjAndMods, ret *Result) *Result `json:"-"`
+	Run func(ctx context.Context, pm *PrjAndMods, ret *Result) *Result `json:"-"`
 }
 
-func simpleProc(cmd string, path string, ret *Result) *Result {
-	exitCode, out, err := util.RunProcessSimple(cmd, path)
+func simpleProc(ctx context.Context, cmd string, path string, ret *Result, logger *zap.SugaredLogger) *Result {
+	exitCode, out, err := telemetry.RunProcessSimple(ctx, cmd, path, logger)
 	if err != nil {
 		return ret.WithError(err)
 	}
@@ -35,8 +35,8 @@ func simpleProc(cmd string, path string, ret *Result) *Result {
 }
 
 func simpleBuild(key string, title string, cmd string) *Build {
-	return &Build{Key: key, Title: title, Description: "Runs [" + cmd + "]", Run: func(pm *PrjAndMods, ret *Result) *Result {
-		return simpleProc(cmd, pm.Prj.Path, ret)
+	return &Build{Key: key, Title: title, Description: "Runs [" + cmd + "]", Run: func(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
+		return simpleProc(ctx, cmd, pm.Prj.Path, ret, pm.Logger)
 	}}
 }
 
@@ -62,12 +62,12 @@ var AllBuilds = Builds{
 	simpleBuild("tidy", "Tidy", "go mod tidy"),
 	simpleBuild("format", "Format", "bin/format.sh"),
 	simpleBuild("lint", "Lint", "bin/check.sh"),
-	{Key: "clientInstall", Title: "Client Install", Description: ciDesc, Run: func(pm *PrjAndMods, ret *Result) *Result {
-		return simpleProc("npm install", filepath.Join(pm.Prj.Path, "client"), ret)
+	{Key: "clientInstall", Title: "Client Install", Description: ciDesc, Run: func(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
+		return simpleProc(ctx, "npm install", filepath.Join(pm.Prj.Path, "client"), ret, pm.Logger)
 	}},
 	simpleBuild("clientBuild", "Client Build", "bin/build/client.sh"),
-	{Key: "test", Title: "Test", Description: "Does a test", Run: func(pm *PrjAndMods, ret *Result) *Result {
-		return simpleProc("ls", pm.Prj.Path, ret)
+	{Key: "test", Title: "Test", Description: "Does a test", Run: func(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
+		return simpleProc(ctx, "ls", pm.Prj.Path, ret, pm.Logger)
 	}},
 }
 
@@ -94,23 +94,23 @@ func onBuild(ctx context.Context, pm *PrjAndMods) *Result {
 		return ret.WithError(errors.Errorf("invalid phase [%s]", phaseStr))
 	}
 	timer := util.TimerStart()
-	ret = phase.Run(pm, ret)
+	ret = phase.Run(ctx, pm, ret)
 	ret.Duration = timer.End()
 	return ret
 }
 
-func onDeps(pm *PrjAndMods, ret *Result) *Result {
+func onDeps(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
 	if up, _ := ret.Args.GetString("upgrade", true); up != "" {
 		o, _ := ret.Args.GetString("old", true)
 		n, _ := ret.Args.GetString("new", true)
-		err := build.OnDepsUpgrade(pm.Prj, up, o, n, pm.PSvc, pm.Logger)
+		err := build.OnDepsUpgrade(ctx, pm.Prj, up, o, n, pm.PSvc, pm.Logger)
 		if err != nil {
 			return ret.WithError(err)
 		}
 	}
 	upd, _ := ret.Args.GetString("upd", true)
 	showAll, _ := pm.Cfg.GetBool("showAll", true)
-	deps, err := build.LoadDeps(pm.Prj.Key, pm.Prj.Path, upd != "false", pm.PSvc.GetFilesystem(pm.Prj), showAll)
+	deps, err := build.LoadDeps(ctx, pm.Prj.Key, pm.Prj.Path, upd != "false", pm.PSvc.GetFilesystem(pm.Prj), showAll, pm.Logger)
 	ret.Data = deps
 	if err != nil {
 		return ret.WithError(err)
@@ -118,7 +118,7 @@ func onDeps(pm *PrjAndMods, ret *Result) *Result {
 	return ret
 }
 
-func onImports(pm *PrjAndMods, r *Result) *Result {
+func onImports(ctx context.Context, pm *PrjAndMods, r *Result) *Result {
 	fixStr, _ := r.Args.GetString("fix", true)
 	fix := fixStr == "true"
 	fileStr, _ := r.Args.GetString("file", true)
@@ -132,7 +132,7 @@ func onImports(pm *PrjAndMods, r *Result) *Result {
 	return r
 }
 
-func onCleanup(pm *PrjAndMods, r *Result) *Result {
+func onCleanup(ctx context.Context, pm *PrjAndMods, r *Result) *Result {
 	t := util.TimerStart()
 	logs, diffs, err := build.Cleanup(pm.PSvc.GetFilesystem(pm.Prj))
 	r.Modules = append(r.Modules, &module.Result{Keys: []string{"cleanup"}, Status: "OK", Diffs: diffs, Duration: t.End()})
@@ -143,8 +143,8 @@ func onCleanup(pm *PrjAndMods, r *Result) *Result {
 	return r
 }
 
-func fullBuild(prj *project.Project, r *Result, logger *zap.SugaredLogger) *Result {
-	logs, err := build.Full(prj, logger)
+func fullBuild(ctx context.Context, prj *project.Project, r *Result, logger *zap.SugaredLogger) *Result {
+	logs, err := build.Full(ctx, prj, logger)
 	for _, l := range logs {
 		r.AddLog(l)
 	}

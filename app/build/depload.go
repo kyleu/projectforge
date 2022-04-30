@@ -1,13 +1,16 @@
 package build
 
 import (
+	"context"
 	"strings"
 
 	"github.com/pkg/errors"
+	"go.uber.org/zap"
 	"golang.org/x/exp/slices"
-	"projectforge.dev/projectforge/app/lib/filesystem"
-	"projectforge.dev/projectforge/app/project"
 
+	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/lib/telemetry"
+	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )
 
@@ -37,7 +40,9 @@ func LoadDepsEasyMode(key string, fs filesystem.FileLoader) (Dependencies, error
 	return ret, nil
 }
 
-func LoadDeps(key string, path string, includeUpdates bool, fs filesystem.FileLoader, showAll bool) (Dependencies, error) {
+func LoadDeps(
+	ctx context.Context, key string, path string, includeUpdates bool, fs filesystem.FileLoader, showAll bool, logger *zap.SugaredLogger,
+) (Dependencies, error) {
 	actual, err := LoadDepsEasyMode(key, fs)
 	if err != nil {
 		return nil, err
@@ -47,7 +52,7 @@ func LoadDeps(key string, path string, includeUpdates bool, fs filesystem.FileLo
 	if includeUpdates {
 		cmd = "go list -m -u all"
 	}
-	_, out, err := util.RunProcessSimple(cmd, path)
+	_, out, err := telemetry.RunProcessSimple(ctx, cmd, path, logger)
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +82,7 @@ func LoadDeps(key string, path string, includeUpdates bool, fs filesystem.FileLo
 			ret = append(ret, d)
 		}
 	}
-	err = loadReferences(path, ret)
+	err = loadReferences(ctx, path, ret, logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to load reference graph")
 	}
@@ -85,8 +90,8 @@ func LoadDeps(key string, path string, includeUpdates bool, fs filesystem.FileLo
 	return ret, nil
 }
 
-func loadReferences(path string, deps Dependencies) error {
-	_, out, err := util.RunProcessSimple("go mod graph", path)
+func loadReferences(ctx context.Context, path string, deps Dependencies, logger *zap.SugaredLogger) error {
+	_, out, err := telemetry.RunProcessSimple(ctx, "go mod graph", path, logger)
 	if err != nil {
 		return err
 	}

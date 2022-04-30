@@ -7,6 +7,8 @@ set -euo pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $dir/..
 
+git fetch --tags
+
 TGT=${1-none}
 if [[ $TGT == "none" ]]; then
   TGT=$(git describe --tags | sed -e 's/v//g')

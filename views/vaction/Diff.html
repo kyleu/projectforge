@@ -17,7 +17,7 @@
     </div>
     {%- case "build" -%}
     <div class="mt">
-      <a href="/b/{%s prjKey %}/imports?fix=true" title="Fix all imports for incorrect files"><button>Fix All</button></a>
+      <a href="/run/{%s prjKey %}/build?phase=imports&fix=true" title="Fix all imports for incorrect files"><button>Fix All</button></a>
     </div>
     {%- endswitch -%}
     <table>
@@ -49,7 +49,7 @@
               <button type="submit" name="to" value="project" title="Overwrite project changes with module version">-&gt;</button>
             </form>
             {%- case "build" -%}
-            <form action="/b/{%s prjKey %}/imports" method="get">
+            <form action="/run/{%s prjKey %}/build" method="get">
               <input type="hidden" name="fix" value="true" />
               <input type="hidden" name="phase" value="imports" />
               <input type="hidden" name="file" value="{%s d.Path %}" />

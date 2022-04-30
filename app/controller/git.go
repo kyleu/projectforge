@@ -38,7 +38,7 @@ func GitAction(rc *fasthttp.RequestCtx) {
 		case git.ActionMagic.Key:
 			result, err = as.Services.Git.Magic(prj)
 		case git.ActionFetch.Key:
-			result, err = as.Services.Git.Fetch(prj)
+			result, err = as.Services.Git.Fetch(ps.Context, prj, ps.Logger)
 		case git.ActionCommit.Key:
 			argRes := cutil.CollectArgs(rc, gitCommitArgs)
 			if len(argRes.Missing) > 0 {
@@ -46,7 +46,7 @@ func GitAction(rc *fasthttp.RequestCtx) {
 				ps.Data = argRes
 				return render(rc, as, &verror.Args{URL: url, Directions: "Enter your commit message", ArgRes: argRes}, ps, "projects", prj.Key, "Git")
 			}
-			result, err = as.Services.Git.Commit(prj, argRes.Values["message"])
+			result, err = as.Services.Git.Commit(ps.Context, prj, argRes.Values["message"], ps.Logger)
 		case git.ActionBranch.Key:
 			argRes := cutil.CollectArgs(rc, gitBranchArgs)
 			if len(argRes.Missing) > 0 {
@@ -54,7 +54,7 @@ func GitAction(rc *fasthttp.RequestCtx) {
 				ps.Data = argRes
 				return render(rc, as, &verror.Args{URL: url, Directions: "Enter your branch name", ArgRes: argRes}, ps, "projects", prj.Key, "Git")
 			}
-			result, err = as.Services.Git.Commit(prj, argRes.Values["message"])
+			result, err = as.Services.Git.Commit(ps.Context, prj, argRes.Values["message"], ps.Logger)
 		default:
 			err = errors.Errorf("unhandled action [%s]", a)
 		}

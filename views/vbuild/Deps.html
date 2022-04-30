@@ -31,7 +31,7 @@
   {%- endif -%}
 
   <div class="card">
-    <div class="right"><a href="?upgrade=all" onclick="return confirm('You sure about this?')"><button>Upgrade All</button></a></div>
+    <div class="right"><a href="?phase=deps&upgrade=all" onclick="return confirm('You sure about this?')"><button>Upgrade All</button></a></div>
     <h3>Dependencies</h3>
     {%- if len(p.Dependencies) == 0 -%}
       <em>no dependencies, somehow</em>
@@ -65,7 +65,7 @@
           <td>{%d len(d.References) %}</td>
           <td>{%s d.Version %}</td>
           <td>{%s d.Available %}</td>
-          <td>{%- if d.Available != "" -%}<a href="?upgrade={%s d.Key %}&old={%s d.Version %}&new={%s d.Available %}"><button>Upgrade</button></a>{%- endif -%}</td>
+          <td>{%- if d.Available != "" -%}<a href="?phase=deps&upgrade={%u d.Key %}&old={%u d.Version %}&new={%u d.Available %}"><button>Upgrade</button></a>{%- endif -%}</td>
         </tr>
         {%- endfor -%}
         </tbody>

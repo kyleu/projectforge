@@ -113,44 +113,39 @@ func StreamSummary(qw422016 *qt422016.Writer, prj *project.Project, gitResult *g
 	qw422016.E().S(prj.Key)
 //line views/vproject/Summary.html:30
 	qw422016.N().S(`" title="Add new SVGs and set the app icon"><button>SVG</button></a>
-      <a href="/b/`)
-//line views/vproject/Summary.html:31
-	qw422016.E().S(prj.Key)
-//line views/vproject/Summary.html:31
-	qw422016.N().S(`" title="Build this project"><button>Build</button></a>
       <a href="/git/`)
-//line views/vproject/Summary.html:32
+//line views/vproject/Summary.html:31
 	qw422016.E().S(prj.Key)
-//line views/vproject/Summary.html:32
+//line views/vproject/Summary.html:31
 	qw422016.N().S(`" title="Source control status for this project"><button>Git</button></a>
     </div>
   </div>
 `)
-//line views/vproject/Summary.html:35
+//line views/vproject/Summary.html:34
 }
 
-//line views/vproject/Summary.html:35
+//line views/vproject/Summary.html:34
 func WriteSummary(qq422016 qtio422016.Writer, prj *project.Project, gitResult *git.Result, args util.ValueMap, act *action.Type, ps *cutil.PageState, path ...string) {
-//line views/vproject/Summary.html:35
+//line views/vproject/Summary.html:34
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/Summary.html:35
+//line views/vproject/Summary.html:34
 	StreamSummary(qw422016, prj, gitResult, args, act, ps, path...)
-//line views/vproject/Summary.html:35
+//line views/vproject/Summary.html:34
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/Summary.html:35
+//line views/vproject/Summary.html:34
 }
 
-//line views/vproject/Summary.html:35
+//line views/vproject/Summary.html:34
 func Summary(prj *project.Project, gitResult *git.Result, args util.ValueMap, act *action.Type, ps *cutil.PageState, path ...string) string {
-//line views/vproject/Summary.html:35
+//line views/vproject/Summary.html:34
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/Summary.html:35
+//line views/vproject/Summary.html:34
 	WriteSummary(qb422016, prj, gitResult, args, act, ps, path...)
-//line views/vproject/Summary.html:35
+//line views/vproject/Summary.html:34
 	qs422016 := string(qb422016.B)
-//line views/vproject/Summary.html:35
+//line views/vproject/Summary.html:34
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/Summary.html:35
+//line views/vproject/Summary.html:34
 	return qs422016
-//line views/vproject/Summary.html:35
+//line views/vproject/Summary.html:34
 }

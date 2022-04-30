@@ -9,8 +9,8 @@ import (
 )
 
 type (
-	CheckFn func(r *Result, logger *zap.SugaredLogger) *Result
-	SolveFn func(r *Result, logger *zap.SugaredLogger) *Result
+	CheckFn func(ctx context.Context, r *Result, logger *zap.SugaredLogger) *Result
+	SolveFn func(ctx context.Context, r *Result, logger *zap.SugaredLogger) *Result
 )
 
 type Check struct {
@@ -31,9 +31,9 @@ func (c *Check) Check(ctx context.Context, logger *zap.SugaredLogger) *Result {
 
 	r := NewResult(c, c.Key, c.Title, c.Summary)
 	timer := util.TimerStart()
-	r = c.Fn(r, logger)
+	r = c.Fn(ctx, r, logger)
 	r.Duration = timer.End()
-	r = c.Solve(r, logger)
+	r = c.Solve(ctx, r, logger)
 	return r
 }
 

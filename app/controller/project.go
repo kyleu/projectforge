@@ -38,6 +38,13 @@ func ProjectList(rc *fasthttp.RequestCtx) {
 			}
 			_, _ = rc.WriteString(strings.Join(msgs, "\n"))
 			return "", nil
+		case "versions":
+			msgs := make([]string, 0, len(prjs))
+			for _, p := range prjs {
+				msgs = append(msgs, fmt.Sprintf("%s: %s", p.Key, p.Version))
+			}
+			_, _ = rc.WriteString(strings.Join(msgs, "\n"))
+			return "", nil
 		default:
 			return render(rc, as, &vproject.List{Projects: prjs}, ps, "projects")
 		}

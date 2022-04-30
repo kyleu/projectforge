@@ -1,6 +1,7 @@
 package svg
 
 import (
+	"context"
 	"fmt"
 	"path/filepath"
 
@@ -10,12 +11,12 @@ import (
 	"projectforge.dev/projectforge/app/project"
 )
 
-func macOSAssets(prj *project.Project, orig string, fs filesystem.FileLoader, logger *zap.SugaredLogger) error {
+func macOSAssets(ctx context.Context, prj *project.Project, orig string, fs filesystem.FileLoader, logger *zap.SugaredLogger) error {
 	if prj.Build == nil || (!prj.Build.Desktop) {
 		return nil
 	}
 	macOSResize := func(size int, fn string, p string) {
-		err := proc(fmt.Sprintf(pngMsg, size, size, fn), p)
+		err := proc(ctx, fmt.Sprintf(pngMsg, size, size, fn), p, logger)
 		if err != nil {
 			logger.Warnf("error processing icon [%s]: %+v", fn, err)
 		}
@@ -41,7 +42,7 @@ func macOSAssets(prj *project.Project, orig string, fs filesystem.FileLoader, lo
 	if err != nil {
 		return errors.Wrap(err, "unable to remove temporary macOS [logo.svg]")
 	}
-	err = proc("iconutil --convert icns icons.iconset", filepath.Join(fs.Root(), "tools", "desktop", "template", "macos"))
+	err = proc(ctx, "iconutil --convert icns icons.iconset", filepath.Join(fs.Root(), "tools", "desktop", "template", "macos"), logger)
 	if err != nil {
 		return errors.Wrap(err, "unable to remove temporary macOS [logo.svg]")
 	}

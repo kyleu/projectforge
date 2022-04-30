@@ -48,11 +48,11 @@ func streamrenderDiffs(qw422016 *qt422016.Writer, prjKey string, act action.Type
 //line views/vaction/Diff.html:18
 	case "build":
 //line views/vaction/Diff.html:18
-		qw422016.N().S(`<div class="mt"><a href="/b/`)
+		qw422016.N().S(`<div class="mt"><a href="/run/`)
 //line views/vaction/Diff.html:20
 		qw422016.E().S(prjKey)
 //line views/vaction/Diff.html:20
-		qw422016.N().S(`/imports?fix=true" title="Fix all imports for incorrect files"><button>Fix All</button></a></div>`)
+		qw422016.N().S(`/build?phase=imports&fix=true" title="Fix all imports for incorrect files"><button>Fix All</button></a></div>`)
 //line views/vaction/Diff.html:22
 	}
 //line views/vaction/Diff.html:22
@@ -114,11 +114,11 @@ func streamrenderDiffs(qw422016 *qt422016.Writer, prjKey string, act action.Type
 //line views/vaction/Diff.html:51
 		case "build":
 //line views/vaction/Diff.html:51
-			qw422016.N().S(`<form action="/b/`)
+			qw422016.N().S(`<form action="/run/`)
 //line views/vaction/Diff.html:52
 			qw422016.E().S(prjKey)
 //line views/vaction/Diff.html:52
-			qw422016.N().S(`/imports" method="get"><input type="hidden" name="fix" value="true" /><input type="hidden" name="phase" value="imports" /><input type="hidden" name="file" value="`)
+			qw422016.N().S(`/build" method="get"><input type="hidden" name="fix" value="true" /><input type="hidden" name="phase" value="imports" /><input type="hidden" name="file" value="`)
 //line views/vaction/Diff.html:55
 			qw422016.E().S(d.Path)
 //line views/vaction/Diff.html:55

@@ -45,11 +45,25 @@ func diffs(ctx context.Context, pm *PrjAndMods) (file.Files, diff.Diffs, error) 
 		}
 	}
 
-	portOffsets := map[string]int{}
 	var configVars util.KeyTypeDescs
+	portOffsets := map[string]int{}
+
 	for _, m := range pm.Prj.Modules {
 		mod := pm.Mods.Get(m)
-		configVars = append(configVars, mod.ConfigVars...)
+		for _, src := range mod.ConfigVars {
+			var hit bool
+			for _, tgt := range configVars {
+				if src.Key == tgt.Key {
+					hit = true
+					break
+				}
+			}
+			if !hit {
+				configVars = append(configVars, src)
+			}
+		}
+		configVars.Sort()
+
 		for k, v := range mod.PortOffsets {
 			portOffsets[k] = v
 		}

@@ -50,6 +50,6 @@ func CheckAll(ctx context.Context, modules []string, logger *zap.SugaredLogger) 
 	return ret
 }
 
-func noop(r *doctor.Result, out string) *doctor.Result {
+func noop(ctx context.Context, r *doctor.Result, out string) *doctor.Result {
 	return r
 }

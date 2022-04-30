@@ -2,6 +2,7 @@
 package util
 
 import (
+	"fmt"
 	"strings"
 
 	"golang.org/x/exp/slices"
@@ -10,6 +11,28 @@ import (
 type KeyValInt struct {
 	Key   string `json:"key" db:"key"`
 	Count int    `json:"val" db:"val"`
+}
+
+func (k KeyValInt) String() string {
+	return fmt.Sprintf("%s: %d", k.Key, k.Count)
+}
+
+type KeyValInts []*KeyValInt
+
+func (k KeyValInts) ToMap() map[string]int {
+	ret := make(map[string]int, len(k))
+	for _, x := range k {
+		ret[x.Key] = x.Count
+	}
+	return ret
+}
+
+func (k KeyValInts) String() string {
+	var ret []string
+	for _, x := range k {
+		ret = append(ret, x.String())
+	}
+	return strings.Join(ret, ", ")
 }
 
 type KeyTypeDesc struct {

@@ -1,22 +1,24 @@
 package build
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )
 
 const gomod = "go.mod"
 
-func OnDepsUpgrade(prj *project.Project, up string, o string, n string, pSvc *project.Service, logger *zap.SugaredLogger) error {
+func OnDepsUpgrade(ctx context.Context, prj *project.Project, up string, o string, n string, pSvc *project.Service, logger *zap.SugaredLogger) error {
 	var deps Dependencies
 	if up == "all" {
-		curr, err := LoadDeps(prj.Key, prj.Path, true, pSvc.GetFilesystem(prj), false)
+		curr, err := LoadDeps(ctx, prj.Key, prj.Path, true, pSvc.GetFilesystem(prj), false, logger)
 		if err != nil {
 			return err
 		}
@@ -35,24 +37,24 @@ func OnDepsUpgrade(prj *project.Project, up string, o string, n string, pSvc *pr
 		}
 		deps = Dependencies{{Key: up, Version: o, Available: n}}
 	}
-	err := upgradeDeps(prj, deps, pSvc, logger)
+	err := upgradeDeps(ctx, prj, deps, pSvc, logger)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func upgradeDeps(prj *project.Project, deps Dependencies, pSvc *project.Service, logger *zap.SugaredLogger) error {
+func upgradeDeps(ctx context.Context, prj *project.Project, deps Dependencies, pSvc *project.Service, logger *zap.SugaredLogger) error {
 	logger.Infof("upgrading [%d] dependencies for [%s]", len(deps), prj.Key)
 	fs := pSvc.GetFilesystem(prj)
-	err := bumpGoMod(prj, fs, deps, logger)
+	err := bumpGoMod(ctx, prj, fs, deps, logger)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func bumpGoMod(prj *project.Project, fs filesystem.FileLoader, deps Dependencies, logger *zap.SugaredLogger) error {
+func bumpGoMod(ctx context.Context, prj *project.Project, fs filesystem.FileLoader, deps Dependencies, logger *zap.SugaredLogger) error {
 	bts, err := fs.ReadFile(gomod)
 	if err != nil {
 		return errors.Wrap(err, "unable to read [go.mod]")
@@ -85,14 +87,14 @@ func bumpGoMod(prj *project.Project, fs filesystem.FileLoader, deps Dependencies
 		return errors.Wrap(err, "unable to write [go.mod]")
 	}
 
-	_, _, err = util.RunProcessSimple("go mod tidy", prj.Path)
+	_, _, err = telemetry.RunProcessSimple(ctx, "go mod tidy", prj.Path, logger)
 	if err != nil {
 		return errors.Wrap(err, "unable to run [go mod tidy]")
 	}
 	return nil
 }
 
-func SetDepsMap(projects project.Projects, dep *Dependency, pSvc *project.Service, logger *zap.SugaredLogger) (string, error) {
+func SetDepsMap(ctx context.Context, projects project.Projects, dep *Dependency, pSvc *project.Service, logger *zap.SugaredLogger) (string, error) {
 	logger.Infof("upgrading dependency [%s] to [%s]", dep.Key, dep.Version)
 	var affected int
 
@@ -135,7 +137,7 @@ func SetDepsMap(projects project.Projects, dep *Dependency, pSvc *project.Servic
 			if err != nil {
 				return nil, errors.Wrap(err, "unable to write [go.mod]")
 			}
-			_, _, err = util.RunProcessSimple("go mod tidy", item.Path)
+			_, _, err = telemetry.RunProcessSimple(ctx, "go mod tidy", item.Path, logger)
 			if err != nil {
 				return nil, errors.Wrapf(err, "unable to run [go mod tidy] in path [%s]", item.Path)
 			}

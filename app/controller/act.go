@@ -2,6 +2,7 @@
 package controller
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/pkg/errors"
@@ -87,7 +88,7 @@ func safeRun(f func(as *app.State, ps *cutil.PageState) (string, error), as *app
 			if recoverErr, ok := rec.(error); ok {
 				e = errors.Wrap(recoverErr, "panic")
 			} else {
-				e = errors.Errorf("controller encountered panic recovery of type [%T]", rec)
+				e = errors.Errorf("controller encountered panic recovery of type [%T]: %s", rec, fmt.Sprint(rec))
 			}
 		}
 	}()

@@ -22,6 +22,7 @@ var (
 	ImpJSON       = golang.NewImport(golang.ImportTypeInternal, "encoding/json")
 	ImpLayout     = AppImport("views/layout")
 	ImpLogging    = golang.NewImport(golang.ImportTypeExternal, "go.uber.org/zap")
+	ImpSlices     = golang.NewImport(golang.ImportTypeExternal, "golang.org/x/exp/slices")
 	ImpSQLx       = golang.NewImport(golang.ImportTypeExternal, "github.com/jmoiron/sqlx")
 	ImpStrconv    = golang.NewImport(golang.ImportTypeInternal, "strconv")
 	ImpStrings    = golang.NewImport(golang.ImportTypeInternal, "strings")

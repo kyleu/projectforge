@@ -66,123 +66,132 @@ func (p *DepMap) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vbuild/DepMap.html:26
 	}
 //line views/vbuild/DepMap.html:26
-	qw422016.N().S(`    <ul class="accordion mt">
+	qw422016.N().S(`    <div class="mt">
+      <ul class="accordion">
 `)
-//line views/vbuild/DepMap.html:29
+//line views/vbuild/DepMap.html:30
 	depKeys := maps.Keys(p.Result)
 	slices.Sort(depKeys)
 
-//line views/vbuild/DepMap.html:32
-	for _, k := range depKeys {
 //line views/vbuild/DepMap.html:33
+	for _, k := range depKeys {
+//line views/vbuild/DepMap.html:34
 		v := p.Result[k]
 
-//line views/vbuild/DepMap.html:33
+//line views/vbuild/DepMap.html:34
 		qw422016.N().S(`
-      <li>
-        <input id="accordion-`)
-//line views/vbuild/DepMap.html:35
+        <li>
+          <input id="accordion-`)
+//line views/vbuild/DepMap.html:36
 		qw422016.E().S(k)
-//line views/vbuild/DepMap.html:35
+//line views/vbuild/DepMap.html:36
 		qw422016.N().S(`" type="checkbox" hidden />
-        <label for="accordion-`)
-//line views/vbuild/DepMap.html:36
+          <label for="accordion-`)
+//line views/vbuild/DepMap.html:37
 		qw422016.E().S(k)
-//line views/vbuild/DepMap.html:36
+//line views/vbuild/DepMap.html:37
 		qw422016.N().S(`">
-          <div class="right">`)
-//line views/vbuild/DepMap.html:37
+            <div class="right">`)
+//line views/vbuild/DepMap.html:38
 		qw422016.N().D(len(v))
-//line views/vbuild/DepMap.html:37
+//line views/vbuild/DepMap.html:38
 		qw422016.N().S(`</div>
-          `)
-//line views/vbuild/DepMap.html:38
+            `)
+//line views/vbuild/DepMap.html:39
 		components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vbuild/DepMap.html:38
+//line views/vbuild/DepMap.html:39
 		qw422016.N().S(` `)
-//line views/vbuild/DepMap.html:38
+//line views/vbuild/DepMap.html:39
 		qw422016.E().S(k)
-//line views/vbuild/DepMap.html:38
+//line views/vbuild/DepMap.html:39
 		qw422016.N().S(`
-        </label>
-        <div class="bd">
-          <ul>
+          </label>
+          <div class="bd">
+            <ul>
 `)
-//line views/vbuild/DepMap.html:42
-		for vers, prjs := range v {
-//line views/vbuild/DepMap.html:42
-			qw422016.N().S(`            <li><a href="?key=`)
-//line views/vbuild/DepMap.html:43
-			qw422016.E().S(k)
-//line views/vbuild/DepMap.html:43
+//line views/vbuild/DepMap.html:44
+		vKeys := maps.Keys(v)
+		slices.Sort(vKeys)
+
+//line views/vbuild/DepMap.html:47
+		for i := len(vKeys) - 1; i >= 0; i-- {
+//line views/vbuild/DepMap.html:48
+			vers := vKeys[i]
+
+//line views/vbuild/DepMap.html:48
+			qw422016.N().S(`              <li><a href="?phase=deps&key=`)
+//line views/vbuild/DepMap.html:49
+			qw422016.N().U(k)
+//line views/vbuild/DepMap.html:49
 			qw422016.N().S(`&version=`)
-//line views/vbuild/DepMap.html:43
-			qw422016.E().S(vers)
-//line views/vbuild/DepMap.html:43
+//line views/vbuild/DepMap.html:49
+			qw422016.N().U(vers)
+//line views/vbuild/DepMap.html:49
 			qw422016.N().S(`">`)
-//line views/vbuild/DepMap.html:43
+//line views/vbuild/DepMap.html:49
 			qw422016.E().S(vers)
-//line views/vbuild/DepMap.html:43
+//line views/vbuild/DepMap.html:49
 			qw422016.N().S(`</a>:
-              <ul>
+                <ul>
 `)
-//line views/vbuild/DepMap.html:45
-			for _, prj := range prjs {
-//line views/vbuild/DepMap.html:45
-				qw422016.N().S(`                <li><a href="/p/`)
-//line views/vbuild/DepMap.html:46
+//line views/vbuild/DepMap.html:51
+			for _, prj := range v[vers] {
+//line views/vbuild/DepMap.html:51
+				qw422016.N().S(`                  <li><a href="/p/`)
+//line views/vbuild/DepMap.html:52
 				qw422016.E().S(prj)
-//line views/vbuild/DepMap.html:46
+//line views/vbuild/DepMap.html:52
 				qw422016.N().S(`">`)
-//line views/vbuild/DepMap.html:46
+//line views/vbuild/DepMap.html:52
 				qw422016.E().S(prj)
-//line views/vbuild/DepMap.html:46
+//line views/vbuild/DepMap.html:52
 				qw422016.N().S(`</a></li>
 `)
-//line views/vbuild/DepMap.html:47
+//line views/vbuild/DepMap.html:53
 			}
-//line views/vbuild/DepMap.html:47
-			qw422016.N().S(`              </ul>
-            </li>
+//line views/vbuild/DepMap.html:53
+			qw422016.N().S(`                </ul>
+              </li>
 `)
-//line views/vbuild/DepMap.html:50
+//line views/vbuild/DepMap.html:56
 		}
-//line views/vbuild/DepMap.html:50
-		qw422016.N().S(`          </ul>
-        </div>
-      </li>
+//line views/vbuild/DepMap.html:56
+		qw422016.N().S(`            </ul>
+          </div>
+        </li>
 `)
-//line views/vbuild/DepMap.html:54
+//line views/vbuild/DepMap.html:60
 	}
-//line views/vbuild/DepMap.html:54
-	qw422016.N().S(`    </ul>
+//line views/vbuild/DepMap.html:60
+	qw422016.N().S(`      </ul>
+    </div>
   </div>
 `)
-//line views/vbuild/DepMap.html:57
+//line views/vbuild/DepMap.html:64
 }
 
-//line views/vbuild/DepMap.html:57
+//line views/vbuild/DepMap.html:64
 func (p *DepMap) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vbuild/DepMap.html:57
+//line views/vbuild/DepMap.html:64
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vbuild/DepMap.html:57
+//line views/vbuild/DepMap.html:64
 	p.StreamBody(qw422016, as, ps)
-//line views/vbuild/DepMap.html:57
+//line views/vbuild/DepMap.html:64
 	qt422016.ReleaseWriter(qw422016)
-//line views/vbuild/DepMap.html:57
+//line views/vbuild/DepMap.html:64
 }
 
-//line views/vbuild/DepMap.html:57
+//line views/vbuild/DepMap.html:64
 func (p *DepMap) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vbuild/DepMap.html:57
+//line views/vbuild/DepMap.html:64
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vbuild/DepMap.html:57
+//line views/vbuild/DepMap.html:64
 	p.WriteBody(qb422016, as, ps)
-//line views/vbuild/DepMap.html:57
+//line views/vbuild/DepMap.html:64
 	qs422016 := string(qb422016.B)
-//line views/vbuild/DepMap.html:57
+//line views/vbuild/DepMap.html:64
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vbuild/DepMap.html:57
+//line views/vbuild/DepMap.html:64
 	return qs422016
-//line views/vbuild/DepMap.html:57
+//line views/vbuild/DepMap.html:64
 }

@@ -17,5 +17,8 @@ if [ -f ".env" ]; then
 	export $(cat .env | grep -v "#" | xargs)
 fi
 
+./bin/templates.sh
+go mod tidy
+
 ulimit -n 2048
 air

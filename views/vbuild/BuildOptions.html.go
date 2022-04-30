@@ -41,11 +41,11 @@ func StreamBuildOptions(qw422016 *qt422016.Writer, key string) {
 	for _, b := range action.AllBuilds {
 //line views/vbuild/BuildOptions.html:16
 		qw422016.N().S(`        <tr>
-          <td><a href="/b/`)
+          <td><a href="/run/`)
 //line views/vbuild/BuildOptions.html:18
 		qw422016.E().S(key)
 //line views/vbuild/BuildOptions.html:18
-		qw422016.N().S(`/`)
+		qw422016.N().S(`/build?phase=`)
 //line views/vbuild/BuildOptions.html:18
 		qw422016.E().S(b.Key)
 //line views/vbuild/BuildOptions.html:18

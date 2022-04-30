@@ -23,7 +23,7 @@ func Model(m *model.Model, args *model.Args, addHeader bool) (*file.File, error)
 	if len(m.PKs()) > 1 {
 		g.AddImport(helper.ImpFmt)
 	}
-	g.AddImport(helper.ImpAppUtil)
+	g.AddImport(helper.ImpAppUtil, helper.ImpSlices)
 	for _, col := range m.Columns {
 		if col.Type.Key() == types.KeyReference {
 			ref, err := model.AsRef(col.Type)
@@ -47,7 +47,7 @@ func Model(m *model.Model, args *model.Args, addHeader bool) (*file.File, error)
 		hc := m.HistoryColumns(false)
 		g.AddBlocks(modelToData(m, hc.Const, "Core"), modelToData(m, hc.Var, hc.Col.Proper()))
 	}
-	g.AddBlocks(modelArray(m))
+	g.AddBlocks(modelArray(m), modelArrayClone(m))
 	return g.Render(addHeader)
 }
 
@@ -145,5 +145,13 @@ func modelToData(m *model.Model, cols model.Columns, suffix string) *golang.Bloc
 func modelArray(m *model.Model) *golang.Block {
 	ret := golang.NewBlock(m.Proper()+"Array", "type")
 	ret.W("type %s []*%s", m.ProperPlural(), m.Proper())
+	return ret
+}
+
+func modelArrayClone(m *model.Model) *golang.Block {
+	ret := golang.NewBlock(m.Proper()+"ArrayClone", "type")
+	ret.W("func (%s %s) Clone() %s {", m.FirstLetter(), m.ProperPlural(), m.ProperPlural())
+	ret.W("\treturn slices.Clone(%s)", m.FirstLetter())
+	ret.W("}")
 	return ret
 }

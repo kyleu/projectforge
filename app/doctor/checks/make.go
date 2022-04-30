@@ -1,6 +1,8 @@
 package checks
 
 import (
+	"context"
+
 	"go.uber.org/zap"
 	"projectforge.dev/projectforge/app/doctor"
 )
@@ -16,7 +18,7 @@ var mke = &doctor.Check{
 	Solve:   solveMake,
 }
 
-func solveMake(r *doctor.Result, logger *zap.SugaredLogger) *doctor.Result {
+func solveMake(ctx context.Context, r *doctor.Result, logger *zap.SugaredLogger) *doctor.Result {
 	if r.Errors.Find("missing") != nil || r.Errors.Find("exitcode") != nil {
 		r.AddSolution("You should really have make installed")
 	}

@@ -1,15 +1,18 @@
 package git
 
 import (
-	"github.com/pkg/errors"
+	"context"
 
-	"projectforge.dev/projectforge/app/util"
+	"github.com/pkg/errors"
+	"go.uber.org/zap"
+
+	"projectforge.dev/projectforge/app/lib/telemetry"
 )
 
 var errNoRepo = errors.New("not a git repository")
 
-func gitCmd(args string, path string) (string, error) {
-	exit, out, err := util.RunProcessSimple("git "+args, path)
+func gitCmd(ctx context.Context, args string, path string, logger *zap.SugaredLogger) (string, error) {
+	exit, out, err := telemetry.RunProcessSimple(ctx, "git "+args, path, logger)
 	if err != nil {
 		return "", errors.Wrap(err, "can't read git status for path ["+path+"]")
 	}

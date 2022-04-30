@@ -6,12 +6,12 @@ import (
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 	"golang.org/x/exp/slices"
-	"projectforge.dev/projectforge/app/util"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/git"
 	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/vgit"
 )
 
@@ -70,7 +70,7 @@ func gitFetchAll(prjs project.Projects, rc *fasthttp.RequestCtx, as *app.State, 
 	results := make(git.Results, 0, len(prjs))
 
 	results, errs := util.AsyncCollect(prjs, func(item *project.Project) (*git.Result, error) {
-		return as.Services.Git.Fetch(item)
+		return as.Services.Git.Fetch(ps.Context, item, ps.Logger)
 	})
 	if len(errs) > 0 {
 		return nil, errs[0]

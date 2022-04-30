@@ -27,11 +27,11 @@ func (s Service) Status(ctx context.Context, prj *project.Project, logger *zap.S
 	_, span, _ := telemetry.StartSpan(ctx, "git.status:"+prj.Key, logger)
 	defer span.Complete()
 
-	dirty, err := gitStatus(prj.Path)
+	dirty, err := gitStatus(ctx, prj.Path, logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to find git status")
 	}
-	branch := gitBranch(prj.Path)
+	branch := gitBranch(ctx, prj.Path, logger)
 	data := util.ValueMap{"branch": branch}
 	if len(dirty) > 0 {
 		data["dirty"] = dirty
@@ -51,8 +51,8 @@ func (s Service) Magic(prj *project.Project) (*Result, error) {
 	return NewResult(prj, "TODO", util.ValueMap{"TODO": "Magic!"}), nil
 }
 
-func (s Service) Fetch(prj *project.Project) (*Result, error) {
-	x, err := gitFetch(prj.Path, true)
+func (s Service) Fetch(ctx context.Context, prj *project.Project, logger *zap.SugaredLogger) (*Result, error) {
+	x, err := gitFetch(ctx, prj.Path, true, logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to fetch")
 	}
@@ -73,8 +73,8 @@ func (s Service) Fetch(prj *project.Project) (*Result, error) {
 	return NewResult(prj, status, util.ValueMap{"updates": fetched}), nil
 }
 
-func (s Service) Commit(prj *project.Project, msg string) (*Result, error) {
-	result, err := gitCommit(prj.Path, msg)
+func (s Service) Commit(ctx context.Context, prj *project.Project, msg string, logger *zap.SugaredLogger) (*Result, error) {
+	result, err := gitCommit(ctx, prj.Path, msg, logger)
 	if err != nil {
 		return nil, err
 	}

@@ -111,7 +111,7 @@ func SVGSetApp(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to set project icon ["+key+"]")
 		}
-		err = svg.SetAppIcon(prj, fs, &svg.SVG{Key: key, Markup: content}, ps.Logger)
+		err = svg.SetAppIcon(ps.Context, prj, fs, &svg.SVG{Key: key, Markup: content}, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to set app icon to ["+key+"]")
 		}
