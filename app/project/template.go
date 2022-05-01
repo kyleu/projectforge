@@ -2,6 +2,7 @@ package project
 
 import (
 	"fmt"
+	"strings"
 
 	"projectforge.dev/projectforge/app/lib/theme"
 	"projectforge.dev/projectforge/app/util"
@@ -43,7 +44,10 @@ func (p *Project) ToTemplateContext(configVars util.KeyTypeDescs, portOffsets ma
 
 	var ignoreGrep string
 	for _, ig := range p.Ignore {
-		ignoreGrep += fmt.Sprintf(" | grep -v \\\\./%s", ig)
+		if strings.HasPrefix(ig, "^") {
+			ig = "\\\\./" + strings.TrimPrefix(ig, "^")
+		}
+		ignoreGrep += fmt.Sprintf(" | grep -v %s", ig)
 	}
 
 	cv := append(util.KeyTypeDescs{}, configVars...)

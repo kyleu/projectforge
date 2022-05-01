@@ -17,10 +17,9 @@
     "upgrade"
   ],
   "ignore": [
-    "data",
-    "module",
-    "testproject",
-    "tmp"
+    "^data",
+    "^module",
+    "^testproject"
   ],
   "info": {
     "org": "kyleu",
@@ -53,7 +52,7 @@
     "freeBSD": true,
     "netBSD": true,
     "openBSD": true,
-    "plan9": false,
+    "plan9": true,
     "solaris": true,
     "homebrew": true,
     "nfpms": true,

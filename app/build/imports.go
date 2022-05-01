@@ -19,26 +19,27 @@ func Imports(self string, fix bool, targetPath string, fs filesystem.FileLoader)
 	}
 
 	for _, fn := range files {
-		if strings.HasSuffix(fn, ".go") {
-			content, err := fs.ReadFile(fn)
-			if err != nil {
-				return nil, nil, errors.Wrapf(err, "unable to read file [%s]", fn)
-			}
+		if !strings.HasSuffix(fn, ".go") {
+			continue
+		}
+		content, err := fs.ReadFile(fn)
+		if err != nil {
+			return nil, nil, errors.Wrapf(err, "unable to read file [%s]", fn)
+		}
 
-			fixed, diffs, err := processFile(fn, strings.Split(string(content), "\n"), self)
-			ret = append(ret, diffs...)
-			if err != nil {
-				return nil, nil, errors.Wrapf(err, "unable to process imports for [%s]", fn)
-			}
-			if fix && len(diffs) > 0 {
-				if targetPath == "" || fn == targetPath {
-					newContent := strings.Join(fixed, "\n")
-					err = fs.WriteFile(fn, []byte(newContent), filesystem.DefaultMode, true)
-					if err != nil {
-						return nil, nil, errors.Wrapf(err, "unable to write file [%s]", fn)
-					}
-					logs = append(logs, fmt.Sprintf("fixed imports for [%s]", fn))
+		fixed, diffs, err := processFile(fn, strings.Split(string(content), "\n"), self)
+		ret = append(ret, diffs...)
+		if err != nil {
+			return nil, nil, errors.Wrapf(err, "unable to process imports for [%s]", fn)
+		}
+		if fix && len(diffs) > 0 {
+			if targetPath == "" || fn == targetPath {
+				newContent := strings.Join(fixed, "\n")
+				err = fs.WriteFile(fn, []byte(newContent), filesystem.DefaultMode, true)
+				if err != nil {
+					return nil, nil, errors.Wrapf(err, "unable to write file [%s]", fn)
 				}
+				logs = append(logs, fmt.Sprintf("fixed imports for [%s]", fn))
 			}
 		}
 	}
@@ -59,7 +60,6 @@ func processFile(fn string, lines []string, self string) ([]string, diff.Diffs, 
 	for idx, line := range lines {
 		if started {
 			if line == ")" {
-				started = false
 				if end > 0 {
 					return nil, nil, errors.New("multiple import section endings")
 				}
@@ -67,8 +67,8 @@ func processFile(fn string, lines []string, self string) ([]string, diff.Diffs, 
 				break
 			}
 			i := strings.TrimSpace(line)
-			if idx := strings.Index(line, " "); idx > -1 {
-				i = strings.TrimSpace(line[idx:])
+			if lidx := strings.Index(line, " "); lidx > -1 {
+				i = strings.TrimSpace(line[lidx:])
 			}
 			i = strings.TrimPrefix(i, "_ ")
 			i = strings.TrimSuffix(i, "\"")

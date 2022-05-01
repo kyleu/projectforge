@@ -29,4 +29,3 @@ func AsyncCollect[T any, R any](items []T, f func(item T) (R, error)) ([]R, []er
 	wg.Wait()
 	return ret, errs
 }
-

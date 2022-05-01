@@ -67,8 +67,6 @@ func gitMagicAll(prjs project.Projects, rc *fasthttp.RequestCtx, as *app.State, 
 }
 
 func gitFetchAll(prjs project.Projects, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (git.Results, error) {
-	results := make(git.Results, 0, len(prjs))
-
 	results, errs := util.AsyncCollect(prjs, func(item *project.Project) (*git.Result, error) {
 		return as.Services.Git.Fetch(ps.Context, item, ps.Logger)
 	})

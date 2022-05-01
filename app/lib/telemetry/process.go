@@ -12,7 +12,7 @@ import (
 
 func RunProcess(ctx context.Context, cmd string, path string, in io.Reader, out io.Writer, er io.Writer, logger *zap.SugaredLogger) (int, error) {
 	exec, _ := util.StringSplit(cmd, ' ', true)
-	ctx, span, logger := StartSpan(ctx, "process:"+exec, logger)
+	_, span, _ := StartSpan(ctx, "process:"+exec, logger)
 	defer span.Complete()
 	span.Attribute("cmd", cmd)
 	span.Attribute("path", path)
@@ -21,7 +21,7 @@ func RunProcess(ctx context.Context, cmd string, path string, in io.Reader, out 
 
 func RunProcessSimple(ctx context.Context, cmd string, path string, logger *zap.SugaredLogger) (int, string, error) {
 	exec, _ := util.StringSplit(cmd, ' ', true)
-	ctx, span, logger := StartSpan(ctx, "process-simple:"+exec, logger)
+	_, span, _ := StartSpan(ctx, "process-simple:"+exec, logger)
 	defer span.Complete()
 	span.Attribute("cmd", cmd)
 	span.Attribute("path", path)

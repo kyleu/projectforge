@@ -15,6 +15,8 @@ import (
 	"projectforge.dev/projectforge/views/vbuild"
 )
 
+const depsKey = "deps"
+
 func RunAction(rc *fasthttp.RequestCtx) {
 	act("run.action", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		tgt, err := RCRequiredString(rc, "key", false)
@@ -51,7 +53,7 @@ func RunAction(rc *fasthttp.RequestCtx) {
 		}
 
 		if isBuild {
-			if phase == "deps" {
+			if phase == depsKey {
 				return runDeps(prj, result, rc, as, ps)
 			}
 			page := &vbuild.BuildResult{Project: prj, BuildResult: result}
@@ -83,7 +85,7 @@ func RunAllActions(rc *fasthttp.RequestCtx) {
 			case nil:
 				page := &vaction.Results{T: actT, Cfg: cfg, Ctxs: nil, IsBuild: true}
 				return render(rc, as, page, ps, "projects", actT.Title)
-			case "deps":
+			case depsKey:
 				return runAllDeps(cfg, prjs, rc, as, ps)
 			}
 		}

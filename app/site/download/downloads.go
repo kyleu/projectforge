@@ -77,6 +77,9 @@ func calcDownloadLinks(version string) Links {
 	addDefault(modeServer, osOpenBSD, archARM64)
 	addDefault(modeServer, osOpenBSD, archI386)
 	addARMs(modeServer, osOpenBSD)
+	addDefault(modeServer, osPlan9, archAMD64)
+	addDefault(modeServer, osPlan9, archI386)
+	addARMs(modeServer, osPlan9)
 	addDefault(modeServer, osSolaris, archAMD64)
 
 	return ret

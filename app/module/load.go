@@ -28,17 +28,17 @@ func (s *Service) Load(ctx context.Context, key string, url string) (Modules, er
 	return s.load(ctx, key, "", url)
 }
 
-func (s *Service) load(ctx context.Context, key string, path string, url string) (Modules, error) {
+func (s *Service) load(ctx context.Context, key string, pth string, url string) (Modules, error) {
 	var fs filesystem.FileLoader
 	switch {
 	case s.local.IsDir(key):
 		fs = filesystem.NewFileSystem(filepath.Join(s.local.Root(), key), s.logger)
 	case s.config.IsDir(key):
 		fs = filesystem.NewFileSystem(filepath.Join(s.config.Root(), key), s.logger)
-	case path != "":
-		fs = filesystem.NewFileSystem(path, s.logger)
+	case pth != "":
+		fs = filesystem.NewFileSystem(pth, s.logger)
 		if key == "*" {
-			return s.loadDirectory(ctx, path, url, fs)
+			return s.loadDirectory(ctx, pth, url, fs)
 		}
 	default:
 		var err error

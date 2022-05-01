@@ -45,29 +45,7 @@ func diffs(ctx context.Context, pm *PrjAndMods) (file.Files, diff.Diffs, error) 
 		}
 	}
 
-	var configVars util.KeyTypeDescs
-	portOffsets := map[string]int{}
-
-	for _, m := range pm.Prj.Modules {
-		mod := pm.Mods.Get(m)
-		for _, src := range mod.ConfigVars {
-			var hit bool
-			for _, tgt := range configVars {
-				if src.Key == tgt.Key {
-					hit = true
-					break
-				}
-			}
-			if !hit {
-				configVars = append(configVars, src)
-			}
-		}
-		configVars.Sort()
-
-		for k, v := range mod.PortOffsets {
-			portOffsets[k] = v
-		}
-	}
+	configVars, portOffsets := parse(pm)
 
 	tCtx := pm.Prj.ToTemplateContext(configVars, portOffsets)
 
@@ -101,4 +79,31 @@ func diffs(ctx context.Context, pm *PrjAndMods) (file.Files, diff.Diffs, error) 
 	}
 
 	return srcFiles, dfs, nil
+}
+
+func parse(pm *PrjAndMods) (util.KeyTypeDescs, map[string]int) {
+	var configVars util.KeyTypeDescs
+	portOffsets := map[string]int{}
+
+	for _, m := range pm.Prj.Modules {
+		mod := pm.Mods.Get(m)
+		for _, src := range mod.ConfigVars {
+			var hit bool
+			for _, tgt := range configVars {
+				if src.Key == tgt.Key {
+					hit = true
+					break
+				}
+			}
+			if !hit {
+				configVars = append(configVars, src)
+			}
+		}
+		configVars.Sort()
+
+		for k, v := range mod.PortOffsets {
+			portOffsets[k] = v
+		}
+	}
+	return configVars, portOffsets
 }

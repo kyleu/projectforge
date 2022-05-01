@@ -164,65 +164,67 @@ func (p *Deps) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 			qw422016.E().S(d.Available)
 //line views/vbuild/Deps.html:67
 			qw422016.N().S(`</td>
-          <td>`)
-//line views/vbuild/Deps.html:68
-			if d.Available != "" {
-//line views/vbuild/Deps.html:68
-				qw422016.N().S(`<a href="?phase=deps&upgrade=`)
-//line views/vbuild/Deps.html:68
+          <td>
+`)
+//line views/vbuild/Deps.html:69
+			if d.Available != "" && d.Available != "(deprecated)" && d.Available != "(retracted)" {
+//line views/vbuild/Deps.html:69
+				qw422016.N().S(`            <a href="?phase=deps&upgrade=`)
+//line views/vbuild/Deps.html:70
 				qw422016.N().U(d.Key)
-//line views/vbuild/Deps.html:68
+//line views/vbuild/Deps.html:70
 				qw422016.N().S(`&old=`)
-//line views/vbuild/Deps.html:68
+//line views/vbuild/Deps.html:70
 				qw422016.N().U(d.Version)
-//line views/vbuild/Deps.html:68
+//line views/vbuild/Deps.html:70
 				qw422016.N().S(`&new=`)
-//line views/vbuild/Deps.html:68
+//line views/vbuild/Deps.html:70
 				qw422016.N().U(d.Available)
-//line views/vbuild/Deps.html:68
-				qw422016.N().S(`"><button>Upgrade</button></a>`)
-//line views/vbuild/Deps.html:68
+//line views/vbuild/Deps.html:70
+				qw422016.N().S(`"><button>Upgrade</button></a>
+`)
+//line views/vbuild/Deps.html:71
 			}
-//line views/vbuild/Deps.html:68
-			qw422016.N().S(`</td>
+//line views/vbuild/Deps.html:71
+			qw422016.N().S(`          </td>
         </tr>
 `)
-//line views/vbuild/Deps.html:70
+//line views/vbuild/Deps.html:74
 		}
-//line views/vbuild/Deps.html:70
+//line views/vbuild/Deps.html:74
 		qw422016.N().S(`        </tbody>
       </table>
 `)
-//line views/vbuild/Deps.html:73
+//line views/vbuild/Deps.html:77
 	}
-//line views/vbuild/Deps.html:73
+//line views/vbuild/Deps.html:77
 	qw422016.N().S(`  </div>
 `)
-//line views/vbuild/Deps.html:75
+//line views/vbuild/Deps.html:79
 }
 
-//line views/vbuild/Deps.html:75
+//line views/vbuild/Deps.html:79
 func (p *Deps) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vbuild/Deps.html:75
+//line views/vbuild/Deps.html:79
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vbuild/Deps.html:75
+//line views/vbuild/Deps.html:79
 	p.StreamBody(qw422016, as, ps)
-//line views/vbuild/Deps.html:75
+//line views/vbuild/Deps.html:79
 	qt422016.ReleaseWriter(qw422016)
-//line views/vbuild/Deps.html:75
+//line views/vbuild/Deps.html:79
 }
 
-//line views/vbuild/Deps.html:75
+//line views/vbuild/Deps.html:79
 func (p *Deps) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vbuild/Deps.html:75
+//line views/vbuild/Deps.html:79
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vbuild/Deps.html:75
+//line views/vbuild/Deps.html:79
 	p.WriteBody(qb422016, as, ps)
-//line views/vbuild/Deps.html:75
+//line views/vbuild/Deps.html:79
 	qs422016 := string(qb422016.B)
-//line views/vbuild/Deps.html:75
+//line views/vbuild/Deps.html:79
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vbuild/Deps.html:75
+//line views/vbuild/Deps.html:79
 	return qs422016
-//line views/vbuild/Deps.html:75
+//line views/vbuild/Deps.html:79
 }

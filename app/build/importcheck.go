@@ -7,6 +7,8 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+const sepKey, firstKey, thirdKey, selfKey = "sep", "1st", "3rd", "self"
+
 func check(imports []string, orig []string) ([]string, error) {
 	var err error
 	var state int
@@ -24,78 +26,79 @@ func check(imports []string, orig []string) ([]string, error) {
 	clear := func() {
 		observed = []string{}
 	}
+	ss := func(expected int) {
+		if state != expected {
+			state = expected
+			clear()
+		}
+	}
 
 	for idx, imp := range imports {
 		i, l := util.StringSplitLast(imp, ':', true)
 		switch l {
-		case "sep":
+		case sepKey:
 			if state != 0 && lastLine != "" {
 				state++
 				clear()
 			}
-		case "1st":
+		case firstKey:
 			if state > 1 {
 				err = errors.New("1st party")
 			}
-			if state != 1 {
-				state = 1
-				clear()
-			}
+			ss(1)
 			first[i] = orig[idx]
 			observe(i, "1st party")
-		case "3rd":
+		case thirdKey:
 			if state > 2 {
 				err = errors.New("3rd party")
 			}
-			if state != 2 {
-				state = 2
-				clear()
-			}
+			ss(2)
 			third[i] = orig[idx]
 			observe(i, "3rd party")
-		case "self":
+		case selfKey:
 			if state > 3 {
 				err = errors.New("self")
 			}
-			if state != 3 {
-				state = 3
-				clear()
-			}
+			ss(3)
 			self[i] = orig[idx]
-			observe(i, "self")
+			observe(i, selfKey)
 		default:
 			return nil, errors.New("invalid type")
 		}
 		lastLine = l
 	}
-	var ret []string
+	return makeResult(first, third, self), err
+}
+
+func makeResult(first util.ValueMap, third util.ValueMap, self util.ValueMap) []string {
+	ret := make([]string, 0, len(first)+len(third)+len(self))
 	for _, k := range first.Keys() {
-		ret = append(ret, first[k].(string))
+		ret = append(ret, first.GetStringOpt(k))
 	}
 	if len(first) > 0 && (len(third) > 0 || len(self) > 0) {
 		ret = append(ret, "")
 	}
 	for _, k := range third.Keys() {
-		ret = append(ret, third[k].(string))
+		ret = append(ret, third.GetStringOpt(k))
 	}
 	if len(third) > 0 && len(self) > 0 {
 		ret = append(ret, "")
 	}
 	for _, k := range self.Keys() {
-		ret = append(ret, self[k].(string))
+		ret = append(ret, self.GetStringOpt(k))
 	}
-	return ret, err
+	return ret
 }
 
 func importType(i string, self string) string {
 	if i == "" {
-		return "sep"
+		return sepKey
 	}
 	if strings.HasPrefix(i, self) || strings.HasPrefix(i, "{{{ .Package }}}") {
-		return "self"
+		return selfKey
 	}
 	if strings.Contains(i, ".") {
-		return "3rd"
+		return thirdKey
 	}
-	return "1st"
+	return firstKey
 }

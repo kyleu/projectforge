@@ -27,7 +27,7 @@ func (k KeyValInts) ToMap() map[string]int {
 }
 
 func (k KeyValInts) String() string {
-	var ret []string
+	ret := make([]string, 0, len(k))
 	for _, x := range k {
 		ret = append(ret, x.String())
 	}

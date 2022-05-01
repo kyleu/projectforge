@@ -22,20 +22,21 @@ func LoadDepsEasyMode(key string, fs filesystem.FileLoader) (Dependencies, error
 	lines := strings.Split(string(bytes), "\n")
 	ret := make(Dependencies, 0, len(lines))
 	for _, line := range lines {
-		if strings.HasPrefix(line, "\t") && strings.Contains(line, " v") {
-			start := strings.Index(line, " v")
-			if start == -1 {
-				return nil, errors.Errorf("project [%s] does not contain a version in [%s]", key, line)
-			}
-			dep := &Dependency{Key: strings.TrimSpace(line[:start])}
-			start++
-			offset := strings.Index(line[start:], " ")
-			if offset == -1 {
-				offset = len(line) - start
-			}
-			dep.Version = line[start : start+offset]
-			ret = append(ret, dep)
+		if !(strings.HasPrefix(line, "\t") && strings.Contains(line, " v")) {
+			continue
 		}
+		start := strings.Index(line, " v")
+		if start == -1 {
+			return nil, errors.Errorf("project [%s] does not contain a version in [%s]", key, line)
+		}
+		dep := &Dependency{Key: strings.TrimSpace(line[:start])}
+		start++
+		offset := strings.Index(line[start:], " ")
+		if offset == -1 {
+			offset = len(line) - start
+		}
+		dep.Version = line[start : start+offset]
+		ret = append(ret, dep)
 	}
 	return ret, nil
 }

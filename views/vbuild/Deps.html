@@ -65,7 +65,11 @@
           <td>{%d len(d.References) %}</td>
           <td>{%s d.Version %}</td>
           <td>{%s d.Available %}</td>
-          <td>{%- if d.Available != "" -%}<a href="?phase=deps&upgrade={%u d.Key %}&old={%u d.Version %}&new={%u d.Available %}"><button>Upgrade</button></a>{%- endif -%}</td>
+          <td>
+            {%- if d.Available != "" && d.Available != "(deprecated)" && d.Available != "(retracted)" -%}
+            <a href="?phase=deps&upgrade={%u d.Key %}&old={%u d.Version %}&new={%u d.Available %}"><button>Upgrade</button></a>
+            {%- endif -%}
+          </td>
         </tr>
         {%- endfor -%}
         </tbody>

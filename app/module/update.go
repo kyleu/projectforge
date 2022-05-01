@@ -79,7 +79,7 @@ func reverseDiff(dest string, d *diff.Diff, logger *zap.SugaredLogger) ([]byte, 
 			}
 			return nil, errors.New("module file does not contain pre-content context lines")
 		}
-		preIdx = preIdx + len(pre)
+		preIdx += len(pre)
 		postIdx := preIdx + strings.Index(dest[preIdx:], post)
 		if postIdx == -1 {
 			if hasTemplate {

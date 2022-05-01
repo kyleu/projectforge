@@ -66,7 +66,7 @@ func (t *TemplateContext) IgnoredSetting() string {
 	}
 	ret := make([]string, 0, len(t.Ignore))
 	for _, i := range t.Ignore {
-		ret = append(ret, "/"+i)
+		ret = append(ret, "/"+strings.TrimPrefix(i, "^"))
 	}
 	return " --skip-dirs \"" + strings.Join(ret, "|") + "\""
 }
