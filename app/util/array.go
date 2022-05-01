@@ -3,6 +3,7 @@ package util
 
 import (
 	"fmt"
+	"reflect"
 )
 
 func StringArrayMaxLength(a []string) int {
@@ -68,4 +69,32 @@ func StringArrayOxfordComma(names []string, separator string) string {
 		ret += name
 	}
 	return ret
+}
+
+func LengthAny(dest any) int {
+	defer func() { _ = recover() }()
+	rfl := reflect.ValueOf(dest)
+	if rfl.Kind() == reflect.Ptr {
+		rfl = rfl.Elem()
+	}
+	return rfl.Len()
+}
+
+func ArrayFromAny(dest any) []any {
+	defer func() { _ = recover() }()
+	rfl := reflect.ValueOf(dest)
+	if rfl.Kind() == reflect.Ptr {
+		rfl = rfl.Elem()
+	}
+	if k := rfl.Kind(); k == reflect.Array || k == reflect.Slice {
+		ret := make([]any, 0, rfl.Len())
+		for i := 0; i < rfl.Len(); i++ {
+			e := rfl.Index(i)
+			ret = append(ret, e.Interface())
+		}
+		return ret
+	} else {
+		println(rfl.Kind().String())
+	}
+	return []any{}
 }

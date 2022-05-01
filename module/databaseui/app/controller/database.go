@@ -1,6 +1,9 @@
 package controller
 
 import (
+	"fmt"
+	"strconv"
+
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 
@@ -54,6 +57,11 @@ func DatabaseAction(rc *fasthttp.RequestCtx) {
 			_ = svc.EnableTracing(true, true, ps.Logger)
 			return "/admin/database/" + svc.Key + "/recent", nil
 		case "recent":
+			if idxStr := string(rc.URI().QueryArgs().Peek("idx")); idxStr != "" {
+				idx, _ := strconv.Atoi(idxStr)
+				st := database.GetDebugStatement(svc.Key, idx)
+				return render(rc, as, &vdatabase.Statement{Statement: st}, ps, "admin", "Database||/admin/database", svc.Key)
+			}
 			recent := database.GetDebugStatements(svc.Key)
 			return render(rc, as, &vdatabase.Detail{Mode: "recent", Svc: svc, Recent: recent}, ps, "admin", "Database||/admin/database", svc.Key)
 		case "tables":
@@ -63,12 +71,14 @@ func DatabaseAction(rc *fasthttp.RequestCtx) {
 			}
 			return render(rc, as, &vdatabase.Detail{Mode: "tables", Svc: svc, Sizes: sizes}, ps, "admin", "Database||/admin/database", svc.Key)
 		case "analyze":
+			t := util.TimerStart()
 			var tmp []interface{}
 			err = svc.Select(ps.Context, &tmp, "analyze", nil, ps.Logger)
 			if err != nil {
 				return "", err
 			}
-			return "/admin/database/" + svc.Key + "/tables", nil{{{ if .DatabaseUISQLEditor }}}
+			msg := fmt.Sprintf("Analyzed database in [%s]", util.MicrosToMillis(t.End()))
+			return flashAndRedir(true, msg, "/admin/database/"+svc.Key+"/tables", rc, ps){{{ if .DatabaseUISQLEditor }}}
 		case "sql":
 			return render(rc, as, &vdatabase.Detail{Mode: "sql", Svc: svc, SQL: "select 1;"}, ps, "admin", "Database||/admin/database", svc.Key){{{ end }}}
 		default:

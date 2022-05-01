@@ -73,19 +73,22 @@ func check(imports []string, orig []string) ([]string, error) {
 func makeResult(first util.ValueMap, third util.ValueMap, self util.ValueMap) []string {
 	ret := make([]string, 0, len(first)+len(third)+len(self))
 	for _, k := range first.Keys() {
-		ret = append(ret, first.GetStringOpt(k))
+		s, _ := first[k].(string)
+		ret = append(ret, s)
 	}
 	if len(first) > 0 && (len(third) > 0 || len(self) > 0) {
 		ret = append(ret, "")
 	}
 	for _, k := range third.Keys() {
-		ret = append(ret, third.GetStringOpt(k))
+		s, _ := third[k].(string)
+		ret = append(ret, s)
 	}
 	if len(third) > 0 && len(self) > 0 {
 		ret = append(ret, "")
 	}
 	for _, k := range self.Keys() {
-		ret = append(ret, self.GetStringOpt(k))
+		s, _ := self[k].(string)
+		ret = append(ret, s)
 	}
 	return ret
 }

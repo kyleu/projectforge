@@ -10,7 +10,10 @@ import (
 
 const maxStatements = 100
 
+var lastIndex = 0
+
 type DebugStatement struct {
+	Index   int         `json:"index"`
 	SQL     string      `json:"sql"`
 	Values  []any       `json:"values,omitempty"`
 	Extra   interface{} `json:"extra,omitempty"`
@@ -18,7 +21,14 @@ type DebugStatement struct {
 	Error   string      `json:"error"`
 	Message string      `json:"message,omitempty"`
 	Count   int         `json:"count,omitempty"`
-	Out     any         `json:"out,omitempty"`
+	Out     []any       `json:"out,omitempty"`
+}
+
+func (s *DebugStatement) SQLTrimmed(maxLength int) string {
+	if len(s.SQL) > maxLength {
+		return s.SQL[:maxLength] + "..."
+	}
+	return s.SQL
 }
 
 func (s *DebugStatement) Complete(count int, msg string, err error, output ...any) {
@@ -27,18 +37,12 @@ func (s *DebugStatement) Complete(count int, msg string, err error, output ...an
 	if err != nil {
 		s.Error = err.Error()
 	}
-	switch len(output) {
-	case 1:
-		s.Out = output[0]
-	case 0:
-		// noop
-	default:
-		s.Out = output
-	}
+	s.Out = output
 }
 
 func NewStatement(ctx context.Context, s *Service, q string, values []any, timing int) (*DebugStatement, error) {
-	ret := &DebugStatement{SQL: q, Timing: timing}
+	lastIndex++
+	ret := &DebugStatement{Index: lastIndex, SQL: q, Timing: timing}
 	if s.tracing == "values" || s.tracing == "analyze" {
 		ret.Values = values
 	}
@@ -92,6 +96,17 @@ func GetDebugStatements(key string) DebugStatements {
 	statementsMu.Lock()
 	defer statementsMu.Unlock()
 	return slices.Clone(statements[key])
+}
+
+func GetDebugStatement(key string, idx int) *DebugStatement {
+	statementsMu.Lock()
+	defer statementsMu.Unlock()
+	for _, st := range statements[key] {
+		if st.Index == idx {
+			return st
+		}
+	}
+	return nil
 }
 
 func (s *Service) addDebug(st *DebugStatement) {

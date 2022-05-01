@@ -20,9 +20,9 @@
     {%- if util.AppSource != "" -%}
     <div class="right"><a href="{%s util.AppSource %}"><button>Github</button></a></div>
     {%- endif -%}
-    <h3 title="github:{%s as.BuildInfo.Commit %}">{%s util.AppName %} {%s as.BuildInfo.String() %}</h3>
+    <h3 title="github:{%s as.BuildInfo.Commit %}">{%= components.SVGRefIcon(`app`, ps) %}{%s util.AppName %} {%s as.BuildInfo.String() %}</h3>
     {%- if util.AppLegal != "" -%}
-    <div>{%s= util.AppLegal %}</div>
+    <div class="mt">{%s= util.AppLegal %}</div>
     {%- endif -%}
     {%- if util.AppURL != "" -%}
     <p><a href="{%s= util.AppURL %}">{%s= util.AppURL %}</a></p>
@@ -32,7 +32,7 @@
   <div class="card">
     <div class="right"><a href="#modal-mem"><button type="button">Memory Usage</button></a></div>
     {%= components.JSONModal("mem", "Memory Usage", p.Mem, 1) %}
-    <h3>Admin Functions</h3>
+    <h3>{%= components.SVGRefIcon(`cog`, ps) %}Admin Functions</h3>
     <ul class="mt">
       <li><a href="/admin/modules">View Go modules</a></li>
       <li><a href="/admin/session">Parse and display session</a></li>
@@ -45,7 +45,7 @@
   </div>
 
   <div class="card">
-    <h3>Themes</h3>
+    <h3>{%= components.SVGRefIcon(`archive`, ps) %}Themes</h3>
     <ul class="mt">
       <li><a href="/theme">Edit Themes</a></li>
     </ul>

@@ -61,6 +61,8 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vadmin/Settings.html:23
 	qw422016.N().S(`">`)
 //line views/vadmin/Settings.html:23
+	components.StreamSVGRefIcon(qw422016, `app`, ps)
+//line views/vadmin/Settings.html:23
 	qw422016.E().S(util.AppName)
 //line views/vadmin/Settings.html:23
 	qw422016.N().S(` `)
@@ -72,7 +74,7 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vadmin/Settings.html:24
 	if util.AppLegal != "" {
 //line views/vadmin/Settings.html:24
-		qw422016.N().S(`    <div>`)
+		qw422016.N().S(`    <div class="mt">`)
 //line views/vadmin/Settings.html:25
 		qw422016.N().S(util.AppLegal)
 //line views/vadmin/Settings.html:25
@@ -105,7 +107,11 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 	components.StreamJSONModal(qw422016, "mem", "Memory Usage", p.Mem, 1)
 //line views/vadmin/Settings.html:34
 	qw422016.N().S(`
-    <h3>Admin Functions</h3>
+    <h3>`)
+//line views/vadmin/Settings.html:35
+	components.StreamSVGRefIcon(qw422016, `cog`, ps)
+//line views/vadmin/Settings.html:35
+	qw422016.N().S(`Admin Functions</h3>
     <ul class="mt">
       <li><a href="/admin/modules">View Go modules</a></li>
       <li><a href="/admin/session">Parse and display session</a></li>
@@ -118,7 +124,11 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
   </div>
 
   <div class="card">
-    <h3>Themes</h3>
+    <h3>`)
+//line views/vadmin/Settings.html:48
+	components.StreamSVGRefIcon(qw422016, `archive`, ps)
+//line views/vadmin/Settings.html:48
+	qw422016.N().S(`Themes</h3>
     <ul class="mt">
       <li><a href="/theme">Edit Themes</a></li>
     </ul>

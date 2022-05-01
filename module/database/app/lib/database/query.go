@@ -122,11 +122,11 @@ func (s *Service) Select(ctx context.Context, dest any, q string, tx *sqlx.Tx, l
 	f := s.logQuery(ctx, fmt.Sprintf("selecting rows of type [%T]", dest), q, logger, values)
 	if tx == nil {
 		err = s.db.SelectContext(ctx, dest, q, values...)
-		defer f(0, "ran select query without transaction", err, dest)
+		defer f(util.LengthAny(dest), "ran select query without transaction", err, util.ArrayFromAny(dest)...)
 		return err
 	}
 	err = tx.SelectContext(ctx, dest, q, values...)
-	defer f(0, "ran select query with transaction", err, dest)
+	defer f(util.LengthAny(dest), "ran select query with transaction", err, util.ArrayFromAny(dest)...)
 	return err
 }
 

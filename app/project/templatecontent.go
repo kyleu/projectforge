@@ -77,7 +77,7 @@ func (t *TemplateContext) IgnoredQuoted() string {
 	}
 	ret := make([]string, 0, len(t.Ignore))
 	for _, i := range t.Ignore {
-		ret = append(ret, fmt.Sprintf(", %q", i))
+		ret = append(ret, fmt.Sprintf(", %q", strings.TrimPrefix(i, "^")))
 	}
 	return strings.Join(ret, "")
 }
