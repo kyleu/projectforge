@@ -70,7 +70,7 @@ func Admin(rc *fasthttp.RequestCtx) {
 			return flashAndRedir(true, "wrote heap profile", "/admin", rc, ps){{{ if .HasModule "migration" }}}
 		case "migrations":
 			ms := migrate.GetMigrations()
-			am := migrate.ListMigrations(ps.Context, as.DB, nil, as.Logger)
+			am := migrate.ListMigrations(ps.Context, as.DB, nil, ps.Logger)
 			ps.Data = map[string]any{"available": ms, "applied": am}
 			return render(rc, as, &vadmin.Migrations{Available: ms, Applied: am}, ps, "admin", "Migrations"){{{ end }}}
 		case "gc":

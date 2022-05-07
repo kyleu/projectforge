@@ -85,6 +85,15 @@ func NewProject(key string, path string) *Project {
 
 type Projects []*Project
 
+func (p Projects) Get(key string) *Project {
+	for _, x := range p {
+		if x.Key == key {
+			return x
+		}
+	}
+	return nil
+}
+
 func (p Projects) Root() *Project {
 	for _, x := range p {
 		if x.Path == "." {

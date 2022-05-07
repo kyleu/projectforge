@@ -1,6 +1,8 @@
 package build
 
 import (
+	"strings"
+
 	"golang.org/x/exp/slices"
 )
 
@@ -9,6 +11,18 @@ type Dependency struct {
 	Version    string   `json:"version,omitempty"`
 	Available  string   `json:"available,omitempty"`
 	References []string `json:"references,omitempty"`
+}
+
+func ParseDependency(line string) *Dependency {
+	if strings.HasPrefix(line, "\t") && strings.Contains(line, " ") {
+		start := strings.Index(line, " v")
+		if start == -1 {
+			return nil
+		}
+
+		return &Dependency{Key: strings.TrimSpace(line[:start]), Version: strings.TrimSpace(line[start:])}
+	}
+	return nil
 }
 
 func (d *Dependency) AddRef(r string) {

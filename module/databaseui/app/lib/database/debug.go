@@ -2,26 +2,40 @@ package database
 
 import (
 	"context"
+	"strings"
 	"sync"
 
+	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"golang.org/x/exp/slices"
 )
 
-const maxStatements = 100
+const (
+	MaxTracedStatements = 100
+	MaxValueCount       = 20
+)
 
-var lastIndex = 0
+var (
+	statements   = map[string]DebugStatements{}
+	statementsMu = sync.Mutex{}
+	lastIndex    = 0
+	debugExample = &DebugStatement{
+		Index: -1, SQL: "select * from test where a = $1 and b = $2",
+		Values: []any{map[string]any{"a": true}, map[string]any{"b": true}, map[string]any{"c": true}},
+		Extra: "[example plan]", Timing: 1, Message: "test query run without issue", Count: 2, Out: []any{1, 2},
+	}
+)
 
 type DebugStatement struct {
-	Index   int         `json:"index"`
-	SQL     string      `json:"sql"`
-	Values  []any       `json:"values,omitempty"`
-	Extra   interface{} `json:"extra,omitempty"`
-	Timing  int         `json:"timing,omitempty"`
-	Error   string      `json:"error"`
-	Message string      `json:"message,omitempty"`
-	Count   int         `json:"count,omitempty"`
-	Out     []any       `json:"out,omitempty"`
+	Index   int    `json:"index"`
+	SQL     string `json:"sql"`
+	Values  []any  `json:"values,omitempty"`
+	Extra   string `json:"extra,omitempty"`
+	Timing  int    `json:"timing,omitempty"`
+	Error   string `json:"error"`
+	Message string `json:"message,omitempty"`
+	Count   int    `json:"count,omitempty"`
+	Out     []any  `json:"out,omitempty"`
 }
 
 func (s *DebugStatement) SQLTrimmed(maxLength int) string {
@@ -37,47 +51,73 @@ func (s *DebugStatement) Complete(count int, msg string, err error, output ...an
 	if err != nil {
 		s.Error = err.Error()
 	}
-	s.Out = output
-}
-
-func NewStatement(ctx context.Context, s *Service, q string, values []any, timing int) (*DebugStatement, error) {
-	lastIndex++
-	ret := &DebugStatement{Index: lastIndex, SQL: q, Timing: timing}
-	if s.tracing == "values" || s.tracing == "analyze" {
-		ret.Values = values
+	if len(output) > MaxValueCount {
+		s.Out = output[:MaxValueCount]
+	} else {
+		s.Out = output
 	}
-	if s.tracing == "analyze" {
-		ret.Extra = "TODO"
-	}
-	return ret, nil
 }
 
 type DebugStatements []*DebugStatement
 
 func (d DebugStatements) Add(st *DebugStatement) DebugStatements {
-	if len(d) > maxStatements {
+	if len(d) > MaxTracedStatements {
 		d = d[1:]
 	}
 	d = append(d, st)
 	return d
 }
 
-var (
-	statements   = map[string]DebugStatements{}
-	statementsMu = sync.Mutex{}
-)
+func GetDebugStatements(key string) DebugStatements {
+	statementsMu.Lock()
+	defer statementsMu.Unlock()
+	return slices.Clone(statements[key])
+}
+
+func GetDebugStatement(key string, idx int) *DebugStatement {
+	if idx == -1 {
+		return debugExample
+	}
+	statementsMu.Lock()
+	defer statementsMu.Unlock()
+	for _, st := range statements[key] {
+		if st.Index == idx {
+			return st
+		}
+	}
+	return nil
+}
+
+func (s *Service) newStatement(ctx context.Context, q string, values []any, timing int, logger *zap.SugaredLogger) (*DebugStatement, error) {
+	lastIndex++
+	ret := &DebugStatement{Index: lastIndex, SQL: q, Timing: timing}
+	if s.tracing == "values" || s.tracing == "analyze" {
+		ret.Values = values
+	}
+	q = strings.TrimSpace(q)
+	if s.tracing == "analyze" && !strings.HasPrefix(q, "explain") {
+		ret.Extra = "[explain in progress]"
+		go func() {
+			if a, err := s.Explain(ctx, q, values, logger); err == nil {
+				ret.Extra = strings.Join(a, "\n")
+			} else {
+				ret.Extra = "[explain error] " + err.Error()
+			}
+		}()
+	}
+	return ret, nil
+}
 
 func (s *Service) Tracing() string {
 	return s.tracing
 }
 
-func (s *Service) EnableTracing(includeValues bool, analyze bool, logger *zap.SugaredLogger) error {
-	if analyze {
-		s.tracing = "analyze"
-	} else if includeValues {
-		s.tracing = "values"
-	} else {
-		s.tracing = "statement"
+func (s *Service) EnableTracing(v string, logger *zap.SugaredLogger) error {
+	switch v {
+	case "statement", "values", "analyze", "":
+		s.tracing = v
+	default:
+		return errors.Errorf("invalid tracing level [%s] must be [analyze], [values], or [statement]", v)
 	}
 	logger.Infof("database [%s] has tracing enabled in [%s] mode", s.Key, s.tracing)
 	return nil
@@ -89,23 +129,6 @@ func (s *Service) DisableTracing(logger *zap.SugaredLogger) error {
 	defer statementsMu.Unlock()
 	delete(statements, s.Key)
 	logger.Infof("database [%s] no longer has tracing enabled", s.Key)
-	return nil
-}
-
-func GetDebugStatements(key string) DebugStatements {
-	statementsMu.Lock()
-	defer statementsMu.Unlock()
-	return slices.Clone(statements[key])
-}
-
-func GetDebugStatement(key string, idx int) *DebugStatement {
-	statementsMu.Lock()
-	defer statementsMu.Unlock()
-	for _, st := range statements[key] {
-		if st.Index == idx {
-			return st
-		}
-	}
 	return nil
 }
 

@@ -14,7 +14,7 @@ func Search(rc *fasthttp.RequestCtx) {
 		q := string(rc.URI().QueryArgs().Peek("q"))
 		paramSet := cutil.ParamSetFromRequest(rc)
 		params := &search.Params{Q: q, PS: paramSet}
-		results, errs := search.Search(ps.Context, as, params)
+		results, errs := search.Search(ps.Context, as, params, ps.Logger)
 		ps.Title = "Search Results"
 		ps.Data = results
 		return render(rc, as, &vsearch.Results{Params: params, Results: results, Errors: errs}, ps, "Search")

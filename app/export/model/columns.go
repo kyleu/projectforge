@@ -230,3 +230,12 @@ func (c Columns) ForDisplay(k string) Columns {
 	}
 	return ret
 }
+
+func (c Columns) HasFormat(f string) bool {
+	for _, col := range c {
+		if col.Format == f {
+			return true
+		}
+	}
+	return false
+}

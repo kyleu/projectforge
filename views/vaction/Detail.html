@@ -69,7 +69,7 @@
       {%- endif -%}
       {%- code diffs := mr.DiffsFiltered(includeSkipped) -%}
       {%- if len(diffs) > 0 -%}
-      {%= renderDiffs(res.Project.Key, res.Action, diffs, as, ps) %}
+      {%= renderDiffs(res.Project.Key, res.Action, diffs, cfg, as, ps) %}
       {%- endif -%}
     </div>
   {%- endfor -%}

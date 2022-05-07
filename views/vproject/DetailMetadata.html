@@ -1,6 +1,4 @@
 {% import (
-  "strings"
-
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/project"
@@ -75,7 +73,31 @@
       </tr>
       <tr>
         <th>Extra Files</th>
-        <td>{%s strings.Join(info.ExtraFiles, ", ") %}</td>
+        <td>
+          {%- if len(info.ExtraFiles) == 0 -%}
+          <em>none</em>
+          {%- else -%}
+          <ul>
+            {%- for _, x := range info.ExtraFiles -%}
+            <li>{%s x %}</li>
+            {%- endfor -%}
+          </ul>
+          {%- endif -%}
+        </td>
+      </tr>
+      <tr>
+        <th>Deployments</th>
+        <td>
+          {%- if len(info.Deployments) == 0 -%}
+          <em>none</em>
+          {%- else -%}
+          <ul>
+            {%- for _, x := range info.Deployments -%}
+            <li>{%s x %}</li>
+            {%- endfor -%}
+          </ul>
+          {%- endif -%}
+        </td>
       </tr>
       <tr>
         <th>Config Vars</th>

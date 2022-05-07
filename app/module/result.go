@@ -2,6 +2,7 @@ package module
 
 import (
 	"projectforge.dev/projectforge/app/diff"
+	"projectforge.dev/projectforge/app/util"
 )
 
 type Result struct {
@@ -30,4 +31,12 @@ func (r Results) DiffCount(includeSkipped bool) int {
 		ret += len(m.DiffsFiltered(includeSkipped))
 	}
 	return ret
+}
+
+func (r Results) Paths(includeSkipped bool) []string {
+	ret := make([]string, 0, r.DiffCount(includeSkipped))
+	for _, res := range r {
+		ret = append(ret, res.DiffsFiltered(includeSkipped).Paths()...)
+	}
+	return util.ArrayRemoveDuplicates(ret)
 }

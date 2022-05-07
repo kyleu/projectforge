@@ -17,6 +17,7 @@ type Column struct {
 	Search     bool           `json:"search,omitempty"`
 	SQLDefault string         `json:"sqlDefault,omitempty"`
 	Display    string         `json:"display,omitempty"`
+	Format     string         `json:"format,omitempty"`
 	Tags       []string       `json:"tags,omitempty"`
 }
 
@@ -61,7 +62,7 @@ func (c *Column) ToGoString(prefix string) string {
 }
 
 func (c *Column) ToGoViewString(prefix string) string {
-	return ToGoViewString(c.Type, prefix+c.Proper(), c.Nullable)
+	return ToGoViewString(c.Type, prefix+c.Proper(), c.Nullable, c.Format)
 }
 
 func (c *Column) ToGoType(pkg string) string {
@@ -83,7 +84,7 @@ func (c *Column) ToSQLType() string {
 	return ret
 }
 
-func (c *Column) ToGoEditString(prefix string) string {
+func (c *Column) ToGoEditString(prefix string, format string) string {
 	switch c.Type.Key() {
 	case types.KeyAny:
 		return fmt.Sprintf(`{%%%%= components.TableTextarea(%q, %q, 8, util.ToJSON(%s), 5, %q) %%%%}`, c.Camel(), c.Title(), c.ToGoString(prefix), c.Help())
@@ -105,6 +106,11 @@ func (c *Column) ToGoEditString(prefix string) string {
 			gs = "&" + gs
 		}
 		return fmt.Sprintf(`{%%%%= components.TableInputUUID(%q, %q, %s, 5, %q) %%%%}`, c.Camel(), c.Title(), gs, c.Help())
+	case types.KeyString:
+		if format == "code" {
+			return fmt.Sprintf(`{%%%%= components.TableTextarea(%q, %q, 8, %s, 5, %q) %%%%}`, c.Camel(), c.Title(), c.ToGoString(prefix), c.Help())
+		}
+		return fmt.Sprintf(`{%%%%= components.TableInput(%q, %q, %s, 5, %q) %%%%}`, c.Camel(), c.Title(), c.ToGoString(prefix), c.Help())
 	default:
 		return fmt.Sprintf(`{%%%%= components.TableInput(%q, %q, %s, 5, %q) %%%%}`, c.Camel(), c.Title(), c.ToGoString(prefix), c.Help())
 	}

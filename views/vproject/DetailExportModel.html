@@ -42,6 +42,7 @@
         <tr>
           <th>Name</th>
           <th>Type</th>
+          <th>Format</th>
           <th>Tags</th>
         </tr>
       </thead>
@@ -50,6 +51,7 @@
         <tr>
           <td>{%s col.Name %}</td>
           <td>{%s col.Type.String() %}</td>
+          <td>{%s col.Format %}</td>
           <td>{%s strings.Join(col.Tags, ", ") %}</td>
         </tr>
         {%- endfor -%}

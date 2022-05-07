@@ -8,7 +8,6 @@ import (
 
 	"github.com/pkg/errors"
 	"projectforge.dev/projectforge/app/diff"
-	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -18,11 +17,11 @@ const projectKey = "project"
 func onMerge(ctx context.Context, pm *PrjAndMods) *Result {
 	ret := newResult(TypeMerge, pm.Prj, pm.Cfg, pm.Logger)
 
-	to, _ := pm.Cfg.GetString("to", true)
+	to := pm.Cfg.GetStringOpt("to")
 	if to == "" {
 		to = projectKey
 	}
-	file, _ := pm.Cfg.GetString("file", true)
+	file := pm.Cfg.GetStringOpt("file")
 
 	timer := util.TimerStart()
 	_, dfs, err := diffs(ctx, pm)
@@ -91,6 +90,10 @@ func mergeRight(pm *PrjAndMods, d *diff.Diff, ret *Result) *Result {
 	if err != nil {
 		return ret.WithError(err)
 	}
+	stat, err := loader.Stat(d.Path)
+	if err != nil {
+		return ret.WithError(err)
+	}
 
 	newContent, err := diff.Apply(b, d)
 	if err != nil {
@@ -102,7 +105,7 @@ func mergeRight(pm *PrjAndMods, d *diff.Diff, ret *Result) *Result {
 			msg = fmt.Sprintf("no changes required to [%s] for project [%s]", d.Path, pm.Prj.Key)
 		} else {
 			msg = fmt.Sprintf("wrote [%d] bytes to [%s] for project [%s]", len(newContent), d.Path, pm.Prj.Key)
-			err = loader.WriteFile(d.Path, newContent, filesystem.DefaultMode, true)
+			err = loader.WriteFile(d.Path, newContent, stat.Mode(), true)
 			if err != nil {
 				return ret.WithError(err)
 			}

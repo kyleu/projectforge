@@ -15,8 +15,8 @@ import (
 
 type Provider func(context.Context, *app.State, *Params, *zap.SugaredLogger) (result.Results, error)
 
-func Search(ctx context.Context, as *app.State, params *Params) (result.Results, []error) {
-	ctx, span, logger := telemetry.StartSpan(ctx, "search", as.Logger)
+func Search(ctx context.Context, as *app.State, params *Params, logger *zap.SugaredLogger) (result.Results, []error) {
+	ctx, span, logger := telemetry.StartSpan(ctx, "search", logger)
 	defer span.Complete()
 
 	if params.Q == "" {

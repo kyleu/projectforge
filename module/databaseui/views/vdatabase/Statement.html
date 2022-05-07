@@ -17,51 +17,83 @@
   <div class="card">
     <div class="right">{%s util.MicrosToMillis(s.Timing) %} elapsed</div>
     <h3>{%= components.SVGRefIcon(`database`, ps) %}Statement [{%d p.Statement.Index %}]</h3>
-    <em>{%s s.Message %}</em>
-    <hr class="clear" />
     <div class="right">{%d s.Count %} rows returned</div>
-    <h4>SQL</h4>
-    {%- code out, _ := cutil.FormatLang(s.SQL, "sql") -%}
-    <pre>{%s= out %}</pre>
-    <hr />
-    <h4>Out</h4>
+    <em>{%s s.Message %}</em>
+
     <div class="mt">
-      <table>
-        <thead>
-          <tr>
-            <th class="shrink">Idx</th>
-            <th>Result</th>
-          </tr>
-        </thead>
-        <tbody>
-          {%- for idx, v := range s.Out -%}
-          <tr>
-            <td>{%d idx %}</td>
-            <td>{%= components.JSON(v) %}</td>
-          </tr>
-          {%- endfor -%}
-        </tbody>
-      </table>
+      <ul class="accordion">
+        <li>
+          <input id="accordion-sql" type="checkbox" hidden />
+          <label for="accordion-sql">{%= components.ExpandCollapse(3, ps) %} SQL</label>
+          <div class="bd">{%= statementSQL(s) %}</div>
+        </li>
+        {%- if len(s.Values) > 0 -%}
+        <li>
+          <input id="accordion-values" type="checkbox" hidden />
+          <label for="accordion-values">{%= components.ExpandCollapse(3, ps) %} Values</label>
+          <div class="bd">{%= statementValues(s) %}</div>
+        </li>
+        {%- endif -%}
+        <li>
+          <input id="accordion-out" type="checkbox" hidden />
+          <label for="accordion-out">{%= components.ExpandCollapse(3, ps) %} Result</label>
+          <div class="bd">{%= statementOut(s) %}</div>
+        </li>
+        {%- if s.Extra != "" -%}
+        <li>
+          <input id="accordion-extra" type="checkbox" hidden />
+          <label for="accordion-extra">{%= components.ExpandCollapse(3, ps) %} Query Plan</label>
+          <div class="bd">{%= statementExtra(s) %}</div>
+        </li>
+        {%- endif -%}
+      </ul>
     </div>
-    {%- if len(s.Values) > 0 -%}
-    <hr />
-    <h4>Values</h4>
-    <table>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Values</th>
-        </tr>
-      </thead>
-      <tbody>
-        {%- for idx, v := range s.Values -%}
-        <tr>
-          <td>{%d idx+1 %}</td>
-          <td>{%v v %}</td>
-        </tr>
-        {%- endfor -%}
-      </tbody>
-    </table>
-    {%- endif -%}
   </div>
+{% endfunc %}
+
+{% func statementSQL(s *database.DebugStatement) %}
+  {%- code out, _ := cutil.FormatLang(s.SQL, "sql") -%}
+  <pre>{%s= out %}</pre>
+{% endfunc %}
+
+{% func statementValues(s *database.DebugStatement) %}
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Values</th>
+      </tr>
+    </thead>
+    <tbody>
+      {%- for idx, v := range s.Values -%}
+      <tr>
+        <td>{%d idx+1 %}</td>
+        <td>{%= components.JSON(v) %}</td>
+      </tr>
+      {%- endfor -%}
+    </tbody>
+  </table>
+{% endfunc %}
+
+{% func statementOut(s *database.DebugStatement) %}
+  <table>
+    <thead>
+      <tr>
+        <th class="shrink">Idx</th>
+        <th>Result</th>
+      </tr>
+    </thead>
+    <tbody>
+      {%- for idx, v := range s.Out -%}
+      <tr>
+        <td>{%d idx %}</td>
+        <td>{%= components.JSON(v) %}</td>
+      </tr>
+      {%- endfor -%}
+    </tbody>
+  </table>
+{% endfunc %}
+
+{% func statementExtra(s *database.DebugStatement) %}
+  <pre>{%s s.Extra %}</pre>
 {% endfunc %}

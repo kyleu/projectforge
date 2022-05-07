@@ -36,6 +36,7 @@ type Info struct {
 	GoBinary        string            `json:"goBinary,omitempty"`
 	ConfigVars      util.KeyTypeDescs `json:"configVars,omitempty"`
 	ExtraFiles      []string          `json:"extraFiles,omitempty"`
+	Deployments     []string          `json:"deployments,omitempty"`
 	ModuleDefs      ModuleDefs        `json:"moduleDefs,omitempty"`
 	ModuleArgs      util.ValueMap     `json:"moduleArgs,omitempty"`
 }

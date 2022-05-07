@@ -71,9 +71,9 @@ func (p *Session) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 				for _, line := range util.StringSplitAndTrim(x, ",") {
 //line views/vadmin/Session.html:27
 					qw422016.N().S(`
-          <li>`)
+          <li class="break-word">`)
 //line views/vadmin/Session.html:28
-					qw422016.E().S(fmt.Sprint(line))
+					qw422016.E().S(line)
 //line views/vadmin/Session.html:28
 					qw422016.N().S(`</li>
 `)
@@ -131,11 +131,11 @@ func (p *Session) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 				qw422016.E().S(acct.Email)
 //line views/vadmin/Session.html:53
 				qw422016.N().S(`</td>
-        <td>`)
+        <td><div class="break-word">`)
 //line views/vadmin/Session.html:54
 				qw422016.E().S(acct.Token)
 //line views/vadmin/Session.html:54
-				qw422016.N().S(`</td>
+				qw422016.N().S(`</div></td>
       </tr>
 `)
 //line views/vadmin/Session.html:56

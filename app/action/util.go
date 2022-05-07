@@ -43,8 +43,13 @@ func projectFromCfg(proto *project.Project, cfg util.ValueMap) *project.Project 
 		moduleArgs = ma
 	}
 
+	md := i.ModuleDefs
+	if x := cfg.GetStringOpt("moduleDefs"); x != "" {
+		_ = util.FromJSON([]byte(x), &md)
+	}
+
 	cfgVars := i.ConfigVars
-	if x, _ := cfg.GetString("configVars", true); x != "" {
+	if x := cfg.GetStringOpt("configVars"); x != "" {
 		_ = util.FromJSON([]byte(x), &cfgVars)
 	}
 
@@ -77,6 +82,8 @@ func projectFromCfg(proto *project.Project, cfg util.ValueMap) *project.Project 
 			GoBinary:        str("goBinary", i.GoBinary),
 			ConfigVars:      cfgVars,
 			ExtraFiles:      util.StringSplitAndTrim(str("extraFiles", strings.Join(i.ExtraFiles, ", ")), ","),
+			Deployments:     util.StringSplitAndTrim(str("deployments", strings.Join(i.Deployments, ", ")), ","),
+			ModuleDefs:      md,
 			ModuleArgs:      moduleArgs,
 		},
 		Path: proto.Path,

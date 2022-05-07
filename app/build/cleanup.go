@@ -18,17 +18,18 @@ func Cleanup(fs filesystem.FileLoader) ([]string, diff.Diffs, error) {
 	}
 
 	for _, fn := range files {
-		if matches(fn) {
-			st, err := fs.Stat(fn)
+		if !matches(fn) {
+			continue
+		}
+		st, err := fs.Stat(fn)
+		if err != nil {
+			return nil, nil, errors.Wrapf(err, "can't stat file [%s]", fn)
+		}
+		if st.Mode() != filesystem.DefaultMode {
+			ret = append(ret, &diff.Diff{Path: fn, Status: diff.StatusDifferent, Patch: "fixed mode"})
+			err = fs.SetMode(fn, filesystem.DefaultMode)
 			if err != nil {
-				return nil, nil, errors.Wrapf(err, "can't stat file [%s]", fn)
-			}
-			if st.Mode() != filesystem.DefaultMode {
-				ret = append(ret, &diff.Diff{Path: fn, Status: diff.StatusDifferent, Patch: "fixed mode"})
-				err = fs.SetMode(fn, filesystem.DefaultMode)
-				if err != nil {
-					return nil, nil, errors.Wrapf(err, "can't set mode for file [%s]", fn)
-				}
+				return nil, nil, errors.Wrapf(err, "can't set mode for file [%s]", fn)
 			}
 		}
 	}

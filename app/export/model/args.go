@@ -36,6 +36,11 @@ func (a *Args) Validate() error {
 			if relTable == nil {
 				return errors.Errorf("relation [%s] refers to missing table [%s]", rel.Name, rel.Table)
 			}
+			for _, t := range rel.Tgt {
+				if relTable.Columns.Get(t) == nil {
+					return errors.Errorf("relation [%s] references missing target column [%s]", rel.Name, t)
+				}
+			}
 		}
 		if _, ok := packages[m.Package]; ok {
 			return errors.Wrap(err, "multiple models are in package ["+m.Package+"]")

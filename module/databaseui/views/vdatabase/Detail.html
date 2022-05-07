@@ -23,13 +23,17 @@
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`database`, ps) %}{%s p.Svc.Key %}</h3>
-    {%- if p.Svc.Tracing() != "" -%}
-    <em>tracing is enabled in [{%s p.Svc.Tracing() %}] mode</em>
-    {%- endif -%}
     <div class="mt">
       {%- if p.Svc.Tracing() == "" -%}
-      <a href="/admin/database/{%s p.Svc.Key %}/enable"><button>Enable Tracing</button></a>
+      <em>tracing is disabled</em>
       {%- else -%}
+      <em>tracing is enabled in [{%s p.Svc.Tracing() %}] mode</em>
+      {%- endif -%}
+    </div>
+    <div class="mt">
+      <a href="#modal-settings"><button>Tracing Settings</button></a>
+      {%= settingsModal(p.Svc) %}
+      {%- if p.Svc.Tracing() != "" -%}
       <a href="/admin/database/{%s p.Svc.Key %}/recent"><button>Recent Activity</button></a>
       {%- endif -%}
       <a href="/admin/database/{%s p.Svc.Key %}/tables"><button>Tables</button></a>
@@ -43,53 +47,7 @@
   {%- case "tables" -%}
   {%= tableSizes(as, ps, p.Sizes) %}
   {%- case "sql" -%}
-  <div class="card">
-    <h3>SQL Editor</h3>
-    <form method="post" action="/admin/database/{%s p.Svc.Key %}/sql">
-      <div class="mt expanded">
-        <textarea name="sql" rows="12" placeholder="SQL statement">{%s p.SQL %}</textarea>
-      </div>
-      {%- if p.Svc.ReadOnly -%}
-      <input type="hidden" name="commit" value="false" />
-      {%- else -%}
-      <div class="mt">
-        <label><input type="checkbox" name="commit" value="true" {% if p.Commit %}checked="checked"{% endif %}/> Commit Changes</label>
-      </div>
-      {%- endif -%}
-      <div class="mt">
-        <button type="submit" name="action" value="run">Run</button>
-        <button type="submit" name="action" value="analyze">Analyze</button>
-      </div>
-    </form>
-  </div>
-  {%- if p.Results != nil -%}
-  <div class="card">
-    <div class="right">{%s util.MicrosToMillis(p.Timing) %}</div>
-    <h3>Results</h3>
-    {%- if len(p.Results) == 0 -%}
-      <em>No rows returned</em>
-    {%- else -%}
-      <table class="mt expanded">
-        <thead>
-          <tr>
-            {%- for _, c := range p.Columns -%}
-            <th>{%s c %}</th>
-            {%- endfor -%}
-          </tr>
-        </thead>
-        <tbody>
-          {%- for _, row := range p.Results -%}
-            <tr>
-              {%- for _, x := range row -%}
-              <td>{%v x %}</td>
-              {%- endfor -%}
-            </tr>
-          {%- endfor -%}
-        </tbody>
-      </table>
-    {%- endif -%}
-  </div>
-  {%- endif -%}
+  {%= sqlEditor(as, ps, p.SQL, p.Svc, p.Commit, p.Columns, p.Results, p.Timing) %}
   {%- endswitch -%}
 {% endfunc %}
 
@@ -160,5 +118,95 @@
       {%- endfor -%}
       </tbody>
     </table>
+  </div>
+{% endfunc %}
+
+{% func sqlEditor(as *app.State, ps *cutil.PageState, sql string, svc *database.Service, commit bool, columns []string, results [][]any, timing int) %}
+  <div class="card">
+    <h3>SQL Editor</h3>
+    <form method="post" action="/admin/database/{%s svc.Key %}/sql">
+      <div class="mt expanded">
+        <textarea name="sql" rows="12" placeholder="SQL statement">{%s sql %}</textarea>
+      </div>
+      {%- if svc.ReadOnly -%}
+      <input type="hidden" name="commit" value="false" />
+      {%- else -%}
+      <div class="mt">
+        <label><input type="checkbox" name="commit" value="true" {% if commit %}checked="checked"{% endif %}/> Commit Changes</label>
+      </div>
+      {%- endif -%}
+      <div class="mt">
+        <button type="submit" name="action" value="run">Run</button>
+        <button type="submit" name="action" value="analyze">Analyze</button>
+      </div>
+    </form>
+  </div>
+  {%- if results != nil -%}
+  <div class="card">
+    <div class="right">{%s util.MicrosToMillis(timing) %}</div>
+    <h3>Results</h3>
+    {%- if len(results) == 0 -%}
+      <em>No rows returned</em>
+    {%- else -%}
+      <table class="mt expanded">
+        <thead>
+          <tr>
+            {%- for _, c := range columns -%}
+            <th>{%s c %}</th>
+            {%- endfor -%}
+          </tr>
+        </thead>
+        <tbody>
+          {%- for _, row := range results -%}
+            <tr>
+              {%- for _, x := range row -%}
+              <td>{%v x %}</td>
+              {%- endfor -%}
+            </tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+    {%- endif -%}
+  </div>
+  {%- endif -%}
+{% endfunc %}
+
+{% func settingsModal(svc *database.Service) %}
+  <div id="modal-settings" class="modal" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2>Tracing Settings</h2>
+      </div>
+      <div class="modal-body">
+        <form action="/admin/database/{%s svc.Key %}/enable">
+          <table>
+            <tbody>
+              {%- code trc := svc.Tracing() %}
+              <tr>
+                <td><label><input type="radio" name="tracing" value=""{% if trc == `` %} checked="checked"{% endif %}> No Tracing</label></td>
+                <td><em>Fastest configuration, no tracing overhead</em></td>
+              </tr>
+              <tr>
+                <td><label><input type="radio" name="tracing" value="statement"{% if trc == `statement` %} checked="checked"{% endif %}> Save Queries</label></td>
+                <td><em>Save most recent 100 SQL statements with timing information</em></td>
+              </tr>
+              <tr>
+                <td><label><input type="radio" name="tracing" value="values"{% if trc == `values` %} checked="checked"{% endif %}> Save Results</label></td>
+                <td><em>Saves SQL, timing, and the results of the query</em></td>
+              </tr>
+              <tr>
+                <td><label><input type="radio" name="tracing" value="analyze"{% if trc == `analyze` %} checked="checked"{% endif %}> Analyze Queries</label></td>
+                <td><em>In addition to the above, runs an explain plan on each query</em></td>
+              </tr>
+              <tr>
+                <td colspan="2"><button>Submit</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </form>
+      </div>
+    </div>
   </div>
 {% endfunc %}

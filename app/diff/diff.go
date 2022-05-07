@@ -25,6 +25,14 @@ func (d *Diff) String() string {
 
 type Diffs []*Diff
 
+func (d Diffs) Paths() []string {
+	var ret []string
+	for _, x := range d {
+		ret = append(ret, x.Path)
+	}
+	return util.ArrayRemoveDuplicates(ret)
+}
+
 func File(src *file.File, tgt *file.File) *Diff {
 	ret := &Diff{Path: src.FullPath()}
 	switch {

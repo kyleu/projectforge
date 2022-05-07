@@ -1,5 +1,5 @@
 .menu-container {
-  position:absolute;
+  position: absolute;
   top: var(--nav-height);
   left: 0;
   width: var(--menu-width);
@@ -26,6 +26,10 @@
   margin: 0;
   list-style: none;
   padding: 0;
+}
+
+.menu-container li {
+  margin-right: -400px;
 }
 
 .menu-container .item, .menu-container label {
@@ -106,12 +110,15 @@
 .menu-container input[type=checkbox] + label .expand {
   display: inline;
 }
+
 .menu-container input[type=checkbox] + label .collapse {
   display: none;
 }
+
 .menu-container input[type=checkbox]:checked + label .expand {
   display: none;
 }
+
 .menu-container input[type=checkbox]:checked + label .collapse {
   display: inline;
 }

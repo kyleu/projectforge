@@ -78,8 +78,8 @@ func (t *TemplateContext) DatabaseUIOpts() (bool, bool) {
 	if len(cfg) == 0 {
 		return true, true
 	}
-	sqleditor, _ := cfg.GetBool("sqleditor", true)
-	readonly, _ := cfg.GetBool("readonly", true)
+	sqleditor := cfg.GetBoolOpt("sqleditor")
+	readonly := cfg.GetBoolOpt("readonly")
 	return sqleditor, readonly
 }
 

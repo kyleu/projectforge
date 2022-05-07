@@ -26,7 +26,10 @@ func Imports(self string, fix bool, targetPath string, fs filesystem.FileLoader)
 		if err != nil {
 			return nil, nil, errors.Wrapf(err, "unable to read file [%s]", fn)
 		}
-
+		stat, err := fs.Stat(fn)
+		if err != nil {
+			return nil, nil, err
+		}
 		fixed, diffs, err := processFile(fn, strings.Split(string(content), "\n"), self)
 		ret = append(ret, diffs...)
 		if err != nil {
@@ -35,7 +38,7 @@ func Imports(self string, fix bool, targetPath string, fs filesystem.FileLoader)
 		if fix && len(diffs) > 0 {
 			if targetPath == "" || fn == targetPath {
 				newContent := strings.Join(fixed, "\n")
-				err = fs.WriteFile(fn, []byte(newContent), filesystem.DefaultMode, true)
+				err = fs.WriteFile(fn, []byte(newContent), stat.Mode(), true)
 				if err != nil {
 					return nil, nil, errors.Wrapf(err, "unable to write file [%s]", fn)
 				}

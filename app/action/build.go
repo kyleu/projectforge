@@ -66,13 +66,14 @@ var AllBuilds = Builds{
 		return simpleProc(ctx, "npm install", filepath.Join(pm.Prj.Path, "client"), ret, pm.Logger)
 	}},
 	simpleBuild("clientBuild", "Client Build", "bin/build/client.sh"),
+	{Key: "deployments", Title: "Deployments", Description: "Manages deployments", Run: onDeployments},
 	{Key: "test", Title: "Test", Description: "Does a test", Run: func(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
 		return simpleProc(ctx, "ls", pm.Prj.Path, ret, pm.Logger)
 	}},
 }
 
 func onBuild(ctx context.Context, pm *PrjAndMods) *Result {
-	phaseStr, _ := pm.Cfg.GetString("phase", true)
+	phaseStr := pm.Cfg.GetStringOpt("phase")
 	if phaseStr == "" {
 		phaseStr = "build"
 	}
@@ -100,16 +101,16 @@ func onBuild(ctx context.Context, pm *PrjAndMods) *Result {
 }
 
 func onDeps(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
-	if up, _ := ret.Args.GetString("upgrade", true); up != "" {
-		o, _ := ret.Args.GetString("old", true)
-		n, _ := ret.Args.GetString("new", true)
+	if up := ret.Args.GetStringOpt("upgrade"); up != "" {
+		o := ret.Args.GetStringOpt("old")
+		n := ret.Args.GetStringOpt("new")
 		err := build.OnDepsUpgrade(ctx, pm.Prj, up, o, n, pm.PSvc, pm.Logger)
 		if err != nil {
 			return ret.WithError(err)
 		}
 	}
-	upd, _ := ret.Args.GetString("upd", true)
-	showAll, _ := pm.Cfg.GetBool("showAll", true)
+	upd := ret.Args.GetStringOpt("upd")
+	showAll := pm.Cfg.GetBoolOpt("showAll")
 	deps, err := build.LoadDeps(ctx, pm.Prj.Key, pm.Prj.Path, upd != "false", pm.PSvc.GetFilesystem(pm.Prj), showAll, pm.Logger)
 	ret.Data = deps
 	if err != nil {
@@ -119,9 +120,9 @@ func onDeps(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
 }
 
 func onImports(ctx context.Context, pm *PrjAndMods, r *Result) *Result {
-	fixStr, _ := r.Args.GetString("fix", true)
+	fixStr := r.Args.GetStringOpt("fix")
 	fix := fixStr == "true"
-	fileStr, _ := r.Args.GetString("file", true)
+	fileStr := r.Args.GetStringOpt("file")
 	t := util.TimerStart()
 	logs, diffs, err := build.Imports(pm.Prj.Package, fix, fileStr, pm.PSvc.GetFilesystem(pm.Prj))
 	r.Modules = append(r.Modules, &module.Result{Keys: []string{"imports"}, Status: "OK", Diffs: diffs, Duration: t.End()})
@@ -136,6 +137,21 @@ func onCleanup(ctx context.Context, pm *PrjAndMods, r *Result) *Result {
 	t := util.TimerStart()
 	logs, diffs, err := build.Cleanup(pm.PSvc.GetFilesystem(pm.Prj))
 	r.Modules = append(r.Modules, &module.Result{Keys: []string{"cleanup"}, Status: "OK", Diffs: diffs, Duration: t.End()})
+	r.Logs = append(r.Logs, logs...)
+	if err != nil {
+		return r.WithError(err)
+	}
+	return r
+}
+
+func onDeployments(ctx context.Context, pm *PrjAndMods, r *Result) *Result {
+	if pm.Prj.Info == nil || len(pm.Prj.Info.Deployments) == 0 {
+		return r
+	}
+	t := util.TimerStart()
+	fix := pm.Cfg.GetBoolOpt("fix")
+	logs, diffs, err := build.Deployments(ctx, pm.Prj.Version, pm.PSvc.GetFilesystem(pm.Prj), fix, pm.Cfg.GetStringOpt("path"), pm.Prj.Info.Deployments)
+	r.Modules = append(r.Modules, &module.Result{Keys: []string{"deployments"}, Status: "OK", Diffs: diffs, Duration: t.End()})
 	r.Logs = append(r.Logs, logs...)
 	if err != nil {
 		return r.WithError(err)

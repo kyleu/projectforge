@@ -45,6 +45,18 @@ func StringArrayFromInterfaces(a []any, maxLength int) []string {
 	return ret
 }
 
+func ArrayRemoveDuplicates[T comparable](x []T) []T {
+	m := make(map[T]struct{}, len(x))
+	ret := make([]T, 0, len(x))
+	for _, item := range x {
+		if _, ok := m[item]; !ok {
+			m[item] = struct{}{}
+			ret = append(ret, item)
+		}
+	}
+	return ret
+}
+
 func InterfaceArrayFrom[T any](x ...T) []any {
 	ret := make([]any, len(x))
 	for idx, item := range x {
@@ -93,8 +105,6 @@ func ArrayFromAny(dest any) []any {
 			ret = append(ret, e.Interface())
 		}
 		return ret
-	} else {
-		println(rfl.Kind().String())
 	}
-	return []any{}
+	return []any{dest}
 }

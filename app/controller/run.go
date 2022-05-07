@@ -43,7 +43,7 @@ func RunAction(rc *fasthttp.RequestCtx) {
 		phase := cfg.GetStringOpt("phase")
 
 		if isBuild && phase == "" {
-			page := &vbuild.BuildResult{Project: prj, BuildResult: nil, GitResult: nil}
+			page := &vbuild.BuildResult{Project: prj, Cfg: cfg, BuildResult: nil, GitResult: nil}
 			return render(rc, as, page, ps, "projects", actT.Title)
 		}
 
@@ -56,7 +56,7 @@ func RunAction(rc *fasthttp.RequestCtx) {
 			if phase == depsKey {
 				return runDeps(prj, result, rc, as, ps)
 			}
-			page := &vbuild.BuildResult{Project: prj, BuildResult: result}
+			page := &vbuild.BuildResult{Project: prj, Cfg: cfg, BuildResult: result}
 			return render(rc, as, page, ps, "projects", actT.Title)
 		}
 

@@ -9,7 +9,6 @@ import (
 	"projectforge.dev/projectforge/app/diff"
 	"projectforge.dev/projectforge/app/export/model"
 	"projectforge.dev/projectforge/app/file"
-	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -20,9 +19,9 @@ func onAudit(ctx context.Context, pm *PrjAndMods) *Result {
 	var err error
 	switch f := pm.Cfg.GetStringOpt("fix"); f {
 	case "remove":
-		err = auditRemove(ctx, pm, ret)
+		err = auditRemove(ctx, pm.Cfg.GetStringOpt("file"), pm, ret)
 	case "header":
-		err = auditHeader(ctx, pm, ret)
+		err = auditHeader(ctx, pm.Cfg.GetStringOpt("file"), pm, ret)
 	case "":
 		// noop, run normal audit
 	default:
@@ -94,23 +93,45 @@ func auditRun(ctx context.Context, pm *PrjAndMods, ret *Result) error {
 	return nil
 }
 
-func auditRemove(ctx context.Context, pm *PrjAndMods, ret *Result) error {
-	path := pm.Cfg.GetStringOpt("file")
-	if path == "" {
-		return errors.New("must specify [file] as argument")
+func auditRemove(ctx context.Context, fn string, pm *PrjAndMods, ret *Result) error {
+	if fn == "" {
+		err := auditRun(ctx, pm, ret)
+		if err != nil {
+			return err
+		}
+		for _, path := range ret.Modules.Paths(false) {
+			err = auditRemove(ctx, path, pm, ret)
+			if err != nil {
+				return errors.Wrapf(err, "can't fix audit of [%s]", path)
+			}
+		}
+		return nil
 	}
 	tgt := pm.PSvc.GetFilesystem(pm.Prj)
-	ret.AddLog("removed file [%s]", path)
-	return tgt.Remove(path)
+	ret.AddLog("removed file [%s]", fn)
+	return tgt.Remove(fn)
 }
 
-func auditHeader(ctx context.Context, pm *PrjAndMods, ret *Result) error {
-	path := pm.Cfg.GetStringOpt("file")
-	if path == "" {
-		return errors.New("must specify [file] as argument")
+func auditHeader(ctx context.Context, fn string, pm *PrjAndMods, ret *Result) error {
+	if fn == "" {
+		err := auditRun(ctx, pm, ret)
+		if err != nil {
+			return err
+		}
+		for _, path := range ret.Modules.Paths(false) {
+			err = auditHeader(ctx, path, pm, ret)
+			if err != nil {
+				return errors.Wrapf(err, "can't fix audit of [%s]", path)
+			}
+		}
+		return nil
 	}
 	tgt := pm.PSvc.GetFilesystem(pm.Prj)
-	content, err := tgt.ReadFile(path)
+	stat, err := tgt.Stat(fn)
+	if err != nil {
+		return err
+	}
+	content, err := tgt.ReadFile(fn)
 	if err != nil {
 		return err
 	}
@@ -126,13 +147,13 @@ func auditHeader(ctx context.Context, pm *PrjAndMods, ret *Result) error {
 	}
 	if hit {
 		final := strings.Join(fixed, "\n")
-		err = tgt.WriteFile(path, []byte(final), filesystem.DefaultMode, true)
+		err = tgt.WriteFile(fn, []byte(final), stat.Mode(), true)
 		if err != nil {
-			return errors.Wrapf(err, "can't overwrite file at path [%s]", path)
+			return errors.Wrapf(err, "can't overwrite file at path [%s]", fn)
 		}
-		ret.AddLog("removed header from file [%s]", path)
+		ret.AddLog("removed header from file [%s]", fn)
 	} else {
-		ret.AddLog("no header to remove from file [%s]", path)
+		ret.AddLog("no header to remove from file [%s]", fn)
 	}
 	return nil
 }

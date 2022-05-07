@@ -28,7 +28,7 @@ func act(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.Pa
 		f = Unauthorized(rc, reason, ps.Accounts)
 	}
 	if err := initAppRequest(as, ps); err != nil {
-		as.Logger.Warnf("%+v", err)
+		ps.Logger.Warnf("%+v", err)
 	}
 	actComplete(key, as, ps, rc, f)
 }
@@ -41,7 +41,7 @@ func actSite(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cuti
 		f = Unauthorized(rc, reason, ps.Accounts)
 	}
 	if err := initSiteRequest(as, ps); err != nil {
-		as.Logger.Warnf("%+v", err)
+		ps.Logger.Warnf("%+v", err)
 	}
 	actComplete(key, as, ps, rc, f)
 }
@@ -49,7 +49,7 @@ func actSite(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cuti
 func actComplete(key string, as *app.State, ps *cutil.PageState, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
 	err := clean(as, ps)
 	if err != nil {
-		as.Logger.Warnf("error while cleaning request, somehow: %+v", err)
+		ps.Logger.Warnf("error while cleaning request, somehow: %+v", err)
 	}
 	status := fasthttp.StatusOK
 	cutil.WriteCORS(rc)
@@ -60,7 +60,7 @@ func actComplete(key string, as *app.State, ps *cutil.PageState, rc *fasthttp.Re
 		if err != nil {
 			redir, err = handleError(key, as, ps, rc, err)
 			if err != nil {
-				as.Logger.Warnf("unable to handle error: %+v", err)
+				ps.Logger.Warnf("unable to handle error: %+v", err)
 			}
 		}
 	} else {

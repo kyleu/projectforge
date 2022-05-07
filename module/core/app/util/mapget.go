@@ -25,6 +25,11 @@ func (m ValueMap) GetBool(key string, allowEmpty bool) (bool, error) {
 	return m.ParseBool(key, false, allowEmpty)
 }
 
+func (m ValueMap) GetBoolOpt(key string) bool {
+	ret, _ := m.ParseBool(key, true, true)
+	return ret
+}
+
 func (m ValueMap) GetInt(key string, allowEmpty bool) (int, error) {
 	return m.ParseInt(key, false, allowEmpty)
 }

@@ -5,9 +5,10 @@
   "projectforge.dev/projectforge/app/action"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/diff"
+  "projectforge.dev/projectforge/app/util"
 ) %}
 
-{% func renderDiffs(prjKey string, act action.Type, diffs diff.Diffs, as *app.State, ps *cutil.PageState) %}{% stripspace %}
+{% func renderDiffs(prjKey string, act action.Type, diffs diff.Diffs, cfg util.ValueMap, as *app.State, ps *cutil.PageState) %}{% stripspace %}
     <h4 class="mt">Diffs</h4>
     {%- switch act.Key -%}
     {%- case "audit" -%}
@@ -32,7 +33,13 @@
       <tbody>
       {%- for _, d := range diffs -%}
         <tr>
-          <td class="shrink"><a href="/p/{%s prjKey %}/fs/{%s d.Path %}" target="_blank">{%s d.Path %}</a></td>
+          <td class="shrink">
+            {%- if strings.Contains(d.Path, "..") -%}
+            {%s d.Path %}
+            {%- else -%}
+            <a href="/p/{%s prjKey %}/fs/{%s d.Path %}" target="_blank">{%s d.Path %}</a>
+            {%- endif -%}
+          </td>
           <td>{%s d.Status.String() %}</td>
           <td>
             {%- switch act.Key -%}
@@ -45,16 +52,30 @@
             {%- case "preview" -%}
             <form action="/run/{%s prjKey %}/merge" method="get">
               <input type="hidden" name="file" value="{%s d.Path %}" />
+              {%- if d.Status.String() != "new" -%}
               <button type="submit" name="to" value="module" title="Incorporate change into module">&lt;-</button>{% space %}
+              {%- endif -%}
               <button type="submit" name="to" value="project" title="Overwrite project changes with module version">-&gt;</button>
             </form>
             {%- case "build" -%}
-            <form action="/run/{%s prjKey %}/build" method="get">
-              <input type="hidden" name="fix" value="true" />
-              <input type="hidden" name="phase" value="imports" />
-              <input type="hidden" name="file" value="{%s d.Path %}" />
-              <button type="submit" title="Reorder modules">Fix</button>
-            </form>
+              {%- switch cfg.GetStringOpt("phase") -%}
+              {%- case "imports" -%}
+                <form action="/run/{%s prjKey %}/build" method="get">
+                  <input type="hidden" name="fix" value="true" />
+                  <input type="hidden" name="phase" value="imports" />
+                  <input type="hidden" name="file" value="{%s d.Path %}" />
+                  <button type="submit" title="Reorder modules">Fix</button>
+                </form>
+              {%- case "deployments" -%}
+                {%- if d.Status != diff.StatusIdentical -%}
+                <form action="/run/{%s prjKey %}/build" method="get">
+                  <input type="hidden" name="fix" value="true" />
+                  <input type="hidden" name="phase" value="deployments" />
+                  <input type="hidden" name="file" value="{%s d.Path %}" />
+                  <button type="submit" title="Update deployment">Fix</button>
+                </form>
+                {%- endif -%}
+              {%- endswitch -%}
             {%- endswitch -%}
           </td>
           <td>{%= renderPatch(d.Patch, as, ps) %}</td>

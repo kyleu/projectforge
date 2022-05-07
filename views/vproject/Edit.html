@@ -100,6 +100,7 @@
           {%= components.TableInput("goVersion", "Go Version", info.GoVersion, 5, project.Helpers["goVersion"]...) %}
           {%= components.TableInput("goBinary", "Go Binary", info.GoBinary, 5, project.Helpers["goBinary"]...) %}
           {%= components.TableInput("extraFiles", "Extra Files", strings.Join(info.ExtraFiles, ", "), 5, project.Helpers["extraFiles"]...) %}
+          {%= components.TableInput("deployments", "Deployments", strings.Join(info.Deployments, ", "), 5, project.Helpers["deployments"]...) %}
         </tbody>
       </table>
     </div>

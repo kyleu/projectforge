@@ -36,13 +36,21 @@ func runDeps(prj *project.Project, res *action.Result, rc *fasthttp.RequestCtx, 
 func runAllDeps(cfg util.ValueMap, prjs project.Projects, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (string, error) {
 	var msg string
 	key := cfg.GetStringOpt("key")
-	version := cfg.GetStringOpt("version")
-	if key != "" && version != "" {
-		result, err := build.SetDepsMap(ps.Context, prjs, &build.Dependency{Key: key, Version: version}, as.Services.Projects, ps.Logger)
+	if pj := cfg.GetStringOpt("project"); pj != "" {
+		result, err := build.SetDepsProject(ps.Context, prjs, pj, as.Services.Projects, ps.Logger)
 		if err != nil {
 			return "", err
 		}
 		msg = result
+	} else {
+		version := cfg.GetStringOpt("version")
+		if key != "" && version != "" {
+			result, err := build.SetDepsMap(ps.Context, prjs, &build.Dependency{Key: key, Version: version}, as.Services.Projects, ps.Logger)
+			if err != nil {
+				return "", err
+			}
+			msg = result
+		}
 	}
 
 	ret, err := build.LoadDepsMap(prjs, 2, as.Services.Projects)

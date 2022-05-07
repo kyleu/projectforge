@@ -5,13 +5,13 @@
   "projectforge.dev/projectforge/views/vtheme"
 ) %}
 
-{% func DetailTheme(t *theme.Theme, title string, as *app.State, ps *cutil.PageState) %}
+{% func DetailTheme(key string, t *theme.Theme, title string, as *app.State, ps *cutil.PageState) %}
   {%- code
     if t == nil {
       t = theme.ThemeDefault
     }
   -%}
-  <table class="centered full-width">
+  <table class="centered">
     <tbody>
       <tr>
         <th>
@@ -25,4 +25,10 @@
       </tr>
     </tbody>
   </table>
+  <div class="mt">
+    Choose a different theme from
+    <a href="/theme/palette/crayola?project={%s key %}">Crayola</a>,
+    <a href="/theme/palette/css?project={%s key %}">CSS</a>,
+    or <a href="/theme/palette/wikipedia?project={%s key %}">Wikipedia</a>
+  </div>
 {% endfunc %}

@@ -67,7 +67,7 @@ func ToGoString(t types.Type, prop string) string {
 	}
 }
 
-func ToGoViewString(t types.Type, prop string, nullable bool) string {
+func ToGoViewString(t types.Type, prop string, nullable bool, format string) string {
 	switch t.Key() {
 	case types.KeyAny:
 		return "{%%= components.JSON(" + prop + ") %%}"
@@ -87,6 +87,16 @@ func ToGoViewString(t types.Type, prop string, nullable bool) string {
 			return "{%%= components.DisplayUUID(" + prop + ") %%}"
 		}
 		return "{%%= components.DisplayUUID(&" + prop + ") %%}"
+	case types.KeyString:
+		switch format {
+		case "code":
+			return "<pre>{%%s " + ToGoString(t, prop) + " %%}</pre>"
+		case "url":
+			x := "{%%s " + ToGoString(t, prop) + " %%}"
+			return fmt.Sprintf("<a href=%q target=\"_blank\">%s</a>", x, x)
+		default:
+			return "{%%s " + ToGoString(t, prop) + " %%}"
+		}
 	default:
 		return "{%%s " + ToGoString(t, prop) + " %%}"
 	}

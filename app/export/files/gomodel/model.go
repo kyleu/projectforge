@@ -47,7 +47,7 @@ func Model(m *model.Model, args *model.Args, addHeader bool) (*file.File, error)
 		hc := m.HistoryColumns(false)
 		g.AddBlocks(modelToData(m, hc.Const, "Core"), modelToData(m, hc.Var, hc.Col.Proper()))
 	}
-	g.AddBlocks(modelArray(m), modelArrayClone(m))
+	g.AddBlocks(modelArray(m), modelArrayGet(m), modelArrayClone(m))
 	return g.Render(addHeader)
 }
 
@@ -138,20 +138,6 @@ func modelToData(m *model.Model, cols model.Columns, suffix string) *golang.Bloc
 		// }
 	}
 	ret.W("\treturn []any{%s}", strings.Join(refs, ", "))
-	ret.W("}")
-	return ret
-}
-
-func modelArray(m *model.Model) *golang.Block {
-	ret := golang.NewBlock(m.Proper()+"Array", "type")
-	ret.W("type %s []*%s", m.ProperPlural(), m.Proper())
-	return ret
-}
-
-func modelArrayClone(m *model.Model) *golang.Block {
-	ret := golang.NewBlock(m.Proper()+"ArrayClone", "type")
-	ret.W("func (%s %s) Clone() %s {", m.FirstLetter(), m.ProperPlural(), m.ProperPlural())
-	ret.W("\treturn slices.Clone(%s)", m.FirstLetter())
 	ret.W("}")
 	return ret
 }

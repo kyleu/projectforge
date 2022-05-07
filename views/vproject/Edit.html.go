@@ -307,58 +307,63 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	components.StreamTableInput(qw422016, "extraFiles", "Extra Files", strings.Join(info.ExtraFiles, ", "), 5, project.Helpers["extraFiles"]...)
 //line views/vproject/Edit.html:102
 	qw422016.N().S(`
+          `)
+//line views/vproject/Edit.html:103
+	components.StreamTableInput(qw422016, "deployments", "Deployments", strings.Join(info.Deployments, ", "), 5, project.Helpers["deployments"]...)
+//line views/vproject/Edit.html:103
+	qw422016.N().S(`
         </tbody>
       </table>
     </div>
 `)
-//line views/vproject/Edit.html:107
+//line views/vproject/Edit.html:108
 	t := prj.Theme
 	if t == nil {
 		t = theme.ThemeDefault
 	}
 
-//line views/vproject/Edit.html:111
+//line views/vproject/Edit.html:112
 	qw422016.N().S(`    `)
-//line views/vproject/Edit.html:112
+//line views/vproject/Edit.html:113
 	vtheme.StreamEditor(qw422016, prj.Title(), t, as, ps)
-//line views/vproject/Edit.html:112
+//line views/vproject/Edit.html:113
 	qw422016.N().S(`
     <div class="card">
       <h3>Builds</h3>
       <table class="mt min-200">
         <tbody>
 `)
-//line views/vproject/Edit.html:117
+//line views/vproject/Edit.html:118
 	for _, o := range project.AllBuildOptions {
-//line views/vproject/Edit.html:117
+//line views/vproject/Edit.html:118
 		qw422016.N().S(`        <tr>
           <th class="shrink">`)
-//line views/vproject/Edit.html:119
+//line views/vproject/Edit.html:120
 		qw422016.E().S(o.Title)
-//line views/vproject/Edit.html:119
+//line views/vproject/Edit.html:120
 		qw422016.N().S(`</th>
           <td><label><input type="checkbox" name="build-`)
-//line views/vproject/Edit.html:120
+//line views/vproject/Edit.html:121
 		qw422016.E().S(o.Key)
-//line views/vproject/Edit.html:120
+//line views/vproject/Edit.html:121
 		qw422016.N().S(`" value="true" `)
-//line views/vproject/Edit.html:120
+//line views/vproject/Edit.html:121
 		if buildMap[o.Key] {
-//line views/vproject/Edit.html:120
+//line views/vproject/Edit.html:121
 			qw422016.N().S(` checked="checked" `)
-//line views/vproject/Edit.html:120
+//line views/vproject/Edit.html:121
 		}
-//line views/vproject/Edit.html:120
+//line views/vproject/Edit.html:121
 		qw422016.N().S(`/> `)
-//line views/vproject/Edit.html:120
+//line views/vproject/Edit.html:121
 		qw422016.E().S(o.Description)
-//line views/vproject/Edit.html:120
+//line views/vproject/Edit.html:121
 		qw422016.N().S(`</label></td>
         </tr>
 `)
-//line views/vproject/Edit.html:122
+//line views/vproject/Edit.html:123
 	}
-//line views/vproject/Edit.html:122
+//line views/vproject/Edit.html:123
 	qw422016.N().S(`        </tbody>
       </table>
     </div>
@@ -368,31 +373,31 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
     </div>
   </form>
 `)
-//line views/vproject/Edit.html:131
+//line views/vproject/Edit.html:132
 }
 
-//line views/vproject/Edit.html:131
+//line views/vproject/Edit.html:132
 func (p *Edit) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vproject/Edit.html:131
+//line views/vproject/Edit.html:132
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/Edit.html:131
+//line views/vproject/Edit.html:132
 	p.StreamBody(qw422016, as, ps)
-//line views/vproject/Edit.html:131
+//line views/vproject/Edit.html:132
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/Edit.html:131
+//line views/vproject/Edit.html:132
 }
 
-//line views/vproject/Edit.html:131
+//line views/vproject/Edit.html:132
 func (p *Edit) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vproject/Edit.html:131
+//line views/vproject/Edit.html:132
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/Edit.html:131
+//line views/vproject/Edit.html:132
 	p.WriteBody(qb422016, as, ps)
-//line views/vproject/Edit.html:131
+//line views/vproject/Edit.html:132
 	qs422016 := string(qb422016.B)
-//line views/vproject/Edit.html:131
+//line views/vproject/Edit.html:132
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/Edit.html:131
+//line views/vproject/Edit.html:132
 	return qs422016
-//line views/vproject/Edit.html:131
+//line views/vproject/Edit.html:132
 }

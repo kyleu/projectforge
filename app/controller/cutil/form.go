@@ -34,7 +34,7 @@ func ParseFormAsChanges(rc *fasthttp.RequestCtx) (util.ValueMap, error) {
 }
 
 func parseJSONForm(rc *fasthttp.RequestCtx) (util.ValueMap, error) {
-	var ret interface{}
+	var ret any
 	err := util.FromJSON(rc.Request.Body(), &ret)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't parse JSON body")

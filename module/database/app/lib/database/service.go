@@ -105,7 +105,7 @@ func (s *Service) logQuery(ctx context.Context, msg string, q string, logger *za
 	t := util.TimerStart()
 	return func(count int, msg string, err error, output ...any) {
 		go func() {
-			st, err := NewStatement(ctx, s, q, values, t.End())
+			st, err := s.newStatement(ctx, q, values, t.End(), logger)
 			if err == nil {
 				st.Complete(count, msg, err, output...)
 				s.addDebug(st)

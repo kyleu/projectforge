@@ -32,9 +32,21 @@ func (m *Model) Validate(mods []string) error {
 			return hc.Err
 		}
 	}
+	if m.IsSoftDelete() {
+		if d := m.Columns.WithTag("deleted"); len(d) == 0 {
+			return errors.New("when set to soft delete, model must have one column tagged [deleted]")
+		}
+	}
 	for _, col := range m.Columns {
 		if slices.Contains(goKeywords, col.Name) {
 			return errors.Errorf("column [%s] uses reserved keyword", col.Name)
+		}
+	}
+	for _, rel := range m.Relations {
+		for _, s := range rel.Src {
+			if m.Columns.Get(s) == nil {
+				return errors.Errorf("relation [%s] references missing source column [%s]", rel.Name, s)
+			}
 		}
 	}
 	return nil

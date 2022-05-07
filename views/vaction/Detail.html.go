@@ -192,7 +192,7 @@ func StreamDetail(qw422016 *qt422016.Writer, cfg util.ValueMap, res *action.Resu
 //line views/vaction/Detail.html:71
 			qw422016.N().S(`      `)
 //line views/vaction/Detail.html:72
-			streamrenderDiffs(qw422016, res.Project.Key, res.Action, diffs, as, ps)
+			streamrenderDiffs(qw422016, res.Project.Key, res.Action, diffs, cfg, as, ps)
 //line views/vaction/Detail.html:72
 			qw422016.N().S(`
 `)

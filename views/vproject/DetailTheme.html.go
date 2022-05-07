@@ -26,7 +26,7 @@ var (
 )
 
 //line views/vproject/DetailTheme.html:8
-func StreamDetailTheme(qw422016 *qt422016.Writer, t *theme.Theme, title string, as *app.State, ps *cutil.PageState) {
+func StreamDetailTheme(qw422016 *qt422016.Writer, key string, t *theme.Theme, title string, as *app.State, ps *cutil.PageState) {
 //line views/vproject/DetailTheme.html:8
 	qw422016.N().S(`
 `)
@@ -36,7 +36,7 @@ func StreamDetailTheme(qw422016 *qt422016.Writer, t *theme.Theme, title string, 
 	}
 
 //line views/vproject/DetailTheme.html:13
-	qw422016.N().S(`  <table class="centered full-width">
+	qw422016.N().S(`  <table class="centered">
     <tbody>
       <tr>
         <th>
@@ -58,32 +58,50 @@ func StreamDetailTheme(qw422016 *qt422016.Writer, t *theme.Theme, title string, 
       </tr>
     </tbody>
   </table>
+  <div class="mt">
+    Choose a different theme from
+    <a href="/theme/palette/crayola?project=`)
+//line views/vproject/DetailTheme.html:30
+	qw422016.E().S(key)
+//line views/vproject/DetailTheme.html:30
+	qw422016.N().S(`">Crayola</a>,
+    <a href="/theme/palette/css?project=`)
+//line views/vproject/DetailTheme.html:31
+	qw422016.E().S(key)
+//line views/vproject/DetailTheme.html:31
+	qw422016.N().S(`">CSS</a>,
+    or <a href="/theme/palette/wikipedia?project=`)
+//line views/vproject/DetailTheme.html:32
+	qw422016.E().S(key)
+//line views/vproject/DetailTheme.html:32
+	qw422016.N().S(`">Wikipedia</a>
+  </div>
 `)
-//line views/vproject/DetailTheme.html:28
+//line views/vproject/DetailTheme.html:34
 }
 
-//line views/vproject/DetailTheme.html:28
-func WriteDetailTheme(qq422016 qtio422016.Writer, t *theme.Theme, title string, as *app.State, ps *cutil.PageState) {
-//line views/vproject/DetailTheme.html:28
+//line views/vproject/DetailTheme.html:34
+func WriteDetailTheme(qq422016 qtio422016.Writer, key string, t *theme.Theme, title string, as *app.State, ps *cutil.PageState) {
+//line views/vproject/DetailTheme.html:34
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/DetailTheme.html:28
-	StreamDetailTheme(qw422016, t, title, as, ps)
-//line views/vproject/DetailTheme.html:28
+//line views/vproject/DetailTheme.html:34
+	StreamDetailTheme(qw422016, key, t, title, as, ps)
+//line views/vproject/DetailTheme.html:34
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/DetailTheme.html:28
+//line views/vproject/DetailTheme.html:34
 }
 
-//line views/vproject/DetailTheme.html:28
-func DetailTheme(t *theme.Theme, title string, as *app.State, ps *cutil.PageState) string {
-//line views/vproject/DetailTheme.html:28
+//line views/vproject/DetailTheme.html:34
+func DetailTheme(key string, t *theme.Theme, title string, as *app.State, ps *cutil.PageState) string {
+//line views/vproject/DetailTheme.html:34
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/DetailTheme.html:28
-	WriteDetailTheme(qb422016, t, title, as, ps)
-//line views/vproject/DetailTheme.html:28
+//line views/vproject/DetailTheme.html:34
+	WriteDetailTheme(qb422016, key, t, title, as, ps)
+//line views/vproject/DetailTheme.html:34
 	qs422016 := string(qb422016.B)
-//line views/vproject/DetailTheme.html:28
+//line views/vproject/DetailTheme.html:34
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/DetailTheme.html:28
+//line views/vproject/DetailTheme.html:34
 	return qs422016
-//line views/vproject/DetailTheme.html:28
+//line views/vproject/DetailTheme.html:34
 }

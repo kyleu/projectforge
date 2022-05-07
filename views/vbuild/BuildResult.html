@@ -13,6 +13,7 @@
 {% code type BuildResult struct {
   layout.Basic
   Project *project.Project
+  Cfg util.ValueMap
   BuildResult *action.Result
   GitResult *git.Result
 } %}
@@ -27,6 +28,6 @@
     <div class="right"><em>{%s br.Status %} [{%s util.MicrosToMillis(br.Duration) %}]</em></div>
     <h3>Result</h3>
   </div>
-  {%= vaction.Detail(nil, br, false, as, ps) %}
+  {%= vaction.Detail(p.Cfg, br, false, as, ps) %}
   {%- endif -%}
 {% endfunc %}

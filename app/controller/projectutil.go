@@ -61,6 +61,7 @@ func projectFromForm(frm util.ValueMap, prj *project.Project) error {
 	prj.Info.GoVersion = get("goVersion", prj.Info.GoBinary)
 	prj.Info.GoBinary = get("goBinary", prj.Info.GoBinary)
 	prj.Info.ExtraFiles = util.StringSplitAndTrim(get("extraFiles", strings.Join(prj.Info.ExtraFiles, ", ")), ",")
+	prj.Info.Deployments = util.StringSplitAndTrim(get("deployments", strings.Join(prj.Info.Deployments, ", ")), ",")
 
 	var err error
 	prj.Info.ModuleArgs, err = getModuleArgs(frm)

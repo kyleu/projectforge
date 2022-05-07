@@ -41,8 +41,8 @@ type KeyTypeDesc struct {
 	Description string `json:"description"`
 }
 
-func (k *KeyTypeDesc) Array() []string {
-	return []string{strings.ReplaceAll("`"+k.Key+"`", "{key}", AppKey), k.Type, strings.ReplaceAll(k.Description, "{key}", AppKey)}
+func (k *KeyTypeDesc) Array(key string) []string {
+	return []string{strings.ReplaceAll("`"+k.Key+"`", "{key}", key), k.Type, strings.ReplaceAll(k.Description, "{key}", key)}
 }
 
 type KeyTypeDescs []*KeyTypeDesc
@@ -53,11 +53,11 @@ func (k KeyTypeDescs) Sort() {
 	})
 }
 
-func (k KeyTypeDescs) Array() [][]string {
+func (k KeyTypeDescs) Array(key string) [][]string {
 	k.Sort()
 	ret := make([][]string, 0, len(k))
 	for _, x := range k {
-		ret = append(ret, x.Array())
+		ret = append(ret, x.Array(key))
 	}
 	return ret
 }

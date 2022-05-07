@@ -11,8 +11,9 @@ import (
 )
 
 func MenuFor(ctx context.Context, isAuthed bool, isAdmin bool, as *app.State) (menu.Items, error) {
-	_, span, _ := telemetry.StartSpan(ctx, "menu:generate", nil)
+	ctx, span, logger := telemetry.StartSpan(ctx, "menu:generate", nil)
 	defer span.Complete()
+	_ = logger
 
 	var ret menu.Items
 	// $PF_SECTION_START(routes_start)$
@@ -28,7 +29,7 @@ func MenuFor(ctx context.Context, isAuthed bool, isAdmin bool, as *app.State) (m
 	// $PF_SECTION_START(routes_end)$
 	if isAdmin {
 		ret = append(ret,
-			docMenu(ctx, as),
+			docMenu(ctx, as, logger),
 			menu.Separator,
 			&menu.Item{Key: "admin", Title: "Settings", Description: "System-wide settings and preferences", Icon: "cog", Route: "/admin"},
 			DoctorMenu("first-aid", "/doctor"),

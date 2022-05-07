@@ -54,6 +54,11 @@
   margin: var(--padding);
 }
 
+.break-word {
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
 .two-pane {
   display: flex;
 }

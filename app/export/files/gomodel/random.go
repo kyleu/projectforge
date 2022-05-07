@@ -33,7 +33,12 @@ func randFor(col *model.Column) string {
 	case types.KeyReference:
 		return "nil"
 	case types.KeyString:
-		return "util.RandomString(12)"
+		switch col.Format {
+		case "url":
+			return "\"https://\" + util.RandomString(6) + \".com/\" + util.RandomString(6)"
+		default:
+			return "util.RandomString(12)"
+		}
 	case types.KeyTimestamp:
 		if col.HasTag("deleted") {
 			return types.KeyNil

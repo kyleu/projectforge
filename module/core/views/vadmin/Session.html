@@ -24,7 +24,7 @@
         {%- if x, ok := v.(string); ok -%}
         <ul>
           {%- for _, line := range util.StringSplitAndTrim(x, ",") %}
-          <li>{%s fmt.Sprint(line) %}</li>
+          <li class="break-word">{%s line %}</li>
           {%- endfor -%}
         </ul>
         {%- else -%}
@@ -50,7 +50,7 @@
       <tr>
         <td>{%s acct.Provider %}</td>
         <td>{%s acct.Email %}</td>
-        <td>{%s acct.Token %}</td>
+        <td><div class="break-word">{%s acct.Token %}</div></td>
       </tr>
       {%- endfor -%}
       </tbody>

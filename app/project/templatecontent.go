@@ -24,7 +24,7 @@ func (t *TemplateContext) CIContent() string {
 }
 
 func (t *TemplateContext) ConfigVarsContent() string {
-	ret, err := util.MarkdownTable([]string{"Name", "Type", "Description"}, t.ConfigVars.Array())
+	ret, err := util.MarkdownTable([]string{"Name", "Type", "Description"}, t.ConfigVars.Array(t.Key))
 	if err != nil {
 		return "ERROR: " + err.Error()
 	}

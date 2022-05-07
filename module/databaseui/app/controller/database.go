@@ -52,27 +52,30 @@ func DatabaseAction(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
+		bc := []string{"admin", "Database||/admin/database", fmt.Sprintf("%s||/admin/database/%s", svc.Key, svc.Key), act}
 		switch act {
 		case "enable":
-			_ = svc.EnableTracing(true, true, ps.Logger)
+			_ = svc.EnableTracing(string(rc.URI().QueryArgs().Peek("tracing")), ps.Logger)
 			return "/admin/database/" + svc.Key + "/recent", nil
 		case "recent":
 			if idxStr := string(rc.URI().QueryArgs().Peek("idx")); idxStr != "" {
 				idx, _ := strconv.Atoi(idxStr)
 				st := database.GetDebugStatement(svc.Key, idx)
-				return render(rc, as, &vdatabase.Statement{Statement: st}, ps, "admin", "Database||/admin/database", svc.Key)
+				if st != nil {
+					return render(rc, as, &vdatabase.Statement{Statement: st}, ps, bc...)
+				}
 			}
 			recent := database.GetDebugStatements(svc.Key)
-			return render(rc, as, &vdatabase.Detail{Mode: "recent", Svc: svc, Recent: recent}, ps, "admin", "Database||/admin/database", svc.Key)
+			return render(rc, as, &vdatabase.Detail{Mode: "recent", Svc: svc, Recent: recent}, ps, bc...)
 		case "tables":
 			sizes, err := svc.Sizes(ps.Context, ps.Logger)
 			if err != nil {
 				return "", errors.Wrapf(err, "unable to calculate sizes for database [%s]", svc.Key)
 			}
-			return render(rc, as, &vdatabase.Detail{Mode: "tables", Svc: svc, Sizes: sizes}, ps, "admin", "Database||/admin/database", svc.Key)
+			return render(rc, as, &vdatabase.Detail{Mode: "tables", Svc: svc, Sizes: sizes}, ps, bc...)
 		case "analyze":
 			t := util.TimerStart()
-			var tmp []interface{}
+			var tmp []any
 			err = svc.Select(ps.Context, &tmp, "analyze", nil, ps.Logger)
 			if err != nil {
 				return "", err
@@ -80,7 +83,7 @@ func DatabaseAction(rc *fasthttp.RequestCtx) {
 			msg := fmt.Sprintf("Analyzed database in [%s]", util.MicrosToMillis(t.End()))
 			return flashAndRedir(true, msg, "/admin/database/"+svc.Key+"/tables", rc, ps){{{ if .DatabaseUISQLEditor }}}
 		case "sql":
-			return render(rc, as, &vdatabase.Detail{Mode: "sql", Svc: svc, SQL: "select 1;"}, ps, "admin", "Database||/admin/database", svc.Key){{{ end }}}
+			return render(rc, as, &vdatabase.Detail{Mode: "sql", Svc: svc, SQL: "select 1;"}, ps, bc...){{{ end }}}
 		default:
 			return "", errors.Errorf("invalid database action [%s]", act)
 		}

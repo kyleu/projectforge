@@ -37,6 +37,7 @@ func ThemePalette(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
+		prj := string(rc.URI().QueryArgs().Peek("project"))
 		ps.Title = fmt.Sprintf("[%s] Themes", pal)
 		_, span, _ := telemetry.StartSpan(ps.Context, "theme:load", ps.Logger)
 		x, err := theme.PaletteThemes(pal)
@@ -45,15 +46,29 @@ func ThemePalette(rc *fasthttp.RequestCtx) {
 		}
 		span.Complete()
 		ps.Data = x
-		return render(rc, as, &vtheme.Add{Palette: pal, Themes: x}, ps, "admin", "Themes")
+		return render(rc, as, &vtheme.Add{Project: prj, Palette: pal, Themes: x}, ps, "admin", "Themes")
 	})
 }
 
 func ThemePreview(rc *fasthttp.RequestCtx) {
 	act("theme.preview", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		thm, err := themeFromRC(rc)
+		pallette, thm, err := themeFromRC(rc)
 		if err != nil {
 			return "", err
+		}
+
+		if prj := string(rc.URI().QueryArgs().Peek("project")); prj != "" {
+			p, err := as.Services.Projects.Get(prj)
+			if err != nil {
+				return "", err
+			}
+			p.Theme = thm
+			err = as.Services.Projects.Save(p)
+			if err != nil {
+				return "", err
+			}
+			msg := fmt.Sprintf("set theme to [%s:%s]", pallette, thm.Key)
+			return flashAndRedir(true, msg, "/p/"+p.Key, rc, ps)
 		}
 
 		ps.Title = fmt.Sprintf("Preview [%s]", thm.Key)
@@ -64,18 +79,19 @@ func ThemePreview(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func themeFromRC(rc *fasthttp.RequestCtx) (*theme.Theme, error) {
+func themeFromRC(rc *fasthttp.RequestCtx) (string, *theme.Theme, error) {
 	color, err := RCRequiredString(rc, "color", false)
 	if err != nil {
 		pal, err := RCRequiredString(rc, "palette", false)
 		if err != nil {
-			return nil, err
+			return "", nil, err
 		}
 		key, err := RCRequiredString(rc, "key", false)
 		if err != nil {
-			return nil, err
+			return "", nil, err
 		}
-		return theme.PaletteTheme(pal, key)
+		ret, err := theme.PaletteTheme(pal, key)
+		return pal, ret, err
 	}
-	return theme.ColorTheme(color, gamut.Hex(color)), nil
+	return "", theme.ColorTheme(color, gamut.Hex(color)), nil
 }

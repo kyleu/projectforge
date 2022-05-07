@@ -50,15 +50,15 @@ func handleError(key string, as *app.State, ps *cutil.PageState, rc *fasthttp.Re
 
 	err = clean(as, ps)
 	if err != nil {
-		as.Logger.Error(err)
+		ps.Logger.Error(err)
 		msg := fmt.Sprintf("error while cleaning request: %+v", err)
-		as.Logger.Error(msg)
+		ps.Logger.Error(msg)
 		_, _ = rc.WriteString(msg)
 	}
 	redir, err := render(rc, as, page, ps)
 	if err != nil {
 		msg := fmt.Sprintf("error while running error handler: %+v", err)
-		as.Logger.Error(msg)
+		ps.Logger.Error(msg)
 		_, _ = rc.WriteString(msg)
 	}
 	return redir, err
