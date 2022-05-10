@@ -34,7 +34,13 @@
         <li>
           <input id="accordion-{%s prj.Key %}" type="checkbox" hidden />
           <label for="accordion-{%s prj.Key %}">
-            <div class="right">{%d len(res) %} matches</div>
+            <div class="right">
+              {%- if len(res) == 0 -%}
+              <em>0 matches</em>
+              {%- else -%}
+              {%d len(res) %} matches
+              {%- endif -%}
+            </div>
             {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef(prj.IconSafe(), 16, 16, "icon", ps) %} {%s prj.Title() %}
           </label>
           <div class="bd">
