@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/valyala/fasthttp"
-	"go.uber.org/zap"
 
 	"{{{ .Package }}}/app/util"
 )
@@ -120,7 +119,7 @@ func (p *Params) OrderByString() string {
 	return strings.Join(ret, ", ")
 }
 
-func (p *Params) Filtered(available []string, logger *zap.SugaredLogger) *Params {
+func (p *Params) Filtered(available []string, logger util.Logger) *Params {
 	if available == nil {
 		available = AllowedColumns[p.Key]
 	}

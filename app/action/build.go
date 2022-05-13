@@ -5,8 +5,6 @@ import (
 	"path/filepath"
 
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
-
 	"projectforge.dev/projectforge/app/build"
 	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/module"
@@ -22,7 +20,7 @@ type Build struct {
 	Run func(ctx context.Context, pm *PrjAndMods, ret *Result) *Result `json:"-"`
 }
 
-func simpleProc(ctx context.Context, cmd string, path string, ret *Result, logger *zap.SugaredLogger) *Result {
+func simpleProc(ctx context.Context, cmd string, path string, ret *Result, logger util.Logger) *Result {
 	exitCode, out, err := telemetry.RunProcessSimple(ctx, cmd, path, logger)
 	if err != nil {
 		return ret.WithError(err)
@@ -159,7 +157,7 @@ func onDeployments(ctx context.Context, pm *PrjAndMods, r *Result) *Result {
 	return r
 }
 
-func fullBuild(ctx context.Context, prj *project.Project, r *Result, logger *zap.SugaredLogger) *Result {
+func fullBuild(ctx context.Context, prj *project.Project, r *Result, logger util.Logger) *Result {
 	logs, err := build.Full(ctx, prj, logger)
 	for _, l := range logs {
 		r.AddLog(l)

@@ -2,13 +2,12 @@ package model
 
 import (
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
 
 	"{{{ .Package }}}/app/lib/schema/field"
 	"{{{ .Package }}}/app/util"
 )
 
-func (m *Model) GetPK(logger *zap.SugaredLogger) []string {
+func (m *Model) GetPK(logger util.Logger) []string {
 	if m.pk == nil {
 		for _, idx := range m.Indexes {
 			if idx.Primary {
@@ -22,7 +21,7 @@ func (m *Model) GetPK(logger *zap.SugaredLogger) []string {
 	return m.pk
 }
 
-func (m *Model) IsPK(key string, logger *zap.SugaredLogger) bool {
+func (m *Model) IsPK(key string, logger util.Logger) bool {
 	pk := m.GetPK(logger)
 	for _, col := range pk {
 		if col == key {

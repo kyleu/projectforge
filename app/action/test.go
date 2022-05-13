@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -39,7 +38,7 @@ func bootstrap(ctx context.Context, params *Params) *Result {
 	return onCreate(ctx, params)
 }
 
-func wipeIfNeeded(cfg util.ValueMap, logger *zap.SugaredLogger) error {
+func wipeIfNeeded(cfg util.ValueMap, logger util.Logger) error {
 	shouldWipe, _ := cfg.ParseBool("wipe", true, true)
 	if shouldWipe {
 		fs := filesystem.NewFileSystem(".", logger)

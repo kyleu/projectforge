@@ -6,7 +6,6 @@ import (
 	"sync"
 
 	"github.com/google/uuid"
-	"go.uber.org/zap"
 	"golang.org/x/exp/slices"
 
 	"{{{ .Package }}}/app/lib/filter"
@@ -25,7 +24,7 @@ type Service struct {
 	connectionsMu sync.Mutex
 	channels      map[string]*Channel
 	channelsMu    sync.Mutex
-	Logger        *zap.SugaredLogger
+	Logger        util.Logger
 	onOpen        ConnectEvent
 	handler       Handler
 	onClose       ConnectEvent
@@ -33,7 +32,7 @@ type Service struct {
 }
 
 // Creates a new service with the provided handler functions.
-func NewService(logger *zap.SugaredLogger, onOpen ConnectEvent, handler Handler, onClose ConnectEvent, ctx any) *Service {
+func NewService(logger util.Logger, onOpen ConnectEvent, handler Handler, onClose ConnectEvent, ctx any) *Service {
 	return &Service{
 		connections: make(map[uuid.UUID]*Connection),
 		channels:    make(map[string]*Channel),

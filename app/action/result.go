@@ -3,7 +3,6 @@ package action
 import (
 	"fmt"
 
-	"go.uber.org/zap"
 	"projectforge.dev/projectforge/app/diff"
 	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/project"
@@ -20,10 +19,10 @@ type Result struct {
 	Logs     []string         `json:"logs,omitempty"`
 	Errors   []string         `json:"errors,omitempty"`
 	Duration int              `json:"duration,omitempty"`
-	logger   *zap.SugaredLogger
+	logger   util.Logger
 }
 
-func newResult(act Type, prj *project.Project, cfg util.ValueMap, logger *zap.SugaredLogger) *Result {
+func newResult(act Type, prj *project.Project, cfg util.ValueMap, logger util.Logger) *Result {
 	return &Result{Project: prj, Action: act, Args: cfg, Status: "OK", logger: logger}
 }
 
@@ -128,6 +127,6 @@ func (x ResultContexts) Errors() []string {
 	return ret
 }
 
-func errorResult(err error, t Type, cfg util.ValueMap, logger *zap.SugaredLogger) *Result {
+func errorResult(err error, t Type, cfg util.ValueMap, logger util.Logger) *Result {
 	return newResult(t, nil, cfg, logger).WithError(err)
 }

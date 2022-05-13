@@ -8,17 +8,16 @@ import (
 	"github.com/coreos/go-semver/semver"
 	"github.com/google/go-github/v39/github"
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
 
 	"projectforge.dev/projectforge/app/util"
 )
 
 type Service struct {
-	logger *zap.SugaredLogger
+	logger util.Logger
 	client *github.Client
 }
 
-func NewService(logger *zap.SugaredLogger) *Service {
+func NewService(logger util.Logger) *Service {
 	return &Service{logger: logger, client: createGithubClient()}
 }
 

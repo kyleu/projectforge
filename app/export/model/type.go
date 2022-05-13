@@ -60,7 +60,7 @@ func ToGoString(t types.Type, prop string) string {
 		return fmt.Sprintf("fmt.Sprint(%s)", prop)
 	case types.KeyInt:
 		return fmt.Sprintf("fmt.Sprint(%s)", prop)
-	case types.KeyUUID:
+	case types.KeyUUID, types.KeyReference:
 		return fmt.Sprintf("%s.String()", prop)
 	default:
 		return prop
@@ -89,9 +89,9 @@ func ToGoViewString(t types.Type, prop string, nullable bool, format string) str
 		return "{%%= components.DisplayUUID(&" + prop + ") %%}"
 	case types.KeyString:
 		switch format {
-		case "code":
+		case FmtCode:
 			return "<pre>{%%s " + ToGoString(t, prop) + " %%}</pre>"
-		case "url":
+		case FmtURL:
 			x := "{%%s " + ToGoString(t, prop) + " %%}"
 			return fmt.Sprintf("<a href=%q target=\"_blank\">%s</a>", x, x)
 		default:

@@ -3,14 +3,13 @@ package doctor
 import (
 	"context"
 
-	"go.uber.org/zap"
 	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/util"
 )
 
 type (
-	CheckFn func(ctx context.Context, r *Result, logger *zap.SugaredLogger) *Result
-	SolveFn func(ctx context.Context, r *Result, logger *zap.SugaredLogger) *Result
+	CheckFn func(ctx context.Context, r *Result, logger util.Logger) *Result
+	SolveFn func(ctx context.Context, r *Result, logger util.Logger) *Result
 )
 
 type Check struct {
@@ -25,7 +24,7 @@ type Check struct {
 	Solve   SolveFn  `json:"-"`
 }
 
-func (c *Check) Check(ctx context.Context, logger *zap.SugaredLogger) *Result {
+func (c *Check) Check(ctx context.Context, logger util.Logger) *Result {
 	_, span, logger := telemetry.StartSpan(ctx, "doctor:check:"+c.Key, logger)
 	defer span.Complete()
 

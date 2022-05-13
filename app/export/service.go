@@ -5,23 +5,24 @@ import (
 	"fmt"
 
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
+
 	"projectforge.dev/projectforge/app/export/files"
 	"projectforge.dev/projectforge/app/export/inject"
 	"projectforge.dev/projectforge/app/export/model"
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/util"
 )
 
 type Service struct {
-	logger *zap.SugaredLogger
+	logger util.Logger
 }
 
-func NewService(logger *zap.SugaredLogger) *Service {
+func NewService(logger util.Logger) *Service {
 	logger = logger.With("svc", "export")
 	return &Service{logger: logger}
 }
 
-func (s *Service) Files(ctx context.Context, args *model.Args, addHeader bool, logger *zap.SugaredLogger) (f file.Files, e error) {
+func (s *Service) Files(ctx context.Context, args *model.Args, addHeader bool, logger util.Logger) (f file.Files, e error) {
 	defer func() {
 		if rec := recover(); rec != nil {
 			if err, ok := rec.(error); ok {
@@ -35,7 +36,7 @@ func (s *Service) Files(ctx context.Context, args *model.Args, addHeader bool, l
 	return
 }
 
-func (s *Service) Inject(ctx context.Context, args *model.Args, fs file.Files, logger *zap.SugaredLogger) (e error) {
+func (s *Service) Inject(ctx context.Context, args *model.Args, fs file.Files, logger util.Logger) (e error) {
 	defer func() {
 		if rec := recover(); rec != nil {
 			if err, ok := rec.(error); ok {

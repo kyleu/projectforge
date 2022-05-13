@@ -10,14 +10,12 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
-
 	"projectforge.dev/projectforge/app/util"
 )
 
 var key string
 
-func EncryptMessage(message string, logger *zap.SugaredLogger) (string, error) {
+func EncryptMessage(message string, logger util.Logger) (string, error) {
 	byteMsg := []byte(message)
 	block, err := aes.NewCipher(getKey(logger))
 	if err != nil {
@@ -36,7 +34,7 @@ func EncryptMessage(message string, logger *zap.SugaredLogger) (string, error) {
 	return base64.StdEncoding.EncodeToString(cipherText), nil
 }
 
-func DecryptMessage(message string, logger *zap.SugaredLogger) (string, error) {
+func DecryptMessage(message string, logger util.Logger) (string, error) {
 	cipherText, err := base64.StdEncoding.DecodeString(message)
 	if err != nil {
 		return "", errors.Wrap(err, "could not base64 decode")
@@ -60,7 +58,7 @@ func DecryptMessage(message string, logger *zap.SugaredLogger) (string, error) {
 	return string(cipherText), nil
 }
 
-func getKey(logger *zap.SugaredLogger) []byte {
+func getKey(logger util.Logger) []byte {
 	if key == "" {
 		env := strings.ReplaceAll(util.AppKey, "-", "_") + "_encryption_key"
 		key = os.Getenv(env)

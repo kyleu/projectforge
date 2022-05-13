@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
 
 	"{{{ .Package }}}/app/lib/database"
 	"{{{ .Package }}}/app/lib/filter"
@@ -14,10 +13,10 @@ import (
 
 type Service struct {
 	db     *database.Service
-	logger *zap.SugaredLogger
+	logger util.Logger
 }
 
-func NewService(db *database.Service, logger *zap.SugaredLogger) *Service {
+func NewService(db *database.Service, logger util.Logger) *Service {
 	logger = logger.With("svc", "audit")
 	filter.AllowedColumns["audit"] = columns
 	filter.AllowedColumns["audit_record"] = recordColumns

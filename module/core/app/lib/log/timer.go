@@ -3,20 +3,18 @@ package log
 import (
 	"fmt"
 
-	"go.uber.org/zap"
-
 	"{{{ .Package }}}/app/util"
 )
 
 type Timer struct {
-	Key     string             `json:"key"`
-	Log     *zap.SugaredLogger `json:"-"`
-	Timer   *util.Timer        `json:"-"`
+	Key     string      `json:"key"`
+	Log     util.Logger `json:"-"`
+	Timer   *util.Timer `json:"-"`
 	initial *util.Timer
 	index   int
 }
 
-func NewTimer(key string, logger *zap.SugaredLogger) *Timer {
+func NewTimer(key string, logger util.Logger) *Timer {
 	return &Timer{Key: key, Log: logger, Timer: util.TimerStart(), initial: util.TimerStart()}
 }
 

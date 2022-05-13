@@ -1,7 +1,6 @@
 package action
 
 import (
-	"go.uber.org/zap"
 	"projectforge.dev/projectforge/app/export"
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/module"
@@ -18,5 +17,5 @@ type Params struct {
 	PSvc       *project.Service
 	ESvc       *export.Service
 	CLI        bool
-	Logger     *zap.SugaredLogger
+	Logger     util.Logger
 }

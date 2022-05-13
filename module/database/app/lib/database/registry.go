@@ -4,9 +4,10 @@ import (
 	"sync"
 
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
 	"golang.org/x/exp/maps"
 	"golang.org/x/exp/slices"
+
+	"{{{ .Package }}}/app/util"
 )
 
 var (
@@ -14,7 +15,7 @@ var (
 	serviceRegistryMu = sync.Mutex{}
 )
 
-func register(s *Service, logger *zap.SugaredLogger) {
+func register(s *Service, logger util.Logger) {
 	serviceRegistryMu.Lock()
 	defer serviceRegistryMu.Unlock()
 	if _, ok := serviceRegistry[s.Key]; ok {

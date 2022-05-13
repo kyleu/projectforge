@@ -9,7 +9,6 @@ import (
 	"github.com/muesli/coral"
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
-	"go.uber.org/zap"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
@@ -50,7 +49,7 @@ func startServer(flags *Flags) error {
 	return nil
 }
 
-func loadServer(flags *Flags, logger *zap.SugaredLogger) (*app.State, fasthttp.RequestHandler, *zap.SugaredLogger, error) {
+func loadServer(flags *Flags, logger util.Logger) (*app.State, fasthttp.RequestHandler, util.Logger, error) {
 	r := controller.AppRoutes()
 	f := filesystem.NewFileSystem(flags.ConfigDir, logger)
 	telemetryDisabled := util.GetEnvBool("disable_telemetry", false)

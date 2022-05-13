@@ -73,72 +73,81 @@ func StreamDetailModuleArg(qw422016 *qt422016.Writer, mod *module.Module, arg an
 			qw422016.E().S(m.Name)
 //line views/vproject/DetailModuleArg.html:29
 			qw422016.N().S(`">
-          `)
+          <div class="right"><em>`)
 //line views/vproject/DetailModuleArg.html:30
+			qw422016.N().D(len(m.Columns))
+//line views/vproject/DetailModuleArg.html:30
+			qw422016.N().S(` `)
+//line views/vproject/DetailModuleArg.html:30
+			qw422016.E().S(util.StringPluralMaybe("field", len(m.Columns)))
+//line views/vproject/DetailModuleArg.html:30
+			qw422016.N().S(`</em></div>
+          `)
+//line views/vproject/DetailModuleArg.html:31
 			components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vproject/DetailModuleArg.html:30
+//line views/vproject/DetailModuleArg.html:31
 			qw422016.N().S(`
           `)
-//line views/vproject/DetailModuleArg.html:31
+//line views/vproject/DetailModuleArg.html:32
 			components.StreamSVGRef(qw422016, m.IconSafe(), 15, 15, ``, ps)
-//line views/vproject/DetailModuleArg.html:31
+//line views/vproject/DetailModuleArg.html:32
 			qw422016.N().S(`
           `)
-//line views/vproject/DetailModuleArg.html:32
+//line views/vproject/DetailModuleArg.html:33
 			qw422016.E().S(m.Title())
-//line views/vproject/DetailModuleArg.html:32
+//line views/vproject/DetailModuleArg.html:33
 			qw422016.N().S(`
         </label>
         <div class="bd">
           `)
-//line views/vproject/DetailModuleArg.html:35
+//line views/vproject/DetailModuleArg.html:36
 			StreamDetailExportModel(qw422016, m, as, ps)
-//line views/vproject/DetailModuleArg.html:35
+//line views/vproject/DetailModuleArg.html:36
 			qw422016.N().S(`
         </div>
       </li>
 `)
-//line views/vproject/DetailModuleArg.html:38
+//line views/vproject/DetailModuleArg.html:39
 		}
-//line views/vproject/DetailModuleArg.html:38
+//line views/vproject/DetailModuleArg.html:39
 		qw422016.N().S(`    </ul>
 `)
-//line views/vproject/DetailModuleArg.html:40
+//line views/vproject/DetailModuleArg.html:41
 	default:
-//line views/vproject/DetailModuleArg.html:40
+//line views/vproject/DetailModuleArg.html:41
 		qw422016.N().S(`    `)
-//line views/vproject/DetailModuleArg.html:41
+//line views/vproject/DetailModuleArg.html:42
 		components.StreamJSON(qw422016, arg)
-//line views/vproject/DetailModuleArg.html:41
+//line views/vproject/DetailModuleArg.html:42
 		qw422016.N().S(`
 `)
-//line views/vproject/DetailModuleArg.html:42
+//line views/vproject/DetailModuleArg.html:43
 	}
-//line views/vproject/DetailModuleArg.html:43
+//line views/vproject/DetailModuleArg.html:44
 }
 
-//line views/vproject/DetailModuleArg.html:43
+//line views/vproject/DetailModuleArg.html:44
 func WriteDetailModuleArg(qq422016 qtio422016.Writer, mod *module.Module, arg any, as *app.State, ps *cutil.PageState) {
-//line views/vproject/DetailModuleArg.html:43
+//line views/vproject/DetailModuleArg.html:44
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/DetailModuleArg.html:43
+//line views/vproject/DetailModuleArg.html:44
 	StreamDetailModuleArg(qw422016, mod, arg, as, ps)
-//line views/vproject/DetailModuleArg.html:43
+//line views/vproject/DetailModuleArg.html:44
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/DetailModuleArg.html:43
+//line views/vproject/DetailModuleArg.html:44
 }
 
-//line views/vproject/DetailModuleArg.html:43
+//line views/vproject/DetailModuleArg.html:44
 func DetailModuleArg(mod *module.Module, arg any, as *app.State, ps *cutil.PageState) string {
-//line views/vproject/DetailModuleArg.html:43
+//line views/vproject/DetailModuleArg.html:44
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/DetailModuleArg.html:43
+//line views/vproject/DetailModuleArg.html:44
 	WriteDetailModuleArg(qb422016, mod, arg, as, ps)
-//line views/vproject/DetailModuleArg.html:43
+//line views/vproject/DetailModuleArg.html:44
 	qs422016 := string(qb422016.B)
-//line views/vproject/DetailModuleArg.html:43
+//line views/vproject/DetailModuleArg.html:44
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/DetailModuleArg.html:43
+//line views/vproject/DetailModuleArg.html:44
 	return qs422016
-//line views/vproject/DetailModuleArg.html:43
+//line views/vproject/DetailModuleArg.html:44
 }

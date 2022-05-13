@@ -4,9 +4,9 @@ import (
 	"context"
 	"strings"
 
-	"go.uber.org/zap"
 	"projectforge.dev/projectforge/app/doctor"
 	"projectforge.dev/projectforge/app/lib/telemetry"
+	"projectforge.dev/projectforge/app/util"
 )
 
 var repo = &doctor.Check{
@@ -20,7 +20,7 @@ var repo = &doctor.Check{
 	Solve:   solveRepo,
 }
 
-func checkRepo(ctx context.Context, r *doctor.Result, logger *zap.SugaredLogger) *doctor.Result {
+func checkRepo(ctx context.Context, r *doctor.Result, logger util.Logger) *doctor.Result {
 	exitCode, _, err := telemetry.RunProcessSimple(ctx, "git status", ".", logger)
 	if err != nil {
 		return r.WithError(doctor.NewError("missing", "[git] is not present on your computer"))
@@ -49,7 +49,7 @@ func checkRepo(ctx context.Context, r *doctor.Result, logger *zap.SugaredLogger)
 	return r
 }
 
-func solveRepo(ctx context.Context, r *doctor.Result, logger *zap.SugaredLogger) *doctor.Result {
+func solveRepo(ctx context.Context, r *doctor.Result, logger util.Logger) *doctor.Result {
 	if r.Errors.Find("norepo") != nil {
 		r.AddSolution("run [git init] in this directory")
 	}

@@ -30,6 +30,9 @@ func Help(t types.Type) string {
 }
 
 func (c *Column) Help() string {
+	if c.HelpString != "" {
+		return c.HelpString
+	}
 	ret := Help(c.Type)
 	if c.Nullable {
 		ret += " (optional)"

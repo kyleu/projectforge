@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/lib/search/result"
@@ -13,9 +12,9 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-type Provider func(context.Context, *app.State, *Params, *zap.SugaredLogger) (result.Results, error)
+type Provider func(context.Context, *app.State, *Params, util.Logger) (result.Results, error)
 
-func Search(ctx context.Context, as *app.State, params *Params, logger *zap.SugaredLogger) (result.Results, []error) {
+func Search(ctx context.Context, as *app.State, params *Params, logger util.Logger) (result.Results, []error) {
 	ctx, span, logger := telemetry.StartSpan(ctx, "search", logger)
 	defer span.Complete()
 
@@ -24,7 +23,7 @@ func Search(ctx context.Context, as *app.State, params *Params, logger *zap.Suga
 	}
 	var allProviders []Provider
 	// $PF_SECTION_START(search_functions)$
-	testFunc := func(ctx context.Context, as *app.State, p *Params, logger *zap.SugaredLogger) (result.Results, error) {
+	testFunc := func(ctx context.Context, as *app.State, p *Params, logger util.Logger) (result.Results, error) {
 		return result.Results{{URL: "/search?q=test", Title: "Test Result", Icon: "star", Matches: nil}}, nil
 	}
 	allProviders = append(allProviders, testFunc)

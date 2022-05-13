@@ -43,7 +43,7 @@ func ServiceAll(m *model.Model, args *model.Args, addHeader bool) (file.Files, e
 
 func Service(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.Package}, "service")
-	g.AddImport(helper.ImpLogging, helper.ImpFilter, helper.ImpDatabase)
+	g.AddImport(helper.ImpAppUtil, helper.ImpFilter, helper.ImpDatabase)
 
 	isRO := args.HasModule("readonlydb")
 	isAudit := args.HasModule("audit") && m.HasTag("audit")
@@ -65,7 +65,7 @@ func serviceStruct(isRO bool, isAudit bool) *golang.Block {
 	if isAudit {
 		ret.W("\taudit  *audit.Service")
 	}
-	ret.W("\tlogger *zap.SugaredLogger")
+	ret.W("\tlogger util.Logger")
 	ret.W("}")
 	return ret
 }
@@ -81,7 +81,7 @@ func serviceNew(m *model.Model, isRO bool, isAudit bool) *golang.Block {
 		newSuffix = "aud *audit.Service, "
 		callSuffix = "audit: aud, "
 	}
-	ret.W("func NewService(db *database.Service, %slogger *zap.SugaredLogger) *Service {", newSuffix)
+	ret.W("func NewService(db *database.Service, %slogger util.Logger) *Service {", newSuffix)
 	ret.W("\tlogger = logger.With(\"svc\", %q)", m.Camel())
 	ret.W("\tfilter.AllowedColumns[\"%s\"] = columns", m.Package)
 	ret.W("\treturn &Service{db: db, %slogger: logger}", callSuffix)

@@ -15,14 +15,22 @@ func table(m *model.Model, args *model.Args, addHeader bool) (*file.File, error)
 	g := golang.NewGoTemplate([]string{"views", "v" + m.Package}, "Table.html")
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpFilter)
 	g.AddImport(helper.AppImport("app/" + m.Package))
-	g.AddBlocks(exportViewTableFunc(m, args.Models))
+	g.AddBlocks(exportViewTableFunc(m, args.Models, g))
 	return g.Render(addHeader)
 }
 
-func exportViewTableFunc(m *model.Model, models model.Models) *golang.Block {
+func exportViewTableFunc(m *model.Model, models model.Models, g *golang.Template) *golang.Block {
 	summCols := m.Columns.ForDisplay("summary")
 	ret := golang.NewBlock("Table", "func")
-	ret.W("{%% func Table(models " + m.Package + "." + m.ProperPlural() + ", params filter.ParamSet, as *app.State, ps *cutil.PageState) %%}")
+	suffix := ""
+	for _, rel := range m.Relations {
+		if relModel := models.Get(rel.Table); relModel.CanTraverseRelation() {
+			g.AddImport(helper.AppImport("app/" + relModel.Package))
+			msg := ", %s %s.%s"
+			suffix += fmt.Sprintf(msg, relModel.Plural(), relModel.Package, relModel.ProperPlural())
+		}
+	}
+	ret.W("{%% func Table(models " + m.Package + "." + m.ProperPlural() + suffix + ", params filter.ParamSet, as *app.State, ps *cutil.PageState) %%}")
 	ret.W("  {%%- code prms := params.Get(\"" + m.Package + "\", nil, ps.Logger).Sanitize(\"" + m.Package + "\") -%%}")
 	ret.W("  <table class=\"mt\">")
 	ret.W("    <thead>")
@@ -37,7 +45,7 @@ func exportViewTableFunc(m *model.Model, models model.Models) *golang.Block {
 	ret.W("      {%%- for _, model := range models -%%}")
 	ret.W("      <tr>")
 	for _, col := range summCols {
-		viewTableColumn(ret, models, m, true, col, "model.", 4)
+		viewTableColumn(ret, models, m, true, col, "model.", "", 4)
 	}
 	ret.W("      </tr>")
 	ret.W("      {%%- endfor -%%}")
@@ -52,31 +60,47 @@ func exportViewTableFunc(m *model.Model, models model.Models) *golang.Block {
 	return ret
 }
 
-func viewTableColumn(ret *golang.Block, models model.Models, m *model.Model, link bool, col *model.Column, prefix string, indent int) {
+func viewTableColumn(ret *golang.Block, models model.Models, m *model.Model, link bool, col *model.Column, modelKey string, prefix string, indent int) {
 	ind := util.StringRepeat("  ", indent)
-	if rels := m.RelationsFor(col); len(rels) == 0 {
+	rels := m.RelationsFor(col)
+	if len(rels) == 0 {
 		switch {
 		case col.PK && link:
-			ret.W(ind+"<td><a href=%q>%s</a></td>", m.LinkURL(prefix), col.ToGoViewString(prefix))
+			ret.W(ind+"<td><a href=%q>%s</a></td>", m.LinkURL(modelKey), col.ToGoViewString(modelKey))
 		case col.HasTag("grouped"):
-			u := fmt.Sprintf("/%s/%s/%s", m.Route(), col.TitleLower(), col.ToGoViewString(prefix))
-			ret.W(ind+"<td><a href=%q>%s</a></td>", u, col.ToGoViewString(prefix))
+			u := fmt.Sprintf("/%s/%s/%s", m.Route(), col.TitleLower(), col.ToGoViewString(modelKey))
+			ret.W(ind+"<td><a href=%q>%s</a></td>", u, col.ToGoViewString(modelKey))
+		case col.HasTag("title"):
+			ret.W(ind + "<td><strong>" + col.ToGoViewString(modelKey) + "</strong></td>")
 		default:
-			ret.W(ind + "<td>" + col.ToGoViewString(prefix) + "</td>")
+			ret.W(ind + "<td>" + col.ToGoViewString(modelKey) + "</td>")
 		}
 		return
 	}
+
+	var toStrings string
+	for _, rel := range rels {
+		if relModel := models.Get(rel.Table); relModel.CanTraverseRelation() {
+			k := relModel.Plural()
+			if prefix != "" {
+				k = prefix + relModel.ProperPlural()
+			}
+			get := fmt.Sprintf("%s.Get(%s%s)", k, modelKey, m.Columns.Get(rel.Src[0]).Proper())
+			toStrings += "{%% if x := " + get + "; x != nil %%} ({%%s x.TitleString() %%}){%% endif %%}"
+		}
+	}
+
 	ret.W(ind + "<td>")
 	if col.PK && link {
-		ret.W(ind + "  <div class=\"icon\"><a href=\"" + m.LinkURL(prefix) + "\">" + col.ToGoViewString(prefix) + "</a></div>")
+		ret.W(ind + "  <div class=\"icon\"><a href=\"" + m.LinkURL(modelKey) + "\">" + col.ToGoViewString(modelKey) + toStrings + "</a></div>")
 	} else {
-		ret.W(ind + "  <div class=\"icon\">" + col.ToGoViewString(prefix) + "</div>")
+		ret.W(ind + "  <div class=\"icon\">" + col.ToGoViewString(modelKey) + toStrings + "</div>")
 	}
 	const msg = "%s  <a title=%q href=\"{%%%%s %s %%%%}\">{%%%%= components.SVGRefIcon(%q, ps) %%%%}</a>"
-	for _, rel := range m.Relations {
+	for _, rel := range rels {
 		if slices.Contains(rel.Src, col.Name) {
 			relModel := models.Get(rel.Table)
-			ret.W(msg, ind, relModel.Title(), rel.WebPath(m, relModel, prefix), relModel.Icon)
+			ret.W(msg, ind, relModel.Title(), rel.WebPath(m, relModel, modelKey), relModel.Icon)
 		}
 	}
 	ret.W(ind + "</td>")

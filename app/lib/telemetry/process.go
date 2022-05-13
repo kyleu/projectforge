@@ -5,12 +5,10 @@ import (
 	"context"
 	"io"
 
-	"go.uber.org/zap"
-
 	"projectforge.dev/projectforge/app/util"
 )
 
-func RunProcess(ctx context.Context, cmd string, path string, in io.Reader, out io.Writer, er io.Writer, logger *zap.SugaredLogger) (int, error) {
+func RunProcess(ctx context.Context, cmd string, path string, in io.Reader, out io.Writer, er io.Writer, logger util.Logger) (int, error) {
 	exec, _ := util.StringSplit(cmd, ' ', true)
 	_, span, _ := StartSpan(ctx, "process:"+exec, logger)
 	defer span.Complete()
@@ -19,7 +17,7 @@ func RunProcess(ctx context.Context, cmd string, path string, in io.Reader, out 
 	return util.RunProcess(cmd, path, in, out, er)
 }
 
-func RunProcessSimple(ctx context.Context, cmd string, path string, logger *zap.SugaredLogger) (int, string, error) {
+func RunProcessSimple(ctx context.Context, cmd string, path string, logger util.Logger) (int, string, error) {
 	exec, _ := util.StringSplit(cmd, ' ', true)
 	_, span, _ := StartSpan(ctx, "process-simple:"+exec, logger)
 	defer span.Complete()

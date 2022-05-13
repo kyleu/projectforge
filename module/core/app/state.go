@@ -4,8 +4,6 @@ import (
 	"context"
 	"fmt"
 	"time"
-
-	"go.uber.org/zap"
 {{{ if .HasModule "oauth" }}}
 	"{{{ .Package }}}/app/lib/auth"{{{ end }}}{{{ if .HasDatabaseModule }}}
 	"{{{ .Package }}}/app/lib/database"{{{ end }}}
@@ -38,7 +36,7 @@ type State struct {
 	DB        *database.Service{{{ end }}}{{{ if .HasModule "readonlydb" }}}
 	DBRead    *database.Service{{{ end }}}
 	Themes    *theme.Service
-	Logger    *zap.SugaredLogger
+	Logger    util.Logger
 	Services  *Services
 	Started   time.Time
 }
@@ -53,7 +51,7 @@ func (s State) Close(ctx context.Context) error {
 	{{{ end }}}return s.Services.Close(ctx)
 }
 
-func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, enableTelemetry bool, logger *zap.SugaredLogger) (*State, error) {
+func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, enableTelemetry bool, logger util.Logger) (*State, error) {
 	loc, err := time.LoadLocation("UTC")
 	if err != nil {
 		return nil, err

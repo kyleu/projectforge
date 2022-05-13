@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
 
 	"projectforge.dev/projectforge/app/export/files/controller"
 	"projectforge.dev/projectforge/app/export/files/gomodel"
@@ -14,9 +13,10 @@ import (
 	"projectforge.dev/projectforge/app/export/files/view"
 	"projectforge.dev/projectforge/app/export/model"
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/util"
 )
 
-func All(ctx context.Context, args *model.Args, addHeader bool, logger *zap.SugaredLogger) (file.Files, error) {
+func All(ctx context.Context, args *model.Args, addHeader bool, logger util.Logger) (file.Files, error) {
 	if err := args.Validate(); err != nil {
 		return nil, errors.Wrap(err, "invalid export arguments")
 	}

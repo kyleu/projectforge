@@ -4,7 +4,6 @@ import (
 	"os"
 	"path/filepath"
 
-	"go.uber.org/zap"
 	"projectforge.dev/projectforge/app/util"
 )
 
@@ -16,7 +15,7 @@ type File struct {
 	Content string      `json:"-"`
 }
 
-func NewFile(path string, mode os.FileMode, b []byte, addHeader bool, logger *zap.SugaredLogger) *File {
+func NewFile(path string, mode os.FileMode, b []byte, addHeader bool, logger util.Logger) *File {
 	p, n := util.StringSplitLast(path, '/', true)
 	if n == "" {
 		n = p

@@ -3,7 +3,6 @@ package cutil
 import (
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
-	"go.uber.org/zap"
 
 	"{{{ .Package }}}/app/lib/user"
 	"{{{ .Package }}}/app/util"
@@ -26,17 +25,17 @@ func NewCookie(v string) *fasthttp.Cookie {
 	return ret
 }
 
-func StoreInSession(k string, v string, rc *fasthttp.RequestCtx, websess util.ValueMap, logger *zap.SugaredLogger) error {
+func StoreInSession(k string, v string, rc *fasthttp.RequestCtx, websess util.ValueMap, logger util.Logger) error {
 	websess[k] = v
 	return SaveSession(rc, websess, logger)
 }
 
-func RemoveFromSession(k string, rc *fasthttp.RequestCtx, websess util.ValueMap, logger *zap.SugaredLogger) error {
+func RemoveFromSession(k string, rc *fasthttp.RequestCtx, websess util.ValueMap, logger util.Logger) error {
 	delete(websess, k)
 	return SaveSession(rc, websess, logger)
 }
 
-func SaveSession(rc *fasthttp.RequestCtx, websess util.ValueMap, logger *zap.SugaredLogger) error {
+func SaveSession(rc *fasthttp.RequestCtx, websess util.ValueMap, logger util.Logger) error {
 	enc, err := util.EncryptMessage(nil, util.ToJSONCompact(websess), logger)
 	if err != nil {
 		return err
@@ -58,7 +57,7 @@ func GetFromSession(key string, websess util.ValueMap) (string, error) {
 	return s, nil
 }
 
-func SaveProfile(n *user.Profile, rc *fasthttp.RequestCtx, sess util.ValueMap, logger *zap.SugaredLogger) error {
+func SaveProfile(n *user.Profile, rc *fasthttp.RequestCtx, sess util.ValueMap, logger util.Logger) error {
 	if n == nil || n.Equals(user.DefaultProfile) {
 		err := RemoveFromSession("profile", rc, sess, logger)
 		if err != nil {

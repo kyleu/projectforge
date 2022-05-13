@@ -3,7 +3,7 @@ package file
 import (
 	"strings"
 
-	"go.uber.org/zap"
+	"projectforge.dev/projectforge/app/util"
 )
 
 const HeaderContent = "Content managed by Project Forge, see [projectforge.md] for details."
@@ -12,7 +12,7 @@ func ContainsHeader(s string) bool {
 	return strings.Contains(s, HeaderContent) || strings.Contains(s, "$PF_IGNORE$")
 }
 
-func contentWithHeader(t Type, c string, logger *zap.SugaredLogger) string {
+func contentWithHeader(t Type, c string, logger util.Logger) string {
 	if strings.Contains(c, IgnorePattern) {
 		return c
 	}

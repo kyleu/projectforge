@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
 	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
@@ -15,15 +14,15 @@ import (
 const ok = "OK"
 
 type Service struct {
-	logger *zap.SugaredLogger
+	logger util.Logger
 }
 
-func NewService(logger *zap.SugaredLogger) *Service {
+func NewService(logger util.Logger) *Service {
 	logger = logger.With("svc", "build")
 	return &Service{logger: logger}
 }
 
-func (s Service) Status(ctx context.Context, prj *project.Project, logger *zap.SugaredLogger) (*Result, error) {
+func (s Service) Status(ctx context.Context, prj *project.Project, logger util.Logger) (*Result, error) {
 	_, span, _ := telemetry.StartSpan(ctx, "git.status:"+prj.Key, logger)
 	defer span.Complete()
 
@@ -51,7 +50,7 @@ func (s Service) Magic(prj *project.Project) (*Result, error) {
 	return NewResult(prj, "TODO", util.ValueMap{"TODO": "Magic!"}), nil
 }
 
-func (s Service) Fetch(ctx context.Context, prj *project.Project, logger *zap.SugaredLogger) (*Result, error) {
+func (s Service) Fetch(ctx context.Context, prj *project.Project, logger util.Logger) (*Result, error) {
 	x, err := gitFetch(ctx, prj.Path, true, logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to fetch")
@@ -73,7 +72,7 @@ func (s Service) Fetch(ctx context.Context, prj *project.Project, logger *zap.Su
 	return NewResult(prj, status, util.ValueMap{"updates": fetched}), nil
 }
 
-func (s Service) Commit(ctx context.Context, prj *project.Project, msg string, logger *zap.SugaredLogger) (*Result, error) {
+func (s Service) Commit(ctx context.Context, prj *project.Project, msg string, logger util.Logger) (*Result, error) {
 	result, err := gitCommit(ctx, prj.Path, msg, logger)
 	if err != nil {
 		return nil, err

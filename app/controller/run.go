@@ -44,7 +44,7 @@ func RunAction(rc *fasthttp.RequestCtx) {
 
 		if isBuild && phase == "" {
 			page := &vbuild.BuildResult{Project: prj, Cfg: cfg, BuildResult: nil, GitResult: nil}
-			return render(rc, as, page, ps, "projects", actT.Title)
+			return render(rc, as, page, ps, "projects", prj.Key, actT.Title)
 		}
 
 		result := action.Apply(ps.Context, actionParams(tgt, actT, cfg, as, ps.Logger))
@@ -57,7 +57,7 @@ func RunAction(rc *fasthttp.RequestCtx) {
 				return runDeps(prj, result, rc, as, ps)
 			}
 			page := &vbuild.BuildResult{Project: prj, Cfg: cfg, BuildResult: result}
-			return render(rc, as, page, ps, "projects", actT.Title)
+			return render(rc, as, page, ps, "projects", prj.Key, actT.Title)
 		}
 
 		ps.Title = fmt.Sprintf("[%s] %s", actT.Title, prj.Title())

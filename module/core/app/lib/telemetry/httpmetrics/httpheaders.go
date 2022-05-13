@@ -6,7 +6,8 @@ import (
 	"github.com/valyala/fasthttp"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/propagation"
-	"go.uber.org/zap"
+
+	"{{{ .Package }}}/app/util"
 )
 
 var _ propagation.TextMapCarrier = (*headerCarrier)(nil)
@@ -31,6 +32,6 @@ func (hc headerCarrier) Keys() []string {
 	return keys
 }
 
-func ExtractHeaders(rc *fasthttp.RequestCtx, logger *zap.SugaredLogger) context.Context {
+func ExtractHeaders(rc *fasthttp.RequestCtx, logger util.Logger) context.Context {
 	return otel.GetTextMapPropagator().Extract(rc, headerCarrier{h: &rc.Request.Header})
 }

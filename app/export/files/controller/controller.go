@@ -19,7 +19,7 @@ func Controller(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 	g.AddImport(helper.ImpFmt, helper.ImpErrors, helper.ImpFastHTTP, helper.ImpApp, helper.ImpCutil)
 	g.AddImport(helper.AppImport("app/" + m.Package))
 	g.AddImport(helper.AppImport("views/v" + m.Package))
-	g.AddBlocks(controllerTitle(m), controllerList(m, nil), controllerDetail(args.Models, m, nil))
+	g.AddBlocks(controllerTitle(m), controllerList(m, nil, args.Models, g), controllerDetail(args.Models, m, nil))
 	if m.IsRevision() {
 		g.AddBlocks(controllerRevision(m))
 	}

@@ -11,7 +11,6 @@ import (
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
 	"go.opentelemetry.io/otel/trace"
-	"go.uber.org/zap"
 
 	"projectforge.dev/projectforge/app/util"
 )
@@ -22,7 +21,7 @@ var (
 	tracerProvider *sdktrace.TracerProvider
 )
 
-func InitializeIfNeeded(enabled bool, version string, logger *zap.SugaredLogger) bool {
+func InitializeIfNeeded(enabled bool, version string, logger util.Logger) bool {
 	if initialized {
 		return false
 	}
@@ -32,7 +31,7 @@ func InitializeIfNeeded(enabled bool, version string, logger *zap.SugaredLogger)
 	return true
 }
 
-func Initialize(version string, logger *zap.SugaredLogger) {
+func Initialize(version string, logger util.Logger) {
 	if initialized {
 		logger.Warn("double telemetry initialization")
 		return
@@ -76,17 +75,17 @@ func Close() error {
 	return tracerProvider.Shutdown(context.Background())
 }
 
-func StartSpan(ctx context.Context, spanName string, logger *zap.SugaredLogger, opts ...any) (context.Context, *Span, *zap.SugaredLogger) {
+func StartSpan(ctx context.Context, spanName string, logger util.Logger, opts ...any) (context.Context, *Span, util.Logger) {
 	return spanCreate(ctx, spanName, logger, opts...)
 }
 
-func StartAsyncSpan(ctx context.Context, spanName string, logger *zap.SugaredLogger, opts ...any) (context.Context, *Span, *zap.SugaredLogger) {
+func StartAsyncSpan(ctx context.Context, spanName string, logger util.Logger, opts ...any) (context.Context, *Span, util.Logger) {
 	parentSpan := trace.SpanFromContext(ctx)
 	asyncChildCtx := trace.ContextWithSpan(context.Background(), parentSpan)
 	return spanCreate(asyncChildCtx, spanName, logger, opts...)
 }
 
-func spanCreate(ctx context.Context, spanName string, logger *zap.SugaredLogger, opts ...any) (context.Context, *Span, *zap.SugaredLogger) {
+func spanCreate(ctx context.Context, spanName string, logger util.Logger, opts ...any) (context.Context, *Span, util.Logger) {
 	tr := otel.GetTracerProvider().Tracer(util.AppKey)
 	ssos := []trace.SpanStartOption{trace.WithSpanKind(trace.SpanKindServer)}
 	for _, opt := range opts {

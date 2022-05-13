@@ -5,11 +5,9 @@ import (
 	"fmt"
 	"os"
 	"strings"
-
-	"go.uber.org/zap"
 )
 
-func ReplaceEnvVars(s string, logger *zap.SugaredLogger) string {
+func ReplaceEnvVars(s string, logger Logger) string {
 	sIdx := strings.Index(s, "${")
 	if sIdx > -1 {
 		eIdx := strings.Index(s[sIdx:], "}")

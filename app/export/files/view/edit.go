@@ -49,7 +49,7 @@ func exportViewEditBody(m *model.Model) *golang.Block {
 	ret.W("    <div class=\"right\"><a href=\"{%%s p.Model.WebPath() %%}/delete\" onclick=\"return confirm('" + delMsg + "')\"><button>Delete</button></a></div>")
 	ret.W("    <h3>{%%= components.SVGRefIcon(`" + m.Icon + "`, ps) %%} Edit " + m.Title() + " [{%%s p.Model.String() %%}]</h3>")
 	ret.W("    {%%- endif -%%}")
-	ret.W("    <form action=\"\" class=\"mt\" method=\"post\">")
+	ret.W("    <form action=\"\" method=\"post\">")
 	ret.W("      <table class=\"mt expanded\">")
 	ret.W("        <tbody>")
 	editCols := m.Columns.WithoutTag("created").WithoutTag("updated")

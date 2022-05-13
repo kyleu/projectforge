@@ -5,7 +5,8 @@ import (
 	"sync"
 
 	"github.com/google/cel-go/cel"
-	"go.uber.org/zap"
+
+	"{{{ .Package }}}/app/util"
 )
 
 var (
@@ -23,7 +24,7 @@ func NewEngine(opts ...cel.EnvOption) (*Engine, error) {
 	return &Engine{env: env}, err
 }
 
-func (e *Engine) Check(as string, params map[string]any, logger *zap.SugaredLogger) bool {
+func (e *Engine) Check(as string, params map[string]any, logger util.Logger) bool {
 	expressionMU.Lock()
 	ex, ok := expressionCache[as]
 	expressionMU.Unlock()

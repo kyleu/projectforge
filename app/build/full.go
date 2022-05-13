@@ -6,13 +6,13 @@ import (
 	"path/filepath"
 
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
 
 	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/app/util"
 )
 
-func Full(ctx context.Context, prj *project.Project, logger *zap.SugaredLogger) ([]string, error) {
+func Full(ctx context.Context, prj *project.Project, logger util.Logger) ([]string, error) {
 	var logs []string
 	addLog := func(msg string, args ...any) {
 		ret := fmt.Sprintf(msg, args...)

@@ -3,8 +3,6 @@ package database
 import (
 	"context"
 
-	"go.uber.org/zap"
-
 	"{{{ .Package }}}/app/util"
 )
 
@@ -14,12 +12,12 @@ type SQLiteParams struct {
 	Debug  bool   `json:"debug,omitempty"`
 }
 
-func OpenSQLite(ctx context.Context, prefix string, logger *zap.SugaredLogger) (*Service, error) {
+func OpenSQLite(ctx context.Context, prefix string, logger util.Logger) (*Service, error) {
 	envParams := SQLiteParamsFromEnv(util.AppKey, util.AppKey, prefix)
 	return OpenSQLiteDatabase(ctx, util.AppKey, envParams, logger)
 }
 
-func OpenDefaultSQLite(ctx context.Context, logger *zap.SugaredLogger) (*Service, error) {
+func OpenDefaultSQLite(ctx context.Context, logger util.Logger) (*Service, error) {
 	return OpenSQLite(ctx, "", logger)
 }
 

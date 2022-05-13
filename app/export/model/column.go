@@ -9,6 +9,11 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+const (
+	FmtCode = "code"
+	FmtURL  = "url"
+)
+
 type Column struct {
 	Name       string         `json:"name"`
 	Type       *types.Wrapped `json:"type"`
@@ -19,6 +24,7 @@ type Column struct {
 	Display    string         `json:"display,omitempty"`
 	Format     string         `json:"format,omitempty"`
 	Tags       []string       `json:"tags,omitempty"`
+	HelpString string         `json:"helpString,omitempty"`
 }
 
 func (c *Column) Clone() *Column {
@@ -92,8 +98,10 @@ func (c *Column) ToGoEditString(prefix string, format string) string {
 		return fmt.Sprintf(`{%%%%= components.TableBoolean(%q, %q, %s, 5, %q) %%%%}`, c.Camel(), c.Title(), prefix+c.Proper(), c.Help())
 	case types.KeyInt:
 		return fmt.Sprintf(`{%%%%= components.TableInputNumber(%q, %q, %s, 5, %q) %%%%}`, c.Camel(), c.Title(), prefix+c.Proper(), c.Help())
-	case types.KeyMap, types.KeyValueMap, types.KeyReference:
+	case types.KeyMap, types.KeyValueMap:
 		return fmt.Sprintf(`{%%%%= components.TableTextarea(%q, %q, 8, util.ToJSON(%s), 5, %q) %%%%}`, c.Camel(), c.Title(), c.ToGoString(prefix), c.Help())
+	case types.KeyReference:
+		return fmt.Sprintf(`{%%%%= components.TableTextarea(%q, %q, 8, util.ToJSON(%s), 5, %q) %%%%}`, c.Camel(), c.Title(), prefix+c.Proper(), c.Help())
 	case types.KeyTimestamp:
 		gs := c.ToGoString(prefix)
 		if !c.Nullable {
@@ -107,7 +115,7 @@ func (c *Column) ToGoEditString(prefix string, format string) string {
 		}
 		return fmt.Sprintf(`{%%%%= components.TableInputUUID(%q, %q, %s, 5, %q) %%%%}`, c.Camel(), c.Title(), gs, c.Help())
 	case types.KeyString:
-		if format == "code" {
+		if format == FmtCode {
 			return fmt.Sprintf(`{%%%%= components.TableTextarea(%q, %q, 8, %s, 5, %q) %%%%}`, c.Camel(), c.Title(), c.ToGoString(prefix), c.Help())
 		}
 		return fmt.Sprintf(`{%%%%= components.TableInput(%q, %q, %s, 5, %q) %%%%}`, c.Camel(), c.Title(), c.ToGoString(prefix), c.Help())

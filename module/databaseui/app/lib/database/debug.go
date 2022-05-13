@@ -6,8 +6,9 @@ import (
 	"sync"
 
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
 	"golang.org/x/exp/slices"
+
+	"{{{ .Package }}}/app/util"
 )
 
 const (
@@ -22,7 +23,7 @@ var (
 	debugExample = &DebugStatement{
 		Index: -1, SQL: "select * from test where a = $1 and b = $2",
 		Values: []any{map[string]any{"a": true}, map[string]any{"b": true}, map[string]any{"c": true}},
-		Extra: "[example plan]", Timing: 1, Message: "test query run without issue", Count: 2, Out: []any{1, 2},
+		Extra:  "[example plan]", Timing: 1, Message: "test query run without issue", Count: 2, Out: []any{1, 2},
 	}
 )
 
@@ -88,7 +89,7 @@ func GetDebugStatement(key string, idx int) *DebugStatement {
 	return nil
 }
 
-func (s *Service) newStatement(ctx context.Context, q string, values []any, timing int, logger *zap.SugaredLogger) (*DebugStatement, error) {
+func (s *Service) newStatement(ctx context.Context, q string, values []any, timing int, logger util.Logger) (*DebugStatement, error) {
 	lastIndex++
 	ret := &DebugStatement{Index: lastIndex, SQL: q, Timing: timing}
 	if s.tracing == "values" || s.tracing == "analyze" {
@@ -112,7 +113,7 @@ func (s *Service) Tracing() string {
 	return s.tracing
 }
 
-func (s *Service) EnableTracing(v string, logger *zap.SugaredLogger) error {
+func (s *Service) EnableTracing(v string, logger util.Logger) error {
 	switch v {
 	case "statement", "values", "analyze", "":
 		s.tracing = v
@@ -123,7 +124,7 @@ func (s *Service) EnableTracing(v string, logger *zap.SugaredLogger) error {
 	return nil
 }
 
-func (s *Service) DisableTracing(logger *zap.SugaredLogger) error {
+func (s *Service) DisableTracing(logger util.Logger) error {
 	s.tracing = ""
 	statementsMu.Lock()
 	defer statementsMu.Unlock()

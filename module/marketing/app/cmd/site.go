@@ -7,7 +7,6 @@ import (
 	"github.com/muesli/coral"
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
-	"go.uber.org/zap"
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller"
@@ -39,7 +38,7 @@ func startSite(flags *Flags) error {
 	return err
 }
 
-func loadSite(flags *Flags, logger *zap.SugaredLogger) (fasthttp.RequestHandler, *zap.SugaredLogger, error) {
+func loadSite(flags *Flags, logger util.Logger) (fasthttp.RequestHandler, util.Logger, error) {
 	r := controller.SiteRoutes()
 	f := filesystem.NewFileSystem(flags.ConfigDir, logger)
 

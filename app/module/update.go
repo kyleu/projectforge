@@ -6,8 +6,9 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
+
 	"projectforge.dev/projectforge/app/diff"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func (s *Service) UpdateFile(mods Modules, d *diff.Diff) ([]string, error) {
@@ -42,7 +43,7 @@ func (s *Service) UpdateFile(mods Modules, d *diff.Diff) ([]string, error) {
 	return ret, nil
 }
 
-func reverseDiff(dest string, d *diff.Diff, logger *zap.SugaredLogger) ([]byte, error) {
+func reverseDiff(dest string, d *diff.Diff, logger util.Logger) ([]byte, error) {
 	logger.Debugf("reversing [%d] changes for file [%s]", len(d.Changes), d.Path)
 	for _, ch := range d.Changes {
 		var preCtx, postCtx, addedCtx, deletedCtx []string

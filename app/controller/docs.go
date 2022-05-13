@@ -9,7 +9,6 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
-	"go.uber.org/zap"
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app"
@@ -41,14 +40,14 @@ func Docs(rc *fasthttp.RequestCtx) {
 
 var docMenuCached *menu.Item
 
-func docMenu(ctx context.Context, as *app.State, logger *zap.SugaredLogger) *menu.Item {
+func docMenu(ctx context.Context, as *app.State, logger util.Logger) *menu.Item {
 	if docMenuCached == nil {
 		docMenuCached = docMenuCreate(ctx, as, logger)
 	}
 	return docMenuCached
 }
 
-func docMenuCreate(ctx context.Context, as *app.State, logger *zap.SugaredLogger) *menu.Item {
+func docMenuCreate(ctx context.Context, as *app.State, logger util.Logger) *menu.Item {
 	var paths []string
 	err := fs.WalkDir(doc.FS, ".", func(path string, d fs.DirEntry, err error) error {
 		paths = append(paths, path)

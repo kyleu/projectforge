@@ -6,14 +6,13 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func SetDepsMap(ctx context.Context, projects project.Projects, dep *Dependency, pSvc *project.Service, logger *zap.SugaredLogger) (string, error) {
+func SetDepsMap(ctx context.Context, projects project.Projects, dep *Dependency, pSvc *project.Service, logger util.Logger) (string, error) {
 	logger.Infof("upgrading dependency [%s] to [%s]", dep.Key, dep.Version)
 	var affected int
 
@@ -70,7 +69,7 @@ func SetDepsMap(ctx context.Context, projects project.Projects, dep *Dependency,
 	return fmt.Sprintf("upgraded [%s] to [%s] in [%d] projects", dep.Key, dep.Version, affected), nil
 }
 
-func SetDepsProject(ctx context.Context, prjs project.Projects, key string, pSvc *project.Service, logger *zap.SugaredLogger) (string, error) {
+func SetDepsProject(ctx context.Context, prjs project.Projects, key string, pSvc *project.Service, logger util.Logger) (string, error) {
 	t := util.TimerStart()
 
 	tgt := prjs.Get(key)
@@ -92,38 +91,13 @@ func SetDepsProject(ctx context.Context, prjs project.Projects, key string, pSvc
 	lines := strings.Split(string(bytes), "\n")
 	ret := make([]string, 0, len(lines))
 	for _, line := range lines {
-		if dep := ParseDependency(line); dep != nil {
-			start := strings.Index(line, " v")
-			if start == -1 {
-				return "", errors.Errorf("project [%s] does not contain a version in [%s]", key, line)
-			}
-			start++
-			offset := strings.Index(line[start:], " ")
-			if offset == -1 {
-				offset = len(line) - start
-			}
-
-			if existing, ok := curr[dep.Key]; ok {
-				v := line[start : start+offset]
-				newVer := ""
-				newCount := 0
-				for kx, vx := range existing {
-					if len(vx) > newCount {
-						newCount = len(vx)
-						newVer = kx
-					}
-				}
-				if v == dep.Version {
-					ret = append(ret, line)
-				} else {
-					affected++
-					ret = append(ret, strings.Replace(line, v, newVer, 1))
-				}
-			} else {
-				ret = append(ret, line)
-			}
-		} else {
-			ret = append(ret, line)
+		hit, pline, errChild := setDepProcessLine(line, curr, key)
+		if errChild != nil {
+			return "", errChild
+		}
+		ret = append(ret, pline)
+		if hit {
+			affected++
 		}
 	}
 	if affected > 0 {
@@ -139,4 +113,34 @@ func SetDepsProject(ctx context.Context, prjs project.Projects, key string, pSvc
 		logger.Infof("completed upgrade of project [%s] in [%s]", key, util.MicrosToMillis(t.End()))
 	}
 	return fmt.Sprintf("upgraded [%d] dependencies in project [%s]", affected, key), nil
+}
+
+func setDepProcessLine(line string, curr map[string]map[string][]string, key string) (bool, string, error) {
+	if dep := ParseDependency(line); dep != nil {
+		start := strings.Index(line, " v")
+		if start == -1 {
+			return false, "", errors.Errorf("project [%s] does not contain a version in [%s]", key, line)
+		}
+		start++
+		offset := strings.Index(line[start:], " ")
+		if offset == -1 {
+			offset = len(line) - start
+		}
+
+		if existing, ok := curr[dep.Key]; ok {
+			v := line[start : start+offset]
+			newVer := ""
+			newCount := 0
+			for kx, vx := range existing {
+				if len(vx) > newCount {
+					newCount = len(vx)
+					newVer = kx
+				}
+			}
+			if v != dep.Version {
+				return true, strings.Replace(line, v, newVer, 1), nil
+			}
+		}
+	}
+	return false, line, nil
 }

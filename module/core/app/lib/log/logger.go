@@ -12,7 +12,7 @@ import (
 
 const keyCustom = "custom"
 
-func InitLogging(debug bool) (*zap.SugaredLogger, error) {
+func InitLogging(debug bool) (util.Logger, error) {
 	var logger *zap.Logger
 	var err error
 	lf := util.GetEnv("logging_format")
@@ -30,7 +30,7 @@ func InitLogging(debug bool) (*zap.SugaredLogger, error) {
 	return logger.Sugar(), nil
 }
 
-func CreateTestLogger() (*zap.SugaredLogger, error) {
+func CreateTestLogger() (util.Logger, error) {
 	return InitLogging(false)
 }
 

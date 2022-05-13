@@ -12,12 +12,11 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
 )
 
 var _encryptKey string
 
-func EncryptMessage(key []byte, message string, logger *zap.SugaredLogger) (string, error) {
+func EncryptMessage(key []byte, message string, logger Logger) (string, error) {
 	block, err := newCipher(key, logger)
 	if err != nil {
 		return "", errors.Wrap(err, "could not create new cipher")
@@ -36,7 +35,7 @@ func EncryptMessage(key []byte, message string, logger *zap.SugaredLogger) (stri
 	return base64.StdEncoding.EncodeToString(cipherText), nil
 }
 
-func DecryptMessage(key []byte, message string, logger *zap.SugaredLogger) (string, error) {
+func DecryptMessage(key []byte, message string, logger Logger) (string, error) {
 	block, err := newCipher(key, logger)
 	if err != nil {
 		return "", errors.Wrap(err, "could not create new cipher")
@@ -59,7 +58,7 @@ func DecryptMessage(key []byte, message string, logger *zap.SugaredLogger) (stri
 	return string(cipherText), nil
 }
 
-func newCipher(key []byte, logger *zap.SugaredLogger) (cipher.Block, error) {
+func newCipher(key []byte, logger Logger) (cipher.Block, error) {
 	if key == nil {
 		key = getKey(logger)
 	}
@@ -83,7 +82,7 @@ func HashSHA256(s string) string {
 	return base64.URLEncoding.EncodeToString(ret)
 }
 
-func getKey(logger *zap.SugaredLogger) []byte {
+func getKey(logger Logger) []byte {
 	if _encryptKey == "" {
 		env := strings.ReplaceAll(AppKey, "-", "_") + "_encryption_key"
 		_encryptKey = GetEnv(env)

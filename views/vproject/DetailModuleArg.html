@@ -27,6 +27,7 @@
       <li>
         <input id="export-accordion-{%s m.Name %}" type="checkbox" hidden />
         <label for="export-accordion-{%s m.Name %}">
+          <div class="right"><em>{%d len(m.Columns) %} {%s util.StringPluralMaybe("field", len(m.Columns)) %}</em></div>
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRef(m.IconSafe(), 15, 15, ``, ps) %}
           {%s m.Title() %}

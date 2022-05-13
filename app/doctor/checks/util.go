@@ -4,7 +4,6 @@ import (
 	"context"
 	"strings"
 
-	"go.uber.org/zap"
 	"projectforge.dev/projectforge/app/doctor"
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/lib/telemetry"
@@ -13,7 +12,7 @@ import (
 )
 
 func simpleOut(path string, cmd string, args []string, outCheck func(ctx context.Context, r *doctor.Result, out string) *doctor.Result) doctor.CheckFn {
-	return func(ctx context.Context, r *doctor.Result, logger *zap.SugaredLogger) *doctor.Result {
+	return func(ctx context.Context, r *doctor.Result, logger util.Logger) *doctor.Result {
 		fullCmd := strings.Join(append([]string{cmd}, args...), " ")
 		exitCode, out, err := telemetry.RunProcessSimple(ctx, fullCmd, path, logger)
 		if err != nil {
@@ -26,7 +25,7 @@ func simpleOut(path string, cmd string, args []string, outCheck func(ctx context
 	}
 }
 
-func loadRootProject(r *doctor.Result, logger *zap.SugaredLogger) (*project.Project, *doctor.Result) {
+func loadRootProject(r *doctor.Result, logger util.Logger) (*project.Project, *doctor.Result) {
 	const dir = "."
 	fs := filesystem.NewFileSystem(dir, logger)
 	if !fs.Exists(project.ConfigFilename) {

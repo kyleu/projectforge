@@ -36,6 +36,7 @@
 
 .menu-container .item {
   height: 28px;
+  white-space: nowrap;
   overflow: hidden;
 }
 

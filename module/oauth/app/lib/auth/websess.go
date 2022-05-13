@@ -2,7 +2,6 @@ package auth
 
 import (
 	"github.com/valyala/fasthttp"
-	"go.uber.org/zap"
 
 	"{{{ .Package }}}/app/controller/cutil"
 	"{{{ .Package }}}/app/lib/user"
@@ -12,7 +11,7 @@ import (
 const WebAuthKey = "auth"
 
 func addToSession(
-	provider string, email string, token string, rc *fasthttp.RequestCtx, websess util.ValueMap, logger *zap.SugaredLogger,
+	provider string, email string, token string, rc *fasthttp.RequestCtx, websess util.ValueMap, logger util.Logger,
 ) (*user.Account, user.Accounts, error) {
 	ret := getCurrentAuths(websess)
 	s := &user.Account{Provider: provider, Email: email, Token: token}
@@ -29,7 +28,7 @@ func addToSession(
 	return s, ret, nil
 }
 
-func removeProviderData(rc *fasthttp.RequestCtx, websess util.ValueMap, logger *zap.SugaredLogger) error {
+func removeProviderData(rc *fasthttp.RequestCtx, websess util.ValueMap, logger util.Logger) error {
 	dirty := false
 	for s := range websess {
 		if isProvider(s) {

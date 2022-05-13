@@ -25,11 +25,11 @@ func detail(m *model.Model, args *model.Args, addHeader bool) (*file.File, error
 	if m.IsRevision() || m.IsHistory() {
 		g.AddImport(helper.ImpFilter)
 	}
-	g.AddBlocks(exportViewDetailClass(args.Models, m), exportViewDetailBody(m, args.Models))
+	g.AddBlocks(exportViewDetailClass(m, args.Models, g), exportViewDetailBody(m, args.Models))
 	return g.Render(addHeader)
 }
 
-func exportViewDetailClass(models model.Models, m *model.Model) *golang.Block {
+func exportViewDetailClass(m *model.Model, models model.Models, g *golang.Template) *golang.Block {
 	ret := golang.NewBlock("Detail", "struct")
 	ret.W("{%% code type Detail struct {")
 	ret.W("  layout.Basic")
@@ -38,6 +38,14 @@ func exportViewDetailClass(models model.Models, m *model.Model) *golang.Block {
 	if m.IsHistory() {
 		ret.W("  Histories %s.%sHistories", m.Package, m.Proper())
 	}
+	for _, rel := range m.Relations {
+		if relModel := models.Get(rel.Table); relModel.CanTraverseRelation() {
+			g.AddImport(helper.AppImport("app/" + relModel.Package))
+			msg := "  %s %s.%s"
+			ret.W(msg, relModel.ProperPlural(), relModel.Package, relModel.ProperPlural())
+		}
+	}
+
 	if len(rrs) > 0 || m.IsRevision() || m.IsHistory() {
 		ret.W("  Params filter.ParamSet")
 	}
@@ -61,13 +69,14 @@ func exportViewDetailBody(m *model.Model, models model.Models) *golang.Block {
 	ret.W("      <a href=\"#modal-%s\"><button type=\"button\">JSON</button></a>", m.Camel())
 	ret.W("      <a href=\"{%%s p.Model.WebPath() %%}/edit\"><button>Edit</button></a>")
 	ret.W("    </div>")
-	ret.W("    <h3>{%%= components.SVGRefIcon(`" + m.Icon + "`, ps) %%} " + m.Title() + " [{%%s p.Model.String() %%}]</h3>")
+	ret.W("    <h3>{%%= components.SVGRefIcon(`" + m.Icon + "`, ps) %%} {%%s p.Model.TitleString() %%}</h3>")
+	ret.W("    <div><a href=\"/" + m.Route() + "\"><em>" + m.Title() + "</em></a></div>")
 	ret.W("    <table class=\"mt\">")
 	ret.W("      <tbody>")
 	for _, col := range m.Columns {
 		ret.W("        <tr>")
 		ret.W(`          <th class="shrink" title="%s">%s</th>`, col.Help(), col.Title())
-		viewTableColumn(ret, models, m, false, col, "p.Model.", 5)
+		viewTableColumn(ret, models, m, false, col, "p.Model.", "p.", 5)
 		ret.W("        </tr>")
 	}
 	ret.W("      </tbody>")
@@ -101,7 +110,11 @@ func exportViewDetailRelations(ret *golang.Block, m *model.Model, models model.M
 		ret.W("  <div class=\"card\">")
 		const msg = "    <h3>{%%%%= components.SVGRefIcon(`%s`, ps) %%%%} Related %s by [%s]</h3>"
 		ret.W(msg, tgt.Icon, tgt.TitlePluralLower(), strings.Join(rel.TgtColumns(tgt).TitlesLower(), ", "))
-		ret.W("    {%%%%= v%s.Table(p.%s, p.Params, as, ps) %%%%}", tgt.Package, tgtName)
+		var addons string
+		if m.CanTraverseRelation() {
+			addons = ", nil"
+		}
+		ret.W("    {%%%%= v%s.Table(p.%s%s, p.Params, as, ps) %%%%}", tgt.Package, tgtName, addons)
 		ret.W("  </div>")
 		ret.W("  {%%- endif -%%}")
 	}

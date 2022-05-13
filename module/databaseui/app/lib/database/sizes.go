@@ -3,9 +3,8 @@ package database
 import (
 	"context"
 
-	"go.uber.org/zap"
-
 	"{{{ .Package }}}/queries/schema"
+	"{{{ .Package }}}/app/util"
 )
 
 type NumAndString struct {
@@ -61,7 +60,7 @@ func (ts sizeDTOs) ToSizes() TableSizes {
 	return ret
 }
 
-func (s *Service) Sizes(ctx context.Context, logger *zap.SugaredLogger) (TableSizes, error) {
+func (s *Service) Sizes(ctx context.Context, logger util.Logger) (TableSizes, error) {
 	q := schema.SizeInfo()
 	ret := sizeDTOs{}
 	err := s.Select(ctx, &ret, q, nil, logger)

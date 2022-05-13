@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
 
 	"projectforge.dev/projectforge/app/export"
 	"projectforge.dev/projectforge/app/export/model"
@@ -103,7 +102,7 @@ type PrjAndMods struct {
 	PSvc   *project.Service
 	ESvc   *export.Service
 	EArgs  *model.Args
-	Logger *zap.SugaredLogger
+	Logger util.Logger
 }
 
 func getPrjAndMods(ctx context.Context, p *Params) (context.Context, *PrjAndMods, error) {

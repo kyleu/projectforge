@@ -3,13 +3,12 @@ package action
 import (
 	"context"
 
-	"go.uber.org/zap"
 	"projectforge.dev/projectforge/app/doctor/checks"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func onDoctor(ctx context.Context, cfg util.ValueMap, pSvc *project.Service, logger *zap.SugaredLogger) *Result {
+func onDoctor(ctx context.Context, cfg util.ValueMap, pSvc *project.Service, logger util.Logger) *Result {
 	ret := newResult(TypeDoctor, nil, cfg, logger)
 	prjs := pSvc.Projects()
 	res := checks.CheckAll(ctx, prjs.AllModules(), logger)

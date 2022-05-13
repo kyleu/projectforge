@@ -2,14 +2,13 @@ package auth
 
 import (
 	"github.com/valyala/fasthttp"
-	"go.uber.org/zap"
 
 	"{{{ .Package }}}/app/controller/cutil"
 	"{{{ .Package }}}/app/lib/user"
 	"{{{ .Package }}}/app/util"
 )
 
-func getAuthURL(prv *Provider, rc *fasthttp.RequestCtx, websess util.ValueMap, logger *zap.SugaredLogger) (string, error) {
+func getAuthURL(prv *Provider, rc *fasthttp.RequestCtx, websess util.ValueMap, logger util.Logger) (string, error) {
 	g, err := gothFor(rc, prv)
 	if err != nil {
 		return "", err
@@ -42,7 +41,7 @@ func getCurrentAuths(websess util.ValueMap) user.Accounts {
 	return ret
 }
 
-func setCurrentAuths(s user.Accounts, rc *fasthttp.RequestCtx, websess util.ValueMap, logger *zap.SugaredLogger) error {
+func setCurrentAuths(s user.Accounts, rc *fasthttp.RequestCtx, websess util.ValueMap, logger util.Logger) error {
 	s.Sort()
 	if len(s) == 0 {
 		return cutil.RemoveFromSession(WebAuthKey, rc, websess, logger)

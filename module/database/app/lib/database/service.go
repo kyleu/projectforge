@@ -9,11 +9,10 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
 
 	"{{{ .Package }}}/app/lib/telemetry"
-	"{{{ .Package }}}/app/lib/telemetry/dbmetrics"{{{ if.HasModule "databaseui" }}}
-	"{{{ .Package }}}/app/util"{{{ end }}}{{{ if.HasModule "migration" }}}
+	"{{{ .Package }}}/app/lib/telemetry/dbmetrics"
+	"{{{ .Package }}}/app/util"{{{ if.HasModule "migration" }}}
 	"{{{ .Package }}}/queries"
 	"{{{ .Package }}}/queries/schema"{{{ end }}}
 )
@@ -39,7 +38,7 @@ type Service struct {
 	metrics      *dbmetrics.Metrics
 }
 
-func NewService(typ *DBType, key string, dbName string, schName string, username string, debug bool, db *sqlx.DB, logger *zap.SugaredLogger) (*Service, error) {
+func NewService(typ *DBType, key string, dbName string, schName string, username string, debug bool, db *sqlx.DB, logger util.Logger) (*Service, error) {
 	if logger == nil {
 		return nil, errors.New("logger must be provided to database service")
 	}
@@ -74,7 +73,7 @@ func (s *Service) Healthcheck(dbName string, db *sqlx.DB) error {
 	return nil
 }
 
-func (s *Service) StartTransaction(logger *zap.SugaredLogger) (*sqlx.Tx, error) {
+func (s *Service) StartTransaction(logger util.Logger) (*sqlx.Tx, error) {
 	if s.Debug {
 		logger.Debug("opening transaction")
 	}
@@ -95,7 +94,7 @@ func errMessage(t string, q string, values []any) string {
 
 type logFunc func(count int, msg string, err error, output ...any)
 
-func (s *Service) logQuery(ctx context.Context, msg string, q string, logger *zap.SugaredLogger, values []any) logFunc {
+func (s *Service) logQuery(ctx context.Context, msg string, q string, logger util.Logger, values []any) logFunc {
 	if s.Debug {
 		logger.Debugf("%s {\n  SQL: %s\n  Values: %s\n}", msg, strings.TrimSpace(q), valueStrings(values))
 	}{{{ if .HasModule "databaseui" }}}
@@ -118,8 +117,8 @@ func (s *Service) logQuery(ctx context.Context, msg string, q string, logger *za
 }
 
 func (s *Service) newSpan(
-	ctx context.Context, name string, q string, logger *zap.SugaredLogger,
-) (time.Time, context.Context, *telemetry.Span, *zap.SugaredLogger) {
+	ctx context.Context, name string, q string, logger util.Logger,
+) (time.Time, context.Context, *telemetry.Span, util.Logger) {
 	if s.metrics != nil {
 		s.metrics.IncStmt(q, name)
 	}
@@ -133,7 +132,7 @@ func (s *Service) newSpan(
 	return time.Now(), nc, span, logger
 }
 
-func (s *Service) complete(q string, op string, span *telemetry.Span, started time.Time, logger *zap.SugaredLogger, err error) {
+func (s *Service) complete(q string, op string, span *telemetry.Span, started time.Time, logger util.Logger, err error) {
 	if err != nil {
 		span.OnError(err)
 	}

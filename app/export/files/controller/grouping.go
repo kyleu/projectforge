@@ -16,7 +16,7 @@ func Grouping(m *model.Model, args *model.Args, grp *model.Column, addHeader boo
 	g.AddImport(helper.AppImport("app/" + m.Package))
 	g.AddImport(helper.AppImport("views/v" + m.Package))
 	g.AddBlocks(
-		controllerGrouped(m, grp), controllerList(m, grp), controllerDetail(args.Models, m, grp),
+		controllerGrouped(m, grp), controllerList(m, grp, args.Models, g), controllerDetail(args.Models, m, grp),
 		controllerCreateForm(m, grp), controllerCreate(m, g, grp),
 		controllerEditForm(m, grp), controllerEdit(m, g, grp), controllerDelete(m, g, grp),
 	)

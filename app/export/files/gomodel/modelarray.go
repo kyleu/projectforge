@@ -18,7 +18,7 @@ func modelArrayGet(m *model.Model) *golang.Block {
 	ret := golang.NewBlock(m.Proper()+"ArrayGet", "func")
 	ret.W("func (%s %s) Get(%s) *%s {", m.FirstLetter(), m.ProperPlural(), m.PKs().Args(m.Package), m.Proper())
 	ret.W("\tfor _, x := range %s {", m.FirstLetter())
-	var comps []string
+	comps := make([]string, 0, len(m.PKs()))
 	for _, pk := range m.PKs() {
 		comps = append(comps, fmt.Sprintf("x.%s == %s", pk.Proper(), pk.Camel()))
 	}

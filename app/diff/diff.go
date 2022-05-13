@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
 	"golang.org/x/exp/slices"
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/filesystem"
@@ -26,7 +25,7 @@ func (d *Diff) String() string {
 type Diffs []*Diff
 
 func (d Diffs) Paths() []string {
-	var ret []string
+	ret := make([]string, 0, len(d))
 	for _, x := range d {
 		ret = append(ret, x.Path)
 	}
@@ -66,7 +65,7 @@ func Files(src file.Files, tgt file.Files, includeUnchanged bool) Diffs {
 	return ret
 }
 
-func FileLoader(mods []string, src file.Files, tgt filesystem.FileLoader, includeUnchanged bool, logger *zap.SugaredLogger) (Diffs, error) {
+func FileLoader(mods []string, src file.Files, tgt filesystem.FileLoader, includeUnchanged bool, logger util.Logger) (Diffs, error) {
 	var ret Diffs
 	for _, s := range src {
 		p := s.FullPath()

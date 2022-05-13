@@ -2,12 +2,11 @@
 package cmd
 
 import (
-	"go.uber.org/zap"
-
 	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/util"
 )
 
-func Run(bi *app.BuildInfo) (*zap.SugaredLogger, error) {
+func Run(bi *app.BuildInfo) (util.Logger, error) {
 	_buildInfo = bi
 
 	if err := rootCmd().Execute(); err != nil {

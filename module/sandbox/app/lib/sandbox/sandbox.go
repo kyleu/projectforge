@@ -4,13 +4,12 @@ import (
 	"context"
 	"fmt"
 
-	"go.uber.org/zap"
-
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/lib/menu"
+	"{{{ .Package }}}/app/util"
 )
 
-type runFn func(ctx context.Context, st *app.State, logger *zap.SugaredLogger) (any, error)
+type runFn func(ctx context.Context, st *app.State, logger util.Logger) (any, error)
 
 type Sandbox struct {
 	Key   string `json:"key,omitempty"`

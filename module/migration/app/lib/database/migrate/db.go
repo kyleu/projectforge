@@ -6,10 +6,10 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
 
 	"{{{ .Package }}}/app/lib/database"
 	"{{{ .Package }}}/app/lib/filter"
+	"{{{ .Package }}}/app/util"
 )
 
 const (
@@ -22,7 +22,7 @@ const (
 );`
 )
 
-func ListMigrations(ctx context.Context, s *database.Service, params *filter.Params, logger *zap.SugaredLogger) Migrations {
+func ListMigrations(ctx context.Context, s *database.Service, params *filter.Params, logger util.Logger) Migrations {
 	params = filter.ParamsWithDefaultOrdering(migrationTable, params, &filter.Ordering{Column: "created", Asc: false})
 	var dtos []migrationDTO
 	q := database.SQLSelect("*", migrationTable, "", params.OrderByString(), params.Limit, params.Offset)
@@ -34,7 +34,7 @@ func ListMigrations(ctx context.Context, s *database.Service, params *filter.Par
 	return toMigrations(dtos)
 }
 
-func createMigrationTableIfNeeded(ctx context.Context, s *database.Service, logger *zap.SugaredLogger) error {
+func createMigrationTableIfNeeded(ctx context.Context, s *database.Service, logger util.Logger) error {
 	q := database.SQLSelectSimple("count(*) as x", migrationTable)
 	_, err := s.SingleInt(ctx, q, nil, logger)
 	if err != nil {
@@ -47,7 +47,7 @@ func createMigrationTableIfNeeded(ctx context.Context, s *database.Service, logg
 	return nil
 }
 
-func getMigrationByIdx(ctx context.Context, s *database.Service, idx int, logger *zap.SugaredLogger) *Migration {
+func getMigrationByIdx(ctx context.Context, s *database.Service, idx int, logger util.Logger) *Migration {
 	dto := &migrationDTO{}
 	q := database.SQLSelectSimple("*", "migration", "idx = $1")
 	err := s.Get(ctx, dto, q, nil, logger, idx)
@@ -61,7 +61,7 @@ func getMigrationByIdx(ctx context.Context, s *database.Service, idx int, logger
 	return dto.toMigration()
 }
 
-func removeMigrationByIdx(ctx context.Context, s *database.Service, idx int, logger *zap.SugaredLogger) error {
+func removeMigrationByIdx(ctx context.Context, s *database.Service, idx int, logger util.Logger) error {
 	q := database.SQLDelete("migration", "idx = $1")
 	_, err := s.Delete(ctx, q, nil, 1, logger, idx)
 	if err != nil {
@@ -70,12 +70,12 @@ func removeMigrationByIdx(ctx context.Context, s *database.Service, idx int, log
 	return nil
 }
 
-func newMigration(ctx context.Context, s *database.Service, e *Migration, logger *zap.SugaredLogger) error {
+func newMigration(ctx context.Context, s *database.Service, e *Migration, logger util.Logger) error {
 	q := database.SQLInsert("migration", []string{"idx", "title", "src", "created"}, 1, s.Type.Placeholder)
 	return s.Insert(ctx, q, nil, logger, e.Idx, e.Title, e.Src, time.Now())
 }
 
-func maxMigrationIdx(ctx context.Context, s *database.Service, logger *zap.SugaredLogger) int {
+func maxMigrationIdx(ctx context.Context, s *database.Service, logger util.Logger) int {
 	q := database.SQLSelectSimple("max(idx) as x", "migration")
 	max, err := s.SingleInt(ctx, q, nil, logger)
 	if err != nil {

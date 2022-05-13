@@ -7,7 +7,6 @@ import (
 	"sync"
 
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
@@ -24,10 +23,10 @@ type Service struct {
 	cacheLock   sync.RWMutex
 	filesystems map[string]filesystem.FileLoader
 	fsLock      sync.RWMutex
-	logger      *zap.SugaredLogger
+	logger      util.Logger
 }
 
-func NewService(logger *zap.SugaredLogger) *Service {
+func NewService(logger util.Logger) *Service {
 	logger = logger.With("svc", "project")
 	return &Service{cache: map[string]*Project{}, filesystems: map[string]filesystem.FileLoader{}, logger: logger}
 }

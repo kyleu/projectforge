@@ -9,7 +9,6 @@ import (
 	_ "github.com/jackc/pgx/v4/stdlib"
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
 
 	"{{{ .Package }}}/app/lib/telemetry"
 	"{{{ .Package }}}/app/util"
@@ -66,7 +65,7 @@ func PostgresParamsFromEnv(key string, defaultUser string, prefix string) *Postg
 	return &PostgresParams{Host: h, Port: p, Username: u, Password: pw, Database: d, Schema: s, MaxConns: mc, Debug: debug}
 }
 
-func OpenPostgres(ctx context.Context, key string, prefix string, logger *zap.SugaredLogger) (*Service, error) {
+func OpenPostgres(ctx context.Context, key string, prefix string, logger util.Logger) (*Service, error) {
 	if key == "" {
 		key = util.AppKey
 	}
@@ -81,11 +80,11 @@ func OpenPostgres(ctx context.Context, key string, prefix string, logger *zap.Su
 	return OpenPostgresDatabase(ctx, key, envParams, logger)
 }
 
-func OpenDefaultPostgres(ctx context.Context, logger *zap.SugaredLogger) (*Service, error) {
+func OpenDefaultPostgres(ctx context.Context, logger util.Logger) (*Service, error) {
 	return OpenPostgres(ctx, "", "", logger)
 }
 
-func OpenPostgresDatabase(ctx context.Context, key string, params *PostgresParams, logger *zap.SugaredLogger) (*Service, error) {
+func OpenPostgresDatabase(ctx context.Context, key string, params *PostgresParams, logger util.Logger) (*Service, error) {
 	_, span, logger := telemetry.StartSpan(ctx, "database:open", logger)
 	defer span.Complete()
 	host := params.Host
@@ -117,7 +116,7 @@ func OpenPostgresDatabase(ctx context.Context, key string, params *PostgresParam
 	return NewService(typePostgres, key, params.Database, params.Schema, params.Username, params.Debug, db, logger)
 }
 
-func OpenPostgresDatabaseSSL(ctx context.Context, key string, ep *PostgresParams, sp *PostgresServiceParams, logger *zap.SugaredLogger) (*Service, error) {
+func OpenPostgresDatabaseSSL(ctx context.Context, key string, ep *PostgresParams, sp *PostgresServiceParams, logger util.Logger) (*Service, error) {
 	_, span, logger := telemetry.StartSpan(ctx, "database:openssl", logger)
 	defer span.Complete()
 

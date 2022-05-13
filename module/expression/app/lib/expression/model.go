@@ -5,7 +5,6 @@ import (
 
 	"github.com/google/cel-go/cel"
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
 
 	"{{{ .Package }}}/app/util"
 )
@@ -48,7 +47,7 @@ func (e *Expression) Run(params map[string]any) (any, int, error) {
 	return out.Value(), timer.End(), nil
 }
 
-func CheckResult(x any, logger *zap.SugaredLogger) bool {
+func CheckResult(x any, logger util.Logger) bool {
 	switch t := x.(type) {
 	case bool:
 		return t

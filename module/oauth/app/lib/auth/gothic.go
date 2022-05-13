@@ -4,7 +4,6 @@ import (
 	"github.com/markbates/goth"
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
-	"go.uber.org/zap"
 
 	"{{{ .Package }}}/app/controller/cutil"
 	"{{{ .Package }}}/app/lib/user"
@@ -13,7 +12,7 @@ import (
 
 const defaultProfilePath = "/profile"
 
-func BeginAuthHandler(prv *Provider, rc *fasthttp.RequestCtx, websess util.ValueMap, logger *zap.SugaredLogger) (string, error) {
+func BeginAuthHandler(prv *Provider, rc *fasthttp.RequestCtx, websess util.ValueMap, logger util.Logger) (string, error) {
 	u, err := getAuthURL(prv, rc, websess, logger)
 	if err != nil {
 		return "", err
@@ -25,7 +24,7 @@ func BeginAuthHandler(prv *Provider, rc *fasthttp.RequestCtx, websess util.Value
 	return u, nil
 }
 
-func CompleteUserAuth(prv *Provider, rc *fasthttp.RequestCtx, websess util.ValueMap, logger *zap.SugaredLogger) (*user.Account, user.Accounts, error) {
+func CompleteUserAuth(prv *Provider, rc *fasthttp.RequestCtx, websess util.ValueMap, logger util.Logger) (*user.Account, user.Accounts, error) {
 	value, err := cutil.GetFromSession(prv.ID, websess)
 	if err != nil {
 		return nil, nil, err
@@ -82,7 +81,7 @@ func gothFor(rc *fasthttp.RequestCtx, prv *Provider) (goth.Provider, error) {
 	return prv.Goth(proto, host)
 }
 
-func Logout(rc *fasthttp.RequestCtx, websess util.ValueMap, logger *zap.SugaredLogger, prvKeys ...string) error {
+func Logout(rc *fasthttp.RequestCtx, websess util.ValueMap, logger util.Logger, prvKeys ...string) error {
 	a := getCurrentAuths(websess)
 	n := a.Purge(prvKeys...)
 	return setCurrentAuths(n, rc, websess, logger)

@@ -4,9 +4,11 @@ import (
 	"strings"
 
 	"go.uber.org/zap"
+
+	"{{{ .Package }}}/app/util"
 )
 
-func LoggerFor(logger *zap.SugaredLogger, span *Span) *zap.SugaredLogger {
+func LoggerFor(logger util.Logger, span *Span) util.Logger {
 	if span == nil {
 		return logger
 	}
@@ -14,7 +16,7 @@ func LoggerFor(logger *zap.SugaredLogger, span *Span) *zap.SugaredLogger {
 }
 
 type ErrHandler struct {
-	logger     *zap.SugaredLogger
+	logger     util.Logger
 	hasPrinted bool
 }
 

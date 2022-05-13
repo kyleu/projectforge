@@ -1,12 +1,11 @@
 package cmd
 
 import (
-	"go.uber.org/zap"
-
 	"{{{ .Package }}}/app"
+	"{{{ .Package }}}/app/util"
 )
 
-func Run(bi *app.BuildInfo) (*zap.SugaredLogger, error) {
+func Run(bi *app.BuildInfo) (util.Logger, error) {
 	_buildInfo = bi
 
 	if err := rootCmd().Execute(); err != nil {

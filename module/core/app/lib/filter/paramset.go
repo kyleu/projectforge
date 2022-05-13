@@ -3,12 +3,12 @@ package filter
 import (
 	"strings"
 
-	"go.uber.org/zap"
+	"{{{ .Package }}}/app/util"
 )
 
 type ParamSet map[string]*Params
 
-func (s ParamSet) Get(key string, allowed []string, logger *zap.SugaredLogger) *Params {
+func (s ParamSet) Get(key string, allowed []string, logger util.Logger) *Params {
 	x, ok := s[key]
 	if !ok {
 		return &Params{Key: key}

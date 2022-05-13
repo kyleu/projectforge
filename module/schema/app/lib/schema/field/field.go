@@ -14,7 +14,7 @@ type Field struct {
 	Title    string         `json:"-"` // override only
 	Plural   string         `json:"-"` // override only
 	Hidden   bool           `json:"-"` // override only
-	Default  any    `json:"default,omitempty"`
+	Default  any            `json:"default,omitempty"`
 	ReadOnly bool           `json:"readOnly,omitempty"`
 	Metadata *Metadata      `json:"metadata,omitempty"`
 }

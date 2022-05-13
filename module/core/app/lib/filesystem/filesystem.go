@@ -7,6 +7,8 @@ import (
 
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
+
+	"{{{ .Package }}}/app/util"
 )
 
 var (
@@ -16,12 +18,12 @@ var (
 
 type FileSystem struct {
 	root   string
-	logger *zap.SugaredLogger
+	logger util.Logger
 }
 
 var _ FileLoader = (*FileSystem)(nil)
 
-func NewFileSystem(root string, logger *zap.SugaredLogger) *FileSystem {
+func NewFileSystem(root string, logger util.Logger) *FileSystem {
 	return &FileSystem{root: root, logger: logger.With(zap.String("service", "filesystem"))}
 }
 

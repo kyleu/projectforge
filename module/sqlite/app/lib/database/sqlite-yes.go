@@ -9,17 +9,17 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
 	_ "modernc.org/sqlite" // load sqlite driver.
 
 	"{{{ .Package }}}/app/lib/telemetry"
+	"{{{ .Package }}}/app/util"
 )
 
 const SQLiteEnabled = true
 
 var typeSQLite = &DBType{Key: "sqlite", Title: "SQLite", Quote: `"`, Placeholder: "$", SupportsReturning: true}
 
-func OpenSQLiteDatabase(ctx context.Context, key string, params *SQLiteParams, logger *zap.SugaredLogger) (*Service, error) {
+func OpenSQLiteDatabase(ctx context.Context, key string, params *SQLiteParams, logger util.Logger) (*Service, error) {
 	_, span, logger := telemetry.StartSpan(ctx, "database:open", logger)
 	defer span.Complete()
 	if params.File == "" {

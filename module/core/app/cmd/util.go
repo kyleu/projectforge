@@ -8,7 +8,6 @@ import (
 	"github.com/kirsle/configdir"
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
-	"go.uber.org/zap"
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/lib/log"
@@ -19,7 +18,7 @@ var (
 	_initialized = false
 	_buildInfo   *app.BuildInfo
 	_flags       = &Flags{}
-	_logger      *zap.SugaredLogger
+	_logger      util.Logger
 )
 
 type Flags struct {

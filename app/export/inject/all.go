@@ -3,12 +3,12 @@ package inject
 import (
 	"context"
 
-	"go.uber.org/zap"
 	"projectforge.dev/projectforge/app/export/model"
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/util"
 )
 
-func All(ctx context.Context, args *model.Args, files file.Files, logger *zap.SugaredLogger) error {
+func All(ctx context.Context, args *model.Args, files file.Files, logger util.Logger) error {
 	if args == nil {
 		return nil
 	}

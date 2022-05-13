@@ -9,37 +9,6 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-const incDel = "cutil.RequestCtxBool(rc, \"includeDeleted\")"
-
-func controllerList(m *model.Model, grp *model.Column) *golang.Block {
-	ret := blockFor(m, grp, "list")
-	meth := "List"
-	grpArgs := ""
-	if grp != nil {
-		meth = "GetBy" + grp.Title()
-		grpArgs = ", " + grp.Camel() + "Arg"
-		controllerArgFor(grp, ret, "\"\"", 2)
-	}
-
-	ret.W("\t\tps.Title = %sDefaultTitle", m.Camel())
-	ret.W("\t\tparams := cutil.ParamSetFromRequest(rc)")
-	suffix := ""
-	if m.IsSoftDelete() {
-		suffix = ", " + incDel
-	}
-	ret.W("\t\tprms := params.Get(%q, nil, ps.Logger).Sanitize(%q)", m.Package, m.Package)
-	const msg = "\t\tret, err := as.Services.%s.%s(ps.Context, nil%s, prms%s)"
-	ret.W(msg, m.Proper(), meth, grpArgs, suffix)
-	ret.W("\t\tif err != nil {")
-	ret.W("\t\t\treturn \"\", err")
-	ret.W("\t\t}")
-	ret.W("\t\tps.Data = ret")
-	ret.W("\t\treturn render(rc, as, &v%s.List{Models: ret, Params: params}, ps, %q%s)", m.Package, m.Package, grp.BC())
-	ret.W("\t})")
-	ret.W("}")
-	return ret
-}
-
 func controllerDetail(models model.Models, m *model.Model, grp *model.Column) *golang.Block {
 	rrels := models.ReverseRelations(m.Name)
 	ret := blockFor(m, grp, "detail")
@@ -131,54 +100,5 @@ func controllerDetail(models model.Models, m *model.Model, grp *model.Column) *g
 	}
 	ret.W("\t})")
 	ret.W("}")
-	return ret
-}
-
-func checkRev(ret *golang.Block, m *model.Model) {
-	if !m.IsRevision() {
-		return
-	}
-	hc := m.HistoryColumn()
-
-	prmsStr := m.PKs().ToRefs("ret.")
-	const msg = "\t\t%s, err := as.Services.%s.GetAll%s(ps.Context, nil, %s, params.Get(%q, nil, ps.Logger).Sanitize(%q), false)"
-	ret.W(msg, hc.CamelPlural(), m.Proper(), hc.ProperPlural(), prmsStr, m.Package, m.Package)
-	ret.W("\t\tif err != nil {")
-	ret.W("\t\t\treturn \"\", err")
-	ret.W("\t\t}")
-}
-
-func checkGrp(ret *golang.Block, grp *model.Column, override ...string) {
-	if grp == nil {
-		return
-	}
-	x := "ret"
-	if len(override) > 0 {
-		x = override[0]
-	}
-	ret.W("\t\tif %s.%s != %sArg {", x, grp.Proper(), grp.Camel())
-	ret.W("\t\t\treturn \"\", errors.New(\"unauthorized: incorrect [%s]\")", grp.Camel())
-	ret.W("\t\t}")
-}
-
-func controllerModelFromPath(m *model.Model) *golang.Block {
-	ret := golang.NewBlock(m.Proper()+"FromPath", "func")
-	ret.W("func %sFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*%s, error) {", m.Package, m.ClassRef())
-	pks := m.PKs()
-	for _, col := range pks {
-		controllerArgFor(col, ret, "nil", 1)
-	}
-	args := make([]string, 0, len(pks))
-	for _, x := range pks {
-		args = append(args, x.Camel()+"Arg")
-	}
-	suffix := ""
-	if m.IsSoftDelete() {
-		suffix = ", includeDeleted"
-		ret.W("\tincludeDeleted := rc.UserValue(\"includeDeleted\") != nil || " + incDel)
-	}
-	ret.W("\treturn as.Services.%s.Get(ps.Context, nil, %s%s)", m.Proper(), strings.Join(args, ", "), suffix)
-	ret.W("}")
-
 	return ret
 }

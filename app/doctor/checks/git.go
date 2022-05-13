@@ -3,9 +3,8 @@ package checks
 import (
 	"context"
 
-	"go.uber.org/zap"
-
 	"projectforge.dev/projectforge/app/doctor"
+	"projectforge.dev/projectforge/app/util"
 )
 
 var git = &doctor.Check{
@@ -19,7 +18,7 @@ var git = &doctor.Check{
 	Solve:   solveGit,
 }
 
-func solveGit(ctx context.Context, r *doctor.Result, logger *zap.SugaredLogger) *doctor.Result {
+func solveGit(ctx context.Context, r *doctor.Result, logger util.Logger) *doctor.Result {
 	if r.Errors.Find("missing") != nil || r.Errors.Find("exitcode") != nil {
 		r.AddSolution("https://git-scm.com")
 	}

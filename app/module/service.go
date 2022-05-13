@@ -6,13 +6,13 @@ import (
 	"sync"
 
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/export"
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/lib/search/result"
 	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/app/util"
 )
 
 var nativeModuleKeys = []string{
@@ -28,10 +28,10 @@ type Service struct {
 	cacheMu     sync.Mutex
 	filesystems map[string]filesystem.FileLoader
 	expSvc      *export.Service
-	logger      *zap.SugaredLogger
+	logger      util.Logger
 }
 
-func NewService(ctx context.Context, config filesystem.FileLoader, logger *zap.SugaredLogger) *Service {
+func NewService(ctx context.Context, config filesystem.FileLoader, logger util.Logger) *Service {
 	logger = logger.With("svc", "module")
 	local := filesystem.NewFileSystem("module", logger)
 	config = filesystem.NewFileSystem(filepath.Join(config.Root(), "module"), logger)
@@ -136,7 +136,7 @@ func (s *Service) Register(ctx context.Context, path string, defs ...*project.Mo
 	return ret, nil
 }
 
-func (s *Service) Search(ctx context.Context, q string, logger *zap.SugaredLogger) (result.Results, error) {
+func (s *Service) Search(ctx context.Context, q string, logger util.Logger) (result.Results, error) {
 	ret := result.Results{}
 	for _, mod := range s.Modules() {
 		if res := result.NewResult("module", mod.Key, mod.WebPath(), mod.Title(), mod.IconSafe(), mod, q); len(res.Matches) > 0 {

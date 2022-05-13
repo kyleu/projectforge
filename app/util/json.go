@@ -9,7 +9,7 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-var jsoniterParser = jsoniter.ConfigCompatibleWithStandardLibrary
+var jsoniterParser = jsoniter.Config{EscapeHTML: false, SortMapKeys: true, ValidateJsonRawMessage: true}.Froze()
 
 func ToJSON(x any) string {
 	return string(ToJSONBytes(x, true))
@@ -21,8 +21,14 @@ func ToJSONCompact(x any) string {
 
 func ToJSONBytes(x any, indent bool) []byte {
 	if indent {
-		b, _ := json.MarshalIndent(x, "", "  ")
-		return b
+		bts := &bytes.Buffer{}
+		enc := json.NewEncoder(bts)
+		if indent {
+			enc.SetIndent("", "  ")
+		}
+		enc.SetEscapeHTML(false)
+		_ = enc.Encode(x)
+		return bts.Bytes()
 	}
 	b, _ := json.Marshal(x)
 	return b

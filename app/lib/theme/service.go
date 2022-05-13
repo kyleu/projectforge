@@ -5,7 +5,6 @@ import (
 	"path/filepath"
 
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/util"
@@ -17,10 +16,10 @@ type Service struct {
 	root   string
 	files  filesystem.FileLoader
 	cache  Themes
-	logger *zap.SugaredLogger
+	logger util.Logger
 }
 
-func NewService(files filesystem.FileLoader, logger *zap.SugaredLogger) *Service {
+func NewService(files filesystem.FileLoader, logger util.Logger) *Service {
 	return &Service{root: "themes", files: files, logger: logger}
 }
 

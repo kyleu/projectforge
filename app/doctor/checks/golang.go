@@ -3,8 +3,8 @@ package checks
 import (
 	"context"
 
-	"go.uber.org/zap"
 	"projectforge.dev/projectforge/app/doctor"
+	"projectforge.dev/projectforge/app/util"
 )
 
 var golang = &doctor.Check{
@@ -18,7 +18,7 @@ var golang = &doctor.Check{
 	Solve:   solveGo,
 }
 
-func solveGo(ctx context.Context, r *doctor.Result, logger *zap.SugaredLogger) *doctor.Result {
+func solveGo(ctx context.Context, r *doctor.Result, logger util.Logger) *doctor.Result {
 	if r.Errors.Find("missing") != nil || r.Errors.Find("exitcode") != nil {
 		r.AddSolution("Download Go for your platform")
 	}

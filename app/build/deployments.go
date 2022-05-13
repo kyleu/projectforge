@@ -32,28 +32,14 @@ func Deployments(ctx context.Context, curr string, fs filesystem.FileLoader, fix
 		df := &diff.Diff{Path: dep, Status: diff.StatusIdentical}
 
 		for _, line := range lines {
-			if idx := strings.Index(line, "tag: "); idx > -1 {
-				v := strings.TrimSpace(line[idx+5:])
-				if curr == v || curr == strings.TrimPrefix(v, "v") {
-					final = append(final, line)
-				} else {
-					hit[v] = struct{}{}
-					if fix {
-						final = append(final, strings.ReplaceAll(line, v, curr))
-					} else {
-						final = append(final, line)
-					}
-				}
-			} else {
-				final = append(final, line)
-			}
+			final = append(final, deploymentProcessLine(line, fix, hit, curr))
 		}
 
 		if len(hit) > 0 {
 			ret = append(ret, df)
 			hits := strings.Join(hit.Keys(), ", ")
 			if fix && (path == "" || path == dep) {
-				logs = append(logs, fmt.Sprintf("updated version [%s] to [%s]", hits, curr))
+				logs = append(logs, fmt.Sprintf("updated version [%s] to [%s]", hits, curr), strings.Join(final, "\n"))
 			} else {
 				df.Status = diff.StatusDifferent
 				df.Patch = hits + " -> " + curr
@@ -62,4 +48,18 @@ func Deployments(ctx context.Context, curr string, fs filesystem.FileLoader, fix
 	}
 
 	return logs, ret, nil
+}
+
+func deploymentProcessLine(line string, fix bool, hit util.ValueMap, curr string) string {
+	if idx := strings.Index(line, "tag: "); idx > -1 {
+		v := strings.TrimSpace(line[idx+5:])
+		if curr == v || curr == strings.TrimPrefix(v, "v") {
+			return line
+		}
+		hit[v] = struct{}{}
+		if fix {
+			return strings.ReplaceAll(line, v, curr)
+		}
+	}
+	return line
 }

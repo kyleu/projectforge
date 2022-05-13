@@ -3,8 +3,6 @@ package checks
 import (
 	"context"
 
-	"go.uber.org/zap"
-
 	"projectforge.dev/projectforge/app/doctor"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -20,7 +18,7 @@ var pf = &doctor.Check{
 	Solve:   solvePF,
 }
 
-func solvePF(ctx context.Context, r *doctor.Result, logger *zap.SugaredLogger) *doctor.Result {
+func solvePF(ctx context.Context, r *doctor.Result, logger util.Logger) *doctor.Result {
 	if r.Errors.Find("missing") != nil || r.Errors.Find("exitcode") != nil {
 		r.AddSolution("Install [" + util.AppName + "] by following the instructions at [" + util.AppURL + "]")
 	}

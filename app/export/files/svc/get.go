@@ -159,8 +159,11 @@ func serviceGetMultiple(m *model.Model, dbRef string) *golang.Block {
 	ret.W("\t\treturn %s{}, nil", m.ProperPlural())
 	ret.W("\t}")
 	ret.W("\twc := database.SQLInClause(%q, len(%s), 0)", pk.Name, pk.Plural())
+	if m.IsSoftDelete() {
+		ret.W("\twc = addDeletedClause(wc, includeDeleted)")
+	}
 	ret.W("\tret := dtos{}")
-	ret.W("\tq := database.SQLSelectSimple(columnsString, tableQuoted, wc)")
+	ret.W("\tq := database.SQLSelectSimple(columnsString, %s, wc)", tableClauseFor(m))
 	ret.W("\tvals := make([]any, 0, len(%s))", pk.Plural())
 	ret.W("\tfor _, x := range %s {", pk.Plural())
 	ret.W("\t\tvals = append(vals, x)")

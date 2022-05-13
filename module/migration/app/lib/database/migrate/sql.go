@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
 
 	"{{{ .Package }}}/app/lib/database"
 	"{{{ .Package }}}/app/util"
@@ -39,7 +38,7 @@ func GetMigrations() MigrationFiles {
 	return ret
 }
 
-func exec(ctx context.Context, file *MigrationFile, s *database.Service, logger *zap.SugaredLogger) (string, error) {
+func exec(ctx context.Context, file *MigrationFile, s *database.Service, logger util.Logger) (string, error) {
 	sql := file.Content
 	timer := util.TimerStart()
 	logger.Infof("migration running SQL: %v", sql)

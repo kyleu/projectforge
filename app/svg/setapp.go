@@ -8,11 +8,11 @@ import (
 	"sync"
 
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/app/util"
 )
 
 const (
@@ -20,7 +20,7 @@ const (
 	noBG   = "convert -density 1000 -background none -resize %dx%d -define png:exclude-chunks=date,time logo.svg %s"
 )
 
-func proc(ctx context.Context, cmd string, path string, logger *zap.SugaredLogger) error {
+func proc(ctx context.Context, cmd string, path string, logger util.Logger) error {
 	exit, out, err := telemetry.RunProcessSimple(ctx, cmd, path, logger)
 	if err != nil {
 		return errors.Wrap(err, "unable to convert [logo.png]")
@@ -31,7 +31,7 @@ func proc(ctx context.Context, cmd string, path string, logger *zap.SugaredLogge
 	return nil
 }
 
-func SetAppIcon(ctx context.Context, prj *project.Project, fs filesystem.FileLoader, x *SVG, logger *zap.SugaredLogger) error {
+func SetAppIcon(ctx context.Context, prj *project.Project, fs filesystem.FileLoader, x *SVG, logger util.Logger) error {
 	orig := x.Markup
 	for strings.Contains(orig, "<!--") {
 		startIdx := strings.Index(orig, "<!--")
@@ -46,7 +46,7 @@ func SetAppIcon(ctx context.Context, prj *project.Project, fs filesystem.FileLoa
 	wg.Add(4)
 	var errs []error
 
-	queue := func(f func(ctx context.Context, prj *project.Project, orig string, fs filesystem.FileLoader, logger *zap.SugaredLogger) error) {
+	queue := func(f func(ctx context.Context, prj *project.Project, orig string, fs filesystem.FileLoader, logger util.Logger) error) {
 		err := f(ctx, prj, orig, fs, logger)
 		if err != nil {
 			errs = append(errs, err)
@@ -79,7 +79,7 @@ func SetAppIcon(ctx context.Context, prj *project.Project, fs filesystem.FileLoa
 	return nil
 }
 
-func webAssets(ctx context.Context, prj *project.Project, orig string, fs filesystem.FileLoader, logger *zap.SugaredLogger) error {
+func webAssets(ctx context.Context, prj *project.Project, orig string, fs filesystem.FileLoader, logger util.Logger) error {
 	webResize := func(size int, fn string, p string) {
 		err := proc(ctx, fmt.Sprintf(noBG, size, size, fn), p, logger)
 		if err != nil {

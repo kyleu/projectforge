@@ -1,6 +1,9 @@
 package gomodel
 
 import (
+	"fmt"
+	"strings"
+
 	"projectforge.dev/projectforge/app/export/golang"
 	"projectforge.dev/projectforge/app/export/model"
 	"projectforge.dev/projectforge/app/lib/types"
@@ -29,14 +32,7 @@ func modelString(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("String", "func")
 	ret.W("func (%s *%s) String() string {", m.FirstLetter(), m.Proper())
 	if pks := m.PKs(); len(pks) == 1 {
-		switch pks[0].Type.Key() {
-		case types.KeyString:
-			ret.W("\treturn %s.%s", m.FirstLetter(), pks[0].Proper())
-		case types.KeyUUID, types.KeyReference:
-			ret.W("\treturn %s.%s.String()", m.FirstLetter(), pks[0].Proper())
-		default:
-			ret.W("\treturn fmt.Sprint(%s.%s)", m.FirstLetter(), pks[0].Proper())
-		}
+		ret.W("\treturn %s", model.ToGoString(pks[0].Type, fmt.Sprintf("%s.%s", m.FirstLetter(), pks[0].Proper())))
 	} else {
 		s := "\treturn fmt.Sprintf(\""
 		for idx := range m.PKs() {
@@ -50,6 +46,22 @@ func modelString(m *model.Model) *golang.Block {
 			s += ", " + c.ToGoString(m.FirstLetter()+".")
 		}
 		ret.W(s + ")")
+	}
+	ret.W("}")
+	return ret
+}
+
+func modelTitle(m *model.Model) *golang.Block {
+	ret := golang.NewBlock("Title", "func")
+	ret.W("func (%s *%s) TitleString() string {", m.FirstLetter(), m.Proper())
+	if titles := m.Columns.WithTag("title"); len(titles) > 0 {
+		var toStrings []string
+		for _, title := range titles {
+			toStrings = append(toStrings, model.ToGoString(title.Type, fmt.Sprintf("%s.%s", m.FirstLetter(), title.Proper())))
+		}
+		ret.W("\treturn %s", strings.Join(toStrings, " + \" / \" + "))
+	} else {
+		ret.W("\treturn %s.String()", m.FirstLetter())
 	}
 	ret.W("}")
 	return ret

@@ -9,7 +9,6 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
 
 	"{{{ .Package }}}/app/lib/telemetry"
 	"{{{ .Package }}}/app/util"
@@ -64,7 +63,7 @@ func MySQLParamsFromEnv(key string, defaultUser string, prefix string) *MySQLPar
 	return &MySQLParams{Host: h, Port: p, Username: u, Password: pw, Database: d, Schema: s, MaxConns: mc, Debug: debug}
 }
 
-func OpenMySQLDatabase(ctx context.Context, key string, params *MySQLParams, logger *zap.SugaredLogger) (*Service, error) {
+func OpenMySQLDatabase(ctx context.Context, key string, params *MySQLParams, logger util.Logger) (*Service, error) {
 	_, span, logger := telemetry.StartSpan(ctx, "database:open", logger)
 	defer span.Complete()
 	host := params.Host
@@ -90,7 +89,7 @@ func OpenMySQLDatabase(ctx context.Context, key string, params *MySQLParams, log
 	return NewService(typeMySQL, key, params.Database, params.Schema, params.Username, params.Debug, db, logger)
 }
 
-func OpenDefaultMySQL(logger *zap.SugaredLogger) (*Service, error) {
+func OpenDefaultMySQL(logger util.Logger) (*Service, error) {
 	params := MySQLParamsFromEnv(util.AppKey, util.AppKey, "")
 	return OpenMySQLDatabase(context.Background(), util.AppKey, params, logger)
 }

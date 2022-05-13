@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/lib/telemetry"
@@ -51,7 +50,7 @@ type ghRsp struct {
 	Assets []*ghAsset `json:"assets"`
 }
 
-func loadAssetMap(ctx context.Context, logger *zap.SugaredLogger) error {
+func loadAssetMap(ctx context.Context, logger util.Logger) error {
 	logger.Infof("loading assets from [%s]", assetURL)
 	assetMap = map[string]string{}
 	httpClient := telemetry.WrapHTTPClient(http.DefaultClient)

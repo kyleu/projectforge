@@ -6,12 +6,11 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
 	"golang.org/x/exp/slices"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func gitStatus(ctx context.Context, path string, logger *zap.SugaredLogger) ([]string, error) {
+func gitStatus(ctx context.Context, path string, logger util.Logger) ([]string, error) {
 	out, err := gitCmd(ctx, "status --porcelain", path, logger)
 	if err != nil {
 		if errors.Is(err, errNoRepo) {
@@ -34,7 +33,7 @@ func gitStatus(ctx context.Context, path string, logger *zap.SugaredLogger) ([]s
 	return dirty, nil
 }
 
-func gitBranch(ctx context.Context, path string, logger *zap.SugaredLogger) string {
+func gitBranch(ctx context.Context, path string, logger util.Logger) string {
 	out, err := gitCmd(ctx, "branch --show-current", path, logger)
 	if err != nil {
 		if errors.Is(err, errNoRepo) {
@@ -45,7 +44,7 @@ func gitBranch(ctx context.Context, path string, logger *zap.SugaredLogger) stri
 	return strings.TrimSpace(out)
 }
 
-func gitFetch(ctx context.Context, path string, dryRun bool, logger *zap.SugaredLogger) (string, error) {
+func gitFetch(ctx context.Context, path string, dryRun bool, logger util.Logger) (string, error) {
 	cmd := "fetch"
 	if dryRun {
 		cmd += " --dry-run"
@@ -60,7 +59,7 @@ func gitFetch(ctx context.Context, path string, dryRun bool, logger *zap.Sugared
 	return out, nil
 }
 
-func gitCommit(ctx context.Context, path string, message string, logger *zap.SugaredLogger) (string, error) {
+func gitCommit(ctx context.Context, path string, message string, logger util.Logger) (string, error) {
 	_, err := gitCmd(ctx, "add .", path, logger)
 	if err != nil {
 		if errors.Is(err, errNoRepo) {

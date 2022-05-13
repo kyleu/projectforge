@@ -5,12 +5,13 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
+
+	"{{{ .Package }}}/app/util"
 )
 
 const explainPrefix = "explain "
 
-func (s *Service) Explain(ctx context.Context, q string, values []any, logger *zap.SugaredLogger) ([]string, error) {
+func (s *Service) Explain(ctx context.Context, q string, values []any, logger util.Logger) ([]string, error) {
 	q = strings.TrimSpace(q)
 	if !strings.HasPrefix(q, explainPrefix) {
 		q = explainPrefix + q

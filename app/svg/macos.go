@@ -6,12 +6,13 @@ import (
 	"path/filepath"
 
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
+
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/app/util"
 )
 
-func macOSAssets(ctx context.Context, prj *project.Project, orig string, fs filesystem.FileLoader, logger *zap.SugaredLogger) error {
+func macOSAssets(ctx context.Context, prj *project.Project, orig string, fs filesystem.FileLoader, logger util.Logger) error {
 	if prj.Build == nil || (!prj.Build.Desktop) {
 		return nil
 	}

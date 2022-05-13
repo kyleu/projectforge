@@ -2,7 +2,6 @@ package controller
 
 import (
 	"github.com/valyala/fasthttp"
-	"go.uber.org/zap"
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller/cutil"
@@ -30,7 +29,7 @@ func loadPageState(rc *fasthttp.RequestCtx, key string, as *app.State) *cutil.Pa
 	}
 }
 
-func loadSession(rc *fasthttp.RequestCtx, logger *zap.SugaredLogger) (util.ValueMap, []string, *user.Profile, user.Accounts) {
+func loadSession(rc *fasthttp.RequestCtx, logger util.Logger) (util.ValueMap, []string, *user.Profile, user.Accounts) {
 	sessionBytes := rc.Request.Header.Cookie(util.AppKey)
 	session := util.ValueMap{}
 	if len(sessionBytes) > 0 {

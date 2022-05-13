@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
@@ -42,7 +41,7 @@ func LoadDepsEasyMode(key string, fs filesystem.FileLoader) (Dependencies, error
 }
 
 func LoadDeps(
-	ctx context.Context, key string, path string, includeUpdates bool, fs filesystem.FileLoader, showAll bool, logger *zap.SugaredLogger,
+	ctx context.Context, key string, path string, includeUpdates bool, fs filesystem.FileLoader, showAll bool, logger util.Logger,
 ) (Dependencies, error) {
 	actual, err := LoadDepsEasyMode(key, fs)
 	if err != nil {
@@ -91,7 +90,7 @@ func LoadDeps(
 	return ret, nil
 }
 
-func loadReferences(ctx context.Context, path string, deps Dependencies, logger *zap.SugaredLogger) error {
+func loadReferences(ctx context.Context, path string, deps Dependencies, logger util.Logger) error {
 	_, out, err := telemetry.RunProcessSimple(ctx, "go mod graph", path, logger)
 	if err != nil {
 		return err
@@ -107,8 +106,8 @@ func loadReferences(ctx context.Context, path string, deps Dependencies, logger 
 		curr := deps.Get(dest)
 		if curr != nil {
 			curr.AddRef(src)
-		} else {
-			// return errors.Errorf("missing dependency entry for [%s] in path [%s]", dest, path)
+			// } else {
+			//	return errors.Errorf("missing dependency entry for [%s] in path [%s]", dest, path)
 		}
 	}
 	return nil

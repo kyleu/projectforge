@@ -6,8 +6,6 @@ import (
 	"fmt"
 	"time"
 
-	"go.uber.org/zap"
-
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/lib/theme"
@@ -34,7 +32,7 @@ type State struct {
 	BuildInfo *BuildInfo
 	Files     filesystem.FileLoader
 	Themes    *theme.Service
-	Logger    *zap.SugaredLogger
+	Logger    util.Logger
 	Services  *Services
 	Started   time.Time
 }
@@ -43,7 +41,7 @@ func (s State) Close(ctx context.Context) error {
 	return s.Services.Close(ctx)
 }
 
-func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, enableTelemetry bool, logger *zap.SugaredLogger) (*State, error) {
+func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, enableTelemetry bool, logger util.Logger) (*State, error) {
 	loc, err := time.LoadLocation("UTC")
 	if err != nil {
 		return nil, err

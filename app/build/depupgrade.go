@@ -5,15 +5,16 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
+
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/app/util"
 )
 
 const gomod = "go.mod"
 
-func OnDepsUpgrade(ctx context.Context, prj *project.Project, up string, o string, n string, pSvc *project.Service, logger *zap.SugaredLogger) error {
+func OnDepsUpgrade(ctx context.Context, prj *project.Project, up string, o string, n string, pSvc *project.Service, logger util.Logger) error {
 	var deps Dependencies
 	if up == "all" {
 		curr, err := LoadDeps(ctx, prj.Key, prj.Path, true, pSvc.GetFilesystem(prj), false, logger)
@@ -42,7 +43,7 @@ func OnDepsUpgrade(ctx context.Context, prj *project.Project, up string, o strin
 	return nil
 }
 
-func upgradeDeps(ctx context.Context, prj *project.Project, deps Dependencies, pSvc *project.Service, logger *zap.SugaredLogger) error {
+func upgradeDeps(ctx context.Context, prj *project.Project, deps Dependencies, pSvc *project.Service, logger util.Logger) error {
 	logger.Infof("upgrading [%d] dependencies for [%s]", len(deps), prj.Key)
 	fs := pSvc.GetFilesystem(prj)
 	err := bumpGoMod(ctx, prj, fs, deps, logger)
@@ -52,7 +53,7 @@ func upgradeDeps(ctx context.Context, prj *project.Project, deps Dependencies, p
 	return nil
 }
 
-func bumpGoMod(ctx context.Context, prj *project.Project, fs filesystem.FileLoader, deps Dependencies, logger *zap.SugaredLogger) error {
+func bumpGoMod(ctx context.Context, prj *project.Project, fs filesystem.FileLoader, deps Dependencies, logger util.Logger) error {
 	bts, err := fs.ReadFile(gomod)
 	if err != nil {
 		return errors.Wrap(err, "unable to read [go.mod]")
