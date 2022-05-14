@@ -3,8 +3,8 @@ package database
 import (
 	"context"
 
-	"{{{ .Package }}}/queries/schema"
 	"{{{ .Package }}}/app/util"
+	"{{{ .Package }}}/queries/schema"
 )
 
 type NumAndString struct {

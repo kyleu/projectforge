@@ -36,8 +36,8 @@ func controllerList(m *model.Model, grp *model.Column, models model.Models, g *g
 		if relModel := models.Get(rel.Table); relModel.CanTraverseRelation() {
 			srcCol := m.Columns.Get(rel.Src[0])
 
-			//g.AddImport(helper.AppImport("app/" + relModel.Package))
-			//ret.W("\t\tvar %s %s.%s", relModel.Plural(), relModel.Package, relModel.ProperPlural())
+			// g.AddImport(helper.AppImport("app/" + relModel.Package))
+			// ret.W("\t\tvar %s %s.%s", relModel.Plural(), relModel.Package, relModel.ProperPlural())
 
 			for _, imp := range helper.ImportsForTypes("go", srcCol.Type) {
 				g.AddImport(imp)
