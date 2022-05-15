@@ -2,6 +2,7 @@
 .chroma {
   color: var(--chroma-fg);
   background-color: var(--chroma-bg);
+  margin: var(--padding) 0;
 }
 
 /* LineTableTD */

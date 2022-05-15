@@ -1,5 +1,6 @@
 <!-- Content managed by Project Forge, see [projectforge.md] for details. -->
 {% import (
+  "fmt"
   "time"
 
   "github.com/google/uuid"
@@ -22,14 +23,41 @@
   <em>no changes</em>
   {%- else -%}
   <table>
-    {%- for _, d := range value -%}
+    <tbody>
+      {%- for _, d := range value -%}
+      <tr>
+        <td><code>{%s d.Path %}</code></td>
+        <td><code class="error">{%s d.Old %}</code></td>
+        <td>→</td>
+        <td><code class="success">{%s d.New %}</code></td>
+      </tr>
+      {%- endfor -%}
+    </tbody>
+  </table>
+  {%- endif -%}
+{% endstripspace %}{% endfunc %}
+
+{% func DisplayMaps(maps []util.ValueMap) %}{% stripspace %}
+  {%- if len(maps) == 0 -%}
+  <em>no results</em>
+  {%- else -%}
+  <table>
+    <thead>
     <tr>
-      <td><code>{%s d.Path %}</code></td>
-      <td><code class="error">{%s d.Old %}</code></td>
-      <td>→</td>
-      <td><code class="success">{%s d.New %}</code></td>
+      {%- for _, k := range maps[0].Keys() -%}
+      <th>{%s k %}</th>
+      {%- endfor -%}
     </tr>
-    {%- endfor -%}
+    </thead>
+    <tbody>
+      {%- for _, m := range maps -%}
+      <tr>
+        {%- for _, k := range m.Keys() -%}
+        <td>{%s fmt.Sprint(m[k]) %}</td>
+        {%- endfor -%}
+      </tr>
+      {%- endfor -%}
+    </tbody>
   </table>
   {%- endif -%}
 {% endstripspace %}{% endfunc %}

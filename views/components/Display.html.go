@@ -8,6 +8,7 @@ package components
 
 //line views/components/Display.html:2
 import (
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -15,146 +16,219 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-//line views/components/Display.html:10
+//line views/components/Display.html:11
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/components/Display.html:10
+//line views/components/Display.html:11
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/components/Display.html:10
-func StreamDisplayTimestamp(qw422016 *qt422016.Writer, value *time.Time) {
 //line views/components/Display.html:11
+func StreamDisplayTimestamp(qw422016 *qt422016.Writer, value *time.Time) {
+//line views/components/Display.html:12
 	qw422016.E().S(util.TimeToFull(value))
-//line views/components/Display.html:12
+//line views/components/Display.html:13
 }
 
-//line views/components/Display.html:12
+//line views/components/Display.html:13
 func WriteDisplayTimestamp(qq422016 qtio422016.Writer, value *time.Time) {
-//line views/components/Display.html:12
+//line views/components/Display.html:13
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/Display.html:12
+//line views/components/Display.html:13
 	StreamDisplayTimestamp(qw422016, value)
-//line views/components/Display.html:12
+//line views/components/Display.html:13
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/Display.html:12
+//line views/components/Display.html:13
 }
 
-//line views/components/Display.html:12
+//line views/components/Display.html:13
 func DisplayTimestamp(value *time.Time) string {
-//line views/components/Display.html:12
+//line views/components/Display.html:13
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/Display.html:12
+//line views/components/Display.html:13
 	WriteDisplayTimestamp(qb422016, value)
-//line views/components/Display.html:12
+//line views/components/Display.html:13
 	qs422016 := string(qb422016.B)
-//line views/components/Display.html:12
+//line views/components/Display.html:13
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/Display.html:12
+//line views/components/Display.html:13
 	return qs422016
-//line views/components/Display.html:12
+//line views/components/Display.html:13
 }
 
-//line views/components/Display.html:14
-func StreamDisplayUUID(qw422016 *qt422016.Writer, value *uuid.UUID) {
 //line views/components/Display.html:15
-	if value != nil {
+func StreamDisplayUUID(qw422016 *qt422016.Writer, value *uuid.UUID) {
 //line views/components/Display.html:16
-		qw422016.E().S(value.String())
+	if value != nil {
 //line views/components/Display.html:17
-	}
+		qw422016.E().S(value.String())
 //line views/components/Display.html:18
+	}
+//line views/components/Display.html:19
 }
 
-//line views/components/Display.html:18
+//line views/components/Display.html:19
 func WriteDisplayUUID(qq422016 qtio422016.Writer, value *uuid.UUID) {
-//line views/components/Display.html:18
+//line views/components/Display.html:19
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/Display.html:18
+//line views/components/Display.html:19
 	StreamDisplayUUID(qw422016, value)
-//line views/components/Display.html:18
+//line views/components/Display.html:19
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/Display.html:18
+//line views/components/Display.html:19
 }
 
-//line views/components/Display.html:18
+//line views/components/Display.html:19
 func DisplayUUID(value *uuid.UUID) string {
-//line views/components/Display.html:18
+//line views/components/Display.html:19
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/Display.html:18
+//line views/components/Display.html:19
 	WriteDisplayUUID(qb422016, value)
-//line views/components/Display.html:18
+//line views/components/Display.html:19
 	qs422016 := string(qb422016.B)
-//line views/components/Display.html:18
+//line views/components/Display.html:19
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/Display.html:18
+//line views/components/Display.html:19
 	return qs422016
-//line views/components/Display.html:18
+//line views/components/Display.html:19
 }
 
-//line views/components/Display.html:20
+//line views/components/Display.html:21
 func StreamDisplayDiffs(qw422016 *qt422016.Writer, value util.Diffs) {
-//line views/components/Display.html:21
+//line views/components/Display.html:22
 	if len(value) == 0 {
-//line views/components/Display.html:21
+//line views/components/Display.html:22
 		qw422016.N().S(`<em>no changes</em>`)
-//line views/components/Display.html:23
+//line views/components/Display.html:24
 	} else {
-//line views/components/Display.html:23
-		qw422016.N().S(`<table>`)
-//line views/components/Display.html:25
+//line views/components/Display.html:24
+		qw422016.N().S(`<table><tbody>`)
+//line views/components/Display.html:27
 		for _, d := range value {
-//line views/components/Display.html:25
+//line views/components/Display.html:27
 			qw422016.N().S(`<tr><td><code>`)
-//line views/components/Display.html:27
+//line views/components/Display.html:29
 			qw422016.E().S(d.Path)
-//line views/components/Display.html:27
+//line views/components/Display.html:29
 			qw422016.N().S(`</code></td><td><code class="error">`)
-//line views/components/Display.html:28
+//line views/components/Display.html:30
 			qw422016.E().S(d.Old)
-//line views/components/Display.html:28
+//line views/components/Display.html:30
 			qw422016.N().S(`</code></td><td>→</td><td><code class="success">`)
-//line views/components/Display.html:30
+//line views/components/Display.html:32
 			qw422016.E().S(d.New)
-//line views/components/Display.html:30
+//line views/components/Display.html:32
 			qw422016.N().S(`</code></td></tr>`)
-//line views/components/Display.html:32
-		}
-//line views/components/Display.html:32
-		qw422016.N().S(`</table>`)
 //line views/components/Display.html:34
+		}
+//line views/components/Display.html:34
+		qw422016.N().S(`</tbody></table>`)
+//line views/components/Display.html:37
 	}
-//line views/components/Display.html:35
+//line views/components/Display.html:38
 }
 
-//line views/components/Display.html:35
+//line views/components/Display.html:38
 func WriteDisplayDiffs(qq422016 qtio422016.Writer, value util.Diffs) {
-//line views/components/Display.html:35
+//line views/components/Display.html:38
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/Display.html:35
+//line views/components/Display.html:38
 	StreamDisplayDiffs(qw422016, value)
-//line views/components/Display.html:35
+//line views/components/Display.html:38
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/Display.html:35
+//line views/components/Display.html:38
 }
 
-//line views/components/Display.html:35
+//line views/components/Display.html:38
 func DisplayDiffs(value util.Diffs) string {
-//line views/components/Display.html:35
+//line views/components/Display.html:38
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/Display.html:35
+//line views/components/Display.html:38
 	WriteDisplayDiffs(qb422016, value)
-//line views/components/Display.html:35
+//line views/components/Display.html:38
 	qs422016 := string(qb422016.B)
-//line views/components/Display.html:35
+//line views/components/Display.html:38
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/Display.html:35
+//line views/components/Display.html:38
 	return qs422016
-//line views/components/Display.html:35
+//line views/components/Display.html:38
+}
+
+//line views/components/Display.html:40
+func StreamDisplayMaps(qw422016 *qt422016.Writer, maps []util.ValueMap) {
+//line views/components/Display.html:41
+	if len(maps) == 0 {
+//line views/components/Display.html:41
+		qw422016.N().S(`<em>no results</em>`)
+//line views/components/Display.html:43
+	} else {
+//line views/components/Display.html:43
+		qw422016.N().S(`<table><thead><tr>`)
+//line views/components/Display.html:47
+		for _, k := range maps[0].Keys() {
+//line views/components/Display.html:47
+			qw422016.N().S(`<th>`)
+//line views/components/Display.html:48
+			qw422016.E().S(k)
+//line views/components/Display.html:48
+			qw422016.N().S(`</th>`)
+//line views/components/Display.html:49
+		}
+//line views/components/Display.html:49
+		qw422016.N().S(`</tr></thead><tbody>`)
+//line views/components/Display.html:53
+		for _, m := range maps {
+//line views/components/Display.html:53
+			qw422016.N().S(`<tr>`)
+//line views/components/Display.html:55
+			for _, k := range m.Keys() {
+//line views/components/Display.html:55
+				qw422016.N().S(`<td>`)
+//line views/components/Display.html:56
+				qw422016.E().S(fmt.Sprint(m[k]))
+//line views/components/Display.html:56
+				qw422016.N().S(`</td>`)
+//line views/components/Display.html:57
+			}
+//line views/components/Display.html:57
+			qw422016.N().S(`</tr>`)
+//line views/components/Display.html:59
+		}
+//line views/components/Display.html:59
+		qw422016.N().S(`</tbody></table>`)
+//line views/components/Display.html:62
+	}
+//line views/components/Display.html:63
+}
+
+//line views/components/Display.html:63
+func WriteDisplayMaps(qq422016 qtio422016.Writer, maps []util.ValueMap) {
+//line views/components/Display.html:63
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/components/Display.html:63
+	StreamDisplayMaps(qw422016, maps)
+//line views/components/Display.html:63
+	qt422016.ReleaseWriter(qw422016)
+//line views/components/Display.html:63
+}
+
+//line views/components/Display.html:63
+func DisplayMaps(maps []util.ValueMap) string {
+//line views/components/Display.html:63
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/components/Display.html:63
+	WriteDisplayMaps(qb422016, maps)
+//line views/components/Display.html:63
+	qs422016 := string(qb422016.B)
+//line views/components/Display.html:63
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/components/Display.html:63
+	return qs422016
+//line views/components/Display.html:63
 }
