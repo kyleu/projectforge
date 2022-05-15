@@ -39,11 +39,11 @@
           <label for="accordion-out">{%= components.ExpandCollapse(3, ps) %} Result</label>
           <div class="bd">{%= statementOut(s) %}</div>
         </li>
-        {%- if s.Extra != "" -%}
+        {%- if len(s.Extra) > 0 -%}
         <li>
           <input id="accordion-extra" type="checkbox" hidden />
           <label for="accordion-extra">{%= components.ExpandCollapse(3, ps) %} Query Plan</label>
-          <div class="bd">{%= statementExtra(s) %}</div>
+          <div class="bd">{%= components.DisplayMaps(s.Extra) %}</div>
         </li>
         {%- endif -%}
       </ul>
@@ -53,7 +53,7 @@
 
 {% func statementSQL(s *database.DebugStatement) %}
   {%- code out, _ := cutil.FormatLang(s.SQL, "sql") -%}
-  <pre>{%s= out %}</pre>
+  {%s= out %}
 {% endfunc %}
 
 {% func statementValues(s *database.DebugStatement) %}
@@ -96,8 +96,4 @@
     </tbody>
   </table>
   {%- endif -%}
-{% endfunc %}
-
-{% func statementExtra(s *database.DebugStatement) %}
-  <pre>{%s s.Extra %}</pre>
 {% endfunc %}

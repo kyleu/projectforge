@@ -23,20 +23,21 @@ var (
 	debugExample = &DebugStatement{
 		Index: -1, SQL: "select * from test where a = $1 and b = $2",
 		Values: []any{map[string]any{"a": true}, map[string]any{"b": true}, map[string]any{"c": true}},
-		Extra:  "[example plan]", Timing: 1, Message: "test query run without issue", Count: 2, Out: []any{1, 2},
+		Extra:  []util.ValueMap{{"example": "[example plan]"}}, Timing: 1,
+		Message: "test query run without issue", Count: 2, Out: []any{1, 2},
 	}
 )
 
 type DebugStatement struct {
-	Index   int    `json:"index"`
-	SQL     string `json:"sql"`
-	Values  []any  `json:"values,omitempty"`
-	Extra   string `json:"extra,omitempty"`
-	Timing  int    `json:"timing,omitempty"`
-	Error   string `json:"error"`
-	Message string `json:"message,omitempty"`
-	Count   int    `json:"count,omitempty"`
-	Out     []any  `json:"out,omitempty"`
+	Index   int             `json:"index"`
+	SQL     string          `json:"sql"`
+	Values  []any           `json:"values,omitempty"`
+	Extra   []util.ValueMap `json:"extra,omitempty"`
+	Timing  int             `json:"timing,omitempty"`
+	Error   string          `json:"error"`
+	Message string          `json:"message,omitempty"`
+	Count   int             `json:"count,omitempty"`
+	Out     []any           `json:"out,omitempty"`
 }
 
 func (s *DebugStatement) SQLTrimmed(maxLength int) string {
@@ -97,12 +98,12 @@ func (s *Service) newStatement(ctx context.Context, q string, values []any, timi
 	}
 	q = strings.TrimSpace(q)
 	if s.tracing == "analyze" && !strings.HasPrefix(q, "explain") {
-		ret.Extra = "[explain in progress]"
+		ret.Extra = []util.ValueMap{{"status": "[explain in progress]"}}
 		go func() {
 			if a, err := s.Explain(ctx, q, values, logger); err == nil {
-				ret.Extra = strings.Join(a, "\n")
+				ret.Extra = a
 			} else {
-				ret.Extra = "[explain error] " + err.Error()
+				ret.Extra = []util.ValueMap{{"error": "[explain error] " + err.Error()}}
 			}
 		}()
 	}

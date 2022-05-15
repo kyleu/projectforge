@@ -9,9 +9,9 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-const explainPrefix = "{{{ .ExplainPrefix }}}"
+const explainPrefix = "explain query plan "
 
-func (s *Service) Explain(ctx context.Context, q string, values []any, logger util.Logger) ([]string, error) {
+func (s *Service) Explain(ctx context.Context, q string, values []any, logger util.Logger) ([]util.ValueMap, error) {
 	q = strings.TrimSpace(q)
 	if !strings.HasPrefix(q, explainPrefix) {
 		q = explainPrefix + q
@@ -21,18 +21,14 @@ func (s *Service) Explain(ctx context.Context, q string, values []any, logger ut
 		return nil, errors.Wrap(err, "invalid explain result")
 	}
 	defer func() { _ = res.Close() }()
-	var ret []string
+	var ret []util.ValueMap
 	for res.Next() {
 		x := map[string]any{}
 		err = res.MapScan(x)
 		if err != nil {
 			return nil, errors.Wrap(err, "can't read results")
 		}
-		for _, v := range x {
-			if s, ok := v.(string); ok {
-				ret = append(ret, s)
-			}
-		}
+		ret = append(ret, x)
 	}
 
 	return ret, nil
