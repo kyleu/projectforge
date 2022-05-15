@@ -1,11 +1,12 @@
 // Content managed by Project Forge, see [projectforge.md] for details.
 import "./client.css"
 import {menuInit} from "./menu";
-import {flashInit} from "./flash";
-import {editorInit} from "./editor";
-import {linkInit} from "./link";
-import {themeInit} from "./theme";
 import {modeInit} from "./mode";
+import {flashInit} from "./flash";
+import {linkInit} from "./link";
+import {modalInit} from "./modal";
+import {editorInit} from "./editor";
+import {themeInit} from "./theme";
 import {appInit} from "./app";
 
 export function init(): void {
@@ -14,6 +15,7 @@ export function init(): void {
   modeInit();
   flashInit();
   linkInit();
+  modalInit();
   editorInit();
   themeInit();
   appInit();

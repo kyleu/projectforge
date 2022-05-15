@@ -7,7 +7,7 @@ import (
 	"projectforge.dev/projectforge/app/export/model"
 )
 
-func sqlCreateRevision(m *model.Model) (*golang.Block, error) {
+func sqlCreateRevision(m *model.Model, modules []string) (*golang.Block, error) {
 	pks := m.PKs()
 	hc := m.HistoryColumns(true)
 
@@ -60,7 +60,7 @@ func sqlCreateRevision(m *model.Model) (*golang.Block, error) {
 		ret.W("create index if not exists %q on %s;", idx.Name, idx.Decl)
 	}
 
-	sqlHistory(ret, m)
+	sqlHistory(ret, m, modules)
 	ret.W("-- {%% endfunc %%}")
 	return ret, nil
 }

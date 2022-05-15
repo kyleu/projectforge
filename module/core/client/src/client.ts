@@ -1,10 +1,11 @@
 import "./client.css"
 import {menuInit} from "./menu";
+import {modeInit} from "./mode";
 import {flashInit} from "./flash";
-import {editorInit} from "./editor";
 import {linkInit} from "./link";
-import {themeInit} from "./theme";
-import {modeInit} from "./mode";{{{ if .HasModule "websocket" }}}
+import {modalInit} from "./modal";
+import {editorInit} from "./editor";
+import {themeInit} from "./theme";{{{ if .HasModule "websocket" }}}
 import {socketInit} from "./socket";{{{ end }}}
 import {appInit} from "./app";
 
@@ -14,6 +15,7 @@ export function init(): void {
   modeInit();
   flashInit();
   linkInit();
+  modalInit();
   editorInit();
   themeInit();{{{ if .HasModule "websocket" }}}
   socketInit();{{{ end }}}

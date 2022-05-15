@@ -9,7 +9,7 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-const explainPrefix = "explain "
+const explainPrefix = "{{{ .ExplainPrefix }}}"
 
 func (s *Service) Explain(ctx context.Context, q string, values []any, logger util.Logger) ([]string, error) {
 	q = strings.TrimSpace(q)
@@ -28,15 +28,10 @@ func (s *Service) Explain(ctx context.Context, q string, values []any, logger ut
 		if err != nil {
 			return nil, errors.Wrap(err, "can't read results")
 		}
-		if len(x) != 1 {
-			return nil, errors.New("return from explain contains more than one column")
-		}
 		for _, v := range x {
-			s, ok := v.(string)
-			if !ok {
-				return nil, errors.Errorf("explain column is [%T], not [string]", v)
+			if s, ok := v.(string); ok {
+				ret = append(ret, s)
 			}
-			ret = append(ret, s)
 		}
 	}
 

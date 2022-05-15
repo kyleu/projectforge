@@ -4,11 +4,12 @@ import (
 	"fmt"
 	"strings"
 
+	"golang.org/x/exp/slices"
 	"projectforge.dev/projectforge/app/export/golang"
 	"projectforge.dev/projectforge/app/export/model"
 )
 
-func sqlHistory(ret *golang.Block, m *model.Model) {
+func sqlHistory(ret *golang.Block, m *model.Model, modules []string) {
 	if m.IsHistory() {
 		ret.W("")
 		ret.W("create table if not exists %q (", m.Name+"_history")
@@ -22,7 +23,11 @@ func sqlHistory(ret *golang.Block, m *model.Model) {
 		ret.W("  \"o\" jsonb not null,")
 		ret.W("  \"n\" jsonb not null,")
 		ret.W("  \"c\" jsonb not null,")
-		ret.W("  \"created\" timestamp not null default now(),")
+		now := "now()"
+		if slices.Contains(modules, "sqlite") && !slices.Contains(modules, "postgres") {
+			now = "(datetime('now'))"
+		}
+		ret.W("  \"created\" timestamp not null default %s,", now)
 		ret.W("  foreign key (%s) references %q (%s),", strings.Join(pkRefs, ", "), m.Name, strings.Join(m.PKs().NamesQuoted(), ", "))
 		ret.W("  primary key (\"id\")")
 		ret.W(");")

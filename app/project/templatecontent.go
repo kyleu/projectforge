@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"golang.org/x/exp/slices"
 	"projectforge.dev/projectforge/app/util"
 )
 
@@ -80,4 +81,11 @@ func (t *TemplateContext) IgnoredQuoted() string {
 		ret = append(ret, fmt.Sprintf(", %q", strings.TrimPrefix(i, "^")))
 	}
 	return strings.Join(ret, "")
+}
+
+func (t *TemplateContext) ExplainPrefix() string {
+	if slices.Contains(t.Modules, "sqlite") && !slices.Contains(t.Modules, "postgres") {
+		return "explain query plan "
+	}
+	return "explain "
 }

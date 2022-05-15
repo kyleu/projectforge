@@ -17,7 +17,7 @@ func Migration(m *model.Model, args *model.Args, addHeader bool) (*file.File, er
 			return nil, err
 		}
 		g.AddBlocks(drop)
-		cr, err := sqlCreateRevision(m)
+		cr, err := sqlCreateRevision(m, args.Modules)
 		if err != nil {
 			return nil, err
 		}
@@ -28,7 +28,7 @@ func Migration(m *model.Model, args *model.Args, addHeader bool) (*file.File, er
 			return nil, err
 		}
 		g.AddBlocks(drop)
-		g.AddBlocks(sqlCreate(m))
+		g.AddBlocks(sqlCreate(m, args.Modules))
 	}
 	return g.Render(addHeader)
 }
@@ -47,7 +47,7 @@ func sqlDrop(m *model.Model) (*golang.Block, error) {
 	return ret, nil
 }
 
-func sqlCreate(m *model.Model) *golang.Block {
+func sqlCreate(m *model.Model, modules []string) *golang.Block {
 	ret := golang.NewBlock("SQLCreate", "sql")
 	ret.W("-- {%% func " + m.Proper() + "Create() %%}")
 	ret.W("create table if not exists %q (", m.Name)
@@ -75,7 +75,7 @@ func sqlCreate(m *model.Model) *golang.Block {
 		}
 		addIndex(ret, m.Name, cols.Names()...)
 	}
-	sqlHistory(ret, m)
+	sqlHistory(ret, m, modules)
 	ret.W("-- {%% endfunc %%}")
 	return ret
 }

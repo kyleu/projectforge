@@ -76,6 +76,9 @@
 {% endfunc %}
 
 {% func statementOut(s *database.DebugStatement) %}
+  {%- if len(s.Out) == 0 -%}
+  <em>no results</em>
+  {%- else -%}
   <table>
     <thead>
       <tr>
@@ -92,6 +95,7 @@
       {%- endfor -%}
     </tbody>
   </table>
+  {%- endif -%}
 {% endfunc %}
 
 {% func statementExtra(s *database.DebugStatement) %}
