@@ -9,7 +9,7 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-const explainPrefix = "explain query plan "
+const explainPrefix = "{{{ .ExplainPrefix }}}"
 
 func (s *Service) Explain(ctx context.Context, q string, values []any, logger util.Logger) ([]util.ValueMap, error) {
 	q = strings.TrimSpace(q)
