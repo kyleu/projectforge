@@ -11,12 +11,13 @@ import (
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/lib/theme"
+	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/vtheme"
 )
 
 func ThemeColor(rc *fasthttp.RequestCtx) {
 	act("theme.color", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		col, err := RCRequiredString(rc, "color", false)
+		col, err := cutil.RCRequiredString(rc, "color", false)
 		if err != nil {
 			return "", err
 		}
@@ -33,11 +34,18 @@ func ThemeColor(rc *fasthttp.RequestCtx) {
 
 func ThemePalette(rc *fasthttp.RequestCtx) {
 	act("theme.palette", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		pal, err := RCRequiredString(rc, "palette", false)
+		pal, err := cutil.RCRequiredString(rc, "palette", false)
 		if err != nil {
 			return "", err
 		}
 		prj := string(rc.URI().QueryArgs().Peek("project"))
+		prjTitle := util.AppName
+		if prj != "" {
+			curr, _ := as.Services.Projects.Get(prj)
+			if curr != nil {
+				prjTitle = curr.Title()
+			}
+		}
 		ps.Title = fmt.Sprintf("[%s] Themes", pal)
 		_, span, _ := telemetry.StartSpan(ps.Context, "theme:load", ps.Logger)
 		x, err := theme.PaletteThemes(pal)
@@ -46,7 +54,7 @@ func ThemePalette(rc *fasthttp.RequestCtx) {
 		}
 		span.Complete()
 		ps.Data = x
-		return render(rc, as, &vtheme.Add{Project: prj, Palette: pal, Themes: x}, ps, "admin", "Themes")
+		return render(rc, as, &vtheme.Add{Project: prj, Palette: pal, Themes: x, Title: prjTitle}, ps, "admin", "Themes")
 	})
 }
 
@@ -72,7 +80,6 @@ func ThemePreview(rc *fasthttp.RequestCtx) {
 		}
 
 		ps.Title = fmt.Sprintf("Preview [%s]", thm.Key)
-
 		ps.Data = thm
 		page := &vtheme.Edit{Theme: thm}
 		return render(rc, as, page, ps, "admin", "Themes||/admin/theme", thm.Key)
@@ -80,18 +87,18 @@ func ThemePreview(rc *fasthttp.RequestCtx) {
 }
 
 func themeFromRC(rc *fasthttp.RequestCtx) (string, *theme.Theme, error) {
-	color, err := RCRequiredString(rc, "color", false)
+	color, err := cutil.RCRequiredString(rc, "color", false)
 	if err != nil {
-		pal, err := RCRequiredString(rc, "palette", false)
+		pal, err := cutil.RCRequiredString(rc, "palette", false)
 		if err != nil {
 			return "", nil, err
 		}
-		key, err := RCRequiredString(rc, "key", false)
+		key, err := cutil.RCRequiredString(rc, "key", false)
 		if err != nil {
 			return "", nil, err
 		}
 		ret, err := theme.PaletteTheme(pal, key)
 		return pal, ret, err
 	}
-	return "", theme.ColorTheme(color, gamut.Hex(color)), nil
+	return color, theme.ColorTheme(color, gamut.Hex(color)), nil
 }

@@ -37,8 +37,8 @@ type State struct {
 	Started   time.Time
 }
 
-func (s State) Close(ctx context.Context) error {
-	return s.Services.Close(ctx)
+func (s State) Close(ctx context.Context, logger util.Logger) error {
+	return s.Services.Close(ctx, logger)
 }
 
 func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, enableTelemetry bool, logger util.Logger) (*State, error) {
@@ -49,7 +49,7 @@ func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, enableTelemetr
 	time.Local = loc
 
 	_ = telemetry.InitializeIfNeeded(enableTelemetry, bi.Version, logger)
-	ts := theme.NewService(f, logger)
+	ts := theme.NewService(f)
 
 	return &State{
 		Debug:     debug,

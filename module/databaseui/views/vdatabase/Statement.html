@@ -19,7 +19,9 @@
     <h3>{%= components.SVGRefIcon(`database`, ps) %}Statement [{%d p.Statement.Index %}]</h3>
     <div class="right">{%d s.Count %} rows returned</div>
     <em>{%s s.Message %}</em>
-
+    {%- if s.Error != "" -%}
+    <div class="mt error">{%s s.Error %}</div>
+    {%- endif -%}
     <div class="mt">
       <ul class="accordion">
         <li>
@@ -43,7 +45,7 @@
         <li>
           <input id="accordion-extra" type="checkbox" hidden />
           <label for="accordion-extra">{%= components.ExpandCollapse(3, ps) %} Query Plan</label>
-          <div class="bd">{%= components.DisplayMaps(s.Extra) %}</div>
+          <div class="bd">{%= components.DisplayMaps(s.Extra, true) %}</div>
         </li>
         {%- endif -%}
       </ul>
@@ -89,10 +91,15 @@
     <tbody>
       {%- for idx, v := range s.Out -%}
       <tr>
-        <td>{%d idx %}</td>
+        <td>{%d idx+1 %}</td>
         <td>{%= components.JSON(v) %}</td>
       </tr>
       {%- endfor -%}
+      {%- if s.Count > len(s.Out) -%}
+      <tr>
+        <td colspan="2">...and {%d s.Count - len(s.Out) %} additional rows</td>
+      </tr>
+      {%- endif -%}
     </tbody>
   </table>
   {%- endif -%}

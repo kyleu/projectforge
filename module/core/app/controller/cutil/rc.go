@@ -1,6 +1,11 @@
 package cutil
 
 import (
+	"net/url"
+	"strconv"
+
+	"github.com/google/uuid"
+	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 
 	"{{{ .Package }}}/app/util"
@@ -35,6 +40,43 @@ func RequestCtxToMap(rc *fasthttp.RequestCtx, data any) map[string]any {
 	return map[string]any{"data": data, "request": req, "response": rsp}
 }
 
-func RequestCtxBool(rc *fasthttp.RequestCtx, key string) bool {
-	return string(rc.URI().QueryArgs().Peek(key)) == util.BoolTrue
+func RCRequiredString(rc *fasthttp.RequestCtx, key string, allowEmpty bool) (string, error) {
+	v, ok := rc.UserValue(key).(string)
+	if !ok || ((!allowEmpty) && v == "") {
+		return v, errors.Errorf("must provide [%s] in path", key)
+	}
+	v, err := url.QueryUnescape(v)
+	if err != nil {
+		return "", err
+	}
+	return v, nil
+}
+
+func RCRequiredBool(rc *fasthttp.RequestCtx, key string) (bool, error) {
+	ret, err := RCRequiredString(rc, key, true)
+	if err != nil {
+		return false, err
+	}
+	return ret == util.BoolTrue, nil
+}
+
+func RCRequiredInt(rc *fasthttp.RequestCtx, key string) (int, error) {
+	s, err := RCRequiredString(rc, key, true)
+	if err != nil {
+		return 0, err
+	}
+	return strconv.Atoi(s)
+}
+
+func RCRequiredUUID(rc *fasthttp.RequestCtx, key string) (*uuid.UUID, error) {
+	ret, err := RCRequiredString(rc, key, true)
+	if err != nil {
+		return nil, err
+	}
+	return util.UUIDFromString(ret), nil
+}
+
+func QueryStringBool(rc *fasthttp.RequestCtx, key string) bool {
+	x := string(rc.URI().QueryArgs().Peek(key))
+	return x == "true" || x == "t" || x == "True" || x == "TRUE"
 }

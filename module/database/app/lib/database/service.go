@@ -104,12 +104,12 @@ func (s *Service) logQuery(ctx context.Context, msg string, q string, logger uti
 	t := util.TimerStart()
 	return func(count int, msg string, err error, output ...any) {
 		go func() {
-			st, err := s.newStatement(ctx, q, values, t.End(), logger)
-			if err == nil {
+			st, stErr := s.newStatement(ctx, q, values, t.End(), logger)
+			if stErr == nil {
 				st.Complete(count, msg, err, output...)
 				s.addDebug(st)
 			} else {
-				logger.Warnf("error inserting trace history: %+v", err)
+				logger.Warnf("error inserting trace history: %+v", stErr)
 			}
 		}()
 	}{{{ else }}}

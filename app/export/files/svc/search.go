@@ -50,7 +50,7 @@ func serviceSearch(m *model.Model, grp *model.Column, dbRef string) *golang.Bloc
 	} else {
 		grpTxt = fmt.Sprintf(", %s %s", grp.Camel(), grp.ToGoType(m.Package))
 	}
-	const decl = "func (s *Service) Search%s(ctx context.Context%s, query string, tx *sqlx.Tx, params *filter.Params%s) (%s, error) {"
+	const decl = "func (s *Service) Search%s(ctx context.Context%s, query string, tx *sqlx.Tx, params *filter.Params%s, logger util.Logger) (%s, error) {"
 	ret.W(decl, prefix, grpTxt, getSuffix(m), m.ProperPlural())
 	ret.W("\tparams = filters(params)")
 	if m.IsSoftDelete() {
@@ -60,7 +60,7 @@ func serviceSearch(m *model.Model, grp *model.Column, dbRef string) *golang.Bloc
 	}
 	ret.W("\tq := database.SQLSelect(columnsString, %s, wc, params.OrderByString(), params.Limit, params.Offset)", tableClauseFor(m))
 	ret.W("\tret := dtos{}")
-	ret.W("\terr := s.%s.Select(ctx, &ret, q, tx, s.logger, %s)", dbRef, strings.Join(params, ", "))
+	ret.W("\terr := s.%s.Select(ctx, &ret, q, tx, logger, %s)", dbRef, strings.Join(params, ", "))
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, err")
 	ret.W("\t}")

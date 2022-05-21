@@ -68,7 +68,7 @@ func applyBasic(ctx context.Context, p *Params) *Result {
 	case TypeTest:
 		return onTest(ctx, p)
 	case TypeDoctor:
-		return onDoctor(ctx, p.Cfg, p.PSvc, p.Logger)
+		return onDoctor(ctx, p.Cfg, p.PSvc, p.MSvc, p.Logger)
 	}
 	return nil
 }
@@ -89,6 +89,8 @@ func applyPrj(ctx context.Context, pm *PrjAndMods, t Type) *Result {
 		return onSlam(ctx, pm)
 	case TypeSVG:
 		return onSVG(ctx, pm)
+	case TypeValidate:
+		return onValidate(ctx, pm)
 	default:
 		return errorResult(errors.Errorf("invalid action type [%s]", t.String()), t, pm.Cfg, pm.Logger)
 	}
@@ -118,9 +120,11 @@ func getPrjAndMods(ctx context.Context, p *Params) (context.Context, *PrjAndMods
 		return nil, nil, errors.Wrapf(err, "unable to load project [%s]", p.ProjectKey)
 	}
 	if prj.Info != nil {
-		_, e := p.MSvc.Register(ctx, prj.Path, prj.Info.ModuleDefs...)
-		if e != nil {
-			return nil, nil, errors.Wrap(e, "unable to register modules")
+		for _, mod := range prj.Info.ModuleDefs {
+			_, e := p.MSvc.Register(ctx, prj.Path, mod.Key, mod.Path, mod.URL)
+			if e != nil {
+				return nil, nil, errors.Wrap(e, "unable to register modules")
+			}
 		}
 	}
 

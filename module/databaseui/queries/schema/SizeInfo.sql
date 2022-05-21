@@ -1,5 +1,5 @@
 -- {% func SizeInfo() %}
-with recursive
+{{{ if .HasModule "postgres" }}}with recursive
   pg_inherit(inhrelid, inhparent) as (
     select inhrelid, inhparent
     from pg_inherits
@@ -42,5 +42,19 @@ from (
   ) a
   where oid = parent
 ) a
-order by total_bytes desc;
+order by total_bytes desc;{{{ else }}}select
+  'default' as "table_schema",
+  "name" as "table_name",
+  0 as "row_estimate",
+  0 as "total",
+  '' as "total_pretty",
+  0 as "index",
+  '' as "index_pretty",
+  0 as "toast",
+  '' as "toast_pretty",
+  0 as "table",
+  '' as "table_pretty"
+from "sqlite_master"
+where "type" = 'table'
+order by "table_name";{{{ end }}}
 -- {% endfunc %}

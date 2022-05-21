@@ -16,7 +16,7 @@ import (
 )
 
 func GitActionAll(rc *fasthttp.RequestCtx) {
-	a, _ := RCRequiredString(rc, "act", false)
+	a, _ := cutil.RCRequiredString(rc, "act", false)
 	act("git.all."+a, rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prjs := as.Services.Projects.Projects()
 		var results git.Results
@@ -37,6 +37,7 @@ func GitActionAll(rc *fasthttp.RequestCtx) {
 		slices.SortFunc(results, func(l *git.Result, r *git.Result) bool {
 			return strings.ToLower(l.Project.Title()) < strings.ToLower(r.Project.Title())
 		})
+		ps.Title = "[git] All Projects"
 		ps.Data = results
 		return render(rc, as, &vgit.Results{Results: results}, ps, "projects", "Git")
 	})

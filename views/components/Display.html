@@ -37,7 +37,7 @@
   {%- endif -%}
 {% endstripspace %}{% endfunc %}
 
-{% func DisplayMaps(maps []util.ValueMap) %}{% stripspace %}
+{% func DisplayMaps(maps []util.ValueMap, preserveWhitespace bool) %}{% stripspace %}
   {%- if len(maps) == 0 -%}
   <em>no results</em>
   {%- else -%}
@@ -53,7 +53,22 @@
       {%- for _, m := range maps -%}
       <tr>
         {%- for _, k := range m.Keys() -%}
-        <td>{%s fmt.Sprint(m[k]) %}</td>
+        {%- code
+          res := ""
+          switch t := m[k].(type) {
+          case string:
+            res = t
+          case []byte:
+            res = string(t)
+          default:
+            res = fmt.Sprint(m[k])
+          }
+        -%}
+        {%- if preserveWhitespace -%}
+        <td style="white-space: pre;">{%s res %}</td>
+        {%- else -%}
+        <td>{%s res %}</td>
+        {%- endif -%}
         {%- endfor -%}
       </tr>
       {%- endfor -%}

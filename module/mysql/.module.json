@@ -48,5 +48,6 @@
       "description": "when set, logs all database interactions"
     }
   ],
+  "requires": ["database"],
   "priority": 10
 }

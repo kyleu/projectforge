@@ -1,6 +1,9 @@
 package controller
 
 import (
+	"fmt"
+	"strings"
+
 	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
@@ -15,6 +18,7 @@ func ModuleFileRoot(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
+		ps.Title = fmt.Sprintf("[%s] Files", mod.Key)
 		return render(rc, as, &vmodule.Files{Module: mod}, ps, "modules", mod.Key, "Files")
 	})
 }
@@ -26,7 +30,7 @@ func ModuleFile(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 
-		pathS, err := RCRequiredString(rc, "path", false)
+		pathS, err := cutil.RCRequiredString(rc, "path", false)
 		if err != nil {
 			return "", err
 		}
@@ -38,6 +42,7 @@ func ModuleFile(rc *fasthttp.RequestCtx) {
 			b := x + bcAppend
 			bc = append(bc, b)
 		}
+		ps.Title = fmt.Sprintf("[%s] /%s", mod.Key, strings.Join(path, "/"))
 		return render(rc, as, &vmodule.Files{Module: mod, Path: path}, ps, bc...)
 	})
 }

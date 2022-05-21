@@ -107,14 +107,7 @@ func (p Projects) AllModules() []string {
 	var ret []string
 	for _, prj := range p {
 		for _, mod := range prj.Modules {
-			hit := false
-			for _, x := range ret {
-				if x == mod {
-					hit = true
-					break
-				}
-			}
-			if !hit {
+			if !slices.Contains(ret, mod) {
 				ret = append(ret, mod)
 			}
 		}

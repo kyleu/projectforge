@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -29,6 +30,8 @@ func runDeps(prj *project.Project, res *action.Result, rc *fasthttp.RequestCtx, 
 	if !ok {
 		return "", errors.Errorf("data is of type [%T], expected [Dependencies]", res.Data)
 	}
+	ps.Title = fmt.Sprintf("[%s] Dependencies", prj.Key)
+	ps.Data = deps
 	return render(rc, as, &vbuild.Deps{Project: prj, BuildResult: res, Dependencies: deps}, ps, "projects", prj.Key, "Dependency Management")
 }
 
@@ -56,6 +59,7 @@ func runAllDeps(cfg util.ValueMap, prjs project.Projects, rc *fasthttp.RequestCt
 	if err != nil {
 		return "", errors.Wrap(err, "")
 	}
+	ps.Title = "Dependency Merge"
 	ps.Data = ret
 	page := &vbuild.DepMap{Message: msg, Result: ret}
 	return render(rc, as, page, ps, "projects", "Dependencies")

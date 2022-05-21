@@ -26,9 +26,9 @@ func Services(f *file.File, args *model.Args) error {
 	for _, m := range args.Models {
 		svcs = append(svcs, fmt.Sprintf("%s *%s.Service", util.StringPad(m.Proper(), svcSize), m.Package))
 		if args.HasModule("readonlydb") {
-			refs = append(refs, fmt.Sprintf("%s %s.NewService(st.DB, st.DBRead, st.Logger),", util.StringPad(m.Proper()+":", svcSize+1), m.Package))
+			refs = append(refs, fmt.Sprintf("%s %s.NewService(st.DB, st.DBRead),", util.StringPad(m.Proper()+":", svcSize+1), m.Package))
 		} else {
-			refs = append(refs, fmt.Sprintf("%s %s.NewService(st.DB, st.Logger),", util.StringPad(m.Proper()+":", svcSize+1), m.Package))
+			refs = append(refs, fmt.Sprintf("%s %s.NewService(st.DB),", util.StringPad(m.Proper()+":", svcSize+1), m.Package))
 		}
 	}
 	svcTxt := fmt.Sprintf("\n\t%s\n\t// ", strings.Join(svcs, "\n\t"))

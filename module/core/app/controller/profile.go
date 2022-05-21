@@ -29,9 +29,9 @@ func ProfileSite(rc *fasthttp.RequestCtx) {
 func profileAction(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (string, error) {
 	ps.Title = "Profile"
 	ps.Data = ps.Profile
-	thm := as.Themes.Get(ps.Profile.Theme){{{ if .HasModule "oauth" }}}
+	thm := as.Themes.Get(ps.Profile.Theme, ps.Logger){{{ if .HasModule "oauth" }}}
 
-	prvs, err := as.Auth.Providers()
+	prvs, err := as.Auth.Providers(ps.Logger)
 	if err != nil {
 		return "", errors.Wrap(err, "can't load providers")
 	}{{{ end }}}
@@ -94,19 +94,4 @@ func loadProfile(session util.ValueMap) (*user.Profile, error) {
 		return nil, err
 	}
 	return p, nil
-}
-
-func returnToReferrer(msg string, dflt string, rc *fasthttp.RequestCtx, ps *cutil.PageState) (string, error) {
-	refer := ""
-	referX, ok := ps.Session[cutil.ReferKey]
-	if ok {
-		refer, ok = referX.(string)
-		if ok {
-			_ = cutil.RemoveFromSession(cutil.ReferKey, rc, ps.Session, ps.Logger)
-		}
-	}
-	if refer == "" {
-		refer = dflt
-	}
-	return flashAndRedir(true, msg, refer, rc, ps)
 }

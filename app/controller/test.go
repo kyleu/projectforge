@@ -24,7 +24,7 @@ func TestList(rc *fasthttp.RequestCtx) {
 
 func TestRun(rc *fasthttp.RequestCtx) {
 	act("test.run", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := RCRequiredString(rc, "key", false)
+		key, err := cutil.RCRequiredString(rc, "key", false)
 		if err != nil {
 			return "", err
 		}

@@ -32,6 +32,6 @@ func (hc headerCarrier) Keys() []string {
 	return keys
 }
 
-func ExtractHeaders(rc *fasthttp.RequestCtx, logger util.Logger) context.Context {
-	return otel.GetTextMapPropagator().Extract(rc, headerCarrier{h: &rc.Request.Header})
+func ExtractHeaders(rc *fasthttp.RequestCtx, logger util.Logger) (context.Context, util.Logger) {
+	return otel.GetTextMapPropagator().Extract(rc, headerCarrier{h: &rc.Request.Header}), logger
 }

@@ -2,11 +2,12 @@ package controller
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/valyala/fasthttp"
-
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/project/stats"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/vproject"
 )
@@ -31,7 +32,7 @@ func ProjectFile(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 
-		pathS, err := RCRequiredString(rc, "path", false)
+		pathS, err := cutil.RCRequiredString(rc, "path", false)
 		if err != nil {
 			return "", err
 		}
@@ -43,6 +44,25 @@ func ProjectFile(rc *fasthttp.RequestCtx) {
 			b := x + bcAppend
 			bc = append(bc, b)
 		}
+		ps.Title = fmt.Sprintf("[%s] /%s", prj.Key, strings.Join(path, "/"))
 		return render(rc, as, &vproject.Files{Project: prj, Path: path}, ps, bc...)
+	})
+}
+
+func ProjectFileStats(rc *fasthttp.RequestCtx) {
+	act("project.file.stats", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, err := getProject(rc, as)
+		if err != nil {
+			return "", err
+		}
+		dir := string(rc.URI().QueryArgs().Peek("dir"))
+		ret, err := stats.GetFileStats(as.Services.Projects.GetFilesystem(prj), dir)
+		if err != nil {
+			return "", err
+		}
+		ps.Data = ret.Extensions()
+		ps.Title = fmt.Sprintf("[%s] File Stats", prj.Key)
+		page := &vproject.FileStats{Project: prj, Path: util.StringSplitAndTrim(dir, "/"), Files: ret}
+		return render(rc, as, page, ps, "projects", prj.Key, "File Stats")
 	})
 }

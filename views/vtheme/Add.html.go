@@ -9,29 +9,29 @@ import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/theme"
-	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/layout"
 )
 
-//line views/vtheme/Add.html:9
+//line views/vtheme/Add.html:8
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vtheme/Add.html:9
+//line views/vtheme/Add.html:8
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vtheme/Add.html:9
+//line views/vtheme/Add.html:8
 type Add struct {
 	layout.Basic
 	Project string
 	Palette string
 	Themes  theme.Themes
+	Title   string
 }
 
 //line views/vtheme/Add.html:16
@@ -134,12 +134,12 @@ func (p *Add) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pag
 		qw422016.N().S(`            </th>
             <th class="shrink" style="background-color: #ffffff; padding: 12px 36px;">`)
 //line views/vtheme/Add.html:40
-		StreamMockupColors(qw422016, util.AppName, "", t.Light, true, 5, ps)
+		StreamMockupColors(qw422016, p.Title, "", t.Light, true, 5, ps)
 //line views/vtheme/Add.html:40
 		qw422016.N().S(`</th>
             <th class="shrink" style="background-color: #121212; padding: 12px 36px;">`)
 //line views/vtheme/Add.html:41
-		StreamMockupColors(qw422016, util.AppName, "", t.Dark, true, 5, ps)
+		StreamMockupColors(qw422016, p.Title, "", t.Dark, true, 5, ps)
 //line views/vtheme/Add.html:41
 		qw422016.N().S(`</th>
           </tr>

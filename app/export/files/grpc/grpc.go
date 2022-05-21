@@ -13,6 +13,8 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+const updateKey = "Update"
+
 func GRPC(m *model.Model, args *model.Args, addHeader bool) (file.Files, error) {
 	fileArgs, err := GetGRPCFileArgs(m, args)
 	if err != nil {
@@ -97,7 +99,7 @@ func grpcFile(m *model.Model, args *model.Args, ga *FileArgs, addHeader bool) (*
 	}
 	g.AddBlocks(
 		grpcCall("Create", m, false, grpcArgs, grpcRet, ga),
-		grpcCall("Update", m, true, grpcArgs, grpcRet, ga),
+		grpcCall(updateKey, m, true, grpcArgs, grpcRet, ga),
 		grpcCall("Save", m, true, grpcArgs, grpcRet, ga),
 		grpcDelete(m, grpcArgs, grpcRet, ga),
 	)

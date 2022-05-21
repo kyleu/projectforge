@@ -42,16 +42,3 @@ func loadRootProject(r *doctor.Result, logger util.Logger) (*project.Project, *d
 	}
 	return p, r
 }
-
-func checkMods(p *project.Project, r *doctor.Result) *doctor.Result {
-	if p.HasModule("desktop") && (!p.Build.Desktop) {
-		r = r.WithError(doctor.NewError("config", "desktop module is enabled, but desktop build isn't set"))
-	}
-	if p.HasModule("ios") && (!p.Build.IOS) {
-		r = r.WithError(doctor.NewError("config", "iOS module is enabled, but iOS build isn't set"))
-	}
-	if p.HasModule("android") && (!p.Build.Android) {
-		r = r.WithError(doctor.NewError("config", "Android module is enabled, but Android build isn't set"))
-	}
-	return r
-}

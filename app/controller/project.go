@@ -29,6 +29,7 @@ func ProjectList(rc *fasthttp.RequestCtx) {
 			})
 		}
 
+		ps.Title = "All Projects"
 		ps.Data = prjs
 		switch string(rc.QueryArgs().Peek("fmt")) {
 		case "ports":
@@ -104,7 +105,7 @@ func ProjectEdit(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = fmt.Sprintf("%s (project %s)", prj.Title(), prj.Key)
+		ps.Title = fmt.Sprintf("Edit %s (project %s)", prj.Title(), prj.Key)
 		ps.Data = prj
 		return render(rc, as, &vproject.Edit{Project: prj}, ps, "projects", prj.Key)
 	})

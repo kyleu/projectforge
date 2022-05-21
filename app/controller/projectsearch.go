@@ -119,13 +119,6 @@ func newProjectResult(q string, prjKey string, path string, content []byte) *res
 		return nil
 	}
 
-	return &result.Result{
-		Type:    "file",
-		ID:      fn,
-		Title:   fn,
-		Icon:    "star",
-		URL:     fmt.Sprintf("/p/%s/fs/%s", prjKey, path),
-		Matches: matches,
-		Data:    nil,
-	}
+	u := fmt.Sprintf("/p/%s/fs/%s", prjKey, path)
+	return &result.Result{Type: "file", ID: fn, Title: fn, Icon: "star", URL: u, Matches: matches, Data: nil}
 }

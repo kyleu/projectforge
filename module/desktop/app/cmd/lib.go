@@ -37,7 +37,7 @@ func Lib(path string) int32 {
 		if e != nil {
 			panic(errors.WithStack(e))
 		}
-		err = st.Close(context.Background())
+		err = st.Close(context.Background(), _logger)
 		if err != nil {
 			logger.Errorf("unable to close application: %s", err.Error())
 		}

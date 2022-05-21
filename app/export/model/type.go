@@ -94,6 +94,8 @@ func ToGoViewString(t types.Type, prop string, nullable bool, format string) str
 		case FmtURL:
 			x := "{%%s " + ToGoString(t, prop) + " %%}"
 			return fmt.Sprintf("<a href=%q target=\"_blank\">%s</a>", x, x)
+		case FmtSelect:
+			return "<strong>{%%s " + ToGoString(t, prop) + " %%}</strong>"
 		default:
 			return "{%%s " + ToGoString(t, prop) + " %%}"
 		}

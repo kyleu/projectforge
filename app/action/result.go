@@ -32,7 +32,7 @@ func (r *Result) WithError(err error) *Result {
 		msg = err.Error()
 	}
 	if r.logger != nil {
-		r.logger.Errorf("error: %+v", err)
+		r.logger.Warnf("action error: %+v", err.Error())
 	}
 	r.Status = "error"
 	r.Errors = append(r.Errors, msg)

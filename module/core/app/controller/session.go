@@ -11,9 +11,11 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
+var initialIcons = {{{ if .HasModule "search" }}}[]string{"searchbox"}{{{ else }}}[]string{}{{{ end }}}
+
 func loadPageState(rc *fasthttp.RequestCtx, key string, as *app.State) *cutil.PageState {
-	ctx := httpmetrics.ExtractHeaders(rc, as.Logger)
-	traceCtx, span, logger := telemetry.StartSpan(ctx, "http:"+key, as.Logger)
+	ctx, logger := httpmetrics.ExtractHeaders(rc, as.Logger)
+	traceCtx, span, logger := telemetry.StartSpan(ctx, "http:"+key, logger)
 	span.Attribute("path", string(rc.Request.URI().Path()))
 	httpmetrics.InjectHTTP(rc, span)
 

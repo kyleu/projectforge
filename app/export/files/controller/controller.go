@@ -44,7 +44,7 @@ func controllerArgFor(col *model.Column, b *golang.Block, retVal string, indent 
 	}
 	switch col.Type.Key() {
 	case types.KeyBool:
-		add("%sArg, err := RCRequiredBool(rc, %q)", col.Camel(), col.Camel())
+		add("%sArg, err := cutil.RCRequiredBool(rc, %q)", col.Camel(), col.Camel())
 		add("if err != nil {")
 		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as an argument\")", retVal, col.Camel())
 		add("}")
@@ -52,7 +52,7 @@ func controllerArgFor(col *model.Column, b *golang.Block, retVal string, indent 
 		add("\treturn %s, errors.Wrap(err, \"field [%s] must be a valid a valid boolean\")", retVal, col.Camel())
 		add("}")
 	case types.KeyInt:
-		add("%sArgStr, err := RCRequiredString(rc, %q, false)", col.Camel(), col.Camel())
+		add("%sArgStr, err := cutil.RCRequiredString(rc, %q, false)", col.Camel(), col.Camel())
 		add("if err != nil {")
 		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as an argument\")", retVal, col.Camel())
 		add("}")
@@ -61,12 +61,12 @@ func controllerArgFor(col *model.Column, b *golang.Block, retVal string, indent 
 		add("\treturn %s, errors.Wrap(err, \"field [%s] must be a valid a valid integer\")", retVal, col.Camel())
 		add("}")
 	case types.KeyString:
-		add("%sArg, err := RCRequiredString(rc, %q, false)", col.Camel(), col.Camel())
+		add("%sArg, err := cutil.RCRequiredString(rc, %q, false)", col.Camel(), col.Camel())
 		add("if err != nil {")
 		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as an argument\")", retVal, col.Camel())
 		add("}")
 	case types.KeyUUID:
-		add("%sArgStr, err := RCRequiredString(rc, %q, false)", col.Camel(), col.Camel())
+		add("%sArgStr, err := cutil.RCRequiredString(rc, %q, false)", col.Camel(), col.Camel())
 		add("if err != nil {")
 		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as an argument\")", retVal, col.Camel())
 		add("}")

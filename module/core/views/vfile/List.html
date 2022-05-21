@@ -9,22 +9,20 @@
 ) %}
 
 {% func List(path []string, files []os.DirEntry, fs filesystem.FileLoader, urlPrefix string, as *app.State, ps *cutil.PageState) %}
-  <div class="card">
-    <h3>{%- for idx, p := range path -%}/<a href="{%s urlPrefix %}/{%s filepath.Join(path[:idx + 1]...) %}">{%s p %}</a>{%- endfor -%}</h3>
-    <div class="mt">
-    {%- for _, f := range files -%}
-      {%- code
-        icon := "file-text"
-        if f.IsDir() {
-          icon = "folder"
-        }
-        x := []string{urlPrefix}
-        x = append(x, path...)
-        x = append(x, f.Name())
-        u := filepath.Join(x...)
-      -%}
-      <div><a href="{%s u %}">{%= components.SVGRef(icon, 16, 16, `icon`, ps) %}{%s f.Name() %}</a></div>
-    {%- endfor -%}
-    </div>
+  <h3><a href="{%s urlPrefix %}">.</a>{%- for idx, p := range path -%}/<a href="{%s urlPrefix %}/{%s filepath.Join(path[:idx + 1]...) %}">{%s p %}</a>{%- endfor -%}</h3>
+  <div class="mt">
+  {%- for _, f := range files -%}
+    {%- code
+      icon := "file-text"
+      if f.IsDir() {
+        icon = "folder"
+      }
+      x := []string{urlPrefix}
+      x = append(x, path...)
+      x = append(x, f.Name())
+      u := filepath.Join(x...)
+    -%}
+    <div><a href="{%s u %}">{%= components.SVGRef(icon, 16, 16, `icon`, ps) %}{%s f.Name() %}</a></div>
+  {%- endfor -%}
   </div>
 {% endfunc %}

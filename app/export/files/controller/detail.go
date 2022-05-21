@@ -27,7 +27,7 @@ func controllerDetail(models model.Models, m *model.Model, grp *model.Column) *g
 	checkGrp(ret, grp)
 	checkRev(ret, m)
 	if m.IsHistory() {
-		ret.W("\t\thist, err := as.Services.%s.GetHistories(ps.Context, nil, %s)", m.Proper(), m.PKs().ToRefs("ret."))
+		ret.W("\t\thist, err := as.Services.%s.GetHistories(ps.Context, nil, %s, ps.Logger)", m.Proper(), m.PKs().ToRefs("ret."))
 		ret.W("\t\tif err != nil {")
 		ret.W("\t\t\treturn \"\", err")
 		ret.W("\t\t}")
@@ -45,7 +45,7 @@ func controllerDetail(models model.Models, m *model.Model, grp *model.Column) *g
 	}
 
 	if shouldIncDel {
-		ret.W("\t\tincDel := cutil.RequestCtxBool(rc, \"includeDeleted\")")
+		ret.W("\t\tincDel := cutil.QueryStringBool(rc, \"includeDeleted\")")
 	}
 
 	var argKeys []string
@@ -69,7 +69,7 @@ func controllerDetail(models model.Models, m *model.Model, grp *model.Column) *g
 		rCols := rel.TgtColumns(rm)
 		rNames := strings.Join(rCols.ProperNames(), "")
 		ret.W("\t\t%sPrms := params.Get(%q, nil, ps.Logger).Sanitize(%q)", rm.Camel(), rm.Camel(), rm.Camel())
-		const msg = "\t\t%sBy%s, err := as.Services.%s.GetBy%s(ps.Context, nil, %s, %sPrms%s)"
+		const msg = "\t\t%sBy%s, err := as.Services.%s.GetBy%s(ps.Context, nil, %s, %sPrms%s, ps.Logger)"
 		ret.W(msg, rm.CamelPlural(), rNames, rm.Proper(), rNames, lCols.ToRefs("ret."), rm.Camel(), delSuffix)
 		ret.W("\t\tif err != nil {")
 		ret.W("\t\t\treturn \"\", errors.Wrap(err, \"unable to retrieve child %s\")", rm.TitlePluralLower())

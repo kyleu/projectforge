@@ -11,6 +11,7 @@ import (
 
 func About(rc *fasthttp.RequestCtx) {
 	act("about", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ps.Title = "About " + util.AppName
 		ps.Data = util.AppName + " v" + as.BuildInfo.Version
 		return render(rc, as, &views.About{}, ps, "about")
 	})

@@ -9,8 +9,8 @@ import (
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller/cutil"
-	"{{{ .Package }}}/app/lib/database"{{{ if .DatabaseUISQLEditor }}}
-	"{{{ .Package }}}/app/util"{{{ end }}}
+	"{{{ .Package }}}/app/lib/database"
+	"{{{ .Package }}}/app/util"
 	"{{{ .Package }}}/views/vdatabase"
 )
 
@@ -48,7 +48,7 @@ func DatabaseAction(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		act, err := RCRequiredString(rc, "act", true)
+		act, err := cutil.RCRequiredString(rc, "act", true)
 		if err != nil {
 			return "", err
 		}
@@ -87,6 +87,30 @@ func DatabaseAction(rc *fasthttp.RequestCtx) {
 		default:
 			return "", errors.Errorf("invalid database action [%s]", act)
 		}
+	})
+}
+
+func DatabaseTableView(rc *fasthttp.RequestCtx) {
+	act("database.sql.run", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		params := cutil.ParamSetFromRequest(rc)
+		prms := params.Get("table", nil, ps.Logger).Sanitize("table")
+		svc, err := getDatabaseService(rc)
+		if err != nil {
+			return "", err
+		}
+		schema, _ := cutil.RCRequiredString(rc, "schema", true)
+		table, _ := cutil.RCRequiredString(rc, "table", true)
+
+		tbl := fmt.Sprintf("%q", table)
+		if schema != "default" {
+			tbl = fmt.Sprintf("%q.%q", schema, table)
+		}
+
+		q := database.SQLSelect("*", tbl, "", prms.OrderByString(), prms.Limit, prms.Offset)
+		res, err := svc.QueryRows(ps.Context, q, nil, ps.Logger)
+		ps.Data = res
+		bc := []string{"admin", "Database||/admin/database", fmt.Sprintf("%s||/admin/database/%s", svc.Key, svc.Key), "Tables"}
+		return render(rc, as, &vdatabase.Results{Svc: svc, Schema: schema, Table: table, Results: res, Error: err}, ps, bc...)
 	})
 }{{{ if .DatabaseUISQLEditor }}}
 
@@ -152,7 +176,7 @@ func DatabaseSQLRun(rc *fasthttp.RequestCtx) {
 }{{{ end }}}
 
 func getDatabaseService(rc *fasthttp.RequestCtx) (*database.Service, error) {
-	key, err := RCRequiredString(rc, "key", true)
+	key, err := cutil.RCRequiredString(rc, "key", true)
 	if err != nil {
 		return nil, err
 	}

@@ -12,18 +12,17 @@ import (
 const KeyNew = "new"
 
 type Service struct {
-	root   string
-	files  filesystem.FileLoader
-	cache  Themes
-	logger util.Logger
+	root  string
+	files filesystem.FileLoader
+	cache Themes
 }
 
-func NewService(files filesystem.FileLoader, logger util.Logger) *Service {
-	return &Service{root: "themes", files: files, logger: logger}
+func NewService(files filesystem.FileLoader) *Service {
+	return &Service{root: "themes", files: files}
 }
 
-func (s *Service) All() Themes {
-	s.loadIfNeeded()
+func (s *Service) All(logger util.Logger) Themes {
+	s.loadIfNeeded(logger)
 	return s.cache
 }
 
@@ -31,8 +30,8 @@ func (s *Service) Clear() {
 	s.cache = nil
 }
 
-func (s *Service) Get(theme string) *Theme {
-	for _, t := range s.All() {
+func (s *Service) Get(theme string, logger util.Logger) *Theme {
+	for _, t := range s.All(logger) {
 		if t.Key == theme {
 			return t
 		}
@@ -40,7 +39,7 @@ func (s *Service) Get(theme string) *Theme {
 	return ThemeDefault
 }
 
-func (s *Service) Save(t *Theme) error {
+func (s *Service) Save(t *Theme, logger util.Logger) error {
 	if t.Key == ThemeDefault.Key {
 		return errors.New("can't overwrite default theme")
 	}
@@ -50,24 +49,24 @@ func (s *Service) Save(t *Theme) error {
 	b := util.ToJSONBytes(t, true)
 	err := s.files.WriteFile(filepath.Join(s.root, t.Key+".json"), b, filesystem.DefaultMode, true)
 	if err != nil {
-		s.logger.Warnf("can't save theme [%s]: %+v", t.Key, err)
+		logger.Warnf("can't save theme [%s]: %+v", t.Key, err)
 	}
 	s.cache = s.cache.Replace(t)
 	return nil
 }
 
-func (s *Service) loadIfNeeded() {
+func (s *Service) loadIfNeeded(logger util.Logger) {
 	if s.cache == nil {
 		s.cache = Themes{ThemeDefault}
 		for _, key := range s.files.ListJSON(s.root, true) {
 			t := &Theme{}
 			b, err := s.files.ReadFile(filepath.Join(s.root, key+".json"))
 			if err != nil {
-				s.logger.Warnf("can't load theme [%s]: %+v", key, err)
+				logger.Warnf("can't load theme [%s]: %+v", key, err)
 			}
 			err = util.FromJSON(b, t)
 			if err != nil {
-				s.logger.Warnf("can't load theme [%s]: %+v", key, err)
+				logger.Warnf("can't load theme [%s]: %+v", key, err)
 			}
 			t.Key = key
 			s.cache = append(s.cache, t)

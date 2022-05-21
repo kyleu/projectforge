@@ -16,7 +16,7 @@ func controllerRevision(m *model.Model) *golang.Block {
 	ret.W("\t\tif err != nil {")
 	ret.W("\t\t\treturn \"\", err")
 	ret.W("\t\t}")
-	ret.W("\t\t%s, err := RCRequiredInt(rc, %q)", hc.Col.Camel(), hc.Col.Camel())
+	ret.W("\t\t%s, err := cutil.RCRequiredInt(rc, %q)", hc.Col.Camel(), hc.Col.Camel())
 	ret.W("\t\tif err != nil {")
 	ret.W("\t\t\treturn \"\", err")
 	ret.W("\t\t}")
@@ -25,7 +25,7 @@ func controllerRevision(m *model.Model) *golang.Block {
 		pkRefs = append(pkRefs, "latest."+pk.Proper())
 	}
 	pkStuff := strings.Join(pkRefs, ", ")
-	ret.W("\t\tret, err := as.Services.%s.Get%s(ps.Context, nil, %s, %s)", m.Proper(), hc.Col.Proper(), pkStuff, hc.Col.Camel())
+	ret.W("\t\tret, err := as.Services.%s.Get%s(ps.Context, nil, %s, %s, ps.Logger)", m.Proper(), hc.Col.Proper(), pkStuff, hc.Col.Camel())
 	ret.W("\t\tif err != nil {")
 	ret.W("\t\t\treturn \"\", err")
 	ret.W("\t\t}")

@@ -48,9 +48,13 @@ func initProjects(ctx context.Context, as *app.State) error {
 		if prj.Info != nil {
 			mods = prj.Info.ModuleDefs
 		}
-		keys, err := as.Services.Modules.Register(ctx, prj.Path, mods...)
-		if err != nil {
-			return errors.Wrap(err, "unable to register module definitions")
+		var keys []string
+		for _, mod := range mods {
+			k, err := as.Services.Modules.Register(ctx, prj.Path, mod.Key, mod.Path, mod.URL)
+			if err != nil {
+				return errors.Wrapf(err, "unable to register module definition for module [%s]", mod.Key)
+			}
+			keys = append(keys, k...)
 		}
 		if len(keys) > 0 {
 			if len(keys) != 1 && keys[0] != "*" {

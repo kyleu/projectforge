@@ -36,8 +36,4 @@ func (c *Check) Check(ctx context.Context, logger util.Logger) *Result {
 	return r
 }
 
-func NewCheck(key string, section string, title string, summary string, mods ...string) *Check {
-	return &Check{Key: key, Section: section, Title: title, Summary: summary, Modules: mods}
-}
-
 type Checks = []*Check

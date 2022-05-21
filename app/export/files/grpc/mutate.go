@@ -16,11 +16,15 @@ func grpcCall(k string, m *model.Model, isUpdate bool, grpcArgs string, grpcRet 
 	ret.W("\t}")
 	grpcAddSection(ret, strings.ToLower(k), 1)
 	ga.AddStaticCheck("model", ret, m, ga.Grp, strings.ToLower(k))
-	ret.W("\terr = appState.Services.%s.%s(p.Ctx, nil, model)", m.Proper(), k)
+	args := ", p.Logger, model"
+	if k == updateKey {
+		args = ", model, p.Logger"
+	}
+	ret.W("\terr = appState.Services.%s.%s(p.Ctx, nil%s)", m.Proper(), k, args)
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, err")
 	ret.W("\t}")
-	if k == "Create" || k == "Update" {
+	if k == "Create" || k == updateKey {
 		grpcAddSection(ret, "post"+strings.ToLower(k), 1)
 	}
 	ret.W("\tprovider.SetOutput(p.TX, model)")
@@ -37,13 +41,13 @@ func grpcDelete(m *model.Model, grpcArgs string, grpcRet string, ga *FileArgs) *
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, err")
 	ret.W("\t}")
-	ret.W("\torig, err := appState.Services.%s.Get(p.Ctx, nil, %s%s)", m.Proper(), strings.Join(pks.CamelNames(), ", "), m.SoftDeleteSuffix())
+	ret.W("\torig, err := appState.Services.%s.Get(p.Ctx, nil, %s%s, p.Logger)", m.Proper(), strings.Join(pks.CamelNames(), ", "), m.SoftDeleteSuffix())
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, err")
 	ret.W("\t}")
 	grpcAddSection(ret, "delete", 1)
 	ga.AddStaticCheck("orig", ret, m, ga.Grp, "delete")
-	ret.W("\terr = appState.Services.%s.Delete(p.Ctx, nil, %s)", m.Proper(), strings.Join(pks.CamelNames(), ", "))
+	ret.W("\terr = appState.Services.%s.Delete(p.Ctx, nil, %s, p.Logger)", m.Proper(), strings.Join(pks.CamelNames(), ", "))
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, err")
 	ret.W("\t}")

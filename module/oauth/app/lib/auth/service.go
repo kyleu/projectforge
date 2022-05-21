@@ -7,12 +7,11 @@ import (
 type Service struct {
 	baseURL   string
 	providers Providers
-	logger    util.Logger
 }
 
 func NewService(baseURL string, logger util.Logger) *Service {
-	ret := &Service{baseURL: baseURL, logger: logger}
-	_ = ret.load()
+	ret := &Service{baseURL: baseURL}
+	_ = ret.load(logger)
 	return ret
 }
 

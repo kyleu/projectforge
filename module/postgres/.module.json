@@ -53,5 +53,6 @@
       "description": "when set, uses SSL sessions for connections"
     }
   ],
+  "requires": ["database"],
   "priority": 10
 }

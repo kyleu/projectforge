@@ -18,7 +18,7 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 	for _, imp := range helper.ImportsForTypes("go", m.PKs().Types()...) {
 		g.AddImport(imp)
 	}
-	g.AddImport(helper.ImpContext, helper.ImpErrors, helper.ImpSQLx, helper.ImpFilter, helper.ImpDatabase)
+	g.AddImport(helper.ImpAppUtil, helper.ImpContext, helper.ImpErrors, helper.ImpSQLx, helper.ImpFilter, helper.ImpDatabase)
 	g.AddBlocks(serviceList(m, args.DBRef()))
 	g.AddBlocks(serviceCount(g, m, args.DBRef()))
 	pkLen := len(m.PKs())
@@ -76,7 +76,7 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 func serviceGrouped(m *model.Model, grp *model.Column, dbRef string) *golang.Block {
 	name := "Get" + grp.ProperPlural()
 	ret := golang.NewBlock(name, "func")
-	ret.W("func (s *Service) %s(ctx context.Context, tx *sqlx.Tx%s) ([]*util.KeyValInt, error) {", name, getSuffix(m))
+	ret.W("func (s *Service) %s(ctx context.Context, tx *sqlx.Tx%s, logger util.Logger) ([]*util.KeyValInt, error) {", name, getSuffix(m))
 	ret.W("\twc := \"\"")
 	if m.IsSoftDelete() {
 		delCols := m.Columns.WithTag("deleted")
@@ -87,7 +87,7 @@ func serviceGrouped(m *model.Model, grp *model.Column, dbRef string) *golang.Blo
 	cols := fmt.Sprintf("%q as key, count(*) as val", grp.Name)
 	ret.W("\tq := database.SQLSelectGrouped(%q, %s, wc, %q, %q, 0, 0)", cols, tableClauseFor(m), `"`+grp.Name+`"`, `"`+grp.Name+`"`)
 	ret.W("\tvar ret []*util.KeyValInt")
-	ret.W("\terr := s.%s.Select(ctx, &ret, q, tx, s.logger)", dbRef)
+	ret.W("\terr := s.%s.Select(ctx, &ret, q, tx, logger)", dbRef)
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, errors.Wrap(err, \"unable to get %s by %s\")", m.TitlePluralLower(), grp.TitleLower())
 	ret.W("\t}")
@@ -98,7 +98,7 @@ func serviceGrouped(m *model.Model, grp *model.Column, dbRef string) *golang.Blo
 
 func serviceList(m *model.Model, dbRef string) *golang.Block {
 	ret := golang.NewBlock("List", "func")
-	ret.W("func (s *Service) List(ctx context.Context, tx *sqlx.Tx, params *filter.Params%s) (%s, error) {", getSuffix(m), m.ProperPlural())
+	ret.W("func (s *Service) List(ctx context.Context, tx *sqlx.Tx, params *filter.Params%s, logger util.Logger) (%s, error) {", getSuffix(m), m.ProperPlural())
 	ret.W("\tparams = filters(params)")
 	ret.W("\twc := \"\"")
 	if m.IsSoftDelete() {
@@ -109,7 +109,7 @@ func serviceList(m *model.Model, dbRef string) *golang.Block {
 	}
 	ret.W("\tq := database.SQLSelect(columnsString, %s, wc, params.OrderByString(), params.Limit, params.Offset)", tableClauseFor(m))
 	ret.W("\tret := dtos{}")
-	ret.W("\terr := s.%s.Select(ctx, &ret, q, tx, s.logger)", dbRef)
+	ret.W("\terr := s.%s.Select(ctx, &ret, q, tx, logger)", dbRef)
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, errors.Wrap(err, \"unable to get %s\")", m.TitlePluralLower())
 	ret.W("\t}")
@@ -121,7 +121,7 @@ func serviceList(m *model.Model, dbRef string) *golang.Block {
 func serviceCount(g *golang.File, m *model.Model, dbRef string) *golang.Block {
 	g.AddImport(helper.ImpStrings)
 	ret := golang.NewBlock("Count", "func")
-	ret.W("func (s *Service) Count(ctx context.Context, tx *sqlx.Tx, whereClause string%s, args ...any) (int, error) {", getSuffix(m))
+	ret.W("func (s *Service) Count(ctx context.Context, tx *sqlx.Tx, whereClause string%s, logger util.Logger, args ...any) (int, error) {", getSuffix(m))
 	ret.W("\tif strings.Contains(whereClause, \"'\") || strings.Contains(whereClause, \";\") {")
 	ret.W("\t\treturn 0, errors.Errorf(\"invalid where clause [%%s]\", whereClause)")
 	ret.W("\t}")
@@ -136,7 +136,7 @@ func serviceCount(g *golang.File, m *model.Model, dbRef string) *golang.Block {
 		ret.W("\t}")
 	}
 	ret.W("\tq := database.SQLSelectSimple(columnsString, %s, whereClause)", tableClauseFor(m))
-	ret.W("\tret, err := s.%s.SingleInt(ctx, q, tx, s.logger, args...)", dbRef)
+	ret.W("\tret, err := s.%s.SingleInt(ctx, q, tx, logger, args...)", dbRef)
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn 0, errors.Wrap(err, \"unable to get count of %s\")", m.TitlePluralLower())
 	ret.W("\t}")
@@ -154,7 +154,8 @@ func serviceGetMultiple(m *model.Model, dbRef string) *golang.Block {
 	ret := golang.NewBlock(name, "func")
 	pk := m.PKs()[0]
 	t := model.ToGoType(pk.Type, pk.Nullable, m.Package)
-	ret.W("func (s *Service) %s(ctx context.Context, tx *sqlx.Tx%s, %s ...%s) (%s, error) {", name, getSuffix(m), pk.Plural(), t, m.ProperPlural())
+	msg := "func (s *Service) %s(ctx context.Context, tx *sqlx.Tx%s, logger util.Logger, %s ...%s) (%s, error) {"
+	ret.W(msg, name, getSuffix(m), pk.Plural(), t, m.ProperPlural())
 	ret.W("\tif len(%s) == 0 {", pk.Plural())
 	ret.W("\t\treturn %s{}, nil", m.ProperPlural())
 	ret.W("\t}")
@@ -168,7 +169,7 @@ func serviceGetMultiple(m *model.Model, dbRef string) *golang.Block {
 	ret.W("\tfor _, x := range %s {", pk.Plural())
 	ret.W("\t\tvals = append(vals, x)")
 	ret.W("\t}")
-	ret.W("\terr := s.%s.Select(ctx, &ret, q, tx, s.logger, vals...)", dbRef)
+	ret.W("\terr := s.%s.Select(ctx, &ret, q, tx, logger, vals...)", dbRef)
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, errors.Wrapf(err, \"unable to get %s for [%%%%d] %s\", len(%s))", m.ProperPlural(), pk.Plural(), pk.Plural())
 	ret.W("\t}")
@@ -189,14 +190,15 @@ func serviceGet(key string, m *model.Model, cols model.Columns, dbRef string) *g
 		key = "GetBy" + cols.Smushed()
 	}
 	ret := golang.NewBlock(key, "func")
-	ret.W("func (s *Service) %s(ctx context.Context, tx *sqlx.Tx, %s%s) (*%s, error) {", key, cols.Args(m.Package), getSuffix(m), m.Proper())
+	msg := "func (s *Service) %s(ctx context.Context, tx *sqlx.Tx, %s%s, logger util.Logger) (*%s, error) {"
+	ret.W(msg, key, cols.Args(m.Package), getSuffix(m), m.Proper())
 	ret.W("\twc := defaultWC(0)")
 	if m.IsSoftDelete() {
 		ret.W("\twc = addDeletedClause(wc, includeDeleted)")
 	}
 	ret.W("\tret := &dto{}")
 	ret.W("\tq := database.SQLSelectSimple(columnsString, %s, wc)", tableClauseFor(m))
-	ret.W("\terr := s.%s.Get(ctx, ret, q, tx, s.logger, %s)", dbRef, strings.Join(cols.CamelNames(), ", "))
+	ret.W("\terr := s.%s.Get(ctx, ret, q, tx, logger, %s)", dbRef, strings.Join(cols.CamelNames(), ", "))
 	ret.W("\tif err != nil {")
 	sj := strings.Join(cols.CamelNames(), ", ")
 	decls := make([]string, 0, len(cols))
@@ -215,7 +217,7 @@ func serviceGetByCols(key string, m *model.Model, cols model.Columns, dbRef stri
 		key = "GetBy" + cols.Smushed()
 	}
 	ret := golang.NewBlock(key, "func")
-	msg := "func (s *Service) %s(ctx context.Context, tx *sqlx.Tx, %s, params *filter.Params%s) (%s, error) {"
+	msg := "func (s *Service) %s(ctx context.Context, tx *sqlx.Tx, %s, params *filter.Params%s, logger util.Logger) (%s, error) {"
 	ret.W(msg, key, cols.Args(m.Package), getSuffix(m), m.ProperPlural())
 	ret.W("\tparams = filters(params)")
 	ret.W("\twc := %q", cols.WhereClause(0))
@@ -224,7 +226,7 @@ func serviceGetByCols(key string, m *model.Model, cols model.Columns, dbRef stri
 	}
 	ret.W("\tq := database.SQLSelect(columnsString, %s, wc, params.OrderByString(), params.Limit, params.Offset)", tableClauseFor(m))
 	ret.W("\tret := dtos{}")
-	ret.W("\terr := s.%s.Select(ctx, &ret, q, tx, s.logger, %s)", dbRef, strings.Join(cols.CamelNames(), ", "))
+	ret.W("\terr := s.%s.Select(ctx, &ret, q, tx, logger, %s)", dbRef, strings.Join(cols.CamelNames(), ", "))
 	ret.W("\tif err != nil {")
 	sj := strings.Join(cols.CamelNames(), ", ")
 	decls := make([]string, 0, len(cols))
@@ -240,9 +242,9 @@ func serviceGetByCols(key string, m *model.Model, cols model.Columns, dbRef stri
 
 func serviceListSQL(m *model.Model, dbRef string) *golang.Block {
 	ret := golang.NewBlock("ListSQL", "func")
-	ret.W("func (s *Service) ListSQL(ctx context.Context, tx *sqlx.Tx, sql string) (%s, error) {", m.ProperPlural())
+	ret.W("func (s *Service) ListSQL(ctx context.Context, tx *sqlx.Tx, sql string, logger util.Logger) (%s, error) {", m.ProperPlural())
 	ret.W("\tret := dtos{}")
-	ret.W("\terr := s.%s.Select(ctx, &ret, sql, tx, s.logger)", dbRef)
+	ret.W("\terr := s.%s.Select(ctx, &ret, sql, tx, logger)", dbRef)
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, errors.Wrap(err, \"unable to get %s using custom SQL\")", m.TitlePluralLower())
 	ret.W("\t}")

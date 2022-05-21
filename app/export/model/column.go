@@ -10,8 +10,9 @@ import (
 )
 
 const (
-	FmtCode = "code"
-	FmtURL  = "url"
+	FmtCode   = "code"
+	FmtURL    = "url"
+	FmtSelect = "select"
 )
 
 type Column struct {
@@ -23,6 +24,7 @@ type Column struct {
 	SQLDefault string         `json:"sqlDefault,omitempty"`
 	Display    string         `json:"display,omitempty"`
 	Format     string         `json:"format,omitempty"`
+	Values     []string       `json:"values,omitempty"`
 	Tags       []string       `json:"tags,omitempty"`
 	HelpString string         `json:"helpString,omitempty"`
 }
@@ -45,6 +47,14 @@ func (c *Column) CamelPlural() string {
 
 func (c *Column) Proper() string {
 	return util.StringToCamel(c.Name)
+}
+
+func (c *Column) Title() string {
+	return util.StringToTitle(c.Name)
+}
+
+func (c *Column) TitleLower() string {
+	return strings.ToLower(c.Title())
 }
 
 func (c *Column) Plural() string {
@@ -77,106 +87,6 @@ func (c *Column) ToGoType(pkg string) string {
 
 func (c *Column) ToGoDTOType(pkg string) string {
 	return ToGoDTOType(c.Type, c.Nullable, pkg)
-}
-
-func (c *Column) ToSQLType() string {
-	ret := ToSQLType(c.Type)
-	if !c.Nullable {
-		ret += " not null"
-	}
-	if c.SQLDefault != "" {
-		ret += " default " + c.SQLDefault
-	}
-	return ret
-}
-
-func (c *Column) ToGoEditString(prefix string, format string) string {
-	switch c.Type.Key() {
-	case types.KeyAny:
-		return fmt.Sprintf(`{%%%%= components.TableTextarea(%q, %q, 8, util.ToJSON(%s), 5, %q) %%%%}`, c.Camel(), c.Title(), c.ToGoString(prefix), c.Help())
-	case types.KeyBool:
-		return fmt.Sprintf(`{%%%%= components.TableBoolean(%q, %q, %s, 5, %q) %%%%}`, c.Camel(), c.Title(), prefix+c.Proper(), c.Help())
-	case types.KeyInt:
-		return fmt.Sprintf(`{%%%%= components.TableInputNumber(%q, %q, %s, 5, %q) %%%%}`, c.Camel(), c.Title(), prefix+c.Proper(), c.Help())
-	case types.KeyMap, types.KeyValueMap:
-		return fmt.Sprintf(`{%%%%= components.TableTextarea(%q, %q, 8, util.ToJSON(%s), 5, %q) %%%%}`, c.Camel(), c.Title(), c.ToGoString(prefix), c.Help())
-	case types.KeyReference:
-		return fmt.Sprintf(`{%%%%= components.TableTextarea(%q, %q, 8, util.ToJSON(%s), 5, %q) %%%%}`, c.Camel(), c.Title(), prefix+c.Proper(), c.Help())
-	case types.KeyTimestamp:
-		gs := c.ToGoString(prefix)
-		if !c.Nullable {
-			gs = "&" + gs
-		}
-		return fmt.Sprintf(`{%%%%= components.TableInputTimestamp(%q, %q, %s, 5, %q) %%%%}`, c.Camel(), c.Title(), gs, c.Help())
-	case types.KeyUUID:
-		gs := prefix + c.Proper()
-		if !c.Nullable {
-			gs = "&" + gs
-		}
-		return fmt.Sprintf(`{%%%%= components.TableInputUUID(%q, %q, %s, 5, %q) %%%%}`, c.Camel(), c.Title(), gs, c.Help())
-	case types.KeyString:
-		if format == FmtCode {
-			return fmt.Sprintf(`{%%%%= components.TableTextarea(%q, %q, 8, %s, 5, %q) %%%%}`, c.Camel(), c.Title(), c.ToGoString(prefix), c.Help())
-		}
-		return fmt.Sprintf(`{%%%%= components.TableInput(%q, %q, %s, 5, %q) %%%%}`, c.Camel(), c.Title(), c.ToGoString(prefix), c.Help())
-	default:
-		return fmt.Sprintf(`{%%%%= components.TableInput(%q, %q, %s, 5, %q) %%%%}`, c.Camel(), c.Title(), c.ToGoString(prefix), c.Help())
-	}
-}
-
-func (c *Column) ToGoMapParse() string {
-	switch c.Type.Key() {
-	case types.KeyAny:
-		return "Interface"
-	case types.KeyBool:
-		return "Bool"
-	case types.KeyInt:
-		return "Int"
-	case types.KeyMap, types.KeyValueMap:
-		return "Map"
-	case types.KeyReference:
-		return asRefK(c.Type)
-	case types.KeyString:
-		return "String"
-	case types.KeyTimestamp:
-		return "Time"
-	case types.KeyUUID:
-		return "UUID"
-	default:
-		return "ERROR:unhandled map parse for type [" + c.Type.Key() + "]"
-	}
-}
-
-func (c *Column) ZeroVal() string {
-	if c.Nullable {
-		return types.KeyNil
-	}
-	switch c.Type.Key() {
-	case types.KeyAny:
-		return types.KeyNil
-	case types.KeyBool:
-		return "false"
-	case types.KeyInt:
-		return "0"
-	case types.KeyMap, types.KeyValueMap, types.KeyReference:
-		return types.KeyNil
-	case types.KeyString:
-		return "\"\""
-	case types.KeyTimestamp:
-		return "time.Time{}"
-	case types.KeyUUID:
-		return "uuid.UUID{}"
-	default:
-		return "ERROR:unhandled zero value for type [" + c.Type.Key() + "]"
-	}
-}
-
-func (c *Column) Title() string {
-	return util.StringToTitle(c.Name)
-}
-
-func (c *Column) TitleLower() string {
-	return strings.ToLower(c.Title())
 }
 
 func (c *Column) ShouldDisplay(k string) bool {

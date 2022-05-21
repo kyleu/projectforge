@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"fmt"
+
 	"github.com/valyala/fasthttp"
 
 	"{{{ .Package }}}/app"
@@ -16,6 +18,9 @@ func Search(rc *fasthttp.RequestCtx) {
 		params := &search.Params{Q: q, PS: paramSet}
 		results, errs := search.Search(ps.Context, as, params, ps.Logger)
 		ps.Title = "Search Results"
+		if q != "" {
+			ps.Title = fmt.Sprintf("[%s] %s", q, ps.Title)
+		}
 		ps.Data = results
 		return render(rc, as, &vsearch.Results{Params: params, Results: results, Errors: errs}, ps, "Search")
 	})

@@ -8,6 +8,7 @@ import (
 	"projectforge.dev/projectforge/app/git"
 	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/app/util"
 )
 
 type Services struct {
@@ -26,6 +27,6 @@ func NewServices(ctx context.Context, st *State) (*Services, error) {
 	}, nil
 }
 
-func (s *Services) Close(_ context.Context) error {
+func (s *Services) Close(_ context.Context, _ util.Logger) error {
 	return nil
 }

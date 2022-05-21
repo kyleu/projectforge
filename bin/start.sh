@@ -16,4 +16,4 @@ fi
 
 make clean
 make build
-./build/debug/projectforge -v
+./build/debug/projectforge -v --addr=0.0.0.0 all projectforge

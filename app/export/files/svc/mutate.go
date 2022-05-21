@@ -18,7 +18,7 @@ func ServiceMutate(m *model.Model, args *model.Args, addHeader bool) (*file.File
 	for _, imp := range helper.ImportsForTypes("go", m.PKs().Types()...) {
 		g.AddImport(imp)
 	}
-	g.AddImport(helper.ImpContext, helper.ImpSQLx, helper.ImpDatabase)
+	g.AddImport(helper.ImpAppUtil, helper.ImpContext, helper.ImpSQLx, helper.ImpDatabase)
 
 	if add, err := serviceCreate(m, g); err == nil {
 		g.AddBlocks(add)
@@ -40,27 +40,23 @@ func ServiceMutate(m *model.Model, args *model.Args, addHeader bool) (*file.File
 	}
 	if m.IsSoftDelete() {
 		g.AddImport(helper.ImpTime)
-		softDel, err := serviceSoftDelete(m)
-		if err != nil {
-			return nil, err
-		}
-		g.AddBlocks(softDel)
+		g.AddBlocks(serviceSoftDelete(m), serviceSoftDeleteWhere(m), serviceAddDeletedClause(m))
 	} else {
-		g.AddBlocks(serviceDelete(m))
+		g.AddBlocks(serviceDelete(m), serviceDeleteWhere(m))
 	}
 	return g.Render(addHeader)
 }
 
 func serviceCreate(m *model.Model, g *golang.File) (*golang.Block, error) {
 	ret := golang.NewBlock("Create", "func")
-	ret.W("func (s *Service) Create(ctx context.Context, tx *sqlx.Tx, models ...*%s) error {", m.Proper())
+	ret.W("func (s *Service) Create(ctx context.Context, tx *sqlx.Tx, logger util.Logger, models ...*%s) error {", m.Proper())
 	ret.W("\tif len(models) == 0 {")
 	ret.W("\t\treturn nil")
 	ret.W("\t}")
 
 	if m.IsRevision() {
 		revCol := m.HistoryColumn()
-		ret.W("\trevs, err := s.getCurrent%s(ctx, tx, models...)", revCol.ProperPlural())
+		ret.W("\trevs, err := s.getCurrent%s(ctx, tx, logger, models...)", revCol.ProperPlural())
 		ret.W("\tif err != nil {")
 		ret.W("\t\treturn err")
 		ret.W("\t}")
@@ -70,11 +66,11 @@ func serviceCreate(m *model.Model, g *golang.File) (*golang.Block, error) {
 		}
 
 		ret.W("")
-		ret.W("\terr = s.upsertCore(ctx, tx, models...)")
+		ret.W("\terr = s.upsertCore(ctx, tx, logger, models...)")
 		ret.W("\tif err != nil {")
 		ret.W("\t\treturn err")
 		ret.W("\t}")
-		ret.W("\terr = s.insert%s(ctx, tx, models...)", revCol.Proper())
+		ret.W("\terr = s.insert%s(ctx, tx, logger, models...)", revCol.Proper())
 		ret.W("\tif err != nil {")
 		ret.W("\t\treturn err")
 		ret.W("\t}")
@@ -89,7 +85,7 @@ func serviceCreate(m *model.Model, g *golang.File) (*golang.Block, error) {
 		ret.W("\tfor _, arg := range models {")
 		ret.W("\t\tvals = append(vals, arg.ToData()...)")
 		ret.W("\t}")
-		ret.W("\treturn s.db.Insert(ctx, q, tx, s.logger, vals...)")
+		ret.W("\treturn s.db.Insert(ctx, q, tx, logger, vals...)")
 	}
 	ret.W("}")
 	return ret, nil
@@ -97,10 +93,10 @@ func serviceCreate(m *model.Model, g *golang.File) (*golang.Block, error) {
 
 func serviceUpdate(m *model.Model, g *golang.File) (*golang.Block, error) {
 	ret := golang.NewBlock("Update", "func")
-	ret.W("func (s *Service) Update(ctx context.Context, tx *sqlx.Tx, model *%s) error {", m.Proper())
+	ret.W("func (s *Service) Update(ctx context.Context, tx *sqlx.Tx, model *%s, logger util.Logger) error {", m.Proper())
 	if m.IsRevision() {
 		revCol := m.HistoryColumn()
-		ret.W("\trevs, err := s.getCurrent%s(ctx, tx, model)", revCol.ProperPlural())
+		ret.W("\trevs, err := s.getCurrent%s(ctx, tx, logger, model)", revCol.ProperPlural())
 		ret.W("\tif err != nil {")
 		ret.W("\t\treturn err")
 		ret.W("\t}")
@@ -109,7 +105,7 @@ func serviceUpdate(m *model.Model, g *golang.File) (*golang.Block, error) {
 
 	if cc := m.Columns.WithTag("created"); len(cc) > 0 {
 		g.AddImport(helper.ImpErrors)
-		ret.W("\tcurr, err := s.Get(ctx, tx, %s%s)", m.PKs().ToRefs("model."), m.SoftDeleteSuffix())
+		ret.W("\tcurr, err := s.Get(ctx, tx, %s%s, logger)", m.PKs().ToRefs("model."), m.SoftDeleteSuffix())
 		ret.W("\tif err != nil {")
 		ret.W("\t\treturn errors.Wrapf(err, \"can't get original %s [%%%%s]\", model.String())", m.TitleLower())
 		ret.W("\t}")
@@ -127,7 +123,7 @@ func serviceUpdate(m *model.Model, g *golang.File) (*golang.Block, error) {
 
 	if m.IsHistory() {
 		ret.W("")
-		ret.W("\t_, hErr := s.SaveHistory(ctx, tx, curr, model)")
+		ret.W("\t_, hErr := s.SaveHistory(ctx, tx, curr, model, logger)")
 		ret.W("\tif hErr != nil {")
 		ret.W("\t\treturn errors.Wrap(hErr, \"unable to save history\")")
 		ret.W("\t}")
@@ -141,11 +137,11 @@ func serviceUpdate(m *model.Model, g *golang.File) (*golang.Block, error) {
 	if m.IsRevision() {
 		revCol := m.HistoryColumn()
 		ret.W("")
-		ret.W("\terr = s.upsertCore(ctx, tx, model)")
+		ret.W("\terr = s.upsertCore(ctx, tx, logger, model)")
 		ret.W("\tif err != nil {")
 		ret.W("\t\treturn err")
 		ret.W("\t}")
-		ret.W("\terr = s.insert%s(ctx, tx, model)", revCol.Proper())
+		ret.W("\terr = s.insert%s(ctx, tx, logger, model)", revCol.Proper())
 		ret.W("\tif err != nil {")
 		ret.W("\t\treturn err")
 		ret.W("\t}")
@@ -158,7 +154,7 @@ func serviceUpdate(m *model.Model, g *golang.File) (*golang.Block, error) {
 		if len(m.Columns.WithTag("created")) == 0 {
 			token = ":="
 		}
-		ret.W("\t_, err %s s.db.Update(ctx, q, tx, 1, s.logger, data...)", token)
+		ret.W("\t_, err %s s.db.Update(ctx, q, tx, 1, logger, data...)", token)
 		ret.W("\tif err != nil {")
 		ret.W("\t\treturn err")
 		ret.W("\t}")
@@ -170,13 +166,13 @@ func serviceUpdate(m *model.Model, g *golang.File) (*golang.Block, error) {
 
 func serviceSave(m *model.Model, g *golang.File) (*golang.Block, error) {
 	ret := golang.NewBlock("Save", "func")
-	ret.W("func (s *Service) Save(ctx context.Context, tx *sqlx.Tx, models ...*%s) error {", m.Proper())
+	ret.W("func (s *Service) Save(ctx context.Context, tx *sqlx.Tx, logger util.Logger, models ...*%s) error {", m.Proper())
 	ret.W("\tif len(models) == 0 {")
 	ret.W("\t\treturn nil")
 	ret.W("\t}")
 
 	if m.IsRevision() {
-		ret.W("\trevs, err := s.getCurrent%s(ctx, tx, models...)", m.HistoryColumns(true).Col.ProperPlural())
+		ret.W("\trevs, err := s.getCurrent%s(ctx, tx, logger, models...)", m.HistoryColumns(true).Col.ProperPlural())
 		ret.W("\tif err != nil {")
 		ret.W("\t\treturn err")
 		ret.W("\t}")
@@ -187,11 +183,11 @@ func serviceSave(m *model.Model, g *golang.File) (*golang.Block, error) {
 	}
 	if m.IsRevision() {
 		ret.W("")
-		ret.W("\terr = s.upsertCore(ctx, tx, models...)")
+		ret.W("\terr = s.upsertCore(ctx, tx, logger, models...)")
 		ret.W("\tif err != nil {")
 		ret.W("\t\treturn err")
 		ret.W("\t}")
-		ret.W("\terr = s.insert%s(ctx, tx, models...)", m.HistoryColumn().Proper())
+		ret.W("\terr = s.insert%s(ctx, tx, logger, models...)", m.HistoryColumn().Proper())
 		ret.W("\tif err != nil {")
 		ret.W("\t\treturn err")
 		ret.W("\t}")
@@ -203,7 +199,7 @@ func serviceSave(m *model.Model, g *golang.File) (*golang.Block, error) {
 		ret.W("\tfor _, model := range models {")
 		ret.W("\t\tdata = append(data, model.ToData()...)")
 		ret.W("\t}")
-		ret.W("\treturn s.db.Insert(ctx, q, tx, s.logger, data...)")
+		ret.W("\treturn s.db.Insert(ctx, q, tx, logger, data...)")
 	}
 	ret.W("}")
 	return ret, nil
@@ -212,14 +208,14 @@ func serviceSave(m *model.Model, g *golang.File) (*golang.Block, error) {
 func serviceUpsertCore(m *model.Model, g *golang.File) *golang.Block {
 	g.AddImport(helper.ImpAppUtil)
 	ret := golang.NewBlock("UpsertCore", "func")
-	ret.W("func (s *Service) upsertCore(ctx context.Context, tx *sqlx.Tx, models ...*%s) error {", m.Proper())
+	ret.W("func (s *Service) upsertCore(ctx context.Context, tx *sqlx.Tx, logger util.Logger, models ...*%s) error {", m.Proper())
 	ret.W("\tconflicts := util.StringArrayQuoted([]string{%s})", strings.Join(m.PKs().NamesQuoted(), ", "))
 	ret.W("\tq := database.SQLUpsert(tableQuoted, columnsCore, len(models), conflicts, columnsCore, \"\")")
 	ret.W("\tdata := make([]any, 0, len(columnsCore)*len(models))")
 	ret.W("\tfor _, model := range models {")
 	ret.W("\t\tdata = append(data, model.ToDataCore()...)")
 	ret.W("\t}")
-	ret.W("\t_, err := s.db.Update(ctx, q, tx, 1, s.logger, data...)")
+	ret.W("\t_, err := s.db.Update(ctx, q, tx, 1, logger, data...)")
 	ret.W("\treturn err")
 	ret.W("}")
 	return ret
@@ -228,13 +224,13 @@ func serviceUpsertCore(m *model.Model, g *golang.File) *golang.Block {
 func serviceInsertRevision(m *model.Model) *golang.Block {
 	revCol := m.HistoryColumn()
 	ret := golang.NewBlock("InsertRev", "func")
-	ret.W("func (s *Service) insert%s(ctx context.Context, tx *sqlx.Tx, models ...*%s) error {", m.HistoryColumn().Proper(), m.Proper())
+	ret.W("func (s *Service) insert%s(ctx context.Context, tx *sqlx.Tx, logger util.Logger, models ...*%s) error {", m.HistoryColumn().Proper(), m.Proper())
 	ret.W("\tq := database.SQLInsert(table%sQuoted, columns%s, len(models), \"\")", revCol.Proper(), revCol.Proper())
 	ret.W("\tdata := make([]any, 0, len(columns%s)*len(models))", revCol.Proper())
 	ret.W("\tfor _, model := range models {")
 	ret.W("\t\tdata = append(data, model.ToData%s()...)", m.HistoryColumn().Proper())
 	ret.W("\t}")
-	ret.W("\treturn s.db.Insert(ctx, q, tx, s.logger, data...)")
+	ret.W("\treturn s.db.Insert(ctx, q, tx, logger, data...)")
 	ret.W("}")
 	return ret
 }

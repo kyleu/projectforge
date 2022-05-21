@@ -71,7 +71,6 @@ func Admin(rc *fasthttp.RequestCtx) {
 			return flashAndRedir(true, msg, "/admin", rc, ps)
 		// $PF_SECTION_START(admin-actions)$
 		// $PF_SECTION_END(admin-actions)$
-
 		default:
 			return "", errors.Errorf("unhandled admin action [%s]", path[0])
 		}

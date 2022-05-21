@@ -19,11 +19,11 @@ const depsKey = "deps"
 
 func RunAction(rc *fasthttp.RequestCtx) {
 	act("run.action", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		tgt, err := RCRequiredString(rc, "key", false)
+		tgt, err := cutil.RCRequiredString(rc, "key", false)
 		if err != nil {
 			return "", err
 		}
-		actS, err := RCRequiredString(rc, "act", false)
+		actS, err := cutil.RCRequiredString(rc, "act", false)
 		if err != nil {
 			return "", err
 		}
@@ -69,7 +69,7 @@ func RunAction(rc *fasthttp.RequestCtx) {
 
 func RunAllActions(rc *fasthttp.RequestCtx) {
 	act("run.all.actions", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		actS, err := RCRequiredString(rc, "act", false)
+		actS, err := cutil.RCRequiredString(rc, "act", false)
 		if err != nil {
 			return "", err
 		}
@@ -83,6 +83,7 @@ func RunAllActions(rc *fasthttp.RequestCtx) {
 		if actT.Key == action.TypeBuild.Key {
 			switch cfg["phase"] {
 			case nil:
+				ps.Title = "Build All Projects"
 				page := &vaction.Results{T: actT, Cfg: cfg, Ctxs: nil, IsBuild: true}
 				return render(rc, as, page, ps, "projects", actT.Title)
 			case depsKey:

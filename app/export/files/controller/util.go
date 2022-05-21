@@ -7,17 +7,24 @@ import (
 	"projectforge.dev/projectforge/app/export/model"
 )
 
-const incDel = "cutil.RequestCtxBool(rc, \"includeDeleted\")"
+const (
+	incDel   = "cutil.QueryStringBool(rc, \"includeDeleted\")"
+	incFalse = ", false"
+)
 
 func checkRev(ret *golang.Block, m *model.Model) {
 	if !m.IsRevision() {
 		return
 	}
 	hc := m.HistoryColumn()
-
+	incDel := ""
+	if m.IsSoftDelete() {
+		incDel = incFalse
+	}
 	prmsStr := m.PKs().ToRefs("ret.")
-	const msg = "\t\t%s, err := as.Services.%s.GetAll%s(ps.Context, nil, %s, params.Get(%q, nil, ps.Logger).Sanitize(%q), false)"
-	ret.W(msg, hc.CamelPlural(), m.Proper(), hc.ProperPlural(), prmsStr, m.Package, m.Package)
+	ret.W("\t\tprms := params.Get(%q, nil, ps.Logger).Sanitize(%q)", m.Package, m.Package)
+	const msg = "\t\t%s, err := as.Services.%s.GetAll%s(ps.Context, nil, %s, prms%s, ps.Logger)"
+	ret.W(msg, hc.CamelPlural(), m.Proper(), hc.ProperPlural(), prmsStr, incDel)
 	ret.W("\t\tif err != nil {")
 	ret.W("\t\t\treturn \"\", err")
 	ret.W("\t\t}")
@@ -52,7 +59,7 @@ func controllerModelFromPath(m *model.Model) *golang.Block {
 		suffix = ", includeDeleted"
 		ret.W("\tincludeDeleted := rc.UserValue(\"includeDeleted\") != nil || " + incDel)
 	}
-	ret.W("\treturn as.Services.%s.Get(ps.Context, nil, %s%s)", m.Proper(), strings.Join(args, ", "), suffix)
+	ret.W("\treturn as.Services.%s.Get(ps.Context, nil, %s%s, ps.Logger)", m.Proper(), strings.Join(args, ", "), suffix)
 	ret.W("}")
 
 	return ret

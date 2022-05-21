@@ -33,7 +33,7 @@ func (m *Model) Validate(mods []string) error {
 		}
 	}
 	if m.IsSoftDelete() {
-		if d := m.Columns.WithTag("deleted"); len(d) == 0 {
+		if d := m.Columns.WithTag("deleted"); len(d) != 1 {
 			return errors.New("when set to soft delete, model must have one column tagged [deleted]")
 		}
 	}

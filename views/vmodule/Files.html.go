@@ -59,54 +59,56 @@ func (p *Files) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
 		files := fs.ListFiles(filepath.Join(p.Path...), nil)
 
 //line views/vmodule/Files.html:26
-		qw422016.N().S(`  `)
-//line views/vmodule/Files.html:27
-		vfile.StreamList(qw422016, p.Path, files, fs, u, as, ps)
-//line views/vmodule/Files.html:27
-		qw422016.N().S(`
-`)
+		qw422016.N().S(`  <div class="card">
+    `)
 //line views/vmodule/Files.html:28
-	} else {
+		vfile.StreamList(qw422016, p.Path, files, fs, u, as, ps)
+//line views/vmodule/Files.html:28
+		qw422016.N().S(`
+  </div>
+`)
 //line views/vmodule/Files.html:30
+	} else {
+//line views/vmodule/Files.html:32
 		b, err := fs.ReadFile(filepath.Join(p.Path...))
 		if err != nil {
 			panic(err)
 		}
 
-//line views/vmodule/Files.html:34
+//line views/vmodule/Files.html:36
 		qw422016.N().S(`  `)
-//line views/vmodule/Files.html:35
+//line views/vmodule/Files.html:37
 		vfile.StreamDetail(qw422016, p.Path, b, u, as, ps)
-//line views/vmodule/Files.html:35
+//line views/vmodule/Files.html:37
 		qw422016.N().S(`
 `)
-//line views/vmodule/Files.html:36
+//line views/vmodule/Files.html:38
 	}
-//line views/vmodule/Files.html:37
+//line views/vmodule/Files.html:39
 }
 
-//line views/vmodule/Files.html:37
+//line views/vmodule/Files.html:39
 func (p *Files) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vmodule/Files.html:37
+//line views/vmodule/Files.html:39
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vmodule/Files.html:37
+//line views/vmodule/Files.html:39
 	p.StreamBody(qw422016, as, ps)
-//line views/vmodule/Files.html:37
+//line views/vmodule/Files.html:39
 	qt422016.ReleaseWriter(qw422016)
-//line views/vmodule/Files.html:37
+//line views/vmodule/Files.html:39
 }
 
-//line views/vmodule/Files.html:37
+//line views/vmodule/Files.html:39
 func (p *Files) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vmodule/Files.html:37
+//line views/vmodule/Files.html:39
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vmodule/Files.html:37
+//line views/vmodule/Files.html:39
 	p.WriteBody(qb422016, as, ps)
-//line views/vmodule/Files.html:37
+//line views/vmodule/Files.html:39
 	qs422016 := string(qb422016.B)
-//line views/vmodule/Files.html:37
+//line views/vmodule/Files.html:39
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vmodule/Files.html:37
+//line views/vmodule/Files.html:39
 	return qs422016
-//line views/vmodule/Files.html:37
+//line views/vmodule/Files.html:39
 }

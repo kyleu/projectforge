@@ -21,7 +21,7 @@ func SandboxList(rc *fasthttp.RequestCtx) {
 
 func SandboxRun(rc *fasthttp.RequestCtx) {
 	act("sandbox.run", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := RCRequiredString(rc, "key", false)
+		key, err := cutil.RCRequiredString(rc, "key", false)
 		if err != nil {
 			return "", err
 		}

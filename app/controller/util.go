@@ -3,12 +3,9 @@ package controller
 
 import (
 	"fmt"
-	"net/url"
-	"strconv"
 	"strings"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 
@@ -19,44 +16,6 @@ import (
 	"projectforge.dev/projectforge/views/layout"
 	"projectforge.dev/projectforge/views/verror"
 )
-
-var initialIcons = []string{"searchbox"}
-
-func RCRequiredString(rc *fasthttp.RequestCtx, key string, allowEmpty bool) (string, error) {
-	v, ok := rc.UserValue(key).(string)
-	if !ok || ((!allowEmpty) && v == "") {
-		return v, errors.Errorf("must provide [%s] in path", key)
-	}
-	v, err := url.QueryUnescape(v)
-	if err != nil {
-		return "", err
-	}
-	return v, nil
-}
-
-func RCRequiredBool(rc *fasthttp.RequestCtx, key string) (bool, error) {
-	ret, err := RCRequiredString(rc, key, true)
-	if err != nil {
-		return false, err
-	}
-	return ret == util.BoolTrue, nil
-}
-
-func RCRequiredInt(rc *fasthttp.RequestCtx, key string) (int, error) {
-	s, err := RCRequiredString(rc, key, true)
-	if err != nil {
-		return 0, err
-	}
-	return strconv.Atoi(s)
-}
-
-func RCRequiredUUID(rc *fasthttp.RequestCtx, key string) (*uuid.UUID, error) {
-	ret, err := RCRequiredString(rc, key, true)
-	if err != nil {
-		return nil, err
-	}
-	return util.UUIDFromString(ret), nil
-}
 
 func render(rc *fasthttp.RequestCtx, as *app.State, page layout.Page, ps *cutil.PageState, breadcrumbs ...string) (string, error) {
 	defer func() {
@@ -126,4 +85,19 @@ func flashAndRedir(success bool, msg string, redir string, rc *fasthttp.RequestC
 		return "/", nil
 	}
 	return redir, nil
+}
+
+func returnToReferrer(msg string, dflt string, rc *fasthttp.RequestCtx, ps *cutil.PageState) (string, error) {
+	refer := ""
+	referX, ok := ps.Session[cutil.ReferKey]
+	if ok {
+		refer, ok = referX.(string)
+		if ok {
+			_ = cutil.RemoveFromSession(cutil.ReferKey, rc, ps.Session, ps.Logger)
+		}
+	}
+	if refer == "" {
+		refer = dflt
+	}
+	return flashAndRedir(true, msg, refer, rc, ps)
 }

@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"fmt"
+
 	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
@@ -31,12 +33,14 @@ func ModuleDetail(rc *fasthttp.RequestCtx) {
 				usages = append(usages, p)
 			}
 		}
+		ps.Data = mod
+		ps.Title = fmt.Sprintf("[%s] Module", mod.Key)
 		return render(rc, as, &vmodule.Detail{Module: mod, Usages: usages}, ps, "modules", mod.Key)
 	})
 }
 
 func getModule(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*module.Module, error) {
-	key, err := RCRequiredString(rc, "key", true)
+	key, err := cutil.RCRequiredString(rc, "key", true)
 	if err != nil {
 		return nil, err
 	}

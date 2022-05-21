@@ -74,9 +74,9 @@ func (p Providers) Titles() []string {
 	return ret
 }
 
-func (s *Service) Providers() (Providers, error) {
+func (s *Service) Providers(logger util.Logger) (Providers, error) {
 	if s.providers == nil {
-		err := s.load()
+		err := s.load(logger)
 		if err != nil {
 			return nil, err
 		}
@@ -84,7 +84,7 @@ func (s *Service) Providers() (Providers, error) {
 	return s.providers, nil
 }
 
-func (s *Service) load() error {
+func (s *Service) load(logger util.Logger) error {
 	if s.providers != nil {
 		return errors.New("called [load] twice")
 	}
@@ -111,10 +111,10 @@ func (s *Service) load() error {
 	s.providers = ret
 
 	if len(ret) == 0 {
-		s.logger.Debug("authentication disabled, no providers configured in environment")
+		logger.Debug("authentication disabled, no providers configured in environment")
 	} else {
 		const msg = "authentication enabled for [%s], using [%s] as a base URL"
-		s.logger.Infof(msg, util.StringArrayOxfordComma(ret.Titles(), "and"), s.baseURL)
+		logger.Infof(msg, util.StringArrayOxfordComma(ret.Titles(), "and"), s.baseURL)
 	}
 
 	return nil

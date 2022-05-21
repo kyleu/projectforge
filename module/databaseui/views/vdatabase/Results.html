@@ -1,0 +1,30 @@
+{% import (
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/lib/database"
+  "{{{ .Package }}}/app/util"
+  "{{{ .Package }}}/views/components"
+  "{{{ .Package }}}/views/layout"
+) %}
+
+{% code type Results struct {
+  layout.Basic
+  Svc *database.Service
+  Schema string
+  Table string
+  Results []util.ValueMap
+  Timing int
+  Error error
+} %}
+
+{% func (p *Results) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <div class="right">{%s util.MicrosToMillis(p.Timing) %} elapsed</div>
+    <h3>{%= components.SVGRefIcon(`database`, ps) %}Table [{% if p.Schema != "default" %}{%s p.Schema %}:{% endif %}{%s p.Table %}]</h3>
+    <div class="right">{%d len(p.Results) %} rows returned</div>
+    {%- if p.Error != nil -%}
+    <div class="mt error">{%s p.Error.Error() %}</div>
+    {%- endif -%}
+    <div class="mt">{%= components.DisplayMaps(p.Results, true) %}</div>
+  </div>
+{% endfunc %}

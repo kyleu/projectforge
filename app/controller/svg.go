@@ -91,6 +91,7 @@ func SVGAdd(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
+		ps.Title = "SVG [" + x.Key + "]"
 		ps.Data = x
 		return render(rc, as, &vsvg.View{Project: prj, SVG: x}, ps, "projects", prj.Key, "SVG||/svg/"+prj.Key, x.Key)
 	})
@@ -151,7 +152,7 @@ func prjAndIcon(rc *fasthttp.RequestCtx, as *app.State) (*project.Project, files
 	}
 	fs := as.Services.Projects.GetFilesystem(prj)
 
-	key, err := RCRequiredString(rc, "icon", false)
+	key, err := cutil.RCRequiredString(rc, "icon", false)
 	if err != nil {
 		return nil, nil, "", err
 	}

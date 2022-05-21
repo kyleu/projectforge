@@ -8,6 +8,7 @@ import (
 	"projectforge.dev/projectforge/app/export/golang"
 	"projectforge.dev/projectforge/app/export/model"
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func ServiceAll(m *model.Model, args *model.Args, addHeader bool) (file.Files, error) {
@@ -43,7 +44,7 @@ func ServiceAll(m *model.Model, args *model.Args, addHeader bool) (file.Files, e
 
 func Service(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.Package}, "service")
-	g.AddImport(helper.ImpAppUtil, helper.ImpFilter, helper.ImpDatabase)
+	g.AddImport(helper.ImpFilter, helper.ImpDatabase)
 
 	isRO := args.HasModule("readonlydb")
 	isAudit := args.HasModule("audit") && m.HasTag("audit")
@@ -58,14 +59,20 @@ func Service(m *model.Model, args *model.Args, addHeader bool) (*file.File, erro
 func serviceStruct(isRO bool, isAudit bool) *golang.Block {
 	ret := golang.NewBlock("Service", "struct")
 	ret.W("type Service struct {")
-	ret.W("\tdb     *database.Service")
+	size := 2
+	if isAudit {
+		size = 5
+	}
 	if isRO {
-		ret.W("\tdbRead *database.Service")
+		size = 6
+	}
+	ret.W("\t%s *database.Service", util.StringPad("db", size))
+	if isRO {
+		ret.W("\t%s *database.Service", util.StringPad("dbRead", size))
 	}
 	if isAudit {
-		ret.W("\taudit  *audit.Service")
+		ret.W("\t%s *audit.Service", util.StringPad("audit", size))
 	}
-	ret.W("\tlogger util.Logger")
 	ret.W("}")
 	return ret
 }
@@ -74,17 +81,16 @@ func serviceNew(m *model.Model, isRO bool, isAudit bool) *golang.Block {
 	ret := golang.NewBlock("NewService", "func")
 	newSuffix, callSuffix := "", ""
 	if isRO {
-		newSuffix = "dbRead *database.Service, "
-		callSuffix = "dbRead: dbRead, "
+		newSuffix = ", dbRead *database.Service"
+		callSuffix = ", dbRead: dbRead"
 	}
 	if isAudit {
-		newSuffix = "aud *audit.Service, "
-		callSuffix = "audit: aud, "
+		newSuffix = ", aud *audit.Service"
+		callSuffix = ", audit: aud"
 	}
-	ret.W("func NewService(db *database.Service, %slogger util.Logger) *Service {", newSuffix)
-	ret.W("\tlogger = logger.With(\"svc\", %q)", m.Camel())
+	ret.W("func NewService(db *database.Service%s) *Service {", newSuffix)
 	ret.W("\tfilter.AllowedColumns[\"%s\"] = columns", m.Package)
-	ret.W("\treturn &Service{db: db, %slogger: logger}", callSuffix)
+	ret.W("\treturn &Service{db: db%s}", callSuffix)
 	ret.W("}")
 	return ret
 }
@@ -111,7 +117,7 @@ func serviceDefaultFilters(m *model.Model) *golang.Block {
 
 func getSuffix(m *model.Model) string {
 	if m.IsSoftDelete() {
-		return ", includeDeleted bool"
+		return incDel
 	}
 	return ""
 }

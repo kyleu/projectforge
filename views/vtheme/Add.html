@@ -2,7 +2,6 @@
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/lib/theme"
-  "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/layout"
 ) %}
 
@@ -11,6 +10,7 @@
   Project string
   Palette string
   Themes theme.Themes
+  Title string
 } %}
 
 {% func (p *Add) Body(as *app.State, ps *cutil.PageState) %}
@@ -37,8 +37,8 @@
               <a href="/theme/preview/{%s p.Palette %}/{%s t.Key %}?project={%s p.Project %}">Set</a>
               {%- endif -%}
             </th>
-            <th class="shrink" style="background-color: #ffffff; padding: 12px 36px;">{%= MockupColors(util.AppName, "", t.Light, true, 5, ps) %}</th>
-            <th class="shrink" style="background-color: #121212; padding: 12px 36px;">{%= MockupColors(util.AppName, "", t.Dark, true, 5, ps) %}</th>
+            <th class="shrink" style="background-color: #ffffff; padding: 12px 36px;">{%= MockupColors(p.Title, "", t.Light, true, 5, ps) %}</th>
+            <th class="shrink" style="background-color: #121212; padding: 12px 36px;">{%= MockupColors(p.Title, "", t.Dark, true, 5, ps) %}</th>
           </tr>
           {%- endfor -%}
         </tbody>

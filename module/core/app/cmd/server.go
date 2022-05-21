@@ -42,7 +42,7 @@ func startServer(flags *Flags) error {
 		return err
 	}
 
-	err = st.Close(context.Background())
+	err = st.Close(context.Background(), st.Logger)
 	if err != nil {
 		return errors.Wrap(err, "unable to close application")
 	}

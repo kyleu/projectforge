@@ -59,7 +59,7 @@ func (i *Info) AuthorIDSafe() string {
 	ret := make([]string, 0, len(spl))
 	for _, x := range spl {
 		x = strings.ReplaceAll(x, ",", "")
-		if !strings.Contains(x, "@") {
+		if !strings.HasPrefix(x, "@") {
 			x = "@" + x
 		}
 		ret = append(ret, x)

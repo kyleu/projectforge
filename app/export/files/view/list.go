@@ -23,8 +23,7 @@ func exportViewListClass(m *model.Model, models model.Models, g *golang.Template
 	for _, rel := range m.Relations {
 		relModel := models.Get(rel.Table)
 		g.AddImport(helper.AppImport("app/" + relModel.Package))
-		msg := "  %s %s.%s"
-		ret.W(msg, relModel.ProperPlural(), relModel.Package, relModel.ProperPlural())
+		ret.W(commonLine, relModel.ProperPlural(), relModel.Package, relModel.ProperPlural())
 	}
 	ret.W("  Params filter.ParamSet")
 	ret.W("} %%}")

@@ -13,10 +13,12 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+const incDel = ", includeDeleted bool"
+
 func ServiceRevision(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	dbRef := args.DBRef()
 	g := golang.NewFile(m.Package, []string{"app", m.Package}, "servicerevision")
-	g.AddImport(helper.ImpFmt, helper.ImpStrings, helper.ImpContext, helper.ImpFilter, helper.ImpSQLx, helper.ImpErrors, helper.ImpDatabase)
+	g.AddImport(helper.ImpAppUtil, helper.ImpFmt, helper.ImpStrings, helper.ImpContext, helper.ImpFilter, helper.ImpSQLx, helper.ImpErrors, helper.ImpDatabase)
 	ar, err := serviceGetAllRevisions(m, dbRef)
 	if err != nil {
 		return nil, err
@@ -38,8 +40,12 @@ func serviceGetAllRevisions(m *model.Model, dbRef string) (*golang.Block, error)
 	pks := m.PKs()
 
 	ret := golang.NewBlock(fmt.Sprintf("GetAll%s", hc.Col.ProperPlural()), "func")
-	const decl = "func (s *Service) GetAll%s(ctx context.Context, tx *sqlx.Tx, %s, params *filter.Params, includeDeleted bool) (%s, error) {"
-	ret.W(decl, hc.Col.ProperPlural(), pks.Args(m.Package), m.ProperPlural())
+	suffix := ""
+	if m.IsSoftDelete() {
+		suffix += incDel
+	}
+	const decl = "func (s *Service) GetAll%s(ctx context.Context, tx *sqlx.Tx, %s, params *filter.Params%s, logger util.Logger) (%s, error) {"
+	ret.W(decl, hc.Col.ProperPlural(), pks.Args(m.Package), suffix, m.ProperPlural())
 	ret.W("\tparams = filters(params)")
 	placeholders := make([]string, 0, len(m.PKs()))
 	for idx, pk := range m.PKs() {
@@ -55,7 +61,7 @@ func serviceGetAllRevisions(m *model.Model, dbRef string) (*golang.Block, error)
 	}
 	ret.W("\tq := database.SQLSelect(columnsString, tablesJoinedParam, wc, params.OrderByString(), params.Limit, params.Offset)")
 	ret.W("\tret := dtos{}")
-	ret.W("\terr := s.%s.Select(ctx, &ret, q, tx, s.logger, %s)", dbRef, strings.Join(pks.CamelNames(), ", "))
+	ret.W("\terr := s.%s.Select(ctx, &ret, q, tx, logger, %s)", dbRef, strings.Join(pks.CamelNames(), ", "))
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, errors.Wrap(err, \"unable to get %s\")", m.ProperPlural())
 	ret.W("\t}")
@@ -67,7 +73,7 @@ func serviceGetAllRevisions(m *model.Model, dbRef string) (*golang.Block, error)
 func serviceGetRevision(m *model.Model, dbRef string) (*golang.Block, error) {
 	revCol := m.HistoryColumn()
 	ret := golang.NewBlock(fmt.Sprintf("Get%s", revCol.Proper()), "func")
-	const decl = "func (s *Service) Get%s(ctx context.Context, tx *sqlx.Tx, %s, %s int) (*%s, error) {"
+	const decl = "func (s *Service) Get%s(ctx context.Context, tx *sqlx.Tx, %s, %s int, logger util.Logger) (*%s, error) {"
 	ret.W(decl, revCol.Proper(), m.PKs().Args(m.Package), revCol.Camel(), m.Proper())
 	placeholders := make([]string, 0, len(m.PKs()))
 	for idx, pk := range m.PKs() {
@@ -80,7 +86,7 @@ func serviceGetRevision(m *model.Model, dbRef string) (*golang.Block, error) {
 		return nil, err
 	}
 	ret.W("\tq := database.SQLSelectSimple(columnsString, tablesJoinedParam, wc)")
-	ret.W("\terr := s.%s.Get(ctx, ret, q, tx, s.logger, %s, %s)", dbRef, strings.Join(m.PKs().CamelNames(), ", "), revCol.Camel())
+	ret.W("\terr := s.%s.Get(ctx, ret, q, tx, logger, %s, %s)", dbRef, strings.Join(m.PKs().CamelNames(), ", "), revCol.Camel())
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, err")
 	ret.W("\t}")
@@ -113,7 +119,7 @@ func serviceGetCurrentRevisions(m *model.Model, dbRef string) (*golang.Block, er
 	}
 	ret.W("\t\t%s int    `db:\"current_%s\"`", currRevStr, revCol.Name)
 	ret.W("\t}")
-	ret.W("\terr := s.%s.Select(ctx, &results, q, tx, s.logger, vals...)", dbRef)
+	ret.W("\terr := s.%s.Select(ctx, &results, q, tx, logger, vals...)", dbRef)
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, errors.Wrap(err, \"unable to get %s\")", m.ProperPlural())
 	ret.W("\t}")
@@ -147,7 +153,7 @@ func serviceGetCurrentRevisionsBlock(m *model.Model, ret *golang.Block, revCol *
 		pkModelRefs = append(pkModelRefs, fmt.Sprintf("model.%s", pk.Proper()))
 	}
 
-	const decl = "func (s *Service) getCurrent%s(ctx context.Context, tx *sqlx.Tx, models ...*%s) (map[string]%s, error) {"
+	const decl = "func (s *Service) getCurrent%s(ctx context.Context, tx *sqlx.Tx, logger util.Logger, models ...*%s) (map[string]%s, error) {"
 	ret.W(decl, revCol.ProperPlural(), m.Proper(), model.ToGoType(revCol.Type, false, m.Package))
 	ret.W("\tstmts := make([]string, 0, len(models))")
 	ret.W("\tfor i := range models {")

@@ -14,7 +14,7 @@ import (
 func ThemeList(rc *fasthttp.RequestCtx) {
 	act("theme.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ps.Title = "Themes"
-		x := as.Themes.All()
+		x := as.Themes.All(ps.Logger)
 		ps.Data = x
 		return render(rc, as, &vtheme.List{Themes: x}, ps, "admin", "Themes")
 	})
@@ -22,7 +22,7 @@ func ThemeList(rc *fasthttp.RequestCtx) {
 
 func ThemeEdit(rc *fasthttp.RequestCtx) {
 	act("theme.edit", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := RCRequiredString(rc, "key", false)
+		key, err := cutil.RCRequiredString(rc, "key", false)
 		if err != nil {
 			return "", err
 		}
@@ -30,7 +30,7 @@ func ThemeEdit(rc *fasthttp.RequestCtx) {
 		if key == theme.KeyNew {
 			t = theme.ThemeDefault.Clone(key)
 		} else {
-			t = as.Themes.Get(key)
+			t = as.Themes.Get(key, ps.Logger)
 		}
 		if t == nil {
 			return "", errors.Wrap(err, "no theme found with key ["+key+"]")
@@ -44,7 +44,7 @@ func ThemeEdit(rc *fasthttp.RequestCtx) {
 
 func ThemeSave(rc *fasthttp.RequestCtx) {
 	act("theme.save", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := RCRequiredString(rc, "key", false)
+		key, err := cutil.RCRequiredString(rc, "key", false)
 		if err != nil {
 			return "", err
 		}
@@ -53,7 +53,7 @@ func ThemeSave(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to parse form")
 		}
 
-		orig := as.Themes.Get(key)
+		orig := as.Themes.Get(key, ps.Logger)
 
 		newKey, err := frm.GetString("key", false)
 		if err != nil {
@@ -68,7 +68,7 @@ func ThemeSave(rc *fasthttp.RequestCtx) {
 
 		t := &theme.Theme{Key: newKey, Light: l, Dark: d}
 
-		err = as.Themes.Save(t)
+		err = as.Themes.Save(t, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to save theme")
 		}

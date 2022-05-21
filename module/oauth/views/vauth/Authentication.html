@@ -7,7 +7,7 @@
 
 {% func Authentication(as *app.State, ps *cutil.PageState) %}
   {%- code
-    prvs, err := as.Auth.Providers()
+    prvs, err := as.Auth.Providers(ps.Logger)
     if err != nil {
       panic(err)
     }

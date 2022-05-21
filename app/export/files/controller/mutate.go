@@ -51,7 +51,7 @@ func controllerCreate(m *model.Model, g *golang.File, grp *model.Column) *golang
 	ret.W("\t\t\treturn \"\", errors.Wrap(err, \"unable to parse %s from form\")", m.Proper())
 	ret.W("\t\t}")
 	checkGrp(ret, grp)
-	ret.W("\t\terr = as.Services.%s.Create(ps.Context, nil, ret)", m.Proper())
+	ret.W("\t\terr = as.Services.%s.Create(ps.Context, nil, ps.Logger, ret)", m.Proper())
 	ret.W("\t\tif err != nil {")
 	ret.W("\t\t\treturn \"\", errors.Wrap(err, \"unable to save newly-created %s\")", m.Proper())
 	ret.W("\t\t}")
@@ -104,7 +104,7 @@ func controllerEdit(m *model.Model, g *golang.File, grp *model.Column) *golang.B
 	for _, pk := range m.PKs() {
 		ret.W("\t\tfrm.%s = ret.%s", pk.Proper(), pk.Proper())
 	}
-	ret.W("\t\terr = as.Services.%s.Update(ps.Context, nil, frm)", m.Proper())
+	ret.W("\t\terr = as.Services.%s.Update(ps.Context, nil, frm, ps.Logger)", m.Proper())
 	ret.W("\t\tif err != nil {")
 	ret.W("\t\t\treturn \"\", errors.Wrapf(err, \"unable to update %s [%%%%s]\", frm.String())", m.Proper())
 	ret.W("\t\t}")
@@ -129,7 +129,7 @@ func controllerDelete(m *model.Model, g *golang.File, grp *model.Column) *golang
 	for _, pk := range m.PKs() {
 		pkCamels = append(pkCamels, "ret."+pk.Proper())
 	}
-	ret.W("\t\terr = as.Services.%s.Delete(ps.Context, nil, %s)", m.Proper(), strings.Join(pkCamels, ", "))
+	ret.W("\t\terr = as.Services.%s.Delete(ps.Context, nil, %s, ps.Logger)", m.Proper(), strings.Join(pkCamels, ", "))
 	ret.W("\t\tif err != nil {")
 	ret.W("\t\t\treturn \"\", errors.Wrapf(err, \"unable to delete %s [%%%%s]\", ret.String())", m.TitleLower())
 	ret.W("\t\t}")

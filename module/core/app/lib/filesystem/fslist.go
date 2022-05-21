@@ -117,7 +117,11 @@ func checkIgnore(ignore []string, fp string) bool {
 	for _, i := range ignore {
 		switch {
 		case strings.HasPrefix(i, keyPrefix):
-			if strings.HasPrefix(fp, strings.TrimPrefix(i, keyPrefix)) {
+			i = strings.TrimPrefix(i, keyPrefix)
+			if strings.HasSuffix(i, "/") && fp == strings.TrimSuffix(i, "/") {
+				return true
+			}
+			if strings.HasPrefix(fp, i) {
 				return true
 			}
 		case strings.HasSuffix(i, keySuffix):

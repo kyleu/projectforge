@@ -19,9 +19,9 @@ func grpcList(m *model.Model, grpcArgs string, grpcRet string, ga *FileArgs) *go
 	ret.W("\tout := util.ValueMap{}")
 	grpcAddSection(ret, "list", 1)
 	if ga.Grp == nil {
-		ret.W("\tret, err := appState.Services.%s.List(p.Ctx, nil, &filter.Params{}%s)", m.Proper(), suffix)
+		ret.W("\tret, err := appState.Services.%s.List(p.Ctx, nil, &filter.Params{}%s, p.Logger)", m.Proper(), suffix)
 	} else {
-		ret.W("\tret, err := appState.Services.%s.Get%s(p.Ctx, nil, %s, &filter.Params{}%s)", m.Proper(), ga.APISuffix(), ga.Grp.Camel(), suffix)
+		ret.W("\tret, err := appState.Services.%s.Get%s(p.Ctx, nil, %s, &filter.Params{}%s, p.Logger)", m.Proper(), ga.APISuffix(), ga.Grp.Camel(), suffix)
 	}
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, err")
@@ -46,9 +46,9 @@ func grpcSearch(m *model.Model, grpcArgs string, grpcRet string, ga *FileArgs) *
 	ret.W("\t}")
 	grpcAddSection(ret, "search", 1)
 	if ga.Grp == nil {
-		ret.W("\tret, err := appState.Services.%s.Search(p.Ctx, q, nil, nil%s)", m.Proper(), suffix)
+		ret.W("\tret, err := appState.Services.%s.Search(p.Ctx, q, nil, nil%s, p.Logger)", m.Proper(), suffix)
 	} else {
-		ret.W("\tret, err := appState.Services.%s.Search%s(p.Ctx, %s, q, nil, nil%s)", m.Proper(), ga.APISuffix(), ga.Grp.Camel(), suffix)
+		ret.W("\tret, err := appState.Services.%s.Search%s(p.Ctx, %s, q, nil, nil%s, p.Logger)", m.Proper(), ga.APISuffix(), ga.Grp.Camel(), suffix)
 	}
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, err")
@@ -82,12 +82,12 @@ func grpcDetail(m *model.Model, grpcArgs string, grpcRet string, g *golang.File,
 		ret.W("\t%s, err := provider.GetRequestInt(p.R, %q)", hc.Camel(), hc.Camel())
 		ret.W("\tif err == nil && %s > 0 {", hc.Camel())
 		xargs := strings.Join(pks.CamelNames(), ", ")
-		ret.W("\t\tret, err = appState.Services.%s.Get%s(p.Ctx, nil, %s, %s)", m.Proper(), hc.Proper(), xargs, hc.Camel())
+		ret.W("\t\tret, err = appState.Services.%s.Get%s(p.Ctx, nil, %s, %s, p.Logger)", m.Proper(), hc.Proper(), xargs, hc.Camel())
 		ret.W("\t} else {")
-		ret.W("\t\tret, err = appState.Services.%s.Get(p.Ctx, nil, %s%s)", m.Proper(), strings.Join(pks.CamelNames(), ", "), suffix)
+		ret.W("\t\tret, err = appState.Services.%s.Get(p.Ctx, nil, %s%s, p.Logger)", m.Proper(), strings.Join(pks.CamelNames(), ", "), suffix)
 		ret.W("\t}")
 	} else {
-		ret.W("\tret, err := appState.Services.%s.Get(p.Ctx, nil, %s%s)", m.Proper(), strings.Join(pks.CamelNames(), ", "), suffix)
+		ret.W("\tret, err := appState.Services.%s.Get(p.Ctx, nil, %s%s, p.Logger)", m.Proper(), strings.Join(pks.CamelNames(), ", "), suffix)
 	}
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, err")

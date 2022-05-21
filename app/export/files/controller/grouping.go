@@ -33,7 +33,7 @@ func controllerGrouped(m *model.Model, grp *model.Column) *golang.Block {
 	if m.IsSoftDelete() {
 		suffix = ", " + incDel
 	}
-	ret.W("\t\tret, err := as.Services.%s.Get%s(ps.Context, nil%s)", m.Proper(), grp.ProperPlural(), suffix)
+	ret.W("\t\tret, err := as.Services.%s.Get%s(ps.Context, nil%s, ps.Logger)", m.Proper(), grp.ProperPlural(), suffix)
 	ret.W("\t\tif err != nil {")
 	ret.W("\t\t\treturn \"\", err")
 	ret.W("\t\t}")

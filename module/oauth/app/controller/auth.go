@@ -9,13 +9,14 @@ import (
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller/cutil"
 	"{{{ .Package }}}/app/lib/auth"
+	"{{{ .Package }}}/app/util"
 )
 
 const signinMsg = "signed in using %s as [%s]"
 
 func AuthDetail(rc *fasthttp.RequestCtx) {
 	act("auth.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prv, err := getProvider(as, rc)
+		prv, err := getProvider(as, rc, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -30,7 +31,7 @@ func AuthDetail(rc *fasthttp.RequestCtx) {
 
 func AuthCallback(rc *fasthttp.RequestCtx) {
 	act("auth.callback", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prv, err := getProvider(as, rc)
+		prv, err := getProvider(as, rc, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -45,7 +46,7 @@ func AuthCallback(rc *fasthttp.RequestCtx) {
 
 func AuthLogout(rc *fasthttp.RequestCtx) {
 	act("auth.logout", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := RCRequiredString(rc, "key", false)
+		key, err := cutil.RCRequiredString(rc, "key", false)
 		if err != nil {
 			return "", err
 		}
@@ -58,12 +59,12 @@ func AuthLogout(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func getProvider(as *app.State, rc *fasthttp.RequestCtx) (*auth.Provider, error) {
-	key, err := RCRequiredString(rc, "key", false)
+func getProvider(as *app.State, rc *fasthttp.RequestCtx, logger util.Logger) (*auth.Provider, error) {
+	key, err := cutil.RCRequiredString(rc, "key", false)
 	if err != nil {
 		return nil, err
 	}
-	prvs, err := as.Auth.Providers()
+	prvs, err := as.Auth.Providers(logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't load providers")
 	}

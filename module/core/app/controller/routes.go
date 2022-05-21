@@ -49,7 +49,8 @@ func AppRoutes() fasthttp.RequestHandler {
 	r.GET("/admin/audit/{id}/delete", AuditDelete){{{ end }}}{{{ if .HasModule "databaseui" }}}
 	r.GET("/admin/database", DatabaseList)
 	r.GET("/admin/database/{key}", DatabaseDetail)
-	r.GET("/admin/database/{key}/{act}", DatabaseAction){{{ if .DatabaseUISQLEditor }}}
+	r.GET("/admin/database/{key}/{act}", DatabaseAction)
+	r.GET("/admin/database/{key}/tables/{schema}/{table}", DatabaseTableView){{{ if .DatabaseUISQLEditor }}}
 	r.POST("/admin/database/{key}/sql", DatabaseSQLRun){{{ end }}}{{{ end }}}
 	r.GET("/admin/{path:*}", Admin)
 

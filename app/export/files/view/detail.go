@@ -10,6 +10,8 @@ import (
 	"projectforge.dev/projectforge/app/file"
 )
 
+const commonLine = "  %s %s.%s"
+
 func detail(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"views", "v" + m.Package}, "Detail.html")
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpLayout)
@@ -41,8 +43,7 @@ func exportViewDetailClass(m *model.Model, models model.Models, g *golang.Templa
 	for _, rel := range m.Relations {
 		if relModel := models.Get(rel.Table); relModel.CanTraverseRelation() {
 			g.AddImport(helper.AppImport("app/" + relModel.Package))
-			msg := "  %s %s.%s"
-			ret.W(msg, relModel.ProperPlural(), relModel.Package, relModel.ProperPlural())
+			ret.W(commonLine, relModel.ProperPlural(), relModel.Package, relModel.ProperPlural())
 		}
 	}
 
@@ -55,7 +56,7 @@ func exportViewDetailClass(m *model.Model, models model.Models, g *golang.Templa
 		ret.W("  %sBy%s %s.%s", rm.ProperPlural(), strings.Join(rCols.ProperNames(), ""), rm.Package, rm.ProperPlural())
 	}
 	if m.IsRevision() {
-		ret.W("  %s %s.%s", m.HistoryColumn().ProperPlural(), m.Package, m.ProperPlural())
+		ret.W(commonLine, m.HistoryColumn().ProperPlural(), m.Package, m.ProperPlural())
 	}
 	ret.W("} %%}")
 	return ret
@@ -112,7 +113,9 @@ func exportViewDetailRelations(ret *golang.Block, m *model.Model, models model.M
 		ret.W(msg, tgt.Icon, tgt.TitlePluralLower(), strings.Join(rel.TgtColumns(tgt).TitlesLower(), ", "))
 		var addons string
 		if m.CanTraverseRelation() {
-			addons = ", nil"
+			for range tgt.Relations {
+				addons += ", nil"
+			}
 		}
 		ret.W("    {%%%%= v%s.Table(p.%s%s, p.Params, as, ps) %%%%}", tgt.Package, tgtName, addons)
 		ret.W("  </div>")

@@ -20,7 +20,7 @@ import (
 
 func Docs(rc *fasthttp.RequestCtx) {
 	act("docs", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		pth, _ := RCRequiredString(rc, "path", false)
+		pth, _ := cutil.RCRequiredString(rc, "path", false)
 		if pth == "" {
 			return "", errors.New("invalid path")
 		}
@@ -33,6 +33,8 @@ func Docs(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to load documentation from [%s]", pth)
 		}
+		ps.Title = "Documentation: " + pth
+		ps.Data, _ = doc.Content(pth + ".md")
 		return render(rc, as, &vdoc.MarkdownPage{Title: pth, HTML: x}, ps, bc...)
 	})
 }

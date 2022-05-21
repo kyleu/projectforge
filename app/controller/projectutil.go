@@ -9,6 +9,7 @@ import (
 	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/theme"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
@@ -93,7 +94,7 @@ func getModuleArgs(frm util.ValueMap) (util.ValueMap, error) {
 }
 
 func getProject(rc *fasthttp.RequestCtx, as *app.State) (*project.Project, error) {
-	key, err := RCRequiredString(rc, "key", true)
+	key, err := cutil.RCRequiredString(rc, "key", true)
 	if err != nil {
 		return nil, err
 	}

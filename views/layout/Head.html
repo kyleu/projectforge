@@ -6,7 +6,7 @@
 ) %}
 
 {% func Head(as *app.State, ps *cutil.PageState) %}
-  {%- code thm := as.Themes.Get(ps.Profile.Theme) -%}
+  {%- code thm := as.Themes.Get(ps.Profile.Theme, ps.Logger) -%}
   <meta charset="UTF-8">
   <title>{%s ps.TitleString() %}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">

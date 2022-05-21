@@ -18,6 +18,7 @@ type Module struct {
 	Sourcecode  string                `json:"sourcecode,omitempty"`
 	ConfigVars  util.KeyTypeDescs     `json:"configVars,omitempty"`
 	PortOffsets map[string]int        `json:"portOffsets,omitempty"`
+	Requires    []string              `json:"requires,omitempty"`
 	Priority    int                   `json:"priority,omitempty"`
 	Files       filesystem.FileLoader `json:"-"`
 	URL         string                `json:"-"`

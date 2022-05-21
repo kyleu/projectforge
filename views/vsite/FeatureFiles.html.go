@@ -53,54 +53,56 @@ func (p *FeatureFiles) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *
 		files := fs.ListFiles(filepath.Join(p.Path...), nil)
 
 //line views/vsite/FeatureFiles.html:24
-		qw422016.N().S(`  `)
-//line views/vsite/FeatureFiles.html:25
-		vfile.StreamList(qw422016, p.Path, files, fs, u, as, ps)
-//line views/vsite/FeatureFiles.html:25
-		qw422016.N().S(`
-`)
+		qw422016.N().S(`  <div class="card">
+    `)
 //line views/vsite/FeatureFiles.html:26
-	} else {
+		vfile.StreamList(qw422016, p.Path, files, fs, u, as, ps)
+//line views/vsite/FeatureFiles.html:26
+		qw422016.N().S(`
+  </div>
+`)
 //line views/vsite/FeatureFiles.html:28
+	} else {
+//line views/vsite/FeatureFiles.html:30
 		b, err := fs.ReadFile(filepath.Join(p.Path...))
 		if err != nil {
 			panic(err)
 		}
 
-//line views/vsite/FeatureFiles.html:32
+//line views/vsite/FeatureFiles.html:34
 		qw422016.N().S(`  `)
-//line views/vsite/FeatureFiles.html:33
+//line views/vsite/FeatureFiles.html:35
 		vfile.StreamDetail(qw422016, p.Path, b, u, as, ps)
-//line views/vsite/FeatureFiles.html:33
+//line views/vsite/FeatureFiles.html:35
 		qw422016.N().S(`
 `)
-//line views/vsite/FeatureFiles.html:34
+//line views/vsite/FeatureFiles.html:36
 	}
-//line views/vsite/FeatureFiles.html:35
+//line views/vsite/FeatureFiles.html:37
 }
 
-//line views/vsite/FeatureFiles.html:35
+//line views/vsite/FeatureFiles.html:37
 func (p *FeatureFiles) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsite/FeatureFiles.html:35
+//line views/vsite/FeatureFiles.html:37
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsite/FeatureFiles.html:35
+//line views/vsite/FeatureFiles.html:37
 	p.StreamBody(qw422016, as, ps)
-//line views/vsite/FeatureFiles.html:35
+//line views/vsite/FeatureFiles.html:37
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsite/FeatureFiles.html:35
+//line views/vsite/FeatureFiles.html:37
 }
 
-//line views/vsite/FeatureFiles.html:35
+//line views/vsite/FeatureFiles.html:37
 func (p *FeatureFiles) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsite/FeatureFiles.html:35
+//line views/vsite/FeatureFiles.html:37
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsite/FeatureFiles.html:35
+//line views/vsite/FeatureFiles.html:37
 	p.WriteBody(qb422016, as, ps)
-//line views/vsite/FeatureFiles.html:35
+//line views/vsite/FeatureFiles.html:37
 	qs422016 := string(qb422016.B)
-//line views/vsite/FeatureFiles.html:35
+//line views/vsite/FeatureFiles.html:37
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsite/FeatureFiles.html:35
+//line views/vsite/FeatureFiles.html:37
 	return qs422016
-//line views/vsite/FeatureFiles.html:35
+//line views/vsite/FeatureFiles.html:37
 }

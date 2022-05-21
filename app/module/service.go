@@ -11,7 +11,6 @@ import (
 	"projectforge.dev/projectforge/app/export"
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/lib/search/result"
-	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )
 
@@ -122,16 +121,22 @@ func (s *Service) Modules() Modules {
 	return ret
 }
 
-func (s *Service) Register(ctx context.Context, path string, defs ...*project.ModuleDef) ([]string, error) {
+func (s *Service) Deps() map[string][]string {
+	ret := map[string][]string{}
+	for _, m := range s.Modules() {
+		ret[m.Key] = m.Requires
+	}
+	return ret
+}
+
+func (s *Service) Register(ctx context.Context, root string, key string, path string, u string) ([]string, error) {
 	var ret []string
-	for _, def := range defs {
-		_, added, err := s.AddIfNeeded(ctx, def.Key, filepath.Join(path, def.Path), def.URL)
-		if err != nil {
-			return nil, err
-		}
-		if added {
-			ret = append(ret, def.Key)
-		}
+	_, added, err := s.AddIfNeeded(ctx, key, filepath.Join(root, path), u)
+	if err != nil {
+		return nil, err
+	}
+	if added {
+		ret = append(ret, key)
 	}
 	return ret, nil
 }
