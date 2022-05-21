@@ -56,13 +56,15 @@ func ProjectFileStats(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		dir := string(rc.URI().QueryArgs().Peek("dir"))
+		pth := util.StringSplitAndTrim(dir, "/")
+		ext := string(rc.URI().QueryArgs().Peek("ext"))
 		ret, err := stats.GetFileStats(as.Services.Projects.GetFilesystem(prj), dir)
 		if err != nil {
 			return "", err
 		}
-		ps.Data = ret.Extensions()
+		ps.Data = ret
 		ps.Title = fmt.Sprintf("[%s] File Stats", prj.Key)
-		page := &vproject.FileStats{Project: prj, Path: util.StringSplitAndTrim(dir, "/"), Files: ret}
+		page := &vproject.FileStats{Project: prj, Path: pth, Ext: ext, Files: ret}
 		return render(rc, as, page, ps, "projects", prj.Key, "File Stats")
 	})
 }

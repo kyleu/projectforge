@@ -29,6 +29,7 @@ func controllerList(m *model.Model, grp *model.Column, models model.Models, g *g
 	ret.W("\t\tif err != nil {")
 	ret.W("\t\t\treturn \"\", err")
 	ret.W("\t\t}")
+	ret.W("\t\tps.Title = %q", m.TitlePlural())
 	ret.W("\t\tps.Data = ret")
 
 	var toStrings string

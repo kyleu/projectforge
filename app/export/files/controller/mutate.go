@@ -33,7 +33,7 @@ func controllerCreateForm(m *model.Model, grp *model.Column) *golang.Block {
 func controllerCreateFormRandom(m *model.Model) *golang.Block {
 	ret := blockFor(m, nil, "create", "form", "random")
 	ret.W("\t\tret := %s.Random()", m.Package)
-	ret.W("\t\tps.Title = \"Create Random [" + m.Proper() + "]\"")
+	ret.W("\t\tps.Title = \"Create Random %s\"", m.Proper())
 	ret.W("\t\tps.Data = ret")
 	ret.W("\t\treturn render(rc, as, &v%s.Edit{Model: ret, IsNew: true}, ps, %q, \"Create\")", m.Package, m.Package)
 	ret.W("\t})")
@@ -75,7 +75,7 @@ func controllerEditForm(m *model.Model, grp *model.Column) *golang.Block {
 	ret.W("\t\t\treturn \"\", err")
 	ret.W("\t\t}")
 	checkGrp(ret, grp)
-	ret.W("\t\tps.Title = \"Edit [\" + ret.String() + \"]\"")
+	ret.W("\t\tps.Title = \"Edit \" + ret.String()")
 	ret.W("\t\tps.Data = ret")
 	ret.W("\t\treturn render(rc, as, &v%s.Edit{Model: ret}, ps, %q%s, ret.String())", m.Package, m.Package, grp.BC())
 	ret.W("\t})")

@@ -26,13 +26,19 @@ func (f *FileStat) FullPath() string {
 	return f.fullPath
 }
 
+func (f *FileStat) Count() int {
+	return 1 + len(f.Kids)
+}
+
 func (f *FileStat) Largest() *FileStat {
-	ret := f
-	l := f.Kids.Largest()
-	if ret == nil || l.Size > ret.Size {
-		ret = l
+	if len(f.Kids) == 0 {
+		return f
 	}
-	return ret
+	l := f.Kids.Largest()
+	if l != nil && l.Size > f.Size {
+		return l
+	}
+	return f
 }
 
 func (f *FileStat) TotalSize() int64 {

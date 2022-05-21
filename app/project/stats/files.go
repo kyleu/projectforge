@@ -8,6 +8,14 @@ import (
 
 type FileStats []*FileStat
 
+func (f FileStats) Count() int {
+	var ret = 0
+	for _, x := range f {
+		ret += x.Count()
+	}
+	return ret
+}
+
 func (f FileStats) Largest() *FileStat {
 	var ret *FileStat
 	for _, x := range f {
@@ -43,8 +51,10 @@ func GetFileStats(fs filesystem.FileLoader, pth string) (FileStats, error) {
 	return listDir(fs, pth)
 }
 
+var ignores = []string{"^tmp/", "^node_modules/", "^libs/"}
+
 func listDir(fs filesystem.FileLoader, pth ...string) (FileStats, error) {
-	curr := fs.ListFiles(filepath.Join(pth...), []string{"^tmp/"})
+	curr := fs.ListFiles(filepath.Join(pth...), ignores)
 	ret := make(FileStats, 0, len(curr))
 	for _, f := range curr {
 		s := newFileStat(pth, f.Name(), f.IsDir())

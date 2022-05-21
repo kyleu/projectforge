@@ -32,7 +32,7 @@ func controllerDetail(models model.Models, m *model.Model, grp *model.Column) *g
 		ret.W("\t\t\treturn \"\", err")
 		ret.W("\t\t}")
 	}
-	ret.W("\t\tps.Title = ret.String()")
+	ret.W("\t\tps.Title = ret.TitleString()+\" (%s)\"", m.Title())
 	ret.W("\t\tps.Data = ret")
 
 	var shouldIncDel bool

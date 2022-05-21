@@ -7,6 +7,8 @@ import (
 	"projectforge.dev/projectforge/app/export/model"
 )
 
+const argString = "ctx context.Context, tx *sqlx.Tx, wc string, expected int, logger util.Logger, values ...any"
+
 func serviceDelete(m *model.Model) *golang.Block {
 	pks := m.PKs()
 	ret := golang.NewBlock("Delete", "func")
@@ -34,7 +36,6 @@ func serviceSoftDelete(m *model.Model) *golang.Block {
 
 func serviceDeleteWhere(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("Delete", "func")
-	argString := "ctx context.Context, tx *sqlx.Tx, wc string, expected int, logger util.Logger, values ...any"
 	ret.W("func (s *Service) DeleteWhere(%s) error {", argString)
 	ret.W("\tq := database.SQLDelete(tableQuoted, wc)")
 	ret.W("\t_, err := s.db.Delete(ctx, q, tx, expected, logger, values...)")
@@ -47,7 +48,6 @@ func serviceSoftDeleteWhere(m *model.Model) *golang.Block {
 	delCols := m.Columns.WithTag("deleted")
 	ret := golang.NewBlock("Delete", "func")
 	ret.W("// Delete doesn't actually delete, it only sets [" + strings.Join(delCols.Names(), ", ") + "].")
-	argString := "ctx context.Context, tx *sqlx.Tx, wc string, expected int, logger util.Logger, values ...any"
 	ret.W("func (s *Service) DeleteWhere(%s) error {", argString)
 	ret.W("\tcols := []string{%s}", strings.Join(delCols.NamesQuoted(), ", "))
 	ret.W("\tq := database.SQLUpdate(tableQuoted, cols, wc, \"\")")

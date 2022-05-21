@@ -1,6 +1,8 @@
 {% import (
   "path/filepath"
+  "strings"
 
+  "golang.org/x/exp/maps"
   "golang.org/x/exp/slices"
 
   "projectforge.dev/projectforge/app"
@@ -16,38 +18,83 @@
   layout.Basic
   Project *project.Project
   Path []string
+  Ext string
   Files stats.FileStats
 } %}
 
 {% func (p *FileStats) Body(as *app.State, ps *cutil.PageState) %}
-  {%- code prj := p.Project -%}
+  {%- code
+    prj := p.Project
+  -%}
   {%= Summary(prj, nil, nil, nil, ps) %}
   <div class="card">
     <div class="right"><a href="#modal-stats"><button type="button">JSON</button></a></div>
     <h3>File Statistics</h3>
-    <h3><a href="?">.</a>{%- for idx, px := range p.Path -%}/<a href="?dir={%u filepath.Join(p.Path[:idx + 1]...) %}">{%s px %}</a>{%- endfor -%}</h3>
-    {%- if len(p.Files) == 0 -%}
-    <p><em>No files available</em></p>
-    {%- else -%}
-    <ul class="accordion">
-    {%- for _, f := range p.Files -%}
-      {%= renderFileStat(p.Path, f, as, ps) %}
-    {%- endfor -%}
-    </ul>
-    {%- endif -%}
+    <h3>{%= pathLinks(p.Path, p.Ext) %}</h3>
   </div>
-  {%= components.JSONModal("stats", "File Stats JSON", p.Files, 1) %}
+  <div class="card tabs">
+    <input name="type" type="radio" id="stat-summary" class="input" checked="checked" />
+    <label for="stat-summary" class="label">Summary</label>
+    <div class="panel">
+      <em>{%d p.Files.Count() %} files totalling {%s util.ByteSizeSI(p.Files.TotalSize()) %}</em>
+    </div>
+
+    <input name="type" type="radio" id="stat-files" class="input" />
+    <label for="stat-files" class="label">Files</label>
+    <div class="panel">{%= renderFiles(p.Path, p.Files, p.Ext, as, ps) %}</div>
+
+    <input name="type" type="radio" id="stat-types" class="input" />
+    <label for="stat-types" class="label">Types</label>
+    <div class="panel">{%= renderTypes(p.Path, p.Files, p.Ext, as, ps) %}</div>
+  </div>
+{%= components.JSONModal("stats", "File Stats JSON", p.Files, 1) %}
 {% endfunc %}
 
-{% func renderFileStat(pth []string, f *stats.FileStat, as *app.State, ps *cutil.PageState) %}
+{% func pathLinks(pth []string, ext string) %}{% stripspace %}
+  <a href="?{% if ext != `` %}ext={%s ext %}{% endif %}">.</a>
+  {%- for idx, px := range pth -%}
+    /<a href="?dir={%u filepath.Join(pth[:idx + 1]...) %}{% if ext != `` %}&ext={%s ext %}{% endif %}">{%s px %}</a>
+  {%- endfor -%}
+{% endstripspace %}{% endfunc %}
+
+{% func renderFiles(pth []string, files stats.FileStats, ext string, as *app.State, ps *cutil.PageState) %}
+  {%- if len(files) == 0 -%}
+  <p><em>No files available</em></p>
+  {%- else -%}
+  <ul class="accordion">
+    {%- for _, f := range files -%}
+    {%= renderFileStat(pth, f, ext, as, ps) %}
+    {%- endfor -%}
+  </ul>
+  {%- endif -%}
+{% endfunc %}
+
+{% func renderTypes(pth []string, files stats.FileStats, ext string, as *app.State, ps *cutil.PageState) %}
+  {%- code
+    exts := files.Extensions()
+    extKeys := maps.Keys(exts)
+    slices.Sort(extKeys)
+  -%}
+  {%- if len(files) == 0 -%}
+  <p><em>No files available</em></p>
+  {%- else -%}
+  <ul>
+    {%- for _, extKey := range extKeys -%}
+    <li><a href="?ext={%s extKey %}{% if len(pth) > 0 %}&pth={%u strings.Join(pth, `/`) %}{% endif %}">{%s extKey %}</a>: {%d exts[extKey] %}</li>
+    {%- endfor -%}
+  </ul>
+  {%- endif -%}
+{% endfunc %}
+
+{% func renderFileStat(pth []string, f *stats.FileStat, ext string, as *app.State, ps *cutil.PageState) %}
   <li>
     <input id="accordion-{%s f.FullPath() %}" type="checkbox" hidden />
-    <label for="accordion-{%s f.FullPath() %}">{%= renderFileStatSummary(f, ps) %}</label>
+    <label for="accordion-{%s f.FullPath() %}">{%= renderFileStatSummary(f, ext, ps) %}</label>
     <div class="bd">
       {%- if len(f.Kids) > 0 -%}
       <ul class="accordion">
         {%- for _, k := range f.Kids -%}
-        {%= renderFileStat(append(slices.Clone(pth), f.Name), k, as, ps) %}
+        {%= renderFileStat(append(slices.Clone(pth), f.Name), k, ext, as, ps) %}
         {%- endfor -%}
       </ul>
     </div>
@@ -55,20 +102,18 @@
   </li>
 {% endfunc %}
 
-{% func renderFileStatSummary(f *stats.FileStat, ps *cutil.PageState) %}{% stripspace %}
+{% func renderFileStatSummary(f *stats.FileStat, ext string, ps *cutil.PageState) %}{% stripspace %}
   {% code
     icon := "file"
     if f.IsDir {
       icon = "folder"
     }
-    sz := f.TotalSize()
-    status := util.ByteSizeSI(sz)
   %}
   {%= components.ExpandCollapse(3, ps) %}
-  <div class="right"><em>{%s status %}</em></div>
+  <div class="right"><em>{%s util.ByteSizeSI(f.TotalSize()) %}</em></div>
   {%= components.SVGRef(icon, 16, 16, `icon`, ps) %}
   {% if f.IsDir %}
-    <a href="?dir={%u f.FullPath() %}">
+    <a href="?dir={%u f.FullPath() %}{% if ext != `` %}&ext={%s ext %}{% endif %}">
   {% endif %}
   {%s f.Name %}
   {% if f.IsDir %}

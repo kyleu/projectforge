@@ -38,7 +38,9 @@ func Cleanup(fs filesystem.FileLoader) ([]string, diff.Diffs, error) {
 }
 
 func matches(fn string) bool {
-	return strings.HasSuffix(fn, ".go") || strings.HasSuffix(fn, ".svg") ||
+	return strings.HasSuffix(fn, ".go") ||
+		strings.HasSuffix(fn, ".js") || strings.HasSuffix(fn, ".ts") ||
+		strings.HasSuffix(fn, ".css") || strings.HasSuffix(fn, ".svg") ||
 		strings.HasSuffix(fn, ".mod") || strings.HasSuffix(fn, ".json") ||
 		strings.HasSuffix(fn, ".html") || strings.HasSuffix(fn, ".sql")
 }

@@ -6,6 +6,7 @@
   flex-wrap: wrap;
   background-color: var(--color-background-muted);
   border: var(--border);
+  padding: 0;
 }
 
 .tabs.padded {
