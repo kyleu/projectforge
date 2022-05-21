@@ -3,6 +3,7 @@ package project
 import (
 	"strings"
 
+	"projectforge.dev/projectforge/app/export/model"
 	"projectforge.dev/projectforge/app/util"
 )
 
@@ -72,4 +73,14 @@ func (i *Info) ModuleArg(mod string) any {
 		return nil
 	}
 	return i.ModuleArgs[mod]
+}
+
+func (i *Info) ModuleArgExport() (*model.Args, error) {
+	arg := i.ModuleArg("export")
+	ret := &model.Args{}
+	err := util.CycleJSON(arg, ret)
+	if err != nil {
+		return nil, err
+	}
+	return ret, nil
 }

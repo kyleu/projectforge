@@ -1,4 +1,6 @@
 {% import (
+  "fmt"
+
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/git"
@@ -6,6 +8,7 @@
   "projectforge.dev/projectforge/app/project"
   "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/layout"
+  "projectforge.dev/projectforge/views/vexport"
 ) %}
 
 {% code type Detail struct {
@@ -29,7 +32,7 @@
     <label for="tab-metadata" class="label">Metadata</label>
     <div class="panel">{%= DetailMetadata(prj.Info, as, ps) %}</div>
 
-    {%- for k, arg := range prj.Info.ModuleArgs -%}
+    {%- for k := range prj.Info.ModuleArgs -%}
     {%- code
       argTitle := k
       argMod := p.Modules.Get(k)
@@ -39,7 +42,24 @@
     -%}
     <input name="type" type="radio" id="tab-modulearg-{%s k %}" class="input"/>
     <label for="tab-modulearg-{%s k %}" class="label">{%s argTitle %}</label>
-    <div class="panel">{% if argMod == nil %}{%= components.JSON(arg) %}{% else %}{%= DetailModuleArg(argMod, arg, as, ps) %}{% endif %}</div>
+    <div class="panel">
+      {%- switch k -%}
+      {%- case "export" -%}
+        {%- code ea, _ := p.Project.Info.ModuleArgExport() -%}
+        {%- if argMod == nil -%}
+          <em>empty</em>
+        {%- else -%}
+          {%- if ea.Config != nil -%}
+          <h3>Config Settings</h3>
+          {%= components.JSON(ea.Config) %}
+          {%- endif -%}
+          <h3 class="mt">Models</h3>
+          {%= vexport.ModelList(ea.Models, fmt.Sprintf("/p/%s/export", p.Project.Key), as, ps) %}
+        {%- endif -%}
+      {%- default -%}
+        <em>unknown argument</em>
+      {%- endswitch -%}
+    </div>
     {%- endfor -%}
     {%- endif -%}
 

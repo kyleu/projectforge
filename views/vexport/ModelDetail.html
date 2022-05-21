@@ -5,21 +5,35 @@
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/export/model"
   "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/layout"
 ) %}
 
-{% func DetailExportModel(model *model.Model, as *app.State, ps *cutil.PageState) %}
-  <div style="margin-left: 32px;">
-    {%= exportModelDetails(model, as, ps) %}
-    {%= exportModelColumns(model, as, ps) %}
-    {%= exportModelRelations(model, as, ps) %}
+{% code type ModelDetail struct {
+  layout.Basic
+  Model *model.Model
+} %}
+
+{% func (p *ModelDetail) Body(as *app.State, ps *cutil.PageState) %}
+  {%- code m := p.Model -%}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(m.IconSafe(), ps) %}{%s m.Name %}</h3>
+    {%= modelSummary(m, as, ps) %}
   </div>
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`first-aid`, ps) %} Columns</h3>
+    {%= modelColumns(m, as, ps) %}
+  </div>
+  {%- if len(m.Relations) > 0 -%}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`social`, ps) %} Relations</h3>
+    {%= modelRelations(m, as, ps) %}
+  </div>{%- endif -%}
 {% endfunc %}
 
-{% func exportModelDetails(model *model.Model, as *app.State, ps *cutil.PageState) %}
-  <h3>{%= components.SVGRefIcon(`star`, ps) %} Details</h3>
+{% func modelSummary(model *model.Model, as *app.State, ps *cutil.PageState) %}
   <table class="min-200 full-width">
     <tbody>
-      <tr><td>Name</td><td>{%s model.Name %}</td></tr>
+      <tr><td class="shrink">Name</td><td>{%s model.Name %}</td></tr>
       <tr><td>Package</td><td>{%s model.Package %}</td></tr>
       <tr><td>Description</td><td>{%s model.Description %}</td></tr>
       <tr>
@@ -32,6 +46,9 @@
         </tr>
       {%- if len(model.GroupedColumns()) > 0 -%}
       <tr><td>Groupings</td><td>{%s strings.Join(model.GroupedColumns().Names(), ", ") %}</td></tr>
+      {%- endif -%}
+      {%- if len(model.Tags) > 0 -%}
+      <tr><td>Tags</td><td>{%s strings.Join(model.Tags, ", ") %}</td></tr>
       {%- endif -%}
       {%- if len(model.Search) > 0 -%}
       <tr><td>Search</td><td>{%s strings.Join(model.Search, ", ") %}</td></tr>
@@ -46,15 +63,14 @@
   </table>
 {% endfunc %}
 
-{% func exportModelColumns(model *model.Model, as *app.State, ps *cutil.PageState) %}
-  <h3 class="mt">{%= components.SVGRefIcon(`first-aid`, ps) %} Columns</h3>
+{% func modelColumns(model *model.Model, as *app.State, ps *cutil.PageState) %}
   {%- if len(model.Columns) == 0 -%}
   <p><em>no columns</em></p>
   {%- else -%}
   <table class="mt min-200 full-width">
     <thead>
       <tr>
-        <th>Name</th>
+        <th class="shrink">Name</th>
         <th>Type</th>
         <th>Format</th>
         <th>Tags</th>
@@ -74,13 +90,11 @@
   {%- endif -%}
 {% endfunc %}
 
-{% func exportModelRelations(model *model.Model, as *app.State, ps *cutil.PageState) %}
-  {%- if len(model.Relations) > 0 -%}
-  <h3 class="mt">{%= components.SVGRefIcon(`first-aid`, ps) %} Relations</h3>
+{% func modelRelations(model *model.Model, as *app.State, ps *cutil.PageState) %}
   <table class="mt min-200 full-width">
     <thead>
       <tr>
-        <th>Name</th>
+        <th class="shrink">Name</th>
         <th>Source</th>
         <th>Table</th>
         <th>Target</th>
@@ -97,5 +111,4 @@
       {%- endfor -%}
     </tbody>
   </table>
-  {%- endif -%}
 {% endfunc %}

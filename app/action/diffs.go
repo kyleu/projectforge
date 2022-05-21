@@ -7,7 +7,6 @@ import (
 
 	"github.com/pkg/errors"
 	"projectforge.dev/projectforge/app/diff"
-	"projectforge.dev/projectforge/app/export/model"
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -26,12 +25,9 @@ func diffs(ctx context.Context, pm *PrjAndMods) (file.Files, diff.Diffs, error) 
 	}
 
 	if pm.Mods.Get("export") != nil {
-		args := &model.Args{}
-		if argsX := pm.Prj.Info.ModuleArg("export"); argsX != nil {
-			e := util.CycleJSON(argsX, &args)
-			if e != nil {
-				return nil, nil, errors.Wrap(e, "export module arguments are invalid")
-			}
+		args, err := pm.Prj.Info.ModuleArgExport()
+		if err != nil {
+			return nil, nil, errors.Wrap(err, "export module arguments are invalid")
 		}
 		args.Modules = pm.Mods.Keys()
 		files, e := pm.ESvc.Files(ctx, args, true, pm.Logger)

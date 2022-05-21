@@ -7,7 +7,6 @@ import (
 	"github.com/pkg/errors"
 	"golang.org/x/exp/slices"
 	"projectforge.dev/projectforge/app/diff"
-	"projectforge.dev/projectforge/app/export/model"
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/util"
@@ -62,12 +61,9 @@ func auditRun(ctx context.Context, pm *PrjAndMods, ret *Result) error {
 	}
 
 	if pm.Mods.Get("export") != nil {
-		args := &model.Args{}
-		if argsX := pm.Prj.Info.ModuleArg("export"); argsX != nil {
-			e := util.CycleJSON(argsX, &args)
-			if e != nil {
-				return err
-			}
+		args, err := pm.Prj.Info.ModuleArgExport()
+		if err != nil {
+			return err
 		}
 		args.Modules = pm.Mods.Keys()
 		files, e := pm.ESvc.Files(ctx, args, true, pm.Logger)

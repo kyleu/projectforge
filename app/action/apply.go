@@ -133,12 +133,9 @@ func getPrjAndMods(ctx context.Context, p *Params) (context.Context, *PrjAndMods
 		return nil, nil, err
 	}
 
-	args := &model.Args{}
-	if argsX := prj.Info.ModuleArg("export"); argsX != nil {
-		err := util.CycleJSON(argsX, args)
-		if err != nil {
-			return nil, nil, errors.Wrap(err, "export module arguments are invalid")
-		}
+	args, err := prj.Info.ModuleArgExport()
+	if err != nil {
+		return nil, nil, err
 	}
 	args.Modules = mods.Keys()
 
