@@ -21,9 +21,9 @@ func (s *Service) Magic(ctx context.Context, prj *project.Project, message strin
 	}
 	add("OK")
 
-	data := util.ValueMap{"branch": statRet.Branch(), "magic": true, "commitMessage": message, "logs": logs}
+	data := util.ValueMap{"branch": statRet.DataString("branch"), "magic": true, "commitMessage": message, "logs": logs}
 
-	if d := statRet.Dirty(); len(d) > 0 {
+	if d := statRet.DataStringArray("dirty"); len(d) > 0 {
 		data["dirtyCount"] = len(d)
 	}
 

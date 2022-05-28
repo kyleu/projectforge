@@ -61,8 +61,8 @@
           <em class="right">{%s x.Status %}{% if x.Error != "" %} (error){% endif %}</em>
           {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef(x.Project.IconSafe(), 16, 16, "icon", ps) %}
           {%s x.Project.Title() %}
-          {%- if x.Branch() != "" -%}
-          <em>({%s x.Branch() %})</em>
+          {%- if x.DataString("branch") != "" -%}
+          <em>({%s x.DataString("branch") %})</em>
           {%- endif -%}
         </label>
         <div class="bd">

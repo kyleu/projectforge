@@ -32,28 +32,25 @@ func GitAction(rc *fasthttp.RequestCtx) {
 		}
 		var bc = []string{"projects", prj.Key, "Git"}
 		var result *git.Result
-		var actn *git.Action
+		actn := git.ActionStatusFromString(a)
 		switch a {
 		case git.ActionStatus.Key, "":
-			actn = git.ActionStatus
 			// runs by default
 		case git.ActionCreateRepo.Key:
-			actn = git.ActionCreateRepo
 			result, err = as.Services.Git.CreateRepo(ps.Context, prj, ps.Logger)
 		case git.ActionFetch.Key:
-			actn = git.ActionFetch
 			result, err = as.Services.Git.Fetch(ps.Context, prj, ps.Logger)
 		case git.ActionCommit.Key:
-			actn = git.ActionCommit
 			argRes := cutil.CollectArgs(rc, gitCommitArgs)
 			if len(argRes.Missing) > 0 {
-				url := fmt.Sprintf("/git/%s/commit", prj.Key)
 				ps.Data = argRes
+				url := fmt.Sprintf("/git/%s/commit", prj.Key)
 				return render(rc, as, &verror.Args{URL: url, Directions: "Enter your commit message", ArgRes: argRes}, ps, bc...)
 			}
 			result, err = as.Services.Git.Commit(ps.Context, prj, argRes.Values["message"], ps.Logger)
+		case git.ActionUndoCommit.Key:
+			result, err = as.Services.Git.UndoCommit(ps.Context, prj, ps.Logger)
 		case git.ActionBranch.Key:
-			actn = git.ActionBranch
 			argRes := cutil.CollectArgs(rc, gitBranchArgs)
 			if len(argRes.Missing) > 0 {
 				url := fmt.Sprintf("/git/%s/branch", prj.Key)
@@ -62,7 +59,6 @@ func GitAction(rc *fasthttp.RequestCtx) {
 			}
 			result, err = as.Services.Git.Commit(ps.Context, prj, argRes.Values["message"], ps.Logger)
 		case git.ActionMagic.Key:
-			actn = git.ActionMagic
 			argRes := cutil.CollectArgs(rc, gitCommitArgs)
 			if len(argRes.Missing) > 0 {
 				url := fmt.Sprintf("/git/%s/magic", prj.Key)

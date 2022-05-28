@@ -25,37 +25,22 @@ func (s *Result) Actions() Actions {
 	if dirty, _ := s.Data.GetStringArray("dirty", true); len(dirty) > 0 {
 		ret = append(ret, ActionCommit)
 	}
-	ret = append(ret, ActionMagic)
+	ret = append(ret, ActionUndoCommit, ActionMagic)
 	return ret
 }
 
-func (s *Result) Branch() string {
+func (s *Result) DataString(k string) string {
 	if s.Data == nil {
 		return ""
 	}
-	return s.Data.GetStringOpt("branch")
+	return s.Data.GetStringOpt(k)
 }
 
-func (s *Result) CommitMessage() string {
-	if s.Data == nil {
-		return ""
-	}
-	return s.Data.GetStringOpt("commitMessage")
-}
-
-func (s *Result) Logs() []string {
+func (s *Result) DataStringArray(k string) []string {
 	if s.Data == nil {
 		return nil
 	}
-	ret, _ := s.Data.GetStringArray("logs", true)
-	return ret
-}
-
-func (s *Result) Dirty() []string {
-	if s.Data == nil {
-		return nil
-	}
-	ret, _ := s.Data.GetStringArray("dirty", true)
+	ret, _ := s.Data.GetStringArray(k, true)
 	return ret
 }
 

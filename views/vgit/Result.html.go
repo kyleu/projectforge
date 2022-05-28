@@ -68,11 +68,11 @@ func (p *Result) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
 `)
 //line views/vgit/Result.html:21
-	if p.Result.Branch() != "" {
+	if p.Result.DataString("branch") != "" {
 //line views/vgit/Result.html:21
 		qw422016.N().S(`      <em>(`)
 //line views/vgit/Result.html:22
-		qw422016.E().S(p.Result.Branch())
+		qw422016.E().S(p.Result.DataString("branch"))
 //line views/vgit/Result.html:22
 		qw422016.N().S(`)</em>
 `)
@@ -201,100 +201,114 @@ func streamstatusDetail(qw422016 *qt422016.Writer, r *git.Result) {
         <th class="shrink">Branch</th>
         <td>`)
 //line views/vgit/Result.html:48
-	qw422016.E().S(r.Branch())
+	qw422016.E().S(r.DataString("branch"))
 //line views/vgit/Result.html:48
 	qw422016.N().S(`</td>
       </tr>
 `)
 //line views/vgit/Result.html:50
-	if r.CommitMessage() != "" {
+	if r.DataString("commitMessage") != "" {
 //line views/vgit/Result.html:50
 		qw422016.N().S(`      <tr>
         <th class="shrink">Commit Message</th>
         <td>`)
 //line views/vgit/Result.html:53
-		qw422016.E().S(r.CommitMessage())
+		qw422016.E().S(r.DataString("commitMessage"))
 //line views/vgit/Result.html:53
 		qw422016.N().S(`</td>
       </tr>
 `)
 //line views/vgit/Result.html:55
 	}
-//line views/vgit/Result.html:55
+//line views/vgit/Result.html:56
+	if r.DataString("commit") != "" {
+//line views/vgit/Result.html:56
+		qw422016.N().S(`      <tr>
+        <th class="shrink">Commit Message</th>
+        <td><pre>`)
+//line views/vgit/Result.html:59
+		qw422016.N().S(r.DataString("commit"))
+//line views/vgit/Result.html:59
+		qw422016.N().S(`</pre></td>
+      </tr>
+`)
+//line views/vgit/Result.html:61
+	}
+//line views/vgit/Result.html:61
 	qw422016.N().S(`      <tr>
         <th class="shrink">Dirty Files</th>
         <td>`)
-//line views/vgit/Result.html:58
-	qw422016.N().D(len(r.Dirty()))
-//line views/vgit/Result.html:58
+//line views/vgit/Result.html:64
+	qw422016.N().D(len(r.DataStringArray("dirty")))
+//line views/vgit/Result.html:64
 	qw422016.N().S(`</td>
       </tr>
 `)
-//line views/vgit/Result.html:60
-	if len(r.Logs()) > 0 {
-//line views/vgit/Result.html:60
+//line views/vgit/Result.html:66
+	if len(r.DataStringArray("logs")) > 0 {
+//line views/vgit/Result.html:66
 		qw422016.N().S(`      <tr>
         <th class="shrink">Logs</th>
         <td>
           <table>
             <tbody>
 `)
-//line views/vgit/Result.html:66
-		for _, l := range r.Logs() {
-//line views/vgit/Result.html:66
+//line views/vgit/Result.html:72
+		for _, l := range r.DataStringArray("logs") {
+//line views/vgit/Result.html:72
 			qw422016.N().S(`              <tr><td>`)
-//line views/vgit/Result.html:67
+//line views/vgit/Result.html:73
 			qw422016.E().S(l)
-//line views/vgit/Result.html:67
+//line views/vgit/Result.html:73
 			qw422016.N().S(`</td></tr>
 `)
-//line views/vgit/Result.html:68
+//line views/vgit/Result.html:74
 		}
-//line views/vgit/Result.html:68
+//line views/vgit/Result.html:74
 		qw422016.N().S(`            </tbody>
           </table>
         </td>
       </tr>
 `)
-//line views/vgit/Result.html:73
+//line views/vgit/Result.html:79
 	}
-//line views/vgit/Result.html:73
+//line views/vgit/Result.html:79
 	qw422016.N().S(`      <tr>
         <th class="shrink">Data</th>
         <td>`)
-//line views/vgit/Result.html:76
+//line views/vgit/Result.html:82
 	components.StreamJSON(qw422016, r.Data)
-//line views/vgit/Result.html:76
+//line views/vgit/Result.html:82
 	qw422016.N().S(`</td>
       </tr>
     </tbody>
   </table>
 `)
-//line views/vgit/Result.html:80
+//line views/vgit/Result.html:86
 }
 
-//line views/vgit/Result.html:80
+//line views/vgit/Result.html:86
 func writestatusDetail(qq422016 qtio422016.Writer, r *git.Result) {
-//line views/vgit/Result.html:80
+//line views/vgit/Result.html:86
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vgit/Result.html:80
+//line views/vgit/Result.html:86
 	streamstatusDetail(qw422016, r)
-//line views/vgit/Result.html:80
+//line views/vgit/Result.html:86
 	qt422016.ReleaseWriter(qw422016)
-//line views/vgit/Result.html:80
+//line views/vgit/Result.html:86
 }
 
-//line views/vgit/Result.html:80
+//line views/vgit/Result.html:86
 func statusDetail(r *git.Result) string {
-//line views/vgit/Result.html:80
+//line views/vgit/Result.html:86
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vgit/Result.html:80
+//line views/vgit/Result.html:86
 	writestatusDetail(qb422016, r)
-//line views/vgit/Result.html:80
+//line views/vgit/Result.html:86
 	qs422016 := string(qb422016.B)
-//line views/vgit/Result.html:80
+//line views/vgit/Result.html:86
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vgit/Result.html:80
+//line views/vgit/Result.html:86
 	return qs422016
-//line views/vgit/Result.html:80
+//line views/vgit/Result.html:86
 }

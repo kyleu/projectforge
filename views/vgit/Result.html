@@ -18,8 +18,8 @@
     <div class="right"><em>{%s p.Result.Status %}</em></div>
     <h3>
       <a href="/p/{%s prj.Key %}">{%= components.SVGRefIcon(prj.IconSafe(), ps) %} {%s prj.Title() %}</a>: Git {%s p.Action.Title %}
-      {%- if p.Result.Branch() != "" -%}
-      <em>({%s p.Result.Branch() %})</em>
+      {%- if p.Result.DataString("branch") != "" -%}
+      <em>({%s p.Result.DataString("branch") %})</em>
       {%- endif -%}
     </h3>
     <div class="mt">
@@ -45,25 +45,31 @@
       </tr>
       <tr>
         <th class="shrink">Branch</th>
-        <td>{%s r.Branch() %}</td>
+        <td>{%s r.DataString("branch") %}</td>
       </tr>
-      {%- if r.CommitMessage() != "" -%}
+      {%- if r.DataString("commitMessage") != "" -%}
       <tr>
         <th class="shrink">Commit Message</th>
-        <td>{%s r.CommitMessage() %}</td>
+        <td>{%s r.DataString("commitMessage") %}</td>
+      </tr>
+      {%- endif -%}
+      {%- if r.DataString("commit") != "" -%}
+      <tr>
+        <th class="shrink">Commit Message</th>
+        <td><pre>{%s= r.DataString("commit") %}</pre></td>
       </tr>
       {%- endif -%}
       <tr>
         <th class="shrink">Dirty Files</th>
-        <td>{%d len(r.Dirty()) %}</td>
+        <td>{%d len(r.DataStringArray("dirty")) %}</td>
       </tr>
-      {%- if len(r.Logs()) > 0 -%}
+      {%- if len(r.DataStringArray("logs")) > 0 -%}
       <tr>
         <th class="shrink">Logs</th>
         <td>
           <table>
             <tbody>
-              {%- for _, l := range r.Logs() -%}
+              {%- for _, l := range r.DataStringArray("logs") -%}
               <tr><td>{%s l %}</td></tr>
               {%- endfor -%}
             </tbody>

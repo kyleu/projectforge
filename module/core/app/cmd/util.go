@@ -51,18 +51,15 @@ func initIfNeeded() error {
 	if _buildInfo == nil {
 		return errors.New("no build info")
 	}
-
 	if _flags.ConfigDir == "" {
 		_flags.ConfigDir = configdir.LocalConfig(util.AppName)
 		_ = configdir.MakePath(_flags.ConfigDir)
 	}
-
 	l, err := log.InitLogging(_flags.Debug)
 	if err != nil {
 		return err
 	}
 	_logger = l
-
 	_initialized = true
 	return nil
 }
@@ -85,13 +82,7 @@ func listen(address string, port uint16) (uint16, net.Listener, error) {
 }
 
 func serve(name string, listener net.Listener, h fasthttp.RequestHandler) error {
-	x := &fasthttp.Server{
-		Handler:               h,
-		Name:                  name,
-		ReadBufferSize:        65536,
-		NoDefaultServerHeader: true,
-		MaxRequestBodySize:    1024 * 1024 * 128,
-	}
+	x := &fasthttp.Server{Handler: h, Name: name, ReadBufferSize: 65536, NoDefaultServerHeader: true, MaxRequestBodySize: 1024 * 1024 * 128}
 	if err := x.Serve(listener); err != nil {
 		return errors.Wrap(err, "unable to run http server")
 	}

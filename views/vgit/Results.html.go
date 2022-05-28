@@ -138,11 +138,11 @@ func (p *Results) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 		qw422016.N().S(`
 `)
 //line views/vgit/Results.html:64
-		if x.Branch() != "" {
+		if x.DataString("branch") != "" {
 //line views/vgit/Results.html:64
 			qw422016.N().S(`          <em>(`)
 //line views/vgit/Results.html:65
-			qw422016.E().S(x.Branch())
+			qw422016.E().S(x.DataString("branch"))
 //line views/vgit/Results.html:65
 			qw422016.N().S(`)</em>
 `)
