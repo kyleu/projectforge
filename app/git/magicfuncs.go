@@ -38,7 +38,7 @@ func (s *Service) magicPull(a *magicArgs, add func(string, ...any)) error {
 	if !a.DryRun {
 		x, err := s.Pull(a.Ctx, a.Prj, a.Logger)
 		if err != nil {
-			return errors.Wrap(err, "unable to push")
+			return errors.Wrap(err, "unable to pull")
 		}
 		a.Result.Data = x.Data.Merge(a.Result.Data)
 	}
@@ -59,10 +59,24 @@ func (s *Service) magicPush(a *magicArgs, count int, add func(string, ...any)) e
 
 func (s *Service) magicStashApply(a *magicArgs, add func(string, ...any)) error {
 	add("stashing [%d] changed %s", a.Dirty, util.StringPluralMaybe("file", a.Dirty))
+	if !a.DryRun {
+		err := s.gitStashApply(a.Ctx, a.Prj, a.Logger)
+		if err != nil {
+			return errors.Wrap(err, "unable to apply stash")
+		}
+		a.Result.Data["stash"] = "applied"
+	}
 	return nil
 }
 
 func (s *Service) magicStashPop(a *magicArgs, add func(string, ...any)) error {
 	add("restoring [%d] stashed %s", a.Dirty, util.StringPluralMaybe("file", a.Dirty))
+	if !a.DryRun {
+		err := s.gitStashPop(a.Ctx, a.Prj, a.Logger)
+		if err != nil {
+			return errors.Wrap(err, "unable to pop stash")
+		}
+		a.Result.Data["stash"] = "applied"
+	}
 	return nil
 }
