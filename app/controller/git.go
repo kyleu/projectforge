@@ -50,6 +50,10 @@ func GitAction(rc *fasthttp.RequestCtx) {
 			result, err = as.Services.Git.Commit(ps.Context, prj, argRes.Values["message"], ps.Logger)
 		case git.ActionUndoCommit.Key:
 			result, err = as.Services.Git.UndoCommit(ps.Context, prj, ps.Logger)
+		case git.ActionPull.Key:
+			result, err = as.Services.Git.Pull(ps.Context, prj, ps.Logger)
+		case git.ActionPush.Key:
+			result, err = as.Services.Git.Push(ps.Context, prj, ps.Logger)
 		case git.ActionBranch.Key:
 			argRes := cutil.CollectArgs(rc, gitBranchArgs)
 			if len(argRes.Missing) > 0 {
@@ -72,7 +76,11 @@ func GitAction(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		statusResult, _ := as.Services.Git.Status(ps.Context, prj, ps.Logger)
+		statusResult, err := as.Services.Git.Status(ps.Context, prj, ps.Logger)
+		if err != nil {
+			return "", errors.Wrap(err, "unable to pull repo status")
+		}
+
 		if result == nil {
 			result = statusResult
 		} else {

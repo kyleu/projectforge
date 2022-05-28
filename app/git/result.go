@@ -1,6 +1,8 @@
 package git
 
 import (
+	"strconv"
+
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -22,8 +24,14 @@ func (s *Result) Actions() Actions {
 		return append(ret, ActionCreateRepo)
 	}
 	ret = append(ret, ActionFetch)
-	if dirty, _ := s.Data.GetStringArray("dirty", true); len(dirty) > 0 {
+	if dirty := s.DataStringArray("dirty"); len(dirty) > 0 {
 		ret = append(ret, ActionCommit)
+	}
+	if s.DataInt("commitsAhead") > 0 {
+		ret = append(ret, ActionPush)
+	}
+	if s.DataInt("commitsBehind") > 0 {
+		ret = append(ret, ActionPull)
 	}
 	ret = append(ret, ActionUndoCommit, ActionMagic)
 	return ret
@@ -34,6 +42,11 @@ func (s *Result) DataString(k string) string {
 		return ""
 	}
 	return s.Data.GetStringOpt(k)
+}
+
+func (s *Result) DataInt(k string) int {
+	ret, _ := strconv.Atoi(s.DataString(k))
+	return ret
 }
 
 func (s *Result) DataStringArray(k string) []string {

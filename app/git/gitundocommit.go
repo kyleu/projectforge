@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/pkg/errors"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -22,7 +21,7 @@ func gitResetSoft(ctx context.Context, path string, logger util.Logger) (string,
 	currBranch := gitBranch(ctx, path, logger)
 	_, err := gitCmd(ctx, fmt.Sprintf("reset --soft %s~1", currBranch), path, logger)
 	if err != nil {
-		if errors.Is(err, errNoRepo) {
+		if isNoRepo(err) {
 			return "", nil
 		}
 		return "", err

@@ -27,5 +27,30 @@ func (s *Service) Magic(ctx context.Context, prj *project.Project, message strin
 		data["dirtyCount"] = len(d)
 	}
 
-	return NewResult(prj, "OK", data), nil
+	ahead := statRet.DataInt("commitsAhead")
+	behind := statRet.DataInt("commitsBehind")
+
+	ret := NewResult(prj, "no changes needed", data)
+
+	if ahead > 0 {
+		if behind > 0 {
+			ret.Status = "conflicting commits"
+		} else {
+			add("pushing [%d] commits", ahead)
+			x, err := s.Push(ctx, prj, logger)
+			if err != nil {
+				return nil, errors.Wrap(err, "unable to push")
+			}
+			ret.Data = x.Data.Merge(ret.Data)
+		}
+	} else if behind > 0 {
+		add("pulling [%d] commits", behind)
+		x, err := s.Pull(ctx, prj, logger)
+		if err != nil {
+			return nil, errors.Wrap(err, "unable to pull")
+		}
+		ret.Data = x.Data.Merge(ret.Data)
+	}
+
+	return ret, nil
 }

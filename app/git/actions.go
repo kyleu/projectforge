@@ -14,13 +14,18 @@ var (
 	ActionMagic      = &Action{Key: "magic", Title: "Magic", Description: "Does everything it can to bring the repo up to date"}
 	ActionFetch      = &Action{Key: "fetch", Title: "Fetch", Description: "Fetches the latest changes from the repository"}
 	ActionCommit     = &Action{Key: "commit", Title: "Commit", Description: "Adds all files, commits with the provided message"}
+	ActionPull       = &Action{Key: "pull", Title: "Pull", Description: "Pulls pending commits from upstream"}
+	ActionPush       = &Action{Key: "push", Title: "Push", Description: "Pushes pending commits to the remote"}
 	ActionBranch     = &Action{Key: "branch", Title: "Branch", Description: "Switch to a new branch"}
 	ActionUndoCommit = &Action{Key: "undocommit", Title: "Undo", Description: "Removes the most recent commit, keeping all local changes"}
 
-	allActions = Actions{ActionStatus, ActionCreateRepo, ActionMagic, ActionFetch, ActionCommit, ActionBranch, ActionUndoCommit}
+	allActions = Actions{ActionStatus, ActionCreateRepo, ActionMagic, ActionFetch, ActionCommit, ActionPull, ActionPush, ActionBranch, ActionUndoCommit}
 )
 
 func ActionStatusFromString(key string) *Action {
+	if key == "" {
+		return ActionStatus
+	}
 	for _, act := range allActions {
 		if act.Key == key {
 			return act

@@ -67,13 +67,15 @@ func (m ValueMap) Keys() []string {
 	return ret
 }
 
-func (m ValueMap) Merge(args ValueMap) ValueMap {
+func (m ValueMap) Merge(args ...ValueMap) ValueMap {
 	ret := make(ValueMap, len(m)+len(args))
 	for k, v := range m {
 		ret[k] = v
 	}
-	for k, v := range args {
-		ret[k] = v
+	for _, arg := range args {
+		for k, v := range arg {
+			ret[k] = v
+		}
 	}
 	return ret
 }

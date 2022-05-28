@@ -2,6 +2,8 @@
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/git"
   "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/project"
+  "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/layout"
 ) %}
@@ -25,7 +27,7 @@
     <div class="mt">
       {%= statusActions(p.Result) %}
     </div>
-    {%= statusDetail(p.Result) %}
+    {%= statusDetail(prj, p.Result) %}
   </div>
 {% endfunc %}
 
@@ -36,7 +38,7 @@
   {%- endfor -%}
 {% endfunc %}
 
-{% func statusDetail(r *git.Result) %}
+{% func statusDetail(prj *project.Project, r *git.Result) %}
   <table class="mt min-200">
     <tbody>
       <tr>
@@ -55,22 +57,46 @@
       {%- endif -%}
       {%- if r.DataString("commit") != "" -%}
       <tr>
-        <th class="shrink">Commit Message</th>
+        <th class="shrink">Commit Results</th>
         <td><pre>{%s= r.DataString("commit") %}</pre></td>
       </tr>
       {%- endif -%}
       <tr>
         <th class="shrink">Dirty Files</th>
-        <td>{%d len(r.DataStringArray("dirty")) %}</td>
+        <td>
+          {%- code dirt := r.DataStringArray("dirty") -%}
+          {%- if len(dirt) > 0 -%}
+          <div class="right"><a href="/git/{%s prj.Key %}/commit"><button>Commit</button></a></div>
+          {%- endif -%}
+          {%d len(dirt) %}
+        </td>
       </tr>
+      {%- if delta := r.DataInt("commitsAhead"); delta > 0 -%}
+      <tr>
+        <th class="shrink">Ahead By</th>
+        <td>
+          <div class="right"><a href="/git/{%s prj.Key %}/push"><button>Push</button></a></div>
+          {%d delta %} {%s util.StringPluralMaybe("commit", delta) %}
+        </td>
+      </tr>
+      {%- endif -%}
+      {%- if delta := r.DataInt("commitsBehind"); delta > 0 -%}
+      <tr>
+        <th class="shrink">Behind By</th>
+        <td>
+          <div class="right"><a href="/git/{%s prj.Key %}/pull"><button>Pull</button></a></div>
+          {%d delta %} {%s util.StringPluralMaybe("commit", delta) %}
+        </td>
+      </tr>
+      {%- endif -%}
       {%- if len(r.DataStringArray("logs")) > 0 -%}
       <tr>
         <th class="shrink">Logs</th>
         <td>
           <table>
             <tbody>
-              {%- for _, l := range r.DataStringArray("logs") -%}
-              <tr><td>{%s l %}</td></tr>
+              {%- for idx, l := range r.DataStringArray("logs") -%}
+              <tr><td class="shrink"><em>{%d idx+1 %}</em>:</td><td>{%s l %}</td></tr>
               {%- endfor -%}
             </tbody>
           </table>

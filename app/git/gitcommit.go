@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/pkg/errors"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -21,7 +20,7 @@ func (s *Service) Commit(ctx context.Context, prj *project.Project, msg string, 
 func gitCommit(ctx context.Context, path string, message string, logger util.Logger) (string, error) {
 	_, err := gitCmd(ctx, "add .", path, logger)
 	if err != nil {
-		if errors.Is(err, errNoRepo) {
+		if isNoRepo(err) {
 			return "", nil
 		}
 		return "", err

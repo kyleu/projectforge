@@ -27,7 +27,7 @@ func GitActionAll(rc *fasthttp.RequestCtx) {
 
 		var results git.Results
 		var err error
-		var action *git.Action
+		action := git.ActionStatusFromString(a)
 		switch a {
 		case git.ActionStatus.Key, "":
 			action = git.ActionStatus

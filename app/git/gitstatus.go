@@ -3,6 +3,7 @@ package git
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -16,12 +17,20 @@ func (s *Service) Status(ctx context.Context, prj *project.Project, logger util.
 	_, span, _ := telemetry.StartSpan(ctx, "git.status:"+prj.Key, logger)
 	defer span.Complete()
 
-	dirty, err := gitStatus(ctx, prj.Path, logger)
+	data := make(util.ValueMap, 16)
+
+	commitsAhead, commitsBehind, dirty, err := gitStatus(ctx, prj.Path, logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to find git status")
 	}
-	branch := gitBranch(ctx, prj.Path, logger)
-	data := util.ValueMap{"branch": branch}
+	if commitsAhead != 0 {
+		data["commitsAhead"] = commitsAhead
+	}
+	if commitsBehind != 0 {
+		data["commitsBehind"] = commitsBehind
+	}
+
+	data["branch"] = gitBranch(ctx, prj.Path, logger)
 	if len(dirty) > 0 {
 		data["dirty"] = dirty
 	}
@@ -32,19 +41,44 @@ func (s *Service) Status(ctx context.Context, prj *project.Project, logger util.
 	return NewResult(prj, status, data), nil
 }
 
-func gitStatus(ctx context.Context, path string, logger util.Logger) ([]string, error) {
-	out, err := gitCmd(ctx, "status --porcelain", path, logger)
+func gitStatus(ctx context.Context, path string, logger util.Logger) (int, int, []string, error) {
+	out, err := gitCmd(ctx, "status --porcelain -b", path, logger)
 	if err != nil {
-		if errors.Is(err, errNoRepo) {
-			return nil, nil
+		if isNoRepo(err) {
+			return 0, 0, nil, nil
 		}
-		return nil, err
+		return 0, 0, nil, err
 	}
 
 	lines := util.StringSplitAndTrim(out, "\n")
 
+	commitsAhead, commitsBehind := 0, 0
 	dirty := make([]string, 0, len(lines))
 	for _, line := range lines {
+		if strings.HasPrefix(line, "##") {
+			if i := strings.Index(line, "ahead "); i > -1 {
+				l := line[i+6:]
+				end := strings.Index(l, ",")
+				if end == -1 {
+					end = strings.Index(l, "]")
+				}
+				l = strings.TrimSpace(l[:end])
+				commitsAhead, err = strconv.Atoi(l)
+				if err != nil {
+					return 0, 0, nil, errors.Wrap(err, "invalid [ahead] block")
+				}
+			}
+			if i := strings.Index(line, "behind "); i > -1 {
+				l := line[i+7:]
+				end := strings.Index(l, "]")
+				l = strings.TrimSpace(l[:end])
+				commitsBehind, err = strconv.Atoi(l)
+				if err != nil {
+					return 0, 0, nil, errors.Wrap(err, "invalid [behind] block")
+				}
+			}
+			continue
+		}
 		if i := strings.Index(line, " "); i > -1 {
 			line = line[i+1:]
 		}
@@ -52,5 +86,5 @@ func gitStatus(ctx context.Context, path string, logger util.Logger) ([]string, 
 	}
 	slices.Sort(dirty)
 
-	return dirty, nil
+	return commitsAhead, commitsBehind, dirty, nil
 }
