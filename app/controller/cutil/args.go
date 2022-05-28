@@ -10,6 +10,7 @@ type Arg struct {
 	Title       string `json:"title"`
 	Description string `json:"description,omitempty"`
 	Type        string `json:"type,omitempty"`
+	Default     string `json:"default,omitempty"`
 }
 
 type Args []*Arg
@@ -24,10 +25,11 @@ func CollectArgs(rc *fasthttp.RequestCtx, args Args) *ArgResults {
 	ret := make(map[string]string, len(args))
 	var missing []string
 	for _, arg := range args {
-		if !rc.URI().QueryArgs().Has(arg.Key) {
+		qa := rc.URI().QueryArgs()
+		if !qa.Has(arg.Key) {
 			missing = append(missing, arg.Key)
 		}
-		ret[arg.Key] = string(rc.URI().QueryArgs().Peek(arg.Key))
+		ret[arg.Key] = string(qa.Peek(arg.Key))
 	}
 	return &ArgResults{Args: args, Values: ret, Missing: missing}
 }

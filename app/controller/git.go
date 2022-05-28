@@ -14,9 +14,12 @@ import (
 )
 
 var (
-	messageArg    = &cutil.Arg{Key: "message", Title: "Message", Description: "The message to used for the commit"}
+	messageArg = &cutil.Arg{Key: "message", Title: "Message", Description: "The message to used for the commit"}
+	dryRunArg  = &cutil.Arg{Key: "dryRun", Title: "Dry Run", Description: "Runs without any destructive operations", Type: "bool", Default: "true"}
+
 	gitBranchArgs = cutil.Args{{Key: "name", Title: "Branch Name", Description: "The name to used for the new branch"}}
 	gitCommitArgs = cutil.Args{messageArg}
+	gitMagicArgs  = cutil.Args{messageArg, dryRunArg}
 )
 
 func GitAction(rc *fasthttp.RequestCtx) {
@@ -63,13 +66,14 @@ func GitAction(rc *fasthttp.RequestCtx) {
 			}
 			result, err = as.Services.Git.Commit(ps.Context, prj, argRes.Values["message"], ps.Logger)
 		case git.ActionMagic.Key:
-			argRes := cutil.CollectArgs(rc, gitCommitArgs)
+			argRes := cutil.CollectArgs(rc, gitMagicArgs)
 			if len(argRes.Missing) > 0 {
 				url := fmt.Sprintf("/git/%s/magic", prj.Key)
 				ps.Data = argRes
 				return render(rc, as, &verror.Args{URL: url, Directions: "Enter your commit message", ArgRes: argRes}, ps, bc...)
 			}
-			result, err = as.Services.Git.Magic(ps.Context, prj, argRes.Values["message"], ps.Logger)
+			dryRun := argRes.Values["dryRun"] == "true"
+			result, err = as.Services.Git.Magic(ps.Context, prj, argRes.Values["message"], dryRun, ps.Logger)
 		default:
 			err = errors.Errorf("unhandled action [%s]", a)
 		}

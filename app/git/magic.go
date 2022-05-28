@@ -9,48 +9,69 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func (s *Service) Magic(ctx context.Context, prj *project.Project, message string, logger util.Logger) (*Result, error) {
+func (s *Service) Magic(ctx context.Context, prj *project.Project, message string, dryRun bool, logger util.Logger) (*Result, error) {
+	args, err := s.magicArgsFor(ctx, prj, message, dryRun, logger)
+	if err != nil {
+		return nil, err
+	}
+
 	var logs []string
 	add := func(msg string, args ...any) {
 		logs = append(logs, fmt.Sprintf(msg, args...))
 	}
 
-	statRet, err := s.Status(ctx, prj, logger)
-	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get status for project [%s]", prj.Key)
-	}
-	add("OK")
-
-	data := util.ValueMap{"branch": statRet.DataString("branch"), "magic": true, "commitMessage": message, "logs": logs}
-
-	if d := statRet.DataStringArray("dirty"); len(d) > 0 {
-		data["dirtyCount"] = len(d)
-	}
-
-	ahead := statRet.DataInt("commitsAhead")
-	behind := statRet.DataInt("commitsBehind")
-
-	ret := NewResult(prj, "no changes needed", data)
-
-	if ahead > 0 {
-		if behind > 0 {
-			ret.Status = "conflicting commits"
-		} else {
-			add("pushing [%d] commits", ahead)
-			x, err := s.Push(ctx, prj, logger)
-			if err != nil {
-				return nil, errors.Wrap(err, "unable to push")
+	switch {
+	case args.Ahead == 0 && args.Behind == 0:
+		if args.Dirty > 0 {
+			args.Result.Status = "commit"
+			if err = s.magicCommit(args, add); err != nil {
+				return nil, err
 			}
-			ret.Data = x.Data.Merge(ret.Data)
+			if err = s.magicPush(args, 1, add); err != nil {
+				return nil, err
+			}
 		}
-	} else if behind > 0 {
-		add("pulling [%d] commits", behind)
-		x, err := s.Pull(ctx, prj, logger)
-		if err != nil {
-			return nil, errors.Wrap(err, "unable to pull")
+	case args.Ahead == 0 && args.Behind > 0:
+		if args.Dirty > 0 {
+			if err = s.magicStashApply(args, add); err != nil {
+				return nil, err
+			}
 		}
-		ret.Data = x.Data.Merge(ret.Data)
+		args.Result.Status = "pull"
+		if err = s.magicPull(args, add); err != nil {
+			return nil, err
+		}
+		if args.Dirty > 0 {
+			args.Result.Status += ", commit"
+			if err = s.magicStashPop(args, add); err != nil {
+				return nil, err
+			}
+			if err = s.magicCommit(args, add); err != nil {
+				return nil, err
+			}
+			if err = s.magicPush(args, 1, add); err != nil {
+				return nil, err
+			}
+		}
+	case args.Ahead > 0 && args.Behind == 0:
+		if args.Dirty == 0 {
+			args.Result.Status = "push"
+		} else {
+			args.Result.Status = "commit, push"
+			if err = s.magicCommit(args, add); err != nil {
+				return nil, err
+			}
+		}
+		if err = s.magicPush(args, args.Ahead+1, add); err != nil {
+			return nil, err
+		}
+	case args.Ahead > 0 && args.Behind > 0:
+		args.Result.Status = "conflicting commits"
+		return nil, errors.New("TODO: handle conflicting commits")
+	default:
+		return nil, errors.New("invalid git state")
 	}
 
-	return ret, nil
+	args.Result.Data["logs"] = logs
+	return args.Result, nil
 }

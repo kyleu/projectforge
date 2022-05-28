@@ -30,14 +30,11 @@ func GitActionAll(rc *fasthttp.RequestCtx) {
 		action := git.ActionStatusFromString(a)
 		switch a {
 		case git.ActionStatus.Key, "":
-			action = git.ActionStatus
 			results, err = gitStatusAll(prjs, rc, as, ps)
 		case git.ActionFetch.Key:
-			action = git.ActionFetch
 			results, err = gitFetchAll(prjs, rc, as, ps)
 		case git.ActionMagic.Key:
-			action = git.ActionMagic
-			argRes := cutil.CollectArgs(rc, gitCommitArgs)
+			argRes := cutil.CollectArgs(rc, gitMagicArgs)
 			if len(argRes.Missing) > 0 {
 				url := "/git/all/magic"
 				ps.Data = argRes
@@ -75,9 +72,10 @@ func gitStatusAll(prjs project.Projects, rc *fasthttp.RequestCtx, as *app.State,
 
 func gitMagicAll(prjs project.Projects, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (git.Results, error) {
 	message := string(rc.URI().QueryArgs().Peek("message"))
+	dryRun := string(rc.URI().QueryArgs().Peek("dryRun")) == "true"
 	results := make(git.Results, 0, len(prjs))
 	for _, prj := range prjs {
-		out, err := as.Services.Git.Magic(ps.Context, prj, message, ps.Logger)
+		out, err := as.Services.Git.Magic(ps.Context, prj, message, dryRun, ps.Logger)
 		if err != nil {
 			return nil, errors.Wrapf(err, "can't perform magic on project [%s]", prj.Key)
 		}
