@@ -1,6 +1,6 @@
 #!/usr/bin/osascript
 # Content managed by Project Forge, see [projectforge.md] for details.
-tell application "iTerm"
+tell application "iTerm2"
 	set lwin to current session of current tab of current window
 	tell lwin
     write text "cd ~/go/src/github.com/kyleu/projectforge"

@@ -1,5 +1,5 @@
 #!/usr/bin/osascript
-tell application "iTerm"
+tell application "iTerm2"
 	set lwin to current session of current tab of current window
 	tell lwin
     write text "cd ~/go/src/{{{ .SourceTrimmed }}}"
