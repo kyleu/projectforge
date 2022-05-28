@@ -39,6 +39,7 @@ func projectFromForm(frm util.ValueMap, prj *project.Project) error {
 		prj.Modules = []string{"core"}
 	}
 	prj.Ignore = util.StringSplitAndTrim(get("ignore", strings.Join(prj.Ignore, ",")), ",")
+	prj.Tags = util.StringSplitAndTrim(get("tags", strings.Join(prj.Tags, ",")), ",")
 	prj.Path = get("path", prj.Path)
 
 	if prj.Info == nil {

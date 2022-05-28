@@ -43,7 +43,7 @@ func StreamSummary(qw422016 *qt422016.Writer, prj *project.Project, gitResult *g
 //line views/vproject/Summary.html:18
 	qw422016.N().S(`    `)
 //line views/vproject/Summary.html:19
-	vsearch.StreamForm(qw422016, "/p/"+prj.Key+"/search", q, "Search Files", ps)
+	vsearch.StreamForm(qw422016, "/p/"+prj.Key+"/search", q, "Search Files", nil, ps)
 //line views/vproject/Summary.html:19
 	qw422016.N().S(`
     <h3><a href="/p/`)

@@ -17,6 +17,9 @@ func (m *Model) Validate(mods []string) error {
 	if len(m.PKs()) == 0 {
 		return errors.Errorf("model [%s] has no primary key", m.Name)
 	}
+	if m.Package == "vendor" {
+		return errors.Errorf("model [%s] uses [vendor] package, which is reserved by Go", m.Name)
+	}
 	for _, mod := range mods {
 		if slices.Contains(reservedNames[mod], m.Name) {
 			return errors.Errorf("model [%s] uses name which is reserved by [%s]", m.Name, mod)

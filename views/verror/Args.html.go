@@ -8,102 +8,149 @@ package verror
 
 //line views/verror/Args.html:2
 import (
+	"strconv"
+
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/views/components"
 	"projectforge.dev/projectforge/views/layout"
 )
 
-//line views/verror/Args.html:9
+//line views/verror/Args.html:11
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/verror/Args.html:9
+//line views/verror/Args.html:11
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/verror/Args.html:9
+//line views/verror/Args.html:11
 type Args struct {
 	layout.Basic
 	URL        string
 	Directions string
 	ArgRes     *cutil.ArgResults
+	Hidden     map[string]string
 }
 
-//line views/verror/Args.html:16
+//line views/verror/Args.html:19
 func (p *Args) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/verror/Args.html:16
+//line views/verror/Args.html:19
 	qw422016.N().S(`
   <div class="card">
     <h3>`)
-//line views/verror/Args.html:18
+//line views/verror/Args.html:21
 	if p.Directions == "" {
-//line views/verror/Args.html:18
+//line views/verror/Args.html:21
 		qw422016.N().S(`Enter Data`)
-//line views/verror/Args.html:18
+//line views/verror/Args.html:21
 	} else {
-//line views/verror/Args.html:18
+//line views/verror/Args.html:21
 		qw422016.E().S(p.Directions)
-//line views/verror/Args.html:18
+//line views/verror/Args.html:21
 	}
-//line views/verror/Args.html:18
+//line views/verror/Args.html:21
 	qw422016.N().S(`</h3>
     <form action="`)
-//line views/verror/Args.html:19
+//line views/verror/Args.html:22
 	qw422016.E().S(p.URL)
-//line views/verror/Args.html:19
+//line views/verror/Args.html:22
 	qw422016.N().S(`" method="get">
-      <table class="mt min-200 expanded">
+`)
+//line views/verror/Args.html:23
+	for k, v := range p.Hidden {
+//line views/verror/Args.html:23
+		qw422016.N().S(`      <input type="hidden" name="`)
+//line views/verror/Args.html:24
+		qw422016.E().S(k)
+//line views/verror/Args.html:24
+		qw422016.N().S(`" value="`)
+//line views/verror/Args.html:24
+		qw422016.E().S(v)
+//line views/verror/Args.html:24
+		qw422016.N().S(`" />
+`)
+//line views/verror/Args.html:25
+	}
+//line views/verror/Args.html:25
+	qw422016.N().S(`      <table class="mt min-200 expanded">
         <tbody>
 `)
-//line views/verror/Args.html:22
+//line views/verror/Args.html:28
 	for _, arg := range p.ArgRes.Args {
-//line views/verror/Args.html:22
-		qw422016.N().S(`          `)
-//line views/verror/Args.html:23
-		components.StreamTableInput(qw422016, arg.Key, arg.Title, p.ArgRes.Values[arg.Key], 5, arg.Description)
-//line views/verror/Args.html:23
-		qw422016.N().S(`
+//line views/verror/Args.html:29
+		switch arg.Type {
+//line views/verror/Args.html:30
+		case "textarea":
+//line views/verror/Args.html:30
+			qw422016.N().S(`          `)
+//line views/verror/Args.html:31
+			components.StreamTableTextarea(qw422016, arg.Key, arg.Title, 12, p.ArgRes.Values[arg.Key], 5, arg.Description)
+//line views/verror/Args.html:31
+			qw422016.N().S(`
 `)
-//line views/verror/Args.html:24
+//line views/verror/Args.html:32
+		case "number", "int":
+//line views/verror/Args.html:33
+			i, _ := strconv.Atoi(p.ArgRes.Values[arg.Key])
+
+//line views/verror/Args.html:33
+			qw422016.N().S(`          `)
+//line views/verror/Args.html:34
+			components.StreamTableInputNumber(qw422016, arg.Key, arg.Title, i, 5, arg.Description)
+//line views/verror/Args.html:34
+			qw422016.N().S(`
+`)
+//line views/verror/Args.html:35
+		default:
+//line views/verror/Args.html:35
+			qw422016.N().S(`          `)
+//line views/verror/Args.html:36
+			components.StreamTableInput(qw422016, arg.Key, arg.Title, p.ArgRes.Values[arg.Key], 5, arg.Description)
+//line views/verror/Args.html:36
+			qw422016.N().S(`
+`)
+//line views/verror/Args.html:37
+		}
+//line views/verror/Args.html:38
 	}
-//line views/verror/Args.html:24
+//line views/verror/Args.html:38
 	qw422016.N().S(`        </tbody>
       </table>
-      <button type="submit">Submit</button>
+      <button class="mt" type="submit">Submit</button>
     </form>
   </div>
 `)
-//line views/verror/Args.html:30
+//line views/verror/Args.html:44
 }
 
-//line views/verror/Args.html:30
+//line views/verror/Args.html:44
 func (p *Args) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/verror/Args.html:30
+//line views/verror/Args.html:44
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/verror/Args.html:30
+//line views/verror/Args.html:44
 	p.StreamBody(qw422016, as, ps)
-//line views/verror/Args.html:30
+//line views/verror/Args.html:44
 	qt422016.ReleaseWriter(qw422016)
-//line views/verror/Args.html:30
+//line views/verror/Args.html:44
 }
 
-//line views/verror/Args.html:30
+//line views/verror/Args.html:44
 func (p *Args) Body(as *app.State, ps *cutil.PageState) string {
-//line views/verror/Args.html:30
+//line views/verror/Args.html:44
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/verror/Args.html:30
+//line views/verror/Args.html:44
 	p.WriteBody(qb422016, as, ps)
-//line views/verror/Args.html:30
+//line views/verror/Args.html:44
 	qs422016 := string(qb422016.B)
-//line views/verror/Args.html:30
+//line views/verror/Args.html:44
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/verror/Args.html:30
+//line views/verror/Args.html:44
 	return qs422016
-//line views/verror/Args.html:30
+//line views/verror/Args.html:44
 }

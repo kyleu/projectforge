@@ -1,0 +1,8 @@
+/* Content managed by Project Forge, see [projectforge.md] for details. */
+.markdown h1 {
+  margin: 0 0 var(--padding) 0;
+}
+
+.markdown h2, .markdown h3, .markdown h4 {
+  margin: var(--padding) 0;
+}

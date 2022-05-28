@@ -20,6 +20,7 @@ type Project struct {
 	Port    int          `json:"port,omitempty"`
 	Modules []string     `json:"modules"`
 	Ignore  []string     `json:"ignore,omitempty"`
+	Tags    []string     `json:"tags"`
 	Info    *Info        `json:"info,omitempty"`
 	Theme   *theme.Theme `json:"theme,omitempty"`
 	Build   *Build       `json:"build,omitempty"`
@@ -81,37 +82,4 @@ func (p *Project) WebPath() string {
 
 func NewProject(key string, path string) *Project {
 	return &Project{Key: key, Version: "0.0.0", Path: path}
-}
-
-type Projects []*Project
-
-func (p Projects) Get(key string) *Project {
-	for _, x := range p {
-		if x.Key == key {
-			return x
-		}
-	}
-	return nil
-}
-
-func (p Projects) Root() *Project {
-	for _, x := range p {
-		if x.Path == "." {
-			return x
-		}
-	}
-	return nil
-}
-
-func (p Projects) AllModules() []string {
-	var ret []string
-	for _, prj := range p {
-		for _, mod := range prj.Modules {
-			if !slices.Contains(ret, mod) {
-				ret = append(ret, mod)
-			}
-		}
-	}
-	slices.Sort(ret)
-	return ret
 }

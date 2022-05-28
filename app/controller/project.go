@@ -10,12 +10,17 @@ import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/vproject"
 )
 
 func ProjectList(rc *fasthttp.RequestCtx) {
 	act("project.root", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prjs := as.Services.Projects.Projects()
+		tags := util.StringSplitAndTrim(string(rc.URI().QueryArgs().Peek("tags")), ",")
+		if len(tags) > 0 {
+			prjs = prjs.WithTags(tags)
+		}
 		ps.Title = "Project Listing"
 
 		switch string(rc.QueryArgs().Peek("sort")) {
@@ -47,7 +52,7 @@ func ProjectList(rc *fasthttp.RequestCtx) {
 			_, _ = rc.WriteString(strings.Join(msgs, "\n"))
 			return "", nil
 		default:
-			return render(rc, as, &vproject.List{Projects: prjs}, ps, "projects")
+			return render(rc, as, &vproject.List{Projects: prjs, Tags: tags}, ps, "projects")
 		}
 	})
 }

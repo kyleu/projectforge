@@ -61,7 +61,8 @@ func projectFromCfg(proto *project.Project, cfg util.ValueMap) *project.Project 
 		Args:    str("args", proto.Args),
 		Port:    integer("port", proto.Port),
 		Modules: mods,
-		Ignore:  proto.Ignore,
+		Ignore:  util.StringSplitAndTrim(str("ignore", strings.Join(proto.Ignore, ", ")), ","),
+		Tags:    util.StringSplitAndTrim(str("tags", strings.Join(proto.Tags, ", ")), ","),
 		Info: &project.Info{
 			Org:             str("org", i.Org),
 			AuthorID:        str("author_id", i.AuthorID),

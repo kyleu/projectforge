@@ -61,7 +61,7 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vadmin/Settings.html:23
 	qw422016.N().S(`">`)
 //line views/vadmin/Settings.html:23
-	components.StreamSVGRefIcon(qw422016, `app`, ps)
+	components.StreamSVGRefIcon(qw422016, `cog`, ps)
 //line views/vadmin/Settings.html:23
 	qw422016.E().S(util.AppName)
 //line views/vadmin/Settings.html:23

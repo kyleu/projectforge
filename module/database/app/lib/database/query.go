@@ -39,7 +39,7 @@ func (s *Service) QueryRows(ctx context.Context, q string, tx *sqlx.Tx, logger u
 
 	var ret []util.ValueMap
 	for rows.Next() {
-		x := map[string]any{}
+		x := util.ValueMap{}
 		err = rows.MapScan(x)
 		if err != nil {
 			return nil, errors.Wrap(err, "unable to scan output row")

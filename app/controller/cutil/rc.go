@@ -12,12 +12,12 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func RequestCtxToMap(rc *fasthttp.RequestCtx, data any) map[string]any {
+func RequestCtxToMap(rc *fasthttp.RequestCtx, data any) util.ValueMap {
 	reqHeaders := make(map[string]string, rc.Request.Header.Len())
 	rc.Request.Header.VisitAll(func(k, v []byte) {
 		reqHeaders[string(k)] = string(v)
 	})
-	req := map[string]any{
+	req := util.ValueMap{
 		"id":          rc.ID(),
 		"url":         rc.URI().String(),
 		"protocol":    string(rc.Request.URI().Scheme()),
@@ -32,13 +32,13 @@ func RequestCtxToMap(rc *fasthttp.RequestCtx, data any) map[string]any {
 	rc.Response.Header.VisitAll(func(k, v []byte) {
 		rspHeaders[string(k)] = string(v)
 	})
-	rsp := map[string]any{
+	rsp := util.ValueMap{
 		"code":     rc.Response.StatusCode(),
 		"bodySize": len(rc.Response.Body()),
 		"headers":  rspHeaders,
 		"string":   rc.Response.String(),
 	}
-	return map[string]any{"data": data, "request": req, "response": rsp}
+	return util.ValueMap{"data": data, "request": req, "response": rsp}
 }
 
 func RCRequiredString(rc *fasthttp.RequestCtx, key string, allowEmpty bool) (string, error) {

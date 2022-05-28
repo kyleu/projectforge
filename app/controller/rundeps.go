@@ -36,6 +36,10 @@ func runDeps(prj *project.Project, res *action.Result, rc *fasthttp.RequestCtx, 
 }
 
 func runAllDeps(cfg util.ValueMap, prjs project.Projects, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (string, error) {
+	tags := util.StringSplitAndTrim(string(rc.URI().QueryArgs().Peek("tags")), ",")
+	if len(tags) > 0 {
+		prjs = prjs.WithTags(tags)
+	}
 	var msg string
 	key := cfg.GetStringOpt("key")
 	if pj := cfg.GetStringOpt("project"); pj != "" {
@@ -61,6 +65,6 @@ func runAllDeps(cfg util.ValueMap, prjs project.Projects, rc *fasthttp.RequestCt
 	}
 	ps.Title = "Dependency Merge"
 	ps.Data = ret
-	page := &vbuild.DepMap{Message: msg, Result: ret}
+	page := &vbuild.DepMap{Message: msg, Result: ret, Tags: tags}
 	return render(rc, as, page, ps, "projects", "Dependencies")
 }

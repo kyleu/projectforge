@@ -59,7 +59,7 @@ func CycleJSON(src any, tgt any) error {
 }
 
 func JSONToMap(i any) map[string]any {
-	var m map[string]any
+	m := map[string]any{}
 	_ = CycleJSON(i, &m)
 	return m
 }

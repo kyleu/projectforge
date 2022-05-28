@@ -20,7 +20,7 @@
     {%- if util.AppSource != "" -%}
     <div class="right"><a href="{%s util.AppSource %}"><button>Github</button></a></div>
     {%- endif -%}
-    <h3 title="github:{%s as.BuildInfo.Commit %}">{%= components.SVGRefIcon(`app`, ps) %}{%s util.AppName %} {%s as.BuildInfo.String() %}</h3>
+    <h3 title="github:{%s as.BuildInfo.Commit %}">{%= components.SVGRefIcon(`cog`, ps) %}{%s util.AppName %} {%s as.BuildInfo.String() %}</h3>
     {%- if util.AppLegal != "" -%}
     <div class="mt">{%s= util.AppLegal %}</div>
     {%- endif -%}

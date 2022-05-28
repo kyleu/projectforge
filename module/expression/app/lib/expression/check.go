@@ -24,7 +24,7 @@ func NewEngine(opts ...cel.EnvOption) (*Engine, error) {
 	return &Engine{env: env}, err
 }
 
-func (e *Engine) Check(as string, params map[string]any, logger util.Logger) bool {
+func (e *Engine) Check(as string, params map[string]any, logger util.Logger) (bool, error) {
 	expressionMU.Lock()
 	ex, ok := expressionCache[as]
 	expressionMU.Unlock()
@@ -34,7 +34,7 @@ func (e *Engine) Check(as string, params map[string]any, logger util.Logger) boo
 		err := ex.Compile(e)
 		if err != nil {
 			logger.Error(fmt.Sprintf("error compiling expression [%v]: %+v", as, err))
-			return false
+			return false, err
 		}
 		expressionMU.Lock()
 		expressionCache[as] = ex
@@ -44,8 +44,27 @@ func (e *Engine) Check(as string, params map[string]any, logger util.Logger) boo
 	rsp, _, err := ex.Run(params)
 	if err != nil {
 		logger.Debug(fmt.Sprintf("error running expression [%v]: %v", as, err.Error()))
-		return false
+		return false, err
 	}
 	ret := CheckResult(rsp, logger)
-	return ret
+	return ret, nil
+}
+
+func (e *Engine) Compile(as string, logger util.Logger) (*Expression, error) {
+	expressionMU.Lock()
+	ex, ok := expressionCache[as]
+	expressionMU.Unlock()
+	if !ok {
+		ex = NewExpression("temp", "a temporary expression", as)
+
+		err := ex.Compile(e)
+		if err != nil {
+			logger.Error(fmt.Sprintf("error compiling expression [%v]: %+v", as, err))
+			return nil, err
+		}
+		expressionMU.Lock()
+		expressionCache[as] = ex
+		expressionMU.Unlock()
+	}
+	return ex, nil
 }

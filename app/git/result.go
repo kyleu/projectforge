@@ -17,7 +17,7 @@ func NewResult(prj *project.Project, status string, data util.ValueMap) *Result 
 }
 
 func (s *Result) Actions() Actions {
-	ret := Actions{ActionStatus, ActionMagic}
+	ret := Actions{ActionStatus}
 	if s.Status == "no repo" {
 		return append(ret, ActionCreateRepo)
 	}
@@ -25,6 +25,7 @@ func (s *Result) Actions() Actions {
 	if dirty, _ := s.Data.GetStringArray("dirty", true); len(dirty) > 0 {
 		ret = append(ret, ActionCommit)
 	}
+	ret = append(ret, ActionMagic)
 	return ret
 }
 
@@ -33,6 +34,29 @@ func (s *Result) Branch() string {
 		return ""
 	}
 	return s.Data.GetStringOpt("branch")
+}
+
+func (s *Result) CommitMessage() string {
+	if s.Data == nil {
+		return ""
+	}
+	return s.Data.GetStringOpt("commitMessage")
+}
+
+func (s *Result) Logs() []string {
+	if s.Data == nil {
+		return nil
+	}
+	ret, _ := s.Data.GetStringArray("logs", true)
+	return ret
+}
+
+func (s *Result) Dirty() []string {
+	if s.Data == nil {
+		return nil
+	}
+	ret, _ := s.Data.GetStringArray("dirty", true)
+	return ret
 }
 
 type Results []*Result

@@ -79,12 +79,16 @@ func RunAllActions(rc *fasthttp.RequestCtx) {
 		})
 		actT := action.TypeFromString(actS)
 		prjs := as.Services.Projects.Projects()
+		tags := util.StringSplitAndTrim(string(rc.URI().QueryArgs().Peek("tags")), ",")
+		if len(tags) > 0 {
+			prjs = prjs.WithTags(tags)
+		}
 
 		if actT.Key == action.TypeBuild.Key {
 			switch cfg["phase"] {
 			case nil:
 				ps.Title = "Build All Projects"
-				page := &vaction.Results{T: actT, Cfg: cfg, Ctxs: nil, IsBuild: true}
+				page := &vaction.Results{T: actT, Cfg: cfg, Projects: prjs, Ctxs: nil, Tags: tags, IsBuild: true}
 				return render(rc, as, page, ps, "projects", actT.Title)
 			case depsKey:
 				return runAllDeps(cfg, prjs, rc, as, ps)
@@ -104,7 +108,7 @@ func RunAllActions(rc *fasthttp.RequestCtx) {
 		})
 		ps.Title = fmt.Sprintf("[%s] All Projects", actT.Title)
 		ps.Data = results
-		page := &vaction.Results{T: actT, Cfg: cfg, Ctxs: results}
+		page := &vaction.Results{T: actT, Cfg: cfg, Projects: prjs, Ctxs: results, Tags: tags}
 		return render(rc, as, page, ps, "projects", actT.Title)
 	})
 }

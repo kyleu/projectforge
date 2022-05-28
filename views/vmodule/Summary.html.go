@@ -42,7 +42,7 @@ func StreamSummary(qw422016 *qt422016.Writer, mod *module.Module, args util.Valu
 //line views/vmodule/Summary.html:17
 	qw422016.N().S(`    `)
 //line views/vmodule/Summary.html:18
-	vsearch.StreamForm(qw422016, "/m/"+mod.Key+"/search", q, "Search Files", ps)
+	vsearch.StreamForm(qw422016, "/m/"+mod.Key+"/search", q, "Search Files", nil, ps)
 //line views/vmodule/Summary.html:18
 	qw422016.N().S(`
     <h3>`)

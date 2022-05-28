@@ -23,7 +23,7 @@ func (s *Service) Explain(ctx context.Context, q string, values []any, logger ut
 	defer func() { _ = res.Close() }()
 	var ret []util.ValueMap
 	for res.Next() {
-		x := map[string]any{}
+		x := util.ValueMap{}
 		err = res.MapScan(x)
 		if err != nil {
 			return nil, errors.Wrap(err, "can't read results")

@@ -3,6 +3,7 @@ package util
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -52,4 +53,15 @@ func GetEnv(name string, defaultValue ...string) string {
 
 func GetEnvBool(name string, defaultValue bool) bool {
 	return GetEnv(name, fmt.Sprint(defaultValue)) == BoolTrue
+}
+
+func GetEnvInt(name string, defaultValue int) int {
+	v := GetEnv(name, "")
+
+	i, err := strconv.Atoi(v)
+	if err != nil {
+		return defaultValue
+	}
+
+	return i
 }

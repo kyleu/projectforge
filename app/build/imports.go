@@ -19,7 +19,7 @@ func Imports(self string, fix bool, targetPath string, fs filesystem.FileLoader)
 	}
 
 	for _, fn := range files {
-		if !strings.HasSuffix(fn, ".go") {
+		if !(strings.HasSuffix(fn, ".go") || strings.HasSuffix(fn, ".html")) {
 			continue
 		}
 		content, err := fs.ReadFile(fn)
@@ -62,7 +62,7 @@ func processFile(fn string, lines []string, self string) ([]string, diff.Diffs, 
 	var imports, orig []string
 	for idx, line := range lines {
 		if started {
-			if line == ")" {
+			if line == ")" || line == ") %}" {
 				if end > 0 {
 					return nil, nil, errors.New("multiple import section endings")
 				}
@@ -74,12 +74,12 @@ func processFile(fn string, lines []string, self string) ([]string, diff.Diffs, 
 				i = strings.TrimSpace(line[lidx:])
 			}
 			i = strings.TrimPrefix(i, "_ ")
-			i = strings.TrimSuffix(i, "\"")
-			i = strings.TrimPrefix(i, "\"")
+			i = strings.TrimSuffix(i, `"`)
+			i = strings.TrimPrefix(i, `"`)
 			imports = append(imports, i+":"+importType(i, self))
 			orig = append(orig, line)
 		} else {
-			if strings.HasPrefix(line, "import") && strings.Contains(line, "(") {
+			if (strings.HasPrefix(line, "import") || strings.HasPrefix(line, "{% import")) && strings.Contains(line, "(") {
 				started = true
 				if start > 0 {
 					return nil, nil, errors.New("multiple import section starts")

@@ -21,6 +21,9 @@
     "^module",
     "^testproject"
   ],
+  "tags": [
+    "self"
+  ],
   "info": {
     "org": "kyleu",
     "authorID": "kyleu",

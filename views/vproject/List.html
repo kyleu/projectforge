@@ -1,27 +1,20 @@
 {% import (
+
   "projectforge.dev/projectforge/app"
-  "projectforge.dev/projectforge/app/action"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/project"
   "projectforge.dev/projectforge/views/layout"
-  "projectforge.dev/projectforge/views/vsearch"
 ) %}
 
 {% code type List struct {
   layout.Basic
   Projects project.Projects
+  Tags []string
 } %}
 
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    {%= vsearch.Form("/p/search", "", "Search All Files", ps) %}
-    <h3>Actions for all Projects</h3>
-    <div class="mt">
-      {%- for _, t := range action.ProjectTypes -%}
-      <a href="/run/{%s t.Key %}" title="{%s t.Description %}"><button>{%s t.Title %}</button></a>
-      {%- endfor -%}
-      <a href="/git" title="Git dashboard for all projects"><button>Git</button></a>
-    </div>
+    {%= AvailActions("Actions", p.Tags, p.Projects.Tags(), ps) %}
   </div>
-  {%= Table(p.Projects, true, as, ps) %}
+  {%= Table(p.Projects, p.Tags, true, as, ps) %}
 {% endfunc %}

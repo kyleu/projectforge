@@ -19,13 +19,14 @@ type TemplateContext struct {
 	ConfigVars  util.KeyTypeDescs `json:"configVars,omitempty"`
 	PortOffsets map[string]int    `json:"portOffsets,omitempty"`
 
-	Modules []string     `json:"modules,omitempty"`
-	Info    *Info        `json:"info,omitempty"`
-	Build   *Build       `json:"build,omitempty"`
-	Theme   *theme.Theme `json:"theme,omitempty"`
-
 	Ignore     []string `json:"ignore,omitempty"`
 	IgnoreGrep string   `json:"ignoreGrep,omitempty"`
+	Modules    []string `json:"modules,omitempty"`
+	Tags       []string `json:"tags,omitempty"`
+
+	Info  *Info        `json:"info,omitempty"`
+	Build *Build       `json:"build,omitempty"`
+	Theme *theme.Theme `json:"theme,omitempty"`
 }
 
 func (p *Project) ToTemplateContext(configVars util.KeyTypeDescs, portOffsets map[string]int) *TemplateContext {
@@ -58,7 +59,8 @@ func (p *Project) ToTemplateContext(configVars util.KeyTypeDescs, portOffsets ma
 	ret := &TemplateContext{
 		Key: p.Key, Name: p.Name, Exec: p.Executable(), Version: p.Version,
 		Package: p.Package, Args: p.Args, Port: p.Port, ConfigVars: cv, PortOffsets: portOffsets,
-		Modules: p.Modules, Info: i, Build: b, Theme: t, Ignore: p.Ignore, IgnoreGrep: ignoreGrep,
+		Ignore: p.Ignore, IgnoreGrep: ignoreGrep, Modules: p.Modules, Tags: p.Tags,
+		Info: i, Build: b, Theme: t,
 	}
 
 	if ret.Name == "" {

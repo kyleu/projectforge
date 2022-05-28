@@ -6,18 +6,21 @@
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/layout"
-  "projectforge.dev/projectforge/views/vaction"
+  "projectforge.dev/projectforge/views/vproject"
 ) %}
 
 {% code type DepMap struct {
   layout.Basic
   Message string
   Result map[string]map[string][]string
+  Tags []string
 } %}
 
 {% func (p *DepMap) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    {%= vaction.SharedActions("Dependency Conflicts", as, ps) %}
+    {%= vproject.AvailActions("Dependency Conflicts", p.Tags, nil, ps) %}
+  </div>
+  <div class="card">
     {%- if p.Message != "" -%}
     <h4 class="mt mb">{%s p.Message %}</h4>
     {%- endif -%}

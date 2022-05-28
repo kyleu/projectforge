@@ -3,7 +3,6 @@ package controller
 import (
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
-
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/action"
 	"projectforge.dev/projectforge/app/controller/cutil"
@@ -30,6 +29,7 @@ func TestRun(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = "Test [" + key + "]"
 		ps.Data = key
+		bc := []string{"Tests||/test"}
 
 		var page layout.Page
 		switch key {
@@ -39,12 +39,16 @@ func TestRun(rc *fasthttp.RequestCtx) {
 				res := x.Calc()
 				ret = append(ret, res)
 			}
+			bc = append(bc, "Diff")
+			ps.Title = "Diff Test"
 			ps.Data = ret
 			page = &vtest.Diffs{Results: ret}
 		case "bootstrap":
 			cfg := util.ValueMap{}
 			cfg.Add("path", "./testproject", "method", key, "wipe", true)
 			res := action.Apply(ps.Context, actionParams("testproject", action.TypeTest, cfg, as, ps.Logger))
+
+			bc = append(bc, "Bootstrap")
 			ps.Data = res
 
 			_, err = as.Services.Projects.Refresh()
@@ -61,6 +65,6 @@ func TestRun(rc *fasthttp.RequestCtx) {
 		default:
 			return "", errors.New("invalid test [" + key + "]")
 		}
-		return render(rc, as, page, ps, "Tests", key)
+		return render(rc, as, page, ps, bc...)
 	})
 }

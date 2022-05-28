@@ -6,314 +6,260 @@ package vaction
 
 //line views/vaction/Results.html:1
 import (
+	"strings"
+
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/action"
 	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/components"
 	"projectforge.dev/projectforge/views/layout"
 	"projectforge.dev/projectforge/views/vproject"
-	"projectforge.dev/projectforge/views/vsearch"
 )
 
-//line views/vaction/Results.html:12
+//line views/vaction/Results.html:14
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vaction/Results.html:12
+//line views/vaction/Results.html:14
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vaction/Results.html:12
+//line views/vaction/Results.html:14
 type Results struct {
 	layout.Basic
-	T       action.Type
-	Cfg     util.ValueMap
-	Ctxs    action.ResultContexts
-	IsBuild bool
+	T        action.Type
+	Cfg      util.ValueMap
+	Projects project.Projects
+	Ctxs     action.ResultContexts
+	Tags     []string
+	IsBuild  bool
 }
 
-//line views/vaction/Results.html:20
+//line views/vaction/Results.html:24
 func (p *Results) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vaction/Results.html:20
+//line views/vaction/Results.html:24
 	qw422016.N().S(`
-  <div class="card">
 `)
-//line views/vaction/Results.html:23
+//line views/vaction/Results.html:26
 	title := p.T.Title
 	if phase := p.Cfg.GetStringOpt("phase"); phase != "" {
 		title += " [" + phase + "]"
 	}
 
-//line views/vaction/Results.html:27
-	qw422016.N().S(`    `)
-//line views/vaction/Results.html:28
-	StreamSharedActions(qw422016, title, as, ps)
-//line views/vaction/Results.html:28
+//line views/vaction/Results.html:30
+	qw422016.N().S(`  <div class="card">
+    `)
+//line views/vaction/Results.html:32
+	vproject.StreamAvailActions(qw422016, title, p.Tags, p.Projects.Tags(), ps)
+//line views/vaction/Results.html:32
 	qw422016.N().S(`
+  </div>
+  <div class="card">
 `)
-//line views/vaction/Results.html:29
+//line views/vaction/Results.html:35
 	if p.IsBuild {
-//line views/vaction/Results.html:29
+//line views/vaction/Results.html:35
 		qw422016.N().S(`    `)
-//line views/vaction/Results.html:30
-		StreamSharedBuildActions(qw422016)
-//line views/vaction/Results.html:30
+//line views/vaction/Results.html:36
+		StreamAvailBuildActions(qw422016, p.Tags)
+//line views/vaction/Results.html:36
 		qw422016.N().S(`
 `)
-//line views/vaction/Results.html:31
+//line views/vaction/Results.html:37
 	}
-//line views/vaction/Results.html:31
-	qw422016.N().S(`    <div class="mt">
-      <ul class="accordion">
+//line views/vaction/Results.html:37
+	qw422016.N().S(`    <ul class="accordion">
 `)
-//line views/vaction/Results.html:34
+//line views/vaction/Results.html:39
 	for _, x := range p.Ctxs {
-//line views/vaction/Results.html:34
-		qw422016.N().S(`        <li>
-          <input id="accordion-`)
-//line views/vaction/Results.html:36
+//line views/vaction/Results.html:39
+		qw422016.N().S(`      <li>
+        <input id="accordion-`)
+//line views/vaction/Results.html:41
 		qw422016.E().S(x.Prj.Key)
-//line views/vaction/Results.html:36
+//line views/vaction/Results.html:41
 		qw422016.N().S(`" type="checkbox" hidden />
-          <label for="accordion-`)
-//line views/vaction/Results.html:37
+        <label for="accordion-`)
+//line views/vaction/Results.html:42
 		qw422016.E().S(x.Prj.Key)
-//line views/vaction/Results.html:37
+//line views/vaction/Results.html:42
 		qw422016.N().S(`">
-            <div class="right">`)
-//line views/vaction/Results.html:38
+          <div class="right">`)
+//line views/vaction/Results.html:43
 		qw422016.N().S(x.Status())
-//line views/vaction/Results.html:38
+//line views/vaction/Results.html:43
 		if x.Res != nil && len(x.Res.Errors) > 0 {
-//line views/vaction/Results.html:38
+//line views/vaction/Results.html:43
 			qw422016.N().S(` (`)
-//line views/vaction/Results.html:38
+//line views/vaction/Results.html:43
 			qw422016.N().D(len(x.Res.Errors))
-//line views/vaction/Results.html:38
+//line views/vaction/Results.html:43
 			qw422016.N().S(` errors)`)
-//line views/vaction/Results.html:38
+//line views/vaction/Results.html:43
 		}
-//line views/vaction/Results.html:38
+//line views/vaction/Results.html:43
 		qw422016.N().S(`</div>
-            `)
-//line views/vaction/Results.html:39
+          `)
+//line views/vaction/Results.html:44
 		components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vaction/Results.html:39
+//line views/vaction/Results.html:44
 		qw422016.N().S(` `)
-//line views/vaction/Results.html:39
+//line views/vaction/Results.html:44
 		components.StreamSVGRef(qw422016, x.Prj.IconSafe(), 16, 16, "icon", ps)
-//line views/vaction/Results.html:39
+//line views/vaction/Results.html:44
 		qw422016.N().S(`
-            `)
-//line views/vaction/Results.html:40
+          `)
+//line views/vaction/Results.html:45
 		if x.Prj.Key == util.AppKey {
-//line views/vaction/Results.html:40
+//line views/vaction/Results.html:45
 			qw422016.N().S(`<strong>`)
-//line views/vaction/Results.html:40
+//line views/vaction/Results.html:45
 		}
-//line views/vaction/Results.html:40
+//line views/vaction/Results.html:45
 		qw422016.E().S(x.Prj.Title())
-//line views/vaction/Results.html:40
+//line views/vaction/Results.html:45
 		if x.Prj.Key == util.AppKey {
-//line views/vaction/Results.html:40
+//line views/vaction/Results.html:45
 			qw422016.N().S(`</strong>`)
-//line views/vaction/Results.html:40
+//line views/vaction/Results.html:45
 		}
-//line views/vaction/Results.html:40
+//line views/vaction/Results.html:45
 		qw422016.N().S(`
-          </label>
-          <div class="bd">
-            `)
-//line views/vaction/Results.html:43
+        </label>
+        <div class="bd">
+          `)
+//line views/vaction/Results.html:48
 		vproject.StreamSummary(qw422016, x.Prj, nil, nil, &x.Res.Action, ps)
-//line views/vaction/Results.html:43
+//line views/vaction/Results.html:48
 		qw422016.N().S(`
-            `)
-//line views/vaction/Results.html:44
+          `)
+//line views/vaction/Results.html:49
 		StreamDetail(qw422016, x.Cfg, x.Res, false, as, ps)
-//line views/vaction/Results.html:44
+//line views/vaction/Results.html:49
 		qw422016.N().S(`
-          </div>
-        </li>
+        </div>
+      </li>
 `)
-//line views/vaction/Results.html:47
+//line views/vaction/Results.html:52
 	}
-//line views/vaction/Results.html:47
-	qw422016.N().S(`      </ul>
-    </div>
+//line views/vaction/Results.html:52
+	qw422016.N().S(`    </ul>
   </div>
 `)
-//line views/vaction/Results.html:51
+//line views/vaction/Results.html:55
 }
 
-//line views/vaction/Results.html:51
+//line views/vaction/Results.html:55
 func (p *Results) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vaction/Results.html:51
+//line views/vaction/Results.html:55
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vaction/Results.html:51
+//line views/vaction/Results.html:55
 	p.StreamBody(qw422016, as, ps)
-//line views/vaction/Results.html:51
+//line views/vaction/Results.html:55
 	qt422016.ReleaseWriter(qw422016)
-//line views/vaction/Results.html:51
+//line views/vaction/Results.html:55
 }
 
-//line views/vaction/Results.html:51
+//line views/vaction/Results.html:55
 func (p *Results) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vaction/Results.html:51
+//line views/vaction/Results.html:55
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vaction/Results.html:51
+//line views/vaction/Results.html:55
 	p.WriteBody(qb422016, as, ps)
-//line views/vaction/Results.html:51
+//line views/vaction/Results.html:55
 	qs422016 := string(qb422016.B)
-//line views/vaction/Results.html:51
+//line views/vaction/Results.html:55
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vaction/Results.html:51
+//line views/vaction/Results.html:55
 	return qs422016
-//line views/vaction/Results.html:51
+//line views/vaction/Results.html:55
 }
 
-//line views/vaction/Results.html:53
-func StreamSharedBuildActions(qw422016 *qt422016.Writer) {
-//line views/vaction/Results.html:53
+//line views/vaction/Results.html:57
+func StreamAvailBuildActions(qw422016 *qt422016.Writer, currTags []string) {
+//line views/vaction/Results.html:57
 	qw422016.N().S(`
-  <table class="mt">
+`)
+//line views/vaction/Results.html:59
+	var tags string
+	if len(currTags) > 0 {
+		tags = "&tags=" + strings.Join(currTags, ",")
+	}
+
+//line views/vaction/Results.html:63
+	qw422016.N().S(`  <table class="min-200">
     <thead>
       <tr>
-        <th>Action</th>
+        <th class="shrink">Build Action</th>
         <th>Description</th>
       </tr>
     </thead>
     <tbody>
 `)
-//line views/vaction/Results.html:62
+//line views/vaction/Results.html:72
 	for _, b := range action.AllBuilds {
-//line views/vaction/Results.html:62
+//line views/vaction/Results.html:72
 		qw422016.N().S(`      <tr>
         <td><a href="/run/build?phase=`)
-//line views/vaction/Results.html:64
+//line views/vaction/Results.html:74
 		qw422016.E().S(b.Key)
-//line views/vaction/Results.html:64
+//line views/vaction/Results.html:74
+		qw422016.E().S(tags)
+//line views/vaction/Results.html:74
 		qw422016.N().S(`" title="`)
-//line views/vaction/Results.html:64
+//line views/vaction/Results.html:74
 		qw422016.E().S(b.Description)
-//line views/vaction/Results.html:64
+//line views/vaction/Results.html:74
 		qw422016.N().S(`"><button>`)
-//line views/vaction/Results.html:64
+//line views/vaction/Results.html:74
 		qw422016.E().S(b.Title)
-//line views/vaction/Results.html:64
+//line views/vaction/Results.html:74
 		qw422016.N().S(`</button></a></td>
         <td>`)
-//line views/vaction/Results.html:65
+//line views/vaction/Results.html:75
 		qw422016.E().S(b.Description)
-//line views/vaction/Results.html:65
+//line views/vaction/Results.html:75
 		qw422016.N().S(`</td>
       </tr>
 `)
-//line views/vaction/Results.html:67
+//line views/vaction/Results.html:77
 	}
-//line views/vaction/Results.html:67
+//line views/vaction/Results.html:77
 	qw422016.N().S(`    </tbody>
   </table>
 `)
-//line views/vaction/Results.html:70
+//line views/vaction/Results.html:80
 }
 
-//line views/vaction/Results.html:70
-func WriteSharedBuildActions(qq422016 qtio422016.Writer) {
-//line views/vaction/Results.html:70
+//line views/vaction/Results.html:80
+func WriteAvailBuildActions(qq422016 qtio422016.Writer, currTags []string) {
+//line views/vaction/Results.html:80
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vaction/Results.html:70
-	StreamSharedBuildActions(qw422016)
-//line views/vaction/Results.html:70
+//line views/vaction/Results.html:80
+	StreamAvailBuildActions(qw422016, currTags)
+//line views/vaction/Results.html:80
 	qt422016.ReleaseWriter(qw422016)
-//line views/vaction/Results.html:70
+//line views/vaction/Results.html:80
 }
 
-//line views/vaction/Results.html:70
-func SharedBuildActions() string {
-//line views/vaction/Results.html:70
+//line views/vaction/Results.html:80
+func AvailBuildActions(currTags []string) string {
+//line views/vaction/Results.html:80
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vaction/Results.html:70
-	WriteSharedBuildActions(qb422016)
-//line views/vaction/Results.html:70
+//line views/vaction/Results.html:80
+	WriteAvailBuildActions(qb422016, currTags)
+//line views/vaction/Results.html:80
 	qs422016 := string(qb422016.B)
-//line views/vaction/Results.html:70
+//line views/vaction/Results.html:80
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vaction/Results.html:70
+//line views/vaction/Results.html:80
 	return qs422016
-//line views/vaction/Results.html:70
-}
-
-//line views/vaction/Results.html:72
-func StreamSharedActions(qw422016 *qt422016.Writer, title string, as *app.State, ps *cutil.PageState) {
-//line views/vaction/Results.html:72
-	qw422016.N().S(`
-  `)
-//line views/vaction/Results.html:73
-	vsearch.StreamForm(qw422016, "/p/search", "", "Search Files", ps)
-//line views/vaction/Results.html:73
-	qw422016.N().S(`
-  <h3>All Projects: `)
-//line views/vaction/Results.html:74
-	qw422016.E().S(title)
-//line views/vaction/Results.html:74
-	qw422016.N().S(`</h3>
-  <div class="mt">
-`)
-//line views/vaction/Results.html:76
-	for _, t := range action.ProjectTypes {
-//line views/vaction/Results.html:76
-		qw422016.N().S(`    <a href="/run/`)
-//line views/vaction/Results.html:77
-		qw422016.E().S(t.Key)
-//line views/vaction/Results.html:77
-		qw422016.N().S(`" title="`)
-//line views/vaction/Results.html:77
-		qw422016.E().S(t.Description)
-//line views/vaction/Results.html:77
-		qw422016.N().S(`"><button>`)
-//line views/vaction/Results.html:77
-		qw422016.E().S(t.Title)
-//line views/vaction/Results.html:77
-		qw422016.N().S(`</button></a>
-`)
-//line views/vaction/Results.html:78
-	}
-//line views/vaction/Results.html:78
-	qw422016.N().S(`    <a href="/git" title="Git dashboard for all projects"><button>Git</button></a>
-  </div>
-`)
-//line views/vaction/Results.html:81
-}
-
-//line views/vaction/Results.html:81
-func WriteSharedActions(qq422016 qtio422016.Writer, title string, as *app.State, ps *cutil.PageState) {
-//line views/vaction/Results.html:81
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vaction/Results.html:81
-	StreamSharedActions(qw422016, title, as, ps)
-//line views/vaction/Results.html:81
-	qt422016.ReleaseWriter(qw422016)
-//line views/vaction/Results.html:81
-}
-
-//line views/vaction/Results.html:81
-func SharedActions(title string, as *app.State, ps *cutil.PageState) string {
-//line views/vaction/Results.html:81
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vaction/Results.html:81
-	WriteSharedActions(qb422016, title, as, ps)
-//line views/vaction/Results.html:81
-	qs422016 := string(qb422016.B)
-//line views/vaction/Results.html:81
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vaction/Results.html:81
-	return qs422016
-//line views/vaction/Results.html:81
+//line views/vaction/Results.html:80
 }

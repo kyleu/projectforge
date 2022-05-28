@@ -14,8 +14,9 @@ import (
 )
 
 var (
-	gitCommitArgs = cutil.Args{{Key: "message", Title: "Message", Description: "The message to used for the commit"}}
+	messageArg    = &cutil.Arg{Key: "message", Title: "Message", Description: "The message to used for the commit"}
 	gitBranchArgs = cutil.Args{{Key: "name", Title: "Branch Name", Description: "The name to used for the new branch"}}
+	gitCommitArgs = cutil.Args{messageArg}
 )
 
 func GitAction(rc *fasthttp.RequestCtx) {
@@ -29,32 +30,46 @@ func GitAction(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to load project")
 		}
+		var bc = []string{"projects", prj.Key, "Git"}
 		var result *git.Result
+		var actn *git.Action
 		switch a {
 		case git.ActionStatus.Key, "":
+			actn = git.ActionStatus
 			// runs by default
 		case git.ActionCreateRepo.Key:
-			result, err = as.Services.Git.CreateRepo(prj)
-		case git.ActionMagic.Key:
-			result, err = as.Services.Git.Magic(prj)
+			actn = git.ActionCreateRepo
+			result, err = as.Services.Git.CreateRepo(ps.Context, prj, ps.Logger)
 		case git.ActionFetch.Key:
+			actn = git.ActionFetch
 			result, err = as.Services.Git.Fetch(ps.Context, prj, ps.Logger)
 		case git.ActionCommit.Key:
+			actn = git.ActionCommit
 			argRes := cutil.CollectArgs(rc, gitCommitArgs)
 			if len(argRes.Missing) > 0 {
 				url := fmt.Sprintf("/git/%s/commit", prj.Key)
 				ps.Data = argRes
-				return render(rc, as, &verror.Args{URL: url, Directions: "Enter your commit message", ArgRes: argRes}, ps, "projects", prj.Key, "Git")
+				return render(rc, as, &verror.Args{URL: url, Directions: "Enter your commit message", ArgRes: argRes}, ps, bc...)
 			}
 			result, err = as.Services.Git.Commit(ps.Context, prj, argRes.Values["message"], ps.Logger)
 		case git.ActionBranch.Key:
+			actn = git.ActionBranch
 			argRes := cutil.CollectArgs(rc, gitBranchArgs)
 			if len(argRes.Missing) > 0 {
 				url := fmt.Sprintf("/git/%s/branch", prj.Key)
 				ps.Data = argRes
-				return render(rc, as, &verror.Args{URL: url, Directions: "Enter your branch name", ArgRes: argRes}, ps, "projects", prj.Key, "Git")
+				return render(rc, as, &verror.Args{URL: url, Directions: "Enter your branch name", ArgRes: argRes}, ps, bc...)
 			}
 			result, err = as.Services.Git.Commit(ps.Context, prj, argRes.Values["message"], ps.Logger)
+		case git.ActionMagic.Key:
+			actn = git.ActionMagic
+			argRes := cutil.CollectArgs(rc, gitCommitArgs)
+			if len(argRes.Missing) > 0 {
+				url := fmt.Sprintf("/git/%s/magic", prj.Key)
+				ps.Data = argRes
+				return render(rc, as, &verror.Args{URL: url, Directions: "Enter your commit message", ArgRes: argRes}, ps, bc...)
+			}
+			result, err = as.Services.Git.Magic(ps.Context, prj, argRes.Values["message"], ps.Logger)
 		default:
 			err = errors.Errorf("unhandled action [%s]", a)
 		}
@@ -68,6 +83,6 @@ func GitAction(rc *fasthttp.RequestCtx) {
 			result.Data = result.Data.Merge(statusResult.Data)
 		}
 		ps.Data = result
-		return render(rc, as, &vgit.Result{Result: result}, ps, "projects", prj.Key, "Git")
+		return render(rc, as, &vgit.Result{Action: actn, Result: result}, ps, bc...)
 	})
 }

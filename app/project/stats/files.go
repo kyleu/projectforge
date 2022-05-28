@@ -9,7 +9,7 @@ import (
 type FileStats []*FileStat
 
 func (f FileStats) Count() int {
-	var ret = 0
+	ret := 0
 	for _, x := range f {
 		ret += x.Count()
 	}

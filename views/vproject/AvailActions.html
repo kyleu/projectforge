@@ -1,0 +1,35 @@
+{% import (
+  "strings"
+
+  "projectforge.dev/projectforge/app/action"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/views/vsearch"
+) %}
+
+{% func AvailActions(title string, currTags []string, availTags []string, ps *cutil.PageState) %}
+  {%- code
+    var tags string
+    if len(currTags) > 0 {
+      tags = "?tags=" + strings.Join(currTags, ",")
+    }
+  -%}
+  {%= vsearch.Form("/p/search", "", "Search All Files", currTags, ps) %}
+  <h3>
+    <a href="/p">All Projects</a>{% if len(currTags) > 0 %} tagged [<a href="/p?tags={%s strings.Join(currTags, `, `) %}">{%s strings.Join(currTags, `, `) %}</a>]{% endif %}: {%s title %}
+  </h3>
+  <div class="clear"></div>
+  {%- if len(availTags) > 0 -%}
+  <div class="right mt">
+    Available Tags:
+    {%- for idx, t := range availTags -%}
+    <a href="?tags={%s t %}"><code>{%s t %}</code></a>{% if idx != (len(availTags)-1) %}, {% endif %}
+    {%- endfor -%}
+  </div>
+  {%- endif -%}
+  <div class="mt">
+    {%- for _, t := range action.ProjectTypes -%}
+    <a href="/run/{%s t.Key %}{%s tags %}" title="{%s t.Description %}"><button>{%s t.Title %}</button></a>
+    {%- endfor -%}
+    <a href="/git{%s tags %}" title="Git dashboard for all projects"><button>Git</button></a>
+  </div>
+{% endfunc %}

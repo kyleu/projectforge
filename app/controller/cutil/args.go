@@ -9,6 +9,7 @@ type Arg struct {
 	Key         string `json:"key"`
 	Title       string `json:"title"`
 	Description string `json:"description,omitempty"`
+	Type        string `json:"type,omitempty"`
 }
 
 type Args []*Arg

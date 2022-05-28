@@ -15,7 +15,7 @@
         q = args.GetStringOpt(`q`)
       }
     -%}
-    {%= vsearch.Form("/m/" + mod.Key + "/search", q, "Search Files", ps) %}
+    {%= vsearch.Form("/m/" + mod.Key + "/search", q, "Search Files", nil, ps) %}
     <h3>{%= components.SVGRefIcon(mod.IconSafe(), ps) %} {%s mod.Title() %}</h3>
     <div class="mt">
       {%- if len(path) == 0 -%}

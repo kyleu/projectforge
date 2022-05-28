@@ -1,81 +1,80 @@
 {% import (
+  "strings"
+
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/action"
   "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/project"
   "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/layout"
   "projectforge.dev/projectforge/views/vproject"
-  "projectforge.dev/projectforge/views/vsearch"
 ) %}
 
 {% code type Results struct {
   layout.Basic
   T action.Type
   Cfg util.ValueMap
+  Projects project.Projects
   Ctxs action.ResultContexts
+  Tags []string
   IsBuild bool
 } %}
 
 {% func (p *Results) Body(as *app.State, ps *cutil.PageState) %}
+  {%- code
+    title := p.T.Title
+    if phase := p.Cfg.GetStringOpt("phase"); phase != "" {
+      title += " [" + phase + "]"
+    }
+  -%}
   <div class="card">
-    {%- code
-      title := p.T.Title
-      if phase := p.Cfg.GetStringOpt("phase"); phase != "" {
-        title += " [" + phase + "]"
-      }
-    -%}
-    {%= SharedActions(title, as, ps) %}
+    {%= vproject.AvailActions(title, p.Tags, p.Projects.Tags(), ps) %}
+  </div>
+  <div class="card">
     {%- if p.IsBuild -%}
-    {%= SharedBuildActions() %}
+    {%= AvailBuildActions(p.Tags) %}
     {%- endif -%}
-    <div class="mt">
-      <ul class="accordion">
-        {%- for _, x := range p.Ctxs -%}
-        <li>
-          <input id="accordion-{%s x.Prj.Key %}" type="checkbox" hidden />
-          <label for="accordion-{%s x.Prj.Key %}">
-            <div class="right">{%s= x.Status() %}{% if x.Res != nil && len(x.Res.Errors) > 0 %} ({%d len(x.Res.Errors) %} errors){% endif %}</div>
-            {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef(x.Prj.IconSafe(), 16, 16, "icon", ps) %}
-            {% if x.Prj.Key == util.AppKey %}<strong>{% endif %}{%s x.Prj.Title() %}{% if x.Prj.Key == util.AppKey %}</strong>{% endif %}
-          </label>
-          <div class="bd">
-            {%= vproject.Summary(x.Prj, nil, nil, &x.Res.Action, ps) %}
-            {%= Detail(x.Cfg, x.Res, false, as, ps) %}
-          </div>
-        </li>
-        {%- endfor -%}
-      </ul>
-    </div>
+    <ul class="accordion">
+      {%- for _, x := range p.Ctxs -%}
+      <li>
+        <input id="accordion-{%s x.Prj.Key %}" type="checkbox" hidden />
+        <label for="accordion-{%s x.Prj.Key %}">
+          <div class="right">{%s= x.Status() %}{% if x.Res != nil && len(x.Res.Errors) > 0 %} ({%d len(x.Res.Errors) %} errors){% endif %}</div>
+          {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef(x.Prj.IconSafe(), 16, 16, "icon", ps) %}
+          {% if x.Prj.Key == util.AppKey %}<strong>{% endif %}{%s x.Prj.Title() %}{% if x.Prj.Key == util.AppKey %}</strong>{% endif %}
+        </label>
+        <div class="bd">
+          {%= vproject.Summary(x.Prj, nil, nil, &x.Res.Action, ps) %}
+          {%= Detail(x.Cfg, x.Res, false, as, ps) %}
+        </div>
+      </li>
+      {%- endfor -%}
+    </ul>
   </div>
 {% endfunc %}
 
-{% func SharedBuildActions() %}
-  <table class="mt">
+{% func AvailBuildActions(currTags []string) %}
+  {%- code
+    var tags string
+    if len(currTags) > 0 {
+      tags = "&tags=" + strings.Join(currTags, ",")
+    }
+  -%}
+  <table class="min-200">
     <thead>
       <tr>
-        <th>Action</th>
+        <th class="shrink">Build Action</th>
         <th>Description</th>
       </tr>
     </thead>
     <tbody>
       {%- for _, b := range action.AllBuilds -%}
       <tr>
-        <td><a href="/run/build?phase={%s b.Key %}" title="{%s b.Description %}"><button>{%s b.Title %}</button></a></td>
+        <td><a href="/run/build?phase={%s b.Key %}{%s tags %}" title="{%s b.Description %}"><button>{%s b.Title %}</button></a></td>
         <td>{%s b.Description %}</td>
       </tr>
       {%- endfor -%}
     </tbody>
   </table>
-{% endfunc %}
-
-{% func SharedActions(title string, as *app.State, ps *cutil.PageState) %}
-  {%= vsearch.Form("/p/search", "", "Search Files", ps) %}
-  <h3>All Projects: {%s title %}</h3>
-  <div class="mt">
-    {%- for _, t := range action.ProjectTypes -%}
-    <a href="/run/{%s t.Key %}" title="{%s t.Description %}"><button>{%s t.Title %}</button></a>
-    {%- endfor -%}
-    <a href="/git" title="Git dashboard for all projects"><button>Git</button></a>
-  </div>
 {% endfunc %}

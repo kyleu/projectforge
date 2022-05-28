@@ -46,7 +46,10 @@ func ProjectSearch(rc *fasthttp.RequestCtx) {
 func ProjectSearchAll(rc *fasthttp.RequestCtx) {
 	act("project.search.all", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prjs := as.Services.Projects.Projects()
-
+		tags := util.StringSplitAndTrim(string(rc.URI().QueryArgs().Peek("tags")), ",")
+		if len(tags) > 0 {
+			prjs = prjs.WithTags(tags)
+		}
 		q := string(rc.URI().QueryArgs().Peek("q"))
 		params := &search.Params{
 			Q:  q,
@@ -65,7 +68,7 @@ func ProjectSearchAll(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = "Project Search Results"
 		ps.Data = ret
-		page := &vproject.SearchAll{Params: params, Projects: prjs, Results: ret}
+		page := &vproject.SearchAll{Params: params, Projects: prjs, Tags: tags, Results: ret}
 		return render(rc, as, page, ps, "projects", "Search")
 	})
 }

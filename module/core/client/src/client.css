@@ -12,6 +12,7 @@
 @import "./style/modal.css";
 @import "./style/tabs.css";
 @import "./style/formatter.css";
+@import "./style/markdown.css";
 
 @import "./style/nav.css";{{{ if .HasModule "search" }}}
 @import "./style/search.css";{{{ end }}}

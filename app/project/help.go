@@ -21,6 +21,7 @@ var Helpers = func() map[string][]string {
 	add("port", "The TCP port used by your project's HTTP server")
 	add("modules", "Project Forge modules used by this project")
 	add("ignore", "Files ignored by your project")
+	add("tags", "Tags for your project, not really used anywhere yet")
 
 	// info
 	add("org", "The Github organization responsible for this project")
