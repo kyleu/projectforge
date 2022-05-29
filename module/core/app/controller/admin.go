@@ -23,31 +23,9 @@ func Admin(rc *fasthttp.RequestCtx) {
 		path := util.StringSplitAndTrim(strings.TrimPrefix(string(rc.URI().Path()), "/admin"), "/")
 		if len(path) == 0 {
 			ps.Title = "Administration"
-			x := &runtime.MemStats{}
-			runtime.ReadMemStats(x)
-			return render(rc, as, &vadmin.Settings{Perms: user.GetPermissions(), Mem: x}, ps, "admin")
+			return render(rc, as, &vadmin.Settings{Perms: user.GetPermissions()}, ps, "admin")
 		}
 		switch path[0] {
-		case "modules":
-			di, err := util.GetDebugInfo()
-			if err != nil {
-				return "", err
-			}
-			ps.Title = "Modules"
-			ps.Data = di
-			return render(rc, as, &vadmin.Modules{Info: di}, ps, "admin", "Modules")
-		case "request":
-			ps.Title = "Request Debug"
-			ps.Data = cutil.RequestCtxToMap(rc, nil)
-			return render(rc, as, &vadmin.Request{RC: rc}, ps, "admin", "Request")
-		case "session":
-			ps.Title = "Session Debug"
-			ps.Data = ps.Session
-			return render(rc, as, &vadmin.Session{}, ps, "admin", "Session"){{{ if .HasModule "queue" }}}
-		case "queue":
-			ps.Title = "Queue Debug"
-			ps.Data = as.Services.Publisher
-			return render(rc, as, &vadmin.Queue{Con: as.Services.Consumer, Pub: as.Services.Publisher}, ps, "admin", "Queue"){{{ end }}}
 		case "cpu":
 			switch path[1] {
 			case "start":
@@ -62,22 +40,51 @@ func Admin(rc *fasthttp.RequestCtx) {
 			default:
 				return "", errors.Errorf("unhandled CPU profile action [%s]", path[1])
 			}
-		case "heap":
-			err := takeHeapProfile()
-			if err != nil {
-				return "", err
-			}
-			return flashAndRedir(true, "wrote heap profile", "/admin", rc, ps){{{ if .HasModule "migration" }}}
-		case "migrations":
-			ms := migrate.GetMigrations()
-			am := migrate.ListMigrations(ps.Context, as.DB, nil, ps.Logger)
-			ps.Data = util.ValueMap{"available": ms, "applied": am}
-			return render(rc, as, &vadmin.Migrations{Available: ms, Applied: am}, ps, "admin", "Migrations"){{{ end }}}
 		case "gc":
 			timer := util.TimerStart()
 			runtime.GC()
 			msg := fmt.Sprintf("ran garbage collection in [%s]", timer.EndString())
 			return flashAndRedir(true, msg, "/admin", rc, ps)
+		case "heap":
+			err := takeHeapProfile()
+			if err != nil {
+				return "", err
+			}
+			return flashAndRedir(true, "wrote heap profile", "/admin", rc, ps)
+		case "memusage":
+			x := &runtime.MemStats{}
+			runtime.ReadMemStats(x)
+			ps.Data = x
+			return render(rc, as, &vadmin.MemUsage{Mem: x}, ps, "admin", "Memory Usage"){{{ if .HasModule "migration" }}}
+		case "migrations":
+			ms := migrate.GetMigrations()
+			am := migrate.ListMigrations(ps.Context, as.DB, nil, ps.Logger)
+			ps.Data = util.ValueMap{"available": ms, "applied": am}
+			return render(rc, as, &vadmin.Migrations{Available: ms, Applied: am}, ps, "admin", "Migrations"){{{ end }}}
+		case "modules":
+			di, err := util.GetDebugInfo()
+			if err != nil {
+				return "", err
+			}
+			ps.Title = "Modules"
+			ps.Data = di
+			return render(rc, as, &vadmin.Modules{Info: di}, ps, "admin", "Modules"){{{ if .HasModule "queue" }}}
+		case "queue":
+			ps.Title = "Queue Debug"
+			ps.Data = as.Services.Publisher
+			return render(rc, as, &vadmin.Queue{Con: as.Services.Consumer, Pub: as.Services.Publisher}, ps, "admin", "Queue"){{{ end }}}
+		case "request":
+			ps.Title = "Request Debug"
+			ps.Data = cutil.RequestCtxToMap(rc, nil)
+			return render(rc, as, &vadmin.Request{RC: rc}, ps, "admin", "Request")
+		case "routes":
+			ps.Title = "HTTP Routes"
+			ps.Data = AppRoutesList
+			return render(rc, as, &vadmin.Routes{Routes: AppRoutesList}, ps, "admin", "Request")
+		case "session":
+			ps.Title = "Session Debug"
+			ps.Data = ps.Session
+			return render(rc, as, &vadmin.Session{}, ps, "admin", "Session")
 		// $PF_SECTION_START(admin-actions)$
 		// $PF_SECTION_END(admin-actions)$
 		default:

@@ -1,0 +1,20 @@
+{% import (
+  "runtime"
+
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/views/components"
+  "{{{ .Package }}}/views/layout"
+) %}
+
+{% code type MemUsage struct {
+  layout.Basic
+  Mem *runtime.MemStats
+} %}
+
+{% func (p *MemUsage) MemUsage(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>Memory Usage</h3>
+    {%s= components.JSON(p.Mem) %}
+  </div>
+{% endfunc %}

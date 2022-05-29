@@ -1,0 +1,35 @@
+{% import (
+	"golang.org/x/exp/maps"
+	"golang.org/x/exp/slices"
+
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/views/layout"
+) %}
+
+{% code type Routes struct {
+  layout.Basic
+  Routes map[string][]string
+} %}
+
+{% func (p *Routes) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>HTTP Routes</h3>
+    <ul class="mt">
+      {%- code
+        x := maps.Keys(p.Routes)
+        slices.Sort(x)
+      -%}
+      {%- for _, k := range x -%}
+      <li>
+        <strong>{%s k %}</strong>
+        <ul>
+          {%- for _, r := range p.Routes[k] -%}
+          <li><code>{%s r %}</code></li>
+          {%- endfor -%}
+        </ul>
+      </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+{% endfunc %}

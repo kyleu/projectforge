@@ -9,6 +9,8 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+var AppRoutesList map[string][]string
+
 //nolint
 func AppRoutes() fasthttp.RequestHandler {
 	r := router.New()
@@ -88,6 +90,8 @@ func AppRoutes() fasthttp.RequestHandler {
 	r.OPTIONS("/", Options)
 	r.OPTIONS("/{_:*}", Options)
 	r.NotFound = NotFound
+
+	AppRoutesList = r.List()
 
 	p := httpmetrics.NewMetrics(util.AppKey)
 	return fasthttp.CompressHandlerLevel(p.WrapHandler(r), fasthttp.CompressBestSpeed)

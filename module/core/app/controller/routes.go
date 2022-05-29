@@ -8,6 +8,8 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
+var AppRoutesList map[string][]string
+
 //nolint
 func AppRoutes() fasthttp.RequestHandler {
 	r := router.New()
@@ -35,9 +37,7 @@ func AppRoutes() fasthttp.RequestHandler {
 	r.GET("/docs", Docs)
 	r.GET("/docs/{path:*}", Docs){{{ end }}}
 
-	r.GET("/admin", Admin){{{ if .HasModule "sandbox" }}}
-	r.GET("/admin/sandbox", SandboxList)
-	r.GET("/admin/sandbox/{key}", SandboxRun){{{ end }}}{{{ if.HasModule "audit" }}}
+	r.GET("/admin", Admin){{{ if.HasModule "audit" }}}
 	r.GET("/admin/audit", AuditList)
 	r.GET("/admin/audit/random", AuditCreateFormRandom)
 	r.GET("/admin/audit/new", AuditCreateForm)
@@ -51,7 +51,9 @@ func AppRoutes() fasthttp.RequestHandler {
 	r.GET("/admin/database/{key}", DatabaseDetail)
 	r.GET("/admin/database/{key}/{act}", DatabaseAction)
 	r.GET("/admin/database/{key}/tables/{schema}/{table}", DatabaseTableView){{{ if .DatabaseUISQLEditor }}}
-	r.POST("/admin/database/{key}/sql", DatabaseSQLRun){{{ end }}}{{{ end }}}
+	r.POST("/admin/database/{key}/sql", DatabaseSQLRun){{{ end }}}{{{ end }}}{{{ if .HasModule "sandbox" }}}
+	r.GET("/admin/sandbox", SandboxList)
+	r.GET("/admin/sandbox/{key}", SandboxRun){{{ end }}}
 	r.GET("/admin/{path:*}", Admin)
 
 	r.GET("/favicon.ico", Favicon)
@@ -61,6 +63,8 @@ func AppRoutes() fasthttp.RequestHandler {
 	r.OPTIONS("/", Options)
 	r.OPTIONS("/{_:*}", Options)
 	r.NotFound = NotFound
+
+	AppRoutesList = r.List()
 
 	p := httpmetrics.NewMetrics(util.AppKey)
 	return fasthttp.CompressHandlerLevel(p.WrapHandler(r), fasthttp.CompressBestSpeed)

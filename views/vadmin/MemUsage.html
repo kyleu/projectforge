@@ -1,0 +1,21 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "runtime"
+
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/layout"
+) %}
+
+{% code type MemUsage struct {
+  layout.Basic
+  Mem *runtime.MemStats
+} %}
+
+{% func (p *MemUsage) MemUsage(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>Memory Usage</h3>
+    {%s= components.JSON(p.Mem) %}
+  </div>
+{% endfunc %}
