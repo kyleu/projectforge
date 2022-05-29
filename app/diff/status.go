@@ -32,6 +32,17 @@ func (t *Status) String() string {
 	return t.Key
 }
 
+func (t *Status) StringFor(act string) string {
+	switch {
+	case act == "audit" && t.Key == StatusDifferent.Key:
+		return "Invalid Header"
+	case act == "audit" && t.Key == StatusMissing.Key:
+		return "Empty Folder"
+	default:
+		return util.StringToTitle(t.Key)
+	}
+}
+
 func (t *Status) MarshalJSON() ([]byte, error) {
 	return util.ToJSONBytes(t.Key, false), nil
 }

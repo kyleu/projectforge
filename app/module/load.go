@@ -87,7 +87,7 @@ func (s *Service) load(ctx context.Context, key string, pth string, url string) 
 }
 
 func (s *Service) loadDirectory(ctx context.Context, pth string, u string, fs filesystem.FileLoader) (Modules, error) {
-	dirs := fs.ListDirectories(pth)
+	dirs := fs.ListDirectories(pth, nil)
 	if len(dirs) == 0 {
 		return nil, errors.Errorf("directory at path [%s] does not contain module directories", pth)
 	}

@@ -1,4 +1,3 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
 package theme
 
 import (
@@ -6,8 +5,8 @@ import (
 
 	"github.com/pkg/errors"
 
-	"projectforge.dev/projectforge/app/lib/filesystem"
-	"projectforge.dev/projectforge/app/util"
+	"{{{ .Package }}}/app/lib/filesystem"
+	"{{{ .Package }}}/app/util"
 )
 
 const KeyNew = "new"

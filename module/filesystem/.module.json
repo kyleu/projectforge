@@ -1,0 +1,10 @@
+{
+  "name": "Filesystem",
+  "icon": "file",
+  "description": "Provides an abstraction around local and remote filesystems",
+  "authorName": "Kyle U",
+  "authorEmail": "kyle@kyleu.com",
+  "license": "CC0",
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/filesystem",
+  "priority": 10
+}

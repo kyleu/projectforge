@@ -25,31 +25,35 @@ func (f *FileSystem) ListFiles(path string, ign []string) []os.DirEntry {
 	return ret
 }
 
-func (f *FileSystem) ListJSON(path string, trimExtension bool) []string {
-	return f.ListExtension(path, "json", trimExtension)
+func (f *FileSystem) ListJSON(path string, ign []string, trimExtension bool) []string {
+	return f.ListExtension(path, "json", ign, trimExtension)
 }
 
-func (f *FileSystem) ListExtension(path string, ext string, trimExtension bool) []string {
+func (f *FileSystem) ListExtension(path string, ext string, ign []string, trimExtension bool) []string {
+	ignore := buildIgnore(ign)
 	matches, err := filepath.Glob(f.getPath(path, "*."+ext))
 	if err != nil {
 		f.logger.Warnf("cannot list [%s] in path [%s]: %+v", ext, path, err)
 	}
 	ret := make([]string, 0, len(matches))
 	for _, j := range matches {
-		idx := strings.LastIndex(j, "/")
-		if idx > 0 {
-			j = j[idx+1:]
+		if !checkIgnore(ignore, j) {
+			idx := strings.LastIndex(j, "/")
+			if idx > 0 {
+				j = j[idx+1:]
+			}
+			if trimExtension {
+				j = strings.TrimSuffix(j, "."+ext)
+			}
+			ret = append(ret, j)
 		}
-		if trimExtension {
-			j = strings.TrimSuffix(j, "."+ext)
-		}
-		ret = append(ret, j)
 	}
 	slices.Sort(ret)
 	return ret
 }
 
-func (f *FileSystem) ListDirectories(path string) []string {
+func (f *FileSystem) ListDirectories(path string, ign []string) []string {
+	ignore := buildIgnore(ign)
 	if !f.Exists(path) {
 		return nil
 	}
@@ -61,7 +65,9 @@ func (f *FileSystem) ListDirectories(path string) []string {
 	var ret []string
 	for _, f := range files {
 		if f.IsDir() {
-			ret = append(ret, f.Name())
+			if !checkIgnore(ignore, f.Name()) {
+				ret = append(ret, f.Name())
+			}
 		}
 	}
 	slices.Sort(ret)

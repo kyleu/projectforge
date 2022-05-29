@@ -14,7 +14,9 @@
     {%- case "audit" -%}
     <div class="mt">
       <a href="/run/{%s prjKey %}/audit?fix=remove" title="Remove all audited files from project"><button>Purge All</button></a>
+      {%- if diffs.HasStatus(diff.StatusDifferent) -%}{% space %}
       <a href="/run/{%s prjKey %}/audit?fix=header" title="Remove header from all audited files"><button>Fix All</button></a>
+      {%- endif -%}
     </div>
     {%- case "build" -%}
     <div class="mt">
@@ -40,14 +42,16 @@
             <a href="/p/{%s prjKey %}/fs/{%s d.Path %}" target="_blank">{%s d.Path %}</a>
             {%- endif -%}
           </td>
-          <td>{%s d.Status.String() %}</td>
+          <td>{%s d.Status.StringFor(act.Key) %}</td>
           <td>
             {%- switch act.Key -%}
             {%- case "audit" -%}
             <form action="/run/{%s prjKey %}/audit" method="get">
               <input type="hidden" name="file" value="{%s d.Path %}" />
               <button type="submit" name="fix" value="remove" title="Remove file from project">Purge</button>{% space %}
+              {%- if d.Status.Key == diff.StatusDifferent.Key -%}
               <button type="submit" name="fix" value="header" title="Remove header from file">Fix</button>
+              {%- endif -%}
             </form>
             {%- case "preview" -%}
             <form action="/run/{%s prjKey %}/merge" method="get">

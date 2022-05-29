@@ -17,9 +17,9 @@ type FileLoader interface {
 	Move(src string, tgt string) error
 	ListFiles(path string, ignore []string) []os.DirEntry
 	ListFilesRecursive(path string, ignore []string) ([]string, error)
-	ListJSON(path string, trimExtension bool) []string
-	ListExtension(path string, ext string, trimExtension bool) []string
-	ListDirectories(path string) []string
+	ListJSON(path string, ignore []string, trimExtension bool) []string
+	ListExtension(path string, ext string, ignore []string, trimExtension bool) []string
+	ListDirectories(path string, ignore []string) []string
 	Walk(path string, ign []string, fn func(fp string, info os.FileInfo, err error) error) error
 	Stat(path string) (os.FileInfo, error)
 	SetMode(path string, mode os.FileMode) error

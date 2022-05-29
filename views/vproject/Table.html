@@ -26,7 +26,10 @@
       <tbody>
         {%- for _, prj := range prjs -%}
         <tr>
-          <td class="shrink"><a href="/p/{%s prj.Key %}">{%= components.SVGRef(prj.IconSafe(), 16, 16, "icon", ps) %} {%s prj.Title() %}</a></td>
+          <td class="shrink"><a href="/p/{%s prj.Key %}">
+            {%= components.SVGRef(prj.IconSafe(), 16, 16, "icon", ps) %}
+            {% if prj.Key == util.AppKey %}<strong>{% endif %}{%s prj.Title() %}{% if prj.Key == util.AppKey %}</strong>{% endif %}
+          </a></td>
           <td>{%s prj.Package %}</td>
           {%- if full -%}
           <td><a href="http://localhost:{%d prj.Port %}" title="browse to [http://localhost:{%d prj.Port %}]" target="_blank">{%d prj.Port %}</a></td>

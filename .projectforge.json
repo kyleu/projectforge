@@ -10,6 +10,7 @@
     "core",
     "desktop",
     "docbrowse",
+    "filesystem",
     "ios",
     "marketing",
     "search",
@@ -22,6 +23,7 @@
     "^testproject"
   ],
   "tags": [
+    "kyleu",
     "self"
   ],
   "info": {

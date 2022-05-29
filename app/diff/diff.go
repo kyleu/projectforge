@@ -24,6 +24,15 @@ func (d *Diff) String() string {
 
 type Diffs []*Diff
 
+func (d Diffs) HasStatus(s *Status) bool {
+	for _, x := range d {
+		if x.Status.Key == s.Key {
+			return true
+		}
+	}
+	return false
+}
+
 func (d Diffs) Paths() []string {
 	ret := make([]string, 0, len(d))
 	for _, x := range d {

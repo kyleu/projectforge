@@ -7,16 +7,16 @@ import (
 	"github.com/pkg/errors"
 
 	"{{{ .Package }}}/app"{{{ if .HasDatabaseModule }}}
-	"{{{ .Package }}}/app/lib/database"{{{ end }}}
-	"{{{ .Package }}}/app/lib/filesystem"
+	"{{{ .Package }}}/app/lib/database"{{{ end }}}{{{ if .HasModule "filesystem" }}}
+	"{{{ .Package }}}/app/lib/filesystem"{{{ end }}}
 	"{{{ .Package }}}/app/lib/telemetry"
 	"{{{ .Package }}}/app/util"
 )
 
 func buildDefaultAppState(flags *Flags, logger util.Logger) (*app.State, error) {
-	f := filesystem.NewFileSystem(flags.ConfigDir, logger)
-	telemetryDisabled := util.GetEnvBool("disable_telemetry", false)
-	st, err := app.NewState(flags.Debug, _buildInfo, f, !telemetryDisabled, logger)
+	{{{ if .HasModule "filesystem" }}}fs := filesystem.NewFileSystem(flags.ConfigDir, logger)
+	{{{ end }}}telemetryDisabled := util.GetEnvBool("disable_telemetry", false)
+	st, err := app.NewState(flags.Debug, _buildInfo{{{ if .HasModule "filesystem" }}}, fs{{{ end }}}, !telemetryDisabled, logger)
 	if err != nil {
 		return nil, err
 	}

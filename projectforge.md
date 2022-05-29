@@ -11,6 +11,7 @@ The following modules were used to build this project:
 - [core](./doc/module/core.md)
 - [desktop](./doc/module/desktop.md)
 - [docbrowse](./doc/module/docbrowse.md)
+- [filesystem](./doc/module/filesystem.md)
 - [ios](./doc/module/ios.md)
 - [marketing](./doc/module/marketing.md)
 - [search](./doc/module/search.md)

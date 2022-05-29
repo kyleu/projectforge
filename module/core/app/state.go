@@ -6,8 +6,8 @@ import (
 	"time"
 {{{ if .HasModule "oauth" }}}
 	"{{{ .Package }}}/app/lib/auth"{{{ end }}}{{{ if .HasDatabaseModule }}}
-	"{{{ .Package }}}/app/lib/database"{{{ end }}}
-	"{{{ .Package }}}/app/lib/filesystem"
+	"{{{ .Package }}}/app/lib/database"{{{ end }}}{{{ if .HasModule "filesystem" }}}
+	"{{{ .Package }}}/app/lib/filesystem"{{{ end }}}
 	"{{{ .Package }}}/app/lib/telemetry"
 	"{{{ .Package }}}/app/lib/theme"
 	"{{{ .Package }}}/app/util"
@@ -30,8 +30,8 @@ func (b *BuildInfo) String() string {
 
 type State struct {
 	Debug     bool
-	BuildInfo *BuildInfo
-	Files     filesystem.FileLoader{{{ if .HasModule "oauth" }}}
+	BuildInfo *BuildInfo{{{ if .HasModule "filesystem" }}}
+	Files     filesystem.FileLoader{{{ end }}}{{{ if .HasModule "oauth" }}}
 	Auth      *auth.Service{{{ end }}}{{{ if .HasModule "migration" }}}
 	DB        *database.Service{{{ end }}}{{{ if .HasModule "readonlydb" }}}
 	DBRead    *database.Service{{{ end }}}
@@ -51,7 +51,7 @@ func (s State) Close(ctx context.Context, logger util.Logger) error {
 	{{{ end }}}return s.Services.Close(ctx, logger)
 }
 
-func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, enableTelemetry bool, logger util.Logger) (*State, error) {
+func NewState(debug bool, bi *BuildInfo{{{ if .HasModule "filesystem" }}}, f filesystem.FileLoader{{{ end }}}, enableTelemetry bool, logger util.Logger) (*State, error) {
 	loc, err := time.LoadLocation("UTC")
 	if err != nil {
 		return nil, err
@@ -60,12 +60,12 @@ func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, enableTelemetr
 
 	_ = telemetry.InitializeIfNeeded(enableTelemetry, bi.Version, logger){{{ if .HasModule "oauth" }}}
 	as := auth.NewService("", logger){{{ end }}}
-	ts := theme.NewService(f)
+	ts := theme.NewService({{{ if .HasModule "filesystem" }}}f{{{ end }}})
 
 	return &State{
 		Debug:     debug,
-		BuildInfo: bi,
-		Files:     f{{{ if .HasModule "oauth" }}},
+		BuildInfo: bi{{{ if .HasModule "filesystem" }}},
+		Files:     f{{{ end }}}{{{ if .HasModule "oauth" }}},
 		Auth:      as{{{ end }}},
 		Themes:    ts,
 		Logger:    logger,

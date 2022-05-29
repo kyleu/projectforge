@@ -10,7 +10,7 @@ import (
 )
 
 func List(fs filesystem.FileLoader) ([]string, error) {
-	files := fs.ListExtension(svgPath, "svg", false)
+	files := fs.ListExtension(svgPath, "svg", nil, false)
 	ret := make([]string, 0, len(files))
 	for _, key := range files {
 		ret = append(ret, strings.TrimSuffix(key, ".svg"))

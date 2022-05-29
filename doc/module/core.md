@@ -15,7 +15,6 @@ See `customizing.md` for details
 
 - `cmd` contains the main CLI actions
 - `controller` contains HTTP actions for the server UI, see []
-- `lib/filesystem` contains an interface for manipulating files
 - `lib/filter` is used by the UI for sorting and filtering
 - `lib/log` contains custom zap loggers and appenders
 - `lib/menu` is used by the UI to draw the left nav and breadcrumbs

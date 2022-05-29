@@ -7,5 +7,6 @@
   "license": "CC0",
   "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/marketing",
   "portOffsets": { "marketing": 1 },
+  "requires": ["filesystem"],
   "priority": 30
 }

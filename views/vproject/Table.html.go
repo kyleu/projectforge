@@ -72,94 +72,109 @@ func StreamTable(qw422016 *qt422016.Writer, prjs project.Projects, tags []string
 //line views/vproject/Table.html:29
 		qw422016.E().S(prj.Key)
 //line views/vproject/Table.html:29
-		qw422016.N().S(`">`)
-//line views/vproject/Table.html:29
+		qw422016.N().S(`">
+            `)
+//line views/vproject/Table.html:30
 		components.StreamSVGRef(qw422016, prj.IconSafe(), 16, 16, "icon", ps)
-//line views/vproject/Table.html:29
-		qw422016.N().S(` `)
-//line views/vproject/Table.html:29
+//line views/vproject/Table.html:30
+		qw422016.N().S(`
+            `)
+//line views/vproject/Table.html:31
+		if prj.Key == util.AppKey {
+//line views/vproject/Table.html:31
+			qw422016.N().S(`<strong>`)
+//line views/vproject/Table.html:31
+		}
+//line views/vproject/Table.html:31
 		qw422016.E().S(prj.Title())
-//line views/vproject/Table.html:29
-		qw422016.N().S(`</a></td>
+//line views/vproject/Table.html:31
+		if prj.Key == util.AppKey {
+//line views/vproject/Table.html:31
+			qw422016.N().S(`</strong>`)
+//line views/vproject/Table.html:31
+		}
+//line views/vproject/Table.html:31
+		qw422016.N().S(`
+          </a></td>
           <td>`)
-//line views/vproject/Table.html:30
+//line views/vproject/Table.html:33
 		qw422016.E().S(prj.Package)
-//line views/vproject/Table.html:30
+//line views/vproject/Table.html:33
 		qw422016.N().S(`</td>
 `)
-//line views/vproject/Table.html:31
+//line views/vproject/Table.html:34
 		if full {
-//line views/vproject/Table.html:31
+//line views/vproject/Table.html:34
 			qw422016.N().S(`          <td><a href="http://localhost:`)
-//line views/vproject/Table.html:32
+//line views/vproject/Table.html:35
 			qw422016.N().D(prj.Port)
-//line views/vproject/Table.html:32
+//line views/vproject/Table.html:35
 			qw422016.N().S(`" title="browse to [http://localhost:`)
-//line views/vproject/Table.html:32
+//line views/vproject/Table.html:35
 			qw422016.N().D(prj.Port)
-//line views/vproject/Table.html:32
+//line views/vproject/Table.html:35
 			qw422016.N().S(`]" target="_blank">`)
-//line views/vproject/Table.html:32
+//line views/vproject/Table.html:35
 			qw422016.N().D(prj.Port)
-//line views/vproject/Table.html:32
+//line views/vproject/Table.html:35
 			qw422016.N().S(`</a></td>
 `)
-//line views/vproject/Table.html:33
+//line views/vproject/Table.html:36
 		}
-//line views/vproject/Table.html:33
+//line views/vproject/Table.html:36
 		qw422016.N().S(`          <td>
 `)
-//line views/vproject/Table.html:35
+//line views/vproject/Table.html:38
 		for _, tag := range prj.Tags {
-//line views/vproject/Table.html:35
+//line views/vproject/Table.html:38
 			qw422016.N().S(`            <a href="/p?tags=`)
-//line views/vproject/Table.html:36
+//line views/vproject/Table.html:39
 			qw422016.E().S(tag)
-//line views/vproject/Table.html:36
+//line views/vproject/Table.html:39
 			qw422016.N().S(`"><code>`)
-//line views/vproject/Table.html:36
+//line views/vproject/Table.html:39
 			qw422016.E().S(tag)
-//line views/vproject/Table.html:36
+//line views/vproject/Table.html:39
 			qw422016.N().S(`</code></a>
 `)
-//line views/vproject/Table.html:37
+//line views/vproject/Table.html:40
 		}
-//line views/vproject/Table.html:37
+//line views/vproject/Table.html:40
 		qw422016.N().S(`          </td>
         </tr>
 `)
-//line views/vproject/Table.html:40
+//line views/vproject/Table.html:43
 	}
-//line views/vproject/Table.html:40
+//line views/vproject/Table.html:43
 	qw422016.N().S(`      </tbody>
     </table>
   </div>
 `)
-//line views/vproject/Table.html:44
+//line views/vproject/Table.html:47
 }
 
-//line views/vproject/Table.html:44
+//line views/vproject/Table.html:47
 func WriteTable(qq422016 qtio422016.Writer, prjs project.Projects, tags []string, full bool, as *app.State, ps *cutil.PageState) {
-//line views/vproject/Table.html:44
+//line views/vproject/Table.html:47
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/Table.html:44
+//line views/vproject/Table.html:47
 	StreamTable(qw422016, prjs, tags, full, as, ps)
-//line views/vproject/Table.html:44
+//line views/vproject/Table.html:47
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/Table.html:44
+//line views/vproject/Table.html:47
 }
 
-//line views/vproject/Table.html:44
+//line views/vproject/Table.html:47
 func Table(prjs project.Projects, tags []string, full bool, as *app.State, ps *cutil.PageState) string {
-//line views/vproject/Table.html:44
+//line views/vproject/Table.html:47
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/Table.html:44
+//line views/vproject/Table.html:47
 	WriteTable(qb422016, prjs, tags, full, as, ps)
-//line views/vproject/Table.html:44
+//line views/vproject/Table.html:47
 	qs422016 := string(qb422016.B)
-//line views/vproject/Table.html:44
+//line views/vproject/Table.html:47
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/Table.html:44
+//line views/vproject/Table.html:47
 	return qs422016
-//line views/vproject/Table.html:44
+//line views/vproject/Table.html:47
 }
