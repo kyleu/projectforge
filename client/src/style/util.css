@@ -1,4 +1,12 @@
 /* Content managed by Project Forge, see [projectforge.md] for details. */
+* {
+  box-sizing: inherit;
+}
+
+*:before, *:after {
+  box-sizing: inherit;
+}
+
 .left {
   float: left;
 }

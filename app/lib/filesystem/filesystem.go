@@ -7,9 +7,6 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
-
-	"projectforge.dev/projectforge/app/util"
 )
 
 var (
@@ -19,13 +16,12 @@ var (
 
 type FileSystem struct {
 	root   string
-	logger util.Logger
 }
 
 var _ FileLoader = (*FileSystem)(nil)
 
-func NewFileSystem(root string, logger util.Logger) *FileSystem {
-	return &FileSystem{root: root, logger: logger.With(zap.String("service", "filesystem"))}
+func NewFileSystem(root string) *FileSystem {
+	return &FileSystem{root: root}
 }
 
 func (f *FileSystem) getPath(ss ...string) string {
@@ -41,7 +37,7 @@ func (f *FileSystem) Root() string {
 }
 
 func (f *FileSystem) Clone() FileLoader {
-	return NewFileSystem(f.root, f.logger)
+	return NewFileSystem(f.root)
 }
 
 func (f *FileSystem) Stat(path string) (os.FileInfo, error) {

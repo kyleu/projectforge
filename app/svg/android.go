@@ -34,7 +34,7 @@ func androidAssets(ctx context.Context, prj *project.Project, orig string, fs fi
 	androidResize(96, "mipmap-xhdpi/ic_launcher.png", androidPath)
 	androidResize(144, "mipmap-xxhdpi/ic_launcher.png", androidPath)
 	androidResize(192, "mipmap-xxxhdpi/ic_launcher.png", androidPath)
-	err = fs.Remove(androidLogoPath)
+	err = fs.Remove(androidLogoPath, logger)
 	if err != nil {
 		return errors.Wrap(err, "unable to remove temporary Android [logo.svg]")
 	}

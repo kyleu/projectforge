@@ -14,7 +14,7 @@ func onSVG(ctx context.Context, pm *PrjAndMods) *Result {
 	tgt := fmt.Sprintf("%s/app/util/svg.go", pm.Prj.Path)
 
 	fs := pm.PSvc.GetFilesystem(pm.Prj)
-	count, err := svg.Run(fs, src, tgt)
+	count, err := svg.Run(fs, src, tgt, pm.Logger)
 	if err != nil {
 		return errorResult(err, TypeSVG, pm.Cfg, pm.Logger)
 	}

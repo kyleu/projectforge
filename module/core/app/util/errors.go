@@ -43,8 +43,13 @@ func GetErrorDetail(e error) *ErrorDetail {
 		cause = GetErrorDetail(u.Unwrap())
 	}
 
+	msg := "error"
+	if e != nil {
+		msg = e.Error()
+	}
+
 	return &ErrorDetail{
-		Message:    e.Error(),
+		Message:    msg,
 		StackTrace: stack,
 		Cause:      cause,
 	}

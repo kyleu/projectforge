@@ -39,7 +39,7 @@ func auditRun(ctx context.Context, pm *PrjAndMods, ret *Result) error {
 	timer := util.TimerStart()
 	tgt := pm.PSvc.GetFilesystem(pm.Prj)
 
-	generated, err := getGeneratedFiles(tgt, pm.Prj.Ignore)
+	generated, err := getGeneratedFiles(tgt, pm.Prj.Ignore, pm.Logger)
 	if err != nil {
 		return err
 	}
@@ -49,7 +49,7 @@ func auditRun(ctx context.Context, pm *PrjAndMods, ret *Result) error {
 		return err
 	}
 
-	empty, err := getEmptyFolders(tgt, pm.Prj.Ignore)
+	empty, err := getEmptyFolders(tgt, pm.Prj.Ignore, pm.Logger)
 	if err != nil {
 		return err
 	}

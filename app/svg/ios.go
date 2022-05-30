@@ -60,7 +60,7 @@ func iOSAssets(ctx context.Context, prj *project.Project, orig string, fs filesy
 	iOSResize(256, "256.png", iOSPath)
 	iOSResize(512, "512.png", iOSPath)
 	iOSResize(1024, "1024.png", iOSPath)
-	err = fs.Remove(iOSLogoPath)
+	err = fs.Remove(iOSLogoPath, logger)
 	if err != nil {
 		return errors.Wrap(err, "unable to remove temporary iOS [logo.svg]")
 	}

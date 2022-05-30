@@ -6,18 +6,20 @@ import (
 	"path/filepath"
 
 	"github.com/pkg/errors"
+
+	"{{{ .Package }}}/app/util"
 )
 
-func (f *FileSystem) Remove(path string) error {
+func (f *FileSystem) Remove(path string, logger util.Logger) error {
 	p := f.getPath(path)
-	f.logger.Warnf("removing file at path [%s]", p)
+	logger.Warnf("removing file at path [%s]", p)
 	if err := os.Remove(p); err != nil {
 		return errors.Wrapf(err, "error removing file [%s]", path)
 	}
 	return nil
 }
 
-func (f *FileSystem) RemoveRecursive(path string) error {
+func (f *FileSystem) RemoveRecursive(path string, logger util.Logger) error {
 	if !f.Exists(path) {
 		return nil
 	}
@@ -30,10 +32,10 @@ func (f *FileSystem) RemoveRecursive(path string) error {
 		var files []fs.DirEntry
 		files, err = os.ReadDir(p)
 		if err != nil {
-			f.logger.Warnf("cannot read path [%s] for removal: %+v", path, err)
+			logger.Warnf("cannot read path [%s] for removal: %+v", path, err)
 		}
 		for _, file := range files {
-			err = f.RemoveRecursive(filepath.Join(path, file.Name()))
+			err = f.RemoveRecursive(filepath.Join(path, file.Name()), logger)
 			if err != nil {
 				return err
 			}

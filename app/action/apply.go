@@ -121,7 +121,7 @@ func getPrjAndMods(ctx context.Context, p *Params) (context.Context, *PrjAndMods
 	}
 	if prj.Info != nil {
 		for _, mod := range prj.Info.ModuleDefs {
-			_, e := p.MSvc.Register(ctx, prj.Path, mod.Key, mod.Path, mod.URL)
+			_, e := p.MSvc.Register(ctx, prj.Path, mod.Key, mod.Path, mod.URL, p.Logger)
 			if e != nil {
 				return nil, nil, errors.Wrap(e, "unable to register modules")
 			}

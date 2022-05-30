@@ -7,14 +7,15 @@ import (
 
 	"golang.org/x/exp/slices"
 	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/util"
 )
 
-func Build(fs filesystem.FileLoader) (int, error) {
-	return Run(fs, "client/src/svg", "app/util/svg.go")
+func Build(fs filesystem.FileLoader, logger util.Logger) (int, error) {
+	return Run(fs, "client/src/svg", "app/util/svg.go", logger)
 }
 
-func Run(fs filesystem.FileLoader, src string, tgt string) (int, error) {
-	svgs, err := loadSVGs(fs)
+func Run(fs filesystem.FileLoader, src string, tgt string, logger util.Logger) (int, error) {
+	svgs, err := loadSVGs(fs, logger)
 	if err != nil {
 		return 0, err
 	}
@@ -46,8 +47,8 @@ func markup(key string, bytes []byte) string {
 	return replaced
 }
 
-func loadSVGs(fs filesystem.FileLoader) ([]*SVG, error) {
-	files := fs.ListExtension(svgPath, "svg", nil, false)
+func loadSVGs(fs filesystem.FileLoader, logger util.Logger) ([]*SVG, error) {
+	files := fs.ListExtension(svgPath, "svg", nil, false, logger)
 	svgs := make([]*SVG, 0, len(files))
 	for _, f := range files {
 		b, err := fs.ReadFile(filepath.Join(svgPath, f))

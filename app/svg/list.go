@@ -5,12 +5,13 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	"projectforge.dev/projectforge/app/util"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
 )
 
-func List(fs filesystem.FileLoader) ([]string, error) {
-	files := fs.ListExtension(svgPath, "svg", nil, false)
+func List(fs filesystem.FileLoader, logger util.Logger) ([]string, error) {
+	files := fs.ListExtension(svgPath, "svg", nil, false, logger)
 	ret := make([]string, 0, len(files))
 	for _, key := range files {
 		ret = append(ret, strings.TrimSuffix(key, ".svg"))
@@ -26,12 +27,12 @@ func Content(fs filesystem.FileLoader, key string) (string, error) {
 	return string(c), nil
 }
 
-func Remove(fs filesystem.FileLoader, key string) error {
-	return fs.Remove(filepath.Join(svgPath, key+".svg"))
+func Remove(fs filesystem.FileLoader, key string, logger util.Logger) error {
+	return fs.Remove(filepath.Join(svgPath, key+".svg"), logger)
 }
 
-func Contents(fs filesystem.FileLoader) ([]string, map[string]string, error) {
-	files, err := List(fs)
+func Contents(fs filesystem.FileLoader, logger util.Logger) ([]string, map[string]string, error) {
+	files, err := List(fs, logger)
 	if err != nil {
 		return nil, nil, err
 	}

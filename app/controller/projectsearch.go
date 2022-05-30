@@ -30,7 +30,7 @@ func ProjectSearch(rc *fasthttp.RequestCtx) {
 			PS: nil,
 		}
 
-		res, err := searchProject(prj, q, as)
+		res, err := searchProject(prj, q, as, ps.Logger)
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to search project [%s]", prj.Key)
 		}
@@ -59,7 +59,7 @@ func ProjectSearchAll(rc *fasthttp.RequestCtx) {
 		ret := map[string]result.Results{}
 
 		for _, prj := range prjs {
-			res, err := searchProject(prj, q, as)
+			res, err := searchProject(prj, q, as, ps.Logger)
 			if err != nil {
 				return "", errors.Wrapf(err, "unable to search project [%s]", prj.Key)
 			}
@@ -73,13 +73,13 @@ func ProjectSearchAll(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func searchProject(prj *project.Project, q string, as *app.State) (result.Results, error) {
+func searchProject(prj *project.Project, q string, as *app.State, logger util.Logger) (result.Results, error) {
 	if q == "" {
 		return nil, nil
 	}
 	var res result.Results
 	fs := as.Services.Projects.GetFilesystem(prj)
-	files, err := fs.ListFilesRecursive("", append([]string{".png$"}, prj.Ignore...))
+	files, err := fs.ListFilesRecursive("", append([]string{".png$"}, prj.Ignore...), logger)
 	if err != nil {
 		return nil, err
 	}

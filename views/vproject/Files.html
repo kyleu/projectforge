@@ -22,7 +22,7 @@
   -%}
   {%= Summary(prj, nil, nil, nil, ps) %}
   {%- if fs.IsDir(pth) -%}
-  {%- code files := fs.ListFiles(pth, nil) -%}
+  {%- code files := fs.ListFiles(pth, nil, ps.Logger) -%}
   <div class="card">
     <div class="right"><a href="/p/{%s prj.Key %}/stats{% if pth != `` %}?dir={%u pth %}{% endif %}"><button>File Stats</button></a></div>
     {%= vfile.List(p.Path, files, fs, u, as, ps) %}

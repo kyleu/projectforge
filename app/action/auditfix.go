@@ -24,7 +24,7 @@ func auditRemove(ctx context.Context, fn string, pm *PrjAndMods, ret *Result) er
 	}
 	tgt := pm.PSvc.GetFilesystem(pm.Prj)
 	ret.AddLog("removed [%s]", fn)
-	return tgt.Remove(fn)
+	return tgt.Remove(fn, pm.Logger)
 }
 
 func auditHeader(ctx context.Context, fn string, pm *PrjAndMods, ret *Result) error {

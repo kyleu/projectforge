@@ -9,13 +9,15 @@ import (
 	"path/filepath"
 
 	"github.com/pkg/errors"
+
+	"projectforge.dev/projectforge/app/util"
 )
 
-func (s *Service) Download(key string, url string) error {
+func (s *Service) Download(key string, url string, logger util.Logger) error {
 	if url == "" {
 		return errors.New("must provide URL")
 	}
-	s.logger.Infof("downloading module [%s] from URL [%s]", key, url)
+	logger.Infof("downloading module [%s] from URL [%s]", key, url)
 	req, err := http.NewRequestWithContext(context.Background(), "GET", url, http.NoBody)
 	if err != nil {
 		return errors.Wrapf(err, "invalid URL [%s] for module [%s]", url, key)
@@ -41,7 +43,7 @@ func (s *Service) Download(key string, url string) error {
 		return errors.Errorf("unable to unzip body from module [%s] load request to [%s]", key, url)
 	}
 
-	_ = s.config.RemoveRecursive(key)
+	_ = s.config.RemoveRecursive(key, logger)
 	for _, f := range r.File {
 		fn := filepath.Join(key, f.Name) // nolint
 		if f.FileInfo().IsDir() {

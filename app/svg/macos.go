@@ -39,7 +39,7 @@ func macOSAssets(ctx context.Context, prj *project.Project, orig string, fs file
 	macOSResize(512, "icon_256x256@2x.png", macOSPath)
 	macOSResize(512, "icon_512x512.png", macOSPath)
 	macOSResize(1024, "icon_512x512@2x.png", macOSPath)
-	err = fs.Remove(macOSLogoPath)
+	err = fs.Remove(macOSLogoPath, logger)
 	if err != nil {
 		return errors.Wrap(err, "unable to remove temporary macOS [logo.svg]")
 	}
@@ -47,5 +47,5 @@ func macOSAssets(ctx context.Context, prj *project.Project, orig string, fs file
 	if err != nil {
 		return errors.Wrap(err, "unable to remove temporary macOS [logo.svg]")
 	}
-	return fs.RemoveRecursive(macOSPath)
+	return fs.RemoveRecursive(macOSPath, logger)
 }

@@ -25,9 +25,9 @@ func simpleOut(path string, cmd string, args []string, outCheck func(ctx context
 	}
 }
 
-func loadRootProject(r *doctor.Result, logger util.Logger) (*project.Project, *doctor.Result) {
+func loadRootProject(r *doctor.Result) (*project.Project, *doctor.Result) {
 	const dir = "."
-	fs := filesystem.NewFileSystem(dir, logger)
+	fs := filesystem.NewFileSystem(dir)
 	if !fs.Exists(project.ConfigFilename) {
 		return nil, r.WithError(doctor.NewError("missing", "no project found in [%s]", dir))
 	}

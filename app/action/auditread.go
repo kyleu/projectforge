@@ -8,10 +8,11 @@ import (
 	"golang.org/x/exp/slices"
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/util"
 )
 
-func getGeneratedFiles(tgt filesystem.FileLoader, ignore []string) ([]string, error) {
-	filenames, err := tgt.ListFilesRecursive("", ignore)
+func getGeneratedFiles(tgt filesystem.FileLoader, ignore []string, logger util.Logger) ([]string, error) {
+	filenames, err := tgt.ListFilesRecursive("", ignore, logger)
 	if err != nil {
 		return nil, err
 	}
@@ -30,7 +31,7 @@ func getGeneratedFiles(tgt filesystem.FileLoader, ignore []string) ([]string, er
 }
 
 func getModuleFiles(ctx context.Context, pm *PrjAndMods) ([]string, error) {
-	ret, err := pm.MSvc.GetFilenames(pm.Mods)
+	ret, err := pm.MSvc.GetFilenames(pm.Mods, pm.Logger)
 	if err != nil {
 		return nil, err
 	}
@@ -52,19 +53,19 @@ func getModuleFiles(ctx context.Context, pm *PrjAndMods) ([]string, error) {
 	return ret, nil
 }
 
-func getEmptyFolders(tgt filesystem.FileLoader, ignore []string, pth ...string) ([]string, error) {
+func getEmptyFolders(tgt filesystem.FileLoader, ignore []string, logger util.Logger, pth ...string) ([]string, error) {
 	var ret []string
-	dirs := tgt.ListDirectories(path.Join(pth...), ignore)
+	dirs := tgt.ListDirectories(path.Join(pth...), ignore, logger)
 	for _, fn := range dirs {
 		newPath := append(slices.Clone(pth), fn)
 		pStr := path.Join(newPath...)
-		fc := len(tgt.ListFiles(pStr, nil))
-		ds := tgt.ListDirectories(pStr, ignore)
+		fc := len(tgt.ListFiles(pStr, nil, logger))
+		ds := tgt.ListDirectories(pStr, ignore, logger)
 		if fc == 0 && len(ds) == 0 {
 			ret = append(ret, pStr)
 		}
 		for _, d := range ds {
-			childRes, err := getEmptyFolders(tgt, ignore, append(slices.Clone(newPath), d)...)
+			childRes, err := getEmptyFolders(tgt, ignore, logger, append(slices.Clone(newPath), d)...)
 			if err != nil {
 				return nil, errors.Wrapf(err, "unable to get empty folders for [%s/%s]", newPath, d)
 			}

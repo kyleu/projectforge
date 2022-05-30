@@ -31,7 +31,7 @@ func ModuleSearch(rc *fasthttp.RequestCtx) {
 		var res result.Results
 		if q != "" {
 			fs := as.Services.Modules.GetFilesystem(mod.Key)
-			files, err := fs.ListFilesRecursive("", []string{".png$"})
+			files, err := fs.ListFilesRecursive("", []string{".png$"}, ps.Logger)
 			if err != nil {
 				return "", err
 			}

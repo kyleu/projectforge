@@ -58,7 +58,7 @@ func (s *Service) Save(t *Theme, logger util.Logger) error {
 func (s *Service) loadIfNeeded(logger util.Logger) {
 	if s.cache == nil {
 		s.cache = Themes{ThemeDefault}
-		for _, key := range s.files.ListJSON(s.root, nil, true) {
+		for _, key := range s.files.ListJSON(s.root, nil, true, logger) {
 			t := &Theme{}
 			b, err := s.files.ReadFile(filepath.Join(s.root, key+".json"))
 			if err != nil {

@@ -23,7 +23,7 @@ var prj = &doctor.Check{
 }
 
 func checkProject(ctx context.Context, r *doctor.Result, logger util.Logger) *doctor.Result {
-	p, r := loadRootProject(r, logger)
+	p, r := loadRootProject(r)
 	if len(r.Errors) > 0 {
 		return r
 	}

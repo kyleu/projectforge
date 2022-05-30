@@ -5,15 +5,17 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+
 	"projectforge.dev/projectforge/app/diff"
 	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/util"
 )
 
-func Imports(self string, fix bool, targetPath string, fs filesystem.FileLoader) ([]string, diff.Diffs, error) {
+func Imports(self string, fix bool, targetPath string, fs filesystem.FileLoader, logger util.Logger) ([]string, diff.Diffs, error) {
 	var logs []string
 	var ret diff.Diffs
 
-	files, err := fs.ListFilesRecursive(".", nil)
+	files, err := fs.ListFilesRecursive(".", nil, logger)
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "unable to list project files")
 	}

@@ -50,7 +50,7 @@ func initProjects(ctx context.Context, as *app.State) error {
 		}
 		var keys []string
 		for _, mod := range mods {
-			k, err := as.Services.Modules.Register(ctx, prj.Path, mod.Key, mod.Path, mod.URL)
+			k, err := as.Services.Modules.Register(ctx, prj.Path, mod.Key, mod.Path, mod.URL, as.Logger)
 			if err != nil {
 				return errors.Wrapf(err, "unable to register module definition for module [%s]", mod.Key)
 			}

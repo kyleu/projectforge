@@ -13,7 +13,7 @@ import (
 )
 
 func buildDefaultAppState(flags *Flags, logger util.Logger) (*app.State, error) {
-	fs := filesystem.NewFileSystem(flags.ConfigDir, logger)
+	fs := filesystem.NewFileSystem(flags.ConfigDir)
 	telemetryDisabled := util.GetEnvBool("disable_telemetry", false)
 	st, err := app.NewState(flags.Debug, _buildInfo, fs, !telemetryDisabled, logger)
 	if err != nil {

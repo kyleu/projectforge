@@ -4,6 +4,7 @@ import (
 	"path/filepath"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/util"
 )
 
 type FileStats []*FileStat
@@ -44,17 +45,17 @@ func (f FileStats) Extensions() map[string]int {
 	return ret
 }
 
-func GetFileStats(fs filesystem.FileLoader, pth string) (FileStats, error) {
+func GetFileStats(fs filesystem.FileLoader, pth string, logger util.Logger) (FileStats, error) {
 	if pth == "" {
 		pth = "."
 	}
-	return listDir(fs, pth)
+	return listDir(fs, logger, pth)
 }
 
 var ignores = []string{"^tmp/", "^node_modules/", "^libs/"}
 
-func listDir(fs filesystem.FileLoader, pth ...string) (FileStats, error) {
-	curr := fs.ListFiles(filepath.Join(pth...), ignores)
+func listDir(fs filesystem.FileLoader, logger util.Logger, pth ...string) (FileStats, error) {
+	curr := fs.ListFiles(filepath.Join(pth...), ignores, logger)
 	ret := make(FileStats, 0, len(curr))
 	for _, f := range curr {
 		s := newFileStat(pth, f.Name(), f.IsDir())
@@ -63,7 +64,7 @@ func listDir(fs filesystem.FileLoader, pth ...string) (FileStats, error) {
 			return nil, err
 		}
 		if f.IsDir() {
-			kids, err := listDir(fs, filepath.Join(append(pth, f.Name())...))
+			kids, err := listDir(fs, logger, filepath.Join(append(pth, f.Name())...))
 			if err != nil {
 				return nil, err
 			}

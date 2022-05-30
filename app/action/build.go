@@ -122,7 +122,7 @@ func onImports(ctx context.Context, pm *PrjAndMods, r *Result) *Result {
 	fix := fixStr == "true"
 	fileStr := r.Args.GetStringOpt("file")
 	t := util.TimerStart()
-	logs, diffs, err := build.Imports(pm.Prj.Package, fix, fileStr, pm.PSvc.GetFilesystem(pm.Prj))
+	logs, diffs, err := build.Imports(pm.Prj.Package, fix, fileStr, pm.PSvc.GetFilesystem(pm.Prj), pm.Logger)
 	r.Modules = append(r.Modules, &module.Result{Keys: []string{"imports"}, Status: "OK", Diffs: diffs, Duration: t.End()})
 	r.Logs = append(r.Logs, logs...)
 	if err != nil {
@@ -133,7 +133,7 @@ func onImports(ctx context.Context, pm *PrjAndMods, r *Result) *Result {
 
 func onCleanup(ctx context.Context, pm *PrjAndMods, r *Result) *Result {
 	t := util.TimerStart()
-	logs, diffs, err := build.Cleanup(pm.PSvc.GetFilesystem(pm.Prj))
+	logs, diffs, err := build.Cleanup(pm.PSvc.GetFilesystem(pm.Prj), pm.Logger)
 	r.Modules = append(r.Modules, &module.Result{Keys: []string{"cleanup"}, Status: "OK", Diffs: diffs, Duration: t.End()})
 	r.Logs = append(r.Logs, logs...)
 	if err != nil {

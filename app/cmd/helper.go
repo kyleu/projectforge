@@ -13,7 +13,7 @@ import (
 )
 
 func runToCompletion(ctx context.Context, projectKey string, t action.Type, cfg util.ValueMap) *action.Result {
-	fs := filesystem.NewFileSystem(_flags.ConfigDir, _logger)
+	fs := filesystem.NewFileSystem(_flags.ConfigDir)
 	mSvc := module.NewService(ctx, fs, _logger)
 	pSvc := project.NewService(_logger)
 	eSvc := export.NewService(_logger)

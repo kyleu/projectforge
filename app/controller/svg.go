@@ -23,7 +23,7 @@ func SVGList(rc *fasthttp.RequestCtx) {
 		}
 		fs := as.Services.Projects.GetFilesystem(prj)
 
-		icons, contents, err := svg.Contents(fs)
+		icons, contents, err := svg.Contents(fs, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to list project SVGs")
 		}
@@ -57,7 +57,7 @@ func SVGBuild(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		count, err := svg.Build(as.Services.Projects.GetFilesystem(prj))
+		count, err := svg.Build(as.Services.Projects.GetFilesystem(prj), ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -87,7 +87,7 @@ func SVGAdd(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		_, err = svg.Build(as.Services.Projects.GetFilesystem(prj))
+		_, err = svg.Build(as.Services.Projects.GetFilesystem(prj), ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -116,7 +116,7 @@ func SVGSetApp(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to set app icon to ["+key+"]")
 		}
-		_, err = svg.Build(fs)
+		_, err = svg.Build(fs, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -133,11 +133,11 @@ func SVGRemove(rc *fasthttp.RequestCtx) {
 		if key == "app" {
 			return "", errors.New("you can't remove the app icon")
 		}
-		err = svg.Remove(fs, key)
+		err = svg.Remove(fs, key, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to remove SVG ["+key+"]")
 		}
-		_, err = svg.Build(fs)
+		_, err = svg.Build(fs, ps.Logger)
 		if err != nil {
 			return "", err
 		}

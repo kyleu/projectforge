@@ -7,13 +7,14 @@ import (
 	"golang.org/x/exp/slices"
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/util"
 )
 
-func (s *Service) GetFilenames(mods Modules) ([]string, error) {
+func (s *Service) GetFilenames(mods Modules, logger util.Logger) ([]string, error) {
 	ret := map[string]bool{}
 	for _, mod := range mods {
 		loader := s.GetFilesystem(mod.Key)
-		fs, err := loader.ListFilesRecursive("", nil)
+		fs, err := loader.ListFilesRecursive("", nil, logger)
 		if err != nil {
 			return nil, err
 		}
@@ -29,10 +30,10 @@ func (s *Service) GetFilenames(mods Modules) ([]string, error) {
 	return keys, nil
 }
 
-func (s *Service) GetFiles(mods Modules, addHeader bool) (file.Files, error) {
+func (s *Service) GetFiles(mods Modules, addHeader bool, logger util.Logger) (file.Files, error) {
 	ret := map[string]*file.File{}
 	for _, mod := range mods {
-		err := s.loadFiles(mod, addHeader, ret)
+		err := s.loadFiles(mod, addHeader, ret, logger)
 		if err != nil {
 			return nil, errors.Wrapf(err, "unable to load module [%s]", mod.Key)
 		}
@@ -50,9 +51,9 @@ func (s *Service) GetFiles(mods Modules, addHeader bool) (file.Files, error) {
 	return files, nil
 }
 
-func (s *Service) loadFiles(mod *Module, addHeader bool, ret map[string]*file.File) error {
+func (s *Service) loadFiles(mod *Module, addHeader bool, ret map[string]*file.File, logger util.Logger) error {
 	loader := s.GetFilesystem(mod.Key)
-	fs, err := loader.ListFilesRecursive("", nil)
+	fs, err := loader.ListFilesRecursive("", nil, logger)
 	if err != nil {
 		return err
 	}
@@ -64,7 +65,7 @@ func (s *Service) loadFiles(mod *Module, addHeader bool, ret map[string]*file.Fi
 		if err != nil {
 			return err
 		}
-		fl := file.NewFile(f, mode, b, addHeader, s.logger)
+		fl := file.NewFile(f, mode, b, addHeader, logger)
 		ret[fl.FullPath()] = fl
 	}
 	return nil

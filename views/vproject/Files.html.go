@@ -55,7 +55,7 @@ func (p *Files) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
 //line views/vproject/Files.html:24
 	if fs.IsDir(pth) {
 //line views/vproject/Files.html:25
-		files := fs.ListFiles(pth, nil)
+		files := fs.ListFiles(pth, nil, ps.Logger)
 
 //line views/vproject/Files.html:25
 		qw422016.N().S(`  <div class="card">

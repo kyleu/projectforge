@@ -6,6 +6,8 @@ import (
 	"path/filepath"
 
 	"github.com/pkg/errors"
+
+	"projectforge.dev/projectforge/app/util"
 )
 
 func (f *FileSystem) CopyFile(src string, tgt string) error {
@@ -27,8 +29,8 @@ func (f *FileSystem) CopyFile(src string, tgt string) error {
 	return err
 }
 
-func (f *FileSystem) CopyRecursive(src string, tgt string, ignore []string) error {
-	srcFiles, err := f.ListFilesRecursive(src, ignore)
+func (f *FileSystem) CopyRecursive(src string, tgt string, ignore []string, logger util.Logger) error {
+	srcFiles, err := f.ListFilesRecursive(src, ignore, logger)
 	if err != nil {
 		return err
 	}

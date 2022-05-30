@@ -38,7 +38,7 @@ func (s *Service) GetFilesystem(prj *Project) filesystem.FileLoader {
 	if ok {
 		return curr
 	}
-	fs := filesystem.NewFileSystem(prj.Path, s.logger)
+	fs := filesystem.NewFileSystem(prj.Path)
 	s.filesystems[prj.Key] = fs
 	return fs
 }

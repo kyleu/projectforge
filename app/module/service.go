@@ -27,18 +27,17 @@ type Service struct {
 	cacheMu     sync.Mutex
 	filesystems map[string]filesystem.FileLoader
 	expSvc      *export.Service
-	logger      util.Logger
 }
 
 func NewService(ctx context.Context, config filesystem.FileLoader, logger util.Logger) *Service {
 	logger = logger.With("svc", "module")
-	local := filesystem.NewFileSystem("module", logger)
-	config = filesystem.NewFileSystem(filepath.Join(config.Root(), "module"), logger)
+	local := filesystem.NewFileSystem("module")
+	config = filesystem.NewFileSystem(filepath.Join(config.Root(), "module"))
 	fs := map[string]filesystem.FileLoader{}
 	es := export.NewService(logger)
-	ret := &Service{local: local, config: config, cache: map[string]*Module{}, filesystems: fs, expSvc: es, logger: logger}
+	ret := &Service{local: local, config: config, cache: map[string]*Module{}, filesystems: fs, expSvc: es}
 
-	_, err := ret.LoadNative(ctx, nativeModuleKeys...)
+	_, err := ret.LoadNative(ctx, logger, nativeModuleKeys...)
 	if err != nil {
 		logger.Errorf("unable to load [core] module: %+v", err)
 	}
@@ -56,17 +55,17 @@ func (s *Service) GetFilesystem(key string) filesystem.FileLoader {
 	return mod.Files
 }
 
-func (s *Service) AddIfNeeded(ctx context.Context, key string, path string, url string) (Modules, bool, error) {
+func (s *Service) AddIfNeeded(ctx context.Context, key string, path string, url string, logger util.Logger) (Modules, bool, error) {
 	s.cacheMu.Lock()
 	ret, ok := s.cache[key]
 	s.cacheMu.Unlock()
 	if ok {
 		if ret.URL != url {
-			s.logger.Warnf("module [%s] is loaded with url [%s] but there is another reference with url [%s]", ret.Key, ret.URL, url)
+			logger.Warnf("module [%s] is loaded with url [%s] but there is another reference with url [%s]", ret.Key, ret.URL, url)
 		}
 		return Modules{ret}, false, nil
 	}
-	mods, err := s.load(ctx, key, path, url)
+	mods, err := s.load(ctx, key, path, url, logger)
 	if err != nil {
 		return nil, false, err
 	}
@@ -129,9 +128,9 @@ func (s *Service) Deps() map[string][]string {
 	return ret
 }
 
-func (s *Service) Register(ctx context.Context, root string, key string, path string, u string) ([]string, error) {
+func (s *Service) Register(ctx context.Context, root string, key string, path string, u string, logger util.Logger) ([]string, error) {
 	var ret []string
-	_, added, err := s.AddIfNeeded(ctx, key, filepath.Join(root, path), u)
+	_, added, err := s.AddIfNeeded(ctx, key, filepath.Join(root, path), u, logger)
 	if err != nil {
 		return nil, err
 	}

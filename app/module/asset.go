@@ -21,9 +21,9 @@ const (
 
 var assetMap map[string]string
 
-func (s *Service) AssetURL(ctx context.Context, key string) (string, error) {
+func (s *Service) AssetURL(ctx context.Context, key string, logger util.Logger) (string, error) {
 	if assetMap == nil {
-		if err := loadAssetMap(ctx, s.logger); err != nil {
+		if err := loadAssetMap(ctx, logger); err != nil {
 			return "", err
 		}
 	}

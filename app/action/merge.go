@@ -73,7 +73,7 @@ func onMerge(ctx context.Context, pm *PrjAndMods) *Result {
 }
 
 func mergeLeft(pm *PrjAndMods, d *diff.Diff, ret *Result) *Result {
-	logs, err := pm.MSvc.UpdateFile(pm.Mods, d)
+	logs, err := pm.MSvc.UpdateFile(pm.Mods, d, pm.Logger)
 	if err != nil {
 		return ret.WithError(err)
 	}

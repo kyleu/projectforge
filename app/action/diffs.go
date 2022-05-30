@@ -19,7 +19,7 @@ const (
 func diffs(ctx context.Context, pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 	tgt := pm.PSvc.GetFilesystem(pm.Prj)
 
-	srcFiles, err := pm.MSvc.GetFiles(pm.Mods, true)
+	srcFiles, err := pm.MSvc.GetFiles(pm.Mods, true, pm.Logger)
 	if err != nil {
 		return nil, nil, errors.Wrapf(err, "unable to get files from [%d] modules", len(pm.Mods))
 	}

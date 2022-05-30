@@ -41,14 +41,14 @@ func bootstrap(ctx context.Context, params *Params) *Result {
 func wipeIfNeeded(cfg util.ValueMap, logger util.Logger) error {
 	shouldWipe, _ := cfg.ParseBool("wipe", true, true)
 	if shouldWipe {
-		fs := filesystem.NewFileSystem(".", logger)
+		fs := filesystem.NewFileSystem(".")
 		path := cfg.GetStringOpt("path")
 		if path == "" {
 			return errors.New("must provide [path] as an argument")
 		}
 		if fs.Exists(path) {
 			logger.Infof("removing existing directory [%s]", path)
-			_ = fs.RemoveRecursive(path)
+			_ = fs.RemoveRecursive(path, logger)
 		}
 	}
 	return nil

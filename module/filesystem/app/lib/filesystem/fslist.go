@@ -6,15 +6,17 @@ import (
 	"strings"
 
 	"golang.org/x/exp/slices"
+
+	"{{{ .Package }}}/app/util"
 )
 
 var defaultIgnore = []string{".DS_Store$", "^.git/", "^.idea/", "^build/", "^client/node_modules", ".html.go$", ".sql.go$"}
 
-func (f *FileSystem) ListFiles(path string, ign []string) []os.DirEntry {
+func (f *FileSystem) ListFiles(path string, ign []string, logger util.Logger) []os.DirEntry {
 	ignore := buildIgnore(ign)
 	infos, err := os.ReadDir(filepath.Join(f.root, path))
 	if err != nil {
-		f.logger.Warnf("cannot list files in path [%s]: %+v", path, err)
+		logger.Warnf("cannot list files in path [%s]: %+v", path, err)
 	}
 	ret := make([]os.DirEntry, 0, len(infos))
 	for _, info := range infos {
@@ -25,15 +27,15 @@ func (f *FileSystem) ListFiles(path string, ign []string) []os.DirEntry {
 	return ret
 }
 
-func (f *FileSystem) ListJSON(path string, ign []string, trimExtension bool) []string {
-	return f.ListExtension(path, "json", ign, trimExtension)
+func (f *FileSystem) ListJSON(path string, ign []string, trimExtension bool, logger util.Logger) []string {
+	return f.ListExtension(path, "json", ign, trimExtension, logger)
 }
 
-func (f *FileSystem) ListExtension(path string, ext string, ign []string, trimExtension bool) []string {
+func (f *FileSystem) ListExtension(path string, ext string, ign []string, trimExtension bool, logger util.Logger) []string {
 	ignore := buildIgnore(ign)
 	matches, err := filepath.Glob(f.getPath(path, "*."+ext))
 	if err != nil {
-		f.logger.Warnf("cannot list [%s] in path [%s]: %+v", ext, path, err)
+		logger.Warnf("cannot list [%s] in path [%s]: %+v", ext, path, err)
 	}
 	ret := make([]string, 0, len(matches))
 	for _, j := range matches {
@@ -52,7 +54,7 @@ func (f *FileSystem) ListExtension(path string, ext string, ign []string, trimEx
 	return ret
 }
 
-func (f *FileSystem) ListDirectories(path string, ign []string) []string {
+func (f *FileSystem) ListDirectories(path string, ign []string, logger util.Logger) []string {
 	ignore := buildIgnore(ign)
 	if !f.Exists(path) {
 		return nil
@@ -60,7 +62,7 @@ func (f *FileSystem) ListDirectories(path string, ign []string) []string {
 	p := f.getPath(path)
 	files, err := os.ReadDir(p)
 	if err != nil {
-		f.logger.Warnf("cannot list path [%s]: %+v", path, err)
+		logger.Warnf("cannot list path [%s]: %+v", path, err)
 	}
 	var ret []string
 	for _, f := range files {
@@ -74,7 +76,7 @@ func (f *FileSystem) ListDirectories(path string, ign []string) []string {
 	return ret
 }
 
-func (f *FileSystem) ListFilesRecursive(path string, ign []string) ([]string, error) {
+func (f *FileSystem) ListFilesRecursive(path string, ign []string, logger util.Logger) ([]string, error) {
 	ignore := buildIgnore(ign)
 	p := f.getPath(path)
 	var ret []string

@@ -34,6 +34,12 @@ func AppRoutes() fasthttp.RequestHandler {
 	r.GET("/doctor/all", DoctorRunAll)
 	r.GET("/doctor/{key}", DoctorRun)
 
+	r.GET("/m", ModuleList)
+	r.GET("/m/{key}", ModuleDetail)
+	r.GET("/m/{key}/fs", ModuleFileRoot)
+	r.GET("/m/{key}/fs/{path:*}", ModuleFile)
+	r.GET("/m/{key}/search", ModuleSearch)
+
 	r.GET("/p", ProjectList)
 	r.GET("/p/search", ProjectSearchAll)
 	r.GET("/p/new", ProjectForm)
@@ -41,9 +47,9 @@ func AppRoutes() fasthttp.RequestHandler {
 	r.GET("/p/{key}", ProjectDetail)
 	r.GET("/p/{key}/edit", ProjectEdit)
 	r.POST("/p/{key}/edit", ProjectSave)
-	r.GET("/p/{key}/fs", ProjectFileRoot)
 	r.GET("/p/{key}/stats", ProjectFileStats)
 	r.GET("/p/{key}/export/{model}", ProjectExportModelDetail)
+	r.GET("/p/{key}/fs", ProjectFileRoot)
 	r.GET("/p/{key}/fs/{path:*}", ProjectFile)
 	r.GET("/p/{key}/search", ProjectSearch)
 
@@ -62,12 +68,6 @@ func AppRoutes() fasthttp.RequestHandler {
 
 	r.GET("/run/{act}", RunAllActions)
 	r.GET("/run/{key}/{act}", RunAction)
-
-	r.GET("/m", ModuleList)
-	r.GET("/m/{key}", ModuleDetail)
-	r.GET("/m/{key}/fs", ModuleFileRoot)
-	r.GET("/m/{key}/fs/{path:*}", ModuleFile)
-	r.GET("/m/{key}/search", ModuleSearch)
 
 	r.GET("/test", TestList)
 	r.GET("/test/{key}", TestRun)

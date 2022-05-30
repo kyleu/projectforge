@@ -46,21 +46,23 @@ func handleError(key string, as *app.State, ps *cutil.PageState, rc *fasthttp.Re
 		ps.Breadcrumbs = bc
 	}
 
-	err = clean(as, ps)
-	if err != nil {
-		ps.Logger.Error(err)
-		msg := fmt.Sprintf("error while cleaning request: %+v", err)
+	cleanErr := clean(as, ps)
+	if cleanErr != nil {
+		ps.Logger.Error(cleanErr)
+		msg := fmt.Sprintf("error while cleaning request: %+v", cleanErr)
 		ps.Logger.Error(msg)
 		_, _ = rc.WriteString(msg)
+		return "", cleanErr
 	}
 
-	redir, err := render(rc, as, &verror.Error{Err: util.GetErrorDetail(err)}, ps)
-	if err != nil {
-		msg := fmt.Sprintf("error while running error handler: %+v", err)
+	redir, renderErr := render(rc, as, &verror.Error{Err: util.GetErrorDetail(err)}, ps)
+	if renderErr != nil {
+		msg := fmt.Sprintf("error while running error handler: %+v", renderErr)
 		ps.Logger.Error(msg)
 		_, _ = rc.WriteString(msg)
+		return "", renderErr
 	}
-	return redir, err
+	return redir, nil
 }
 
 func clean(as *app.State, ps *cutil.PageState) error {
@@ -86,7 +88,7 @@ func clean(as *app.State, ps *cutil.PageState) error {
 		ps.ProfilePath = defaultProfilePath
 	}
 	if len(ps.Menu) == 0 {
-		m, err := MenuFor(ps.Context, ps.Authed, ps.Admin, as)
+		m, err := MenuFor(ps.Context, ps.Authed, ps.Admin, as, ps.Logger)
 		if err != nil {
 			return err
 		}

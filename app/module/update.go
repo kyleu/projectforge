@@ -11,7 +11,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func (s *Service) UpdateFile(mods Modules, d *diff.Diff) ([]string, error) {
+func (s *Service) UpdateFile(mods Modules, d *diff.Diff, logger util.Logger) ([]string, error) {
 	var ret []string
 	for _, mod := range mods {
 		loader := s.GetFilesystem(mod.Key)
@@ -23,7 +23,7 @@ func (s *Service) UpdateFile(mods Modules, d *diff.Diff) ([]string, error) {
 			return nil, err
 		}
 
-		newContent, err := reverseDiff(string(b), d, s.logger)
+		newContent, err := reverseDiff(string(b), d, logger)
 		if err != nil {
 			return nil, err
 		}
