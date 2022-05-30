@@ -9,7 +9,6 @@ import (
 	"path/filepath"
 
 	"github.com/pkg/errors"
-	"projectforge.dev/projectforge/app/lib/filesystem"
 )
 
 func (s *Service) Download(key string, url string) error {
@@ -60,7 +59,7 @@ func (s *Service) Download(key string, url string) error {
 		if err != nil {
 			return errors.Errorf("unable to read content of [%s] for module [%s] from [%s]", fn, key, url)
 		}
-		err = s.config.WriteFile(fn, content, filesystem.DefaultMode, false)
+		err = s.config.WriteFile(fn, content, f.Mode(), false)
 		if err != nil {
 			return errors.Errorf("unable to write file [%s] for module [%s] from [%s]", fn, key, url)
 		}
