@@ -44,8 +44,6 @@ func handleError(key string, as *app.State, ps *cutil.PageState, rc *fasthttp.Re
 		bc = append(bc, "Error")
 		ps.Breadcrumbs = bc
 	}
-	errDetail := util.GetErrorDetail(err)
-	page := &verror.Error{Err: errDetail}
 
 	err = clean(as, ps)
 	if err != nil {
@@ -54,7 +52,8 @@ func handleError(key string, as *app.State, ps *cutil.PageState, rc *fasthttp.Re
 		ps.Logger.Error(msg)
 		_, _ = rc.WriteString(msg)
 	}
-	redir, err := render(rc, as, page, ps)
+
+	redir, err := render(rc, as, &verror.Error{Err: util.GetErrorDetail(err)}, ps)
 	if err != nil {
 		msg := fmt.Sprintf("error while running error handler: %+v", err)
 		ps.Logger.Error(msg)

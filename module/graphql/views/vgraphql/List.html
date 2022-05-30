@@ -1,0 +1,27 @@
+{% import (
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/views/components"
+  "{{{ .Package }}}/views/layout"
+) %}
+
+{% code type List struct {
+  layout.Basic
+  Keys []string
+} %}
+
+{% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
+  {%- code titles := as.GraphQL.Titles() -%}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`graph`, ps) %}GraphQL</h3>
+    {%- if len(p.Keys) == 0 -%}
+    <p><em>no schemata available</em></p>
+    {%- else -%}
+    <ul class="mt">
+    {%- for _, k := range p.Keys -%}
+      <li><a href="/graphql/{%s k %}">{%s titles[k] %}</a></li>
+    {%- endfor -%}
+    </ul>
+    {%- endif -%}
+  </div>
+{% endfunc %}

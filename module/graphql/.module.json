@@ -1,0 +1,10 @@
+{
+  "name": "GraphQL",
+  "icon": "graph",
+  "description": "Supports GraphQL APIs within your application",
+  "authorName": "Kyle U",
+  "authorEmail": "kyle@kyleu.com",
+  "license": "CC0",
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/graphql",
+  "priority": 30
+}

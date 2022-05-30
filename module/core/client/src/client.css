@@ -15,7 +15,8 @@
 @import "./style/markdown.css";
 
 @import "./style/nav.css";{{{ if .HasModule "search" }}}
-@import "./style/search.css";{{{ end }}}
+@import "./style/search.css";{{{ end }}}{{{ if .HasModule "graphql" }}}
+@import "./style/graphql.css";{{{ end }}}
 @import "./style/menu.css";
 @import "./style/flash.css";
 

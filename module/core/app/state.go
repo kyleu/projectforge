@@ -7,7 +7,8 @@ import (
 {{{ if .HasModule "oauth" }}}
 	"{{{ .Package }}}/app/lib/auth"{{{ end }}}{{{ if .HasDatabaseModule }}}
 	"{{{ .Package }}}/app/lib/database"{{{ end }}}{{{ if .HasModule "filesystem" }}}
-	"{{{ .Package }}}/app/lib/filesystem"{{{ end }}}
+	"{{{ .Package }}}/app/lib/filesystem"{{{ end }}}{{{ if .HasModule "graphql" }}}
+	"{{{ .Package }}}/app/lib/graphql"{{{ end }}}
 	"{{{ .Package }}}/app/lib/telemetry"
 	"{{{ .Package }}}/app/lib/theme"
 	"{{{ .Package }}}/app/util"
@@ -34,7 +35,8 @@ type State struct {
 	Files     filesystem.FileLoader{{{ end }}}{{{ if .HasModule "oauth" }}}
 	Auth      *auth.Service{{{ end }}}{{{ if .HasModule "migration" }}}
 	DB        *database.Service{{{ end }}}{{{ if .HasModule "readonlydb" }}}
-	DBRead    *database.Service{{{ end }}}
+	DBRead    *database.Service{{{ end }}}{{{ if .HasModule "graphql" }}}
+	GraphQL   *graphql.Service{{{ end }}}
 	Themes    *theme.Service
 	Logger    util.Logger
 	Services  *Services
@@ -48,6 +50,9 @@ func (s State) Close(ctx context.Context, logger util.Logger) error {
 	{{{ end }}}{{{ if .HasModule "readonlydb" }}}if err := s.DBRead.Close(); err != nil {
 		logger.Errorf("error closing read-only database: %+v", err)
 	}
+	{{{ end }}}{{{ if .HasModule "graphql" }}}if err := s.GraphQL.Close(); err != nil {
+		logger.Errorf("error closing GraphQL service: %+v", err)
+	}
 	{{{ end }}}return s.Services.Close(ctx, logger)
 }
 
@@ -60,13 +65,15 @@ func NewState(debug bool, bi *BuildInfo{{{ if .HasModule "filesystem" }}}, f fil
 
 	_ = telemetry.InitializeIfNeeded(enableTelemetry, bi.Version, logger){{{ if .HasModule "oauth" }}}
 	as := auth.NewService("", logger){{{ end }}}
-	ts := theme.NewService({{{ if .HasModule "filesystem" }}}f{{{ end }}})
+	ts := theme.NewService({{{ if .HasModule "filesystem" }}}f{{{ end }}}){{{ if .HasModule "graphql" }}}
+	gqls := graphql.NewService(){{{ end }}}
 
 	return &State{
 		Debug:     debug,
 		BuildInfo: bi{{{ if .HasModule "filesystem" }}},
 		Files:     f{{{ end }}}{{{ if .HasModule "oauth" }}},
-		Auth:      as{{{ end }}},
+		Auth:      as{{{ end }}}{{{ if .HasModule "graphql" }}},
+		GraphQL:   gqls{{{ end }}},
 		Themes:    ts,
 		Logger:    logger,
 		Started:   time.Now(),

@@ -155,7 +155,7 @@ func (m ValueMap) ParseMap(path string, allowMissing bool, allowEmpty bool) (Val
 		return ret, err
 	case nil:
 		if !allowEmpty {
-			return nil, errors.Errorf("could not find time for path [%s]", path)
+			return nil, errors.Errorf("could not find map for path [%s]", path)
 		}
 		return nil, nil
 	default:
@@ -244,7 +244,7 @@ func (m ValueMap) ParseUUID(path string, allowMissing bool, allowEmpty bool) (*u
 			return nil, err
 		}
 		if ret == uuid.Nil && (!allowEmpty) {
-			return nil, errors.Errorf("could not find time for path [%s]", path)
+			return nil, errors.Errorf("could not find uuid for path [%s]", path)
 		}
 		return &ret, nil
 	case nil:

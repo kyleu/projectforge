@@ -35,7 +35,11 @@ func AppRoutes() fasthttp.RequestHandler {
 	// $PF_SECTION_END(routes)${{{ if .HasModule "docbrowse" }}}
 
 	r.GET("/docs", Docs)
-	r.GET("/docs/{path:*}", Docs){{{ end }}}
+	r.GET("/docs/{path:*}", Docs){{{ end }}}{{{ if .HasModule "graphql" }}}
+
+	r.GET("/graphql", GraphQLIndex)
+	r.GET("/graphql/{key}", GraphQLDetail)
+	r.POST("/graphql/{key}", GraphQLRun){{{ end }}}
 
 	r.GET("/admin", Admin){{{ if.HasModule "audit" }}}
 	r.GET("/admin/audit", AuditList)
