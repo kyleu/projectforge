@@ -10,4 +10,6 @@ Licensed under [CC0](https://creativecommons.org/publicdomain/zero/1.0)
 
 ### Usage
 
-- TODO
+- There's a GraphQL Service wired up in `app.State`
+- Register schemata and execute queries using the methods on this service
+- A UI based on GraphiQL is provided

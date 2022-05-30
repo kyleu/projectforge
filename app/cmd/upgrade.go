@@ -21,9 +21,6 @@ func upgradeF(ctx context.Context, _ []string) error {
 	if err != nil {
 		return err
 	}
-	if _version == "" {
-		_version = _buildInfo.Version
-	}
 	return upgrade.NewService(l).UpgradeIfNeeded(ctx, _buildInfo.Version, _version, _force)
 }
 
