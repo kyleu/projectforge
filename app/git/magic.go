@@ -33,7 +33,7 @@ func (s *Service) Magic(ctx context.Context, prj *project.Project, message strin
 		}
 	case args.Ahead == 0 && args.Behind > 0:
 		if args.Dirty > 0 {
-			if err = s.magicStashApply(args, add); err != nil {
+			if err = s.magicStash(args, add); err != nil {
 				return nil, err
 			}
 		}

@@ -8,8 +8,8 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func (s *Service) gitStashApply(ctx context.Context, prj *project.Project, logger util.Logger) error {
-	out, err := gitCmd(ctx, "stashXXX", prj.Path, logger)
+func (s *Service) gitStash(ctx context.Context, prj *project.Project, logger util.Logger) error {
+	out, err := gitCmd(ctx, "stash", prj.Path, logger)
 	if err != nil {
 		if isNoRepo(err) {
 			return nil
@@ -21,7 +21,7 @@ func (s *Service) gitStashApply(ctx context.Context, prj *project.Project, logge
 }
 
 func (s *Service) gitStashPop(ctx context.Context, prj *project.Project, logger util.Logger) error {
-	out, err := gitCmd(ctx, "stashXXX", prj.Path, logger)
+	out, err := gitCmd(ctx, "stash pop", prj.Path, logger)
 	if err != nil {
 		if isNoRepo(err) {
 			return nil

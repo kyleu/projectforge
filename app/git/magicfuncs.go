@@ -57,10 +57,10 @@ func (s *Service) magicPush(a *magicArgs, count int, add func(string, ...any)) e
 	return nil
 }
 
-func (s *Service) magicStashApply(a *magicArgs, add func(string, ...any)) error {
+func (s *Service) magicStash(a *magicArgs, add func(string, ...any)) error {
 	add("stashing [%d] changed %s", a.Dirty, util.StringPluralMaybe("file", a.Dirty))
 	if !a.DryRun {
-		err := s.gitStashApply(a.Ctx, a.Prj, a.Logger)
+		err := s.gitStash(a.Ctx, a.Prj, a.Logger)
 		if err != nil {
 			return errors.Wrap(err, "unable to apply stash")
 		}
