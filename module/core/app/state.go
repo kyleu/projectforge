@@ -38,7 +38,6 @@ type State struct {
 	DBRead    *database.Service{{{ end }}}{{{ if .HasModule "graphql" }}}
 	GraphQL   *graphql.Service{{{ end }}}
 	Themes    *theme.Service
-	Logger    util.Logger
 	Services  *Services
 	Started   time.Time
 }
@@ -75,7 +74,6 @@ func NewState(debug bool, bi *BuildInfo{{{ if .HasModule "filesystem" }}}, f fil
 		Auth:      as{{{ end }}}{{{ if .HasModule "graphql" }}},
 		GraphQL:   gqls{{{ end }}},
 		Themes:    ts,
-		Logger:    logger,
 		Started:   time.Now(),
 	}, nil
 }

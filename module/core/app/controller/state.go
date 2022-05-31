@@ -13,8 +13,10 @@ import (
 )
 
 var (
-	_currentAppState       *app.State{{{ if.HasModule "marketing" }}}
-	_currentSiteState      *app.State{{{ end }}}
+	_currentAppState       *app.State
+	_currentAppRootLogger  util.Logger{{{ if.HasModule "marketing" }}}
+	_currentSiteState      *app.State
+	_currentSiteRootLogger  util.Logger{{{ end }}}
 	defaultRootTitleAppend = util.GetEnv("app_display_name_append")
 	defaultRootTitle       = func() string {
 		if tmp := util.GetEnv("app_display_name"); tmp != "" {
@@ -24,14 +26,16 @@ var (
 	}()
 )
 
-func SetAppState(a *app.State) {
+func SetAppState(a *app.State, logger util.Logger) {
 	_currentAppState = a
-	initApp(a)
+	_currentAppRootLogger = logger
+	initApp(a, logger)
 }{{{ if.HasModule "marketing" }}}
 
-func SetSiteState(a *app.State) {
+func SetSiteState(a *app.State, logger util.Logger) {
 	_currentSiteState = a
-	initSite(a)
+	_currentSiteRootLogger = logger
+	initSite(a, logger)
 }{{{ end }}}
 
 func handleError(key string, as *app.State, ps *cutil.PageState, rc *fasthttp.RequestCtx, err error) (string, error) {
@@ -45,8 +49,7 @@ func handleError(key string, as *app.State, ps *cutil.PageState, rc *fasthttp.Re
 		ps.Breadcrumbs = bc
 	}
 
-	cleanErr := clean(as, ps)
-	if cleanErr != nil {
+	if cleanErr := clean(as, ps); cleanErr != nil {
 		ps.Logger.Error(cleanErr)
 		msg := fmt.Sprintf("error while cleaning request: %+v", cleanErr)
 		ps.Logger.Error(msg)

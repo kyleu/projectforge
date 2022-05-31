@@ -22,54 +22,25 @@ func (s *Service) Magic(ctx context.Context, prj *project.Project, message strin
 
 	switch {
 	case args.Ahead == 0 && args.Behind == 0:
-		if args.Dirty > 0 {
-			args.Result.Status = "commit"
-			if err = s.magicCommit(args, add); err != nil {
-				return nil, err
-			}
-			if err = s.magicPush(args, 1, add); err != nil {
-				return nil, err
-			}
+		err := s.onClean(args, add)
+		if err != nil {
+			return args.Result, err
 		}
 	case args.Ahead == 0 && args.Behind > 0:
-		if args.Dirty > 0 {
-			if err = s.magicStash(args, add); err != nil {
-				return nil, err
-			}
-		}
-		args.Result.Status = "pull"
-		if err = s.magicPull(args, add); err != nil {
-			return nil, err
-		}
-		if args.Dirty > 0 {
-			args.Result.Status += ", commit"
-			if err = s.magicStashPop(args, add); err != nil {
-				return nil, err
-			}
-			if err = s.magicCommit(args, add); err != nil {
-				return nil, err
-			}
-			if err = s.magicPush(args, 1, add); err != nil {
-				return nil, err
-			}
+		err := s.onBehind(args, add)
+		if err != nil {
+			return args.Result, err
 		}
 	case args.Ahead > 0 && args.Behind == 0:
-		if args.Dirty == 0 {
-			args.Result.Status = "push"
-		} else {
-			args.Result.Status = "commit, push"
-			if err = s.magicCommit(args, add); err != nil {
-				return nil, err
-			}
-		}
-		if err = s.magicPush(args, args.Ahead+1, add); err != nil {
-			return nil, err
+		err := s.onAhead(args, add)
+		if err != nil {
+			return args.Result, err
 		}
 	case args.Ahead > 0 && args.Behind > 0:
 		args.Result.Status = "conflicting commits"
-		return nil, errors.New("TODO: handle conflicting commits")
+		return args.Result, errors.New("TODO: handle conflicting commits")
 	default:
-		return nil, errors.New("invalid git state")
+		return args.Result, errors.New("invalid git state")
 	}
 
 	args.Result.Data["logs"] = logs

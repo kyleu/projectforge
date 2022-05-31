@@ -10,7 +10,7 @@ require (
 	github.com/dustin/go-humanize v1.0.0
 	github.com/fasthttp/router v1.4.9
 	github.com/gertd/go-pluralize v0.2.1
-	github.com/gomarkdown/markdown v0.0.0-20220510115730-2372b9aa33e5
+	github.com/gomarkdown/markdown v0.0.0-20220527210340-c82b80a9daf2
 	github.com/google/go-github/v39 v39.2.0
 	github.com/google/uuid v1.3.0
 	github.com/hexops/gotextdiff v1.0.3
@@ -60,7 +60,7 @@ require (
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/common v0.34.0 // indirect
 	github.com/prometheus/procfs v0.7.3 // indirect
-	github.com/savsgio/gotils v0.0.0-20220401102855-e56b59f40436 // indirect
+	github.com/savsgio/gotils v0.0.0-20220530130905-52f3993e8d6d // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 // indirect
@@ -75,7 +75,7 @@ require (
 	golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a // indirect
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
-	google.golang.org/genproto v0.0.0-20220527130721-00d5c0f3be58 // indirect
+	google.golang.org/genproto v0.0.0-20220531134929-86cf59382f1b // indirect
 	google.golang.org/grpc v1.46.2 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect

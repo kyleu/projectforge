@@ -22,7 +22,7 @@ func Menu(ctx context.Context, as *app.State, _ *user.Profile, _ user.Accounts) 
 	return menu.Items{
 		{Key: keyInstall, Title: "Install", Icon: "code", Route: "/" + keyInstall},
 		{Key: keyDownload, Title: "Download", Icon: "download", Route: "/" + keyDownload},
-		{Key: keyFeatures, Title: "Features", Icon: "bolt", Route: "/" + keyFeatures, Children: featuresMenu(ctx, as)},
+		{Key: keyFeatures, Title: "Features", Icon: "bolt", Route: "/" + keyFeatures, Children: featuresMenu(ctx, as.Services.Modules)},
 		{Key: keyCustomizing, Title: "Customizing", Icon: "code", Route: "/" + keyCustomizing},
 		{Key: keyContrib, Title: "Contributing", Icon: "cog", Route: "/" + keyContrib},
 		{Key: keyTech, Title: "Technology", Icon: "shield", Route: "/" + keyTech},

@@ -10,24 +10,25 @@ import (
 
 	"{{{ .Package }}}/app/lib/database"
 	"{{{ .Package }}}/app/lib/filter"
+	"{{{ .Package }}}/app/util"
 )
 
-func (s *Service) List(ctx context.Context, tx *sqlx.Tx, params *filter.Params) (Audits, error) {
+func (s *Service) List(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger) (Audits, error) {
 	params = filters(params)
 	q := database.SQLSelect(columnsString, tableQuoted, "", params.OrderByString(), params.Limit, params.Offset)
 	ret := dtos{}
-	err := s.db.Select(ctx, &ret, q, tx, s.logger)
+	err := s.db.Select(ctx, &ret, q, tx, logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to get audits")
 	}
 	return ret.ToAudits(), nil
 }
 
-func (s *Service) Get(ctx context.Context, tx *sqlx.Tx, id uuid.UUID) (*Audit, error) {
+func (s *Service) Get(ctx context.Context, tx *sqlx.Tx, id uuid.UUID, logger util.Logger) (*Audit, error) {
 	wc := defaultWC
 	ret := &dto{}
 	q := database.SQLSelectSimple(columnsString, tableQuoted, wc)
-	err := s.db.Get(ctx, ret, q, tx, s.logger, id)
+	err := s.db.Get(ctx, ret, q, tx, logger, id)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get audit by id [%v]", id)
 	}
@@ -40,12 +41,12 @@ const searchClause = `(
   lower(metadata::text) like $1 or lower(message) like $1
 )`
 
-func (s *Service) Search(ctx context.Context, query string, tx *sqlx.Tx, params *filter.Params) (Audits, error) {
+func (s *Service) Search(ctx context.Context, query string, tx *sqlx.Tx, params *filter.Params, logger util.Logger) (Audits, error) {
 	params = filters(params)
 	wc := searchClause
 	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
 	ret := dtos{}
-	err := s.db.Select(ctx, &ret, q, tx, s.logger, "%"+strings.ToLower(query)+"%")
+	err := s.db.Select(ctx, &ret, q, tx, logger, "%"+strings.ToLower(query)+"%")
 	if err != nil {
 		return nil, err
 	}

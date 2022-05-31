@@ -30,11 +30,10 @@ type Service struct {
 }
 
 func NewService(ctx context.Context, config filesystem.FileLoader, logger util.Logger) *Service {
-	logger = logger.With("svc", "module")
 	local := filesystem.NewFileSystem("module")
 	config = filesystem.NewFileSystem(filepath.Join(config.Root(), "module"))
 	fs := map[string]filesystem.FileLoader{}
-	es := export.NewService(logger)
+	es := export.NewService()
 	ret := &Service{local: local, config: config, cache: map[string]*Module{}, filesystems: fs, expSvc: es}
 
 	_, err := ret.LoadNative(ctx, logger, nativeModuleKeys...)

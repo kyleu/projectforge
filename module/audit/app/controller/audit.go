@@ -21,7 +21,7 @@ func AuditList(rc *fasthttp.RequestCtx) {
 	act("audit.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ps.Title = auditDefaultTitle
 		params := cutil.ParamSetFromRequest(rc)
-		ret, err := as.Services.Audit.List(ps.Context, nil, params.Get("audit", nil, ps.Logger))
+		ret, err := as.Services.Audit.List(ps.Context, nil, params.Get("audit", nil, ps.Logger), ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -39,7 +39,7 @@ func AuditDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = ret.String()
 		ps.Data = ret
-		records, err := as.Services.Audit.RecordsForAudit(ps.Context, nil, ret.ID, params.Get("auditRecord", nil, ps.Logger))
+		records, err := as.Services.Audit.RecordsForAudit(ps.Context, nil, ret.ID, params.Get("auditRecord", nil, ps.Logger), ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child auditrecords")
 		}
@@ -71,7 +71,7 @@ func AuditCreate(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse Audit from form")
 		}
-		err = as.Services.Audit.Create(ps.Context, nil, ret)
+		err = as.Services.Audit.Create(ps.Context, nil, ps.Logger, ret)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to save newly-created Audit")
 		}
@@ -103,7 +103,7 @@ func AuditEdit(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to parse Audit from form")
 		}
 		frm.ID = ret.ID
-		err = as.Services.Audit.Update(ps.Context, nil, frm)
+		err = as.Services.Audit.Update(ps.Context, nil, frm, ps.Logger)
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to update Audit [%s]", frm.String())
 		}
@@ -118,7 +118,7 @@ func AuditDelete(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		err = as.Services.Audit.Delete(ps.Context, nil, ret.ID)
+		err = as.Services.Audit.Delete(ps.Context, nil, ret.ID, ps.Logger)
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to delete audit [%s]", ret.String())
 		}
@@ -149,7 +149,7 @@ func auditFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) 
 		return nil, errors.Errorf("argument [id] (%s) is not a valid UUID", idArgStr)
 	}
 	idArg := *idArgP
-	return as.Services.Audit.Get(ps.Context, nil, idArg)
+	return as.Services.Audit.Get(ps.Context, nil, idArg, ps.Logger)
 }
 
 func auditFromForm(rc *fasthttp.RequestCtx, setPK bool) (*audit.Audit, error) {
@@ -170,5 +170,5 @@ func recordFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState)
 		return nil, errors.Errorf("argument [id] (%s) is not a valid UUID", idArgStr)
 	}
 	idArg := *idArgP
-	return as.Services.Audit.GetRecord(ps.Context, nil, idArg)
+	return as.Services.Audit.GetRecord(ps.Context, nil, idArg, ps.Logger)
 }

@@ -1,9 +1,6 @@
 package graphql
 
 import (
-	"context"
-	"fmt"
-
 	"github.com/graph-gophers/graphql-go"
 	"github.com/pkg/errors"
 	"golang.org/x/exp/maps"
@@ -11,8 +8,9 @@ import (
 )
 
 type reg struct {
-	Title  string
-	Schema *graphql.Schema
+	Title     string
+	Schema    *graphql.Schema
+	ExecCount int
 }
 
 type Service struct {
@@ -33,20 +31,6 @@ func (s *Service) RegisterStringSchema(key string, title string, content string,
 	}
 	s.schemata[key] = &reg{Title: title, Schema: sch}
 	return nil
-}
-
-func (s *Service) Exec(ctx context.Context, sch *graphql.Schema, q string, op string, vars map[string]any) (g *graphql.Response, e error) {
-	defer func() {
-		if rec := recover(); rec != nil {
-			if recoverErr, ok := rec.(error); ok {
-				e = errors.Wrap(recoverErr, "panic")
-			} else {
-				e = errors.Errorf("graphql encountered panic recovery of type [%T]: %s", rec, fmt.Sprint(rec))
-			}
-		}
-	}()
-	g = sch.Exec(ctx, q, op, vars)
-	return
 }
 
 func (s *Service) Keys() []string {

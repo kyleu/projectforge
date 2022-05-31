@@ -49,7 +49,7 @@ func WelcomeResult(rc *fasthttp.RequestCtx) {
 		prj.Port, _ = strconv.Atoi(ret.GetStringOpt("port"))
 		prj.Info.License = ret.GetStringOpt("license")
 
-		err = as.Services.Projects.Save(prj)
+		err = as.Services.Projects.Save(prj, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to save initial project")
 		}

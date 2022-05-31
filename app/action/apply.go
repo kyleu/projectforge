@@ -39,7 +39,7 @@ func Apply(ctx context.Context, p *Params) *Result {
 	ret = applyBasic(ctx, p)
 	if ret == nil {
 		if len(p.PSvc.Projects()) == 0 {
-			_, err := p.PSvc.Refresh()
+			_, err := p.PSvc.Refresh(p.Logger)
 			if err != nil {
 				return errorResult(err, p.T, p.Cfg, logger)
 			}

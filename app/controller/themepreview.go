@@ -71,7 +71,7 @@ func ThemePreview(rc *fasthttp.RequestCtx) {
 				return "", err
 			}
 			p.Theme = thm
-			err = as.Services.Projects.Save(p)
+			err = as.Services.Projects.Save(p, ps.Logger)
 			if err != nil {
 				return "", err
 			}

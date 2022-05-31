@@ -3,7 +3,6 @@ package controller
 import (
 	"github.com/valyala/fasthttp"
 
-	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller/cutil"
 	"{{{ .Package }}}/app/lib/telemetry"
 	"{{{ .Package }}}/app/lib/telemetry/httpmetrics"
@@ -13,8 +12,8 @@ import (
 
 var initialIcons = {{{ if .HasModule "search" }}}[]string{"searchbox"}{{{ else }}}[]string{}{{{ end }}}
 
-func loadPageState(rc *fasthttp.RequestCtx, key string, as *app.State) *cutil.PageState {
-	ctx, logger := httpmetrics.ExtractHeaders(rc, as.Logger)
+func loadPageState(rc *fasthttp.RequestCtx, key string, logger util.Logger) *cutil.PageState {
+	ctx, logger := httpmetrics.ExtractHeaders(rc, logger)
 	traceCtx, span, logger := telemetry.StartSpan(ctx, "http:"+key, logger)
 	span.Attribute("path", string(rc.Request.URI().Path()))
 	httpmetrics.InjectHTTP(rc, span)

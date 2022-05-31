@@ -32,6 +32,8 @@
       panic(err)
     }
   -%}
-  {%= vfile.Detail(p.Path, b, u, as, ps) %}
+  <div class="card">
+    {%= vfile.Detail(p.Path, b, u, as, ps) %}
+  </div>
   {%- endif -%}
 {% endfunc %}

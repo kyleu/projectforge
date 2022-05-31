@@ -11,7 +11,7 @@ import (
 )
 
 func MenuFor(ctx context.Context, isAuthed bool, isAdmin bool, as *app.State, logger util.Logger) (menu.Items, error) {
-	ctx, span, logger := telemetry.StartSpan(ctx, "menu:generate", nil)
+	ctx, span, logger := telemetry.StartSpan(ctx, "menu:generate", logger)
 	defer span.Complete()
 	_ = logger
 

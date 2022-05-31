@@ -49,7 +49,7 @@ func loadSite(flags *Flags, logger util.Logger) (fasthttp.RequestHandler, util.L
 		return nil, logger, err
 	}
 
-	controller.SetSiteState(st)
+	controller.SetSiteState(st, logger)
 	logger.Infof("started marketing site using address [%s:%d] on %s:%s", flags.Address, flags.Port, runtime.GOOS, runtime.GOARCH)
 	return r, logger, nil
 }

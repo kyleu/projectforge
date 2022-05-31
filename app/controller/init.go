@@ -9,15 +9,16 @@ import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/app/util"
 )
 
 // Initialize app-specific system dependencies.
-func initApp(*app.State) {
+func initApp(*app.State, util.Logger) {
 }
 
 // Configure app-specific data for each request.
 func initAppRequest(as *app.State, ps *cutil.PageState) error {
-	if err := initProjects(ps.Context, as); err != nil {
+	if err := initProjects(ps.Context, as, ps.Logger); err != nil {
 		return errors.Wrap(err, "unable to initialize projects")
 	}
 
@@ -30,7 +31,7 @@ func initAppRequest(as *app.State, ps *cutil.PageState) error {
 }
 
 // Initialize system dependencies for the marketing site.
-func initSite(*app.State) {
+func initSite(*app.State, util.Logger) {
 }
 
 // Configure marketing site data for each request.
@@ -38,8 +39,8 @@ func initSiteRequest(*app.State, *cutil.PageState) error {
 	return nil
 }
 
-func initProjects(ctx context.Context, as *app.State) error {
-	prjs, err := as.Services.Projects.Refresh()
+func initProjects(ctx context.Context, as *app.State, logger util.Logger) error {
+	prjs, err := as.Services.Projects.Refresh(logger)
 	if err != nil {
 		return errors.Wrap(err, "can't load projects")
 	}
@@ -50,7 +51,7 @@ func initProjects(ctx context.Context, as *app.State) error {
 		}
 		var keys []string
 		for _, mod := range mods {
-			k, err := as.Services.Modules.Register(ctx, prj.Path, mod.Key, mod.Path, mod.URL, as.Logger)
+			k, err := as.Services.Modules.Register(ctx, prj.Path, mod.Key, mod.Path, mod.URL, logger)
 			if err != nil {
 				return errors.Wrapf(err, "unable to register module definition for module [%s]", mod.Key)
 			}
@@ -58,7 +59,7 @@ func initProjects(ctx context.Context, as *app.State) error {
 		}
 		if len(keys) > 0 {
 			if len(keys) != 1 && keys[0] != "*" {
-				as.Logger.Debugf("Loaded modules for [%s]: %s", prj.Key, strings.Join(keys, ", "))
+				logger.Debugf("Loaded modules for [%s]: %s", prj.Key, strings.Join(keys, ", "))
 			}
 		}
 	}

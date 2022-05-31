@@ -12,13 +12,8 @@ import (
 	"projectforge.dev/projectforge/views/vsite"
 )
 
-func featuresMenu(ctx context.Context, as *app.State) menu.Items {
-	if as.Services == nil {
-		as.Services = &app.Services{
-			Modules: module.NewService(ctx, as.Files, as.Logger),
-		}
-	}
-	ms := as.Services.Modules.Modules()
+func featuresMenu(ctx context.Context, mSvc *module.Service) menu.Items {
+	ms := mSvc.Modules()
 	ret := make(menu.Items, 0, len(ms))
 	for _, m := range ms {
 		ret = append(ret, &menu.Item{Key: m.Key, Title: m.Title(), Description: m.Description, Icon: m.Icon, Route: "/features/" + m.Key})

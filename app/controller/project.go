@@ -95,7 +95,7 @@ func ProjectCreate(rc *fasthttp.RequestCtx) {
 		}
 		key := frm.GetStringOpt("key")
 		prj.Key = key
-		err = as.Services.Projects.Save(prj)
+		err = as.Services.Projects.Save(prj, ps.Logger)
 		if err != nil {
 			return ersp("unable to save project: %+v", err)
 		}
@@ -130,7 +130,7 @@ func ProjectSave(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		err = as.Services.Projects.Save(prj)
+		err = as.Services.Projects.Save(prj, ps.Logger)
 		if err != nil {
 			return ersp("unable to save project: %+v", err)
 		}

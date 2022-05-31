@@ -22,8 +22,12 @@ func GraphQLIndex(rc *fasthttp.RequestCtx) {
 		if len(keys) == 1 {
 			return "/graphql/" + keys[0], nil
 		}
+		counts := make([]int, 0, len(keys))
+		for _, key := range keys {
+			counts = append(counts, as.GraphQL.ExecCount(key))
+		}
 		ps.Data = keys
-		return render(rc, as, &vgraphql.List{Keys: keys}, ps, "graphql")
+		return render(rc, as, &vgraphql.List{Keys: keys, Counts: counts}, ps, "graphql")
 	})
 }
 
@@ -54,11 +58,6 @@ func GraphQLRun(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		sch := as.GraphQL.Schema(key)
-		if sch == nil {
-			return "", errors.Errorf("no schema found at [%s]", key)
-		}
-
 		frm, err := cutil.ParseForm(rc)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse form")
@@ -70,7 +69,7 @@ func GraphQLRun(rc *fasthttp.RequestCtx) {
 		if v != "" {
 			_ = util.FromJSON([]byte(v), &vars)
 		}
-		rsp, err := as.GraphQL.Exec(ps.Context, sch, q, op, vars)
+		rsp, err := as.GraphQL.Exec(ps.Context, key, q, op, vars, ps.Logger)
 		if err != nil {
 			return "", err
 		}

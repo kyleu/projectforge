@@ -13,13 +13,10 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-type Service struct {
-	logger util.Logger
-}
+type Service struct {}
 
-func NewService(logger util.Logger) *Service {
-	logger = logger.With("svc", "export")
-	return &Service{logger: logger}
+func NewService() *Service {
+	return &Service{}
 }
 
 func (s *Service) Files(ctx context.Context, args *model.Args, addHeader bool, logger util.Logger) (f file.Files, e error) {

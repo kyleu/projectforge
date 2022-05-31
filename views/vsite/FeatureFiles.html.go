@@ -70,39 +70,41 @@ func (p *FeatureFiles) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *
 		}
 
 //line views/vsite/FeatureFiles.html:34
-		qw422016.N().S(`  `)
-//line views/vsite/FeatureFiles.html:35
-		vfile.StreamDetail(qw422016, p.Path, b, u, as, ps)
-//line views/vsite/FeatureFiles.html:35
-		qw422016.N().S(`
-`)
+		qw422016.N().S(`  <div class="card">
+    `)
 //line views/vsite/FeatureFiles.html:36
+		vfile.StreamDetail(qw422016, p.Path, b, u, as, ps)
+//line views/vsite/FeatureFiles.html:36
+		qw422016.N().S(`
+  </div>
+`)
+//line views/vsite/FeatureFiles.html:38
 	}
-//line views/vsite/FeatureFiles.html:37
+//line views/vsite/FeatureFiles.html:39
 }
 
-//line views/vsite/FeatureFiles.html:37
+//line views/vsite/FeatureFiles.html:39
 func (p *FeatureFiles) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsite/FeatureFiles.html:37
+//line views/vsite/FeatureFiles.html:39
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsite/FeatureFiles.html:37
+//line views/vsite/FeatureFiles.html:39
 	p.StreamBody(qw422016, as, ps)
-//line views/vsite/FeatureFiles.html:37
+//line views/vsite/FeatureFiles.html:39
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsite/FeatureFiles.html:37
+//line views/vsite/FeatureFiles.html:39
 }
 
-//line views/vsite/FeatureFiles.html:37
+//line views/vsite/FeatureFiles.html:39
 func (p *FeatureFiles) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsite/FeatureFiles.html:37
+//line views/vsite/FeatureFiles.html:39
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsite/FeatureFiles.html:37
+//line views/vsite/FeatureFiles.html:39
 	p.WriteBody(qb422016, as, ps)
-//line views/vsite/FeatureFiles.html:37
+//line views/vsite/FeatureFiles.html:39
 	qs422016 := string(qb422016.B)
-//line views/vsite/FeatureFiles.html:37
+//line views/vsite/FeatureFiles.html:39
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsite/FeatureFiles.html:37
+//line views/vsite/FeatureFiles.html:39
 	return qs422016
-//line views/vsite/FeatureFiles.html:37
+//line views/vsite/FeatureFiles.html:39
 }

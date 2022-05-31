@@ -23,12 +23,10 @@ type Service struct {
 	cacheLock   sync.RWMutex
 	filesystems map[string]filesystem.FileLoader
 	fsLock      sync.RWMutex
-	logger      util.Logger
 }
 
-func NewService(logger util.Logger) *Service {
-	logger = logger.With("svc", "project")
-	return &Service{cache: map[string]*Project{}, filesystems: map[string]filesystem.FileLoader{}, logger: logger}
+func NewService() *Service {
+	return &Service{cache: map[string]*Project{}, filesystems: map[string]filesystem.FileLoader{}}
 }
 
 func (s *Service) GetFilesystem(prj *Project) filesystem.FileLoader {
@@ -66,13 +64,13 @@ func (s *Service) add(path string, parent *Project) (*Project, error) {
 	return p, nil
 }
 
-func (s *Service) Refresh() (Projects, error) {
+func (s *Service) Refresh(logger util.Logger) (Projects, error) {
 	s.cache = map[string]*Project{}
 	root, err := s.add(".", nil)
 	if err != nil {
 		return nil, err
 	}
-	if add, ok := s.getAdditional(); ok {
+	if add, ok := s.getAdditional(logger); ok {
 		for _, a := range add {
 			if _, err := s.add(a, root); err != nil {
 				return nil, err
@@ -155,7 +153,7 @@ func (s *Service) load(path string) (*Project, error) {
 	return ret, nil
 }
 
-func (s *Service) Save(prj *Project) error {
+func (s *Service) Save(prj *Project, logger util.Logger) error {
 	if prj.Icon == DefaultIcon {
 		prj.Icon = ""
 	}
@@ -166,7 +164,7 @@ func (s *Service) Save(prj *Project) error {
 		return errors.Wrapf(err, "unable to write config file to [%s]", ConfigFilename)
 	}
 	if prj.Path != "" && prj.Path != "." {
-		s.addAdditional(prj.Path)
+		s.addAdditional(prj.Path, logger)
 	}
 	return nil
 }
@@ -186,26 +184,26 @@ func (s *Service) Init() error {
 	return nil
 }
 
-func (s *Service) getAdditional() ([]string, bool) {
+func (s *Service) getAdditional(logger util.Logger) ([]string, bool) {
 	_, fs := s.root()
 	if fs == nil {
 		return nil, false
 	}
 	additionalContent, err := fs.ReadFile(additionalFilename)
 	if err != nil {
-		s.logger.Warnf("unable to load additional projects from [%s]", filepath.Join(fs.Root(), additionalFilename))
+		logger.Warnf("unable to load additional projects from [%s]", filepath.Join(fs.Root(), additionalFilename))
 		return nil, false
 	}
 	var additional []string
 	err = util.FromJSON(additionalContent, &additional)
 	if err != nil {
-		s.logger.Warnf("unable to parse additional projects from [%s]: %+v", filepath.Join(fs.Root(), additionalFilename), err)
+		logger.Warnf("unable to parse additional projects from [%s]: %+v", filepath.Join(fs.Root(), additionalFilename), err)
 	}
 	return additional, true
 }
 
-func (s *Service) addAdditional(path string) {
-	add, ok := s.getAdditional()
+func (s *Service) addAdditional(path string, logger util.Logger) {
+	add, ok := s.getAdditional(logger)
 	if !ok {
 		return
 	}

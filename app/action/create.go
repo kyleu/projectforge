@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/pkg/errors"
-
 	"projectforge.dev/projectforge/app/project"
 )
 
@@ -26,12 +25,12 @@ func onCreate(ctx context.Context, params *Params) *Result {
 
 	params.ProjectKey = prj.Key
 
-	err := params.PSvc.Save(prj)
+	err := params.PSvc.Save(prj, params.Logger)
 	if err != nil {
 		return ret.WithError(err)
 	}
 
-	_, err = params.PSvc.Refresh()
+	_, err = params.PSvc.Refresh(params.Logger)
 	if err != nil {
 		msg := fmt.Sprintf("unable to load newly created project from path [%s]", path)
 		return errorResult(errors.Wrap(err, msg), TypeCreate, params.Cfg, params.Logger)

@@ -7,17 +7,15 @@
 ) %}
 
 {% func Detail(path []string, b []byte, urlPrefix string, as *app.State, ps *cutil.PageState) %}
-  <div class="card">
-    <h3>{%- for idx, p := range path -%}/<a href="{%s urlPrefix %}/{%s filepath.Join(path[:idx + 1]...) %}">{%s p %}</a>{%- endfor -%}</h3>
-    <div class="mt">
-      {%- if len(b) > (1024 * 128) -%}
-      <em>File is {%d len(b) %} bytes, which is too large for the file viewer</em>
-      {%- elseif utf8.Valid(b) -%}
-      {%- code out, _ := cutil.FormatFilename(string(b), path[len(path)-1]) -%}
-      {%s= out %}
-      {%- else -%}
-      <em>File is binary, which is unsupported for the file viewer</em>
-      {%- endif -%}
-    </div>
+  <h3>{%- for idx, p := range path -%}/<a href="{%s urlPrefix %}/{%s filepath.Join(path[:idx + 1]...) %}">{%s p %}</a>{%- endfor -%}</h3>
+  <div class="mt">
+    {%- if len(b) > (1024 * 128) -%}
+    <em>File is {%d len(b) %} bytes, which is too large for the file viewer</em>
+    {%- elseif utf8.Valid(b) -%}
+    {%- code out, _ := cutil.FormatFilename(string(b), path[len(path)-1]) -%}
+    {%s= out %}
+    {%- else -%}
+    <em>File is binary, which is unsupported for the file viewer</em>
+    {%- endif -%}
   </div>
 {% endfunc %}

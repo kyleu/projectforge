@@ -5,6 +5,7 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
+	"projectforge.dev/projectforge/app/util"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
@@ -15,7 +16,7 @@ import (
 
 var (
 	messageArg = &cutil.Arg{Key: "message", Title: "Message", Description: "The message to used for the commit"}
-	dryRunArg  = &cutil.Arg{Key: "dryRun", Title: "Dry Run", Description: "Runs without any destructive operations", Type: "bool", Default: "true"}
+	dryRunArg  = &cutil.Arg{Key: "dryRun", Title: "Dry Run", Description: "Runs without any destructive operations", Type: "bool", Default: util.BoolTrue}
 
 	gitBranchArgs = cutil.Args{{Key: "name", Title: "Branch Name", Description: "The name to used for the new branch"}}
 	gitCommitArgs = cutil.Args{messageArg}
@@ -33,7 +34,7 @@ func GitAction(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to load project")
 		}
-		var bc = []string{"projects", prj.Key, "Git"}
+		bc := []string{"projects", prj.Key, "Git"}
 		var result *git.Result
 		actn := git.ActionStatusFromString(a)
 		switch a {
@@ -72,7 +73,7 @@ func GitAction(rc *fasthttp.RequestCtx) {
 				ps.Data = argRes
 				return render(rc, as, &verror.Args{URL: url, Directions: "Enter your commit message", ArgRes: argRes}, ps, bc...)
 			}
-			dryRun := argRes.Values["dryRun"] == "true"
+			dryRun := argRes.Values["dryRun"] == util.BoolTrue
 			result, err = as.Services.Git.Magic(ps.Context, prj, argRes.Values["message"], dryRun, ps.Logger)
 		default:
 			err = errors.Errorf("unhandled action [%s]", a)

@@ -23,27 +23,27 @@ func NewService(db *database.Service, logger util.Logger) *Service {
 	return &Service{db: db, logger: logger}
 }
 
-func (s *Service) ApplyObj(ctx context.Context, a *Audit, l any, r any, md util.ValueMap) (*Audit, Records, error) {
+func (s *Service) ApplyObj(ctx context.Context, a *Audit, l any, r any, md util.ValueMap, logger util.Logger) (*Audit, Records, error) {
 	o := r
 	if o == nil {
 		o = l
 	}
 	d := util.DiffObjects(l, r, "")
 	rec := NewRecord(a.ID, fmt.Sprintf("%T", o), fmt.Sprint(o), d, md)
-	return s.Apply(ctx, a, rec)
+	return s.Apply(ctx, a, logger, rec)
 }
 
-func (s *Service) Apply(ctx context.Context, a *Audit, r ...*Record) (*Audit, Records, error) {
-	tx, err := s.db.StartTransaction(s.logger)
+func (s *Service) Apply(ctx context.Context, a *Audit, logger util.Logger, r ...*Record) (*Audit, Records, error) {
+	tx, err := s.db.StartTransaction(logger)
 	defer func() { _ = tx.Rollback() }()
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "unable to start transaction")
 	}
-	err = s.Create(ctx, tx, a)
+	err = s.Create(ctx, tx, logger, a)
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "unable to insert audit")
 	}
-	err = s.CreateRecords(ctx, tx, r...)
+	err = s.CreateRecords(ctx, tx, logger, r...)
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "unable to insert audit records")
 	}

@@ -38,7 +38,7 @@ func startServer(flags *Flags) error {
 		return err
 	}
 
-	err = st.Close(context.Background(), st.Logger)
+	err = st.Close(context.Background(), _logger)
 	if err != nil {
 		return errors.Wrap(err, "unable to close application")
 	}
@@ -54,7 +54,7 @@ func loadServer(flags *Flags, logger util.Logger) (*app.State, fasthttp.RequestH
 		return nil, nil, logger, err
 	}
 
-	controller.SetAppState(st)
+	controller.SetAppState(st, logger)
 
 	logger.Infof("started %s v%s using address [%s:%d] on %s:%s", util.AppName, _buildInfo.Version, flags.Address, flags.Port, runtime.GOOS, runtime.GOARCH)
 

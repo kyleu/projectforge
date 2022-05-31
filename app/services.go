@@ -18,12 +18,12 @@ type Services struct {
 	Git      *git.Service
 }
 
-func NewServices(ctx context.Context, st *State) (*Services, error) {
+func NewServices(ctx context.Context, st *State, rootLogger util.Logger) (*Services, error) {
 	return &Services{
-		Modules:  module.NewService(ctx, st.Files, st.Logger),
-		Projects: project.NewService(st.Logger),
-		Export:   export.NewService(st.Logger),
-		Git:      git.NewService(st.Logger),
+		Modules:  module.NewService(ctx, st.Files, rootLogger),
+		Projects: project.NewService(),
+		Export:   export.NewService(),
+		Git:      git.NewService(),
 	}, nil
 }
 

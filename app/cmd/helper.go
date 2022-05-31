@@ -15,8 +15,8 @@ import (
 func runToCompletion(ctx context.Context, projectKey string, t action.Type, cfg util.ValueMap) *action.Result {
 	fs := filesystem.NewFileSystem(_flags.ConfigDir)
 	mSvc := module.NewService(ctx, fs, _logger)
-	pSvc := project.NewService(_logger)
-	eSvc := export.NewService(_logger)
+	pSvc := project.NewService()
+	eSvc := export.NewService()
 	logger := _logger.With("service", "runner")
 	p := &action.Params{ProjectKey: projectKey, T: t, Cfg: cfg, MSvc: mSvc, PSvc: pSvc, ESvc: eSvc, CLI: true, Logger: logger}
 	return action.Apply(ctx, p)

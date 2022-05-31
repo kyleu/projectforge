@@ -18,9 +18,9 @@ type Services struct {
 	{{{ end }}}// add your dependencies here
 }
 
-func NewServices(ctx context.Context, st *State) (*Services, error) {
+func NewServices(ctx context.Context, st *State, logger util.Logger) (*Services, error) {
 	{{{ if .HasModule "migration" }}}migrations.LoadMigrations(st.Debug)
-	err := migrate.Migrate(ctx, st.DB, st.Logger)
+	err := migrate.Migrate(ctx, st.DB, logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to run database migrations")
 	}

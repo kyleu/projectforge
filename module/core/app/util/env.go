@@ -5,6 +5,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func ReplaceEnvVars(s string, logger Logger) string {
@@ -64,4 +65,15 @@ func GetEnvInt(name string, defaultValue int) int {
 	}
 
 	return i
+}
+
+func GetEnvDuration(name string, defaultValue time.Duration) time.Duration {
+	v := GetEnv(name, "")
+
+	ret, err := time.ParseDuration(v)
+	if err != nil {
+		return defaultValue
+	}
+
+	return ret
 }

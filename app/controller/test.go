@@ -51,7 +51,7 @@ func TestRun(rc *fasthttp.RequestCtx) {
 			bc = append(bc, "Bootstrap")
 			ps.Data = res
 
-			_, err = as.Services.Projects.Refresh()
+			_, err = as.Services.Projects.Refresh(ps.Logger)
 			if err != nil {
 				return "", err
 			}

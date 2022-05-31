@@ -54,7 +54,7 @@ func auditRun(ctx context.Context, pm *PrjAndMods, ret *Result) error {
 		return err
 	}
 
-	var audits []*diff.Diff
+	audits := make(diff.Diffs, 0, len(generated))
 	for _, g := range generated {
 		if !slices.Contains(src, g) {
 			if (!strings.HasSuffix(g, "client.js.map")) && (!strings.HasSuffix(g, "file/header.go")) {

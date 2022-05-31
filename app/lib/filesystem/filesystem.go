@@ -15,7 +15,7 @@ var (
 )
 
 type FileSystem struct {
-	root   string
+	root string
 }
 
 var _ FileLoader = (*FileSystem)(nil)

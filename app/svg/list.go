@@ -5,9 +5,9 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	"projectforge.dev/projectforge/app/util"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func List(fs filesystem.FileLoader, logger util.Logger) ([]string, error) {

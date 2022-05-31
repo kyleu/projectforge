@@ -90,39 +90,41 @@ func (p *Files) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
 		}
 
 //line views/vproject/Files.html:36
-		qw422016.N().S(`  `)
-//line views/vproject/Files.html:37
-		vfile.StreamDetail(qw422016, p.Path, b, u, as, ps)
-//line views/vproject/Files.html:37
-		qw422016.N().S(`
-`)
+		qw422016.N().S(`  <div class="card">
+    `)
 //line views/vproject/Files.html:38
+		vfile.StreamDetail(qw422016, p.Path, b, u, as, ps)
+//line views/vproject/Files.html:38
+		qw422016.N().S(`
+  </div>
+`)
+//line views/vproject/Files.html:40
 	}
-//line views/vproject/Files.html:39
+//line views/vproject/Files.html:41
 }
 
-//line views/vproject/Files.html:39
+//line views/vproject/Files.html:41
 func (p *Files) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vproject/Files.html:39
+//line views/vproject/Files.html:41
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/Files.html:39
+//line views/vproject/Files.html:41
 	p.StreamBody(qw422016, as, ps)
-//line views/vproject/Files.html:39
+//line views/vproject/Files.html:41
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/Files.html:39
+//line views/vproject/Files.html:41
 }
 
-//line views/vproject/Files.html:39
+//line views/vproject/Files.html:41
 func (p *Files) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vproject/Files.html:39
+//line views/vproject/Files.html:41
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/Files.html:39
+//line views/vproject/Files.html:41
 	p.WriteBody(qb422016, as, ps)
-//line views/vproject/Files.html:39
+//line views/vproject/Files.html:41
 	qs422016 := string(qb422016.B)
-//line views/vproject/Files.html:39
+//line views/vproject/Files.html:41
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/Files.html:39
+//line views/vproject/Files.html:41
 	return qs422016
-//line views/vproject/Files.html:39
+//line views/vproject/Files.html:41
 }

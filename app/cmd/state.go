@@ -22,11 +22,12 @@ func buildDefaultAppState(flags *Flags, logger util.Logger) (*app.State, error) 
 
 	ctx, span, logger := telemetry.StartSpan(context.Background(), "app:init", logger)
 	defer span.Complete()
-
-	svcs, err := app.NewServices(ctx, st)
+	t := util.TimerStart()
+	svcs, err := app.NewServices(ctx, st, logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "error creating services")
 	}
+	logger.Debugf("created app state in [%s]", util.MicrosToMillis(t.End()))
 	st.Services = svcs
 
 	return st, nil

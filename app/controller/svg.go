@@ -108,7 +108,7 @@ func SVGSetApp(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to read SVG ["+key+"]")
 		}
 		prj.Icon = key
-		err = as.Services.Projects.Save(prj)
+		err = as.Services.Projects.Save(prj, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to set project icon ["+key+"]")
 		}

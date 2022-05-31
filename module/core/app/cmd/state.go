@@ -22,7 +22,8 @@ func buildDefaultAppState(flags *Flags, logger util.Logger) (*app.State, error) 
 	}
 
 	ctx, span, logger := telemetry.StartSpan(context.Background(), "app:init", logger)
-	defer span.Complete(){{{ if .HasModule "migration" }}}{{{ if .HasModule "postgres" }}}
+	defer span.Complete()
+	t := util.TimerStart(){{{ if .HasModule "migration" }}}{{{ if .HasModule "postgres" }}}
 
 	db, err := database.OpenDefaultPostgres(ctx, logger){{{ else }}}{{{ if .HasModule "sqlite" }}}
 
@@ -49,11 +50,11 @@ func buildDefaultAppState(flags *Flags, logger util.Logger) (*app.State, error) 
 		return nil, errors.Wrap(err, "unable to open read-only database")
 	}
 	st.DBRead.ReadOnly = true{{{ end }}}
-
-	svcs, err := app.NewServices(ctx, st)
+	svcs, err := app.NewServices(ctx, st, logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "error creating services")
 	}
+	logger.Debugf("created app state in [%s]", util.MicrosToMillis(t.End()))
 	st.Services = svcs
 
 	return st, nil

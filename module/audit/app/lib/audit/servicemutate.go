@@ -7,9 +7,10 @@ import (
 	"github.com/jmoiron/sqlx"
 
 	"{{{ .Package }}}/app/lib/database"
+	"{{{ .Package }}}/app/util"
 )
 
-func (s *Service) Create(ctx context.Context, tx *sqlx.Tx, models ...*Audit) error {
+func (s *Service) Create(ctx context.Context, tx *sqlx.Tx, logger util.Logger, models ...*Audit) error {
 	if len(models) == 0 {
 		return nil
 	}
@@ -18,18 +19,18 @@ func (s *Service) Create(ctx context.Context, tx *sqlx.Tx, models ...*Audit) err
 	for _, arg := range models {
 		vals = append(vals, arg.ToData()...)
 	}
-	return s.db.Insert(ctx, q, tx, s.logger, vals...)
+	return s.db.Insert(ctx, q, tx, logger, vals...)
 }
 
-func (s *Service) Update(ctx context.Context, tx *sqlx.Tx, model *Audit) error {
+func (s *Service) Update(ctx context.Context, tx *sqlx.Tx, model *Audit, logger util.Logger) error {
 	q := database.SQLUpdate(tableQuoted, columnsQuoted, "\"id\" = $11", "")
 	data := model.ToData()
 	data = append(data, model.ID)
-	_, ret := s.db.Update(ctx, q, tx, 1, s.logger, data...)
+	_, ret := s.db.Update(ctx, q, tx, 1, logger, data...)
 	return ret
 }
 
-func (s *Service) Save(ctx context.Context, tx *sqlx.Tx, models ...*Audit) error {
+func (s *Service) Save(ctx context.Context, tx *sqlx.Tx, logger util.Logger, models ...*Audit) error {
 	if len(models) == 0 {
 		return nil
 	}
@@ -38,11 +39,11 @@ func (s *Service) Save(ctx context.Context, tx *sqlx.Tx, models ...*Audit) error
 	for _, model := range models {
 		data = append(data, model.ToData()...)
 	}
-	return s.db.Insert(ctx, q, tx, s.logger, data...)
+	return s.db.Insert(ctx, q, tx, logger, data...)
 }
 
-func (s *Service) Delete(ctx context.Context, tx *sqlx.Tx, id uuid.UUID) error {
+func (s *Service) Delete(ctx context.Context, tx *sqlx.Tx, id uuid.UUID, logger util.Logger) error {
 	q := database.SQLDelete(tableQuoted, defaultWC)
-	_, err := s.db.Delete(ctx, q, tx, 1, s.logger, id)
+	_, err := s.db.Delete(ctx, q, tx, 1, logger, id)
 	return err
 }

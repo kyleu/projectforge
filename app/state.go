@@ -32,7 +32,6 @@ type State struct {
 	BuildInfo *BuildInfo
 	Files     filesystem.FileLoader
 	Themes    *theme.Service
-	Logger    util.Logger
 	Services  *Services
 	Started   time.Time
 }
@@ -56,7 +55,6 @@ func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, enableTelemetr
 		BuildInfo: bi,
 		Files:     f,
 		Themes:    ts,
-		Logger:    logger,
 		Started:   time.Now(),
 	}, nil
 }
