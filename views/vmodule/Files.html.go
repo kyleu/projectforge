@@ -7,6 +7,7 @@ package vmodule
 //line views/vmodule/Files.html:1
 import (
 	"path/filepath"
+
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/module"
@@ -14,103 +15,103 @@ import (
 	"projectforge.dev/projectforge/views/vfile"
 )
 
-//line views/vmodule/Files.html:10
+//line views/vmodule/Files.html:11
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vmodule/Files.html:10
+//line views/vmodule/Files.html:11
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vmodule/Files.html:10
+//line views/vmodule/Files.html:11
 type Files struct {
 	layout.Basic
 	Module *module.Module
 	Path   []string
 }
 
-//line views/vmodule/Files.html:16
+//line views/vmodule/Files.html:17
 func (p *Files) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vmodule/Files.html:16
+//line views/vmodule/Files.html:17
 	qw422016.N().S(`
 `)
-//line views/vmodule/Files.html:18
+//line views/vmodule/Files.html:19
 	mod := p.Module
 	fs := as.Services.Modules.GetFilesystem(mod.Key)
 	u := "/m/" + mod.Key + "/fs"
 
-//line views/vmodule/Files.html:21
+//line views/vmodule/Files.html:22
 	qw422016.N().S(`
   `)
-//line views/vmodule/Files.html:23
+//line views/vmodule/Files.html:24
 	StreamSummary(qw422016, mod, nil, ps)
-//line views/vmodule/Files.html:23
+//line views/vmodule/Files.html:24
 	qw422016.N().S(`
 
 `)
-//line views/vmodule/Files.html:25
-	if fs.IsDir(filepath.Join(p.Path...)) {
 //line views/vmodule/Files.html:26
+	if fs.IsDir(filepath.Join(p.Path...)) {
+//line views/vmodule/Files.html:27
 		files := fs.ListFiles(filepath.Join(p.Path...), nil, ps.Logger)
 
-//line views/vmodule/Files.html:26
+//line views/vmodule/Files.html:27
 		qw422016.N().S(`  <div class="card">
     `)
-//line views/vmodule/Files.html:28
+//line views/vmodule/Files.html:29
 		vfile.StreamList(qw422016, p.Path, files, fs, u, as, ps)
-//line views/vmodule/Files.html:28
+//line views/vmodule/Files.html:29
 		qw422016.N().S(`
   </div>
 `)
-//line views/vmodule/Files.html:30
+//line views/vmodule/Files.html:31
 	} else {
-//line views/vmodule/Files.html:32
+//line views/vmodule/Files.html:33
 		b, err := fs.ReadFile(filepath.Join(p.Path...))
 		if err != nil {
 			panic(err)
 		}
 
-//line views/vmodule/Files.html:36
+//line views/vmodule/Files.html:37
 		qw422016.N().S(`  <div class="card">
     `)
-//line views/vmodule/Files.html:38
+//line views/vmodule/Files.html:39
 		vfile.StreamDetail(qw422016, p.Path, b, u, as, ps)
-//line views/vmodule/Files.html:38
+//line views/vmodule/Files.html:39
 		qw422016.N().S(`
   </div>
 `)
-//line views/vmodule/Files.html:40
+//line views/vmodule/Files.html:41
 	}
-//line views/vmodule/Files.html:41
+//line views/vmodule/Files.html:42
 }
 
-//line views/vmodule/Files.html:41
+//line views/vmodule/Files.html:42
 func (p *Files) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vmodule/Files.html:41
+//line views/vmodule/Files.html:42
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vmodule/Files.html:41
+//line views/vmodule/Files.html:42
 	p.StreamBody(qw422016, as, ps)
-//line views/vmodule/Files.html:41
+//line views/vmodule/Files.html:42
 	qt422016.ReleaseWriter(qw422016)
-//line views/vmodule/Files.html:41
+//line views/vmodule/Files.html:42
 }
 
-//line views/vmodule/Files.html:41
+//line views/vmodule/Files.html:42
 func (p *Files) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vmodule/Files.html:41
+//line views/vmodule/Files.html:42
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vmodule/Files.html:41
+//line views/vmodule/Files.html:42
 	p.WriteBody(qb422016, as, ps)
-//line views/vmodule/Files.html:41
+//line views/vmodule/Files.html:42
 	qs422016 := string(qb422016.B)
-//line views/vmodule/Files.html:41
+//line views/vmodule/Files.html:42
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vmodule/Files.html:41
+//line views/vmodule/Files.html:42
 	return qs422016
-//line views/vmodule/Files.html:41
+//line views/vmodule/Files.html:42
 }

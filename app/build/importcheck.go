@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+
 	"projectforge.dev/projectforge/app/util"
 )
 
@@ -26,12 +27,7 @@ func check(imports []string, orig []string) ([]string, error) {
 	clear := func() {
 		observed = []string{}
 	}
-	ss := func(expected int) {
-		if state != expected {
-			state = expected
-			clear()
-		}
-	}
+	var lastSep bool
 
 	for idx, imp := range imports {
 		i, l := util.StringSplitLast(imp, ':', true)
@@ -41,25 +37,44 @@ func check(imports []string, orig []string) ([]string, error) {
 				state++
 				clear()
 			}
+			lastSep = true
 		case firstKey:
+			if state != 1 {
+				state = 1
+				clear()
+			}
+			lastSep = false
 			if state > 1 {
 				err = errors.New("1st party")
 			}
-			ss(1)
 			first[i] = orig[idx]
 			observe(i, "1st party")
 		case thirdKey:
+			if state != 2 {
+				if !lastSep && len(first) > 0 {
+					err = errors.New("missing separator")
+				}
+				state = 2
+				clear()
+			}
+			lastSep = false
 			if state > 2 {
 				err = errors.New("3rd party")
 			}
-			ss(2)
 			third[i] = orig[idx]
 			observe(i, "3rd party")
 		case selfKey:
+			if state != 3 {
+				if !lastSep && (len(third) > 0 || len(first) > 0) {
+					err = errors.New("missing separator")
+				}
+				state = 3
+				clear()
+			}
+			lastSep = false
 			if state > 3 {
 				err = errors.New("self")
 			}
-			ss(3)
 			self[i] = orig[idx]
 			observe(i, selfKey)
 		default:

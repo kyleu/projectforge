@@ -7,6 +7,7 @@ package vsite
 //line views/vsite/FeatureFiles.html:1
 import (
 	"path/filepath"
+
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/module"
@@ -14,97 +15,97 @@ import (
 	"projectforge.dev/projectforge/views/vfile"
 )
 
-//line views/vsite/FeatureFiles.html:10
+//line views/vsite/FeatureFiles.html:11
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vsite/FeatureFiles.html:10
+//line views/vsite/FeatureFiles.html:11
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vsite/FeatureFiles.html:10
+//line views/vsite/FeatureFiles.html:11
 type FeatureFiles struct {
 	layout.Basic
 	Module *module.Module
 	Path   []string
 }
 
-//line views/vsite/FeatureFiles.html:16
+//line views/vsite/FeatureFiles.html:17
 func (p *FeatureFiles) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsite/FeatureFiles.html:16
+//line views/vsite/FeatureFiles.html:17
 	qw422016.N().S(`
 `)
-//line views/vsite/FeatureFiles.html:18
+//line views/vsite/FeatureFiles.html:19
 	mod := p.Module
 	fs := as.Services.Modules.GetFilesystem(mod.Key)
 	u := "/features/" + mod.Key + "/files"
 
-//line views/vsite/FeatureFiles.html:21
+//line views/vsite/FeatureFiles.html:22
 	qw422016.N().S(`
 `)
-//line views/vsite/FeatureFiles.html:23
-	if fs.IsDir(filepath.Join(p.Path...)) {
 //line views/vsite/FeatureFiles.html:24
+	if fs.IsDir(filepath.Join(p.Path...)) {
+//line views/vsite/FeatureFiles.html:25
 		files := fs.ListFiles(filepath.Join(p.Path...), nil, ps.Logger)
 
-//line views/vsite/FeatureFiles.html:24
+//line views/vsite/FeatureFiles.html:25
 		qw422016.N().S(`  <div class="card">
     `)
-//line views/vsite/FeatureFiles.html:26
+//line views/vsite/FeatureFiles.html:27
 		vfile.StreamList(qw422016, p.Path, files, fs, u, as, ps)
-//line views/vsite/FeatureFiles.html:26
+//line views/vsite/FeatureFiles.html:27
 		qw422016.N().S(`
   </div>
 `)
-//line views/vsite/FeatureFiles.html:28
+//line views/vsite/FeatureFiles.html:29
 	} else {
-//line views/vsite/FeatureFiles.html:30
+//line views/vsite/FeatureFiles.html:31
 		b, err := fs.ReadFile(filepath.Join(p.Path...))
 		if err != nil {
 			panic(err)
 		}
 
-//line views/vsite/FeatureFiles.html:34
+//line views/vsite/FeatureFiles.html:35
 		qw422016.N().S(`  <div class="card">
     `)
-//line views/vsite/FeatureFiles.html:36
+//line views/vsite/FeatureFiles.html:37
 		vfile.StreamDetail(qw422016, p.Path, b, u, as, ps)
-//line views/vsite/FeatureFiles.html:36
+//line views/vsite/FeatureFiles.html:37
 		qw422016.N().S(`
   </div>
 `)
-//line views/vsite/FeatureFiles.html:38
+//line views/vsite/FeatureFiles.html:39
 	}
-//line views/vsite/FeatureFiles.html:39
+//line views/vsite/FeatureFiles.html:40
 }
 
-//line views/vsite/FeatureFiles.html:39
+//line views/vsite/FeatureFiles.html:40
 func (p *FeatureFiles) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsite/FeatureFiles.html:39
+//line views/vsite/FeatureFiles.html:40
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsite/FeatureFiles.html:39
+//line views/vsite/FeatureFiles.html:40
 	p.StreamBody(qw422016, as, ps)
-//line views/vsite/FeatureFiles.html:39
+//line views/vsite/FeatureFiles.html:40
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsite/FeatureFiles.html:39
+//line views/vsite/FeatureFiles.html:40
 }
 
-//line views/vsite/FeatureFiles.html:39
+//line views/vsite/FeatureFiles.html:40
 func (p *FeatureFiles) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsite/FeatureFiles.html:39
+//line views/vsite/FeatureFiles.html:40
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsite/FeatureFiles.html:39
+//line views/vsite/FeatureFiles.html:40
 	p.WriteBody(qb422016, as, ps)
-//line views/vsite/FeatureFiles.html:39
+//line views/vsite/FeatureFiles.html:40
 	qs422016 := string(qb422016.B)
-//line views/vsite/FeatureFiles.html:39
+//line views/vsite/FeatureFiles.html:40
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsite/FeatureFiles.html:39
+//line views/vsite/FeatureFiles.html:40
 	return qs422016
-//line views/vsite/FeatureFiles.html:39
+//line views/vsite/FeatureFiles.html:40
 }

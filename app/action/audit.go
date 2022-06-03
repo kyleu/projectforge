@@ -6,6 +6,7 @@ import (
 
 	"github.com/pkg/errors"
 	"golang.org/x/exp/slices"
+
 	"projectforge.dev/projectforge/app/diff"
 	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/util"

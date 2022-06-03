@@ -5,6 +5,7 @@ import (
 	"github.com/muesli/gamut/palette"
 	"github.com/pkg/errors"
 	"golang.org/x/exp/slices"
+
 	"projectforge.dev/projectforge/app/util"
 )
 

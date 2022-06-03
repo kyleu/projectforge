@@ -6,149 +6,150 @@ package vproject
 
 //line views/vproject/DetailSettings.html:1
 import (
+	"strings"
+
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/views/components"
-	"strings"
 )
 
-//line views/vproject/DetailSettings.html:9
+//line views/vproject/DetailSettings.html:10
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vproject/DetailSettings.html:9
+//line views/vproject/DetailSettings.html:10
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vproject/DetailSettings.html:9
+//line views/vproject/DetailSettings.html:10
 func StreamDetailSettings(qw422016 *qt422016.Writer, prj *project.Project, as *app.State, ps *cutil.PageState) {
-//line views/vproject/DetailSettings.html:9
+//line views/vproject/DetailSettings.html:10
 	qw422016.N().S(`
   <table class="min-200 full-width">
     <tbody>
       <tr>
         <th class="shrink">Key</th>
         <td>`)
-//line views/vproject/DetailSettings.html:14
+//line views/vproject/DetailSettings.html:15
 	qw422016.E().S(prj.Key)
-//line views/vproject/DetailSettings.html:14
+//line views/vproject/DetailSettings.html:15
 	qw422016.N().S(`</td>
       </tr>
       <tr>
         <th>Name</th>
         <td>`)
-//line views/vproject/DetailSettings.html:18
+//line views/vproject/DetailSettings.html:19
 	qw422016.E().S(prj.Name)
-//line views/vproject/DetailSettings.html:18
+//line views/vproject/DetailSettings.html:19
 	qw422016.N().S(`</td>
       </tr>
       <tr>
         <th>Version</th>
         <td>`)
-//line views/vproject/DetailSettings.html:22
+//line views/vproject/DetailSettings.html:23
 	qw422016.E().S(prj.Version)
-//line views/vproject/DetailSettings.html:22
+//line views/vproject/DetailSettings.html:23
 	qw422016.N().S(`</td>
       </tr>
       <tr>
         <th>Package</th>
         <td>`)
-//line views/vproject/DetailSettings.html:26
+//line views/vproject/DetailSettings.html:27
 	qw422016.E().S(prj.Package)
-//line views/vproject/DetailSettings.html:26
+//line views/vproject/DetailSettings.html:27
 	qw422016.N().S(`</td>
       </tr>
       <tr>
         <th>Args</th>
         <td>`)
-//line views/vproject/DetailSettings.html:30
+//line views/vproject/DetailSettings.html:31
 	qw422016.E().S(prj.Args)
-//line views/vproject/DetailSettings.html:30
+//line views/vproject/DetailSettings.html:31
 	qw422016.N().S(`</td>
       </tr>
       <tr>
         <th>Port</th>
         <td><a href="http://localhost:`)
-//line views/vproject/DetailSettings.html:34
+//line views/vproject/DetailSettings.html:35
 	qw422016.N().D(prj.Port)
-//line views/vproject/DetailSettings.html:34
+//line views/vproject/DetailSettings.html:35
 	qw422016.N().S(`" target="_blank">`)
-//line views/vproject/DetailSettings.html:34
+//line views/vproject/DetailSettings.html:35
 	qw422016.N().D(prj.Port)
-//line views/vproject/DetailSettings.html:34
+//line views/vproject/DetailSettings.html:35
 	qw422016.N().S(`</a></td>
       </tr>
       <tr>
         <th>Ignore</th>
         <td>`)
-//line views/vproject/DetailSettings.html:38
+//line views/vproject/DetailSettings.html:39
 	qw422016.E().S(strings.Join(prj.Ignore, ", "))
-//line views/vproject/DetailSettings.html:38
+//line views/vproject/DetailSettings.html:39
 	qw422016.N().S(`</td>
       </tr>
       <tr>
         <th>Tags</th>
         <td>`)
-//line views/vproject/DetailSettings.html:42
+//line views/vproject/DetailSettings.html:43
 	qw422016.E().S(strings.Join(prj.Tags, ", "))
-//line views/vproject/DetailSettings.html:42
+//line views/vproject/DetailSettings.html:43
 	qw422016.N().S(`</td>
       </tr>
       <tr>
         <th>Path</th>
         <td>`)
-//line views/vproject/DetailSettings.html:46
+//line views/vproject/DetailSettings.html:47
 	qw422016.E().S(prj.Path)
-//line views/vproject/DetailSettings.html:46
+//line views/vproject/DetailSettings.html:47
 	qw422016.N().S(`</td>
       </tr>
       <tr>
         <th>JSON</th>
         <td><a href="#modal-`)
-//line views/vproject/DetailSettings.html:50
+//line views/vproject/DetailSettings.html:51
 	qw422016.E().S(prj.Key)
-//line views/vproject/DetailSettings.html:50
+//line views/vproject/DetailSettings.html:51
 	qw422016.N().S(`"><button type="button">JSON</button></a></td>
       </tr>
     </tbody>
   </table>
   `)
-//line views/vproject/DetailSettings.html:54
+//line views/vproject/DetailSettings.html:55
 	components.StreamJSONModal(qw422016, prj.Key, "Project JSON", prj, 1)
-//line views/vproject/DetailSettings.html:54
+//line views/vproject/DetailSettings.html:55
 	qw422016.N().S(`
 `)
-//line views/vproject/DetailSettings.html:55
+//line views/vproject/DetailSettings.html:56
 }
 
-//line views/vproject/DetailSettings.html:55
+//line views/vproject/DetailSettings.html:56
 func WriteDetailSettings(qq422016 qtio422016.Writer, prj *project.Project, as *app.State, ps *cutil.PageState) {
-//line views/vproject/DetailSettings.html:55
+//line views/vproject/DetailSettings.html:56
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/DetailSettings.html:55
+//line views/vproject/DetailSettings.html:56
 	StreamDetailSettings(qw422016, prj, as, ps)
-//line views/vproject/DetailSettings.html:55
+//line views/vproject/DetailSettings.html:56
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/DetailSettings.html:55
+//line views/vproject/DetailSettings.html:56
 }
 
-//line views/vproject/DetailSettings.html:55
+//line views/vproject/DetailSettings.html:56
 func DetailSettings(prj *project.Project, as *app.State, ps *cutil.PageState) string {
-//line views/vproject/DetailSettings.html:55
+//line views/vproject/DetailSettings.html:56
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/DetailSettings.html:55
+//line views/vproject/DetailSettings.html:56
 	WriteDetailSettings(qb422016, prj, as, ps)
-//line views/vproject/DetailSettings.html:55
+//line views/vproject/DetailSettings.html:56
 	qs422016 := string(qb422016.B)
-//line views/vproject/DetailSettings.html:55
+//line views/vproject/DetailSettings.html:56
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/DetailSettings.html:55
+//line views/vproject/DetailSettings.html:56
 	return qs422016
-//line views/vproject/DetailSettings.html:55
+//line views/vproject/DetailSettings.html:56
 }

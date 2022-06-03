@@ -3,6 +3,7 @@ package module
 import (
 	"github.com/gomarkdown/markdown"
 	"golang.org/x/exp/slices"
+
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/util"
 )

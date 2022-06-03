@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/pkg/errors"
+
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/menu"
@@ -49,9 +50,7 @@ func featureFiles(path []string, as *app.State, ps *cutil.PageState) ([]string, 
 	for _, x := range path[3:] {
 		u += "/" + x
 		bc = append(bc, x+"||"+u)
-		// println(bc)
 	}
-	// println(filepath.Join(path...))
 	mod, err := as.Services.Modules.Get(path[1])
 	if err != nil {
 		return path, nil, err

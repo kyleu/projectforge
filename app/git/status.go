@@ -8,6 +8,7 @@ import (
 
 	"github.com/pkg/errors"
 	"golang.org/x/exp/slices"
+
 	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"

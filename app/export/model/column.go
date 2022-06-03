@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"golang.org/x/exp/slices"
+
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/util"
 )
