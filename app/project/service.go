@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	ConfigDir          = ".projectforge"
+	ConfigDir          = "."+util.AppKey
 	additionalFilename = ConfigDir+"/additional-projects.json"
 )
 
