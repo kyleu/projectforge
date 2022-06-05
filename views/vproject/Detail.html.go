@@ -123,7 +123,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vproject/Detail.html:53
 						qw422016.E().S(p.Project.Key)
 //line views/vproject/Detail.html:53
-						qw422016.N().S(`/export/config/edit"><button>Edit</button></a></div>
+						qw422016.N().S(`/export/config"><button>Edit</button></a></div>
           <h3>`)
 //line views/vproject/Detail.html:54
 						components.StreamSVGRefIcon(qw422016, `print`, ps)
@@ -153,7 +153,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
           <div class="clear"></div>
           `)
 //line views/vproject/Detail.html:62
-					vexport.StreamModelList(qw422016, ea.Models, fmt.Sprintf("/p/%s/export", p.Project.Key), as, ps)
+					vexport.StreamModelList(qw422016, ea.Models, fmt.Sprintf("/p/%s/export/models", p.Project.Key), as, ps)
 //line views/vproject/Detail.html:62
 					qw422016.N().S(`
 `)

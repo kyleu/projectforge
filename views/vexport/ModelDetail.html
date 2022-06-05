@@ -18,7 +18,7 @@
 {% func (p *ModelDetail) Body(as *app.State, ps *cutil.PageState) %}
   {%- code m := p.Model -%}
   <div class="card">
-    <div class="right"><a href="/p/{%s p.Project.Key %}/export/{%s p.Model.Name %}/edit"><button>Edit</button></a></div>
+    <div class="right"><a href="/p/{%s p.Project.Key %}/export/models/{%s p.Model.Name %}/edit"><button>Edit</button></a></div>
     <h3>{%= components.SVGRefIcon(m.IconSafe(), ps) %}{%s m.Name %}</h3>
     <em>export model</em>
     {%= modelSummary(m, as, ps) %}

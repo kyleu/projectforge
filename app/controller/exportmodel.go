@@ -5,6 +5,7 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
+	"projectforge.dev/projectforge/app/export/model"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
@@ -34,9 +35,15 @@ func ProjectExportModelForm(rc *fasthttp.RequestCtx) {
 
 		ps.Data = mdl
 
-		bc := []string{"projects", prj.Key, fmt.Sprintf("Export||/p/%s/export", prj.Key), mdl.Title() + "||/p/" + prj.Key + "/export/" + mdl.Name, "Edit"}
+		bc := []string{
+			"projects",
+			prj.Key,
+			fmt.Sprintf("Export||/p/%s/export", prj.Key),
+			mdl.Title() + "||/p/" + prj.Key + "/export/models/" + mdl.Name,
+			"Edit",
+		}
 		ps.Title = fmt.Sprintf("[%s] %s", prj.Key, mdl.Name)
-		return render(rc, as, &vexport.ModelForm{Project: prj, Model: mdl}, ps, bc...)
+		return render(rc, as, &vexport.ModelForm{Project: prj, Model: mdl, Examples: model.Examples}, ps, bc...)
 	})
 }
 
@@ -57,10 +64,30 @@ func ProjectExportModelSave(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to parse model from form")
 		}
 
-		// TODO: actually save
+		err = as.Services.Projects.SaveExportModel(as.Services.Projects.GetFilesystem(prj), mdl, ps.Logger)
+		if err != nil {
+			return "", err
+		}
 
 		msg := fmt.Sprintf("model saved successfully")
-		u := fmt.Sprintf("/p/%s/export/%s", prj.Key, mdl.Name)
+		u := fmt.Sprintf("/p/%s/export/models/%s", prj.Key, mdl.Name)
 		return flashAndRedir(true, msg, u, rc, ps)
+	})
+}
+
+func ProjectExportModelDelete(rc *fasthttp.RequestCtx) {
+	act("project.export.model.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, mdl, _, err := exportLoad(rc, as)
+		if err != nil {
+			return "", err
+		}
+
+		err = as.Services.Projects.DeleteExportModel(as.Services.Projects.GetFilesystem(prj), mdl.Name, ps.Logger)
+		if err != nil {
+			return "", err
+		}
+
+		msg := fmt.Sprintf("model saved successfully")
+		return flashAndRedir(true, msg, fmt.Sprintf("/p/%s/export", prj.Key), rc, ps)
 	})
 }

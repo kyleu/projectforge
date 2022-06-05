@@ -6,6 +6,7 @@ package vexport
 
 //line views/vexport/ModelForm.html:1
 import (
+	"fmt"
 	"strings"
 
 	"projectforge.dev/projectforge/app"
@@ -18,157 +19,169 @@ import (
 	"projectforge.dev/projectforge/views/layout"
 )
 
-//line views/vexport/ModelForm.html:14
+//line views/vexport/ModelForm.html:15
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vexport/ModelForm.html:14
+//line views/vexport/ModelForm.html:15
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vexport/ModelForm.html:14
+//line views/vexport/ModelForm.html:15
 type ModelForm struct {
 	layout.Basic
-	Project *project.Project
-	Model   *model.Model
+	Project  *project.Project
+	Model    *model.Model
+	Examples map[string]any
 }
 
-//line views/vexport/ModelForm.html:20
+//line views/vexport/ModelForm.html:22
 func (p *ModelForm) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vexport/ModelForm.html:20
+//line views/vexport/ModelForm.html:22
 	qw422016.N().S(`
 `)
-//line views/vexport/ModelForm.html:21
+//line views/vexport/ModelForm.html:23
 	m := p.Model
 
-//line views/vexport/ModelForm.html:21
+//line views/vexport/ModelForm.html:24
+	u := fmt.Sprintf("/p/%s/export/models/%s/delete", p.Project.Key, p.Model.Name)
+
+//line views/vexport/ModelForm.html:24
 	qw422016.N().S(`  <form action="" method="post" class="mt expanded">
     <div class="card">
+      <div class="right"><a href="`)
+//line views/vexport/ModelForm.html:27
+	qw422016.E().S(u)
+//line views/vexport/ModelForm.html:27
+	qw422016.N().S(`" onclick="return confirm('Are you sure you wish to remove this export model?')"><button type="button">Delete</button></a></div>
       <h3>`)
-//line views/vexport/ModelForm.html:24
+//line views/vexport/ModelForm.html:28
 	components.StreamSVGRefIcon(qw422016, m.IconSafe(), ps)
-//line views/vexport/ModelForm.html:24
+//line views/vexport/ModelForm.html:28
 	qw422016.N().S(`Edit `)
-//line views/vexport/ModelForm.html:24
+//line views/vexport/ModelForm.html:28
 	qw422016.E().S(m.Name)
-//line views/vexport/ModelForm.html:24
+//line views/vexport/ModelForm.html:28
 	qw422016.N().S(`</h3>
       <table class="mt min-200 expanded">
         <tbody>
           `)
-//line views/vexport/ModelForm.html:27
+//line views/vexport/ModelForm.html:31
 	components.StreamTableInput(qw422016, "name", "Name", m.Name, 5, export.Helpers["model.name"]...)
-//line views/vexport/ModelForm.html:27
+//line views/vexport/ModelForm.html:31
 	qw422016.N().S(`
           `)
-//line views/vexport/ModelForm.html:28
+//line views/vexport/ModelForm.html:32
 	components.StreamTableInput(qw422016, "package", "Package", m.Package, 5, export.Helpers["model.package"]...)
-//line views/vexport/ModelForm.html:28
+//line views/vexport/ModelForm.html:32
 	qw422016.N().S(`
           `)
-//line views/vexport/ModelForm.html:29
+//line views/vexport/ModelForm.html:33
 	components.StreamTableInput(qw422016, "description", "Description", m.Description, 5, export.Helpers["model.description"]...)
-//line views/vexport/ModelForm.html:29
+//line views/vexport/ModelForm.html:33
 	qw422016.N().S(`
           `)
-//line views/vexport/ModelForm.html:30
+//line views/vexport/ModelForm.html:34
 	components.StreamTableInput(qw422016, "icon", "Icon", m.Icon, 5, export.Helpers["model.icon"]...)
-//line views/vexport/ModelForm.html:30
+//line views/vexport/ModelForm.html:34
 	qw422016.N().S(`
           `)
-//line views/vexport/ModelForm.html:31
+//line views/vexport/ModelForm.html:35
 	components.StreamTableTextarea(qw422016, "ordering", "Ordering", 3, util.ToJSON(m.Ordering), 5, export.Helpers["model.ordering"]...)
-//line views/vexport/ModelForm.html:31
+//line views/vexport/ModelForm.html:35
 	qw422016.N().S(`
           `)
-//line views/vexport/ModelForm.html:32
+//line views/vexport/ModelForm.html:36
 	components.StreamTableInput(qw422016, "search", "Search", strings.Join(m.Search, `, `), 5, export.Helpers["model.search"]...)
-//line views/vexport/ModelForm.html:32
+//line views/vexport/ModelForm.html:36
 	qw422016.N().S(`
           `)
-//line views/vexport/ModelForm.html:33
+//line views/vexport/ModelForm.html:37
 	components.StreamTableInput(qw422016, "history", "History", m.History, 5, export.Helpers["model.history"]...)
-//line views/vexport/ModelForm.html:33
+//line views/vexport/ModelForm.html:37
 	qw422016.N().S(`
           `)
-//line views/vexport/ModelForm.html:34
+//line views/vexport/ModelForm.html:38
 	components.StreamTableInput(qw422016, "tags", "Tags", strings.Join(m.Tags, `, `), 5, export.Helpers["model.tags"]...)
-//line views/vexport/ModelForm.html:34
+//line views/vexport/ModelForm.html:38
 	qw422016.N().S(`
           `)
-//line views/vexport/ModelForm.html:35
+//line views/vexport/ModelForm.html:39
 	components.StreamTableInput(qw422016, "titleOverride", "Title Override", m.TitleOverride, 5, export.Helpers["model.titleOverride"]...)
-//line views/vexport/ModelForm.html:35
+//line views/vexport/ModelForm.html:39
 	qw422016.N().S(`
           `)
-//line views/vexport/ModelForm.html:36
+//line views/vexport/ModelForm.html:40
 	components.StreamTableInput(qw422016, "properOverride", "Proper Override", m.ProperOverride, 5, export.Helpers["model.properOverride"]...)
-//line views/vexport/ModelForm.html:36
+//line views/vexport/ModelForm.html:40
 	qw422016.N().S(`
           `)
-//line views/vexport/ModelForm.html:37
+//line views/vexport/ModelForm.html:41
 	components.StreamTableTextarea(qw422016, "config", "Config", 3, util.ToJSON(m.Config), 5, export.Helpers["model.config"]...)
-//line views/vexport/ModelForm.html:37
+//line views/vexport/ModelForm.html:41
 	qw422016.N().S(`
         </tbody>
       </table>
     </div>
     <div class="card">
+      <div class="right"><a href="#modal-columns"><button type="button">Example</button></a></div>
       <h3 title="`)
-//line views/vexport/ModelForm.html:42
+//line views/vexport/ModelForm.html:47
 	qw422016.E().S(strings.Join(export.Helpers[`model.columns`], `; `))
-//line views/vexport/ModelForm.html:42
+//line views/vexport/ModelForm.html:47
 	qw422016.N().S(`">`)
-//line views/vexport/ModelForm.html:42
+//line views/vexport/ModelForm.html:47
 	components.StreamSVGRefIcon(qw422016, `first-aid`, ps)
-//line views/vexport/ModelForm.html:42
+//line views/vexport/ModelForm.html:47
 	qw422016.N().S(`Columns</h3>
       <div class="mt expanded">
           `)
-//line views/vexport/ModelForm.html:44
+//line views/vexport/ModelForm.html:49
 	components.StreamFormTextarea(qw422016, "columns", "input-columns", 8, util.ToJSON(m.Columns), export.Helpers["model.columns"]...)
-//line views/vexport/ModelForm.html:44
+//line views/vexport/ModelForm.html:49
 	qw422016.N().S(`
       </div>
     </div>
     <div class="card">
+      <div class="right"><a href="#modal-relations"><button type="button">Example</button></a></div>
       <h3 title="`)
-//line views/vexport/ModelForm.html:48
+//line views/vexport/ModelForm.html:54
 	qw422016.E().S(strings.Join(export.Helpers[`model.relations`], `; `))
-//line views/vexport/ModelForm.html:48
+//line views/vexport/ModelForm.html:54
 	qw422016.N().S(`">`)
-//line views/vexport/ModelForm.html:48
+//line views/vexport/ModelForm.html:54
 	components.StreamSVGRefIcon(qw422016, `social`, ps)
-//line views/vexport/ModelForm.html:48
+//line views/vexport/ModelForm.html:54
 	qw422016.N().S(`Relations</h3>
       <div class="mt expanded">
         `)
-//line views/vexport/ModelForm.html:50
+//line views/vexport/ModelForm.html:56
 	components.StreamFormTextarea(qw422016, "relations", "input-relations", 8, util.ToJSON(m.Relations), export.Helpers["model.relations"]...)
-//line views/vexport/ModelForm.html:50
+//line views/vexport/ModelForm.html:56
 	qw422016.N().S(`
       </div>
     </div>
     <div class="card">
+      <div class="right"><a href="#modal-indexes"><button type="button">Example</button></a></div>
       <h3 title="`)
-//line views/vexport/ModelForm.html:54
+//line views/vexport/ModelForm.html:61
 	qw422016.E().S(strings.Join(export.Helpers[`model.indexes`], `; `))
-//line views/vexport/ModelForm.html:54
+//line views/vexport/ModelForm.html:61
 	qw422016.N().S(`">`)
-//line views/vexport/ModelForm.html:54
+//line views/vexport/ModelForm.html:61
 	components.StreamSVGRefIcon(qw422016, `star`, ps)
-//line views/vexport/ModelForm.html:54
+//line views/vexport/ModelForm.html:61
 	qw422016.N().S(`Indexes</h3>
       <div class="mt expanded">
         `)
-//line views/vexport/ModelForm.html:56
+//line views/vexport/ModelForm.html:63
 	components.StreamFormTextarea(qw422016, "indexes", "input-indexes", 8, util.ToJSON(m.Indexes), export.Helpers["model.indexes"]...)
-//line views/vexport/ModelForm.html:56
+//line views/vexport/ModelForm.html:63
 	qw422016.N().S(`
       </div>
     </div>
@@ -178,31 +191,42 @@ func (p *ModelForm) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
     </div>
   </form>
 `)
-//line views/vexport/ModelForm.html:64
+//line views/vexport/ModelForm.html:71
+	for k, v := range p.Examples {
+//line views/vexport/ModelForm.html:71
+		qw422016.N().S(`  `)
+//line views/vexport/ModelForm.html:72
+		components.StreamJSONModal(qw422016, k, "["+k+"] Example", v, 1)
+//line views/vexport/ModelForm.html:72
+		qw422016.N().S(`
+`)
+//line views/vexport/ModelForm.html:73
+	}
+//line views/vexport/ModelForm.html:74
 }
 
-//line views/vexport/ModelForm.html:64
+//line views/vexport/ModelForm.html:74
 func (p *ModelForm) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vexport/ModelForm.html:64
+//line views/vexport/ModelForm.html:74
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/ModelForm.html:64
+//line views/vexport/ModelForm.html:74
 	p.StreamBody(qw422016, as, ps)
-//line views/vexport/ModelForm.html:64
+//line views/vexport/ModelForm.html:74
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/ModelForm.html:64
+//line views/vexport/ModelForm.html:74
 }
 
-//line views/vexport/ModelForm.html:64
+//line views/vexport/ModelForm.html:74
 func (p *ModelForm) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vexport/ModelForm.html:64
+//line views/vexport/ModelForm.html:74
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/ModelForm.html:64
+//line views/vexport/ModelForm.html:74
 	p.WriteBody(qb422016, as, ps)
-//line views/vexport/ModelForm.html:64
+//line views/vexport/ModelForm.html:74
 	qs422016 := string(qb422016.B)
-//line views/vexport/ModelForm.html:64
+//line views/vexport/ModelForm.html:74
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/ModelForm.html:64
+//line views/vexport/ModelForm.html:74
 	return qs422016
-//line views/vexport/ModelForm.html:64
+//line views/vexport/ModelForm.html:74
 }

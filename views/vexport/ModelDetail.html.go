@@ -50,7 +50,7 @@ func (p *ModelDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *c
 //line views/vexport/ModelDetail.html:21
 	qw422016.E().S(p.Project.Key)
 //line views/vexport/ModelDetail.html:21
-	qw422016.N().S(`/export/`)
+	qw422016.N().S(`/export/models/`)
 //line views/vexport/ModelDetail.html:21
 	qw422016.E().S(p.Model.Name)
 //line views/vexport/ModelDetail.html:21

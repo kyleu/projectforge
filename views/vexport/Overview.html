@@ -18,13 +18,13 @@
 
 {% func (p *Overview) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <div class="right"><a href="/p/{%s p.Project.Key %}/export/config/edit"><button>Edit</button></a></div>
+    <div class="right"><a href="/p/{%s p.Project.Key %}/export/config"><button>Edit</button></a></div>
     <h3>{%= components.SVGRefIcon(`print`, ps) %}Export Configuration</h3>
     {%= components.JSON(p.Args.Config) %}
   </div>
   <div class="card">
     <h3>{%= components.SVGRefIcon(`list`, ps) %}Models</h3>
-    {%= ModelList(p.Args.Models, fmt.Sprintf("/p/%s/export", p.Project.Key), as, ps) %}
+    {%= ModelList(p.Args.Models, fmt.Sprintf("/p/%s/export/models", p.Project.Key), as, ps) %}
   </div>
 {% endfunc %}
 

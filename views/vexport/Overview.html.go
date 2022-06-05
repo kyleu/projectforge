@@ -46,7 +46,7 @@ func (p *Overview) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vexport/Overview.html:21
 	qw422016.E().S(p.Project.Key)
 //line views/vexport/Overview.html:21
-	qw422016.N().S(`/export/config/edit"><button>Edit</button></a></div>
+	qw422016.N().S(`/export/config"><button>Edit</button></a></div>
     <h3>`)
 //line views/vexport/Overview.html:22
 	components.StreamSVGRefIcon(qw422016, `print`, ps)
@@ -66,7 +66,7 @@ func (p *Overview) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 	qw422016.N().S(`Models</h3>
     `)
 //line views/vexport/Overview.html:27
-	StreamModelList(qw422016, p.Args.Models, fmt.Sprintf("/p/%s/export", p.Project.Key), as, ps)
+	StreamModelList(qw422016, p.Args.Models, fmt.Sprintf("/p/%s/export/models", p.Project.Key), as, ps)
 //line views/vexport/Overview.html:27
 	qw422016.N().S(`
   </div>
