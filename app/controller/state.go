@@ -17,7 +17,7 @@ var (
 	_currentAppState       *app.State
 	_currentAppRootLogger  util.Logger
 	_currentSiteState      *app.State
-	_currentSiteRootLogger  util.Logger
+	_currentSiteRootLogger util.Logger
 	defaultRootTitleAppend = util.GetEnv("app_display_name_append")
 	defaultRootTitle       = func() string {
 		if tmp := util.GetEnv("app_display_name"); tmp != "" {

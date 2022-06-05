@@ -31,7 +31,7 @@ func loadRootProject(r *doctor.Result) (*project.Project, *doctor.Result) {
 	if !fs.Exists(project.ConfigDir) {
 		return nil, r.WithError(doctor.NewError("missing", "no project found in [%s]", dir))
 	}
-	b, err := fs.ReadFile(project.ConfigDir+"project.json")
+	b, err := fs.ReadFile(project.ConfigDir + "project.json")
 	if err != nil {
 		return nil, r.WithError(doctor.NewError("missing", "unable to read project from [%s]", dir))
 	}

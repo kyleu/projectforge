@@ -54,7 +54,10 @@ func ProjectExportConfigSave(rc *fasthttp.RequestCtx) {
 
 		args.Config = cfg
 
-		// TODO save
+		err = as.Services.Projects.Save(prj, ps.Logger)
+		if err != nil {
+			return "", err
+		}
 
 		return flashAndRedir(true, "configuration saved", fmt.Sprintf("/p/%s/export", prj.Key), rc, ps)
 	})

@@ -2,12 +2,13 @@ package project
 
 import (
 	"github.com/pkg/errors"
+
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/util"
 )
 
 func (s *Service) Save(prj *Project, logger util.Logger) error {
-	fn := ConfigDir+"/project.json"
+	fn := ConfigDir + "/project.json"
 	if prj.Icon == DefaultIcon {
 		prj.Icon = ""
 	}

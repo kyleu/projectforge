@@ -13,7 +13,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-type Service struct {}
+type Service struct{}
 
 func NewService() *Service {
 	return &Service{}

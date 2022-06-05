@@ -12,8 +12,8 @@ import (
 )
 
 const (
-	ConfigDir          = "."+util.AppKey
-	additionalFilename = ConfigDir+"/additional-projects.json"
+	ConfigDir          = "." + util.AppKey
+	additionalFilename = ConfigDir + "/additional-projects.json"
 )
 
 type Service struct {

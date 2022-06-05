@@ -16,7 +16,7 @@ var (
 	_currentAppState       *app.State
 	_currentAppRootLogger  util.Logger{{{ if.HasModule "marketing" }}}
 	_currentSiteState      *app.State
-	_currentSiteRootLogger  util.Logger{{{ end }}}
+	_currentSiteRootLogger util.Logger{{{ end }}}
 	defaultRootTitleAppend = util.GetEnv("app_display_name_append")
 	defaultRootTitle       = func() string {
 		if tmp := util.GetEnv("app_display_name"); tmp != "" {
