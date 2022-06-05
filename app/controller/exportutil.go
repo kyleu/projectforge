@@ -81,7 +81,7 @@ func exportLoad(rc *fasthttp.RequestCtx, as *app.State) (*project.Project, *mode
 		return nil, nil, nil, err
 	}
 
-	args, err := prj.Info.ModuleArgExport()
+	args, err := prj.ModuleArgExport()
 	if err != nil {
 		return nil, nil, nil, err
 	}

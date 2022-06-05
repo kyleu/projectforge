@@ -77,7 +77,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 
 `)
 //line views/vproject/Detail.html:35
-		for k := range prj.Info.ModuleArgs {
+		for k := range prj.ModuleArgs {
 //line views/vproject/Detail.html:37
 			argTitle := k
 			argMod := p.Modules.Get(k)
@@ -107,7 +107,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vproject/Detail.html:47
 			case "export":
 //line views/vproject/Detail.html:48
-				ea, _ := p.Project.Info.ModuleArgExport()
+				ea, _ := p.Project.ModuleArgExport()
 
 //line views/vproject/Detail.html:49
 				if argMod == nil {

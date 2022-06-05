@@ -17,7 +17,7 @@ func ProjectExportConfigForm(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		args, err := prj.Info.ModuleArgExport()
+		args, err := prj.ModuleArgExport()
 		if err != nil {
 			return "", err
 		}
@@ -40,7 +40,7 @@ func ProjectExportConfigSave(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		args, err := prj.Info.ModuleArgExport()
+		args, err := prj.ModuleArgExport()
 		if err != nil {
 			return "", err
 		}

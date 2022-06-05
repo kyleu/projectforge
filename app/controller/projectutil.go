@@ -66,7 +66,7 @@ func projectFromForm(frm util.ValueMap, prj *project.Project) error {
 	prj.Info.Deployments = util.StringSplitAndTrim(get("deployments", strings.Join(prj.Info.Deployments, ", ")), ",")
 
 	var err error
-	prj.Info.ModuleArgs, err = getModuleArgs(frm)
+	prj.ModuleArgs, err = getModuleArgs(frm)
 	if err != nil {
 		return err
 	}

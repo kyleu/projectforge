@@ -41,7 +41,7 @@ func ProjectExportModelForm(rc *fasthttp.RequestCtx) {
 
 func ProjectExportModelSave(rc *fasthttp.RequestCtx) {
 	act("project.export.model.save", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, mdl, args, err := exportLoad(rc, as)
+		prj, mdl, _, err := exportLoad(rc, as)
 		if err != nil {
 			return "", err
 		}
@@ -56,7 +56,7 @@ func ProjectExportModelSave(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to parse model from form")
 		}
 
-		args.Models = args.Models.Replace(mdl)
+		// TODO: actually save
 
 		msg := fmt.Sprintf("model saved successfully")
 		u := fmt.Sprintf("/p/%s/export/%s", prj.Key, mdl.Name)

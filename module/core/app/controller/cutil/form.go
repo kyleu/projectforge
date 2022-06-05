@@ -27,7 +27,7 @@ func ParseForm(rc *fasthttp.RequestCtx) (util.ValueMap, error) {
 func ParseFormAsChanges(rc *fasthttp.RequestCtx) (util.ValueMap, error) {
 	ret, err := ParseForm(rc)
 	if err != nil {
-		return nil, errors.Wrap(err, "unable to parse form")
+		return nil, err
 	}
 	return ret.AsChanges()
 }

@@ -2,6 +2,7 @@ package project
 
 import (
 	"golang.org/x/exp/slices"
+	"projectforge.dev/projectforge/app/export/model"
 
 	"projectforge.dev/projectforge/app/lib/theme"
 	"projectforge.dev/projectforge/app/util"
@@ -10,23 +11,29 @@ import (
 var DefaultIcon = "code"
 
 type Project struct {
-	Key     string       `json:"key"`
-	Name    string       `json:"name,omitempty"`
-	Icon    string       `json:"icon,omitempty"`
-	Exec    string       `json:"exec,omitempty"`
-	Version string       `json:"version"`
-	Package string       `json:"package,omitempty"`
-	Args    string       `json:"args,omitempty"`
-	Port    int          `json:"port,omitempty"`
-	Modules []string     `json:"modules"`
-	Ignore  []string     `json:"ignore,omitempty"`
-	Tags    []string     `json:"tags"`
-	Info    *Info        `json:"info,omitempty"`
-	Theme   *theme.Theme `json:"theme,omitempty"`
-	Build   *Build       `json:"build,omitempty"`
+	Key     string   `json:"key"`
+	Name    string   `json:"name,omitempty"`
+	Icon    string   `json:"icon,omitempty"`
+	Exec    string   `json:"exec,omitempty"`
+	Version string   `json:"version"`
+	Package string   `json:"package,omitempty"`
+	Args    string   `json:"args,omitempty"`
+	Port    int      `json:"port,omitempty"`
+	Modules []string `json:"modules"`
+	Ignore  []string `json:"ignore,omitempty"`
+	Tags    []string `json:"tags"`
 
-	Path   string `json:"-"`
-	Parent string `json:"-"`
+	Info  *Info        `json:"info,omitempty"`
+	Theme *theme.Theme `json:"theme,omitempty"`
+	Build *Build       `json:"build,omitempty"`
+
+	ModuleArgs util.ValueMap `json:"-"`
+	Path       string        `json:"-"`
+	Parent     string        `json:"-"`
+}
+
+func NewProject(key string, path string) *Project {
+	return &Project{Key: key, Version: "0.0.0", Path: path}
 }
 
 func (p *Project) Title() string {
@@ -80,6 +87,19 @@ func (p *Project) WebPath() string {
 	return "/p/" + p.Key
 }
 
-func NewProject(key string, path string) *Project {
-	return &Project{Key: key, Version: "0.0.0", Path: path}
+func (p *Project) ModuleArg(mod string) any {
+	if p.ModuleArgs == nil {
+		return nil
+	}
+	return p.ModuleArgs[mod]
+}
+
+func (p *Project) ModuleArgExport() (*model.Args, error) {
+	arg := p.ModuleArg("export")
+	ret := &model.Args{}
+	err := util.CycleJSON(arg, ret)
+	if err != nil {
+		return nil, err
+	}
+	return ret, nil
 }

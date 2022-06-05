@@ -50,7 +50,7 @@ func ThemeSave(rc *fasthttp.RequestCtx) {
 		}
 		frm, err := cutil.ParseForm(rc)
 		if err != nil {
-			return "", errors.Wrap(err, "unable to parse form")
+			return "", err
 		}
 
 		orig := as.Themes.Get(key, ps.Logger)

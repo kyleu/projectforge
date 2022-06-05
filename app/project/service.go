@@ -1,8 +1,6 @@
 package project
 
 import (
-	"os"
-	"path/filepath"
 	"strings"
 	"sync"
 
@@ -14,8 +12,8 @@ import (
 )
 
 const (
-	ConfigFilename     = ".projectforge.json"
-	additionalFilename = "additional-projects.json"
+	ConfigDir          = ".projectforge"
+	additionalFilename = ConfigDir+"/additional-projects.json"
 )
 
 type Service struct {
@@ -41,38 +39,15 @@ func (s *Service) GetFilesystem(prj *Project) filesystem.FileLoader {
 	return fs
 }
 
-func (s *Service) add(path string, parent *Project) (*Project, error) {
-	if parent != nil {
-		path = filepath.Join(parent.Path, path)
-	}
-	p, err := s.load(path)
-	if err != nil {
-		return nil, err
-	}
-	if parent != nil {
-		p.Parent = parent.Key
-	}
-	s.cacheLock.Lock()
-	curr, ok := s.cache[p.Key]
-	s.cacheLock.Unlock()
-	if ok {
-		return nil, errors.Errorf("can't overwrite cache entry for project [%s] located at [%s]", curr.Key, curr.Path)
-	}
-	s.cacheLock.Lock()
-	s.cache[p.Key] = p
-	s.cacheLock.Unlock()
-	return p, nil
-}
-
 func (s *Service) Refresh(logger util.Logger) (Projects, error) {
 	s.cache = map[string]*Project{}
-	root, err := s.add(".", nil)
+	root, err := s.add(".", nil, logger)
 	if err != nil {
 		return nil, err
 	}
 	if add, ok := s.getAdditional(logger); ok {
 		for _, a := range add {
-			if _, err := s.add(a, root); err != nil {
+			if _, err := s.add(a, root, logger); err != nil {
 				return nil, err
 			}
 		}
@@ -118,57 +93,6 @@ func (s *Service) Projects() Projects {
 	return ret
 }
 
-func (s *Service) load(path string) (*Project, error) {
-	cfgPath := filepath.Join(path, ConfigFilename)
-	if curr, _ := os.Stat(cfgPath); curr == nil {
-		l, r := util.StringSplitLast(path, '/', true)
-		if r == "" {
-			r = l
-		}
-		if r == "." {
-			r, _ = os.Getwd()
-			if strings.Contains(r, "/") {
-				r = r[strings.LastIndex(r, "/")+1:]
-			}
-		}
-		if r == "" {
-			r = "root"
-		}
-		ret := NewProject(r, path)
-		ret.Name = r + " (missing)"
-		return ret, nil
-	}
-	b, err := os.ReadFile(cfgPath)
-	if err != nil {
-		return nil, err
-	}
-
-	ret := &Project{}
-	err = util.FromJSON(b, &ret)
-	if err != nil {
-		return nil, errors.Wrapf(err, "can't load project from [%s]", ConfigFilename)
-	}
-	ret.Path = path
-
-	return ret, nil
-}
-
-func (s *Service) Save(prj *Project, logger util.Logger) error {
-	if prj.Icon == DefaultIcon {
-		prj.Icon = ""
-	}
-	tgtFS := s.GetFilesystem(prj)
-	j := util.ToJSON(prj) + "\n"
-	err := tgtFS.WriteFile(ConfigFilename, []byte(j), filesystem.DefaultMode, true)
-	if err != nil {
-		return errors.Wrapf(err, "unable to write config file to [%s]", ConfigFilename)
-	}
-	if prj.Path != "" && prj.Path != "." {
-		s.addAdditional(prj.Path, logger)
-	}
-	return nil
-}
-
 func (s *Service) ByPath(path string) *Project {
 	s.cacheLock.Lock()
 	defer s.cacheLock.Unlock()
@@ -178,57 +102,4 @@ func (s *Service) ByPath(path string) *Project {
 		}
 	}
 	return nil
-}
-
-func (s *Service) Init() error {
-	return nil
-}
-
-func (s *Service) getAdditional(logger util.Logger) ([]string, bool) {
-	_, fs := s.root()
-	if fs == nil {
-		return nil, false
-	}
-	additionalContent, err := fs.ReadFile(additionalFilename)
-	if err != nil {
-		logger.Warnf("unable to load additional projects from [%s]", filepath.Join(fs.Root(), additionalFilename))
-		return nil, false
-	}
-	var additional []string
-	err = util.FromJSON(additionalContent, &additional)
-	if err != nil {
-		logger.Warnf("unable to parse additional projects from [%s]: %+v", filepath.Join(fs.Root(), additionalFilename), err)
-	}
-	return additional, true
-}
-
-func (s *Service) addAdditional(path string, logger util.Logger) {
-	add, ok := s.getAdditional(logger)
-	if !ok {
-		return
-	}
-	hit := false
-	for _, a := range add {
-		if a == path {
-			hit = true
-			break
-		}
-	}
-	if !hit {
-		add = append(add, path)
-		_, fs := s.root()
-		_ = fs.WriteFile(additionalFilename, util.ToJSONBytes(add, true), filesystem.DefaultMode, true)
-	}
-}
-
-func (s *Service) root() (*Project, filesystem.FileLoader) {
-	root := s.ByPath(".")
-	if root == nil {
-		return nil, nil
-	}
-	fs := s.GetFilesystem(root)
-	if !fs.Exists(additionalFilename) {
-		return nil, nil
-	}
-	return root, fs
 }

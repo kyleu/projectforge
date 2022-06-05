@@ -26,7 +26,7 @@ func diffs(ctx context.Context, pm *PrjAndMods) (file.Files, diff.Diffs, error) 
 	}
 
 	if pm.Mods.Get("export") != nil {
-		args, errx := pm.Prj.Info.ModuleArgExport()
+		args, errx := pm.Prj.ModuleArgExport()
 		if errx != nil {
 			return nil, nil, errors.Wrap(errx, "export module arguments are invalid")
 		}

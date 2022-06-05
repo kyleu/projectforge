@@ -8,5 +8,5 @@
 
 /client/node_modules
 
-additional-projects.json
+.projectforge/additional-projects.json
 /testproject

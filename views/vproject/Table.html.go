@@ -44,7 +44,7 @@ func StreamTable(qw422016 *qt422016.Writer, prjs project.Projects, tags []string
 //line views/vproject/Table.html:14
 		qw422016.N().S(`      <thead>
         <tr>
-          <th class="shrink"><a href="/p">Title</a></th>
+          <th><a href="/p">Title</a></th>
           <th><a href="/p?sort=package">Package</a></th>
 `)
 //line views/vproject/Table.html:19
@@ -68,7 +68,7 @@ func StreamTable(qw422016 *qt422016.Writer, prjs project.Projects, tags []string
 	for _, prj := range prjs {
 //line views/vproject/Table.html:27
 		qw422016.N().S(`        <tr>
-          <td class="shrink"><a href="/p/`)
+          <td><a href="/p/`)
 //line views/vproject/Table.html:29
 		qw422016.E().S(prj.Key)
 //line views/vproject/Table.html:29

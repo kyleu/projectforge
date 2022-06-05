@@ -14,7 +14,7 @@
       {%- if full -%}
       <thead>
         <tr>
-          <th class="shrink"><a href="/p">Title</a></th>
+          <th><a href="/p">Title</a></th>
           <th><a href="/p?sort=package">Package</a></th>
           {%- if full -%}
           <th class="shrink"><a href="/p?sort=port">Port</a></th>
@@ -26,7 +26,7 @@
       <tbody>
         {%- for _, prj := range prjs -%}
         <tr>
-          <td class="shrink"><a href="/p/{%s prj.Key %}">
+          <td><a href="/p/{%s prj.Key %}">
             {%= components.SVGRef(prj.IconSafe(), 16, 16, "icon", ps) %}
             {% if prj.Key == util.AppKey %}<strong>{% endif %}{%s prj.Title() %}{% if prj.Key == util.AppKey %}</strong>{% endif %}
           </a></td>

@@ -32,7 +32,7 @@
     <label for="tab-metadata" class="label">Metadata</label>
     <div class="panel">{%= DetailMetadata(prj.Info, as, ps) %}</div>
 
-    {%- for k := range prj.Info.ModuleArgs -%}
+    {%- for k := range prj.ModuleArgs -%}
     {%- code
       argTitle := k
       argMod := p.Modules.Get(k)
@@ -45,7 +45,7 @@
     <div class="panel">
       {%- switch k -%}
       {%- case "export" -%}
-        {%- code ea, _ := p.Project.Info.ModuleArgExport() -%}
+        {%- code ea, _ := p.Project.ModuleArgExport() -%}
         {%- if argMod == nil -%}
           <em>empty</em>
         {%- else -%}

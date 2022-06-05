@@ -39,11 +39,6 @@ func projectFromCfg(proto *project.Project, cfg util.ValueMap) *project.Project 
 		i = &project.Info{License: "Proprietary"}
 	}
 
-	var moduleArgs util.ValueMap
-	if ma, err := cfg.ParseMap("moduleArgs", true, true); ma != nil && err == nil {
-		moduleArgs = ma
-	}
-
 	md := i.ModuleDefs
 	if x := cfg.GetStringOpt("moduleDefs"); x != "" {
 		_ = util.FromJSON([]byte(x), &md)
@@ -86,7 +81,6 @@ func projectFromCfg(proto *project.Project, cfg util.ValueMap) *project.Project 
 			ExtraFiles:      util.StringSplitAndTrim(str("extraFiles", strings.Join(i.ExtraFiles, ", ")), ","),
 			Deployments:     util.StringSplitAndTrim(str("deployments", strings.Join(i.Deployments, ", ")), ","),
 			ModuleDefs:      md,
-			ModuleArgs:      moduleArgs,
 		},
 		Path: proto.Path,
 	}

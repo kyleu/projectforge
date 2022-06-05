@@ -3,7 +3,6 @@ package project
 import (
 	"strings"
 
-	"projectforge.dev/projectforge/app/export/model"
 	"projectforge.dev/projectforge/app/util"
 )
 
@@ -39,7 +38,6 @@ type Info struct {
 	ExtraFiles      []string          `json:"extraFiles,omitempty"`
 	Deployments     []string          `json:"deployments,omitempty"`
 	ModuleDefs      ModuleDefs        `json:"moduleDefs,omitempty"`
-	ModuleArgs      util.ValueMap     `json:"moduleArgs,omitempty"`
 }
 
 func (i *Info) SigningIdentityTrimmed() string {
@@ -66,21 +64,4 @@ func (i *Info) AuthorIDSafe() string {
 		ret = append(ret, x)
 	}
 	return strings.Join(ret, " ")
-}
-
-func (i *Info) ModuleArg(mod string) any {
-	if i == nil || i.ModuleArgs == nil {
-		return nil
-	}
-	return i.ModuleArgs[mod]
-}
-
-func (i *Info) ModuleArgExport() (*model.Args, error) {
-	arg := i.ModuleArg("export")
-	ret := &model.Args{}
-	err := util.CycleJSON(arg, ret)
-	if err != nil {
-		return nil, err
-	}
-	return ret, nil
 }

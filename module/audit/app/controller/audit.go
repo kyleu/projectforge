@@ -155,7 +155,7 @@ func auditFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) 
 func auditFromForm(rc *fasthttp.RequestCtx, setPK bool) (*audit.Audit, error) {
 	frm, err := cutil.ParseForm(rc)
 	if err != nil {
-		return nil, errors.Wrap(err, "unable to parse form")
+		return nil, err
 	}
 	return audit.FromMap(frm, setPK)
 }

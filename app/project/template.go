@@ -24,9 +24,10 @@ type TemplateContext struct {
 	Modules    []string `json:"modules,omitempty"`
 	Tags       []string `json:"tags,omitempty"`
 
-	Info  *Info        `json:"info,omitempty"`
-	Build *Build       `json:"build,omitempty"`
-	Theme *theme.Theme `json:"theme,omitempty"`
+	ModuleArgs util.ValueMap `json:"moduleArgs,omitempty"`
+	Info       *Info         `json:"info,omitempty"`
+	Build      *Build        `json:"build,omitempty"`
+	Theme      *theme.Theme  `json:"theme,omitempty"`
 }
 
 func (p *Project) ToTemplateContext(configVars util.KeyTypeDescs, portOffsets map[string]int) *TemplateContext {
@@ -60,7 +61,7 @@ func (p *Project) ToTemplateContext(configVars util.KeyTypeDescs, portOffsets ma
 		Key: p.Key, Name: p.Name, Exec: p.Executable(), Version: p.Version,
 		Package: p.Package, Args: p.Args, Port: p.Port, ConfigVars: cv, PortOffsets: portOffsets,
 		Ignore: p.Ignore, IgnoreGrep: ignoreGrep, Modules: p.Modules, Tags: p.Tags,
-		Info: i, Build: b, Theme: t,
+		ModuleArgs: p.ModuleArgs, Info: i, Build: b, Theme: t,
 	}
 
 	if ret.Name == "" {

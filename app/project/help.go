@@ -42,7 +42,6 @@ var Helpers = func() map[string][]string {
 	add("goVersion", "The version used for Go, defaults to \""+defaultGoVersion+"\"")
 	add("goBinary", "The binary used for Go, defaults to \"go\"")
 	add("configVars", "Configuration variables for code generation")
-	add("moduleArgs", "Arguments for custom modules")
 	add("extraFiles", "Additional files to include in the builds")
 	add("deployments", "Files that track deployment of this app")
 

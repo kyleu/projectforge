@@ -15,7 +15,7 @@ func ProjectExportOverview(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		args, err := prj.Info.ModuleArgExport()
+		args, err := prj.ModuleArgExport()
 		if err != nil {
 			return "", err
 		}

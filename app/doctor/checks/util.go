@@ -28,10 +28,10 @@ func simpleOut(path string, cmd string, args []string, outCheck func(ctx context
 func loadRootProject(r *doctor.Result) (*project.Project, *doctor.Result) {
 	const dir = "."
 	fs := filesystem.NewFileSystem(dir)
-	if !fs.Exists(project.ConfigFilename) {
+	if !fs.Exists(project.ConfigDir) {
 		return nil, r.WithError(doctor.NewError("missing", "no project found in [%s]", dir))
 	}
-	b, err := fs.ReadFile(project.ConfigFilename)
+	b, err := fs.ReadFile(project.ConfigDir+"project.json")
 	if err != nil {
 		return nil, r.WithError(doctor.NewError("missing", "unable to read project from [%s]", dir))
 	}

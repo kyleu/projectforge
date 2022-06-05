@@ -3,8 +3,8 @@ package controller
 import (
 	"net/url"
 
-	"github.com/pkg/errors"
-	"github.com/valyala/fasthttp"
+	{{{ if .HasModule "oauth" }}}"github.com/pkg/errors"
+	{{{ end }}}"github.com/valyala/fasthttp"
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller/cutil"
@@ -53,7 +53,7 @@ func ProfileSave(rc *fasthttp.RequestCtx) {
 	act("profile.save", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		frm, err := cutil.ParseForm(rc)
 		if err != nil {
-			return "", errors.Wrap(err, "unable to parse form")
+			return "", err
 		}
 
 		n := ps.Profile.Clone()
