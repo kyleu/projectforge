@@ -4,19 +4,23 @@
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/export/model"
+  "projectforge.dev/projectforge/app/project"
   "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/layout"
 ) %}
 
 {% code type ModelDetail struct {
   layout.Basic
+  Project *project.Project
   Model *model.Model
 } %}
 
 {% func (p *ModelDetail) Body(as *app.State, ps *cutil.PageState) %}
   {%- code m := p.Model -%}
   <div class="card">
+    <div class="right"><a href="/p/{%s p.Project.Key %}/export/{%s p.Model.Name %}/edit"><button>Edit</button></a></div>
     <h3>{%= components.SVGRefIcon(m.IconSafe(), ps) %}{%s m.Name %}</h3>
+    <em>export model</em>
     {%= modelSummary(m, as, ps) %}
   </div>
   <div class="card">
@@ -27,17 +31,21 @@
   <div class="card">
     <h3>{%= components.SVGRefIcon(`social`, ps) %} Relations</h3>
     {%= modelRelations(m, as, ps) %}
+  </div>{%- endif -%}{%- if len(m.Indexes) > 0 -%}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`star`, ps) %} Indexes</h3>
+    {%= modelIndexes(m, as, ps) %}
   </div>{%- endif -%}
 {% endfunc %}
 
 {% func modelSummary(model *model.Model, as *app.State, ps *cutil.PageState) %}
-  <table class="min-200 full-width">
+  <table class="mt min-200 full-width">
     <tbody>
-      <tr><td class="shrink">Name</td><td>{%s model.Name %}</td></tr>
-      <tr><td>Package</td><td>{%s model.Package %}</td></tr>
-      <tr><td>Description</td><td>{%s model.Description %}</td></tr>
+      <tr><th class="shrink">Name</th><td>{%s model.Name %}</td></tr>
+      <tr><th>Package</th><td>{%s model.Package %}</td></tr>
+      <tr><th>Description</th><td>{%s model.Description %}</td></tr>
       <tr>
-        <td>Ordering</td>
+        <th>Ordering</th>
         <td>
           {%- for _, x := range model.Ordering -%}
           <div>{%s x.String() %}</div>
@@ -45,19 +53,19 @@
         </td>
         </tr>
       {%- if len(model.GroupedColumns()) > 0 -%}
-      <tr><td>Groupings</td><td>{%s strings.Join(model.GroupedColumns().Names(), ", ") %}</td></tr>
+      <tr><th>Groupings</th><td>{%s strings.Join(model.GroupedColumns().Names(), ", ") %}</td></tr>
       {%- endif -%}
       {%- if len(model.Tags) > 0 -%}
-      <tr><td>Tags</td><td>{%s strings.Join(model.Tags, ", ") %}</td></tr>
+      <tr><th>Tags</th><td>{%s strings.Join(model.Tags, ", ") %}</td></tr>
       {%- endif -%}
       {%- if len(model.Search) > 0 -%}
-      <tr><td>Search</td><td>{%s strings.Join(model.Search, ", ") %}</td></tr>
+      <tr><th>Search</th><td>{%s strings.Join(model.Search, ", ") %}</td></tr>
       {%- endif -%}
       {%- if len(model.History) > 0 -%}
-      <tr><td>History</td><td>{%s model.History %}</td></tr>
+      <tr><th>History</th><td>{%s model.History %}</td></tr>
       {%- endif -%}
       {%- if len(model.Config) > 0 -%}
-      <tr><td>Config</td><td>{%= components.JSON(model.Config) %}</td></tr>
+      <tr><th>Config</th><td>{%= components.JSON(model.Config) %}</td></tr>
       {%- endif -%}
     </tbody>
   </table>
@@ -107,6 +115,25 @@
         <td>{%s strings.Join(rel.Src, ", ") %}</td>
         <td>{%s rel.Table %}</td>
         <td>{%s strings.Join(rel.Tgt, ", ") %}</td>
+      </tr>
+      {%- endfor -%}
+    </tbody>
+  </table>
+{% endfunc %}
+
+{% func modelIndexes(model *model.Model, as *app.State, ps *cutil.PageState) %}
+  <table class="mt min-200 full-width">
+    <thead>
+      <tr>
+        <th class="shrink">Name</th>
+        <th>Declaration</th>
+      </tr>
+    </thead>
+    <tbody>
+      {%- for _, idx := range model.Indexes -%}
+      <tr>
+        <td>{%s idx.Name %}</td>
+        <td>{%s idx.Decl %}</td>
       </tr>
       {%- endfor -%}
     </tbody>

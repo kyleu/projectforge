@@ -44,7 +44,7 @@ func (p *Result) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vaction/Result.html:17
 		qw422016.N().S(`  `)
 //line views/vaction/Result.html:18
-		vproject.StreamSummary(qw422016, p.Ctx.Prj, nil, nil, &p.Ctx.Res.Action, ps)
+		vproject.StreamSummary(qw422016, p.Ctx.Prj, p.Ctx.Title(), nil, nil, &p.Ctx.Res.Action, ps)
 //line views/vaction/Result.html:18
 		qw422016.N().S(`
 `)
@@ -55,7 +55,7 @@ func (p *Result) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vaction/Result.html:20
 		qw422016.N().S(`  `)
 //line views/vaction/Result.html:21
-		vproject.StreamSummary(qw422016, p.Ctx.Prj, nil, nil, &p.Ctx.Res.Action, ps)
+		vproject.StreamSummary(qw422016, p.Ctx.Prj, p.Ctx.Title(), nil, nil, &p.Ctx.Res.Action, ps)
 //line views/vaction/Result.html:21
 		qw422016.N().S(`
 `)

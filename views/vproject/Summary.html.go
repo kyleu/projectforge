@@ -29,7 +29,7 @@ var (
 )
 
 //line views/vproject/Summary.html:11
-func StreamSummary(qw422016 *qt422016.Writer, prj *project.Project, gitResult *git.Result, args util.ValueMap, act *action.Type, ps *cutil.PageState, path ...string) {
+func StreamSummary(qw422016 *qt422016.Writer, prj *project.Project, title string, gitResult *git.Result, args util.ValueMap, act *action.Type, ps *cutil.PageState, path ...string) {
 //line views/vproject/Summary.html:11
 	qw422016.N().S(`
   <div class="card">
@@ -58,7 +58,19 @@ func StreamSummary(qw422016 *qt422016.Writer, prj *project.Project, gitResult *g
 //line views/vproject/Summary.html:20
 	qw422016.E().S(prj.Title())
 //line views/vproject/Summary.html:20
-	qw422016.N().S(`</a></h3>
+	qw422016.N().S(`</a>`)
+//line views/vproject/Summary.html:20
+	if title != "" {
+//line views/vproject/Summary.html:20
+		qw422016.N().S(`: <a href="">`)
+//line views/vproject/Summary.html:20
+		qw422016.E().S(title)
+//line views/vproject/Summary.html:20
+		qw422016.N().S(`</a>`)
+//line views/vproject/Summary.html:20
+	}
+//line views/vproject/Summary.html:20
+	qw422016.N().S(`</h3>
 `)
 //line views/vproject/Summary.html:21
 	if act != nil {
@@ -125,22 +137,22 @@ func StreamSummary(qw422016 *qt422016.Writer, prj *project.Project, gitResult *g
 }
 
 //line views/vproject/Summary.html:34
-func WriteSummary(qq422016 qtio422016.Writer, prj *project.Project, gitResult *git.Result, args util.ValueMap, act *action.Type, ps *cutil.PageState, path ...string) {
+func WriteSummary(qq422016 qtio422016.Writer, prj *project.Project, title string, gitResult *git.Result, args util.ValueMap, act *action.Type, ps *cutil.PageState, path ...string) {
 //line views/vproject/Summary.html:34
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vproject/Summary.html:34
-	StreamSummary(qw422016, prj, gitResult, args, act, ps, path...)
+	StreamSummary(qw422016, prj, title, gitResult, args, act, ps, path...)
 //line views/vproject/Summary.html:34
 	qt422016.ReleaseWriter(qw422016)
 //line views/vproject/Summary.html:34
 }
 
 //line views/vproject/Summary.html:34
-func Summary(prj *project.Project, gitResult *git.Result, args util.ValueMap, act *action.Type, ps *cutil.PageState, path ...string) string {
+func Summary(prj *project.Project, title string, gitResult *git.Result, args util.ValueMap, act *action.Type, ps *cutil.PageState, path ...string) string {
 //line views/vproject/Summary.html:34
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vproject/Summary.html:34
-	WriteSummary(qb422016, prj, gitResult, args, act, ps, path...)
+	WriteSummary(qb422016, prj, title, gitResult, args, act, ps, path...)
 //line views/vproject/Summary.html:34
 	qs422016 := string(qb422016.B)
 //line views/vproject/Summary.html:34

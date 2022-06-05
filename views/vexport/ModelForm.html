@@ -1,0 +1,64 @@
+{% import (
+  "strings"
+
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/export"
+  "projectforge.dev/projectforge/app/export/model"
+  "projectforge.dev/projectforge/app/project"
+  "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/layout"
+) %}
+
+{% code type ModelForm struct {
+  layout.Basic
+  Project *project.Project
+  Model *model.Model
+} %}
+
+{% func (p *ModelForm) Body(as *app.State, ps *cutil.PageState) %}
+  {%- code m := p.Model -%}
+  <form action="" method="post" class="mt expanded">
+    <div class="card">
+      <h3>{%= components.SVGRefIcon(m.IconSafe(), ps) %}Edit {%s m.Name %}</h3>
+      <table class="mt min-200 expanded">
+        <tbody>
+          {%= components.TableInput("name", "Name", m.Name, 5, export.Helpers["model.name"]...) %}
+          {%= components.TableInput("package", "Package", m.Package, 5, export.Helpers["model.package"]...) %}
+          {%= components.TableInput("description", "Description", m.Description, 5, export.Helpers["model.description"]...) %}
+          {%= components.TableInput("icon", "Icon", m.Icon, 5, export.Helpers["model.icon"]...) %}
+          {%= components.TableTextarea("ordering", "Ordering", 3, util.ToJSON(m.Ordering), 5, export.Helpers["model.ordering"]...) %}
+          {%= components.TableInput("search", "Search", strings.Join(m.Search, `, `), 5, export.Helpers["model.search"]...) %}
+          {%= components.TableInput("history", "History", m.History, 5, export.Helpers["model.history"]...) %}
+          {%= components.TableInput("tags", "Tags", strings.Join(m.Tags, `, `), 5, export.Helpers["model.tags"]...) %}
+          {%= components.TableInput("titleOverride", "Title Override", m.TitleOverride, 5, export.Helpers["model.titleOverride"]...) %}
+          {%= components.TableInput("properOverride", "Proper Override", m.ProperOverride, 5, export.Helpers["model.properOverride"]...) %}
+          {%= components.TableTextarea("config", "Config", 3, util.ToJSON(m.Config), 5, export.Helpers["model.config"]...) %}
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3 title="{%s strings.Join(export.Helpers[`model.columns`], `; `) %}">{%= components.SVGRefIcon(`first-aid`, ps) %}Columns</h3>
+      <div class="mt expanded">
+          {%= components.FormTextarea("columns", "input-columns", 8, util.ToJSON(m.Columns), export.Helpers["model.columns"]...) %}
+      </div>
+    </div>
+    <div class="card">
+      <h3 title="{%s strings.Join(export.Helpers[`model.relations`], `; `) %}">{%= components.SVGRefIcon(`social`, ps) %}Relations</h3>
+      <div class="mt expanded">
+        {%= components.FormTextarea("relations", "input-relations", 8, util.ToJSON(m.Relations), export.Helpers["model.relations"]...) %}
+      </div>
+    </div>
+    <div class="card">
+      <h3 title="{%s strings.Join(export.Helpers[`model.indexes`], `; `) %}">{%= components.SVGRefIcon(`star`, ps) %}Indexes</h3>
+      <div class="mt expanded">
+        {%= components.FormTextarea("indexes", "input-indexes", 8, util.ToJSON(m.Indexes), export.Helpers["model.indexes"]...) %}
+      </div>
+    </div>
+    <div class="card">
+      <button type="submit">Save</button>
+      <button type="reset">Reset</button>
+    </div>
+  </form>
+{% endfunc %}

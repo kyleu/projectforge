@@ -15,10 +15,10 @@
 
 {% func (p *Result) Body(as *app.State, ps *cutil.PageState) %}
   {%- if p.Ctx.Prj != nil -%}
-  {%= vproject.Summary(p.Ctx.Prj, nil, nil, &p.Ctx.Res.Action, ps) %}
+  {%= vproject.Summary(p.Ctx.Prj, p.Ctx.Title(), nil, nil, &p.Ctx.Res.Action, ps) %}
   {%- endif -%}
   {%- if p.IsBuild -%}
-  {%= vproject.Summary(p.Ctx.Prj, nil, nil, &p.Ctx.Res.Action, ps) %}
+  {%= vproject.Summary(p.Ctx.Prj, p.Ctx.Title(), nil, nil, &p.Ctx.Res.Action, ps) %}
   {%- endif -%}
 
   <div class="card">

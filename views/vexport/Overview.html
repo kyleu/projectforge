@@ -4,12 +4,32 @@
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/export/model"
+  "projectforge.dev/projectforge/app/project"
   "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/layout"
 ) %}
 
+{% code type Overview struct {
+  layout.Basic
+  Project *project.Project
+  Args *model.Args
+} %}
+
+{% func (p *Overview) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <div class="right"><a href="/p/{%s p.Project.Key %}/export/config/edit"><button>Edit</button></a></div>
+    <h3>{%= components.SVGRefIcon(`print`, ps) %}Export Configuration</h3>
+    {%= components.JSON(p.Args.Config) %}
+  </div>
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`list`, ps) %}Models</h3>
+    {%= ModelList(p.Args.Models, fmt.Sprintf("/p/%s/export", p.Project.Key), as, ps) %}
+  </div>
+{% endfunc %}
+
 {% func ModelList(models model.Models, urlPrefix string, as *app.State, ps *cutil.PageState) %}
-  <table class="min-200 full-width">
+  <table class="mt min-200 full-width">
     <tbody>
       {%- for _, m := range models -%}
       {%- code u := fmt.Sprintf("%s/%s", urlPrefix, m.Name) -%}

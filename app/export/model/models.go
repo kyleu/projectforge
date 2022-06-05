@@ -1,5 +1,9 @@
 package model
 
+import (
+	"golang.org/x/exp/slices"
+)
+
 type Models []*Model
 
 func (m Models) Get(n string) *Model {
@@ -21,4 +25,23 @@ func (m Models) ReverseRelations(t string) Relations {
 		}
 	}
 	return rels
+}
+
+func (m Models) Replace(mdl *Model) Models {
+	for idx, curr := range m {
+		if curr.Name == mdl.Name {
+			m[idx] = mdl
+			m.Sort()
+			return m
+		}
+	}
+	m = append(m, mdl)
+	m.Sort()
+	return m
+}
+
+func (m Models) Sort() {
+	slices.SortFunc(m, func(l *Model, r *Model) bool {
+		return l.Offset < r.Offset
+	})
 }

@@ -23,6 +23,7 @@ type Model struct {
 	Columns        Columns          `json:"columns"`
 	Relations      Relations        `json:"relations,omitempty"`
 	Indexes        Indexes          `json:"indexes,omitempty"`
+	Offset         int              `json:"-"`
 	historyMap     *HistoryMap
 	historyMapDB   *HistoryMap
 }

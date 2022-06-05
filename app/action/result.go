@@ -83,6 +83,10 @@ func (r *Result) Merge(tgt *Result) *Result {
 	}
 }
 
+func (r *Result) Title() string {
+	return r.Action.Title
+}
+
 func (r *Result) HasErrors() bool {
 	return len(r.Errors) > 0
 }
@@ -115,6 +119,13 @@ func (c *ResultContext) Status() string {
 	return c.Res.StatusLog()
 }
 
+func (c *ResultContext) Title() string {
+	if c.Res == nil {
+		return "Unknown"
+	}
+	return c.Res.Action.Title
+}
+
 type ResultContexts []*ResultContext
 
 func (x ResultContexts) Errors() []string {
@@ -125,6 +136,13 @@ func (x ResultContexts) Errors() []string {
 		}
 	}
 	return ret
+}
+
+func (x ResultContexts) Title() string {
+	if len(x) == 0 || x[0].Res == nil {
+		return "Unknown"
+	}
+	return x[0].Res.Action.Title
 }
 
 func errorResult(err error, t Type, cfg util.ValueMap, logger util.Logger) *Result {

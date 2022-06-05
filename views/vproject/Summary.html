@@ -8,7 +8,7 @@
   "projectforge.dev/projectforge/views/vsearch"
 ) %}
 
-{% func Summary(prj *project.Project, gitResult *git.Result, args util.ValueMap, act *action.Type, ps *cutil.PageState, path ...string) %}
+{% func Summary(prj *project.Project, title string, gitResult *git.Result, args util.ValueMap, act *action.Type, ps *cutil.PageState, path ...string) %}
   <div class="card">
     {%- code
       q := ""
@@ -17,7 +17,7 @@
       }
     -%}
     {%= vsearch.Form("/p/" + prj.Key + "/search", q, "Search Files", nil, ps) %}
-    <h3><a href="/p/{%s prj.Key %}">{%= components.SVGRefIcon(prj.IconSafe(), ps) %} {%s prj.Title() %}</a></h3>
+    <h3><a href="/p/{%s prj.Key %}">{%= components.SVGRefIcon(prj.IconSafe(), ps) %} {%s prj.Title() %}</a>{% if title != "" %}: <a href="">{%s title %}</a>{%- endif -%}</h3>
     {%- if act != nil -%}
     <em>{%s act.Title %} results</em>
     {%- endif -%}

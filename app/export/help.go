@@ -1,0 +1,26 @@
+package export
+
+var Helpers = func() map[string][]string {
+	ret := map[string][]string{}
+	add := func(k string, v string) {
+		ret[k] = []string{v}
+	}
+
+	// project
+	add("model.name", "The name, usually corresponding to the name of your database table")
+	add("model.package", "package")
+	add("model.description", "description")
+	add("model.icon", "icon")
+	add("model.ordering", "ordering")
+	add("model.search", "search")
+	add("model.history", "history")
+	add("model.tags", "tags")
+	add("model.titleOverride", "titleOverride")
+	add("model.properOverride", "properOverride")
+	add("model.config", "config")
+	add("model.columns", "columns")
+	add("model.relations", "relations")
+	add("model.indexes", "indexes")
+
+	return ret
+}()
