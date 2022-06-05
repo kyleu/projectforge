@@ -60,9 +60,15 @@ func StreamAvailActions(qw422016 *qt422016.Writer, title string, currTags []stri
 //line views/vproject/AvailActions.html:18
 	}
 //line views/vproject/AvailActions.html:18
-	qw422016.N().S(`: `)
+	if title != "" {
 //line views/vproject/AvailActions.html:18
-	qw422016.E().S(title)
+		qw422016.N().S(`: <a href="">`)
+//line views/vproject/AvailActions.html:18
+		qw422016.E().S(title)
+//line views/vproject/AvailActions.html:18
+		qw422016.N().S(`</a>`)
+//line views/vproject/AvailActions.html:18
+	}
 //line views/vproject/AvailActions.html:18
 	qw422016.N().S(`
   </h3>

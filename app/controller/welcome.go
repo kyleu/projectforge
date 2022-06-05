@@ -28,7 +28,7 @@ func WelcomeResult(rc *fasthttp.RequestCtx) {
 	act("welcome.result", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret, err := cutil.ParseForm(rc)
 		if err != nil {
-			return "", errors.Wrap(err, "unable to parse form")
+			return "", err
 		}
 
 		prj := as.Services.Projects.ByPath(".")

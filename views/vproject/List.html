@@ -14,7 +14,7 @@
 
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    {%= AvailActions("Actions", p.Tags, p.Projects.Tags(), ps) %}
+    {%= AvailActions("", p.Tags, p.Projects.Tags(), ps) %}
   </div>
   {%= Table(p.Projects, p.Tags, true, as, ps) %}
 {% endfunc %}

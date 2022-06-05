@@ -49,6 +49,8 @@ func AppRoutes() fasthttp.RequestHandler {
 	r.POST("/p/{key}/edit", ProjectSave)
 	r.GET("/p/{key}/stats", ProjectFileStats)
 	r.GET("/p/{key}/export", ProjectExportOverview)
+	r.GET("/p/{key}/export/config/edit", ProjectExportConfigForm)
+	r.POST("/p/{key}/export/config/edit", ProjectExportConfigSave)
 	r.GET("/p/{key}/export/{model}", ProjectExportModelDetail)
 	r.GET("/p/{key}/export/{model}/edit", ProjectExportModelForm)
 	r.POST("/p/{key}/export/{model}/edit", ProjectExportModelSave)

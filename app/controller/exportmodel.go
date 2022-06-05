@@ -10,24 +10,6 @@ import (
 	"projectforge.dev/projectforge/views/vexport"
 )
 
-func ProjectExportOverview(rc *fasthttp.RequestCtx) {
-	act("project.export.overview", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(rc, as)
-		if err != nil {
-			return "", err
-		}
-		args, err := prj.Info.ModuleArgExport()
-		if err != nil {
-			return "", err
-		}
-		ps.Data = args
-
-		bc := []string{"projects", prj.Key, "Export"}
-		ps.Title = fmt.Sprintf("[%s] Export", prj.Key)
-		return render(rc, as, &vexport.Overview{Project: prj, Args: args}, ps, bc...)
-	})
-}
-
 func ProjectExportModelDetail(rc *fasthttp.RequestCtx) {
 	act("project.export.model.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prj, mdl, _, err := exportLoad(rc, as)
@@ -66,7 +48,7 @@ func ProjectExportModelSave(rc *fasthttp.RequestCtx) {
 
 		frm, err := cutil.ParseForm(rc)
 		if err != nil {
-			return "", errors.Wrap(err, "unable to parse form")
+			return "", err
 		}
 
 		err = exportModelFromForm(frm, mdl)

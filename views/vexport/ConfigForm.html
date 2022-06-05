@@ -1,0 +1,29 @@
+{% import (
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/project"
+  "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/layout"
+) %}
+
+{% code type ConfigForm struct {
+  layout.Basic
+  Project *project.Project
+  Cfg util.ValueMap
+} %}
+
+{% func (p *ConfigForm) Body(as *app.State, ps *cutil.PageState) %}
+  <form action="" method="post" class="mt expanded">
+    <div class="card">
+      <h3>{%= components.SVGRefIcon(`print`, ps) %}{%s p.Project.Title() %} Export Configuration</h3>
+      <div class="mt">
+        {%= components.FormTextarea("cfg", "input-cfg", 16, util.ToJSON(p.Cfg), "JSON object") %}
+      </div>
+      <div class="mt">
+        <button type="submit">Save</button>
+        <button type="reset">Reset</button>
+      </div>
+    </div>
+  </form>
+{% endfunc %}
