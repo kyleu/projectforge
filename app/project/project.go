@@ -27,7 +27,8 @@ type Project struct {
 	Theme *theme.Theme `json:"theme,omitempty"`
 	Build *Build       `json:"build,omitempty"`
 
-	ModuleArgs util.ValueMap `json:"-"`
+	ExportArgs *model.Args   `json:"-"`
+	Config     util.ValueMap `json:"-"`
 	Path       string        `json:"-"`
 	Parent     string        `json:"-"`
 }
@@ -87,19 +88,6 @@ func (p *Project) WebPath() string {
 	return "/p/" + p.Key
 }
 
-func (p *Project) ModuleArg(mod string) any {
-	if p.ModuleArgs == nil {
-		return nil
-	}
-	return p.ModuleArgs[mod]
-}
-
 func (p *Project) ModuleArgExport() (*model.Args, error) {
-	arg := p.ModuleArg("export")
-	ret := &model.Args{}
-	err := util.CycleJSON(arg, ret)
-	if err != nil {
-		return nil, err
-	}
-	return ret, nil
+	return p.ExportArgs, nil
 }

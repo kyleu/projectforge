@@ -137,7 +137,9 @@ func getPrjAndMods(ctx context.Context, p *Params) (context.Context, *PrjAndMods
 	if err != nil {
 		return nil, nil, err
 	}
-	args.Modules = mods.Keys()
+	if args != nil {
+		args.Modules = mods.Keys()
+	}
 
 	pm := &PrjAndMods{Cfg: p.Cfg, Prj: prj, Mods: mods, MSvc: p.MSvc, PSvc: p.PSvc, ESvc: p.ESvc, EArgs: args, Logger: p.Logger}
 	return ctx, pm, nil

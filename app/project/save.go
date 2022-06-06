@@ -16,7 +16,7 @@ func (s *Service) Save(prj *Project, logger util.Logger) error {
 		prj.Icon = ""
 	}
 	tgtFS := s.GetFilesystem(prj)
-	j := util.ToJSON(prj) + "\n"
+	j := util.ToJSON(prj)
 	err := tgtFS.WriteFile(fn, []byte(j), filesystem.DefaultMode, true)
 	if err != nil {
 		return errors.Wrapf(err, "unable to write project file to [%s]", fn)

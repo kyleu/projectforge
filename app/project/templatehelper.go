@@ -74,7 +74,7 @@ func (t *TemplateContext) HasSlack() bool {
 }
 
 func (t *TemplateContext) DatabaseUIOpts() (bool, bool) {
-	cfg, _ := t.ModuleArgs.GetMap("databaseui", true)
+	cfg, _ := t.Config.GetMap("databaseui", true)
 	if len(cfg) == 0 {
 		return true, true
 	}

@@ -26,9 +26,9 @@ func diffs(ctx context.Context, pm *PrjAndMods) (file.Files, diff.Diffs, error) 
 	}
 
 	if pm.Mods.Get("export") != nil {
-		args, errx := pm.Prj.ModuleArgExport()
-		if errx != nil {
-			return nil, nil, errors.Wrap(errx, "export module arguments are invalid")
+		args, errX := pm.Prj.ModuleArgExport()
+		if errX != nil {
+			return nil, nil, errors.Wrap(errX, "export module arguments are invalid")
 		}
 		args.Modules = pm.Mods.Keys()
 		files, e := pm.ESvc.Files(ctx, args, true, pm.Logger)

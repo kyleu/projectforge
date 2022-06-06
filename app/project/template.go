@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"projectforge.dev/projectforge/app/export/model"
 	"projectforge.dev/projectforge/app/lib/theme"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -24,7 +25,8 @@ type TemplateContext struct {
 	Modules    []string `json:"modules,omitempty"`
 	Tags       []string `json:"tags,omitempty"`
 
-	ModuleArgs util.ValueMap `json:"moduleArgs,omitempty"`
+	ExportArgs *model.Args   `json:"exportArgs,omitempty"`
+	Config     util.ValueMap `json:"config,omitempty"`
 	Info       *Info         `json:"info,omitempty"`
 	Build      *Build        `json:"build,omitempty"`
 	Theme      *theme.Theme  `json:"theme,omitempty"`
@@ -61,7 +63,7 @@ func (p *Project) ToTemplateContext(configVars util.KeyTypeDescs, portOffsets ma
 		Key: p.Key, Name: p.Name, Exec: p.Executable(), Version: p.Version,
 		Package: p.Package, Args: p.Args, Port: p.Port, ConfigVars: cv, PortOffsets: portOffsets,
 		Ignore: p.Ignore, IgnoreGrep: ignoreGrep, Modules: p.Modules, Tags: p.Tags,
-		ModuleArgs: p.ModuleArgs, Info: i, Build: b, Theme: t,
+		ExportArgs: p.ExportArgs, Config: p.Config, Info: i, Build: b, Theme: t,
 	}
 
 	if ret.Name == "" {

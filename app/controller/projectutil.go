@@ -5,7 +5,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
@@ -65,12 +64,6 @@ func projectFromForm(frm util.ValueMap, prj *project.Project) error {
 	prj.Info.ExtraFiles = util.StringSplitAndTrim(get("extraFiles", strings.Join(prj.Info.ExtraFiles, ", ")), ",")
 	prj.Info.Deployments = util.StringSplitAndTrim(get("deployments", strings.Join(prj.Info.Deployments, ", ")), ",")
 
-	var err error
-	prj.ModuleArgs, err = getModuleArgs(frm)
-	if err != nil {
-		return err
-	}
-
 	prj.Build = project.BuildFromMap(frm)
 	if prj.Build.Empty() {
 		prj.Build = nil
@@ -80,18 +73,6 @@ func projectFromForm(frm util.ValueMap, prj *project.Project) error {
 		prj.Theme = nil
 	}
 	return nil
-}
-
-func getModuleArgs(frm util.ValueMap) (util.ValueMap, error) {
-	ma := frm.GetStringOpt("moduleArgs")
-	if ma == "" {
-		return nil, nil
-	}
-	moduleArgs := util.ValueMap{}
-	if err := util.FromJSON([]byte(ma), &moduleArgs); err != nil {
-		return nil, errors.Wrap(err, "invalid module args JSON")
-	}
-	return moduleArgs, nil
 }
 
 func getProject(rc *fasthttp.RequestCtx, as *app.State) (*project.Project, error) {

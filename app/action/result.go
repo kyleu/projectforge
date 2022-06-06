@@ -31,6 +31,9 @@ func (r *Result) WithError(err error) *Result {
 	if err != nil {
 		msg = err.Error()
 	}
+	if r == nil {
+		println("TODO")
+	}
 	if r.logger != nil {
 		r.logger.Warnf("action error: %+v", err.Error())
 	}
