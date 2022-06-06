@@ -26,7 +26,7 @@ func diffs(ctx context.Context, pm *PrjAndMods) (file.Files, diff.Diffs, error) 
 	}
 
 	if pm.Mods.Get("export") != nil {
-		args, errX := pm.Prj.ModuleArgExport()
+		args, errX := pm.Prj.ModuleArgExport(pm.PSvc, pm.Logger)
 		if errX != nil {
 			return nil, nil, errors.Wrap(errX, "export module arguments are invalid")
 		}
@@ -43,6 +43,8 @@ func diffs(ctx context.Context, pm *PrjAndMods) (file.Files, diff.Diffs, error) 
 	}
 
 	configVars, portOffsets := parse(pm)
+
+	pm.Prj.ExportArgs, _ = pm.Prj.ModuleArgExport(pm.PSvc, pm.Logger)
 
 	tCtx := pm.Prj.ToTemplateContext(configVars, portOffsets)
 

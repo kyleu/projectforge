@@ -71,7 +71,7 @@ func exportModelFromForm(frm util.ValueMap, m *model.Model) error {
 	return nil
 }
 
-func exportLoad(rc *fasthttp.RequestCtx, as *app.State) (*project.Project, *model.Model, *model.Args, error) {
+func exportLoad(rc *fasthttp.RequestCtx, as *app.State, logger util.Logger) (*project.Project, *model.Model, *model.Args, error) {
 	prj, err := getProject(rc, as)
 	if err != nil {
 		return nil, nil, nil, err
@@ -82,7 +82,7 @@ func exportLoad(rc *fasthttp.RequestCtx, as *app.State) (*project.Project, *mode
 		return nil, nil, nil, err
 	}
 
-	args, err := prj.ModuleArgExport()
+	args, err := prj.ModuleArgExport(as.Services.Projects, logger)
 	if err != nil {
 		return nil, nil, nil, err
 	}

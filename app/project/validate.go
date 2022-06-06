@@ -25,6 +25,7 @@ func Validate(p *Project, moduleDeps map[string][]string) []*ValidationError {
 	validateModuleDeps(p.Modules, moduleDeps, e)
 	validateModuleConfig(p, e)
 	validateBuild(p, e)
+	validateExport(p, e)
 
 	return ret
 }
@@ -94,5 +95,16 @@ func validateBuild(p *Project, e func(code string, msg string, args ...any)) {
 	}
 	if p.Info.AuthorEmail == "" {
 		e("config", "No author email set")
+	}
+}
+
+func validateExport(p *Project, e func(code string, msg string, args ...any)) {
+	if p.ExportArgs == nil {
+		return
+	}
+	for _, x := range p.ExportArgs.Models {
+		if err := x.Validate(p.Modules); err != nil {
+			e("export", err.Error())
+		}
 	}
 }

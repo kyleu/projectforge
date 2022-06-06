@@ -22,7 +22,7 @@ func (s *Service) Save(prj *Project, logger util.Logger) error {
 		return errors.Wrapf(err, "unable to write project file to [%s]", fn)
 	}
 
-	if exportArgs, _ := prj.ModuleArgExport(); exportArgs != nil {
+	if exportArgs, _ := prj.ModuleArgExport(s, logger); exportArgs != nil {
 		if len(exportArgs.Config) > 0 {
 			fn := ConfigDir + "/export/config.json"
 			err = tgtFS.WriteFile(fn, util.ToJSONBytes(exportArgs.Config, true), filesystem.DefaultMode, true)

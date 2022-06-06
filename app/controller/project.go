@@ -64,6 +64,8 @@ func ProjectDetail(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 
+		prj.ExportArgs, _ = prj.ModuleArgExport(as.Services.Projects, ps.Logger)
+
 		mods := as.Services.Modules.Modules()
 		gitStatus, _ := as.Services.Git.Status(ps.Context, prj, ps.Logger)
 

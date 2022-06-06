@@ -36,7 +36,7 @@ func (m Models) Sort() {
 func (m Models) Sorted() Models {
 	ret := make(Models, 0, len(m))
 	for _, mdl := range m {
-		if curr := m.Get(mdl.Name); curr != nil {
+		if curr := ret.Get(mdl.Name); curr == nil {
 			ret = append(ret, m.withDeps(mdl)...)
 		}
 	}

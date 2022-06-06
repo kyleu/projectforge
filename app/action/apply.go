@@ -133,7 +133,7 @@ func getPrjAndMods(ctx context.Context, p *Params) (context.Context, *PrjAndMods
 		return nil, nil, err
 	}
 
-	args, err := prj.ModuleArgExport()
+	args, err := prj.ModuleArgExport(p.PSvc, p.Logger)
 	if err != nil {
 		return nil, nil, err
 	}

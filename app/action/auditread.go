@@ -38,7 +38,7 @@ func getModuleFiles(ctx context.Context, pm *PrjAndMods) ([]string, error) {
 	}
 
 	if pm.Mods.Get("export") != nil {
-		args, err := pm.Prj.ModuleArgExport()
+		args, err := pm.Prj.ModuleArgExport(pm.PSvc, pm.Logger)
 		if err != nil {
 			return nil, err
 		}

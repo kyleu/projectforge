@@ -77,7 +77,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 
 `)
 //line views/vproject/Detail.html:35
-		ea, _ := p.Project.ModuleArgExport()
+		ea, _ := p.Project.ModuleArgExport(as.Services.Projects, ps.Logger)
 
 //line views/vproject/Detail.html:36
 		if ea != nil {

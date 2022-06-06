@@ -14,7 +14,7 @@ import (
 
 func ProjectExportModelDetail(rc *fasthttp.RequestCtx) {
 	act("project.export.model.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, mdl, _, err := exportLoad(rc, as)
+		prj, mdl, _, err := exportLoad(rc, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -28,7 +28,7 @@ func ProjectExportModelDetail(rc *fasthttp.RequestCtx) {
 
 func ProjectExportModelForm(rc *fasthttp.RequestCtx) {
 	act("project.export.model.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, mdl, _, err := exportLoad(rc, as)
+		prj, mdl, _, err := exportLoad(rc, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -49,7 +49,7 @@ func ProjectExportModelForm(rc *fasthttp.RequestCtx) {
 
 func ProjectExportModelSave(rc *fasthttp.RequestCtx) {
 	act("project.export.model.save", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, mdl, _, err := exportLoad(rc, as)
+		prj, mdl, _, err := exportLoad(rc, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -77,7 +77,7 @@ func ProjectExportModelSave(rc *fasthttp.RequestCtx) {
 
 func ProjectExportModelDelete(rc *fasthttp.RequestCtx) {
 	act("project.export.model.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, mdl, _, err := exportLoad(rc, as)
+		prj, mdl, _, err := exportLoad(rc, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}

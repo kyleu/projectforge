@@ -32,7 +32,7 @@
       <label for="tab-metadata" class="label">Metadata</label>
       <div class="panel">{%= DetailMetadata(prj.Info, as, ps) %}</div>
 
-      {%- code ea, _ := p.Project.ModuleArgExport() -%}
+      {%- code ea, _ := p.Project.ModuleArgExport(as.Services.Projects, ps.Logger) -%}
       {%- if ea != nil -%}
       <input name="type" type="radio" id="tab-modulearg-export" class="input"/>
       <label for="tab-modulearg-export" class="label">Export</label>

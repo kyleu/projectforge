@@ -6,7 +6,7 @@ import (
 	"projectforge.dev/projectforge/app/lib/types"
 )
 
-func exportCol(f *Field) (*model.Column, error) {
+func exportColumn(f *Field) (*model.Column, error) {
 	typ, tags, err := typeFor(f.Type)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to parse type for field [%s]", f.Name)
