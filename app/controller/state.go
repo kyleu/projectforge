@@ -2,6 +2,7 @@
 package controller
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/valyala/fasthttp"
@@ -9,6 +10,7 @@ import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/theme"
+	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/verror"
 )
@@ -34,6 +36,9 @@ func SetAppState(a *app.State, logger util.Logger) {
 }
 
 func SetSiteState(a *app.State, logger util.Logger) {
+	a.Services = &app.Services{
+		Modules: module.NewService(context.Background(), a.Files, logger),
+	}
 	_currentSiteState = a
 	_currentSiteRootLogger = logger
 	initSite(a, logger)
