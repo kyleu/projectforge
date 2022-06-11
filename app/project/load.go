@@ -1,6 +1,7 @@
 package project
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -13,6 +14,7 @@ import (
 
 func (s *Service) load(path string, logger util.Logger) (*Project, error) {
 	cfgPath := filepath.Join(path, ConfigDir, "project.json")
+
 	if curr, _ := os.Stat(cfgPath); curr == nil {
 		l, r := util.StringSplitLast(path, '/', true)
 		if r == "" {
@@ -28,7 +30,7 @@ func (s *Service) load(path string, logger util.Logger) (*Project, error) {
 			r = "root"
 		}
 		ret := NewProject(r, path)
-		ret.Name = r + " (missing)"
+		ret.Name = fmt.Sprintf("%s (missing)", r)
 		return ret, nil
 	}
 	b, err := os.ReadFile(cfgPath)
@@ -39,7 +41,18 @@ func (s *Service) load(path string, logger util.Logger) (*Project, error) {
 	ret := &Project{}
 	err = util.FromJSON(b, &ret)
 	if err != nil {
-		return nil, errors.Wrapf(err, "can't load project from [%s]", cfgPath)
+		l, r := util.StringSplitLast(path, '/', true)
+		if r == "" {
+			r = l
+		}
+		if r == "." || r == "" {
+			r = "root"
+		}
+		ret := NewProject(r, path)
+		ret.Name = fmt.Sprintf("%s (json error)", r)
+		ret.Info = &Info{}
+		return ret, nil
+		// return nil, errors.Wrapf(err, "can't load project from [%s]", cfgPath)
 	}
 	ret.Path = path
 

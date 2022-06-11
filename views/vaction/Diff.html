@@ -36,7 +36,7 @@
       {%- for _, d := range diffs -%}
         <tr>
           <td class="shrink">
-            {%- if strings.Contains(d.Path, "..") -%}
+            {%- if strings.Contains(d.Path, "..") || d.Status.Key == diff.StatusNew.Key -%}
             {%s d.Path %}
             {%- else -%}
             <a href="/p/{%s prjKey %}/fs/{%s d.Path %}" target="_blank">{%s d.Path %}</a>

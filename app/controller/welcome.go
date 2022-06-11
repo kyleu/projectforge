@@ -50,11 +50,16 @@ func WelcomeResult(rc *fasthttp.RequestCtx) {
 		prj.Port, _ = strconv.Atoi(ret.GetStringOpt("port"))
 		prj.Info.License = ret.GetStringOpt("license")
 
+		prj.Modules = util.StringSplitAndTrim(ret.GetStringOpt("modules"), ",")
+		if err != nil {
+			return "", errors.Wrap(err, "can't parse modules")
+		}
+
 		err = as.Services.Projects.Save(prj, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to save initial project")
 		}
 
-		return FlashAndRedir(true, "project initialized", "/", rc, ps)
+		return FlashAndRedir(true, "project initialized", prj.WebPath(), rc, ps)
 	})
 }

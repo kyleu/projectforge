@@ -73,7 +73,7 @@ func streamrenderDiffs(qw422016 *qt422016.Writer, prjKey string, act action.Type
 //line views/vaction/Diff.html:36
 		qw422016.N().S(`<tr><td class="shrink">`)
 //line views/vaction/Diff.html:39
-		if strings.Contains(d.Path, "..") {
+		if strings.Contains(d.Path, "..") || d.Status.Key == diff.StatusNew.Key {
 //line views/vaction/Diff.html:40
 			qw422016.E().S(d.Path)
 //line views/vaction/Diff.html:41
