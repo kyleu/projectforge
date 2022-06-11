@@ -83,34 +83,34 @@ func (p *PageState) User() string {
 	return p.Accounts[0].Email
 }
 
-func (ps *PageState) Clean(as *app.State) error {
-	if ps.Profile != nil && ps.Profile.Theme == "" {
-		ps.Profile.Theme = theme.ThemeDefault.Key
+func (p *PageState) Clean(as *app.State) error {
+	if p.Profile != nil && p.Profile.Theme == "" {
+		p.Profile.Theme = theme.ThemeDefault.Key
 	}
-	if ps.RootIcon == "" {
-		ps.RootIcon = defaultIcon
+	if p.RootIcon == "" {
+		p.RootIcon = defaultIcon
 	}
-	if ps.RootPath == "" {
-		ps.RootPath = "/"
+	if p.RootPath == "" {
+		p.RootPath = "/"
 	}
-	if ps.RootTitle == "" {
-		ps.RootTitle = defaultRootTitle
+	if p.RootTitle == "" {
+		p.RootTitle = defaultRootTitle
 	}
 	if defaultRootTitleAppend != "" {
-		ps.RootTitle += " " + defaultRootTitleAppend
+		p.RootTitle += " " + defaultRootTitleAppend
+	}{{{ if .HasModule "search" }}}
+	if p.SearchPath == "" {
+		p.SearchPath = DefaultSearchPath
+	}{{{ end }}}
+	if p.ProfilePath == "" {
+		p.ProfilePath = DefaultProfilePath
 	}
-	if ps.SearchPath == "" {
-		ps.SearchPath = DefaultSearchPath
-	}
-	if ps.ProfilePath == "" {
-		ps.ProfilePath = DefaultProfilePath
-	}
-	if len(ps.Menu) == 0 {
-		m, err := cmenu.MenuFor(ps.Context, ps.Authed, ps.Admin, as, ps.Logger)
+	if len(p.Menu) == 0 {
+		m, err := cmenu.MenuFor(p.Context, p.Authed, p.Admin, as, p.Logger)
 		if err != nil {
 			return err
 		}
-		ps.Menu = m
+		p.Menu = m
 	}
 	return nil
 }

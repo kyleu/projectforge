@@ -27,7 +27,7 @@ func (c *Column) ToGoEditString(prefix string, format string) string {
 		return fmt.Sprintf(`{%%%%= components.TableBoolean(%q, %q, %s, 5, %q) %%%%}`, c.Camel(), c.Title(), prefix+c.Proper(), c.Help())
 	case types.KeyInt:
 		return fmt.Sprintf(`{%%%%= components.TableInputNumber(%q, %q, %s, 5, %q) %%%%}`, c.Camel(), c.Title(), prefix+c.Proper(), c.Help())
-	case types.KeyMap, types.KeyValueMap:
+	case types.KeyList, types.KeyMap, types.KeyValueMap:
 		return fmt.Sprintf(`{%%%%= components.TableTextarea(%q, %q, 8, util.ToJSON(%s), 5, %q) %%%%}`, c.Camel(), c.Title(), c.ToGoString(prefix), c.Help())
 	case types.KeyReference:
 		return fmt.Sprintf(`{%%%%= components.TableTextarea(%q, %q, 8, util.ToJSON(%s), 5, %q) %%%%}`, c.Camel(), c.Title(), prefix+c.Proper(), c.Help())
@@ -63,17 +63,27 @@ func (c *Column) ToGoEditString(prefix string, format string) string {
 }
 
 func (c *Column) ToGoMapParse() string {
-	switch c.Type.Key() {
+	return toGoMapParse(c.Type)
+}
+
+func toGoMapParse(t types.Type) string {
+	switch t.Key() {
 	case types.KeyAny:
 		return "Interface"
 	case types.KeyBool:
 		return "Bool"
 	case types.KeyInt:
 		return "Int"
+	case types.KeyList:
+		// l := types.TypeAs[*types.List](t)
+		// if l == nil {
+		// 	return fmt.Sprintf("ERROR:invalid list type [%T]", t)
+		// }
+		return "Array" // + toGoMapParse(l.V)
 	case types.KeyMap, types.KeyValueMap:
 		return "Map"
 	case types.KeyReference:
-		return asRefK(c.Type)
+		return asRefK(t)
 	case types.KeyString:
 		return "String"
 	case types.KeyTimestamp:
@@ -81,7 +91,7 @@ func (c *Column) ToGoMapParse() string {
 	case types.KeyUUID:
 		return "UUID"
 	default:
-		return "ERROR:unhandled map parse for type [" + c.Type.Key() + "]"
+		return "ERROR:unhandled map parse for type [" + t.Key() + "]"
 	}
 }
 
@@ -94,6 +104,8 @@ func (c *Column) ZeroVal() string {
 		return types.KeyNil
 	case types.KeyBool:
 		return "false"
+	case types.KeyList:
+		return types.KeyNil
 	case types.KeyInt:
 		return "0"
 	case types.KeyMap, types.KeyValueMap, types.KeyReference:

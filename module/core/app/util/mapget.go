@@ -17,8 +17,8 @@ func (m ValueMap) GetRequired(k string) (any, error) {
 	return v, nil
 }
 
-func (m ValueMap) GetArray(key string, allowEmpty bool, allowNonArray bool) ([]any, error) {
-	return m.ParseArray(key, false, allowEmpty, allowNonArray)
+func (m ValueMap) GetArray(key string, allowEmpty bool) ([]any, error) {
+	return m.ParseArray(key, false, allowEmpty)
 }
 
 func (m ValueMap) GetBool(key string, allowEmpty bool) (bool, error) {
@@ -36,10 +36,7 @@ func (m ValueMap) GetInt(key string, allowEmpty bool) (int, error) {
 
 func (m ValueMap) GetInt64(key string, allowEmpty bool) (int64, error) {
 	ret, err := m.ParseInt(key, false, allowEmpty)
-	if err != nil {
-		return 0, errors.Wrap(err, "")
-	}
-	return int64(ret), nil
+	return int64(ret), err
 }
 
 func (m ValueMap) GetFloat(key string, allowEmpty bool) (float64, error) {
@@ -60,7 +57,7 @@ func (m ValueMap) GetStringOpt(key string) string {
 }
 
 func (m ValueMap) GetStringArray(key string, allowEmpty bool) ([]string, error) {
-	ret, err := m.ParseArray(key, false, allowEmpty, true)
+	ret, err := m.ParseArrayString(key, false, allowEmpty)
 	if err != nil {
 		return nil, err
 	}

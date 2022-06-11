@@ -23,7 +23,7 @@ A project managed by Project Forge...
 - Has a beautiful and fast HTML UI, no JavaScript required
 - Optimizes for speed and developer experience, sub-second turnaround times
 - Builds in seconds, live-reloads in dev mode when code or templates change
-- Builds to dozens of platforms; mobile, desktop, weird architectures, notarized macOS universal apps
+- Builds native apps for dozens of platforms; mobile, desktop, weird architectures, macOS universal apps
 - Produces a small self-contained binary, includes full REST server and command line interface
 - Optionally supports OAuth with dozens of providers, full theme and stateless session support
 - Provides a type-safe API for working with PostgreSQL, MySQL, and SQLite databases (or no database at all)

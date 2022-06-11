@@ -70,7 +70,7 @@ func ProjectExportModelSave(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 
-		msg := fmt.Sprintf("model saved successfully")
+		msg := "model saved successfully"
 		u := fmt.Sprintf("/p/%s/export/models/%s", prj.Key, mdl.Name)
 		return controller.FlashAndRedir(true, msg, u, rc, ps)
 	})
@@ -88,7 +88,7 @@ func ProjectExportModelDelete(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 
-		msg := fmt.Sprintf("model saved successfully")
+		msg := "model deleted successfully"
 		return controller.FlashAndRedir(true, msg, fmt.Sprintf("/p/%s/export", prj.Key), rc, ps)
 	})
 }

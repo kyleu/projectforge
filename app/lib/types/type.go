@@ -15,3 +15,18 @@ type Type interface {
 }
 
 type Types []Type
+
+func TypeAs[T any](t Type) T {
+	l, ok := t.(T)
+	if !ok {
+		w, ok := t.(*Wrapped)
+		if ok {
+			l, ok = w.T.(T)
+		}
+		if !ok {
+			var ret T
+			return ret
+		}
+	}
+	return l
+}

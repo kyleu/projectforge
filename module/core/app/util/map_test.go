@@ -65,11 +65,11 @@ func TestValueMap(t *testing.T) {
 	var un *uuid.UUID
 	assert(t, "uuid-f-f-x", u, un, err)
 
-	a, err := tm.ParseArray("a", true, true, true)
+	a, err := tm.ParseArray("a", true, true)
 	assert(t, "array-t-t", a[0], "a", err)
 	assert(t, "array-t-t", a[1], "b", err)
 
-	_, err = tm.ParseArray("ae", false, false, true)
+	_, err = tm.ParseArray("ae", false, false)
 	if err == nil {
 		t.Fatal(err)
 	}

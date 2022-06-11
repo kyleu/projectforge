@@ -99,7 +99,7 @@ func modelDiff(m *model.Model, g *golang.File) *golang.Block {
 			ret.W("\tif %s != %s {", l, r)
 			ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, fmt.Sprint(%s), fmt.Sprint(%s)))", col.Camel(), l, r)
 			ret.W("\t}")
-		case types.KeyMap, types.KeyValueMap, types.KeyReference:
+		case types.KeyList, types.KeyMap, types.KeyValueMap, types.KeyReference:
 			ret.W("\tdiffs = append(diffs, util.DiffObjects(%s, %s, %q)...)", l, r, col.Camel())
 		case types.KeyString:
 			ret.W("\tif %s != %s {", l, r)

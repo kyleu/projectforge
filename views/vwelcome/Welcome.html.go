@@ -60,7 +60,7 @@ func (p *Welcome) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 //line views/vwelcome/Welcome.html:29
 	qw422016.E().S(util.AppName)
 //line views/vwelcome/Welcome.html:29
-	qw422016.N().S(` in a directory without a project. Set your project's details using this form and we'll get started</p>
+	qw422016.N().S(` in a directory without a project. Set your project's details using this form, and we'll get started</p>
     <em>This will add <code>project.json</code> to `)
 //line views/vwelcome/Welcome.html:30
 	qw422016.E().S(directory)

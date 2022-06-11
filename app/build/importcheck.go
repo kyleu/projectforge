@@ -15,7 +15,9 @@ func check(imports []string, orig []string) ([]string, error) {
 	var state int
 	var lastLine string
 	var observed []string
+	var lastSep bool
 	first, third, self := util.ValueMap{}, util.ValueMap{}, util.ValueMap{}
+
 	observe := func(key string, i string) {
 		for _, ob := range observed {
 			if ob > i {
@@ -27,7 +29,19 @@ func check(imports []string, orig []string) ([]string, error) {
 	clear := func() {
 		observed = []string{}
 	}
-	var lastSep bool
+	chk := func(tgt int, msg string) {
+		if state != tgt {
+			if !lastSep && len(first) > 0 {
+				err = errors.New("missing separator")
+			}
+			state = tgt
+			clear()
+		}
+		lastSep = false
+		if state > tgt {
+			err = errors.New(msg)
+		}
+	}
 
 	for idx, imp := range imports {
 		i, l := util.StringSplitLast(imp, ':', true)
@@ -50,31 +64,11 @@ func check(imports []string, orig []string) ([]string, error) {
 			first[i] = orig[idx]
 			observe(i, "1st party")
 		case thirdKey:
-			if state != 2 {
-				if !lastSep && len(first) > 0 {
-					err = errors.New("missing separator")
-				}
-				state = 2
-				clear()
-			}
-			lastSep = false
-			if state > 2 {
-				err = errors.New("3rd party")
-			}
+			chk(2, "3rd party")
 			third[i] = orig[idx]
 			observe(i, "3rd party")
 		case selfKey:
-			if state != 3 {
-				if !lastSep && (len(third) > 0 || len(first) > 0) {
-					err = errors.New("missing separator")
-				}
-				state = 3
-				clear()
-			}
-			lastSep = false
-			if state > 3 {
-				err = errors.New("self")
-			}
+			chk(3, "self")
 			self[i] = orig[idx]
 			observe(i, selfKey)
 		default:

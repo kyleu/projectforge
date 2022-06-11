@@ -28,6 +28,8 @@ func randFor(col *model.Column) string {
 		return "util.RandomBool()"
 	case types.KeyInt:
 		return "util.RandomInt(10000)"
+	case types.KeyList:
+		return "nil"
 	case types.KeyMap, types.KeyValueMap:
 		return "util.RandomValueMap(4)"
 	case types.KeyReference:

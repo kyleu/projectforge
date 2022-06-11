@@ -14,6 +14,8 @@ func Help(t types.Type) string {
 		return "Value [true] or [false]"
 	case types.KeyInt:
 		return "Integer"
+	case types.KeyList:
+		return "Comma-separated list of values"
 	case types.KeyMap, types.KeyValueMap:
 		return "JSON object"
 	case types.KeyReference:

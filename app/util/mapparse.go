@@ -11,44 +11,6 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (m ValueMap) ParseArray(path string, allowMissing bool, allowEmpty bool, allowNonArray bool) ([]any, error) {
-	result, err := m.GetPath(path, allowMissing)
-	if err != nil {
-		return nil, errors.Wrap(err, "invalid array")
-	}
-	switch t := result.(type) {
-	case []any:
-		if (!allowEmpty) && len(t) == 0 {
-			return nil, errors.New("empty array")
-		}
-		return t, nil
-	case []string:
-		if (!allowEmpty) && len(t) == 0 {
-			return nil, errors.New("empty array")
-		}
-		return InterfaceArrayFrom(t...), nil
-	case []int:
-		if (!allowEmpty) && len(t) == 0 {
-			return nil, errors.New("empty array")
-		}
-		a := make([]any, 0, len(t))
-		for _, x := range t {
-			a = append(a, x)
-		}
-		return a, nil
-	case nil:
-		if !allowEmpty {
-			return nil, errors.Errorf("could not find array for path [%s]", path)
-		}
-		return nil, nil
-	default:
-		if allowNonArray {
-			return []any{t}, nil
-		}
-		return nil, invalidTypeError(path, "array", t)
-	}
-}
-
 func (m ValueMap) ParseBool(path string, allowMissing bool, allowEmpty bool) (bool, error) {
 	result, err := m.GetPath(path, allowMissing)
 	if err != nil {
@@ -98,7 +60,11 @@ func (m ValueMap) ParseInt(path string, allowMissing bool, allowEmpty bool) (int
 	if err != nil {
 		return 0, errors.Wrap(err, "invalid int")
 	}
-	switch t := result.(type) {
+	return valueInt(path, result, allowEmpty)
+}
+
+func valueInt(path string, r any, allowEmpty bool) (int, error) {
+	switch t := r.(type) {
 	case int:
 		return t, nil
 	case int64:
@@ -114,52 +80,6 @@ func (m ValueMap) ParseInt(path string, allowMissing bool, allowEmpty bool) (int
 		return 0, nil
 	default:
 		return 0, invalidTypeError(path, "int", t)
-	}
-}
-
-func (m ValueMap) ParseMap(path string, allowMissing bool, allowEmpty bool) (ValueMap, error) {
-	result, err := m.GetPath(path, allowMissing)
-	if err != nil {
-		return nil, errors.Wrap(err, "invalid int")
-	}
-	switch t := result.(type) {
-	case ValueMap:
-		if (!allowEmpty) && len(t) == 0 {
-			return nil, errors.New("empty map")
-		}
-		return t, nil
-	case map[string]any:
-		if (!allowEmpty) && len(t) == 0 {
-			return nil, errors.New("empty map")
-		}
-		return t, nil
-	case string:
-		if strings.TrimSpace(t) == "" {
-			return nil, nil
-		}
-		ret := ValueMap{}
-		err := FromJSON([]byte(t), &ret)
-		if err != nil {
-			return nil, decorateError(m, path, "time", errors.Wrap(err, "invalid JSON"))
-		}
-		return ret, err
-	case []byte:
-		if len(t) == 0 {
-			return nil, nil
-		}
-		ret := ValueMap{}
-		err := FromJSON(t, &ret)
-		if err != nil {
-			return nil, decorateError(m, path, "time", errors.Wrap(err, "invalid JSON"))
-		}
-		return ret, err
-	case nil:
-		if !allowEmpty {
-			return nil, errors.Errorf("could not find map for path [%s]", path)
-		}
-		return nil, nil
-	default:
-		return nil, invalidTypeError(path, "map", t)
 	}
 }
 

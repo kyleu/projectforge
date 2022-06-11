@@ -36,6 +36,11 @@ func typeFor(t string) (*types.Wrapped, []string, error) {
 	if isList {
 		tags = append(tags, "list")
 		t = strings.TrimPrefix(t, "list|")
+		n, nt, err := typeFor(t)
+		if err != nil {
+			return nil, nil, err
+		}
+		return types.NewList(n), append(tags, nt...), nil
 	}
 
 	switch t {
@@ -45,6 +50,8 @@ func typeFor(t string) (*types.Wrapped, []string, error) {
 		return types.NewInt(64), tags, nil
 	case "string":
 		return types.NewString(), tags, nil
+	case "ulong":
+		return types.NewInt(64), tags, nil
 	default:
 		return types.NewString(), append(tags, "unhandled", t), nil
 	}

@@ -58,39 +58,51 @@ func (p *Index) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
       <li>Has a beautiful and fast HTML UI, no JavaScript required</li>
       <li>Optimizes for speed and developer experience, sub-second turnaround times</li>
       <li>Builds in seconds, live-reloads in dev mode when code or templates change</li>
-      <li>Builds to dozens of platforms; mobile, desktop, weird architectures, macOS universal apps</li>
+      <li>Builds native apps for dozens of platforms; mobile, desktop, weird architectures, macOS universal apps</li>
       <li>Produces a small self-contained binary, includes full REST server and command line interface</li>
       <li>Optionally supports OAuth with dozens of providers, full theme and stateless session support</li>
       <li>Provides a type-safe API for working with PostgreSQL, MySQL, and SQLite databases (or no database at all)</li>
       <li>Uses ESBuild for a TypeScript client with progressive enhancement, SVGs, and modern CSS</li>
     </ul>
   </div>
+  <div class="card">
+    <h3>Licensing</h3>
+    <div class="mt">
+      `)
+//line views/vsite/Index.html:40
+	qw422016.E().S(util.AppName)
+//line views/vsite/Index.html:40
+	qw422016.N().S(` is <a href="https://choosealicense.com/licenses/mit/">MIT</a> licensed,
+      and the modules are <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>.
+    </div>
+    <div class="mt">Your project is your own, use any license you'd like.</div>
+  </div>
 `)
-//line views/vsite/Index.html:37
+//line views/vsite/Index.html:45
 }
 
-//line views/vsite/Index.html:37
+//line views/vsite/Index.html:45
 func (p *Index) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsite/Index.html:37
+//line views/vsite/Index.html:45
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsite/Index.html:37
+//line views/vsite/Index.html:45
 	p.StreamBody(qw422016, as, ps)
-//line views/vsite/Index.html:37
+//line views/vsite/Index.html:45
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsite/Index.html:37
+//line views/vsite/Index.html:45
 }
 
-//line views/vsite/Index.html:37
+//line views/vsite/Index.html:45
 func (p *Index) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsite/Index.html:37
+//line views/vsite/Index.html:45
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsite/Index.html:37
+//line views/vsite/Index.html:45
 	p.WriteBody(qb422016, as, ps)
-//line views/vsite/Index.html:37
+//line views/vsite/Index.html:45
 	qs422016 := string(qb422016.B)
-//line views/vsite/Index.html:37
+//line views/vsite/Index.html:45
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsite/Index.html:37
+//line views/vsite/Index.html:45
 	return qs422016
-//line views/vsite/Index.html:37
+//line views/vsite/Index.html:45
 }

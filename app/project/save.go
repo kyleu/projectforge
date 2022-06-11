@@ -56,8 +56,7 @@ func (s *Service) SaveExportModel(fs filesystem.FileLoader, mdl *model.Model, lo
 
 func (s *Service) DeleteExportModel(fs filesystem.FileLoader, mdl string, logger util.Logger) error {
 	fn := fmt.Sprintf("%s/export/models/%s.json", ConfigDir, mdl)
-	err := fs.Remove(fn, logger)
-	if err != nil {
+	if err := fs.Remove(fn, logger); err != nil {
 		return errors.Wrapf(err, "unable to delete export model file [%s]", fn)
 	}
 	return nil

@@ -25,11 +25,11 @@ func (d *File) ToModel() (*model.Model, error) {
 	name := strings.TrimSuffix(d.Filename, ".dat")
 	key := util.StringToSnake(name)
 	ret := &model.Model{
-		Name:           key,
-		Package:        key,
-		Description:    fmt.Sprintf("from file [%s]", d.Filename),
-		Icon:           "star",
-		TitleOverride:  util.StringToTitle(name),
+		Name:          key,
+		Package:       key,
+		Description:   fmt.Sprintf("from file [%s]", d.Filename),
+		Icon:          "star",
+		TitleOverride: util.StringToTitle(name),
 	}
 	for _, col := range d.Fields {
 		x, err := exportColumn(col)

@@ -31,9 +31,6 @@ func (r *Result) WithError(err error) *Result {
 	if err != nil {
 		msg = err.Error()
 	}
-	if r == nil {
-		println("TODO")
-	}
 	if r.logger != nil {
 		r.logger.Warnf("action error: %+v", err.Error())
 	}
@@ -143,7 +140,7 @@ func (x ResultContexts) Errors() []string {
 
 func (x ResultContexts) Title() string {
 	if len(x) == 0 || x[0].Res == nil {
-		return "Unknown"
+		return fmt.Sprintf("Unknown (%d results)", len(x))
 	}
 	return x[0].Res.Action.Title
 }

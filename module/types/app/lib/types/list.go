@@ -24,7 +24,7 @@ func (x *List) Sortable() bool {
 }
 
 func (x *List) Scalar() bool {
-	return false
+	return true
 }
 
 func (x *List) String() string {
