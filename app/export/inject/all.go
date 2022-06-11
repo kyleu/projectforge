@@ -25,9 +25,9 @@ func All(ctx context.Context, args *model.Args, files file.Files, logger util.Lo
 		switch f.FullPath() {
 		case "app/services.go":
 			err = Services(f, args)
-		case "app/controller/routes.go":
+		case "app/controller/routes/routes.go":
 			err = Routes(f, args)
-		case "app/controller/menu.go":
+		case "app/controller/cmenu/menu.go":
 			err = Menu(f, args)
 		case "app/lib/search/search.go":
 			err = Search(f, args)

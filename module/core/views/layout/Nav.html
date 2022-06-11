@@ -2,6 +2,7 @@
   "strings"
 
   "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/controller/cmenu"
   "{{{ .Package }}}/app/controller/cutil"
   "{{{ .Package }}}/app/lib/menu"
   "{{{ .Package }}}/views/components"
@@ -25,7 +26,7 @@
   {%= Menu(ps) %}{% endif %}
 </nav>{% endfunc %}
 
-{% func NavItems(m menu.Items, breadcrumbs cutil.Breadcrumbs) %}{% stripspace %}
+{% func NavItems(m menu.Items, breadcrumbs cmenu.Breadcrumbs) %}{% stripspace %}
   {% for idx, bc := range breadcrumbs %}
     {% code
       i := m.GetByPath(breadcrumbs[:idx + 1])

@@ -15,12 +15,12 @@ import (
 )
 
 const ({{{ if .HasModule "search" }}}
-	defaultSearchPath  = "/search"{{{ end }}}
-	defaultProfilePath = "/profile"
+	DefaultSearchPath  = "/search"{{{ end }}}
+	DefaultProfilePath = "/profile"
 	defaultIcon        = "app"
 )
 
-func act(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
+func Act(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
 	as := _currentAppState
 	ps := loadPageState(rc, key, _currentAppRootLogger)
 	if allowed, reason := user.Check(string(ps.URI.Path()), ps.Accounts); !allowed {
@@ -32,7 +32,7 @@ func act(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.Pa
 	actComplete(key, as, ps, rc, f)
 }
 {{{ if.HasModule "marketing" }}}
-func actSite(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
+func ActSite(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
 	as := _currentSiteState
 	ps := loadPageState(rc, key, _currentSiteRootLogger)
 	ps.Menu = site.Menu(ps.Context, as, ps.Profile, ps.Accounts)

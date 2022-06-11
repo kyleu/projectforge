@@ -16,16 +16,16 @@ import (
 const welcomeMessage = "Welcome to " + util.AppName + "! View this page in a browser to get started."
 
 func Welcome(rc *fasthttp.RequestCtx) {
-	act("welcome", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+	Act("welcome", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ps.Title = "Welcome to " + util.AppName
 		ps.Data = welcomeMessage
 		ps.HideMenu = true
-		return render(rc, as, &vwelcome.Welcome{Project: as.Services.Projects.ByPath(".")}, ps, "Welcome")
+		return Render(rc, as, &vwelcome.Welcome{Project: as.Services.Projects.ByPath(".")}, ps, "Welcome")
 	})
 }
 
 func WelcomeResult(rc *fasthttp.RequestCtx) {
-	act("welcome.result", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+	Act("welcome.result", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret, err := cutil.ParseForm(rc)
 		if err != nil {
 			return "", err
@@ -55,6 +55,6 @@ func WelcomeResult(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to save initial project")
 		}
 
-		return flashAndRedir(true, "project initialized", "/", rc, ps)
+		return FlashAndRedir(true, "project initialized", "/", rc, ps)
 	})
 }

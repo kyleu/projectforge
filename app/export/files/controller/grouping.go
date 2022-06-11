@@ -27,7 +27,7 @@ func controllerGrouped(m *model.Model, grp *model.Column) *golang.Block {
 	name := fmt.Sprintf("%s%sList", m.Proper(), grp.Proper())
 	ret := golang.NewBlock(name, "func")
 	ret.W("func %s(rc *fasthttp.RequestCtx) {", name)
-	ret.W("\tact(\"%s.%s.list\", rc, func(as *app.State, ps *cutil.PageState) (string, error) {", m.Package, grp.Camel())
+	ret.W("\tAct(\"%s.%s.list\", rc, func(as *app.State, ps *cutil.PageState) (string, error) {", m.Package, grp.Camel())
 	ret.W("\t\tps.Title = \"[%s] by %s\"", m.ProperPlural(), grp.TitleLower())
 	suffix := ""
 	if m.IsSoftDelete() {
@@ -38,7 +38,7 @@ func controllerGrouped(m *model.Model, grp *model.Column) *golang.Block {
 	ret.W("\t\t\treturn \"\", err")
 	ret.W("\t\t}")
 	ret.W("\t\tps.Data = ret")
-	ret.W("\t\treturn render(rc, as, &v%s.%s{%s: ret}, ps, %q, %q)", m.Package, grp.ProperPlural(), grp.ProperPlural(), m.Package, grp.Camel())
+	ret.W("\t\treturn Render(rc, as, &v%s.%s{%s: ret}, ps, %q, %q)", m.Package, grp.ProperPlural(), grp.ProperPlural(), m.Package, grp.Camel())
 	ret.W("\t})")
 	ret.W("}")
 	return ret

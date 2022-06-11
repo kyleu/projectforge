@@ -13,9 +13,18 @@ func modelFromMap(g *golang.File, m *model.Model) (*golang.Block, error) {
 	ret := golang.NewBlock(m.Package+"FromForm", "func")
 	ret.W("func FromMap(m util.ValueMap, setPK bool) (*%s, error) {", m.Proper())
 	ret.W("\tret := &%s{}", m.Proper())
-	ret.W("\tvar err error")
-	ret.W("\tif setPK {")
 	cols := m.Columns.WithoutTag("created").WithoutTag("updated").WithoutTag(model.RevisionType)
+	var needsErr bool
+	for _, c := range cols {
+		if c.Type.Scalar() || c.Type.Key() == "timestamp" || c.Type.Key() == "reference" {
+			needsErr = true
+			break
+		}
+	}
+	if needsErr {
+		ret.W("\tvar err error")
+	}
+	ret.W("\tif setPK {")
 	err := forCols(g, ret, 2, m, cols.PKs()...)
 	if err != nil {
 		return nil, err

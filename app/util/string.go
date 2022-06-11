@@ -75,6 +75,10 @@ func StringToLowerCamel(s string) string {
 	return acr(strcase.ToLowerCamel(s))
 }
 
+func StringToSnake(s string) string {
+	return acr(strcase.ToSnake(s))
+}
+
 func StringTruncate(s string, max int) string {
 	if max > len(s) {
 		return s

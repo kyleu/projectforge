@@ -117,7 +117,9 @@ func exportViewDetailRelations(ret *golang.Block, m *model.Model, models model.M
 				addons += ", nil"
 			}
 		}
-		ret.W("    {%%%%= v%s.Table(p.%s%s, p.Params, as, ps) %%%%}", tgt.Package, tgtName, addons)
+		ret.W("    <div class=\"overflow clear\">")
+		ret.W("      {%%%%= v%s.Table(p.%s%s, p.Params, as, ps) %%%%}", tgt.Package, tgtName, addons)
+		ret.W("    </div>")
 		ret.W("  </div>")
 		ret.W("  {%%- endif -%%}")
 	}

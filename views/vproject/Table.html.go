@@ -125,7 +125,7 @@ func StreamTable(qw422016 *qt422016.Writer, prjs project.Projects, tags []string
 		qw422016.N().S(`          <td>
 `)
 //line views/vproject/Table.html:38
-		for _, tag := range prj.Tags {
+		for idx, tag := range prj.Tags {
 //line views/vproject/Table.html:38
 			qw422016.N().S(`            <a href="/p?tags=`)
 //line views/vproject/Table.html:39
@@ -135,7 +135,15 @@ func StreamTable(qw422016 *qt422016.Writer, prjs project.Projects, tags []string
 //line views/vproject/Table.html:39
 			qw422016.E().S(tag)
 //line views/vproject/Table.html:39
-			qw422016.N().S(`</code></a>
+			qw422016.N().S(`</code></a>`)
+//line views/vproject/Table.html:39
+			if idx < (len(prj.Tags) - 1) {
+//line views/vproject/Table.html:39
+				qw422016.N().S(`, `)
+//line views/vproject/Table.html:39
+			}
+//line views/vproject/Table.html:39
+			qw422016.N().S(`
 `)
 //line views/vproject/Table.html:40
 		}

@@ -11,6 +11,7 @@ import (
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
+	"projectforge.dev/projectforge/app/controller/routes"
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -40,7 +41,7 @@ func startSite(flags *Flags) error {
 }
 
 func loadSite(flags *Flags, logger util.Logger) (fasthttp.RequestHandler, util.Logger, error) {
-	r := controller.SiteRoutes()
+	r := routes.SiteRoutes()
 	f := filesystem.NewFileSystem(flags.ConfigDir)
 
 	telemetryDisabled := util.GetEnvBool("disable_telemetry", false)

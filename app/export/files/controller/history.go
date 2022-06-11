@@ -8,7 +8,7 @@ import (
 func controllerHistory(m *model.Model) *golang.Block {
 	ret := golang.NewBlock(m.Camel()+"History", "func")
 	ret.W("func %sHistory(rc *fasthttp.RequestCtx) {", m.Proper())
-	ret.W("\tact(\"%s.history\", rc, func(as *app.State, ps *cutil.PageState) (string, error) {", m.Package)
+	ret.W("\tAct(\"%s.history\", rc, func(as *app.State, ps *cutil.PageState) (string, error) {", m.Package)
 	ret.W("\t\tret, err := %sFromPath(rc, as, ps)", m.Package)
 	ret.W("\t\tif err != nil {")
 	ret.W("\t\t\treturn \"\", err")
@@ -23,7 +23,7 @@ func controllerHistory(m *model.Model) *golang.Block {
 	ret.W("\t\t}")
 	ret.W("\t\tps.Title = hist.ID.String()")
 	ret.W("\t\tps.Data = hist")
-	ret.W("\t\treturn render(rc, as, &v%s.History{Model: ret, History: hist}, ps, %q, ret.String(), hist.ID.String())", m.Package, m.Package)
+	ret.W("\t\treturn Render(rc, as, &v%s.History{Model: ret, History: hist}, ps, %q, ret.String(), hist.ID.String())", m.Package, m.Package)
 	ret.W("\t})")
 	ret.W("}")
 	return ret

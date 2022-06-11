@@ -12,15 +12,15 @@ import (
 )
 
 func SandboxList(rc *fasthttp.RequestCtx) {
-	act("sandbox.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+	Act("sandbox.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ps.Title = "Sandboxes"
 		ps.Data = sandbox.AllSandboxes
-		return render(rc, as, &vsandbox.List{}, ps, "sandbox")
+		return Render(rc, as, &vsandbox.List{}, ps, "sandbox")
 	})
 }
 
 func SandboxRun(rc *fasthttp.RequestCtx) {
-	act("sandbox.run", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+	Act("sandbox.run", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		key, err := cutil.RCRequiredString(rc, "key", false)
 		if err != nil {
 			return "", err
@@ -28,7 +28,7 @@ func SandboxRun(rc *fasthttp.RequestCtx) {
 
 		sb := sandbox.AllSandboxes.Get(key)
 		if sb == nil {
-			return ersp("no sandbox with key [%s]", key)
+			return ERsp("no sandbox with key [%s]", key)
 		}
 
 		ctx, span, logger := telemetry.StartSpan(ps.Context, "sandbox."+key, ps.Logger)
@@ -41,8 +41,8 @@ func SandboxRun(rc *fasthttp.RequestCtx) {
 		ps.Title = sb.Title
 		ps.Data = ret
 		if sb.Key == "testbed" {
-			return render(rc, as, &vsandbox.Testbed{}, ps, "sandbox", sb.Key)
+			return Render(rc, as, &vsandbox.Testbed{}, ps, "sandbox", sb.Key)
 		}
-		return render(rc, as, &vsandbox.Run{Key: key, Title: sb.Title, Icon: sb.Icon, Result: ret}, ps, "sandbox", sb.Key)
+		return Render(rc, as, &vsandbox.Run{Key: key, Title: sb.Title, Icon: sb.Icon, Result: ret}, ps, "sandbox", sb.Key)
 	})
 }

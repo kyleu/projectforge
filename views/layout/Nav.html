@@ -3,6 +3,7 @@
   "strings"
 
   "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/controller/cmenu"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/lib/menu"
   "projectforge.dev/projectforge/views/components"
@@ -26,7 +27,7 @@
   {%= Menu(ps) %}{% endif %}
 </nav>{% endfunc %}
 
-{% func NavItems(m menu.Items, breadcrumbs cutil.Breadcrumbs) %}{% stripspace %}
+{% func NavItems(m menu.Items, breadcrumbs cmenu.Breadcrumbs) %}{% stripspace %}
   {% for idx, bc := range breadcrumbs %}
     {% code
       i := m.GetByPath(breadcrumbs[:idx + 1])

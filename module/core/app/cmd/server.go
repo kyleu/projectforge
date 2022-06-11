@@ -11,6 +11,7 @@ import (
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller"
+	"{{{ .Package }}}/app/controller/routes"
 	"{{{ .Package }}}/app/util"
 )
 
@@ -47,7 +48,7 @@ func startServer(flags *Flags) error {
 }
 
 func loadServer(flags *Flags, logger util.Logger) (*app.State, fasthttp.RequestHandler, util.Logger, error) {
-	r := controller.AppRoutes()
+	r := routes.AppRoutes()
 
 	st, err := buildDefaultAppState(flags, logger)
 	if err != nil {

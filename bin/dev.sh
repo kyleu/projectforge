@@ -21,5 +21,6 @@ fi
 ./bin/templates.sh
 go mod tidy
 
-ulimit -n 2048
+ulimit -n 10240
+
 air

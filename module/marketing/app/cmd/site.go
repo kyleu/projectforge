@@ -10,6 +10,7 @@ import (
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller"
+	"{{{ .Package }}}/app/controller/routes"
 	"{{{ .Package }}}/app/lib/filesystem"
 	"{{{ .Package }}}/app/util"
 )
@@ -39,7 +40,7 @@ func startSite(flags *Flags) error {
 }
 
 func loadSite(flags *Flags, logger util.Logger) (fasthttp.RequestHandler, util.Logger, error) {
-	r := controller.SiteRoutes()
+	r := routes.SiteRoutes()
 	f := filesystem.NewFileSystem(flags.ConfigDir)
 
 	telemetryDisabled := util.GetEnvBool("disable_telemetry", false)

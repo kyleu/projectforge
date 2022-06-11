@@ -74,3 +74,17 @@ func TraceDetail(trace errors.StackTrace) []ErrorFrame {
 	}
 	return ret
 }
+
+func ErrorMerge(errs ...error) error {
+	switch len(errs) {
+	case 0:
+		return nil
+	case 1:
+		return errs[0]
+	}
+	msg := make([]string, 0, len(errs))
+	for _, e := range errs {
+		msg = append(msg, e.Error())
+	}
+	return errors.Wrapf(errs[0], strings.Join(msg, ", "))
+}

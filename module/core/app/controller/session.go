@@ -3,6 +3,7 @@ package controller
 import (
 	"github.com/valyala/fasthttp"
 
+	"{{{ .Package }}}/app/controller/csession"
 	"{{{ .Package }}}/app/controller/cutil"
 	"{{{ .Package }}}/app/lib/telemetry"
 	"{{{ .Package }}}/app/lib/telemetry/httpmetrics"
@@ -44,22 +45,22 @@ func loadSession(rc *fasthttp.RequestCtx, logger util.Logger) (util.ValueMap, []
 		}
 	}
 
-	flashes := util.StringSplitAndTrim(session.GetStringOpt(cutil.WebFlashKey), ";")
+	flashes := util.StringSplitAndTrim(session.GetStringOpt(csession.WebFlashKey), ";")
 	if len(flashes) > 0 {
-		delete(session, cutil.WebFlashKey)
-		err := cutil.SaveSession(rc, session, logger)
+		delete(session, csession.WebFlashKey)
+		err := csession.SaveSession(rc, session, logger)
 		if err != nil {
 			logger.Warnf("can't save session: %+v", err)
 		}
 	}
 
-	prof, err := loadProfile(session)
+	prof, err := LoadProfile(session)
 	if err != nil {
 		logger.Warnf("can't load profile: %+v", err)
 	}
 
 	var accts user.Accounts
-	authX, ok := session[cutil.WebAuthKey]
+	authX, ok := session[csession.WebAuthKey]
 	if ok {
 		authS, ok := authX.(string)
 		if ok {
@@ -68,4 +69,21 @@ func loadSession(rc *fasthttp.RequestCtx, logger util.Logger) (util.ValueMap, []
 	}
 
 	return session, flashes, prof, accts
+}
+
+func LoadProfile(session util.ValueMap) (*user.Profile, error) {
+	x, ok := session["profile"]
+	if !ok {
+		return user.DefaultProfile.Clone(), nil
+	}
+	s, ok := x.(string)
+	if !ok {
+		return user.DefaultProfile.Clone(), nil
+	}
+	p := &user.Profile{}
+	err := util.FromJSON([]byte(s), p)
+	if err != nil {
+		return nil, err
+	}
+	return p, nil
 }

@@ -5,7 +5,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 
-	"{{{ .Package }}}/app/controller/cutil"
+	"{{{ .Package }}}/app/controller/csession"
 	"{{{ .Package }}}/app/lib/user"
 	"{{{ .Package }}}/app/util"
 )
@@ -17,15 +17,15 @@ func BeginAuthHandler(prv *Provider, rc *fasthttp.RequestCtx, websess util.Value
 	if err != nil {
 		return "", err
 	}
-	refer := string(rc.Request.URI().QueryArgs().Peek("refer"))
+	refer := string(rc.QueryArgs().Peek("refer"))
 	if refer != "" && refer != defaultProfilePath {
-		_ = cutil.StoreInSession(cutil.ReferKey, refer, rc, websess, logger)
+		_ = csession.StoreInSession(csession.ReferKey, refer, rc, websess, logger)
 	}
 	return u, nil
 }
 
 func CompleteUserAuth(prv *Provider, rc *fasthttp.RequestCtx, websess util.ValueMap, logger util.Logger) (*user.Account, user.Accounts, error) {
-	value, err := cutil.GetFromSession(prv.ID, websess)
+	value, err := csession.GetFromSession(prv.ID, websess)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -54,12 +54,12 @@ func CompleteUserAuth(prv *Provider, rc *fasthttp.RequestCtx, websess util.Value
 		return addToSession(u.Provider, u.Email, u.AccessToken, rc, websess, logger)
 	}
 
-	_, err = sess.Authorize(g, &params{q: rc.Request.URI().QueryArgs()})
+	_, err = sess.Authorize(g, &params{q: rc.QueryArgs()})
 	if err != nil {
 		return nil, nil, err
 	}
 
-	err = cutil.StoreInSession(prv.ID, sess.Marshal(), rc, websess, logger)
+	err = csession.StoreInSession(prv.ID, sess.Marshal(), rc, websess, logger)
 	if err != nil {
 		return nil, nil, err
 	}

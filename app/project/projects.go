@@ -53,7 +53,7 @@ func (p Projects) Titles() []string {
 	return ret
 }
 
-func (p Projects) WithTags(tags []string) Projects {
+func (p Projects) WithTags(tags ...string) Projects {
 	ret := make(Projects, 0, len(p))
 	for _, prj := range p {
 		for _, t := range tags {
@@ -61,6 +61,23 @@ func (p Projects) WithTags(tags []string) Projects {
 				ret = append(ret, prj)
 				break
 			}
+		}
+	}
+	return ret
+}
+
+func (p Projects) WithoutTags(tags ...string) Projects {
+	ret := make(Projects, 0, len(p))
+	for _, prj := range p {
+		var hit bool
+		for _, t := range tags {
+			if slices.Contains(prj.Tags, t) {
+				hit = true
+				break
+			}
+		}
+		if !hit {
+			ret = append(ret, prj)
 		}
 	}
 	return ret

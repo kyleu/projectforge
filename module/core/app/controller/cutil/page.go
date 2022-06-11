@@ -6,6 +6,7 @@ import (
 
 	"github.com/valyala/fasthttp"
 
+	"{{{ .Package }}}/app/controller/cmenu"
 	"{{{ .Package }}}/app/lib/menu"
 	"{{{ .Package }}}/app/lib/telemetry"
 	"{{{ .Package }}}/app/lib/user"
@@ -13,32 +14,32 @@ import (
 )
 
 type PageState struct {
-	Title         string          `json:"title,omitempty"`
-	Description   string          `json:"description,omitempty"`
-	Method        string          `json:"method,omitempty"`
-	URI           *fasthttp.URI   `json:"-"`
-	Menu          menu.Items      `json:"menu,omitempty"`
-	Breadcrumbs   Breadcrumbs     `json:"breadcrumbs,omitempty"`
-	Flashes       []string        `json:"flashes,omitempty"`
-	Session       util.ValueMap   `json:"-"`
-	Profile       *user.Profile   `json:"profile,omitempty"`
-	Accounts      user.Accounts   `json:"accounts,omitempty"`
-	Authed        bool            `json:"authed,omitempty"`
-	Admin         bool            `json:"admin,omitempty"`
-	Icons         []string        `json:"icons,omitempty"`
-	RootIcon      string          `json:"rootIcon,omitempty"`
-	RootPath      string          `json:"rootPath,omitempty"`
-	RootTitle     string          `json:"rootTitle,omitempty"`{{{ if .HasModule "search" }}}
-	SearchPath    string          `json:"searchPath,omitempty"`{{{ end }}}
-	ProfilePath   string          `json:"profilePath,omitempty"`
-	HideMenu      bool            `json:"hideMenu,omitempty"`
-	ForceRedirect string          `json:"forceRedirect,omitempty"`
-	HeaderContent string          `json:"headerContent,omitempty"`
-	Data          any             `json:"data,omitempty"`
-	Logger        util.Logger     `json:"-"`
-	Context       context.Context `json:"-"`
-	Span          *telemetry.Span `json:"-"`
-	RenderElapsed float64         `json:"renderElapsed,omitempty"`
+	Title         string            `json:"title,omitempty"`
+	Description   string            `json:"description,omitempty"`
+	Method        string            `json:"method,omitempty"`
+	URI           *fasthttp.URI     `json:"-"`
+	Menu          menu.Items        `json:"menu,omitempty"`
+	Breadcrumbs   cmenu.Breadcrumbs `json:"breadcrumbs,omitempty"`
+	Flashes       []string          `json:"flashes,omitempty"`
+	Session       util.ValueMap     `json:"-"`
+	Profile       *user.Profile     `json:"profile,omitempty"`
+	Accounts      user.Accounts     `json:"accounts,omitempty"`
+	Authed        bool              `json:"authed,omitempty"`
+	Admin         bool              `json:"admin,omitempty"`
+	Icons         []string          `json:"icons,omitempty"`
+	RootIcon      string            `json:"rootIcon,omitempty"`
+	RootPath      string            `json:"rootPath,omitempty"`
+	RootTitle     string            `json:"rootTitle,omitempty"`{{{ if .HasModule "search" }}}
+	SearchPath    string            `json:"searchPath,omitempty"`{{{ end }}}
+	ProfilePath   string            `json:"profilePath,omitempty"`
+	HideMenu      bool              `json:"hideMenu,omitempty"`
+	ForceRedirect string            `json:"forceRedirect,omitempty"`
+	HeaderContent string            `json:"headerContent,omitempty"`
+	Data          any               `json:"data,omitempty"`
+	Logger        util.Logger       `json:"-"`
+	Context       context.Context   `json:"-"`
+	Span          *telemetry.Span   `json:"-"`
+	RenderElapsed float64           `json:"renderElapsed,omitempty"`
 }
 
 func (p *PageState) AddIcon(n string) {

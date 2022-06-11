@@ -65,7 +65,7 @@ func SetDepsMap(ctx context.Context, projects project.Projects, dep *Dependency,
 		return nil, nil
 	})
 	if len(errs) > 0 {
-		return "", errs[0]
+		return "", util.ErrorMerge(errs...)
 	}
 	return fmt.Sprintf("upgraded [%s] to [%s] in [%d] projects", dep.Key, dep.Version, affected), nil
 }

@@ -2,15 +2,14 @@
 package controller
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/cmenu"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/theme"
-	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/verror"
 )
@@ -36,9 +35,6 @@ func SetAppState(a *app.State, logger util.Logger) {
 }
 
 func SetSiteState(a *app.State, logger util.Logger) {
-	a.Services = &app.Services{
-		Modules: module.NewService(context.Background(), a.Files, logger),
-	}
 	_currentSiteState = a
 	_currentSiteRootLogger = logger
 	initSite(a, logger)
@@ -63,7 +59,7 @@ func handleError(key string, as *app.State, ps *cutil.PageState, rc *fasthttp.Re
 		return "", cleanErr
 	}
 
-	redir, renderErr := render(rc, as, &verror.Error{Err: util.GetErrorDetail(err)}, ps)
+	redir, renderErr := Render(rc, as, &verror.Error{Err: util.GetErrorDetail(err)}, ps)
 	if renderErr != nil {
 		msg := fmt.Sprintf("error while running error handler: %+v", renderErr)
 		ps.Logger.Error(msg)
@@ -90,13 +86,13 @@ func clean(as *app.State, ps *cutil.PageState) error {
 		ps.RootTitle += " " + defaultRootTitleAppend
 	}
 	if ps.SearchPath == "" {
-		ps.SearchPath = defaultSearchPath
+		ps.SearchPath = DefaultSearchPath
 	}
 	if ps.ProfilePath == "" {
-		ps.ProfilePath = defaultProfilePath
+		ps.ProfilePath = DefaultProfilePath
 	}
 	if len(ps.Menu) == 0 {
-		m, err := MenuFor(ps.Context, ps.Authed, ps.Admin, as, ps.Logger)
+		m, err := cmenu.MenuFor(ps.Context, ps.Authed, ps.Admin, as, ps.Logger)
 		if err != nil {
 			return err
 		}

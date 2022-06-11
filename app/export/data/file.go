@@ -7,6 +7,8 @@ import (
 	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/export/model"
+	"projectforge.dev/projectforge/app/lib/types"
+	"projectforge.dev/projectforge/app/util"
 )
 
 type File struct {
@@ -20,7 +22,15 @@ func (d *File) String() string {
 }
 
 func (d *File) ToModel() (*model.Model, error) {
-	ret := &model.Model{Name: strings.TrimSuffix(d.Filename, ".dat")}
+	name := strings.TrimSuffix(d.Filename, ".dat")
+	key := util.StringToSnake(name)
+	ret := &model.Model{
+		Name:           key,
+		Package:        key,
+		Description:    fmt.Sprintf("from file [%s]", d.Filename),
+		Icon:           "star",
+		TitleOverride:  util.StringToTitle(name),
+	}
 	for _, col := range d.Fields {
 		x, err := exportColumn(col)
 		if err != nil {
@@ -28,6 +38,11 @@ func (d *File) ToModel() (*model.Model, error) {
 		}
 		ret.Columns = append(ret.Columns, x)
 	}
+	if len(ret.PKs()) == 0 {
+		idCol := &model.Column{Name: "id", Type: types.NewUUID(), PK: true, Search: true, HelpString: "Synthetic identifier"}
+		ret.Columns = append(model.Columns{idCol}, ret.Columns...)
+	}
+
 	return ret, nil
 }
 

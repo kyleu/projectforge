@@ -3,7 +3,7 @@ package auth
 import (
 	"github.com/valyala/fasthttp"
 
-	"{{{ .Package }}}/app/controller/cutil"
+	"{{{ .Package }}}/app/controller/csession"
 	"{{{ .Package }}}/app/lib/user"
 	"{{{ .Package }}}/app/util"
 )
@@ -38,7 +38,7 @@ func removeProviderData(rc *fasthttp.RequestCtx, websess util.ValueMap, logger u
 		}
 	}
 	if dirty {
-		return cutil.SaveSession(rc, websess, logger)
+		return csession.SaveSession(rc, websess, logger)
 	}
 	return nil
 }

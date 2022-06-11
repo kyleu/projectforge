@@ -2,6 +2,7 @@
 {% import (
   "strings"
 
+  "projectforge.dev/projectforge/app/controller/cmenu"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/lib/menu"
   "projectforge.dev/projectforge/views/components"
@@ -25,10 +26,14 @@
   </div>
 {% endstripspace %}{% endfunc %}
 
-{% func MenuItem(i *menu.Item, path []string, breadcrumbs cutil.Breadcrumbs, indent int, ps *cutil.PageState) %}{% stripspace %}
+{% func MenuItem(i *menu.Item, path []string, breadcrumbs cmenu.Breadcrumbs, indent int, ps *cutil.PageState) %}{% stripspace %}
   {% code
     path = append(path, i.Key)
     active, final := breadcrumbs.Active(i, path)
+    title := i.Title
+    if i.Description != "" {
+      title += ": " + i.Description
+    }
   %}
   {% if i.Key == "" %}
     {%= vutil.Indent(true, indent + 1) %}
@@ -40,7 +45,7 @@
       {%= vutil.Indent(true, indent + 2) %}
       <input id="{%s itemID %}-input" type="checkbox"{% if active %}{% space %}checked="checked"{% endif %}{% space %}hidden />
       {%= vutil.Indent(true, indent + 2) %}
-      {% if final %}<label class="final" for="{%s itemID %}-input" title="{%s i.Description %}">{% else %}<label for="{%s itemID %}-input" title="{%s i.Description %}">{% endif %}
+      {% if final %}<label class="final" for="{%s itemID %}-input" title="{%s title %}">{% else %}<label for="{%s itemID %}-input" title="{%s title %}">{% endif %}
         {% if i.Route != "" %}
           {%= vutil.Indent(true, indent + 3) %}
           <a class="label-link" href="{%s i.Route %}">{%= components.SVGRef(`link`, 15, 15, ``, ps) %}</a>
@@ -74,21 +79,12 @@
     %}
     {%= vutil.Indent(true, indent + 1) %}
     <li>
-      {% if i.Description == "" %}
-        <a class="{%s finalClass %}" href="{%s i.Route %}">
-          {% if i.Icon != "" %}
-            {%= components.SVGRef(i.Icon, 16, 16, "icon", ps) %}
-          {% endif %}
-          {%s i.Title %}
-        </a>
-      {% else %}
-        <a class="{%s finalClass %}" href="{%s i.Route %}" title="{%s i.Description %}">
-          {% if i.Icon != "" %}
-            {%= components.SVGRef(i.Icon, 16, 16, "icon", ps) %}
-          {% endif %}
-          {%s i.Title %}
-        </a>
-      {% endif %}
+      <a class="{%s finalClass %}" href="{%s i.Route %}" title="{%s title %}">
+        {% if i.Icon != "" %}
+          {%= components.SVGRef(i.Icon, 16, 16, "icon", ps) %}
+        {% endif %}
+        {%s i.Title %}
+      </a>
     </li>
   {% endif %}
 {% endstripspace %}{% endfunc %}

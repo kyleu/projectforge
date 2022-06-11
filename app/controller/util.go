@@ -10,6 +10,7 @@ import (
 	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/controller/csession"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views"
@@ -17,7 +18,7 @@ import (
 	"projectforge.dev/projectforge/views/verror"
 )
 
-func render(rc *fasthttp.RequestCtx, as *app.State, page layout.Page, ps *cutil.PageState, breadcrumbs ...string) (string, error) {
+func Render(rc *fasthttp.RequestCtx, as *app.State, page layout.Page, ps *cutil.PageState, breadcrumbs ...string) (string, error) {
 	defer func() {
 		x := recover()
 		if x != nil {
@@ -54,17 +55,17 @@ func render(rc *fasthttp.RequestCtx, as *app.State, page layout.Page, ps *cutil.
 }
 
 // nolint // sometimes unused
-func ersp(msg string, args ...any) (string, error) {
+func ERsp(msg string, args ...any) (string, error) {
 	return "", errors.Errorf(msg, args...)
 }
 
-func flashAndRedir(success bool, msg string, redir string, rc *fasthttp.RequestCtx, ps *cutil.PageState) (string, error) {
+func FlashAndRedir(success bool, msg string, redir string, rc *fasthttp.RequestCtx, ps *cutil.PageState) (string, error) {
 	status := "error"
 	if success {
 		status = "success"
 	}
 	msgFmt := fmt.Sprintf("%s:%s", status, msg)
-	currStr := ps.Session.GetStringOpt(cutil.WebFlashKey)
+	currStr := ps.Session.GetStringOpt(csession.WebFlashKey)
 	if currStr == "" {
 		currStr = msgFmt
 	} else {
@@ -72,8 +73,8 @@ func flashAndRedir(success bool, msg string, redir string, rc *fasthttp.RequestC
 		curr = append(curr, msgFmt)
 		currStr = strings.Join(curr, ";")
 	}
-	ps.Session[cutil.WebFlashKey] = currStr
-	if err := cutil.SaveSession(rc, ps.Session, ps.Logger); err != nil {
+	ps.Session[csession.WebFlashKey] = currStr
+	if err := csession.SaveSession(rc, ps.Session, ps.Logger); err != nil {
 		return "", errors.Wrap(err, "unable to save flash session")
 	}
 
@@ -87,17 +88,17 @@ func flashAndRedir(success bool, msg string, redir string, rc *fasthttp.RequestC
 	return redir, nil
 }
 
-func returnToReferrer(msg string, dflt string, rc *fasthttp.RequestCtx, ps *cutil.PageState) (string, error) {
+func ReturnToReferrer(msg string, dflt string, rc *fasthttp.RequestCtx, ps *cutil.PageState) (string, error) {
 	refer := ""
-	referX, ok := ps.Session[cutil.ReferKey]
+	referX, ok := ps.Session[csession.ReferKey]
 	if ok {
 		refer, ok = referX.(string)
 		if ok {
-			_ = cutil.RemoveFromSession(cutil.ReferKey, rc, ps.Session, ps.Logger)
+			_ = csession.RemoveFromSession(csession.ReferKey, rc, ps.Session, ps.Logger)
 		}
 	}
 	if refer == "" {
 		refer = dflt
 	}
-	return flashAndRedir(true, msg, refer, rc, ps)
+	return FlashAndRedir(true, msg, refer, rc, ps)
 }

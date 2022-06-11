@@ -12,7 +12,7 @@ import (
 )
 
 func setState(rc *fasthttp.RequestCtx) string {
-	state := rc.Request.URI().QueryArgs().Peek("state")
+	state := rc.QueryArgs().Peek("state")
 	if len(state) > 0 {
 		return string(state)
 	}
@@ -34,7 +34,7 @@ func validateState(rc *fasthttp.RequestCtx, sess goth.Session) error {
 	}
 
 	originalState := authURL.Query().Get("state")
-	qs := string(rc.Request.URI().QueryArgs().Peek("state"))
+	qs := string(rc.QueryArgs().Peek("state"))
 	if originalState != "" && (originalState != qs) {
 		return errors.New("state token mismatch")
 	}

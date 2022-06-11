@@ -51,12 +51,24 @@
           <div>{%s x.String() %}</div>
           {%- endfor -%}
         </td>
-        </tr>
+      </tr>
+      {%- if model.TitleOverride != "" -%}
+      <tr><th>Title Override</th><td>{%s model.TitleOverride %}</td></tr>
+      {%- endif -%}
+      {%- if model.ProperOverride != "" -%}
+      <tr><th>Proper Override</th><td>{%s model.ProperOverride %}</td></tr>
+      {%- endif -%}
+      {%- if model.RouteOverride != "" -%}
+      <tr><th>Route Override</th><td>{%s model.RouteOverride %}</td></tr>
+      {%- endif -%}
       {%- if len(model.GroupedColumns()) > 0 -%}
       <tr><th>Groupings</th><td>{%s strings.Join(model.GroupedColumns().Names(), ", ") %}</td></tr>
       {%- endif -%}
       {%- if len(model.Tags) > 0 -%}
       <tr><th>Tags</th><td>{%s strings.Join(model.Tags, ", ") %}</td></tr>
+      {%- endif -%}
+      {%- if len(model.Ordering) > 0 -%}
+      <tr><th>Ordering</th><td>{%= components.JSON(model.Ordering) %}</td></tr>
       {%- endif -%}
       {%- if len(model.Search) > 0 -%}
       <tr><th>Search</th><td>{%s strings.Join(model.Search, ", ") %}</td></tr>

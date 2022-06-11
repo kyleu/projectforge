@@ -16,7 +16,7 @@ func Options(rc *fasthttp.RequestCtx) {
 }
 
 func NotFound(rc *fasthttp.RequestCtx) {
-	act("notfound", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+	Act("notfound", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		cutil.WriteCORS(rc)
 		rc.Response.Header.Set("Content-Type", "text/html; charset=utf-8")
 		rc.SetStatusCode(fasthttp.StatusNotFound)
@@ -28,7 +28,7 @@ func NotFound(rc *fasthttp.RequestCtx) {
 		bc := util.StringSplitAndTrim(string(rc.URI().Path()), "/")
 		bc = append(bc, "Not Found")
 		ps.Data = ps.Title
-		return render(rc, as, &verror.NotFound{Path: path}, ps, bc...)
+		return Render(rc, as, &verror.NotFound{Path: path}, ps, bc...)
 	})
 }
 
@@ -45,6 +45,6 @@ func Unauthorized(rc *fasthttp.RequestCtx, reason string, accounts user.Accounts
 		bc := util.StringSplitAndTrim(string(rc.URI().Path()), "/")
 		bc = append(bc, "Unauthorized")
 		ps.Data = ps.Title
-		return render(rc, as, &verror.Unauthorized{Path: path, Message: reason, Accounts: accounts}, ps, bc...)
+		return Render(rc, as, &verror.Unauthorized{Path: path, Message: reason, Accounts: accounts}, ps, bc...)
 	}
 }

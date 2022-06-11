@@ -92,7 +92,7 @@ func blockFor(m *model.Model, grp *model.Column, keys ...string) *golang.Block {
 	if grp != nil {
 		grpStr = grp.Name + "."
 	}
-	ret.W("\tact(\"%s.%s%s\", rc, func(as *app.State, ps *cutil.PageState) (string, error) {", m.Package, grpStr, strings.Join(keys, "."))
+	ret.W("\tAct(\"%s.%s%s\", rc, func(as *app.State, ps *cutil.PageState) (string, error) {", m.Package, grpStr, strings.Join(keys, "."))
 	return ret
 }
 

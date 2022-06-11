@@ -1,9 +1,5 @@
 package model
 
-import (
-	"golang.org/x/exp/slices"
-)
-
 type Models []*Model
 
 func (m Models) Get(n string) *Model {
@@ -25,12 +21,6 @@ func (m Models) ReverseRelations(t string) Relations {
 		}
 	}
 	return rels
-}
-
-func (m Models) Sort() {
-	slices.SortFunc(m, func(l *Model, r *Model) bool {
-		return l.Offset < r.Offset
-	})
 }
 
 func (m Models) Sorted() Models {

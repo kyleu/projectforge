@@ -42,6 +42,10 @@
   margin-right: var(--padding);
 }
 
+.overflow {
+  overflow: auto;
+}
+
 .error {
   color: var(--color-error);
 }
