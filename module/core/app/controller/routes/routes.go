@@ -6,6 +6,7 @@ import (
 
 	"{{{ .Package }}}/app/controller"
 	"{{{ .Package }}}/app/controller/clib"
+	"{{{ .Package }}}/app/controller/cutil"
 	"{{{ .Package }}}/app/lib/telemetry/httpmetrics"
 	"{{{ .Package }}}/app/util"
 )
@@ -20,10 +21,10 @@ func AppRoutes() fasthttp.RequestHandler {
 	r.GET("/theme", clib.ThemeList)
 	r.GET("/theme/{key}", clib.ThemeEdit)
 	r.POST("/theme/{key}", clib.ThemeSave){{{ if .HasModule "search" }}}
-	r.GET(controller.DefaultSearchPath, clib.Search){{{ end }}}
+	r.GET(cutil.DefaultSearchPath, clib.Search){{{ end }}}
 
-	r.GET(controller.DefaultProfilePath, clib.Profile)
-	r.POST(controller.DefaultProfilePath, clib.ProfileSave){{{ if .HasModule "oauth" }}}
+	r.GET(cutil.DefaultProfilePath, clib.Profile)
+	r.POST(cutil.DefaultProfilePath, clib.ProfileSave){{{ if .HasModule "oauth" }}}
 	r.GET("/auth/{key}", clib.AuthDetail)
 	r.GET("/auth/callback/{key}", clib.AuthCallback)
 	r.GET("/auth/logout/{key}", clib.AuthLogout){{{ end }}}{{{ if.HasModule "export" }}}

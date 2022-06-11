@@ -7,6 +7,7 @@ import (
 
 	"projectforge.dev/projectforge/app/controller"
 	"projectforge.dev/projectforge/app/controller/clib"
+	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/telemetry/httpmetrics"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -21,10 +22,10 @@ func AppRoutes() fasthttp.RequestHandler {
 	r.GET("/theme", clib.ThemeList)
 	r.GET("/theme/{key}", clib.ThemeEdit)
 	r.POST("/theme/{key}", clib.ThemeSave)
-	r.GET(controller.DefaultSearchPath, clib.Search)
+	r.GET(cutil.DefaultSearchPath, clib.Search)
 
-	r.GET(controller.DefaultProfilePath, clib.Profile)
-	r.POST(controller.DefaultProfilePath, clib.ProfileSave)
+	r.GET(cutil.DefaultProfilePath, clib.Profile)
+	r.POST(cutil.DefaultProfilePath, clib.ProfileSave)
 
 	// $PF_SECTION_START(routes)$
 	r.GET("/welcome", controller.Welcome)

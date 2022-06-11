@@ -35,7 +35,7 @@ func profileAction(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) 
 	ref := string(rc.Request.Header.Peek("Referer"))
 	if ref != "" {
 		u, err := url.Parse(ref)
-		if err == nil && u != nil && u.Path != controller.DefaultProfilePath {
+		if err == nil && u != nil && u.Path != cutil.DefaultProfilePath {
 			redir = u.Path
 		}
 	}
@@ -55,7 +55,7 @@ func ProfileSave(rc *fasthttp.RequestCtx) {
 
 		referrer := frm.GetStringOpt("referrer")
 		if referrer == "" {
-			referrer = controller.DefaultProfilePath
+			referrer = cutil.DefaultProfilePath
 		}
 
 		n.Name = frm.GetStringOpt("name")

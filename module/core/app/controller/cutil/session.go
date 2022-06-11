@@ -1,20 +1,18 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
-package controller
+package cutil
 
 import (
 	"github.com/valyala/fasthttp"
 
-	"projectforge.dev/projectforge/app/controller/csession"
-	"projectforge.dev/projectforge/app/controller/cutil"
-	"projectforge.dev/projectforge/app/lib/telemetry"
-	"projectforge.dev/projectforge/app/lib/telemetry/httpmetrics"
-	"projectforge.dev/projectforge/app/lib/user"
-	"projectforge.dev/projectforge/app/util"
+	"{{{ .Package }}}/app/controller/csession"
+	"{{{ .Package }}}/app/lib/telemetry"
+	"{{{ .Package }}}/app/lib/telemetry/httpmetrics"
+	"{{{ .Package }}}/app/lib/user"
+	"{{{ .Package }}}/app/util"
 )
 
-var initialIcons = []string{"searchbox"}
+var initialIcons = {{{ if .HasModule "search" }}}[]string{"searchbox"}{{{ else }}}[]string{}{{{ end }}}
 
-func loadPageState(rc *fasthttp.RequestCtx, key string, logger util.Logger) *cutil.PageState {
+func LoadPageState(rc *fasthttp.RequestCtx, key string, logger util.Logger) *PageState {
 	ctx, logger := httpmetrics.ExtractHeaders(rc, logger)
 	traceCtx, span, logger := telemetry.StartSpan(ctx, "http:"+key, logger)
 	span.Attribute("path", string(rc.Request.URI().Path()))
@@ -25,7 +23,7 @@ func loadPageState(rc *fasthttp.RequestCtx, key string, logger util.Logger) *cut
 	isAuthed, _ := user.Check("/", accts)
 	isAdmin, _ := user.Check("/admin", accts)
 
-	return &cutil.PageState{
+	return &PageState{
 		Method: string(rc.Method()), URI: rc.Request.URI(), Flashes: flashes, Session: session,
 		Profile: prof, Accounts: accts, Authed: isAuthed, Admin: isAdmin,
 		Icons: initialIcons, Context: traceCtx, Span: span, Logger: logger,
@@ -55,7 +53,7 @@ func loadSession(rc *fasthttp.RequestCtx, logger util.Logger) (util.ValueMap, []
 		}
 	}
 
-	prof, err := LoadProfile(session)
+	prof, err := loadProfile(session)
 	if err != nil {
 		logger.Warnf("can't load profile: %+v", err)
 	}
@@ -72,7 +70,7 @@ func loadSession(rc *fasthttp.RequestCtx, logger util.Logger) (util.ValueMap, []
 	return session, flashes, prof, accts
 }
 
-func LoadProfile(session util.ValueMap) (*user.Profile, error) {
+func loadProfile(session util.ValueMap) (*user.Profile, error) {
 	x, ok := session["profile"]
 	if !ok {
 		return user.DefaultProfile.Clone(), nil

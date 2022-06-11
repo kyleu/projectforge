@@ -6,6 +6,7 @@ import (
 
 	"{{{ .Package }}}/app/controller"
 	"{{{ .Package }}}/app/controller/clib"
+	"{{{ .Package }}}/app/controller/cutil"
 	"{{{ .Package }}}/app/lib/telemetry/httpmetrics"
 )
 
@@ -14,8 +15,8 @@ func SiteRoutes() fasthttp.RequestHandler {
 
 	r.GET("/", controller.Site)
 
-	r.GET(controller.DefaultProfilePath, clib.ProfileSite)
-	r.POST(controller.DefaultProfilePath, clib.ProfileSave){{{ if .HasModule "oauth" }}}
+	r.GET(cutil.DefaultProfilePath, clib.ProfileSite)
+	r.POST(cutil.DefaultProfilePath, clib.ProfileSave){{{ if .HasModule "oauth" }}}
 	r.GET("/auth/{key}", clib.AuthDetail)
 	r.GET("/auth/callback/{key}", clib.AuthCallback)
 	r.GET("/auth/logout/{key}", clib.AuthLogout){{{ end }}}

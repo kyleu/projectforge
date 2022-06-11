@@ -15,15 +15,9 @@ import (
 	"projectforge.dev/projectforge/app/site"
 )
 
-const (
-	DefaultSearchPath  = "/search"
-	DefaultProfilePath = "/profile"
-	defaultIcon        = "app"
-)
-
 func Act(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
 	as := _currentAppState
-	ps := loadPageState(rc, key, _currentAppRootLogger)
+	ps := cutil.LoadPageState(rc, key, _currentAppRootLogger)
 	if allowed, reason := user.Check(string(ps.URI.Path()), ps.Accounts); !allowed {
 		f = Unauthorized(rc, reason, ps.Accounts)
 	}
@@ -35,7 +29,7 @@ func Act(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.Pa
 
 func ActSite(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
 	as := _currentSiteState
-	ps := loadPageState(rc, key, _currentSiteRootLogger)
+	ps := cutil.LoadPageState(rc, key, _currentSiteRootLogger)
 	ps.Menu = site.Menu(ps.Context, as, ps.Profile, ps.Accounts)
 	if allowed, reason := user.Check(string(ps.URI.Path()), ps.Accounts); !allowed {
 		f = Unauthorized(rc, reason, ps.Accounts)
@@ -47,7 +41,7 @@ func ActSite(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cuti
 }
 
 func actComplete(key string, as *app.State, ps *cutil.PageState, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
-	err := clean(as, ps)
+	err := ps.Clean(as)
 	if err != nil {
 		ps.Logger.Warnf("error while cleaning request, somehow: %+v", err)
 	}

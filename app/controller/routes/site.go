@@ -7,6 +7,7 @@ import (
 
 	"projectforge.dev/projectforge/app/controller"
 	"projectforge.dev/projectforge/app/controller/clib"
+	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/telemetry/httpmetrics"
 )
 
@@ -15,8 +16,8 @@ func SiteRoutes() fasthttp.RequestHandler {
 
 	r.GET("/", controller.Site)
 
-	r.GET(controller.DefaultProfilePath, clib.ProfileSite)
-	r.POST(controller.DefaultProfilePath, clib.ProfileSave)
+	r.GET(cutil.DefaultProfilePath, clib.ProfileSite)
+	r.POST(cutil.DefaultProfilePath, clib.ProfileSave)
 
 	r.GET("/favicon.ico", clib.Favicon)
 	r.GET("/assets/{_:*}", clib.Static)
