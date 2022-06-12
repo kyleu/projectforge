@@ -46,7 +46,7 @@ func (s *Service) loadExportArgs(fs filesystem.FileLoader, logger util.Logger) (
 	}
 	args.Models = append(args.Models, explicitModels...)
 
-	jsonModels, err := getJSONModels(args.Config, fs, logger)
+	jsonModels, err := getJSONModels(args.Config, args.Groups, fs, logger)
 	if err != nil {
 		return nil, err
 	}
@@ -82,7 +82,7 @@ func getModels(exportPath string, fs filesystem.FileLoader, logger util.Logger) 
 	return models, nil
 }
 
-func getJSONModels(cfg util.ValueMap, fs filesystem.FileLoader, logger util.Logger) (model.Models, error) {
+func getJSONModels(cfg util.ValueMap, groups model.Groups, fs filesystem.FileLoader, logger util.Logger) (model.Models, error) {
 	if cfg == nil {
 		return nil, nil
 	}
@@ -113,7 +113,7 @@ func getJSONModels(cfg util.ValueMap, fs filesystem.FileLoader, logger util.Logg
 		if err != nil {
 			return nil, errors.Wrapf(err, "unable to parse JSON data file at [%s]", fn)
 		}
-		mdl, err := df.ToModel()
+		mdl, err := df.ToModel(groups)
 		if err != nil {
 			return nil, errors.Wrapf(err, "unable to convert file at [%s]", fn)
 		}

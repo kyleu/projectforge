@@ -103,7 +103,7 @@ func validateExport(p *Project, e func(code string, msg string, args ...any)) {
 		return
 	}
 	for _, x := range p.ExportArgs.Models {
-		if err := x.Validate(p.Modules); err != nil {
+		if err := x.Validate(p.Modules, p.ExportArgs.Groups); err != nil {
 			e("export", err.Error())
 		}
 	}

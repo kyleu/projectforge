@@ -10,6 +10,7 @@ import (
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller/cutil"
+	"{{{ .Package }}}/app/lib/telemetry"
 	"{{{ .Package }}}/app/lib/user"{{{ if.HasModule "marketing" }}}
 	"{{{ .Package }}}/app/site"{{{ end }}}
 )
@@ -48,6 +49,15 @@ func actComplete(key string, as *app.State, ps *cutil.PageState, rc *fasthttp.Re
 	cutil.WriteCORS(rc)
 	startNanos := time.Now().UnixNano()
 	var redir string
+	ctx, span, logger := telemetry.StartSpan(ps.Context, "controller."+key, ps.Logger)
+	defer span.Complete()
+	logger = logger.With(
+		zap.String("path", string(rc.URI().Path())),
+		zap.String("method", ps.Method),
+		zap.Int("status", status),
+	)
+	ps.Context = ctx
+
 	if ps.ForceRedirect == "" || ps.ForceRedirect == string(rc.URI().Path()) {
 		redir, err = safeRun(f, as, ps)
 		if err != nil {
@@ -66,13 +76,8 @@ func actComplete(key string, as *app.State, ps *cutil.PageState, rc *fasthttp.Re
 	}
 	elapsedMillis := float64((time.Now().UnixNano()-startNanos)/int64(time.Microsecond)) / float64(1000)
 	defer ps.Close()
-	l := ps.Logger.With(
-		zap.String("path", string(rc.URI().Path())),
-		zap.String("method", ps.Method),
-		zap.Int("status", status),
-		zap.Float64("elapsed", elapsedMillis),
-	)
-	l.Debugf("processed request in [%.3fms] (render: %.3fms)", elapsedMillis, ps.RenderElapsed)
+	logger = logger.With(zap.Float64("elapsed", elapsedMillis))
+	logger.Debugf("processed request in [%.3fms] (render: %.3fms)", elapsedMillis, ps.RenderElapsed)
 }
 
 func safeRun(f func(as *app.State, ps *cutil.PageState) (string, error), as *app.State, ps *cutil.PageState) (s string, e error) {

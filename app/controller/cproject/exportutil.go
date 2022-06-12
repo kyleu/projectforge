@@ -24,6 +24,7 @@ func exportModelFromForm(frm util.ValueMap, m *model.Model) error {
 	}
 	m.Name = get("name", m.Name)
 	m.Package = get("package", m.Package)
+	m.Group = util.StringSplitAndTrim(get("group", strings.Join(m.Group, "/")), "/")
 	m.Description = get("description", m.Description)
 	m.Icon = get("icon", m.Icon)
 

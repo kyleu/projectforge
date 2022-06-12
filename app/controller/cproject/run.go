@@ -50,6 +50,9 @@ func RunAction(rc *fasthttp.RequestCtx) {
 		}
 
 		result := action.Apply(ps.Context, actionParams(tgt, actT, cfg, as, ps.Logger))
+		if result == nil {
+			result = &action.Result{}
+		}
 		if result.Project == nil {
 			result.Project = prj
 		}

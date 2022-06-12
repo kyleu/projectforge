@@ -14,19 +14,19 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func Apply(ctx context.Context, p *Params) *Result {
+func Apply(ctx context.Context, p *Params) (ret *Result) {
 	ctx, span, logger := telemetry.StartSpan(ctx, "action:"+p.T.Key, p.Logger)
 	defer span.Complete()
 	span.Attribute("project", p.ProjectKey)
 	span.Attribute("action", p.T.String())
 
 	timer := util.TimerStart()
-	var ret *Result
 
 	defer func() {
-		if ret != nil {
-			ret.Duration = timer.End()
+		if ret == nil {
+			ret = &Result{}
 		}
+		ret.Duration = timer.End()
 		if rec := recover(); rec != nil {
 			if err, ok := rec.(error); ok {
 				ret = ret.WithError(err)

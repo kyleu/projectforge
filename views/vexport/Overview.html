@@ -1,5 +1,6 @@
 {% import (
   "fmt"
+  "strings"
 
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
@@ -24,29 +25,37 @@
     {%= components.JSON(p.Args.Config) %}
   </div>
   <div class="card">
+    <div class="right"><a href="/p/{%s p.Project.Key %}/export/groups"><button>Edit</button></a></div>
+    <h3>{%= components.SVGRefIcon(`users`, ps) %}Groups</h3>
+    <div class="mt">
+      {%- if len(p.Args.Groups) == 0 -%}
+      <em>no groups defined</em>
+      {%- else -%}
+      {%= GroupList(p.Args.Groups, 2) %}
+      {%- endif -%}
+    </div>
+  </div>
+  <div class="card">
     <div class="right"><a href="/p/{%s p.Project.Key %}/export/models/new"><button>New</button></a></div>
     <h3>{%= components.SVGRefIcon(`list`, ps) %}Models</h3>
     {%= ModelList(p.Args.Models, fmt.Sprintf("/p/%s/export/models", p.Project.Key), as, ps) %}
   </div>
-  {%- if len(p.Args.Groups) > 0 -%}
-  <div class="card">
-    <div class="right"><a href="/p/{%s p.Project.Key %}/export/groups"><button>Edit</button></a></div>
-    <h3>{%= components.SVGRefIcon(`users`, ps) %}Groups</h3>
-    <div class="mt">
-      {%= GroupList(p.Args.Groups, 2) %}
-    </div>
-  </div>
-  {%- endif -%}
 {% endfunc %}
 
 {% func ModelList(models model.Models, urlPrefix string, as *app.State, ps *cutil.PageState) %}
   <table class="mt min-200 full-width">
     <tbody>
       {%- for _, m := range models -%}
-      {%- code u := fmt.Sprintf("%s/%s", urlPrefix, m.Name) -%}
+      {%- code
+        u := fmt.Sprintf("%s/%s", urlPrefix, m.Name)
+        var prefix string
+        if len(m.Group) > 0 {
+          prefix = strings.Join(m.Group, "/")+", "
+        }
+      -%}
       <tr>
         <td class="shrink"><a href="{%s u %}">{%= components.SVGRef(m.IconSafe(), 15, 15, ``, ps) %}</a> <a href="{%s u %}">{%s m.Title() %}</a></td>
-        <td style="text-align: right;"><em>{%d len(m.Columns) %} {%s util.StringPluralMaybe("field", len(m.Columns)) %}</em></td>
+        <td style="text-align: right;"><em>{%s prefix %}{%d len(m.Columns) %} {%s util.StringPluralMaybe("field", len(m.Columns)) %}</em></td>
       </tr>
       {%- endfor -%}
     </tbody>

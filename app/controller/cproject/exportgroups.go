@@ -27,7 +27,8 @@ func ProjectExportGroupsEdit(rc *fasthttp.RequestCtx) {
 
 		bc := []string{"projects", prj.Key, fmt.Sprintf("Export||/p/%s/export", prj.Key), "Groups"}
 		ps.Title = fmt.Sprintf("[%s] Groups", prj.Key)
-		return controller.Render(rc, as, &vexport.GroupForm{Project: prj, Groups: args.Groups}, ps, bc...)
+		ex := model.Groups{{Key: "foo", Title: "Foo", Description: "The foos!", Icon: "star", Children: model.Groups{{Key: "bar"}}}}
+		return controller.Render(rc, as, &vexport.GroupForm{Project: prj, Groups: args.Groups, Example: ex}, ps, bc...)
 	})
 }
 

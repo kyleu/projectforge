@@ -30,6 +30,7 @@
         <tbody>
           {%= components.TableInput("name", "Name", m.Name, 5, export.Helpers["model.name"]...) %}
           {%= components.TableInput("package", "Package", m.Package, 5, export.Helpers["model.package"]...) %}
+          {%= components.TableInput("group", "Group", strings.Join(m.Group, "/"), 5, export.Helpers["model.group"]...) %}
           {%= components.TableInput("description", "Description", m.Description, 5, export.Helpers["model.description"]...) %}
           {%= components.TableInput("icon", "Icon", m.Icon, 5, export.Helpers["model.icon"]...) %}
           {%= components.TableTextarea("ordering", "Ordering", 3, util.ToJSON(m.Ordering), 5, export.Helpers["model.ordering"]...) %}

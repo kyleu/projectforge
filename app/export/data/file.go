@@ -21,16 +21,19 @@ func (d *File) String() string {
 	return fmt.Sprintf("%s [%d fields]: %d rows", d.Filename, len(d.Fields), len(d.Data))
 }
 
-func (d *File) ToModel() (*model.Model, error) {
+func (d *File) ToModel(groups model.Groups) (*model.Model, error) {
 	name := strings.TrimSuffix(d.Filename, ".dat")
 	key := util.StringToSnake(name)
-	ret := &model.Model{
-		Name:          key,
-		Package:       key,
-		Description:   fmt.Sprintf("from file [%s]", d.Filename),
-		Icon:          "star",
-		TitleOverride: util.StringToTitle(name),
+	desc := fmt.Sprintf("from file [%s]", d.Filename)
+	title := util.StringToTitle(name)
+	var group []string
+	for _, g := range groups {
+		if strings.HasPrefix(key, g.Key+"_") {
+			//key = strings.TrimPrefix(key, g.Key+"_")
+			group = []string{g.Key}
+		}
 	}
+	ret := &model.Model{Name: key, Package: key, Group: group, Description: desc, Icon: "star", TitleOverride: title}
 	for _, col := range d.Fields {
 		x, err := exportColumn(col)
 		if err != nil {

@@ -1,6 +1,8 @@
 package model
 
 import (
+	"strings"
+
 	"github.com/pkg/errors"
 	"golang.org/x/exp/slices"
 )
@@ -13,7 +15,7 @@ var goKeywords = []string{
 
 var reservedNames = map[string][]string{"audit": {"audit", "audit_record"}}
 
-func (m *Model) Validate(mods []string) error {
+func (m *Model) Validate(mods []string, groups Groups) error {
 	if len(m.PKs()) == 0 {
 		return errors.Errorf("model [%s] has no primary key", m.Name)
 	}
@@ -50,6 +52,11 @@ func (m *Model) Validate(mods []string) error {
 			if m.Columns.Get(s) == nil {
 				return errors.Errorf("relation [%s] references missing source column [%s]", rel.Name, s)
 			}
+		}
+	}
+	if len(m.Group) > 0 {
+		if groups.Get(m.Group...) == nil {
+			return errors.Errorf("model [%s] references undefined group [%s]", m.Name, strings.Join(m.Group, "/"))
 		}
 	}
 	return nil

@@ -28,7 +28,7 @@ func (a *Args) DBRef() string {
 func (a *Args) Validate() error {
 	packages := make(map[string]struct{}, len(a.Models))
 	for _, m := range a.Models {
-		err := m.Validate(a.Modules)
+		err := m.Validate(a.Modules, a.Groups)
 		if err != nil {
 			return errors.Wrap(err, "invalid model ["+m.Name+"]")
 		}

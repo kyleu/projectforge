@@ -58,7 +58,7 @@ func (p *GroupForm) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
       <div class="mt expanded">
         `)
 //line views/vexport/GroupForm.html:27
-	components.StreamFormTextarea(qw422016, "groups", "input-groups", 8, util.ToJSON(p.Groups), export.Helpers["model.groups"]...)
+	components.StreamFormTextarea(qw422016, "groups", "input-groups", 24, util.ToJSON(p.Groups), export.Helpers["model.groups"]...)
 //line views/vexport/GroupForm.html:27
 	qw422016.N().S(`
       </div>

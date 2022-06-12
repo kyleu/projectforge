@@ -43,6 +43,9 @@
     <tbody>
       <tr><th class="shrink">Name</th><td>{%s model.Name %}</td></tr>
       <tr><th>Package</th><td>{%s model.Package %}</td></tr>
+      {%- if len(model.Group) > 0 -%}
+      <tr><th>Group</th><td>{%s strings.Join(model.Group, "/") %}</td></tr>
+      {%- endif -%}
       <tr><th>Description</th><td>{%s model.Description %}</td></tr>
       <tr>
         <th>Ordering</th>

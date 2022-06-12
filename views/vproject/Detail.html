@@ -37,24 +37,26 @@
       <input name="type" type="radio" id="tab-modulearg-export" class="input"/>
       <label for="tab-modulearg-export" class="label">Export</label>
       <div class="panel">
-        {%- if ea.Config != nil -%}
         <div class="right"><a href="/p/{%s p.Project.Key %}/export/config"><button>Edit</button></a></div>
         <h3>{%= components.SVGRefIcon(`print`, ps) %}Config Settings</h3>
         <div class="clear"></div>
+        {%- if ea.Config == nil -%}
+        <em>empty config</em>
+        {%- else -%}
         {%= components.JSON(ea.Config) %}
+        {%- endif -%}
+        <hr />
+        {%- if len(ea.Groups) > 0 -%}
+        <div class="right"><a href="/p/{%s p.Project.Key %}/export/groups"><button>Edit</button></a></div>
+        <h3>{%= components.SVGRefIcon(`users`, ps) %}Groups</h3>
+        <div class="mt clear"></div>
+        {%= vexport.GroupList(ea.Groups, 4) %}
         <hr />
         {%- endif -%}
         <div class="right"><a href="/p/{%s p.Project.Key %}/export"><button>Manage</button></a></div>
         <h3 class="mt">{%= components.SVGRefIcon(`list`, ps) %}Models</h3>
         <div class="clear"></div>
         {%= vexport.ModelList(ea.Models, fmt.Sprintf("/p/%s/export/models", p.Project.Key), as, ps) %}
-        {%- if len(ea.Groups) > 0 -%}
-        <hr />
-        <div class="right"><a href="/p/{%s p.Project.Key %}/export/groups"><button>Edit</button></a></div>
-        <h3>{%= components.SVGRefIcon(`users`, ps) %}Groups</h3>
-        <div class="mt clear"></div>
-        {%= vexport.GroupList(ea.Groups, 4) %}
-        {%- endif -%}
       </div>
       {%- endif -%}
 
