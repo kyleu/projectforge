@@ -13,9 +13,9 @@ import (
 )
 
 func table(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
-	g := golang.NewGoTemplate([]string{"views", "v" + m.Package}, "Table.html")
+	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "Table.html")
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpFilter)
-	g.AddImport(helper.AppImport("app/" + m.Package))
+	g.AddImport(helper.AppImport("app/" + m.PackageWithGroup("")))
 	g.AddBlocks(exportViewTableFunc(m, args.Models, g))
 	return g.Render(addHeader)
 }
@@ -26,7 +26,7 @@ func exportViewTableFunc(m *model.Model, models model.Models, g *golang.Template
 	suffix := ""
 	for _, rel := range m.Relations {
 		if relModel := models.Get(rel.Table); relModel.CanTraverseRelation() {
-			g.AddImport(helper.AppImport("app/" + relModel.Package))
+			g.AddImport(helper.AppImport("app/" + relModel.PackageWithGroup("")))
 			msg := ", %s %s.%s"
 			suffix += fmt.Sprintf(msg, relModel.Plural(), relModel.Package, relModel.ProperPlural())
 		}

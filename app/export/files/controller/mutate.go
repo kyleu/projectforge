@@ -8,8 +8,8 @@ import (
 	"projectforge.dev/projectforge/app/export/model"
 )
 
-func controllerCreateForm(m *model.Model, grp *model.Column) *golang.Block {
-	ret := blockFor(m, grp, "create", "form")
+func controllerCreateForm(m *model.Model, grp *model.Column, prefix string) *golang.Block {
+	ret := blockFor(m, prefix, grp, "create", "form")
 	if grp != nil {
 		controllerArgFor(grp, ret, "\"\"", 2)
 	}
@@ -24,25 +24,25 @@ func controllerCreateForm(m *model.Model, grp *model.Column) *golang.Block {
 		ret.W("\t\tps.Title = fmt.Sprintf(\"Create ["+m.Proper()+"] for %s [%%%%s]\", %sArg)", grp.TitleLower(), grp.Camel())
 	}
 	ret.W("\t\tps.Data = ret")
-	ret.W("\t\treturn Render(rc, as, &v%s.Edit{Model: ret, IsNew: true}, ps, %q%s, \"Create\")", m.Package, m.Package, grp.BC())
+	ret.W("\t\treturn %sRender(rc, as, &v%s.Edit{Model: ret, IsNew: true}, ps, %q%s, \"Create\")", prefix, m.Package, m.Package, grp.BC())
 	ret.W("\t})")
 	ret.W("}")
 	return ret
 }
 
-func controllerCreateFormRandom(m *model.Model) *golang.Block {
-	ret := blockFor(m, nil, "create", "form", "random")
+func controllerCreateFormRandom(m *model.Model, prefix string) *golang.Block {
+	ret := blockFor(m, prefix, nil, "create", "form", "random")
 	ret.W("\t\tret := %s.Random()", m.Package)
 	ret.W("\t\tps.Title = \"Create Random %s\"", m.Proper())
 	ret.W("\t\tps.Data = ret")
-	ret.W("\t\treturn Render(rc, as, &v%s.Edit{Model: ret, IsNew: true}, ps, %q, \"Create\")", m.Package, m.Package)
+	ret.W("\t\treturn %sRender(rc, as, &v%s.Edit{Model: ret, IsNew: true}, ps, %q, \"Create\")", prefix, m.Package, m.Package)
 	ret.W("\t})")
 	ret.W("}")
 	return ret
 }
 
-func controllerCreate(m *model.Model, g *golang.File, grp *model.Column) *golang.Block {
-	ret := blockFor(m, grp, "create")
+func controllerCreate(m *model.Model, g *golang.File, grp *model.Column, prefix string) *golang.Block {
+	ret := blockFor(m, prefix, grp, "create")
 	if grp != nil {
 		controllerArgFor(grp, ret, "\"\"", 2)
 	}
@@ -56,14 +56,14 @@ func controllerCreate(m *model.Model, g *golang.File, grp *model.Column) *golang
 	ret.W("\t\t\treturn \"\", errors.Wrap(err, \"unable to save newly-created %s\")", m.Proper())
 	ret.W("\t\t}")
 	ret.W("\t\tmsg := fmt.Sprintf(\"" + m.Proper() + " [%%s] created\", ret.String())")
-	ret.W("\t\treturn FlashAndRedir(true, msg, ret.WebPath(), rc, ps)")
+	ret.W("\t\treturn %sFlashAndRedir(true, msg, ret.WebPath(), rc, ps)", prefix)
 	ret.W("\t})")
 	ret.W("}")
 	return ret
 }
 
-func controllerEditForm(m *model.Model, grp *model.Column) *golang.Block {
-	ret := blockFor(m, grp, "edit", "form")
+func controllerEditForm(m *model.Model, grp *model.Column, prefix string) *golang.Block {
+	ret := blockFor(m, prefix, grp, "edit", "form")
 	if m.IsRevision() {
 		ret.W("\t\trc.SetUserValue(\"includeDeleted\", true)")
 	}
@@ -77,14 +77,14 @@ func controllerEditForm(m *model.Model, grp *model.Column) *golang.Block {
 	checkGrp(ret, grp)
 	ret.W("\t\tps.Title = \"Edit \" + ret.String()")
 	ret.W("\t\tps.Data = ret")
-	ret.W("\t\treturn Render(rc, as, &v%s.Edit{Model: ret}, ps, %q%s, ret.String())", m.Package, m.Package, grp.BC())
+	ret.W("\t\treturn %sRender(rc, as, &v%s.Edit{Model: ret}, ps, %q%s, ret.String())", prefix, m.Package, m.Package, grp.BC())
 	ret.W("\t})")
 	ret.W("}")
 	return ret
 }
 
-func controllerEdit(m *model.Model, g *golang.File, grp *model.Column) *golang.Block {
-	ret := blockFor(m, grp, "edit")
+func controllerEdit(m *model.Model, g *golang.File, grp *model.Column, prefix string) *golang.Block {
+	ret := blockFor(m, prefix, grp, "edit")
 	if m.IsRevision() {
 		ret.W("\t\trc.SetUserValue(\"includeDeleted\", true)")
 	}
@@ -109,14 +109,14 @@ func controllerEdit(m *model.Model, g *golang.File, grp *model.Column) *golang.B
 	ret.W("\t\t\treturn \"\", errors.Wrapf(err, \"unable to update %s [%%%%s]\", frm.String())", m.Proper())
 	ret.W("\t\t}")
 	ret.W("\t\tmsg := fmt.Sprintf(\"" + m.Proper() + " [%%s] updated\", frm.String())")
-	ret.W("\t\treturn FlashAndRedir(true, msg, frm.WebPath(), rc, ps)")
+	ret.W("\t\treturn %sFlashAndRedir(true, msg, frm.WebPath(), rc, ps)", prefix)
 	ret.W("\t})")
 	ret.W("}")
 	return ret
 }
 
-func controllerDelete(m *model.Model, g *golang.File, grp *model.Column) *golang.Block {
-	ret := blockFor(m, grp, "delete")
+func controllerDelete(m *model.Model, g *golang.File, grp *model.Column, prefix string) *golang.Block {
+	ret := blockFor(m, prefix, grp, "delete")
 	if grp != nil {
 		controllerArgFor(grp, ret, "\"\"", 2)
 	}
@@ -134,7 +134,7 @@ func controllerDelete(m *model.Model, g *golang.File, grp *model.Column) *golang
 	ret.W("\t\t\treturn \"\", errors.Wrapf(err, \"unable to delete %s [%%%%s]\", ret.String())", m.TitleLower())
 	ret.W("\t\t}")
 	ret.W("\t\tmsg := fmt.Sprintf(\"" + m.Proper() + " [%%s] deleted\", ret.String())")
-	ret.W("\t\treturn FlashAndRedir(true, msg, \"/%s\", rc, ps)", m.Camel())
+	ret.W("\t\treturn %sFlashAndRedir(true, msg, \"/%s\", rc, ps)", prefix, m.Camel())
 	ret.W("\t})")
 	ret.W("}")
 	return ret

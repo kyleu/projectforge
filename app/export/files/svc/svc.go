@@ -43,7 +43,7 @@ func ServiceAll(m *model.Model, args *model.Args, addHeader bool) (file.Files, e
 }
 
 func Service(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
-	g := golang.NewFile(m.Package, []string{"app", m.Package}, "service")
+	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "service")
 	g.AddImport(helper.ImpFilter, helper.ImpDatabase)
 
 	isRO := args.HasModule("readonlydb")

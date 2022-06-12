@@ -17,35 +17,9 @@ func Menu(f *file.File, args *model.Args) error {
 	}
 	out := make([]string, 0, len(args.Models)+len(args.Groups))
 
-	var adminGroups, nonAdminGroups model.Groups
-	for _, g := range args.Groups {
-		if g.HasTag("public") {
-			nonAdminGroups = append(nonAdminGroups, g)
-		} else {
-			adminGroups = append(adminGroups, g)
-		}
-	}
-
-	var adminModels, nonAdminModels model.Models
-	for _, m := range args.Models {
-		if m.HasTag("public") {
-			nonAdminModels = append(nonAdminModels, m)
-		} else {
-			adminModels = append(adminModels, m)
-		}
-	}
-
-	if len(nonAdminGroups) > 0 || len(nonAdminModels) > 0 {
-		out = append(out, "ret = append(ret,")
-		for _, x := range menuItemsFor(nonAdminGroups, nonAdminModels) {
-			out = append(out, menuSerialize(x, "\t\t")...)
-		}
-		out = append(out, ")")
-	}
-
-	if len(adminGroups) > 0 || len(adminModels) > 0 {
+	if len(args.Groups) > 0 || len(args.Models) > 0 {
 		out = append(out, "if isAdmin {", "\tret = append(ret,")
-		for _, x := range menuItemsFor(adminGroups, adminModels) {
+		for _, x := range menuItemsFor(args.Groups, args.Models) {
 			out = append(out, menuSerialize(x, "\t\t")...)
 		}
 		out = append(out, "\t)", "}")

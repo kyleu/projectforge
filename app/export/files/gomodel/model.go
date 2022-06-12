@@ -13,7 +13,7 @@ import (
 )
 
 func Model(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
-	g := golang.NewFile(m.Package, []string{"app", m.Package}, strings.ToLower(m.Camel()))
+	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, strings.ToLower(m.Camel()))
 	for _, imp := range helper.ImportsForTypes("go", m.Columns.Types()...) {
 		g.AddImport(imp)
 	}

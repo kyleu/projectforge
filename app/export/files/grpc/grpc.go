@@ -82,7 +82,7 @@ func grpcFile(m *model.Model, args *model.Args, ga *FileArgs, addHeader bool) (*
 	g.AddImport(helper.ImpErrors, helper.ImpFilter, helper.ImpAppUtil)
 	g.AddImport(helper.AppImport("app/lib/" + ga.CPkg))
 	if ga.Grp == nil {
-		g.AddImport(helper.AppImport("app/" + m.Package))
+		g.AddImport(helper.AppImport("app/" + m.PackageWithGroup("")))
 	}
 
 	grpcArgs := fmt.Sprintf("p *%s.Params", ga.CPkg)

@@ -8,9 +8,9 @@ import (
 )
 
 func list(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
-	g := golang.NewGoTemplate([]string{"views", "v" + m.Package}, "List.html")
+	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "List.html")
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpFilter, helper.ImpLayout)
-	g.AddImport(helper.AppImport("app/" + m.Package))
+	g.AddImport(helper.AppImport("app/" + m.PackageWithGroup("")))
 	g.AddBlocks(exportViewListClass(m, args.Models, g), exportViewListBody(m, args.Models))
 	return g.Render(addHeader)
 }
@@ -22,7 +22,7 @@ func exportViewListClass(m *model.Model, models model.Models, g *golang.Template
 	ret.W("  Models %s.%s", m.Package, m.ProperPlural())
 	for _, rel := range m.Relations {
 		relModel := models.Get(rel.Table)
-		g.AddImport(helper.AppImport("app/" + relModel.Package))
+		g.AddImport(helper.AppImport("app/" + relModel.PackageWithGroup("")))
 		ret.W(commonLine, relModel.ProperPlural(), relModel.Package, relModel.ProperPlural())
 	}
 	ret.W("  Params filter.ParamSet")

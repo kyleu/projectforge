@@ -29,8 +29,7 @@ func AppRoutes() fasthttp.RequestHandler {
 	r.GET("/auth/callback/{key}", clib.AuthCallback)
 	r.GET("/auth/logout/{key}", clib.AuthLogout){{{ end }}}{{{ if.HasModule "export" }}}
 
-	// $PF_INJECT_START(codegen)$
-	// $PF_INJECT_END(codegen)${{{ end }}}
+	generatedRoutes(r){{{ end }}}
 
 	// $PF_SECTION_START(routes)$
 	// $PF_SECTION_END(routes)${{{ if .HasModule "docbrowse" }}}

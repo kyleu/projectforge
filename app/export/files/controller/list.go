@@ -8,8 +8,8 @@ import (
 	"projectforge.dev/projectforge/app/export/model"
 )
 
-func controllerList(m *model.Model, grp *model.Column, models model.Models, g *golang.File) *golang.Block {
-	ret := blockFor(m, grp, "list")
+func controllerList(m *model.Model, grp *model.Column, models model.Models, g *golang.File, prefix string) *golang.Block {
+	ret := blockFor(m, prefix, grp, "list")
 	meth := "List"
 	grpArgs := ""
 	if grp != nil {
@@ -59,8 +59,8 @@ func controllerList(m *model.Model, grp *model.Column, models model.Models, g *g
 
 		toStrings += fmt.Sprintf(", %s: %s", relModel.ProperPlural(), relModel.Plural())
 	}
-	render := "\t\treturn Render(rc, as, &v%s.List{Models: ret%s, Params: params}, ps, %q%s)"
-	ret.W(render, m.Package, toStrings, m.Package, grp.BC())
+	render := "\t\treturn %sRender(rc, as, &v%s.List{Models: ret%s, Params: params}, ps, %q%s)"
+	ret.W(render, prefix, m.Package, toStrings, m.Package, grp.BC())
 	ret.W("\t})")
 	ret.W("}")
 	return ret

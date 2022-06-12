@@ -1,6 +1,8 @@
 package model
 
 import (
+	"strings"
+
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/lib/filter"
@@ -80,4 +82,27 @@ func (m *Model) RelationsFor(col *Column) Relations {
 
 func (m *Model) CanTraverseRelation() bool {
 	return len(m.PKs()) == 1 && len(m.Columns.WithTag("title")) > 0
+}
+
+func (m *Model) PackageWithGroup(prefix string) string {
+	if len(m.Group) == 0 {
+		return prefix + m.Package
+	}
+	x := make([]string, 0, len(m.Group)+1)
+	for _, g := range m.Group {
+		x = append(x, prefix+g)
+	}
+	x = append(x, prefix+m.Package)
+	return strings.Join(x, "/")
+}
+
+func (m *Model) GroupString(prefix string, dflt string) string {
+	if len(m.Group) == 0 {
+		return dflt
+	}
+	x := make([]string, 0, len(m.Group)+1)
+	for _, g := range m.Group {
+		x = append(x, prefix+g)
+	}
+	return strings.Join(x, "/")
 }

@@ -15,7 +15,7 @@ import (
 )
 
 func DTO(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
-	g := golang.NewFile(m.Package, []string{"app", m.Package}, "dto")
+	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "dto")
 	for _, imp := range helper.ImportsForTypes("dto", m.Columns.Types()...) {
 		g.AddImport(imp)
 	}

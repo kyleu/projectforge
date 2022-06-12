@@ -26,7 +26,8 @@ func All(ctx context.Context, args *model.Args, files file.Files, logger util.Lo
 		case "app/services.go":
 			err = Services(f, args)
 		case "app/controller/routes/routes.go":
-			err = Routes(f, args)
+			println("TODO: skipping routes!")
+			// err = Routes(f, args)
 		case "app/controller/cmenu/menu.go":
 			err = Menu(f, args)
 		case "app/lib/search/search.go":

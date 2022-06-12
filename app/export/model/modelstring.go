@@ -85,3 +85,13 @@ func (m *Model) URLPath(prefix string) string {
 func (m *Model) ClassRef() string {
 	return m.Package + "." + m.Proper()
 }
+
+func (m *Model) LastGroup(prefix string, dflt string) string {
+	if len(m.Group) == 0 {
+		if dflt != "" {
+			return dflt
+		}
+		return m.Package
+	}
+	return prefix + m.Group[len(m.Group)-1]
+}

@@ -14,7 +14,7 @@ import (
 
 func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	dbRef := args.DBRef()
-	g := golang.NewFile(m.Package, []string{"app", m.Package}, "serviceget")
+	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "serviceget")
 	for _, imp := range helper.ImportsForTypes("go", m.PKs().Types()...) {
 		g.AddImport(imp)
 	}

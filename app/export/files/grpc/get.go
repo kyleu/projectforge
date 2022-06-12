@@ -78,7 +78,7 @@ func grpcDetail(m *model.Model, grpcArgs string, grpcRet string, g *golang.File,
 		if hc == nil {
 			return nil, errors.New("invalid history column")
 		}
-		g.AddImport(helper.AppImport("app/" + m.Package))
+		g.AddImport(helper.AppImport("app/" + m.PackageWithGroup("")))
 		ret.W("\tvar ret *%s.%s", m.Package, m.Proper())
 		ret.W("\t%s, err := provider.GetRequestInt(p.R, %q)", hc.Camel(), hc.Camel())
 		ret.W("\tif err == nil && %s > 0 {", hc.Camel())

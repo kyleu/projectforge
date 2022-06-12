@@ -9,9 +9,9 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func controllerDetail(models model.Models, m *model.Model, grp *model.Column) *golang.Block {
+func controllerDetail(models model.Models, m *model.Model, grp *model.Column, prefix string) *golang.Block {
 	rrels := models.ReverseRelations(m.Name)
-	ret := blockFor(m, grp, "detail")
+	ret := blockFor(m, prefix, grp, "detail")
 	grpHistory := ""
 	if grp != nil {
 		controllerArgFor(grp, ret, "\"\"", 2)
@@ -89,9 +89,9 @@ func controllerDetail(models model.Models, m *model.Model, grp *model.Column) *g
 			args = append(args, fmt.Sprintf("%s: %s", k, argVals[idx]))
 		}
 		argStr := strings.Join(args, ", ")
-		ret.W("\t\treturn Render(rc, as, &v%s.Detail{%s}, ps, %q%s, ret.String())", m.Package, argStr, m.Package, grpHistory)
+		ret.W("\t\treturn %sRender(rc, as, &v%s.Detail{%s}, ps, %q%s, ret.String())", prefix, m.Package, argStr, m.Package, grpHistory)
 	} else {
-		ret.W("\t\treturn Render(rc, as, &v%s.Detail{", m.Package)
+		ret.W("\t\treturn %sRender(rc, as, &v%s.Detail{", prefix, m.Package)
 		keyPad := util.StringArrayMaxLength(argKeys) + 1
 		for idx, k := range argKeys {
 			ret.W("\t\t\t%s %s,", util.StringPad(k+":", keyPad), argVals[idx])

@@ -14,7 +14,7 @@ import (
 )
 
 func ServiceMutate(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
-	g := golang.NewFile(m.Package, []string{"app", m.Package}, "servicemutate")
+	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "servicemutate")
 	for _, imp := range helper.ImportsForTypes("go", m.PKs().Types()...) {
 		g.AddImport(imp)
 	}

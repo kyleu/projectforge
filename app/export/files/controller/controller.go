@@ -12,23 +12,35 @@ import (
 )
 
 func Controller(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
-	g := golang.NewFile("controller", []string{"app", "controller"}, m.Package)
+	fn := m.Package
+	if len(m.Group) > 0 {
+		fn = m.GroupString("c", "") + "/" + fn
+	}
+	g := golang.NewFile(m.LastGroup("c", "controller"), []string{"app", "controller"}, fn)
 	for _, imp := range helper.ImportsForTypes("parse", m.PKs().Types()...) {
 		g.AddImport(imp)
 	}
+	if len(m.Group) > 0 {
+		g.AddImport(helper.ImpAppController)
+	}
 	g.AddImport(helper.ImpFmt, helper.ImpErrors, helper.ImpFastHTTP, helper.ImpApp, helper.ImpCutil)
-	g.AddImport(helper.AppImport("app/" + m.Package))
-	g.AddImport(helper.AppImport("views/v" + m.Package))
-	g.AddBlocks(controllerTitle(m), controllerList(m, nil, args.Models, g), controllerDetail(args.Models, m, nil))
+	g.AddImport(helper.AppImport("app/" + m.PackageWithGroup("")))
+	g.AddImport(helper.AppImport("views/" + m.PackageWithGroup("v")))
+
+	var prefix string
+	if len(m.Group) > 0 {
+		prefix = "controller."
+	}
+	g.AddBlocks(controllerTitle(m), controllerList(m, nil, args.Models, g, prefix), controllerDetail(args.Models, m, nil, prefix))
 	if m.IsRevision() {
-		g.AddBlocks(controllerRevision(m))
+		g.AddBlocks(controllerRevision(m, prefix))
 	}
 	g.AddBlocks(
-		controllerCreateForm(m, nil), controllerCreateFormRandom(m), controllerCreate(m, g, nil),
-		controllerEditForm(m, nil), controllerEdit(m, g, nil), controllerDelete(m, g, nil),
+		controllerCreateForm(m, nil, prefix), controllerCreateFormRandom(m, prefix), controllerCreate(m, g, nil, prefix),
+		controllerEditForm(m, nil, prefix), controllerEdit(m, g, nil, prefix), controllerDelete(m, g, nil, prefix),
 	)
 	if m.IsHistory() {
-		g.AddBlocks(controllerHistory(m))
+		g.AddBlocks(controllerHistory(m, prefix))
 	}
 	g.AddBlocks(controllerModelFromPath(m), controllerModelFromForm(m))
 	return g.Render(addHeader)
@@ -80,7 +92,7 @@ func controllerArgFor(col *model.Column, b *golang.Block, retVal string, indent 
 	}
 }
 
-func blockFor(m *model.Model, grp *model.Column, keys ...string) *golang.Block {
+func blockFor(m *model.Model, prefix string, grp *model.Column, keys ...string) *golang.Block {
 	properKeys := make([]string, 0, len(keys))
 	for _, k := range keys {
 		properKeys = append(properKeys, util.StringToTitle(k))
@@ -92,7 +104,7 @@ func blockFor(m *model.Model, grp *model.Column, keys ...string) *golang.Block {
 	if grp != nil {
 		grpStr = grp.Name + "."
 	}
-	ret.W("\tAct(\"%s.%s%s\", rc, func(as *app.State, ps *cutil.PageState) (string, error) {", m.Package, grpStr, strings.Join(keys, "."))
+	ret.W("\t%sAct(\"%s.%s%s\", rc, func(as *app.State, ps *cutil.PageState) (string, error) {", prefix, m.Package, grpStr, strings.Join(keys, "."))
 	return ret
 }
 

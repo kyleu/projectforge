@@ -13,16 +13,16 @@ import (
 const commonLine = "  %s %s.%s"
 
 func detail(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
-	g := golang.NewGoTemplate([]string{"views", "v" + m.Package}, "Detail.html")
+	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "Detail.html")
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpLayout)
-	g.AddImport(helper.AppImport("app/" + m.Package))
+	g.AddImport(helper.AppImport("app/" + m.PackageWithGroup("")))
 	rrs := args.Models.ReverseRelations(m.Name)
 	if len(rrs) > 0 {
 		g.AddImport(helper.ImpFilter)
 	}
 	for _, rel := range rrs {
 		rm := args.Models.Get(rel.Table)
-		g.AddImport(helper.AppImport("views/v"+rm.Package), helper.AppImport("app/"+rm.Package))
+		g.AddImport(helper.AppImport("views/"+rm.PackageWithGroup("v")), helper.AppImport("app/"+rm.PackageWithGroup("")))
 	}
 	if m.IsRevision() || m.IsHistory() {
 		g.AddImport(helper.ImpFilter)
@@ -42,7 +42,7 @@ func exportViewDetailClass(m *model.Model, models model.Models, g *golang.Templa
 	}
 	for _, rel := range m.Relations {
 		if relModel := models.Get(rel.Table); relModel.CanTraverseRelation() {
-			g.AddImport(helper.AppImport("app/" + relModel.Package))
+			g.AddImport(helper.AppImport("app/" + relModel.PackageWithGroup("")))
 			ret.W(commonLine, relModel.ProperPlural(), relModel.Package, relModel.ProperPlural())
 		}
 	}

@@ -7,7 +7,7 @@ import (
 	"projectforge.dev/projectforge/app/export/model"
 )
 
-func controllerRevision(m *model.Model) *golang.Block {
+func controllerRevision(m *model.Model, prefix string) *golang.Block {
 	hc := m.HistoryColumns(true)
 	ret := golang.NewBlock(m.Camel()+"Detail", "func")
 	ret.W("func %s%s(rc *fasthttp.RequestCtx) {", m.Proper(), hc.Col.Proper())
@@ -31,7 +31,7 @@ func controllerRevision(m *model.Model) *golang.Block {
 	ret.W("\t\t}")
 	ret.W("\t\tps.Title = ret.String()")
 	ret.W("\t\tps.Data = ret")
-	ret.W("\t\treturn Render(rc, as, &v%s.Detail{Model: ret}, ps, %q, ret.String())", m.Package, m.Package)
+	ret.W("\t\treturn %sRender(rc, as, &v%s.Detail{Model: ret}, ps, %q, ret.String())", prefix, m.Package, m.Package)
 	ret.W("\t})")
 	ret.W("}")
 	return ret
