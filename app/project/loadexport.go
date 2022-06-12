@@ -30,6 +30,16 @@ func (s *Service) loadExportArgs(fs filesystem.FileLoader, logger util.Logger) (
 			args.Config = cfgMap
 		}
 	}
+	if groupCfgPath := filepath.Join(exportPath, "groups.json"); fs.Exists(groupCfgPath) {
+		if cfg, err := fs.ReadFile(groupCfgPath); err == nil {
+			grps := model.Groups{}
+			err = util.FromJSON(cfg, &grps)
+			if err != nil {
+				return nil, errors.Wrap(err, "invalid group config")
+			}
+			args.Groups = grps
+		}
+	}
 	explicitModels, err := getModels(exportPath, fs, logger)
 	if err != nil {
 		return nil, err

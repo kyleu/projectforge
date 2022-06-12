@@ -86,7 +86,12 @@ func exportLoad(rc *fasthttp.RequestCtx, as *app.State, logger util.Logger) (*pr
 	if err != nil {
 		return nil, nil, nil, err
 	}
-	mdl := args.Models.Get(modelKey)
+	var mdl *model.Model
+	if modelKey == "new" {
+		mdl = &model.Model{}
+	} else {
+		mdl = args.Models.Get(modelKey)
+	}
 
 	return prj, mdl, args, nil
 }

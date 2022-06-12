@@ -8,6 +8,7 @@
   "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/layout"
+  "projectforge.dev/projectforge/views/vutil"
 ) %}
 
 {% code type Overview struct {
@@ -23,9 +24,19 @@
     {%= components.JSON(p.Args.Config) %}
   </div>
   <div class="card">
+    <div class="right"><a href="/p/{%s p.Project.Key %}/export/models/new"><button>New</button></a></div>
     <h3>{%= components.SVGRefIcon(`list`, ps) %}Models</h3>
     {%= ModelList(p.Args.Models, fmt.Sprintf("/p/%s/export/models", p.Project.Key), as, ps) %}
   </div>
+  {%- if len(p.Args.Groups) > 0 -%}
+  <div class="card">
+    <div class="right"><a href="/p/{%s p.Project.Key %}/export/groups"><button>Edit</button></a></div>
+    <h3>{%= components.SVGRefIcon(`users`, ps) %}Groups</h3>
+    <div class="mt">
+      {%= GroupList(p.Args.Groups, 2) %}
+    </div>
+  </div>
+  {%- endif -%}
 {% endfunc %}
 
 {% func ModelList(models model.Models, urlPrefix string, as *app.State, ps *cutil.PageState) %}
@@ -41,3 +52,21 @@
     </tbody>
   </table>
 {% endfunc %}
+
+{% func GroupList(groups model.Groups, indent int) %}{% stripspace %}
+  {%= vutil.Indent(true, indent) %}
+  <ul>
+    {%- for _, g := range groups -%}
+    {%= vutil.Indent(true, indent+1) %}
+    <li>
+      {%= vutil.Indent(true, indent+2) %}
+      {%s g.Key %}
+      {% if len(g.Children) > 0 %}
+      {%= GroupList(g.Children, indent + 3) %}
+      {% endif %}
+    {%= vutil.Indent(true, indent+1) %}
+    </li>
+    {%- endfor -%}
+  {%= vutil.Indent(true, indent) %}
+  </ul>
+{% endstripspace %}{% endfunc %}

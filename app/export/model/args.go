@@ -10,6 +10,7 @@ import (
 type Args struct {
 	Config  util.ValueMap `json:"config,omitempty"`
 	Models  Models        `json:"models,omitempty"`
+	Groups  Groups        `json:"groups,omitempty"`
 	Modules []string      `json:"-"`
 }
 

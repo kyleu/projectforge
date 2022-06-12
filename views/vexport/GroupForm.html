@@ -1,0 +1,36 @@
+{% import (
+  "strings"
+
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/export"
+  "projectforge.dev/projectforge/app/export/model"
+  "projectforge.dev/projectforge/app/project"
+  "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/layout"
+) %}
+
+{% code type GroupForm struct {
+  layout.Basic
+  Project *project.Project
+  Groups model.Groups
+  Example model.Groups
+} %}
+
+{% func (p *GroupForm) Body(as *app.State, ps *cutil.PageState) %}
+  <form action="" method="post" class="mt expanded">
+    <div class="card">
+      <div class="right"><a href="#modal-groups"><button type="button">Example</button></a></div>
+      <h3 title="{%s strings.Join(export.Helpers[`model.columns`], `; `) %}">{%= components.SVGRefIcon(`users`, ps) %}Groups</h3>
+      <div class="mt expanded">
+        {%= components.FormTextarea("groups", "input-groups", 8, util.ToJSON(p.Groups), export.Helpers["model.groups"]...) %}
+      </div>
+      <div class="mt">
+        <button type="submit">Save</button>
+        <button type="reset">Reset</button>
+      </div>
+    </div>
+  </form>
+  {%= components.JSONModal("groups", "Groups Example", p.Example, 1) %}
+{% endfunc %}

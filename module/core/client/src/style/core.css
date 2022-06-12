@@ -42,6 +42,7 @@ h2, h3, h4 {
 
 ul {
   margin: 0;
+  padding-left: calc(var(--padding)*2);
 }
 
 hr {

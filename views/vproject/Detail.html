@@ -48,6 +48,13 @@
         <h3 class="mt">{%= components.SVGRefIcon(`list`, ps) %}Models</h3>
         <div class="clear"></div>
         {%= vexport.ModelList(ea.Models, fmt.Sprintf("/p/%s/export/models", p.Project.Key), as, ps) %}
+        {%- if len(ea.Groups) > 0 -%}
+        <hr />
+        <div class="right"><a href="/p/{%s p.Project.Key %}/export/groups"><button>Edit</button></a></div>
+        <h3>{%= components.SVGRefIcon(`users`, ps) %}Groups</h3>
+        <div class="mt clear"></div>
+        {%= vexport.GroupList(ea.Groups, 4) %}
+        {%- endif -%}
       </div>
       {%- endif -%}
 

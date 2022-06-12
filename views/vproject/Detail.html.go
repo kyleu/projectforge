@@ -126,75 +126,100 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 			vexport.StreamModelList(qw422016, ea.Models, fmt.Sprintf("/p/%s/export/models", p.Project.Key), as, ps)
 //line views/vproject/Detail.html:50
 			qw422016.N().S(`
-      </div>
 `)
-//line views/vproject/Detail.html:52
+//line views/vproject/Detail.html:51
+			if len(ea.Groups) > 0 {
+//line views/vproject/Detail.html:51
+				qw422016.N().S(`        <hr />
+        <div class="right"><a href="/p/`)
+//line views/vproject/Detail.html:53
+				qw422016.E().S(p.Project.Key)
+//line views/vproject/Detail.html:53
+				qw422016.N().S(`/export/groups"><button>Edit</button></a></div>
+        <h3>`)
+//line views/vproject/Detail.html:54
+				components.StreamSVGRefIcon(qw422016, `users`, ps)
+//line views/vproject/Detail.html:54
+				qw422016.N().S(`Groups</h3>
+        <div class="mt clear"></div>
+        `)
+//line views/vproject/Detail.html:56
+				vexport.StreamGroupList(qw422016, ea.Groups, 4)
+//line views/vproject/Detail.html:56
+				qw422016.N().S(`
+`)
+//line views/vproject/Detail.html:57
+			}
+//line views/vproject/Detail.html:57
+			qw422016.N().S(`      </div>
+`)
+//line views/vproject/Detail.html:59
 		}
-//line views/vproject/Detail.html:52
+//line views/vproject/Detail.html:59
 		qw422016.N().S(`
 `)
-//line views/vproject/Detail.html:54
+//line views/vproject/Detail.html:61
 	}
-//line views/vproject/Detail.html:54
+//line views/vproject/Detail.html:61
 	qw422016.N().S(`
     <input name="type" type="radio" id="tab-theme" class="input"/>
     <label for="tab-theme" class="label">Theme</label>
     <div class="panel">`)
-//line views/vproject/Detail.html:58
+//line views/vproject/Detail.html:65
 	StreamDetailTheme(qw422016, prj.Key, prj.Theme, prj.Title(), as, ps)
-//line views/vproject/Detail.html:58
+//line views/vproject/Detail.html:65
 	qw422016.N().S(`</div>
 
     <input name="type" type="radio" id="tab-modules" class="input"/>
     <label for="tab-modules" class="label">Modules</label>
     <div class="panel">`)
-//line views/vproject/Detail.html:62
+//line views/vproject/Detail.html:69
 	StreamDetailModules(qw422016, prj.Modules, p.Modules, as, ps)
-//line views/vproject/Detail.html:62
+//line views/vproject/Detail.html:69
 	qw422016.N().S(`</div>
 
 `)
-//line views/vproject/Detail.html:64
+//line views/vproject/Detail.html:71
 	if prj.Build != nil && !prj.Build.Empty() {
-//line views/vproject/Detail.html:64
+//line views/vproject/Detail.html:71
 		qw422016.N().S(`    <input name="type" type="radio" id="tab-builds" class="input"/>
     <label for="tab-builds" class="label">Builds</label>
     <div class="panel">`)
-//line views/vproject/Detail.html:67
+//line views/vproject/Detail.html:74
 		StreamDetailBuild(qw422016, prj.Build, as, ps)
-//line views/vproject/Detail.html:67
+//line views/vproject/Detail.html:74
 		qw422016.N().S(`</div>
 `)
-//line views/vproject/Detail.html:68
+//line views/vproject/Detail.html:75
 	}
-//line views/vproject/Detail.html:68
+//line views/vproject/Detail.html:75
 	qw422016.N().S(`  </div>
 `)
-//line views/vproject/Detail.html:70
+//line views/vproject/Detail.html:77
 }
 
-//line views/vproject/Detail.html:70
+//line views/vproject/Detail.html:77
 func (p *Detail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vproject/Detail.html:70
+//line views/vproject/Detail.html:77
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/Detail.html:70
+//line views/vproject/Detail.html:77
 	p.StreamBody(qw422016, as, ps)
-//line views/vproject/Detail.html:70
+//line views/vproject/Detail.html:77
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/Detail.html:70
+//line views/vproject/Detail.html:77
 }
 
-//line views/vproject/Detail.html:70
+//line views/vproject/Detail.html:77
 func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vproject/Detail.html:70
+//line views/vproject/Detail.html:77
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/Detail.html:70
+//line views/vproject/Detail.html:77
 	p.WriteBody(qb422016, as, ps)
-//line views/vproject/Detail.html:70
+//line views/vproject/Detail.html:77
 	qs422016 := string(qb422016.B)
-//line views/vproject/Detail.html:70
+//line views/vproject/Detail.html:77
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/Detail.html:70
+//line views/vproject/Detail.html:77
 	return qs422016
-//line views/vproject/Detail.html:70
+//line views/vproject/Detail.html:77
 }

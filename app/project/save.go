@@ -44,9 +44,19 @@ func (s *Service) Save(prj *Project, logger util.Logger) error {
 	return nil
 }
 
+func (s *Service) SaveExportGroups(fs filesystem.FileLoader, g model.Groups, logger util.Logger) error {
+	fn := fmt.Sprintf("%s/export/groups.json", ConfigDir)
+	j := util.ToJSON(g)
+	err := fs.WriteFile(fn, []byte(j), filesystem.DefaultMode, true)
+	if err != nil {
+		return errors.Wrapf(err, "unable to write export groups file to [%s]", fn)
+	}
+	return nil
+}
+
 func (s *Service) SaveExportModel(fs filesystem.FileLoader, mdl *model.Model, logger util.Logger) error {
 	fn := fmt.Sprintf("%s/export/models/%s.json", ConfigDir, mdl.Name)
-	j := util.ToJSON(mdl) + "\n"
+	j := util.ToJSON(mdl)
 	err := fs.WriteFile(fn, []byte(j), filesystem.DefaultMode, true)
 	if err != nil {
 		return errors.Wrapf(err, "unable to write export model file to [%s]", fn)
