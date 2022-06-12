@@ -21,34 +21,46 @@ func Imports(self string, fix bool, targetPath string, fs filesystem.FileLoader,
 	}
 
 	for _, fn := range files {
-		if !(strings.HasSuffix(fn, ".go") || strings.HasSuffix(fn, ".html")) {
-			continue
-		}
-		content, err := fs.ReadFile(fn)
+		rlogs, rdiffs, err := importsFor(self, fix, fs, fn, targetPath)
 		if err != nil {
-			return nil, nil, errors.Wrapf(err, "unable to read file [%s]", fn)
+			return nil, nil, errors.Wrap(err, "")
 		}
-		stat, err := fs.Stat(fn)
-		if err != nil {
-			return nil, nil, err
-		}
-		fixed, diffs, err := processFile(fn, strings.Split(string(content), "\n"), self)
-		ret = append(ret, diffs...)
-		if err != nil {
-			return nil, nil, errors.Wrapf(err, "unable to process imports for [%s]", fn)
-		}
-		if fix && len(diffs) > 0 {
-			if targetPath == "" || fn == targetPath {
-				newContent := strings.Join(fixed, "\n")
-				err = fs.WriteFile(fn, []byte(newContent), stat.Mode(), true)
-				if err != nil {
-					return nil, nil, errors.Wrapf(err, "unable to write file [%s]", fn)
-				}
-				logs = append(logs, fmt.Sprintf("fixed imports for [%s]", fn))
-			}
-		}
+		logs = append(logs, rlogs...)
+		ret = append(ret, rdiffs...)
 	}
 
+	return logs, ret, nil
+}
+
+func importsFor(self string, fix bool, fs filesystem.FileLoader, fn string, targetPath string) ([]string, diff.Diffs, error) {
+	if !(strings.HasSuffix(fn, ".go") || strings.HasSuffix(fn, ".html")) {
+		return nil, nil, nil
+	}
+	var ret diff.Diffs
+	var logs []string
+	content, err := fs.ReadFile(fn)
+	if err != nil {
+		return nil, nil, errors.Wrapf(err, "unable to read file [%s]", fn)
+	}
+	stat, err := fs.Stat(fn)
+	if err != nil {
+		return nil, nil, err
+	}
+	fixed, diffs, err := processFile(fn, strings.Split(string(content), "\n"), self)
+	ret = append(ret, diffs...)
+	if err != nil {
+		return nil, nil, errors.Wrapf(err, "unable to process imports for [%s]", fn)
+	}
+	if fix && len(diffs) > 0 {
+		if targetPath == "" || fn == targetPath {
+			newContent := strings.Join(fixed, "\n")
+			err = fs.WriteFile(fn, []byte(newContent), stat.Mode(), true)
+			if err != nil {
+				return nil, nil, errors.Wrapf(err, "unable to write file [%s]", fn)
+			}
+			logs = append(logs, fmt.Sprintf("fixed imports for [%s]", fn))
+		}
+	}
 	return logs, ret, nil
 }
 

@@ -18,6 +18,7 @@ import (
 )
 
 const depsKey = "deps"
+const pkgsKey = "packages"
 
 func RunAction(rc *fasthttp.RequestCtx) {
 	controller.Act("run.action", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
@@ -60,6 +61,9 @@ func RunAction(rc *fasthttp.RequestCtx) {
 		if isBuild {
 			if phase == depsKey {
 				return runDeps(prj, result, rc, as, ps)
+			}
+			if phase == pkgsKey {
+				return runPkgs(prj, result, rc, as, ps)
 			}
 			page := &vbuild.BuildResult{Project: prj, Cfg: cfg, BuildResult: result}
 			return controller.Render(rc, as, page, ps, "projects", prj.Key, actT.Title)

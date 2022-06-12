@@ -1,0 +1,37 @@
+{% import (
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/action"
+  "projectforge.dev/projectforge/app/build"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/project"
+  "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/layout"
+  "projectforge.dev/projectforge/views/vproject"
+) %}
+
+{% code type Packages struct {
+  layout.Basic
+  Project *project.Project
+  BuildResult *action.Result
+  Packages build.Pkgs
+} %}
+
+{% func (p *Packages) Body(as *app.State, ps *cutil.PageState) %}
+  {%- code prj := p.Project -%}
+  {%= vproject.Summary(prj, "Packages", nil, nil, &action.TypeBuild, ps) %}
+  {%= BuildOptions(prj.Key) %}
+
+  {%- if p.BuildResult != nil && len(p.BuildResult.Errors) > 0 -%}
+  <div class="card">
+    <h3>Error</h3>
+    {%- for _, e := range p.BuildResult.Errors -%}
+    <p class="error">{%s e %}</p>
+    {%- endfor -%}
+  </div>
+  {%- endif -%}
+
+  <div class="card">
+    <h3>Packages</h3>
+    {%= components.JSON(p.Packages) %}
+  </div>
+{% endfunc %}
