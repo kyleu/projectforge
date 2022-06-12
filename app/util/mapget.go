@@ -2,7 +2,6 @@
 package util
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -58,15 +57,7 @@ func (m ValueMap) GetStringOpt(key string) string {
 }
 
 func (m ValueMap) GetStringArray(key string, allowEmpty bool) ([]string, error) {
-	ret, err := m.ParseArrayString(key, false, allowEmpty)
-	if err != nil {
-		return nil, err
-	}
-	strs := make([]string, 0, len(ret))
-	for _, s := range ret {
-		strs = append(strs, fmt.Sprint(s))
-	}
-	return strs, nil
+	return m.ParseArrayString(key, false, allowEmpty)
 }
 
 func (m ValueMap) GetTime(key string, allowEmpty bool) (*time.Time, error) {

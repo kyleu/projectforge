@@ -7,6 +7,8 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+const nilKey = "nil"
+
 func modelRandom(m *model.Model) *golang.Block {
 	ret := golang.NewBlock(m.Proper()+"Random", "struct")
 	ret.W("func Random() *%s {", m.Proper())
@@ -29,11 +31,11 @@ func randFor(col *model.Column) string {
 	case types.KeyInt:
 		return "util.RandomInt(10000)"
 	case types.KeyList:
-		return "nil"
+		return nilKey
 	case types.KeyMap, types.KeyValueMap:
 		return "util.RandomValueMap(4)"
 	case types.KeyReference:
-		return "nil"
+		return nilKey
 	case types.KeyString:
 		switch col.Format {
 		case "url":

@@ -67,7 +67,7 @@ func ProjectExportModelCreate(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 
-		msg := "model saved successfully"
+		msg := "model created successfully"
 		u := fmt.Sprintf("/p/%s/export/models/%s", prj.Key, mdl.Name)
 		return controller.FlashAndRedir(true, msg, u, rc, ps)
 	})

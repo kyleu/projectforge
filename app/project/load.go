@@ -12,6 +12,8 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+const rootKey = "root"
+
 func (s *Service) load(path string, logger util.Logger) (*Project, error) {
 	cfgPath := filepath.Join(path, ConfigDir, "project.json")
 
@@ -27,7 +29,7 @@ func (s *Service) load(path string, logger util.Logger) (*Project, error) {
 			}
 		}
 		if r == "" {
-			r = "root"
+			r = rootKey
 		}
 		ret := NewProject(r, path)
 		ret.Name = fmt.Sprintf("%s (missing)", r)
@@ -46,9 +48,9 @@ func (s *Service) load(path string, logger util.Logger) (*Project, error) {
 			r = l
 		}
 		if r == "." || r == "" {
-			r = "root"
+			r = rootKey
 		}
-		ret := NewProject(r, path)
+		ret = NewProject(r, path)
 		ret.Name = fmt.Sprintf("%s (json error)", r)
 		ret.Info = &Info{}
 		return ret, nil

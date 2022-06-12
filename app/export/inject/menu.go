@@ -9,8 +9,6 @@ import (
 	"projectforge.dev/projectforge/app/lib/menu"
 )
 
-const msg = `Key: %q, Title: %q, Description: %q, Icon: %q, Route: "/%s"`
-
 func Menu(f *file.File, args *model.Args) error {
 	if len(args.Models) == 0 && len(args.Groups) == 0 {
 		return nil

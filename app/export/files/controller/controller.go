@@ -11,6 +11,8 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+const defaultPrefix = "controller."
+
 func Controller(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	fn := m.Package
 	if len(m.Group) > 0 {
@@ -29,7 +31,7 @@ func Controller(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 
 	var prefix string
 	if len(m.Group) > 0 {
-		prefix = "controller."
+		prefix = defaultPrefix
 	}
 	g.AddBlocks(controllerTitle(m), controllerList(m, nil, args.Models, g, prefix), controllerDetail(args.Models, m, nil, prefix))
 	if m.IsRevision() {

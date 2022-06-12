@@ -5,6 +5,8 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+const defaultIcon = "star"
+
 type Group struct {
 	Key         string   `json:"key"`
 	Title       string   `json:"title,omitempty"`
@@ -20,7 +22,7 @@ func (g *Group) HasTag(t string) bool {
 
 func (g *Group) IconSafe() string {
 	if g.Icon == "" {
-		return "star"
+		return defaultIcon
 	}
 	return g.Icon
 }

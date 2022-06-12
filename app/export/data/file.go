@@ -29,7 +29,7 @@ func (d *File) ToModel(groups model.Groups) (*model.Model, error) {
 	var group []string
 	for _, g := range groups {
 		if strings.HasPrefix(key, g.Key+"_") {
-			//key = strings.TrimPrefix(key, g.Key+"_")
+			// key = strings.TrimPrefix(key, g.Key+"_")
 			group = []string{g.Key}
 		}
 	}

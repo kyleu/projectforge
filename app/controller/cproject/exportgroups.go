@@ -57,6 +57,5 @@ func ProjectExportGroupsSave(rc *fasthttp.RequestCtx) {
 		msg := "groups saved successfully"
 		u := fmt.Sprintf("/p/%s/export", prj.Key)
 		return controller.FlashAndRedir(true, msg, u, rc, ps)
-
 	})
 }

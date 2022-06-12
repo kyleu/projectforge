@@ -71,7 +71,7 @@ func (m *Model) IconSafe() string {
 	if _, ok := util.SVGLibrary[m.Icon]; ok {
 		return m.Icon
 	}
-	return "star"
+	return defaultIcon
 }
 
 func (m *Model) URLPath(prefix string) string {

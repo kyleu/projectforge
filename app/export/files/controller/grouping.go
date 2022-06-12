@@ -17,7 +17,7 @@ func Grouping(m *model.Model, args *model.Args, grp *model.Column, addHeader boo
 	g.AddImport(helper.AppImport("views/" + m.PackageWithGroup("v")))
 	var prefix string
 	if len(m.Group) > 0 {
-		prefix = "controller."
+		prefix = defaultPrefix
 	}
 	g.AddBlocks(
 		controllerGrouped(m, grp, prefix), controllerList(m, grp, args.Models, g, prefix), controllerDetail(args.Models, m, grp, prefix),

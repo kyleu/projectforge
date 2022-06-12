@@ -17,8 +17,10 @@ import (
 	"projectforge.dev/projectforge/views/vbuild"
 )
 
-const depsKey = "deps"
-const pkgsKey = "packages"
+const (
+	depsKey = "deps"
+	pkgsKey = "packages"
+)
 
 func RunAction(rc *fasthttp.RequestCtx) {
 	controller.Act("run.action", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
@@ -103,6 +105,8 @@ func RunAllActions(rc *fasthttp.RequestCtx) {
 				return controller.Render(rc, as, page, ps, "projects", actT.Title)
 			case depsKey:
 				return runAllDeps(cfg, prjs, rc, as, ps)
+			case pkgsKey:
+				return runAllPkgs(cfg, prjs, rc, as, ps)
 			}
 		}
 

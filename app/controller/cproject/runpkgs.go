@@ -58,7 +58,7 @@ func runAllPkgs(cfg util.ValueMap, prjs project.Projects, rc *fasthttp.RequestCt
 	if err != nil {
 		return "", errors.Wrap(err, "")
 	}
-	ps.Title = "Dependency Merge"
+	ps.Title = "Packages"
 	ps.Data = ret
 	page := &vbuild.DepMap{Message: msg, Result: ret, Tags: tags}
 	return controller.Render(rc, as, page, ps, "projects", "Dependencies")
