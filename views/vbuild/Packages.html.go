@@ -86,7 +86,7 @@ func (p *Packages) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
     <h3>Packages</h3>
     `)
 //line views/vbuild/Packages.html:35
-	components.StreamJSON(qw422016, p.Packages)
+	streamrenderPackages(qw422016, p.Project, p.Packages)
 //line views/vbuild/Packages.html:35
 	qw422016.N().S(`
   </div>
@@ -118,4 +118,174 @@ func (p *Packages) Body(as *app.State, ps *cutil.PageState) string {
 //line views/vbuild/Packages.html:37
 	return qs422016
 //line views/vbuild/Packages.html:37
+}
+
+//line views/vbuild/Packages.html:39
+type PackagesAll struct {
+	layout.Basic
+	Projects project.Projects
+	Results  map[string]*action.Result
+	Packages map[string]build.Pkgs
+}
+
+//line views/vbuild/Packages.html:46
+func (p *PackagesAll) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
+//line views/vbuild/Packages.html:46
+	qw422016.N().S(`
+  <div class="card">
+    <h3>Package Graphs</h3>
+    <div class="mt">
+      <ul class="accordion">
+`)
+//line views/vbuild/Packages.html:51
+	for _, prj := range p.Projects {
+//line views/vbuild/Packages.html:53
+		res := p.Results[prj.Key]
+		pkgs := p.Packages[prj.Key]
+
+//line views/vbuild/Packages.html:55
+		qw422016.N().S(`        <li>
+          <input id="accordion-`)
+//line views/vbuild/Packages.html:57
+		qw422016.E().S(prj.Key)
+//line views/vbuild/Packages.html:57
+		qw422016.N().S(`" type="checkbox" hidden />
+          <label for="accordion-`)
+//line views/vbuild/Packages.html:58
+		qw422016.E().S(prj.Key)
+//line views/vbuild/Packages.html:58
+		qw422016.N().S(`">
+            `)
+//line views/vbuild/Packages.html:59
+		components.StreamExpandCollapse(qw422016, 3, ps)
+//line views/vbuild/Packages.html:59
+		qw422016.N().S(` `)
+//line views/vbuild/Packages.html:59
+		components.StreamSVGRef(qw422016, prj.IconSafe(), 16, 16, "icon", ps)
+//line views/vbuild/Packages.html:59
+		qw422016.N().S(` `)
+//line views/vbuild/Packages.html:59
+		qw422016.E().S(prj.Title())
+//line views/vbuild/Packages.html:59
+		qw422016.N().S(`
+          </label>
+          <div class="bd">
+            `)
+//line views/vbuild/Packages.html:62
+		vproject.StreamSummary(qw422016, prj, "Packages", nil, nil, nil, ps)
+//line views/vbuild/Packages.html:62
+		qw422016.N().S(`
+`)
+//line views/vbuild/Packages.html:63
+		if res != nil && len(res.Errors) > 0 {
+//line views/vbuild/Packages.html:63
+			qw422016.N().S(`            <div class="card">
+              <h3>Error</h3>
+`)
+//line views/vbuild/Packages.html:66
+			for _, e := range res.Errors {
+//line views/vbuild/Packages.html:66
+				qw422016.N().S(`              <p class="error">`)
+//line views/vbuild/Packages.html:67
+				qw422016.E().S(e)
+//line views/vbuild/Packages.html:67
+				qw422016.N().S(`</p>
+`)
+//line views/vbuild/Packages.html:68
+			}
+//line views/vbuild/Packages.html:68
+			qw422016.N().S(`            </div>
+`)
+//line views/vbuild/Packages.html:70
+		}
+//line views/vbuild/Packages.html:70
+		qw422016.N().S(`            <div class="card">
+              <h3>Package Graph</h3>
+              `)
+//line views/vbuild/Packages.html:73
+		streamrenderPackages(qw422016, prj, pkgs)
+//line views/vbuild/Packages.html:73
+		qw422016.N().S(`
+            </div>
+          </div>
+        </li>
+`)
+//line views/vbuild/Packages.html:77
+	}
+//line views/vbuild/Packages.html:77
+	qw422016.N().S(`      </ul>
+    </div>
+  </div>
+`)
+//line views/vbuild/Packages.html:81
+}
+
+//line views/vbuild/Packages.html:81
+func (p *PackagesAll) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
+//line views/vbuild/Packages.html:81
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vbuild/Packages.html:81
+	p.StreamBody(qw422016, as, ps)
+//line views/vbuild/Packages.html:81
+	qt422016.ReleaseWriter(qw422016)
+//line views/vbuild/Packages.html:81
+}
+
+//line views/vbuild/Packages.html:81
+func (p *PackagesAll) Body(as *app.State, ps *cutil.PageState) string {
+//line views/vbuild/Packages.html:81
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vbuild/Packages.html:81
+	p.WriteBody(qb422016, as, ps)
+//line views/vbuild/Packages.html:81
+	qs422016 := string(qb422016.B)
+//line views/vbuild/Packages.html:81
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vbuild/Packages.html:81
+	return qs422016
+//line views/vbuild/Packages.html:81
+}
+
+//line views/vbuild/Packages.html:83
+func streamrenderPackages(qw422016 *qt422016.Writer, prj *project.Project, p build.Pkgs) {
+//line views/vbuild/Packages.html:83
+	qw422016.N().S(`
+  `)
+//line views/vbuild/Packages.html:84
+	components.StreamJSON(qw422016, p)
+//line views/vbuild/Packages.html:84
+	qw422016.N().S(`
+  <pre>`)
+//line views/vbuild/Packages.html:85
+	qw422016.E().S(p.ToGraph(prj.Package))
+//line views/vbuild/Packages.html:85
+	qw422016.N().S(`</pre>
+`)
+//line views/vbuild/Packages.html:86
+}
+
+//line views/vbuild/Packages.html:86
+func writerenderPackages(qq422016 qtio422016.Writer, prj *project.Project, p build.Pkgs) {
+//line views/vbuild/Packages.html:86
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vbuild/Packages.html:86
+	streamrenderPackages(qw422016, prj, p)
+//line views/vbuild/Packages.html:86
+	qt422016.ReleaseWriter(qw422016)
+//line views/vbuild/Packages.html:86
+}
+
+//line views/vbuild/Packages.html:86
+func renderPackages(prj *project.Project, p build.Pkgs) string {
+//line views/vbuild/Packages.html:86
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vbuild/Packages.html:86
+	writerenderPackages(qb422016, prj, p)
+//line views/vbuild/Packages.html:86
+	qs422016 := string(qb422016.B)
+//line views/vbuild/Packages.html:86
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vbuild/Packages.html:86
+	return qs422016
+//line views/vbuild/Packages.html:86
 }

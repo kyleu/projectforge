@@ -23,7 +23,7 @@ func controllerHistory(m *model.Model, prefix string) *golang.Block {
 	ret.W("\t\t}")
 	ret.W("\t\tps.Title = hist.ID.String()")
 	ret.W("\t\tps.Data = hist")
-	ret.W("\t\treturn %sRender(rc, as, &v%s.History{Model: ret, History: hist}, ps, %q, ret.String(), hist.ID.String())", prefix, m.Package, m.Package)
+	ret.W("\t\treturn %sRender(rc, as, &v%s.History{Model: ret, History: hist}, ps, %s, ret.String(), hist.ID.String())", prefix, m.Package, m.Breadcrumbs())
 	ret.W("\t})")
 	ret.W("}")
 	return ret

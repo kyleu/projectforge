@@ -56,22 +56,19 @@ func getModuleFiles(ctx context.Context, pm *PrjAndMods) ([]string, error) {
 
 func getEmptyFolders(tgt filesystem.FileLoader, ignore []string, logger util.Logger, pth ...string) ([]string, error) {
 	var ret []string
-	dirs := tgt.ListDirectories(path.Join(pth...), ignore, logger)
-	for _, fn := range dirs {
-		newPath := append(slices.Clone(pth), fn)
-		pStr := path.Join(newPath...)
-		fc := len(tgt.ListFiles(pStr, nil, logger))
-		ds := tgt.ListDirectories(pStr, ignore, logger)
-		if fc == 0 && len(ds) == 0 {
-			ret = append(ret, pStr)
+	pStr := path.Join(pth...)
+	fc := len(tgt.ListFiles(pStr, nil, logger))
+	ds := tgt.ListDirectories(pStr, ignore, logger)
+	if fc == 0 && len(ds) == 0 {
+		ret = append(ret, pStr)
+	}
+	for _, d := range ds {
+		p := append(slices.Clone(pth), d)
+		childRes, err := getEmptyFolders(tgt, ignore, logger, p...)
+		if err != nil {
+			return nil, errors.Wrapf(err, "unable to get empty folders for [%s/%s]", path.Join(p...), d)
 		}
-		for _, d := range ds {
-			childRes, err := getEmptyFolders(tgt, ignore, logger, append(slices.Clone(newPath), d)...)
-			if err != nil {
-				return nil, errors.Wrapf(err, "unable to get empty folders for [%s/%s]", newPath, d)
-			}
-			ret = append(ret, childRes...)
-		}
+		ret = append(ret, childRes...)
 	}
 	return ret, nil
 }

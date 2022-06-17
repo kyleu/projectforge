@@ -18,8 +18,9 @@ func MenuFor(ctx context.Context, isAuthed bool, isAdmin bool, as *app.State, lo
 	var ret menu.Items
 	// $PF_SECTION_START(routes_start)$
 	// $PF_SECTION_END(routes_start)${{{ if.HasModule "export" }}}
-	// $PF_INJECT_START(codegen)$
-	// $PF_INJECT_END(codegen)${{{ end }}}
+	if isAdmin {
+		ret = append(ret, generatedMenu()...)
+	}{{{ end }}}
 	// $PF_SECTION_START(routes_end)$
 	if isAdmin {
 		admin := &menu.Item{Key: "admin", Title: "Settings", Description: "System-wide settings and preferences", Icon: "cog", Route: "/admin"}

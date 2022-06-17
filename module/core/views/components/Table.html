@@ -79,6 +79,16 @@
   </tr>
 {% endstripspace %}{% endfunc %}
 
+{% func TableDatalist(key string, title string, value string, opts []string, titles []string, indent int, help ...string) %}{% stripspace %}
+  <tr>
+    {%= vutil.Indent(true, indent + 1) %}
+    <th class="shrink"><label for="input-{%s key %}"{%= titleFor(help) %}>{%s title %}</label></th>
+    {%= vutil.Indent(true, indent + 1) %}
+    <td>{%= FormDatalist(key, "input-" + key, value, opts, titles, indent) %}</td>
+  {%= vutil.Indent(true, indent) %}
+  </tr>
+{% endstripspace %}{% endfunc %}
+
 {% func TableRadio(key string, title string, value string, opts []string, titles []string, indent int, help ...string) %}{% stripspace %}
   <tr>
     {%= vutil.Indent(true, indent + 1) %}

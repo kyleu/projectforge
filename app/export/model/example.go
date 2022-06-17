@@ -7,6 +7,7 @@ import (
 var (
 	ExampleColumns = Columns{
 		{Name: "id", Type: types.NewUUID(), PK: true, Search: true, HelpString: "The primary key"},
+		{Name: "name", Type: types.NewString(), Search: true, HelpString: "The name of the thing"},
 		{Name: "created", Type: types.NewTimestamp(), SQLDefault: "now()", Tags: []string{"created"}, HelpString: "Created timestamp"},
 		{Name: "deleted_at", Type: types.NewTimestamp(), Nullable: true, Tags: []string{"deleted"}, HelpString: "Optional timestamp"},
 	}

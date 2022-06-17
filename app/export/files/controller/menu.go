@@ -1,52 +1,80 @@
-package inject
+package controller
 
 import (
 	"fmt"
-	"strings"
 
+	"golang.org/x/exp/slices"
+
+	"projectforge.dev/projectforge/app/export/files/helper"
+	"projectforge.dev/projectforge/app/export/golang"
 	"projectforge.dev/projectforge/app/export/model"
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/menu"
 )
 
-func Menu(f *file.File, args *model.Args) error {
+func Menu(args *model.Args, addHeader bool) (*file.File, error) {
+	g := golang.NewFile("cmenu", []string{"app", "controller", "cmenu"}, "generated")
+	g.AddImport(helper.ImpAppMenu)
+	g.AddBlocks(menuBlock(args))
+	return g.Render(addHeader)
+}
+
+func menuBlock(args *model.Args) *golang.Block {
+	ret := golang.NewBlock("menu", "func")
+	ret.W("func generatedMenu() menu.Items {")
+	rct := menuContent(args)
+	for _, x := range rct {
+		ret.W(x)
+	}
+	ret.W("}")
+	return ret
+}
+
+func menuContent(args *model.Args) []string {
 	if len(args.Models) == 0 && len(args.Groups) == 0 {
 		return nil
 	}
 	out := make([]string, 0, len(args.Models)+len(args.Groups))
 
-	if len(args.Groups) > 0 || len(args.Models) > 0 {
-		out = append(out, "if isAdmin {", "\tret = append(ret,")
+	if len(args.Groups) == 0 && len(args.Models) == 0 {
+		out = append(out, "\treturn menu.Items{}")
+	} else {
+		out = append(out, "\treturn menu.Items{")
 		for _, x := range menuItemsFor(args.Groups, args.Models) {
 			out = append(out, menuSerialize(x, "\t\t")...)
 		}
-		out = append(out, "\t)", "}")
+		out = append(out, "\t}")
 	}
-
-	content := map[string]string{"codegen": "\n\t" + strings.Join(out, "\n\t") + "\n\t// "}
-	return file.Inject(f, content)
+	return out
 }
 
 func menuItemsFor(groups model.Groups, models model.Models) menu.Items {
 	ret := make(menu.Items, 0, len(groups)+len(models))
 	for _, g := range groups {
-		ret = append(ret, menuItemForGroup(g))
+		ret = append(ret, menuItemForGroup(g, models))
 	}
 	for _, m := range models {
-		ret = append(ret, menuItemForModel(m))
+		if len(m.Group) == 0 {
+			ret = append(ret, menuItemForModel(m))
+		}
 	}
 	return ret
 }
 
-func menuItemForGroup(g *model.Group) *menu.Item {
+func menuItemForGroup(g *model.Group, models model.Models, pth ...string) *menu.Item {
+	np := append(slices.Clone(pth), g.Key)
 	ret := &menu.Item{Key: g.Key, Title: g.TitleSafe(), Description: g.Description, Icon: g.IconSafe()}
 	for _, child := range g.Children {
-		ret.Children = append(ret.Children, menuItemForGroup(child))
+		ret.Children = append(ret.Children, menuItemForGroup(child, models, np...))
+	}
+	matches := models.ForGroup(np...)
+	for _, m := range matches {
+		ret.Children = append(ret.Children, menuItemForModel(m, np...))
 	}
 	return ret
 }
 
-func menuItemForModel(m *model.Model) *menu.Item {
+func menuItemForModel(m *model.Model, pth ...string) *menu.Item {
 	ret := &menu.Item{Key: m.Package, Title: m.TitlePlural(), Description: m.Description, Icon: m.Icon, Route: m.Route()}
 	if len(m.GroupedColumns()) > 0 {
 		for _, g := range m.GroupedColumns() {

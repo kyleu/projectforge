@@ -49,15 +49,13 @@ func StringPad(s string, size int) string {
 	return s
 }
 
-var acronyms = []string{"Id", "Ip", "Api", "Json", "Html", "Xml", "Uri", "Url"}
-
-func StringToCamel(s string) string {
-	return acr(strcase.ToCamel(s))
+func StringToCamel(s string, extraAcronyms ...string) string {
+	return acr(strcase.ToCamel(s), extraAcronyms...)
 }
 
-func StringToTitle(s string) string {
+func StringToTitle(s string, extraAcronyms ...string) string {
 	ret := strings.Builder{}
-	runes := []rune(StringToCamel(s))
+	runes := []rune(StringToCamel(s, extraAcronyms...))
 	for idx, c := range runes {
 		if idx > 0 && idx < len(runes)-1 && unicode.IsUpper(c) {
 			if !unicode.IsUpper(runes[idx+1]) {
@@ -71,12 +69,12 @@ func StringToTitle(s string) string {
 	return ret.String()
 }
 
-func StringToLowerCamel(s string) string {
-	return acr(strcase.ToLowerCamel(s))
+func StringToLowerCamel(s string, extraAcronyms ...string) string {
+	return acr(strcase.ToLowerCamel(s), extraAcronyms...)
 }
 
-func StringToSnake(s string) string {
-	return acr(strcase.ToSnake(s))
+func StringToSnake(s string, extraAcronyms ...string) string {
+	return acr(strcase.ToSnake(s), extraAcronyms...)
 }
 
 func StringTruncate(s string, max int) string {
@@ -94,15 +92,41 @@ func StringRepeat(s string, n int) string {
 	return ret.String()
 }
 
-func acr(ret string) string {
-	for _, a := range acronyms {
+var acronyms = func() []string {
+	ret := []string{"Api", "Html", "Id", "Ip", "Json", "Xml", "Uri", "Url"}
+	for _, x := range ret {
+		strcase.ConfigureAcronym(strings.ToUpper(x), strings.ToLower(x))
+	}
+	return ret
+}()
+
+func acr(ret string, extraAcronyms ...string) string {
+	proc := func(a string) {
+		var lastIdx int
 		for {
-			i := strings.Index(ret, a)
+			i := strings.Index(ret[lastIdx:], a)
 			if i == -1 {
 				break
 			}
-			ret = ret[:i] + strings.ToUpper(a) + ret[i+len(a):]
+			i += lastIdx
+			lastIdx = i + len(a)
+			if lastIdx >= len(ret) {
+				ret = ret[:i] + strings.ToUpper(a) + ret[lastIdx:]
+			} else {
+				s := string(ret[lastIdx])
+				if strings.ToUpper(s) == s {
+					ret = ret[:i] + strings.ToUpper(a) + ret[lastIdx:]
+				} else {
+					lastIdx++
+				}
+			}
 		}
+	}
+	for _, a := range acronyms {
+		proc(a)
+	}
+	for _, a := range extraAcronyms {
+		proc(a)
 	}
 	return ret
 }

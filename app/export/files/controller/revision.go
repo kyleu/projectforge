@@ -31,7 +31,7 @@ func controllerRevision(m *model.Model, prefix string) *golang.Block {
 	ret.W("\t\t}")
 	ret.W("\t\tps.Title = ret.String()")
 	ret.W("\t\tps.Data = ret")
-	ret.W("\t\treturn %sRender(rc, as, &v%s.Detail{Model: ret}, ps, %q, ret.String())", prefix, m.Package, m.Package)
+	ret.W("\t\treturn %sRender(rc, as, &v%s.Detail{Model: ret}, ps, %s, ret.String())", prefix, m.Package, m.Breadcrumbs())
 	ret.W("\t})")
 	ret.W("}")
 	return ret

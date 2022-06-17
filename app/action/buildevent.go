@@ -72,7 +72,7 @@ func onImports(ctx context.Context, pm *PrjAndMods, r *Result) *Result {
 }
 
 func onPackages(ctx context.Context, pm *PrjAndMods, r *Result) *Result {
-	pkgs, err := build.Packages(pm.PSvc.GetFilesystem(pm.Prj), pm.Logger)
+	pkgs, err := build.Packages(pm.Prj, pm.PSvc.GetFilesystem(pm.Prj), pm.Cfg.GetBoolOpt("all"), pm.Logger)
 	r.Data = pkgs
 	if err != nil {
 		return r.WithError(err)

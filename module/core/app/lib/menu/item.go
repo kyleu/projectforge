@@ -15,6 +15,13 @@ func (i *Item) AddChild(child *Item) {
 	i.Children = append(i.Children, child)
 }
 
+func (i *Item) Desc() string {
+	if i.Description != "" {
+		return i.Title + ": " + i.Description
+	}
+	return i.Title
+}
+
 type Items []*Item
 
 func (i Items) Get(key string) *Item {

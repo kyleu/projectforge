@@ -46,7 +46,7 @@ func importsFor(self string, fix bool, fs filesystem.FileLoader, fn string, targ
 	if err != nil {
 		return nil, nil, err
 	}
-	fixed, diffs, err := processFile(fn, strings.Split(string(content), "\n"), self)
+	_, fixed, diffs, err := processFileImports(fn, strings.Split(string(content), "\n"), self)
 	ret = append(ret, diffs...)
 	if err != nil {
 		return nil, nil, errors.Wrapf(err, "unable to process imports for [%s]", fn)
@@ -64,9 +64,9 @@ func importsFor(self string, fix bool, fs filesystem.FileLoader, fn string, targ
 	return logs, ret, nil
 }
 
-func processFile(fn string, lines []string, self string) ([]string, diff.Diffs, error) {
+func processFileImports(fn string, lines []string, self string) ([]string, []string, diff.Diffs, error) {
 	if strings.HasPrefix(fn, "module/") {
-		return nil, nil, nil
+		return nil, nil, nil, nil
 	}
 	var ret diff.Diffs
 
@@ -78,7 +78,7 @@ func processFile(fn string, lines []string, self string) ([]string, diff.Diffs, 
 		if started {
 			if line == ")" || line == ") %}" {
 				if end > 0 {
-					return nil, nil, errors.New("multiple import section endings")
+					return nil, nil, nil, errors.New("multiple import section endings")
 				}
 				end = idx
 				break
@@ -96,7 +96,7 @@ func processFile(fn string, lines []string, self string) ([]string, diff.Diffs, 
 			if (strings.HasPrefix(line, "import") || strings.HasPrefix(line, "{% import")) && strings.Contains(line, "(") {
 				started = true
 				if start > 0 {
-					return nil, nil, errors.New("multiple import section starts")
+					return nil, nil, nil, errors.New("multiple import section starts")
 				}
 				start = idx
 			}
@@ -104,9 +104,9 @@ func processFile(fn string, lines []string, self string) ([]string, diff.Diffs, 
 		}
 	}
 
-	ordered, chkErr := check(imports, orig)
+	_, ordered, chkErr := check(imports, orig)
 	if chkErr == nil {
-		return lines, ret, nil
+		return imports, lines, ret, nil
 	}
 
 	ret = append(ret, &diff.Diff{
@@ -121,5 +121,5 @@ func processFile(fn string, lines []string, self string) ([]string, diff.Diffs, 
 	fixed = append(fixed, ordered...)
 	fixed = append(fixed, lines[end:]...)
 
-	return fixed, ret, nil
+	return imports, fixed, ret, nil
 }

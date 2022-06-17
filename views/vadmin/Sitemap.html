@@ -1,0 +1,65 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "golang.org/x/exp/slices"
+
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/controller/cmenu"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/lib/menu"
+  "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/layout"
+  "projectforge.dev/projectforge/views/vutil"
+) %}
+
+{% code type Sitemap struct {
+  layout.Basic
+} %}
+
+{% func (p *Sitemap) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`star`, ps) %}Sitemap</h3>
+    <div class="mt">
+      {%= SitemapDetail(ps.Menu, 1, ps) %}
+    </div>
+  </div>
+{% endfunc %}
+
+{% func SitemapDetail(m menu.Items, indent int, ps *cutil.PageState) %}{% stripspace %}
+  {%= vutil.Indent(true, 1) %}
+  <div class="mt">
+    {%= vutil.Indent(true, 2) %}
+    <ul class="level-0">
+      {% for _, i := range m %}
+        {% if i.Key != "" %}
+          {%= sitemapItemDetail(i, []string{}, ps.Breadcrumbs, 3, ps) %}
+        {% endif %}
+      {% endfor %}
+    {%= vutil.Indent(true, 2) %}
+    </ul>
+  {%= vutil.Indent(true, 1) %}
+  </div>
+{% endstripspace %}{% endfunc %}
+
+{% func sitemapItemDetail(i *menu.Item, path []string, breadcrumbs cmenu.Breadcrumbs, indent int, ps *cutil.PageState) %}{% stripspace %}
+  {%= vutil.Indent(true, indent) %}
+  <li>
+    <div class="right"><em>{%s i.Desc() %}</em></div>
+    {%= vutil.Indent(true, indent + 1) %}
+    <a href="{%s i.Route %}" title="{%s i.Desc() %}">
+      {% if i.Icon != "" %}
+        {%= components.SVGRef(i.Icon, 16, 16, "icon", ps) %}
+      {% endif %}
+      {%s i.Title %}
+    </a>
+    {% if len(i.Children) > 0 %}
+    <ul class="level-{%d len(path) %}">
+      {% for _, kid := range i.Children %}
+        {% if kid.Key != "" %}
+          {%= sitemapItemDetail(kid, append(slices.Clone(path), i.Key), breadcrumbs, indent + 2, ps) %}
+        {% endif %}
+      {% endfor %}
+    </ul>
+    {% endif %}
+  {%= vutil.Indent(true, indent) %}
+  </li>
+{% endstripspace %}{% endfunc %}

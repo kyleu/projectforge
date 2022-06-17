@@ -1,6 +1,7 @@
 package model
 
 import (
+	"path"
 	"strings"
 
 	"projectforge.dev/projectforge/app/util"
@@ -62,7 +63,7 @@ func (m *Model) FirstLetter() string {
 
 func (m *Model) Route() string {
 	if m.RouteOverride == "" {
-		return m.Package
+		return path.Join(append(m.Group, m.Package)...)
 	}
 	return m.RouteOverride
 }

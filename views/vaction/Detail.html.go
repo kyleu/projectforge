@@ -101,32 +101,39 @@ func StreamDetail(qw422016 *qt422016.Writer, cfg util.ValueMap, res *action.Resu
 //line views/vaction/Detail.html:35
 		qw422016.N().S(`  <div class="card">
     <h3>Logs</h3>
-    <table>
-      <tbody>
+    <div class="mt">
+      <table>
+        <tbody>
 `)
-//line views/vaction/Detail.html:40
-		for _, l := range res.Logs {
-//line views/vaction/Detail.html:40
-			qw422016.N().S(`        <tr>
-          <td><pre>`)
-//line views/vaction/Detail.html:42
+//line views/vaction/Detail.html:41
+		for idx, l := range res.Logs {
+//line views/vaction/Detail.html:41
+			qw422016.N().S(`          <tr>
+            <td class="shrink">`)
+//line views/vaction/Detail.html:43
+			qw422016.N().D(idx + 1)
+//line views/vaction/Detail.html:43
+			qw422016.N().S(`</td>
+            <td><code>`)
+//line views/vaction/Detail.html:44
 			qw422016.E().S(l)
-//line views/vaction/Detail.html:42
-			qw422016.N().S(`</pre></td>
-        </tr>
+//line views/vaction/Detail.html:44
+			qw422016.N().S(`</code></td>
+          </tr>
 `)
-//line views/vaction/Detail.html:44
+//line views/vaction/Detail.html:46
 		}
-//line views/vaction/Detail.html:44
-		qw422016.N().S(`      </tbody>
-    </table>
+//line views/vaction/Detail.html:46
+		qw422016.N().S(`        </tbody>
+      </table>
+    </div>
   </div>
 `)
-//line views/vaction/Detail.html:48
-	}
-//line views/vaction/Detail.html:49
-	for _, mr := range res.Modules {
 //line views/vaction/Detail.html:51
+	}
+//line views/vaction/Detail.html:52
+	for _, mr := range res.Modules {
+//line views/vaction/Detail.html:54
 		links := ""
 		for mIdx, mk := range mr.Keys {
 			if mIdx > 0 {
@@ -135,99 +142,101 @@ func StreamDetail(qw422016 *qt422016.Writer, cfg util.ValueMap, res *action.Resu
 			links += `<a href="/m/` + mk + `">` + mk + `</a>`
 		}
 
-//line views/vaction/Detail.html:58
+//line views/vaction/Detail.html:61
 		qw422016.N().S(`    <div class="card">
       <div class="right">`)
-//line views/vaction/Detail.html:60
+//line views/vaction/Detail.html:63
 		qw422016.E().S(util.MicrosToMillis(mr.Duration))
-//line views/vaction/Detail.html:60
+//line views/vaction/Detail.html:63
 		qw422016.N().S(`</div>
       <h3>`)
-//line views/vaction/Detail.html:61
+//line views/vaction/Detail.html:64
 		qw422016.E().S(util.StringPluralMaybe("Module", len(mr.Keys)))
-//line views/vaction/Detail.html:61
+//line views/vaction/Detail.html:64
 		qw422016.N().S(` [`)
-//line views/vaction/Detail.html:61
+//line views/vaction/Detail.html:64
 		qw422016.N().S(links)
-//line views/vaction/Detail.html:61
+//line views/vaction/Detail.html:64
 		qw422016.N().S(`]</h3>
       <div class="right">`)
-//line views/vaction/Detail.html:62
+//line views/vaction/Detail.html:65
 		qw422016.N().S(res.StatusLog())
-//line views/vaction/Detail.html:62
+//line views/vaction/Detail.html:65
 		qw422016.N().S(`</div>
       <em>`)
-//line views/vaction/Detail.html:63
+//line views/vaction/Detail.html:66
 		qw422016.E().S(mr.Status)
-//line views/vaction/Detail.html:63
+//line views/vaction/Detail.html:66
 		qw422016.N().S(`</em>
 `)
-//line views/vaction/Detail.html:64
+//line views/vaction/Detail.html:67
 		if len(mr.Actions) > 0 {
-//line views/vaction/Detail.html:64
+//line views/vaction/Detail.html:67
 			qw422016.N().S(`      <h4>Actions</h4>
 `)
-//line views/vaction/Detail.html:66
+//line views/vaction/Detail.html:69
 			for _, a := range mr.Actions {
-//line views/vaction/Detail.html:66
+//line views/vaction/Detail.html:69
 				qw422016.N().S(`        <a href="`)
-//line views/vaction/Detail.html:67
+//line views/vaction/Detail.html:70
 				qw422016.E().S(a.URL())
-//line views/vaction/Detail.html:67
+//line views/vaction/Detail.html:70
 				qw422016.N().S(`"><button>`)
-//line views/vaction/Detail.html:67
+//line views/vaction/Detail.html:70
 				qw422016.E().S(a.Title)
-//line views/vaction/Detail.html:67
+//line views/vaction/Detail.html:70
 				qw422016.N().S(`</button></a>
 `)
-//line views/vaction/Detail.html:68
+//line views/vaction/Detail.html:71
 			}
-//line views/vaction/Detail.html:69
+//line views/vaction/Detail.html:72
 		}
-//line views/vaction/Detail.html:70
+//line views/vaction/Detail.html:73
 		diffs := mr.DiffsFiltered(includeSkipped)
 
-//line views/vaction/Detail.html:71
+//line views/vaction/Detail.html:74
 		if len(diffs) > 0 {
-//line views/vaction/Detail.html:71
-			qw422016.N().S(`      `)
-//line views/vaction/Detail.html:72
+//line views/vaction/Detail.html:74
+			qw422016.N().S(`      <div class="overflow">
+      `)
+//line views/vaction/Detail.html:76
 			streamrenderDiffs(qw422016, res.Project.Key, res.Action, diffs, cfg, as, ps)
-//line views/vaction/Detail.html:72
+//line views/vaction/Detail.html:76
 			qw422016.N().S(`
+      </div>
 `)
-//line views/vaction/Detail.html:73
+//line views/vaction/Detail.html:78
 		}
-//line views/vaction/Detail.html:73
+//line views/vaction/Detail.html:78
 		qw422016.N().S(`    </div>
 `)
-//line views/vaction/Detail.html:75
+//line views/vaction/Detail.html:80
 	}
-//line views/vaction/Detail.html:76
+//line views/vaction/Detail.html:81
 }
 
-//line views/vaction/Detail.html:76
+//line views/vaction/Detail.html:81
 func WriteDetail(qq422016 qtio422016.Writer, cfg util.ValueMap, res *action.Result, includeSkipped bool, as *app.State, ps *cutil.PageState) {
-//line views/vaction/Detail.html:76
+//line views/vaction/Detail.html:81
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vaction/Detail.html:76
+//line views/vaction/Detail.html:81
 	StreamDetail(qw422016, cfg, res, includeSkipped, as, ps)
-//line views/vaction/Detail.html:76
+//line views/vaction/Detail.html:81
 	qt422016.ReleaseWriter(qw422016)
-//line views/vaction/Detail.html:76
+//line views/vaction/Detail.html:81
 }
 
-//line views/vaction/Detail.html:76
+//line views/vaction/Detail.html:81
 func Detail(cfg util.ValueMap, res *action.Result, includeSkipped bool, as *app.State, ps *cutil.PageState) string {
-//line views/vaction/Detail.html:76
+//line views/vaction/Detail.html:81
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vaction/Detail.html:76
+//line views/vaction/Detail.html:81
 	WriteDetail(qb422016, cfg, res, includeSkipped, as, ps)
-//line views/vaction/Detail.html:76
+//line views/vaction/Detail.html:81
 	qs422016 := string(qb422016.B)
-//line views/vaction/Detail.html:76
+//line views/vaction/Detail.html:81
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vaction/Detail.html:76
+//line views/vaction/Detail.html:81
 	return qs422016
-//line views/vaction/Detail.html:76
+//line views/vaction/Detail.html:81
 }

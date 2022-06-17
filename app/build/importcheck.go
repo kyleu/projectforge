@@ -10,11 +10,12 @@ import (
 
 const sepKey, firstKey, thirdKey, selfKey = "sep", "1st", "3rd", "self"
 
-func check(imports []string, orig []string) ([]string, error) {
+func check(imports []string, orig []string) ([]string, []string, error) {
 	var err error
 	var state int
 	var lastLine string
 	var observed []string
+	var imps []string
 	var lastSep bool
 	first, third, self := util.ValueMap{}, util.ValueMap{}, util.ValueMap{}
 
@@ -62,21 +63,24 @@ func check(imports []string, orig []string) ([]string, error) {
 				err = errors.New("1st party")
 			}
 			first[i] = orig[idx]
+			imps = append(imps, imp)
 			observe(i, "1st party")
 		case thirdKey:
 			chk(2, "3rd party")
 			third[i] = orig[idx]
+			imps = append(imps, imp)
 			observe(i, "3rd party")
 		case selfKey:
 			chk(3, "self")
 			self[i] = orig[idx]
+			imps = append(imps, imp)
 			observe(i, selfKey)
 		default:
-			return nil, errors.New("invalid type")
+			return nil, nil, errors.New("invalid type")
 		}
 		lastLine = l
 	}
-	return makeResult(first, third, self), err
+	return imps, makeResult(first, third, self), err
 }
 
 func makeResult(first util.ValueMap, third util.ValueMap, self util.ValueMap) []string {

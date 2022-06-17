@@ -42,7 +42,7 @@ func controllerGrouped(m *model.Model, grp *model.Column, prefix string) *golang
 	ret.W("\t\t\treturn \"\", err")
 	ret.W("\t\t}")
 	ret.W("\t\tps.Data = ret")
-	ret.W("\t\treturn %sRender(rc, as, &v%s.%s{%s: ret}, ps, %q, %q)", prefix, m.Package, grp.ProperPlural(), grp.ProperPlural(), m.Package, grp.Camel())
+	ret.W("\t\treturn %sRender(rc, as, &v%s.%s{%s: ret}, ps, %s, %q)", prefix, m.Package, grp.ProperPlural(), grp.ProperPlural(), m.Breadcrumbs(), grp.Camel())
 	ret.W("\t})")
 	ret.W("}")
 	return ret

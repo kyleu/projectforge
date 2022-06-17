@@ -1,5 +1,9 @@
 package model
 
+import (
+	"golang.org/x/exp/slices"
+)
+
 type Models []*Model
 
 func (m Models) Get(n string) *Model {
@@ -41,4 +45,23 @@ func (m Models) withDeps(mdl *Model) Models {
 		}
 	}
 	return append(Models{mdl}, deps...)
+}
+
+func (m Models) HasSearch() bool {
+	for _, x := range m {
+		if len(x.Search) > 0 {
+			return true
+		}
+	}
+	return false
+}
+
+func (m Models) ForGroup(pth ...string) Models {
+	var ret Models
+	for _, x := range m {
+		if slices.Equal(x.Group, pth) {
+			ret = append(ret, x)
+		}
+	}
+	return ret
 }

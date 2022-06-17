@@ -3,10 +3,10 @@ package cproject
 import (
 	"fmt"
 	"strings"
+	"sync"
 
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
-
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/action"
 	"projectforge.dev/projectforge/app/build"
@@ -25,41 +25,31 @@ func runPkgs(prj *project.Project, res *action.Result, rc *fasthttp.RequestCtx, 
 	if !ok {
 		return "", errors.Errorf("data is of type [%T], expected [Pkgs]", res.Data)
 	}
-	ps.Title = fmt.Sprintf("[%s] Dependencies", prj.Key)
+	ps.Title = fmt.Sprintf("[%s] Packages", prj.Key)
 	ps.Data = pkgs
 	return controller.Render(rc, as, &vbuild.Packages{Project: prj, BuildResult: res, Packages: pkgs}, ps, "projects", prj.Key, "Packages")
 }
 
 func runAllPkgs(cfg util.ValueMap, prjs project.Projects, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (string, error) {
-	tags := util.StringSplitAndTrim(string(rc.URI().QueryArgs().Peek("tags")), ",")
-	if len(tags) > 0 {
-		prjs = prjs.WithTags(tags...)
-	}
-	var msg string
-	key := cfg.GetStringOpt("key")
-	if pj := cfg.GetStringOpt("project"); pj != "" {
-		result, err := build.SetDepsProject(ps.Context, prjs, pj, as.Services.Projects, ps.Logger)
-		if err != nil {
-			return "", err
-		}
-		msg = result
-	} else {
-		version := cfg.GetStringOpt("version")
-		if key != "" && version != "" {
-			result, err := build.SetDepsMap(ps.Context, prjs, &build.Dependency{Key: key, Version: version}, as.Services.Projects, ps.Logger)
-			if err != nil {
-				return "", err
-			}
-			msg = result
-		}
-	}
+	mu := sync.Mutex{}
+	ret := map[string]*action.Result{}
+	pkgs := map[string]build.Pkgs{}
 
-	ret, err := build.LoadDepsMap(prjs, 2, as.Services.Projects)
-	if err != nil {
-		return "", errors.Wrap(err, "")
-	}
+	util.AsyncCollect(prjs, func(prj *project.Project) (string, error) {
+		res := action.Apply(ps.Context, actionParams(prj.Key, action.TypeBuild, cfg, as, ps.Logger))
+		packages, ok := res.Data.(build.Pkgs)
+		if !ok {
+			return "", errors.Errorf("data is of type [%T], expected [Pkgs]", res.Data)
+		}
+		mu.Lock()
+		ret[prj.Key] = res
+		pkgs[prj.Key] = packages
+		mu.Unlock()
+		return "", nil
+	})
+
 	ps.Title = "Packages"
-	ps.Data = ret
-	page := &vbuild.DepMap{Message: msg, Result: ret, Tags: tags}
-	return controller.Render(rc, as, page, ps, "projects", "Dependencies")
+	ps.Data = pkgs
+	page := &vbuild.PackagesAll{Projects: prjs, Results: ret, Packages: pkgs}
+	return controller.Render(rc, as, page, ps, "projects", "Packages")
 }

@@ -32,6 +32,55 @@
 
   <div class="card">
     <h3>Packages</h3>
-    {%= components.JSON(p.Packages) %}
+    {%= renderPackages(p.Project, p.Packages) %}
   </div>
+{% endfunc %}
+
+{% code type PackagesAll struct {
+  layout.Basic
+  Projects project.Projects
+  Results map[string]*action.Result
+  Packages map[string]build.Pkgs
+} %}
+
+{% func (p *PackagesAll) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>Package Graphs</h3>
+    <div class="mt">
+      <ul class="accordion">
+        {%- for _, prj := range p.Projects -%}
+        {%- code
+          res := p.Results[prj.Key]
+          pkgs := p.Packages[prj.Key]
+        -%}
+        <li>
+          <input id="accordion-{%s prj.Key %}" type="checkbox" hidden />
+          <label for="accordion-{%s prj.Key %}">
+            {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef(prj.IconSafe(), 16, 16, "icon", ps) %} {%s prj.Title() %}
+          </label>
+          <div class="bd">
+            {%= vproject.Summary(prj, "Packages", nil, nil, nil, ps) %}
+            {%- if res != nil && len(res.Errors) > 0 -%}
+            <div class="card">
+              <h3>Error</h3>
+              {%- for _, e := range res.Errors -%}
+              <p class="error">{%s e %}</p>
+              {%- endfor -%}
+            </div>
+            {%- endif -%}
+            <div class="card">
+              <h3>Package Graph</h3>
+              {%= renderPackages(prj, pkgs) %}
+            </div>
+          </div>
+        </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+{% endfunc %}
+
+{% func renderPackages(prj *project.Project, p build.Pkgs) %}
+  {%= components.JSON(p) %}
+  <pre>{%s p.ToGraph(prj.Package) %}</pre>
 {% endfunc %}

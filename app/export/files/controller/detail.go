@@ -89,14 +89,14 @@ func controllerDetail(models model.Models, m *model.Model, grp *model.Column, pr
 			args = append(args, fmt.Sprintf("%s: %s", k, argVals[idx]))
 		}
 		argStr := strings.Join(args, ", ")
-		ret.W("\t\treturn %sRender(rc, as, &v%s.Detail{%s}, ps, %q%s, ret.String())", prefix, m.Package, argStr, m.Package, grpHistory)
+		ret.W("\t\treturn %sRender(rc, as, &v%s.Detail{%s}, ps, %s%s, ret.String())", prefix, m.Package, argStr, m.Breadcrumbs(), grpHistory)
 	} else {
 		ret.W("\t\treturn %sRender(rc, as, &v%s.Detail{", prefix, m.Package)
 		keyPad := util.StringArrayMaxLength(argKeys) + 1
 		for idx, k := range argKeys {
 			ret.W("\t\t\t%s %s,", util.StringPad(k+":", keyPad), argVals[idx])
 		}
-		ret.W("\t\t}, ps, %q%s, ret.String())", m.Package, grpHistory)
+		ret.W("\t\t}, ps, %s%s, ret.String())", m.Breadcrumbs(), grpHistory)
 	}
 	ret.W("\t})")
 	ret.W("}")

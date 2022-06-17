@@ -14,12 +14,14 @@ var (
 	testObj = util.ValueMap{"x": util.ValueMap{"y": 1}}
 )
 
-var diffTests = []struct {
+type diffTest struct {
 	k string
 	l any
 	r any
 	d util.Diffs
-}{
+}
+
+var diffTests = []*diffTest{
 	{k: "bool.same", l: true, r: true, d: util.Diffs{}},
 	{
 		k: "bool.different", l: true, r: false, d: util.Diffs{

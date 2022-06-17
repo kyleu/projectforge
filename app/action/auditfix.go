@@ -11,12 +11,17 @@ import (
 
 func auditRemove(ctx context.Context, fn string, pm *PrjAndMods, ret *Result) error {
 	if fn == "" {
-		err := auditRun(ctx, pm, ret)
-		if err != nil {
-			return err
+		paths := ret.Modules.Paths(false)
+		if len(paths) == 0 {
+			x := &Result{}
+			err := auditRun(ctx, pm, x)
+			if err != nil {
+				return err
+			}
+			paths = x.Modules.Paths(false)
 		}
-		for _, path := range ret.Modules.Paths(false) {
-			err = auditRemove(ctx, path, pm, ret)
+		for _, path := range paths {
+			err := auditRemove(ctx, path, pm, ret)
 			if err != nil {
 				return errors.Wrapf(err, "can't fix audit of [%s]", path)
 			}

@@ -79,6 +79,10 @@ func Admin(rc *fasthttp.RequestCtx) {
 			ps.Title = "Session Debug"
 			ps.Data = ps.Session
 			return controller.Render(rc, as, &vadmin.Session{}, ps, "admin", "Session")
+		case "sitemap":
+			ps.Title = "Sitemap"
+			ps.Data = ps.Menu
+			return controller.Render(rc, as, &vadmin.Sitemap{}, ps, "admin", "Sitemap")
 		// $PF_SECTION_START(admin-actions)$
 		// $PF_SECTION_END(admin-actions)$
 		default:

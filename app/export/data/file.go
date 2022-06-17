@@ -28,8 +28,7 @@ func (d *File) ToModel(groups model.Groups) (*model.Model, error) {
 	title := util.StringToTitle(name)
 	var group []string
 	for _, g := range groups {
-		if strings.HasPrefix(key, g.Key+"_") {
-			// key = strings.TrimPrefix(key, g.Key+"_")
+		if key != g.Key && strings.HasPrefix(key, g.Key) {
 			group = []string{g.Key}
 		}
 	}

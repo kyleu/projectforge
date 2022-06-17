@@ -24,7 +24,7 @@ func controllerCreateForm(m *model.Model, grp *model.Column, prefix string) *gol
 		ret.W("\t\tps.Title = fmt.Sprintf(\"Create ["+m.Proper()+"] for %s [%%%%s]\", %sArg)", grp.TitleLower(), grp.Camel())
 	}
 	ret.W("\t\tps.Data = ret")
-	ret.W("\t\treturn %sRender(rc, as, &v%s.Edit{Model: ret, IsNew: true}, ps, %q%s, \"Create\")", prefix, m.Package, m.Package, grp.BC())
+	ret.W("\t\treturn %sRender(rc, as, &v%s.Edit{Model: ret, IsNew: true}, ps, %s%s, \"Create\")", prefix, m.Package, m.Breadcrumbs(), grp.BC())
 	ret.W("\t})")
 	ret.W("}")
 	return ret
@@ -35,7 +35,7 @@ func controllerCreateFormRandom(m *model.Model, prefix string) *golang.Block {
 	ret.W("\t\tret := %s.Random()", m.Package)
 	ret.W("\t\tps.Title = \"Create Random %s\"", m.Proper())
 	ret.W("\t\tps.Data = ret")
-	ret.W("\t\treturn %sRender(rc, as, &v%s.Edit{Model: ret, IsNew: true}, ps, %q, \"Create\")", prefix, m.Package, m.Package)
+	ret.W("\t\treturn %sRender(rc, as, &v%s.Edit{Model: ret, IsNew: true}, ps, %s, \"Create\")", prefix, m.Package, m.Breadcrumbs())
 	ret.W("\t})")
 	ret.W("}")
 	return ret
@@ -77,7 +77,7 @@ func controllerEditForm(m *model.Model, grp *model.Column, prefix string) *golan
 	checkGrp(ret, grp)
 	ret.W("\t\tps.Title = \"Edit \" + ret.String()")
 	ret.W("\t\tps.Data = ret")
-	ret.W("\t\treturn %sRender(rc, as, &v%s.Edit{Model: ret}, ps, %q%s, ret.String())", prefix, m.Package, m.Package, grp.BC())
+	ret.W("\t\treturn %sRender(rc, as, &v%s.Edit{Model: ret}, ps, %s%s, ret.String())", prefix, m.Package, m.Breadcrumbs(), grp.BC())
 	ret.W("\t})")
 	ret.W("}")
 	return ret

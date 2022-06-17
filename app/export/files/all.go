@@ -70,6 +70,18 @@ func All(ctx context.Context, args *model.Args, addHeader bool, logger util.Logg
 	}
 	ret = append(ret, x)
 
+	x, err = controller.Menu(args, addHeader)
+	if err != nil {
+		return nil, err
+	}
+	ret = append(ret, x)
+
+	x, err = controller.Search(args, addHeader)
+	if err != nil {
+		return nil, err
+	}
+	ret = append(ret, x)
+
 	if args.HasModule("migration") {
 		f, err := sql.MigrationAll(args.Models, addHeader)
 		if err != nil {

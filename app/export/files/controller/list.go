@@ -59,8 +59,8 @@ func controllerList(m *model.Model, grp *model.Column, models model.Models, g *g
 
 		toStrings += fmt.Sprintf(", %s: %s", relModel.ProperPlural(), relModel.Plural())
 	}
-	render := "\t\treturn %sRender(rc, as, &v%s.List{Models: ret%s, Params: params}, ps, %q%s)"
-	ret.W(render, prefix, m.Package, toStrings, m.Package, grp.BC())
+	render := "\t\treturn %sRender(rc, as, &v%s.List{Models: ret%s, Params: params}, ps, %s%s)"
+	ret.W(render, prefix, m.Package, toStrings, m.Breadcrumbs(), grp.BC())
 	ret.W("\t})")
 	ret.W("}")
 	return ret

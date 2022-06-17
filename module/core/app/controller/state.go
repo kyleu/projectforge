@@ -12,10 +12,11 @@ import (
 )
 
 var (
-	_currentAppState       *app.State
-	_currentAppRootLogger  util.Logger{{{ if.HasModule "marketing" }}}
+	{{{ if.HasModule "marketing" }}}_currentAppState       *app.State
+	_currentAppRootLogger  util.Logger
 	_currentSiteState      *app.State
-	_currentSiteRootLogger util.Logger{{{ end }}}
+	_currentSiteRootLogger util.Logger{{{ else }}}_currentAppState      *app.State
+	_currentAppRootLogger util.Logger{{{ end }}}
 )
 
 func SetAppState(a *app.State, logger util.Logger) {

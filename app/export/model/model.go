@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	"strings"
 
 	"golang.org/x/exp/slices"
@@ -105,4 +106,13 @@ func (m *Model) GroupString(prefix string, dflt string) string {
 		x = append(x, prefix+g)
 	}
 	return strings.Join(x, "/")
+}
+
+func (m *Model) Breadcrumbs() string {
+	ret := make([]string, 0, len(m.Group)+1)
+	for _, g := range m.Group {
+		ret = append(ret, fmt.Sprintf("%q", g))
+	}
+	ret = append(ret, fmt.Sprintf("%q", m.Package))
+	return strings.Join(ret, ", ")
 }
