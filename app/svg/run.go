@@ -32,17 +32,9 @@ func Run(fs filesystem.FileLoader, src string, tgt string, logger util.Logger) (
 }
 
 func markup(key string, bytes []byte) string {
-	orig := strings.TrimSpace(string(bytes))
+	orig, _ := cleanMarkup(strings.TrimSpace(string(bytes)), "")
 	if !strings.Contains(orig, "id=\"svg-") {
 		panic(fmt.Sprintf("no id for SVG [%s]", key))
-	}
-	for strings.Contains(orig, "<!--") {
-		startIdx := strings.Index(orig, "<!--")
-		endIdx := strings.Index(orig, "-->")
-		if endIdx == -1 {
-			break
-		}
-		orig = orig[:startIdx] + orig[endIdx+3:]
 	}
 	replaced := re.ReplaceAllLiteralString(orig, "")
 	return replaced

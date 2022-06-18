@@ -23,11 +23,11 @@ var prj = &doctor.Check{
 }
 
 func checkProject(ctx context.Context, r *doctor.Result, logger util.Logger) *doctor.Result {
-	p, r := loadRootProject(r)
+	p, fs, r := loadRootProject(r)
 	if len(r.Errors) > 0 {
 		return r
 	}
-	errs := project.Validate(p, CurrentModuleDeps)
+	errs := project.Validate(p, CurrentModuleDeps, fs)
 	for _, err := range errs {
 		r = r.WithError(doctor.NewError("config", "[%s]: %s", err.Code, err.Message))
 	}

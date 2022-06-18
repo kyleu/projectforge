@@ -2,6 +2,7 @@ package svg
 
 import (
 	"encoding/xml"
+	"strings"
 )
 
 type xmlNode struct {
@@ -25,4 +26,20 @@ func getAttr(attrs []xml.Attr, k string) string {
 		}
 	}
 	return ""
+}
+
+func cleanMarkup(orig string, color string) (string, string) {
+	for strings.Contains(orig, "<!--") {
+		startIdx := strings.Index(orig, "<!--")
+		endIdx := strings.Index(orig, "-->")
+		if endIdx == -1 {
+			break
+		}
+		orig = strings.TrimPrefix(orig[:startIdx]+orig[endIdx+3:], "\n")
+	}
+	origColored := orig
+	if color != "" {
+		origColored = strings.ReplaceAll(orig, "<path ", "<path fill=\""+color+"\" ")
+	}
+	return orig, origColored
 }

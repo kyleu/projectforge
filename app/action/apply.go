@@ -3,16 +3,40 @@ package action
 import (
 	"context"
 	"fmt"
+	"strings"
+	"sync"
 
 	"github.com/pkg/errors"
-
-	"projectforge.dev/projectforge/app/export"
-	"projectforge.dev/projectforge/app/export/model"
-	"projectforge.dev/projectforge/app/lib/telemetry"
-	"projectforge.dev/projectforge/app/module"
+	"golang.org/x/exp/slices"
+	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/project"
+
+	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/util"
 )
+
+func ApplyAll(ctx context.Context, prjs project.Projects, actT Type, cfg util.ValueMap, as *app.State, logger util.Logger) []*ResultContext {
+	serial := cfg.GetBoolOpt("serial") || cfg.GetStringOpt("mode") == "refresh"
+	mu := sync.Mutex{}
+	mSvc, pSvc, eSvc := as.Services.Modules, as.Services.Projects, as.Services.Export
+	results, _ := util.AsyncCollect(prjs, func(prj *project.Project) (*ResultContext, error) {
+		if serial {
+			mu.Lock()
+			defer mu.Unlock()
+		}
+		c := cfg.Clone()
+		prms := &Params{ProjectKey: prj.Key, T: actT, Cfg: cfg, MSvc: mSvc, PSvc: pSvc, ESvc: eSvc, Logger: logger}
+		result := Apply(ctx, prms)
+		if result.Project == nil {
+			result.Project = prj
+		}
+		return &ResultContext{Prj: prj, Cfg: c, Res: result}, nil
+	})
+	slices.SortFunc(results, func(l *ResultContext, r *ResultContext) bool {
+		return strings.ToLower(l.Prj.Title()) < strings.ToLower(r.Prj.Title())
+	})
+	return results
+}
 
 func Apply(ctx context.Context, p *Params) (ret *Result) {
 	ctx, span, logger := telemetry.StartSpan(ctx, "action:"+p.T.Key, p.Logger)
@@ -94,53 +118,4 @@ func applyPrj(ctx context.Context, pm *PrjAndMods, t Type) *Result {
 	default:
 		return errorResult(errors.Errorf("invalid action type [%s]", t.String()), t, pm.Cfg, pm.Logger)
 	}
-}
-
-type PrjAndMods struct {
-	Cfg    util.ValueMap
-	Prj    *project.Project
-	Mods   module.Modules
-	MSvc   *module.Service
-	PSvc   *project.Service
-	ESvc   *export.Service
-	EArgs  *model.Args
-	Logger util.Logger
-}
-
-func getPrjAndMods(ctx context.Context, p *Params) (context.Context, *PrjAndMods, error) {
-	if p.ProjectKey == "" {
-		prj := p.PSvc.ByPath("")
-		if prj != nil {
-			p.ProjectKey = prj.Key
-		}
-	}
-
-	prj, err := p.PSvc.Get(p.ProjectKey)
-	if err != nil {
-		return nil, nil, errors.Wrapf(err, "unable to load project [%s]", p.ProjectKey)
-	}
-	if prj.Info != nil {
-		for _, mod := range prj.Info.ModuleDefs {
-			_, e := p.MSvc.Register(ctx, prj.Path, mod.Key, mod.Path, mod.URL, p.Logger)
-			if e != nil {
-				return nil, nil, errors.Wrap(e, "unable to register modules")
-			}
-		}
-	}
-
-	mods, err := p.MSvc.GetModules(prj.Modules...)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	args, err := prj.ModuleArgExport(p.PSvc, p.Logger)
-	if err != nil {
-		return nil, nil, err
-	}
-	if args != nil {
-		args.Modules = mods.Keys()
-	}
-
-	pm := &PrjAndMods{Cfg: p.Cfg, Prj: prj, Mods: mods, MSvc: p.MSvc, PSvc: p.PSvc, ESvc: p.ESvc, EArgs: args, Logger: p.Logger}
-	return ctx, pm, nil
 }

@@ -54,7 +54,7 @@ func solveRepo(ctx context.Context, r *doctor.Result, logger util.Logger) *docto
 		r.AddSolution("run [git init] in this directory")
 	}
 	if r.Errors.Find("noremote") != nil {
-		p, dr := loadRootProject(r)
+		p, _, dr := loadRootProject(r)
 		dr.AddSolution("run [git remote add origin " + p.Info.Sourcecode + ".git]")
 	}
 	if r.Errors.Find("nocommit") != nil {

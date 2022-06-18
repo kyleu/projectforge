@@ -17,6 +17,9 @@ func iOSAssets(ctx context.Context, prj *project.Project, orig string, fs filesy
 		return nil
 	}
 	iOSResize := func(size int, fn string, p string) {
+		if x := filepath.Dir(filepath.Join(p, fn)); !fs.Exists(x) {
+			_ = fs.CreateDirectory(x)
+		}
 		err := proc(ctx, fmt.Sprintf(pngMsg, size, size, fn), p, logger)
 		if err != nil {
 			logger.Warnf("error processing icon [%s]: %+v", fn, err)

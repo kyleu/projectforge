@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"golang.org/x/exp/slices"
+	"projectforge.dev/projectforge/app/lib/filesystem"
 )
 
 type ValidationError struct {
@@ -11,7 +12,7 @@ type ValidationError struct {
 	Message string `json:"message"`
 }
 
-func Validate(p *Project, moduleDeps map[string][]string) []*ValidationError {
+func Validate(p *Project, moduleDeps map[string][]string, fs filesystem.FileLoader) []*ValidationError {
 	var ret []*ValidationError
 
 	e := func(code string, msg string, args ...any) {
@@ -76,6 +77,16 @@ func validateModuleConfig(p *Project, e func(code string, msg string, args ...an
 func validateBuild(p *Project, e func(code string, msg string, args ...any)) {
 	if p.Build == nil {
 		p.Build = &Build{}
+	}
+
+	if p.Build.Desktop && !slices.Contains(p.Modules, "desktop") {
+		e("config", "Desktop is enabled, but module [desktop] isn't included")
+	}
+	if p.Build.IOS && !slices.Contains(p.Modules, "ios") {
+		e("config", "IOS is enabled, but module [ios] isn't included")
+	}
+	if p.Build.Android && !slices.Contains(p.Modules, "android") {
+		e("config", "Android is enabled, but module [android] isn't included")
 	}
 
 	if p.Build.Notarize && p.Info.SigningIdentity == "" {

@@ -25,20 +25,20 @@ func simpleOut(path string, cmd string, args []string, outCheck func(ctx context
 	}
 }
 
-func loadRootProject(r *doctor.Result) (*project.Project, *doctor.Result) {
+func loadRootProject(r *doctor.Result) (*project.Project, *filesystem.FileSystem, *doctor.Result) {
 	const dir = "."
 	fs := filesystem.NewFileSystem(dir)
 	if !fs.Exists(project.ConfigDir) {
-		return nil, r.WithError(doctor.NewError("missing", "no project found in [%s]", dir))
+		return nil, nil, r.WithError(doctor.NewError("missing", "no project found in [%s]", dir))
 	}
 	b, err := fs.ReadFile(project.ConfigDir + "project.json")
 	if err != nil {
-		return nil, r.WithError(doctor.NewError("missing", "unable to read project from [%s]", dir))
+		return nil, nil, r.WithError(doctor.NewError("missing", "unable to read project from [%s]", dir))
 	}
 	p := &project.Project{}
 	err = util.FromJSON(b, p)
 	if err != nil {
-		return nil, r.WithError(doctor.NewError("invalid", "unable to parse project JSON from [%s]", dir))
+		return nil, nil, r.WithError(doctor.NewError("invalid", "unable to parse project JSON from [%s]", dir))
 	}
-	return p, r
+	return p, fs, r
 }

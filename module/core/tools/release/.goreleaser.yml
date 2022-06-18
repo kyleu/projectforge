@@ -205,10 +205,10 @@ builds:
     mod_timestamp: "{{ .CommitTimestamp }}"{{{ .GoBinaryContent }}}
     hooks:
       # This build uses only one architecture, and is a good place to put one-time use scripts
-      post:{{{ if .Build.Desktop }}}
-        - "./bin/build/desktop.release.sh {{ .Version }}"{{{ end }}}{{{ if .BuildAndroid }}}
+      post:{{{ if .BuildAndroid }}}
         - "./bin/build/android.sh {{ .Version }}"{{{ end }}}{{{ if .BuildIOS }}}
-        - "./bin/build/ios.sh {{ .Version }}"{{{ end }}}{{{ if .Build.Notarize }}}
+        - "./bin/build/ios.sh {{ .Version }}"{{{ end }}}{{{ if .Build.Desktop }}}
+        - "./bin/build/desktop.release.sh {{ .Version }}"{{{ end }}}{{{ if .Build.Notarize }}}
         - "./tools/notarize/notarize.sh"{{{ end }}}
         # $PF_SECTION_START(extrascripts)$
         # $PF_SECTION_END(extrascripts)$

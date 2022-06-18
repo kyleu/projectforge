@@ -20,7 +20,10 @@
   {%= vproject.Summary(p.Project, "SVG", nil, nil, &action.TypeSVG, ps) %}
   <div class="card">
     <h3>SVG icons</h3>
-    <a href="/svg/{%s p.Project.Key %}/x/build"><button>Rebuild</button></a>
+    <div class="mt">
+      <a href="/svg/{%s p.Project.Key %}/x/build" title="Writes [svg.go], containing the contents of all SVGs"><button>Rebuild</button></a>
+      <a href="/svg/{%s p.Project.Key %}/x/refreshapp" title="Rewrites the application icon and all exported forms"><button>Refresh App Icon</button></a>
+    </div>
   </div>
   <div class="card">
     <h3>Add a new icon</h3>

@@ -37,6 +37,7 @@ func projectRoutes(r *router.Router) {
 	r.GET("/svg/{key}", cproject.SVGList)
 	r.GET("/svg/{key}/x/add", cproject.SVGAdd)
 	r.GET("/svg/{key}/x/build", cproject.SVGBuild)
+	r.GET("/svg/{key}/x/refreshapp", cproject.SVGRefreshApp)
 	r.GET("/svg/{key}/{icon}", cproject.SVGDetail)
 	r.GET("/svg/{key}/{icon}/setapp", cproject.SVGSetApp)
 	r.GET("/svg/{key}/{icon}/remove", cproject.SVGRemove)

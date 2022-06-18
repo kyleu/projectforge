@@ -17,6 +17,9 @@ func macOSAssets(ctx context.Context, prj *project.Project, orig string, fs file
 		return nil
 	}
 	macOSResize := func(size int, fn string, p string) {
+		if x := filepath.Dir(filepath.Join(p, fn)); !fs.Exists(x) {
+			_ = fs.CreateDirectory(x)
+		}
 		err := proc(ctx, fmt.Sprintf(pngMsg, size, size, fn), p, logger)
 		if err != nil {
 			logger.Warnf("error processing icon [%s]: %+v", fn, err)
@@ -43,9 +46,21 @@ func macOSAssets(ctx context.Context, prj *project.Project, orig string, fs file
 	if err != nil {
 		return errors.Wrap(err, "unable to remove temporary macOS [logo.svg]")
 	}
-	err = proc(ctx, "iconutil --convert icns icons.iconset", filepath.Join(fs.Root(), "tools", "desktop", "template", "macos"), logger)
+	templatePath := filepath.Join(fs.Root(), "tools", "desktop", "template", "macos")
+	if !fs.Exists(templatePath) {
+		_ = fs.CreateDirectory(templatePath)
+	}
+	err = proc(ctx, "iconutil --convert icns icons.iconset", templatePath, logger)
 	if err != nil {
 		return errors.Wrap(err, "unable to remove temporary macOS [logo.svg]")
+	}
+	if !fs.Exists(filepath.Join(templatePath, "background.png")) {
+		cmdMsg := "magick -background %q -fill black -font %q -pointsize 72 -size 1920x1080 -gravity center label:%q background.png"
+		cmd := fmt.Sprintf(cmdMsg, prj.Theme.Light.NavBackground, "Helvetica-Neue", prj.Title())
+		err = proc(ctx, cmd, templatePath, logger)
+		if err != nil {
+			return errors.Wrap(err, "unable to generate background image")
+		}
 	}
 	return fs.RemoveRecursive(macOSPath, logger)
 }

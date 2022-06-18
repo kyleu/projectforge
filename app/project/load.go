@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	"projectforge.dev/projectforge/app/lib/theme"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/util"
@@ -62,7 +63,9 @@ func (s *Service) load(path string, logger util.Logger) (*Project, error) {
 	if ret.Config, err = s.loadModuleConfig(fs); err != nil {
 		return nil, err
 	}
-
+	if ret.Theme == nil {
+		ret.Theme = theme.ThemeDefault
+	}
 	return ret, nil
 }
 

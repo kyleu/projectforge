@@ -99,7 +99,7 @@ func SVGAdd(rc *fasthttp.RequestCtx) {
 }
 
 func SVGSetApp(rc *fasthttp.RequestCtx) {
-	controller.Act("svg.setapp", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+	controller.Act("svg.set.app", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prj, fs, key, err := prjAndIcon(rc, as)
 		if err != nil {
 			return "", err
@@ -122,6 +122,21 @@ func SVGSetApp(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		return controller.FlashAndRedir(true, "set SVG ["+key+"] as app icon", "/svg/"+prj.Key, rc, ps)
+	})
+}
+
+func SVGRefreshApp(rc *fasthttp.RequestCtx) {
+	controller.Act("svg.refresh.app", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, err := getProject(rc, as)
+		if err != nil {
+			return "", err
+		}
+		fs := as.Services.Projects.GetFilesystem(prj)
+		err = svg.RefreshAppIcon(ps.Context, prj, fs, ps.Logger)
+		if err != nil {
+			return "", errors.Wrap(err, "unable to refresh app icon")
+		}
+		return controller.FlashAndRedir(true, "refreshed app icon", "/svg/"+prj.Key, rc, ps)
 	})
 }
 
