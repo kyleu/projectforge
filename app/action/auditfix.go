@@ -35,11 +35,12 @@ func auditRemove(ctx context.Context, fn string, pm *PrjAndMods, ret *Result) er
 
 func auditHeader(ctx context.Context, fn string, pm *PrjAndMods, ret *Result) error {
 	if fn == "" {
-		err := auditRun(ctx, pm, ret)
+		x := &Result{}
+		err := auditRun(ctx, pm, x)
 		if err != nil {
 			return err
 		}
-		for _, path := range ret.Modules.Paths(false) {
+		for _, path := range x.Modules.Paths(false) {
 			err = auditHeader(ctx, path, pm, ret)
 			if err != nil {
 				return errors.Wrapf(err, "can't fix audit of [%s]", path)

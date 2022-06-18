@@ -26,6 +26,9 @@ func menuBlock(args *model.Args) *golang.Block {
 	for _, x := range rct {
 		ret.W(x)
 	}
+	if len(rct) == 0 {
+		ret.W("\treturn nil")
+	}
 	ret.W("}")
 	return ret
 }
