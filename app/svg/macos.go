@@ -55,7 +55,15 @@ func macOSAssets(ctx context.Context, prj *project.Project, orig string, fs file
 		return errors.Wrap(err, "unable to remove temporary macOS [logo.svg]")
 	}
 	if !fs.Exists(filepath.Join(templatePath, "background.png")) {
-		cmdMsg := "magick -background %q -fill black -font %q -pointsize 72 -size 1920x1080 -gravity center label:%q background.png"
+		cmdMsg := "magick -background %q -fill black -font %q -pointsize 48 -size 640x400 -gravity center label:%q background.png"
+		cmd := fmt.Sprintf(cmdMsg, prj.Theme.Light.NavBackground, "Helvetica-Neue", prj.Title())
+		err = proc(ctx, cmd, templatePath, logger)
+		if err != nil {
+			return errors.Wrap(err, "unable to generate background image")
+		}
+	}
+	if !fs.Exists(filepath.Join(templatePath, "background@2x.png")) {
+		cmdMsg := "magick -background %q -fill black -font %q -pointsize 72 -size 1280x800 -gravity center label:%q background@2x.png"
 		cmd := fmt.Sprintf(cmdMsg, prj.Theme.Light.NavBackground, "Helvetica-Neue", prj.Title())
 		err = proc(ctx, cmd, templatePath, logger)
 		if err != nil {

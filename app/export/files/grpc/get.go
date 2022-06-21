@@ -42,9 +42,6 @@ func grpcSearch(m *model.Model, grpcArgs string, grpcRet string, ga *FileArgs) *
 		ret.W(idClause)
 	}
 	ret.W("\tq, _ := provider.GetString(p.R, p.TX, \"q\")")
-	ret.W("\tif q == \"\" {")
-	ret.W("\t\treturn nil, errors.New(\"must provide [q] in request data\")")
-	ret.W("\t}")
 	grpcAddSection(ret, "search", 1)
 	if ga.Grp == nil {
 		ret.W("\tret, err := appState.Services.%s.Search(p.Ctx, q, nil, nil%s, p.Logger)", m.Proper(), suffix)
