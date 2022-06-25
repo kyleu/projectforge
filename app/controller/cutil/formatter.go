@@ -79,5 +79,6 @@ func FormatString(content string, l chroma.Lexer) (string, error) {
 	if l.Config().Name == "SQL" {
 		ret = strings.ReplaceAll(ret, `<span class="err">$</span>`, `<span class="mi">$</span>`)
 	}
+	ret = strings.Replace(ret, `<td class="lntd"><pre tabindex="0" class="chroma"><span class="lnt">1<br /></span></pre></td>`, "", 1)
 	return ret, nil
 }
