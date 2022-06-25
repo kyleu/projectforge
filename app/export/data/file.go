@@ -32,7 +32,11 @@ func (d *File) ToModel(groups model.Groups) (*model.Model, error) {
 			group = []string{g.Key}
 		}
 	}
-	ret := &model.Model{Name: key, Package: key, Group: group, Description: desc, Icon: "star", TitleOverride: title}
+	var sd [][]any
+	if len(d.Data) > 0 {
+		sd = d.Data
+	}
+	ret := &model.Model{Name: key, Package: key, Group: group, Description: desc, Icon: "star", TitleOverride: title, SeedData: sd}
 	for _, col := range d.Fields {
 		x, err := exportColumn(col)
 		if err != nil {
@@ -43,6 +47,11 @@ func (d *File) ToModel(groups model.Groups) (*model.Model, error) {
 	if len(ret.PKs()) == 0 {
 		idCol := &model.Column{Name: "id", Type: types.NewUUID(), PK: true, Search: true, HelpString: "Synthetic identifier"}
 		ret.Columns = append(model.Columns{idCol}, ret.Columns...)
+		appended := make([][]any, 0, len(ret.SeedData))
+		for _, x := range ret.SeedData {
+			appended = append(appended, append([]any{util.UUID()}, x...))
+		}
+		ret.SeedData = appended
 	}
 
 	return ret, nil

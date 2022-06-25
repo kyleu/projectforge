@@ -27,6 +27,7 @@ type Model struct {
 	Columns        Columns          `json:"columns"`
 	Relations      Relations        `json:"relations,omitempty"`
 	Indexes        Indexes          `json:"indexes,omitempty"`
+	SeedData       [][]any          `json:"seedData,omitempty"`
 	historyMap     *HistoryMap
 	historyMapDB   *HistoryMap
 }

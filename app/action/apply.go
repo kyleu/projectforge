@@ -8,15 +8,15 @@ import (
 
 	"github.com/pkg/errors"
 	"golang.org/x/exp/slices"
-	"projectforge.dev/projectforge/app"
-	"projectforge.dev/projectforge/app/project"
 
+	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/lib/telemetry"
+	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )
 
 func ApplyAll(ctx context.Context, prjs project.Projects, actT Type, cfg util.ValueMap, as *app.State, logger util.Logger) []*ResultContext {
-	serial := cfg.GetBoolOpt("serial") || cfg.GetStringOpt("mode") == "refresh"
+	serial := cfg.GetBoolOpt("serial") || cfg.GetStringOpt("mode") == refreshMode
 	mu := sync.Mutex{}
 	mSvc, pSvc, eSvc := as.Services.Modules, as.Services.Projects, as.Services.Export
 	results, _ := util.AsyncCollect(prjs, func(prj *project.Project) (*ResultContext, error) {

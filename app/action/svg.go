@@ -7,6 +7,8 @@ import (
 	"projectforge.dev/projectforge/app/svg"
 )
 
+const refreshMode = "refresh"
+
 func onSVG(ctx context.Context, pm *PrjAndMods) *Result {
 	ret := newResult(TypeSVG, pm.Prj, pm.Cfg, pm.Logger)
 
@@ -15,7 +17,7 @@ func onSVG(ctx context.Context, pm *PrjAndMods) *Result {
 
 	fs := pm.PSvc.GetFilesystem(pm.Prj)
 
-	if pm.Cfg.GetStringOpt("mode") == "refresh" {
+	if pm.Cfg.GetStringOpt("mode") == refreshMode {
 		ret.AddLog("refreshing app SVG for project [%s]", pm.Prj.Key)
 		err := svg.RefreshAppIcon(ctx, pm.Prj, fs, pm.Logger)
 		if err != nil {

@@ -140,145 +140,148 @@ func (p *Overview) Body(as *app.State, ps *cutil.PageState) string {
 }
 
 //line views/vexport/Overview.html:45
+func StreamGroupList(qw422016 *qt422016.Writer, groups model.Groups, indent int) {
+//line views/vexport/Overview.html:46
+	vutil.StreamIndent(qw422016, true, indent)
+//line views/vexport/Overview.html:46
+	qw422016.N().S(`<ul>`)
+//line views/vexport/Overview.html:48
+	for _, g := range groups {
+//line views/vexport/Overview.html:49
+		vutil.StreamIndent(qw422016, true, indent+1)
+//line views/vexport/Overview.html:49
+		qw422016.N().S(`<li>`)
+//line views/vexport/Overview.html:51
+		vutil.StreamIndent(qw422016, true, indent+2)
+//line views/vexport/Overview.html:52
+		qw422016.E().S(g.Key)
+//line views/vexport/Overview.html:53
+		if len(g.Children) > 0 {
+//line views/vexport/Overview.html:54
+			StreamGroupList(qw422016, g.Children, indent+3)
+//line views/vexport/Overview.html:55
+		}
+//line views/vexport/Overview.html:56
+		vutil.StreamIndent(qw422016, true, indent+1)
+//line views/vexport/Overview.html:56
+		qw422016.N().S(`</li>`)
+//line views/vexport/Overview.html:58
+	}
+//line views/vexport/Overview.html:59
+	vutil.StreamIndent(qw422016, true, indent)
+//line views/vexport/Overview.html:59
+	qw422016.N().S(`</ul>`)
+//line views/vexport/Overview.html:61
+}
+
+//line views/vexport/Overview.html:61
+func WriteGroupList(qq422016 qtio422016.Writer, groups model.Groups, indent int) {
+//line views/vexport/Overview.html:61
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vexport/Overview.html:61
+	StreamGroupList(qw422016, groups, indent)
+//line views/vexport/Overview.html:61
+	qt422016.ReleaseWriter(qw422016)
+//line views/vexport/Overview.html:61
+}
+
+//line views/vexport/Overview.html:61
+func GroupList(groups model.Groups, indent int) string {
+//line views/vexport/Overview.html:61
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vexport/Overview.html:61
+	WriteGroupList(qb422016, groups, indent)
+//line views/vexport/Overview.html:61
+	qs422016 := string(qb422016.B)
+//line views/vexport/Overview.html:61
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vexport/Overview.html:61
+	return qs422016
+//line views/vexport/Overview.html:61
+}
+
+//line views/vexport/Overview.html:63
 func StreamModelList(qw422016 *qt422016.Writer, models model.Models, urlPrefix string, as *app.State, ps *cutil.PageState) {
-//line views/vexport/Overview.html:45
+//line views/vexport/Overview.html:63
 	qw422016.N().S(`
   <table class="mt min-200 full-width">
     <tbody>
 `)
-//line views/vexport/Overview.html:48
+//line views/vexport/Overview.html:66
 	for _, m := range models {
-//line views/vexport/Overview.html:50
+//line views/vexport/Overview.html:68
 		u := fmt.Sprintf("%s/%s", urlPrefix, m.Name)
 		var prefix string
 		if len(m.Group) > 0 {
-			prefix = strings.Join(m.Group, "/") + ", "
+			prefix += strings.Join(m.Group, "/") + ", "
+		}
+		if len(m.SeedData) > 0 {
+			prefix += fmt.Sprintf("%d seed rows, ", len(m.SeedData))
 		}
 
-//line views/vexport/Overview.html:55
+//line views/vexport/Overview.html:76
 		qw422016.N().S(`      <tr>
         <td class="shrink"><a href="`)
-//line views/vexport/Overview.html:57
+//line views/vexport/Overview.html:78
 		qw422016.E().S(u)
-//line views/vexport/Overview.html:57
+//line views/vexport/Overview.html:78
 		qw422016.N().S(`">`)
-//line views/vexport/Overview.html:57
+//line views/vexport/Overview.html:78
 		components.StreamSVGRef(qw422016, m.IconSafe(), 15, 15, ``, ps)
-//line views/vexport/Overview.html:57
+//line views/vexport/Overview.html:78
 		qw422016.N().S(`</a> <a href="`)
-//line views/vexport/Overview.html:57
+//line views/vexport/Overview.html:78
 		qw422016.E().S(u)
-//line views/vexport/Overview.html:57
+//line views/vexport/Overview.html:78
 		qw422016.N().S(`">`)
-//line views/vexport/Overview.html:57
+//line views/vexport/Overview.html:78
 		qw422016.E().S(m.Title())
-//line views/vexport/Overview.html:57
+//line views/vexport/Overview.html:78
 		qw422016.N().S(`</a></td>
         <td style="text-align: right;"><em>`)
-//line views/vexport/Overview.html:58
+//line views/vexport/Overview.html:79
 		qw422016.E().S(prefix)
-//line views/vexport/Overview.html:58
+//line views/vexport/Overview.html:79
 		qw422016.N().D(len(m.Columns))
-//line views/vexport/Overview.html:58
+//line views/vexport/Overview.html:79
 		qw422016.N().S(` `)
-//line views/vexport/Overview.html:58
+//line views/vexport/Overview.html:79
 		qw422016.E().S(util.StringPluralMaybe("field", len(m.Columns)))
-//line views/vexport/Overview.html:58
+//line views/vexport/Overview.html:79
 		qw422016.N().S(`</em></td>
       </tr>
 `)
-//line views/vexport/Overview.html:60
+//line views/vexport/Overview.html:81
 	}
-//line views/vexport/Overview.html:60
+//line views/vexport/Overview.html:81
 	qw422016.N().S(`    </tbody>
   </table>
 `)
-//line views/vexport/Overview.html:63
+//line views/vexport/Overview.html:84
 }
 
-//line views/vexport/Overview.html:63
+//line views/vexport/Overview.html:84
 func WriteModelList(qq422016 qtio422016.Writer, models model.Models, urlPrefix string, as *app.State, ps *cutil.PageState) {
-//line views/vexport/Overview.html:63
+//line views/vexport/Overview.html:84
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/Overview.html:63
+//line views/vexport/Overview.html:84
 	StreamModelList(qw422016, models, urlPrefix, as, ps)
-//line views/vexport/Overview.html:63
+//line views/vexport/Overview.html:84
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/Overview.html:63
+//line views/vexport/Overview.html:84
 }
 
-//line views/vexport/Overview.html:63
+//line views/vexport/Overview.html:84
 func ModelList(models model.Models, urlPrefix string, as *app.State, ps *cutil.PageState) string {
-//line views/vexport/Overview.html:63
+//line views/vexport/Overview.html:84
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/Overview.html:63
+//line views/vexport/Overview.html:84
 	WriteModelList(qb422016, models, urlPrefix, as, ps)
-//line views/vexport/Overview.html:63
+//line views/vexport/Overview.html:84
 	qs422016 := string(qb422016.B)
-//line views/vexport/Overview.html:63
+//line views/vexport/Overview.html:84
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/Overview.html:63
+//line views/vexport/Overview.html:84
 	return qs422016
-//line views/vexport/Overview.html:63
-}
-
-//line views/vexport/Overview.html:65
-func StreamGroupList(qw422016 *qt422016.Writer, groups model.Groups, indent int) {
-//line views/vexport/Overview.html:66
-	vutil.StreamIndent(qw422016, true, indent)
-//line views/vexport/Overview.html:66
-	qw422016.N().S(`<ul>`)
-//line views/vexport/Overview.html:68
-	for _, g := range groups {
-//line views/vexport/Overview.html:69
-		vutil.StreamIndent(qw422016, true, indent+1)
-//line views/vexport/Overview.html:69
-		qw422016.N().S(`<li>`)
-//line views/vexport/Overview.html:71
-		vutil.StreamIndent(qw422016, true, indent+2)
-//line views/vexport/Overview.html:72
-		qw422016.E().S(g.Key)
-//line views/vexport/Overview.html:73
-		if len(g.Children) > 0 {
-//line views/vexport/Overview.html:74
-			StreamGroupList(qw422016, g.Children, indent+3)
-//line views/vexport/Overview.html:75
-		}
-//line views/vexport/Overview.html:76
-		vutil.StreamIndent(qw422016, true, indent+1)
-//line views/vexport/Overview.html:76
-		qw422016.N().S(`</li>`)
-//line views/vexport/Overview.html:78
-	}
-//line views/vexport/Overview.html:79
-	vutil.StreamIndent(qw422016, true, indent)
-//line views/vexport/Overview.html:79
-	qw422016.N().S(`</ul>`)
-//line views/vexport/Overview.html:81
-}
-
-//line views/vexport/Overview.html:81
-func WriteGroupList(qq422016 qtio422016.Writer, groups model.Groups, indent int) {
-//line views/vexport/Overview.html:81
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/Overview.html:81
-	StreamGroupList(qw422016, groups, indent)
-//line views/vexport/Overview.html:81
-	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/Overview.html:81
-}
-
-//line views/vexport/Overview.html:81
-func GroupList(groups model.Groups, indent int) string {
-//line views/vexport/Overview.html:81
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/Overview.html:81
-	WriteGroupList(qb422016, groups, indent)
-//line views/vexport/Overview.html:81
-	qs422016 := string(qb422016.B)
-//line views/vexport/Overview.html:81
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/Overview.html:81
-	return qs422016
-//line views/vexport/Overview.html:81
+//line views/vexport/Overview.html:84
 }

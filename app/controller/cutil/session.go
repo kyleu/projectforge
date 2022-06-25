@@ -41,7 +41,7 @@ func loadSession(rc *fasthttp.RequestCtx, logger util.Logger) (util.ValueMap, []
 		}
 		err = util.FromJSON([]byte(dec), &session)
 		if err != nil {
-			logger.Warnf("error parsing session: %+v", err)
+			session = util.ValueMap{}
 		}
 	}
 

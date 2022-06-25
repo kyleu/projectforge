@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/valyala/fasthttp"
+
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/action"
 	"projectforge.dev/projectforge/app/controller"
@@ -44,9 +45,7 @@ func RunAllActions(rc *fasthttp.RequestCtx) {
 			}
 		}
 
-		var results []*action.ResultContext
-
-		results = action.ApplyAll(ps.Context, prjs, actT, cfg, as, ps.Logger)
+		results := action.ApplyAll(ps.Context, prjs, actT, cfg, as, ps.Logger)
 
 		ps.Title = fmt.Sprintf("[%s] All Projects", actT.Title)
 		ps.Data = results

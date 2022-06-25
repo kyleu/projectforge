@@ -25,8 +25,26 @@ func sqlDropAll(models model.Models) *golang.Block {
 func sqlCreateAll(models model.Models) *golang.Block {
 	ret := golang.NewBlock("SQLCreateAll", "sql")
 	ret.W("-- {%% func CreateAll() %%}")
-	for _, model := range models {
-		ret.W("-- {%%%%= %sCreate() %%%%}", model.Proper())
+	for _, m := range models {
+		ret.W("-- {%%%%= %sCreate() %%%%}", m.Proper())
+	}
+	ret.W("-- {%% endfunc %%}")
+	return ret
+}
+
+func SeedDataAll(models model.Models) (*file.File, error) {
+	g := golang.NewGoTemplate([]string{"queries", "seeddata"}, "all.sql")
+	g.AddBlocks(sqlSeedAll(models))
+	return g.Render(false)
+}
+
+func sqlSeedAll(models model.Models) *golang.Block {
+	ret := golang.NewBlock("SQLSeedDataAll", "sql")
+	ret.W("-- {%% func SeedDataAll() %%}")
+	for _, m := range models {
+		if len(m.SeedData) > 0 {
+			ret.W("-- {%%%%= %sSeedData() %%%%}", m.Proper())
+		}
 	}
 	ret.W("-- {%% endfunc %%}")
 	return ret

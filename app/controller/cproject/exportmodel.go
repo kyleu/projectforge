@@ -27,6 +27,22 @@ func ProjectExportModelDetail(rc *fasthttp.RequestCtx) {
 	})
 }
 
+func ProjectExportModelSeedData(rc *fasthttp.RequestCtx) {
+	controller.Act("project.export.seed.data", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, mdl, _, err := exportLoad(rc, as, ps.Logger)
+		if err != nil {
+			return "", err
+		}
+		ps.Data = mdl
+
+		xbc := fmt.Sprintf("Export||/p/%s/export", prj.Key)
+		mbc := fmt.Sprintf("%s||/p/%s/export/models/%s", mdl.Title(), prj.Key, mdl.Name)
+		bc := []string{"projects", prj.Key, xbc, mbc, "Seed Data"}
+		ps.Title = fmt.Sprintf("[%s] %s", prj.Key, mdl.Name)
+		return controller.Render(rc, as, &vexport.ModelSeedData{Project: prj, Model: mdl}, ps, bc...)
+	})
+}
+
 func ProjectExportModelNew(rc *fasthttp.RequestCtx) {
 	controller.Act("project.export.model.new", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prj, err := getProject(rc, as)

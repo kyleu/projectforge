@@ -12,7 +12,7 @@ import (
 )
 
 func History(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
-	g := golang.NewFile(m.Package, []string{"app", m.Package}, m.Camel()+"history")
+	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, m.Camel()+"history")
 	for _, imp := range helper.ImportsForTypes("go", m.Columns.Types()...) {
 		g.AddImport(imp)
 	}

@@ -56,6 +56,15 @@ func (m Models) HasSearch() bool {
 	return false
 }
 
+func (m Models) HasSeedData() bool {
+	for _, x := range m {
+		if len(x.SeedData) > 0 {
+			return true
+		}
+	}
+	return false
+}
+
 func (m Models) ForGroup(pth ...string) Models {
 	var ret Models
 	for _, x := range m {

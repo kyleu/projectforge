@@ -1,0 +1,43 @@
+{% import (
+  "fmt"
+
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/export/model"
+  "projectforge.dev/projectforge/app/project"
+  "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/layout"
+) %}
+
+{% code type ModelSeedData struct {
+  layout.Basic
+  Project *project.Project
+  Model *model.Model
+} %}
+
+{% func (p *ModelSeedData) Body(as *app.State, ps *cutil.PageState) %}
+  {%- code m := p.Model -%}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(m.IconSafe(), ps) %}{%s m.Name %} Seed Data</h3>
+    <div class="mt overflow">
+      <table>
+        <thead>
+          <tr>
+            {%- for _, x := range p.Model.Columns -%}
+            <th>{%s x.Name %}</th>
+            {%- endfor -%}
+          </tr>
+        </thead>
+        <tbody>
+          {%- for _, row := range p.Model.SeedData -%}
+          <tr>
+            {%- for _, cell := range row -%}
+            <td>{%s fmt.Sprint(cell) %}</td>
+            {%- endfor -%}
+          </tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endfunc %}

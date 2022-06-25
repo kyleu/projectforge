@@ -21,7 +21,7 @@
     <div class="right"><a href="/p/{%s p.Project.Key %}/export/models/{%s p.Model.Name %}/edit"><button>Edit</button></a></div>
     <h3>{%= components.SVGRefIcon(m.IconSafe(), ps) %}{%s m.Name %}</h3>
     <em>export model</em>
-    {%= modelSummary(m, as, ps) %}
+    {%= modelSummary(p.Project.Key, m, as, ps) %}
   </div>
   <div class="card">
     <h3>{%= components.SVGRefIcon(`first-aid`, ps) %} Columns</h3>
@@ -38,7 +38,7 @@
   </div>{%- endif -%}
 {% endfunc %}
 
-{% func modelSummary(model *model.Model, as *app.State, ps *cutil.PageState) %}
+{% func modelSummary(pKey string, model *model.Model, as *app.State, ps *cutil.PageState) %}
   <table class="mt min-200 full-width">
     <tbody>
       <tr><th class="shrink">Name</th><td>{%s model.Name %}</td></tr>
@@ -78,6 +78,9 @@
       {%- endif -%}
       {%- if len(model.History) > 0 -%}
       <tr><th>History</th><td>{%s model.History %}</td></tr>
+      {%- endif -%}
+      {%- if len(model.SeedData) > 0 -%}
+      <tr><th>Seed Data</th><td><a href="/p/{%s pKey %}/export/models/{%s model.Name %}/seeddata">{%d len(model.SeedData) %}</a></td></tr>
       {%- endif -%}
       {%- if len(model.Config) > 0 -%}
       <tr><th>Config</th><td>{%= components.JSON(model.Config) %}</td></tr>

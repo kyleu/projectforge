@@ -8,7 +8,7 @@ targets:
     deploymentTarget: "14.0"
     sources: [app]
     dependencies:
-      - framework: ../mobile_ios_arm64/{{{ .Key }}}Server.framework
+      - framework: ../mobile_ios_arm64/{{{ .Key }}}Server.xcframework
         embed: false
     info:
       path: Info.plist

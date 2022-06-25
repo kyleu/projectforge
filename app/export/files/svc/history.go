@@ -13,7 +13,7 @@ import (
 
 func ServiceHistory(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	dbRef := args.DBRef()
-	g := golang.NewFile(m.Package, []string{"app", m.Package}, "servicehistory")
+	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "servicehistory")
 	g.AddImport(helper.ImpContext, helper.ImpUUID, helper.ImpErrors, helper.ImpFmt, helper.ImpTime, helper.ImpStrings)
 	g.AddImport(helper.ImpSQLx, helper.ImpAppUtil, helper.ImpDatabase)
 	g.AddBlocks(serviceHistoryVars(m), serviceHistoryGetHistory(m, dbRef), serviceHistoryGetHistories(m, dbRef), serviceHistorySaveHistory(m))

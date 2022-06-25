@@ -4,7 +4,7 @@
 
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
-  "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/layout"
 ) %}
 
@@ -21,19 +21,19 @@
     <ul class="mt">
     {%- for k, v := range ps.Session -%}
       <li>
-        {%s k %}:
-        {%- if x, ok := v.(string); ok -%}
-        <ul>
-          {%- for _, line := range util.StringSplitAndTrim(x, ",") %}
-          <li class="break-word">{%s line %}</li>
-          {%- endfor -%}
-        </ul>
-        {%- else -%}
-        {%s fmt.Sprint(v) %}
-        {%- endif -%}
+        {%s k %}: {%s fmt.Sprint(v) %}
       </li>
     {%- endfor -%}
     </ul>
+  </div>
+  {%- else -%}
+  <div class="card">
+    <em>Empty session</em>
+  </div>
+  {%- endif -%}
+  <div class="card">
+    <h3>Profile</h3>
+    <div class="mt">{%= components.JSON(ps.Profile) %}</div>
   </div>
   {%- if len(ps.Accounts) > 0 -%}
   <div class="card">
@@ -56,11 +56,6 @@
       {%- endfor -%}
       </tbody>
     </table>
-  </div>
-  {%- endif -%}
-  {%- else -%}
-  <div class="card">
-    <em>Empty session</em>
   </div>
   {%- endif -%}
 {% endfunc %}

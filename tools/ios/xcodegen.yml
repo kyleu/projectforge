@@ -9,7 +9,7 @@ targets:
     deploymentTarget: "14.0"
     sources: [app]
     dependencies:
-      - framework: ../mobile_ios_arm64/projectforgeServer.framework
+      - framework: ../mobile_ios_arm64/projectforgeServer.xcframework
         embed: false
     info:
       path: Info.plist

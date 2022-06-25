@@ -8,7 +8,7 @@ import (
 )
 
 func history(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
-	g := golang.NewGoTemplate([]string{"views", "v" + m.Package}, "History.html")
+	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "History.html")
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpLayout, helper.ImpFilter)
 	g.AddImport(helper.AppImport("app/" + m.PackageWithGroup("")))
 	g.AddBlocks(exportViewHistoryClass(m), exportViewHistoryBody(m), exportViewHistoryTable(m))

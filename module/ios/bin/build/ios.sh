@@ -8,9 +8,9 @@ TGT=$1
 [ "$TGT" ] || TGT="0.0.0"
 
 echo "building gomobile for iOS..."
-time gomobile bind -o build/dist/mobile_ios_arm64/{{{ .Key }}}Server.framework -target=ios {{{ .Package }}}/app/cmd
+time gomobile bind -o build/dist/mobile_ios_arm64/{{{ .Key }}}Server.xcframework -target=ios {{{ .Package }}}/app/cmd
 echo "gomobile for iOS completed successfully, building distribution..."
-cd "build/dist/mobile_ios_arm64/{{{ .Key }}}Server.framework"
+cd "build/dist/mobile_ios_arm64/{{{ .Key }}}Server.xcframework"
 zip --symlinks -r "../../{{{ .Key }}}_${TGT}_ios_framework.zip" .
 
 echo "Building iOS app..."
