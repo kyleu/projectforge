@@ -22,7 +22,7 @@ func runToCompletion(ctx context.Context, projectKey string, t action.Type, cfg 
 	return action.Apply(ctx, p)
 }
 
-func extractConfig(args []string) ([]string, util.ValueMap) {
+func extractConfig(args []string) util.ValueMap {
 	var retArgs []string
 	retMap := util.ValueMap{}
 	for _, arg := range args {
@@ -35,5 +35,8 @@ func extractConfig(args []string) ([]string, util.ValueMap) {
 			retMap[l] = r
 		}
 	}
-	return retArgs, retMap
+	if len(retArgs) > 0 {
+		retMap["cmds"] = retArgs
+	}
+	return retMap
 }

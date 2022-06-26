@@ -14,7 +14,11 @@ import (
 func onBuild(ctx context.Context, pm *PrjAndMods) *Result {
 	phaseStr := pm.Cfg.GetStringOpt("phase")
 	if phaseStr == "" {
-		phaseStr = "build"
+		if x, _ := pm.Cfg.GetStringArray("cmds", true); len(x) == 1 {
+			phaseStr = x[0]
+		} else {
+			phaseStr = "build"
+		}
 	}
 
 	_, span, logger := telemetry.StartSpan(ctx, "build:"+phaseStr, pm.Logger)

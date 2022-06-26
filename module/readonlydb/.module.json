@@ -1,0 +1,52 @@
+{
+  "name": "Read-only DB",
+  "icon": "database",
+  "description": "Adds a read-only database connection",
+  "authorName": "Kyle",
+  "authorEmail": "kyle@fevo.com",
+  "license": "Proprietary",
+  "sourcecode": "https://github.com/fevo-tech/modules/tree/master/readonlydb",
+  "configVars": [
+    {
+      "key": "read_db_host",
+      "type": "string",
+      "description": "hostname for the read-only PostgreSQL connection, defaults to `localhost`"
+    },
+    {
+      "key": "read_db_port",
+      "type": "int",
+      "description": "port for the read-only PostgreSQL connection, defaults to `3306`"
+    },
+    {
+      "key": "read_db_user",
+      "type": "string",
+      "description": "user for the read-only PostgreSQL connection"
+    },
+    {
+      "key": "read_db_password",
+      "type": "string",
+      "description": "password for the read-only PostgreSQL connection"
+    },
+    {
+      "key": "read_db_database",
+      "type": "string",
+      "description": "database for the read-only PostgreSQL connection"
+    },
+    {
+      "key": "read_db_schema",
+      "type": "string",
+      "description": "schema for the read-only PostgreSQL connection"
+    },
+    {
+      "key": "read_max_connections",
+      "type": "int",
+      "description": "max connection count for the read-only PostgreSQL connection"
+    },
+    {
+      "key": "read_db_debug",
+      "type": "bool",
+      "description": "when set, logs all database interactions for the read-only database"
+    }
+  ],
+  "requires": ["database"]
+}

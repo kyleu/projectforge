@@ -6,6 +6,8 @@ import (
 
 	"github.com/muesli/coral"
 	"github.com/pkg/errors"
+	"golang.org/x/exp/slices"
+	"projectforge.dev/projectforge/app/build"
 
 	"projectforge.dev/projectforge/app/action"
 	"projectforge.dev/projectforge/app/util"
@@ -15,16 +17,24 @@ func actionF(ctx context.Context, t action.Type, args []string) error {
 	if err := initIfNeeded(); err != nil {
 		return errors.Wrap(err, "error initializing application")
 	}
-
-	_, cfg := extractConfig(args)
+	cfg := extractConfig(args)
 	logResult(t, runToCompletion(ctx, "", t, cfg))
-
 	return nil
 }
 
 func actionCmd(ctx context.Context, t action.Type) *coral.Command {
 	f := func(cmd *coral.Command, args []string) error { return actionF(ctx, t, args) }
-	return &coral.Command{Use: t.Key, Short: t.Description, RunE: f}
+	ret := &coral.Command{Use: t.Key, Short: t.Description, RunE: f}
+	if t.Key == action.TypeBuild.Key {
+		for _, x := range action.AllBuilds {
+			k := x.Key
+			fx := func(cmd *coral.Command, args []string) error {
+				return actionF(ctx, t, append(slices.Clone(args), k))
+			}
+			ret.AddCommand(&coral.Command{Use: x.Key, Short: x.Description, RunE: fx})
+		}
+	}
+	return ret
 }
 
 func actionCommands() []*coral.Command {
@@ -55,6 +65,14 @@ func logResult(t action.Type, r *action.Result) {
 						_logger.Info(strings.TrimSuffix(l.String(), "\n"))
 					}
 				}
+			}
+		}
+	}
+	if r.Data != nil {
+		deps, ok := r.Data.(build.Dependencies)
+		if ok {
+			for _, dep := range deps {
+				_logger.Infof(dep.String())
 			}
 		}
 	}

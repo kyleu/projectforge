@@ -16,6 +16,7 @@ const (
 	keyContrib     = "contributing"
 	keyCustomizing = "customizing"
 	keyTech        = "technology"
+	keyFAQ         = "faq"
 )
 
 func Menu(ctx context.Context, as *app.State, _ *user.Profile, _ user.Accounts) menu.Items {
@@ -26,5 +27,6 @@ func Menu(ctx context.Context, as *app.State, _ *user.Profile, _ user.Accounts) 
 		{Key: keyCustomizing, Title: "Customizing", Icon: "code", Route: "/" + keyCustomizing},
 		{Key: keyContrib, Title: "Contributing", Icon: "cog", Route: "/" + keyContrib},
 		{Key: keyTech, Title: "Technology", Icon: "shield", Route: "/" + keyTech},
+		{Key: keyFAQ, Title: "FAQ", Icon: "question", Route: "/" + keyFAQ},
 	}
 }
