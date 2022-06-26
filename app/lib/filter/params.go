@@ -127,6 +127,9 @@ func (p *Params) Filtered(available []string, logger util.Logger) *Params {
 	if len(available) == 0 {
 		logger.Warnf("no columns available for [%s]", p.Key)
 	}
+	if len(available) == 1 && available[0] == "*" {
+		return p
+	}
 	if len(p.Orderings) > 0 {
 		allowed := Orderings{}
 

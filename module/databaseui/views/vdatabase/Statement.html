@@ -45,7 +45,7 @@
         <li>
           <input id="accordion-extra" type="checkbox" hidden />
           <label for="accordion-extra">{%= components.ExpandCollapse(3, ps) %} Query Plan</label>
-          <div class="bd">{%= components.DisplayMaps(s.Extra, true) %}</div>
+          <div class="bd">{%= components.DisplayMaps(s.Extra, nil, true, ps) %}</div>
         </li>
         {%- endif -%}
       </ul>

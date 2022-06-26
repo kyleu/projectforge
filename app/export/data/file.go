@@ -36,7 +36,7 @@ func (d *File) ToModel(groups model.Groups) (*model.Model, error) {
 	if len(d.Data) > 0 {
 		sd = d.Data
 	}
-	ret := &model.Model{Name: key, Package: key, Group: group, Description: desc, Icon: "star", TitleOverride: title, SeedData: sd}
+	ret := &model.Model{Name: key, Package: key, Group: group, Description: desc, Icon: "star", Tags: []string{"json"}, TitleOverride: title, SeedData: sd}
 	for _, col := range d.Fields {
 		x, err := exportColumn(col)
 		if err != nil {

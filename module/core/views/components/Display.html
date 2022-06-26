@@ -4,6 +4,8 @@
 
   "github.com/google/uuid"
 
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/lib/filter"
   "{{{ .Package }}}/app/util"
 ) %}
 
@@ -36,7 +38,7 @@
   {%- endif -%}
 {% endstripspace %}{% endfunc %}
 
-{% func DisplayMaps(maps []util.ValueMap, preserveWhitespace bool) %}{% stripspace %}
+{% func DisplayMaps(maps []util.ValueMap, params *filter.Params, preserveWhitespace bool, ps *cutil.PageState) %}{% stripspace %}
   {%- if len(maps) == 0 -%}
   <em>no results</em>
   {%- else -%}
@@ -44,7 +46,7 @@
     <thead>
     <tr>
       {%- for _, k := range maps[0].Keys() -%}
-      <th>{%s k %}</th>
+      {%= TableHeader("map", k, k, params, "", ps.URI, "", true, "", false, ps) %}
       {%- endfor -%}
     </tr>
     </thead>

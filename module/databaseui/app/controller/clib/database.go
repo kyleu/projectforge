@@ -94,7 +94,7 @@ func DatabaseAction(rc *fasthttp.RequestCtx) {
 func DatabaseTableView(rc *fasthttp.RequestCtx) {
 	controller.Act("database.sql.run", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		params := cutil.ParamSetFromRequest(rc)
-		prms := params.Get("table", nil, ps.Logger).Sanitize("table")
+		prms := params.Get("table", []string{"*"}, ps.Logger).Sanitize("table")
 		svc, err := getDatabaseService(rc)
 		if err != nil {
 			return "", err
@@ -111,7 +111,7 @@ func DatabaseTableView(rc *fasthttp.RequestCtx) {
 		res, err := svc.QueryRows(ps.Context, q, nil, ps.Logger)
 		ps.Data = res
 		bc := []string{"admin", "Database||/admin/database", fmt.Sprintf("%s||/admin/database/%s", svc.Key, svc.Key), "Tables"}
-		return controller.Render(rc, as, &vdatabase.Results{Svc: svc, Schema: schema, Table: table, Results: res, Error: err}, ps, bc...)
+		return controller.Render(rc, as, &vdatabase.Results{Svc: svc, Schema: schema, Table: table, Results: res, Params: prms, Error: err}, ps, bc...)
 	})
 }{{{ if .DatabaseUISQLEditor }}}
 

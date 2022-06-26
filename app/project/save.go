@@ -55,6 +55,9 @@ func (s *Service) SaveExportGroups(fs filesystem.FileLoader, g model.Groups, log
 }
 
 func (s *Service) SaveExportModel(fs filesystem.FileLoader, mdl *model.Model, logger util.Logger) error {
+	if mdl.HasTag("json") {
+		return nil
+	}
 	fn := fmt.Sprintf("%s/export/models/%s.json", ConfigDir, mdl.Name)
 	j := util.ToJSON(mdl)
 	err := fs.WriteFile(fn, []byte(j), filesystem.DefaultMode, true)
