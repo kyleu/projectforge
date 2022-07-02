@@ -91,7 +91,7 @@ func importsForTypeCtxDTO(t types.Type) golang.Imports {
 
 func importsForTypeCtxString(t types.Type) golang.Imports {
 	switch t.Key() {
-	case types.KeyInt:
+	case types.KeyInt, types.KeyFloat:
 		return golang.Imports{ImpFmt}
 	case types.KeyMap, types.KeyValueMap:
 		return golang.Imports{ImpAppUtil}
@@ -102,7 +102,7 @@ func importsForTypeCtxString(t types.Type) golang.Imports {
 
 func importsForTypeCtxParse(t types.Type) golang.Imports {
 	switch t.Key() {
-	case types.KeyInt:
+	case types.KeyInt, types.KeyFloat:
 		return golang.Imports{ImpStrconv}
 	case types.KeyUUID:
 		return golang.Imports{ImpAppUtil}

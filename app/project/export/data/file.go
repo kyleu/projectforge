@@ -17,14 +17,14 @@ type File struct {
 	Data     [][]any `json:"data"`
 }
 
-func (d *File) String() string {
-	return fmt.Sprintf("%s [%d fields]: %d rows", d.Filename, len(d.Fields), len(d.Data))
+func (f *File) String() string {
+	return fmt.Sprintf("%s [%d fields]: %d rows", f.Filename, len(f.Fields), len(f.Data))
 }
 
-func (d *File) ToModel(tableIdx int, groups model.Groups) (*model.Model, error) {
-	name := strings.TrimSuffix(d.Filename, ".dat")
+func (f *File) ToModel(tableIdx int, groups model.Groups) (*model.Model, error) {
+	name := strings.TrimSuffix(f.Filename, ".dat")
 	key := util.StringToSnake(name)
-	desc := fmt.Sprintf("from file [%s]", d.Filename)
+	desc := fmt.Sprintf("from file [%s]", f.Filename)
 	title := util.StringToTitle(name)
 	var group []string
 	for _, g := range groups {
@@ -33,14 +33,23 @@ func (d *File) ToModel(tableIdx int, groups model.Groups) (*model.Model, error) 
 		}
 	}
 	var sd [][]any
-	if len(d.Data) > 0 {
-		sd = d.Data
+	if len(f.Data) > 0 {
+		sd = f.Data
 	}
 	ret := &model.Model{Name: key, Package: key, Group: group, Description: desc, Icon: "star", Tags: []string{"json"}, TitleOverride: title, SeedData: sd}
-	for _, col := range d.Fields {
-		x, err := exportColumn(col)
+	for colIdx, col := range f.Fields {
+		ex := make([]any, 0, 16)
+		for rowIdx, row := range f.Data {
+			if rowIdx > 15 {
+				break
+			}
+			if len(row) > colIdx {
+				ex = append(ex, row[colIdx])
+			}
+		}
+		x, err := exportColumn(col, ex)
 		if err != nil {
-			return nil, errors.Wrapf(err, "can't export model [%s]", d.Filename)
+			return nil, errors.Wrapf(err, "can't export model [%s]", f.Filename)
 		}
 		ret.Columns = append(ret.Columns, x)
 	}

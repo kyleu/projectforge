@@ -27,6 +27,8 @@ func (c *Column) ToGoEditString(prefix string, format string) string {
 		return fmt.Sprintf(`{%%%%= components.TableBoolean(%q, %q, %s, 5, %q) %%%%}`, c.Camel(), c.Title(), prefix+c.Proper(), c.Help())
 	case types.KeyInt:
 		return fmt.Sprintf(`{%%%%= components.TableInputNumber(%q, %q, %s, 5, %q) %%%%}`, c.Camel(), c.Title(), prefix+c.Proper(), c.Help())
+	case types.KeyFloat:
+		return fmt.Sprintf(`{%%%%= components.TableInputFloat(%q, %q, %s, 5, %q) %%%%}`, c.Camel(), c.Title(), prefix+c.Proper(), c.Help())
 	case types.KeyList, types.KeyMap, types.KeyValueMap:
 		return fmt.Sprintf(`{%%%%= components.TableTextarea(%q, %q, 8, util.ToJSON(%s), 5, %q) %%%%}`, c.Camel(), c.Title(), c.ToGoString(prefix), c.Help())
 	case types.KeyReference:
@@ -74,6 +76,8 @@ func toGoMapParse(t types.Type) string {
 		return "Bool"
 	case types.KeyInt:
 		return "Int"
+	case types.KeyFloat:
+		return "Float"
 	case types.KeyList:
 		// l := types.TypeAs[*types.List](t)
 		// if l == nil {
@@ -108,6 +112,8 @@ func (c *Column) ZeroVal() string {
 		return types.KeyNil
 	case types.KeyInt:
 		return "0"
+	case types.KeyFloat:
+		return "0.0"
 	case types.KeyMap, types.KeyValueMap, types.KeyReference:
 		return types.KeyNil
 	case types.KeyString:

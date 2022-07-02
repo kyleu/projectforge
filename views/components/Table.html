@@ -40,6 +40,16 @@
   </tr>
 {% endstripspace %}{% endfunc %}
 
+{% func TableInputFloat(key string, title string, value float64, indent int, help ...string) %}{% stripspace %}
+  <tr>
+    {%= vutil.Indent(true, indent + 1) %}
+    <th class="shrink"><label for="input-{%s key %}"{%= titleFor(help) %}>{%s title %}</label></th>
+    {%= vutil.Indent(true, indent + 1) %}
+    <td>{%= FormInputFloat(key, "input-" + key, value, help...) %}</td>
+  {%= vutil.Indent(true, indent) %}
+  </tr>
+{% endstripspace %}{% endfunc %}
+
 {% func TableInputTimestamp(key string, title string, value *time.Time, indent int, help ...string) %}{% stripspace %}
   <tr>
     {%= vutil.Indent(true, indent + 1) %}

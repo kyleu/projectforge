@@ -29,6 +29,15 @@ func RandomInt(maxExclusive int) int {
 	return int(ret.Int64())
 }
 
+func RandomFloat(maxExclusive int) float64 {
+	max := big.NewInt(int64(maxExclusive) * 1000)
+	ret, err := rand.Int(rand.Reader, max)
+	if err != nil {
+		panic(errMsg(err))
+	}
+	return float64(ret.Int64()) / 1000
+}
+
 func RandomBool() bool {
 	ret, err := rand.Int(rand.Reader, big.NewInt(1))
 	if err != nil {

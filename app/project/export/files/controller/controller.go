@@ -74,6 +74,15 @@ func controllerArgFor(col *model.Column, b *golang.Block, retVal string, indent 
 		add("if err != nil {")
 		add("\treturn %s, errors.Wrap(err, \"field [%s] must be a valid a valid integer\")", retVal, col.Camel())
 		add("}")
+	case types.KeyFloat:
+		add("%sArgStr, err := cutil.RCRequiredString(rc, %q, false)", col.Camel(), col.Camel())
+		add("if err != nil {")
+		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as an argument\")", retVal, col.Camel())
+		add("}")
+		add("%sArg, err := strconv.ParseFloat(%sArgStr, 64)", col.Camel(), col.Camel())
+		add("if err != nil {")
+		add("\treturn %s, errors.Wrap(err, \"field [%s] must be a valid a valid floating-point number\")", retVal, col.Camel())
+		add("}")
 	case types.KeyString:
 		add("%sArg, err := cutil.RCRequiredString(rc, %q, false)", col.Camel(), col.Camel())
 		add("if err != nil {")

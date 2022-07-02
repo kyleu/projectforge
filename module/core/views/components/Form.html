@@ -33,6 +33,14 @@
   {% endif %}
 {% endstripspace %}{% endfunc %}
 
+{% func FormInputFloat(key string, id string, value any, placeholder ...string) %}{% stripspace %}
+  {% if id == "" %}
+    <input name="{%s key %}" type="number" value="{%v value %}" step="0.001"{%= phFor(placeholder) %} />
+  {% else %}
+    <input id="{%s id %}" name="{%s key %}" type="number" value="{%v value %}" step="0.001"{%= phFor(placeholder) %} />
+  {% endif %}
+{% endstripspace %}{% endfunc %}
+
 {% func FormInputTimestamp(key string, id string, value *time.Time, placeholder ...string) %}{% stripspace %}
   {% if id == "" %}
     <input name="{%s key %}" type="text" value="{%s util.TimeToJS(value) %}"{%= phFor(placeholder) %} />

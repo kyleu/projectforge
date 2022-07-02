@@ -17,6 +17,8 @@ func ToGoType(t types.Type, nullable bool, pkg string) string {
 		ret = types.KeyBool
 	case types.KeyInt:
 		ret = types.KeyInt
+	case types.KeyFloat:
+		ret = "float64"
 	case types.KeyList:
 		ret = "[]any"
 	case types.KeyMap, types.KeyValueMap:
@@ -57,11 +59,7 @@ func ToGoDTOType(t types.Type, nullable bool, pkg string) string {
 
 func ToGoString(t types.Type, prop string) string {
 	switch t.Key() {
-	case types.KeyAny:
-		return fmt.Sprintf("fmt.Sprint(%s)", prop)
-	case types.KeyBool:
-		return fmt.Sprintf("fmt.Sprint(%s)", prop)
-	case types.KeyInt:
+	case types.KeyAny, types.KeyBool, types.KeyInt, types.KeyFloat:
 		return fmt.Sprintf("fmt.Sprint(%s)", prop)
 	case types.KeyUUID, types.KeyReference:
 		return fmt.Sprintf("%s.String()", prop)
@@ -78,6 +76,8 @@ func ToGoViewString(t types.Type, prop string, nullable bool, format string) str
 		return "{%%v " + prop + " %%}"
 	case types.KeyInt:
 		return "{%%d " + prop + " %%}"
+	case types.KeyFloat:
+		return "{%%f " + prop + " %%}"
 	case types.KeyList, types.KeyMap, types.KeyValueMap, types.KeyReference:
 		return "{%%= components.JSON(" + prop + ") %%}"
 	case types.KeyTimestamp:
@@ -124,6 +124,8 @@ func ToSQLType(t types.Type) string {
 			}
 		}
 		return "int"
+	case types.KeyFloat:
+		return "double precision"
 	case types.KeyList, types.KeyMap, types.KeyValueMap, types.KeyReference:
 		return keyJSONB
 	case types.KeyString:

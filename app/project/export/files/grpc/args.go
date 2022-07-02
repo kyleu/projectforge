@@ -92,6 +92,11 @@ func grpcArgFor(col *model.Column, b *golang.Block, zeroVals string, g *golang.F
 		b.W("\tif err != nil {")
 		b.W("\t\treturn %s, err", zeroVals)
 		b.W("\t}")
+	case types.KeyFloat:
+		b.W("\t%s, err := provider.GetRequestFloat(p.R, %q)", col.Camel(), col.Camel())
+		b.W("\tif err != nil {")
+		b.W("\t\treturn %s, err", zeroVals)
+		b.W("\t}")
 	case types.KeyString:
 		b.W("\t%s, err := provider.GetRequestString(p.R, %q)", col.Camel(), col.Camel())
 		b.W("\tif err != nil {")
