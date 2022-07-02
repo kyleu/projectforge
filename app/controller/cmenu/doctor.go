@@ -1,8 +1,8 @@
 package cmenu
 
 import (
-	"projectforge.dev/projectforge/app/action"
 	"projectforge.dev/projectforge/app/lib/menu"
+	"projectforge.dev/projectforge/app/project/action"
 )
 
 func DoctorMenu(i string, r string) *menu.Item {

@@ -1,4 +1,6 @@
 {% import (
+  "strings"
+
   "golang.org/x/exp/maps"
   "golang.org/x/exp/slices"
 
@@ -17,6 +19,12 @@
 } %}
 
 {% func (p *DepMap) Body(as *app.State, ps *cutil.PageState) %}
+  {%- code
+    suffix := ""
+    if len(p.Tags) > 0 {
+      suffix = "&tags=" + strings.Join(p.Tags, ",")
+    }
+  -%}
   <div class="card">
     {%= vproject.AvailActions("Dependency Conflicts", p.Tags, nil, ps) %}
   </div>
@@ -49,7 +57,7 @@
               -%}
               {%- for i := len(vKeys)-1; i >= 0; i-- -%}
               {%- code vers := vKeys[i] -%}
-              <li><a href="?phase=deps&key={%u k %}&version={%u vers %}">{%s vers %}</a>:
+              <li><a href="?phase=deps&key={%u k %}&version={%u vers %}{%s suffix %}">{%s vers %}</a>:
                 <ul>
                   {%- for _, prj := range v[vers] -%}
                   <li><a href="/p/{%s prj %}">{%s prj %}</a></li>

@@ -96,6 +96,7 @@ func (p *Project) ModuleArgExport(pSvc *Service, logger util.Logger) (*model.Arg
 		if err != nil {
 			return nil, err
 		}
+		p.ExportArgs.Modules = p.Modules
 	}
 	return p.ExportArgs, nil
 }

@@ -8,7 +8,7 @@
 
 {% func Table(prjs project.Projects, tags []string, full bool, as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <div class="right"><a href="/p/new"><button>New</button></a></div>
+    <div class="right"><a href="/p/new"><button>{%= components.SVGRef("file", 15, 15, "icon", ps) %}New</button></a></div>
     <h3><a href="/p">{%s util.StringPlural(len(prjs), "Available Project") %}</a></h3>
     <table class="mt min-200">
       {%- if full -%}

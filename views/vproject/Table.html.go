@@ -31,7 +31,11 @@ func StreamTable(qw422016 *qt422016.Writer, prjs project.Projects, tags []string
 //line views/vproject/Table.html:9
 	qw422016.N().S(`
   <div class="card">
-    <div class="right"><a href="/p/new"><button>New</button></a></div>
+    <div class="right"><a href="/p/new"><button>`)
+//line views/vproject/Table.html:11
+	components.StreamSVGRef(qw422016, "file", 15, 15, "icon", ps)
+//line views/vproject/Table.html:11
+	qw422016.N().S(`New</button></a></div>
     <h3><a href="/p">`)
 //line views/vproject/Table.html:12
 	qw422016.E().S(util.StringPlural(len(prjs), "Available Project"))

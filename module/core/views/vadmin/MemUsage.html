@@ -12,7 +12,7 @@
   Mem *runtime.MemStats
 } %}
 
-{% func (p *MemUsage) MemUsage(as *app.State, ps *cutil.PageState) %}
+{% func (p *MemUsage) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>Memory Usage</h3>
     {%s= components.JSON(p.Mem) %}

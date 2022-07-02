@@ -68,7 +68,7 @@ func exportViewDetailBody(m *model.Model, models model.Models) *golang.Block {
 	ret.W("  <div class=\"card\">")
 	ret.W("    <div class=\"right\">")
 	ret.W("      <a href=\"#modal-%s\"><button type=\"button\">JSON</button></a>", m.Camel())
-	ret.W("      <a href=\"{%%s p.Model.WebPath() %%}/edit\"><button>Edit</button></a>")
+	ret.W("      <a href=\"{%%s p.Model.WebPath() %%}/edit\"><button>{%%= components.SVGRef(\"edit\", 15, 15, \"icon\", ps) %%}Edit</button></a>")
 	ret.W("    </div>")
 	ret.W("    <h3>{%%= components.SVGRefIcon(`" + m.Icon + "`, ps) %%} {%%s p.Model.TitleString() %%}</h3>")
 	ret.W("    <div><a href=\"/" + m.Route() + "\"><em>" + m.Title() + "</em></a></div>")

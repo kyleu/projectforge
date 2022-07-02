@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/export/data"
 	"projectforge.dev/projectforge/app/export/model"
@@ -53,7 +54,9 @@ func (s *Service) loadExportArgs(fs filesystem.FileLoader, logger util.Logger) (
 	args.Models = append(args.Models, jsonModels...)
 
 	if len(args.Models) > 0 {
-		args.Models = args.Models.Sorted()
+		slices.SortFunc(args.Models, func(l *model.Model, r *model.Model) bool {
+			return l.Name < r.Name
+		})
 	}
 
 	return args, nil
@@ -96,7 +99,7 @@ func getJSONModels(cfg util.ValueMap, groups model.Groups, fs filesystem.FileLoa
 	}
 	jsonFiles := fs.ListJSON(pth, nil, false, logger)
 	jsonModels := make(model.Models, 0, len(jsonFiles))
-	for _, jsonFile := range jsonFiles {
+	for idx, jsonFile := range jsonFiles {
 		if !strings.HasSuffix(jsonFile, ".json") {
 			continue
 		}
@@ -113,7 +116,7 @@ func getJSONModels(cfg util.ValueMap, groups model.Groups, fs filesystem.FileLoa
 		if err != nil {
 			return nil, errors.Wrapf(err, "unable to parse JSON data file at [%s]", fn)
 		}
-		mdl, err := df.ToModel(groups)
+		mdl, err := df.ToModel(idx, groups)
 		if err != nil {
 			return nil, errors.Wrapf(err, "unable to convert file at [%s]", fn)
 		}

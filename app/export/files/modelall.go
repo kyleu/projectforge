@@ -2,6 +2,7 @@ package files
 
 import (
 	"github.com/pkg/errors"
+	"projectforge.dev/projectforge/app/file"
 
 	"projectforge.dev/projectforge/app/export/files/controller"
 	"projectforge.dev/projectforge/app/export/files/gomodel"
@@ -10,10 +11,9 @@ import (
 	"projectforge.dev/projectforge/app/export/files/svc"
 	"projectforge.dev/projectforge/app/export/files/view"
 	"projectforge.dev/projectforge/app/export/model"
-	"projectforge.dev/projectforge/app/file"
 )
 
-func modelAll(m *model.Model, args *model.Args, addHeader bool) (file.Files, error) {
+func ModelAll(m *model.Model, args *model.Args, addHeader bool) (file.Files, error) {
 	var calls file.Files
 	var f *file.File
 
@@ -37,13 +37,13 @@ func modelAll(m *model.Model, args *model.Args, addHeader bool) (file.Files, err
 			return nil, errors.Wrap(err, "can't render SQL migration")
 		}
 		calls = append(calls, f)
-		if len(m.SeedData) > 0 {
-			f, err = sql.SeedData(m, args)
-			if err != nil {
-				return nil, errors.Wrap(err, "can't render SQL seed data")
-			}
-			calls = append(calls, f)
+	}
+	if len(m.SeedData) > 0 {
+		f, err = sql.SeedData(m, args)
+		if err != nil {
+			return nil, errors.Wrap(err, "can't render SQL seed data")
 		}
+		calls = append(calls, f)
 	}
 
 	fs, err = view.All(m, args, addHeader)

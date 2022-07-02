@@ -10,7 +10,7 @@ import (
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
-	"projectforge.dev/projectforge/app/diff"
+	"projectforge.dev/projectforge/app/file/diff"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/layout"
 )

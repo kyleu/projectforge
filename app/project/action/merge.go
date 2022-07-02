@@ -8,7 +8,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"projectforge.dev/projectforge/app/diff"
+	"projectforge.dev/projectforge/app/file/diff"
 	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -16,7 +16,7 @@ import (
 const projectKey = "project"
 
 func onMerge(ctx context.Context, pm *PrjAndMods) *Result {
-	ret := newResult(TypeMerge, pm.Prj, pm.Cfg, pm.Logger)
+	ret := newResult(TypeGenerate, pm.Prj, pm.Cfg, pm.Logger)
 
 	to := pm.Cfg.GetStringOpt("to")
 	if to == "" {

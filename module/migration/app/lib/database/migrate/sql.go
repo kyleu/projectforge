@@ -3,6 +3,7 @@ package migrate
 import (
 	"context"
 
+	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
 
 	"{{{ .Package }}}/app/lib/database"
@@ -38,11 +39,11 @@ func GetMigrations() MigrationFiles {
 	return ret
 }
 
-func exec(ctx context.Context, file *MigrationFile, s *database.Service, logger util.Logger) (string, error) {
+func exec(ctx context.Context, file *MigrationFile, s *database.Service, tx *sqlx.Tx, logger util.Logger) (string, error) {
 	sql := file.Content
 	timer := util.TimerStart()
 	logger.Infof("migration running SQL: %v", sql)
-	_, err := s.Exec(ctx, sql, nil, -1, logger)
+	_, err := s.Exec(ctx, sql, tx, -1, logger)
 	if err != nil {
 		return "", errors.Wrap(err, "cannot execute ["+file.Title+"]")
 	}

@@ -21,7 +21,7 @@ func (d *File) String() string {
 	return fmt.Sprintf("%s [%d fields]: %d rows", d.Filename, len(d.Fields), len(d.Data))
 }
 
-func (d *File) ToModel(groups model.Groups) (*model.Model, error) {
+func (d *File) ToModel(tableIdx int, groups model.Groups) (*model.Model, error) {
 	name := strings.TrimSuffix(d.Filename, ".dat")
 	key := util.StringToSnake(name)
 	desc := fmt.Sprintf("from file [%s]", d.Filename)
@@ -48,8 +48,12 @@ func (d *File) ToModel(groups model.Groups) (*model.Model, error) {
 		idCol := &model.Column{Name: "id", Type: types.NewUUID(), PK: true, Search: true, HelpString: "Synthetic identifier"}
 		ret.Columns = append(model.Columns{idCol}, ret.Columns...)
 		appended := make([][]any, 0, len(ret.SeedData))
-		for _, x := range ret.SeedData {
-			appended = append(appended, append([]any{util.UUID()}, x...))
+		for rowIdx, x := range ret.SeedData {
+			id := util.UUIDFromString(fmt.Sprintf("%08d-0000-0000-0000-%012d", tableIdx, rowIdx))
+			if id == nil {
+				return nil, errors.Errorf("invalid UUID")
+			}
+			appended = append(appended, append([]any{*id}, x...))
 		}
 		ret.SeedData = appended
 	}

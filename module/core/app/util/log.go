@@ -1,7 +1,5 @@
 package util
 
-import (
-	"go.uber.org/zap"
-)
+import "go.uber.org/zap"
 
 type Logger = *zap.SugaredLogger

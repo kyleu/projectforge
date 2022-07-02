@@ -7,6 +7,7 @@ import (
 	"projectforge.dev/projectforge/app/export/golang"
 	"projectforge.dev/projectforge/app/export/model"
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/util"
 )
 
 const nilStr = "<nil>"
@@ -30,29 +31,29 @@ func sqlSeedData(m *model.Model, modules []string) *golang.Block {
 			cellStr := fmt.Sprint(cell)
 			switch col.Type.Key() {
 			case "string":
-				if cellStr == nilStr {
-					vs = append(vs, "''")
-					continue
-				}
-				vs = append(vs, "'"+clean(cellStr)+"'")
+				vs = append(vs, processString(cellStr, "''"))
 			case "uuid":
-				if cellStr == nilStr {
-					vs = append(vs, "'00000000-0000-0000-0000-000000000000'")
-					continue
-				}
-				vs = append(vs, "'"+cellStr+"'")
+				vs = append(vs, processString(cellStr, "'00000000-0000-0000-0000-000000000000'"))
 			case "list":
-				if cellStr == nilStr {
-					vs = append(vs, "'[]'")
-					continue
-				}
-				vs = append(vs, "'"+clean(cellStr)+"'")
-			case "int", "int64", "float", "float64":
+				vs = append(vs, processList(cell, cellStr))
+			case "int", "int64":
 				if cellStr == nilStr {
 					vs = append(vs, "0")
 					continue
 				}
-				vs = append(vs, cellStr)
+				vs = append(vs, fmt.Sprintf("%.0f", cell))
+			case "float", "float64":
+				if cellStr == nilStr {
+					vs = append(vs, "0")
+					continue
+				}
+				vs = append(vs, fmt.Sprintf("%f", cell))
+			case "map", "valuemap":
+				if cellStr == nilStr {
+					vs = append(vs, "null")
+					continue
+				}
+				vs = append(vs, "'"+util.ToJSONCompact(cell)+"'")
 			default:
 				if cellStr == nilStr {
 					vs = append(vs, "null")
@@ -71,6 +72,38 @@ func sqlSeedData(m *model.Model, modules []string) *golang.Block {
 	return ret
 }
 
+func processString(cellStr string, dflt string) string {
+	if cellStr == nilStr {
+		return dflt
+	}
+	return "'" + clean(cellStr) + "'"
+}
+
+func processList(cell any, cellStr string) string {
+	if cellStr == nilStr {
+		return "'[]'"
+	}
+	a, ok := cell.([]any)
+	if !ok {
+		return "'[\"error:invalid_type\"]'"
+	}
+	ret := make([]string, 0, len(a))
+	for _, x := range a {
+		switch t := x.(type) {
+		case string:
+			ret = append(ret, "\""+t+"\"")
+		default:
+			ret = append(ret, fmt.Sprint(t))
+		}
+	}
+	return "'[" + clean(strings.Join(ret, ", ")) + "]'"
+}
+
+var cleanRpl *strings.Replacer
+
 func clean(s string) string {
-	return strings.ReplaceAll(strings.ReplaceAll(s, "%", "%%"), "{{{", "{ {{")
+	if cleanRpl == nil {
+		cleanRpl = strings.NewReplacer("'", "''", "\f", "", "\v", "", "\u0000", "", "\u0082", "", "%", "%%", "{{{", "{ {{")
+	}
+	return cleanRpl.Replace(s)
 }

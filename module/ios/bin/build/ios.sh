@@ -1,5 +1,7 @@
 #!/bin/bash
 
+## Builds the iOS framework and application
+
 set -eo pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $dir/../..

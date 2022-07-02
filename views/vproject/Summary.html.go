@@ -6,10 +6,10 @@ package vproject
 
 //line views/vproject/Summary.html:1
 import (
-	"projectforge.dev/projectforge/app/action"
 	"projectforge.dev/projectforge/app/controller/cutil"
-	"projectforge.dev/projectforge/app/git"
 	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/app/project/action"
+	"projectforge.dev/projectforge/app/project/git"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/components"
 	"projectforge.dev/projectforge/views/vsearch"
@@ -103,6 +103,8 @@ func StreamSummary(qw422016 *qt422016.Writer, prj *project.Project, title string
 //line views/vproject/Summary.html:26
 		qw422016.N().S(`"><button>`)
 //line views/vproject/Summary.html:26
+		components.StreamSVGRef(qw422016, t.Icon, 15, 15, "icon", ps)
+//line views/vproject/Summary.html:26
 		qw422016.E().S(t.Title)
 //line views/vproject/Summary.html:26
 		qw422016.N().S(`</button></a>
@@ -114,22 +116,38 @@ func StreamSummary(qw422016 *qt422016.Writer, prj *project.Project, title string
 //line views/vproject/Summary.html:28
 	qw422016.E().S(prj.Key)
 //line views/vproject/Summary.html:28
-	qw422016.N().S(`/edit" title="Edit the project definition"><button>Edit</button></a>
+	qw422016.N().S(`/edit" title="Edit the project definition"><button>`)
+//line views/vproject/Summary.html:28
+	components.StreamSVGRef(qw422016, "edit", 15, 15, "icon", ps)
+//line views/vproject/Summary.html:28
+	qw422016.N().S(`Edit</button></a>
       <a href="/p/`)
 //line views/vproject/Summary.html:29
 	qw422016.E().S(prj.Key)
 //line views/vproject/Summary.html:29
-	qw422016.N().S(`/fs" title="Explore the project's files"><button>Files</button></a>
+	qw422016.N().S(`/fs" title="Explore the project's files"><button>`)
+//line views/vproject/Summary.html:29
+	components.StreamSVGRef(qw422016, "folder", 15, 15, "icon", ps)
+//line views/vproject/Summary.html:29
+	qw422016.N().S(`Files</button></a>
       <a href="/svg/`)
 //line views/vproject/Summary.html:30
 	qw422016.E().S(prj.Key)
 //line views/vproject/Summary.html:30
-	qw422016.N().S(`" title="Add new SVGs and set the app icon"><button>SVG</button></a>
+	qw422016.N().S(`" title="Add new SVGs and set the app icon"><button>`)
+//line views/vproject/Summary.html:30
+	components.StreamSVGRef(qw422016, "icons", 15, 15, "icon", ps)
+//line views/vproject/Summary.html:30
+	qw422016.N().S(`SVG</button></a>
       <a href="/git/`)
 //line views/vproject/Summary.html:31
 	qw422016.E().S(prj.Key)
 //line views/vproject/Summary.html:31
-	qw422016.N().S(`" title="Source control status for this project"><button>Git</button></a>
+	qw422016.N().S(`" title="Source control status for this project"><button>`)
+//line views/vproject/Summary.html:31
+	components.StreamSVGRef(qw422016, "git", 15, 15, "icon", ps)
+//line views/vproject/Summary.html:31
+	qw422016.N().S(`Git</button></a>
     </div>
   </div>
 `)

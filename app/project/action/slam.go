@@ -5,13 +5,13 @@ import (
 
 	"github.com/pkg/errors"
 
-	"projectforge.dev/projectforge/app/diff"
+	"projectforge.dev/projectforge/app/file/diff"
 	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/util"
 )
 
 func onSlam(ctx context.Context, pm *PrjAndMods) *Result {
-	ret := newResult(TypeSlam, pm.Prj, pm.Cfg, pm.Logger)
+	ret := newResult(TypeGenerate, pm.Prj, pm.Cfg, pm.Logger)
 	timer := util.TimerStart()
 	srcFiles, dfs, err := diffs(ctx, pm)
 	if err != nil {

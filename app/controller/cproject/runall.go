@@ -6,9 +6,9 @@ import (
 	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
-	"projectforge.dev/projectforge/app/action"
 	"projectforge.dev/projectforge/app/controller"
 	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/project/action"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/vaction"
 )
@@ -39,9 +39,9 @@ func RunAllActions(rc *fasthttp.RequestCtx) {
 				page := &vaction.Results{T: actT, Cfg: cfg, Projects: prjs, Ctxs: nil, Tags: tags, IsBuild: true}
 				return controller.Render(rc, as, page, ps, "projects", actT.Title)
 			case depsKey:
-				return runAllDeps(cfg, prjs, rc, as, ps)
+				return runAllDeps(cfg, prjs, tags, rc, as, ps)
 			case pkgsKey:
-				return runAllPkgs(cfg, prjs, rc, as, ps)
+				return runAllPkgs(cfg, prjs, tags, rc, as, ps)
 			}
 		}
 

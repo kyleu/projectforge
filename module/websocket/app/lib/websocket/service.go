@@ -133,3 +133,11 @@ func (s *Service) OnClose(connID uuid.UUID) error {
 	}
 	return nil
 }
+
+func (s *Service) Close() {
+	s.connectionsMu.Lock()
+	defer s.connectionsMu.Unlock()
+	for _, v := range s.connections {
+		_ = v.Close()
+	}
+}

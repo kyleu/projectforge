@@ -33,6 +33,14 @@ func (f *File) FullPath() string {
 	return filepath.Join(f.Path...) + "/" + f.Name
 }
 
+func (f *File) Ext() string {
+	l, r := util.StringSplitLast(f.Name, '.', true)
+	if r == "" {
+		return l
+	}
+	return r
+}
+
 const (
 	prefix = "$PF_"
 	suffix = "$"

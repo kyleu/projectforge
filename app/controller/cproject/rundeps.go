@@ -8,11 +8,11 @@ import (
 	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
-	"projectforge.dev/projectforge/app/action"
-	"projectforge.dev/projectforge/app/build"
 	"projectforge.dev/projectforge/app/controller"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/app/project/action"
+	"projectforge.dev/projectforge/app/project/build"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/vbuild"
 )
@@ -37,11 +37,7 @@ func runDeps(prj *project.Project, res *action.Result, rc *fasthttp.RequestCtx, 
 	return controller.Render(rc, as, &vbuild.Deps{Project: prj, BuildResult: res, Dependencies: deps}, ps, "projects", prj.Key, "Dependency Management")
 }
 
-func runAllDeps(cfg util.ValueMap, prjs project.Projects, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (string, error) {
-	tags := util.StringSplitAndTrim(string(rc.URI().QueryArgs().Peek("tags")), ",")
-	if len(tags) > 0 {
-		prjs = prjs.WithTags(tags...)
-	}
+func runAllDeps(cfg util.ValueMap, prjs project.Projects, tags []string, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (string, error) {
 	var msg string
 	key := cfg.GetStringOpt("key")
 	if pj := cfg.GetStringOpt("project"); pj != "" {

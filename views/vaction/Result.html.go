@@ -7,8 +7,8 @@ package vaction
 //line views/vaction/Result.html:1
 import (
 	"projectforge.dev/projectforge/app"
-	"projectforge.dev/projectforge/app/action"
 	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/project/action"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/layout"
 	"projectforge.dev/projectforge/views/vproject"

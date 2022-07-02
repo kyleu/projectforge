@@ -48,7 +48,11 @@ func (p *Overview) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vexport/Overview.html:23
 	qw422016.E().S(p.Project.Key)
 //line views/vexport/Overview.html:23
-	qw422016.N().S(`/export/config"><button>Edit</button></a></div>
+	qw422016.N().S(`/export/config"><button>`)
+//line views/vexport/Overview.html:23
+	components.StreamSVGRef(qw422016, "edit", 15, 15, "icon", ps)
+//line views/vexport/Overview.html:23
+	qw422016.N().S(`Edit</button></a></div>
     <h3>`)
 //line views/vexport/Overview.html:24
 	components.StreamSVGRefIcon(qw422016, `print`, ps)
@@ -65,7 +69,11 @@ func (p *Overview) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vexport/Overview.html:28
 	qw422016.E().S(p.Project.Key)
 //line views/vexport/Overview.html:28
-	qw422016.N().S(`/export/groups"><button>Edit</button></a></div>
+	qw422016.N().S(`/export/groups"><button>`)
+//line views/vexport/Overview.html:28
+	components.StreamSVGRef(qw422016, "edit", 15, 15, "icon", ps)
+//line views/vexport/Overview.html:28
+	qw422016.N().S(`Edit</button></a></div>
     <h3>`)
 //line views/vexport/Overview.html:29
 	components.StreamSVGRefIcon(qw422016, `users`, ps)
@@ -97,7 +105,11 @@ func (p *Overview) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vexport/Overview.html:39
 	qw422016.E().S(p.Project.Key)
 //line views/vexport/Overview.html:39
-	qw422016.N().S(`/export/models/new"><button>New</button></a></div>
+	qw422016.N().S(`/export/models/new"><button>`)
+//line views/vexport/Overview.html:39
+	components.StreamSVGRef(qw422016, "file", 15, 15, "icon", ps)
+//line views/vexport/Overview.html:39
+	qw422016.N().S(`New</button></a></div>
     <h3>`)
 //line views/vexport/Overview.html:40
 	components.StreamSVGRefIcon(qw422016, `list`, ps)

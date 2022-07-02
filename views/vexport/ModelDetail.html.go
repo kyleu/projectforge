@@ -11,357 +11,382 @@ import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/export/model"
+	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/views/components"
 	"projectforge.dev/projectforge/views/layout"
 )
 
-//line views/vexport/ModelDetail.html:12
+//line views/vexport/ModelDetail.html:13
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vexport/ModelDetail.html:12
+//line views/vexport/ModelDetail.html:13
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vexport/ModelDetail.html:12
+//line views/vexport/ModelDetail.html:13
 type ModelDetail struct {
 	layout.Basic
 	Project *project.Project
 	Model   *model.Model
+	Files   file.Files
 }
 
-//line views/vexport/ModelDetail.html:18
+//line views/vexport/ModelDetail.html:20
 func (p *ModelDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vexport/ModelDetail.html:18
+//line views/vexport/ModelDetail.html:20
 	qw422016.N().S(`
 `)
-//line views/vexport/ModelDetail.html:19
+//line views/vexport/ModelDetail.html:21
 	m := p.Model
 
-//line views/vexport/ModelDetail.html:19
+//line views/vexport/ModelDetail.html:21
 	qw422016.N().S(`  <div class="card">
-    <div class="right"><a href="/p/`)
-//line views/vexport/ModelDetail.html:21
+    <div class="right">
+      <a href="/p/`)
+//line views/vexport/ModelDetail.html:24
 	qw422016.E().S(p.Project.Key)
-//line views/vexport/ModelDetail.html:21
+//line views/vexport/ModelDetail.html:24
 	qw422016.N().S(`/export/models/`)
-//line views/vexport/ModelDetail.html:21
+//line views/vexport/ModelDetail.html:24
 	qw422016.E().S(p.Model.Name)
-//line views/vexport/ModelDetail.html:21
-	qw422016.N().S(`/edit"><button>Edit</button></a></div>
+//line views/vexport/ModelDetail.html:24
+	qw422016.N().S(`/edit"><button>`)
+//line views/vexport/ModelDetail.html:24
+	components.StreamSVGRef(qw422016, "edit", 15, 15, "icon", ps)
+//line views/vexport/ModelDetail.html:24
+	qw422016.N().S(`Edit</button></a>
+    </div>
     <h3>`)
-//line views/vexport/ModelDetail.html:22
+//line views/vexport/ModelDetail.html:26
 	components.StreamSVGRefIcon(qw422016, m.IconSafe(), ps)
-//line views/vexport/ModelDetail.html:22
+//line views/vexport/ModelDetail.html:26
 	qw422016.E().S(m.Name)
-//line views/vexport/ModelDetail.html:22
+//line views/vexport/ModelDetail.html:26
 	qw422016.N().S(`</h3>
     <em>export model</em>
     `)
-//line views/vexport/ModelDetail.html:24
+//line views/vexport/ModelDetail.html:28
 	streammodelSummary(qw422016, p.Project.Key, m, as, ps)
-//line views/vexport/ModelDetail.html:24
+//line views/vexport/ModelDetail.html:28
 	qw422016.N().S(`
   </div>
   <div class="card">
     <h3>`)
-//line views/vexport/ModelDetail.html:27
+//line views/vexport/ModelDetail.html:31
 	components.StreamSVGRefIcon(qw422016, `first-aid`, ps)
-//line views/vexport/ModelDetail.html:27
+//line views/vexport/ModelDetail.html:31
 	qw422016.N().S(` Columns</h3>
     `)
-//line views/vexport/ModelDetail.html:28
+//line views/vexport/ModelDetail.html:32
 	streammodelColumns(qw422016, m, as, ps)
-//line views/vexport/ModelDetail.html:28
+//line views/vexport/ModelDetail.html:32
 	qw422016.N().S(`
   </div>
 `)
-//line views/vexport/ModelDetail.html:30
+//line views/vexport/ModelDetail.html:34
 	if len(m.Relations) > 0 {
-//line views/vexport/ModelDetail.html:30
+//line views/vexport/ModelDetail.html:34
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vexport/ModelDetail.html:32
+//line views/vexport/ModelDetail.html:36
 		components.StreamSVGRefIcon(qw422016, `social`, ps)
-//line views/vexport/ModelDetail.html:32
+//line views/vexport/ModelDetail.html:36
 		qw422016.N().S(` Relations</h3>
     `)
-//line views/vexport/ModelDetail.html:33
-		streammodelRelations(qw422016, m, as, ps)
-//line views/vexport/ModelDetail.html:33
-		qw422016.N().S(`
-  </div>`)
-//line views/vexport/ModelDetail.html:34
-	}
-//line views/vexport/ModelDetail.html:34
-	if len(m.Indexes) > 0 {
-//line views/vexport/ModelDetail.html:34
-		qw422016.N().S(`  <div class="card">
-    <h3>`)
-//line views/vexport/ModelDetail.html:36
-		components.StreamSVGRefIcon(qw422016, `star`, ps)
-//line views/vexport/ModelDetail.html:36
-		qw422016.N().S(` Indexes</h3>
-    `)
 //line views/vexport/ModelDetail.html:37
-		streammodelIndexes(qw422016, m, as, ps)
+		streammodelRelations(qw422016, m, as, ps)
 //line views/vexport/ModelDetail.html:37
 		qw422016.N().S(`
   </div>`)
 //line views/vexport/ModelDetail.html:38
 	}
-//line views/vexport/ModelDetail.html:39
+//line views/vexport/ModelDetail.html:38
+	if len(m.Indexes) > 0 {
+//line views/vexport/ModelDetail.html:38
+		qw422016.N().S(`  <div class="card">
+    <h3>`)
+//line views/vexport/ModelDetail.html:40
+		components.StreamSVGRefIcon(qw422016, `star`, ps)
+//line views/vexport/ModelDetail.html:40
+		qw422016.N().S(` Indexes</h3>
+    `)
+//line views/vexport/ModelDetail.html:41
+		streammodelIndexes(qw422016, m, as, ps)
+//line views/vexport/ModelDetail.html:41
+		qw422016.N().S(`
+  </div>`)
+//line views/vexport/ModelDetail.html:42
+	}
+//line views/vexport/ModelDetail.html:42
+	if len(p.Files) > 0 {
+//line views/vexport/ModelDetail.html:42
+		qw422016.N().S(`  <div class="card">
+    <h3>`)
+//line views/vexport/ModelDetail.html:44
+		components.StreamSVGRefIcon(qw422016, `file`, ps)
+//line views/vexport/ModelDetail.html:44
+		qw422016.N().S(` Exported Files</h3>
+    `)
+//line views/vexport/ModelDetail.html:45
+		streammodelFiles(qw422016, m, p.Files, as, ps)
+//line views/vexport/ModelDetail.html:45
+		qw422016.N().S(`
+  </div>`)
+//line views/vexport/ModelDetail.html:46
+	}
+//line views/vexport/ModelDetail.html:47
 }
 
-//line views/vexport/ModelDetail.html:39
+//line views/vexport/ModelDetail.html:47
 func (p *ModelDetail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vexport/ModelDetail.html:39
+//line views/vexport/ModelDetail.html:47
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/ModelDetail.html:39
+//line views/vexport/ModelDetail.html:47
 	p.StreamBody(qw422016, as, ps)
-//line views/vexport/ModelDetail.html:39
+//line views/vexport/ModelDetail.html:47
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/ModelDetail.html:39
+//line views/vexport/ModelDetail.html:47
 }
 
-//line views/vexport/ModelDetail.html:39
+//line views/vexport/ModelDetail.html:47
 func (p *ModelDetail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vexport/ModelDetail.html:39
+//line views/vexport/ModelDetail.html:47
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/ModelDetail.html:39
+//line views/vexport/ModelDetail.html:47
 	p.WriteBody(qb422016, as, ps)
-//line views/vexport/ModelDetail.html:39
+//line views/vexport/ModelDetail.html:47
 	qs422016 := string(qb422016.B)
-//line views/vexport/ModelDetail.html:39
+//line views/vexport/ModelDetail.html:47
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/ModelDetail.html:39
+//line views/vexport/ModelDetail.html:47
 	return qs422016
-//line views/vexport/ModelDetail.html:39
+//line views/vexport/ModelDetail.html:47
 }
 
-//line views/vexport/ModelDetail.html:41
+//line views/vexport/ModelDetail.html:49
 func streammodelSummary(qw422016 *qt422016.Writer, pKey string, model *model.Model, as *app.State, ps *cutil.PageState) {
-//line views/vexport/ModelDetail.html:41
+//line views/vexport/ModelDetail.html:49
 	qw422016.N().S(`
   <table class="mt min-200 full-width">
     <tbody>
       <tr><th class="shrink">Name</th><td>`)
-//line views/vexport/ModelDetail.html:44
+//line views/vexport/ModelDetail.html:52
 	qw422016.E().S(model.Name)
-//line views/vexport/ModelDetail.html:44
+//line views/vexport/ModelDetail.html:52
 	qw422016.N().S(`</td></tr>
       <tr><th>Package</th><td>`)
-//line views/vexport/ModelDetail.html:45
+//line views/vexport/ModelDetail.html:53
 	qw422016.E().S(model.Package)
-//line views/vexport/ModelDetail.html:45
+//line views/vexport/ModelDetail.html:53
 	qw422016.N().S(`</td></tr>
 `)
-//line views/vexport/ModelDetail.html:46
+//line views/vexport/ModelDetail.html:54
 	if len(model.Group) > 0 {
-//line views/vexport/ModelDetail.html:46
+//line views/vexport/ModelDetail.html:54
 		qw422016.N().S(`      <tr><th>Group</th><td>`)
-//line views/vexport/ModelDetail.html:47
+//line views/vexport/ModelDetail.html:55
 		qw422016.E().S(strings.Join(model.Group, "/"))
-//line views/vexport/ModelDetail.html:47
+//line views/vexport/ModelDetail.html:55
 		qw422016.N().S(`</td></tr>
 `)
-//line views/vexport/ModelDetail.html:48
+//line views/vexport/ModelDetail.html:56
 	}
-//line views/vexport/ModelDetail.html:48
+//line views/vexport/ModelDetail.html:56
 	qw422016.N().S(`      <tr><th>Description</th><td>`)
-//line views/vexport/ModelDetail.html:49
+//line views/vexport/ModelDetail.html:57
 	qw422016.E().S(model.Description)
-//line views/vexport/ModelDetail.html:49
+//line views/vexport/ModelDetail.html:57
 	qw422016.N().S(`</td></tr>
       <tr>
         <th>Ordering</th>
         <td>
 `)
-//line views/vexport/ModelDetail.html:53
+//line views/vexport/ModelDetail.html:61
 	for _, x := range model.Ordering {
-//line views/vexport/ModelDetail.html:53
+//line views/vexport/ModelDetail.html:61
 		qw422016.N().S(`          <div>`)
-//line views/vexport/ModelDetail.html:54
+//line views/vexport/ModelDetail.html:62
 		qw422016.E().S(x.String())
-//line views/vexport/ModelDetail.html:54
+//line views/vexport/ModelDetail.html:62
 		qw422016.N().S(`</div>
-`)
-//line views/vexport/ModelDetail.html:55
-	}
-//line views/vexport/ModelDetail.html:55
-	qw422016.N().S(`        </td>
-      </tr>
-`)
-//line views/vexport/ModelDetail.html:58
-	if model.TitleOverride != "" {
-//line views/vexport/ModelDetail.html:58
-		qw422016.N().S(`      <tr><th>Title Override</th><td>`)
-//line views/vexport/ModelDetail.html:59
-		qw422016.E().S(model.TitleOverride)
-//line views/vexport/ModelDetail.html:59
-		qw422016.N().S(`</td></tr>
-`)
-//line views/vexport/ModelDetail.html:60
-	}
-//line views/vexport/ModelDetail.html:61
-	if model.ProperOverride != "" {
-//line views/vexport/ModelDetail.html:61
-		qw422016.N().S(`      <tr><th>Proper Override</th><td>`)
-//line views/vexport/ModelDetail.html:62
-		qw422016.E().S(model.ProperOverride)
-//line views/vexport/ModelDetail.html:62
-		qw422016.N().S(`</td></tr>
 `)
 //line views/vexport/ModelDetail.html:63
 	}
-//line views/vexport/ModelDetail.html:64
-	if model.RouteOverride != "" {
-//line views/vexport/ModelDetail.html:64
-		qw422016.N().S(`      <tr><th>Route Override</th><td>`)
-//line views/vexport/ModelDetail.html:65
-		qw422016.E().S(model.RouteOverride)
-//line views/vexport/ModelDetail.html:65
-		qw422016.N().S(`</td></tr>
+//line views/vexport/ModelDetail.html:63
+	qw422016.N().S(`        </td>
+      </tr>
 `)
 //line views/vexport/ModelDetail.html:66
-	}
+	if model.TitleOverride != "" {
+//line views/vexport/ModelDetail.html:66
+		qw422016.N().S(`      <tr><th>Title Override</th><td>`)
 //line views/vexport/ModelDetail.html:67
-	if len(model.GroupedColumns()) > 0 {
+		qw422016.E().S(model.TitleOverride)
 //line views/vexport/ModelDetail.html:67
-		qw422016.N().S(`      <tr><th>Groupings</th><td>`)
-//line views/vexport/ModelDetail.html:68
-		qw422016.E().S(strings.Join(model.GroupedColumns().Names(), ", "))
-//line views/vexport/ModelDetail.html:68
 		qw422016.N().S(`</td></tr>
 `)
+//line views/vexport/ModelDetail.html:68
+	}
 //line views/vexport/ModelDetail.html:69
-	}
+	if model.ProperOverride != "" {
+//line views/vexport/ModelDetail.html:69
+		qw422016.N().S(`      <tr><th>Proper Override</th><td>`)
 //line views/vexport/ModelDetail.html:70
-	if len(model.Tags) > 0 {
+		qw422016.E().S(model.ProperOverride)
 //line views/vexport/ModelDetail.html:70
-		qw422016.N().S(`      <tr><th>Tags</th><td>`)
-//line views/vexport/ModelDetail.html:71
-		qw422016.E().S(strings.Join(model.Tags, ", "))
-//line views/vexport/ModelDetail.html:71
 		qw422016.N().S(`</td></tr>
 `)
+//line views/vexport/ModelDetail.html:71
+	}
 //line views/vexport/ModelDetail.html:72
-	}
+	if model.RouteOverride != "" {
+//line views/vexport/ModelDetail.html:72
+		qw422016.N().S(`      <tr><th>Route Override</th><td>`)
 //line views/vexport/ModelDetail.html:73
-	if len(model.Ordering) > 0 {
+		qw422016.E().S(model.RouteOverride)
 //line views/vexport/ModelDetail.html:73
-		qw422016.N().S(`      <tr><th>Ordering</th><td>`)
-//line views/vexport/ModelDetail.html:74
-		components.StreamJSON(qw422016, model.Ordering)
-//line views/vexport/ModelDetail.html:74
 		qw422016.N().S(`</td></tr>
 `)
+//line views/vexport/ModelDetail.html:74
+	}
 //line views/vexport/ModelDetail.html:75
-	}
+	if len(model.GroupedColumns()) > 0 {
+//line views/vexport/ModelDetail.html:75
+		qw422016.N().S(`      <tr><th>Groupings</th><td>`)
 //line views/vexport/ModelDetail.html:76
-	if len(model.Search) > 0 {
+		qw422016.E().S(strings.Join(model.GroupedColumns().Names(), ", "))
 //line views/vexport/ModelDetail.html:76
-		qw422016.N().S(`      <tr><th>Search</th><td>`)
-//line views/vexport/ModelDetail.html:77
-		qw422016.E().S(strings.Join(model.Search, ", "))
-//line views/vexport/ModelDetail.html:77
 		qw422016.N().S(`</td></tr>
 `)
+//line views/vexport/ModelDetail.html:77
+	}
 //line views/vexport/ModelDetail.html:78
-	}
+	if len(model.Tags) > 0 {
+//line views/vexport/ModelDetail.html:78
+		qw422016.N().S(`      <tr><th>Tags</th><td>`)
 //line views/vexport/ModelDetail.html:79
-	if len(model.History) > 0 {
+		qw422016.E().S(strings.Join(model.Tags, ", "))
 //line views/vexport/ModelDetail.html:79
-		qw422016.N().S(`      <tr><th>History</th><td>`)
-//line views/vexport/ModelDetail.html:80
-		qw422016.E().S(model.History)
-//line views/vexport/ModelDetail.html:80
 		qw422016.N().S(`</td></tr>
 `)
+//line views/vexport/ModelDetail.html:80
+	}
 //line views/vexport/ModelDetail.html:81
-	}
+	if len(model.Ordering) > 0 {
+//line views/vexport/ModelDetail.html:81
+		qw422016.N().S(`      <tr><th>Ordering</th><td>`)
 //line views/vexport/ModelDetail.html:82
-	if len(model.SeedData) > 0 {
+		components.StreamJSON(qw422016, model.Ordering)
 //line views/vexport/ModelDetail.html:82
-		qw422016.N().S(`      <tr><th>Seed Data</th><td><a href="/p/`)
-//line views/vexport/ModelDetail.html:83
-		qw422016.E().S(pKey)
-//line views/vexport/ModelDetail.html:83
-		qw422016.N().S(`/export/models/`)
-//line views/vexport/ModelDetail.html:83
-		qw422016.E().S(model.Name)
-//line views/vexport/ModelDetail.html:83
-		qw422016.N().S(`/seeddata">`)
-//line views/vexport/ModelDetail.html:83
-		qw422016.N().D(len(model.SeedData))
-//line views/vexport/ModelDetail.html:83
-		qw422016.N().S(`</a></td></tr>
-`)
-//line views/vexport/ModelDetail.html:84
-	}
-//line views/vexport/ModelDetail.html:85
-	if len(model.Config) > 0 {
-//line views/vexport/ModelDetail.html:85
-		qw422016.N().S(`      <tr><th>Config</th><td>`)
-//line views/vexport/ModelDetail.html:86
-		components.StreamJSON(qw422016, model.Config)
-//line views/vexport/ModelDetail.html:86
 		qw422016.N().S(`</td></tr>
 `)
-//line views/vexport/ModelDetail.html:87
+//line views/vexport/ModelDetail.html:83
+	}
+//line views/vexport/ModelDetail.html:84
+	if len(model.Search) > 0 {
+//line views/vexport/ModelDetail.html:84
+		qw422016.N().S(`      <tr><th>Search</th><td>`)
+//line views/vexport/ModelDetail.html:85
+		qw422016.E().S(strings.Join(model.Search, ", "))
+//line views/vexport/ModelDetail.html:85
+		qw422016.N().S(`</td></tr>
+`)
+//line views/vexport/ModelDetail.html:86
 	}
 //line views/vexport/ModelDetail.html:87
+	if len(model.History) > 0 {
+//line views/vexport/ModelDetail.html:87
+		qw422016.N().S(`      <tr><th>History</th><td>`)
+//line views/vexport/ModelDetail.html:88
+		qw422016.E().S(model.History)
+//line views/vexport/ModelDetail.html:88
+		qw422016.N().S(`</td></tr>
+`)
+//line views/vexport/ModelDetail.html:89
+	}
+//line views/vexport/ModelDetail.html:90
+	if len(model.SeedData) > 0 {
+//line views/vexport/ModelDetail.html:90
+		qw422016.N().S(`      <tr><th>Seed Data</th><td><a href="/p/`)
+//line views/vexport/ModelDetail.html:91
+		qw422016.E().S(pKey)
+//line views/vexport/ModelDetail.html:91
+		qw422016.N().S(`/export/models/`)
+//line views/vexport/ModelDetail.html:91
+		qw422016.E().S(model.Name)
+//line views/vexport/ModelDetail.html:91
+		qw422016.N().S(`/seeddata">`)
+//line views/vexport/ModelDetail.html:91
+		qw422016.N().D(len(model.SeedData))
+//line views/vexport/ModelDetail.html:91
+		qw422016.N().S(` rows</a></td></tr>
+`)
+//line views/vexport/ModelDetail.html:92
+	}
+//line views/vexport/ModelDetail.html:93
+	if len(model.Config) > 0 {
+//line views/vexport/ModelDetail.html:93
+		qw422016.N().S(`      <tr><th>Config</th><td>`)
+//line views/vexport/ModelDetail.html:94
+		components.StreamJSON(qw422016, model.Config)
+//line views/vexport/ModelDetail.html:94
+		qw422016.N().S(`</td></tr>
+`)
+//line views/vexport/ModelDetail.html:95
+	}
+//line views/vexport/ModelDetail.html:95
 	qw422016.N().S(`    </tbody>
   </table>
 `)
-//line views/vexport/ModelDetail.html:90
+//line views/vexport/ModelDetail.html:98
 }
 
-//line views/vexport/ModelDetail.html:90
+//line views/vexport/ModelDetail.html:98
 func writemodelSummary(qq422016 qtio422016.Writer, pKey string, model *model.Model, as *app.State, ps *cutil.PageState) {
-//line views/vexport/ModelDetail.html:90
+//line views/vexport/ModelDetail.html:98
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/ModelDetail.html:90
+//line views/vexport/ModelDetail.html:98
 	streammodelSummary(qw422016, pKey, model, as, ps)
-//line views/vexport/ModelDetail.html:90
+//line views/vexport/ModelDetail.html:98
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/ModelDetail.html:90
+//line views/vexport/ModelDetail.html:98
 }
 
-//line views/vexport/ModelDetail.html:90
+//line views/vexport/ModelDetail.html:98
 func modelSummary(pKey string, model *model.Model, as *app.State, ps *cutil.PageState) string {
-//line views/vexport/ModelDetail.html:90
+//line views/vexport/ModelDetail.html:98
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/ModelDetail.html:90
+//line views/vexport/ModelDetail.html:98
 	writemodelSummary(qb422016, pKey, model, as, ps)
-//line views/vexport/ModelDetail.html:90
+//line views/vexport/ModelDetail.html:98
 	qs422016 := string(qb422016.B)
-//line views/vexport/ModelDetail.html:90
+//line views/vexport/ModelDetail.html:98
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/ModelDetail.html:90
+//line views/vexport/ModelDetail.html:98
 	return qs422016
-//line views/vexport/ModelDetail.html:90
+//line views/vexport/ModelDetail.html:98
 }
 
-//line views/vexport/ModelDetail.html:92
+//line views/vexport/ModelDetail.html:100
 func streammodelColumns(qw422016 *qt422016.Writer, model *model.Model, as *app.State, ps *cutil.PageState) {
-//line views/vexport/ModelDetail.html:92
+//line views/vexport/ModelDetail.html:100
 	qw422016.N().S(`
 `)
-//line views/vexport/ModelDetail.html:93
+//line views/vexport/ModelDetail.html:101
 	if len(model.Columns) == 0 {
-//line views/vexport/ModelDetail.html:93
+//line views/vexport/ModelDetail.html:101
 		qw422016.N().S(`  <p><em>no columns</em></p>
 `)
-//line views/vexport/ModelDetail.html:95
+//line views/vexport/ModelDetail.html:103
 	} else {
-//line views/vexport/ModelDetail.html:95
+//line views/vexport/ModelDetail.html:103
 		qw422016.N().S(`  <table class="mt min-200 full-width">
     <thead>
       <tr>
@@ -373,72 +398,72 @@ func streammodelColumns(qw422016 *qt422016.Writer, model *model.Model, as *app.S
     </thead>
     <tbody>
 `)
-//line views/vexport/ModelDetail.html:106
+//line views/vexport/ModelDetail.html:114
 		for _, col := range model.Columns {
-//line views/vexport/ModelDetail.html:106
+//line views/vexport/ModelDetail.html:114
 			qw422016.N().S(`      <tr>
         <td>`)
-//line views/vexport/ModelDetail.html:108
+//line views/vexport/ModelDetail.html:116
 			qw422016.E().S(col.Name)
-//line views/vexport/ModelDetail.html:108
+//line views/vexport/ModelDetail.html:116
 			qw422016.N().S(`</td>
         <td>`)
-//line views/vexport/ModelDetail.html:109
+//line views/vexport/ModelDetail.html:117
 			qw422016.E().S(col.Type.String())
-//line views/vexport/ModelDetail.html:109
+//line views/vexport/ModelDetail.html:117
 			qw422016.N().S(`</td>
         <td>`)
-//line views/vexport/ModelDetail.html:110
+//line views/vexport/ModelDetail.html:118
 			qw422016.E().S(col.Format)
-//line views/vexport/ModelDetail.html:110
+//line views/vexport/ModelDetail.html:118
 			qw422016.N().S(`</td>
         <td>`)
-//line views/vexport/ModelDetail.html:111
+//line views/vexport/ModelDetail.html:119
 			qw422016.E().S(strings.Join(col.Tags, ", "))
-//line views/vexport/ModelDetail.html:111
+//line views/vexport/ModelDetail.html:119
 			qw422016.N().S(`</td>
       </tr>
 `)
-//line views/vexport/ModelDetail.html:113
+//line views/vexport/ModelDetail.html:121
 		}
-//line views/vexport/ModelDetail.html:113
+//line views/vexport/ModelDetail.html:121
 		qw422016.N().S(`    </tbody>
   </table>
 `)
-//line views/vexport/ModelDetail.html:116
+//line views/vexport/ModelDetail.html:124
 	}
-//line views/vexport/ModelDetail.html:117
+//line views/vexport/ModelDetail.html:125
 }
 
-//line views/vexport/ModelDetail.html:117
+//line views/vexport/ModelDetail.html:125
 func writemodelColumns(qq422016 qtio422016.Writer, model *model.Model, as *app.State, ps *cutil.PageState) {
-//line views/vexport/ModelDetail.html:117
+//line views/vexport/ModelDetail.html:125
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/ModelDetail.html:117
+//line views/vexport/ModelDetail.html:125
 	streammodelColumns(qw422016, model, as, ps)
-//line views/vexport/ModelDetail.html:117
+//line views/vexport/ModelDetail.html:125
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/ModelDetail.html:117
+//line views/vexport/ModelDetail.html:125
 }
 
-//line views/vexport/ModelDetail.html:117
+//line views/vexport/ModelDetail.html:125
 func modelColumns(model *model.Model, as *app.State, ps *cutil.PageState) string {
-//line views/vexport/ModelDetail.html:117
+//line views/vexport/ModelDetail.html:125
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/ModelDetail.html:117
+//line views/vexport/ModelDetail.html:125
 	writemodelColumns(qb422016, model, as, ps)
-//line views/vexport/ModelDetail.html:117
+//line views/vexport/ModelDetail.html:125
 	qs422016 := string(qb422016.B)
-//line views/vexport/ModelDetail.html:117
+//line views/vexport/ModelDetail.html:125
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/ModelDetail.html:117
+//line views/vexport/ModelDetail.html:125
 	return qs422016
-//line views/vexport/ModelDetail.html:117
+//line views/vexport/ModelDetail.html:125
 }
 
-//line views/vexport/ModelDetail.html:119
+//line views/vexport/ModelDetail.html:127
 func streammodelRelations(qw422016 *qt422016.Writer, model *model.Model, as *app.State, ps *cutil.PageState) {
-//line views/vexport/ModelDetail.html:119
+//line views/vexport/ModelDetail.html:127
 	qw422016.N().S(`
   <table class="mt min-200 full-width">
     <thead>
@@ -451,70 +476,70 @@ func streammodelRelations(qw422016 *qt422016.Writer, model *model.Model, as *app
     </thead>
     <tbody>
 `)
-//line views/vexport/ModelDetail.html:130
+//line views/vexport/ModelDetail.html:138
 	for _, rel := range model.Relations {
-//line views/vexport/ModelDetail.html:130
+//line views/vexport/ModelDetail.html:138
 		qw422016.N().S(`      <tr>
         <td>`)
-//line views/vexport/ModelDetail.html:132
+//line views/vexport/ModelDetail.html:140
 		qw422016.E().S(rel.Name)
-//line views/vexport/ModelDetail.html:132
+//line views/vexport/ModelDetail.html:140
 		qw422016.N().S(`</td>
         <td>`)
-//line views/vexport/ModelDetail.html:133
+//line views/vexport/ModelDetail.html:141
 		qw422016.E().S(strings.Join(rel.Src, ", "))
-//line views/vexport/ModelDetail.html:133
+//line views/vexport/ModelDetail.html:141
 		qw422016.N().S(`</td>
         <td>`)
-//line views/vexport/ModelDetail.html:134
+//line views/vexport/ModelDetail.html:142
 		qw422016.E().S(rel.Table)
-//line views/vexport/ModelDetail.html:134
+//line views/vexport/ModelDetail.html:142
 		qw422016.N().S(`</td>
         <td>`)
-//line views/vexport/ModelDetail.html:135
+//line views/vexport/ModelDetail.html:143
 		qw422016.E().S(strings.Join(rel.Tgt, ", "))
-//line views/vexport/ModelDetail.html:135
+//line views/vexport/ModelDetail.html:143
 		qw422016.N().S(`</td>
       </tr>
 `)
-//line views/vexport/ModelDetail.html:137
+//line views/vexport/ModelDetail.html:145
 	}
-//line views/vexport/ModelDetail.html:137
+//line views/vexport/ModelDetail.html:145
 	qw422016.N().S(`    </tbody>
   </table>
 `)
-//line views/vexport/ModelDetail.html:140
+//line views/vexport/ModelDetail.html:148
 }
 
-//line views/vexport/ModelDetail.html:140
+//line views/vexport/ModelDetail.html:148
 func writemodelRelations(qq422016 qtio422016.Writer, model *model.Model, as *app.State, ps *cutil.PageState) {
-//line views/vexport/ModelDetail.html:140
+//line views/vexport/ModelDetail.html:148
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/ModelDetail.html:140
+//line views/vexport/ModelDetail.html:148
 	streammodelRelations(qw422016, model, as, ps)
-//line views/vexport/ModelDetail.html:140
+//line views/vexport/ModelDetail.html:148
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/ModelDetail.html:140
+//line views/vexport/ModelDetail.html:148
 }
 
-//line views/vexport/ModelDetail.html:140
+//line views/vexport/ModelDetail.html:148
 func modelRelations(model *model.Model, as *app.State, ps *cutil.PageState) string {
-//line views/vexport/ModelDetail.html:140
+//line views/vexport/ModelDetail.html:148
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/ModelDetail.html:140
+//line views/vexport/ModelDetail.html:148
 	writemodelRelations(qb422016, model, as, ps)
-//line views/vexport/ModelDetail.html:140
+//line views/vexport/ModelDetail.html:148
 	qs422016 := string(qb422016.B)
-//line views/vexport/ModelDetail.html:140
+//line views/vexport/ModelDetail.html:148
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/ModelDetail.html:140
+//line views/vexport/ModelDetail.html:148
 	return qs422016
-//line views/vexport/ModelDetail.html:140
+//line views/vexport/ModelDetail.html:148
 }
 
-//line views/vexport/ModelDetail.html:142
+//line views/vexport/ModelDetail.html:150
 func streammodelIndexes(qw422016 *qt422016.Writer, model *model.Model, as *app.State, ps *cutil.PageState) {
-//line views/vexport/ModelDetail.html:142
+//line views/vexport/ModelDetail.html:150
 	qw422016.N().S(`
   <table class="mt min-200 full-width">
     <thead>
@@ -525,53 +550,139 @@ func streammodelIndexes(qw422016 *qt422016.Writer, model *model.Model, as *app.S
     </thead>
     <tbody>
 `)
-//line views/vexport/ModelDetail.html:151
+//line views/vexport/ModelDetail.html:159
 	for _, idx := range model.Indexes {
-//line views/vexport/ModelDetail.html:151
+//line views/vexport/ModelDetail.html:159
 		qw422016.N().S(`      <tr>
         <td>`)
-//line views/vexport/ModelDetail.html:153
+//line views/vexport/ModelDetail.html:161
 		qw422016.E().S(idx.Name)
-//line views/vexport/ModelDetail.html:153
+//line views/vexport/ModelDetail.html:161
 		qw422016.N().S(`</td>
         <td>`)
-//line views/vexport/ModelDetail.html:154
+//line views/vexport/ModelDetail.html:162
 		qw422016.E().S(idx.Decl)
-//line views/vexport/ModelDetail.html:154
+//line views/vexport/ModelDetail.html:162
 		qw422016.N().S(`</td>
       </tr>
 `)
-//line views/vexport/ModelDetail.html:156
+//line views/vexport/ModelDetail.html:164
 	}
-//line views/vexport/ModelDetail.html:156
+//line views/vexport/ModelDetail.html:164
 	qw422016.N().S(`    </tbody>
   </table>
 `)
-//line views/vexport/ModelDetail.html:159
+//line views/vexport/ModelDetail.html:167
 }
 
-//line views/vexport/ModelDetail.html:159
+//line views/vexport/ModelDetail.html:167
 func writemodelIndexes(qq422016 qtio422016.Writer, model *model.Model, as *app.State, ps *cutil.PageState) {
-//line views/vexport/ModelDetail.html:159
+//line views/vexport/ModelDetail.html:167
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/ModelDetail.html:159
+//line views/vexport/ModelDetail.html:167
 	streammodelIndexes(qw422016, model, as, ps)
-//line views/vexport/ModelDetail.html:159
+//line views/vexport/ModelDetail.html:167
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/ModelDetail.html:159
+//line views/vexport/ModelDetail.html:167
 }
 
-//line views/vexport/ModelDetail.html:159
+//line views/vexport/ModelDetail.html:167
 func modelIndexes(model *model.Model, as *app.State, ps *cutil.PageState) string {
-//line views/vexport/ModelDetail.html:159
+//line views/vexport/ModelDetail.html:167
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/ModelDetail.html:159
+//line views/vexport/ModelDetail.html:167
 	writemodelIndexes(qb422016, model, as, ps)
-//line views/vexport/ModelDetail.html:159
+//line views/vexport/ModelDetail.html:167
 	qs422016 := string(qb422016.B)
-//line views/vexport/ModelDetail.html:159
+//line views/vexport/ModelDetail.html:167
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/ModelDetail.html:159
+//line views/vexport/ModelDetail.html:167
 	return qs422016
-//line views/vexport/ModelDetail.html:159
+//line views/vexport/ModelDetail.html:167
+}
+
+//line views/vexport/ModelDetail.html:169
+func streammodelFiles(qw422016 *qt422016.Writer, model *model.Model, fls file.Files, as *app.State, ps *cutil.PageState) {
+//line views/vexport/ModelDetail.html:169
+	qw422016.N().S(`
+  <div class="mt">
+    <ul class="accordion">
+`)
+//line views/vexport/ModelDetail.html:172
+	for _, f := range fls {
+//line views/vexport/ModelDetail.html:172
+		qw422016.N().S(`      <li>
+        <input id="accordion-`)
+//line views/vexport/ModelDetail.html:174
+		qw422016.E().S(f.FullPath())
+//line views/vexport/ModelDetail.html:174
+		qw422016.N().S(`" type="checkbox" hidden />
+        <label for="accordion-`)
+//line views/vexport/ModelDetail.html:175
+		qw422016.E().S(f.FullPath())
+//line views/vexport/ModelDetail.html:175
+		qw422016.N().S(`">`)
+//line views/vexport/ModelDetail.html:175
+		components.StreamExpandCollapse(qw422016, 3, ps)
+//line views/vexport/ModelDetail.html:175
+		qw422016.N().S(` `)
+//line views/vexport/ModelDetail.html:175
+		qw422016.E().S(f.FullPath())
+//line views/vexport/ModelDetail.html:175
+		qw422016.N().S(`</label>
+        <div class="bd">
+`)
+//line views/vexport/ModelDetail.html:177
+		out, err := cutil.FormatLang(f.Content, f.Ext())
+
+//line views/vexport/ModelDetail.html:177
+		qw422016.N().S(`          `)
+//line views/vexport/ModelDetail.html:178
+		if err == nil {
+//line views/vexport/ModelDetail.html:178
+			qw422016.N().S(out)
+//line views/vexport/ModelDetail.html:178
+		} else {
+//line views/vexport/ModelDetail.html:178
+			qw422016.E().S(err.Error())
+//line views/vexport/ModelDetail.html:178
+		}
+//line views/vexport/ModelDetail.html:178
+		qw422016.N().S(`
+        </div>
+      </li>
+`)
+//line views/vexport/ModelDetail.html:181
+	}
+//line views/vexport/ModelDetail.html:181
+	qw422016.N().S(`    </ul>
+  </div>
+`)
+//line views/vexport/ModelDetail.html:184
+}
+
+//line views/vexport/ModelDetail.html:184
+func writemodelFiles(qq422016 qtio422016.Writer, model *model.Model, fls file.Files, as *app.State, ps *cutil.PageState) {
+//line views/vexport/ModelDetail.html:184
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vexport/ModelDetail.html:184
+	streammodelFiles(qw422016, model, fls, as, ps)
+//line views/vexport/ModelDetail.html:184
+	qt422016.ReleaseWriter(qw422016)
+//line views/vexport/ModelDetail.html:184
+}
+
+//line views/vexport/ModelDetail.html:184
+func modelFiles(model *model.Model, fls file.Files, as *app.State, ps *cutil.PageState) string {
+//line views/vexport/ModelDetail.html:184
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vexport/ModelDetail.html:184
+	writemodelFiles(qb422016, model, fls, as, ps)
+//line views/vexport/ModelDetail.html:184
+	qs422016 := string(qb422016.B)
+//line views/vexport/ModelDetail.html:184
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vexport/ModelDetail.html:184
+	return qs422016
+//line views/vexport/ModelDetail.html:184
 }

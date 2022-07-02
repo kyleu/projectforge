@@ -33,17 +33,18 @@ func load(src string, tgt string) (*SVG, error) {
 	var b []byte
 	cl := &fasthttp.Client{}
 	status, b, err := cl.Get(b, url)
-	if err != nil {
+	if err != nil || status == 404 {
 		if !strings.HasPrefix(src, "http") {
 			origErr := err
 			origURL := url
 			url = "https://raw.githubusercontent.com/icons8/line-awesome/master/svg/" + src + "-solid.svg"
-			_, _, err = cl.Get(b, url)
+			status, b, err = cl.Get(b, url)
 			if err != nil {
 				return nil, errors.Wrapf(origErr, "unable to call URL [%s]", origURL)
 			}
+		} else {
+			return nil, errors.Wrapf(err, "unable to call URL [%s]: %d", url, status)
 		}
-		return nil, errors.Wrapf(err, "unable to call URL [%s]: %d", url, status)
 	}
 	if status != 200 {
 		return nil, errors.Errorf("received status [%d] while calling URL [%s]", status, url)

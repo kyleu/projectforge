@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"time"
 
+	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
 
 	"{{{ .Package }}}/app/lib/database"
@@ -22,11 +23,11 @@ const (
 );`
 )
 
-func ListMigrations(ctx context.Context, s *database.Service, params *filter.Params, logger util.Logger) Migrations {
+func ListMigrations(ctx context.Context, s *database.Service, params *filter.Params, tx *sqlx.Tx, logger util.Logger) Migrations {
 	params = filter.ParamsWithDefaultOrdering(migrationTable, params, &filter.Ordering{Column: "created", Asc: false})
 	var dtos []migrationDTO
 	q := database.SQLSelect("*", migrationTable, "", params.OrderByString(), params.Limit, params.Offset)
-	err := s.Select(ctx, &dtos, q, nil, logger)
+	err := s.Select(ctx, &dtos, q, tx, logger)
 	if err != nil {
 		logger.Errorf("error retrieving migrations: %+v", err)
 		return nil
@@ -34,9 +35,9 @@ func ListMigrations(ctx context.Context, s *database.Service, params *filter.Par
 	return toMigrations(dtos)
 }
 
-func createMigrationTableIfNeeded(ctx context.Context, s *database.Service, logger util.Logger) error {
+func createMigrationTableIfNeeded(ctx context.Context, s *database.Service, tx *sqlx.Tx, logger util.Logger) error {
 	q := database.SQLSelectSimple("count(*) as x", migrationTable)
-	_, err := s.SingleInt(ctx, q, nil, logger)
+	_, err := s.SingleInt(ctx, q, tx, logger)
 	if err != nil {
 		logger.Info("first run, creating migration table")
 		_, err = s.Exec(ctx, migrationTableSQL, nil, -1, logger)
@@ -47,10 +48,10 @@ func createMigrationTableIfNeeded(ctx context.Context, s *database.Service, logg
 	return nil
 }
 
-func getMigrationByIdx(ctx context.Context, s *database.Service, idx int, logger util.Logger) *Migration {
+func getMigrationByIdx(ctx context.Context, s *database.Service, idx int, tx *sqlx.Tx, logger util.Logger) *Migration {
 	dto := &migrationDTO{}
 	q := database.SQLSelectSimple("*", "migration", "idx = $1")
-	err := s.Get(ctx, dto, q, nil, logger, idx)
+	err := s.Get(ctx, dto, q, tx, logger, idx)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil
@@ -61,23 +62,23 @@ func getMigrationByIdx(ctx context.Context, s *database.Service, idx int, logger
 	return dto.toMigration()
 }
 
-func removeMigrationByIdx(ctx context.Context, s *database.Service, idx int, logger util.Logger) error {
+func removeMigrationByIdx(ctx context.Context, s *database.Service, idx int, tx *sqlx.Tx, logger util.Logger) error {
 	q := database.SQLDelete("migration", "idx = $1")
-	_, err := s.Delete(ctx, q, nil, 1, logger, idx)
+	_, err := s.Delete(ctx, q, tx, 1, logger, idx)
 	if err != nil {
 		return errors.Wrap(err, "error removing migration")
 	}
 	return nil
 }
 
-func newMigration(ctx context.Context, s *database.Service, e *Migration, logger util.Logger) error {
+func newMigration(ctx context.Context, s *database.Service, e *Migration, tx *sqlx.Tx, logger util.Logger) error {
 	q := database.SQLInsert("migration", []string{"idx", "title", "src", "created"}, 1, s.Type.Placeholder)
-	return s.Insert(ctx, q, nil, logger, e.Idx, e.Title, e.Src, time.Now())
+	return s.Insert(ctx, q, tx, logger, e.Idx, e.Title, e.Src, time.Now())
 }
 
-func maxMigrationIdx(ctx context.Context, s *database.Service, logger util.Logger) int {
+func maxMigrationIdx(ctx context.Context, s *database.Service, tx *sqlx.Tx, logger util.Logger) int {
 	q := database.SQLSelectSimple("max(idx) as x", "migration")
-	max, err := s.SingleInt(ctx, q, nil, logger)
+	max, err := s.SingleInt(ctx, q, tx, logger)
 	if err != nil {
 		logger.Errorf("error getting migrations: %+v", err)
 		return -1

@@ -7,9 +7,9 @@ import (
 	"github.com/muesli/coral"
 	"github.com/pkg/errors"
 	"golang.org/x/exp/slices"
-	"projectforge.dev/projectforge/app/build"
 
-	"projectforge.dev/projectforge/app/action"
+	"projectforge.dev/projectforge/app/project/action"
+	"projectforge.dev/projectforge/app/project/build"
 	"projectforge.dev/projectforge/app/util"
 )
 

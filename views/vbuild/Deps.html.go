@@ -7,10 +7,10 @@ package vbuild
 //line views/vbuild/Deps.html:1
 import (
 	"projectforge.dev/projectforge/app"
-	"projectforge.dev/projectforge/app/action"
-	"projectforge.dev/projectforge/app/build"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/app/project/action"
+	"projectforge.dev/projectforge/app/project/build"
 	"projectforge.dev/projectforge/views/components"
 	"projectforge.dev/projectforge/views/layout"
 	"projectforge.dev/projectforge/views/vproject"

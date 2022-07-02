@@ -10,9 +10,9 @@ import (
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
-	"projectforge.dev/projectforge/app/git"
 	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/app/project/git"
 	"projectforge.dev/projectforge/views/components"
 	"projectforge.dev/projectforge/views/layout"
 	"projectforge.dev/projectforge/views/vexport"
@@ -89,7 +89,11 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vproject/Detail.html:40
 			qw422016.E().S(p.Project.Key)
 //line views/vproject/Detail.html:40
-			qw422016.N().S(`/export/config"><button>Edit</button></a></div>
+			qw422016.N().S(`/export/config"><button>`)
+//line views/vproject/Detail.html:40
+			components.StreamSVGRef(qw422016, "edit", 15, 15, "icon", ps)
+//line views/vproject/Detail.html:40
+			qw422016.N().S(`Edit</button></a></div>
         <h3>`)
 //line views/vproject/Detail.html:41
 			components.StreamSVGRefIcon(qw422016, `print`, ps)
@@ -123,7 +127,11 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vproject/Detail.html:50
 				qw422016.E().S(p.Project.Key)
 //line views/vproject/Detail.html:50
-				qw422016.N().S(`/export/groups"><button>Edit</button></a></div>
+				qw422016.N().S(`/export/groups"><button>`)
+//line views/vproject/Detail.html:50
+				components.StreamSVGRef(qw422016, "edit", 15, 15, "icon", ps)
+//line views/vproject/Detail.html:50
+				qw422016.N().S(`Edit</button></a></div>
         <h3>`)
 //line views/vproject/Detail.html:51
 				components.StreamSVGRefIcon(qw422016, `users`, ps)
@@ -144,7 +152,11 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vproject/Detail.html:56
 			qw422016.E().S(p.Project.Key)
 //line views/vproject/Detail.html:56
-			qw422016.N().S(`/export"><button>Manage</button></a></div>
+			qw422016.N().S(`/export"><button>`)
+//line views/vproject/Detail.html:56
+			components.StreamSVGRef(qw422016, "wrench", 15, 15, "icon", ps)
+//line views/vproject/Detail.html:56
+			qw422016.N().S(`Manage</button></a></div>
         <h3 class="mt">`)
 //line views/vproject/Detail.html:57
 			components.StreamSVGRefIcon(qw422016, `list`, ps)

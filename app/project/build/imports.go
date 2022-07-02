@@ -6,7 +6,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"projectforge.dev/projectforge/app/diff"
+	"projectforge.dev/projectforge/app/file/diff"
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/util"
 )

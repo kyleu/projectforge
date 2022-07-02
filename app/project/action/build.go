@@ -6,9 +6,9 @@ import (
 
 	"github.com/pkg/errors"
 
-	"projectforge.dev/projectforge/app/build"
 	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/app/project/build"
 	"projectforge.dev/projectforge/app/util"
 )
 

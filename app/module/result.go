@@ -1,7 +1,7 @@
 package module
 
 import (
-	"projectforge.dev/projectforge/app/diff"
+	"projectforge.dev/projectforge/app/file/diff"
 	"projectforge.dev/projectforge/app/util"
 )
 

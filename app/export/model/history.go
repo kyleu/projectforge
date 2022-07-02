@@ -19,10 +19,10 @@ type HistoryMap struct {
 }
 
 func (m *Model) HistoryColumns(coreColumns bool) *HistoryMap {
-	if m.historyMap != nil {
-		if coreColumns {
-			return m.historyMapDB
-		}
+	if coreColumns && m.historyMapDB != nil {
+		return m.historyMapDB
+	}
+	if !coreColumns && m.historyMap != nil {
 		return m.historyMap
 	}
 	var pk Columns

@@ -3,7 +3,7 @@ package diff_test
 import (
 	"testing"
 
-	"projectforge.dev/projectforge/app/diff"
+	"projectforge.dev/projectforge/app/file/diff"
 )
 
 func TestDiffs(t *testing.T) {

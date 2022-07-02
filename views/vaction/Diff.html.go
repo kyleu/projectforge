@@ -9,9 +9,9 @@ import (
 	"strings"
 
 	"projectforge.dev/projectforge/app"
-	"projectforge.dev/projectforge/app/action"
 	"projectforge.dev/projectforge/app/controller/cutil"
-	"projectforge.dev/projectforge/app/diff"
+	"projectforge.dev/projectforge/app/file/diff"
+	"projectforge.dev/projectforge/app/project/action"
 	"projectforge.dev/projectforge/app/util"
 )
 

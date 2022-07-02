@@ -1,7 +1,7 @@
 {% import (
   "projectforge.dev/projectforge/app"
-  "projectforge.dev/projectforge/app/action"
-  "projectforge.dev/projectforge/app/build"
+  "projectforge.dev/projectforge/app/project/action"
+  "projectforge.dev/projectforge/app/project/build"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/project"
   "projectforge.dev/projectforge/views/components"
@@ -41,6 +41,7 @@
   Projects project.Projects
   Results map[string]*action.Result
   Packages map[string]build.Pkgs
+  Tags []string
 } %}
 
 {% func (p *PackagesAll) Body(as *app.State, ps *cutil.PageState) %}

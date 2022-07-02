@@ -116,6 +116,13 @@ func ToSQLType(t types.Type) string {
 	case types.KeyBool:
 		return "boolean"
 	case types.KeyInt:
+		w, ok := t.(*types.Wrapped)
+		if ok {
+			i, ok := w.T.(*types.Int)
+			if ok && i.Bits == 64 {
+				return "bigint"
+			}
+		}
 		return "int"
 	case types.KeyList, types.KeyMap, types.KeyValueMap, types.KeyReference:
 		return keyJSONB

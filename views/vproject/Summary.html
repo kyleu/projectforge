@@ -1,7 +1,7 @@
 {% import (
-  "projectforge.dev/projectforge/app/action"
+  "projectforge.dev/projectforge/app/project/action"
   "projectforge.dev/projectforge/app/controller/cutil"
-  "projectforge.dev/projectforge/app/git"
+  "projectforge.dev/projectforge/app/project/git"
   "projectforge.dev/projectforge/app/project"
   "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
@@ -23,12 +23,12 @@
     {%- endif -%}
     <div class="mt">
       {%- for _, t := range action.ProjectTypes -%}
-      <a href="/run/{%s prj.Key %}/{%s t.Key %}" title="{%s t.Description %}"><button>{%s t.Title %}</button></a>
+      <a href="/run/{%s prj.Key %}/{%s t.Key %}" title="{%s t.Description %}"><button>{%= components.SVGRef(t.Icon, 15, 15, "icon", ps) %}{%s t.Title %}</button></a>
       {%- endfor -%}
-      <a href="/p/{%s prj.Key %}/edit" title="Edit the project definition"><button>Edit</button></a>
-      <a href="/p/{%s prj.Key %}/fs" title="Explore the project's files"><button>Files</button></a>
-      <a href="/svg/{%s prj.Key %}" title="Add new SVGs and set the app icon"><button>SVG</button></a>
-      <a href="/git/{%s prj.Key %}" title="Source control status for this project"><button>Git</button></a>
+      <a href="/p/{%s prj.Key %}/edit" title="Edit the project definition"><button>{%= components.SVGRef("edit", 15, 15, "icon", ps) %}Edit</button></a>
+      <a href="/p/{%s prj.Key %}/fs" title="Explore the project's files"><button>{%= components.SVGRef("folder", 15, 15, "icon", ps) %}Files</button></a>
+      <a href="/svg/{%s prj.Key %}" title="Add new SVGs and set the app icon"><button>{%= components.SVGRef("icons", 15, 15, "icon", ps) %}SVG</button></a>
+      <a href="/git/{%s prj.Key %}" title="Source control status for this project"><button>{%= components.SVGRef("git", 15, 15, "icon", ps) %}Git</button></a>
     </div>
   </div>
 {% endfunc %}

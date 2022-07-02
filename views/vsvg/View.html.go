@@ -9,7 +9,7 @@ import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/project"
-	"projectforge.dev/projectforge/app/svg"
+	"projectforge.dev/projectforge/app/project/svg"
 	"projectforge.dev/projectforge/views/layout"
 )
 

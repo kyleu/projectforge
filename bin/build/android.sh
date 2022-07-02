@@ -1,6 +1,8 @@
 #!/bin/bash
 # Content managed by Project Forge, see [projectforge.md] for details.
 
+## Builds the Android library and application
+
 set -eo pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $dir/../..

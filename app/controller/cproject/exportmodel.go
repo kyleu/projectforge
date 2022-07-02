@@ -9,21 +9,27 @@ import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
 	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/export/files"
 	"projectforge.dev/projectforge/app/export/model"
 	"projectforge.dev/projectforge/views/vexport"
 )
 
 func ProjectExportModelDetail(rc *fasthttp.RequestCtx) {
 	controller.Act("project.export.model.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, mdl, _, err := exportLoad(rc, as, ps.Logger)
+		prj, mdl, args, err := exportLoad(rc, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}
 		ps.Data = mdl
 
+		fls, err := files.ModelAll(mdl, args, true)
+		if err != nil {
+			ps.Logger.Warnf("unable to generate files for model [%s]", mdl.Name)
+		}
+
 		bc := []string{"projects", prj.Key, fmt.Sprintf("Export||/p/%s/export", prj.Key), mdl.Title()}
 		ps.Title = fmt.Sprintf("[%s] %s", prj.Key, mdl.Name)
-		return controller.Render(rc, as, &vexport.ModelDetail{Project: prj, Model: mdl}, ps, bc...)
+		return controller.Render(rc, as, &vexport.ModelDetail{Project: prj, Model: mdl, Files: fls}, ps, bc...)
 	})
 }
 

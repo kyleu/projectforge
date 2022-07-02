@@ -18,7 +18,7 @@ func All(ctx context.Context, args *model.Args, addHeader bool, logger util.Logg
 	}
 	ret := make(file.Files, 0, len(args.Models)*10)
 	for _, m := range args.Models {
-		calls, err := modelAll(m, args, addHeader)
+		calls, err := ModelAll(m, args, addHeader)
 		if err != nil {
 			return nil, errors.Wrapf(err, "error processing model [%s]", m.Name)
 		}
@@ -45,18 +45,18 @@ func All(ctx context.Context, args *model.Args, addHeader bool, logger util.Logg
 	ret = append(ret, x)
 
 	if args.HasModule("migration") {
-		f, err := sql.MigrationAll(args.Models, addHeader)
+		f, err := sql.MigrationAll(args.Models.Sorted(), addHeader)
 		if err != nil {
 			return nil, errors.Wrap(err, "can't render SQL \"all\" migration")
 		}
 		ret = append(ret, f)
-		if args.Models.HasSeedData() {
-			f, err = sql.SeedDataAll(args.Models)
-			if err != nil {
-				return nil, errors.Wrap(err, "can't render SQL \"all\" migration")
-			}
-			ret = append(ret, f)
+	}
+	if args.Models.HasSeedData() {
+		f, err := sql.SeedDataAll(args.Models)
+		if err != nil {
+			return nil, errors.Wrap(err, "can't render SQL \"all\" migration")
 		}
+		ret = append(ret, f)
 	}
 	return ret, nil
 }

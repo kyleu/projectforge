@@ -31,7 +31,11 @@ func (m Models) Sorted() Models {
 	ret := make(Models, 0, len(m))
 	for _, mdl := range m {
 		if curr := ret.Get(mdl.Name); curr == nil {
-			ret = append(ret, m.withDeps(mdl)...)
+			for _, n := range m.withDeps(mdl) {
+				if x := ret.Get(n.Name); x == nil {
+					ret = append(ret, n)
+				}
+			}
 		}
 	}
 	return ret
@@ -39,12 +43,15 @@ func (m Models) Sorted() Models {
 
 func (m Models) withDeps(mdl *Model) Models {
 	var deps Models
-	for _, rel := range m.ReverseRelations(mdl.Name) {
-		if rel.Table == mdl.Name {
+	for _, rel := range mdl.Relations {
+		if deps.Get(rel.Table) == nil {
 			deps = append(deps, m.withDeps(m.Get(rel.Table))...)
 		}
 	}
-	return append(Models{mdl}, deps...)
+	if deps.Get(mdl.Name) == nil {
+		deps = append(deps, mdl)
+	}
+	return deps
 }
 
 func (m Models) HasSearch() bool {

@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"projectforge.dev/projectforge/app/svg"
+	"projectforge.dev/projectforge/app/project/svg"
 )
 
 const refreshMode = "refresh"

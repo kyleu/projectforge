@@ -20,12 +20,12 @@
 
 {% func (p *Overview) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <div class="right"><a href="/p/{%s p.Project.Key %}/export/config"><button>Edit</button></a></div>
+    <div class="right"><a href="/p/{%s p.Project.Key %}/export/config"><button>{%= components.SVGRef("edit", 15, 15, "icon", ps) %}Edit</button></a></div>
     <h3>{%= components.SVGRefIcon(`print`, ps) %}Export Configuration</h3>
     {%= components.JSON(p.Args.Config) %}
   </div>
   <div class="card">
-    <div class="right"><a href="/p/{%s p.Project.Key %}/export/groups"><button>Edit</button></a></div>
+    <div class="right"><a href="/p/{%s p.Project.Key %}/export/groups"><button>{%= components.SVGRef("edit", 15, 15, "icon", ps) %}Edit</button></a></div>
     <h3>{%= components.SVGRefIcon(`users`, ps) %}Groups</h3>
     <div class="mt">
       {%- if len(p.Args.Groups) == 0 -%}
@@ -36,7 +36,7 @@
     </div>
   </div>
   <div class="card">
-    <div class="right"><a href="/p/{%s p.Project.Key %}/export/models/new"><button>New</button></a></div>
+    <div class="right"><a href="/p/{%s p.Project.Key %}/export/models/new"><button>{%= components.SVGRef("file", 15, 15, "icon", ps) %}New</button></a></div>
     <h3>{%= components.SVGRefIcon(`list`, ps) %}Models</h3>
     {%= ModelList(p.Args.Models, fmt.Sprintf("/p/%s/export/models", p.Project.Key), as, ps) %}
   </div>

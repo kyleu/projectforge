@@ -61,7 +61,7 @@ func Admin(rc *fasthttp.RequestCtx) {
 			return controller.Render(rc, as, &vadmin.MemUsage{Mem: x}, ps, "admin", "Memory Usage"){{{ if .HasModule "migration" }}}
 		case "migrations":
 			ms := migrate.GetMigrations()
-			am := migrate.ListMigrations(ps.Context, as.DB, nil, ps.Logger)
+			am := migrate.ListMigrations(ps.Context, as.DB, nil, nil, ps.Logger)
 			ps.Data = util.ValueMap{"available": ms, "applied": am}
 			return controller.Render(rc, as, &vadmin.Migrations{Available: ms, Applied: am}, ps, "admin", "Migrations"){{{ end }}}
 		case "modules":

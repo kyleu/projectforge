@@ -1,5 +1,7 @@
 #!/bin/bash
 
+## Builds the Android library and application
+
 set -eo pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $dir/../..

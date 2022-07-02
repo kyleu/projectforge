@@ -8,163 +8,170 @@ package vproject
 import (
 	"strings"
 
-	"projectforge.dev/projectforge/app/action"
 	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/project/action"
+	"projectforge.dev/projectforge/views/components"
 	"projectforge.dev/projectforge/views/vsearch"
 )
 
-//line views/vproject/AvailActions.html:9
+//line views/vproject/AvailActions.html:10
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vproject/AvailActions.html:9
+//line views/vproject/AvailActions.html:10
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vproject/AvailActions.html:9
+//line views/vproject/AvailActions.html:10
 func StreamAvailActions(qw422016 *qt422016.Writer, title string, currTags []string, availTags []string, ps *cutil.PageState) {
-//line views/vproject/AvailActions.html:9
+//line views/vproject/AvailActions.html:10
 	qw422016.N().S(`
 `)
-//line views/vproject/AvailActions.html:11
+//line views/vproject/AvailActions.html:12
 	var tags string
 	if len(currTags) > 0 {
 		tags = "?tags=" + strings.Join(currTags, ",")
 	}
 
-//line views/vproject/AvailActions.html:15
+//line views/vproject/AvailActions.html:16
 	qw422016.N().S(`  `)
-//line views/vproject/AvailActions.html:16
+//line views/vproject/AvailActions.html:17
 	vsearch.StreamForm(qw422016, "/p/search", "", "Search All Files", currTags, ps)
-//line views/vproject/AvailActions.html:16
+//line views/vproject/AvailActions.html:17
 	qw422016.N().S(`
   <h3>
     <a href="/p">All Projects</a>`)
-//line views/vproject/AvailActions.html:18
+//line views/vproject/AvailActions.html:19
 	if len(currTags) > 0 {
-//line views/vproject/AvailActions.html:18
+//line views/vproject/AvailActions.html:19
 		qw422016.N().S(` tagged [<a href="/p?tags=`)
-//line views/vproject/AvailActions.html:18
+//line views/vproject/AvailActions.html:19
 		qw422016.E().S(strings.Join(currTags, `, `))
-//line views/vproject/AvailActions.html:18
+//line views/vproject/AvailActions.html:19
 		qw422016.N().S(`">`)
-//line views/vproject/AvailActions.html:18
+//line views/vproject/AvailActions.html:19
 		qw422016.E().S(strings.Join(currTags, `, `))
-//line views/vproject/AvailActions.html:18
+//line views/vproject/AvailActions.html:19
 		qw422016.N().S(`</a>]`)
-//line views/vproject/AvailActions.html:18
+//line views/vproject/AvailActions.html:19
 	}
-//line views/vproject/AvailActions.html:18
+//line views/vproject/AvailActions.html:19
 	if title != "" {
-//line views/vproject/AvailActions.html:18
+//line views/vproject/AvailActions.html:19
 		qw422016.N().S(`: <a href="">`)
-//line views/vproject/AvailActions.html:18
+//line views/vproject/AvailActions.html:19
 		qw422016.E().S(title)
-//line views/vproject/AvailActions.html:18
+//line views/vproject/AvailActions.html:19
 		qw422016.N().S(`</a>`)
-//line views/vproject/AvailActions.html:18
+//line views/vproject/AvailActions.html:19
 	}
-//line views/vproject/AvailActions.html:18
+//line views/vproject/AvailActions.html:19
 	qw422016.N().S(`
   </h3>
   <div class="clear"></div>
 `)
-//line views/vproject/AvailActions.html:21
+//line views/vproject/AvailActions.html:22
 	if len(availTags) > 0 {
-//line views/vproject/AvailActions.html:21
+//line views/vproject/AvailActions.html:22
 		qw422016.N().S(`  <div class="right mt">
     Available Tags:
 `)
-//line views/vproject/AvailActions.html:24
+//line views/vproject/AvailActions.html:25
 		for idx, t := range availTags {
-//line views/vproject/AvailActions.html:24
+//line views/vproject/AvailActions.html:25
 			qw422016.N().S(`    <a href="?tags=`)
-//line views/vproject/AvailActions.html:25
+//line views/vproject/AvailActions.html:26
 			qw422016.E().S(t)
-//line views/vproject/AvailActions.html:25
+//line views/vproject/AvailActions.html:26
 			qw422016.N().S(`"><code>`)
-//line views/vproject/AvailActions.html:25
+//line views/vproject/AvailActions.html:26
 			qw422016.E().S(t)
-//line views/vproject/AvailActions.html:25
+//line views/vproject/AvailActions.html:26
 			qw422016.N().S(`</code></a>`)
-//line views/vproject/AvailActions.html:25
+//line views/vproject/AvailActions.html:26
 			if idx != (len(availTags) - 1) {
-//line views/vproject/AvailActions.html:25
+//line views/vproject/AvailActions.html:26
 				qw422016.N().S(`, `)
-//line views/vproject/AvailActions.html:25
+//line views/vproject/AvailActions.html:26
 			}
-//line views/vproject/AvailActions.html:25
+//line views/vproject/AvailActions.html:26
 			qw422016.N().S(`
 `)
-//line views/vproject/AvailActions.html:26
+//line views/vproject/AvailActions.html:27
 		}
-//line views/vproject/AvailActions.html:26
+//line views/vproject/AvailActions.html:27
 		qw422016.N().S(`  </div>
 `)
-//line views/vproject/AvailActions.html:28
+//line views/vproject/AvailActions.html:29
 	}
-//line views/vproject/AvailActions.html:28
+//line views/vproject/AvailActions.html:29
 	qw422016.N().S(`  <div class="mt">
 `)
-//line views/vproject/AvailActions.html:30
+//line views/vproject/AvailActions.html:31
 	for _, t := range action.ProjectTypes {
-//line views/vproject/AvailActions.html:30
+//line views/vproject/AvailActions.html:31
 		qw422016.N().S(`    <a href="/run/`)
-//line views/vproject/AvailActions.html:31
+//line views/vproject/AvailActions.html:32
 		qw422016.E().S(t.Key)
-//line views/vproject/AvailActions.html:31
+//line views/vproject/AvailActions.html:32
 		qw422016.E().S(tags)
-//line views/vproject/AvailActions.html:31
+//line views/vproject/AvailActions.html:32
 		qw422016.N().S(`" title="`)
-//line views/vproject/AvailActions.html:31
+//line views/vproject/AvailActions.html:32
 		qw422016.E().S(t.Description)
-//line views/vproject/AvailActions.html:31
+//line views/vproject/AvailActions.html:32
 		qw422016.N().S(`"><button>`)
-//line views/vproject/AvailActions.html:31
+//line views/vproject/AvailActions.html:32
+		components.StreamSVGRef(qw422016, t.Icon, 15, 15, "icon", ps)
+//line views/vproject/AvailActions.html:32
 		qw422016.E().S(t.Title)
-//line views/vproject/AvailActions.html:31
+//line views/vproject/AvailActions.html:32
 		qw422016.N().S(`</button></a>
 `)
-//line views/vproject/AvailActions.html:32
+//line views/vproject/AvailActions.html:33
 	}
-//line views/vproject/AvailActions.html:32
+//line views/vproject/AvailActions.html:33
 	qw422016.N().S(`    <a href="/git`)
-//line views/vproject/AvailActions.html:33
+//line views/vproject/AvailActions.html:34
 	qw422016.E().S(tags)
-//line views/vproject/AvailActions.html:33
-	qw422016.N().S(`" title="Git dashboard for all projects"><button>Git</button></a>
+//line views/vproject/AvailActions.html:34
+	qw422016.N().S(`" title="Git dashboard for all projects"><button>`)
+//line views/vproject/AvailActions.html:34
+	components.StreamSVGRef(qw422016, "git", 15, 15, "icon", ps)
+//line views/vproject/AvailActions.html:34
+	qw422016.N().S(`Git</button></a>
   </div>
 `)
-//line views/vproject/AvailActions.html:35
+//line views/vproject/AvailActions.html:36
 }
 
-//line views/vproject/AvailActions.html:35
+//line views/vproject/AvailActions.html:36
 func WriteAvailActions(qq422016 qtio422016.Writer, title string, currTags []string, availTags []string, ps *cutil.PageState) {
-//line views/vproject/AvailActions.html:35
+//line views/vproject/AvailActions.html:36
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/AvailActions.html:35
+//line views/vproject/AvailActions.html:36
 	StreamAvailActions(qw422016, title, currTags, availTags, ps)
-//line views/vproject/AvailActions.html:35
+//line views/vproject/AvailActions.html:36
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/AvailActions.html:35
+//line views/vproject/AvailActions.html:36
 }
 
-//line views/vproject/AvailActions.html:35
+//line views/vproject/AvailActions.html:36
 func AvailActions(title string, currTags []string, availTags []string, ps *cutil.PageState) string {
-//line views/vproject/AvailActions.html:35
+//line views/vproject/AvailActions.html:36
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/AvailActions.html:35
+//line views/vproject/AvailActions.html:36
 	WriteAvailActions(qb422016, title, currTags, availTags, ps)
-//line views/vproject/AvailActions.html:35
+//line views/vproject/AvailActions.html:36
 	qs422016 := string(qb422016.B)
-//line views/vproject/AvailActions.html:35
+//line views/vproject/AvailActions.html:36
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/AvailActions.html:35
+//line views/vproject/AvailActions.html:36
 	return qs422016
-//line views/vproject/AvailActions.html:35
+//line views/vproject/AvailActions.html:36
 }

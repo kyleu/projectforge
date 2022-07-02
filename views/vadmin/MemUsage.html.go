@@ -36,7 +36,7 @@ type MemUsage struct {
 }
 
 //line views/vadmin/MemUsage.html:16
-func (p *MemUsage) StreamMemUsage(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
+func (p *MemUsage) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
 //line views/vadmin/MemUsage.html:16
 	qw422016.N().S(`
   <div class="card">
@@ -52,22 +52,22 @@ func (p *MemUsage) StreamMemUsage(qw422016 *qt422016.Writer, as *app.State, ps *
 }
 
 //line views/vadmin/MemUsage.html:21
-func (p *MemUsage) WriteMemUsage(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
+func (p *MemUsage) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
 //line views/vadmin/MemUsage.html:21
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vadmin/MemUsage.html:21
-	p.StreamMemUsage(qw422016, as, ps)
+	p.StreamBody(qw422016, as, ps)
 //line views/vadmin/MemUsage.html:21
 	qt422016.ReleaseWriter(qw422016)
 //line views/vadmin/MemUsage.html:21
 }
 
 //line views/vadmin/MemUsage.html:21
-func (p *MemUsage) MemUsage(as *app.State, ps *cutil.PageState) string {
+func (p *MemUsage) Body(as *app.State, ps *cutil.PageState) string {
 //line views/vadmin/MemUsage.html:21
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vadmin/MemUsage.html:21
-	p.WriteMemUsage(qb422016, as, ps)
+	p.WriteBody(qb422016, as, ps)
 //line views/vadmin/MemUsage.html:21
 	qs422016 := string(qb422016.B)
 //line views/vadmin/MemUsage.html:21
