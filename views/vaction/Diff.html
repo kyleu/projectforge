@@ -54,7 +54,7 @@
               {%- endif -%}
             </form>
             {%- case "preview" -%}
-            <form action="/run/{%s prjKey %}/merge" method="get">
+            <form action="/run/{%s prjKey %}/generate" method="get">
               <input type="hidden" name="file" value="{%s d.Path %}" />
               {%- if d.Status.String() != "new" -%}
               <button type="submit" name="to" value="module" title="Incorporate change into module">&lt;-</button>{% space %}

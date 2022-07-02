@@ -131,7 +131,7 @@ func streamrenderDiffs(qw422016 *qt422016.Writer, prjKey string, act action.Type
 //line views/vaction/Diff.html:57
 			qw422016.E().S(prjKey)
 //line views/vaction/Diff.html:57
-			qw422016.N().S(`/merge" method="get"><input type="hidden" name="file" value="`)
+			qw422016.N().S(`/generate" method="get"><input type="hidden" name="file" value="`)
 //line views/vaction/Diff.html:58
 			qw422016.E().S(d.Path)
 //line views/vaction/Diff.html:58

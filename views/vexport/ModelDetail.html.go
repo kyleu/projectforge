@@ -6,10 +6,8 @@ package vexport
 
 //line views/vexport/ModelDetail.html:1
 import (
-	qtio422016 "io"
 	"strings"
 
-	qt422016 "github.com/valyala/quicktemplate"
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/file"
@@ -20,6 +18,11 @@ import (
 )
 
 //line views/vexport/ModelDetail.html:13
+import (
+	qtio422016 "io"
+
+	qt422016 "github.com/valyala/quicktemplate"
+)
 
 //line views/vexport/ModelDetail.html:13
 var (

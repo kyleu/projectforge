@@ -106,8 +106,7 @@ func applyPrj(ctx context.Context, pm *PrjAndMods, t Type) *Result {
 	case TypeDebug:
 		return onDebug(ctx, pm)
 	case TypeGenerate:
-		return onSlam(ctx, pm)
-		// return onMerge(ctx, pm)
+		return onGenerate(ctx, pm)
 	case TypePreview:
 		return onPreview(ctx, pm)
 	case TypeSVG:

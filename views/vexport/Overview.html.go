@@ -7,14 +7,12 @@ package vexport
 //line views/vexport/Overview.html:1
 import (
 	"fmt"
-	qtio422016 "io"
 	"strings"
 
-	qt422016 "github.com/valyala/quicktemplate"
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/project"
-	model2 "projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/project/export/model"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/components"
 	"projectforge.dev/projectforge/views/layout"
@@ -22,6 +20,11 @@ import (
 )
 
 //line views/vexport/Overview.html:15
+import (
+	qtio422016 "io"
+
+	qt422016 "github.com/valyala/quicktemplate"
+)
 
 //line views/vexport/Overview.html:15
 var (
@@ -33,7 +36,7 @@ var (
 type Overview struct {
 	layout.Basic
 	Project *project.Project
-	Args    *model2.Args
+	Args    *model.Args
 }
 
 //line views/vexport/Overview.html:21
@@ -149,7 +152,7 @@ func (p *Overview) Body(as *app.State, ps *cutil.PageState) string {
 }
 
 //line views/vexport/Overview.html:45
-func StreamGroupList(qw422016 *qt422016.Writer, groups model2.Groups, indent int) {
+func StreamGroupList(qw422016 *qt422016.Writer, groups model.Groups, indent int) {
 //line views/vexport/Overview.html:46
 	vutil.StreamIndent(qw422016, true, indent)
 //line views/vexport/Overview.html:46
@@ -184,7 +187,7 @@ func StreamGroupList(qw422016 *qt422016.Writer, groups model2.Groups, indent int
 }
 
 //line views/vexport/Overview.html:61
-func WriteGroupList(qq422016 qtio422016.Writer, groups model2.Groups, indent int) {
+func WriteGroupList(qq422016 qtio422016.Writer, groups model.Groups, indent int) {
 //line views/vexport/Overview.html:61
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vexport/Overview.html:61
@@ -195,7 +198,7 @@ func WriteGroupList(qq422016 qtio422016.Writer, groups model2.Groups, indent int
 }
 
 //line views/vexport/Overview.html:61
-func GroupList(groups model2.Groups, indent int) string {
+func GroupList(groups model.Groups, indent int) string {
 //line views/vexport/Overview.html:61
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vexport/Overview.html:61
@@ -210,7 +213,7 @@ func GroupList(groups model2.Groups, indent int) string {
 }
 
 //line views/vexport/Overview.html:63
-func StreamModelList(qw422016 *qt422016.Writer, models model2.Models, urlPrefix string, as *app.State, ps *cutil.PageState) {
+func StreamModelList(qw422016 *qt422016.Writer, models model.Models, urlPrefix string, as *app.State, ps *cutil.PageState) {
 //line views/vexport/Overview.html:63
 	qw422016.N().S(`
   <table class="mt min-200 full-width">
@@ -270,7 +273,7 @@ func StreamModelList(qw422016 *qt422016.Writer, models model2.Models, urlPrefix 
 }
 
 //line views/vexport/Overview.html:84
-func WriteModelList(qq422016 qtio422016.Writer, models model2.Models, urlPrefix string, as *app.State, ps *cutil.PageState) {
+func WriteModelList(qq422016 qtio422016.Writer, models model.Models, urlPrefix string, as *app.State, ps *cutil.PageState) {
 //line views/vexport/Overview.html:84
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vexport/Overview.html:84
@@ -281,7 +284,7 @@ func WriteModelList(qq422016 qtio422016.Writer, models model2.Models, urlPrefix 
 }
 
 //line views/vexport/Overview.html:84
-func ModelList(models model2.Models, urlPrefix string, as *app.State, ps *cutil.PageState) string {
+func ModelList(models model.Models, urlPrefix string, as *app.State, ps *cutil.PageState) string {
 //line views/vexport/Overview.html:84
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vexport/Overview.html:84
