@@ -4,11 +4,11 @@ import (
 	"fmt"
 
 	"projectforge.dev/projectforge/app/project/export/files/helper"
-	golang2 "projectforge.dev/projectforge/app/project/export/golang"
-	model2 "projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func controllerList(m *model2.Model, grp *model2.Column, models model2.Models, g *golang2.File, prefix string) *golang2.Block {
+func controllerList(m *model.Model, grp *model.Column, models model.Models, g *golang.File, prefix string) *golang.Block {
 	ret := blockFor(m, prefix, grp, "list")
 	meth := "List"
 	grpArgs := ""
@@ -43,7 +43,7 @@ func controllerList(m *model2.Model, grp *model2.Column, models model2.Models, g
 			g.AddImport(imp)
 		}
 
-		ret.W("\t\t%sIDs := make([]%s, 0, len(ret))", relModel.Camel(), model2.ToGoType(srcCol.Type, srcCol.Nullable, m.Package))
+		ret.W("\t\t%sIDs := make([]%s, 0, len(ret))", relModel.Camel(), model.ToGoType(srcCol.Type, srcCol.Nullable, m.Package))
 		ret.W("\t\tfor _, x := range ret {")
 		ret.W("\t\t\t%sIDs = append(%sIDs, x.%s)", relModel.Camel(), relModel.Camel(), srcCol.Proper())
 		ret.W("\t\t}")

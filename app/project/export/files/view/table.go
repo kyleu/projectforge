@@ -5,24 +5,24 @@ import (
 
 	"golang.org/x/exp/slices"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
-	golang2 "projectforge.dev/projectforge/app/project/export/golang"
-	model2 "projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/project/export/model"
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func table(m *model2.Model, args *model2.Args, addHeader bool) (*file.File, error) {
-	g := golang2.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "Table.html")
+func table(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
+	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "Table.html")
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpFilter)
 	g.AddImport(helper.AppImport("app/" + m.PackageWithGroup("")))
 	g.AddBlocks(exportViewTableFunc(m, args.Models, g))
 	return g.Render(addHeader)
 }
 
-func exportViewTableFunc(m *model2.Model, models model2.Models, g *golang2.Template) *golang2.Block {
+func exportViewTableFunc(m *model.Model, models model.Models, g *golang.Template) *golang.Block {
 	summCols := m.Columns.ForDisplay("summary")
-	ret := golang2.NewBlock("Table", "func")
+	ret := golang.NewBlock("Table", "func")
 	suffix := ""
 	for _, rel := range m.Relations {
 		if relModel := models.Get(rel.Table); relModel.CanTraverseRelation() {
@@ -61,7 +61,7 @@ func exportViewTableFunc(m *model2.Model, models model2.Models, g *golang2.Templ
 	return ret
 }
 
-func viewTableColumn(ret *golang2.Block, models model2.Models, m *model2.Model, link bool, col *model2.Column, modelKey string, prefix string, indent int) {
+func viewTableColumn(ret *golang.Block, models model.Models, m *model.Model, link bool, col *model.Column, modelKey string, prefix string, indent int) {
 	ind := util.StringRepeat("  ", indent)
 	rels := m.RelationsFor(col)
 	if len(rels) == 0 {

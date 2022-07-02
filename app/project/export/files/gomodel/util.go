@@ -6,11 +6,11 @@ import (
 
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/golang"
-	model2 "projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/project/export/model"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func modelClone(m *model2.Model) *golang.Block {
+func modelClone(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("Clone", "func")
 	ret.W("func (%s *%s) Clone() *%s {", m.FirstLetter(), m.Proper(), m.Proper())
 	ret.W("\treturn &%s{", m.Proper())
@@ -28,11 +28,11 @@ func modelClone(m *model2.Model) *golang.Block {
 	return ret
 }
 
-func modelString(m *model2.Model) *golang.Block {
+func modelString(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("String", "func")
 	ret.W("func (%s *%s) String() string {", m.FirstLetter(), m.Proper())
 	if pks := m.PKs(); len(pks) == 1 {
-		ret.W("\treturn %s", model2.ToGoString(pks[0].Type, fmt.Sprintf("%s.%s", m.FirstLetter(), pks[0].Proper())))
+		ret.W("\treturn %s", model.ToGoString(pks[0].Type, fmt.Sprintf("%s.%s", m.FirstLetter(), pks[0].Proper())))
 	} else {
 		s := "\treturn fmt.Sprintf(\""
 		for idx := range m.PKs() {
@@ -51,13 +51,13 @@ func modelString(m *model2.Model) *golang.Block {
 	return ret
 }
 
-func modelTitle(m *model2.Model) *golang.Block {
+func modelTitle(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("Title", "func")
 	ret.W("func (%s *%s) TitleString() string {", m.FirstLetter(), m.Proper())
 	if titles := m.Columns.WithTag("title"); len(titles) > 0 {
 		var toStrings []string
 		for _, title := range titles {
-			toStrings = append(toStrings, model2.ToGoString(title.Type, fmt.Sprintf("%s.%s", m.FirstLetter(), title.Proper())))
+			toStrings = append(toStrings, model.ToGoString(title.Type, fmt.Sprintf("%s.%s", m.FirstLetter(), title.Proper())))
 		}
 		ret.W("\treturn %s", strings.Join(toStrings, " + \" / \" + "))
 	} else {
@@ -67,7 +67,7 @@ func modelTitle(m *model2.Model) *golang.Block {
 	return ret
 }
 
-func modelWebPath(m *model2.Model) *golang.Block {
+func modelWebPath(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("WebPath", "type")
 	ret.W("func (%s *%s) WebPath() string {", m.FirstLetter(), m.Proper())
 	p := "\"/" + m.Route() + "\""

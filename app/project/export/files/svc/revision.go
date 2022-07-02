@@ -6,8 +6,8 @@ import (
 
 	"github.com/pkg/errors"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
-	golang2 "projectforge.dev/projectforge/app/project/export/golang"
-	model2 "projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/project/export/model"
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/util"
@@ -15,9 +15,9 @@ import (
 
 const incDel = ", includeDeleted bool"
 
-func ServiceRevision(m *model2.Model, args *model2.Args, addHeader bool) (*file.File, error) {
+func ServiceRevision(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	dbRef := args.DBRef()
-	g := golang2.NewFile(m.Package, []string{"app", m.Package}, "servicerevision")
+	g := golang.NewFile(m.Package, []string{"app", m.Package}, "servicerevision")
 	g.AddImport(helper.ImpAppUtil, helper.ImpFmt, helper.ImpStrings, helper.ImpContext, helper.ImpFilter, helper.ImpSQLx, helper.ImpErrors, helper.ImpDatabase)
 	ar, err := serviceGetAllRevisions(m, dbRef)
 	if err != nil {
@@ -35,11 +35,11 @@ func ServiceRevision(m *model2.Model, args *model2.Args, addHeader bool) (*file.
 	return g.Render(addHeader)
 }
 
-func serviceGetAllRevisions(m *model2.Model, dbRef string) (*golang2.Block, error) {
+func serviceGetAllRevisions(m *model.Model, dbRef string) (*golang.Block, error) {
 	hc := m.HistoryColumns(true)
 	pks := m.PKs()
 
-	ret := golang2.NewBlock(fmt.Sprintf("GetAll%s", hc.Col.ProperPlural()), "func")
+	ret := golang.NewBlock(fmt.Sprintf("GetAll%s", hc.Col.ProperPlural()), "func")
 	suffix := ""
 	if m.IsSoftDelete() {
 		suffix += incDel
@@ -70,9 +70,9 @@ func serviceGetAllRevisions(m *model2.Model, dbRef string) (*golang2.Block, erro
 	return ret, nil
 }
 
-func serviceGetRevision(m *model2.Model, dbRef string) (*golang2.Block, error) {
+func serviceGetRevision(m *model.Model, dbRef string) (*golang.Block, error) {
 	revCol := m.HistoryColumn()
-	ret := golang2.NewBlock(fmt.Sprintf("Get%s", revCol.Proper()), "func")
+	ret := golang.NewBlock(fmt.Sprintf("Get%s", revCol.Proper()), "func")
 	const decl = "func (s *Service) Get%s(ctx context.Context, tx *sqlx.Tx, %s, %s int, logger util.Logger) (*%s, error) {"
 	ret.W(decl, revCol.Proper(), m.PKs().Args(m.Package), revCol.Camel(), m.Proper())
 	placeholders := make([]string, 0, len(m.PKs()))
@@ -95,10 +95,10 @@ func serviceGetRevision(m *model2.Model, dbRef string) (*golang2.Block, error) {
 	return ret, nil
 }
 
-func serviceGetCurrentRevisions(m *model2.Model, dbRef string) (*golang2.Block, error) {
+func serviceGetCurrentRevisions(m *model.Model, dbRef string) (*golang.Block, error) {
 	revCol := m.HistoryColumn()
 	pks := m.PKs()
-	ret := golang2.NewBlock(fmt.Sprintf("GetCurrent%s", revCol.ProperPlural()), "func")
+	ret := golang.NewBlock(fmt.Sprintf("GetCurrent%s", revCol.ProperPlural()), "func")
 	serviceGetCurrentRevisionsBlock(m, ret, revCol, pks)
 
 	pkComps := make([]string, 0, len(pks))
@@ -139,7 +139,7 @@ func serviceGetCurrentRevisions(m *model2.Model, dbRef string) (*golang2.Block, 
 	return ret, nil
 }
 
-func serviceGetCurrentRevisionsBlock(m *model2.Model, ret *golang2.Block, revCol *model2.Column, pks model2.Columns) {
+func serviceGetCurrentRevisionsBlock(m *model.Model, ret *golang.Block, revCol *model.Column, pks model.Columns) {
 	pkWCStr := make([]string, 0, len(pks))
 	pkWCIdx := make([]string, 0, len(pks))
 	pkModelRefs := make([]string, 0, len(pks))
@@ -154,7 +154,7 @@ func serviceGetCurrentRevisionsBlock(m *model2.Model, ret *golang2.Block, revCol
 	}
 
 	const decl = "func (s *Service) getCurrent%s(ctx context.Context, tx *sqlx.Tx, logger util.Logger, models ...*%s) (map[string]%s, error) {"
-	ret.W(decl, revCol.ProperPlural(), m.Proper(), model2.ToGoType(revCol.Type, false, m.Package))
+	ret.W(decl, revCol.ProperPlural(), m.Proper(), model.ToGoType(revCol.Type, false, m.Package))
 	ret.W("\tstmts := make([]string, 0, len(models))")
 	ret.W("\tfor i := range models {")
 	ret.W("\t\tstmts = append(stmts, fmt.Sprintf(`%s`, %s))", strings.Join(pkWCStr, " and "), strings.Join(pkWCIdx, ", "))
@@ -166,13 +166,13 @@ func serviceGetCurrentRevisionsBlock(m *model2.Model, ret *golang2.Block, revCol
 	ret.W("\t}")
 }
 
-func addJoinClause(ret *golang2.Block, m *model2.Model, hc *model2.HistoryMap) error {
+func addJoinClause(ret *golang.Block, m *model.Model, hc *model.HistoryMap) error {
 	joinClause := fmt.Sprintf("%%%%q %s join %%%%q %sr on ", m.FirstLetter(), m.FirstLetter())
 	var joins []string
 	for idx, col := range hc.Const {
 		if col.PK {
 			rCol := hc.Var[idx]
-			if !(rCol.PK || rCol.HasTag(model2.RevisionType)) {
+			if !(rCol.PK || rCol.HasTag(model.RevisionType)) {
 				return errors.Errorf("invalid revision column [%s] at index [%d]", rCol.Name, idx)
 			}
 			joins = append(joins, fmt.Sprintf("%s.%q = %sr.%q", m.FirstLetter(), col.Name, m.FirstLetter(), rCol.Name))

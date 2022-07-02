@@ -5,12 +5,12 @@ import (
 	"strings"
 
 	"projectforge.dev/projectforge/app/file"
-	golang2 "projectforge.dev/projectforge/app/project/export/golang"
-	model2 "projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func Migration(m *model2.Model, args *model2.Args, addHeader bool) (*file.File, error) {
-	g := golang2.NewGoTemplate([]string{"queries", "ddl"}, m.Package+".sql")
+func Migration(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
+	g := golang.NewGoTemplate([]string{"queries", "ddl"}, m.Package+".sql")
 	if m.IsRevision() {
 		drop, err := sqlDrop(m)
 		if err != nil {
@@ -33,8 +33,8 @@ func Migration(m *model2.Model, args *model2.Args, addHeader bool) (*file.File, 
 	return g.Render(addHeader)
 }
 
-func sqlDrop(m *model2.Model) (*golang2.Block, error) {
-	ret := golang2.NewBlock("SQLDrop", "sql")
+func sqlDrop(m *model.Model) (*golang.Block, error) {
+	ret := golang.NewBlock("SQLDrop", "sql")
 	ret.W("-- {%% func " + m.Proper() + "Drop() %%}")
 	if m.IsHistory() {
 		ret.W("drop table if exists %q;", fmt.Sprintf("%s_history", m.Name))
@@ -47,8 +47,8 @@ func sqlDrop(m *model2.Model) (*golang2.Block, error) {
 	return ret, nil
 }
 
-func sqlCreate(m *model2.Model, modules []string) *golang2.Block {
-	ret := golang2.NewBlock("SQLCreate", "sql")
+func sqlCreate(m *model.Model, modules []string) *golang.Block {
+	ret := golang.NewBlock("SQLCreate", "sql")
 	ret.W("-- {%% func " + m.Proper() + "Create() %%}")
 	ret.W("create table if not exists %q (", m.Name)
 	for _, col := range m.Columns {
@@ -80,7 +80,7 @@ func sqlCreate(m *model2.Model, modules []string) *golang2.Block {
 	return ret
 }
 
-func addIndex(ret *golang2.Block, tbl string, names ...string) {
+func addIndex(ret *golang.Block, tbl string, names ...string) {
 	name := fmt.Sprintf("%s__%s_idx", tbl, strings.Join(names, "_"))
 	quoted := make([]string, 0, len(names))
 	for _, n := range names {

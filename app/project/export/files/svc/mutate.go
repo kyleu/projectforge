@@ -5,16 +5,16 @@ import (
 
 	"github.com/pkg/errors"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
-	golang2 "projectforge.dev/projectforge/app/project/export/golang"
-	model2 "projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/project/export/model"
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func ServiceMutate(m *model2.Model, args *model2.Args, addHeader bool) (*file.File, error) {
-	g := golang2.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "servicemutate")
+func ServiceMutate(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
+	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "servicemutate")
 	for _, imp := range helper.ImportsForTypes("go", m.PKs().Types()...) {
 		g.AddImport(imp)
 	}
@@ -47,8 +47,8 @@ func ServiceMutate(m *model2.Model, args *model2.Args, addHeader bool) (*file.Fi
 	return g.Render(addHeader)
 }
 
-func serviceCreate(m *model2.Model, g *golang2.File) (*golang2.Block, error) {
-	ret := golang2.NewBlock("Create", "func")
+func serviceCreate(m *model.Model, g *golang.File) (*golang.Block, error) {
+	ret := golang.NewBlock("Create", "func")
 	ret.W("func (s *Service) Create(ctx context.Context, tx *sqlx.Tx, logger util.Logger, models ...*%s) error {", m.Proper())
 	ret.W("\tif len(models) == 0 {")
 	ret.W("\t\treturn nil")
@@ -91,8 +91,8 @@ func serviceCreate(m *model2.Model, g *golang2.File) (*golang2.Block, error) {
 	return ret, nil
 }
 
-func serviceUpdate(m *model2.Model, g *golang2.File) (*golang2.Block, error) {
-	ret := golang2.NewBlock("Update", "func")
+func serviceUpdate(m *model.Model, g *golang.File) (*golang.Block, error) {
+	ret := golang.NewBlock("Update", "func")
 	ret.W("func (s *Service) Update(ctx context.Context, tx *sqlx.Tx, model *%s, logger util.Logger) error {", m.Proper())
 	if m.IsRevision() {
 		revCol := m.HistoryColumn()
@@ -164,8 +164,8 @@ func serviceUpdate(m *model2.Model, g *golang2.File) (*golang2.Block, error) {
 	return ret, nil
 }
 
-func serviceSave(m *model2.Model, g *golang2.File) (*golang2.Block, error) {
-	ret := golang2.NewBlock("Save", "func")
+func serviceSave(m *model.Model, g *golang.File) (*golang.Block, error) {
+	ret := golang.NewBlock("Save", "func")
 	ret.W("func (s *Service) Save(ctx context.Context, tx *sqlx.Tx, logger util.Logger, models ...*%s) error {", m.Proper())
 	ret.W("\tif len(models) == 0 {")
 	ret.W("\t\treturn nil")
@@ -205,9 +205,9 @@ func serviceSave(m *model2.Model, g *golang2.File) (*golang2.Block, error) {
 	return ret, nil
 }
 
-func serviceUpsertCore(m *model2.Model, g *golang2.File) *golang2.Block {
+func serviceUpsertCore(m *model.Model, g *golang.File) *golang.Block {
 	g.AddImport(helper.ImpAppUtil)
-	ret := golang2.NewBlock("UpsertCore", "func")
+	ret := golang.NewBlock("UpsertCore", "func")
 	ret.W("func (s *Service) upsertCore(ctx context.Context, tx *sqlx.Tx, logger util.Logger, models ...*%s) error {", m.Proper())
 	ret.W("\tconflicts := util.StringArrayQuoted([]string{%s})", strings.Join(m.PKs().NamesQuoted(), ", "))
 	ret.W("\tq := database.SQLUpsert(tableQuoted, columnsCore, len(models), conflicts, columnsCore, \"\")")
@@ -221,9 +221,9 @@ func serviceUpsertCore(m *model2.Model, g *golang2.File) *golang2.Block {
 	return ret
 }
 
-func serviceInsertRevision(m *model2.Model) *golang2.Block {
+func serviceInsertRevision(m *model.Model) *golang.Block {
 	revCol := m.HistoryColumn()
-	ret := golang2.NewBlock("InsertRev", "func")
+	ret := golang.NewBlock("InsertRev", "func")
 	ret.W("func (s *Service) insert%s(ctx context.Context, tx *sqlx.Tx, logger util.Logger, models ...*%s) error {", m.HistoryColumn().Proper(), m.Proper())
 	ret.W("\tq := database.SQLInsert(table%sQuoted, columns%s, len(models), \"\")", revCol.Proper(), revCol.Proper())
 	ret.W("\tdata := make([]any, 0, len(columns%s)*len(models))", revCol.Proper())
@@ -235,7 +235,7 @@ func serviceInsertRevision(m *model2.Model) *golang2.Block {
 	return ret
 }
 
-func serviceAddCreatedUpdated(m *model2.Model, ret *golang2.Block, g *golang2.File, loadCurr bool, additional ...string) error {
+func serviceAddCreatedUpdated(m *model.Model, ret *golang.Block, g *golang.File, loadCurr bool, additional ...string) error {
 	createdCols := m.Columns.WithTag("created")
 	updatedCols := m.Columns.WithTag("updated")
 	if len(createdCols) > 0 || len(updatedCols) > 0 || m.IsRevision() {
@@ -265,7 +265,7 @@ func serviceAddCreatedUpdated(m *model2.Model, ret *golang2.Block, g *golang2.Fi
 	return nil
 }
 
-func serviceLoadCreated(g *golang2.File, ret *golang2.Block, m *model2.Model, createdCols model2.Columns, loadCurr bool) error {
+func serviceLoadCreated(g *golang.File, ret *golang.Block, m *model.Model, createdCols model.Columns, loadCurr bool) error {
 	if len(createdCols) > 0 {
 		if loadCurr {
 			ret.W("\t\tcurr, e := s.Get(ctx, tx, %s%s)", m.PKs().ToRefs("model."), m.SoftDeleteSuffix())
@@ -293,7 +293,7 @@ func serviceLoadCreated(g *golang2.File, ret *golang2.Block, m *model2.Model, cr
 	return nil
 }
 
-func serviceSetVal(c *model2.Column, g *golang2.File, ret *golang2.Block, indent int) error {
+func serviceSetVal(c *model.Column, g *golang.File, ret *golang.Block, indent int) error {
 	ind := util.StringRepeat("\t", indent)
 	if c.Type.Key() == types.KeyTimestamp {
 		if c.Nullable {

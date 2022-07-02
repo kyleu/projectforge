@@ -3,10 +3,10 @@ package view
 import (
 	"github.com/pkg/errors"
 	"projectforge.dev/projectforge/app/file"
-	model2 "projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func All(m *model2.Model, args *model2.Args, addHeader bool) (file.Files, error) {
+func All(m *model.Model, args *model.Args, addHeader bool) (file.Files, error) {
 	var calls file.Files
 	var f *file.File
 	var err error

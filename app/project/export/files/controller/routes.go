@@ -6,12 +6,12 @@ import (
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
-	golang2 "projectforge.dev/projectforge/app/project/export/golang"
-	model2 "projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func Routes(args *model2.Args, addHeader bool) (*file.File, error) {
-	g := golang2.NewFile("routes", []string{"app", "controller", "routes"}, "generated")
+func Routes(args *model.Args, addHeader bool) (*file.File, error) {
+	g := golang.NewFile("routes", []string{"app", "controller", "routes"}, "generated")
 	g.AddImport(helper.ImpRouter)
 	g.AddBlocks(routes(args))
 	for _, m := range args.Models {
@@ -24,8 +24,8 @@ func Routes(args *model2.Args, addHeader bool) (*file.File, error) {
 	return g.Render(addHeader)
 }
 
-func routes(args *model2.Args) *golang2.Block {
-	ret := golang2.NewBlock("routes", "func")
+func routes(args *model.Args) *golang.Block {
+	ret := golang.NewBlock("routes", "func")
 	ret.W("func generatedRoutes(r *router.Router) {")
 	rct := routeContent(args)
 	for _, x := range rct {
@@ -35,7 +35,7 @@ func routes(args *model2.Args) *golang2.Block {
 	return ret
 }
 
-func routeContent(args *model2.Args) []string {
+func routeContent(args *model.Args) []string {
 	out := make([]string, 0, 100)
 	for _, m := range args.Models {
 		out = append(out, routeModelContent(m)...)
@@ -43,7 +43,7 @@ func routeContent(args *model2.Args) []string {
 	return out
 }
 
-func routeModelContent(m *model2.Model) []string {
+func routeModelContent(m *model.Model) []string {
 	out := make([]string, 0, 100)
 	pkNames := make([]string, 0, len(m.PKs()))
 	for _, col := range m.PKs() {

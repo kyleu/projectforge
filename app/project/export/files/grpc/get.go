@@ -5,12 +5,12 @@ import (
 
 	"github.com/pkg/errors"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
-	golang2 "projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func grpcList(m *model.Model, grpcArgs string, grpcRet string, ga *FileArgs) *golang2.Block {
-	ret := golang2.NewBlock("grpcList", "func")
+func grpcList(m *model.Model, grpcArgs string, grpcRet string, ga *FileArgs) *golang.Block {
+	ret := golang.NewBlock("grpcList", "func")
 	ret.W("func %sList%s(%s) %s {", m.Proper(), ga.APISuffix(), grpcArgs, grpcRet)
 	idClause, suffix := idClauseFor(m)
 	if idClause != "" {
@@ -33,8 +33,8 @@ func grpcList(m *model.Model, grpcArgs string, grpcRet string, ga *FileArgs) *go
 	return ret
 }
 
-func grpcSearch(m *model.Model, grpcArgs string, grpcRet string, ga *FileArgs) *golang2.Block {
-	ret := golang2.NewBlock("grpcSearch", "func")
+func grpcSearch(m *model.Model, grpcArgs string, grpcRet string, ga *FileArgs) *golang.Block {
+	ret := golang.NewBlock("grpcSearch", "func")
 	ret.W("func %sSearch%s(%s) %s {", m.Proper(), ga.APISuffix(), grpcArgs, grpcRet)
 	idClause, suffix := idClauseFor(m)
 	if idClause != "" {
@@ -56,8 +56,8 @@ func grpcSearch(m *model.Model, grpcArgs string, grpcRet string, ga *FileArgs) *
 	return ret
 }
 
-func grpcDetail(m *model.Model, grpcArgs string, grpcRet string, g *golang2.File, ga *FileArgs) (*golang2.Block, error) {
-	ret := golang2.NewBlock("grpcDetail", "func")
+func grpcDetail(m *model.Model, grpcArgs string, grpcRet string, g *golang.File, ga *FileArgs) (*golang.Block, error) {
+	ret := golang.NewBlock("grpcDetail", "func")
 	ret.W("func %sDetail%s(%s) %s {", m.Proper(), ga.APISuffix(), grpcArgs, grpcRet)
 	idClause, suffix := idClauseFor(m)
 	if idClause != "" {

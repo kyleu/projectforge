@@ -251,7 +251,7 @@ func streamrenderPatch(qw422016 *qt422016.Writer, patch string, as *app.State, p
 //line views/vaction/Diff.html:100
 			case '+':
 //line views/vaction/Diff.html:100
-				qw422016.N().S(`<div title="added" style="color: green;">`)
+				qw422016.N().S(`<div title="added" class="success">`)
 //line views/vaction/Diff.html:101
 				qw422016.E().S(line[1:])
 //line views/vaction/Diff.html:101
@@ -265,7 +265,7 @@ func streamrenderPatch(qw422016 *qt422016.Writer, patch string, as *app.State, p
 //line views/vaction/Diff.html:102
 			case '-':
 //line views/vaction/Diff.html:102
-				qw422016.N().S(`<div title="removed" style="color: red;">`)
+				qw422016.N().S(`<div title="removed" class="error">`)
 //line views/vaction/Diff.html:103
 				qw422016.E().S(line[1:])
 //line views/vaction/Diff.html:103

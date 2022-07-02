@@ -5,12 +5,12 @@ import (
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
-	golang2 "projectforge.dev/projectforge/app/project/export/golang"
-	model2 "projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func edit(m *model2.Model, args *model2.Args, addHeader bool) (*file.File, error) {
-	g := golang2.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "Edit.html")
+func edit(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
+	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "Edit.html")
 	for _, imp := range helper.ImportsForTypes("webedit", m.Columns.Types()...) {
 		g.AddImport(imp)
 	}
@@ -20,8 +20,8 @@ func edit(m *model2.Model, args *model2.Args, addHeader bool) (*file.File, error
 	return g.Render(addHeader)
 }
 
-func exportViewEditClass(m *model2.Model) *golang2.Block {
-	ret := golang2.NewBlock("Edit", "struct")
+func exportViewEditClass(m *model.Model) *golang.Block {
+	ret := golang.NewBlock("Edit", "struct")
 	ret.W("{%% code type Edit struct {")
 	ret.W("  layout.Basic")
 	ret.W("  Model *%s.%s", m.Package, m.Proper())
@@ -30,7 +30,7 @@ func exportViewEditClass(m *model2.Model) *golang2.Block {
 	return ret
 }
 
-func exportViewEditBody(m *model2.Model) *golang2.Block {
+func exportViewEditBody(m *model.Model) *golang.Block {
 	editURL := "/" + m.Route()
 	for _, pk := range m.PKs() {
 		editURL += "/{%% " + pk.ToGoString("p.Model.") + " %%}"
@@ -38,7 +38,7 @@ func exportViewEditBody(m *model2.Model) *golang2.Block {
 
 	delMsg := fmt.Sprintf("Are you sure you wish to delete %s [{%%%%s p.Model.String() %%%%}]?", m.TitleLower())
 
-	ret := golang2.NewBlock("EditBody", "func")
+	ret := golang.NewBlock("EditBody", "func")
 	ret.W("{%% func (p *Edit) Body(as *app.State, ps *cutil.PageState) %%}")
 	ret.W("  <div class=\"card\">")
 	ret.W("    {%%- if p.IsNew -%%}")

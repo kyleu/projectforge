@@ -5,21 +5,21 @@ import (
 	"strings"
 
 	"projectforge.dev/projectforge/app/file"
-	golang2 "projectforge.dev/projectforge/app/project/export/golang"
-	model2 "projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/project/export/model"
 	"projectforge.dev/projectforge/app/util"
 )
 
 const nilStr = "<nil>"
 
-func SeedData(m *model2.Model, args *model2.Args) (*file.File, error) {
-	g := golang2.NewGoTemplate([]string{"queries", "seeddata"}, m.Package+".sql")
+func SeedData(m *model.Model, args *model.Args) (*file.File, error) {
+	g := golang.NewGoTemplate([]string{"queries", "seeddata"}, m.Package+".sql")
 	g.AddBlocks(sqlSeedData(m, args.Modules))
 	return g.Render(false)
 }
 
-func sqlSeedData(m *model2.Model, modules []string) *golang2.Block {
-	ret := golang2.NewBlock("SQLCreate", "sql")
+func sqlSeedData(m *model.Model, modules []string) *golang.Block {
+	ret := golang.NewBlock("SQLCreate", "sql")
 	ret.W("-- {%% func " + m.Proper() + "SeedData() %%}")
 	ret.W("insert into %q (", m.Name)
 	ret.W("  " + strings.Join(m.Columns.NamesQuoted(), ", "))

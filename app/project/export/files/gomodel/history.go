@@ -6,13 +6,13 @@ import (
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
-	golang2 "projectforge.dev/projectforge/app/project/export/golang"
-	model2 "projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/project/export/model"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func History(m *model2.Model, args *model2.Args, addHeader bool) (*file.File, error) {
-	g := golang2.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, m.Camel()+"history")
+func History(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
+	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, m.Camel()+"history")
 	for _, imp := range helper.ImportsForTypes("go", m.Columns.Types()...) {
 		g.AddImport(imp)
 	}
@@ -21,8 +21,8 @@ func History(m *model2.Model, args *model2.Args, addHeader bool) (*file.File, er
 	return g.Render(addHeader)
 }
 
-func modelHistory(m *model2.Model) *golang2.Block {
-	ret := golang2.NewBlock(m.Proper()+"History", "struct")
+func modelHistory(m *model.Model) *golang.Block {
+	ret := golang.NewBlock(m.Proper()+"History", "struct")
 	ret.W("type %sHistory struct {", m.Proper())
 	max := m.PKs().MaxCamelLength() + len(m.Camel())
 	tmax := 13
@@ -39,8 +39,8 @@ func modelHistory(m *model2.Model) *golang2.Block {
 	return ret
 }
 
-func modelHistoryToData(m *model2.Model) *golang2.Block {
-	ret := golang2.NewBlock(m.Proper()+"HistoryToData", "func")
+func modelHistoryToData(m *model.Model) *golang.Block {
+	ret := golang.NewBlock(m.Proper()+"HistoryToData", "func")
 	ret.W("func (h *%sHistory) ToData() []any {", m.Proper())
 	ret.W("\treturn []any{")
 	ret.W("\t\th.ID,")
@@ -56,14 +56,14 @@ func modelHistoryToData(m *model2.Model) *golang2.Block {
 	return ret
 }
 
-func modelHistories(m *model2.Model) *golang2.Block {
-	ret := golang2.NewBlock(m.Proper()+"Histories", "struct")
+func modelHistories(m *model.Model) *golang.Block {
+	ret := golang.NewBlock(m.Proper()+"Histories", "struct")
 	ret.W("type %sHistories []*%sHistory", m.Proper(), m.Proper())
 	return ret
 }
 
-func modelHistoryDTO(m *model2.Model) *golang2.Block {
-	ret := golang2.NewBlock(m.Proper()+"HistoryDTO", "struct")
+func modelHistoryDTO(m *model.Model) *golang.Block {
+	ret := golang.NewBlock(m.Proper()+"HistoryDTO", "struct")
 	ret.W("type historyDTO struct {")
 	max := m.PKs().MaxCamelLength() + len(m.Camel())
 	tmax := 15
@@ -80,8 +80,8 @@ func modelHistoryDTO(m *model2.Model) *golang2.Block {
 	return ret
 }
 
-func modelHistoryDTOToHistory(m *model2.Model) *golang2.Block {
-	ret := golang2.NewBlock(m.Proper()+"HistoryDTOToHistory", "func")
+func modelHistoryDTOToHistory(m *model.Model) *golang.Block {
+	ret := golang.NewBlock(m.Proper()+"HistoryDTOToHistory", "func")
 	ret.W("func (h *historyDTO) ToHistory() *%sHistory {", m.Proper())
 	ret.W("\to := util.ValueMap{}")
 	ret.W("\t_ = util.FromJSON(h.Old, &o)")
@@ -98,8 +98,8 @@ func modelHistoryDTOToHistory(m *model2.Model) *golang2.Block {
 	return ret
 }
 
-func modelHistoryDTOs(m *model2.Model) *golang2.Block {
-	ret := golang2.NewBlock(m.Proper()+"HistoryDTOs", "func")
+func modelHistoryDTOs(m *model.Model) *golang.Block {
+	ret := golang.NewBlock(m.Proper()+"HistoryDTOs", "func")
 	ret.W("type historyDTOs []*historyDTO")
 	ret.W("")
 	ret.W("func (h historyDTOs) ToHistories() %sHistories {", m.Proper())

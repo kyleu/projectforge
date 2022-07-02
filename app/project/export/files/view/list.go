@@ -3,20 +3,20 @@ package view
 import (
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
-	golang2 "projectforge.dev/projectforge/app/project/export/golang"
-	model2 "projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func list(m *model2.Model, args *model2.Args, addHeader bool) (*file.File, error) {
-	g := golang2.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "List.html")
+func list(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
+	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "List.html")
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpFilter, helper.ImpLayout)
 	g.AddImport(helper.AppImport("app/" + m.PackageWithGroup("")))
 	g.AddBlocks(exportViewListClass(m, args.Models, g), exportViewListBody(m, args.Models))
 	return g.Render(addHeader)
 }
 
-func exportViewListClass(m *model2.Model, models model2.Models, g *golang2.Template) *golang2.Block {
-	ret := golang2.NewBlock("List", "struct")
+func exportViewListClass(m *model.Model, models model.Models, g *golang.Template) *golang.Block {
+	ret := golang.NewBlock("List", "struct")
 	ret.W("{%% code type List struct {")
 	ret.W("  layout.Basic")
 	ret.W("  Models %s.%s", m.Package, m.ProperPlural())
@@ -30,8 +30,8 @@ func exportViewListClass(m *model2.Model, models model2.Models, g *golang2.Templ
 	return ret
 }
 
-func exportViewListBody(m *model2.Model, models model2.Models) *golang2.Block {
-	ret := golang2.NewBlock("ListBody", "func")
+func exportViewListBody(m *model.Model, models model.Models) *golang.Block {
+	ret := golang.NewBlock("ListBody", "func")
 
 	suffix := ""
 	for _, rel := range m.Relations {

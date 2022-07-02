@@ -2,18 +2,18 @@ package gomodel
 
 import (
 	"github.com/pkg/errors"
-	golang2 "projectforge.dev/projectforge/app/project/export/golang"
-	model2 "projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/project/export/model"
 
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func modelFromMap(g *golang2.File, m *model2.Model) (*golang2.Block, error) {
-	ret := golang2.NewBlock(m.Package+"FromForm", "func")
+func modelFromMap(g *golang.File, m *model.Model) (*golang.Block, error) {
+	ret := golang.NewBlock(m.Package+"FromForm", "func")
 	ret.W("func FromMap(m util.ValueMap, setPK bool) (*%s, error) {", m.Proper())
 	ret.W("\tret := &%s{}", m.Proper())
-	cols := m.Columns.WithoutTag("created").WithoutTag("updated").WithoutTag(model2.RevisionType)
+	cols := m.Columns.WithoutTag("created").WithoutTag("updated").WithoutTag(model.RevisionType)
 	var needsErr bool
 	for _, c := range cols {
 		if c.Type.Scalar() || c.Type.Key() == "timestamp" || c.Type.Key() == "reference" {
@@ -44,7 +44,7 @@ func modelFromMap(g *golang2.File, m *model2.Model) (*golang2.Block, error) {
 	return ret, nil
 }
 
-func forCols(g *golang2.File, ret *golang2.Block, indent int, m *model2.Model, cols ...*model2.Column) error {
+func forCols(g *golang.File, ret *golang.Block, indent int, m *model.Model, cols ...*model.Column) error {
 	ind := util.StringRepeat("\t", indent)
 	catchErr := func(s string) {
 		ret.W(ind + "if " + s + " != nil {")
@@ -59,7 +59,7 @@ func forCols(g *golang2.File, ret *golang2.Block, indent int, m *model2.Model, c
 			ret.W(ind+"tmp%s, err := m.ParseString(%q, true, true)", col.Proper(), col.Camel())
 			catchErr("err")
 
-			ref, err := model2.AsRef(col.Type)
+			ref, err := model.AsRef(col.Type)
 			if err != nil {
 				return errors.Wrap(err, "invalid ref")
 			}
@@ -67,7 +67,7 @@ func forCols(g *golang2.File, ret *golang2.Block, indent int, m *model2.Model, c
 				ret.W("\t%sArg := &%s{}", col.Camel(), ref.K)
 			} else {
 				ret.W("\t%sArg := &%s.%s{}", col.Camel(), ref.Pkg.Last(), ref.K)
-				g.AddImport(golang2.NewImport(golang2.ImportTypeApp, ref.Pkg.ToPath()))
+				g.AddImport(golang.NewImport(golang.ImportTypeApp, ref.Pkg.ToPath()))
 			}
 			ret.W(ind+"err = util.FromJSON([]byte(tmp%s), %sArg)", col.Proper(), col.Camel())
 			catchErr("err")

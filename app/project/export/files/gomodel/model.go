@@ -7,13 +7,13 @@ import (
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
-	golang2 "projectforge.dev/projectforge/app/project/export/golang"
-	model2 "projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/project/export/model"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func Model(m *model2.Model, args *model2.Args, addHeader bool) (*file.File, error) {
-	g := golang2.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, strings.ToLower(m.Camel()))
+func Model(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
+	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, strings.ToLower(m.Camel()))
 	for _, imp := range helper.ImportsForTypes("go", m.Columns.Types()...) {
 		g.AddImport(imp)
 	}
@@ -26,12 +26,12 @@ func Model(m *model2.Model, args *model2.Args, addHeader bool) (*file.File, erro
 	g.AddImport(helper.ImpAppUtil, helper.ImpSlices)
 	for _, col := range m.Columns {
 		if col.Type.Key() == types.KeyReference {
-			ref, err := model2.AsRef(col.Type)
+			ref, err := model.AsRef(col.Type)
 			if err != nil {
 				return nil, err
 			}
 			if ref.Pkg.Last() != m.Package {
-				g.AddImport(golang2.NewImport(golang2.ImportTypeApp, ref.Pkg.ToPath()))
+				g.AddImport(golang.NewImport(golang.ImportTypeApp, ref.Pkg.ToPath()))
 			}
 		}
 	}
@@ -51,8 +51,8 @@ func Model(m *model2.Model, args *model2.Args, addHeader bool) (*file.File, erro
 	return g.Render(addHeader)
 }
 
-func modelStruct(m *model2.Model) *golang2.Block {
-	ret := golang2.NewBlock(m.Proper(), "struct")
+func modelStruct(m *model.Model) *golang.Block {
+	ret := golang.NewBlock(m.Proper(), "struct")
 	ret.W("type %s struct {", m.Proper())
 	maxColLength := util.StringArrayMaxLength(m.Columns.CamelNames())
 	maxTypeLength := m.Columns.MaxGoKeyLength(m.Package)
@@ -68,16 +68,16 @@ func modelStruct(m *model2.Model) *golang2.Block {
 	return ret
 }
 
-func modelConstructor(m *model2.Model) *golang2.Block {
-	ret := golang2.NewBlock("New"+m.Proper(), "func")
+func modelConstructor(m *model.Model) *golang.Block {
+	ret := golang.NewBlock("New"+m.Proper(), "func")
 	ret.W("func New(%s) *%s {", m.PKs().Args(m.Package), m.Proper())
 	ret.W("\treturn &%s{%s}", m.Proper(), m.PKs().Refs())
 	ret.W("}")
 	return ret
 }
 
-func modelDiff(m *model2.Model, g *golang2.File) *golang2.Block {
-	ret := golang2.NewBlock("Diff"+m.Proper(), "func")
+func modelDiff(m *model.Model, g *golang.File) *golang.Block {
+	ret := golang.NewBlock("Diff"+m.Proper(), "func")
 	ret.W("func (%s *%s) Diff(%sx *%s) util.Diffs {", m.FirstLetter(), m.Proper(), m.FirstLetter(), m.Proper())
 	ret.W("\tvar diffs util.Diffs")
 	for _, col := range m.Columns {
@@ -124,8 +124,8 @@ func modelDiff(m *model2.Model, g *golang2.File) *golang2.Block {
 	return ret
 }
 
-func modelToData(m *model2.Model, cols model2.Columns, suffix string) *golang2.Block {
-	ret := golang2.NewBlock(m.Proper(), "func")
+func modelToData(m *model.Model, cols model.Columns, suffix string) *golang.Block {
+	ret := golang.NewBlock(m.Proper(), "func")
 	ret.W("func (%s *%s) ToData%s() []any {", m.FirstLetter(), m.Proper(), suffix)
 	refs := make([]string, 0, len(cols))
 	for _, c := range cols {

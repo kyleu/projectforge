@@ -6,12 +6,12 @@ import (
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
-	golang2 "projectforge.dev/projectforge/app/project/export/golang"
-	model2 "projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/project/export/model"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func ServiceAll(m *model2.Model, args *model2.Args, addHeader bool) (file.Files, error) {
+func ServiceAll(m *model.Model, args *model.Args, addHeader bool) (file.Files, error) {
 	x, err := Service(m, args, addHeader)
 	if err != nil {
 		return nil, err
@@ -42,8 +42,8 @@ func ServiceAll(m *model2.Model, args *model2.Args, addHeader bool) (file.Files,
 	return ret, nil
 }
 
-func Service(m *model2.Model, args *model2.Args, addHeader bool) (*file.File, error) {
-	g := golang2.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "service")
+func Service(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
+	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "service")
 	g.AddImport(helper.ImpFilter, helper.ImpDatabase)
 
 	isRO := args.HasModule("readonlydb")
@@ -56,8 +56,8 @@ func Service(m *model2.Model, args *model2.Args, addHeader bool) (*file.File, er
 	return g.Render(addHeader)
 }
 
-func serviceStruct(isRO bool, isAudit bool) *golang2.Block {
-	ret := golang2.NewBlock("Service", "struct")
+func serviceStruct(isRO bool, isAudit bool) *golang.Block {
+	ret := golang.NewBlock("Service", "struct")
 	ret.W("type Service struct {")
 	size := 2
 	if isAudit {
@@ -77,8 +77,8 @@ func serviceStruct(isRO bool, isAudit bool) *golang2.Block {
 	return ret
 }
 
-func serviceNew(m *model2.Model, isRO bool, isAudit bool) *golang2.Block {
-	ret := golang2.NewBlock("NewService", "func")
+func serviceNew(m *model.Model, isRO bool, isAudit bool) *golang.Block {
+	ret := golang.NewBlock("NewService", "func")
 	newSuffix, callSuffix := "", ""
 	if isRO {
 		newSuffix = ", dbRead *database.Service"
@@ -95,8 +95,8 @@ func serviceNew(m *model2.Model, isRO bool, isAudit bool) *golang2.Block {
 	return ret
 }
 
-func serviceDefaultFilters(m *model2.Model) *golang2.Block {
-	ret := golang2.NewBlock("NewService", "func")
+func serviceDefaultFilters(m *model.Model) *golang.Block {
+	ret := golang.NewBlock("NewService", "func")
 	ret.W("func filters(orig *filter.Params) *filter.Params {")
 	ords := make([]string, 0, len(m.Ordering))
 	for _, ord := range m.Ordering {
@@ -115,7 +115,7 @@ func serviceDefaultFilters(m *model2.Model) *golang2.Block {
 	return ret
 }
 
-func getSuffix(m *model2.Model) string {
+func getSuffix(m *model.Model) string {
 	if m.IsSoftDelete() {
 		return incDel
 	}

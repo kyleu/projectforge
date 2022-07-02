@@ -3,20 +3,20 @@ package view
 import (
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
-	golang2 "projectforge.dev/projectforge/app/project/export/golang"
-	model2 "projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func history(m *model2.Model, args *model2.Args, addHeader bool) (*file.File, error) {
-	g := golang2.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "History.html")
+func history(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
+	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "History.html")
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpLayout, helper.ImpFilter)
 	g.AddImport(helper.AppImport("app/" + m.PackageWithGroup("")))
 	g.AddBlocks(exportViewHistoryClass(m), exportViewHistoryBody(m), exportViewHistoryTable(m))
 	return g.Render(addHeader)
 }
 
-func exportViewHistoryClass(m *model2.Model) *golang2.Block {
-	ret := golang2.NewBlock("History", "struct")
+func exportViewHistoryClass(m *model.Model) *golang.Block {
+	ret := golang.NewBlock("History", "struct")
 	ret.W("{%% code type History struct {")
 	ret.W("  layout.Basic")
 	ret.W("  Model *%s.%s", m.Package, m.Proper())
@@ -25,8 +25,8 @@ func exportViewHistoryClass(m *model2.Model) *golang2.Block {
 	return ret
 }
 
-func exportViewHistoryBody(m *model2.Model) *golang2.Block {
-	ret := golang2.NewBlock("HistoryBody", "func")
+func exportViewHistoryBody(m *model.Model) *golang.Block {
+	ret := golang.NewBlock("HistoryBody", "func")
 	ret.W("{%% func (p *History) Body(as *app.State, ps *cutil.PageState) %%}")
 	ret.W("  <div class=\"card\">")
 	ret.W("    <h3>{%%= components.SVGRefIcon(`" + m.Icon + "`, ps) %%} " + m.Title() + " History [{%%s p.History.ID.String() %%}]</h3>")
@@ -68,8 +68,8 @@ func exportViewHistoryBody(m *model2.Model) *golang2.Block {
 	return ret
 }
 
-func exportViewHistoryTable(m *model2.Model) *golang2.Block {
-	ret := golang2.NewBlock("HistoryTable", "struct")
+func exportViewHistoryTable(m *model.Model) *golang.Block {
+	ret := golang.NewBlock("HistoryTable", "struct")
 	const decl = "{%%%% func HistoryTable(model *%s.%s, histories %s.%sHistories, params filter.ParamSet, as *app.State, ps *cutil.PageState) %%%%}"
 	ret.W(decl, m.Package, m.Proper(), m.Package, m.Proper())
 	ret.W("  {%%- code prms := params.Get(\"history_history\", nil, ps.Logger).Sanitize(\"history_history\") -%%}")
@@ -82,7 +82,7 @@ func exportViewHistoryTable(m *model2.Model) *golang2.Block {
 	}
 	addHeader("id", "ID", "System-generated history UUID identifier")
 	for _, pk := range m.PKs() {
-		addHeader(m.Package+"_"+pk.Name, m.Title()+" "+pk.Title(), model2.Help(pk.Type))
+		addHeader(m.Package+"_"+pk.Name, m.Title()+" "+pk.Title(), model.Help(pk.Type))
 	}
 	addHeader("c", "Changes", "Object changes")
 	addHeader("created", "Created", "Time when history was created")

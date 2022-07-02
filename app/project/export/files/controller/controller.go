@@ -6,19 +6,19 @@ import (
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
-	golang2 "projectforge.dev/projectforge/app/project/export/golang"
-	model2 "projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/project/export/model"
 	"projectforge.dev/projectforge/app/util"
 )
 
 const defaultPrefix = "controller."
 
-func Controller(m *model2.Model, args *model2.Args, addHeader bool) (*file.File, error) {
+func Controller(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	fn := m.Package
 	if len(m.Group) > 0 {
 		fn = m.GroupString("c", "") + "/" + fn
 	}
-	g := golang2.NewFile(m.LastGroup("c", "controller"), []string{"app", "controller"}, fn)
+	g := golang.NewFile(m.LastGroup("c", "controller"), []string{"app", "controller"}, fn)
 	for _, imp := range helper.ImportsForTypes("parse", m.PKs().Types()...) {
 		g.AddImport(imp)
 	}
@@ -48,7 +48,7 @@ func Controller(m *model2.Model, args *model2.Args, addHeader bool) (*file.File,
 	return g.Render(addHeader)
 }
 
-func controllerArgFor(col *model2.Column, b *golang2.Block, retVal string, indent int) {
+func controllerArgFor(col *model.Column, b *golang.Block, retVal string, indent int) {
 	ind := ""
 	for i := 0; i < indent; i++ {
 		ind += "\t"
@@ -94,13 +94,13 @@ func controllerArgFor(col *model2.Column, b *golang2.Block, retVal string, inden
 	}
 }
 
-func blockFor(m *model2.Model, prefix string, grp *model2.Column, keys ...string) *golang2.Block {
+func blockFor(m *model.Model, prefix string, grp *model.Column, keys ...string) *golang.Block {
 	properKeys := make([]string, 0, len(keys))
 	for _, k := range keys {
 		properKeys = append(properKeys, util.StringToTitle(k))
 	}
 	name := m.Proper() + withGroupName(strings.Join(properKeys, ""), grp)
-	ret := golang2.NewBlock(name, "func")
+	ret := golang.NewBlock(name, "func")
 	ret.W("func %s(rc *fasthttp.RequestCtx) {", name)
 	grpStr := ""
 	if grp != nil {
@@ -110,15 +110,15 @@ func blockFor(m *model2.Model, prefix string, grp *model2.Column, keys ...string
 	return ret
 }
 
-func withGroupName(s string, grp *model2.Column) string {
+func withGroupName(s string, grp *model.Column) string {
 	if grp == nil {
 		return s
 	}
 	return s + "By" + grp.Proper()
 }
 
-func controllerTitle(m *model2.Model) *golang2.Block {
-	ret := golang2.NewBlock("Title", "func")
+func controllerTitle(m *model.Model) *golang.Block {
+	ret := golang.NewBlock("Title", "func")
 	ret.W("const %sDefaultTitle = \"%s\"", m.Camel(), m.TitlePlural())
 	return ret
 }

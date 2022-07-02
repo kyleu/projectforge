@@ -5,10 +5,10 @@ import (
 	"strings"
 
 	"projectforge.dev/projectforge/app/project/export/golang"
-	model2 "projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func serviceSearch(m *model2.Model, grp *model2.Column, dbRef string) *golang.Block {
+func serviceSearch(m *model.Model, grp *model.Column, dbRef string) *golang.Block {
 	prefix := ""
 	if grp != nil {
 		prefix = "By" + grp.Proper()

@@ -4,10 +4,10 @@ import (
 	"strings"
 
 	"projectforge.dev/projectforge/app/project/export/golang"
-	model2 "projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func sqlCreateRevision(m *model2.Model, modules []string) (*golang.Block, error) {
+func sqlCreateRevision(m *model.Model, modules []string) (*golang.Block, error) {
 	pks := m.PKs()
 	hc := m.HistoryColumns(true)
 
@@ -37,7 +37,7 @@ func sqlCreateRevision(m *model2.Model, modules []string) (*golang.Block, error)
 	}
 
 	revPKs := hc.Var.PKs()
-	revPKsWithRev := append(model2.Columns{}, revPKs...)
+	revPKsWithRev := append(model.Columns{}, revPKs...)
 	revPKsWithRev = append(revPKsWithRev, hc.Col)
 
 	bareRefs := strings.Join(revPKs.NamesQuoted(), ", ")
@@ -51,7 +51,7 @@ func sqlCreateRevision(m *model2.Model, modules []string) (*golang.Block, error)
 	}
 
 	for _, pk := range revPKsWithRev {
-		if !pk.HasTag(model2.RevisionType) {
+		if !pk.HasTag(model.RevisionType) {
 			addIndex(ret, revTblName, pk.Name)
 		}
 	}

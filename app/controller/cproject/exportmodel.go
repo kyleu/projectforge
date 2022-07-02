@@ -6,7 +6,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 	"projectforge.dev/projectforge/app/project/export/files"
-	model2 "projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/project/export/model"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
@@ -56,13 +56,13 @@ func ProjectExportModelNew(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 
-		mdl := &model2.Model{}
+		mdl := &model.Model{}
 
 		ps.Data = mdl
 
 		bc := []string{"projects", prj.Key, fmt.Sprintf("Export||/p/%s/export", prj.Key), "New"}
 		ps.Title = fmt.Sprintf("[%s] New Model", prj.Key)
-		return controller.Render(rc, as, &vexport.ModelForm{Project: prj, Model: mdl, Examples: model2.Examples}, ps, bc...)
+		return controller.Render(rc, as, &vexport.ModelForm{Project: prj, Model: mdl, Examples: model.Examples}, ps, bc...)
 	})
 }
 
@@ -78,7 +78,7 @@ func ProjectExportModelCreate(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 
-		mdl := &model2.Model{}
+		mdl := &model.Model{}
 		err = exportModelFromForm(frm, mdl)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse model from form")
@@ -112,7 +112,7 @@ func ProjectExportModelForm(rc *fasthttp.RequestCtx) {
 			"Edit",
 		}
 		ps.Title = fmt.Sprintf("[%s] %s", prj.Key, mdl.Name)
-		return controller.Render(rc, as, &vexport.ModelForm{Project: prj, Model: mdl, Examples: model2.Examples}, ps, bc...)
+		return controller.Render(rc, as, &vexport.ModelForm{Project: prj, Model: mdl, Examples: model.Examples}, ps, bc...)
 	})
 }
 

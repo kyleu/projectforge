@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	"projectforge.dev/projectforge/app/project/export/golang"
-	model2 "projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/project/export/model"
 )
 
 const (
@@ -12,7 +12,7 @@ const (
 	incFalse = ", false"
 )
 
-func checkRev(ret *golang.Block, m *model2.Model) {
+func checkRev(ret *golang.Block, m *model.Model) {
 	if !m.IsRevision() {
 		return
 	}
@@ -30,7 +30,7 @@ func checkRev(ret *golang.Block, m *model2.Model) {
 	ret.W("\t\t}")
 }
 
-func checkGrp(ret *golang.Block, grp *model2.Column, override ...string) {
+func checkGrp(ret *golang.Block, grp *model.Column, override ...string) {
 	if grp == nil {
 		return
 	}
@@ -43,7 +43,7 @@ func checkGrp(ret *golang.Block, grp *model2.Column, override ...string) {
 	ret.W("\t\t}")
 }
 
-func controllerModelFromPath(m *model2.Model) *golang.Block {
+func controllerModelFromPath(m *model.Model) *golang.Block {
 	ret := golang.NewBlock(m.Proper()+"FromPath", "func")
 	ret.W("func %sFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*%s, error) {", m.Package, m.ClassRef())
 	pks := m.PKs()

@@ -5,13 +5,13 @@ import (
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
-	golang2 "projectforge.dev/projectforge/app/project/export/golang"
-	model2 "projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func Grouping(m *model2.Model, args *model2.Args, grp *model2.Column, addHeader bool) (*file.File, error) {
+func Grouping(m *model.Model, args *model.Args, grp *model.Column, addHeader bool) (*file.File, error) {
 	name := m.Package + "by" + grp.Name
-	g := golang2.NewFile("controller", []string{"app", "controller"}, name)
+	g := golang.NewFile("controller", []string{"app", "controller"}, name)
 	g.AddImport(helper.ImpFmt, helper.ImpErrors, helper.ImpFastHTTP, helper.ImpApp, helper.ImpCutil)
 	g.AddImport(helper.AppImport("app/" + m.PackageWithGroup("")))
 	g.AddImport(helper.AppImport("views/" + m.PackageWithGroup("v")))
@@ -27,9 +27,9 @@ func Grouping(m *model2.Model, args *model2.Args, grp *model2.Column, addHeader 
 	return g.Render(addHeader)
 }
 
-func controllerGrouped(m *model2.Model, grp *model2.Column, prefix string) *golang2.Block {
+func controllerGrouped(m *model.Model, grp *model.Column, prefix string) *golang.Block {
 	name := fmt.Sprintf("%s%sList", m.Proper(), grp.Proper())
-	ret := golang2.NewBlock(name, "func")
+	ret := golang.NewBlock(name, "func")
 	ret.W("func %s(rc *fasthttp.RequestCtx) {", name)
 	ret.W("\tAct(\"%s.%s.list\", rc, func(as *app.State, ps *cutil.PageState) (string, error) {", m.Package, grp.Camel())
 	ret.W("\t\tps.Title = \"[%s] by %s\"", m.ProperPlural(), grp.TitleLower())

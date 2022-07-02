@@ -98,9 +98,9 @@
         {% case ' ' %}
         <div title="unchanged" style="color: grey;">{%s line[1:] %}{% if len(line) == 1 %}&nbsp;{% endif %}</div>
         {% case '+' %}
-        <div title="added" style="color: green;">{%s line[1:] %}{% if len(line) == 1 %}&nbsp;{% endif %}</div>
+        <div title="added" class="success">{%s line[1:] %}{% if len(line) == 1 %}&nbsp;{% endif %}</div>
         {% case '-' %}
-        <div title="removed" style="color: red;">{%s line[1:] %}{% if len(line) == 1 %}&nbsp;{% endif %}</div>
+        <div title="removed" class="error">{%s line[1:] %}{% if len(line) == 1 %}&nbsp;{% endif %}</div>
         {% default %}
         {%s line %}
         {% endswitch %}

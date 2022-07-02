@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/pkg/errors"
-	controller2 "projectforge.dev/projectforge/app/project/export/files/controller"
+	"projectforge.dev/projectforge/app/project/export/files/controller"
 	"projectforge.dev/projectforge/app/project/export/files/sql"
 	"projectforge.dev/projectforge/app/project/export/model"
 
@@ -26,19 +26,19 @@ func All(ctx context.Context, args *model.Args, addHeader bool, logger util.Logg
 		ret = append(ret, calls...)
 	}
 
-	x, err := controller2.Routes(args, addHeader)
+	x, err := controller.Routes(args, addHeader)
 	if err != nil {
 		return nil, err
 	}
 	ret = append(ret, x)
 
-	x, err = controller2.Menu(args, addHeader)
+	x, err = controller.Menu(args, addHeader)
 	if err != nil {
 		return nil, err
 	}
 	ret = append(ret, x)
 
-	x, err = controller2.Search(args, addHeader)
+	x, err = controller.Search(args, addHeader)
 	if err != nil {
 		return nil, err
 	}

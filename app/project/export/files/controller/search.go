@@ -6,12 +6,12 @@ import (
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
-	golang2 "projectforge.dev/projectforge/app/project/export/golang"
-	model2 "projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func Search(args *model2.Args, addHeader bool) (*file.File, error) {
-	g := golang2.NewFile("search", []string{"app", "lib", "search"}, "generated")
+func Search(args *model.Args, addHeader bool) (*file.File, error) {
+	g := golang.NewFile("search", []string{"app", "lib", "search"}, "generated")
 	if args.Models.HasSearch() {
 		g.AddImport(helper.ImpContext, helper.ImpApp, helper.ImpAppUtil, helper.AppImport("app/lib/search/result"))
 	}
@@ -19,8 +19,8 @@ func Search(args *model2.Args, addHeader bool) (*file.File, error) {
 	return g.Render(addHeader)
 }
 
-func searchBlock(args *model2.Args) *golang2.Block {
-	ret := golang2.NewBlock("menu", "func")
+func searchBlock(args *model.Args) *golang.Block {
+	ret := golang.NewBlock("menu", "func")
 	keys := make([]string, 0, len(args.Models))
 	ret.W("func generatedSearch() []Provider {")
 	for _, m := range args.Models {
@@ -37,7 +37,7 @@ func searchBlock(args *model2.Args) *golang2.Block {
 	return ret
 }
 
-func searchModel(m *model2.Model) []string {
+func searchModel(m *model.Model) []string {
 	const msg = "\t\tmodels, err := as.Services.%s.Search(ctx, params.Q, nil, params.PS.Get(%q, nil, logger)%s, logger)"
 	var ret []string
 	add := func(s string, args ...any) {

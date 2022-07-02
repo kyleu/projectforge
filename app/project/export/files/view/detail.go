@@ -6,14 +6,14 @@ import (
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
-	golang2 "projectforge.dev/projectforge/app/project/export/golang"
-	model2 "projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/project/export/model"
 )
 
 const commonLine = "  %s %s.%s"
 
-func detail(m *model2.Model, args *model2.Args, addHeader bool) (*file.File, error) {
-	g := golang2.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "Detail.html")
+func detail(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
+	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "Detail.html")
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpLayout)
 	g.AddImport(helper.AppImport("app/" + m.PackageWithGroup("")))
 	rrs := args.Models.ReverseRelations(m.Name)
@@ -31,8 +31,8 @@ func detail(m *model2.Model, args *model2.Args, addHeader bool) (*file.File, err
 	return g.Render(addHeader)
 }
 
-func exportViewDetailClass(m *model2.Model, models model2.Models, g *golang2.Template) *golang2.Block {
-	ret := golang2.NewBlock("Detail", "struct")
+func exportViewDetailClass(m *model.Model, models model.Models, g *golang.Template) *golang.Block {
+	ret := golang.NewBlock("Detail", "struct")
 	ret.W("{%% code type Detail struct {")
 	ret.W("  layout.Basic")
 	ret.W("  Model *%s.%s", m.Package, m.Proper())
@@ -62,8 +62,8 @@ func exportViewDetailClass(m *model2.Model, models model2.Models, g *golang2.Tem
 	return ret
 }
 
-func exportViewDetailBody(m *model2.Model, models model2.Models) *golang2.Block {
-	ret := golang2.NewBlock("DetailBody", "func")
+func exportViewDetailBody(m *model.Model, models model.Models) *golang.Block {
+	ret := golang.NewBlock("DetailBody", "func")
 	ret.W("{%% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %%}")
 	ret.W("  <div class=\"card\">")
 	ret.W("    <div class=\"right\">")
@@ -102,7 +102,7 @@ func exportViewDetailBody(m *model2.Model, models model2.Models) *golang2.Block 
 	return ret
 }
 
-func exportViewDetailRelations(ret *golang2.Block, m *model2.Model, models model2.Models) {
+func exportViewDetailRelations(ret *golang.Block, m *model.Model, models model.Models) {
 	for _, rel := range models.ReverseRelations(m.Name) {
 		tgt := models.Get(rel.Table)
 		tgtCols := rel.TgtColumns(tgt)

@@ -5,19 +5,19 @@ import (
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
-	golang2 "projectforge.dev/projectforge/app/project/export/golang"
-	model2 "projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func Grouping(m *model2.Model, grp *model2.Column, addHeader bool) (*file.File, error) {
-	g := golang2.NewGoTemplate([]string{"views", "v" + m.Package}, fmt.Sprintf("%s.html", grp.ProperPlural()))
+func Grouping(m *model.Model, grp *model.Column, addHeader bool) (*file.File, error) {
+	g := golang.NewGoTemplate([]string{"views", "v" + m.Package}, fmt.Sprintf("%s.html", grp.ProperPlural()))
 	g.AddImport(helper.ImpApp, helper.ImpAppUtil, helper.ImpComponents, helper.ImpCutil, helper.ImpLayout)
 	g.AddBlocks(exportViewGroupedClass(grp), exportViewGroupedBody(m, grp))
 	return g.Render(addHeader)
 }
 
-func exportViewGroupedClass(grp *model2.Column) *golang2.Block {
-	ret := golang2.NewBlock(grp.ProperPlural(), "struct")
+func exportViewGroupedClass(grp *model.Column) *golang.Block {
+	ret := golang.NewBlock(grp.ProperPlural(), "struct")
 	ret.W("{%%%% code type %s struct {", grp.ProperPlural())
 	ret.W("  layout.Basic")
 	ret.W("  %s []*util.KeyValInt", grp.ProperPlural())
@@ -25,8 +25,8 @@ func exportViewGroupedClass(grp *model2.Column) *golang2.Block {
 	return ret
 }
 
-func exportViewGroupedBody(m *model2.Model, grp *model2.Column) *golang2.Block {
-	ret := golang2.NewBlock(fmt.Sprintf("%sBody", grp.ProperPlural()), "func")
+func exportViewGroupedBody(m *model.Model, grp *model.Column) *golang.Block {
+	ret := golang.NewBlock(fmt.Sprintf("%sBody", grp.ProperPlural()), "func")
 	ret.W("{%%%% func (p *%s) Body(as *app.State, ps *cutil.PageState) %%%%}", grp.ProperPlural())
 	ret.W("  <div class=\"card\">")
 	ret.W("    <h3>{%%%%= components.SVGRefIcon(`%s`, ps) %%%%} %s %s</h3>", m.Icon, m.Title(), grp.ProperPlural())

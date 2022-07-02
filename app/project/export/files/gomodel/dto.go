@@ -6,16 +6,16 @@ import (
 
 	"github.com/pkg/errors"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
-	golang2 "projectforge.dev/projectforge/app/project/export/golang"
-	model2 "projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/project/export/model"
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func DTO(m *model2.Model, args *model2.Args, addHeader bool) (*file.File, error) {
-	g := golang2.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "dto")
+func DTO(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
+	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "dto")
 	for _, imp := range helper.ImportsForTypes("dto", m.Columns.Types()...) {
 		g.AddImport(imp)
 	}
@@ -34,8 +34,8 @@ func DTO(m *model2.Model, args *model2.Args, addHeader bool) (*file.File, error)
 	return g.Render(addHeader)
 }
 
-func modelTableCols(m *model2.Model, g *golang2.File) (*golang2.Block, error) {
-	ret := golang2.NewBlock("Columns", "procedural")
+func modelTableCols(m *model.Model, g *golang.File) (*golang.Block, error) {
+	ret := golang.NewBlock("Columns", "procedural")
 	ret.W("var (")
 	ret.W("\ttable         = %q", m.Name)
 	ret.W("\ttableQuoted   = fmt.Sprintf(\"%%q\", table)")
@@ -58,7 +58,7 @@ func modelTableCols(m *model2.Model, g *golang2.File) (*golang2.Block, error) {
 		for idx, col := range hc.Const {
 			if col.PK || col.HasTag("current_revision") {
 				rCol := hc.Var[idx]
-				if !(rCol.PK || rCol.HasTag(model2.RevisionType)) {
+				if !(rCol.PK || rCol.HasTag(model.RevisionType)) {
 					return nil, errors.Errorf("invalid revision column [%s] at index [%d]", rCol.Name, idx)
 				}
 				joins = append(joins, fmt.Sprintf("%s.%s = %sr.%s", m.FirstLetter(), col.NameQuoted(), m.FirstLetter(), rCol.NameQuoted()))
@@ -71,8 +71,8 @@ func modelTableCols(m *model2.Model, g *golang2.File) (*golang2.Block, error) {
 	return ret, nil
 }
 
-func modelDTO(m *model2.Model) *golang2.Block {
-	ret := golang2.NewBlock(m.Proper()+"DTO", "struct")
+func modelDTO(m *model.Model) *golang.Block {
+	ret := golang.NewBlock(m.Proper()+"DTO", "struct")
 	ret.W("type dto struct {")
 	maxColLength := util.StringArrayMaxLength(m.Columns.CamelNames())
 	maxTypeLength := m.Columns.MaxGoDTOKeyLength(m.Package)
@@ -83,8 +83,8 @@ func modelDTO(m *model2.Model) *golang2.Block {
 	return ret
 }
 
-func modelDTOToModel(g *golang2.File, m *model2.Model) (*golang2.Block, error) {
-	ret := golang2.NewBlock(m.Proper(), "func")
+func modelDTOToModel(g *golang.File, m *model.Model) (*golang.Block, error) {
+	ret := golang.NewBlock(m.Proper(), "func")
 	ret.W("func (d *dto) To%s() *%s {", m.Proper(), m.Proper())
 	ret.W("\tif d == nil {")
 	ret.W("\t\treturn nil")
@@ -107,7 +107,7 @@ func modelDTOToModel(g *golang2.File, m *model2.Model) (*golang2.Block, error) {
 			ret.W("\t_ = util.FromJSON(d.%s, &%sArg)", c.Proper(), c.Camel())
 			refs = append(refs, fmt.Sprintf("%s %sArg", k, c.Camel()))
 		case types.KeyReference:
-			ref, err := model2.AsRef(c.Type)
+			ref, err := model.AsRef(c.Type)
 			if err != nil {
 				return nil, errors.Wrap(err, "invalid ref")
 			}
@@ -115,7 +115,7 @@ func modelDTOToModel(g *golang2.File, m *model2.Model) (*golang2.Block, error) {
 				ret.W("\t%sArg := &%s{}", c.Camel(), ref.K)
 			} else {
 				ret.W("\t%sArg := &%s.%s{}", c.Camel(), ref.Pkg.Last(), ref.K)
-				g.AddImport(golang2.NewImport(golang2.ImportTypeApp, ref.Pkg.ToPath()))
+				g.AddImport(golang.NewImport(golang.ImportTypeApp, ref.Pkg.ToPath()))
 			}
 			ret.W("\t_ = util.FromJSON(d.%s, %sArg)", c.Proper(), c.Camel())
 			refs = append(refs, fmt.Sprintf("%s %sArg", k, c.Camel()))
@@ -132,14 +132,14 @@ func modelDTOToModel(g *golang2.File, m *model2.Model) (*golang2.Block, error) {
 	return ret, nil
 }
 
-func modelDTOArray() *golang2.Block {
-	ret := golang2.NewBlock("DTOArray", "type")
+func modelDTOArray() *golang.Block {
+	ret := golang.NewBlock("DTOArray", "type")
 	ret.W("type dtos []*dto")
 	return ret
 }
 
-func modelDTOArrayTransformer(m *model2.Model) *golang2.Block {
-	ret := golang2.NewBlock(fmt.Sprintf("DTOTo%s", m.ProperPlural()), "type")
+func modelDTOArrayTransformer(m *model.Model) *golang.Block {
+	ret := golang.NewBlock(fmt.Sprintf("DTOTo%s", m.ProperPlural()), "type")
 	ret.W("func (x dtos) To%s() %s {", m.ProperPlural(), m.ProperPlural())
 	ret.W("\tret := make(%s, 0, len(x))", m.ProperPlural())
 	ret.W("\tfor _, d := range x {")
@@ -150,8 +150,8 @@ func modelDTOArrayTransformer(m *model2.Model) *golang2.Block {
 	return ret
 }
 
-func defaultWC(m *model2.Model) *golang2.Block {
-	ret := golang2.NewBlock("Columns", "procedural")
+func defaultWC(m *model.Model) *golang.Block {
+	ret := golang.NewBlock("Columns", "procedural")
 	ret.W("func defaultWC(idx int) string {")
 	c := m.PKs()
 	wc := make([]string, 0, len(c))

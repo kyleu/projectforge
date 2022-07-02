@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	model2 "projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/project/export/model"
 
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/util"
@@ -21,7 +21,7 @@ func (d *File) String() string {
 	return fmt.Sprintf("%s [%d fields]: %d rows", d.Filename, len(d.Fields), len(d.Data))
 }
 
-func (d *File) ToModel(tableIdx int, groups model2.Groups) (*model2.Model, error) {
+func (d *File) ToModel(tableIdx int, groups model.Groups) (*model.Model, error) {
 	name := strings.TrimSuffix(d.Filename, ".dat")
 	key := util.StringToSnake(name)
 	desc := fmt.Sprintf("from file [%s]", d.Filename)
@@ -36,7 +36,7 @@ func (d *File) ToModel(tableIdx int, groups model2.Groups) (*model2.Model, error
 	if len(d.Data) > 0 {
 		sd = d.Data
 	}
-	ret := &model2.Model{Name: key, Package: key, Group: group, Description: desc, Icon: "star", Tags: []string{"json"}, TitleOverride: title, SeedData: sd}
+	ret := &model.Model{Name: key, Package: key, Group: group, Description: desc, Icon: "star", Tags: []string{"json"}, TitleOverride: title, SeedData: sd}
 	for _, col := range d.Fields {
 		x, err := exportColumn(col)
 		if err != nil {
@@ -45,8 +45,8 @@ func (d *File) ToModel(tableIdx int, groups model2.Groups) (*model2.Model, error
 		ret.Columns = append(ret.Columns, x)
 	}
 	if len(ret.PKs()) == 0 {
-		idCol := &model2.Column{Name: "id", Type: types.NewUUID(), PK: true, Search: true, HelpString: "Synthetic identifier"}
-		ret.Columns = append(model2.Columns{idCol}, ret.Columns...)
+		idCol := &model.Column{Name: "id", Type: types.NewUUID(), PK: true, Search: true, HelpString: "Synthetic identifier"}
+		ret.Columns = append(model.Columns{idCol}, ret.Columns...)
 		appended := make([][]any, 0, len(ret.SeedData))
 		for rowIdx, x := range ret.SeedData {
 			id := util.UUIDFromString(fmt.Sprintf("%08d-0000-0000-0000-%012d", tableIdx, rowIdx))
@@ -61,11 +61,11 @@ func (d *File) ToModel(tableIdx int, groups model2.Groups) (*model2.Model, error
 	return ret, nil
 }
 
-type DataFiles []*File
+type Files []*File
 
-func (d DataFiles) Headers() []map[string]any {
-	ret := make([]map[string]any, 0, len(d))
-	for _, x := range d {
+func (f Files) Headers() []map[string]any {
+	ret := make([]map[string]any, 0, len(f))
+	for _, x := range f {
 		ret = append(ret, map[string]any{"fn": x.Filename, "cols": x.Fields})
 	}
 	return ret

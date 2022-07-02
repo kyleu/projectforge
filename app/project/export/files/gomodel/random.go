@@ -3,13 +3,13 @@ package gomodel
 import (
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/golang"
-	model2 "projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/project/export/model"
 	"projectforge.dev/projectforge/app/util"
 )
 
 const nilKey = "nil"
 
-func modelRandom(m *model2.Model) *golang.Block {
+func modelRandom(m *model.Model) *golang.Block {
 	ret := golang.NewBlock(m.Proper()+"Random", "struct")
 	ret.W("func Random() *%s {", m.Proper())
 	ret.W("\treturn &%s{", m.Proper())
@@ -22,7 +22,7 @@ func modelRandom(m *model2.Model) *golang.Block {
 	return ret
 }
 
-func randFor(col *model2.Column) string {
+func randFor(col *model.Column) string {
 	switch col.Type.Key() {
 	case types.KeyAny:
 		return types.KeyNil

@@ -5,8 +5,8 @@ import (
 
 	"github.com/pkg/errors"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
-	golang2 "projectforge.dev/projectforge/app/project/export/golang"
-	model2 "projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/project/export/model"
 
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/util"
@@ -17,7 +17,7 @@ type FileArgs struct {
 	Pkg   string
 	CPkg  string
 	API   string
-	Grp   *model2.Column
+	Grp   *model.Column
 }
 
 func (a FileArgs) APISuffix() string {
@@ -41,7 +41,7 @@ func (a FileArgs) GrpSuffix() string {
 	return "By" + a.Grp.Proper()
 }
 
-func (a FileArgs) AddStaticCheck(ref string, ret *golang2.Block, m *model2.Model, grp *model2.Column, act string) {
+func (a FileArgs) AddStaticCheck(ref string, ret *golang.Block, m *model.Model, grp *model.Column, act string) {
 	if grp == nil {
 		return
 	}
@@ -51,21 +51,21 @@ func (a FileArgs) AddStaticCheck(ref string, ret *golang2.Block, m *model2.Model
 	ret.W("\t}")
 }
 
-func grpcAddSection(b *golang2.Block, key string, indent int) {
+func grpcAddSection(b *golang.Block, key string, indent int) {
 	ind := util.StringRepeat("\t", indent)
 	b.W(ind+"// $PF_SECTION_START(%s)$", key)
 	b.W(ind+"// $PF_SECTION_END(%s)$", key)
 }
 
-func idClauseFor(m *model2.Model) (string, string) {
+func idClauseFor(m *model.Model) (string, string) {
 	if m.IsSoftDelete() {
 		return "\tincludeDeleted, _ := provider.GetBool(p.R, p.TX, \"includeDeleted\")", ", includeDeleted"
 	}
 	return "", ""
 }
 
-func grpcParamsFromRequest(m *model2.Model, args string, g *golang2.File) (*golang2.Block, error) {
-	ret := golang2.NewBlock("grpcParamsFromRequest", "func")
+func grpcParamsFromRequest(m *model.Model, args string, g *golang.File) (*golang.Block, error) {
+	ret := golang.NewBlock("grpcParamsFromRequest", "func")
 	pks := m.PKs()
 	ret.W("func %sParamsFromRequest(%s) (%s, error) {", m.Camel(), args, strings.Join(pks.GoTypeKeys(m.Package), ", "))
 	zeroVals := strings.Join(pks.ZeroVals(), ", ")
@@ -80,7 +80,7 @@ func grpcParamsFromRequest(m *model2.Model, args string, g *golang2.File) (*gola
 	return ret, nil
 }
 
-func grpcArgFor(col *model2.Column, b *golang2.Block, zeroVals string, g *golang2.File) error {
+func grpcArgFor(col *model.Column, b *golang.Block, zeroVals string, g *golang.File) error {
 	switch col.Type.Key() {
 	case types.KeyBool:
 		b.W("\t%s, err := provider.GetRequestBool(p.R, %q)", col.Camel(), col.Camel())

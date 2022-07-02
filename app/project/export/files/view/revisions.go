@@ -4,11 +4,11 @@ import (
 	"fmt"
 
 	"projectforge.dev/projectforge/app/project/export/golang"
-	model2 "projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/project/export/model"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func exportViewDetailRevisions(ret *golang.Block, m *model2.Model) {
+func exportViewDetailRevisions(ret *golang.Block, m *model.Model) {
 	hc := m.HistoryColumns(false)
 	ret.W("  {%%%%- if len(p.%s) > 1 -%%%%}", hc.Col.ProperPlural())
 	ret.W("  <div class=\"card\">")
@@ -17,7 +17,7 @@ func exportViewDetailRevisions(ret *golang.Block, m *model2.Model) {
 	ret.W("    <table class=\"mt\">")
 	ret.W("      <thead>")
 	ret.W("        <tr>")
-	addHeader := func(col *model2.Column) {
+	addHeader := func(col *model.Column) {
 		call := fmt.Sprintf("components.TableHeaderSimple(%q, %q, %q, %q, prms, ps.URI, ps)", m.Package, col.Name, util.StringToTitle(col.Name), col.Help())
 		ret.W("          {%%= " + call + " %%}")
 	}
@@ -34,8 +34,8 @@ func exportViewDetailRevisions(ret *golang.Block, m *model2.Model) {
 	ret.W("        {%%- for _, model := range p." + hc.Col.ProperPlural() + " -%%}")
 	ret.W("        <tr>")
 	linkURL := m.LinkURL("model.") + "/" + hc.Col.Camel() + "/" + hc.Col.ToGoViewString("model.")
-	addView := func(col *model2.Column) {
-		if col.PK || col.HasTag(model2.RevisionType) {
+	addView := func(col *model.Column) {
+		if col.PK || col.HasTag(model.RevisionType) {
 			ret.W("          <td><a href=\"" + linkURL + "\">" + col.ToGoViewString("model.") + "</a></td>")
 		} else {
 			ret.W("          <td>" + col.ToGoViewString("model.") + "</td>")

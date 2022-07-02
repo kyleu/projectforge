@@ -9,14 +9,14 @@ import (
 	"github.com/pkg/errors"
 	"golang.org/x/exp/slices"
 	"projectforge.dev/projectforge/app/project/export/data"
-	model2 "projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/project/export/model"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func (s *Service) loadExportArgs(fs filesystem.FileLoader, logger util.Logger) (*model2.Args, error) {
-	args := &model2.Args{Config: util.ValueMap{}}
+func (s *Service) loadExportArgs(fs filesystem.FileLoader, logger util.Logger) (*model.Args, error) {
+	args := &model.Args{Config: util.ValueMap{}}
 	exportPath := filepath.Join(ConfigDir, "export")
 	if !fs.IsDir(exportPath) {
 		return args, nil
@@ -33,7 +33,7 @@ func (s *Service) loadExportArgs(fs filesystem.FileLoader, logger util.Logger) (
 	}
 	if groupCfgPath := filepath.Join(exportPath, "groups.json"); fs.Exists(groupCfgPath) {
 		if cfg, err := fs.ReadFile(groupCfgPath); err == nil {
-			grps := model2.Groups{}
+			grps := model.Groups{}
 			err = util.FromJSON(cfg, &grps)
 			if err != nil {
 				return nil, errors.Wrap(err, "invalid group config")
@@ -54,7 +54,7 @@ func (s *Service) loadExportArgs(fs filesystem.FileLoader, logger util.Logger) (
 	args.Models = append(args.Models, jsonModels...)
 
 	if len(args.Models) > 0 {
-		slices.SortFunc(args.Models, func(l *model2.Model, r *model2.Model) bool {
+		slices.SortFunc(args.Models, func(l *model.Model, r *model.Model) bool {
 			return l.Name < r.Name
 		})
 	}
@@ -62,20 +62,20 @@ func (s *Service) loadExportArgs(fs filesystem.FileLoader, logger util.Logger) (
 	return args, nil
 }
 
-func getModels(exportPath string, fs filesystem.FileLoader, logger util.Logger) (model2.Models, error) {
+func getModels(exportPath string, fs filesystem.FileLoader, logger util.Logger) (model.Models, error) {
 	modelsPath := filepath.Join(exportPath, "models")
 	if !fs.IsDir(modelsPath) {
 		return nil, nil
 	}
 	modelNames := fs.ListJSON(modelsPath, nil, false, logger)
-	models := model2.Models{}
+	models := model.Models{}
 	for _, modelName := range modelNames {
 		fn := filepath.Join(modelsPath, modelName)
 		content, err := fs.ReadFile(fn)
 		if err != nil {
 			return nil, errors.Wrapf(err, "unable to read export model file from [%s]", fn)
 		}
-		m := &model2.Model{}
+		m := &model.Model{}
 		err = util.FromJSON(content, m)
 		if err != nil {
 			return nil, errors.Wrapf(err, "unable to read export model JSON from [%s]", fn)
@@ -85,7 +85,7 @@ func getModels(exportPath string, fs filesystem.FileLoader, logger util.Logger) 
 	return models, nil
 }
 
-func getJSONModels(cfg util.ValueMap, groups model2.Groups, fs filesystem.FileLoader, logger util.Logger) (model2.Models, error) {
+func getJSONModels(cfg util.ValueMap, groups model.Groups, fs filesystem.FileLoader, logger util.Logger) (model.Models, error) {
 	if cfg == nil {
 		return nil, nil
 	}
@@ -98,7 +98,7 @@ func getJSONModels(cfg util.ValueMap, groups model2.Groups, fs filesystem.FileLo
 		return nil, nil
 	}
 	jsonFiles := fs.ListJSON(pth, nil, false, logger)
-	jsonModels := make(model2.Models, 0, len(jsonFiles))
+	jsonModels := make(model.Models, 0, len(jsonFiles))
 	for idx, jsonFile := range jsonFiles {
 		if !strings.HasSuffix(jsonFile, ".json") {
 			continue

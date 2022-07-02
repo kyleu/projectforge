@@ -6,24 +6,24 @@ import (
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
-	golang2 "projectforge.dev/projectforge/app/project/export/golang"
-	model2 "projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/project/export/model"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func ServiceHistory(m *model2.Model, args *model2.Args, addHeader bool) (*file.File, error) {
+func ServiceHistory(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	dbRef := args.DBRef()
-	g := golang2.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "servicehistory")
+	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "servicehistory")
 	g.AddImport(helper.ImpContext, helper.ImpUUID, helper.ImpErrors, helper.ImpFmt, helper.ImpTime, helper.ImpStrings)
 	g.AddImport(helper.ImpSQLx, helper.ImpAppUtil, helper.ImpDatabase)
 	g.AddBlocks(serviceHistoryVars(m), serviceHistoryGetHistory(m, dbRef), serviceHistoryGetHistories(m, dbRef), serviceHistorySaveHistory(m))
 	return g.Render(addHeader)
 }
 
-func serviceHistoryVars(m *model2.Model) *golang2.Block {
-	ret := golang2.NewBlock("HistoryVars", "func")
+func serviceHistoryVars(m *model.Model) *golang.Block {
+	ret := golang.NewBlock("HistoryVars", "func")
 	ret.W("var (")
-	xx := make(model2.Columns, 0, len(m.PKs()))
+	xx := make(model.Columns, 0, len(m.PKs()))
 	for _, pk := range m.PKs() {
 		x := pk.Clone()
 		x.Name = m.Name + "_" + x.Name
@@ -39,8 +39,8 @@ func serviceHistoryVars(m *model2.Model) *golang2.Block {
 	return ret
 }
 
-func serviceHistoryGetHistory(m *model2.Model, dbRef string) *golang2.Block {
-	ret := golang2.NewBlock("GetHistory", "func")
+func serviceHistoryGetHistory(m *model.Model, dbRef string) *golang.Block {
+	ret := golang.NewBlock("GetHistory", "func")
 	ret.W("func (s *Service) GetHistory(ctx context.Context, tx *sqlx.Tx, id uuid.UUID, logger util.Logger) (*%sHistory, error) {", m.Proper())
 	ret.W("\tq := database.SQLSelectSimple(historyColumnsString, historyTableQuoted, \"id = $1\")")
 	ret.W("\tret := historyDTO{}")
@@ -53,8 +53,8 @@ func serviceHistoryGetHistory(m *model2.Model, dbRef string) *golang2.Block {
 	return ret
 }
 
-func serviceHistoryGetHistories(m *model2.Model, dbRef string) *golang2.Block {
-	ret := golang2.NewBlock("GetHistories", "func")
+func serviceHistoryGetHistories(m *model.Model, dbRef string) *golang.Block {
+	ret := golang.NewBlock("GetHistories", "func")
 	msg := "func (s *Service) GetHistories(ctx context.Context, tx *sqlx.Tx, %s, logger util.Logger) (%sHistories, error) {"
 	ret.W(msg, m.PKs().Args(m.Package), m.Proper())
 	pks := m.PKs()
@@ -76,8 +76,8 @@ func serviceHistoryGetHistories(m *model2.Model, dbRef string) *golang2.Block {
 	return ret
 }
 
-func serviceHistorySaveHistory(m *model2.Model) *golang2.Block {
-	ret := golang2.NewBlock("SaveHistory", "func")
+func serviceHistorySaveHistory(m *model.Model) *golang.Block {
+	ret := golang.NewBlock("SaveHistory", "func")
 	const decl = "func (s *Service) SaveHistory(ctx context.Context, tx *sqlx.Tx, o *%s, n *%s, logger util.Logger) (*%sHistory, error) {"
 	ret.W(decl, m.Proper(), m.Proper(), m.Proper())
 	ret.W("\tq := database.SQLInsert(historyTableQuoted, historyColumns, 1, \"\")")

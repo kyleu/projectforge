@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"strings"
 
-	golang2 "projectforge.dev/projectforge/app/project/export/golang"
-	model2 "projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func controllerCreateForm(m *model2.Model, grp *model2.Column, prefix string) *golang2.Block {
+func controllerCreateForm(m *model.Model, grp *model.Column, prefix string) *golang.Block {
 	ret := blockFor(m, prefix, grp, "create", "form")
 	if grp != nil {
 		controllerArgFor(grp, ret, "\"\"", 2)
@@ -30,7 +30,7 @@ func controllerCreateForm(m *model2.Model, grp *model2.Column, prefix string) *g
 	return ret
 }
 
-func controllerCreateFormRandom(m *model2.Model, prefix string) *golang2.Block {
+func controllerCreateFormRandom(m *model.Model, prefix string) *golang.Block {
 	ret := blockFor(m, prefix, nil, "create", "form", "random")
 	ret.W("\t\tret := %s.Random()", m.Package)
 	ret.W("\t\tps.Title = \"Create Random %s\"", m.Proper())
@@ -41,7 +41,7 @@ func controllerCreateFormRandom(m *model2.Model, prefix string) *golang2.Block {
 	return ret
 }
 
-func controllerCreate(m *model2.Model, g *golang2.File, grp *model2.Column, prefix string) *golang2.Block {
+func controllerCreate(m *model.Model, g *golang.File, grp *model.Column, prefix string) *golang.Block {
 	ret := blockFor(m, prefix, grp, "create")
 	if grp != nil {
 		controllerArgFor(grp, ret, "\"\"", 2)
@@ -62,7 +62,7 @@ func controllerCreate(m *model2.Model, g *golang2.File, grp *model2.Column, pref
 	return ret
 }
 
-func controllerEditForm(m *model2.Model, grp *model2.Column, prefix string) *golang2.Block {
+func controllerEditForm(m *model.Model, grp *model.Column, prefix string) *golang.Block {
 	ret := blockFor(m, prefix, grp, "edit", "form")
 	if m.IsRevision() {
 		ret.W("\t\trc.SetUserValue(\"includeDeleted\", true)")
@@ -83,7 +83,7 @@ func controllerEditForm(m *model2.Model, grp *model2.Column, prefix string) *gol
 	return ret
 }
 
-func controllerEdit(m *model2.Model, g *golang2.File, grp *model2.Column, prefix string) *golang2.Block {
+func controllerEdit(m *model.Model, g *golang.File, grp *model.Column, prefix string) *golang.Block {
 	ret := blockFor(m, prefix, grp, "edit")
 	if m.IsRevision() {
 		ret.W("\t\trc.SetUserValue(\"includeDeleted\", true)")
@@ -115,7 +115,7 @@ func controllerEdit(m *model2.Model, g *golang2.File, grp *model2.Column, prefix
 	return ret
 }
 
-func controllerDelete(m *model2.Model, g *golang2.File, grp *model2.Column, prefix string) *golang2.Block {
+func controllerDelete(m *model.Model, g *golang.File, grp *model.Column, prefix string) *golang.Block {
 	ret := blockFor(m, prefix, grp, "delete")
 	if grp != nil {
 		controllerArgFor(grp, ret, "\"\"", 2)
@@ -140,8 +140,8 @@ func controllerDelete(m *model2.Model, g *golang2.File, grp *model2.Column, pref
 	return ret
 }
 
-func controllerModelFromForm(m *model2.Model) *golang2.Block {
-	ret := golang2.NewBlock(m.Package+"FromForm", "func")
+func controllerModelFromForm(m *model.Model) *golang.Block {
+	ret := golang.NewBlock(m.Package+"FromForm", "func")
 	ret.W("func %sFromForm(rc *fasthttp.RequestCtx, setPK bool) (*%s, error) {", m.Package, m.ClassRef())
 	ret.W("\tfrm, err := cutil.ParseForm(rc)")
 	ret.W("\tif err != nil {")

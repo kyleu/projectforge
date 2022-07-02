@@ -7,7 +7,7 @@ import (
 	"golang.org/x/exp/slices"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
-	model2 "projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/project/export/model"
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/util"
@@ -15,7 +15,7 @@ import (
 
 const updateKey = "Update"
 
-func GRPC(m *model2.Model, args *model2.Args, addHeader bool) (file.Files, error) {
+func GRPC(m *model.Model, args *model.Args, addHeader bool) (file.Files, error) {
 	fileArgs, err := GetGRPCFileArgs(m, args)
 	if err != nil {
 		return nil, errors.Wrap(err, "invalid arguments")
@@ -32,7 +32,7 @@ func GRPC(m *model2.Model, args *model2.Args, addHeader bool) (file.Files, error
 	return ret, nil
 }
 
-func GetGRPCFileArgs(m *model2.Model, args *model2.Args) ([]*FileArgs, error) {
+func GetGRPCFileArgs(m *model.Model, args *model.Args) ([]*FileArgs, error) {
 	grpcPackage := args.Config.GetStringOpt("grpcPackage")
 	if grpcPackage == "" {
 		return nil, errors.New("must provide [grpcPackage] in the export config")
@@ -73,7 +73,7 @@ func GetGRPCFileArgs(m *model2.Model, args *model2.Args) ([]*FileArgs, error) {
 	return ret, nil
 }
 
-func grpcFile(m *model2.Model, args *model2.Args, ga *FileArgs, addHeader bool) (*file.File, error) {
+func grpcFile(m *model.Model, args *model.Args, ga *FileArgs, addHeader bool) (*file.File, error) {
 	fn := m.Package
 	if ga.API != "*" {
 		fn += "by" + ga.API

@@ -6,15 +6,15 @@ import (
 
 	"golang.org/x/exp/slices"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
-	golang2 "projectforge.dev/projectforge/app/project/export/golang"
-	model2 "projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/project/export/model"
 
 	"projectforge.dev/projectforge/app/file"
 )
 
-func ServiceGet(m *model2.Model, args *model2.Args, addHeader bool) (*file.File, error) {
+func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	dbRef := args.DBRef()
-	g := golang2.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "serviceget")
+	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "serviceget")
 	for _, imp := range helper.ImportsForTypes("go", m.PKs().Types()...) {
 		g.AddImport(imp)
 	}
@@ -28,16 +28,16 @@ func ServiceGet(m *model2.Model, args *model2.Args, addHeader bool) (*file.File,
 	if pkLen == 1 {
 		g.AddBlocks(serviceGetMultiple(m, dbRef))
 	}
-	getBys := map[string]model2.Columns{}
+	getBys := map[string]model.Columns{}
 	if pkLen > 1 {
 		for _, pkCol := range m.PKs() {
-			getBys[pkCol.Name] = model2.Columns{pkCol}
+			getBys[pkCol.Name] = model.Columns{pkCol}
 		}
 	}
 	for _, grp := range m.GroupedColumns() {
 		g.AddImport(helper.ImpAppUtil)
 		g.AddBlocks(serviceGrouped(m, grp, args.DBRef()))
-		getBys[grp.Name] = model2.Columns{grp}
+		getBys[grp.Name] = model.Columns{grp}
 	}
 	for _, rel := range m.Relations {
 		cols := rel.SrcColumns(m)
@@ -73,9 +73,9 @@ func ServiceGet(m *model2.Model, args *model2.Args, addHeader bool) (*file.File,
 	return g.Render(addHeader)
 }
 
-func serviceGrouped(m *model2.Model, grp *model2.Column, dbRef string) *golang2.Block {
+func serviceGrouped(m *model.Model, grp *model.Column, dbRef string) *golang.Block {
 	name := "Get" + grp.ProperPlural()
-	ret := golang2.NewBlock(name, "func")
+	ret := golang.NewBlock(name, "func")
 	ret.W("func (s *Service) %s(ctx context.Context, tx *sqlx.Tx%s, logger util.Logger) ([]*util.KeyValInt, error) {", name, getSuffix(m))
 	ret.W("\twc := \"\"")
 	if m.IsSoftDelete() {
@@ -96,8 +96,8 @@ func serviceGrouped(m *model2.Model, grp *model2.Column, dbRef string) *golang2.
 	return ret
 }
 
-func serviceList(m *model2.Model, dbRef string) *golang2.Block {
-	ret := golang2.NewBlock("List", "func")
+func serviceList(m *model.Model, dbRef string) *golang.Block {
+	ret := golang.NewBlock("List", "func")
 	ret.W("func (s *Service) List(ctx context.Context, tx *sqlx.Tx, params *filter.Params%s, logger util.Logger) (%s, error) {", getSuffix(m), m.ProperPlural())
 	ret.W("\tparams = filters(params)")
 	ret.W("\twc := \"\"")
@@ -118,9 +118,9 @@ func serviceList(m *model2.Model, dbRef string) *golang2.Block {
 	return ret
 }
 
-func serviceCount(g *golang2.File, m *model2.Model, dbRef string) *golang2.Block {
+func serviceCount(g *golang.File, m *model.Model, dbRef string) *golang.Block {
 	g.AddImport(helper.ImpStrings)
-	ret := golang2.NewBlock("Count", "func")
+	ret := golang.NewBlock("Count", "func")
 	ret.W("func (s *Service) Count(ctx context.Context, tx *sqlx.Tx, whereClause string%s, logger util.Logger, args ...any) (int, error) {", getSuffix(m))
 	ret.W("\tif strings.Contains(whereClause, \"'\") || strings.Contains(whereClause, \";\") {")
 	ret.W("\t\treturn 0, errors.Errorf(\"invalid where clause [%%s]\", whereClause)")
@@ -145,15 +145,15 @@ func serviceCount(g *golang2.File, m *model2.Model, dbRef string) *golang2.Block
 	return ret
 }
 
-func serviceGetByPK(m *model2.Model, dbRef string) *golang2.Block {
+func serviceGetByPK(m *model.Model, dbRef string) *golang.Block {
 	return serviceGetBy("Get", m, m.PKs(), false, dbRef)
 }
 
-func serviceGetMultiple(m *model2.Model, dbRef string) *golang2.Block {
+func serviceGetMultiple(m *model.Model, dbRef string) *golang.Block {
 	name := "GetMultiple"
-	ret := golang2.NewBlock(name, "func")
+	ret := golang.NewBlock(name, "func")
 	pk := m.PKs()[0]
-	t := model2.ToGoType(pk.Type, pk.Nullable, m.Package)
+	t := model.ToGoType(pk.Type, pk.Nullable, m.Package)
 	msg := "func (s *Service) %s(ctx context.Context, tx *sqlx.Tx%s, logger util.Logger, %s ...%s) (%s, error) {"
 	ret.W(msg, name, getSuffix(m), pk.Plural(), t, m.ProperPlural())
 	ret.W("\tif len(%s) == 0 {", pk.Plural())
@@ -178,18 +178,18 @@ func serviceGetMultiple(m *model2.Model, dbRef string) *golang2.Block {
 	return ret
 }
 
-func serviceGetBy(key string, m *model2.Model, cols model2.Columns, returnMultiple bool, dbRef string) *golang2.Block {
+func serviceGetBy(key string, m *model.Model, cols model.Columns, returnMultiple bool, dbRef string) *golang.Block {
 	if returnMultiple {
 		return serviceGetByCols(key, m, cols, dbRef)
 	}
 	return serviceGet(key, m, cols, dbRef)
 }
 
-func serviceGet(key string, m *model2.Model, cols model2.Columns, dbRef string) *golang2.Block {
+func serviceGet(key string, m *model.Model, cols model.Columns, dbRef string) *golang.Block {
 	if key == "" {
 		key = "GetBy" + cols.Smushed()
 	}
-	ret := golang2.NewBlock(key, "func")
+	ret := golang.NewBlock(key, "func")
 	msg := "func (s *Service) %s(ctx context.Context, tx *sqlx.Tx, %s%s, logger util.Logger) (*%s, error) {"
 	ret.W(msg, key, cols.Args(m.Package), getSuffix(m), m.Proper())
 	ret.W("\twc := defaultWC(0)")
@@ -212,11 +212,11 @@ func serviceGet(key string, m *model2.Model, cols model2.Columns, dbRef string) 
 	return ret
 }
 
-func serviceGetByCols(key string, m *model2.Model, cols model2.Columns, dbRef string) *golang2.Block {
+func serviceGetByCols(key string, m *model.Model, cols model.Columns, dbRef string) *golang.Block {
 	if key == "" {
 		key = "GetBy" + cols.Smushed()
 	}
-	ret := golang2.NewBlock(key, "func")
+	ret := golang.NewBlock(key, "func")
 	msg := "func (s *Service) %s(ctx context.Context, tx *sqlx.Tx, %s, params *filter.Params%s, logger util.Logger) (%s, error) {"
 	ret.W(msg, key, cols.Args(m.Package), getSuffix(m), m.ProperPlural())
 	ret.W("\tparams = filters(params)")
@@ -240,8 +240,8 @@ func serviceGetByCols(key string, m *model2.Model, cols model2.Columns, dbRef st
 	return ret
 }
 
-func serviceListSQL(m *model2.Model, dbRef string) *golang2.Block {
-	ret := golang2.NewBlock("ListSQL", "func")
+func serviceListSQL(m *model.Model, dbRef string) *golang.Block {
+	ret := golang.NewBlock("ListSQL", "func")
 	ret.W("func (s *Service) ListSQL(ctx context.Context, tx *sqlx.Tx, sql string, logger util.Logger) (%s, error) {", m.ProperPlural())
 	ret.W("\tret := dtos{}")
 	ret.W("\terr := s.%s.Select(ctx, &ret, sql, tx, logger)", dbRef)
@@ -253,7 +253,7 @@ func serviceListSQL(m *model2.Model, dbRef string) *golang2.Block {
 	return ret
 }
 
-func tableClauseFor(m *model2.Model) string {
+func tableClauseFor(m *model.Model) string {
 	if m.IsRevision() {
 		return "tablesJoined"
 	}

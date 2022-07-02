@@ -5,11 +5,11 @@ import (
 	"strings"
 
 	"projectforge.dev/projectforge/app/project/export/golang"
-	model2 "projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/project/export/model"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func controllerDetail(models model2.Models, m *model2.Model, grp *model2.Column, prefix string) *golang.Block {
+func controllerDetail(models model.Models, m *model.Model, grp *model.Column, prefix string) *golang.Block {
 	rrels := models.ReverseRelations(m.Name)
 	ret := blockFor(m, prefix, grp, "detail")
 	grpHistory := ""
