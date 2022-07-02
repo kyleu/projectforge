@@ -6,24 +6,21 @@ package vexport
 
 //line views/vexport/GroupForm.html:1
 import (
+	qtio422016 "io"
 	"strings"
 
+	qt422016 "github.com/valyala/quicktemplate"
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
-	"projectforge.dev/projectforge/app/export"
-	"projectforge.dev/projectforge/app/export/model"
 	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/app/project/export"
+	"projectforge.dev/projectforge/app/project/export/model"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/components"
 	"projectforge.dev/projectforge/views/layout"
 )
 
 //line views/vexport/GroupForm.html:14
-import (
-	qtio422016 "io"
-
-	qt422016 "github.com/valyala/quicktemplate"
-)
 
 //line views/vexport/GroupForm.html:14
 var (

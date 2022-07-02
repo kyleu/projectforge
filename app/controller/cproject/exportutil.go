@@ -5,16 +5,16 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
+	model2 "projectforge.dev/projectforge/app/project/export/model"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
-	"projectforge.dev/projectforge/app/export/model"
 	"projectforge.dev/projectforge/app/lib/filter"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func exportModelFromForm(frm util.ValueMap, m *model.Model) error {
+func exportModelFromForm(frm util.ValueMap, m *model2.Model) error {
 	get := func(k string, def string) string {
 		x := frm.GetStringOpt(k)
 		if x == "" {
@@ -48,21 +48,21 @@ func exportModelFromForm(frm util.ValueMap, m *model.Model) error {
 	}
 	m.Config = cfg
 
-	cols := model.Columns{}
+	cols := model2.Columns{}
 	err = util.FromJSON([]byte(get("columns", util.ToJSON(m.Columns))), &cols)
 	if err != nil {
 		return errors.Wrap(err, "invalid columns")
 	}
 	m.Columns = cols
 
-	rels := model.Relations{}
+	rels := model2.Relations{}
 	err = util.FromJSON([]byte(get("relations", util.ToJSON(m.Relations))), &rels)
 	if err != nil {
 		return errors.Wrap(err, "invalid relations")
 	}
 	m.Relations = rels
 
-	idxs := model.Indexes{}
+	idxs := model2.Indexes{}
 	err = util.FromJSON([]byte(get("indexes", util.ToJSON(m.Indexes))), &idxs)
 	if err != nil {
 		return errors.Wrap(err, "invalid indexes")
@@ -79,7 +79,7 @@ func exportModelFromForm(frm util.ValueMap, m *model.Model) error {
 	return nil
 }
 
-func exportLoad(rc *fasthttp.RequestCtx, as *app.State, logger util.Logger) (*project.Project, *model.Model, *model.Args, error) {
+func exportLoad(rc *fasthttp.RequestCtx, as *app.State, logger util.Logger) (*project.Project, *model2.Model, *model2.Args, error) {
 	prj, err := getProject(rc, as)
 	if err != nil {
 		return nil, nil, nil, err
@@ -94,9 +94,9 @@ func exportLoad(rc *fasthttp.RequestCtx, as *app.State, logger util.Logger) (*pr
 	if err != nil {
 		return nil, nil, nil, err
 	}
-	var mdl *model.Model
+	var mdl *model2.Model
 	if modelKey == "new" {
-		mdl = &model.Model{}
+		mdl = &model2.Model{}
 	} else {
 		mdl = args.Models.Get(modelKey)
 	}

@@ -2,8 +2,8 @@ package project
 
 import (
 	"golang.org/x/exp/slices"
+	"projectforge.dev/projectforge/app/project/export/model"
 
-	"projectforge.dev/projectforge/app/export/model"
 	"projectforge.dev/projectforge/app/lib/theme"
 	"projectforge.dev/projectforge/app/util"
 )

@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/pkg/errors"
+	model2 "projectforge.dev/projectforge/app/project/export/model"
 
-	"projectforge.dev/projectforge/app/export/model"
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -44,7 +44,7 @@ func (s *Service) Save(prj *Project, logger util.Logger) error {
 	return nil
 }
 
-func (s *Service) SaveExportGroups(fs filesystem.FileLoader, g model.Groups, logger util.Logger) error {
+func (s *Service) SaveExportGroups(fs filesystem.FileLoader, g model2.Groups, logger util.Logger) error {
 	fn := fmt.Sprintf("%s/export/groups.json", ConfigDir)
 	j := util.ToJSON(g)
 	err := fs.WriteFile(fn, []byte(j), filesystem.DefaultMode, true)
@@ -54,7 +54,7 @@ func (s *Service) SaveExportGroups(fs filesystem.FileLoader, g model.Groups, log
 	return nil
 }
 
-func (s *Service) SaveExportModel(fs filesystem.FileLoader, mdl *model.Model, logger util.Logger) error {
+func (s *Service) SaveExportModel(fs filesystem.FileLoader, mdl *model2.Model, logger util.Logger) error {
 	if mdl.HasTag("json") {
 		return nil
 	}

@@ -4,9 +4,9 @@ import (
 	"context"
 
 	"github.com/pkg/errors"
+	"projectforge.dev/projectforge/app/project/export"
+	"projectforge.dev/projectforge/app/project/export/model"
 
-	"projectforge.dev/projectforge/app/export"
-	"projectforge.dev/projectforge/app/export/model"
 	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"

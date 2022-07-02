@@ -7,8 +7,8 @@ import (
 
 	"github.com/pkg/errors"
 	"golang.org/x/exp/slices"
+	"projectforge.dev/projectforge/app/project/export"
 
-	"projectforge.dev/projectforge/app/export"
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/lib/search/result"
 	"projectforge.dev/projectforge/app/util"

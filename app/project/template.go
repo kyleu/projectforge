@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"projectforge.dev/projectforge/app/export/model"
 	"projectforge.dev/projectforge/app/lib/theme"
+	"projectforge.dev/projectforge/app/project/export/model"
 	"projectforge.dev/projectforge/app/util"
 )
 
