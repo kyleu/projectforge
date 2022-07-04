@@ -11,12 +11,13 @@ All managed projects expose a web and CLI interface, and additional modules are 
 
 - `all`: (default action) Starts the main http server on port 40000 and the marketing site on port 40001
 - `audit`: Audits the project files, detecting invalid files and empty folders
-- `build`: Builds the project, many options available
+- `build`: Builds the project, many options available, see below
 - `completion`: Generate the autocompletion script for the specified shell
 - `create`: Creates a new project
 - `debug`: Dumps a ton of information about the project
 - `doctor`: Makes sure your machine has the required dependencies
 - `generate`: Applies pending changes to files as required
+- `git`: Handles git operations, many options available, see below
 - `help`: Help about any command
 - `preview`: Show what would happen if you generate
 - `server`: Starts the http server on port 40000 (by default)
@@ -43,6 +44,16 @@ All managed projects expose a web and CLI interface, and additional modules are 
 - `packages`: Visualize your application's packages
 - `test`: Does a test
 - `tidy`: Runs [go mod tidy]
+
+
+## What git actions are available?
+
+Common git actions like `status`, `fetch`, `pull` and `commit` do exactly what you'd expect.
+There's also a `magic` action, which is a little crazy:
+- If there are uncommitted changes, it will stash them
+- If there are pending upstream commits, it will pull them
+- If a stash was previously created, it will pop and commit it
+- If commits exist that haven't been pushed, it will push them
 
 
 ## What modules are available?
@@ -74,6 +85,17 @@ All managed projects expose a web and CLI interface, and additional modules are 
 - `upgrade`: Provides in-place version upgrades using Github Releases
 - `websocket`: Provides an API for hosting WebSocket connections
 
+## What is provided in the TypeScript application?
+
+
+## How do I use custom modules?
+
+
+## How do I manage more than one Project Forge project at once?
+
+
+## How are static assets served?
+
 
 ## How do I work with SVG icons?
 
@@ -91,6 +113,25 @@ Some files are managed but also support custom code. The text you place inside a
 As always, adding `$PF_IGNORE$` at the top of your file causes it to be skipped entirely. 
 
 
+## What administrative functions are available?
+
+Assuming you've got access, going to `/admin` will show you the available actions:
+
+- CPU/memory profiling and visualization, runtime heap dumps
+- Garbage collection management and metrics
+- View your projects Go modules, internal and external
+- Theme management, with theme catalogs and live preview
+- Lots of HTTP tools, for investigating sessions or request
+
+## How can I secure my application?
+
+
+## What options are available for the HTML menu and breadcrumbs?
+
+
+## What search facilities are available?
+
+
 ## What utility methods are available for my app?
 
 _So many_. See the files in `./app/util`, there's a ton of juicy stuff.
@@ -99,4 +140,57 @@ _So many_. See the files in `./app/util`, there's a ton of juicy stuff.
 ## How do I add a new model and service?
 
 
+
 ## How do I make a new HTTP action?
+
+Create a new file in `app/controller` or a child directory, then add your method.
+The usual form is:
+
+```go
+// All controller actions require a fasthttp request/response
+func CurrentTime(rc *fasthttp.RequestCtx) {
+	// The Act method wires up the page state for your logic 
+	Act("current.time", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		// The PageState::Title is used as the HTML title
+		ps.Title = "The current server time for " + util.AppName
+		// For example purposes
+		t := time.Now()
+		// PageState::Data will be rendered as JSON or XML if the Content-Type of the request matches
+		ps.Data = t
+		// The Render method will send the template contents if HTML is requested. The final argument refers to the active menu key
+		return Render(rc, as, &views.CurrentTime{Time: t}, ps, "time")
+	})
+}
+```
+
+Add your action to `./app/controller/routes/routes.go` like so:
+
+```go
+r.GET("/time", controller.CurrentTime)
+```
+
+Then create a menu item in `./app/controller/cmenu/menu.go` like so:
+
+```go
+i := &menu.Item{Key: "time", Title: "Current Time", Description: "...", Icon: "star", Route: "/time"}
+ret = append(ret, i)
+```
+
+
+Templates are written in [quicktemplate](https://github.com/valyala/quicktemplate), and generally take this form:
+
+```html
+{% code type CurrentTime struct {
+  layout.Basic
+  Time time.Time
+} %}
+
+{% func (p *CurrentTime) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`calendar`, ps) %}The Current Time!</h3>
+    <p>{%s fmt.Sprint(p.Time) %}</p>
+  </div>
+{% endfunc %}
+```
+
+The `layout.Basic` renders menu and navigation, and is swappable for custom response types.
