@@ -13,7 +13,7 @@ Licensed under [CC0](https://creativecommons.org/publicdomain/zero/1.0)
 See `customizing.md` for details
 
 - `cmd` contains the main CLI actions
-- `controller` contains HTTP actions for the server UI, see []
+- `controller` contains HTTP actions for the server UI, see [faq.md](../faq.md) for details
 - `lib/filter` is used by the UI for sorting and filtering
 - `lib/log` contains custom zap loggers and appenders
 - `lib/menu` is used by the UI to draw the left nav and breadcrumbs
