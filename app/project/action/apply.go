@@ -111,8 +111,6 @@ func applyPrj(ctx context.Context, pm *PrjAndMods, t Type) *Result {
 		return onPreview(ctx, pm)
 	case TypeSVG:
 		return onSVG(ctx, pm)
-	case TypeValidate:
-		return onValidate(ctx, pm)
 	default:
 		return errorResult(errors.Errorf("invalid action type [%s]", t.String()), t, pm.Cfg, pm.Logger)
 	}

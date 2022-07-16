@@ -85,6 +85,10 @@ There's also a `magic` action, which is a little crazy:
 - `upgrade`: Provides in-place version upgrades using Github Releases
 - `websocket`: Provides an API for hosting WebSocket connections
 
+
+## What actions are available for my project from the UI?
+
+
 ## What is provided in the TypeScript application?
 
 

@@ -6,6 +6,7 @@ import (
 
 	"github.com/pkg/errors"
 	"golang.org/x/exp/slices"
+	"projectforge.dev/projectforge/app/project"
 
 	"projectforge.dev/projectforge/app/file/diff"
 	"projectforge.dev/projectforge/app/module"
@@ -33,6 +34,13 @@ func onAudit(ctx context.Context, pm *PrjAndMods) *Result {
 	if err != nil {
 		return errorResult(err, TypeAudit, pm.Cfg, pm.Logger)
 	}
+
+	fs := pm.PSvc.GetFilesystem(pm.Prj)
+	errs := project.Validate(pm.Prj, pm.MSvc.Deps(), fs)
+	for _, err := range errs {
+		ret = ret.WithError(errors.Errorf("%s: %s", err.Code, err.Message))
+	}
+
 	return ret
 }
 

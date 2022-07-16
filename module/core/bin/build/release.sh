@@ -8,4 +8,4 @@ cd $dir/../..
 
 [[ -f "$HOME/bin/oauth" ]] && . $HOME/bin/oauth
 
-goreleaser -f ./tools/release/.goreleaser.yml release --timeout 60m --rm-dist
+goreleaser -f ./tools/release/.goreleaser.yml release --timeout 240m --rm-dist

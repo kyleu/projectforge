@@ -21,13 +21,12 @@ var (
 	TypeGenerate = Type{Key: "generate", Title: "Generate", Icon: "forward", Description: "Applies pending changes to files as required"}
 	TypePreview  = Type{Key: "preview", Title: "Preview", Icon: "play", Description: "Show what would happen if you generate"}
 	TypeSVG      = Type{Key: "svg", Title: "SVG", Icon: "icons", Description: "Builds the project's SVG files"}
-	TypeValidate = Type{Key: "validate", Title: "Validate", Icon: "glasses", Description: "Validates the project config"}
 	TypeTest     = Type{Key: "test", Title: "Test", Icon: "wrench", Description: "Runs internal tests, you probably don't want this", Hidden: true}
 )
 
 var (
-	AllTypes     = []Type{TypeAudit, TypeBuild, TypeCreate, TypeDebug, TypeDoctor, TypeGenerate, TypePreview, TypeSVG, TypeTest, TypeValidate}
-	ProjectTypes = []Type{TypePreview, TypeGenerate, TypeAudit, TypeValidate, TypeBuild}
+	AllTypes     = []Type{TypeAudit, TypeBuild, TypeCreate, TypeDebug, TypeDoctor, TypeGenerate, TypePreview, TypeSVG, TypeTest}
+	ProjectTypes = []Type{TypePreview, TypeGenerate, TypeAudit, TypeBuild}
 )
 
 func TypeFromString(s string) Type {
