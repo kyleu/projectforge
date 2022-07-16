@@ -5,11 +5,11 @@ import (
 	"strings"
 
 	"golang.org/x/exp/slices"
+
+	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
-
-	"projectforge.dev/projectforge/app/file"
 )
 
 func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {

@@ -36,6 +36,8 @@ func RunAction(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
+		ps.Title = fmt.Sprintf("[%s] %s", actT.Title, prj.Title())
+
 		cfg["path"] = prj.Path
 		rc.QueryArgs().VisitAll(func(k []byte, v []byte) {
 			cfg[string(k)] = string(v)
@@ -45,6 +47,7 @@ func RunAction(rc *fasthttp.RequestCtx) {
 		phase := cfg.GetStringOpt("phase")
 
 		if isBuild && phase == "" {
+			ps.Data = action.AllBuilds
 			page := &vbuild.BuildResult{Project: prj, Cfg: cfg, BuildResult: nil, GitResult: nil}
 			return controller.Render(rc, as, page, ps, "projects", prj.Key, actT.Title)
 		}
@@ -56,6 +59,7 @@ func RunAction(rc *fasthttp.RequestCtx) {
 		if result.Project == nil {
 			result.Project = prj
 		}
+		ps.Data = result
 
 		if isBuild {
 			if phase == depsKey {
@@ -68,8 +72,6 @@ func RunAction(rc *fasthttp.RequestCtx) {
 			return controller.Render(rc, as, page, ps, "projects", prj.Key, actT.Title)
 		}
 
-		ps.Title = fmt.Sprintf("[%s] %s", actT.Title, prj.Title())
-		ps.Data = result
 		page := &vaction.Result{Ctx: &action.ResultContext{Prj: prj, Cfg: cfg, Res: result}, IsBuild: actT.Key == action.TypeBuild.Key}
 		return controller.Render(rc, as, page, ps, "projects", prj.Key, actT.Title)
 	})
