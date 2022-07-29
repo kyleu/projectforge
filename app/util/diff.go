@@ -22,12 +22,24 @@ func (d Diff) String() string {
 	return d.Path
 }
 
+func (d Diff) StringVerbose() string {
+	return fmt.Sprintf("%s (%q != %q)", d.Path, d.Old, d.New)
+}
+
 type Diffs []*Diff
 
 func (d Diffs) String() string {
 	sb := make([]string, 0, len(d))
 	for _, x := range d {
 		sb = append(sb, x.String())
+	}
+	return strings.Join(sb, "; ")
+}
+
+func (d Diffs) StringVerbose() string {
+	sb := make([]string, 0, len(d))
+	for _, x := range d {
+		sb = append(sb, x.StringVerbose())
 	}
 	return strings.Join(sb, "; ")
 }

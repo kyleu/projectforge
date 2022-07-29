@@ -107,7 +107,7 @@ func (s *Service) QuerySingleRow(ctx context.Context, q string, tx *sqlx.Tx, log
 	if len(rows) == 0 {
 		return nil, errors.Wrap(sql.ErrNoRows, "no rows returned from query")
 	}
-	if len(rows) < 1 {
+	if len(rows) > 1 {
 		return nil, errors.New("more than one row returned from query")
 	}
 	return rows[0], nil
