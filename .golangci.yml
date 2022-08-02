@@ -76,7 +76,7 @@ linters:
   enable:
     - asciicheck
     - bodyclose
-    - contextcheck
+    # - contextcheck
     # - cyclop
     - deadcode
     - depguard
