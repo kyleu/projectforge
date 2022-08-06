@@ -1,4 +1,4 @@
-// Package site $PF_IGNORE$
+// $PF_IGNORE$
 package site
 
 import (
@@ -10,13 +10,14 @@ import (
 )
 
 const (
-	keyInstall     = "install"
-	keyDownload    = "download"
-	keyFeatures    = "features"
+	keyAbout       = "about"
 	keyContrib     = "contributing"
 	keyCustomizing = "customizing"
-	keyTech        = "technology"
+	keyDownload    = "download"
 	keyFAQ         = "faq"
+	keyFeatures    = "features"
+	keyInstall     = "install"
+	keyTech        = "technology"
 )
 
 func Menu(ctx context.Context, as *app.State, _ *user.Profile, _ user.Accounts) menu.Items {

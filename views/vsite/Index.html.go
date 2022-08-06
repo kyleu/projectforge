@@ -43,18 +43,56 @@ func (p *Index) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
 	qw422016.E().S(util.AppName)
 //line views/vsite/Index.html:14
 	qw422016.N().S(`</h3>
+
     <div class="mt">
-      <div>Project Forge manages web projects written in the Go language.</div>
-      <em>Using code generation, the latest technology, and a strong standard library, Project Forge will manage your project's code, assets, UI and UX.</em>
+      <a href="/download"><button>`)
+//line views/vsite/Index.html:17
+	components.StreamSVGRef(qw422016, "download", 15, 15, "icon", ps)
+//line views/vsite/Index.html:17
+	qw422016.N().S(`Download</button></a>
+      <a href="https://github.com/kyleu/projectforge"><button>`)
+//line views/vsite/Index.html:18
+	components.StreamSVGRef(qw422016, "git", 15, 15, "icon", ps)
+//line views/vsite/Index.html:18
+	qw422016.N().S(`Source Code</button></a>
     </div>
+
     <p>
-      <a href="/download"><button>Download</button></a>
-      <a href="https://github.com/kyleu/projectforge"><button>Source Code</button></a>
+      <a href="https://projectforge.dev">Project Forge</a> is an application that allows you to generate, manage, and grow web applications built using the Go language.
+      You control your application's features, provided via "modules" that enable everything from databases to OAuth.
+      A standard Golang project is created, with a ton of utilities and APIs to help you build the application you want, with no compromises.
     </p>
+
+    <p>
+      All projects managed by Project Forge provide an HTTP server based on fasthttp, and use quicktemplate for HTML templates (and SQL, if enabled).
+      An MVC framework is provided (but not required) that handles content negotiation, hierarchical menus, breadcrumbs, OAuth to dozens of providers, stateless user profiles, dark mode support, SVG management, syntax highlighting, form components, and embedded assets.
+    </p>
+
+    <p>
+      You're welcome to use any UI framework you'd like, but the included UI renders a JS-dependency-free page, heavily optimized for speed and modern UX.
+      The about page is animated, themed, and responsive, but is only three requests (HTML, CSS, JS) totaling less than 40KB zipped.
+      It serves in less than a millisecond, and renders in Chrome in less than 20ms.
+      Progressive enhancement is provided by an included ESBuild TypeScript project, though all functionality is supported with JavaScript disabled.
+    </p>
+
+    <p>
+      Your project can (optionally) build for _every_ platform; desktop and mobile webview apps, WASM, universal macOS binaries, frickin' Plan9 and Solaris.
+      If you check all the boxes it'll produce like 60 builds. They all produce a ~20MB native binary.
+      The binaries produced can be configured to auto-upgrade from GitHub Releases, or upgraded by the user using a CLI or UI (module "upgrade" must be in your project).
+      CI/CD workflows based on GitHub Actions are provided, handling building, testing, linting, and publishing to GitHub Releases (and any configured Docker repos).
+    </p>
+  </div>
+  <div class="card">
+    <h3>Examples</h3>
+    <ul>
+      <li><a href="https://github.com/kyleu/admini" target="_blank">Admini</a>: A database management application, basically. It does other stuff too.</li>
+      <li><em>More examples coming soon...</em></li>
+    </ul>
   </div>
   <div class="card">
     <h3>A project managed by Project Forge...</h3>
     <ul class="mt">
+      <li>Is written in the Go programming language, using the latest versions and dependencies</li>
       <li>Has a beautiful and fast HTML UI, no JavaScript required</li>
       <li>Optimizes for speed and developer experience, sub-second turnaround times</li>
       <li>Builds in seconds, live-reloads in dev mode when code or templates change</li>
@@ -69,40 +107,40 @@ func (p *Index) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
     <h3>Licensing</h3>
     <div class="mt">
       `)
-//line views/vsite/Index.html:40
+//line views/vsite/Index.html:70
 	qw422016.E().S(util.AppName)
-//line views/vsite/Index.html:40
+//line views/vsite/Index.html:70
 	qw422016.N().S(` is <a href="https://choosealicense.com/licenses/mit/">MIT</a> licensed,
       and the modules are <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>.
     </div>
     <div class="mt">Your project is your own, use any license you'd like.</div>
   </div>
 `)
-//line views/vsite/Index.html:45
+//line views/vsite/Index.html:75
 }
 
-//line views/vsite/Index.html:45
+//line views/vsite/Index.html:75
 func (p *Index) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsite/Index.html:45
+//line views/vsite/Index.html:75
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsite/Index.html:45
+//line views/vsite/Index.html:75
 	p.StreamBody(qw422016, as, ps)
-//line views/vsite/Index.html:45
+//line views/vsite/Index.html:75
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsite/Index.html:45
+//line views/vsite/Index.html:75
 }
 
-//line views/vsite/Index.html:45
+//line views/vsite/Index.html:75
 func (p *Index) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsite/Index.html:45
+//line views/vsite/Index.html:75
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsite/Index.html:45
+//line views/vsite/Index.html:75
 	p.WriteBody(qb422016, as, ps)
-//line views/vsite/Index.html:45
+//line views/vsite/Index.html:75
 	qs422016 := string(qb422016.B)
-//line views/vsite/Index.html:45
+//line views/vsite/Index.html:75
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsite/Index.html:45
+//line views/vsite/Index.html:75
 	return qs422016
-//line views/vsite/Index.html:45
+//line views/vsite/Index.html:75
 }
