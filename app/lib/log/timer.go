@@ -21,11 +21,21 @@ func NewTimer(key string, logger util.Logger) *Timer {
 
 func (l *Timer) Lap(msg string, args ...any) {
 	l.index++
-	l.Log.Infof(fmt.Sprintf("[%s::%d] ", l.Key, l.index) + fmt.Sprintf(msg, args...) + " [" + util.MicrosToMillis(l.Timer.End()) + "]")
+	out := fmt.Sprintf("[%s::%d] ", l.Key, l.index) + fmt.Sprintf(msg, args...) + " [" + util.MicrosToMillis(l.Timer.End()) + "]"
+	if l.Log == nil {
+		fmt.Println(out)
+	} else {
+		l.Log.Infof(out)
+	}
 	l.Timer = util.TimerStart()
 }
 
 func (l *Timer) Complete() {
 	msg := fmt.Sprintf("completed after [%d] steps in [%s]", l.index, util.MicrosToMillis(l.initial.End()))
-	l.Log.Infof(fmt.Sprintf("[%s::%d] ", l.Key, l.index) + msg + " [" + util.MicrosToMillis(l.Timer.End()) + "]")
+	out := fmt.Sprintf("[%s::%d] ", l.Key, l.index) + msg + " [" + util.MicrosToMillis(l.Timer.End()) + "]"
+	if l.Log == nil {
+		fmt.Println(out)
+	} else {
+		l.Log.Infof(out)
+	}
 }

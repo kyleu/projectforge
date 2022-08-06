@@ -34,6 +34,8 @@ func GitActionAll(rc *fasthttp.RequestCtx) {
 			results, err = gitStatusAll(prjs, rc, as, ps)
 		case git.ActionFetch.Key:
 			results, err = gitFetchAll(prjs, rc, as, ps)
+		case git.ActionPull.Key:
+			results, err = gitPullAll(prjs, rc, as, ps)
 		case git.ActionMagic.Key:
 			argRes := cutil.CollectArgs(rc, gitMagicArgs)
 			if len(argRes.Missing) > 0 {
@@ -69,6 +71,13 @@ func gitStatusAll(prjs project.Projects, rc *fasthttp.RequestCtx, as *app.State,
 func gitFetchAll(prjs project.Projects, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (git.Results, error) {
 	results, errs := util.AsyncCollect(prjs, func(item *project.Project) (*git.Result, error) {
 		return as.Services.Git.Fetch(ps.Context, item, ps.Logger)
+	})
+	return results, util.ErrorMerge(errs...)
+}
+
+func gitPullAll(prjs project.Projects, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (git.Results, error) {
+	results, errs := util.AsyncCollect(prjs, func(item *project.Project) (*git.Result, error) {
+		return as.Services.Git.Pull(ps.Context, item, ps.Logger)
 	})
 	return results, util.ErrorMerge(errs...)
 }

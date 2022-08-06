@@ -6,7 +6,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-const defaultGoVersion = "1.18"
+const defaultGoVersion = "1.19"
 
 type ModuleDef struct {
 	Key  string `json:"key"`

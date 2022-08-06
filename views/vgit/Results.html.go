@@ -84,10 +84,18 @@ func (p *Results) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
           <td>Fetches updates for all projects</td>
         </tr>
         <tr>
-          <td><a href="/git/all/magic`)
+          <td><a href="/git/all/pull`)
 //line views/vgit/Results.html:49
 	qw422016.E().S(tags)
 //line views/vgit/Results.html:49
+	qw422016.N().S(`"><button>Pull</button></a></td>
+          <td>Pulls commits for all projects</td>
+        </tr>
+        <tr>
+          <td><a href="/git/all/magic`)
+//line views/vgit/Results.html:53
+	qw422016.E().S(tags)
+//line views/vgit/Results.html:53
 	qw422016.N().S(`"><button>Magic</button></a></td>
           <td>Runs the magic for all projects</td>
         </tr>
@@ -97,104 +105,104 @@ func (p *Results) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
   <div class="card">
     <ul class="accordion">
 `)
-//line views/vgit/Results.html:57
+//line views/vgit/Results.html:61
 	for _, x := range p.Results {
-//line views/vgit/Results.html:57
+//line views/vgit/Results.html:61
 		qw422016.N().S(`      <li>
         <input id="accordion-`)
-//line views/vgit/Results.html:59
+//line views/vgit/Results.html:63
 		qw422016.E().S(x.Project.Key)
-//line views/vgit/Results.html:59
+//line views/vgit/Results.html:63
 		qw422016.N().S(`" type="checkbox" hidden />
         <label for="accordion-`)
-//line views/vgit/Results.html:60
+//line views/vgit/Results.html:64
 		qw422016.E().S(x.Project.Key)
-//line views/vgit/Results.html:60
+//line views/vgit/Results.html:64
 		qw422016.N().S(`">
           <em class="right">`)
-//line views/vgit/Results.html:61
+//line views/vgit/Results.html:65
 		qw422016.E().S(x.Status)
-//line views/vgit/Results.html:61
+//line views/vgit/Results.html:65
 		if x.Error != "" {
-//line views/vgit/Results.html:61
+//line views/vgit/Results.html:65
 			qw422016.N().S(` (error)`)
-//line views/vgit/Results.html:61
+//line views/vgit/Results.html:65
 		}
-//line views/vgit/Results.html:61
+//line views/vgit/Results.html:65
 		qw422016.N().S(`</em>
           `)
-//line views/vgit/Results.html:62
+//line views/vgit/Results.html:66
 		components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vgit/Results.html:62
+//line views/vgit/Results.html:66
 		qw422016.N().S(` `)
-//line views/vgit/Results.html:62
+//line views/vgit/Results.html:66
 		components.StreamSVGRef(qw422016, x.Project.IconSafe(), 16, 16, "icon", ps)
-//line views/vgit/Results.html:62
+//line views/vgit/Results.html:66
 		qw422016.N().S(`
           `)
-//line views/vgit/Results.html:63
+//line views/vgit/Results.html:67
 		qw422016.E().S(x.Project.Title())
-//line views/vgit/Results.html:63
+//line views/vgit/Results.html:67
 		qw422016.N().S(`
 `)
-//line views/vgit/Results.html:64
+//line views/vgit/Results.html:68
 		if x.DataString("branch") != "" {
-//line views/vgit/Results.html:64
+//line views/vgit/Results.html:68
 			qw422016.N().S(`          <em>(`)
-//line views/vgit/Results.html:65
+//line views/vgit/Results.html:69
 			qw422016.E().S(x.DataString("branch"))
-//line views/vgit/Results.html:65
+//line views/vgit/Results.html:69
 			qw422016.N().S(`)</em>
 `)
-//line views/vgit/Results.html:66
+//line views/vgit/Results.html:70
 		}
-//line views/vgit/Results.html:66
+//line views/vgit/Results.html:70
 		qw422016.N().S(`        </label>
         <div class="bd">
           `)
-//line views/vgit/Results.html:69
+//line views/vgit/Results.html:73
 		streamstatusActions(qw422016, x)
-//line views/vgit/Results.html:69
+//line views/vgit/Results.html:73
 		qw422016.N().S(`
           `)
-//line views/vgit/Results.html:70
+//line views/vgit/Results.html:74
 		streamstatusDetail(qw422016, x.Project, x)
-//line views/vgit/Results.html:70
+//line views/vgit/Results.html:74
 		qw422016.N().S(`
         </div>
       </li>
 `)
-//line views/vgit/Results.html:73
+//line views/vgit/Results.html:77
 	}
-//line views/vgit/Results.html:73
+//line views/vgit/Results.html:77
 	qw422016.N().S(`    </ul>
   </div>
 `)
-//line views/vgit/Results.html:76
+//line views/vgit/Results.html:80
 }
 
-//line views/vgit/Results.html:76
+//line views/vgit/Results.html:80
 func (p *Results) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vgit/Results.html:76
+//line views/vgit/Results.html:80
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vgit/Results.html:76
+//line views/vgit/Results.html:80
 	p.StreamBody(qw422016, as, ps)
-//line views/vgit/Results.html:76
+//line views/vgit/Results.html:80
 	qt422016.ReleaseWriter(qw422016)
-//line views/vgit/Results.html:76
+//line views/vgit/Results.html:80
 }
 
-//line views/vgit/Results.html:76
+//line views/vgit/Results.html:80
 func (p *Results) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vgit/Results.html:76
+//line views/vgit/Results.html:80
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vgit/Results.html:76
+//line views/vgit/Results.html:80
 	p.WriteBody(qb422016, as, ps)
-//line views/vgit/Results.html:76
+//line views/vgit/Results.html:80
 	qs422016 := string(qb422016.B)
-//line views/vgit/Results.html:76
+//line views/vgit/Results.html:80
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vgit/Results.html:76
+//line views/vgit/Results.html:80
 	return qs422016
-//line views/vgit/Results.html:76
+//line views/vgit/Results.html:80
 }

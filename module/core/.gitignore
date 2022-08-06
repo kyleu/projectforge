@@ -1,4 +1,5 @@
 # $PF_IGNORE$
+/.env
 /.vscode
 /.idea
 /.scannerwork
