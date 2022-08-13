@@ -43,6 +43,7 @@ func AsyncRateLimit[T any, R any](items []T, f func(item T) (R, error), maxConcu
 	for {
 		select {
 		case limit <- struct{}{}:
+			idx++
 			item := items[idx]
 			go func() {
 				r, err := f(item)

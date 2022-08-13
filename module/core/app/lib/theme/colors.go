@@ -87,9 +87,9 @@ func (c *Colors) ApplyMap(m util.ValueMap, prefix string) *Colors {
 	get := func(k string, def string) string {
 		x, err := m.GetString(prefix+k, true)
 		if err != nil {
-			return def
+			return strings.ToLower(def)
 		}
-		return x
+		return strings.ToLower(x)
 	}
 	c.Border = get("border", c.Border)
 	c.LinkDecoration = get("link-decoration", c.LinkDecoration)
