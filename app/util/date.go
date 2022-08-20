@@ -88,6 +88,10 @@ func TimeFromJS(s string) (*time.Time, error) {
 	return TimeFromStringFmt(s, dateFmtJS)
 }
 
+func TimeToMap(t time.Time) map[string]any {
+	return map[string]any{"epoch": t.UnixMilli(), "iso8601": t.Format("2006-01-02T15:04:05-0700")}
+}
+
 func NowPointer() *time.Time {
 	ret := time.Now()
 	return &ret

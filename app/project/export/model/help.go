@@ -6,7 +6,7 @@ import (
 	"projectforge.dev/projectforge/app/lib/types"
 )
 
-func Help(t types.Type) string {
+func Help(t types.Type, f string) string {
 	switch t.Key() {
 	case types.KeyAny:
 		return "Interface, could be anything"
@@ -23,7 +23,14 @@ func Help(t types.Type) string {
 	case types.KeyReference:
 		return "[" + asRefK(t) + "], as a JSON object"
 	case types.KeyString:
-		return "String text"
+		switch f {
+		case FmtURL:
+			return "URL in string form"
+		case FmtCountry:
+			return "Two-digit country code"
+		default:
+			return "String text"
+		}
 	case types.KeyTimestamp:
 		return "Date and time, in almost any format"
 	case types.KeyUUID:
@@ -37,7 +44,7 @@ func (c *Column) Help() string {
 	if c.HelpString != "" {
 		return c.HelpString
 	}
-	ret := Help(c.Type)
+	ret := Help(c.Type, c.Format)
 	if c.Nullable {
 		ret += " (optional)"
 	}

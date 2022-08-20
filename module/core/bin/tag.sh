@@ -14,7 +14,7 @@ if [[ $TGT == "none" ]]; then
   TGT=$(echo ${TGT} | awk -F. -v OFS=. '{$NF++;print}')
 fi
 if [[ ${TGT:0:1} == "v" ]]; then
-  TGT = "${TGT:1}"
+  TGT="${TGT:1}"
 fi
 
 echo $TGT

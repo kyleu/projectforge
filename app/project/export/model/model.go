@@ -67,7 +67,7 @@ func (m *Model) LinkURL(prefix string) string {
 	pks := m.PKs()
 	linkURL := "/" + m.Route()
 	for _, pk := range pks {
-		linkURL += "/" + pk.ToGoViewString(prefix)
+		linkURL += "/" + pk.ToGoViewString(prefix, false)
 	}
 	return linkURL
 }

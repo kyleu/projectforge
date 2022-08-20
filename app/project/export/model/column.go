@@ -11,9 +11,10 @@ import (
 )
 
 const (
-	FmtCode   = "code"
-	FmtURL    = "url"
-	FmtSelect = "select"
+	FmtCode    = "code"
+	FmtCountry = "country"
+	FmtURL     = "url"
+	FmtSelect  = "select"
 )
 
 type Column struct {
@@ -31,7 +32,10 @@ type Column struct {
 }
 
 func (c *Column) Clone() *Column {
-	return &Column{Name: c.Name, Type: c.Type, PK: c.PK, Nullable: c.Nullable, Search: c.Search, SQLDefault: c.SQLDefault, Display: c.Display, Tags: c.Tags}
+	return &Column{
+		Name: c.Name, Type: c.Type, PK: c.PK, Nullable: c.Nullable, Search: c.Search, SQLDefault: c.SQLDefault,
+		Display: c.Display, Format: c.Format, Values: c.Values, Tags: c.Tags, HelpString: c.HelpString,
+	}
 }
 
 func (c *Column) NameQuoted() string {
@@ -78,8 +82,8 @@ func (c *Column) ToGoString(prefix string) string {
 	return ToGoString(c.Type, prefix+c.Proper())
 }
 
-func (c *Column) ToGoViewString(prefix string) string {
-	return ToGoViewString(c.Type, prefix+c.Proper(), c.Nullable, c.Format)
+func (c *Column) ToGoViewString(prefix string, verbose bool) string {
+	return ToGoViewString(c.Type, prefix+c.Proper(), c.Nullable, c.Format, verbose)
 }
 
 func (c *Column) ToGoType(pkg string) string {

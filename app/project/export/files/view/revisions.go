@@ -33,12 +33,12 @@ func exportViewDetailRevisions(ret *golang.Block, m *model.Model) {
 	ret.W("      <tbody>")
 	ret.W("        {%%- for _, model := range p." + hc.Col.ProperPlural() + " -%%}")
 	ret.W("        <tr>")
-	linkURL := m.LinkURL("model.") + "/" + hc.Col.Camel() + "/" + hc.Col.ToGoViewString("model.")
+	linkURL := m.LinkURL("model.") + "/" + hc.Col.Camel() + "/" + hc.Col.ToGoViewString("model.", false)
 	addView := func(col *model.Column) {
 		if col.PK || col.HasTag(model.RevisionType) {
-			ret.W("          <td><a href=\"" + linkURL + "\">" + col.ToGoViewString("model.") + "</a></td>")
+			ret.W("          <td><a href=\"" + linkURL + "\">" + col.ToGoViewString("model.", true) + "</a></td>")
 		} else {
-			ret.W("          <td>" + col.ToGoViewString("model.") + "</td>")
+			ret.W("          <td>" + col.ToGoViewString("model.", true) + "</td>")
 		}
 	}
 	for _, pk := range m.PKs() {

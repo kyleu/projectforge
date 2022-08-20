@@ -11,6 +11,9 @@ func history(m *model.Model, args *model.Args, addHeader bool) (*file.File, erro
 	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "History.html")
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpLayout, helper.ImpFilter)
 	g.AddImport(helper.AppImport("app/" + m.PackageWithGroup("")))
+	if m.Columns.HasFormat(model.FmtCountry) {
+		g.AddImport(helper.ImpAppUtil)
+	}
 	g.AddBlocks(exportViewHistoryClass(m), exportViewHistoryBody(m), exportViewHistoryTable(m))
 	return g.Render(addHeader)
 }
@@ -42,7 +45,7 @@ func exportViewHistoryBody(m *model.Model) *golang.Block {
 		x.Name = m.Proper() + x.Proper()
 		ret.W("        <tr>")
 		ret.W("          <th class=\"shrink\">%s</th>", x.Title())
-		ret.W("          <td><a href=\"{%%%%s p.Model.WebPath() %%%%}\">%s</a></td>", x.ToGoViewString("p.History."))
+		ret.W("          <td><a href=\"{%%%%s p.Model.WebPath() %%%%}\">%s</a></td>", x.ToGoViewString("p.History.", true))
 		ret.W("        </tr>")
 	}
 	ret.W("        <tr>")
@@ -82,7 +85,7 @@ func exportViewHistoryTable(m *model.Model) *golang.Block {
 	}
 	addHeader("id", "ID", "System-generated history UUID identifier")
 	for _, pk := range m.PKs() {
-		addHeader(m.Package+"_"+pk.Name, m.Title()+" "+pk.Title(), model.Help(pk.Type))
+		addHeader(m.Package+"_"+pk.Name, m.Title()+" "+pk.Title(), model.Help(pk.Type, pk.Format))
 	}
 	addHeader("c", "Changes", "Object changes")
 	addHeader("created", "Created", "Time when history was created")
@@ -95,7 +98,7 @@ func exportViewHistoryTable(m *model.Model) *golang.Block {
 	for _, pk := range m.PKs() {
 		x := pk.Clone()
 		x.Name = m.Proper() + x.Proper()
-		ret.W("        <td><a href=\"{%%s model.WebPath() %%}\">" + x.ToGoViewString("h.") + "</a></td>")
+		ret.W("        <td><a href=\"{%%s model.WebPath() %%}\">" + x.ToGoViewString("h.", true) + "</a></td>")
 	}
 	ret.W("        <td>{%%= components.DisplayDiffs(h.Changes) %%}</td>")
 	ret.W("        <td>{%%= components.DisplayTimestamp(&h.Created) %%}</td>")

@@ -44,7 +44,7 @@ func Migrate(ctx context.Context, s *database.Service, logger util.Logger) error
 		}
 	}
 
-	if err = tx.Commit(); err != nil {
+	if err := tx.Commit(); err != nil {
 		return err
 	}
 

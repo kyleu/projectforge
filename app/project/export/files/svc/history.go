@@ -80,6 +80,10 @@ func serviceHistorySaveHistory(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("SaveHistory", "func")
 	const decl = "func (s *Service) SaveHistory(ctx context.Context, tx *sqlx.Tx, o *%s, n *%s, logger util.Logger) (*%sHistory, error) {"
 	ret.W(decl, m.Proper(), m.Proper(), m.Proper())
+	ret.W("\tdiffs := o.Diff(n)")
+	ret.W("\tif len(diffs) == 0 {")
+	ret.W("\t\treturn nil, nil")
+	ret.W("\t}")
 	ret.W("\tq := database.SQLInsert(historyTableQuoted, historyColumns, 1, \"\")")
 	ret.W("\th := &historyDTO{")
 	max := m.PKs().MaxCamelLength() + len(m.Proper()) + 1
@@ -89,7 +93,7 @@ func serviceHistorySaveHistory(m *model.Model) *golang.Block {
 	}
 	ret.W("\t\t%s util.ToJSONBytes(o, true),", util.StringPad("Old:", max))
 	ret.W("\t\t%s util.ToJSONBytes(n, true),", util.StringPad("New:", max))
-	ret.W("\t\t%s util.ToJSONBytes(o.Diff(n), true),", util.StringPad("Changes:", max))
+	ret.W("\t\t%s util.ToJSONBytes(diffs, true),", util.StringPad("Changes:", max))
 	ret.W("\t\t%s time.Now(),", util.StringPad("Created:", max))
 	ret.W("\t}")
 	ret.W("\thist := h.ToHistory()")

@@ -1,6 +1,7 @@
 package util
 
 import (
+	"fmt"
 	"strings"
 	"unicode"
 
@@ -128,4 +129,15 @@ func acr(ret string, extraAcronyms ...string) string {
 		proc(a)
 	}
 	return ret
+}
+
+const flagBaseIndex = '\U0001F1E6' - 'a'
+
+func CountryFlag(code string) string {
+	if len(code) != 2 {
+		return fmt.Sprintf("INVALID: %q", code)
+	}
+
+	code = strings.ToLower(code)
+	return string(rune(code[0])+flagBaseIndex) + string(rune(code[1])+flagBaseIndex)
 }

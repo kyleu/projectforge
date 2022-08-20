@@ -68,7 +68,7 @@ func ToGoString(t types.Type, prop string) string {
 	}
 }
 
-func ToGoViewString(t types.Type, prop string, nullable bool, format string) string {
+func ToGoViewString(t types.Type, prop string, nullable bool, format string, verbose bool) string {
 	switch t.Key() {
 	case types.KeyAny:
 		return "{%%= components.JSON(" + prop + ") %%}"
@@ -97,6 +97,12 @@ func ToGoViewString(t types.Type, prop string, nullable bool, format string) str
 		case FmtURL:
 			x := "{%%s " + ToGoString(t, prop) + " %%}"
 			return fmt.Sprintf("<a href=%q target=\"_blank\">%s</a>", x, x)
+		case FmtCountry:
+			if verbose {
+				return "{%%s " + ToGoString(t, prop) + " %%} {%%s util.CountryFlag(" + ToGoString(t, prop) + ") %%}"
+			} else {
+				return "{%%s " + ToGoString(t, prop) + " %%}"
+			}
 		case FmtSelect:
 			return "<strong>{%%s " + ToGoString(t, prop) + " %%}</strong>"
 		default:

@@ -40,6 +40,9 @@ func exportViewDetailClass(m *model.Model, models model.Models, g *golang.Templa
 	if m.IsHistory() {
 		ret.W("  Histories %s.%sHistories", m.Package, m.Proper())
 	}
+	if m.Columns.HasFormat(model.FmtCountry) {
+		g.AddImport(helper.ImpAppUtil)
+	}
 	for _, rel := range m.Relations {
 		if relModel := models.Get(rel.Table); relModel.CanTraverseRelation() {
 			g.AddImport(helper.AppImport("app/" + relModel.PackageWithGroup("")))

@@ -16,6 +16,9 @@ func table(m *model.Model, args *model.Args, addHeader bool) (*file.File, error)
 	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "Table.html")
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpFilter)
 	g.AddImport(helper.AppImport("app/" + m.PackageWithGroup("")))
+	if m.Columns.HasFormat(model.FmtCountry) {
+		g.AddImport(helper.ImpAppUtil)
+	}
 	g.AddBlocks(exportViewTableFunc(m, args.Models, g))
 	return g.Render(addHeader)
 }
@@ -67,14 +70,14 @@ func viewTableColumn(ret *golang.Block, models model.Models, m *model.Model, lin
 	if len(rels) == 0 {
 		switch {
 		case col.PK && link:
-			ret.W(ind+"<td><a href=%q>%s</a></td>", m.LinkURL(modelKey), col.ToGoViewString(modelKey))
+			ret.W(ind+"<td><a href=%q>%s</a></td>", m.LinkURL(modelKey), col.ToGoViewString(modelKey, true))
 		case col.HasTag("grouped"):
-			u := fmt.Sprintf("/%s/%s/%s", m.Route(), col.TitleLower(), col.ToGoViewString(modelKey))
-			ret.W(ind+"<td><a href=%q>%s</a></td>", u, col.ToGoViewString(modelKey))
+			u := fmt.Sprintf("/%s/%s/%s", m.Route(), col.TitleLower(), col.ToGoViewString(modelKey, false))
+			ret.W(ind+"<td><a href=%q>%s</a></td>", u, col.ToGoViewString(modelKey, true))
 		case col.HasTag("title"):
-			ret.W(ind + "<td><strong>" + col.ToGoViewString(modelKey) + "</strong></td>")
+			ret.W(ind + "<td><strong>" + col.ToGoViewString(modelKey, true) + "</strong></td>")
 		default:
-			ret.W(ind + "<td>" + col.ToGoViewString(modelKey) + "</td>")
+			ret.W(ind + "<td>" + col.ToGoViewString(modelKey, true) + "</td>")
 		}
 		return
 	}
@@ -93,9 +96,9 @@ func viewTableColumn(ret *golang.Block, models model.Models, m *model.Model, lin
 
 	ret.W(ind + "<td>")
 	if col.PK && link {
-		ret.W(ind + "  <div class=\"icon\"><a href=\"" + m.LinkURL(modelKey) + "\">" + col.ToGoViewString(modelKey) + toStrings + "</a></div>")
+		ret.W(ind + "  <div class=\"icon\"><a href=\"" + m.LinkURL(modelKey) + "\">" + col.ToGoViewString(modelKey, true) + toStrings + "</a></div>")
 	} else {
-		ret.W(ind + "  <div class=\"icon\">" + col.ToGoViewString(modelKey) + toStrings + "</div>")
+		ret.W(ind + "  <div class=\"icon\">" + col.ToGoViewString(modelKey, true) + toStrings + "</div>")
 	}
 	const msg = "%s  <a title=%q href=\"{%%%%s %s %%%%}\">{%%%%= components.SVGRefIcon(%q, ps) %%%%}</a>"
 	for _, rel := range rels {
