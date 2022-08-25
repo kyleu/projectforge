@@ -70,14 +70,14 @@ func viewTableColumn(ret *golang.Block, models model.Models, m *model.Model, lin
 	if len(rels) == 0 {
 		switch {
 		case col.PK && link:
-			ret.W(ind+"<td><a href=%q>%s</a></td>", m.LinkURL(modelKey), col.ToGoViewString(modelKey, true))
+			ret.W(ind+"<td><a href=%q>%s</a></td>", m.LinkURL(modelKey), col.ToGoViewString(modelKey, true, false))
 		case col.HasTag("grouped"):
-			u := fmt.Sprintf("/%s/%s/%s", m.Route(), col.TitleLower(), col.ToGoViewString(modelKey, false))
-			ret.W(ind+"<td><a href=%q>%s</a></td>", u, col.ToGoViewString(modelKey, true))
+			u := fmt.Sprintf("/%s/%s/%s", m.Route(), col.TitleLower(), col.ToGoViewString(modelKey, false, true))
+			ret.W(ind+"<td><a href=%q>%s</a></td>", u, col.ToGoViewString(modelKey, true, false))
 		case col.HasTag("title"):
-			ret.W(ind + "<td><strong>" + col.ToGoViewString(modelKey, true) + "</strong></td>")
+			ret.W(ind + "<td><strong>" + col.ToGoViewString(modelKey, true, false) + "</strong></td>")
 		default:
-			ret.W(ind + "<td>" + col.ToGoViewString(modelKey, true) + "</td>")
+			ret.W(ind + "<td>" + col.ToGoViewString(modelKey, true, false) + "</td>")
 		}
 		return
 	}
@@ -96,9 +96,9 @@ func viewTableColumn(ret *golang.Block, models model.Models, m *model.Model, lin
 
 	ret.W(ind + "<td>")
 	if col.PK && link {
-		ret.W(ind + "  <div class=\"icon\"><a href=\"" + m.LinkURL(modelKey) + "\">" + col.ToGoViewString(modelKey, true) + toStrings + "</a></div>")
+		ret.W(ind + "  <div class=\"icon\"><a href=\"" + m.LinkURL(modelKey) + "\">" + col.ToGoViewString(modelKey, true, false) + toStrings + "</a></div>")
 	} else {
-		ret.W(ind + "  <div class=\"icon\">" + col.ToGoViewString(modelKey, true) + toStrings + "</div>")
+		ret.W(ind + "  <div class=\"icon\">" + col.ToGoViewString(modelKey, true, false) + toStrings + "</div>")
 	}
 	const msg = "%s  <a title=%q href=\"{%%%%s %s %%%%}\">{%%%%= components.SVGRefIcon(%q, ps) %%%%}</a>"
 	for _, rel := range rels {

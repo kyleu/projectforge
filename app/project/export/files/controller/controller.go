@@ -33,7 +33,7 @@ func Controller(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 	if len(m.Group) > 0 {
 		prefix = defaultPrefix
 	}
-	g.AddBlocks(controllerTitle(m), controllerList(m, nil, args.Models, g, prefix), controllerDetail(args.Models, m, nil, prefix))
+	g.AddBlocks(controllerList(m, nil, args.Models, g, prefix), controllerDetail(args.Models, m, nil, prefix))
 	if m.IsRevision() {
 		g.AddBlocks(controllerRevision(m, prefix))
 	}
@@ -124,10 +124,4 @@ func withGroupName(s string, grp *model.Column) string {
 		return s
 	}
 	return s + "By" + grp.Proper()
-}
-
-func controllerTitle(m *model.Model) *golang.Block {
-	ret := golang.NewBlock("Title", "func")
-	ret.W("const %sDefaultTitle = \"%s\"", m.Camel(), m.TitlePlural())
-	return ret
 }

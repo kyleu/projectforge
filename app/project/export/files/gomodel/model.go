@@ -20,9 +20,6 @@ func Model(m *model.Model, args *model.Args, addHeader bool) (*file.File, error)
 	for _, imp := range helper.ImportsForTypes("string", m.PKs().Types()...) {
 		g.AddImport(imp)
 	}
-	if len(m.PKs()) > 1 {
-		g.AddImport(helper.ImpFmt)
-	}
 	g.AddImport(helper.ImpAppUtil, helper.ImpSlices)
 	for _, col := range m.Columns {
 		if col.Type.Key() == types.KeyReference {
@@ -36,6 +33,9 @@ func Model(m *model.Model, args *model.Args, addHeader bool) (*file.File, error)
 		}
 	}
 
+	if len(m.PKs()) > 1 {
+		g.AddBlocks(modelPK(m))
+	}
 	g.AddBlocks(modelStruct(m), modelConstructor(m), modelRandom(m))
 	if b, err := modelFromMap(g, m); err == nil {
 		g.AddBlocks(b)
@@ -49,6 +49,24 @@ func Model(m *model.Model, args *model.Args, addHeader bool) (*file.File, error)
 	}
 	g.AddBlocks(modelArray(m), modelArrayGet(m), modelArrayClone(m))
 	return g.Render(addHeader)
+}
+
+func modelPK(m *model.Model) *golang.Block {
+	ret := golang.NewBlock("PK", "struct")
+	ret.W("type PK struct {")
+	pks := m.PKs()
+	maxColLength := util.StringArrayMaxLength(pks.CamelNames())
+	maxTypeLength := pks.MaxGoKeyLength(m.Package)
+	for _, c := range pks {
+		suffix := ""
+		if c.Nullable || c.HasTag("omitempty") {
+			suffix = ",omitempty"
+		}
+		goType := util.StringPad(c.ToGoType(m.Package), maxTypeLength)
+		ret.W("\t%s %s `json:%q`", util.StringPad(c.Proper(), maxColLength), goType, c.Camel()+suffix)
+	}
+	ret.W("}")
+	return ret
 }
 
 func modelStruct(m *model.Model) *golang.Block {

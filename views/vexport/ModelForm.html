@@ -25,7 +25,7 @@
   <form action="" method="post" class="mt expanded">
     <div class="card">
       <div class="right"><a href="{%s u %}" onclick="return confirm('Are you sure you wish to remove this export model?')"><button type="button">Delete</button></a></div>
-      <h3>{%= components.SVGRefIcon(m.IconSafe(), ps) %}Edit {%s m.Name %}</h3>
+      <h3>{%= components.SVGRefIcon(m.IconSafe(), ps) %}{% if m.Name == "" %}New Model{% else %}Edit {%s m.Name %}{% endif %}</h3>
       <table class="mt min-200 expanded">
         <tbody>
           {%= components.TableInput("name", "Name", m.Name, 5, export.Helpers["model.name"]...) %}

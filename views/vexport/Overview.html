@@ -36,7 +36,10 @@
     </div>
   </div>
   <div class="card">
-    <div class="right"><a href="/p/{%s p.Project.Key %}/export/models/new"><button>{%= components.SVGRef("file", 15, 15, "icon", ps) %}New</button></a></div>
+    <div class="right">
+      <a href="/p/{%s p.Project.Key %}/export/models/create/derive"><button>{%= components.SVGRef("dna", 15, 15, "icon", ps) %}Derive</button></a>
+      <a href="/p/{%s p.Project.Key %}/export/models/create/new"><button>{%= components.SVGRef("file", 15, 15, "icon", ps) %}New</button></a>
+    </div>
     <h3>{%= components.SVGRefIcon(`list`, ps) %}Models</h3>
     {%= ModelList(p.Args.Models, fmt.Sprintf("/p/%s/export/models", p.Project.Key), as, ps) %}
   </div>

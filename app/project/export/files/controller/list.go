@@ -18,7 +18,6 @@ func controllerList(m *model.Model, grp *model.Column, models model.Models, g *g
 		controllerArgFor(grp, ret, "\"\"", 2)
 	}
 
-	ret.W("\t\tps.Title = %sDefaultTitle", m.Camel())
 	ret.W("\t\tparams := cutil.ParamSetFromRequest(rc)")
 	suffix := ""
 	if m.IsSoftDelete() {

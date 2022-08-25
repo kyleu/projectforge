@@ -19,6 +19,25 @@
   {%- endif -%}
 {% endstripspace %}{% endfunc %}
 
+{% func DisplayStringArray(value []string) %}{% stripspace %}
+  {% if len(value) == 0 %}
+  <em>empty</em>
+  {% endif %}
+  {% code
+    max := 3
+    var extra int
+    if len(value) > max {
+      extra = len(value) - max
+      value = value[:max]
+    }
+  %}
+  {%- for idx, v := range value -%}
+  {% if idx > 0 %},{% space %}{% endif %}
+  {%s v %}
+  {% endfor %}
+  {% if extra > 0 %}, <em>and{% space %}{%d extra %}{% space %}more...</em>{% endif %}
+{% endstripspace %}{% endfunc %}
+
 {% func DisplayDiffs(value util.Diffs) %}{% stripspace %}
   {%- if len(value) == 0 -%}
   <em>no changes</em>

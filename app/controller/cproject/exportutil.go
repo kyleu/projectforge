@@ -100,6 +100,9 @@ func exportLoad(rc *fasthttp.RequestCtx, as *app.State, logger util.Logger) (*pr
 	} else {
 		mdl = args.Models.Get(modelKey)
 	}
+	if mdl == nil {
+		return nil, nil, nil, errors.Errorf("no model found with key [%s]", modelKey)
+	}
 
 	return prj, mdl, args, nil
 }

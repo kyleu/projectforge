@@ -82,8 +82,8 @@ func (c *Column) ToGoString(prefix string) string {
 	return ToGoString(c.Type, prefix+c.Proper())
 }
 
-func (c *Column) ToGoViewString(prefix string, verbose bool) string {
-	return ToGoViewString(c.Type, prefix+c.Proper(), c.Nullable, c.Format, verbose)
+func (c *Column) ToGoViewString(prefix string, verbose bool, url bool) string {
+	return ToGoViewString(c.Type, prefix+c.Proper(), c.Nullable, c.Format, verbose, url)
 }
 
 func (c *Column) ToGoType(pkg string) string {

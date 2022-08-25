@@ -18,15 +18,20 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 	for _, imp := range helper.ImportsForTypes("go", m.PKs().Types()...) {
 		g.AddImport(imp)
 	}
+	if len(m.PKs()) > 1 {
+		g.AddImport(helper.ImpFmt)
+	}
 	g.AddImport(helper.ImpAppUtil, helper.ImpContext, helper.ImpErrors, helper.ImpSQLx, helper.ImpFilter, helper.ImpDatabase)
 	g.AddBlocks(serviceList(m, args.DBRef()))
 	g.AddBlocks(serviceCount(g, m, args.DBRef()))
 	pkLen := len(m.PKs())
 	if pkLen > 0 {
 		g.AddBlocks(serviceGetByPK(m, dbRef))
-	}
-	if pkLen == 1 {
-		g.AddBlocks(serviceGetMultiple(m, dbRef))
+		if pkLen == 1 {
+			g.AddBlocks(serviceGetMultipleSinglePK(m, dbRef))
+		} else {
+			g.AddBlocks(serviceGetMultipleManyPKs(m, dbRef))
+		}
 	}
 	getBys := map[string]model.Columns{}
 	if pkLen > 1 {
@@ -147,35 +152,6 @@ func serviceCount(g *golang.File, m *model.Model, dbRef string) *golang.Block {
 
 func serviceGetByPK(m *model.Model, dbRef string) *golang.Block {
 	return serviceGetBy("Get", m, m.PKs(), false, dbRef)
-}
-
-func serviceGetMultiple(m *model.Model, dbRef string) *golang.Block {
-	name := "GetMultiple"
-	ret := golang.NewBlock(name, "func")
-	pk := m.PKs()[0]
-	t := model.ToGoType(pk.Type, pk.Nullable, m.Package)
-	msg := "func (s *Service) %s(ctx context.Context, tx *sqlx.Tx%s, logger util.Logger, %s ...%s) (%s, error) {"
-	ret.W(msg, name, getSuffix(m), pk.Plural(), t, m.ProperPlural())
-	ret.W("\tif len(%s) == 0 {", pk.Plural())
-	ret.W("\t\treturn %s{}, nil", m.ProperPlural())
-	ret.W("\t}")
-	ret.W("\twc := database.SQLInClause(%q, len(%s), 0)", pk.Name, pk.Plural())
-	if m.IsSoftDelete() {
-		ret.W("\twc = addDeletedClause(wc, includeDeleted)")
-	}
-	ret.W("\tret := dtos{}")
-	ret.W("\tq := database.SQLSelectSimple(columnsString, %s, wc)", tableClauseFor(m))
-	ret.W("\tvals := make([]any, 0, len(%s))", pk.Plural())
-	ret.W("\tfor _, x := range %s {", pk.Plural())
-	ret.W("\t\tvals = append(vals, x)")
-	ret.W("\t}")
-	ret.W("\terr := s.%s.Select(ctx, &ret, q, tx, logger, vals...)", dbRef)
-	ret.W("\tif err != nil {")
-	ret.W("\t\treturn nil, errors.Wrapf(err, \"unable to get %s for [%%%%d] %s\", len(%s))", m.ProperPlural(), pk.Plural(), pk.Plural())
-	ret.W("\t}")
-	ret.W("\treturn ret.To%s(), nil", m.ProperPlural())
-	ret.W("}")
-	return ret
 }
 
 func serviceGetBy(key string, m *model.Model, cols model.Columns, returnMultiple bool, dbRef string) *golang.Block {

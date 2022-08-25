@@ -43,7 +43,7 @@ func exportViewListBody(m *model.Model, models model.Models) *golang.Block {
 	ret.W("{%% func (p *List) Body(as *app.State, ps *cutil.PageState) %%}")
 	ret.W("  <div class=\"card\">")
 	ret.W("    <div class=\"right\"><a href=\"/%s/new\"><button>New</button></a></div>", m.Route())
-	ret.W("    <h3>{%%= components.SVGRefIcon(`" + m.Icon + "`, ps) %%} " + m.TitlePlural() + "</h3>")
+	ret.W("    <h3>{%%= components.SVGRefIcon(`" + m.Icon + "`, ps) %%}{%%s ps.Title %%}</h3>")
 	ret.W("    {%%- if len(p.Models) == 0 -%%}")
 	ret.W("    <div class=\"mt\"><em>No %s available</em></div>", m.TitlePluralLower())
 	ret.W("    {%%- else -%%}")

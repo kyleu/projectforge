@@ -34,6 +34,11 @@ func (m ValueMap) GetInt(key string, allowEmpty bool) (int, error) {
 	return m.ParseInt(key, false, allowEmpty)
 }
 
+func (m ValueMap) GetIntOpt(key string) int {
+	ret, _ := m.ParseInt(key, false, true)
+	return ret
+}
+
 func (m ValueMap) GetInt64(key string, allowEmpty bool) (int64, error) {
 	ret, err := m.ParseInt(key, false, allowEmpty)
 	return int64(ret), err

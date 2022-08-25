@@ -63,9 +63,17 @@ func (p *ModelForm) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
 //line views/vexport/ModelForm.html:28
 	components.StreamSVGRefIcon(qw422016, m.IconSafe(), ps)
 //line views/vexport/ModelForm.html:28
-	qw422016.N().S(`Edit `)
+	if m.Name == "" {
 //line views/vexport/ModelForm.html:28
-	qw422016.E().S(m.Name)
+		qw422016.N().S(`New Model`)
+//line views/vexport/ModelForm.html:28
+	} else {
+//line views/vexport/ModelForm.html:28
+		qw422016.N().S(`Edit `)
+//line views/vexport/ModelForm.html:28
+		qw422016.E().S(m.Name)
+//line views/vexport/ModelForm.html:28
+	}
 //line views/vexport/ModelForm.html:28
 	qw422016.N().S(`</h3>
       <table class="mt min-200 expanded">

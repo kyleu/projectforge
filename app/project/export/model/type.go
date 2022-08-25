@@ -20,7 +20,22 @@ func ToGoType(t types.Type, nullable bool, pkg string) string {
 	case types.KeyFloat:
 		ret = "float64"
 	case types.KeyList:
-		ret = "[]any"
+		switch t := t.(type) {
+		case *types.List:
+			if t.V.Equals(types.NewString()) {
+				ret = "[]string"
+			} else {
+				ret = "[]any"
+			}
+		case *types.Wrapped:
+			if t.Equals(types.NewList(types.NewString())) {
+				ret = "[]string"
+			} else {
+				ret = "[]any"
+			}
+		default:
+			return fmt.Sprintf("unhandled go type [%T]", t)
+		}
 	case types.KeyMap, types.KeyValueMap:
 		ret = "util.ValueMap"
 	case types.KeyReference:
@@ -68,7 +83,7 @@ func ToGoString(t types.Type, prop string) string {
 	}
 }
 
-func ToGoViewString(t types.Type, prop string, nullable bool, format string, verbose bool) string {
+func ToGoViewString(t types.Type, prop string, nullable bool, format string, verbose bool, url bool) string {
 	switch t.Key() {
 	case types.KeyAny:
 		return "{%%= components.JSON(" + prop + ") %%}"
@@ -78,7 +93,13 @@ func ToGoViewString(t types.Type, prop string, nullable bool, format string, ver
 		return "{%%d " + prop + " %%}"
 	case types.KeyFloat:
 		return "{%%f " + prop + " %%}"
-	case types.KeyList, types.KeyMap, types.KeyValueMap, types.KeyReference:
+	case types.KeyList:
+		x := types.TypeAs[*types.List](t)
+		if x != nil && x.V.Equals(types.NewString()) {
+			return "{%%= components.DisplayStringArray(" + prop + ") %%}"
+		}
+		return "{%%= components.JSON(" + prop + ") %%}"
+	case types.KeyMap, types.KeyValueMap, types.KeyReference:
 		return "{%%= components.JSON(" + prop + ") %%}"
 	case types.KeyTimestamp:
 		if nullable {
@@ -91,25 +112,29 @@ func ToGoViewString(t types.Type, prop string, nullable bool, format string, ver
 		}
 		return "{%%= components.DisplayUUID(&" + prop + ") %%}"
 	case types.KeyString:
+		key := "s"
+		if url {
+			key = "u"
+		}
 		switch format {
 		case FmtCode:
 			return "<pre>{%%s " + ToGoString(t, prop) + " %%}</pre>"
 		case FmtURL:
-			x := "{%%s " + ToGoString(t, prop) + " %%}"
+			x := "{%%" + key + " " + ToGoString(t, prop) + " %%}"
 			return fmt.Sprintf("<a href=%q target=\"_blank\">%s</a>", x, x)
 		case FmtCountry:
 			if verbose {
-				return "{%%s " + ToGoString(t, prop) + " %%} {%%s util.CountryFlag(" + ToGoString(t, prop) + ") %%}"
+				return "{%%" + key + " " + ToGoString(t, prop) + " %%} {%%s util.CountryFlag(" + ToGoString(t, prop) + ") %%}"
 			} else {
-				return "{%%s " + ToGoString(t, prop) + " %%}"
+				return "{%%" + key + " " + ToGoString(t, prop) + " %%}"
 			}
 		case FmtSelect:
-			return "<strong>{%%s " + ToGoString(t, prop) + " %%}</strong>"
+			return "<strong>{%%" + key + " " + ToGoString(t, prop) + " %%}</strong>"
 		default:
-			return "{%%s " + ToGoString(t, prop) + " %%}"
+			return "{%%" + key + " " + ToGoString(t, prop) + " %%}"
 		}
 	default:
-		return "{%%s " + ToGoString(t, prop) + " %%}"
+		return "{%%v " + ToGoString(t, prop) + " %%}"
 	}
 }
 
@@ -122,12 +147,9 @@ func ToSQLType(t types.Type) string {
 	case types.KeyBool:
 		return "boolean"
 	case types.KeyInt:
-		w, ok := t.(*types.Wrapped)
-		if ok {
-			i, ok := w.T.(*types.Int)
-			if ok && i.Bits == 64 {
-				return "bigint"
-			}
+		i := types.TypeAs[*types.Int](t)
+		if i != nil && i.Bits == 64 {
+			return "bigint"
 		}
 		return "int"
 	case types.KeyFloat:

@@ -79,11 +79,11 @@ func toGoMapParse(t types.Type) string {
 	case types.KeyFloat:
 		return "Float"
 	case types.KeyList:
-		// l := types.TypeAs[*types.List](t)
-		// if l == nil {
-		// 	return fmt.Sprintf("ERROR:invalid list type [%T]", t)
-		// }
-		return "Array" // + toGoMapParse(l.V)
+		l := types.TypeAs[*types.List](t)
+		if l == nil {
+			return fmt.Sprintf("ERROR:invalid list type [%T]", t)
+		}
+		return "Array" + toGoMapParse(l.V)
 	case types.KeyMap, types.KeyValueMap:
 		return "Map"
 	case types.KeyReference:

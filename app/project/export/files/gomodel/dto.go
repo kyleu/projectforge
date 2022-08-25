@@ -99,7 +99,11 @@ func modelDTOToModel(g *golang.File, m *model.Model) (*golang.Block, error) {
 			ret.W("\t_ = util.FromJSON(d.%s, &%sArg)", c.Proper(), c.Camel())
 			refs = append(refs, fmt.Sprintf("%s %sArg", k, c.Camel()))
 		case types.KeyList:
-			ret.W("\t%sArg := []any{}", c.Camel())
+			t := "any"
+			if c.Type.IsListOf(types.NewString()) {
+				t = "string"
+			}
+			ret.W("\t%sArg := []%s{}", c.Camel(), t)
 			ret.W("\t_ = util.FromJSON(d.%s, &%sArg)", c.Proper(), c.Camel())
 			refs = append(refs, fmt.Sprintf("%s %sArg", k, c.Camel()))
 		case types.KeyMap, types.KeyValueMap:
