@@ -32,7 +32,7 @@ func modelString(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("String", "func")
 	ret.W("func (%s *%s) String() string {", m.FirstLetter(), m.Proper())
 	if pks := m.PKs(); len(pks) == 1 {
-		ret.W("\treturn %s", model.ToGoString(pks[0].Type, fmt.Sprintf("%s.%s", m.FirstLetter(), pks[0].Proper())))
+		ret.W("\treturn %s", model.ToGoString(pks[0].Type, fmt.Sprintf("%s.%s", m.FirstLetter(), pks[0].Proper()), false))
 	} else {
 		s := "\treturn fmt.Sprintf(\""
 		for idx := range m.PKs() {
@@ -57,7 +57,7 @@ func modelTitle(m *model.Model) *golang.Block {
 	if titles := m.Columns.WithTag("title"); len(titles) > 0 {
 		var toStrings []string
 		for _, title := range titles {
-			toStrings = append(toStrings, model.ToGoString(title.Type, fmt.Sprintf("%s.%s", m.FirstLetter(), title.Proper())))
+			toStrings = append(toStrings, model.ToGoString(title.Type, fmt.Sprintf("%s.%s", m.FirstLetter(), title.Proper()), true))
 		}
 		ret.W("\treturn %s", strings.Join(toStrings, " + \" / \" + "))
 	} else {

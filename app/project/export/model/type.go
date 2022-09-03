@@ -72,10 +72,16 @@ func ToGoDTOType(t types.Type, nullable bool, pkg string) string {
 	}
 }
 
-func ToGoString(t types.Type, prop string) string {
+func ToGoString(t types.Type, prop string, alwaysString bool) string {
 	switch t.Key() {
 	case types.KeyAny, types.KeyBool, types.KeyInt, types.KeyFloat:
 		return fmt.Sprintf("fmt.Sprint(%s)", prop)
+	case types.KeyTimestamp, types.KeyTimestampZoned:
+		if alwaysString {
+			return fmt.Sprintf("util.TimeToFull(&%s)", prop)
+		} else {
+			return prop
+		}
 	case types.KeyUUID, types.KeyReference:
 		return fmt.Sprintf("%s.String()", prop)
 	default:
@@ -118,23 +124,23 @@ func ToGoViewString(t types.Type, prop string, nullable bool, format string, ver
 		}
 		switch format {
 		case FmtCode:
-			return "<pre>{%%s " + ToGoString(t, prop) + " %%}</pre>"
+			return "<pre>{%%s " + ToGoString(t, prop, false) + " %%}</pre>"
 		case FmtURL:
-			x := "{%%" + key + " " + ToGoString(t, prop) + " %%}"
+			x := "{%%" + key + " " + ToGoString(t, prop, false) + " %%}"
 			return fmt.Sprintf("<a href=%q target=\"_blank\">%s</a>", x, x)
 		case FmtCountry:
 			if verbose {
-				return "{%%" + key + " " + ToGoString(t, prop) + " %%} {%%s util.CountryFlag(" + ToGoString(t, prop) + ") %%}"
+				return "{%%" + key + " " + ToGoString(t, prop, false) + " %%} {%%s util.CountryFlag(" + ToGoString(t, prop, false) + ") %%}"
 			} else {
-				return "{%%" + key + " " + ToGoString(t, prop) + " %%}"
+				return "{%%" + key + " " + ToGoString(t, prop, false) + " %%}"
 			}
 		case FmtSelect:
-			return "<strong>{%%" + key + " " + ToGoString(t, prop) + " %%}</strong>"
+			return "<strong>{%%" + key + " " + ToGoString(t, prop, false) + " %%}</strong>"
 		default:
-			return "{%%" + key + " " + ToGoString(t, prop) + " %%}"
+			return "{%%" + key + " " + ToGoString(t, prop, false) + " %%}"
 		}
 	default:
-		return "{%%v " + ToGoString(t, prop) + " %%}"
+		return "{%%v " + ToGoString(t, prop, false) + " %%}"
 	}
 }
 

@@ -1,8 +1,10 @@
 package svc
 
 import (
+	"fmt"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
+	"strings"
 )
 
 func serviceGetMultipleSinglePK(m *model.Model, dbRef string) *golang.Block {
@@ -45,6 +47,18 @@ func serviceGetMultipleManyPKs(m *model.Model, dbRef string) *golang.Block {
 	ret.W("\t\treturn %s{}, nil", m.ProperPlural())
 	ret.W("\t}")
 	ret.W("\twc := \"(\"")
+	ret.W("\tfor idx := range pks {")
+	ret.W("\t\tif idx > 0 {")
+	ret.W("\t\t\twc += \" or \"")
+	ret.W("\t\t}")
+	var tags []string
+	var idxs []string
+	for idx, pk := range pks {
+		tags = append(tags, fmt.Sprintf("%s = $%%%%d", pk.Name))
+		idxs = append(idxs, fmt.Sprintf("(idx*%d)+%d", len(pks), idx+1))
+	}
+	ret.W("\t\twc += fmt.Sprintf(\"(%s)\", %s)", strings.Join(tags, " and "), strings.Join(idxs, ", "))
+	ret.W("\t}")
 	ret.W("\twc += \")\"")
 	if m.IsSoftDelete() {
 		ret.W("\twc = addDeletedClause(wc, includeDeleted)")
@@ -53,7 +67,11 @@ func serviceGetMultipleManyPKs(m *model.Model, dbRef string) *golang.Block {
 	ret.W("\tq := database.SQLSelectSimple(columnsString, %s, wc)", tableClauseFor(m))
 	ret.W("\tvals := make([]any, 0, len(pks)*%d)", len(pks))
 	ret.W("\tfor _, x := range pks {")
-	ret.W("\t\tvals = append(vals, x)")
+	var refs []string
+	for _, pk := range pks {
+		refs = append(refs, fmt.Sprintf("x.%s", pk.Proper()))
+	}
+	ret.W("\t\tvals = append(vals, %s)", strings.Join(refs, ", "))
 	ret.W("\t}")
 	ret.W("\terr := s.%s.Select(ctx, &ret, q, tx, logger, vals...)", dbRef)
 	ret.W("\tif err != nil {")

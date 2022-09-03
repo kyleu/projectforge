@@ -121,7 +121,7 @@ func (c Columns) TitlesLower() []string {
 func (c Columns) ToGoStrings(prefix string) string {
 	ret := make([]string, 0, len(c))
 	for _, x := range c {
-		ret = append(ret, ToGoString(x.Type, prefix+x.Proper()))
+		ret = append(ret, ToGoString(x.Type, prefix+x.Proper(), false))
 	}
 	return strings.Join(ret, ", ")
 }

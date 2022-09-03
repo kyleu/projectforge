@@ -22,7 +22,7 @@ func ColToViewString(c *Column, prefix string) string {
 }
 
 func TypeToViewString(t types.Type, prop string, nullable bool) string {
-	ret := ToGoString(t, prop)
+	ret := ToGoString(t, prop, false)
 	switch t.Key() {
 	case types.KeyTimestamp:
 		if nullable {

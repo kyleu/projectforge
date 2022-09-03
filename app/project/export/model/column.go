@@ -79,7 +79,7 @@ func (c *Column) HasTag(t string) bool {
 }
 
 func (c *Column) ToGoString(prefix string) string {
-	return ToGoString(c.Type, prefix+c.Proper())
+	return ToGoString(c.Type, prefix+c.Proper(), false)
 }
 
 func (c *Column) ToGoViewString(prefix string, verbose bool, url bool) string {
