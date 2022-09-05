@@ -22,7 +22,7 @@ func (x *Wrapped) MarshalJSON() ([]byte, error) {
 	return util.ToJSONBytes(wrappedUnmarshal{K: x.K, T: b}, false), nil
 }
 
-// nolint
+//nolint:funlen, gocyclo, cyclop
 func (x *Wrapped) UnmarshalJSON(data []byte) error {
 	var wu wrappedUnmarshal
 	err := util.FromJSON(data, &wu)

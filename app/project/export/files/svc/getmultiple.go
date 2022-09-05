@@ -2,18 +2,20 @@ package svc
 
 import (
 	"fmt"
+	"strings"
+
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
-	"strings"
 )
 
+const serviceGetMultipleName = "GetMultiple"
+
 func serviceGetMultipleSinglePK(m *model.Model, dbRef string) *golang.Block {
-	name := "GetMultiple"
-	ret := golang.NewBlock(name, "func")
+	ret := golang.NewBlock(serviceGetMultipleName, "func")
 	pk := m.PKs()[0]
 	t := model.ToGoType(pk.Type, pk.Nullable, m.Package)
 	msg := "func (s *Service) %s(ctx context.Context, tx *sqlx.Tx%s, logger util.Logger, %s ...%s) (%s, error) {"
-	ret.W(msg, name, getSuffix(m), pk.Plural(), t, m.ProperPlural())
+	ret.W(msg, serviceGetMultipleName, getSuffix(m), pk.Plural(), t, m.ProperPlural())
 	ret.W("\tif len(%s) == 0 {", pk.Plural())
 	ret.W("\t\treturn %s{}, nil", m.ProperPlural())
 	ret.W("\t}")
@@ -37,12 +39,20 @@ func serviceGetMultipleSinglePK(m *model.Model, dbRef string) *golang.Block {
 }
 
 func serviceGetMultipleManyPKs(m *model.Model, dbRef string) *golang.Block {
-	name := "GetMultiple"
-	ret := golang.NewBlock(name, "func")
+	ret := golang.NewBlock(serviceGetMultipleName, "func")
 	pks := m.PKs()
-	//t := model.ToGoType(pk.Type, pk.Nullable, m.Package)
+
+	tags := make([]string, 0, len(pks))
+	idxs := make([]string, 0, len(pks))
+	refs := make([]string, 0, len(pks))
+	for idx, pk := range pks {
+		tags = append(tags, fmt.Sprintf("%s = $%%%%d", pk.Name))
+		idxs = append(idxs, fmt.Sprintf("(idx*%d)+%d", len(pks), idx+1))
+		refs = append(refs, fmt.Sprintf("x.%s", pk.Proper()))
+	}
+
 	msg := "func (s *Service) %s(ctx context.Context, tx *sqlx.Tx%s, logger util.Logger, pks ...*PK) (%s, error) {"
-	ret.W(msg, name, getSuffix(m), m.ProperPlural())
+	ret.W(msg, serviceGetMultipleName, getSuffix(m), m.ProperPlural())
 	ret.W("\tif len(pks) == 0 {")
 	ret.W("\t\treturn %s{}, nil", m.ProperPlural())
 	ret.W("\t}")
@@ -51,12 +61,6 @@ func serviceGetMultipleManyPKs(m *model.Model, dbRef string) *golang.Block {
 	ret.W("\t\tif idx > 0 {")
 	ret.W("\t\t\twc += \" or \"")
 	ret.W("\t\t}")
-	var tags []string
-	var idxs []string
-	for idx, pk := range pks {
-		tags = append(tags, fmt.Sprintf("%s = $%%%%d", pk.Name))
-		idxs = append(idxs, fmt.Sprintf("(idx*%d)+%d", len(pks), idx+1))
-	}
 	ret.W("\t\twc += fmt.Sprintf(\"(%s)\", %s)", strings.Join(tags, " and "), strings.Join(idxs, ", "))
 	ret.W("\t}")
 	ret.W("\twc += \")\"")
@@ -67,10 +71,6 @@ func serviceGetMultipleManyPKs(m *model.Model, dbRef string) *golang.Block {
 	ret.W("\tq := database.SQLSelectSimple(columnsString, %s, wc)", tableClauseFor(m))
 	ret.W("\tvals := make([]any, 0, len(pks)*%d)", len(pks))
 	ret.W("\tfor _, x := range pks {")
-	var refs []string
-	for _, pk := range pks {
-		refs = append(refs, fmt.Sprintf("x.%s", pk.Proper()))
-	}
 	ret.W("\t\tvals = append(vals, %s)", strings.Join(refs, ", "))
 	ret.W("\t}")
 	ret.W("\terr := s.%s.Select(ctx, &ret, q, tx, logger, vals...)", dbRef)

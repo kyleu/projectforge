@@ -18,7 +18,6 @@ type customEncoder struct {
 	pool buffer.Pool
 }
 
-// nolint
 func newEncoder(cfg zapcore.EncoderConfig) *customEncoder {
 	return &customEncoder{Encoder: zapcore.NewJSONEncoder(cfg), pool: buffer.NewPool()}
 }
@@ -27,7 +26,6 @@ func (e *customEncoder) Clone() zapcore.Encoder {
 	return &customEncoder{Encoder: e.Encoder.Clone(), pool: e.pool}
 }
 
-// nolint
 func (e *customEncoder) EncodeEntry(entry zapcore.Entry, fields []zapcore.Field) (*buffer.Buffer, error) {
 	b, err := e.Encoder.EncodeEntry(entry, fields)
 	if err != nil {

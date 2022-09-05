@@ -10,7 +10,7 @@ import (
 )
 
 type magicArgs struct {
-	Ctx     context.Context
+	Ctx     context.Context //nolint:containedctx
 	Prj     *project.Project
 	DryRun  bool
 	Dirty   int

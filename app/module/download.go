@@ -13,7 +13,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func (s *Service) Download(key string, url string, logger util.Logger) error {
+func (s *Service) Download(ctx context.Context, key string, url string, logger util.Logger) error {
 	if url == "" {
 		return errors.New("must provide URL")
 	}
@@ -45,7 +45,7 @@ func (s *Service) Download(key string, url string, logger util.Logger) error {
 
 	_ = s.config.RemoveRecursive(key, logger)
 	for _, f := range r.File {
-		fn := filepath.Join(key, f.Name) // nolint
+		fn := filepath.Join(key, f.Name)
 		if f.FileInfo().IsDir() {
 			err = s.config.CreateDirectory(fn)
 			if err != nil {

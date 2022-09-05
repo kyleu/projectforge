@@ -12,7 +12,7 @@ import (
 )
 
 func clilog(s string) {
-	print(s) // nolint
+	print(s) //nolint:forbidigo
 }
 
 func cliProject(p *project.Project, modKeys []string) error {

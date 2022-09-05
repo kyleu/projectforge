@@ -20,7 +20,7 @@ func upgradeF(ctx context.Context, _ []string) error {
 	if err != nil {
 		return err
 	}
-	return upgrade.NewService(l).UpgradeIfNeeded(ctx, _buildInfo.Version, _version, _force)
+	return upgrade.NewService(ctx, l).UpgradeIfNeeded(ctx, _buildInfo.Version, _version, _force)
 }
 
 func upgradeCmd() *coral.Command {

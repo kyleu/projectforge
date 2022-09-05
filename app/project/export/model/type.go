@@ -8,6 +8,11 @@ import (
 	"projectforge.dev/projectforge/app/lib/types"
 )
 
+const (
+	goTypeStringArray = "[]string"
+	goTypeAnyArray    = "[]any"
+)
+
 func ToGoType(t types.Type, nullable bool, pkg string) string {
 	var ret string
 	switch t.Key() {
@@ -23,15 +28,15 @@ func ToGoType(t types.Type, nullable bool, pkg string) string {
 		switch t := t.(type) {
 		case *types.List:
 			if t.V.Equals(types.NewString()) {
-				ret = "[]string"
+				ret = goTypeStringArray
 			} else {
-				ret = "[]any"
+				ret = goTypeAnyArray
 			}
 		case *types.Wrapped:
 			if t.Equals(types.NewList(types.NewString())) {
-				ret = "[]string"
+				ret = goTypeStringArray
 			} else {
-				ret = "[]any"
+				ret = goTypeAnyArray
 			}
 		default:
 			return fmt.Sprintf("unhandled go type [%T]", t)
@@ -79,9 +84,8 @@ func ToGoString(t types.Type, prop string, alwaysString bool) string {
 	case types.KeyTimestamp, types.KeyTimestampZoned:
 		if alwaysString {
 			return fmt.Sprintf("util.TimeToFull(&%s)", prop)
-		} else {
-			return prop
 		}
+		return prop
 	case types.KeyUUID, types.KeyReference:
 		return fmt.Sprintf("%s.String()", prop)
 	default:
@@ -131,9 +135,8 @@ func ToGoViewString(t types.Type, prop string, nullable bool, format string, ver
 		case FmtCountry:
 			if verbose {
 				return "{%%" + key + " " + ToGoString(t, prop, false) + " %%} {%%s util.CountryFlag(" + ToGoString(t, prop, false) + ") %%}"
-			} else {
-				return "{%%" + key + " " + ToGoString(t, prop, false) + " %%}"
 			}
+			return "{%%" + key + " " + ToGoString(t, prop, false) + " %%}"
 		case FmtSelect:
 			return "<strong>{%%" + key + " " + ToGoString(t, prop, false) + " %%}</strong>"
 		default:

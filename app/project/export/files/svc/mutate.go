@@ -13,6 +13,8 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+const serviceAssignmentToken = ":="
+
 func ServiceMutate(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "servicemutate")
 	for _, imp := range helper.ImportsForTypes("go", m.PKs().Types()...) {
@@ -159,7 +161,7 @@ func serviceUpdate(m *model.Model, g *golang.File) (*golang.Block, error) {
 		ret.W("\tdata = append(data, %s)", strings.Join(pkVals, ", "))
 		token := "="
 		if len(m.Columns.WithTag("created")) == 0 {
-			token = ":="
+			token = serviceAssignmentToken
 		}
 		ret.W("\t_, err %s s.db.Update(ctx, q, tx, 1, logger, data...)", token)
 		ret.W("\tif err != nil {")
@@ -235,7 +237,7 @@ func serviceUpdateIfNeeded(m *model.Model, g *golang.File) (*golang.Block, error
 		ret.W("\tdata = append(data, %s)", strings.Join(pkVals, ", "))
 		token := "="
 		if len(m.Columns.WithTag("created")) == 0 {
-			token = ":="
+			token = serviceAssignmentToken
 		}
 		ret.W("\t_, err %s s.db.Update(ctx, q, tx, 1, logger, data...)", token)
 		ret.W("\tif err != nil {")

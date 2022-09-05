@@ -27,7 +27,7 @@ func assetFor(version semver.Version) string {
 	return fmt.Sprintf("%s_%s_%s_%s.zip", util.AppKey, version.String(), o, arch)
 }
 
-func (s *Service) downloadAsset(version semver.Version, release *github.RepositoryRelease) ([]byte, error) {
+func (s *Service) downloadAsset(ctx context.Context, version semver.Version, release *github.RepositoryRelease) ([]byte, error) {
 	candidate := assetFor(version)
 	var match *github.ReleaseAsset
 	for _, a := range release.Assets {
@@ -48,7 +48,7 @@ func (s *Service) downloadAsset(version semver.Version, release *github.Reposito
 		return nil, err
 	}
 
-	rsp, _, err := s.client.Repositories.DownloadReleaseAsset(context.Background(), org, repo, *match.ID, s.client.Client())
+	rsp, _, err := s.client.Repositories.DownloadReleaseAsset(ctx, org, repo, *match.ID, s.client.Client())
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to download asset from [%s]", *match.BrowserDownloadURL)
 	}

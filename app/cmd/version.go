@@ -8,7 +8,7 @@ import (
 )
 
 func versionF(_ context.Context, _ []string) error {
-	println(_buildInfo.Version) // nolint
+	println(_buildInfo.Version) //nolint:forbidigo
 	return nil
 }
 

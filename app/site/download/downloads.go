@@ -14,7 +14,6 @@ func GetLinks(version string) Links {
 	return availableLinks
 }
 
-// nolint
 func calcDownloadLinks(version string) Links {
 	ret := Links{}
 	add := func(url string, mode string, os string, arch string) {
@@ -36,7 +35,8 @@ func calcDownloadLinks(version string) Links {
 		}
 	}
 	addMIPS := func(mode string, os string) {
-		for _, weird := range []string{archMIPS64Hard, archMIPS64Soft, archMIPS64LEHard, archMIPS64LESoft, archMIPSHard, archMIPSSoft, archMIPSLEHard, archMIPSLESoft} {
+		mips := []string{archMIPS64Hard, archMIPS64Soft, archMIPS64LEHard, archMIPS64LESoft, archMIPSHard, archMIPSSoft, archMIPSLEHard, archMIPSLESoft}
+		for _, weird := range mips {
 			addDefault(mode, os, weird)
 		}
 	}

@@ -17,7 +17,7 @@ import (
 
 const (
 	authURL         string = "https://login.microsoftonline.com/%s/oauth2/v2.0/authorize"
-	tokenURL        string = "https://login.microsoftonline.com/%s/oauth2/v2.0/token" //nolint
+	tokenURL        string = "https://login.microsoftonline.com/%s/oauth2/v2.0/token" //nolint:gosec
 	endpointProfile string = "https://graph.microsoft.com/v1.0/me"
 )
 
@@ -77,7 +77,7 @@ func (p *Provider) FetchUser(session goth.Session) (goth.User, error) {
 		return user, errors.Errorf("%s cannot get user information without accessToken", p.providerName)
 	}
 
-	req, err := http.NewRequestWithContext(context.Background(), "GET", endpointProfile, http.NoBody)
+	req, err := http.NewRequestWithContext(context.Background(), http.MethodGet, endpointProfile, http.NoBody)
 	if err != nil {
 		return user, err
 	}

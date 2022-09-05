@@ -44,7 +44,7 @@ func RunProcess(cmd string, path string, in io.Reader, out io.Writer, er io.Writ
 	}
 	err = c.Wait()
 	if err != nil {
-		ec, ok := err.(*exec.ExitError) // nolint
+		ec, ok := err.(*exec.ExitError) //nolint:errorlint
 		if ok {
 			return ec.ExitCode(), nil
 		}

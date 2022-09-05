@@ -4,7 +4,6 @@ import (
 	"reflect"
 )
 
-// nolint
 func FromReflect(t reflect.Type) *Wrapped {
 	switch t.Kind() {
 	case reflect.Invalid:

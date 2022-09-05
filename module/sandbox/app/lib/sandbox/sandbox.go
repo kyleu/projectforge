@@ -29,7 +29,6 @@ func (s Sandboxes) Get(key string) *Sandbox {
 	return nil
 }
 
-// nolint
 // $PF_SECTION_START(sandboxes)$
 var AllSandboxes = Sandboxes{testbed}
 

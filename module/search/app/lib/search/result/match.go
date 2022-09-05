@@ -47,7 +47,6 @@ func (m Matches) Sort() {
 	})
 }
 
-// nolint
 func MatchesFor(key string, x any, q string) Matches {
 	v := reflect.ValueOf(x)
 	if v.Kind() == reflect.Ptr {

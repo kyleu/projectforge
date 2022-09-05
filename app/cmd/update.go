@@ -28,7 +28,7 @@ func updateF(ctx context.Context, args []string) error {
 				return err
 			}
 		}
-		err = mSvc.Download(mod.Key, url, _logger)
+		err = mSvc.Download(ctx, mod.Key, url, _logger)
 		if err != nil {
 			return err
 		}

@@ -27,10 +27,10 @@ func ToJSONBytes(x any, indent bool) []byte {
 			enc.SetIndent("", "  ")
 		}
 		enc.SetEscapeHTML(false)
-		_ = enc.Encode(x)
+		_ = enc.Encode(x) //nolint:errchkjson // no chance of error
 		return bts.Bytes()
 	}
-	b, _ := json.Marshal(x)
+	b, _ := json.Marshal(x) //nolint:errchkjson // no chance of error
 	return b
 }
 

@@ -84,7 +84,7 @@ func gitPullAll(prjs project.Projects, rc *fasthttp.RequestCtx, as *app.State, p
 
 func gitMagicAll(prjs project.Projects, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (git.Results, error) {
 	message := string(rc.URI().QueryArgs().Peek("message"))
-	dryRun := string(rc.URI().QueryArgs().Peek("dryRun")) == "true"
+	dryRun := cutil.QueryStringBool(rc, "dryRun")
 	results, errs := util.AsyncCollect(prjs, func(prj *project.Project) (*git.Result, error) {
 		return as.Services.Git.Magic(ps.Context, prj, message, dryRun, ps.Logger)
 	})

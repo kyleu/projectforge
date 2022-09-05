@@ -16,8 +16,8 @@ type Service struct {
 	client *github.Client
 }
 
-func NewService(logger util.Logger) *Service {
-	return &Service{logger: logger, client: createGithubClient()}
+func NewService(ctx context.Context, logger util.Logger) *Service {
+	return &Service{logger: logger, client: createGithubClient(ctx)}
 }
 
 func (s *Service) UpgradeIfNeeded(ctx context.Context, o string, n string, force bool) error {
@@ -47,7 +47,7 @@ func (s *Service) UpgradeIfNeeded(ctx context.Context, o string, n string, force
 	}
 
 	s.logger.Infof("upgrading from [%s] to [%s]...", currVersion.String(), tgtVersion.String())
-	zipped, err := s.downloadAsset(*tgtVersion, tgtRelease)
+	zipped, err := s.downloadAsset(ctx, *tgtVersion, tgtRelease)
 	if err != nil {
 		return err
 	}

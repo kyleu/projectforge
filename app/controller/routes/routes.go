@@ -12,7 +12,6 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-// nolint
 func AppRoutes() fasthttp.RequestHandler {
 	r := router.New()
 

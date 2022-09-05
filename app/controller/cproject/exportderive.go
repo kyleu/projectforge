@@ -2,14 +2,15 @@ package cproject
 
 import (
 	"fmt"
+
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
+
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/project/export/data"
 	"projectforge.dev/projectforge/app/project/export/model"
-	"projectforge.dev/projectforge/views"
 	"projectforge.dev/projectforge/views/vexport"
 )
 
@@ -54,16 +55,14 @@ func ProjectExportModelDerive(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 
-		ps.Data = mdl
+		if cutil.QueryStringBool(rc, "save") {
+			err = as.Services.Projects.SaveExportModel(as.Services.Projects.GetFilesystem(prj), mdl, ps.Logger)
+			if err != nil {
+				return "", err
+			}
+		}
 
-		//err = as.Services.Projects.SaveExportModel(as.Services.Projects.GetFilesystem(prj), mdl, ps.Logger)
-		//if err != nil {
-		//	return "", err
-		//}
-
-		return controller.Render(rc, as, &views.Debug{}, ps)
-
-		msg := "model created successfully"
+		msg := "model created successfully from input"
 		u := fmt.Sprintf("/p/%s/export/models/%s", prj.Key, mdl.Name)
 		return controller.FlashAndRedir(true, msg, u, rc, ps)
 	})

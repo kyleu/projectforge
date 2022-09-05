@@ -11,7 +11,6 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-// nolint
 func AppRoutes() fasthttp.RequestHandler {
 	r := router.New()
 

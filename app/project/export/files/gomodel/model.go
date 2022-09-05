@@ -58,12 +58,8 @@ func modelPK(m *model.Model) *golang.Block {
 	maxColLength := util.StringArrayMaxLength(pks.CamelNames())
 	maxTypeLength := pks.MaxGoKeyLength(m.Package)
 	for _, c := range pks {
-		suffix := ""
-		if c.Nullable || c.HasTag("omitempty") {
-			suffix = ",omitempty"
-		}
 		goType := util.StringPad(c.ToGoType(m.Package), maxTypeLength)
-		ret.W("\t%s %s `json:%q`", util.StringPad(c.Proper(), maxColLength), goType, c.Camel()+suffix)
+		ret.W("\t%s %s `json:%q`", util.StringPad(c.Proper(), maxColLength), goType, c.Camel()+modelJSONSuffix(c))
 	}
 	ret.W("}")
 	return ret
@@ -75,15 +71,18 @@ func modelStruct(m *model.Model) *golang.Block {
 	maxColLength := util.StringArrayMaxLength(m.Columns.CamelNames())
 	maxTypeLength := m.Columns.MaxGoKeyLength(m.Package)
 	for _, c := range m.Columns {
-		suffix := ""
-		if c.Nullable || c.HasTag("omitempty") {
-			suffix = ",omitempty"
-		}
 		goType := util.StringPad(c.ToGoType(m.Package), maxTypeLength)
-		ret.W("\t%s %s `json:%q`", util.StringPad(c.Proper(), maxColLength), goType, c.Camel()+suffix)
+		ret.W("\t%s %s `json:%q`", util.StringPad(c.Proper(), maxColLength), goType, c.Camel()+modelJSONSuffix(c))
 	}
 	ret.W("}")
 	return ret
+}
+
+func modelJSONSuffix(c *model.Column) string {
+	if c.Nullable || c.HasTag("omitempty") {
+		return ",omitempty"
+	}
+	return ""
 }
 
 func modelConstructor(m *model.Model) *golang.Block {

@@ -10,7 +10,7 @@ type simpleEncoder struct {
 	pool buffer.Pool
 }
 
-// nolint
+//nolint:revive
 func SimpleEncoder(cfg zapcore.EncoderConfig) *simpleEncoder {
 	return &simpleEncoder{Encoder: zapcore.NewJSONEncoder(cfg), pool: buffer.NewPool()}
 }
@@ -19,7 +19,6 @@ func (e *simpleEncoder) Clone() zapcore.Encoder {
 	return &simpleEncoder{Encoder: e.Encoder.Clone(), pool: e.pool}
 }
 
-// nolint
 func (e *simpleEncoder) EncodeEntry(entry zapcore.Entry, _ []zapcore.Field) (*buffer.Buffer, error) {
 	ret := e.pool.Get()
 	m := levelToColor[entry.Level].Add(entry.Message)

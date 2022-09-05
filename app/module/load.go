@@ -49,7 +49,7 @@ func (s *Service) load(ctx context.Context, key string, pth string, url string, 
 				return nil, errors.Wrapf(err, "error downloading module [%s]", key)
 			}
 		}
-		err = s.Download(key, url, logger)
+		err = s.Download(ctx, key, url, logger)
 		if err != nil {
 			return nil, errors.Wrapf(err, "error downloading module [%s]", key)
 		}

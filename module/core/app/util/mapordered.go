@@ -70,7 +70,7 @@ func (o *OrderedMap[V]) UnmarshalJSON(b []byte) error {
 	index := make(map[string]int)
 	for key := range o.Map {
 		o.Order = append(o.Order, key)
-		esc, _ := json.Marshal(key) // Escape the key
+		esc := ToJSONBytes(key, false) // escape the key
 		index[key] = bytes.Index(b, esc)
 	}
 

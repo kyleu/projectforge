@@ -23,7 +23,7 @@ func (l *Timer) Lap(msg string, args ...any) {
 	l.index++
 	out := fmt.Sprintf("[%s::%d] ", l.Key, l.index) + fmt.Sprintf(msg, args...) + " [" + util.MicrosToMillis(l.Timer.End()) + "]"
 	if l.Log == nil {
-		fmt.Println(out) // nolint
+		fmt.Println(out) //nolint:forbidigo
 	} else {
 		l.Log.Infof(out)
 	}
@@ -34,7 +34,7 @@ func (l *Timer) Complete() {
 	msg := fmt.Sprintf("completed after [%d] steps in [%s]", l.index, util.MicrosToMillis(l.initial.End()))
 	out := fmt.Sprintf("[%s::%d] ", l.Key, l.index) + msg + " [" + util.MicrosToMillis(l.Timer.End()) + "]"
 	if l.Log == nil {
-		fmt.Println(out) // nolint
+		fmt.Println(out) //nolint:forbidigo
 	} else {
 		l.Log.Infof(out)
 	}

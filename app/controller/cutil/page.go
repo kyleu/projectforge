@@ -56,7 +56,7 @@ type PageState struct {
 	HeaderContent string            `json:"headerContent,omitempty"`
 	Data          any               `json:"data,omitempty"`
 	Logger        util.Logger       `json:"-"`
-	Context       context.Context   `json:"-"`
+	Context       context.Context   `json:"-"` //nolint:containedctx // properly closed, never directly used
 	Span          *telemetry.Span   `json:"-"`
 	RenderElapsed float64           `json:"renderElapsed,omitempty"`
 }

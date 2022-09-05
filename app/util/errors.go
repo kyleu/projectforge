@@ -30,7 +30,7 @@ type ErrorDetail struct {
 func GetErrorDetail(e error) *ErrorDetail {
 	var stack errors.StackTrace
 
-	// nolint
+	//nolint:errorlint
 	t, ok := e.(stackTracer)
 	if ok {
 		stack = t.StackTrace()
@@ -38,7 +38,7 @@ func GetErrorDetail(e error) *ErrorDetail {
 
 	var cause *ErrorDetail
 
-	// nolint
+	//nolint:errorlint
 	u, ok := e.(unwrappable)
 	if ok {
 		cause = GetErrorDetail(u.Unwrap())

@@ -1,5 +1,5 @@
 # Content managed by Project Forge, see [projectforge.md] for details.
-# Requires golangci-lint 1.45.2; `go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest`
+# Requires golangci-lint 1.49.0; `go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest`
 issues:
   max-issues-per-linter: 0
   max-same-issues: 0
@@ -8,15 +8,22 @@ output:
   sort-results: true
 
 linters-settings:
+  cyclop:
+    max-complexity: 32
   depguard:
     list-type: blacklist
   dupl:
-    threshold: 100
+    threshold: 512
+  exhaustive:
+    default-signifies-exhaustive: true
   funlen:
     lines: 100
     statements: 80
   gci:
-    local-prefixes: github.com/golangci/golangci-lint
+    sections:
+      - standard
+      - default
+      - prefix(projectforge.dev/projectforge)
   goconst:
     min-len: 2
     min-occurrences: 2
@@ -34,10 +41,11 @@ linters-settings:
       - rangeValCopy
       - typeDefFirst
       - unnamedResult
+      - whyNoLint
   gocyclo:
     min-complexity: 30
   goimports:
-    local-prefixes: github.com/golangci/golangci-lint
+    local-prefixes: projectforge.dev/projectforge
   golint:
     min-confidence: 0
   gomnd:
@@ -65,33 +73,43 @@ linters-settings:
     suggest-new: true
   misspell:
     locale: US
+  nestif:
+    min-complexity: 10
   nolintlint:
-    allow-leading-space: true # don't require machine-readable nolint directives (i.e. with no leading space)
+    allow-leading-space: false # don't require machine-readable nolint directives (i.e. with no leading space)
     allow-unused: false # report any unused nolint directives
     require-explanation: false # don't require an explanation for nolint directives
-    require-specific: false # don't require nolint directives to be specific about which linter is being skipped
+    require-specific: true # don't require nolint directives to be specific about which linter is being skipped
 
 linters:
   disable-all: true
   enable:
+    - asasalint
     - asciicheck
+    - bidichk
     - bodyclose
-    # - contextcheck
-    # - cyclop
-    - deadcode
+    - containedctx
+    - contextcheck
+    - cyclop
+    # - deadcode # deprecated
+    - decorder
     - depguard
     - dogsled
-    # - dupl
+    - dupl
     - durationcheck
     - errcheck
+    - errchkjson
+    - errname
     - errorlint
+    - execinquery
     - exhaustive
-    # - exhaustivestruct
+    # - exhaustivestruct # deprecated
+    # - exhaustruct
     - exportloopref
     - forbidigo
     - forcetypeassert
     - funlen
-    # - gci
+    - gci
     # - gochecknoglobals
     - gochecknoinits
     - gocognit
@@ -106,34 +124,45 @@ linters:
     - goheader
     - goimports
     # - gomnd
-    # - gomoddirectives
+    - gomoddirectives
     - gomodguard
     - goprintffuncname
     - gosec
     - gosimple
     - govet
-    - ifshort
+    - grouper
+    # - ifshort # deprecated
     - importas
     - ineffassign
+    # - interfacebloat
+    # - interfacer # deprecated
+    # - ireturn
     - lll
+    - maintidx
     - makezero
+    # - maligned # deprecated
     - misspell
     - nakedret
-    # - nestif
+    - nestif
     - nilerr
+    # - nilnil
+    # - nlreturn
     - noctx
     - nolintlint
     - paralleltest
     - prealloc
     - predeclared
     - promlinter
+    - reassign
     - revive
     - rowserrcheck
+    # - scopelint # deprecated
     - sqlclosecheck
     - staticcheck
-    - structcheck
+    # - structcheck # deprecated
     - stylecheck
     # - tagliatelle
+    - tenv
     - testpackage
     - thelper
     - tparallel
@@ -141,8 +170,10 @@ linters:
     - unconvert
     # - unparam
     - unused
-    - varcheck
+    - usestdlibvars
+    # - varcheck # deprecated
+    # - varnamelen
     - wastedassign
-    # - whitespace
+    # - whitespace # crashes with template files
     # - wrapcheck
-    # - wsl
+    # - wsl # way too picky

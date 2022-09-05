@@ -54,7 +54,6 @@ func Render(rc *fasthttp.RequestCtx, as *app.State, page layout.Page, ps *cutil.
 	return "", nil
 }
 
-// nolint // sometimes unused
 func ERsp(msg string, args ...any) (string, error) {
 	return "", errors.Errorf(msg, args...)
 }

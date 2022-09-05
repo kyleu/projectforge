@@ -13,11 +13,11 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func createGithubClient() *github.Client {
+func createGithubClient(ctx context.Context) *github.Client {
 	client := http.DefaultClient
 	if token := util.GetEnv("github_token"); token != "" {
 		src := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: token})
-		client = oauth2.NewClient(context.Background(), src)
+		client = oauth2.NewClient(ctx, src)
 	}
 	return github.NewClient(client)
 }
