@@ -49,7 +49,7 @@ func startServer(flags *Flags) error {
 }
 
 func loadServer(flags *Flags, logger util.Logger) (*app.State, fasthttp.RequestHandler, util.Logger, error) {
-	r := routes.AppRoutes()
+	r := routes.AppRoutes(logger)
 
 	st, err := buildDefaultAppState(flags, logger)
 	if err != nil {

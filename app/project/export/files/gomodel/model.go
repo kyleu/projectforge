@@ -126,7 +126,7 @@ func modelDiff(m *model.Model, g *golang.File) *golang.Block {
 			if col.Nullable {
 				ret.W("\tif (%s == nil && %s != nil) || (%s != nil && %s == nil) || (%s != nil && %s != nil && *%s != *%s) {", l, r, l, r, l, r, l, r)
 				g.AddImport(helper.ImpFmt)
-				ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, fmt.Sprint(%s), fmt.Sprint(%s))) // nolint:gocritic // it's nullable", col.Camel(), l, r)
+				ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, fmt.Sprint(%s), fmt.Sprint(%s))) //nolint:gocritic // it's nullable", col.Camel(), l, r)
 			} else {
 				ret.W("\tif %s != %s {", l, r)
 				ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, %s.String(), %s.String()))", col.Camel(), l, r)

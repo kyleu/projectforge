@@ -6,6 +6,9 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus"
+
+	"{{{ .Package }}}/app/lib/telemetry"
+	"{{{ .Package }}}/app/util"
 )
 
 type Metrics struct {
@@ -13,10 +16,10 @@ type Metrics struct {
 	stmtDur *prometheus.HistogramVec
 }
 
-func NewMetrics(key string, db StatsGetter) (*Metrics, error) {
+func NewMetrics(key string, db StatsGetter, logger util.Logger) (*Metrics, error) {
 	ss := strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(key, "-", "_"), "/", "_"), ".", "_")
 	m := &Metrics{}
-	err := m.registerDatabaseMetrics(ss)
+	err := m.registerDatabaseMetrics(ss, logger)
 	if err != nil {
 		return nil, err
 	}
@@ -28,22 +31,11 @@ func NewMetrics(key string, db StatsGetter) (*Metrics, error) {
 	return m, nil
 }
 
-func (p *Metrics) registerDatabaseMetrics(subsystem string) error {
-	cOpts := prometheus.CounterOpts{Subsystem: subsystem, Name: "statements_total", Help: "The total number of SQL statements processed."}
-
-	p.stmtCnt = prometheus.NewCounterVec(cOpts, []string{"sql", "method"})
-	err := prometheus.Register(p.stmtCnt)
-	if err != nil {
-		return errors.Wrap(err, "unable to register statement counter")
-	}
-
-	hOpts := prometheus.HistogramOpts{Subsystem: subsystem, Name: "statement_duration_seconds", Help: "The SQL statement duration in seconds."}
-	hOpts.Buckets = []float64{.005, .01, .025, .05, .1, .25, .5, 1, 2.5, 5, 10, 15, 20, 30, 40, 50, 60}
-	p.stmtDur = prometheus.NewHistogramVec(hOpts, []string{"sql", "method"})
-	err = prometheus.Register(p.stmtDur)
-	if err != nil {
-		return errors.Wrap(err, "unable to register statement duration histogram")
-	}
+func (p *Metrics) registerDatabaseMetrics(subsystem string, logger util.Logger) error {
+	stmtCntHelp := "The total number of SQL statements processed."
+	p.stmtCnt = telemetry.MetricsCounter(subsystem, "statements_total", stmtCntHelp, logger, "sql", "method")
+	stmtDurHelp := "The SQL statement duration in seconds."
+	p.stmtDur = telemetry.MetricsHistogram(subsystem, "statement_duration_seconds", stmtDurHelp, logger, "sql", "method")
 
 	return nil
 }

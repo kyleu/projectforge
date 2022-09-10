@@ -12,7 +12,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func AppRoutes() fasthttp.RequestHandler {
+func AppRoutes(logger util.Logger) fasthttp.RequestHandler {
 	r := router.New()
 
 	r.GET("/", controller.Home)
@@ -54,6 +54,6 @@ func AppRoutes() fasthttp.RequestHandler {
 
 	clib.AppRoutesList = r.List()
 
-	p := httpmetrics.NewMetrics(util.AppKey)
+	p := httpmetrics.NewMetrics(util.AppKey, logger)
 	return fasthttp.CompressHandlerLevel(p.WrapHandler(r), fasthttp.CompressBestSpeed)
 }

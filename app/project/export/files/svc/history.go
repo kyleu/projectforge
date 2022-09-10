@@ -41,7 +41,7 @@ func serviceHistoryVars(m *model.Model) *golang.Block {
 
 func serviceHistoryGetHistory(m *model.Model, dbRef string) *golang.Block {
 	ret := golang.NewBlock("GetHistory", "func")
-	ret.W("func (s *Service) GetHistory(ctx context.Context, tx *sqlx.Tx, id uuid.UUID, logger util.Logger) (*%sHistory, error) {", m.Proper())
+	ret.W("func (s *Service) GetHistory(ctx context.Context, tx *sqlx.Tx, id uuid.UUID, logger util.Logger) (*History, error) {")
 	ret.W("\tq := database.SQLSelectSimple(historyColumnsString, historyTableQuoted, \"id = $1\")")
 	ret.W("\tret := historyDTO{}")
 	ret.W("\terr := s.%s.Get(ctx, &ret, q, tx, logger, id)", dbRef)
@@ -55,8 +55,8 @@ func serviceHistoryGetHistory(m *model.Model, dbRef string) *golang.Block {
 
 func serviceHistoryGetHistories(m *model.Model, dbRef string) *golang.Block {
 	ret := golang.NewBlock("GetHistories", "func")
-	msg := "func (s *Service) GetHistories(ctx context.Context, tx *sqlx.Tx, %s, logger util.Logger) (%sHistories, error) {"
-	ret.W(msg, m.PKs().Args(m.Package), m.Proper())
+	msg := "func (s *Service) GetHistories(ctx context.Context, tx *sqlx.Tx, %s, logger util.Logger) (Histories, error) {"
+	ret.W(msg, m.PKs().Args(m.Package))
 	pks := m.PKs()
 	joins := make([]string, 0, len(pks))
 	logs := make([]string, 0, len(pks))
@@ -78,8 +78,8 @@ func serviceHistoryGetHistories(m *model.Model, dbRef string) *golang.Block {
 
 func serviceHistorySaveHistory(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("SaveHistory", "func")
-	const decl = "func (s *Service) SaveHistory(ctx context.Context, tx *sqlx.Tx, o *%s, n *%s, logger util.Logger) (*%sHistory, error) {"
-	ret.W(decl, m.Proper(), m.Proper(), m.Proper())
+	const decl = "func (s *Service) SaveHistory(ctx context.Context, tx *sqlx.Tx, o *%s, n *%s, logger util.Logger) (*History, error) {"
+	ret.W(decl, m.Proper(), m.Proper())
 	ret.W("\tdiffs := o.Diff(n)")
 	ret.W("\tif len(diffs) == 0 {")
 	ret.W("\t\treturn nil, nil")

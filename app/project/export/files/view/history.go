@@ -23,7 +23,7 @@ func exportViewHistoryClass(m *model.Model) *golang.Block {
 	ret.W("{%% code type History struct {")
 	ret.W("  layout.Basic")
 	ret.W("  Model *%s.%s", m.Package, m.Proper())
-	ret.W("  History *%s.%sHistory", m.Package, m.Proper())
+	ret.W("  History *%s.History", m.Package)
 	ret.W("} %%}")
 	return ret
 }
@@ -73,8 +73,8 @@ func exportViewHistoryBody(m *model.Model) *golang.Block {
 
 func exportViewHistoryTable(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("HistoryTable", "struct")
-	const decl = "{%%%% func HistoryTable(model *%s.%s, histories %s.%sHistories, params filter.ParamSet, as *app.State, ps *cutil.PageState) %%%%}"
-	ret.W(decl, m.Package, m.Proper(), m.Package, m.Proper())
+	const decl = "{%%%% func HistoryTable(model *%s.%s, histories %s.Histories, params filter.ParamSet, as *app.State, ps *cutil.PageState) %%%%}"
+	ret.W(decl, m.Package, m.Proper(), m.Package)
 	ret.W("  {%%- code prms := params.Get(\"history_history\", nil, ps.Logger).Sanitize(\"history_history\") -%%}")
 	ret.W("  <table class=\"mt\">")
 	ret.W("    <thead>")

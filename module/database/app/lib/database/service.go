@@ -43,7 +43,7 @@ func NewService(typ *DBType, key string, dbName string, schName string, username
 		return nil, errors.New("logger must be provided to database service")
 	}
 	logger = logger.With("database", dbName, "user", username)
-	m, err := dbmetrics.NewMetrics(strings.ReplaceAll(key, "-", "_"), db)
+	m, err := dbmetrics.NewMetrics(strings.ReplaceAll(key, "-", "_"), db, logger)
 	if err != nil {
 		logger.Warnf(fmt.Sprintf("unable to register database metrics for [%s]: %+v", key, err))
 	}

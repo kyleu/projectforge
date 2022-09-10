@@ -7,6 +7,7 @@ import (
 	"github.com/valyala/fasthttp"
 
 	"{{{ .Package }}}/app/lib/telemetry"
+	"{{{ .Package }}}/app/util"
 )
 
 type Metrics struct {
@@ -18,10 +19,10 @@ type Metrics struct {
 	MetricsPath string
 }
 
-func NewMetrics(subsystem string) *Metrics {
+func NewMetrics(subsystem string, logger util.Logger) *Metrics {
 	ss := strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(subsystem, "-", "_"), "/", "_"), ".", "_")
 	m := &Metrics{MetricsPath: defaultMetricPath}
-	m.registerHTTPMetrics(ss)
+	m.registerHTTPMetrics(ss, logger)
 	return m
 }
 
@@ -41,19 +42,9 @@ func InjectHTTP(rc *fasthttp.RequestCtx, span *telemetry.Span) {
 	span.SetHTTPStatus(rc.Response.StatusCode())
 }
 
-func (p *Metrics) registerHTTPMetrics(subsystem string) {
-	cOpts := prometheus.CounterOpts{Subsystem: subsystem, Name: "requests_total", Help: "The HTTP request counts processed."}
-	p.reqCnt = prometheus.NewCounterVec(cOpts, []string{"code", "method"})
-
-	hOpts := prometheus.HistogramOpts{Subsystem: subsystem, Name: "request_duration_seconds", Help: "The HTTP request duration in seconds."}
-	hOpts.Buckets = []float64{.005, .01, .025, .05, .1, .25, .5, 1, 2.5, 5, 10, 15, 20, 30, 40, 50, 60}
-	p.reqDur = prometheus.NewHistogramVec(hOpts, []string{"code"})
-
-	reqOpts := prometheus.SummaryOpts{Subsystem: subsystem, Name: "request_size_bytes", Help: "The HTTP request sizes in bytes."}
-	p.reqSize = prometheus.NewSummary(reqOpts)
-
-	rspOpts := prometheus.SummaryOpts{Subsystem: subsystem, Name: "response_size_bytes", Help: "The HTTP response sizes in bytes."}
-	p.rspSize = prometheus.NewSummary(rspOpts)
-
-	prometheus.MustRegister(p.reqCnt, p.reqDur, p.reqSize, p.rspSize)
+func (p *Metrics) registerHTTPMetrics(subsystem string, logger util.Logger) {
+	p.reqCnt = telemetry.MetricsCounter(subsystem, "requests_total", "The HTTP request counts processed.", logger, "code", "method")
+	p.reqDur = telemetry.MetricsHistogram(subsystem, "request_duration_seconds", "The HTTP request duration in seconds.", logger, "code")
+	p.reqSize = telemetry.MetricsSummary(subsystem, "request_size_bytes", "The HTTP request sizes in bytes.", logger)
+	p.rspSize = telemetry.MetricsSummary(subsystem, "response_size_bytes", "The HTTP response sizes in bytes.", logger)
 }

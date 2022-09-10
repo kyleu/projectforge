@@ -9,9 +9,10 @@ import (
 	"projectforge.dev/projectforge/app/controller/clib"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/telemetry/httpmetrics"
+	"projectforge.dev/projectforge/app/util"
 )
 
-func SiteRoutes() fasthttp.RequestHandler {
+func SiteRoutes(logger util.Logger) fasthttp.RequestHandler {
 	r := router.New()
 
 	r.GET("/", controller.Site)
@@ -28,6 +29,6 @@ func SiteRoutes() fasthttp.RequestHandler {
 	r.OPTIONS("/{_:*}", controller.Options)
 	r.NotFound = controller.NotFound
 
-	p := httpmetrics.NewMetrics("marketing_site")
+	p := httpmetrics.NewMetrics("marketing_site", logger)
 	return fasthttp.CompressHandlerLevel(p.WrapHandler(r), fasthttp.CompressBestSpeed)
 }

@@ -69,9 +69,9 @@ func DatabaseAction(rc *fasthttp.RequestCtx) {
 			recent := database.GetDebugStatements(svc.Key)
 			return controller.Render(rc, as, &vdatabase.Detail{Mode: "recent", Svc: svc, Recent: recent}, ps, bc...)
 		case "tables":
-			sizes, err := svc.Sizes(ps.Context, ps.Logger)
-			if err != nil {
-				return "", errors.Wrapf(err, "unable to calculate sizes for database [%s]", svc.Key)
+			sizes, dberr := svc.Sizes(ps.Context, ps.Logger)
+			if dberr != nil {
+				return "", errors.Wrapf(dberr, "unable to calculate sizes for database [%s]", svc.Key)
 			}
 			return controller.Render(rc, as, &vdatabase.Detail{Mode: "tables", Svc: svc, Sizes: sizes}, ps, bc...)
 		case "analyze":

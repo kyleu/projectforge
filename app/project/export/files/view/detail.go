@@ -38,7 +38,7 @@ func exportViewDetailClass(m *model.Model, models model.Models, g *golang.Templa
 	ret.W("  Model *%s.%s", m.Package, m.Proper())
 	rrs := models.ReverseRelations(m.Name)
 	if m.IsHistory() {
-		ret.W("  Histories %s.%sHistories", m.Package, m.Proper())
+		ret.W("  Histories %s.Histories", m.Package)
 	}
 	if m.Columns.HasFormat(model.FmtCountry) {
 		g.AddImport(helper.ImpAppUtil)

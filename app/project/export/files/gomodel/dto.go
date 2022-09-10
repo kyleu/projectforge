@@ -65,7 +65,7 @@ func modelTableCols(m *model.Model, g *golang.File) (*golang.Block, error) {
 			}
 		}
 		joinClause += strings.Join(joins, " and ")
-		ret.W("\ttables%s = fmt.Sprintf(`%s`, table, table%s) // nolint", util.StringPad("Joined", len(hcp)+5), joinClause, hcp)
+		ret.W("\ttables%s = fmt.Sprintf(`%s`, table, table%s) //nolint", util.StringPad("Joined", len(hcp)+5), joinClause, hcp)
 	}
 	ret.W(")")
 	return ret, nil
