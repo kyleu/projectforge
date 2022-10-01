@@ -1,6 +1,8 @@
 package project
 
 import (
+	"strings"
+
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/lib/theme"
@@ -43,6 +45,10 @@ func (p *Project) Title() string {
 		return p.Key
 	}
 	return p.Name
+}
+
+func (p *Project) NameSafe() string {
+	return strings.ReplaceAll(strings.ReplaceAll(p.Name, "-", ""), " ", "")
 }
 
 func (p *Project) Executable() string {

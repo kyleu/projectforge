@@ -31,6 +31,31 @@ func AsyncCollect[T any, R any](items []T, f func(item T) (R, error)) ([]R, []er
 	return ret, errs
 }
 
+func AsyncCollectMap[T any, K comparable, R any](items []T, k func(item T) K, f func(item T) (R, error)) (map[K]R, map[K]error) {
+	ret := make(map[K]R, len(items))
+	errs := map[K]error{}
+	mu := sync.Mutex{}
+	wg := sync.WaitGroup{}
+	wg.Add(len(items))
+	for _, item := range items {
+		i := item
+		go func() {
+			key := k(i)
+			r, err := f(i)
+			mu.Lock()
+			if err == nil {
+				ret[key] = r
+			} else {
+				errs[key] = err
+			}
+			mu.Unlock()
+			wg.Done()
+		}()
+	}
+	wg.Wait()
+	return ret, errs
+}
+
 func AsyncRateLimit[T any, R any](items []T, f func(item T) (R, error), maxConcurrent int, timeout time.Duration) ([]R, []error) {
 	ret := make([]R, 0, len(items))
 	var errs []error

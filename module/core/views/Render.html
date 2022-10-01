@@ -27,9 +27,7 @@
 <html lang="en">
 <!-- {%s cutil.PageComment %} -->
 <head>{%= page.Head(as, ps) %}</head>
-<body{% if ps.Profile.Mode != `` %} class="{%s ps.Profile.ModeClass() %}"{% endif %}>
-{%- if len(ps.Flashes) > 0 -%}{%= renderFlashes(ps.Flashes) %}{%- endif -%}
-{%= page.Nav(as, ps) %}
+<body{% if ps.Profile.Mode != `` %} class="{%s ps.Profile.ModeClass() %}"{% endif %}>{%- if len(ps.Flashes) > 0 -%}{%= renderFlashes(ps.Flashes) %}{%- endif -%}{%= page.Nav(as, ps) %}
 <main id="content"{% if ps.HideMenu %} class="nomenu"{% endif %}>{%= page.Body(as, ps) %}</main>
 {%- code slices.Sort(ps.Icons) -%}
 {% if len(ps.Icons) > 0 %}<div class="icon-list" style="display: none;">{% for _, icon := range ps.Icons %}

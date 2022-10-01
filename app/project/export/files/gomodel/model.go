@@ -42,7 +42,7 @@ func Model(m *model.Model, args *model.Args, addHeader bool) (*file.File, error)
 	} else {
 		return nil, err
 	}
-	g.AddBlocks(modelClone(m), modelString(m), modelTitle(m), modelWebPath(m), modelDiff(m, g), modelToData(m, m.Columns, ""))
+	g.AddBlocks(modelClone(m), modelString(g, m), modelTitle(m), modelWebPath(m), modelDiff(m, g), modelToData(m, m.Columns, ""))
 	if m.IsRevision() {
 		hc := m.HistoryColumns(false)
 		g.AddBlocks(modelToData(m, hc.Const, "Core"), modelToData(m, hc.Var, hc.Col.Proper()))

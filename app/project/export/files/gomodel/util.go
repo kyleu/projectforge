@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"projectforge.dev/projectforge/app/lib/types"
+	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
 	"projectforge.dev/projectforge/app/util"
@@ -28,12 +29,13 @@ func modelClone(m *model.Model) *golang.Block {
 	return ret
 }
 
-func modelString(m *model.Model) *golang.Block {
+func modelString(g *golang.File, m *model.Model) *golang.Block {
 	ret := golang.NewBlock("String", "func")
 	ret.W("func (%s *%s) String() string {", m.FirstLetter(), m.Proper())
 	if pks := m.PKs(); len(pks) == 1 {
 		ret.W("\treturn %s", model.ToGoString(pks[0].Type, fmt.Sprintf("%s.%s", m.FirstLetter(), pks[0].Proper()), false))
 	} else {
+		g.AddImport(helper.ImpFmt)
 		s := "\treturn fmt.Sprintf(\""
 		for idx := range m.PKs() {
 			if idx > 0 {

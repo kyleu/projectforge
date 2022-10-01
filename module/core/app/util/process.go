@@ -12,7 +12,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-func RunProcess(cmd string, path string, in io.Reader, out io.Writer, er io.Writer) (int, error) {
+func RunProcess(cmd string, path string, in io.Reader, out io.Writer, er io.Writer, env ...string) (int, error) {
 	args, _ := shellquote.Split(cmd)
 	if len(args) == 0 {
 		return -1, errors.New("no arguments provided")
@@ -37,7 +37,7 @@ func RunProcess(cmd string, path string, in io.Reader, out io.Writer, er io.Writ
 		er = os.Stderr
 	}
 
-	c := exec.Cmd{Path: firstArg, Args: args, Stdin: in, Stdout: out, Stderr: er, Dir: path}
+	c := exec.Cmd{Path: firstArg, Args: args, Env: env, Stdin: in, Stdout: out, Stderr: er, Dir: path}
 	err = c.Start()
 	if err != nil {
 		return -1, errors.Wrap(err, fmt.Sprintf("unable to start [%s] (%T)", cmd, err))
