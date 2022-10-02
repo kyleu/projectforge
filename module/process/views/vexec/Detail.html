@@ -1,0 +1,113 @@
+{% import (
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/lib/exec"
+  "{{{ .Package }}}/app/util"
+  "{{{ .Package }}}/views/components"
+  "{{{ .Package }}}/views/layout"
+) %}
+
+{% code type Detail struct {
+  layout.Basic
+  Exec *exec.Exec
+} %}
+
+{% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    {%- if p.Exec.Completed == nil -%}
+    <div class="right">
+      <a href="{%s p.Exec.WebPath() %}/kill"><button>Kill</button></a>
+    </div>
+    {%- endif -%}
+    <h3>{%= components.SVGRef("terminal", 20, 20, `icon`, ps) %} Process [{%s p.Exec.String() %}]</h3>
+    <table>
+      <tbody>
+        <tr>
+          <th>Key</th>
+          <td>{%s p.Exec.Key %}</td>
+        </tr>
+        <tr>
+          <th>Index</th>
+          <td>{%d p.Exec.Idx %}</td>
+        </tr>
+        <tr>
+          <th>PID</th>
+          <td>{%d p.Exec.PID %}</td>
+        </tr>
+        <tr>
+          <th>Command</th>
+          <td>{%s p.Exec.Cmd %}</td>
+        </tr>
+        <tr>
+          <th>Path</th>
+          <td>{%s p.Exec.Path %}</td>
+        </tr>
+        <tr>
+          <th>Environment</th>
+          <td>
+            <ul>
+              {%- for _, x := range p.Exec.Env -%}
+              <li>{%s x %}</li>
+              {%- endfor -%}
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <th>Started</th>
+          <td title="{%s util.TimeToFull(p.Exec.Started) %}">{%s util.TimeRelative(p.Exec.Started) %}</td>
+        </tr>
+        {%- if p.Exec.Completed != nil -%}
+        <tr>
+          <th>Completed</th>
+          <td title="{%s util.TimeToFull(p.Exec.Completed) %}">{%s util.TimeRelative(p.Exec.Completed) %}</td>
+        </tr>
+        <tr>
+          <th>Exit Code</th>
+          <td>{%d p.Exec.ExitCode %}</td>
+        </tr>
+        {%- endif -%}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>{%= components.SVGRef("database", 20, 20, `icon`, ps) %} Output</h3>
+    {%= components.DisplayTerminal("console-list", p.Exec.Buffer.String()) %}
+  </div>{{{ if .HasModule "websocket" }}}
+
+  <script>
+    function open() {
+      console.log("[socket]: open");
+    }
+    function recv(m) {
+      const tbody = document.getElementById("console-list");
+      const h = m.param["html"].split("\n");
+      for (x in h) {
+        if (h[x] === "") {
+          continue;
+        }
+        const row = document.createElement("tr");
+        row.style.fontFamily = "monospace";
+        const numTD = document.createElement("td");
+        numTD.className = "shrink";
+        numTD.style.padding = "2px var(--padding) 2px 0";
+        numTD.style.borderRight = "var(--border)";
+        numTD.style.verticalAlign = "top";
+        numTD.innerText = (tbody.children.length+1).toString();
+        const textTD = document.createElement("td");
+        textTD.style.padding = "2px var(--padding)";
+        textTD.innerHTML = h[x];
+        row.append(numTD, textTD);
+        tbody.append(row);
+      }
+      const c = document.getElementById("content");
+      c.scrollTo(0, c.scrollHeight);
+    }
+    function err(e) {
+      console.log("[socket error]: " + e);
+    }
+    window.addEventListener('load', () => {
+      new {{{ .Key }}}.Socket(true, open, recv, err, "{%s p.Exec.WebPath() %}/connect");
+    })
+  </script>{{{ end }}}
+{% endfunc %}

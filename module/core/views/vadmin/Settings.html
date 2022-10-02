@@ -49,7 +49,8 @@
         <li><a href="/admin/gc">Collect garbage</a></li>{{{ if.HasModule "migration" }}}
         <li><a href="/admin/migrations">View database migrations</a></li>{{{ end }}}{{{ if .HasModule "queue" }}}
         <li><a href="/admin/queue">Queue Statistics</a></li>{{{ end }}}
-        <li><a href="/theme">Edit Themes</a></li>
+        <li><a href="/theme">Edit Themes</a></li>{{{ if .HasModule "process" }}}
+        <li><a href="/admin/exec">Managed Processes</a></li>{{{ end }}}
       </ul>
     </div>
     <div class="card" style="flex-grow: 1;">

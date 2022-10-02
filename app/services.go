@@ -4,6 +4,7 @@ package app // import "projectforge.dev/projectforge/app"
 import (
 	"context"
 
+	"projectforge.dev/projectforge/app/lib/exec"
 	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/project/export"
@@ -16,6 +17,7 @@ type Services struct {
 	Projects *project.Service
 	Export   *export.Service
 	Git      *git.Service
+	Exec     *exec.Service
 }
 
 func NewServices(ctx context.Context, st *State, rootLogger util.Logger) (*Services, error) {
@@ -24,6 +26,7 @@ func NewServices(ctx context.Context, st *State, rootLogger util.Logger) (*Servi
 		Projects: project.NewService(),
 		Export:   export.NewService(),
 		Git:      git.NewService(),
+		Exec:     exec.NewService(),
 	}, nil
 }
 

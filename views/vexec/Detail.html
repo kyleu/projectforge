@@ -1,0 +1,78 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/lib/exec"
+  "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/layout"
+) %}
+
+{% code type Detail struct {
+  layout.Basic
+  Exec *exec.Exec
+} %}
+
+{% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    {%- if p.Exec.Completed == nil -%}
+    <div class="right">
+      <a href="{%s p.Exec.WebPath() %}/kill"><button>Kill</button></a>
+    </div>
+    {%- endif -%}
+    <h3>{%= components.SVGRef("terminal", 20, 20, `icon`, ps) %} Process [{%s p.Exec.String() %}]</h3>
+    <table>
+      <tbody>
+        <tr>
+          <th>Key</th>
+          <td>{%s p.Exec.Key %}</td>
+        </tr>
+        <tr>
+          <th>Index</th>
+          <td>{%d p.Exec.Idx %}</td>
+        </tr>
+        <tr>
+          <th>PID</th>
+          <td>{%d p.Exec.PID %}</td>
+        </tr>
+        <tr>
+          <th>Command</th>
+          <td>{%s p.Exec.Cmd %}</td>
+        </tr>
+        <tr>
+          <th>Path</th>
+          <td>{%s p.Exec.Path %}</td>
+        </tr>
+        <tr>
+          <th>Environment</th>
+          <td>
+            <ul>
+              {%- for _, x := range p.Exec.Env -%}
+              <li>{%s x %}</li>
+              {%- endfor -%}
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <th>Started</th>
+          <td title="{%s util.TimeToFull(p.Exec.Started) %}">{%s util.TimeRelative(p.Exec.Started) %}</td>
+        </tr>
+        {%- if p.Exec.Completed != nil -%}
+        <tr>
+          <th>Completed</th>
+          <td title="{%s util.TimeToFull(p.Exec.Completed) %}">{%s util.TimeRelative(p.Exec.Completed) %}</td>
+        </tr>
+        <tr>
+          <th>Exit Code</th>
+          <td>{%d p.Exec.ExitCode %}</td>
+        </tr>
+        {%- endif -%}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>{%= components.SVGRef("database", 20, 20, `icon`, ps) %} Output</h3>
+    {%= components.DisplayTerminal("console-list", p.Exec.Buffer.String()) %}
+  </div>
+{% endfunc %}

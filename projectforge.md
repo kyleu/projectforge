@@ -14,6 +14,7 @@ The following modules were used to build this project:
 - [filesystem](./doc/module/filesystem.md)
 - [ios](./doc/module/ios.md)
 - [marketing](./doc/module/marketing.md)
+- [process](./doc/module/process.md)
 - [search](./doc/module/search.md)
 - [types](./doc/module/types.md)
 - [upgrade](./doc/module/upgrade.md)

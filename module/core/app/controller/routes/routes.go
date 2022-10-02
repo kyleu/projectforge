@@ -4,6 +4,7 @@ import (
 	"github.com/fasthttp/router"
 	"github.com/valyala/fasthttp"
 
+	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller"
 	"{{{ .Package }}}/app/controller/clib"
 	"{{{ .Package }}}/app/controller/cutil"
@@ -11,7 +12,7 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-func AppRoutes(logger util.Logger) fasthttp.RequestHandler {
+func AppRoutes(as *app.State, logger util.Logger) fasthttp.RequestHandler {
 	r := router.New()
 
 	r.GET("/", controller.Home)

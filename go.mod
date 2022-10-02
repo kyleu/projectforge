@@ -22,6 +22,7 @@ require (
 	github.com/muesli/gamut v0.3.1
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.13.0
+	github.com/robert-nix/ansihtml v1.0.1
 	github.com/valyala/fasthttp v1.40.0
 	github.com/valyala/quicktemplate v1.7.0
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.36.1

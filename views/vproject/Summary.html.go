@@ -46,136 +46,151 @@ func StreamSummary(qw422016 *qt422016.Writer, prj *project.Project, title string
 	vsearch.StreamForm(qw422016, "/p/"+prj.Key+"/search", q, "Search Files", nil, ps)
 //line views/vproject/Summary.html:19
 	qw422016.N().S(`
-    <h3><a href="/p/`)
-//line views/vproject/Summary.html:20
+    <h3>
+      <a href="/p/`)
+//line views/vproject/Summary.html:21
 	qw422016.E().S(prj.Key)
-//line views/vproject/Summary.html:20
+//line views/vproject/Summary.html:21
 	qw422016.N().S(`">`)
-//line views/vproject/Summary.html:20
+//line views/vproject/Summary.html:21
 	components.StreamSVGRefIcon(qw422016, prj.IconSafe(), ps)
-//line views/vproject/Summary.html:20
+//line views/vproject/Summary.html:21
 	qw422016.N().S(` `)
-//line views/vproject/Summary.html:20
+//line views/vproject/Summary.html:21
 	qw422016.E().S(prj.Title())
-//line views/vproject/Summary.html:20
-	qw422016.N().S(`</a>`)
-//line views/vproject/Summary.html:20
+//line views/vproject/Summary.html:21
+	qw422016.N().S(`</a>
+      `)
+//line views/vproject/Summary.html:22
 	if title != "" {
-//line views/vproject/Summary.html:20
+//line views/vproject/Summary.html:22
 		qw422016.N().S(`: <a href="">`)
-//line views/vproject/Summary.html:20
+//line views/vproject/Summary.html:22
 		qw422016.E().S(title)
-//line views/vproject/Summary.html:20
+//line views/vproject/Summary.html:22
 		qw422016.N().S(`</a>`)
-//line views/vproject/Summary.html:20
+//line views/vproject/Summary.html:22
 	}
-//line views/vproject/Summary.html:20
-	qw422016.N().S(`</h3>
+//line views/vproject/Summary.html:22
+	qw422016.N().S(`    </h3>
 `)
-//line views/vproject/Summary.html:21
+//line views/vproject/Summary.html:24
 	if act != nil {
-//line views/vproject/Summary.html:21
+//line views/vproject/Summary.html:24
 		qw422016.N().S(`    <em>`)
-//line views/vproject/Summary.html:22
+//line views/vproject/Summary.html:25
 		qw422016.E().S(act.Title)
-//line views/vproject/Summary.html:22
+//line views/vproject/Summary.html:25
 		qw422016.N().S(` results</em>
 `)
-//line views/vproject/Summary.html:23
+//line views/vproject/Summary.html:26
 	}
-//line views/vproject/Summary.html:23
-	qw422016.N().S(`    <div class="mt">
+//line views/vproject/Summary.html:26
+	qw422016.N().S(`    <div class="clear mt"></div>
+    <div class="right" style="padding-top: 6px;">
+      <em>running</em>
+    </div>
+    <div>
+      <a href="/p/`)
+//line views/vproject/Summary.html:32
+	qw422016.E().S(prj.Key)
+//line views/vproject/Summary.html:32
+	qw422016.N().S(`/edit" title="Edit the project definition"><button>`)
+//line views/vproject/Summary.html:32
+	components.StreamSVGRef(qw422016, "edit", 15, 15, "icon", ps)
+//line views/vproject/Summary.html:32
+	qw422016.N().S(`Edit</button></a>
 `)
-//line views/vproject/Summary.html:25
+//line views/vproject/Summary.html:33
 	for _, t := range action.ProjectTypes {
-//line views/vproject/Summary.html:25
+//line views/vproject/Summary.html:33
 		qw422016.N().S(`      <a href="/run/`)
-//line views/vproject/Summary.html:26
+//line views/vproject/Summary.html:34
 		qw422016.E().S(prj.Key)
-//line views/vproject/Summary.html:26
+//line views/vproject/Summary.html:34
 		qw422016.N().S(`/`)
-//line views/vproject/Summary.html:26
+//line views/vproject/Summary.html:34
 		qw422016.E().S(t.Key)
-//line views/vproject/Summary.html:26
+//line views/vproject/Summary.html:34
 		qw422016.N().S(`" title="`)
-//line views/vproject/Summary.html:26
+//line views/vproject/Summary.html:34
 		qw422016.E().S(t.Description)
-//line views/vproject/Summary.html:26
+//line views/vproject/Summary.html:34
 		qw422016.N().S(`"><button>`)
-//line views/vproject/Summary.html:26
+//line views/vproject/Summary.html:34
 		components.StreamSVGRef(qw422016, t.Icon, 15, 15, "icon", ps)
-//line views/vproject/Summary.html:26
+//line views/vproject/Summary.html:34
 		qw422016.E().S(t.Title)
-//line views/vproject/Summary.html:26
+//line views/vproject/Summary.html:34
 		qw422016.N().S(`</button></a>
 `)
-//line views/vproject/Summary.html:27
+//line views/vproject/Summary.html:35
 	}
-//line views/vproject/Summary.html:27
+//line views/vproject/Summary.html:35
 	qw422016.N().S(`      <a href="/p/`)
-//line views/vproject/Summary.html:28
+//line views/vproject/Summary.html:36
 	qw422016.E().S(prj.Key)
-//line views/vproject/Summary.html:28
-	qw422016.N().S(`/edit" title="Edit the project definition"><button>`)
-//line views/vproject/Summary.html:28
-	components.StreamSVGRef(qw422016, "edit", 15, 15, "icon", ps)
-//line views/vproject/Summary.html:28
-	qw422016.N().S(`Edit</button></a>
+//line views/vproject/Summary.html:36
+	qw422016.N().S(`/run" title="Run the project"><button>`)
+//line views/vproject/Summary.html:36
+	components.StreamSVGRef(qw422016, "terminal", 15, 15, "icon", ps)
+//line views/vproject/Summary.html:36
+	qw422016.N().S(`Run</button></a>
       <a href="/p/`)
-//line views/vproject/Summary.html:29
+//line views/vproject/Summary.html:37
 	qw422016.E().S(prj.Key)
-//line views/vproject/Summary.html:29
+//line views/vproject/Summary.html:37
 	qw422016.N().S(`/fs" title="Explore the project's files"><button>`)
-//line views/vproject/Summary.html:29
+//line views/vproject/Summary.html:37
 	components.StreamSVGRef(qw422016, "folder", 15, 15, "icon", ps)
-//line views/vproject/Summary.html:29
+//line views/vproject/Summary.html:37
 	qw422016.N().S(`Files</button></a>
       <a href="/svg/`)
-//line views/vproject/Summary.html:30
+//line views/vproject/Summary.html:38
 	qw422016.E().S(prj.Key)
-//line views/vproject/Summary.html:30
+//line views/vproject/Summary.html:38
 	qw422016.N().S(`" title="Add new SVGs and set the app icon"><button>`)
-//line views/vproject/Summary.html:30
+//line views/vproject/Summary.html:38
 	components.StreamSVGRef(qw422016, "icons", 15, 15, "icon", ps)
-//line views/vproject/Summary.html:30
+//line views/vproject/Summary.html:38
 	qw422016.N().S(`SVG</button></a>
       <a href="/git/`)
-//line views/vproject/Summary.html:31
+//line views/vproject/Summary.html:39
 	qw422016.E().S(prj.Key)
-//line views/vproject/Summary.html:31
+//line views/vproject/Summary.html:39
 	qw422016.N().S(`" title="Source control status for this project"><button>`)
-//line views/vproject/Summary.html:31
+//line views/vproject/Summary.html:39
 	components.StreamSVGRef(qw422016, "git", 15, 15, "icon", ps)
-//line views/vproject/Summary.html:31
+//line views/vproject/Summary.html:39
 	qw422016.N().S(`Git</button></a>
     </div>
   </div>
 `)
-//line views/vproject/Summary.html:34
+//line views/vproject/Summary.html:42
 }
 
-//line views/vproject/Summary.html:34
+//line views/vproject/Summary.html:42
 func WriteSummary(qq422016 qtio422016.Writer, prj *project.Project, title string, gitResult *git.Result, args util.ValueMap, act *action.Type, ps *cutil.PageState, path ...string) {
-//line views/vproject/Summary.html:34
+//line views/vproject/Summary.html:42
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/Summary.html:34
+//line views/vproject/Summary.html:42
 	StreamSummary(qw422016, prj, title, gitResult, args, act, ps, path...)
-//line views/vproject/Summary.html:34
+//line views/vproject/Summary.html:42
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/Summary.html:34
+//line views/vproject/Summary.html:42
 }
 
-//line views/vproject/Summary.html:34
+//line views/vproject/Summary.html:42
 func Summary(prj *project.Project, title string, gitResult *git.Result, args util.ValueMap, act *action.Type, ps *cutil.PageState, path ...string) string {
-//line views/vproject/Summary.html:34
+//line views/vproject/Summary.html:42
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/Summary.html:34
+//line views/vproject/Summary.html:42
 	WriteSummary(qb422016, prj, title, gitResult, args, act, ps, path...)
-//line views/vproject/Summary.html:34
+//line views/vproject/Summary.html:42
 	qs422016 := string(qb422016.B)
-//line views/vproject/Summary.html:34
+//line views/vproject/Summary.html:42
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/Summary.html:34
+//line views/vproject/Summary.html:42
 	return qs422016
-//line views/vproject/Summary.html:34
+//line views/vproject/Summary.html:42
 }

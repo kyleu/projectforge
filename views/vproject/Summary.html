@@ -17,15 +17,23 @@
       }
     -%}
     {%= vsearch.Form("/p/" + prj.Key + "/search", q, "Search Files", nil, ps) %}
-    <h3><a href="/p/{%s prj.Key %}">{%= components.SVGRefIcon(prj.IconSafe(), ps) %} {%s prj.Title() %}</a>{% if title != "" %}: <a href="">{%s title %}</a>{%- endif -%}</h3>
+    <h3>
+      <a href="/p/{%s prj.Key %}">{%= components.SVGRefIcon(prj.IconSafe(), ps) %} {%s prj.Title() %}</a>
+      {% if title != "" %}: <a href="">{%s title %}</a>{%- endif -%}
+    </h3>
     {%- if act != nil -%}
     <em>{%s act.Title %} results</em>
     {%- endif -%}
-    <div class="mt">
+    <div class="clear mt"></div>
+    <div class="right" style="padding-top: 6px;">
+      <em>running</em>
+    </div>
+    <div>
+      <a href="/p/{%s prj.Key %}/edit" title="Edit the project definition"><button>{%= components.SVGRef("edit", 15, 15, "icon", ps) %}Edit</button></a>
       {%- for _, t := range action.ProjectTypes -%}
       <a href="/run/{%s prj.Key %}/{%s t.Key %}" title="{%s t.Description %}"><button>{%= components.SVGRef(t.Icon, 15, 15, "icon", ps) %}{%s t.Title %}</button></a>
       {%- endfor -%}
-      <a href="/p/{%s prj.Key %}/edit" title="Edit the project definition"><button>{%= components.SVGRef("edit", 15, 15, "icon", ps) %}Edit</button></a>
+      <a href="/p/{%s prj.Key %}/run" title="Run the project"><button>{%= components.SVGRef("terminal", 15, 15, "icon", ps) %}Run</button></a>
       <a href="/p/{%s prj.Key %}/fs" title="Explore the project's files"><button>{%= components.SVGRef("folder", 15, 15, "icon", ps) %}Files</button></a>
       <a href="/svg/{%s prj.Key %}" title="Add new SVGs and set the app icon"><button>{%= components.SVGRef("icons", 15, 15, "icon", ps) %}SVG</button></a>
       <a href="/git/{%s prj.Key %}" title="Source control status for this project"><button>{%= components.SVGRef("git", 15, 15, "icon", ps) %}Git</button></a>

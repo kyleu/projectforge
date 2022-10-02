@@ -109,13 +109,14 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
         <li><a href="/admin/modules">View Go modules</a></li>
         <li><a href="/admin/gc">Collect garbage</a></li>
         <li><a href="/theme">Edit Themes</a></li>
+        <li><a href="/admin/exec">Managed Processes</a></li>
       </ul>
     </div>
     <div class="card" style="flex-grow: 1;">
       <h3>`)
-//line views/vadmin/Settings.html:40
+//line views/vadmin/Settings.html:41
 	components.StreamSVGRefIcon(qw422016, `bolt`, ps)
-//line views/vadmin/Settings.html:40
+//line views/vadmin/Settings.html:41
 	qw422016.N().S(`HTTP Methods</h3>
       <ul class="mt">
         <li><a href="/admin/sitemap">Sitemap</a></li>
@@ -126,9 +127,9 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
     </div>
     <div class="card" style="flex-grow: 1;">
       <h3>`)
-//line views/vadmin/Settings.html:49
+//line views/vadmin/Settings.html:50
 	components.StreamSVGRefIcon(qw422016, `cog`, ps)
-//line views/vadmin/Settings.html:49
+//line views/vadmin/Settings.html:50
 	qw422016.N().S(`App Profiling</h3>
       <ul class="mt">
         <li><a href="/admin/cpu/start">Start CPU profile</a></li>
@@ -139,31 +140,31 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
     </div>
   </div>
 `)
-//line views/vadmin/Settings.html:58
+//line views/vadmin/Settings.html:59
 }
 
-//line views/vadmin/Settings.html:58
+//line views/vadmin/Settings.html:59
 func (p *Settings) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vadmin/Settings.html:58
+//line views/vadmin/Settings.html:59
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vadmin/Settings.html:58
+//line views/vadmin/Settings.html:59
 	p.StreamBody(qw422016, as, ps)
-//line views/vadmin/Settings.html:58
+//line views/vadmin/Settings.html:59
 	qt422016.ReleaseWriter(qw422016)
-//line views/vadmin/Settings.html:58
+//line views/vadmin/Settings.html:59
 }
 
-//line views/vadmin/Settings.html:58
+//line views/vadmin/Settings.html:59
 func (p *Settings) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vadmin/Settings.html:58
+//line views/vadmin/Settings.html:59
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vadmin/Settings.html:58
+//line views/vadmin/Settings.html:59
 	p.WriteBody(qb422016, as, ps)
-//line views/vadmin/Settings.html:58
+//line views/vadmin/Settings.html:59
 	qs422016 := string(qb422016.B)
-//line views/vadmin/Settings.html:58
+//line views/vadmin/Settings.html:59
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vadmin/Settings.html:58
+//line views/vadmin/Settings.html:59
 	return qs422016
-//line views/vadmin/Settings.html:58
+//line views/vadmin/Settings.html:59
 }

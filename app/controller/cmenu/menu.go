@@ -32,6 +32,7 @@ func MenuFor(ctx context.Context, isAuthed bool, isAdmin bool, as *app.State, lo
 			docMenu(ctx, as, logger),
 			menu.Separator,
 			&menu.Item{Key: "admin", Title: "Settings", Description: "System-wide settings and preferences", Icon: "cog", Route: "/admin"},
+			processMenu(as.Services.Exec.Execs),
 			DoctorMenu("first-aid", "/doctor"),
 		)
 	}

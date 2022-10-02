@@ -12,10 +12,10 @@ import (
 	"github.com/pkg/errors"
 )
 
-func RunProcess(cmd string, path string, in io.Reader, out io.Writer, er io.Writer, env ...string) (int, error) {
+func StartProcess(cmd string, path string, in io.Reader, out io.Writer, er io.Writer, env ...string) (*exec.Cmd, error) {
 	args, _ := shellquote.Split(cmd)
 	if len(args) == 0 {
-		return -1, errors.New("no arguments provided")
+		return nil, errors.New("no arguments provided")
 	}
 	firstArg := args[0]
 
@@ -23,7 +23,7 @@ func RunProcess(cmd string, path string, in io.Reader, out io.Writer, er io.Writ
 	if !strings.Contains(firstArg, "/") {
 		firstArg, err = exec.LookPath(firstArg)
 		if err != nil {
-			return -1, errors.Wrap(err, "unable to look up cmd ["+firstArg+"]")
+			return nil, errors.Wrap(err, "unable to look up cmd ["+firstArg+"]")
 		}
 	}
 
@@ -37,10 +37,18 @@ func RunProcess(cmd string, path string, in io.Reader, out io.Writer, er io.Writ
 		er = os.Stderr
 	}
 
-	c := exec.Cmd{Path: firstArg, Args: args, Env: env, Stdin: in, Stdout: out, Stderr: er, Dir: path}
+	c := &exec.Cmd{Path: firstArg, Args: args, Env: env, Stdin: in, Stdout: out, Stderr: er, Dir: path}
 	err = c.Start()
 	if err != nil {
-		return -1, errors.Wrap(err, fmt.Sprintf("unable to start [%s] (%T)", cmd, err))
+		return nil, errors.Wrap(err, fmt.Sprintf("unable to start [%s] (%T)", cmd, err))
+	}
+	return c, nil
+}
+
+func RunProcess(cmd string, path string, in io.Reader, out io.Writer, er io.Writer, env ...string) (int, error) {
+	c, err := StartProcess(cmd, path, in, out, er, env...)
+	if err != nil {
+		return -1, err
 	}
 	err = c.Wait()
 	if err != nil {

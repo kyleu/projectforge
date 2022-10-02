@@ -5,6 +5,7 @@ import (
 	"github.com/fasthttp/router"
 	"github.com/valyala/fasthttp"
 
+	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
 	"projectforge.dev/projectforge/app/controller/clib"
 	"projectforge.dev/projectforge/app/controller/cutil"
@@ -12,7 +13,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func AppRoutes(logger util.Logger) fasthttp.RequestHandler {
+func AppRoutes(as *app.State, logger util.Logger) fasthttp.RequestHandler {
 	r := router.New()
 
 	r.GET("/", controller.Home)
@@ -36,6 +37,8 @@ func AppRoutes(logger util.Logger) fasthttp.RequestHandler {
 	r.GET("/theme/palette/{palette}", clib.ThemePalette)
 	r.GET("/theme/color/{color}", clib.ThemeColor)
 	r.GET("/theme/preview/{palette}/{key}", clib.ThemePreview)
+
+	execRoutes(r)
 	// $PF_SECTION_END(routes)$
 
 	r.GET("/docs", clib.Docs)
