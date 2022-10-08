@@ -22,7 +22,7 @@
     u := "/p/" + prj.Key + "/fs"
     pth := filepath.Join(p.Path...)
   -%}
-  {%= Summary(prj, "/" + strings.Join(p.Path, "/"), nil, nil, nil, ps) %}
+  {%= Summary(prj, "/" + strings.Join(p.Path, "/"), nil, nil, nil, nil, ps) %}
   {%- if fs.IsDir(pth) -%}
   {%- code files := fs.ListFiles(pth, nil, ps.Logger) -%}
   <div class="card">

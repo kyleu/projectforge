@@ -17,7 +17,7 @@
 } %}
 
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
-  {%= vproject.Summary(p.Project, "SVG", nil, nil, &action.TypeSVG, ps) %}
+  {%= vproject.Summary(p.Project, "SVG", nil, nil, &action.TypeSVG, nil, ps) %}
   <div class="card">
     <h3>SVG icons</h3>
     <div class="mt">

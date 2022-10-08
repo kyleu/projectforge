@@ -70,7 +70,23 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
           <th>Key</th>
           <td>`)
 //line views/vexec/Detail.html:28
-	qw422016.E().S(p.Exec.Key)
+	if len(p.Exec.Link) > 0 {
+//line views/vexec/Detail.html:28
+		qw422016.N().S(`<a href="`)
+//line views/vexec/Detail.html:28
+		qw422016.E().S(p.Exec.Link)
+//line views/vexec/Detail.html:28
+		qw422016.N().S(`">`)
+//line views/vexec/Detail.html:28
+		qw422016.E().S(p.Exec.Key)
+//line views/vexec/Detail.html:28
+		qw422016.N().S(`</a>`)
+//line views/vexec/Detail.html:28
+	} else {
+//line views/vexec/Detail.html:28
+		qw422016.E().S(p.Exec.Key)
+//line views/vexec/Detail.html:28
+	}
 //line views/vexec/Detail.html:28
 	qw422016.N().S(`</td>
         </tr>
@@ -182,32 +198,72 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vexec/Detail.html:76
 	qw422016.N().S(`
   </div>
+
+  <script>
+    function open() {
+      console.log("[socket]: open");
+    }
+    function recv(m) {
+      const tbody = document.getElementById("console-list");
+      const h = m.param["html"].split("\n");
+      for (x in h) {
+        if (h[x] === "") {
+          continue;
+        }
+        const row = document.createElement("tr");
+        row.style.fontFamily = "monospace";
+        const numTD = document.createElement("td");
+        numTD.className = "shrink";
+        numTD.style.padding = "2px var(--padding) 2px 0";
+        numTD.style.borderRight = "var(--border)";
+        numTD.style.verticalAlign = "top";
+        numTD.innerText = (tbody.children.length+1).toString();
+        const textTD = document.createElement("td");
+        textTD.style.padding = "2px var(--padding)";
+        textTD.innerHTML = h[x];
+        row.append(numTD, textTD);
+        tbody.append(row);
+      }
+      const c = document.getElementById("content");
+      c.scrollTo(0, c.scrollHeight);
+    }
+    function err(e) {
+      console.log("[socket error]: " + e);
+    }
+    window.addEventListener('load', () => {
+      new projectforge.Socket(true, open, recv, err, "`)
+//line views/vexec/Detail.html:111
+	qw422016.E().S(p.Exec.WebPath())
+//line views/vexec/Detail.html:111
+	qw422016.N().S(`/connect");
+    })
+  </script>
 `)
-//line views/vexec/Detail.html:78
+//line views/vexec/Detail.html:114
 }
 
-//line views/vexec/Detail.html:78
+//line views/vexec/Detail.html:114
 func (p *Detail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vexec/Detail.html:78
+//line views/vexec/Detail.html:114
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexec/Detail.html:78
+//line views/vexec/Detail.html:114
 	p.StreamBody(qw422016, as, ps)
-//line views/vexec/Detail.html:78
+//line views/vexec/Detail.html:114
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexec/Detail.html:78
+//line views/vexec/Detail.html:114
 }
 
-//line views/vexec/Detail.html:78
+//line views/vexec/Detail.html:114
 func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vexec/Detail.html:78
+//line views/vexec/Detail.html:114
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexec/Detail.html:78
+//line views/vexec/Detail.html:114
 	p.WriteBody(qb422016, as, ps)
-//line views/vexec/Detail.html:78
+//line views/vexec/Detail.html:114
 	qs422016 := string(qb422016.B)
-//line views/vexec/Detail.html:78
+//line views/vexec/Detail.html:114
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexec/Detail.html:78
+//line views/vexec/Detail.html:114
 	return qs422016
-//line views/vexec/Detail.html:78
+//line views/vexec/Detail.html:114
 }

@@ -7,6 +7,7 @@ import {linkInit} from "./link";
 import {modalInit} from "./modal";
 import {editorInit} from "./editor";
 import {themeInit} from "./theme";
+import {socketInit} from "./socket";
 import {appInit} from "./app";
 
 export function init(): void {
@@ -18,6 +19,7 @@ export function init(): void {
   modalInit();
   editorInit();
   themeInit();
+  socketInit();
   appInit();
 }
 

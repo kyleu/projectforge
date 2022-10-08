@@ -18,14 +18,14 @@ import (
 func ApplyAll(ctx context.Context, prjs project.Projects, actT Type, cfg util.ValueMap, as *app.State, logger util.Logger) []*ResultContext {
 	serial := cfg.GetBoolOpt("serial") || cfg.GetStringOpt("mode") == refreshMode
 	mu := sync.Mutex{}
-	mSvc, pSvc, eSvc := as.Services.Modules, as.Services.Projects, as.Services.Export
+	mSvc, pSvc, eSvc, xSvc := as.Services.Modules, as.Services.Projects, as.Services.Export, as.Services.Exec
 	results, _ := util.AsyncCollect(prjs, func(prj *project.Project) (*ResultContext, error) {
 		if serial {
 			mu.Lock()
 			defer mu.Unlock()
 		}
 		c := cfg.Clone()
-		prms := &Params{ProjectKey: prj.Key, T: actT, Cfg: cfg, MSvc: mSvc, PSvc: pSvc, ESvc: eSvc, Logger: logger}
+		prms := &Params{ProjectKey: prj.Key, T: actT, Cfg: cfg, MSvc: mSvc, PSvc: pSvc, XSvc: xSvc, ESvc: eSvc, Logger: logger}
 		result := Apply(ctx, prms)
 		if result.Project == nil {
 			result.Project = prj

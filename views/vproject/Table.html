@@ -1,12 +1,13 @@
 {% import (
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/lib/exec"
   "projectforge.dev/projectforge/app/project"
   "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
 ) %}
 
-{% func Table(prjs project.Projects, tags []string, full bool, as *app.State, ps *cutil.PageState) %}
+{% func Table(prjs project.Projects, tags []string, full bool, ex exec.Execs, as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <div class="right"><a href="/p/new"><button>{%= components.SVGRef("file", 15, 15, "icon", ps) %}New</button></a></div>
     <h3><a href="/p">{%s util.StringPlural(len(prjs), "Available Project") %}</a></h3>
@@ -18,6 +19,9 @@
           <th><a href="/p?sort=package">Package</a></th>
           {%- if full -%}
           <th class="shrink"><a href="/p?sort=port">Port</a></th>
+          {%- endif -%}
+          {%- if len(ex) > 0 -%}
+          <th class="shrink">Processes</th>
           {%- endif -%}
           <th class="shrink">Tags</th>
         </tr>
@@ -33,6 +37,14 @@
           <td>{%s prj.Package %}</td>
           {%- if full -%}
           <td><a href="http://localhost:{%d prj.Port %}" title="browse to [http://localhost:{%d prj.Port %}]" target="_blank">{%d prj.Port %}</a></td>
+          {%- endif -%}
+          {%- if len(ex) > 0 -%}
+          <td>
+            {%- code e := ex.GetByKey(prj.Key) -%}
+            {%- if len(e) > 0 -%}
+            <a href="{%s e[len(e) - 1].WebPath() %}">{%d e.Running() %}/{%d len(e) %}</a>
+            {%- endif -%}
+          </td>
           {%- endif -%}
           <td>
             {%- for idx, tag := range prj.Tags -%}

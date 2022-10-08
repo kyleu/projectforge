@@ -13,8 +13,9 @@ import (
 func Home(rc *fasthttp.RequestCtx) {
 	Act("home", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prjs := as.Services.Projects.Projects()
+		execs := as.Services.Exec.Execs
 		mods := as.Services.Modules.Modules()
 		ps.Data = util.ValueMap{"projects": prjs, "modules": mods}
-		return Render(rc, as, &views.Home{Projects: prjs, Modules: mods}, ps)
+		return Render(rc, as, &views.Home{Projects: prjs, Execs: execs, Modules: mods}, ps)
 	})
 }

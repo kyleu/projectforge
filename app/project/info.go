@@ -37,6 +37,7 @@ type Info struct {
 	ConfigVars      util.KeyTypeDescs `json:"configVars,omitempty"`
 	ExtraFiles      []string          `json:"extraFiles,omitempty"`
 	Deployments     []string          `json:"deployments,omitempty"`
+	EnvVars         []string          `json:"envVars,omitempty"`
 	ModuleDefs      ModuleDefs        `json:"moduleDefs,omitempty"`
 }
 

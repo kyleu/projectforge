@@ -44,7 +44,7 @@ func (p *Search) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
   `)
 //line views/vproject/Search.html:21
-	StreamSummary(qw422016, p.Project, "Search", nil, util.ValueMap{"q": p.Params.Q}, nil, ps)
+	StreamSummary(qw422016, p.Project, "Search", nil, util.ValueMap{"q": p.Params.Q}, nil, nil, ps)
 //line views/vproject/Search.html:21
 	qw422016.N().S(`
   `)

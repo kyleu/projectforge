@@ -46,16 +46,12 @@ checksum:
 dockers:
   -
     image_templates:
-      - "ghcr.io/kyleu/projectforge:{{ .Major }}"
-      - "ghcr.io/kyleu/projectforge:{{ .Major }}.{{ .Minor }}"
-      - "ghcr.io/kyleu/projectforge:{{ .Major }}.{{ .Minor }}.{{ .Patch }}"
+      - "ghcr.io/kyleu/projectforge:{{ trimprefix .Tag \"v\" }}"
       - "ghcr.io/kyleu/projectforge:latest"
     dockerfile: ./tools/release/Dockerfile
   -
     image_templates:
-      - "ghcr.io/kyleu/projectforge:{{ .Major }}-debug"
-      - "ghcr.io/kyleu/projectforge:{{ .Major }}.{{ .Minor }}-debug"
-      - "ghcr.io/kyleu/projectforge:{{ .Major }}.{{ .Minor }}.{{ .Patch }}-debug"
+      - "ghcr.io/kyleu/projectforge:{{ trimprefix .Tag \"v\" }}-debug"
       - "ghcr.io/kyleu/projectforge:latest-debug"
     dockerfile: ./tools/release/debug.Dockerfile
 

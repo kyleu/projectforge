@@ -45,7 +45,7 @@
           {% if x.Prj.Key == util.AppKey %}<strong>{% endif %}{%s x.Prj.Title() %}{% if x.Prj.Key == util.AppKey %}</strong>{% endif %}
         </label>
         <div class="bd">
-          {%= vproject.Summary(x.Prj, x.Title(), nil, nil, &x.Res.Action, ps) %}
+          {%= vproject.Summary(x.Prj, x.Title(), nil, nil, &x.Res.Action, nil, ps) %}
           {%= Detail(x.Cfg, x.Res, false, as, ps) %}
         </div>
       </li>

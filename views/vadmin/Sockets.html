@@ -1,0 +1,69 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "strings"
+
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/lib/websocket"
+  "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/layout"
+) %}
+
+{% code type Sockets struct {
+  layout.Basic
+  Channels []string
+  Connections []*websocket.Connection
+  Context any
+} %}
+
+{% func (p *Sockets) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>Channels</h3>
+    <div class="mt">
+      {%- if len(p.Channels) == 0 -%}
+      <em>no active channels</em>
+      {%- else -%}
+      <ul>
+        {%- for _, x := range p.Channels -%}
+        <li>{%s x %}</li>
+        {%- endfor -%}
+      </ul>
+      {%- endif -%}
+    </div>
+  </div>
+  <div class="card">
+    <h3>Active Connections</h3>
+    <div class="mt">
+      {%- if len(p.Connections) == 0 -%}
+      <em>no active connections</em>
+      {%- else -%}
+      <table class="expanded">
+        <thead>
+          <tr>
+            <th class="shrink">ID</th>
+            <th>Profile</th>
+            <th>Service</th>
+            <th>Channels</th>
+          </tr>
+        </thead>
+        <tbody>
+          {%- for _, x := range p.Connections -%}
+          <tr>
+            <td class="shrink">{%s x.ID.String() %}</td>
+            <td>{%s x.Profile.String() %}</td>
+            <td>{%s x.Svc %}</td>
+            <td>{%s strings.Join(x.Channels, ", ") %}</td>
+          </tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+      {%- endif -%}
+    </div>
+  </div>
+  {%- if p.Context != nil -%}
+  <div class="card">
+    <h3>Server Context</h3>
+    {%s= components.JSON(p.Context) %}
+  </div>
+  {%- endif -%}
+{% endfunc %}

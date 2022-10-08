@@ -18,7 +18,7 @@
 
 {% func (p *Packages) Body(as *app.State, ps *cutil.PageState) %}
   {%- code prj := p.Project -%}
-  {%= vproject.Summary(prj, "Packages", nil, nil, &action.TypeBuild, ps) %}
+  {%= vproject.Summary(prj, "Packages", nil, nil, &action.TypeBuild, nil, ps) %}
   {%= BuildOptions(prj.Key) %}
 
   {%- if p.BuildResult != nil && len(p.BuildResult.Errors) > 0 -%}
@@ -60,7 +60,7 @@
             {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef(prj.IconSafe(), 16, 16, "icon", ps) %} {%s prj.Title() %}
           </label>
           <div class="bd">
-            {%= vproject.Summary(prj, "Packages", nil, nil, nil, ps) %}
+            {%= vproject.Summary(prj, "Packages", nil, nil, nil, nil, ps) %}
             {%- if res != nil && len(res.Errors) > 0 -%}
             <div class="card">
               <h3>Error</h3>

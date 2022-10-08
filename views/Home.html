@@ -2,6 +2,7 @@
 {% import (
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/lib/exec"
   "projectforge.dev/projectforge/app/module"
   "projectforge.dev/projectforge/app/project"
   "projectforge.dev/projectforge/app/util"
@@ -14,6 +15,7 @@
 {% code type Home struct {
   layout.Basic
   Projects project.Projects
+  Execs exec.Execs
   Modules module.Modules
 } %}
 
@@ -26,6 +28,6 @@
       <a href="/about"><button>Learn More</button></a>
     </div>
   </div>
-  {%= vproject.Table(p.Projects, nil, false, as, ps) %}
+  {%= vproject.Table(p.Projects, nil, false, p.Execs, as, ps) %}
   {%= vmodule.Table(p.Modules, false, as, ps) %}
 {% endfunc %}

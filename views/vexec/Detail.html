@@ -25,7 +25,7 @@
       <tbody>
         <tr>
           <th>Key</th>
-          <td>{%s p.Exec.Key %}</td>
+          <td>{% if len(p.Exec.Link) > 0 %}<a href="{%s p.Exec.Link %}">{%s p.Exec.Key %}</a>{% else %}{%s p.Exec.Key %}{% endif %}</td>
         </tr>
         <tr>
           <th>Index</th>
@@ -75,4 +75,40 @@
     <h3>{%= components.SVGRef("database", 20, 20, `icon`, ps) %} Output</h3>
     {%= components.DisplayTerminal("console-list", p.Exec.Buffer.String()) %}
   </div>
+
+  <script>
+    function open() {
+      console.log("[socket]: open");
+    }
+    function recv(m) {
+      const tbody = document.getElementById("console-list");
+      const h = m.param["html"].split("\n");
+      for (x in h) {
+        if (h[x] === "") {
+          continue;
+        }
+        const row = document.createElement("tr");
+        row.style.fontFamily = "monospace";
+        const numTD = document.createElement("td");
+        numTD.className = "shrink";
+        numTD.style.padding = "2px var(--padding) 2px 0";
+        numTD.style.borderRight = "var(--border)";
+        numTD.style.verticalAlign = "top";
+        numTD.innerText = (tbody.children.length+1).toString();
+        const textTD = document.createElement("td");
+        textTD.style.padding = "2px var(--padding)";
+        textTD.innerHTML = h[x];
+        row.append(numTD, textTD);
+        tbody.append(row);
+      }
+      const c = document.getElementById("content");
+      c.scrollTo(0, c.scrollHeight);
+    }
+    function err(e) {
+      console.log("[socket error]: " + e);
+    }
+    window.addEventListener('load', () => {
+      new projectforge.Socket(true, open, recv, err, "{%s p.Exec.WebPath() %}/connect");
+    })
+  </script>
 {% endfunc %}

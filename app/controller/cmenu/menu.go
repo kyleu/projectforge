@@ -28,13 +28,12 @@ func MenuFor(ctx context.Context, isAuthed bool, isAdmin bool, as *app.State, lo
 	// $PF_SECTION_END(routes_start)$
 	// $PF_SECTION_START(routes_end)$
 	if isAdmin {
-		ret = append(ret,
-			docMenu(ctx, as, logger),
-			menu.Separator,
-			&menu.Item{Key: "admin", Title: "Settings", Description: "System-wide settings and preferences", Icon: "cog", Route: "/admin"},
-			processMenu(as.Services.Exec.Execs),
-			DoctorMenu("first-aid", "/doctor"),
-		)
+		adm := &menu.Item{Key: "admin", Title: "Settings", Description: "System-wide settings and preferences", Icon: "cog", Route: "/admin"}
+		ret = append(ret, docMenu(ctx, as, logger), menu.Separator, adm)
+		if len(as.Services.Exec.Execs) > 0 {
+			ret = append(ret, processMenu(as.Services.Exec.Execs))
+		}
+		ret = append(ret, DoctorMenu("first-aid", "/doctor"))
 	}
 	const desc = "Get assistance and advice for using " + util.AppName
 	ret = append(ret, &menu.Item{Key: "about", Title: "About", Description: desc, Icon: "question", Route: "/about"})

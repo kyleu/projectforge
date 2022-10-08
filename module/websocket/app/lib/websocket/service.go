@@ -122,6 +122,16 @@ func OnMessage(s *Service, connID uuid.UUID, message *Message) error {
 	return s.handler(s, c, message.Channel, message.Cmd, message.Param)
 }
 
+func (s *Service) Status() ([]string, []*Connection, any) {
+	s.connectionsMu.Lock()
+	defer s.connectionsMu.Unlock()
+	conns := make([]*Connection, 0, len(s.connections))
+	for _, conn := range s.connections {
+		conns = append(conns, conn)
+	}
+	return s.ChannelList(nil), conns, s.Context
+}
+
 // Callback for when the backing connection is closed.
 func (s *Service) OnClose(connID uuid.UUID) error {
 	c, ok := s.connections[connID]

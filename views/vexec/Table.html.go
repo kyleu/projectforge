@@ -31,7 +31,7 @@ var (
 func StreamTable(qw422016 *qt422016.Writer, execs exec.Execs, as *app.State, ps *cutil.PageState) {
 //line views/vexec/Table.html:9
 	qw422016.N().S(`
-  <table class="mt min-200">
+  <table class="mt expanded">
     <thead>
       <tr>
         <th class="shrink">Key</th>

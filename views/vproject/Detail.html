@@ -3,11 +3,13 @@
 
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/lib/exec"
   "projectforge.dev/projectforge/app/project/git"
   "projectforge.dev/projectforge/app/module"
   "projectforge.dev/projectforge/app/project"
   "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/layout"
+  "projectforge.dev/projectforge/views/vexec"
   "projectforge.dev/projectforge/views/vexport"
 ) %}
 
@@ -16,11 +18,12 @@
   Project *project.Project
   Modules module.Modules
   GitResult *git.Result
+  Execs exec.Execs
 } %}
 
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
   {%- code prj := p.Project -%}
-  {%= Summary(prj, "", p.GitResult, nil, nil, ps) %}
+  {%= Summary(prj, "", p.GitResult, nil, nil, p.Execs, ps) %}
 
   <div class="tabs padded">
     <input name="type" type="radio" id="tab-settings" class="input" checked="checked" />
@@ -59,7 +62,6 @@
         {%= vexport.ModelList(ea.Models, fmt.Sprintf("/p/%s/export/models", p.Project.Key), as, ps) %}
       </div>
       {%- endif -%}
-
     {%- endif -%}
 
     <input name="type" type="radio" id="tab-theme" class="input"/>
@@ -69,6 +71,12 @@
     <input name="type" type="radio" id="tab-modules" class="input"/>
     <label for="tab-modules" class="label">Modules</label>
     <div class="panel">{%= DetailModules(prj.Modules, p.Modules, as, ps) %}</div>
+
+    {%- if len(p.Execs) > 0 -%}
+    <input name="type" type="radio" id="tab-execs" class="input"/>
+    <label for="tab-execs" class="label">Processes</label>
+    <div class="panel">{%= vexec.Table(p.Execs, as, ps) %}</div>
+    {%- endif -%}
 
     {%- if prj.Build != nil && !prj.Build.Empty() -%}
     <input name="type" type="radio" id="tab-builds" class="input"/>

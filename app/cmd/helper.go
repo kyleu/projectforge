@@ -4,6 +4,7 @@ import (
 	"context"
 	"strings"
 
+	"projectforge.dev/projectforge/app/lib/exec"
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/project"
@@ -17,8 +18,9 @@ func runToCompletion(ctx context.Context, projectKey string, t action.Type, cfg 
 	mSvc := module.NewService(ctx, fs, _logger)
 	pSvc := project.NewService()
 	eSvc := export.NewService()
+	xSvc := exec.NewService()
 	logger := _logger.With("service", "runner")
-	p := &action.Params{ProjectKey: projectKey, T: t, Cfg: cfg, MSvc: mSvc, PSvc: pSvc, ESvc: eSvc, CLI: true, Logger: logger}
+	p := &action.Params{ProjectKey: projectKey, T: t, Cfg: cfg, MSvc: mSvc, PSvc: pSvc, SSvc: nil, XSvc: xSvc, ESvc: eSvc, CLI: true, Logger: logger}
 	return action.Apply(ctx, p)
 }
 

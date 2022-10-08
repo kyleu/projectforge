@@ -2,6 +2,7 @@
 
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/lib/exec"
   "projectforge.dev/projectforge/app/project"
   "projectforge.dev/projectforge/views/layout"
 ) %}
@@ -9,6 +10,7 @@
 {% code type List struct {
   layout.Basic
   Projects project.Projects
+  Execs exec.Execs
   Tags []string
 } %}
 
@@ -16,5 +18,5 @@
   <div class="card">
     {%= AvailActions("", p.Tags, p.Projects.Tags(), ps) %}
   </div>
-  {%= Table(p.Projects, p.Tags, true, as, ps) %}
+  {%= Table(p.Projects, p.Tags, true, p.Execs, as, ps) %}
 {% endfunc %}

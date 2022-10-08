@@ -17,7 +17,7 @@ func (t *TemplateContext) CIContent() string {
 	case "all":
 		return "on: push"
 	case "tags":
-		return "on:\n  push:\n    tags"
+		return "on:\n  push:\n    tags:\n      - '*'"
 	case "versions":
 		return "on:\n  push:\n    tags:\n      - 'v*'"
 	default:

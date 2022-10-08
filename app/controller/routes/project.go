@@ -19,6 +19,8 @@ func projectRoutes(r *router.Router) {
 	r.GET("/p/{key}/edit", cproject.ProjectEdit)
 	r.POST("/p/{key}/edit", cproject.ProjectSave)
 	r.GET("/p/{key}/stats", cproject.ProjectFileStats)
+	r.GET("/p/{key}/start", cproject.ProjectStart)
+
 	r.GET("/p/{key}/export", cproject.ProjectExportOverview)
 	r.GET("/p/{key}/export/config", cproject.ProjectExportConfigForm)
 	r.POST("/p/{key}/export/config", cproject.ProjectExportConfigSave)

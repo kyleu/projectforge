@@ -34,6 +34,7 @@ type Exec struct {
 	PID       int           `json:"pid"`
 	Completed *time.Time    `json:"completed"`
 	ExitCode  int           `json:"exitCode"`
+	Link      string        `json:"link,omitempty"`
 	Buffer    *bytes.Buffer `json:"-"`
 	execCmd   *exec.Cmd
 }
@@ -46,13 +47,13 @@ func (e *Exec) WebPath() string {
 	return fmt.Sprintf("/admin/exec/%s/%d", e.Key, e.Idx)
 }
 
-func (e *Exec) Start(ctx context.Context, fn func(key string, b []byte) error, logger util.Logger) error {
+func (e *Exec) Start(ctx context.Context, logger util.Logger, fns ...func(key string, b []byte) error) error {
 	if e.Started != nil {
 		return errors.New("process already started")
 	}
 	var w io.Writer = e.Buffer
-	if fn != nil {
-		w = io.MultiWriter(e.Buffer, &writer{Key: e.Key, fn: fn})
+	for _, fn := range fns {
+		w = io.MultiWriter(w, &writer{Key: e.String(), fn: fn})
 	}
 	e.Started = util.NowPointer()
 	cmd, err := util.StartProcess(e.Cmd, e.Path, nil, w, w, e.Env...)

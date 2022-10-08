@@ -45,7 +45,7 @@ func NewService(typ *DBType, key string, dbName string, schName string, username
 	logger = logger.With("database", dbName, "user", username)
 	m, err := dbmetrics.NewMetrics(strings.ReplaceAll(key, "-", "_"), db, logger)
 	if err != nil {
-		logger.Warnf(fmt.Sprintf("unable to register database metrics for [%s]: %+v", key, err))
+		logger.Debugf("unable to register database metrics for [%s]: %+v", key, err)
 	}
 
 	ret := &Service{Key: key, DatabaseName: dbName, SchemaName: schName, Username: username, Debug: debug, Type: typ, db: db, metrics: m}

@@ -16,7 +16,8 @@
     "process",
     "search",
     "types",
-    "upgrade"
+    "upgrade",
+    "websocket"
   ],
   "ignore": [
     "^data",

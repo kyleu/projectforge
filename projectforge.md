@@ -18,3 +18,4 @@ The following modules were used to build this project:
 - [search](./doc/module/search.md)
 - [types](./doc/module/types.md)
 - [upgrade](./doc/module/upgrade.md)
+- [websocket](./doc/module/websocket.md)

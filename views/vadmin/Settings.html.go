@@ -123,13 +123,14 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
         <li><a href="/admin/routes">View HTTP routes</a></li>
         <li><a href="/admin/session">Parse and display session</a></li>
         <li><a href="/admin/request">Debug HTTP request</a></li>
+        <li><a href="/admin/sockets">Active WebSockets</a></li>
       </ul>
     </div>
     <div class="card" style="flex-grow: 1;">
       <h3>`)
-//line views/vadmin/Settings.html:50
+//line views/vadmin/Settings.html:51
 	components.StreamSVGRefIcon(qw422016, `cog`, ps)
-//line views/vadmin/Settings.html:50
+//line views/vadmin/Settings.html:51
 	qw422016.N().S(`App Profiling</h3>
       <ul class="mt">
         <li><a href="/admin/cpu/start">Start CPU profile</a></li>
@@ -140,31 +141,31 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
     </div>
   </div>
 `)
-//line views/vadmin/Settings.html:59
+//line views/vadmin/Settings.html:60
 }
 
-//line views/vadmin/Settings.html:59
+//line views/vadmin/Settings.html:60
 func (p *Settings) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vadmin/Settings.html:59
+//line views/vadmin/Settings.html:60
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vadmin/Settings.html:59
+//line views/vadmin/Settings.html:60
 	p.StreamBody(qw422016, as, ps)
-//line views/vadmin/Settings.html:59
+//line views/vadmin/Settings.html:60
 	qt422016.ReleaseWriter(qw422016)
-//line views/vadmin/Settings.html:59
+//line views/vadmin/Settings.html:60
 }
 
-//line views/vadmin/Settings.html:59
+//line views/vadmin/Settings.html:60
 func (p *Settings) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vadmin/Settings.html:59
+//line views/vadmin/Settings.html:60
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vadmin/Settings.html:59
+//line views/vadmin/Settings.html:60
 	p.WriteBody(qb422016, as, ps)
-//line views/vadmin/Settings.html:59
+//line views/vadmin/Settings.html:60
 	qs422016 := string(qb422016.B)
-//line views/vadmin/Settings.html:59
+//line views/vadmin/Settings.html:60
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vadmin/Settings.html:59
+//line views/vadmin/Settings.html:60
 	return qs422016
-//line views/vadmin/Settings.html:59
+//line views/vadmin/Settings.html:60
 }

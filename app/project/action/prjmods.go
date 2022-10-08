@@ -5,6 +5,8 @@ import (
 
 	"github.com/pkg/errors"
 
+	"projectforge.dev/projectforge/app/lib/exec"
+	"projectforge.dev/projectforge/app/lib/websocket"
 	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/project/export"
@@ -18,6 +20,8 @@ type PrjAndMods struct {
 	Mods   module.Modules
 	MSvc   *module.Service
 	PSvc   *project.Service
+	XSvc   *exec.Service
+	SSvc   *websocket.Service
 	ESvc   *export.Service
 	EArgs  *model.Args
 	Logger util.Logger
@@ -57,6 +61,6 @@ func getPrjAndMods(ctx context.Context, p *Params) (context.Context, *PrjAndMods
 		args.Modules = mods.Keys()
 	}
 
-	pm := &PrjAndMods{Cfg: p.Cfg, Prj: prj, Mods: mods, MSvc: p.MSvc, PSvc: p.PSvc, ESvc: p.ESvc, EArgs: args, Logger: p.Logger}
+	pm := &PrjAndMods{Cfg: p.Cfg, Prj: prj, Mods: mods, MSvc: p.MSvc, PSvc: p.PSvc, XSvc: p.XSvc, ESvc: p.ESvc, EArgs: args, Logger: p.Logger}
 	return ctx, pm, nil
 }

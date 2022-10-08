@@ -105,7 +105,7 @@ func (p *SearchAll) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
         <div class="bd">
           `)
 //line views/vproject/SearchAll.html:40
-		StreamSummary(qw422016, prj, "Search", nil, nil, nil, ps)
+		StreamSummary(qw422016, prj, "Search", nil, nil, nil, nil, ps)
 //line views/vproject/SearchAll.html:40
 		qw422016.N().S(`
           `)

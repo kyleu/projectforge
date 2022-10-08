@@ -24,7 +24,7 @@
       <tbody>
         <tr>
           <th>Key</th>
-          <td>{%s p.Exec.Key %}</td>
+          <td>{% if len(p.Exec.Link) > 0 %}<a href="{%s p.Exec.Link %}">{%s p.Exec.Key %}</a>{% else %}{%s p.Exec.Key %}{% endif %}</td>
         </tr>
         <tr>
           <th>Index</th>

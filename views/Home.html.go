@@ -10,6 +10,7 @@ package views
 import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/lib/exec"
 	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
@@ -19,37 +20,38 @@ import (
 	"projectforge.dev/projectforge/views/vproject"
 )
 
-//line views/Home.html:14
+//line views/Home.html:15
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/Home.html:14
+//line views/Home.html:15
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/Home.html:14
+//line views/Home.html:15
 type Home struct {
 	layout.Basic
 	Projects project.Projects
+	Execs    exec.Execs
 	Modules  module.Modules
 }
 
-//line views/Home.html:20
+//line views/Home.html:22
 func (p *Home) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/Home.html:20
+//line views/Home.html:22
 	qw422016.N().S(`
   <div class="card">
     <h3>`)
-//line views/Home.html:22
+//line views/Home.html:24
 	components.StreamSVGRefIcon(qw422016, `app`, ps)
-//line views/Home.html:22
+//line views/Home.html:24
 	qw422016.E().S(util.AppName)
-//line views/Home.html:22
+//line views/Home.html:24
 	qw422016.N().S(`</h3>
     <div class="mt">
       <div>Project Forge manages web projects written in the Go language.</div>
@@ -58,41 +60,41 @@ func (p *Home) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
     </div>
   </div>
   `)
-//line views/Home.html:29
-	vproject.StreamTable(qw422016, p.Projects, nil, false, as, ps)
-//line views/Home.html:29
+//line views/Home.html:31
+	vproject.StreamTable(qw422016, p.Projects, nil, false, p.Execs, as, ps)
+//line views/Home.html:31
 	qw422016.N().S(`
   `)
-//line views/Home.html:30
+//line views/Home.html:32
 	vmodule.StreamTable(qw422016, p.Modules, false, as, ps)
-//line views/Home.html:30
+//line views/Home.html:32
 	qw422016.N().S(`
 `)
-//line views/Home.html:31
+//line views/Home.html:33
 }
 
-//line views/Home.html:31
+//line views/Home.html:33
 func (p *Home) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/Home.html:31
+//line views/Home.html:33
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/Home.html:31
+//line views/Home.html:33
 	p.StreamBody(qw422016, as, ps)
-//line views/Home.html:31
+//line views/Home.html:33
 	qt422016.ReleaseWriter(qw422016)
-//line views/Home.html:31
+//line views/Home.html:33
 }
 
-//line views/Home.html:31
+//line views/Home.html:33
 func (p *Home) Body(as *app.State, ps *cutil.PageState) string {
-//line views/Home.html:31
+//line views/Home.html:33
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/Home.html:31
+//line views/Home.html:33
 	p.WriteBody(qb422016, as, ps)
-//line views/Home.html:31
+//line views/Home.html:33
 	qs422016 := string(qb422016.B)
-//line views/Home.html:31
+//line views/Home.html:33
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/Home.html:31
+//line views/Home.html:33
 	return qs422016
-//line views/Home.html:31
+//line views/Home.html:33
 }

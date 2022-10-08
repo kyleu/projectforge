@@ -26,7 +26,7 @@
       title = p.BuildResult.Title()
     }
   -%}
-  {%= vproject.Summary(prj, title, p.GitResult, nil, &action.TypeBuild, ps) %}
+  {%= vproject.Summary(prj, title, p.GitResult, nil, &action.TypeBuild, nil, ps) %}
   {%= BuildOptions(prj.Key) %}
   {%- if p.BuildResult != nil -%}
   {%- code br := p.BuildResult -%}

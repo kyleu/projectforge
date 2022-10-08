@@ -56,7 +56,7 @@ func (p *BuildResult) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *c
 //line views/vbuild/BuildResult.html:28
 	qw422016.N().S(`  `)
 //line views/vbuild/BuildResult.html:29
-	vproject.StreamSummary(qw422016, prj, title, p.GitResult, nil, &action.TypeBuild, ps)
+	vproject.StreamSummary(qw422016, prj, title, p.GitResult, nil, &action.TypeBuild, nil, ps)
 //line views/vbuild/BuildResult.html:29
 	qw422016.N().S(`
   `)

@@ -13,12 +13,12 @@ import (
 
 // Represents a user's WebSocket session.
 type Connection struct {
-	ID       uuid.UUID
-	Profile  *user.Profile
-	Accounts user.Accounts
-	Svc      string
-	ModelID  *uuid.UUID
-	Channels []string
+	ID       uuid.UUID     `json:"id"`
+	Profile  *user.Profile `json:"profile,omitempty"`
+	Accounts user.Accounts `json:"accounts,omitempty"`
+	Svc      string        `json:"svc,omitempty"`
+	ModelID  *uuid.UUID    `json:"modelID,omitempty"`
+	Channels []string      `json:"channels,omitempty"`
 	socket   *websocket.Conn
 	mu       sync.Mutex
 }

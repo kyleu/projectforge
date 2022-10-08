@@ -83,6 +83,11 @@ func Admin(rc *fasthttp.RequestCtx) {
 			ps.Title = "Sitemap"
 			ps.Data = ps.Menu
 			return controller.Render(rc, as, &vadmin.Sitemap{}, ps, "admin", "Sitemap")
+		case "sockets":
+			ps.Title = "Sockets"
+			chans, conns, ctx := as.Services.Socket.Status()
+			ps.Data = util.ValueMap{"channels": chans, "connections": conns, "context": ctx}
+			return controller.Render(rc, as, &vadmin.Sockets{Channels: chans, Connections: conns, Context: ctx}, ps, "admin", "Sockets")
 		// $PF_SECTION_START(admin-actions)$
 		// $PF_SECTION_END(admin-actions)$
 		default:

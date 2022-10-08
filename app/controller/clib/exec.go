@@ -2,15 +2,19 @@
 package clib
 
 import (
+	"fmt"
 	"strings"
 
+	fhws "github.com/fasthttp/websocket"
 	"github.com/pkg/errors"
+	"github.com/robert-nix/ansihtml"
 	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/exec"
+	"projectforge.dev/projectforge/app/lib/websocket"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/vexec"
 )
@@ -55,7 +59,12 @@ func ExecNew(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		err = x.Start(ps.Context, nil, ps.Logger)
+		w := func(key string, b []byte) error {
+			m := util.ValueMap{"msg": string(b), "html": string(ansihtml.ConvertToHTML(b))}
+			msg := &websocket.Message{Channel: key, Cmd: "output", Param: util.ToJSONBytes(m, true)}
+			return as.Services.Socket.WriteChannel(msg)
+		}
+		err = x.Start(ps.Context, ps.Logger, w)
 		if err != nil {
 			return "", err
 		}
@@ -65,20 +74,75 @@ func ExecNew(rc *fasthttp.RequestCtx) {
 
 func ExecDetail(rc *fasthttp.RequestCtx) {
 	controller.Act("exec.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := cutil.RCRequiredString(rc, "key", false)
+		ex, err := getExecRC(rc, as)
 		if err != nil {
 			return "", err
 		}
-		idx, err := cutil.RCRequiredInt(rc, "idx")
-		if err != nil {
-			return "", err
-		}
-		proc := as.Services.Exec.Execs.Get(key, idx)
-		if proc == nil {
-			return "", errors.Errorf("no process found with key [%s] and index [%d]", key, idx)
-		}
-		ps.Title = proc.String()
-		ps.Data = proc
-		return controller.Render(rc, as, &vexec.Detail{Exec: proc}, ps, "exec", proc.String())
+		ps.Title = ex.String()
+		ps.Data = ex
+		return controller.Render(rc, as, &vexec.Detail{Exec: ex}, ps, "exec", ex.String())
 	})
+}
+
+var upgrader = fhws.FastHTTPUpgrader{EnableCompression: true}
+
+func ExecSocket(rc *fasthttp.RequestCtx) {
+	controller.Act("exec.socket", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ex, err := getExecRC(rc, as)
+		if err != nil {
+			return "", err
+		}
+		err = upgrader.Upgrade(rc, func(conn *fhws.Conn) {
+			connID, errf := as.Services.Socket.Register(ps.Profile, conn)
+			if errf != nil {
+				ps.Logger.Warn("unable to register websocket connection")
+				return
+			}
+			joined, errf := as.Services.Socket.Join(connID.ID, ex.String())
+			if errf != nil {
+				ps.Logger.Error(fmt.Sprintf("error processing socket join (%v): %+v", joined, errf))
+				return
+			}
+			errf = as.Services.Socket.ReadLoop(connID.ID, nil)
+			if errf != nil {
+				ps.Logger.Error(fmt.Sprintf("error processing socket read loop: %+v", errf))
+				return
+			}
+		})
+		if err != nil {
+			ps.Logger.Warn("unable to upgrade connection to websocket")
+			return "", err
+		}
+		return "", nil
+	})
+}
+
+func ExecKill(rc *fasthttp.RequestCtx) {
+	controller.Act("exec.kill", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		proc, err := getExecRC(rc, as)
+		if err != nil {
+			return "", err
+		}
+		err = proc.Kill()
+		if err != nil {
+			return "", err
+		}
+		return controller.FlashAndRedir(true, fmt.Sprintf("Killed process [%s]", proc.String()), "/admin/exec", rc, ps)
+	})
+}
+
+func getExecRC(rc *fasthttp.RequestCtx, as *app.State) (*exec.Exec, error) {
+	key, err := cutil.RCRequiredString(rc, "key", false)
+	if err != nil {
+		return nil, err
+	}
+	idx, err := cutil.RCRequiredInt(rc, "idx")
+	if err != nil {
+		return nil, err
+	}
+	proc := as.Services.Exec.Execs.Get(key, idx)
+	if proc == nil {
+		return nil, errors.Errorf("no process found with key [%s] and index [%d]", key, idx)
+	}
+	return proc, nil
 }

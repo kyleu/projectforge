@@ -48,7 +48,7 @@ func (p *Deps) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vbuild/Deps.html:20
 	qw422016.N().S(`  `)
 //line views/vbuild/Deps.html:21
-	vproject.StreamSummary(qw422016, prj, "Dependencies", nil, nil, &action.TypeBuild, ps)
+	vproject.StreamSummary(qw422016, prj, "Dependencies", nil, nil, &action.TypeBuild, nil, ps)
 //line views/vbuild/Deps.html:21
 	qw422016.N().S(`
   `)

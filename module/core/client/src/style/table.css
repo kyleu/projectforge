@@ -32,6 +32,10 @@ table thead th {
   font-weight: bold;
 }
 
+table.expanded {
+  width: 100%;
+}
+
 table .shrink {
   width: 1px;
   white-space: nowrap;

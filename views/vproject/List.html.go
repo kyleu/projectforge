@@ -8,72 +8,74 @@ package vproject
 import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/lib/exec"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/views/layout"
 )
 
-//line views/vproject/List.html:9
+//line views/vproject/List.html:10
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vproject/List.html:9
+//line views/vproject/List.html:10
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vproject/List.html:9
+//line views/vproject/List.html:10
 type List struct {
 	layout.Basic
 	Projects project.Projects
+	Execs    exec.Execs
 	Tags     []string
 }
 
-//line views/vproject/List.html:15
+//line views/vproject/List.html:17
 func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vproject/List.html:15
+//line views/vproject/List.html:17
 	qw422016.N().S(`
   <div class="card">
     `)
-//line views/vproject/List.html:17
+//line views/vproject/List.html:19
 	StreamAvailActions(qw422016, "", p.Tags, p.Projects.Tags(), ps)
-//line views/vproject/List.html:17
+//line views/vproject/List.html:19
 	qw422016.N().S(`
   </div>
   `)
-//line views/vproject/List.html:19
-	StreamTable(qw422016, p.Projects, p.Tags, true, as, ps)
-//line views/vproject/List.html:19
+//line views/vproject/List.html:21
+	StreamTable(qw422016, p.Projects, p.Tags, true, p.Execs, as, ps)
+//line views/vproject/List.html:21
 	qw422016.N().S(`
 `)
-//line views/vproject/List.html:20
+//line views/vproject/List.html:22
 }
 
-//line views/vproject/List.html:20
+//line views/vproject/List.html:22
 func (p *List) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vproject/List.html:20
+//line views/vproject/List.html:22
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/List.html:20
+//line views/vproject/List.html:22
 	p.StreamBody(qw422016, as, ps)
-//line views/vproject/List.html:20
+//line views/vproject/List.html:22
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/List.html:20
+//line views/vproject/List.html:22
 }
 
-//line views/vproject/List.html:20
+//line views/vproject/List.html:22
 func (p *List) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vproject/List.html:20
+//line views/vproject/List.html:22
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/List.html:20
+//line views/vproject/List.html:22
 	p.WriteBody(qb422016, as, ps)
-//line views/vproject/List.html:20
+//line views/vproject/List.html:22
 	qs422016 := string(qb422016.B)
-//line views/vproject/List.html:20
+//line views/vproject/List.html:22
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/List.html:20
+//line views/vproject/List.html:22
 	return qs422016
-//line views/vproject/List.html:20
+//line views/vproject/List.html:22
 }
