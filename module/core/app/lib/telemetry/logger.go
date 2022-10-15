@@ -3,16 +3,17 @@ package telemetry
 import (
 	"strings"
 
-	"go.uber.org/zap"
-
 	"{{{ .Package }}}/app/util"
 )
 
 func LoggerFor(logger util.Logger, span *Span) util.Logger {
+	if logger == nil {
+		return nil
+	}
 	if span == nil {
 		return logger
 	}
-	return logger.With(zap.String("trace", span.TraceID()), zap.String("span", span.SpanID()))
+	return logger.With("trace", span.TraceID(), "span", span.SpanID())
 }
 
 type ErrHandler struct {

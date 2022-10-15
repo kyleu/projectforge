@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 	"strconv"
+	"sync"
 
 	"github.com/kirsle/configdir"
 	"github.com/pkg/errors"
@@ -44,7 +45,12 @@ func (f *Flags) Clone(port uint16) *Flags {
 	}
 }
 
+var initMu sync.Mutex
+
 func initIfNeeded() error {
+	initMu.Lock()
+	defer initMu.Unlock()
+
 	if _initialized {
 		return nil
 	}

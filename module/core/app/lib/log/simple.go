@@ -21,7 +21,7 @@ func (e *simpleEncoder) Clone() zapcore.Encoder {
 
 func (e *simpleEncoder) EncodeEntry(entry zapcore.Entry, _ []zapcore.Field) (*buffer.Buffer, error) {
 	ret := e.pool.Get()
-	m := levelToColor[entry.Level].Add(entry.Message)
+	m := levelToColor[entry.Level.String()].Add(entry.Message)
 	ret.AppendString(m)
 	ret.AppendByte('\n')
 	return ret, nil

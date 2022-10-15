@@ -7,7 +7,6 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
-	"go.uber.org/zap"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
@@ -52,11 +51,7 @@ func actComplete(key string, as *app.State, ps *cutil.PageState, rc *fasthttp.Re
 	var redir string
 	ctx, span, logger := telemetry.StartSpan(ps.Context, "controller."+key, ps.Logger)
 	defer span.Complete()
-	logger = logger.With(
-		zap.String("path", string(rc.URI().Path())),
-		zap.String("method", ps.Method),
-		zap.Int("status", status),
-	)
+	logger = logger.With("path", string(rc.URI().Path()), "method", ps.Method, "status", status)
 	ps.Context = ctx
 
 	if ps.ForceRedirect == "" || ps.ForceRedirect == string(rc.URI().Path()) {
@@ -77,7 +72,7 @@ func actComplete(key string, as *app.State, ps *cutil.PageState, rc *fasthttp.Re
 	}
 	elapsedMillis := float64((time.Now().UnixNano()-startNanos)/int64(time.Microsecond)) / float64(1000)
 	defer ps.Close()
-	logger = logger.With(zap.Float64("elapsed", elapsedMillis))
+	logger = logger.With("elapsed", elapsedMillis)
 	logger.Debugf("processed request in [%.3fms] (render: %.3fms)", elapsedMillis, ps.RenderElapsed)
 }
 

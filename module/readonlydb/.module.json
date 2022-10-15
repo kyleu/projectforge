@@ -5,7 +5,7 @@
   "authorName": "Kyle",
   "authorEmail": "kyle@fevo.com",
   "license": "Proprietary",
-  "sourcecode": "https://github.com/fevo-tech/modules/tree/master/readonlydb",
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/readonlydb",
   "configVars": [
     {
       "key": "read_db_host",

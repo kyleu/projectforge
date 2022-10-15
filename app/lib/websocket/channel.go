@@ -14,8 +14,6 @@ type Channel struct {
 	MessageCount int         `json:"messageCount"`
 }
 
-type channels []*Channel
-
 func newChannel(key string) *Channel {
 	return &Channel{Key: key, MemberIDs: []uuid.UUID{}, LastUpdate: time.Now()}
 }

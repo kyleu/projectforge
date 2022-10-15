@@ -98,7 +98,7 @@ func (s *Service) ReadLoop(connID uuid.UUID, onDisconnect func(conn *Connection)
 	for {
 		_, message, err := c.socket.ReadMessage()
 		if err != nil {
-			break
+			return err
 		}
 
 		var m Message
@@ -113,5 +113,4 @@ func (s *Service) ReadLoop(connID uuid.UUID, onDisconnect func(conn *Connection)
 			return errors.Wrap(err, "error handling websocket message")
 		}
 	}
-	return nil
 }

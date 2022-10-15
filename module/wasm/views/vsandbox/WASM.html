@@ -1,0 +1,31 @@
+{% import (
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/util"
+  "{{{ .Package }}}/views/components"
+  "{{{ .Package }}}/views/layout"
+) %}
+
+{% code type WASM struct {
+  layout.Basic
+} %}
+
+{% func (p *WASM) Body(as *app.State, ps *cutil.PageState) %}
+<div class="card">
+  <h3>{%= components.SVGRefIcon(`gift`, ps) %}{%s util.AppName %} WASM</h3>
+</div>
+<script src="/assets/wasm/wasm_exec.js"></script>
+<script>
+  if (!WebAssembly.instantiateStreaming) {
+    WebAssembly.instantiateStreaming = async (resp, importObject) => {
+      const source = await (await resp).arrayBuffer();
+      return await WebAssembly.instantiate(source, importObject);
+    };
+  }
+
+  const go = new Go();
+  WebAssembly.instantiateStreaming(fetch("/assets/wasm/{{{ .Key }}}.wasm"), go.importObject).then((result) => {
+    go.run(result.instance);
+  });
+</script>
+{% endfunc %}

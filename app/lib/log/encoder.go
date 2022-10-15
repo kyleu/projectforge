@@ -49,7 +49,7 @@ func (e *customEncoder) EncodeEntry(entry zapcore.Entry, fields []zapcore.Field)
 	}
 
 	lvl := fmt.Sprintf("%-5v", entry.Level.CapitalString())
-	lvl = levelToColor[entry.Level].Add(lvl)
+	lvl = levelToColor[entry.Level.String()].Add(lvl)
 	tm := entry.Time.Format(timeFormat)
 
 	msg := entry.Message
