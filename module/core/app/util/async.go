@@ -46,7 +46,7 @@ func AsyncCollectMap[T any, K comparable, R any](items []T, k func(item T) K, f 
 			if err == nil {
 				ret[key] = r
 			} else {
-				errs[key] = err
+				errs[key] = errors.Wrapf(err, "error running async function for item [%v]", key)
 			}
 			mu.Unlock()
 			wg.Done()
