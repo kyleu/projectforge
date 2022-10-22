@@ -1,6 +1,7 @@
 package grpc
 
 import (
+	"projectforge.dev/projectforge/app/project/export/enum"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -64,10 +65,14 @@ func idClauseFor(m *model.Model) (string, string) {
 	return "", ""
 }
 
-func grpcParamsFromRequest(m *model.Model, args string, g *golang.File) (*golang.Block, error) {
+func grpcParamsFromRequest(m *model.Model, args string, g *golang.File, enums enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock("grpcParamsFromRequest", "func")
 	pks := m.PKs()
-	ret.W("func %sParamsFromRequest(%s) (%s, error) {", m.Camel(), args, strings.Join(pks.GoTypeKeys(m.Package), ", "))
+	ks, err := pks.GoTypeKeys(m.Package, enums)
+	if err != nil {
+		return nil, err
+	}
+	ret.W("func %sParamsFromRequest(%s) (%s, error) {", m.Camel(), args, strings.Join(ks, ", "))
 	zeroVals := strings.Join(pks.ZeroVals(), ", ")
 	for _, col := range pks {
 		err := grpcArgFor(col, ret, zeroVals, g)

@@ -28,7 +28,11 @@ func Migration(m *model.Model, args *model.Args, addHeader bool) (*file.File, er
 			return nil, err
 		}
 		g.AddBlocks(drop)
-		g.AddBlocks(sqlCreate(m, args.Modules))
+		sc, err := sqlCreate(m, args.Modules)
+		if err != nil {
+			return nil, err
+		}
+		g.AddBlocks(sc)
 	}
 	return g.Render(addHeader)
 }
@@ -47,12 +51,16 @@ func sqlDrop(m *model.Model) (*golang.Block, error) {
 	return ret, nil
 }
 
-func sqlCreate(m *model.Model, modules []string) *golang.Block {
+func sqlCreate(m *model.Model, modules []string) (*golang.Block, error) {
 	ret := golang.NewBlock("SQLCreate", "sql")
 	ret.W("-- {%% func " + m.Proper() + "Create() %%}")
 	ret.W("create table if not exists %q (", m.Name)
 	for _, col := range m.Columns {
-		ret.W("  %q %s,", col.Name, col.ToSQLType())
+		st, err := col.ToSQLType()
+		if err != nil {
+			return nil, err
+		}
+		ret.W("  %q %s,", col.Name, st)
 	}
 	sqlRelations(ret, m)
 	for _, col := range m.Columns {
@@ -77,7 +85,7 @@ func sqlCreate(m *model.Model, modules []string) *golang.Block {
 	}
 	sqlHistory(ret, m, modules)
 	ret.W("-- {%% endfunc %%}")
-	return ret
+	return ret, nil
 }
 
 func addIndex(ret *golang.Block, tbl string, names ...string) {

@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
@@ -27,7 +28,11 @@ func detail(m *model.Model, args *model.Args, addHeader bool) (*file.File, error
 	if m.IsRevision() || m.IsHistory() {
 		g.AddImport(helper.ImpFilter)
 	}
-	g.AddBlocks(exportViewDetailClass(m, args.Models, g), exportViewDetailBody(m, args.Models))
+	vdb, err := exportViewDetailBody(m, args.Models, args.Enums)
+	if err != nil {
+		return nil, err
+	}
+	g.AddBlocks(exportViewDetailClass(m, args.Models, g), vdb)
 	return g.Render(addHeader)
 }
 
@@ -65,7 +70,7 @@ func exportViewDetailClass(m *model.Model, models model.Models, g *golang.Templa
 	return ret
 }
 
-func exportViewDetailBody(m *model.Model, models model.Models) *golang.Block {
+func exportViewDetailBody(m *model.Model, models model.Models, enums enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock("DetailBody", "func")
 	ret.W("{%% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %%}")
 	ret.W("  <div class=\"card\">")
@@ -79,7 +84,11 @@ func exportViewDetailBody(m *model.Model, models model.Models) *golang.Block {
 	ret.W("      <tbody>")
 	for _, col := range m.Columns {
 		ret.W("        <tr>")
-		ret.W(`          <th class="shrink" title="%s">%s</th>`, col.Help(), col.Title())
+		h, err := col.Help(enums)
+		if err != nil {
+			return nil, err
+		}
+		ret.W(`          <th class="shrink" title="%s">%s</th>`, h, col.Title())
 		viewTableColumn(ret, models, m, false, col, "p.Model.", "p.", 5)
 		ret.W("        </tr>")
 	}
@@ -87,7 +96,9 @@ func exportViewDetailBody(m *model.Model, models model.Models) *golang.Block {
 	ret.W("    </table>")
 	ret.W("  </div>")
 	if m.IsRevision() {
-		exportViewDetailRevisions(ret, m)
+		if err := exportViewDetailRevisions(ret, m, enums); err != nil {
+			return nil, err
+		}
 	}
 	if m.IsHistory() {
 		ret.W("  {%%- if len(p.Histories) > 0 -%%}")
@@ -102,7 +113,7 @@ func exportViewDetailBody(m *model.Model, models model.Models) *golang.Block {
 	exportViewDetailRelations(ret, m, models)
 	ret.W("  {%%%%= components.JSONModal(%q, \"%s JSON\", p.Model, 1) %%%%}", m.Camel(), m.Title())
 	ret.W("{%% endfunc %%}")
-	return ret
+	return ret, nil
 }
 
 func exportViewDetailRelations(ret *golang.Block, m *model.Model, models model.Models) {

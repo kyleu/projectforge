@@ -104,7 +104,7 @@ func grpcFile(m *model.Model, args *model.Args, ga *FileArgs, addHeader bool) (*
 		grpcDelete(m, grpcArgs, grpcRet, ga),
 	)
 	if ga.Grp == nil {
-		b, err := grpcParamsFromRequest(m, grpcArgs, g)
+		b, err := grpcParamsFromRequest(m, grpcArgs, g, args.Enums)
 		if err != nil {
 			return nil, err
 		}

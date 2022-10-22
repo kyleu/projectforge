@@ -7,6 +7,7 @@ import (
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project/export/files/controller"
+	"projectforge.dev/projectforge/app/project/export/files/goenum"
 	"projectforge.dev/projectforge/app/project/export/files/sql"
 	"projectforge.dev/projectforge/app/project/export/model"
 	"projectforge.dev/projectforge/app/util"
@@ -16,13 +17,21 @@ func All(ctx context.Context, args *model.Args, addHeader bool, logger util.Logg
 	if err := args.Validate(); err != nil {
 		return nil, errors.Wrap(err, "invalid export arguments")
 	}
-	ret := make(file.Files, 0, len(args.Models)*10)
+	ret := make(file.Files, 0, (len(args.Models)*10)+len(args.Enums))
+
+	for _, e := range args.Enums {
+		call, err := goenum.Enum(e, args, addHeader)
+		if err != nil {
+			return nil, errors.Wrapf(err, "error processing enum [%s]", e.Name)
+		}
+		ret = append(ret, call)
+	}
+
 	for _, m := range args.Models {
 		calls, err := ModelAll(m, args, addHeader)
 		if err != nil {
 			return nil, errors.Wrapf(err, "error processing model [%s]", m.Name)
 		}
-
 		ret = append(ret, calls...)
 	}
 
@@ -45,7 +54,7 @@ func All(ctx context.Context, args *model.Args, addHeader bool, logger util.Logg
 	ret = append(ret, x)
 
 	if args.HasModule("migration") {
-		f, err := sql.MigrationAll(args.Models.Sorted(), addHeader)
+		f, err := sql.MigrationAll(args.Models.Sorted(), args.Enums, addHeader)
 		if err != nil {
 			return nil, errors.Wrap(err, "can't render SQL \"all\" migration")
 		}
@@ -55,6 +64,13 @@ func All(ctx context.Context, args *model.Args, addHeader bool, logger util.Logg
 		f, err := sql.SeedDataAll(args.Models)
 		if err != nil {
 			return nil, errors.Wrap(err, "can't render SQL \"all\" migration")
+		}
+		ret = append(ret, f)
+	}
+	if len(args.Enums) > 0 {
+		f, err := sql.Types(args.Enums, addHeader)
+		if err != nil {
+			return nil, errors.Wrap(err, "can't render SQL types")
 		}
 		ret = append(ret, f)
 	}

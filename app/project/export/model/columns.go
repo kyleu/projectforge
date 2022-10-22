@@ -2,6 +2,7 @@ package model
 
 import (
 	"fmt"
+	"projectforge.dev/projectforge/app/project/export/enum"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -158,12 +159,16 @@ func (c Columns) Smushed() string {
 	return strings.Join(ret, "")
 }
 
-func (c Columns) Args(pkg string) string {
+func (c Columns) Args(pkg string, enums enum.Enums) (string, error) {
 	args := make([]string, 0, len(c))
 	for _, col := range c {
-		args = append(args, fmt.Sprintf("%s %s", col.Camel(), col.ToGoType(pkg)))
+		gt, err := col.ToGoType(pkg, enums)
+		if err != nil {
+			return "", err
+		}
+		args = append(args, fmt.Sprintf("%s %s", col.Camel(), gt))
 	}
-	return strings.Join(args, ", ")
+	return strings.Join(args, ", "), nil
 }
 
 func (c Columns) Refs() string {
@@ -182,44 +187,60 @@ func (c Columns) WhereClause(offset int) string {
 	return strings.Join(wc, " and ")
 }
 
-func (c Columns) GoTypeKeys(pkg string) []string {
+func (c Columns) GoTypeKeys(pkg string, enums enum.Enums) ([]string, error) {
 	ret := make([]string, 0, len(c))
 	for _, x := range c {
-		ret = append(ret, ToGoType(x.Type, x.Nullable, pkg))
+		gt, err := ToGoType(x.Type, x.Nullable, pkg, enums)
+		if err != nil {
+			return nil, err
+		}
+
+		ret = append(ret, gt)
 	}
-	return ret
+	return ret, nil
 }
 
-func (c Columns) GoTypes(pkg string) []string {
+func (c Columns) GoTypes(pkg string, enums enum.Enums) ([]string, error) {
 	ret := make([]string, 0, len(c))
 	for _, x := range c {
-		ret = append(ret, x.ToGoType(pkg))
+		gt, err := x.ToGoType(pkg, enums)
+		if err != nil {
+			return nil, err
+		}
+		ret = append(ret, gt)
 	}
-	return ret
+	return ret, nil
 }
 
-func (c Columns) GoDTOTypeKeys(pkg string) []string {
+func (c Columns) GoDTOTypeKeys(pkg string, enums enum.Enums) ([]string, error) {
 	ret := make([]string, 0, len(c))
 	for _, x := range c {
-		ret = append(ret, ToGoDTOType(x.Type, x.Nullable, pkg))
+		gdt, err := ToGoDTOType(x.Type, x.Nullable, pkg, enums)
+		if err != nil {
+			return nil, err
+		}
+		ret = append(ret, gdt)
 	}
-	return ret
+	return ret, nil
 }
 
 func (c Columns) MaxCamelLength() int {
 	return util.StringArrayMaxLength(c.CamelNames())
 }
 
-func (c Columns) MaxGoTypeLength(pkg string) int {
-	return util.StringArrayMaxLength(c.GoTypes(pkg))
+func (c Columns) MaxGoTypeLength(pkg string, enums enum.Enums) int {
+	gt, _ := c.GoTypes(pkg, enums)
+	return util.StringArrayMaxLength(gt)
 }
 
-func (c Columns) MaxGoKeyLength(pkg string) int {
-	return util.StringArrayMaxLength(c.GoTypeKeys(pkg))
+func (c Columns) MaxGoKeyLength(pkg string, enums enum.Enums) int {
+	ks, _ := c.GoTypeKeys(pkg, enums)
+	return util.StringArrayMaxLength(ks)
 }
 
-func (c Columns) MaxGoDTOKeyLength(pkg string) int {
-	return util.StringArrayMaxLength(c.GoDTOTypeKeys(pkg))
+func (c Columns) MaxGoDTOKeyLength(pkg string, enums enum.Enums) int {
+	ks, _ := c.GoDTOTypeKeys(pkg, enums)
+	return util.StringArrayMaxLength(ks)
 }
 
 func (c Columns) ForDisplay(k string) Columns {

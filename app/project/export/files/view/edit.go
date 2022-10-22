@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
@@ -11,12 +12,16 @@ import (
 
 func edit(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "Edit.html")
-	for _, imp := range helper.ImportsForTypes("webedit", m.Columns.Types()...) {
+	for _, imp := range helper.ImportsForTypes("webedit", args.Enums, m.Columns.Types()...) {
 		g.AddImport(imp)
 	}
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpLayout)
 	g.AddImport(helper.AppImport("app/" + m.PackageWithGroup("")))
-	g.AddBlocks(exportViewEditClass(m), exportViewEditBody(m))
+	veb, err := exportViewEditBody(m, args.Enums)
+	if err != nil {
+		return nil, err
+	}
+	g.AddBlocks(exportViewEditClass(m), veb)
 	return g.Render(addHeader)
 }
 
@@ -30,7 +35,7 @@ func exportViewEditClass(m *model.Model) *golang.Block {
 	return ret
 }
 
-func exportViewEditBody(m *model.Model) *golang.Block {
+func exportViewEditBody(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	editURL := "/" + m.Route()
 	for _, pk := range m.PKs() {
 		editURL += "/{%% " + pk.ToGoString("p.Model.") + " %%}"
@@ -54,7 +59,10 @@ func exportViewEditBody(m *model.Model) *golang.Block {
 	ret.W("        <tbody>")
 	editCols := m.Columns.WithoutTag("created").WithoutTag("updated")
 	for _, col := range editCols {
-		call := col.ToGoEditString("p.Model.", col.Format)
+		call, err := col.ToGoEditString("p.Model.", col.Format, enums)
+		if err != nil {
+			return nil, err
+		}
 		if col.PK {
 			ret.W("          {%% if p.IsNew %%}" + call + "{%% endif %%}")
 		} else {
@@ -67,5 +75,5 @@ func exportViewEditBody(m *model.Model) *golang.Block {
 	ret.W("    </form>")
 	ret.W("  </div>")
 	ret.W("{%% endfunc %%}")
-	return ret
+	return ret, nil
 }

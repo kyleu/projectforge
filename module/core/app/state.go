@@ -42,19 +42,6 @@ type State struct {
 	Started   time.Time
 }
 
-func (s State) Close(ctx context.Context, logger util.Logger) error {
-	{{{ if .HasModule "migration" }}}if err := s.DB.Close(); err != nil {
-		logger.Errorf("error closing database: %+v", err)
-	}
-	{{{ end }}}{{{ if .HasModule "readonlydb" }}}if err := s.DBRead.Close(); err != nil {
-		logger.Errorf("error closing read-only database: %+v", err)
-	}
-	{{{ end }}}{{{ if .HasModule "graphql" }}}if err := s.GraphQL.Close(); err != nil {
-		logger.Errorf("error closing GraphQL service: %+v", err)
-	}
-	{{{ end }}}return s.Services.Close(ctx, logger)
-}
-
 func NewState(debug bool, bi *BuildInfo{{{ if .HasModule "filesystem" }}}, f filesystem.FileLoader{{{ end }}}, enableTelemetry bool, logger util.Logger) (*State, error) {
 	loc, err := time.LoadLocation("UTC")
 	if err != nil {
@@ -76,4 +63,17 @@ func NewState(debug bool, bi *BuildInfo{{{ if .HasModule "filesystem" }}}, f fil
 		Themes:    ts,
 		Started:   time.Now(),
 	}, nil
+}
+
+func (s State) Close(ctx context.Context, logger util.Logger) error {
+	{{{ if .HasModule "migration" }}}if err := s.DB.Close(); err != nil {
+		logger.Errorf("error closing database: %+v", err)
+	}
+	{{{ end }}}{{{ if .HasModule "readonlydb" }}}if err := s.DBRead.Close(); err != nil {
+		logger.Errorf("error closing read-only database: %+v", err)
+	}
+	{{{ end }}}{{{ if .HasModule "graphql" }}}if err := s.GraphQL.Close(); err != nil {
+		logger.Errorf("error closing GraphQL service: %+v", err)
+	}
+	{{{ end }}}return s.Services.Close(ctx, logger)
 }

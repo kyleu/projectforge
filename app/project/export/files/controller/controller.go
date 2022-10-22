@@ -19,7 +19,7 @@ func Controller(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 		fn = m.GroupString("c", "") + "/" + fn
 	}
 	g := golang.NewFile(m.LastGroup("c", "controller"), []string{"app", "controller"}, fn)
-	for _, imp := range helper.ImportsForTypes("parse", m.PKs().Types()...) {
+	for _, imp := range helper.ImportsForTypes("parse", args.Enums, m.PKs().Types()...) {
 		g.AddImport(imp)
 	}
 	if len(m.Group) > 0 {
@@ -33,7 +33,11 @@ func Controller(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 	if len(m.Group) > 0 {
 		prefix = defaultPrefix
 	}
-	g.AddBlocks(controllerList(m, nil, args.Models, g, prefix), controllerDetail(args.Models, m, nil, prefix))
+	cl, err := controllerList(m, nil, args.Models, args.Enums, g, prefix)
+	if err != nil {
+		return nil, err
+	}
+	g.AddBlocks(cl, controllerDetail(args.Models, m, nil, prefix))
 	if m.IsRevision() {
 		g.AddBlocks(controllerRevision(m, prefix))
 	}

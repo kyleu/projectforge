@@ -2,6 +2,7 @@ package svc
 
 import (
 	"fmt"
+	"projectforge.dev/projectforge/app/project/export/enum"
 	"strings"
 
 	"golang.org/x/exp/slices"
@@ -15,7 +16,7 @@ import (
 func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	dbRef := args.DBRef()
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "serviceget")
-	for _, imp := range helper.ImportsForTypes("go", m.PKs().Types()...) {
+	for _, imp := range helper.ImportsForTypes("go", args.Enums, m.PKs().Types()...) {
 		g.AddImport(imp)
 	}
 	if len(m.PKs()) > 1 {
@@ -26,9 +27,17 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 	g.AddBlocks(serviceCount(g, m, args.DBRef()))
 	pkLen := len(m.PKs())
 	if pkLen > 0 {
-		g.AddBlocks(serviceGetByPK(m, dbRef))
+		gbpk, err := serviceGetByPK(m, dbRef, args.Enums)
+		if err != nil {
+			return nil, err
+		}
+		g.AddBlocks(gbpk)
 		if pkLen == 1 {
-			g.AddBlocks(serviceGetMultipleSinglePK(m, dbRef))
+			x, err := serviceGetMultipleSinglePK(m, dbRef, args.Enums)
+			if err != nil {
+				return nil, err
+			}
+			g.AddBlocks(x)
 		} else {
 			g.AddBlocks(serviceGetMultipleManyPKs(m, dbRef))
 		}
@@ -57,20 +66,32 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 	for _, key := range keys {
 		cols := getBys[key]
 		name := "GetBy" + strings.Join(cols.ProperNames(), "")
-		for _, imp := range helper.ImportsForTypes("go", cols.Types()...) {
+		for _, imp := range helper.ImportsForTypes("go", args.Enums, cols.Types()...) {
 			g.AddImport(imp)
 		}
-		g.AddBlocks(serviceGetBy(name, m, cols, true, dbRef))
+		gb, err := serviceGetBy(name, m, cols, true, dbRef, args.Enums)
+		if err != nil {
+			return nil, err
+		}
+		g.AddBlocks(gb)
 	}
 
 	if len(m.Search) > 0 {
 		g.AddImport(helper.ImpStrings)
-		g.AddBlocks(serviceSearch(m, nil, dbRef))
+		ss, err := serviceSearch(m, nil, dbRef, args.Enums)
+		if err != nil {
+			return nil, err
+		}
+		g.AddBlocks(ss)
 	}
 	for _, grp := range m.GroupedColumns() {
 		if !grp.PK {
 			if len(m.Search) > 0 {
-				g.AddBlocks(serviceSearch(m, grp, dbRef))
+				ss, err := serviceSearch(m, grp, dbRef, args.Enums)
+				if err != nil {
+					return nil, err
+				}
+				g.AddBlocks(ss)
 			}
 		}
 	}
@@ -150,24 +171,28 @@ func serviceCount(g *golang.File, m *model.Model, dbRef string) *golang.Block {
 	return ret
 }
 
-func serviceGetByPK(m *model.Model, dbRef string) *golang.Block {
-	return serviceGetBy("Get", m, m.PKs(), false, dbRef)
+func serviceGetByPK(m *model.Model, dbRef string, enums enum.Enums) (*golang.Block, error) {
+	return serviceGetBy("Get", m, m.PKs(), false, dbRef, enums)
 }
 
-func serviceGetBy(key string, m *model.Model, cols model.Columns, returnMultiple bool, dbRef string) *golang.Block {
+func serviceGetBy(key string, m *model.Model, cols model.Columns, returnMultiple bool, dbRef string, enums enum.Enums) (*golang.Block, error) {
 	if returnMultiple {
-		return serviceGetByCols(key, m, cols, dbRef)
+		return serviceGetByCols(key, m, cols, dbRef, enums)
 	}
-	return serviceGet(key, m, cols, dbRef)
+	return serviceGet(key, m, cols, dbRef, enums)
 }
 
-func serviceGet(key string, m *model.Model, cols model.Columns, dbRef string) *golang.Block {
+func serviceGet(key string, m *model.Model, cols model.Columns, dbRef string, enums enum.Enums) (*golang.Block, error) {
 	if key == "" {
 		key = "GetBy" + cols.Smushed()
 	}
 	ret := golang.NewBlock(key, "func")
 	msg := "func (s *Service) %s(ctx context.Context, tx *sqlx.Tx, %s%s, logger util.Logger) (*%s, error) {"
-	ret.W(msg, key, cols.Args(m.Package), getSuffix(m), m.Proper())
+	args, err := cols.Args(m.Package, enums)
+	if err != nil {
+		return nil, err
+	}
+	ret.W(msg, key, args, getSuffix(m), m.Proper())
 	ret.W("\twc := defaultWC(0)")
 	if m.IsSoftDelete() {
 		ret.W("\twc = addDeletedClause(wc, includeDeleted)")
@@ -185,16 +210,20 @@ func serviceGet(key string, m *model.Model, cols model.Columns, dbRef string) *g
 	ret.W("\t}")
 	ret.W("\treturn ret.To%s(), nil", m.Proper())
 	ret.W("}")
-	return ret
+	return ret, nil
 }
 
-func serviceGetByCols(key string, m *model.Model, cols model.Columns, dbRef string) *golang.Block {
+func serviceGetByCols(key string, m *model.Model, cols model.Columns, dbRef string, enums enum.Enums) (*golang.Block, error) {
 	if key == "" {
 		key = "GetBy" + cols.Smushed()
 	}
 	ret := golang.NewBlock(key, "func")
 	msg := "func (s *Service) %s(ctx context.Context, tx *sqlx.Tx, %s, params *filter.Params%s, logger util.Logger) (%s, error) {"
-	ret.W(msg, key, cols.Args(m.Package), getSuffix(m), m.ProperPlural())
+	args, err := cols.Args(m.Package, enums)
+	if err != nil {
+		return nil, err
+	}
+	ret.W(msg, key, args, getSuffix(m), m.ProperPlural())
 	ret.W("\tparams = filters(params)")
 	ret.W("\twc := %q", cols.WhereClause(0))
 	if m.IsSoftDelete() {
@@ -213,7 +242,7 @@ func serviceGetByCols(key string, m *model.Model, cols model.Columns, dbRef stri
 	ret.W("\t}")
 	ret.W("\treturn ret.To%s(), nil", m.ProperPlural())
 	ret.W("}")
-	return ret
+	return ret, nil
 }
 
 func serviceListSQL(m *model.Model, dbRef string) *golang.Block {

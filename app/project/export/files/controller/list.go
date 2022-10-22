@@ -2,13 +2,14 @@ package controller
 
 import (
 	"fmt"
+	"projectforge.dev/projectforge/app/project/export/enum"
 
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func controllerList(m *model.Model, grp *model.Column, models model.Models, g *golang.File, prefix string) *golang.Block {
+func controllerList(m *model.Model, grp *model.Column, models model.Models, enums enum.Enums, g *golang.File, prefix string) (*golang.Block, error) {
 	ret := blockFor(m, prefix, grp, "list")
 	meth := "List"
 	grpArgs := ""
@@ -38,11 +39,15 @@ func controllerList(m *model.Model, grp *model.Column, models model.Models, g *g
 			continue
 		}
 		srcCol := m.Columns.Get(rel.Src[0])
-		for _, imp := range helper.ImportsForTypes("go", srcCol.Type) {
+		for _, imp := range helper.ImportsForTypes("go", enums, srcCol.Type) {
 			g.AddImport(imp)
 		}
+		gt, err := model.ToGoType(srcCol.Type, srcCol.Nullable, m.Package, enums)
+		if err != nil {
+			return nil, err
+		}
 
-		ret.W("\t\t%sIDs := make([]%s, 0, len(ret))", relModel.Camel(), model.ToGoType(srcCol.Type, srcCol.Nullable, m.Package))
+		ret.W("\t\t%sIDs := make([]%s, 0, len(ret))", relModel.Camel(), gt)
 		ret.W("\t\tfor _, x := range ret {")
 		ret.W("\t\t\t%sIDs = append(%sIDs, x.%s)", relModel.Camel(), relModel.Camel(), srcCol.Proper())
 		ret.W("\t\t}")
@@ -62,5 +67,5 @@ func controllerList(m *model.Model, grp *model.Column, models model.Models, g *g
 	ret.W(render, prefix, m.Package, toStrings, m.Breadcrumbs(), grp.BC())
 	ret.W("\t})")
 	ret.W("}")
-	return ret
+	return ret, nil
 }

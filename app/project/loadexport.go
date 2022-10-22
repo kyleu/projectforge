@@ -11,6 +11,7 @@ import (
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/project/export/data"
+	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/model"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -41,6 +42,13 @@ func (s *Service) loadExportArgs(fs filesystem.FileLoader, logger util.Logger) (
 			args.Groups = grps
 		}
 	}
+
+	enums, err := getEnums(exportPath, fs, logger)
+	if err != nil {
+		return nil, err
+	}
+	args.Enums = enums
+
 	explicitModels, err := getModels(exportPath, fs, logger)
 	if err != nil {
 		return nil, err
@@ -60,6 +68,29 @@ func (s *Service) loadExportArgs(fs filesystem.FileLoader, logger util.Logger) (
 	}
 
 	return args, nil
+}
+
+func getEnums(exportPath string, fs filesystem.FileLoader, logger util.Logger) (enum.Enums, error) {
+	enumsPath := filepath.Join(exportPath, "enums")
+	if !fs.IsDir(enumsPath) {
+		return nil, nil
+	}
+	enumNames := fs.ListJSON(enumsPath, nil, false, logger)
+	enums := make(enum.Enums, 0, len(enumNames))
+	for _, enumName := range enumNames {
+		fn := filepath.Join(enumsPath, enumName)
+		content, err := fs.ReadFile(fn)
+		if err != nil {
+			return nil, errors.Wrapf(err, "unable to read export enum file from [%s]", fn)
+		}
+		m := &enum.Enum{}
+		err = util.FromJSON(content, m)
+		if err != nil {
+			return nil, errors.Wrapf(err, "unable to read export enum JSON from [%s]", fn)
+		}
+		enums = append(enums, m)
+	}
+	return enums, nil
 }
 
 func getModels(exportPath string, fs filesystem.FileLoader, logger util.Logger) (model.Models, error) {

@@ -2,6 +2,7 @@ package gomodel
 
 import (
 	"fmt"
+	"projectforge.dev/projectforge/app/project/export/enum"
 	"strings"
 
 	"projectforge.dev/projectforge/app/file"
@@ -13,22 +14,34 @@ import (
 
 func History(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, m.Camel()+"history")
-	for _, imp := range helper.ImportsForTypes("go", m.Columns.Types()...) {
+	for _, imp := range helper.ImportsForTypes("go", args.Enums, m.Columns.Types()...) {
 		g.AddImport(imp)
 	}
 	g.AddImport(helper.ImpJSON, helper.ImpUUID, helper.ImpAppUtil)
-	g.AddBlocks(modelHistory(m), modelHistoryToData(m), modelHistories(m), modelHistoryDTO(m), modelHistoryDTOToHistory(m), modelHistoryDTOs(m))
+	mh, err := modelHistory(m, args.Enums)
+	if err != nil {
+		return nil, err
+	}
+	dto, err := modelHistoryDTO(m, args.Enums)
+	if err != nil {
+		return nil, err
+	}
+	g.AddBlocks(mh, modelHistoryToData(m), modelHistories(m), dto, modelHistoryDTOToHistory(m), modelHistoryDTOs(m))
 	return g.Render(addHeader)
 }
 
-func modelHistory(m *model.Model) *golang.Block {
+func modelHistory(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock(m.Proper()+"History", "struct")
 	ret.W("type History struct {")
 	max := m.PKs().MaxCamelLength() + len(m.Camel())
 	tmax := 13
 	ret.W("\t%s %s `json:\"id\"`", util.StringPad("ID", max), util.StringPad("uuid.UUID", tmax))
 	for _, pk := range m.PKs() {
-		goType := util.StringPad(pk.ToGoType(m.Package), tmax)
+		gt, err := pk.ToGoType(m.Package, enums)
+		if err != nil {
+			return nil, err
+		}
+		goType := util.StringPad(gt, tmax)
 		ret.W("\t%s %s `json:\"%s%s\"`", util.StringPad(m.Proper()+pk.Proper(), max), goType, m.Camel(), pk.Proper())
 	}
 	ret.W("\t%s util.ValueMap `json:\"o,omitempty\"`", util.StringPad("Old", max))
@@ -36,7 +49,7 @@ func modelHistory(m *model.Model) *golang.Block {
 	ret.W("\t%s util.Diffs    `json:\"c,omitempty\"`", util.StringPad("Changes", max))
 	ret.W("\t%s time.Time     `json:\"created\"`", util.StringPad("Created", max))
 	ret.W("}")
-	return ret
+	return ret, nil
 }
 
 func modelHistoryToData(m *model.Model) *golang.Block {
@@ -62,14 +75,18 @@ func modelHistories(m *model.Model) *golang.Block {
 	return ret
 }
 
-func modelHistoryDTO(m *model.Model) *golang.Block {
+func modelHistoryDTO(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock(m.Proper()+"HistoryDTO", "struct")
 	ret.W("type historyDTO struct {")
 	max := m.PKs().MaxCamelLength() + len(m.Camel())
 	tmax := 15
 	ret.W("\t%s %s `db:\"id\"`", util.StringPad("ID", max), util.StringPad("uuid.UUID", tmax))
 	for _, pk := range m.PKs() {
-		goType := util.StringPad(pk.ToGoType(m.Package), tmax)
+		gt, err := pk.ToGoType(m.Package, enums)
+		if err != nil {
+			return nil, err
+		}
+		goType := util.StringPad(gt, tmax)
 		ret.W("\t%s %s `db:\"%s_%s\"`", util.StringPad(m.Proper()+pk.Proper(), max), goType, m.Name, pk.Name)
 	}
 	ret.W("\t%s json.RawMessage `db:\"o\"`", util.StringPad("Old", max))
@@ -77,7 +94,7 @@ func modelHistoryDTO(m *model.Model) *golang.Block {
 	ret.W("\t%s json.RawMessage `db:\"c\"`", util.StringPad("Changes", max))
 	ret.W("\t%s time.Time       `db:\"created\"`", util.StringPad("Created", max))
 	ret.W("}")
-	return ret
+	return ret, nil
 }
 
 func modelHistoryDTOToHistory(m *model.Model) *golang.Block {

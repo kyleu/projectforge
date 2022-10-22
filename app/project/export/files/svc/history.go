@@ -2,6 +2,7 @@ package svc
 
 import (
 	"fmt"
+	"projectforge.dev/projectforge/app/project/export/enum"
 	"strings"
 
 	"projectforge.dev/projectforge/app/file"
@@ -16,7 +17,11 @@ func ServiceHistory(m *model.Model, args *model.Args, addHeader bool) (*file.Fil
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "servicehistory")
 	g.AddImport(helper.ImpContext, helper.ImpUUID, helper.ImpErrors, helper.ImpFmt, helper.ImpTime, helper.ImpStrings)
 	g.AddImport(helper.ImpSQLx, helper.ImpAppUtil, helper.ImpDatabase)
-	g.AddBlocks(serviceHistoryVars(m), serviceHistoryGetHistory(m, dbRef), serviceHistoryGetHistories(m, dbRef), serviceHistorySaveHistory(m))
+	gh, err := serviceHistoryGetHistories(m, dbRef, args.Enums)
+	if err != nil {
+		return nil, err
+	}
+	g.AddBlocks(serviceHistoryVars(m), serviceHistoryGetHistory(m, dbRef), gh, serviceHistorySaveHistory(m))
 	return g.Render(addHeader)
 }
 
@@ -53,10 +58,14 @@ func serviceHistoryGetHistory(m *model.Model, dbRef string) *golang.Block {
 	return ret
 }
 
-func serviceHistoryGetHistories(m *model.Model, dbRef string) *golang.Block {
+func serviceHistoryGetHistories(m *model.Model, dbRef string, enums enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock("GetHistories", "func")
 	msg := "func (s *Service) GetHistories(ctx context.Context, tx *sqlx.Tx, %s, logger util.Logger) (Histories, error) {"
-	ret.W(msg, m.PKs().Args(m.Package))
+	args, err := m.PKs().Args(m.Package, enums)
+	if err != nil {
+		return nil, err
+	}
+	ret.W(msg, args)
 	pks := m.PKs()
 	joins := make([]string, 0, len(pks))
 	logs := make([]string, 0, len(pks))
@@ -73,7 +82,7 @@ func serviceHistoryGetHistories(m *model.Model, dbRef string) *golang.Block {
 	ret.W("\t}")
 	ret.W("\treturn ret.ToHistories(), nil")
 	ret.W("}")
-	return ret
+	return ret, nil
 }
 
 func serviceHistorySaveHistory(m *model.Model) *golang.Block {

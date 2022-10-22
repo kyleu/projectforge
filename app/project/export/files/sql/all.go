@@ -2,29 +2,36 @@ package sql
 
 import (
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func MigrationAll(models model.Models, addHeader bool) (*file.File, error) {
+func MigrationAll(models model.Models, enums enum.Enums, addHeader bool) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"queries", "ddl"}, "all.sql")
-	g.AddBlocks(sqlDropAll(models), sqlCreateAll(models))
+	g.AddBlocks(sqlDropAll(models, enums), sqlCreateAll(models, enums))
 	return g.Render(addHeader)
 }
 
-func sqlDropAll(models model.Models) *golang.Block {
+func sqlDropAll(models model.Models, enums enum.Enums) *golang.Block {
 	ret := golang.NewBlock("SQLDropAll", "sql")
 	ret.W("-- {%% func DropAll() %%}")
 	for i := len(models) - 1; i >= 0; i-- {
 		ret.W("-- {%%%%= %sDrop() %%%%}", models[i].Proper())
 	}
+	if len(enums) > 1 {
+		ret.W("-- {%%= TypesDrop() %%}")
+	}
 	ret.W("-- {%% endfunc %%}")
 	return ret
 }
 
-func sqlCreateAll(models model.Models) *golang.Block {
+func sqlCreateAll(models model.Models, enums enum.Enums) *golang.Block {
 	ret := golang.NewBlock("SQLCreateAll", "sql")
 	ret.W("-- {%% func CreateAll() %%}")
+	if len(enums) > 0 {
+		ret.W("-- {%%= TypesCreate() %%}")
+	}
 	for _, m := range models {
 		ret.W("-- {%%%%= %sCreate() %%%%}", m.Proper())
 	}
@@ -33,8 +40,9 @@ func sqlCreateAll(models model.Models) *golang.Block {
 }
 
 func SeedDataAll(models model.Models) (*file.File, error) {
+	ordered := models.Sorted()
 	g := golang.NewGoTemplate([]string{"queries", "seeddata"}, "all.sql")
-	g.AddBlocks(sqlSeedAll(models))
+	g.AddBlocks(sqlSeedAll(ordered))
 	return g.Render(false)
 }
 

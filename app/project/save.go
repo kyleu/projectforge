@@ -6,6 +6,7 @@ import (
 	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/model"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -59,8 +60,8 @@ func (s *Service) SaveExportModel(fs filesystem.FileLoader, mdl *model.Model, lo
 		return nil
 	}
 	fn := fmt.Sprintf("%s/export/models/%s.json", ConfigDir, mdl.Name)
-	j := util.ToJSON(mdl)
-	err := fs.WriteFile(fn, []byte(j), filesystem.DefaultMode, true)
+	j := util.ToJSONBytes(mdl, true)
+	err := fs.WriteFile(fn, j, filesystem.DefaultMode, true)
 	if err != nil {
 		return errors.Wrapf(err, "unable to write export model file to [%s]", fn)
 	}
@@ -71,6 +72,24 @@ func (s *Service) DeleteExportModel(fs filesystem.FileLoader, mdl string, logger
 	fn := fmt.Sprintf("%s/export/models/%s.json", ConfigDir, mdl)
 	if err := fs.Remove(fn, logger); err != nil {
 		return errors.Wrapf(err, "unable to delete export model file [%s]", fn)
+	}
+	return nil
+}
+
+func (s *Service) SaveExportEnum(fs filesystem.FileLoader, e *enum.Enum, logger util.Logger) error {
+	fn := fmt.Sprintf("%s/export/enums/%s.json", ConfigDir, e.Name)
+	j := util.ToJSONBytes(e, true)
+	err := fs.WriteFile(fn, j, filesystem.DefaultMode, true)
+	if err != nil {
+		return errors.Wrapf(err, "unable to write export enum file to [%s]", fn)
+	}
+	return nil
+}
+
+func (s *Service) DeleteExportEnum(fs filesystem.FileLoader, e string, logger util.Logger) error {
+	fn := fmt.Sprintf("%s/export/enums/%s.json", ConfigDir, e)
+	if err := fs.Remove(fn, logger); err != nil {
+		return errors.Wrapf(err, "unable to delete export enum file [%s]", fn)
 	}
 	return nil
 }

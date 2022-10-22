@@ -2,6 +2,7 @@ package svc
 
 import (
 	"fmt"
+	"projectforge.dev/projectforge/app/project/export/enum"
 	"strings"
 
 	"projectforge.dev/projectforge/app/project/export/golang"
@@ -10,10 +11,13 @@ import (
 
 const serviceGetMultipleName = "GetMultiple"
 
-func serviceGetMultipleSinglePK(m *model.Model, dbRef string) *golang.Block {
+func serviceGetMultipleSinglePK(m *model.Model, dbRef string, enums enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock(serviceGetMultipleName, "func")
 	pk := m.PKs()[0]
-	t := model.ToGoType(pk.Type, pk.Nullable, m.Package)
+	t, err := model.ToGoType(pk.Type, pk.Nullable, m.Package, enums)
+	if err != nil {
+		return nil, err
+	}
 	msg := "func (s *Service) %s(ctx context.Context, tx *sqlx.Tx%s, logger util.Logger, %s ...%s) (%s, error) {"
 	ret.W(msg, serviceGetMultipleName, getSuffix(m), pk.Plural(), t, m.ProperPlural())
 	ret.W("\tif len(%s) == 0 {", pk.Plural())
@@ -35,7 +39,7 @@ func serviceGetMultipleSinglePK(m *model.Model, dbRef string) *golang.Block {
 	ret.W("\t}")
 	ret.W("\treturn ret.To%s(), nil", m.ProperPlural())
 	ret.W("}")
-	return ret
+	return ret, nil
 }
 
 func serviceGetMultipleManyPKs(m *model.Model, dbRef string) *golang.Block {

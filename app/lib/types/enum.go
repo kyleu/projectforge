@@ -22,7 +22,7 @@ func (x *Enum) Sortable() bool {
 }
 
 func (x *Enum) Scalar() bool {
-	return false
+	return true
 }
 
 func (x *Enum) String() string {

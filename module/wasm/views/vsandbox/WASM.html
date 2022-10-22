@@ -4,6 +4,7 @@
   "{{{ .Package }}}/app/util"
   "{{{ .Package }}}/views/components"
   "{{{ .Package }}}/views/layout"
+  "{{{ .Package }}}/views/vutil"
 ) %}
 
 {% code type WASM struct {
@@ -13,19 +14,12 @@
 {% func (p *WASM) Body(as *app.State, ps *cutil.PageState) %}
 <div class="card">
   <h3>{%= components.SVGRefIcon(`gift`, ps) %}{%s util.AppName %} WASM</h3>
+  <em id="load-status">Loading...</em>
 </div>
-<script src="/assets/wasm/wasm_exec.js"></script>
 <script>
-  if (!WebAssembly.instantiateStreaming) {
-    WebAssembly.instantiateStreaming = async (resp, importObject) => {
-      const source = await (await resp).arrayBuffer();
-      return await WebAssembly.instantiate(source, importObject);
-    };
+  function wasmInit(ms) {
+    document.getElementById("load-status").innerText = "Loaded in [" + ms + "ms]";
   }
-
-  const go = new Go();
-  WebAssembly.instantiateStreaming(fetch("/assets/wasm/{{{ .Key }}}.wasm"), go.importObject).then((result) => {
-    go.run(result.instance);
-  });
 </script>
+{%= vutil.WASMScript() %}
 {% endfunc %}

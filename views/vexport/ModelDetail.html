@@ -78,9 +78,6 @@
       {%- if len(model.Tags) > 0 -%}
       <tr><th>Tags</th><td>{%s strings.Join(model.Tags, ", ") %}</td></tr>
       {%- endif -%}
-      {%- if len(model.Ordering) > 0 -%}
-      <tr><th>Ordering</th><td>{%= components.JSON(model.Ordering) %}</td></tr>
-      {%- endif -%}
       {%- if len(model.Search) > 0 -%}
       <tr><th>Search</th><td>{%s strings.Join(model.Search, ", ") %}</td></tr>
       {%- endif -%}

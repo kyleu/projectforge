@@ -4,6 +4,7 @@
 
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/project/export/enum"
   "projectforge.dev/projectforge/app/project/export/model"
   "projectforge.dev/projectforge/app/project"
   "projectforge.dev/projectforge/app/util"
@@ -37,6 +38,17 @@
   </div>
   <div class="card">
     <div class="right">
+      <a href="/p/{%s p.Project.Key %}/export/enums/create/new"><button>{%= components.SVGRef("file", 15, 15, "icon", ps) %}New</button></a>
+    </div>
+    <h3>{%= components.SVGRefIcon(`hammer`, ps) %}Enums</h3>
+    {%- if len(p.Args.Enums) == 0 -%}
+    <em>no enums defined</em>
+    {%- else -%}
+    {%= EnumList(p.Args.Enums, fmt.Sprintf("/p/%s/export/enums", p.Project.Key), as, ps) %}
+    {%- endif -%}
+  </div>
+  <div class="card">
+    <div class="right">
       <a href="/p/{%s p.Project.Key %}/export/models/create/derive"><button>{%= components.SVGRef("dna", 15, 15, "icon", ps) %}Derive</button></a>
       <a href="/p/{%s p.Project.Key %}/export/models/create/new"><button>{%= components.SVGRef("file", 15, 15, "icon", ps) %}New</button></a>
     </div>
@@ -63,6 +75,26 @@
   </ul>
 {% endstripspace %}{% endfunc %}
 
+{% func EnumList(enums enum.Enums, urlPrefix string, as *app.State, ps *cutil.PageState) %}
+  <table class="mt min-200 full-width">
+    <tbody>
+      {%- for _, e := range enums -%}
+      {%- code
+        u := fmt.Sprintf("%s/%s", urlPrefix, e.Name)
+        var prefix string
+        if len(e.Group) > 0 {
+          prefix += strings.Join(e.Group, "/")+", "
+        }
+      -%}
+      <tr>
+        <td class="shrink"><a href="{%s u %}">{%= components.SVGRef(e.IconSafe(), 15, 15, ``, ps) %}</a> <a href="{%s u %}">{%s e.Title() %}</a></td>
+        <td>{%s e.Description %}</td>
+      </tr>
+      {%- endfor -%}
+    </tbody>
+  </table>
+{% endfunc %}
+
 {% func ModelList(models model.Models, urlPrefix string, as *app.State, ps *cutil.PageState) %}
   <table class="mt min-200 full-width">
     <tbody>
@@ -74,7 +106,7 @@
           prefix += strings.Join(m.Group, "/")+", "
         }
         if len(m.SeedData) > 0 {
-          prefix += fmt.Sprintf("%d seed rows, ", len(m.SeedData))
+          prefix += fmt.Sprintf("%d seed %s, ", len(m.SeedData), util.StringPluralMaybe("row", len(m.SeedData)))
         }
       -%}
       <tr>

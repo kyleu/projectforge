@@ -6,6 +6,8 @@ package vproject
 
 //line views/vproject/Table.html:1
 import (
+	"strings"
+
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/exec"
@@ -14,219 +16,249 @@ import (
 	"projectforge.dev/projectforge/views/components"
 )
 
-//line views/vproject/Table.html:10
+//line views/vproject/Table.html:12
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vproject/Table.html:10
+//line views/vproject/Table.html:12
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vproject/Table.html:10
+//line views/vproject/Table.html:12
 func StreamTable(qw422016 *qt422016.Writer, prjs project.Projects, tags []string, full bool, ex exec.Execs, as *app.State, ps *cutil.PageState) {
-//line views/vproject/Table.html:10
+//line views/vproject/Table.html:12
 	qw422016.N().S(`
   <div class="card">
     <div class="right"><a href="/p/new"><button>`)
-//line views/vproject/Table.html:12
+//line views/vproject/Table.html:14
 	components.StreamSVGRef(qw422016, "file", 15, 15, "icon", ps)
-//line views/vproject/Table.html:12
+//line views/vproject/Table.html:14
 	qw422016.N().S(`New</button></a></div>
     <h3><a href="/p">`)
-//line views/vproject/Table.html:13
+//line views/vproject/Table.html:15
 	qw422016.E().S(util.StringPlural(len(prjs), "Available Project"))
-//line views/vproject/Table.html:13
+//line views/vproject/Table.html:15
 	qw422016.N().S(`</a></h3>
     <table class="mt min-200">
 `)
-//line views/vproject/Table.html:15
+//line views/vproject/Table.html:17
 	if full {
-//line views/vproject/Table.html:15
+//line views/vproject/Table.html:17
 		qw422016.N().S(`      <thead>
         <tr>
-          <th><a href="/p">Title</a></th>
-          <th><a href="/p?sort=package">Package</a></th>
-`)
+          <th><a href="/p`)
 //line views/vproject/Table.html:20
-		if full {
+		if len(tags) > 0 {
 //line views/vproject/Table.html:20
-			qw422016.N().S(`          <th class="shrink"><a href="/p?sort=port">Port</a></th>
+			qw422016.N().S(`?tags=`)
+//line views/vproject/Table.html:20
+			qw422016.E().S(strings.Join(tags, `,`))
+//line views/vproject/Table.html:20
+		}
+//line views/vproject/Table.html:20
+		qw422016.N().S(`">Title</a></th>
+          <th><a href="/p?sort=package`)
+//line views/vproject/Table.html:21
+		if len(tags) > 0 {
+//line views/vproject/Table.html:21
+			qw422016.N().S(`&tags=`)
+//line views/vproject/Table.html:21
+			qw422016.E().S(strings.Join(tags, `,`))
+//line views/vproject/Table.html:21
+		}
+//line views/vproject/Table.html:21
+		qw422016.N().S(`">Package</a></th>
 `)
 //line views/vproject/Table.html:22
+		if full {
+//line views/vproject/Table.html:22
+			qw422016.N().S(`          <th class="shrink"><a href="/p?sort=port`)
+//line views/vproject/Table.html:23
+			if len(tags) > 0 {
+//line views/vproject/Table.html:23
+				qw422016.N().S(`&tags=`)
+//line views/vproject/Table.html:23
+				qw422016.E().S(strings.Join(tags, `,`))
+//line views/vproject/Table.html:23
+			}
+//line views/vproject/Table.html:23
+			qw422016.N().S(`">Port</a></th>
+`)
+//line views/vproject/Table.html:24
 		}
-//line views/vproject/Table.html:23
+//line views/vproject/Table.html:25
 		if len(ex) > 0 {
-//line views/vproject/Table.html:23
+//line views/vproject/Table.html:25
 			qw422016.N().S(`          <th class="shrink">Processes</th>
 `)
-//line views/vproject/Table.html:25
+//line views/vproject/Table.html:27
 		}
-//line views/vproject/Table.html:25
+//line views/vproject/Table.html:27
 		qw422016.N().S(`          <th class="shrink">Tags</th>
         </tr>
       </thead>
 `)
-//line views/vproject/Table.html:29
+//line views/vproject/Table.html:31
 	}
-//line views/vproject/Table.html:29
+//line views/vproject/Table.html:31
 	qw422016.N().S(`      <tbody>
 `)
-//line views/vproject/Table.html:31
+//line views/vproject/Table.html:33
 	for _, prj := range prjs {
-//line views/vproject/Table.html:31
+//line views/vproject/Table.html:33
 		qw422016.N().S(`        <tr>
           <td><a href="/p/`)
-//line views/vproject/Table.html:33
+//line views/vproject/Table.html:35
 		qw422016.E().S(prj.Key)
-//line views/vproject/Table.html:33
+//line views/vproject/Table.html:35
 		qw422016.N().S(`">
             `)
-//line views/vproject/Table.html:34
+//line views/vproject/Table.html:36
 		components.StreamSVGRef(qw422016, prj.IconSafe(), 16, 16, "icon", ps)
-//line views/vproject/Table.html:34
+//line views/vproject/Table.html:36
 		qw422016.N().S(`
             `)
-//line views/vproject/Table.html:35
+//line views/vproject/Table.html:37
 		if prj.Key == util.AppKey {
-//line views/vproject/Table.html:35
+//line views/vproject/Table.html:37
 			qw422016.N().S(`<strong>`)
-//line views/vproject/Table.html:35
+//line views/vproject/Table.html:37
 		}
-//line views/vproject/Table.html:35
+//line views/vproject/Table.html:37
 		qw422016.E().S(prj.Title())
-//line views/vproject/Table.html:35
+//line views/vproject/Table.html:37
 		if prj.Key == util.AppKey {
-//line views/vproject/Table.html:35
+//line views/vproject/Table.html:37
 			qw422016.N().S(`</strong>`)
-//line views/vproject/Table.html:35
+//line views/vproject/Table.html:37
 		}
-//line views/vproject/Table.html:35
+//line views/vproject/Table.html:37
 		qw422016.N().S(`
           </a></td>
           <td>`)
-//line views/vproject/Table.html:37
+//line views/vproject/Table.html:39
 		qw422016.E().S(prj.Package)
-//line views/vproject/Table.html:37
+//line views/vproject/Table.html:39
 		qw422016.N().S(`</td>
 `)
-//line views/vproject/Table.html:38
+//line views/vproject/Table.html:40
 		if full {
-//line views/vproject/Table.html:38
+//line views/vproject/Table.html:40
 			qw422016.N().S(`          <td><a href="http://localhost:`)
-//line views/vproject/Table.html:39
+//line views/vproject/Table.html:41
 			qw422016.N().D(prj.Port)
-//line views/vproject/Table.html:39
+//line views/vproject/Table.html:41
 			qw422016.N().S(`" title="browse to [http://localhost:`)
-//line views/vproject/Table.html:39
+//line views/vproject/Table.html:41
 			qw422016.N().D(prj.Port)
-//line views/vproject/Table.html:39
+//line views/vproject/Table.html:41
 			qw422016.N().S(`]" target="_blank">`)
-//line views/vproject/Table.html:39
+//line views/vproject/Table.html:41
 			qw422016.N().D(prj.Port)
-//line views/vproject/Table.html:39
+//line views/vproject/Table.html:41
 			qw422016.N().S(`</a></td>
 `)
-//line views/vproject/Table.html:40
+//line views/vproject/Table.html:42
 		}
-//line views/vproject/Table.html:41
+//line views/vproject/Table.html:43
 		if len(ex) > 0 {
-//line views/vproject/Table.html:41
+//line views/vproject/Table.html:43
 			qw422016.N().S(`          <td>
 `)
-//line views/vproject/Table.html:43
+//line views/vproject/Table.html:45
 			e := ex.GetByKey(prj.Key)
 
-//line views/vproject/Table.html:44
+//line views/vproject/Table.html:46
 			if len(e) > 0 {
-//line views/vproject/Table.html:44
+//line views/vproject/Table.html:46
 				qw422016.N().S(`            <a href="`)
-//line views/vproject/Table.html:45
+//line views/vproject/Table.html:47
 				qw422016.E().S(e[len(e)-1].WebPath())
-//line views/vproject/Table.html:45
+//line views/vproject/Table.html:47
 				qw422016.N().S(`">`)
-//line views/vproject/Table.html:45
+//line views/vproject/Table.html:47
 				qw422016.N().D(e.Running())
-//line views/vproject/Table.html:45
+//line views/vproject/Table.html:47
 				qw422016.N().S(`/`)
-//line views/vproject/Table.html:45
+//line views/vproject/Table.html:47
 				qw422016.N().D(len(e))
-//line views/vproject/Table.html:45
+//line views/vproject/Table.html:47
 				qw422016.N().S(`</a>
 `)
-//line views/vproject/Table.html:46
+//line views/vproject/Table.html:48
 			}
-//line views/vproject/Table.html:46
+//line views/vproject/Table.html:48
 			qw422016.N().S(`          </td>
 `)
-//line views/vproject/Table.html:48
+//line views/vproject/Table.html:50
 		}
-//line views/vproject/Table.html:48
+//line views/vproject/Table.html:50
 		qw422016.N().S(`          <td>
 `)
-//line views/vproject/Table.html:50
+//line views/vproject/Table.html:52
 		for idx, tag := range prj.Tags {
-//line views/vproject/Table.html:50
+//line views/vproject/Table.html:52
 			qw422016.N().S(`            <a href="/p?tags=`)
-//line views/vproject/Table.html:51
+//line views/vproject/Table.html:53
 			qw422016.E().S(tag)
-//line views/vproject/Table.html:51
+//line views/vproject/Table.html:53
 			qw422016.N().S(`"><code>`)
-//line views/vproject/Table.html:51
+//line views/vproject/Table.html:53
 			qw422016.E().S(tag)
-//line views/vproject/Table.html:51
+//line views/vproject/Table.html:53
 			qw422016.N().S(`</code></a>`)
-//line views/vproject/Table.html:51
+//line views/vproject/Table.html:53
 			if idx < (len(prj.Tags) - 1) {
-//line views/vproject/Table.html:51
+//line views/vproject/Table.html:53
 				qw422016.N().S(`, `)
-//line views/vproject/Table.html:51
+//line views/vproject/Table.html:53
 			}
-//line views/vproject/Table.html:51
+//line views/vproject/Table.html:53
 			qw422016.N().S(`
 `)
-//line views/vproject/Table.html:52
+//line views/vproject/Table.html:54
 		}
-//line views/vproject/Table.html:52
+//line views/vproject/Table.html:54
 		qw422016.N().S(`          </td>
         </tr>
 `)
-//line views/vproject/Table.html:55
+//line views/vproject/Table.html:57
 	}
-//line views/vproject/Table.html:55
+//line views/vproject/Table.html:57
 	qw422016.N().S(`      </tbody>
     </table>
   </div>
 `)
-//line views/vproject/Table.html:59
+//line views/vproject/Table.html:61
 }
 
-//line views/vproject/Table.html:59
+//line views/vproject/Table.html:61
 func WriteTable(qq422016 qtio422016.Writer, prjs project.Projects, tags []string, full bool, ex exec.Execs, as *app.State, ps *cutil.PageState) {
-//line views/vproject/Table.html:59
+//line views/vproject/Table.html:61
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/Table.html:59
+//line views/vproject/Table.html:61
 	StreamTable(qw422016, prjs, tags, full, ex, as, ps)
-//line views/vproject/Table.html:59
+//line views/vproject/Table.html:61
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/Table.html:59
+//line views/vproject/Table.html:61
 }
 
-//line views/vproject/Table.html:59
+//line views/vproject/Table.html:61
 func Table(prjs project.Projects, tags []string, full bool, ex exec.Execs, as *app.State, ps *cutil.PageState) string {
-//line views/vproject/Table.html:59
+//line views/vproject/Table.html:61
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/Table.html:59
+//line views/vproject/Table.html:61
 	WriteTable(qb422016, prjs, tags, full, ex, as, ps)
-//line views/vproject/Table.html:59
+//line views/vproject/Table.html:61
 	qs422016 := string(qb422016.B)
-//line views/vproject/Table.html:59
+//line views/vproject/Table.html:61
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/Table.html:59
+//line views/vproject/Table.html:61
 	return qs422016
-//line views/vproject/Table.html:59
+//line views/vproject/Table.html:61
 }

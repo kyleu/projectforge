@@ -2,6 +2,7 @@ package gomodel
 
 import (
 	"fmt"
+	"projectforge.dev/projectforge/app/project/export/enum"
 	"strings"
 
 	"projectforge.dev/projectforge/app/project/export/golang"
@@ -14,9 +15,13 @@ func modelArray(m *model.Model) *golang.Block {
 	return ret
 }
 
-func modelArrayGet(m *model.Model) *golang.Block {
+func modelArrayGet(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock(m.Proper()+"ArrayGet", "func")
-	ret.W("func (%s %s) Get(%s) *%s {", m.FirstLetter(), m.ProperPlural(), m.PKs().Args(m.Package), m.Proper())
+	args, err := m.PKs().Args(m.Package, enums)
+	if err != nil {
+		return nil, err
+	}
+	ret.W("func (%s %s) Get(%s) *%s {", m.FirstLetter(), m.ProperPlural(), args, m.Proper())
 	ret.W("\tfor _, x := range %s {", m.FirstLetter())
 	comps := make([]string, 0, len(m.PKs()))
 	for _, pk := range m.PKs() {
@@ -28,7 +33,7 @@ func modelArrayGet(m *model.Model) *golang.Block {
 	ret.W("\t}")
 	ret.W("\treturn nil")
 	ret.W("}")
-	return ret
+	return ret, nil
 }
 
 func modelArrayClone(m *model.Model) *golang.Block {

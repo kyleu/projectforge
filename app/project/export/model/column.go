@@ -2,6 +2,7 @@ package model
 
 import (
 	"fmt"
+	"projectforge.dev/projectforge/app/project/export/enum"
 	"strings"
 
 	"golang.org/x/exp/slices"
@@ -86,12 +87,12 @@ func (c *Column) ToGoViewString(prefix string, verbose bool, url bool) string {
 	return ToGoViewString(c.Type, prefix+c.Proper(), c.Nullable, c.Format, verbose, url)
 }
 
-func (c *Column) ToGoType(pkg string) string {
-	return ToGoType(c.Type, c.Nullable, pkg)
+func (c *Column) ToGoType(pkg string, enums enum.Enums) (string, error) {
+	return ToGoType(c.Type, c.Nullable, pkg, enums)
 }
 
-func (c *Column) ToGoDTOType(pkg string) string {
-	return ToGoDTOType(c.Type, c.Nullable, pkg)
+func (c *Column) ToGoDTOType(pkg string, enums enum.Enums) (string, error) {
+	return ToGoDTOType(c.Type, c.Nullable, pkg, enums)
 }
 
 func (c *Column) ShouldDisplay(k string) bool {

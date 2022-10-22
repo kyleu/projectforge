@@ -33,7 +33,10 @@ If you just want to build from source for whatever reason, follow these steps:
 ```shell
 git clone {{{ .Info.Sourcecode }}}
 cd {{{ .Key }}}
-go mod tidy
 make build
 ./build/debug/{{{ .Key }}} --help
 ```
+
+A script has been provided at `./bin/dev.sh` that will auto-reload when the project changes.
+
+Note that you may need to run `./bin/bootstrap.sh` before building the project for the first time.

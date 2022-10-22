@@ -2,13 +2,14 @@ package svc
 
 import (
 	"fmt"
+	"projectforge.dev/projectforge/app/project/export/enum"
 	"strings"
 
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func serviceSearch(m *model.Model, grp *model.Column, dbRef string) *golang.Block {
+func serviceSearch(m *model.Model, grp *model.Column, dbRef string, enums enum.Enums) (*golang.Block, error) {
 	prefix := ""
 	if grp != nil {
 		prefix = "By" + grp.Proper()
@@ -48,7 +49,11 @@ func serviceSearch(m *model.Model, grp *model.Column, dbRef string) *golang.Bloc
 		ret.W("const searchClause = %q", wc)
 		ret.W("")
 	} else {
-		grpTxt = fmt.Sprintf(", %s %s", grp.Camel(), grp.ToGoType(m.Package))
+		gt, err := grp.ToGoType(m.Package, enums)
+		if err != nil {
+			return nil, err
+		}
+		grpTxt = fmt.Sprintf(", %s %s", grp.Camel(), gt)
 	}
 	const decl = "func (s *Service) Search%s(ctx context.Context%s, query string, tx *sqlx.Tx, params *filter.Params%s, logger util.Logger) (%s, error) {"
 	ret.W(decl, prefix, grpTxt, getSuffix(m), m.ProperPlural())
@@ -66,5 +71,5 @@ func serviceSearch(m *model.Model, grp *model.Column, dbRef string) *golang.Bloc
 	ret.W("\t}")
 	ret.W("\treturn ret.To%s(), nil", m.ProperPlural())
 	ret.W("}")
-	return ret
+	return ret, nil
 }

@@ -6,6 +6,7 @@ import (
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
@@ -19,11 +20,15 @@ func table(m *model.Model, args *model.Args, addHeader bool) (*file.File, error)
 	if m.Columns.HasFormat(model.FmtCountry) {
 		g.AddImport(helper.ImpAppUtil)
 	}
-	g.AddBlocks(exportViewTableFunc(m, args.Models, g))
+	vtf, err := exportViewTableFunc(m, args.Models, args.Enums, g)
+	if err != nil {
+		return nil, err
+	}
+	g.AddBlocks(vtf)
 	return g.Render(addHeader)
 }
 
-func exportViewTableFunc(m *model.Model, models model.Models, g *golang.Template) *golang.Block {
+func exportViewTableFunc(m *model.Model, models model.Models, enums enum.Enums, g *golang.Template) (*golang.Block, error) {
 	summCols := m.Columns.ForDisplay("summary")
 	ret := golang.NewBlock("Table", "func")
 	suffix := ""
@@ -40,7 +45,11 @@ func exportViewTableFunc(m *model.Model, models model.Models, g *golang.Template
 	ret.W("    <thead>")
 	ret.W("      <tr>")
 	for _, col := range summCols {
-		call := fmt.Sprintf("components.TableHeaderSimple(%q, %q, %q, %q, prms, ps.URI, ps)", m.Package, col.Name, util.StringToTitle(col.Name), col.Help())
+		h, err := col.Help(enums)
+		if err != nil {
+			return nil, err
+		}
+		call := fmt.Sprintf("components.TableHeaderSimple(%q, %q, %q, %q, prms, ps.URI, ps)", m.Package, col.Name, util.StringToTitle(col.Name), h)
 		ret.W("        {%%= " + call + " %%}")
 	}
 	ret.W("      </tr>")
@@ -61,7 +70,7 @@ func exportViewTableFunc(m *model.Model, models model.Models, g *golang.Template
 	ret.W("    </tbody>")
 	ret.W("  </table>")
 	ret.W("{%% endfunc %%}")
-	return ret
+	return ret, nil
 }
 
 func viewTableColumn(ret *golang.Block, models model.Models, m *model.Model, link bool, col *model.Column, modelKey string, prefix string, indent int) {

@@ -1,0 +1,20 @@
+{% func WASMScript() %}
+<script src="/assets/wasm/wasm_exec.js" defer="defer"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    if (!WebAssembly.instantiateStreaming) {
+      WebAssembly.instantiateStreaming = async (resp, importObject) => {
+        const source = await (await resp).arrayBuffer();
+        return await WebAssembly.instantiate(source, importObject);
+      };
+    }
+
+    const start = new Date().getTime();
+    const go = new Go();
+    WebAssembly.instantiateStreaming(fetch("/assets/wasm/idled.wasm"), go.importObject).then((result) => {
+      go.run(result.instance);
+      wasmInit(new Date().getTime() - start);
+    });
+  });
+</script>
+{% endfunc %}

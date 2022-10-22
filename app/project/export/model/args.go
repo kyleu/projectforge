@@ -4,11 +4,14 @@ import (
 	"github.com/pkg/errors"
 	"golang.org/x/exp/slices"
 
+
+	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/util"
 )
 
 type Args struct {
 	Config  util.ValueMap `json:"config,omitempty"`
+	Enums   enum.Enums    `json:"enums,omitempty"`
 	Models  Models        `json:"models,omitempty"`
 	Groups  Groups        `json:"groups,omitempty"`
 	Modules []string      `json:"-"`
@@ -28,7 +31,7 @@ func (a *Args) DBRef() string {
 func (a *Args) Validate() error {
 	packages := make(map[string]struct{}, len(a.Models))
 	for _, m := range a.Models {
-		err := m.Validate(a.Modules, a.Groups)
+		err := m.Validate(a.Modules, a.Models, a.Groups)
 		if err != nil {
 			return errors.Wrap(err, "invalid model ["+m.Name+"]")
 		}

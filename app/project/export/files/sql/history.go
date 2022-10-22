@@ -19,7 +19,8 @@ func sqlHistory(ret *golang.Block, m *model.Model, modules []string) {
 		for _, pk := range m.PKs() {
 			x := fmt.Sprintf("\"%s_%s\"", m.Name, pk.Name)
 			pkRefs = append(pkRefs, x)
-			ret.W("  %s %s,", x, pk.ToSQLType())
+			st, _ := pk.ToSQLType()
+			ret.W("  %s %s,", x, st)
 		}
 		ret.W("  \"o\" jsonb not null,")
 		ret.W("  \"n\" jsonb not null,")

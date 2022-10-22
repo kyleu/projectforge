@@ -50,7 +50,11 @@
         {% if i.Icon != "" %}
           {%= components.SVGRef(i.Icon, 16, 16, "icon", ps) %}
         {% endif %}
-        {%s i.Title %}
+        {% if i.Route != "" %}
+          <a href="{%s i.Route %}">{%s i.Title %}</a>
+        {% else %}
+          {%s i.Title %}
+        {% endif %}
       {%= vutil.Indent(true, indent + 2) %}
       </label>
       {%= vutil.Indent(true, indent + 2) %}

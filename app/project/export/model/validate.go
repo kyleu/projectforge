@@ -15,7 +15,7 @@ var goKeywords = []string{
 
 var reservedNames = map[string][]string{"audit": {"audit", "audit_record"}}
 
-func (m *Model) Validate(mods []string, groups Groups) error {
+func (m *Model) Validate(mods []string, models Models, groups Groups) error {
 	if len(m.PKs()) == 0 {
 		return errors.Errorf("model [%s] has no primary key", m.Name)
 	}
@@ -56,7 +56,9 @@ func (m *Model) Validate(mods []string, groups Groups) error {
 	}
 	if len(m.Group) > 0 {
 		if groups.Get(m.Group...) == nil {
-			return errors.Errorf("model [%s] references undefined group [%s]", m.Name, strings.Join(m.Group, "/"))
+			if len(m.Group) != 1 && models.Get(m.Group[0]) == nil {
+				return errors.Errorf("model [%s] references undefined group [%s]", m.Name, strings.Join(m.Group, "/"))
+			}
 		}
 	}
 	return nil

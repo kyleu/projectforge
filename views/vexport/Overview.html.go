@@ -12,6 +12,7 @@ import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/model"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/components"
@@ -19,103 +20,94 @@ import (
 	"projectforge.dev/projectforge/views/vutil"
 )
 
-//line views/vexport/Overview.html:15
+//line views/vexport/Overview.html:16
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vexport/Overview.html:15
+//line views/vexport/Overview.html:16
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vexport/Overview.html:15
+//line views/vexport/Overview.html:16
 type Overview struct {
 	layout.Basic
 	Project *project.Project
 	Args    *model.Args
 }
 
-//line views/vexport/Overview.html:21
+//line views/vexport/Overview.html:22
 func (p *Overview) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vexport/Overview.html:21
+//line views/vexport/Overview.html:22
 	qw422016.N().S(`
   <div class="card">
     <div class="right"><a href="/p/`)
-//line views/vexport/Overview.html:23
+//line views/vexport/Overview.html:24
 	qw422016.E().S(p.Project.Key)
-//line views/vexport/Overview.html:23
+//line views/vexport/Overview.html:24
 	qw422016.N().S(`/export/config"><button>`)
-//line views/vexport/Overview.html:23
+//line views/vexport/Overview.html:24
 	components.StreamSVGRef(qw422016, "edit", 15, 15, "icon", ps)
-//line views/vexport/Overview.html:23
+//line views/vexport/Overview.html:24
 	qw422016.N().S(`Edit</button></a></div>
     <h3>`)
-//line views/vexport/Overview.html:24
+//line views/vexport/Overview.html:25
 	components.StreamSVGRefIcon(qw422016, `print`, ps)
-//line views/vexport/Overview.html:24
+//line views/vexport/Overview.html:25
 	qw422016.N().S(`Export Configuration</h3>
     `)
-//line views/vexport/Overview.html:25
+//line views/vexport/Overview.html:26
 	components.StreamJSON(qw422016, p.Args.Config)
-//line views/vexport/Overview.html:25
+//line views/vexport/Overview.html:26
 	qw422016.N().S(`
   </div>
   <div class="card">
     <div class="right"><a href="/p/`)
-//line views/vexport/Overview.html:28
+//line views/vexport/Overview.html:29
 	qw422016.E().S(p.Project.Key)
-//line views/vexport/Overview.html:28
+//line views/vexport/Overview.html:29
 	qw422016.N().S(`/export/groups"><button>`)
-//line views/vexport/Overview.html:28
+//line views/vexport/Overview.html:29
 	components.StreamSVGRef(qw422016, "edit", 15, 15, "icon", ps)
-//line views/vexport/Overview.html:28
+//line views/vexport/Overview.html:29
 	qw422016.N().S(`Edit</button></a></div>
     <h3>`)
-//line views/vexport/Overview.html:29
+//line views/vexport/Overview.html:30
 	components.StreamSVGRefIcon(qw422016, `users`, ps)
-//line views/vexport/Overview.html:29
+//line views/vexport/Overview.html:30
 	qw422016.N().S(`Groups</h3>
     <div class="mt">
 `)
-//line views/vexport/Overview.html:31
+//line views/vexport/Overview.html:32
 	if len(p.Args.Groups) == 0 {
-//line views/vexport/Overview.html:31
+//line views/vexport/Overview.html:32
 		qw422016.N().S(`      <em>no groups defined</em>
 `)
-//line views/vexport/Overview.html:33
+//line views/vexport/Overview.html:34
 	} else {
-//line views/vexport/Overview.html:33
+//line views/vexport/Overview.html:34
 		qw422016.N().S(`      `)
-//line views/vexport/Overview.html:34
+//line views/vexport/Overview.html:35
 		StreamGroupList(qw422016, p.Args.Groups, 2)
-//line views/vexport/Overview.html:34
+//line views/vexport/Overview.html:35
 		qw422016.N().S(`
 `)
-//line views/vexport/Overview.html:35
+//line views/vexport/Overview.html:36
 	}
-//line views/vexport/Overview.html:35
+//line views/vexport/Overview.html:36
 	qw422016.N().S(`    </div>
   </div>
   <div class="card">
     <div class="right">
       <a href="/p/`)
-//line views/vexport/Overview.html:40
-	qw422016.E().S(p.Project.Key)
-//line views/vexport/Overview.html:40
-	qw422016.N().S(`/export/models/create/derive"><button>`)
-//line views/vexport/Overview.html:40
-	components.StreamSVGRef(qw422016, "dna", 15, 15, "icon", ps)
-//line views/vexport/Overview.html:40
-	qw422016.N().S(`Derive</button></a>
-      <a href="/p/`)
 //line views/vexport/Overview.html:41
 	qw422016.E().S(p.Project.Key)
 //line views/vexport/Overview.html:41
-	qw422016.N().S(`/export/models/create/new"><button>`)
+	qw422016.N().S(`/export/enums/create/new"><button>`)
 //line views/vexport/Overview.html:41
 	components.StreamSVGRef(qw422016, "file", 15, 15, "icon", ps)
 //line views/vexport/Overview.html:41
@@ -123,188 +115,310 @@ func (p *Overview) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
     </div>
     <h3>`)
 //line views/vexport/Overview.html:43
-	components.StreamSVGRefIcon(qw422016, `list`, ps)
+	components.StreamSVGRefIcon(qw422016, `hammer`, ps)
 //line views/vexport/Overview.html:43
+	qw422016.N().S(`Enums</h3>
+`)
+//line views/vexport/Overview.html:44
+	if len(p.Args.Enums) == 0 {
+//line views/vexport/Overview.html:44
+		qw422016.N().S(`    <em>no enums defined</em>
+`)
+//line views/vexport/Overview.html:46
+	} else {
+//line views/vexport/Overview.html:46
+		qw422016.N().S(`    `)
+//line views/vexport/Overview.html:47
+		StreamEnumList(qw422016, p.Args.Enums, fmt.Sprintf("/p/%s/export/enums", p.Project.Key), as, ps)
+//line views/vexport/Overview.html:47
+		qw422016.N().S(`
+`)
+//line views/vexport/Overview.html:48
+	}
+//line views/vexport/Overview.html:48
+	qw422016.N().S(`  </div>
+  <div class="card">
+    <div class="right">
+      <a href="/p/`)
+//line views/vexport/Overview.html:52
+	qw422016.E().S(p.Project.Key)
+//line views/vexport/Overview.html:52
+	qw422016.N().S(`/export/models/create/derive"><button>`)
+//line views/vexport/Overview.html:52
+	components.StreamSVGRef(qw422016, "dna", 15, 15, "icon", ps)
+//line views/vexport/Overview.html:52
+	qw422016.N().S(`Derive</button></a>
+      <a href="/p/`)
+//line views/vexport/Overview.html:53
+	qw422016.E().S(p.Project.Key)
+//line views/vexport/Overview.html:53
+	qw422016.N().S(`/export/models/create/new"><button>`)
+//line views/vexport/Overview.html:53
+	components.StreamSVGRef(qw422016, "file", 15, 15, "icon", ps)
+//line views/vexport/Overview.html:53
+	qw422016.N().S(`New</button></a>
+    </div>
+    <h3>`)
+//line views/vexport/Overview.html:55
+	components.StreamSVGRefIcon(qw422016, `list`, ps)
+//line views/vexport/Overview.html:55
 	qw422016.N().S(`Models</h3>
     `)
-//line views/vexport/Overview.html:44
+//line views/vexport/Overview.html:56
 	StreamModelList(qw422016, p.Args.Models, fmt.Sprintf("/p/%s/export/models", p.Project.Key), as, ps)
-//line views/vexport/Overview.html:44
+//line views/vexport/Overview.html:56
 	qw422016.N().S(`
   </div>
 `)
-//line views/vexport/Overview.html:46
-}
-
-//line views/vexport/Overview.html:46
-func (p *Overview) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vexport/Overview.html:46
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/Overview.html:46
-	p.StreamBody(qw422016, as, ps)
-//line views/vexport/Overview.html:46
-	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/Overview.html:46
-}
-
-//line views/vexport/Overview.html:46
-func (p *Overview) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vexport/Overview.html:46
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/Overview.html:46
-	p.WriteBody(qb422016, as, ps)
-//line views/vexport/Overview.html:46
-	qs422016 := string(qb422016.B)
-//line views/vexport/Overview.html:46
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/Overview.html:46
-	return qs422016
-//line views/vexport/Overview.html:46
-}
-
-//line views/vexport/Overview.html:48
-func StreamGroupList(qw422016 *qt422016.Writer, groups model.Groups, indent int) {
-//line views/vexport/Overview.html:49
-	vutil.StreamIndent(qw422016, true, indent)
-//line views/vexport/Overview.html:49
-	qw422016.N().S(`<ul>`)
-//line views/vexport/Overview.html:51
-	for _, g := range groups {
-//line views/vexport/Overview.html:52
-		vutil.StreamIndent(qw422016, true, indent+1)
-//line views/vexport/Overview.html:52
-		qw422016.N().S(`<li>`)
-//line views/vexport/Overview.html:54
-		vutil.StreamIndent(qw422016, true, indent+2)
-//line views/vexport/Overview.html:55
-		qw422016.E().S(g.Key)
-//line views/vexport/Overview.html:56
-		if len(g.Children) > 0 {
-//line views/vexport/Overview.html:57
-			StreamGroupList(qw422016, g.Children, indent+3)
 //line views/vexport/Overview.html:58
-		}
-//line views/vexport/Overview.html:59
-		vutil.StreamIndent(qw422016, true, indent+1)
-//line views/vexport/Overview.html:59
-		qw422016.N().S(`</li>`)
-//line views/vexport/Overview.html:61
-	}
-//line views/vexport/Overview.html:62
-	vutil.StreamIndent(qw422016, true, indent)
-//line views/vexport/Overview.html:62
-	qw422016.N().S(`</ul>`)
-//line views/vexport/Overview.html:64
 }
 
-//line views/vexport/Overview.html:64
-func WriteGroupList(qq422016 qtio422016.Writer, groups model.Groups, indent int) {
-//line views/vexport/Overview.html:64
+//line views/vexport/Overview.html:58
+func (p *Overview) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
+//line views/vexport/Overview.html:58
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/Overview.html:64
-	StreamGroupList(qw422016, groups, indent)
-//line views/vexport/Overview.html:64
+//line views/vexport/Overview.html:58
+	p.StreamBody(qw422016, as, ps)
+//line views/vexport/Overview.html:58
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/Overview.html:64
+//line views/vexport/Overview.html:58
 }
 
-//line views/vexport/Overview.html:64
-func GroupList(groups model.Groups, indent int) string {
-//line views/vexport/Overview.html:64
+//line views/vexport/Overview.html:58
+func (p *Overview) Body(as *app.State, ps *cutil.PageState) string {
+//line views/vexport/Overview.html:58
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/Overview.html:64
-	WriteGroupList(qb422016, groups, indent)
-//line views/vexport/Overview.html:64
+//line views/vexport/Overview.html:58
+	p.WriteBody(qb422016, as, ps)
+//line views/vexport/Overview.html:58
 	qs422016 := string(qb422016.B)
-//line views/vexport/Overview.html:64
+//line views/vexport/Overview.html:58
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/Overview.html:64
+//line views/vexport/Overview.html:58
 	return qs422016
-//line views/vexport/Overview.html:64
+//line views/vexport/Overview.html:58
 }
 
+//line views/vexport/Overview.html:60
+func StreamGroupList(qw422016 *qt422016.Writer, groups model.Groups, indent int) {
+//line views/vexport/Overview.html:61
+	vutil.StreamIndent(qw422016, true, indent)
+//line views/vexport/Overview.html:61
+	qw422016.N().S(`<ul>`)
+//line views/vexport/Overview.html:63
+	for _, g := range groups {
+//line views/vexport/Overview.html:64
+		vutil.StreamIndent(qw422016, true, indent+1)
+//line views/vexport/Overview.html:64
+		qw422016.N().S(`<li>`)
 //line views/vexport/Overview.html:66
-func StreamModelList(qw422016 *qt422016.Writer, models model.Models, urlPrefix string, as *app.State, ps *cutil.PageState) {
-//line views/vexport/Overview.html:66
+		vutil.StreamIndent(qw422016, true, indent+2)
+//line views/vexport/Overview.html:67
+		qw422016.E().S(g.Key)
+//line views/vexport/Overview.html:68
+		if len(g.Children) > 0 {
+//line views/vexport/Overview.html:69
+			StreamGroupList(qw422016, g.Children, indent+3)
+//line views/vexport/Overview.html:70
+		}
+//line views/vexport/Overview.html:71
+		vutil.StreamIndent(qw422016, true, indent+1)
+//line views/vexport/Overview.html:71
+		qw422016.N().S(`</li>`)
+//line views/vexport/Overview.html:73
+	}
+//line views/vexport/Overview.html:74
+	vutil.StreamIndent(qw422016, true, indent)
+//line views/vexport/Overview.html:74
+	qw422016.N().S(`</ul>`)
+//line views/vexport/Overview.html:76
+}
+
+//line views/vexport/Overview.html:76
+func WriteGroupList(qq422016 qtio422016.Writer, groups model.Groups, indent int) {
+//line views/vexport/Overview.html:76
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vexport/Overview.html:76
+	StreamGroupList(qw422016, groups, indent)
+//line views/vexport/Overview.html:76
+	qt422016.ReleaseWriter(qw422016)
+//line views/vexport/Overview.html:76
+}
+
+//line views/vexport/Overview.html:76
+func GroupList(groups model.Groups, indent int) string {
+//line views/vexport/Overview.html:76
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vexport/Overview.html:76
+	WriteGroupList(qb422016, groups, indent)
+//line views/vexport/Overview.html:76
+	qs422016 := string(qb422016.B)
+//line views/vexport/Overview.html:76
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vexport/Overview.html:76
+	return qs422016
+//line views/vexport/Overview.html:76
+}
+
+//line views/vexport/Overview.html:78
+func StreamEnumList(qw422016 *qt422016.Writer, enums enum.Enums, urlPrefix string, as *app.State, ps *cutil.PageState) {
+//line views/vexport/Overview.html:78
 	qw422016.N().S(`
   <table class="mt min-200 full-width">
     <tbody>
 `)
-//line views/vexport/Overview.html:69
+//line views/vexport/Overview.html:81
+	for _, e := range enums {
+//line views/vexport/Overview.html:83
+		u := fmt.Sprintf("%s/%s", urlPrefix, e.Name)
+		var prefix string
+		if len(e.Group) > 0 {
+			prefix += strings.Join(e.Group, "/") + ", "
+		}
+
+//line views/vexport/Overview.html:88
+		qw422016.N().S(`      <tr>
+        <td class="shrink"><a href="`)
+//line views/vexport/Overview.html:90
+		qw422016.E().S(u)
+//line views/vexport/Overview.html:90
+		qw422016.N().S(`">`)
+//line views/vexport/Overview.html:90
+		components.StreamSVGRef(qw422016, e.IconSafe(), 15, 15, ``, ps)
+//line views/vexport/Overview.html:90
+		qw422016.N().S(`</a> <a href="`)
+//line views/vexport/Overview.html:90
+		qw422016.E().S(u)
+//line views/vexport/Overview.html:90
+		qw422016.N().S(`">`)
+//line views/vexport/Overview.html:90
+		qw422016.E().S(e.Title())
+//line views/vexport/Overview.html:90
+		qw422016.N().S(`</a></td>
+        <td>`)
+//line views/vexport/Overview.html:91
+		qw422016.E().S(e.Description)
+//line views/vexport/Overview.html:91
+		qw422016.N().S(`</td>
+      </tr>
+`)
+//line views/vexport/Overview.html:93
+	}
+//line views/vexport/Overview.html:93
+	qw422016.N().S(`    </tbody>
+  </table>
+`)
+//line views/vexport/Overview.html:96
+}
+
+//line views/vexport/Overview.html:96
+func WriteEnumList(qq422016 qtio422016.Writer, enums enum.Enums, urlPrefix string, as *app.State, ps *cutil.PageState) {
+//line views/vexport/Overview.html:96
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vexport/Overview.html:96
+	StreamEnumList(qw422016, enums, urlPrefix, as, ps)
+//line views/vexport/Overview.html:96
+	qt422016.ReleaseWriter(qw422016)
+//line views/vexport/Overview.html:96
+}
+
+//line views/vexport/Overview.html:96
+func EnumList(enums enum.Enums, urlPrefix string, as *app.State, ps *cutil.PageState) string {
+//line views/vexport/Overview.html:96
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vexport/Overview.html:96
+	WriteEnumList(qb422016, enums, urlPrefix, as, ps)
+//line views/vexport/Overview.html:96
+	qs422016 := string(qb422016.B)
+//line views/vexport/Overview.html:96
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vexport/Overview.html:96
+	return qs422016
+//line views/vexport/Overview.html:96
+}
+
+//line views/vexport/Overview.html:98
+func StreamModelList(qw422016 *qt422016.Writer, models model.Models, urlPrefix string, as *app.State, ps *cutil.PageState) {
+//line views/vexport/Overview.html:98
+	qw422016.N().S(`
+  <table class="mt min-200 full-width">
+    <tbody>
+`)
+//line views/vexport/Overview.html:101
 	for _, m := range models {
-//line views/vexport/Overview.html:71
+//line views/vexport/Overview.html:103
 		u := fmt.Sprintf("%s/%s", urlPrefix, m.Name)
 		var prefix string
 		if len(m.Group) > 0 {
 			prefix += strings.Join(m.Group, "/") + ", "
 		}
 		if len(m.SeedData) > 0 {
-			prefix += fmt.Sprintf("%d seed rows, ", len(m.SeedData))
+			prefix += fmt.Sprintf("%d seed %s, ", len(m.SeedData), util.StringPluralMaybe("row", len(m.SeedData)))
 		}
 
-//line views/vexport/Overview.html:79
+//line views/vexport/Overview.html:111
 		qw422016.N().S(`      <tr>
         <td class="shrink"><a href="`)
-//line views/vexport/Overview.html:81
+//line views/vexport/Overview.html:113
 		qw422016.E().S(u)
-//line views/vexport/Overview.html:81
+//line views/vexport/Overview.html:113
 		qw422016.N().S(`">`)
-//line views/vexport/Overview.html:81
+//line views/vexport/Overview.html:113
 		components.StreamSVGRef(qw422016, m.IconSafe(), 15, 15, ``, ps)
-//line views/vexport/Overview.html:81
+//line views/vexport/Overview.html:113
 		qw422016.N().S(`</a> <a href="`)
-//line views/vexport/Overview.html:81
+//line views/vexport/Overview.html:113
 		qw422016.E().S(u)
-//line views/vexport/Overview.html:81
+//line views/vexport/Overview.html:113
 		qw422016.N().S(`">`)
-//line views/vexport/Overview.html:81
+//line views/vexport/Overview.html:113
 		qw422016.E().S(m.Title())
-//line views/vexport/Overview.html:81
+//line views/vexport/Overview.html:113
 		qw422016.N().S(`</a></td>
         <td style="text-align: right;"><em>`)
-//line views/vexport/Overview.html:82
+//line views/vexport/Overview.html:114
 		qw422016.E().S(prefix)
-//line views/vexport/Overview.html:82
+//line views/vexport/Overview.html:114
 		qw422016.N().D(len(m.Columns))
-//line views/vexport/Overview.html:82
+//line views/vexport/Overview.html:114
 		qw422016.N().S(` `)
-//line views/vexport/Overview.html:82
+//line views/vexport/Overview.html:114
 		qw422016.E().S(util.StringPluralMaybe("field", len(m.Columns)))
-//line views/vexport/Overview.html:82
+//line views/vexport/Overview.html:114
 		qw422016.N().S(`</em></td>
       </tr>
 `)
-//line views/vexport/Overview.html:84
+//line views/vexport/Overview.html:116
 	}
-//line views/vexport/Overview.html:84
+//line views/vexport/Overview.html:116
 	qw422016.N().S(`    </tbody>
   </table>
 `)
-//line views/vexport/Overview.html:87
+//line views/vexport/Overview.html:119
 }
 
-//line views/vexport/Overview.html:87
+//line views/vexport/Overview.html:119
 func WriteModelList(qq422016 qtio422016.Writer, models model.Models, urlPrefix string, as *app.State, ps *cutil.PageState) {
-//line views/vexport/Overview.html:87
+//line views/vexport/Overview.html:119
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/Overview.html:87
+//line views/vexport/Overview.html:119
 	StreamModelList(qw422016, models, urlPrefix, as, ps)
-//line views/vexport/Overview.html:87
+//line views/vexport/Overview.html:119
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/Overview.html:87
+//line views/vexport/Overview.html:119
 }
 
-//line views/vexport/Overview.html:87
+//line views/vexport/Overview.html:119
 func ModelList(models model.Models, urlPrefix string, as *app.State, ps *cutil.PageState) string {
-//line views/vexport/Overview.html:87
+//line views/vexport/Overview.html:119
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/Overview.html:87
+//line views/vexport/Overview.html:119
 	WriteModelList(qb422016, models, urlPrefix, as, ps)
-//line views/vexport/Overview.html:87
+//line views/vexport/Overview.html:119
 	qs422016 := string(qb422016.B)
-//line views/vexport/Overview.html:87
+//line views/vexport/Overview.html:119
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/Overview.html:87
+//line views/vexport/Overview.html:119
 	return qs422016
-//line views/vexport/Overview.html:87
+//line views/vexport/Overview.html:119
 }

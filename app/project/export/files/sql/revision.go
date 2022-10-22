@@ -17,7 +17,11 @@ func sqlCreateRevision(m *model.Model, modules []string) (*golang.Block, error) 
 	// core
 	ret.W("create table if not exists %q (", m.Name)
 	for _, col := range hc.Const {
-		ret.W("  %q %s,", col.Name, col.ToSQLType())
+		st, err := col.ToSQLType()
+		if err != nil {
+			return nil, err
+		}
+		ret.W("  %q %s,", col.Name, st)
 	}
 	ret.W("  primary key (%s)", strings.Join(pks.NamesQuoted(), ", "))
 	ret.W(");")
@@ -33,7 +37,11 @@ func sqlCreateRevision(m *model.Model, modules []string) (*golang.Block, error) 
 	revTblName := m.Name + "_" + hc.Col.Name
 	ret.W("create table if not exists %q (", revTblName)
 	for _, col := range hc.Var {
-		ret.W("  %q %s,", col.Name, col.ToSQLType())
+		st, err := col.ToSQLType()
+		if err != nil {
+			return nil, err
+		}
+		ret.W("  %q %s,", col.Name, st)
 	}
 
 	revPKs := hc.Var.PKs()

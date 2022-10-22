@@ -10,6 +10,7 @@ import (
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/filter"
 	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/model"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -39,7 +40,7 @@ func exportModelFromForm(frm util.ValueMap, m *model.Model) error {
 	m.History = get("history", m.History)
 	m.Tags = util.StringSplitAndTrim(get("tags", strings.Join(m.Tags, ",")), ",")
 	m.TitleOverride = get("titleOverride", m.TitleOverride)
-	m.ProperOverride = get("propoerOverride", m.ProperOverride)
+	m.ProperOverride = get("properOverride", m.ProperOverride)
 
 	cfg := util.ValueMap{}
 	err = util.FromJSON([]byte(get("config", util.ToJSON(m.Config))), &cfg)
@@ -79,18 +80,12 @@ func exportModelFromForm(frm util.ValueMap, m *model.Model) error {
 	return nil
 }
 
-func exportLoad(rc *fasthttp.RequestCtx, as *app.State, logger util.Logger) (*project.Project, *model.Model, *model.Args, error) {
-	prj, err := getProject(rc, as)
+func exportLoadModel(rc *fasthttp.RequestCtx, as *app.State, logger util.Logger) (*project.Project, *model.Model, *model.Args, error) {
+	prj, args, err := exportLoadPrjArgs(rc, as, logger)
 	if err != nil {
 		return nil, nil, nil, err
 	}
-
 	modelKey, err := cutil.RCRequiredString(rc, "model", false)
-	if err != nil {
-		return nil, nil, nil, err
-	}
-
-	args, err := prj.ModuleArgExport(as.Services.Projects, logger)
 	if err != nil {
 		return nil, nil, nil, err
 	}
@@ -105,4 +100,67 @@ func exportLoad(rc *fasthttp.RequestCtx, as *app.State, logger util.Logger) (*pr
 	}
 
 	return prj, mdl, args, nil
+}
+
+func exportEnumFromForm(frm util.ValueMap, e *enum.Enum) error {
+	get := func(k string, def string) string {
+		x := frm.GetStringOpt(k)
+		if x == "" {
+			return def
+		}
+		return x
+	}
+	e.Name = get("name", e.Name)
+	e.Package = get("package", e.Package)
+	e.Group = util.StringSplitAndTrim(get("group", strings.Join(e.Group, "/")), "/")
+	e.Description = get("description", e.Description)
+	e.Icon = get("icon", e.Icon)
+
+	e.Tags = util.StringSplitAndTrim(get("tags", strings.Join(e.Tags, ",")), ",")
+	e.TitleOverride = get("titleOverride", e.TitleOverride)
+	e.ProperOverride = get("properOverride", e.ProperOverride)
+
+	e.Values = util.StringSplitAndTrim(get("values", strings.Join(e.Values, "\n")), "\n")
+
+	cfg := util.ValueMap{}
+	err := util.FromJSON([]byte(get("config", util.ToJSON(e.Config))), &cfg)
+	if err != nil {
+		return errors.Wrap(err, "invalid config")
+	}
+	e.Config = cfg
+	return nil
+}
+
+func exportLoadEnum(rc *fasthttp.RequestCtx, as *app.State, logger util.Logger) (*project.Project, *enum.Enum, *model.Args, error) {
+	prj, args, err := exportLoadPrjArgs(rc, as, logger)
+	if err != nil {
+		return nil, nil, nil, err
+	}
+	enumKey, err := cutil.RCRequiredString(rc, "enum", false)
+	if err != nil {
+		return nil, nil, nil, err
+	}
+	var en *enum.Enum
+	if enumKey == "new" {
+		en = &enum.Enum{}
+	} else {
+		en = args.Enums.Get(enumKey)
+	}
+	if en == nil {
+		return nil, nil, nil, errors.Errorf("no model found with key [%s]", enumKey)
+	}
+
+	return prj, en, args, nil
+}
+
+func exportLoadPrjArgs(rc *fasthttp.RequestCtx, as *app.State, logger util.Logger) (*project.Project, *model.Args, error) {
+	prj, err := getProject(rc, as)
+	if err != nil {
+		return nil, nil, err
+	}
+	args, err := prj.ModuleArgExport(as.Services.Projects, logger)
+	if err != nil {
+		return nil, nil, err
+	}
+	return prj, args, nil
 }

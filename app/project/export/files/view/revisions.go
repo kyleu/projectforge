@@ -3,12 +3,13 @@ package view
 import (
 	"fmt"
 
+	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func exportViewDetailRevisions(ret *golang.Block, m *model.Model) {
+func exportViewDetailRevisions(ret *golang.Block, m *model.Model, enums enum.Enums) error {
 	hc := m.HistoryColumns(false)
 	ret.W("  {%%%%- if len(p.%s) > 1 -%%%%}", hc.Col.ProperPlural())
 	ret.W("  <div class=\"card\">")
@@ -17,16 +18,28 @@ func exportViewDetailRevisions(ret *golang.Block, m *model.Model) {
 	ret.W("    <table class=\"mt\">")
 	ret.W("      <thead>")
 	ret.W("        <tr>")
-	addHeader := func(col *model.Column) {
-		call := fmt.Sprintf("components.TableHeaderSimple(%q, %q, %q, %q, prms, ps.URI, ps)", m.Package, col.Name, util.StringToTitle(col.Name), col.Help())
+	addHeader := func(col *model.Column) error {
+		h, err := col.Help(enums)
+		if err != nil {
+			return err
+		}
+		msg := "components.TableHeaderSimple(%q, %q, %q, %q, prms, ps.URI, ps)"
+		call := fmt.Sprintf(msg, m.Package, col.Name, util.StringToTitle(col.Name), h)
 		ret.W("          {%%= " + call + " %%}")
+		return nil
 	}
 	for _, pk := range m.PKs() {
-		addHeader(pk)
+		if err := addHeader(pk); err != nil {
+			return err
+		}
 	}
-	addHeader(hc.Col)
+	if err := addHeader(hc.Col); err != nil {
+		return err
+	}
 	for _, c := range m.Columns.WithTag("created") {
-		addHeader(c)
+		if err := addHeader(c); err != nil {
+			return err
+		}
 	}
 	ret.W("        </tr>")
 	ret.W("      </thead>")
@@ -54,4 +67,5 @@ func exportViewDetailRevisions(ret *golang.Block, m *model.Model) {
 	ret.W("    </table>")
 	ret.W("  </div>")
 	ret.W("  {%%- endif -%%}")
+	return nil
 }

@@ -9,7 +9,7 @@ func (o Ordering) String() string {
 	if o.Asc {
 		return o.Column
 	}
-	return o.Column + "-desc"
+	return o.Column + ":desc"
 }
 
 type Orderings []*Ordering

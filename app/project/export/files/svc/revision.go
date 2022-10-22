@@ -2,6 +2,7 @@ package svc
 
 import (
 	"fmt"
+	"projectforge.dev/projectforge/app/project/export/enum"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -19,15 +20,15 @@ func ServiceRevision(m *model.Model, args *model.Args, addHeader bool) (*file.Fi
 	dbRef := args.DBRef()
 	g := golang.NewFile(m.Package, []string{"app", m.Package}, "servicerevision")
 	g.AddImport(helper.ImpAppUtil, helper.ImpFmt, helper.ImpStrings, helper.ImpContext, helper.ImpFilter, helper.ImpSQLx, helper.ImpErrors, helper.ImpDatabase)
-	ar, err := serviceGetAllRevisions(m, dbRef)
+	ar, err := serviceGetAllRevisions(m, dbRef, args.Enums)
 	if err != nil {
 		return nil, err
 	}
-	gr, err := serviceGetRevision(m, dbRef)
+	gr, err := serviceGetRevision(m, dbRef, args.Enums)
 	if err != nil {
 		return nil, err
 	}
-	gnr, err := serviceGetCurrentRevisions(m, dbRef)
+	gnr, err := serviceGetCurrentRevisions(m, dbRef, args.Enums)
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +36,7 @@ func ServiceRevision(m *model.Model, args *model.Args, addHeader bool) (*file.Fi
 	return g.Render(addHeader)
 }
 
-func serviceGetAllRevisions(m *model.Model, dbRef string) (*golang.Block, error) {
+func serviceGetAllRevisions(m *model.Model, dbRef string, enums enum.Enums) (*golang.Block, error) {
 	hc := m.HistoryColumns(true)
 	pks := m.PKs()
 
@@ -45,7 +46,11 @@ func serviceGetAllRevisions(m *model.Model, dbRef string) (*golang.Block, error)
 		suffix += incDel
 	}
 	const decl = "func (s *Service) GetAll%s(ctx context.Context, tx *sqlx.Tx, %s, params *filter.Params%s, logger util.Logger) (%s, error) {"
-	ret.W(decl, hc.Col.ProperPlural(), pks.Args(m.Package), suffix, m.ProperPlural())
+	args, err := pks.Args(m.Package, enums)
+	if err != nil {
+		return nil, err
+	}
+	ret.W(decl, hc.Col.ProperPlural(), args, suffix, m.ProperPlural())
 	ret.W("\tparams = filters(params)")
 	placeholders := make([]string, 0, len(m.PKs()))
 	for idx, pk := range m.PKs() {
@@ -55,7 +60,7 @@ func serviceGetAllRevisions(m *model.Model, dbRef string) (*golang.Block, error)
 	if m.IsSoftDelete() {
 		ret.W("\twc = addDeletedClause(wc, includeDeleted)")
 	}
-	err := addJoinClause(ret, m, hc)
+	err = addJoinClause(ret, m, hc)
 	if err != nil {
 		return nil, err
 	}
@@ -70,18 +75,22 @@ func serviceGetAllRevisions(m *model.Model, dbRef string) (*golang.Block, error)
 	return ret, nil
 }
 
-func serviceGetRevision(m *model.Model, dbRef string) (*golang.Block, error) {
+func serviceGetRevision(m *model.Model, dbRef string, enums enum.Enums) (*golang.Block, error) {
 	revCol := m.HistoryColumn()
 	ret := golang.NewBlock(fmt.Sprintf("Get%s", revCol.Proper()), "func")
 	const decl = "func (s *Service) Get%s(ctx context.Context, tx *sqlx.Tx, %s, %s int, logger util.Logger) (*%s, error) {"
-	ret.W(decl, revCol.Proper(), m.PKs().Args(m.Package), revCol.Camel(), m.Proper())
+	args, err := m.PKs().Args(m.Package, enums)
+	if err != nil {
+		return nil, err
+	}
+	ret.W(decl, revCol.Proper(), args, revCol.Camel(), m.Proper())
 	placeholders := make([]string, 0, len(m.PKs()))
 	for idx, pk := range m.PKs() {
 		placeholders = append(placeholders, fmt.Sprintf("\\\"%s\\\" = $%d", pk.Name, idx+1))
 	}
 	ret.W("\twc := \"%s and \\\"%s\\\" = $%d\"", strings.Join(placeholders, " and "), revCol.Name, len(m.PKs())+1)
 	ret.W("\tret := &dto{}")
-	err := addJoinClause(ret, m, m.HistoryColumns(true))
+	err = addJoinClause(ret, m, m.HistoryColumns(true))
 	if err != nil {
 		return nil, err
 	}
@@ -95,11 +104,14 @@ func serviceGetRevision(m *model.Model, dbRef string) (*golang.Block, error) {
 	return ret, nil
 }
 
-func serviceGetCurrentRevisions(m *model.Model, dbRef string) (*golang.Block, error) {
+func serviceGetCurrentRevisions(m *model.Model, dbRef string, enums enum.Enums) (*golang.Block, error) {
 	revCol := m.HistoryColumn()
 	pks := m.PKs()
 	ret := golang.NewBlock(fmt.Sprintf("GetCurrent%s", revCol.ProperPlural()), "func")
-	serviceGetCurrentRevisionsBlock(m, ret, revCol, pks)
+	err := serviceGetCurrentRevisionsBlock(m, ret, revCol, pks, enums)
+	if err != nil {
+		return nil, err
+	}
 
 	pkComps := make([]string, 0, len(pks))
 	for _, pk := range pks {
@@ -107,14 +119,18 @@ func serviceGetCurrentRevisions(m *model.Model, dbRef string) (*golang.Block, er
 	}
 
 	ret.W("\tvar results []*struct {")
-	maxColLength := pks.MaxGoKeyLength(m.Package)
-	maxTypeLength := pks.MaxGoTypeLength(m.Package)
+	maxColLength := pks.MaxGoKeyLength(m.Package, enums)
+	maxTypeLength := pks.MaxGoTypeLength(m.Package, enums)
 	currRevStr := fmt.Sprintf("Current%s", revCol.Proper())
 	if maxColLength < len(currRevStr) {
 		maxColLength = len(currRevStr)
 	}
 	for _, pk := range pks {
-		goType := util.StringPad(pk.ToGoType(m.Package), maxTypeLength)
+		gt, err := pk.ToGoType(m.Package, enums)
+		if err != nil {
+			return nil, err
+		}
+		goType := util.StringPad(gt, maxTypeLength)
 		ret.W("\t\t%s %s `db:%q`", util.StringPad(pk.Proper(), maxColLength), goType, pk.Name)
 	}
 	ret.W("\t\t%s int    `db:\"current_%s\"`", currRevStr, revCol.Name)
@@ -139,7 +155,7 @@ func serviceGetCurrentRevisions(m *model.Model, dbRef string) (*golang.Block, er
 	return ret, nil
 }
 
-func serviceGetCurrentRevisionsBlock(m *model.Model, ret *golang.Block, revCol *model.Column, pks model.Columns) {
+func serviceGetCurrentRevisionsBlock(m *model.Model, ret *golang.Block, revCol *model.Column, pks model.Columns, enums enum.Enums) error {
 	pkWCStr := make([]string, 0, len(pks))
 	pkWCIdx := make([]string, 0, len(pks))
 	pkModelRefs := make([]string, 0, len(pks))
@@ -154,7 +170,12 @@ func serviceGetCurrentRevisionsBlock(m *model.Model, ret *golang.Block, revCol *
 	}
 
 	const decl = "func (s *Service) getCurrent%s(ctx context.Context, tx *sqlx.Tx, logger util.Logger, models ...*%s) (map[string]%s, error) {"
-	ret.W(decl, revCol.ProperPlural(), m.Proper(), model.ToGoType(revCol.Type, false, m.Package))
+	gt, err := model.ToGoType(revCol.Type, false, m.Package, enums)
+	if err != nil {
+		return err
+	}
+
+	ret.W(decl, revCol.ProperPlural(), m.Proper(), gt)
 	ret.W("\tstmts := make([]string, 0, len(models))")
 	ret.W("\tfor i := range models {")
 	ret.W("\t\tstmts = append(stmts, fmt.Sprintf(`%s`, %s))", strings.Join(pkWCStr, " and "), strings.Join(pkWCIdx, ", "))
@@ -164,6 +185,7 @@ func serviceGetCurrentRevisionsBlock(m *model.Model, ret *golang.Block, revCol *
 	ret.W("\tfor _, model := range models {")
 	ret.W("\t\tvals = append(vals, %s)", strings.Join(pkModelRefs, ", "))
 	ret.W("\t}")
+	return nil
 }
 
 func addJoinClause(ret *golang.Block, m *model.Model, hc *model.HistoryMap) error {

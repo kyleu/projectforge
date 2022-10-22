@@ -2,8 +2,8 @@ package model
 
 import (
 	"fmt"
-
 	"github.com/pkg/errors"
+	"projectforge.dev/projectforge/app/project/export/enum"
 
 	"projectforge.dev/projectforge/app/lib/types"
 )
@@ -13,13 +13,19 @@ const (
 	goTypeAnyArray    = "[]any"
 )
 
-func ToGoType(t types.Type, nullable bool, pkg string) string {
+func ToGoType(t types.Type, nullable bool, pkg string, enums enum.Enums) (string, error) {
 	var ret string
 	switch t.Key() {
 	case types.KeyAny:
 		ret = "any"
 	case types.KeyBool:
 		ret = types.KeyBool
+	case types.KeyEnum:
+		e, err := AsEnumInstance(t, enums)
+		if err != nil {
+			return "", err
+		}
+		ret = e.Package + "." + e.Title()
 	case types.KeyInt:
 		ret = types.KeyInt
 	case types.KeyFloat:
@@ -39,14 +45,14 @@ func ToGoType(t types.Type, nullable bool, pkg string) string {
 				ret = goTypeAnyArray
 			}
 		default:
-			return fmt.Sprintf("unhandled go type [%T]", t)
+			return "", errors.Errorf("unhandled go type [%T]", t)
 		}
 	case types.KeyMap, types.KeyValueMap:
 		ret = "util.ValueMap"
 	case types.KeyReference:
 		ref, err := AsRef(t)
 		if err != nil {
-			return "ERROR:" + err.Error()
+			return "", err
 		}
 		if ref.Pkg.Last() == pkg {
 			ret = fmt.Sprintf("*%s", ref.K)
@@ -60,20 +66,20 @@ func ToGoType(t types.Type, nullable bool, pkg string) string {
 	case types.KeyUUID:
 		ret = "uuid.UUID"
 	default:
-		return "ERROR:Unhandled[" + t.Key() + "]"
+		return "", errors.Errorf("ERROR:Unhandled[%s]", t.Key())
 	}
 	if nullable && !t.Scalar() {
-		return "*" + ret
+		return "*" + ret, nil
 	}
-	return ret
+	return ret, nil
 }
 
-func ToGoDTOType(t types.Type, nullable bool, pkg string) string {
+func ToGoDTOType(t types.Type, nullable bool, pkg string, enums enum.Enums) (string, error) {
 	switch t.Key() {
 	case types.KeyAny, types.KeyList, types.KeyMap, types.KeyValueMap, types.KeyReference:
-		return "json.RawMessage"
+		return "json.RawMessage", nil
 	default:
-		return ToGoType(t, nullable, pkg)
+		return ToGoType(t, nullable, pkg, enums)
 	}
 }
 
@@ -149,31 +155,57 @@ func ToGoViewString(t types.Type, prop string, nullable bool, format string, ver
 
 const keyJSONB = "jsonb"
 
-func ToSQLType(t types.Type) string {
+func ToSQLType(t types.Type) (string, error) {
 	switch t.Key() {
 	case types.KeyAny:
-		return keyJSONB
+		return keyJSONB, nil
 	case types.KeyBool:
-		return "boolean"
+		return "boolean", nil
+	case types.KeyEnum:
+		e, err := AsEnum(t)
+		if err != nil {
+			return "", err
+		}
+		return e.Ref, nil
 	case types.KeyInt:
 		i := types.TypeAs[*types.Int](t)
 		if i != nil && i.Bits == 64 {
-			return "bigint"
+			return "bigint", nil
 		}
-		return "int"
+		return "int", nil
 	case types.KeyFloat:
-		return "double precision"
+		return "double precision", nil
 	case types.KeyList, types.KeyMap, types.KeyValueMap, types.KeyReference:
-		return keyJSONB
+		return keyJSONB, nil
 	case types.KeyString:
-		return "text"
+		return "text", nil
 	case types.KeyTimestamp:
-		return "timestamp"
+		return "timestamp", nil
 	case types.KeyUUID:
-		return "uuid"
+		return "uuid", nil
 	default:
-		return "sql-error-invalid-type"
+		return "sql-error-invalid-type", nil
 	}
+}
+
+func AsEnum(t types.Type) (*types.Enum, error) {
+	w, ok := t.(*types.Wrapped)
+	if ok {
+		t = w.T
+	}
+	ref, ok := t.(*types.Enum)
+	if !ok {
+		return nil, errors.Errorf("InvalidType(%T)", w.T)
+	}
+	return ref, nil
+}
+
+func AsEnumInstance(t types.Type, enums enum.Enums) (*enum.Enum, error) {
+	e, err := AsEnum(t)
+	if err != nil {
+		return nil, err
+	}
+	return enums.Get(e.Ref), nil
 }
 
 func AsRef(t types.Type) (*types.Reference, error) {

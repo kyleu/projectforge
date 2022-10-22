@@ -2,6 +2,7 @@ package view
 
 import (
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
@@ -14,7 +15,11 @@ func history(m *model.Model, args *model.Args, addHeader bool) (*file.File, erro
 	if m.Columns.HasFormat(model.FmtCountry) {
 		g.AddImport(helper.ImpAppUtil)
 	}
-	g.AddBlocks(exportViewHistoryClass(m), exportViewHistoryBody(m), exportViewHistoryTable(m))
+	evht, err := exportViewHistoryTable(m, args.Enums)
+	if err != nil {
+		return nil, err
+	}
+	g.AddBlocks(exportViewHistoryClass(m), exportViewHistoryBody(m), evht)
 	return g.Render(addHeader)
 }
 
@@ -71,7 +76,7 @@ func exportViewHistoryBody(m *model.Model) *golang.Block {
 	return ret
 }
 
-func exportViewHistoryTable(m *model.Model) *golang.Block {
+func exportViewHistoryTable(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock("HistoryTable", "struct")
 	const decl = "{%%%% func HistoryTable(model *%s.%s, histories %s.Histories, params filter.ParamSet, as *app.State, ps *cutil.PageState) %%%%}"
 	ret.W(decl, m.Package, m.Proper(), m.Package)
@@ -85,7 +90,11 @@ func exportViewHistoryTable(m *model.Model) *golang.Block {
 	}
 	addHeader("id", "ID", "System-generated history UUID identifier")
 	for _, pk := range m.PKs() {
-		addHeader(m.Package+"_"+pk.Name, m.Title()+" "+pk.Title(), model.Help(pk.Type, pk.Format))
+		h, err := model.Help(pk.Type, pk.Format, enums)
+		if err != nil {
+			return nil, err
+		}
+		addHeader(m.Package+"_"+pk.Name, m.Title()+" "+pk.Title(), h)
 	}
 	addHeader("c", "Changes", "Object changes")
 	addHeader("created", "Created", "Time when history was created")
@@ -107,5 +116,5 @@ func exportViewHistoryTable(m *model.Model) *golang.Block {
 	ret.W("    </tbody>")
 	ret.W("  </table>")
 	ret.W("{%% endfunc %%}")
-	return ret
+	return ret, nil
 }

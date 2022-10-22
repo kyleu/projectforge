@@ -2,6 +2,7 @@ package gomodel
 
 import (
 	"fmt"
+	"projectforge.dev/projectforge/app/project/export/enum"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -16,7 +17,7 @@ import (
 
 func DTO(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "dto")
-	for _, imp := range helper.ImportsForTypes("dto", m.Columns.Types()...) {
+	for _, imp := range helper.ImportsForTypes("dto", args.Enums, m.Columns.Types()...) {
 		g.AddImport(imp)
 	}
 	g.AddImport(helper.ImpStrings, helper.ImpAppUtil, helper.ImpFmt)
@@ -25,7 +26,11 @@ func DTO(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	} else {
 		return nil, err
 	}
-	g.AddBlocks(modelDTO(m))
+	mdto, err := modelDTO(m, args.Enums)
+	if err != nil {
+		return nil, err
+	}
+	g.AddBlocks(mdto)
 	mdm, err := modelDTOToModel(g, m)
 	if err != nil {
 		return nil, err
@@ -71,16 +76,20 @@ func modelTableCols(m *model.Model, g *golang.File) (*golang.Block, error) {
 	return ret, nil
 }
 
-func modelDTO(m *model.Model) *golang.Block {
+func modelDTO(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock(m.Proper()+"DTO", "struct")
 	ret.W("type dto struct {")
 	maxColLength := util.StringArrayMaxLength(m.Columns.CamelNames())
-	maxTypeLength := m.Columns.MaxGoDTOKeyLength(m.Package)
+	maxTypeLength := m.Columns.MaxGoDTOKeyLength(m.Package, enums)
 	for _, c := range m.Columns {
-		ret.W("\t%s %s `db:%q`", util.StringPad(c.Proper(), maxColLength), util.StringPad(c.ToGoDTOType(m.Package), maxTypeLength), c.Name)
+		gdt, err := c.ToGoDTOType(m.Package, enums)
+		if err != nil {
+			return nil, err
+		}
+		ret.W("\t%s %s `db:%q`", util.StringPad(c.Proper(), maxColLength), util.StringPad(gdt, maxTypeLength), c.Name)
 	}
 	ret.W("}")
-	return ret
+	return ret, nil
 }
 
 func modelDTOToModel(g *golang.File, m *model.Model) (*golang.Block, error) {

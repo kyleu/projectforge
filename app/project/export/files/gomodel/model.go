@@ -2,6 +2,7 @@ package gomodel
 
 import (
 	"fmt"
+	"projectforge.dev/projectforge/app/project/export/enum"
 	"strings"
 
 	"projectforge.dev/projectforge/app/file"
@@ -14,10 +15,10 @@ import (
 
 func Model(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, strings.ToLower(m.Camel()))
-	for _, imp := range helper.ImportsForTypes("go", m.Columns.Types()...) {
+	for _, imp := range helper.ImportsForTypes("go", args.Enums, m.Columns.Types()...) {
 		g.AddImport(imp)
 	}
-	for _, imp := range helper.ImportsForTypes("string", m.PKs().Types()...) {
+	for _, imp := range helper.ImportsForTypes("string", args.Enums, m.PKs().Types()...) {
 		g.AddImport(imp)
 	}
 	g.AddImport(helper.ImpAppUtil, helper.ImpSlices)
@@ -34,10 +35,22 @@ func Model(m *model.Model, args *model.Args, addHeader bool) (*file.File, error)
 	}
 
 	if len(m.PKs()) > 1 {
-		g.AddBlocks(modelPK(m))
+		pk, err := modelPK(m, args.Enums)
+		if err != nil {
+			return nil, err
+		}
+		g.AddBlocks(pk)
 	}
-	g.AddBlocks(modelStruct(m), modelConstructor(m), modelRandom(m))
-	if b, err := modelFromMap(g, m); err == nil {
+	str, err := modelStruct(m, args.Enums)
+	if err != nil {
+		return nil, err
+	}
+	c, err := modelConstructor(m, args.Enums)
+	if err != nil {
+		return nil, err
+	}
+	g.AddBlocks(str, c, modelRandom(m, args.Enums))
+	if b, e := modelFromMap(g, m, args.Enums); e == nil {
 		g.AddBlocks(b)
 	} else {
 		return nil, err
@@ -47,35 +60,47 @@ func Model(m *model.Model, args *model.Args, addHeader bool) (*file.File, error)
 		hc := m.HistoryColumns(false)
 		g.AddBlocks(modelToData(m, hc.Const, "Core"), modelToData(m, hc.Var, hc.Col.Proper()))
 	}
-	g.AddBlocks(modelArray(m), modelArrayGet(m), modelArrayClone(m))
+	ag, err := modelArrayGet(m, args.Enums)
+	if err != nil {
+		return nil, err
+	}
+	g.AddBlocks(modelArray(m), ag, modelArrayClone(m))
 	return g.Render(addHeader)
 }
 
-func modelPK(m *model.Model) *golang.Block {
+func modelPK(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock("PK", "struct")
 	ret.W("type PK struct {")
 	pks := m.PKs()
 	maxColLength := util.StringArrayMaxLength(pks.CamelNames())
-	maxTypeLength := pks.MaxGoKeyLength(m.Package)
+	maxTypeLength := pks.MaxGoKeyLength(m.Package, enums)
 	for _, c := range pks {
-		goType := util.StringPad(c.ToGoType(m.Package), maxTypeLength)
+		gt, err := c.ToGoType(m.Package, enums)
+		if err != nil {
+			return nil, err
+		}
+		goType := util.StringPad(gt, maxTypeLength)
 		ret.W("\t%s %s `json:%q`", util.StringPad(c.Proper(), maxColLength), goType, c.Camel()+modelJSONSuffix(c))
 	}
 	ret.W("}")
-	return ret
+	return ret, nil
 }
 
-func modelStruct(m *model.Model) *golang.Block {
+func modelStruct(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock(m.Proper(), "struct")
 	ret.W("type %s struct {", m.Proper())
 	maxColLength := util.StringArrayMaxLength(m.Columns.CamelNames())
-	maxTypeLength := m.Columns.MaxGoKeyLength(m.Package)
+	maxTypeLength := m.Columns.MaxGoKeyLength(m.Package, enums)
 	for _, c := range m.Columns {
-		goType := util.StringPad(c.ToGoType(m.Package), maxTypeLength)
+		gt, err := c.ToGoType(m.Package, enums)
+		if err != nil {
+			return nil, err
+		}
+		goType := util.StringPad(gt, maxTypeLength)
 		ret.W("\t%s %s `json:%q`", util.StringPad(c.Proper(), maxColLength), goType, c.Camel()+modelJSONSuffix(c))
 	}
 	ret.W("}")
-	return ret
+	return ret, nil
 }
 
 func modelJSONSuffix(c *model.Column) string {
@@ -85,12 +110,16 @@ func modelJSONSuffix(c *model.Column) string {
 	return ""
 }
 
-func modelConstructor(m *model.Model) *golang.Block {
+func modelConstructor(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock("New"+m.Proper(), "func")
-	ret.W("func New(%s) *%s {", m.PKs().Args(m.Package), m.Proper())
+	args, err := m.PKs().Args(m.Package, enums)
+	if err != nil {
+		return nil, err
+	}
+	ret.W("func New(%s) *%s {", args, m.Proper())
 	ret.W("\treturn &%s{%s}", m.Proper(), m.PKs().Refs())
 	ret.W("}")
-	return ret
+	return ret, nil
 }
 
 func modelDiff(m *model.Model, g *golang.File) *golang.Block {
@@ -110,6 +139,10 @@ func modelDiff(m *model.Model, g *golang.File) *golang.Block {
 			g.AddImport(helper.ImpFmt)
 			ret.W("\tif %s != %s {", l, r)
 			ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, fmt.Sprint(%s), fmt.Sprint(%s)))", col.Camel(), l, r)
+			ret.W("\t}")
+		case types.KeyEnum:
+			ret.W("\tif %s != %s {", l, r)
+			ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, string(%s), string(%s)))", col.Camel(), l, r)
 			ret.W("\t}")
 		case types.KeyInt, types.KeyFloat:
 			g.AddImport(helper.ImpFmt)

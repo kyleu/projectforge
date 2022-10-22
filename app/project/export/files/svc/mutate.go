@@ -17,7 +17,7 @@ const serviceAssignmentToken = ":="
 
 func ServiceMutate(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "servicemutate")
-	for _, imp := range helper.ImportsForTypes("go", m.PKs().Types()...) {
+	for _, imp := range helper.ImportsForTypes("go", args.Enums, m.PKs().Types()...) {
 		g.AddImport(imp)
 	}
 	g.AddImport(helper.ImpAppUtil, helper.ImpContext, helper.ImpSQLx, helper.ImpDatabase)
@@ -49,9 +49,17 @@ func ServiceMutate(m *model.Model, args *model.Args, addHeader bool) (*file.File
 	}
 	if m.IsSoftDelete() {
 		g.AddImport(helper.ImpTime)
-		g.AddBlocks(serviceSoftDelete(m), serviceSoftDeleteWhere(m), serviceAddDeletedClause(m))
+		sdel, err := serviceSoftDelete(m, args.Enums)
+		if err != nil {
+			return nil, err
+		}
+		g.AddBlocks(sdel, serviceSoftDeleteWhere(m), serviceAddDeletedClause(m))
 	} else {
-		g.AddBlocks(serviceDelete(m), serviceDeleteWhere(m))
+		del, err := serviceDelete(m, args.Enums)
+		if err != nil {
+			return nil, err
+		}
+		g.AddBlocks(del, serviceDeleteWhere(m))
 	}
 	return g.Render(addHeader)
 }

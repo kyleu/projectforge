@@ -13,7 +13,7 @@ import (
 const nilStr = "<nil>"
 
 func SeedData(m *model.Model, args *model.Args) (*file.File, error) {
-	g := golang.NewGoTemplate([]string{"queries", "seeddata"}, m.Package+".sql")
+	g := golang.NewGoTemplate([]string{"queries", "seeddata"}, fmt.Sprintf("%s_%s.sql", m.Package, m.Name))
 	g.AddBlocks(sqlSeedData(m, args.Modules))
 	return g.Render(false)
 }
@@ -30,7 +30,7 @@ func sqlSeedData(m *model.Model, modules []string) *golang.Block {
 			cell := row[colIdx]
 			cellStr := fmt.Sprint(cell)
 			switch col.Type.Key() {
-			case "string":
+			case "string", "enum":
 				vs = append(vs, processString(cellStr, "''"))
 			case "uuid":
 				vs = append(vs, processString(cellStr, "'00000000-0000-0000-0000-000000000000'"))

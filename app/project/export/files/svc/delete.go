@@ -1,6 +1,7 @@
 package svc
 
 import (
+	"projectforge.dev/projectforge/app/project/export/enum"
 	"strings"
 
 	"projectforge.dev/projectforge/app/project/export/golang"
@@ -9,29 +10,37 @@ import (
 
 const argString = "ctx context.Context, tx *sqlx.Tx, wc string, expected int, logger util.Logger, values ...any"
 
-func serviceDelete(m *model.Model) *golang.Block {
+func serviceDelete(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	pks := m.PKs()
 	ret := golang.NewBlock("Delete", "func")
-	ret.W("func (s *Service) Delete(ctx context.Context, tx *sqlx.Tx, %s, logger util.Logger) error {", pks.Args(m.Package))
+	args, err := pks.Args(m.Package, enums)
+	if err != nil {
+		return nil, err
+	}
+	ret.W("func (s *Service) Delete(ctx context.Context, tx *sqlx.Tx, %s, logger util.Logger) error {", args)
 	ret.W("\tq := database.SQLDelete(tableQuoted, defaultWC(0))")
 	ret.W("\t_, err := s.db.Delete(ctx, q, tx, 1, logger, %s)", strings.Join(pks.CamelNames(), ", "))
 	ret.W("\treturn err")
 	ret.W("}")
-	return ret
+	return ret, nil
 }
 
-func serviceSoftDelete(m *model.Model) *golang.Block {
+func serviceSoftDelete(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	pks := m.PKs()
 	delCols := m.Columns.WithTag("deleted")
 	ret := golang.NewBlock("Delete", "func")
 	ret.W("// Delete doesn't actually delete, it only sets [" + strings.Join(delCols.Names(), ", ") + "].")
-	ret.W("func (s *Service) Delete(ctx context.Context, tx *sqlx.Tx, %s, logger util.Logger) error {", pks.Args(m.Package))
+	args, err := pks.Args(m.Package, enums)
+	if err != nil {
+		return nil, err
+	}
+	ret.W("func (s *Service) Delete(ctx context.Context, tx *sqlx.Tx, %s, logger util.Logger) error {", args)
 	ret.W("\tcols := []string{%s}", strings.Join(delCols.NamesQuoted(), ", "))
 	ret.W("\tq := database.SQLUpdate(tableQuoted, cols, defaultWC(len(cols)), \"\")")
 	ret.W("\t_, err := s.db.Update(ctx, q, tx, 1, logger, time.Now(), %s)", strings.Join(pks.CamelNames(), ", "))
 	ret.W("\treturn err")
 	ret.W("}")
-	return ret
+	return ret, nil
 }
 
 func serviceDeleteWhere(m *model.Model) *golang.Block {
