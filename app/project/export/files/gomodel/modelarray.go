@@ -2,11 +2,11 @@ package gomodel
 
 import (
 	"fmt"
+	"strings"
+
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
-	"strings"
-
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
 )

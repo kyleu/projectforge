@@ -1,9 +1,10 @@
 package model
 
 import (
-	"golang.org/x/exp/slices"
 	"path"
 	"strings"
+
+	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/util"
 )

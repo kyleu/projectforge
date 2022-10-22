@@ -2,8 +2,9 @@ package model
 
 import (
 	"fmt"
-	"projectforge.dev/projectforge/app/project/export/enum"
 	"strings"
+
+	"projectforge.dev/projectforge/app/project/export/enum"
 
 	"github.com/pkg/errors"
 

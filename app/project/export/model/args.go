@@ -3,8 +3,6 @@ package model
 import (
 	"github.com/pkg/errors"
 	"golang.org/x/exp/slices"
-
-
 	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/util"
 )

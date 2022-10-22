@@ -93,22 +93,24 @@ func viewTableColumn(ret *golang.Block, models model.Models, m *model.Model, lin
 
 	var toStrings string
 	for _, rel := range rels {
-		if relModel := models.Get(rel.Table); relModel.CanTraverseRelation() {
-			srcCol := m.Columns.Get(rel.Src[0])
-			tgtCol := m.Columns.Get(rel.Tgt[0])
-			k := relModel.Plural()
-			if prefix != "" {
-				k = prefix + relModel.ProperPlural()
-			}
-			if srcCol.Nullable && !tgtCol.Nullable {
-				get := fmt.Sprintf("%s.Get(*%s%s)", k, modelKey, srcCol.Proper())
-				toStrings += "{%% if " + modelKey + srcCol.Proper() + " != nil %%}"
-				toStrings += "{%% if x := " + get + "; x != nil %%} ({%%s x.TitleString() %%}){%% endif %%}"
-				toStrings += "{%% endif %%}"
-			} else {
-				get := fmt.Sprintf("%s.Get(%s%s)", k, modelKey, srcCol.Proper())
-				toStrings += "{%% if x := " + get + "; x != nil %%} ({%%s x.TitleString() %%}){%% endif %%}"
-			}
+		relModel := models.Get(rel.Table)
+		if !relModel.CanTraverseRelation() {
+			continue
+		}
+		srcCol := m.Columns.Get(rel.Src[0])
+		tgtCol := m.Columns.Get(rel.Tgt[0])
+		k := relModel.Plural()
+		if prefix != "" {
+			k = prefix + relModel.ProperPlural()
+		}
+		if srcCol.Nullable && !tgtCol.Nullable {
+			get := fmt.Sprintf("%s.Get(*%s%s)", k, modelKey, srcCol.Proper())
+			toStrings += "{%% if " + modelKey + srcCol.Proper() + " != nil %%}"
+			toStrings += "{%% if x := " + get + "; x != nil %%} ({%%s x.TitleString() %%}){%% endif %%}"
+			toStrings += "{%% endif %%}"
+		} else {
+			get := fmt.Sprintf("%s.Get(%s%s)", k, modelKey, srcCol.Proper())
+			toStrings += "{%% if x := " + get + "; x != nil %%} ({%%s x.TitleString() %%}){%% endif %%}"
 		}
 	}
 
