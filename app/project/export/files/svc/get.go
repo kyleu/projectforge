@@ -59,6 +59,11 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 		colStr := strings.Join(cols.Names(), ",")
 		getBys[colStr] = cols
 	}
+	for _, col := range m.Columns {
+		if col.Indexed {
+			getBys[col.Name] = model.Columns{col}
+		}
+	}
 	keys := make([]string, 0, len(getBys))
 	for k := range getBys {
 		keys = append(keys, k)

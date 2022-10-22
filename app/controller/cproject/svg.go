@@ -70,7 +70,7 @@ func SVGBuild(rc *fasthttp.RequestCtx) {
 func SVGAdd(rc *fasthttp.RequestCtx) {
 	controller.Act("svg.add", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		qa := rc.URI().QueryArgs()
-		src := string(qa.Peek("src"))
+		src := strings.TrimSpace(string(qa.Peek("src")))
 		if src == "" {
 			return controller.ERsp("must provide [src]")
 		}
