@@ -2,6 +2,7 @@ package sql
 
 import (
 	"fmt"
+	"golang.org/x/exp/slices"
 	"strings"
 
 	"projectforge.dev/projectforge/app/file"
@@ -71,17 +72,28 @@ func sqlCreate(m *model.Model, modules []string) (*golang.Block, error) {
 	ret.W("  primary key (%s)", strings.Join(m.PKs().NamesQuoted(), ", "))
 	ret.W(");")
 
-	if pks := m.PKs(); len(pks) > 1 {
-		for _, pk := range pks {
-			addIndex(ret, m.Name, pk.Name)
+	pks := m.PKs()
+
+	//var indexes [][]string
+	for _, col := range m.Columns {
+		if (col.PK && len(pks) > 1) || col.Indexed {
+			addIndex(ret, m.Name, col.Name)
 		}
 	}
 	for _, rel := range m.Relations {
 		cols := rel.SrcColumns(m)
-		if len(cols) == 1 && cols[0].PK {
+		if slices.Equal(cols.Names(), m.PKs().Names()) {
 			continue
 		}
-		addIndex(ret, m.Name, cols.Names()...)
+		for _, c := range cols {
+			if !(c.PK || c.Indexed) {
+				addIndex(ret, m.Name, cols.Names()...)
+				break
+			}
+		}
+	}
+	for _, idx := range m.Indexes {
+		ret.W("create index if not exists %q on %s;", idx.Name, idx.Decl)
 	}
 	sqlHistory(ret, m, modules)
 	ret.W("-- {%% endfunc %%}")

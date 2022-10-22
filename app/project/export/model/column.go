@@ -26,6 +26,7 @@ type Column struct {
 	Nullable   bool           `json:"nullable,omitempty"`
 	Search     bool           `json:"search,omitempty"`
 	SQLDefault string         `json:"sqlDefault,omitempty"`
+	Indexed    bool           `json:"indexed,omitempty"`
 	Display    string         `json:"display,omitempty"`
 	Format     string         `json:"format,omitempty"`
 	Values     []string       `json:"values,omitempty"`
