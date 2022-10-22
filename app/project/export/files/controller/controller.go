@@ -92,6 +92,15 @@ func controllerArgFor(col *model.Column, b *golang.Block, retVal string, indent 
 		add("if err != nil {")
 		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as an argument\")", retVal, col.Camel())
 		add("}")
+	case types.KeyList:
+		if !types.IsStringList(col.Type) {
+			add("// ERROR: invalid list argument [%s]", col.Type.String())
+			break
+		}
+		add("%sArg, err := cutil.RCRequiredArray(rc, %q)", col.Camel(), col.Camel())
+		add("if err != nil {")
+		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as an comma-separated argument\")", retVal, col.Camel())
+		add("}")
 	case types.KeyUUID:
 		add("%sArgStr, err := cutil.RCRequiredString(rc, %q, false)", col.Camel(), col.Camel())
 		add("if err != nil {")
@@ -103,7 +112,7 @@ func controllerArgFor(col *model.Column, b *golang.Block, retVal string, indent 
 		add("}")
 		add("%sArg := *%sArgP", col.Camel(), col.Camel())
 	default:
-		add("ERROR: unhandled controller arg type [%s]", col.Type.String())
+		add("// ERROR: unhandled controller arg type [%s]", col.Type.String())
 	}
 }
 

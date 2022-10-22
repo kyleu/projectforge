@@ -82,6 +82,26 @@ func StringArrayOxfordComma(names []string, separator string) string {
 	return ret
 }
 
+func ArrayRemoveNil[T any](x []*T) []*T {
+	ret := make([]*T, 0, len(x))
+	for _, item := range x {
+		if item != nil {
+			ret = append(ret, item)
+		}
+	}
+	return ret
+}
+
+func ArrayDefererence[T any](x []*T) []T {
+	ret := make([]T, 0, len(x))
+	for _, item := range x {
+		if item != nil {
+			ret = append(ret, *item)
+		}
+	}
+	return ret
+}
+
 func LengthAny(dest any) int {
 	defer func() { _ = recover() }()
 	rfl := reflect.ValueOf(dest)

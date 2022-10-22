@@ -2,6 +2,7 @@ package sql
 
 import (
 	"fmt"
+	"github.com/pkg/errors"
 	"strings"
 
 	"projectforge.dev/projectforge/app/file"
@@ -10,21 +11,31 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-const nilStr = "<nil>"
+const (
+	nilStr  = "<nil>"
+	nullStr = "null"
+)
 
 func SeedData(m *model.Model, args *model.Args) (*file.File, error) {
-	g := golang.NewGoTemplate([]string{"queries", "seeddata"}, fmt.Sprintf("%s_%s.sql", m.Package, m.Name))
-	g.AddBlocks(sqlSeedData(m, args.Modules))
+	g := golang.NewGoTemplate([]string{"queries", "seeddata"}, fmt.Sprintf("seed_%s.sql", m.Name))
+	seed, err := sqlSeedData(m, args.Modules)
+	if err != nil {
+		return nil, err
+	}
+	g.AddBlocks(seed)
 	return g.Render(false)
 }
 
-func sqlSeedData(m *model.Model, modules []string) *golang.Block {
+func sqlSeedData(m *model.Model, modules []string) (*golang.Block, error) {
 	ret := golang.NewBlock("SQLCreate", "sql")
 	ret.W("-- {%% func " + m.Proper() + "SeedData() %%}")
 	ret.W("insert into %q (", m.Name)
 	ret.W("  " + strings.Join(m.Columns.NamesQuoted(), ", "))
 	ret.W(") values (")
 	for idx, row := range m.SeedData {
+		if len(row) != len(m.Columns) {
+			return nil, errors.Errorf("seed data row [%d] expected [%d] columns, but only [%d] were provided", idx+1, len(m.Columns), len(row))
+		}
 		var vs []string
 		for colIdx, col := range m.Columns {
 			cell := row[colIdx]
@@ -32,6 +43,14 @@ func sqlSeedData(m *model.Model, modules []string) *golang.Block {
 			switch col.Type.Key() {
 			case "string", "enum":
 				vs = append(vs, processString(cellStr, "''"))
+			case "timestamp":
+				if cellStr == nilStr {
+					vs = append(vs, nullStr)
+				} else if _, err := util.TimeFromString(cellStr); err == nil {
+					vs = append(vs, processString(cellStr, "''"))
+				} else {
+					vs = append(vs, cellStr)
+				}
 			case "uuid":
 				vs = append(vs, processString(cellStr, "'00000000-0000-0000-0000-000000000000'"))
 			case "list":
@@ -50,13 +69,13 @@ func sqlSeedData(m *model.Model, modules []string) *golang.Block {
 				vs = append(vs, fmt.Sprintf("%f", cell))
 			case "map", "valuemap":
 				if cellStr == nilStr {
-					vs = append(vs, "null")
+					vs = append(vs, nullStr)
 					continue
 				}
 				vs = append(vs, "'"+util.ToJSONCompact(cell)+"'")
 			default:
 				if cellStr == nilStr {
-					vs = append(vs, "null")
+					vs = append(vs, nullStr)
 					continue
 				}
 				vs = append(vs, cellStr)
@@ -67,9 +86,9 @@ func sqlSeedData(m *model.Model, modules []string) *golang.Block {
 			ret.W("), (")
 		}
 	}
-	ret.W(");")
+	ret.W(") on conflict do nothing;")
 	ret.W("-- {%% endfunc %%}")
-	return ret
+	return ret, nil
 }
 
 func processString(cellStr string, dflt string) string {
@@ -85,7 +104,16 @@ func processList(cell any, cellStr string) string {
 	}
 	a, ok := cell.([]any)
 	if !ok {
-		return "'[\"error:invalid_type\"]'"
+		s, ok := cell.([]string)
+		if ok {
+			a = util.InterfaceArrayFrom(s...)
+		} else {
+			str, ok := cell.(string)
+			if ok {
+				return "'" + str + "'"
+			}
+			return "'[\"error:invalid_type\"]'"
+		}
 	}
 	ret := make([]string, 0, len(a))
 	for _, x := range a {

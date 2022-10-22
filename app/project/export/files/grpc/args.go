@@ -68,7 +68,7 @@ func idClauseFor(m *model.Model) (string, string) {
 func grpcParamsFromRequest(m *model.Model, args string, g *golang.File, enums enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock("grpcParamsFromRequest", "func")
 	pks := m.PKs()
-	ks, err := pks.GoTypeKeys(m.Package, enums)
+	ks, err := pks.GoTypes(m.Package, enums)
 	if err != nil {
 		return nil, err
 	}

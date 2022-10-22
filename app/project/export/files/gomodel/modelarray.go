@@ -2,7 +2,9 @@ package gomodel
 
 import (
 	"fmt"
+	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/enum"
+	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"strings"
 
 	"projectforge.dev/projectforge/app/project/export/golang"
@@ -15,7 +17,7 @@ func modelArray(m *model.Model) *golang.Block {
 	return ret
 }
 
-func modelArrayGet(m *model.Model, enums enum.Enums) (*golang.Block, error) {
+func modelArrayGet(g *golang.File, m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock(m.Proper()+"ArrayGet", "func")
 	args, err := m.PKs().Args(m.Package, enums)
 	if err != nil {
@@ -25,7 +27,12 @@ func modelArrayGet(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	ret.W("\tfor _, x := range %s {", m.FirstLetter())
 	comps := make([]string, 0, len(m.PKs()))
 	for _, pk := range m.PKs() {
-		comps = append(comps, fmt.Sprintf("x.%s == %s", pk.Proper(), pk.Camel()))
+		if types.IsList(pk.Type) {
+			g.AddImport(helper.ImpSlices)
+			comps = append(comps, fmt.Sprintf("slices.Equal(x.%s, %s)", pk.Proper(), pk.Camel()))
+		} else {
+			comps = append(comps, fmt.Sprintf("x.%s == %s", pk.Proper(), pk.Camel()))
+		}
 	}
 	ret.W("\t\tif %s {", strings.Join(comps, " && "))
 	ret.W("\t\t\treturn x")

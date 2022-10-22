@@ -16,17 +16,32 @@ type Type interface {
 
 type Types []Type
 
-func TypeAs[T any](t Type) T {
+func TypeAs[T Type](t Type) T {
 	l, ok := t.(T)
+	if ok {
+		return l
+	}
+	w, ok := t.(*Wrapped)
 	if !ok {
-		w, ok := t.(*Wrapped)
-		if ok {
-			l, ok = w.T.(T)
-		}
-		if !ok {
-			var ret T
-			return ret
-		}
+		var ret T
+		return ret
+	}
+	l, ok = w.T.(T)
+	if !ok {
+		var ret T
+		return ret
 	}
 	return l
+}
+
+func IsList(t Type) bool {
+	return t.Key() == KeyList
+}
+
+func IsStringList(t Type) bool {
+	l := TypeAs[*List](t)
+	if l == nil {
+		return false
+	}
+	return l.V.T.Key() == KeyString
 }

@@ -31,21 +31,10 @@ func ToGoType(t types.Type, nullable bool, pkg string, enums enum.Enums) (string
 	case types.KeyFloat:
 		ret = "float64"
 	case types.KeyList:
-		switch t := t.(type) {
-		case *types.List:
-			if t.V.Equals(types.NewString()) {
-				ret = goTypeStringArray
-			} else {
-				ret = goTypeAnyArray
-			}
-		case *types.Wrapped:
-			if t.Equals(types.NewList(types.NewString())) {
-				ret = goTypeStringArray
-			} else {
-				ret = goTypeAnyArray
-			}
-		default:
-			return "", errors.Errorf("unhandled go type [%T]", t)
+		if types.IsStringList(t) {
+			ret = goTypeStringArray
+		} else {
+			ret = goTypeAnyArray
 		}
 	case types.KeyMap, types.KeyValueMap:
 		ret = "util.ValueMap"
@@ -110,8 +99,7 @@ func ToGoViewString(t types.Type, prop string, nullable bool, format string, ver
 	case types.KeyFloat:
 		return "{%%f " + prop + " %%}"
 	case types.KeyList:
-		x := types.TypeAs[*types.List](t)
-		if x != nil && x.V.Equals(types.NewString()) {
+		if types.IsStringList(t) {
 			return "{%%= components.DisplayStringArray(" + prop + ") %%}"
 		}
 		return "{%%= components.JSON(" + prop + ") %%}"

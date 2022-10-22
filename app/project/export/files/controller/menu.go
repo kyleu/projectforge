@@ -2,7 +2,6 @@ package controller
 
 import (
 	"fmt"
-
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/file"
@@ -72,12 +71,12 @@ func menuItemForGroup(g *model.Group, models model.Models, pth ...string) *menu.
 	}
 	matches := models.ForGroup(np...)
 	for _, m := range matches {
-		ret.Children = append(ret.Children, menuItemForModel(m, models, np...))
+		ret.Children = append(ret.Children, menuItemForModel(m, models))
 	}
 	return ret
 }
 
-func menuItemForModel(m *model.Model, models model.Models, pth ...string) *menu.Item {
+func menuItemForModel(m *model.Model, models model.Models) *menu.Item {
 	ret := &menu.Item{Key: m.Package, Title: m.TitlePlural(), Description: m.Description, Icon: m.Icon, Route: m.Route()}
 	if len(m.GroupedColumns()) > 0 {
 		for _, g := range m.GroupedColumns() {
@@ -86,9 +85,8 @@ func menuItemForModel(m *model.Model, models model.Models, pth ...string) *menu.
 			ret.Children = append(ret.Children, kid)
 		}
 	}
-	for _, x := range models.ForGroup(m.Name) {
-		desc := fmt.Sprintf("%s from %s", x.TitlePlural(), m.Plural())
-		kid := &menu.Item{Key: x.Package, Title: x.TitlePlural(), Description: desc, Icon: m.Icon, Route: m.Route() + "/" + x.Package}
+	for _, x := range models.ForGroup(append(slices.Clone(m.Group), m.Name)...) {
+		kid := menuItemForModel(x, models)
 		ret.Children = append(ret.Children, kid)
 	}
 	return ret

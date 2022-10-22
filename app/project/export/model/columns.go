@@ -127,10 +127,17 @@ func (c Columns) ToGoStrings(prefix string) string {
 	return strings.Join(ret, ", ")
 }
 
-func (c Columns) ToRefs(prefix string) string {
+func (c Columns) ToRefs(prefix string, relCols ...*Column) string {
 	ret := make([]string, 0, len(c))
-	for _, x := range c {
-		ret = append(ret, prefix+x.Proper())
+	for idx, x := range c {
+		r := prefix + x.Proper()
+		if len(relCols) > idx {
+			tc := relCols[idx]
+			if tc.Nullable && !x.Nullable {
+				r = "&" + r
+			}
+		}
+		ret = append(ret, r)
 	}
 	return strings.Join(ret, ", ")
 }
@@ -190,7 +197,7 @@ func (c Columns) WhereClause(offset int) string {
 func (c Columns) GoTypeKeys(pkg string, enums enum.Enums) ([]string, error) {
 	ret := make([]string, 0, len(c))
 	for _, x := range c {
-		gt, err := ToGoType(x.Type, x.Nullable, pkg, enums)
+		gt, err := x.ToGoType(pkg, enums)
 		if err != nil {
 			return nil, err
 		}
@@ -212,10 +219,10 @@ func (c Columns) GoTypes(pkg string, enums enum.Enums) ([]string, error) {
 	return ret, nil
 }
 
-func (c Columns) GoDTOTypeKeys(pkg string, enums enum.Enums) ([]string, error) {
+func (c Columns) GoDTOTypes(pkg string, enums enum.Enums) ([]string, error) {
 	ret := make([]string, 0, len(c))
 	for _, x := range c {
-		gdt, err := ToGoDTOType(x.Type, x.Nullable, pkg, enums)
+		gdt, err := x.ToGoDTOType(pkg, enums)
 		if err != nil {
 			return nil, err
 		}
@@ -233,13 +240,8 @@ func (c Columns) MaxGoTypeLength(pkg string, enums enum.Enums) int {
 	return util.StringArrayMaxLength(gt)
 }
 
-func (c Columns) MaxGoKeyLength(pkg string, enums enum.Enums) int {
-	ks, _ := c.GoTypeKeys(pkg, enums)
-	return util.StringArrayMaxLength(ks)
-}
-
-func (c Columns) MaxGoDTOKeyLength(pkg string, enums enum.Enums) int {
-	ks, _ := c.GoDTOTypeKeys(pkg, enums)
+func (c Columns) MaxGoDTOTypeLength(pkg string, enums enum.Enums) int {
+	ks, _ := c.GoDTOTypes(pkg, enums)
 	return util.StringArrayMaxLength(ks)
 }
 

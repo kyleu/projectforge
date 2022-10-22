@@ -42,6 +42,10 @@ func controllerList(m *model.Model, grp *model.Column, models model.Models, enum
 		for _, imp := range helper.ImportsForTypes("go", enums, srcCol.Type) {
 			g.AddImport(imp)
 		}
+		tgtCol := relModel.Columns.Get(rel.Tgt[0])
+		for _, imp := range helper.ImportsForTypes("go", enums, srcCol.Type) {
+			g.AddImport(imp)
+		}
 		gt, err := model.ToGoType(srcCol.Type, srcCol.Nullable, m.Package, enums)
 		if err != nil {
 			return nil, err
@@ -55,8 +59,12 @@ func controllerList(m *model.Model, grp *model.Column, models model.Models, enum
 		if relModel.IsSoftDelete() {
 			suffix = ", false"
 		}
-		call := "\t\t%s, err := as.Services.%s.GetMultiple(ps.Context, nil%s, ps.Logger, %sIDs...)"
-		ret.W(call, relModel.Plural(), relModel.Proper(), suffix, relModel.Camel())
+		c := fmt.Sprintf("%sIDs", relModel.Camel())
+		if srcCol.Nullable && !tgtCol.Nullable {
+			c = "util.ArrayDefererence(" + c + ")"
+		}
+		call := "\t\t%s, err := as.Services.%s.GetMultiple(ps.Context, nil%s, ps.Logger, %s...)"
+		ret.W(call, relModel.Plural(), relModel.Proper(), suffix, c)
 		ret.W("\t\tif err != nil {")
 		ret.W("\t\t\treturn \"\", err")
 		ret.W("\t\t}")

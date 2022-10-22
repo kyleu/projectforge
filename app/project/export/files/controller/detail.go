@@ -70,7 +70,7 @@ func controllerDetail(models model.Models, m *model.Model, grp *model.Column, pr
 		rNames := strings.Join(rCols.ProperNames(), "")
 		ret.W("\t\t%sPrms := params.Get(%q, nil, ps.Logger).Sanitize(%q)", rm.Camel(), rm.Camel(), rm.Camel())
 		const msg = "\t\t%sBy%s, err := as.Services.%s.GetBy%s(ps.Context, nil, %s, %sPrms%s, ps.Logger)"
-		ret.W(msg, rm.CamelPlural(), rNames, rm.Proper(), rNames, lCols.ToRefs("ret."), rm.Camel(), delSuffix)
+		ret.W(msg, rm.CamelPlural(), rNames, rm.Proper(), rNames, lCols.ToRefs("ret.", rCols...), rm.Camel(), delSuffix)
 		ret.W("\t\tif err != nil {")
 		ret.W("\t\t\treturn \"\", errors.Wrap(err, \"unable to retrieve child %s\")", rm.TitlePluralLower())
 		ret.W("\t\t}")

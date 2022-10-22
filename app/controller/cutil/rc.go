@@ -77,6 +77,14 @@ func RCRequiredUUID(rc *fasthttp.RequestCtx, key string) (*uuid.UUID, error) {
 	return util.UUIDFromString(ret), nil
 }
 
+func RCRequiredArray(rc *fasthttp.RequestCtx, key string) ([]string, error) {
+	ret, err := RCRequiredString(rc, key, true)
+	if err != nil {
+		return nil, err
+	}
+	return util.StringSplitAndTrim(ret, ","), nil
+}
+
 func QueryStringBool(rc *fasthttp.RequestCtx, key string) bool {
 	x := string(rc.URI().QueryArgs().Peek(key))
 	return x == "true" || x == "t" || x == "True" || x == "TRUE"

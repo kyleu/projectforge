@@ -79,8 +79,8 @@ func modelTableCols(m *model.Model, g *golang.File) (*golang.Block, error) {
 func modelDTO(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock(m.Proper()+"DTO", "struct")
 	ret.W("type dto struct {")
-	maxColLength := util.StringArrayMaxLength(m.Columns.CamelNames())
-	maxTypeLength := m.Columns.MaxGoDTOKeyLength(m.Package, enums)
+	maxColLength := m.Columns.MaxCamelLength()
+	maxTypeLength := m.Columns.MaxGoDTOTypeLength(m.Package, enums)
 	for _, c := range m.Columns {
 		gdt, err := c.ToGoDTOType(m.Package, enums)
 		if err != nil {

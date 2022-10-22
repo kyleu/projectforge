@@ -10,7 +10,7 @@ import (
 )
 
 func Migration(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
-	g := golang.NewGoTemplate([]string{"queries", "ddl"}, m.Package+".sql")
+	g := golang.NewGoTemplate([]string{"queries", "ddl"}, m.Name+".sql")
 	if m.IsRevision() {
 		drop, err := sqlDrop(m)
 		if err != nil {

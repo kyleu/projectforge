@@ -1,6 +1,7 @@
 package model
 
 import (
+	"golang.org/x/exp/slices"
 	"path"
 	"strings"
 
@@ -63,7 +64,7 @@ func (m *Model) FirstLetter() string {
 
 func (m *Model) Route() string {
 	if m.RouteOverride == "" {
-		return path.Join(append(m.Group, m.Package)...)
+		return path.Join(append(slices.Clone(m.Group), m.Package)...)
 	}
 	return m.RouteOverride
 }

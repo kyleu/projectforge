@@ -69,13 +69,18 @@ func modelTitle(m *model.Model) *golang.Block {
 	return ret
 }
 
-func modelWebPath(m *model.Model) *golang.Block {
+func modelWebPath(g *golang.File, m *model.Model) *golang.Block {
 	ret := golang.NewBlock("WebPath", "type")
 	ret.W("func (%s *%s) WebPath() string {", m.FirstLetter(), m.Proper())
 	p := "\"/" + m.Route() + "\""
 	for _, pk := range m.PKs() {
 		p += " + \"/\" + "
-		p += pk.ToGoString(m.FirstLetter() + ".")
+		if types.IsStringList(pk.Type) {
+			g.AddImport(helper.ImpStrings)
+			p += fmt.Sprintf(`strings.Join(%s, ",")`, pk.ToGoString(m.FirstLetter()+"."))
+		} else {
+			p += pk.ToGoString(m.FirstLetter() + ".")
+		}
 	}
 	ret.W("\treturn " + p)
 	ret.W("}")

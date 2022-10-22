@@ -2,6 +2,7 @@ package svc
 
 import (
 	"fmt"
+	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/enum"
 	"strings"
 
@@ -28,7 +29,7 @@ func ServiceRevision(m *model.Model, args *model.Args, addHeader bool) (*file.Fi
 	if err != nil {
 		return nil, err
 	}
-	gnr, err := serviceGetCurrentRevisions(m, dbRef, args.Enums)
+	gnr, err := serviceGetCurrentRevisions(g, m, dbRef, args.Enums)
 	if err != nil {
 		return nil, err
 	}
@@ -104,7 +105,7 @@ func serviceGetRevision(m *model.Model, dbRef string, enums enum.Enums) (*golang
 	return ret, nil
 }
 
-func serviceGetCurrentRevisions(m *model.Model, dbRef string, enums enum.Enums) (*golang.Block, error) {
+func serviceGetCurrentRevisions(g *golang.File, m *model.Model, dbRef string, enums enum.Enums) (*golang.Block, error) {
 	revCol := m.HistoryColumn()
 	pks := m.PKs()
 	ret := golang.NewBlock(fmt.Sprintf("GetCurrent%s", revCol.ProperPlural()), "func")
@@ -115,11 +116,16 @@ func serviceGetCurrentRevisions(m *model.Model, dbRef string, enums enum.Enums) 
 
 	pkComps := make([]string, 0, len(pks))
 	for _, pk := range pks {
-		pkComps = append(pkComps, fmt.Sprintf("x.%s == model.%s", pk.Proper(), pk.Proper()))
+		if types.IsStringList(pk.Type) {
+			g.AddImport(helper.ImpSlices)
+			pkComps = append(pkComps, fmt.Sprintf("slices.Equal(x.%s, model.%s)", pk.Proper(), pk.Proper()))
+		} else {
+			pkComps = append(pkComps, fmt.Sprintf("x.%s == model.%s", pk.Proper(), pk.Proper()))
+		}
 	}
 
 	ret.W("\tvar results []*struct {")
-	maxColLength := pks.MaxGoKeyLength(m.Package, enums)
+	maxColLength := pks.MaxCamelLength()
 	maxTypeLength := pks.MaxGoTypeLength(m.Package, enums)
 	currRevStr := fmt.Sprintf("Current%s", revCol.Proper())
 	if maxColLength < len(currRevStr) {
@@ -130,10 +136,9 @@ func serviceGetCurrentRevisions(m *model.Model, dbRef string, enums enum.Enums) 
 		if err != nil {
 			return nil, err
 		}
-		goType := util.StringPad(gt, maxTypeLength)
-		ret.W("\t\t%s %s `db:%q`", util.StringPad(pk.Proper(), maxColLength), goType, pk.Name)
+		ret.W("\t\t%s %s `db:%q`", util.StringPad(pk.Proper(), maxColLength), util.StringPad(gt, maxTypeLength), pk.Name)
 	}
-	ret.W("\t\t%s int    `db:\"current_%s\"`", currRevStr, revCol.Name)
+	ret.W("\t\t%s %s `db:\"current_%s\"`", util.StringPad(currRevStr, maxColLength), util.StringPad("int", maxTypeLength), revCol.Name)
 	ret.W("\t}")
 	ret.W("\terr := s.%s.Select(ctx, &results, q, tx, logger, vals...)", dbRef)
 	ret.W("\tif err != nil {")
