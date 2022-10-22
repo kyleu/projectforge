@@ -47,6 +47,10 @@
           <a class="label-link" href="{%s i.Route %}">{%= components.SVGRef(`link`, 15, 15, ``, ps) %}</a>
         {% endif %}
         {%= components.ExpandCollapse(indent + 3, ps) %}
+        {% if i.Badge != "" %}
+          {%= vutil.Indent(true, indent + 3) %}
+          <div class="badge">{%s i.Badge %}</div>
+        {% endif %}
         {%= vutil.Indent(true, indent + 3) %}
         {% if i.Icon != "" %}
           {%= components.SVGRef(i.Icon, 16, 16, "icon", ps) %}
@@ -80,6 +84,10 @@
     {%= vutil.Indent(true, indent + 1) %}
     <li>
       <a class="{%s finalClass %}" href="{%s i.Route %}" title="{%s i.Desc() %}">
+        {% if i.Badge != "" %}
+          {%= vutil.Indent(true, indent + 3) %}
+          <div class="badge">{%s i.Badge %}</div>
+        {% endif %}
         {% if i.Icon != "" %}
           {%= components.SVGRef(i.Icon, 16, 16, "icon", ps) %}
         {% endif %}

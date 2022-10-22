@@ -53,7 +53,7 @@
 .menu-container .label-link {
   float: right;
   margin-right: var(--padding);
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
 .menu-container .item svg {
@@ -66,6 +66,14 @@
 
 .menu-container label {
   cursor: pointer;
+}
+
+.menu-container .badge {
+  float: right;
+  margin-right: var(--padding-small);
+  font-size: 75%;
+  padding-top: 2px;
+  color: var(--color-foreground-muted);
 }
 
 .level-0 .item, .level-0 label {

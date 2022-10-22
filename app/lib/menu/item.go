@@ -7,6 +7,7 @@ type Item struct {
 	Key         string `json:"key"`
 	Title       string `json:"title,omitempty"`
 	Description string `json:"description,omitempty"`
+	Badge       string `json:"badge,omitempty"`
 	Icon        string `json:"icon,omitempty"`
 	Route       string `json:"route,omitempty"`
 	Children    Items  `json:"children,omitempty"`
