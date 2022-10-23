@@ -37,7 +37,8 @@ func RemoveFromSession(k string, rc *fasthttp.RequestCtx, websess util.ValueMap,
 }
 
 func SaveSession(rc *fasthttp.RequestCtx, websess util.ValueMap, logger util.Logger) error {
-	enc, err := util.EncryptMessage(nil, util.ToJSONCompact(websess), logger)
+	js := util.ToJSONCompact(websess)
+	enc, err := util.EncryptMessage(nil, js, logger)
 	if err != nil {
 		return err
 	}

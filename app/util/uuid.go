@@ -5,6 +5,8 @@ import (
 	"github.com/google/uuid"
 )
 
+var UUIDDefault = uuid.UUID{}
+
 func UUIDFromString(s string) *uuid.UUID {
 	var retID *uuid.UUID
 

@@ -1,14 +1,20 @@
 package user
 
 import (
-	"fmt"
+	"fmt"{{{ if .HasModule "user" }}}
+
+	"github.com/google/uuid"{{{ end }}}
 )
 
 type Profile struct {
-	Name  string `json:"name"`
+{{{ if .HasModule "user" }}}	ID    uuid.UUID `json:"id"`
+	Name  string    `json:"name"`
+	Mode  string    `json:"mode,omitempty"`
+	Theme string    `json:"theme,omitempty"`
+{{{ else }}}	Name  string `json:"name"`
 	Mode  string `json:"mode,omitempty"`
 	Theme string `json:"theme,omitempty"`
-}
+{{{ end }}}}
 
 var DefaultProfile = &Profile{Name: "Guest"}
 
