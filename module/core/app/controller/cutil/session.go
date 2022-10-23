@@ -71,7 +71,7 @@ func loadSession(ctx context.Context, as *app.State, rc *fasthttp.RequestCtx, lo
 			logger.Warnf("unable to save user [%s]", prof.ID.String())
 			return nil, nil, prof, nil
 		}
-		session["userID"] = prof
+		session["profile"] = prof
 		err = csession.SaveSession(rc, session, logger)
 		if err != nil {
 			logger.Warnf("unable to save session for user [%s]", prof.ID.String())
