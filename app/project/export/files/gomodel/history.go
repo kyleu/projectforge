@@ -15,7 +15,7 @@ import (
 
 func History(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, m.Camel()+"history")
-	for _, imp := range helper.ImportsForTypes("go", args.Enums, m.Columns.Types()...) {
+	for _, imp := range helper.ImportsForTypes("go", m.Columns.Types()...) {
 		g.AddImport(imp)
 	}
 	g.AddImport(helper.ImpJSON, helper.ImpUUID, helper.ImpAppUtil)

@@ -119,6 +119,9 @@ func (s *Service) logQuery(ctx context.Context, msg string, q string, logger uti
 func (s *Service) newSpan(
 	ctx context.Context, name string, q string, logger util.Logger,
 ) (time.Time, context.Context, *telemetry.Span, util.Logger) {
+	if ctx == nil {
+		return time.Now(), context.Background(), nil, logger
+	}
 	if s.metrics != nil {
 		s.metrics.IncStmt(q, name)
 	}
@@ -133,10 +136,12 @@ func (s *Service) newSpan(
 }
 
 func (s *Service) complete(q string, op string, span *telemetry.Span, started time.Time, logger util.Logger, err error) {
-	if err != nil {
+	if err != nil && span != nil {
 		span.OnError(err)
 	}
-	span.Complete()
+	if span != nil {
+		span.Complete()
+	}
 	if s.metrics != nil {
 		s.metrics.CompleteStmt(q, op, started)
 	}

@@ -18,10 +18,13 @@ import (
 
 func DTO(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "dto")
-	for _, imp := range helper.ImportsForTypes("dto", args.Enums, m.Columns.Types()...) {
+	for _, imp := range helper.ImportsForTypes("dto", m.Columns.Types()...) {
 		g.AddImport(imp)
 	}
 	g.AddImport(helper.ImpStrings, helper.ImpAppUtil, helper.ImpFmt)
+	if err := helper.SpecialImports(g, m.Columns, m.PackageWithGroup(""), args.Enums); err != nil {
+		return nil, err
+	}
 	if tc, err := modelTableCols(m, g); err == nil {
 		g.AddBlocks(tc)
 	} else {

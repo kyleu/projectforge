@@ -106,9 +106,12 @@ func (p *PageState) Clean(as *app.State) error {
 		p.ProfilePath = DefaultProfilePath
 	}
 	if len(p.Menu) == 0 {
-		m, err := cmenu.MenuFor(p.Context, p.Authed, p.Admin, p.Profile, as, p.Logger)
+		m, data, err := cmenu.MenuFor(p.Context, p.Authed, p.Admin, p.Profile, as, p.Logger)
 		if err != nil {
 			return err
+		}
+		if data != nil && p.Data == nil {
+			p.Data = data
 		}
 		p.Menu = m
 	}

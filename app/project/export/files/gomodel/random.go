@@ -18,14 +18,14 @@ func modelRandom(m *model.Model, enums enum.Enums) *golang.Block {
 	ret.W("\treturn &%s{", m.Proper())
 	maxColLength := m.Columns.MaxCamelLength() + 1
 	for _, col := range m.Columns {
-		ret.W("\t\t%s %s,", util.StringPad(col.Proper()+":", maxColLength), randFor(col, enums))
+		ret.W("\t\t%s %s,", util.StringPad(col.Proper()+":", maxColLength), randFor(col, m.PackageWithGroup(""), enums))
 	}
 	ret.W("\t}")
 	ret.W("}")
 	return ret
 }
 
-func randFor(col *model.Column, enums enum.Enums) string {
+func randFor(col *model.Column, pkg string, enums enum.Enums) string {
 	switch col.Type.Key() {
 	case types.KeyAny:
 		return types.KeyNil
@@ -36,7 +36,10 @@ func randFor(col *model.Column, enums enum.Enums) string {
 		if err != nil {
 			return "ERROR:" + err.Error()
 		}
-		return fmt.Sprintf("%s.%s(util.RandomString(12))", et.Package, et.Title())
+		if pkg == et.PackageWithGroup("") {
+			return fmt.Sprintf("%s(util.RandomString(12))", et.Proper())
+		}
+		return fmt.Sprintf("%s.%s(util.RandomString(12))", et.Package, et.Proper())
 	case types.KeyInt:
 		return "util.RandomInt(10000)"
 	case types.KeyFloat:

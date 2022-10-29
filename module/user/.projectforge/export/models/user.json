@@ -1,0 +1,60 @@
+{
+  "name": "user",
+  "package": "user",
+  "description": "A user of the system",
+  "icon": "profile",
+  "ordering": [
+    {
+      "column": "created",
+      "asc": false
+    }
+  ],
+  "route": "admin/db/user",
+  "columns": [
+    {
+      "name": "id",
+      "type": "uuid",
+      "pk": true,
+      "search": true
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "search": true,
+      "tags": [
+        "title"
+      ]
+    },
+    {
+      "name": "picture",
+      "type": "string",
+      "format": "url"
+    },
+    {
+      "name": "created",
+      "type": "timestamp",
+      "sqlDefault": "now()",
+      "tags": [
+        "created"
+      ]
+    },
+    {
+      "name": "updated",
+      "type": "timestamp",
+      "nullable": true,
+      "sqlDefault": "now()",
+      "tags": [
+        "updated"
+      ]
+    }
+  ],
+  "seedData": [
+    [
+      "90000000-0000-0000-0000-000000000000",
+      "Test User",
+      "https://electricfrankfurter.com/index.png",
+      "now()",
+      null
+    ]
+  ]
+}

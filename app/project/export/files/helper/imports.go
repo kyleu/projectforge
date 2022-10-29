@@ -3,11 +3,8 @@ package helper
 import (
 	"fmt"
 
-
 	"projectforge.dev/projectforge/app/lib/types"
-	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/golang"
-	"projectforge.dev/projectforge/app/project/export/model"
 )
 
 var (
@@ -39,36 +36,34 @@ func AppImport(path string) *golang.Import {
 	return &golang.Import{Type: golang.ImportTypeApp, Value: "{{{ .Package }}}/" + path}
 }
 
-func ImportsForTypes(ctx string, enums enum.Enums, ts ...types.Type) golang.Imports {
+func ImportsForTypes(ctx string, ts ...types.Type) golang.Imports {
 	var ret golang.Imports
 	for _, t := range ts {
-		ret = ret.Add(importsForType(ctx, enums, t)...)
+		ret = ret.Add(importsForType(ctx, t)...)
 	}
 	return ret
 }
 
-func importsForType(ctx string, enums enum.Enums, t types.Type) golang.Imports {
+func importsForType(ctx string, t types.Type) golang.Imports {
 	switch ctx {
 	case "go":
-		return importsForTypeCtxGo(t, enums)
+		return importsForTypeCtxGo(t)
 	case "dto":
-		return importsForTypeCtxDTO(t, enums)
+		return importsForTypeCtxDTO(t)
 	case "string":
-		return importsForTypeCtxString(t, enums)
+		return importsForTypeCtxString(t)
 	case "parse":
-		return importsForTypeCtxParse(t, enums)
+		return importsForTypeCtxParse(t)
 	case "webedit":
-		return importsForTypeCtxWebEdit(t, enums)
+		return importsForTypeCtxWebEdit(t)
 	default:
 		return golang.Imports{{Type: golang.ImportTypeInternal, Value: fmt.Sprintf("ERROR:invalid import context [%s]", ctx)}}
 	}
 }
 
-func importsForTypeCtxGo(t types.Type, enums enum.Enums) golang.Imports {
+func importsForTypeCtxGo(t types.Type) golang.Imports {
 	switch t.Key() {
-	case types.KeyEnum:
-		return importsForEnum(t, enums)
-	case types.KeyMap, types.KeyValueMap:
+	case types.KeyMap, types.KeyValueMap, types.KeyList:
 		return golang.Imports{ImpAppUtil}
 	case types.KeyTimestamp:
 		return golang.Imports{ImpTime}
@@ -79,12 +74,10 @@ func importsForTypeCtxGo(t types.Type, enums enum.Enums) golang.Imports {
 	}
 }
 
-func importsForTypeCtxDTO(t types.Type, enums enum.Enums) golang.Imports {
+func importsForTypeCtxDTO(t types.Type) golang.Imports {
 	switch t.Key() {
 	case types.KeyAny:
 		return golang.Imports{ImpJSON}
-	case types.KeyEnum:
-		return importsForEnum(t, enums)
 	case types.KeyList, types.KeyMap, types.KeyValueMap, types.KeyReference:
 		return golang.Imports{ImpJSON, ImpAppUtil}
 	case types.KeyTimestamp:
@@ -96,15 +89,7 @@ func importsForTypeCtxDTO(t types.Type, enums enum.Enums) golang.Imports {
 	}
 }
 
-func importsForEnum(t types.Type, enums enum.Enums) golang.Imports {
-	e, err := model.AsEnumInstance(t, enums)
-	if err != nil {
-		return golang.Imports{{Type: "error", Value: err.Error()}}
-	}
-	return golang.Imports{AppImport("app/" + e.PackageWithGroup(""))}
-}
-
-func importsForTypeCtxString(t types.Type, enums enum.Enums) golang.Imports {
+func importsForTypeCtxString(t types.Type) golang.Imports {
 	switch t.Key() {
 	case types.KeyInt, types.KeyFloat:
 		return golang.Imports{ImpFmt}
@@ -115,7 +100,7 @@ func importsForTypeCtxString(t types.Type, enums enum.Enums) golang.Imports {
 	}
 }
 
-func importsForTypeCtxParse(t types.Type, enums enum.Enums) golang.Imports {
+func importsForTypeCtxParse(t types.Type) golang.Imports {
 	switch t.Key() {
 	case types.KeyInt, types.KeyFloat:
 		return golang.Imports{ImpStrconv}
@@ -126,7 +111,7 @@ func importsForTypeCtxParse(t types.Type, enums enum.Enums) golang.Imports {
 	}
 }
 
-func importsForTypeCtxWebEdit(t types.Type, enums enum.Enums) golang.Imports {
+func importsForTypeCtxWebEdit(t types.Type) golang.Imports {
 	switch t.Key() {
 	case types.KeyAny:
 		return golang.Imports{ImpAppUtil, ImpFmt}

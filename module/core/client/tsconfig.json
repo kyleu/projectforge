@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
-    "esModuleInterop": true,
-    "moduleResolution": "Node",
+    "esModuleInterop": true,{{{ if .HasModule "user" }}}
+    "jsx": "react",
+    "jsxFactory": "JSX",{{{ end }}}
+    "module": "none",
     "noImplicitAny": true,
     "removeComments": false,
     "preserveConstEnums": true,

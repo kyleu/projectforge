@@ -15,7 +15,7 @@ type CounterAndHistogram struct {
 
 func NewCounterAndHistogram(subsystem string, name string, help string, logger util.Logger, labelNames ...string) *CounterAndHistogram {
 	return &CounterAndHistogram{
-		c: MetricsCounter(subsystem, name, help, logger, labelNames...),
+		c: MetricsCounter(subsystem, name+"Count", help, logger, labelNames...),
 		h: MetricsHistogram(subsystem, name, help, logger, labelNames...),
 	}
 }
@@ -33,7 +33,7 @@ type CounterAndGauge struct {
 
 func NewCounterAndGauge(subsystem string, name string, help string, logger util.Logger, labelNames ...string) *CounterAndGauge {
 	return &CounterAndGauge{
-		c: MetricsCounter(subsystem, name, help, logger, labelNames...),
+		c: MetricsCounter(subsystem, name+"Count", help, logger, labelNames...),
 		g: MetricsGauge(subsystem, name, help, logger, labelNames...),
 	}
 }
@@ -58,7 +58,7 @@ func MetricsGauge(subsystem string, name string, help string, logger util.Logger
 	ret := prometheus.NewGaugeVec(cOpts, labelNames)
 	err := prometheus.Register(ret)
 	if err != nil {
-		logger.Warnf("error registering counter metric [%s:%s]: %+v", subsystem, name, err)
+		logger.Warnf("error registering gauge metric [%s:%s]: %+v", subsystem, name, err)
 	}
 	return ret
 }

@@ -12,12 +12,12 @@ import (
 
 func edit(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "Edit.html")
-	for _, imp := range helper.ImportsForTypes("webedit", args.Enums, m.Columns.Types()...) {
+	for _, imp := range helper.ImportsForTypes("webedit", m.Columns.Types()...) {
 		g.AddImport(imp)
 	}
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpLayout)
 	g.AddImport(helper.AppImport("app/" + m.PackageWithGroup("")))
-	veb, err := exportViewEditBody(m, args.Enums)
+	veb, err := exportViewEditBody(g, m, args.Enums)
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +35,7 @@ func exportViewEditClass(m *model.Model) *golang.Block {
 	return ret
 }
 
-func exportViewEditBody(m *model.Model, enums enum.Enums) (*golang.Block, error) {
+func exportViewEditBody(g *golang.Template, m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	editURL := "/" + m.Route()
 	for _, pk := range m.PKs() {
 		editURL += "/{%% " + pk.ToGoString("p.Model.") + " %%}"

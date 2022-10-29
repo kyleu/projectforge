@@ -5,7 +5,6 @@ import (
 
 	"github.com/pkg/errors"
 
-
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/enum"
 )
@@ -27,7 +26,11 @@ func ToGoType(t types.Type, nullable bool, pkg string, enums enum.Enums) (string
 		if err != nil {
 			return "", err
 		}
-		ret = e.Package + "." + e.Title()
+		if e.PackageWithGroup("") == pkg {
+			ret = e.Proper()
+		} else {
+			ret = e.Package + "." + e.Proper()
+		}
 	case types.KeyInt:
 		ret = types.KeyInt
 	case types.KeyFloat:
@@ -78,6 +81,11 @@ func ToGoString(t types.Type, prop string, alwaysString bool) string {
 	switch t.Key() {
 	case types.KeyAny, types.KeyBool, types.KeyInt, types.KeyFloat:
 		return fmt.Sprintf("fmt.Sprint(%s)", prop)
+	case types.KeyList:
+		if alwaysString {
+			return fmt.Sprintf("util.ToJSON(&%s)", prop)
+		}
+		return prop
 	case types.KeyTimestamp, types.KeyTimestampZoned:
 		if alwaysString {
 			return fmt.Sprintf("util.TimeToFull(&%s)", prop)

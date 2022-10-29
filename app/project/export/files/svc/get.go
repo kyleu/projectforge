@@ -17,13 +17,16 @@ import (
 func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	dbRef := args.DBRef()
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "serviceget")
-	for _, imp := range helper.ImportsForTypes("go", args.Enums, m.PKs().Types()...) {
+	for _, imp := range helper.ImportsForTypes("go", m.PKs().Types()...) {
 		g.AddImport(imp)
 	}
 	if len(m.PKs()) > 1 {
 		g.AddImport(helper.ImpFmt)
 	}
 	g.AddImport(helper.ImpAppUtil, helper.ImpContext, helper.ImpErrors, helper.ImpSQLx, helper.ImpFilter, helper.ImpDatabase)
+	if err := helper.SpecialImports(g, m.IndexedColumns(), m.PackageWithGroup(""), args.Enums); err != nil {
+		return nil, err
+	}
 	g.AddBlocks(serviceList(m, args.DBRef()))
 	g.AddBlocks(serviceCount(g, m, args.DBRef()))
 	pkLen := len(m.PKs())
@@ -72,7 +75,7 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 	for _, key := range keys {
 		cols := getBys[key]
 		name := "GetBy" + strings.Join(cols.ProperNames(), "")
-		for _, imp := range helper.ImportsForTypes("go", args.Enums, cols.Types()...) {
+		for _, imp := range helper.ImportsForTypes("go", cols.Types()...) {
 			g.AddImport(imp)
 		}
 		gb, err := serviceGetBy(name, m, cols, true, dbRef, args.Enums)

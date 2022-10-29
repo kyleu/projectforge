@@ -2,6 +2,7 @@ package gomodel
 
 import (
 	"fmt"
+	"projectforge.dev/projectforge/app/file"
 	"strings"
 
 	"projectforge.dev/projectforge/app/lib/types"
@@ -10,6 +11,27 @@ import (
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
 )
+
+func Models(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
+	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, strings.ToLower(m.CamelPlural()))
+	for _, imp := range helper.ImportsForTypes("go", m.PKs().Types()...) {
+		g.AddImport(imp)
+	}
+	g.AddImport(helper.ImpSlices)
+	g.AddBlocks(modelArray(m))
+	ag, err := modelArrayGet(g, m, args.Enums)
+	if err != nil {
+		return nil, err
+	}
+	g.AddBlocks(ag)
+	for _, pk := range m.PKs() {
+		if pk.Proper() != "Title" {
+			g.AddBlocks(modelArrayColStrings(m, pk))
+		}
+	}
+	g.AddBlocks(modelArrayTitleStrings(m), modelArrayClone(m))
+	return g.Render(addHeader)
+}
 
 func modelArray(m *model.Model) *golang.Block {
 	ret := golang.NewBlock(m.Proper()+"Array", "type")
@@ -47,6 +69,36 @@ func modelArrayClone(m *model.Model) *golang.Block {
 	ret := golang.NewBlock(m.Proper()+"ArrayClone", "func")
 	ret.W("func (%s %s) Clone() %s {", m.FirstLetter(), m.ProperPlural(), m.ProperPlural())
 	ret.W("\treturn slices.Clone(%s)", m.FirstLetter())
+	ret.W("}")
+	return ret
+}
+
+func modelArrayColStrings(m *model.Model, col *model.Column) *golang.Block {
+	ret := golang.NewBlock(fmt.Sprintf("%sArray%sStrings", m.Proper(), col.Proper()), "func")
+	ret.W("func (%s %s) %sStrings(includeNil bool) []string {", m.FirstLetter(), m.ProperPlural(), col.Proper())
+	ret.W("\tret := make([]string, 0, len(%s)+1)", m.FirstLetter())
+	ret.W("\tif includeNil {")
+	ret.W("\t\tret = append(ret, \"\")")
+	ret.W("\t}")
+	ret.W("\tfor _, x := range %s {", m.FirstLetter())
+	ret.W("\t\tret = append(ret, %s)", model.ToGoString(col.Type, "x."+col.Proper(), true))
+	ret.W("\t}")
+	ret.W("\treturn ret")
+	ret.W("}")
+	return ret
+}
+
+func modelArrayTitleStrings(m *model.Model) *golang.Block {
+	ret := golang.NewBlock(m.Proper()+"ArrayTitleStrings", "func")
+	ret.W("func (%s %s) TitleStrings(nilTitle string) []string {", m.FirstLetter(), m.ProperPlural())
+	ret.W("\tret := make([]string, 0, len(%s)+1)", m.FirstLetter())
+	ret.W("\tif nilTitle != \"\" {")
+	ret.W("\t\tret = append(ret, nilTitle)")
+	ret.W("\t}")
+	ret.W("\tfor _, x := range %s {", m.FirstLetter())
+	ret.W("\t\tret = append(ret, x.TitleString())")
+	ret.W("\t}")
+	ret.W("\treturn ret")
 	ret.W("}")
 	return ret
 }

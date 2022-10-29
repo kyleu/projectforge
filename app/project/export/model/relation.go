@@ -42,7 +42,20 @@ func (r *Relation) Reverse(name string) *Relation {
 	return &Relation{Name: r.Name, Src: r.Tgt, Table: name, Tgt: r.Src}
 }
 
+func (r *Relation) ContainsSource(colName string) bool {
+	return len(r.Src) == 1 && r.Src[0] == colName
+}
+
 type Relations []*Relation
+
+func (r Relations) ContainsSource(colName string) bool {
+	for _, x := range r {
+		if x.ContainsSource(colName) {
+			return true
+		}
+	}
+	return false
+}
 
 func colsFor(cols []string, m *Model) Columns {
 	ret := make(Columns, 0, len(cols))

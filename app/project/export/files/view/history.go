@@ -85,7 +85,7 @@ func exportViewHistoryTable(m *model.Model, enums enum.Enums) (*golang.Block, er
 	ret.W("    <thead>")
 	ret.W("      <tr>")
 	addHeader := func(key string, title string, help string) {
-		const msg = "        {%%%%= components.TableHeaderSimple(\"%s_history\", \"%s\", \"%s\", \"%s\", prms, ps.URI, ps) %%%%}"
+		const msg = "        {%%%%= components.TableHeaderSimple(\"%s_history\", %q, %q, %q, prms, ps.URI, ps) %%%%}"
 		ret.W(msg, m.Name, key, title, help)
 	}
 	addHeader("id", "ID", "System-generated history UUID identifier")

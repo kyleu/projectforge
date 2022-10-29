@@ -15,6 +15,7 @@ func Enum(e *enum.Enum, args *model.Args, addHeader bool) (*file.File, error) {
 	m.Camel()
 	g := golang.NewFile(e.Package, []string{"app", e.PackageWithGroup("")}, strings.ToLower(e.Camel()))
 	g.AddBlocks(enumStruct(e))
+	// g.AddBlocks(enumAll(e), enumAllStrings(e))
 	return g.Render(addHeader)
 }
 
@@ -28,5 +29,25 @@ func enumStruct(e *enum.Enum) *golang.Block {
 		ret.W("\t%s %s = %q", util.StringPad(e.Proper()+util.StringToCamel(v), maxColLength), e.Proper(), v)
 	}
 	ret.W(")")
+	return ret
+}
+
+func enumAll(e *enum.Enum) *golang.Block {
+	ret := golang.NewBlock(e.Proper()+"All", "var")
+	ret.W("var %sAll = []%s{", e.Proper(), e.Proper())
+	for _, v := range e.Values {
+		ret.W("\t%s%s,", e.Proper(), util.StringToCamel(v))
+	}
+	ret.W("}")
+	return ret
+}
+
+func enumAllStrings(e *enum.Enum) *golang.Block {
+	ret := golang.NewBlock(e.Proper()+"AllStrings", "var")
+	ret.W("var %sAllStrings = []string{", e.Proper())
+	for _, v := range e.Values {
+		ret.W("\tstring(%s%s),", e.Proper(), util.StringToCamel(v))
+	}
+	ret.W("}")
 	return ret
 }

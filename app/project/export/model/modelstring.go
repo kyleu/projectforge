@@ -13,7 +13,7 @@ func (m *Model) Camel() string {
 	return util.StringToLowerCamel(m.Name)
 }
 
-func (m *Model) CamelPlural() any {
+func (m *Model) CamelPlural() string {
 	return util.StringToPlural(m.Camel())
 }
 

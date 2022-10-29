@@ -1,4 +1,5 @@
-import "./client.css"
+import "./client.css"{{{ if .HasModule "jsx" }}}
+import {JSX} from "./jsx";{{{ end }}}
 import {menuInit} from "./menu";
 import {modeInit} from "./mode";
 import {flashInit} from "./flash";
@@ -10,7 +11,8 @@ import {socketInit} from "./socket";{{{ end }}}
 import {appInit} from "./app";
 
 export function init(): void {
-  (window as any).{{{ .CleanKey }}} = {};
+  (window as any).{{{ .CleanKey }}} = {};{{{ if .HasModule "jsx" }}}
+  (window as any).JSX = JSX;{{{ end }}}
   menuInit();
   modeInit();
   flashInit();

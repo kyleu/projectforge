@@ -7,7 +7,6 @@ import (
 	"projectforge.dev/projectforge/app/project/export/enum"
 
 	"projectforge.dev/projectforge/app/file"
-	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
@@ -16,25 +15,17 @@ import (
 
 func Model(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, strings.ToLower(m.Camel()))
-	for _, imp := range helper.ImportsForTypes("go", args.Enums, m.Columns.Types()...) {
+	for _, imp := range helper.ImportsForTypes("go", m.Columns.Types()...) {
 		g.AddImport(imp)
 	}
-	for _, imp := range helper.ImportsForTypes("string", args.Enums, m.PKs().Types()...) {
+	for _, imp := range helper.ImportsForTypes("string", m.PKs().Types()...) {
 		g.AddImport(imp)
 	}
-	g.AddImport(helper.ImpAppUtil, helper.ImpSlices)
-	for _, col := range m.Columns {
-		if col.Type.Key() == types.KeyReference {
-			ref, err := model.AsRef(col.Type)
-			if err != nil {
-				return nil, err
-			}
-			if ref.Pkg.Last() != m.Package {
-				g.AddImport(golang.NewImport(golang.ImportTypeApp, ref.Pkg.ToPath()))
-			}
-		}
+	g.AddImport(helper.ImpAppUtil)
+	err := helper.SpecialImports(g, m.Columns, m.PackageWithGroup(""), args.Enums)
+	if err != nil {
+		return nil, err
 	}
-
 	if len(m.PKs()) > 1 {
 		pk, err := modelPK(m, args.Enums)
 		if err != nil {
@@ -61,11 +52,6 @@ func Model(m *model.Model, args *model.Args, addHeader bool) (*file.File, error)
 		hc := m.HistoryColumns(false)
 		g.AddBlocks(modelToData(m, hc.Const, "Core"), modelToData(m, hc.Var, hc.Col.Proper()))
 	}
-	ag, err := modelArrayGet(g, m, args.Enums)
-	if err != nil {
-		return nil, err
-	}
-	g.AddBlocks(modelArray(m), ag, modelArrayClone(m))
 	return g.Render(addHeader)
 }
 

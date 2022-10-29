@@ -11,12 +11,13 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func MenuFor(ctx context.Context, isAuthed bool, isAdmin bool, profile *user.Profile, as *app.State, logger util.Logger) (menu.Items, error) {
+func MenuFor(ctx context.Context, isAuthed bool, isAdmin bool, profile *user.Profile, as *app.State, logger util.Logger) (menu.Items, any, error) {
 	ctx, span, logger := telemetry.StartSpan(ctx, "menu:generate", logger)
 	defer span.Complete()
 	_ = logger
 
 	var ret menu.Items
+	var data any
 	// $PF_SECTION_START(routes_start)$
 	if isAuthed {
 		ret = append(ret,
@@ -39,5 +40,5 @@ func MenuFor(ctx context.Context, isAuthed bool, isAdmin bool, profile *user.Pro
 	const desc = "Get assistance and advice for using " + util.AppName
 	ret = append(ret, &menu.Item{Key: "about", Title: "About", Description: desc, Icon: "question", Route: "/about"})
 	// $PF_SECTION_END(routes_end)$
-	return ret, nil
+	return ret, data, nil
 }

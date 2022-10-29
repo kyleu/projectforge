@@ -34,7 +34,12 @@ func typesCreate(enums enum.Enums) *golang.Block {
 		for _, x := range e.Values {
 			q = append(q, fmt.Sprintf("'%s'", strings.ReplaceAll(x, "'", "''")))
 		}
-		ret.W("create type %q as enum (%s);", e.Name, strings.Join(q, ", "))
+
+		ret.W("do $$ begin")
+		ret.W("  create type %q as enum (%s);", e.Name, strings.Join(q, ", "))
+		ret.W("exception")
+		ret.W("  when duplicate_object then null;")
+		ret.W("end $$;")
 	}
 	ret.W("-- {%% endfunc %%}")
 	return ret

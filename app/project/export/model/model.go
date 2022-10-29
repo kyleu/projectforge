@@ -117,3 +117,21 @@ func (m *Model) Breadcrumbs() string {
 	ret = append(ret, fmt.Sprintf("%q", m.Package))
 	return strings.Join(ret, ", ")
 }
+
+func (m *Model) IndexedColumns() Columns {
+	ret := m.GroupedColumns()
+	a := func(c *Column) {
+		for _, x := range ret {
+			if x.Name == c.Name {
+				return
+			}
+		}
+		ret = append(ret, c)
+	}
+	for _, c := range m.Columns {
+		if c.Indexed || c.PK {
+			a(c)
+		}
+	}
+	return ret
+}

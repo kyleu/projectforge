@@ -3,7 +3,6 @@ package gomodel
 import (
 	"github.com/pkg/errors"
 
-
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/golang"
@@ -81,7 +80,11 @@ func forCols(g *golang.File, ret *golang.Block, indent int, m *model.Model, enum
 			if err != nil {
 				return err
 			}
-			ret.W(ind+"ret.%s = %s.%s(ret%s)", col.Proper(), e.Package, e.Proper(), col.Proper())
+			if e.PackageWithGroup("") == m.PackageWithGroup("") {
+				ret.W(ind+"ret.%s = %s(ret%s)", col.Proper(), e.Proper(), col.Proper())
+			} else {
+				ret.W(ind+"ret.%s = %s.%s(ret%s)", col.Proper(), e.Package, e.Proper(), col.Proper())
+			}
 		case col.Nullable || col.Type.Scalar():
 			ret.W(ind+"ret.%s, err = m.Parse%s(%q, true, true)", col.Proper(), col.ToGoMapParse(), col.Camel())
 			catchErr("err")

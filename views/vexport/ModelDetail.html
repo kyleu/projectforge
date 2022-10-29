@@ -104,6 +104,8 @@
         <th class="shrink">Name</th>
         <th>Type</th>
         <th>Format</th>
+        <th>Indexed</th>
+        <th>Unique</th>
         <th>Tags</th>
       </tr>
     </thead>
@@ -113,6 +115,8 @@
         <td>{%s col.Name %}</td>
         <td>{%s col.Type.String() %}</td>
         <td>{%s col.Format %}</td>
+        <td>{% if col.Indexed || model.Relations.ContainsSource(col.Name) %}{%= components.SVGRef("check", 15, 15, "icon", ps) %}{% endif %}</td>
+        <td>{% if col.HasTag("unique") %}{%= components.SVGRef("check", 15, 15, "icon", ps) %}{% endif %}</td>
         <td>{%s strings.Join(col.Tags, ", ") %}</td>
       </tr>
       {%- endfor -%}
