@@ -34,7 +34,7 @@ func (c *Column) ToGoEditString(prefix string, format string, enums enum.Enums) 
 		return fmt.Sprintf(`{%%%%= components.TableTextarea(%q, %q, 8, util.ToJSON(%s), 5, %q) %%%%}`, c.Camel(), c.Title(), c.ToGoString(prefix), h), nil
 	case types.KeyBool:
 		return fmt.Sprintf(`{%%%%= components.TableBoolean(%q, %q, %s, 5, %q) %%%%}`, c.Camel(), c.Title(), prefix+c.Proper(), h), nil
-	//case types.KeyEnum:
+	// case types.KeyEnum:
 	//	return fmt.Sprintf(`{%%%%= components.TableInput(%q, %q, string(%s), 5, %q) %%%%}`, c.Camel(), c.Title(), c.ToGoString(prefix), h), nil
 	case types.KeyEnum:
 		e, err := AsEnumInstance(c.Type, enums)

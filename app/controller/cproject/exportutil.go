@@ -15,6 +15,8 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+const keyNew = "new"
+
 func exportModelFromForm(frm util.ValueMap, m *model.Model) error {
 	get := func(k string, def string) string {
 		x := frm.GetStringOpt(k)
@@ -90,7 +92,7 @@ func exportLoadModel(rc *fasthttp.RequestCtx, as *app.State, logger util.Logger)
 		return nil, nil, nil, err
 	}
 	var mdl *model.Model
-	if modelKey == "new" {
+	if modelKey == keyNew {
 		mdl = &model.Model{}
 	} else {
 		mdl = args.Models.Get(modelKey)
@@ -141,7 +143,7 @@ func exportLoadEnum(rc *fasthttp.RequestCtx, as *app.State, logger util.Logger) 
 		return nil, nil, nil, err
 	}
 	var en *enum.Enum
-	if enumKey == "new" {
+	if enumKey == keyNew {
 		en = &enum.Enum{}
 	} else {
 		en = args.Enums.Get(enumKey)

@@ -31,23 +31,3 @@ func enumStruct(e *enum.Enum) *golang.Block {
 	ret.W(")")
 	return ret
 }
-
-func enumAll(e *enum.Enum) *golang.Block {
-	ret := golang.NewBlock(e.Proper()+"All", "var")
-	ret.W("var %sAll = []%s{", e.Proper(), e.Proper())
-	for _, v := range e.Values {
-		ret.W("\t%s%s,", e.Proper(), util.StringToCamel(v))
-	}
-	ret.W("}")
-	return ret
-}
-
-func enumAllStrings(e *enum.Enum) *golang.Block {
-	ret := golang.NewBlock(e.Proper()+"AllStrings", "var")
-	ret.W("var %sAllStrings = []string{", e.Proper())
-	for _, v := range e.Values {
-		ret.W("\tstring(%s%s),", e.Proper(), util.StringToCamel(v))
-	}
-	ret.W("}")
-	return ret
-}

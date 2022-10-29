@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strings"
 
-
 	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/file"

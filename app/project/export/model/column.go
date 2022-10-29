@@ -4,11 +4,10 @@ import (
 	"fmt"
 	"strings"
 
-	"projectforge.dev/projectforge/app/project/export/enum"
-
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/lib/types"
+	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/util"
 )
 

@@ -30,7 +30,7 @@ func ExecList(rc *fasthttp.RequestCtx) {
 func ExecForm(rc *fasthttp.RequestCtx) {
 	controller.Act("exec.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		x := &exec.Exec{}
-		ps.Title = "Processes"
+		ps.Title = "New Process"
 		ps.Data = x
 		return controller.Render(rc, as, &vexec.Form{Exec: x}, ps, "exec", "New Process")
 	})

@@ -4,9 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-
 	"projectforge.dev/projectforge/app/project/export/enum"
-
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
 )

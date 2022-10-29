@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "esModuleInterop": true,
-    "moduleResolution": "Node",
+    "module": "none",
     "noImplicitAny": true,
     "removeComments": false,
     "preserveConstEnums": true,

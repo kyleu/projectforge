@@ -4,9 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"projectforge.dev/projectforge/app/project/export/enum"
-
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
@@ -27,9 +26,9 @@ func Model(m *model.Model, args *model.Args, addHeader bool) (*file.File, error)
 		return nil, err
 	}
 	if len(m.PKs()) > 1 {
-		pk, err := modelPK(m, args.Enums)
-		if err != nil {
-			return nil, err
+		pk, e := modelPK(m, args.Enums)
+		if e != nil {
+			return nil, e
 		}
 		g.AddBlocks(pk)
 	}

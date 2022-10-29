@@ -2,8 +2,9 @@ package sql
 
 import (
 	"fmt"
-	"golang.org/x/exp/slices"
 	"strings"
+
+	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project/export/golang"
@@ -74,7 +75,7 @@ func sqlCreate(m *model.Model, modules []string) (*golang.Block, error) {
 
 	pks := m.PKs()
 
-	//var indexes [][]string
+	// var indexes [][]string
 	for _, col := range m.Columns {
 		if (col.PK && len(pks) > 1) || col.Indexed {
 			addIndex(ret, m.Name, col.Name)
