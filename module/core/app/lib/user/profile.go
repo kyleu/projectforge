@@ -23,7 +23,7 @@ func (p *Profile) String() string {
 }
 
 func (p *Profile) Clone() *Profile {
-	return &Profile{Name: p.Name, Mode: p.Mode, Theme: p.Theme}
+	{{{ if .HasModule "user" }}}return &Profile{ID: p.ID, Name: p.Name, Mode: p.Mode, Theme: p.Theme}{{{ else }}}return &Profile{Name: p.Name, Mode: p.Mode, Theme: p.Theme}{{{ end }}}
 }
 
 func (p *Profile) ModeClass() string {
