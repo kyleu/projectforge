@@ -8,6 +8,7 @@ import (
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller/cmenu"
+	"{{{ .Package }}}/app/lib/filter"
 	"{{{ .Package }}}/app/lib/menu"
 	"{{{ .Package }}}/app/lib/telemetry"
 	"{{{ .Package }}}/app/lib/theme"
@@ -44,6 +45,7 @@ type PageState struct {
 	Accounts      user.Accounts     `json:"accounts,omitempty"`
 	Authed        bool              `json:"authed,omitempty"`
 	Admin         bool              `json:"admin,omitempty"`
+	Params        filter.ParamSet   `json:"params,omitempty"`
 	Icons         []string          `json:"icons,omitempty"`
 	RootIcon      string            `json:"rootIcon,omitempty"`
 	RootPath      string            `json:"rootPath,omitempty"`
@@ -83,7 +85,7 @@ func (p *PageState) User() string {
 	return p.Accounts[0].Email
 }
 
-func (p *PageState) Clean(as *app.State) error {
+func (p *PageState) Clean(rc *fasthttp.RequestCtx, as *app.State) error {
 	if p.Profile != nil && p.Profile.Theme == "" {
 		p.Profile.Theme = theme.ThemeDefault.Key
 	}
@@ -106,7 +108,7 @@ func (p *PageState) Clean(as *app.State) error {
 		p.ProfilePath = DefaultProfilePath
 	}
 	if len(p.Menu) == 0 {
-		m, data, err := cmenu.MenuFor(p.Context, p.Authed, p.Admin, p.Profile, as, p.Logger)
+		m, data, err := cmenu.MenuFor(p.Context, p.Authed, p.Admin, p.Profile, p.Params, as, p.Logger)
 		if err != nil {
 			return err
 		}

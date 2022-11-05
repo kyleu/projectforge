@@ -3,6 +3,7 @@ package websocket
 
 import (
 	"github.com/google/uuid"
+	"golang.org/x/exp/slices"
 )
 
 type UpdateMemberParams struct {
@@ -10,20 +11,33 @@ type UpdateMemberParams struct {
 	Role string    `json:"role"`
 }
 
-// Returns membership details for the provided Channel.
-func (s *Service) GetOnline(ch string) []uuid.UUID {
-	connections, ok := s.channels[ch]
+func (s *Service) GetAllMembers(key string) []*Connection {
+	ch, ok := s.channels[key]
 	if !ok {
-		connections = newChannel(ch)
+		return nil
+	}
+	ret := make([]*Connection, 0, len(ch.MemberIDs))
+	for _, cID := range ch.MemberIDs {
+		c, ok := s.connections[cID]
+		if ok && c != nil {
+			ret = append(ret, c)
+		}
+	}
+	return ret
+}
+
+func (s *Service) GetOnline(key string) []uuid.UUID {
+	ch, ok := s.channels[key]
+	if !ok {
+		return nil
 	}
 	online := make([]uuid.UUID, 0)
-	for _, cID := range connections.MemberIDs {
+	for _, cID := range ch.MemberIDs {
 		c, ok := s.connections[cID]
-		if ok && c != nil && (!containsUUID(online, c.ID)) {
+		if ok && c != nil && (!slices.Contains(online, c.ID)) {
 			online = append(online, c.ID)
 		}
 	}
-
 	return online
 }
 

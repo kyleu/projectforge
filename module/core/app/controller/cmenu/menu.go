@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"{{{ .Package }}}/app"
+	"{{{ .Package }}}/app/lib/filter"
 	"{{{ .Package }}}/app/lib/menu"{{{ if .HasModule "sandbox" }}}
 	"{{{ .Package }}}/app/lib/sandbox"{{{ end }}}
 	"{{{ .Package }}}/app/lib/telemetry"
@@ -11,7 +12,9 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-func MenuFor(ctx context.Context, isAuthed bool, isAdmin bool, profile *user.Profile, as *app.State, logger util.Logger) (menu.Items, any, error) {
+func MenuFor(
+	ctx context.Context, isAuthed bool, isAdmin bool, profile *user.Profile, params filter.ParamSet, as *app.State, logger util.Logger,
+) (menu.Items, any, error) {
 	ctx, span, logger := telemetry.StartSpan(ctx, "menu:generate", logger)
 	defer span.Complete()
 	_ = logger

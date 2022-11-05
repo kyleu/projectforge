@@ -19,12 +19,11 @@ func controllerList(m *model.Model, grp *model.Column, models model.Models, enum
 		controllerArgFor(grp, ret, "\"\"", 2)
 	}
 
-	ret.W("\t\tparams := cutil.ParamSetFromRequest(rc)")
 	suffix := ""
 	if m.IsSoftDelete() {
 		suffix = ", " + incDel
 	}
-	ret.W("\t\tprms := params.Get(%q, nil, ps.Logger).Sanitize(%q)", m.Package, m.Package)
+	ret.W("\t\tprms := ps.Params.Get(%q, nil, ps.Logger).Sanitize(%q)", m.Package, m.Package)
 	ret.W("\t\tret, err := as.Services.%s.%s(ps.Context, nil%s, prms%s, ps.Logger)", m.Proper(), meth, grpArgs, suffix)
 	ret.W("\t\tif err != nil {")
 	ret.W("\t\t\treturn \"\", err")
@@ -71,7 +70,7 @@ func controllerList(m *model.Model, grp *model.Column, models model.Models, enum
 
 		toStrings += fmt.Sprintf(", %s: %s", relModel.ProperPlural(), relModel.Plural())
 	}
-	render := "\t\treturn %sRender(rc, as, &v%s.List{Models: ret%s, Params: params}, ps, %s%s)"
+	render := "\t\treturn %sRender(rc, as, &v%s.List{Models: ret%s, Params: ps.Params}, ps, %s%s)"
 	ret.W(render, prefix, m.Package, toStrings, m.Breadcrumbs(), grp.BC())
 	ret.W("\t})")
 	ret.W("}")

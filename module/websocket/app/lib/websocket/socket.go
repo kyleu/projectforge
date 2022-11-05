@@ -7,13 +7,13 @@ import (
 	"github.com/fasthttp/websocket"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
+	"golang.org/x/exp/slices"
 
 	"{{{ .Package }}}/app/util"
 )
 
 var count int64
 
-// Write a text message to the Connection matching the provided ID.
 func (s *Service) Write(connID uuid.UUID, message string) error {
 	if connID == systemID {
 		s.Logger.Warn("--- admin message sent ---")
@@ -40,12 +40,10 @@ func (s *Service) Write(connID uuid.UUID, message string) error {
 	return nil
 }
 
-// Write a Message to the Connection matching the provided ID.
 func (s *Service) WriteMessage(connID uuid.UUID, message *Message) error {
 	return s.Write(connID, util.ToJSON(message))
 }
 
-// Write a Message to the provided Channel.
 func (s *Service) WriteChannel(message *Message, except ...uuid.UUID) error {
 	if message == nil {
 		return errors.New("no message provided")
@@ -60,7 +58,7 @@ func (s *Service) WriteChannel(message *Message, except ...uuid.UUID) error {
 
 	s.Logger.Debug(fmt.Sprintf("sending message [%v::%v] to [%v] connections", message.Channel, message.Cmd, len(conns.MemberIDs)))
 	for _, conn := range conns.MemberIDs {
-		if !containsUUID(except, conn) {
+		if !slices.Contains(except, conn) {
 			connID := conn
 
 			go func() {
@@ -72,7 +70,6 @@ func (s *Service) WriteChannel(message *Message, except ...uuid.UUID) error {
 	return nil
 }
 
-// Enter an loop that reads Message objects from the Connection matching the provided ID.
 func (s *Service) ReadLoop(connID uuid.UUID, onDisconnect func(conn *Connection) error) error {
 	c, ok := s.connections[connID]
 	if !ok {

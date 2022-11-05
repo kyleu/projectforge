@@ -120,11 +120,16 @@ func viewTableColumn(ret *golang.Block, models model.Models, m *model.Model, lin
 	} else {
 		ret.W(ind + "  <div class=\"icon\">" + col.ToGoViewString(modelKey, true, false) + toStrings + "</div>")
 	}
-	const msg = "%s  <a title=%q href=\"{%%%%s %s %%%%}\">{%%%%= components.SVGRefIcon(%q, ps) %%%%}</a>"
+	const msgNotNull = "%s  <a title=%q href=\"{%%%%s %s %%%%}\">{%%%%= components.SVGRefIcon(%q, ps) %%%%}</a>"
+	const msg = "%s  {%%%% if %s%s != nil %%%%}<a title=%q href=\"{%%%%s %s %%%%}\">{%%%%= components.SVGRefIcon(%q, ps) %%%%}</a>{%%%% endif %%%%}"
 	for _, rel := range rels {
 		if slices.Contains(rel.Src, col.Name) {
 			relModel := models.Get(rel.Table)
-			ret.W(msg, ind, relModel.Title(), rel.WebPath(m, relModel, modelKey), relModel.Icon)
+			if col.Nullable {
+				ret.W(msg, ind, modelKey, col.Proper(), relModel.Title(), rel.WebPath(m, relModel, modelKey), relModel.Icon)
+			} else {
+				ret.W(msgNotNull, ind, relModel.Title(), rel.WebPath(m, relModel, modelKey), relModel.Icon)
+			}
 		}
 	}
 	ret.W(ind + "</td>")

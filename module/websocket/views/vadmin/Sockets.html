@@ -17,6 +17,7 @@
 
 {% func (p *Sockets) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
+    <div class="right"><a href="/admin/sockets/tap"><button>Tap Traffic</button></a></div>
     <h3>Channels</h3>
     <div class="mt">
       {%- if len(p.Channels) == 0 -%}
@@ -24,7 +25,7 @@
       {%- else -%}
       <ul>
         {%- for _, x := range p.Channels -%}
-        <li>{%s x %}</li>
+        <li><a href="/admin/sockets/chan/{%s x %}">{%s x %}</a></li>
         {%- endfor -%}
       </ul>
       {%- endif -%}
@@ -49,7 +50,7 @@
         <tbody>
           {%- for _, x := range p.Connections -%}
           <tr>
-            <td class="shrink">{%s x.ID.String() %}</td>
+            <td class="shrink"><a href="/admin/sockets/conn/{%s x.ID.String() %}">{%s x.ID.String() %}</a></td>
             <td>{%s x.Profile.String() %}</td>
             <td>{%s x.Svc %}</td>
             <td>{%s strings.Join(x.Channels, ", ") %}</td>
@@ -70,4 +71,92 @@
     {%s= components.JSON(p.Context) %}
   </div>
   {%- endif -%}
+{% endfunc %}
+
+{% code type Tap struct {
+  layout.Basic
+} %}
+
+{% func (p *Tap) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>Tap Activity</h3>
+    <em>TODO</em>
+  </div>
+{% endfunc %}
+
+{% code type Channel struct {
+  layout.Basic
+  Channel *websocket.Channel
+  Members []*websocket.Connection
+} %}
+
+{% func (p *Channel) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <div class="right"><a href="#modal-channel"><button type="button">JSON</button></a></div>
+    <h3>Channel [{%s p.Channel.Key %}]</h3>
+  </div>
+  {%= components.JSONModal("channel", "Channel [" + p.Channel.Key + "] JSON", p.Channel, 1) %}
+  {%- for _, m := range p.Members -%}
+  {%= ConnectionCard(m, as, ps) %}
+  {%- endfor -%}
+{% endfunc %}
+
+{% code type Connection struct {
+  layout.Basic
+  Connection *websocket.Connection
+} %}
+
+{% func (p *Connection) Body(as *app.State, ps *cutil.PageState) %}
+  {%= ConnectionCard(p.Connection, as, ps) %}
+  <div class="card">
+    <h3>Send Message</h3>
+    <form action="/admin/sockets/conn/{%s p.Connection.ID.String() %}/send" method="post">
+      <table class="mt expanded">
+        <tbody>{{{ if .HasModule "user" }}}
+          {%= components.TableInput("from", "From", ps.Profile.ID.String(), 5, "The user this message is from") %}{{{ else }}}
+          {%= components.TableInput("from", "From", "", 5, "The user this message is from") %}{{{ end }}}
+          {%= components.TableInput("channel", "Channel", "", 5, "The channel this message is from") %}
+          {%= components.TableInput("cmd", "Command", "", 5, "The command for this message") %}
+          {%= components.TableTextarea("param", "Parameter", 8, "", 5, "JSON object message payload") %}
+          <tr><td colspan="2"><button type="submit">Send</button></td></tr>
+        </tbody>
+      </table>
+    </form>
+  </div>
+{% endfunc %}
+
+{% func ConnectionCard(c *websocket.Connection, as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <div class="right"><a href="#modal-connection-{%s c.ID.String() %}"><button type="button">JSON</button></a></div>
+    <h3>{%s c.ID.String() %} ({%s c.Profile.Name %})</h3>
+    <table class="mt expanded">
+      <tbody>
+        <tr>
+          <th>Connection ID</th>
+          <td>{%s c.ID.String() %}</td>
+        </tr>{{{ if .HasModule "user" }}}
+        <tr>
+          <th>User ID</th>
+          <td>{%s c.Profile.ID.String() %}</td>
+        </tr>{{{ end }}}
+        <tr>
+          <th>Name</th>
+          <td>{%s c.Profile.Name %}</td>
+        </tr>
+        <tr>
+          <th>Theme</th>
+          <td>{%s c.Profile.Theme %}</td>
+        </tr>
+        <tr>
+          <th>Service</th>
+          <td>{%s c.Svc %}</td>
+        </tr>
+        <tr>
+          <th>Channels</th>
+          <td>{%s strings.Join(c.Channels, ", ") %}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  {%= components.JSONModal("connection-" + c.ID.String(), "Connection [" + c.ID.String() + "] JSON", c, 1) %}
 {% endfunc %}

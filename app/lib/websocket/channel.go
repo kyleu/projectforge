@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"golang.org/x/exp/slices"
 )
 
 type Channel struct {
@@ -18,13 +19,12 @@ func newChannel(key string) *Channel {
 	return &Channel{Key: key, MemberIDs: []uuid.UUID{}, LastUpdate: time.Now()}
 }
 
-// Adds a Connection to this Channel.
 func (s *Service) Join(connID uuid.UUID, ch string) (bool, error) {
 	conn, ok := s.connections[connID]
 	if !ok {
 		return false, invalidConnection(connID)
 	}
-	if !chanContains(conn.Channels, ch) {
+	if !slices.Contains(conn.Channels, ch) {
 		conn.Channels = append(conn.Channels, ch)
 	}
 
@@ -38,13 +38,12 @@ func (s *Service) Join(connID uuid.UUID, ch string) (bool, error) {
 		s.channels[ch] = curr
 		created = true
 	}
-	if !containsUUID(curr.MemberIDs, connID) {
+	if !slices.Contains(curr.MemberIDs, connID) {
 		curr.MemberIDs = append(curr.MemberIDs, connID)
 	}
 	return created, nil
 }
 
-// Removes a Connection from this Channel.
 func (s *Service) Leave(connID uuid.UUID, ch string) (bool, error) {
 	conn, ok := s.connections[connID]
 	if !ok {
@@ -75,22 +74,14 @@ func (s *Service) Leave(connID uuid.UUID, ch string) (bool, error) {
 	return false, s.sendOnlineUpdate(ch, conn.ID, conn.ID, false)
 }
 
-func containsUUID(s []uuid.UUID, e uuid.UUID) bool {
-	for _, a := range s {
-		if a == e {
-			return true
-		}
-	}
-	return false
+func (s *Service) GetChannel(ch string) *Channel {
+	ret, _ := s.channels[ch]
+	return ret
 }
 
-func chanContains(c []string, id string) bool {
-	for _, x := range c {
-		if x == id {
-			return true
-		}
-	}
-	return false
+func (s *Service) GetConnection(id uuid.UUID) *Connection {
+	ret, _ := s.connections[id]
+	return ret
 }
 
 func chanWithout(c []string, ch string) []string {

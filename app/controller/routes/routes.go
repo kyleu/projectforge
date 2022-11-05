@@ -46,6 +46,7 @@ func AppRoutes(as *app.State, logger util.Logger) fasthttp.RequestHandler {
 
 	r.GET("/admin", clib.Admin)
 	r.GET("/admin/{path:*}", clib.Admin)
+	r.POST("/admin/{path:*}", clib.Admin)
 
 	r.GET("/favicon.ico", clib.Favicon)
 	r.GET("/robots.txt", clib.RobotsTxt)

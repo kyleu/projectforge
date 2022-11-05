@@ -21,30 +21,28 @@ var auditBreadcrumb = "Audit||/admin/audit"
 func AuditList(rc *fasthttp.RequestCtx) {
 	controller.Act("audit.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ps.Title = auditDefaultTitle
-		params := cutil.ParamSetFromRequest(rc)
-		ret, err := as.Services.Audit.List(ps.Context, nil, params.Get("audit", nil, ps.Logger), ps.Logger)
+		ret, err := as.Services.Audit.List(ps.Context, nil, ps.Params.Get("audit", nil, ps.Logger), ps.Logger)
 		if err != nil {
 			return "", err
 		}
 		ps.Data = ret
-		return controller.Render(rc, as, &vaudit.List{Models: ret, Params: params}, ps, "admin", "Audit")
+		return controller.Render(rc, as, &vaudit.List{Models: ret, Params: ps.Params}, ps, "admin", "Audit")
 	})
 }
 
 func AuditDetail(rc *fasthttp.RequestCtx) {
 	controller.Act("audit.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		params := cutil.ParamSetFromRequest(rc)
 		ret, err := auditFromPath(rc, as, ps)
 		if err != nil {
 			return "", err
 		}
 		ps.Title = ret.String()
 		ps.Data = ret
-		records, err := as.Services.Audit.RecordsForAudit(ps.Context, nil, ret.ID, params.Get("auditRecord", nil, ps.Logger), ps.Logger)
+		records, err := as.Services.Audit.RecordsForAudit(ps.Context, nil, ret.ID, ps.Params.Get("auditRecord", nil, ps.Logger), ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child auditrecords")
 		}
-		return controller.Render(rc, as, &vaudit.Detail{Model: ret, Params: params, Records: records}, ps, "admin", auditBreadcrumb, ret.String())
+		return controller.Render(rc, as, &vaudit.Detail{Model: ret, Params: ps.Params, Records: records}, ps, "admin", auditBreadcrumb, ret.String())
 	})
 }
 

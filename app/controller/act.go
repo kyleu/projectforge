@@ -41,7 +41,7 @@ func ActSite(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cuti
 }
 
 func actComplete(key string, as *app.State, ps *cutil.PageState, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
-	err := ps.Clean(as)
+	err := ps.Clean(rc, as)
 	if err != nil {
 		ps.Logger.Warnf("error while cleaning request, somehow: %+v", err)
 	}

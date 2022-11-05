@@ -93,8 +93,7 @@ func DatabaseAction(rc *fasthttp.RequestCtx) {
 
 func DatabaseTableView(rc *fasthttp.RequestCtx) {
 	controller.Act("database.sql.run", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		params := cutil.ParamSetFromRequest(rc)
-		prms := params.Get("table", []string{"*"}, ps.Logger).Sanitize("table")
+		prms := ps.Params.Get("table", []string{"*"}, ps.Logger).Sanitize("table")
 		svc, err := getDatabaseService(rc)
 		if err != nil {
 			return "", err

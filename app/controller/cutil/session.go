@@ -23,13 +23,14 @@ func LoadPageState(as *app.State, rc *fasthttp.RequestCtx, key string, logger ut
 	httpmetrics.InjectHTTP(rc, span)
 
 	session, flashes, prof, accts := loadSession(ctx, as, rc, logger)
+	params := ParamSetFromRequest(rc)
 
 	isAuthed, _ := user.Check("/", accts)
 	isAdmin, _ := user.Check("/admin", accts)
 
 	return &PageState{
 		Method: string(rc.Method()), URI: rc.Request.URI(), Flashes: flashes, Session: session,
-		Profile: prof, Accounts: accts, Authed: isAuthed, Admin: isAdmin,
+		Profile: prof, Accounts: accts, Authed: isAuthed, Admin: isAdmin, Params: params,
 		Icons: initialIcons, Context: traceCtx, Span: span, Logger: logger,
 	}
 }

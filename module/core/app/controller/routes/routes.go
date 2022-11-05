@@ -59,6 +59,7 @@ func AppRoutes(as *app.State, logger util.Logger) fasthttp.RequestHandler {
 	r.GET("/admin/sandbox", controller.SandboxList)
 	r.GET("/admin/sandbox/{key}", controller.SandboxRun){{{ end }}}
 	r.GET("/admin/{path:*}", clib.Admin)
+	r.POST("/admin/{path:*}", clib.Admin)
 
 	r.GET("/favicon.ico", clib.Favicon)
 	r.GET("/robots.txt", clib.RobotsTxt)

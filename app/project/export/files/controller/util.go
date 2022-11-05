@@ -22,7 +22,7 @@ func checkRev(ret *golang.Block, m *model.Model) {
 		incDel = incFalse
 	}
 	prmsStr := m.PKs().ToRefs("ret.")
-	ret.W("\t\tprms := params.Get(%q, nil, ps.Logger).Sanitize(%q)", m.Package, m.Package)
+	ret.W("\t\tprms := ps.Params.Get(%q, nil, ps.Logger).Sanitize(%q)", m.Package, m.Package)
 	const msg = "\t\t%s, err := as.Services.%s.GetAll%s(ps.Context, nil, %s, prms%s, ps.Logger)"
 	ret.W(msg, hc.CamelPlural(), m.Proper(), hc.ProperPlural(), prmsStr, incDel)
 	ret.W("\t\tif err != nil {")
