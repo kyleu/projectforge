@@ -42,7 +42,7 @@ type State struct {
 	Started   time.Time
 }
 
-func NewState(debug bool, bi *BuildInfo{{{ if .HasModule "filesystem" }}}, f filesystem.FileLoader{{{ end }}}, enableTelemetry bool, logger util.Logger) (*State, error) {
+func NewState(debug bool, bi *BuildInfo{{{ if .HasModule "filesystem" }}}, f filesystem.FileLoader{{{ end }}}, enableTelemetry bool, port uint16, logger util.Logger) (*State, error) {
 	loc, err := time.LoadLocation("UTC")
 	if err != nil {
 		return nil, err
@@ -50,7 +50,7 @@ func NewState(debug bool, bi *BuildInfo{{{ if .HasModule "filesystem" }}}, f fil
 	time.Local = loc
 
 	_ = telemetry.InitializeIfNeeded(enableTelemetry, bi.Version, logger){{{ if .HasModule "oauth" }}}
-	as := auth.NewService("", logger){{{ end }}}
+	as := auth.NewService("", port, logger){{{ end }}}
 	ts := theme.NewService({{{ if .HasModule "filesystem" }}}f{{{ end }}}){{{ if .HasModule "graphql" }}}
 	gqls := graphql.NewService(){{{ end }}}
 

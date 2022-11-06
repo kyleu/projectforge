@@ -36,7 +36,7 @@ type State struct {
 	Started   time.Time
 }
 
-func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, enableTelemetry bool, logger util.Logger) (*State, error) {
+func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, enableTelemetry bool, port uint16, logger util.Logger) (*State, error) {
 	loc, err := time.LoadLocation("UTC")
 	if err != nil {
 		return nil, err

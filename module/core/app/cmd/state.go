@@ -16,7 +16,7 @@ import (
 func buildDefaultAppState(flags *Flags, logger util.Logger) (*app.State, error) {
 	{{{ if .HasModule "filesystem" }}}fs := filesystem.NewFileSystem(flags.ConfigDir)
 	{{{ end }}}telemetryDisabled := util.GetEnvBool("disable_telemetry", false)
-	st, err := app.NewState(flags.Debug, _buildInfo{{{ if .HasModule "filesystem" }}}, fs{{{ end }}}, !telemetryDisabled, logger)
+	st, err := app.NewState(flags.Debug, _buildInfo{{{ if .HasModule "filesystem" }}}, fs{{{ end }}}, !telemetryDisabled, flags.Port, logger)
 	if err != nil {
 		return nil, err
 	}

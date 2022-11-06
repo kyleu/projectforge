@@ -20,3 +20,10 @@ fieldset {
   padding: 0;
   margin: 0;
 }
+
+input.combined {
+}
+
+button.combined {
+  padding: var(--padding-small);
+}

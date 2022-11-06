@@ -3,6 +3,7 @@ package auth
 import (
 	"fmt"
 	"strings"
+	"sync"
 
 	"github.com/markbates/goth"
 	"github.com/pkg/errors"
@@ -84,7 +85,12 @@ func (s *Service) Providers(logger util.Logger) (Providers, error) {
 	return s.providers, nil
 }
 
+var initMu sync.Mutex
+
 func (s *Service) load(logger util.Logger) error {
+	initMu.Lock()
+	defer initMu.Unlock()
+
 	if s.providers != nil {
 		return errors.New("called [load] twice")
 	}
@@ -92,7 +98,7 @@ func (s *Service) load(logger util.Logger) error {
 		s.baseURL = util.GetEnv(util.AppKey + "_oauth_redirect")
 	}
 	if s.baseURL == "" {
-		s.baseURL = fmt.Sprintf("http://localhost:%d", util.AppPort)
+		s.baseURL = fmt.Sprintf("http://localhost:%d", s.port)
 	}
 	s.baseURL = strings.TrimSuffix(s.baseURL, "/")
 

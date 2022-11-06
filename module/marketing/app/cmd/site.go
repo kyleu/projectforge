@@ -44,7 +44,7 @@ func loadSite(flags *Flags, logger util.Logger) (fasthttp.RequestHandler, util.L
 	f := filesystem.NewFileSystem(flags.ConfigDir)
 
 	telemetryDisabled := util.GetEnvBool("disable_telemetry", false)
-	st, err := app.NewState(flags.Debug, _buildInfo, f, !telemetryDisabled, logger)
+	st, err := app.NewState(flags.Debug, _buildInfo, f, !telemetryDisabled, flags.Port, logger)
 	if err != nil {
 		return nil, logger, err
 	}
