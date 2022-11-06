@@ -17,7 +17,7 @@ func modelFromMap(g *golang.File, m *model.Model, enums enum.Enums) (*golang.Blo
 	cols := m.Columns.WithoutTag("created").WithoutTag("updated").WithoutTag(model.RevisionType)
 	var needsErr bool
 	for _, c := range cols {
-		if c.Type.Scalar() || c.Type.Key() == "timestamp" || c.Type.Key() == "reference" {
+		if c.Type.Scalar() || c.Type.Key() == types.KeyDate || c.Type.Key() == types.KeyTimestamp || c.Type.Key() == types.KeyReference {
 			needsErr = true
 			break
 		}

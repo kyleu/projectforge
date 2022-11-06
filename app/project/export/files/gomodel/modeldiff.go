@@ -42,7 +42,7 @@ func modelDiff(m *model.Model, g *golang.File) *golang.Block {
 			ret.W("\tif %s != %s {", l, r)
 			ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, %s, %s))", col.Camel(), l, r)
 			ret.W("\t}")
-		case types.KeyTimestamp, types.KeyUUID:
+		case types.KeyDate, types.KeyTimestamp, types.KeyUUID:
 			if col.Nullable {
 				ret.W("\tif (%s == nil && %s != nil) || (%s != nil && %s == nil) || (%s != nil && %s != nil && *%s != *%s) {", l, r, l, r, l, r, l, r)
 				g.AddImport(helper.ImpFmt)

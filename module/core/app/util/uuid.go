@@ -19,6 +19,13 @@ func UUIDFromString(s string) *uuid.UUID {
 	return retID
 }
 
+func UUIDString(u *uuid.UUID) string {
+	if u == nil {
+		return ""
+	}
+	return u.String()
+}
+
 func UUID() uuid.UUID {
 	return uuid.New()
 }

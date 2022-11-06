@@ -2,6 +2,7 @@ package sql
 
 import (
 	"fmt"
+	"projectforge.dev/projectforge/app/lib/types"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -42,9 +43,9 @@ func sqlSeedData(m *model.Model, modules []string) (*golang.Block, error) {
 			cell := row[colIdx]
 			cellStr := fmt.Sprint(cell)
 			switch col.Type.Key() {
-			case "string", "enum":
+			case types.KeyString, types.KeyEnum:
 				vs = append(vs, processString(cellStr, "''"))
-			case "timestamp":
+			case types.KeyDate, types.KeyTimestamp:
 				if cellStr == nilStr {
 					vs = append(vs, nullStr)
 				} else if _, err := util.TimeFromString(cellStr); err == nil {
@@ -52,23 +53,23 @@ func sqlSeedData(m *model.Model, modules []string) (*golang.Block, error) {
 				} else {
 					vs = append(vs, cellStr)
 				}
-			case "uuid":
+			case types.KeyUUID:
 				vs = append(vs, processString(cellStr, "'00000000-0000-0000-0000-000000000000'"))
-			case "list":
+			case types.KeyList:
 				vs = append(vs, processList(cell, cellStr))
-			case "int", "int64":
+			case types.KeyInt:
 				if cellStr == nilStr {
 					vs = append(vs, "0")
 					continue
 				}
 				vs = append(vs, fmt.Sprintf("%.0f", cell))
-			case "float", "float64":
+			case types.KeyFloat:
 				if cellStr == nilStr {
 					vs = append(vs, "0")
 					continue
 				}
 				vs = append(vs, fmt.Sprintf("%f", cell))
-			case "map", "valuemap":
+			case types.KeyMap, types.KeyValueMap:
 				if cellStr == nilStr {
 					vs = append(vs, nullStr)
 					continue

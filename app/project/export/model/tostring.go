@@ -24,6 +24,11 @@ func ColToViewString(c *Column, prefix string) string {
 func TypeToViewString(t types.Type, prop string, nullable bool) string {
 	ret := ToGoString(t, prop, false)
 	switch t.Key() {
+	case types.KeyDate:
+		if nullable {
+			return "{%%= components.DisplayTimestampDay(" + ret + ") %%}"
+		}
+		return "{%%= components.DisplayTimestampDay(&" + ret + ") %%}"
 	case types.KeyTimestamp:
 		if nullable {
 			return "{%%= components.DisplayTimestamp(" + ret + ") %%}"

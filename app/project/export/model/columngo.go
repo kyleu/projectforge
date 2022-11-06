@@ -52,6 +52,12 @@ func (c *Column) ToGoEditString(prefix string, format string, enums enum.Enums) 
 		return fmt.Sprintf(`{%%%%= components.TableTextarea(%q, %q, 8, util.ToJSON(%s), 5, %q) %%%%}`, c.Camel(), c.Title(), c.ToGoString(prefix), h), nil
 	case types.KeyReference:
 		return fmt.Sprintf(`{%%%%= components.TableTextarea(%q, %q, 8, util.ToJSON(%s), 5, %q) %%%%}`, c.Camel(), c.Title(), prefix+c.Proper(), h), nil
+	case types.KeyDate:
+		gs := c.ToGoString(prefix)
+		if !c.Nullable {
+			gs = "&" + gs
+		}
+		return fmt.Sprintf(`{%%%%= components.TableInputTimestampDay(%q, %q, %s, 5, %q) %%%%}`, c.Camel(), c.Title(), gs, h), nil
 	case types.KeyTimestamp:
 		gs := c.ToGoString(prefix)
 		if !c.Nullable {
@@ -109,7 +115,7 @@ func toGoMapParse(t types.Type) string {
 		return asRefK(t)
 	case types.KeyString, types.KeyEnum:
 		return "String"
-	case types.KeyTimestamp:
+	case types.KeyDate, types.KeyTimestamp:
 		return "Time"
 	case types.KeyUUID:
 		return "UUID"
@@ -137,7 +143,7 @@ func (c *Column) ZeroVal() string {
 		return types.KeyNil
 	case types.KeyString:
 		return "\"\""
-	case types.KeyTimestamp:
+	case types.KeyDate, types.KeyTimestamp:
 		return "time.Time{}"
 	case types.KeyUUID:
 		return "uuid.UUID{}"

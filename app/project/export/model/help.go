@@ -39,6 +39,8 @@ func Help(t types.Type, f string, enums enum.Enums) (string, error) {
 		default:
 			return "String text", nil
 		}
+	case types.KeyDate:
+		return "Calendar date", nil
 	case types.KeyTimestamp:
 		return "Date and time, in almost any format", nil
 	case types.KeyUUID:

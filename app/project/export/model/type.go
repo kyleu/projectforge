@@ -55,7 +55,7 @@ func ToGoType(t types.Type, nullable bool, pkg string, enums enum.Enums) (string
 		}
 	case types.KeyString:
 		ret = types.KeyString
-	case types.KeyTimestamp:
+	case types.KeyDate, types.KeyTimestamp:
 		ret = "time.Time"
 	case types.KeyUUID:
 		ret = "uuid.UUID"
@@ -84,6 +84,11 @@ func ToGoString(t types.Type, prop string, alwaysString bool) string {
 	case types.KeyList:
 		if alwaysString {
 			return fmt.Sprintf("util.ToJSON(&%s)", prop)
+		}
+		return prop
+	case types.KeyDate:
+		if alwaysString {
+			return fmt.Sprintf("util.TimeToYMD(&%s)", prop)
 		}
 		return prop
 	case types.KeyTimestamp, types.KeyTimestampZoned:
@@ -115,6 +120,11 @@ func ToGoViewString(t types.Type, prop string, nullable bool, format string, ver
 		return "{%%= components.JSON(" + prop + ") %%}"
 	case types.KeyMap, types.KeyValueMap, types.KeyReference:
 		return "{%%= components.JSON(" + prop + ") %%}"
+	case types.KeyDate:
+		if nullable {
+			return "{%%= components.DisplayTimestampDay(" + prop + ") %%}"
+		}
+		return "{%%= components.DisplayTimestampDay(&" + prop + ") %%}"
 	case types.KeyTimestamp:
 		if nullable {
 			return "{%%= components.DisplayTimestamp(" + prop + ") %%}"
@@ -177,7 +187,7 @@ func ToSQLType(t types.Type) (string, error) {
 		return keyJSONB, nil
 	case types.KeyString:
 		return "text", nil
-	case types.KeyTimestamp:
+	case types.KeyDate, types.KeyTimestamp:
 		return "timestamp", nil
 	case types.KeyUUID:
 		return "uuid", nil

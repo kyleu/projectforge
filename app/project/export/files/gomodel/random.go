@@ -57,7 +57,7 @@ func randFor(col *model.Column, pkg string, enums enum.Enums) string {
 		default:
 			return "util.RandomString(12)"
 		}
-	case types.KeyTimestamp:
+	case types.KeyDate, types.KeyTimestamp:
 		if col.HasTag("deleted") {
 			return types.KeyNil
 		}
