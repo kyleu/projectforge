@@ -65,7 +65,7 @@ func controllerDetail(models model.Models, m *model.Model, grp *model.Column, pr
 		lCols := rel.SrcColumns(m)
 		rCols := rel.TgtColumns(rm)
 		rNames := strings.Join(rCols.ProperNames(), "")
-		ret.W("\t\t%sPrms := ps.Params.Get(%q, nil, ps.Logger).Sanitize(%q)", rm.Camel(), rm.Camel(), rm.Camel())
+		ret.W("\t\t%sPrms := ps.Params.Get(%q, nil, ps.Logger).Sanitize(%q)", rm.Camel(), rm.Package, rm.Package)
 		const msg = "\t\t%sBy%s, err := as.Services.%s.GetBy%s(ps.Context, nil, %s, %sPrms%s, ps.Logger)"
 		ret.W(msg, rm.CamelPlural(), rNames, rm.Proper(), rNames, lCols.ToRefs("ret.", rCols...), rm.Camel(), delSuffix)
 		ret.W("\t\tif err != nil {")

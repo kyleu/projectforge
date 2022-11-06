@@ -192,7 +192,7 @@ func (p *Params) ToQueryString(u *fasthttp.URI) string {
 		ret.Add(p.Key+".o", s)
 	}
 
-	if p.Limit > 0 {
+	if p.Limit != 0 && p.Limit != 1000 {
 		ret.Add(p.Key+".l", fmt.Sprint(p.Limit))
 	}
 
