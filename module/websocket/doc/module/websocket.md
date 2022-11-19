@@ -1,6 +1,6 @@
-# Websocket
+# WebSocket
 
-This is a module for [Project Forge](https://projectforge.dev). It provides a Websocket API
+This is a module for [Project Forge](https://projectforge.dev). It provides a WebSocket API
 
 https://github.com/kyleu/projectforge/tree/master/module/socket
 

@@ -59,6 +59,9 @@ func RunAction(rc *fasthttp.RequestCtx) {
 		if result.Project == nil {
 			result.Project = prj
 		}
+		if redir, ok := result.Data.(string); ok {
+			return redir, nil
+		}
 		ps.Data = result
 
 		if isBuild {

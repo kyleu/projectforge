@@ -1,6 +1,7 @@
 package websocket
 
 import (
+	"fmt"
 	"sync"
 
 	"github.com/fasthttp/websocket"
@@ -40,9 +41,11 @@ func (c *Connection) ToStatus() *Status {
 func (c *Connection) Write(b []byte) error {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-
 	err := c.socket.WriteMessage(websocket.TextMessage, b)
-	return errors.Wrap(err, "unable to write to websocket")
+	if err != nil {
+		return errors.Wrap(err, "unable to write to websocket")
+	}
+	return nil
 }
 
 // Reads bytes from this Connection, you should probably use a helper method.
@@ -56,48 +59,6 @@ func (c *Connection) Close() error {
 	return c.socket.Close()
 }
 
-// Registers a new Connection for this Service using the provided fevouser.Profile and websocket.Conn.
-func (s *Service) Register(profile *user.Profile, c *websocket.Conn) (*Connection, error) {
-	conn := &Connection{ID: util.UUID(), Profile: profile, Svc: "system", socket: c}
-
-	s.connectionsMu.Lock()
-	defer s.connectionsMu.Unlock()
-
-	s.connections[conn.ID] = conn
-	if s.onOpen != nil {
-		err := s.onOpen(s, conn)
-		if err != nil {
-			return nil, err
-		}
-	}
-	return conn, nil
-}
-
-// Removes a Connection from this Service.
-func (s *Service) Disconnect(connID uuid.UUID) (bool, error) {
-	conn, ok := s.connections[connID]
-	if !ok {
-		return false, errors.Errorf("no connection found with id [%s]", connID.String())
-	}
-	left := false
-
-	if conn.Channels != nil {
-		left = true
-		for _, x := range conn.Channels {
-			_, err := s.Leave(connID, x)
-			if err != nil {
-				return left, errors.Wrap(err, "error leaving channel ["+x+"]")
-			}
-		}
-	}
-
-	s.connectionsMu.Lock()
-	defer s.connectionsMu.Unlock()
-
-	delete(s.connections, connID)
-	return left, nil
-}
-
-func invalidConnection(id uuid.UUID) error {
-	return errors.Errorf("no connection found with id [%s]", id.String())
+func (c *Connection) String() string {
+	return fmt.Sprintf("[%s][%s::%s][%s]", c.ID, c.Svc, c.ModelID, c.Profile.String())
 }

@@ -30,7 +30,7 @@ func NewServices(ctx context.Context, st *State, rootLogger util.Logger) (*Servi
 		Export:   export.NewService(),
 		Git:      git.NewService(),
 		Exec:     exec.NewService(),
-		Socket:   websocket.NewService(rootLogger, nil, socketHandler, nil, nil),
+		Socket:   websocket.NewService(nil, socketHandler, nil, nil),
 	}, nil
 }
 
@@ -38,15 +38,15 @@ func (s *Services) Close(_ context.Context, _ util.Logger) error {
 	return nil
 }
 
-func socketHandler(s *websocket.Service, c *websocket.Connection, svc string, cmd string, param json.RawMessage) error {
+func socketHandler(s *websocket.Service, c *websocket.Connection, svc string, cmd string, param json.RawMessage, logger util.Logger) error {
 	switch cmd {
 	case "connect":
-		_, err := s.Join(c.ID, "tap")
+		_, err := s.Join(c.ID, "tap", logger)
 		if err != nil {
 			return err
 		}
 	default:
-		s.Logger.Error("unhandled command [" + cmd + "]")
+		logger.Error("unhandled command [" + cmd + "]")
 	}
 	return nil
 }

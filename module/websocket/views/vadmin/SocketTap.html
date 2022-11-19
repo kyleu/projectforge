@@ -1,0 +1,70 @@
+{% import (
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/views/layout"
+) %}
+
+{% code type SocketTap struct {
+  layout.Basic
+} %}
+
+{% func (p *SocketTap) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>Tap Activity</h3>
+    <em>Shows all WebSocket traffic in real-time</em>
+    <table class="mt">
+      <thead>
+        <tr>
+          <th>From</th>
+          <th>Channel</th>
+          <th>Command</th>
+          <th>Param</th>
+        </tr>
+      </thead>
+      <tbody id="tap-logs">
+        <tr>
+          <td colspan="4">Connecting...</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <script>
+    function open() {
+      document.getElementById("tap-logs").innerHTML = "";
+      addMessage({"from": ":tap", "channel": ":tap", "cmd": "open", "param": null});
+    }
+    function recv(m) {
+      addMessage(m);
+    }
+    function err(e) {
+      addMessage({"from": ":tap", "channel": ":tap", "cmd": "error", "param": e});
+    }
+    function addMessage(m) {
+      const t = document.getElementById("tap-logs");
+      const row = document.createElement("tr");
+
+      const tdFrom = document.createElement("td");
+      tdFrom.innerText = m.from;
+      row.appendChild(tdFrom);
+
+      const tdChannel = document.createElement("td");
+      tdChannel.innerText = m.channel;
+      row.appendChild(tdChannel);
+
+      const tdCmd = document.createElement("td");
+      tdCmd.innerText = m.cmd;
+      row.appendChild(tdCmd);
+
+      const tdParam = document.createElement("td");
+      const pre = document.createElement("pre");
+      pre.innerText = JSON.stringify(m.param, null, 2);
+      tdParam.appendChild(pre);
+      row.appendChild(tdParam);
+
+      t.appendChild(row);
+    }
+    document.addEventListener("DOMContentLoaded", function() {
+      new {{{ .Key }}}.Socket(true, open, recv, err, "/admin/sockets/tap-socket");
+    });
+  </script>
+{% endfunc %}

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"strings"
 
-	fhws "github.com/fasthttp/websocket"
 	"github.com/pkg/errors"
 	"github.com/robert-nix/ansihtml"
 	"github.com/valyala/fasthttp"
@@ -62,7 +61,7 @@ func ExecNew(rc *fasthttp.RequestCtx) {
 		w := func(key string, b []byte) error {
 			m := util.ValueMap{"msg": string(b), "html": string(ansihtml.ConvertToHTML(b))}
 			msg := &websocket.Message{Channel: key, Cmd: "output", Param: util.ToJSONBytes(m, true)}
-			return as.Services.Socket.WriteChannel(msg)
+			return as.Services.Socket.WriteChannel(msg, ps.Logger)
 		}
 		err = x.Start(ps.Context, ps.Logger, w)
 		if err != nil {
@@ -84,31 +83,13 @@ func ExecDetail(rc *fasthttp.RequestCtx) {
 	})
 }
 
-var upgrader = fhws.FastHTTPUpgrader{EnableCompression: true}
-
 func ExecSocket(rc *fasthttp.RequestCtx) {
 	controller.Act("exec.socket", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ex, err := getExecRC(rc, as)
 		if err != nil {
 			return "", err
 		}
-		err = upgrader.Upgrade(rc, func(conn *fhws.Conn) {
-			connID, errf := as.Services.Socket.Register(ps.Profile, conn)
-			if errf != nil {
-				ps.Logger.Warn("unable to register websocket connection")
-				return
-			}
-			joined, errf := as.Services.Socket.Join(connID.ID, ex.String())
-			if errf != nil {
-				ps.Logger.Error(fmt.Sprintf("error processing socket join (%v): %+v", joined, errf))
-				return
-			}
-			errf = as.Services.Socket.ReadLoop(connID.ID, nil)
-			if errf != nil {
-				ps.Logger.Error(fmt.Sprintf("error processing socket read loop: %+v", errf))
-				return
-			}
-		})
+		err = as.Services.Socket.Upgrade(rc, ex.String(), ps.Profile, ps.Logger)
 		if err != nil {
 			ps.Logger.Warn("unable to upgrade connection to websocket")
 			return "", err

@@ -14,10 +14,9 @@ import (
 
 var count int64
 
-func (s *Service) Write(connID uuid.UUID, message string) error {
+func (s *Service) write(connID uuid.UUID, message string, logger util.Logger) error {
 	if connID == systemID {
-		s.Logger.Warn("--- admin message sent ---")
-		s.Logger.Warn(message)
+		logger.Warnf("admin message sent: %s", message)
 		return nil
 	}
 
@@ -40,11 +39,12 @@ func (s *Service) Write(connID uuid.UUID, message string) error {
 	return nil
 }
 
-func (s *Service) WriteMessage(connID uuid.UUID, message *Message) error {
-	return s.Write(connID, util.ToJSON(message))
+func (s *Service) WriteMessage(connID uuid.UUID, message *Message, logger util.Logger) error {
+	s.WriteTap(message, logger)
+	return s.write(connID, util.ToJSON(message), logger)
 }
 
-func (s *Service) WriteChannel(message *Message, except ...uuid.UUID) error {
+func (s *Service) WriteChannel(message *Message, logger util.Logger, except ...uuid.UUID) error {
 	if message == nil {
 		return errors.New("no message provided")
 	}
@@ -55,57 +55,75 @@ func (s *Service) WriteChannel(message *Message, except ...uuid.UUID) error {
 	if !ok {
 		return nil
 	}
-
-	s.Logger.Debug(fmt.Sprintf("sending message [%v::%v] to [%v] connections", message.Channel, message.Cmd, len(conns.MemberIDs)))
+	json := util.ToJSON(message)
+	logger.Debugf("sending message [%v::%v] to [%v] connections", message.Channel, message.Cmd, len(conns.MemberIDs))
 	for _, conn := range conns.MemberIDs {
 		if !slices.Contains(except, conn) {
 			connID := conn
 
 			go func() {
 				defer func() { _ = recover() }()
-				_ = s.Write(connID, util.ToJSON(message))
+				_ = s.write(connID, json, logger)
 			}()
 		}
 	}
+	s.WriteTap(message, logger)
 	return nil
 }
 
-func (s *Service) ReadLoop(connID uuid.UUID, onDisconnect func(conn *Connection) error) error {
+func (s *Service) ReadLoop(connID uuid.UUID, onDisconnect func(conn *Connection) error, logger util.Logger) error {
 	c, ok := s.connections[connID]
 	if !ok {
 		return errors.New("cannot load connection [" + connID.String() + "]")
 	}
-
-	defer func() {
-		_ = c.socket.Close()
+	if onDisconnect == nil {
+		onDisconnect = func(conn *Connection) error {
+			_, err := s.Disconnect(connID, logger)
+			return err
+		}
+	}
+	d := func() error {
 		if onDisconnect != nil {
-			err := onDisconnect(c)
+			return onDisconnect(c)
+		}
+		return nil
+	}
+	m := func(m *Message) error {
+		return OnMessage(s, connID, m, logger)
+	}
+	return ReadSocketLoop(connID, c.socket, m, d, logger)
+}
+
+func ReadSocketLoop(connID uuid.UUID, sock *websocket.Conn, onMessage func(m *Message) error, onDisconnect func() error, logger util.Logger) error {
+	defer func() {
+		_ = sock.Close()
+		if onDisconnect != nil {
+			err := onDisconnect()
 			if err != nil {
-				s.Logger.Warn(fmt.Sprintf("error running onDisconnect for [%v]: %+v", connID, err))
+				logger.Warn(fmt.Sprintf("error running onDisconnect for [%v]: %+v", connID, err))
 			}
 		}
-		_, err := s.Disconnect(connID)
-		if err != nil {
-			s.Logger.Warn(fmt.Sprintf("error running disconnect for [%v]: %+v", connID, err))
+		if onDisconnect == nil {
+			err := onDisconnect()
+			if err != nil {
+				logger.Warn(fmt.Sprintf("error running disconnect for [%v]: %+v", connID, err))
+			}
 		}
-		s.Logger.Debug(fmt.Sprintf("closed websocket [%v]", connID.String()))
+		logger.Debug(fmt.Sprintf("closed websocket [%v]", connID.String()))
 	}()
 
 	for {
-		_, message, err := c.socket.ReadMessage()
+		_, message, err := sock.ReadMessage()
 		if err != nil {
 			return err
 		}
-
-		var m Message
-		err = util.FromJSON(message, &m)
+		m := &Message{}
+		err = util.FromJSON(message, m)
 		if err != nil {
 			return errors.Wrap(err, "error decoding websocket message")
 		}
-
-		err = OnMessage(s, connID, &m)
+		err = onMessage(m)
 		if err != nil {
-			_ = s.WriteMessage(c.ID, NewMessage(nil, "system", "error", err.Error()))
 			return errors.Wrap(err, "error handling websocket message")
 		}
 	}

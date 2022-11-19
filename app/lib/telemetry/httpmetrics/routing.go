@@ -21,15 +21,15 @@ func prometheusHandler() fasthttp.RequestHandler {
 	return fasthttpadaptor.NewFastHTTPHandler(promhttp.Handler())
 }
 
-func (p *Metrics) WrapHandler(r *router.Router) fasthttp.RequestHandler {
-	r.GET(p.MetricsPath, prometheusHandler())
-
+func (p *Metrics) WrapHandler(r *router.Router, includeMetrics bool) fasthttp.RequestHandler {
+	if includeMetrics {
+		r.GET(p.MetricsPath, prometheusHandler())
+	}
 	return func(rc *fasthttp.RequestCtx) {
-		if string(rc.Request.URI().Path()) == defaultMetricPath {
+		if includeMetrics && string(rc.Request.URI().Path()) == defaultMetricPath {
 			r.Handler(rc)
 			return
 		}
-
 		reqSize := make(chan int)
 		frc := acquireRequestFromPool()
 		rc.Request.CopyTo(frc)

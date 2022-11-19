@@ -1,6 +1,8 @@
 {% import (
   "strings"
 
+  "github.com/google/uuid"
+
   "{{{ .Package }}}/app"
   "{{{ .Package }}}/app/controller/cutil"
   "{{{ .Package }}}/app/lib/websocket"
@@ -12,12 +14,27 @@
   layout.Basic
   Channels []string
   Connections []*websocket.Connection
+  Taps []uuid.UUID
   Context any
 } %}
 
 {% func (p *Sockets) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <div class="right"><a href="/admin/sockets/tap"><button>Tap Traffic</button></a></div>
+    <h3>Activity Taps</h3>
+    <div class="mt">
+      {%- if len(p.Taps) == 0 -%}
+      <em>no active taps</em>
+      {%- else -%}
+      <ul>
+        {%- for _, x := range p.Taps -%}
+        <li>{%s x.String() %}</li>
+        {%- endfor -%}
+      </ul>
+      {%- endif -%}
+    </div>
+  </div>
+  <div class="card">
     <h3>Channels</h3>
     <div class="mt">
       {%- if len(p.Channels) == 0 -%}
@@ -73,17 +90,6 @@
     {%s= components.JSON(p.Context) %}
   </div>
   {%- endif -%}
-{% endfunc %}
-
-{% code type Tap struct {
-  layout.Basic
-} %}
-
-{% func (p *Tap) Body(as *app.State, ps *cutil.PageState) %}
-  <div class="card">
-    <h3>Tap Activity</h3>
-    <em>TODO</em>
-  </div>
 {% endfunc %}
 
 {% code type Channel struct {

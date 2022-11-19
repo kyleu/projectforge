@@ -6,6 +6,8 @@ import (
 
 	"github.com/google/uuid"
 	"golang.org/x/exp/slices"
+
+	"projectforge.dev/projectforge/app/util"
 )
 
 type Channel struct {
@@ -19,7 +21,7 @@ func newChannel(key string) *Channel {
 	return &Channel{Key: key, MemberIDs: []uuid.UUID{}, LastUpdate: time.Now()}
 }
 
-func (s *Service) Join(connID uuid.UUID, ch string) (bool, error) {
+func (s *Service) Join(connID uuid.UUID, ch string, logger util.Logger) (bool, error) {
 	conn, ok := s.connections[connID]
 	if !ok {
 		return false, invalidConnection(connID)
@@ -41,10 +43,10 @@ func (s *Service) Join(connID uuid.UUID, ch string) (bool, error) {
 	if !slices.Contains(curr.MemberIDs, connID) {
 		curr.MemberIDs = append(curr.MemberIDs, connID)
 	}
-	return created, nil
+	return created, s.sendOnlineUpdate(ch, conn.ID, conn.ID, true, logger)
 }
 
-func (s *Service) Leave(connID uuid.UUID, ch string) (bool, error) {
+func (s *Service) Leave(connID uuid.UUID, ch string, logger util.Logger) (bool, error) {
 	conn, ok := s.connections[connID]
 	if !ok {
 		return false, invalidConnection(connID)
@@ -71,7 +73,7 @@ func (s *Service) Leave(connID uuid.UUID, ch string) (bool, error) {
 	}
 
 	s.channels[ch].MemberIDs = filtered
-	return false, s.sendOnlineUpdate(ch, conn.ID, conn.ID, false)
+	return false, s.sendOnlineUpdate(ch, conn.ID, conn.ID, false, logger)
 }
 
 func (s *Service) GetChannel(ch string) *Channel {

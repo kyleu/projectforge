@@ -16,6 +16,12 @@ const (
 	dateFmtJS   = "2006-01-02T15:04:05Z"
 )
 
+func TimeToday() *time.Time {
+	t := time.Now()
+	t = time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location())
+	return &t
+}
+
 func TimeCurrentMillis() int64 {
 	return time.Now().UnixMilli()
 }

@@ -5,18 +5,22 @@ import (
 	"fmt"
 	"sync"
 
+	"github.com/fasthttp/websocket"
 	"github.com/google/uuid"
+	"github.com/valyala/fasthttp"
+	"golang.org/x/exp/maps"
 	"golang.org/x/exp/slices"
 
 	"{{{ .Package }}}/app/lib/filter"
+	"{{{ .Package }}}/app/lib/user"
 	"{{{ .Package }}}/app/util"
 )
 
 // Function used to handle incoming messages.
-type Handler func(s *Service, conn *Connection, svc string, cmd string, param json.RawMessage) error
+type Handler func(s *Service, conn *Connection, svc string, cmd string, param json.RawMessage, logger util.Logger) error
 
 // Function used to handle incoming connections.
-type ConnectEvent func(s *Service, conn *Connection) error
+type ConnectEvent func(s *Service, conn *Connection, logger util.Logger) error
 
 // Manages all Connection objects.
 type Service struct {
@@ -24,7 +28,8 @@ type Service struct {
 	connectionsMu sync.Mutex
 	channels      map[string]*Channel
 	channelsMu    sync.Mutex
-	Logger        util.Logger
+	taps          map[uuid.UUID]*websocket.Conn
+	tapsMu        sync.Mutex
 	onOpen        ConnectEvent
 	handler       Handler
 	onClose       ConnectEvent
@@ -32,11 +37,11 @@ type Service struct {
 }
 
 // Creates a new service with the provided handler functions.
-func NewService(logger util.Logger, onOpen ConnectEvent, handler Handler, onClose ConnectEvent, ctx any) *Service {
+func NewService(onOpen ConnectEvent, handler Handler, onClose ConnectEvent, ctx any) *Service {
 	return &Service{
 		connections: make(map[uuid.UUID]*Connection),
 		channels:    make(map[string]*Channel),
-		Logger:      logger,
+		taps:        make(map[uuid.UUID]*websocket.Conn),
 		handler:     handler,
 		onOpen:      onOpen,
 		Context:     ctx,
@@ -79,13 +84,13 @@ func (s *Service) ChannelList(params *filter.Params) []string {
 }
 
 // Returns a Status representing the Connection with the provided ID.
-func (s *Service) GetByID(id uuid.UUID) *Status {
+func (s *Service) GetByID(id uuid.UUID, logger util.Logger) *Status {
 	if id == systemID {
 		return systemStatus
 	}
 	conn, ok := s.connections[id]
 	if !ok {
-		s.Logger.Error(fmt.Sprintf("error getting connection by id [%v]", id))
+		logger.Error(fmt.Sprintf("error getting connection by id [%v]", id))
 		return nil
 	}
 	return conn.ToStatus()
@@ -96,52 +101,15 @@ func (s *Service) Count() int {
 	return len(s.connections)
 }
 
-// Callback for when the backing connection is re-established.
-func (s *Service) OnOpen(connID uuid.UUID) error {
-	c, ok := s.connections[connID]
-	if !ok {
-		return invalidConnection(connID)
-	}
-	return s.onOpen(s, c)
-}
-
-// Sends a message to a provided Connection ID.
-func OnMessage(s *Service, connID uuid.UUID, message *Message) error {
-	if connID == systemID {
-		s.Logger.Warn("--- admin message received ---")
-		s.Logger.Warn(message.String())
-		return nil
-	}
-	s.connectionsMu.Lock()
-	c, ok := s.connections[connID]
-	s.connectionsMu.Unlock()
-	if !ok {
-		return invalidConnection(connID)
-	}
-
-	return s.handler(s, c, message.Channel, message.Cmd, message.Param)
-}
-
-func (s *Service) Status() ([]string, []*Connection, any) {
+func (s *Service) Status() ([]string, []*Connection, []uuid.UUID, any) {
 	s.connectionsMu.Lock()
 	defer s.connectionsMu.Unlock()
 	conns := make([]*Connection, 0, len(s.connections))
 	for _, conn := range s.connections {
 		conns = append(conns, conn)
 	}
-	return s.ChannelList(nil), conns, s.Context
-}
-
-// Callback for when the backing connection is closed.
-func (s *Service) OnClose(connID uuid.UUID) error {
-	c, ok := s.connections[connID]
-	if !ok {
-		return invalidConnection(connID)
-	}
-	if s.onClose != nil {
-		return s.onClose(s, c)
-	}
-	return nil
+	taps := slices.Clone(maps.Keys(s.taps))
+	return s.ChannelList(nil), conns, taps, s.Context
 }
 
 func (s *Service) Close() {
@@ -150,4 +118,26 @@ func (s *Service) Close() {
 	for _, v := range s.connections {
 		_ = v.Close()
 	}
+}
+
+var upgrader = websocket.FastHTTPUpgrader{EnableCompression: true}
+
+func (s *Service) Upgrade(rc *fasthttp.RequestCtx, channel string, profile *user.Profile, logger util.Logger) error {
+	return upgrader.Upgrade(rc, func(conn *websocket.Conn) {
+		cx, err := s.Register(profile, conn, logger)
+		if err != nil {
+			logger.Warn("unable to register websocket connection")
+			return
+		}
+		joined, err := s.Join(cx.ID, channel, logger)
+		if err != nil {
+			logger.Error(fmt.Sprintf("error processing socket join (%v): %+v", joined, err))
+			return
+		}
+		err = s.ReadLoop(cx.ID, nil, logger)
+		if err != nil {
+			logger.Error(fmt.Sprintf("error processing socket read loop: %+v", err))
+			return
+		}
+	})
 }

@@ -59,5 +59,5 @@ func AppRoutes(as *app.State, logger util.Logger) fasthttp.RequestHandler {
 	clib.AppRoutesList = r.List()
 
 	p := httpmetrics.NewMetrics(util.AppKey, logger)
-	return fasthttp.CompressHandlerLevel(p.WrapHandler(r), fasthttp.CompressBestSpeed)
+	return fasthttp.CompressHandlerLevel(p.WrapHandler(r, true), fasthttp.CompressBestSpeed)
 }

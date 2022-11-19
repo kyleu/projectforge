@@ -3,6 +3,8 @@ package websocket
 import (
 	"github.com/google/uuid"
 	"golang.org/x/exp/slices"
+
+	"{{{ .Package }}}/app/util"
 )
 
 type UpdateMemberParams struct {
@@ -40,8 +42,8 @@ func (s *Service) GetOnline(key string) []uuid.UUID {
 	return online
 }
 
-func (s *Service) sendOnlineUpdate(ch string, connID uuid.UUID, userID uuid.UUID, connected bool) error {
+func (s *Service) sendOnlineUpdate(ch string, connID uuid.UUID, userID uuid.UUID, connected bool, logger util.Logger) error {
 	p := OnlineUpdate{UserID: userID, Connected: connected}
 	onlineMsg := NewMessage(&userID, ch, "online-update", p)
-	return s.WriteChannel(onlineMsg, connID)
+	return s.WriteChannel(onlineMsg, logger, connID)
 }

@@ -22,13 +22,20 @@ func socketRoute(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState, pa
 	}
 	if len(path) == 0 {
 		ps.Title = "Sockets"
-		chans, conns, ctx := as.Services.Socket.Status()
+		chans, conns, taps, ctx := as.Services.Socket.Status()
 		ps.Data = util.ValueMap{"channels": chans, "connections": conns, "context": ctx}
-		return controller.Render(rc, as, &vadmin.Sockets{Channels: chans, Connections: conns, Context: ctx}, ps, bc()...)
+		return controller.Render(rc, as, &vadmin.Sockets{Channels: chans, Connections: conns, Taps: taps, Context: ctx}, ps, bc()...)
 	}
 	switch path[0] {
 	case "tap":
-		return controller.Render(rc, as, &vadmin.Tap{}, ps, bc("Tap")...)
+		ps.Title = "WebSocket Tap"
+		return controller.Render(rc, as, &vadmin.SocketTap{}, ps, bc("Tap")...)
+	case "tap-socket":
+		_, err := as.Services.Socket.RegisterTap(rc, ps.Logger)
+		if err != nil {
+			return "", errors.Wrap(err, "unable to register tap socket")
+		}
+		return "", nil
 	case "chan":
 		if len(path) == 0 {
 			return "", errors.New("no channel in path")
@@ -47,6 +54,9 @@ func socketRoute(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState, pa
 		}
 		if len(path) == 2 {
 			c := as.Services.Socket.GetConnection(*id)
+			if c == nil {
+				return "", errors.Errorf("no connection with ID [%s]", id.String())
+			}
 			ps.Data = c
 			return controller.Render(rc, as, &vadmin.Connection{Connection: c}, ps, bc("Connection", c.ID.String())...)
 		}
@@ -62,7 +72,7 @@ func socketRoute(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState, pa
 			Cmd:     cmd,
 			Param:   []byte(param),
 		}
-		err := as.Services.Socket.WriteMessage(*id, m)
+		err := as.Services.Socket.WriteMessage(*id, m, ps.Logger)
 		if err != nil {
 			return "", err
 		}

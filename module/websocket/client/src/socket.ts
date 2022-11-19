@@ -12,7 +12,7 @@ interface Message {
 
 class Socket {
   readonly debug: boolean;
-  private readonly open: (id: string) => void;
+  private readonly open: () => void;
   private readonly recv: (m: Message) => void;
   private readonly err: (svc: string, err: string) => void;
   readonly url?: string;
@@ -22,7 +22,7 @@ class Socket {
   connectTime?: number
   sock?: WebSocket;
 
-  constructor(debug: boolean, open: (id: string) => void, recv: (m: Message) => void, err: (svc: string, err: string) => void, url?: string) {
+  constructor(debug: boolean, open: () => void, recv: (m: Message) => void, err: (svc: string, err: string) => void, url?: string) {
     this.debug = debug
     this.open = open;
     this.recv = recv;
@@ -46,7 +46,7 @@ class Socket {
       if (s.debug) {
         console.log("WebSocket connected")
       }
-      s.open("todo");
+      s.open();
     };
     this.sock.onmessage = (event) => {
       const msg = JSON.parse(event.data) as Message;
@@ -72,7 +72,9 @@ class Socket {
         }, s.pauseSeconds * 1000);
       } else {
         console.debug("socket closed after [" + elapsed + "ms]");
-        s.connect();
+        setTimeout(() => {
+          s.connect();
+        }, s.pauseSeconds * 500);
       }
     };
   }

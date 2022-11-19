@@ -27,12 +27,13 @@ func onStart(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
 		if pm.SSvc == nil {
 			return nil
 		}
-		return pm.SSvc.WriteChannel(msg)
+		return pm.SSvc.WriteChannel(msg, pm.Logger)
 	}
 	err = exec.Start(ctx, pm.Logger, w)
 	if err != nil {
 		return errorResult(err, TypeDebug, pm.Cfg, pm.Logger)
 	}
+	ret.Data = fmt.Sprintf("/admin/exec/%s/%d", pm.Prj.Key, 1)
 
 	return ret
 }
