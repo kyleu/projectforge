@@ -13,7 +13,7 @@ export function editorInit() {
 
   let editorCache: { [key: string]: string; } = {};
   let selectedCache: { [key: string]: HTMLInputElement; } = {};
-  for (const n of Array.from(document.querySelectorAll(".editor"))) {
+  for (const n of Array.from(document.querySelectorAll("form.editor"))) {
     const frm = n as HTMLFormElement;
     const buildCache = () => {
       editorCache = {};

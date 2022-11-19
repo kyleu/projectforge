@@ -10,4 +10,7 @@ const (
 	AppURL     = "{{{ .Info.Homepage }}}"
 	AppSource  = "{{{ .Info.Sourcecode }}}"
 	AppLegal   = `Built by <a href="mailto:{{{ .Info.AuthorEmail }}}">{{{ .Info.AuthorName }}}</a>, all rights reserved`
+
+	// $PF_SECTION_START(keys)$
+	// $PF_SECTION_END(keys)$.
 )

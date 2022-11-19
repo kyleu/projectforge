@@ -30,7 +30,7 @@ func (s *Service) Exec(ctx context.Context, key string, q string, op string, var
 		}
 	}()
 	logger.Debugf("running GraphQL query")
-	r.ExecCount += 1
+	r.ExecCount++
 	g = r.Schema.Exec(ctx, q, op, vars)
 	return
 }

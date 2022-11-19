@@ -144,8 +144,18 @@
     {%= vutil.Indent(true, indent + 1) %}
     <th class="shrink"><label>{%s title %}</label></th>
     {%= vutil.Indent(true, indent + 1) %}
-    <td>{%= IconPicker(value, key, ps, indent + 2) %}
+    <td>{%= IconPicker(key, value, ps, indent + 2) %}
     </td>
+  {%= vutil.Indent(true, indent) %}
+  </tr>
+{% endstripspace %}{% endfunc %}
+
+{% func TableInputTags(key string, title string, values []string, ps *cutil.PageState, indent int, help ...string) %}{% stripspace %}
+  <tr>
+    {%= vutil.Indent(true, indent + 1) %}
+    <th class="shrink"><label for="input-{%s key %}"{%= titleFor(help) %}>{%s title %}</label></th>
+    {%= vutil.Indent(true, indent + 1) %}
+    <td>{%= FormInputTags(key, "input-" + key, values, ps, help...) %}</td>
   {%= vutil.Indent(true, indent) %}
   </tr>
 {% endstripspace %}{% endfunc %}

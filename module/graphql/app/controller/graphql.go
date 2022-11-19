@@ -13,7 +13,7 @@ import (
 
 func GraphQLIndex(rc *fasthttp.RequestCtx) {
 	Act("graphql.index", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ps.Title = "GraphQL"
+		ps.Title = "GraphQL List"
 		keys := as.GraphQL.Keys()
 		if len(keys) == 1 {
 			return "/graphql/" + keys[0], nil
@@ -35,9 +35,9 @@ func GraphQLDetail(rc *fasthttp.RequestCtx) {
 		}
 		titles := as.GraphQL.Titles()
 		if len(titles) > 1 {
-			ps.Title = fmt.Sprintf("[%s] GraphQL", titles[key])
+			ps.Title = fmt.Sprintf("[%s] GraphQL Workspace", titles[key])
 		} else {
-			ps.Title = "GraphQL"
+			ps.Title = "GraphQL Workspace"
 		}
 		ps.Data = key
 		bc := []string{"graphql"}

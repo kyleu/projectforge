@@ -66,6 +66,7 @@ func NewState(debug bool, bi *BuildInfo{{{ if .HasModule "filesystem" }}}, f fil
 }
 
 func (s State) Close(ctx context.Context, logger util.Logger) error {
+	defer func() { _ = telemetry.Close(ctx) }()
 	{{{ if .HasModule "migration" }}}if err := s.DB.Close(); err != nil {
 		logger.Errorf("error closing database: %+v", err)
 	}

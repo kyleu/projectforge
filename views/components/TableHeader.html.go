@@ -128,7 +128,7 @@ func TableHeader(section string, key string, title string, params *filter.Params
 //line views/components/TableHeader.html:34
 func StreamTableHeaderSimple(qw422016 *qt422016.Writer, section string, key string, title string, tooltip string, params *filter.Params, u *fasthttp.URI, ps *cutil.PageState) {
 //line views/components/TableHeader.html:35
-	StreamTableHeader(qw422016, section, key, title, params, "", u, tooltip, true, "", false, ps)
+	StreamTableHeader(qw422016, section, key, title, params, "", u, tooltip, u != nil, "", false, ps)
 //line views/components/TableHeader.html:36
 }
 

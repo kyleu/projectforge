@@ -37,7 +37,7 @@
 
 .modal-content {
   position: relative;
-  width: fit-content;
+  width: min-content;
   min-width: 50%;
   max-width: 90%;
   max-height: 90%;
@@ -48,7 +48,7 @@
 
 .modal-content .modal-header {
   flex-grow: 0;
-  padding: var(--padding);
+  padding: var(--padding) var(--padding) 0 var(--padding);
 }
 
 .modal-content .modal-body {

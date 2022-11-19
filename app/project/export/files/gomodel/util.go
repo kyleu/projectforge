@@ -74,7 +74,11 @@ func modelWebPath(g *golang.File, m *model.Model) *golang.Block {
 	ret.W("func (%s *%s) WebPath() string {", m.FirstLetter(), m.Proper())
 	p := "\"/" + m.Route() + "\""
 	for _, pk := range m.PKs() {
-		p += " + \"/\" + "
+		if strings.HasSuffix(p, "\"") {
+			p = p[:len(p)-1] + "/" + "\" + "
+		} else {
+			p += " + \"/\" + "
+		}
 		if types.IsStringList(pk.Type) {
 			g.AddImport(helper.ImpStrings)
 			p += fmt.Sprintf(`strings.Join(%s, ",")`, pk.ToGoString(m.FirstLetter()+"."))

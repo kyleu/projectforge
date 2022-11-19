@@ -13,6 +13,7 @@ import (
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
+//nolint:gocognit
 func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	dbRef := args.DBRef()
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "serviceget")
@@ -77,7 +78,13 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 		for _, imp := range helper.ImportsForTypes("go", cols.Types()...) {
 			g.AddImport(imp)
 		}
-		gb, err := serviceGetBy(name, m, cols, true, dbRef, args.Enums)
+		returnMultiple := false
+		for _, x := range cols {
+			if !x.HasTag("unique") {
+				returnMultiple = true
+			}
+		}
+		gb, err := serviceGetBy(name, m, cols, returnMultiple, dbRef, args.Enums)
 		if err != nil {
 			return nil, err
 		}
@@ -201,7 +208,15 @@ func serviceGet(key string, m *model.Model, cols model.Columns, dbRef string, en
 		return nil, err
 	}
 	ret.W(msg, key, args, getSuffix(m), m.Proper())
-	ret.W("\twc := defaultWC(0)")
+	if slices.Equal(m.PKs().Names(), cols.Names()) {
+		ret.W("\twc := defaultWC(0)")
+	} else {
+		wc := make([]string, 0, len(cols))
+		for idx, col := range cols {
+			wc = append(wc, fmt.Sprintf("%q = $%d", col.Name, idx+1))
+		}
+		ret.W("\twc := %q", strings.Join(wc, " and "))
+	}
 	if m.IsSoftDelete() {
 		ret.W("\twc = addDeletedClause(wc, includeDeleted)")
 	}
@@ -226,12 +241,16 @@ func serviceGetByCols(key string, m *model.Model, cols model.Columns, dbRef stri
 		key = "GetBy" + cols.Smushed()
 	}
 	ret := golang.NewBlock(key, "func")
-	msg := "func (s *Service) %s(ctx context.Context, tx *sqlx.Tx, %s, params *filter.Params%s, logger util.Logger) (%s, error) {"
 	args, err := cols.Args(m.Package, enums)
 	if err != nil {
 		return nil, err
 	}
-	ret.W(msg, key, args, getSuffix(m), m.ProperPlural())
+	msg := "func (s *Service) %s(ctx context.Context, tx *sqlx.Tx, %s, params *filter.Params%s, logger util.Logger) (%s, error) {"
+	msg = fmt.Sprintf(msg, key, args, getSuffix(m), m.ProperPlural())
+	if len(msg) > 160 {
+		msg += " //nolint:lll"
+	}
+	ret.W(msg)
 	ret.W("\tparams = filters(params)")
 	ret.W("\twc := %q", cols.WhereClause(0))
 	if m.IsSoftDelete() {
@@ -255,9 +274,9 @@ func serviceGetByCols(key string, m *model.Model, cols model.Columns, dbRef stri
 
 func serviceListSQL(m *model.Model, dbRef string) *golang.Block {
 	ret := golang.NewBlock("ListSQL", "func")
-	ret.W("func (s *Service) ListSQL(ctx context.Context, tx *sqlx.Tx, sql string, logger util.Logger) (%s, error) {", m.ProperPlural())
+	ret.W("func (s *Service) ListSQL(ctx context.Context, tx *sqlx.Tx, sql string, logger util.Logger, values ...any) (%s, error) {", m.ProperPlural())
 	ret.W("\tret := dtos{}")
-	ret.W("\terr := s.%s.Select(ctx, &ret, sql, tx, logger)", dbRef)
+	ret.W("\terr := s.%s.Select(ctx, &ret, sql, tx, logger, values...)", dbRef)
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, errors.Wrap(err, \"unable to get %s using custom SQL\")", m.TitlePluralLower())
 	ret.W("\t}")

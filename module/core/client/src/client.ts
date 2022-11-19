@@ -5,6 +5,7 @@ import {modeInit} from "./mode";
 import {flashInit} from "./flash";
 import {linkInit} from "./link";
 import {modalInit} from "./modal";
+import {tagsInit} from "./tags";
 import {editorInit} from "./editor";
 import {themeInit} from "./theme";{{{ if .HasModule "websocket" }}}
 import {socketInit} from "./socket";{{{ end }}}
@@ -18,6 +19,7 @@ export function init(): void {
   flashInit();
   linkInit();
   modalInit();
+  tagsInit();
   editorInit();
   themeInit();{{{ if .HasModule "websocket" }}}
   socketInit();{{{ end }}}

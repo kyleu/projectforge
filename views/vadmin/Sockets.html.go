@@ -96,7 +96,7 @@ func (p *Sockets) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
         <thead>
           <tr>
             <th class="shrink">ID</th>
-            <th>Profile</th>
+            <th>Profile Name</th>
             <th>Service</th>
             <th>Channels</th>
             <th></th>

@@ -10,7 +10,7 @@ import (
 )
 
 func controllerList(m *model.Model, grp *model.Column, models model.Models, enums enum.Enums, g *golang.File, prefix string) (*golang.Block, error) {
-	ret := blockFor(m, prefix, grp, "list")
+	ret := blockFor(m, prefix, grp, 0, "list")
 	meth := "List"
 	grpArgs := ""
 	if grp != nil {

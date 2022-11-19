@@ -16,7 +16,7 @@ func Search(rc *fasthttp.RequestCtx) {
 	controller.Act("search", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		q := string(rc.URI().QueryArgs().Peek("q"))
 		params := &search.Params{Q: q, PS: ps.Params}
-		results, errs := search.Search(ps.Context, as, params, ps.Logger)
+		results, errs := search.Search(ps.Context, params, as, ps)
 		ps.Title = "Search Results"
 		if q != "" {
 			ps.Title = fmt.Sprintf("[%s] %s", q, ps.Title)

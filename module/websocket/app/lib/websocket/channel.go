@@ -74,12 +74,12 @@ func (s *Service) Leave(connID uuid.UUID, ch string) (bool, error) {
 }
 
 func (s *Service) GetChannel(ch string) *Channel {
-	ret, _ := s.channels[ch]
+	ret := s.channels[ch]
 	return ret
 }
 
 func (s *Service) GetConnection(id uuid.UUID) *Connection {
-	ret, _ := s.connections[id]
+	ret := s.connections[id]
 	return ret
 }
 

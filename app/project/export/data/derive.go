@@ -8,7 +8,6 @@ import (
 )
 
 func Derive(name string, pkg string, content string) (*model.Model, error) {
-	println(util.ToJSON(types.NewList(types.NewString())))
 	var js any
 	err := util.FromJSON([]byte(content), &js)
 	if err == nil {

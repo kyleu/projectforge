@@ -1,0 +1,44 @@
+/* Content managed by Project Forge, see [projectforge.md] for details. */
+.tag-editor .tags, .tag-view .tags {
+  touch-action: none;
+}
+
+.tag-editor .tags .item, .tag-view .tags .item {
+  float: left;
+  background-color: var(--color-background-muted);
+  margin-right: var(--padding-small);
+
+  box-sizing: border-box;
+  min-width: var(--text-height);
+  height: var(--text-height);
+  padding: var(--padding-small);
+  margin-top: var(--padding-small);
+  border-radius: var(--text-height);
+  vertical-align: middle;
+  font-size: 14px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tag-editor .value {
+  padding: 0 4px;
+}
+
+.tag-editor .close {
+  cursor: pointer;
+}
+
+.tag-editor input.editor {
+  display: none;
+  height: var(--text-height);
+  margin: 0 var(--padding-small);
+  padding-left: 2px;
+  width: 100px;
+}
+
+.tag-editor .add-item {
+  cursor: pointer;
+  float: left;
+  margin-top: var(--padding-small);
+}

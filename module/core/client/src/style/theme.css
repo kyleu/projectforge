@@ -84,7 +84,5 @@
 }
 .choice input:checked ~ * {
   border: 3px solid var(--color-background-muted);
-}
-.choice input:checked ~ .title {
   background-color: var(--color-background-muted);
 }

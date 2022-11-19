@@ -6,6 +6,7 @@
   "github.com/google/uuid"
   "golang.org/x/exp/slices"
 
+  "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/vutil"
 ) %}
@@ -150,6 +151,22 @@
       <br />
     {% endif %}
   {% endfor %}
+{% endstripspace %}{% endfunc %}
+
+{% func FormInputTags(key string, id string, values []string, ps *cutil.PageState, placeholder ...string) %}{% stripspace %}
+  {%- code
+    ps.AddIcon("times")
+    ps.AddIcon("plus")
+  -%}
+  <div class="tag-editor">
+    {% if id == "" %}
+      <input class="result" name="{%s key %}" value="{%s strings.Join(values, `, `) %}"{%= phFor(placeholder) %} />
+    {% else %}
+      <input class="result" id="{%s id %}" name="{%s key %}" value="{%s strings.Join(values, `, `) %}"{%= phFor(placeholder) %} />
+    {% endif %}
+    <div class="tags"></div>
+    <div class="clear"></div>
+  </div>
 {% endstripspace %}{% endfunc %}
 
 {% func phFor(phs []string) %}{% stripspace %}

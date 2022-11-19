@@ -33,6 +33,7 @@ func Models(m *model.Model, args *model.Args, addHeader bool) (*file.File, error
 	g.AddBlocks(ag)
 	for _, pk := range m.PKs() {
 		if pk.Proper() != "Title" {
+			g.AddBlocks(modelArrayCol(m, pk, args.Enums))
 			g.AddBlocks(modelArrayColStrings(m, pk))
 		}
 	}
@@ -76,6 +77,26 @@ func modelArrayClone(m *model.Model) *golang.Block {
 	ret := golang.NewBlock(m.Proper()+"ArrayClone", "func")
 	ret.W("func (%s %s) Clone() %s {", m.FirstLetter(), m.ProperPlural(), m.ProperPlural())
 	ret.W("\treturn slices.Clone(%s)", m.FirstLetter())
+	ret.W("}")
+	return ret
+}
+
+func modelArrayCol(m *model.Model, col *model.Column, enums enum.Enums) *golang.Block {
+	ret := golang.NewBlock(fmt.Sprintf("%sArray%s", m.Proper(), col.ProperPlural()), "func")
+	name := col.ProperPlural()
+	if name == col.Proper() {
+		name = col.Proper() + "Set"
+	}
+	if name[len(name)-1] == 'S' {
+		name = name[:len(name)-1] + "s"
+	}
+	t, _ := col.ToGoType(m.Package, enums)
+	ret.W("func (%s %s) %s() []%s {", m.FirstLetter(), m.ProperPlural(), name, t)
+	ret.W("\tret := make([]%s, 0, len(%s)+1)", t, m.FirstLetter())
+	ret.W("\tfor _, x := range %s {", m.FirstLetter())
+	ret.W("\t\tret = append(ret, x.%s)", col.Proper())
+	ret.W("\t}")
+	ret.W("\treturn ret")
 	ret.W("}")
 	return ret
 }

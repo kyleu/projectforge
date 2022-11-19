@@ -32,7 +32,7 @@
 {% endstripspace %}{% endfunc %}
 
 {% func TableHeaderSimple(section string, key string, title string, tooltip string, params *filter.Params, u *fasthttp.URI, ps *cutil.PageState) %}{% stripspace %}
-  {%= TableHeader(section, key, title, params, "", u, tooltip, true, "", false, ps) %}
+  {%= TableHeader(section, key, title, params, "", u, tooltip, u != nil, "", false, ps) %}
 {% endstripspace %}{% endfunc %}
 
 {% func thNormal(section string, key string, title string, params *filter.Params, icon string, u *fasthttp.URI, tooltip string, ps *cutil.PageState) %}{% stripspace %}

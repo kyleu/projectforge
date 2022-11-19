@@ -281,7 +281,7 @@ func StreamDisplayMaps(qw422016 *qt422016.Writer, maps []util.ValueMap, params *
 //line views/components/Display.html:72
 		for _, k := range maps[0].Keys() {
 //line views/components/Display.html:73
-			StreamTableHeader(qw422016, "map", k, k, params, "", ps.URI, "", true, "", false, ps)
+			StreamTableHeaderSimple(qw422016, "map", k, k, "", params, nil, ps)
 //line views/components/Display.html:74
 		}
 //line views/components/Display.html:74

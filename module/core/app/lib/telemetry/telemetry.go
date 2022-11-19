@@ -70,8 +70,8 @@ func buildTP(endpoint string) (*sdktrace.TracerProvider, error) {
 	return tp, nil
 }
 
-func Close() error {
-	return tracerProvider.Shutdown(context.Background())
+func Close(ctx context.Context) error {
+	return tracerProvider.Shutdown(ctx)
 }
 
 func StartSpan(ctx context.Context, spanName string, logger util.Logger, opts ...any) (context.Context, *Span, util.Logger) {

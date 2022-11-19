@@ -94,7 +94,7 @@ linters:
     - decorder
     - depguard
     - dogsled
-    - dupl
+    # - dupl
     - durationcheck
     - errcheck
     - errchkjson

@@ -38,12 +38,24 @@ func (a Account) String() string {
 	return ret
 }
 
+func (a Account) TitleString() string {
+	return a.Provider + ":" + a.Email
+}
+
 type Accounts []*Account
 
 func (a Accounts) String() string {
 	ret := make([]string, 0, len(a))
 	for _, x := range a {
 		ret = append(ret, x.String())
+	}
+	return strings.Join(ret, ",")
+}
+
+func (a Accounts) TitleString() string {
+	ret := make([]string, 0, len(a))
+	for _, x := range a {
+		ret = append(ret, x.TitleString())
 	}
 	return strings.Join(ret, ",")
 }

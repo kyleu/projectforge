@@ -28,6 +28,7 @@ func SeedData(m *model.Model, args *model.Args) (*file.File, error) {
 	return g.Render(false)
 }
 
+//nolint:gocognit
 func sqlSeedData(m *model.Model, modules []string) (*golang.Block, error) {
 	ret := golang.NewBlock("SQLCreate", "sql")
 	ret.W("-- {%% func " + m.Proper() + "SeedData() %%}")
@@ -74,7 +75,12 @@ func sqlSeedData(m *model.Model, modules []string) (*golang.Block, error) {
 					vs = append(vs, nullStr)
 					continue
 				}
-				vs = append(vs, "'"+util.ToJSONCompact(cell)+"'")
+				switch cell.(type) {
+				case string:
+					vs = append(vs, "'"+cellStr+"'")
+				default:
+					vs = append(vs, "'"+util.ToJSONCompact(cell)+"'")
+				}
 			default:
 				if cellStr == nilStr {
 					vs = append(vs, nullStr)

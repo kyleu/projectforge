@@ -48,6 +48,7 @@ func (m Matches) Sort() {
 }
 
 func MatchesFor(key string, x any, q string) Matches {
+	q = strings.ToLower(q)
 	v := reflect.ValueOf(x)
 	if v.Kind() == reflect.Ptr {
 		if v.IsNil() {
@@ -95,7 +96,8 @@ func MatchesFor(key string, x any, q string) Matches {
 		}
 		return ret
 	case reflect.String:
-		return maybe(strings.Contains(strings.ToLower(v.String()), q), v.String())
+		s := v.String()
+		return maybe(strings.Contains(strings.ToLower(s), q), s)
 	case reflect.Struct:
 		var ret Matches
 		for i := 0; i < v.NumField(); i++ {

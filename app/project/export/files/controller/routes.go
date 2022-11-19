@@ -26,6 +26,14 @@ func Routes(args *model.Args, addHeader bool) (*file.File, error) {
 
 func routes(args *model.Args) *golang.Block {
 	ret := golang.NewBlock("routes", "func")
+	var complexity int
+	for _, m := range args.Models {
+		complexity += (len(m.GroupedColumns()) * 7) + 8
+	}
+	if complexity > 80 {
+		ret.W("//nolint:funlen")
+	}
+
 	ret.W("func generatedRoutes(r *router.Router) {")
 	rct := routeContent(args)
 	for _, x := range rct {

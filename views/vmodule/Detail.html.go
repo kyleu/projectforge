@@ -127,7 +127,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vmodule/Detail.html:53
 	qw422016.N().S(`  <div class="card">
     <h3>Project Usages</h3>
-    <ul>
+    <ul class="mt">
 `)
 //line views/vmodule/Detail.html:57
 	if len(p.Usages) == 0 {

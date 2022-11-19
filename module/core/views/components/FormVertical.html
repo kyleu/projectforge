@@ -1,0 +1,159 @@
+{% import (
+  "fmt"
+  "time"
+
+  "github.com/google/uuid"
+
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/views/vutil"
+) %}
+
+{% func FormVerticalInput(key string, title string, value string, indent int, help ...string) %}{% stripspace %}
+  <div class="mb expanded">
+    {%= vutil.Indent(true, indent + 1) %}
+    <em class="title">{%s title %}</em>
+    {%= vutil.Indent(true, indent + 1) %}
+    <div>{%= FormInput(key, "input-" + key, value, help...) %}</div>
+  {%= vutil.Indent(true, indent) %}
+  </div>
+{% endstripspace %}{% endfunc %}
+
+{% func FormVerticalInputPassword(key string, title string, value string, indent int, help ...string) %}{% stripspace %}
+  <div class="mb expanded">
+    {%= vutil.Indent(true, indent + 1) %}
+    <em class="title">{%s title %}</em>
+    {%= vutil.Indent(true, indent + 1) %}
+    <div>{%= FormInputPassword(key, "input-" + key, value, help...) %}</div>
+  {%= vutil.Indent(true, indent) %}
+  </div>
+{% endstripspace %}{% endfunc %}
+
+{% func FormVerticalInputNumber(key string, title string, value int, indent int, help ...string) %}{% stripspace %}
+  <div class="mb expanded">
+    {%= vutil.Indent(true, indent + 1) %}
+    <em class="title">{%s title %}</em>
+    {%= vutil.Indent(true, indent + 1) %}
+    <div>{%= FormInputNumber(key, "input-" + key, value, help...) %}</div>
+  {%= vutil.Indent(true, indent) %}
+  </div>
+{% endstripspace %}{% endfunc %}
+
+{% func FormVerticalInputFloat(key string, title string, value float64, indent int, help ...string) %}{% stripspace %}
+  <div class="mb expanded">
+    {%= vutil.Indent(true, indent + 1) %}
+    <em class="title">{%s title %}</em>
+    {%= vutil.Indent(true, indent + 1) %}
+    <div>{%= FormInputFloat(key, "input-" + key, value, help...) %}</div>
+  {%= vutil.Indent(true, indent) %}
+  </div>
+{% endstripspace %}{% endfunc %}
+
+{% func FormVerticalInputTimestamp(key string, title string, value *time.Time, indent int, help ...string) %}{% stripspace %}
+  <div class="mb expanded">
+    {%= vutil.Indent(true, indent + 1) %}
+    <em class="title">{%s title %}</em>
+    {%= vutil.Indent(true, indent + 1) %}
+    <div>{%= FormInputTimestamp(key, "input-" + key, value, help...) %}</div>
+  {%= vutil.Indent(true, indent) %}
+  </div>
+{% endstripspace %}{% endfunc %}
+
+{% func FormVerticalInputTimestampDay(key string, title string, value *time.Time, indent int, help ...string) %}{% stripspace %}
+  <div class="mb expanded">
+    {%= vutil.Indent(true, indent + 1) %}
+    <em class="title">{%s title %}</em>
+    {%= vutil.Indent(true, indent + 1) %}
+    <div>{%= FormInputTimestampDay(key, "input-" + key, value, help...) %}</div>
+  {%= vutil.Indent(true, indent) %}
+  </div>
+{% endstripspace %}{% endfunc %}
+
+{% func FormVerticalInputUUID(key string, title string, value *uuid.UUID, indent int, help ...string) %}{% stripspace %}
+  <div class="mb expanded">
+    {%= vutil.Indent(true, indent + 1) %}
+    <em class="title">{%s title %}</em>
+    {%= vutil.Indent(true, indent + 1) %}
+    <div>{%= FormInputUUID(key, "input-" + key, value, help...) %}</div>
+  {%= vutil.Indent(true, indent) %}
+  </div>
+{% endstripspace %}{% endfunc %}
+
+{% func FormVerticalTextarea(key string, title string, rows int, value string, indent int, help ...string) %}{% stripspace %}
+  <div class="mb expanded">
+    {%= vutil.Indent(true, indent + 1) %}
+    <em class="title">{%s title %}</em>
+    {%= vutil.Indent(true, indent + 1) %}
+    <div>{%= FormTextarea(key, "input-" + key, rows, value, help...) %}</div>
+  {%= vutil.Indent(true, indent) %}
+  </div>
+{% endstripspace %}{% endfunc %}
+
+{% func FormVerticalSelect(key string, title string, value string, opts []string, titles []string, indent int, help ...string) %}{% stripspace %}
+  <div class="mb expanded">
+    {%= vutil.Indent(true, indent + 1) %}
+    <em class="title">{%s title %}</em>
+    {%= vutil.Indent(true, indent + 1) %}
+    <div>{%= FormSelect(key, "input-" + key, value, opts, titles, indent) %}</div>
+  {%= vutil.Indent(true, indent) %}
+  </div>
+{% endstripspace %}{% endfunc %}
+
+{% func FormVerticalDatalist(key string, title string, value string, opts []string, titles []string, indent int, help ...string) %}{% stripspace %}
+  <div class="mb expanded">
+    {%= vutil.Indent(true, indent + 1) %}
+    <em class="title">{%s title %}</em>
+    {%= vutil.Indent(true, indent + 1) %}
+    <div>{%= FormDatalist(key, "input-" + key, value, opts, titles, indent) %}</div>
+  {%= vutil.Indent(true, indent) %}
+  </div>
+{% endstripspace %}{% endfunc %}
+
+{% func FormVerticalRadio(key string, title string, value string, opts []string, titles []string, indent int, help ...string) %}{% stripspace %}
+  <div class="mb expanded">
+    {%= vutil.Indent(true, indent + 1) %}
+    <div><label{%= titleFor(help) %}>{%s title %}</div>
+    {%= vutil.Indent(true, indent + 1) %}
+    <div>
+      {%= FormRadio(key, value, opts, titles, indent + 2) %}
+    {%= vutil.Indent(true, indent + 1) %}
+    </div>
+  {%= vutil.Indent(true, indent) %}
+  </div>
+{% endstripspace %}{% endfunc %}
+
+{% func FormVerticalBoolean(key string, title string, value bool, indent int, help ...string) %}{% stripspace %}
+  {%= FormVerticalRadio(key, title, fmt.Sprint(value), []string{"true", "false"}, []string{"True", "False"}, indent) %}
+{% endstripspace %}{% endfunc %}
+
+{% func FormVerticalCheckbox(key string, title string, values []string, opts []string, titles []string, linebreaks bool, indent int, help ...string) %}{% stripspace %}
+  <div class="mb expanded">
+    {%= vutil.Indent(true, indent + 1) %}
+    <div><label>{%s title %}</div>
+    {%= vutil.Indent(true, indent + 1) %}
+    <div>
+      {%= FormCheckbox(key, values, opts, titles, linebreaks, indent + 2) %}
+    {%= vutil.Indent(true, indent + 1) %}
+    </div>
+  {%= vutil.Indent(true, indent) %}
+  </div>
+{% endstripspace %}{% endfunc %}
+
+{% func FormVerticalInputTags(key string, title string, values []string, ps *cutil.PageState, indent int, help ...string) %}{% stripspace %}
+  <div class="mb expanded">
+    {%= vutil.Indent(true, indent + 1) %}
+    <em class="title">{%s title %}</em>
+    {%= vutil.Indent(true, indent + 1) %}
+    <div>{%= FormInputTags(key, "input-" + key, values, ps, help...) %}</div>
+  {%= vutil.Indent(true, indent) %}
+  </div>
+{% endstripspace %}{% endfunc %}
+
+{% func FormVerticalIconPicker(key string, title string, value string, ps *cutil.PageState, indent int) %}{% stripspace %}
+  <div class="mb expanded">
+    {%= vutil.Indent(true, indent + 1) %}
+    <em class="title">{%s title %}</em>
+    {%= vutil.Indent(true, indent + 1) %}
+    <div>{%= IconPicker(key, value, ps, indent) %}</div>
+  {%= vutil.Indent(true, indent) %}
+  </div>
+{% endstripspace %}{% endfunc %}

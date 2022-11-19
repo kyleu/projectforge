@@ -41,7 +41,7 @@ func (p *Profile) AuthString(a Accounts) string {
 		}
 		return msg
 	}
-	return fmt.Sprintf("%s using [%s]", msg, a.String())
+	return fmt.Sprintf("%s using [%s]", msg, a.TitleString())
 }
 
 func (p *Profile) Equals(x *Profile) bool {

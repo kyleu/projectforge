@@ -40,8 +40,9 @@
       <table class="expanded">
         <thead>
           <tr>
-            <th class="shrink">ID</th>
-            <th>Profile</th>
+            <th class="shrink">ID</th>{{{ if .HasModule "user" }}}
+            <th>User ID</th>{{{ end }}}
+            <th>Profile Name</th>
             <th>Service</th>
             <th>Channels</th>
             <th></th>
@@ -50,7 +51,8 @@
         <tbody>
           {%- for _, x := range p.Connections -%}
           <tr>
-            <td class="shrink"><a href="/admin/sockets/conn/{%s x.ID.String() %}">{%s x.ID.String() %}</a></td>
+            <td class="shrink"><a href="/admin/sockets/conn/{%s x.ID.String() %}">{%s x.ID.String() %}</a></td>{{{ if .HasModule "user" }}}
+            <td><a href="/admin/db/user/{%s x.Profile.ID.String() %}">{%s x.Profile.ID.String() %}</a></td>{{{ end }}}
             <td>{%s x.Profile.String() %}</td>
             <td>{%s x.Svc %}</td>
             <td>{%s strings.Join(x.Channels, ", ") %}</td>
@@ -137,7 +139,7 @@
         </tr>{{{ if .HasModule "user" }}}
         <tr>
           <th>User ID</th>
-          <td>{%s c.Profile.ID.String() %}</td>
+          <td><a href="/admin/db/user/{%s c.Profile.ID.String() %}">{%s c.Profile.ID.String() %}</a></td>
         </tr>{{{ end }}}
         <tr>
           <th>Name</th>

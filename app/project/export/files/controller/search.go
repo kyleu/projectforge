@@ -13,7 +13,7 @@ import (
 func Search(args *model.Args, addHeader bool) (*file.File, error) {
 	g := golang.NewFile("search", []string{"app", "lib", "search"}, "generated")
 	if args.Models.HasSearch() {
-		g.AddImport(helper.ImpContext, helper.ImpApp, helper.ImpAppUtil, helper.AppImport("app/lib/search/result"))
+		g.AddImport(helper.ImpContext, helper.ImpApp, helper.ImpAppUtil, helper.ImpCutil, helper.AppImport("app/lib/search/result"))
 	}
 	g.AddBlocks(searchBlock(args))
 	return g.Render(addHeader)
@@ -43,7 +43,7 @@ func searchModel(m *model.Model) []string {
 	add := func(s string, args ...any) {
 		ret = append(ret, fmt.Sprintf(s, args...))
 	}
-	add("\t%sFunc := func(ctx context.Context, as *app.State, params *Params, logger util.Logger) (result.Results, error) {", m.Package)
+	add("\t%sFunc := func(ctx context.Context, params *Params, as *app.State, page *cutil.PageState, logger util.Logger) (result.Results, error) {", m.Package)
 	add(msg, m.Proper(), m.Package, m.SoftDeleteSuffix())
 	add("\t\tif err != nil {")
 	add("\t\t\treturn nil, err")

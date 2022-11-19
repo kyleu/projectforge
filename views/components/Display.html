@@ -70,7 +70,7 @@
     <thead>
     <tr>
       {%- for _, k := range maps[0].Keys() -%}
-      {%= TableHeader("map", k, k, params, "", ps.URI, "", true, "", false, ps) %}
+      {%= TableHeaderSimple("map", k, k, "", params, nil, ps) %}
       {%- endfor -%}
     </tr>
     </thead>
