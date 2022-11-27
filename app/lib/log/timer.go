@@ -7,6 +7,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+// Timer lets you measure laps. It is not safe for concurrent use
 type Timer struct {
 	Key     string      `json:"key"`
 	Log     util.Logger `json:"-"`

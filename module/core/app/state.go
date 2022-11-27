@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"fmt"
+	"sync"
 	"time"
 {{{ if .HasModule "oauth" }}}
 	"{{{ .Package }}}/app/lib/auth"{{{ end }}}{{{ if .HasDatabaseModule }}}
@@ -13,6 +14,8 @@ import (
 	"{{{ .Package }}}/app/lib/theme"
 	"{{{ .Package }}}/app/util"
 )
+
+var once sync.Once
 
 type BuildInfo struct {
 	Version string `json:"version"`
@@ -43,11 +46,18 @@ type State struct {
 }
 
 func NewState(debug bool, bi *BuildInfo{{{ if .HasModule "filesystem" }}}, f filesystem.FileLoader{{{ end }}}, enableTelemetry bool, port uint16, logger util.Logger) (*State, error) {
-	loc, err := time.LoadLocation("UTC")
-	if err != nil {
-		return nil, err
+	var loadLocationError error
+	once.Do(func() {
+		loc, err := time.LoadLocation("UTC")
+		if err != nil {
+			loadLocationError = err
+			return
+		}
+		time.Local = loc
+	})
+	if loadLocationError != nil {
+		return nil, loadLocationError
 	}
-	time.Local = loc
 
 	_ = telemetry.InitializeIfNeeded(enableTelemetry, bi.Version, logger){{{ if .HasModule "oauth" }}}
 	as := auth.NewService("", port, logger){{{ end }}}

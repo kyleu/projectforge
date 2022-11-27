@@ -4,6 +4,7 @@ package app
 import (
 	"context"
 	"fmt"
+	"sync"
 	"time"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
@@ -11,6 +12,8 @@ import (
 	"projectforge.dev/projectforge/app/lib/theme"
 	"projectforge.dev/projectforge/app/util"
 )
+
+var once sync.Once
 
 type BuildInfo struct {
 	Version string `json:"version"`
@@ -37,11 +40,18 @@ type State struct {
 }
 
 func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, enableTelemetry bool, port uint16, logger util.Logger) (*State, error) {
-	loc, err := time.LoadLocation("UTC")
-	if err != nil {
-		return nil, err
+	var loadLocationError error
+	once.Do(func() {
+		loc, err := time.LoadLocation("UTC")
+		if err != nil {
+			loadLocationError = err
+			return
+		}
+		time.Local = loc
+	})
+	if loadLocationError != nil {
+		return nil, loadLocationError
 	}
-	time.Local = loc
 
 	_ = telemetry.InitializeIfNeeded(enableTelemetry, bi.Version, logger)
 	ts := theme.NewService(f)

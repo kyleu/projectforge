@@ -19,13 +19,15 @@ const (
 	mimeYAML = "application/x-yaml"
 )
 
-var AllowedHeaders = "*"
+var AllowedRequestHeaders = "*"
+var AllowedResponseHeaders = "*"
 
 func WriteCORS(rc *fasthttp.RequestCtx) {
-	rc.Response.Header.Set("Access-Control-Allow-Headers", AllowedHeaders)
+	rc.Response.Header.Set("Access-Control-Allow-Headers", AllowedRequestHeaders)
 	rc.Response.Header.Set("Access-Control-Allow-Method", "GET,POST,DELETE,PUT,PATCH,OPTIONS,HEAD")
 	rc.Response.Header.Set("Access-Control-Allow-Origin", "*")
 	rc.Response.Header.Set("Access-Control-Allow-Credentials", util.BoolTrue)
+	rc.Response.Header.Set("Access-Control-Expose-Headers", AllowedResponseHeaders)
 }
 
 func RespondDebug(rc *fasthttp.RequestCtx, filename string, body any) (string, error) {
