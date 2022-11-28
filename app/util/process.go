@@ -3,7 +3,6 @@ package util
 
 import (
 	"bytes"
-	"fmt"
 	"io"
 	"os"
 	"os/exec"
@@ -24,7 +23,7 @@ func StartProcess(cmd string, path string, in io.Reader, out io.Writer, er io.Wr
 	if !strings.Contains(firstArg, "/") {
 		firstArg, err = exec.LookPath(firstArg)
 		if err != nil {
-			return nil, errors.Wrap(err, "unable to look up cmd ["+firstArg+"]")
+			return nil, errors.Wrapf(err, "unable to look up cmd [%s]", firstArg)
 		}
 	}
 
@@ -41,7 +40,7 @@ func StartProcess(cmd string, path string, in io.Reader, out io.Writer, er io.Wr
 	c := &exec.Cmd{Path: firstArg, Args: args, Env: env, Stdin: in, Stdout: out, Stderr: er, Dir: path}
 	err = c.Start()
 	if err != nil {
-		return nil, errors.Wrap(err, fmt.Sprintf("unable to start [%s] (%T)", cmd, err))
+		return nil, errors.Wrapf(err, "unable to start [%s] (%T)", cmd, err)
 	}
 	return c, nil
 }
@@ -57,7 +56,7 @@ func RunProcess(cmd string, path string, in io.Reader, out io.Writer, er io.Writ
 		if ok {
 			return ec.ExitCode(), nil
 		}
-		return -1, errors.Wrap(err, fmt.Sprintf("unable to run [%s] (%T)", cmd, err))
+		return -1, errors.Wrapf(err, "unable to run [%s] (%T)", cmd, err)
 	}
 	return 0, nil
 }

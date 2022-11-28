@@ -45,7 +45,7 @@ func exec(ctx context.Context, file *MigrationFile, s *database.Service, tx *sql
 	logger.Infof("migration running SQL: %v", sql)
 	_, err := s.Exec(ctx, sql, tx, -1, logger)
 	if err != nil {
-		return "", errors.Wrap(err, "cannot execute ["+file.Title+"]")
+		return "", errors.Wrapf(err, "cannot execute [%s]", file.Title)
 	}
 	logger.Debugf("ran query [%s] in [%v]", file.Title, timer.EndString())
 	return sql, nil

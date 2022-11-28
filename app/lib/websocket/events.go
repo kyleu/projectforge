@@ -56,7 +56,7 @@ func (s *Service) Disconnect(connID uuid.UUID, logger util.Logger) (bool, error)
 		for _, x := range conn.Channels {
 			_, err := s.Leave(connID, x, logger)
 			if err != nil {
-				return left, errors.Wrap(err, "error leaving channel ["+x+"]")
+				return left, errors.Wrapf(err, "error leaving channel [%s]", x)
 			}
 		}
 	}

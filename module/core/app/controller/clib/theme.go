@@ -35,7 +35,7 @@ func ThemeEdit(rc *fasthttp.RequestCtx) {
 			t = as.Themes.Get(key, ps.Logger)
 		}
 		if t == nil {
-			return "", errors.Wrap(err, "no theme found with key ["+key+"]")
+			return "", errors.Wrapf(err, "no theme found with key [%s]", key)
 		}
 		ps.Data = t
 		ps.Title = "Edit theme [" + t.Key + "]"

@@ -33,6 +33,9 @@ func Models(m *model.Model, args *model.Args, addHeader bool) (*file.File, error
 	g.AddBlocks(ag)
 	for _, pk := range m.PKs() {
 		if pk.Proper() != "Title" {
+			if pk.Type.Key() != types.KeyList {
+				g.AddBlocks(modelArrayGetBy(m, pk, args.Enums))
+			}
 			g.AddBlocks(modelArrayCol(m, pk, args.Enums))
 			g.AddBlocks(modelArrayColStrings(m, pk))
 		}
@@ -77,6 +80,28 @@ func modelArrayClone(m *model.Model) *golang.Block {
 	ret := golang.NewBlock(m.Proper()+"ArrayClone", "func")
 	ret.W("func (%s %s) Clone() %s {", m.FirstLetter(), m.ProperPlural(), m.ProperPlural())
 	ret.W("\treturn slices.Clone(%s)", m.FirstLetter())
+	ret.W("}")
+	return ret
+}
+
+func modelArrayGetBy(m *model.Model, col *model.Column, enums enum.Enums) *golang.Block {
+	ret := golang.NewBlock(fmt.Sprintf("%sArrayGetBy%s", m.Proper(), col.Proper()), "func")
+	name := col.ProperPlural()
+	if name == col.Proper() {
+		name = col.Proper() + "Set"
+	}
+	if name[len(name)-1] == 'S' {
+		name = name[:len(name)-1] + "s"
+	}
+	t, _ := col.ToGoType(m.Package, enums)
+	ret.W("func (%s %s) GetBy%s(%s ...%s) %s {", m.FirstLetter(), m.ProperPlural(), name, col.CamelPlural(), t, m.ProperPlural())
+	ret.W("\tvar ret %s", m.ProperPlural())
+	ret.W("\tfor _, x := range %s {", m.FirstLetter())
+	ret.W("\t\tif slices.Contains(%s, x.%s) {", col.CamelPlural(), col.Proper())
+	ret.W("\t\t\tret = append(ret, x)")
+	ret.W("\t\t}")
+	ret.W("\t}")
+	ret.W("\treturn ret")
 	ret.W("}")
 	return ret
 }

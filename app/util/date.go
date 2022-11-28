@@ -18,8 +18,15 @@ const (
 
 func TimeToday() *time.Time {
 	t := time.Now()
-	t = time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location())
-	return &t
+	return TimeTruncate(&t)
+}
+
+func TimeTruncate(t *time.Time) *time.Time {
+	if t == nil {
+		return nil
+	}
+	ret := time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location())
+	return &ret
 }
 
 func TimeCurrentMillis() int64 {

@@ -62,6 +62,18 @@ button {
   border-color: var(--color-menu-background);
 }
 
+.button-link {
+  border: none;
+  outline: none;
+  background: none;
+  cursor: pointer;
+  color: var(--color-link-foreground);
+  text-decoration: var(--link-text-decoration);
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+}
+
 #content {
   margin-left: var(--menu-width);
   overflow: auto;

@@ -73,14 +73,14 @@ func initIfNeeded() error {
 func listen(address string, port uint16) (uint16, net.Listener, error) {
 	l, err := net.Listen("tcp", fmt.Sprintf("%s:%d", address, port))
 	if err != nil {
-		return port, nil, errors.Wrap(err, fmt.Sprintf("unable to listen on port [%d]", port))
+		return port, nil, errors.Wrapf(err, "unable to listen on port [%d]", port)
 	}
 	if port == 0 {
 		addr := l.Addr().String()
 		_, portStr := util.StringSplitLast(addr, ':', true)
 		actualPort, err := strconv.Atoi(portStr)
 		if err != nil {
-			return 0, nil, errors.Wrap(err, "invalid port ["+portStr+"]")
+			return 0, nil, errors.Wrapf(err, "invalid port [%s]", portStr)
 		}
 		port = uint16(actualPort)
 	}
