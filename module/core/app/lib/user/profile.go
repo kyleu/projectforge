@@ -47,3 +47,10 @@ func (p *Profile) AuthString(a Accounts) string {
 func (p *Profile) Equals(x *Profile) bool {
 	return p.Name == x.Name && p.Mode == x.Mode && p.Theme == x.Theme
 }
+
+func (p *Profile) NameSafe() string {
+	if p.Name == "" {
+		return "Guest"
+	}
+	return p.Name
+}

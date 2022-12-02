@@ -19,6 +19,7 @@ body {
 a {
   color: var(--color-link-foreground);
   text-decoration: var(--link-text-decoration);
+  text-decoration-skip-ink: all;
 }
 
 a:hover {
