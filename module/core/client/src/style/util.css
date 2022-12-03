@@ -146,6 +146,10 @@
   border-left: var(--border);
 }
 
+.flex {
+  display: flex;
+}
+
 .flex-wrap {
   display: flex;
   flex-wrap: wrap;

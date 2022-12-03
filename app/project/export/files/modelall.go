@@ -3,7 +3,9 @@ package files
 import (
 	"github.com/pkg/errors"
 
+
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/project/export/files/controller"
 	"projectforge.dev/projectforge/app/project/export/files/gomodel"
 	"projectforge.dev/projectforge/app/project/export/files/grpc"
@@ -13,7 +15,7 @@ import (
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func ModelAll(m *model.Model, args *model.Args, addHeader bool) (file.Files, error) {
+func ModelAll(m *model.Model, p *project.Project, args *model.Args, addHeader bool) (file.Files, error) {
 	var calls file.Files
 	var f *file.File
 
@@ -46,7 +48,7 @@ func ModelAll(m *model.Model, args *model.Args, addHeader bool) (file.Files, err
 		calls = append(calls, f)
 	}
 
-	fs, err = view.All(m, args, addHeader)
+	fs, err = view.All(m, p, args, addHeader)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't render list template")
 	}

@@ -72,20 +72,14 @@ func (s *Service) WriteChannel(message *Message, logger util.Logger, except ...u
 	return nil
 }
 
-func (s *Service) ReadLoop(connID uuid.UUID, onDisconnect func(conn *Connection) error, logger util.Logger) error {
+func (s *Service) ReadLoop(connID uuid.UUID, logger util.Logger) error {
 	c, ok := s.connections[connID]
 	if !ok {
 		return errors.New("cannot load connection [" + connID.String() + "]")
 	}
-	if onDisconnect == nil {
-		onDisconnect = func(conn *Connection) error {
-			_, err := s.Disconnect(connID, logger)
-			return err
-		}
-	}
 	d := func() error {
-		if onDisconnect != nil {
-			return onDisconnect(c)
+		if s.onClose != nil {
+			return s.onClose(s, c, logger)
 		}
 		return nil
 	}

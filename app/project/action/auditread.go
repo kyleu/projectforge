@@ -43,7 +43,7 @@ func getModuleFiles(ctx context.Context, pm *PrjAndMods) ([]string, error) {
 			return nil, err
 		}
 		args.Modules = pm.Mods.Keys()
-		files, e := pm.ESvc.Files(ctx, args, true, pm.Logger)
+		files, e := pm.ESvc.Files(ctx, pm.Prj, args, true, pm.Logger)
 		if e != nil {
 			return nil, err
 		}

@@ -16,7 +16,7 @@ func serviceSearch(m *model.Model, grp *model.Column, dbRef string, enums enum.E
 	}
 	var clauses []string
 	hasEqual, hasLike := false, false
-	for _, s := range m.Search {
+	for _, s := range m.AllSearches() {
 		if strings.HasPrefix(s, "=") {
 			hasEqual = true
 		} else {
@@ -34,7 +34,7 @@ func serviceSearch(m *model.Model, grp *model.Column, dbRef string, enums enum.E
 			like = eq
 		}
 	}
-	for _, s := range m.Search {
+	for _, s := range m.AllSearches() {
 		if strings.HasPrefix(s, "=") {
 			clauses = append(clauses, s+" = "+eq)
 		} else {

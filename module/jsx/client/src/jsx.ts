@@ -42,8 +42,6 @@ export function JSX(tag: string, attrs: any) {
       });
     } else if (child === undefined || child === null) {
       throw `child for tag [${tag}] is ${child}\n${e.outerHTML}`;
-      // debugger;
-      // child = document.createTextNode("NULL!");
     } else {
       if (!child.nodeType) {
         child = document.createTextNode(child.toString());

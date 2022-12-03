@@ -11,7 +11,7 @@ func controllerRevision(m *model.Model, prefix string) *golang.Block {
 	hc := m.HistoryColumns(true)
 	ret := golang.NewBlock(m.Camel()+"Detail", "func")
 	ret.W("func %s%s(rc *fasthttp.RequestCtx) {", m.Proper(), hc.Col.Proper())
-	ret.W("\tAct(\"%s.%s\", rc, func(as *app.State, ps *cutil.PageState) (string, error) {", m.Package, hc.Col.Name)
+	ret.W("\t%sAct(\"%s.%s\", rc, func(as *app.State, ps *cutil.PageState) (string, error) {", prefix, m.Package, hc.Col.Name)
 	ret.W("\t\tlatest, err := %sFromPath(rc, as, ps)", m.Package)
 	ret.W("\t\tif err != nil {")
 	ret.W("\t\t\treturn \"\", err")

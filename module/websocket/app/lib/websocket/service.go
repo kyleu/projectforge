@@ -33,18 +33,17 @@ type Service struct {
 	onOpen        ConnectEvent
 	handler       Handler
 	onClose       ConnectEvent
-	Context       any
 }
 
 // Creates a new service with the provided handler functions.
-func NewService(onOpen ConnectEvent, handler Handler, onClose ConnectEvent, ctx any) *Service {
+func NewService(onOpen ConnectEvent, handler Handler, onClose ConnectEvent) *Service {
 	return &Service{
 		connections: make(map[uuid.UUID]*Connection),
 		channels:    make(map[string]*Channel),
 		taps:        make(map[uuid.UUID]*websocket.Conn),
-		handler:     handler,
 		onOpen:      onOpen,
-		Context:     ctx,
+		handler:     handler,
+		onClose:     onClose,
 	}
 }
 
@@ -101,7 +100,7 @@ func (s *Service) Count() int {
 	return len(s.connections)
 }
 
-func (s *Service) Status() ([]string, []*Connection, []uuid.UUID, any) {
+func (s *Service) Status() ([]string, []*Connection, []uuid.UUID) {
 	s.connectionsMu.Lock()
 	defer s.connectionsMu.Unlock()
 	conns := make([]*Connection, 0, len(s.connections))
@@ -109,7 +108,7 @@ func (s *Service) Status() ([]string, []*Connection, []uuid.UUID, any) {
 		conns = append(conns, conn)
 	}
 	taps := slices.Clone(maps.Keys(s.taps))
-	return s.ChannelList(nil), conns, taps, s.Context
+	return s.ChannelList(nil), conns, taps
 }
 
 func (s *Service) Close() {
@@ -134,7 +133,7 @@ func (s *Service) Upgrade(rc *fasthttp.RequestCtx, channel string, profile *user
 			logger.Error(fmt.Sprintf("error processing socket join (%v): %+v", joined, err))
 			return
 		}
-		err = s.ReadLoop(cx.ID, nil, logger)
+		err = s.ReadLoop(cx.ID, logger)
 		if err != nil {
 			logger.Error(fmt.Sprintf("error processing socket read loop: %+v", err))
 			return

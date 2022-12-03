@@ -23,8 +23,22 @@ func controllerList(m *model.Model, grp *model.Column, models model.Models, enum
 	if m.IsSoftDelete() {
 		suffix = ", " + incDel
 	}
+	if len(m.AllSearches()) > 0 {
+		g.AddImport(helper.ImpStrings)
+		ret.W("\t\tq := strings.TrimSpace(string(rc.URI().QueryArgs().Peek(\"q\")))")
+	}
 	ret.W("\t\tprms := ps.Params.Get(%q, nil, ps.Logger).Sanitize(%q)", m.Package, m.Package)
-	ret.W("\t\tret, err := as.Services.%s.%s(ps.Context, nil%s, prms%s, ps.Logger)", m.Proper(), meth, grpArgs, suffix)
+	if grpArgs == "" && len(m.AllSearches()) > 0 {
+		ret.W("\t\tvar ret %s.%s", m.Package, m.ProperPlural())
+		ret.W("\t\tvar err error")
+		ret.W("\t\tif q == \"\" {")
+		ret.W("\t\t\tret, err = as.Services.%s.%s(ps.Context, nil, prms%s, ps.Logger)", m.Proper(), meth, suffix)
+		ret.W("\t\t} else {")
+		ret.W("\t\t\tret, err = as.Services.%s.Search(ps.Context, q, nil, prms%s, ps.Logger)", m.Proper(), suffix)
+		ret.W("\t\t}")
+	} else {
+		ret.W("\t\tret, err := as.Services.%s.%s(ps.Context, nil%s, prms%s, ps.Logger)", m.Proper(), meth, grpArgs, suffix)
+	}
 	ret.W("\t\tif err != nil {")
 	ret.W("\t\t\treturn \"\", err")
 	ret.W("\t\t}")
@@ -70,8 +84,13 @@ func controllerList(m *model.Model, grp *model.Column, models model.Models, enum
 
 		toStrings += fmt.Sprintf(", %s: %s", relModel.ProperPlural(), relModel.Plural())
 	}
-	render := "\t\treturn %sRender(rc, as, &v%s.List{Models: ret%s, Params: ps.Params}, ps, %s%s)"
-	ret.W(render, prefix, m.Package, toStrings, m.Breadcrumbs(), grp.BC())
+	var searchSuffix string
+	if len(m.AllSearches()) > 0 {
+		searchSuffix += ", SearchQuery: q"
+	}
+	ret.W("\t\tpage := &v%s.List{Models: ret%s, Params: ps.Params%s}", m.Package, toStrings, searchSuffix)
+	render := "\t\treturn %sRender(rc, as, page, ps, %s%s)"
+	ret.W(render, prefix, m.Breadcrumbs(), grp.BC())
 	ret.W("\t})")
 	ret.W("}")
 	return ret, nil

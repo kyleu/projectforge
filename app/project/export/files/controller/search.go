@@ -22,9 +22,10 @@ func Search(args *model.Args, addHeader bool) (*file.File, error) {
 func searchBlock(args *model.Args) *golang.Block {
 	ret := golang.NewBlock("menu", "func")
 	keys := make([]string, 0, len(args.Models))
+	ret.W("//nolint:gocognit")
 	ret.W("func generatedSearch() []Provider {")
 	for _, m := range args.Models {
-		if len(m.Search) > 0 {
+		if len(m.AllSearches()) > 0 {
 			keys = append(keys, m.Package+"Func")
 			out := searchModel(m)
 			for _, line := range out {
@@ -38,12 +39,17 @@ func searchBlock(args *model.Args) *golang.Block {
 }
 
 func searchModel(m *model.Model) []string {
-	const msg = "\t\tmodels, err := as.Services.%s.Search(ctx, params.Q, nil, params.PS.Get(%q, nil, logger)%s, logger)"
 	var ret []string
 	add := func(s string, args ...any) {
 		ret = append(ret, fmt.Sprintf(s, args...))
 	}
 	add("\t%sFunc := func(ctx context.Context, params *Params, as *app.State, page *cutil.PageState, logger util.Logger) (result.Results, error) {", m.Package)
+	if !m.HasTag("public") {
+		add("\t\tif !page.Admin {")
+		add("\t\t\treturn nil, nil")
+		add("\t\t}")
+	}
+	const msg = "\t\tmodels, err := as.Services.%s.Search(ctx, params.Q, nil, params.PS.Get(%q, nil, logger)%s, logger)"
 	add(msg, m.Proper(), m.Package, m.SoftDeleteSuffix())
 	add("\t\tif err != nil {")
 	add("\t\t\treturn nil, err")

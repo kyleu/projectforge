@@ -8,7 +8,7 @@ import (
 func controllerHistory(m *model.Model, prefix string) *golang.Block {
 	ret := golang.NewBlock(m.Camel()+"History", "func")
 	ret.W("func %sHistory(rc *fasthttp.RequestCtx) {", m.Proper())
-	ret.W("\tAct(\"%s.history\", rc, func(as *app.State, ps *cutil.PageState) (string, error) {", m.Package)
+	ret.W("\t%sAct(\"%s.history\", rc, func(as *app.State, ps *cutil.PageState) (string, error) {", prefix, m.Package)
 	ret.W("\t\tret, err := %sFromPath(rc, as, ps)", m.Package)
 	ret.W("\t\tif err != nil {")
 	ret.W("\t\t\treturn \"\", err")

@@ -26,6 +26,9 @@ func exportViewListClass(m *model.Model, models model.Models, g *golang.Template
 		ret.W(commonLine, relModel.ProperPlural(), relModel.Package, relModel.ProperPlural())
 	}
 	ret.W("  Params filter.ParamSet")
+	if len(m.AllSearches()) > 0 {
+		ret.W("  SearchQuery string")
+	}
 	ret.W("} %%}")
 	return ret
 }
@@ -42,8 +45,17 @@ func exportViewListBody(m *model.Model, models model.Models) *golang.Block {
 
 	ret.W("{%% func (p *List) Body(as *app.State, ps *cutil.PageState) %%}")
 	ret.W("  <div class=\"card\">")
-	ret.W("    <div class=\"right\"><a href=\"/%s/new\"><button>New</button></a></div>", m.Route())
-	ret.W("    <h3>{%%= components.SVGRefIcon(`" + m.Icon + "`, ps) %%}{%%s ps.Title %%}</h3>")
+	if len(m.AllSearches()) == 0 {
+		ret.W("    <div class=\"right\"><a href=\"/%s/new\"><button>New</button></a></div>", m.Route())
+		ret.W("    <h3>{%%= components.SVGRefIcon(`" + m.Icon + "`, ps) %%}{%%s ps.Title %%}</h3>")
+	} else {
+		ret.W(`    <div class="right">{%%%%= components.SearchForm("", "q", "Search %s", p.SearchQuery, ps) %%%%}</div>`, m.Plural())
+		ret.W("    <h3>{%%%%= components.SVGRefIcon(`"+m.Icon+"`, ps) %%%%}{%%%%s ps.Title %%%%} <a href=\"/%s/new\"><button>New</button></a></h3>", m.Route())
+		ret.W("    <div class=\"clear\"></div>")
+		ret.W("    {%%- if p.SearchQuery != \"\" -%%}")
+		ret.W("    <em>Search results for [{%%s p.SearchQuery %%}]</em>")
+		ret.W("    {%%- endif -%%}")
+	}
 	ret.W("    {%%- if len(p.Models) == 0 -%%}")
 	ret.W("    <div class=\"mt\"><em>No %s available</em></div>", m.TitlePluralLower())
 	ret.W("    {%%- else -%%}")

@@ -158,6 +158,9 @@ func (m ValueMap) ParseUUID(path string, allowMissing bool, allowEmpty bool) (*u
 		}
 		return &t, nil
 	case string:
+		if t == "" && allowEmpty {
+			return nil, nil
+		}
 		ret, err := uuid.Parse(t)
 		if err != nil {
 			return nil, err

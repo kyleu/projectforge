@@ -57,10 +57,10 @@
               -%}
               {%- for i := len(vKeys)-1; i >= 0; i-- -%}
               {%- code vers := vKeys[i] -%}
-              <li><a href="?phase=deps&key={%u k %}&version={%u vers %}{%s suffix %}">{%s vers %}</a>:
+              <li><a href="?phase=deps&key={%u k %}&version={%u vers %}{%s suffix %}" title="Change all projects to use version [{%s vers %}] of [{%s k %}]">{%s vers %}</a>:
                 <ul>
                   {%- for _, prj := range v[vers] -%}
-                  <li><a href="/p/{%s prj %}">{%s prj %}</a></li>
+                  <li><a href="/p/{%s prj %}" title="View project">{%s prj %}</a></li>
                   {%- endfor -%}
                 </ul>
               </li>

@@ -7,6 +7,7 @@ import (
 	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/project/export/files"
 	"projectforge.dev/projectforge/app/project/export/inject"
 	"projectforge.dev/projectforge/app/project/export/model"
@@ -19,7 +20,7 @@ func NewService() *Service {
 	return &Service{}
 }
 
-func (s *Service) Files(ctx context.Context, args *model.Args, addHeader bool, logger util.Logger) (f file.Files, e error) {
+func (s *Service) Files(ctx context.Context, p *project.Project, args *model.Args, addHeader bool, logger util.Logger) (f file.Files, e error) {
 	defer func() {
 		if rec := recover(); rec != nil {
 			if err, ok := rec.(error); ok {
@@ -29,7 +30,7 @@ func (s *Service) Files(ctx context.Context, args *model.Args, addHeader bool, l
 			}
 		}
 	}()
-	f, e = files.All(ctx, args, addHeader, logger)
+	f, e = files.All(ctx, p, args, addHeader, logger)
 	return
 }
 

@@ -21,6 +21,7 @@ func Menu(args *model.Args, addHeader bool) (*file.File, error) {
 
 func menuBlock(args *model.Args) *golang.Block {
 	ret := golang.NewBlock("menu", "func")
+	ret.W("//nolint:lll")
 	ret.W("func generatedMenu() menu.Items {")
 	rct := menuContent(args)
 	for _, x := range rct {

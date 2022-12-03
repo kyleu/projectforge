@@ -22,7 +22,7 @@ func ProjectExportModelDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Data = mdl
 
-		fls, err := files.ModelAll(mdl, args, true)
+		fls, err := files.ModelAll(mdl, prj, args, true)
 		if err != nil {
 			ps.Logger.Warnf("unable to generate files for model [%s]", mdl.Name)
 		}

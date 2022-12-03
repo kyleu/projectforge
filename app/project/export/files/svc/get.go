@@ -91,7 +91,7 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 		g.AddBlocks(gb)
 	}
 
-	if len(m.Search) > 0 {
+	if len(m.AllSearches()) > 0 {
 		g.AddImport(helper.ImpStrings)
 		ss, err := serviceSearch(m, nil, dbRef, args.Enums)
 		if err != nil {
@@ -101,7 +101,7 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 	}
 	for _, grp := range m.GroupedColumns() {
 		if !grp.PK {
-			if len(m.Search) > 0 {
+			if len(m.AllSearches()) > 0 {
 				ss, err := serviceSearch(m, grp, dbRef, args.Enums)
 				if err != nil {
 					return nil, err

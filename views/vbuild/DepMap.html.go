@@ -142,7 +142,15 @@ func (p *DepMap) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vbuild/DepMap.html:60
 			qw422016.E().S(suffix)
 //line views/vbuild/DepMap.html:60
-			qw422016.N().S(`">`)
+			qw422016.N().S(`" title="Change all projects to use version [`)
+//line views/vbuild/DepMap.html:60
+			qw422016.E().S(vers)
+//line views/vbuild/DepMap.html:60
+			qw422016.N().S(`] of [`)
+//line views/vbuild/DepMap.html:60
+			qw422016.E().S(k)
+//line views/vbuild/DepMap.html:60
+			qw422016.N().S(`]">`)
 //line views/vbuild/DepMap.html:60
 			qw422016.E().S(vers)
 //line views/vbuild/DepMap.html:60
@@ -156,7 +164,7 @@ func (p *DepMap) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vbuild/DepMap.html:63
 				qw422016.E().S(prj)
 //line views/vbuild/DepMap.html:63
-				qw422016.N().S(`">`)
+				qw422016.N().S(`" title="View project">`)
 //line views/vbuild/DepMap.html:63
 				qw422016.E().S(prj)
 //line views/vbuild/DepMap.html:63

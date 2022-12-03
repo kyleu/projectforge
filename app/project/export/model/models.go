@@ -56,7 +56,7 @@ func (m Models) withDeps(mdl *Model) Models {
 
 func (m Models) HasSearch() bool {
 	for _, x := range m {
-		if len(x.Search) > 0 {
+		if len(x.AllSearches()) > 0 {
 			return true
 		}
 	}

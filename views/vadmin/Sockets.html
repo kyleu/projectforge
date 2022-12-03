@@ -16,7 +16,6 @@
   Channels []string
   Connections []*websocket.Connection
   Taps []uuid.UUID
-  Context any
 } %}
 
 {% func (p *Sockets) Body(as *app.State, ps *cutil.PageState) %}
@@ -83,12 +82,6 @@
   {%- for _, x := range p.Connections -%}
   {%= components.JSONModal("conn-" + x.ID.String(), "Connection [" + x.ID.String() + "] JSON", x, 1) %}
   {%- endfor -%}
-  {%- if p.Context != nil -%}
-  <div class="card">
-    <h3>Server Context</h3>
-    {%s= components.JSON(p.Context) %}
-  </div>
-  {%- endif -%}
 {% endfunc %}
 
 {% code type Channel struct {

@@ -30,7 +30,7 @@ func NewServices(ctx context.Context, st *State, rootLogger util.Logger) (*Servi
 		Export:   export.NewService(),
 		Git:      git.NewService(),
 		Exec:     exec.NewService(),
-		Socket:   websocket.NewService(nil, socketHandler, nil, nil),
+		Socket:   websocket.NewService(nil, socketHandler, nil),
 	}, nil
 }
 

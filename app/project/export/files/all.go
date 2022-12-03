@@ -6,6 +6,7 @@ import (
 	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/project/export/files/controller"
 	"projectforge.dev/projectforge/app/project/export/files/goenum"
 	"projectforge.dev/projectforge/app/project/export/files/sql"
@@ -13,7 +14,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func All(ctx context.Context, args *model.Args, addHeader bool, logger util.Logger) (file.Files, error) {
+func All(ctx context.Context, p *project.Project, args *model.Args, addHeader bool, logger util.Logger) (file.Files, error) {
 	if err := args.Validate(); err != nil {
 		return nil, errors.Wrap(err, "invalid export arguments")
 	}
@@ -28,7 +29,7 @@ func All(ctx context.Context, args *model.Args, addHeader bool, logger util.Logg
 	}
 
 	for _, m := range args.Models {
-		calls, err := ModelAll(m, args, addHeader)
+		calls, err := ModelAll(m, p, args, addHeader)
 		if err != nil {
 			return nil, errors.Wrapf(err, "error processing model [%s]", m.Name)
 		}
@@ -47,11 +48,13 @@ func All(ctx context.Context, args *model.Args, addHeader bool, logger util.Logg
 	}
 	ret = append(ret, x)
 
-	x, err = controller.Search(args, addHeader)
-	if err != nil {
-		return nil, err
+	if args.HasModule("search") {
+		x, err = controller.Search(args, addHeader)
+		if err != nil {
+			return nil, err
+		}
+		ret = append(ret, x)
 	}
-	ret = append(ret, x)
 
 	if args.HasModule("migration") {
 		f, err := sql.MigrationAll(args.Models.Sorted(), args.Enums, addHeader)

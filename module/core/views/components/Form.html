@@ -168,6 +168,35 @@
   </div>
 {% endstripspace %}{% endfunc %}
 
+{% func SearchForm(action string, fieldKey string, placeholder string, value string, ps *cutil.PageState) %}{% stripspace %}
+  {% code
+    if fieldKey == "" {
+      fieldKey = "q"
+    }
+    m := map[string]string{}
+    ps.URI.QueryArgs().VisitAll(func(key []byte, value []byte) {
+      k, v := string(key), string(value)
+      if k == fieldKey {
+        return
+      }
+      curr, ok := m[k]
+      if ok {
+        curr += ","
+      }
+      curr += v
+      m[k] = curr
+    })
+  %}
+  <form action="{%s action %}" method="get" class="">
+    {% for k, v := range m %}
+    <input type="hidden" name="{%s k %}" value="{%s v %}" />
+    {% endfor %}
+    <button class="right" type="submit">{%= SVGRef("search", 22, 22, `icon`, ps) %}</button>
+    <input class="right" type="search" placeholder="{%s placeholder %}" name="{%s fieldKey %}" value="{%s value %}" style="border-right: 0;">
+    <div class="clear"></div>
+  </form>
+{% endstripspace %}{% endfunc %}
+
 {% func phFor(phs []string) %}{% stripspace %}
 {% if len(phs) > 0 %}{% space %}placeholder="{%s strings.Join(phs, "; ") %}"{% endif %}
 {% endstripspace %}{% endfunc %}

@@ -22,9 +22,9 @@ func socketRoute(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState, pa
 	}
 	if len(path) == 0 {
 		ps.Title = "Sockets"
-		chans, conns, taps, ctx := as.Services.Socket.Status()
-		ps.Data = util.ValueMap{"channels": chans, "connections": conns, "context": ctx}
-		return controller.Render(rc, as, &vadmin.Sockets{Channels: chans, Connections: conns, Taps: taps, Context: ctx}, ps, bc()...)
+		chans, conns, taps := as.Services.Socket.Status()
+		ps.Data = util.ValueMap{"channels": chans, "connections": conns}
+		return controller.Render(rc, as, &vadmin.Sockets{Channels: chans, Connections: conns, Taps: taps}, ps, bc()...)
 	}
 	switch path[0] {
 	case "tap":

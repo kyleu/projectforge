@@ -7,6 +7,7 @@ import (
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/lib/filter"
+	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/util"
 )
 
@@ -131,6 +132,23 @@ func (m *Model) IndexedColumns() Columns {
 	for _, c := range m.Columns {
 		if c.Indexed || c.PK {
 			a(c)
+		}
+	}
+	return ret
+}
+
+func (m *Model) AllSearches() []string {
+	if !m.HasTag("search") {
+		return m.Search
+	}
+	ret := slices.Clone(m.Search)
+	for _, c := range m.Columns {
+		if c.Search {
+			x := c.Name
+			if c.Type.Key() != types.KeyString {
+				x += "::text"
+			}
+			ret = append(ret, "lower("+x+")")
 		}
 	}
 	return ret
