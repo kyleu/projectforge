@@ -111,10 +111,12 @@ func exportViewEditRelation(m *model.Model, rel *model.Relation, p *project.Proj
 	tgt := relModel.Columns.Get(rel.Tgt[0])
 
 	title := ""
-	if titles := relModel.Columns.WithTag("title"); len(titles) > 0 {
+	if titles := relModel.Columns.Searches(); len(titles) > 0 {
 		var refs []string
 		for _, title := range titles {
-			refs = append(refs, fmt.Sprintf("o[%q]", title.Camel()))
+			if !title.PK {
+				refs = append(refs, fmt.Sprintf("o[%q]", title.Camel()))
+			}
 		}
 		title = fmt.Sprintf(`(o) => %s + " (" + o[%q] + ")"`, strings.Join(refs, " + \" / \" + "), tgt.Camel())
 	} else {
