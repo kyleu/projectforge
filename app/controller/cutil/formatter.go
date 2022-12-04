@@ -107,3 +107,25 @@ func FormatMarkdown(s string) (string, error) {
 	}
 	return s, nil
 }
+
+func FormatCleanMarkup(s string, icon string) (string, string, error) {
+	ret, err := FormatMarkdown(s)
+	if err != nil {
+		return "", "", err
+	}
+	title := ""
+	if h1Idx := strings.Index(ret, "<h1>"); h1Idx > -1 {
+		if h1EndIdx := strings.Index(ret, "</h1>"); h1EndIdx > -1 {
+			title = s[h1Idx+4 : h1EndIdx]
+		}
+		ic := fmt.Sprintf(`<svg class="icon" style="width: 20px; height: 20px;"><use xlink:href="#svg-%s" /></svg> `, icon)
+		ret = ret[:h1Idx+4] + ic + ret[h1Idx+4:]
+		ret = strings.ReplaceAll(ret, "<h3>", "<h4>")
+		ret = strings.ReplaceAll(ret, "</h3>", "</h4>")
+		ret = strings.ReplaceAll(ret, "<h2>", "<h4>")
+		ret = strings.ReplaceAll(ret, "</h2>", "</h4>")
+		ret = strings.ReplaceAll(ret, "<h1>", "<h3 style=\"margin-top: 0;\">")
+		ret = strings.ReplaceAll(ret, "</h1>", "</h3>")
+	}
+	return ret, title, nil
+}

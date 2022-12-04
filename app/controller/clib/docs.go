@@ -24,11 +24,21 @@ func Docs(rc *fasthttp.RequestCtx) {
 		bc := []string{"docs"}
 		bc = append(bc, split...)
 
-		x, err := doc.HTML(pth+".md", cutil.FormatMarkdown)
+		title := pth
+		x, err := doc.HTML(pth+".md", func(s string) (string, error) {
+			ret, t, err := cutil.FormatCleanMarkup(s, "file")
+			if err != nil {
+				return "", err
+			}
+			if t != "" {
+				title = t
+			}
+			return ret, nil
+		})
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to load documentation from [%s]", pth)
 		}
-		ps.Title = "Documentation: " + pth
+		ps.Title = title
 		ps.Data, _ = doc.Content(pth + ".md")
 		return controller.Render(rc, as, &vdoc.MarkdownPage{Title: pth, HTML: x}, ps, bc...)
 	})
