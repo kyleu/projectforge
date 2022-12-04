@@ -17,7 +17,7 @@
     <h3>{%= components.SVGRefIcon(`app`, ps) %}{%s util.AppName %} Features</h3>
     <ul class="mt">
       {%- for _, mod := range p.Modules -%}
-      <li>
+      <li class="mt">
         <a href="/features/{%s mod.Key %}">{%= components.SVGRefIcon(mod.Icon, ps) %}{%s mod.Title() %}</a>
         <div class="clear"><em>{%s mod.Description %}</em></div>
       </li>

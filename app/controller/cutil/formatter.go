@@ -3,6 +3,7 @@ package cutil
 
 import (
 	"fmt"
+	h "html"
 	"strings"
 
 	"github.com/alecthomas/chroma"
@@ -81,4 +82,28 @@ func FormatString(content string, l chroma.Lexer) (string, error) {
 	}
 	ret = strings.Replace(ret, `<td class="lntd"><pre tabindex="0" class="chroma"><span class="lnt">1<br /></span></pre></td>`, "", 1)
 	return ret, nil
+}
+
+func FormatMarkdown(s string) (string, error) {
+	match, end := "<pre><code class=\"language-", "</code></pre>"
+	idx := strings.Index(s, match)
+	for idx > -1 {
+		startQuote := idx + len(match)
+		endQuote := strings.Index(s[startQuote:], "\"")
+		lang := s[startQuote : startQuote+endQuote]
+		if lang == "shell" {
+			lang = "bash"
+		}
+		contentStart := startQuote + endQuote + 2
+		contentEnd := strings.Index(s[startQuote:], end) + startQuote
+		content := s[contentStart:contentEnd]
+		content = h.UnescapeString(content)
+		code, err := FormatLang(content, lang)
+		if err != nil {
+			return "", err
+		}
+		s = s[:idx] + code + s[contentEnd+len(end):]
+		idx = strings.Index(s, match)
+	}
+	return s, nil
 }

@@ -29,7 +29,7 @@ func Act(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.Pa
 func ActSite(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
 	as := _currentSiteState
 	ps := cutil.LoadPageState(as, rc, key, _currentSiteRootLogger)
-	ps.Menu = site.Menu(ps.Context, as, ps.Profile, ps.Accounts)
+	ps.Menu = site.Menu(ps.Context, as, ps.Profile, ps.Accounts, ps.Logger)
 	if allowed, reason := user.Check(string(ps.URI.Path()), ps.Accounts); !allowed {
 		f = Unauthorized(rc, reason, ps.Accounts)
 	}

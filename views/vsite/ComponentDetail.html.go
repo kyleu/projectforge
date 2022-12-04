@@ -48,40 +48,38 @@ func (p *ComponentDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, p
 	qw422016.E().S(p.Component.Description)
 //line views/vsite/ComponentDetail.html:16
 	qw422016.N().S(`</em>
-  </div>
-  <div class="card">
     `)
-//line views/vsite/ComponentDetail.html:19
+//line views/vsite/ComponentDetail.html:17
 	qw422016.N().S(p.Component.HTML)
-//line views/vsite/ComponentDetail.html:19
+//line views/vsite/ComponentDetail.html:17
 	qw422016.N().S(`
   </div>
 `)
-//line views/vsite/ComponentDetail.html:21
+//line views/vsite/ComponentDetail.html:19
 }
 
-//line views/vsite/ComponentDetail.html:21
+//line views/vsite/ComponentDetail.html:19
 func (p *ComponentDetail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsite/ComponentDetail.html:21
+//line views/vsite/ComponentDetail.html:19
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsite/ComponentDetail.html:21
+//line views/vsite/ComponentDetail.html:19
 	p.StreamBody(qw422016, as, ps)
-//line views/vsite/ComponentDetail.html:21
+//line views/vsite/ComponentDetail.html:19
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsite/ComponentDetail.html:21
+//line views/vsite/ComponentDetail.html:19
 }
 
-//line views/vsite/ComponentDetail.html:21
+//line views/vsite/ComponentDetail.html:19
 func (p *ComponentDetail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsite/ComponentDetail.html:21
+//line views/vsite/ComponentDetail.html:19
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsite/ComponentDetail.html:21
+//line views/vsite/ComponentDetail.html:19
 	p.WriteBody(qb422016, as, ps)
-//line views/vsite/ComponentDetail.html:21
+//line views/vsite/ComponentDetail.html:19
 	qs422016 := string(qb422016.B)
-//line views/vsite/ComponentDetail.html:21
+//line views/vsite/ComponentDetail.html:19
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsite/ComponentDetail.html:21
+//line views/vsite/ComponentDetail.html:19
 	return qs422016
-//line views/vsite/ComponentDetail.html:21
+//line views/vsite/ComponentDetail.html:19
 }

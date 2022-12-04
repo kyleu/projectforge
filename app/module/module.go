@@ -1,7 +1,6 @@
 package module
 
 import (
-	"github.com/gomarkdown/markdown"
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
@@ -24,7 +23,6 @@ type Module struct {
 	Files       filesystem.FileLoader `json:"-"`
 	URL         string                `json:"-"`
 	UsageMD     string                `json:"-"`
-	usageHTML   string
 }
 
 func (m *Module) Title() string {
@@ -39,13 +37,6 @@ func (m *Module) IconSafe() string {
 		return "compass"
 	}
 	return m.Icon
-}
-
-func (m *Module) UsageHTML() string {
-	if m.usageHTML == "" {
-		m.usageHTML = string(markdown.ToHTML([]byte(m.UsageMD), nil, nil))
-	}
-	return m.usageHTML
 }
 
 func (m *Module) WebPath() string {

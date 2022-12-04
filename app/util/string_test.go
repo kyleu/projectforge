@@ -58,3 +58,33 @@ func TestToTitle(t *testing.T) {
 		}
 	}
 }
+
+func TestSubstringBetween(t *testing.T) {
+	t.Parallel()
+	test := func(s string, l string, r string, expected string) {
+		if res := util.StringSubstringBetween(s, l, r); res != expected {
+			t.Errorf("invalid result for substring [%s] between [%s] and [%s]: %s", s, l, r, res)
+		}
+	}
+	test("abc", "a", "c", "b")
+	test("looooooongassstring", "looooooong", "string", "ass")
+	test("thishasstuffinthemiddle", "has", "the", "stuffin")
+	test("missingprefix", "invalid", "prefix", "")
+	test("missingsuffix", "missing", "invalid", "suffix")
+}
+
+func TestReplaceBetween(t *testing.T) {
+	t.Parallel()
+	test := func(s string, l string, r string, replacement string, expected string) {
+		res, err := util.StringReplaceBetween(s, l, r, replacement)
+		if err != nil {
+			t.Error(err)
+		}
+		if res != expected {
+			t.Errorf("invalid result for substring [%s] between [%s] and [%s]: %s", s, l, r, res)
+		}
+	}
+	test("abc", "a", "c", "x", "axc")
+	test("ApplePearKiwi", "Apple", "Kiwi", "Strawberry", "AppleStrawberryKiwi")
+	test("thishasstuffinthemiddle", "has", "the", "thingsin", "thishasthingsinthemiddle")
+}

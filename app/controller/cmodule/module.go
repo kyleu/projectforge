@@ -2,6 +2,7 @@ package cmodule
 
 import (
 	"fmt"
+	"projectforge.dev/projectforge/doc"
 
 	"github.com/valyala/fasthttp"
 
@@ -34,9 +35,13 @@ func ModuleDetail(rc *fasthttp.RequestCtx) {
 				usages = append(usages, p)
 			}
 		}
+		html, err := doc.HTMLString("module:"+mod.Key, []byte{}, cutil.FormatMarkdown)
+		if err != nil {
+			return "", err
+		}
 		ps.Data = mod
 		ps.Title = fmt.Sprintf("[%s] Module", mod.Key)
-		return controller.Render(rc, as, &vmodule.Detail{Module: mod, Usages: usages}, ps, "modules", mod.Key)
+		return controller.Render(rc, as, &vmodule.Detail{Module: mod, HTML: html, Usages: usages}, ps, "modules", mod.Key)
 	})
 }
 

@@ -4,7 +4,7 @@
 Download any package from the [release page]({{{ .Info.Sourcecode }}}/releases).
 {{{ if .Build.Homebrew }}}
 ### Homebrew
-```
+```shell
 brew install {{{ .Info.Org }}}/{{{ .Info.Org }}}/{{{ .Key }}}
 ```
 {{{ end }}}{{{ if .Build.NFPMS }}}

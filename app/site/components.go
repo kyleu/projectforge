@@ -2,10 +2,7 @@ package site
 
 import (
 	"context"
-	"fmt"
 	"github.com/pkg/errors"
-	"strings"
-
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/menu"
@@ -13,6 +10,7 @@ import (
 	"projectforge.dev/projectforge/doc"
 	"projectforge.dev/projectforge/views/layout"
 	"projectforge.dev/projectforge/views/vsite"
+	"strings"
 )
 
 func componentsMenu(ctx context.Context, logger util.Logger) menu.Items {
@@ -46,18 +44,21 @@ func componentDetail(key string, as *app.State, ps *cutil.PageState) (layout.Pag
 }
 
 func componentTemplate(key string, icon string) (string, string, error) {
-	html, err := doc.HTML("components/" + key + ".md")
+	html, err := doc.HTML("components/"+key+".md", func(s string) (string, error) {
+		ret, err := cutil.FormatMarkdown(s)
+		if err != nil {
+			return "", err
+		}
+		if h1Idx := strings.Index(ret, "<h1>"); h1Idx > -1 {
+			if h1EndIdx := strings.Index(ret, "</h1>"); h1EndIdx > -1 {
+				ret = ret[:h1Idx] + ret[h1EndIdx+5:]
+			}
+		}
+		return ret, nil
+	})
 	if err != nil {
 		return "", "", err
 	}
 	title := util.StringToTitle(key)
-	if h1Idx := strings.Index(html, "<h1>"); h1Idx > -1 {
-		if h1EndIdx := strings.Index(html, "</h1>"); h1EndIdx > -1 {
-			title = html[h1Idx+4 : h1EndIdx]
-		}
-		println(icon)
-		ic := fmt.Sprintf(`<svg class="icon" style="width: 36px; height: 36px;"><use xlink:href="#svg-%s" /></svg> `, icon)
-		html = html[:h1Idx+4] + ic + html[h1Idx+4:]
-	}
 	return title, html, nil
 }

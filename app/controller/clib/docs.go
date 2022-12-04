@@ -24,7 +24,7 @@ func Docs(rc *fasthttp.RequestCtx) {
 		bc := []string{"docs"}
 		bc = append(bc, split...)
 
-		x, err := doc.HTML(pth + ".md")
+		x, err := doc.HTML(pth+".md", cutil.FormatMarkdown)
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to load documentation from [%s]", pth)
 		}

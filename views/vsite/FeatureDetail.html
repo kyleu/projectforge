@@ -9,17 +9,14 @@
 {% code type FeatureDetail struct {
   layout.Basic
   Module *module.Module
+  HTML string
 } %}
 
 {% func (p *FeatureDetail) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
+    <div class="right"><a href="/features/{%s p.Module.Key %}/files"><button>Files</button></a></div>
     <h3>{%= components.SVGRefIcon(p.Module.Icon, ps) %}{%s p.Module.Title() %}</h3>
     <em>{%s p.Module.Description %}</em>
-    <div class="mt"><a href="/features/{%s p.Module.Key %}/files"><button>Files</button></a></div>
+    {%s= p.HTML %}
   </div>
-  {%- if p.Module.UsageHTML() != "" -%}
-  <div class="card">
-    {%s= p.Module.UsageHTML() %}
-  </div>
-  {%- endif -%}
 {% endfunc %}

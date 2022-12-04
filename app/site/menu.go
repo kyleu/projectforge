@@ -3,11 +3,11 @@ package site
 
 import (
 	"context"
-	"projectforge.dev/projectforge/app/util"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/lib/menu"
 	"projectforge.dev/projectforge/app/lib/user"
+	"projectforge.dev/projectforge/app/util"
 )
 
 const (

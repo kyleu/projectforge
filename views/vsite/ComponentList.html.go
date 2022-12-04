@@ -71,7 +71,7 @@ func (p *ComponentList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps 
 //line views/vsite/ComponentList.html:42
 	for _, c := range AllComponents {
 //line views/vsite/ComponentList.html:42
-		qw422016.N().S(`      <li>
+		qw422016.N().S(`      <li class="mt">
         <a href="/components/`)
 //line views/vsite/ComponentList.html:44
 		qw422016.E().S(c.Key)

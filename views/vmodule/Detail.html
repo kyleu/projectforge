@@ -9,6 +9,7 @@
 {% code type Detail struct {
   layout.Basic
   Module *module.Module
+  HTML string
   Usages project.Projects
 } %}
 
@@ -46,9 +47,9 @@
       </tbody>
     </table>
   </div>
-  {%- if p.Module.UsageHTML() != "" -%}
+  {%- if p.HTML != "" -%}
   <div class="card">
-    {%s= p.Module.UsageHTML() %}
+    {%s= p.HTML %}
   </div>
   {%- endif -%}
   <div class="card">

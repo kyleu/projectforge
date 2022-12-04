@@ -10,6 +10,7 @@ import (
 var componentMetadata = map[string][]string{
 	"accordion":    []string{"map", "collapsible UI for multiple sections"},
 	"autocomplete": []string{"glasses", "enhances an input to support server-driven search"},
+	"code":         []string{"file-text", "script-free code syntax highlighting with theme support"},
 	"dom":          []string{"file-contract", "provides TypeScript methods for manipulating the DOM"},
 	"editor":       []string{"edit", "form editor with lots of neat features"},
 	"flash":        []string{"fire", "temporary notifications to the user"},
@@ -17,9 +18,10 @@ var componentMetadata = map[string][]string{
 	"link":         []string{"link", "enhances links with confirmation prompts and other utilities"},
 	"menu":         []string{"list", "hierarchical menu with icon support and clean markup"},
 	"modal":        []string{"folder-open", "a modal window that appears over the current page"},
-	"table":        []string{"calendar", "utilities for resizable and sortable tables"},
+	"table":        []string{"table", "utilities for resizable and sortable tables"},
 	"tabs":         []string{"handle", "tabbed navigation component for multiple panels"},
 	"tags":         []string{"hashtag", "drag/drop tag editor with accessibility support"},
+	"templates":    []string{"sitemap", "dynamic HTML pages from a templating engine with full Go support "},
 	"theme":        []string{"gift", "light/dark mode support, theme editor and gallery"},
 	"websocket":    []string{"hammer", "supports bidirectional communication between a client and server"},
 }

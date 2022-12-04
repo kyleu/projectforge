@@ -7,6 +7,7 @@ import (
 	"unicode"
 
 	"github.com/iancoleman/strcase"
+	"github.com/pkg/errors"
 )
 
 func StringSplit(s string, sep byte, cutc bool) (string, string) {
@@ -93,6 +94,39 @@ func StringRepeat(s string, n int) string {
 	return ret.String()
 }
 
+func StringSubstringBetween(s string, l string, r string) string {
+	li, ri := strings.Index(s, l), strings.Index(s, r)
+	if li == -1 {
+		return ""
+	}
+	lio := li + len(l)
+	if ri == -1 {
+		ri = len(s)
+	}
+	return s[lio:ri]
+}
+
+func StringReplaceBetween(s string, l string, r string, replacement string) (string, error) {
+	li, ri := strings.Index(s, l), strings.Index(s, r)
+	if li == -1 {
+		return "", errors.Errorf("substring [%s] does not appear in the source", l)
+	}
+	lio := li + len(l)
+	if ri == -1 {
+		ri = len(s)
+	}
+	return s[:lio] + replacement + s[ri:], nil
+}
+
+func CountryFlag(code string) string {
+	if len(code) != 2 {
+		return fmt.Sprintf("INVALID: %q", code)
+	}
+	code = strings.ToLower(code)
+	const flagBaseIndex = '\U0001F1E6' - 'a'
+	return string(rune(code[0])+flagBaseIndex) + string(rune(code[1])+flagBaseIndex)
+}
+
 var acronyms = func() []string {
 	ret := []string{"Api", "Html", "Id", "Ip", "Json", "Xml", "Uri", "Url"}
 	for _, x := range ret {
@@ -130,15 +164,4 @@ func acr(ret string, extraAcronyms ...string) string {
 		proc(a)
 	}
 	return ret
-}
-
-const flagBaseIndex = '\U0001F1E6' - 'a'
-
-func CountryFlag(code string) string {
-	if len(code) != 2 {
-		return fmt.Sprintf("INVALID: %q", code)
-	}
-
-	code = strings.ToLower(code)
-	return string(rune(code[0])+flagBaseIndex) + string(rune(code[1])+flagBaseIndex)
 }

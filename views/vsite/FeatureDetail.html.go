@@ -30,70 +30,63 @@ var (
 type FeatureDetail struct {
 	layout.Basic
 	Module *module.Module
+	HTML   string
 }
 
-//line views/vsite/FeatureDetail.html:14
+//line views/vsite/FeatureDetail.html:15
 func (p *FeatureDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsite/FeatureDetail.html:14
+//line views/vsite/FeatureDetail.html:15
 	qw422016.N().S(`
   <div class="card">
+    <div class="right"><a href="/features/`)
+//line views/vsite/FeatureDetail.html:17
+	qw422016.E().S(p.Module.Key)
+//line views/vsite/FeatureDetail.html:17
+	qw422016.N().S(`/files"><button>Files</button></a></div>
     <h3>`)
-//line views/vsite/FeatureDetail.html:16
+//line views/vsite/FeatureDetail.html:18
 	components.StreamSVGRefIcon(qw422016, p.Module.Icon, ps)
-//line views/vsite/FeatureDetail.html:16
+//line views/vsite/FeatureDetail.html:18
 	qw422016.E().S(p.Module.Title())
-//line views/vsite/FeatureDetail.html:16
+//line views/vsite/FeatureDetail.html:18
 	qw422016.N().S(`</h3>
     <em>`)
-//line views/vsite/FeatureDetail.html:17
+//line views/vsite/FeatureDetail.html:19
 	qw422016.E().S(p.Module.Description)
-//line views/vsite/FeatureDetail.html:17
+//line views/vsite/FeatureDetail.html:19
 	qw422016.N().S(`</em>
-    <div class="mt"><a href="/features/`)
-//line views/vsite/FeatureDetail.html:18
-	qw422016.E().S(p.Module.Key)
-//line views/vsite/FeatureDetail.html:18
-	qw422016.N().S(`/files"><button>Files</button></a></div>
-  </div>
-`)
-//line views/vsite/FeatureDetail.html:20
-	if p.Module.UsageHTML() != "" {
-//line views/vsite/FeatureDetail.html:20
-		qw422016.N().S(`  <div class="card">
     `)
-//line views/vsite/FeatureDetail.html:22
-		qw422016.N().S(p.Module.UsageHTML())
-//line views/vsite/FeatureDetail.html:22
-		qw422016.N().S(`
+//line views/vsite/FeatureDetail.html:20
+	qw422016.N().S(p.HTML)
+//line views/vsite/FeatureDetail.html:20
+	qw422016.N().S(`
   </div>
 `)
-//line views/vsite/FeatureDetail.html:24
-	}
-//line views/vsite/FeatureDetail.html:25
+//line views/vsite/FeatureDetail.html:22
 }
 
-//line views/vsite/FeatureDetail.html:25
+//line views/vsite/FeatureDetail.html:22
 func (p *FeatureDetail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsite/FeatureDetail.html:25
+//line views/vsite/FeatureDetail.html:22
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsite/FeatureDetail.html:25
+//line views/vsite/FeatureDetail.html:22
 	p.StreamBody(qw422016, as, ps)
-//line views/vsite/FeatureDetail.html:25
+//line views/vsite/FeatureDetail.html:22
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsite/FeatureDetail.html:25
+//line views/vsite/FeatureDetail.html:22
 }
 
-//line views/vsite/FeatureDetail.html:25
+//line views/vsite/FeatureDetail.html:22
 func (p *FeatureDetail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsite/FeatureDetail.html:25
+//line views/vsite/FeatureDetail.html:22
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsite/FeatureDetail.html:25
+//line views/vsite/FeatureDetail.html:22
 	p.WriteBody(qb422016, as, ps)
-//line views/vsite/FeatureDetail.html:25
+//line views/vsite/FeatureDetail.html:22
 	qs422016 := string(qb422016.B)
-//line views/vsite/FeatureDetail.html:25
+//line views/vsite/FeatureDetail.html:22
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsite/FeatureDetail.html:25
+//line views/vsite/FeatureDetail.html:22
 	return qs422016
-//line views/vsite/FeatureDetail.html:25
+//line views/vsite/FeatureDetail.html:22
 }

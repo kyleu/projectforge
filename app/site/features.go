@@ -2,6 +2,8 @@ package site
 
 import (
 	"context"
+	"projectforge.dev/projectforge/doc"
+	"strings"
 
 	"github.com/pkg/errors"
 
@@ -34,9 +36,24 @@ func featureDetail(key string, as *app.State, ps *cutil.PageState) (layout.Page,
 	if err != nil {
 		return nil, err
 	}
+	html, err := doc.HTMLString("feature:"+mod.Key, []byte(mod.UsageMD), func(s string) (string, error) {
+		ret, err := cutil.FormatMarkdown(s)
+		if err != nil {
+			return "", err
+		}
+		if h1Idx := strings.Index(ret, "<h1>"); h1Idx > -1 {
+			if h1EndIdx := strings.Index(ret, "</h1>"); h1EndIdx > -1 {
+				ret = ret[:h1Idx] + ret[h1EndIdx+5:]
+			}
+		}
+		return ret, nil
+	})
+	if err != nil {
+		return nil, err
+	}
 	ps.Title = mod.Title()
 	ps.Data = mod
-	return &vsite.FeatureDetail{Module: mod}, nil
+	return &vsite.FeatureDetail{Module: mod, HTML: html}, nil
 }
 
 func featureFiles(path []string, as *app.State, ps *cutil.PageState) ([]string, layout.Page, error) {

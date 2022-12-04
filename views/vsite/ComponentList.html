@@ -40,7 +40,7 @@
     <p>Components are provided for your HTML UI. Most components can be used without JavaScript.</p>
     <ul class="mt">
       {%- for _, c := range AllComponents -%}
-      <li>
+      <li class="mt">
         <a href="/components/{%s c.Key %}">{%= components.SVGRefIcon(c.Icon, ps) %}{%s c.Title %}</a>
         <div class="clear"><em>{%s c.Description %}</em></div>
       </li>
