@@ -1,0 +1,50 @@
+{% import (
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/layout"
+) %}
+
+{% code
+  type Component struct {
+    Key         string `json:"key"`
+    Title       string `json:"title"`
+    Description string `json:"description,omitempty"`
+    Icon        string `json:"icon,omitempty"`
+    HTML        string `json:"-"`
+  }
+
+  type Components []*Component
+
+  func (c Components) Get(key string) *Component {
+    for _, x := range c {
+      if x.Key == key {
+        return x
+      }
+    }
+    return nil
+  }
+
+  var AllComponents Components
+%}
+
+
+{% code type ComponentList struct {
+  layout.Basic
+} %}
+
+{% func (p *ComponentList) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`app`, ps) %}{%s util.AppName %} Components</h3>
+    <p>Components are provided for your HTML UI. Most components can be used without JavaScript.</p>
+    <ul class="mt">
+      {%- for _, c := range AllComponents -%}
+      <li>
+        <a href="/components/{%s c.Key %}">{%= components.SVGRefIcon(c.Icon, ps) %}{%s c.Title %}</a>
+        <div class="clear"><em>{%s c.Description %}</em></div>
+      </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+{% endfunc %}

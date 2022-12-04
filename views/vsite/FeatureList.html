@@ -19,7 +19,7 @@
       {%- for _, mod := range p.Modules -%}
       <li>
         <a href="/features/{%s mod.Key %}">{%= components.SVGRefIcon(mod.Icon, ps) %}{%s mod.Title() %}</a>
-        <div><em>{%s mod.Description %}</em></div>
+        <div class="clear"><em>{%s mod.Description %}</em></div>
       </li>
       {%- endfor -%}
     </ul>

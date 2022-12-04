@@ -1,0 +1,21 @@
+{% import (
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/layout"
+) %}
+
+{% code type ComponentDetail struct {
+  layout.Basic
+  Component *Component
+} %}
+
+{% func (p *ComponentDetail) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(p.Component.Icon, ps) %}{%s p.Component.Title %}</h3>
+    <em>{%s p.Component.Description %}</em>
+  </div>
+  <div class="card">
+    {%s= p.Component.HTML %}
+  </div>
+{% endfunc %}
