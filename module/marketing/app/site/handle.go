@@ -42,13 +42,13 @@ func Handle(path []string, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.Pag
 		ps.Data = util.ValueMap{"base": "https://{{{ .Package }}}/releases/download/v" + as.BuildInfo.Version, "links": dls}
 		page = &vsite.Download{Links: dls}
 	case keyInstall:
-		page, err = mdTemplate("Installation", "This static page contains installation instructions", "installation.md", "code", ps)
+		page, err = mdTemplate("This static page contains installation instructions", "installation.md", "code", ps)
 	case keyContrib:
-		page, err = mdTemplate("Contributing", "This static page describes how to build "+util.AppName, "contributing.md", "cog", ps)
+		page, err = mdTemplate("This static page describes how to build "+util.AppName, "contributing.md", "cog", ps)
 	case keyTech:
-		page, err = mdTemplate("Technology", "This static page describes the technology used in "+util.AppName, "technology.md", "shield", ps)
+		page, err = mdTemplate("This static page describes the technology used in "+util.AppName, "technology.md", "shield", ps)
 	default:
-		page, err = mdTemplate("Documentation", "Documentation for "+util.AppName, path[0]+".md", "", ps)
+		page, err = mdTemplate("Documentation for "+util.AppName, path[0]+".md", "", ps)
 		if err != nil {
 			page = &verror.NotFound{Path: "/" + strings.Join(path, "/")}
 			err = nil
@@ -65,20 +65,36 @@ func siteData(result string, kvs ...string) util.ValueMap {
 	return ret
 }
 
-func mdTemplate(title string, description string, path string, icon string, ps *cutil.PageState) (layout.Page, error) {
+func mdTemplate(description string, path string, icon string, ps *cutil.PageState) (layout.Page, error) {
 	if icon == "" {
 		icon = "cog"
 	}
-	ps.Data = siteData(title, "description", description)
-	ps.Title = title
-	html, err := doc.HTML(path)
+	title := strings.TrimSuffix(path, ".md")
+	html, err := doc.HTML(path, func(s string) (string, error) {
+		ret, err := cutil.FormatMarkdown(s)
+		if err != nil {
+			return "", err
+		}
+		if h1Idx := strings.Index(ret, "<h1>"); h1Idx > -1 {
+			if h1EndIdx := strings.Index(ret, "</h1>"); h1EndIdx > -1 {
+				title = s[h1Idx+4 : h1EndIdx]
+			}
+			ic := fmt.Sprintf(`<svg class="icon" style="width: 20px; height: 20px;"><use xlink:href="#svg-%s" /></svg> `, icon)
+			ret = ret[:h1Idx+4] + ic + ret[h1Idx+4:]
+			ret = strings.ReplaceAll(ret, "<h3>", "<h4>")
+			ret = strings.ReplaceAll(ret, "</h3>", "</h4>")
+			ret = strings.ReplaceAll(ret, "<h2>", "<h4>")
+			ret = strings.ReplaceAll(ret, "</h2>", "</h4>")
+			ret = strings.ReplaceAll(ret, "<h1>", "<h3 style=\"margin-top: 0;\">")
+			ret = strings.ReplaceAll(ret, "</h1>", "</h3>")
+		}
+		return ret, nil
+	})
 	if err != nil {
 		return nil, err
 	}
-	if h1Idx := strings.Index(html, "<h1>"); h1Idx > -1 {
-		ic := fmt.Sprintf(`<svg class="icon" style="width: 36px; height: 36px;"><use xlink:href="#svg-%s" /></svg> `, icon)
-		html = html[:h1Idx+4] + ic + html[h1Idx+4:]
-	}
+	ps.Data = siteData(title, "description", description)
+	ps.Title = title
 	page := &vsite.MarkdownPage{Title: title, HTML: html}
 	return page, nil
 }

@@ -2,7 +2,6 @@ package doc
 
 import (
 	"embed"
-
 	"github.com/gomarkdown/markdown"
 	"github.com/pkg/errors"
 )
@@ -24,7 +23,7 @@ func Content(path string) ([]byte, error) {
 
 var htmlCache = map[string]string{}
 
-func HTML(path string) (string, error) {
+func HTML(path string, f func(s string) (string, error)) (string, error) {
 	if curr, ok := htmlCache[path]; ok {
 		return curr, nil
 	}
@@ -32,7 +31,21 @@ func HTML(path string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	return HTMLString(path, data, f)
+}
+
+func HTMLString(key string, data []byte, f func(s string) (string, error)) (string, error) {
+	if curr, ok := htmlCache[key]; ok {
+		return curr, nil
+	}
 	html := string(markdown.ToHTML(data, nil, nil))
-	htmlCache[path] = html
+	if f != nil {
+		var err error
+		html, err = f(html)
+		if err != nil {
+			return "", err
+		}
+	}
+	htmlCache[key] = html
 	return html, nil
 }

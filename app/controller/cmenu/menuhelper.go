@@ -24,7 +24,6 @@ func moduleMenu(mods module.Modules) *menu.Item {
 		key := mod.Key
 		i := &menu.Item{Key: key, Title: mod.Name, Description: mod.Description, Icon: mod.IconSafe(), Route: "/m/" + mod.Key}
 		ret.Children = append(ret.Children, i)
-		println(key)
 	}
 	return ret
 }
