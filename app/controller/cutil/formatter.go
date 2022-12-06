@@ -127,5 +127,5 @@ func FormatCleanMarkup(s string, icon string) (string, string, error) {
 		ret = strings.ReplaceAll(ret, "<h1>", "<h3 style=\"margin-top: 0;\">")
 		ret = strings.ReplaceAll(ret, "</h1>", "</h3>")
 	}
-	return ret, title, nil
+	return title, ret, nil
 }

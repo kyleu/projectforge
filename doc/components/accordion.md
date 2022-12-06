@@ -21,3 +21,5 @@ You'll need to import `views/components` at the top of your template
   </li>
 </ul>
 ```
+
+![logo](../../assets/logo.png "Temporary logo")

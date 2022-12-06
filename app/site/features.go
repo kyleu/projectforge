@@ -2,7 +2,6 @@ package site
 
 import (
 	"context"
-	"projectforge.dev/projectforge/doc"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -11,6 +10,7 @@ import (
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/menu"
 	"projectforge.dev/projectforge/app/module"
+	"projectforge.dev/projectforge/doc"
 	"projectforge.dev/projectforge/views/layout"
 	"projectforge.dev/projectforge/views/vsite"
 )
@@ -36,17 +36,17 @@ func featureDetail(key string, as *app.State, ps *cutil.PageState) (layout.Page,
 	if err != nil {
 		return nil, err
 	}
-	html, err := doc.HTMLString("feature:"+mod.Key, []byte(mod.UsageMD), func(s string) (string, error) {
+	_, html, err := doc.HTMLString("feature:"+mod.Key, []byte(mod.UsageMD), func(s string) (string, string, error) {
 		ret, err := cutil.FormatMarkdown(s)
 		if err != nil {
-			return "", err
+			return "", "", err
 		}
 		if h1Idx := strings.Index(ret, "<h1>"); h1Idx > -1 {
 			if h1EndIdx := strings.Index(ret, "</h1>"); h1EndIdx > -1 {
 				ret = ret[:h1Idx] + ret[h1EndIdx+5:]
 			}
 		}
-		return ret, nil
+		return "", ret, nil
 	})
 	if err != nil {
 		return nil, err

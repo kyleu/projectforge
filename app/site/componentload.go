@@ -16,6 +16,7 @@ var componentMetadata = map[string][]string{
 	"flash":        []string{"fire", "temporary notifications to the user"},
 	"icons":        []string{"cocktail", "in-document SVG references with theming support"},
 	"link":         []string{"link", "enhances links with confirmation prompts and other utilities"},
+	"markdown":     []string{"desktop", "renders Markdown as HTML"},
 	"menu":         []string{"list", "hierarchical menu with icon support and clean markup"},
 	"modal":        []string{"folder-open", "a modal window that appears over the current page"},
 	"table":        []string{"table", "utilities for resizable and sortable tables"},

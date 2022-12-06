@@ -69,16 +69,8 @@ func mdTemplate(description string, path string, icon string, ps *cutil.PageStat
 	if icon == "" {
 		icon = "cog"
 	}
-	title := strings.TrimSuffix(path, ".md")
-	html, err := doc.HTML(path, func(s string) (string, error) {
-		ret, t, err := cutil.FormatCleanMarkup(s, icon)
-		if err != nil {
-			return "", err
-		}
-		if t != "" {
-			title = t
-		}
-		return ret, nil
+	title, html, err := doc.HTML(path, path, func(s string) (string, string, error) {
+		return cutil.FormatCleanMarkup(s, icon)
 	})
 	if err != nil {
 		return nil, err
