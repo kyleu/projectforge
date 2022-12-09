@@ -126,13 +126,13 @@
   {%= TableRadio(key, title, fmt.Sprint(value), []string{"true", "false"}, []string{"True", "False"}, indent) %}
 {% endstripspace %}{% endfunc %}
 
-{% func TableCheckbox(key string, title string, values []string, opts []string, titles []string, linebreaks bool, indent int, help ...string) %}{% stripspace %}
+{% func TableCheckbox(key string, title string, values []string, opts []string, titles []string, indent int, help ...string) %}{% stripspace %}
   <tr>
     {%= vutil.Indent(true, indent + 1) %}
     <th class="shrink"><label>{%s title %}</label></th>
     {%= vutil.Indent(true, indent + 1) %}
     <td>
-      {%= FormCheckbox(key, values, opts, titles, linebreaks, indent + 2) %}
+      {%= FormCheckbox(key, values, opts, titles, indent + 2) %}
     {%= vutil.Indent(true, indent + 1) %}
     </td>
   {%= vutil.Indent(true, indent) %}

@@ -37,6 +37,9 @@ class Socket {
   }
 
   connect() {
+    window.onbeforeunload = function(){
+      appUnloading = true;
+    };
     this.connectTime = Date.now();
     this.sock = new WebSocket(socketUrl(this.url));
     const s = this;
@@ -60,9 +63,11 @@ class Socket {
       s.err("socket", event.type);
     }
     this.sock.onclose = () => {
+      if (appUnloading) {
+        return;
+      }
       s.connected = false;
       const elapsed = s.connectTime ? Date.now() - s.connectTime : 0;
-
       if (0 < elapsed && elapsed < 2000) {
         s.pauseSeconds = s.pauseSeconds * 2;
         if (s.debug) {

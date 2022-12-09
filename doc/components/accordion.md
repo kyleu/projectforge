@@ -1,6 +1,6 @@
 # Accordion
 
-You'll need to import `views/components` at the top of your template
+It's an accordion. No JavaScript required. You'll need to import `views/components` at the top of your template.
 
 ```html
 <ul class="accordion">
@@ -21,5 +21,3 @@ You'll need to import `views/components` at the top of your template
   </li>
 </ul>
 ```
-
-![logo](../../assets/logo.png "Temporary logo")

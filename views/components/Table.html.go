@@ -734,7 +734,7 @@ func TableBoolean(key string, title string, value bool, indent int, help ...stri
 }
 
 //line views/components/Table.html:130
-func StreamTableCheckbox(qw422016 *qt422016.Writer, key string, title string, values []string, opts []string, titles []string, linebreaks bool, indent int, help ...string) {
+func StreamTableCheckbox(qw422016 *qt422016.Writer, key string, title string, values []string, opts []string, titles []string, indent int, help ...string) {
 //line views/components/Table.html:130
 	qw422016.N().S(`<tr>`)
 //line views/components/Table.html:132
@@ -750,7 +750,7 @@ func StreamTableCheckbox(qw422016 *qt422016.Writer, key string, title string, va
 //line views/components/Table.html:134
 	qw422016.N().S(`<td>`)
 //line views/components/Table.html:136
-	StreamFormCheckbox(qw422016, key, values, opts, titles, linebreaks, indent+2)
+	StreamFormCheckbox(qw422016, key, values, opts, titles, indent+2)
 //line views/components/Table.html:137
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/Table.html:137
@@ -763,22 +763,22 @@ func StreamTableCheckbox(qw422016 *qt422016.Writer, key string, title string, va
 }
 
 //line views/components/Table.html:141
-func WriteTableCheckbox(qq422016 qtio422016.Writer, key string, title string, values []string, opts []string, titles []string, linebreaks bool, indent int, help ...string) {
+func WriteTableCheckbox(qq422016 qtio422016.Writer, key string, title string, values []string, opts []string, titles []string, indent int, help ...string) {
 //line views/components/Table.html:141
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/components/Table.html:141
-	StreamTableCheckbox(qw422016, key, title, values, opts, titles, linebreaks, indent, help...)
+	StreamTableCheckbox(qw422016, key, title, values, opts, titles, indent, help...)
 //line views/components/Table.html:141
 	qt422016.ReleaseWriter(qw422016)
 //line views/components/Table.html:141
 }
 
 //line views/components/Table.html:141
-func TableCheckbox(key string, title string, values []string, opts []string, titles []string, linebreaks bool, indent int, help ...string) string {
+func TableCheckbox(key string, title string, values []string, opts []string, titles []string, indent int, help ...string) string {
 //line views/components/Table.html:141
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/components/Table.html:141
-	WriteTableCheckbox(qb422016, key, title, values, opts, titles, linebreaks, indent, help...)
+	WriteTableCheckbox(qb422016, key, title, values, opts, titles, indent, help...)
 //line views/components/Table.html:141
 	qs422016 := string(qb422016.B)
 //line views/components/Table.html:141

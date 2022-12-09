@@ -42,6 +42,8 @@ func componentDetail(key string, as *app.State, ps *cutil.PageState) (layout.Pag
 		return nil, errors.Errorf("no component available with key [%s]", key)
 	}
 	ps.AddIcon(c.Icon)
+	ps.Title = c.Title
+	ps.Data = c
 	return &vsite.ComponentDetail{Component: c}, nil
 }
 
@@ -51,12 +53,13 @@ func componentTemplate(key string, icon string) (string, string, error) {
 		if err != nil {
 			return "", "", err
 		}
+		title := util.StringToTitle(key)
 		if h1Idx := strings.Index(ret, "<h1>"); h1Idx > -1 {
 			if h1EndIdx := strings.Index(ret, "</h1>"); h1EndIdx > -1 {
+				title = ret[h1Idx+4 : h1EndIdx]
 				ret = ret[:h1Idx] + ret[h1EndIdx+5:]
 			}
 		}
-		title := util.StringToTitle(key)
 		return title, ret, nil
 	})
 	if err != nil {

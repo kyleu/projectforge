@@ -15,10 +15,12 @@
   <div class="breadcrumbs">
     <a class="link" href="{%s ps.RootPath %}">{%s ps.RootTitle %}</a>{%= NavItems(ps.Menu, ps.Breadcrumbs) %}
   </div>{{{ if .HasModule "search" }}}
+  {%- if ps.SearchPath != "-" -%}
   <form action="{%s ps.SearchPath %}" class="search" title="search">
     <input type="search" name="q" placeholder=" " />
     <div class="search-image" style="display: none;"><svg><use xlink:href="#svg-searchbox" /></svg></div>
-  </form>{{{ end }}}
+  </form>
+  {%- endif -%}{{{ end }}}
   <a class="profile" title="{%s ps.Profile.AuthString(ps.Accounts) %}" href="{%s ps.ProfilePath %}">{%= components.SVGRef(`profile`, 24, 24, ``, ps) %}</a>{% if !ps.HideMenu %}
 
   <input type="checkbox" id="menu-toggle-input" style="display: none;" />

@@ -826,7 +826,7 @@ func FormRadio(key string, value string, opts []string, titles []string, indent 
 }
 
 //line views/components/Form.html:136
-func StreamFormCheckbox(qw422016 *qt422016.Writer, key string, values []string, opts []string, titles []string, linebreaks bool, indent int) {
+func StreamFormCheckbox(qw422016 *qt422016.Writer, key string, values []string, opts []string, titles []string, indent int) {
 //line views/components/Form.html:137
 	for idx, opt := range opts {
 //line views/components/Form.html:139
@@ -887,22 +887,22 @@ func StreamFormCheckbox(qw422016 *qt422016.Writer, key string, values []string, 
 }
 
 //line views/components/Form.html:154
-func WriteFormCheckbox(qq422016 qtio422016.Writer, key string, values []string, opts []string, titles []string, linebreaks bool, indent int) {
+func WriteFormCheckbox(qq422016 qtio422016.Writer, key string, values []string, opts []string, titles []string, indent int) {
 //line views/components/Form.html:154
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/components/Form.html:154
-	StreamFormCheckbox(qw422016, key, values, opts, titles, linebreaks, indent)
+	StreamFormCheckbox(qw422016, key, values, opts, titles, indent)
 //line views/components/Form.html:154
 	qt422016.ReleaseWriter(qw422016)
 //line views/components/Form.html:154
 }
 
 //line views/components/Form.html:154
-func FormCheckbox(key string, values []string, opts []string, titles []string, linebreaks bool, indent int) string {
+func FormCheckbox(key string, values []string, opts []string, titles []string, indent int) string {
 //line views/components/Form.html:154
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/components/Form.html:154
-	WriteFormCheckbox(qb422016, key, values, opts, titles, linebreaks, indent)
+	WriteFormCheckbox(qb422016, key, values, opts, titles, indent)
 //line views/components/Form.html:154
 	qs422016 := string(qb422016.B)
 //line views/components/Form.html:154

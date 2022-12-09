@@ -133,7 +133,7 @@
   {% endfor %}
 {% endstripspace %}{% endfunc %}
 
-{% func FormCheckbox(key string, values []string, opts []string, titles []string, linebreaks bool, indent int) %}{% stripspace %}
+{% func FormCheckbox(key string, values []string, opts []string, titles []string, indent int) %}{% stripspace %}
   {% for idx, opt := range opts %}
     {% code
       title := opt

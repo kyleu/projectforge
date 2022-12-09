@@ -653,7 +653,7 @@ func FormVerticalBoolean(key string, title string, value bool, indent int, help 
 }
 
 //line views/components/FormVertical.html:129
-func StreamFormVerticalCheckbox(qw422016 *qt422016.Writer, key string, title string, values []string, opts []string, titles []string, linebreaks bool, indent int, help ...string) {
+func StreamFormVerticalCheckbox(qw422016 *qt422016.Writer, key string, title string, values []string, opts []string, titles []string, indent int, help ...string) {
 //line views/components/FormVertical.html:129
 	qw422016.N().S(`<div class="mb expanded">`)
 //line views/components/FormVertical.html:131
@@ -669,7 +669,7 @@ func StreamFormVerticalCheckbox(qw422016 *qt422016.Writer, key string, title str
 //line views/components/FormVertical.html:133
 	qw422016.N().S(`<div>`)
 //line views/components/FormVertical.html:135
-	StreamFormCheckbox(qw422016, key, values, opts, titles, linebreaks, indent+2)
+	StreamFormCheckbox(qw422016, key, values, opts, titles, indent+2)
 //line views/components/FormVertical.html:136
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/FormVertical.html:136
@@ -682,22 +682,22 @@ func StreamFormVerticalCheckbox(qw422016 *qt422016.Writer, key string, title str
 }
 
 //line views/components/FormVertical.html:140
-func WriteFormVerticalCheckbox(qq422016 qtio422016.Writer, key string, title string, values []string, opts []string, titles []string, linebreaks bool, indent int, help ...string) {
+func WriteFormVerticalCheckbox(qq422016 qtio422016.Writer, key string, title string, values []string, opts []string, titles []string, indent int, help ...string) {
 //line views/components/FormVertical.html:140
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/components/FormVertical.html:140
-	StreamFormVerticalCheckbox(qw422016, key, title, values, opts, titles, linebreaks, indent, help...)
+	StreamFormVerticalCheckbox(qw422016, key, title, values, opts, titles, indent, help...)
 //line views/components/FormVertical.html:140
 	qt422016.ReleaseWriter(qw422016)
 //line views/components/FormVertical.html:140
 }
 
 //line views/components/FormVertical.html:140
-func FormVerticalCheckbox(key string, title string, values []string, opts []string, titles []string, linebreaks bool, indent int, help ...string) string {
+func FormVerticalCheckbox(key string, title string, values []string, opts []string, titles []string, indent int, help ...string) string {
 //line views/components/FormVertical.html:140
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/components/FormVertical.html:140
-	WriteFormVerticalCheckbox(qb422016, key, title, values, opts, titles, linebreaks, indent, help...)
+	WriteFormVerticalCheckbox(qb422016, key, title, values, opts, titles, indent, help...)
 //line views/components/FormVertical.html:140
 	qs422016 := string(qb422016.B)
 //line views/components/FormVertical.html:140

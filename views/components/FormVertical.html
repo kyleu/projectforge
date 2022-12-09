@@ -126,13 +126,13 @@
   {%= FormVerticalRadio(key, title, fmt.Sprint(value), []string{"true", "false"}, []string{"True", "False"}, indent) %}
 {% endstripspace %}{% endfunc %}
 
-{% func FormVerticalCheckbox(key string, title string, values []string, opts []string, titles []string, linebreaks bool, indent int, help ...string) %}{% stripspace %}
+{% func FormVerticalCheckbox(key string, title string, values []string, opts []string, titles []string, indent int, help ...string) %}{% stripspace %}
   <div class="mb expanded">
     {%= vutil.Indent(true, indent + 1) %}
     <div><label>{%s title %}</div>
     {%= vutil.Indent(true, indent + 1) %}
     <div>
-      {%= FormCheckbox(key, values, opts, titles, linebreaks, indent + 2) %}
+      {%= FormCheckbox(key, values, opts, titles, indent + 2) %}
     {%= vutil.Indent(true, indent + 1) %}
     </div>
   {%= vutil.Indent(true, indent) %}
