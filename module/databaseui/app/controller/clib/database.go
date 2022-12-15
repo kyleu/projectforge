@@ -133,6 +133,7 @@ func DatabaseSQLRun(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to start transaction")
 		}
+		defer func() { _ = tx.Rollback() }()
 
 		var columns []string
 		results := [][]any{}

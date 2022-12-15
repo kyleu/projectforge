@@ -19,7 +19,7 @@ const incDel = ", includeDeleted bool"
 
 func ServiceRevision(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	dbRef := args.DBRef()
-	g := golang.NewFile(m.Package, []string{"app", m.Package}, "servicerevision")
+	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "servicerevision")
 	g.AddImport(helper.ImpAppUtil, helper.ImpFmt, helper.ImpStrings, helper.ImpContext, helper.ImpFilter, helper.ImpSQLx, helper.ImpErrors, helper.ImpDatabase)
 	ar, err := serviceGetAllRevisions(m, dbRef, args.Enums)
 	if err != nil {
