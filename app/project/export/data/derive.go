@@ -8,6 +8,8 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+const primaryKey = "id"
+
 func Derive(name string, pkg string, content string) (*model.Model, error) {
 	var js any
 	err := util.FromJSON([]byte(content), &js)
@@ -42,7 +44,7 @@ func deriveExtractColumns(prefix string, childMap util.ValueMap) (model.Columns,
 	var ret model.Columns
 	var sd [][]any
 	for k, v := range childMap {
-		col := &model.Column{Name: k, PK: k == "id"}
+		col := &model.Column{Name: k, PK: k == primaryKey}
 		switch t := v.(type) {
 		case float64:
 			if t == float64(int64(t)) {

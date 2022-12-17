@@ -62,7 +62,9 @@ func loadAssetMap(ctx context.Context, logger util.Logger) error {
 	if err != nil {
 		return errors.Wrapf(err, "unable to get release asset from [%s]", assetURL)
 	}
-	if rsp.StatusCode != 200 {
+	defer func() { _ = rsp.Body.Close() }()
+
+	if rsp.StatusCode != http.StatusOK {
 		return errors.Errorf("release asset [%s] returned status [%s]", assetURL, rsp.Status)
 	}
 	bts, err := io.ReadAll(rsp.Body)

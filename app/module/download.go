@@ -4,9 +4,12 @@ import (
 	"archive/zip"
 	"bytes"
 	"context"
+	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/pkg/errors"
 
@@ -18,7 +21,7 @@ func (s *Service) Download(ctx context.Context, key string, url string, logger u
 		return errors.New("must provide URL")
 	}
 	logger.Infof("downloading module [%s] from URL [%s]", key, url)
-	req, err := http.NewRequestWithContext(context.Background(), "GET", url, http.NoBody)
+	req, err := http.NewRequestWithContext(ctx, "GET", url, http.NoBody)
 	if err != nil {
 		return errors.Wrapf(err, "invalid URL [%s] for module [%s]", url, key)
 	}
@@ -43,8 +46,17 @@ func (s *Service) Download(ctx context.Context, key string, url string, logger u
 		return errors.Errorf("unable to unzip body from module [%s] load request to [%s]", key, url)
 	}
 
+	sanitizeExtractPath := func(filePath string, destination string) error {
+		destpath := filepath.Join(destination, filePath)
+		if !strings.HasPrefix(destpath, filepath.Clean(destination)+string(os.PathSeparator)) {
+			return fmt.Errorf("%s: illegal file path", filePath)
+		}
+		return nil
+	}
+
 	_ = s.config.RemoveRecursive(key, logger)
 	for _, f := range r.File {
+		// G305: File traversal when extracting zip/tar archive (gosec)
 		fn := filepath.Join(key, f.Name)
 		if f.FileInfo().IsDir() {
 			err = s.config.CreateDirectory(fn)

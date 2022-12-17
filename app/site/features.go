@@ -37,8 +37,8 @@ func featureDetail(key string, as *app.State, ps *cutil.PageState) (layout.Page,
 		return nil, err
 	}
 	_, html, err := doc.HTMLString("feature:"+mod.Key, []byte(mod.UsageMD), func(s string) (string, string, error) {
-		ret, err := cutil.FormatMarkdown(s)
-		if err != nil {
+		ret, fmtErr := cutil.FormatMarkdown(s)
+		if fmtErr != nil {
 			return "", "", err
 		}
 		if h1Idx := strings.Index(ret, "<h1>"); h1Idx > -1 {

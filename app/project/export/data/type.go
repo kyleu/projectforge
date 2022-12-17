@@ -30,7 +30,7 @@ func exportColumn(f *Field, ex []any) (*model.Column, error) {
 		}
 	}
 	var isPK bool
-	if key == "id" {
+	if key == primaryKey {
 		if vals {
 			isPK = true
 		} else {

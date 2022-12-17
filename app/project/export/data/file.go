@@ -54,7 +54,7 @@ func (f *File) ToModel(tableIdx int, groups model.Groups) (*model.Model, error) 
 		ret.Columns = append(ret.Columns, x)
 	}
 	if len(ret.PKs()) == 0 {
-		idCol := &model.Column{Name: "id", Type: types.NewUUID(), PK: true, Search: true, HelpString: "Synthetic identifier"}
+		idCol := &model.Column{Name: primaryKey, Type: types.NewUUID(), PK: true, Search: true, HelpString: "Synthetic identifier"}
 		ret.Columns = append(model.Columns{idCol}, ret.Columns...)
 		appended := make([][]any, 0, len(ret.SeedData))
 		for rowIdx, x := range ret.SeedData {

@@ -46,7 +46,7 @@ func (s *Service) UpdateFile(mods Modules, d *diff.Diff, logger util.Logger) ([]
 func reverseDiff(dest string, d *diff.Diff, logger util.Logger) ([]byte, error) {
 	logger.Debugf("reversing [%d] changes for file [%s]", len(d.Changes), d.Path)
 	for _, ch := range d.Changes {
-		var preCtx, postCtx, addedCtx, deletedCtx []string
+		var preCtx, postCtx, deletedCtx []string
 		var isPost, hasTemplate bool
 		for _, chLine := range ch.Lines {
 			switch chLine.T {
@@ -61,7 +61,6 @@ func reverseDiff(dest string, d *diff.Diff, logger util.Logger) ([]byte, error) 
 				}
 			case "added":
 				isPost = true
-				addedCtx = append(addedCtx, chLine.V)
 			case "deleted":
 				isPost = true
 				deletedCtx = append(deletedCtx, chLine.V)

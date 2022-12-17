@@ -3,9 +3,6 @@ package cmodule
 import (
 	"strings"
 
-
-	"projectforge.dev/projectforge/doc"
-
 	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
