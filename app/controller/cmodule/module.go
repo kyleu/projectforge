@@ -1,8 +1,10 @@
 package cmodule
 
 import (
-	"projectforge.dev/projectforge/doc"
 	"strings"
+
+
+	"projectforge.dev/projectforge/doc"
 
 	"github.com/valyala/fasthttp"
 
@@ -11,6 +13,7 @@ import (
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/doc"
 	"projectforge.dev/projectforge/views/vmodule"
 )
 
