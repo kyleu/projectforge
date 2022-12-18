@@ -2,8 +2,6 @@
 package httpmetrics
 
 import (
-	"strings"
-
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/valyala/fasthttp"
 
@@ -12,6 +10,7 @@ import (
 )
 
 type Metrics struct {
+	Key     string
 	reqCnt  *prometheus.CounterVec
 	reqDur  *prometheus.HistogramVec
 	reqSize prometheus.Summary
@@ -20,10 +19,9 @@ type Metrics struct {
 	MetricsPath string
 }
 
-func NewMetrics(subsystem string, logger util.Logger) *Metrics {
-	ss := strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(subsystem, "-", "_"), "/", "_"), ".", "_")
-	m := &Metrics{MetricsPath: defaultMetricPath}
-	m.registerHTTPMetrics(ss, logger)
+func NewMetrics(key string, logger util.Logger) *Metrics {
+	m := &Metrics{Key: key, MetricsPath: defaultMetricPath}
+	m.registerHTTPMetrics(logger)
 	return m
 }
 
@@ -43,9 +41,10 @@ func InjectHTTP(rc *fasthttp.RequestCtx, span *telemetry.Span) {
 	span.SetHTTPStatus(rc.Response.StatusCode())
 }
 
-func (p *Metrics) registerHTTPMetrics(subsystem string, logger util.Logger) {
-	p.reqCnt = telemetry.MetricsCounter(subsystem, "requests_total", "The HTTP request counts processed.", logger, "code", "method")
-	p.reqDur = telemetry.MetricsHistogram(subsystem, "request_duration_seconds", "The HTTP request duration in seconds.", logger, "code")
+func (p *Metrics) registerHTTPMetrics(logger util.Logger) {
+	subsystem := "http"
+	p.reqCnt = telemetry.MetricsCounter(subsystem, "requests_total", "The HTTP request counts processed.", logger, "key", "code", "method")
+	p.reqDur = telemetry.MetricsHistogram(subsystem, "request_duration_seconds", "The HTTP request duration in seconds.", logger, "key", "code")
 	p.reqSize = telemetry.MetricsSummary(subsystem, "request_size_bytes", "The HTTP request sizes in bytes.", logger)
 	p.rspSize = telemetry.MetricsSummary(subsystem, "response_size_bytes", "The HTTP response sizes in bytes.", logger)
 }

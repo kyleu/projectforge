@@ -142,7 +142,7 @@ func (s *Service) Register(ctx context.Context, root string, key string, path st
 func (s *Service) Search(ctx context.Context, q string, logger util.Logger) (result.Results, error) {
 	ret := result.Results{}
 	for _, mod := range s.Modules() {
-		if res := result.NewResult("module", mod.Key, mod.WebPath(), mod.Title(), mod.IconSafe(), mod, q); len(res.Matches) > 0 {
+		if res := result.NewResult("module", mod.Key, mod.WebPath(), mod.Title(), mod.IconSafe(), mod, mod, q); len(res.Matches) > 0 {
 			ret = append(ret, res)
 		}
 	}

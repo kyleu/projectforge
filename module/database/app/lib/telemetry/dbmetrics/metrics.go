@@ -1,7 +1,6 @@
 package dbmetrics
 
 import (
-	"strings"
 	"time"
 
 	"github.com/pkg/errors"
@@ -12,18 +11,18 @@ import (
 )
 
 type Metrics struct {
+	Key     string
 	stmtCnt *prometheus.CounterVec
 	stmtDur *prometheus.HistogramVec
 }
 
 func NewMetrics(key string, db StatsGetter, logger util.Logger) (*Metrics, error) {
-	ss := strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(key, "-", "_"), "/", "_"), ".", "_")
-	m := &Metrics{}
-	err := m.registerDatabaseMetrics(ss, logger)
+	m := &Metrics{Key: key}
+	err := m.registerDatabaseMetrics("database", logger)
 	if err != nil {
 		return nil, err
 	}
-	err = prometheus.Register(newStatsCollector(ss, key, db))
+	err = prometheus.Register(newStatsCollector("database", db))
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to register stats collector")
 	}
@@ -33,20 +32,20 @@ func NewMetrics(key string, db StatsGetter, logger util.Logger) (*Metrics, error
 
 func (p *Metrics) registerDatabaseMetrics(subsystem string, logger util.Logger) error {
 	stmtCntHelp := "The total number of SQL statements processed."
-	p.stmtCnt = telemetry.MetricsCounter(subsystem, "statements_total", stmtCntHelp, logger, "sql", "method")
+	p.stmtCnt = telemetry.MetricsCounter(subsystem, "statements_total", stmtCntHelp, logger, "database", "sql", "method")
 	stmtDurHelp := "The SQL statement duration in seconds."
-	p.stmtDur = telemetry.MetricsHistogram(subsystem, "statement_duration_seconds", stmtDurHelp, logger, "sql", "method")
+	p.stmtDur = telemetry.MetricsHistogram(subsystem, "statement_duration_seconds", stmtDurHelp, logger, "database", "sql", "method")
 
 	return nil
 }
 
 func (p *Metrics) IncStmt(sql string, method string) {
-	p.stmtCnt.WithLabelValues(sql, method).Inc()
+	p.stmtCnt.WithLabelValues(p.Key, sql, method).Inc()
 }
 
 func (p *Metrics) CompleteStmt(q string, op string, started time.Time) {
 	elapsed := float64(time.Since(started)) / float64(time.Second)
-	p.stmtDur.WithLabelValues(q, op).Observe(elapsed)
+	p.stmtDur.WithLabelValues(p.Key, q, op).Observe(elapsed)
 }
 
 func (p *Metrics) Close() error {

@@ -2,11 +2,8 @@ package dbmetrics
 
 import (
 	"database/sql"
-	"strings"
 
 	"github.com/prometheus/client_golang/prometheus"
-
-	"{{{ .Package }}}/app/util"
 )
 
 type StatsGetter interface {
@@ -26,10 +23,10 @@ type StatsCollector struct {
 	closedMaxIdleTimeDesc *prometheus.Desc
 }
 
-func newStatsCollector(subsystem string, dbName string, sg StatsGetter) *StatsCollector {
+func newStatsCollector(dbName string, sg StatsGetter) *StatsCollector {
 	labels := prometheus.Labels{"db_name": dbName}
 	x := func(key string, help string) *prometheus.Desc {
-		return prometheus.NewDesc(prometheus.BuildFQName(strings.ReplaceAll(util.AppKey, "-", "_"), subsystem, key), help, nil, labels)
+		return prometheus.NewDesc(prometheus.BuildFQName("database", "database", key), help, nil, labels)
 	}
 	return &StatsCollector{
 		sg:                    sg,

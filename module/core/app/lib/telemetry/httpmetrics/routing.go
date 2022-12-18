@@ -41,8 +41,8 @@ func (p *Metrics) WrapHandler(r *router.Router, includeMetrics bool) fasthttp.Re
 		elapsed := float64(time.Since(start)) / float64(time.Second)
 		rspSize := float64(len(rc.Response.Body()))
 
-		p.reqDur.WithLabelValues(status).Observe(elapsed)
-		p.reqCnt.WithLabelValues(status, string(rc.Method())).Inc()
+		p.reqDur.WithLabelValues(p.Key, status).Observe(elapsed)
+		p.reqCnt.WithLabelValues(p.Key, status, string(rc.Method())).Inc()
 		p.reqSize.Observe(float64(<-reqSize))
 		p.rspSize.Observe(rspSize)
 	}

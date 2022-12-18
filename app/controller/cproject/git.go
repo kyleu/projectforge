@@ -59,6 +59,8 @@ func GitAction(rc *fasthttp.RequestCtx) {
 			result, err = as.Services.Git.Pull(ps.Context, prj, ps.Logger)
 		case git.ActionPush.Key:
 			result, err = as.Services.Git.Push(ps.Context, prj, ps.Logger)
+		case git.ActionOutdated.Key:
+			result, err = as.Services.Git.Outdated(ps.Context, prj, ps.Logger)
 		case git.ActionBranch.Key:
 			argRes := cutil.CollectArgs(rc, gitBranchArgs)
 			if len(argRes.Missing) > 0 {

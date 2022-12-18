@@ -6,6 +6,31 @@ set -euo pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $dir/..
 
+# uncommitted file checks
+git update-index -q --ignore-submodules --refresh
+err=0
+
+if ! git diff-files --quiet --ignore-submodules --
+then
+    echo >&2 "you have unstaged changes."
+    git diff-files --name-status -r --ignore-submodules -- >&2
+    err=1
+fi
+
+if ! git diff-index --cached --quiet HEAD --ignore-submodules --
+then
+    echo >&2 "your index contains uncommitted changes."
+    git diff-index --cached --name-status -r --ignore-submodules HEAD -- >&2
+    err=1
+fi
+
+if [ $err = 1 ]
+then
+    echo >&2 "please commit or stash them."
+    exit 1
+fi
+# end checks
+
 git fetch --tags
 
 TGT=${1-none}

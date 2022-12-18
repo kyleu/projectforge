@@ -56,7 +56,7 @@ func searchModel(m *model.Model) []string {
 	add("\t\t}")
 	add("\t\tres := make(result.Results, 0, len(models))")
 	add("\t\tfor _, m := range models {")
-	add("\t\t\tres = append(res, result.NewResult(%q, m.String(), m.WebPath(), m.String(), %q, m, params.Q))", m.Package, m.Icon)
+	add("\t\t\tres = append(res, result.NewResult(%q, m.String(), m.WebPath(), m.String(), %q, m, m, params.Q))", m.Package, m.Icon)
 	add("\t\t}")
 	add("\t\treturn res, nil")
 	add("\t}")

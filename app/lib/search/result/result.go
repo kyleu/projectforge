@@ -18,8 +18,8 @@ type Result struct {
 	HTML    string  `json:"-"`
 }
 
-func NewResult(t string, id string, url string, title string, icon string, obj any, q string) *Result {
-	return &Result{Type: t, ID: id, URL: url, Title: title, Icon: icon, Matches: MatchesFor("", obj, q), Data: obj}
+func NewResult(t string, id string, url string, title string, icon string, diff any, data any, q string) *Result {
+	return &Result{Type: t, ID: id, URL: url, Title: title, Icon: icon, Matches: MatchesFor("", diff, q), Data: data}
 }
 
 type Results []*Result

@@ -18,8 +18,11 @@ var (
 	ActionPush       = &Action{Key: "push", Title: "Push", Description: "Pushes pending commits to the remote"}
 	ActionBranch     = &Action{Key: "branch", Title: "Branch", Description: "Switch to a new branch"}
 	ActionUndoCommit = &Action{Key: "undocommit", Title: "Undo", Description: "Removes the most recent commit, keeping all local changes"}
+	ActionOutdated   = &Action{Key: "outdated", Title: "Outdated", Description: "Finds commits since last tag"}
 
-	allActions = Actions{ActionStatus, ActionCreateRepo, ActionMagic, ActionFetch, ActionCommit, ActionPull, ActionPush, ActionBranch, ActionUndoCommit}
+	allActions = Actions{
+		ActionStatus, ActionCreateRepo, ActionMagic, ActionFetch, ActionCommit, ActionPull, ActionPush, ActionBranch, ActionUndoCommit, ActionOutdated,
+	}
 )
 
 func ActionStatusFromString(key string) *Action {
