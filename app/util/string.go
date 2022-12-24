@@ -50,37 +50,27 @@ func StringPad(s string, size int) string {
 
 func StringPadRight(s string, size int, chr rune) string {
 	sLen := len(s)
-
 	if sLen >= size {
 		return s
 	}
-
 	sb := strings.Builder{}
-
 	sb.WriteString(s)
-
 	for i := len(s); i < size; i++ {
 		sb.WriteRune(chr)
 	}
-
 	return sb.String()
 }
 
 func StringPadLeft(s string, size int, chr rune) string {
 	sLen := len(s)
-
 	if sLen >= size {
 		return s
 	}
-
 	sb := strings.Builder{}
-
 	for i := 0; i < size-sLen; i++ {
 		sb.WriteRune(chr)
 	}
-
 	sb.WriteString(s)
-
 	return sb.String()
 }
 

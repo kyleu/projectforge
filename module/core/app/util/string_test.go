@@ -87,3 +87,55 @@ func TestReplaceBetween(t *testing.T) {
 	test("ApplePearKiwi", "Apple", "Kiwi", "Strawberry", "AppleStrawberryKiwi")
 	test("thishasstuffinthemiddle", "has", "the", "thingsin", "thishasthingsinthemiddle")
 }
+
+type StringArgs struct {
+	Input string
+	Size  int
+	Chr   rune
+}
+
+func TestPadRight(t *testing.T) {
+	t.Parallel()
+	cases := []struct {
+		Name     string
+		Args     StringArgs
+		Expected string
+	}{
+		{Name: "normal args", Args: StringArgs{Input: "foo", Size: 5, Chr: '界'}, Expected: "foo界界"},
+		{Name: "nothing to pad, size is equal to input len", Args: StringArgs{Input: "привет", Size: 6, Chr: '界'}, Expected: "привет"},
+		{Name: "nothing to pad, size is smaller than input len", Args: StringArgs{Input: "привет", Size: 4, Chr: '界'}, Expected: "привет"},
+		{Name: "negative size, input is left intact", Args: StringArgs{Input: "привет", Size: -10, Chr: '界'}, Expected: "привет"},
+		{Name: "empty input", Args: StringArgs{Input: "", Size: 3, Chr: '界'}, Expected: "界界界"},
+	}
+	for _, tCase := range cases {
+		t.Run(tCase.Name, func(t *testing.T) {
+			res := util.StringPadRight(tCase.Args.Input, tCase.Args.Size, tCase.Args.Chr)
+			if res != tCase.Expected {
+				t.Errorf("unexpected result %s, expected %s", res, tCase.Expected)
+			}
+		})
+	}
+}
+
+func TestPadLeft(t *testing.T) {
+	t.Parallel()
+	cases := []struct {
+		Name     string
+		Args     StringArgs
+		Expected string
+	}{
+		{Name: "normal args", Args: StringArgs{Input: "foo", Size: 5, Chr: '界'}, Expected: "界界foo"},
+		{Name: "nothing to pad, size is equal to input len", Args: StringArgs{Input: "привет", Size: 6, Chr: '界'}, Expected: "привет"},
+		{Name: "nothing to pad, size is smaller than input len", Args: StringArgs{Input: "привет", Size: 4, Chr: '界'}, Expected: "привет"},
+		{Name: "negative size, input is left intact", Args: StringArgs{Input: "привет", Size: -10, Chr: '界'}, Expected: "привет"},
+		{Name: "empty input", Args: StringArgs{Input: "", Size: 3, Chr: '界'}, Expected: "界界界"},
+	}
+	for _, tCase := range cases {
+		t.Run(tCase.Name, func(t *testing.T) {
+			res := util.StringPadLeft(tCase.Args.Input, tCase.Args.Size, tCase.Args.Chr)
+			if res != tCase.Expected {
+				t.Errorf("unexpected result %s, expected %s", res, tCase.Expected)
+			}
+		})
+	}
+}

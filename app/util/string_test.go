@@ -89,67 +89,25 @@ func TestReplaceBetween(t *testing.T) {
 	test("thishasstuffinthemiddle", "has", "the", "thingsin", "thishasthingsinthemiddle")
 }
 
+type StringArgs struct {
+	Input string
+	Size  int
+	Chr   rune
+}
+
 func TestPadRight(t *testing.T) {
 	t.Parallel()
-
-	type Args struct {
-		Input string
-		Size  int
-		Chr   rune
-	}
-
 	cases := []struct {
 		Name     string
-		Args     Args
+		Args     StringArgs
 		Expected string
 	}{
-		{
-			Name: "normal args",
-			Args: Args{
-				Input: "foo",
-				Size:  5,
-				Chr:   '界',
-			},
-			Expected: "foo界界",
-		},
-		{
-			Name: "nothing to pad, size is equal to input len",
-			Args: Args{
-				Input: "привет",
-				Size:  6,
-				Chr:   '界',
-			},
-			Expected: "привет",
-		},
-		{
-			Name: "nothing to pad, size is smaller than input len",
-			Args: Args{
-				Input: "привет",
-				Size:  4,
-				Chr:   '界',
-			},
-			Expected: "привет",
-		},
-		{
-			Name: "negative size, input is left intact",
-			Args: Args{
-				Input: "привет",
-				Size:  -10,
-				Chr:   '界',
-			},
-			Expected: "привет",
-		},
-		{
-			Name: "empty input",
-			Args: Args{
-				Input: "",
-				Size:  3,
-				Chr:   '界',
-			},
-			Expected: "界界界",
-		},
+		{Name: "normal args", Args: StringArgs{Input: "foo", Size: 5, Chr: '界'}, Expected: "foo界界"},
+		{Name: "nothing to pad, size is equal to input len", Args: StringArgs{Input: "привет", Size: 6, Chr: '界'}, Expected: "привет"},
+		{Name: "nothing to pad, size is smaller than input len", Args: StringArgs{Input: "привет", Size: 4, Chr: '界'}, Expected: "привет"},
+		{Name: "negative size, input is left intact", Args: StringArgs{Input: "привет", Size: -10, Chr: '界'}, Expected: "привет"},
+		{Name: "empty input", Args: StringArgs{Input: "", Size: 3, Chr: '界'}, Expected: "界界界"},
 	}
-
 	for _, tCase := range cases {
 		t.Run(tCase.Name, func(t *testing.T) {
 			res := util.StringPadRight(tCase.Args.Input, tCase.Args.Size, tCase.Args.Chr)
@@ -160,94 +118,19 @@ func TestPadRight(t *testing.T) {
 	}
 }
 
-func BenchmarkStringPadRight(b *testing.B) {
-	padSize := 1_000_000
-	inputString := "test"
-
-	b.SetBytes(int64(len(inputString) + padSize))
-	b.ReportAllocs()
-	for i := 0; i < b.N; i++ {
-		var res string
-		res = util.StringPadRight(inputString, padSize, ' ')
-		_ = res
-	}
-
-	/*
-		goos: darwin
-		goarch: arm64
-		pkg: projectforge.dev/projectforge/app/util
-		BenchmarkStringPadRight
-									   run times(b.N) avg time/op       throughput       (?)                memory allocations/op
-		# StringPadRight with strings.Builder
-		BenchmarkStringPadRight-8   	     445	   2607051 ns/op	 383.58 MB/s	 5241614 B/op	      33 allocs/op
-		-------------------------------------------------------------------------------------------------------------------------
-									   run times(b.N) avg time/op       throughput       (?)                memory allocations/op
-		# StringPadRight without strings.Builder
-		BenchmarkStringPadRight-8   	       1	37883665875 ns/op	   0.03 MB/s	503999148496 B/op	 2015246 allocs/op
-	*/
-}
-
 func TestPadLeft(t *testing.T) {
 	t.Parallel()
-
-	type Args struct {
-		Input string
-		Size  int
-		Chr   rune
-	}
-
 	cases := []struct {
 		Name     string
-		Args     Args
+		Args     StringArgs
 		Expected string
 	}{
-		{
-			Name: "normal args",
-			Args: Args{
-				Input: "foo",
-				Size:  5,
-				Chr:   '界',
-			},
-			Expected: "界界foo",
-		},
-		{
-			Name: "nothing to pad, size is equal to input len",
-			Args: Args{
-				Input: "привет",
-				Size:  6,
-				Chr:   '界',
-			},
-			Expected: "привет",
-		},
-		{
-			Name: "nothing to pad, size is smaller than input len",
-			Args: Args{
-				Input: "привет",
-				Size:  4,
-				Chr:   '界',
-			},
-			Expected: "привет",
-		},
-		{
-			Name: "negative size, input is left intact",
-			Args: Args{
-				Input: "привет",
-				Size:  -10,
-				Chr:   '界',
-			},
-			Expected: "привет",
-		},
-		{
-			Name: "empty input",
-			Args: Args{
-				Input: "",
-				Size:  3,
-				Chr:   '界',
-			},
-			Expected: "界界界",
-		},
+		{Name: "normal args", Args: StringArgs{Input: "foo", Size: 5, Chr: '界'}, Expected: "界界foo"},
+		{Name: "nothing to pad, size is equal to input len", Args: StringArgs{Input: "привет", Size: 6, Chr: '界'}, Expected: "привет"},
+		{Name: "nothing to pad, size is smaller than input len", Args: StringArgs{Input: "привет", Size: 4, Chr: '界'}, Expected: "привет"},
+		{Name: "negative size, input is left intact", Args: StringArgs{Input: "привет", Size: -10, Chr: '界'}, Expected: "привет"},
+		{Name: "empty input", Args: StringArgs{Input: "", Size: 3, Chr: '界'}, Expected: "界界界"},
 	}
-
 	for _, tCase := range cases {
 		t.Run(tCase.Name, func(t *testing.T) {
 			res := util.StringPadLeft(tCase.Args.Input, tCase.Args.Size, tCase.Args.Chr)

@@ -24,11 +24,16 @@ var (
 )
 
 func WriteCORS(rc *fasthttp.RequestCtx) {
-	rc.Response.Header.Set("Access-Control-Allow-Headers", AllowedRequestHeaders)
-	rc.Response.Header.Set("Access-Control-Allow-Method", "GET,POST,DELETE,PUT,PATCH,OPTIONS,HEAD")
-	rc.Response.Header.Set("Access-Control-Allow-Origin", "*")
-	rc.Response.Header.Set("Access-Control-Allow-Credentials", util.BoolTrue)
-	rc.Response.Header.Set("Access-Control-Expose-Headers", AllowedResponseHeaders)
+	setIfEmpty := func(k string, v string) {
+		if x := rc.Response.Header.Peek(k); len(x) == 0 {
+			rc.Response.Header.Set(k, v)
+		}
+	}
+	setIfEmpty("Access-Control-Allow-Headers", AllowedRequestHeaders)
+	setIfEmpty("Access-Control-Allow-Methods", "GET,POST,DELETE,PUT,PATCH,OPTIONS,HEAD")
+	setIfEmpty("Access-Control-Allow-Origin", "*")
+	setIfEmpty("Access-Control-Allow-Credentials", util.BoolTrue)
+	setIfEmpty("Access-Control-Expose-Headers", AllowedResponseHeaders)
 }
 
 func RespondDebug(rc *fasthttp.RequestCtx, filename string, body any) (string, error) {

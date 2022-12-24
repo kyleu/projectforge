@@ -3,24 +3,35 @@ package httpmetrics
 import (
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/valyala/fasthttp"
+	"sync"
 
 	"{{{ .Package }}}/app/lib/telemetry"
 	"{{{ .Package }}}/app/util"
 )
 
-type Metrics struct {
-	Key     string
+var (
 	reqCnt  *prometheus.CounterVec
 	reqDur  *prometheus.HistogramVec
 	reqSize prometheus.Summary
 	rspSize prometheus.Summary
 
+	metricsMu sync.Mutex
+)
+
+type Metrics struct {
+	Key         string
 	MetricsPath string
 }
 
 func NewMetrics(key string, logger util.Logger) *Metrics {
 	m := &Metrics{Key: key, MetricsPath: defaultMetricPath}
-	m.registerHTTPMetrics(logger)
+	if reqCnt == nil {
+		metricsMu.Lock()
+		if reqCnt == nil {
+			registerHTTPMetrics(logger)
+		}
+		metricsMu.Unlock()
+	}
 	return m
 }
 
@@ -40,10 +51,10 @@ func InjectHTTP(rc *fasthttp.RequestCtx, span *telemetry.Span) {
 	span.SetHTTPStatus(rc.Response.StatusCode())
 }
 
-func (p *Metrics) registerHTTPMetrics(logger util.Logger) {
+func registerHTTPMetrics(logger util.Logger) {
 	subsystem := "http"
-	p.reqCnt = telemetry.MetricsCounter(subsystem, "requests_total", "The HTTP request counts processed.", logger, "key", "code", "method")
-	p.reqDur = telemetry.MetricsHistogram(subsystem, "request_duration_seconds", "The HTTP request duration in seconds.", logger, "key", "code")
-	p.reqSize = telemetry.MetricsSummary(subsystem, "request_size_bytes", "The HTTP request sizes in bytes.", logger)
-	p.rspSize = telemetry.MetricsSummary(subsystem, "response_size_bytes", "The HTTP response sizes in bytes.", logger)
+	reqCnt = telemetry.MetricsCounter(subsystem, "requests_total", "The HTTP request counts processed.", logger, "key", "code", "method")
+	reqDur = telemetry.MetricsHistogram(subsystem, "request_duration_seconds", "The HTTP request duration in seconds.", logger, "key", "code")
+	reqSize = telemetry.MetricsSummary(subsystem, "request_size_bytes", "The HTTP request sizes in bytes.", logger)
+	rspSize = telemetry.MetricsSummary(subsystem, "response_size_bytes", "The HTTP response sizes in bytes.", logger)
 }

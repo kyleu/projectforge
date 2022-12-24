@@ -2,8 +2,8 @@ package files
 
 import (
 	"context"
-
 	"github.com/pkg/errors"
+	"projectforge.dev/projectforge/app/lib/filesystem"
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project"
@@ -56,6 +56,11 @@ func All(ctx context.Context, p *project.Project, args *model.Args, addHeader bo
 		ret = append(ret, x)
 	}
 
+	if args.HasModule("datadog") {
+		svc := ServiceDefinition(p)
+		f := file.NewFile("doc/service.json", filesystem.DefaultMode, util.ToJSONBytes(svc, true), false, logger)
+		ret = append(ret, f)
+	}
 	if args.HasModule("migration") {
 		f, err := sql.MigrationAll(args.Models.Sorted(), args.Enums, addHeader)
 		if err != nil {

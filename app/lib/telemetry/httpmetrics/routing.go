@@ -30,22 +30,22 @@ func (p *Metrics) WrapHandler(r *router.Router, includeMetrics bool) fasthttp.Re
 			r.Handler(rc)
 			return
 		}
-		reqSize := make(chan int)
+		reqBytes := make(chan int)
 		frc := acquireRequestFromPool()
 		rc.Request.CopyTo(frc)
-		go computeApproximateRequestSize(frc, reqSize)
+		go computeApproximateRequestSize(frc, reqBytes)
 
 		start := time.Now()
 		r.Handler(rc)
 
 		status := strconv.Itoa(rc.Response.StatusCode())
 		elapsed := float64(time.Since(start)) / float64(time.Second)
-		rspSize := float64(len(rc.Response.Body()))
+		rspBytes := float64(len(rc.Response.Body()))
 
-		p.reqDur.WithLabelValues(p.Key, status).Observe(elapsed)
-		p.reqCnt.WithLabelValues(p.Key, status, string(rc.Method())).Inc()
-		p.reqSize.Observe(float64(<-reqSize))
-		p.rspSize.Observe(rspSize)
+		reqDur.WithLabelValues(p.Key, status).Observe(elapsed)
+		reqCnt.WithLabelValues(p.Key, status, string(rc.Method())).Inc()
+		reqSize.Observe(float64(<-reqBytes))
+		rspSize.Observe(rspBytes)
 	}
 }
 
