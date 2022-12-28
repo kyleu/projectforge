@@ -4,6 +4,7 @@ import {menuInit} from "./menu";
 import {modeInit} from "./mode";
 import {flashInit} from "./flash";
 import {linkInit} from "./link";
+import {timeInit} from "./time";
 import {autocompleteInit} from "./autocomplete";
 import {modalInit} from "./modal";
 import {tagsInit} from "./tags";
@@ -19,6 +20,7 @@ export function init(): void {
   modeInit();
   flashInit();
   linkInit();
+  timeInit();
   autocompleteInit();
   modalInit();
   tagsInit();
