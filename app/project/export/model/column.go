@@ -14,6 +14,7 @@ import (
 const (
 	FmtCode    = "code"
 	FmtCountry = "country"
+	FmtHTML    = "html"
 	FmtURL     = "url"
 	FmtSelect  = "select"
 )

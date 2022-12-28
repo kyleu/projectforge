@@ -52,7 +52,9 @@ func randFor(col *model.Column, pkg string, enums enum.Enums) string {
 		return nilKey
 	case types.KeyString:
 		switch col.Format {
-		case "url":
+		case model.FmtHTML:
+			return "\"<h3>\" + util.RandomString(6) + \"</h3>\""
+		case model.FmtURL:
 			return "\"https://\" + util.RandomString(6) + \".com/\" + util.RandomString(6)"
 		default:
 			return "util.RandomString(12)"

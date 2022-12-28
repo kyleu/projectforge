@@ -11,7 +11,7 @@
 ) %}
 
 {% func DisplayTimestamp(value *time.Time) %}{% stripspace %}
-  {%s util.TimeToFull(value) %}
+  <span class="nowrap">{%s util.TimeToFull(value) %}</span>
 {% endstripspace %}{% endfunc %}
 
 {% func DisplayTimestampDay(value *time.Time) %}{% stripspace %}

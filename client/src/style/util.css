@@ -43,8 +43,28 @@
   margin-right: var(--padding);
 }
 
+.pt {
+  padding-top: var(--padding);
+}
+
+.pb {
+  padding-bottom: var(--padding);
+}
+
+.pl {
+  padding-left: var(--padding);
+}
+
+.pr {
+  padding-right: var(--padding);
+}
+
 .overflow {
   overflow: auto;
+}
+
+.nowrap {
+  white-space: nowrap;
 }
 
 .error {

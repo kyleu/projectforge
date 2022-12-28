@@ -114,14 +114,15 @@ func viewTableColumn(ret *golang.Block, models model.Models, m *model.Model, lin
 		}
 	}
 
-	ret.W(ind + "<td>")
+	ret.W(ind + "<td class=\"nowrap\">")
 	if col.PK && link {
-		ret.W(ind + "  <div class=\"icon\"><a href=\"" + m.LinkURL(modelKey) + "\">" + col.ToGoViewString(modelKey, true, false) + toStrings + "</a></div>")
+		ret.W(ind + "  <a href=\"" + m.LinkURL(modelKey) + "\">" + col.ToGoViewString(modelKey, true, false) + toStrings + "</a>")
 	} else {
-		ret.W(ind + "  <div class=\"icon\">" + col.ToGoViewString(modelKey, true, false) + toStrings + "</div>")
+		ret.W(ind + "  " + col.ToGoViewString(modelKey, true, false) + toStrings)
 	}
-	const msgNotNull = "%s  <a title=%q href=\"{%%%%s %s %%%%}\">{%%%%= components.SVGRefIcon(%q, ps) %%%%}</a>"
-	const msg = "%s  {%%%% if %s%s != nil %%%%}<a title=%q href=\"{%%%%s %s %%%%}\">{%%%%= components.SVGRefIcon(%q, ps) %%%%}</a>{%%%% endif %%%%}"
+	const l = "<a title=%q href=\"{%%%%s %s %%%%}\">{%%%%= components.SVGRef(%q, 18, 18, \"\", ps) %%%%}</a>"
+	const msgNotNull = "%s  " + l
+	const msg = "%s  {%%%% if %s%s != nil %%%%}" + l + "{%%%% endif %%%%}"
 	for _, rel := range rels {
 		if slices.Contains(rel.Src, col.Name) {
 			relModel := models.Get(rel.Table)

@@ -34,8 +34,12 @@ var (
 
 //line views/components/Display.html:14
 func StreamDisplayTimestamp(qw422016 *qt422016.Writer, value *time.Time) {
+//line views/components/Display.html:14
+	qw422016.N().S(`<span class="nowrap">`)
 //line views/components/Display.html:15
 	qw422016.E().S(util.TimeToFull(value))
+//line views/components/Display.html:15
+	qw422016.N().S(`</span>`)
 //line views/components/Display.html:16
 }
 
