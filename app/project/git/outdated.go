@@ -3,11 +3,12 @@ package git
 import (
 	"context"
 	"fmt"
-	"github.com/pkg/errors"
-	"projectforge.dev/projectforge/app/lib/telemetry"
 	"strconv"
 	"strings"
 
+	"github.com/pkg/errors"
+
+	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )

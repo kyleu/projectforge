@@ -74,6 +74,7 @@
           {%= components.TableInput("authorID", "Author ID", info.AuthorID, 5, project.Helpers["authorID"]...) %}
           {%= components.TableInput("authorName", "Author Name", info.AuthorName, 5, project.Helpers["authorName"]...) %}
           {%= components.TableInput("authorEmail", "Author Email", info.AuthorEmail, 5, project.Helpers["authorEmail"]...) %}
+          {%= components.TableInput("team", "Team", info.Team, 5, project.Helpers["team"]...) %}
           {%= components.TableInput("license", "License", info.License, 5, project.Helpers["license"]...) %}
           {%= components.TableInput("homepage", "Homepage", info.Homepage, 5, project.Helpers["homepage"]...) %}
           {%= components.TableInput("sourcecode", "Source Code", info.Sourcecode, 5, project.Helpers["sourcecode"]...) %}
@@ -92,6 +93,7 @@
           <input type="hidden" name="signingIdentity" value="{%s info.SigningIdentity %}" />
           {%- endif -%}
           {%= components.TableInput("slack", "Slack Webhook", info.Slack, 5, project.Helpers["slack"]...) %}
+          {%= components.TableInput("channels", "Channels", strings.Join(info.Channels, ", "), 5, project.Helpers["channels"]...) %}
           {%- if prj.HasModule("android") -%}
           {%= components.TableInput("javaPackage", "Java Package", info.JavaPackage, 5, project.Helpers["javaPackage"]...) %}
           {%- else -%}

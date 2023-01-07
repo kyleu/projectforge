@@ -5,6 +5,8 @@ import (
 	"path"
 	"strings"
 
+	"projectforge.dev/projectforge/app/lib/filesystem"
+
 	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/file"
@@ -40,6 +42,11 @@ func diffs(ctx context.Context, pm *PrjAndMods) (file.Files, diff.Diffs, error) 
 		if e != nil {
 			return nil, nil, errors.Wrap(e, "unable to inject code")
 		}
+	}
+	if pm.Mods.Get("datadog") != nil {
+		svc := ServiceDefinition(pm.Prj)
+		f := file.NewFile("doc/service.json", filesystem.DefaultMode, util.ToJSONBytes(svc, true), false, pm.Logger)
+		srcFiles = append(srcFiles, f)
 	}
 
 	configVars, portOffsets := parse(pm)

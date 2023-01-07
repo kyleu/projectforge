@@ -125,3 +125,21 @@ func (m ValueMap) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 	}
 	return e.Flush()
 }
+
+func (m ValueMap) Filter(keys []string) ValueMap {
+	filteredMap := ValueMap{}
+	for _, key := range keys {
+		if data, ok := m[key]; ok {
+			filteredMap[key] = data
+		}
+	}
+	return filteredMap
+}
+
+func (m ValueMap) Overwrite(sourceMap ValueMap) ValueMap {
+	destMap := m.Clone()
+	for key, data := range sourceMap {
+		destMap[key] = data
+	}
+	return destMap
+}

@@ -21,6 +21,7 @@ type Info struct {
 	AuthorID        string            `json:"authorID,omitempty"`
 	AuthorName      string            `json:"authorName,omitempty"`
 	AuthorEmail     string            `json:"authorEmail,omitempty"`
+	Team            string            `json:"team,omitempty"`
 	License         string            `json:"license,omitempty"`
 	Homepage        string            `json:"homepage,omitempty"`
 	Sourcecode      string            `json:"sourcecode,omitempty"`
@@ -31,6 +32,7 @@ type Info struct {
 	Bundle          string            `json:"bundle,omitempty"`
 	SigningIdentity string            `json:"signingIdentity,omitempty"`
 	Slack           string            `json:"slack,omitempty"`
+	Channels        []string          `json:"channels,omitempty"`
 	JavaPackage     string            `json:"javaPackage,omitempty"`
 	GoVersion       string            `json:"goVersion,omitempty"`
 	GoBinary        string            `json:"goBinary,omitempty"`

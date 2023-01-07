@@ -53,6 +53,7 @@ func cliProject(p *project.Project, modKeys []string) error {
 	}
 	p.Info.AuthorEmail = promptString("Enter the email address of this project's owner", p.Info.AuthorEmail)
 	p.Info.AuthorID = promptString("Enter the GitHub username(s) of this project's owner", p.Info.AuthorID)
+	p.Info.Team = promptString("Enter the team that owns this project", p.Info.Team)
 
 	if p.Port == 0 {
 		p.Port = 20000

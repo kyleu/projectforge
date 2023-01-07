@@ -6,6 +6,6 @@ A very tiny custom JSX engine is provided. To use it, create a `.tsx` file in `.
 import * as JSX from "./jsx";
 
 export function myComponent() {
-  return <div style="color: red;">Check out this JSX!</div>;
+  return <div>Check out this JSX!</div>;
 }
 ```

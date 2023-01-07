@@ -1,6 +1,8 @@
 package helper
 
 import (
+	"strings"
+
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/golang"
@@ -15,7 +17,8 @@ func SpecialImports(g *golang.File, cols model.Columns, pkg string, enums enum.E
 			if err != nil {
 				return err
 			}
-			if ref.Pkg.Last() != pkg {
+			split := strings.Split(pkg, "/")
+			if ref.Pkg.Last() != split[len(split)-1] {
 				g.AddImport(golang.NewImport(golang.ImportTypeApp, ref.Pkg.ToPath()))
 			}
 		case types.KeyEnum:
