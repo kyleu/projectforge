@@ -34,6 +34,9 @@ func modelHistory(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock(m.Proper()+"History", "struct")
 	ret.W("type History struct {")
 	max := m.PKs().MaxCamelLength() + len(m.Camel())
+	if max < 7 {
+		max = 7
+	}
 	tmax := 13
 	ret.W("\t%s %s `json:\"id\"`", util.StringPad("ID", max), util.StringPad("uuid.UUID", tmax))
 	for _, pk := range m.PKs() {
@@ -79,6 +82,9 @@ func modelHistoryDTO(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock(m.Proper()+"HistoryDTO", "struct")
 	ret.W("type historyDTO struct {")
 	max := m.PKs().MaxCamelLength() + len(m.Camel())
+	if max < 7 {
+		max = 7
+	}
 	tmax := 15
 	ret.W("\t%s %s `db:\"id\"`", util.StringPad("ID", max), util.StringPad("uuid.UUID", tmax))
 	for _, pk := range m.PKs() {

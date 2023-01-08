@@ -96,6 +96,9 @@ func serviceHistorySaveHistory(m *model.Model) *golang.Block {
 	ret.W("\tq := database.SQLInsert(historyTableQuoted, historyColumns, 1, \"\")")
 	ret.W("\th := &historyDTO{")
 	max := m.PKs().MaxCamelLength() + len(m.Proper()) + 1
+	if max < 8 {
+		max = 8
+	}
 	ret.W("\t\t%s util.UUID(),", util.StringPad("ID:", max))
 	for _, pk := range m.PKs() {
 		ret.W("\t\t%s o.%s,", util.StringPad(m.Proper()+pk.Proper()+":", max), pk.Proper())
