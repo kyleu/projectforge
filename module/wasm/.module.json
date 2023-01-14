@@ -2,9 +2,9 @@
   "name": "WebAssembly",
   "icon": "gift",
   "description": "Provides a WASM library and HTML host",
-  "authorName": "Kyle",
-  "authorEmail": "kyle@fevo.com",
-  "license": "Proprietary",
+  "authorName": "Kyle U",
+  "authorEmail": "kyle@kyleu.com",
+  "license": "CC0",
   "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/wasm",
   "requires": ["sandbox"]
 }

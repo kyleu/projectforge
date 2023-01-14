@@ -23,7 +23,7 @@
     <ul class="mt">
       {%- for _, link := range p.Links.GetByModes("desktop") -%}
       <li>
-        <a href="https://github.com/kyleu/projectforge/releases/download/v{%s as.BuildInfo.Version %}/{%s link.URL %}">
+        <a href="{{{ .Info.Sourcecode }}}/releases/download/v{%s as.BuildInfo.Version %}/{%s link.URL %}">
           {%= components.SVGRef(link.OSIcon(), 20, 20, "icon", ps) %} {%s link.OSString() %}
         </a>
         <div class="clear"></div>

@@ -2,9 +2,9 @@
   "name": "Read-only DB",
   "icon": "database",
   "description": "Adds a read-only database connection",
-  "authorName": "Kyle",
-  "authorEmail": "kyle@fevo.com",
-  "license": "Proprietary",
+  "authorName": "Kyle U",
+  "authorEmail": "kyle@kyleu.com",
+  "license": "CC0",
   "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/readonlydb",
   "configVars": [
     {

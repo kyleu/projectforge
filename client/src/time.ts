@@ -2,6 +2,7 @@
 import {els} from "./dom";
 
 export function timeInit() {
+  (window as any).projectforge.relativeTime = relativeTime;
   els(".reltime").forEach(el => {
     const t = el.dataset["time"] || "";
     el.innerText = relativeTime(t);

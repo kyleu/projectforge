@@ -1,28 +1,32 @@
 import {els, opt, req, setDisplay} from "./dom";
 import {svgRef} from "./util";
 
+function tagsWire(el: HTMLElement) {
+  const input = req<HTMLInputElement>("input.result", el);
+  const tagContainer = req<HTMLDivElement>(".tags", el);
+  const vals = input.value.split(",").map(x => x.trim()).filter(k => k !== "");
+
+  setDisplay(input, false);
+  tagContainer.innerHTML = "";
+  for (const v of vals) {
+    tagContainer.appendChild(tagsRender(v, el));
+  }
+
+  opt(".add-item", el)?.remove();
+
+  const add = document.createElement("div");
+  add.className = "add-item";
+  add.innerHTML = svgRef("plus", 22);
+  add.onclick = function () {
+    tagsAdd(tagContainer, el);
+  }
+  el.insertBefore(add, req(".clear", el));
+}
+
 export function tagsInit() {
+  (window as any).{{{ .CleanKey }}}.tags = tagsWire;
   for (const el of els(".tag-editor")) {
-    const input = req<HTMLInputElement>("input.result", el);
-    const tagContainer = req<HTMLDivElement>(".tags", el);
-    const vals = input.value.split(",").map(x => x.trim()).filter(k => k !== "");
-    // console.log("tag-editor[" + input.name + "]: " + vals.join(", "));
-
-    setDisplay(input, false);
-    tagContainer.innerHTML = "";
-    for (const v of vals) {
-      tagContainer.appendChild(tagsRender(v, el));
-    }
-
-    opt(".add-item", el)?.remove();
-
-    const add = document.createElement("div");
-    add.className = "add-item";
-    add.innerHTML = svgRef("plus", 22);
-    add.onclick = function () {
-      tagsAdd(tagContainer, el);
-    }
-    el.insertBefore(add, req(".clear", el));
+    tagsWire(el);
   }
 }
 

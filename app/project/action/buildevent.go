@@ -5,6 +5,7 @@ import (
 
 	"github.com/pkg/errors"
 
+	"projectforge.dev/projectforge/app/file/diff"
 	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/project/build"
@@ -27,13 +28,7 @@ func onBuild(ctx context.Context, pm *PrjAndMods) *Result {
 
 	ret := newResult(TypeBuild, pm.Prj, pm.Cfg, logger)
 	ret.AddLog("building project [%s] in [%s] with phase [%s]", pm.Prj.Key, pm.Prj.Path, phaseStr)
-	var phase *Build
-	for _, x := range AllBuilds {
-		if x.Key == phaseStr {
-			phase = x
-			break
-		}
-	}
+	phase := AllBuilds.Get(phaseStr)
 	if phase == nil {
 		return ret.WithError(errors.Errorf("invalid phase [%s]", phaseStr))
 	}
@@ -73,6 +68,20 @@ func onImports(ctx context.Context, pm *PrjAndMods, r *Result) *Result {
 	if err != nil {
 		return r.WithError(err)
 	}
+	return r
+}
+
+func onIgnored(ctx context.Context, pm *PrjAndMods, r *Result) *Result {
+	ign, err := build.Ignored(pm.Prj, pm.PSvc.GetFilesystem(pm.Prj), pm.Logger)
+	r.Data = ign
+	if err != nil {
+		return r.WithError(err)
+	}
+	res := &module.Result{Keys: []string{"ignored"}, Status: "OK"}
+	for _, x := range ign {
+		res.Diffs = append(res.Diffs, &diff.Diff{Path: x, Status: diff.StatusDifferent})
+	}
+	r.Modules = append(r.Modules, res)
 	return r
 }
 

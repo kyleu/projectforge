@@ -10,7 +10,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-// Registers a new Connection for this Service using the provided fevouser.Profile and websocket.Conn.
+// Registers a new Connection for this Service using the provided user.Profile and websocket.Conn.
 func (s *Service) Register(profile *user.Profile, c *websocket.Conn, logger util.Logger) (*Connection, error) {
 	conn := &Connection{ID: util.UUID(), Profile: profile, Svc: "system", socket: c}
 

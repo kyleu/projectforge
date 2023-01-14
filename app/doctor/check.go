@@ -36,4 +36,13 @@ func (c *Check) Check(ctx context.Context, logger util.Logger) *Result {
 	return r
 }
 
-type Checks = []*Check
+type Checks []*Check
+
+func (c Checks) Get(key string) *Check {
+	for _, x := range c {
+		if x.Key == key {
+			return x
+		}
+	}
+	return nil
+}

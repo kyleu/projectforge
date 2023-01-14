@@ -19,9 +19,11 @@
       {%- endif -%}
     </div>
     {%- case "build" -%}
+    {%- if cfg.GetStringOpt("phase") == "imports" %}
     <div class="mt">
       <a href="/run/{%s prjKey %}/build?phase=imports&fix=true" title="Fix all imports for incorrect files"><button>Fix All</button></a>
     </div>
+    {%- endif -%}
     {%- endswitch -%}
     <table>
       <thead>

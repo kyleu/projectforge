@@ -9,38 +9,36 @@ export function setSiblingToNull(el: HTMLElement) {
   i.value = "∅";
 }
 
-export function editorInit() {
-  (window as any).projectforge.setSiblingToNull = setSiblingToNull;
-
+export function initForm(frm: HTMLFormElement) {
+  frm.onreset = () => initForm(frm);
   let editorCache: { [key: string]: string; } = {};
   let selectedCache: { [key: string]: HTMLInputElement; } = {};
-  for (const n of Array.from(document.querySelectorAll("form.editor"))) {
-    const frm = n as HTMLFormElement;
-    const buildCache = () => {
-      editorCache = {};
-      selectedCache = {};
-      for (const el of frm.elements) {
-        const input = el as HTMLInputElement;
-        if (input.name.length > 0) {
-          if (input.name.endsWith(selected)) {
-            selectedCache[input.name] = input;
-          } else {
-            if ((input.type !== "radio") || input.checked) {
-              editorCache[input.name] = input.value;
-            }
-            const evt = () => {
-              const cv = selectedCache[input.name + selected];
-              if (cv) {
-                cv.checked = editorCache[input.name] !== input.value;
-              }
-            };
-            input.onchange = evt;
-            input.onkeyup = evt;
-          }
+  for (const el of frm.elements) {
+    const input = el as HTMLInputElement;
+    if (input.name.length > 0) {
+      if (input.name.endsWith(selected)) {
+        selectedCache[input.name] = input;
+      } else {
+        if ((input.type !== "radio") || input.checked) {
+          editorCache[input.name] = input.value;
         }
+        const evt = () => {
+          const cv = selectedCache[input.name + selected];
+          if (cv) {
+            cv.checked = editorCache[input.name] !== input.value;
+          }
+        };
+        input.onchange = evt;
+        input.onkeyup = evt;
       }
     }
-    frm.onreset = buildCache;
-    buildCache();
+  }
+}
+
+export function editorInit() {
+  (window as any).projectforge.setSiblingToNull = setSiblingToNull;
+  (window as any).projectforge.initForm = initForm;
+  for (const n of Array.from(document.querySelectorAll<HTMLFormElement>("form.editor"))) {
+    initForm(n);
   }
 }

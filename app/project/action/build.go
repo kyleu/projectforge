@@ -55,6 +55,7 @@ var AllBuilds = Builds{
 	{Key: "start", Title: "Start", Description: "Starts the prebuilt project binary", Run: onStart},
 	{Key: "deps", Title: "Dependencies", Description: "Manages Go dependencies", Run: onDeps},
 	{Key: "imports", Title: "Imports", Description: "Reorders the imports", Run: onImports},
+	{Key: "ignored", Title: "Ignored", Description: "Shows files that are ignored by code generation", Run: onIgnored},
 	{Key: "packages", Title: "Packages", Description: "Visualize your application's packages", Run: onPackages},
 	{Key: "cleanup", Title: "Cleanup", Description: "Cleans up file permissions", Run: onCleanup},
 	simpleBuild("build", "Build", "make build"),

@@ -13,12 +13,7 @@ import (
 var AllChecks = doctor.Checks{pf, prj, repo, air, git, golang, imagemagick, mke, node, qtc}
 
 func GetCheck(key string) *doctor.Check {
-	for _, x := range AllChecks {
-		if x.Key == key {
-			return x
-		}
-	}
-	return nil
+	return AllChecks.Get(key)
 }
 
 func ForModules(modules []string) doctor.Checks {

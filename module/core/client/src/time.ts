@@ -1,6 +1,7 @@
 import {els} from "./dom";
 
 export function timeInit() {
+  (window as any).{{{ .CleanKey }}}.relativeTime = relativeTime;
   els(".reltime").forEach(el => {
     const t = el.dataset["time"] || "";
     el.innerText = relativeTime(t);

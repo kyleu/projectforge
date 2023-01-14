@@ -22,10 +22,36 @@ func ServiceDefinition(p *project.Project) util.ValueMap {
 	}
 
 	tags := make([]string, 0, len(p.Tags))
-	for _, x := range p.Tags {
-		tags = append(tags, fmt.Sprintf("%s:%s", x, x))
+	tags = append(tags, fmt.Sprintf("service:%s", p.CleanKey()))
+	//for _, x := range p.Tags {
+	//	tags = append(tags, fmt.Sprintf("%s:%s", x, x))
+	//}
+	for _, x := range p.Modules {
+		switch x {
+		case "export":
+			tags = append(tags, "codegen:true")
+		case "expression":
+			tags = append(tags, x+":cel")
+		case "graphql", "gqlgen":
+			tags = append(tags, "graphql:"+x)
+		case "grpc":
+			tags = append(tags, "transport:"+x)
+		case "mysql":
+			tags = append(tags, "database:"+x)
+		case "oauth":
+			tags = append(tags, "auth:"+x)
+		case "postgres":
+			tags = append(tags, "database:"+x)
+		case "queue":
+			tags = append(tags, x+":kafka")
+		case "sqlite":
+			tags = append(tags, "database:"+x)
+		case "temporal":
+			tags = append(tags, "workflow:"+x)
+		case "wasm":
+			tags = append(tags, "build:"+x)
+		}
 	}
-
 	contacts := []util.ValueMap{
 		{"name": p.Info.AuthorName, "type": "email", "contact": p.Info.AuthorEmail},
 		{"name": p.Info.AuthorName, "type": "github", "contact": p.Info.AuthorID},
