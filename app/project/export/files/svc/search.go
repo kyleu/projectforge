@@ -64,7 +64,7 @@ func serviceSearch(m *model.Model, grp *model.Column, dbRef string, enums enum.E
 		ret.W("\twc := searchClause")
 	}
 	ret.W("\tq := database.SQLSelect(columnsString, %s, wc, params.OrderByString(), params.Limit, params.Offset)", tableClauseFor(m))
-	ret.W("\tret := dtos{}")
+	ret.W("\tret := rows{}")
 	ret.W("\terr := s.%s.Select(ctx, &ret, q, tx, logger, %s)", dbRef, strings.Join(params, ", "))
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, err")

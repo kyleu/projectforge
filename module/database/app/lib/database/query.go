@@ -129,26 +129,26 @@ func (s *Service) Select(ctx context.Context, dest any, q string, tx *sqlx.Tx, l
 	return err
 }
 
-func (s *Service) Get(ctx context.Context, dto any, q string, tx *sqlx.Tx, logger util.Logger, values ...any) error {
+func (s *Service) Get(ctx context.Context, row any, q string, tx *sqlx.Tx, logger util.Logger, values ...any) error {
 	const op = "get"
 	now, ctx, span, logger := s.newSpan(ctx, "db:"+op, q, logger)
 	var err error
 	defer s.complete(q, op, span, now, logger, err)
-	f := s.logQuery(ctx, fmt.Sprintf("getting single row of type [%T]", dto), q, logger, values)
+	f := s.logQuery(ctx, fmt.Sprintf("getting single row of type [%T]", row), q, logger, values)
 	if tx == nil {
-		err = s.db.GetContext(ctx, dto, q, values...)
+		err = s.db.GetContext(ctx, row, q, values...)
 		count := 0
-		if dto != nil {
+		if row != nil {
 			count = 1
 		}
-		defer f(count, "ran [get] query without transaction", err, dto)
+		defer f(count, "ran [get] query without transaction", err, row)
 	} else {
-		err = tx.GetContext(ctx, dto, q, values...)
+		err = tx.GetContext(ctx, row, q, values...)
 		count := 0
-		if dto != nil {
+		if row != nil {
 			count = 1
 		}
-		defer f(count, "ran [get] query with transaction", err, dto)
+		defer f(count, "ran [get] query with transaction", err, row)
 	}
 	return err
 }

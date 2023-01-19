@@ -16,7 +16,7 @@ import (
 func (s *Service) List(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger) (Audits, error) {
 	params = filters(params)
 	q := database.SQLSelect(columnsString, tableQuoted, "", params.OrderByString(), params.Limit, params.Offset)
-	ret := dtos{}
+	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to get audits")
@@ -26,7 +26,7 @@ func (s *Service) List(ctx context.Context, tx *sqlx.Tx, params *filter.Params, 
 
 func (s *Service) Get(ctx context.Context, tx *sqlx.Tx, id uuid.UUID, logger util.Logger) (*Audit, error) {
 	wc := defaultWC
-	ret := &dto{}
+	ret := &row{}
 	q := database.SQLSelectSimple(columnsString, tableQuoted, wc)
 	err := s.db.Get(ctx, ret, q, tx, logger, id)
 	if err != nil {
@@ -45,7 +45,7 @@ func (s *Service) Search(ctx context.Context, query string, tx *sqlx.Tx, params 
 	params = filters(params)
 	wc := searchClause
 	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
-	ret := dtos{}
+	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, "%"+strings.ToLower(query)+"%")
 	if err != nil {
 		return nil, err

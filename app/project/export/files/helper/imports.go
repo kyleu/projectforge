@@ -48,8 +48,8 @@ func importsForType(ctx string, t types.Type) golang.Imports {
 	switch ctx {
 	case "go":
 		return importsForTypeCtxGo(t)
-	case "dto":
-		return importsForTypeCtxDTO(t)
+	case "row":
+		return importsForTypeCtxRow(t)
 	case "string":
 		return importsForTypeCtxString(t)
 	case "parse":
@@ -74,7 +74,7 @@ func importsForTypeCtxGo(t types.Type) golang.Imports {
 	}
 }
 
-func importsForTypeCtxDTO(t types.Type) golang.Imports {
+func importsForTypeCtxRow(t types.Type) golang.Imports {
 	switch t.Key() {
 	case types.KeyAny:
 		return golang.Imports{ImpJSON}

@@ -66,7 +66,7 @@ func serviceGetAllRevisions(m *model.Model, dbRef string, enums enum.Enums) (*go
 		return nil, err
 	}
 	ret.W("\tq := database.SQLSelect(columnsString, tablesJoinedParam, wc, params.OrderByString(), params.Limit, params.Offset)")
-	ret.W("\tret := dtos{}")
+	ret.W("\tret := rows{}")
 	ret.W("\terr := s.%s.Select(ctx, &ret, q, tx, logger, %s)", dbRef, strings.Join(pks.CamelNames(), ", "))
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, errors.Wrap(err, \"unable to get %s\")", m.ProperPlural())
@@ -90,7 +90,7 @@ func serviceGetRevision(m *model.Model, dbRef string, enums enum.Enums) (*golang
 		placeholders = append(placeholders, fmt.Sprintf("\\\"%s\\\" = $%d", pk.Name, idx+1))
 	}
 	ret.W("\twc := \"%s and \\\"%s\\\" = $%d\"", strings.Join(placeholders, " and "), revCol.Name, len(m.PKs())+1)
-	ret.W("\tret := &dto{}")
+	ret.W("\tret := &row{}")
 	err = addJoinClause(ret, m, m.HistoryColumns(true))
 	if err != nil {
 		return nil, err

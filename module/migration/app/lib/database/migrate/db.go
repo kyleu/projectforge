@@ -25,14 +25,14 @@ const (
 
 func ListMigrations(ctx context.Context, s *database.Service, params *filter.Params, tx *sqlx.Tx, logger util.Logger) Migrations {
 	params = filter.ParamsWithDefaultOrdering(migrationTable, params, &filter.Ordering{Column: "created", Asc: false})
-	var dtos []migrationDTO
+	var rows []migrationRow
 	q := database.SQLSelect("*", migrationTable, "", params.OrderByString(), params.Limit, params.Offset)
-	err := s.Select(ctx, &dtos, q, tx, logger)
+	err := s.Select(ctx, &rows, q, tx, logger)
 	if err != nil {
 		logger.Errorf("error retrieving migrations: %+v", err)
 		return nil
 	}
-	return toMigrations(dtos)
+	return toMigrations(rows)
 }
 
 func createMigrationTableIfNeeded(ctx context.Context, s *database.Service, tx *sqlx.Tx, logger util.Logger) error {
@@ -49,9 +49,9 @@ func createMigrationTableIfNeeded(ctx context.Context, s *database.Service, tx *
 }
 
 func getMigrationByIdx(ctx context.Context, s *database.Service, idx int, tx *sqlx.Tx, logger util.Logger) *Migration {
-	dto := &migrationDTO{}
+	row := &migrationRow{}
 	q := database.SQLSelectSimple("*", "migration", "idx = $1")
-	err := s.Get(ctx, dto, q, tx, logger, idx)
+	err := s.Get(ctx, row, q, tx, logger, idx)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil
@@ -59,7 +59,7 @@ func getMigrationByIdx(ctx context.Context, s *database.Service, idx int, tx *sq
 		logger.Errorf("error getting migration by idx [%v]: %+v", idx, err)
 		return nil
 	}
-	return dto.toMigration()
+	return row.toMigration()
 }
 
 func removeMigrationByIdx(ctx context.Context, s *database.Service, idx int, tx *sqlx.Tx, logger util.Logger) error {

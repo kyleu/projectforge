@@ -27,7 +27,7 @@ func serviceGetMultipleSinglePK(m *model.Model, dbRef string, enums enum.Enums) 
 	if m.IsSoftDelete() {
 		ret.W("\twc = addDeletedClause(wc, includeDeleted)")
 	}
-	ret.W("\tret := dtos{}")
+	ret.W("\tret := rows{}")
 	ret.W("\tq := database.SQLSelectSimple(columnsString, %s, wc)", tableClauseFor(m))
 	ret.W("\tvals := make([]any, 0, len(%s))", pk.Plural())
 	ret.W("\tfor _, x := range %s {", pk.Plural())
@@ -71,7 +71,7 @@ func serviceGetMultipleManyPKs(m *model.Model, dbRef string) *golang.Block {
 	if m.IsSoftDelete() {
 		ret.W("\twc = addDeletedClause(wc, includeDeleted)")
 	}
-	ret.W("\tret := dtos{}")
+	ret.W("\tret := rows{}")
 	ret.W("\tq := database.SQLSelectSimple(columnsString, %s, wc)", tableClauseFor(m))
 	ret.W("\tvals := make([]any, 0, len(pks)*%d)", len(pks))
 	ret.W("\tfor _, x := range pks {")

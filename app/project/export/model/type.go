@@ -68,7 +68,7 @@ func ToGoType(t types.Type, nullable bool, pkg string, enums enum.Enums) (string
 	return ret, nil
 }
 
-func ToGoDTOType(t types.Type, nullable bool, pkg string, enums enum.Enums) (string, error) {
+func ToGoRowType(t types.Type, nullable bool, pkg string, enums enum.Enums) (string, error) {
 	switch t.Key() {
 	case types.KeyAny, types.KeyList, types.KeyMap, types.KeyValueMap, types.KeyReference:
 		return "json.RawMessage", nil

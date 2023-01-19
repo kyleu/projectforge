@@ -149,7 +149,7 @@ func serviceList(m *model.Model, dbRef string) *golang.Block {
 		ret.W("\t}")
 	}
 	ret.W("\tq := database.SQLSelect(columnsString, %s, wc, params.OrderByString(), params.Limit, params.Offset)", tableClauseFor(m))
-	ret.W("\tret := dtos{}")
+	ret.W("\tret := rows{}")
 	ret.W("\terr := s.%s.Select(ctx, &ret, q, tx, logger)", dbRef)
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, errors.Wrap(err, \"unable to get %s\")", m.TitlePluralLower())
@@ -220,7 +220,7 @@ func serviceGet(key string, m *model.Model, cols model.Columns, dbRef string, en
 	if m.IsSoftDelete() {
 		ret.W("\twc = addDeletedClause(wc, includeDeleted)")
 	}
-	ret.W("\tret := &dto{}")
+	ret.W("\tret := &row{}")
 	ret.W("\tq := database.SQLSelectSimple(columnsString, %s, wc)", tableClauseFor(m))
 	ret.W("\terr := s.%s.Get(ctx, ret, q, tx, logger, %s)", dbRef, strings.Join(cols.CamelNames(), ", "))
 	ret.W("\tif err != nil {")
@@ -257,7 +257,7 @@ func serviceGetByCols(key string, m *model.Model, cols model.Columns, dbRef stri
 		ret.W("\twc = addDeletedClause(wc, includeDeleted)")
 	}
 	ret.W("\tq := database.SQLSelect(columnsString, %s, wc, params.OrderByString(), params.Limit, params.Offset)", tableClauseFor(m))
-	ret.W("\tret := dtos{}")
+	ret.W("\tret := rows{}")
 	ret.W("\terr := s.%s.Select(ctx, &ret, q, tx, logger, %s)", dbRef, strings.Join(cols.CamelNames(), ", "))
 	ret.W("\tif err != nil {")
 	sj := strings.Join(cols.CamelNames(), ", ")
@@ -275,7 +275,7 @@ func serviceGetByCols(key string, m *model.Model, cols model.Columns, dbRef stri
 func serviceListSQL(m *model.Model, dbRef string) *golang.Block {
 	ret := golang.NewBlock("ListSQL", "func")
 	ret.W("func (s *Service) ListSQL(ctx context.Context, tx *sqlx.Tx, sql string, logger util.Logger, values ...any) (%s, error) {", m.ProperPlural())
-	ret.W("\tret := dtos{}")
+	ret.W("\tret := rows{}")
 	ret.W("\terr := s.%s.Select(ctx, &ret, sql, tx, logger, values...)", dbRef)
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, errors.Wrap(err, \"unable to get %s using custom SQL\")", m.TitlePluralLower())

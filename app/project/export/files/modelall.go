@@ -85,9 +85,9 @@ func basics(m *model.Model, args *model.Args, addHeader bool) (file.Files, error
 		calls = append(calls, f)
 	}
 
-	f, err = gomodel.DTO(m, args, addHeader)
+	f, err = gomodel.Row(m, args, addHeader)
 	if err != nil {
-		return nil, errors.Wrap(err, "can't render DTO")
+		return nil, errors.Wrap(err, "can't render Row")
 	}
 	calls = append(calls, f)
 

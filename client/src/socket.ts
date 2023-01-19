@@ -5,13 +5,13 @@ export function socketInit() {
 
 let appUnloading = false;
 
-interface Message {
+export interface Message {
   readonly channel: string;
   readonly cmd: string;
   readonly param: any;
 }
 
-class Socket {
+export class Socket {
   readonly debug: boolean;
   private readonly open: () => void;
   private readonly recv: (m: Message) => void;
@@ -55,7 +55,7 @@ class Socket {
     this.sock.onmessage = (event) => {
       const msg = JSON.parse(event.data) as Message;
       if (s.debug) {
-        console.debug("in", msg);
+        console.debug("[socket]: receive", msg);
       }
       s.recv(msg);
     };

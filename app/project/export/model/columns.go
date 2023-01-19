@@ -219,10 +219,10 @@ func (c Columns) GoTypes(pkg string, enums enum.Enums) ([]string, error) {
 	return ret, nil
 }
 
-func (c Columns) GoDTOTypes(pkg string, enums enum.Enums) ([]string, error) {
+func (c Columns) GoRowTypes(pkg string, enums enum.Enums) ([]string, error) {
 	ret := make([]string, 0, len(c))
 	for _, x := range c {
-		gdt, err := x.ToGoDTOType(pkg, enums)
+		gdt, err := x.ToGoRowType(pkg, enums)
 		if err != nil {
 			return nil, err
 		}
@@ -240,8 +240,8 @@ func (c Columns) MaxGoTypeLength(pkg string, enums enum.Enums) int {
 	return util.StringArrayMaxLength(gt)
 }
 
-func (c Columns) MaxGoDTOTypeLength(pkg string, enums enum.Enums) int {
-	ks, _ := c.GoDTOTypes(pkg, enums)
+func (c Columns) MaxGoRowTypeLength(pkg string, enums enum.Enums) int {
+	ks, _ := c.GoRowTypes(pkg, enums)
 	return util.StringArrayMaxLength(ks)
 }
 

@@ -20,7 +20,7 @@ var (
 	defaultWC     = "\"id\" = $1"
 )
 
-type dto struct {
+type row struct {
 	ID        uuid.UUID       `db:"id"`
 	App       string          `db:"app"`
 	Act       string          `db:"act"`
@@ -33,24 +33,24 @@ type dto struct {
 	Completed time.Time       `db:"completed"`
 }
 
-func (d *dto) ToAudit() *Audit {
-	if d == nil {
+func (r *row) ToAudit() *Audit {
+	if r == nil {
 		return nil
 	}
 	metadataArg := util.ValueMap{}
-	_ = util.FromJSON(d.Metadata, &metadataArg)
+	_ = util.FromJSON(r.Metadata, &metadataArg)
 	return &Audit{
-		ID: d.ID, App: d.App, Act: d.Act, Client: d.Client, Server: d.Server, User: d.User,
-		Metadata: metadataArg, Message: d.Message, Started: d.Started, Completed: d.Completed,
+		ID: r.ID, App: r.App, Act: r.Act, Client: r.Client, Server: r.Server, User: r.User,
+		Metadata: metadataArg, Message: r.Message, Started: r.Started, Completed: r.Completed,
 	}
 }
 
-type dtos []*dto
+type rows []*row
 
-func (x dtos) ToAudits() Audits {
+func (x rows) ToAudits() Audits {
 	ret := make(Audits, 0, len(x))
-	for _, d := range x {
-		ret = append(ret, d.ToAudit())
+	for _, r := range x {
+		ret = append(ret, r.ToAudit())
 	}
 	return ret
 }

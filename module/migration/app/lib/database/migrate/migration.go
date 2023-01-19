@@ -9,26 +9,26 @@ type Migration struct {
 	Created time.Time `json:"created"`
 }
 
-type migrationDTO struct {
+type migrationRow struct {
 	Idx     int       `db:"idx"`
 	Title   string    `db:"title"`
 	Src     string    `db:"src"`
 	Created time.Time `db:"created"`
 }
 
-func (dto *migrationDTO) toMigration() *Migration {
+func (r *migrationRow) toMigration() *Migration {
 	return &Migration{
-		Idx:     dto.Idx,
-		Title:   dto.Title,
-		Src:     dto.Src,
-		Created: dto.Created,
+		Idx:     r.Idx,
+		Title:   r.Title,
+		Src:     r.Src,
+		Created: r.Created,
 	}
 }
 
-func toMigrations(dtos []migrationDTO) Migrations {
-	ret := make(Migrations, 0, len(dtos))
-	for _, dto := range dtos {
-		ret = append(ret, dto.toMigration())
+func toMigrations(rs []migrationRow) Migrations {
+	ret := make(Migrations, 0, len(rs))
+	for _, r := range rs {
+		ret = append(ret, r.toMigration())
 	}
 	return ret
 }

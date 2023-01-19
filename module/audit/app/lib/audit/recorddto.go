@@ -19,7 +19,7 @@ var (
 	recordColumnsString = strings.Join(recordColumnsQuoted, ", ")
 )
 
-type recordDTO struct {
+type recordRow struct {
 	ID       uuid.UUID       `db:"id"`
 	AuditID  uuid.UUID       `db:"audit_id"`
 	T        string          `db:"t"`
@@ -29,23 +29,23 @@ type recordDTO struct {
 	Occurred time.Time       `db:"occurred"`
 }
 
-func (d *recordDTO) ToRecord() *Record {
-	if d == nil {
+func (r *recordRow) ToRecord() *Record {
+	if r == nil {
 		return nil
 	}
 	changesArg := util.Diffs{}
-	_ = util.FromJSON(d.Changes, &changesArg)
+	_ = util.FromJSON(r.Changes, &changesArg)
 	metadataArg := util.ValueMap{}
-	_ = util.FromJSON(d.Metadata, &metadataArg)
-	return &Record{ID: d.ID, AuditID: d.AuditID, T: d.T, PK: d.PK, Changes: changesArg, Metadata: metadataArg, Occurred: d.Occurred}
+	_ = util.FromJSON(r.Metadata, &metadataArg)
+	return &Record{ID: r.ID, AuditID: r.AuditID, T: r.T, PK: r.PK, Changes: changesArg, Metadata: metadataArg, Occurred: r.Occurred}
 }
 
-type recordDTOs []*recordDTO
+type recordRows []*recordRow
 
-func (x recordDTOs) ToRecords() Records {
+func (x recordRows) ToRecords() Records {
 	ret := make(Records, 0, len(x))
-	for _, d := range x {
-		ret = append(ret, d.ToRecord())
+	for _, r := range x {
+		ret = append(ret, r.ToRecord())
 	}
 	return ret
 }

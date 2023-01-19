@@ -2,6 +2,7 @@ package action
 
 import (
 	"fmt"
+	"strings"
 
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
@@ -52,9 +53,15 @@ func ServiceDefinition(p *project.Project) util.ValueMap {
 			tags = append(tags, "build:"+x)
 		}
 	}
+
+	gh := p.Info.AuthorID
+	if !strings.Contains(gh, "/") {
+		gh = "https://github.com/" + gh
+	}
+
 	contacts := []util.ValueMap{
 		{"name": p.Info.AuthorName, "type": "email", "contact": p.Info.AuthorEmail},
-		{"name": p.Info.AuthorName, "type": "github", "contact": p.Info.AuthorID},
+		{"name": p.Info.AuthorName, "type": "github", "contact": gh},
 	}
 	for _, x := range p.Info.Channels {
 		l, r := util.StringSplit(x, ':', true)
@@ -68,6 +75,11 @@ func ServiceDefinition(p *project.Project) util.ValueMap {
 		}
 		contacts = append(contacts, util.ValueMap{"name": ch, "type": l, "contact": u})
 	}
+
+	docs := []util.ValueMap{{"name": "Source Code", "provider": "github", "url": p.Info.Sourcecode}}
+	for _, x := range p.Info.Docs {
+		docs = append(docs, util.ValueMap{"name": x.Name, "provider": x.Provider, "url": x.URL})
+	}
 	ret := util.ValueMap{
 		"schema-version": "v2",
 		"dd-service":     p.Key,
@@ -78,9 +90,7 @@ func ServiceDefinition(p *project.Project) util.ValueMap {
 		"repos": []util.ValueMap{
 			{"name": "sourcecode", "provider": "github", "url": p.Info.Sourcecode},
 		},
-		"docs": []util.ValueMap{
-			{"name": "sourcecode", "provider": "github", "url": p.Info.Sourcecode},
-		},
+		"docs":         docs,
 		"integrations": util.ValueMap{},
 		"extensions":   util.ValueMap{},
 		"tags":         tags,

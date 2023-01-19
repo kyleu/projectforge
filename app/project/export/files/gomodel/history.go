@@ -22,11 +22,11 @@ func History(m *model.Model, args *model.Args, addHeader bool) (*file.File, erro
 	if err != nil {
 		return nil, err
 	}
-	dto, err := modelHistoryDTO(m, args.Enums)
+	row, err := modelHistoryRow(m, args.Enums)
 	if err != nil {
 		return nil, err
 	}
-	g.AddBlocks(mh, modelHistoryToData(m), modelHistories(m), dto, modelHistoryDTOToHistory(m), modelHistoryDTOs(m))
+	g.AddBlocks(mh, modelHistoryToData(m), modelHistories(m), row, modelHistoryRowToHistory(m), modelHistoryRows(m))
 	return g.Render(addHeader)
 }
 
@@ -78,9 +78,9 @@ func modelHistories(m *model.Model) *golang.Block {
 	return ret
 }
 
-func modelHistoryDTO(m *model.Model, enums enum.Enums) (*golang.Block, error) {
-	ret := golang.NewBlock(m.Proper()+"HistoryDTO", "struct")
-	ret.W("type historyDTO struct {")
+func modelHistoryRow(m *model.Model, enums enum.Enums) (*golang.Block, error) {
+	ret := golang.NewBlock(m.Proper()+"HistoryRow", "struct")
+	ret.W("type historyRow struct {")
 	max := m.PKs().MaxCamelLength() + len(m.Camel())
 	if max < 7 {
 		max = 7
@@ -103,9 +103,9 @@ func modelHistoryDTO(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	return ret, nil
 }
 
-func modelHistoryDTOToHistory(m *model.Model) *golang.Block {
-	ret := golang.NewBlock(m.Proper()+"HistoryDTOToHistory", "func")
-	ret.W("func (h *historyDTO) ToHistory() *History {")
+func modelHistoryRowToHistory(m *model.Model) *golang.Block {
+	ret := golang.NewBlock(m.Proper()+"HistoryRowToHistory", "func")
+	ret.W("func (h *historyRow) ToHistory() *History {")
 	ret.W("\to := util.ValueMap{}")
 	ret.W("\t_ = util.FromJSON(h.Old, &o)")
 	ret.W("\tn := util.ValueMap{}")
@@ -121,11 +121,11 @@ func modelHistoryDTOToHistory(m *model.Model) *golang.Block {
 	return ret
 }
 
-func modelHistoryDTOs(m *model.Model) *golang.Block {
-	ret := golang.NewBlock(m.Proper()+"HistoryDTOs", "func")
-	ret.W("type historyDTOs []*historyDTO")
+func modelHistoryRows(m *model.Model) *golang.Block {
+	ret := golang.NewBlock(m.Proper()+"HistoryRows", "func")
+	ret.W("type historyRows []*historyRow")
 	ret.W("")
-	ret.W("func (h historyDTOs) ToHistories() Histories {")
+	ret.W("func (h historyRows) ToHistories() Histories {")
 	ret.W("\tret := make(Histories, 0, len(h))")
 	ret.W("\tfor _, x := range h {")
 	ret.W("\t\tret = append(ret, x.ToHistory())")

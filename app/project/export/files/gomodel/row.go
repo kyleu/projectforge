@@ -15,9 +15,9 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func DTO(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
-	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "dto")
-	for _, imp := range helper.ImportsForTypes("dto", m.Columns.Types()...) {
+func Row(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
+	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "row")
+	for _, imp := range helper.ImportsForTypes("row", m.Columns.Types()...) {
 		g.AddImport(imp)
 	}
 	g.AddImport(helper.ImpStrings, helper.ImpAppUtil, helper.ImpFmt)
@@ -29,16 +29,16 @@ func DTO(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	} else {
 		return nil, err
 	}
-	mdto, err := modelDTO(m, args.Enums)
+	mrow, err := modelRow(m, args.Enums)
 	if err != nil {
 		return nil, err
 	}
-	g.AddBlocks(mdto)
-	mdm, err := modelDTOToModel(g, m)
+	g.AddBlocks(mrow)
+	mrm, err := modelRowToModel(g, m)
 	if err != nil {
 		return nil, err
 	}
-	g.AddBlocks(mdm, modelDTOArray(), modelDTOArrayTransformer(m), defaultWC(m))
+	g.AddBlocks(mrm, modelRowArray(), modelRowArrayTransformer(m), defaultWC(m))
 	return g.Render(addHeader)
 }
 
@@ -79,13 +79,13 @@ func modelTableCols(m *model.Model, g *golang.File) (*golang.Block, error) {
 	return ret, nil
 }
 
-func modelDTO(m *model.Model, enums enum.Enums) (*golang.Block, error) {
-	ret := golang.NewBlock(m.Proper()+"DTO", "struct")
-	ret.W("type dto struct {")
+func modelRow(m *model.Model, enums enum.Enums) (*golang.Block, error) {
+	ret := golang.NewBlock(m.Proper()+"Row", "struct")
+	ret.W("type row struct {")
 	maxColLength := m.Columns.MaxCamelLength()
-	maxTypeLength := m.Columns.MaxGoDTOTypeLength(m.Package, enums)
+	maxTypeLength := m.Columns.MaxGoRowTypeLength(m.Package, enums)
 	for _, c := range m.Columns {
-		gdt, err := c.ToGoDTOType(m.Package, enums)
+		gdt, err := c.ToGoRowType(m.Package, enums)
 		if err != nil {
 			return nil, err
 		}
@@ -95,10 +95,10 @@ func modelDTO(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	return ret, nil
 }
 
-func modelDTOToModel(g *golang.File, m *model.Model) (*golang.Block, error) {
+func modelRowToModel(g *golang.File, m *model.Model) (*golang.Block, error) {
 	ret := golang.NewBlock(m.Proper(), "func")
-	ret.W("func (d *dto) To%s() *%s {", m.Proper(), m.Proper())
-	ret.W("\tif d == nil {")
+	ret.W("func (r *row) To%s() *%s {", m.Proper(), m.Proper())
+	ret.W("\tif r == nil {")
 	ret.W("\t\treturn nil")
 	ret.W("\t}")
 	refs := make([]string, 0, len(m.Columns))
@@ -108,7 +108,7 @@ func modelDTOToModel(g *golang.File, m *model.Model) (*golang.Block, error) {
 		switch c.Type.Key() {
 		case types.KeyAny:
 			ret.W("\tvar %sArg any", c.Camel())
-			ret.W("\t_ = util.FromJSON(d.%s, &%sArg)", c.Proper(), c.Camel())
+			ret.W("\t_ = util.FromJSON(r.%s, &%sArg)", c.Proper(), c.Camel())
 			refs = append(refs, fmt.Sprintf("%s %sArg", k, c.Camel()))
 		case types.KeyList:
 			t := "any"
@@ -116,11 +116,11 @@ func modelDTOToModel(g *golang.File, m *model.Model) (*golang.Block, error) {
 				t = "string"
 			}
 			ret.W("\t%sArg := []%s{}", c.Camel(), t)
-			ret.W("\t_ = util.FromJSON(d.%s, &%sArg)", c.Proper(), c.Camel())
+			ret.W("\t_ = util.FromJSON(r.%s, &%sArg)", c.Proper(), c.Camel())
 			refs = append(refs, fmt.Sprintf("%s %sArg", k, c.Camel()))
 		case types.KeyMap, types.KeyValueMap:
 			ret.W("\t%sArg := util.ValueMap{}", c.Camel())
-			ret.W("\t_ = util.FromJSON(d.%s, &%sArg)", c.Proper(), c.Camel())
+			ret.W("\t_ = util.FromJSON(r.%s, &%sArg)", c.Proper(), c.Camel())
 			refs = append(refs, fmt.Sprintf("%s %sArg", k, c.Camel()))
 		case types.KeyReference:
 			ref, err := model.AsRef(c.Type)
@@ -133,10 +133,10 @@ func modelDTOToModel(g *golang.File, m *model.Model) (*golang.Block, error) {
 				ret.W("\t%sArg := &%s.%s{}", c.Camel(), ref.Pkg.Last(), ref.K)
 				g.AddImport(golang.NewImport(golang.ImportTypeApp, ref.Pkg.ToPath()))
 			}
-			ret.W("\t_ = util.FromJSON(d.%s, %sArg)", c.Proper(), c.Camel())
+			ret.W("\t_ = util.FromJSON(r.%s, %sArg)", c.Proper(), c.Camel())
 			refs = append(refs, fmt.Sprintf("%s %sArg", k, c.Camel()))
 		default:
-			refs = append(refs, fmt.Sprintf("%s d.%s", k, c.Proper()))
+			refs = append(refs, fmt.Sprintf("%s r.%s", k, c.Proper()))
 		}
 	}
 	ret.W("\treturn &%s{", m.Proper())
@@ -148,15 +148,15 @@ func modelDTOToModel(g *golang.File, m *model.Model) (*golang.Block, error) {
 	return ret, nil
 }
 
-func modelDTOArray() *golang.Block {
-	ret := golang.NewBlock("DTOArray", "type")
-	ret.W("type dtos []*dto")
+func modelRowArray() *golang.Block {
+	ret := golang.NewBlock("RowArray", "type")
+	ret.W("type rows []*row")
 	return ret
 }
 
-func modelDTOArrayTransformer(m *model.Model) *golang.Block {
-	ret := golang.NewBlock(fmt.Sprintf("DTOTo%s", m.ProperPlural()), "type")
-	ret.W("func (x dtos) To%s() %s {", m.ProperPlural(), m.ProperPlural())
+func modelRowArrayTransformer(m *model.Model) *golang.Block {
+	ret := golang.NewBlock(fmt.Sprintf("RowTo%s", m.ProperPlural()), "type")
+	ret.W("func (x rows) To%s() %s {", m.ProperPlural(), m.ProperPlural())
 	ret.W("\tret := make(%s, 0, len(x))", m.ProperPlural())
 	ret.W("\tfor _, d := range x {")
 	ret.W("\t\tret = append(ret, d.To%s())", m.Proper())

@@ -8,6 +8,14 @@ import (
 
 const defaultGoVersion = "1.19"
 
+type Doc struct {
+	Name     string `json:"name"`
+	Provider string `json:"provider,omitempty"`
+	URL      string `json:"url"`
+}
+
+type Docs []*Doc
+
 type ModuleDef struct {
 	Key  string `json:"key"`
 	Path string `json:"path"`
@@ -40,6 +48,7 @@ type Info struct {
 	ExtraFiles      []string          `json:"extraFiles,omitempty"`
 	Deployments     []string          `json:"deployments,omitempty"`
 	EnvVars         []string          `json:"envVars,omitempty"`
+	Docs            Docs              `json:"docs,omitempty"`
 	ModuleDefs      ModuleDefs        `json:"moduleDefs,omitempty"`
 }
 

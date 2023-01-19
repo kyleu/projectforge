@@ -25,7 +25,7 @@ type TableSize struct {
 
 type TableSizes []*TableSize
 
-type sizeDTO struct {
+type sizeRow struct {
 	TableSchema string `db:"table_schema"`
 	TableName   string `db:"table_name"`
 	RowEstimate string `db:"row_estimate"`
@@ -39,7 +39,7 @@ type sizeDTO struct {
 	TablePretty string `db:"table_pretty"`
 }
 
-func (s *sizeDTO) ToSize() *TableSize {
+func (s *sizeRow) ToSize() *TableSize {
 	return &TableSize{
 		Schema: s.TableSchema,
 		Name:   s.TableName,
@@ -51,9 +51,9 @@ func (s *sizeDTO) ToSize() *TableSize {
 	}
 }
 
-type sizeDTOs []*sizeDTO
+type sizeRows []*sizeRow
 
-func (ts sizeDTOs) ToSizes() TableSizes {
+func (ts sizeRows) ToSizes() TableSizes {
 	ret := make(TableSizes, 0, len(ts))
 	for _, t := range ts {
 		ret = append(ret, t.ToSize())
@@ -63,18 +63,18 @@ func (ts sizeDTOs) ToSizes() TableSizes {
 
 func (s *Service) Sizes(ctx context.Context, logger util.Logger) (TableSizes, error) {
 	q := schema.SizeInfo()
-	ret := sizeDTOs{}
+	ret := sizeRows{}
 	err := s.Select(ctx, &ret, q, nil, logger)
 	if err != nil {
 		return nil, err
 	}{{{ if .HasModule "sqlite" }}}{{{ if .HasModule "postgres" }}}{{{ else }}}
-	for _, dto := range ret {
-		sizeq := fmt.Sprintf("select count(*) as x from %q", dto.TableName)
-		rowEstimate, err := s.SingleInt(ctx, sizeq, nil, logger, dto.TableName)
+	for _, r := range ret {
+		sizeq := fmt.Sprintf("select count(*) as x from %q", r.TableName)
+		rowEstimate, err := s.SingleInt(ctx, sizeq, nil, logger, r.TableName)
 		if err != nil {
 			return nil, err
 		}
-		dto.RowEstimate = fmt.Sprint(rowEstimate)
+		r.RowEstimate = fmt.Sprint(rowEstimate)
 	}{{{ end }}}{{{ end }}}
 	return ret.ToSizes(), nil
 }
