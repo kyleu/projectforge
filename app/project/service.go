@@ -1,6 +1,7 @@
 package project
 
 import (
+	"os"
 	"strings"
 	"sync"
 
@@ -11,10 +12,9 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-const (
-	ConfigDir          = "." + util.AppKey
-	additionalFilename = ConfigDir + "/additional-projects.json"
-)
+const ConfigDir = "." + util.AppKey
+
+var additionalFilename = ""
 
 type Service struct {
 	cache       map[string]*Project
@@ -24,6 +24,8 @@ type Service struct {
 }
 
 func NewService() *Service {
+	hd, _ := os.UserHomeDir()
+	additionalFilename = hd + "/.pfconfig/additional-projects.json"
 	return &Service{cache: map[string]*Project{}, filesystems: map[string]filesystem.FileLoader{}}
 }
 

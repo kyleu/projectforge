@@ -1,6 +1,7 @@
 package project
 
 import (
+	"os"
 	"path/filepath"
 
 	"github.com/pkg/errors"
@@ -33,19 +34,15 @@ func (s *Service) add(path string, parent *Project, logger util.Logger) (*Projec
 }
 
 func (s *Service) getAdditional(logger util.Logger) ([]string, bool) {
-	_, fs := s.root()
-	if fs == nil {
-		return nil, false
-	}
-	additionalContent, err := fs.ReadFile(additionalFilename)
+	additionalContent, err := os.ReadFile(additionalFilename)
 	if err != nil {
-		logger.Warnf("unable to load additional projects from [%s]", filepath.Join(fs.Root(), additionalFilename))
+		logger.Warnf("unable to load additional projects from [%s]", additionalFilename)
 		return nil, false
 	}
 	var additional []string
 	err = util.FromJSON(additionalContent, &additional)
 	if err != nil {
-		logger.Warnf("unable to parse additional projects from [%s]: %+v", filepath.Join(fs.Root(), additionalFilename), err)
+		logger.Warnf("unable to parse additional projects from [%s]: %+v", additionalFilename, err)
 	}
 	return additional, true
 }
@@ -64,19 +61,6 @@ func (s *Service) addAdditional(path string, logger util.Logger) {
 	}
 	if !hit {
 		add = append(add, path)
-		_, fs := s.root()
-		_ = fs.WriteFile(additionalFilename, util.ToJSONBytes(add, true), filesystem.DefaultMode, true)
+		_ = os.WriteFile(additionalFilename, util.ToJSONBytes(add, true), filesystem.DefaultMode)
 	}
-}
-
-func (s *Service) root() (*Project, filesystem.FileLoader) {
-	root := s.ByPath(".")
-	if root == nil {
-		return nil, nil
-	}
-	fs := s.GetFilesystem(root)
-	if !fs.Exists(additionalFilename) {
-		return nil, nil
-	}
-	return root, fs
 }
