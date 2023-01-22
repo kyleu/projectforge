@@ -64,7 +64,7 @@ func StreamList(qw422016 *qt422016.Writer, path []string, files []os.DirEntry, f
 //line views/vfile/List.html:15
 	for _, f := range files {
 //line views/vfile/List.html:17
-		icon := "file-text"
+		icon := "file"
 		if f.IsDir() {
 			icon = "folder"
 		}

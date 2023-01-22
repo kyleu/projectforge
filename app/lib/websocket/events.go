@@ -2,10 +2,13 @@
 package websocket
 
 import (
+	"context"
+
 	"github.com/fasthttp/websocket"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 
+	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/lib/user"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -30,6 +33,9 @@ func (s *Service) Register(profile *user.Profile, c *websocket.Conn, logger util
 
 // Sends a message to a provided Connection ID.
 func OnMessage(s *Service, connID uuid.UUID, message *Message, logger util.Logger) error {
+	ctx, span, logger := telemetry.StartSpan(context.Background(), "message::"+message.Cmd, logger)
+	defer span.Complete()
+
 	if connID == systemID {
 		logger.Warnf("admin message received: %s", util.ToJSON(message))
 		return nil
@@ -41,7 +47,7 @@ func OnMessage(s *Service, connID uuid.UUID, message *Message, logger util.Logge
 		return invalidConnection(connID)
 	}
 	s.WriteTap(message, logger)
-	return s.handler(s, c, message.Channel, message.Cmd, message.Param, logger)
+	return s.handler(ctx, s, c, message.Channel, message.Cmd, message.Param, logger)
 }
 
 // Removes a Connection from this Service.

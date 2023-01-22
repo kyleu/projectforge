@@ -1,6 +1,7 @@
 package websocket
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"sync"
@@ -17,7 +18,7 @@ import (
 )
 
 // Function used to handle incoming messages.
-type Handler func(s *Service, conn *Connection, svc string, cmd string, param json.RawMessage, logger util.Logger) error
+type Handler func(ctx context.Context, s *Service, conn *Connection, svc string, cmd string, param json.RawMessage, logger util.Logger) error
 
 // Function used to handle incoming connections.
 type ConnectEvent func(s *Service, conn *Connection, logger util.Logger) error

@@ -75,6 +75,14 @@ func (e *Enum) Breadcrumbs() string {
 	return strings.Join(ret, ", ")
 }
 
+func (e *Enum) ValuesCamel() []string {
+	ret := make([]string, 0, len(e.Values))
+	for _, x := range e.Values {
+		ret = append(ret, util.StringToCamel(x))
+	}
+	return ret
+}
+
 type Enums []*Enum
 
 func (e Enums) Get(key string) *Enum {
