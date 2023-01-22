@@ -36,7 +36,6 @@ func (s *Service) add(path string, parent *Project, logger util.Logger) (*Projec
 func (s *Service) getAdditional(logger util.Logger) ([]string, bool) {
 	additionalContent, err := os.ReadFile(additionalFilename)
 	if err != nil {
-		logger.Warnf("unable to load additional projects from [%s]", additionalFilename)
 		return nil, false
 	}
 	var additional []string
