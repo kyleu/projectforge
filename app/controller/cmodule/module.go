@@ -36,9 +36,9 @@ func ModuleDetail(rc *fasthttp.RequestCtx) {
 			}
 		}
 		_, html, err := doc.HTMLString("module:"+mod.Key, []byte(mod.UsageMD), func(s string) (string, string, error) {
-			ret, err := cutil.FormatMarkdown(s)
-			if err != nil {
-				return "", "", err
+			ret, e := cutil.FormatMarkdown(s)
+			if e != nil {
+				return "", "", e
 			}
 			if aIdx := strings.Index(ret, "CC0</a>"); aIdx > -1 {
 				ret = strings.TrimPrefix(ret[aIdx+7:], "</p>")

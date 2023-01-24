@@ -68,11 +68,9 @@ func mkGoSvcs(prjs project.Projects) []string {
 		ret = append(ret, fmt.Sprintf("  "+s, args...))
 	}
 	for _, p := range prjs {
-		tags := make([]string, 0, len(p.Tags)+1)
+		tags := make([]string, 0, len(p.Tags)+2)
 		tags = append(tags, "go", "v2")
-		for _, x := range p.Tags {
-			tags = append(tags, x)
-		}
+		tags = append(tags, p.Tags...)
 		if p.HasModule("database") {
 			tags = append(tags, "database")
 		}

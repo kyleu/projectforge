@@ -24,7 +24,7 @@ func ServiceDefinition(p *project.Project) util.ValueMap {
 
 	tags := make([]string, 0, len(p.Tags))
 	tags = append(tags, fmt.Sprintf("service:%s", p.CleanKey()))
-	//for _, x := range p.Tags {
+	// for _, x := range p.Tags {
 	//	tags = append(tags, fmt.Sprintf("%s:%s", x, x))
 	//}
 	for _, x := range p.Modules {

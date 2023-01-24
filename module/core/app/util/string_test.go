@@ -8,7 +8,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"{{{ .Package }}}/app/util"
+	"projectforge.dev/projectforge/app/util"
 )
 
 type StringTest struct {
@@ -107,11 +107,14 @@ func TestPadRight(t *testing.T) {
 		{Name: "negative size, input is left intact", Args: StringArgs{Input: "привет", Size: -10, Chr: '界'}, Expected: "привет"},
 		{Name: "empty input", Args: StringArgs{Input: "", Size: 3, Chr: '界'}, Expected: "界界界"},
 	}
+	t.Parallel()
 	for _, tCase := range cases {
-		t.Run(tCase.Name, func(t *testing.T) {
-			res := util.StringPadRight(tCase.Args.Input, tCase.Args.Size, tCase.Args.Chr)
-			if res != tCase.Expected {
-				t.Errorf("unexpected result %s, expected %s", res, tCase.Expected)
+		c := tCase
+		t.Run(c.Name, func(t *testing.T) {
+			t.Parallel()
+			res := util.StringPadRight(c.Args.Input, c.Args.Size, c.Args.Chr)
+			if res != c.Expected {
+				t.Errorf("unexpected result %s, expected %s", res, c.Expected)
 			}
 		})
 	}
@@ -130,11 +133,14 @@ func TestPadLeft(t *testing.T) {
 		{Name: "negative size, input is left intact", Args: StringArgs{Input: "привет", Size: -10, Chr: '界'}, Expected: "привет"},
 		{Name: "empty input", Args: StringArgs{Input: "", Size: 3, Chr: '界'}, Expected: "界界界"},
 	}
+	t.Parallel()
 	for _, tCase := range cases {
-		t.Run(tCase.Name, func(t *testing.T) {
-			res := util.StringPadLeft(tCase.Args.Input, tCase.Args.Size, tCase.Args.Chr)
-			if res != tCase.Expected {
-				t.Errorf("unexpected result %s, expected %s", res, tCase.Expected)
+		c := tCase
+		t.Run(c.Name, func(t *testing.T) {
+			t.Parallel()
+			res := util.StringPadLeft(c.Args.Input, c.Args.Size, c.Args.Chr)
+			if res != c.Expected {
+				t.Errorf("unexpected result %s, expected %s", res, c.Expected)
 			}
 		})
 	}

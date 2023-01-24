@@ -46,7 +46,7 @@ func gitOutdated(ctx context.Context, path string, logger util.Logger) (string, 
 
 	out, err = gitCmd(ctx, "describe --abbrev=0 --tags "+currentCommitHash, path, logger)
 	if err != nil {
-		return "", 0, nil
+		return "", 0, nil //nolint:nilerr
 	}
 	latestTag := strings.TrimSpace(out)
 	out, err = gitCmd(ctx, "rev-list --count "+fmt.Sprintf("%s..HEAD", latestTag), path, logger)
