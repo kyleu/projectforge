@@ -49,6 +49,16 @@ func projectFromCfg(proto *project.Project, cfg util.ValueMap) *project.Project 
 		_ = util.FromJSON([]byte(x), &cfgVars)
 	}
 
+	envVars := i.EnvVars
+	if x := cfg.GetStringOpt("envvars"); x != "" {
+		_ = util.FromJSON([]byte(x), &envVars)
+	}
+
+	docs := i.Docs
+	if x := cfg.GetStringOpt("docs"); x != "" {
+		_ = util.FromJSON([]byte(x), &docs)
+	}
+
 	return &project.Project{
 		Key:     str("key", proto.Key),
 		Version: str("version", proto.Version),
@@ -82,6 +92,8 @@ func projectFromCfg(proto *project.Project, cfg util.ValueMap) *project.Project 
 			ConfigVars:      cfgVars,
 			ExtraFiles:      util.StringSplitAndTrim(str("extraFiles", strings.Join(i.ExtraFiles, ", ")), ","),
 			Deployments:     util.StringSplitAndTrim(str("deployments", strings.Join(i.Deployments, ", ")), ","),
+			EnvVars:         envVars,
+			Docs:            docs,
 			ModuleDefs:      md,
 		},
 		Path: proto.Path,

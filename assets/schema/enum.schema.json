@@ -5,42 +5,53 @@
   "type": "object",
   "properties": {
     "name": {
+      "$comment": "the name of the enum, lowercase and underscore-delimited",
       "type": "string"
     },
     "package": {
+      "$comment": "single-word package name for this enum",
       "type": "string"
     },
     "group": {
+      "$comment": "when set, places this enum inside a folder group",
       "type": "string"
     },
     "description": {
+      "$comment": "used in UI and documentation",
       "type": "string"
     },
     "icon": {
+      "$comment": "one of the SVGs available in ./assets",
       "type": "string"
     },
     "values": {
+      "$comment": "the possible values of this enum's members",
       "type": "array",
       "items": {
         "type": "string"
       }
     },
     "tags": {
+      "$comment": "simple flags for this model; unused",
       "type": "array",
       "items": {
         "type": "string"
       }
     },
     "title": {
+      "$comment": "overrides the computed title",
       "type": "string"
     },
     "proper": {
+      "$comment": "overrides the computed proper-case version of the name",
       "type": "string"
     },
     "route": {
+      "$comment": "overrides the computed route",
       "type": "string"
     },
     "config": {
+      "$comment": "a config object for this enum; unused",
       "type": "object"
     }
   },

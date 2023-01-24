@@ -5,30 +5,39 @@
   "type": "object",
   "properties": {
     "name": {
-      "type": "string"
+      "$comment": "the name of the model, lowercase and underscore-delimited",
+      "type": "string",
+      "minLength": 1
     },
     "package": {
-      "type": "string"
+      "$comment": "single-word package name for this model",
+      "type": "string",
+      "minLength": 1
     },
     "group": {
+      "$comment": "when set, places this model inside a folder group",
       "type": "array",
       "items": {
         "type": "string"
       }
     },
     "description": {
+      "$comment": "used in UI and documentation",
       "type": "string"
     },
     "icon": {
+      "$comment": "one of the SVGs available in ./assets",
       "type": "string"
     },
     "ordering": {
+      "$comment": "default SQL ordering when querying this model",
       "type": "array",
       "items": {
         "type": "object",
         "properties": {
           "column": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "asc": {
             "type": "boolean"
@@ -37,45 +46,55 @@
       }
     },
     "search": {
+      "$comment": "additional columns to include in the search",
       "type": "array",
       "items": {
         "type": "string"
       }
     },
     "history": {
-      "type": "string"
+      "$comment": "used to track the history of a column",
+      "enum": ["history", "revision", "audit"]
     },
     "tags": {
+      "$comment": "flags for this model that control generated code",
       "type": "array",
       "items": {
-        "type": "string"
+        "enum": ["public", "search", "softDelete"]
       }
     },
     "title": {
+      "$comment": "overrides the computed title",
       "type": "string"
     },
     "proper": {
+      "$comment": "overrides the computed proper-case version of the name",
       "type": "string"
     },
     "route": {
+      "$comment": "overrides the computed route",
       "type": "string"
     },
     "config": {
+      "$comment": "a config object for this model; unused",
       "type": "object"
     },
     "columns": {
+      "$comment": "the columns in this model's table",
       "type": "array",
       "items": {
         "$ref": "#/$defs/column"
       }
     },
     "relations": {
+      "$comment": "defines relationships to other models",
       "type": "array",
       "items": {
         "$ref": "#/$defs/relation"
       }
     },
     "indexes": {
+      "$comment": "additional indexes for this model",
       "type": "array",
       "items": {
         "$ref": "#/$defs/index"
@@ -83,50 +102,62 @@
     }
   },
   "required": [
-    "name"
+    "name",
+    "package"
   ],
   "$defs": {
     "column": {
       "type": "object",
       "properties": {
         "name": {
+          "$comment": "the name of this column, in database format",
           "type": "string"
         },
         "type": {},
         "pk": {
+          "$comment": "if set, column will be part of the primary key",
           "type": "boolean"
         },
         "nullable": {
+          "$comment": "if set, null values are allowed",
           "type": "boolean"
         },
         "search": {
+          "$comment": "if set, column will be part of the search",
           "type": "boolean"
         },
         "sqlDefault": {
+          "$comment": "default value, include single quotes for string literals",
           "type": "string"
         },
         "indexed": {
+          "$comment": "if set, column will be indexed",
           "type": "boolean"
         },
         "display": {
-          "type": "string"
+          "$comment": "if set to \"detail\", will omit column from listing tables",
+          "enum": ["detail"]
         },
         "format": {
-          "type": "string"
+          "$comment": "used for strings, controls output format in UI",
+          "enum": ["code", "country", "html", "select", "url"]
         },
         "values": {
+          "$comment": "when format is \"select\", this controls the available values",
           "type": "array",
           "items": {
             "type": "string"
           }
         },
         "tags": {
+          "$comment": "tags controlling the column's code behavior",
           "type": "array",
           "items": {
-            "type": "string"
+            "enum": ["omitempty", "const", "deleted", "grouped", "title", "unique", "updated"]
           }
         },
         "helpString": {
+          "$comment": "emitted it the UI, this is an optional help string",
           "type": "string"
         }
       }
@@ -135,18 +166,22 @@
       "type": "object",
       "properties": {
         "name": {
+          "$comment": "name of this relationship, used as the database FK name",
           "type": "string"
         },
         "src": {
+          "$comment": "columns from source table",
           "type": "array",
           "items": {
             "type": "string"
           }
         },
         "table": {
+          "$comment": "name of target table",
           "type": "string"
         },
         "tgt": {
+          "$comment": "columns from target table",
           "type": "array",
           "items": {
             "type": "string"
@@ -158,9 +193,11 @@
       "type": "object",
       "properties": {
         "name": {
+          "$comment": "name of the index, used as the database name",
           "type": "string"
         },
         "decl": {
+          "$comment": "declaration, in SQL format, of this index's members",
           "type": "string"
         }
       }

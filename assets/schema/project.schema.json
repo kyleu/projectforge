@@ -5,54 +5,68 @@
   "type": "object",
   "properties": {
     "key": {
+      "$comment": "the id of this project, globally unique",
       "type": "string"
     },
     "name": {
+      "$comment": "the human-readable name of this project",
       "type": "string"
     },
     "icon": {
+      "$comment": "one of the SVGs available in ./assets",
       "type": "string"
     },
     "exec": {
+      "$comment": "executable name for this project",
       "type": "string"
     },
     "version": {
+      "$comment": "semver version string",
       "type": "string"
     },
     "package": {
+      "$comment": "full package for this project's module",
       "type": "string"
     },
     "args": {
+      "$comment": "additional arguments to pass when starting this project",
       "type": "string"
     },
     "port": {
+      "$comment": "http port for this project",
       "type": "integer"
     },
     "modules": {
+      "$comment": "the modules used by this project",
       "type": "array",
       "items": {
         "type": "string"
       }
     },
     "ignore": {
+      "$comment": "file patterns to ignore in git and Docker",
       "type": "array",
       "items": {
         "type": "string"
       }
     },
     "tags": {
+      "$comment": "flags for sorting and filtering projects",
       "type": "array",
       "items": {
         "type": "string"
       }
     },
     "info": {
+      "$comment": "additional info about this project",
       "$ref": "#/$defs/info"
     },
     "theme": {
+      "$comment": "default theme definition for this project",
       "$ref": "#/$defs/theme"
     },
     "build": {
+      "$comment": "build options for this project",
       "$ref": "#/$defs/build"
     }
   },
@@ -68,112 +82,142 @@
       "type": "object",
       "properties": {
         "org": {
+          "$comment": "the Github organization responsible for this project",
           "type": "string"
         },
         "authorID": {
+          "$comment": "the GitHub handle of the author of this project",
           "type": "string"
         },
         "authorName": {
+          "$comment": "the full name of the author of this project",
           "type": "string"
         },
         "authorEmail": {
+          "$comment": "the email address of the author of this project",
           "type": "string"
         },
         "team": {
+          "$comment": "the team that owns this project",
           "type": "string"
         },
         "license": {
+          "$comment": "the software license used by this project",
           "type": "string"
         },
         "homepage": {
+          "$comment": "the main web page for this project",
           "type": "string"
         },
         "sourcecode": {
+          "$comment": "the URL of this project's source repository",
           "type": "string"
         },
         "summary": {
+          "$comment": "a one-line summary of this project",
           "type": "string"
         },
         "description": {
+          "$comment": "a full multi-line description of this project",
           "type": "string"
         },
         "ci": {
+          "$comment": "when to run CI",
           "type": "string"
         },
         "homebrew": {
+          "$comment": "override the URL to download Homebrew assets from",
           "type": "string"
         },
         "bundle": {
+          "$comment": "app bundle used in iOS and macOS applications",
           "type": "string"
         },
         "signingIdentity": {
+          "$comment": "keychain identity to use for signing binaries",
           "type": "string"
         },
         "slack": {
+          "$comment": "Slack webhook for notifying after successful releases",
           "type": "string"
         },
         "channels": {
+          "$comment": "various communication channels used by this project",
           "type": "array",
           "items": {
             "type": "string"
           }
         },
         "javaPackage": {
+          "$comment": "the Java package used by the Android application",
           "type": "string"
         },
         "goVersion": {
+          "$comment": "the Go version used by this project",
           "type": "string"
         },
         "goBinary": {
+          "$comment": "The binary used for Go, defaults to \"go\"",
           "type": "string"
         },
         "configVars": {
+          "$comment": "configuration variables for code generation",
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
               "key": {
+                "$comment": "the key of this variable",
                 "type": "string"
               },
               "type": {
-                "type": "string"
+                "$comment": "the type of the value for this config variable",
+                "enum": ["string", "int"]
               },
               "description": {
+                "$comment": "a plain-text description of this variable",
                 "type": "string"
               }
             }
           }
         },
         "extraFiles": {
+          "$comment": "additional files to include in the builds",
           "type": "array",
           "items": {
             "type": "string"
           }
         },
         "deployments": {
+          "$comment": "files that track deployment of this app",
           "type": "array",
           "items": {
             "type": "string"
           }
         },
         "envVars": {
+          "$comment": "additional environment variables used by this project",
           "type": "array",
           "items": {
             "type": "string"
           }
         },
         "docs": {
+          "$comment": "documentation resources for this project",
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
               "name": {
+                "$comment": "the name of this document",
                 "type": "string"
               },
               "provider": {
+                "$comment": "the name of this document's provider",
                 "type": "string"
               },
               "url": {
+                "$comment": "full URL to this document",
                 "type": "string"
               }
             },
@@ -181,17 +225,21 @@
           }
         },
         "moduleDefs": {
+          "$comment": "",
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
               "key": {
+                "$comment": "name of this module, or \"*\" if a collection",
                 "type": "string"
               },
               "path": {
+                "$comment": "relative path to the definition of this module",
                 "type": "string"
               },
               "url": {
+                "$comment": "fallback URL to pull the module definition from",
                 "type": "string"
               }
             },
@@ -208,9 +256,11 @@
       "type": "object",
       "properties": {
         "light": {
+          "$comment": "light-mode colors",
           "$ref": "#/$defs/colors"
         },
         "dark": {
+          "$comment": "dark-mode colors",
           "$ref": "#/$defs/colors"
         }
       },
@@ -224,54 +274,71 @@
       "type": "object",
       "properties": {
         "brd": {
+          "$comment": "border color",
           "type": "string"
         },
         "ld": {
+          "$comment": "link decoration color",
           "type": "string"
         },
         "fg": {
+          "$comment": "foreground color",
           "type": "string"
         },
         "fgm": {
+          "$comment": "foreground muted color",
           "type": "string"
         },
         "bg": {
+          "$comment": "background color",
           "type": "string"
         },
         "bgm": {
+          "$comment": "background muted color",
           "type": "string"
         },
         "lf": {
+          "$comment": "link foreground color",
           "type": "string"
         },
         "lvf": {
+          "$comment": "visited link foreground color",
           "type": "string"
         },
         "nf": {
+          "$comment": "nav foreground color",
           "type": "string"
         },
         "nb": {
+          "$comment": "nav background color",
           "type": "string"
         },
         "mf": {
+          "$comment": "menu foreground color",
           "type": "string"
         },
         "mb": {
+          "$comment": "menu background color",
           "type": "string"
         },
         "msf": {
+          "$comment": "selected menu foreground color",
           "type": "string"
         },
         "msb": {
+          "$comment": "selected menu background color",
           "type": "string"
         },
         "mbd": {
+          "$comment": "modal backdrop color",
           "type": "string"
         },
         "ok": {
+          "$comment": "success foreground color",
           "type": "string"
         },
         "err": {
+          "$comment": "error foreground color",
           "type": "string"
         }
       },
@@ -281,84 +348,111 @@
       "type": "object",
       "properties": {
         "publish": {
+          "$comment": "if set, publishes this release to Github",
           "type": "boolean"
         },
         "private": {
+          "$comment": "if set, skips public assets",
           "type": "boolean"
         },
         "changelog": {
+          "$comment": "if set, generates a changelog from commit comments",
           "type": "boolean"
         },
         "testsFail": {
+          "$comment": "if set, build will fail if tests fail",
           "type": "boolean"
         },
         "desktop": {
+          "$comment": "if set, generates a desktop application",
           "type": "boolean"
         },
         "notarize": {
+          "$comment": "if set, notarizes the iOS and macOS binaries with Apple",
           "type": "boolean"
         },
         "signing": {
+          "$comment": "if set, signs the results with PGP",
           "type": "boolean"
         },
         "simple": {
+          "$comment": "if set, skips extra files like debug images",
           "type": "boolean"
         },
         "android": {
+          "$comment": "if set, generates an Android application",
           "type": "boolean"
         },
         "iOS": {
+          "$comment": "if set, generates an iOS application",
           "type": "boolean"
         },
         "wasm": {
+          "$comment": "if set, generates an WASM binary",
           "type": "boolean"
         },
         "x86": {
+          "$comment": "if set, generates x86 binaries",
           "type": "boolean"
         },
         "windowsARM": {
+          "$comment": "if set, generates ARM Windows binaries",
           "type": "boolean"
         },
         "linuxARM": {
+          "$comment": "if set, generates ARM Linux binaries",
           "type": "boolean"
         },
         "linuxMIPS": {
+          "$comment": "if set, generates MIPS Linux binaries",
           "type": "boolean"
         },
         "linuxOdd": {
+          "$comment": "if set, generates Linux binaries for weird architectures",
           "type": "boolean"
         },
         "dragonfly": {
+          "$comment": "if set, generates Dragonfly binaries",
           "type": "boolean"
         },
         "illumos": {
+          "$comment": "if set, generates Illumos binaries",
           "type": "boolean"
         },
         "freeBSD": {
+          "$comment": "if set, generates FreeBSD binaries",
           "type": "boolean"
         },
         "netBSD": {
+          "$comment": "if set, generates NetBSD binaries",
           "type": "boolean"
         },
         "openBSD": {
+          "$comment": "if set, generates OpenBSD binaries",
           "type": "boolean"
         },
         "plan9": {
+          "$comment": "if set, generates Plan 9 binaries",
           "type": "boolean"
         },
         "solaris": {
+          "$comment": "if set, generates Solaris binaries",
           "type": "boolean"
         },
         "homebrew": {
+          "$comment": "if set, publishes this project to Homebrew",
           "type": "boolean"
         },
         "nfpms": {
+          "$comment": "if set, generates NFPMS packages",
           "type": "boolean"
         },
         "bom": {
+          "$comment": "if set, generates BoM packages",
           "type": "boolean"
         },
         "snapcraft": {
+          "$comment": "if set, generates Snapcraft packages",
           "type": "boolean"
         }
       },
