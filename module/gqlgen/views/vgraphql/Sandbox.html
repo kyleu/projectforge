@@ -1,0 +1,19 @@
+{% import (
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/views/layout"
+) %}
+
+{% code type Sandbox struct { layout.Basic } %}
+
+{% func (p *Sandbox) Body(as *app.State, ps *cutil.PageState) %}
+  <div style="width: 100%; height: 100%;" id='embedded-sandbox'></div>
+  <script src="https://embeddable-sandbox.cdn.apollographql.com/_latest/embeddable-sandbox.umd.production.min.js" type="application/javascript"></script>
+  <script>
+    new window.EmbeddedSandbox({
+      target: '#embedded-sandbox',
+      initialEndpoint: 'http://localhost:23660/graphql',
+      includeCookies: false,
+    });
+  </script>
+{% endfunc %}

@@ -1,6 +1,7 @@
 package project
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -15,7 +16,7 @@ import (
 
 const rootKey = "root"
 
-func (s *Service) load(path string, logger util.Logger) (*Project, error) {
+func (s *Service) load(path string, logger util.Logger) (json.RawMessage, *Project, error) {
 	cfgPath := filepath.Join(path, ConfigDir, "project.json")
 
 	if curr, _ := os.Stat(cfgPath); curr == nil {
@@ -34,11 +35,11 @@ func (s *Service) load(path string, logger util.Logger) (*Project, error) {
 		}
 		ret := NewProject(r, path)
 		ret.Name = fmt.Sprintf("%s (missing)", r)
-		return ret, nil
+		return nil, ret, nil
 	}
 	b, err := os.ReadFile(cfgPath)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	ret := &Project{}
@@ -54,19 +55,19 @@ func (s *Service) load(path string, logger util.Logger) (*Project, error) {
 		ret = NewProject(r, path)
 		ret.Name = fmt.Sprintf("%s (json error)", r)
 		ret.Info = &Info{}
-		return ret, nil
+		return b, ret, nil
 		// return nil, errors.Wrapf(err, "can't load project from [%s]", cfgPath)
 	}
 	ret.Path = path
 
 	fs := s.GetFilesystem(ret)
 	if ret.Config, err = s.loadModuleConfig(fs); err != nil {
-		return nil, err
+		return b, nil, err
 	}
 	if ret.Theme == nil {
 		ret.Theme = theme.ThemeDefault
 	}
-	return ret, nil
+	return b, ret, nil
 }
 
 func (s *Service) loadModuleConfig(fs filesystem.FileLoader) (util.ValueMap, error) {

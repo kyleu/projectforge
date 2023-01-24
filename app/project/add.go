@@ -14,7 +14,7 @@ func (s *Service) add(path string, parent *Project, logger util.Logger) (*Projec
 	if parent != nil {
 		path = filepath.Join(parent.Path, path)
 	}
-	p, err := s.load(path, logger)
+	b, p, err := s.load(path, logger)
 	if err != nil {
 		return nil, err
 	}
@@ -29,6 +29,7 @@ func (s *Service) add(path string, parent *Project, logger util.Logger) (*Projec
 	}
 	s.cacheLock.Lock()
 	s.cache[p.Key] = p
+	s.fileContent[p.Key] = b
 	s.cacheLock.Unlock()
 	return p, nil
 }

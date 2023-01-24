@@ -27,7 +27,7 @@ func sqlHistory(ret *golang.Block, m *model.Model, modules []string) {
 		ret.W("  \"c\" jsonb not null,")
 		now := "now()"
 		if slices.Contains(modules, "sqlite") && !slices.Contains(modules, "postgres") {
-			now = "(datetime('now'))"
+			now = "current_timestamp"
 		}
 		ret.W("  \"created\" timestamp not null default %s,", now)
 		ret.W("  foreign key (%s) references %q (%s),", strings.Join(pkRefs, ", "), m.Name, strings.Join(m.PKs().NamesQuoted(), ", "))

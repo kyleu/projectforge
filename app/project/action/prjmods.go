@@ -2,6 +2,7 @@ package action
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/pkg/errors"
 
@@ -17,6 +18,7 @@ import (
 type PrjAndMods struct {
 	Cfg    util.ValueMap
 	Prj    *project.Project
+	File   json.RawMessage
 	Mods   module.Modules
 	MSvc   *module.Service
 	PSvc   *project.Service
@@ -34,6 +36,8 @@ func getPrjAndMods(ctx context.Context, p *Params) (context.Context, *PrjAndMods
 			p.ProjectKey = prj.Key
 		}
 	}
+
+	f := p.PSvc.GetFile(p.ProjectKey)
 
 	prj, err := p.PSvc.Get(p.ProjectKey)
 	if err != nil {
@@ -61,6 +65,6 @@ func getPrjAndMods(ctx context.Context, p *Params) (context.Context, *PrjAndMods
 		args.Modules = mods.Keys()
 	}
 
-	pm := &PrjAndMods{Cfg: p.Cfg, Prj: prj, Mods: mods, MSvc: p.MSvc, PSvc: p.PSvc, XSvc: p.XSvc, ESvc: p.ESvc, EArgs: args, Logger: p.Logger}
+	pm := &PrjAndMods{Cfg: p.Cfg, File: f, Prj: prj, Mods: mods, MSvc: p.MSvc, PSvc: p.PSvc, XSvc: p.XSvc, ESvc: p.ESvc, EArgs: args, Logger: p.Logger}
 	return ctx, pm, nil
 }

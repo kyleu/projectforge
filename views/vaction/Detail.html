@@ -25,7 +25,7 @@
   <div class="card">
     <div class="right">{%d len(res.Errors) %} {%s util.StringPluralMaybe("error", len(res.Errors)) %}</div>
     <h3>Errors</h3>
-    <ul>
+    <ul class="mt">
       {%- for _, e := range res.Errors -%}
       <li class="error">{%s e %}</li>
       {%- endfor -%}

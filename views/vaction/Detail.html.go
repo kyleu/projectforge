@@ -77,7 +77,7 @@ func StreamDetail(qw422016 *qt422016.Writer, cfg util.ValueMap, res *action.Resu
 //line views/vaction/Detail.html:26
 		qw422016.N().S(`</div>
     <h3>Errors</h3>
-    <ul>
+    <ul class="mt">
 `)
 //line views/vaction/Detail.html:29
 		for _, e := range res.Errors {

@@ -1,0 +1,368 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://projectforge.dev/schemas/project.schema.json",
+  "title": "Project",
+  "type": "object",
+  "properties": {
+    "key": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "icon": {
+      "type": "string"
+    },
+    "exec": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "package": {
+      "type": "string"
+    },
+    "args": {
+      "type": "string"
+    },
+    "port": {
+      "type": "integer"
+    },
+    "modules": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "ignore": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "info": {
+      "$ref": "#/$defs/info"
+    },
+    "theme": {
+      "$ref": "#/$defs/theme"
+    },
+    "build": {
+      "$ref": "#/$defs/build"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "key",
+    "name",
+    "version",
+    "package"
+  ],
+  "$defs": {
+    "info": {
+      "type": "object",
+      "properties": {
+        "org": {
+          "type": "string"
+        },
+        "authorID": {
+          "type": "string"
+        },
+        "authorName": {
+          "type": "string"
+        },
+        "authorEmail": {
+          "type": "string"
+        },
+        "team": {
+          "type": "string"
+        },
+        "license": {
+          "type": "string"
+        },
+        "homepage": {
+          "type": "string"
+        },
+        "sourcecode": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "ci": {
+          "type": "string"
+        },
+        "homebrew": {
+          "type": "string"
+        },
+        "bundle": {
+          "type": "string"
+        },
+        "signingIdentity": {
+          "type": "string"
+        },
+        "slack": {
+          "type": "string"
+        },
+        "channels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "javaPackage": {
+          "type": "string"
+        },
+        "goVersion": {
+          "type": "string"
+        },
+        "goBinary": {
+          "type": "string"
+        },
+        "configVars": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "extraFiles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "deployments": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "envVars": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "docs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "provider": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "moduleDefs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "path": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "org"
+      ]
+    },
+    "theme": {
+      "type": "object",
+      "properties": {
+        "light": {
+          "$ref": "#/$defs/colors"
+        },
+        "dark": {
+          "$ref": "#/$defs/colors"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "light",
+        "dark"
+      ]
+    },
+    "colors": {
+      "type": "object",
+      "properties": {
+        "brd": {
+          "type": "string"
+        },
+        "ld": {
+          "type": "string"
+        },
+        "fg": {
+          "type": "string"
+        },
+        "fgm": {
+          "type": "string"
+        },
+        "bg": {
+          "type": "string"
+        },
+        "bgm": {
+          "type": "string"
+        },
+        "lf": {
+          "type": "string"
+        },
+        "lvf": {
+          "type": "string"
+        },
+        "nf": {
+          "type": "string"
+        },
+        "nb": {
+          "type": "string"
+        },
+        "mf": {
+          "type": "string"
+        },
+        "mb": {
+          "type": "string"
+        },
+        "msf": {
+          "type": "string"
+        },
+        "msb": {
+          "type": "string"
+        },
+        "mbd": {
+          "type": "string"
+        },
+        "ok": {
+          "type": "string"
+        },
+        "err": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "build": {
+      "type": "object",
+      "properties": {
+        "publish": {
+          "type": "boolean"
+        },
+        "private": {
+          "type": "boolean"
+        },
+        "changelog": {
+          "type": "boolean"
+        },
+        "testsFail": {
+          "type": "boolean"
+        },
+        "desktop": {
+          "type": "boolean"
+        },
+        "notarize": {
+          "type": "boolean"
+        },
+        "signing": {
+          "type": "boolean"
+        },
+        "simple": {
+          "type": "boolean"
+        },
+        "android": {
+          "type": "boolean"
+        },
+        "iOS": {
+          "type": "boolean"
+        },
+        "wasm": {
+          "type": "boolean"
+        },
+        "x86": {
+          "type": "boolean"
+        },
+        "windowsARM": {
+          "type": "boolean"
+        },
+        "linuxARM": {
+          "type": "boolean"
+        },
+        "linuxMIPS": {
+          "type": "boolean"
+        },
+        "linuxOdd": {
+          "type": "boolean"
+        },
+        "dragonfly": {
+          "type": "boolean"
+        },
+        "illumos": {
+          "type": "boolean"
+        },
+        "freeBSD": {
+          "type": "boolean"
+        },
+        "netBSD": {
+          "type": "boolean"
+        },
+        "openBSD": {
+          "type": "boolean"
+        },
+        "plan9": {
+          "type": "boolean"
+        },
+        "solaris": {
+          "type": "boolean"
+        },
+        "homebrew": {
+          "type": "boolean"
+        },
+        "nfpms": {
+          "type": "boolean"
+        },
+        "bom": {
+          "type": "boolean"
+        },
+        "snapcraft": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -93,3 +93,10 @@ func (p Pkg) StartsWith(t Pkg) bool {
 	}
 	return true
 }
+
+func DefaultIfNil[T any](ptr *T, d T) T {
+	if ptr == nil {
+		return d
+	}
+	return *ptr
+}

@@ -58,11 +58,6 @@ func auditRun(ctx context.Context, pm *PrjAndMods, ret *Result) error {
 		return err
 	}
 
-	empty, err := getEmptyFolders(tgt, pm.Prj.Ignore, pm.Logger)
-	if err != nil {
-		return err
-	}
-
 	audits := make(diff.Diffs, 0, len(generated))
 	for _, g := range generated {
 		if !slices.Contains(src, g) {
@@ -71,9 +66,20 @@ func auditRun(ctx context.Context, pm *PrjAndMods, ret *Result) error {
 			}
 		}
 	}
+
+	empty, err := getEmptyFolders(tgt, pm.Prj.Ignore, pm.Logger)
+	if err != nil {
+		return err
+	}
 	for _, e := range empty {
 		audits = append(audits, &diff.Diff{Path: e, Status: diff.StatusMissing})
 	}
+
+	sch, err := schemaCheck(pm)
+	if err != nil {
+		return err
+	}
+	ret.Errors = append(ret.Errors, sch...)
 
 	mr := &module.Result{Keys: pm.Mods.Keys(), Status: "OK", Diffs: audits, Duration: timer.End()}
 	ret.Modules = append(ret.Modules, mr)

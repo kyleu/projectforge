@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://projectforge.dev/schemas/enum.schema.json",
+  "title": "Enum",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "package": {
+      "type": "string"
+    },
+    "group": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "icon": {
+      "type": "string"
+    },
+    "values": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "title": {
+      "type": "string"
+    },
+    "proper": {
+      "type": "string"
+    },
+    "route": {
+      "type": "string"
+    },
+    "config": {
+      "type": "object"
+    }
+  },
+  "required": ["name", "package", "values"]
+}

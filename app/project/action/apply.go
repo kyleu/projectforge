@@ -61,28 +61,27 @@ func Apply(ctx context.Context, p *Params) (ret *Result) {
 	}()
 
 	ret = applyBasic(ctx, p)
-	if ret == nil {
-		if len(p.PSvc.Projects()) == 0 {
-			_, err := p.PSvc.Refresh(p.Logger)
-			if err != nil {
-				return errorResult(err, p.T, p.Cfg, logger)
-			}
-		}
-		if p.ProjectKey == "" {
-			prj := p.PSvc.ByPath(".")
-			p.ProjectKey = prj.Key
-		}
-
-		var pm *PrjAndMods
-		var err error
-		ctx, pm, err = getPrjAndMods(ctx, p)
+	if ret != nil {
+		return ret
+	}
+	if len(p.PSvc.Projects()) == 0 {
+		_, err := p.PSvc.Refresh(p.Logger)
 		if err != nil {
 			return errorResult(err, p.T, p.Cfg, logger)
 		}
-
-		ret = applyPrj(ctx, pm, p.T)
 	}
-	return ret
+	if p.ProjectKey == "" {
+		prj := p.PSvc.ByPath(".")
+		p.ProjectKey = prj.Key
+	}
+
+	var pm *PrjAndMods
+	var err error
+	ctx, pm, err = getPrjAndMods(ctx, p)
+	if err != nil {
+		return errorResult(err, p.T, p.Cfg, logger)
+	}
+	return applyPrj(ctx, pm, p.T)
 }
 
 func applyBasic(ctx context.Context, p *Params) *Result {

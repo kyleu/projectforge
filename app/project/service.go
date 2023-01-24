@@ -1,6 +1,7 @@
 package project
 
 import (
+	"encoding/json"
 	"os"
 	"strings"
 	"sync"
@@ -18,6 +19,7 @@ var additionalFilename = ""
 
 type Service struct {
 	cache       map[string]*Project
+	fileContent map[string]json.RawMessage
 	cacheLock   sync.RWMutex
 	filesystems map[string]filesystem.FileLoader
 	fsLock      sync.RWMutex
@@ -26,7 +28,7 @@ type Service struct {
 func NewService() *Service {
 	hd, _ := os.UserHomeDir()
 	additionalFilename = hd + "/.pfconfig/additional-projects.json"
-	return &Service{cache: map[string]*Project{}, filesystems: map[string]filesystem.FileLoader{}}
+	return &Service{cache: map[string]*Project{}, fileContent: map[string]json.RawMessage{}, filesystems: map[string]filesystem.FileLoader{}}
 }
 
 func (s *Service) GetFilesystem(prj *Project) filesystem.FileLoader {
@@ -65,6 +67,10 @@ func (s *Service) Get(key string) (*Project, error) {
 		return ret, nil
 	}
 	return nil, errors.Errorf("no project with key [%s] found among %d candidates [%s]", key, len(s.cache), strings.Join(s.Keys(), ", "))
+}
+
+func (s *Service) GetFile(key string) json.RawMessage {
+	return s.fileContent[key]
 }
 
 func (s *Service) Keys() []string {

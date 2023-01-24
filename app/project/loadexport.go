@@ -1,6 +1,7 @@
 package project
 
 import (
+	"encoding/json"
 	"fmt"
 	"path"
 	"path/filepath"
@@ -29,38 +30,44 @@ func (s *Service) loadExportArgs(fs filesystem.FileLoader, logger util.Logger) (
 			if err != nil {
 				return nil, errors.Wrap(err, "invalid export config")
 			}
+			args.ConfigFile = cfg
 			args.Config = cfgMap
 		}
 	}
 	if groupCfgPath := filepath.Join(exportPath, "groups.json"); fs.Exists(groupCfgPath) {
-		if cfg, err := fs.ReadFile(groupCfgPath); err == nil {
+		if grpFile, err := fs.ReadFile(groupCfgPath); err == nil {
 			grps := model.Groups{}
-			err = util.FromJSON(cfg, &grps)
+			err = util.FromJSON(grpFile, &grps)
 			if err != nil {
 				return nil, errors.Wrap(err, "invalid group config")
 			}
+			args.GroupsFile = grpFile
 			args.Groups = grps
 		}
 	}
 
-	enums, err := getEnums(exportPath, fs, logger)
+	enumFiles, enums, err := getEnums(exportPath, fs, logger)
 	if err != nil {
 		return nil, err
 	}
+	args.EnumFiles = enumFiles
 	args.Enums = enums
 
-	explicitModels, err := getModels(exportPath, fs, logger)
+	explicitModelFiles, explicitModels, err := getModels(exportPath, fs, logger)
 	if err != nil {
 		return nil, err
 	}
+	args.ModelFiles = explicitModelFiles
 	args.Models = append(args.Models, explicitModels...)
 
-	jsonModels, err := getJSONModels(args.Config, args.Groups, fs, logger)
+	jsonModelFiles, jsonModels, err := getJSONModels(args.Config, args.Groups, fs, logger)
 	if err != nil {
 		return nil, err
 	}
+	for k, v := range jsonModelFiles {
+		args.ModelFiles[k] = v
+	}
 	args.Models = append(args.Models, jsonModels...)
-
 	if len(args.Models) > 0 {
 		slices.SortFunc(args.Models, func(l *model.Model, r *model.Model) bool {
 			return l.Name < r.Name
@@ -70,65 +77,70 @@ func (s *Service) loadExportArgs(fs filesystem.FileLoader, logger util.Logger) (
 	return args, nil
 }
 
-func getEnums(exportPath string, fs filesystem.FileLoader, logger util.Logger) (enum.Enums, error) {
+func getEnums(exportPath string, fs filesystem.FileLoader, logger util.Logger) (map[string]json.RawMessage, enum.Enums, error) {
 	enumsPath := filepath.Join(exportPath, "enums")
 	if !fs.IsDir(enumsPath) {
-		return nil, nil
+		return nil, nil, nil
 	}
 	enumNames := fs.ListJSON(enumsPath, nil, false, logger)
 	enums := make(enum.Enums, 0, len(enumNames))
+	enumFiles := make(map[string]json.RawMessage, len(enumNames))
 	for _, enumName := range enumNames {
 		fn := filepath.Join(enumsPath, enumName)
 		content, err := fs.ReadFile(fn)
 		if err != nil {
-			return nil, errors.Wrapf(err, "unable to read export enum file from [%s]", fn)
+			return nil, nil, errors.Wrapf(err, "unable to read export enum file from [%s]", fn)
 		}
 		m := &enum.Enum{}
 		err = util.FromJSON(content, m)
 		if err != nil {
-			return nil, errors.Wrapf(err, "unable to read export enum JSON from [%s]", fn)
+			return nil, nil, errors.Wrapf(err, "unable to read export enum JSON from [%s]", fn)
 		}
 		enums = append(enums, m)
+		enumFiles[m.Name] = content
 	}
-	return enums, nil
+	return enumFiles, enums, nil
 }
 
-func getModels(exportPath string, fs filesystem.FileLoader, logger util.Logger) (model.Models, error) {
+func getModels(exportPath string, fs filesystem.FileLoader, logger util.Logger) (map[string]json.RawMessage, model.Models, error) {
 	modelsPath := filepath.Join(exportPath, "models")
 	if !fs.IsDir(modelsPath) {
-		return nil, nil
+		return nil, nil, nil
 	}
 	modelNames := fs.ListJSON(modelsPath, nil, false, logger)
-	models := model.Models{}
+	models := make(model.Models, 0, len(modelNames))
+	modelFiles := make(map[string]json.RawMessage, len(modelNames))
 	for _, modelName := range modelNames {
 		fn := filepath.Join(modelsPath, modelName)
 		content, err := fs.ReadFile(fn)
 		if err != nil {
-			return nil, errors.Wrapf(err, "unable to read export model file from [%s]", fn)
+			return nil, nil, errors.Wrapf(err, "unable to read export model file from [%s]", fn)
 		}
 		m := &model.Model{}
 		err = util.FromJSON(content, m)
 		if err != nil {
-			return nil, errors.Wrapf(err, "unable to read export model JSON from [%s]", fn)
+			return nil, nil, errors.Wrapf(err, "unable to read export model JSON from [%s]", fn)
 		}
+		modelFiles[m.Name] = content
 		models = append(models, m)
 	}
-	return models, nil
+	return modelFiles, models, nil
 }
 
-func getJSONModels(cfg util.ValueMap, groups model.Groups, fs filesystem.FileLoader, logger util.Logger) (model.Models, error) {
+func getJSONModels(cfg util.ValueMap, groups model.Groups, fs filesystem.FileLoader, logger util.Logger) (map[string]json.RawMessage, model.Models, error) {
 	if cfg == nil {
-		return nil, nil
+		return nil, nil, nil
 	}
 	jsonCfg, ok := cfg["jsonExport"]
 	if !ok {
-		return nil, nil
+		return nil, nil, nil
 	}
 	pth := fmt.Sprint(jsonCfg)
 	if pth == "" {
-		return nil, nil
+		return nil, nil, nil
 	}
 	jsonFiles := fs.ListJSON(pth, nil, false, logger)
+	jsonModelFiles := make(map[string]json.RawMessage, len(jsonFiles))
 	jsonModels := make(model.Models, 0, len(jsonFiles))
 	for idx, jsonFile := range jsonFiles {
 		if !strings.HasSuffix(jsonFile, ".json") {
@@ -140,18 +152,19 @@ func getJSONModels(cfg util.ValueMap, groups model.Groups, fs filesystem.FileLoa
 		fn := path.Join(pth, jsonFile)
 		x, err := fs.ReadFile(fn)
 		if err != nil {
-			return nil, errors.Wrapf(err, "can't read file [%s]", fn)
+			return nil, nil, errors.Wrapf(err, "can't read file [%s]", fn)
 		}
 		df := &data.File{}
 		err = util.FromJSON(x, df)
 		if err != nil {
-			return nil, errors.Wrapf(err, "unable to parse JSON data file at [%s]", fn)
+			return nil, nil, errors.Wrapf(err, "unable to parse JSON data file at [%s]", fn)
 		}
 		mdl, err := df.ToModel(idx, groups)
 		if err != nil {
-			return nil, errors.Wrapf(err, "unable to convert file at [%s]", fn)
+			return nil, nil, errors.Wrapf(err, "unable to convert file at [%s]", fn)
 		}
+		jsonModelFiles[mdl.Name] = x
 		jsonModels = append(jsonModels, mdl)
 	}
-	return jsonModels, nil
+	return jsonModelFiles, jsonModels, nil
 }

@@ -15,7 +15,7 @@
 {% endstripspace %}{% endfunc %}
 
 {% func DisplayTimestampRelative(value *time.Time) %}{% stripspace %}
-  <span class="nowrap reltime" data-time="{%s util.TimeToFull(value) %}">{%s util.TimeToFull(value) %}</span>
+  <span class="nowrap reltime" data-time="{%s util.TimeToFull(value) %}">{%s util.TimeRelative(value) %}</span>
 {% endstripspace %}{% endfunc %}
 
 {% func DisplayTimestampDay(value *time.Time) %}{% stripspace %}

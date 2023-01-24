@@ -78,7 +78,7 @@ func StreamDisplayTimestampRelative(qw422016 *qt422016.Writer, value *time.Time)
 //line views/components/Display.html:19
 	qw422016.N().S(`">`)
 //line views/components/Display.html:19
-	qw422016.E().S(util.TimeToFull(value))
+	qw422016.E().S(util.TimeRelative(value))
 //line views/components/Display.html:19
 	qw422016.N().S(`</span>`)
 //line views/components/Display.html:20

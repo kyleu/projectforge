@@ -1,6 +1,8 @@
 package model
 
 import (
+	"encoding/json"
+
 	"github.com/pkg/errors"
 	"golang.org/x/exp/slices"
 
@@ -9,11 +11,15 @@ import (
 )
 
 type Args struct {
-	Config  util.ValueMap `json:"config,omitempty"`
-	Enums   enum.Enums    `json:"enums,omitempty"`
-	Models  Models        `json:"models,omitempty"`
-	Groups  Groups        `json:"groups,omitempty"`
-	Modules []string      `json:"-"`
+	Config     util.ValueMap              `json:"config,omitempty"`
+	ConfigFile json.RawMessage            `json:"-"`
+	Enums      enum.Enums                 `json:"enums,omitempty"`
+	EnumFiles  map[string]json.RawMessage `json:"-"`
+	Models     Models                     `json:"models,omitempty"`
+	ModelFiles map[string]json.RawMessage `json:"-"`
+	Groups     Groups                     `json:"groups,omitempty"`
+	GroupsFile json.RawMessage            `json:"-"`
+	Modules    []string                   `json:"-"`
 }
 
 func (a *Args) HasModule(key string) bool {
