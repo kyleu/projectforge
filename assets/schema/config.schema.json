@@ -5,11 +5,11 @@
   "type": "object",
   "properties": {
     "grpcClass": {
-      "$comment": "when set, overrides the gRPC class for generated code",
+      "description": "when set, overrides the gRPC class for generated code",
       "type": "string"
     },
     "grpcPackage": {
-      "$comment": "when set, overrides the gRPC package for generated code",
+      "description": "when set, overrides the gRPC package for generated code",
       "type": "string"
     }
   }
