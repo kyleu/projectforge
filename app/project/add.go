@@ -3,6 +3,7 @@ package project
 import (
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/pkg/errors"
 
@@ -11,7 +12,7 @@ import (
 )
 
 func (s *Service) add(path string, parent *Project, logger util.Logger) (*Project, error) {
-	if parent != nil {
+	if parent != nil && !strings.HasPrefix(path, "/") {
 		path = filepath.Join(parent.Path, path)
 	}
 	b, p, err := s.load(path, logger)
