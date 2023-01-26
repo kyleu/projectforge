@@ -13,19 +13,36 @@ import {themeInit} from "./theme";
 import {socketInit} from "./socket";
 import {appInit} from "./app";
 
+declare global {
+  interface Window {
+    "projectforge": {
+      relativeTime: (time: string, el?: HTMLElement) => string;
+      autocomplete: (el: HTMLInputElement, url: string, field: string, title: (x: any) => string, val: (x: any) => string) => void;
+      setSiblingToNull: (el: HTMLElement) => void;
+      initForm: (frm: HTMLFormElement) => void;
+      flash: (key: string, level: string, msg: string) => void;
+      tags: (el: HTMLElement) => void;
+      Socket: any;
+    };
+  }
+}
+
 export function init(): void {
-  (window as any).projectforge = {};
+  const [s, i] = editorInit();
+  window.projectforge = {
+    relativeTime: timeInit(),
+    autocomplete: autocompleteInit(),
+    setSiblingToNull: s,
+    initForm: i,
+    flash: flashInit(),
+    tags: tagsInit(),
+    Socket: socketInit()
+  };
   menuInit();
   modeInit();
-  flashInit();
   linkInit();
-  timeInit();
-  autocompleteInit();
   modalInit();
-  tagsInit();
-  editorInit();
   themeInit();
-  socketInit();
   appInit();
 }
 

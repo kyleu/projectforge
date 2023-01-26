@@ -1,5 +1,5 @@
 export function autocompleteInit() {
-  (window as any).{{{ .CleanKey }}}.autocomplete = autocomplete;
+  return autocomplete;
 }
 
 function autocomplete(el: HTMLInputElement, url: string, field: string, title: (x: any) => string, val: (x: any) => string) {
@@ -31,7 +31,7 @@ function autocomplete(el: HTMLInputElement, url: string, field: string, title: (
   let lastQuery = "";
 
   function getURL(q: string): string {
-    let dest = url;
+    const dest = url;
     if (dest.includes("?")) {
       return dest + "&t=json&" + field + "=" + encodeURIComponent(q);
     } else {
@@ -53,7 +53,7 @@ function autocomplete(el: HTMLInputElement, url: string, field: string, title: (
     if (q.length === 0) {
       return;
     }
-    let dest = getURL(q);
+    const dest = getURL(q);
     let proceed: boolean = (!q || !lastQuery);
     if (!proceed) {
       const l = cache[lastQuery];
@@ -94,14 +94,14 @@ function autocomplete(el: HTMLInputElement, url: string, field: string, title: (
   console.log("managing [" + el.id + "] autocomplete");
 }
 
-function debounce(callback: any, wait: number) {
+function debounce(callback: (...args: any) => void, wait: number) {
   let timeoutId = 0;
   return function (...args: any) {
     if (timeoutId !== 0) {
       window.clearTimeout(timeoutId);
     }
     timeoutId = window.setTimeout(function () {
-      callback.apply(null, args);
+      callback(null, ...args);
     }, wait);
   };
 }

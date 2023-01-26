@@ -56,8 +56,8 @@ func (s *Service) WriteChannel(message *Message, logger util.Logger, except ...u
 		return nil
 	}
 	json := util.ToJSON(message)
-	logger.Debugf("sending message [%v::%v] to [%v] connections", message.Channel, message.Cmd, len(conns.MemberIDs))
-	for _, conn := range conns.MemberIDs {
+	logger.Debugf("sending message [%v::%v] to [%v] connections", message.Channel, message.Cmd, len(conns.ConnIDs)-len(except))
+	for _, conn := range conns.ConnIDs {
 		if !slices.Contains(except, conn) {
 			connID := conn
 
@@ -77,6 +77,10 @@ func (s *Service) ReadLoop(connID uuid.UUID, logger util.Logger) error {
 		return errors.New("cannot load connection [" + connID.String() + "]")
 	}
 	d := func() error {
+		_, err := s.Disconnect(connID, logger)
+		if err != nil {
+			return err
+		}
 		if s.onClose != nil {
 			return s.onClose(s, c, logger)
 		}

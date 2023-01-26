@@ -1,5 +1,5 @@
 export function socketInit() {
-  (window as any).{{{ .CleanKey }}}.Socket = Socket;
+  return Socket;
 }
 
 let appUnloading = false;

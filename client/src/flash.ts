@@ -32,10 +32,9 @@ export function flashCreate(key: string, level: string, msg: string) {
 }
 
 export function flashInit() {
-  (window as any).projectforge.flash = flashCreate;
   const container = document.getElementById("flash-container");
   if (container === null) {
-    return;
+    return flashCreate;
   }
   const x = container.querySelectorAll<HTMLElement>(".flash");
   if (x.length > 0) {
@@ -43,6 +42,7 @@ export function flashInit() {
       fade(f);
     }
   }
+  return flashCreate;
 }
 
 function fade(el: HTMLElement) {

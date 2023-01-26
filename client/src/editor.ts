@@ -11,8 +11,8 @@ export function setSiblingToNull(el: HTMLElement) {
 
 export function initForm(frm: HTMLFormElement) {
   frm.onreset = () => initForm(frm);
-  let editorCache: { [key: string]: string; } = {};
-  let selectedCache: { [key: string]: HTMLInputElement; } = {};
+  const editorCache: { [key: string]: string; } = {};
+  const selectedCache: { [key: string]: HTMLInputElement; } = {};
   for (const el of frm.elements) {
     const input = el as HTMLInputElement;
     if (input.name.length > 0) {
@@ -35,10 +35,9 @@ export function initForm(frm: HTMLFormElement) {
   }
 }
 
-export function editorInit() {
-  (window as any).projectforge.setSiblingToNull = setSiblingToNull;
-  (window as any).projectforge.initForm = initForm;
+export function editorInit(): [(el: HTMLElement) => void, (frm: HTMLFormElement) => void] {
   for (const n of Array.from(document.querySelectorAll<HTMLFormElement>("form.editor"))) {
     initForm(n);
   }
+  return [setSiblingToNull, initForm];
 }

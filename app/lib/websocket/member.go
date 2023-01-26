@@ -18,8 +18,8 @@ func (s *Service) GetAllMembers(key string) []*Connection {
 	if !ok {
 		return nil
 	}
-	ret := make([]*Connection, 0, len(ch.MemberIDs))
-	for _, cID := range ch.MemberIDs {
+	ret := make([]*Connection, 0, len(ch.ConnIDs))
+	for _, cID := range ch.ConnIDs {
 		c, ok := s.connections[cID]
 		if ok && c != nil {
 			ret = append(ret, c)
@@ -34,7 +34,7 @@ func (s *Service) GetOnline(key string) []uuid.UUID {
 		return nil
 	}
 	online := make([]uuid.UUID, 0)
-	for _, cID := range ch.MemberIDs {
+	for _, cID := range ch.ConnIDs {
 		c, ok := s.connections[cID]
 		if ok && c != nil && (!slices.Contains(online, c.ID)) {
 			online = append(online, c.ID)

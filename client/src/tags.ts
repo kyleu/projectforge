@@ -25,10 +25,10 @@ function tagsWire(el: HTMLElement) {
 }
 
 export function tagsInit() {
-  (window as any).projectforge.tags = tagsWire;
   for (const el of els(".tag-editor")) {
     tagsWire(el);
   }
+  return tagsWire;
 }
 
 function compareOrder(elem1: HTMLElement, elem2: HTMLElement) {
@@ -55,7 +55,7 @@ function tagsRender(v: string, editorEl: HTMLElement): HTMLDivElement {
     item.classList.add("dragging");
     draggedElement = item;
   }
-  item.ondragover = function (e) {
+  item.ondragover = function () {
     const order = compareOrder(item, draggedElement);
     if (!order) {
       return;

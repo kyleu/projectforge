@@ -3,5 +3,8 @@
   "version": "1.0.0",
   "dependencies": {
     "esbuild": "^0.11.6"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.49.0"
   }
 }

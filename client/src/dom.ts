@@ -41,7 +41,7 @@ export function setHTML(el: string | HTMLElement, html: string) {
   return el;
 }
 
-export function setDisplay(el: string | HTMLElement, condition: boolean, v: string = "block") {
+export function setDisplay(el: string | HTMLElement, condition: boolean, v = "block") {
   if (typeof el === "string") {
     el = req(el);
   }

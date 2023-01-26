@@ -13,20 +13,38 @@ import {themeInit} from "./theme";{{{ if .HasModule "websocket" }}}
 import {socketInit} from "./socket";{{{ end }}}
 import {appInit} from "./app";
 
+declare global {
+  interface Window {
+    "{{{ .CleanKey }}}": {
+      relativeTime: (time: string, el?: HTMLElement) => string;
+      autocomplete: (el: HTMLInputElement, url: string, field: string, title: (x: any) => string, val: (x: any) => string) => void;
+      setSiblingToNull: (el: HTMLElement) => void;
+      initForm: (frm: HTMLFormElement) => void;
+      flash: (key: string, level: string, msg: string) => void;
+      tags: (el: HTMLElement) => void;{{{ if .HasModule "websocket" }}}
+      Socket: any;{{{ end }}}
+    };{{{ if .HasModule "jsx" }}}
+    "JSX": (tag: string, attrs: any) => HTMLElement;{{{ end }}}
+  }
+}
+
 export function init(): void {
-  (window as any).{{{ .CleanKey }}} = {};{{{ if .HasModule "jsx" }}}
-  (window as any).JSX = JSX;{{{ end }}}
+  const [s, i] = editorInit();
+  window.{{{ .CleanKey }}} = {
+    relativeTime: timeInit(),
+    autocomplete: autocompleteInit(),
+    setSiblingToNull: s,
+    initForm: i,
+    flash: flashInit(),
+    tags: tagsInit(){{{ if .HasModule "websocket" }}},
+    Socket: socketInit(){{{ end }}}
+  };
   menuInit();
   modeInit();
-  flashInit();
   linkInit();
-  timeInit();
-  autocompleteInit();
   modalInit();
-  tagsInit();
-  editorInit();
-  themeInit();{{{ if .HasModule "websocket" }}}
-  socketInit();{{{ end }}}
+  themeInit();{{{ if .HasModule "jsx" }}}
+  window.JSX = JSX;{{{ end }}}
   appInit();
 }
 

@@ -8,10 +8,8 @@ declare global {
   }
 }
 
-export interface Element extends HTMLElement {}
-
 // noinspection JSUnusedGlobalSymbols
-export function JSX(tag: string, attrs: any) {
+export function JSX(tag: string, attrs: any, ...args: any) {
   const e = document.createElement(tag);
   for (const name in attrs) {
     if (name && attrs.hasOwnProperty(name)) {
@@ -25,8 +23,7 @@ export function JSX(tag: string, attrs: any) {
       }
     }
   }
-  for (let i = 2; i < arguments.length; i++) {
-    let child = arguments[i];
+  for (let child of args) {
     if (Array.isArray(child)) {
       child.forEach(c => {
         if (child === undefined || child === null) {

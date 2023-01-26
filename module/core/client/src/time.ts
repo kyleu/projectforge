@@ -1,14 +1,14 @@
 import {els} from "./dom";
 
 export function timeInit() {
-  (window as any).{{{ .CleanKey }}}.relativeTime = relativeTime;
   els(".reltime").forEach(el => {
     relativeTime(el.dataset["time"] || "", el);
   })
+  return relativeTime;
 }
 
 export function utc(date: Date) {
-  var utc = Date.UTC(
+  const utc = Date.UTC(
     date.getUTCFullYear(), date.getUTCMonth(),
     date.getUTCDate(), date.getUTCHours(),
     date.getUTCMinutes(), date.getUTCSeconds()

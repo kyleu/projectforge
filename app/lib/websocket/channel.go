@@ -12,13 +12,13 @@ import (
 
 type Channel struct {
 	Key          string      `json:"key"`
-	MemberIDs    []uuid.UUID `json:"memberIDs"`
+	ConnIDs      []uuid.UUID `json:"connIDs"`
 	LastUpdate   time.Time   `json:"lastUpdate"`
 	MessageCount int         `json:"messageCount"`
 }
 
 func newChannel(key string) *Channel {
-	return &Channel{Key: key, MemberIDs: []uuid.UUID{}, LastUpdate: time.Now()}
+	return &Channel{Key: key, LastUpdate: time.Now()}
 }
 
 func (s *Service) Join(connID uuid.UUID, ch string, logger util.Logger) (bool, error) {
@@ -40,8 +40,8 @@ func (s *Service) Join(connID uuid.UUID, ch string, logger util.Logger) (bool, e
 		s.channels[ch] = curr
 		created = true
 	}
-	if !slices.Contains(curr.MemberIDs, connID) {
-		curr.MemberIDs = append(curr.MemberIDs, connID)
+	if !slices.Contains(curr.ConnIDs, connID) {
+		curr.ConnIDs = append(curr.ConnIDs, connID)
 	}
 	return created, s.sendOnlineUpdate(ch, conn.ID, conn.ID, true, logger)
 }
@@ -60,19 +60,19 @@ func (s *Service) Leave(connID uuid.UUID, ch string, logger util.Logger) (bool, 
 	if !ok {
 		curr = newChannel(ch)
 	}
-	filtered := make([]uuid.UUID, 0)
-	for _, i := range curr.MemberIDs {
+
+	filteredConns := make([]uuid.UUID, len(curr.ConnIDs))
+	for _, i := range curr.ConnIDs {
 		if i != connID {
-			filtered = append(filtered, i)
+			filteredConns = append(filteredConns, i)
 		}
 	}
-
-	if len(filtered) == 0 {
+	if len(filteredConns) == 0 {
 		delete(s.channels, ch)
 		return true, nil
 	}
 
-	s.channels[ch].MemberIDs = filtered
+	s.channels[ch].ConnIDs = filteredConns
 	return false, s.sendOnlineUpdate(ch, conn.ID, conn.ID, false, logger)
 }
 

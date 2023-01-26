@@ -108,7 +108,6 @@ func TestPadRight(t *testing.T) {
 		{Name: "negative size, input is left intact", Args: StringArgs{Input: "привет", Size: -10, Chr: '界'}, Expected: "привет"},
 		{Name: "empty input", Args: StringArgs{Input: "", Size: 3, Chr: '界'}, Expected: "界界界"},
 	}
-	t.Parallel()
 	for _, tCase := range cases {
 		c := tCase
 		t.Run(c.Name, func(t *testing.T) {
@@ -134,7 +133,6 @@ func TestPadLeft(t *testing.T) {
 		{Name: "negative size, input is left intact", Args: StringArgs{Input: "привет", Size: -10, Chr: '界'}, Expected: "привет"},
 		{Name: "empty input", Args: StringArgs{Input: "", Size: 3, Chr: '界'}, Expected: "界界界"},
 	}
-	t.Parallel()
 	for _, tCase := range cases {
 		c := tCase
 		t.Run(c.Name, func(t *testing.T) {

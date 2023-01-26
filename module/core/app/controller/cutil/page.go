@@ -62,13 +62,19 @@ type PageState struct {
 	RenderElapsed float64           `json:"renderElapsed,omitempty"`
 }
 
-func (p *PageState) AddIcon(n string) {
-	for _, icon := range p.Icons {
-		if icon == n {
-			return
+func (p *PageState) AddIcon(keys ...string) {
+	for _, k := range keys {
+		var hit bool
+		for _, icon := range p.Icons {
+			if icon == k {
+				hit = true
+				break
+			}
+		}
+		if !hit {
+			p.Icons = append(p.Icons, k)
 		}
 	}
-	p.Icons = append(p.Icons, n)
 }
 
 func (p *PageState) TitleString() string {

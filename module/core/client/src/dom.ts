@@ -1,4 +1,4 @@
-{{{ if .HasModule "user" }}}import * as JSX from "./jsx"
+{{{ if .HasModule "jsx" }}}import * as JSX from "./jsx"
 
 {{{ end }}}export function els<T extends HTMLElement>(selector: string, context?: HTMLElement): readonly T[] {
   let result: NodeListOf<Element>;
@@ -42,7 +42,7 @@ export function setHTML(el: string | HTMLElement, html: string) {
   return el;
 }
 
-export function setDisplay(el: string | HTMLElement, condition: boolean, v: string = "block") {
+export function setDisplay(el: string | HTMLElement, condition: boolean, v = "block") {
   if (typeof el === "string") {
     el = req(el);
   }
