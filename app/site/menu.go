@@ -31,6 +31,7 @@ func Menu(ctx context.Context, as *app.State, _ *user.Profile, _ user.Accounts, 
 		{Key: keyCustomizing, Title: "Customizing", Icon: "code", Route: "/" + keyCustomizing},
 		{Key: keyContrib, Title: "Contributing", Icon: "cog", Route: "/" + keyContrib},
 		{Key: keyTech, Title: "Technology", Icon: "shield", Route: "/" + keyTech},
-		{Key: keyFAQ, Title: "FAQ", Icon: "question", Route: "/" + keyFAQ},
+		{Key: keyFAQ, Title: "FAQ", Icon: "book", Route: "/" + keyFAQ},
+		{Key: keyAbout, Title: "About", Icon: "question", Route: "/" + keyAbout},
 	}
 }

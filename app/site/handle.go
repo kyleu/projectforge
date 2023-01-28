@@ -67,7 +67,7 @@ func Handle(path []string, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.Pag
 	case keyTech:
 		page, err = mdTemplate("This static page describes the technology used in "+util.AppName, "technology.md", "shield", ps)
 	case keyFAQ:
-		page, err = mdTemplate("Frequently asked questions about "+util.AppName, "faq.md", "question", ps)
+		page, err = mdTemplate("Frequently asked questions about "+util.AppName, "faq.md", "book", ps)
 	default:
 		page, err = mdTemplate("Documentation for "+util.AppName, path[0]+".md", "", ps)
 		if err != nil {
