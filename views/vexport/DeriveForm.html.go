@@ -47,17 +47,17 @@ func (p *DeriveForm) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cu
         <tbody>
           `)
 //line views/vexport/DeriveForm.html:20
-	components.StreamTableInput(qw422016, "name", "Name", "", 5, "If provided, overrides the detected model name")
+	components.StreamTableInput(qw422016, "name", "", "Name", "", 5, "If provided, overrides the detected model name")
 //line views/vexport/DeriveForm.html:20
 	qw422016.N().S(`
           `)
 //line views/vexport/DeriveForm.html:21
-	components.StreamTableInput(qw422016, "pkg", "Package", "", 5, "If provided, overrides the detected package")
+	components.StreamTableInput(qw422016, "pkg", "", "Package", "", 5, "If provided, overrides the detected package")
 //line views/vexport/DeriveForm.html:21
 	qw422016.N().S(`
           `)
 //line views/vexport/DeriveForm.html:22
-	components.StreamTableTextarea(qw422016, "content", "Content", 16, "", 5, "Try pasting any ol' thing, it'll figure it out")
+	components.StreamTableTextarea(qw422016, "content", "", "Content", 16, "", 5, "Try pasting any ol' thing, it'll figure it out")
 //line views/vexport/DeriveForm.html:22
 	qw422016.N().S(`
           <tr>

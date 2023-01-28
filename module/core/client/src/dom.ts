@@ -1,6 +1,6 @@
 {{{ if .HasModule "jsx" }}}import * as JSX from "./jsx"
 
-{{{ end }}}export function els<T extends HTMLElement>(selector: string, context?: HTMLElement): readonly T[] {
+{{{ end }}}export function els<T extends HTMLElement>(selector: string, context?: Element): readonly T[] {
   let result: NodeListOf<Element>;
   if (context) {
     result = context.querySelectorAll(selector);
@@ -14,7 +14,7 @@
   return ret;
 }
 
-export function opt<T extends HTMLElement>(selector: string, context?: HTMLElement): T | undefined {
+export function opt<T extends HTMLElement>(selector: string, context?: Element): T | undefined {
   const e = els<T>(selector, context);
   switch (e.length) {
     case 0:
@@ -26,7 +26,7 @@ export function opt<T extends HTMLElement>(selector: string, context?: HTMLEleme
   }
 }
 
-export function req<T extends HTMLElement>(selector: string, context?: HTMLElement): T {
+export function req<T extends HTMLElement>(selector: string, context?: Element): T {
   const res = opt<T>(selector, context);
   if (!res) {
     console.warn(`no element found for selector [${selector}]`);
@@ -50,8 +50,8 @@ export function setDisplay(el: string | HTMLElement, condition: boolean, v = "bl
   el.style.display = condition ? v : "none";
   return el;
 }
-{{{ if .HasModule "user" }}}
-export function setContent(el: string | HTMLElement, e: JSX.Element | JSX.Element[]) {
+{{{ if .HasModule "jsx" }}}
+export function setContent(el: string | HTMLElement, e: Element | Element[]) {
   if (typeof el === "string") {
     el = req(el);
   }

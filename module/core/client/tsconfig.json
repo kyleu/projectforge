@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "allowJs": true,
-    "esModuleInterop": true,{{{ if .HasModule "user" }}}
+    "esModuleInterop": true,{{{ if .HasModule "jsx" }}}
     "jsx": "react",
     "jsxFactory": "JSX",{{{ end }}}
     "listFiles": false,

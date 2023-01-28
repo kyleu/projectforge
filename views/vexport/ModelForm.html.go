@@ -80,62 +80,62 @@ func (p *ModelForm) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
         <tbody>
           `)
 //line views/vexport/ModelForm.html:31
-	components.StreamTableInput(qw422016, "name", "Name", m.Name, 5, export.Helpers["model.name"]...)
+	components.StreamTableInput(qw422016, "name", "", "Name", m.Name, 5, export.Helpers["model.name"]...)
 //line views/vexport/ModelForm.html:31
 	qw422016.N().S(`
           `)
 //line views/vexport/ModelForm.html:32
-	components.StreamTableInput(qw422016, "package", "Package", m.Package, 5, export.Helpers["model.package"]...)
+	components.StreamTableInput(qw422016, "package", "", "Package", m.Package, 5, export.Helpers["model.package"]...)
 //line views/vexport/ModelForm.html:32
 	qw422016.N().S(`
           `)
 //line views/vexport/ModelForm.html:33
-	components.StreamTableInput(qw422016, "group", "Group", strings.Join(m.Group, "/"), 5, export.Helpers["model.group"]...)
+	components.StreamTableInput(qw422016, "group", "", "Group", strings.Join(m.Group, "/"), 5, export.Helpers["model.group"]...)
 //line views/vexport/ModelForm.html:33
 	qw422016.N().S(`
           `)
 //line views/vexport/ModelForm.html:34
-	components.StreamTableInput(qw422016, "description", "Description", m.Description, 5, export.Helpers["model.description"]...)
+	components.StreamTableInput(qw422016, "description", "", "Description", m.Description, 5, export.Helpers["model.description"]...)
 //line views/vexport/ModelForm.html:34
 	qw422016.N().S(`
           `)
 //line views/vexport/ModelForm.html:35
-	components.StreamTableInput(qw422016, "icon", "Icon", m.Icon, 5, export.Helpers["model.icon"]...)
+	components.StreamTableInput(qw422016, "icon", "", "Icon", m.Icon, 5, export.Helpers["model.icon"]...)
 //line views/vexport/ModelForm.html:35
 	qw422016.N().S(`
           `)
 //line views/vexport/ModelForm.html:36
-	components.StreamTableTextarea(qw422016, "ordering", "Ordering", 3, util.ToJSON(m.Ordering), 5, export.Helpers["model.ordering"]...)
+	components.StreamTableTextarea(qw422016, "ordering", "", "Ordering", 3, util.ToJSON(m.Ordering), 5, export.Helpers["model.ordering"]...)
 //line views/vexport/ModelForm.html:36
 	qw422016.N().S(`
           `)
 //line views/vexport/ModelForm.html:37
-	components.StreamTableInput(qw422016, "search", "Search", strings.Join(m.Search, `, `), 5, export.Helpers["model.search"]...)
+	components.StreamTableInput(qw422016, "search", "", "Search", strings.Join(m.Search, `, `), 5, export.Helpers["model.search"]...)
 //line views/vexport/ModelForm.html:37
 	qw422016.N().S(`
           `)
 //line views/vexport/ModelForm.html:38
-	components.StreamTableInput(qw422016, "history", "History", m.History, 5, export.Helpers["model.history"]...)
+	components.StreamTableInput(qw422016, "history", "", "History", m.History, 5, export.Helpers["model.history"]...)
 //line views/vexport/ModelForm.html:38
 	qw422016.N().S(`
           `)
 //line views/vexport/ModelForm.html:39
-	components.StreamTableInput(qw422016, "tags", "Tags", strings.Join(m.Tags, `, `), 5, export.Helpers["model.tags"]...)
+	components.StreamTableInput(qw422016, "tags", "", "Tags", strings.Join(m.Tags, `, `), 5, export.Helpers["model.tags"]...)
 //line views/vexport/ModelForm.html:39
 	qw422016.N().S(`
           `)
 //line views/vexport/ModelForm.html:40
-	components.StreamTableInput(qw422016, "titleOverride", "Title Override", m.TitleOverride, 5, export.Helpers["model.titleOverride"]...)
+	components.StreamTableInput(qw422016, "titleOverride", "", "Title Override", m.TitleOverride, 5, export.Helpers["model.titleOverride"]...)
 //line views/vexport/ModelForm.html:40
 	qw422016.N().S(`
           `)
 //line views/vexport/ModelForm.html:41
-	components.StreamTableInput(qw422016, "properOverride", "Proper Override", m.ProperOverride, 5, export.Helpers["model.properOverride"]...)
+	components.StreamTableInput(qw422016, "properOverride", "", "Proper Override", m.ProperOverride, 5, export.Helpers["model.properOverride"]...)
 //line views/vexport/ModelForm.html:41
 	qw422016.N().S(`
           `)
 //line views/vexport/ModelForm.html:42
-	components.StreamTableTextarea(qw422016, "config", "Config", 3, util.ToJSON(m.Config), 5, export.Helpers["model.config"]...)
+	components.StreamTableTextarea(qw422016, "config", "", "Config", 3, util.ToJSON(m.Config), 5, export.Helpers["model.config"]...)
 //line views/vexport/ModelForm.html:42
 	qw422016.N().S(`
         </tbody>

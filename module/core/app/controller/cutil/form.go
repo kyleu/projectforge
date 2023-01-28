@@ -82,3 +82,10 @@ func parseHTTPForm(rc *fasthttp.RequestCtx) (util.ValueMap, error) {
 	})
 	return ret, nil
 }
+
+func CleanID(key string, id string) string {
+	if id == "" {
+		return key + "-" + util.RandomString(6)
+	}
+	return id
+}

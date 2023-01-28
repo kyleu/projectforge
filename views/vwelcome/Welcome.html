@@ -34,16 +34,16 @@
       <h3>Create your project</h3>
       <table class="mt min-200 expanded">
         <tbody>
-          {%= components.TableInput("key", "Key", prj.Key, 5, project.Helpers["key"]...) %}
-          {%= components.TableInput("name", "Name", strings.TrimSuffix(prj.Name, " (missing)"), 5, project.Helpers["name"]...) %}
-          {%= components.TableInput("version", "Version", prj.Version, 5, project.Helpers["version"]...) %}
-          {%= components.TableInput("org", "Organization", info.Org, 5, project.Helpers["org"]...) %}
-          {%= components.TableInput("package", "Package", prj.Package, 5, project.Helpers["package"]...) %}
-          {%= components.TableInput("homepage", "Homepage", info.Homepage, 5, project.Helpers["homepage"]...) %}
-          {%= components.TableInput("sourcecode", "Source Code", info.Sourcecode, 5, project.Helpers["sourcecode"]...) %}
-          {%= components.TableInput("summary", "Summary", info.Summary, 5, project.Helpers["summary"]...) %}
-          {%= components.TableInputNumber("port", "Port", prj.Port, 5, project.Helpers["port"]...) %}
-          {%= components.TableInput("license", "License", info.License, 5, project.Helpers["license"]...) %}
+          {%= components.TableInput("key", "", "Key", prj.Key, 5, project.Helpers["key"]...) %}
+          {%= components.TableInput("name", "", "Name", strings.TrimSuffix(prj.Name, " (missing)"), 5, project.Helpers["name"]...) %}
+          {%= components.TableInput("version", "", "Version", prj.Version, 5, project.Helpers["version"]...) %}
+          {%= components.TableInput("org", "", "Organization", info.Org, 5, project.Helpers["org"]...) %}
+          {%= components.TableInput("package", "", "Package", prj.Package, 5, project.Helpers["package"]...) %}
+          {%= components.TableInput("homepage", "", "Homepage", info.Homepage, 5, project.Helpers["homepage"]...) %}
+          {%= components.TableInput("sourcecode", "", "Source Code", info.Sourcecode, 5, project.Helpers["sourcecode"]...) %}
+          {%= components.TableInput("summary", "", "Summary", info.Summary, 5, project.Helpers["summary"]...) %}
+          {%= components.TableInputNumber("port", "", "Port", prj.Port, 5, project.Helpers["port"]...) %}
+          {%= components.TableInput("license", "", "License", info.License, 5, project.Helpers["license"]...) %}
         </tbody>
       </table>
     </div>

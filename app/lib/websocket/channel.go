@@ -61,7 +61,7 @@ func (s *Service) Leave(connID uuid.UUID, ch string, logger util.Logger) (bool, 
 		curr = newChannel(ch)
 	}
 
-	filteredConns := make([]uuid.UUID, len(curr.ConnIDs))
+	filteredConns := make([]uuid.UUID, 0, len(curr.ConnIDs))
 	for _, i := range curr.ConnIDs {
 		if i != connID {
 			filteredConns = append(filteredConns, i)

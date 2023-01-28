@@ -35,12 +35,12 @@
           {%- case "bool" -%}
           {%= components.TableBoolean(arg.Key, arg.Title, v == "true", 5, arg.Description) %}
           {%- case "textarea" -%}
-          {%= components.TableTextarea(arg.Key, arg.Title, 12, v, 5, arg.Description) %}
+          {%= components.TableTextarea(arg.Key, "", arg.Title, 12, v, 5, arg.Description) %}
           {%- case "number", "int" -%}
           {%- code i, _ := strconv.Atoi(v) -%}
-          {%= components.TableInputNumber(arg.Key, arg.Title, i, 5, arg.Description) %}
+          {%= components.TableInputNumber(arg.Key, "", arg.Title, i, 5, arg.Description) %}
           {%- default -%}
-          {%= components.TableInput(arg.Key, arg.Title, v, 5, arg.Description) %}
+          {%= components.TableInput(arg.Key, "", arg.Title, v, 5, arg.Description) %}
           {%- endswitch -%}
           {%- endfor -%}
         </tbody>

@@ -56,22 +56,22 @@ func (p *Form) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
         <tbody>
           `)
 //line views/vexec/Form.html:24
-	components.StreamTableInput(qw422016, "key", "Key", x.Key, 5, "optional, defaults to command")
+	components.StreamTableInput(qw422016, "key", "", "Key", x.Key, 5, "optional, defaults to command")
 //line views/vexec/Form.html:24
 	qw422016.N().S(`
           `)
 //line views/vexec/Form.html:25
-	components.StreamTableInput(qw422016, "cmd", "Command", x.Cmd, 5, "command to execute, with arguments")
+	components.StreamTableInput(qw422016, "cmd", "", "Command", x.Cmd, 5, "command to execute, with arguments")
 //line views/vexec/Form.html:25
 	qw422016.N().S(`
           `)
 //line views/vexec/Form.html:26
-	components.StreamTableInput(qw422016, "path", "Path", x.Path, 5)
+	components.StreamTableInput(qw422016, "path", "", "Path", x.Path, 5)
 //line views/vexec/Form.html:26
 	qw422016.N().S(`
           `)
 //line views/vexec/Form.html:27
-	components.StreamTableTextarea(qw422016, "env", "Env Vars", len(x.Env), strings.Join(x.Env, "\n"), 5)
+	components.StreamTableTextarea(qw422016, "env", "", "Env Vars", len(x.Env), strings.Join(x.Env, "\n"), 5)
 //line views/vexec/Form.html:27
 	qw422016.N().S(`
           <tr>

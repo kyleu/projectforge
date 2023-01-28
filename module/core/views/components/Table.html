@@ -9,102 +9,123 @@
   "{{{ .Package }}}/views/vutil"
 ) %}
 
-{% func TableInput(key string, title string, value string, indent int, help ...string) %}{% stripspace %}
+{% func TableInput(key string, id string, title string, value string, indent int, help ...string) %}{% stripspace %}
+  {%- code id = cutil.CleanID(key, id) -%}
   <tr>
     {%= vutil.Indent(true, indent + 1) %}
-    <th class="shrink"><label for="input-{%s key %}"{%= titleFor(help) %}>{%s title %}</label></th>
+    <th class="shrink"><label for="{%s id %}"{%= titleFor(help) %}>{%s title %}</label></th>
     {%= vutil.Indent(true, indent + 1) %}
-    <td>{%= FormInput(key, "input-" + key, value, help...) %}</td>
+    <td>{%= FormInput(key, id, value, help...) %}</td>
   {%= vutil.Indent(true, indent) %}
   </tr>
 {% endstripspace %}{% endfunc %}
 
-{% func TableInputPassword(key string, title string, value string, indent int, help ...string) %}{% stripspace %}
+{% func TableInputPassword(key string, id string, title string, value string, indent int, help ...string) %}{% stripspace %}
+  {%- code id = cutil.CleanID(key, id) -%}
   <tr>
     {%= vutil.Indent(true, indent + 1) %}
-    <th class="shrink"><label for="input-{%s key %}"{%= titleFor(help) %}>{%s title %}</label></th>
+    <th class="shrink"><label for="{%s id %}"{%= titleFor(help) %}>{%s title %}</label></th>
     {%= vutil.Indent(true, indent + 1) %}
-    <td>{%= FormInputPassword(key, "input-" + key, value, help...) %}</td>
+    <td>{%= FormInputPassword(key, id, value, help...) %}</td>
   {%= vutil.Indent(true, indent) %}
   </tr>
 {% endstripspace %}{% endfunc %}
 
-{% func TableInputNumber(key string, title string, value int, indent int, help ...string) %}{% stripspace %}
+{% func TableInputNumber(key string, id string, title string, value int, indent int, help ...string) %}{% stripspace %}
+  {%- code id = cutil.CleanID(key, id) -%}
   <tr>
     {%= vutil.Indent(true, indent + 1) %}
-    <th class="shrink"><label for="input-{%s key %}"{%= titleFor(help) %}>{%s title %}</label></th>
+    <th class="shrink"><label for="{%s id %}"{%= titleFor(help) %}>{%s title %}</label></th>
     {%= vutil.Indent(true, indent + 1) %}
-    <td>{%= FormInputNumber(key, "input-" + key, value, help...) %}</td>
+    <td>{%= FormInputNumber(key, id, value, help...) %}</td>
   {%= vutil.Indent(true, indent) %}
   </tr>
 {% endstripspace %}{% endfunc %}
 
-{% func TableInputFloat(key string, title string, value float64, indent int, help ...string) %}{% stripspace %}
+{% func TableInputFloat(key string, id string, title string, value float64, indent int, help ...string) %}{% stripspace %}
+  {%- code id = cutil.CleanID(key, id) -%}
   <tr>
     {%= vutil.Indent(true, indent + 1) %}
-    <th class="shrink"><label for="input-{%s key %}"{%= titleFor(help) %}>{%s title %}</label></th>
+    <th class="shrink"><label for="{%s id %}"{%= titleFor(help) %}>{%s title %}</label></th>
     {%= vutil.Indent(true, indent + 1) %}
-    <td>{%= FormInputFloat(key, "input-" + key, value, help...) %}</td>
+    <td>{%= FormInputFloat(key, id, value, help...) %}</td>
   {%= vutil.Indent(true, indent) %}
   </tr>
 {% endstripspace %}{% endfunc %}
 
-{% func TableInputTimestamp(key string, title string, value *time.Time, indent int, help ...string) %}{% stripspace %}
+{% func TableInputTimestamp(key string, id string, title string, value *time.Time, indent int, help ...string) %}{% stripspace %}
+  {%- code id = cutil.CleanID(key, id) -%}
   <tr>
     {%= vutil.Indent(true, indent + 1) %}
-    <th class="shrink"><label for="input-{%s key %}"{%= titleFor(help) %}>{%s title %}</label></th>
+    <th class="shrink"><label for="{%s id %}"{%= titleFor(help) %}>{%s title %}</label></th>
     {%= vutil.Indent(true, indent + 1) %}
-    <td>{%= FormInputTimestamp(key, "input-" + key, value, help...) %}</td>
+    <td>{%= FormInputTimestamp(key, id, value, help...) %}</td>
   {%= vutil.Indent(true, indent) %}
   </tr>
 {% endstripspace %}{% endfunc %}
 
-{% func TableInputTimestampDay(key string, title string, value *time.Time, indent int, help ...string) %}{% stripspace %}
+{% func TableInputTimestampDay(key string, id string, title string, value *time.Time, indent int, help ...string) %}{% stripspace %}
+  {%- code id = cutil.CleanID(key, id) -%}
   <tr>
     {%= vutil.Indent(true, indent + 1) %}
-    <th class="shrink"><label for="input-{%s key %}"{%= titleFor(help) %}>{%s title %}</label></th>
+    <th class="shrink"><label for="{%s id %}"{%= titleFor(help) %}>{%s title %}</label></th>
     {%= vutil.Indent(true, indent + 1) %}
-    <td>{%= FormInputTimestampDay(key, "input-" + key, value, help...) %}</td>
+    <td>{%= FormInputTimestampDay(key, id, value, help...) %}</td>
   {%= vutil.Indent(true, indent) %}
   </tr>
 {% endstripspace %}{% endfunc %}
 
-{% func TableInputUUID(key string, title string, value *uuid.UUID, indent int, help ...string) %}{% stripspace %}
+{% func TableInputUUID(key string, id string, title string, value *uuid.UUID, indent int, help ...string) %}{% stripspace %}
+  {%- code id = cutil.CleanID(key, id) -%}
   <tr>
     {%= vutil.Indent(true, indent + 1) %}
-    <th class="shrink"><label for="input-{%s key %}"{%= titleFor(help) %}>{%s title %}</label></th>
+    <th class="shrink"><label for="{%s id %}"{%= titleFor(help) %}>{%s title %}</label></th>
     {%= vutil.Indent(true, indent + 1) %}
-    <td>{%= FormInputUUID(key, "input-" + key, value, help...) %}</td>
+    <td>{%= FormInputUUID(key, id, value, help...) %}</td>
   {%= vutil.Indent(true, indent) %}
   </tr>
 {% endstripspace %}{% endfunc %}
 
-{% func TableTextarea(key string, title string, rows int, value string, indent int, help ...string) %}{% stripspace %}
+{% func TableTextarea(key string, id string, title string, rows int, value string, indent int, help ...string) %}{% stripspace %}
+  {%- code id = cutil.CleanID(key, id) -%}
   <tr>
     {%= vutil.Indent(true, indent + 1) %}
-    <th class="shrink"><label for="input-{%s key %}"{%= titleFor(help) %}>{%s title %}</label></th>
+    <th class="shrink"><label for="{%s id %}"{%= titleFor(help) %}>{%s title %}</label></th>
     {%= vutil.Indent(true, indent + 1) %}
-    <td>{%= FormTextarea(key, "input-" + key, rows, value, help...) %}</td>
+    <td>{%= FormTextarea(key, id, rows, value, help...) %}</td>
   {%= vutil.Indent(true, indent) %}
   </tr>
 {% endstripspace %}{% endfunc %}
 
-{% func TableSelect(key string, title string, value string, opts []string, titles []string, indent int, help ...string) %}{% stripspace %}
+{% func TableSelect(key string, id string, title string, value string, opts []string, titles []string, indent int, help ...string) %}{% stripspace %}
+  {%- code id = cutil.CleanID(key, id) -%}
   <tr>
     {%= vutil.Indent(true, indent + 1) %}
-    <th class="shrink"><label for="input-{%s key %}"{%= titleFor(help) %}>{%s title %}</label></th>
+    <th class="shrink"><label for="{%s id %}"{%= titleFor(help) %}>{%s title %}</label></th>
     {%= vutil.Indent(true, indent + 1) %}
-    <td>{%= FormSelect(key, "input-" + key, value, opts, titles, indent) %}</td>
+    <td>{%= FormSelect(key, id, value, opts, titles, indent) %}</td>
   {%= vutil.Indent(true, indent) %}
   </tr>
 {% endstripspace %}{% endfunc %}
 
-{% func TableDatalist(key string, title string, value string, opts []string, titles []string, indent int, help ...string) %}{% stripspace %}
+{% func TableDatalist(key string, id string, title string, value string, opts []string, titles []string, indent int, help ...string) %}{% stripspace %}
+  {%- code id = cutil.CleanID(key, id) -%}
   <tr>
     {%= vutil.Indent(true, indent + 1) %}
-    <th class="shrink"><label for="input-{%s key %}"{%= titleFor(help) %}>{%s title %}</label></th>
+    <th class="shrink"><label for="{%s id %}"{%= titleFor(help) %}>{%s title %}</label></th>
     {%= vutil.Indent(true, indent + 1) %}
-    <td>{%= FormDatalist(key, "input-" + key, value, opts, titles, indent) %}</td>
+    <td>{%= FormDatalist(key, id, value, opts, titles, indent) %}</td>
+  {%= vutil.Indent(true, indent) %}
+  </tr>
+{% endstripspace %}{% endfunc %}
+
+{% func TableInputTags(key string, id string, title string, values []string, ps *cutil.PageState, indent int, help ...string) %}{% stripspace %}
+  {%- code id = cutil.CleanID(key, id) -%}
+  <tr>
+    {%= vutil.Indent(true, indent + 1) %}
+    <th class="shrink"><label for="{%s id %}"{%= titleFor(help) %}>{%s title %}</label></th>
+    {%= vutil.Indent(true, indent + 1) %}
+    <td>{%= FormInputTags(key, id, values, ps, help...) %}</td>
   {%= vutil.Indent(true, indent) %}
   </tr>
 {% endstripspace %}{% endfunc %}
@@ -146,16 +167,6 @@
     {%= vutil.Indent(true, indent + 1) %}
     <td>{%= IconPicker(key, value, ps, indent + 2) %}
     </td>
-  {%= vutil.Indent(true, indent) %}
-  </tr>
-{% endstripspace %}{% endfunc %}
-
-{% func TableInputTags(key string, title string, values []string, ps *cutil.PageState, indent int, help ...string) %}{% stripspace %}
-  <tr>
-    {%= vutil.Indent(true, indent + 1) %}
-    <th class="shrink"><label for="input-{%s key %}"{%= titleFor(help) %}>{%s title %}</label></th>
-    {%= vutil.Indent(true, indent + 1) %}
-    <td>{%= FormInputTags(key, "input-" + key, values, ps, help...) %}</td>
   {%= vutil.Indent(true, indent) %}
   </tr>
 {% endstripspace %}{% endfunc %}

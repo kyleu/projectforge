@@ -28,18 +28,18 @@
       <h3>{%= components.SVGRefIcon(m.IconSafe(), ps) %}{% if m.Name == "" %}New Model{% else %}Edit {%s m.Name %}{% endif %}</h3>
       <table class="mt min-200 expanded">
         <tbody>
-          {%= components.TableInput("name", "Name", m.Name, 5, export.Helpers["model.name"]...) %}
-          {%= components.TableInput("package", "Package", m.Package, 5, export.Helpers["model.package"]...) %}
-          {%= components.TableInput("group", "Group", strings.Join(m.Group, "/"), 5, export.Helpers["model.group"]...) %}
-          {%= components.TableInput("description", "Description", m.Description, 5, export.Helpers["model.description"]...) %}
-          {%= components.TableInput("icon", "Icon", m.Icon, 5, export.Helpers["model.icon"]...) %}
-          {%= components.TableTextarea("ordering", "Ordering", 3, util.ToJSON(m.Ordering), 5, export.Helpers["model.ordering"]...) %}
-          {%= components.TableInput("search", "Search", strings.Join(m.Search, `, `), 5, export.Helpers["model.search"]...) %}
-          {%= components.TableInput("history", "History", m.History, 5, export.Helpers["model.history"]...) %}
-          {%= components.TableInput("tags", "Tags", strings.Join(m.Tags, `, `), 5, export.Helpers["model.tags"]...) %}
-          {%= components.TableInput("titleOverride", "Title Override", m.TitleOverride, 5, export.Helpers["model.titleOverride"]...) %}
-          {%= components.TableInput("properOverride", "Proper Override", m.ProperOverride, 5, export.Helpers["model.properOverride"]...) %}
-          {%= components.TableTextarea("config", "Config", 3, util.ToJSON(m.Config), 5, export.Helpers["model.config"]...) %}
+          {%= components.TableInput("name", "", "Name", m.Name, 5, export.Helpers["model.name"]...) %}
+          {%= components.TableInput("package", "", "Package", m.Package, 5, export.Helpers["model.package"]...) %}
+          {%= components.TableInput("group", "", "Group", strings.Join(m.Group, "/"), 5, export.Helpers["model.group"]...) %}
+          {%= components.TableInput("description", "", "Description", m.Description, 5, export.Helpers["model.description"]...) %}
+          {%= components.TableInput("icon", "", "Icon", m.Icon, 5, export.Helpers["model.icon"]...) %}
+          {%= components.TableTextarea("ordering", "", "Ordering", 3, util.ToJSON(m.Ordering), 5, export.Helpers["model.ordering"]...) %}
+          {%= components.TableInput("search", "", "Search", strings.Join(m.Search, `, `), 5, export.Helpers["model.search"]...) %}
+          {%= components.TableInput("history", "", "History", m.History, 5, export.Helpers["model.history"]...) %}
+          {%= components.TableInput("tags", "", "Tags", strings.Join(m.Tags, `, `), 5, export.Helpers["model.tags"]...) %}
+          {%= components.TableInput("titleOverride", "", "Title Override", m.TitleOverride, 5, export.Helpers["model.titleOverride"]...) %}
+          {%= components.TableInput("properOverride", "", "Proper Override", m.ProperOverride, 5, export.Helpers["model.properOverride"]...) %}
+          {%= components.TableTextarea("config", "", "Config", 3, util.ToJSON(m.Config), 5, export.Helpers["model.config"]...) %}
         </tbody>
       </table>
     </div>

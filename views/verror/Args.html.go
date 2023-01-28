@@ -105,7 +105,7 @@ func (p *Args) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/verror/Args.html:38
 			qw422016.N().S(`          `)
 //line views/verror/Args.html:39
-			components.StreamTableTextarea(qw422016, arg.Key, arg.Title, 12, v, 5, arg.Description)
+			components.StreamTableTextarea(qw422016, arg.Key, "", arg.Title, 12, v, 5, arg.Description)
 //line views/verror/Args.html:39
 			qw422016.N().S(`
 `)
@@ -117,7 +117,7 @@ func (p *Args) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/verror/Args.html:41
 			qw422016.N().S(`          `)
 //line views/verror/Args.html:42
-			components.StreamTableInputNumber(qw422016, arg.Key, arg.Title, i, 5, arg.Description)
+			components.StreamTableInputNumber(qw422016, arg.Key, "", arg.Title, i, 5, arg.Description)
 //line views/verror/Args.html:42
 			qw422016.N().S(`
 `)
@@ -126,7 +126,7 @@ func (p *Args) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/verror/Args.html:43
 			qw422016.N().S(`          `)
 //line views/verror/Args.html:44
-			components.StreamTableInput(qw422016, arg.Key, arg.Title, v, 5, arg.Description)
+			components.StreamTableInput(qw422016, arg.Key, "", arg.Title, v, 5, arg.Description)
 //line views/verror/Args.html:44
 			qw422016.N().S(`
 `)

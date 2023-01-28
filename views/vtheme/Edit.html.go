@@ -59,7 +59,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
         <tbody>
           `)
 //line views/vtheme/Edit.html:23
-	components.StreamTableInput(qw422016, "key", "Key", p.Theme.Key, 5)
+	components.StreamTableInput(qw422016, "key", "", "Key", p.Theme.Key, 5)
 //line views/vtheme/Edit.html:23
 	qw422016.N().S(`
         </tbody>

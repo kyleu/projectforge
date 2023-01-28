@@ -78,7 +78,7 @@
 {% endstripspace %}{% endfunc %}
 
 {% func FormSelect(key string, id string, value string, opts []string, titles []string, indent int) %}{% stripspace %}
-  <select name="{%s key %}"{% if id == `` %}{% space %}id="{%s id %}"{% endif %}>
+  <select name="{%s key %}"{% if id != `` %}{% space %}id="{%s id %}"{% endif %}>
     {% for idx, opt := range opts %}
       {% code
         title := opt

@@ -571,7 +571,7 @@ func StreamFormSelect(qw422016 *qt422016.Writer, key string, id string, value st
 //line views/components/Form.html:81
 	qw422016.N().S(`"`)
 //line views/components/Form.html:81
-	if id == `` {
+	if id != `` {
 //line views/components/Form.html:81
 		qw422016.N().S(` `)
 //line views/components/Form.html:81

@@ -74,52 +74,52 @@ func (p *Welcome) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
         <tbody>
           `)
 //line views/vwelcome/Welcome.html:37
-	components.StreamTableInput(qw422016, "key", "Key", prj.Key, 5, project.Helpers["key"]...)
+	components.StreamTableInput(qw422016, "key", "", "Key", prj.Key, 5, project.Helpers["key"]...)
 //line views/vwelcome/Welcome.html:37
 	qw422016.N().S(`
           `)
 //line views/vwelcome/Welcome.html:38
-	components.StreamTableInput(qw422016, "name", "Name", strings.TrimSuffix(prj.Name, " (missing)"), 5, project.Helpers["name"]...)
+	components.StreamTableInput(qw422016, "name", "", "Name", strings.TrimSuffix(prj.Name, " (missing)"), 5, project.Helpers["name"]...)
 //line views/vwelcome/Welcome.html:38
 	qw422016.N().S(`
           `)
 //line views/vwelcome/Welcome.html:39
-	components.StreamTableInput(qw422016, "version", "Version", prj.Version, 5, project.Helpers["version"]...)
+	components.StreamTableInput(qw422016, "version", "", "Version", prj.Version, 5, project.Helpers["version"]...)
 //line views/vwelcome/Welcome.html:39
 	qw422016.N().S(`
           `)
 //line views/vwelcome/Welcome.html:40
-	components.StreamTableInput(qw422016, "org", "Organization", info.Org, 5, project.Helpers["org"]...)
+	components.StreamTableInput(qw422016, "org", "", "Organization", info.Org, 5, project.Helpers["org"]...)
 //line views/vwelcome/Welcome.html:40
 	qw422016.N().S(`
           `)
 //line views/vwelcome/Welcome.html:41
-	components.StreamTableInput(qw422016, "package", "Package", prj.Package, 5, project.Helpers["package"]...)
+	components.StreamTableInput(qw422016, "package", "", "Package", prj.Package, 5, project.Helpers["package"]...)
 //line views/vwelcome/Welcome.html:41
 	qw422016.N().S(`
           `)
 //line views/vwelcome/Welcome.html:42
-	components.StreamTableInput(qw422016, "homepage", "Homepage", info.Homepage, 5, project.Helpers["homepage"]...)
+	components.StreamTableInput(qw422016, "homepage", "", "Homepage", info.Homepage, 5, project.Helpers["homepage"]...)
 //line views/vwelcome/Welcome.html:42
 	qw422016.N().S(`
           `)
 //line views/vwelcome/Welcome.html:43
-	components.StreamTableInput(qw422016, "sourcecode", "Source Code", info.Sourcecode, 5, project.Helpers["sourcecode"]...)
+	components.StreamTableInput(qw422016, "sourcecode", "", "Source Code", info.Sourcecode, 5, project.Helpers["sourcecode"]...)
 //line views/vwelcome/Welcome.html:43
 	qw422016.N().S(`
           `)
 //line views/vwelcome/Welcome.html:44
-	components.StreamTableInput(qw422016, "summary", "Summary", info.Summary, 5, project.Helpers["summary"]...)
+	components.StreamTableInput(qw422016, "summary", "", "Summary", info.Summary, 5, project.Helpers["summary"]...)
 //line views/vwelcome/Welcome.html:44
 	qw422016.N().S(`
           `)
 //line views/vwelcome/Welcome.html:45
-	components.StreamTableInputNumber(qw422016, "port", "Port", prj.Port, 5, project.Helpers["port"]...)
+	components.StreamTableInputNumber(qw422016, "port", "", "Port", prj.Port, 5, project.Helpers["port"]...)
 //line views/vwelcome/Welcome.html:45
 	qw422016.N().S(`
           `)
 //line views/vwelcome/Welcome.html:46
-	components.StreamTableInput(qw422016, "license", "License", info.License, 5, project.Helpers["license"]...)
+	components.StreamTableInput(qw422016, "license", "", "License", info.License, 5, project.Helpers["license"]...)
 //line views/vwelcome/Welcome.html:46
 	qw422016.N().S(`
         </tbody>

@@ -17,9 +17,9 @@
       <h3>{%= components.SVGRefIcon(`dna`, ps) %}Import Model</h3>
       <table class="mt min-200 expanded">
         <tbody>
-          {%= components.TableInput("name", "Name", "", 5, "If provided, overrides the detected model name") %}
-          {%= components.TableInput("pkg", "Package", "", 5, "If provided, overrides the detected package") %}
-          {%= components.TableTextarea("content", "Content", 16, "", 5, "Try pasting any ol' thing, it'll figure it out") %}
+          {%= components.TableInput("name", "", "Name", "", 5, "If provided, overrides the detected model name") %}
+          {%= components.TableInput("pkg", "", "Package", "", 5, "If provided, overrides the detected package") %}
+          {%= components.TableTextarea("content", "", "Content", 16, "", 5, "Try pasting any ol' thing, it'll figure it out") %}
           <tr>
             <td colspan="2">
               <button type="submit">Save</button>
