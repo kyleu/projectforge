@@ -28,9 +28,9 @@ export function opt<T extends HTMLElement>(selector: string, context?: Element):
 export function req<T extends HTMLElement>(selector: string, context?: Element): T {
   const res = opt<T>(selector, context);
   if (!res) {
-    console.warn(`no element found for selector [${selector}]`);
+    throw `no element found for selector [${selector}]`;
   }
-  return res!;
+  return res;
 }
 
 export function setHTML(el: string | HTMLElement, html: string) {

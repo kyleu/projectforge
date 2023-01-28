@@ -24,7 +24,7 @@ func NewFile(path string, mode os.FileMode, b []byte, addHeader bool, logger uti
 	t := getType(n)
 	c := string(b)
 	if addHeader {
-		c = contentWithHeader(t, c, logger)
+		c = contentWithHeader(path, t, c, logger)
 	}
 	return &File{Type: t, Path: util.StringSplitAndTrim(p, "/"), Name: n, Mode: mode, Content: c}
 }

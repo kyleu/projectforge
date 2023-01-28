@@ -1,5 +1,5 @@
 import "./client.css"{{{ if .HasModule "jsx" }}}
-import {JSX} from "./jsx";{{{ end }}}
+import {JSX} from "./jsx"; // eslint-disable-line @typescript-eslint/no-unused-vars{{{ end }}}
 import {menuInit} from "./menu";
 import {modeInit} from "./mode";
 import {flashInit} from "./flash";

@@ -50,7 +50,7 @@ function tagsRender(v: string, editorEl: HTMLElement): HTMLDivElement {
   item.className = "item";
   item.draggable = true;
   item.ondragstart = function (e) {
-    e.dataTransfer!.setDragImage(document.createElement("div"), 0, 0)
+    e.dataTransfer?.setDragImage(document.createElement("div"), 0, 0)
     item.classList.add("dragging");
     draggedElement = item;
   }
@@ -60,7 +60,7 @@ function tagsRender(v: string, editorEl: HTMLElement): HTMLDivElement {
       return;
     }
     const baseElement = order === -1 ? item : item.nextSibling;
-    draggedElement.parentElement!.insertBefore(draggedElement, baseElement);
+    draggedElement.parentElement?.insertBefore(draggedElement, baseElement);
     tagsUpdate(editorEl);
   }
   item.ondrop = function (e) {
@@ -95,9 +95,11 @@ function tagsRender(v: string, editorEl: HTMLElement): HTMLDivElement {
 }
 
 function tagsRemove(itemEl: HTMLElement) {
-  const editorEl = itemEl.parentElement!.parentElement!;
+  const editorEl = itemEl.parentElement?.parentElement;
   itemEl.remove();
-  tagsUpdate(editorEl);
+  if (editorEl) {
+    tagsUpdate(editorEl);
+  }
 }
 
 function tagsAdd(tagContainerEl: HTMLElement, editorEl: HTMLElement) {
@@ -118,8 +120,10 @@ function tagsEdit(itemEl: HTMLElement) {
     value.innerText = edit.value;
     setDisplay(value, true);
     setDisplay(edit, false);
-    const editorEl = itemEl.parentElement!.parentElement!;
-    tagsUpdate(editorEl);
+    const editorEl = itemEl.parentElement?.parentElement;
+    if(editorEl) {
+      tagsUpdate(editorEl);
+    }
   }
   edit.onblur = apply;
   edit.onkeydown = function (event) {

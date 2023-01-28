@@ -1,4 +1,4 @@
-{{{ if .HasModule "jsx" }}}import * as JSX from "./jsx"
+{{{ if .HasModule "jsx" }}}import * as JSX from "./jsx" // eslint-disable-line @typescript-eslint/no-unused-vars
 
 {{{ end }}}export function els<T extends HTMLElement>(selector: string, context?: Element): readonly T[] {
   let result: NodeListOf<Element>;
@@ -29,9 +29,9 @@ export function opt<T extends HTMLElement>(selector: string, context?: Element):
 export function req<T extends HTMLElement>(selector: string, context?: Element): T {
   const res = opt<T>(selector, context);
   if (!res) {
-    console.warn(`no element found for selector [${selector}]`);
+    throw `no element found for selector [${selector}]`;
   }
-  return res!;
+  return res;
 }
 
 export function setHTML(el: string | HTMLElement, html: string) {

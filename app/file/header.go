@@ -12,7 +12,7 @@ func ContainsHeader(s string) bool {
 	return strings.Contains(s, HeaderContent) || strings.Contains(s, "$PF_IGNORE$")
 }
 
-func contentWithHeader(t Type, c string, logger util.Logger) string {
+func contentWithHeader(filename string, t Type, c string, logger util.Logger) string {
 	if strings.Contains(c, IgnorePattern) {
 		return c
 	}
@@ -21,7 +21,9 @@ func contentWithHeader(t Type, c string, logger util.Logger) string {
 		return "rem " + HeaderContent + "\n" + c
 	case TypeCodeowners.Key, TypeDocker.Key, TypeYAML.Key, TypeProperties.Key, TypeMakefile.Key, TypeHCL.Key:
 		return "# " + HeaderContent + "\n" + c
-	case TypeConf.Key, TypeEditorConfig.Key, TypeGitIgnore.Key, TypeIcons.Key, TypeIgnore.Key, TypeJSON.Key, TypePList.Key, TypeProtobuf.Key, TypeSVG.Key:
+	case TypeConf.Key, TypeEditorConfig.Key, TypeESLint.Key, TypeGitIgnore.Key:
+		return c
+	case TypeIcons.Key, TypeIgnore.Key, TypeJSON.Key, TypePList.Key, TypeProtobuf.Key, TypeSVG.Key:
 		return c
 	case TypeCSS.Key:
 		return "/* " + HeaderContent + " */\n" + c
@@ -38,7 +40,7 @@ func contentWithHeader(t Type, c string, logger util.Logger) string {
 	case TypeEntitlements.Key, TypeXML.Key:
 		return secondLine(c, "<!-- "+HeaderContent+" -->")
 	default:
-		logger.Warnf("unhandled header for file type [%s]", t.Key)
+		logger.Warnf("unhandled header for file [%s], of type [%s]", filename, t.Key)
 		return c
 	}
 }
