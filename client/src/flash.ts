@@ -1,5 +1,5 @@
 // Content managed by Project Forge, see [projectforge.md] for details.
-export function flashCreate(key: string, level: string, msg: string) {
+export function flashCreate(key: string, level: "success" | "error", msg: string) {
   let container = document.getElementById("flash-container");
   if (container === null) {
     container = document.createElement("div");

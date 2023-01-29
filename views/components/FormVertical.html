@@ -13,7 +13,7 @@
   {%- code id = cutil.CleanID(key, id) -%}
   <div class="mb expanded">
     {%= vutil.Indent(true, indent + 1) %}
-    <em class="title">{%s title %}</em>
+    <label for="{%s id %}"><em class="title">{%s title %}</em></label>
     {%= vutil.Indent(true, indent + 1) %}
     <div>{%= FormInput(key, id, value, help...) %}</div>
   {%= vutil.Indent(true, indent) %}
@@ -24,7 +24,7 @@
   {%- code id = cutil.CleanID(key, id) -%}
   <div class="mb expanded">
     {%= vutil.Indent(true, indent + 1) %}
-    <em class="title">{%s title %}</em>
+    <label for="{%s id %}"><em class="title">{%s title %}</em></label>
     {%= vutil.Indent(true, indent + 1) %}
     <div>{%= FormInputPassword(key, id, value, help...) %}</div>
   {%= vutil.Indent(true, indent) %}
@@ -35,7 +35,7 @@
   {%- code id = cutil.CleanID(key, id) -%}
   <div class="mb expanded">
     {%= vutil.Indent(true, indent + 1) %}
-    <em class="title">{%s title %}</em>
+    <label for="{%s id %}"><em class="title">{%s title %}</em></label>
     {%= vutil.Indent(true, indent + 1) %}
     <div>{%= FormInputNumber(key, id, value, help...) %}</div>
   {%= vutil.Indent(true, indent) %}
@@ -46,7 +46,7 @@
   {%- code id = cutil.CleanID(key, id) -%}
   <div class="mb expanded">
     {%= vutil.Indent(true, indent + 1) %}
-    <em class="title">{%s title %}</em>
+    <label for="{%s id %}"><em class="title">{%s title %}</em></label>
     {%= vutil.Indent(true, indent + 1) %}
     <div>{%= FormInputFloat(key, id, value, help...) %}</div>
   {%= vutil.Indent(true, indent) %}
@@ -57,7 +57,7 @@
   {%- code id = cutil.CleanID(key, id) -%}
   <div class="mb expanded">
     {%= vutil.Indent(true, indent + 1) %}
-    <em class="title">{%s title %}</em>
+    <label for="{%s id %}"><em class="title">{%s title %}</em></label>
     {%= vutil.Indent(true, indent + 1) %}
     <div>{%= FormInputTimestamp(key, id, value, help...) %}</div>
   {%= vutil.Indent(true, indent) %}
@@ -68,7 +68,7 @@
   {%- code id = cutil.CleanID(key, id) -%}
   <div class="mb expanded">
     {%= vutil.Indent(true, indent + 1) %}
-    <em class="title">{%s title %}</em>
+    <label for="{%s id %}"><em class="title">{%s title %}</em></label>
     {%= vutil.Indent(true, indent + 1) %}
     <div>{%= FormInputTimestampDay(key, id, value, help...) %}</div>
   {%= vutil.Indent(true, indent) %}
@@ -79,7 +79,7 @@
   {%- code id = cutil.CleanID(key, id) -%}
   <div class="mb expanded">
     {%= vutil.Indent(true, indent + 1) %}
-    <em class="title">{%s title %}</em>
+    <label for="{%s id %}"><em class="title">{%s title %}</em></label>
     {%= vutil.Indent(true, indent + 1) %}
     <div>{%= FormInputUUID(key, id, value, help...) %}</div>
   {%= vutil.Indent(true, indent) %}
@@ -90,7 +90,7 @@
   {%- code id = cutil.CleanID(key, id) -%}
   <div class="mb expanded">
     {%= vutil.Indent(true, indent + 1) %}
-    <em class="title">{%s title %}</em>
+    <label for="{%s id %}"><em class="title">{%s title %}</em></label>
     {%= vutil.Indent(true, indent + 1) %}
     <div>{%= FormTextarea(key, id, rows, value, help...) %}</div>
   {%= vutil.Indent(true, indent) %}
@@ -101,7 +101,7 @@
   {%- code id = cutil.CleanID(key, id) -%}
   <div class="mb expanded">
     {%= vutil.Indent(true, indent + 1) %}
-    <em class="title">{%s title %}</em>
+    <label for="{%s id %}"><em class="title">{%s title %}</em></label>
     {%= vutil.Indent(true, indent + 1) %}
     <div>{%= FormSelect(key, id, value, opts, titles, indent) %}</div>
   {%= vutil.Indent(true, indent) %}
@@ -112,9 +112,19 @@
   {%- code id = cutil.CleanID(key, id) -%}
   <div class="mb expanded">
     {%= vutil.Indent(true, indent + 1) %}
-    <em class="title">{%s title %}</em>
+    <label for="{%s id %}"><em class="title">{%s title %}</em></label>
     {%= vutil.Indent(true, indent + 1) %}
     <div>{%= FormDatalist(key, id, value, opts, titles, indent) %}</div>
+  {%= vutil.Indent(true, indent) %}
+  </div>
+{% endstripspace %}{% endfunc %}
+
+{% func FormVerticalInputTags(key string, id string, title string, values []string, ps *cutil.PageState, indent int, help ...string) %}{% stripspace %}
+  <div class="mb expanded">
+    {%= vutil.Indent(true, indent + 1) %}
+    <label for="{%s id %}"><em class="title">{%s title %}</em></label>
+    {%= vutil.Indent(true, indent + 1) %}
+    <div>{%= FormInputTags(key, id, values, ps, help...) %}</div>
   {%= vutil.Indent(true, indent) %}
   </div>
 {% endstripspace %}{% endfunc %}
@@ -122,7 +132,7 @@
 {% func FormVerticalRadio(key string, title string, value string, opts []string, titles []string, indent int, help ...string) %}{% stripspace %}
   <div class="mb expanded">
     {%= vutil.Indent(true, indent + 1) %}
-    <div><label{%= titleFor(help) %}>{%s title %}</div>
+    <div>{%= titleFor(help) %}>{%s title %}</div>
     {%= vutil.Indent(true, indent + 1) %}
     <div>
       {%= FormRadio(key, value, opts, titles, indent + 2) %}
@@ -139,22 +149,12 @@
 {% func FormVerticalCheckbox(key string, title string, values []string, opts []string, titles []string, indent int, help ...string) %}{% stripspace %}
   <div class="mb expanded">
     {%= vutil.Indent(true, indent + 1) %}
-    <div><label>{%s title %}</div>
+    <div>{%s title %}</div>
     {%= vutil.Indent(true, indent + 1) %}
     <div>
       {%= FormCheckbox(key, values, opts, titles, indent + 2) %}
     {%= vutil.Indent(true, indent + 1) %}
     </div>
-  {%= vutil.Indent(true, indent) %}
-  </div>
-{% endstripspace %}{% endfunc %}
-
-{% func FormVerticalInputTags(key string, id string, title string, values []string, ps *cutil.PageState, indent int, help ...string) %}{% stripspace %}
-  <div class="mb expanded">
-    {%= vutil.Indent(true, indent + 1) %}
-    <em class="title">{%s title %}</em>
-    {%= vutil.Indent(true, indent + 1) %}
-    <div>{%= FormInputTags(key, id, values, ps, help...) %}</div>
   {%= vutil.Indent(true, indent) %}
   </div>
 {% endstripspace %}{% endfunc %}

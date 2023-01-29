@@ -74,9 +74,7 @@ function call(mockup: Element, sel: string, f: (el: HTMLElement) => void) {
   if (q.length == 0) {
     throw "empty query selector [" + sel + "]"
   }
-  q.forEach(x => {
-    f(x as HTMLElement);
-  })
+  q.forEach(x => f(x as HTMLElement));
 }
 
 function setBG(mockup: Element, sel: string, v: string) {

@@ -2,7 +2,7 @@
 import {els, opt, req, setDisplay} from "./dom";
 import {svgRef} from "./util";
 
-function tagsWire(el: HTMLElement) {
+export function tagsWire(el: HTMLElement) {
   const input = req<HTMLInputElement>("input.result", el);
   const tagContainer = req<HTMLDivElement>(".tags", el);
   const vals = input.value.split(",").map(x => x.trim()).filter(k => k !== "");

@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
 	"sync"
 
 	"github.com/fasthttp/websocket"
@@ -137,7 +138,9 @@ func (s *Service) Upgrade(rc *fasthttp.RequestCtx, channel string, profile *user
 		}
 		err = s.ReadLoop(cx.ID, logger)
 		if err != nil {
-			logger.Error(fmt.Sprintf("error processing socket read loop: %+v", err))
+			if !strings.Contains(err.Error(), "1001") {
+				logger.Error(fmt.Sprintf("error processing socket read loop for connection [%s]: %+v", cx.ID.String(), err))
+			}
 			return
 		}
 	})

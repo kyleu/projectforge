@@ -40,11 +40,15 @@ func StreamFormVerticalInput(qw422016 *qt422016.Writer, key string, id string, t
 //line views/components/FormVertical.html:15
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/FormVertical.html:15
-	qw422016.N().S(`<em class="title">`)
+	qw422016.N().S(`<label for="`)
+//line views/components/FormVertical.html:16
+	qw422016.E().S(id)
+//line views/components/FormVertical.html:16
+	qw422016.N().S(`"><em class="title">`)
 //line views/components/FormVertical.html:16
 	qw422016.E().S(title)
 //line views/components/FormVertical.html:16
-	qw422016.N().S(`</em>`)
+	qw422016.N().S(`</em></label>`)
 //line views/components/FormVertical.html:17
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/FormVertical.html:17
@@ -96,11 +100,15 @@ func StreamFormVerticalInputPassword(qw422016 *qt422016.Writer, key string, id s
 //line views/components/FormVertical.html:26
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/FormVertical.html:26
-	qw422016.N().S(`<em class="title">`)
+	qw422016.N().S(`<label for="`)
+//line views/components/FormVertical.html:27
+	qw422016.E().S(id)
+//line views/components/FormVertical.html:27
+	qw422016.N().S(`"><em class="title">`)
 //line views/components/FormVertical.html:27
 	qw422016.E().S(title)
 //line views/components/FormVertical.html:27
-	qw422016.N().S(`</em>`)
+	qw422016.N().S(`</em></label>`)
 //line views/components/FormVertical.html:28
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/FormVertical.html:28
@@ -152,11 +160,15 @@ func StreamFormVerticalInputNumber(qw422016 *qt422016.Writer, key string, id str
 //line views/components/FormVertical.html:37
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/FormVertical.html:37
-	qw422016.N().S(`<em class="title">`)
+	qw422016.N().S(`<label for="`)
+//line views/components/FormVertical.html:38
+	qw422016.E().S(id)
+//line views/components/FormVertical.html:38
+	qw422016.N().S(`"><em class="title">`)
 //line views/components/FormVertical.html:38
 	qw422016.E().S(title)
 //line views/components/FormVertical.html:38
-	qw422016.N().S(`</em>`)
+	qw422016.N().S(`</em></label>`)
 //line views/components/FormVertical.html:39
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/FormVertical.html:39
@@ -208,11 +220,15 @@ func StreamFormVerticalInputFloat(qw422016 *qt422016.Writer, key string, id stri
 //line views/components/FormVertical.html:48
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/FormVertical.html:48
-	qw422016.N().S(`<em class="title">`)
+	qw422016.N().S(`<label for="`)
+//line views/components/FormVertical.html:49
+	qw422016.E().S(id)
+//line views/components/FormVertical.html:49
+	qw422016.N().S(`"><em class="title">`)
 //line views/components/FormVertical.html:49
 	qw422016.E().S(title)
 //line views/components/FormVertical.html:49
-	qw422016.N().S(`</em>`)
+	qw422016.N().S(`</em></label>`)
 //line views/components/FormVertical.html:50
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/FormVertical.html:50
@@ -264,11 +280,15 @@ func StreamFormVerticalInputTimestamp(qw422016 *qt422016.Writer, key string, id 
 //line views/components/FormVertical.html:59
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/FormVertical.html:59
-	qw422016.N().S(`<em class="title">`)
+	qw422016.N().S(`<label for="`)
+//line views/components/FormVertical.html:60
+	qw422016.E().S(id)
+//line views/components/FormVertical.html:60
+	qw422016.N().S(`"><em class="title">`)
 //line views/components/FormVertical.html:60
 	qw422016.E().S(title)
 //line views/components/FormVertical.html:60
-	qw422016.N().S(`</em>`)
+	qw422016.N().S(`</em></label>`)
 //line views/components/FormVertical.html:61
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/FormVertical.html:61
@@ -320,11 +340,15 @@ func StreamFormVerticalInputTimestampDay(qw422016 *qt422016.Writer, key string, 
 //line views/components/FormVertical.html:70
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/FormVertical.html:70
-	qw422016.N().S(`<em class="title">`)
+	qw422016.N().S(`<label for="`)
+//line views/components/FormVertical.html:71
+	qw422016.E().S(id)
+//line views/components/FormVertical.html:71
+	qw422016.N().S(`"><em class="title">`)
 //line views/components/FormVertical.html:71
 	qw422016.E().S(title)
 //line views/components/FormVertical.html:71
-	qw422016.N().S(`</em>`)
+	qw422016.N().S(`</em></label>`)
 //line views/components/FormVertical.html:72
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/FormVertical.html:72
@@ -376,11 +400,15 @@ func StreamFormVerticalInputUUID(qw422016 *qt422016.Writer, key string, id strin
 //line views/components/FormVertical.html:81
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/FormVertical.html:81
-	qw422016.N().S(`<em class="title">`)
+	qw422016.N().S(`<label for="`)
+//line views/components/FormVertical.html:82
+	qw422016.E().S(id)
+//line views/components/FormVertical.html:82
+	qw422016.N().S(`"><em class="title">`)
 //line views/components/FormVertical.html:82
 	qw422016.E().S(title)
 //line views/components/FormVertical.html:82
-	qw422016.N().S(`</em>`)
+	qw422016.N().S(`</em></label>`)
 //line views/components/FormVertical.html:83
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/FormVertical.html:83
@@ -432,11 +460,15 @@ func StreamFormVerticalTextarea(qw422016 *qt422016.Writer, key string, id string
 //line views/components/FormVertical.html:92
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/FormVertical.html:92
-	qw422016.N().S(`<em class="title">`)
+	qw422016.N().S(`<label for="`)
+//line views/components/FormVertical.html:93
+	qw422016.E().S(id)
+//line views/components/FormVertical.html:93
+	qw422016.N().S(`"><em class="title">`)
 //line views/components/FormVertical.html:93
 	qw422016.E().S(title)
 //line views/components/FormVertical.html:93
-	qw422016.N().S(`</em>`)
+	qw422016.N().S(`</em></label>`)
 //line views/components/FormVertical.html:94
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/FormVertical.html:94
@@ -488,11 +520,15 @@ func StreamFormVerticalSelect(qw422016 *qt422016.Writer, key string, id string, 
 //line views/components/FormVertical.html:103
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/FormVertical.html:103
-	qw422016.N().S(`<em class="title">`)
+	qw422016.N().S(`<label for="`)
+//line views/components/FormVertical.html:104
+	qw422016.E().S(id)
+//line views/components/FormVertical.html:104
+	qw422016.N().S(`"><em class="title">`)
 //line views/components/FormVertical.html:104
 	qw422016.E().S(title)
 //line views/components/FormVertical.html:104
-	qw422016.N().S(`</em>`)
+	qw422016.N().S(`</em></label>`)
 //line views/components/FormVertical.html:105
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/FormVertical.html:105
@@ -544,11 +580,15 @@ func StreamFormVerticalDatalist(qw422016 *qt422016.Writer, key string, id string
 //line views/components/FormVertical.html:114
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/FormVertical.html:114
-	qw422016.N().S(`<em class="title">`)
+	qw422016.N().S(`<label for="`)
+//line views/components/FormVertical.html:115
+	qw422016.E().S(id)
+//line views/components/FormVertical.html:115
+	qw422016.N().S(`"><em class="title">`)
 //line views/components/FormVertical.html:115
 	qw422016.E().S(title)
 //line views/components/FormVertical.html:115
-	qw422016.N().S(`</em>`)
+	qw422016.N().S(`</em></label>`)
 //line views/components/FormVertical.html:116
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/FormVertical.html:116
@@ -591,171 +631,175 @@ func FormVerticalDatalist(key string, id string, title string, value string, opt
 }
 
 //line views/components/FormVertical.html:122
-func StreamFormVerticalRadio(qw422016 *qt422016.Writer, key string, title string, value string, opts []string, titles []string, indent int, help ...string) {
+func StreamFormVerticalInputTags(qw422016 *qt422016.Writer, key string, id string, title string, values []string, ps *cutil.PageState, indent int, help ...string) {
 //line views/components/FormVertical.html:122
 	qw422016.N().S(`<div class="mb expanded">`)
 //line views/components/FormVertical.html:124
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/FormVertical.html:124
-	qw422016.N().S(`<div><label`)
+	qw422016.N().S(`<label for="`)
 //line views/components/FormVertical.html:125
-	streamtitleFor(qw422016, help)
+	qw422016.E().S(id)
 //line views/components/FormVertical.html:125
-	qw422016.N().S(`>`)
+	qw422016.N().S(`"><em class="title">`)
 //line views/components/FormVertical.html:125
 	qw422016.E().S(title)
 //line views/components/FormVertical.html:125
-	qw422016.N().S(`</div>`)
+	qw422016.N().S(`</em></label>`)
 //line views/components/FormVertical.html:126
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/FormVertical.html:126
 	qw422016.N().S(`<div>`)
-//line views/components/FormVertical.html:128
-	StreamFormRadio(qw422016, key, value, opts, titles, indent+2)
-//line views/components/FormVertical.html:129
-	vutil.StreamIndent(qw422016, true, indent+1)
-//line views/components/FormVertical.html:129
-	qw422016.N().S(`</div>`)
-//line views/components/FormVertical.html:131
-	vutil.StreamIndent(qw422016, true, indent)
-//line views/components/FormVertical.html:131
-	qw422016.N().S(`</div>`)
-//line views/components/FormVertical.html:133
-}
-
-//line views/components/FormVertical.html:133
-func WriteFormVerticalRadio(qq422016 qtio422016.Writer, key string, title string, value string, opts []string, titles []string, indent int, help ...string) {
-//line views/components/FormVertical.html:133
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/FormVertical.html:133
-	StreamFormVerticalRadio(qw422016, key, title, value, opts, titles, indent, help...)
-//line views/components/FormVertical.html:133
-	qt422016.ReleaseWriter(qw422016)
-//line views/components/FormVertical.html:133
-}
-
-//line views/components/FormVertical.html:133
-func FormVerticalRadio(key string, title string, value string, opts []string, titles []string, indent int, help ...string) string {
-//line views/components/FormVertical.html:133
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/FormVertical.html:133
-	WriteFormVerticalRadio(qb422016, key, title, value, opts, titles, indent, help...)
-//line views/components/FormVertical.html:133
-	qs422016 := string(qb422016.B)
-//line views/components/FormVertical.html:133
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/FormVertical.html:133
-	return qs422016
-//line views/components/FormVertical.html:133
-}
-
-//line views/components/FormVertical.html:135
-func StreamFormVerticalBoolean(qw422016 *qt422016.Writer, key string, title string, value bool, indent int, help ...string) {
-//line views/components/FormVertical.html:136
-	StreamFormVerticalRadio(qw422016, key, title, fmt.Sprint(value), []string{"true", "false"}, []string{"True", "False"}, indent)
-//line views/components/FormVertical.html:137
-}
-
-//line views/components/FormVertical.html:137
-func WriteFormVerticalBoolean(qq422016 qtio422016.Writer, key string, title string, value bool, indent int, help ...string) {
-//line views/components/FormVertical.html:137
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/FormVertical.html:137
-	StreamFormVerticalBoolean(qw422016, key, title, value, indent, help...)
-//line views/components/FormVertical.html:137
-	qt422016.ReleaseWriter(qw422016)
-//line views/components/FormVertical.html:137
-}
-
-//line views/components/FormVertical.html:137
-func FormVerticalBoolean(key string, title string, value bool, indent int, help ...string) string {
-//line views/components/FormVertical.html:137
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/FormVertical.html:137
-	WriteFormVerticalBoolean(qb422016, key, title, value, indent, help...)
-//line views/components/FormVertical.html:137
-	qs422016 := string(qb422016.B)
-//line views/components/FormVertical.html:137
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/FormVertical.html:137
-	return qs422016
-//line views/components/FormVertical.html:137
-}
-
-//line views/components/FormVertical.html:139
-func StreamFormVerticalCheckbox(qw422016 *qt422016.Writer, key string, title string, values []string, opts []string, titles []string, indent int, help ...string) {
-//line views/components/FormVertical.html:139
-	qw422016.N().S(`<div class="mb expanded">`)
-//line views/components/FormVertical.html:141
-	vutil.StreamIndent(qw422016, true, indent+1)
-//line views/components/FormVertical.html:141
-	qw422016.N().S(`<div><label>`)
-//line views/components/FormVertical.html:142
-	qw422016.E().S(title)
-//line views/components/FormVertical.html:142
-	qw422016.N().S(`</div>`)
-//line views/components/FormVertical.html:143
-	vutil.StreamIndent(qw422016, true, indent+1)
-//line views/components/FormVertical.html:143
-	qw422016.N().S(`<div>`)
-//line views/components/FormVertical.html:145
-	StreamFormCheckbox(qw422016, key, values, opts, titles, indent+2)
-//line views/components/FormVertical.html:146
-	vutil.StreamIndent(qw422016, true, indent+1)
-//line views/components/FormVertical.html:146
-	qw422016.N().S(`</div>`)
-//line views/components/FormVertical.html:148
-	vutil.StreamIndent(qw422016, true, indent)
-//line views/components/FormVertical.html:148
-	qw422016.N().S(`</div>`)
-//line views/components/FormVertical.html:150
-}
-
-//line views/components/FormVertical.html:150
-func WriteFormVerticalCheckbox(qq422016 qtio422016.Writer, key string, title string, values []string, opts []string, titles []string, indent int, help ...string) {
-//line views/components/FormVertical.html:150
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/FormVertical.html:150
-	StreamFormVerticalCheckbox(qw422016, key, title, values, opts, titles, indent, help...)
-//line views/components/FormVertical.html:150
-	qt422016.ReleaseWriter(qw422016)
-//line views/components/FormVertical.html:150
-}
-
-//line views/components/FormVertical.html:150
-func FormVerticalCheckbox(key string, title string, values []string, opts []string, titles []string, indent int, help ...string) string {
-//line views/components/FormVertical.html:150
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/FormVertical.html:150
-	WriteFormVerticalCheckbox(qb422016, key, title, values, opts, titles, indent, help...)
-//line views/components/FormVertical.html:150
-	qs422016 := string(qb422016.B)
-//line views/components/FormVertical.html:150
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/FormVertical.html:150
-	return qs422016
-//line views/components/FormVertical.html:150
-}
-
-//line views/components/FormVertical.html:152
-func StreamFormVerticalInputTags(qw422016 *qt422016.Writer, key string, id string, title string, values []string, ps *cutil.PageState, indent int, help ...string) {
-//line views/components/FormVertical.html:152
-	qw422016.N().S(`<div class="mb expanded">`)
-//line views/components/FormVertical.html:154
-	vutil.StreamIndent(qw422016, true, indent+1)
-//line views/components/FormVertical.html:154
-	qw422016.N().S(`<em class="title">`)
-//line views/components/FormVertical.html:155
-	qw422016.E().S(title)
-//line views/components/FormVertical.html:155
-	qw422016.N().S(`</em>`)
-//line views/components/FormVertical.html:156
-	vutil.StreamIndent(qw422016, true, indent+1)
-//line views/components/FormVertical.html:156
-	qw422016.N().S(`<div>`)
-//line views/components/FormVertical.html:157
+//line views/components/FormVertical.html:127
 	StreamFormInputTags(qw422016, key, id, values, ps, help...)
-//line views/components/FormVertical.html:157
+//line views/components/FormVertical.html:127
+	qw422016.N().S(`</div>`)
+//line views/components/FormVertical.html:128
+	vutil.StreamIndent(qw422016, true, indent)
+//line views/components/FormVertical.html:128
+	qw422016.N().S(`</div>`)
+//line views/components/FormVertical.html:130
+}
+
+//line views/components/FormVertical.html:130
+func WriteFormVerticalInputTags(qq422016 qtio422016.Writer, key string, id string, title string, values []string, ps *cutil.PageState, indent int, help ...string) {
+//line views/components/FormVertical.html:130
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/components/FormVertical.html:130
+	StreamFormVerticalInputTags(qw422016, key, id, title, values, ps, indent, help...)
+//line views/components/FormVertical.html:130
+	qt422016.ReleaseWriter(qw422016)
+//line views/components/FormVertical.html:130
+}
+
+//line views/components/FormVertical.html:130
+func FormVerticalInputTags(key string, id string, title string, values []string, ps *cutil.PageState, indent int, help ...string) string {
+//line views/components/FormVertical.html:130
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/components/FormVertical.html:130
+	WriteFormVerticalInputTags(qb422016, key, id, title, values, ps, indent, help...)
+//line views/components/FormVertical.html:130
+	qs422016 := string(qb422016.B)
+//line views/components/FormVertical.html:130
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/components/FormVertical.html:130
+	return qs422016
+//line views/components/FormVertical.html:130
+}
+
+//line views/components/FormVertical.html:132
+func StreamFormVerticalRadio(qw422016 *qt422016.Writer, key string, title string, value string, opts []string, titles []string, indent int, help ...string) {
+//line views/components/FormVertical.html:132
+	qw422016.N().S(`<div class="mb expanded">`)
+//line views/components/FormVertical.html:134
+	vutil.StreamIndent(qw422016, true, indent+1)
+//line views/components/FormVertical.html:134
+	qw422016.N().S(`<div>`)
+//line views/components/FormVertical.html:135
+	streamtitleFor(qw422016, help)
+//line views/components/FormVertical.html:135
+	qw422016.N().S(`>`)
+//line views/components/FormVertical.html:135
+	qw422016.E().S(title)
+//line views/components/FormVertical.html:135
+	qw422016.N().S(`</div>`)
+//line views/components/FormVertical.html:136
+	vutil.StreamIndent(qw422016, true, indent+1)
+//line views/components/FormVertical.html:136
+	qw422016.N().S(`<div>`)
+//line views/components/FormVertical.html:138
+	StreamFormRadio(qw422016, key, value, opts, titles, indent+2)
+//line views/components/FormVertical.html:139
+	vutil.StreamIndent(qw422016, true, indent+1)
+//line views/components/FormVertical.html:139
+	qw422016.N().S(`</div>`)
+//line views/components/FormVertical.html:141
+	vutil.StreamIndent(qw422016, true, indent)
+//line views/components/FormVertical.html:141
+	qw422016.N().S(`</div>`)
+//line views/components/FormVertical.html:143
+}
+
+//line views/components/FormVertical.html:143
+func WriteFormVerticalRadio(qq422016 qtio422016.Writer, key string, title string, value string, opts []string, titles []string, indent int, help ...string) {
+//line views/components/FormVertical.html:143
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/components/FormVertical.html:143
+	StreamFormVerticalRadio(qw422016, key, title, value, opts, titles, indent, help...)
+//line views/components/FormVertical.html:143
+	qt422016.ReleaseWriter(qw422016)
+//line views/components/FormVertical.html:143
+}
+
+//line views/components/FormVertical.html:143
+func FormVerticalRadio(key string, title string, value string, opts []string, titles []string, indent int, help ...string) string {
+//line views/components/FormVertical.html:143
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/components/FormVertical.html:143
+	WriteFormVerticalRadio(qb422016, key, title, value, opts, titles, indent, help...)
+//line views/components/FormVertical.html:143
+	qs422016 := string(qb422016.B)
+//line views/components/FormVertical.html:143
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/components/FormVertical.html:143
+	return qs422016
+//line views/components/FormVertical.html:143
+}
+
+//line views/components/FormVertical.html:145
+func StreamFormVerticalBoolean(qw422016 *qt422016.Writer, key string, title string, value bool, indent int, help ...string) {
+//line views/components/FormVertical.html:146
+	StreamFormVerticalRadio(qw422016, key, title, fmt.Sprint(value), []string{"true", "false"}, []string{"True", "False"}, indent)
+//line views/components/FormVertical.html:147
+}
+
+//line views/components/FormVertical.html:147
+func WriteFormVerticalBoolean(qq422016 qtio422016.Writer, key string, title string, value bool, indent int, help ...string) {
+//line views/components/FormVertical.html:147
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/components/FormVertical.html:147
+	StreamFormVerticalBoolean(qw422016, key, title, value, indent, help...)
+//line views/components/FormVertical.html:147
+	qt422016.ReleaseWriter(qw422016)
+//line views/components/FormVertical.html:147
+}
+
+//line views/components/FormVertical.html:147
+func FormVerticalBoolean(key string, title string, value bool, indent int, help ...string) string {
+//line views/components/FormVertical.html:147
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/components/FormVertical.html:147
+	WriteFormVerticalBoolean(qb422016, key, title, value, indent, help...)
+//line views/components/FormVertical.html:147
+	qs422016 := string(qb422016.B)
+//line views/components/FormVertical.html:147
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/components/FormVertical.html:147
+	return qs422016
+//line views/components/FormVertical.html:147
+}
+
+//line views/components/FormVertical.html:149
+func StreamFormVerticalCheckbox(qw422016 *qt422016.Writer, key string, title string, values []string, opts []string, titles []string, indent int, help ...string) {
+//line views/components/FormVertical.html:149
+	qw422016.N().S(`<div class="mb expanded">`)
+//line views/components/FormVertical.html:151
+	vutil.StreamIndent(qw422016, true, indent+1)
+//line views/components/FormVertical.html:151
+	qw422016.N().S(`<div>`)
+//line views/components/FormVertical.html:152
+	qw422016.E().S(title)
+//line views/components/FormVertical.html:152
+	qw422016.N().S(`</div>`)
+//line views/components/FormVertical.html:153
+	vutil.StreamIndent(qw422016, true, indent+1)
+//line views/components/FormVertical.html:153
+	qw422016.N().S(`<div>`)
+//line views/components/FormVertical.html:155
+	StreamFormCheckbox(qw422016, key, values, opts, titles, indent+2)
+//line views/components/FormVertical.html:156
+	vutil.StreamIndent(qw422016, true, indent+1)
+//line views/components/FormVertical.html:156
 	qw422016.N().S(`</div>`)
 //line views/components/FormVertical.html:158
 	vutil.StreamIndent(qw422016, true, indent)
@@ -765,22 +809,22 @@ func StreamFormVerticalInputTags(qw422016 *qt422016.Writer, key string, id strin
 }
 
 //line views/components/FormVertical.html:160
-func WriteFormVerticalInputTags(qq422016 qtio422016.Writer, key string, id string, title string, values []string, ps *cutil.PageState, indent int, help ...string) {
+func WriteFormVerticalCheckbox(qq422016 qtio422016.Writer, key string, title string, values []string, opts []string, titles []string, indent int, help ...string) {
 //line views/components/FormVertical.html:160
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/components/FormVertical.html:160
-	StreamFormVerticalInputTags(qw422016, key, id, title, values, ps, indent, help...)
+	StreamFormVerticalCheckbox(qw422016, key, title, values, opts, titles, indent, help...)
 //line views/components/FormVertical.html:160
 	qt422016.ReleaseWriter(qw422016)
 //line views/components/FormVertical.html:160
 }
 
 //line views/components/FormVertical.html:160
-func FormVerticalInputTags(key string, id string, title string, values []string, ps *cutil.PageState, indent int, help ...string) string {
+func FormVerticalCheckbox(key string, title string, values []string, opts []string, titles []string, indent int, help ...string) string {
 //line views/components/FormVertical.html:160
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/components/FormVertical.html:160
-	WriteFormVerticalInputTags(qb422016, key, id, title, values, ps, indent, help...)
+	WriteFormVerticalCheckbox(qb422016, key, title, values, opts, titles, indent, help...)
 //line views/components/FormVertical.html:160
 	qs422016 := string(qb422016.B)
 //line views/components/FormVertical.html:160
