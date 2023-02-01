@@ -28,7 +28,7 @@ func Render(rc *fasthttp.RequestCtx, as *app.State, page layout.Page, ps *cutil.
 				ed := util.GetErrorDetail(t)
 				verror.WriteDetail(rc, ed, as, ps)
 			default:
-				ed := &util.ErrorDetail{Message: fmt.Sprint(t)}
+				ed := &util.ErrorDetail{Type: fmt.Sprintf("%T", x), Message: fmt.Sprint(t)}
 				verror.WriteDetail(rc, ed, as, ps)
 			}
 		}

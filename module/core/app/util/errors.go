@@ -21,6 +21,7 @@ type ErrorFrame struct {
 }
 
 type ErrorDetail struct {
+	Type       string            `json:"type"`
 	Message    string            `json:"message"`
 	StackTrace errors.StackTrace `json:"-"`
 	Cause      *ErrorDetail      `json:"cause,omitempty"`
@@ -49,6 +50,7 @@ func GetErrorDetail(e error) *ErrorDetail {
 	}
 
 	return &ErrorDetail{
+		Type:       "error",
 		Message:    msg,
 		StackTrace: stack,
 		Cause:      cause,

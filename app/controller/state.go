@@ -50,7 +50,9 @@ func handleError(key string, as *app.State, ps *cutil.PageState, rc *fasthttp.Re
 		return "", cleanErr
 	}
 
-	redir, renderErr := Render(rc, as, &verror.Error{Err: util.GetErrorDetail(err)}, ps)
+	e := util.GetErrorDetail(err)
+	ps.Data = e
+	redir, renderErr := Render(rc, as, &verror.Error{Err: e}, ps)
 	if renderErr != nil {
 		msg := fmt.Sprintf("error while running error handler: %+v", renderErr)
 		ps.Logger.Error(msg)
