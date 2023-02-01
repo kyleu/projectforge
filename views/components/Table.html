@@ -161,6 +161,15 @@
   </tr>
 {% endstripspace %}{% endfunc %}
 
+{% func TableInputFile(key string, id string, title string, label string, value string) %}{% stripspace %}
+  <tr>
+    <th class="shrink"><label for="{%s id %}">{%s title %}</label></th>
+    <td>
+      {%= FormInputFile(key, id, label, value) %}
+    </td>
+  </tr>
+{% endstripspace %}{% endfunc %}
+
 {% func TableIcons(key string, title string, value string, ps *cutil.PageState, indent int, help ...string) %}{% stripspace %}
   <tr>
     {%= vutil.Indent(true, indent + 1) %}

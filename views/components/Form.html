@@ -169,6 +169,14 @@
   </div>
 {% endstripspace %}{% endfunc %}
 
+{% func FormInputFile(key string, id string, label string, value string) %}{% stripspace %}
+  {% if id == "" %}
+    <label for="key"><input type="file" name="{%s key %}" value="{%s value %}"/>{%s label %}</label>
+  {% else %}
+    <label id="{%s id %}" for="{%s key %}"><input type="file" name="{%s key %}" value="{%s value %}"/>{%s label %}</label>
+  {% endif %}
+{% endstripspace %}{% endfunc %}
+
 {% func SearchForm(action string, fieldKey string, placeholder string, value string, ps *cutil.PageState) %}{% stripspace %}
   {% code
     if fieldKey == "" {

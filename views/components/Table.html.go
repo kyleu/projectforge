@@ -883,97 +883,142 @@ func TableCheckbox(key string, title string, values []string, opts []string, tit
 }
 
 //line views/components/Table.html:164
-func StreamTableIcons(qw422016 *qt422016.Writer, key string, title string, value string, ps *cutil.PageState, indent int, help ...string) {
+func StreamTableInputFile(qw422016 *qt422016.Writer, key string, id string, title string, label string, value string) {
 //line views/components/Table.html:164
-	qw422016.N().S(`<tr>`)
+	qw422016.N().S(`<tr><th class="shrink"><label for="`)
 //line views/components/Table.html:166
-	vutil.StreamIndent(qw422016, true, indent+1)
+	qw422016.E().S(id)
 //line views/components/Table.html:166
-	qw422016.N().S(`<th class="shrink"><label>`)
-//line views/components/Table.html:167
+	qw422016.N().S(`">`)
+//line views/components/Table.html:166
 	qw422016.E().S(title)
-//line views/components/Table.html:167
-	qw422016.N().S(`</label></th>`)
+//line views/components/Table.html:166
+	qw422016.N().S(`</label></th><td>`)
 //line views/components/Table.html:168
-	vutil.StreamIndent(qw422016, true, indent+1)
+	StreamFormInputFile(qw422016, key, id, label, value)
 //line views/components/Table.html:168
-	qw422016.N().S(`<td>`)
-//line views/components/Table.html:169
-	StreamIconPicker(qw422016, key, value, ps, indent+2)
-//line views/components/Table.html:169
-	qw422016.N().S(`</td>`)
+	qw422016.N().S(`</td></tr>`)
 //line views/components/Table.html:171
-	vutil.StreamIndent(qw422016, true, indent)
-//line views/components/Table.html:171
-	qw422016.N().S(`</tr>`)
-//line views/components/Table.html:173
 }
 
-//line views/components/Table.html:173
-func WriteTableIcons(qq422016 qtio422016.Writer, key string, title string, value string, ps *cutil.PageState, indent int, help ...string) {
-//line views/components/Table.html:173
+//line views/components/Table.html:171
+func WriteTableInputFile(qq422016 qtio422016.Writer, key string, id string, title string, label string, value string) {
+//line views/components/Table.html:171
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/Table.html:173
-	StreamTableIcons(qw422016, key, title, value, ps, indent, help...)
-//line views/components/Table.html:173
+//line views/components/Table.html:171
+	StreamTableInputFile(qw422016, key, id, title, label, value)
+//line views/components/Table.html:171
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/Table.html:173
+//line views/components/Table.html:171
 }
 
-//line views/components/Table.html:173
-func TableIcons(key string, title string, value string, ps *cutil.PageState, indent int, help ...string) string {
-//line views/components/Table.html:173
+//line views/components/Table.html:171
+func TableInputFile(key string, id string, title string, label string, value string) string {
+//line views/components/Table.html:171
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/Table.html:173
-	WriteTableIcons(qb422016, key, title, value, ps, indent, help...)
-//line views/components/Table.html:173
+//line views/components/Table.html:171
+	WriteTableInputFile(qb422016, key, id, title, label, value)
+//line views/components/Table.html:171
 	qs422016 := string(qb422016.B)
-//line views/components/Table.html:173
+//line views/components/Table.html:171
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/Table.html:173
+//line views/components/Table.html:171
 	return qs422016
-//line views/components/Table.html:173
+//line views/components/Table.html:171
 }
 
+//line views/components/Table.html:173
+func StreamTableIcons(qw422016 *qt422016.Writer, key string, title string, value string, ps *cutil.PageState, indent int, help ...string) {
+//line views/components/Table.html:173
+	qw422016.N().S(`<tr>`)
 //line views/components/Table.html:175
-func streamtitleFor(qw422016 *qt422016.Writer, help []string) {
+	vutil.StreamIndent(qw422016, true, indent+1)
+//line views/components/Table.html:175
+	qw422016.N().S(`<th class="shrink"><label>`)
 //line views/components/Table.html:176
-	if len(help) > 0 {
+	qw422016.E().S(title)
 //line views/components/Table.html:176
-		qw422016.N().S(` `)
-//line views/components/Table.html:176
-		qw422016.N().S(`title="`)
-//line views/components/Table.html:176
-		qw422016.E().S(strings.Join(help, "; "))
-//line views/components/Table.html:176
-		qw422016.N().S(`"`)
-//line views/components/Table.html:176
-	}
+	qw422016.N().S(`</label></th>`)
 //line views/components/Table.html:177
+	vutil.StreamIndent(qw422016, true, indent+1)
+//line views/components/Table.html:177
+	qw422016.N().S(`<td>`)
+//line views/components/Table.html:178
+	StreamIconPicker(qw422016, key, value, ps, indent+2)
+//line views/components/Table.html:178
+	qw422016.N().S(`</td>`)
+//line views/components/Table.html:180
+	vutil.StreamIndent(qw422016, true, indent)
+//line views/components/Table.html:180
+	qw422016.N().S(`</tr>`)
+//line views/components/Table.html:182
 }
 
-//line views/components/Table.html:177
-func writetitleFor(qq422016 qtio422016.Writer, help []string) {
-//line views/components/Table.html:177
+//line views/components/Table.html:182
+func WriteTableIcons(qq422016 qtio422016.Writer, key string, title string, value string, ps *cutil.PageState, indent int, help ...string) {
+//line views/components/Table.html:182
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/Table.html:177
-	streamtitleFor(qw422016, help)
-//line views/components/Table.html:177
+//line views/components/Table.html:182
+	StreamTableIcons(qw422016, key, title, value, ps, indent, help...)
+//line views/components/Table.html:182
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/Table.html:177
+//line views/components/Table.html:182
 }
 
-//line views/components/Table.html:177
-func titleFor(help []string) string {
-//line views/components/Table.html:177
+//line views/components/Table.html:182
+func TableIcons(key string, title string, value string, ps *cutil.PageState, indent int, help ...string) string {
+//line views/components/Table.html:182
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/Table.html:177
-	writetitleFor(qb422016, help)
-//line views/components/Table.html:177
+//line views/components/Table.html:182
+	WriteTableIcons(qb422016, key, title, value, ps, indent, help...)
+//line views/components/Table.html:182
 	qs422016 := string(qb422016.B)
-//line views/components/Table.html:177
+//line views/components/Table.html:182
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/Table.html:177
+//line views/components/Table.html:182
 	return qs422016
-//line views/components/Table.html:177
+//line views/components/Table.html:182
+}
+
+//line views/components/Table.html:184
+func streamtitleFor(qw422016 *qt422016.Writer, help []string) {
+//line views/components/Table.html:185
+	if len(help) > 0 {
+//line views/components/Table.html:185
+		qw422016.N().S(` `)
+//line views/components/Table.html:185
+		qw422016.N().S(`title="`)
+//line views/components/Table.html:185
+		qw422016.E().S(strings.Join(help, "; "))
+//line views/components/Table.html:185
+		qw422016.N().S(`"`)
+//line views/components/Table.html:185
+	}
+//line views/components/Table.html:186
+}
+
+//line views/components/Table.html:186
+func writetitleFor(qq422016 qtio422016.Writer, help []string) {
+//line views/components/Table.html:186
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/components/Table.html:186
+	streamtitleFor(qw422016, help)
+//line views/components/Table.html:186
+	qt422016.ReleaseWriter(qw422016)
+//line views/components/Table.html:186
+}
+
+//line views/components/Table.html:186
+func titleFor(help []string) string {
+//line views/components/Table.html:186
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/components/Table.html:186
+	writetitleFor(qb422016, help)
+//line views/components/Table.html:186
+	qs422016 := string(qb422016.B)
+//line views/components/Table.html:186
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/components/Table.html:186
+	return qs422016
+//line views/components/Table.html:186
 }
