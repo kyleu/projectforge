@@ -69,7 +69,7 @@ var AllBuilds = Builds{
 	simpleBuild("clientBuild", "Client Build", "bin/build/client.sh"),
 	{Key: "deployments", Title: "Deployments", Description: "Manages deployments", Run: onDeployments},
 	{Key: "test", Title: "Test", Description: "Does a test", Run: func(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
-		return simpleProc(ctx, "ls", pm.Prj.Path, ret, pm.Logger)
+		return simpleProc(ctx, "bin/test.sh", pm.Prj.Path, ret, pm.Logger)
 	}},
 }
 

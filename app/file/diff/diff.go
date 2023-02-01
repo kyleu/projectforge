@@ -94,6 +94,9 @@ func FileLoader(mods []string, src file.Files, tgt filesystem.FileLoader, includ
 			if strings.Contains(tgtFile.Content, file.IgnorePattern) {
 				skip = true
 			}
+			if strings.Contains(s.Content, file.GenerateOncePattern) {
+				skip = true
+			}
 		}
 
 		matches, err := matchesModules(s, mods, tgtFile)

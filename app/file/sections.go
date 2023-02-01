@@ -11,13 +11,14 @@ import (
 )
 
 const (
-	InjectPrefix  = prefix + "INJECT"
-	ModulePrefix  = prefix + "HAS_MODULE"
-	sectionPrefix = prefix + "SECTION"
-	startPattern  = "_START("
-	endPattern    = "_END("
-	closePattern  = ")$"
-	IgnorePattern = prefix + "IGNORE" + suffix
+	InjectPrefix        = prefix + "INJECT"
+	ModulePrefix        = prefix + "HAS_MODULE"
+	sectionPrefix       = prefix + "SECTION"
+	startPattern        = "_START("
+	endPattern          = "_END("
+	closePattern        = ")$"
+	IgnorePattern       = prefix + "IGNORE" + suffix
+	GenerateOncePattern = prefix + "GENERATE_ONCE" + suffix
 )
 
 func Inject(fl *File, content map[string]string) error {

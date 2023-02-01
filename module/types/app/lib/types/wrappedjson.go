@@ -34,6 +34,9 @@ func (x *Wrapped) UnmarshalJSON(data []byte) error {
 		}
 		wu = wrappedUnmarshal{K: str, T: []byte("{}")}
 	}
+	if wu.K == "boolean" {
+		wu.K = KeyBool
+	}
 	var t Type
 	switch wu.K {
 	case KeyAny:
