@@ -2,7 +2,7 @@ export function autocompleteInit() {
   return autocomplete;
 }
 
-function autocomplete(el: HTMLInputElement, url: string, field: string, title: (x: any) => string, val: (x: any) => string) {
+function autocomplete(el: HTMLInputElement, url: string, field: string, title: (x: unknown) => string, val: (x: unknown) => string) {
   if (!el) {
     return;
   }
@@ -24,7 +24,7 @@ function autocomplete(el: HTMLInputElement, url: string, field: string, title: (
     [_: string]: {
       url: string;
       complete: boolean;
-      data: any[];
+      data: unknown[];
       frag: DocumentFragment;
     }
   } = {};
@@ -94,9 +94,9 @@ function autocomplete(el: HTMLInputElement, url: string, field: string, title: (
   console.log("managing [" + el.id + "] autocomplete");
 }
 
-function debounce(callback: (...args: any) => void, wait: number) {
+function debounce(callback: (...args: unknown[]) => void, wait: number) {
   let timeoutId = 0;
-  return function (...args: any) {
+  return function (...args: unknown[]) {
     if (timeoutId !== 0) {
       window.clearTimeout(timeoutId);
     }

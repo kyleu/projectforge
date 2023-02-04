@@ -1,18 +1,18 @@
 import {setHTML} from "./dom";
 
 declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      [elemName: string]: any;
+  namespace JSX { // eslint-disable-line @typescript-eslint/no-namespace
+    type IntrinsicElements = {
+      [elemName: string]: unknown;
     }
   }
 }
 
 // noinspection JSUnusedGlobalSymbols
-export function JSX(tag: string, attrs: any, ...args: any) {
+export function JSX(tag: string, attrs: any[], ...args: Node[]) { // eslint-disable-line @typescript-eslint/no-explicit-any
   const e = document.createElement(tag);
   for (const name in attrs) {
-    if (name && attrs.hasOwnProperty(name)) {
+    if (name && attrs.hasOwnProperty(name)) { // eslint-disable-line no-prototype-builtins
       const v = attrs[name];
       if (name === "dangerouslySetInnerHTML") {
         setHTML(e, v["__html"]);

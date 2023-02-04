@@ -14,17 +14,17 @@ import {socketInit} from "./socket";{{{ end }}}
 import {appInit} from "./app";
 
 declare global {
-  interface Window {
+  interface Window { // eslint-disable-line @typescript-eslint/consistent-type-definitions
     "{{{ .CleanKey }}}": {
       relativeTime: (time: string, el?: HTMLElement) => string;
-      autocomplete: (el: HTMLInputElement, url: string, field: string, title: (x: any) => string, val: (x: any) => string) => void;
+      autocomplete: (el: HTMLInputElement, url: string, field: string, title: (x: unknown) => string, val: (x: unknown) => string) => void;
       setSiblingToNull: (el: HTMLElement) => void;
       initForm: (frm: HTMLFormElement) => void;
-      flash: (key: string, level: string, msg: string) => void;
+      flash: (key: string, level: "success" | "error", msg: string) => void;
       tags: (el: HTMLElement) => void;{{{ if .HasModule "websocket" }}}
-      Socket: any;{{{ end }}}
+      Socket: unknown;{{{ end }}}
     };{{{ if .HasModule "jsx" }}}
-    "JSX": (tag: string, attrs: any) => HTMLElement;{{{ end }}}
+    "JSX": (tag: string, attrs: unknown[]) => HTMLElement;{{{ end }}}
   }
 }
 

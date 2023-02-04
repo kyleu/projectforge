@@ -4,10 +4,10 @@ export function socketInit() {
 
 let appUnloading = false;
 
-export interface Message {
+export type Message = {
   readonly channel: string;
   readonly cmd: string;
-  readonly param: any;
+  readonly param: unknown;
 }
 
 export class Socket {
@@ -41,7 +41,7 @@ export class Socket {
     };
     this.connectTime = Date.now();
     this.sock = new WebSocket(socketUrl(this.url));
-    const s = this;
+    const s = this; // eslint-disable-line @typescript-eslint/no-this-alias
     this.sock.onopen = () => {
       s.connected = true;
       s.pendingMessages.forEach(s.send);
@@ -85,7 +85,7 @@ export class Socket {
   }
 
   disconnect() {
-
+    // noop
   }
 
   send(msg: Message) {
