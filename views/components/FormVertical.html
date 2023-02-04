@@ -120,6 +120,7 @@
 {% endstripspace %}{% endfunc %}
 
 {% func FormVerticalInputTags(key string, id string, title string, values []string, ps *cutil.PageState, indent int, help ...string) %}{% stripspace %}
+  {%- code id = cutil.CleanID(key, id) -%}
   <div class="mb expanded">
     {%= vutil.Indent(true, indent + 1) %}
     <label for="{%s id %}"><em class="title">{%s title %}</em></label>

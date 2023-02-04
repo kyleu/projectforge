@@ -116,7 +116,7 @@
         <tbody>{{{ if .HasModule "user" }}}
           {%= components.TableInput("from", "", "From", ps.Profile.ID.String(), 5, "The user this message is from") %}{{{ else }}}
           {%= components.TableInput("from", "", "From", p.Connection.ID.String(), 5, "The connection this message is from") %}{{{ end }}}
-          {%= components.TableInput("channel", "", "Channel", "", 5, "The channel this message is from") %}
+          {%= components.TableInput("channel", "", "Channel", "", 5, "The channel this message is for") %}
           {%= components.TableInput("cmd", "", "Command", "", 5, "The command for this message") %}
           {%= components.TableTextarea("param", "", "Parameter", 8, "", 5, "JSON object message payload") %}
           <tr><td colspan="2"><button type="submit">Send</button></td></tr>
