@@ -1,7 +1,10 @@
 package model
 
 import (
+	"github.com/pkg/errors"
 	"golang.org/x/exp/slices"
+
+	"projectforge.dev/projectforge/app/util"
 )
 
 type Models []*Model
@@ -80,4 +83,17 @@ func (m Models) ForGroup(pth ...string) Models {
 		}
 	}
 	return ret
+}
+
+func (m Models) Validate(mods []string, groups Groups) error {
+	names := util.ValueMap{}
+	for _, x := range m {
+		if _, ok := names[x.Name]; ok {
+			return errors.Errorf("multiple models found with name [%s]", x.Name)
+		}
+		if err := x.Validate(mods, m, groups); err != nil {
+			return err
+		}
+	}
+	return nil
 }

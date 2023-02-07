@@ -35,11 +35,11 @@ func (a *Args) DBRef() string {
 
 func (a *Args) Validate() error {
 	packages := make(map[string]struct{}, len(a.Models))
+	err := a.Models.Validate(a.Modules, a.Groups)
+	if err != nil {
+		return err
+	}
 	for _, m := range a.Models {
-		err := m.Validate(a.Modules, a.Models, a.Groups)
-		if err != nil {
-			return errors.Wrap(err, "invalid model ["+m.Name+"]")
-		}
 		for _, rel := range m.Relations {
 			relTable := a.Models.Get(rel.Table)
 			if relTable == nil {

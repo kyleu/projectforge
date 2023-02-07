@@ -37,7 +37,7 @@ func apply(ps filter.ParamSet, qk string, qv string) filter.ParamSet {
 		li, err := strconv.ParseInt(qv, 10, 64)
 		if err == nil {
 			curr.Limit = int(li)
-			max := 10000
+			max := 1000
 			if curr.Limit > max {
 				curr.Limit = max
 			}

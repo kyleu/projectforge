@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/types"
@@ -20,7 +21,7 @@ const (
 
 func SeedData(m *model.Model, args *model.Args) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"queries", "seeddata"}, fmt.Sprintf("seed_%s.sql", m.Name))
-	seed, err := sqlSeedData(m, args.Modules)
+	seed, err := sqlSeedData(m)
 	if err != nil {
 		return nil, err
 	}
@@ -29,18 +30,30 @@ func SeedData(m *model.Model, args *model.Args) (*file.File, error) {
 }
 
 //nolint:gocognit
-func sqlSeedData(m *model.Model, modules []string) (*golang.Block, error) {
+func sqlSeedData(m *model.Model) (*golang.Block, error) {
 	ret := golang.NewBlock("SQLCreate", "sql")
 	ret.W("-- {%% func " + m.Proper() + "SeedData() %%}")
-	ret.W("insert into %q (", m.Name)
-	ret.W("  " + strings.Join(m.Columns.NamesQuoted(), ", "))
-	ret.W(") values (")
+	err := sqlSeedDataColumns(m, ret, m.Name, m.Columns)
+	if err != nil {
+		return nil, err
+	}
+	ret.W("-- {%% endfunc %%}")
+	return ret, nil
+}
+
+func sqlSeedDataColumns(m *model.Model, block *golang.Block, tableName string, cols model.Columns) error {
+	block.W("insert into %q (", m.Name)
+	block.W("  " + strings.Join(m.Columns.NamesQuoted(), ", "))
+	block.W(") values (")
 	for idx, row := range m.SeedData {
 		if len(row) != len(m.Columns) {
-			return nil, errors.Errorf("seed data row [%d] expected [%d] columns, but only [%d] were provided", idx+1, len(m.Columns), len(row))
+			return errors.Errorf("seed data row [%d] expected [%d] columns, but only [%d] were provided", idx+1, len(m.Columns), len(row))
 		}
 		var vs []string
-		for colIdx, col := range m.Columns {
+		for _, col := range cols {
+			colIdx := slices.IndexFunc(m.Columns, func(c *model.Column) bool {
+				return col.Name == c.Name
+			})
 			cell := row[colIdx]
 			cellStr := fmt.Sprint(cell)
 			switch col.Type.Key() {
@@ -89,14 +102,13 @@ func sqlSeedData(m *model.Model, modules []string) (*golang.Block, error) {
 				vs = append(vs, cellStr)
 			}
 		}
-		ret.W("  " + strings.Join(vs, ", "))
+		block.W("  " + strings.Join(vs, ", "))
 		if idx < len(m.SeedData)-1 {
-			ret.W("), (")
+			block.W("), (")
 		}
 	}
-	ret.W(") on conflict do nothing;")
-	ret.W("-- {%% endfunc %%}")
-	return ret, nil
+	block.W(") on conflict do nothing;")
+	return nil
 }
 
 func processString(cellStr string, dflt string) string {

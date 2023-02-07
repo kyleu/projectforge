@@ -36,7 +36,7 @@ func (p *Params) Sanitize(key string, defaultOrderings ...*Ordering) *Params {
 		p = &Params{Key: key}
 	}
 	if p.Limit == 0 || p.Limit > 10000 {
-		p.Limit = 1000
+		p.Limit = 50
 	}
 	if p.Offset < 0 {
 		p.Offset = 0
