@@ -1,4 +1,4 @@
-FROM ghcr.io/gythialy/golang-cross:v1.20.0-0 AS builder
+FROM ghcr.io/gythialy/golang-cross:v1.19.0-0 AS builder
 
 LABEL maintainer="{{{ .Info.AuthorEmail }}}"
 ENV PATH=${OSX_CROSS_PATH}/target/bin:$PATH:${GOPATH}/bin

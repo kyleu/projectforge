@@ -178,9 +178,9 @@ builds:
     hooks:
       # This build uses only one architecture, and is a good place to put one-time use scripts
       post:
-        # - "./bin/build/android.sh {{ .Version }}"
-        # - "./bin/build/ios.sh {{ .Version }}"
-        # - "./bin/build/desktop.release.sh {{ .Version }}"
+        - "./bin/build/android.sh {{ .Version }}"
+        - "./bin/build/ios.sh {{ .Version }}"
+        - "./bin/build/desktop.release.sh {{ .Version }}"
         # $PF_SECTION_START(extrascripts)$
         - "./bin/build/modules.sh"
         # $PF_SECTION_END(extrascripts)$
