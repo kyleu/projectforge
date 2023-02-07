@@ -94,7 +94,7 @@ func sqlCreate(m *model.Model, modules []string) (*golang.Block, error) {
 		}
 	}
 	for _, idx := range m.Indexes {
-		ret.W("create index if not exists %q on %s;", idx.Name, idx.Decl)
+		ret.W(idx.SQL())
 	}
 	sqlHistory(ret, m, modules)
 	ret.W("-- {%% endfunc %%}")

@@ -11,7 +11,13 @@ declare global {
 // noinspection JSUnusedGlobalSymbols
 export function JSX(tag: string, attrs: any[], ...args: Node[]) { // eslint-disable-line @typescript-eslint/no-explicit-any
   const e = document.createElement(tag);
-  for (const name in attrs) {
+  for (let name in attrs) {
+    if (name === "for") {
+      name = "for";
+    }
+    if (name === "className") {
+      name = "class";
+    }
     if (name && attrs.hasOwnProperty(name)) { // eslint-disable-line no-prototype-builtins
       const v = attrs[name];
       if (name === "dangerouslySetInnerHTML") {
