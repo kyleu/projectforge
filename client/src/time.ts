@@ -30,9 +30,8 @@ export function relativeTime(time: string, el?: HTMLElement): string {
     return year.toString() + '-' + ((month < 10) ? '0' + month.toString() : month.toString()) + '-' + ((day < 10) ? '0' + day.toString() : day.toString());
   }
 
-  let ret = "";
-  let timeoutSeconds = 0;
-
+  let ret: string;
+  let timeoutSeconds: number;
   if (day_diff == 0) {
     if (diff < 5) {
       timeoutSeconds = 1;

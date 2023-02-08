@@ -33,17 +33,29 @@ func SeedData(m *model.Model, args *model.Args) (*file.File, error) {
 func sqlSeedData(m *model.Model) (*golang.Block, error) {
 	ret := golang.NewBlock("SQLCreate", "sql")
 	ret.W("-- {%% func " + m.Proper() + "SeedData() %%}")
-	err := sqlSeedDataColumns(m, ret, m.Name, m.Columns)
-	if err != nil {
-		return nil, err
+	if m.History == model.RevisionType {
+		err := sqlSeedDataColumns(m, ret, m.Name, m.HistoryColumns(true).Const)
+		if err != nil {
+			return nil, err
+		}
+		ret.W("")
+		err = sqlSeedDataColumns(m, ret, m.Name+"_"+m.HistoryColumn().Name, m.HistoryColumns(true).Var)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		err := sqlSeedDataColumns(m, ret, m.Name, m.Columns)
+		if err != nil {
+			return nil, err
+		}
 	}
 	ret.W("-- {%% endfunc %%}")
 	return ret, nil
 }
 
 func sqlSeedDataColumns(m *model.Model, block *golang.Block, tableName string, cols model.Columns) error {
-	block.W("insert into %q (", m.Name)
-	block.W("  " + strings.Join(m.Columns.NamesQuoted(), ", "))
+	block.W("insert into %q (", tableName)
+	block.W("  " + strings.Join(cols.NamesQuoted(), ", "))
 	block.W(") values (")
 	for idx, row := range m.SeedData {
 		if len(row) != len(m.Columns) {
@@ -54,8 +66,26 @@ func sqlSeedDataColumns(m *model.Model, block *golang.Block, tableName string, c
 			colIdx := slices.IndexFunc(m.Columns, func(c *model.Column) bool {
 				return col.Name == c.Name
 			})
+			if colIdx == -1 && strings.HasPrefix(col.Name, m.Name+"_") {
+				trimmed := strings.TrimPrefix(col.Name, m.Name+"_")
+				colIdx = slices.IndexFunc(m.Columns, func(c *model.Column) bool {
+					return trimmed == c.Name
+				})
+			}
+			if colIdx == -1 && strings.HasPrefix(col.Name, "current_") {
+				trimmed := strings.TrimPrefix(col.Name, "current_")
+				colIdx = slices.IndexFunc(m.Columns, func(c *model.Column) bool {
+					return trimmed == c.Name
+				})
+			}
+			if colIdx == -1 {
+				return errors.Errorf("unable to find column [%s]", col.Name)
+			}
 			cell := row[colIdx]
 			cellStr := fmt.Sprint(cell)
+			if col.Name == "metadata" {
+				println(cellStr)
+			}
 			switch col.Type.Key() {
 			case types.KeyString, types.KeyEnum:
 				vs = append(vs, processString(cellStr, "''"))
@@ -83,7 +113,7 @@ func sqlSeedDataColumns(m *model.Model, block *golang.Block, tableName string, c
 					continue
 				}
 				vs = append(vs, fmt.Sprintf("%f", cell))
-			case types.KeyMap, types.KeyValueMap:
+			case types.KeyMap, types.KeyValueMap, types.KeyReference:
 				if cellStr == nilStr {
 					vs = append(vs, nullStr)
 					continue
