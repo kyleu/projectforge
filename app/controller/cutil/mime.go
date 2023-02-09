@@ -4,6 +4,7 @@ package cutil
 import (
 	"encoding/xml"
 	"fmt"
+	"net/url"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -30,11 +31,28 @@ func WriteCORS(rc *fasthttp.RequestCtx) {
 			rc.Response.Header.Set(k, v)
 		}
 	}
-	setIfEmpty("Access-Control-Allow-Headers", AllowedRequestHeaders)
-	setIfEmpty("Access-Control-Allow-Methods", "GET,POST,DELETE,PUT,PATCH,OPTIONS,HEAD")
-	setIfEmpty("Access-Control-Allow-Origin", "*")
-	setIfEmpty("Access-Control-Allow-Credentials", util.BoolTrue)
-	setIfEmpty("Access-Control-Expose-Headers", AllowedResponseHeaders)
+	setIfEmpty(fasthttp.HeaderAccessControlAllowHeaders, AllowedRequestHeaders)
+	setIfEmpty(fasthttp.HeaderAccessControlAllowMethods, "GET,POST,DELETE,PUT,PATCH,OPTIONS,HEAD")
+	if x := string(rc.Request.Header.Peek(fasthttp.HeaderReferer)); x == "" {
+		setIfEmpty(fasthttp.HeaderAccessControlAllowOrigin, "*")
+	} else {
+		u, err := url.Parse(x)
+		if err == nil {
+			o := u.Hostname()
+			if u.Port() != "" {
+				o += ":" + u.Port()
+			}
+			sch := u.Scheme
+			if strings.Count(o, ".") > 1 {
+				sch = "https"
+			}
+			setIfEmpty(fasthttp.HeaderAccessControlAllowOrigin, sch+"://"+o)
+		} else {
+			setIfEmpty(fasthttp.HeaderAccessControlAllowOrigin, "*")
+		}
+	}
+	setIfEmpty(fasthttp.HeaderAccessControlAllowCredentials, util.BoolTrue)
+	setIfEmpty(fasthttp.HeaderAccessControlExposeHeaders, AllowedResponseHeaders)
 }
 
 func RespondDebug(rc *fasthttp.RequestCtx, filename string, body any) (string, error) {

@@ -69,7 +69,7 @@ function autocomplete(el: HTMLInputElement, url: string, field: string, title: (
       return;
     }
 
-    fetch(dest).then(res => res.json()).then(data => {
+    fetch(dest, { credentials: 'include' }).then(res => res.json()).then(data => {
       if (!data) return;
       const arr = Array.isArray(data) ? data : [data];
       const frag = document.createDocumentFragment();
