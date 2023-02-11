@@ -42,7 +42,7 @@ func WriteCORS(rc *fasthttp.RequestCtx) {
 				o += ":" + u.Port()
 			}
 			sch := u.Scheme
-			if strings.Count(o, ".") > 1 {
+			if strings.Contains(o, ".network") {
 				sch = "https"
 			}
 			setIfEmpty(fasthttp.HeaderAccessControlAllowOrigin, sch+"://"+o)

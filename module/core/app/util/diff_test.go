@@ -59,9 +59,8 @@ func TestDiffs(t *testing.T) {
 		diffs := util.DiffObjects(tt.l, tt.r, "")
 		diffJSON := util.ToJSONCompact(diffs)
 		if len(diffs) == len(tt.d) {
-			for i := 0; i < len(diffs); i++ {
+			for i, observed := range diffs {
 				expected := tt.d[i]
-				observed := diffs[i]
 				if expected.Path != observed.Path {
 					t.Errorf("%s: diff [%d] has path [%s], expected path [%s]: %s", tt.k, i, observed.Path, expected.Path, diffJSON)
 				}
