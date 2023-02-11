@@ -89,7 +89,7 @@ func ExecSocket(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		err = as.Services.Socket.Upgrade(rc, ex.String(), ps.Profile, ps.Logger)
+		err = as.Services.Socket.Upgrade(rc, ex.String(), ps.Profile, ps.Accounts, ps.Logger)
 		if err != nil {
 			ps.Logger.Warn("unable to upgrade connection to websocket")
 			return "", err
