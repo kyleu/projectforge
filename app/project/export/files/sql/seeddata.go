@@ -29,7 +29,6 @@ func SeedData(m *model.Model, args *model.Args) (*file.File, error) {
 	return g.Render(false)
 }
 
-//nolint:gocognit
 func sqlSeedData(m *model.Model) (*golang.Block, error) {
 	ret := golang.NewBlock("SQLCreate", "sql")
 	ret.W("-- {%% func " + m.Proper() + "SeedData() %%}")
@@ -53,6 +52,7 @@ func sqlSeedData(m *model.Model) (*golang.Block, error) {
 	return ret, nil
 }
 
+//nolint:gocognit
 func sqlSeedDataColumns(m *model.Model, block *golang.Block, tableName string, cols model.Columns) error {
 	block.W("insert into %q (", tableName)
 	block.W("  " + strings.Join(cols.NamesQuoted(), ", "))
@@ -83,9 +83,6 @@ func sqlSeedDataColumns(m *model.Model, block *golang.Block, tableName string, c
 			}
 			cell := row[colIdx]
 			cellStr := fmt.Sprint(cell)
-			if col.Name == "metadata" {
-				println(cellStr)
-			}
 			switch col.Type.Key() {
 			case types.KeyString, types.KeyEnum:
 				vs = append(vs, processString(cellStr, "''"))

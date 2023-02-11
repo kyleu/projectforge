@@ -177,13 +177,13 @@ func StreamIconGallery(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageS
 //line views/components/SVG.html:34
 	for _, k := range util.SVGIconKeys {
 //line views/components/SVG.html:34
-		qw422016.N().S(`    <div style="text-align: center; margin: 6px 12px 6px 0; padding: 6px; border: var(--border);">
-      <div style="color: var(--color-foreground-muted);">`)
+		qw422016.N().S(`    <div class="icon-gallery-icon">
+      <div class="gallery-svg">`)
 //line views/components/SVG.html:36
 		StreamSVGRef(qw422016, k, 64, 64, "icon", ps)
 //line views/components/SVG.html:36
 		qw422016.N().S(`</div>
-      <div style="font-size: 75%;">`)
+      <div class="gallery-title">`)
 //line views/components/SVG.html:37
 		qw422016.E().S(k)
 //line views/components/SVG.html:37

@@ -15,6 +15,8 @@ import (
 	"{{{ .Package }}}/views/vdatabase"
 )
 
+const KeyAnalyze = "analyze"
+
 func DatabaseList(rc *fasthttp.RequestCtx) {
 	controller.Act("database.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		keys := database.RegistryKeys()
@@ -74,10 +76,10 @@ func DatabaseAction(rc *fasthttp.RequestCtx) {
 				return "", errors.Wrapf(dberr, "unable to calculate sizes for database [%s]", svc.Key)
 			}
 			return controller.Render(rc, as, &vdatabase.Detail{Mode: "tables", Svc: svc, Sizes: sizes}, ps, bc...)
-		case "analyze":
+		case KeyAnalyze:
 			t := util.TimerStart()
 			var tmp []any
-			err = svc.Select(ps.Context, &tmp, "analyze", nil, ps.Logger)
+			err = svc.Select(ps.Context, &tmp, KeyAnalyze, nil, ps.Logger)
 			if err != nil {
 				return "", err
 			}
@@ -125,7 +127,7 @@ func DatabaseSQLRun(rc *fasthttp.RequestCtx) {
 		c := string(f.Peek("commit"))
 		commit := c == util.BoolTrue
 		action := string(f.Peek("action"))
-		if action == "analyze" {
+		if action == KeyAnalyze {
 			sql = "explain analyze " + sql
 		}
 

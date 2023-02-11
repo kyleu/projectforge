@@ -53,9 +53,15 @@
 .pl {
   padding-left: var(--padding);
 }
+.pls {
+  padding-left: var(--padding-small);
+}
 
 .pr {
   padding-right: var(--padding);
+}
+.prs {
+  padding-right: var(--padding-small);
 }
 
 .overflow {
@@ -103,6 +109,10 @@
 
 .pre {
   font-family: monospace, monospace;
+  white-space: pre;
+}
+
+.prews {
   white-space: pre;
 }
 
@@ -158,6 +168,19 @@
   margin-right: 4px;
 }
 
+.icon-gallery-icon {
+  text-align: center;
+  margin: var(--padding-small) var(--padding) var(--padding-small) 0;
+  padding: var(--padding-small);
+  border: var(--border);
+}
+.icon-gallery-icon .gallery-svg {
+  color: var(--color-foreground-muted);
+}
+.icon-gallery-icon .gallery-title {
+  font-size: 75%;
+}
+
 .small-text {
   font-size: 80%;
 }
@@ -173,6 +196,18 @@
 .flex-wrap {
   display: flex;
   flex-wrap: wrap;
+}
+
+.flex-grow-1 {
+  flex-grow: 1;
+}
+
+.flex-align-stretch {
+  align-items: stretch;
+}
+
+.text-align-right {
+  text-align: right;
 }
 
 .toggle label {

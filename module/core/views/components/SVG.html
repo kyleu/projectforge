@@ -31,9 +31,9 @@
 {%- func IconGallery(as *app.State, ps *cutil.PageState) -%}
   <div class="flex-wrap mt">
     {%- for _, k := range util.SVGIconKeys -%}
-    <div style="text-align: center; margin: 6px 12px 6px 0; padding: 6px; border: var(--border);">
-      <div style="color: var(--color-foreground-muted);">{%= SVGRef(k, 64, 64, "icon", ps) %}</div>
-      <div style="font-size: 75%;">{%s k %}</div>
+    <div class="icon-gallery-icon">
+      <div class="gallery-svg">{%= SVGRef(k, 64, 64, "icon", ps) %}</div>
+      <div class="gallery-title">{%s k %}</div>
     </div>
     {%- endfor -%}
   </div>

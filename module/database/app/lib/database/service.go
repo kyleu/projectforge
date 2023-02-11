@@ -88,8 +88,8 @@ func (s *Service) Stats() sql.DBStats {
 	return s.db.Stats()
 }
 
-func (s *Service) Prepare(ctx context.Context, sql string) (*sqlx.Stmt, error) {
-	return s.db.PreparexContext(ctx, sql)
+func (s *Service) Prepare(ctx context.Context, q string) (*sqlx.Stmt, error) {
+	return s.db.PreparexContext(ctx, q)
 }
 
 func errMessage(t string, q string, values []any) string {

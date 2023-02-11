@@ -134,7 +134,7 @@ func (p *Request) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 		for k, v := range hd {
 //line views/vadmin/Request.html:76
 			qw422016.N().S(`        <tr>
-          <td style="white-space: nowrap;">`)
+          <td class="nowrap">`)
 //line views/vadmin/Request.html:78
 			qw422016.E().S(k)
 //line views/vadmin/Request.html:78

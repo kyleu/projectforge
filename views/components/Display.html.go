@@ -369,7 +369,7 @@ func StreamDisplayMaps(qw422016 *qt422016.Writer, maps []util.ValueMap, params *
 //line views/components/Display.html:100
 				if preserveWhitespace {
 //line views/components/Display.html:100
-					qw422016.N().S(`<td style="white-space: pre;">`)
+					qw422016.N().S(`<td class="prews">`)
 //line views/components/Display.html:101
 					qw422016.E().S(res)
 //line views/components/Display.html:101
