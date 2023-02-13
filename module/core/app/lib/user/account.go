@@ -42,6 +42,14 @@ func (a Account) TitleString() string {
 	return a.Provider + ":" + a.Email
 }
 
+func (a Account) Domain() string {
+	if a.Email == "" || !strings.Contains(a.Email, "@") {
+		return ""
+	}
+	_, r := util.StringSplitLast(a.Email, '@', true)
+	return r
+}
+
 type Accounts []*Account
 
 func (a Accounts) String() string {
@@ -77,6 +85,15 @@ func (a Accounts) GetByProvider(p string) Accounts {
 		}
 	}
 	return ret
+}
+
+func (a Accounts) GetByProviderDomain(p string, d string) *Account {
+	for _, x := range a {
+		if x.Provider == p && x.Domain() == d {
+			return x
+		}
+	}
+	return nil
 }
 
 func (a Accounts) Matches(match string) bool {

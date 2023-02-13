@@ -56,7 +56,9 @@ func (s *Service) WriteChannel(message *Message, logger util.Logger, except ...u
 		return nil
 	}
 	json := util.ToJSON(message)
-	logger.Debugf("sending message [%v::%v] to [%v] connections", message.Channel, message.Cmd, len(conns.ConnIDs)-len(except))
+	if size := len(conns.ConnIDs) - len(except); size > 0 {
+		logger.Debugf("sending message [%v::%v] to [%v] connections", message.Channel, message.Cmd, size)
+	}
 	for _, conn := range conns.ConnIDs {
 		if !slices.Contains(except, conn) {
 			connID := conn

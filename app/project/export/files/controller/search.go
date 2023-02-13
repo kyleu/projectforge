@@ -49,8 +49,9 @@ func searchModel(m *model.Model) []string {
 		add("\t\t\treturn nil, nil")
 		add("\t\t}")
 	}
-	const msg = "\t\tmodels, err := as.Services.%s.Search(ctx, params.Q, nil, params.PS.Get(%q, nil, logger)%s, logger)"
-	add(msg, m.Proper(), m.Package, m.SoftDeleteSuffix())
+	add("\t\tprm := params.PS.Get(%q, nil, logger).Sanitize(%q)", m.Package, m.Package)
+	const msg = "\t\tmodels, err := as.Services.%s.Search(ctx, params.Q, nil, prm%s, logger)"
+	add(msg, m.Proper(), m.SoftDeleteSuffix())
 	add("\t\tif err != nil {")
 	add("\t\t\treturn nil, err")
 	add("\t\t}")

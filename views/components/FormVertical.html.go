@@ -52,7 +52,7 @@ func StreamFormVerticalInput(qw422016 *qt422016.Writer, key string, id string, t
 //line views/components/FormVertical.html:17
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/FormVertical.html:17
-	qw422016.N().S(`<div>`)
+	qw422016.N().S(`<div class="mt">`)
 //line views/components/FormVertical.html:18
 	StreamFormInput(qw422016, key, id, value, help...)
 //line views/components/FormVertical.html:18
@@ -112,7 +112,7 @@ func StreamFormVerticalInputPassword(qw422016 *qt422016.Writer, key string, id s
 //line views/components/FormVertical.html:28
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/FormVertical.html:28
-	qw422016.N().S(`<div>`)
+	qw422016.N().S(`<div class="mt">`)
 //line views/components/FormVertical.html:29
 	StreamFormInputPassword(qw422016, key, id, value, help...)
 //line views/components/FormVertical.html:29
@@ -172,7 +172,7 @@ func StreamFormVerticalInputNumber(qw422016 *qt422016.Writer, key string, id str
 //line views/components/FormVertical.html:39
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/FormVertical.html:39
-	qw422016.N().S(`<div>`)
+	qw422016.N().S(`<div class="mt">`)
 //line views/components/FormVertical.html:40
 	StreamFormInputNumber(qw422016, key, id, value, help...)
 //line views/components/FormVertical.html:40
@@ -232,7 +232,7 @@ func StreamFormVerticalInputFloat(qw422016 *qt422016.Writer, key string, id stri
 //line views/components/FormVertical.html:50
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/FormVertical.html:50
-	qw422016.N().S(`<div>`)
+	qw422016.N().S(`<div class="mt">`)
 //line views/components/FormVertical.html:51
 	StreamFormInputFloat(qw422016, key, id, value, help...)
 //line views/components/FormVertical.html:51
@@ -292,7 +292,7 @@ func StreamFormVerticalInputTimestamp(qw422016 *qt422016.Writer, key string, id 
 //line views/components/FormVertical.html:61
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/FormVertical.html:61
-	qw422016.N().S(`<div>`)
+	qw422016.N().S(`<div class="mt">`)
 //line views/components/FormVertical.html:62
 	StreamFormInputTimestamp(qw422016, key, id, value, help...)
 //line views/components/FormVertical.html:62
@@ -352,7 +352,7 @@ func StreamFormVerticalInputTimestampDay(qw422016 *qt422016.Writer, key string, 
 //line views/components/FormVertical.html:72
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/FormVertical.html:72
-	qw422016.N().S(`<div>`)
+	qw422016.N().S(`<div class="mt">`)
 //line views/components/FormVertical.html:73
 	StreamFormInputTimestampDay(qw422016, key, id, value, help...)
 //line views/components/FormVertical.html:73
@@ -412,7 +412,7 @@ func StreamFormVerticalInputUUID(qw422016 *qt422016.Writer, key string, id strin
 //line views/components/FormVertical.html:83
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/FormVertical.html:83
-	qw422016.N().S(`<div>`)
+	qw422016.N().S(`<div class="mt">`)
 //line views/components/FormVertical.html:84
 	StreamFormInputUUID(qw422016, key, id, value, help...)
 //line views/components/FormVertical.html:84
@@ -472,7 +472,7 @@ func StreamFormVerticalTextarea(qw422016 *qt422016.Writer, key string, id string
 //line views/components/FormVertical.html:94
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/FormVertical.html:94
-	qw422016.N().S(`<div>`)
+	qw422016.N().S(`<div class="mt">`)
 //line views/components/FormVertical.html:95
 	StreamFormTextarea(qw422016, key, id, rows, value, help...)
 //line views/components/FormVertical.html:95
@@ -532,7 +532,7 @@ func StreamFormVerticalSelect(qw422016 *qt422016.Writer, key string, id string, 
 //line views/components/FormVertical.html:105
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/FormVertical.html:105
-	qw422016.N().S(`<div>`)
+	qw422016.N().S(`<div class="mt">`)
 //line views/components/FormVertical.html:106
 	StreamFormSelect(qw422016, key, id, value, opts, titles, indent)
 //line views/components/FormVertical.html:106
@@ -592,7 +592,7 @@ func StreamFormVerticalDatalist(qw422016 *qt422016.Writer, key string, id string
 //line views/components/FormVertical.html:116
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/FormVertical.html:116
-	qw422016.N().S(`<div>`)
+	qw422016.N().S(`<div class="mt">`)
 //line views/components/FormVertical.html:117
 	StreamFormDatalist(qw422016, key, id, value, opts, titles, indent)
 //line views/components/FormVertical.html:117
@@ -652,7 +652,7 @@ func StreamFormVerticalInputTags(qw422016 *qt422016.Writer, key string, id strin
 //line views/components/FormVertical.html:127
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/FormVertical.html:127
-	qw422016.N().S(`<div>`)
+	qw422016.N().S(`<div class="mt">`)
 //line views/components/FormVertical.html:128
 	StreamFormInputTags(qw422016, key, id, values, ps, help...)
 //line views/components/FormVertical.html:128
@@ -709,7 +709,7 @@ func StreamFormVerticalRadio(qw422016 *qt422016.Writer, key string, title string
 //line views/components/FormVertical.html:137
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/FormVertical.html:137
-	qw422016.N().S(`<div>`)
+	qw422016.N().S(`<div class="mt">`)
 //line views/components/FormVertical.html:139
 	StreamFormRadio(qw422016, key, value, opts, titles, indent+2)
 //line views/components/FormVertical.html:140
@@ -797,7 +797,7 @@ func StreamFormVerticalCheckbox(qw422016 *qt422016.Writer, key string, title str
 //line views/components/FormVertical.html:154
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/FormVertical.html:154
-	qw422016.N().S(`<div>`)
+	qw422016.N().S(`<div class="mt">`)
 //line views/components/FormVertical.html:156
 	StreamFormCheckbox(qw422016, key, values, opts, titles, indent+2)
 //line views/components/FormVertical.html:157
@@ -852,7 +852,7 @@ func StreamFormVerticalIconPicker(qw422016 *qt422016.Writer, key string, title s
 //line views/components/FormVertical.html:167
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/FormVertical.html:167
-	qw422016.N().S(`<div>`)
+	qw422016.N().S(`<div class="mt">`)
 //line views/components/FormVertical.html:168
 	StreamIconPicker(qw422016, key, value, ps, indent)
 //line views/components/FormVertical.html:168
