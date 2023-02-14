@@ -60,7 +60,11 @@ func exportViewEditBody(m *model.Model, p *project.Project, args *model.Args) (*
 	ret.W("        <tbody>")
 	editCols := m.Columns.WithoutTag("created").WithoutTag("updated")
 	for _, col := range editCols {
-		call, err := col.ToGoEditString("p.Model.", col.Format, args.Enums)
+		id := ""
+		if len(m.RelationsFor(col)) > 0 {
+			id = "input-" + col.Camel()
+		}
+		call, err := col.ToGoEditString("p.Model.", col.Format, id, args.Enums)
 		if err != nil {
 			return nil, err
 		}
