@@ -128,6 +128,21 @@ func ArrayFromAny(dest any) []any {
 	return []any{dest}
 }
 
+func ArrayFlatten[T any](arrs ...[]T) []T {
+	l := 0
+	for _, a := range arrs {
+		l += len(a)
+	}
+
+	out := make([]T, 0, l)
+	for _, a := range arrs {
+		for _, x := range a {
+			out = append(out, x)
+		}
+	}
+	return out
+}
+
 func ArrayFirstN[V any](items []V, n int) []V {
 	if n > len(items) {
 		return items

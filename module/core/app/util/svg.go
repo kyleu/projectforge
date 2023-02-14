@@ -1,4 +1,4 @@
-// Package util - $PF_IGNORE$
+// Package util - $PF_GENERATE_ONCE$
 // Code generated from files in [client/src/svg]. DO NOT EDIT.
 package util
 

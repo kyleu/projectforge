@@ -1,4 +1,3 @@
-<!--- $PF_IGNORE$ -->
 # Project Forge
 ![app logo](./assets/favicon.png)
 

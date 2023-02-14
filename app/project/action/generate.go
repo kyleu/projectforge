@@ -77,6 +77,9 @@ func gen(pm *PrjAndMods, srcFiles file.Files, f *diff.Diff, ret *Result, tgtFS f
 	if src == nil {
 		return ret.WithError(errors.Errorf("unable to read file from [%s]", f.Path))
 	}
+	if idx := strings.Index(src.Content, file.GenerateOncePattern); idx > -1 {
+		src.Content = src.Content[strings.Index(src.Content[idx:], "\n")+idx+1:]
+	}
 	err := tgtFS.WriteFile(f.Path, []byte(src.Content), src.Mode, true)
 	if err != nil {
 		return ret.WithError(errors.Wrapf(err, "unable to write updated content to [%s]", f.Path))

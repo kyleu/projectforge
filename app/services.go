@@ -1,4 +1,3 @@
-// Package app $PF_IGNORE$
 package app // import "projectforge.dev/projectforge/app"
 
 import (

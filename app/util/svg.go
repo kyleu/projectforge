@@ -1,4 +1,3 @@
-// Package util $PF_IGNORE$
 // Code generated from files in [client/src/svg]. See https://projectforge.dev for details. DO NOT EDIT.
 package util
 

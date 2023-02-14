@@ -1,4 +1,4 @@
-// Package controller - $PF_IGNORE$
+// Package controller - $PF_GENERATE_ONCE$
 package controller
 
 import (

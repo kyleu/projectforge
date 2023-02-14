@@ -64,7 +64,6 @@ func SetAppIcon(ctx context.Context, prj *project.Project, fs filesystem.FileLoa
 
 	// app icon
 	appIconContent := strings.ReplaceAll(orig, "svg-"+x.Key, "svg-app")
-	appIconContent = "<!-- $PF_IGNORE$ -->\n" + appIconContent
 	err := fs.WriteFile("client/src/svg/app.svg", []byte(appIconContent), filesystem.DefaultMode, true)
 	if err != nil {
 		return errors.Wrap(err, "unable to write initial [app.svg]")

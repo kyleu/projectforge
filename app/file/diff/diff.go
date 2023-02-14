@@ -94,7 +94,7 @@ func FileLoader(mods []string, src file.Files, tgt filesystem.FileLoader, includ
 			if strings.Contains(tgtFile.Content, file.IgnorePattern) {
 				skip = true
 			}
-			if strings.Contains(s.Content, file.GenerateOncePattern) {
+			if idx := strings.Index(s.Content, file.GenerateOncePattern); idx > -1 {
 				skip = true
 			}
 		}

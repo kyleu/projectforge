@@ -1,4 +1,4 @@
-// $PF_IGNORE$
+// $PF_GENERATE_ONCE$
 package migrations
 
 import (
