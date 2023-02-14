@@ -176,7 +176,7 @@ func serviceCount(g *golang.File, m *model.Model, dbRef string) *golang.Block {
 		ret.W("\t\t}")
 		ret.W("\t}")
 	}
-	ret.W("\tq := database.SQLSelectSimple(count(*) as x, %s, whereClause)", tableClauseFor(m))
+	ret.W("\tq := database.SQLSelectSimple(\"count(*) as x\", %s, whereClause)", tableClauseFor(m))
 	ret.W("\tret, err := s.%s.SingleInt(ctx, q, tx, logger, args...)", dbRef)
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn 0, errors.Wrap(err, \"unable to get count of %s\")", m.TitlePluralLower())
