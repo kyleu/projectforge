@@ -127,3 +127,17 @@ func ArrayFromAny(dest any) []any {
 	}
 	return []any{dest}
 }
+
+func ArrayFirstN[V any](items []V, n int) []V {
+	if n > len(items) {
+		return items
+	}
+	return items[:n]
+}
+
+func ArrayLastN[V any](items []V, n int) []V {
+	if n > len(items) {
+		return items
+	}
+	return items[len(items)-n:]
+}
