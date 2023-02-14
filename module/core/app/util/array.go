@@ -128,16 +128,14 @@ func ArrayFromAny(dest any) []any {
 	return []any{dest}
 }
 
-// TakeFirstN returns the first N items from a slice
-func TakeFirstN[V any](n int, items []V) []V {
+func TakeFirstN[V any](items []V, n int) []V {
 	if n > len(items) {
-		n = len(items)
+		return items
 	}
 	return items[:n]
 }
 
-// TakeLastN returns the last N items from a slice
-func TakeLastN[V any](n int, items []V) []V {
+func TakeLastN[V any](items []V, n int) []V {
 	if n > len(items) {
 		return items
 	}
