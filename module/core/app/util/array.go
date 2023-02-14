@@ -128,14 +128,14 @@ func ArrayFromAny(dest any) []any {
 	return []any{dest}
 }
 
-func TakeFirstN[V any](items []V, n int) []V {
+func ArrayFirstN[V any](items []V, n int) []V {
 	if n > len(items) {
 		return items
 	}
 	return items[:n]
 }
 
-func TakeLastN[V any](items []V, n int) []V {
+func ArrayLastN[V any](items []V, n int) []V {
 	if n > len(items) {
 		return items
 	}
