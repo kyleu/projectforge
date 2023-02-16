@@ -39,6 +39,11 @@ func Check(path string, accounts Accounts) (bool, string) {
 	return perms.Check(path, accounts)
 }
 
+func IsAdmin(accounts Accounts) bool {
+	ret, _ := perms.Check("/admin", accounts)
+	return ret
+}
+
 func Perm(p string, m string, a bool) *Permission {
 	return &Permission{Path: p, Match: m, Allow: a}
 }
