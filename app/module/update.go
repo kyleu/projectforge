@@ -32,11 +32,12 @@ func (s *Service) UpdateFile(mods Modules, d *diff.Diff, logger util.Logger) ([]
 				ret = append(ret, fmt.Sprintf("no changes required to [%s] for module [%s]", d.Path, mod.Key))
 			} else {
 				_ = mode
-				err = loader.WriteFile(d.Path, newContent, mode, true)
-				if err != nil {
-					return nil, err
-				}
-				ret = append(ret, fmt.Sprintf("wrote [%d] bytes to [%s] for module [%s]", len(newContent), d.Path, mod.Key))
+				return nil, errors.Errorf("unable to merge change into module")
+				//err = loader.WriteFile(d.Path, newContent, mode, true)
+				//if err != nil {
+				//	return nil, err
+				//}
+				//ret = append(ret, fmt.Sprintf("wrote [%d] bytes to [%s] for module [%s]", len(newContent), d.Path, mod.Key))
 			}
 		}
 	}

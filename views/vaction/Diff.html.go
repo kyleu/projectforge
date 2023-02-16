@@ -143,7 +143,15 @@ func streamrenderDiffs(qw422016 *qt422016.Writer, prjKey string, act action.Type
 //line views/vaction/Diff.html:61
 			if d.Status.String() != "new" {
 //line views/vaction/Diff.html:61
+				qw422016.N().S(`<!--`)
+//line views/vaction/Diff.html:62
+				qw422016.N().S(` `)
+//line views/vaction/Diff.html:62
 				qw422016.N().S(`<button type="submit" name="to" value="module" title="Incorporate change into module">&lt;-</button>`)
+//line views/vaction/Diff.html:62
+				qw422016.N().S(` `)
+//line views/vaction/Diff.html:62
+				qw422016.N().S(`-->`)
 //line views/vaction/Diff.html:62
 				qw422016.N().S(` `)
 //line views/vaction/Diff.html:63

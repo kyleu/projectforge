@@ -13,7 +13,10 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-const projectKey = "project"
+const (
+	projectKey = "project"
+	moduleKey  = "module"
+)
 
 func onGenerate(ctx context.Context, pm *PrjAndMods) *Result {
 	ret := newResult(TypeGenerate, pm.Prj, pm.Cfg, pm.Logger)
@@ -41,7 +44,7 @@ func onGenerate(ctx context.Context, pm *PrjAndMods) *Result {
 			// noop
 		case diff.StatusDifferent, diff.StatusNew:
 			switch to {
-			case "module":
+			case moduleKey:
 				ret = mergeToModule(pm, f, ret)
 			case projectKey:
 				ret = gen(pm, srcFiles, f, ret, tgtFS)

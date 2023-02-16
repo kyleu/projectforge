@@ -59,7 +59,7 @@
             <form action="/run/{%s prjKey %}/generate" method="get">
               <input type="hidden" name="file" value="{%s d.Path %}" />
               {%- if d.Status.String() != "new" -%}
-              <button type="submit" name="to" value="module" title="Incorporate change into module">&lt;-</button>{% space %}
+              <!--{% space %}<button type="submit" name="to" value="module" title="Incorporate change into module">&lt;-</button>{% space %}-->{% space %}
               {%- endif -%}
               <button type="submit" name="to" value="project" title="Overwrite project changes with module version">-&gt;</button>
             </form>

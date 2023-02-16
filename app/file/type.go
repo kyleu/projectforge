@@ -20,11 +20,13 @@ var (
 	TypeDocker       = Type{Key: "docker", Suffixes: []string{"Dockerfile"}, Title: "Docker build configuration"}
 	TypeEditorConfig = Type{Key: "editorconfig", Suffixes: []string{".editorconfig"}, Title: "IDE configuration and styling"}
 	TypeEntitlements = Type{Key: "entitlements", Suffixes: []string{".entitlements"}, Title: "Apple entitlements file"}
+	TypeEnv          = Type{Key: "env", Suffixes: []string{".env"}, Title: "Shell environment files"}
 	TypeESLint       = Type{Key: "eslint", Suffixes: []string{".eslintrc"}, Title: "ESLint configuration file"}
 	TypeGitIgnore    = Type{Key: "gitignore", Suffixes: []string{".gitignore"}, Title: "Git ignore file"}
 	TypeGo           = Type{Key: "go", Suffixes: []string{".go"}, Title: "Go source"}
 	TypeGoMod        = Type{Key: "gomod", Suffixes: []string{".mod"}, Title: "Go module configuration"}
 	TypeGradle       = Type{Key: "gradle", Suffixes: []string{".gradle"}, Title: "Gradle build or source file"}
+	TypeGraphQL      = Type{Key: "graphql", Suffixes: []string{".graphql", ".graphqls"}, Title: "Query and schema files for GraphQL"}
 	TypeHCL          = Type{Key: "hcl", Suffixes: []string{".hcl"}, Title: "HashiCorp Configuration Language"}
 	TypeHTML         = Type{Key: "html", Suffixes: []string{".html", ".htm"}, Title: "HTML web page"}
 	TypeIgnore       = Type{Key: "dockerignore", Suffixes: []string{".dockerignore"}, Title: "Docker ignore file"}
@@ -47,8 +49,8 @@ var (
 )
 
 var AllTypes = []Type{
-	TypeBatch, TypeCodeowners, TypeConf, TypeCSS, TypeDocker, TypeEditorConfig, TypeEntitlements,
-	TypeESLint, TypeGitIgnore, TypeGo, TypeGoMod, TypeGradle, TypeHCL, TypeHTML, TypeIcons, TypeIgnore,
+	TypeBatch, TypeCodeowners, TypeConf, TypeCSS, TypeDocker, TypeEditorConfig, TypeEntitlements, TypeEnv,
+	TypeESLint, TypeGitIgnore, TypeGo, TypeGoMod, TypeGradle, TypeGraphQL, TypeHCL, TypeHTML, TypeIcons, TypeIgnore,
 	TypeJavaScript, TypeJSON, TypeKotlin, TypeMakefile, TypeMarkdown, TypePList, TypeProperties,
 	TypeProtobuf, TypeShell, TypeSQL, TypeSVG, TypeSwift, TypeTypeScript, TypeXML, TypeYAML,
 }
