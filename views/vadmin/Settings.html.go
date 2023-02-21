@@ -10,100 +10,98 @@ package vadmin
 import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
-	"projectforge.dev/projectforge/app/lib/user"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/components"
 	"projectforge.dev/projectforge/views/layout"
 )
 
-//line views/vadmin/Settings.html:11
+//line views/vadmin/Settings.html:10
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vadmin/Settings.html:11
+//line views/vadmin/Settings.html:10
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vadmin/Settings.html:11
+//line views/vadmin/Settings.html:10
 type Settings struct {
 	layout.Basic
-	Perms user.Permissions
 }
 
-//line views/vadmin/Settings.html:16
+//line views/vadmin/Settings.html:14
 func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vadmin/Settings.html:16
+//line views/vadmin/Settings.html:14
 	qw422016.N().S(`
   <div class="card">
 `)
-//line views/vadmin/Settings.html:18
+//line views/vadmin/Settings.html:16
 	if util.AppSource != "" {
-//line views/vadmin/Settings.html:18
+//line views/vadmin/Settings.html:16
 		qw422016.N().S(`    <div class="right"><a href="`)
-//line views/vadmin/Settings.html:19
+//line views/vadmin/Settings.html:17
 		qw422016.E().S(util.AppSource)
-//line views/vadmin/Settings.html:19
+//line views/vadmin/Settings.html:17
 		qw422016.N().S(`"><button>Github</button></a></div>
 `)
-//line views/vadmin/Settings.html:20
+//line views/vadmin/Settings.html:18
 	}
-//line views/vadmin/Settings.html:20
+//line views/vadmin/Settings.html:18
 	qw422016.N().S(`    <h3 title="github:`)
-//line views/vadmin/Settings.html:21
+//line views/vadmin/Settings.html:19
 	qw422016.E().S(as.BuildInfo.Commit)
-//line views/vadmin/Settings.html:21
+//line views/vadmin/Settings.html:19
 	qw422016.N().S(`">`)
-//line views/vadmin/Settings.html:21
+//line views/vadmin/Settings.html:19
 	components.StreamSVGRefIcon(qw422016, `cog`, ps)
-//line views/vadmin/Settings.html:21
+//line views/vadmin/Settings.html:19
 	qw422016.E().S(util.AppName)
-//line views/vadmin/Settings.html:21
+//line views/vadmin/Settings.html:19
 	qw422016.N().S(` `)
-//line views/vadmin/Settings.html:21
+//line views/vadmin/Settings.html:19
 	qw422016.E().S(as.BuildInfo.String())
-//line views/vadmin/Settings.html:21
+//line views/vadmin/Settings.html:19
 	qw422016.N().S(`</h3>
 `)
-//line views/vadmin/Settings.html:22
+//line views/vadmin/Settings.html:20
 	if util.AppLegal != "" {
-//line views/vadmin/Settings.html:22
+//line views/vadmin/Settings.html:20
 		qw422016.N().S(`    <div class="mt">`)
-//line views/vadmin/Settings.html:23
+//line views/vadmin/Settings.html:21
 		qw422016.N().S(util.AppLegal)
-//line views/vadmin/Settings.html:23
+//line views/vadmin/Settings.html:21
 		qw422016.N().S(`</div>
 `)
-//line views/vadmin/Settings.html:24
+//line views/vadmin/Settings.html:22
 	}
-//line views/vadmin/Settings.html:25
+//line views/vadmin/Settings.html:23
 	if util.AppURL != "" {
-//line views/vadmin/Settings.html:25
+//line views/vadmin/Settings.html:23
 		qw422016.N().S(`    <p><a href="`)
-//line views/vadmin/Settings.html:26
+//line views/vadmin/Settings.html:24
 		qw422016.N().S(util.AppURL)
-//line views/vadmin/Settings.html:26
+//line views/vadmin/Settings.html:24
 		qw422016.N().S(`">`)
-//line views/vadmin/Settings.html:26
+//line views/vadmin/Settings.html:24
 		qw422016.N().S(util.AppURL)
-//line views/vadmin/Settings.html:26
+//line views/vadmin/Settings.html:24
 		qw422016.N().S(`</a></p>
 `)
-//line views/vadmin/Settings.html:27
+//line views/vadmin/Settings.html:25
 	}
-//line views/vadmin/Settings.html:27
+//line views/vadmin/Settings.html:25
 	qw422016.N().S(`  </div>
 
   <div class="flex-wrap flex-align-stretch">
     <div class="card flex-grow-1">
       <h3>`)
-//line views/vadmin/Settings.html:32
+//line views/vadmin/Settings.html:30
 	components.StreamSVGRefIcon(qw422016, `archive`, ps)
-//line views/vadmin/Settings.html:32
+//line views/vadmin/Settings.html:30
 	qw422016.N().S(`Admin Functions</h3>
       <ul class="mt">
         <li><a href="/admin/modules">View Go modules</a></li>
@@ -114,9 +112,9 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
     </div>
     <div class="card flex-grow-1">
       <h3>`)
-//line views/vadmin/Settings.html:41
+//line views/vadmin/Settings.html:39
 	components.StreamSVGRefIcon(qw422016, `bolt`, ps)
-//line views/vadmin/Settings.html:41
+//line views/vadmin/Settings.html:39
 	qw422016.N().S(`HTTP Methods</h3>
       <ul class="mt">
         <li><a href="/admin/sitemap">Sitemap</a></li>
@@ -128,9 +126,9 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
     </div>
     <div class="card flex-grow-1">
       <h3>`)
-//line views/vadmin/Settings.html:51
+//line views/vadmin/Settings.html:49
 	components.StreamSVGRefIcon(qw422016, `cog`, ps)
-//line views/vadmin/Settings.html:51
+//line views/vadmin/Settings.html:49
 	qw422016.N().S(`App Profiling</h3>
       <ul class="mt">
         <li><a href="/admin/cpu/start">Start CPU profile</a></li>
@@ -141,31 +139,31 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
     </div>
   </div>
 `)
-//line views/vadmin/Settings.html:60
+//line views/vadmin/Settings.html:58
 }
 
-//line views/vadmin/Settings.html:60
+//line views/vadmin/Settings.html:58
 func (p *Settings) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vadmin/Settings.html:60
+//line views/vadmin/Settings.html:58
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vadmin/Settings.html:60
+//line views/vadmin/Settings.html:58
 	p.StreamBody(qw422016, as, ps)
-//line views/vadmin/Settings.html:60
+//line views/vadmin/Settings.html:58
 	qt422016.ReleaseWriter(qw422016)
-//line views/vadmin/Settings.html:60
+//line views/vadmin/Settings.html:58
 }
 
-//line views/vadmin/Settings.html:60
+//line views/vadmin/Settings.html:58
 func (p *Settings) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vadmin/Settings.html:60
+//line views/vadmin/Settings.html:58
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vadmin/Settings.html:60
+//line views/vadmin/Settings.html:58
 	p.WriteBody(qb422016, as, ps)
-//line views/vadmin/Settings.html:60
+//line views/vadmin/Settings.html:58
 	qs422016 := string(qb422016.B)
-//line views/vadmin/Settings.html:60
+//line views/vadmin/Settings.html:58
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vadmin/Settings.html:60
+//line views/vadmin/Settings.html:58
 	return qs422016
-//line views/vadmin/Settings.html:60
+//line views/vadmin/Settings.html:58
 }

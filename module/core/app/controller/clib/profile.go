@@ -59,9 +59,9 @@ func ProfileSave(rc *fasthttp.RequestCtx) {
 
 		n := ps.Profile.Clone()
 
-		referrer := frm.GetStringOpt("referrer")
-		if referrer == "" {
-			referrer = cutil.DefaultProfilePath
+		referrerDefault := frm.GetStringOpt("referrer")
+		if referrerDefault == "" {
+			referrerDefault = cutil.DefaultProfilePath
 		}
 
 		n.Name = frm.GetStringOpt("name")
@@ -79,8 +79,20 @@ func ProfileSave(rc *fasthttp.RequestCtx) {
 		err = csession.SaveProfile(n, rc, ps.Session, ps.Logger)
 		if err != nil {
 			return "", err
-		}
+		}{{{ if .HasModule "user" }}}
 
-		return controller.ReturnToReferrer("Saved profile", referrer, rc, ps)
+		curr, _ := as.Services.User.Get(ps.Context, nil, ps.Profile.ID, ps.Logger)
+		if curr != nil {
+			curr.Name = n.Name
+			if curr.Picture == "" {
+				curr.Picture = ps.Accounts.Image()
+			}
+			err = as.Services.User.Update(ps.Context, nil, curr, ps.Logger)
+			if err != nil {
+				return "", err
+			}
+		}{{{ end }}}
+
+		return controller.ReturnToReferrer("Saved profile", referrerDefault, rc, ps)
 	})
 }

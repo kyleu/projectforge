@@ -12,7 +12,8 @@ import (
 	"{{{ .Package }}}/app/lib/menu"
 	"{{{ .Package }}}/app/lib/telemetry"
 	"{{{ .Package }}}/app/lib/theme"
-	"{{{ .Package }}}/app/lib/user"
+	"{{{ .Package }}}/app/lib/user"{{{ if .HasModule "user" }}}
+	dbuser "github.com/kyleu/rituals/app/user"{{{ end }}}
 	"{{{ .Package }}}/app/util"
 )
 
@@ -40,9 +41,10 @@ type PageState struct {
 	Menu          menu.Items        `json:"menu,omitempty"`
 	Breadcrumbs   cmenu.Breadcrumbs `json:"breadcrumbs,omitempty"`
 	Flashes       []string          `json:"flashes,omitempty"`
-	Session       util.ValueMap     `json:"-"`
-	Profile       *user.Profile     `json:"profile,omitempty"`
-	Accounts      user.Accounts     `json:"accounts,omitempty"`
+	Session       util.ValueMap     `json:"-"`{{{ if .HasModule "user" }}}
+	User          *dbuser.User      `json:"user,omitempty"`{{{ end }}}
+	Profile       *user.Profile     `json:"profile,omitempty"`{{{ if .HasModule "oauth" }}}
+	Accounts      user.Accounts     `json:"accounts,omitempty"`{{{ end }}}
 	Authed        bool              `json:"authed,omitempty"`
 	Admin         bool              `json:"admin,omitempty"`
 	Params        filter.ParamSet   `json:"params,omitempty"`
@@ -82,14 +84,45 @@ func (p *PageState) TitleString() string {
 		return util.AppName
 	}
 	return fmt.Sprintf("%s - %s", p.Title, util.AppName)
+}{{{ if .HasModule "user" }}}
+
+func (p *PageState) Username() string {
+	if p.User != nil {
+		return p.User.Name
+	}
+	return p.Profile.Name
 }
 
-func (p *PageState) User() string {
-	if len(p.Accounts) == 0 {
-		return "anonymous"
+func (p *PageState) AuthString() string {
+	n := p.Profile.String()
+	if p.User != nil {
+		n = p.User.Name
 	}
-	return p.Accounts[0].Email
-}
+	msg := fmt.Sprintf("signed in as %s", n)
+	if len(p.Accounts) == 0 {
+		if n == user.DefaultProfile.Name {
+			return "click to sign in"
+		}
+		return msg
+	}
+	return fmt.Sprintf("%s using [%s]", msg, p.Accounts.TitleString())
+}{{{ else }}}
+
+func (p *PageState) Username() string {
+	return p.Profile.Name
+}{{{ if .HasModule "oauth" }}}
+
+func (p *PageState) AuthString() string {
+	n := p.Profile.String()
+	msg := fmt.Sprintf("signed in as %s", n)
+	if len(p.Accounts) == 0 {
+		if n == user.DefaultProfile.Name {
+			return "click to sign in"
+		}
+		return msg
+	}
+	return fmt.Sprintf("%s using [%s]", msg, p.Accounts.TitleString())
+}{{{ end }}}{{{ end }}}
 
 func (p *PageState) Clean(rc *fasthttp.RequestCtx, as *app.State) error {
 	if p.Profile != nil && p.Profile.Theme == "" {

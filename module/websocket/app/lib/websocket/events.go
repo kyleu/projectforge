@@ -8,13 +8,14 @@ import (
 	"github.com/pkg/errors"
 
 	"{{{ .Package }}}/app/lib/telemetry"
-	"{{{ .Package }}}/app/lib/user"
+	"{{{ .Package }}}/app/lib/user"{{{ if .HasModule "user" }}}
+	dbuser "github.com/kyleu/rituals/app/user"{{{ end }}}
 	"{{{ .Package }}}/app/util"
 )
 
 // Registers a new Connection for this Service using the provided user.Profile and websocket.Conn.
-func (s *Service) Register(profile *user.Profile, accts user.Accounts, c *websocket.Conn, logger util.Logger) (*Connection, error) {
-	conn := &Connection{ID: util.UUID(), Profile: profile, Accounts: accts, Svc: "system", socket: c}
+func (s *Service) Register({{{ if .HasModule "user" }}}u *dbuser.User, {{{ end }}}profile *user.Profile{{{ if .HasModule "oauth" }}}, accts user.Accounts{{{ end }}}, c *websocket.Conn, logger util.Logger) (*Connection, error) {
+	conn := &Connection{ID: util.UUID(){{{ if .HasModule "user" }}}, User: u{{{ end }}}, Profile: profile{{{ if .HasModule "oauth" }}}, Accounts: accts{{{ end }}}, Svc: "system", socket: c}
 
 	s.connectionsMu.Lock()
 	defer s.connectionsMu.Unlock()

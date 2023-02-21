@@ -46,27 +46,4 @@
     <h3>Profile</h3>
     <div class="mt">{%= components.JSON(ps.Profile) %}</div>
   </div>
-  {%- if len(ps.Accounts) > 0 -%}
-  <div class="card">
-    <h3>Accounts</h3>
-    <table class="mt">
-      <thead>
-        <tr>
-          <th>Provider</th>
-          <th>Email</th>
-          <th>Token</th>
-        </tr>
-      </thead>
-      <tbody>
-      {%- for _, acct := range ps.Accounts -%}
-      <tr>
-        <td>{%s acct.Provider %}</td>
-        <td>{%s acct.Email %}</td>
-        <td><div class="break-word">{%s acct.Token %}</div></td>
-      </tr>
-      {%- endfor -%}
-      </tbody>
-    </table>
-  </div>
-  {%- endif -%}
 {% endfunc %}

@@ -14,7 +14,7 @@ type Profile struct {
 var DefaultProfile = &Profile{Name: "Guest"}
 
 func (p *Profile) String() string {
-	return p.Name
+	return fmt.Sprint(p.Name)
 }
 
 func (p *Profile) Clone() *Profile {
@@ -28,24 +28,6 @@ func (p *Profile) ModeClass() string {
 	return "mode-" + p.Mode
 }
 
-func (p *Profile) AuthString(a Accounts) string {
-	msg := fmt.Sprintf("signed in as %s", p.String())
-	if len(a) == 0 {
-		if p.Name == DefaultProfile.Name {
-			return "click to sign in"
-		}
-		return msg
-	}
-	return fmt.Sprintf("%s using [%s]", msg, a.TitleString())
-}
-
 func (p *Profile) Equals(x *Profile) bool {
 	return p.Name == x.Name && p.Mode == x.Mode && p.Theme == x.Theme
-}
-
-func (p *Profile) NameSafe() string {
-	if p.Name == "" {
-		return "Guest"
-	}
-	return p.Name
 }

@@ -44,7 +44,7 @@
   <div class="card">
     <h3>Profile</h3>
     <div class="mt">{%= components.JSON(ps.Profile) %}</div>
-  </div>
+  </div>{{{ if .HasModule "oauth" }}}
   {%- if len(ps.Accounts) > 0 -%}
   <div class="card">
     <h3>Accounts</h3>
@@ -54,6 +54,7 @@
           <th>Provider</th>
           <th>Email</th>
           <th>Token</th>
+          <th>Picture</th>
         </tr>
       </thead>
       <tbody>
@@ -62,10 +63,11 @@
         <td>{%s acct.Provider %}</td>
         <td>{%s acct.Email %}</td>
         <td><div class="break-word">{%s acct.Token %}</div></td>
+        <td>{%s acct.Picture %}</td>
       </tr>
       {%- endfor -%}
       </tbody>
     </table>
   </div>
-  {%- endif -%}
+  {%- endif -%}{{{ end }}}
 {% endfunc %}

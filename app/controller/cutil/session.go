@@ -22,20 +22,17 @@ func LoadPageState(as *app.State, rc *fasthttp.RequestCtx, key string, logger ut
 	span.Attribute("path", string(rc.Request.URI().Path()))
 	httpmetrics.InjectHTTP(rc, span)
 
-	session, flashes, prof, accts := loadSession(ctx, as, rc, logger)
+	session, flashes, prof := loadSession(ctx, as, rc, logger)
 	params := ParamSetFromRequest(rc)
-
-	isAuthed, _ := user.Check("/", accts)
-	isAdmin, _ := user.Check("/admin", accts)
 
 	return &PageState{
 		Method: string(rc.Method()), URI: rc.Request.URI(), Flashes: flashes, Session: session,
-		Profile: prof, Accounts: accts, Authed: isAuthed, Admin: isAdmin, Params: params,
+		Profile: prof, Params: params,
 		Icons: initialIcons, Context: traceCtx, Span: span, Logger: logger,
 	}
 }
 
-func loadSession(ctx context.Context, as *app.State, rc *fasthttp.RequestCtx, logger util.Logger) (util.ValueMap, []string, *user.Profile, user.Accounts) {
+func loadSession(ctx context.Context, as *app.State, rc *fasthttp.RequestCtx, logger util.Logger) (util.ValueMap, []string, *user.Profile) {
 	sessionBytes := rc.Request.Header.Cookie(util.AppKey)
 	session := util.ValueMap{}
 	if len(sessionBytes) > 0 {
@@ -63,16 +60,7 @@ func loadSession(ctx context.Context, as *app.State, rc *fasthttp.RequestCtx, lo
 		logger.Warnf("can't load profile: %+v", err)
 	}
 
-	var accts user.Accounts
-	authX, ok := session[csession.WebAuthKey]
-	if ok {
-		authS, ok := authX.(string)
-		if ok {
-			accts = user.AccountsFromString(authS)
-		}
-	}
-
-	return session, flashes, prof, accts
+	return session, flashes, prof
 }
 
 func loadProfile(session util.ValueMap) (*user.Profile, error) {

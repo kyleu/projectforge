@@ -2,7 +2,6 @@
 {% import (
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
-  "projectforge.dev/projectforge/app/lib/user"
   "projectforge.dev/projectforge/views/layout"
 ) %}
 
@@ -10,7 +9,6 @@
   layout.Basic
   Path string
   Message string
-  Accounts user.Accounts
 } %}
 
 {% func (p *Unauthorized) Body(as *app.State, ps *cutil.PageState) %}

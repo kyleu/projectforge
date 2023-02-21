@@ -14,8 +14,8 @@ import (
 )
 
 // Registers a new Connection for this Service using the provided user.Profile and websocket.Conn.
-func (s *Service) Register(profile *user.Profile, accts user.Accounts, c *websocket.Conn, logger util.Logger) (*Connection, error) {
-	conn := &Connection{ID: util.UUID(), Profile: profile, Accounts: accts, Svc: "system", socket: c}
+func (s *Service) Register(profile *user.Profile, c *websocket.Conn, logger util.Logger) (*Connection, error) {
+	conn := &Connection{ID: util.UUID(), Profile: profile, Svc: "system", socket: c}
 
 	s.connectionsMu.Lock()
 	defer s.connectionsMu.Unlock()

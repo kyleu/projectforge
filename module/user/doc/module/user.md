@@ -58,4 +58,4 @@ No implementation of a User is provided. Either provide your own, or have Projec
 }
 ```
 
-Feel free to customize this model for your purposes
+The fields "id" and "name" are required, but feel free to customize this model for your purposes

@@ -12,220 +12,213 @@ import (
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
-	"projectforge.dev/projectforge/app/lib/user"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/layout"
 )
 
-//line views/verror/Error.html:12
+//line views/verror/Error.html:11
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/verror/Error.html:12
+//line views/verror/Error.html:11
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/verror/Error.html:12
+//line views/verror/Error.html:11
 func streamerrorStack(qw422016 *qt422016.Writer, ed *util.ErrorDetail) {
-//line views/verror/Error.html:12
+//line views/verror/Error.html:11
 	qw422016.N().S(`    <table>
       <tbody>
 `)
-//line views/verror/Error.html:15
+//line views/verror/Error.html:14
 	for _, f := range util.TraceDetail(ed.StackTrace) {
-//line views/verror/Error.html:15
+//line views/verror/Error.html:14
 		qw422016.N().S(`        <tr>
           <td>
 `)
-//line views/verror/Error.html:18
+//line views/verror/Error.html:17
 		if strings.Contains(f.Key, util.AppKey) {
-//line views/verror/Error.html:18
+//line views/verror/Error.html:17
 			qw422016.N().S(`            <div class="error-key error-owned">`)
-//line views/verror/Error.html:19
+//line views/verror/Error.html:18
 			qw422016.E().S(f.Key)
-//line views/verror/Error.html:19
+//line views/verror/Error.html:18
 			qw422016.N().S(`</div>
 `)
-//line views/verror/Error.html:20
+//line views/verror/Error.html:19
 		} else {
-//line views/verror/Error.html:20
+//line views/verror/Error.html:19
 			qw422016.N().S(`            <div class="error-key">`)
-//line views/verror/Error.html:21
+//line views/verror/Error.html:20
 			qw422016.E().S(f.Key)
-//line views/verror/Error.html:21
+//line views/verror/Error.html:20
 			qw422016.N().S(`</div>
 `)
-//line views/verror/Error.html:22
+//line views/verror/Error.html:21
 		}
-//line views/verror/Error.html:22
+//line views/verror/Error.html:21
 		qw422016.N().S(`            <div class="error-location">`)
-//line views/verror/Error.html:23
+//line views/verror/Error.html:22
 		qw422016.E().S(f.Loc)
-//line views/verror/Error.html:23
+//line views/verror/Error.html:22
 		qw422016.N().S(`</div>
           </td>
         </tr>
 `)
-//line views/verror/Error.html:26
+//line views/verror/Error.html:25
 	}
-//line views/verror/Error.html:26
+//line views/verror/Error.html:25
 	qw422016.N().S(`      </tbody>
     </table>
 `)
-//line views/verror/Error.html:29
+//line views/verror/Error.html:28
 }
 
-//line views/verror/Error.html:29
+//line views/verror/Error.html:28
 func writeerrorStack(qq422016 qtio422016.Writer, ed *util.ErrorDetail) {
-//line views/verror/Error.html:29
+//line views/verror/Error.html:28
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/verror/Error.html:29
+//line views/verror/Error.html:28
 	streamerrorStack(qw422016, ed)
-//line views/verror/Error.html:29
+//line views/verror/Error.html:28
 	qt422016.ReleaseWriter(qw422016)
-//line views/verror/Error.html:29
+//line views/verror/Error.html:28
 }
 
-//line views/verror/Error.html:29
+//line views/verror/Error.html:28
 func errorStack(ed *util.ErrorDetail) string {
-//line views/verror/Error.html:29
+//line views/verror/Error.html:28
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/verror/Error.html:29
+//line views/verror/Error.html:28
 	writeerrorStack(qb422016, ed)
-//line views/verror/Error.html:29
+//line views/verror/Error.html:28
 	qs422016 := string(qb422016.B)
-//line views/verror/Error.html:29
+//line views/verror/Error.html:28
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/verror/Error.html:29
+//line views/verror/Error.html:28
 	return qs422016
-//line views/verror/Error.html:29
+//line views/verror/Error.html:28
 }
 
-//line views/verror/Error.html:31
+//line views/verror/Error.html:30
 type Error struct {
 	layout.Basic
 	Err *util.ErrorDetail
 }
 
-//line views/verror/Error.html:36
+//line views/verror/Error.html:35
 func (p *Error) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/verror/Error.html:36
+//line views/verror/Error.html:35
 	qw422016.N().S(`
   `)
-//line views/verror/Error.html:37
+//line views/verror/Error.html:36
 	StreamDetail(qw422016, p.Err, as, ps)
-//line views/verror/Error.html:37
+//line views/verror/Error.html:36
 	qw422016.N().S(`
 `)
-//line views/verror/Error.html:38
+//line views/verror/Error.html:37
 }
 
-//line views/verror/Error.html:38
+//line views/verror/Error.html:37
 func (p *Error) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/verror/Error.html:38
+//line views/verror/Error.html:37
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/verror/Error.html:38
+//line views/verror/Error.html:37
 	p.StreamBody(qw422016, as, ps)
-//line views/verror/Error.html:38
+//line views/verror/Error.html:37
 	qt422016.ReleaseWriter(qw422016)
-//line views/verror/Error.html:38
+//line views/verror/Error.html:37
 }
 
-//line views/verror/Error.html:38
+//line views/verror/Error.html:37
 func (p *Error) Body(as *app.State, ps *cutil.PageState) string {
-//line views/verror/Error.html:38
+//line views/verror/Error.html:37
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/verror/Error.html:38
+//line views/verror/Error.html:37
 	p.WriteBody(qb422016, as, ps)
-//line views/verror/Error.html:38
+//line views/verror/Error.html:37
 	qs422016 := string(qb422016.B)
-//line views/verror/Error.html:38
+//line views/verror/Error.html:37
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/verror/Error.html:38
+//line views/verror/Error.html:37
 	return qs422016
-//line views/verror/Error.html:38
+//line views/verror/Error.html:37
 }
 
-//line views/verror/Error.html:40
+//line views/verror/Error.html:39
 func StreamDetail(qw422016 *qt422016.Writer, ed *util.ErrorDetail, as *app.State, ps *cutil.PageState) {
-//line views/verror/Error.html:40
+//line views/verror/Error.html:39
 	qw422016.N().S(`
   <div class="card">
     <h3>`)
-//line views/verror/Error.html:42
+//line views/verror/Error.html:41
 	qw422016.E().S(ed.Message)
-//line views/verror/Error.html:42
+//line views/verror/Error.html:41
 	qw422016.N().S(`</h3>
     <em>Internal Server Error</em>
+    `)
+//line views/verror/Error.html:43
+	streamerrorStack(qw422016, ed)
+//line views/verror/Error.html:43
+	qw422016.N().S(` `)
+//line views/verror/Error.html:43
+	cause := ed.Cause
+
+//line views/verror/Error.html:43
+	qw422016.N().S(`
 `)
 //line views/verror/Error.html:44
-	if user.IsAdmin(ps.Accounts) {
+	for cause != nil {
 //line views/verror/Error.html:44
-		qw422016.N().S(`    `)
-//line views/verror/Error.html:45
-		streamerrorStack(qw422016, ed)
-//line views/verror/Error.html:45
-		qw422016.N().S(` `)
-//line views/verror/Error.html:45
-		cause := ed.Cause
+		qw422016.N().S(`    <h3>Caused by</h3>
+    <div>`)
+//line views/verror/Error.html:46
+		qw422016.E().S(cause.Message)
+//line views/verror/Error.html:46
+		qw422016.N().S(`</div>`)
+//line views/verror/Error.html:46
+		streamerrorStack(qw422016, cause)
+//line views/verror/Error.html:46
+		cause = cause.Cause
 
-//line views/verror/Error.html:45
+//line views/verror/Error.html:46
 		qw422016.N().S(`
 `)
-//line views/verror/Error.html:46
-		for cause != nil {
-//line views/verror/Error.html:46
-			qw422016.N().S(`    <h3>Caused by</h3>
-    <div>`)
-//line views/verror/Error.html:48
-			qw422016.E().S(cause.Message)
-//line views/verror/Error.html:48
-			qw422016.N().S(`</div>`)
-//line views/verror/Error.html:48
-			streamerrorStack(qw422016, cause)
-//line views/verror/Error.html:48
-			cause = cause.Cause
-
-//line views/verror/Error.html:48
-			qw422016.N().S(`
-`)
-//line views/verror/Error.html:49
-		}
-//line views/verror/Error.html:50
+//line views/verror/Error.html:47
 	}
-//line views/verror/Error.html:50
+//line views/verror/Error.html:47
 	qw422016.N().S(`  </div>
 `)
-//line views/verror/Error.html:52
+//line views/verror/Error.html:49
 }
 
-//line views/verror/Error.html:52
+//line views/verror/Error.html:49
 func WriteDetail(qq422016 qtio422016.Writer, ed *util.ErrorDetail, as *app.State, ps *cutil.PageState) {
-//line views/verror/Error.html:52
+//line views/verror/Error.html:49
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/verror/Error.html:52
+//line views/verror/Error.html:49
 	StreamDetail(qw422016, ed, as, ps)
-//line views/verror/Error.html:52
+//line views/verror/Error.html:49
 	qt422016.ReleaseWriter(qw422016)
-//line views/verror/Error.html:52
+//line views/verror/Error.html:49
 }
 
-//line views/verror/Error.html:52
+//line views/verror/Error.html:49
 func Detail(ed *util.ErrorDetail, as *app.State, ps *cutil.PageState) string {
-//line views/verror/Error.html:52
+//line views/verror/Error.html:49
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/verror/Error.html:52
+//line views/verror/Error.html:49
 	WriteDetail(qb422016, ed, as, ps)
-//line views/verror/Error.html:52
+//line views/verror/Error.html:49
 	qs422016 := string(qb422016.B)
-//line views/verror/Error.html:52
+//line views/verror/Error.html:49
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/verror/Error.html:52
+//line views/verror/Error.html:49
 	return qs422016
-//line views/verror/Error.html:52
+//line views/verror/Error.html:49
 }

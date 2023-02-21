@@ -2,8 +2,8 @@
   "strings"
 
   "{{{ .Package }}}/app"
-  "{{{ .Package }}}/app/controller/cutil"
-  "{{{ .Package }}}/app/lib/user"
+  "{{{ .Package }}}/app/controller/cutil"{{{ if .HasModule "oauth" }}}
+  "{{{ .Package }}}/app/lib/user"{{{ end }}}
   "{{{ .Package }}}/app/util"
   "{{{ .Package }}}/views/layout"
 ) %}
@@ -39,13 +39,13 @@
 {% func Detail(ed *util.ErrorDetail, as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>{%s ed.Message %}</h3>
-    <em>Internal Server Error</em>
-    {%- if user.IsAdmin(ps.Accounts) -%}
+    <em>Internal Server Error</em>{{{ if .HasModule "oauth" }}}
+    {%- if user.IsAdmin(ps.Accounts) -%}{{{ end }}}
     {%= errorStack(ed) %} {% code cause := ed.Cause %}
     {%- for cause != nil -%}
     <h3>Caused by</h3>
     <div>{%s cause.Message %}</div>{%= errorStack(cause) %}{% code cause = cause.Cause %}
-    {%- endfor -%}
-    {%- endif -%}
+    {%- endfor -%}{{{ if .HasModule "oauth" }}}
+    {%- endif -%}{{{ end }}}
   </div>
 {% endfunc %}

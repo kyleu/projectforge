@@ -4,8 +4,8 @@ import (
 	"github.com/valyala/fasthttp"
 
 	"{{{ .Package }}}/app"
-	"{{{ .Package }}}/app/controller/cutil"
-	"{{{ .Package }}}/app/lib/user"
+	"{{{ .Package }}}/app/controller/cutil"{{{ if .HasModule "oauth" }}}
+	"{{{ .Package }}}/app/lib/user"{{{ end }}}
 	"{{{ .Package }}}/app/util"
 	"{{{ .Package }}}/views/verror"
 )
@@ -32,7 +32,7 @@ func NotFound(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func Unauthorized(rc *fasthttp.RequestCtx, reason string, accounts user.Accounts) func(as *app.State, ps *cutil.PageState) (string, error) {
+func Unauthorized(rc *fasthttp.RequestCtx, reason string{{{ if .HasModule "oauth" }}}, accounts user.Accounts{{{ end }}}) func(as *app.State, ps *cutil.PageState) (string, error) {
 	return func(as *app.State, ps *cutil.PageState) (string, error) {
 		cutil.WriteCORS(rc)
 		rc.Response.Header.Set("Content-Type", "text/html; charset=utf-8")
@@ -45,6 +45,6 @@ func Unauthorized(rc *fasthttp.RequestCtx, reason string, accounts user.Accounts
 		bc := util.StringSplitAndTrim(string(rc.URI().Path()), "/")
 		bc = append(bc, "Unauthorized")
 		ps.Data = ps.Title
-		return Render(rc, as, &verror.Unauthorized{Path: path, Message: reason, Accounts: accounts}, ps, bc...)
+		return Render(rc, as, &verror.Unauthorized{Path: path, Message: reason{{{ if .HasModule "oauth" }}}, Accounts: accounts{{{ end }}}}, ps, bc...)
 	}
 }

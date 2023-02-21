@@ -127,7 +127,7 @@
 {% func ConnectionCard(c *websocket.Connection, as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <div class="right"><a href="#modal-connection-{%s c.ID.String() %}"><button type="button">JSON</button></a></div>
-    <h3>{%s c.ID.String() %} ({%s c.Profile.Name %})</h3>
+    <h3>{%s c.ID.String() %} ({%s c.Username() %})</h3>
     <table class="mt expanded">
       <tbody>
         <tr>
@@ -136,7 +136,7 @@
         </tr>
         <tr>
           <th>Name</th>
-          <td>{%s c.Profile.Name %}</td>
+          <td>{%s c.Username() %}</td>
         </tr>
         <tr>
           <th>Theme</th>

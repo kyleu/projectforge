@@ -34,6 +34,41 @@ func (k KeyValInts) String() string {
 	return strings.Join(ret, ", ")
 }
 
+type KeyVal[T any] struct {
+	Key string `json:"key" db:"key"`
+	Val T      `json:"val" db:"val"`
+}
+
+func (k KeyVal[T]) String() string {
+	return fmt.Sprintf("%s: %v", k.Key, k.Val)
+}
+
+type KeyVals[T any] []*KeyVal[T]
+
+func (k KeyVals[T]) ToMap() map[string]T {
+	ret := make(map[string]T, len(k))
+	for _, x := range k {
+		ret[x.Key] = x.Val
+	}
+	return ret
+}
+
+func (k KeyVals[T]) String() string {
+	ret := make([]string, 0, len(k))
+	for _, x := range k {
+		ret = append(ret, x.String())
+	}
+	return strings.Join(ret, ", ")
+}
+
+func (k KeyVals[T]) Values() []T {
+	ret := make([]T, 0, len(k))
+	for _, x := range k {
+		ret = append(ret, x.Val)
+	}
+	return ret
+}
+
 type KeyTypeDesc struct {
 	Key         string `json:"key"`
 	Type        string `json:"type"`

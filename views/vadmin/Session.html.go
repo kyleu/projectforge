@@ -106,75 +106,30 @@ func (p *Session) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
   </div>
 `)
 //line views/vadmin/Session.html:49
-	if len(ps.Accounts) > 0 {
+}
+
 //line views/vadmin/Session.html:49
-		qw422016.N().S(`  <div class="card">
-    <h3>Accounts</h3>
-    <table class="mt">
-      <thead>
-        <tr>
-          <th>Provider</th>
-          <th>Email</th>
-          <th>Token</th>
-        </tr>
-      </thead>
-      <tbody>
-`)
-//line views/vadmin/Session.html:61
-		for _, acct := range ps.Accounts {
-//line views/vadmin/Session.html:61
-			qw422016.N().S(`      <tr>
-        <td>`)
-//line views/vadmin/Session.html:63
-			qw422016.E().S(acct.Provider)
-//line views/vadmin/Session.html:63
-			qw422016.N().S(`</td>
-        <td>`)
-//line views/vadmin/Session.html:64
-			qw422016.E().S(acct.Email)
-//line views/vadmin/Session.html:64
-			qw422016.N().S(`</td>
-        <td><div class="break-word">`)
-//line views/vadmin/Session.html:65
-			qw422016.E().S(acct.Token)
-//line views/vadmin/Session.html:65
-			qw422016.N().S(`</div></td>
-      </tr>
-`)
-//line views/vadmin/Session.html:67
-		}
-//line views/vadmin/Session.html:67
-		qw422016.N().S(`      </tbody>
-    </table>
-  </div>
-`)
-//line views/vadmin/Session.html:71
-	}
-//line views/vadmin/Session.html:72
-}
-
-//line views/vadmin/Session.html:72
 func (p *Session) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vadmin/Session.html:72
+//line views/vadmin/Session.html:49
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vadmin/Session.html:72
+//line views/vadmin/Session.html:49
 	p.StreamBody(qw422016, as, ps)
-//line views/vadmin/Session.html:72
+//line views/vadmin/Session.html:49
 	qt422016.ReleaseWriter(qw422016)
-//line views/vadmin/Session.html:72
+//line views/vadmin/Session.html:49
 }
 
-//line views/vadmin/Session.html:72
+//line views/vadmin/Session.html:49
 func (p *Session) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vadmin/Session.html:72
+//line views/vadmin/Session.html:49
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vadmin/Session.html:72
+//line views/vadmin/Session.html:49
 	p.WriteBody(qb422016, as, ps)
-//line views/vadmin/Session.html:72
+//line views/vadmin/Session.html:49
 	qs422016 := string(qb422016.B)
-//line views/vadmin/Session.html:72
+//line views/vadmin/Session.html:49
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vadmin/Session.html:72
+//line views/vadmin/Session.html:49
 	return qs422016
-//line views/vadmin/Session.html:72
+//line views/vadmin/Session.html:49
 }

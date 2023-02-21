@@ -1,7 +1,7 @@
 {% import (
   "{{{ .Package }}}/app"
-  "{{{ .Package }}}/app/controller/cutil"
-  "{{{ .Package }}}/app/lib/user"
+  "{{{ .Package }}}/app/controller/cutil"{{{ if .HasModule "oauth" }}}
+  "{{{ .Package }}}/app/lib/user"{{{ end }}}
   "{{{ .Package }}}/app/util"
   "{{{ .Package }}}/views/components"
   "{{{ .Package }}}/views/layout"{{{ if.HasModule "oauth" }}}
@@ -9,8 +9,8 @@
 ) %}
 
 {% code type Settings struct {
-  layout.Basic
-  Perms user.Permissions
+  layout.Basic{{{ if .HasModule "oauth" }}}
+  Perms user.Permissions{{{ end }}}
 } %}
 
 {% func (p *Settings) Body(as *app.State, ps *cutil.PageState) %}

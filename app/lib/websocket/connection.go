@@ -17,7 +17,6 @@ import (
 type Connection struct {
 	ID       uuid.UUID     `json:"id"`
 	Profile  *user.Profile `json:"profile,omitempty"`
-	Accounts user.Accounts `json:"accounts,omitempty"`
 	Svc      string        `json:"svc,omitempty"`
 	ModelID  *uuid.UUID    `json:"modelID,omitempty"`
 	Channels []string      `json:"channels,omitempty"`
@@ -26,8 +25,8 @@ type Connection struct {
 }
 
 // Creates a new Connection.
-func NewConnection(svc string, profile *user.Profile, accounts user.Accounts, socket *websocket.Conn) *Connection {
-	return &Connection{ID: util.UUID(), Profile: profile, Accounts: accounts, Svc: svc, socket: socket}
+func NewConnection(svc string, profile *user.Profile, socket *websocket.Conn) *Connection {
+	return &Connection{ID: util.UUID(), Profile: profile, Svc: svc, socket: socket}
 }
 
 // Transforms this Connection to a serializable Status object.
@@ -36,6 +35,10 @@ func (c *Connection) ToStatus() *Status {
 		return &Status{ID: c.ID, Username: c.Profile.Name, Channels: nil}
 	}
 	return &Status{ID: c.ID, Username: c.Profile.Name, Channels: c.Channels}
+}
+
+func (c *Connection) Username() string {
+	return c.Profile.Name
 }
 
 // Writes bytes to this Connection, you should probably use a helper method.

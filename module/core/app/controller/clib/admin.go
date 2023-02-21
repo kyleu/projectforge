@@ -13,8 +13,8 @@ import (
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller"
 	"{{{ .Package }}}/app/controller/cutil"{{{ if .HasModule "migration" }}}
-	"{{{ .Package }}}/app/lib/database/migrate"{{{ end }}}
-	"{{{ .Package }}}/app/lib/user"
+	"{{{ .Package }}}/app/lib/database/migrate"{{{ end }}}{{{ if .HasModule "oauth" }}}
+	"{{{ .Package }}}/app/lib/user"{{{ end }}}
 	"{{{ .Package }}}/app/util"
 	"{{{ .Package }}}/views/vadmin"
 )
@@ -26,7 +26,7 @@ func Admin(rc *fasthttp.RequestCtx) {
 		path := util.StringSplitAndTrim(strings.TrimPrefix(string(rc.URI().Path()), "/admin"), "/")
 		if len(path) == 0 {
 			ps.Title = "Administration"
-			return controller.Render(rc, as, &vadmin.Settings{Perms: user.GetPermissions()}, ps, "admin")
+			return controller.Render(rc, as, {{{ if .HasModule "oauth" }}}&vadmin.Settings{Perms: user.GetPermissions()}{{{ else }}}&vadmin.Settings{}{{{ end }}}, ps, "admin")
 		}
 		switch path[0] {
 		case "cpu":

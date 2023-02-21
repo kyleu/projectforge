@@ -21,7 +21,13 @@
     <div class="search-image" style="display: none;"><svg><use xlink:href="#svg-searchbox" /></svg></div>
   </form>
   {%- endif -%}{{{ end }}}
-  <a class="profile" title="{%s ps.Profile.AuthString(ps.Accounts) %}" href="{%s ps.ProfilePath %}">{%= components.SVGRef(`profile`, 24, 24, ``, ps) %}</a>{% if !ps.HideMenu %}
+  <a class="profile"{{{ if .HasModule "oauth" }}} title="{%s ps.AuthString() %}"{{{ end }}} href="{%s ps.ProfilePath %}">
+    {{{ if .HasModule "oauth" }}}{%- if i := ps.Accounts.Image(); i != "" -%}
+    <img style="width: 24px; height: 24px;" src="{%s i %}" />
+    {%- else -%}
+    {%= components.SVGRef(`profile`, 24, 24, ``, ps) %}
+    {%- endif -%}{{{ else }}}{%= components.SVGRef(`profile`, 24, 24, ``, ps) %}{{{ end }}}
+  </a>{% if !ps.HideMenu %}
 
   <input type="checkbox" id="menu-toggle-input" style="display: none;" />
   <label class="menu-toggle" for="menu-toggle-input"><div class="spinner diagonal part-1"></div><div class="spinner horizontal"></div><div class="spinner diagonal part-2"></div></label>

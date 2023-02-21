@@ -9,17 +9,17 @@ import (
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller/cutil"
-	"{{{ .Package }}}/app/lib/telemetry"
-	"{{{ .Package }}}/app/lib/user"{{{ if.HasModule "marketing" }}}
+	"{{{ .Package }}}/app/lib/telemetry"{{{ if .HasModule "oauth" }}}
+	"{{{ .Package }}}/app/lib/user"{{{ end }}}{{{ if.HasModule "marketing" }}}
 	"{{{ .Package }}}/app/site"{{{ end }}}
 )
 
 func Act(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
 	as := _currentAppState
-	ps := cutil.LoadPageState(as, rc, key, _currentAppRootLogger)
+	ps := cutil.LoadPageState(as, rc, key, _currentAppRootLogger){{{ if .HasModule "oauth" }}}
 	if allowed, reason := user.Check(string(ps.URI.Path()), ps.Accounts); !allowed {
 		f = Unauthorized(rc, reason, ps.Accounts)
-	}
+	}{{{ end }}}
 	if err := initAppRequest(as, ps); err != nil {
 		ps.Logger.Warnf("%+v", err)
 	}
@@ -29,10 +29,10 @@ func Act(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.Pa
 func ActSite(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
 	as := _currentSiteState
 	ps := cutil.LoadPageState(as, rc, key, _currentSiteRootLogger)
-	ps.Menu = site.Menu(ps.Context, as, ps.Profile, ps.Accounts, ps.Logger)
+	ps.Menu = site.Menu(ps.Context, as, ps.Profile{{{ if .HasModule "oauth" }}}, ps.Accounts{{{ end }}}, ps.Logger){{{ if .HasModule "oauth" }}}
 	if allowed, reason := user.Check(string(ps.URI.Path()), ps.Accounts); !allowed {
 		f = Unauthorized(rc, reason, ps.Accounts)
-	}
+	}{{{ end }}}
 	if err := initSiteRequest(as, ps); err != nil {
 		ps.Logger.Warnf("%+v", err)
 	}

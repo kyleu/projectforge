@@ -4,7 +4,6 @@
 
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
-  "projectforge.dev/projectforge/app/lib/user"
   "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/layout"
 ) %}
@@ -41,12 +40,10 @@
   <div class="card">
     <h3>{%s ed.Message %}</h3>
     <em>Internal Server Error</em>
-    {%- if user.IsAdmin(ps.Accounts) -%}
     {%= errorStack(ed) %} {% code cause := ed.Cause %}
     {%- for cause != nil -%}
     <h3>Caused by</h3>
     <div>{%s cause.Message %}</div>{%= errorStack(cause) %}{% code cause = cause.Cause %}
     {%- endfor -%}
-    {%- endif -%}
   </div>
 {% endfunc %}

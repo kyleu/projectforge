@@ -17,10 +17,11 @@ func MenuFor(
 	var ret menu.Items
 	var data any
 	// $PF_SECTION_START(routes_start)$
-	// $PF_SECTION_END(routes_start)${{{ if.HasModule "export" }}}
+	// $PF_SECTION_END(routes_start)${{{ if.HasModule "export" }}}{{{ if .HasModule "oauth" }}}
 	if isAdmin {
 		ret = append(ret, generatedMenu()...)
-	}{{{ end }}}
+	}{{{ else }}}
+	ret = append(ret, generatedMenu()...){{{ end }}}{{{ end }}}
 	// $PF_SECTION_START(routes_end)$
 	if isAdmin {
 		admin := &menu.Item{Key: "admin", Title: "Settings", Description: "System-wide settings and preferences", Icon: "cog", Route: "/admin"}

@@ -43,7 +43,6 @@ type PageState struct {
 	Flashes       []string          `json:"flashes,omitempty"`
 	Session       util.ValueMap     `json:"-"`
 	Profile       *user.Profile     `json:"profile,omitempty"`
-	Accounts      user.Accounts     `json:"accounts,omitempty"`
 	Authed        bool              `json:"authed,omitempty"`
 	Admin         bool              `json:"admin,omitempty"`
 	Params        filter.ParamSet   `json:"params,omitempty"`
@@ -85,11 +84,8 @@ func (p *PageState) TitleString() string {
 	return fmt.Sprintf("%s - %s", p.Title, util.AppName)
 }
 
-func (p *PageState) User() string {
-	if len(p.Accounts) == 0 {
-		return "anonymous"
-	}
-	return p.Accounts[0].Email
+func (p *PageState) Username() string {
+	return p.Profile.Name
 }
 
 func (p *PageState) Clean(rc *fasthttp.RequestCtx, as *app.State) error {

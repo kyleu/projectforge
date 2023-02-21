@@ -124,9 +124,9 @@ func (s *Service) Close() {
 
 var upgrader = websocket.FastHTTPUpgrader{EnableCompression: true}
 
-func (s *Service) Upgrade(rc *fasthttp.RequestCtx, channel string, profile *user.Profile, accts user.Accounts, logger util.Logger) error {
+func (s *Service) Upgrade(rc *fasthttp.RequestCtx, channel string, profile *user.Profile, logger util.Logger) error {
 	return upgrader.Upgrade(rc, func(conn *websocket.Conn) {
-		cx, err := s.Register(profile, accts, conn, logger)
+		cx, err := s.Register(profile, conn, logger)
 		if err != nil {
 			logger.Warn("unable to register websocket connection")
 			return

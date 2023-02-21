@@ -11,10 +11,10 @@ import (
 const WebAuthKey = "auth"
 
 func addToSession(
-	provider string, email string, token string, rc *fasthttp.RequestCtx, websess util.ValueMap, logger util.Logger,
+	provider string, email string, picture string, token string, rc *fasthttp.RequestCtx, websess util.ValueMap, logger util.Logger,
 ) (*user.Account, user.Accounts, error) {
 	ret := getCurrentAuths(websess)
-	s := &user.Account{Provider: provider, Email: email, Token: token}
+	s := &user.Account{Provider: provider, Email: email, Picture: picture, Token: token}
 	for _, x := range ret {
 		if x.Provider == s.Provider && x.Email == s.Email {
 			return s, ret, nil

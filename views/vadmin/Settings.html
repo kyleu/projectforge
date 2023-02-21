@@ -2,7 +2,6 @@
 {% import (
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
-  "projectforge.dev/projectforge/app/lib/user"
   "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/layout"
@@ -10,7 +9,6 @@
 
 {% code type Settings struct {
   layout.Basic
-  Perms user.Permissions
 } %}
 
 {% func (p *Settings) Body(as *app.State, ps *cutil.PageState) %}
