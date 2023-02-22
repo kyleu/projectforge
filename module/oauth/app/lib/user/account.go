@@ -88,7 +88,7 @@ func (a Accounts) Images() []string {
 }
 
 func (a Accounts) Image() string {
-	if is := a.Images(); len(a) > 0 {
+	if is := a.Images(); len(is) > 0 {
 		return is[0]
 	}
 	return ""
