@@ -52,7 +52,7 @@
 
 {% func FormInputTimestampDay(key string, id string, value *time.Time, placeholder ...string) %}{% stripspace %}
   {% if id == "" %}
-    <input name="{%s key %}" type="date" value="{%s util.TimeToFull(value) %}"{%= phFor(placeholder) %} />
+    <input name="{%s key %}" type="date" value="{%s util.TimeToYMD(value) %}"{%= phFor(placeholder) %} />
   {% else %}
     <input id="{%s id %}" name="{%s key %}" type="date" value="{%s util.TimeToYMD(value) %}"{%= phFor(placeholder) %} />
   {% endif %}

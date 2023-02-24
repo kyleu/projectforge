@@ -1,10 +1,12 @@
 // Content managed by Project Forge, see [projectforge.md] for details.
+import {els} from "./dom";
+
 const selected = "--selected";
 
 export function setSiblingToNull(el: HTMLElement) {
   const i = el.parentElement?.parentElement?.querySelector("input");
   if (!i) {
-    throw "no associated input found";
+    throw new Error("no associated input found");
   }
   i.value = "∅";
 }
@@ -19,7 +21,7 @@ export function initForm(frm: HTMLFormElement) {
       if (input.name.endsWith(selected)) {
         selectedCache[input.name] = input;
       } else {
-        if ((input.type !== "radio") || input.checked) {
+        if (input.type !== "radio" || input.checked) {
           editorCache[input.name] = input.value;
         }
         const evt = () => {
@@ -36,7 +38,7 @@ export function initForm(frm: HTMLFormElement) {
 }
 
 export function editorInit(): [(el: HTMLElement) => void, (frm: HTMLFormElement) => void] {
-  for (const n of Array.from(document.querySelectorAll<HTMLFormElement>("form.editor"))) {
+  for (const n of els<HTMLFormElement>("form.editor")) {
     initForm(n);
   }
   return [setSiblingToNull, initForm];

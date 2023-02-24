@@ -1,14 +1,23 @@
 {
   "compilerOptions": {
-    "allowJs": true,
-    "esModuleInterop": true,{{{ if .HasModule "jsx" }}}
+    "allowJs": false,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "alwaysStrict": true,
+    "declaration": true,
+    "esModuleInterop": true,
+    "importsNotUsedAsValues": "error",{{{ if .HasModule "jsx" }}}
     "jsx": "react",
     "jsxFactory": "JSX",{{{ end }}}
     "listFiles": false,
     "module": "none",
+    "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
+    "noImplicitOverride": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "outFile": "../assets/{{{ .Key }}}.js",
-    "removeComments": false,
+    "removeComments": true,
     "preserveConstEnums": true,
     "preserveWatchOutput": true,
     "skipLibCheck": true,

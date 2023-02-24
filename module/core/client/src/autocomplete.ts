@@ -1,5 +1,13 @@
-export function autocompleteInit() {
-  return autocomplete;
+function debounce(callback: (...args: unknown[]) => void, wait: number) {
+  let timeoutId = 0;
+  return (...args: unknown[]) => {
+    if (timeoutId !== 0) {
+      window.clearTimeout(timeoutId);
+    }
+    timeoutId = window.setTimeout(() => {
+      callback(null, ...args);
+    }, wait);
+  };
 }
 
 function autocomplete(el: HTMLInputElement, url: string, field: string, title: (x: unknown) => string, val: (x: unknown) => string) {
@@ -7,7 +15,7 @@ function autocomplete(el: HTMLInputElement, url: string, field: string, title: (
     return;
   }
   const listId = el.id + "-list";
-  const list = document.createElement('datalist');
+  const list = document.createElement("datalist");
 
   const loadingOpt = document.createElement("option");
   loadingOpt.value = "";
@@ -34,9 +42,8 @@ function autocomplete(el: HTMLInputElement, url: string, field: string, title: (
     const dest = url;
     if (dest.includes("?")) {
       return dest + "&t=json&" + field + "=" + encodeURIComponent(q);
-    } else {
-      return dest + "?t=json&" + field + "=" + encodeURIComponent(q);
     }
+    return dest + "?t=json&" + field + "=" + encodeURIComponent(q);
   }
 
   function datalistUpdate(q: string) {
@@ -54,11 +61,11 @@ function autocomplete(el: HTMLInputElement, url: string, field: string, title: (
       return;
     }
     const dest = getURL(q);
-    let proceed: boolean = (!q || !lastQuery);
+    let proceed: boolean = !q || !lastQuery;
     if (!proceed) {
       const l = cache[lastQuery];
       if (l) {
-        proceed = !l.data.find(d => q === val(d));
+        proceed = !l.data.find((d) => q === val(d));
       }
     }
     if (!proceed) {
@@ -69,8 +76,10 @@ function autocomplete(el: HTMLInputElement, url: string, field: string, title: (
       return;
     }
 
-    fetch(dest, { credentials: 'include' }).then(res => res.json()).then(data => {
-      if (!data) return;
+    fetch(dest, {credentials: "include"}).then((res) => res.json()).then((data) => {
+      if (!data) {
+        return;
+      }
       const arr = Array.isArray(data) ? data : [data];
       const frag = document.createDocumentFragment();
       let optMax = 10;
@@ -78,7 +87,7 @@ function autocomplete(el: HTMLInputElement, url: string, field: string, title: (
         const v = val(arr[d]);
         const t = title(arr[d]);
         if (v) {
-          const option = document.createElement('option');
+          const option = document.createElement("option");
           option.value = v;
           option.innerText = t;
           frag.appendChild(option);
@@ -94,14 +103,6 @@ function autocomplete(el: HTMLInputElement, url: string, field: string, title: (
   console.log("managing [" + el.id + "] autocomplete");
 }
 
-function debounce(callback: (...args: unknown[]) => void, wait: number) {
-  let timeoutId = 0;
-  return function (...args: unknown[]) {
-    if (timeoutId !== 0) {
-      window.clearTimeout(timeoutId);
-    }
-    timeoutId = window.setTimeout(function () {
-      callback(null, ...args);
-    }, wait);
-  };
+export function autocompleteInit() {
+  return autocomplete;
 }

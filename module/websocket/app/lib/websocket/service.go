@@ -15,7 +15,7 @@ import (
 
 	"{{{ .Package }}}/app/lib/filter"
 	"{{{ .Package }}}/app/lib/user"{{{ if .HasModule "user" }}}
-	dbuser "github.com/kyleu/rituals/app/user"{{{ end }}}
+	dbuser "{{{ .Package }}}/app/user"{{{ end }}}
 	"{{{ .Package }}}/app/util"
 )
 

@@ -388,7 +388,7 @@ func StreamFormInputTimestampDay(qw422016 *qt422016.Writer, key string, id strin
 //line views/components/Form.html:56
 		qw422016.N().S(`" type="date" value="`)
 //line views/components/Form.html:56
-		qw422016.E().S(util.TimeToFull(value))
+		qw422016.E().S(util.TimeToYMD(value))
 //line views/components/Form.html:56
 		qw422016.N().S(`"`)
 //line views/components/Form.html:56

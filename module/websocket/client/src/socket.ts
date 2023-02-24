@@ -1,13 +1,27 @@
-export function socketInit() {
-  return Socket;
-}
-
 let appUnloading = false;
 
 export type Message = {
   readonly channel: string;
   readonly cmd: string;
   readonly param: unknown;
+}
+
+function socketUrl(u?: string) {
+  if (!u) {
+    u = "/connect";
+  }
+  if (u.indexOf("ws") === 0) {
+    return u;
+  }
+  const l = document.location;
+  let protocol = "ws";
+  if (l.protocol === "https:") {
+    protocol = "wss";
+  }
+  if (u.indexOf("/") !== 0) {
+    u = "/" + u;
+  }
+  return protocol + `://${l.host}${u}`;
 }
 
 export class Socket {
@@ -19,14 +33,14 @@ export class Socket {
   connected: boolean;
   pauseSeconds: number;
   pendingMessages: Message[];
-  connectTime?: number
+  connectTime?: number;
   sock?: WebSocket;
 
-  constructor(debug: boolean, open: () => void, recv: (m: Message) => void, err: (svc: string, err: string) => void, url?: string) {
-    this.debug = debug
-    this.open = open;
-    this.recv = recv;
-    this.err = err;
+  constructor(debug: boolean, o: () => void, r: (m: Message) => void, e: (svc: string, err: string) => void, url?: string) {
+    this.debug = debug;
+    this.open = o;
+    this.recv = r;
+    this.err = e;
     this.url = socketUrl(url);
     this.connected = false;
     this.pauseSeconds = 1;
@@ -36,7 +50,7 @@ export class Socket {
   }
 
   connect() {
-    window.onbeforeunload = function(){
+    window.onbeforeunload = () => {
       appUnloading = true;
     };
     this.connectTime = Date.now();
@@ -47,7 +61,7 @@ export class Socket {
       s.pendingMessages.forEach(s.send);
       s.pendingMessages = [];
       if (s.debug) {
-        console.log("WebSocket connected")
+        console.log("WebSocket connected");
       }
       s.open();
     };
@@ -60,14 +74,14 @@ export class Socket {
     };
     this.sock.onerror = (event) => () => {
       s.err("socket", event.type);
-    }
+    };
     this.sock.onclose = () => {
       if (appUnloading) {
         return;
       }
       s.connected = false;
       const elapsed = s.connectTime ? Date.now() - s.connectTime : 0;
-      if (0 < elapsed && elapsed < 2000) {
+      if (elapsed > 0 && elapsed < 2000) {
         s.pauseSeconds = s.pauseSeconds * 2;
         if (s.debug) {
           console.debug(`socket closed immediately, reconnecting in ${s.pauseSeconds} seconds`);
@@ -93,7 +107,7 @@ export class Socket {
       console.debug("out", msg);
     }
     if (!this.sock) {
-      throw "not initialized";
+      throw new Error("socket not initialized");
     }
     if (this.connected) {
       const m = JSON.stringify(msg, null, 2);
@@ -104,20 +118,6 @@ export class Socket {
   }
 }
 
-function socketUrl(u?: string) {
-  if (!u) {
-    u = "/connect";
-  }
-  if (u.indexOf("ws") == 0) {
-    return u
-  }
-  const l = document.location;
-  let protocol = "ws";
-  if (l.protocol === "https:") {
-    protocol = "wss";
-  }
-  if (u.indexOf("/") != 0) {
-    u = "/" + u;
-  }
-  return protocol + `://${l.host}${u}`;
+export function socketInit() {
+  return Socket;
 }

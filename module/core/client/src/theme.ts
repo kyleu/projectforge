@@ -1,27 +1,31 @@
-const keys: string[] = []
+import {els} from "./dom";
 
-export function themeInit() {
-  const x = document.querySelectorAll(".color-var");
-  if (x.length > 0) {
-    for (const el of Array.from(x)) {
-      const i = (el as HTMLInputElement)
-      const v = i.dataset["var"] as string;
-      const m = i.dataset["mode"] as string;
-      keys.push(v);
-      if (!v || v.length === 0) {
-        continue;
-      }
-      i.oninput = function () {
-        set(m, v, i.value);
-      }
-    }
+const keys: string[] = [];
+
+function call(mockup: Element, sel: string, f: (el: HTMLElement) => void) {
+  const q = mockup.querySelectorAll(sel);
+  if (q.length === 0) {
+    throw new Error("empty query selector [" + sel + "]");
   }
+  q.forEach((x) => f(x as HTMLElement));
+}
+
+function setBG(mockup: Element, sel: string, v: string) {
+  call(mockup, sel, (el) => {
+    el.style.backgroundColor = v;
+  });
+}
+
+function setFG(mockup: Element, sel: string, v: string) {
+  call(mockup, sel, (el) => {
+    el.style.color = v;
+  });
 }
 
 function set(mode: string, key: string, v: string) {
   const mockup = document.querySelector("#mockup-" + mode);
   if (!mockup) {
-    console.error("can't find mockup for mode [" + mode + "]")
+    console.error("can't find mockup for mode [" + mode + "]");
     return;
   }
   switch (key) {
@@ -64,22 +68,20 @@ function set(mode: string, key: string, v: string) {
       setBG(mockup, ".mock-menu .mock-link-selected", v);
       break;
     default:
-      console.error("invalid key [" + key + "]")
+      console.error("invalid key [" + key + "]");
   }
 }
 
-function call(mockup: Element, sel: string, f: (el: HTMLElement) => void) {
-  const q = mockup.querySelectorAll(sel);
-  if (q.length == 0) {
-    throw "empty query selector [" + sel + "]"
+export function themeInit() {
+  for (const el of els<HTMLInputElement>(".color-var")) {
+    const v = el.dataset.var as string;
+    const m = el.dataset.mode as string;
+    keys.push(v);
+    if (!v || v.length === 0) {
+      continue;
+    }
+    el.oninput = () => {
+      set(m, v, el.value);
+    };
   }
-  q.forEach(x => f(x as HTMLElement));
-}
-
-function setBG(mockup: Element, sel: string, v: string) {
-  call(mockup, sel, el => el.style.backgroundColor = v);
-}
-
-function setFG(mockup: Element, sel: string, v: string) {
-  call(mockup, sel, el => el.style.color = v);
 }

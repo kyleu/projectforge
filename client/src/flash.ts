@@ -1,4 +1,11 @@
 // Content managed by Project Forge, see [projectforge.md] for details.
+function fade(el: HTMLElement) {
+  setTimeout(() => {
+    el.style.opacity = "0";
+    setTimeout(() => el.remove(), 500);
+  }, 5000);
+}
+
 export function flashCreate(key: string, level: "success" | "error", msg: string) {
   let container = document.getElementById("flash-container");
   if (container === null) {
@@ -43,11 +50,4 @@ export function flashInit() {
     }
   }
   return flashCreate;
-}
-
-function fade(el: HTMLElement) {
-  setTimeout(() => {
-    el.style.opacity = "0";
-    setTimeout(() => el.remove(), 500);
-  }, 5000)
 }

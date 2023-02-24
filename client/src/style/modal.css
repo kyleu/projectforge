@@ -61,6 +61,7 @@
 a.modal-close {
   float: right;
   font-size: 150%;
+  margin-top: -8px;
   text-decoration: none;
   color: var(--color-foreground-muted);
 }

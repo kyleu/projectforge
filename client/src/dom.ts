@@ -6,8 +6,8 @@ export function els<T extends HTMLElement>(selector: string, context?: Element):
   } else {
     result = document.querySelectorAll(selector);
   }
-  const ret: T[] = []
-  result.forEach(v => {
+  const ret: T[] = [];
+  result.forEach((v) => {
     ret.push(v as T);
   });
   return ret;
@@ -28,7 +28,7 @@ export function opt<T extends HTMLElement>(selector: string, context?: Element):
 export function req<T extends HTMLElement>(selector: string, context?: Element): T {
   const res = opt<T>(selector, context);
   if (!res) {
-    throw `no element found for selector [${selector}]`;
+    throw new Error(`no element found for selector [${selector}]`);
   }
   return res;
 }
@@ -50,14 +50,14 @@ export function setDisplay(el: string | HTMLElement, condition: boolean, v = "bl
   return el;
 }
 
+export function clear(el: string | HTMLElement) {
+  return setHTML(el, "");
+}
+
 export function setText(el: string | HTMLElement, text: string): HTMLElement {
   if (typeof el === "string") {
     el = req(el);
   }
   el.innerText = text;
   return el;
-}
-
-export function clear(el: string | HTMLElement) {
-  return setHTML(el, "");
 }

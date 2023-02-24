@@ -1,37 +1,26 @@
 import {els} from "./dom";
 
-export function timeInit() {
-  els(".reltime").forEach(el => {
-    relativeTime(el.dataset["time"] || "", el);
-  })
-  return relativeTime;
-}
-
 export function utc(date: Date) {
-  const utc = Date.UTC(
-    date.getUTCFullYear(), date.getUTCMonth(),
-    date.getUTCDate(), date.getUTCHours(),
-    date.getUTCMinutes(), date.getUTCSeconds()
-  );
-  return new Date(utc).toISOString().substring(0, 19).replace("T", " ");
+  const u = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
+  return new Date(u).toISOString().substring(0, 19).replace("T", " ");
 }
 
 export function relativeTime(time: string, el?: HTMLElement): string {
-  const str = (time || "").replace(/-/g, "/").replace(/[TZ]/g, " ") + " UTC";
+  const str = (time || "").replace(/-/gu, "/").replace(/[TZ]/gu, " ") + " UTC";
   const date = new Date(str);
-  const diff = (((new Date()).getTime() - date.getTime()) / 1000);
-  const day_diff = Math.floor(diff / 86400);
+  const diff = (new Date().getTime() - date.getTime()) / 1000;
+  const dayDiff = Math.floor(diff / 86400);
   const year = date.getFullYear();
   const month = date.getMonth() + 1;
   const day = date.getDate();
 
-  if (isNaN(day_diff) || day_diff < 0 || day_diff >= 31) {
-    return year.toString() + '-' + ((month < 10) ? '0' + month.toString() : month.toString()) + '-' + ((day < 10) ? '0' + day.toString() : day.toString());
+  if (isNaN(dayDiff) || dayDiff < 0 || dayDiff >= 31) {
+    return year.toString() + "-" + (month < 10 ? "0" + month.toString() : month.toString()) + "-" + (day < 10 ? "0" + day.toString() : day.toString());
   }
 
   let ret: string;
   let timeoutSeconds: number;
-  if (day_diff == 0) {
+  if (dayDiff === 0) {
     if (diff < 5) {
       timeoutSeconds = 1;
       ret = "just now";
@@ -51,19 +40,26 @@ export function relativeTime(time: string, el?: HTMLElement): string {
       timeoutSeconds = 60;
       ret = Math.floor(diff / 3600) + " hours ago";
     }
-  } else if (day_diff == 1) {
+  } else if (dayDiff === 1) {
     timeoutSeconds = 600;
     ret = "yesterday";
-  } else if (day_diff < 7) {
+  } else if (dayDiff < 7) {
     timeoutSeconds = 600;
-    ret = day_diff + " days ago";
+    ret = dayDiff + " days ago";
   } else {
     timeoutSeconds = 6000;
-    ret = Math.ceil(day_diff / 7) + " weeks ago"
+    ret = Math.ceil(dayDiff / 7) + " weeks ago";
   }
   if (el) {
     el.innerText = ret;
     setTimeout(() => relativeTime(time, el), timeoutSeconds * 1000);
   }
   return ret;
+}
+
+export function timeInit() {
+  els(".reltime").forEach((el) => {
+    relativeTime(el.dataset.time || "", el);
+  });
+  return relativeTime;
 }

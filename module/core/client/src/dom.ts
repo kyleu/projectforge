@@ -1,4 +1,5 @@
-{{{ if .HasModule "jsx" }}}import * as JSX from "./jsx" // eslint-disable-line @typescript-eslint/no-unused-vars
+{{{ if .HasModule "jsx" }}}// @ts-ignore
+import * as JSX from "./jsx"; // eslint-disable-line @typescript-eslint/no-unused-vars
 
 {{{ end }}}export function els<T extends HTMLElement>(selector: string, context?: Element): readonly T[] {
   let result: NodeListOf<Element>;
@@ -7,8 +8,8 @@
   } else {
     result = document.querySelectorAll(selector);
   }
-  const ret: T[] = []
-  result.forEach(v => {
+  const ret: T[] = [];
+  result.forEach((v) => {
     ret.push(v as T);
   });
   return ret;
@@ -29,7 +30,7 @@ export function opt<T extends HTMLElement>(selector: string, context?: Element):
 export function req<T extends HTMLElement>(selector: string, context?: Element): T {
   const res = opt<T>(selector, context);
   if (!res) {
-    throw `no element found for selector [${selector}]`;
+    throw new Error(`no element found for selector [${selector}]`);
   }
   return res;
 }
@@ -50,14 +51,19 @@ export function setDisplay(el: string | HTMLElement, condition: boolean, v = "bl
   el.style.display = condition ? v : "none";
   return el;
 }
+
+export function clear(el: string | HTMLElement) {
+  return setHTML(el, "");
+}
 {{{ if .HasModule "jsx" }}}
 export function setContent(el: string | HTMLElement, e: Element | Element[]) {
   if (typeof el === "string") {
     el = req(el);
   }
   clear(el);
+  const h = el as HTMLElement;
   if (Array.isArray(e)) {
-    e.forEach(x => (el as HTMLElement).appendChild(x));
+    e.forEach((x) => h.appendChild(x));
   } else {
     el.appendChild(e);
   }
@@ -70,8 +76,4 @@ export function setText(el: string | HTMLElement, text: string): HTMLElement {
   }
   el.innerText = text;
   return el;
-}
-
-export function clear(el: string | HTMLElement) {
-  return setHTML(el, "");
 }
