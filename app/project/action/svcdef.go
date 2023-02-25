@@ -65,6 +65,10 @@ func ServiceDefinition(p *project.Project) util.ValueMap {
 	}
 	for _, x := range p.Info.Channels {
 		l, r := util.StringSplit(x, ':', true)
+		if l == "http" || l == "https" {
+			l = "web"
+			r = x
+		}
 		if r == "" {
 			r = l
 			l = "unknown"

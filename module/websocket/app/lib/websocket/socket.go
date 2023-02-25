@@ -1,6 +1,7 @@
 package websocket
 
 import (
+	"context"
 	"fmt"
 	"sync/atomic"
 
@@ -73,7 +74,7 @@ func (s *Service) WriteChannel(message *Message, logger util.Logger, except ...u
 	return nil
 }
 
-func (s *Service) ReadLoop(connID uuid.UUID, logger util.Logger) error {
+func (s *Service) ReadLoop(ctx context.Context, connID uuid.UUID, logger util.Logger) error {
 	c, ok := s.connections[connID]
 	if !ok {
 		return errors.New("cannot load connection [" + connID.String() + "]")
@@ -89,7 +90,7 @@ func (s *Service) ReadLoop(connID uuid.UUID, logger util.Logger) error {
 		return nil
 	}
 	m := func(m *Message) error {
-		return OnMessage(s, connID, m, logger)
+		return OnMessage(ctx, s, connID, m, logger)
 	}
 	return ReadSocketLoop(connID, c.socket, m, d, logger)
 }
