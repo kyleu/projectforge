@@ -6,6 +6,7 @@ import (
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
@@ -58,7 +59,7 @@ func exportViewTableFunc(m *model.Model, models model.Models, enums enum.Enums, 
 	ret.W("      {%%- for _, model := range models -%%}")
 	ret.W("      <tr>")
 	for _, col := range summCols {
-		viewTableColumn(ret, models, m, true, col, "model.", "", 4)
+		viewTableColumn(g, ret, models, m, true, col, "model.", "", 4)
 	}
 	ret.W("      </tr>")
 	ret.W("      {%%- endfor -%%}")
@@ -73,7 +74,9 @@ func exportViewTableFunc(m *model.Model, models model.Models, enums enum.Enums, 
 	return ret, nil
 }
 
-func viewTableColumn(ret *golang.Block, models model.Models, m *model.Model, link bool, col *model.Column, modelKey string, prefix string, indent int) {
+func viewTableColumn(
+	g *golang.Template, ret *golang.Block, models model.Models, m *model.Model, link bool, col *model.Column, modelKey string, prefix string, indent int,
+) {
 	ind := util.StringRepeat("  ", indent)
 	rels := m.RelationsFor(col)
 	if len(rels) == 0 {
@@ -125,6 +128,10 @@ func viewTableColumn(ret *golang.Block, models model.Models, m *model.Model, lin
 	const msg = "%s  {%%%% if %s%s != nil %%%%}" + l + "{%%%% endif %%%%}"
 	for _, rel := range rels {
 		if slices.Contains(rel.Src, col.Name) {
+			switch col.Type.Key() {
+			case types.KeyBool, types.KeyInt, types.KeyFloat:
+				g.AddImport(helper.ImpFmt)
+			}
 			relModel := models.Get(rel.Table)
 			if col.Nullable {
 				ret.W(msg, ind, modelKey, col.Proper(), relModel.Title(), rel.WebPath(m, relModel, modelKey), relModel.Icon)

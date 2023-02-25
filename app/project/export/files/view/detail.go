@@ -28,7 +28,7 @@ func detail(m *model.Model, args *model.Args, addHeader bool) (*file.File, error
 	if m.IsRevision() || m.IsHistory() {
 		g.AddImport(helper.ImpFilter)
 	}
-	vdb, err := exportViewDetailBody(m, args.Models, args.Enums)
+	vdb, err := exportViewDetailBody(g, m, args.Models, args.Enums)
 	if err != nil {
 		return nil, err
 	}
@@ -70,7 +70,7 @@ func exportViewDetailClass(m *model.Model, models model.Models, g *golang.Templa
 	return ret
 }
 
-func exportViewDetailBody(m *model.Model, models model.Models, enums enum.Enums) (*golang.Block, error) {
+func exportViewDetailBody(g *golang.Template, m *model.Model, models model.Models, enums enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock("DetailBody", "func")
 	ret.W("{%% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %%}")
 	ret.W("  <div class=\"card\">")
@@ -89,7 +89,7 @@ func exportViewDetailBody(m *model.Model, models model.Models, enums enum.Enums)
 			return nil, err
 		}
 		ret.W(`          <th class="shrink" title="%s">%s</th>`, h, col.Title())
-		viewTableColumn(ret, models, m, false, col, "p.Model.", "p.", 5)
+		viewTableColumn(g, ret, models, m, false, col, "p.Model.", "p.", 5)
 		ret.W("        </tr>")
 	}
 	ret.W("      </tbody>")

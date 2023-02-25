@@ -80,7 +80,13 @@ func exportViewEditBody(m *model.Model, p *project.Project, args *model.Args) (*
 	ret.W("    </form>")
 	ret.W("  </div>")
 
-	if len(m.Relations) > 0 {
+	var canAutocomplete bool
+	for _, x := range m.Relations {
+		if len(x.Src) == 1 {
+			canAutocomplete = true
+		}
+	}
+	if canAutocomplete {
 		ret.W("  <script>")
 		ret.W("    document.addEventListener(\"DOMContentLoaded\", function() {")
 		for _, rel := range m.Relations {
