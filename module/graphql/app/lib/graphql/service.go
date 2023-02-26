@@ -2,9 +2,13 @@ package graphql
 
 import (
 	"github.com/graph-gophers/graphql-go"
+	otelgraphql "github.com/graph-gophers/graphql-go/trace/otel"
 	"github.com/pkg/errors"
+	"go.opentelemetry.io/otel"
 	"golang.org/x/exp/maps"
 	"golang.org/x/exp/slices"
+
+	"{{{ .Package }}}/app/util"
 )
 
 type reg struct {
@@ -25,7 +29,7 @@ func (s *Service) RegisterStringSchema(key string, title string, content string,
 	if _, ok := s.schemata[key]; ok {
 		return errors.Errorf("duplicate registration of schema [%s]", key)
 	}
-	sch, err := graphql.ParseSchema(content, target)
+	sch, err := graphql.ParseSchema(content, target, graphql.Tracer(&otelgraphql.Tracer{Tracer: otel.GetTracerProvider().Tracer(util.AppKey)}))
 	if err != nil {
 		return errors.Wrapf(err, "unable to parse schema for [%s]", key)
 	}

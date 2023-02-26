@@ -1,0 +1,11 @@
+# $PF_GENERATE_ONCE$
+scalar Time
+scalar UUID
+
+type Query {
+  hello: String!
+}
+
+type Mutation {
+  kill: String!
+}
