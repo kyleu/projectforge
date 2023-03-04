@@ -1,7 +1,7 @@
 {
   "name": "Process",
   "icon": "terminal",
-  "description": "Provides a framework for managng system processes",
+  "description": "Provides a framework for managing system processes",
   "authorName": "Kyle U",
   "authorEmail": "kyle@kyleu.com",
   "license": "CC0",

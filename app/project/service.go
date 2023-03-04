@@ -15,20 +15,23 @@ import (
 
 const ConfigDir = "." + util.AppKey
 
-var additionalFilename = ""
-
 type Service struct {
 	cache       map[string]*Project
 	fileContent map[string]json.RawMessage
 	cacheLock   sync.RWMutex
 	filesystems map[string]filesystem.FileLoader
 	fsLock      sync.RWMutex
+	additional  string
 }
 
 func NewService() *Service {
 	hd, _ := os.UserHomeDir()
-	additionalFilename = hd + "/.pfconfig/additional-projects.json"
-	return &Service{cache: map[string]*Project{}, fileContent: map[string]json.RawMessage{}, filesystems: map[string]filesystem.FileLoader{}}
+	return &Service{
+		cache:       map[string]*Project{},
+		fileContent: map[string]json.RawMessage{},
+		filesystems: map[string]filesystem.FileLoader{},
+		additional:  hd + "/.pfconfig/additional-projects.json",
+	}
 }
 
 func (s *Service) GetFilesystem(prj *Project) filesystem.FileLoader {

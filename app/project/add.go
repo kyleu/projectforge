@@ -35,15 +35,23 @@ func (s *Service) add(path string, parent *Project, logger util.Logger) (*Projec
 	return p, nil
 }
 
+func (s *Service) getAdditionalFilename() string {
+	ret := ".projectforge/additional-projects.json"
+	if _, err := os.Stat(ret); err == nil {
+		return ret
+	}
+	return s.additional
+}
+
 func (s *Service) getAdditional(logger util.Logger) ([]string, bool) {
-	additionalContent, err := os.ReadFile(additionalFilename)
+	additionalContent, err := os.ReadFile(s.getAdditionalFilename())
 	if err != nil {
 		return nil, false
 	}
 	var additional []string
 	err = util.FromJSON(additionalContent, &additional)
 	if err != nil {
-		logger.Warnf("unable to parse additional projects from [%s]: %+v", additionalFilename, err)
+		logger.Warnf("unable to parse additional projects from [%s]: %+v", s.getAdditionalFilename(), err)
 	}
 	return additional, true
 }
@@ -62,6 +70,6 @@ func (s *Service) addAdditional(path string, logger util.Logger) {
 	}
 	if !hit {
 		add = append(add, path)
-		_ = os.WriteFile(additionalFilename, util.ToJSONBytes(add, true), filesystem.DefaultMode)
+		_ = os.WriteFile(s.getAdditionalFilename(), util.ToJSONBytes(add, true), filesystem.DefaultMode)
 	}
 }

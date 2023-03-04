@@ -7,7 +7,7 @@ import (
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func sqlCreateRevision(m *model.Model, modules []string) (*golang.Block, error) {
+func sqlCreateRevision(m *model.Model, modules []string, models model.Models) (*golang.Block, error) {
 	pks := m.PKs()
 	hc := m.HistoryColumns(true)
 
@@ -50,7 +50,7 @@ func sqlCreateRevision(m *model.Model, modules []string) (*golang.Block, error) 
 
 	bareRefs := strings.Join(revPKs.NamesQuoted(), ", ")
 	ret.W("  foreign key (%s) references %q (%s),", bareRefs, m.Name, strings.Join(pks.NamesQuoted(), ", "))
-	sqlRelations(ret, m)
+	sqlRelations(ret, m, models)
 	ret.W("  primary key (%s)", strings.Join(revPKsWithRev.NamesQuoted(), ", "))
 	ret.W(");")
 

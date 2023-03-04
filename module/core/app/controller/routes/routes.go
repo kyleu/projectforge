@@ -32,6 +32,7 @@ func AppRoutes(as *app.State, logger util.Logger) fasthttp.RequestHandler {
 	generatedRoutes(r){{{ end }}}
 
 	// $PF_SECTION_START(routes)$
+	// Add your custom routes here
 	// $PF_SECTION_END(routes)${{{ if .HasModule "docbrowse" }}}
 
 	r.GET("/docs", clib.Docs)

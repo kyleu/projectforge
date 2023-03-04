@@ -95,6 +95,9 @@ func (p *Provider) FetchUser(session goth.Session) (goth.User, error) {
 	}
 
 	user.AccessToken = msSession.AccessToken
+	if len(user.AccessToken) > 1024 {
+		user.AccessToken = ""
+	}
 
 	err = userFromReader(response.Body, &user)
 	return user, err

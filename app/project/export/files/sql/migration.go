@@ -19,7 +19,7 @@ func Migration(m *model.Model, args *model.Args, addHeader bool) (*file.File, er
 			return nil, err
 		}
 		g.AddBlocks(drop)
-		cr, err := sqlCreateRevision(m, args.Modules)
+		cr, err := sqlCreateRevision(m, args.Modules, args.Models)
 		if err != nil {
 			return nil, err
 		}
@@ -30,7 +30,7 @@ func Migration(m *model.Model, args *model.Args, addHeader bool) (*file.File, er
 			return nil, err
 		}
 		g.AddBlocks(drop)
-		sc, err := sqlCreate(m, args.Modules)
+		sc, err := sqlCreate(m, args.Modules, args.Models)
 		if err != nil {
 			return nil, err
 		}
@@ -53,7 +53,7 @@ func sqlDrop(m *model.Model) (*golang.Block, error) {
 	return ret, nil
 }
 
-func sqlCreate(m *model.Model, modules []string) (*golang.Block, error) {
+func sqlCreate(m *model.Model, modules []string, models model.Models) (*golang.Block, error) {
 	ret := golang.NewBlock("SQLCreate", "sql")
 	ret.W("-- {%% func " + m.Proper() + "Create() %%}")
 	ret.W("create table if not exists %q (", m.Name)
@@ -64,7 +64,7 @@ func sqlCreate(m *model.Model, modules []string) (*golang.Block, error) {
 		}
 		ret.W("  %q %s,", col.Name, st)
 	}
-	sqlRelations(ret, m)
+	sqlRelations(ret, m, models)
 	for _, col := range m.Columns {
 		if col.HasTag("unique") {
 			ret.W("  unique (%q),", col.Name)

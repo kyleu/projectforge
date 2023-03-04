@@ -50,10 +50,11 @@ func WelcomeResult(rc *fasthttp.RequestCtx) {
 		prj.Port, _ = strconv.Atoi(ret.GetStringOpt("port"))
 		prj.Info.License = ret.GetStringOpt("license")
 
-		prj.Modules = util.StringSplitAndTrim(ret.GetStringOpt("modules"), ",")
+		mods, err := as.Services.Modules.GetModules(util.StringSplitAndTrim(ret.GetStringOpt("modules"), "||")...)
 		if err != nil {
 			return "", errors.Wrap(err, "can't parse modules")
 		}
+		prj.Modules = mods.Keys()
 
 		err = as.Services.Projects.Save(prj, ps.Logger)
 		if err != nil {
