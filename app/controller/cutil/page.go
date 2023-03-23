@@ -88,7 +88,7 @@ func (p *PageState) Username() string {
 	return p.Profile.Name
 }
 
-func (p *PageState) Clean(rc *fasthttp.RequestCtx, as *app.State) error {
+func (p *PageState) Clean(as *app.State) error {
 	if p.Profile != nil && p.Profile.Theme == "" {
 		p.Profile.Theme = theme.ThemeDefault.Key
 	}

@@ -2,11 +2,8 @@
 package cutil
 
 import (
-	"context"
-
 	"github.com/valyala/fasthttp"
 
-	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/csession"
 	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/lib/telemetry/httpmetrics"
@@ -16,13 +13,13 @@ import (
 
 var initialIcons = []string{"searchbox"}
 
-func LoadPageState(as *app.State, rc *fasthttp.RequestCtx, key string, logger util.Logger) *PageState {
+func LoadPageState(rc *fasthttp.RequestCtx, key string, logger util.Logger) *PageState {
 	parentCtx, logger := httpmetrics.ExtractHeaders(rc, logger)
 	ctx, span, logger := telemetry.StartSpan(parentCtx, "http:"+key, logger)
 	span.Attribute("path", string(rc.Request.URI().Path()))
 	httpmetrics.InjectHTTP(rc, span)
 
-	session, flashes, prof := loadSession(ctx, as, rc, logger)
+	session, flashes, prof := loadSession(rc, logger)
 	params := ParamSetFromRequest(rc)
 
 	return &PageState{
@@ -32,7 +29,7 @@ func LoadPageState(as *app.State, rc *fasthttp.RequestCtx, key string, logger ut
 	}
 }
 
-func loadSession(ctx context.Context, as *app.State, rc *fasthttp.RequestCtx, logger util.Logger) (util.ValueMap, []string, *user.Profile) {
+func loadSession(rc *fasthttp.RequestCtx, logger util.Logger) (util.ValueMap, []string, *user.Profile) {
 	sessionBytes := rc.Request.Header.Cookie(util.AppKey)
 	session := util.ValueMap{}
 	if len(sessionBytes) > 0 {

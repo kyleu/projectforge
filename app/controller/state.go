@@ -42,7 +42,7 @@ func handleError(key string, as *app.State, ps *cutil.PageState, rc *fasthttp.Re
 		ps.Breadcrumbs = bc
 	}
 
-	if cleanErr := ps.Clean(rc, as); cleanErr != nil {
+	if cleanErr := ps.Clean(as); cleanErr != nil {
 		ps.Logger.Error(cleanErr)
 		msg := fmt.Sprintf("error while cleaning request: %+v", cleanErr)
 		ps.Logger.Error(msg)

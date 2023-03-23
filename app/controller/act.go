@@ -16,7 +16,7 @@ import (
 
 func Act(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
 	as := _currentAppState
-	ps := cutil.LoadPageState(as, rc, key, _currentAppRootLogger)
+	ps := cutil.LoadPageState(rc, key, _currentAppRootLogger)
 	if err := initAppRequest(as, ps); err != nil {
 		ps.Logger.Warnf("%+v", err)
 	}
@@ -25,7 +25,7 @@ func Act(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.Pa
 
 func ActSite(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
 	as := _currentSiteState
-	ps := cutil.LoadPageState(as, rc, key, _currentSiteRootLogger)
+	ps := cutil.LoadPageState(rc, key, _currentSiteRootLogger)
 	ps.Menu = site.Menu(ps.Context, as, ps.Profile, ps.Logger)
 	if err := initSiteRequest(as, ps); err != nil {
 		ps.Logger.Warnf("%+v", err)
@@ -33,8 +33,14 @@ func ActSite(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cuti
 	actComplete(key, as, ps, rc, f)
 }
 
-func actComplete(key string, as *app.State, ps *cutil.PageState, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
-	err := ps.Clean(rc, as)
+func actComplete(
+	key string,
+	as *app.State,
+	ps *cutil.PageState,
+	rc *fasthttp.RequestCtx,
+	f func(as *app.State, ps *cutil.PageState) (string, error),
+) {
+	err := ps.Clean(as)
 	if err != nil {
 		ps.Logger.Warnf("error while cleaning request, somehow: %+v", err)
 	}

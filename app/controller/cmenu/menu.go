@@ -1,4 +1,6 @@
 // Content managed by Project Forge, see [projectforge.md] for details.
+//
+//nolint:revive
 package cmenu
 
 import (
