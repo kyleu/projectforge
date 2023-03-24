@@ -49,7 +49,7 @@ func searchModel(m *model.Model) []string {
 		add("\t\t\treturn nil, nil")
 		add("\t\t}")
 	}
-	add("\t\tprm := params.PS.Get(%q, nil, logger).Sanitize(%q)", m.Package, m.Package)
+	add("\t\tprm := params.PS.Get(%q, nil, logger).Sanitize(%q).WithLimit(5)", m.Package, m.Package)
 	const msg = "\t\tmodels, err := as.Services.%s.Search(ctx, params.Q, nil, prm%s, logger)"
 	add(msg, m.Proper(), m.SoftDeleteSuffix())
 	add("\t\tif err != nil {")
@@ -57,7 +57,11 @@ func searchModel(m *model.Model) []string {
 	add("\t\t}")
 	add("\t\tres := make(result.Results, 0, len(models))")
 	add("\t\tfor _, m := range models {")
-	add("\t\t\tres = append(res, result.NewResult(%q, m.String(), m.WebPath(), m.String(), %q, m, m, params.Q))", m.Package, m.Icon)
+	data := "m"
+	if m.HasTag("big") {
+		data = "nil"
+	}
+	add("\t\t\tres = append(res, result.NewResult(%q, m.String(), m.WebPath(), m.String(), %q, m, %s, params.Q))", m.Package, m.Icon, data)
 	add("\t\t}")
 	add("\t\treturn res, nil")
 	add("\t}")

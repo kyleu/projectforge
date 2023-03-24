@@ -15,6 +15,8 @@ var (
 	stmtCnt *prometheus.CounterVec
 	stmtDur *prometheus.HistogramVec
 	stmtMu  sync.Mutex
+
+	SkipDBMetrics = util.GetEnvBool("db_metrics_disabled", false)
 )
 
 type Metrics struct {
@@ -42,12 +44,16 @@ func NewMetrics(key string, db StatsGetter, logger util.Logger) (*Metrics, error
 }
 
 func (m *Metrics) IncStmt(sql string, method string) {
-	stmtCnt.WithLabelValues(m.Key, sql, method).Inc()
+	if !SkipDBMetrics {
+		stmtCnt.WithLabelValues(m.Key, sql, method).Inc()
+	}
 }
 
 func (m *Metrics) CompleteStmt(q string, op string, started time.Time) {
-	elapsed := float64(time.Since(started)) / float64(time.Second)
-	stmtDur.WithLabelValues(m.Key, q, op).Observe(elapsed)
+	if !SkipDBMetrics {
+		elapsed := float64(time.Since(started)) / float64(time.Second)
+		stmtDur.WithLabelValues(m.Key, q, op).Observe(elapsed)
+	}
 }
 
 func (m *Metrics) Close() error {
@@ -55,9 +61,11 @@ func (m *Metrics) Close() error {
 }
 
 func registerDatabaseMetrics(subsystem string, logger util.Logger) error {
-	stmtCntHelp := "The total number of SQL statements processed."
-	stmtCnt = telemetry.MetricsCounter(subsystem, "statements_total", stmtCntHelp, logger, "database", "sql", "method")
-	stmtDurHelp := "The SQL statement duration in seconds."
-	stmtDur = telemetry.MetricsHistogram(subsystem, "statement_duration_seconds", stmtDurHelp, logger, "database", "sql", "method")
+	if !SkipDBMetrics {
+		stmtCntHelp := "The total number of SQL statements processed."
+		stmtCnt = telemetry.MetricsCounter(subsystem, "statements_total", stmtCntHelp, logger, "database", "sql", "method")
+		stmtDurHelp := "The SQL statement duration in seconds."
+		stmtDur = telemetry.MetricsHistogram(subsystem, "statement_duration_seconds", stmtDurHelp, logger, "database", "sql", "method")
+	}
 	return nil
 }

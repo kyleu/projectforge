@@ -46,6 +46,11 @@ func (p *Params) Sanitize(key string, defaultOrderings ...*Ordering) *Params {
 	return p
 }
 
+func (p *Params) WithLimit(n int) *Params {
+	p.Limit = n
+	return p
+}
+
 func (p *Params) CloneOrdering(orderings ...*Ordering) *Params {
 	if p == nil {
 		return nil

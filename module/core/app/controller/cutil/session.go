@@ -21,8 +21,9 @@ func LoadPageState(as *app.State, rc *fasthttp.RequestCtx, key string, logger ut
 	parentCtx, logger := httpmetrics.ExtractHeaders(rc, logger)
 	ctx, span, logger := telemetry.StartSpan(parentCtx, "http:"+key, logger)
 	span.Attribute("path", string(rc.Request.URI().Path()))
-	httpmetrics.InjectHTTP(rc, span)
-
+	if !telemetry.SkipControllerMetrics {
+		httpmetrics.InjectHTTP(rc, span)
+	}
 	session, flashes, prof{{{ if .HasModule "oauth" }}}, accts{{{ end }}} := loadSession(ctx, as, rc, logger)
 	params := ParamSetFromRequest(rc){{{ if .HasModule "oauth" }}}
 

@@ -48,8 +48,13 @@ func actComplete(key string, as *app.State, ps *cutil.PageState, rc *fasthttp.Re
 	cutil.WriteCORS(rc)
 	startNanos := time.Now().UnixNano()
 	var redir string
-	ctx, span, logger := telemetry.StartSpan(ps.Context, "controller."+key, ps.Logger)
-	defer span.Complete()
+	var logger = ps.Logger
+	var ctx = ps.Context
+	if !telemetry.SkipControllerMetrics {
+		var span *telemetry.Span
+		ctx, span, logger = telemetry.StartSpan(ps.Context, "controller."+key, ps.Logger)
+		defer span.Complete()
+	}
 	logger = logger.With("path", string(rc.URI().Path()), "method", ps.Method, "status", status)
 	ps.Context = ctx
 
