@@ -6,5 +6,12 @@
   "authorEmail": "kyle@kyleu.com",
   "license": "CC0",
   "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/database",
+  "configVars": [
+    {
+      "key": "db_metrics_disabled",
+      "type": "bool",
+      "description": "when set, skips metrics for database methods"
+    }
+  ],
   "priority": 10
 }

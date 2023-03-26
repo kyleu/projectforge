@@ -18,6 +18,11 @@
       "description": "replaces the UI title"
     },
     {
+      "key": "controller_metrics_disabled",
+      "type": "bool",
+      "description": "when set, skips metrics for controller methods"
+    },
+    {
       "key": "logging_format",
       "type": "string",
       "description": "When set to `json`, forces the logging format"
