@@ -1,11 +1,7 @@
 package user
-
-import (
-	"fmt"{{{ if .HasModule "user" }}}
-
-	"github.com/google/uuid"{{{ end }}}
-)
-
+{{{ if .HasModule "user" }}}
+import "github.com/google/uuid"
+{{{ end }}}
 type Profile struct {
 {{{ if .HasModule "user" }}}	ID    uuid.UUID `json:"id"`
 	Name  string    `json:"name"`
@@ -19,7 +15,7 @@ type Profile struct {
 var DefaultProfile = &Profile{Name: "Guest"}
 
 func (p *Profile) String() string {
-	return fmt.Sprint(p.Name)
+	return p.Name
 }
 
 func (p *Profile) Clone() *Profile {

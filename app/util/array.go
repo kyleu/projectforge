@@ -137,9 +137,7 @@ func ArrayFlatten[T any](arrs ...[]T) []T {
 
 	out := make([]T, 0, l)
 	for _, a := range arrs {
-		for _, x := range a {
-			out = append(out, x)
-		}
+		out = append(out, a...)
 	}
 	return out
 }

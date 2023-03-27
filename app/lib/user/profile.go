@@ -1,10 +1,6 @@
 // Content managed by Project Forge, see [projectforge.md] for details.
 package user
 
-import (
-	"fmt"
-)
-
 type Profile struct {
 	Name  string `json:"name"`
 	Mode  string `json:"mode,omitempty"`
@@ -14,7 +10,7 @@ type Profile struct {
 var DefaultProfile = &Profile{Name: "Guest"}
 
 func (p *Profile) String() string {
-	return fmt.Sprint(p.Name)
+	return p.Name
 }
 
 func (p *Profile) Clone() *Profile {

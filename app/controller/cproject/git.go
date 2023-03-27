@@ -19,7 +19,7 @@ var (
 	messageArg = &cutil.Arg{Key: "message", Title: "Message", Description: "The message to used for the commit"}
 	dryRunArg  = &cutil.Arg{Key: "dryRun", Title: "Dry Run", Description: "Runs without any destructive operations", Type: "bool", Default: util.BoolTrue}
 
-	gitBranchArgs = cutil.Args{{Key: "name", Title: "Branch Name", Description: "The name to used for the new branch"}}
+	gitBranchArgs = cutil.Args{&cutil.Arg{Key: "name", Title: "Branch Name", Description: "The name to used for the new branch"}}
 	gitCommitArgs = cutil.Args{messageArg}
 	gitMagicArgs  = cutil.Args{messageArg, dryRunArg}
 )

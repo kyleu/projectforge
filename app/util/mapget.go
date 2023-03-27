@@ -61,6 +61,14 @@ func (m ValueMap) GetStringOpt(key string) string {
 	return ret
 }
 
+func (m ValueMap) GetStringPtr(key string) *string {
+	ret, err := m.ParseString(key, true, true)
+	if err != nil {
+		return nil
+	}
+	return &ret
+}
+
 func (m ValueMap) GetStringArray(key string, allowEmpty bool) ([]string, error) {
 	return m.ParseArrayString(key, false, allowEmpty)
 }

@@ -42,7 +42,8 @@ func AppRoutes(as *app.State, logger util.Logger) fasthttp.RequestHandler {
 	r.GET("/graphql/{key}", controller.GraphQLDetail)
 	r.POST("/graphql/{key}", controller.GraphQLRun){{{ end }}}{{{ if .HasModule "gqlgen" }}}
 
-	graphqlRoutes(as, r, logger){{{ end }}}
+	graphqlRoutes(as, r, logger){{{ end }}}{{{ if .HasModule "grpcui" }}}
+	grpcuiRoutes(as, r, logger){{{ end }}}
 
 	r.GET("/admin", clib.Admin){{{ if.HasModule "audit" }}}
 	r.GET("/admin/audit", clib.AuditList)

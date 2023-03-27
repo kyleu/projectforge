@@ -9,6 +9,8 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+const msgTextarea = `{%%%%= components.TableTextarea(%q, %q, %q, 8, util.ToJSON(%s), 5, %q) %%%%}`
+
 func (c *Column) ToSQLType() (string, error) {
 	ret, err := ToSQLType(c.Type)
 	if err != nil {
@@ -31,8 +33,7 @@ func (c *Column) ToGoEditString(prefix string, format string, id string, enums e
 	}
 	switch c.Type.Key() {
 	case types.KeyAny:
-		msg := `{%%%%= components.TableTextarea(%q, %q, %q, 8, util.ToJSON(%s), 5, %q) %%%%}`
-		return fmt.Sprintf(msg, c.Camel(), id, c.Title(), c.ToGoString(prefix), h), nil
+		return fmt.Sprintf(msgTextarea, c.Camel(), id, c.Title(), c.ToGoString(prefix), h), nil
 	case types.KeyBool:
 		return fmt.Sprintf(`{%%%%= components.TableBoolean(%q, %q, %s, 5, %q) %%%%}`, c.Camel(), c.Title(), prefix+c.Proper(), h), nil
 	// case types.KeyEnum:
@@ -50,11 +51,9 @@ func (c *Column) ToGoEditString(prefix string, format string, id string, enums e
 	case types.KeyFloat:
 		return fmt.Sprintf(`{%%%%= components.TableInputFloat(%q, %q, %q, %s, 5, %q) %%%%}`, c.Camel(), id, c.Title(), prefix+c.Proper(), h), nil
 	case types.KeyList, types.KeyMap, types.KeyValueMap:
-		msg := `{%%%%= components.TableTextarea(%q, %q, %q, 8, util.ToJSON(%s), 5, %q) %%%%}`
-		return fmt.Sprintf(msg, c.Camel(), id, c.Title(), c.ToGoString(prefix), h), nil
+		return fmt.Sprintf(msgTextarea, c.Camel(), id, c.Title(), c.ToGoString(prefix), h), nil
 	case types.KeyReference:
-		msg := `{%%%%= components.TableTextarea(%q, %q, %q, 8, util.ToJSON(%s), 5, %q) %%%%}`
-		return fmt.Sprintf(msg, c.Camel(), id, c.Title(), prefix+c.Proper(), h), nil
+		return fmt.Sprintf(msgTextarea, c.Camel(), id, c.Title(), prefix+c.Proper(), h), nil
 	case types.KeyDate:
 		gs := c.ToGoString(prefix)
 		if !c.Nullable {
