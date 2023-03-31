@@ -186,10 +186,17 @@ func (c Columns) Refs() string {
 	return strings.Join(refs, ", ")
 }
 
-func (c Columns) WhereClause(offset int) string {
+func (c Columns) WhereClause(offset int, placeholder string) string {
 	wc := make([]string, 0, len(c))
 	for idx, col := range c {
-		wc = append(wc, fmt.Sprintf("%q = $%d", col.Name, idx+offset+1))
+		switch placeholder {
+		case "$", "":
+			wc = append(wc, fmt.Sprintf("%q = $%d", col.Name, idx+offset+1))
+		case "?":
+			wc = append(wc, fmt.Sprintf("%q = ?", col.Name))
+		case "@":
+			wc = append(wc, fmt.Sprintf("%q = @p%d", col.Name, idx+offset+1))
+		}
 	}
 	return strings.Join(wc, " and ")
 }
@@ -219,10 +226,10 @@ func (c Columns) GoTypes(pkg string, enums enum.Enums) ([]string, error) {
 	return ret, nil
 }
 
-func (c Columns) GoRowTypes(pkg string, enums enum.Enums) ([]string, error) {
+func (c Columns) GoRowTypes(pkg string, enums enum.Enums, database string) ([]string, error) {
 	ret := make([]string, 0, len(c))
 	for _, x := range c {
-		gdt, err := x.ToGoRowType(pkg, enums)
+		gdt, err := x.ToGoRowType(pkg, enums, database)
 		if err != nil {
 			return nil, err
 		}
@@ -240,8 +247,8 @@ func (c Columns) MaxGoTypeLength(pkg string, enums enum.Enums) int {
 	return util.StringArrayMaxLength(gt)
 }
 
-func (c Columns) MaxGoRowTypeLength(pkg string, enums enum.Enums) int {
-	ks, _ := c.GoRowTypes(pkg, enums)
+func (c Columns) MaxGoRowTypeLength(pkg string, enums enum.Enums, database string) int {
+	ks, _ := c.GoRowTypes(pkg, enums, database)
 	return util.StringArrayMaxLength(ks)
 }
 

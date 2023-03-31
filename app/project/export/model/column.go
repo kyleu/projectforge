@@ -93,8 +93,8 @@ func (c *Column) ToGoType(pkg string, enums enum.Enums) (string, error) {
 	return ToGoType(c.Type, c.Nullable, pkg, enums)
 }
 
-func (c *Column) ToGoRowType(pkg string, enums enum.Enums) (string, error) {
-	return ToGoRowType(c.Type, c.Nullable, pkg, enums)
+func (c *Column) ToGoRowType(pkg string, enums enum.Enums, database string) (string, error) {
+	return ToGoRowType(c.Type, c.Nullable, pkg, enums, database)
 }
 
 func (c *Column) ShouldDisplay(k string) bool {

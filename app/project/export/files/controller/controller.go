@@ -19,7 +19,7 @@ func Controller(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 		fn = m.GroupString("c", "") + "/" + fn
 	}
 	g := golang.NewFile(m.LastGroup("c", "controller"), []string{"app", "controller"}, fn)
-	for _, imp := range helper.ImportsForTypes("parse", m.PKs().Types()...) {
+	for _, imp := range helper.ImportsForTypes("parse", "", m.PKs().Types()...) {
 		g.AddImport(imp)
 	}
 	if len(m.Group) > 0 {

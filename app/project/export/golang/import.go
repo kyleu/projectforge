@@ -18,6 +18,21 @@ const (
 type Import struct {
 	Type  ImportType
 	Value string
+	Alias string
+}
+
+func (i *Import) WithAlias(a string) *Import {
+	i.Alias = a
+	return i
+}
+
+func (i *Import) Render() string {
+	alias := ""
+	if i.Alias != "" {
+		alias = i.Alias + " "
+	}
+	return fmt.Sprintf("%s%q", alias, i.Value)
+
 }
 
 func NewImport(t ImportType, v string) *Import {
@@ -28,7 +43,7 @@ type Imports []*Import
 
 func (i Imports) Render() string {
 	if len(i) == 1 {
-		return fmt.Sprintf("import %q", i[0].Value)
+		return fmt.Sprintf("import %s", i[0].Render())
 	}
 	ret := []string{"import ("}
 
@@ -38,7 +53,7 @@ func (i Imports) Render() string {
 				ret = append(ret, "")
 			}
 			for _, x := range x {
-				ret = append(ret, fmt.Sprintf("\t%q", x))
+				ret = append(ret, fmt.Sprintf("\t%s", x))
 			}
 		}
 	}
@@ -56,7 +71,7 @@ func (i Imports) Render() string {
 
 func (i Imports) RenderHTML() string {
 	if len(i) == 1 {
-		return fmt.Sprintf("{%% import %q %%}", i[0].Value)
+		return fmt.Sprintf("{%% import %s %%}", i[0].Render())
 	}
 	ret := []string{"{%% import ("}
 
@@ -66,7 +81,7 @@ func (i Imports) RenderHTML() string {
 				ret = append(ret, "")
 			}
 			for _, x := range x {
-				ret = append(ret, fmt.Sprintf("  %q", x))
+				ret = append(ret, fmt.Sprintf("  %s", x))
 			}
 		}
 	}
@@ -86,7 +101,7 @@ func (i Imports) ByType(t ImportType) []string {
 	var ret []string
 	for _, x := range i {
 		if x.Type == t {
-			ret = append(ret, x.Value)
+			ret = append(ret, x.Render())
 		}
 	}
 	slices.Sort(ret)

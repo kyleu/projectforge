@@ -17,28 +17,40 @@ import (
 
 func Row(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "row")
-	for _, imp := range helper.ImportsForTypes("row", m.Columns.Types()...) {
+	for _, imp := range helper.ImportsForTypes("row", args.Database(), m.Columns.Types()...) {
 		g.AddImport(imp)
 	}
 	g.AddImport(helper.ImpStrings, helper.ImpAppUtil, helper.ImpFmt)
 	if err := helper.SpecialImports(g, m.Columns, m.PackageWithGroup(""), args.Enums); err != nil {
 		return nil, err
 	}
+	for _, col := range m.Columns {
+		if col.Nullable && (col.Type.Key() == types.KeyString || col.Type.Key() == types.KeyInt || col.Type.Key() == types.KeyBool) {
+			g.AddImport(helper.ImpSQL)
+		}
+		if col.Type.Key() == types.KeyUUID && args.Database() == "sqlserver" {
+			if col.Nullable {
+				g.AddImport(helper.ImpDatabase)
+			} else {
+				g.AddImport(helper.ImpMSSQL)
+			}
+		}
+	}
 	if tc, err := modelTableCols(m, g); err == nil {
 		g.AddBlocks(tc)
 	} else {
 		return nil, err
 	}
-	mrow, err := modelRow(m, args.Enums)
+	mrow, err := modelRow(m, args.Enums, args.Database())
 	if err != nil {
 		return nil, err
 	}
 	g.AddBlocks(mrow)
-	mrm, err := modelRowToModel(g, m)
+	mrm, err := modelRowToModel(g, m, args.Database())
 	if err != nil {
 		return nil, err
 	}
-	g.AddBlocks(mrm, modelRowArray(), modelRowArrayTransformer(m), defaultWC(m))
+	g.AddBlocks(mrm, modelRowArray(), modelRowArrayTransformer(m), defaultWC(m, args.Database()))
 	return g.Render(addHeader)
 }
 
@@ -79,13 +91,13 @@ func modelTableCols(m *model.Model, g *golang.File) (*golang.Block, error) {
 	return ret, nil
 }
 
-func modelRow(m *model.Model, enums enum.Enums) (*golang.Block, error) {
+func modelRow(m *model.Model, enums enum.Enums, database string) (*golang.Block, error) {
 	ret := golang.NewBlock(m.Proper()+"Row", "struct")
 	ret.W("type row struct {")
 	maxColLength := m.Columns.MaxCamelLength()
-	maxTypeLength := m.Columns.MaxGoRowTypeLength(m.Package, enums)
+	maxTypeLength := m.Columns.MaxGoRowTypeLength(m.Package, enums, database)
 	for _, c := range m.Columns {
-		gdt, err := c.ToGoRowType(m.Package, enums)
+		gdt, err := c.ToGoRowType(m.Package, enums, database)
 		if err != nil {
 			return nil, err
 		}
@@ -95,7 +107,7 @@ func modelRow(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	return ret, nil
 }
 
-func modelRowToModel(g *golang.File, m *model.Model) (*golang.Block, error) {
+func modelRowToModel(g *golang.File, m *model.Model, database string) (*golang.Block, error) {
 	ret := golang.NewBlock(m.Proper(), "func")
 	ret.W("func (r *row) To%s() *%s {", m.Proper(), m.Proper())
 	ret.W("\tif r == nil {")
@@ -136,7 +148,28 @@ func modelRowToModel(g *golang.File, m *model.Model) (*golang.Block, error) {
 			ret.W("\t_ = util.FromJSON(r.%s, %sArg)", c.Proper(), c.Camel())
 			refs = append(refs, fmt.Sprintf("%s %sArg", k, c.Camel()))
 		default:
-			refs = append(refs, fmt.Sprintf("%s r.%s", k, c.Proper()))
+			if c.Type.Scalar() && c.Nullable {
+				switch c.Type.Key() {
+				case types.KeyString:
+					refs = append(refs, fmt.Sprintf("%s r.%s.String", k, c.Proper()))
+				case types.KeyInt:
+					refs = append(refs, fmt.Sprintf("%s int(r.%s.Int64)", k, c.Proper()))
+				case types.KeyFloat:
+					refs = append(refs, fmt.Sprintf("%s r.%s.Float64", k, c.Proper()))
+				case types.KeyBool:
+					refs = append(refs, fmt.Sprintf("%s r.%s.Bool", k, c.Proper()))
+				default:
+					refs = append(refs, fmt.Sprintf("%s r.%s", k, c.Proper()))
+				}
+			} else if database == "sqlserver" && c.Type.Key() == types.KeyUUID {
+				if c.Nullable {
+					refs = append(refs, fmt.Sprintf("%s database.UUIDFromGUID(r.%s)", k, c.Proper()))
+				} else {
+					refs = append(refs, fmt.Sprintf("%s util.UUIDFromStringOK(r.%s.String())", k, c.Proper()))
+				}
+			} else {
+				refs = append(refs, fmt.Sprintf("%s r.%s", k, c.Proper()))
+			}
 		}
 	}
 	ret.W("\treturn &%s{", m.Proper())
@@ -166,14 +199,18 @@ func modelRowArrayTransformer(m *model.Model) *golang.Block {
 	return ret
 }
 
-func defaultWC(m *model.Model) *golang.Block {
+func defaultWC(m *model.Model, database string) *golang.Block {
 	ret := golang.NewBlock("Columns", "procedural")
 	ret.W("func defaultWC(idx int) string {")
 	c := m.PKs()
 	wc := make([]string, 0, len(c))
 	idxs := make([]string, 0, len(c))
 	for idx, col := range c {
-		wc = append(wc, fmt.Sprintf("%q = $%%%%d", col.Name))
+		if database == "sqlserver" {
+			wc = append(wc, fmt.Sprintf("%q = @p%%%%d", col.Name))
+		} else {
+			wc = append(wc, fmt.Sprintf("%q = $%%%%d", col.Name))
+		}
 		idxs = append(idxs, fmt.Sprintf("idx+%d", idx+1))
 	}
 	ret.W("\treturn fmt.Sprintf(%q, %s)", strings.Join(wc, " and "), strings.Join(idxs, ", "))

@@ -13,7 +13,7 @@ import (
 
 func edit(m *model.Model, p *project.Project, args *model.Args, addHeader bool) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "Edit.html")
-	for _, imp := range helper.ImportsForTypes("webedit", m.Columns.Types()...) {
+	for _, imp := range helper.ImportsForTypes("webedit", "", m.Columns.Types()...) {
 		g.AddImport(imp)
 	}
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpLayout)

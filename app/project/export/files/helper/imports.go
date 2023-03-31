@@ -11,6 +11,7 @@ var (
 	ImpAudit         = AppImport("app/lib/audit")
 	ImpApp           = AppImport("app")
 	ImpAppController = AppImport("app/controller")
+	ImpAppMenu       = AppImport("app/lib/menu")
 	ImpAppUtil       = AppImport("app/util")
 	ImpContext       = golang.NewImport(golang.ImportTypeInternal, "context")
 	ImpComponents    = AppImport("views/components")
@@ -22,9 +23,10 @@ var (
 	ImpFmt           = golang.NewImport(golang.ImportTypeInternal, "fmt")
 	ImpJSON          = golang.NewImport(golang.ImportTypeInternal, "encoding/json")
 	ImpLayout        = AppImport("views/layout")
-	ImpAppMenu       = AppImport("app/lib/menu")
+	ImpMSSQL         = golang.NewImport(golang.ImportTypeExternal, "github.com/denisenkom/go-mssqldb").WithAlias("mssql")
 	ImpRouter        = golang.NewImport(golang.ImportTypeExternal, "github.com/fasthttp/router")
 	ImpSlices        = golang.NewImport(golang.ImportTypeExternal, "golang.org/x/exp/slices")
+	ImpSQL           = golang.NewImport(golang.ImportTypeInternal, "database/sql")
 	ImpSQLx          = golang.NewImport(golang.ImportTypeExternal, "github.com/jmoiron/sqlx")
 	ImpStrconv       = golang.NewImport(golang.ImportTypeInternal, "strconv")
 	ImpStrings       = golang.NewImport(golang.ImportTypeInternal, "strings")
@@ -36,20 +38,20 @@ func AppImport(path string) *golang.Import {
 	return &golang.Import{Type: golang.ImportTypeApp, Value: "{{{ .Package }}}/" + path}
 }
 
-func ImportsForTypes(ctx string, ts ...types.Type) golang.Imports {
+func ImportsForTypes(ctx string, database string, ts ...types.Type) golang.Imports {
 	var ret golang.Imports
 	for _, t := range ts {
-		ret = ret.Add(importsForType(ctx, t)...)
+		ret = ret.Add(importsForType(ctx, t, database)...)
 	}
 	return ret
 }
 
-func importsForType(ctx string, t types.Type) golang.Imports {
+func importsForType(ctx string, t types.Type, database string) golang.Imports {
 	switch ctx {
 	case "go":
 		return importsForTypeCtxGo(t)
 	case "row":
-		return importsForTypeCtxRow(t)
+		return importsForTypeCtxRow(t, database)
 	case "string":
 		return importsForTypeCtxString(t)
 	case "parse":
@@ -74,7 +76,7 @@ func importsForTypeCtxGo(t types.Type) golang.Imports {
 	}
 }
 
-func importsForTypeCtxRow(t types.Type) golang.Imports {
+func importsForTypeCtxRow(t types.Type, database string) golang.Imports {
 	switch t.Key() {
 	case types.KeyAny:
 		return golang.Imports{ImpJSON}
@@ -83,7 +85,11 @@ func importsForTypeCtxRow(t types.Type) golang.Imports {
 	case types.KeyDate, types.KeyTimestamp:
 		return golang.Imports{ImpTime}
 	case types.KeyUUID:
-		return golang.Imports{ImpUUID}
+		if database == "sqlserver" {
+			return golang.Imports{ImpMSSQL}
+		} else {
+			return golang.Imports{ImpUUID}
+		}
 	default:
 		return nil
 	}

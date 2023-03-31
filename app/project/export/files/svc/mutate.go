@@ -17,35 +17,35 @@ const serviceAssignmentToken = ":="
 
 func ServiceMutate(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "servicemutate")
-	for _, imp := range helper.ImportsForTypes("go", m.PKs().Types()...) {
+	for _, imp := range helper.ImportsForTypes("go", "", m.PKs().Types()...) {
 		g.AddImport(imp)
 	}
 	g.AddImport(helper.ImpAppUtil, helper.ImpContext, helper.ImpSQLx, helper.ImpDatabase)
 
-	if add, err := serviceCreate(m, g); err == nil {
+	if add, err := serviceCreate(m, g, args.Database()); err == nil {
 		g.AddBlocks(add)
 	} else {
 		return nil, err
 	}
-	if upd, err := serviceUpdate(m, g); err == nil {
+	if upd, err := serviceUpdate(m, g, args.Database()); err == nil {
 		g.AddBlocks(upd)
 	} else {
 		return nil, err
 	}
 	if m.IsRevision() || m.IsHistory() {
-		if updIN, err := serviceUpdateIfNeeded(m, g); err == nil {
+		if updIN, err := serviceUpdateIfNeeded(m, g, args.Database()); err == nil {
 			g.AddBlocks(updIN)
 		} else {
 			return nil, err
 		}
 	}
-	if save, err := serviceSave(m, g); err == nil {
+	if save, err := serviceSave(m, g, args.Database()); err == nil {
 		g.AddBlocks(save)
 	} else {
 		return nil, err
 	}
 	if m.IsRevision() {
-		g.AddBlocks(serviceUpsertCore(m, g), serviceInsertRevision(m))
+		g.AddBlocks(serviceUpsertCore(m, g, args.Database()), serviceInsertRevision(m, args.Database()))
 	}
 	if m.IsSoftDelete() {
 		g.AddImport(helper.ImpTime)
@@ -64,7 +64,7 @@ func ServiceMutate(m *model.Model, args *model.Args, addHeader bool) (*file.File
 	return g.Render(addHeader)
 }
 
-func serviceCreate(m *model.Model, g *golang.File) (*golang.Block, error) {
+func serviceCreate(m *model.Model, g *golang.File, database string) (*golang.Block, error) {
 	ret := golang.NewBlock("Create", "func")
 	ret.W("func (s *Service) Create(ctx context.Context, tx *sqlx.Tx, logger util.Logger, models ...*%s) error {", m.Proper())
 	ret.W("\tif len(models) == 0 {")
@@ -96,8 +96,11 @@ func serviceCreate(m *model.Model, g *golang.File) (*golang.Block, error) {
 		if err := serviceAddCreatedUpdated(m, ret, g, false); err != nil {
 			return nil, err
 		}
-
-		ret.W("\tq := database.SQLInsert(tableQuoted, columnsQuoted, len(models), \"\")")
+		placeholder := ""
+		if database == "sqlserver" {
+			placeholder = "@"
+		}
+		ret.W("\tq := database.SQLInsert(tableQuoted, columnsQuoted, len(models), %q)", placeholder)
 		ret.W("\tvals := make([]any, 0, len(models)*len(columnsQuoted))")
 		ret.W("\tfor _, arg := range models {")
 		ret.W("\t\tvals = append(vals, arg.ToData()...)")
@@ -108,7 +111,7 @@ func serviceCreate(m *model.Model, g *golang.File) (*golang.Block, error) {
 	return ret, nil
 }
 
-func serviceUpdate(m *model.Model, g *golang.File) (*golang.Block, error) {
+func serviceUpdate(m *model.Model, g *golang.File, database string) (*golang.Block, error) {
 	ret := golang.NewBlock("Update", "func")
 	ret.W("func (s *Service) Update(ctx context.Context, tx *sqlx.Tx, model *%s, logger util.Logger) error {", m.Proper())
 	if m.IsRevision() {
@@ -164,7 +167,11 @@ func serviceUpdate(m *model.Model, g *golang.File) (*golang.Block, error) {
 		ret.W("\t}")
 		ret.W("\treturn nil")
 	} else {
-		ret.W("\tq := database.SQLUpdate(tableQuoted, columnsQuoted, %q, \"\")", pks.WhereClause(len(m.Columns)))
+		placeholder := ""
+		if database == "sqlserver" {
+			placeholder = "@"
+		}
+		ret.W("\tq := database.SQLUpdate(tableQuoted, columnsQuoted, %q, %q)", pks.WhereClause(len(m.Columns), placeholder), placeholder)
 		ret.W("\tdata := model.ToData()")
 		ret.W("\tdata = append(data, %s)", strings.Join(pkVals, ", "))
 		token := "="
@@ -181,7 +188,7 @@ func serviceUpdate(m *model.Model, g *golang.File) (*golang.Block, error) {
 	return ret, nil
 }
 
-func serviceUpdateIfNeeded(m *model.Model, g *golang.File) (*golang.Block, error) {
+func serviceUpdateIfNeeded(m *model.Model, g *golang.File, database string) (*golang.Block, error) {
 	ret := golang.NewBlock("UpdateIfNeeded", "func")
 	ret.W("func (s *Service) UpdateIfNeeded(ctx context.Context, tx *sqlx.Tx, model *%s, logger util.Logger) error {", m.Proper())
 	if m.IsRevision() {
@@ -240,7 +247,11 @@ func serviceUpdateIfNeeded(m *model.Model, g *golang.File) (*golang.Block, error
 		ret.W("\t}")
 		ret.W("\treturn nil")
 	} else {
-		ret.W("\tq := database.SQLUpdate(tableQuoted, columnsQuoted, %q, \"\")", pks.WhereClause(len(m.Columns)))
+		placeholder := ""
+		if database == "sqlserver" {
+			placeholder = "@"
+		}
+		ret.W("\tq := database.SQLUpdate(tableQuoted, columnsQuoted, %q, %q)", pks.WhereClause(len(m.Columns), placeholder), placeholder)
 		ret.W("\tdata := model.ToData()")
 		ret.W("\tdata = append(data, %s)", strings.Join(pkVals, ", "))
 		token := "="
@@ -257,7 +268,7 @@ func serviceUpdateIfNeeded(m *model.Model, g *golang.File) (*golang.Block, error
 	return ret, nil
 }
 
-func serviceSave(m *model.Model, g *golang.File) (*golang.Block, error) {
+func serviceSave(m *model.Model, g *golang.File, database string) (*golang.Block, error) {
 	ret := golang.NewBlock("Save", "func")
 	ret.W("func (s *Service) Save(ctx context.Context, tx *sqlx.Tx, logger util.Logger, models ...*%s) error {", m.Proper())
 	ret.W("\tif len(models) == 0 {")
@@ -286,8 +297,12 @@ func serviceSave(m *model.Model, g *golang.File) (*golang.Block, error) {
 		ret.W("\t}")
 		ret.W("\treturn nil")
 	} else {
+		placeholder := ""
+		if database == "sqlserver" {
+			placeholder = "@"
+		}
 		q := strings.Join(m.PKs().NamesQuoted(), ", ")
-		ret.W("\tq := database.SQLUpsert(tableQuoted, columnsQuoted, len(models), []string{%s}, columnsQuoted, \"\")", q)
+		ret.W("\tq := database.SQLUpsert(tableQuoted, columnsQuoted, len(models), []string{%s}, columnsQuoted, %q)", q, placeholder)
 		ret.W("\tvar data []any")
 		ret.W("\tfor _, model := range models {")
 		ret.W("\t\tdata = append(data, model.ToData()...)")
@@ -298,12 +313,16 @@ func serviceSave(m *model.Model, g *golang.File) (*golang.Block, error) {
 	return ret, nil
 }
 
-func serviceUpsertCore(m *model.Model, g *golang.File) *golang.Block {
+func serviceUpsertCore(m *model.Model, g *golang.File, database string) *golang.Block {
+	placeholder := ""
+	if database == "sqlserver" {
+		placeholder = "@"
+	}
 	g.AddImport(helper.ImpAppUtil)
 	ret := golang.NewBlock("UpsertCore", "func")
 	ret.W("func (s *Service) upsertCore(ctx context.Context, tx *sqlx.Tx, logger util.Logger, models ...*%s) error {", m.Proper())
 	ret.W("\tconflicts := util.StringArrayQuoted([]string{%s})", strings.Join(m.PKs().NamesQuoted(), ", "))
-	ret.W("\tq := database.SQLUpsert(tableQuoted, columnsCore, len(models), conflicts, columnsCore, \"\")")
+	ret.W("\tq := database.SQLUpsert(tableQuoted, columnsCore, len(models), conflicts, columnsCore, %q)", placeholder)
 	ret.W("\tdata := make([]any, 0, len(columnsCore)*len(models))")
 	ret.W("\tfor _, model := range models {")
 	ret.W("\t\tdata = append(data, model.ToDataCore()...)")
@@ -314,11 +333,15 @@ func serviceUpsertCore(m *model.Model, g *golang.File) *golang.Block {
 	return ret
 }
 
-func serviceInsertRevision(m *model.Model) *golang.Block {
+func serviceInsertRevision(m *model.Model, database string) *golang.Block {
+	placeholder := ""
+	if database == "sqlserver" {
+		placeholder = "@"
+	}
 	revCol := m.HistoryColumn()
 	ret := golang.NewBlock("InsertRev", "func")
 	ret.W("func (s *Service) insert%s(ctx context.Context, tx *sqlx.Tx, logger util.Logger, models ...*%s) error {", m.HistoryColumn().Proper(), m.Proper())
-	ret.W("\tq := database.SQLInsert(table%sQuoted, columns%s, len(models), \"\")", revCol.Proper(), revCol.Proper())
+	ret.W("\tq := database.SQLInsert(table%sQuoted, columns%s, len(models), %q)", revCol.Proper(), revCol.Proper(), placeholder)
 	ret.W("\tdata := make([]any, 0, len(columns%s)*len(models))", revCol.Proper())
 	ret.W("\tfor _, model := range models {")
 	ret.W("\t\tdata = append(data, model.ToData%s()...)", m.HistoryColumn().Proper())

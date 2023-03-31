@@ -11,7 +11,7 @@ import (
 
 const serviceGetMultipleName = "GetMultiple"
 
-func serviceGetMultipleSinglePK(m *model.Model, dbRef string, enums enum.Enums) (*golang.Block, error) {
+func serviceGetMultipleSinglePK(m *model.Model, dbRef string, enums enum.Enums, database string) (*golang.Block, error) {
 	ret := golang.NewBlock(serviceGetMultipleName, "func")
 	pk := m.PKs()[0]
 	t, err := model.ToGoType(pk.Type, pk.Nullable, m.Package, enums)
@@ -23,7 +23,11 @@ func serviceGetMultipleSinglePK(m *model.Model, dbRef string, enums enum.Enums) 
 	ret.W("\tif len(%s) == 0 {", pk.Plural())
 	ret.W("\t\treturn %s{}, nil", m.ProperPlural())
 	ret.W("\t}")
-	ret.W("\twc := database.SQLInClause(%q, len(%s), 0)", pk.Name, pk.Plural())
+	placeholder := ""
+	if database == "sqlserver" {
+		placeholder = "@"
+	}
+	ret.W("\twc := database.SQLInClause(%q, len(%s), 0, %q)", pk.Name, pk.Plural(), placeholder)
 	if m.IsSoftDelete() {
 		ret.W("\twc = addDeletedClause(wc, includeDeleted)")
 	}

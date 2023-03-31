@@ -14,7 +14,7 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-const defaultSchema = "public"
+const defaultPostgreSQLSchema = "public"
 
 var typePostgres = &DBType{Key: "postgres", Title: "PostgreSQL", Quote: `"`, Placeholder: "$", SupportsReturning: true}
 
@@ -50,7 +50,7 @@ func PostgresParamsFromEnv(key string, defaultUser string, prefix string) *Postg
 	if x := util.GetEnv(prefix + "db_database"); x != "" {
 		d = x
 	}
-	s := defaultSchema
+	s := defaultPostgreSQLSchema
 	if x := util.GetEnv(prefix + "db_schema"); x != "" {
 		s = x
 	}
@@ -95,7 +95,7 @@ func OpenPostgresDatabase(ctx context.Context, key string, params *PostgresParam
 	if port == 0 {
 		port = 5432
 	}
-	sch := defaultSchema
+	sch := defaultPostgreSQLSchema
 	if params.Schema != "" {
 		sch = params.Schema
 	}
@@ -129,7 +129,7 @@ func OpenPostgresDatabaseSSL(ctx context.Context, key string, ep *PostgresParams
 		schema = ep.Schema
 	}
 	if schema == "" {
-		schema = defaultSchema
+		schema = defaultPostgreSQLSchema
 	}
 
 	const template = "postgres://%s:%d/%s?search_path=%s&application_name=%s&user=%s&sslmode=%s&sslcert=%s&sslrootcert=%s&sslkey=%s"

@@ -58,3 +58,16 @@ func (a *Args) Validate() error {
 	}
 	return nil
 }
+
+func (a *Args) Database() string {
+	if a.HasModule("postgres") {
+		return "postgres"
+	}
+	if a.HasModule("sqlite") {
+		return "sqlite"
+	}
+	if a.HasModule("sqlserver") {
+		return "sqlserver"
+	}
+	return "unknown"
+}

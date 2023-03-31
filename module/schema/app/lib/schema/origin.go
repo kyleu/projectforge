@@ -15,6 +15,7 @@ var (
 	OriginMySQL      = Origin{Key: "mysql", Title: "MySQL", Icon: "database", Description: "MySQL database schema"}
 	OriginPostgres   = Origin{Key: "postgres", Title: "PostgreSQL", Icon: "database", Description: "PostgreSQL database schema"}
 	OriginSQLite     = Origin{Key: "sqlite", Title: "SQLite", Icon: "database", Description: "SQLite database schema"}
+	OriginSQLServer  = Origin{Key: "sqlserver", Title: "SQL Server", Icon: "database", Description: "SQL Server database schema"}
 	OriginGraphQL    = Origin{Key: "graphql", Title: "GraphQL", Icon: "star", Description: "GraphQL schema and queries"}
 	OriginProtobuf   = Origin{Key: "protobuf", Title: "Protobuf", Icon: "star", Description: "File describing proto3 definitions"}
 	OriginJSONSchema = Origin{Key: "jsonschema", Title: "JSON Schema", Icon: "star", Description: "JSON Schema definition files"}
@@ -38,7 +39,7 @@ func OriginTitles() []string {
 	return ret
 }
 
-var AllOrigins = []Origin{OriginMySQL, OriginPostgres, OriginSQLite, OriginGraphQL, OriginProtobuf, OriginJSONSchema, OriginMock}
+var AllOrigins = []Origin{OriginMySQL, OriginPostgres, OriginSQLite, OriginSQLServer, OriginGraphQL, OriginProtobuf, OriginJSONSchema, OriginMock}
 
 func OriginFromString(s string) Origin {
 	for _, t := range AllOrigins {

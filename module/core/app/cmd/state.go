@@ -27,7 +27,9 @@ func buildDefaultAppState(flags *Flags, logger util.Logger) (*app.State, error) 
 
 	db, err := database.OpenDefaultPostgres(ctx, logger){{{ else }}}{{{ if .HasModule "sqlite" }}}
 
-	db, err := database.OpenDefaultSQLite(ctx, logger){{{ end }}}{{{ end }}}
+	db, err := database.OpenDefaultSQLite(ctx, logger){{{ else }}}{{{ if .HasModule "sqlserver" }}}
+
+	db, err := database.OpenDefaultSQLServer(ctx, logger){{{ end }}}{{{ end }}}{{{ end }}}
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to open database")
 	}

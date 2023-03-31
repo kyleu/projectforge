@@ -18,10 +18,10 @@ func Models(m *model.Model, args *model.Args, addHeader bool) (*file.File, error
 		name += "_array"
 	}
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, name)
-	for _, imp := range helper.ImportsForTypes("go", m.PKs().Types()...) {
+	for _, imp := range helper.ImportsForTypes("go", "", m.PKs().Types()...) {
 		g.AddImport(imp)
 	}
-	for _, imp := range helper.ImportsForTypes("string", m.PKs().Types()...) {
+	for _, imp := range helper.ImportsForTypes("string", "", m.PKs().Types()...) {
 		g.AddImport(imp)
 	}
 	g.AddImport(helper.ImpSlices)

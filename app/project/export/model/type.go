@@ -68,11 +68,30 @@ func ToGoType(t types.Type, nullable bool, pkg string, enums enum.Enums) (string
 	return ret, nil
 }
 
-func ToGoRowType(t types.Type, nullable bool, pkg string, enums enum.Enums) (string, error) {
+func ToGoRowType(t types.Type, nullable bool, pkg string, enums enum.Enums, database string) (string, error) {
 	switch t.Key() {
 	case types.KeyAny, types.KeyList, types.KeyMap, types.KeyValueMap, types.KeyReference:
 		return "json.RawMessage", nil
 	default:
+		if t.Key() == types.KeyUUID && database == "sqlserver" {
+			if nullable {
+				return "*any", nil
+			} else {
+				return "mssql.UniqueIdentifier", nil
+			}
+		}
+		if t.Scalar() && nullable {
+			switch t.Key() {
+			case types.KeyString:
+				return "sql.NullString", nil
+			case types.KeyInt:
+				return "sql.NullInt64", nil
+			case types.KeyFloat:
+				return "sql.NullFloat64", nil
+			case types.KeyBool:
+				return "sql.NullBool", nil
+			}
+		}
 		return ToGoType(t, nullable, pkg, enums)
 	}
 }
