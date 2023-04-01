@@ -3,6 +3,7 @@
 /.scannerwork
 /build
 /data
+/rules.json
 /tmp
 
 /client/node_modules

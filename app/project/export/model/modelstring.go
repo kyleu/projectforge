@@ -65,7 +65,7 @@ func (m *Model) FirstLetter() string {
 
 func (m *Model) Route() string {
 	if m.RouteOverride == "" {
-		return path.Join(append(slices.Clone(m.Group), m.Package)...)
+		return strings.ToLower(path.Join(append(slices.Clone(m.Group), m.Package)...))
 	}
 	return m.RouteOverride
 }
@@ -94,7 +94,7 @@ func (m *Model) LastGroup(prefix string, dflt string) string {
 		if dflt != "" {
 			return dflt
 		}
-		return m.Package
+		return strings.ToLower(m.Package)
 	}
-	return prefix + m.Group[len(m.Group)-1]
+	return strings.ToLower(prefix + m.Group[len(m.Group)-1])
 }

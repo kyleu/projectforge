@@ -39,6 +39,8 @@ func AppRoutes(as *app.State, logger util.Logger) fasthttp.RequestHandler {
 	r.GET("/theme/preview/{palette}/{key}", clib.ThemePreview)
 
 	execRoutes(r)
+
+	r.GET("/sandbox/{key}", controller.Sandbox)
 	// $PF_SECTION_END(routes)$
 
 	r.GET("/docs", clib.Docs)

@@ -24,6 +24,9 @@ func serviceSearch(m *model.Model, grp *model.Column, dbRef string, enums enum.E
 		}
 	}
 	eq, like := "$1", "$2"
+	if database == model.SQLServer {
+		eq, like = "@p1", "@p2"
+	}
 	var params []string
 	if hasEqual {
 		params = append(params, "strings.ToLower(query)")

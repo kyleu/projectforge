@@ -100,7 +100,7 @@ func (m *Model) PackageWithGroup(prefix string) string {
 	}
 	x := make([]string, 0, len(m.Group)+1)
 	for _, g := range m.Group {
-		x = append(x, prefix+g)
+		x = append(x, strings.ToLower(prefix+g))
 	}
 	x = append(x, prefix+m.Package)
 	return strings.Join(x, "/")
@@ -112,7 +112,7 @@ func (m *Model) GroupString(prefix string, dflt string) string {
 	}
 	x := make([]string, 0, len(m.Group)+1)
 	for _, g := range m.Group {
-		x = append(x, prefix+g)
+		x = append(x, strings.ToLower(prefix+g))
 	}
 	return strings.Join(x, "/")
 }

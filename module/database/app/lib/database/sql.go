@@ -168,15 +168,17 @@ func SQLInClause(column string, numParams int, offset int, placeholder string) s
 	resBuilder := strings.Builder{}
 	for index := 0; index < numParams; index++ {
 		if index == 0 {
-			resBuilder.WriteString(column + " in ")
+			resBuilder.WriteString(column + " in (")
+		} else {
+			resBuilder.WriteString(", ")
 		}
 		switch placeholder {
 		case "$", "":
-			resBuilder.WriteString(fmt.Sprintf(", $%d", index+offset+1))
+			resBuilder.WriteString(fmt.Sprintf("$%d", index+offset+1))
 		case "?":
 			resBuilder.WriteString("?")
 		case "@":
-			resBuilder.WriteString(fmt.Sprintf(", @p%d", index+offset+1))
+			resBuilder.WriteString(fmt.Sprintf("@p%d", index+offset+1))
 		}
 	}
 	resBuilder.WriteString(")")
