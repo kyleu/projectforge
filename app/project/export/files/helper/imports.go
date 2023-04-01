@@ -5,6 +5,7 @@ import (
 
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/project/export/model"
 )
 
 var (
@@ -85,8 +86,8 @@ func importsForTypeCtxRow(t types.Type, database string) golang.Imports {
 	case types.KeyDate, types.KeyTimestamp:
 		return golang.Imports{ImpTime}
 	case types.KeyUUID:
-		if database == "sqlserver" {
-			return golang.Imports{ImpMSSQL}
+		if database == model.SQLServer {
+			return nil
 		} else {
 			return golang.Imports{ImpUUID}
 		}

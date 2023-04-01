@@ -97,7 +97,7 @@ func serviceCreate(m *model.Model, g *golang.File, database string) (*golang.Blo
 			return nil, err
 		}
 		placeholder := ""
-		if database == "sqlserver" {
+		if database == model.SQLServer {
 			placeholder = "@"
 		}
 		ret.W("\tq := database.SQLInsert(tableQuoted, columnsQuoted, len(models), %q)", placeholder)
@@ -168,7 +168,7 @@ func serviceUpdate(m *model.Model, g *golang.File, database string) (*golang.Blo
 		ret.W("\treturn nil")
 	} else {
 		placeholder := ""
-		if database == "sqlserver" {
+		if database == model.SQLServer {
 			placeholder = "@"
 		}
 		ret.W("\tq := database.SQLUpdate(tableQuoted, columnsQuoted, %q, %q)", pks.WhereClause(len(m.Columns), placeholder), placeholder)
@@ -248,7 +248,7 @@ func serviceUpdateIfNeeded(m *model.Model, g *golang.File, database string) (*go
 		ret.W("\treturn nil")
 	} else {
 		placeholder := ""
-		if database == "sqlserver" {
+		if database == model.SQLServer {
 			placeholder = "@"
 		}
 		ret.W("\tq := database.SQLUpdate(tableQuoted, columnsQuoted, %q, %q)", pks.WhereClause(len(m.Columns), placeholder), placeholder)
@@ -298,7 +298,7 @@ func serviceSave(m *model.Model, g *golang.File, database string) (*golang.Block
 		ret.W("\treturn nil")
 	} else {
 		placeholder := ""
-		if database == "sqlserver" {
+		if database == model.SQLServer {
 			placeholder = "@"
 		}
 		q := strings.Join(m.PKs().NamesQuoted(), ", ")
@@ -315,7 +315,7 @@ func serviceSave(m *model.Model, g *golang.File, database string) (*golang.Block
 
 func serviceUpsertCore(m *model.Model, g *golang.File, database string) *golang.Block {
 	placeholder := ""
-	if database == "sqlserver" {
+	if database == model.SQLServer {
 		placeholder = "@"
 	}
 	g.AddImport(helper.ImpAppUtil)
@@ -335,7 +335,7 @@ func serviceUpsertCore(m *model.Model, g *golang.File, database string) *golang.
 
 func serviceInsertRevision(m *model.Model, database string) *golang.Block {
 	placeholder := ""
-	if database == "sqlserver" {
+	if database == model.SQLServer {
 		placeholder = "@"
 	}
 	revCol := m.HistoryColumn()

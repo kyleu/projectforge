@@ -81,6 +81,13 @@ func (c *Column) HasTag(t string) bool {
 	return slices.Contains(c.Tags, t)
 }
 
+func (c *Column) AddTag(t string) {
+	if !slices.Contains(c.Tags, t) {
+		c.Tags = append(c.Tags, t)
+		slices.Sort(c.Tags)
+	}
+}
+
 func (c *Column) ToGoString(prefix string) string {
 	return ToGoString(c.Type, prefix+c.Proper(), false)
 }
@@ -111,4 +118,23 @@ func (c *Column) BC() string {
 		return ""
 	}
 	return fmt.Sprintf(", %q", c.Camel())
+}
+
+func (c *Column) NeedsErr(mdl string, database string) bool {
+	if database == SQLServer && c.Type.Key() == types.KeyUUID && c.Nullable {
+		return true
+	}
+	if c.Type.Scalar() {
+		return true
+	}
+	if c.Nullable && (c.Type.Key() == types.KeyDate || c.Type.Key() == types.KeyTimestamp || c.Type.Key() == types.KeyReference) {
+		return true
+	}
+	return false
+}
+
+func (c *Column) RemoveTag(t string) {
+	if idx := slices.Index(c.Tags, t); idx > -1 {
+		c.Tags = append(c.Tags[:idx], c.Tags[idx+1:]...)
+	}
 }

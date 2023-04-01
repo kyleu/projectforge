@@ -3,7 +3,7 @@ package types
 const KeyFloat = "float"
 
 type Float struct {
-	Bits int
+	Bits int `json:"bits,omitempty"`
 }
 
 var _ Type = (*Float)(nil)

@@ -9,14 +9,14 @@ import (
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func serviceSearch(m *model.Model, grp *model.Column, dbRef string, enums enum.Enums) (*golang.Block, error) {
+func serviceSearch(m *model.Model, grp *model.Column, dbRef string, enums enum.Enums, database string) (*golang.Block, error) {
 	prefix := ""
 	if grp != nil {
 		prefix = "By" + grp.Proper()
 	}
 	var clauses []string
 	hasEqual, hasLike := false, false
-	for _, s := range m.AllSearches() {
+	for _, s := range m.AllSearches(database) {
 		if strings.HasPrefix(s, "=") {
 			hasEqual = true
 		} else {
@@ -34,7 +34,7 @@ func serviceSearch(m *model.Model, grp *model.Column, dbRef string, enums enum.E
 			like = eq
 		}
 	}
-	for _, s := range m.AllSearches() {
+	for _, s := range m.AllSearches(database) {
 		if strings.HasPrefix(s, "=") {
 			clauses = append(clauses, s+" = "+eq)
 		} else {

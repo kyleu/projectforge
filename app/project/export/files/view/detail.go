@@ -11,7 +11,7 @@ import (
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-const commonLine = "  %s %s.%s"
+const commonLine = "  %sBy%s %s.%s"
 
 func detail(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "Detail.html")
@@ -23,7 +23,10 @@ func detail(m *model.Model, args *model.Args, addHeader bool) (*file.File, error
 	}
 	for _, rel := range rrs {
 		rm := args.Models.Get(rel.Table)
-		g.AddImport(helper.AppImport("views/"+rm.PackageWithGroup("v")), helper.AppImport("app/"+rm.PackageWithGroup("")))
+		g.AddImport(helper.AppImport("app/" + rm.PackageWithGroup("")))
+		if rm.PackageWithGroup("") != m.PackageWithGroup("") {
+			g.AddImport(helper.AppImport("views/" + rm.PackageWithGroup("v")))
+		}
 	}
 	if m.IsRevision() || m.IsHistory() {
 		g.AddImport(helper.ImpFilter)
@@ -50,8 +53,10 @@ func exportViewDetailClass(m *model.Model, models model.Models, g *golang.Templa
 	}
 	for _, rel := range m.Relations {
 		if relModel := models.Get(rel.Table); relModel.CanTraverseRelation() {
+			relCols := rel.SrcColumns(m)
+			relNames := strings.Join(relCols.ProperNames(), "")
 			g.AddImport(helper.AppImport("app/" + relModel.PackageWithGroup("")))
-			ret.W(commonLine, relModel.ProperPlural(), relModel.Package, relModel.ProperPlural())
+			ret.W(commonLine, relModel.ProperPlural(), relNames, relModel.Package, relModel.ProperPlural())
 		}
 	}
 
@@ -61,10 +66,10 @@ func exportViewDetailClass(m *model.Model, models model.Models, g *golang.Templa
 	for _, rel := range rrs {
 		rm := models.Get(rel.Table)
 		rCols := rel.TgtColumns(rm)
-		ret.W("  %sBy%s %s.%s", rm.ProperPlural(), strings.Join(rCols.ProperNames(), ""), rm.Package, rm.ProperPlural())
+		ret.W(commonLine, rm.ProperPlural(), strings.Join(rCols.ProperNames(), ""), rm.Package, rm.ProperPlural())
 	}
 	if m.IsRevision() {
-		ret.W(commonLine, m.HistoryColumn().ProperPlural(), m.Package, m.ProperPlural())
+		ret.W("  %s %s.%s", m.HistoryColumn().ProperPlural(), m.Package, m.ProperPlural())
 	}
 	ret.W("} %%}")
 	return ret
@@ -132,7 +137,11 @@ func exportViewDetailRelations(ret *golang.Block, m *model.Model, models model.M
 			}
 		}
 		ret.W("    <div class=\"overflow clear\">")
-		ret.W("      {%%%%= v%s.Table(p.%s%s, p.Params, as, ps) %%%%}", tgt.Package, tgtName, addons)
+		if m.PackageWithGroup("") == tgt.PackageWithGroup("") {
+			ret.W("      {%%%%= Table(p.%s%s, p.Params, as, ps) %%%%}", tgtName, addons)
+		} else {
+			ret.W("      {%%%%= v%s.Table(p.%s%s, p.Params, as, ps) %%%%}", tgt.Package, tgtName, addons)
+		}
 		ret.W("    </div>")
 		ret.W("  </div>")
 		ret.W("  {%%- endif -%%}")

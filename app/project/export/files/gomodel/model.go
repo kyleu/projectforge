@@ -41,7 +41,7 @@ func Model(m *model.Model, args *model.Args, addHeader bool) (*file.File, error)
 		return nil, err
 	}
 	g.AddBlocks(str, c, modelRandom(m, args.Enums))
-	if b, e := modelFromMap(g, m, args.Enums); e == nil {
+	if b, e := modelFromMap(g, m, args.Enums, args.Database()); e == nil {
 		g.AddBlocks(b)
 	} else {
 		return nil, err

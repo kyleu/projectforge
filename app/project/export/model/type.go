@@ -73,7 +73,7 @@ func ToGoRowType(t types.Type, nullable bool, pkg string, enums enum.Enums, data
 	case types.KeyAny, types.KeyList, types.KeyMap, types.KeyValueMap, types.KeyReference:
 		return "json.RawMessage", nil
 	default:
-		if t.Key() == types.KeyUUID && database == "sqlserver" {
+		if t.Key() == types.KeyUUID && database == SQLServer {
 			if nullable {
 				return "*any", nil
 			} else {

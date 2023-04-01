@@ -2,6 +2,7 @@ package view
 
 import (
 	"fmt"
+	"strings"
 
 	"golang.org/x/exp/slices"
 
@@ -35,9 +36,11 @@ func exportViewTableFunc(m *model.Model, models model.Models, enums enum.Enums, 
 	suffix := ""
 	for _, rel := range m.Relations {
 		if relModel := models.Get(rel.Table); relModel.CanTraverseRelation() {
+			relCols := rel.SrcColumns(m)
+			relNames := strings.Join(relCols.ProperNames(), "")
 			g.AddImport(helper.AppImport("app/" + relModel.PackageWithGroup("")))
-			msg := ", %s %s.%s"
-			suffix += fmt.Sprintf(msg, relModel.Plural(), relModel.Package, relModel.ProperPlural())
+			msg := ", %sBy%s %s.%s"
+			suffix += fmt.Sprintf(msg, relModel.Plural(), relNames, relModel.Package, relModel.ProperPlural())
 		}
 	}
 	ret.W("{%% func Table(models " + m.Package + "." + m.ProperPlural() + suffix + ", params filter.ParamSet, as *app.State, ps *cutil.PageState) %%}")
@@ -107,12 +110,12 @@ func viewTableColumn(
 			k = prefix + relModel.ProperPlural()
 		}
 		if srcCol.Nullable && !tgtCol.Nullable {
-			get := fmt.Sprintf("%s.Get(*%s%s)", k, modelKey, srcCol.Proper())
+			get := fmt.Sprintf("%sBy%s.Get(*%s%s)", k, srcCol.Proper(), modelKey, srcCol.Proper())
 			toStrings += "{%% if " + modelKey + srcCol.Proper() + " != nil %%}"
 			toStrings += "{%% if x := " + get + "; x != nil %%} ({%%s x.TitleString() %%}){%% endif %%}"
 			toStrings += "{%% endif %%}"
 		} else {
-			get := fmt.Sprintf("%s.Get(%s%s)", k, modelKey, srcCol.Proper())
+			get := fmt.Sprintf("%sBy%s.Get(%s%s)", k, srcCol.Proper(), modelKey, srcCol.Proper())
 			toStrings += "{%% if x := " + get + "; x != nil %%} ({%%s x.TitleString() %%}){%% endif %%}"
 		}
 	}

@@ -47,7 +47,7 @@ func (m Models) Sorted() Models {
 func (m Models) withDeps(mdl *Model) Models {
 	var deps Models
 	for _, rel := range mdl.Relations {
-		if deps.Get(rel.Table) == nil {
+		if deps.Get(rel.Table) == nil && rel.Table != mdl.Name {
 			deps = append(deps, m.withDeps(m.Get(rel.Table))...)
 		}
 	}
@@ -59,7 +59,7 @@ func (m Models) withDeps(mdl *Model) Models {
 
 func (m Models) HasSearch() bool {
 	for _, x := range m {
-		if len(x.AllSearches()) > 0 {
+		if x.HasSearches() {
 			return true
 		}
 	}

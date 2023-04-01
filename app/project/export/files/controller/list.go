@@ -23,12 +23,12 @@ func controllerList(m *model.Model, grp *model.Column, models model.Models, enum
 	if m.IsSoftDelete() {
 		suffix = ", " + incDel
 	}
-	if len(m.AllSearches()) > 0 {
+	if m.HasSearches() {
 		g.AddImport(helper.ImpStrings)
 		ret.W("\t\tq := strings.TrimSpace(string(rc.URI().QueryArgs().Peek(\"q\")))")
 	}
 	ret.W("\t\tprms := ps.Params.Get(%q, nil, ps.Logger).Sanitize(%q)", m.Package, m.Package)
-	if grpArgs == "" && len(m.AllSearches()) > 0 {
+	if grpArgs == "" && m.HasSearches() {
 		ret.W("\t\tvar ret %s.%s", m.Package, m.ProperPlural())
 		ret.W("\t\tvar err error")
 		ret.W("\t\tif q == \"\" {")
@@ -76,16 +76,16 @@ func controllerList(m *model.Model, grp *model.Column, models model.Models, enum
 		if srcCol.Nullable && !tgtCol.Nullable {
 			c = "util.ArrayDefererence(" + c + ")"
 		}
-		call := "\t\t%s, err := as.Services.%s.GetMultiple(ps.Context, nil%s, ps.Logger, %s...)"
-		ret.W(call, relModel.Plural(), relModel.Proper(), suffix, c)
+		call := "\t\t%sBy%s, err := as.Services.%s.GetMultiple(ps.Context, nil%s, ps.Logger, %s...)"
+		ret.W(call, relModel.Plural(), srcCol.Proper(), relModel.Proper(), suffix, c)
 		ret.W("\t\tif err != nil {")
 		ret.W("\t\t\treturn \"\", err")
 		ret.W("\t\t}")
 
-		toStrings += fmt.Sprintf(", %s: %s", relModel.ProperPlural(), relModel.Plural())
+		toStrings += fmt.Sprintf(", %sBy%s: %sBy%s", relModel.ProperPlural(), srcCol.Proper(), relModel.Plural(), srcCol.Proper())
 	}
 	var searchSuffix string
-	if len(m.AllSearches()) > 0 {
+	if m.HasSearches() {
 		searchSuffix += ", SearchQuery: q"
 	}
 	ret.W("\t\tpage := &v%s.List{Models: ret%s, Params: ps.Params%s}", m.Package, toStrings, searchSuffix)

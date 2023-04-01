@@ -91,9 +91,9 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 		g.AddBlocks(gb)
 	}
 
-	if len(m.AllSearches()) > 0 {
+	if m.HasSearches() {
 		g.AddImport(helper.ImpStrings)
-		ss, err := serviceSearch(m, nil, dbRef, args.Enums)
+		ss, err := serviceSearch(m, nil, dbRef, args.Enums, args.Database())
 		if err != nil {
 			return nil, err
 		}
@@ -101,8 +101,8 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 	}
 	for _, grp := range m.GroupedColumns() {
 		if !grp.PK {
-			if len(m.AllSearches()) > 0 {
-				ss, err := serviceSearch(m, grp, dbRef, args.Enums)
+			if m.HasSearches() {
+				ss, err := serviceSearch(m, grp, dbRef, args.Enums, args.Database())
 				if err != nil {
 					return nil, err
 				}
@@ -253,7 +253,7 @@ func serviceGetByCols(key string, m *model.Model, cols model.Columns, dbRef stri
 	ret.W(msg)
 	ret.W("\tparams = filters(params)")
 	placeholder := ""
-	if database == "sqlserver" {
+	if database == model.SQLServer {
 		placeholder = "@"
 	}
 	ret.W("\twc := %q", cols.WhereClause(0, placeholder))

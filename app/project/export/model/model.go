@@ -37,6 +37,13 @@ func (m *Model) HasTag(t string) bool {
 	return slices.Contains(m.Tags, t)
 }
 
+func (m *Model) AddTag(t string) {
+	if !slices.Contains(m.Tags, t) {
+		m.Tags = append(m.Tags, t)
+		slices.Sort(m.Tags)
+	}
+}
+
 func (m *Model) PKs() Columns {
 	return m.Columns.PKs()
 }
@@ -137,19 +144,27 @@ func (m *Model) IndexedColumns() Columns {
 	return ret
 }
 
-func (m *Model) AllSearches() []string {
+func (m *Model) AllSearches(database string) []string {
 	if !m.HasTag("search") {
 		return m.Search
 	}
 	ret := slices.Clone(m.Search)
 	for _, c := range m.Columns {
 		if c.Search {
-			x := c.Name
+			var x string = c.Name
 			if c.Type.Key() != types.KeyString {
-				x += "::text"
+				if database == SQLServer {
+					x = fmt.Sprintf("cast(%s as nvarchar(2048))", c.Name)
+				} else {
+					x = fmt.Sprintf("%s::text", c.Name)
+				}
 			}
 			ret = append(ret, "lower("+x+")")
 		}
 	}
 	return ret
+}
+
+func (m *Model) HasSearches() bool {
+	return len(m.AllSearches("")) > 0
 }

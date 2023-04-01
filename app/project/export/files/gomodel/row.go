@@ -28,7 +28,7 @@ func Row(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 		if col.Nullable && (col.Type.Key() == types.KeyString || col.Type.Key() == types.KeyInt || col.Type.Key() == types.KeyBool) {
 			g.AddImport(helper.ImpSQL)
 		}
-		if col.Type.Key() == types.KeyUUID && args.Database() == "sqlserver" {
+		if col.Type.Key() == types.KeyUUID && args.Database() == model.SQLServer {
 			if col.Nullable {
 				g.AddImport(helper.ImpDatabase)
 			} else {
@@ -161,7 +161,7 @@ func modelRowToModel(g *golang.File, m *model.Model, database string) (*golang.B
 				default:
 					refs = append(refs, fmt.Sprintf("%s r.%s", k, c.Proper()))
 				}
-			} else if database == "sqlserver" && c.Type.Key() == types.KeyUUID {
+			} else if database == model.SQLServer && c.Type.Key() == types.KeyUUID {
 				if c.Nullable {
 					refs = append(refs, fmt.Sprintf("%s database.UUIDFromGUID(r.%s)", k, c.Proper()))
 				} else {
@@ -206,7 +206,7 @@ func defaultWC(m *model.Model, database string) *golang.Block {
 	wc := make([]string, 0, len(c))
 	idxs := make([]string, 0, len(c))
 	for idx, col := range c {
-		if database == "sqlserver" {
+		if database == model.SQLServer {
 			wc = append(wc, fmt.Sprintf("%q = @p%%%%d", col.Name))
 		} else {
 			wc = append(wc, fmt.Sprintf("%q = $%%%%d", col.Name))

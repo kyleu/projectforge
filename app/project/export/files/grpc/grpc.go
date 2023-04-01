@@ -89,7 +89,7 @@ func grpcFile(m *model.Model, args *model.Args, ga *FileArgs, addHeader bool) (*
 	grpcRet := fmt.Sprintf("(*%sTransaction, error)", ga.Class)
 
 	g.AddBlocks(grpcList(m, grpcArgs, grpcRet, ga))
-	if len(m.AllSearches()) > 0 {
+	if m.HasSearches() {
 		g.AddBlocks(grpcSearch(m, grpcArgs, grpcRet, ga))
 	}
 	if detail, err := grpcDetail(m, grpcArgs, grpcRet, g, ga); err == nil {

@@ -25,7 +25,7 @@ func searchBlock(args *model.Args) *golang.Block {
 	ret.W("//nolint:gocognit")
 	ret.W("func generatedSearch() []Provider {")
 	for _, m := range args.Models {
-		if len(m.AllSearches()) > 0 {
+		if m.HasSearches() {
 			keys = append(keys, m.Package+"Func")
 			out := searchModel(m)
 			for _, line := range out {

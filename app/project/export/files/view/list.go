@@ -1,6 +1,9 @@
 package view
 
 import (
+	"fmt"
+	"strings"
+
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
@@ -22,11 +25,13 @@ func exportViewListClass(m *model.Model, models model.Models, g *golang.Template
 	ret.W("  Models %s.%s", m.Package, m.ProperPlural())
 	for _, rel := range m.Relations {
 		relModel := models.Get(rel.Table)
+		relCols := rel.SrcColumns(m)
+		relNames := strings.Join(relCols.ProperNames(), "")
 		g.AddImport(helper.AppImport("app/" + relModel.PackageWithGroup("")))
-		ret.W(commonLine, relModel.ProperPlural(), relModel.Package, relModel.ProperPlural())
+		ret.W(commonLine, relModel.ProperPlural(), relNames, relModel.Package, relModel.ProperPlural())
 	}
 	ret.W("  Params filter.ParamSet")
-	if len(m.AllSearches()) > 0 {
+	if m.HasSearches() {
 		ret.W("  SearchQuery string")
 	}
 	ret.W("} %%}")
@@ -39,13 +44,15 @@ func exportViewListBody(m *model.Model, models model.Models) *golang.Block {
 	suffix := ""
 	for _, rel := range m.Relations {
 		if relModel := models.Get(rel.Table); relModel.CanTraverseRelation() {
-			suffix += ", p." + relModel.ProperPlural()
+			relCols := rel.SrcColumns(m)
+			relNames := strings.Join(relCols.ProperNames(), "")
+			suffix += fmt.Sprintf(", p.%sBy%s", relModel.ProperPlural(), relNames)
 		}
 	}
 
 	ret.W("{%% func (p *List) Body(as *app.State, ps *cutil.PageState) %%}")
 	ret.W("  <div class=\"card\">")
-	if len(m.AllSearches()) == 0 {
+	if !m.HasSearches() {
 		ret.W("    <div class=\"right\"><a href=\"/%s/new\"><button>New</button></a></div>", m.Route())
 		ret.W("    <h3>{%%= components.SVGRefIcon(`" + m.Icon + "`, ps) %%}{%%s ps.Title %%}</h3>")
 	} else {

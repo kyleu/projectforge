@@ -10,14 +10,14 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func modelFromMap(g *golang.File, m *model.Model, enums enum.Enums) (*golang.Block, error) {
+func modelFromMap(g *golang.File, m *model.Model, enums enum.Enums, database string) (*golang.Block, error) {
 	ret := golang.NewBlock(m.Package+"FromForm", "func")
 	ret.W("func FromMap(m util.ValueMap, setPK bool) (*%s, error) {", m.Proper())
 	ret.W("\tret := &%s{}", m.Proper())
 	cols := m.Columns.WithoutTag("created").WithoutTag("updated").WithoutTag(model.RevisionType)
 	var needsErr bool
 	for _, c := range cols {
-		if c.Type.Scalar() || c.Type.Key() == types.KeyDate || c.Type.Key() == types.KeyTimestamp || c.Type.Key() == types.KeyReference {
+		if c.NeedsErr(m.Name, database) {
 			needsErr = true
 			break
 		}

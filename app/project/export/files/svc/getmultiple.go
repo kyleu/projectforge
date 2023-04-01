@@ -24,7 +24,7 @@ func serviceGetMultipleSinglePK(m *model.Model, dbRef string, enums enum.Enums, 
 	ret.W("\t\treturn %s{}, nil", m.ProperPlural())
 	ret.W("\t}")
 	placeholder := ""
-	if database == "sqlserver" {
+	if database == model.SQLServer {
 		placeholder = "@"
 	}
 	ret.W("\twc := database.SQLInClause(%q, len(%s), 0, %q)", pk.Name, pk.Plural(), placeholder)

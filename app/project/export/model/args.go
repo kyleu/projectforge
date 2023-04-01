@@ -10,6 +10,8 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+const SQLServer = "sqlserver"
+
 type Args struct {
 	Config     util.ValueMap              `json:"config,omitempty"`
 	ConfigFile json.RawMessage            `json:"-"`
@@ -66,8 +68,8 @@ func (a *Args) Database() string {
 	if a.HasModule("sqlite") {
 		return "sqlite"
 	}
-	if a.HasModule("sqlserver") {
-		return "sqlserver"
+	if a.HasModule(SQLServer) {
+		return SQLServer
 	}
 	return "unknown"
 }
