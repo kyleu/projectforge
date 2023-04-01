@@ -4,6 +4,7 @@
 /build
 /data
 /tmp
+/app/controller/home.go
 
 /client/node_modules
 
