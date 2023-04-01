@@ -15,6 +15,16 @@ func Home(rc *fasthttp.RequestCtx) {
 		execs := as.Services.Exec.Execs
 		mods := as.Services.Modules.Modules()
 		ps.Data = util.ValueMap{"projects": prjs, "modules": mods}
+		if string(rc.URI().QueryArgs().Peek("act")) == "clean" {
+			err := Testbed(as, ps.Logger)
+			if err != nil {
+				return "", err
+			}
+		}
 		return Render(rc, as, &views.Home{Projects: prjs, Execs: execs, Modules: mods}, ps)
 	})
+}
+
+func Testbed(st *app.State, logger util.Logger) error {
+	return nil
 }
