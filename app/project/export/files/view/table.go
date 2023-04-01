@@ -40,7 +40,7 @@ func exportViewTableFunc(m *model.Model, models model.Models, enums enum.Enums, 
 			relNames := strings.Join(relCols.ProperNames(), "")
 			g.AddImport(helper.AppImport("app/" + relModel.PackageWithGroup("")))
 			msg := ", %sBy%s %s.%s"
-			suffix += fmt.Sprintf(msg, relModel.Plural(), relNames, relModel.Package, relModel.ProperPlural())
+			suffix += fmt.Sprintf(msg, relModel.CamelPlural(), relNames, relModel.Package, relModel.ProperPlural())
 		}
 	}
 	ret.W("{%% func Table(models " + m.Package + "." + m.ProperPlural() + suffix + ", params filter.ParamSet, as *app.State, ps *cutil.PageState) %%}")
@@ -105,7 +105,7 @@ func viewTableColumn(
 		}
 		srcCol := m.Columns.Get(rel.Src[0])
 		tgtCol := m.Columns.Get(rel.Tgt[0])
-		k := relModel.Plural()
+		k := relModel.CamelPlural()
 		if prefix != "" {
 			k = prefix + relModel.ProperPlural()
 		}

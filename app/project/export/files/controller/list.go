@@ -77,12 +77,12 @@ func controllerList(m *model.Model, grp *model.Column, models model.Models, enum
 			c = "util.ArrayDefererence(" + c + ")"
 		}
 		call := "\t\t%sBy%s, err := as.Services.%s.GetMultiple(ps.Context, nil%s, ps.Logger, %s...)"
-		ret.W(call, relModel.Plural(), srcCol.Proper(), relModel.Proper(), suffix, c)
+		ret.W(call, relModel.CamelPlural(), srcCol.Proper(), relModel.Proper(), suffix, c)
 		ret.W("\t\tif err != nil {")
 		ret.W("\t\t\treturn \"\", err")
 		ret.W("\t\t}")
 
-		toStrings += fmt.Sprintf(", %sBy%s: %sBy%s", relModel.ProperPlural(), srcCol.Proper(), relModel.Plural(), srcCol.Proper())
+		toStrings += fmt.Sprintf(", %sBy%s: %sBy%s", relModel.ProperPlural(), srcCol.Proper(), relModel.CamelPlural(), srcCol.Proper())
 	}
 	var searchSuffix string
 	if m.HasSearches() {
