@@ -59,6 +59,9 @@ func cleanProject(st *app.State, prjKey string, logger util.Logger) error {
 	}
 	for k, v := range rules {
 		split := util.StringSplitAndTrim(k, ".")
+		if split[0] == "disabled" {
+			continue
+		}
 		m := args.Models.Get(split[0])
 		if m == nil {
 			return errors.Errorf("no model found with name [%s]", split[0])
@@ -78,6 +81,10 @@ func cleanProject(st *app.State, prjKey string, logger util.Logger) error {
 				return errors.Errorf("no column found with name [%s] in model [%s]", split[1], split[0])
 			}
 			switch split[2] {
+			case "display":
+				col.Display = v
+			case "format":
+				col.Format = v
 			case "tag":
 				col.AddTag(v)
 			case "tags":
@@ -86,6 +93,8 @@ func cleanProject(st *app.State, prjKey string, logger util.Logger) error {
 				}
 			case "search":
 				col.Search = v == "true"
+			default:
+				return errors.Errorf("unable to handle action [%s] for [%s.%s]", split[2], split[0], split[1])
 			}
 		}
 	}

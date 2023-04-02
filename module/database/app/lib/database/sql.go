@@ -46,11 +46,11 @@ func SQLSelectGrouped(columns string, tables string, where string, groupBy strin
 	}
 
 	offsetClause := ""
-	if len(orderBy) > 0 && offset > 0 {
+	if len(orderBy) > 0 && (offset > 0 || limit > 0) {
 		offsetClause = fmt.Sprintf(" offset %d rows", offset)
 	}
 
-	return "select " + prefix + columns + " from " + tables + whereClause + groupByClause + orderByClause + limitClause + offsetClause
+	return "select " + prefix + columns + " from " + tables + whereClause + groupByClause + orderByClause + offsetClause + limitClause
 }
 {{{ else }}}
 func SQLSelectGrouped(columns string, tables string, where string, groupBy string, orderBy string, limit int, offset int) string {
