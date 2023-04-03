@@ -1,10 +1,7 @@
 package model
 
 import (
-	"path"
 	"strings"
-
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/util"
 )
@@ -65,7 +62,7 @@ func (m *Model) FirstLetter() string {
 
 func (m *Model) Route() string {
 	if m.RouteOverride == "" {
-		return strings.ToLower(path.Join(append(slices.Clone(m.Group), m.Package)...))
+		return m.PackageWithGroup("")
 	}
 	return m.RouteOverride
 }
