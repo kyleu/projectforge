@@ -92,6 +92,10 @@ func (s *Service) Prepare(ctx context.Context, q string) (*sqlx.Stmt, error) {
 	return s.db.PreparexContext(ctx, q)
 }
 
+func (s *Service) Placeholder() string {
+	return s.Type.Placeholder
+}
+
 func errMessage(t string, q string, values []any) string {
 	return fmt.Sprintf("error running %s sql [%s] with values [%s]", t, strings.TrimSpace(q), valueStrings(values))
 }

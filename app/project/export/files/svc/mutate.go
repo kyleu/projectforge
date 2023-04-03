@@ -96,11 +96,7 @@ func serviceCreate(m *model.Model, g *golang.File, database string) (*golang.Blo
 		if err := serviceAddCreatedUpdated(m, ret, g, false); err != nil {
 			return nil, err
 		}
-		placeholder := ""
-		if database == model.SQLServer {
-			placeholder = "@"
-		}
-		ret.W("\tq := database.SQLInsert(tableQuoted, columnsQuoted, len(models), %q)", placeholder)
+		ret.W("\tq := database.SQLInsert(tableQuoted, columnsQuoted, len(models), s.db.Placeholder())")
 		ret.W("\tvals := make([]any, 0, len(models)*len(columnsQuoted))")
 		ret.W("\tfor _, arg := range models {")
 		ret.W("\t\tvals = append(vals, arg.ToData()...)")
@@ -171,7 +167,7 @@ func serviceUpdate(m *model.Model, g *golang.File, database string) (*golang.Blo
 		if database == model.SQLServer {
 			placeholder = "@"
 		}
-		ret.W("\tq := database.SQLUpdate(tableQuoted, columnsQuoted, %q, %q)", pks.WhereClause(len(m.Columns), placeholder), placeholder)
+		ret.W("\tq := database.SQLUpdate(tableQuoted, columnsQuoted, %q, s.db.Placeholder())", pks.WhereClause(len(m.Columns), placeholder))
 		ret.W("\tdata := model.ToData()")
 		ret.W("\tdata = append(data, %s)", strings.Join(pkVals, ", "))
 		token := "="
@@ -251,7 +247,7 @@ func serviceUpdateIfNeeded(m *model.Model, g *golang.File, database string) (*go
 		if database == model.SQLServer {
 			placeholder = "@"
 		}
-		ret.W("\tq := database.SQLUpdate(tableQuoted, columnsQuoted, %q, %q)", pks.WhereClause(len(m.Columns), placeholder), placeholder)
+		ret.W("\tq := database.SQLUpdate(tableQuoted, columnsQuoted, %q, s.db.Placeholder())", pks.WhereClause(len(m.Columns), placeholder))
 		ret.W("\tdata := model.ToData()")
 		ret.W("\tdata = append(data, %s)", strings.Join(pkVals, ", "))
 		token := "="
@@ -297,12 +293,8 @@ func serviceSave(m *model.Model, g *golang.File, database string) (*golang.Block
 		ret.W("\t}")
 		ret.W("\treturn nil")
 	} else {
-		placeholder := ""
-		if database == model.SQLServer {
-			placeholder = "@"
-		}
 		q := strings.Join(m.PKs().NamesQuoted(), ", ")
-		ret.W("\tq := database.SQLUpsert(tableQuoted, columnsQuoted, len(models), []string{%s}, columnsQuoted, %q)", q, placeholder)
+		ret.W("\tq := database.SQLUpsert(tableQuoted, columnsQuoted, len(models), []string{%s}, columnsQuoted, s.db.Placeholder())", q)
 		ret.W("\tvar data []any")
 		ret.W("\tfor _, model := range models {")
 		ret.W("\t\tdata = append(data, model.ToData()...)")
@@ -314,15 +306,11 @@ func serviceSave(m *model.Model, g *golang.File, database string) (*golang.Block
 }
 
 func serviceUpsertCore(m *model.Model, g *golang.File, database string) *golang.Block {
-	placeholder := ""
-	if database == model.SQLServer {
-		placeholder = "@"
-	}
 	g.AddImport(helper.ImpAppUtil)
 	ret := golang.NewBlock("UpsertCore", "func")
 	ret.W("func (s *Service) upsertCore(ctx context.Context, tx *sqlx.Tx, logger util.Logger, models ...*%s) error {", m.Proper())
 	ret.W("\tconflicts := util.StringArrayQuoted([]string{%s})", strings.Join(m.PKs().NamesQuoted(), ", "))
-	ret.W("\tq := database.SQLUpsert(tableQuoted, columnsCore, len(models), conflicts, columnsCore, %q)", placeholder)
+	ret.W("\tq := database.SQLUpsert(tableQuoted, columnsCore, len(models), conflicts, columnsCore, s.db.Placeholder())")
 	ret.W("\tdata := make([]any, 0, len(columnsCore)*len(models))")
 	ret.W("\tfor _, model := range models {")
 	ret.W("\t\tdata = append(data, model.ToDataCore()...)")
@@ -334,14 +322,10 @@ func serviceUpsertCore(m *model.Model, g *golang.File, database string) *golang.
 }
 
 func serviceInsertRevision(m *model.Model, database string) *golang.Block {
-	placeholder := ""
-	if database == model.SQLServer {
-		placeholder = "@"
-	}
 	revCol := m.HistoryColumn()
 	ret := golang.NewBlock("InsertRev", "func")
 	ret.W("func (s *Service) insert%s(ctx context.Context, tx *sqlx.Tx, logger util.Logger, models ...*%s) error {", m.HistoryColumn().Proper(), m.Proper())
-	ret.W("\tq := database.SQLInsert(table%sQuoted, columns%s, len(models), %q)", revCol.Proper(), revCol.Proper(), placeholder)
+	ret.W("\tq := database.SQLInsert(table%sQuoted, columns%s, len(models), s.db.Placeholder())", revCol.Proper(), revCol.Proper())
 	ret.W("\tdata := make([]any, 0, len(columns%s)*len(models))", revCol.Proper())
 	ret.W("\tfor _, model := range models {")
 	ret.W("\t\tdata = append(data, model.ToData%s()...)", m.HistoryColumn().Proper())

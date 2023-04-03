@@ -7,15 +7,15 @@ import (
 
 const whereSpaces = " where "
 
-func SQLSelect(columns string, tables string, where string, orderBy string, limit int, offset int) string {
-	return SQLSelectGrouped(columns, tables, where, "", orderBy, limit, offset)
+func SQLSelect(columns string, tables string, where string, orderBy string, limit int, offset int, placeholder string) string {
+	return SQLSelectGrouped(columns, tables, where, "", orderBy, limit, offset, placeholder)
 }
 
-func SQLSelectSimple(columns string, tables string, where ...string) string {
-	return SQLSelectGrouped(columns, tables, strings.Join(where, " and "), "", "", 0, 0)
+func SQLSelectSimple(columns string, tables string, placeholder string, where ...string) string {
+	return SQLSelectGrouped(columns, tables, strings.Join(where, " and "), "", "", 0, 0, placeholder)
 }
-{{{ if .HasModule "sqlserver" }}}
-func SQLSelectGrouped(columns string, tables string, where string, groupBy string, orderBy string, limit int, offset int) string {
+
+func SQLSelectGrouped(columns string, tables string, where string, groupBy string, orderBy string, limit int, offset int, placeholder string) string {
 	if columns == "" {
 		columns = "*"
 	}
@@ -35,57 +35,34 @@ func SQLSelectGrouped(columns string, tables string, where string, groupBy strin
 		orderByClause = " order by " + orderBy
 	}
 
-	prefix := ""
 	limitClause := ""
-	if limit > 0 {
-		if len(orderBy) == 0 {
-			prefix = fmt.Sprintf("top %d ", limit)
-		} else {
-			limitClause = fmt.Sprintf(" fetch next %d rows only", limit)
-		}
-	}
-
 	offsetClause := ""
-	if len(orderBy) > 0 && (offset > 0 || limit > 0) {
-		offsetClause = fmt.Sprintf(" offset %d rows", offset)
+	if placeholder == "@" {
+		prefix := ""
+		if limit > 0 {
+			if len(orderBy) == 0 {
+				prefix = fmt.Sprintf("top %d ", limit)
+			} else {
+				limitClause = fmt.Sprintf(" fetch next %d rows only", limit)
+			}
+		}
+
+		offsetClause := ""
+		if len(orderBy) > 0 && (offset > 0 || limit > 0) {
+			offsetClause = fmt.Sprintf(" offset %d rows", offset)
+		}
+		return "select " + prefix + columns + " from " + tables + whereClause + groupByClause + orderByClause + offsetClause + limitClause
 	}
 
-	return "select " + prefix + columns + " from " + tables + whereClause + groupByClause + orderByClause + offsetClause + limitClause
-}
-{{{ else }}}
-func SQLSelectGrouped(columns string, tables string, where string, groupBy string, orderBy string, limit int, offset int) string {
-	if columns == "" {
-		columns = "*"
-	}
-
-	whereClause := ""
-	if len(where) > 0 {
-		whereClause = whereSpaces + where
-	}
-
-	groupByClause := ""
-	if len(groupBy) > 0 {
-		groupByClause = " group by " + groupBy
-	}
-
-	orderByClause := ""
-	if len(orderBy) > 0 {
-		orderByClause = " order by " + orderBy
-	}
-
-	limitClause := ""
 	if limit > 0 {
 		limitClause = fmt.Sprintf(" limit %d", limit)
 	}
-
-	offsetClause := ""
 	if offset > 0 {
 		offsetClause = fmt.Sprintf(" offset %d", offset)
 	}
-
 	return "select " + columns + " from " + tables + whereClause + groupByClause + orderByClause + limitClause + offsetClause
 }
-{{{ end }}}
+
 func SQLInsert(table string, columns []string, rows int, placeholder string) string {
 	if rows <= 0 {
 		rows = 1
@@ -157,7 +134,7 @@ func SQLUpsert(table string, columns []string, rows int, conflicts []string, upd
 	return q
 }
 
-func SQLDelete(table string, where string) string {
+func SQLDelete(table string, where string, placeholder string) string {
 	if strings.TrimSpace(where) == "" {
 		return fmt.Sprintf("attempt to delete from [%s] with empty where clause", table)
 	}

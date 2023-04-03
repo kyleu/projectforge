@@ -23,16 +23,12 @@ func serviceGetMultipleSinglePK(m *model.Model, dbRef string, enums enum.Enums, 
 	ret.W("\tif len(%s) == 0 {", pk.Plural())
 	ret.W("\t\treturn %s{}, nil", m.ProperPlural())
 	ret.W("\t}")
-	placeholder := ""
-	if database == model.SQLServer {
-		placeholder = "@"
-	}
-	ret.W("\twc := database.SQLInClause(%q, len(%s), 0, %q)", pk.Name, pk.Plural(), placeholder)
+	ret.W("\twc := database.SQLInClause(%q, len(%s), 0, s.db.Placeholder())", pk.Name, pk.Plural())
 	if m.IsSoftDelete() {
 		ret.W("\twc = addDeletedClause(wc, includeDeleted)")
 	}
 	ret.W("\tret := rows{}")
-	ret.W("\tq := database.SQLSelectSimple(columnsString, %s, wc)", tableClauseFor(m))
+	ret.W("\tq := database.SQLSelectSimple(columnsString, %s, s.db.Placeholder(), wc)", tableClauseFor(m))
 	ret.W("\tvals := make([]any, 0, len(%s))", pk.Plural())
 	ret.W("\tfor _, x := range %s {", pk.Plural())
 	ret.W("\t\tvals = append(vals, x)")
@@ -76,7 +72,7 @@ func serviceGetMultipleManyPKs(m *model.Model, dbRef string) *golang.Block {
 		ret.W("\twc = addDeletedClause(wc, includeDeleted)")
 	}
 	ret.W("\tret := rows{}")
-	ret.W("\tq := database.SQLSelectSimple(columnsString, %s, wc)", tableClauseFor(m))
+	ret.W("\tq := database.SQLSelectSimple(columnsString, %s, s.db.Placeholder(), wc)", tableClauseFor(m))
 	ret.W("\tvals := make([]any, 0, len(pks)*%d)", len(pks))
 	ret.W("\tfor _, x := range pks {")
 	ret.W("\t\tvals = append(vals, %s)", strings.Join(refs, ", "))

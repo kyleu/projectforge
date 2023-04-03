@@ -5,9 +5,11 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
+	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/project/svg"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views"
 )
@@ -38,7 +40,17 @@ func cleanProject(st *app.State, prjKey string, logger util.Logger) error {
 		return err
 	}
 
+	fs := svcs.Projects.GetFilesystem(prj)
+
+	icons, err := svg.List(fs, logger)
+	if err != nil {
+		return err
+	}
+	forbidden := []string{"app", "check", "times", "down", "left", "right", "search", "up", "star"}
 	for _, m := range args.Models {
+		for slices.Contains(forbidden, m.Icon) {
+			m.Icon = icons[util.RandomInt(len(icons))]
+		}
 		m.AddTag("search")
 		for _, col := range m.Columns {
 			if col.PK {

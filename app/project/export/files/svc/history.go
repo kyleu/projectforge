@@ -47,7 +47,7 @@ func serviceHistoryVars(m *model.Model) *golang.Block {
 func serviceHistoryGetHistory(m *model.Model, dbRef string) *golang.Block {
 	ret := golang.NewBlock("GetHistory", "func")
 	ret.W("func (s *Service) GetHistory(ctx context.Context, tx *sqlx.Tx, id uuid.UUID, logger util.Logger) (*History, error) {")
-	ret.W("\tq := database.SQLSelectSimple(historyColumnsString, historyTableQuoted, \"id = $1\")")
+	ret.W("\tq := database.SQLSelectSimple(historyColumnsString, historyTableQuoted, s.db.Placeholder(), \"id = $1\")")
 	ret.W("\tret := historyRow{}")
 	ret.W("\terr := s.%s.Get(ctx, &ret, q, tx, logger, id)", dbRef)
 	ret.W("\tif err != nil {")
@@ -73,7 +73,7 @@ func serviceHistoryGetHistories(m *model.Model, dbRef string, enums enum.Enums) 
 		joins = append(joins, fmt.Sprintf("%s_%s = $%d", m.Name, pk.Name, idx+1))
 		logs = append(logs, pk.Camel()+" [%%v]")
 	}
-	ret.W("\tq := database.SQLSelectSimple(historyColumnsString, historyTableQuoted, %q)", strings.Join(joins, " and "))
+	ret.W("\tq := database.SQLSelectSimple(historyColumnsString, historyTableQuoted, s.db.Placeholder(), %q)", strings.Join(joins, " and "))
 	ret.W("\tret := historyRows{}")
 	ret.W("\terr := s.%s.Select(ctx, &ret, q, tx, logger, %s)", dbRef, strings.Join(pks.CamelNames(), ", "))
 	ret.W("\tif err != nil {")
@@ -93,7 +93,7 @@ func serviceHistorySaveHistory(m *model.Model) *golang.Block {
 	ret.W("\tif len(diffs) == 0 {")
 	ret.W("\t\treturn nil, nil")
 	ret.W("\t}")
-	ret.W("\tq := database.SQLInsert(historyTableQuoted, historyColumns, 1, \"\")")
+	ret.W("\tq := database.SQLInsert(historyTableQuoted, historyColumns, 1, s.db.Placeholder())")
 	ret.W("\th := &historyRow{")
 	max := m.PKs().MaxCamelLength() + len(m.Proper()) + 1
 	if max < 8 {

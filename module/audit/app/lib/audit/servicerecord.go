@@ -15,7 +15,7 @@ import (
 func (s *Service) RecordsForAudit(ctx context.Context, tx *sqlx.Tx, auditID uuid.UUID, params *filter.Params, logger util.Logger) (Records, error) {
 	params = params.Sanitize("audit_record", &filter.Ordering{Column: "occurred"})
 	wc := `"audit_id" = $1`
-	q := database.SQLSelect(recordColumnsString, recordTableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
+	q := database.SQLSelect(recordColumnsString, recordTableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
 	ret := recordRows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, auditID)
 	if err != nil {
@@ -25,7 +25,7 @@ func (s *Service) RecordsForAudit(ctx context.Context, tx *sqlx.Tx, auditID uuid
 }
 
 func (s *Service) GetRecord(ctx context.Context, tx *sqlx.Tx, id uuid.UUID, logger util.Logger) (*Record, error) {
-	q := database.SQLSelectSimple(recordColumnsString, recordTableQuoted, "id = $1")
+	q := database.SQLSelectSimple(recordColumnsString, recordTableQuoted, s.db.Placeholder(), "id = $1")
 	ret := &recordRow{}
 	err := s.db.Get(ctx, ret, q, tx, logger, id)
 	if err != nil {
@@ -38,7 +38,7 @@ func (s *Service) CreateRecords(ctx context.Context, tx *sqlx.Tx, logger util.Lo
 	if len(models) == 0 {
 		return nil
 	}
-	q := database.SQLInsert(recordTableQuoted, recordColumnsQuoted, len(models), "")
+	q := database.SQLInsert(recordTableQuoted, recordColumnsQuoted, len(models), s.db.Placeholder())
 	vals := make([]any, 0, len(models)*len(recordColumnsQuoted))
 	for _, arg := range models {
 		vals = append(vals, arg.ToData()...)

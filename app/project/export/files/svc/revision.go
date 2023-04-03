@@ -65,7 +65,7 @@ func serviceGetAllRevisions(m *model.Model, dbRef string, enums enum.Enums) (*go
 	if err != nil {
 		return nil, err
 	}
-	ret.W("\tq := database.SQLSelect(columnsString, tablesJoinedParam, wc, params.OrderByString(), params.Limit, params.Offset)")
+	ret.W("\tq := database.SQLSelect(columnsString, tablesJoinedParam, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())")
 	ret.W("\tret := rows{}")
 	ret.W("\terr := s.%s.Select(ctx, &ret, q, tx, logger, %s)", dbRef, strings.Join(pks.CamelNames(), ", "))
 	ret.W("\tif err != nil {")
@@ -95,7 +95,7 @@ func serviceGetRevision(m *model.Model, dbRef string, enums enum.Enums) (*golang
 	if err != nil {
 		return nil, err
 	}
-	ret.W("\tq := database.SQLSelectSimple(columnsString, tablesJoinedParam, wc)")
+	ret.W("\tq := database.SQLSelectSimple(columnsString, tablesJoinedParam, s.db.Placeholder(), wc)")
 	ret.W("\terr := s.%s.Get(ctx, ret, q, tx, logger, %s, %s)", dbRef, strings.Join(m.PKs().CamelNames(), ", "), revCol.Camel())
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, err")
@@ -185,7 +185,7 @@ func serviceGetCurrentRevisionsBlock(m *model.Model, ret *golang.Block, revCol *
 	ret.W("\tfor i := range models {")
 	ret.W("\t\tstmts = append(stmts, fmt.Sprintf(`%s`, %s))", strings.Join(pkWCStr, " and "), strings.Join(pkWCIdx, ", "))
 	ret.W("\t}")
-	ret.W("\tq := database.SQLSelectSimple(`%s, \"current_%s\"`, tableQuoted, strings.Join(stmts, \" or \"))", strings.Join(pks.NamesQuoted(), ", "), revCol.Name)
+	ret.W("\tq := database.SQLSelectSimple(`%s, \"current_%s\"`, tableQuoted, s.db.Placeholder(), strings.Join(stmts, \" or \"))", strings.Join(pks.NamesQuoted(), ", "), revCol.Name)
 	ret.W("\tvals := make([]any, 0, len(models))")
 	ret.W("\tfor _, model := range models {")
 	ret.W("\t\tvals = append(vals, %s)", strings.Join(pkModelRefs, ", "))
