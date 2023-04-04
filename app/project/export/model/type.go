@@ -76,9 +76,8 @@ func ToGoRowType(t types.Type, nullable bool, pkg string, enums enum.Enums, data
 		if t.Key() == types.KeyUUID && database == SQLServer {
 			if nullable {
 				return "*any", nil
-			} else {
-				return "mssql.UniqueIdentifier", nil
 			}
+			return "mssql.UniqueIdentifier", nil
 		}
 		if t.Scalar() && nullable {
 			switch t.Key() {

@@ -185,7 +185,8 @@ func serviceGetCurrentRevisionsBlock(m *model.Model, ret *golang.Block, revCol *
 	ret.W("\tfor i := range models {")
 	ret.W("\t\tstmts = append(stmts, fmt.Sprintf(`%s`, %s))", strings.Join(pkWCStr, " and "), strings.Join(pkWCIdx, ", "))
 	ret.W("\t}")
-	ret.W("\tq := database.SQLSelectSimple(`%s, \"current_%s\"`, tableQuoted, s.db.Placeholder(), strings.Join(stmts, \" or \"))", strings.Join(pks.NamesQuoted(), ", "), revCol.Name)
+	msg := "\tq := database.SQLSelectSimple(`%s, \"current_%s\"`, tableQuoted, s.db.Placeholder(), strings.Join(stmts, \" or \"))"
+	ret.W(msg, strings.Join(pks.NamesQuoted(), ", "), revCol.Name)
 	ret.W("\tvals := make([]any, 0, len(models))")
 	ret.W("\tfor _, model := range models {")
 	ret.W("\t\tvals = append(vals, %s)", strings.Join(pkModelRefs, ", "))

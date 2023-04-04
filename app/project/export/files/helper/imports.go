@@ -88,9 +88,8 @@ func importsForTypeCtxRow(t types.Type, database string) golang.Imports {
 	case types.KeyUUID:
 		if database == model.SQLServer {
 			return nil
-		} else {
-			return golang.Imports{ImpUUID}
 		}
+		return golang.Imports{ImpUUID}
 	default:
 		return nil
 	}

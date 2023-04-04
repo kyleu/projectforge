@@ -1,53 +1,32 @@
-package controller
+package action
 
 import (
+	"context"
 	"os"
 
 	"github.com/pkg/errors"
-	"github.com/valyala/fasthttp"
 	"golang.org/x/exp/slices"
 
-	"projectforge.dev/projectforge/app"
-	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/project/svg"
 	"projectforge.dev/projectforge/app/util"
-	"projectforge.dev/projectforge/views"
 )
 
-func Sandbox(rc *fasthttp.RequestCtx) {
-	Act("sandbox", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := cutil.RCRequiredString(rc, "key", true)
-		if err != nil {
-			return "", err
-		}
-		ps.Data = "OK"
-		err = cleanProject(as, key, ps.Logger)
-		if err != nil {
-			return "", err
-		}
-		return Render(rc, as, &views.Debug{}, ps)
-	})
-}
+const keyTag, keyTags = "tag", "tags"
 
-func cleanProject(st *app.State, prjKey string, logger util.Logger) error {
-	svcs := st.Services
-	prj, err := svcs.Projects.Get(prjKey)
-	if err != nil {
-		return err
-	}
-	args, err := prj.ModuleArgExport(svcs.Projects, logger)
-	if err != nil {
-		return err
+func onRules(ctx context.Context, pm *PrjAndMods) *Result {
+	ret := newResult(TypeRules, pm.Prj, pm.Cfg, pm.Logger)
+	if pm.EArgs == nil {
+		ret.Status = "OK"
+		return ret
 	}
 
-	fs := svcs.Projects.GetFilesystem(prj)
-
-	icons, err := svg.List(fs, logger)
+	fs := pm.PSvc.GetFilesystem(pm.Prj)
+	icons, err := svg.List(fs, pm.Logger)
 	if err != nil {
-		return err
+		return ret.WithError(err)
 	}
 	forbidden := []string{"app", "check", "times", "down", "left", "right", "search", "up", "star"}
-	for _, m := range args.Models {
+	for _, m := range pm.EArgs.Models {
 		for slices.Contains(forbidden, m.Icon) {
 			m.Icon = icons[util.RandomInt(len(icons))]
 		}
@@ -62,28 +41,43 @@ func cleanProject(st *app.State, prjKey string, logger util.Logger) error {
 
 	b, err := os.ReadFile("rules.json")
 	if err != nil {
-		return err
+		return ret.WithError(err)
 	}
 	rules := map[string]string{}
 	err = util.FromJSON(b, &rules)
 	if err != nil {
-		return err
+		return ret.WithError(err)
 	}
+
+	err = applyRules(pm, rules)
+	if err != nil {
+		return ret.WithError(err)
+	}
+
+	err = pm.PSvc.Save(pm.Prj, pm.Logger)
+	if err != nil {
+		return ret.WithError(err)
+	}
+
+	return ret
+}
+
+func applyRules(pm *PrjAndMods, rules map[string]string) error {
 	for k, v := range rules {
 		split := util.StringSplitAndTrim(k, ".")
 		if split[0] == "disabled" {
 			continue
 		}
-		m := args.Models.Get(split[0])
+		m := pm.EArgs.Models.Get(split[0])
 		if m == nil {
 			return errors.Errorf("no model found with name [%s]", split[0])
 		}
 		switch split[1] {
 		case "group":
 			m.Group = util.StringSplitAndTrim(v, ".")
-		case "tag":
+		case keyTag:
 			m.AddTag(v)
-		case "tags":
+		case keyTags:
 			for _, t := range util.StringSplitAndTrim(v, ",") {
 				m.AddTag(t)
 			}
@@ -97,9 +91,9 @@ func cleanProject(st *app.State, prjKey string, logger util.Logger) error {
 				col.Display = v
 			case "format":
 				col.Format = v
-			case "tag":
+			case keyTag:
 				col.AddTag(v)
-			case "tags":
+			case keyTags:
 				for _, t := range util.StringSplitAndTrim(v, ",") {
 					col.AddTag(t)
 				}
@@ -110,11 +104,5 @@ func cleanProject(st *app.State, prjKey string, logger util.Logger) error {
 			}
 		}
 	}
-
-	err = svcs.Projects.Save(prj, logger)
-	if err != nil {
-		return err
-	}
-
 	return nil
 }

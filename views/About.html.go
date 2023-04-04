@@ -57,7 +57,7 @@ func (p *About) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
     <h3>Help</h3>
 `)
 //line views/About.html:19
-	qw422016.N().S(`    <p>Using code generation, the latest technology, and a strong standard library, Project Forge will manage your project's code, assets, UI and UX.</p>
+	qw422016.N().S(`    <p>Using code generation, the latest technology, and a strong standard library, Project Forge will helpmanage your project's code, assets, UI and UX.</p>
     `)
 //line views/About.html:21
 	components.StreamBragApp(qw422016)

@@ -151,7 +151,7 @@ func (m *Model) AllSearches(database string) []string {
 	ret := slices.Clone(m.Search)
 	for _, c := range m.Columns {
 		if c.Search {
-			var x string = c.Name
+			x := c.Name
 			if c.Type.Key() != types.KeyString {
 				if database == SQLServer {
 					x = fmt.Sprintf("cast(%s as nvarchar(2048))", c.Name)

@@ -52,8 +52,8 @@ func (p *Home) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/Home.html:23
 	qw422016.N().S(`</h3>
     <div class="mt">
-      <div>Project Forge manages web projects written in the Go language.</div>
-      <p><em>Using code generation, the latest technology, and a strong standard library, Project Forge will manage your project's code, assets, UI and UX.</em></p>
+      <div>Project Forge manages projects written in the Go language.</div>
+      <p><em>Using code generation, the latest technology, and a strong standard library, Project Forge will help manage your project's code, assets, UI and UX.</em></p>
       <a href="/about"><button>Learn More</button></a>
     </div>
   </div>

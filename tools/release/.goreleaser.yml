@@ -22,7 +22,7 @@ brews:
       email: "kyle@kyleu.com"
     folder: Formula
     homepage: "https://projectforge.dev"
-    description: "Project Forge creates and manages web projects written in the Go language. Using code generation, the latest technology, and a strong standard library, Project Forge will manage your project's code, assets, UI and UX."
+    description: "Project Forge creates and manages projects written in the Go language. Using code generation, the latest technology, and a strong standard library, Project Forge will help manage your project's code, assets, UI and UX."
     license: "Proprietary"
     skip_upload: "false"
     install: "bin.install \"projectforge\""
@@ -62,7 +62,7 @@ nfpms:
     vendor: "Kyle"
     homepage: "https://projectforge.dev}"
     maintainer: "Kyle <kyle@kyleu.com>"
-    description: "Project Forge creates and manages web projects written in the Go language. Using code generation, the latest technology, and a strong standard library, Project Forge will manage your project's code, assets, UI and UX."
+    description: "Project Forge creates and manages projects written in the Go language. Using code generation, the latest technology, and a strong standard library, Project Forge will help manage your project's code, assets, UI and UX."
     license: "Proprietary"
     replacements: *replacements
     formats:
@@ -99,7 +99,7 @@ snapcrafts:
     publish: false
     replacements: *replacements
     summary: "Build and maintain feature-rich applications using Golang"
-    description: "Project Forge creates and manages web projects written in the Go language. Using code generation, the latest technology, and a strong standard library, Project Forge will manage your project's code, assets, UI and UX."
+    description: "Project Forge creates and manages projects written in the Go language. Using code generation, the latest technology, and a strong standard library, Project Forge will help manage your project's code, assets, UI and UX."
     grade: stable
     confinement: strict
     license: "Proprietary"

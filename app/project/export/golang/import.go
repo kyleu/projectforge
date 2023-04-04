@@ -32,7 +32,6 @@ func (i *Import) Render() string {
 		alias = i.Alias + " "
 	}
 	return fmt.Sprintf("%s%q", alias, i.Value)
-
 }
 
 func NewImport(t ImportType, v string) *Import {

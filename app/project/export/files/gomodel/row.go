@@ -148,7 +148,8 @@ func modelRowToModel(g *golang.File, m *model.Model, database string) (*golang.B
 			ret.W("\t_ = util.FromJSON(r.%s, %sArg)", c.Proper(), c.Camel())
 			refs = append(refs, fmt.Sprintf("%s %sArg", k, c.Camel()))
 		default:
-			if c.Type.Scalar() && c.Nullable {
+			switch {
+			case c.Type.Scalar() && c.Nullable:
 				switch c.Type.Key() {
 				case types.KeyString:
 					refs = append(refs, fmt.Sprintf("%s r.%s.String", k, c.Proper()))
@@ -161,13 +162,13 @@ func modelRowToModel(g *golang.File, m *model.Model, database string) (*golang.B
 				default:
 					refs = append(refs, fmt.Sprintf("%s r.%s", k, c.Proper()))
 				}
-			} else if database == model.SQLServer && c.Type.Key() == types.KeyUUID {
+			case database == model.SQLServer && c.Type.Key() == types.KeyUUID:
 				if c.Nullable {
 					refs = append(refs, fmt.Sprintf("%s database.UUIDFromGUID(r.%s)", k, c.Proper()))
 				} else {
 					refs = append(refs, fmt.Sprintf("%s util.UUIDFromStringOK(r.%s.String())", k, c.Proper()))
 				}
-			} else {
+			default:
 				refs = append(refs, fmt.Sprintf("%s r.%s", k, c.Proper()))
 			}
 		}
