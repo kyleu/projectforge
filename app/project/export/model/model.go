@@ -91,7 +91,7 @@ func (m *Model) RelationsFor(col *Column) Relations {
 }
 
 func (m *Model) CanTraverseRelation() bool {
-	return len(m.PKs()) == 1 && len(m.Columns.WithTag("title")) > 0
+	return len(m.PKs()) == 1
 }
 
 func (m *Model) PackageWithGroup(prefix string) string {

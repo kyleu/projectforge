@@ -40,7 +40,6 @@ func exportViewListClass(m *model.Model, models model.Models, g *golang.Template
 
 func exportViewListBody(m *model.Model, models model.Models) *golang.Block {
 	ret := golang.NewBlock("ListBody", "func")
-
 	suffix := ""
 	for _, rel := range m.Relations {
 		if relModel := models.Get(rel.Table); relModel.CanTraverseRelation() {

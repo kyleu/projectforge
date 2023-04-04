@@ -64,15 +64,15 @@ func controllerList(m *model.Model, grp *model.Column, models model.Models, enum
 			return nil, err
 		}
 
-		ret.W("\t\t%sIDs := make([]%s, 0, len(ret))", relModel.Camel(), gt)
+		ret.W("\t\t%sIDsBy%s := make([]%s, 0, len(ret))", relModel.Camel(), srcCol.Proper(), gt)
 		ret.W("\t\tfor _, x := range ret {")
-		ret.W("\t\t\t%sIDs = append(%sIDs, x.%s)", relModel.Camel(), relModel.Camel(), srcCol.Proper())
+		ret.W("\t\t\t%sIDsBy%s = append(%sIDsBy%s, x.%s)", relModel.Camel(), srcCol.Proper(), relModel.Camel(), srcCol.Proper(), srcCol.Proper())
 		ret.W("\t\t}")
 		suffix := ""
 		if relModel.IsSoftDelete() {
 			suffix = ", false"
 		}
-		c := fmt.Sprintf("%sIDs", relModel.Camel())
+		c := fmt.Sprintf("%sIDsBy%s", relModel.Camel(), srcCol.Proper())
 		if srcCol.Nullable && !tgtCol.Nullable {
 			c = "util.ArrayDefererence(" + c + ")"
 		}

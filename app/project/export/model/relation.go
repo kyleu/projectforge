@@ -30,7 +30,7 @@ func (r *Relation) TgtQuoted() any {
 }
 
 func (r *Relation) WebPath(src *Model, tgt *Model, prefix string) any {
-	url := "`/" + tgt.PackageWithGroup("") + "`"
+	url := "`/" + tgt.Route() + "`"
 	for _, s := range r.Src {
 		c := src.Columns.Get(s)
 		url += "+`/`+" + c.ToGoString(prefix)
