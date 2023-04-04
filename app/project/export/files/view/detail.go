@@ -66,7 +66,7 @@ func exportViewDetailClass(m *model.Model, models model.Models, g *golang.Templa
 	for _, rel := range rrs {
 		rm := models.Get(rel.Table)
 		rCols := rel.TgtColumns(rm)
-		ret.W(commonLine, rm.ProperPlural(), strings.Join(rCols.ProperNames(), ""), rm.Package, rm.ProperPlural())
+		ret.W(commonLine, "Rel"+rm.ProperPlural(), strings.Join(rCols.ProperNames(), ""), rm.Package, rm.ProperPlural())
 	}
 	if m.IsRevision() {
 		ret.W("  %s %s.%s", m.HistoryColumn().ProperPlural(), m.Package, m.ProperPlural())
@@ -126,7 +126,7 @@ func exportViewDetailRelations(ret *golang.Block, m *model.Model, models model.M
 		tgt := models.Get(rel.Table)
 		tgtCols := rel.TgtColumns(tgt)
 		tgtName := fmt.Sprintf("%sBy%s", tgt.ProperPlural(), strings.Join(tgtCols.ProperNames(), ""))
-		ret.W("  {%%%%- if len(p.%s) > 0 -%%%%}", tgtName)
+		ret.W("  {%%%%- if len(p.Rel%s) > 0 -%%%%}", tgtName)
 		ret.W("  <div class=\"card\">")
 		const msg = "    <h3>{%%%%= components.SVGRefIcon(`%s`, ps) %%%%} Related %s by [%s]</h3>"
 		ret.W(msg, tgt.Icon, tgt.TitlePluralLower(), strings.Join(rel.TgtColumns(tgt).TitlesLower(), ", "))
@@ -138,9 +138,9 @@ func exportViewDetailRelations(ret *golang.Block, m *model.Model, models model.M
 		}
 		ret.W("    <div class=\"overflow clear\">")
 		if m.PackageWithGroup("") == tgt.PackageWithGroup("") {
-			ret.W("      {%%%%= Table(p.%s%s, p.Params, as, ps) %%%%}", tgtName, addons)
+			ret.W("      {%%%%= Table(p.Rel%s%s, p.Params, as, ps) %%%%}", tgtName, addons)
 		} else {
-			ret.W("      {%%%%= v%s.Table(p.%s%s, p.Params, as, ps) %%%%}", tgt.Package, tgtName, addons)
+			ret.W("      {%%%%= v%s.Table(p.Rel%s%s, p.Params, as, ps) %%%%}", tgt.Package, tgtName, addons)
 		}
 		ret.W("    </div>")
 		ret.W("  </div>")

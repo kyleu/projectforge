@@ -74,6 +74,7 @@ func controllerList(m *model.Model, grp *model.Column, models model.Models, enum
 		}
 		c := fmt.Sprintf("%sIDsBy%s", relModel.Camel(), srcCol.Proper())
 		if srcCol.Nullable && !tgtCol.Nullable {
+			g.AddImport(helper.ImpAppUtil)
 			c = "util.ArrayDefererence(" + c + ")"
 		}
 		call := "\t\t%sBy%s, err := as.Services.%s.GetMultiple(ps.Context, nil%s, ps.Logger, %s...)"

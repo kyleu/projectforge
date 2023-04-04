@@ -71,7 +71,7 @@ func controllerDetail(models model.Models, m *model.Model, grp *model.Column, pr
 		ret.W("\t\tif err != nil {")
 		ret.W("\t\t\treturn \"\", errors.Wrap(err, \"unable to retrieve child %s\")", rm.TitlePluralLower())
 		ret.W("\t\t}")
-		argAdd(fmt.Sprintf("%sBy%s", rm.ProperPlural(), rNames), fmt.Sprintf("%sBy%s", rm.CamelPlural(), rNames))
+		argAdd(fmt.Sprintf("Rel%sBy%s", rm.ProperPlural(), rNames), fmt.Sprintf("%sBy%s", rm.CamelPlural(), rNames))
 	}
 	if m.IsRevision() {
 		revCol := m.HistoryColumn()
