@@ -4,12 +4,13 @@ import (
 	"fmt"
 	"strings"
 
+	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func controllerDetail(models model.Models, m *model.Model, grp *model.Column, prefix string) *golang.Block {
+func controllerDetail(models model.Models, m *model.Model, grp *model.Column, g *golang.File, prefix string) *golang.Block {
 	rrels := models.ReverseRelations(m.Name)
 	ret := blockFor(m, prefix, grp, (len(rrels)*6)+40, "detail")
 	grpHistory := ""
@@ -40,46 +41,11 @@ func controllerDetail(models model.Models, m *model.Model, grp *model.Column, pr
 			break
 		}
 	}
-
 	if shouldIncDel {
 		ret.W("\t\tincDel := cutil.QueryStringBool(rc, \"includeDeleted\")")
 	}
-
-	var argKeys []string
-	var argVals []string
-	argAdd := func(k string, v string) {
-		argKeys = append(argKeys, k)
-		argVals = append(argVals, v)
-	}
-	argAdd("Model", "ret")
-
-	if m.IsRevision() || m.IsHistory() || len(rrels) > 0 {
-		argAdd("Params", "ps.Params")
-	}
-	for _, rel := range rrels {
-		rm := models.Get(rel.Table)
-		delSuffix := ""
-		if rm.IsSoftDelete() {
-			delSuffix = ", incDel"
-		}
-		lCols := rel.SrcColumns(m)
-		rCols := rel.TgtColumns(rm)
-		rNames := strings.Join(rCols.ProperNames(), "")
-		ret.W("\t\t%sBy%sPrms := ps.Params.Get(%q, nil, ps.Logger).Sanitize(%q)", rm.CamelPlural(), rNames, rm.Package, rm.Package)
-		const msg = "\t\t%sBy%s, err := as.Services.%s.GetBy%s(ps.Context, nil, %s, %sBy%sPrms%s, ps.Logger)"
-		ret.W(msg, rm.CamelPlural(), rNames, rm.Proper(), rNames, lCols.ToRefs("ret.", rCols...), rm.CamelPlural(), rNames, delSuffix)
-		ret.W("\t\tif err != nil {")
-		ret.W("\t\t\treturn \"\", errors.Wrap(err, \"unable to retrieve child %s\")", rm.TitlePluralLower())
-		ret.W("\t\t}")
-		argAdd(fmt.Sprintf("Rel%sBy%s", rm.ProperPlural(), rNames), fmt.Sprintf("%sBy%s", rm.CamelPlural(), rNames))
-	}
-	if m.IsRevision() {
-		revCol := m.HistoryColumn()
-		argAdd(revCol.ProperPlural(), revCol.CamelPlural())
-	}
-	if m.IsHistory() {
-		argAdd("Histories", "hist")
-	}
+	ret.W("")
+	argKeys, argVals := getArgs(models, m, rrels, g, ret)
 	if len(argKeys) <= 2 {
 		args := make([]string, 0, len(argKeys))
 		for idx, k := range argKeys {
@@ -98,4 +64,74 @@ func controllerDetail(models model.Models, m *model.Model, grp *model.Column, pr
 	ret.W("\t})")
 	ret.W("}")
 	return ret
+}
+
+func getArgs(models model.Models, m *model.Model, rrels model.Relations, g *golang.File, ret *golang.Block) ([]string, []string) {
+	var argKeys []string
+	var argVals []string
+	argAdd := func(k string, v string) {
+		argKeys = append(argKeys, k)
+		argVals = append(argVals, v)
+	}
+	argAdd("Model", "ret")
+	for _, rel := range m.Relations {
+		rm := models.Get(rel.Table)
+		lCols := rel.SrcColumns(m)
+
+		lNames := strings.Join(lCols.ProperNames(), "")
+		argAdd(fmt.Sprintf("%sBy%s", rm.Proper(), lNames), fmt.Sprintf("%sBy%s", rm.Camel(), lNames))
+
+		var conditions []string
+		var args []string
+		for _, col := range lCols {
+			if col.Nullable {
+				conditions = append(conditions, fmt.Sprintf("ret.%s != nil", col.Proper()))
+				args = append(args, fmt.Sprintf("*ret.%s", col.Proper()))
+			} else {
+				args = append(args, fmt.Sprintf("ret.%s", col.Proper()))
+			}
+		}
+		suffix := rm.SoftDeleteSuffix()
+		if len(conditions) == 0 {
+			ret.W("\t\t%sBy%s, _ := as.Services.%s.Get(ps.Context, nil, %s%s, ps.Logger)", rm.Camel(), lNames, rm.Proper(), strings.Join(args, ", "), suffix)
+		} else {
+			g.AddImport(helper.AppImport("app/" + rm.PackageWithGroup("")))
+			ret.W("\t\tvar %sBy%s *%s.%s", rm.Camel(), lNames, rm.Package, rm.Proper())
+			ret.W("\t\tif %s {", strings.Join(conditions, " && "))
+			ret.W("\t\t\t%sBy%s, _ = as.Services.%s.Get(ps.Context, nil, %s%s, ps.Logger)", rm.Camel(), lNames, rm.Proper(), strings.Join(args, ", "), suffix)
+			ret.W("\t\t}")
+		}
+	}
+	if len(m.Relations) > 0 {
+		ret.W("")
+	}
+	if m.IsRevision() || m.IsHistory() || len(rrels) > 0 {
+		argAdd("Params", "ps.Params")
+	}
+	for _, rrel := range rrels {
+		rm := models.Get(rrel.Table)
+		delSuffix := ""
+		if rm.IsSoftDelete() {
+			delSuffix = ", incDel"
+		}
+		lCols := rrel.SrcColumns(m)
+		rCols := rrel.TgtColumns(rm)
+		rNames := strings.Join(rCols.ProperNames(), "")
+		argAdd(fmt.Sprintf("Rel%sBy%s", rm.ProperPlural(), rNames), fmt.Sprintf("rel%sBy%s", rm.ProperPlural(), rNames))
+
+		ret.W("\t\trel%sBy%sPrms := ps.Params.Get(%q, nil, ps.Logger).Sanitize(%q)", rm.ProperPlural(), rNames, rm.Package, rm.Package)
+		const msg = "\t\trel%sBy%s, err := as.Services.%s.GetBy%s(ps.Context, nil, %s, rel%sBy%sPrms%s, ps.Logger)"
+		ret.W(msg, rm.ProperPlural(), rNames, rm.Proper(), rNames, lCols.ToRefs("ret.", rCols...), rm.ProperPlural(), rNames, delSuffix)
+		ret.W("\t\tif err != nil {")
+		ret.W("\t\t\treturn \"\", errors.Wrap(err, \"unable to retrieve child %s\")", rm.TitlePluralLower())
+		ret.W("\t\t}")
+	}
+	if m.IsRevision() {
+		revCol := m.HistoryColumn()
+		argAdd(revCol.ProperPlural(), revCol.CamelPlural())
+	}
+	if m.IsHistory() {
+		argAdd("Histories", "hist")
+	}
+	return argKeys, argVals
 }

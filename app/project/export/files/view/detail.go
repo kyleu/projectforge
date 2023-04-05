@@ -4,11 +4,15 @@ import (
 	"fmt"
 	"strings"
 
+	"golang.org/x/exp/slices"
+
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/util"
 )
 
 const commonLine = "  %sBy%s %s.%s"
@@ -52,12 +56,11 @@ func exportViewDetailClass(m *model.Model, models model.Models, g *golang.Templa
 		g.AddImport(helper.ImpAppUtil)
 	}
 	for _, rel := range m.Relations {
-		if relModel := models.Get(rel.Table); relModel.CanTraverseRelation() {
-			relCols := rel.SrcColumns(m)
-			relNames := strings.Join(relCols.ProperNames(), "")
-			g.AddImport(helper.AppImport("app/" + relModel.PackageWithGroup("")))
-			ret.W(commonLine, relModel.ProperPlural(), relNames, relModel.Package, relModel.ProperPlural())
-		}
+		relModel := models.Get(rel.Table)
+		relCols := rel.SrcColumns(m)
+		relNames := strings.Join(relCols.ProperNames(), "")
+		g.AddImport(helper.AppImport("app/" + relModel.PackageWithGroup("")))
+		ret.W(commonLine, relModel.Proper(), relNames, "*"+relModel.Package, relModel.Proper())
 	}
 
 	if len(rrs) > 0 || m.IsRevision() || m.IsHistory() {
@@ -94,7 +97,7 @@ func exportViewDetailBody(g *golang.Template, m *model.Model, models model.Model
 			return nil, err
 		}
 		ret.W(`          <th class="shrink" title="%s">%s</th>`, h, col.Title())
-		viewTableColumn(g, ret, models, m, false, col, "p.Model.", "p.", 5)
+		viewDetailColumn(g, ret, models, m, false, col, "p.Model.", "p.", 5)
 		ret.W("        </tr>")
 	}
 	ret.W("      </tbody>")
@@ -146,4 +149,60 @@ func exportViewDetailRelations(ret *golang.Block, m *model.Model, models model.M
 		ret.W("  </div>")
 		ret.W("  {%%- endif -%%}")
 	}
+}
+
+func viewDetailColumn(
+	g *golang.Template, ret *golang.Block, models model.Models, m *model.Model, link bool, col *model.Column, modelKey string, prefix string, indent int,
+) {
+	ind := util.StringRepeat("  ", indent)
+	rels := m.RelationsFor(col)
+	if len(rels) == 0 {
+		switch {
+		case col.PK && link:
+			ret.W(ind+"<td><a href=%q>%s</a></td>", m.LinkURL(modelKey), col.ToGoViewString(modelKey, true, false))
+		case col.HasTag("grouped"):
+			u := fmt.Sprintf("/%s/%s/%s", m.Route(), col.TitleLower(), col.ToGoViewString(modelKey, false, true))
+			ret.W(ind+"<td><a href=%q>%s</a></td>", u, col.ToGoViewString(modelKey, true, false))
+		case col.HasTag("title"):
+			ret.W(ind + "<td><strong>" + col.ToGoViewString(modelKey, true, false) + "</strong></td>")
+		default:
+			ret.W(ind + "<td>" + col.ToGoViewString(modelKey, true, false) + "</td>")
+		}
+		return
+	}
+
+	var toStrings string
+	for _, rel := range rels {
+		relModel := models.Get(rel.Table)
+		lCols := rel.SrcColumns(m)
+		lNames := strings.Join(lCols.ProperNames(), "")
+
+		msg := "{%%%% if p.%sBy%s != nil %%%%} ({%%%%s p.%sBy%s.TitleString() %%%%}){%%%% endif %%%%}"
+		toStrings += fmt.Sprintf(msg, relModel.Proper(), lNames, relModel.Proper(), lNames)
+	}
+
+	ret.W(ind + "<td class=\"nowrap\">")
+	if col.PK && link {
+		ret.W(ind + "  <a href=\"" + m.LinkURL(modelKey) + "\">" + col.ToGoViewString(modelKey, true, false) + toStrings + "</a>")
+	} else {
+		ret.W(ind + "  " + col.ToGoViewString(modelKey, true, false) + toStrings)
+	}
+	const l = "<a title=%q href=\"{%%%%s %s %%%%}\">{%%%%= components.SVGRef(%q, 18, 18, \"\", ps) %%%%}</a>"
+	const msgNotNull = "%s  " + l
+	const msg = "%s  {%%%% if %s%s != nil %%%%}" + l + "{%%%% endif %%%%}"
+	for _, rel := range rels {
+		if slices.Contains(rel.Src, col.Name) {
+			switch col.Type.Key() {
+			case types.KeyBool, types.KeyInt, types.KeyFloat:
+				g.AddImport(helper.ImpFmt)
+			}
+			relModel := models.Get(rel.Table)
+			if col.Nullable {
+				ret.W(msg, ind, modelKey, col.Proper(), relModel.Title(), rel.WebPath(m, relModel, modelKey), relModel.Icon)
+			} else {
+				ret.W(msgNotNull, ind, relModel.Title(), rel.WebPath(m, relModel, modelKey), relModel.Icon)
+			}
+		}
+	}
+	ret.W(ind + "</td>")
 }

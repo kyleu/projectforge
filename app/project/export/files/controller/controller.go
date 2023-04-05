@@ -37,7 +37,7 @@ func Controller(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 	if err != nil {
 		return nil, err
 	}
-	g.AddBlocks(cl, controllerDetail(args.Models, m, nil, prefix))
+	g.AddBlocks(cl, controllerDetail(args.Models, m, nil, g, prefix))
 	if m.IsRevision() {
 		g.AddBlocks(controllerRevision(m, prefix))
 	}
