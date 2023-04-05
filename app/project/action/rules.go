@@ -3,6 +3,7 @@ package action
 import (
 	"context"
 	"os"
+	"strings"
 
 	"github.com/pkg/errors"
 	"golang.org/x/exp/slices"
@@ -32,6 +33,10 @@ func onRules(ctx context.Context, pm *PrjAndMods) *Result {
 		}
 		m.AddTag("search")
 		for _, col := range m.Columns {
+			switch strings.ToLower(col.Name) {
+			case "name", "title":
+				col.AddTag("title")
+			}
 			if col.PK {
 				col.Search = true
 				col.RemoveTag("search")
