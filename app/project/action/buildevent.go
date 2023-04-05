@@ -59,7 +59,7 @@ func onDeps(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
 
 func onImports(ctx context.Context, pm *PrjAndMods, r *Result) *Result {
 	fixStr := r.Args.GetStringOpt("fix")
-	fix := fixStr == "true"
+	fix := fixStr == keyTrue
 	fileStr := r.Args.GetStringOpt("file")
 	t := util.TimerStart()
 	logs, diffs, err := build.Imports(pm.Prj.Package, fix, fileStr, pm.PSvc.GetFilesystem(pm.Prj), pm.Logger)

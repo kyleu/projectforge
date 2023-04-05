@@ -12,7 +12,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-const keyTag, keyTags = "tag", "tags"
+const keyTrue, keyTag, keyTags = "true", "tag", "tags"
 
 func onRules(ctx context.Context, pm *PrjAndMods) *Result {
 	ret := newResult(TypeRules, pm.Prj, pm.Cfg, pm.Logger)
@@ -105,7 +105,7 @@ func applyRules(pm *PrjAndMods, rules map[string]string) error {
 					col.AddTag(t)
 				}
 			case "search":
-				col.Search = v == "true"
+				col.Search = v == keyTrue
 			default:
 				return errors.Errorf("unable to handle action [%s] for [%s.%s]", split[2], split[0], split[1])
 			}
