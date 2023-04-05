@@ -35,7 +35,9 @@ func onRules(ctx context.Context, pm *PrjAndMods) *Result {
 		for _, col := range m.Columns {
 			switch strings.ToLower(col.Name) {
 			case "name", "title":
-				col.AddTag("title")
+				if len(m.Columns.WithTag("title")) == 0 {
+					col.AddTag("title")
+				}
 			}
 			if col.PK {
 				col.Search = true
