@@ -9,7 +9,7 @@ class FullScreenWKWebView: WKWebView {
 
 }
 
-final class WebViewWrapper : UIViewRepresentable {
+struct WebViewWrapper : UIViewRepresentable {
     let view: FullScreenWKWebView
 
     init(url: URLRequest) {

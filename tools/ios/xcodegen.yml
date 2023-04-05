@@ -11,6 +11,7 @@ targets:
     dependencies:
       - framework: ../mobile_ios_arm64/projectforgeServer.xcframework
         embed: false
+      - sdk: libresolv.tbd
     info:
       path: Info.plist
       properties:
