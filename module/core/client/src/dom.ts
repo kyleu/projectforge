@@ -1,7 +1,4 @@
-{{{ if .HasModule "jsx" }}}// @ts-ignore
-import * as JSX from "./jsx"; // eslint-disable-line @typescript-eslint/no-unused-vars
-
-{{{ end }}}export function els<T extends HTMLElement>(selector: string, context?: Element): readonly T[] {
+export function els<T extends HTMLElement>(selector: string, context?: Element): readonly T[] {
   let result: NodeListOf<Element>;
   if (context) {
     result = context.querySelectorAll(selector);
@@ -55,21 +52,7 @@ export function setDisplay(el: string | HTMLElement, condition: boolean, v = "bl
 export function clear(el: string | HTMLElement) {
   return setHTML(el, "");
 }
-{{{ if .HasModule "jsx" }}}
-export function setContent(el: string | HTMLElement, e: Element | Element[]) {
-  if (typeof el === "string") {
-    el = req(el);
-  }
-  clear(el);
-  const h = el as HTMLElement;
-  if (Array.isArray(e)) {
-    e.forEach((x) => h.appendChild(x));
-  } else {
-    el.appendChild(e);
-  }
-  return el;
-}
-{{{ end }}}
+
 export function setText(el: string | HTMLElement, text: string): HTMLElement {
   if (typeof el === "string") {
     el = req(el);
