@@ -18,8 +18,8 @@ brews:
       owner: "kyleu"
       name: "homebrew-kyleu"
     commit_author:
-      name: "Kyle"
-      email: "kyle@kyleu.com"
+      name: "Kyle U"
+      email: "projectforge@kyleu.com"
     folder: Formula
     homepage: "https://projectforge.dev"
     description: "Project Forge creates and manages projects written in the Go language. Using code generation, the latest technology, and a strong standard library, Project Forge will help manage your project's code, assets, UI and UX."
@@ -59,9 +59,9 @@ dist: "build/dist"
 
 nfpms:
   -
-    vendor: "Kyle"
+    vendor: "Kyle U"
     homepage: "https://projectforge.dev}"
-    maintainer: "Kyle <kyle@kyleu.com>"
+    maintainer: "Kyle U <projectforge@kyleu.com>"
     description: "Project Forge creates and manages projects written in the Go language. Using code generation, the latest technology, and a strong standard library, Project Forge will help manage your project's code, assets, UI and UX."
     license: "Proprietary"
     replacements: *replacements

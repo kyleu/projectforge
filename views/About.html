@@ -30,12 +30,20 @@
     <div class="mt">Your project is your own, use any license you'd like.</div>
     {%- comment %}$PF_SECTION_END(help)${% endcomment -%}
   </div>
+  {%= SourceCode() %}
   {%= Feedback() %}
+{% endfunc %}
+
+{% func SourceCode() %}
+<div class="card">
+  <h3>Source Code</h3>
+  <p>The project is available on <a href="https://github.com/kyleu/projectforge" target="_blank">GitHub</a></p>
+</div>
 {% endfunc %}
 
 {% func Feedback() %}
 <div class="card">
   <h3>Feedback</h3>
-  <p>For now, email <a href="mailto:kyle@kyleu.com">Kyle</a></p>
+  <p>For now, email <a href="mailto:projectforge@kyleu.com">Kyle U</a></p>
 </div>
 {% endfunc %}

@@ -18,9 +18,17 @@
     {%- comment %}$PF_SECTION_START(help)${% endcomment -%}
     <p>Coming soon...</p>
     {%- comment %}$PF_SECTION_END(help)${% endcomment -%}
-  </div>
+  </div>{{{ if .Build.Private }}}{{{ else }}}
+  {%= SourceCode() %}{{{ end }}}
   {%= Feedback() %}
-{% endfunc %}
+{% endfunc %}{{{ if .Build.Private }}}{{{ else }}}
+
+{% func SourceCode() %}
+<div class="card">
+  <h3>Source Code</h3>
+  <p>The project is available on <a href="{{{ .Info.Sourcecode }}}" target="_blank">GitHub</a></p>
+</div>
+{% endfunc %}{{{ end }}}
 
 {% func Feedback() %}
 <div class="card">

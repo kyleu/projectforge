@@ -1,7 +1,7 @@
 # Content managed by Project Forge, see [projectforge.md] for details.
 FROM --platform=linux/amd64 ghcr.io/gythialy/golang-cross:v1.20.2-0 AS builder
 
-LABEL maintainer="kyle@kyleu.com"
+LABEL maintainer="projectforge@kyleu.com"
 ENV PATH=${OSX_CROSS_PATH}/target/bin:$PATH:${GOPATH}/bin
 ENV CGO_ENABLED=1
 
