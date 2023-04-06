@@ -120,7 +120,7 @@ func exportViewEditRelation(m *model.Model, rel *model.Relation, p *project.Proj
 	src := m.Columns.Get(rel.Src[0])
 	tgt := relModel.Columns.Get(rel.Tgt[0])
 
-	title := ""
+	var title string
 	if titles := relModel.Columns.Searches(); len(titles) > 0 {
 		var refs []string
 		for _, title := range titles {

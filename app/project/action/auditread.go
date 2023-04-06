@@ -1,7 +1,6 @@
 package action
 
 import (
-	"context"
 	"path"
 
 	"github.com/pkg/errors"
@@ -31,7 +30,7 @@ func getGeneratedFiles(tgt filesystem.FileLoader, ignore []string, logger util.L
 	return ret, nil
 }
 
-func getModuleFiles(ctx context.Context, pm *PrjAndMods) ([]string, error) {
+func getModuleFiles(pm *PrjAndMods) ([]string, error) {
 	ret, err := pm.MSvc.GetFilenames(pm.Mods, pm.Logger)
 	if err != nil {
 		return nil, err
@@ -43,7 +42,7 @@ func getModuleFiles(ctx context.Context, pm *PrjAndMods) ([]string, error) {
 			return nil, err
 		}
 		args.Modules = pm.Mods.Keys()
-		files, e := pm.ESvc.Files(ctx, pm.Prj, args, true, pm.Logger)
+		files, e := pm.ESvc.Files(pm.Prj, args, true)
 		if e != nil {
 			return nil, err
 		}

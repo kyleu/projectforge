@@ -120,7 +120,7 @@ func (c *Column) BC() string {
 	return fmt.Sprintf(", %q", c.Camel())
 }
 
-func (c *Column) NeedsErr(mdl string, database string) bool {
+func (c *Column) NeedsErr(_ string, database string) bool {
 	if database == SQLServer && c.Type.Key() == types.KeyUUID && c.Nullable {
 		return true
 	}

@@ -12,16 +12,16 @@ import (
 )
 
 func Build(fs filesystem.FileLoader, logger util.Logger) (int, error) {
-	return Run(fs, "client/src/svg", "app/util/svg.go", logger)
+	return Run(fs, "app/util/svg.go", logger)
 }
 
-func Run(fs filesystem.FileLoader, src string, tgt string, logger util.Logger) (int, error) {
+func Run(fs filesystem.FileLoader, tgt string, logger util.Logger) (int, error) {
 	svgs, err := loadSVGs(fs, logger)
 	if err != nil {
 		return 0, err
 	}
 
-	out := template(src, svgs)
+	out := template(svgs)
 
 	err = writeFile(fs, tgt, out)
 	if err != nil {

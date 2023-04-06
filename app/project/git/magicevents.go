@@ -9,10 +9,7 @@ func (s *Service) onAhead(args *magicArgs, add func(msg string, args ...any)) er
 			return err
 		}
 	}
-	if err := s.magicPush(args, args.Ahead+1, add); err != nil {
-		return err
-	}
-	return nil
+	return s.magicPush(args, args.Ahead+1, add)
 }
 
 func (s *Service) onBehind(args *magicArgs, add func(msg string, args ...any)) error {

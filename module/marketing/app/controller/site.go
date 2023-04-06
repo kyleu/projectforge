@@ -12,7 +12,7 @@ import (
 func Site(rc *fasthttp.RequestCtx) {
 	ActSite("site", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		path := util.StringSplitAndTrim(string(rc.Request.URI().Path()), "/")
-		redir, page, bc, err := site.Handle(path, rc, as, ps)
+		redir, page, bc, err := site.Handle(path, as, ps)
 		if err != nil {
 			return "", err
 		}

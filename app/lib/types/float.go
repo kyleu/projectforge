@@ -26,7 +26,7 @@ func (x *Float) String() string {
 }
 
 func (x *Float) From(v any) any {
-	return invalidInput(x.Key(), x)
+	return invalidInput(x.Key(), v)
 }
 
 func (x *Float) Default(string) any {

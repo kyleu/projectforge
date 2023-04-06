@@ -23,11 +23,10 @@ type BuildInfo struct {
 
 func (b *BuildInfo) String() string {
 	if b.Date == "unknown" {
-	} else {
-		d, _ := util.TimeFromJS(b.Date)
-		return fmt.Sprintf("%s (%s)", b.Version, util.TimeToYMD(d))
+		return b.Version
 	}
-	return b.Version
+	d, _ := util.TimeFromJS(b.Date)
+	return fmt.Sprintf("%s (%s)", b.Version, util.TimeToYMD(d))
 }
 
 type State struct {
@@ -39,7 +38,7 @@ type State struct {
 	Started   time.Time
 }
 
-func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, enableTelemetry bool, port uint16, logger util.Logger) (*State, error) {
+func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, enableTelemetry bool, _ uint16, logger util.Logger) (*State, error) {
 	var loadLocationError error
 	once.Do(func() {
 		loc, err := time.LoadLocation("UTC")

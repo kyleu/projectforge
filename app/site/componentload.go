@@ -42,7 +42,7 @@ func loadComponents() (vsite.Components, error) {
 		if !ok {
 			md = []string{"star", "a web component without documentation"}
 		}
-		title, html, err := componentTemplate(key, md[0])
+		title, html, err := componentTemplate(key)
 		if err != nil {
 			return nil, err
 		}

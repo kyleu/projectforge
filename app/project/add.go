@@ -11,11 +11,11 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func (s *Service) add(path string, parent *Project, logger util.Logger) (*Project, error) {
+func (s *Service) add(path string, parent *Project) (*Project, error) {
 	if parent != nil && !strings.HasPrefix(path, "/") {
 		path = filepath.Join(parent.Path, path)
 	}
-	b, p, err := s.load(path, logger)
+	b, p, err := s.load(path)
 	if err != nil {
 		return nil, err
 	}

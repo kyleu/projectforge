@@ -18,7 +18,7 @@ var pf = &doctor.Check{
 	Solve:   solvePF,
 }
 
-func solvePF(ctx context.Context, r *doctor.Result, logger util.Logger) *doctor.Result {
+func solvePF(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Result {
 	if r.Errors.Find("missing") != nil || r.Errors.Find("exitcode") != nil {
 		r.AddSolution("Install [" + util.AppName + "] by following the instructions at [" + util.AppURL + "]")
 	}

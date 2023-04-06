@@ -31,7 +31,7 @@ func (x *Map) String() string {
 }
 
 func (x *Map) From(v any) any {
-	return invalidInput(x.Key(), x)
+	return invalidInput(x.Key(), v)
 }
 
 func (x *Map) Default(string) any {

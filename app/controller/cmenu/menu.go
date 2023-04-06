@@ -12,13 +12,13 @@ import (
 )
 
 func MenuFor(
-	ctx context.Context, isAuthed bool, isAdmin bool, profile *user.Profile, params filter.ParamSet, as *app.State, logger util.Logger,
+	ctx context.Context, isAuthed bool, isAdmin bool, profile *user.Profile, params filter.ParamSet, as *app.State, logger util.Logger, //nolint:revive
 ) (menu.Items, any, error) {
 	var ret menu.Items
 	var data any
 	// $PF_SECTION_START(routes_start)$
 	ret = append(ret,
-		projectMenu(ctx, as.Services.Projects.Projects()),
+		projectMenu(as.Services.Projects.Projects()),
 		menu.Separator,
 		moduleMenu(as.Services.Modules.Modules()),
 		menu.Separator,
@@ -26,7 +26,7 @@ func MenuFor(
 	// $PF_SECTION_END(routes_start)$
 	// $PF_SECTION_START(routes_end)$
 	adm := &menu.Item{Key: "admin", Title: "Settings", Description: "System-wide settings and preferences", Icon: "cog", Route: "/admin"}
-	ret = append(ret, docMenu(ctx, as, logger), menu.Separator, adm)
+	ret = append(ret, docMenu(logger), menu.Separator, adm)
 	if len(as.Services.Exec.Execs) > 0 {
 		ret = append(ret, processMenu(as.Services.Exec.Execs))
 	}

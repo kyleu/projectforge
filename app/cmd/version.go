@@ -1,18 +1,14 @@
 // Content managed by Project Forge, see [projectforge.md] for details.
 package cmd
 
-import (
-	"context"
+import "github.com/muesli/coral"
 
-	"github.com/muesli/coral"
-)
-
-func versionF(_ context.Context, _ []string) error {
+func versionF() error {
 	println(_buildInfo.Version) //nolint:forbidigo
 	return nil
 }
 
 func versionCmd() *coral.Command {
-	f := func(cmd *coral.Command, args []string) error { return versionF(context.Background(), args) }
+	f := func(_ *coral.Command, _ []string) error { return versionF() }
 	return &coral.Command{Use: "version", Short: "Displays the version and exits", RunE: f}
 }

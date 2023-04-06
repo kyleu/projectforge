@@ -1,7 +1,6 @@
 package build
 
 import (
-	"context"
 	"fmt"
 	"strings"
 
@@ -12,7 +11,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func Deployments(ctx context.Context, curr string, fs filesystem.FileLoader, fix bool, path string, deps []string) ([]string, diff.Diffs, error) {
+func Deployments(curr string, fs filesystem.FileLoader, fix bool, path string, deps []string) ([]string, diff.Diffs, error) {
 	var logs []string
 	var ret diff.Diffs
 

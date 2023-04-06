@@ -2,7 +2,6 @@ package exec
 
 import (
 	"bytes"
-	"context"
 	"fmt"
 	"io"
 	"os/exec"
@@ -47,7 +46,7 @@ func (e *Exec) WebPath() string {
 	return fmt.Sprintf("/admin/exec/%s/%d", e.Key, e.Idx)
 }
 
-func (e *Exec) Start(ctx context.Context, logger util.Logger, fns ...func(key string, b []byte) error) error {
+func (e *Exec) Start(fns ...func(key string, b []byte) error) error {
 	if e.Started != nil {
 		return errors.New("process already started")
 	}

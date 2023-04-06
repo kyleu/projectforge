@@ -97,7 +97,7 @@ func exportViewDetailBody(g *golang.Template, m *model.Model, models model.Model
 			return nil, err
 		}
 		ret.W(`          <th class="shrink" title="%s">%s</th>`, h, col.Title())
-		viewDetailColumn(g, ret, models, m, false, col, "p.Model.", "p.", 5)
+		viewDetailColumn(g, ret, models, m, false, col, "p.Model.", 5)
 		ret.W("        </tr>")
 	}
 	ret.W("      </tbody>")
@@ -151,9 +151,7 @@ func exportViewDetailRelations(ret *golang.Block, m *model.Model, models model.M
 	}
 }
 
-func viewDetailColumn(
-	g *golang.Template, ret *golang.Block, models model.Models, m *model.Model, link bool, col *model.Column, modelKey string, prefix string, indent int,
-) {
+func viewDetailColumn(g *golang.Template, ret *golang.Block, models model.Models, m *model.Model, link bool, col *model.Column, modelKey string, indent int) {
 	ind := util.StringRepeat("  ", indent)
 	rels := m.RelationsFor(col)
 	if len(rels) == 0 {

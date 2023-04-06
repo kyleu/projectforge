@@ -16,13 +16,13 @@ import (
 
 func ProjectExportEnumDetail(rc *fasthttp.RequestCtx) {
 	controller.Act("project.export.enum.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, e, args, err := exportLoadEnum(rc, as, ps.Logger)
+		prj, e, _, err := exportLoadEnum(rc, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}
 		ps.Data = e
 
-		fl, err := goenum.Enum(e, args, true)
+		fl, err := goenum.Enum(e, true)
 		if err != nil {
 			ps.Logger.Warnf("unable to generate files for enum [%s]", e.Name)
 		}
@@ -66,7 +66,7 @@ func ProjectExportEnumCreate(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to parse enum from form")
 		}
 
-		err = as.Services.Projects.SaveExportEnum(as.Services.Projects.GetFilesystem(prj), mdl, ps.Logger)
+		err = as.Services.Projects.SaveExportEnum(as.Services.Projects.GetFilesystem(prj), mdl)
 		if err != nil {
 			return "", err
 		}
@@ -90,7 +90,7 @@ func ProjectExportEnumForm(rc *fasthttp.RequestCtx) {
 			"projects",
 			prj.Key,
 			fmt.Sprintf("Export||/p/%s/export", prj.Key),
-			e.Title() + "||/p/" + prj.Key + "/export/enums/" + e.Name,
+			fmt.Sprintf("%s||/p/%s/export/enums/%s", e.Title(), prj.Key, e.Name),
 			"Edit",
 		}
 		ps.Title = fmt.Sprintf("[%s] %s", prj.Key, e.Name)
@@ -115,7 +115,7 @@ func ProjectExportEnumSave(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to parse enum from form")
 		}
 
-		err = as.Services.Projects.SaveExportEnum(as.Services.Projects.GetFilesystem(prj), e, ps.Logger)
+		err = as.Services.Projects.SaveExportEnum(as.Services.Projects.GetFilesystem(prj), e)
 		if err != nil {
 			return "", err
 		}

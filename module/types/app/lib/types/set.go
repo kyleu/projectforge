@@ -29,7 +29,7 @@ func (x *Set) String() string {
 }
 
 func (x *Set) From(v any) any {
-	return invalidInput(x.Key(), x)
+	return invalidInput(x.Key(), v)
 }
 
 func (x *Set) Default(string) any {

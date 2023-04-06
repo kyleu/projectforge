@@ -48,13 +48,13 @@ func (s *Service) GetFilesystem(prj *Project) filesystem.FileLoader {
 
 func (s *Service) Refresh(logger util.Logger) (Projects, error) {
 	s.cache = map[string]*Project{}
-	root, err := s.add(".", nil, logger)
+	root, err := s.add(".", nil)
 	if err != nil {
 		return nil, err
 	}
 	if add, ok := s.getAdditional(logger); ok {
 		for _, a := range add {
-			if _, err := s.add(a, root, logger); err != nil {
+			if _, err := s.add(a, root); err != nil {
 				return nil, err
 			}
 		}

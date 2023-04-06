@@ -1,8 +1,6 @@
 package files
 
 import (
-	"context"
-
 	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/file"
@@ -11,17 +9,16 @@ import (
 	"projectforge.dev/projectforge/app/project/export/files/goenum"
 	"projectforge.dev/projectforge/app/project/export/files/sql"
 	"projectforge.dev/projectforge/app/project/export/model"
-	"projectforge.dev/projectforge/app/util"
 )
 
-func All(ctx context.Context, p *project.Project, args *model.Args, addHeader bool, logger util.Logger) (file.Files, error) {
+func All(p *project.Project, args *model.Args, addHeader bool) (file.Files, error) {
 	if err := args.Validate(); err != nil {
 		return nil, errors.Wrap(err, "invalid export arguments")
 	}
 	ret := make(file.Files, 0, (len(args.Models)*10)+len(args.Enums))
 
 	for _, e := range args.Enums {
-		call, err := goenum.Enum(e, args, addHeader)
+		call, err := goenum.Enum(e, addHeader)
 		if err != nil {
 			return nil, errors.Wrapf(err, "error processing enum [%s]", e.Name)
 		}

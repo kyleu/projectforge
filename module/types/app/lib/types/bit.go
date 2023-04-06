@@ -23,7 +23,7 @@ func (x *Bit) String() string {
 }
 
 func (x *Bit) From(v any) any {
-	return invalidInput(x.Key(), x)
+	return invalidInput(x.Key(), v)
 }
 
 func (x *Bit) Default(string) any {

@@ -23,7 +23,7 @@ func (x *XML) String() string {
 }
 
 func (x *XML) From(v any) any {
-	return invalidInput(x.Key(), x)
+	return invalidInput(x.Key(), v)
 }
 
 func (x *XML) Default(string) any {

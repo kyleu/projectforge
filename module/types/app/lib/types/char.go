@@ -23,7 +23,7 @@ func (x *Char) String() string {
 }
 
 func (x *Char) From(v any) any {
-	return invalidInput(x.Key(), x)
+	return invalidInput(x.Key(), v)
 }
 
 func (x *Char) Default(string) any {

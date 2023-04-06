@@ -18,7 +18,7 @@ var git = &doctor.Check{
 	Solve:   solveGit,
 }
 
-func solveGit(ctx context.Context, r *doctor.Result, logger util.Logger) *doctor.Result {
+func solveGit(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Result {
 	if r.Errors.Find("missing") != nil || r.Errors.Find("exitcode") != nil {
 		r.AddSolution("https://git-scm.com")
 	}

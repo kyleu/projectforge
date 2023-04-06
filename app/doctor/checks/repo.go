@@ -49,7 +49,7 @@ func checkRepo(ctx context.Context, r *doctor.Result, logger util.Logger) *docto
 	return r
 }
 
-func solveRepo(ctx context.Context, r *doctor.Result, logger util.Logger) *doctor.Result {
+func solveRepo(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Result {
 	if r.Errors.Find("norepo") != nil {
 		r.AddSolution("run [git init] in this directory")
 	}

@@ -32,7 +32,7 @@ func (s *Service) Save(prj *Project, logger util.Logger) error {
 			}
 		}
 		for _, m := range exportArgs.Models {
-			err = s.SaveExportModel(tgtFS, m, logger)
+			err = s.SaveExportModel(tgtFS, m)
 			if err != nil {
 				return err
 			}
@@ -45,7 +45,7 @@ func (s *Service) Save(prj *Project, logger util.Logger) error {
 	return nil
 }
 
-func (s *Service) SaveExportGroups(fs filesystem.FileLoader, g model.Groups, logger util.Logger) error {
+func (s *Service) SaveExportGroups(fs filesystem.FileLoader, g model.Groups) error {
 	fn := fmt.Sprintf("%s/export/groups.json", ConfigDir)
 	j := util.ToJSON(g)
 	err := fs.WriteFile(fn, []byte(j), filesystem.DefaultMode, true)
@@ -55,7 +55,7 @@ func (s *Service) SaveExportGroups(fs filesystem.FileLoader, g model.Groups, log
 	return nil
 }
 
-func (s *Service) SaveExportModel(fs filesystem.FileLoader, mdl *model.Model, logger util.Logger) error {
+func (s *Service) SaveExportModel(fs filesystem.FileLoader, mdl *model.Model) error {
 	if mdl.HasTag("json") {
 		return nil
 	}
@@ -76,7 +76,7 @@ func (s *Service) DeleteExportModel(fs filesystem.FileLoader, mdl string, logger
 	return nil
 }
 
-func (s *Service) SaveExportEnum(fs filesystem.FileLoader, e *enum.Enum, logger util.Logger) error {
+func (s *Service) SaveExportEnum(fs filesystem.FileLoader, e *enum.Enum) error {
 	fn := fmt.Sprintf("%s/export/enums/%s.json", ConfigDir, e.Name)
 	j := util.ToJSONBytes(e, true)
 	err := fs.WriteFile(fn, j, filesystem.DefaultMode, true)

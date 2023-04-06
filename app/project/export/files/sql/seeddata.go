@@ -19,7 +19,7 @@ const (
 	nullStr = "null"
 )
 
-func SeedData(m *model.Model, args *model.Args) (*file.File, error) {
+func SeedData(m *model.Model, _ *model.Args) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"queries", "seeddata"}, fmt.Sprintf("seed_%s.sql", m.Name))
 	seed, err := sqlSeedData(m)
 	if err != nil {

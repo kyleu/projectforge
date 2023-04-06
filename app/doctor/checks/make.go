@@ -18,7 +18,7 @@ var mke = &doctor.Check{
 	Solve:   solveMake,
 }
 
-func solveMake(ctx context.Context, r *doctor.Result, logger util.Logger) *doctor.Result {
+func solveMake(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Result {
 	if r.Errors.Find("missing") != nil || r.Errors.Find("exitcode") != nil {
 		r.AddSolution("You should really have make installed")
 	}

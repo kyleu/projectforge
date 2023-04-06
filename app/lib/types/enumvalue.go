@@ -24,7 +24,7 @@ func (x *EnumValue) String() string {
 }
 
 func (x *EnumValue) From(v any) any {
-	return invalidInput(x.Key(), x)
+	return invalidInput(x.Key(), v)
 }
 
 func (x *EnumValue) Default(key string) any {

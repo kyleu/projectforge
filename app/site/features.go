@@ -1,7 +1,6 @@
 package site
 
 import (
-	"context"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -15,7 +14,7 @@ import (
 	"projectforge.dev/projectforge/views/vsite"
 )
 
-func featuresMenu(ctx context.Context, mSvc *module.Service) menu.Items {
+func featuresMenu(mSvc *module.Service) menu.Items {
 	ms := mSvc.Modules()
 	ret := make(menu.Items, 0, len(ms))
 	for _, m := range ms {

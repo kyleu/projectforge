@@ -37,7 +37,7 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 		}
 		g.AddBlocks(gbpk)
 		if pkLen == 1 {
-			x, err := serviceGetMultipleSinglePK(m, dbRef, args.Enums, args.Database())
+			x, err := serviceGetMultipleSinglePK(m, dbRef, args.Enums)
 			if err != nil {
 				return nil, err
 			}

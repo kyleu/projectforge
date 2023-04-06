@@ -26,7 +26,7 @@ func (x *Date) String() string {
 }
 
 func (x *Date) From(v any) any {
-	return invalidInput(x.Key(), x)
+	return invalidInput(x.Key(), v)
 }
 
 func (x *Date) Default(string) any {

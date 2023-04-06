@@ -2,14 +2,12 @@
 package cmenu
 
 import (
-	"context"
 	"io/fs"
 	"path"
 	"strings"
 
 	"golang.org/x/exp/slices"
 
-	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/lib/menu"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/doc"
@@ -17,14 +15,14 @@ import (
 
 var docMenuCached *menu.Item
 
-func docMenu(ctx context.Context, as *app.State, logger util.Logger) *menu.Item {
+func docMenu(logger util.Logger) *menu.Item {
 	if docMenuCached == nil {
-		docMenuCached = docMenuCreate(ctx, as, logger)
+		docMenuCached = docMenuCreate(logger)
 	}
 	return docMenuCached
 }
 
-func docMenuCreate(ctx context.Context, as *app.State, logger util.Logger) *menu.Item {
+func docMenuCreate(logger util.Logger) *menu.Item {
 	var paths []string
 	err := fs.WalkDir(doc.FS, ".", func(path string, d fs.DirEntry, err error) error {
 		paths = append(paths, path)

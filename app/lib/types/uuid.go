@@ -24,7 +24,7 @@ func (x *UUID) String() string {
 }
 
 func (x *UUID) From(v any) any {
-	return invalidInput(x.Key(), x)
+	return invalidInput(x.Key(), v)
 }
 
 func (x *UUID) Default(string) any {

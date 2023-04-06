@@ -12,7 +12,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func webAssets(ctx context.Context, prj *project.Project, orig string, fs filesystem.FileLoader, logger util.Logger) error {
+func webAssets(ctx context.Context, _ *project.Project, orig string, fs filesystem.FileLoader, logger util.Logger) error {
 	webResize := func(size int, fn string, p string) {
 		if x := filepath.Dir(filepath.Join(p, fn)); !fs.Exists(x) {
 			_ = fs.CreateDirectory(x)

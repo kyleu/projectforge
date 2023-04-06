@@ -124,7 +124,7 @@ func (p *PageState) AuthString() string {
 	return fmt.Sprintf("%s using [%s]", msg, p.Accounts.TitleString())
 }{{{ end }}}{{{ end }}}
 
-func (p *PageState) Clean(rc *fasthttp.RequestCtx, as *app.State) error {
+func (p *PageState) Clean(_ *fasthttp.RequestCtx, as *app.State) error {
 	if p.Profile != nil && p.Profile.Theme == "" {
 		p.Profile.Theme = theme.ThemeDefault.Key
 	}

@@ -52,7 +52,7 @@ func (x *Method) String() string {
 }
 
 func (x *Method) From(v any) any {
-	return invalidInput(x.Key(), x)
+	return invalidInput(x.Key(), v)
 }
 
 func (x *Method) Default(key string) any {

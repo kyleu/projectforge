@@ -25,8 +25,8 @@ func Grouping(m *model.Model, args *model.Args, grp *model.Column, addHeader boo
 	}
 	g.AddBlocks(
 		controllerGrouped(m, grp, prefix), cl, controllerDetail(args.Models, m, grp, g, prefix),
-		controllerCreateForm(m, grp, prefix), controllerCreate(m, g, grp, prefix),
-		controllerEditForm(m, grp, prefix), controllerEdit(m, g, grp, prefix), controllerDelete(m, g, grp, prefix),
+		controllerCreateForm(m, grp, prefix), controllerCreate(m, grp, prefix),
+		controllerEditForm(m, grp, prefix), controllerEdit(m, grp, prefix), controllerDelete(m, grp, prefix),
 	)
 	return g.Render(addHeader)
 }

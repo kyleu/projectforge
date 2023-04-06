@@ -1,7 +1,6 @@
 package action
 
 import (
-	"context"
 	"os"
 	"strings"
 
@@ -14,7 +13,7 @@ import (
 
 const keyTrue, keyTag, keyTags = "true", "tag", "tags"
 
-func onRules(ctx context.Context, pm *PrjAndMods) *Result {
+func onRules(pm *PrjAndMods) *Result {
 	ret := newResult(TypeRules, pm.Prj, pm.Cfg, pm.Logger)
 	if pm.EArgs == nil {
 		ret.Status = "OK"

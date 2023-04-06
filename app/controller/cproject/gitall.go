@@ -31,13 +31,13 @@ func GitActionAll(rc *fasthttp.RequestCtx) {
 		action := git.ActionStatusFromString(a)
 		switch a {
 		case git.ActionStatus.Key, "":
-			results, err = gitStatusAll(prjs, rc, as, ps)
+			results, err = gitStatusAll(prjs, as, ps)
 		case git.ActionFetch.Key:
-			results, err = gitFetchAll(prjs, rc, as, ps)
+			results, err = gitFetchAll(prjs, as, ps)
 		case git.ActionPull.Key:
-			results, err = gitPullAll(prjs, rc, as, ps)
+			results, err = gitPullAll(prjs, as, ps)
 		case git.ActionOutdated.Key:
-			results, err = gitOutdatedAll(prjs, rc, as, ps)
+			results, err = gitOutdatedAll(prjs, as, ps)
 		case git.ActionMagic.Key:
 			argRes := cutil.CollectArgs(rc, gitMagicArgs)
 			if len(argRes.Missing) > 0 {
@@ -63,28 +63,28 @@ func GitActionAll(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func gitStatusAll(prjs project.Projects, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (git.Results, error) {
+func gitStatusAll(prjs project.Projects, as *app.State, ps *cutil.PageState) (git.Results, error) {
 	results, errs := util.AsyncCollect(prjs, func(prj *project.Project) (*git.Result, error) {
 		return as.Services.Git.Status(ps.Context, prj, ps.Logger)
 	})
 	return results, util.ErrorMerge(errs...)
 }
 
-func gitFetchAll(prjs project.Projects, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (git.Results, error) {
+func gitFetchAll(prjs project.Projects, as *app.State, ps *cutil.PageState) (git.Results, error) {
 	results, errs := util.AsyncCollect(prjs, func(prj *project.Project) (*git.Result, error) {
 		return as.Services.Git.Fetch(ps.Context, prj, ps.Logger)
 	})
 	return results, util.ErrorMerge(errs...)
 }
 
-func gitPullAll(prjs project.Projects, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (git.Results, error) {
+func gitPullAll(prjs project.Projects, as *app.State, ps *cutil.PageState) (git.Results, error) {
 	results, errs := util.AsyncCollect(prjs, func(prj *project.Project) (*git.Result, error) {
 		return as.Services.Git.Pull(ps.Context, prj, ps.Logger)
 	})
 	return results, util.ErrorMerge(errs...)
 }
 
-func gitOutdatedAll(prjs project.Projects, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (git.Results, error) {
+func gitOutdatedAll(prjs project.Projects, as *app.State, ps *cutil.PageState) (git.Results, error) {
 	results, errs := util.AsyncCollect(prjs, func(prj *project.Project) (*git.Result, error) {
 		return as.Services.Git.Outdated(ps.Context, prj, ps.Logger)
 	})

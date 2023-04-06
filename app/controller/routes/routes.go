@@ -13,6 +13,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+//nolint:revive
 func AppRoutes(as *app.State, logger util.Logger) fasthttp.RequestHandler {
 	r := router.New()
 

@@ -41,7 +41,7 @@ func controllerCreateFormRandom(m *model.Model, prefix string) *golang.Block {
 	return ret
 }
 
-func controllerCreate(m *model.Model, g *golang.File, grp *model.Column, prefix string) *golang.Block {
+func controllerCreate(m *model.Model, grp *model.Column, prefix string) *golang.Block {
 	ret := blockFor(m, prefix, grp, 0, "create")
 	if grp != nil {
 		controllerArgFor(grp, ret, "\"\"", 2)
@@ -83,7 +83,7 @@ func controllerEditForm(m *model.Model, grp *model.Column, prefix string) *golan
 	return ret
 }
 
-func controllerEdit(m *model.Model, g *golang.File, grp *model.Column, prefix string) *golang.Block {
+func controllerEdit(m *model.Model, grp *model.Column, prefix string) *golang.Block {
 	ret := blockFor(m, prefix, grp, 0, "edit")
 	if m.IsRevision() {
 		ret.W("\t\trc.SetUserValue(\"includeDeleted\", true)")
@@ -115,7 +115,7 @@ func controllerEdit(m *model.Model, g *golang.File, grp *model.Column, prefix st
 	return ret
 }
 
-func controllerDelete(m *model.Model, g *golang.File, grp *model.Column, prefix string) *golang.Block {
+func controllerDelete(m *model.Model, grp *model.Column, prefix string) *golang.Block {
 	ret := blockFor(m, prefix, grp, 0, "delete")
 	if grp != nil {
 		controllerArgFor(grp, ret, "\"\"", 2)

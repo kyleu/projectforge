@@ -49,7 +49,7 @@ func ProjectExportGroupsSave(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 
-		err = as.Services.Projects.SaveExportGroups(as.Services.Projects.GetFilesystem(prj), g, ps.Logger)
+		err = as.Services.Projects.SaveExportGroups(as.Services.Projects.GetFilesystem(prj), g)
 		if err != nil {
 			return "", err
 		}

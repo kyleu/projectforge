@@ -11,7 +11,7 @@ import (
 
 const serviceGetMultipleName = "GetMultiple"
 
-func serviceGetMultipleSinglePK(m *model.Model, dbRef string, enums enum.Enums, database string) (*golang.Block, error) {
+func serviceGetMultipleSinglePK(m *model.Model, dbRef string, enums enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock(serviceGetMultipleName, "func")
 	pk := m.PKs()[0]
 	t, err := model.ToGoType(pk.Type, pk.Nullable, m.Package, enums)

@@ -24,7 +24,7 @@ func (x *Byte) String() string {
 }
 
 func (x *Byte) From(v any) any {
-	return invalidInput(x.Key(), x)
+	return invalidInput(x.Key(), v)
 }
 
 func (x *Byte) Default(string) any {

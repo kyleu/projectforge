@@ -26,7 +26,7 @@ func (x *Timestamp) String() string {
 }
 
 func (x *Timestamp) From(v any) any {
-	return invalidInput(x.Key(), x)
+	return invalidInput(x.Key(), v)
 }
 
 func (x *Timestamp) Default(string) any {

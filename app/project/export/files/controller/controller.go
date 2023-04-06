@@ -42,8 +42,8 @@ func Controller(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 		g.AddBlocks(controllerRevision(m, prefix))
 	}
 	g.AddBlocks(
-		controllerCreateForm(m, nil, prefix), controllerCreateFormRandom(m, prefix), controllerCreate(m, g, nil, prefix),
-		controllerEditForm(m, nil, prefix), controllerEdit(m, g, nil, prefix), controllerDelete(m, g, nil, prefix),
+		controllerCreateForm(m, nil, prefix), controllerCreateFormRandom(m, prefix), controllerCreate(m, nil, prefix),
+		controllerEditForm(m, nil, prefix), controllerEdit(m, nil, prefix), controllerDelete(m, nil, prefix),
 	)
 	if m.IsHistory() {
 		g.AddBlocks(controllerHistory(m, prefix))

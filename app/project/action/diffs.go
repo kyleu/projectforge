@@ -1,7 +1,6 @@
 package action
 
 import (
-	"context"
 	"path"
 	"strings"
 
@@ -18,7 +17,7 @@ const (
 	delimEnd   = "}}}"
 )
 
-func diffs(ctx context.Context, pm *PrjAndMods) (file.Files, diff.Diffs, error) {
+func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 	tgt := pm.PSvc.GetFilesystem(pm.Prj)
 
 	srcFiles, err := pm.MSvc.GetFiles(pm.Mods, true, pm.Logger)
@@ -32,12 +31,12 @@ func diffs(ctx context.Context, pm *PrjAndMods) (file.Files, diff.Diffs, error) 
 			return nil, nil, errors.Wrap(errX, "export module arguments are invalid")
 		}
 		args.Modules = pm.Mods.Keys()
-		files, e := pm.ESvc.Files(ctx, pm.Prj, args, true, pm.Logger)
+		files, e := pm.ESvc.Files(pm.Prj, args, true)
 		if e != nil {
 			return nil, nil, errors.Wrap(e, "unable to export code")
 		}
 		srcFiles = append(srcFiles, files...)
-		e = pm.ESvc.Inject(ctx, args, srcFiles, pm.Logger)
+		e = pm.ESvc.Inject(args, srcFiles)
 		if e != nil {
 			return nil, nil, errors.Wrap(e, "unable to inject code")
 		}

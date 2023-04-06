@@ -31,7 +31,7 @@ func InitializeIfNeeded(enabled bool, version string, logger util.Logger) bool {
 	return true
 }
 
-func Initialize(version string, logger util.Logger) {
+func Initialize(_ string, logger util.Logger) {
 	if initialized {
 		logger.Warn("double telemetry initialization")
 		return

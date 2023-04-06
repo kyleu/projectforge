@@ -4,8 +4,6 @@ import (
 	"fmt"
 
 	"golang.org/x/exp/slices"
-
-	"projectforge.dev/projectforge/app/lib/filesystem"
 )
 
 type ValidationError struct {
@@ -13,7 +11,7 @@ type ValidationError struct {
 	Message string `json:"message"`
 }
 
-func Validate(p *Project, moduleDeps map[string][]string, fs filesystem.FileLoader) []*ValidationError {
+func Validate(p *Project, moduleDeps map[string][]string) []*ValidationError {
 	var ret []*ValidationError
 
 	e := func(code string, msg string, args ...any) {

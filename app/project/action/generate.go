@@ -1,7 +1,6 @@
 package action
 
 import (
-	"context"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -18,7 +17,7 @@ const (
 	moduleKey  = "module"
 )
 
-func onGenerate(ctx context.Context, pm *PrjAndMods) *Result {
+func onGenerate(pm *PrjAndMods) *Result {
 	ret := newResult(TypeGenerate, pm.Prj, pm.Cfg, pm.Logger)
 	timer := util.TimerStart()
 
@@ -28,7 +27,7 @@ func onGenerate(ctx context.Context, pm *PrjAndMods) *Result {
 	}
 	fl := pm.Cfg.GetStringOpt("file")
 
-	srcFiles, dfs, err := diffs(ctx, pm)
+	srcFiles, dfs, err := diffs(pm)
 	if err != nil {
 		return ret.WithError(err)
 	}
@@ -47,7 +46,7 @@ func onGenerate(ctx context.Context, pm *PrjAndMods) *Result {
 			case moduleKey:
 				ret = mergeToModule(pm, f, ret)
 			case projectKey:
-				ret = gen(pm, srcFiles, f, ret, tgtFS)
+				ret = gen(srcFiles, f, ret, tgtFS)
 			}
 		default:
 			return ret.WithError(errors.Errorf("unhandled diff status [%s]", f.Status))
@@ -75,7 +74,7 @@ func limitDiffs(dfs diff.Diffs, fl string) (diff.Diffs, error) {
 	return matched, nil
 }
 
-func gen(pm *PrjAndMods, srcFiles file.Files, f *diff.Diff, ret *Result, tgtFS filesystem.FileLoader) *Result {
+func gen(srcFiles file.Files, f *diff.Diff, ret *Result, tgtFS filesystem.FileLoader) *Result {
 	src := srcFiles.Get(f.Path)
 	if src == nil {
 		return ret.WithError(errors.Errorf("unable to read file from [%s]", f.Path))

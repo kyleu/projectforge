@@ -7,7 +7,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func template(src string, svgs []*SVG) string {
+func template(svgs []*SVG) string {
 	out := strings.Builder{}
 	w := func(s string) {
 		out.WriteString(s)

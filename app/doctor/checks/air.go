@@ -18,7 +18,7 @@ var air = &doctor.Check{
 	Solve:   solveAir,
 }
 
-func solveAir(ctx context.Context, r *doctor.Result, logger util.Logger) *doctor.Result {
+func solveAir(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Result {
 	if r.Errors.Find("missing") != nil || r.Errors.Find("exitcode") != nil {
 		r.AddSolution("go get -u github.com/cosmtrek/air")
 	}

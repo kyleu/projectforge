@@ -10,7 +10,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func onStart(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
+func onStart(_ context.Context, pm *PrjAndMods, ret *Result) *Result {
 	if ret == nil {
 		ret = newResult(TypeDebug, pm.Prj, pm.Cfg, pm.Logger)
 	}
@@ -29,7 +29,7 @@ func onStart(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
 		}
 		return pm.SSvc.WriteChannel(msg, pm.Logger)
 	}
-	err = exec.Start(ctx, pm.Logger, w)
+	err = exec.Start(w)
 	if err != nil {
 		return errorResult(err, TypeDebug, pm.Cfg, pm.Logger)
 	}

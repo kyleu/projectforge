@@ -1,6 +1,7 @@
 package telemetry
 
 import (
+	"fmt"
 	"strings"
 
 	"go.opentelemetry.io/otel/attribute"
@@ -75,6 +76,12 @@ func (s *Span) Event(name string, attrs ...*Attribute) {
 		return
 	}
 	s.OT.AddEvent(name)
+	for _, attr := range attrs {
+		s.OT.SetAttributes(attribute.KeyValue{
+			Key:   attribute.Key(attr.Key),
+			Value: attribute.StringValue(fmt.Sprint(attr.Value)),
+		})
+	}
 }
 
 func (s *Span) OnError(err error) {

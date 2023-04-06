@@ -25,7 +25,7 @@ func (x *TimestampZoned) String() string {
 }
 
 func (x *TimestampZoned) From(v any) any {
-	return invalidInput(x.Key(), x)
+	return invalidInput(x.Key(), v)
 }
 
 func (x *TimestampZoned) Default(string) any {

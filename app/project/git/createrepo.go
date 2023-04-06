@@ -7,6 +7,6 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func (s *Service) CreateRepo(ctx context.Context, prj *project.Project, logger util.Logger) (*Result, error) {
+func (s *Service) CreateRepo(_ context.Context, prj *project.Project, _ util.Logger) (*Result, error) {
 	return NewResult(prj, "TODO", util.ValueMap{"TODO": "Create Repo"}), nil
 }

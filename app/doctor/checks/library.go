@@ -45,6 +45,6 @@ func CheckAll(ctx context.Context, modules []string, logger util.Logger) doctor.
 	return ret
 }
 
-func noop(ctx context.Context, r *doctor.Result, out string) *doctor.Result {
+func noop(_ context.Context, r *doctor.Result, _ string) *doctor.Result {
 	return r
 }

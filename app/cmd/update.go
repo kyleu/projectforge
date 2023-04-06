@@ -11,7 +11,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func updateF(ctx context.Context, args []string) error {
+func updateF(ctx context.Context) error {
 	if err := initIfNeeded(); err != nil {
 		return errors.Wrap(err, "error initializing application")
 	}
@@ -38,6 +38,6 @@ func updateF(ctx context.Context, args []string) error {
 }
 
 func updateCmd() *coral.Command {
-	f := func(cmd *coral.Command, args []string) error { return updateF(context.Background(), args) }
+	f := func(cmd *coral.Command, _ []string) error { return updateF(context.Background()) }
 	return &coral.Command{Use: "update", Short: "Refreshes downloaded assets such as modules", RunE: f}
 }

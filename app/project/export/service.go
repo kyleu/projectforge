@@ -1,7 +1,6 @@
 package export
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/pkg/errors"
@@ -11,7 +10,6 @@ import (
 	"projectforge.dev/projectforge/app/project/export/files"
 	"projectforge.dev/projectforge/app/project/export/inject"
 	"projectforge.dev/projectforge/app/project/export/model"
-	"projectforge.dev/projectforge/app/util"
 )
 
 type Service struct{}
@@ -20,7 +18,7 @@ func NewService() *Service {
 	return &Service{}
 }
 
-func (s *Service) Files(ctx context.Context, p *project.Project, args *model.Args, addHeader bool, logger util.Logger) (f file.Files, e error) {
+func (s *Service) Files(p *project.Project, args *model.Args, addHeader bool) (f file.Files, e error) {
 	defer func() {
 		if rec := recover(); rec != nil {
 			if err, ok := rec.(error); ok {
@@ -30,11 +28,11 @@ func (s *Service) Files(ctx context.Context, p *project.Project, args *model.Arg
 			}
 		}
 	}()
-	f, e = files.All(ctx, p, args, addHeader, logger)
+	f, e = files.All(p, args, addHeader)
 	return
 }
 
-func (s *Service) Inject(ctx context.Context, args *model.Args, fs file.Files, logger util.Logger) (e error) {
+func (s *Service) Inject(args *model.Args, fs file.Files) (e error) {
 	defer func() {
 		if rec := recover(); rec != nil {
 			if err, ok := rec.(error); ok {
@@ -44,6 +42,6 @@ func (s *Service) Inject(ctx context.Context, args *model.Args, fs file.Files, l
 			}
 		}
 	}()
-	e = inject.All(ctx, args, fs, logger)
+	e = inject.All(args, fs)
 	return
 }

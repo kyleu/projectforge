@@ -1,12 +1,10 @@
 package site
 
 import (
-	"context"
 	"strings"
 
 	"github.com/pkg/errors"
 
-	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/menu"
 	"projectforge.dev/projectforge/app/util"
@@ -15,7 +13,7 @@ import (
 	"projectforge.dev/projectforge/views/vsite"
 )
 
-func componentsMenu(ctx context.Context, logger util.Logger) menu.Items {
+func componentsMenu(logger util.Logger) menu.Items {
 	if vsite.AllComponents == nil {
 		var err error
 		vsite.AllComponents, err = loadComponents()
@@ -30,13 +28,13 @@ func componentsMenu(ctx context.Context, logger util.Logger) menu.Items {
 	return ret
 }
 
-func componentList(as *app.State, ps *cutil.PageState) (layout.Page, error) {
+func componentList(ps *cutil.PageState) (layout.Page, error) {
 	ps.Title = "Available Components"
 	ps.Data = vsite.AllComponents
 	return &vsite.ComponentList{}, nil
 }
 
-func componentDetail(key string, as *app.State, ps *cutil.PageState) (layout.Page, error) {
+func componentDetail(key string, ps *cutil.PageState) (layout.Page, error) {
 	c := vsite.AllComponents.Get(key)
 	if c == nil {
 		return nil, errors.Errorf("no component available with key [%s]", key)
@@ -47,7 +45,7 @@ func componentDetail(key string, as *app.State, ps *cutil.PageState) (layout.Pag
 	return &vsite.ComponentDetail{Component: c}, nil
 }
 
-func componentTemplate(key string, icon string) (string, string, error) {
+func componentTemplate(key string) (string, string, error) {
 	title, html, err := doc.HTML("components:"+key, "components/"+key+".md", func(s string) (string, string, error) {
 		ret, err := cutil.FormatMarkdown(s)
 		if err != nil {

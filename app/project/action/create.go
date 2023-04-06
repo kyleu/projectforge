@@ -41,7 +41,7 @@ func onCreate(ctx context.Context, params *Params) *Result {
 	if err != nil {
 		return errorResult(err, TypeCreate, params.Cfg, params.Logger)
 	}
-	retS := onGenerate(ctx, pm)
+	retS := onGenerate(pm)
 	ret = ret.Merge(retS)
 	if ret.HasErrors() {
 		return ret

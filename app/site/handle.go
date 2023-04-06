@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/valyala/fasthttp"
-
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/site/download"
@@ -18,7 +16,7 @@ import (
 	"projectforge.dev/projectforge/views/vsite"
 )
 
-func Handle(path []string, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (string, layout.Page, []string, error) {
+func Handle(path []string, as *app.State, ps *cutil.PageState) (string, layout.Page, []string, error) {
 	if len(path) == 0 {
 		ps.Data = siteData("Welcome to the marketing site!")
 		return "", &vsite.Index{}, path, nil
@@ -45,9 +43,9 @@ func Handle(path []string, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.Pag
 	case keyComponents:
 		switch {
 		case len(path) == 1:
-			page, err = componentList(as, ps)
+			page, err = componentList(ps)
 		case len(path) == 2:
-			page, err = componentDetail(path[1], as, ps)
+			page, err = componentDetail(path[1], ps)
 		}
 	case keyAbout:
 		ps.Title = "About " + util.AppName

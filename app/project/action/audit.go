@@ -30,13 +30,12 @@ func onAudit(ctx context.Context, pm *PrjAndMods) *Result {
 	if err != nil {
 		return errorResult(err, TypeAudit, pm.Cfg, pm.Logger)
 	}
-	err = auditRun(ctx, pm, ret)
+	err = auditRun(pm, ret)
 	if err != nil {
 		return errorResult(err, TypeAudit, pm.Cfg, pm.Logger)
 	}
 
-	fs := pm.PSvc.GetFilesystem(pm.Prj)
-	errs := project.Validate(pm.Prj, pm.MSvc.Deps(), fs)
+	errs := project.Validate(pm.Prj, pm.MSvc.Deps())
 	for _, err := range errs {
 		ret = ret.WithError(errors.Errorf("%s: %s", err.Code, err.Message))
 	}
@@ -44,7 +43,7 @@ func onAudit(ctx context.Context, pm *PrjAndMods) *Result {
 	return ret
 }
 
-func auditRun(ctx context.Context, pm *PrjAndMods, ret *Result) error {
+func auditRun(pm *PrjAndMods, ret *Result) error {
 	timer := util.TimerStart()
 	tgt := pm.PSvc.GetFilesystem(pm.Prj)
 
@@ -53,7 +52,7 @@ func auditRun(ctx context.Context, pm *PrjAndMods, ret *Result) error {
 		return err
 	}
 
-	src, err := getModuleFiles(ctx, pm)
+	src, err := getModuleFiles(pm)
 	if err != nil {
 		return err
 	}

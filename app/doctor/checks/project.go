@@ -22,19 +22,19 @@ var prj = &doctor.Check{
 	Solve:   solveProject,
 }
 
-func checkProject(ctx context.Context, r *doctor.Result, logger util.Logger) *doctor.Result {
-	p, fs, r := loadRootProject(r)
+func checkProject(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Result {
+	p, _, r := loadRootProject(r)
 	if len(r.Errors) > 0 {
 		return r
 	}
-	errs := project.Validate(p, CurrentModuleDeps, fs)
+	errs := project.Validate(p, CurrentModuleDeps)
 	for _, err := range errs {
 		r = r.WithError(doctor.NewError("config", "[%s]: %s", err.Code, err.Message))
 	}
 	return r
 }
 
-func solveProject(ctx context.Context, r *doctor.Result, logger util.Logger) *doctor.Result {
+func solveProject(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Result {
 	if r.Errors.Find("missing") != nil {
 		r.AddSolution("run [projectforge create] in this directory")
 	}

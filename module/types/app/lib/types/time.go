@@ -25,7 +25,7 @@ func (x *Time) String() string {
 }
 
 func (x *Time) From(v any) any {
-	return invalidInput(x.Key(), x)
+	return invalidInput(x.Key(), v)
 }
 
 func (x *Time) Default(string) any {

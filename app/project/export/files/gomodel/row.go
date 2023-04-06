@@ -36,7 +36,7 @@ func Row(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 			}
 		}
 	}
-	if tc, err := modelTableCols(m, g); err == nil {
+	if tc, err := modelTableCols(m); err == nil {
 		g.AddBlocks(tc)
 	} else {
 		return nil, err
@@ -54,7 +54,7 @@ func Row(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	return g.Render(addHeader)
 }
 
-func modelTableCols(m *model.Model, g *golang.File) (*golang.Block, error) {
+func modelTableCols(m *model.Model) (*golang.Block, error) {
 	ret := golang.NewBlock("Columns", "procedural")
 	ret.W("var (")
 	ret.W("\ttable         = %q", m.Name)

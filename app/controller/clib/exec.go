@@ -63,7 +63,7 @@ func ExecNew(rc *fasthttp.RequestCtx) {
 			msg := &websocket.Message{Channel: key, Cmd: "output", Param: util.ToJSONBytes(m, true)}
 			return as.Services.Socket.WriteChannel(msg, ps.Logger)
 		}
-		err = x.Start(ps.Context, ps.Logger, w)
+		err = x.Start(w)
 		if err != nil {
 			return "", err
 		}

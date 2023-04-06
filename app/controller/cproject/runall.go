@@ -8,7 +8,6 @@ import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
 	"projectforge.dev/projectforge/app/controller/cutil"
-	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/project/action"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views"
@@ -33,7 +32,7 @@ func RunAllActions(rc *fasthttp.RequestCtx) {
 			prjs = prjs.WithTags(tags...)
 		}
 		if actS == "start" {
-			return runAllStart(cfg, prjs, tags, rc, as, ps)
+			return runAllStart(rc, as, ps)
 		}
 		actT := action.TypeFromString(actS)
 
@@ -46,7 +45,7 @@ func RunAllActions(rc *fasthttp.RequestCtx) {
 			case depsKey:
 				return runAllDeps(cfg, prjs, tags, rc, as, ps)
 			case pkgsKey:
-				return runAllPkgs(cfg, prjs, tags, rc, as, ps)
+				return runAllPkgs(cfg, prjs, rc, as, ps)
 			}
 		}
 
@@ -59,7 +58,7 @@ func RunAllActions(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func runAllStart(cfg util.ValueMap, prjs project.Projects, tags []string, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (string, error) {
+func runAllStart(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (string, error) {
 	ps.Title = "Start All"
 	ps.Data = "???"
 	page := &views.Debug{}

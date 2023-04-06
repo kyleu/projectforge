@@ -1,14 +1,12 @@
 package cmenu
 
 import (
-	"context"
-
 	"projectforge.dev/projectforge/app/lib/menu"
 	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/project"
 )
 
-func projectMenu(ctx context.Context, prjs project.Projects) *menu.Item {
+func projectMenu(prjs project.Projects) *menu.Item {
 	ret := &menu.Item{Key: "projects", Title: "Projects", Description: "View all of the projects managed by this application", Icon: "code", Route: "/p"}
 	for _, prj := range prjs {
 		key := prj.Key

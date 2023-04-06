@@ -12,7 +12,7 @@ import (
 )
 
 func MenuFor(
-	ctx context.Context, isAuthed bool, isAdmin bool, profile *user.Profile, params filter.ParamSet, as *app.State, logger util.Logger,
+	ctx context.Context, isAuthed bool, isAdmin bool, profile *user.Profile, params filter.ParamSet, as *app.State, logger util.Logger, //nolint:revive
 ) (menu.Items, any, error) {
 	var ret menu.Items
 	var data any
@@ -25,7 +25,7 @@ func MenuFor(
 	// $PF_SECTION_START(routes_end)$
 	// This is your menu, feel free to customize it
 	admin := &menu.Item{Key: "admin", Title: "Settings", Description: "System-wide settings and preferences", Icon: "cog", Route: "/admin"}
-	ret = append(ret, {{{ if .HasModule "graphql" }}}menu.Separator, graphQLMenu(ctx), {{{end}}}{{{ if .HasModule "sandbox" }}}sandbox.Menu(ctx), {{{ end }}}menu.Separator, admin{{{ if .HasModule "docbrowse" }}}, menu.Separator, docMenu(ctx, as, logger){{{ end }}})
+	ret = append(ret, {{{ if .HasModule "graphql" }}}menu.Separator, graphQLMenu(ctx), {{{end}}}{{{ if .HasModule "sandbox" }}}sandbox.Menu(ctx), {{{ end }}}menu.Separator, admin{{{ if .HasModule "docbrowse" }}}, menu.Separator, docMenu(logger){{{ end }}})
 	const aboutDesc = "Get assistance and advice for using " + util.AppName
 	ret = append(ret, &menu.Item{Key: "about", Title: "About", Description: aboutDesc, Icon: "question", Route: "/about"})
 	// $PF_SECTION_END(routes_end)$

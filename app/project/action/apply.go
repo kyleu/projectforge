@@ -103,13 +103,13 @@ func applyPrj(ctx context.Context, pm *PrjAndMods, t Type) *Result {
 	case TypeBuild:
 		return onBuild(ctx, pm)
 	case TypeDebug:
-		return onDebug(ctx, pm)
+		return onDebug(pm)
 	case TypeGenerate:
-		return onGenerate(ctx, pm)
+		return onGenerate(pm)
 	case TypePreview:
-		return onPreview(ctx, pm)
+		return onPreview(pm)
 	case TypeRules:
-		return onRules(ctx, pm)
+		return onRules(pm)
 	case TypeSVG:
 		return onSVG(ctx, pm)
 	default:

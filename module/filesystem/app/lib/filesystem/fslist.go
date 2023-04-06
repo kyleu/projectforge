@@ -76,7 +76,7 @@ func (f *FileSystem) ListDirectories(path string, ign []string, logger util.Logg
 	return ret
 }
 
-func (f *FileSystem) ListFilesRecursive(path string, ign []string, logger util.Logger) ([]string, error) {
+func (f *FileSystem) ListFilesRecursive(path string, ign []string, _ util.Logger) ([]string, error) {
 	ignore := buildIgnore(ign)
 	p := f.getPath(path)
 	var ret []string

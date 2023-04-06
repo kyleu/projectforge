@@ -1,12 +1,10 @@
 package action
 
 import (
-	"context"
-
 	"projectforge.dev/projectforge/app/util"
 )
 
-func onDebug(ctx context.Context, pm *PrjAndMods) *Result {
+func onDebug(pm *PrjAndMods) *Result {
 	ret := newResult(TypeDebug, pm.Prj, pm.Cfg, pm.Logger)
 
 	ret.AddWarn("Project:")

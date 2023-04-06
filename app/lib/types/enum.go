@@ -38,7 +38,7 @@ func (x *Enum) From(v any) any {
 	}
 }
 
-func (x *Enum) Default(key string) any {
+func (x *Enum) Default(_ string) any {
 	return ""
 }
 

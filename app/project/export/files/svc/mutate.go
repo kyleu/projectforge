@@ -22,7 +22,7 @@ func ServiceMutate(m *model.Model, args *model.Args, addHeader bool) (*file.File
 	}
 	g.AddImport(helper.ImpAppUtil, helper.ImpContext, helper.ImpSQLx, helper.ImpDatabase)
 
-	if add, err := serviceCreate(m, g, args.Database()); err == nil {
+	if add, err := serviceCreate(m, g); err == nil {
 		g.AddBlocks(add)
 	} else {
 		return nil, err
@@ -39,13 +39,13 @@ func ServiceMutate(m *model.Model, args *model.Args, addHeader bool) (*file.File
 			return nil, err
 		}
 	}
-	if save, err := serviceSave(m, g, args.Database()); err == nil {
+	if save, err := serviceSave(m, g); err == nil {
 		g.AddBlocks(save)
 	} else {
 		return nil, err
 	}
 	if m.IsRevision() {
-		g.AddBlocks(serviceUpsertCore(m, g, args.Database()), serviceInsertRevision(m, args.Database()))
+		g.AddBlocks(serviceUpsertCore(m, g), serviceInsertRevision(m))
 	}
 	if m.IsSoftDelete() {
 		g.AddImport(helper.ImpTime)
@@ -64,7 +64,7 @@ func ServiceMutate(m *model.Model, args *model.Args, addHeader bool) (*file.File
 	return g.Render(addHeader)
 }
 
-func serviceCreate(m *model.Model, g *golang.File, database string) (*golang.Block, error) {
+func serviceCreate(m *model.Model, g *golang.File) (*golang.Block, error) {
 	ret := golang.NewBlock("Create", "func")
 	ret.W("func (s *Service) Create(ctx context.Context, tx *sqlx.Tx, logger util.Logger, models ...*%s) error {", m.Proper())
 	ret.W("\tif len(models) == 0 {")
@@ -264,7 +264,7 @@ func serviceUpdateIfNeeded(m *model.Model, g *golang.File, database string) (*go
 	return ret, nil
 }
 
-func serviceSave(m *model.Model, g *golang.File, database string) (*golang.Block, error) {
+func serviceSave(m *model.Model, g *golang.File) (*golang.Block, error) {
 	ret := golang.NewBlock("Save", "func")
 	ret.W("func (s *Service) Save(ctx context.Context, tx *sqlx.Tx, logger util.Logger, models ...*%s) error {", m.Proper())
 	ret.W("\tif len(models) == 0 {")
@@ -305,7 +305,7 @@ func serviceSave(m *model.Model, g *golang.File, database string) (*golang.Block
 	return ret, nil
 }
 
-func serviceUpsertCore(m *model.Model, g *golang.File, database string) *golang.Block {
+func serviceUpsertCore(m *model.Model, g *golang.File) *golang.Block {
 	g.AddImport(helper.ImpAppUtil)
 	ret := golang.NewBlock("UpsertCore", "func")
 	ret.W("func (s *Service) upsertCore(ctx context.Context, tx *sqlx.Tx, logger util.Logger, models ...*%s) error {", m.Proper())
@@ -321,7 +321,7 @@ func serviceUpsertCore(m *model.Model, g *golang.File, database string) *golang.
 	return ret
 }
 
-func serviceInsertRevision(m *model.Model, database string) *golang.Block {
+func serviceInsertRevision(m *model.Model) *golang.Block {
 	revCol := m.HistoryColumn()
 	ret := golang.NewBlock("InsertRev", "func")
 	ret.W("func (s *Service) insert%s(ctx context.Context, tx *sqlx.Tx, logger util.Logger, models ...*%s) error {", m.HistoryColumn().Proper(), m.Proper())
@@ -335,7 +335,7 @@ func serviceInsertRevision(m *model.Model, database string) *golang.Block {
 	return ret
 }
 
-func serviceAddCreatedUpdated(m *model.Model, ret *golang.Block, g *golang.File, loadCurr bool, additional ...string) error {
+func serviceAddCreatedUpdated(m *model.Model, ret *golang.Block, g *golang.File, loadCurr bool) error {
 	createdCols := m.Columns.WithTag("created")
 	updatedCols := m.Columns.WithTag("updated")
 	if len(createdCols) > 0 || len(updatedCols) > 0 || m.IsRevision() {

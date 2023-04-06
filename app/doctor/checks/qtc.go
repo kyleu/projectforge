@@ -18,7 +18,7 @@ var qtc = &doctor.Check{
 	Solve:   solveQTC,
 }
 
-func solveQTC(ctx context.Context, r *doctor.Result, logger util.Logger) *doctor.Result {
+func solveQTC(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Result {
 	if r.Errors.Find("missing") != nil || r.Errors.Find("exitcode") != nil {
 		r.AddSolution("go get -u github.com/valyala/quicktemplate/qtc")
 	}

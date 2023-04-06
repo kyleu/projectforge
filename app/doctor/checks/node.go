@@ -18,7 +18,7 @@ var node = &doctor.Check{
 	Solve:   solveNode,
 }
 
-func solveNode(ctx context.Context, r *doctor.Result, logger util.Logger) *doctor.Result {
+func solveNode(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Result {
 	if r.Errors.Find("missing") != nil || r.Errors.Find("exitcode") != nil {
 		r.AddSolution("Install [Node.js] using your platform's package manager")
 	}

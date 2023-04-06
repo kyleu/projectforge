@@ -14,7 +14,7 @@ func auditRemove(ctx context.Context, fn string, pm *PrjAndMods, ret *Result) er
 		paths := ret.Modules.Paths(false)
 		if len(paths) == 0 {
 			x := &Result{}
-			err := auditRun(ctx, pm, x)
+			err := auditRun(pm, x)
 			if err != nil {
 				return err
 			}
@@ -36,7 +36,7 @@ func auditRemove(ctx context.Context, fn string, pm *PrjAndMods, ret *Result) er
 func auditHeader(ctx context.Context, fn string, pm *PrjAndMods, ret *Result) error {
 	if fn == "" {
 		x := &Result{}
-		err := auditRun(ctx, pm, x)
+		err := auditRun(pm, x)
 		if err != nil {
 			return err
 		}

@@ -16,7 +16,7 @@ import (
 
 const rootKey = "root"
 
-func (s *Service) load(path string, logger util.Logger) (json.RawMessage, *Project, error) {
+func (s *Service) load(path string) (json.RawMessage, *Project, error) {
 	cfgPath := filepath.Join(path, ConfigDir, "project.json")
 
 	if curr, _ := os.Stat(cfgPath); curr == nil {

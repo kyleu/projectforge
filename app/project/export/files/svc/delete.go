@@ -43,7 +43,7 @@ func serviceSoftDelete(m *model.Model, enums enum.Enums) (*golang.Block, error) 
 	return ret, nil
 }
 
-func serviceDeleteWhere(m *model.Model) *golang.Block {
+func serviceDeleteWhere(_ *model.Model) *golang.Block {
 	ret := golang.NewBlock("Delete", "func")
 	ret.W("func (s *Service) DeleteWhere(%s) error {", argString)
 	ret.W("\tq := database.SQLDelete(tableQuoted, wc, s.db.Placeholder())")

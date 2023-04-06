@@ -10,7 +10,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func Enum(e *enum.Enum, args *model.Args, addHeader bool) (*file.File, error) {
+func Enum(e *enum.Enum, addHeader bool) (*file.File, error) {
 	var m model.Model
 	m.Camel()
 	g := golang.NewFile(e.Package, []string{"app", e.PackageWithGroup("")}, strings.ToLower(e.Camel()))

@@ -33,7 +33,7 @@ func (x *Reference) String() string {
 }
 
 func (x *Reference) From(v any) any {
-	return invalidInput(x.Key(), x)
+	return invalidInput(x.Key(), v)
 }
 
 func (x *Reference) Path() util.Pkg {

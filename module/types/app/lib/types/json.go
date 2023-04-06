@@ -26,7 +26,7 @@ func (x *JSON) String() string {
 }
 
 func (x *JSON) From(v any) any {
-	return invalidInput(x.Key(), x)
+	return invalidInput(x.Key(), v)
 }
 
 func (x *JSON) Default(string) any {

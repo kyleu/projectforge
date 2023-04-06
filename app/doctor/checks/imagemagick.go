@@ -19,14 +19,14 @@ var imagemagick = &doctor.Check{
 	Solve:   solveImageMagick,
 }
 
-func checkImageMagick(ctx context.Context, r *doctor.Result, out string) *doctor.Result {
+func checkImageMagick(_ context.Context, r *doctor.Result, out string) *doctor.Result {
 	if !strings.Contains(out, "ImageMagick") {
 		return r.WithError(doctor.NewError("invalid", "[convert] is not provided by ImageMagick"))
 	}
 	return r
 }
 
-func solveImageMagick(ctx context.Context, r *doctor.Result, logger util.Logger) *doctor.Result {
+func solveImageMagick(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Result {
 	if r.Errors.Find("missing") != nil || r.Errors.Find("exitcode") != nil {
 		r.AddSolution("Install [imagemagick] using your platform's package manager")
 	}
