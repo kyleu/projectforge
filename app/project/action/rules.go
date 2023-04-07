@@ -30,6 +30,7 @@ func onRules(pm *PrjAndMods) *Result {
 		for slices.Contains(forbidden, m.Icon) {
 			m.Icon = icons[util.RandomInt(len(icons))]
 		}
+		m.AddTag("audit")
 		m.AddTag("search")
 		for _, col := range m.Columns {
 			switch strings.ToLower(col.Name) {

@@ -58,7 +58,7 @@ jobs:
         with:
           distribution: "goreleaser"
           version: "latest"
-          args: "-f ./tools/release/.goreleaser.yml release --rm-dist"
+          args: "-f ./tools/release/.goreleaser.yml release --clean"
         env:
           GOPRIVATE: "github.com/${{ github.repository_owner }}"
           GITHUB_TOKEN: "${{ secrets.CR_PAT }}"

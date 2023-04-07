@@ -11,6 +11,6 @@ Licensed under [CC0](https://creativecommons.org/publicdomain/zero/1.0)
 
 ### Usage
 
-The `audit` module depends on `database`, and provides tables for tracking changes to other objects. 
+Create a new exec service by calling `app/lib/exec/NewService()`, then call `NewExec`. 
 
-Best paired with the `export` module, you can use `audit` to save audit logs. See `./app/lib/audit` for details
+If you'd like to monitor the progress, render `/views/vexec/Detail.html`. If the `websocket` module is included, you'll be able to see a streaming result. 

@@ -18,7 +18,7 @@ const (
 	keyTech        = "technology"
 )
 
-func Menu(ctx context.Context, as *app.State, _ *user.Profile, _ user.Accounts, _ util.Logger) menu.Items {
+func Menu(_ context.Context, _ *app.State, _ *user.Profile, _ user.Accounts, _ util.Logger) menu.Items {
 	return menu.Items{
 		{Key: keyInstall, Title: "Install", Icon: "code", Route: "/" + keyInstall},
 		{Key: keyDownload, Title: "Download", Icon: "download", Route: "/" + keyDownload},

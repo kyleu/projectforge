@@ -10,4 +10,4 @@ Licensed under [CC0](https://creativecommons.org/publicdomain/zero/1.0)
 
 ### Usage
 
-- Provides a bunch of structs representing scalars, models, and schemata
+Provides a bunch of structs representing scalars, models, and schemata. You probably don't need it.

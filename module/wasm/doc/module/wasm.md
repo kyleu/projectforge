@@ -12,4 +12,5 @@ Licensed under [CC0](https://creativecommons.org/publicdomain/zero/1.0)
 
 A WASM library is available in `./app/wasm`. If the `sandbox` module is enabled, a testbed will be created.
 
-To begin enabling
+A main method is generated in `/app/wasm/main.go`, and exported functions are defined in `/app/wasm/funcs.go`.
+To build your wasm project, run `/bin/build/wasm.sh`.

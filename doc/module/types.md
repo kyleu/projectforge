@@ -11,5 +11,4 @@ Licensed under [CC0](https://creativecommons.org/publicdomain/zero/1.0)
 
 ### Usage
 
-- Provides a bunch of structs representing types
-- There's not much to this module, you probably don't need it
+Provides a bunch of structs representing types, with a focus on JSON serialization. It's kind of weird.

@@ -60,7 +60,7 @@ func auditRun(pm *PrjAndMods, ret *Result) error {
 	audits := make(diff.Diffs, 0, len(generated))
 	for _, g := range generated {
 		if !slices.Contains(src, g) {
-			if (!strings.HasSuffix(g, "client.js.map")) && (!strings.HasSuffix(g, "file/header.go")) {
+			if (!strings.HasSuffix(g, "client.js.map")) && (!strings.HasSuffix(g, "client.css.map")) && (!strings.HasSuffix(g, "file/header.go")) {
 				audits = append(audits, &diff.Diff{Path: g, Status: diff.StatusDifferent})
 			}
 		}

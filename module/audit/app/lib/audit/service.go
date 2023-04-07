@@ -3,6 +3,7 @@ package audit
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/pkg/errors"
 
@@ -21,16 +22,6 @@ func NewService(db *database.Service, logger util.Logger) *Service {
 	filter.AllowedColumns["audit"] = columns
 	filter.AllowedColumns["audit_record"] = recordColumns
 	return &Service{db: db, logger: logger}
-}
-
-func (s *Service) ApplyObj(ctx context.Context, a *Audit, l any, r any, md util.ValueMap, logger util.Logger) (*Audit, Records, error) {
-	o := r
-	if o == nil {
-		o = l
-	}
-	d := util.DiffObjects(l, r, "")
-	rec := NewRecord(a.ID, fmt.Sprintf("%T", o), fmt.Sprint(o), d, md)
-	return s.Apply(ctx, a, logger, rec)
 }
 
 func (s *Service) Apply(ctx context.Context, a *Audit, logger util.Logger, r ...*Record) (*Audit, Records, error) {
@@ -52,4 +43,20 @@ func (s *Service) Apply(ctx context.Context, a *Audit, logger util.Logger, r ...
 		return nil, nil, errors.Wrap(err, "unable to commit transaction")
 	}
 	return a, r, nil
+}
+
+func (s *Service) ApplyObj(ctx context.Context, a *Audit, l any, r any, md util.ValueMap, logger util.Logger) (*Audit, Records, error) {
+	o := r
+	if o == nil {
+		o = l
+	}
+	d := util.DiffObjects(l, r, "")
+	rec := NewRecord(a.ID, fmt.Sprintf("%T", o), fmt.Sprint(o), d, md)
+	return s.Apply(ctx, a, logger, rec)
+}
+
+func (s *Service) ApplyObjSimple(ctx context.Context, act string, msg string, l any, r any, md util.ValueMap, logger util.Logger) (*Audit, Records, error) {
+	a := New(act, "", "", "", md, msg)
+	a.Completed = time.Now()
+	return s.ApplyObj(ctx, a, l, r, md, logger)
 }

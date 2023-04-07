@@ -3,7 +3,36 @@ drop table if exists "audit_record";
 drop table if exists "audit";
 -- {% endfunc %}
 
--- {% func AuditCreate() %}
+-- {% func AuditCreate() %}{{{ if .SQLServer }}}
+if not exists (select * from sysobjects where name='audit' and xtype='U')
+create table audit (
+    "id" uniqueidentifier not null,
+    "app" varchar(max) not null,
+    "act" varchar(max) not null,
+    "client" varchar(max) not null,
+    "server" varchar(max) not null,
+    "user" varchar(max) not null,
+    "metadata" varchar(max) not null,
+    "message" varchar(max) not null,
+    "started" datetime not null,
+    "completed" datetime not null,
+    primary key ("id")
+)
+go;
+
+if not exists (select * from sysobjects where name='audit_record' and xtype='U')
+create table audit_record (
+    "id" uniqueidentifier not null,
+    "audit_id" uniqueidentifier not null,
+    "t" text not null,
+    "pk" text not null,
+    "changes" varchar(max) not null,
+    "metadata" varchar(max) not null,
+    "occurred" datetime not null,
+    foreign key ("audit_id") references "audit" ("id"),
+    primary key ("id")
+)
+go;{{{ else }}}
 create table if not exists "audit" (
   "id" uuid not null,
   "app" text not null,
@@ -41,5 +70,5 @@ create index if not exists "audit_record__pk" on "audit_record" using btree ("pk
 create index if not exists "audit_record__changes" on "audit_record" using gin ("changes");
 create index if not exists "audit_record__metadata" on "audit_record" using gin ("metadata");
 
-create index if not exists "audit_record__audit_id_idx" on "audit_record" ("audit_id");
+create index if not exists "audit_record__audit_id_idx" on "audit_record" ("audit_id");{{{ end }}}
 -- {% endfunc %}

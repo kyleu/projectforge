@@ -124,7 +124,9 @@ func (s *Service) Close() {
 
 var upgrader = websocket.FastHTTPUpgrader{EnableCompression: true}
 
-func (s *Service) Upgrade(ctx context.Context, rc *fasthttp.RequestCtx, channel string{{{ if .HasModule "user" }}}, u *dbuser.User{{{ end }}}, profile *user.Profile{{{ if .HasModule "oauth" }}}, accts user.Accounts{{{ end }}}, logger util.Logger) error {
+func (s *Service) Upgrade(
+	ctx context.Context, rc *fasthttp.RequestCtx, channel string{{{ if .HasModule "user" }}}, u *dbuser.User{{{ end }}}, profile *user.Profile{{{ if .HasModule "oauth" }}}, accts user.Accounts{{{ end }}}, logger util.Logger,
+) error {
 	return upgrader.Upgrade(rc, func(conn *websocket.Conn) {
 		cx, err := s.Register({{{ if .HasModule "user" }}}u, {{{ end }}}profile{{{ if .HasModule "oauth" }}}, accts{{{ end }}}, conn, logger)
 		if err != nil {

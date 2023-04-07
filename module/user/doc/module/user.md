@@ -14,7 +14,7 @@ Licensed under [CC0](https://creativecommons.org/publicdomain/zero/1.0)
 
 No implementation of a User is provided. Either provide your own, or have Project Forge generate one by making a new file:
 
-`./.projectforge/export/models/user.json`
+`./.projectforge/export/models/user.json` (`database` and `export` modules are required)
 
 ```json
 {

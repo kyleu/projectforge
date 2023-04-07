@@ -62,7 +62,11 @@ func DiffObjectsIgnoring(l any, r any, ignored []string, path ...string) Diffs {
 	if lt, rt := fmt.Sprintf("%T", l), fmt.Sprintf("%T", r); lt != rt {
 		return append(ret, NewDiff(strings.Join(path, "."), ToJSONCompact(l), ToJSONCompact(r)))
 	}
+	diffType(ret, l, r, ignored, false, path...)
+	return ret
+}
 
+func diffType(ret Diffs, l any, r any, ignored []string, recursed bool, path ...string) {
 	switch t := l.(type) {
 	case ValueMap:
 		ret = append(ret, diffMaps(t, r, ignored, path...)...)
@@ -78,8 +82,18 @@ func DiffObjectsIgnoring(l any, r any, ignored []string, path ...string) Diffs {
 			rv := rm[idx]
 			ret = append(ret, DiffObjectsIgnoring(v, rv, ignored, append([]string{}, path...)...)...)
 		}
+	case int64:
+		i, _ := r.(int64)
+		if t != i {
+			ret = append(ret, NewDiff(strings.Join(path, "."), fmt.Sprint(t), fmt.Sprint(i)))
+		}
 	case int:
 		i, _ := r.(int)
+		if t != i {
+			ret = append(ret, NewDiff(strings.Join(path, "."), fmt.Sprint(t), fmt.Sprint(i)))
+		}
+	case float64:
+		i, _ := r.(float64)
 		if t != i {
 			ret = append(ret, NewDiff(strings.Join(path, "."), fmt.Sprint(t), fmt.Sprint(i)))
 		}
@@ -89,12 +103,19 @@ func DiffObjectsIgnoring(l any, r any, ignored []string, path ...string) Diffs {
 			ret = append(ret, NewDiff(strings.Join(path, "."), t, s))
 		}
 	default:
-		if lj, rj := ToJSONCompact(l), ToJSONCompact(r); lj != rj {
-			ret = append(ret, NewDiff(strings.Join(path, "."), lj, rj))
+		lj, rj := ToJSONCompact(l), ToJSONCompact(r)
+		if !recursed && (strings.HasPrefix(lj, "{") || strings.HasPrefix(lj, "[")) {
+			var lx, rx any
+			_ = FromJSON([]byte(lj), &lx)
+			_ = FromJSON([]byte(rj), &rx)
+			diffType(ret, lx, rx, ignored, true, path...)
+			return
+		} else {
+			if lj != rj {
+				ret = append(ret, NewDiff(strings.Join(path, "."), lj, rj))
+			}
 		}
 	}
-
-	return ret
 }
 
 func diffArrays(l []any, r any, ignored []string, path ...string) Diffs {

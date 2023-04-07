@@ -23,7 +23,7 @@ func (s *Service) Create(ctx context.Context, tx *sqlx.Tx, logger util.Logger, m
 }
 
 func (s *Service) Update(ctx context.Context, tx *sqlx.Tx, model *Audit, logger util.Logger) error {
-	q := database.SQLUpdate(tableQuoted, columnsQuoted, "\"id\" = $11", s.db.Placeholder())
+	q := database.SQLUpdate(tableQuoted, columnsQuoted, "\"id\" = {{{ .Placeholder 11 }}}", s.db.Placeholder())
 	data := model.ToData()
 	data = append(data, model.ID)
 	_, ret := s.db.Update(ctx, q, tx, 1, logger, data...)

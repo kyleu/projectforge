@@ -6,5 +6,6 @@
   "authorEmail": "kyle@kyleu.com",
   "license": "CC0",
   "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/export",
-  "priority": 100
+  "priority": 100,
+  "requires": ["database"]
 }

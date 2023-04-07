@@ -10,4 +10,4 @@ Licensed under [CC0](https://creativecommons.org/publicdomain/zero/1.0)
 
 ### Usage
 
-- Adds a new command for upgrading to the latest Github Release
+- Adds a new command for upgrading to the latest Github Release, just pass argument `upgrade` to the command line invocation

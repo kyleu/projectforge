@@ -10,16 +10,4 @@ Licensed under [CC0](https://creativecommons.org/publicdomain/zero/1.0)
 
 ### Usage
 
-# Audit
-
-This is a module for [Project Forge](https://projectforge.dev). It provides a framework for managing system processes.
-
-https://github.com/kyleu/projectforge/tree/master/module/process
-
-### License
-
-Licensed under [CC0](https://creativecommons.org/publicdomain/zero/1.0)
-
-### Usage
-
-- `app.State::DBRead`
+When enabled, a new read-only database connection will be provided in `app.State::DBRead`

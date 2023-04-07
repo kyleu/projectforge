@@ -106,3 +106,17 @@ func (t *TemplateContext) GoBinarySafe() string {
 	}
 	return t.Info.GoBinary
 }
+
+func (t *TemplateContext) Placeholder(idx int) string {
+	if slices.Contains(t.Modules, "postgres") || slices.Contains(t.Modules, "sqlite") {
+		return fmt.Sprintf("$%d", idx)
+	}
+	if slices.Contains(t.Modules, "sqlserver") {
+		return fmt.Sprintf("@p%d", idx)
+	}
+	return "?"
+}
+
+func (t *TemplateContext) SQLServer() bool {
+	return !slices.Contains(t.Modules, "postgres") && slices.Contains(t.Modules, "sqlserver")
+}

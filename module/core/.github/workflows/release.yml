@@ -64,7 +64,7 @@ jobs:{{{ if .Build.TestsFail }}}
         with:
           distribution: "goreleaser"
           version: "latest"
-          args: "-f ./tools/release/.goreleaser.yml release --rm-dist"
+          args: "-f ./tools/release/.goreleaser.yml release --clean"
         env:{{{ if .HasSlack }}}
           SLACK_WEBHOOK: "{{{ .Info.Slack }}}"{{{ end }}}
           GOPRIVATE: "github.com/${{ github.repository_owner }}"

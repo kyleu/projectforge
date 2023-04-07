@@ -40,14 +40,12 @@ func SQLSelectGrouped(columns string, tables string, where string, groupBy strin
 	if placeholder == "@" {
 		prefix := ""
 		if limit > 0 {
-			if len(orderBy) == 0 {
+			if orderBy == "" {
 				prefix = fmt.Sprintf("top %d ", limit)
 			} else {
 				limitClause = fmt.Sprintf(" fetch next %d rows only", limit)
 			}
 		}
-
-		offsetClause := ""
 		if len(orderBy) > 0 && (offset > 0 || limit > 0) {
 			offsetClause = fmt.Sprintf(" offset %d rows", offset)
 		}
@@ -136,7 +134,7 @@ func SQLUpsert(table string, columns []string, rows int, conflicts []string, upd
 
 func SQLDelete(table string, where string, placeholder string) string {
 	if strings.TrimSpace(where) == "" {
-		return fmt.Sprintf("attempt to delete from [%s] with empty where clause", table)
+		return fmt.Sprintf("attempt to delete from [%s] using placeholder [%s] with empty where clause", table, placeholder)
 	}
 	return "delete from " + table + whereSpaces + where
 }

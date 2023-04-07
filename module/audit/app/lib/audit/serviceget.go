@@ -28,7 +28,7 @@ func (s *Service) Get(ctx context.Context, tx *sqlx.Tx, id uuid.UUID, logger uti
 	wc := defaultWC
 	ret := &row{}
 	q := database.SQLSelectSimple(columnsString, tableQuoted, s.db.Placeholder(), wc)
-	err := s.db.Get(ctx, ret, q, tx, logger, id)
+	err := s.db.Get(ctx, ret, q, tx, logger, id{{{ if .SQLServer }}}.String(){{{ end }}})
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get audit by id [%v]", id)
 	}
@@ -36,9 +36,9 @@ func (s *Service) Get(ctx context.Context, tx *sqlx.Tx, id uuid.UUID, logger uti
 }
 
 const searchClause = `(
-  lower(id) like $1 or lower(app) like $1 or lower(act) like $1 or
-  lower(client) like $1 or lower(server) like $1 or lower(user) like $1 or
-  lower(metadata::text) like $1 or lower(message) like $1
+  lower(id) like {{{ .Placeholder 1 }}} or lower(app) like {{{ .Placeholder 1 }}} or lower(act) like {{{ .Placeholder 1 }}} or
+  lower(client) like {{{ .Placeholder 1 }}} or lower(server) like {{{ .Placeholder 1 }}} or lower(user) like {{{ .Placeholder 1 }}} or
+  lower(metadata::text) like {{{ .Placeholder 1 }}} or lower(message) like {{{ .Placeholder 1 }}}
 )`
 
 func (s *Service) Search(ctx context.Context, query string, tx *sqlx.Tx, params *filter.Params, logger util.Logger) (Audits, error) {

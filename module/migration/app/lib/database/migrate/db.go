@@ -50,7 +50,7 @@ func createMigrationTableIfNeeded(ctx context.Context, s *database.Service, tx *
 
 func getMigrationByIdx(ctx context.Context, s *database.Service, idx int, tx *sqlx.Tx, logger util.Logger) *Migration {
 	row := &migrationRow{}
-	q := database.SQLSelectSimple("*", "migration", s.Placeholder(), "idx = $1")
+	q := database.SQLSelectSimple("*", "migration", s.Placeholder(), "idx = {{{ .Placeholder 1 }}}")
 	err := s.Get(ctx, row, q, tx, logger, idx)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -63,7 +63,7 @@ func getMigrationByIdx(ctx context.Context, s *database.Service, idx int, tx *sq
 }
 
 func removeMigrationByIdx(ctx context.Context, s *database.Service, idx int, tx *sqlx.Tx, logger util.Logger) error {
-	q := database.SQLDelete("migration", "idx = $1", s.Placeholder())
+	q := database.SQLDelete("migration", "idx = {{{ .Placeholder 1 }}}", s.Placeholder())
 	_, err := s.Delete(ctx, q, tx, 1, logger, idx)
 	if err != nil {
 		return errors.Wrap(err, "error removing migration")

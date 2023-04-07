@@ -1,12 +1,12 @@
 package audit
 
 import (
-	"encoding/json"
-	"fmt"
+	{{{ if .SQLServer }}}{{{ else }}}"encoding/json"
+	{{{ end }}}"fmt"
 	"strings"
 	"time"
 
-	"github.com/google/uuid"
+	{{{ if .SQLServer }}}mssql "github.com/denisenkom/go-mssqldb"{{{ else }}}"github.com/google/uuid"{{{ end }}}
 
 	"{{{ .Package }}}/app/util"
 )
@@ -19,7 +19,15 @@ var (
 	recordColumnsString = strings.Join(recordColumnsQuoted, ", ")
 )
 
-type recordRow struct {
+{{{ if .SQLServer }}}type recordRow struct {
+	ID       mssql.UniqueIdentifier `db:"id"`
+	AuditID  mssql.UniqueIdentifier `db:"audit_id"`
+	T        string                 `db:"t"`
+	PK       string                 `db:"pk"`
+	Changes  string                 `db:"changes"`
+	Metadata string                 `db:"metadata"`
+	Occurred time.Time              `db:"occurred"`
+}{{{ else }}}type recordRow struct {
 	ID       uuid.UUID       `db:"id"`
 	AuditID  uuid.UUID       `db:"audit_id"`
 	T        string          `db:"t"`
@@ -27,17 +35,24 @@ type recordRow struct {
 	Changes  json.RawMessage `db:"changes"`
 	Metadata json.RawMessage `db:"metadata"`
 	Occurred time.Time       `db:"occurred"`
-}
+}{{{ end }}}
 
 func (r *recordRow) ToRecord() *Record {
 	if r == nil {
 		return nil
 	}
-	changesArg := util.Diffs{}
+	changesArg := util.Diffs{}{{{ if .SQLServer }}}
+	_ = util.FromJSON([]byte(r.Changes), &changesArg)
+	metadataArg := util.ValueMap{}
+	_ = util.FromJSON([]byte(r.Metadata), &metadataArg)
+	return &Record{
+		ID: util.UUIDFromStringOK(r.ID.String()), AuditID: util.UUIDFromStringOK(r.AuditID.String()), T: r.T, PK: r.PK,
+		Changes: changesArg, Metadata: metadataArg, Occurred: r.Occurred,
+	}{{{ else }}}
 	_ = util.FromJSON(r.Changes, &changesArg)
 	metadataArg := util.ValueMap{}
 	_ = util.FromJSON(r.Metadata, &metadataArg)
-	return &Record{ID: r.ID, AuditID: r.AuditID, T: r.T, PK: r.PK, Changes: changesArg, Metadata: metadataArg, Occurred: r.Occurred}
+	return &Record{ID: r.ID, AuditID: r.AuditID, T: r.T, PK: r.PK, Changes: changesArg, Metadata: metadataArg, Occurred: r.Occurred}{{{ end }}}
 }
 
 type recordRows []*recordRow
