@@ -44,9 +44,10 @@ func controllerDetail(models model.Models, m *model.Model, grp *model.Column, g 
 	if shouldIncDel {
 		ret.W("\t\tincDel := cutil.QueryStringBool(rc, \"includeDeleted\")")
 	}
-	ret.W("")
+	ret.WB()
 	argKeys, argVals := getArgs(models, m, rrels, g, ret)
-	if len(argKeys) <= 2 {
+	revArgKeys, revArgVals := getReverseArgs(models, m, rrels, ret)
+	if len(argKeys)+len(revArgKeys) <= 2 {
 		args := make([]string, 0, len(argKeys))
 		for idx, k := range argKeys {
 			args = append(args, fmt.Sprintf("%s: %s", k, argVals[idx]))
@@ -58,6 +59,13 @@ func controllerDetail(models model.Models, m *model.Model, grp *model.Column, g 
 		keyPad := util.StringArrayMaxLength(argKeys) + 1
 		for idx, k := range argKeys {
 			ret.W("\t\t\t%s %s,", util.StringPad(k+":", keyPad), argVals[idx])
+		}
+		if len(revArgKeys) > 0 {
+			revKeyPad := util.StringArrayMaxLength(revArgKeys) + 1
+			ret.WB()
+			for idx, k := range revArgKeys {
+				ret.W("\t\t\t%s %s,", util.StringPad(k+":", revKeyPad), revArgVals[idx])
+			}
 		}
 		ret.W("\t\t}, ps, %s%s, ret.String())", m.Breadcrumbs(), grpHistory)
 	}
@@ -103,11 +111,24 @@ func getArgs(models model.Models, m *model.Model, rrels model.Relations, g *gola
 		}
 	}
 	if len(m.Relations) > 0 {
-		ret.W("")
+		ret.WB()
 	}
 	if m.IsRevision() || m.IsHistory() || len(rrels) > 0 {
 		argAdd("Params", "ps.Params")
 	}
+	if m.IsRevision() {
+		revCol := m.HistoryColumn()
+		argAdd(revCol.ProperPlural(), revCol.CamelPlural())
+	}
+	if m.IsHistory() {
+		argAdd("Histories", "hist")
+	}
+	return argKeys, argVals
+}
+
+func getReverseArgs(models model.Models, m *model.Model, rrels model.Relations, ret *golang.Block) ([]string, []string) {
+	var argKeys []string
+	var argVals []string
 	for _, rrel := range rrels {
 		rm := models.Get(rrel.Table)
 		delSuffix := ""
@@ -117,21 +138,14 @@ func getArgs(models model.Models, m *model.Model, rrels model.Relations, g *gola
 		lCols := rrel.SrcColumns(m)
 		rCols := rrel.TgtColumns(rm)
 		rNames := strings.Join(rCols.ProperNames(), "")
-		argAdd(fmt.Sprintf("Rel%sBy%s", rm.ProperPlural(), rNames), fmt.Sprintf("rel%sBy%s", rm.ProperPlural(), rNames))
-
+		argKeys = append(argKeys, fmt.Sprintf("Rel%sBy%s", rm.ProperPlural(), rNames))
+		argVals = append(argVals, fmt.Sprintf("rel%sBy%s", rm.ProperPlural(), rNames))
 		ret.W("\t\trel%sBy%sPrms := ps.Params.Get(%q, nil, ps.Logger).Sanitize(%q)", rm.ProperPlural(), rNames, rm.Package, rm.Package)
 		const msg = "\t\trel%sBy%s, err := as.Services.%s.GetBy%s(ps.Context, nil, %s, rel%sBy%sPrms%s, ps.Logger)"
 		ret.W(msg, rm.ProperPlural(), rNames, rm.Proper(), rNames, lCols.ToRefs("ret.", rCols...), rm.ProperPlural(), rNames, delSuffix)
 		ret.W("\t\tif err != nil {")
 		ret.W("\t\t\treturn \"\", errors.Wrap(err, \"unable to retrieve child %s\")", rm.TitlePluralLower())
 		ret.W("\t\t}")
-	}
-	if m.IsRevision() {
-		revCol := m.HistoryColumn()
-		argAdd(revCol.ProperPlural(), revCol.CamelPlural())
-	}
-	if m.IsHistory() {
-		argAdd("Histories", "hist")
 	}
 	return argKeys, argVals
 }

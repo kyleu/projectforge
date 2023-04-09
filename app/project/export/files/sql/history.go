@@ -12,7 +12,7 @@ import (
 
 func sqlHistory(ret *golang.Block, m *model.Model, modules []string) {
 	if m.IsHistory() {
-		ret.W("")
+		ret.WB()
 		ret.W("create table if not exists %q (", m.Name+"_history")
 		ret.W("  \"id\" uuid,")
 		pkRefs := make([]string, 0, len(m.PKs()))

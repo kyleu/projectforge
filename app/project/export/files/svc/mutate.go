@@ -22,12 +22,12 @@ func ServiceMutate(m *model.Model, args *model.Args, addHeader bool) (*file.File
 	}
 	g.AddImport(helper.ImpAppUtil, helper.ImpContext, helper.ImpSQLx, helper.ImpDatabase)
 
-	if add, err := serviceCreate(m, g); err == nil {
+	if add, err := serviceCreate(m, args.Audit(m), g); err == nil {
 		g.AddBlocks(add)
 	} else {
 		return nil, err
 	}
-	if upd, err := serviceUpdate(m, g, args.Database()); err == nil {
+	if upd, err := serviceUpdate(m, args.Audit(m), g, args.Database()); err == nil {
 		g.AddBlocks(upd)
 	} else {
 		return nil, err
@@ -64,7 +64,7 @@ func ServiceMutate(m *model.Model, args *model.Args, addHeader bool) (*file.File
 	return g.Render(addHeader)
 }
 
-func serviceCreate(m *model.Model, g *golang.File) (*golang.Block, error) {
+func serviceCreate(m *model.Model, audit bool, g *golang.File) (*golang.Block, error) {
 	ret := golang.NewBlock("Create", "func")
 	ret.W("func (s *Service) Create(ctx context.Context, tx *sqlx.Tx, logger util.Logger, models ...*%s) error {", m.Proper())
 	ret.W("\tif len(models) == 0 {")
@@ -82,7 +82,7 @@ func serviceCreate(m *model.Model, g *golang.File) (*golang.Block, error) {
 			return nil, err
 		}
 
-		ret.W("")
+		ret.WB()
 		ret.W("\terr = s.upsertCore(ctx, tx, logger, models...)")
 		ret.W("\tif err != nil {")
 		ret.W("\t\treturn err")
@@ -99,6 +99,13 @@ func serviceCreate(m *model.Model, g *golang.File) (*golang.Block, error) {
 		ret.W("\tq := database.SQLInsert(tableQuoted, columnsQuoted, len(models), s.db.Placeholder())")
 		ret.W("\tvals := make([]any, 0, len(models)*len(columnsQuoted))")
 		ret.W("\tfor _, arg := range models {")
+		if audit {
+			msg := "\t\t_, _, err := s.audit.ApplyObjSimple(ctx, \"%s.create\", \"created new %s\", nil, arg, %q, nil, logger)"
+			ret.W(msg, m.Proper(), m.TitleLower(), m.Proper())
+			ret.W("\t\tif err != nil {")
+			ret.W("\t\t\treturn err")
+			ret.W("\t\t}")
+		}
 		ret.W("\t\tvals = append(vals, arg.ToData()...)")
 		ret.W("\t}")
 		ret.W("\treturn s.db.Insert(ctx, q, tx, logger, vals...)")
@@ -107,7 +114,7 @@ func serviceCreate(m *model.Model, g *golang.File) (*golang.Block, error) {
 	return ret, nil
 }
 
-func serviceUpdate(m *model.Model, g *golang.File, database string) (*golang.Block, error) {
+func serviceUpdate(m *model.Model, audit bool, g *golang.File, database string) (*golang.Block, error) {
 	ret := golang.NewBlock("Update", "func")
 	ret.W("func (s *Service) Update(ctx context.Context, tx *sqlx.Tx, model *%s, logger util.Logger) error {", m.Proper())
 	if m.IsRevision() {
@@ -119,7 +126,7 @@ func serviceUpdate(m *model.Model, g *golang.File, database string) (*golang.Blo
 		ret.W("\tmodel.%s = revs[model.String()] + 1", revCol.Proper())
 	}
 
-	if cc := m.Columns.WithTag("created"); len(cc) > 0 {
+	if cc := m.Columns.WithTag("created"); len(cc) > 0 || audit {
 		g.AddImport(helper.ImpErrors)
 		ret.W("\tcurr, err := s.Get(ctx, tx, %s%s, logger)", m.PKs().ToRefs("model."), m.SoftDeleteSuffix())
 		ret.W("\tif err != nil {")
@@ -138,7 +145,7 @@ func serviceUpdate(m *model.Model, g *golang.File, database string) (*golang.Blo
 	}
 
 	if m.IsHistory() {
-		ret.W("")
+		ret.WB()
 		ret.W("\t_, hErr := s.SaveHistory(ctx, tx, curr, model, logger)")
 		ret.W("\tif hErr != nil {")
 		ret.W("\t\treturn errors.Wrap(hErr, \"unable to save history\")")
@@ -152,7 +159,7 @@ func serviceUpdate(m *model.Model, g *golang.File, database string) (*golang.Blo
 	}
 	if m.IsRevision() {
 		revCol := m.HistoryColumn()
-		ret.W("")
+		ret.WB()
 		ret.W("\terr = s.upsertCore(ctx, tx, logger, model)")
 		ret.W("\tif err != nil {")
 		ret.W("\t\treturn err")
@@ -161,6 +168,9 @@ func serviceUpdate(m *model.Model, g *golang.File, database string) (*golang.Blo
 		ret.W("\tif err != nil {")
 		ret.W("\t\treturn err")
 		ret.W("\t}")
+		if audit {
+			serviceAuditApply(m, ret, g)
+		}
 		ret.W("\treturn nil")
 	} else {
 		placeholder := ""
@@ -171,17 +181,29 @@ func serviceUpdate(m *model.Model, g *golang.File, database string) (*golang.Blo
 		ret.W("\tdata := model.ToData()")
 		ret.W("\tdata = append(data, %s)", strings.Join(pkVals, ", "))
 		token := "="
-		if len(m.Columns.WithTag("created")) == 0 {
+		if len(m.Columns.WithTag("created")) == 0 && (!audit) {
 			token = serviceAssignmentToken
 		}
 		ret.W("\t_, err %s s.db.Update(ctx, q, tx, 1, logger, data...)", token)
 		ret.W("\tif err != nil {")
 		ret.W("\t\treturn err")
 		ret.W("\t}")
+		if audit {
+			serviceAuditApply(m, ret, g)
+		}
 		ret.W("\treturn nil")
 	}
 	ret.W("}")
 	return ret, nil
+}
+
+func serviceAuditApply(m *model.Model, ret *golang.Block, g *golang.File) {
+	g.AddImport(helper.ImpFmt)
+	ret.W("\tmsg := fmt.Sprintf(\"updated %s [%%%%s]\", model.String())", m.Title())
+	ret.W("\t_, _, err = s.audit.ApplyObjSimple(ctx, \"%s.update\", msg, curr, model, %q, nil, logger)", m.Proper(), m.Proper())
+	ret.W("\tif err != nil {")
+	ret.W("\t\treturn err")
+	ret.W("\t}")
 }
 
 func serviceUpdateIfNeeded(m *model.Model, g *golang.File, database string) (*golang.Block, error) {
@@ -215,7 +237,7 @@ func serviceUpdateIfNeeded(m *model.Model, g *golang.File, database string) (*go
 	}
 
 	if m.IsHistory() {
-		ret.W("")
+		ret.WB()
 		ret.W("\th, hErr := s.SaveHistory(ctx, tx, curr, model, logger)")
 		ret.W("\tif hErr != nil {")
 		ret.W("\t\treturn errors.Wrap(hErr, \"unable to save history\")")
@@ -232,7 +254,7 @@ func serviceUpdateIfNeeded(m *model.Model, g *golang.File, database string) (*go
 	}
 	if m.IsRevision() {
 		revCol := m.HistoryColumn()
-		ret.W("")
+		ret.WB()
 		ret.W("\terr = s.upsertCore(ctx, tx, logger, model)")
 		ret.W("\tif err != nil {")
 		ret.W("\t\treturn err")
@@ -282,7 +304,7 @@ func serviceSave(m *model.Model, g *golang.File) (*golang.Block, error) {
 		return nil, err
 	}
 	if m.IsRevision() {
-		ret.W("")
+		ret.WB()
 		ret.W("\terr = s.upsertCore(ctx, tx, logger, models...)")
 		ret.W("\tif err != nil {")
 		ret.W("\t\treturn err")
@@ -354,7 +376,7 @@ func serviceAddCreatedUpdated(m *model.Model, ret *golang.Block, g *golang.File,
 			}
 		}
 		if m.IsHistory() && loadCurr {
-			ret.W("")
+			ret.WB()
 			ret.W("\t\t_, hErr := s.SaveHistory(ctx, tx, curr, model)")
 			ret.W("\t\tif hErr != nil {")
 			ret.W("\t\t\treturn errors.Wrap(hErr, \"unable to save history\")")

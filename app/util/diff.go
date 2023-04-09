@@ -49,24 +49,23 @@ func DiffObjects(l any, r any, path ...string) Diffs {
 }
 
 func DiffObjectsIgnoring(l any, r any, ignored []string, path ...string) Diffs {
-	var ret Diffs
 	if len(path) > 0 && slices.Contains(ignored, path[len(path)-1]) {
-		return ret
+		return nil
 	}
 	if l == nil {
-		return append(ret, NewDiff(strings.Join(path, "."), "", fmt.Sprint(r)))
+		return Diffs{NewDiff(strings.Join(path, "."), "", fmt.Sprint(r))}
 	}
 	if r == nil {
-		return append(ret, NewDiff(strings.Join(path, "."), fmt.Sprint(l), ""))
+		return Diffs{NewDiff(strings.Join(path, "."), fmt.Sprint(l), "")}
 	}
 	if lt, rt := fmt.Sprintf("%T", l), fmt.Sprintf("%T", r); lt != rt {
-		return append(ret, NewDiff(strings.Join(path, "."), ToJSONCompact(l), ToJSONCompact(r)))
+		return Diffs{NewDiff(strings.Join(path, "."), ToJSONCompact(l), ToJSONCompact(r))}
 	}
-	diffType(ret, l, r, ignored, false, path...)
-	return ret
+	return diffType(l, r, ignored, false, path...)
 }
 
-func diffType(ret Diffs, l any, r any, ignored []string, recursed bool, path ...string) {
+func diffType(l any, r any, ignored []string, recursed bool, path ...string) Diffs {
+	var ret Diffs
 	switch t := l.(type) {
 	case ValueMap:
 		ret = append(ret, diffMaps(t, r, ignored, path...)...)
@@ -108,14 +107,12 @@ func diffType(ret Diffs, l any, r any, ignored []string, recursed bool, path ...
 			var lx, rx any
 			_ = FromJSON([]byte(lj), &lx)
 			_ = FromJSON([]byte(rj), &rx)
-			diffType(ret, lx, rx, ignored, true, path...)
-			return
-		} else {
-			if lj != rj {
-				ret = append(ret, NewDiff(strings.Join(path, "."), lj, rj))
-			}
+			ret = append(ret, diffType(lx, rx, ignored, true, path...)...)
+		} else if lj != rj {
+			ret = append(ret, NewDiff(strings.Join(path, "."), lj, rj))
 		}
 	}
+	return ret
 }
 
 func diffArrays(l []any, r any, ignored []string, path ...string) Diffs {

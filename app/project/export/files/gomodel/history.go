@@ -124,7 +124,7 @@ func modelHistoryRowToHistory(m *model.Model) *golang.Block {
 func modelHistoryRows(m *model.Model) *golang.Block {
 	ret := golang.NewBlock(m.Proper()+"HistoryRows", "func")
 	ret.W("type historyRows []*historyRow")
-	ret.W("")
+	ret.WB()
 	ret.W("func (h historyRows) ToHistories() Histories {")
 	ret.W("\tret := make(Histories, 0, len(h))")
 	ret.W("\tfor _, x := range h {")

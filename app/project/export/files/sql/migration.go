@@ -107,6 +107,6 @@ func addIndex(ret *golang.Block, tbl string, names ...string) {
 	for _, n := range names {
 		quoted = append(quoted, fmt.Sprintf("%q", n))
 	}
-	ret.W("")
+	ret.WB()
 	ret.W("create index if not exists %q on %q (%s);", name, tbl, strings.Join(quoted, ", "))
 }

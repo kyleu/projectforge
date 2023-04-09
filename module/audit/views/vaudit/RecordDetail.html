@@ -9,6 +9,7 @@
 {% code type RecordDetail struct {
   layout.Basic
   Model *audit.Record
+  Audit *audit.Audit
 } %}
 
 {% func (p *RecordDetail) Body(as *app.State, ps *cutil.PageState) %}
@@ -28,7 +29,7 @@
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Audit ID</th>
           <td>
             <div class="icon">{%= components.DisplayUUID(&p.Model.AuditID) %}</div>
-            <a title="Audit" href="{%s `/audit`+`/`+p.Model.AuditID.String() %}">{%= components.SVGRefIcon("cog", ps) %}</a>
+            <a title="Audit" href="{%s `/admin/audit`+`/`+p.Model.AuditID.String() %}">{%= components.SVGRefIcon("cog", ps) %}</a>
           </td>
         </tr>
         <tr>

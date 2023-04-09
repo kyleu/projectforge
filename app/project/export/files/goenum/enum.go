@@ -22,7 +22,7 @@ func Enum(e *enum.Enum, addHeader bool) (*file.File, error) {
 func enumStruct(e *enum.Enum) *golang.Block {
 	ret := golang.NewBlock(e.Proper(), "struct")
 	ret.W("type %s string", e.Proper())
-	ret.W("")
+	ret.WB()
 	ret.W("const (")
 	max := util.StringArrayMaxLength(e.ValuesCamel())
 	pl := len(e.Proper())

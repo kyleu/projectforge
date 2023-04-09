@@ -33,7 +33,7 @@ func sqlCreateRevision(m *model.Model, modules []string, models model.Models) (*
 	}
 
 	// revision
-	ret.W("")
+	ret.WB()
 	revTblName := m.Name + "_" + hc.Col.Name
 	ret.W("create table if not exists %q (", revTblName)
 	for _, col := range hc.Var {

@@ -35,7 +35,7 @@ func detail(m *model.Model, args *model.Args, addHeader bool) (*file.File, error
 	if m.IsRevision() || m.IsHistory() {
 		g.AddImport(helper.ImpFilter)
 	}
-	vdb, err := exportViewDetailBody(g, m, args.Models, args.Enums)
+	vdb, err := exportViewDetailBody(g, m, args.Audit(m), args.Models, args.Enums)
 	if err != nil {
 		return nil, err
 	}
@@ -78,7 +78,7 @@ func exportViewDetailClass(m *model.Model, models model.Models, g *golang.Templa
 	return ret
 }
 
-func exportViewDetailBody(g *golang.Template, m *model.Model, models model.Models, enums enum.Enums) (*golang.Block, error) {
+func exportViewDetailBody(g *golang.Template, m *model.Model, audit bool, models model.Models, enums enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock("DetailBody", "func")
 	ret.W("{%% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %%}")
 	ret.W("  <div class=\"card\">")
@@ -108,6 +108,8 @@ func exportViewDetailBody(g *golang.Template, m *model.Model, models model.Model
 			return nil, err
 		}
 	}
+	if audit {
+	}
 	if m.IsHistory() {
 		ret.W("  {%%- if len(p.Histories) > 0 -%%}")
 		ret.W("  <div class=\"card\">")
@@ -118,37 +120,56 @@ func exportViewDetailBody(g *golang.Template, m *model.Model, models model.Model
 	}
 	ret.W("  {%%- comment %%}$PF_SECTION_START(extra)${%% endcomment -%%}")
 	ret.W("  {%%- comment %%}$PF_SECTION_END(extra)${%% endcomment -%%}")
-	exportViewDetailRelations(ret, m, models)
+	exportViewDetailReverseRelations(ret, m, models, g)
 	ret.W("  {%%%%= components.JSONModal(%q, \"%s JSON\", p.Model, 1) %%%%}", m.Camel(), m.Title())
 	ret.W("{%% endfunc %%}")
 	return ret, nil
 }
 
-func exportViewDetailRelations(ret *golang.Block, m *model.Model, models model.Models) {
-	for _, rel := range models.ReverseRelations(m.Name) {
+func exportViewDetailReverseRelations(ret *golang.Block, m *model.Model, models model.Models, g *golang.Template) {
+	rels := models.ReverseRelations(m.Name)
+	if len(rels) == 0 {
+		return
+	}
+	g.AddImport(helper.ImpAppUtil)
+	ret.W("  <div class=\"card\">")
+	ret.W("  <h3 class=\"mb\">Relations</h3>")
+	ret.W("    <ul class=\"accordion\">")
+	for _, rel := range rels {
 		tgt := models.Get(rel.Table)
 		tgtCols := rel.TgtColumns(tgt)
 		tgtName := fmt.Sprintf("%sBy%s", tgt.ProperPlural(), strings.Join(tgtCols.ProperNames(), ""))
-		ret.W("  {%%%%- if len(p.Rel%s) > 0 -%%%%}", tgtName)
-		ret.W("  <div class=\"card\">")
-		const msg = "    <h3>{%%%%= components.SVGRefIcon(`%s`, ps) %%%%} Related %s by [%s]</h3>"
-		ret.W(msg, tgt.Icon, tgt.TitlePluralLower(), strings.Join(rel.TgtColumns(tgt).TitlesLower(), ", "))
+		ret.W("      <li>")
+		ret.W("        <input id=\"accordion-%s\" type=\"checkbox\" hidden />", tgtName)
+		ret.W("        <label for=\"accordion-%s\">", tgtName)
+		ret.W("          {%%= components.ExpandCollapse(3, ps) %%}")
+		ret.W("          {%%%%= components.SVGRefIcon(`%s`, ps) %%%%}", tgt.IconSafe())
+		msg := "          {%%%%d len(p.Rel%s) %%%%} {%%%%s util.StringPluralMaybe(\"%s\", len(p.Rel%s)) %%%%} by [discount id]"
+		ret.W(msg, tgtName, tgt.Title(), tgtName)
+		ret.W("        </label>")
+		ret.W("        <div class=\"bd\">")
+		ret.W("          {%%%%- if len(p.Rel%s) == 0 -%%%%}", tgtName)
+		ret.W("          <em>no related %s</em>", tgt.TitlePlural())
+		ret.W("          {%%- else -%%}")
+		ret.W("          <div class=\"overflow clear\">")
 		var addons string
 		if m.CanTraverseRelation() {
 			for range tgt.Relations {
 				addons += ", nil"
 			}
 		}
-		ret.W("    <div class=\"overflow clear\">")
 		if m.PackageWithGroup("") == tgt.PackageWithGroup("") {
-			ret.W("      {%%%%= Table(p.Rel%s%s, p.Params, as, ps) %%%%}", tgtName, addons)
+			ret.W("            {%%%%= Table(p.Rel%s%s, p.Params, as, ps) %%%%}", tgtName, addons)
 		} else {
-			ret.W("      {%%%%= v%s.Table(p.Rel%s%s, p.Params, as, ps) %%%%}", tgt.Package, tgtName, addons)
+			ret.W("            {%%%%= v%s.Table(p.Rel%s%s, p.Params, as, ps) %%%%}", tgt.Package, tgtName, addons)
 		}
-		ret.W("    </div>")
-		ret.W("  </div>")
-		ret.W("  {%%- endif -%%}")
+		ret.W("          </div>")
+		ret.W("          {%%- endif -%%}")
+		ret.W("        </div>")
+		ret.W("      </li>")
 	}
+	ret.W("    </ul>")
+	ret.W("  </div>")
 }
 
 func viewDetailColumn(g *golang.Template, ret *golang.Block, models model.Models, m *model.Model, link bool, col *model.Column, modelKey string, indent int) {

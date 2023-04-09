@@ -30,7 +30,7 @@
         </td>
         <td>{%s model.T %}</td>
         <td>{%s model.PK %}</td>
-        <td>{%d len(model.Changes) %}</td>
+        <td>{%= components.DisplayDiffs(model.Changes) %}</td>
         <td>{%d len(model.Metadata) %}</td>
         <td>{%= components.DisplayTimestamp(&model.Occurred) %}</td>
       </tr>

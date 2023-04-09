@@ -144,7 +144,7 @@ func serviceGetCurrentRevisions(g *golang.File, m *model.Model, dbRef string, en
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, errors.Wrap(err, \"unable to get %s\")", m.ProperPlural())
 	ret.W("\t}")
-	ret.W("")
+	ret.WB()
 	ret.W("\tret := make(map[string]int, len(models))")
 	ret.W("\tfor _, model := range models {")
 	ret.W("\t\tcurr := 0")

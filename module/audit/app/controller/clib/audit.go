@@ -38,7 +38,7 @@ func AuditDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = ret.String()
 		ps.Data = ret
-		records, err := as.Services.Audit.RecordsForAudit(ps.Context, nil, ret.ID, ps.Params.Get("auditRecord", nil, ps.Logger), ps.Logger)
+		records, err := as.Services.Audit.RecordsForAudits(ps.Context, nil, ps.Params.Get("auditRecord", nil, ps.Logger), ps.Logger, ret.ID)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child auditrecords")
 		}
@@ -132,9 +132,13 @@ func RecordDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
+		aud, err := as.Services.Audit.Get(ps.Context, nil, ret.AuditID, ps.Logger)
+		if err != nil {
+			return "", err
+		}
 		ps.Title = ret.String()
 		ps.Data = ret
-		return controller.Render(rc, as, &vaudit.RecordDetail{Model: ret}, ps, "admin", auditBreadcrumb, ret.String())
+		return controller.Render(rc, as, &vaudit.RecordDetail{Model: ret, Audit: aud}, ps, "admin", auditBreadcrumb, ret.String())
 	})
 }
 

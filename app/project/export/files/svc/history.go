@@ -37,7 +37,7 @@ func serviceHistoryVars(m *model.Model) *golang.Block {
 	ret.W("\thistoryColumns       = "+`[]string{"id", %s, "o", "n", "c", "created"}`, strings.Join(xx.NamesQuoted(), ", "))
 	ret.W("\thistoryColumnsQuoted = util.StringArrayQuoted(historyColumns)")
 	ret.W("\thistoryColumnsString = strings.Join(historyColumnsQuoted, \", \")")
-	ret.W("")
+	ret.WB()
 	ret.W("\thistoryTable       = table + \"_history\"")
 	ret.W("\thistoryTableQuoted = fmt.Sprintf(\"%%q\", historyTable)")
 	ret.W(")")

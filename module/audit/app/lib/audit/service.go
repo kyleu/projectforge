@@ -45,18 +45,21 @@ func (s *Service) Apply(ctx context.Context, a *Audit, logger util.Logger, r ...
 	return a, r, nil
 }
 
-func (s *Service) ApplyObj(ctx context.Context, a *Audit, l any, r any, md util.ValueMap, logger util.Logger) (*Audit, Records, error) {
+func (s *Service) ApplyObj(ctx context.Context, a *Audit, l any, r any, t string, md util.ValueMap, logger util.Logger) (*Audit, Records, error) {
 	o := r
 	if o == nil {
 		o = l
 	}
 	d := util.DiffObjects(l, r, "")
-	rec := NewRecord(a.ID, fmt.Sprintf("%T", o), fmt.Sprint(o), d, md)
+	if t == "" {
+		t = fmt.Sprintf("%T", o)
+	}
+	rec := NewRecord(a.ID, t, fmt.Sprint(o), d, md)
 	return s.Apply(ctx, a, logger, rec)
 }
 
-func (s *Service) ApplyObjSimple(ctx context.Context, act string, msg string, l any, r any, md util.ValueMap, logger util.Logger) (*Audit, Records, error) {
+func (s *Service) ApplyObjSimple(ctx context.Context, act string, msg string, l any, r any, t string, md util.ValueMap, logger util.Logger) (*Audit, Records, error) {
 	a := New(act, "", "", "", md, msg)
 	a.Completed = time.Now()
-	return s.ApplyObj(ctx, a, l, r, md, logger)
+	return s.ApplyObj(ctx, a, l, r, t, md, logger)
 }

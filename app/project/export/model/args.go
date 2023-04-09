@@ -73,3 +73,7 @@ func (a *Args) Database() string {
 	}
 	return "unknown"
 }
+
+func (a *Args) Audit(m *Model) bool {
+	return m.HasTag("audit") && slices.Contains(a.Modules, "audit")
+}

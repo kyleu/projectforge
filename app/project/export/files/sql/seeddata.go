@@ -37,7 +37,7 @@ func sqlSeedData(m *model.Model) (*golang.Block, error) {
 		if err != nil {
 			return nil, err
 		}
-		ret.W("")
+		ret.WB()
 		err = sqlSeedDataColumns(m, ret, m.Name+"_"+m.HistoryColumn().Name, m.HistoryColumns(true).Var)
 		if err != nil {
 			return nil, err
