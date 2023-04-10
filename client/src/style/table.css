@@ -21,6 +21,7 @@ table td, table th {
   border-bottom: var(--border);
   margin: 0;
   min-width: 1px;
+  vertical-align: top;
 }
 
 table tbody tr:last-child td, table tbody tr:last-child th {
