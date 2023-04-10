@@ -15,12 +15,19 @@ import (
 
 const (
 	migrationTable    = "migration"
-	migrationTableSQL = `create table if not exists "migration" (
+	migrationTableSQL = {{{ if .SQLServer }}}`if not exists (select * from sysobjects where name='migration' and xtype='U')
+create table migration (
+  "idx" int not null,
+  "title" varchar(max) not null,
+  "src" varchar(max) not null,
+  "created" datetime not null,
+  primary key (idx)
+);`{{{ else }}}`create table if not exists "migration" (
   "idx" int not null primary key,
   "title" text not null,
   "src" text not null,
   "created" timestamp not null
-);`
+);`{{{ end }}}
 )
 
 func ListMigrations(ctx context.Context, s *database.Service, params *filter.Params, tx *sqlx.Tx, logger util.Logger) Migrations {

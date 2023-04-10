@@ -17,8 +17,7 @@ create table audit (
     "started" datetime not null,
     "completed" datetime not null,
     primary key ("id")
-)
-go;
+);
 
 if not exists (select * from sysobjects where name='audit_record' and xtype='U')
 create table audit_record (
@@ -31,8 +30,7 @@ create table audit_record (
     "occurred" datetime not null,
     foreign key ("audit_id") references "audit" ("id"),
     primary key ("id")
-)
-go;{{{ else }}}
+);{{{ else }}}
 create table if not exists "audit" (
   "id" uuid not null,
   "app" text not null,
