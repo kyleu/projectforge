@@ -37,7 +37,7 @@ func Controller(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 	if err != nil {
 		return nil, err
 	}
-	g.AddBlocks(cl, controllerDetail(args.Models, m, nil, g, prefix))
+	g.AddBlocks(cl, controllerDetail(args.Models, m, nil, args.Audit(m), g, prefix))
 	if m.IsRevision() {
 		g.AddBlocks(controllerRevision(m, prefix))
 	}
@@ -64,10 +64,7 @@ func controllerArgFor(col *model.Column, b *golang.Block, retVal string, indent 
 	case types.KeyBool:
 		add("%sArg, err := cutil.RCRequiredBool(rc, %q)", col.Camel(), col.Camel())
 		add("if err != nil {")
-		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as an argument\")", retVal, col.Camel())
-		add("}")
-		add("if err != nil {")
-		add("\treturn %s, errors.Wrap(err, \"field [%s] must be a valid a valid boolean\")", retVal, col.Camel())
+		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as a boolean argument\")", retVal, col.Camel())
 		add("}")
 	case types.KeyInt:
 		add("%sArgStr, err := cutil.RCRequiredString(rc, %q, false)", col.Camel(), col.Camel())
@@ -90,7 +87,7 @@ func controllerArgFor(col *model.Column, b *golang.Block, retVal string, indent 
 	case types.KeyString:
 		add("%sArg, err := cutil.RCRequiredString(rc, %q, false)", col.Camel(), col.Camel())
 		add("if err != nil {")
-		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as an argument\")", retVal, col.Camel())
+		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as a string argument\")", retVal, col.Camel())
 		add("}")
 	case types.KeyList:
 		if !types.IsStringList(col.Type) {

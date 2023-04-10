@@ -10,7 +10,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func controllerDetail(models model.Models, m *model.Model, grp *model.Column, g *golang.File, prefix string) *golang.Block {
+func controllerDetail(models model.Models, m *model.Model, grp *model.Column, audit bool, g *golang.File, prefix string) *golang.Block {
 	rrels := models.ReverseRelations(m.Name)
 	ret := blockFor(m, prefix, grp, (len(rrels)*6)+40, "detail")
 	grpHistory := ""
@@ -47,13 +47,25 @@ func controllerDetail(models model.Models, m *model.Model, grp *model.Column, g 
 	ret.WB()
 	argKeys, argVals := getArgs(models, m, rrels, g, ret)
 	revArgKeys, revArgVals := getReverseArgs(models, m, rrels, ret)
+	if audit {
+		ret.WB()
+		ret.W("\t\trelatedAuditRecords, err := as.Services.Audit.RecordsForModel(ps.Context, nil, %q, %s, nil, ps.Logger)", m.Name, m.PKs().ToGoStrings("ret."))
+		ret.W("\t\tif err != nil {")
+		ret.W("\t\t\treturn \"\", errors.Wrapf(err, \"unable to retrieve related audit records\")")
+		ret.W("\t\t}")
+		ret.WB()
+	}
 	if len(argKeys)+len(revArgKeys) <= 2 {
 		args := make([]string, 0, len(argKeys))
 		for idx, k := range argKeys {
 			args = append(args, fmt.Sprintf("%s: %s", k, argVals[idx]))
 		}
 		argStr := strings.Join(args, ", ")
-		ret.W("\t\treturn %sRender(rc, as, &v%s.Detail{%s}, ps, %s%s, ret.String())", prefix, m.Package, argStr, m.Breadcrumbs(), grpHistory)
+		if audit {
+			ret.W("\t\treturn %sRender(rc, as, &v%s.Detail{%s, AuditRecords: relatedAuditRecords}, ps, %s%s, ret.String())", prefix, m.Package, argStr, m.Breadcrumbs(), grpHistory)
+		} else {
+			ret.W("\t\treturn %sRender(rc, as, &v%s.Detail{%s}, ps, %s%s, ret.String())", prefix, m.Package, argStr, m.Breadcrumbs(), grpHistory)
+		}
 	} else {
 		ret.W("\t\treturn %sRender(rc, as, &v%s.Detail{", prefix, m.Package)
 		keyPad := util.StringArrayMaxLength(argKeys) + 1
@@ -66,6 +78,10 @@ func controllerDetail(models model.Models, m *model.Model, grp *model.Column, g 
 			for idx, k := range revArgKeys {
 				ret.W("\t\t\t%s %s,", util.StringPad(k+":", revKeyPad), revArgVals[idx])
 			}
+		}
+		if audit {
+			ret.WB()
+			ret.W("\t\t\tAuditRecords: relatedAuditRecords,")
 		}
 		ret.W("\t\t}, ps, %s%s, ret.String())", m.Breadcrumbs(), grpHistory)
 	}

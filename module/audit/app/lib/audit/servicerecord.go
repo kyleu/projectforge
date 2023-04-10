@@ -31,6 +31,18 @@ func (s *Service) RecordsForAudits(ctx context.Context, tx *sqlx.Tx, params *fil
 	return ret.ToRecords(), nil
 }
 
+func (s *Service) RecordsForModel(ctx context.Context, tx *sqlx.Tx, t string, pk string, params *filter.Params, logger util.Logger) (Records, error) {
+	params = params.Sanitize("audit_record", &filter.Ordering{Column: "occurred"})
+	wc := "t = {{{ .Placeholder 1 }}} and pk = {{{ .Placeholder 2 }}}"
+	q := database.SQLSelect(recordColumnsString, recordTableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	ret := recordRows{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, t, pk)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to get records for model [%s:%s]", t, pk)
+	}
+	return ret.ToRecords(), nil
+}
+
 func (s *Service) GetRecord(ctx context.Context, tx *sqlx.Tx, id uuid.UUID, logger util.Logger) (*Record, error) {
 	q := database.SQLSelectSimple(recordColumnsString, recordTableQuoted, s.db.Placeholder(), "id = {{{ .Placeholder 1 }}}")
 	ret := &recordRow{}

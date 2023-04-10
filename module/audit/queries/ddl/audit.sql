@@ -24,8 +24,8 @@ if not exists (select * from sysobjects where name='audit_record' and xtype='U')
 create table audit_record (
     "id" uniqueidentifier not null,
     "audit_id" uniqueidentifier not null,
-    "t" text not null,
-    "pk" text not null,
+    "t" varchar(max) not null,
+    "pk" varchar(max) not null,
     "changes" varchar(max) not null,
     "metadata" varchar(max) not null,
     "occurred" datetime not null,

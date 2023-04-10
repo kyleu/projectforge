@@ -32,18 +32,22 @@ func detail(m *model.Model, args *model.Args, addHeader bool) (*file.File, error
 			g.AddImport(helper.AppImport("views/" + rm.PackageWithGroup("v")))
 		}
 	}
-	if m.IsRevision() || m.IsHistory() {
+	if len(rrs) > 0 || m.IsRevision() || m.IsHistory() || args.Audit(m) {
 		g.AddImport(helper.ImpFilter)
+	}
+	if args.Audit(m) {
+		g.AddImport(helper.AppImport("app/lib/audit"))
+		g.AddImport(helper.AppImport("views/vaudit"))
 	}
 	vdb, err := exportViewDetailBody(g, m, args.Audit(m), args.Models, args.Enums)
 	if err != nil {
 		return nil, err
 	}
-	g.AddBlocks(exportViewDetailClass(m, args.Models, g), vdb)
+	g.AddBlocks(exportViewDetailClass(m, args.Models, args.Audit(m), g), vdb)
 	return g.Render(addHeader)
 }
 
-func exportViewDetailClass(m *model.Model, models model.Models, g *golang.Template) *golang.Block {
+func exportViewDetailClass(m *model.Model, models model.Models, audit bool, g *golang.Template) *golang.Block {
 	ret := golang.NewBlock("Detail", "struct")
 	ret.W("{%% code type Detail struct {")
 	ret.W("  layout.Basic")
@@ -63,7 +67,7 @@ func exportViewDetailClass(m *model.Model, models model.Models, g *golang.Templa
 		ret.W(commonLine, relModel.Proper(), relNames, "*"+relModel.Package, relModel.Proper())
 	}
 
-	if len(rrs) > 0 || m.IsRevision() || m.IsHistory() {
+	if len(rrs) > 0 || m.IsRevision() || m.IsHistory() || audit {
 		ret.W("  Params filter.ParamSet")
 	}
 	for _, rel := range rrs {
@@ -73,6 +77,9 @@ func exportViewDetailClass(m *model.Model, models model.Models, g *golang.Templa
 	}
 	if m.IsRevision() {
 		ret.W("  %s %s.%s", m.HistoryColumn().ProperPlural(), m.Package, m.ProperPlural())
+	}
+	if audit {
+		ret.W("  AuditRecords audit.Records")
 	}
 	ret.W("} %%}")
 	return ret
@@ -108,8 +115,6 @@ func exportViewDetailBody(g *golang.Template, m *model.Model, audit bool, models
 			return nil, err
 		}
 	}
-	if audit {
-	}
 	if m.IsHistory() {
 		ret.W("  {%%- if len(p.Histories) > 0 -%%}")
 		ret.W("  <div class=\"card\">")
@@ -121,6 +126,14 @@ func exportViewDetailBody(g *golang.Template, m *model.Model, audit bool, models
 	ret.W("  {%%- comment %%}$PF_SECTION_START(extra)${%% endcomment -%%}")
 	ret.W("  {%%- comment %%}$PF_SECTION_END(extra)${%% endcomment -%%}")
 	exportViewDetailReverseRelations(ret, m, models, g)
+	if audit {
+		ret.W("  {%%- if len(p.AuditRecords) > 0 -%%}")
+		ret.W("  <div class=\"card\">")
+		ret.W("    <h3>Audits</h3>")
+		ret.W("    {%%= vaudit.RecordTable(p.AuditRecords, p.Params, as, ps) %%}")
+		ret.W("  </div>")
+		ret.W("  {%%- endif -%%}")
+	}
 	ret.W("  {%%%%= components.JSONModal(%q, \"%s JSON\", p.Model, 1) %%%%}", m.Camel(), m.Title())
 	ret.W("{%% endfunc %%}")
 	return ret, nil
@@ -133,7 +146,7 @@ func exportViewDetailReverseRelations(ret *golang.Block, m *model.Model, models 
 	}
 	g.AddImport(helper.ImpAppUtil)
 	ret.W("  <div class=\"card\">")
-	ret.W("  <h3 class=\"mb\">Relations</h3>")
+	ret.W("    <h3 class=\"mb\">Relations</h3>")
 	ret.W("    <ul class=\"accordion\">")
 	for _, rel := range rels {
 		tgt := models.Get(rel.Table)
@@ -143,9 +156,9 @@ func exportViewDetailReverseRelations(ret *golang.Block, m *model.Model, models 
 		ret.W("        <input id=\"accordion-%s\" type=\"checkbox\" hidden />", tgtName)
 		ret.W("        <label for=\"accordion-%s\">", tgtName)
 		ret.W("          {%%= components.ExpandCollapse(3, ps) %%}")
-		ret.W("          {%%%%= components.SVGRefIcon(`%s`, ps) %%%%}", tgt.IconSafe())
-		msg := "          {%%%%d len(p.Rel%s) %%%%} {%%%%s util.StringPluralMaybe(\"%s\", len(p.Rel%s)) %%%%} by [discount id]"
-		ret.W(msg, tgtName, tgt.Title(), tgtName)
+		ret.W("          {%%%%= components.SVGRefIcon(`%s`, ps) %%%%}", tgt.Icon)
+		msg := "          {%%%%d len(p.Rel%s) %%%%} {%%%%s util.StringPluralMaybe(\"%s\", len(p.Rel%s)) %%%%} by [%s]"
+		ret.W(msg, tgtName, tgt.Title(), tgtName, strings.Join(tgtCols.Names(), ", "))
 		ret.W("        </label>")
 		ret.W("        <div class=\"bd\">")
 		ret.W("          {%%%%- if len(p.Rel%s) == 0 -%%%%}", tgtName)
