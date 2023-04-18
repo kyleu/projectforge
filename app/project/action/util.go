@@ -1,6 +1,7 @@
 package action
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 	"text/template"
@@ -29,7 +30,19 @@ func projectFromCfg(proto *project.Project, cfg util.ValueMap) *project.Project 
 		return i
 	}
 
+	if proto.Package == "" {
+		proto.Package = fmt.Sprintf("github.com/%s/%s", proto.Key, proto.Key)
+	}
+
+	port := integer("port", proto.Port)
+	if port == 0 {
+		port = 10000
+	}
+
 	mods, _ := cfg.GetStringArray("modules", true)
+	if len(mods) == 1 {
+		mods = util.StringSplitAndTrim(mods[0], "||")
+	}
 	if len(mods) == 0 {
 		mods = []string{"core"}
 	}
@@ -65,7 +78,7 @@ func projectFromCfg(proto *project.Project, cfg util.ValueMap) *project.Project 
 		Name:    str("name", proto.Name),
 		Package: str("package", proto.Package),
 		Args:    str("args", proto.Args),
-		Port:    integer("port", proto.Port),
+		Port:    port,
 		Modules: mods,
 		Ignore:  util.StringSplitAndTrim(str("ignore", strings.Join(proto.Ignore, ", ")), ","),
 		Tags:    util.StringSplitAndTrim(str("tags", strings.Join(proto.Tags, ", ")), ","),

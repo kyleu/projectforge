@@ -2,6 +2,9 @@ package action
 
 import (
 	"fmt"
+	"strings"
+
+	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/file/diff"
 	"projectforge.dev/projectforge/app/module"
@@ -89,6 +92,13 @@ func (r *Result) Title() string {
 
 func (r *Result) HasErrors() bool {
 	return len(r.Errors) > 0
+}
+
+func (r *Result) AsError() error {
+	if r.HasErrors() {
+		return errors.New(strings.Join(r.Errors, "; "))
+	}
+	return nil
 }
 
 func (r *Result) StatusLog() string {

@@ -29,9 +29,6 @@ func AppRoutes(as *app.State, logger util.Logger) fasthttp.RequestHandler {
 	r.POST(cutil.DefaultProfilePath, clib.ProfileSave)
 
 	// $PF_SECTION_START(routes)$
-	r.GET("/welcome", controller.Welcome)
-	r.POST("/welcome", controller.WelcomeResult)
-
 	moduleRoutes(r)
 	projectRoutes(r)
 

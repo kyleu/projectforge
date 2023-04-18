@@ -26,7 +26,7 @@ func (e *ErrHandler) Handle(err error) {
 		return
 	}
 	msg := err.Error()
-	if strings.HasPrefix(msg, "Post \"") {
+	if strings.HasPrefix(msg, "Post \"") || strings.HasPrefix(msg, "traces export") {
 		if e.hasPrinted {
 			return
 		}

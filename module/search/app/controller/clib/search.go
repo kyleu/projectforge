@@ -22,6 +22,10 @@ func Search(rc *fasthttp.RequestCtx) {
 			ps.Title = fmt.Sprintf("[%s] %s", q, ps.Title)
 		}
 		ps.Data = results
-		return controller.Render(rc, as, &vsearch.Results{Params: params, Results: results, Errors: errs}, ps, "Search")
+		bc := []string{"Search||/search"}
+		if q != "" {
+			bc = append(bc, q)
+		}
+		return controller.Render(rc, as, &vsearch.Results{Params: params, Results: results, Errors: errs}, ps, bc...)
 	})
 }

@@ -7,6 +7,9 @@ import (
 )
 
 func projectRoutes(r *router.Router) {
+	r.GET("/welcome", cproject.Welcome)
+	r.POST("/welcome", cproject.WelcomeResult)
+
 	r.GET("/doctor", cproject.Doctor)
 	r.GET("/doctor/all", cproject.DoctorRunAll)
 	r.GET("/doctor/{key}", cproject.DoctorRun)
