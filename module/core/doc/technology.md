@@ -35,15 +35,15 @@
 [6]: https://go.uber.org/zap "Crazy fast logging, with a custom encoder to dump tons of debug info"
 [7]: https://goreleaser.com "Builds projects in all sorts of formats"
 [8]: https://github.com/muesli/coral "Provides a CLI interface without the bloat"
-[9]: github.com/araddon/dateparse "Parses dates in all sorts of formats"
-[10]: github.com/gertd/go-pluralize "Provides plural forms of English words"
-[11]: github.com/dustin/go-humanize "Displays friendly relative time formats"
-[12]: github.com/gomarkdown/markdown "Render Markdown files as HTML"
-[13]: github.com/json-iterator/go "Fast JSON parsing and serialization"
-[14]: github.com/kirsle/configdir "Provides access to OS-specific directories"
-[15]: github.com/pkg/errors "Errors with stack traces and detailed logging"
-[16]: github.com/prometheus/client_golang "Metrics for all aspects of the system"
-[17]: go.opentelemetry.io/otel "Telemetry for full system tracing"{{{ if .HasModule "database" }}}
+[9]: https://github.com/araddon/dateparse "Parses dates in all sorts of formats"
+[10]: https://github.com/gertd/go-pluralize "Provides plural forms of English words"
+[11]: https://github.com/dustin/go-humanize "Displays friendly relative time formats"
+[12]: https://github.com/gomarkdown/markdown "Render Markdown files as HTML"
+[13]: https://github.com/json-iterator/go "Fast JSON parsing and serialization"
+[14]: https://github.com/kirsle/configdir "Provides access to OS-specific directories"
+[15]: https://github.com/pkg/errors "Errors with stack traces and detailed logging"
+[16]: https://github.com/prometheus/client_golang "Metrics for all aspects of the system"
+[17]: https://go.opentelemetry.io/otel "Telemetry for full system tracing"{{{ if .HasModule "database" }}}
 [18]: https://github.com/jmoiron/sqlx "Provides enhancements to the stdlib's sql package, super handy"{{{ end }}}{{{ if .HasModule "postgres" }}}
 [19]: https://github.com/jackc/pgx "Handles (most of) the crazy types that PostgreSQL supports"{{{ end }}}{{{ if .HasModule "mysql" }}}
 [20]: https://github.com/go-sql-driver/mysql "The Golang MySQL driver, does what it says on the tin"{{{ end }}}{{{ if .HasModule "sqlite" }}}

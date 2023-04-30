@@ -30,7 +30,7 @@ var (
 
 func HTML(key string, path string, f func(s string) (string, string, error)) (string, string, error) {
 	if curr, ok := htmlCache[key]; ok {
-		return curr, titleCache[key], nil
+		return titleCache[key], curr, nil
 	}
 	data, err := Content(path)
 	if err != nil {

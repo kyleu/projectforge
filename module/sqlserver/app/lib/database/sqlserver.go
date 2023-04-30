@@ -90,8 +90,15 @@ func OpenSQLServerDatabase(ctx context.Context, key string, params *SQLServerPar
 		port = 1433
 	}
 
-	const template = "sqlserver://%s:%s@%s:%d?database=%s&app%%20name=%s"
-	url := fmt.Sprintf(template, params.Username, params.Password, host, port, params.Database, util.AppKey)
+	var url string
+	switch params.Username {
+	case "native", "local", "":
+		const template = "sqlserver://%s:%d?database=%s&app%%20name=%s"
+		url = fmt.Sprintf(template, host, port, params.Database, util.AppKey)
+	default:
+		const template = "sqlserver://%s:%s@%s:%d?database=%s&app%%20name=%s"
+		url = fmt.Sprintf(template, params.Username, params.Password, host, port, params.Database, util.AppKey)
+	}
 
 	db, err := sqlx.Open("sqlserver", url)
 	if err != nil {
