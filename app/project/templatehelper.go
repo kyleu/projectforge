@@ -73,24 +73,30 @@ func (t *TemplateContext) HasSlack() bool {
 	return t.Info.Slack != ""
 }
 
-func (t *TemplateContext) DatabaseUIOpts() (bool, bool) {
+func (t *TemplateContext) DatabaseUIOpts() (bool, bool, bool) {
 	cfg, _ := t.Config.GetMap("databaseui", true)
 	if len(cfg) == 0 {
-		return true, true
+		return true, false, false
 	}
 	sqleditor := cfg.GetBoolOpt("sqleditor")
 	readonly := cfg.GetBoolOpt("readonly")
-	return sqleditor, readonly
+	saveuser := cfg.GetBoolOpt("saveuser")
+	return sqleditor, readonly, saveuser
 }
 
 func (t *TemplateContext) DatabaseUISQLEditor() bool {
-	sqleditor, _ := t.DatabaseUIOpts()
+	sqleditor, _, _ := t.DatabaseUIOpts()
 	return sqleditor
 }
 
 func (t *TemplateContext) DatabaseUIReadOnly() bool {
-	_, readonly := t.DatabaseUIOpts()
+	_, readonly, _ := t.DatabaseUIOpts()
 	return readonly
+}
+
+func (t *TemplateContext) DatabaseUISaveUser() bool {
+	_, _, saveUser := t.DatabaseUIOpts()
+	return saveUser
 }
 
 func (t *TemplateContext) GoVersionSafe() string {

@@ -1,7 +1,7 @@
 package cutil
 
 import (
-	"context"{{{ if .HasModule "user" }}}
+	"context"{{{ if .DatabaseUISaveUser }}}
 	"time"{{{ end }}}
 
 	"github.com/valyala/fasthttp"
@@ -10,7 +10,7 @@ import (
 	"{{{ .Package }}}/app/controller/csession"
 	"{{{ .Package }}}/app/lib/telemetry"
 	"{{{ .Package }}}/app/lib/telemetry/httpmetrics"
-	"{{{ .Package }}}/app/lib/user"{{{ if .HasModule "user" }}}
+	"{{{ .Package }}}/app/lib/user"{{{ if .DatabaseUISaveUser }}}
 	usr "{{{ .Package }}}/app/user"{{{ end }}}
 	"{{{ .Package }}}/app/util"
 )
@@ -39,7 +39,7 @@ func LoadPageState(as *app.State, rc *fasthttp.RequestCtx, key string, logger ut
 	}
 }
 
-func loadSession({{{ if .HasModule "user" }}}ctx{{{ else }}}_{{{ end }}} context.Context, {{{ if .HasModule "user" }}}as{{{ else }}}_{{{ end }}} *app.State, rc *fasthttp.RequestCtx, logger util.Logger) (util.ValueMap, []string, *user.Profile{{{ if .HasModule "oauth" }}}, user.Accounts{{{ end }}}) {
+func loadSession({{{ if .DatabaseUISaveUser }}}ctx{{{ else }}}_{{{ end }}} context.Context, {{{ if .DatabaseUISaveUser }}}as{{{ else }}}_{{{ end }}} *app.State, rc *fasthttp.RequestCtx, logger util.Logger) (util.ValueMap, []string, *user.Profile{{{ if .HasModule "oauth" }}}, user.Accounts{{{ end }}}) {
 	sessionBytes := rc.Request.Header.Cookie(util.AppKey)
 	session := util.ValueMap{}
 	if len(sessionBytes) > 0 {
@@ -77,13 +77,13 @@ func loadSession({{{ if .HasModule "user" }}}ctx{{{ else }}}_{{{ end }}} context
 	}{{{ end }}}{{{ if .HasModule "user" }}}
 
 	if prof.ID == util.UUIDDefault {
-		prof.ID = util.UUID()
+		prof.ID = util.UUID(){{{ if .DatabaseUISaveUser }}}
 		u := &usr.User{ID: prof.ID, Name: prof.Name{{{ if .HasModule "oauth" }}}, Picture: accts.Image(){{{ end }}}, Created: time.Now()}
 		err = as.Services.User.Save(ctx, nil, logger, u)
 		if err != nil {
 			logger.Warnf("unable to save user [%s]", prof.ID.String())
 			return nil, nil, prof, nil
-		}
+		}{{{ end }}}
 		session["profile"] = prof
 		err = csession.SaveSession(rc, session, logger)
 		if err != nil {
