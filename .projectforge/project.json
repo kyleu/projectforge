@@ -54,7 +54,6 @@
     "linuxARM": true,
     "linuxMIPS": true,
     "linuxOdd": true,
-    "dragonfly": true,
     "illumos": true,
     "freeBSD": true,
     "netBSD": true,
