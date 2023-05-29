@@ -26,13 +26,13 @@ require (
 	github.com/santhosh-tekuri/jsonschema v1.2.4
 	github.com/valyala/fasthttp v1.47.0
 	github.com/valyala/quicktemplate v1.7.0
-	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.41.1
-	go.opentelemetry.io/otel v1.15.1
-	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp v1.15.1
-	go.opentelemetry.io/otel/sdk v1.15.1
-	go.opentelemetry.io/otel/trace v1.15.1
+	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.42.0
+	go.opentelemetry.io/otel v1.16.0
+	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp v1.16.0
+	go.opentelemetry.io/otel/sdk v1.16.0
+	go.opentelemetry.io/otel/trace v1.16.0
 	go.uber.org/zap v1.24.0
-	golang.org/x/exp v0.0.0-20230515195305-f3d0a9c9a5cc
+	golang.org/x/exp v0.0.0-20230522175609-2e198f4a06a1
 	golang.org/x/mobile v0.0.0-20230427221453-e8d11dd0ba41
 	golang.org/x/oauth2 v0.8.0
 	gopkg.in/yaml.v2 v2.4.0
@@ -60,15 +60,15 @@ require (
 	github.com/muesli/clusters v0.0.0-20200529215643-2700303c1762 // indirect
 	github.com/muesli/kmeans v0.3.1 // indirect
 	github.com/prometheus/client_model v0.4.0 // indirect
-	github.com/prometheus/common v0.43.0 // indirect
-	github.com/prometheus/procfs v0.9.0 // indirect
+	github.com/prometheus/common v0.44.0 // indirect
+	github.com/prometheus/procfs v0.10.0 // indirect
 	github.com/savsgio/gotils v0.0.0-20230208104028-c358bd845dee // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 // indirect
-	go.opentelemetry.io/otel/exporters/otlp/internal/retry v1.15.1 // indirect
-	go.opentelemetry.io/otel/exporters/otlp/otlptrace v1.15.1 // indirect
-	go.opentelemetry.io/otel/metric v0.38.1 // indirect
+	go.opentelemetry.io/otel/exporters/otlp/internal/retry v1.16.0 // indirect
+	go.opentelemetry.io/otel/exporters/otlp/otlptrace v1.16.0 // indirect
+	go.opentelemetry.io/otel/metric v1.16.0 // indirect
 	go.opentelemetry.io/proto/otlp v0.19.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
@@ -77,7 +77,7 @@ require (
 	golang.org/x/sys v0.8.0 // indirect
 	golang.org/x/text v0.9.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
-	google.golang.org/genproto v0.0.0-20230410155749-daa745c078e1 // indirect
+	google.golang.org/genproto v0.0.0-20230524185152-1884fd1fac28 // indirect
 	google.golang.org/grpc v1.55.0 // indirect
 	google.golang.org/protobuf v1.30.0 // indirect
 )
