@@ -63,9 +63,9 @@ func (p *Index) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
 	qw422016.N().S(`
   </div>
   <div class="card">
-    <h3>Examples</h3>
+    <h3>Example Applications</h3>
     <ul>
-      <li><a href="https://github.com/kyleu/rituals.dev/tree/projectforge" target="_blank">Rituals.dev</a>: Work with your team to estimate work, track your progress, and gather feedback.</li>
+      <li><a href="https://github.com/kyleu/rituals.dev" target="_blank">Rituals.dev</a>: Work with your team to estimate work, track your progress, and gather feedback.</li>
       <li><a href="https://github.com/kyleu/admini" target="_blank">Admini</a>: A database management application, basically. It does other stuff too.</li>
       <li><em>More examples coming soon...</em></li>
     </ul>
