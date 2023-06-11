@@ -33,8 +33,20 @@ func (s *Result) Actions() Actions {
 	if s.DataInt("commitsBehind") > 0 {
 		ret = append(ret, ActionPull)
 	}
-	ret = append(ret, ActionUndoCommit, ActionMagic)
+	ret = append(ret, ActionUndoCommit, ActionMagic, ActionHistory)
 	return ret
+}
+
+func (s *Result) History() *HistoryResult {
+	if s.Data == nil {
+		return nil
+	}
+	if x, ok := s.Data["history"]; ok {
+		h := &HistoryResult{}
+		_ = util.CycleJSON(x, h)
+		return h
+	}
+	return nil
 }
 
 func (s *Result) DataString(k string) string {

@@ -9,10 +9,11 @@ import (
 )
 
 const (
-	dateFmtYMD  = "2006-01-02"
-	dateFmtFull = "2006-01-02 15:04:05"
-	dateFmtHTML = "2006-01-02T15:04:05"
-	dateFmtJS   = "2006-01-02T15:04:05Z"
+	dateFmtFull    = "2006-01-02 15:04:05"
+	dateFmtHTML    = "2006-01-02T15:04:05"
+	dateFmtJS      = "2006-01-02T15:04:05Z"
+	dateFmtVerbose = "Mon Jan 2 15:04:05 2006 -0700"
+	dateFmtYMD     = "2006-01-02"
 )
 
 func TimeToday() *time.Time {
@@ -46,10 +47,6 @@ func TimeToString(d *time.Time, fmt string) string {
 	return d.Format(fmt)
 }
 
-func TimeToYMD(d *time.Time) string {
-	return TimeToString(d, dateFmtYMD)
-}
-
 func TimeToFull(d *time.Time) string {
 	return TimeToString(d, dateFmtFull)
 }
@@ -60,6 +57,14 @@ func TimeToHTML(d *time.Time) string {
 
 func TimeToJS(d *time.Time) string {
 	return TimeToString(d, dateFmtJS)
+}
+
+func TimeToVerbose(d *time.Time) string {
+	return TimeToString(d, dateFmtVerbose)
+}
+
+func TimeToYMD(d *time.Time) string {
+	return TimeToString(d, dateFmtYMD)
 }
 
 func TimeFromString(s string) (*time.Time, error) {
@@ -84,10 +89,6 @@ func TimeFromStringFmt(s string, fmt string) (*time.Time, error) {
 	return &ret, nil
 }
 
-func TimeFromYMD(s string) (*time.Time, error) {
-	return TimeFromStringFmt(s, dateFmtYMD)
-}
-
 func TimeFromFull(s string) (*time.Time, error) {
 	return TimeFromStringFmt(s, dateFmtFull)
 }
@@ -98,6 +99,14 @@ func TimeFromHTML(s string) (*time.Time, error) {
 
 func TimeFromJS(s string) (*time.Time, error) {
 	return TimeFromStringFmt(s, dateFmtJS)
+}
+
+func TimeFromVerbose(s string) (*time.Time, error) {
+	return TimeFromStringFmt(s, dateFmtVerbose)
+}
+
+func TimeFromYMD(s string) (*time.Time, error) {
+	return TimeFromStringFmt(s, dateFmtYMD)
 }
 
 func TimeToMap(t time.Time) map[string]any {

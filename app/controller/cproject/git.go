@@ -2,6 +2,7 @@ package cproject
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
@@ -16,12 +17,18 @@ import (
 )
 
 var (
-	messageArg = &cutil.Arg{Key: "message", Title: "Message", Description: "The message to used for the commit"}
+	authorsArg = &cutil.Arg{Key: "authors", Title: "Authors", Description: "Limit to a set of author emails (comma-separated)"}
+	branchArg  = &cutil.Arg{Key: "name", Title: "Branch Name", Description: "The name to used for the new branch"}
 	dryRunArg  = &cutil.Arg{Key: "dryRun", Title: "Dry Run", Description: "Runs without any destructive operations", Type: "bool", Default: util.BoolTrue}
+	limitArg   = &cutil.Arg{Key: "limit", Title: "Limit", Description: "Limits the results to, at most, this amount", Type: "number", Default: "100"}
+	messageArg = &cutil.Arg{Key: "message", Title: "Message", Description: "The message to used for the commit"}
+	pathArg    = &cutil.Arg{Key: "path", Title: "Path", Description: "Limits the results to the provided path (leave blank for all)"}
+	sinceArg   = &cutil.Arg{Key: "since", Title: "Since", Description: "Limit to a date range", Type: "datetime"}
 
-	gitBranchArgs = cutil.Args{&cutil.Arg{Key: "name", Title: "Branch Name", Description: "The name to used for the new branch"}}
-	gitCommitArgs = cutil.Args{messageArg}
-	gitMagicArgs  = cutil.Args{messageArg, dryRunArg}
+	gitBranchArgs  = cutil.Args{branchArg}
+	gitCommitArgs  = cutil.Args{messageArg}
+	gitHistoryArgs = cutil.Args{pathArg, sinceArg, authorsArg, limitArg}
+	gitMagicArgs   = cutil.Args{messageArg, dryRunArg}
 )
 
 func GitAction(rc *fasthttp.RequestCtx) {
@@ -61,6 +68,19 @@ func GitAction(rc *fasthttp.RequestCtx) {
 			result, err = as.Services.Git.Push(ps.Context, prj, ps.Logger)
 		case git.ActionOutdated.Key:
 			result, err = as.Services.Git.Outdated(ps.Context, prj, ps.Logger)
+		case git.ActionHistory.Key:
+			argRes := cutil.CollectArgs(rc, gitHistoryArgs)
+			if len(argRes.Missing) > 0 {
+				ps.Data = argRes
+				url := fmt.Sprintf("/git/%s/history", prj.Key)
+				return controller.Render(rc, as, &verror.Args{URL: url, Directions: "Choose your options", ArgRes: argRes}, ps, bc...)
+			}
+			path := argRes.Values["paths"]
+			since, _ := util.TimeFromString(argRes.Values["since"])
+			authors := util.StringSplitAndTrim(argRes.Values["authors"], ",")
+			limit, _ := strconv.Atoi(argRes.Values["limit"])
+			hist := &git.HistoryResult{Path: path, Since: since, Authors: authors, Limit: limit}
+			result, err = as.Services.Git.History(ps.Context, prj, hist, ps.Logger)
 		case git.ActionBranch.Key:
 			argRes := cutil.CollectArgs(rc, gitBranchArgs)
 			if len(argRes.Missing) > 0 {

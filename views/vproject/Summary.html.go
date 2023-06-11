@@ -162,7 +162,19 @@ func StreamSummary(qw422016 *qt422016.Writer, prj *project.Project, title string
 //line views/vproject/Summary.html:41
 	qw422016.E().S(prj.Key)
 //line views/vproject/Summary.html:41
-	qw422016.N().S(`" title="Source control status for this project"><button>`)
+	qw422016.N().S(`" title="`)
+//line views/vproject/Summary.html:41
+	if gitResult == nil {
+//line views/vproject/Summary.html:41
+		qw422016.N().S(`Source control status for this project`)
+//line views/vproject/Summary.html:41
+	} else {
+//line views/vproject/Summary.html:41
+		qw422016.E().S(gitResult.Status)
+//line views/vproject/Summary.html:41
+	}
+//line views/vproject/Summary.html:41
+	qw422016.N().S(`"><button>`)
 //line views/vproject/Summary.html:41
 	components.StreamSVGRef(qw422016, "git", 15, 15, "icon", ps)
 //line views/vproject/Summary.html:41

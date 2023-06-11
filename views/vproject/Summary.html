@@ -38,7 +38,7 @@
       {%- endfor -%}
       <a href="/p/{%s prj.Key %}/fs" title="Explore the project's files"><button>{%= components.SVGRef("folder", 15, 15, "icon", ps) %}Files</button></a>
       <a href="/svg/{%s prj.Key %}" title="Add new SVGs and set the app icon"><button>{%= components.SVGRef("icons", 15, 15, "icon", ps) %}SVG</button></a>
-      <a href="/git/{%s prj.Key %}" title="Source control status for this project"><button>{%= components.SVGRef("git", 15, 15, "icon", ps) %}Git</button></a>
+      <a href="/git/{%s prj.Key %}" title="{%- if gitResult == nil -%}Source control status for this project{% else %}{%s gitResult.Status %}{%- endif -%}"><button>{%= components.SVGRef("git", 15, 15, "icon", ps) %}Git</button></a>
     </div>
   </div>
 {% endfunc %}

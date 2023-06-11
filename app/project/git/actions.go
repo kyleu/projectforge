@@ -19,9 +19,11 @@ var (
 	ActionBranch     = &Action{Key: "branch", Title: "Branch", Description: "Switch to a new branch"}
 	ActionUndoCommit = &Action{Key: "undocommit", Title: "Undo", Description: "Removes the most recent commit, keeping all local changes"}
 	ActionOutdated   = &Action{Key: "outdated", Title: "Outdated", Description: "Finds commits since last tag"}
+	ActionHistory    = &Action{Key: "history", Title: "History", Description: "Visualize the git history"}
 
 	allActions = Actions{
-		ActionStatus, ActionCreateRepo, ActionMagic, ActionFetch, ActionCommit, ActionPull, ActionPush, ActionBranch, ActionUndoCommit, ActionOutdated,
+		ActionStatus, ActionCreateRepo, ActionMagic, ActionFetch, ActionCommit,
+		ActionPull, ActionPush, ActionBranch, ActionUndoCommit, ActionOutdated, ActionHistory,
 	}
 )
 

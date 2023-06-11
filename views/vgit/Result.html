@@ -1,4 +1,7 @@
 {% import (
+  "fmt"
+  "strings"
+
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/project/git"
   "projectforge.dev/projectforge/app/controller/cutil"
@@ -103,10 +106,65 @@
         </td>
       </tr>
       {%- endif -%}
+      {%- if hist := r.History(); hist != nil -%}
+      {%= displayHistory(hist) %}
+      {%- else -%}
       <tr>
         <th class="shrink">Data</th>
         <td>{%= components.JSON(r.Data) %}</td>
       </tr>
+      {%- endif -%}
     </tbody>
   </table>
+{% endfunc %}
+
+{% func displayHistory(hist *git.HistoryResult) %}
+      {%- if hist.Since != nil -%}
+      <tr>
+        <th>Since</th>
+        <td>{%s util.TimeToFull(hist.Since) %}</td>
+      </tr>
+      {%- endif -%}
+      {%- if len(hist.Authors) > 0 -%}
+      <tr>
+        <th>Authors</th>
+        <td>{%s strings.Join(hist.Authors, ", ") %}</td>
+      </tr>
+      {%- endif -%}
+      {%- if hist.Limit > 0 -%}
+      <tr>
+        <th>Limit</th>
+        <td>{%d hist.Limit %}</td>
+      </tr>
+      {%- endif -%}
+      {%- if len(hist.Entries) > 0 -%}
+      <tr>
+        <th>Entries ({%d len(hist.Entries) %})</th>
+        <td>
+          {%- for _, e := range hist.Entries -%}
+            {%= displayEntry(hist, e) %}
+          {%- endfor -%}
+        </td>
+      </tr>
+      {%- endif -%}
+{% endfunc %}
+
+{% func displayEntry(hist *git.HistoryResult, e *git.HistoryEntry) %}
+  {%- code
+    u := "?path=" + hist.Path
+    u += "&since=" + util.TimeToYMD(hist.Since)
+    u += "&authors=" + strings.Join(hist.Authors, ",")
+    u += "&limit=" + fmt.Sprint(hist.Limit)
+    u += "&commit=" + e.SHA
+  -%}
+  <div class="card" style="margin-left: 0;">
+    <div class="right"><em>{%s util.TimeToFull(e.OccurredTime()) %}</em></div>
+    <h4><a href="{%s u %}">{%s e.SHA %}</a></h4>
+    <div class="mt">{%s e.Message %}</div>
+    <div class="mt"><em>
+      -
+      {% if e.AuthorName != "" %}{%s e.AuthorName %}{% endif %}
+      {% if e.AuthorEmail != "" %}(<a href="mailto:{%s e.AuthorEmail %}">{%s e.AuthorEmail %}</a>){% endif %}
+    </em></div>
+  </div>
 {% endfunc %}

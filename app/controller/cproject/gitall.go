@@ -1,11 +1,11 @@
 package cproject
 
 import (
-	"strings"
-
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 	"golang.org/x/exp/slices"
+	"strconv"
+	"strings"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
@@ -38,6 +38,16 @@ func GitActionAll(rc *fasthttp.RequestCtx) {
 			results, err = gitPullAll(prjs, as, ps)
 		case git.ActionOutdated.Key:
 			results, err = gitOutdatedAll(prjs, as, ps)
+		case git.ActionHistory.Key:
+			argRes := cutil.CollectArgs(rc, gitHistoryArgs)
+			if len(argRes.Missing) > 0 {
+				url := "/git/all/history"
+				ps.Data = argRes
+				hidden := map[string]string{"tags": strings.Join(tags, ",")}
+				page := &verror.Args{URL: url, Directions: "Choose your options", ArgRes: argRes, Hidden: hidden}
+				return controller.Render(rc, as, page, ps, "projects", "Git")
+			}
+			results, err = gitHistoryAll(prjs, rc, as, ps)
 		case git.ActionMagic.Key:
 			argRes := cutil.CollectArgs(rc, gitMagicArgs)
 			if len(argRes.Missing) > 0 {
@@ -87,6 +97,18 @@ func gitPullAll(prjs project.Projects, as *app.State, ps *cutil.PageState) (git.
 func gitOutdatedAll(prjs project.Projects, as *app.State, ps *cutil.PageState) (git.Results, error) {
 	results, errs := util.AsyncCollect(prjs, func(prj *project.Project) (*git.Result, error) {
 		return as.Services.Git.Outdated(ps.Context, prj, ps.Logger)
+	})
+	return results, util.ErrorMerge(errs...)
+}
+
+func gitHistoryAll(prjs project.Projects, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (git.Results, error) {
+	path := string(rc.URI().QueryArgs().Peek("path"))
+	since, _ := util.TimeFromString(string(rc.URI().QueryArgs().Peek("since")))
+	authors := util.StringSplitAndTrim(string(rc.URI().QueryArgs().Peek("authors")), ",")
+	limit, _ := strconv.Atoi(string(rc.URI().QueryArgs().Peek("limit")))
+	results, errs := util.AsyncCollect(prjs, func(prj *project.Project) (*git.Result, error) {
+		hist := &git.HistoryResult{Path: path, Since: since, Authors: authors, Limit: limit}
+		return as.Services.Git.History(ps.Context, prj, hist, ps.Logger)
 	})
 	return results, util.ErrorMerge(errs...)
 }
