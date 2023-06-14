@@ -144,7 +144,7 @@ func (c *Column) ZeroVal() string {
 	case types.KeyMap, types.KeyValueMap, types.KeyReference:
 		return types.KeyNil
 	case types.KeyString:
-		return "\"\""
+		return `""`
 	case types.KeyDate, types.KeyTimestamp:
 		return "time.Time{}"
 	case types.KeyUUID:

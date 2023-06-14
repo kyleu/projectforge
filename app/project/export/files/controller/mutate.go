@@ -11,7 +11,7 @@ import (
 func controllerCreateForm(m *model.Model, grp *model.Column, prefix string) *golang.Block {
 	ret := blockFor(m, prefix, grp, 0, "create", "form")
 	if grp != nil {
-		controllerArgFor(grp, ret, "\"\"", 2)
+		controllerArgFor(grp, ret, `""`, 2)
 	}
 	var decls []string
 	if grp != nil {
@@ -44,7 +44,7 @@ func controllerCreateFormRandom(m *model.Model, prefix string) *golang.Block {
 func controllerCreate(m *model.Model, grp *model.Column, prefix string) *golang.Block {
 	ret := blockFor(m, prefix, grp, 0, "create")
 	if grp != nil {
-		controllerArgFor(grp, ret, "\"\"", 2)
+		controllerArgFor(grp, ret, `""`, 2)
 	}
 	ret.W("\t\tret, err := %sFromForm(rc, true)", m.Package)
 	ret.W("\t\tif err != nil {")
@@ -68,12 +68,10 @@ func controllerEditForm(m *model.Model, grp *model.Column, prefix string) *golan
 		ret.W("\t\trc.SetUserValue(\"includeDeleted\", true)")
 	}
 	if grp != nil {
-		controllerArgFor(grp, ret, "\"\"", 2)
+		controllerArgFor(grp, ret, `""`, 2)
 	}
 	ret.W("\t\tret, err := %sFromPath(rc, as, ps)", m.Package)
-	ret.W("\t\tif err != nil {")
-	ret.W("\t\t\treturn \"\", err")
-	ret.W("\t\t}")
+	ret.WE(2, `""`)
 	checkGrp(ret, grp)
 	ret.W("\t\tps.Title = \"Edit \" + ret.String()")
 	ret.W("\t\tps.Data = ret")
@@ -89,12 +87,10 @@ func controllerEdit(m *model.Model, grp *model.Column, prefix string) *golang.Bl
 		ret.W("\t\trc.SetUserValue(\"includeDeleted\", true)")
 	}
 	if grp != nil {
-		controllerArgFor(grp, ret, "\"\"", 2)
+		controllerArgFor(grp, ret, `""`, 2)
 	}
 	ret.W("\t\tret, err := %sFromPath(rc, as, ps)", m.Package)
-	ret.W("\t\tif err != nil {")
-	ret.W("\t\t\treturn \"\", err")
-	ret.W("\t\t}")
+	ret.WE(2, `""`)
 	checkGrp(ret, grp)
 	ret.W("\t\tfrm, err := %sFromForm(rc, false)", m.Package)
 	ret.W("\t\tif err != nil {")
@@ -118,12 +114,10 @@ func controllerEdit(m *model.Model, grp *model.Column, prefix string) *golang.Bl
 func controllerDelete(m *model.Model, grp *model.Column, prefix string) *golang.Block {
 	ret := blockFor(m, prefix, grp, 0, "delete")
 	if grp != nil {
-		controllerArgFor(grp, ret, "\"\"", 2)
+		controllerArgFor(grp, ret, `""`, 2)
 	}
 	ret.W("\t\tret, err := %sFromPath(rc, as, ps)", m.Package)
-	ret.W("\t\tif err != nil {")
-	ret.W("\t\t\treturn \"\", err")
-	ret.W("\t\t}")
+	ret.WE(2, `""`)
 	checkGrp(ret, grp)
 	pkCamels := make([]string, 0, len(m.PKs()))
 	for _, pk := range m.PKs() {

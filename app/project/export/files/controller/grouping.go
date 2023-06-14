@@ -42,9 +42,7 @@ func controllerGrouped(m *model.Model, grp *model.Column, prefix string) *golang
 		suffix = ", " + incDel
 	}
 	ret.W("\t\tret, err := as.Services.%s.Get%s(ps.Context, nil%s, ps.Logger)", m.Proper(), grp.ProperPlural(), suffix)
-	ret.W("\t\tif err != nil {")
-	ret.W("\t\t\treturn \"\", err")
-	ret.W("\t\t}")
+	ret.WE(2, `""`)
 	ret.W("\t\tps.Data = ret")
 	ret.W("\t\treturn %sRender(rc, as, &v%s.%s{%s: ret}, ps, %s, %q)", prefix, m.Package, grp.ProperPlural(), grp.ProperPlural(), m.Breadcrumbs(), grp.Camel())
 	ret.W("\t})")

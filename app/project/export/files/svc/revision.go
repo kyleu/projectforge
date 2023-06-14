@@ -97,9 +97,7 @@ func serviceGetRevision(m *model.Model, dbRef string, enums enum.Enums) (*golang
 	}
 	ret.W("\tq := database.SQLSelectSimple(columnsString, tablesJoinedParam, s.db.Placeholder(), wc)")
 	ret.W("\terr := s.%s.Get(ctx, ret, q, tx, logger, %s, %s)", dbRef, strings.Join(m.PKs().CamelNames(), ", "), revCol.Camel())
-	ret.W("\tif err != nil {")
-	ret.W("\t\treturn nil, err")
-	ret.W("\t}")
+	ret.WE(1, "nil")
 	ret.W("\treturn ret.To%s(), nil", m.Proper())
 	ret.W("}")
 	return ret, nil

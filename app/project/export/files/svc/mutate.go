@@ -74,9 +74,7 @@ func serviceCreate(m *model.Model, audit bool, g *golang.File) (*golang.Block, e
 	if m.IsRevision() {
 		revCol := m.HistoryColumn()
 		ret.W("\trevs, err := s.getCurrent%s(ctx, tx, logger, models...)", revCol.ProperPlural())
-		ret.W("\tif err != nil {")
-		ret.W("\t\treturn err")
-		ret.W("\t}")
+		ret.WE(1)
 
 		if err := serviceAddCreatedUpdated(m, ret, g, false); err != nil {
 			return nil, err
@@ -84,13 +82,9 @@ func serviceCreate(m *model.Model, audit bool, g *golang.File) (*golang.Block, e
 
 		ret.WB()
 		ret.W("\terr = s.upsertCore(ctx, tx, logger, models...)")
-		ret.W("\tif err != nil {")
-		ret.W("\t\treturn err")
-		ret.W("\t}")
+		ret.WE(1)
 		ret.W("\terr = s.insert%s(ctx, tx, logger, models...)", revCol.Proper())
-		ret.W("\tif err != nil {")
-		ret.W("\t\treturn err")
-		ret.W("\t}")
+		ret.WE(1)
 		ret.W("\treturn nil")
 	} else {
 		if err := serviceAddCreatedUpdated(m, ret, g, false); err != nil {
@@ -102,9 +96,7 @@ func serviceCreate(m *model.Model, audit bool, g *golang.File) (*golang.Block, e
 		if audit {
 			msg := "\t\t_, _, err := s.audit.ApplyObjSimple(ctx, \"%s.create\", \"created new %s\", nil, arg, %q, nil, logger)"
 			ret.W(msg, m.Proper(), m.TitleLower(), m.Proper())
-			ret.W("\t\tif err != nil {")
-			ret.W("\t\t\treturn err")
-			ret.W("\t\t}")
+			ret.WE(2)
 		}
 		ret.W("\t\tvals = append(vals, arg.ToData()...)")
 		ret.W("\t}")
@@ -120,9 +112,7 @@ func serviceUpdate(m *model.Model, audit bool, g *golang.File, database string) 
 	if m.IsRevision() {
 		revCol := m.HistoryColumn()
 		ret.W("\trevs, err := s.getCurrent%s(ctx, tx, logger, model)", revCol.ProperPlural())
-		ret.W("\tif err != nil {")
-		ret.W("\t\treturn err")
-		ret.W("\t}")
+		ret.WE(1)
 		ret.W("\tmodel.%s = revs[model.String()] + 1", revCol.Proper())
 	}
 
@@ -161,13 +151,9 @@ func serviceUpdate(m *model.Model, audit bool, g *golang.File, database string) 
 		revCol := m.HistoryColumn()
 		ret.WB()
 		ret.W("\terr = s.upsertCore(ctx, tx, logger, model)")
-		ret.W("\tif err != nil {")
-		ret.W("\t\treturn err")
-		ret.W("\t}")
+		ret.WE(1)
 		ret.W("\terr = s.insert%s(ctx, tx, logger, model)", revCol.Proper())
-		ret.W("\tif err != nil {")
-		ret.W("\t\treturn err")
-		ret.W("\t}")
+		ret.WE(1)
 		if audit {
 			serviceAuditApply(m, ret, g)
 		}
@@ -185,9 +171,7 @@ func serviceUpdate(m *model.Model, audit bool, g *golang.File, database string) 
 			token = serviceAssignmentToken
 		}
 		ret.W("\t_, err %s s.db.Update(ctx, q, tx, 1, logger, data...)", token)
-		ret.W("\tif err != nil {")
-		ret.W("\t\treturn err")
-		ret.W("\t}")
+		ret.WE(1)
 		if audit {
 			serviceAuditApply(m, ret, g)
 		}
@@ -201,9 +185,7 @@ func serviceAuditApply(m *model.Model, ret *golang.Block, g *golang.File) {
 	g.AddImport(helper.ImpFmt)
 	ret.W("\tmsg := fmt.Sprintf(\"updated %s [%%%%s]\", model.String())", m.Title())
 	ret.W("\t_, _, err = s.audit.ApplyObjSimple(ctx, \"%s.update\", msg, curr, model, %q, nil, logger)", m.Proper(), m.Proper())
-	ret.W("\tif err != nil {")
-	ret.W("\t\treturn err")
-	ret.W("\t}")
+	ret.WE(1)
 }
 
 func serviceUpdateIfNeeded(m *model.Model, g *golang.File, database string) (*golang.Block, error) {
@@ -212,9 +194,7 @@ func serviceUpdateIfNeeded(m *model.Model, g *golang.File, database string) (*go
 	if m.IsRevision() {
 		revCol := m.HistoryColumn()
 		ret.W("\trevs, err := s.getCurrent%s(ctx, tx, logger, model)", revCol.ProperPlural())
-		ret.W("\tif err != nil {")
-		ret.W("\t\treturn err")
-		ret.W("\t}")
+		ret.WE(1)
 		ret.W("\tmodel.%s = revs[model.String()] + 1", revCol.Proper())
 	}
 
@@ -256,13 +236,9 @@ func serviceUpdateIfNeeded(m *model.Model, g *golang.File, database string) (*go
 		revCol := m.HistoryColumn()
 		ret.WB()
 		ret.W("\terr = s.upsertCore(ctx, tx, logger, model)")
-		ret.W("\tif err != nil {")
-		ret.W("\t\treturn err")
-		ret.W("\t}")
+		ret.WE(1)
 		ret.W("\terr = s.insert%s(ctx, tx, logger, model)", revCol.Proper())
-		ret.W("\tif err != nil {")
-		ret.W("\t\treturn err")
-		ret.W("\t}")
+		ret.WE(1)
 		ret.W("\treturn nil")
 	} else {
 		placeholder := ""
@@ -277,9 +253,7 @@ func serviceUpdateIfNeeded(m *model.Model, g *golang.File, database string) (*go
 			token = serviceAssignmentToken
 		}
 		ret.W("\t_, err %s s.db.Update(ctx, q, tx, 1, logger, data...)", token)
-		ret.W("\tif err != nil {")
-		ret.W("\t\treturn err")
-		ret.W("\t}")
+		ret.WE(1)
 		ret.W("\treturn nil")
 	}
 	ret.W("}")
@@ -295,9 +269,7 @@ func serviceSave(m *model.Model, g *golang.File) (*golang.Block, error) {
 
 	if m.IsRevision() {
 		ret.W("\trevs, err := s.getCurrent%s(ctx, tx, logger, models...)", m.HistoryColumns(true).Col.ProperPlural())
-		ret.W("\tif err != nil {")
-		ret.W("\t\treturn err")
-		ret.W("\t}")
+		ret.WE(1)
 	}
 
 	if err := serviceAddCreatedUpdated(m, ret, g, false); err != nil {
@@ -306,13 +278,9 @@ func serviceSave(m *model.Model, g *golang.File) (*golang.Block, error) {
 	if m.IsRevision() {
 		ret.WB()
 		ret.W("\terr = s.upsertCore(ctx, tx, logger, models...)")
-		ret.W("\tif err != nil {")
-		ret.W("\t\treturn err")
-		ret.W("\t}")
+		ret.WE(1)
 		ret.W("\terr = s.insert%s(ctx, tx, logger, models...)", m.HistoryColumn().Proper())
-		ret.W("\tif err != nil {")
-		ret.W("\t\treturn err")
-		ret.W("\t}")
+		ret.WE(1)
 		ret.W("\treturn nil")
 	} else {
 		q := strings.Join(m.PKs().NamesQuoted(), ", ")

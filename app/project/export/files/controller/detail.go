@@ -15,20 +15,16 @@ func controllerDetail(models model.Models, m *model.Model, grp *model.Column, au
 	ret := blockFor(m, prefix, grp, (len(rrels)*6)+40, "detail")
 	grpHistory := ""
 	if grp != nil {
-		controllerArgFor(grp, ret, "\"\"", 2)
+		controllerArgFor(grp, ret, `""`, 2)
 		grpHistory = fmt.Sprintf(", %q", grp.Camel())
 	}
 	ret.W("\t\tret, err := %sFromPath(rc, as, ps)", m.Package)
-	ret.W("\t\tif err != nil {")
-	ret.W("\t\t\treturn \"\", err")
-	ret.W("\t\t}")
+	ret.WE(2, `""`)
 	checkGrp(ret, grp)
 	checkRev(ret, m)
 	if m.IsHistory() {
 		ret.W("\t\thist, err := as.Services.%s.GetHistories(ps.Context, nil, %s, ps.Logger)", m.Proper(), m.PKs().ToRefs("ret."))
-		ret.W("\t\tif err != nil {")
-		ret.W("\t\t\treturn \"\", err")
-		ret.W("\t\t}")
+		ret.WE(2, `""`)
 	}
 	ret.W("\t\tps.Title = ret.TitleString() + \" (%s)\"", m.Title())
 	ret.W("\t\tps.Data = ret")
@@ -49,7 +45,8 @@ func controllerDetail(models model.Models, m *model.Model, grp *model.Column, au
 	revArgKeys, revArgVals := getReverseArgs(models, m, rrels, ret)
 	if audit {
 		ret.WB()
-		ret.W("\t\trelatedAuditRecords, err := as.Services.Audit.RecordsForModel(ps.Context, nil, %q, %s, nil, ps.Logger)", m.Name, m.PKs().ToGoStrings("ret."))
+		msg := "\t\trelatedAuditRecords, err := as.Services.Audit.RecordsForModel(ps.Context, nil, %q, %s, nil, ps.Logger)"
+		ret.W(msg, m.Name, m.PKs().ToGoStrings("ret."))
 		ret.W("\t\tif err != nil {")
 		ret.W("\t\t\treturn \"\", errors.Wrapf(err, \"unable to retrieve related audit records\")")
 		ret.W("\t\t}")
@@ -62,9 +59,11 @@ func controllerDetail(models model.Models, m *model.Model, grp *model.Column, au
 		}
 		argStr := strings.Join(args, ", ")
 		if audit {
-			ret.W("\t\treturn %sRender(rc, as, &v%s.Detail{%s, AuditRecords: relatedAuditRecords}, ps, %s%s, ret.String())", prefix, m.Package, argStr, m.Breadcrumbs(), grpHistory)
+			msg := "\t\treturn %sRender(rc, as, &v%s.Detail{%s, AuditRecords: relatedAuditRecords}, ps, %s%s, ret.String())"
+			ret.W(msg, prefix, m.Package, argStr, m.Breadcrumbs(), grpHistory)
 		} else {
-			ret.W("\t\treturn %sRender(rc, as, &v%s.Detail{%s}, ps, %s%s, ret.String())", prefix, m.Package, argStr, m.Breadcrumbs(), grpHistory)
+			msg := "\t\treturn %sRender(rc, as, &v%s.Detail{%s}, ps, %s%s, ret.String())"
+			ret.W(msg, prefix, m.Package, argStr, m.Breadcrumbs(), grpHistory)
 		}
 	} else {
 		ret.W("\t\treturn %sRender(rc, as, &v%s.Detail{", prefix, m.Package)
@@ -143,8 +142,8 @@ func getArgs(models model.Models, m *model.Model, rrels model.Relations, g *gola
 }
 
 func getReverseArgs(models model.Models, m *model.Model, rrels model.Relations, ret *golang.Block) ([]string, []string) {
-	var argKeys []string
-	var argVals []string
+	argKeys := make([]string, 0, len(rrels))
+	argVals := make([]string, 0, len(rrels))
 	for _, rrel := range rrels {
 		rm := models.Get(rrel.Table)
 		delSuffix := ""

@@ -24,9 +24,7 @@ func grpcList(m *model.Model, grpcArgs string, grpcRet string, ga *FileArgs) *go
 	} else {
 		ret.W("\tret, err := appState.Services.%s.Get%s(p.Ctx, nil, %s, &filter.Params{}%s, p.Logger)", m.Proper(), ga.APISuffix(), ga.Grp.Camel(), suffix)
 	}
-	ret.W("\tif err != nil {")
-	ret.W("\t\treturn nil, err")
-	ret.W("\t}")
+	ret.WE(1, "nil")
 	ret.W("\tout[%q] = ret", "results")
 	ret.W("\tprovider.SetOutput(p.TX, out)")
 	ret.W("\treturn p.TX, nil")
@@ -48,9 +46,7 @@ func grpcSearch(m *model.Model, grpcArgs string, grpcRet string, ga *FileArgs) *
 	} else {
 		ret.W("\tret, err := appState.Services.%s.Search%s(p.Ctx, %s, q, nil, nil%s, p.Logger)", m.Proper(), ga.APISuffix(), ga.Grp.Camel(), suffix)
 	}
-	ret.W("\tif err != nil {")
-	ret.W("\t\treturn nil, err")
-	ret.W("\t}")
+	ret.WE(1, "nil")
 	ret.W("\tprovider.SetOutput(p.TX, ret)")
 	ret.W("\treturn p.TX, nil")
 	ret.W("}")
@@ -66,9 +62,7 @@ func grpcDetail(m *model.Model, grpcArgs string, grpcRet string, g *golang.File,
 	}
 	pks := m.PKs()
 	ret.W("\t%s, err := %sParamsFromRequest(p)", strings.Join(pks.CamelNames(), ", "), m.Camel())
-	ret.W("\tif err != nil {")
-	ret.W("\t\treturn nil, err")
-	ret.W("\t}")
+	ret.WE(1, "nil")
 	grpcAddSection(ret, "detail", 1)
 	if m.IsRevision() {
 		hc := m.HistoryColumn()
@@ -87,9 +81,7 @@ func grpcDetail(m *model.Model, grpcArgs string, grpcRet string, g *golang.File,
 	} else {
 		ret.W("\tret, err := appState.Services.%s.Get(p.Ctx, nil, %s%s, p.Logger)", m.Proper(), strings.Join(pks.CamelNames(), ", "), suffix)
 	}
-	ret.W("\tif err != nil {")
-	ret.W("\t\treturn nil, err")
-	ret.W("\t}")
+	ret.WE(1, "nil")
 	ga.AddStaticCheck("ret", ret, m, ga.Grp, "retrieve")
 	grpcAddSection(ret, "postdetail", 1)
 	ret.W("\tprovider.SetOutput(p.TX, ret)")

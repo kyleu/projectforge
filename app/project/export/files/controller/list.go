@@ -16,7 +16,7 @@ func controllerList(m *model.Model, grp *model.Column, models model.Models, enum
 	if grp != nil {
 		meth = "GetBy" + grp.Title()
 		grpArgs = ", " + grp.Camel() + "Arg"
-		controllerArgFor(grp, ret, "\"\"", 2)
+		controllerArgFor(grp, ret, `""`, 2)
 	}
 
 	suffix := ""
@@ -39,9 +39,7 @@ func controllerList(m *model.Model, grp *model.Column, models model.Models, enum
 	} else {
 		ret.W("\t\tret, err := as.Services.%s.%s(ps.Context, nil%s, prms%s, ps.Logger)", m.Proper(), meth, grpArgs, suffix)
 	}
-	ret.W("\t\tif err != nil {")
-	ret.W("\t\t\treturn \"\", err")
-	ret.W("\t\t}")
+	ret.WE(2, `""`)
 	ret.W("\t\tps.Title = %q", m.TitlePlural())
 	ret.W("\t\tps.Data = ret")
 
@@ -79,9 +77,7 @@ func controllerList(m *model.Model, grp *model.Column, models model.Models, enum
 		}
 		call := "\t\t%sBy%s, err := as.Services.%s.GetMultiple(ps.Context, nil%s, ps.Logger, %s...)"
 		ret.W(call, relModel.CamelPlural(), srcCol.Proper(), relModel.Proper(), suffix, c)
-		ret.W("\t\tif err != nil {")
-		ret.W("\t\t\treturn \"\", err")
-		ret.W("\t\t}")
+		ret.WE(2, `""`)
 
 		toStrings += fmt.Sprintf(", %sBy%s: %sBy%s", relModel.ProperPlural(), srcCol.Proper(), relModel.CamelPlural(), srcCol.Proper())
 	}

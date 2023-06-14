@@ -29,11 +29,17 @@ func (b *Block) WB() {
 	b.Lines = append(b.Lines, "")
 }
 
-func (b *Block) WE(indent int) {
+func (b *Block) WE(indent int, prefix ...string) {
 	ind := util.StringRepeat("\t", indent)
-	b.Lines = append(b.Lines, "%sif err != nil {", ind)
-	b.Lines = append(b.Lines, "%s\t return err", ind)
-	b.Lines = append(b.Lines, "%s}", ind)
+	p := strings.Join(prefix, ", ")
+	if p != "" {
+		p += ", "
+	}
+	b.Lines = append(b.Lines,
+		ind+"if err != nil {",
+		ind+"\treturn "+p+"err",
+		ind+"}",
+	)
 }
 
 func (b *Block) Render() string {
