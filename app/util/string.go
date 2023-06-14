@@ -3,6 +3,7 @@ package util
 
 import (
 	"fmt"
+	"hash/fnv"
 	"strings"
 	"unicode"
 
@@ -139,6 +140,12 @@ func StringReplaceBetween(s string, l string, r string, replacement string) (str
 		ri = len(s)
 	}
 	return s[:lio] + replacement + s[ri:], nil
+}
+
+func StringHash(s string) uint32 {
+	h := fnv.New32a()
+	_, _ = h.Write([]byte(s))
+	return h.Sum32()
 }
 
 func CountryFlag(code string) string {
