@@ -26,9 +26,16 @@ func onRules(pm *PrjAndMods) *Result {
 		return ret.WithError(err)
 	}
 	forbidden := []string{"app", "check", "down", "edit", "left", "question", "right", "search", "searchbox", "times", "up", "star"}
+	cleanIcons := make([]string, 0, len(icons))
+	for _, x := range icons {
+		if !slices.Contains(forbidden, x) {
+			cleanIcons = append(cleanIcons, x)
+		}
+	}
 	for _, m := range pm.EArgs.Models {
 		for slices.Contains(forbidden, m.Icon) {
-			m.Icon = icons[util.RandomInt(len(icons))]
+			idx := util.StringHash(m.Name) % uint32(len(cleanIcons))
+			m.Icon = cleanIcons[idx]
 		}
 		m.AddTag("audit")
 		m.AddTag("search")
