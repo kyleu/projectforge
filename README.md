@@ -42,6 +42,7 @@ A project managed by Project Forge...
 ## Example Applications
 
 [Rituals.dev](https://github.com/kyleu/rituals.dev): Work with your team to estimate work, track your progress, and gather feedback.
+
 [Admini](https://github.com/kyleu/admini): A database management application, basically. It does other stuff too.
 More examples coming soon...
 
