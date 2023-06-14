@@ -1,11 +1,12 @@
 package cproject
 
 import (
+	"strconv"
+	"strings"
+
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 	"golang.org/x/exp/slices"
-	"strconv"
-	"strings"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"

@@ -1,8 +1,9 @@
 package git
 
 import (
-	"projectforge.dev/projectforge/app/util"
 	"time"
+
+	"projectforge.dev/projectforge/app/util"
 )
 
 type HistoryResult struct {
