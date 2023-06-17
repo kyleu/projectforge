@@ -34,6 +34,10 @@ func (i *Import) Render() string {
 	return fmt.Sprintf("%s%q", alias, i.Value)
 }
 
+func (i *Import) Equals(x *Import) bool {
+	return x.Type == i.Type && x.Value == i.Value && x.Alias == i.Alias
+}
+
 func NewImport(t ImportType, v string) *Import {
 	return &Import{Type: t, Value: v}
 }

@@ -20,7 +20,17 @@ func NewGoTemplate(path []string, fn string) *Template {
 }
 
 func (f *Template) AddImport(i ...*Import) {
-	f.Imports = append(f.Imports, i...)
+	for _, imp := range i {
+		var hit bool
+		for _, x := range f.Imports {
+			if x.Equals(imp) {
+				hit = true
+			}
+		}
+		if !hit {
+			f.Imports = append(f.Imports, imp)
+		}
+	}
 }
 
 func (f *Template) AddBlocks(b ...*Block) {
