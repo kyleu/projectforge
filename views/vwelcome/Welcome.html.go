@@ -61,11 +61,11 @@ func (p *Welcome) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 	qw422016.E().S(util.AppName)
 //line views/vwelcome/Welcome.html:29
 	qw422016.N().S(` in a directory without a project. Set your project's details using this form, and we'll get started</p>
-    <em>This will add <code>project.json</code> to `)
+    <p>You project will be created in <code>`)
 //line views/vwelcome/Welcome.html:30
 	qw422016.E().S(directory)
 //line views/vwelcome/Welcome.html:30
-	qw422016.N().S(`/.projectforge</em>
+	qw422016.N().S(`</code>; restart from a different directory to change</p>
   </div>
   <form action="" method="post">
     <div class="card">
