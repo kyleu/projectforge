@@ -7,6 +7,8 @@
 - {{{ .Info.Homepage }}}
 - https://{{{ .Package }}}
 
+{{{ .Name }}} was built with help from [Project Forge](https://projectforge.dev)
+
 ## Documentation
 
 - [Installation](doc/installation.md)
