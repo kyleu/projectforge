@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/util"
@@ -86,10 +87,7 @@ func (e *Enum) ValuesCamel() []string {
 type Enums []*Enum
 
 func (e Enums) Get(key string) *Enum {
-	for _, x := range e {
-		if x.Name == key {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(e, nil, func(x *Enum) bool {
+		return x.Name == key
+	})
 }

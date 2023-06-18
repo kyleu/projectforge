@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/valyala/fasthttp"
+	"golang.org/x/exp/slices"
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller/cmenu"
@@ -66,14 +67,7 @@ type PageState struct {
 
 func (p *PageState) AddIcon(keys ...string) {
 	for _, k := range keys {
-		var hit bool
-		for _, icon := range p.Icons {
-			if icon == k {
-				hit = true
-				break
-			}
-		}
-		if !hit {
+		if !slices.Contains(p.Icons, k) {
 			p.Icons = append(p.Icons, k)
 		}
 	}

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 )
 
@@ -116,13 +117,9 @@ func (i Imports) Add(imports ...*Import) Imports {
 		return append(Imports{}, imports...)
 	}
 	for _, imp := range imports {
-		hit := false
-		for _, x := range i {
-			if x.Value == imp.Value {
-				hit = true
-				break
-			}
-		}
+		hit := lo.ContainsBy(i, func(x *Import) bool {
+			return x.Value == imp.Value
+		})
 		if !hit {
 			i = append(i, imp)
 		}

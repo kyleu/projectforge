@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/file/diff"
 	"projectforge.dev/projectforge/app/lib/filesystem"
@@ -27,14 +28,12 @@ func Deployments(curr string, fs filesystem.FileLoader, fix bool, path string, d
 
 		hit := util.ValueMap{}
 		lines := strings.Split(string(b), "\n")
-		final := make([]string, 0, len(lines))
 
 		df := &diff.Diff{Path: dep, Status: diff.StatusIdentical}
 
-		for _, line := range lines {
-			final = append(final, deploymentProcessLine(line, fix, hit, curr))
-		}
-
+		final := lo.Map(lines, func(line string, index int) string {
+			return deploymentProcessLine(line, fix, hit, curr)
+		})
 		if len(hit) > 0 {
 			ret = append(ret, df)
 			hits := strings.Join(hit.Keys(), ", ")

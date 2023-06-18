@@ -6,6 +6,8 @@ import (
 	"sync"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
+	"golang.org/x/exp/maps"
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
@@ -102,22 +104,16 @@ func (s *Service) GetModules(keys ...string) (Modules, error) {
 func (s *Service) Keys() []string {
 	s.cacheMu.Lock()
 	defer s.cacheMu.Unlock()
-	keys := make([]string, 0, len(s.cache))
-	for k := range s.cache {
-		keys = append(keys, k)
-	}
+	keys := maps.Keys(s.cache)
 	slices.Sort(keys)
 	return keys
 }
 
 func (s *Service) Modules() Modules {
-	keys := s.Keys()
-	ret := make(Modules, 0, len(keys))
-	for _, key := range keys {
+	return lo.Map(s.Keys(), func(key string, _ int) *Module {
 		p, _ := s.Get(key)
-		ret = append(ret, p)
-	}
-	return ret
+		return p
+	})
 }
 
 func (s *Service) Deps() map[string][]string {

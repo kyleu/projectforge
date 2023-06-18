@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/file/diff"
@@ -36,9 +37,9 @@ func onAudit(ctx context.Context, pm *PrjAndMods) *Result {
 	}
 
 	errs := project.Validate(pm.Prj, pm.MSvc.Deps())
-	for _, err := range errs {
+	lo.ForEach(errs, func(err *project.ValidationError, index int) {
 		ret = ret.WithError(errors.Errorf("%s: %s", err.Code, err.Message))
-	}
+	})
 
 	return ret
 }

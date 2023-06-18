@@ -1,5 +1,7 @@
 package git
 
+import "github.com/samber/lo"
+
 type Action struct {
 	Key         string `json:"key"`
 	Title       string `json:"title"`
@@ -31,10 +33,7 @@ func ActionStatusFromString(key string) *Action {
 	if key == "" {
 		return ActionStatus
 	}
-	for _, act := range allActions {
-		if act.Key == key {
-			return act
-		}
-	}
-	return nil
+	return lo.FindOrElse(allActions, nil, func(act *Action) bool {
+		return act.Key == key
+	})
 }

@@ -1,6 +1,7 @@
 package file
 
 import (
+	"github.com/samber/lo"
 	"strings"
 
 	"projectforge.dev/projectforge/app/util"
@@ -56,12 +57,9 @@ var AllTypes = []Type{
 }
 
 func TypeFromString(s string) Type {
-	for _, t := range AllTypes {
-		if t.Key == s {
-			return t
-		}
-	}
-	return errorType("No file type available with key [" + s + "]")
+	return lo.FindOrElse(AllTypes, errorType("No file type available with key ["+s+"]"), func(t Type) bool {
+		return t.Key == s
+	})
 }
 
 func errorType(msg string) Type {

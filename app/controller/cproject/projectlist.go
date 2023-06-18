@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/samber/lo"
 	"github.com/valyala/fasthttp"
 	"golang.org/x/exp/slices"
 
@@ -40,17 +41,15 @@ func ProjectList(rc *fasthttp.RequestCtx) {
 		ps.Data = prjs
 		switch string(rc.QueryArgs().Peek("fmt")) {
 		case "ports":
-			msgs := make([]string, 0, len(prjs))
-			for _, p := range prjs {
-				msgs = append(msgs, fmt.Sprintf("%s: %d", p.Key, p.Port))
-			}
+			msgs := lo.Map(prjs, func(p *project.Project, _ int) string {
+				return fmt.Sprintf("%s: %d", p.Key, p.Port)
+			})
 			_, _ = rc.WriteString(strings.Join(msgs, "\n"))
 			return "", nil
 		case "versions":
-			msgs := make([]string, 0, len(prjs))
-			for _, p := range prjs {
-				msgs = append(msgs, fmt.Sprintf("%s: %s", p.Key, p.Version))
-			}
+			msgs := lo.Map(prjs, func(p *project.Project, _ int) string {
+				return fmt.Sprintf("%s: %s", p.Key, p.Version)
+			})
 			_, _ = rc.WriteString(strings.Join(msgs, "\n"))
 			return "", nil
 		case "go":

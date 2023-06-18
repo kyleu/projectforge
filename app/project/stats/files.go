@@ -1,6 +1,7 @@
 package stats
 
 import (
+	"github.com/samber/lo"
 	"path/filepath"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
@@ -10,11 +11,9 @@ import (
 type FileStats []*FileStat
 
 func (f FileStats) Count() int {
-	ret := 0
-	for _, x := range f {
-		ret += x.Count()
-	}
-	return ret
+	return lo.SumBy(f, func(x *FileStat) int {
+		return x.Count()
+	})
 }
 
 func (f FileStats) Largest() *FileStat {
@@ -28,11 +27,9 @@ func (f FileStats) Largest() *FileStat {
 }
 
 func (f FileStats) TotalSize() int64 {
-	var ret int64
-	for _, x := range f {
-		ret += x.TotalSize()
-	}
-	return ret
+	return lo.Sum(lo.Map(f, func(x *FileStat, _ int) int64 {
+		return x.TotalSize()
+	}))
 }
 
 func (f FileStats) Extensions() map[string]int {

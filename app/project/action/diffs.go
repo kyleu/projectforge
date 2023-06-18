@@ -1,6 +1,7 @@
 package action
 
 import (
+	"github.com/samber/lo"
 	"path"
 	"strings"
 
@@ -92,13 +93,9 @@ func parse(pm *PrjAndMods) (util.KeyTypeDescs, map[string]int) {
 	for _, m := range pm.Prj.Modules {
 		mod := pm.Mods.Get(m)
 		for _, src := range mod.ConfigVars {
-			var hit bool
-			for _, tgt := range configVars {
-				if src.Key == tgt.Key {
-					hit = true
-					break
-				}
-			}
+			hit := lo.ContainsBy(configVars, func(tgt *util.KeyTypeDesc) bool {
+				return src.Key == tgt.Key
+			})
 			if !hit {
 				configVars = append(configVars, src)
 			}

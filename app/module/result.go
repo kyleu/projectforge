@@ -1,8 +1,8 @@
 package module
 
 import (
+	"github.com/samber/lo"
 	"projectforge.dev/projectforge/app/file/diff"
-	"projectforge.dev/projectforge/app/util"
 )
 
 type Result struct {
@@ -14,29 +14,21 @@ type Result struct {
 }
 
 func (r *Result) DiffsFiltered(includeSkipped bool) diff.Diffs {
-	ret := make(diff.Diffs, 0, len(r.Diffs))
-	for _, d := range r.Diffs {
-		if includeSkipped || d.Status != diff.StatusSkipped {
-			ret = append(ret, d)
-		}
-	}
-	return ret
+	return lo.Filter(r.Diffs, func(d *diff.Diff, _ int) bool {
+		return includeSkipped || d.Status != diff.StatusSkipped
+	})
 }
 
 type Results []*Result
 
 func (r Results) DiffCount(includeSkipped bool) int {
-	ret := 0
-	for _, m := range r {
-		ret += len(m.DiffsFiltered(includeSkipped))
-	}
-	return ret
+	return lo.Sum(lo.Map(r, func(m *Result, _ int) int {
+		return len(m.DiffsFiltered(includeSkipped))
+	}))
 }
 
 func (r Results) Paths(includeSkipped bool) []string {
-	ret := make([]string, 0, r.DiffCount(includeSkipped))
-	for _, res := range r {
-		ret = append(ret, res.DiffsFiltered(includeSkipped).Paths()...)
-	}
-	return util.ArrayRemoveDuplicates(ret)
+	return lo.Uniq(lo.FlatMap(r, func(res *Result, _ int) []string {
+		return res.DiffsFiltered(includeSkipped).Paths()
+	}))
 }

@@ -2,6 +2,8 @@ package doctor
 
 import (
 	"fmt"
+
+	"github.com/samber/lo"
 )
 
 type Error struct {
@@ -22,10 +24,7 @@ func (e *Error) String() string {
 type Errors []*Error
 
 func (e Errors) Find(code string) *Error {
-	for _, x := range e {
-		if x.Code == code {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(e, nil, func(x *Error) bool {
+		return x.Code == code
+	})
 }

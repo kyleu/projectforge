@@ -1,6 +1,7 @@
 package diff
 
 import (
+	"github.com/samber/lo"
 	"projectforge.dev/projectforge/app/util"
 )
 
@@ -20,12 +21,9 @@ var (
 var AllStatuses = []*Status{StatusDifferent, StatusIdentical, StatusMissing, StatusNew, StatusSkipped}
 
 func StatusFromString(s string) *Status {
-	for _, t := range AllStatuses {
-		if t.Key == s {
-			return t
-		}
-	}
-	return nil
+	return lo.FindOrElse(AllStatuses, nil, func(t *Status) bool {
+		return t.Key == s
+	})
 }
 
 func (t *Status) String() string {

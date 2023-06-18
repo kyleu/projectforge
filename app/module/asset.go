@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	"golang.org/x/exp/maps"
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/lib/telemetry"
@@ -30,10 +31,7 @@ func (s *Service) AssetURL(ctx context.Context, key string, logger util.Logger) 
 	ret, ok := assetMap[key]
 	if !ok {
 		msg := "no URL available for module [%s] among candidates [%s]"
-		keys := make([]string, 0, len(assetMap))
-		for k := range assetMap {
-			keys = append(keys, k)
-		}
+		keys := maps.Keys(assetMap)
 		slices.Sort(keys)
 		return "", errors.Errorf(msg, key, strings.Join(keys, ", "))
 	}

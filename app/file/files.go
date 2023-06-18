@@ -1,6 +1,7 @@
 package file
 
 import (
+	"github.com/samber/lo"
 	"strings"
 )
 
@@ -17,12 +18,9 @@ func (f Files) String() string {
 }
 
 func (f Files) Get(path string) *File {
-	for _, file := range f {
-		if file.FullPath() == path {
-			return file
-		}
-	}
-	return nil
+	return lo.FindOrElse(f, nil, func(file *File) bool {
+		return file.FullPath() == path
+	})
 }
 
 func (f Files) Exists(path string) bool {

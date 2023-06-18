@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/file"
@@ -26,20 +27,15 @@ func (d *Diff) String() string {
 type Diffs []*Diff
 
 func (d Diffs) HasStatus(s *Status) bool {
-	for _, x := range d {
-		if x.Status.Key == s.Key {
-			return true
-		}
-	}
-	return false
+	return lo.ContainsBy(d, func(x *Diff) bool {
+		return x.Status.Key == s.Key
+	})
 }
 
 func (d Diffs) Paths() []string {
-	ret := make([]string, 0, len(d))
-	for _, x := range d {
-		ret = append(ret, x.Path)
-	}
-	return util.ArrayRemoveDuplicates(ret)
+	return lo.Uniq(lo.Map(d, func(x *Diff, _ int) string {
+		return x.Path
+	}))
 }
 
 func File(src *file.File, tgt *file.File) *Diff {

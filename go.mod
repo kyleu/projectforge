@@ -23,6 +23,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.15.1
 	github.com/robert-nix/ansihtml v1.0.1
+	github.com/samber/lo v1.38.1
 	github.com/santhosh-tekuri/jsonschema v1.2.4
 	github.com/valyala/fasthttp v1.47.0
 	github.com/valyala/quicktemplate v1.7.0

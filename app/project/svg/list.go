@@ -1,6 +1,7 @@
 package svg
 
 import (
+	"github.com/samber/lo"
 	"path/filepath"
 	"strings"
 
@@ -12,11 +13,9 @@ import (
 
 func List(fs filesystem.FileLoader, logger util.Logger) ([]string, error) {
 	files := fs.ListExtension(svgPath, "svg", nil, false, logger)
-	ret := make([]string, 0, len(files))
-	for _, key := range files {
-		ret = append(ret, strings.TrimSuffix(key, ".svg"))
-	}
-	return ret, nil
+	return lo.Map(files, func(key string, _ int) string {
+		return strings.TrimSuffix(key, ".svg")
+	}), nil
 }
 
 func Content(fs filesystem.FileLoader, key string) (string, error) {

@@ -3,6 +3,7 @@ package checks
 import (
 	"context"
 
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/doctor"
@@ -38,11 +39,9 @@ func CheckAll(ctx context.Context, modules []string, logger util.Logger) doctor.
 	ctx, span, logger := telemetry.StartSpan(ctx, "doctor:checkall", logger)
 	defer span.Complete()
 
-	var ret doctor.Results
-	for _, c := range ForModules(modules) {
-		ret = append(ret, c.Check(ctx, logger))
-	}
-	return ret
+	return lo.Map(ForModules(modules), func(c *doctor.Check, _ int) *doctor.Result {
+		return c.Check(ctx, logger)
+	})
 }
 
 func noop(_ context.Context, r *doctor.Result, _ string) *doctor.Result {

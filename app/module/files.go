@@ -1,6 +1,8 @@
 package module
 
 import (
+	"github.com/samber/lo"
+	"golang.org/x/exp/maps"
 	"os"
 
 	"github.com/pkg/errors"
@@ -23,10 +25,7 @@ func (s *Service) GetFilenames(mods Modules, logger util.Logger) ([]string, erro
 			ret[f] = true
 		}
 	}
-	keys := make([]string, 0, len(ret))
-	for k := range ret {
-		keys = append(keys, k)
-	}
+	keys := maps.Keys(ret)
 	slices.Sort(keys)
 	return keys, nil
 }
@@ -39,17 +38,12 @@ func (s *Service) GetFiles(mods Modules, addHeader bool, logger util.Logger) (fi
 			return nil, errors.Wrapf(err, "unable to load module [%s]", mod.Key)
 		}
 	}
-	keys := make([]string, 0, len(ret))
-	for k := range ret {
-		keys = append(keys, k)
-	}
+	keys := maps.Keys(ret)
 	slices.Sort(keys)
 
-	files := make(file.Files, 0, len(ret))
-	for _, k := range keys {
-		files = append(files, ret[k])
-	}
-	return files, nil
+	return lo.Map(keys, func(k string, _ int) *file.File {
+		return ret[k]
+	}), nil
 }
 
 func (s *Service) loadFiles(mod *Module, addHeader bool, ret map[string]*file.File, logger util.Logger) error {

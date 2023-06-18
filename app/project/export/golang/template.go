@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/filesystem"
 )
@@ -21,12 +23,9 @@ func NewGoTemplate(path []string, fn string) *Template {
 
 func (f *Template) AddImport(i ...*Import) {
 	for _, imp := range i {
-		var hit bool
-		for _, x := range f.Imports {
-			if x.Equals(imp) {
-				hit = true
-			}
-		}
+		hit := lo.ContainsBy(f.Imports, func(x *Import) bool {
+			return x.Equals(imp)
+		})
 		if !hit {
 			f.Imports = append(f.Imports, imp)
 		}

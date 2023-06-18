@@ -1,6 +1,7 @@
 package module
 
 import (
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
@@ -50,20 +51,15 @@ func (m *Module) DocPath() string {
 type Modules []*Module
 
 func (m Modules) Get(key string) *Module {
-	for _, item := range m {
-		if item.Key == key {
-			return item
-		}
-	}
-	return nil
+	return lo.FindOrElse(m, nil, func(item *Module) bool {
+		return item.Key == key
+	})
 }
 
 func (m Modules) Keys() []string {
-	ret := make([]string, 0, len(m))
-	for _, x := range m {
-		ret = append(ret, x.Key)
-	}
-	return ret
+	return lo.Map(m, func(x *Module, _ int) string {
+		return x.Key
+	})
 }
 
 func (m Modules) Sort() Modules {

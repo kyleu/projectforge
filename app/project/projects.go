@@ -1,27 +1,22 @@
 package project
 
 import (
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 )
 
 type Projects []*Project
 
 func (p Projects) Get(key string) *Project {
-	for _, x := range p {
-		if x.Key == key {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(p, nil, func(x *Project) bool {
+		return x.Key == key
+	})
 }
 
 func (p Projects) Root() *Project {
-	for _, x := range p {
-		if x.Path == "." {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(p, nil, func(x *Project) bool {
+		return x.Path == "."
+	})
 }
 
 func (p Projects) AllModules() []string {
@@ -38,19 +33,15 @@ func (p Projects) AllModules() []string {
 }
 
 func (p Projects) Keys() []string {
-	ret := make([]string, 0, len(p))
-	for _, prj := range p {
-		ret = append(ret, prj.Key)
-	}
-	return ret
+	return lo.Map(p, func(prj *Project, _ int) string {
+		return prj.Key
+	})
 }
 
 func (p Projects) Titles() []string {
-	ret := make([]string, 0, len(p))
-	for _, prj := range p {
-		ret = append(ret, prj.Title())
-	}
-	return ret
+	return lo.Map(p, func(prj *Project, _ int) string {
+		return prj.Title()
+	})
 }
 
 func (p Projects) WithTags(tags ...string) Projects {
@@ -69,13 +60,9 @@ func (p Projects) WithTags(tags ...string) Projects {
 func (p Projects) WithoutTags(tags ...string) Projects {
 	ret := make(Projects, 0, len(p))
 	for _, prj := range p {
-		var hit bool
-		for _, t := range tags {
-			if slices.Contains(prj.Tags, t) {
-				hit = true
-				break
-			}
-		}
+		hit := lo.ContainsBy(tags, func(t string) bool {
+			return slices.Contains(prj.Tags, t)
+		})
 		if !hit {
 			ret = append(ret, prj)
 		}

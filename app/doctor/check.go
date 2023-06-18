@@ -3,6 +3,8 @@ package doctor
 import (
 	"context"
 
+	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -39,10 +41,7 @@ func (c *Check) Check(ctx context.Context, logger util.Logger) *Result {
 type Checks []*Check
 
 func (c Checks) Get(key string) *Check {
-	for _, x := range c {
-		if x.Key == key {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(c, nil, func(x *Check) bool {
+		return x.Key == key
+	})
 }

@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/project"
@@ -43,12 +44,9 @@ const ciDesc = "Installs dependencies for the TypeScript client"
 type Builds []*Build
 
 func (b Builds) Get(key string) *Build {
-	for _, x := range b {
-		if x.Key == key {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(b, nil, func(x *Build) bool {
+		return x.Key == key
+	})
 }
 
 var AllBuilds = Builds{

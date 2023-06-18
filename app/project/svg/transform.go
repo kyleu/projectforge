@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 )
 
 func Transform(tgt string, b []byte, url string) (*SVG, error) {
@@ -95,12 +96,9 @@ func cleanAttrs(attrs []xml.Attr) []xml.Attr {
 	for _, a := range attrs {
 		n := a.Name.Local
 		if n != "xmlns" {
-			hit := false
-			for _, x := range ret {
-				if x.Name.Local == a.Name.Local {
-					hit = true
-				}
-			}
+			hit := lo.ContainsBy(ret, func(x xml.Attr) bool {
+				return x.Name.Local == a.Name.Local
+			})
 			if !hit {
 				ret = append(ret, a)
 			}

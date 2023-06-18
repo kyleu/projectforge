@@ -1,6 +1,7 @@
 package build
 
 import (
+	"github.com/samber/lo"
 	"strings"
 
 	"golang.org/x/exp/slices"
@@ -47,10 +48,7 @@ func (d *Dependency) String() string {
 type Dependencies []*Dependency
 
 func (d Dependencies) Get(k string) *Dependency {
-	for _, x := range d {
-		if x.Key == k {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(d, nil, func(x *Dependency) bool {
+		return x.Key == k
+	})
 }

@@ -1,6 +1,7 @@
 package diff
 
 import (
+	"github.com/samber/lo"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -17,11 +18,9 @@ type cmd struct {
 
 func Apply(b []byte, d *Diff) ([]byte, error) {
 	lines := strings.Split(string(b), "\n")
-
-	cmds := make([]*cmd, 0, len(d.Changes))
-	for _, c := range d.Changes {
-		cmds = append(cmds, loadCmd(c, false))
-	}
+	cmds := lo.Map(d.Changes, func(c *Change, _ int) *cmd {
+		return loadCmd(c, false)
+	})
 	newLines, err := applyCmds(lines, cmds...)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to apply commands")
@@ -32,11 +31,9 @@ func Apply(b []byte, d *Diff) ([]byte, error) {
 
 func ApplyInverse(b []byte, d *Diff) ([]byte, error) {
 	lines := strings.Split(string(b), "\n")
-
-	cmds := make([]*cmd, 0, len(d.Changes))
-	for _, c := range d.Changes {
-		cmds = append(cmds, loadCmd(c, true))
-	}
+	cmds := lo.Map(d.Changes, func(c *Change, _ int) *cmd {
+		return loadCmd(c, true)
+	})
 	newLines, err := applyCmds(lines, cmds...)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to apply commands")

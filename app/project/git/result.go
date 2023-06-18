@@ -1,6 +1,7 @@
 package git
 
 import (
+	"github.com/samber/lo"
 	"strconv"
 
 	"projectforge.dev/projectforge/app/project"
@@ -72,10 +73,7 @@ func (s *Result) DataStringArray(k string) []string {
 type Results []*Result
 
 func (s Results) Get(key string) *Result {
-	for _, x := range s {
-		if x.Project.Key == key {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(s, nil, func(x *Result) bool {
+		return x.Project.Key == key
+	})
 }

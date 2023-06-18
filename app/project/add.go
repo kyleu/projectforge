@@ -1,6 +1,7 @@
 package project
 
 import (
+	"github.com/samber/lo"
 	"os"
 	"path/filepath"
 	"strings"
@@ -61,13 +62,9 @@ func (s *Service) addAdditional(path string, logger util.Logger) {
 	if !ok {
 		return
 	}
-	hit := false
-	for _, a := range add {
-		if a == path {
-			hit = true
-			break
-		}
-	}
+	hit := lo.ContainsBy(add, func(a string) bool {
+		return a == path
+	})
 	if !hit {
 		add = append(add, path)
 		_ = os.WriteFile(s.getAdditionalFilename(), util.ToJSONBytes(add, true), filesystem.DefaultMode)

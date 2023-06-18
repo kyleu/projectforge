@@ -1,6 +1,7 @@
 package action
 
 import (
+	"github.com/samber/lo"
 	"os"
 	"strings"
 
@@ -26,12 +27,9 @@ func onRules(pm *PrjAndMods) *Result {
 		return ret.WithError(err)
 	}
 	forbidden := []string{"app", "check", "down", "edit", "left", "question", "right", "search", "searchbox", "times", "up", "star"}
-	cleanIcons := make([]string, 0, len(icons))
-	for _, x := range icons {
-		if !slices.Contains(forbidden, x) {
-			cleanIcons = append(cleanIcons, x)
-		}
-	}
+	cleanIcons := lo.Filter(icons, func(x string, _ int) bool {
+		return !slices.Contains(forbidden, x)
+	})
 	for _, m := range pm.EArgs.Models {
 		for slices.Contains(forbidden, m.Icon) {
 			idx := util.StringHash(m.Name) % uint32(len(cleanIcons))

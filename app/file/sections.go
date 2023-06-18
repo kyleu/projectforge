@@ -1,6 +1,7 @@
 package file
 
 import (
+	"github.com/samber/lo"
 	"strings"
 	"unicode/utf8"
 
@@ -92,12 +93,9 @@ type section struct {
 type sections []*section
 
 func (s sections) Get(key string) *section {
-	for _, x := range s {
-		if x.Key == key {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(s, nil, func(x *section) bool {
+		return x.Key == key
+	})
 }
 
 func (s sections) Sort() {
