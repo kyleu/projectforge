@@ -6,6 +6,7 @@ import (
 
 	"github.com/muesli/coral"
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/project/action"
@@ -30,25 +31,25 @@ func actionCmd(ctx context.Context, t action.Type) *coral.Command {
 	}
 	ret := &coral.Command{Use: t.Key, Short: t.Description, RunE: f, Aliases: aliases}
 	if t.Key == action.TypeBuild.Key {
-		for _, x := range action.AllBuilds {
+		lo.ForEach(action.AllBuilds, func(x *action.Build, _ int) {
 			k := x.Key
 			fx := func(cmd *coral.Command, args []string) error {
 				return actionF(ctx, t, append(slices.Clone(args), k))
 			}
 			ret.AddCommand(&coral.Command{Use: x.Key, Short: x.Description, RunE: fx})
-		}
+		})
 	}
 	return ret
 }
 
 func actionCommands() []*coral.Command {
 	ctx := context.Background()
-	ret := make([]*coral.Command, 0, len(action.AllTypes))
-	for _, a := range action.AllTypes {
-		if !a.Hidden {
-			ret = append(ret, actionCmd(ctx, a))
+	ret := lo.FilterMap(action.AllTypes, func(a action.Type, _ int) (*coral.Command, bool) {
+		if a.Hidden {
+			return nil, false
 		}
-	}
+		return actionCmd(ctx, a), true
+	})
 	return ret
 }
 
