@@ -59,11 +59,15 @@ func StreamDetailSettings(qw422016 *qt422016.Writer, prj *project.Project, as *a
       </tr>
       <tr>
         <th>Package</th>
-        <td>`)
+        <td><a href="https://`)
 //line views/vproject/DetailSettings.html:27
 	qw422016.E().S(prj.Package)
 //line views/vproject/DetailSettings.html:27
-	qw422016.N().S(`</td>
+	qw422016.N().S(`" target="_blank">`)
+//line views/vproject/DetailSettings.html:27
+	qw422016.E().S(prj.Package)
+//line views/vproject/DetailSettings.html:27
+	qw422016.N().S(`</a></td>
       </tr>
       <tr>
         <th>Args</th>

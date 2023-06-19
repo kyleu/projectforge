@@ -38,17 +38,17 @@
           </a></td>
           <td>{%s prj.Package %}</td>
           {%- if full -%}
-          <td><a href="http://localhost:{%d prj.Port %}" title="browse to [http://localhost:{%d prj.Port %}]" target="_blank">{%d prj.Port %}</a></td>
+          <td class="shrink"><a href="http://localhost:{%d prj.Port %}" title="browse to [http://localhost:{%d prj.Port %}]" target="_blank">{%d prj.Port %}</a></td>
           {%- endif -%}
           {%- if len(ex) > 0 -%}
-          <td>
+          <td class="shrink">
             {%- code e := ex.GetByKey(prj.Key) -%}
             {%- if len(e) > 0 -%}
             <a href="{%s e[len(e) - 1].WebPath() %}">{%d e.Running() %}/{%d len(e) %}</a>
             {%- endif -%}
           </td>
           {%- endif -%}
-          <td>
+          <td class="shrink">
             {%- for idx, tag := range prj.Tags -%}
             <a href="/p?tags={%s tag %}"><code>{%s tag %}</code></a>{% if idx < (len(prj.Tags) - 1) %}, {% endif %}
             {%- endfor -%}
