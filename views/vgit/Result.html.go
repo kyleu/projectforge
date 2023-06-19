@@ -239,365 +239,419 @@ func streamstatusDetail(qw422016 *qt422016.Writer, prj *project.Project, r *git.
 `)
 //line views/vgit/Result.html:66
 	}
-//line views/vgit/Result.html:66
-	qw422016.N().S(`      <tr>
-        <th class="shrink">Dirty Files</th>
-        <td>
-`)
-//line views/vgit/Result.html:70
-	dirt := r.DataStringArray("dirty")
-
-//line views/vgit/Result.html:71
-	if len(dirt) > 0 {
-//line views/vgit/Result.html:71
-		qw422016.N().S(`          <div class="right"><a href="/git/`)
-//line views/vgit/Result.html:72
-		qw422016.E().S(prj.Key)
-//line views/vgit/Result.html:72
-		qw422016.N().S(`/commit"><button>Commit</button></a></div>
-`)
-//line views/vgit/Result.html:73
-	}
-//line views/vgit/Result.html:73
-	qw422016.N().S(`          `)
-//line views/vgit/Result.html:74
-	qw422016.N().D(len(dirt))
-//line views/vgit/Result.html:74
-	qw422016.N().S(`
-        </td>
-      </tr>
-`)
-//line views/vgit/Result.html:77
+//line views/vgit/Result.html:67
 	if delta := r.DataInt("commitsAhead"); delta > 0 {
-//line views/vgit/Result.html:77
+//line views/vgit/Result.html:67
 		qw422016.N().S(`      <tr>
         <th class="shrink">Ahead By</th>
         <td>
           <div class="right"><a href="/git/`)
-//line views/vgit/Result.html:81
+//line views/vgit/Result.html:71
 		qw422016.E().S(prj.Key)
-//line views/vgit/Result.html:81
+//line views/vgit/Result.html:71
 		qw422016.N().S(`/push"><button>Push</button></a></div>
           `)
-//line views/vgit/Result.html:82
+//line views/vgit/Result.html:72
 		qw422016.N().D(delta)
-//line views/vgit/Result.html:82
+//line views/vgit/Result.html:72
 		qw422016.N().S(` `)
-//line views/vgit/Result.html:82
+//line views/vgit/Result.html:72
 		qw422016.E().S(util.StringPluralMaybe("commit", delta))
-//line views/vgit/Result.html:82
+//line views/vgit/Result.html:72
 		qw422016.N().S(`
         </td>
       </tr>
 `)
-//line views/vgit/Result.html:85
+//line views/vgit/Result.html:75
 	}
-//line views/vgit/Result.html:86
+//line views/vgit/Result.html:76
 	if delta := r.DataInt("commitsBehind"); delta > 0 {
-//line views/vgit/Result.html:86
+//line views/vgit/Result.html:76
 		qw422016.N().S(`      <tr>
         <th class="shrink">Behind By</th>
         <td>
           <div class="right"><a href="/git/`)
-//line views/vgit/Result.html:90
+//line views/vgit/Result.html:80
 		qw422016.E().S(prj.Key)
-//line views/vgit/Result.html:90
+//line views/vgit/Result.html:80
 		qw422016.N().S(`/pull"><button>Pull</button></a></div>
           `)
-//line views/vgit/Result.html:91
+//line views/vgit/Result.html:81
 		qw422016.N().D(delta)
-//line views/vgit/Result.html:91
+//line views/vgit/Result.html:81
 		qw422016.N().S(` `)
-//line views/vgit/Result.html:91
+//line views/vgit/Result.html:81
 		qw422016.E().S(util.StringPluralMaybe("commit", delta))
-//line views/vgit/Result.html:91
+//line views/vgit/Result.html:81
 		qw422016.N().S(`
         </td>
       </tr>
 `)
-//line views/vgit/Result.html:94
+//line views/vgit/Result.html:84
 	}
-//line views/vgit/Result.html:95
+//line views/vgit/Result.html:85
 	if len(r.DataStringArray("logs")) > 0 {
-//line views/vgit/Result.html:95
+//line views/vgit/Result.html:85
 		qw422016.N().S(`      <tr>
         <th class="shrink">Logs</th>
         <td>
           <table>
             <tbody>
 `)
-//line views/vgit/Result.html:101
+//line views/vgit/Result.html:91
 		for idx, l := range r.DataStringArray("logs") {
-//line views/vgit/Result.html:101
+//line views/vgit/Result.html:91
 			qw422016.N().S(`              <tr><td class="shrink"><em>`)
-//line views/vgit/Result.html:102
+//line views/vgit/Result.html:92
 			qw422016.N().D(idx + 1)
-//line views/vgit/Result.html:102
+//line views/vgit/Result.html:92
 			qw422016.N().S(`</em>:</td><td>`)
-//line views/vgit/Result.html:102
+//line views/vgit/Result.html:92
 			qw422016.E().S(l)
-//line views/vgit/Result.html:102
+//line views/vgit/Result.html:92
 			qw422016.N().S(`</td></tr>
 `)
-//line views/vgit/Result.html:103
+//line views/vgit/Result.html:93
 		}
-//line views/vgit/Result.html:103
+//line views/vgit/Result.html:93
 		qw422016.N().S(`            </tbody>
           </table>
         </td>
       </tr>
 `)
-//line views/vgit/Result.html:108
+//line views/vgit/Result.html:98
 	}
+//line views/vgit/Result.html:98
+	qw422016.N().S(`
+      <tr>
+        <th class="shrink">Dirty Files</th>
+        <td>
+`)
+//line views/vgit/Result.html:103
+	dirt := r.DataStringArray("dirty")
+
+//line views/vgit/Result.html:104
+	if len(dirt) > 0 {
+//line views/vgit/Result.html:104
+		qw422016.N().S(`          <div class="right"><a href="/git/`)
+//line views/vgit/Result.html:105
+		qw422016.E().S(prj.Key)
+//line views/vgit/Result.html:105
+		qw422016.N().S(`/commit"><button>Commit</button></a></div>
+          <ul>
+`)
+//line views/vgit/Result.html:107
+		for _, d := range dirt {
+//line views/vgit/Result.html:107
+			qw422016.N().S(`            <li>`)
+//line views/vgit/Result.html:108
+			qw422016.E().S(d)
+//line views/vgit/Result.html:108
+			qw422016.N().S(`</li>
+`)
 //line views/vgit/Result.html:109
-	if hist := r.History(); hist != nil {
+		}
 //line views/vgit/Result.html:109
-		qw422016.N().S(`      `)
-//line views/vgit/Result.html:110
-		streamdisplayHistory(qw422016, hist)
-//line views/vgit/Result.html:110
-		qw422016.N().S(`
+		qw422016.N().S(`          </ul>
 `)
 //line views/vgit/Result.html:111
 	} else {
 //line views/vgit/Result.html:111
+		qw422016.N().S(`          <em>none</em>
+`)
+//line views/vgit/Result.html:113
+	}
+//line views/vgit/Result.html:113
+	qw422016.N().S(`        </td>
+      </tr>
+
+`)
+//line views/vgit/Result.html:117
+	if hist := r.History(); hist != nil {
+//line views/vgit/Result.html:117
+		qw422016.N().S(`      `)
+//line views/vgit/Result.html:118
+		streamdisplayHistory(qw422016, hist)
+//line views/vgit/Result.html:118
+		qw422016.N().S(`
+`)
+//line views/vgit/Result.html:119
+	} else if cleanData := r.CleanData(); len(cleanData) > 0 {
+//line views/vgit/Result.html:119
 		qw422016.N().S(`      <tr>
         <th class="shrink">Data</th>
         <td>`)
-//line views/vgit/Result.html:114
-		components.StreamJSON(qw422016, r.Data)
-//line views/vgit/Result.html:114
+//line views/vgit/Result.html:122
+		components.StreamJSON(qw422016, cleanData)
+//line views/vgit/Result.html:122
 		qw422016.N().S(`</td>
       </tr>
 `)
-//line views/vgit/Result.html:116
+//line views/vgit/Result.html:124
 	}
-//line views/vgit/Result.html:116
+//line views/vgit/Result.html:124
 	qw422016.N().S(`    </tbody>
   </table>
 `)
-//line views/vgit/Result.html:119
+//line views/vgit/Result.html:127
 }
 
-//line views/vgit/Result.html:119
+//line views/vgit/Result.html:127
 func writestatusDetail(qq422016 qtio422016.Writer, prj *project.Project, r *git.Result) {
-//line views/vgit/Result.html:119
+//line views/vgit/Result.html:127
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vgit/Result.html:119
+//line views/vgit/Result.html:127
 	streamstatusDetail(qw422016, prj, r)
-//line views/vgit/Result.html:119
+//line views/vgit/Result.html:127
 	qt422016.ReleaseWriter(qw422016)
-//line views/vgit/Result.html:119
+//line views/vgit/Result.html:127
 }
 
-//line views/vgit/Result.html:119
+//line views/vgit/Result.html:127
 func statusDetail(prj *project.Project, r *git.Result) string {
-//line views/vgit/Result.html:119
+//line views/vgit/Result.html:127
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vgit/Result.html:119
+//line views/vgit/Result.html:127
 	writestatusDetail(qb422016, prj, r)
-//line views/vgit/Result.html:119
+//line views/vgit/Result.html:127
 	qs422016 := string(qb422016.B)
-//line views/vgit/Result.html:119
+//line views/vgit/Result.html:127
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vgit/Result.html:119
+//line views/vgit/Result.html:127
 	return qs422016
-//line views/vgit/Result.html:119
+//line views/vgit/Result.html:127
 }
 
-//line views/vgit/Result.html:121
+//line views/vgit/Result.html:129
 func streamdisplayHistory(qw422016 *qt422016.Writer, hist *git.HistoryResult) {
-//line views/vgit/Result.html:121
+//line views/vgit/Result.html:129
 	qw422016.N().S(`
 `)
-//line views/vgit/Result.html:122
+//line views/vgit/Result.html:130
 	if hist.Since != nil {
-//line views/vgit/Result.html:122
+//line views/vgit/Result.html:130
 		qw422016.N().S(`      <tr>
         <th>Since</th>
         <td>`)
-//line views/vgit/Result.html:125
+//line views/vgit/Result.html:133
 		qw422016.E().S(util.TimeToFull(hist.Since))
-//line views/vgit/Result.html:125
+//line views/vgit/Result.html:133
 		qw422016.N().S(`</td>
       </tr>
 `)
-//line views/vgit/Result.html:127
+//line views/vgit/Result.html:135
 	}
-//line views/vgit/Result.html:128
+//line views/vgit/Result.html:136
 	if len(hist.Authors) > 0 {
-//line views/vgit/Result.html:128
+//line views/vgit/Result.html:136
 		qw422016.N().S(`      <tr>
         <th>Authors</th>
         <td>`)
-//line views/vgit/Result.html:131
+//line views/vgit/Result.html:139
 		qw422016.E().S(strings.Join(hist.Authors, ", "))
-//line views/vgit/Result.html:131
+//line views/vgit/Result.html:139
 		qw422016.N().S(`</td>
       </tr>
 `)
-//line views/vgit/Result.html:133
+//line views/vgit/Result.html:141
 	}
-//line views/vgit/Result.html:134
+//line views/vgit/Result.html:142
 	if hist.Limit > 0 {
-//line views/vgit/Result.html:134
+//line views/vgit/Result.html:142
 		qw422016.N().S(`      <tr>
         <th>Limit</th>
         <td>`)
-//line views/vgit/Result.html:137
+//line views/vgit/Result.html:145
 		qw422016.N().D(hist.Limit)
-//line views/vgit/Result.html:137
+//line views/vgit/Result.html:145
 		qw422016.N().S(`</td>
       </tr>
 `)
-//line views/vgit/Result.html:139
+//line views/vgit/Result.html:147
 	}
-//line views/vgit/Result.html:140
+//line views/vgit/Result.html:148
 	if len(hist.Entries) > 0 {
-//line views/vgit/Result.html:140
+//line views/vgit/Result.html:148
 		qw422016.N().S(`      <tr>
         <th>Entries (`)
-//line views/vgit/Result.html:142
+//line views/vgit/Result.html:150
 		qw422016.N().D(len(hist.Entries))
-//line views/vgit/Result.html:142
+//line views/vgit/Result.html:150
 		qw422016.N().S(`)</th>
         <td>
 `)
-//line views/vgit/Result.html:144
+//line views/vgit/Result.html:152
 		for _, e := range hist.Entries {
-//line views/vgit/Result.html:144
+//line views/vgit/Result.html:152
 			qw422016.N().S(`            `)
-//line views/vgit/Result.html:145
+//line views/vgit/Result.html:153
 			streamdisplayEntry(qw422016, hist, e)
-//line views/vgit/Result.html:145
+//line views/vgit/Result.html:153
 			qw422016.N().S(`
 `)
-//line views/vgit/Result.html:146
+//line views/vgit/Result.html:154
 		}
-//line views/vgit/Result.html:146
+//line views/vgit/Result.html:154
 		qw422016.N().S(`        </td>
       </tr>
 `)
-//line views/vgit/Result.html:149
+//line views/vgit/Result.html:157
 	}
-//line views/vgit/Result.html:150
+//line views/vgit/Result.html:158
 }
 
-//line views/vgit/Result.html:150
+//line views/vgit/Result.html:158
 func writedisplayHistory(qq422016 qtio422016.Writer, hist *git.HistoryResult) {
-//line views/vgit/Result.html:150
+//line views/vgit/Result.html:158
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vgit/Result.html:150
+//line views/vgit/Result.html:158
 	streamdisplayHistory(qw422016, hist)
-//line views/vgit/Result.html:150
+//line views/vgit/Result.html:158
 	qt422016.ReleaseWriter(qw422016)
-//line views/vgit/Result.html:150
+//line views/vgit/Result.html:158
 }
 
-//line views/vgit/Result.html:150
+//line views/vgit/Result.html:158
 func displayHistory(hist *git.HistoryResult) string {
-//line views/vgit/Result.html:150
+//line views/vgit/Result.html:158
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vgit/Result.html:150
+//line views/vgit/Result.html:158
 	writedisplayHistory(qb422016, hist)
-//line views/vgit/Result.html:150
+//line views/vgit/Result.html:158
 	qs422016 := string(qb422016.B)
-//line views/vgit/Result.html:150
+//line views/vgit/Result.html:158
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vgit/Result.html:150
+//line views/vgit/Result.html:158
 	return qs422016
-//line views/vgit/Result.html:150
+//line views/vgit/Result.html:158
 }
 
-//line views/vgit/Result.html:152
+//line views/vgit/Result.html:160
 func streamdisplayEntry(qw422016 *qt422016.Writer, hist *git.HistoryResult, e *git.HistoryEntry) {
-//line views/vgit/Result.html:152
+//line views/vgit/Result.html:160
 	qw422016.N().S(`
 `)
-//line views/vgit/Result.html:154
+//line views/vgit/Result.html:162
 	u := "?path=" + hist.Path
-	u += "&since=" + util.TimeToYMD(hist.Since)
-	u += "&authors=" + strings.Join(hist.Authors, ",")
-	u += "&limit=" + fmt.Sprint(hist.Limit)
+	if hist.Since != nil {
+		u += "&since=" + util.TimeToYMD(hist.Since)
+	}
+	if len(hist.Authors) > 0 {
+		u += "&authors=" + strings.Join(hist.Authors, ",")
+	}
+	if hist.Limit > 0 {
+		u += "&limit=" + fmt.Sprint(hist.Limit)
+	}
 	u += "&commit=" + e.SHA
 
-//line views/vgit/Result.html:159
+//line views/vgit/Result.html:173
 	qw422016.N().S(`  <div class="card" style="margin-left: 0;">
     <div class="right"><em>`)
-//line views/vgit/Result.html:161
+//line views/vgit/Result.html:175
 	qw422016.E().S(util.TimeToFull(e.OccurredTime()))
-//line views/vgit/Result.html:161
+//line views/vgit/Result.html:175
 	qw422016.N().S(`</em></div>
     <h4><a href="`)
-//line views/vgit/Result.html:162
+//line views/vgit/Result.html:176
 	qw422016.E().S(u)
-//line views/vgit/Result.html:162
+//line views/vgit/Result.html:176
 	qw422016.N().S(`">`)
-//line views/vgit/Result.html:162
+//line views/vgit/Result.html:176
 	qw422016.E().S(e.SHA)
-//line views/vgit/Result.html:162
+//line views/vgit/Result.html:176
 	qw422016.N().S(`</a></h4>
     <div class="mt">`)
-//line views/vgit/Result.html:163
+//line views/vgit/Result.html:177
 	qw422016.E().S(e.Message)
-//line views/vgit/Result.html:163
+//line views/vgit/Result.html:177
 	qw422016.N().S(`</div>
-    <div class="mt"><em>
-      -
-      `)
-//line views/vgit/Result.html:166
+    <div class="mt">
+      <em>
+        -
+        `)
+//line views/vgit/Result.html:181
 	if e.AuthorName != "" {
-//line views/vgit/Result.html:166
+//line views/vgit/Result.html:181
 		qw422016.E().S(e.AuthorName)
-//line views/vgit/Result.html:166
+//line views/vgit/Result.html:181
 	}
-//line views/vgit/Result.html:166
+//line views/vgit/Result.html:181
 	qw422016.N().S(`
-      `)
-//line views/vgit/Result.html:167
-	if e.AuthorEmail != "" {
-//line views/vgit/Result.html:167
+        `)
+//line views/vgit/Result.html:182
+	if e.AuthorEmail == "" {
+//line views/vgit/Result.html:182
+		qw422016.N().S(`unknown author`)
+//line views/vgit/Result.html:182
+	} else {
+//line views/vgit/Result.html:182
 		qw422016.N().S(`(<a href="mailto:`)
-//line views/vgit/Result.html:167
+//line views/vgit/Result.html:182
 		qw422016.E().S(e.AuthorEmail)
-//line views/vgit/Result.html:167
+//line views/vgit/Result.html:182
 		qw422016.N().S(`">`)
-//line views/vgit/Result.html:167
+//line views/vgit/Result.html:182
 		qw422016.E().S(e.AuthorEmail)
-//line views/vgit/Result.html:167
+//line views/vgit/Result.html:182
 		qw422016.N().S(`</a>)`)
-//line views/vgit/Result.html:167
+//line views/vgit/Result.html:182
 	}
-//line views/vgit/Result.html:167
+//line views/vgit/Result.html:182
 	qw422016.N().S(`
-    </em></div>
-  </div>
+      </em>
+    </div>
 `)
-//line views/vgit/Result.html:170
+//line views/vgit/Result.html:185
+	if len(e.Files) > 0 {
+//line views/vgit/Result.html:185
+		qw422016.N().S(`    <div class="mt">
+      <ul>
+`)
+//line views/vgit/Result.html:188
+		for _, f := range e.Files {
+//line views/vgit/Result.html:188
+			qw422016.N().S(`        <li>`)
+//line views/vgit/Result.html:189
+			qw422016.E().S(f.File)
+//line views/vgit/Result.html:189
+			qw422016.N().S(`</li>
+`)
+//line views/vgit/Result.html:190
+		}
+//line views/vgit/Result.html:190
+		qw422016.N().S(`      </ul>
+    </div>
+`)
+//line views/vgit/Result.html:193
+	}
+//line views/vgit/Result.html:193
+	qw422016.N().S(`  </div>
+`)
+//line views/vgit/Result.html:195
 }
 
-//line views/vgit/Result.html:170
+//line views/vgit/Result.html:195
 func writedisplayEntry(qq422016 qtio422016.Writer, hist *git.HistoryResult, e *git.HistoryEntry) {
-//line views/vgit/Result.html:170
+//line views/vgit/Result.html:195
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vgit/Result.html:170
+//line views/vgit/Result.html:195
 	streamdisplayEntry(qw422016, hist, e)
-//line views/vgit/Result.html:170
+//line views/vgit/Result.html:195
 	qt422016.ReleaseWriter(qw422016)
-//line views/vgit/Result.html:170
+//line views/vgit/Result.html:195
 }
 
-//line views/vgit/Result.html:170
+//line views/vgit/Result.html:195
 func displayEntry(hist *git.HistoryResult, e *git.HistoryEntry) string {
-//line views/vgit/Result.html:170
+//line views/vgit/Result.html:195
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vgit/Result.html:170
+//line views/vgit/Result.html:195
 	writedisplayEntry(qb422016, hist, e)
-//line views/vgit/Result.html:170
+//line views/vgit/Result.html:195
 	qs422016 := string(qb422016.B)
-//line views/vgit/Result.html:170
+//line views/vgit/Result.html:195
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vgit/Result.html:170
+//line views/vgit/Result.html:195
 	return qs422016
-//line views/vgit/Result.html:170
+//line views/vgit/Result.html:195
 }

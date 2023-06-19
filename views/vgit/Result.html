@@ -64,16 +64,6 @@
         <td><pre>{%s= r.DataString("commit") %}</pre></td>
       </tr>
       {%- endif -%}
-      <tr>
-        <th class="shrink">Dirty Files</th>
-        <td>
-          {%- code dirt := r.DataStringArray("dirty") -%}
-          {%- if len(dirt) > 0 -%}
-          <div class="right"><a href="/git/{%s prj.Key %}/commit"><button>Commit</button></a></div>
-          {%- endif -%}
-          {%d len(dirt) %}
-        </td>
-      </tr>
       {%- if delta := r.DataInt("commitsAhead"); delta > 0 -%}
       <tr>
         <th class="shrink">Ahead By</th>
@@ -106,12 +96,30 @@
         </td>
       </tr>
       {%- endif -%}
+
+      <tr>
+        <th class="shrink">Dirty Files</th>
+        <td>
+          {%- code dirt := r.DataStringArray("dirty") -%}
+          {%- if len(dirt) > 0 -%}
+          <div class="right"><a href="/git/{%s prj.Key %}/commit"><button>Commit</button></a></div>
+          <ul>
+            {%- for _, d := range dirt -%}
+            <li>{%s d %}</li>
+            {%- endfor -%}
+          </ul>
+          {%- else -%}
+          <em>none</em>
+          {%- endif -%}
+        </td>
+      </tr>
+
       {%- if hist := r.History(); hist != nil -%}
       {%= displayHistory(hist) %}
-      {%- else -%}
+      {%- elseif cleanData := r.CleanData(); len(cleanData) > 0 -%}
       <tr>
         <th class="shrink">Data</th>
-        <td>{%= components.JSON(r.Data) %}</td>
+        <td>{%= components.JSON(cleanData) %}</td>
       </tr>
       {%- endif -%}
     </tbody>
@@ -152,19 +160,36 @@
 {% func displayEntry(hist *git.HistoryResult, e *git.HistoryEntry) %}
   {%- code
     u := "?path=" + hist.Path
-    u += "&since=" + util.TimeToYMD(hist.Since)
-    u += "&authors=" + strings.Join(hist.Authors, ",")
-    u += "&limit=" + fmt.Sprint(hist.Limit)
+    if hist.Since != nil {
+      u += "&since=" + util.TimeToYMD(hist.Since)
+    }
+    if len(hist.Authors) > 0 {
+      u += "&authors=" + strings.Join(hist.Authors, ",")
+    }
+    if hist.Limit > 0 {
+      u += "&limit=" + fmt.Sprint(hist.Limit)
+    }
     u += "&commit=" + e.SHA
   -%}
   <div class="card" style="margin-left: 0;">
     <div class="right"><em>{%s util.TimeToFull(e.OccurredTime()) %}</em></div>
     <h4><a href="{%s u %}">{%s e.SHA %}</a></h4>
     <div class="mt">{%s e.Message %}</div>
-    <div class="mt"><em>
-      -
-      {% if e.AuthorName != "" %}{%s e.AuthorName %}{% endif %}
-      {% if e.AuthorEmail != "" %}(<a href="mailto:{%s e.AuthorEmail %}">{%s e.AuthorEmail %}</a>){% endif %}
-    </em></div>
+    <div class="mt">
+      <em>
+        -
+        {% if e.AuthorName != "" %}{%s e.AuthorName %}{% endif %}
+        {% if e.AuthorEmail == "" %}unknown author{% else %}(<a href="mailto:{%s e.AuthorEmail %}">{%s e.AuthorEmail %}</a>){% endif %}
+      </em>
+    </div>
+    {%- if len(e.Files) > 0 -%}
+    <div class="mt">
+      <ul>
+        {%- for _, f := range e.Files -%}
+        <li>{%s f.File %}</li>
+        {%- endfor -%}
+      </ul>
+    </div>
+    {%- endif -%}
   </div>
 {% endfunc %}

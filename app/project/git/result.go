@@ -50,6 +50,10 @@ func (s *Result) History() *HistoryResult {
 	return nil
 }
 
+func (s *Result) CleanData() util.ValueMap {
+	return lo.OmitByKeys(s.Data, []string{"branch", "dirty", "status"})
+}
+
 func (s *Result) DataString(k string) string {
 	if s.Data == nil {
 		return ""

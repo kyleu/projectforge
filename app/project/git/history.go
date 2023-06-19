@@ -16,12 +16,19 @@ func (s *Service) History(ctx context.Context, prj *project.Project, hist *Histo
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to retrieve history")
 	}
-
-	status := ok
-	return NewResult(prj, status, util.ValueMap{"history": hist}), nil
+	return NewResult(prj, ok, util.ValueMap{"history": hist}), nil
 }
 
 func gitHistory(ctx context.Context, path string, hist *HistoryResult, logger util.Logger) error {
+	//if hist.Commit != "" {
+	//	curr := &HistoryEntry{SHA: hist.Commit}
+	//	curr.Files = HistoryFiles{
+	//		{Status: "OK", File: "foo.txt"},
+	//	}
+	//	hist.Entries = append(hist.Entries, curr)
+	//	return nil
+	//}
+
 	format := "%H»¦«%an»¦«%ae»¦«%cd»¦«%B»¦¦¦«"
 	cmd := "log --pretty=format:" + format
 	if hist.Since != nil {
@@ -36,6 +43,7 @@ func gitHistory(ctx context.Context, path string, hist *HistoryResult, logger ut
 	if hist.Path != "" {
 		cmd += fmt.Sprintf(" -- %s", path)
 	}
+
 	out, err := gitCmd(ctx, cmd, path, logger)
 	if err != nil {
 		if isNoRepo(err) {
@@ -49,6 +57,7 @@ func gitHistory(ctx context.Context, path string, hist *HistoryResult, logger ut
 		return err
 	}
 	hist.Entries = res
+
 	return nil
 }
 

@@ -1,6 +1,7 @@
 package git
 
 import (
+	"github.com/samber/lo"
 	"time"
 
 	"projectforge.dev/projectforge/app/util"
@@ -11,6 +12,7 @@ type HistoryResult struct {
 	Since   *time.Time     `json:"since,omitempty"`
 	Authors []string       `json:"authors,omitempty"`
 	Limit   int            `json:"limit,omitempty"`
+	Commit  string         `json:"commit,omitempty"`
 	Entries HistoryEntries `json:"entries"`
 	Debug   any            `json:"debug,omitempty"`
 }
@@ -31,6 +33,12 @@ func (h *HistoryEntry) OccurredTime() *time.Time {
 }
 
 type HistoryEntries []*HistoryEntry
+
+func (h HistoryEntries) Get(sha string) *HistoryEntry {
+	return lo.FindOrElse(h, nil, func(x *HistoryEntry) bool {
+		return x.SHA == sha
+	})
+}
 
 type HistoryFile struct {
 	Status string
