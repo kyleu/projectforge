@@ -34,15 +34,14 @@ func PaletteThemes(pal string) (Themes, error) {
 }
 
 func PaletteRandomThemes(pal string, num int) (Themes, error) {
-	ret := make(Themes, 0, num)
 	p, err := getPalette(pal)
 	if err != nil {
 		return nil, err
 	}
 	pc := p.Colors()
-	for i := 0; i < num; i++ {
-		ret = append(ret, randomTheme(pc))
-	}
+	var ret Themes = lo.Times(num, func(_ int) *Theme {
+		return randomTheme(pc)
+	})
 	return ret, nil
 }
 

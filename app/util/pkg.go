@@ -35,8 +35,8 @@ func (p Pkg) Equals(other Pkg) bool {
 }
 
 func (p Pkg) Trim(src Pkg) Pkg {
-	return lo.Filter(src, func(v string, idx int) bool {
-		return !(len(src) >= idx && src[idx] == v)
+	return lo.Reject(src, func(v string, idx int) bool {
+		return len(src) >= idx && src[idx] == v
 	})
 }
 

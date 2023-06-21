@@ -28,11 +28,11 @@ func (f *File) ToModel(tableIdx int, groups model.Groups) (*model.Model, error) 
 	desc := fmt.Sprintf("from file [%s]", f.Filename)
 	title := util.StringToTitle(name)
 	var group []string
-	for _, g := range groups {
+	lo.ForEach(groups, func(g *model.Group, _ int) {
 		if key != g.Key && strings.HasPrefix(key, g.Key) {
 			group = []string{g.Key}
 		}
-	}
+	})
 	var sd [][]any
 	if len(f.Data) > 0 {
 		sd = f.Data

@@ -21,7 +21,7 @@ func (k KeyValInt) String() string {
 type KeyValInts []*KeyValInt
 
 func (k KeyValInts) ToMap() map[string]int {
-	return lo.SliceToMap(k, func(x *KeyValInt) (string, int) {
+	return lo.Associate(k, func(x *KeyValInt) (string, int) {
 		return x.Key, x.Count
 	})
 }
@@ -44,7 +44,7 @@ func (k KeyVal[T]) String() string {
 type KeyVals[T any] []*KeyVal[T]
 
 func (k KeyVals[T]) ToMap() map[string]T {
-	return lo.SliceToMap(k, func(x *KeyVal[T]) (string, T) {
+	return lo.Associate(k, func(x *KeyVal[T]) (string, T) {
 		return x.Key, x.Val
 	})
 }

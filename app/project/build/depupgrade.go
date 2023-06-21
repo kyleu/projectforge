@@ -22,8 +22,8 @@ func OnDepsUpgrade(ctx context.Context, prj *project.Project, up string, o strin
 		if err != nil {
 			return err
 		}
-		deps = lo.Filter(curr, func(x *Dependency, index int) bool {
-			return x.Version != x.Available
+		deps = lo.Reject(curr, func(x *Dependency, index int) bool {
+			return x.Version == x.Available
 		})
 	} else {
 		if o == "" {

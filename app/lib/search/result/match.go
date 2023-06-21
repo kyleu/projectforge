@@ -6,6 +6,7 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 )
 
@@ -101,14 +102,15 @@ func MatchesFor(key string, x any, q string) Matches {
 		return maybe(strings.Contains(strings.ToLower(s), q), s)
 	case reflect.Struct:
 		var ret Matches
-		for i := 0; i < v.NumField(); i++ {
+		lo.Times(v.NumField(), func(i int) any {
 			if f := v.Field(i); f.CanSet() {
 				n := v.Type().Field(i).Name
 				if m := MatchesFor(appendKey(n), v.Field(i).Interface(), q); m != nil {
 					ret = append(ret, m...)
 				}
 			}
-		}
+			return nil
+		})
 		return ret
 	default:
 		return Matches{{Key: key, Value: "error: " + v.Kind().String()}}

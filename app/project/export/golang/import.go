@@ -102,12 +102,9 @@ func (i Imports) RenderHTML() string {
 }
 
 func (i Imports) ByType(t ImportType) []string {
-	var ret []string
-	for _, x := range i {
-		if x.Type == t {
-			ret = append(ret, x.Render())
-		}
-	}
+	ret := lo.FilterMap(i, func(x *Import, _ int) (string, bool) {
+		return x.Render(), x.Type == t
+	})
 	slices.Sort(ret)
 	return ret
 }
@@ -116,13 +113,13 @@ func (i Imports) Add(imports ...*Import) Imports {
 	if i == nil {
 		return append(Imports{}, imports...)
 	}
-	for _, imp := range imports {
+	lo.ForEach(imports, func(imp *Import, _ int) {
 		hit := lo.ContainsBy(i, func(x *Import) bool {
 			return x.Value == imp.Value
 		})
 		if !hit {
 			i = append(i, imp)
 		}
-	}
+	})
 	return i
 }

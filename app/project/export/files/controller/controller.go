@@ -3,7 +3,6 @@ package controller
 import (
 	"strings"
 
-
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/file"
@@ -56,10 +55,9 @@ func Controller(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 }
 
 func controllerArgFor(col *model.Column, b *golang.Block, retVal string, indent int) {
-	ind := ""
-	for i := 0; i < indent; i++ {
-		ind += "\t"
-	}
+	ind := strings.Join(lo.Times(indent, func(_ int) string {
+		return "\t"
+	}), "")
 	add := func(s string, args ...any) {
 		b.W(ind+s, args...)
 	}

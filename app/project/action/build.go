@@ -73,9 +73,9 @@ var AllBuilds = Builds{
 
 func fullBuild(ctx context.Context, prj *project.Project, r *Result, logger util.Logger) *Result {
 	logs, err := build.Full(ctx, prj, logger)
-	for _, l := range logs {
+	lo.ForEach(logs, func(l string, _ int) {
 		r.AddLog(l)
-	}
+	})
 	if err != nil {
 		return r.WithError(err)
 	}

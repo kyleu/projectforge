@@ -21,11 +21,11 @@ func check(imports []string, orig []string) ([]string, []string, error) {
 	first, third, self := util.ValueMap{}, util.ValueMap{}, util.ValueMap{}
 
 	observe := func(key string, i string) {
-		for _, ob := range observed {
+		lo.ForEach(observed, func(ob string, _ int) {
 			if ob > i {
 				err = errors.Errorf("%s sorting", key)
 			}
-		}
+		})
 		observed = append(observed, i)
 	}
 	clear := func() {

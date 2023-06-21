@@ -60,7 +60,6 @@ func ProjectSearchAll(rc *fasthttp.RequestCtx) {
 		}
 
 		ret := map[string]result.Results{}
-
 		for _, prj := range prjs {
 			res, err := searchProject(prj, q, as, ps.Logger)
 			if err != nil {

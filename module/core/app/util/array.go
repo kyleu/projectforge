@@ -81,8 +81,8 @@ func StringArrayOxfordComma(names []string, separator string) string {
 }
 
 func ArrayRemoveNil[T any](x []*T) []*T {
-	return lo.Filter(x, func(item *T, index int) bool {
-		return item != nil
+	return lo.Reject(x, func(item *T, index int) bool {
+		return item == nil
 	})
 }
 
@@ -108,20 +108,15 @@ func ArrayFromAny(dest any) []any {
 		rfl = rfl.Elem()
 	}
 	if k := rfl.Kind(); k == reflect.Array || k == reflect.Slice {
-		ret := make([]any, 0, rfl.Len())
-		for i := 0; i < rfl.Len(); i++ {
-			e := rfl.Index(i)
-			ret = append(ret, e.Interface())
-		}
-		return ret
+		return lo.Times(rfl.Len(), func(i int) any {
+			return rfl.Index(i).Interface()
+		})
 	}
 	return []any{dest}
 }
 
 func ArrayFlatten[T any](arrs ...[]T) []T {
-	return lo.FlatMap(arrs, func(a []T, _ int) []T {
-		return a
-	})
+	return lo.Flatten(arrs)
 }
 
 func ArrayFirstN[V any](items []V, n int) []V {

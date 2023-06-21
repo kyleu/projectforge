@@ -2,6 +2,7 @@ package model
 
 import (
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/util"
@@ -10,47 +11,43 @@ import (
 type Models []*Model
 
 func (m Models) Get(n string) *Model {
-	for _, x := range m {
-		if x.Name == n {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(m, nil, func(x *Model) bool {
+		return x.Name == n
+	})
 }
 
 func (m Models) ReverseRelations(t string) Relations {
-	var rels Relations
-	for _, x := range m {
-		for _, rel := range x.Relations {
+	return lo.FlatMap(m, func(x *Model, index int) []*Relation {
+		return lo.FilterMap(x.Relations, func(rel *Relation, _ int) (*Relation, bool) {
 			if rel.Table == t {
-				rels = append(rels, rel.Reverse(x.Name))
+				return rel.Reverse(x.Name), true
 			}
-		}
-	}
-	return rels
+			return nil, false
+		})
+	})
 }
 
 func (m Models) Sorted() Models {
 	ret := make(Models, 0, len(m))
-	for _, mdl := range m {
+	lo.ForEach(m, func(mdl *Model, _ int) {
 		if curr := ret.Get(mdl.Name); curr == nil {
-			for _, n := range m.withDeps(mdl) {
+			lo.ForEach(m.withDeps(mdl), func(n *Model, index int) {
 				if x := ret.Get(n.Name); x == nil {
 					ret = append(ret, n)
 				}
-			}
+			})
 		}
-	}
+	})
 	return ret
 }
 
 func (m Models) withDeps(mdl *Model) Models {
 	var deps Models
-	for _, rel := range mdl.Relations {
+	lo.ForEach(mdl.Relations, func(rel *Relation, index int) {
 		if deps.Get(rel.Table) == nil && rel.Table != mdl.Name {
 			deps = append(deps, m.withDeps(m.Get(rel.Table))...)
 		}
-	}
+	})
 	if deps.Get(mdl.Name) == nil {
 		deps = append(deps, mdl)
 	}
@@ -58,31 +55,21 @@ func (m Models) withDeps(mdl *Model) Models {
 }
 
 func (m Models) HasSearch() bool {
-	for _, x := range m {
-		if x.HasSearches() {
-			return true
-		}
-	}
-	return false
+	return lo.ContainsBy(m, func(x *Model) bool {
+		return x.HasSearches()
+	})
 }
 
 func (m Models) HasSeedData() bool {
-	for _, x := range m {
-		if len(x.SeedData) > 0 {
-			return true
-		}
-	}
-	return false
+	return lo.ContainsBy(m, func(x *Model) bool {
+		return len(x.SeedData) > 0
+	})
 }
 
 func (m Models) ForGroup(pth ...string) Models {
-	var ret Models
-	for _, x := range m {
-		if slices.Equal(x.Group, pth) {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(m, func(x *Model, _ int) bool {
+		return slices.Equal(x.Group, pth)
+	})
 }
 
 func (m Models) Validate(mods []string, groups Groups) error {

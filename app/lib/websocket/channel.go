@@ -85,7 +85,7 @@ func (s *Service) GetConnection(id uuid.UUID) *Connection {
 }
 
 func chanWithout(c []string, ch string) []string {
-	return lo.Filter(c, func(x string, _ int) bool {
-		return x != ch
+	return lo.Reject(c, func(x string, _ int) bool {
+		return x == ch
 	})
 }

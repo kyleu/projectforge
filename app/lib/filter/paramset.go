@@ -4,6 +4,8 @@ package filter
 import (
 	"strings"
 
+	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/util"
 )
 
@@ -18,10 +20,7 @@ func (s ParamSet) Get(key string, allowed []string, logger util.Logger) *Params 
 }
 
 func (s ParamSet) String() string {
-	ret := make([]string, 0, len(s))
-	for _, p := range s {
-		ret = append(ret, p.String())
-	}
-
-	return strings.Join(ret, ", ")
+	return strings.Join(lo.Map(lo.Values(s), func(p *Params, index int) string {
+		return p.String()
+	}), ", ")
 }

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strings"
 
-
 	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 )
@@ -16,10 +15,8 @@ type Pkg struct {
 }
 
 func (p *Pkg) AddDep(s string) {
-	for _, x := range p.Deps {
-		if x == s {
-			return
-		}
+	if lo.Contains(p.Deps, s) {
+		return
 	}
 	p.Deps = append(p.Deps, s)
 }

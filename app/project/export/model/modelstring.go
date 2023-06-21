@@ -1,6 +1,7 @@
 package model
 
 import (
+	"github.com/samber/lo"
 	"strings"
 
 	"projectforge.dev/projectforge/app/util"
@@ -76,9 +77,9 @@ func (m *Model) IconSafe() string {
 
 func (m *Model) URLPath(prefix string) string {
 	url := "\"/" + m.Route() + "\""
-	for _, pk := range m.PKs() {
+	lo.ForEach(m.PKs(), func(pk *Column, _ int) {
 		url += "+\"/\"+" + pk.ToGoString(prefix)
-	}
+	})
 	return url
 }
 

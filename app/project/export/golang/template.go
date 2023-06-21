@@ -22,14 +22,14 @@ func NewGoTemplate(path []string, fn string) *Template {
 }
 
 func (f *Template) AddImport(i ...*Import) {
-	for _, imp := range i {
+	lo.ForEach(i, func(imp *Import, _ int) {
 		hit := lo.ContainsBy(f.Imports, func(x *Import) bool {
 			return x.Equals(imp)
 		})
 		if !hit {
 			f.Imports = append(f.Imports, imp)
 		}
-	}
+	})
 }
 
 func (f *Template) AddBlocks(b ...*Block) {

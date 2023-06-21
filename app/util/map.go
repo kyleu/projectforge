@@ -49,7 +49,7 @@ func (m ValueMap) AsChanges() (ValueMap, error) {
 		}
 	}
 
-	return lo.SliceToMap(keys, func(k string) (string, any) {
+	return lo.Associate(keys, func(k string) (string, any) {
 		return k, vals[k]
 	}), nil
 }
@@ -121,11 +121,11 @@ func (m ValueMap) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 
 func (m ValueMap) Filter(keys []string) ValueMap {
 	filteredMap := ValueMap{}
-	for _, key := range keys {
+	lo.ForEach(keys, func(key string, _ int) {
 		if data, ok := m[key]; ok {
 			filteredMap[key] = data
 		}
-	}
+	})
 	return filteredMap
 }
 

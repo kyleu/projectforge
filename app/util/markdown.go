@@ -43,9 +43,10 @@ func MarkdownTable(header []string, rows [][]string) (string, error) {
 
 	divider := "|-"
 	lo.ForEach(maxes, func(m int, mi int) {
-		for i := 0; i < m; i++ {
+		lo.Times(m, func(_ int) any {
 			divider += "-"
-		}
+			return nil
+		})
 		if mi < len(maxes)-1 {
 			divider += "-|-"
 		}

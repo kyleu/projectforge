@@ -30,8 +30,8 @@ func onRules(pm *PrjAndMods) *Result {
 		return ret.WithError(err)
 	}
 	forbidden := []string{"app", "check", "down", "edit", "left", "question", "right", "search", "searchbox", "times", "up", "star"}
-	cleanIcons := lo.Filter(icons, func(x string, _ int) bool {
-		return !slices.Contains(forbidden, x)
+	cleanIcons := lo.Reject(icons, func(x string, _ int) bool {
+		return slices.Contains(forbidden, x)
 	})
 	lo.ForEach(pm.EArgs.Models, func(m *model.Model, _ int) {
 		for slices.Contains(forbidden, m.Icon) {

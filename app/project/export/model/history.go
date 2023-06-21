@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 )
 
 const (
@@ -43,9 +44,9 @@ func (m *Model) HistoryColumns(coreColumns bool) *HistoryMap {
 		Tags:       []string{"current_revision"},
 	}
 
-	for _, col := range m.Columns {
+	lo.ForEach(m.Columns, func(col *Column, index int) {
 		if col.Name == revCol.Name {
-			continue
+			return
 		}
 		switch {
 		case col.PK:
@@ -55,7 +56,7 @@ func (m *Model) HistoryColumns(coreColumns bool) *HistoryMap {
 		default:
 			v = append(v, col)
 		}
-	}
+	})
 
 	cRet := Columns{}
 	cRet = append(cRet, pk...)
@@ -67,7 +68,7 @@ func (m *Model) HistoryColumns(coreColumns bool) *HistoryMap {
 	cRet = append(cRet, c...)
 
 	vRet := Columns{}
-	for _, col := range pk {
+	lo.ForEach(pk, func(col *Column, _ int) {
 		if coreColumns {
 			col = &Column{
 				Name:       fmt.Sprintf("%s_%s", m.Name, col.Name),
@@ -80,7 +81,7 @@ func (m *Model) HistoryColumns(coreColumns bool) *HistoryMap {
 			}
 		}
 		vRet = append(vRet, col)
-	}
+	})
 	vRet = append(vRet, revCol)
 	vRet = append(vRet, v...)
 

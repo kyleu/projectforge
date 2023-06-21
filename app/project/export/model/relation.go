@@ -1,6 +1,7 @@
 package model
 
 import (
+	"github.com/samber/lo"
 	"strings"
 
 	"projectforge.dev/projectforge/app/util"
@@ -31,10 +32,10 @@ func (r *Relation) TgtQuoted() any {
 
 func (r *Relation) WebPath(src *Model, tgt *Model, prefix string) any {
 	url := "`/" + tgt.Route() + "`"
-	for _, s := range r.Src {
+	lo.ForEach(r.Src, func(s string, _ int) {
 		c := src.Columns.Get(s)
 		url += "+`/`+" + c.ToGoString(prefix)
-	}
+	})
 	return url
 }
 
@@ -49,18 +50,13 @@ func (r *Relation) ContainsSource(colName string) bool {
 type Relations []*Relation
 
 func (r Relations) ContainsSource(colName string) bool {
-	for _, x := range r {
-		if x.ContainsSource(colName) {
-			return true
-		}
-	}
-	return false
+	return lo.ContainsBy(r, func(x *Relation) bool {
+		return x.ContainsSource(colName)
+	})
 }
 
 func colsFor(cols []string, m *Model) Columns {
-	ret := make(Columns, 0, len(cols))
-	for _, x := range cols {
-		ret = append(ret, m.Columns.Get(x))
-	}
-	return ret
+	return lo.Map(cols, func(x string, index int) *Column {
+		return m.Columns.Get(x)
+	})
 }

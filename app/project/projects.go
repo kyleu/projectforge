@@ -59,27 +59,27 @@ func (p Projects) WithTags(tags ...string) Projects {
 
 func (p Projects) WithoutTags(tags ...string) Projects {
 	ret := make(Projects, 0, len(p))
-	for _, prj := range p {
+	lo.ForEach(p, func(prj *Project, _ int) {
 		hit := lo.ContainsBy(tags, func(t string) bool {
 			return slices.Contains(prj.Tags, t)
 		})
 		if !hit {
 			ret = append(ret, prj)
 		}
-	}
+	})
 	return ret
 }
 
 func (p Projects) Tags() []string {
 	var ret []string
-	for _, prj := range p {
+	lo.ForEach(p, func(prj *Project, _ int) {
 		for _, t := range prj.Tags {
 			if !slices.Contains(ret, t) {
 				ret = append(ret, t)
 				break
 			}
 		}
-	}
+	})
 	slices.Sort(ret)
 	return ret
 }

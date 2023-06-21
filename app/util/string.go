@@ -64,9 +64,10 @@ func StringPadLeft(s string, size int, chr rune) string {
 		return s
 	}
 	sb := strings.Builder{}
-	for i := 0; i < size-sLen; i++ {
+	lo.Times(size-sLen, func(_ int) any {
 		sb.WriteRune(chr)
-	}
+		return nil
+	})
 	sb.WriteString(s)
 	return sb.String()
 }
@@ -108,9 +109,10 @@ func StringTruncate(s string, max int) string {
 
 func StringRepeat(s string, n int) string {
 	ret := strings.Builder{}
-	for i := 0; i < n; i++ {
+	lo.Times(n, func(_ int) any {
 		ret.WriteString(s)
-	}
+		return nil
+	})
 	return ret.String()
 }
 

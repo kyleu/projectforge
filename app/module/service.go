@@ -117,7 +117,7 @@ func (s *Service) Modules() Modules {
 }
 
 func (s *Service) Deps() map[string][]string {
-	return lo.SliceToMap(s.Modules(), func(m *Module) (string, []string) {
+	return lo.Associate(s.Modules(), func(m *Module) (string, []string) {
 		return m.Key, m.Requires
 	})
 }

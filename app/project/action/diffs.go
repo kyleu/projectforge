@@ -90,21 +90,21 @@ func parse(pm *PrjAndMods) (util.KeyTypeDescs, map[string]int) {
 	var configVars util.KeyTypeDescs
 	portOffsets := map[string]int{}
 
-	for _, m := range pm.Prj.Modules {
+	lo.ForEach(pm.Prj.Modules, func(m string, _ int) {
 		mod := pm.Mods.Get(m)
-		for _, src := range mod.ConfigVars {
+		lo.ForEach(mod.ConfigVars, func(src *util.KeyTypeDesc, _ int) {
 			hit := lo.ContainsBy(configVars, func(tgt *util.KeyTypeDesc) bool {
 				return src.Key == tgt.Key
 			})
 			if !hit {
 				configVars = append(configVars, src)
 			}
-		}
+		})
 		configVars.Sort()
 
 		for k, v := range mod.PortOffsets {
 			portOffsets[k] = v
 		}
-	}
+	})
 	return configVars, portOffsets
 }

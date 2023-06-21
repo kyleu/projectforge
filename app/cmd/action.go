@@ -9,6 +9,8 @@ import (
 	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
+	"projectforge.dev/projectforge/app/file/diff"
+	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/project/action"
 	"projectforge.dev/projectforge/app/project/build"
 	"projectforge.dev/projectforge/app/util"
@@ -62,16 +64,16 @@ func logResult(t action.Type, r *action.Result) {
 		})
 	}
 	if r.Modules.DiffCount(false) > 0 {
-		for _, m := range r.Modules {
-			for _, d := range m.DiffsFiltered(false) {
+		lo.ForEach(r.Modules, func(m *module.Result, _ int) {
+			lo.ForEach(m.DiffsFiltered(false), func(d *diff.Diff, _ int) {
 				_logger.Infof("%s [%s]:", d.Path, d.Status)
-				for _, c := range d.Changes {
-					for _, l := range c.Lines {
+				lo.ForEach(d.Changes, func(c *diff.Change, _ int) {
+					lo.ForEach(c.Lines, func(l *diff.Line, _ int) {
 						_logger.Info(strings.TrimSuffix(l.String(), "\n"))
-					}
-				}
-			}
-		}
+					})
+				})
+			})
+		})
 	}
 	if r.Data != nil {
 		deps, ok := r.Data.(build.Dependencies)

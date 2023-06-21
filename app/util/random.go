@@ -7,16 +7,17 @@ import (
 	"io"
 	"math/big"
 	"time"
+
+	"github.com/samber/lo"
 )
 
 const charset = "abcdefghijklmnopqrstuvwxyz0123456789"
 
 func RandomString(length int) string {
 	b := make([]byte, length)
-	for i := range b {
-		idx := RandomInt(len(charset))
-		b[i] = charset[idx]
-	}
+	lo.ForEach(b, func(_ byte, i int) {
+		b[i] = charset[RandomInt(len(charset))]
+	})
 	return string(b)
 }
 
@@ -48,9 +49,10 @@ func RandomBool() bool {
 
 func RandomValueMap(keys int) ValueMap {
 	ret := ValueMap{}
-	for i := 0; i < keys; i++ {
+	lo.Times(keys, func(index int) any {
 		ret[RandomString(4)] = RandomString(10)
-	}
+		return nil
+	})
 	return ret
 }
 
@@ -76,11 +78,9 @@ func RandomDate() time.Time {
 }
 
 func RandomDiffs(size int) Diffs {
-	ret := make(Diffs, 0, size)
-	for i := 0; i < size; i++ {
-		ret = append(ret, &Diff{Path: RandomString(8), Old: RandomString(12), New: RandomString(12)})
-	}
-	return ret
+	return lo.Times(size, func(_ int) *Diff {
+		return &Diff{Path: RandomString(8), Old: RandomString(12), New: RandomString(12)}
+	})
 }
 
 func errMsg(err error) string {

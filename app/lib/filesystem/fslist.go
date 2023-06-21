@@ -20,8 +20,8 @@ func (f *FileSystem) ListFiles(path string, ign []string, logger util.Logger) []
 	if err != nil {
 		logger.Warnf("cannot list files in path [%s]: %+v", path, err)
 	}
-	return lo.Filter(infos, func(info os.DirEntry, index int) bool {
-		return !checkIgnore(ignore, info.Name())
+	return lo.Reject(infos, func(info os.DirEntry, index int) bool {
+		return checkIgnore(ignore, info.Name())
 	})
 }
 

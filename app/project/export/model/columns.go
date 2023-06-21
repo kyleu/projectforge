@@ -32,53 +32,33 @@ func (c Columns) OneWithTag(t string) (*Column, error) {
 }
 
 func (c Columns) WithTag(t string) Columns {
-	var ret Columns
-	lo.ForEach(c, func(col *Column, _ int) {
-		if col.HasTag(t) {
-			ret = append(ret, col)
-		}
+	return lo.Filter(c, func(col *Column, _ int) bool {
+		return col.HasTag(t)
 	})
-	return ret
 }
 
 func (c Columns) WithoutTag(t string) Columns {
-	var ret Columns
-	lo.ForEach(c, func(col *Column, _ int) {
-		if !col.HasTag(t) {
-			ret = append(ret, col)
-		}
+	return lo.Reject(c, func(col *Column, _ int) bool {
+		return col.HasTag(t)
 	})
-	return ret
 }
 
 func (c Columns) PKs() Columns {
-	var ret Columns
-	lo.ForEach(c, func(col *Column, _ int) {
-		if col.PK {
-			ret = append(ret, col)
-		}
+	return lo.Filter(c, func(col *Column, _ int) bool {
+		return col.PK
 	})
-	return ret
 }
 
 func (c Columns) NonPKs() Columns {
-	var ret Columns
-	lo.ForEach(c, func(col *Column, _ int) {
-		if !col.PK {
-			ret = append(ret, col)
-		}
+	return lo.Reject(c, func(col *Column, _ int) bool {
+		return col.PK
 	})
-	return ret
 }
 
 func (c Columns) Searches() Columns {
-	var ret Columns
-	lo.ForEach(c, func(col *Column, _ int) {
-		if col.Search {
-			ret = append(ret, col)
-		}
+	return lo.Filter(c, func(col *Column, _ int) bool {
+		return col.Search
 	})
-	return ret
 }
 
 func (c Columns) Names() []string {
@@ -170,7 +150,7 @@ func (c Columns) Refs() string {
 
 func (c Columns) WhereClause(offset int, placeholder string) string {
 	wc := make([]string, 0, len(c))
-	for idx, col := range c {
+	lo.ForEach(c, func(col *Column, idx int) {
 		switch placeholder {
 		case "$", "":
 			wc = append(wc, fmt.Sprintf("%q = $%d", col.Name, idx+offset+1))
@@ -179,7 +159,7 @@ func (c Columns) WhereClause(offset int, placeholder string) string {
 		case "@":
 			wc = append(wc, fmt.Sprintf("%q = @p%d", col.Name, idx+offset+1))
 		}
-	}
+	})
 	return strings.Join(wc, " and ")
 }
 
@@ -235,11 +215,8 @@ func (c Columns) MaxGoRowTypeLength(pkg string, enums enum.Enums, database strin
 }
 
 func (c Columns) ForDisplay(k string) Columns {
-	return lo.FlatMap(c, func(col *Column, _ int) []*Column {
-		if col.ShouldDisplay(k) {
-			return Columns{col}
-		}
-		return nil
+	return lo.Filter(c, func(col *Column, _ int) bool {
+		return col.ShouldDisplay(k)
 	})
 }
 

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/lib/filter"
@@ -74,20 +75,16 @@ func (m *Model) IsHistory() bool {
 func (m *Model) LinkURL(prefix string) string {
 	pks := m.PKs()
 	linkURL := "/" + m.Route()
-	for _, pk := range pks {
+	lo.ForEach(pks, func(pk *Column, _ int) {
 		linkURL += "/" + pk.ToGoViewString(prefix, false, true)
-	}
+	})
 	return linkURL
 }
 
 func (m *Model) RelationsFor(col *Column) Relations {
-	var ret Relations
-	for _, r := range m.Relations {
-		if slices.Contains(r.Src, col.Name) {
-			ret = append(ret, r)
-		}
-	}
-	return ret
+	return lo.Filter(m.Relations, func(r *Relation, _ int) bool {
+		return slices.Contains(r.Src, col.Name)
+	})
 }
 
 func (m *Model) CanTraverseRelation() bool {
@@ -98,10 +95,9 @@ func (m *Model) PackageWithGroup(prefix string) string {
 	if len(m.Group) == 0 {
 		return prefix + m.Package
 	}
-	x := make([]string, 0, len(m.Group)+1)
-	for _, g := range m.Group {
-		x = append(x, strings.ToLower(prefix+g))
-	}
+	x := lo.Map(m.Group, func(g string, _ int) string {
+		return strings.ToLower(prefix + g)
+	})
 	x = append(x, prefix+m.Package)
 	return strings.Join(x, "/")
 }
@@ -110,18 +106,16 @@ func (m *Model) GroupString(prefix string, dflt string) string {
 	if len(m.Group) == 0 {
 		return dflt
 	}
-	x := make([]string, 0, len(m.Group)+1)
-	for _, g := range m.Group {
-		x = append(x, strings.ToLower(prefix+g))
-	}
+	x := lo.Map(m.Group, func(g string, _ int) string {
+		return strings.ToLower(prefix + g)
+	})
 	return strings.Join(x, "/")
 }
 
 func (m *Model) Breadcrumbs() string {
-	ret := make([]string, 0, len(m.Group)+1)
-	for _, g := range m.Group {
-		ret = append(ret, fmt.Sprintf("%q", strings.ToLower(g)))
-	}
+	ret := lo.Map(m.Group, func(g string, _ int) string {
+		return fmt.Sprintf("%q", strings.ToLower(g))
+	})
 	ret = append(ret, fmt.Sprintf("%q", m.Package))
 	return strings.Join(ret, ", ")
 }
@@ -136,11 +130,11 @@ func (m *Model) IndexedColumns() Columns {
 		}
 		ret = append(ret, c)
 	}
-	for _, c := range m.Columns {
+	lo.ForEach(m.Columns, func(c *Column, _ int) {
 		if c.Indexed || c.PK {
 			a(c)
 		}
-	}
+	})
 	return ret
 }
 
@@ -149,7 +143,7 @@ func (m *Model) AllSearches(database string) []string {
 		return m.Search
 	}
 	ret := slices.Clone(m.Search)
-	for _, c := range m.Columns {
+	lo.ForEach(m.Columns, func(c *Column, _ int) {
 		if c.Search {
 			x := c.Name
 			if c.Type.Key() != types.KeyString {
@@ -161,7 +155,7 @@ func (m *Model) AllSearches(database string) []string {
 			}
 			ret = append(ret, "lower("+x+")")
 		}
-	}
+	})
 	return ret
 }
 

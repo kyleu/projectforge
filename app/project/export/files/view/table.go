@@ -98,10 +98,10 @@ func viewTableColumn(
 	}
 
 	var toStrings string
-	for _, rel := range rels {
+	lo.ForEach(rels, func(rel *model.Relation, idx int) {
 		relModel := models.Get(rel.Table)
 		if !relModel.CanTraverseRelation() {
-			continue
+			return
 		}
 		srcCol := m.Columns.Get(rel.Src[0])
 		tgtCol := relModel.Columns.Get(rel.Tgt[0])
@@ -118,7 +118,7 @@ func viewTableColumn(
 			get := fmt.Sprintf("%sBy%s.Get(%s%s)", k, srcCol.Proper(), modelKey, srcCol.Proper())
 			toStrings += "{%% if x := " + get + "; x != nil %%} ({%%s x.TitleString() %%}){%% endif %%}"
 		}
-	}
+	})
 
 	ret.W(ind + "<td class=\"nowrap\">")
 	if col.PK && link {
