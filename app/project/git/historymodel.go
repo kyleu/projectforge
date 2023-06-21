@@ -1,8 +1,10 @@
 package git
 
 import (
-	"github.com/samber/lo"
 	"time"
+
+
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/util"
 )

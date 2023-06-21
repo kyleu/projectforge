@@ -4,6 +4,8 @@ import (
 	"path"
 	"strings"
 
+	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
@@ -37,12 +39,12 @@ func Packages(prj *project.Project, fs filesystem.FileLoader, showAll bool, logg
 		if err != nil {
 			return nil, err
 		}
-		for _, impRaw := range imps {
+		lo.ForEach(imps, func(impRaw string, index int) {
 			imp, typ := util.StringSplitLast(impRaw, ':', true)
 			if imp != "" && (showAll || typ == "self") {
 				curr.AddDep(imp)
 			}
-		}
+		})
 	}
 	ret.Sort()
 	return ret, nil

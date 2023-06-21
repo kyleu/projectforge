@@ -58,22 +58,22 @@ func auditRun(pm *PrjAndMods, ret *Result) error {
 		return err
 	}
 
-	audits := make(diff.Diffs, 0, len(generated))
-	for _, g := range generated {
+	audits := lo.FilterMap(generated, func(g string, _ int) (*diff.Diff, bool) {
 		if !slices.Contains(src, g) {
 			if (!strings.HasSuffix(g, "client.js.map")) && (!strings.HasSuffix(g, "client.css.map")) && (!strings.HasSuffix(g, "file/header.go")) {
-				audits = append(audits, &diff.Diff{Path: g, Status: diff.StatusDifferent})
+				return &diff.Diff{Path: g, Status: diff.StatusDifferent}, true
 			}
 		}
-	}
+		return nil, false
+	})
 
 	empty, err := getEmptyFolders(tgt, pm.Prj.Ignore, pm.Logger)
 	if err != nil {
 		return err
 	}
-	for _, e := range empty {
+	lo.ForEach(empty, func(e string, _ int) {
 		audits = append(audits, &diff.Diff{Path: e, Status: diff.StatusMissing})
-	}
+	})
 
 	sch, err := schemaCheck(pm)
 	if err != nil {

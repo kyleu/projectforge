@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
@@ -20,7 +21,7 @@ func (s *Service) History(ctx context.Context, prj *project.Project, hist *Histo
 }
 
 func gitHistory(ctx context.Context, path string, hist *HistoryResult, logger util.Logger) error {
-	//if hist.Commit != "" {
+	// if hist.Commit != "" {
 	//	curr := &HistoryEntry{SHA: hist.Commit}
 	//	curr.Files = HistoryFiles{
 	//		{Status: "OK", File: "foo.txt"},
@@ -37,9 +38,9 @@ func gitHistory(ctx context.Context, path string, hist *HistoryResult, logger ut
 	if hist.Limit > 0 {
 		cmd += fmt.Sprintf(" --max-count %d", hist.Limit)
 	}
-	for _, author := range hist.Authors {
+	lo.ForEach(hist.Authors, func(author string, _ int) {
 		cmd += fmt.Sprintf(" --author %s", author)
-	}
+	})
 	if hist.Path != "" {
 		cmd += fmt.Sprintf(" -- %s", path)
 	}

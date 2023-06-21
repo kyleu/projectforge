@@ -1,6 +1,7 @@
 package view
 
 import (
+	"github.com/samber/lo"
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
@@ -45,14 +46,14 @@ func exportViewHistoryBody(m *model.Model) *golang.Block {
 	ret.W("          <th class=\"shrink\">ID</th>")
 	ret.W("          <td>{%%s p.History.ID.String() %%}</td>")
 	ret.W("        </tr>")
-	for _, pk := range m.PKs() {
+	lo.ForEach(m.PKs(), func(pk *model.Column, idx int) {
 		x := pk.Clone()
 		x.Name = m.Proper() + x.Proper()
 		ret.W("        <tr>")
 		ret.W("          <th class=\"shrink\">%s</th>", x.Title())
 		ret.W("          <td><a href=\"{%%%%s p.Model.WebPath() %%%%}\">%s</a></td>", x.ToGoViewString("p.History.", true, false))
 		ret.W("        </tr>")
-	}
+	})
 	ret.W("        <tr>")
 	ret.W("          <th class=\"shrink\">Old</th>")
 	ret.W("          <td>{%%= components.JSON(p.History.Old) %%}</td>")
@@ -104,11 +105,11 @@ func exportViewHistoryTable(m *model.Model, enums enum.Enums) (*golang.Block, er
 	ret.W("      {%%- for _, h := range histories -%%}")
 	ret.W("      <tr>")
 	ret.W("        <td><a href=\"{%%s model.WebPath() %%}/history/{%%s h.ID.String() %%}\">{%%s h.ID.String() %%}</a></td>")
-	for _, pk := range m.PKs() {
+	lo.ForEach(m.PKs(), func(pk *model.Column, idx int) {
 		x := pk.Clone()
 		x.Name = m.Proper() + x.Proper()
 		ret.W("        <td><a href=\"{%%s model.WebPath() %%}\">" + x.ToGoViewString("h.", true, false) + "</a></td>")
-	}
+	})
 	ret.W("        <td>{%%= components.DisplayDiffs(h.Changes) %%}</td>")
 	ret.W("        <td>{%%= components.DisplayTimestamp(&h.Created) %%}</td>")
 	ret.W("      </tr>")

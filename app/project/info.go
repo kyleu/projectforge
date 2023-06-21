@@ -1,6 +1,7 @@
 package project
 
 import (
+	"github.com/samber/lo"
 	"strings"
 
 	"projectforge.dev/projectforge/app/util"
@@ -68,12 +69,12 @@ func (i *Info) AuthorIDSafe() string {
 	}
 	spl := util.StringSplitAndTrim(i.AuthorID, " ")
 	ret := make([]string, 0, len(spl))
-	for _, x := range spl {
+	lo.ForEach(spl, func(x string, _ int) {
 		x = strings.ReplaceAll(x, ",", "")
 		if !strings.HasPrefix(x, "@") {
 			x = "@" + x
 		}
 		ret = append(ret, x)
-	}
+	})
 	return strings.Join(ret, " ")
 }

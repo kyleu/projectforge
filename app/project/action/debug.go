@@ -1,6 +1,8 @@
 package action
 
 import (
+	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/util"
 )
 
@@ -11,9 +13,9 @@ func onDebug(pm *PrjAndMods) *Result {
 	ret.AddLog(util.ToJSON(pm.Prj))
 
 	ret.AddWarn("Modules:")
-	for _, m := range pm.Mods.Keys() {
+	lo.ForEach(pm.Mods.Keys(), func(m string, _ int) {
 		ret.AddLog(" - " + m)
-	}
+	})
 
 	return ret
 }

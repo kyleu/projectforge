@@ -20,10 +20,10 @@ func ChangeDir(rc *fasthttp.RequestCtx) {
 		ps.HideMenu = true
 		argRes := cutil.CollectArgs(rc, changeDirArgs)
 		dir, ok := argRes.Values["dir"]
-		if !ok || len(dir) == 0 || len(argRes.Missing) > 0 {
+		if !ok || dir == "" || len(argRes.Missing) > 0 {
 			ps.Data = argRes
-			dir, _ := filepath.Abs(".")
-			argRes.Values["dir"] = dir
+			d, _ := filepath.Abs(".")
+			argRes.Values["dir"] = d
 			msg := "Choose the working directory to use for loading the main project"
 			return controller.Render(rc, as, &verror.Args{URL: "/welcome/changedir", Directions: msg, ArgRes: argRes}, ps, "Welcome")
 		}

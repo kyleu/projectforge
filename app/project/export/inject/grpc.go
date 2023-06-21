@@ -1,6 +1,7 @@
 package inject
 
 import (
+	"github.com/samber/lo"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -21,9 +22,9 @@ func GRPC(f *file.File, args *model.Args) error {
 		if err != nil {
 			return errors.Wrap(err, "invalid arguments")
 		}
-		for _, fa := range fileArgs {
+		lo.ForEach(fileArgs, func(fa *grpc.FileArgs, _ int) {
 			out = append(out, grpcAll(m, fa)...)
-		}
+		})
 	}
 	content := map[string]string{"codegen": "\n" + strings.Join(out, "\n") + "\n\t// "}
 	return file.Inject(f, content)

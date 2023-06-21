@@ -3,6 +3,10 @@ package action
 import (
 	"context"
 
+	"github.com/samber/lo"
+
+
+	"projectforge.dev/projectforge/app/doctor"
 	"projectforge.dev/projectforge/app/doctor/checks"
 	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/project"
@@ -14,17 +18,17 @@ func onDoctor(ctx context.Context, cfg util.ValueMap, pSvc *project.Service, mSv
 	prjs := pSvc.Projects()
 	checks.CurrentModuleDeps = mSvc.Deps()
 	res := checks.CheckAll(ctx, prjs.AllModules(), logger)
-	for _, r := range res {
+	lo.ForEach(res, func(r *doctor.Result, _ int) {
 		ret.AddLog("%s: %s", r.Title, r.Status)
-		for _, l := range r.Logs {
+		lo.ForEach(r.Logs, func(l string, _ int) {
 			ret.AddLog(" - %s", l)
-		}
-		for _, e := range r.Errors {
+		})
+		lo.ForEach(r.Errors, func(e *doctor.Error, _ int) {
 			ret.AddWarn(" - %s", e.String())
-		}
-		for _, s := range r.Solution {
+		})
+		lo.ForEach(r.Solution, func(s string, _ int) {
 			ret.AddDebug(" - %s", s)
-		}
-	}
+		})
+	})
 	return ret
 }

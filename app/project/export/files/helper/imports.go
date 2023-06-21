@@ -3,6 +3,8 @@ package helper
 import (
 	"fmt"
 
+	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
@@ -40,11 +42,9 @@ func AppImport(path string) *golang.Import {
 }
 
 func ImportsForTypes(ctx string, database string, ts ...types.Type) golang.Imports {
-	var ret golang.Imports
-	for _, t := range ts {
-		ret = ret.Add(importsForType(ctx, t, database)...)
-	}
-	return ret
+	return lo.FlatMap(ts, func(t types.Type, index int) []*golang.Import {
+		return importsForType(ctx, t, database)
+	})
 }
 
 func importsForType(ctx string, t types.Type, database string) golang.Imports {

@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/lib/theme"
 	"projectforge.dev/projectforge/app/project/export/model"
 	"projectforge.dev/projectforge/app/util"
@@ -47,12 +49,12 @@ func (p *Project) ToTemplateContext(configVars util.KeyTypeDescs, portOffsets ma
 	}
 
 	var ignoreGrep string
-	for _, ig := range p.Ignore {
+	lo.ForEach(p.Ignore, func(ig string, _ int) {
 		if strings.HasPrefix(ig, "^") {
 			ig = "\\\\./" + strings.TrimPrefix(ig, "^")
 		}
 		ignoreGrep += fmt.Sprintf(" | grep -v %s", ig)
-	}
+	})
 
 	cv := append(util.KeyTypeDescs{}, configVars...)
 	if p.Info != nil && len(p.Info.ConfigVars) > 0 {

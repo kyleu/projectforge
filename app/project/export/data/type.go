@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/model"
@@ -22,13 +23,9 @@ func exportColumn(f *Field, ex []any) (*model.Column, error) {
 	if key == "type" {
 		key = "typ"
 	}
-	var vals bool
-	for _, e := range ex {
-		if fmt.Sprint(e) != "" {
-			vals = true
-			break
-		}
-	}
+	vals := lo.ContainsBy(ex, func(e any) bool {
+		return fmt.Sprint(e) != ""
+	})
 	var isPK bool
 	if key == "id" {
 		if vals {
@@ -63,15 +60,14 @@ func typeFor(t string, ex []any) (*types.Wrapped, []string, error) {
 	case "bool":
 		return types.NewBool(), tags, nil
 	case "int", "float":
-		var isFloat bool
-		for _, e := range ex {
+		isFloat := lo.ContainsBy(ex, func(e any) bool {
 			if fl, ok := e.(float64); ok {
 				if fl != math.Round(fl) || fl > 1000000000000 {
-					isFloat = true
-					break
+					return true
 				}
 			}
-		}
+			return false
+		})
 		if isFloat {
 			return types.NewFloat(64), tags, nil
 		}

@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"strings"
 
+
+	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
 )
@@ -97,9 +100,9 @@ func controllerEdit(m *model.Model, grp *model.Column, prefix string) *golang.Bl
 	ret.W("\t\t\treturn \"\", errors.Wrap(err, \"unable to parse %s from form\")", m.Proper())
 	ret.W("\t\t}")
 	checkGrp(ret, grp, "frm")
-	for _, pk := range m.PKs() {
+	lo.ForEach(m.PKs(), func(pk *model.Column, index int) {
 		ret.W("\t\tfrm.%s = ret.%s", pk.Proper(), pk.Proper())
-	}
+	})
 	ret.W("\t\terr = as.Services.%s.Update(ps.Context, nil, frm, ps.Logger)", m.Proper())
 	ret.W("\t\tif err != nil {")
 	ret.W("\t\t\treturn \"\", errors.Wrapf(err, \"unable to update %s [%%%%s]\", frm.String())", m.Proper())
@@ -119,10 +122,9 @@ func controllerDelete(m *model.Model, grp *model.Column, prefix string) *golang.
 	ret.W("\t\tret, err := %sFromPath(rc, as, ps)", m.Package)
 	ret.WE(2, `""`)
 	checkGrp(ret, grp)
-	pkCamels := make([]string, 0, len(m.PKs()))
-	for _, pk := range m.PKs() {
-		pkCamels = append(pkCamels, "ret."+pk.Proper())
-	}
+	pkCamels := lo.Map(m.PKs(), func(pk *model.Column, _ int) string {
+		return "ret." + pk.Proper()
+	})
 	ret.W("\t\terr = as.Services.%s.Delete(ps.Context, nil, %s, ps.Logger)", m.Proper(), strings.Join(pkCamels, ", "))
 	ret.W("\t\tif err != nil {")
 	ret.W("\t\t\treturn \"\", errors.Wrapf(err, \"unable to delete %s [%%%%s]\", ret.String())", m.TitleLower())

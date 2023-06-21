@@ -3,6 +3,8 @@ package view
 import (
 	"fmt"
 
+	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
@@ -54,13 +56,13 @@ func exportViewDetailRevisions(ret *golang.Block, m *model.Model, enums enum.Enu
 			ret.W("          <td>" + col.ToGoViewString("model.", true, false) + "</td>")
 		}
 	}
-	for _, pk := range m.PKs() {
+	lo.ForEach(m.PKs(), func(pk *model.Column, idx int) {
 		addView(pk)
-	}
+	})
 	addView(hc.Col)
-	for _, c := range m.Columns.WithTag("created") {
+	lo.ForEach(m.Columns.WithTag("created"), func(c *model.Column, idx int) {
 		addView(c)
-	}
+	})
 	ret.W("        </tr>")
 	ret.W("        {%%- endfor -%%}")
 	ret.W("      </tbody>")

@@ -4,6 +4,8 @@ import (
 	"context"
 	"strings"
 
+	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/lib/exec"
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/module"
@@ -27,7 +29,7 @@ func runToCompletion(ctx context.Context, projectKey string, t action.Type, cfg 
 func extractConfig(args []string) util.ValueMap {
 	var retArgs []string
 	retMap := util.ValueMap{}
-	for _, arg := range args {
+	lo.ForEach(args, func(arg string, index int) {
 		l, r := util.StringSplit(arg, '=', true)
 		l = strings.TrimSpace(l)
 		r = strings.TrimSpace(r)
@@ -36,7 +38,7 @@ func extractConfig(args []string) util.ValueMap {
 		} else {
 			retMap[l] = r
 		}
-	}
+	})
 	if len(retArgs) > 0 {
 		retMap["cmds"] = retArgs
 	}

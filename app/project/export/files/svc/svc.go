@@ -4,7 +4,10 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/lib/filter"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
@@ -99,13 +102,13 @@ func serviceDefaultFilters(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("NewService", "func")
 	ret.W("func filters(orig *filter.Params) *filter.Params {")
 	ords := make([]string, 0, len(m.Ordering))
-	for _, ord := range m.Ordering {
+	lo.ForEach(m.Ordering, func(ord *filter.Ordering, _ int) {
 		if ord.Asc {
 			ords = append(ords, fmt.Sprintf("&filter.Ordering{Column: %q, Asc: true}", ord.Column))
 		} else {
 			ords = append(ords, fmt.Sprintf("&filter.Ordering{Column: %q}", ord.Column))
 		}
-	}
+	})
 	if len(ords) == 0 {
 		ret.W("\treturn orig.Sanitize(%q)", m.Package)
 	} else {

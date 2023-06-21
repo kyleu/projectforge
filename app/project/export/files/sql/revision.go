@@ -1,6 +1,7 @@
 package sql
 
 import (
+	"github.com/samber/lo"
 	"strings"
 
 	"projectforge.dev/projectforge/app/project/export/golang"
@@ -27,9 +28,9 @@ func sqlCreateRevision(m *model.Model, modules []string, models model.Models) (*
 	ret.W(");")
 
 	if len(pks) > 1 {
-		for _, pk := range pks {
+		lo.ForEach(pks, func(pk *model.Column, _ int) {
 			addIndex(ret, m.Name, pk.Name)
-		}
+		})
 	}
 
 	// revision
@@ -58,15 +59,15 @@ func sqlCreateRevision(m *model.Model, modules []string, models model.Models) (*
 		addIndex(ret, revTblName, revPKs.Names()...)
 	}
 
-	for _, pk := range revPKsWithRev {
+	lo.ForEach(revPKsWithRev, func(pk *model.Column, _ int) {
 		if !pk.HasTag(model.RevisionType) {
 			addIndex(ret, revTblName, pk.Name)
 		}
-	}
+	})
 
-	for _, idx := range m.Indexes {
+	lo.ForEach(m.Indexes, func(idx *model.Index, _ int) {
 		ret.W(idx.SQL())
-	}
+	})
 
 	sqlHistory(ret, m, modules)
 	ret.W("-- {%% endfunc %%}")

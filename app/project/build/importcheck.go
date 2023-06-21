@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/util"
 )
@@ -85,24 +86,24 @@ func check(imports []string, orig []string) ([]string, []string, error) {
 
 func makeResult(first util.ValueMap, third util.ValueMap, self util.ValueMap) []string {
 	ret := make([]string, 0, len(first)+len(third)+len(self))
-	for _, k := range first.Keys() {
+	lo.ForEach(first.Keys(), func(k string, _ int) {
 		s, _ := first[k].(string)
 		ret = append(ret, s)
-	}
+	})
 	if len(first) > 0 && (len(third) > 0 || len(self) > 0) {
 		ret = append(ret, "")
 	}
-	for _, k := range third.Keys() {
+	lo.ForEach(third.Keys(), func(k string, _ int) {
 		s, _ := third[k].(string)
 		ret = append(ret, s)
-	}
+	})
 	if len(third) > 0 && len(self) > 0 {
 		ret = append(ret, "")
 	}
-	for _, k := range self.Keys() {
+	lo.ForEach(self.Keys(), func(k string, _ int) {
 		s, _ := self[k].(string)
 		ret = append(ret, s)
-	}
+	})
 	return ret
 }
 

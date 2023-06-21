@@ -3,6 +3,8 @@ package gomodel
 import (
 	"fmt"
 
+	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
@@ -12,23 +14,22 @@ import (
 func modelDiff(m *model.Model, g *golang.File) *golang.Block {
 	ret := golang.NewBlock("Diff"+m.Proper(), "func")
 
-	var complexity int
-	for _, col := range m.Columns {
+	complexity := lo.Sum(lo.Map(m.Columns, func(col *model.Column, _ int) int {
 		switch col.Type.Key() {
 		case types.KeyAny, types.KeyList, types.KeyMap, types.KeyValueMap, types.KeyReference:
-			complexity += 2
+			return 2
 		case types.KeyBool, types.KeyInt, types.KeyFloat:
-			complexity += 4
+			return 4
 		case types.KeyEnum:
-			complexity += 4
+			return 4
 		case types.KeyString:
-			complexity += 2
+			return 2
 		case types.KeyDate, types.KeyTimestamp, types.KeyUUID:
-			complexity += 6
+			return 6
 		default:
-			complexity += 2
+			return 2
 		}
-	}
+	}))
 	if complexity > 42 {
 		ret.W("//nolint:gocognit")
 	}

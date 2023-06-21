@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 	"golang.org/x/exp/maps"
 	"golang.org/x/exp/slices"
 
@@ -72,11 +73,11 @@ func loadAssetMap(ctx context.Context, logger util.Logger) error {
 	if err != nil {
 		return errors.Wrapf(err, "release asset at [%s] returned invalid JSON", assetURL)
 	}
-	for _, asset := range x.Assets {
+	lo.ForEach(x.Assets, func(asset *ghAsset, _ int) {
 		if strings.HasPrefix(asset.Name, assetPrefix) {
 			key := strings.TrimSuffix(asset.Name[len(assetPrefix):], assetSuffix)
 			assetMap[key] = asset.URL
 		}
-	}
+	})
 	return nil
 }

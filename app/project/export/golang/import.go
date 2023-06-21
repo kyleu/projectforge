@@ -56,9 +56,9 @@ func (i Imports) Render() string {
 			if lf {
 				ret = append(ret, "")
 			}
-			for _, x := range x {
-				ret = append(ret, fmt.Sprintf("\t%s", x))
-			}
+			lo.ForEach(x, func(item string, _ int) {
+				ret = append(ret, fmt.Sprintf("\t%s", item))
+			})
 		}
 	}
 
@@ -84,9 +84,9 @@ func (i Imports) RenderHTML() string {
 			if lf {
 				ret = append(ret, "")
 			}
-			for _, x := range x {
-				ret = append(ret, fmt.Sprintf("  %s", x))
-			}
+			lo.ForEach(x, func(item string, _ int) {
+				ret = append(ret, fmt.Sprintf("  %s", item))
+			})
 		}
 	}
 

@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
@@ -24,15 +26,15 @@ func searchBlock(args *model.Args) *golang.Block {
 	keys := make([]string, 0, len(args.Models))
 	ret.W("//nolint:gocognit")
 	ret.W("func generatedSearch() []Provider {")
-	for _, m := range args.Models {
+	lo.ForEach(args.Models, func(m *model.Model, _ int) {
 		if m.HasSearches() {
 			keys = append(keys, m.Package+"Func")
 			out := searchModel(m)
-			for _, line := range out {
+			lo.ForEach(out, func(line string, _ int) {
 				ret.W(line)
-			}
+			})
 		}
-	}
+	})
 	ret.W("\treturn []Provider{" + strings.Join(keys, ", ") + "}")
 	ret.W("}")
 	return ret

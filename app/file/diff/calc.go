@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/samber/lo"
+
 	"github.com/hexops/gotextdiff"
 	"github.com/hexops/gotextdiff/myers"
 	"github.com/hexops/gotextdiff/span"
@@ -63,9 +65,8 @@ func Calc(fn string, src string, tgt string) *Result {
 func changes(src string, edits []gotextdiff.TextEdit) (string, Changes) {
 	u := gotextdiff.ToUnified("", "", src, edits)
 	ret := make(Changes, 0, len(u.Hunks))
-	for _, h := range u.Hunks {
-		lines := make(Lines, 0, len(h.Lines))
-		for _, l := range h.Lines {
+	lo.ForEach(u.Hunks, func(h *gotextdiff.Hunk, _ int) {
+		lines := lo.Map(h.Lines, func(l gotextdiff.Line, _ int) *Line {
 			t := "unknown"
 			switch l.Kind {
 			case gotextdiff.Delete:
@@ -75,10 +76,10 @@ func changes(src string, edits []gotextdiff.TextEdit) (string, Changes) {
 			case gotextdiff.Equal:
 				t = contextKey
 			}
-			lines = append(lines, &Line{T: t, V: l.Content})
-		}
+			return &Line{T: t, V: l.Content}
+		})
 		ret = append(ret, &Change{From: h.FromLine, To: h.ToLine, Lines: lines})
-	}
+	})
 	patch := fmt.Sprint(u)
 	patch = strings.TrimPrefix(patch, "--- ")
 	patch = strings.TrimPrefix(patch, "\n")

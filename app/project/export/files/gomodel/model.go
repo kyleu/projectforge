@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
@@ -14,12 +16,12 @@ import (
 
 func Model(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, strings.ToLower(m.Camel()))
-	for _, imp := range helper.ImportsForTypes("go", "", m.Columns.Types()...) {
+	lo.ForEach(helper.ImportsForTypes("go", "", m.Columns.Types()...), func(imp *golang.Import, _ int) {
 		g.AddImport(imp)
-	}
-	for _, imp := range helper.ImportsForTypes("string", "", m.PKs().Types()...) {
+	})
+	lo.ForEach(helper.ImportsForTypes("string", "", m.PKs().Types()...), func(imp *golang.Import, _ int) {
 		g.AddImport(imp)
-	}
+	})
 	g.AddImport(helper.ImpAppUtil)
 	err := helper.SpecialImports(g, m.Columns, m.PackageWithGroup(""), args.Enums)
 	if err != nil {
@@ -111,16 +113,15 @@ func modelConstructor(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 func modelToData(m *model.Model, cols model.Columns, suffix string) *golang.Block {
 	ret := golang.NewBlock(m.Proper(), "func")
 	ret.W("func (%s *%s) ToData%s() []any {", m.FirstLetter(), m.Proper(), suffix)
-	refs := make([]string, 0, len(cols))
-	for _, c := range cols {
-		// switch c.Type.Key() {
-		//   case types.KeyAny, types.KeyMap:
-		//     ret.W("\t%sArg := util.ToJSONBytes(%s.%s, true)", c.Camel(), m.FirstLetter(), c.Proper())
-		//     refs = append(refs, fmt.Sprintf("%sArg", c.Camel()))
-		//   default:
-		refs = append(refs, fmt.Sprintf("%s.%s", m.FirstLetter(), c.Proper()))
-		// }
-	}
+	refs := lo.Map(cols, func(c *model.Column, _ int) string {
+		//switch c.Type.Key() {
+		//case types.KeyAny, types.KeyMap:
+		//	ret.W("\t%sArg := util.ToJSONBytes(%s.%s, true)", c.Camel(), m.FirstLetter(), c.Proper())
+		//	return fmt.Sprintf("%sArg", c.Camel())
+		//default:
+		return fmt.Sprintf("%s.%s", m.FirstLetter(), c.Proper())
+		//}
+	})
 	ret.W("\treturn []any{%s}", strings.Join(refs, ", "))
 	ret.W("}")
 	return ret

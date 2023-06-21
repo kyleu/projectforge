@@ -53,9 +53,9 @@ func (f *Template) Render(addHeader bool) (*file.File, error) {
 		add(f.Imports.RenderHTML())
 	}
 
-	for _, b := range f.Blocks {
+	lo.ForEach(f.Blocks, func(b *Block, _ int) {
 		add(b.Render())
-	}
+	})
 
 	n := f.Name
 	return &file.File{Path: f.Path, Name: n, Mode: filesystem.DefaultMode, Content: strings.Join(content, "\n")}, nil

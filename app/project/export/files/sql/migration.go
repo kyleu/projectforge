@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/file"
@@ -65,22 +66,22 @@ func sqlCreate(m *model.Model, modules []string, models model.Models) (*golang.B
 		ret.W("  %q %s,", col.Name, st)
 	}
 	sqlRelations(ret, m, models)
-	for _, col := range m.Columns {
+	lo.ForEach(m.Columns, func(col *model.Column, index int) {
 		if col.HasTag("unique") {
 			ret.W("  unique (%q),", col.Name)
 		}
-	}
+	})
 	ret.W("  primary key (%s)", strings.Join(m.PKs().NamesQuoted(), ", "))
 	ret.W(");")
 
 	pks := m.PKs()
 
 	// var indexes [][]string
-	for _, col := range m.Columns {
+	lo.ForEach(m.Columns, func(col *model.Column, _ int) {
 		if (col.PK && len(pks) > 1) || col.Indexed {
 			addIndex(ret, m.Name, col.Name)
 		}
-	}
+	})
 	for _, rel := range m.Relations {
 		cols := rel.SrcColumns(m)
 		if slices.Equal(cols.Names(), m.PKs().Names()) {
@@ -93,9 +94,9 @@ func sqlCreate(m *model.Model, modules []string, models model.Models) (*golang.B
 			}
 		}
 	}
-	for _, idx := range m.Indexes {
+	lo.ForEach(m.Indexes, func(idx *model.Index, index int) {
 		ret.W(idx.SQL())
-	}
+	})
 	sqlHistory(ret, m, modules)
 	ret.W("-- {%% endfunc %%}")
 	return ret, nil
@@ -103,10 +104,9 @@ func sqlCreate(m *model.Model, modules []string, models model.Models) (*golang.B
 
 func addIndex(ret *golang.Block, tbl string, names ...string) {
 	name := fmt.Sprintf("%s__%s_idx", tbl, strings.Join(names, "_"))
-	quoted := make([]string, 0, len(names))
-	for _, n := range names {
-		quoted = append(quoted, fmt.Sprintf("%q", n))
-	}
+	quoted := lo.Map(names, func(n string, index int) string {
+		return fmt.Sprintf("%q", n)
+	})
 	ret.WB()
 	ret.W("create index if not exists %q on %q (%s);", name, tbl, strings.Join(quoted, ", "))
 }

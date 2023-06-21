@@ -1,11 +1,11 @@
 package svg
 
 import (
-	"github.com/samber/lo"
 	"path/filepath"
 	"strings"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/util"

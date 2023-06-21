@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
@@ -23,13 +25,13 @@ func exportViewListClass(m *model.Model, models model.Models, g *golang.Template
 	ret.W("{%% code type List struct {")
 	ret.W("  layout.Basic")
 	ret.W("  Models %s.%s", m.Package, m.ProperPlural())
-	for _, rel := range m.Relations {
+	lo.ForEach(m.Relations, func(rel *model.Relation, _ int) {
 		relModel := models.Get(rel.Table)
 		relCols := rel.SrcColumns(m)
 		relNames := strings.Join(relCols.ProperNames(), "")
 		g.AddImport(helper.AppImport("app/" + relModel.PackageWithGroup("")))
 		ret.W(commonLine, relModel.ProperPlural(), relNames, relModel.Package, relModel.ProperPlural())
-	}
+	})
 	ret.W("  Params filter.ParamSet")
 	if m.HasSearches() {
 		ret.W("  SearchQuery string")
@@ -41,13 +43,13 @@ func exportViewListClass(m *model.Model, models model.Models, g *golang.Template
 func exportViewListBody(m *model.Model, models model.Models) *golang.Block {
 	ret := golang.NewBlock("ListBody", "func")
 	suffix := ""
-	for _, rel := range m.Relations {
+	lo.ForEach(m.Relations, func(rel *model.Relation, _ int) {
 		if relModel := models.Get(rel.Table); relModel.CanTraverseRelation() {
 			relCols := rel.SrcColumns(m)
 			relNames := strings.Join(relCols.ProperNames(), "")
 			suffix += fmt.Sprintf(", p.%sBy%s", relModel.ProperPlural(), relNames)
 		}
-	}
+	})
 
 	ret.W("{%% func (p *List) Body(as *app.State, ps *cutil.PageState) %%}")
 	ret.W("  <div class=\"card\">")

@@ -1,8 +1,9 @@
 package stats
 
 import (
-	"github.com/samber/lo"
 	"path/filepath"
+
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/util"
@@ -18,11 +19,11 @@ func (f FileStats) Count() int {
 
 func (f FileStats) Largest() *FileStat {
 	var ret *FileStat
-	for _, x := range f {
+	lo.ForEach(f, func(x *FileStat, _ int) {
 		if ret == nil || x.Size > ret.Size {
 			ret = x.Largest()
 		}
-	}
+	})
 	return ret
 }
 
@@ -34,11 +35,11 @@ func (f FileStats) TotalSize() int64 {
 
 func (f FileStats) Extensions() map[string]int {
 	ret := map[string]int{}
-	for _, x := range f {
+	lo.ForEach(f, func(x *FileStat, _ int) {
 		for k, v := range x.Extensions() {
 			ret[k] += v
 		}
-	}
+	})
 	return ret
 }
 

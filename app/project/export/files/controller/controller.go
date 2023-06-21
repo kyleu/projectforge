@@ -3,6 +3,9 @@ package controller
 import (
 	"strings"
 
+
+	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
@@ -19,9 +22,9 @@ func Controller(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 		fn = m.GroupString("c", "") + "/" + fn
 	}
 	g := golang.NewFile(m.LastGroup("c", "controller"), []string{"app", "controller"}, fn)
-	for _, imp := range helper.ImportsForTypes("parse", "", m.PKs().Types()...) {
+	lo.ForEach(helper.ImportsForTypes("parse", "", m.PKs().Types()...), func(imp *golang.Import, _ int) {
 		g.AddImport(imp)
-	}
+	})
 	if len(m.Group) > 0 {
 		g.AddImport(helper.ImpAppController)
 	}
@@ -114,10 +117,9 @@ func controllerArgFor(col *model.Column, b *golang.Block, retVal string, indent 
 }
 
 func blockFor(m *model.Model, prefix string, grp *model.Column, expectedLines int, keys ...string) *golang.Block {
-	properKeys := make([]string, 0, len(keys))
-	for _, k := range keys {
-		properKeys = append(properKeys, util.StringToTitle(k))
-	}
+	properKeys := lo.Map(keys, func(k string, index int) string {
+		return util.StringToTitle(k)
+	})
 	name := m.Proper() + withGroupName(strings.Join(properKeys, ""), grp)
 	ret := golang.NewBlock(name, "func")
 	if expectedLines > 100 {

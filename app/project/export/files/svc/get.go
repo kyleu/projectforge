@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/samber/lo"
+	"golang.org/x/exp/maps"
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/file"
@@ -17,9 +19,9 @@ import (
 func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	dbRef := args.DBRef()
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "serviceget")
-	for _, imp := range helper.ImportsForTypes("go", "", m.PKs().Types()...) {
+	lo.ForEach(helper.ImportsForTypes("go", "", m.PKs().Types()...), func(imp *golang.Import, _ int) {
 		g.AddImport(imp)
-	}
+	})
 	if len(m.PKs()) > 1 {
 		g.AddImport(helper.ImpFmt)
 	}
@@ -48,42 +50,36 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 	}
 	getBys := map[string]model.Columns{}
 	if pkLen > 1 {
-		for _, pkCol := range m.PKs() {
+		lo.ForEach(m.PKs(), func(pkCol *model.Column, _ int) {
 			getBys[pkCol.Name] = model.Columns{pkCol}
-		}
+		})
 	}
-	for _, grp := range m.GroupedColumns() {
+	lo.ForEach(m.GroupedColumns(), func(grp *model.Column, index int) {
 		g.AddImport(helper.ImpAppUtil)
 		g.AddBlocks(serviceGrouped(m, grp, args.DBRef()))
 		getBys[grp.Name] = model.Columns{grp}
-	}
-	for _, rel := range m.Relations {
+	})
+	lo.ForEach(m.Relations, func(rel *model.Relation, index int) {
 		cols := rel.SrcColumns(m)
 		colStr := strings.Join(cols.Names(), ",")
 		getBys[colStr] = cols
-	}
-	for _, col := range m.Columns {
+	})
+	lo.ForEach(m.Columns, func(col *model.Column, index int) {
 		if col.Indexed {
 			getBys[col.Name] = model.Columns{col}
 		}
-	}
-	keys := make([]string, 0, len(getBys))
-	for k := range getBys {
-		keys = append(keys, k)
-	}
+	})
+	keys := maps.Keys(getBys)
 	slices.Sort(keys)
 	for _, key := range keys {
 		cols := getBys[key]
 		name := "GetBy" + strings.Join(cols.ProperNames(), "")
-		for _, imp := range helper.ImportsForTypes("go", "", cols.Types()...) {
+		lo.ForEach(helper.ImportsForTypes("go", "", cols.Types()...), func(imp *golang.Import, _ int) {
 			g.AddImport(imp)
-		}
-		returnMultiple := false
-		for _, x := range cols {
-			if !x.HasTag("unique") {
-				returnMultiple = true
-			}
-		}
+		})
+		returnMultiple := lo.ContainsBy(cols, func(x *model.Column) bool {
+			return !x.HasTag("unique")
+		})
 		gb, err := serviceGetBy(name, m, cols, returnMultiple, dbRef, args.Enums, args.Database())
 		if err != nil {
 			return nil, err
@@ -212,9 +208,9 @@ func serviceGet(key string, m *model.Model, cols model.Columns, dbRef string, en
 		ret.W("\twc := defaultWC(0)")
 	} else {
 		wc := make([]string, 0, len(cols))
-		for idx, col := range cols {
+		lo.ForEach(cols, func(col *model.Column, idx int) {
 			wc = append(wc, fmt.Sprintf("%q = $%d", col.Name, idx+1))
-		}
+		})
 		ret.W("\twc := %q", strings.Join(wc, " and "))
 	}
 	if m.IsSoftDelete() {
@@ -226,9 +222,9 @@ func serviceGet(key string, m *model.Model, cols model.Columns, dbRef string, en
 	ret.W("\tif err != nil {")
 	sj := strings.Join(cols.CamelNames(), ", ")
 	decls := make([]string, 0, len(cols))
-	for _, c := range cols {
+	lo.ForEach(cols, func(c *model.Column, _ int) {
 		decls = append(decls, c.Camel()+" [%%v]")
-	}
+	})
 	ret.W("\t\treturn nil, errors.Wrapf(err, \"unable to get %s by %s\", %s)", m.Camel(), strings.Join(decls, ", "), sj)
 	ret.W("\t}")
 	ret.W("\treturn ret.To%s(), nil", m.Proper())
@@ -266,9 +262,9 @@ func serviceGetByCols(key string, m *model.Model, cols model.Columns, dbRef stri
 	ret.W("\tif err != nil {")
 	sj := strings.Join(cols.CamelNames(), ", ")
 	decls := make([]string, 0, len(cols))
-	for _, c := range cols {
+	lo.ForEach(cols, func(c *model.Column, _ int) {
 		decls = append(decls, c.Camel()+" [%%v]")
-	}
+	})
 	ret.W("\t\treturn nil, errors.Wrapf(err, \"unable to get %s by %s\", %s)", m.Plural(), strings.Join(decls, ", "), sj)
 	ret.W("\t}")
 	ret.W("\treturn ret.To%s(), nil", m.ProperPlural())

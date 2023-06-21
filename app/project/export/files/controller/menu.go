@@ -3,6 +3,8 @@ package controller
 import (
 	"fmt"
 
+
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/file"
@@ -24,9 +26,9 @@ func menuBlock(args *model.Args) *golang.Block {
 	ret.W("//nolint:lll")
 	ret.W("func generatedMenu() menu.Items {")
 	rct := menuContent(args)
-	for _, x := range rct {
+	lo.ForEach(rct, func(x string, index int) {
 		ret.W(x)
-	}
+	})
 	if len(rct) == 0 {
 		ret.W("\treturn nil")
 	}
@@ -44,9 +46,9 @@ func menuContent(args *model.Args) []string {
 		out = append(out, "\treturn menu.Items{}")
 	} else {
 		out = append(out, "\treturn menu.Items{")
-		for _, x := range menuItemsFor(args.Groups, args.Models) {
+		lo.ForEach(menuItemsFor(args.Groups, args.Models), func(x *menu.Item, _ int) {
 			out = append(out, menuSerialize(x, "\t\t")...)
-		}
+		})
 		out = append(out, "\t}")
 	}
 	return out
@@ -54,43 +56,43 @@ func menuContent(args *model.Args) []string {
 
 func menuItemsFor(groups model.Groups, models model.Models) menu.Items {
 	ret := make(menu.Items, 0, len(groups)+len(models))
-	for _, g := range groups {
+	lo.ForEach(groups, func(g *model.Group, index int) {
 		ret = append(ret, menuItemForGroup(g, models))
-	}
-	for _, m := range models {
+	})
+	lo.ForEach(models, func(m *model.Model, index int) {
 		if len(m.Group) == 0 {
 			ret = append(ret, menuItemForModel(m, models))
 		}
-	}
+	})
 	return ret
 }
 
 func menuItemForGroup(g *model.Group, models model.Models, pth ...string) *menu.Item {
 	np := append(slices.Clone(pth), g.Key)
 	ret := &menu.Item{Key: g.Key, Title: g.TitleSafe(), Description: g.Description, Icon: g.IconSafe()}
-	for _, child := range g.Children {
+	lo.ForEach(g.Children, func(child *model.Group, index int) {
 		ret.Children = append(ret.Children, menuItemForGroup(child, models, np...))
-	}
+	})
 	matches := models.ForGroup(np...)
-	for _, m := range matches {
+	lo.ForEach(matches, func(m *model.Model, index int) {
 		ret.Children = append(ret.Children, menuItemForModel(m, models))
-	}
+	})
 	return ret
 }
 
 func menuItemForModel(m *model.Model, models model.Models) *menu.Item {
 	ret := &menu.Item{Key: m.Package, Title: m.TitlePlural(), Description: m.Description, Icon: m.Icon, Route: m.Route()}
 	if len(m.GroupedColumns()) > 0 {
-		for _, g := range m.GroupedColumns() {
+		lo.ForEach(m.GroupedColumns(), func(g *model.Column, _ int) {
 			desc := fmt.Sprintf("%s from %s", g.ProperPlural(), m.Plural())
 			kid := &menu.Item{Key: g.Camel(), Title: g.ProperPlural(), Description: desc, Icon: m.Icon, Route: m.Route() + "/" + g.Camel()}
 			ret.Children = append(ret.Children, kid)
-		}
+		})
 	}
-	for _, x := range models.ForGroup(append(slices.Clone(m.Group), m.Name)...) {
+	lo.ForEach(models.ForGroup(append(slices.Clone(m.Group), m.Name)...), func(x *model.Model, _ int) {
 		kid := menuItemForModel(x, models)
 		ret.Children = append(ret.Children, kid)
-	}
+	})
 	return ret
 }
 
@@ -109,9 +111,9 @@ func menuSerialize(m *menu.Item, prefix string) []string {
 		out = append(out, prefix+"&menu.Item{"+args+"},")
 	} else {
 		out = append(out, prefix+"&menu.Item{"+args+", Children: menu.Items{")
-		for _, kid := range m.Children {
+		lo.ForEach(m.Children, func(kid *menu.Item, index int) {
 			out = append(out, menuSerialize(kid, prefix+"\t")...)
-		}
+		})
 		out = append(out, prefix+"}},")
 	}
 	return out

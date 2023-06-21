@@ -66,7 +66,7 @@ func mkGoSvcs(prjs project.Projects) []string {
 	w := func(s string, args ...any) {
 		ret = append(ret, fmt.Sprintf("  "+s, args...))
 	}
-	for _, p := range prjs {
+	lo.ForEach(prjs, func(p *project.Project, _ int) {
 		tags := make([]string, 0, len(p.Tags)+2)
 		tags = append(tags, "go", "v2")
 		tags = append(tags, p.Tags...)
@@ -103,11 +103,11 @@ func mkGoSvcs(prjs project.Projects) []string {
 		}
 		w("}")
 		w("")
-	}
+	})
 	w("goServices = svc.Svcs{")
-	for _, p := range prjs {
+	lo.ForEach(prjs, func(p *project.Project, _ int) {
 		w("  %s,", p.NameSafe())
-	}
+	})
 	w("}")
 	ret = append(ret, ")")
 	return ret

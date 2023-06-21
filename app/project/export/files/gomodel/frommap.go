@@ -2,6 +2,7 @@ package gomodel
 
 import (
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/enum"
@@ -15,13 +16,9 @@ func modelFromMap(g *golang.File, m *model.Model, enums enum.Enums, database str
 	ret.W("func FromMap(m util.ValueMap, setPK bool) (*%s, error) {", m.Proper())
 	ret.W("\tret := &%s{}", m.Proper())
 	cols := m.Columns.WithoutTag("created").WithoutTag("updated").WithoutTag(model.RevisionType)
-	var needsErr bool
-	for _, c := range cols {
-		if c.NeedsErr(m.Name, database) {
-			needsErr = true
-			break
-		}
-	}
+	needsErr := lo.ContainsBy(cols, func(c *model.Column) bool {
+		return c.NeedsErr(m.Name, database)
+	})
 	if needsErr {
 		ret.W("\tvar err error")
 	}

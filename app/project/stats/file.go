@@ -1,6 +1,7 @@
 package stats
 
 import (
+	"github.com/samber/lo"
 	"path/filepath"
 	"strings"
 
@@ -56,10 +57,10 @@ func (f *FileStat) Extensions() map[string]int {
 	} else {
 		ret[f.extension] = 1
 	}
-	for _, x := range f.Kids {
+	lo.ForEach(f.Kids, func(x *FileStat, _ int) {
 		for k, v := range x.Extensions() {
 			ret[k] += v
 		}
-	}
+	})
 	return ret
 }

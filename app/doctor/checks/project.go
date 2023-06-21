@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/doctor"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
@@ -27,10 +29,9 @@ func checkProject(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Re
 	if len(r.Errors) > 0 {
 		return r
 	}
-	errs := project.Validate(p, CurrentModuleDeps)
-	for _, err := range errs {
+	lo.ForEach(project.Validate(p, CurrentModuleDeps), func(err *project.ValidationError, _ int) {
 		r = r.WithError(doctor.NewError("config", "[%s]: %s", err.Code, err.Message))
-	}
+	})
 	return r
 }
 

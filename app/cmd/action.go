@@ -57,9 +57,9 @@ func logResult(t action.Type, r *action.Result) {
 	_logger.Infof("%s [%s]: %s in [%s]", util.AppName, t.String(), r.Status, util.MicrosToMillis(r.Duration))
 	if len(r.Errors) > 0 {
 		_logger.Warnf("Errors:")
-		for _, e := range r.Errors {
+		lo.ForEach(r.Errors, func(e string, _ int) {
 			_logger.Warn(" - " + e)
-		}
+		})
 	}
 	if r.Modules.DiffCount(false) > 0 {
 		for _, m := range r.Modules {
@@ -76,9 +76,9 @@ func logResult(t action.Type, r *action.Result) {
 	if r.Data != nil {
 		deps, ok := r.Data.(build.Dependencies)
 		if ok {
-			for _, dep := range deps {
+			lo.ForEach(deps, func(dep *build.Dependency, _ int) {
 				_logger.Infof(dep.String())
-			}
+			})
 		}
 	}
 }

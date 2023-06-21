@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/file"
@@ -163,14 +164,14 @@ func processList(cell any, cellStr string) string {
 		}
 	}
 	ret := make([]string, 0, len(a))
-	for _, x := range a {
+	lo.ForEach(a, func(x any, _ int) {
 		switch t := x.(type) {
 		case string:
 			ret = append(ret, "\""+t+"\"")
 		default:
 			ret = append(ret, fmt.Sprint(t))
 		}
-	}
+	})
 	return "'[" + clean(strings.Join(ret, ", ")) + "]'"
 }
 

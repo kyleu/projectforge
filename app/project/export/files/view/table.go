@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/file"
@@ -34,14 +35,14 @@ func exportViewTableFunc(m *model.Model, models model.Models, enums enum.Enums, 
 	summCols := m.Columns.ForDisplay("summary")
 	ret := golang.NewBlock("Table", "func")
 	suffix := ""
-	for _, rel := range m.Relations {
+	lo.ForEach(m.Relations, func(rel *model.Relation, _ int) {
 		if relModel := models.Get(rel.Table); relModel.CanTraverseRelation() {
 			relCols := rel.SrcColumns(m)
 			relNames := strings.Join(relCols.ProperNames(), "")
 			g.AddImport(helper.AppImport("app/" + relModel.PackageWithGroup("")))
 			suffix += fmt.Sprintf(", %sBy%s %s.%s", relModel.CamelPlural(), relNames, relModel.Package, relModel.ProperPlural())
 		}
-	}
+	})
 	ret.W("{%% func Table(models " + m.Package + "." + m.ProperPlural() + suffix + ", params filter.ParamSet, as *app.State, ps *cutil.PageState) %%}")
 	ret.W("  {%%- code prms := params.Get(\"" + m.Package + "\", nil, ps.Logger).Sanitize(\"" + m.Package + "\") -%%}")
 	ret.W("  <table class=\"mt\">")
@@ -60,9 +61,9 @@ func exportViewTableFunc(m *model.Model, models model.Models, enums enum.Enums, 
 	ret.W("    <tbody>")
 	ret.W("      {%%- for _, model := range models -%%}")
 	ret.W("      <tr>")
-	for _, col := range summCols {
+	lo.ForEach(summCols, func(col *model.Column, _ int) {
 		viewTableColumn(g, ret, models, m, true, col, "model.", "", 4)
-	}
+	})
 	ret.W("      </tr>")
 	ret.W("      {%%- endfor -%%}")
 	ret.W("      {%%- if prms.HasNextPage(len(models) + prms.Offset) || prms.HasPreviousPage() -%%}")
@@ -128,7 +129,7 @@ func viewTableColumn(
 	const l = "<a title=%q href=\"{%%%%s %s %%%%}\">{%%%%= components.SVGRef(%q, 18, 18, \"\", ps) %%%%}</a>"
 	const msgNotNull = "%s  " + l
 	const msg = "%s  {%%%% if %s%s != nil %%%%}" + l + "{%%%% endif %%%%}"
-	for _, rel := range rels {
+	lo.ForEach(rels, func(rel *model.Relation, _ int) {
 		if slices.Contains(rel.Src, col.Name) {
 			switch col.Type.Key() {
 			case types.KeyBool, types.KeyInt, types.KeyFloat:
@@ -141,6 +142,6 @@ func viewTableColumn(
 				ret.W(msgNotNull, ind, relModel.Title(), rel.WebPath(m, relModel, modelKey), relModel.Icon)
 			}
 		}
-	}
+	})
 	ret.W(ind + "</td>")
 }

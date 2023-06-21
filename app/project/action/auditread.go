@@ -3,6 +3,8 @@ package action
 import (
 	"path"
 
+	"github.com/samber/lo"
+
 	"github.com/pkg/errors"
 	"golang.org/x/exp/slices"
 
@@ -46,9 +48,9 @@ func getModuleFiles(pm *PrjAndMods) ([]string, error) {
 		if e != nil {
 			return nil, err
 		}
-		for _, f := range files {
+		lo.ForEach(files, func(f *file.File, _ int) {
 			ret = append(ret, f.FullPath())
-		}
+		})
 	}
 	return ret, nil
 }

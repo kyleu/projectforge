@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/types"
@@ -17,14 +18,14 @@ import (
 
 func Row(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "row")
-	for _, imp := range helper.ImportsForTypes("row", args.Database(), m.Columns.Types()...) {
+	lo.ForEach(helper.ImportsForTypes("row", args.Database(), m.Columns.Types()...), func(imp *golang.Import, index int) {
 		g.AddImport(imp)
-	}
+	})
 	g.AddImport(helper.ImpStrings, helper.ImpAppUtil, helper.ImpFmt)
 	if err := helper.SpecialImports(g, m.Columns, m.PackageWithGroup(""), args.Enums); err != nil {
 		return nil, err
 	}
-	for _, col := range m.Columns {
+	lo.ForEach(m.Columns, func(col *model.Column, index int) {
 		if col.Nullable && (col.Type.Key() == types.KeyString || col.Type.Key() == types.KeyInt || col.Type.Key() == types.KeyBool) {
 			g.AddImport(helper.ImpSQL)
 		}
@@ -35,7 +36,7 @@ func Row(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 				g.AddImport(helper.ImpMSSQL)
 			}
 		}
-	}
+	})
 	if tc, err := modelTableCols(m); err == nil {
 		g.AddBlocks(tc)
 	} else {
@@ -174,9 +175,9 @@ func modelRowToModel(g *golang.File, m *model.Model, database string) (*golang.B
 		}
 	}
 	ret.W("\treturn &%s{", m.Proper())
-	for _, ref := range refs {
+	lo.ForEach(refs, func(ref string, index int) {
 		ret.W("\t\t%s,", ref)
-	}
+	})
 	ret.W("\t}")
 	ret.W("}")
 	return ret, nil
@@ -206,14 +207,14 @@ func defaultWC(m *model.Model, database string) *golang.Block {
 	c := m.PKs()
 	wc := make([]string, 0, len(c))
 	idxs := make([]string, 0, len(c))
-	for idx, col := range c {
+	lo.ForEach(c, func(col *model.Column, idx int) {
 		if database == model.SQLServer {
 			wc = append(wc, fmt.Sprintf("%q = @p%%%%d", col.Name))
 		} else {
 			wc = append(wc, fmt.Sprintf("%q = $%%%%d", col.Name))
 		}
 		idxs = append(idxs, fmt.Sprintf("idx+%d", idx+1))
-	}
+	})
 	ret.W("\treturn fmt.Sprintf(%q, %s)", strings.Join(wc, " and "), strings.Join(idxs, ", "))
 	ret.W("}")
 	return ret

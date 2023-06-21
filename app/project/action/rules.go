@@ -1,9 +1,12 @@
 package action
 
 import (
-	"github.com/samber/lo"
 	"os"
 	"strings"
+
+	"github.com/samber/lo"
+
+	"projectforge.dev/projectforge/app/project/export/model"
 
 	"github.com/pkg/errors"
 	"golang.org/x/exp/slices"
@@ -30,14 +33,14 @@ func onRules(pm *PrjAndMods) *Result {
 	cleanIcons := lo.Filter(icons, func(x string, _ int) bool {
 		return !slices.Contains(forbidden, x)
 	})
-	for _, m := range pm.EArgs.Models {
+	lo.ForEach(pm.EArgs.Models, func(m *model.Model, _ int) {
 		for slices.Contains(forbidden, m.Icon) {
 			idx := util.StringHash(m.Name) % uint32(len(cleanIcons))
 			m.Icon = cleanIcons[idx]
 		}
 		m.AddTag("audit")
 		m.AddTag("search")
-		for _, col := range m.Columns {
+		lo.ForEach(m.Columns, func(col *model.Column, index int) {
 			switch strings.ToLower(col.Name) {
 			case "name", "title":
 				if len(m.Columns.WithTag("title")) == 0 {
@@ -48,8 +51,8 @@ func onRules(pm *PrjAndMods) *Result {
 				col.Search = true
 				col.RemoveTag("search")
 			}
-		}
-	}
+		})
+	})
 
 	b, err := os.ReadFile("rules.json")
 	if err != nil {
@@ -90,9 +93,9 @@ func applyRules(pm *PrjAndMods, rules map[string]string) error {
 		case keyTag:
 			m.AddTag(v)
 		case keyTags:
-			for _, t := range util.StringSplitAndTrim(v, ",") {
+			lo.ForEach(util.StringSplitAndTrim(v, ","), func(t string, _ int) {
 				m.AddTag(t)
-			}
+			})
 		default:
 			col := m.Columns.Get(split[1])
 			if col == nil {
@@ -106,9 +109,9 @@ func applyRules(pm *PrjAndMods, rules map[string]string) error {
 			case keyTag:
 				col.AddTag(v)
 			case keyTags:
-				for _, t := range util.StringSplitAndTrim(v, ",") {
+				lo.ForEach(util.StringSplitAndTrim(v, ","), func(t string, _ int) {
 					col.AddTag(t)
-				}
+				})
 			case "search":
 				col.Search = v == keyTrue
 			default:

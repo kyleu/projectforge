@@ -3,6 +3,9 @@ package controller
 import (
 	"strings"
 
+
+	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
 )
@@ -16,10 +19,9 @@ func controllerRevision(m *model.Model, prefix string) *golang.Block {
 	ret.WE(2, `""`)
 	ret.W("\t\t%s, err := cutil.RCRequiredInt(rc, %q)", hc.Col.Camel(), hc.Col.Camel())
 	ret.WE(2, `""`)
-	pkRefs := make([]string, 0, len(m.PKs()))
-	for _, pk := range m.PKs() {
-		pkRefs = append(pkRefs, "latest."+pk.Proper())
-	}
+	pkRefs := lo.Map(m.PKs(), func(pk *model.Column, _ int) string {
+		return "latest." + pk.Proper()
+	})
 	pkStuff := strings.Join(pkRefs, ", ")
 	ret.W("\t\tret, err := as.Services.%s.Get%s(ps.Context, nil, %s, %s, ps.Logger)", m.Proper(), hc.Col.Proper(), pkStuff, hc.Col.Camel())
 	ret.WE(2, `""`)

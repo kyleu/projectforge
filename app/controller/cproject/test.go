@@ -2,6 +2,7 @@ package cproject
 
 import (
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
@@ -36,11 +37,9 @@ func TestRun(rc *fasthttp.RequestCtx) {
 		var page layout.Page
 		switch key {
 		case "diff":
-			ret := diff.Results{}
-			for _, x := range diff.AllExamples {
-				res := x.Calc()
-				ret = append(ret, res)
-			}
+			ret := lo.Map(diff.AllExamples, func(x *diff.Example, _ int) *diff.Result {
+				return x.Calc()
+			})
 			bc = append(bc, "Diff")
 			ps.Title = "Diff Test"
 			ps.Data = ret

@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
@@ -28,12 +30,11 @@ func ServiceHistory(m *model.Model, args *model.Args, addHeader bool) (*file.Fil
 func serviceHistoryVars(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("HistoryVars", "func")
 	ret.W("var (")
-	xx := make(model.Columns, 0, len(m.PKs()))
-	for _, pk := range m.PKs() {
+	var xx model.Columns = lo.Map(m.PKs(), func(pk *model.Column, _ int) *model.Column {
 		x := pk.Clone()
 		x.Name = m.Name + "_" + x.Name
-		xx = append(xx, x)
-	}
+		return x
+	})
 	ret.W("\thistoryColumns       = "+`[]string{"id", %s, "o", "n", "c", "created"}`, strings.Join(xx.NamesQuoted(), ", "))
 	ret.W("\thistoryColumnsQuoted = util.StringArrayQuoted(historyColumns)")
 	ret.W("\thistoryColumnsString = strings.Join(historyColumnsQuoted, \", \")")
@@ -69,10 +70,10 @@ func serviceHistoryGetHistories(m *model.Model, dbRef string, enums enum.Enums) 
 	pks := m.PKs()
 	joins := make([]string, 0, len(pks))
 	logs := make([]string, 0, len(pks))
-	for idx, pk := range pks {
+	lo.ForEach(pks, func(pk *model.Column, idx int) {
 		joins = append(joins, fmt.Sprintf("%s_%s = $%d", m.Name, pk.Name, idx+1))
 		logs = append(logs, pk.Camel()+" [%%v]")
-	}
+	})
 	ret.W("\tq := database.SQLSelectSimple(historyColumnsString, historyTableQuoted, s.db.Placeholder(), %q)", strings.Join(joins, " and "))
 	ret.W("\tret := historyRows{}")
 	ret.W("\terr := s.%s.Select(ctx, &ret, q, tx, logger, %s)", dbRef, strings.Join(pks.CamelNames(), ", "))
@@ -100,9 +101,9 @@ func serviceHistorySaveHistory(m *model.Model) *golang.Block {
 		max = 8
 	}
 	ret.W("\t\t%s util.UUID(),", util.StringPad("ID:", max))
-	for _, pk := range m.PKs() {
+	lo.ForEach(m.PKs(), func(pk *model.Column, _ int) {
 		ret.W("\t\t%s o.%s,", util.StringPad(m.Proper()+pk.Proper()+":", max), pk.Proper())
-	}
+	})
 	ret.W("\t\t%s util.ToJSONBytes(o, true),", util.StringPad("Old:", max))
 	ret.W("\t\t%s util.ToJSONBytes(n, true),", util.StringPad("New:", max))
 	ret.W("\t\t%s util.ToJSONBytes(diffs, true),", util.StringPad("Changes:", max))

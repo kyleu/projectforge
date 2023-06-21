@@ -1,6 +1,7 @@
 package goenum
 
 import (
+	"github.com/samber/lo"
 	"strings"
 
 	"projectforge.dev/projectforge/app/file"
@@ -27,9 +28,9 @@ func enumStruct(e *enum.Enum) *golang.Block {
 	max := util.StringArrayMaxLength(e.ValuesCamel())
 	pl := len(e.Proper())
 	maxColLength := max + pl
-	for _, v := range e.Values {
+	lo.ForEach(e.Values, func(v string, index int) {
 		ret.W("\t%s %s = %q", util.StringPad(e.Proper()+util.StringToCamel(v), maxColLength), e.Proper(), v)
-	}
+	})
 	ret.W(")")
 	return ret
 }

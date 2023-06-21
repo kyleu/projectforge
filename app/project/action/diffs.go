@@ -1,11 +1,11 @@
 package action
 
 import (
-	"github.com/samber/lo"
 	"path"
 	"strings"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/file/diff"

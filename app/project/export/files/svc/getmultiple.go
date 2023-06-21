@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
@@ -49,11 +51,11 @@ func serviceGetMultipleManyPKs(m *model.Model, dbRef string) *golang.Block {
 	tags := make([]string, 0, len(pks))
 	idxs := make([]string, 0, len(pks))
 	refs := make([]string, 0, len(pks))
-	for idx, pk := range pks {
+	lo.ForEach(pks, func(pk *model.Column, idx int) {
 		tags = append(tags, fmt.Sprintf("%s = $%%%%d", pk.Name))
 		idxs = append(idxs, fmt.Sprintf("(idx*%d)+%d", len(pks), idx+1))
 		refs = append(refs, fmt.Sprintf("x.%s", pk.Proper()))
-	}
+	})
 
 	msg := "func (s *Service) %s(ctx context.Context, tx *sqlx.Tx%s, logger util.Logger, pks ...*PK) (%s, error) {"
 	ret.W(msg, serviceGetMultipleName, getSuffix(m), m.ProperPlural())

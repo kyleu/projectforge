@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+
+	"github.com/samber/lo"
 	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
@@ -38,11 +40,11 @@ func ModuleFile(rc *fasthttp.RequestCtx) {
 		path := util.StringSplitAndTrim(pathS, "/")
 		bcAppend := "||/m/" + mod.Key + "/fs"
 		bc := []string{"modules", mod.Key, "Files" + bcAppend}
-		for _, x := range path {
+		lo.ForEach(path, func(x string, _ int) {
 			bcAppend += "/" + x
 			b := x + bcAppend
 			bc = append(bc, b)
-		}
+		})
 		ps.Title = fmt.Sprintf("[%s] /%s", mod.Key, strings.Join(path, "/"))
 		return controller.Render(rc, as, &vmodule.Files{Module: mod, Path: path}, ps, bc...)
 	})

@@ -5,6 +5,8 @@ import (
 	"strings"
 	"unicode/utf8"
 
+	"github.com/samber/lo"
+
 	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
@@ -75,12 +77,9 @@ func newModuleResult(q string, modKey string, path string, content []byte) *resu
 
 	lines := strings.Split(string(content), "\n")
 
-	var matches result.Matches
-	for idx, line := range lines {
-		m := result.MatchesFor(fmt.Sprint(idx+1), line, q)
-		matches = append(matches, m...)
-	}
-
+	matches := lo.FlatMap(lines, func(line string, idx int) []*result.Match {
+		return result.MatchesFor(fmt.Sprint(idx+1), line, q)
+	})
 	if len(matches) == 0 {
 		return nil
 	}

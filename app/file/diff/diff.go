@@ -59,16 +59,15 @@ func File(src *file.File, tgt *file.File) *Diff {
 }
 
 func Files(src file.Files, tgt file.Files, includeUnchanged bool) Diffs {
-	var ret Diffs
-	for _, s := range src {
+	return lo.FlatMap(src, func(s *file.File, index int) []*Diff {
 		p := s.FullPath()
 		t := tgt.Get(p)
 		d := File(s, t)
 		if includeUnchanged || d.Status != StatusIdentical {
-			ret = append(ret, d)
+			return Diffs{d}
 		}
-	}
-	return ret
+		return nil
+	})
 }
 
 func FileLoader(mods []string, src file.Files, tgt filesystem.FileLoader, includeUnchanged bool, logger util.Logger) (Diffs, error) {
@@ -119,14 +118,9 @@ func FileLoader(mods []string, src file.Files, tgt filesystem.FileLoader, includ
 func matchesModules(s *file.File, mods []string, tgtFile *file.File) (bool, error) {
 	if idx := strings.Index(s.Content, file.ModulePrefix); idx > 1 {
 		lines := strings.Split(s.Content, "\n")
-		lineIdx := -1
-		for idx, line := range lines {
-			if strings.Contains(line, file.ModulePrefix) {
-				lineIdx = idx
-				break
-			}
-		}
-		line := lines[lineIdx]
+		line, lineIdx, _ := lo.FindIndexOf(lines, func(line string) bool {
+			return strings.Contains(line, file.ModulePrefix)
+		})
 		if !strings.Contains(line, file.ModulePrefix) {
 			return false, errors.New("module requirement tag must be on first meaningful line of the file")
 		}

@@ -21,9 +21,9 @@ func (s *Service) GetFilenames(mods Modules, logger util.Logger) ([]string, erro
 		if err != nil {
 			return nil, err
 		}
-		for _, f := range fs {
+		lo.ForEach(fs, func(f string, _ int) {
 			ret[f] = true
-		}
+		})
 	}
 	keys := maps.Keys(ret)
 	slices.Sort(keys)

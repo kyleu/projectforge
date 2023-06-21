@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/golang"
@@ -28,19 +30,18 @@ func typesDrop(enums enum.Enums) *golang.Block {
 func typesCreate(enums enum.Enums) *golang.Block {
 	ret := golang.NewBlock("SQLCreateAll", "sql")
 	ret.W("-- {%% func TypesCreate() %%}")
-	for _, e := range enums {
+	lo.ForEach(enums, func(e *enum.Enum, _ int) {
 		// create type model_service as enum ('team', 'sprint', 'estimate', 'standup', 'retro', 'story', 'feedback', 'report');
 		q := make([]string, 0, len(e.Values))
-		for _, x := range e.Values {
+		lo.ForEach(e.Values, func(x string, _ int) {
 			q = append(q, fmt.Sprintf("'%s'", strings.ReplaceAll(x, "'", "''")))
-		}
-
+		})
 		ret.W("do $$ begin")
 		ret.W("  create type %q as enum (%s);", e.Name, strings.Join(q, ", "))
 		ret.W("exception")
 		ret.W("  when duplicate_object then null;")
 		ret.W("end $$;")
-	}
+	})
 	ret.W("-- {%% endfunc %%}")
 	return ret
 }

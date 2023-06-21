@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/util"
@@ -38,9 +39,9 @@ func (t *TemplateContext) ExtraFilesContent() string {
 		return ""
 	}
 	ret := []string{"\n    extra_files:"}
-	for _, ef := range t.Info.ExtraFiles {
+	lo.ForEach(t.Info.ExtraFiles, func(ef string, _ int) {
 		ret = append(ret, "      - "+ef)
-	}
+	})
 	return strings.Join(ret, "\n")
 }
 
@@ -49,9 +50,9 @@ func (t *TemplateContext) ExtraFilesDocker() string {
 		return ""
 	}
 	ret := make([]string, 0, len(t.Info.ExtraFiles))
-	for _, ef := range t.Info.ExtraFiles {
+	lo.ForEach(t.Info.ExtraFiles, func(ef string, _ int) {
 		ret = append(ret, fmt.Sprintf("\nCOPY %s /%s", ef, ef))
-	}
+	})
 	return strings.Join(ret, "")
 }
 
@@ -67,9 +68,9 @@ func (t *TemplateContext) IgnoredSetting() string {
 		return ""
 	}
 	ret := make([]string, 0, len(t.Ignore))
-	for _, i := range t.Ignore {
+	lo.ForEach(t.Ignore, func(i string, _ int) {
 		ret = append(ret, "/"+strings.TrimPrefix(i, "^"))
-	}
+	})
 	return " --skip-dirs \"" + strings.Join(ret, "|") + "\""
 }
 
@@ -78,9 +79,9 @@ func (t *TemplateContext) IgnoredQuoted() string {
 		return ""
 	}
 	ret := make([]string, 0, len(t.Ignore))
-	for _, i := range t.Ignore {
+	lo.ForEach(t.Ignore, func(i string, _ int) {
 		ret = append(ret, fmt.Sprintf(", %q", strings.TrimPrefix(i, "^")))
-	}
+	})
 	return strings.Join(ret, "")
 }
 

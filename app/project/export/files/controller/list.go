@@ -3,6 +3,8 @@ package controller
 import (
 	"fmt"
 
+	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
@@ -50,13 +52,13 @@ func controllerList(m *model.Model, grp *model.Column, models model.Models, enum
 			continue
 		}
 		srcCol := m.Columns.Get(rel.Src[0])
-		for _, imp := range helper.ImportsForTypes("go", "", srcCol.Type) {
+		lo.ForEach(helper.ImportsForTypes("go", "", srcCol.Type), func(imp *golang.Import, _ int) {
 			g.AddImport(imp)
-		}
+		})
 		tgtCol := relModel.Columns.Get(rel.Tgt[0])
-		for _, imp := range helper.ImportsForTypes("go", "", srcCol.Type) {
+		lo.ForEach(helper.ImportsForTypes("go", "", srcCol.Type), func(imp *golang.Import, _ int) {
 			g.AddImport(imp)
-		}
+		})
 		gt, err := model.ToGoType(srcCol.Type, srcCol.Nullable, m.Package, enums)
 		if err != nil {
 			return nil, err

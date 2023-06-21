@@ -3,6 +3,8 @@ package gomodel
 import (
 	"fmt"
 
+	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/golang"
@@ -17,9 +19,9 @@ func modelRandom(m *model.Model, enums enum.Enums) *golang.Block {
 	ret.W("func Random() *%s {", m.Proper())
 	ret.W("\treturn &%s{", m.Proper())
 	maxColLength := m.Columns.MaxCamelLength() + 1
-	for _, col := range m.Columns {
+	lo.ForEach(m.Columns, func(col *model.Column, index int) {
 		ret.W("\t\t%s %s,", util.StringPad(col.Proper()+":", maxColLength), randFor(col, m.PackageWithGroup(""), enums))
-	}
+	})
 	ret.W("\t}")
 	ret.W("}")
 	return ret

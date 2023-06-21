@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/filesystem"
 )
@@ -43,9 +45,9 @@ func (f *File) Render(addHeader bool) (*file.File, error) {
 		add(f.Imports.Render())
 	}
 
-	for _, b := range f.Blocks {
+	lo.ForEach(f.Blocks, func(b *Block, _ int) {
 		add(b.Render())
-	}
+	})
 
 	n := f.Name
 	if !strings.HasSuffix(f.Name, ".go") {

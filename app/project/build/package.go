@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 )
 
@@ -25,12 +27,9 @@ func (p *Pkg) AddDep(s string) {
 type Pkgs []*Pkg
 
 func (p Pkgs) Get(s string) *Pkg {
-	for _, x := range p {
-		if x.Path == s {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(p, nil, func(x *Pkg) bool {
+		return x.Path == s
+	})
 }
 
 func (p Pkgs) Sort() {
@@ -48,10 +47,10 @@ func (p Pkgs) ToGraph(prefix string) string {
 		ret = append(ret, fmt.Sprintf(s, args...))
 	}
 	add("graph LR;")
-	for _, pkg := range p {
-		for _, d := range pkg.Deps {
+	lo.ForEach(p, func(pkg *Pkg, _ int) {
+		lo.ForEach(pkg.Deps, func(d string, index int) {
 			add("\t%s --> %s", strings.TrimPrefix(pkg.Path, prefix), strings.TrimPrefix(d, prefix))
-		}
-	}
+		})
+	})
 	return strings.Join(ret, "\n")
 }

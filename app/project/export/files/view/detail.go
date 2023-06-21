@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/file"
@@ -25,13 +26,13 @@ func detail(m *model.Model, args *model.Args, addHeader bool) (*file.File, error
 	if len(rrs) > 0 {
 		g.AddImport(helper.ImpFilter)
 	}
-	for _, rel := range rrs {
+	lo.ForEach(rrs, func(rel *model.Relation, _ int) {
 		rm := args.Models.Get(rel.Table)
 		g.AddImport(helper.AppImport("app/" + rm.PackageWithGroup("")))
 		if rm.PackageWithGroup("") != m.PackageWithGroup("") {
 			g.AddImport(helper.AppImport("views/" + rm.PackageWithGroup("v")))
 		}
-	}
+	})
 	if len(rrs) > 0 || m.IsRevision() || m.IsHistory() || args.Audit(m) {
 		g.AddImport(helper.ImpFilter)
 	}
@@ -59,22 +60,22 @@ func exportViewDetailClass(m *model.Model, models model.Models, audit bool, g *g
 	if m.Columns.HasFormat(model.FmtCountry) {
 		g.AddImport(helper.ImpAppUtil)
 	}
-	for _, rel := range m.Relations {
+	lo.ForEach(m.Relations, func(rel *model.Relation, _ int) {
 		relModel := models.Get(rel.Table)
 		relCols := rel.SrcColumns(m)
 		relNames := strings.Join(relCols.ProperNames(), "")
 		g.AddImport(helper.AppImport("app/" + relModel.PackageWithGroup("")))
 		ret.W(commonLine, relModel.Proper(), relNames, "*"+relModel.Package, relModel.Proper())
-	}
+	})
 
 	if len(rrs) > 0 || m.IsRevision() || m.IsHistory() || audit {
 		ret.W("  Params filter.ParamSet")
 	}
-	for _, rel := range rrs {
+	lo.ForEach(rrs, func(rel *model.Relation, _ int) {
 		rm := models.Get(rel.Table)
 		rCols := rel.TgtColumns(rm)
 		ret.W(commonLine, "Rel"+rm.ProperPlural(), strings.Join(rCols.ProperNames(), ""), rm.Package, rm.ProperPlural())
-	}
+	})
 	if m.IsRevision() {
 		ret.W("  %s %s.%s", m.HistoryColumn().ProperPlural(), m.Package, m.ProperPlural())
 	}
@@ -148,7 +149,7 @@ func exportViewDetailReverseRelations(ret *golang.Block, m *model.Model, models 
 	ret.W("  <div class=\"card\">")
 	ret.W("    <h3 class=\"mb\">Relations</h3>")
 	ret.W("    <ul class=\"accordion\">")
-	for _, rel := range rels {
+	lo.ForEach(rels, func(rel *model.Relation, _ int) {
 		tgt := models.Get(rel.Table)
 		tgtCols := rel.TgtColumns(tgt)
 		tgtName := fmt.Sprintf("%sBy%s", tgt.ProperPlural(), strings.Join(tgtCols.ProperNames(), ""))
@@ -167,9 +168,9 @@ func exportViewDetailReverseRelations(ret *golang.Block, m *model.Model, models 
 		ret.W("          <div class=\"overflow clear\">")
 		var addons string
 		if m.CanTraverseRelation() {
-			for range tgt.Relations {
+			lo.ForEach(tgt.Relations, func(_ *model.Relation, _ int) {
 				addons += ", nil"
-			}
+			})
 		}
 		if m.PackageWithGroup("") == tgt.PackageWithGroup("") {
 			ret.W("            {%%%%= Table(p.Rel%s%s, p.Params, as, ps) %%%%}", tgtName, addons)
@@ -180,7 +181,7 @@ func exportViewDetailReverseRelations(ret *golang.Block, m *model.Model, models 
 		ret.W("          {%%- endif -%%}")
 		ret.W("        </div>")
 		ret.W("      </li>")
-	}
+	})
 	ret.W("    </ul>")
 	ret.W("  </div>")
 }
@@ -204,14 +205,14 @@ func viewDetailColumn(g *golang.Template, ret *golang.Block, models model.Models
 	}
 
 	var toStrings string
-	for _, rel := range rels {
+	lo.ForEach(rels, func(rel *model.Relation, _ int) {
 		relModel := models.Get(rel.Table)
 		lCols := rel.SrcColumns(m)
 		lNames := strings.Join(lCols.ProperNames(), "")
 
 		msg := "{%%%% if p.%sBy%s != nil %%%%} ({%%%%s p.%sBy%s.TitleString() %%%%}){%%%% endif %%%%}"
 		toStrings += fmt.Sprintf(msg, relModel.Proper(), lNames, relModel.Proper(), lNames)
-	}
+	})
 
 	ret.W(ind + "<td class=\"nowrap\">")
 	if col.PK && link {
@@ -222,7 +223,7 @@ func viewDetailColumn(g *golang.Template, ret *golang.Block, models model.Models
 	const l = "<a title=%q href=\"{%%%%s %s %%%%}\">{%%%%= components.SVGRef(%q, 18, 18, \"\", ps) %%%%}</a>"
 	const msgNotNull = "%s  " + l
 	const msg = "%s  {%%%% if %s%s != nil %%%%}" + l + "{%%%% endif %%%%}"
-	for _, rel := range rels {
+	lo.ForEach(rels, func(rel *model.Relation, _ int) {
 		if slices.Contains(rel.Src, col.Name) {
 			switch col.Type.Key() {
 			case types.KeyBool, types.KeyInt, types.KeyFloat:
@@ -235,6 +236,6 @@ func viewDetailColumn(g *golang.Template, ret *golang.Block, models model.Models
 				ret.W(msgNotNull, ind, relModel.Title(), rel.WebPath(m, relModel, modelKey), relModel.Icon)
 			}
 		}
-	}
+	})
 	ret.W(ind + "</td>")
 }

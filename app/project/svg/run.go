@@ -1,7 +1,7 @@
 package svg
 
 import (
-	"fmt"
+	"github.com/pkg/errors"
 	"path/filepath"
 	"strings"
 
@@ -31,13 +31,13 @@ func Run(fs filesystem.FileLoader, tgt string, logger util.Logger) (int, error) 
 	return len(svgs), nil
 }
 
-func markup(key string, bytes []byte) string {
+func markup(key string, bytes []byte) (string, error) {
 	orig, _ := cleanMarkup(strings.TrimSpace(string(bytes)), "")
 	if !strings.Contains(orig, "id=\"svg-") {
-		panic(fmt.Sprintf("no id for SVG [%s]", key))
+		return "", errors.Errorf("no id for SVG [%s]", key)
 	}
 	replaced := re.ReplaceAllLiteralString(orig, "")
-	return replaced
+	return replaced, nil
 }
 
 func loadSVGs(fs filesystem.FileLoader, logger util.Logger) ([]*SVG, error) {
@@ -46,13 +46,11 @@ func loadSVGs(fs filesystem.FileLoader, logger util.Logger) ([]*SVG, error) {
 	for _, f := range files {
 		b, err := fs.ReadFile(filepath.Join(svgPath, f))
 		if err != nil {
-			panic(err)
+			return nil, err
 		}
 		key := strings.TrimSuffix(f, ".svg")
-		svgs = append(svgs, &SVG{
-			Key:    key,
-			Markup: markup(key, b),
-		})
+		mk, err := markup(key, b)
+		svgs = append(svgs, &SVG{Key: key, Markup: mk})
 	}
 
 	slices.SortFunc(svgs, func(l *SVG, r *SVG) bool {

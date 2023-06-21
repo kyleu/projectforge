@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/enum"
@@ -14,12 +15,9 @@ import (
 type Columns []*Column
 
 func (c Columns) Get(name string) *Column {
-	for _, x := range c {
-		if x.Name == name {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(c, nil, func(x *Column) bool {
+		return x.Name == name
+	})
 }
 
 func (c Columns) OneWithTag(t string) (*Column, error) {
@@ -35,60 +33,58 @@ func (c Columns) OneWithTag(t string) (*Column, error) {
 
 func (c Columns) WithTag(t string) Columns {
 	var ret Columns
-	for _, col := range c {
+	lo.ForEach(c, func(col *Column, _ int) {
 		if col.HasTag(t) {
 			ret = append(ret, col)
 		}
-	}
+	})
 	return ret
 }
 
 func (c Columns) WithoutTag(t string) Columns {
 	var ret Columns
-	for _, col := range c {
+	lo.ForEach(c, func(col *Column, _ int) {
 		if !col.HasTag(t) {
 			ret = append(ret, col)
 		}
-	}
+	})
 	return ret
 }
 
 func (c Columns) PKs() Columns {
 	var ret Columns
-	for _, x := range c {
-		if x.PK {
-			ret = append(ret, x)
+	lo.ForEach(c, func(col *Column, _ int) {
+		if col.PK {
+			ret = append(ret, col)
 		}
-	}
+	})
 	return ret
 }
 
 func (c Columns) NonPKs() Columns {
 	var ret Columns
-	for _, x := range c {
-		if !x.PK {
-			ret = append(ret, x)
+	lo.ForEach(c, func(col *Column, _ int) {
+		if !col.PK {
+			ret = append(ret, col)
 		}
-	}
+	})
 	return ret
 }
 
 func (c Columns) Searches() Columns {
 	var ret Columns
-	for _, x := range c {
-		if x.Search {
-			ret = append(ret, x)
+	lo.ForEach(c, func(col *Column, _ int) {
+		if col.Search {
+			ret = append(ret, col)
 		}
-	}
+	})
 	return ret
 }
 
 func (c Columns) Names() []string {
-	ret := make([]string, 0, len(c))
-	for _, x := range c {
-		ret = append(ret, x.Name)
-	}
-	return ret
+	return lo.Map(c, func(x *Column, _ int) string {
+		return x.Name
+	})
 }
 
 func (c Columns) NamesQuoted() []string {
@@ -96,40 +92,32 @@ func (c Columns) NamesQuoted() []string {
 }
 
 func (c Columns) CamelNames() []string {
-	ret := make([]string, 0, len(c))
-	for _, x := range c {
-		ret = append(ret, x.Camel())
-	}
-	return ret
+	return lo.Map(c, func(x *Column, _ int) string {
+		return x.Camel()
+	})
 }
 
 func (c Columns) ProperNames() []string {
-	ret := make([]string, 0, len(c))
-	for _, x := range c {
-		ret = append(ret, x.Proper())
-	}
-	return ret
+	return lo.Map(c, func(x *Column, _ int) string {
+		return x.Proper()
+	})
 }
 
 func (c Columns) TitlesLower() []string {
-	ret := make([]string, 0, len(c))
-	for _, x := range c {
-		ret = append(ret, x.TitleLower())
-	}
-	return ret
+	return lo.Map(c, func(x *Column, _ int) string {
+		return x.TitleLower()
+	})
 }
 
 func (c Columns) ToGoStrings(prefix string) string {
-	ret := make([]string, 0, len(c))
-	for _, x := range c {
-		ret = append(ret, ToGoString(x.Type, prefix+x.Proper(), false))
-	}
+	ret := lo.Map(c, func(x *Column, _ int) string {
+		return ToGoString(x.Type, prefix+x.Proper(), false)
+	})
 	return strings.Join(ret, ", ")
 }
 
 func (c Columns) ToRefs(prefix string, relCols ...*Column) string {
-	ret := make([]string, 0, len(c))
-	for idx, x := range c {
+	ret := lo.Map(c, func(x *Column, idx int) string {
 		r := prefix + x.Proper()
 		if len(relCols) > idx {
 			tc := relCols[idx]
@@ -137,32 +125,27 @@ func (c Columns) ToRefs(prefix string, relCols ...*Column) string {
 				r = "&" + r
 			}
 		}
-		ret = append(ret, r)
-	}
+		return r
+	})
 	return strings.Join(ret, ", ")
 }
 
 func (c Columns) Types() types.Types {
-	var ret types.Types
-	for _, x := range c {
-		ret = append(ret, x.Type)
-	}
-	return ret
+	return lo.Map(c, func(x *Column, _ int) types.Type {
+		return x.Type
+	})
 }
 
 func (c Columns) ZeroVals() []string {
-	ret := make([]string, 0, len(c))
-	for _, x := range c {
-		ret = append(ret, x.ZeroVal())
-	}
-	return ret
+	return lo.Map(c, func(x *Column, _ int) string {
+		return x.ZeroVal()
+	})
 }
 
 func (c Columns) Smushed() string {
-	ret := make([]string, 0, len(c))
-	for _, x := range c {
-		ret = append(ret, x.Proper())
-	}
+	ret := lo.Map(c, func(x *Column, _ int) string {
+		return x.Proper()
+	})
 	return strings.Join(ret, "")
 }
 
@@ -179,10 +162,9 @@ func (c Columns) Args(pkg string, enums enum.Enums) (string, error) {
 }
 
 func (c Columns) Refs() string {
-	refs := make([]string, 0, len(c))
-	for _, col := range c {
-		refs = append(refs, fmt.Sprintf("%s: %s", col.Proper(), col.Camel()))
-	}
+	refs := lo.Map(c, func(col *Column, _ int) string {
+		return fmt.Sprintf("%s: %s", col.Proper(), col.Camel())
+	})
 	return strings.Join(refs, ", ")
 }
 
@@ -253,20 +235,16 @@ func (c Columns) MaxGoRowTypeLength(pkg string, enums enum.Enums, database strin
 }
 
 func (c Columns) ForDisplay(k string) Columns {
-	ret := make(Columns, 0, len(c))
-	for _, x := range c {
-		if x.ShouldDisplay(k) {
-			ret = append(ret, x)
+	return lo.FlatMap(c, func(col *Column, _ int) []*Column {
+		if col.ShouldDisplay(k) {
+			return Columns{col}
 		}
-	}
-	return ret
+		return nil
+	})
 }
 
 func (c Columns) HasFormat(f string) bool {
-	for _, col := range c {
-		if col.Format == f {
-			return true
-		}
-	}
-	return false
+	return lo.ContainsBy(c, func(col *Column) bool {
+		return col.Format == f
+	})
 }

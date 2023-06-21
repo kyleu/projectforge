@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
@@ -16,13 +17,9 @@ func (s *Service) Fetch(ctx context.Context, prj *project.Project, logger util.L
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to fetch")
 	}
-	count := 0
-	lines := strings.Split(x, "\n")
-	for _, line := range lines {
-		if strings.HasPrefix(line, "   ") {
-			count++
-		}
-	}
+	count := lo.CountBy(strings.Split(x, "\n"), func(line string) bool {
+		return strings.HasPrefix(line, "   ")
+	})
 	status := ok
 	fetched := noUpdates
 	if count > 0 {

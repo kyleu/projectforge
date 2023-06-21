@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
@@ -16,13 +18,13 @@ func serviceSearch(m *model.Model, grp *model.Column, dbRef string, enums enum.E
 	}
 	var clauses []string
 	hasEqual, hasLike := false, false
-	for _, s := range m.AllSearches(database) {
+	lo.ForEach(m.AllSearches(database), func(s string, _ int) {
 		if strings.HasPrefix(s, "=") {
 			hasEqual = true
 		} else {
 			hasLike = true
 		}
-	}
+	})
 	eq, like := "$1", "$2"
 	if database == model.SQLServer {
 		eq, like = "@p1", "@p2"
@@ -37,13 +39,13 @@ func serviceSearch(m *model.Model, grp *model.Column, dbRef string, enums enum.E
 			like = eq
 		}
 	}
-	for _, s := range m.AllSearches(database) {
+	lo.ForEach(m.AllSearches(database), func(s string, _ int) {
 		if strings.HasPrefix(s, "=") {
 			clauses = append(clauses, s+" = "+eq)
 		} else {
 			clauses = append(clauses, s+" like "+like)
 		}
-	}
+	})
 
 	ret := golang.NewBlock("search", "func")
 	grpTxt := ""

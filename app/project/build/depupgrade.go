@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/lib/telemetry"
@@ -21,12 +22,9 @@ func OnDepsUpgrade(ctx context.Context, prj *project.Project, up string, o strin
 		if err != nil {
 			return err
 		}
-		deps = make(Dependencies, 0, len(curr))
-		for _, x := range curr {
-			if x.Version != x.Available {
-				deps = append(deps, x)
-			}
-		}
+		deps = lo.Filter(curr, func(x *Dependency, index int) bool {
+			return x.Version != x.Available
+		})
 	} else {
 		if o == "" {
 			return errors.New("must provide [old] argument when upgrading")

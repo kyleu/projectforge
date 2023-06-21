@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/file"
 )
@@ -60,13 +61,13 @@ func auditHeader(ctx context.Context, fn string, pm *PrjAndMods, ret *Result) er
 	lines := strings.Split(string(content), "\n")
 	var hit bool
 	fixed := make([]string, 0, len(lines))
-	for _, line := range lines {
+	lo.ForEach(lines, func(line string, _ int) {
 		if strings.Contains(line, file.HeaderContent) {
 			hit = true
 		} else {
 			fixed = append(fixed, line)
 		}
-	}
+	})
 	if hit {
 		final := strings.Join(fixed, "\n")
 		err = tgt.WriteFile(fn, []byte(final), stat.Mode(), true)

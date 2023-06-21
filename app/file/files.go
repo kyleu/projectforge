@@ -1,19 +1,20 @@
 package file
 
 import (
-	"github.com/samber/lo"
 	"strings"
+
+	"github.com/samber/lo"
 )
 
 type Files []*File
 
 func (f Files) String() string {
 	var sb strings.Builder
-	for _, file := range f {
+	lo.ForEach(f, func(file *File, _ int) {
 		sb.WriteString(" - ")
 		sb.WriteString(file.FullPath())
 		sb.WriteString("\n")
-	}
+	})
 	return sb.String()
 }
 

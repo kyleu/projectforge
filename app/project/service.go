@@ -98,10 +98,10 @@ func (s *Service) Keys() []string {
 func (s *Service) Projects() Projects {
 	keys := s.Keys()
 	ret := make(Projects, 0, len(keys))
-	for _, key := range keys {
+	lo.ForEach(keys, func(key string, _ int) {
 		p, _ := s.Get(key)
 		ret = append(ret, p)
-	}
+	})
 	return ret
 }
 

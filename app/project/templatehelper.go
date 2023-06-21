@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 )
 
@@ -42,9 +43,9 @@ func (t *TemplateContext) HasDatabaseModule() bool {
 
 func (t *TemplateContext) ModuleMarkdown() string {
 	ret := make([]string, 0, len(t.Modules))
-	for _, m := range t.Modules {
+	lo.ForEach(t.Modules, func(m string, _ int) {
 		ret = append(ret, fmt.Sprintf("- [%s](./doc/module/%s.md)", m, m))
-	}
+	})
 	return strings.Join(ret, "\n")
 }
 

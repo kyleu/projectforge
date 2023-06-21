@@ -1,6 +1,7 @@
 package svc
 
 import (
+	"github.com/samber/lo"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -17,9 +18,9 @@ const serviceAssignmentToken = ":="
 
 func ServiceMutate(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "servicemutate")
-	for _, imp := range helper.ImportsForTypes("go", "", m.PKs().Types()...) {
+	lo.ForEach(helper.ImportsForTypes("go", "", m.PKs().Types()...), func(imp *golang.Import, _ int) {
 		g.AddImport(imp)
-	}
+	})
 	g.AddImport(helper.ImpAppUtil, helper.ImpContext, helper.ImpSQLx, helper.ImpDatabase)
 
 	if add, err := serviceCreate(m, args.Audit(m), g); err == nil {
@@ -122,9 +123,9 @@ func serviceUpdate(m *model.Model, audit bool, g *golang.File, database string) 
 		ret.W("\tif err != nil {")
 		ret.W("\t\treturn errors.Wrapf(err, \"can't get original %s [%%%%s]\", model.String())", m.TitleLower())
 		ret.W("\t}")
-		for _, c := range cc {
+		lo.ForEach(cc, func(c *model.Column, _ int) {
 			ret.W("\tmodel.%s = curr.%s", c.Proper(), c.Proper())
-		}
+		})
 	}
 
 	for _, updated := range m.Columns.WithTag("updated") {
@@ -144,9 +145,9 @@ func serviceUpdate(m *model.Model, audit bool, g *golang.File, database string) 
 
 	pks := m.PKs()
 	pkVals := make([]string, 0, len(pks))
-	for _, pk := range pks {
+	lo.ForEach(pks, func(pk *model.Column, _ int) {
 		pkVals = append(pkVals, "model."+pk.Proper())
-	}
+	})
 	if m.IsRevision() {
 		revCol := m.HistoryColumn()
 		ret.WB()
@@ -204,9 +205,9 @@ func serviceUpdateIfNeeded(m *model.Model, g *golang.File, database string) (*go
 		ret.W("\tif curr == nil || err != nil {")
 		ret.W("\t\treturn s.Create(ctx, tx, logger, model)")
 		ret.W("\t}")
-		for _, c := range cc {
+		lo.ForEach(cc, func(c *model.Column, _ int) {
 			ret.W("\tmodel.%s = curr.%s", c.Proper(), c.Proper())
-		}
+		})
 	}
 
 	for _, updated := range m.Columns.WithTag("updated") {
@@ -229,9 +230,9 @@ func serviceUpdateIfNeeded(m *model.Model, g *golang.File, database string) (*go
 
 	pks := m.PKs()
 	pkVals := make([]string, 0, len(pks))
-	for _, pk := range pks {
+	lo.ForEach(pks, func(pk *model.Column, _ int) {
 		pkVals = append(pkVals, "model."+pk.Proper())
-	}
+	})
 	if m.IsRevision() {
 		revCol := m.HistoryColumn()
 		ret.WB()
@@ -360,9 +361,9 @@ func serviceLoadCreated(g *golang.File, ret *golang.Block, m *model.Model, creat
 		if loadCurr {
 			ret.W("\t\tcurr, e := s.Get(ctx, tx, %s%s)", m.PKs().ToRefs("model."), m.SoftDeleteSuffix())
 			ret.W("\t\tif e == nil && curr != nil {")
-			for _, created := range createdCols {
+			lo.ForEach(createdCols, func(created *model.Column, _ int) {
 				ret.W("\t\t\tmodel.%s = curr.%s", created.Proper(), created.Proper())
-			}
+			})
 			ret.W("\t\t} else {")
 			for _, created := range createdCols {
 				err := serviceSetVal(created, g, ret, 3)

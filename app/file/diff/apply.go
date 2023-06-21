@@ -1,8 +1,9 @@
 package diff
 
 import (
-	"github.com/samber/lo"
 	"strings"
+
+	"github.com/samber/lo"
 
 	"github.com/pkg/errors"
 )
@@ -46,13 +47,13 @@ func applyCmds(lines []string, cmds ...*cmd) ([]string, error) {
 	ret := make([]string, 0, len(lines))
 	currIdx := 0
 
-	for _, c := range cmds {
+	lo.ForEach(cmds, func(c *cmd, _ int) {
 		for ; currIdx <= c.From+1; currIdx++ {
 			ret = append(ret, lines[currIdx])
 		}
 		ret = append(ret, c.Added...)
 		currIdx += len(c.Deleted)
-	}
+	})
 	for ; currIdx < len(lines); currIdx++ {
 		ret = append(ret, lines[currIdx])
 	}
@@ -61,7 +62,7 @@ func applyCmds(lines []string, cmds ...*cmd) ([]string, error) {
 
 func loadCmd(c *Change, inverse bool) *cmd {
 	x := &cmd{From: c.From, To: c.To}
-	for _, l := range c.Lines {
+	lo.ForEach(c.Lines, func(l *Line, _ int) {
 		lv := strings.TrimSuffix(l.V, "\n")
 		switch l.T {
 		case contextKey:
@@ -75,7 +76,7 @@ func loadCmd(c *Change, inverse bool) *cmd {
 		case addedKey:
 			x.Added = append(x.Added, lv)
 		}
-	}
+	})
 	if inverse {
 		x.Added, x.Deleted = x.Deleted, x.Added
 	}

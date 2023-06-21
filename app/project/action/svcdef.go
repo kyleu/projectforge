@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"strings"
 
+
+	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -18,16 +21,16 @@ func ServiceDefinition(p *project.Project) util.ValueMap {
 		{"name": "repo", "type": "repo", "url": p.Info.Sourcecode},
 		{"name": "url", "type": "url", "url": p.Info.Homepage},
 	}
-	for _, x := range p.Info.Deployments {
+	lo.ForEach(p.Info.Deployments, func(x string, _ int) {
 		links = append(links, util.ValueMap{"name": "deployment", "type": "link", "url": x})
-	}
+	})
 
 	tags := make([]string, 0, len(p.Tags))
 	tags = append(tags, fmt.Sprintf("service:%s", p.CleanKey()))
 	// for _, x := range p.Tags {
 	//	tags = append(tags, fmt.Sprintf("%s:%s", x, x))
 	//}
-	for _, x := range p.Modules {
+	lo.ForEach(p.Modules, func(x string, _ int) {
 		switch x {
 		case "export":
 			tags = append(tags, "codegen:true")
@@ -52,7 +55,7 @@ func ServiceDefinition(p *project.Project) util.ValueMap {
 		case "wasm":
 			tags = append(tags, "build:"+x)
 		}
-	}
+	})
 
 	gh := p.Info.AuthorID
 	if !strings.Contains(gh, "/") {
@@ -63,7 +66,7 @@ func ServiceDefinition(p *project.Project) util.ValueMap {
 		{"name": p.Info.AuthorName, "type": "email", "contact": p.Info.AuthorEmail},
 		{"name": p.Info.AuthorName, "type": "github", "contact": gh},
 	}
-	for _, x := range p.Info.Channels {
+	lo.ForEach(p.Info.Channels, func(x string, _ int) {
 		l, r := util.StringSplit(x, ':', true)
 		if l == "http" || l == "https" {
 			l = "web"
@@ -78,12 +81,12 @@ func ServiceDefinition(p *project.Project) util.ValueMap {
 			u = ch
 		}
 		contacts = append(contacts, util.ValueMap{"name": ch, "type": l, "contact": u})
-	}
+	})
 
 	docs := []util.ValueMap{{"name": "Source Code", "provider": "github", "url": p.Info.Sourcecode}}
-	for _, x := range p.Info.Docs {
+	lo.ForEach(p.Info.Docs, func(x *project.Doc, _ int) {
 		docs = append(docs, util.ValueMap{"name": x.Name, "provider": x.Provider, "url": x.URL})
-	}
+	})
 	ret := util.ValueMap{
 		"schema-version": "v2",
 		"dd-service":     p.Key,

@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/file/diff"
@@ -62,12 +63,9 @@ func limitDiffs(dfs diff.Diffs, fl string) (diff.Diffs, error) {
 	if fl == "" {
 		return dfs, nil
 	}
-	var matched diff.Diffs
-	for _, d := range dfs {
-		if d.Path == fl {
-			matched = append(matched, d)
-		}
-	}
+	matched := lo.Filter(dfs, func(d *diff.Diff, _ int) bool {
+		return d.Path == fl
+	})
 	if len(matched) == 0 {
 		return nil, errors.Errorf("no file [%s] with a difference to merge", fl)
 	}

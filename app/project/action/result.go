@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/file/diff"
 	"projectforge.dev/projectforge/app/module"
@@ -103,13 +104,13 @@ func (r *Result) AsError() error {
 
 func (r *Result) StatusLog() string {
 	fileCount := 0
-	for _, m := range r.Modules {
-		for _, d := range m.Diffs {
+	lo.ForEach(r.Modules, func(m *module.Result, _ int) {
+		lo.ForEach(m.Diffs, func(d *diff.Diff, index int) {
 			if d.Status != diff.StatusSkipped {
 				fileCount++
 			}
-		}
-	}
+		})
+	})
 	if fileCount == 0 {
 		return "<em>no changes</em>"
 	}
@@ -139,13 +140,12 @@ func (c *ResultContext) Title() string {
 type ResultContexts []*ResultContext
 
 func (x ResultContexts) Errors() []string {
-	var ret []string
-	for _, c := range x {
-		if c.Res != nil {
-			ret = append(ret, c.Res.Errors...)
+	return lo.FlatMap(x, func(c *ResultContext, _ int) []string {
+		if c.Res == nil {
+			return nil
 		}
-	}
-	return ret
+		return c.Res.Errors
+	})
 }
 
 func (x ResultContexts) Title() string {

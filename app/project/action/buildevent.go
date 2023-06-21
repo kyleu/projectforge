@@ -3,7 +3,9 @@ package action
 import (
 	"context"
 
+
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/file/diff"
 	"projectforge.dev/projectforge/app/lib/telemetry"
@@ -78,9 +80,9 @@ func onIgnored(_ context.Context, pm *PrjAndMods, r *Result) *Result {
 		return r.WithError(err)
 	}
 	res := &module.Result{Keys: []string{"ignored"}, Status: "OK"}
-	for _, x := range ign {
+	lo.ForEach(ign, func(x string, _ int) {
 		res.Diffs = append(res.Diffs, &diff.Diff{Path: x, Status: diff.StatusDifferent})
-	}
+	})
 	r.Modules = append(r.Modules, res)
 	return r
 }

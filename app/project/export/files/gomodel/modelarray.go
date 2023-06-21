@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/enum"
@@ -18,12 +20,12 @@ func Models(m *model.Model, args *model.Args, addHeader bool) (*file.File, error
 		name += "_array"
 	}
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, name)
-	for _, imp := range helper.ImportsForTypes("go", "", m.PKs().Types()...) {
+	lo.ForEach(helper.ImportsForTypes("go", "", m.PKs().Types()...), func(imp *golang.Import, _ int) {
 		g.AddImport(imp)
-	}
-	for _, imp := range helper.ImportsForTypes("string", "", m.PKs().Types()...) {
+	})
+	lo.ForEach(helper.ImportsForTypes("string", "", m.PKs().Types()...), func(imp *golang.Import, _ int) {
 		g.AddImport(imp)
-	}
+	})
 	g.AddImport(helper.ImpSlices)
 	g.AddBlocks(modelArray(m))
 	ag, err := modelArrayGet(g, m, args.Enums)
@@ -31,7 +33,7 @@ func Models(m *model.Model, args *model.Args, addHeader bool) (*file.File, error
 		return nil, err
 	}
 	g.AddBlocks(ag)
-	for _, pk := range m.PKs() {
+	lo.ForEach(m.PKs(), func(pk *model.Column, index int) {
 		if pk.Proper() != "Title" {
 			if pk.Type.Key() != types.KeyList {
 				g.AddBlocks(modelArrayGetBy(m, pk, args.Enums))
@@ -39,7 +41,7 @@ func Models(m *model.Model, args *model.Args, addHeader bool) (*file.File, error
 			g.AddBlocks(modelArrayCol(m, pk, args.Enums))
 			g.AddBlocks(modelArrayColStrings(m, pk))
 		}
-	}
+	})
 	g.AddBlocks(modelArrayTitleStrings(m), modelArrayClone(m))
 	return g.Render(addHeader)
 }
@@ -59,14 +61,14 @@ func modelArrayGet(g *golang.File, m *model.Model, enums enum.Enums) (*golang.Bl
 	ret.W("func (%s %s) Get(%s) *%s {", m.FirstLetter(), m.ProperPlural(), args, m.Proper())
 	ret.W("\tfor _, x := range %s {", m.FirstLetter())
 	comps := make([]string, 0, len(m.PKs()))
-	for _, pk := range m.PKs() {
+	lo.ForEach(m.PKs(), func(pk *model.Column, index int) {
 		if types.IsList(pk.Type) {
 			g.AddImport(helper.ImpSlices)
 			comps = append(comps, fmt.Sprintf("slices.Equal(x.%s, %s)", pk.Proper(), pk.Camel()))
 		} else {
 			comps = append(comps, fmt.Sprintf("x.%s == %s", pk.Proper(), pk.Camel()))
 		}
-	}
+	})
 	ret.W("\t\tif %s {", strings.Join(comps, " && "))
 	ret.W("\t\t\treturn x")
 	ret.W("\t\t}")

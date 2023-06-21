@@ -4,6 +4,8 @@ import (
 	"context"
 	"strings"
 
+	"github.com/samber/lo"
+
 	"github.com/pkg/errors"
 	"golang.org/x/exp/slices"
 
@@ -120,7 +122,7 @@ func LoadDepsMap(projects project.Projects, minVersions int, pSvc *project.Servi
 		if err != nil {
 			return nil, err
 		}
-		for _, dep := range deps {
+		lo.ForEach(deps, func(dep *Dependency, index int) {
 			curr, ok := ret[dep.Key]
 			if !ok {
 				curr = map[string][]string{}
@@ -131,7 +133,7 @@ func LoadDepsMap(projects project.Projects, minVersions int, pSvc *project.Servi
 				curr[dep.Version] = vrs
 			}
 			ret[dep.Key] = curr
-		}
+		})
 	}
 	for k, v := range ret {
 		if len(v) < minVersions {

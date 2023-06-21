@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/types"
@@ -54,9 +55,9 @@ func serviceGetAllRevisions(m *model.Model, dbRef string, enums enum.Enums) (*go
 	ret.W(decl, hc.Col.ProperPlural(), args, suffix, m.ProperPlural())
 	ret.W("\tparams = filters(params)")
 	placeholders := make([]string, 0, len(m.PKs()))
-	for idx, pk := range m.PKs() {
+	lo.ForEach(m.PKs(), func(pk *model.Column, idx int) {
 		placeholders = append(placeholders, fmt.Sprintf("\\\"%s\\\" = $%d", pk.Name, idx+1))
-	}
+	})
 	ret.W("\twc := \"%s\"", strings.Join(placeholders, " and "))
 	if m.IsSoftDelete() {
 		ret.W("\twc = addDeletedClause(wc, includeDeleted)")
@@ -86,9 +87,9 @@ func serviceGetRevision(m *model.Model, dbRef string, enums enum.Enums) (*golang
 	}
 	ret.W(decl, revCol.Proper(), args, revCol.Camel(), m.Proper())
 	placeholders := make([]string, 0, len(m.PKs()))
-	for idx, pk := range m.PKs() {
+	lo.ForEach(m.PKs(), func(pk *model.Column, idx int) {
 		placeholders = append(placeholders, fmt.Sprintf("\\\"%s\\\" = $%d", pk.Name, idx+1))
-	}
+	})
 	ret.W("\twc := \"%s and \\\"%s\\\" = $%d\"", strings.Join(placeholders, " and "), revCol.Name, len(m.PKs())+1)
 	ret.W("\tret := &row{}")
 	err = addJoinClause(ret, m, m.HistoryColumns(true))
@@ -113,14 +114,14 @@ func serviceGetCurrentRevisions(g *golang.File, m *model.Model, dbRef string, en
 	}
 
 	pkComps := make([]string, 0, len(pks))
-	for _, pk := range pks {
+	lo.ForEach(pks, func(pk *model.Column, idx int) {
 		if types.IsStringList(pk.Type) {
 			g.AddImport(helper.ImpSlices)
 			pkComps = append(pkComps, fmt.Sprintf("slices.Equal(x.%s, model.%s)", pk.Proper(), pk.Proper()))
 		} else {
 			pkComps = append(pkComps, fmt.Sprintf("x.%s == model.%s", pk.Proper(), pk.Proper()))
 		}
-	}
+	})
 
 	ret.W("\tvar results []*struct {")
 	maxColLength := pks.MaxCamelLength()
@@ -162,7 +163,7 @@ func serviceGetCurrentRevisionsBlock(m *model.Model, ret *golang.Block, revCol *
 	pkWCStr := make([]string, 0, len(pks))
 	pkWCIdx := make([]string, 0, len(pks))
 	pkModelRefs := make([]string, 0, len(pks))
-	for idx, pk := range pks {
+	lo.ForEach(pks, func(pk *model.Column, idx int) {
 		pkWCStr = append(pkWCStr, fmt.Sprintf("%q = $%%%%d", pk.Name))
 		if len(pks) == 1 {
 			pkWCIdx = append(pkWCIdx, "i+1")
@@ -170,7 +171,7 @@ func serviceGetCurrentRevisionsBlock(m *model.Model, ret *golang.Block, revCol *
 			pkWCIdx = append(pkWCIdx, fmt.Sprintf("(i*%d)+%d", len(pks), idx+1))
 		}
 		pkModelRefs = append(pkModelRefs, fmt.Sprintf("model.%s", pk.Proper()))
-	}
+	})
 
 	const decl = "func (s *Service) getCurrent%s(ctx context.Context, tx *sqlx.Tx, logger util.Logger, models ...*%s) (map[string]%s, error) {"
 	gt, err := model.ToGoType(revCol.Type, false, m.Package, enums)

@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"github.com/samber/lo"
 	"strings"
 
 	"projectforge.dev/projectforge/app/project/export/golang"
@@ -45,13 +46,12 @@ func controllerModelFromPath(m *model.Model) *golang.Block {
 	ret := golang.NewBlock(m.Proper()+"FromPath", "func")
 	ret.W("func %sFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*%s, error) {", m.Package, m.ClassRef())
 	pks := m.PKs()
-	for _, col := range pks {
+	lo.ForEach(pks, func(col *model.Column, index int) {
 		controllerArgFor(col, ret, "nil", 1)
-	}
-	args := make([]string, 0, len(pks))
-	for _, x := range pks {
-		args = append(args, x.Camel()+"Arg")
-	}
+	})
+	args := lo.Map(pks, func(x *model.Column, _ int) string {
+		return x.Camel() + "Arg"
+	})
 	suffix := ""
 	if m.IsSoftDelete() {
 		suffix = ", includeDeleted"

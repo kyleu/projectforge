@@ -3,6 +3,8 @@ package cmodule
 import (
 	"strings"
 
+
+	"github.com/samber/lo"
 	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
@@ -29,12 +31,9 @@ func ModuleDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		var usages project.Projects
-		for _, p := range as.Services.Projects.Projects() {
-			if p.HasModule(mod.Key) {
-				usages = append(usages, p)
-			}
-		}
+		usages := lo.Filter(as.Services.Projects.Projects(), func(p *project.Project, _ int) bool {
+			return p.HasModule(mod.Key)
+		})
 		_, html, err := doc.HTMLString("module:"+mod.Key, []byte(mod.UsageMD), func(s string) (string, string, error) {
 			ret, e := cutil.FormatMarkdown(s)
 			if e != nil {

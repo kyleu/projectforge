@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/model"
@@ -73,9 +74,7 @@ func (f *File) ToModel(tableIdx int, groups model.Groups) (*model.Model, error) 
 type Files []*File
 
 func (f Files) Headers() []map[string]any {
-	ret := make([]map[string]any, 0, len(f))
-	for _, x := range f {
-		ret = append(ret, map[string]any{"fn": x.Filename, "cols": x.Fields})
-	}
-	return ret
+	return lo.Map(f, func(x *File, _ int) map[string]any {
+		return map[string]any{"fn": x.Filename, "cols": x.Fields}
+	})
 }

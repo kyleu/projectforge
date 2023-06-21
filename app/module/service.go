@@ -71,11 +71,11 @@ func (s *Service) AddIfNeeded(ctx context.Context, key string, path string, url 
 	if err != nil {
 		return nil, false, err
 	}
-	for _, mod := range mods {
+	lo.ForEach(mods, func(mod *Module, _ int) {
 		s.cacheMu.Lock()
 		s.cache[mod.Key] = mod
 		s.cacheMu.Unlock()
-	}
+	})
 	return mods, true, nil
 }
 
@@ -117,11 +117,9 @@ func (s *Service) Modules() Modules {
 }
 
 func (s *Service) Deps() map[string][]string {
-	ret := map[string][]string{}
-	for _, m := range s.Modules() {
-		ret[m.Key] = m.Requires
-	}
-	return ret
+	return lo.SliceToMap(s.Modules(), func(m *Module) (string, []string) {
+		return m.Key, m.Requires
+	})
 }
 
 func (s *Service) Register(ctx context.Context, root string, key string, path string, u string, logger util.Logger) ([]string, error) {
@@ -137,11 +135,11 @@ func (s *Service) Register(ctx context.Context, root string, key string, path st
 }
 
 func (s *Service) Search(ctx context.Context, q string, logger util.Logger) (result.Results, error) {
-	ret := result.Results{}
-	for _, mod := range s.Modules() {
-		if res := result.NewResult("module", mod.Key, mod.WebPath(), mod.Title(), mod.IconSafe(), mod, mod, q); len(res.Matches) > 0 {
-			ret = append(ret, res)
+	return lo.FilterMap(s.Modules(), func(mod *Module, _ int) (*result.Result, bool) {
+		res := result.NewResult("module", mod.Key, mod.WebPath(), mod.Title(), mod.IconSafe(), mod, mod, q)
+		if len(res.Matches) > 0 {
+			return res, true
 		}
-	}
-	return ret, nil
+		return nil, false
+	}), nil
 }

@@ -3,6 +3,7 @@ package project
 import (
 	"fmt"
 
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 )
 
@@ -50,15 +51,15 @@ func validateModuleDeps(modules []string, deps map[string][]string, e func(code 
 	if deps == nil {
 		return
 	}
-	for _, m := range modules {
+	lo.ForEach(modules, func(m string, _ int) {
 		if currDeps, ok := deps[m]; ok && len(currDeps) > 0 {
-			for _, curr := range currDeps {
+			lo.ForEach(currDeps, func(curr string, _ int) {
 				if !slices.Contains(modules, curr) {
 					e("missing-dependency", "module [%s] requires [%s], which is not included in the project", m, curr)
 				}
-			}
+			})
 		}
-	}
+	})
 }
 
 func validateModuleConfig(p *Project, e func(code string, msg string, args ...any)) {

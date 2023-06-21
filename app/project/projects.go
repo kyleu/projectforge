@@ -21,13 +21,13 @@ func (p Projects) Root() *Project {
 
 func (p Projects) AllModules() []string {
 	var ret []string
-	for _, prj := range p {
-		for _, mod := range prj.Modules {
+	lo.ForEach(p, func(prj *Project, _ int) {
+		lo.ForEach(prj.Modules, func(mod string, _ int) {
 			if !slices.Contains(ret, mod) {
 				ret = append(ret, mod)
 			}
-		}
-	}
+		})
+	})
 	slices.Sort(ret)
 	return ret
 }

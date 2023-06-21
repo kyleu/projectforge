@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
@@ -29,14 +31,9 @@ func controllerDetail(models model.Models, m *model.Model, grp *model.Column, au
 	ret.W("\t\tps.Title = ret.TitleString() + \" (%s)\"", m.Title())
 	ret.W("\t\tps.Data = ret")
 
-	var shouldIncDel bool
-	for _, r := range rrels {
-		rm := models.Get(r.Table)
-		if rm.IsSoftDelete() {
-			shouldIncDel = true
-			break
-		}
-	}
+	_, shouldIncDel := lo.Find(rrels, func(r *model.Relation) bool {
+		return models.Get(r.Table).IsSoftDelete()
+	})
 	if shouldIncDel {
 		ret.W("\t\tincDel := cutil.QueryStringBool(rc, \"includeDeleted\")")
 	}
@@ -53,10 +50,9 @@ func controllerDetail(models model.Models, m *model.Model, grp *model.Column, au
 		ret.WB()
 	}
 	if len(argKeys)+len(revArgKeys) <= 2 {
-		args := make([]string, 0, len(argKeys))
-		for idx, k := range argKeys {
-			args = append(args, fmt.Sprintf("%s: %s", k, argVals[idx]))
-		}
+		args := lo.Map(argKeys, func(k string, idx int) string {
+			return fmt.Sprintf("%s: %s", k, argVals[idx])
+		})
 		argStr := strings.Join(args, ", ")
 		if audit {
 			msg := "\t\treturn %sRender(rc, as, &v%s.Detail{%s, AuditRecords: relatedAuditRecords}, ps, %s%s, ret.String())"
@@ -68,15 +64,15 @@ func controllerDetail(models model.Models, m *model.Model, grp *model.Column, au
 	} else {
 		ret.W("\t\treturn %sRender(rc, as, &v%s.Detail{", prefix, m.Package)
 		keyPad := util.StringArrayMaxLength(argKeys) + 1
-		for idx, k := range argKeys {
+		lo.ForEach(argKeys, func(k string, idx int) {
 			ret.W("\t\t\t%s %s,", util.StringPad(k+":", keyPad), argVals[idx])
-		}
+		})
 		if len(revArgKeys) > 0 {
 			revKeyPad := util.StringArrayMaxLength(revArgKeys) + 1
 			ret.WB()
-			for idx, k := range revArgKeys {
+			lo.ForEach(revArgKeys, func(k string, idx int) {
 				ret.W("\t\t\t%s %s,", util.StringPad(k+":", revKeyPad), revArgVals[idx])
-			}
+			})
 		}
 		if audit {
 			ret.WB()
@@ -97,7 +93,7 @@ func getArgs(models model.Models, m *model.Model, rrels model.Relations, g *gola
 		argVals = append(argVals, v)
 	}
 	argAdd("Model", "ret")
-	for _, rel := range m.Relations {
+	lo.ForEach(m.Relations, func(rel *model.Relation, _ int) {
 		rm := models.Get(rel.Table)
 		lCols := rel.SrcColumns(m)
 
@@ -106,14 +102,14 @@ func getArgs(models model.Models, m *model.Model, rrels model.Relations, g *gola
 
 		var conditions []string
 		var args []string
-		for _, col := range lCols {
+		lo.ForEach(lCols, func(col *model.Column, index int) {
 			if col.Nullable {
 				conditions = append(conditions, fmt.Sprintf("ret.%s != nil", col.Proper()))
 				args = append(args, fmt.Sprintf("*ret.%s", col.Proper()))
 			} else {
 				args = append(args, fmt.Sprintf("ret.%s", col.Proper()))
 			}
-		}
+		})
 		suffix := rm.SoftDeleteSuffix()
 		if len(conditions) == 0 {
 			ret.W("\t\t%sBy%s, _ := as.Services.%s.Get(ps.Context, nil, %s%s, ps.Logger)", rm.Camel(), lNames, rm.Proper(), strings.Join(args, ", "), suffix)
@@ -124,7 +120,7 @@ func getArgs(models model.Models, m *model.Model, rrels model.Relations, g *gola
 			ret.W("\t\t\t%sBy%s, _ = as.Services.%s.Get(ps.Context, nil, %s%s, ps.Logger)", rm.Camel(), lNames, rm.Proper(), strings.Join(args, ", "), suffix)
 			ret.W("\t\t}")
 		}
-	}
+	})
 	if len(m.Relations) > 0 {
 		ret.WB()
 	}
@@ -144,7 +140,7 @@ func getArgs(models model.Models, m *model.Model, rrels model.Relations, g *gola
 func getReverseArgs(models model.Models, m *model.Model, rrels model.Relations, ret *golang.Block) ([]string, []string) {
 	argKeys := make([]string, 0, len(rrels))
 	argVals := make([]string, 0, len(rrels))
-	for _, rrel := range rrels {
+	lo.ForEach(rrels, func(rrel *model.Relation, _ int) {
 		rm := models.Get(rrel.Table)
 		delSuffix := ""
 		if rm.IsSoftDelete() {
@@ -161,6 +157,6 @@ func getReverseArgs(models model.Models, m *model.Model, rrels model.Relations, 
 		ret.W("\t\tif err != nil {")
 		ret.W("\t\t\treturn \"\", errors.Wrap(err, \"unable to retrieve child %s\")", rm.TitlePluralLower())
 		ret.W("\t\t}")
-	}
+	})
 	return argKeys, argVals
 }

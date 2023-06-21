@@ -55,10 +55,9 @@ func (e *Enum) PackageWithGroup(prefix string) string {
 	if len(e.Group) == 0 {
 		return prefix + e.Package
 	}
-	x := make([]string, 0, len(e.Group)+1)
-	for _, g := range e.Group {
-		x = append(x, prefix+g)
-	}
+	x := lo.Map(e.Group, func(g string, _ int) string {
+		return prefix + g
+	})
 	x = append(x, prefix+e.Package)
 	return strings.Join(x, "/")
 }
@@ -68,20 +67,17 @@ func (e *Enum) HasTag(t string) bool {
 }
 
 func (e *Enum) Breadcrumbs() string {
-	ret := make([]string, 0, len(e.Group)+1)
-	for _, g := range e.Group {
-		ret = append(ret, fmt.Sprintf("%q", g))
-	}
+	ret := lo.Map(e.Group, func(g string, _ int) string {
+		return fmt.Sprintf("%q", g)
+	})
 	ret = append(ret, fmt.Sprintf("%q", e.Package))
 	return strings.Join(ret, ", ")
 }
 
 func (e *Enum) ValuesCamel() []string {
-	ret := make([]string, 0, len(e.Values))
-	for _, x := range e.Values {
-		ret = append(ret, util.StringToCamel(x))
-	}
-	return ret
+	return lo.Map(e.Values, func(x string, _ int) string {
+		return util.StringToCamel(x)
+	})
 }
 
 type Enums []*Enum

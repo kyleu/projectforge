@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/util"
 )
 
@@ -16,7 +18,7 @@ func template(svgs []*SVG) string {
 
 	maxKeyLength := 0
 	var keys []string
-	for _, svg := range svgs {
+	lo.ForEach(svgs, func(svg *SVG, _ int) {
 		if len(svg.Key) > maxKeyLength {
 			maxKeyLength = len(svg.Key)
 		}
@@ -26,7 +28,7 @@ func template(svgs []*SVG) string {
 		default:
 			keys = append(keys, fmt.Sprintf(`%q`, svg.Key))
 		}
-	}
+	})
 
 	w("// Package util $PF_" + "IGNORE" + "$")
 	w("// Code generated from files in [client/src/svg]. See " + util.AppURL + " for details. DO NOT EDIT.")
@@ -34,9 +36,9 @@ func template(svgs []*SVG) string {
 	w("")
 	w("var SVGLibrary = map[string]string{")
 	msg := "\t%-" + fmt.Sprintf("%d", maxKeyLength+3) + "s `%s`,"
-	for _, fn := range svgs {
+	lo.ForEach(svgs, func(fn *SVG, _ int) {
 		w(fmt.Sprintf(msg, `"`+fn.Key+`":`, fn.Markup))
-	}
+	})
 	w("}")
 	w("")
 	w("//nolint:lll")

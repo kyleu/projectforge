@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"strings"
 
+
+	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
@@ -14,49 +17,48 @@ func Routes(args *model.Args, addHeader bool) (*file.File, error) {
 	g := golang.NewFile("routes", []string{"app", "controller", "routes"}, "generated")
 	g.AddImport(helper.ImpRouter)
 	g.AddBlocks(routes(args))
-	for _, m := range args.Models {
+	lo.ForEach(args.Models, func(m *model.Model, index int) {
 		if len(m.Group) == 0 {
 			g.AddImport(helper.ImpAppController)
 		} else {
 			g.AddImport(helper.AppImport("app/controller/" + m.GroupString("c", "")))
 		}
-	}
+	})
 	return g.Render(addHeader)
 }
 
 func routes(args *model.Args) *golang.Block {
 	ret := golang.NewBlock("routes", "func")
-	var complexity int
-	for _, m := range args.Models {
-		complexity += (len(m.GroupedColumns()) * 7) + 8
-	}
+	complexity := lo.Sum(lo.Map(args.Models, func(m *model.Model, index int) int {
+		return (len(m.GroupedColumns()) * 7) + 8
+	}))
 	if complexity > 80 {
 		ret.W("//nolint:funlen")
 	}
 
 	ret.W("func generatedRoutes(r *router.Router) {")
 	rct := routeContent(args)
-	for _, x := range rct {
+	lo.ForEach(rct, func(x string, _ int) {
 		ret.W(x)
-	}
+	})
 	ret.W("}")
 	return ret
 }
 
 func routeContent(args *model.Args) []string {
 	out := make([]string, 0, 100)
-	for _, m := range args.Models {
+	lo.ForEach(args.Models, func(m *model.Model, _ int) {
 		out = append(out, routeModelContent(m)...)
-	}
+	})
 	return out
 }
 
 func routeModelContent(m *model.Model) []string {
 	out := make([]string, 0, 100)
 	pkNames := make([]string, 0, len(m.PKs()))
-	for _, col := range m.PKs() {
+	lo.ForEach(m.PKs(), func(col *model.Column, _ int) {
 		pkNames = append(pkNames, fmt.Sprintf("{%s}", col.Camel()))
-	}
+	})
 	pkn := strings.Join(pkNames, "/")
 
 	pkg := "controller"
@@ -64,7 +66,7 @@ func routeModelContent(m *model.Model) []string {
 		pkg = m.LastGroup("c", "")
 	}
 
-	for _, grp := range m.GroupedColumns() {
+	lo.ForEach(m.GroupedColumns(), func(grp *model.Column, index int) {
 		pathExtra := fmt.Sprintf("/%s/{%s}", grp.Camel(), grp.Camel())
 		callSuffix := fmt.Sprintf("By%s", grp.Proper())
 
@@ -76,7 +78,7 @@ func routeModelContent(m *model.Model) []string {
 		ef := fmt.Sprintf("\tr.GET(\"/%s%s/%s/edit\", %s.%sEditForm%s)", m.Route(), pathExtra, pkn, pkg, m.Proper(), callSuffix)
 		es := fmt.Sprintf("\tr.POST(\"/%s%s/%s/edit\", %s.%sEdit%s)", m.Route(), pathExtra, pkn, pkg, m.Proper(), callSuffix)
 		out = append(out, g, l, nf, ns, d, ef, es)
-	}
+	})
 
 	l := fmt.Sprintf("\tr.GET(\"/%s\", %s.%sList)", m.Route(), pkg, m.Proper())
 	nr := fmt.Sprintf("\tr.GET(\"/%s/random\", %s.%sCreateFormRandom)", m.Route(), pkg, m.Proper())

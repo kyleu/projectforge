@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
@@ -14,9 +16,9 @@ import (
 
 func History(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, m.Camel()+"history")
-	for _, imp := range helper.ImportsForTypes("go", "", m.Columns.Types()...) {
+	lo.ForEach(helper.ImportsForTypes("go", "", m.Columns.Types()...), func(imp *golang.Import, _ int) {
 		g.AddImport(imp)
-	}
+	})
 	g.AddImport(helper.ImpJSON, helper.ImpUUID, helper.ImpAppUtil)
 	mh, err := modelHistory(m, args.Enums)
 	if err != nil {
@@ -60,9 +62,9 @@ func modelHistoryToData(m *model.Model) *golang.Block {
 	ret.W("func (h *History) ToData() []any {")
 	ret.W("\treturn []any{")
 	ret.W("\t\th.ID,")
-	for _, pk := range m.PKs() {
+	lo.ForEach(m.PKs(), func(pk *model.Column, index int) {
 		ret.W("\t\th.%s%s,", m.Proper(), pk.Proper())
-	}
+	})
 	ret.W("\t\tutil.ToJSONBytes(h.Old, true),")
 	ret.W("\t\tutil.ToJSONBytes(h.New, true),")
 	ret.W("\t\tutil.ToJSONBytes(h.Changes, true),")
@@ -113,9 +115,9 @@ func modelHistoryRowToHistory(m *model.Model) *golang.Block {
 	ret.W("\tc := util.Diffs{}")
 	ret.W("\t_ = util.FromJSON(h.Changes, &c)")
 	pkCalls := make([]string, 0, len(m.PKs()))
-	for _, pk := range m.PKs() {
+	lo.ForEach(m.PKs(), func(pk *model.Column, index int) {
 		pkCalls = append(pkCalls, fmt.Sprintf("%s%s: h.%s%s", m.Proper(), pk.Proper(), m.Proper(), pk.Proper()))
-	}
+	})
 	ret.W("\treturn &History{ID: h.ID, %s, Old: o, New: n, Changes: c, Created: h.Created}", strings.Join(pkCalls, ", "))
 	ret.W("}")
 	return ret

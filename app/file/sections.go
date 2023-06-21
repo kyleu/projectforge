@@ -1,9 +1,10 @@
 package file
 
 import (
-	"github.com/samber/lo"
 	"strings"
 	"unicode/utf8"
+
+	"github.com/samber/lo"
 
 	"github.com/pkg/errors"
 	"golang.org/x/exp/slices"
