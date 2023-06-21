@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 )
 
 type stackTracer interface {
@@ -62,12 +63,12 @@ func TraceDetail(trace errors.StackTrace) []ErrorFrame {
 	lines := strings.Split(s, "\n")
 	var validLines []string
 
-	for _, line := range lines {
+	lo.ForEach(lines, func(line string, _ int) {
 		l := strings.TrimSpace(line)
 		if len(l) > 0 {
 			validLines = append(validLines, l)
 		}
-	}
+	})
 
 	var ret []ErrorFrame
 	for i := 0; i < len(validLines)-1; i += 2 {
@@ -84,9 +85,8 @@ func ErrorMerge(errs ...error) error {
 	case 1:
 		return errs[0]
 	}
-	msg := make([]string, 0, len(errs))
-	for _, e := range errs {
-		msg = append(msg, e.Error())
-	}
+	msg := lo.Map(errs, func(e error, _ int) string {
+		return e.Error()
+	})
 	return errors.Wrapf(errs[0], strings.Join(msg, ", "))
 }

@@ -6,6 +6,7 @@ import (
 	"path"
 	"strings"
 
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/lib/menu"
@@ -41,7 +42,7 @@ func docMenuCreate(logger util.Logger) *menu.Item {
 		split := strings.Split(p, "/")
 		p = strings.TrimSuffix(p, ".md")
 		mi := ret
-		for idx, comp := range split {
+		lo.ForEach(split, func(comp string, idx int) {
 			name := strings.TrimSuffix(comp, ".md")
 			addFolder := func() {
 				i := &menu.Item{Key: name, Title: util.StringToCamel(name), Icon: "folder"}
@@ -64,7 +65,7 @@ func docMenuCreate(logger util.Logger) *menu.Item {
 					mi = kid
 				}
 			}
-		}
+		})
 	}
 	slices.SortFunc(ret.Children, func(l *menu.Item, r *menu.Item) bool {
 		return l.Title < r.Title

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/samber/lo"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
@@ -64,10 +65,9 @@ func (s *Span) Attributes(attrs ...*Attribute) {
 	if s == nil || !enabled {
 		return
 	}
-	ot := make([]attribute.KeyValue, 0, len(attrs))
-	for _, attr := range attrs {
-		ot = append(ot, attr.ToOT())
-	}
+	ot := lo.Map(attrs, func(attr *Attribute, index int) attribute.KeyValue {
+		return attr.ToOT()
+	})
 	s.OT.SetAttributes(ot...)
 }
 
@@ -76,12 +76,12 @@ func (s *Span) Event(name string, attrs ...*Attribute) {
 		return
 	}
 	s.OT.AddEvent(name)
-	for _, attr := range attrs {
+	lo.ForEach(attrs, func(attr *Attribute, _ int) {
 		s.OT.SetAttributes(attribute.KeyValue{
 			Key:   attribute.Key(attr.Key),
 			Value: attribute.StringValue(fmt.Sprint(attr.Value)),
 		})
-	}
+	})
 }
 
 func (s *Span) OnError(err error) {

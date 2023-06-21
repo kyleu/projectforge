@@ -2,16 +2,16 @@ package util
 
 import (
 	"strings"
+
+	"github.com/samber/lo"
 )
 
 type Pkg []string
 
 func (p Pkg) Quoted(quote string) string {
-	ret := make(Pkg, 0, len(p))
-	for _, x := range p {
-		ret = append(ret, quote+x+quote)
-	}
-	return strings.Join(ret, ".")
+	return strings.Join(lo.Map(p, func(x string, _ int) string {
+		return quote + x + quote
+	}), ".")
 }
 
 func (p Pkg) StringWith(extra ...string) string {
@@ -34,14 +34,9 @@ func (p Pkg) Equals(other Pkg) bool {
 }
 
 func (p Pkg) Trim(src Pkg) Pkg {
-	ret := make(Pkg, 0, len(p))
-	for idx, v := range p {
-		if len(src) >= idx && src[idx] == v {
-			continue
-		}
-		ret = append(ret, v)
-	}
-	return ret
+	return lo.Filter(src, func(v string, idx int) bool {
+		return !(len(src) >= idx && src[idx] == v)
+	})
 }
 
 func (p Pkg) Drop(n int) Pkg {

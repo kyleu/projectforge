@@ -9,6 +9,7 @@ import (
 	"github.com/fasthttp/websocket"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/util"
@@ -61,7 +62,7 @@ func (s *Service) WriteChannel(message *Message, logger util.Logger, except ...u
 	if size := len(conns.ConnIDs) - len(except); size > 0 {
 		logger.Debugf("sending message [%v::%v] to [%v] connections", message.Channel, message.Cmd, size)
 	}
-	for _, conn := range conns.ConnIDs {
+	lo.ForEach(conns.ConnIDs, func(conn uuid.UUID, _ int) {
 		if !slices.Contains(except, conn) {
 			connID := conn
 
@@ -70,7 +71,7 @@ func (s *Service) WriteChannel(message *Message, logger util.Logger, except ...u
 				_ = s.write(connID, json, logger)
 			}()
 		}
-	}
+	})
 	s.WriteTap(message, logger)
 	return nil
 }

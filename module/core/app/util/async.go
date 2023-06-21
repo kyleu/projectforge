@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 )
 
 func AsyncCollect[T any, R any](items []T, f func(item T) (R, error)) ([]R, []error) {
@@ -13,20 +14,20 @@ func AsyncCollect[T any, R any](items []T, f func(item T) (R, error)) ([]R, []er
 	mu := sync.Mutex{}
 	wg := sync.WaitGroup{}
 	wg.Add(len(items))
-	for _, item := range items {
-		item := item
+	lo.ForEach(items, func(item T, index int) {
+		i := item
 		go func() {
-			r, err := f(item)
+			r, err := f(i)
 			mu.Lock()
 			if err == nil {
 				ret = append(ret, r)
 			} else {
-				errs = append(errs, errors.Wrapf(err, "error running async function for item [%v]", item))
+				errs = append(errs, errors.Wrapf(err, "error running async function for item [%v]", i))
 			}
 			mu.Unlock()
 			wg.Done()
 		}()
-	}
+	})
 	wg.Wait()
 	return ret, errs
 }
@@ -37,7 +38,7 @@ func AsyncCollectMap[T any, K comparable, R any](items []T, k func(item T) K, f 
 	mu := sync.Mutex{}
 	wg := sync.WaitGroup{}
 	wg.Add(len(items))
-	for _, item := range items {
+	lo.ForEach(items, func(item T, _ int) {
 		i := item
 		go func() {
 			key := k(i)
@@ -51,7 +52,7 @@ func AsyncCollectMap[T any, K comparable, R any](items []T, k func(item T) K, f 
 			mu.Unlock()
 			wg.Done()
 		}()
-	}
+	})
 	wg.Wait()
 	return ret, errs
 }

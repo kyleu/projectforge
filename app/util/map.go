@@ -8,6 +8,8 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
+	"golang.org/x/exp/maps"
 	"golang.org/x/exp/slices"
 )
 
@@ -20,15 +22,11 @@ func ValueMapFor(kvs ...any) ValueMap {
 }
 
 func (m ValueMap) KeysAndValues() ([]string, []any) {
-	cols := make([]string, 0, len(m))
-	vals := make([]any, 0, len(m))
-	for k := range m {
-		cols = append(cols, k)
-	}
+	cols := maps.Keys(m)
 	slices.Sort(cols)
-	for _, col := range cols {
-		vals = append(vals, m[col])
-	}
+	vals := lo.Map(cols, func(col string, _ int) any {
+		return m[col]
+	})
 	return cols, vals
 }
 
@@ -51,18 +49,13 @@ func (m ValueMap) AsChanges() (ValueMap, error) {
 		}
 	}
 
-	ret := make(ValueMap, len(keys))
-	for _, k := range keys {
-		ret[k] = vals[k]
-	}
-	return ret, nil
+	return lo.SliceToMap(keys, func(k string) (string, any) {
+		return k, vals[k]
+	}), nil
 }
 
 func (m ValueMap) Keys() []string {
-	ret := make([]string, 0, len(m))
-	for k := range m {
-		ret = append(ret, k)
-	}
+	ret := maps.Keys(m)
 	slices.Sort(ret)
 	return ret
 }
@@ -72,11 +65,11 @@ func (m ValueMap) Merge(args ...ValueMap) ValueMap {
 	for k, v := range m {
 		ret[k] = v
 	}
-	for _, arg := range args {
+	lo.ForEach(args, func(arg ValueMap, _ int) {
 		for k, v := range arg {
 			ret[k] = v
 		}
-	}
+	})
 	return ret
 }
 

@@ -1,32 +1,31 @@
 package util
 
 import (
+	"github.com/samber/lo"
 	"strings"
 
 	"github.com/pkg/errors"
 )
 
 func MarkdownTable(header []string, rows [][]string) (string, error) {
-	maxes := make([]int, 0, len(header))
-	for _, h := range header {
-		maxes = append(maxes, len(h))
-	}
-
+	maxes := lo.Map(header, func(h string, _ int) int {
+		return len(h)
+	})
 	for vi, v := range rows {
 		if len(v) != len(header) {
 			return "", errors.Errorf("row [%d] contains [%d] fields, but [%d] header fields were provided", vi, len(v), len(header))
 		}
-		for cellIdx, cellVal := range v {
+		lo.ForEach(v, func(cellVal string, cellIdx int) {
 			if cellIdx <= len(maxes)-1 && len(cellVal) > maxes[cellIdx] {
 				maxes[cellIdx] = len(cellVal)
 			}
-		}
+		})
 	}
 
 	ret := make([]string, 0, len(rows))
 	add := func(x []string) {
 		line := "| "
-		for vi, v := range x {
+		lo.ForEach(x, func(v string, vi int) {
 			mx := 0
 			if vi < len(maxes) {
 				mx = maxes[vi]
@@ -35,7 +34,7 @@ func MarkdownTable(header []string, rows [][]string) (string, error) {
 			if vi < len(x)-1 {
 				line += " | "
 			}
-		}
+		})
 		line += " |"
 		ret = append(ret, line)
 	}
@@ -43,19 +42,19 @@ func MarkdownTable(header []string, rows [][]string) (string, error) {
 	add(header)
 
 	divider := "|-"
-	for mi, m := range maxes {
+	lo.ForEach(maxes, func(m int, mi int) {
 		for i := 0; i < m; i++ {
 			divider += "-"
 		}
 		if mi < len(maxes)-1 {
 			divider += "-|-"
 		}
-	}
+	})
 	divider += "-|"
 	ret = append(ret, divider)
 
-	for _, row := range rows {
+	lo.ForEach(rows, func(row []string, _ int) {
 		add(row)
-	}
+	})
 	return strings.Join(ret, "\n"), nil
 }

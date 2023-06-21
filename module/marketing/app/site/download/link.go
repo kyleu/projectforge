@@ -1,5 +1,10 @@
 package download
 
+import (
+	"github.com/samber/lo"
+	"golang.org/x/exp/slices"
+)
+
 type Link struct {
 	URL  string `json:"url"`
 	Mode string `json:"mode"`
@@ -49,35 +54,21 @@ func (l *Link) OSIcon() string {
 type Links []*Link
 
 func (l Links) Get(mode string, os string, arch string) *Link {
-	for _, link := range l {
-		if link.Mode == mode && link.OS == os && link.Arch == arch {
-			return link
-		}
-	}
-	return nil
+	return lo.FindOrElse(l, nil, func(link *Link) bool {
+		return link.Mode == mode && link.OS == os && link.Arch == arch
+	})
 }
 
 func (l Links) GetByModes(modes ...string) Links {
-	var ret Links
-	for _, link := range l {
-		for _, m := range modes {
-			if link.Mode == m {
-				ret = append(ret, link)
-				break
-			}
-		}
-	}
-	return ret
+	return lo.Filter(l, func(link *Link, _ int) bool {
+		return slices.Contains(modes, link.Mode)
+	})
 }
 
 func (l Links) GetByOS(os string) Links {
-	var ret Links
-	for _, link := range l {
-		if link.OS == os {
-			ret = append(ret, link)
-		}
-	}
-	return ret
+	return lo.Filter(l, func(link *Link, _ int) bool {
+		return link.OS == os
+	})
 }
 
 var availableLinks Links

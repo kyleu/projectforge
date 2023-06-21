@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 )
 
 func (m ValueMap) ParseArray(path string, allowMissing bool, allowEmpty bool) ([]any, error) {
@@ -48,11 +49,7 @@ func (m ValueMap) ParseArray(path string, allowMissing bool, allowEmpty bool) ([
 		if (!allowEmpty) && len(t) == 0 {
 			return nil, errors.New("empty array")
 		}
-		a := make([]any, 0, len(t))
-		for _, x := range t {
-			a = append(a, x)
-		}
-		return a, nil
+		return InterfaceArrayFrom(t...), nil
 	case nil:
 		if !allowEmpty {
 			return nil, errors.Errorf("could not find array for path [%s]", path)
@@ -84,9 +81,7 @@ func (m ValueMap) ParseArrayString(path string, allowMissing bool, allowEmpty bo
 	if err != nil {
 		return nil, err
 	}
-	sa := make([]string, 0, len(a))
-	for _, x := range a {
-		sa = append(sa, fmt.Sprint(x))
-	}
-	return sa, nil
+	return lo.Map(a, func(x any, _ int) string {
+		return fmt.Sprint(x)
+	}), nil
 }

@@ -15,11 +15,9 @@ import (
 
 // Registers a new Connection for this Service using the provided user.Profile and websocket.Conn.
 func (s *Service) Register({{{ if .HasModule "user" }}}u *dbuser.User, {{{ end }}}profile *user.Profile{{{ if .HasModule "oauth" }}}, accts user.Accounts{{{ end }}}, c *websocket.Conn, logger util.Logger) (*Connection, error) {
-	conn := &Connection{ID: util.UUID(){{{ if .HasModule "user" }}}, User: u{{{ end }}}, Profile: profile{{{ if .HasModule "oauth" }}}, Accounts: accts{{{ end }}}, Svc: "system", socket: c}
-
+	conn := NewConnection("system", {{{ if .HasModule "user" }}}u, {{{ end }}}profile{{{ if .HasModule "oauth" }}}, accts{{{ end }}}, c)
 	s.connectionsMu.Lock()
 	defer s.connectionsMu.Unlock()
-
 	s.connections[conn.ID] = conn
 	if s.onOpen != nil {
 		err := s.onOpen(s, conn, logger)

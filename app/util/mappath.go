@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	"golang.org/x/exp/maps"
 )
 
 func (m ValueMap) GetPath(path string, allowMissing bool) (any, error) {
@@ -51,11 +52,7 @@ func getPath(i any, allowMissing bool, path ...string) (any, error) {
 			if allowMissing {
 				return nil, nil
 			}
-			keys := make([]string, 0, len(t))
-			for k := range t {
-				keys = append(keys, k)
-			}
-			return nil, errors.Errorf("map does not have key [%s] among candidates [%s]", k, strings.Join(keys, ", "))
+			return nil, errors.Errorf("map does not have key [%s] among candidates [%s]", k, strings.Join(maps.Keys(t), ", "))
 		}
 		return getPath(ret, allowMissing, path[1:]...)
 	case []any:

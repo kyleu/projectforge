@@ -9,6 +9,7 @@ import (
 
 	"github.com/iancoleman/strcase"
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 )
 
 func StringSplit(s string, sep byte, cutc bool) (string, string) {
@@ -34,15 +35,10 @@ func StringSplitLast(s string, sep byte, cutc bool) (string, string) {
 }
 
 func StringSplitAndTrim(s string, delim string) []string {
-	split := strings.Split(s, delim)
-	ret := make([]string, 0, len(split))
-	for _, x := range split {
+	return lo.FilterMap(strings.Split(s, delim), func(x string, _ int) (string, bool) {
 		x = strings.TrimSpace(x)
-		if len(x) > 0 {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+		return x, len(x) > 0
+	})
 }
 
 func StringPad(s string, size int) string {
@@ -82,7 +78,7 @@ func StringToCamel(s string, extraAcronyms ...string) string {
 func StringToTitle(s string, extraAcronyms ...string) string {
 	ret := strings.Builder{}
 	runes := []rune(StringToCamel(s, extraAcronyms...))
-	for idx, c := range runes {
+	lo.ForEach(runes, func(c rune, idx int) {
 		if idx > 0 && idx < len(runes)-1 && unicode.IsUpper(c) {
 			if !unicode.IsUpper(runes[idx+1]) {
 				ret.WriteRune(' ')
@@ -91,7 +87,7 @@ func StringToTitle(s string, extraAcronyms ...string) string {
 			}
 		}
 		ret.WriteRune(c)
-	}
+	})
 	return ret.String()
 }
 
@@ -159,9 +155,9 @@ func CountryFlag(code string) string {
 
 var acronyms = func() []string {
 	ret := []string{"Api", "Html", "Id", "Ip", "Json", "Xml", "Uri", "Url"}
-	for _, x := range ret {
+	lo.ForEach(ret, func(x string, _ int) {
 		strcase.ConfigureAcronym(strings.ToUpper(x), strings.ToLower(x))
-	}
+	})
 	return ret
 }()
 
@@ -187,11 +183,11 @@ func acr(ret string, extraAcronyms ...string) string {
 			}
 		}
 	}
-	for _, a := range acronyms {
+	lo.ForEach(acronyms, func(a string, _ int) {
 		proc(a)
-	}
-	for _, a := range extraAcronyms {
+	})
+	lo.ForEach(extraAcronyms, func(a string, _ int) {
 		proc(a)
-	}
+	})
 	return ret
 }

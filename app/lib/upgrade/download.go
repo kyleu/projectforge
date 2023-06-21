@@ -12,6 +12,7 @@ import (
 	"github.com/coreos/go-semver/semver"
 	"github.com/google/go-github/v39/github"
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/util"
 )
@@ -30,13 +31,9 @@ func assetFor(version semver.Version) string {
 
 func (s *Service) downloadAsset(ctx context.Context, version semver.Version, release *github.RepositoryRelease) ([]byte, error) {
 	candidate := assetFor(version)
-	var match *github.ReleaseAsset
-	for _, a := range release.Assets {
-		if a.Name != nil && (*a.Name) == candidate {
-			match = a
-			break
-		}
-	}
+	match := lo.FindOrElse(release.Assets, nil, func(a *github.ReleaseAsset) bool {
+		return a.Name != nil && (*a.Name) == candidate
+	})
 	if match == nil {
 		return nil, errors.Errorf("no asset available for version [%s] with name [%s]", version.String(), candidate)
 	}

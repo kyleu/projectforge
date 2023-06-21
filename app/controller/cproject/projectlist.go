@@ -96,9 +96,9 @@ func mkGoSvcs(prjs project.Projects) []string {
 		}
 		if len(p.Info.EnvVars) > 0 {
 			w("	EnvVars:     toEnvMap([]string{")
-			for _, x := range p.Info.EnvVars {
+			lo.ForEach(p.Info.EnvVars, func(x string, _ int) {
 				w("		%q,", x)
-			}
+			})
 			w("	}),")
 		}
 		w("}")

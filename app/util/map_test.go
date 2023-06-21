@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/util"
 )
@@ -19,11 +20,11 @@ func assert(t *testing.T, name string, a any, b any, err error, messages ...stri
 		return
 	}
 	msg := fmt.Sprintf("%s [%v != %v]", name, a, b)
-	for _, m := range messages {
+	lo.ForEach(messages, func(m string, _ int) {
 		if len(m) > 0 {
 			msg += "  " + m
 		}
-	}
+	})
 	t.Fatal(msg, err)
 }
 

@@ -2,6 +2,7 @@
 package cutil
 
 import (
+	"github.com/samber/lo"
 	"github.com/valyala/fasthttp"
 )
 
@@ -24,12 +25,12 @@ type ArgResults struct {
 func CollectArgs(rc *fasthttp.RequestCtx, args Args) *ArgResults {
 	ret := make(map[string]string, len(args))
 	var missing []string
-	for _, arg := range args {
+	lo.ForEach(args, func(arg *Arg, _ int) {
 		qa := rc.URI().QueryArgs()
 		if !qa.Has(arg.Key) {
 			missing = append(missing, arg.Key)
 		}
 		ret[arg.Key] = string(qa.Peek(arg.Key))
-	}
+	})
 	return &ArgResults{Args: args, Values: ret, Missing: missing}
 }

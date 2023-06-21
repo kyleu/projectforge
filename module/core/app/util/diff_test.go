@@ -6,6 +6,8 @@ package util_test
 import (
 	"testing"
 
+	"github.com/samber/lo"
+
 	"{{{ .Package }}}/app/util"
 )
 
@@ -59,7 +61,7 @@ func TestDiffs(t *testing.T) {
 		diffs := util.DiffObjects(tt.l, tt.r, "")
 		diffJSON := util.ToJSONCompact(diffs)
 		if len(diffs) == len(tt.d) {
-			for i, observed := range diffs {
+			lo.ForEach(diffs, func(observed *util.Diff, i int) {
 				expected := tt.d[i]
 				if expected.Path != observed.Path {
 					t.Errorf("%s: diff [%d] has path [%s], expected path [%s]: %s", tt.k, i, observed.Path, expected.Path, diffJSON)
@@ -70,7 +72,7 @@ func TestDiffs(t *testing.T) {
 				if expected.New != observed.New {
 					t.Errorf("%s: diff [%d] has new value [%s], expected new value [%s]: %s", tt.k, i, observed.New, expected.New, diffJSON)
 				}
-			}
+			})
 		} else {
 			t.Errorf("%s: found [%d] diffs, expected [%d]: %s", tt.k, len(diffs), len(tt.d), diffJSON)
 		}

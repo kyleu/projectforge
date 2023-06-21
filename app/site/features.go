@@ -1,6 +1,7 @@
 package site
 
 import (
+	"github.com/samber/lo"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -15,12 +16,9 @@ import (
 )
 
 func featuresMenu(mSvc *module.Service) menu.Items {
-	ms := mSvc.Modules()
-	ret := make(menu.Items, 0, len(ms))
-	for _, m := range ms {
-		ret = append(ret, &menu.Item{Key: m.Key, Title: m.Title(), Description: m.Description, Icon: m.Icon, Route: "/features/" + m.Key})
-	}
-	return ret
+	return lo.Map(mSvc.Modules(), func(m *module.Module, index int) *menu.Item {
+		return &menu.Item{Key: m.Key, Title: m.Title(), Description: m.Description, Icon: m.Icon, Route: "/features/" + m.Key}
+	})
 }
 
 func featureList(as *app.State, ps *cutil.PageState) (layout.Page, error) {
@@ -65,10 +63,10 @@ func featureFiles(path []string, as *app.State, ps *cutil.PageState) ([]string, 
 	u := "/features/" + path[1] + "/files"
 	bc := append([]string{}, path[:2]...)
 	bc = append(bc, "Files||"+u)
-	for _, x := range path[3:] {
+	lo.ForEach(path[3:], func(x string, _ int) {
 		u += "/" + x
 		bc = append(bc, x+"||"+u)
-	}
+	})
 	mod, err := as.Services.Modules.Get(path[1])
 	if err != nil {
 		return path, nil, err

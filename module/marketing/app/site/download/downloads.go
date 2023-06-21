@@ -3,7 +3,14 @@ package download
 import (
 	"fmt"
 
+	"github.com/samber/lo"
+
 	"{{{ .Package }}}/app/util"
+)
+
+var (
+	arms = []string{archARMV5, archARMV6, archARMV7}
+	mips = []string{archMIPS64Hard, archMIPS64Soft, archMIPS64LEHard, archMIPS64LESoft, archMIPSHard, archMIPSSoft, archMIPSLEHard, archMIPSLESoft}
 )
 
 func GetLinks(version string) Links {
@@ -29,15 +36,14 @@ func calcDownloadLinks(version string) Links {
 		add(u, mode, os, arch)
 	}{{{ if .Build.HasArm }}}
 	addARMs := func(mode string, os string) {
-		for _, arm := range []string{archARMV5, archARMV6, archARMV7} {
+		lo.ForEach(arms, func(arm string, index int) {
 			addDefault(mode, os, arm)
-		}
+		})
 	}{{{ end }}}{{{ if .Build.LinuxMIPS }}}
 	addMIPS := func(mode string, os string) {
-		mips := []string{archMIPS64Hard, archMIPS64Soft, archMIPS64LEHard, archMIPS64LESoft, archMIPSHard, archMIPSSoft, archMIPSLEHard, archMIPSLESoft}
-		for _, weird := range mips {
+		lo.ForEach(mips, func(weird string, _ int) {
 			addDefault(mode, os, weird)
-		}
+		})
 	}{{{ end }}}
 {{{ if .Build.Desktop }}}
 	addDefault(modeDesktop, osMac, archAMD64){{{ end }}}

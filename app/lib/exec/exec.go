@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/util"
@@ -52,9 +53,9 @@ func (e *Exec) Start(fns ...func(key string, b []byte) error) error {
 		return errors.New("process already started")
 	}
 	var w io.Writer = e.Buffer
-	for _, fn := range fns {
+	lo.ForEach(fns, func(fn func(key string, b []byte) error, _ int) {
 		w = io.MultiWriter(w, &writer{Key: e.String(), fn: fn})
-	}
+	})
 	e.Started = util.NowPointer()
 	cmd, err := util.StartProcess(e.Cmd, e.Path, nil, w, w, e.Env...)
 	if err != nil {
@@ -98,32 +99,21 @@ func (e *Exec) String() string {
 type Execs []*Exec
 
 func (m Execs) Get(key string, idx int) *Exec {
-	for _, x := range m {
-		if x.Key == key && x.Idx == idx {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(m, nil, func(x *Exec) bool {
+		return x.Key == key && x.Idx == idx
+	})
 }
 
 func (m Execs) GetByKey(key string) Execs {
-	var ret Execs
-	for _, x := range m {
-		if x.Key == key {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(m, func(x *Exec, _ int) bool {
+		return x.Key == key
+	})
 }
 
 func (m Execs) Running() int {
-	var ret int
-	for _, x := range m {
-		if x.Completed == nil {
-			ret++
-		}
-	}
-	return ret
+	return lo.CountBy(m, func(x *Exec) bool {
+		return x.Completed == nil
+	})
 }
 
 func (m Execs) Sort() {

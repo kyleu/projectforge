@@ -3,6 +3,7 @@ package telemetry
 import (
 	"context"
 
+	"github.com/samber/lo"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp"
 	"go.opentelemetry.io/otel/propagation"
@@ -87,12 +88,12 @@ func StartAsyncSpan(ctx context.Context, spanName string, logger util.Logger, op
 func spanCreate(ctx context.Context, spanName string, logger util.Logger, opts ...any) (context.Context, *Span, util.Logger) {
 	tr := otel.GetTracerProvider().Tracer(util.AppKey)
 	ssos := []trace.SpanStartOption{trace.WithSpanKind(trace.SpanKindServer)}
-	for _, opt := range opts {
+	lo.ForEach(opts, func(opt any, index int) {
 		o, ok := opt.(trace.SpanStartOption)
 		if ok {
 			ssos = append(ssos, o)
 		}
-	}
+	})
 	ctx, ot := tr.Start(ctx, spanName, ssos...)
 	sp := &Span{OT: ot}
 	if logger != nil {

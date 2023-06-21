@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 	"go.uber.org/zap/buffer"
 	"go.uber.org/zap/zapcore"
 
@@ -63,12 +64,12 @@ func (e *customEncoder) EncodeEntry(entry zapcore.Entry, fields []zapcore.Field)
 	}
 
 	addLine(fmt.Sprintf("[%s] %s %s", lvl, tm, Cyan.Add(msg)))
-	for _, ml := range msgLines {
+	lo.ForEach(msgLines, func(ml string, _ int) {
 		if strings.Contains(ml, util.AppKey) {
 			ml = Green.Add(ml)
 		}
 		addLine("  " + Cyan.Add(ml))
-	}
+	})
 	if len(data) > 0 {
 		addLine("  " + util.ToJSONCompact(data))
 	}
@@ -84,12 +85,12 @@ func (e *customEncoder) EncodeEntry(entry zapcore.Entry, fields []zapcore.Field)
 
 	if entry.Stack != "" {
 		st := strings.Split(entry.Stack, "\n")
-		for _, stl := range st {
+		lo.ForEach(st, func(stl string, index int) {
 			if strings.Contains(stl, util.AppKey) {
 				stl = Green.Add(stl)
 			}
 			addLine("  " + stl)
-		}
+		})
 	}
 	return ret, nil
 }

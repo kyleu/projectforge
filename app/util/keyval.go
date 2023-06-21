@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 )
 
@@ -20,19 +21,15 @@ func (k KeyValInt) String() string {
 type KeyValInts []*KeyValInt
 
 func (k KeyValInts) ToMap() map[string]int {
-	ret := make(map[string]int, len(k))
-	for _, x := range k {
-		ret[x.Key] = x.Count
-	}
-	return ret
+	return lo.SliceToMap(k, func(x *KeyValInt) (string, int) {
+		return x.Key, x.Count
+	})
 }
 
 func (k KeyValInts) String() string {
-	ret := make([]string, 0, len(k))
-	for _, x := range k {
-		ret = append(ret, x.String())
-	}
-	return strings.Join(ret, ", ")
+	return strings.Join(lo.Map(k, func(x *KeyValInt, _ int) string {
+		return x.String()
+	}), ", ")
 }
 
 type KeyVal[T any] struct {
@@ -47,27 +44,21 @@ func (k KeyVal[T]) String() string {
 type KeyVals[T any] []*KeyVal[T]
 
 func (k KeyVals[T]) ToMap() map[string]T {
-	ret := make(map[string]T, len(k))
-	for _, x := range k {
-		ret[x.Key] = x.Val
-	}
-	return ret
+	return lo.SliceToMap(k, func(x *KeyVal[T]) (string, T) {
+		return x.Key, x.Val
+	})
 }
 
 func (k KeyVals[T]) String() string {
-	ret := make([]string, 0, len(k))
-	for _, x := range k {
-		ret = append(ret, x.String())
-	}
-	return strings.Join(ret, ", ")
+	return strings.Join(lo.Map(k, func(x *KeyVal[T], _ int) string {
+		return x.String()
+	}), ", ")
 }
 
 func (k KeyVals[T]) Values() []T {
-	ret := make([]T, 0, len(k))
-	for _, x := range k {
-		ret = append(ret, x.Val)
-	}
-	return ret
+	return lo.Map(k, func(x *KeyVal[T], _ int) T {
+		return x.Val
+	})
 }
 
 type KeyTypeDesc struct {
@@ -90,9 +81,7 @@ func (k KeyTypeDescs) Sort() {
 
 func (k KeyTypeDescs) Array(key string) [][]string {
 	k.Sort()
-	ret := make([][]string, 0, len(k))
-	for _, x := range k {
-		ret = append(ret, x.Array(key))
-	}
-	return ret
+	return lo.Map(k, func(x *KeyTypeDesc, index int) []string {
+		return x.Array(key)
+	})
 }

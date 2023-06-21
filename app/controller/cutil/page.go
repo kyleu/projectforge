@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/samber/lo"
 	"github.com/valyala/fasthttp"
 	"golang.org/x/exp/slices"
 
@@ -64,11 +65,11 @@ type PageState struct {
 }
 
 func (p *PageState) AddIcon(keys ...string) {
-	for _, k := range keys {
+	lo.ForEach(keys, func(k string, _ int) {
 		if !slices.Contains(p.Icons, k) {
 			p.Icons = append(p.Icons, k)
 		}
-	}
+	})
 }
 
 func (p *PageState) TitleString() string {

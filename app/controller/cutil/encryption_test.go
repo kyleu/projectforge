@@ -1,6 +1,7 @@
 package cutil_test
 
 import (
+	"github.com/samber/lo"
 	"testing"
 
 	"projectforge.dev/projectforge/app/controller/cutil"
@@ -16,7 +17,7 @@ func TestEncryptDecrypt(t *testing.T) {
 		{plaintext: "Hello, world!"},
 	}
 
-	for _, tt := range gcmTests {
+	lo.ForEach(gcmTests, func(tt struct{ plaintext string }, _ int) {
 		ciphertext, err := cutil.EncryptMessage(tt.plaintext, logger)
 		if err != nil {
 			t.Fatal(err)
@@ -30,5 +31,5 @@ func TestEncryptDecrypt(t *testing.T) {
 		if plaintext != tt.plaintext {
 			t.Errorf("plaintexts don't match")
 		}
-	}
+	})
 }

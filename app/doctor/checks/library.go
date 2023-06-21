@@ -20,13 +20,9 @@ func GetCheck(key string) *doctor.Check {
 func ForModules(modules []string) doctor.Checks {
 	var ret doctor.Checks
 	for _, c := range AllChecks {
-		hit := len(c.Modules) == 0
-		for _, mod := range c.Modules {
-			if slices.Contains(modules, mod) {
-				hit = true
-				break
-			}
-		}
+		hit := lo.ContainsBy(c.Modules, func(mod string) bool {
+			return slices.Contains(modules, mod)
+		})
 		if !hit {
 			continue
 		}

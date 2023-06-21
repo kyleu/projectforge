@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
 	"{{{ .Package }}}/app/util"
@@ -61,12 +62,9 @@ func (s *Service) Leave(connID uuid.UUID, ch string, logger util.Logger) (bool, 
 		curr = newChannel(ch)
 	}
 
-	filteredConns := make([]uuid.UUID, 0, len(curr.ConnIDs))
-	for _, i := range curr.ConnIDs {
-		if i != connID {
-			filteredConns = append(filteredConns, i)
-		}
-	}
+	filteredConns := lo.FilterMap(curr.ConnIDs, func(i uuid.UUID, _ int) (uuid.UUID, bool) {
+		return i, i != connID
+	})
 	if len(filteredConns) == 0 {
 		delete(s.channels, ch)
 		return true, nil
@@ -88,11 +86,7 @@ func (s *Service) GetConnection(id uuid.UUID) *Connection {
 }
 
 func chanWithout(c []string, ch string) []string {
-	ret := make([]string, 0, len(c))
-	for _, x := range c {
-		if x != ch {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(c, func(x string, _ int) bool {
+		return x != ch
+	})
 }

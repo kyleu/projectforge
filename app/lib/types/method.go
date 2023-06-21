@@ -4,6 +4,8 @@ package types
 import (
 	"fmt"
 	"strings"
+
+	"github.com/samber/lo"
 )
 
 type Argument struct {
@@ -44,10 +46,9 @@ func (x *Method) Scalar() bool {
 }
 
 func (x *Method) String() string {
-	argStrings := make([]string, 0, len(x.Args))
-	for _, arg := range x.Args {
-		argStrings = append(argStrings, arg.String())
-	}
+	argStrings := lo.Map(x.Args, func(arg Argument, index int) string {
+		return arg.String()
+	})
 	return fmt.Sprintf("fn(%s) %s", strings.Join(argStrings, ", "), x.Ret.String())
 }
 

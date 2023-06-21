@@ -3,6 +3,7 @@ package websocket
 
 import (
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/util"
@@ -18,14 +19,10 @@ func (s *Service) GetAllMembers(key string) []*Connection {
 	if !ok {
 		return nil
 	}
-	ret := make([]*Connection, 0, len(ch.ConnIDs))
-	for _, cID := range ch.ConnIDs {
+	return lo.FilterMap(ch.ConnIDs, func(cID uuid.UUID, _ int) (*Connection, bool) {
 		c, ok := s.connections[cID]
-		if ok && c != nil {
-			ret = append(ret, c)
-		}
-	}
-	return ret
+		return c, ok
+	})
 }
 
 func (s *Service) GetOnline(key string) []uuid.UUID {
@@ -34,12 +31,12 @@ func (s *Service) GetOnline(key string) []uuid.UUID {
 		return nil
 	}
 	online := make([]uuid.UUID, 0)
-	for _, cID := range ch.ConnIDs {
+	lo.ForEach(ch.ConnIDs, func(cID uuid.UUID, _ int) {
 		c, ok := s.connections[cID]
 		if ok && c != nil && (!slices.Contains(online, c.ID)) {
 			online = append(online, c.ID)
 		}
-	}
+	})
 	return online
 }
 

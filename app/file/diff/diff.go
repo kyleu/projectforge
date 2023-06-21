@@ -130,11 +130,11 @@ func matchesModules(s *file.File, mods []string, tgtFile *file.File) (bool, erro
 			return false, errors.New("module requirement tag must contain parentheses")
 		}
 		hasAllMods := true
-		for _, mod := range util.StringSplitAndTrim(line[open+1:cl], ",") {
+		lo.ForEach(util.StringSplitAndTrim(line[open+1:cl], ","), func(mod string, _ int) {
 			if !slices.Contains(mods, mod) {
 				hasAllMods = false
 			}
-		}
+		})
 		if hasAllMods {
 			if tgtFile != nil {
 				tgtFile.Content = strings.Join(slices.Delete(lines, lineIdx, lineIdx), "\n")

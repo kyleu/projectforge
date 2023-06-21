@@ -5,6 +5,7 @@ import (
 	"encoding/xml"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 	"github.com/valyala/fasthttp"
 	"gopkg.in/yaml.v2"
 
@@ -71,10 +72,9 @@ func parseHTTPForm(rc *fasthttp.RequestCtx) (util.ValueMap, error) {
 	f.VisitAll(func(key []byte, value []byte) {
 		k := string(key)
 		xs := f.PeekMulti(k)
-		v := make([]string, 0, len(xs))
-		for _, x := range xs {
-			v = append(v, string(x))
-		}
+		v := lo.Map(xs, func(x []byte, _ int) string {
+			return string(x)
+		})
 		if len(v) == 1 {
 			ret[k] = v[0]
 		} else {

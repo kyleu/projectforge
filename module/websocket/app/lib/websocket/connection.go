@@ -3,6 +3,7 @@ package websocket
 import (
 	"fmt"
 	"sync"
+	"time"
 
 	"github.com/fasthttp/websocket"
 	"github.com/google/uuid"
@@ -22,13 +23,14 @@ type Connection struct {
 	Svc      string        `json:"svc,omitempty"`
 	ModelID  *uuid.UUID    `json:"modelID,omitempty"`
 	Channels []string      `json:"channels,omitempty"`
+	Started  time.Time     `json:"started,omitempty"`
 	socket   *websocket.Conn
 	mu       sync.Mutex
 }
 
 // Creates a new Connection.
 func NewConnection(svc string{{{ if .HasModule "user" }}}, usr *dbuser.User{{{ end }}}, profile *user.Profile{{{ if .HasModule "oauth" }}}, accounts user.Accounts{{{ end }}}, socket *websocket.Conn) *Connection {
-	return &Connection{ID: util.UUID(){{{ if .HasModule "user" }}}, User: usr{{{ end }}}, Profile: profile{{{ if .HasModule "oauth" }}}, Accounts: accounts{{{ end }}}, Svc: svc, socket: socket}
+	return &Connection{ID: util.UUID(){{{ if .HasModule "user" }}}, User: usr{{{ end }}}, Profile: profile{{{ if .HasModule "oauth" }}}, Accounts: accounts{{{ end }}}, Svc: svc, Started: time.Now(), socket: socket}
 }
 
 // Transforms this Connection to a serializable Status object.

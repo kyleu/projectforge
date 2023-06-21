@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
 	"{{{ .Package }}}/app/util"
@@ -18,13 +19,9 @@ func (f *FileSystem) ListFiles(path string, ign []string, logger util.Logger) []
 	if err != nil {
 		logger.Warnf("cannot list files in path [%s]: %+v", path, err)
 	}
-	ret := make([]os.DirEntry, 0, len(infos))
-	for _, info := range infos {
-		if !checkIgnore(ignore, info.Name()) {
-			ret = append(ret, info)
-		}
-	}
-	return ret
+	return lo.Filter(infos, func(info os.DirEntry, index int) bool {
+		return !checkIgnore(ignore, info.Name())
+	})
 }
 
 func (f *FileSystem) ListJSON(path string, ign []string, trimExtension bool, logger util.Logger) []string {
@@ -38,7 +35,7 @@ func (f *FileSystem) ListExtension(path string, ext string, ign []string, trimEx
 		logger.Warnf("cannot list [%s] in path [%s]: %+v", ext, path, err)
 	}
 	ret := make([]string, 0, len(matches))
-	for _, j := range matches {
+	lo.ForEach(matches, func(j string, _ int) {
 		if !checkIgnore(ignore, j) {
 			idx := strings.LastIndex(j, "/")
 			if idx > 0 {
@@ -49,7 +46,7 @@ func (f *FileSystem) ListExtension(path string, ext string, ign []string, trimEx
 			}
 			ret = append(ret, j)
 		}
-	}
+	})
 	slices.Sort(ret)
 	return ret
 }
@@ -64,14 +61,12 @@ func (f *FileSystem) ListDirectories(path string, ign []string, logger util.Logg
 	if err != nil {
 		logger.Warnf("cannot list path [%s]: %+v", path, err)
 	}
-	var ret []string
-	for _, f := range files {
-		if f.IsDir() {
-			if !checkIgnore(ignore, f.Name()) {
-				ret = append(ret, f.Name())
-			}
+	ret := lo.FilterMap(files, func(f os.DirEntry, _ int) (string, bool) {
+		if f.IsDir() && !checkIgnore(ignore, f.Name()) {
+			return f.Name(), true
 		}
-	}
+		return "", false
+	})
 	slices.Sort(ret)
 	return ret
 }

@@ -1,5 +1,7 @@
 package menu
 
+import "github.com/samber/lo"
+
 var Separator = &Item{}
 
 type Item struct {
@@ -26,12 +28,9 @@ func (i *Item) Desc() string {
 type Items []*Item
 
 func (i Items) Get(key string) *Item {
-	for _, item := range i {
-		if item.Key == key {
-			return item
-		}
-	}
-	return nil
+	return lo.FindOrElse(i, nil, func(item *Item) bool {
+		return item.Key == key
+	})
 }
 
 func (i Items) GetByPath(path []string) *Item {
@@ -49,9 +48,7 @@ func (i Items) GetByPath(path []string) *Item {
 }
 
 func (i Items) Keys() []string {
-	ret := make([]string, 0, len(i))
-	for _, x := range i {
-		ret = append(ret, x.Key)
-	}
-	return ret
+	return lo.Map(i, func(x *Item, _ int) string {
+		return x.Key
+	})
 }

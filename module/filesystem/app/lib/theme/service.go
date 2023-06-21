@@ -4,6 +4,7 @@ import (
 	"path/filepath"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"{{{ .Package }}}/app/lib/filesystem"
 	"{{{ .Package }}}/app/util"
@@ -31,12 +32,9 @@ func (s *Service) Clear() {
 }
 
 func (s *Service) Get(theme string, logger util.Logger) *Theme {
-	for _, t := range s.All(logger) {
-		if t.Key == theme {
-			return t
-		}
-	}
-	return ThemeDefault
+	return lo.FindOrElse(s.All(logger), ThemeDefault, func(t *Theme) bool {
+		return t.Key == theme
+	})
 }
 
 func (s *Service) Save(t *Theme, logger util.Logger) error {
@@ -58,7 +56,7 @@ func (s *Service) Save(t *Theme, logger util.Logger) error {
 func (s *Service) loadIfNeeded(logger util.Logger) {
 	if s.cache == nil {
 		s.cache = Themes{ThemeDefault}
-		for _, key := range s.files.ListJSON(s.root, nil, true, logger) {
+		lo.ForEach(s.files.ListJSON(s.root, nil, true, logger), func(key string, _ int) {
 			t := &Theme{}
 			b, err := s.files.ReadFile(filepath.Join(s.root, key+".json"))
 			if err != nil {
@@ -70,7 +68,7 @@ func (s *Service) loadIfNeeded(logger util.Logger) {
 			}
 			t.Key = key
 			s.cache = append(s.cache, t)
-		}
+		})
 		s.cache.Sort()
 	}
 }

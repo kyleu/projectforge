@@ -4,6 +4,7 @@ import (
 	"github.com/muesli/gamut"
 	"github.com/muesli/gamut/palette"
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/util"
@@ -27,11 +28,9 @@ func PaletteThemes(pal string) (Themes, error) {
 		return nil, err
 	}
 	colors := paletteColors(*p)
-	ret := make(Themes, 0, len(colors))
-	for _, c := range colors {
-		ret = append(ret, ColorTheme(c.Name, c.Color))
-	}
-	return ret, nil
+	return lo.Map(colors, func(c gamut.Color, index int) *Theme {
+		return ColorTheme(c.Name, c.Color)
+	}), nil
 }
 
 func PaletteRandomThemes(pal string, num int) (Themes, error) {

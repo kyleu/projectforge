@@ -1,6 +1,7 @@
 package site
 
 import (
+	"github.com/samber/lo"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -21,11 +22,9 @@ func componentsMenu(logger util.Logger) menu.Items {
 			logger.Warn(err)
 		}
 	}
-	ret := make(menu.Items, 0, len(vsite.AllComponents))
-	for _, c := range vsite.AllComponents {
-		ret = append(ret, &menu.Item{Key: c.Key, Title: c.Title, Description: c.Description, Icon: c.Icon, Route: "/components/" + c.Key})
-	}
-	return ret
+	return lo.Map(vsite.AllComponents, func(c *vsite.Component, index int) *menu.Item {
+		return &menu.Item{Key: c.Key, Title: c.Title, Description: c.Description, Icon: c.Icon, Route: "/components/" + c.Key}
+	})
 }
 
 func componentList(ps *cutil.PageState) (layout.Page, error) {
