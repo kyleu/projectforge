@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/types"
@@ -224,7 +223,7 @@ func viewDetailColumn(g *golang.Template, ret *golang.Block, models model.Models
 	const msgNotNull = "%s  " + l
 	const msg = "%s  {%%%% if %s%s != nil %%%%}" + l + "{%%%% endif %%%%}"
 	lo.ForEach(rels, func(rel *model.Relation, _ int) {
-		if slices.Contains(rel.Src, col.Name) {
+		if lo.Contains(rel.Src, col.Name) {
 			switch col.Type.Key() {
 			case types.KeyBool, types.KeyInt, types.KeyFloat:
 				g.AddImport(helper.ImpFmt)

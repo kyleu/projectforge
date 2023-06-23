@@ -1,7 +1,7 @@
 {% import (
   "strings"
 
-  "golang.org/x/exp/maps"
+  "github.com/samber/lo"
   "golang.org/x/exp/slices"
 
   "projectforge.dev/projectforge/app"
@@ -38,7 +38,7 @@
     <div class="mt">
       <ul class="accordion">
         {%- code
-          depKeys := maps.Keys(p.Result)
+          depKeys := lo.Keys(p.Result)
           slices.Sort(depKeys)
         -%}
         {%- for _, k := range depKeys -%}
@@ -52,7 +52,7 @@
           <div class="bd">
             <ul>
               {%- code
-                vKeys := maps.Keys(v)
+                vKeys := lo.Keys(v)
                 slices.Sort(vKeys)
               -%}
               {%- for i := len(vKeys)-1; i >= 0; i-- -%}

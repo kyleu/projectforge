@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 )
 
 type Diff struct {
@@ -45,7 +44,7 @@ func DiffObjects(l any, r any, path ...string) Diffs {
 }
 
 func DiffObjectsIgnoring(l any, r any, ignored []string, path ...string) Diffs {
-	if len(path) > 0 && slices.Contains(ignored, path[len(path)-1]) {
+	if len(path) > 0 && lo.Contains(ignored, path[len(path)-1]) {
 		return nil
 	}
 	if l == nil {
@@ -137,14 +136,14 @@ func diffMaps(l map[string]any, r any, ignored []string, path ...string) Diffs {
 		rm, _ = r.(ValueMap)
 	}
 	for k, v := range l {
-		if slices.Contains(ignored, k) {
+		if lo.Contains(ignored, k) {
 			continue
 		}
 		rv := rm[k]
 		ret = append(ret, DiffObjectsIgnoring(v, rv, ignored, append(append([]string{}, path...), k)...)...)
 	}
 	for k, v := range rm {
-		if slices.Contains(ignored, k) {
+		if lo.Contains(ignored, k) {
 			continue
 		}
 		if _, exists := l[k]; !exists {
@@ -158,14 +157,14 @@ func diffIntMaps(l map[string]int, r any, ignored []string, path ...string) Diff
 	var ret Diffs
 	rm, _ := r.(map[string]int)
 	for k, v := range l {
-		if slices.Contains(ignored, k) {
+		if lo.Contains(ignored, k) {
 			continue
 		}
 		rv := rm[k]
 		ret = append(ret, DiffObjectsIgnoring(v, rv, ignored, append(append([]string{}, path...), k)...)...)
 	}
 	for k, v := range rm {
-		if slices.Contains(ignored, k) {
+		if lo.Contains(ignored, k) {
 			continue
 		}
 		if _, exists := l[k]; !exists {

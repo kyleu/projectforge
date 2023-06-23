@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/samber/lo"
-	"golang.org/x/exp/maps"
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/file"
@@ -14,6 +13,7 @@ import (
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
 )
+
 func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	dbRef := args.DBRef()
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "serviceget")
@@ -67,7 +67,7 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 			getBys[col.Name] = model.Columns{col}
 		}
 	})
-	keys := maps.Keys(getBys)
+	keys := lo.Keys(getBys)
 	slices.Sort(keys)
 	for _, key := range keys {
 		cols := getBys[key]

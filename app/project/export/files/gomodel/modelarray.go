@@ -26,7 +26,7 @@ func Models(m *model.Model, args *model.Args, addHeader bool) (*file.File, error
 	lo.ForEach(helper.ImportsForTypes("string", "", m.PKs().Types()...), func(imp *golang.Import, _ int) {
 		g.AddImport(imp)
 	})
-	g.AddImport(helper.ImpSlices)
+	g.AddImport(helper.ImpSlices, helper.ImpLo)
 	g.AddBlocks(modelArray(m))
 	ag, err := modelArrayGet(g, m, args.Enums)
 	if err != nil {
@@ -99,7 +99,7 @@ func modelArrayGetBy(m *model.Model, col *model.Column, enums enum.Enums) *golan
 	ret.W("func (%s %s) GetBy%s(%s ...%s) %s {", m.FirstLetter(), m.ProperPlural(), name, col.CamelPlural(), t, m.ProperPlural())
 	ret.W("\tvar ret %s", m.ProperPlural())
 	ret.W("\tfor _, x := range %s {", m.FirstLetter())
-	ret.W("\t\tif slices.Contains(%s, x.%s) {", col.CamelPlural(), col.Proper())
+	ret.W("\t\tif lo.Contains(%s, x.%s) {", col.CamelPlural(), col.Proper())
 	ret.W("\t\t\tret = append(ret, x)")
 	ret.W("\t\t}")
 	ret.W("\t}")

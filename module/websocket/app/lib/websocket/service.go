@@ -11,7 +11,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 	"github.com/valyala/fasthttp"
-	"golang.org/x/exp/maps"
 	"golang.org/x/exp/slices"
 
 	"{{{ .Package }}}/app/lib/filter"
@@ -62,7 +61,7 @@ func (s *Service) UserList(params *filter.Params) Statuses {
 	ret := make(Statuses, 0)
 	ret = append(ret, systemStatus)
 	idx := 0
-	lo.ForEach(maps.Values(s.connections), func(conn *Connection, _ int) {
+	lo.ForEach(lo.Values(s.connections), func(conn *Connection, _ int) {
 		if idx >= params.Offset && (params.Limit == 0 || idx < params.Limit) {
 			ret = append(ret, conn.ToStatus())
 		}
@@ -76,7 +75,7 @@ func (s *Service) ChannelList(params *filter.Params) []string {
 	params = filter.ParamsWithDefaultOrdering("channel", params)
 	ret := make([]string, 0)
 	idx := 0
-	lo.ForEach(maps.Keys(s.channels), func(conn string, _ int) {
+	lo.ForEach(lo.Keys(s.channels), func(conn string, _ int) {
 		if idx >= params.Offset && (params.Limit == 0 || idx < params.Limit) {
 			ret = append(ret, conn)
 		}
@@ -107,18 +106,18 @@ func (s *Service) Count() int {
 func (s *Service) Status() ([]string, []*Connection, []uuid.UUID) {
 	s.connectionsMu.Lock()
 	defer s.connectionsMu.Unlock()
-	conns := maps.Values(s.connections)
+	conns := lo.Values(s.connections)
 	slices.SortFunc(conns, func(l *Connection, r *Connection) bool {
 		return l.ID.String() < r.ID.String()
 	})
-	taps := slices.Clone(maps.Keys(s.taps))
+	taps := slices.Clone(lo.Keys(s.taps))
 	return s.ChannelList(nil), conns, taps
 }
 
 func (s *Service) Close() {
 	s.connectionsMu.Lock()
 	defer s.connectionsMu.Unlock()
-	lo.ForEach(maps.Values(s.connections), func(v *Connection, _ int) {
+	lo.ForEach(lo.Values(s.connections), func(v *Connection, _ int) {
 		_ = v.Close()
 	})
 }

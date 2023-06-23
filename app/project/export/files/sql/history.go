@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
@@ -27,7 +26,7 @@ func sqlHistory(ret *golang.Block, m *model.Model, modules []string) {
 		ret.W("  \"n\" jsonb not null,")
 		ret.W("  \"c\" jsonb not null,")
 		now := "now()"
-		if slices.Contains(modules, "sqlite") && !slices.Contains(modules, "postgres") {
+		if lo.Contains(modules, "sqlite") && !lo.Contains(modules, "postgres") {
 			now = "current_timestamp"
 		}
 		ret.W("  \"created\" timestamp not null default %s,", now)

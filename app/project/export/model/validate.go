@@ -1,10 +1,10 @@
 package model
 
 import (
+	"github.com/samber/lo"
 	"strings"
 
 	"github.com/pkg/errors"
-	"golang.org/x/exp/slices"
 )
 
 var goKeywords = []string{
@@ -24,7 +24,7 @@ func (m *Model) Validate(mods []string, models Models, groups Groups) error {
 		return errors.Errorf("model [%s] uses [vendor] package, which is reserved by Go", m.Name)
 	}
 	for _, mod := range mods {
-		if slices.Contains(reservedNames[mod], m.Name) {
+		if lo.Contains(reservedNames[mod], m.Name) {
 			return errors.Errorf("model [%s] uses name which is reserved by [%s]", m.Name, mod)
 		}
 	}
@@ -44,7 +44,7 @@ func (m *Model) Validate(mods []string, models Models, groups Groups) error {
 		}
 	}
 	for _, col := range m.Columns {
-		if slices.Contains(goKeywords, col.Name) {
+		if lo.Contains(goKeywords, col.Name) {
 			return errors.Errorf("column [%s] uses reserved keyword", col.Name)
 		}
 	}

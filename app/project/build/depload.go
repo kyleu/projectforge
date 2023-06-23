@@ -6,7 +6,6 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/lib/telemetry"
@@ -42,7 +41,7 @@ func LoadDepsEasyMode(key string, fs filesystem.FileLoader) (Dependencies, error
 }
 
 func LoadDeps(
-	ctx context.Context, key string, path string, includeUpdates bool, fs filesystem.FileLoader, showAll bool, logger util.Logger,
+		ctx context.Context, key string, path string, includeUpdates bool, fs filesystem.FileLoader, showAll bool, logger util.Logger,
 ) (Dependencies, error) {
 	actual, err := LoadDepsEasyMode(key, fs)
 	if err != nil {
@@ -124,7 +123,7 @@ func LoadDepsMap(projects project.Projects, minVersions int, pSvc *project.Servi
 		lo.ForEach(deps, func(dep *Dependency, _ int) {
 			curr := lo.ValueOr(ret, dep.Key, map[string][]string{})
 			vrs := curr[dep.Version]
-			if !slices.Contains(vrs, prj.Key) {
+			if !lo.Contains(vrs, prj.Key) {
 				vrs = append(vrs, prj.Key)
 				curr[dep.Version] = vrs
 			}

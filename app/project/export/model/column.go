@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/lib/types"
@@ -78,11 +79,11 @@ func (c *Column) ProperPlural() string {
 }
 
 func (c *Column) HasTag(t string) bool {
-	return slices.Contains(c.Tags, t)
+	return lo.Contains(c.Tags, t)
 }
 
 func (c *Column) AddTag(t string) {
-	if !slices.Contains(c.Tags, t) {
+	if !lo.Contains(c.Tags, t) {
 		c.Tags = append(c.Tags, t)
 		slices.Sort(c.Tags)
 	}

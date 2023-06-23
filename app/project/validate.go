@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 )
 
 type ValidationError struct {
@@ -42,7 +41,7 @@ func validateBasic(p *Project, e func(code string, msg string, args ...any)) {
 	if len(p.Modules) == 0 {
 		e("no-modules", "no modules enabled")
 	}
-	if !slices.Contains(p.Modules, "core") {
+	if !lo.Contains(p.Modules, "core") {
 		e("no-modules", "core module not included")
 	}
 }
@@ -54,7 +53,7 @@ func validateModuleDeps(modules []string, deps map[string][]string, e func(code 
 	lo.ForEach(modules, func(m string, _ int) {
 		if currDeps, ok := deps[m]; ok && len(currDeps) > 0 {
 			lo.ForEach(currDeps, func(curr string, _ int) {
-				if !slices.Contains(modules, curr) {
+				if !lo.Contains(modules, curr) {
 					e("missing-dependency", "module [%s] requires [%s], which is not included in the project", m, curr)
 				}
 			})
@@ -79,13 +78,13 @@ func validateBuild(p *Project, e func(code string, msg string, args ...any)) {
 		p.Build = &Build{}
 	}
 
-	if p.Build.Desktop && !slices.Contains(p.Modules, "desktop") {
+	if p.Build.Desktop && !lo.Contains(p.Modules, "desktop") {
 		e("config", "Desktop is enabled, but module [desktop] isn't included")
 	}
-	if p.Build.IOS && !slices.Contains(p.Modules, "ios") {
+	if p.Build.IOS && !lo.Contains(p.Modules, "ios") {
 		e("config", "IOS is enabled, but module [ios] isn't included")
 	}
-	if p.Build.Android && !slices.Contains(p.Modules, "android") {
+	if p.Build.Android && !lo.Contains(p.Modules, "android") {
 		e("config", "Android is enabled, but module [android] isn't included")
 	}
 

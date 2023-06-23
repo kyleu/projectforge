@@ -35,11 +35,11 @@ type Model struct {
 }
 
 func (m *Model) HasTag(t string) bool {
-	return slices.Contains(m.Tags, t)
+	return lo.Contains(m.Tags, t)
 }
 
 func (m *Model) AddTag(t string) {
-	if !slices.Contains(m.Tags, t) {
+	if !lo.Contains(m.Tags, t) {
 		m.Tags = append(m.Tags, t)
 		slices.Sort(m.Tags)
 	}
@@ -83,7 +83,7 @@ func (m *Model) LinkURL(prefix string) string {
 
 func (m *Model) RelationsFor(col *Column) Relations {
 	return lo.Filter(m.Relations, func(r *Relation, _ int) bool {
-		return slices.Contains(r.Src, col.Name)
+		return lo.Contains(r.Src, col.Name)
 	})
 }
 

@@ -26,6 +26,7 @@ var (
 	ImpFmt           = golang.NewImport(golang.ImportTypeInternal, "fmt")
 	ImpJSON          = golang.NewImport(golang.ImportTypeInternal, "encoding/json")
 	ImpLayout        = AppImport("views/layout")
+	ImpLo            = golang.NewImport(golang.ImportTypeExternal, "github.com/samber/lo")
 	ImpMSSQL         = golang.NewImport(golang.ImportTypeExternal, "github.com/denisenkom/go-mssqldb").WithAlias("mssql")
 	ImpRouter        = golang.NewImport(golang.ImportTypeExternal, "github.com/fasthttp/router")
 	ImpSlices        = golang.NewImport(golang.ImportTypeExternal, "golang.org/x/exp/slices")

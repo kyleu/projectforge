@@ -8,7 +8,7 @@ package vbuild
 import (
 	"strings"
 
-	"golang.org/x/exp/maps"
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app"
@@ -83,7 +83,7 @@ func (p *DepMap) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
       <ul class="accordion">
 `)
 //line views/vbuild/DepMap.html:41
-	depKeys := maps.Keys(p.Result)
+	depKeys := lo.Keys(p.Result)
 	slices.Sort(depKeys)
 
 //line views/vbuild/DepMap.html:44
@@ -123,7 +123,7 @@ func (p *DepMap) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
             <ul>
 `)
 //line views/vbuild/DepMap.html:55
-		vKeys := maps.Keys(v)
+		vKeys := lo.Keys(v)
 		slices.Sort(vKeys)
 
 //line views/vbuild/DepMap.html:58

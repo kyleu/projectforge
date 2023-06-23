@@ -9,7 +9,6 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"golang.org/x/exp/maps"
 	"golang.org/x/exp/slices"
 )
 
@@ -22,7 +21,7 @@ func ValueMapFor(kvs ...any) ValueMap {
 }
 
 func (m ValueMap) KeysAndValues() ([]string, []any) {
-	cols := maps.Keys(m)
+	cols := lo.Keys(m)
 	slices.Sort(cols)
 	vals := lo.Map(cols, func(col string, _ int) any {
 		return m[col]
@@ -55,7 +54,7 @@ func (m ValueMap) AsChanges() (ValueMap, error) {
 }
 
 func (m ValueMap) Keys() []string {
-	ret := maps.Keys(m)
+	ret := lo.Keys(m)
 	slices.Sort(ret)
 	return ret
 }

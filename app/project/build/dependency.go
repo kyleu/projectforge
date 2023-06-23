@@ -27,7 +27,7 @@ func ParseDependency(line string) *Dependency {
 }
 
 func (d *Dependency) AddRef(r string) {
-	if slices.Contains(d.References, r) {
+	if lo.Contains(d.References, r) {
 		return
 	}
 	d.References = append(d.References, r)

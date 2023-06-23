@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/util"
 )
@@ -86,7 +85,7 @@ func (t *TemplateContext) IgnoredQuoted() string {
 }
 
 func (t *TemplateContext) ExplainPrefix() string {
-	if slices.Contains(t.Modules, "sqlite") && !slices.Contains(t.Modules, "postgres") {
+	if lo.Contains(t.Modules, "sqlite") && !lo.Contains(t.Modules, "postgres") {
 		return "explain query plan "
 	}
 	return "explain "

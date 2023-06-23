@@ -6,7 +6,6 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/file/diff"
 	"projectforge.dev/projectforge/app/module"
@@ -59,7 +58,7 @@ func auditRun(pm *PrjAndMods, ret *Result) error {
 	}
 
 	audits := lo.FilterMap(generated, func(g string, _ int) (*diff.Diff, bool) {
-		if !slices.Contains(src, g) {
+		if !lo.Contains(src, g) {
 			if (!strings.HasSuffix(g, "client.js.map")) && (!strings.HasSuffix(g, "client.css.map")) && (!strings.HasSuffix(g, "file/header.go")) {
 				return &diff.Diff{Path: g, Status: diff.StatusDifferent}, true
 			}

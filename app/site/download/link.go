@@ -3,7 +3,6 @@ package download
 
 import (
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 )
 
 type Link struct {
@@ -62,7 +61,7 @@ func (l Links) Get(mode string, os string, arch string) *Link {
 
 func (l Links) GetByModes(modes ...string) Links {
 	return lo.Filter(l, func(link *Link, _ int) bool {
-		return slices.Contains(modes, link.Mode)
+		return lo.Contains(modes, link.Mode)
 	})
 }
 

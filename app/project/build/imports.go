@@ -21,6 +21,9 @@ func Imports(self string, fix bool, targetPath string, fs filesystem.FileLoader,
 	}
 
 	for _, fn := range files {
+		if strings.HasSuffix(fn, "generated.go") || strings.HasSuffix(fn, ".pb.go") || strings.HasSuffix(fn, "schema.resolvers.go") {
+			continue
+		}
 		rlogs, rdiffs, err := importsFor(self, fix, fs, fn, targetPath)
 		if err != nil {
 			return nil, nil, errors.Wrap(err, "")

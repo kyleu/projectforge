@@ -4,7 +4,6 @@ package websocket
 import (
 	"github.com/google/uuid"
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/util"
 )
@@ -33,7 +32,7 @@ func (s *Service) GetOnline(key string) []uuid.UUID {
 	online := make([]uuid.UUID, 0)
 	lo.ForEach(ch.ConnIDs, func(cID uuid.UUID, _ int) {
 		c, ok := s.connections[cID]
-		if ok && c != nil && (!slices.Contains(online, c.ID)) {
+		if ok && c != nil && (!lo.Contains(online, c.ID)) {
 			online = append(online, c.ID)
 		}
 	})

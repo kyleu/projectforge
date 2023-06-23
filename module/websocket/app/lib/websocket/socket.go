@@ -9,7 +9,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 
 	"{{{ .Package }}}/app/util"
 )
@@ -62,7 +61,7 @@ func (s *Service) WriteChannel(message *Message, logger util.Logger, except ...u
 		logger.Debugf("sending message [%v::%v] to [%v] connections", message.Channel, message.Cmd, size)
 	}
 	lo.ForEach(conns.ConnIDs, func(conn uuid.UUID, _ int) {
-		if !slices.Contains(except, conn) {
+		if !lo.Contains(except, conn) {
 			connID := conn
 
 			go func() {

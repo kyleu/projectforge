@@ -8,7 +8,6 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"golang.org/x/exp/maps"
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
@@ -108,7 +107,7 @@ func (s *Service) Projects() Projects {
 func (s *Service) ByPath(path string) *Project {
 	s.cacheLock.Lock()
 	defer s.cacheLock.Unlock()
-	return lo.FindOrElse(maps.Values(s.cache), nil, func(v *Project) bool {
+	return lo.FindOrElse(lo.Values(s.cache), nil, func(v *Project) bool {
 		return v.Path == path
 	})
 }

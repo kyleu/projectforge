@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"golang.org/x/exp/slices"
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/util"
@@ -838,7 +838,7 @@ func StreamFormCheckbox(qw422016 *qt422016.Writer, key string, values []string, 
 //line views/components/Form.html:144
 		vutil.StreamIndent(qw422016, true, indent)
 //line views/components/Form.html:145
-		if slices.Contains(values, opt) {
+		if lo.Contains(values, opt) {
 //line views/components/Form.html:145
 			qw422016.N().S(`<label><input type="checkbox" name="`)
 //line views/components/Form.html:146
@@ -876,7 +876,7 @@ func StreamFormCheckbox(qw422016 *qt422016.Writer, key string, values []string, 
 //line views/components/Form.html:149
 		}
 //line views/components/Form.html:150
-		if slices.Contains(values, opt) {
+		if lo.Contains(values, opt) {
 //line views/components/Form.html:150
 			qw422016.N().S(`<br />`)
 //line views/components/Form.html:152

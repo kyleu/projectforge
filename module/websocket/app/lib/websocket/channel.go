@@ -5,7 +5,6 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 
 	"{{{ .Package }}}/app/util"
 )
@@ -26,7 +25,7 @@ func (s *Service) Join(connID uuid.UUID, ch string, logger util.Logger) (bool, e
 	if !ok {
 		return false, invalidConnection(connID)
 	}
-	if !slices.Contains(conn.Channels, ch) {
+	if !lo.Contains(conn.Channels, ch) {
 		conn.Channels = append(conn.Channels, ch)
 	}
 
@@ -40,7 +39,7 @@ func (s *Service) Join(connID uuid.UUID, ch string, logger util.Logger) (bool, e
 		s.channels[ch] = curr
 		created = true
 	}
-	if !slices.Contains(curr.ConnIDs, connID) {
+	if !lo.Contains(curr.ConnIDs, connID) {
 		curr.ConnIDs = append(curr.ConnIDs, connID)
 	}{{{ if .HasModule "user" }}}
 	return created, s.sendOnlineUpdate(ch, conn.ID, conn.Profile.ID, true, logger){{{ else }}}

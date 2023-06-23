@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/pkg/errors"
-	"golang.org/x/exp/slices"
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/util"
@@ -25,7 +25,7 @@ type Args struct {
 }
 
 func (a *Args) HasModule(key string) bool {
-	return slices.Contains(a.Modules, key)
+	return lo.Contains(a.Modules, key)
 }
 
 func (a *Args) DBRef() string {
@@ -75,5 +75,5 @@ func (a *Args) Database() string {
 }
 
 func (a *Args) Audit(m *Model) bool {
-	return m.HasTag("audit") && slices.Contains(a.Modules, "audit")
+	return m.HasTag("audit") && lo.Contains(a.Modules, "audit")
 }

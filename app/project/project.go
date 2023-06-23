@@ -1,9 +1,8 @@
 package project
 
 import (
+	"github.com/samber/lo"
 	"strings"
-
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/lib/theme"
 	"projectforge.dev/projectforge/app/project/export/model"
@@ -80,7 +79,7 @@ func (p *Project) DescriptionSafe() string {
 }
 
 func (p *Project) HasModule(key string) bool {
-	return slices.Contains(p.Modules, key)
+	return lo.Contains(p.Modules, key)
 }
 
 func (p *Project) ToMap() util.ValueMap {

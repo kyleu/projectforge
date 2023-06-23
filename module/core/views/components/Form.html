@@ -3,7 +3,7 @@
   "time"
 
   "github.com/google/uuid"
-  "golang.org/x/exp/slices"
+  "github.com/samber/lo"
 
   "{{{ .Package }}}/app/controller/cutil"
   "{{{ .Package }}}/app/util"
@@ -141,12 +141,12 @@
       }
     %}
     {%= vutil.Indent(true, indent) %}
-    {% if slices.Contains(values, opt) %}
+    {% if lo.Contains(values, opt) %}
       <label><input type="checkbox" name="{%s key %}" value="{%s opt %}" checked="checked" />{% space %}{%s title %}</label>
     {% else %}
       <label><input type="checkbox" name="{%s key %}" value="{%s opt %}" />{% space %}{%s title %}</label>
     {% endif %}
-    {% if slices.Contains(values, opt) %}
+    {% if lo.Contains(values, opt) %}
       <br />
     {% endif %}
   {% endfor %}

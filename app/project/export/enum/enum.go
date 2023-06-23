@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/util"
 )
@@ -63,7 +62,7 @@ func (e *Enum) PackageWithGroup(prefix string) string {
 }
 
 func (e *Enum) HasTag(t string) bool {
-	return slices.Contains(e.Tags, t)
+	return lo.Contains(e.Tags, t)
 }
 
 func (e *Enum) Breadcrumbs() string {

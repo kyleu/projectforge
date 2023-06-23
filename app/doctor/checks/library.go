@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/doctor"
 	"projectforge.dev/projectforge/app/lib/telemetry"
@@ -19,15 +18,15 @@ func GetCheck(key string) *doctor.Check {
 
 func ForModules(modules []string) doctor.Checks {
 	var ret doctor.Checks
-	for _, c := range AllChecks {
+	lo.ForEach(AllChecks, func(c *doctor.Check, _ int) {
 		hit := lo.ContainsBy(c.Modules, func(mod string) bool {
-			return slices.Contains(modules, mod)
+			return lo.Contains(modules, mod)
 		})
 		if !hit {
-			continue
+			return
 		}
 		ret = append(ret, c)
-	}
+	})
 	return ret
 }
 

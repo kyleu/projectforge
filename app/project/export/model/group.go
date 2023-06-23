@@ -1,8 +1,7 @@
 package model
 
 import (
-	"golang.org/x/exp/slices"
-
+	"github.com/samber/lo"
 	"projectforge.dev/projectforge/app/util"
 )
 
@@ -18,7 +17,7 @@ type Group struct {
 }
 
 func (g *Group) HasTag(t string) bool {
-	return slices.Contains(g.Tags, t)
+	return lo.Contains(g.Tags, t)
 }
 
 func (g *Group) IconSafe() string {

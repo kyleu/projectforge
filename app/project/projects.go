@@ -23,7 +23,7 @@ func (p Projects) AllModules() []string {
 	var ret []string
 	lo.ForEach(p, func(prj *Project, _ int) {
 		lo.ForEach(prj.Modules, func(mod string, _ int) {
-			if !slices.Contains(ret, mod) {
+			if !lo.Contains(ret, mod) {
 				ret = append(ret, mod)
 			}
 		})
@@ -48,7 +48,7 @@ func (p Projects) WithTags(tags ...string) Projects {
 	ret := make(Projects, 0, len(p))
 	for _, prj := range p {
 		for _, t := range tags {
-			if slices.Contains(prj.Tags, t) {
+			if lo.Contains(prj.Tags, t) {
 				ret = append(ret, prj)
 				break
 			}
@@ -61,7 +61,7 @@ func (p Projects) WithoutTags(tags ...string) Projects {
 	ret := make(Projects, 0, len(p))
 	lo.ForEach(p, func(prj *Project, _ int) {
 		hit := lo.ContainsBy(tags, func(t string) bool {
-			return slices.Contains(prj.Tags, t)
+			return lo.Contains(prj.Tags, t)
 		})
 		if !hit {
 			ret = append(ret, prj)
@@ -74,7 +74,7 @@ func (p Projects) Tags() []string {
 	var ret []string
 	lo.ForEach(p, func(prj *Project, _ int) {
 		for _, t := range prj.Tags {
-			if !slices.Contains(ret, t) {
+			if !lo.Contains(ret, t) {
 				ret = append(ret, t)
 				break
 			}

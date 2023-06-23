@@ -8,14 +8,9 @@ import (
 )
 
 func StringArrayMaxLength(a []string) int {
-	ret := 0
-	lo.ForEach(a, func(x string, _ int) {
-		l := len(x)
-		if l > ret {
-			ret = l
-		}
-	})
-	return ret
+	return len(lo.MaxBy(a, func(x string, max string) bool {
+		return len(x) > len(max)
+	}))
 }
 
 func StringArrayQuoted(a []string) []string {
@@ -45,15 +40,7 @@ func StringArrayFromInterfaces(a []any, maxLength int) []string {
 }
 
 func ArrayRemoveDuplicates[T comparable](x []T) []T {
-	m := make(map[T]struct{}, len(x))
-	ret := make([]T, 0, len(x))
-	lo.ForEach(x, func(item T, _ int) {
-		if _, ok := m[item]; !ok {
-			m[item] = struct{}{}
-			ret = append(ret, item)
-		}
-	})
-	return ret
+	return lo.Uniq(x)
 }
 
 func InterfaceArrayFrom[T any](x ...T) []any {
@@ -88,7 +75,7 @@ func ArrayRemoveNil[T any](x []*T) []*T {
 
 func ArrayDefererence[T any](x []*T) []T {
 	return lo.Map(x, func(item *T, _ int) T {
-		return *item
+		return lo.FromPtr(item)
 	})
 }
 

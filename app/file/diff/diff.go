@@ -131,7 +131,7 @@ func matchesModules(s *file.File, mods []string, tgtFile *file.File) (bool, erro
 		}
 		hasAllMods := true
 		lo.ForEach(util.StringSplitAndTrim(line[open+1:cl], ","), func(mod string, _ int) {
-			if !slices.Contains(mods, mod) {
+			if !lo.Contains(mods, mod) {
 				hasAllMods = false
 			}
 		})

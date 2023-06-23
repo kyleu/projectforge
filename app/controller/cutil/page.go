@@ -7,7 +7,6 @@ import (
 
 	"github.com/samber/lo"
 	"github.com/valyala/fasthttp"
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cmenu"
@@ -66,7 +65,7 @@ type PageState struct {
 
 func (p *PageState) AddIcon(keys ...string) {
 	lo.ForEach(keys, func(k string, _ int) {
-		if !slices.Contains(p.Icons, k) {
+		if !lo.Contains(p.Icons, k) {
 			p.Icons = append(p.Icons, k)
 		}
 	})

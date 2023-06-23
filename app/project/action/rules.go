@@ -6,7 +6,6 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/project/export/model"
 	"projectforge.dev/projectforge/app/project/svg"
@@ -29,10 +28,10 @@ func onRules(pm *PrjAndMods) *Result {
 	}
 	forbidden := []string{"app", "check", "down", "edit", "left", "question", "right", "search", "searchbox", "times", "up", "star"}
 	cleanIcons := lo.Reject(icons, func(x string, _ int) bool {
-		return slices.Contains(forbidden, x)
+		return lo.Contains(forbidden, x)
 	})
 	lo.ForEach(pm.EArgs.Models, func(m *model.Model, _ int) {
-		for slices.Contains(forbidden, m.Icon) {
+		for lo.Contains(forbidden, m.Icon) {
 			idx := util.StringHash(m.Name) % uint32(len(cleanIcons))
 			m.Icon = cleanIcons[idx]
 		}

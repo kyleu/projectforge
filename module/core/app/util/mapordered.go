@@ -6,7 +6,6 @@ import (
 	"encoding/xml"
 
 	"github.com/samber/lo"
-	"golang.org/x/exp/maps"
 	"golang.org/x/exp/slices"
 )
 
@@ -70,7 +69,7 @@ func (o *OrderedMap[V]) UnmarshalJSON(b []byte) error {
 	}
 
 	index := make(map[string]int)
-	lo.ForEach(maps.Keys(o.Map), func(key string, _ int) {
+	lo.ForEach(lo.Keys(o.Map), func(key string, _ int) {
 		o.Order = append(o.Order, key)
 		esc := ToJSONBytes(key, false) // escape the key
 		index[key] = bytes.Index(b, esc)

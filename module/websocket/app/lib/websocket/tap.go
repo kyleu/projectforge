@@ -6,7 +6,6 @@ import (
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
 	"github.com/valyala/fasthttp"
-	"golang.org/x/exp/maps"
 
 	"{{{ .Package }}}/app/util"
 )
@@ -52,7 +51,7 @@ func (s *Service) WriteTap(message *Message, logger util.Logger) {
 		return
 	}
 	b := util.ToJSONBytes(message, true)
-	lo.ForEach(maps.Values(s.taps), func(tap *websocket.Conn, _ int) {
+	lo.ForEach(lo.Values(s.taps), func(tap *websocket.Conn, _ int) {
 		err := tap.WriteMessage(websocket.TextMessage, b)
 		if err != nil {
 			logger.Warnf("error writing tap message: %s", err.Error())

@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"golang.org/x/exp/maps"
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app"
@@ -264,7 +264,7 @@ func streamrenderTypes(qw422016 *qt422016.Writer, pth []string, files stats.File
 `)
 //line views/vproject/FileStats.html:74
 	exts := files.Extensions()
-	extKeys := maps.Keys(exts)
+	extKeys := lo.Keys(exts)
 	slices.Sort(extKeys)
 
 //line views/vproject/FileStats.html:78

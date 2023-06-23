@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/types"
@@ -78,7 +77,7 @@ func exportViewTableFunc(m *model.Model, models model.Models, enums enum.Enums, 
 }
 
 func viewTableColumn(
-	g *golang.Template, ret *golang.Block, models model.Models, m *model.Model, link bool, col *model.Column, modelKey string, prefix string, indent int,
+		g *golang.Template, ret *golang.Block, models model.Models, m *model.Model, link bool, col *model.Column, modelKey string, prefix string, indent int,
 ) {
 	ind := util.StringRepeat("  ", indent)
 	rels := m.RelationsFor(col)
@@ -130,7 +129,7 @@ func viewTableColumn(
 	const msgNotNull = "%s  " + l
 	const msg = "%s  {%%%% if %s%s != nil %%%%}" + l + "{%%%% endif %%%%}"
 	lo.ForEach(rels, func(rel *model.Relation, _ int) {
-		if slices.Contains(rel.Src, col.Name) {
+		if lo.Contains(rel.Src, col.Name) {
 			switch col.Type.Key() {
 			case types.KeyBool, types.KeyInt, types.KeyFloat:
 				g.AddImport(helper.ImpFmt)

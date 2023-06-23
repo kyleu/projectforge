@@ -1,7 +1,7 @@
 {% import (
   "fmt"
 
-  "golang.org/x/exp/maps"
+  "github.com/samber/lo"
   "golang.org/x/exp/slices"
 
   "{{{ .Package }}}/app"
@@ -23,7 +23,7 @@
     <table class="mt expanded">
       <tbody>
         {%- code
-          keys := maps.Keys(ps.Session)
+          keys := lo.Keys(ps.Session)
           slices.Sort(keys)
         -%}
         {%- for _, k := range keys -%}

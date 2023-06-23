@@ -10,7 +10,7 @@ package vadmin
 import (
 	"fmt"
 
-	"golang.org/x/exp/maps"
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app"
@@ -57,7 +57,7 @@ func (p *Session) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
       <tbody>
 `)
 //line views/vadmin/Session.html:27
-		keys := maps.Keys(ps.Session)
+		keys := lo.Keys(ps.Session)
 		slices.Sort(keys)
 
 //line views/vadmin/Session.html:30

@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 )
 
 const goStdBin = "go"
@@ -34,7 +33,7 @@ func (t *TemplateContext) SourceTrimmed() string {
 }
 
 func (t *TemplateContext) HasModule(m string) bool {
-	return slices.Contains(t.Modules, m)
+	return lo.Contains(t.Modules, m)
 }
 
 func (t *TemplateContext) HasDatabaseModule() bool {
@@ -115,15 +114,15 @@ func (t *TemplateContext) GoBinarySafe() string {
 }
 
 func (t *TemplateContext) Placeholder(idx int) string {
-	if slices.Contains(t.Modules, "postgres") || slices.Contains(t.Modules, "sqlite") {
+	if lo.Contains(t.Modules, "postgres") || lo.Contains(t.Modules, "sqlite") {
 		return fmt.Sprintf("$%d", idx)
 	}
-	if slices.Contains(t.Modules, "sqlserver") {
+	if lo.Contains(t.Modules, "sqlserver") {
 		return fmt.Sprintf("@p%d", idx)
 	}
 	return "?"
 }
 
 func (t *TemplateContext) SQLServer() bool {
-	return !slices.Contains(t.Modules, "postgres") && slices.Contains(t.Modules, "sqlserver")
+	return !lo.Contains(t.Modules, "postgres") && lo.Contains(t.Modules, "sqlserver")
 }

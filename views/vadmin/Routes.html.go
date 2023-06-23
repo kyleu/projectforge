@@ -8,7 +8,7 @@ package vadmin
 
 //line views/vadmin/Routes.html:2
 import (
-	"golang.org/x/exp/maps"
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app"
@@ -44,7 +44,7 @@ func (p *Routes) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <ul class="mt">
 `)
 //line views/vadmin/Routes.html:21
-	x := maps.Keys(p.Routes)
+	x := lo.Keys(p.Routes)
 	slices.Sort(x)
 
 //line views/vadmin/Routes.html:24
