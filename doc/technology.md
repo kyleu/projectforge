@@ -21,7 +21,8 @@ Project Forge relies on a ton of open source projects. First among them is the [
 - [pkg/errors][15]
 - [prometheus][16]
 - [opentelemetry][17]
-- [xcodegen][22]
+- [lo][18]
+- [xcodegen][23]
 
 
 [1]: https://golang.org "What a great contribution to the world of engineering"
@@ -40,5 +41,6 @@ Project Forge relies on a ton of open source projects. First among them is the [
 [14]: https://github.com/kirsle/configdir "Provides access to OS-specific directories"
 [15]: https://github.com/pkg/errors "Errors with stack traces and detailed logging"
 [16]: https://github.com/prometheus/client_golang "Metrics for all aspects of the system"
-[17]: https://go.opentelemetry.io/otel "Telemetry for full system tracing"
-[22]: https://github.com/yonaskolb/XcodeGen "Generates messy iOS XCode projects"
+[17]: https://github.com/samber/lo "Functional programming conveniences, used everywhere"
+[18]: https://go.opentelemetry.io/otel "Telemetry for full system tracing"
+[23]: https://github.com/yonaskolb/XcodeGen "Generates messy iOS XCode projects"

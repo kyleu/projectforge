@@ -19,12 +19,13 @@
 - [configdir][14]
 - [pkg/errors][15]
 - [prometheus][16]
-- [opentelemetry][17]{{{ if .HasModule "database" }}}
-- [sqlx][18]{{{ end }}}{{{ if .HasModule "postgres" }}}
-- [pgx][19]{{{ end }}}{{{ if .HasModule "mysql" }}}
-- [mysql][20]{{{ end }}}{{{ if .HasModule "sqlite" }}}
-- [sqlite][21]{{{ end }}}{{{ if .HasModule "ios" }}}
-- [xcodegen][22]{{{ end }}}
+- [opentelemetry][17]
+- [lo][18]{{{ if .HasModule "database" }}}
+- [sqlx][19]{{{ end }}}{{{ if .HasModule "postgres" }}}
+- [pgx][20]{{{ end }}}{{{ if .HasModule "mysql" }}}
+- [mysql][21]{{{ end }}}{{{ if .HasModule "sqlite" }}}
+- [sqlite][22]{{{ end }}}{{{ if .HasModule "ios" }}}
+- [xcodegen][23]{{{ end }}}
 
 
 [1]: https://golang.org "What a great contribution to the world of engineering"
@@ -43,9 +44,10 @@
 [14]: https://github.com/kirsle/configdir "Provides access to OS-specific directories"
 [15]: https://github.com/pkg/errors "Errors with stack traces and detailed logging"
 [16]: https://github.com/prometheus/client_golang "Metrics for all aspects of the system"
-[17]: https://go.opentelemetry.io/otel "Telemetry for full system tracing"{{{ if .HasModule "database" }}}
-[18]: https://github.com/jmoiron/sqlx "Provides enhancements to the stdlib's sql package, super handy"{{{ end }}}{{{ if .HasModule "postgres" }}}
-[19]: https://github.com/jackc/pgx "Handles (most of) the crazy types that PostgreSQL supports"{{{ end }}}{{{ if .HasModule "mysql" }}}
-[20]: https://github.com/go-sql-driver/mysql "The Golang MySQL driver, does what it says on the tin"{{{ end }}}{{{ if .HasModule "sqlite" }}}
-[21]: https://modernc.org/sqlite "A version of SQLite that was compiled to Go by a machine"{{{ end }}}{{{ if .HasModule "ios" }}}
-[22]: https://github.com/yonaskolb/XcodeGen "Generates messy iOS XCode projects"{{{ end }}}
+[17]: https://github.com/samber/lo "Functional programming conveniences, used everywhere"
+[18]: https://go.opentelemetry.io/otel "Telemetry for full system tracing"{{{ if .HasModule "database" }}}
+[19]: https://github.com/jmoiron/sqlx "Provides enhancements to the stdlib's sql package, super handy"{{{ end }}}{{{ if .HasModule "postgres" }}}
+[20]: https://github.com/jackc/pgx "Handles (most of) the crazy types that PostgreSQL supports"{{{ end }}}{{{ if .HasModule "mysql" }}}
+[21]: https://github.com/go-sql-driver/mysql "The Golang MySQL driver, does what it says on the tin"{{{ end }}}{{{ if .HasModule "sqlite" }}}
+[22]: https://modernc.org/sqlite "A version of SQLite that was compiled to Go by a machine"{{{ end }}}{{{ if .HasModule "ios" }}}
+[23]: https://github.com/yonaskolb/XcodeGen "Generates messy iOS XCode projects"{{{ end }}}
