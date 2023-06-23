@@ -3,6 +3,8 @@ package module
 import (
 	"fmt"
 	"net/url"
+
+	"github.com/samber/lo"
 )
 
 type Resolution struct {
@@ -15,10 +17,9 @@ type Resolution struct {
 func (r *Resolution) URL() string {
 	ret := fmt.Sprintf("/run/%s/%s", r.Project, r.Action)
 	if len(r.Args) > 0 {
-		qs := make(url.Values, len(r.Args))
-		for k, v := range r.Args {
-			qs[k] = []string{v}
-		}
+		var qs url.Values = lo.MapValues(r.Args, func(v string, _ string) []string {
+			return []string{v}
+		})
 		ret += "?" + qs.Encode()
 	}
 	return ret

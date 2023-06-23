@@ -62,7 +62,7 @@ func modelHistoryToData(m *model.Model) *golang.Block {
 	ret.W("func (h *History) ToData() []any {")
 	ret.W("\treturn []any{")
 	ret.W("\t\th.ID,")
-	lo.ForEach(m.PKs(), func(pk *model.Column, index int) {
+	lo.ForEach(m.PKs(), func(pk *model.Column, _ int) {
 		ret.W("\t\th.%s%s,", m.Proper(), pk.Proper())
 	})
 	ret.W("\t\tutil.ToJSONBytes(h.Old, true),")
@@ -115,7 +115,7 @@ func modelHistoryRowToHistory(m *model.Model) *golang.Block {
 	ret.W("\tc := util.Diffs{}")
 	ret.W("\t_ = util.FromJSON(h.Changes, &c)")
 	pkCalls := make([]string, 0, len(m.PKs()))
-	lo.ForEach(m.PKs(), func(pk *model.Column, index int) {
+	lo.ForEach(m.PKs(), func(pk *model.Column, _ int) {
 		pkCalls = append(pkCalls, fmt.Sprintf("%s%s: h.%s%s", m.Proper(), pk.Proper(), m.Proper(), pk.Proper()))
 	})
 	ret.W("\treturn &History{ID: h.ID, %s, Old: o, New: n, Changes: c, Created: h.Created}", strings.Join(pkCalls, ", "))

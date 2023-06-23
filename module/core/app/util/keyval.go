@@ -80,7 +80,7 @@ func (k KeyTypeDescs) Sort() {
 
 func (k KeyTypeDescs) Array(key string) [][]string {
 	k.Sort()
-	return lo.Map(k, func(x *KeyTypeDesc, index int) []string {
+	return lo.Map(k, func(x *KeyTypeDesc, _ int) []string {
 		return x.Array(key)
 	})
 }

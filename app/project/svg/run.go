@@ -1,10 +1,10 @@
 package svg
 
 import (
-	"github.com/pkg/errors"
 	"path/filepath"
 	"strings"
 
+	"github.com/pkg/errors"
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
@@ -50,6 +50,9 @@ func loadSVGs(fs filesystem.FileLoader, logger util.Logger) ([]*SVG, error) {
 		}
 		key := strings.TrimSuffix(f, ".svg")
 		mk, err := markup(key, b)
+		if err != nil {
+			return nil, err
+		}
 		svgs = append(svgs, &SVG{Key: key, Markup: mk})
 	}
 

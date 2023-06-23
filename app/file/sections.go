@@ -4,9 +4,8 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/samber/lo"
-
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"

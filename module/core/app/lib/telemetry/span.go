@@ -65,7 +65,7 @@ func (s *Span) Attributes(attrs ...*Attribute) {
 	if s == nil || !enabled {
 		return
 	}
-	ot := lo.Map(attrs, func(attr *Attribute, index int) attribute.KeyValue {
+	ot := lo.Map(attrs, func(attr *Attribute, _ int) attribute.KeyValue {
 		return attr.ToOT()
 	})
 	s.OT.SetAttributes(ot...)

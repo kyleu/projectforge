@@ -1,8 +1,9 @@
 package cutil_test
 
 import (
-	"github.com/samber/lo"
 	"testing"
+
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/log"

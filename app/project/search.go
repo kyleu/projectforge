@@ -2,6 +2,7 @@ package project
 
 import (
 	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/lib/search/result"
 )
 

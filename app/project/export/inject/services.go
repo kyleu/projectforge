@@ -17,7 +17,7 @@ func Services(f *file.File, args *model.Args) error {
 	}
 
 	svcSize := 0
-	lo.ForEach(args.Models, func(m *model.Model, index int) {
+	lo.ForEach(args.Models, func(m *model.Model, _ int) {
 		if len(m.Proper()) > svcSize {
 			svcSize = len(m.Proper())
 		}
@@ -25,7 +25,7 @@ func Services(f *file.File, args *model.Args) error {
 
 	svcs := make([]string, 0, len(args.Models))
 	refs := make([]string, 0, len(args.Models))
-	lo.ForEach(args.Models, func(m *model.Model, index int) {
+	lo.ForEach(args.Models, func(m *model.Model, _ int) {
 		svcs = append(svcs, fmt.Sprintf("%s *%s.Service", util.StringPad(m.Proper(), svcSize), m.Package))
 		if args.HasModule("readonlydb") {
 			refs = append(refs, fmt.Sprintf("%s %s.NewService(st.DB, st.DBRead),", util.StringPad(m.Proper()+":", svcSize+1), m.Package))

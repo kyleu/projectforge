@@ -34,10 +34,7 @@ func (m *Module) Title() string {
 }
 
 func (m *Module) IconSafe() string {
-	if _, ok := util.SVGLibrary[m.Icon]; !ok {
-		return "compass"
-	}
-	return m.Icon
+	return lo.ValueOr(util.SVGLibrary, m.Icon, "compass")
 }
 
 func (m *Module) WebPath() string {

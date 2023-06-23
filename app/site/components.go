@@ -1,10 +1,10 @@
 package site
 
 import (
-	"github.com/samber/lo"
 	"strings"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/menu"
@@ -22,7 +22,7 @@ func componentsMenu(logger util.Logger) menu.Items {
 			logger.Warn(err)
 		}
 	}
-	return lo.Map(vsite.AllComponents, func(c *vsite.Component, index int) *menu.Item {
+	return lo.Map(vsite.AllComponents, func(c *vsite.Component, _ int) *menu.Item {
 		return &menu.Item{Key: c.Key, Title: c.Title, Description: c.Description, Icon: c.Icon, Route: "/components/" + c.Key}
 	})
 }

@@ -36,7 +36,7 @@ func calcDownloadLinks(version string) Links {
 		add(u, mode, os, arch)
 	}{{{ if .Build.HasArm }}}
 	addARMs := func(mode string, os string) {
-		lo.ForEach(arms, func(arm string, index int) {
+		lo.ForEach(arms, func(arm string, _ int) {
 			addDefault(mode, os, arm)
 		})
 	}{{{ end }}}{{{ if .Build.LinuxMIPS }}}

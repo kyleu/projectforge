@@ -66,7 +66,7 @@ func sqlCreate(m *model.Model, modules []string, models model.Models) (*golang.B
 		ret.W("  %q %s,", col.Name, st)
 	}
 	sqlRelations(ret, m, models)
-	lo.ForEach(m.Columns, func(col *model.Column, index int) {
+	lo.ForEach(m.Columns, func(col *model.Column, _ int) {
 		if col.HasTag("unique") {
 			ret.W("  unique (%q),", col.Name)
 		}
@@ -94,7 +94,7 @@ func sqlCreate(m *model.Model, modules []string, models model.Models) (*golang.B
 			}
 		}
 	}
-	lo.ForEach(m.Indexes, func(idx *model.Index, index int) {
+	lo.ForEach(m.Indexes, func(idx *model.Index, _ int) {
 		ret.W(idx.SQL())
 	})
 	sqlHistory(ret, m, modules)
@@ -104,7 +104,7 @@ func sqlCreate(m *model.Model, modules []string, models model.Models) (*golang.B
 
 func addIndex(ret *golang.Block, tbl string, names ...string) {
 	name := fmt.Sprintf("%s__%s_idx", tbl, strings.Join(names, "_"))
-	quoted := lo.Map(names, func(n string, index int) string {
+	quoted := lo.Map(names, func(n string, _ int) string {
 		return fmt.Sprintf("%q", n)
 	})
 	ret.WB()

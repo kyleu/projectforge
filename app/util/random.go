@@ -49,7 +49,7 @@ func RandomBool() bool {
 
 func RandomValueMap(keys int) ValueMap {
 	ret := ValueMap{}
-	lo.Times(keys, func(index int) any {
+	lo.Times(keys, func(_ int) any {
 		ret[RandomString(4)] = RandomString(10)
 		return nil
 	})

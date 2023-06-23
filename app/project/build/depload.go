@@ -4,9 +4,8 @@ import (
 	"context"
 	"strings"
 
-	"github.com/samber/lo"
-
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
@@ -122,11 +121,8 @@ func LoadDepsMap(projects project.Projects, minVersions int, pSvc *project.Servi
 		if err != nil {
 			return nil, err
 		}
-		lo.ForEach(deps, func(dep *Dependency, index int) {
-			curr, ok := ret[dep.Key]
-			if !ok {
-				curr = map[string][]string{}
-			}
+		lo.ForEach(deps, func(dep *Dependency, _ int) {
+			curr := lo.ValueOr(ret, dep.Key, map[string][]string{})
 			vrs := curr[dep.Version]
 			if !slices.Contains(vrs, prj.Key) {
 				vrs = append(vrs, prj.Key)
@@ -135,10 +131,7 @@ func LoadDepsMap(projects project.Projects, minVersions int, pSvc *project.Servi
 			ret[dep.Key] = curr
 		})
 	}
-	for k, v := range ret {
-		if len(v) < minVersions {
-			delete(ret, k)
-		}
-	}
-	return ret, nil
+	return lo.OmitBy(ret, func(k string, v map[string][]string) bool {
+		return len(v) < minVersions
+	}), nil
 }

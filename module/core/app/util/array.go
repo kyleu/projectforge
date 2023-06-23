@@ -81,13 +81,13 @@ func StringArrayOxfordComma(names []string, separator string) string {
 }
 
 func ArrayRemoveNil[T any](x []*T) []*T {
-	return lo.Reject(x, func(item *T, index int) bool {
+	return lo.Reject(x, func(item *T, _ int) bool {
 		return item == nil
 	})
 }
 
 func ArrayDefererence[T any](x []*T) []T {
-	return lo.Map(x, func(item *T, index int) T {
+	return lo.Map(x, func(item *T, _ int) T {
 		return *item
 	})
 }

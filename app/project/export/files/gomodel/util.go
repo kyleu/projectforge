@@ -59,7 +59,7 @@ func modelTitle(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("Title", "func")
 	ret.W("func (%s *%s) TitleString() string {", m.FirstLetter(), m.Proper())
 	if titles := m.Columns.WithTag("title"); len(titles) > 0 {
-		toStrings := lo.Map(titles, func(title *model.Column, index int) string {
+		toStrings := lo.Map(titles, func(title *model.Column, _ int) string {
 			return model.ToGoString(title.Type, fmt.Sprintf("%s.%s", m.FirstLetter(), title.Proper()), true)
 		})
 		ret.W("\treturn %s", strings.Join(toStrings, " + \" / \" + "))
@@ -74,7 +74,7 @@ func modelWebPath(g *golang.File, m *model.Model) *golang.Block {
 	ret := golang.NewBlock("WebPath", "type")
 	ret.W("func (%s *%s) WebPath() string {", m.FirstLetter(), m.Proper())
 	p := "\"/" + m.Route() + "\""
-	lo.ForEach(m.PKs(), func(pk *model.Column, index int) {
+	lo.ForEach(m.PKs(), func(pk *model.Column, _ int) {
 		if strings.HasSuffix(p, "\"") {
 			p = p[:len(p)-1] + "/" + "\" + "
 		} else {

@@ -6,7 +6,6 @@ import (
 	"unicode/utf8"
 
 	"github.com/samber/lo"
-
 	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"

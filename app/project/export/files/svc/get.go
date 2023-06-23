@@ -14,8 +14,6 @@ import (
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
 )
-
-//nolint:gocognit
 func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	dbRef := args.DBRef()
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "serviceget")
@@ -54,17 +52,17 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 			getBys[pkCol.Name] = model.Columns{pkCol}
 		})
 	}
-	lo.ForEach(m.GroupedColumns(), func(grp *model.Column, index int) {
+	lo.ForEach(m.GroupedColumns(), func(grp *model.Column, _ int) {
 		g.AddImport(helper.ImpAppUtil)
 		g.AddBlocks(serviceGrouped(m, grp, args.DBRef()))
 		getBys[grp.Name] = model.Columns{grp}
 	})
-	lo.ForEach(m.Relations, func(rel *model.Relation, index int) {
+	lo.ForEach(m.Relations, func(rel *model.Relation, _ int) {
 		cols := rel.SrcColumns(m)
 		colStr := strings.Join(cols.Names(), ",")
 		getBys[colStr] = cols
 	})
-	lo.ForEach(m.Columns, func(col *model.Column, index int) {
+	lo.ForEach(m.Columns, func(col *model.Column, _ int) {
 		if col.Indexed {
 			getBys[col.Name] = model.Columns{col}
 		}

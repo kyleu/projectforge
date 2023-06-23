@@ -14,7 +14,7 @@ func AsyncCollect[T any, R any](items []T, f func(item T) (R, error)) ([]R, []er
 	mu := sync.Mutex{}
 	wg := sync.WaitGroup{}
 	wg.Add(len(items))
-	lo.ForEach(items, func(item T, index int) {
+	lo.ForEach(items, func(item T, _ int) {
 		i := item
 		go func() {
 			r, err := f(i)

@@ -37,7 +37,7 @@ func onAudit(ctx context.Context, pm *PrjAndMods) *Result {
 	}
 
 	errs := project.Validate(pm.Prj, pm.MSvc.Deps())
-	lo.ForEach(errs, func(err *project.ValidationError, index int) {
+	lo.ForEach(errs, func(err *project.ValidationError, _ int) {
 		ret = ret.WithError(errors.Errorf("%s: %s", err.Code, err.Message))
 	})
 

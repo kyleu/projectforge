@@ -22,7 +22,7 @@ func OnDepsUpgrade(ctx context.Context, prj *project.Project, up string, o strin
 		if err != nil {
 			return err
 		}
-		deps = lo.Reject(curr, func(x *Dependency, index int) bool {
+		deps = lo.Reject(curr, func(x *Dependency, _ int) bool {
 			return x.Version == x.Available
 		})
 	} else {

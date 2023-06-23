@@ -1,8 +1,9 @@
 package model
 
 import (
-	"github.com/samber/lo"
 	"strings"
+
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/util"
 )
@@ -56,7 +57,7 @@ func (r Relations) ContainsSource(colName string) bool {
 }
 
 func colsFor(cols []string, m *Model) Columns {
-	return lo.Map(cols, func(x string, index int) *Column {
+	return lo.Map(cols, func(x string, _ int) *Column {
 		return m.Columns.Get(x)
 	})
 }

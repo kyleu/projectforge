@@ -1,8 +1,9 @@
 package model
 
 import (
-	"github.com/samber/lo"
 	"strings"
+
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/util"
 )

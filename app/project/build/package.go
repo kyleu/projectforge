@@ -45,7 +45,7 @@ func (p Pkgs) ToGraph(prefix string) string {
 	}
 	add("graph LR;")
 	lo.ForEach(p, func(pkg *Pkg, _ int) {
-		lo.ForEach(pkg.Deps, func(d string, index int) {
+		lo.ForEach(pkg.Deps, func(d string, _ int) {
 			add("\t%s --> %s", strings.TrimPrefix(pkg.Path, prefix), strings.TrimPrefix(d, prefix))
 		})
 	})

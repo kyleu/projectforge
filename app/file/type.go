@@ -3,7 +3,6 @@ package file
 import (
 	"strings"
 
-
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/util"

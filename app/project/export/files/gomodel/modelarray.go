@@ -33,7 +33,7 @@ func Models(m *model.Model, args *model.Args, addHeader bool) (*file.File, error
 		return nil, err
 	}
 	g.AddBlocks(ag)
-	lo.ForEach(m.PKs(), func(pk *model.Column, index int) {
+	lo.ForEach(m.PKs(), func(pk *model.Column, _ int) {
 		if pk.Proper() != "Title" {
 			if pk.Type.Key() != types.KeyList {
 				g.AddBlocks(modelArrayGetBy(m, pk, args.Enums))
@@ -61,7 +61,7 @@ func modelArrayGet(g *golang.File, m *model.Model, enums enum.Enums) (*golang.Bl
 	ret.W("func (%s %s) Get(%s) *%s {", m.FirstLetter(), m.ProperPlural(), args, m.Proper())
 	ret.W("\tfor _, x := range %s {", m.FirstLetter())
 	comps := make([]string, 0, len(m.PKs()))
-	lo.ForEach(m.PKs(), func(pk *model.Column, index int) {
+	lo.ForEach(m.PKs(), func(pk *model.Column, _ int) {
 		if types.IsList(pk.Type) {
 			g.AddImport(helper.ImpSlices)
 			comps = append(comps, fmt.Sprintf("slices.Equal(x.%s, %s)", pk.Proper(), pk.Camel()))

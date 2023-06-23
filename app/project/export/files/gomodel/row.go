@@ -18,14 +18,14 @@ import (
 
 func Row(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "row")
-	lo.ForEach(helper.ImportsForTypes("row", args.Database(), m.Columns.Types()...), func(imp *golang.Import, index int) {
+	lo.ForEach(helper.ImportsForTypes("row", args.Database(), m.Columns.Types()...), func(imp *golang.Import, _ int) {
 		g.AddImport(imp)
 	})
 	g.AddImport(helper.ImpStrings, helper.ImpAppUtil, helper.ImpFmt)
 	if err := helper.SpecialImports(g, m.Columns, m.PackageWithGroup(""), args.Enums); err != nil {
 		return nil, err
 	}
-	lo.ForEach(m.Columns, func(col *model.Column, index int) {
+	lo.ForEach(m.Columns, func(col *model.Column, _ int) {
 		if col.Nullable && (col.Type.Key() == types.KeyString || col.Type.Key() == types.KeyInt || col.Type.Key() == types.KeyBool) {
 			g.AddImport(helper.ImpSQL)
 		}
@@ -175,7 +175,7 @@ func modelRowToModel(g *golang.File, m *model.Model, database string) (*golang.B
 		}
 	}
 	ret.W("\treturn &%s{", m.Proper())
-	lo.ForEach(refs, func(ref string, index int) {
+	lo.ForEach(refs, func(ref string, _ int) {
 		ret.W("\t\t%s,", ref)
 	})
 	ret.W("\t}")

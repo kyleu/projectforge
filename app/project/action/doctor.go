@@ -5,7 +5,6 @@ import (
 
 	"github.com/samber/lo"
 
-
 	"projectforge.dev/projectforge/app/doctor"
 	"projectforge.dev/projectforge/app/doctor/checks"
 	"projectforge.dev/projectforge/app/module"

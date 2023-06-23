@@ -105,7 +105,7 @@ func (r *Result) AsError() error {
 func (r *Result) StatusLog() string {
 	fileCount := 0
 	lo.ForEach(r.Modules, func(m *module.Result, _ int) {
-		lo.ForEach(m.Diffs, func(d *diff.Diff, index int) {
+		lo.ForEach(m.Diffs, func(d *diff.Diff, _ int) {
 			if d.Status != diff.StatusSkipped {
 				fileCount++
 			}

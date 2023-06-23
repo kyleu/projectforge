@@ -29,7 +29,7 @@ func runToCompletion(ctx context.Context, projectKey string, t action.Type, cfg 
 func extractConfig(args []string) util.ValueMap {
 	var retArgs []string
 	retMap := util.ValueMap{}
-	lo.ForEach(args, func(arg string, index int) {
+	lo.ForEach(args, func(arg string, _ int) {
 		l, r := util.StringSplit(arg, '=', true)
 		l = strings.TrimSpace(l)
 		r = strings.TrimSpace(r)

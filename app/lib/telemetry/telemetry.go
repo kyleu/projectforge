@@ -89,7 +89,7 @@ func StartAsyncSpan(ctx context.Context, spanName string, logger util.Logger, op
 func spanCreate(ctx context.Context, spanName string, logger util.Logger, opts ...any) (context.Context, *Span, util.Logger) {
 	tr := otel.GetTracerProvider().Tracer(util.AppKey)
 	ssos := []trace.SpanStartOption{trace.WithSpanKind(trace.SpanKindServer)}
-	lo.ForEach(opts, func(opt any, index int) {
+	lo.ForEach(opts, func(opt any, _ int) {
 		o, ok := opt.(trace.SpanStartOption)
 		if ok {
 			ssos = append(ssos, o)

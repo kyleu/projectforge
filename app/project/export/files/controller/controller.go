@@ -115,7 +115,7 @@ func controllerArgFor(col *model.Column, b *golang.Block, retVal string, indent 
 }
 
 func blockFor(m *model.Model, prefix string, grp *model.Column, expectedLines int, keys ...string) *golang.Block {
-	properKeys := lo.Map(keys, func(k string, index int) string {
+	properKeys := lo.Map(keys, func(k string, _ int) string {
 		return util.StringToTitle(k)
 	})
 	name := m.Proper() + withGroupName(strings.Join(properKeys, ""), grp)

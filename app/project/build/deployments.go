@@ -31,7 +31,7 @@ func Deployments(curr string, fs filesystem.FileLoader, fix bool, path string, d
 
 		df := &diff.Diff{Path: dep, Status: diff.StatusIdentical}
 
-		final := lo.Map(lines, func(line string, index int) string {
+		final := lo.Map(lines, func(line string, _ int) string {
 			return deploymentProcessLine(line, fix, hit, curr)
 		})
 		if len(hit) > 0 {

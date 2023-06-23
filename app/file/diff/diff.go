@@ -59,7 +59,7 @@ func File(src *file.File, tgt *file.File) *Diff {
 }
 
 func Files(src file.Files, tgt file.Files, includeUnchanged bool) Diffs {
-	return lo.FlatMap(src, func(s *file.File, index int) []*Diff {
+	return lo.FlatMap(src, func(s *file.File, _ int) []*Diff {
 		p := s.FullPath()
 		t := tgt.Get(p)
 		d := File(s, t)

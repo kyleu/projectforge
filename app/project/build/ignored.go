@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strings"
 
-
 	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
@@ -21,7 +20,7 @@ func Ignored(prj *project.Project, fs filesystem.FileLoader, logger util.Logger)
 		return nil, err
 	}
 	var ret []string
-	lo.ForEach(files, func(f string, index int) {
+	lo.ForEach(files, func(f string, _ int) {
 		content, err := fs.ReadFile(f)
 		if err != nil {
 			ret = append(ret, fmt.Sprintf("ERROR[%s]: %s", err.Error(), f))

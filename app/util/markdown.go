@@ -1,10 +1,10 @@
 package util
 
 import (
-	"github.com/samber/lo"
 	"strings"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 )
 
 func MarkdownTable(header []string, rows [][]string) (string, error) {

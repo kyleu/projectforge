@@ -114,11 +114,10 @@ func modelToData(m *model.Model, cols model.Columns, suffix string) *golang.Bloc
 	ret := golang.NewBlock(m.Proper(), "func")
 	ret.W("func (%s *%s) ToData%s() []any {", m.FirstLetter(), m.Proper(), suffix)
 	refs := lo.Map(cols, func(c *model.Column, _ int) string {
-		//switch c.Type.Key() {
-		//case types.KeyAny, types.KeyMap:
+		// case types.KeyAny, types.KeyMap:
 		//	ret.W("\t%sArg := util.ToJSONBytes(%s.%s, true)", c.Camel(), m.FirstLetter(), c.Proper())
 		//	return fmt.Sprintf("%sArg", c.Camel())
-		//default:
+		// default:
 		return fmt.Sprintf("%s.%s", m.FirstLetter(), c.Proper())
 		//}
 	})

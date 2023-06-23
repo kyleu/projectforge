@@ -44,7 +44,7 @@ func (m *Model) HistoryColumns(coreColumns bool) *HistoryMap {
 		Tags:       []string{"current_revision"},
 	}
 
-	lo.ForEach(m.Columns, func(col *Column, index int) {
+	lo.ForEach(m.Columns, func(col *Column, _ int) {
 		if col.Name == revCol.Name {
 			return
 		}

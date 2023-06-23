@@ -1,10 +1,10 @@
 package stats
 
 import (
-	"github.com/samber/lo"
 	"path/filepath"
 	"strings"
 
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 )
 

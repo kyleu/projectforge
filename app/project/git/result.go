@@ -3,7 +3,6 @@ package git
 import (
 	"strconv"
 
-
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/project"

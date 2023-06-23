@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strings"
 
-
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/file"
@@ -17,7 +16,7 @@ func Routes(args *model.Args, addHeader bool) (*file.File, error) {
 	g := golang.NewFile("routes", []string{"app", "controller", "routes"}, "generated")
 	g.AddImport(helper.ImpRouter)
 	g.AddBlocks(routes(args))
-	lo.ForEach(args.Models, func(m *model.Model, index int) {
+	lo.ForEach(args.Models, func(m *model.Model, _ int) {
 		if len(m.Group) == 0 {
 			g.AddImport(helper.ImpAppController)
 		} else {
@@ -29,7 +28,7 @@ func Routes(args *model.Args, addHeader bool) (*file.File, error) {
 
 func routes(args *model.Args) *golang.Block {
 	ret := golang.NewBlock("routes", "func")
-	complexity := lo.Sum(lo.Map(args.Models, func(m *model.Model, index int) int {
+	complexity := lo.Sum(lo.Map(args.Models, func(m *model.Model, _ int) int {
 		return (len(m.GroupedColumns()) * 7) + 8
 	}))
 	if complexity > 80 {
@@ -66,7 +65,7 @@ func routeModelContent(m *model.Model) []string {
 		pkg = m.LastGroup("c", "")
 	}
 
-	lo.ForEach(m.GroupedColumns(), func(grp *model.Column, index int) {
+	lo.ForEach(m.GroupedColumns(), func(grp *model.Column, _ int) {
 		pathExtra := fmt.Sprintf("/%s/{%s}", grp.Camel(), grp.Camel())
 		callSuffix := fmt.Sprintf("By%s", grp.Proper())
 

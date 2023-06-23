@@ -28,7 +28,7 @@ func PaletteThemes(pal string) (Themes, error) {
 		return nil, err
 	}
 	colors := paletteColors(*p)
-	return lo.Map(colors, func(c gamut.Color, index int) *Theme {
+	return lo.Map(colors, func(c gamut.Color, _ int) *Theme {
 		return ColorTheme(c.Name, c.Color)
 	}), nil
 }

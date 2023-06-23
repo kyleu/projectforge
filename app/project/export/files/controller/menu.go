@@ -3,7 +3,6 @@ package controller
 import (
 	"fmt"
 
-
 	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
@@ -26,7 +25,7 @@ func menuBlock(args *model.Args) *golang.Block {
 	ret.W("//nolint:lll")
 	ret.W("func generatedMenu() menu.Items {")
 	rct := menuContent(args)
-	lo.ForEach(rct, func(x string, index int) {
+	lo.ForEach(rct, func(x string, _ int) {
 		ret.W(x)
 	})
 	if len(rct) == 0 {
@@ -56,10 +55,10 @@ func menuContent(args *model.Args) []string {
 
 func menuItemsFor(groups model.Groups, models model.Models) menu.Items {
 	ret := make(menu.Items, 0, len(groups)+len(models))
-	lo.ForEach(groups, func(g *model.Group, index int) {
+	lo.ForEach(groups, func(g *model.Group, _ int) {
 		ret = append(ret, menuItemForGroup(g, models))
 	})
-	lo.ForEach(models, func(m *model.Model, index int) {
+	lo.ForEach(models, func(m *model.Model, _ int) {
 		if len(m.Group) == 0 {
 			ret = append(ret, menuItemForModel(m, models))
 		}
@@ -70,11 +69,11 @@ func menuItemsFor(groups model.Groups, models model.Models) menu.Items {
 func menuItemForGroup(g *model.Group, models model.Models, pth ...string) *menu.Item {
 	np := append(slices.Clone(pth), g.Key)
 	ret := &menu.Item{Key: g.Key, Title: g.TitleSafe(), Description: g.Description, Icon: g.IconSafe()}
-	lo.ForEach(g.Children, func(child *model.Group, index int) {
+	lo.ForEach(g.Children, func(child *model.Group, _ int) {
 		ret.Children = append(ret.Children, menuItemForGroup(child, models, np...))
 	})
 	matches := models.ForGroup(np...)
-	lo.ForEach(matches, func(m *model.Model, index int) {
+	lo.ForEach(matches, func(m *model.Model, _ int) {
 		ret.Children = append(ret.Children, menuItemForModel(m, models))
 	})
 	return ret
@@ -111,7 +110,7 @@ func menuSerialize(m *menu.Item, prefix string) []string {
 		out = append(out, prefix+"&menu.Item{"+args+"},")
 	} else {
 		out = append(out, prefix+"&menu.Item{"+args+", Children: menu.Items{")
-		lo.ForEach(m.Children, func(kid *menu.Item, index int) {
+		lo.ForEach(m.Children, func(kid *menu.Item, _ int) {
 			out = append(out, menuSerialize(kid, prefix+"\t")...)
 		})
 		out = append(out, prefix+"}},")

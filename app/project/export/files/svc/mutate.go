@@ -1,10 +1,10 @@
 package svc
 
 import (
-	"github.com/samber/lo"
 	"strings"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/types"

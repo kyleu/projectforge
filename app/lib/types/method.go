@@ -46,7 +46,7 @@ func (x *Method) Scalar() bool {
 }
 
 func (x *Method) String() string {
-	argStrings := lo.Map(x.Args, func(arg Argument, index int) string {
+	argStrings := lo.Map(x.Args, func(arg Argument, _ int) string {
 		return arg.String()
 	})
 	return fmt.Sprintf("fn(%s) %s", strings.Join(argStrings, ", "), x.Ret.String())

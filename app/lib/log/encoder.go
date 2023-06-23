@@ -83,7 +83,7 @@ func (e *customEncoder) EncodeEntry(entry zapcore.Entry, fields []zapcore.Field)
 
 	if entry.Stack != "" {
 		st := strings.Split(entry.Stack, "\n")
-		lo.ForEach(st, func(stl string, index int) {
+		lo.ForEach(st, func(stl string, _ int) {
 			if strings.Contains(stl, util.AppKey) {
 				stl = Green.Add(stl)
 			}

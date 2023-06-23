@@ -2,6 +2,7 @@ package sql
 
 import (
 	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/golang"
@@ -50,7 +51,7 @@ func SeedDataAll(models model.Models) (*file.File, error) {
 func sqlSeedAll(models model.Models) *golang.Block {
 	ret := golang.NewBlock("SQLSeedDataAll", "sql")
 	ret.W("-- {%% func SeedDataAll() %%}")
-	lo.ForEach(models, func(m *model.Model, index int) {
+	lo.ForEach(models, func(m *model.Model, _ int) {
 		if len(m.SeedData) > 0 {
 			ret.W("-- {%%%%= %sSeedData() %%%%}", m.Proper())
 		}

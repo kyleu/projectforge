@@ -19,7 +19,7 @@ func (s ParamSet) Get(key string, allowed []string, logger util.Logger) *Params 
 }
 
 func (s ParamSet) String() string {
-	return strings.Join(lo.Map(lo.Values(s), func(p *Params, index int) string {
+	return strings.Join(lo.Map(lo.Values(s), func(p *Params, _ int) string {
 		return p.String()
 	}), ", ")
 }

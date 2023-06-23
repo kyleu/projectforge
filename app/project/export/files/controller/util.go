@@ -1,8 +1,9 @@
 package controller
 
 import (
-	"github.com/samber/lo"
 	"strings"
+
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
@@ -46,7 +47,7 @@ func controllerModelFromPath(m *model.Model) *golang.Block {
 	ret := golang.NewBlock(m.Proper()+"FromPath", "func")
 	ret.W("func %sFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*%s, error) {", m.Package, m.ClassRef())
 	pks := m.PKs()
-	lo.ForEach(pks, func(col *model.Column, index int) {
+	lo.ForEach(pks, func(col *model.Column, _ int) {
 		controllerArgFor(col, ret, "nil", 1)
 	})
 	args := lo.Map(pks, func(x *model.Column, _ int) string {

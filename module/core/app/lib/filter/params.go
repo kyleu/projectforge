@@ -155,7 +155,7 @@ func (p *Params) String() string {
 	if p.Limit > 0 {
 		ol += fmt.Sprint(p.Limit)
 	}
-	ord := lo.Map(p.Orderings, func(o *Ordering, index int) string {
+	ord := lo.Map(p.Orderings, func(o *Ordering, _ int) string {
 		return o.String()
 	})
 	return fmt.Sprintf("%s(%s): %s", p.Key, ol, strings.Join(ord, " / "))
@@ -177,7 +177,7 @@ func (p *Params) ToQueryString(u *fasthttp.URI) string {
 	ret.Del(p.Key + ".l")
 	ret.Del(p.Key + ".x")
 
-	lo.ForEach(p.Orderings, func(o *Ordering, index int) {
+	lo.ForEach(p.Orderings, func(o *Ordering, _ int) {
 		s := o.Column
 		if !o.Asc {
 			s += ".d"

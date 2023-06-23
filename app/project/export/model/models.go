@@ -17,7 +17,7 @@ func (m Models) Get(n string) *Model {
 }
 
 func (m Models) ReverseRelations(t string) Relations {
-	return lo.FlatMap(m, func(x *Model, index int) []*Relation {
+	return lo.FlatMap(m, func(x *Model, _ int) []*Relation {
 		return lo.FilterMap(x.Relations, func(rel *Relation, _ int) (*Relation, bool) {
 			if rel.Table == t {
 				return rel.Reverse(x.Name), true
@@ -31,7 +31,7 @@ func (m Models) Sorted() Models {
 	ret := make(Models, 0, len(m))
 	lo.ForEach(m, func(mdl *Model, _ int) {
 		if curr := ret.Get(mdl.Name); curr == nil {
-			lo.ForEach(m.withDeps(mdl), func(n *Model, index int) {
+			lo.ForEach(m.withDeps(mdl), func(n *Model, _ int) {
 				if x := ret.Get(n.Name); x == nil {
 					ret = append(ret, n)
 				}
@@ -43,7 +43,7 @@ func (m Models) Sorted() Models {
 
 func (m Models) withDeps(mdl *Model) Models {
 	var deps Models
-	lo.ForEach(mdl.Relations, func(rel *Relation, index int) {
+	lo.ForEach(mdl.Relations, func(rel *Relation, _ int) {
 		if deps.Get(rel.Table) == nil && rel.Table != mdl.Name {
 			deps = append(deps, m.withDeps(m.Get(rel.Table))...)
 		}

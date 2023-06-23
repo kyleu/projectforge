@@ -102,7 +102,7 @@ func getArgs(models model.Models, m *model.Model, rrels model.Relations, g *gola
 
 		var conditions []string
 		var args []string
-		lo.ForEach(lCols, func(col *model.Column, index int) {
+		lo.ForEach(lCols, func(col *model.Column, _ int) {
 			if col.Nullable {
 				conditions = append(conditions, fmt.Sprintf("ret.%s != nil", col.Proper()))
 				args = append(args, fmt.Sprintf("*ret.%s", col.Proper()))

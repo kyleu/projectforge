@@ -3,7 +3,6 @@ package controller
 import (
 	"strings"
 
-
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/project/export/golang"

@@ -19,7 +19,7 @@ func modelRandom(m *model.Model, enums enum.Enums) *golang.Block {
 	ret.W("func Random() *%s {", m.Proper())
 	ret.W("\treturn &%s{", m.Proper())
 	maxColLength := m.Columns.MaxCamelLength() + 1
-	lo.ForEach(m.Columns, func(col *model.Column, index int) {
+	lo.ForEach(m.Columns, func(col *model.Column, _ int) {
 		ret.W("\t\t%s %s,", util.StringPad(col.Proper()+":", maxColLength), randFor(col, m.PackageWithGroup(""), enums))
 	})
 	ret.W("\t}")

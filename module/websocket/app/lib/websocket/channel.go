@@ -57,10 +57,7 @@ func (s *Service) Leave(connID uuid.UUID, ch string, logger util.Logger) (bool, 
 	s.channelsMu.Lock()
 	defer s.channelsMu.Unlock()
 
-	curr, ok := s.channels[ch]
-	if !ok {
-		curr = newChannel(ch)
-	}
+	curr := lo.ValueOr(s.channels, ch, newChannel(ch))
 
 	filteredConns := lo.FilterMap(curr.ConnIDs, func(i uuid.UUID, _ int) (uuid.UUID, bool) {
 		return i, i != connID

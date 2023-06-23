@@ -3,7 +3,6 @@ package cmodule
 import (
 	"strings"
 
-
 	"github.com/samber/lo"
 	"github.com/valyala/fasthttp"
 

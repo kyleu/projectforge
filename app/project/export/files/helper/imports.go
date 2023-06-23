@@ -42,7 +42,7 @@ func AppImport(path string) *golang.Import {
 }
 
 func ImportsForTypes(ctx string, database string, ts ...types.Type) golang.Imports {
-	return lo.FlatMap(ts, func(t types.Type, index int) []*golang.Import {
+	return lo.FlatMap(ts, func(t types.Type, _ int) []*golang.Import {
 		return importsForType(ctx, t, database)
 	})
 }

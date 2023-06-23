@@ -4,13 +4,11 @@ import (
 	"os"
 	"strings"
 
-	"github.com/samber/lo"
-
-	"projectforge.dev/projectforge/app/project/export/model"
-
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
+	"projectforge.dev/projectforge/app/project/export/model"
 	"projectforge.dev/projectforge/app/project/svg"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -40,7 +38,7 @@ func onRules(pm *PrjAndMods) *Result {
 		}
 		m.AddTag("audit")
 		m.AddTag("search")
-		lo.ForEach(m.Columns, func(col *model.Column, index int) {
+		lo.ForEach(m.Columns, func(col *model.Column, _ int) {
 			switch strings.ToLower(col.Name) {
 			case "name", "title":
 				if len(m.Columns.WithTag("title")) == 0 {

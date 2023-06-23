@@ -3,7 +3,6 @@ package git
 import (
 	"time"
 
-
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/util"

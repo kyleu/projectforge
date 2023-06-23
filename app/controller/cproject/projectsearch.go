@@ -5,9 +5,8 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/samber/lo"
-
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"

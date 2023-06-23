@@ -60,10 +60,7 @@ func (m ValueMap) Keys() []string {
 }
 
 func (m ValueMap) Merge(args ...ValueMap) ValueMap {
-	ret := make(ValueMap, len(m)+len(args))
-	for k, v := range m {
-		ret[k] = v
-	}
+	ret := m.Clone()
 	lo.ForEach(args, func(arg ValueMap, _ int) {
 		for k, v := range arg {
 			ret[k] = v

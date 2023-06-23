@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strings"
 
-
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/project/export/golang"
@@ -100,7 +99,7 @@ func controllerEdit(m *model.Model, grp *model.Column, prefix string) *golang.Bl
 	ret.W("\t\t\treturn \"\", errors.Wrap(err, \"unable to parse %s from form\")", m.Proper())
 	ret.W("\t\t}")
 	checkGrp(ret, grp, "frm")
-	lo.ForEach(m.PKs(), func(pk *model.Column, index int) {
+	lo.ForEach(m.PKs(), func(pk *model.Column, _ int) {
 		ret.W("\t\tfrm.%s = ret.%s", pk.Proper(), pk.Proper())
 	})
 	ret.W("\t\terr = as.Services.%s.Update(ps.Context, nil, frm, ps.Logger)", m.Proper())

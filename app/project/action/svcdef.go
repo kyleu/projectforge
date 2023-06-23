@@ -26,9 +26,9 @@ func ServiceDefinition(p *project.Project) util.ValueMap {
 
 	tags := make([]string, 0, len(p.Tags))
 	tags = append(tags, fmt.Sprintf("service:%s", p.CleanKey()))
-	//lo.ForEach(p.Tags, func(x string, _ int) {
+	// lo.ForEach(p.Tags, func(x string, _ int) {
 	//	tags = append(tags, fmt.Sprintf("%s:%s", x, x))
-	//})
+	// })
 	lo.ForEach(p.Modules, func(x string, _ int) {
 		switch x {
 		case "export":

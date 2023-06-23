@@ -3,6 +3,8 @@ package site
 import (
 	"strings"
 
+	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/doc"
 	"projectforge.dev/projectforge/views/vsite"
 )
@@ -38,10 +40,7 @@ func loadComponents() (vsite.Components, error) {
 	ret := make(vsite.Components, 0, len(files))
 	for _, file := range files {
 		key := strings.TrimSuffix(file.Name(), ".md")
-		md, ok := componentMetadata[key]
-		if !ok {
-			md = []string{"star", "a web component without documentation"}
-		}
+		md := lo.ValueOr(componentMetadata, key, []string{"star", "a web component without documentation"})
 		title, html, err := componentTemplate(key)
 		if err != nil {
 			return nil, err

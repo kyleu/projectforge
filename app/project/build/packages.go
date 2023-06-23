@@ -39,7 +39,7 @@ func Packages(prj *project.Project, fs filesystem.FileLoader, showAll bool, logg
 		if err != nil {
 			return nil, err
 		}
-		lo.ForEach(imps, func(impRaw string, index int) {
+		lo.ForEach(imps, func(impRaw string, _ int) {
 			imp, typ := util.StringSplitLast(impRaw, ':', true)
 			if imp != "" && (showAll || typ == "self") {
 				curr.AddDep(imp)
