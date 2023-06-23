@@ -19,7 +19,7 @@ func GetCheck(key string) *doctor.Check {
 func ForModules(modules []string) doctor.Checks {
 	var ret doctor.Checks
 	lo.ForEach(AllChecks, func(c *doctor.Check, _ int) {
-		hit := lo.ContainsBy(c.Modules, func(mod string) bool {
+		hit := len(c.Modules) == 0 || lo.ContainsBy(c.Modules, func(mod string) bool {
 			return lo.Contains(modules, mod)
 		})
 		if !hit {
