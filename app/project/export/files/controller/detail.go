@@ -41,7 +41,6 @@ func controllerDetail(models model.Models, m *model.Model, grp *model.Column, au
 	argKeys, argVals := getArgs(models, m, rrels, g, ret)
 	revArgKeys, revArgVals := getReverseArgs(models, m, rrels, ret)
 	if audit {
-		ret.WB()
 		msg := "\t\trelatedAuditRecords, err := as.Services.Audit.RecordsForModel(ps.Context, nil, %q, %s, nil, ps.Logger)"
 		ret.W(msg, m.Name, m.PKs().ToGoStrings("ret."))
 		ret.W("\t\tif err != nil {")

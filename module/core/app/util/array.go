@@ -73,7 +73,7 @@ func ArrayRemoveNil[T any](x []*T) []*T {
 	})
 }
 
-func ArrayDefererence[T any](x []*T) []T {
+func ArrayDereference[T any](x []*T) []T {
 	return lo.Map(x, func(item *T, _ int) T {
 		return lo.FromPtr(item)
 	})
