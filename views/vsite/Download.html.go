@@ -54,139 +54,356 @@ func (p *Download) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vsite/Download.html:18
 	qw422016.N().S(`</h3>
   </div>
+  `)
+//line views/vsite/Download.html:20
+	streamdownloadServer(qw422016, p.Links, as.BuildInfo.Version, ps)
+//line views/vsite/Download.html:20
+	qw422016.N().S(`
+  `)
+//line views/vsite/Download.html:21
+	streamdownloadDesktop(qw422016, p.Links, as.BuildInfo.Version, ps)
+//line views/vsite/Download.html:21
+	qw422016.N().S(`
+  `)
+//line views/vsite/Download.html:22
+	streamdownloadMobile(qw422016, p.Links, as.BuildInfo.Version, ps)
+//line views/vsite/Download.html:22
+	qw422016.N().S(`
+`)
+//line views/vsite/Download.html:23
+}
 
-  <div class="card">
+//line views/vsite/Download.html:23
+func (p *Download) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
+//line views/vsite/Download.html:23
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vsite/Download.html:23
+	p.StreamBody(qw422016, as, ps)
+//line views/vsite/Download.html:23
+	qt422016.ReleaseWriter(qw422016)
+//line views/vsite/Download.html:23
+}
+
+//line views/vsite/Download.html:23
+func (p *Download) Body(as *app.State, ps *cutil.PageState) string {
+//line views/vsite/Download.html:23
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vsite/Download.html:23
+	p.WriteBody(qb422016, as, ps)
+//line views/vsite/Download.html:23
+	qs422016 := string(qb422016.B)
+//line views/vsite/Download.html:23
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vsite/Download.html:23
+	return qs422016
+//line views/vsite/Download.html:23
+}
+
+//line views/vsite/Download.html:25
+func streamdownloadServer(qw422016 *qt422016.Writer, links download.Links, v string, ps *cutil.PageState) {
+//line views/vsite/Download.html:25
+	qw422016.N().S(`
+`)
+//line views/vsite/Download.html:26
+	serverLinks := links.GetByModes("server")
+
+//line views/vsite/Download.html:27
+	if len(serverLinks) > 0 {
+//line views/vsite/Download.html:27
+		qw422016.N().S(`  <div class="card">
     <h3>Server Version</h3>
     <em>A command line interface that can launch a web server or run commands</em>
     <table class="mt">
       <tbody>
 `)
-//line views/vsite/Download.html:26
-	var currentOS string
+//line views/vsite/Download.html:33
+		var currentOS string
 
-//line views/vsite/Download.html:27
-	for _, link := range p.Links.GetByModes("server", "mobile") {
-//line views/vsite/Download.html:28
-		if currentOS != link.OS {
-//line views/vsite/Download.html:29
-			if currentOS != "" {
-//line views/vsite/Download.html:29
-				qw422016.N().S(`          </td>
+//line views/vsite/Download.html:34
+		for _, link := range serverLinks {
+//line views/vsite/Download.html:35
+			if currentOS != link.OS {
+//line views/vsite/Download.html:36
+				if currentOS != "" {
+//line views/vsite/Download.html:36
+					qw422016.N().S(`          </td>
         </tr>
 `)
-//line views/vsite/Download.html:32
-			}
-//line views/vsite/Download.html:33
-			currentOS = link.OS
+//line views/vsite/Download.html:39
+				}
+//line views/vsite/Download.html:40
+				currentOS = link.OS
 
-//line views/vsite/Download.html:33
-			qw422016.N().S(`        <tr>
+//line views/vsite/Download.html:40
+				qw422016.N().S(`        <tr>
           <td>`)
-//line views/vsite/Download.html:35
-			qw422016.E().S(link.OSString())
-//line views/vsite/Download.html:35
-			qw422016.N().S(`</td>
+//line views/vsite/Download.html:42
+				qw422016.E().S(link.OSString())
+//line views/vsite/Download.html:42
+				qw422016.N().S(`</td>
           <td>
 `)
-//line views/vsite/Download.html:37
-		}
-//line views/vsite/Download.html:38
-		if link.OS == "linux" && (link.Arch == "ppc64" || link.Arch == "mips64_hardfloat" || link.Arch == "mips_hardfloat") {
-//line views/vsite/Download.html:38
-			qw422016.N().S(`            <br />
+//line views/vsite/Download.html:44
+			}
+//line views/vsite/Download.html:45
+			if link.OS == download.OSLinux && (link.Arch == download.ArchPPC64 || link.Arch == download.ArchMIPS64LEHard || link.Arch == download.ArchMIPSHard) {
+//line views/vsite/Download.html:45
+				qw422016.N().S(`            <div class="clear mt" />
 `)
-//line views/vsite/Download.html:40
-		}
-//line views/vsite/Download.html:40
-		qw422016.N().S(`            <a href="https://github.com/kyleu/projectforge/releases/download/v`)
-//line views/vsite/Download.html:41
-		qw422016.E().S(as.BuildInfo.Version)
-//line views/vsite/Download.html:41
-		qw422016.N().S(`/`)
-//line views/vsite/Download.html:41
-		qw422016.E().S(link.URL)
-//line views/vsite/Download.html:41
-		qw422016.N().S(`">`)
-//line views/vsite/Download.html:41
-		qw422016.E().S(link.Arch)
-//line views/vsite/Download.html:41
-		qw422016.N().S(`</a>
+//line views/vsite/Download.html:47
+			}
+//line views/vsite/Download.html:47
+			qw422016.N().S(`            <a href="https://github.com/kyleu/projectforge/releases/download/v`)
+//line views/vsite/Download.html:48
+			qw422016.E().S(v)
+//line views/vsite/Download.html:48
+			qw422016.N().S(`/`)
+//line views/vsite/Download.html:48
+			qw422016.E().S(link.URL)
+//line views/vsite/Download.html:48
+			qw422016.N().S(`"><button>`)
+//line views/vsite/Download.html:48
+			qw422016.E().S(link.Arch)
+//line views/vsite/Download.html:48
+			qw422016.N().S(`</button></a>
 `)
-//line views/vsite/Download.html:42
-	}
-//line views/vsite/Download.html:42
-	qw422016.N().S(`          </td>
+//line views/vsite/Download.html:49
+		}
+//line views/vsite/Download.html:49
+		qw422016.N().S(`          </td>
         </tr>
       </tbody>
     </table>
   </div>
+`)
+//line views/vsite/Download.html:55
+	}
+//line views/vsite/Download.html:56
+}
 
-  <div class="card">
+//line views/vsite/Download.html:56
+func writedownloadServer(qq422016 qtio422016.Writer, links download.Links, v string, ps *cutil.PageState) {
+//line views/vsite/Download.html:56
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vsite/Download.html:56
+	streamdownloadServer(qw422016, links, v, ps)
+//line views/vsite/Download.html:56
+	qt422016.ReleaseWriter(qw422016)
+//line views/vsite/Download.html:56
+}
+
+//line views/vsite/Download.html:56
+func downloadServer(links download.Links, v string, ps *cutil.PageState) string {
+//line views/vsite/Download.html:56
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vsite/Download.html:56
+	writedownloadServer(qb422016, links, v, ps)
+//line views/vsite/Download.html:56
+	qs422016 := string(qb422016.B)
+//line views/vsite/Download.html:56
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vsite/Download.html:56
+	return qs422016
+//line views/vsite/Download.html:56
+}
+
+//line views/vsite/Download.html:58
+func streamdownloadDesktop(qw422016 *qt422016.Writer, links download.Links, v string, ps *cutil.PageState) {
+//line views/vsite/Download.html:58
+	qw422016.N().S(`
+`)
+//line views/vsite/Download.html:59
+	desktopLinks := links.GetByModes("desktop")
+
+//line views/vsite/Download.html:60
+	if len(desktopLinks) > 0 {
+//line views/vsite/Download.html:60
+		qw422016.N().S(`  <div class="card">
     <h3>Desktop Version</h3>
     <em>Standalone application using your platform's native web viewer</em>
     <ul class="mt">
 `)
-//line views/vsite/Download.html:53
-	for _, link := range p.Links.GetByModes("desktop") {
-//line views/vsite/Download.html:53
-		qw422016.N().S(`      <li>
+//line views/vsite/Download.html:65
+		for _, link := range desktopLinks {
+//line views/vsite/Download.html:65
+			qw422016.N().S(`      <li class="mt">
+        `)
+//line views/vsite/Download.html:67
+			components.StreamSVGRef(qw422016, link.OSIcon(), 20, 20, "icon", ps)
+//line views/vsite/Download.html:67
+			qw422016.N().S(`
         <a href="https://github.com/kyleu/projectforge/releases/download/v`)
-//line views/vsite/Download.html:55
-		qw422016.E().S(as.BuildInfo.Version)
-//line views/vsite/Download.html:55
-		qw422016.N().S(`/`)
-//line views/vsite/Download.html:55
-		qw422016.E().S(link.URL)
-//line views/vsite/Download.html:55
-		qw422016.N().S(`">
-          `)
-//line views/vsite/Download.html:56
-		components.StreamSVGRef(qw422016, link.OSIcon(), 20, 20, "icon", ps)
-//line views/vsite/Download.html:56
-		qw422016.N().S(` `)
-//line views/vsite/Download.html:56
-		qw422016.E().S(link.OSString())
-//line views/vsite/Download.html:56
-		qw422016.N().S(`
+//line views/vsite/Download.html:68
+			qw422016.E().S(v)
+//line views/vsite/Download.html:68
+			qw422016.N().S(`/`)
+//line views/vsite/Download.html:68
+			qw422016.E().S(link.URL)
+//line views/vsite/Download.html:68
+			qw422016.N().S(`">
+          <button>
+            `)
+//line views/vsite/Download.html:70
+			qw422016.E().S(link.OSString())
+//line views/vsite/Download.html:70
+			qw422016.N().S(`
+          </button>
         </a> `)
-//line views/vsite/Download.html:57
-		qw422016.E().S(link.Caveat("desktop"))
-//line views/vsite/Download.html:57
-		qw422016.N().S(`
+//line views/vsite/Download.html:72
+			qw422016.E().S(link.Caveat("desktop"))
+//line views/vsite/Download.html:72
+			qw422016.N().S(`
         <div class="clear"></div>
       </li>
 `)
-//line views/vsite/Download.html:60
-	}
-//line views/vsite/Download.html:60
-	qw422016.N().S(`    </ul>
+//line views/vsite/Download.html:75
+		}
+//line views/vsite/Download.html:75
+		qw422016.N().S(`    </ul>
   </div>
 `)
-//line views/vsite/Download.html:63
+//line views/vsite/Download.html:78
+	}
+//line views/vsite/Download.html:79
 }
 
-//line views/vsite/Download.html:63
-func (p *Download) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsite/Download.html:63
+//line views/vsite/Download.html:79
+func writedownloadDesktop(qq422016 qtio422016.Writer, links download.Links, v string, ps *cutil.PageState) {
+//line views/vsite/Download.html:79
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsite/Download.html:63
-	p.StreamBody(qw422016, as, ps)
-//line views/vsite/Download.html:63
+//line views/vsite/Download.html:79
+	streamdownloadDesktop(qw422016, links, v, ps)
+//line views/vsite/Download.html:79
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsite/Download.html:63
+//line views/vsite/Download.html:79
 }
 
-//line views/vsite/Download.html:63
-func (p *Download) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsite/Download.html:63
+//line views/vsite/Download.html:79
+func downloadDesktop(links download.Links, v string, ps *cutil.PageState) string {
+//line views/vsite/Download.html:79
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsite/Download.html:63
-	p.WriteBody(qb422016, as, ps)
-//line views/vsite/Download.html:63
+//line views/vsite/Download.html:79
+	writedownloadDesktop(qb422016, links, v, ps)
+//line views/vsite/Download.html:79
 	qs422016 := string(qb422016.B)
-//line views/vsite/Download.html:63
+//line views/vsite/Download.html:79
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsite/Download.html:63
+//line views/vsite/Download.html:79
 	return qs422016
-//line views/vsite/Download.html:63
+//line views/vsite/Download.html:79
+}
+
+//line views/vsite/Download.html:81
+func streamdownloadMobile(qw422016 *qt422016.Writer, links download.Links, v string, ps *cutil.PageState) {
+//line views/vsite/Download.html:81
+	qw422016.N().S(`
+`)
+//line views/vsite/Download.html:82
+	mobileLinks := links.GetByModes("mobile")
+
+//line views/vsite/Download.html:83
+	if len(mobileLinks) > 0 {
+//line views/vsite/Download.html:83
+		qw422016.N().S(`  <div class="card">
+    <h3>Mobile Version</h3>
+    <em>Libraries and apps for Mobile Platforms</em>
+    <table class="mt">
+      <tbody>
+`)
+//line views/vsite/Download.html:89
+		var currentOS string
+
+//line views/vsite/Download.html:90
+		for _, link := range mobileLinks {
+//line views/vsite/Download.html:91
+			if currentOS != link.OS {
+//line views/vsite/Download.html:92
+				if currentOS != "" {
+//line views/vsite/Download.html:92
+					qw422016.N().S(`          </td>
+        </tr>
+`)
+//line views/vsite/Download.html:95
+				}
+//line views/vsite/Download.html:96
+				currentOS = link.OS
+
+//line views/vsite/Download.html:96
+				qw422016.N().S(`        <tr>
+          <td>
+            `)
+//line views/vsite/Download.html:99
+				components.StreamSVGRef(qw422016, link.OSIcon(), 20, 20, "icon", ps)
+//line views/vsite/Download.html:99
+				qw422016.N().S(`
+            `)
+//line views/vsite/Download.html:100
+				qw422016.E().S(link.OSString())
+//line views/vsite/Download.html:100
+				qw422016.N().S(`
+          </td>
+          <td>
+`)
+//line views/vsite/Download.html:103
+			}
+//line views/vsite/Download.html:104
+			if link.OS == download.OSLinux && (link.Arch == download.ArchPPC64 || link.Arch == download.ArchMIPS64LEHard || link.Arch == download.ArchMIPSHard) {
+//line views/vsite/Download.html:104
+				qw422016.N().S(`            <br />
+`)
+//line views/vsite/Download.html:106
+			}
+//line views/vsite/Download.html:106
+			qw422016.N().S(`            <a href="https://github.com/kyleu/projectforge/releases/download/v`)
+//line views/vsite/Download.html:107
+			qw422016.E().S(v)
+//line views/vsite/Download.html:107
+			qw422016.N().S(`/`)
+//line views/vsite/Download.html:107
+			qw422016.E().S(link.URL)
+//line views/vsite/Download.html:107
+			qw422016.N().S(`"><button>`)
+//line views/vsite/Download.html:107
+			qw422016.E().S(link.Arch)
+//line views/vsite/Download.html:107
+			qw422016.N().S(`</button></a>
+`)
+//line views/vsite/Download.html:108
+		}
+//line views/vsite/Download.html:108
+		qw422016.N().S(`          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+`)
+//line views/vsite/Download.html:114
+	}
+//line views/vsite/Download.html:115
+}
+
+//line views/vsite/Download.html:115
+func writedownloadMobile(qq422016 qtio422016.Writer, links download.Links, v string, ps *cutil.PageState) {
+//line views/vsite/Download.html:115
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vsite/Download.html:115
+	streamdownloadMobile(qw422016, links, v, ps)
+//line views/vsite/Download.html:115
+	qt422016.ReleaseWriter(qw422016)
+//line views/vsite/Download.html:115
+}
+
+//line views/vsite/Download.html:115
+func downloadMobile(links download.Links, v string, ps *cutil.PageState) string {
+//line views/vsite/Download.html:115
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vsite/Download.html:115
+	writedownloadMobile(qb422016, links, v, ps)
+//line views/vsite/Download.html:115
+	qs422016 := string(qb422016.B)
+//line views/vsite/Download.html:115
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vsite/Download.html:115
+	return qs422016
+//line views/vsite/Download.html:115
 }

@@ -16,14 +16,21 @@
   <div class="card">
     <h3>{%= components.SVGRefIcon("download", ps) %} Download {%s util.AppName %} {%s as.BuildInfo.Version %}</h3>
   </div>
+  {%= downloadServer(p.Links, as.BuildInfo.Version, ps) %}
+  {%= downloadDesktop(p.Links, as.BuildInfo.Version, ps) %}
+  {%= downloadMobile(p.Links, as.BuildInfo.Version, ps) %}
+{% endfunc %}
 
+{% func downloadServer(links download.Links, v string, ps *cutil.PageState) %}
+  {%- code serverLinks := links.GetByModes("server") -%}
+  {%- if len(serverLinks) > 0 -%}
   <div class="card">
     <h3>Server Version</h3>
     <em>A command line interface that can launch a web server or run commands</em>
     <table class="mt">
       <tbody>
         {%- code var currentOS string -%}
-        {%- for _, link := range p.Links.GetByModes("server", "mobile") -%}
+        {%- for _, link := range serverLinks -%}
         {%- if currentOS != link.OS -%}
         {%- if currentOS != "" -%}
           </td>
@@ -34,29 +41,74 @@
           <td>{%s link.OSString() %}</td>
           <td>
         {%- endif -%}
-            {%- if link.OS == download.osLinux && (link.Arch == download.archPPC64 || link.Arch == download.archMIPS64LEHard || link.Arch == download.archMIPSHard) -%}
-            <br />
+            {%- if link.OS == download.OSLinux && (link.Arch == download.ArchPPC64 || link.Arch == download.ArchMIPS64LEHard || link.Arch == download.ArchMIPSHard) -%}
+            <div class="clear mt" />
             {%- endif -%}
-            <a href="{{{ .Info.Sourcecode }}}/releases/download/v{%s as.BuildInfo.Version %}/{%s link.URL %}">{%s link.Arch %}</a>
+            <a href="{{{ .Info.Sourcecode }}}/releases/download/v{%s v %}/{%s link.URL %}"><button>{%s link.Arch %}</button></a>
         {%- endfor -%}
           </td>
         </tr>
       </tbody>
     </table>
   </div>
+  {%- endif -%}
+{% endfunc %}
 
+{% func downloadDesktop(links download.Links, v string, ps *cutil.PageState) %}
+  {%- code desktopLinks := links.GetByModes("desktop") -%}
+  {%- if len(desktopLinks) > 0 -%}
   <div class="card">
     <h3>Desktop Version</h3>
     <em>Standalone application using your platform's native web viewer</em>
     <ul class="mt">
-      {%- for _, link := range p.Links.GetByModes("desktop") -%}
-      <li>
-        <a href="{{{ .Info.Sourcecode }}}/releases/download/v{%s as.BuildInfo.Version %}/{%s link.URL %}">
-          {%= components.SVGRef(link.OSIcon(), 20, 20, "icon", ps) %} {%s link.OSString() %}
+      {%- for _, link := range desktopLinks -%}
+      <li class="mt">
+        {%= components.SVGRef(link.OSIcon(), 20, 20, "icon", ps) %}
+        <a href="{{{ .Info.Sourcecode }}}/releases/download/v{%s v %}/{%s link.URL %}">
+          <button>
+            {%s link.OSString() %}
+          </button>
         </a> {%s link.Caveat("desktop") %}
         <div class="clear"></div>
       </li>
       {%- endfor -%}
     </ul>
   </div>
+  {%- endif -%}
+{% endfunc %}
+
+{% func downloadMobile(links download.Links, v string, ps *cutil.PageState) %}
+  {%- code mobileLinks := links.GetByModes("mobile") -%}
+  {%- if len(mobileLinks) > 0 -%}
+  <div class="card">
+    <h3>Mobile Version</h3>
+    <em>Libraries and apps for Mobile Platforms</em>
+    <table class="mt">
+      <tbody>
+        {%- code var currentOS string -%}
+        {%- for _, link := range mobileLinks -%}
+        {%- if currentOS != link.OS -%}
+        {%- if currentOS != "" -%}
+          </td>
+        </tr>
+        {%- endif -%}
+        {%- code currentOS = link.OS -%}
+        <tr>
+          <td>
+            {%= components.SVGRef(link.OSIcon(), 20, 20, "icon", ps) %}
+            {%s link.OSString() %}
+          </td>
+          <td>
+        {%- endif -%}
+            {%- if link.OS == download.OSLinux && (link.Arch == download.ArchPPC64 || link.Arch == download.ArchMIPS64LEHard || link.Arch == download.ArchMIPSHard) -%}
+            <br />
+            {%- endif -%}
+            <a href="{{{ .Info.Sourcecode }}}/releases/download/v{%s v %}/{%s link.URL %}"><button>{%s link.Arch %}</button></a>
+        {%- endfor -%}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  {%- endif -%}
 {% endfunc %}
