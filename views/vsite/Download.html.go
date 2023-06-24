@@ -146,80 +146,75 @@ func streamdownloadShowLinks(qw422016 *qt422016.Writer, mode string, icon string
 
 //line views/vsite/Download.html:40
 				qw422016.N().S(`        <tr>
-          <td style="width: 25%;">
-            `)
-//line views/vsite/Download.html:43
+          <td style="width: 25%;">`)
+//line views/vsite/Download.html:42
 				components.StreamSVGRef(qw422016, link.OSIcon(), 20, 20, "icon", ps)
-//line views/vsite/Download.html:43
-				qw422016.N().S(`
-            `)
-//line views/vsite/Download.html:44
+//line views/vsite/Download.html:42
 				qw422016.E().S(link.OSString())
-//line views/vsite/Download.html:44
-				qw422016.N().S(`
-          </td>
+//line views/vsite/Download.html:42
+				qw422016.N().S(`</td>
           <td>
+`)
+//line views/vsite/Download.html:44
+			}
+//line views/vsite/Download.html:45
+			if link.OS == download.OSLinux && (link.Arch == download.ArchPPC64 || link.Arch == download.ArchMIPS64LEHard || link.Arch == download.ArchMIPSHard) {
+//line views/vsite/Download.html:45
+				qw422016.N().S(`            <div class="mt"></div>
 `)
 //line views/vsite/Download.html:47
 			}
-//line views/vsite/Download.html:48
-			if link.OS == download.OSLinux && (link.Arch == download.ArchPPC64 || link.Arch == download.ArchMIPS64LEHard || link.Arch == download.ArchMIPSHard) {
-//line views/vsite/Download.html:48
-				qw422016.N().S(`            <div class="mt"></div>
-`)
-//line views/vsite/Download.html:50
-			}
-//line views/vsite/Download.html:50
+//line views/vsite/Download.html:47
 			qw422016.N().S(`            <a href="https://github.com/kyleu/projectforge/releases/download/v`)
-//line views/vsite/Download.html:51
+//line views/vsite/Download.html:48
 			qw422016.E().S(v)
-//line views/vsite/Download.html:51
+//line views/vsite/Download.html:48
 			qw422016.N().S(`/`)
-//line views/vsite/Download.html:51
+//line views/vsite/Download.html:48
 			qw422016.E().S(link.URL)
-//line views/vsite/Download.html:51
+//line views/vsite/Download.html:48
 			qw422016.N().S(`"><button>`)
-//line views/vsite/Download.html:51
+//line views/vsite/Download.html:48
 			qw422016.E().S(link.Arch)
-//line views/vsite/Download.html:51
+//line views/vsite/Download.html:48
 			qw422016.N().S(`</button></a>
 `)
-//line views/vsite/Download.html:52
+//line views/vsite/Download.html:49
 		}
-//line views/vsite/Download.html:52
+//line views/vsite/Download.html:49
 		qw422016.N().S(`          </td>
         </tr>
       </tbody>
     </table>
   </div>
 `)
-//line views/vsite/Download.html:58
+//line views/vsite/Download.html:55
 	}
-//line views/vsite/Download.html:59
+//line views/vsite/Download.html:56
 }
 
-//line views/vsite/Download.html:59
+//line views/vsite/Download.html:56
 func writedownloadShowLinks(qq422016 qtio422016.Writer, mode string, icon string, title string, desc string, links download.Links, v string, ps *cutil.PageState) {
-//line views/vsite/Download.html:59
+//line views/vsite/Download.html:56
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsite/Download.html:59
+//line views/vsite/Download.html:56
 	streamdownloadShowLinks(qw422016, mode, icon, title, desc, links, v, ps)
-//line views/vsite/Download.html:59
+//line views/vsite/Download.html:56
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsite/Download.html:59
+//line views/vsite/Download.html:56
 }
 
-//line views/vsite/Download.html:59
+//line views/vsite/Download.html:56
 func downloadShowLinks(mode string, icon string, title string, desc string, links download.Links, v string, ps *cutil.PageState) string {
-//line views/vsite/Download.html:59
+//line views/vsite/Download.html:56
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsite/Download.html:59
+//line views/vsite/Download.html:56
 	writedownloadShowLinks(qb422016, mode, icon, title, desc, links, v, ps)
-//line views/vsite/Download.html:59
+//line views/vsite/Download.html:56
 	qs422016 := string(qb422016.B)
-//line views/vsite/Download.html:59
+//line views/vsite/Download.html:56
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsite/Download.html:59
+//line views/vsite/Download.html:56
 	return qs422016
-//line views/vsite/Download.html:59
+//line views/vsite/Download.html:56
 }

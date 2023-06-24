@@ -38,10 +38,7 @@
         {%- endif -%}
         {%- code currentOS = link.OS -%}
         <tr>
-          <td style="width: 25%;">
-            {%= components.SVGRef(link.OSIcon(), 20, 20, "icon", ps) %}
-            {%s link.OSString() %}
-          </td>
+          <td style="width: 25%;">{%= components.SVGRef(link.OSIcon(), 20, 20, "icon", ps) %}{%s link.OSString() %}</td>
           <td>
         {%- endif -%}
             {%- if link.OS == download.OSLinux && (link.Arch == download.ArchPPC64 || link.Arch == download.ArchMIPS64LEHard || link.Arch == download.ArchMIPSHard) -%}

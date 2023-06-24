@@ -13,6 +13,7 @@
     "filesystem",
     "ios",
     "marketing",
+    "notarize",
     "process",
     "search",
     "types",
@@ -65,4 +66,3 @@
     "snapcraft": true
   }
 }
-
