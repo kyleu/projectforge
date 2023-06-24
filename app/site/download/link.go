@@ -52,7 +52,7 @@ func (l *Link) ArchString() string {
 		return "WASM"
 	case "apk":
 		return "Application"
-	case "":
+	case "aar":
 		return "AAR Library"
 	case "framework":
 		return "Xcode Framework"
