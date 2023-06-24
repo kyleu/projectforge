@@ -58,10 +58,16 @@ func (l *Link) Caveat(plat string) string {
 
 func (l *Link) OSIcon() string {
 	switch l.OS {
+	case OSAndroid:
+		return OSAndroid
+	case OSLinux:
+		return OSLinux
 	case OSMac, OSIOS:
 		return "apple"
+	case OSWindows:
+		return OSWindows
 	default:
-		return l.OS
+		return "star"
 	}
 }
 
