@@ -1,8 +1,9 @@
 package module
 
 import (
-	"github.com/samber/lo"
 	"os"
+
+	"github.com/samber/lo"
 
 	"github.com/pkg/errors"
 	"golang.org/x/exp/slices"

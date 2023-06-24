@@ -1,8 +1,9 @@
 package doctor
 
 import (
-	"github.com/samber/lo"
 	"strings"
+
+	"github.com/samber/lo"
 )
 
 type Result struct {

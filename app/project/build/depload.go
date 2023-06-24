@@ -41,7 +41,7 @@ func LoadDepsEasyMode(key string, fs filesystem.FileLoader) (Dependencies, error
 }
 
 func LoadDeps(
-		ctx context.Context, key string, path string, includeUpdates bool, fs filesystem.FileLoader, showAll bool, logger util.Logger,
+	ctx context.Context, key string, path string, includeUpdates bool, fs filesystem.FileLoader, showAll bool, logger util.Logger,
 ) (Dependencies, error) {
 	actual, err := LoadDepsEasyMode(key, fs)
 	if err != nil {
@@ -86,7 +86,6 @@ func LoadDeps(
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to load reference graph")
 	}
-
 	return ret, nil
 }
 

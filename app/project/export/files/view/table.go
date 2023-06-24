@@ -77,7 +77,7 @@ func exportViewTableFunc(m *model.Model, models model.Models, enums enum.Enums, 
 }
 
 func viewTableColumn(
-		g *golang.Template, ret *golang.Block, models model.Models, m *model.Model, link bool, col *model.Column, modelKey string, prefix string, indent int,
+	g *golang.Template, ret *golang.Block, models model.Models, m *model.Model, link bool, col *model.Column, modelKey string, prefix string, indent int,
 ) {
 	ind := util.StringRepeat("  ", indent)
 	rels := m.RelationsFor(col)
