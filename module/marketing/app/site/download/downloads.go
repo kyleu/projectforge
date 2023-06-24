@@ -46,7 +46,7 @@ func calcDownloadLinks(version string) Links {
 		})
 	}{{{ end }}}
 {{{ if .Build.Desktop }}}
-	addDefault(ModeDesktop, OSMac, ArchAMD64){{{ end }}}
+	addDefault(ModeDesktop, OSMac, ArchUniversal){{{ end }}}
 	addDefault(ModeServer, OSMac, ArchAMD64)
 	addDefault(ModeServer, OSMac, ArchARM64)
 	addDefault(ModeServer, OSMac, ArchUniversal){{{ if .Build.Desktop }}}
