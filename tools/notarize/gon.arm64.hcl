@@ -12,10 +12,10 @@ sign {
 }
 
 dmg {
-  output_path = "./build/dist/projectforge_0.9.30_darwin_arm64.dmg"
+  output_path = "./build/dist/projectforge_0.10.0_darwin_arm64.dmg"
   volume_name = "Project Forge"
 }
 
 zip {
-  output_path = "./build/dist/projectforge_0.9.30_darwin_arm64_notarized.zip"
+  output_path = "./build/dist/projectforge_0.10.0_darwin_arm64_notarized.zip"
 }
