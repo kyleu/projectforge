@@ -11,10 +11,10 @@ sign {
 }
 
 dmg {
-  output_path = "./build/dist/{{{ .Exec }}}_{{{ .Version }}}_macos_arm64.dmg"
+  output_path = "./build/dist/{{{ .Exec }}}_{{{ .Version }}}_darwin_arm64.dmg"
   volume_name = "{{{ .Name }}}"
 }
 
 zip {
-  output_path = "./build/dist/{{{ .Exec }}}_{{{ .Version }}}_macos_arm64_notarized.zip"
+  output_path = "./build/dist/{{{ .Exec }}}_{{{ .Version }}}_darwin_arm64_notarized.zip"
 }

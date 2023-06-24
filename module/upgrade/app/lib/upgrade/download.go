@@ -18,13 +18,7 @@ import (
 
 func assetFor(version semver.Version) string {
 	o := runtime.GOOS
-	if o == "darwin" {
-		o = "macos"
-	}
 	arch := runtime.GOARCH
-	if arch == "amd64" {
-		arch = "x86_64"
-	}
 	return fmt.Sprintf("%s_%s_%s_%s.zip", util.AppKey, version.String(), o, arch)
 }
 

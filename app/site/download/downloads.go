@@ -10,8 +10,8 @@ import (
 )
 
 var (
-	arms = []string{archARMV5, archARMV6, archARMV7}
-	mips = []string{archMIPS64Hard, archMIPS64Soft, archMIPS64LEHard, archMIPS64LESoft, archMIPSHard, archMIPSSoft, archMIPSLEHard, archMIPSLESoft}
+	arms = []string{ArchARMV5, ArchARMV6, ArchARMV7}
+	mips = []string{ArchMIPS64Hard, ArchMIPS64Soft, ArchMIPS64LEHard, ArchMIPS64LESoft, ArchMIPSHard, ArchMIPSSoft, ArchMIPSLEHard, ArchMIPSLESoft}
 )
 
 func GetLinks(version string) Links {
@@ -29,9 +29,9 @@ func calcDownloadLinks(version string) Links {
 	addDefault := func(mode string, os string, arch string) {
 		var u string
 		switch mode {
-		case modeServer, modeMobile:
+		case ModeServer, ModeMobile:
 			u = fmt.Sprintf("%s_%s_%s_%s.zip", util.AppKey, version, os, arch)
-		case modeDesktop:
+		case ModeDesktop:
 			u = fmt.Sprintf("%s_%s_%s_%s_desktop.zip", util.AppKey, version, os, arch)
 		}
 		add(u, mode, os, arch)
@@ -47,43 +47,43 @@ func calcDownloadLinks(version string) Links {
 		})
 	}
 
-	addDefault(modeDesktop, osMac, archAMD64)
-	addDefault(modeServer, osMac, archAMD64)
-	addDefault(modeServer, osMac, archARM64)
-	addDefault(modeServer, osMac, archUniversal)
-	addDefault(modeDesktop, osWindows, archAMD64)
-	addDefault(modeServer, osWindows, archAMD64)
-	addDefault(modeServer, osWindows, archI386)
-	addDefault(modeServer, osWindows, archARM64)
-	addARMs(modeServer, osWindows)
-	addDefault(modeDesktop, osLinux, archAMD64)
-	addDefault(modeServer, osLinux, archAMD64)
-	addDefault(modeServer, osLinux, archI386)
-	addDefault(modeServer, osLinux, archARM64)
-	addARMs(modeServer, osLinux)
-	addDefault(modeServer, osLinux, archPPC64)
-	addDefault(modeServer, osLinux, archRISCV64)
-	addDefault(modeServer, osLinux, archS390X)
-	addMIPS(modeServer, osLinux)
-	addDefault(modeMobile, osAndroid, "apk")
-	addDefault(modeMobile, osAndroid, "aar")
-	addDefault(modeServer, osDragonfly, archAMD64)
-	addDefault(modeServer, osFreeBSD, archAMD64)
-	addDefault(modeServer, osFreeBSD, archI386)
-	addDefault(modeServer, osFreeBSD, archARM64)
-	addARMs(modeServer, osFreeBSD)
-	addDefault(modeServer, osIllumos, archAMD64)
-	addDefault(modeMobile, osIOS, "app")
-	addDefault(modeMobile, osIOS, "framework")
-	addDefault(modeServer, osJS, archWASM)
-	addDefault(modeServer, osNetBSD, archAMD64)
-	addDefault(modeServer, osNetBSD, archI386)
-	addDefault(modeServer, osNetBSD, archARMV7)
-	addDefault(modeServer, osOpenBSD, archAMD64)
-	addDefault(modeServer, osOpenBSD, archARM64)
-	addDefault(modeServer, osOpenBSD, archI386)
-	addARMs(modeServer, osOpenBSD)
-	addDefault(modeServer, osSolaris, archAMD64)
+	addDefault(ModeDesktop, OSMac, ArchAMD64)
+	addDefault(ModeServer, OSMac, ArchAMD64)
+	addDefault(ModeServer, OSMac, ArchARM64)
+	addDefault(ModeServer, OSMac, ArchUniversal)
+	addDefault(ModeDesktop, OSWindows, ArchAMD64)
+	addDefault(ModeServer, OSWindows, ArchAMD64)
+	addDefault(ModeServer, OSWindows, Arch386)
+	addDefault(ModeServer, OSWindows, ArchARM64)
+	addARMs(ModeServer, OSWindows)
+	addDefault(ModeDesktop, OSLinux, ArchAMD64)
+	addDefault(ModeServer, OSLinux, ArchAMD64)
+	addDefault(ModeServer, OSLinux, Arch386)
+	addDefault(ModeServer, OSLinux, ArchARM64)
+	addARMs(ModeServer, OSLinux)
+	addDefault(ModeServer, OSLinux, ArchPPC64)
+	addDefault(ModeServer, OSLinux, ArchRISCV64)
+	addDefault(ModeServer, OSLinux, ArchS390X)
+	addMIPS(ModeServer, OSLinux)
+	addDefault(ModeMobile, OSAndroid, "apk")
+	addDefault(ModeMobile, OSAndroid, "aar")
+	addDefault(ModeServer, OSDragonfly, ArchAMD64)
+	addDefault(ModeServer, OSFreeBSD, ArchAMD64)
+	addDefault(ModeServer, OSFreeBSD, Arch386)
+	addDefault(ModeServer, OSFreeBSD, ArchARM64)
+	addARMs(ModeServer, OSFreeBSD)
+	addDefault(ModeServer, OSIllumos, ArchAMD64)
+	addDefault(ModeMobile, OSIOS, "app")
+	addDefault(ModeMobile, OSIOS, "framework")
+	addDefault(ModeServer, OSJS, ArchWASM)
+	addDefault(ModeServer, OSNetBSD, ArchAMD64)
+	addDefault(ModeServer, OSNetBSD, Arch386)
+	addDefault(ModeServer, OSNetBSD, ArchARMV7)
+	addDefault(ModeServer, OSOpenBSD, ArchAMD64)
+	addDefault(ModeServer, OSOpenBSD, ArchARM64)
+	addDefault(ModeServer, OSOpenBSD, Arch386)
+	addARMs(ModeServer, OSOpenBSD)
+	addDefault(ModeServer, OSSolaris, ArchAMD64)
 
 	return ret
 }

@@ -14,31 +14,31 @@ type Link struct {
 
 func (l *Link) OSString() string {
 	switch l.OS {
-	case osAndroid:
+	case OSAndroid:
 		return "Android"
-	case osDragonfly:
+	case OSDragonfly:
 		return "Dragonfly"
-	case osFreeBSD:
+	case OSFreeBSD:
 		return "FreeBSD"
-	case osIllumos:
+	case OSIllumos:
 		return "Illumos"
-	case osIOS:
+	case OSIOS:
 		return "iOS"
-	case osJS:
+	case OSJS:
 		return "JavaScript"
-	case osLinux:
+	case OSLinux:
 		return "Linux"
-	case osMac:
+	case OSMac:
 		return "macOS"
-	case osNetBSD:
+	case OSNetBSD:
 		return "NetBSD"
-	case osOpenBSD:
+	case OSOpenBSD:
 		return "OpenBSD"
-	case osPlan9:
+	case OSPlan9:
 		return "Plan9"
-	case osSolaris:
+	case OSSolaris:
 		return "Solaris"
-	case osWindows:
+	case OSWindows:
 		return "Windows"
 	}
 	return "Unknown"
@@ -48,9 +48,9 @@ func (l *Link) Caveat(plat string) string {
 	switch plat {
 	case "desktop":
 		switch l.OS {
-		case osMac:
+		case OSMac:
 			return "(Universal)"
-		case osWindows, osLinux:
+		case OSWindows, OSLinux:
 			return "(64-bit Intel only)"
 		}
 	}
@@ -58,10 +58,12 @@ func (l *Link) Caveat(plat string) string {
 }
 
 func (l *Link) OSIcon() string {
-	if l.OS == osMac {
+	switch l.OS {
+	case OSMac, OSIOS:
 		return "apple"
+	default:
+		return l.OS
 	}
-	return l.OS
 }
 
 type Links []*Link
@@ -87,41 +89,41 @@ func (l Links) GetByOS(os string) Links {
 var availableLinks Links
 
 const (
-	modeServer  = "server"
-	modeDesktop = "desktop"
-	modeMobile  = "mobile"
+	ModeServer  = "server"
+	ModeDesktop = "desktop"
+	ModeMobile  = "mobile"
 
-	osAndroid   = "android"
-	osDragonfly = "dragonfly"
-	osFreeBSD   = "freebsd"
-	osIllumos   = "illumos"
-	osIOS       = "ios"
-	osJS        = "js"
-	osLinux     = "linux"
-	osMac       = "macos"
-	osNetBSD    = "netbsd"
-	osOpenBSD   = "openbsd"
-	osPlan9     = "plan9"
-	osSolaris   = "solaris"
-	osWindows   = "windows"
+	OSAndroid   = "android"
+	OSDragonfly = "dragonfly"
+	OSFreeBSD   = "freebsd"
+	OSIllumos   = "illumos"
+	OSIOS       = "ios"
+	OSJS        = "js"
+	OSLinux     = "linux"
+	OSMac       = "darwin"
+	OSNetBSD    = "netbsd"
+	OSOpenBSD   = "openbsd"
+	OSPlan9     = "plan9"
+	OSSolaris   = "solaris"
+	OSWindows   = "windows"
 
-	archAMD64        = "x86_64"
-	archARM64        = "arm64"
-	archARMV5        = "armv5"
-	archARMV6        = "armv6"
-	archARMV7        = "armv7"
-	archI386         = "i386"
-	archMIPS64Hard   = "mips64_hardfloat"
-	archMIPS64LEHard = "mips64le_hardfloat"
-	archMIPS64LESoft = "mips64le_softfloat"
-	archMIPS64Soft   = "mips64_softfloat"
-	archMIPSHard     = "mips_hardfloat"
-	archMIPSLEHard   = "mipsle_hardfloat"
-	archMIPSLESoft   = "mipsle_softfloat"
-	archMIPSSoft     = "mips_softfloat"
-	archPPC64        = "ppc64"
-	archRISCV64      = "riscv64"
-	archS390X        = "s390x"
-	archUniversal    = "all"
-	archWASM         = "wasm"
+	ArchAMD64        = "amd64"
+	ArchARM64        = "arm64"
+	ArchARMV5        = "armv5"
+	ArchARMV6        = "armv6"
+	ArchARMV7        = "armv7"
+	Arch386          = "386"
+	ArchMIPS64Hard   = "mips64_hardfloat"
+	ArchMIPS64LEHard = "mips64le_hardfloat"
+	ArchMIPS64LESoft = "mips64le_softfloat"
+	ArchMIPS64Soft   = "mips64_softfloat"
+	ArchMIPSHard     = "mips_hardfloat"
+	ArchMIPSLEHard   = "mipsle_hardfloat"
+	ArchMIPSLESoft   = "mipsle_softfloat"
+	ArchMIPSSoft     = "mips_softfloat"
+	ArchPPC64        = "ppc64"
+	ArchRISCV64      = "riscv64"
+	ArchS390X        = "s390x"
+	ArchUniversal    = "all"
+	ArchWASM         = "wasm"
 )

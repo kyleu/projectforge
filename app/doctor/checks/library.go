@@ -10,7 +10,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-var AllChecks = doctor.Checks{pf, prj, air, qtc, golang, imagemagick, mke, node, git, repo}
+var AllChecks = doctor.Checks{pf, golang, air, qtc, imagemagick, mke, node, git, repo, prj}
 
 func GetCheck(key string) *doctor.Check {
 	return AllChecks.Get(key)

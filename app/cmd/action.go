@@ -28,8 +28,13 @@ func actionF(ctx context.Context, t action.Type, args []string) error {
 func actionCmd(ctx context.Context, t action.Type) *coral.Command {
 	f := func(cmd *coral.Command, args []string) error { return actionF(ctx, t, args) }
 	var aliases []string
-	if t.Key == action.TypeCreate.Key {
+	switch t.Key {
+	case action.TypeCreate.Key:
 		aliases = []string{"init", "new"}
+	case action.TypeBuild.Key:
+		aliases = []string{"make"}
+	case action.TypeGenerate.Key:
+		aliases = []string{"gen"}
 	}
 	ret := &coral.Command{Use: t.Key, Short: t.Description, RunE: f, Aliases: aliases}
 	if t.Key == action.TypeBuild.Key {
