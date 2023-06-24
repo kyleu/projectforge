@@ -158,7 +158,7 @@ func streamdownloadShowLinks(qw422016 *qt422016.Writer, mode string, icon string
 //line views/vsite/Download.html:44
 			}
 //line views/vsite/Download.html:45
-			if link.OS == download.OSLinux && (link.Arch == download.ArchPPC64 || link.Arch == download.ArchMIPS64LEHard || link.Arch == download.ArchMIPSHard) {
+			if link.OS == download.OSLinux && (link.Arch == download.ArchPPC64 || link.Arch == download.ArchMIPS64Hard || link.Arch == download.ArchMIPSHard) {
 //line views/vsite/Download.html:45
 				qw422016.N().S(`            <div class="mt"></div>
 `)

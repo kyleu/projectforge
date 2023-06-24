@@ -42,7 +42,7 @@
           <td style="width: 25%;">{%= components.SVGRef(link.OSIcon(), 20, 20, "icon", ps) %}{%s link.OSString() %}</td>
           <td>
         {%- endif -%}
-            {%- if link.OS == download.OSLinux && (link.Arch == download.ArchPPC64 || link.Arch == download.ArchMIPS64LEHard || link.Arch == download.ArchMIPSHard) -%}
+            {%- if link.OS == download.OSLinux && (link.Arch == download.ArchPPC64 || link.Arch == download.ArchMIPS64Hard || link.Arch == download.ArchMIPSHard) -%}
             <div class="mt"></div>
             {%- endif -%}
             <a href="https://github.com/kyleu/projectforge/releases/download/v{%s v %}/{%s link.URL %}"><button>{%s link.ArchString() %}</button></a>
