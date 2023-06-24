@@ -41,7 +41,7 @@ var golang = &doctor.Check{
 }
 
 func solveGo(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Result {
-	if r.Errors.Find("missing") != nil || r.Errors.Find("exitcode") != nil {
+	if r.Errors.Find("missing") != nil || r.Errors.Find("exitcode") != nil || r.Errors.Find("minversion") != nil {
 		r.AddSolution("#https://go.dev")
 	}
 	return r
