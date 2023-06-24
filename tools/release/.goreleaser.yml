@@ -29,7 +29,6 @@ changelog:
 checksum:
   name_template: "checksums.txt"
   extra_files:
-    - glob: "./build/dist/*_notarized.zip"
     - glob: "./build/dist/*_desktop.dmg"
     - glob: "./build/dist/*_desktop.zip"
     - glob: "./build/dist/*_aar.zip"
@@ -77,7 +76,6 @@ release:
     - [Windows Intel 64 bit](https://github.com/kyleu/projectforge/releases/download/{{ .Tag }}/projectforge_{{ .Version }}_windows_amd64.zip)
 
   extra_files:
-    - glob: "./build/dist/*_notarized.zip"
     - glob: "./build/dist/*.dmg"
     - glob: "./build/dist/*_desktop.zip"
     - glob: "./build/dist/*_aar.zip"
@@ -177,7 +175,6 @@ builds:
         - "./bin/build/android.sh {{ .Version }}"
         - "./bin/build/ios.sh {{ .Version }}"
         - "./bin/build/desktop.release.sh {{ .Version }}"
-        - "./tools/notarize/notarize.sh"
         # $PF_SECTION_START(extrascripts)$
         - "./bin/build/modules.sh"
         # $PF_SECTION_END(extrascripts)$
