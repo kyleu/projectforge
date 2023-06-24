@@ -18,23 +18,8 @@
   </div>
 
   <div class="card">
-    <h3>Desktop Version</h3>
-    <em>Standalone application using your platform's native web viewer</em>
-    <ul class="mt">
-      {%- for _, link := range p.Links.GetByModes("desktop") -%}
-      <li>
-        <a href="{{{ .Info.Sourcecode }}}/releases/download/v{%s as.BuildInfo.Version %}/{%s link.URL %}">
-          {%= components.SVGRef(link.OSIcon(), 20, 20, "icon", ps) %} {%s link.OSString() %}
-        </a>
-        <div class="clear"></div>
-      </li>
-      {%- endfor -%}
-    </ul>
-  </div>
-
-  <div class="card">
     <h3>Server Version</h3>
-    <em>A command line interface that can launch a web server</em>
+    <em>A command line interface that can launch a web server or run commands</em>
     <table class="mt">
       <tbody>
         {%- code var currentOS string -%}
@@ -58,5 +43,20 @@
         </tr>
       </tbody>
     </table>
+  </div>
+
+  <div class="card">
+    <h3>Desktop Version</h3>
+    <em>Standalone application using your platform's native web viewer</em>
+    <ul class="mt">
+      {%- for _, link := range p.Links.GetByModes("desktop") -%}
+      <li>
+        <a href="{{{ .Info.Sourcecode }}}/releases/download/v{%s as.BuildInfo.Version %}/{%s link.URL %}">
+          {%= components.SVGRef(link.OSIcon(), 20, 20, "icon", ps) %} {%s link.OSString() %}
+        </a> {%s link.Caveat("desktop") %}
+        <div class="clear"></div>
+      </li>
+      {%- endfor -%}
+    </ul>
   </div>
 {% endfunc %}

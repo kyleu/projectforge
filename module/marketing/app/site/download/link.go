@@ -43,6 +43,19 @@ func (l *Link) OSString() string {
 	return "Unknown"
 }
 
+func (l *Link) Caveat(plat string) string {
+	switch plat {
+	case "desktop":
+		switch l.OS {
+		case osMac:
+			return "(Universal)"
+		case osWindows, osLinux:
+			return "(64-bit Intel only)"
+		}
+	}
+	return ""
+}
+
 func (l *Link) OSIcon() string {
 	if l.OS == osMac {
 		return "apple"

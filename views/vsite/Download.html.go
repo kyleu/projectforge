@@ -56,106 +56,110 @@ func (p *Download) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
   </div>
 
   <div class="card">
-    <h3>Desktop Version</h3>
-    <em>Standalone application using your platform's native web viewer</em>
-    <ul class="mt">
-`)
-//line views/vsite/Download.html:25
-	for _, link := range p.Links.GetByModes("desktop") {
-//line views/vsite/Download.html:25
-		qw422016.N().S(`      <li>
-        <a href="https://github.com/kyleu/projectforge/releases/download/v`)
-//line views/vsite/Download.html:27
-		qw422016.E().S(as.BuildInfo.Version)
-//line views/vsite/Download.html:27
-		qw422016.N().S(`/`)
-//line views/vsite/Download.html:27
-		qw422016.E().S(link.URL)
-//line views/vsite/Download.html:27
-		qw422016.N().S(`">
-          `)
-//line views/vsite/Download.html:28
-		components.StreamSVGRef(qw422016, link.OSIcon(), 20, 20, "icon", ps)
-//line views/vsite/Download.html:28
-		qw422016.N().S(` `)
-//line views/vsite/Download.html:28
-		qw422016.E().S(link.OSString())
-//line views/vsite/Download.html:28
-		qw422016.N().S(`
-        </a>
-        <div class="clear"></div>
-      </li>
-`)
-//line views/vsite/Download.html:32
-	}
-//line views/vsite/Download.html:32
-	qw422016.N().S(`    </ul>
-  </div>
-
-  <div class="card">
     <h3>Server Version</h3>
-    <em>A command line interface that can launch a web server</em>
+    <em>A command line interface that can launch a web server or run commands</em>
     <table class="mt">
       <tbody>
 `)
-//line views/vsite/Download.html:41
+//line views/vsite/Download.html:26
 	var currentOS string
 
-//line views/vsite/Download.html:42
+//line views/vsite/Download.html:27
 	for _, link := range p.Links.GetByModes("server", "mobile") {
-//line views/vsite/Download.html:43
+//line views/vsite/Download.html:28
 		if currentOS != link.OS {
-//line views/vsite/Download.html:44
+//line views/vsite/Download.html:29
 			if currentOS != "" {
-//line views/vsite/Download.html:44
+//line views/vsite/Download.html:29
 				qw422016.N().S(`          </td>
         </tr>
 `)
-//line views/vsite/Download.html:47
+//line views/vsite/Download.html:32
 			}
-//line views/vsite/Download.html:48
+//line views/vsite/Download.html:33
 			currentOS = link.OS
 
-//line views/vsite/Download.html:48
+//line views/vsite/Download.html:33
 			qw422016.N().S(`        <tr>
           <td>`)
-//line views/vsite/Download.html:50
+//line views/vsite/Download.html:35
 			qw422016.E().S(link.OSString())
-//line views/vsite/Download.html:50
+//line views/vsite/Download.html:35
 			qw422016.N().S(`</td>
           <td>
 `)
-//line views/vsite/Download.html:52
+//line views/vsite/Download.html:37
 		}
-//line views/vsite/Download.html:53
+//line views/vsite/Download.html:38
 		if link.OS == "linux" && (link.Arch == "ppc64" || link.Arch == "mips64_hardfloat" || link.Arch == "mips_hardfloat") {
-//line views/vsite/Download.html:53
+//line views/vsite/Download.html:38
 			qw422016.N().S(`            <br />
 `)
-//line views/vsite/Download.html:55
+//line views/vsite/Download.html:40
 		}
-//line views/vsite/Download.html:55
+//line views/vsite/Download.html:40
 		qw422016.N().S(`            <a href="https://github.com/kyleu/projectforge/releases/download/v`)
-//line views/vsite/Download.html:56
+//line views/vsite/Download.html:41
 		qw422016.E().S(as.BuildInfo.Version)
-//line views/vsite/Download.html:56
+//line views/vsite/Download.html:41
 		qw422016.N().S(`/`)
-//line views/vsite/Download.html:56
+//line views/vsite/Download.html:41
 		qw422016.E().S(link.URL)
-//line views/vsite/Download.html:56
+//line views/vsite/Download.html:41
 		qw422016.N().S(`">`)
-//line views/vsite/Download.html:56
+//line views/vsite/Download.html:41
 		qw422016.E().S(link.Arch)
-//line views/vsite/Download.html:56
+//line views/vsite/Download.html:41
 		qw422016.N().S(`</a>
 `)
-//line views/vsite/Download.html:57
+//line views/vsite/Download.html:42
 	}
-//line views/vsite/Download.html:57
+//line views/vsite/Download.html:42
 	qw422016.N().S(`          </td>
         </tr>
       </tbody>
     </table>
+  </div>
+
+  <div class="card">
+    <h3>Desktop Version</h3>
+    <em>Standalone application using your platform's native web viewer</em>
+    <ul class="mt">
+`)
+//line views/vsite/Download.html:53
+	for _, link := range p.Links.GetByModes("desktop") {
+//line views/vsite/Download.html:53
+		qw422016.N().S(`      <li>
+        <a href="https://github.com/kyleu/projectforge/releases/download/v`)
+//line views/vsite/Download.html:55
+		qw422016.E().S(as.BuildInfo.Version)
+//line views/vsite/Download.html:55
+		qw422016.N().S(`/`)
+//line views/vsite/Download.html:55
+		qw422016.E().S(link.URL)
+//line views/vsite/Download.html:55
+		qw422016.N().S(`">
+          `)
+//line views/vsite/Download.html:56
+		components.StreamSVGRef(qw422016, link.OSIcon(), 20, 20, "icon", ps)
+//line views/vsite/Download.html:56
+		qw422016.N().S(` `)
+//line views/vsite/Download.html:56
+		qw422016.E().S(link.OSString())
+//line views/vsite/Download.html:56
+		qw422016.N().S(`
+        </a> `)
+//line views/vsite/Download.html:57
+		qw422016.E().S(link.Caveat("desktop"))
+//line views/vsite/Download.html:57
+		qw422016.N().S(`
+        <div class="clear"></div>
+      </li>
+`)
+//line views/vsite/Download.html:60
+	}
+//line views/vsite/Download.html:60
+	qw422016.N().S(`    </ul>
   </div>
 `)
 //line views/vsite/Download.html:63

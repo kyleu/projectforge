@@ -64,7 +64,6 @@ nfpms:
     maintainer: "Kyle U <projectforge@kyleu.com>"
     description: "Project Forge creates and manages applications written in the Go programming language. Using code generation, the latest technology, and a strong standard library, Project Forge will help manage your project's code, assets, UI and UX."
     license: "Proprietary"
-    replacements: *replacements
     formats:
       - apk
       - deb
@@ -97,7 +96,6 @@ signs:
 snapcrafts:
   -
     publish: false
-    replacements: *replacements
     summary: "Build and maintain feature-rich applications using Golang"
     description: "Project Forge creates and manages applications written in the Go programming language. Using code generation, the latest technology, and a strong standard library, Project Forge will help manage your project's code, assets, UI and UX."
     grade: stable

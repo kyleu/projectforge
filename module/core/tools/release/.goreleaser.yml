@@ -75,7 +75,6 @@ nfpms:
     maintainer: "{{{ .Info.AuthorName }}} <{{{ .Info.AuthorEmail }}}>"
     description: "{{{ .Info.Description }}}"
     license: "{{{ .Info.License }}}"
-    replacements: *replacements
     formats:
       - apk
       - deb
@@ -111,7 +110,6 @@ signs:
 snapcrafts:
   -
     publish: false
-    replacements: *replacements
     summary: "{{{ .Info.Summary }}}"
     description: "{{{ .Info.Description }}}"
     grade: stable
