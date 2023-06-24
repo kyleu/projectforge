@@ -6,6 +6,8 @@ package vdoctor
 
 //line views/vdoctor/Results.html:1
 import (
+	"strings"
+
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/doctor"
@@ -13,28 +15,28 @@ import (
 	"projectforge.dev/projectforge/views/layout"
 )
 
-//line views/vdoctor/Results.html:9
+//line views/vdoctor/Results.html:11
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vdoctor/Results.html:9
+//line views/vdoctor/Results.html:11
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vdoctor/Results.html:9
+//line views/vdoctor/Results.html:11
 type Results struct {
 	layout.Basic
 	Results doctor.Results
 }
 
-//line views/vdoctor/Results.html:14
+//line views/vdoctor/Results.html:16
 func (p *Results) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vdoctor/Results.html:14
+//line views/vdoctor/Results.html:16
 	qw422016.N().S(`
   <div class="card">
     <h3>Doctor Results</h3>
@@ -52,94 +54,120 @@ func (p *Results) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
       </thead>
       <tbody>
 `)
-//line views/vdoctor/Results.html:30
+//line views/vdoctor/Results.html:32
 	for _, r := range p.Results {
-//line views/vdoctor/Results.html:30
+//line views/vdoctor/Results.html:32
 		qw422016.N().S(`        <tr>
           <td>`)
-//line views/vdoctor/Results.html:32
+//line views/vdoctor/Results.html:34
 		qw422016.E().S(r.Title)
-//line views/vdoctor/Results.html:32
+//line views/vdoctor/Results.html:34
 		qw422016.N().S(`</td>
           <td><em>`)
-//line views/vdoctor/Results.html:33
+//line views/vdoctor/Results.html:35
 		qw422016.E().S(r.Summary)
-//line views/vdoctor/Results.html:33
+//line views/vdoctor/Results.html:35
 		qw422016.N().S(`</em></td>
           <td>`)
-//line views/vdoctor/Results.html:34
+//line views/vdoctor/Results.html:36
 		qw422016.E().S(util.MicrosToMillis(r.Duration))
-//line views/vdoctor/Results.html:34
+//line views/vdoctor/Results.html:36
 		qw422016.N().S(`</td>
           <td>`)
-//line views/vdoctor/Results.html:35
+//line views/vdoctor/Results.html:37
 		qw422016.E().S(r.Status)
-//line views/vdoctor/Results.html:35
+//line views/vdoctor/Results.html:37
 		qw422016.N().S(`</td>
           <td>
 `)
-//line views/vdoctor/Results.html:37
+//line views/vdoctor/Results.html:39
 		for _, e := range r.Errors {
-//line views/vdoctor/Results.html:37
+//line views/vdoctor/Results.html:39
 			qw422016.N().S(`            <div>`)
-//line views/vdoctor/Results.html:38
+//line views/vdoctor/Results.html:40
 			qw422016.E().S(e.String())
-//line views/vdoctor/Results.html:38
+//line views/vdoctor/Results.html:40
 			qw422016.N().S(`</div>
 `)
-//line views/vdoctor/Results.html:39
+//line views/vdoctor/Results.html:41
 		}
-//line views/vdoctor/Results.html:39
+//line views/vdoctor/Results.html:41
 		qw422016.N().S(`          </td>
           <td>
 `)
-//line views/vdoctor/Results.html:42
-		for _, s := range r.Solution {
-//line views/vdoctor/Results.html:42
-			qw422016.N().S(`            <div>`)
-//line views/vdoctor/Results.html:43
-			qw422016.E().S(s)
-//line views/vdoctor/Results.html:43
-			qw422016.N().S(`</div>
+//line views/vdoctor/Results.html:44
+		for _, s := range r.Solutions {
+//line views/vdoctor/Results.html:45
+			if strings.HasPrefix(s, "#") {
+//line views/vdoctor/Results.html:45
+				qw422016.N().S(`            <div><a target="_blank" href="`)
+//line views/vdoctor/Results.html:46
+				qw422016.E().S(strings.TrimPrefix(s, `#`))
+//line views/vdoctor/Results.html:46
+				qw422016.N().S(`">`)
+//line views/vdoctor/Results.html:46
+				qw422016.E().S(strings.TrimPrefix(s, `#`))
+//line views/vdoctor/Results.html:46
+				qw422016.N().S(`</a></div>
 `)
-//line views/vdoctor/Results.html:44
+//line views/vdoctor/Results.html:47
+			} else if strings.HasPrefix(s, "!") {
+//line views/vdoctor/Results.html:47
+				qw422016.N().S(`            <div>run [<em>`)
+//line views/vdoctor/Results.html:48
+				qw422016.E().S(strings.TrimPrefix(s, `!`))
+//line views/vdoctor/Results.html:48
+				qw422016.N().S(`</em>] in this directory</div>
+`)
+//line views/vdoctor/Results.html:49
+			} else {
+//line views/vdoctor/Results.html:49
+				qw422016.N().S(`            <div>`)
+//line views/vdoctor/Results.html:50
+				qw422016.E().S(s)
+//line views/vdoctor/Results.html:50
+				qw422016.N().S(`</div>
+`)
+//line views/vdoctor/Results.html:51
+			}
+//line views/vdoctor/Results.html:52
 		}
-//line views/vdoctor/Results.html:44
+//line views/vdoctor/Results.html:52
 		qw422016.N().S(`          </td>
         </tr>
 `)
-//line views/vdoctor/Results.html:47
+//line views/vdoctor/Results.html:55
 	}
-//line views/vdoctor/Results.html:47
+//line views/vdoctor/Results.html:55
 	qw422016.N().S(`      </tbody>
     </table>
   </div>
 `)
-//line views/vdoctor/Results.html:51
+//line views/vdoctor/Results.html:59
 }
 
-//line views/vdoctor/Results.html:51
+//line views/vdoctor/Results.html:59
 func (p *Results) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vdoctor/Results.html:51
+//line views/vdoctor/Results.html:59
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vdoctor/Results.html:51
+//line views/vdoctor/Results.html:59
 	p.StreamBody(qw422016, as, ps)
-//line views/vdoctor/Results.html:51
+//line views/vdoctor/Results.html:59
 	qt422016.ReleaseWriter(qw422016)
-//line views/vdoctor/Results.html:51
+//line views/vdoctor/Results.html:59
 }
 
-//line views/vdoctor/Results.html:51
+//line views/vdoctor/Results.html:59
 func (p *Results) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vdoctor/Results.html:51
+//line views/vdoctor/Results.html:59
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vdoctor/Results.html:51
+//line views/vdoctor/Results.html:59
 	p.WriteBody(qb422016, as, ps)
-//line views/vdoctor/Results.html:51
+//line views/vdoctor/Results.html:59
 	qs422016 := string(qb422016.B)
-//line views/vdoctor/Results.html:51
+//line views/vdoctor/Results.html:59
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vdoctor/Results.html:51
+//line views/vdoctor/Results.html:59
 	return qs422016
-//line views/vdoctor/Results.html:51
+//line views/vdoctor/Results.html:59
 }

@@ -10,7 +10,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-var AllChecks = doctor.Checks{pf, prj, repo, air, git, golang, imagemagick, mke, node, qtc}
+var AllChecks = doctor.Checks{pf, prj, air, qtc, golang, imagemagick, mke, node, git, repo}
 
 func GetCheck(key string) *doctor.Check {
 	return AllChecks.Get(key)
@@ -30,12 +30,15 @@ func ForModules(modules []string) doctor.Checks {
 	return ret
 }
 
-func CheckAll(ctx context.Context, modules []string, logger util.Logger) doctor.Results {
+func CheckAll(ctx context.Context, modules []string, logger util.Logger, exclude ...string) doctor.Results {
 	ctx, span, logger := telemetry.StartSpan(ctx, "doctor:checkall", logger)
 	defer span.Complete()
 
-	return lo.Map(ForModules(modules), func(c *doctor.Check, _ int) *doctor.Result {
-		return c.Check(ctx, logger)
+	return lo.FilterMap(ForModules(modules), func(c *doctor.Check, _ int) (*doctor.Result, bool) {
+		if lo.Contains(exclude, c.Key) {
+			return nil, false
+		}
+		return c.Check(ctx, logger), true
 	})
 }
 

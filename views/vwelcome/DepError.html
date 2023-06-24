@@ -1,0 +1,44 @@
+{% import (
+  "strings"
+
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/doctor"
+  "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/layout"
+) %}
+
+{% code type DepError struct {
+  layout.Basic
+  Results doctor.Results
+} %}
+
+{% func (p *DepError) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`warning`, ps) %} Missing dependencies</h3>
+    <div class="mt">Before you can start using {%s util.AppName %}, we need to install some things</div>
+    <div class="mt"><a href="">Refresh</a> this page after you have corrected the errors</div>
+  </div>
+  {%- for _, x := range p.Results -%}
+  <div class="card">
+    <div class="right"><em>{%s x.Summary %}</em></div>
+    <h3>{%s x.Title %}</h3>
+    {%- for _, e := range x.Errors -%}
+    <div class="mt">{%s e.String() %}</div>
+    {%- endfor -%}
+    {%- for _, s := range x.Solutions -%}
+    <div class="mt">
+      Solution:
+      {%- if strings.HasPrefix(s, "#") -%}
+      <a target="_blank" href="{%s strings.TrimPrefix(s, `#`) %}">{%s strings.TrimPrefix(s, `#`) %}</a>
+      {%- elseif strings.HasPrefix(s, "!") -%}
+      run [<em>{%s strings.TrimPrefix(s, `!`) %}</em>] in this directory
+      {%- else -%}
+      {%s s %}
+      {%- endif -%}
+    </div>
+    {%- endfor -%}
+  </div>
+  {%- endfor -%}
+{% endfunc %}

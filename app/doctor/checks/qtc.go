@@ -20,7 +20,7 @@ var qtc = &doctor.Check{
 
 func solveQTC(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Result {
 	if r.Errors.Find("missing") != nil || r.Errors.Find("exitcode") != nil {
-		r.AddSolution("go get -u github.com/valyala/quicktemplate/qtc")
+		r.AddSolution("!go install github.com/valyala/quicktemplate/qtc@latest")
 	}
 	return r
 }

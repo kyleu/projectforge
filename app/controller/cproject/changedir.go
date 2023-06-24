@@ -30,7 +30,10 @@ func ChangeDir(rc *fasthttp.RequestCtx) {
 
 		err := os.Chdir(dir)
 		if err != nil {
-			return "", errors.Wrap(err, "unable to set new directory")
+			err = os.MkdirAll(dir, 0755)
+			if err != nil {
+				return "", errors.Wrap(err, "unable to find or create new directory")
+			}
 		}
 
 		ps.Data = dir

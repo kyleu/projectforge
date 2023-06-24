@@ -25,7 +25,7 @@ func onDoctor(ctx context.Context, cfg util.ValueMap, pSvc *project.Service, mSv
 		lo.ForEach(r.Errors, func(e *doctor.Error, _ int) {
 			ret.AddWarn(" - %s", e.String())
 		})
-		lo.ForEach(r.Solution, func(s string, _ int) {
+		lo.ForEach(r.CleanSolutions(), func(s string, _ int) {
 			ret.AddDebug(" - %s", s)
 		})
 	})

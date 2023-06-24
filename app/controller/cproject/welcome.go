@@ -3,6 +3,7 @@ package cproject
 import (
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
+	"projectforge.dev/projectforge/app/doctor/checks"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
@@ -16,6 +17,14 @@ const welcomeMessage = "Welcome to " + util.AppName + "! View this page in a bro
 
 func Welcome(rc *fasthttp.RequestCtx) {
 	controller.Act("welcome", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ch := checks.CheckAll(ps.Context, as.Services.Modules.Modules().Keys(), ps.Logger, "project", "projectforge", "repo").Errors()
+		if len(ch) > 0 {
+			ps.Title = util.AppName + ": Missing dependencies"
+			ps.Data = ch.ErrorSummary()
+			ps.HideMenu = true
+			return controller.Render(rc, as, &vwelcome.DepError{Results: ch}, ps, "Welcome")
+		}
+
 		ps.Title = "Welcome to " + util.AppName
 		ps.Data = welcomeMessage
 		ps.HideMenu = true

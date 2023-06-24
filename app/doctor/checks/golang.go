@@ -20,7 +20,7 @@ var golang = &doctor.Check{
 
 func solveGo(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Result {
 	if r.Errors.Find("missing") != nil || r.Errors.Find("exitcode") != nil {
-		r.AddSolution("Download Go for your platform")
+		r.AddSolution("#https://go.dev")
 	}
 	return r
 }

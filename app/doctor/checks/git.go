@@ -20,7 +20,7 @@ var git = &doctor.Check{
 
 func solveGit(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Result {
 	if r.Errors.Find("missing") != nil || r.Errors.Find("exitcode") != nil {
-		r.AddSolution("https://git-scm.com")
+		r.AddSolution("#https://git-scm.com")
 	}
 	return r
 }

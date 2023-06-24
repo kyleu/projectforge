@@ -1,4 +1,6 @@
 {% import (
+  "strings"
+
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/doctor"
@@ -39,8 +41,14 @@
             {%- endfor -%}
           </td>
           <td>
-            {%- for _, s := range r.Solution -%}
+            {%- for _, s := range r.Solutions -%}
+            {%- if strings.HasPrefix(s, "#") -%}
+            <div><a target="_blank" href="{%s strings.TrimPrefix(s, `#`) %}">{%s strings.TrimPrefix(s, `#`) %}</a></div>
+            {%- elseif strings.HasPrefix(s, "!") -%}
+            <div>run [<em>{%s strings.TrimPrefix(s, `!`) %}</em>] in this directory</div>
+            {%- else -%}
             <div>{%s s %}</div>
+            {%- endif -%}
             {%- endfor -%}
           </td>
         </tr>
