@@ -11,6 +11,57 @@ type Link struct {
 	Arch string `json:"arch"`
 }
 
+func (l *Link) ArchString() string {
+	switch l.Arch {
+	case ArchAMD64:
+		return "Intel 64-bit"
+	case ArchARM64:
+		return "ARM64"
+	case ArchARMV5:
+		return "ARM v5"
+	case ArchARMV6:
+		return "ARM v6"
+	case ArchARMV7:
+		return "ARM v7"
+	case Arch386:
+		return "Intel 32-bit"
+	case ArchMIPS64Hard:
+		return "MIPS64 (hardfloat)"
+	case ArchMIPS64LEHard:
+		return "MIPS64 (le, hardfloat)"
+	case ArchMIPS64LESoft:
+		return "MIPS64 (le, softfloat)"
+	case ArchMIPS64Soft:
+		return "MIPS64 (softfloat)"
+	case ArchMIPSHard:
+		return "MIPS (hardfloat)"
+	case ArchMIPSLEHard:
+		return "MIPS (le, hardfloat)"
+	case ArchMIPSLESoft:
+		return "MIPS (le, softfloat)"
+	case ArchMIPSSoft:
+		return "MIPS (softfloat)"
+	case ArchRISCV64:
+		return "RISC-V 64-bit"
+	case ArchS390X:
+		return "X390x"
+	case ArchUniversal:
+		return "All (Universal)"
+	case ArchWASM:
+		return "WASM"
+	case "apk":
+		return "Application"
+	case "":
+		return "AAR Library"
+	case "framework":
+		return "Xcode Framework"
+	case "app":
+		return "Application"
+	default:
+		return l.Arch
+	}
+}
+
 func (l *Link) OSString() string {
 	switch l.OS {
 	case OSAndroid:
@@ -41,19 +92,6 @@ func (l *Link) OSString() string {
 		return "Windows"
 	}
 	return "Unknown"
-}
-
-func (l *Link) Caveat(plat string) string {
-	switch plat {
-	case "desktop":
-		switch l.OS {
-		case OSMac:
-			return "(Universal)"
-		case OSWindows, OSLinux:
-			return "(64-bit Intel only)"
-		}
-	}
-	return ""
 }
 
 func (l *Link) OSIcon() string {

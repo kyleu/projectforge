@@ -26,8 +26,8 @@ func macOSAssets(ctx context.Context, prj *project.Project, orig string, fs file
 		}
 	}
 
-	const macOSLogoPath = "tools/desktop/template/macos/icons.iconset/logo.svg"
-	macOSPath := filepath.Join(fs.Root(), "tools", "desktop", "template", "macos", "icons.iconset")
+	const macOSLogoPath = "tools/desktop/template/darwin/icons.iconset/logo.svg"
+	macOSPath := filepath.Join(fs.Root(), "tools", "desktop", "template", "darwin", "icons.iconset")
 	err := fs.WriteFile(macOSLogoPath, []byte(orig), filesystem.DefaultMode, true)
 	if err != nil {
 		return errors.Wrap(err, "unable to write temporary macOS [logo.svg]")
@@ -46,7 +46,7 @@ func macOSAssets(ctx context.Context, prj *project.Project, orig string, fs file
 	if err != nil {
 		return errors.Wrap(err, "unable to remove temporary macOS [logo.svg]")
 	}
-	templatePath := filepath.Join(fs.Root(), "tools", "desktop", "template", "macos")
+	templatePath := filepath.Join(fs.Root(), "tools", "desktop", "template", "darwin")
 	if !fs.Exists(templatePath) {
 		_ = fs.CreateDirectory(templatePath)
 	}

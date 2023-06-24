@@ -47,7 +47,7 @@ func calcDownloadLinks(version string) Links {
 		})
 	}
 
-	addDefault(ModeDesktop, OSMac, ArchAMD64)
+	addDefault(ModeDesktop, OSMac, ArchUniversal)
 	addDefault(ModeServer, OSMac, ArchAMD64)
 	addDefault(ModeServer, OSMac, ArchARM64)
 	addDefault(ModeServer, OSMac, ArchUniversal)

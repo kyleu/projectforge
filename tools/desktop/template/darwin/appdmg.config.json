@@ -1,7 +1,7 @@
 {
-  "title": "{{{ .Name }}}",
-  "icon": "template/macos/icons.icns",
-  "background": "template/macos/background.png",
+  "title": "Project Forge",
+  "icon": "template/darwin/icons.icns",
+  "background": "template/darwin/background.png",
   "format": "UDBZ",
   "window": {
     "size": {
@@ -14,7 +14,7 @@
       "x": 192,
       "y": 244,
       "type": "file",
-      "path": "{{{ .Name }}}.app"
+      "path": "Project Forge.app"
     },
     { "x": 448, "y": 244, "type": "link", "path": "/Applications" }
   ]

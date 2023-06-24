@@ -34,16 +34,16 @@ cp -R "../../tools/desktop/template" .
 mkdir -p "./{{{ .Name }}}.app/Contents/Resources"
 mkdir -p "./{{{ .Name }}}.app/Contents/MacOS"
 
-cp -R "./template/macos/Info.plist" "./{{{ .Name }}}.app/Contents/Info.plist"
-cp -R "./template/macos/icons.icns" "./{{{ .Name }}}.app/Contents/Resources/icons.icns"
+cp -R "./template/darwin/Info.plist" "./{{{ .Name }}}.app/Contents/Info.plist"
+cp -R "./template/darwin/icons.icns" "./{{{ .Name }}}.app/Contents/Resources/icons.icns"
 
-cp "{{{ .Key }}}.macos" "./{{{ .Name }}}.app/Contents/MacOS/{{{ .Key }}}"
+cp "{{{ .Key }}}.darwin" "./{{{ .Name }}}.app/Contents/MacOS/{{{ .Key }}}"
 
 echo "signing amd64 desktop binary..."
 codesign -f --options=runtime --verbose=4 --deep --force --strict -s '{{{ .Info.SigningIdentity }}}' "./{{{ .Name }}}.app/Contents/MacOS/{{{ .Key }}}"
 codesign -f --options=runtime --verbose=4 --deep --force --strict -s '{{{ .Info.SigningIdentity }}}' "./{{{ .Name }}}.app"
 
-cp "./template/macos/appdmg.config.json" "./appdmg.config.json"
+cp "./template/darwin/appdmg.config.json" "./appdmg.config.json"
 
 echo "building macOS amd64 DMG..."
 appdmg "appdmg.config.json" "./{{{ .Key }}}_${TGT}_darwin_amd64_desktop.dmg"

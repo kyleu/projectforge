@@ -175,7 +175,7 @@ func streamdownloadShowLinks(qw422016 *qt422016.Writer, mode string, icon string
 //line views/vsite/Download.html:48
 			qw422016.N().S(`"><button>`)
 //line views/vsite/Download.html:48
-			qw422016.E().S(link.Arch)
+			qw422016.E().S(link.ArchString())
 //line views/vsite/Download.html:48
 			qw422016.N().S(`</button></a>
 `)

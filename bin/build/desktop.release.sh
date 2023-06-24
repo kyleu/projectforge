@@ -35,16 +35,16 @@ cp -R "../../tools/desktop/template" .
 mkdir -p "./Project Forge.app/Contents/Resources"
 mkdir -p "./Project Forge.app/Contents/MacOS"
 
-cp -R "./template/macos/Info.plist" "./Project Forge.app/Contents/Info.plist"
-cp -R "./template/macos/icons.icns" "./Project Forge.app/Contents/Resources/icons.icns"
+cp -R "./template/darwin/Info.plist" "./Project Forge.app/Contents/Info.plist"
+cp -R "./template/darwin/icons.icns" "./Project Forge.app/Contents/Resources/icons.icns"
 
-cp "projectforge.macos" "./Project Forge.app/Contents/MacOS/projectforge"
+cp "projectforge.darwin" "./Project Forge.app/Contents/MacOS/projectforge"
 
 echo "signing amd64 desktop binary..."
 codesign -f --options=runtime --verbose=4 --deep --force --strict -s 'Developer ID Application: Kyle Unverferth (C6S478FYLD)' "./Project Forge.app/Contents/MacOS/projectforge"
 codesign -f --options=runtime --verbose=4 --deep --force --strict -s 'Developer ID Application: Kyle Unverferth (C6S478FYLD)' "./Project Forge.app"
 
-cp "./template/macos/appdmg.config.json" "./appdmg.config.json"
+cp "./template/darwin/appdmg.config.json" "./appdmg.config.json"
 
 echo "building macOS amd64 DMG..."
 appdmg "appdmg.config.json" "./projectforge_${TGT}_darwin_amd64_desktop.dmg"
