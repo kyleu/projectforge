@@ -19,7 +19,7 @@ func History(m *model.Model, args *model.Args, addHeader bool) (*file.File, erro
 	lo.ForEach(helper.ImportsForTypes("go", "", m.Columns.Types()...), func(imp *golang.Import, _ int) {
 		g.AddImport(imp)
 	})
-	g.AddImport(helper.ImpJSON, helper.ImpUUID, helper.ImpAppUtil)
+	g.AddImport(helper.ImpJSON, helper.ImpUUID, helper.ImpAppUtil, helper.ImpLo)
 	mh, err := modelHistory(m, args.Enums)
 	if err != nil {
 		return nil, err
@@ -128,11 +128,9 @@ func modelHistoryRows(m *model.Model) *golang.Block {
 	ret.W("type historyRows []*historyRow")
 	ret.WB()
 	ret.W("func (h historyRows) ToHistories() Histories {")
-	ret.W("\tret := make(Histories, 0, len(h))")
-	ret.W("\tfor _, x := range h {")
-	ret.W("\t\tret = append(ret, x.ToHistory())")
-	ret.W("\t}")
-	ret.W("\treturn ret")
+	ret.W("\treturn lo.Map(%s, func(x *historyRow, _ int) *History {", m.FirstLetter())
+	ret.W("\t\treturn x.ToHistory()")
+	ret.W("\t})")
 	ret.W("}")
 	return ret
 }

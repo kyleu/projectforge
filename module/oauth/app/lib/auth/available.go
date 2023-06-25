@@ -3,6 +3,7 @@ package auth
 import (
 	"fmt"
 
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
 	"{{{ .Package }}}/app/util"
@@ -28,26 +29,75 @@ func initAvailable() {
 			openIDConnectName = "OpenID Connect"
 		}
 		AvailableProviderNames = map[string]string{
-			"amazon": "Amazon", auth0Key: "Auth0", "azuread": "Azure AD",
-			"battlenet": "Battlenet", "bitbucket": "Bitbucket", "box": "Box", "cloudfoundry": "Cloud Foundry",
-			"dailymotion": "Dailymotion", "deezer": "Deezer", "digitalocean": "Digital Ocean", "discord": "Discord", "dropbox": "Dropbox",
-			"eveonline": "Eve Online", "facebook": "Facebook", "fitbit": "Fitbit",
-			"gitea": "Gitea", "github": "Github", "gitlab": "Gitlab", "google": "Google", "gplus": "Google Plus",
-			"heroku": "Heroku", "influxcloud": "InfluxCloud", "instagram": "Instagram", "intercom": "Intercom", "kakao": "Kakao",
-			"lastfm": "Last FM", "line": "LINE", "linkedin": "Linkedin",
-			"mailru": "Mailru", "mastodon": "Mastodon", "meetup": "Meetup.com", microsoftKey: "Microsoft", "microsoftonline": "Microsoft Online",
-			"naver": "Naver", nextcloudKey: "NextCloud",
-			"okta": "Okta", "onedrive": "Onedrive", OpenIDConnectKey: openIDConnectName, "oura": "Oura", "paypal": "Paypal",
-			"salesforce": "Salesforce", "seatalk": "SeaTalk", "shopify": "Shopify", "slack": "Slack",
-			"soundcloud": "SoundCloud", "spotify": "Spotify", "steam": "Steam", "strava": "Strava", "stripe": "Stripe",
-			"tumblr": "Tumblr", "twitch": "Twitch", "twitter": "Twitter", "typetalk": "Typetalk",
-			"uber": "Uber", "vk": "VK", "wecom": "WeCom", "wepay": "Wepay", "xero": "Xero",
-			"yahoo": "Yahoo", "yammer": "Yammer", "yandex": "Yandex", "zoom": "Zoom",
+			"amazon":          "Amazon",
+			"apple":           "Apple",
+			auth0Key:          "Auth0",
+			"azuread":         "Azure AD",
+			"battlenet":       "Battlenet",
+			"bitbucket":       "Bitbucket",
+			"bitly":           "Bitly",
+			"box":             "Box",
+			"cloudfoundry":    "Cloud Foundry",
+			"cognito":         "Cognito",
+			"dailymotion":     "Dailymotion",
+			"deezer":          "Deezer",
+			"digitalocean":    "Digital Ocean",
+			"discord":         "Discord",
+			"dropbox":         "Dropbox",
+			"eveonline":       "Eve Online",
+			"facebook":        "Facebook",
+			"fitbit":          "Fitbit",
+			"gitea":           "Gitea",
+			"github":          "Github",
+			"gitlab":          "Gitlab",
+			"google":          "Google",
+			"gplus":           "Google Plus",
+			"heroku":          "Heroku",
+			"influxcloud":     "InfluxCloud",
+			"instagram":       "Instagram",
+			"intercom":        "Intercom",
+			"kakao":           "Kakao",
+			"lastfm":          "Last FM",
+			"line":            "LINE",
+			"linkedin":        "Linkedin",
+			"mailru":          "Mailru",
+			"mastodon":        "Mastodon",
+			"meetup":          "Meetup.com",
+			microsoftKey:      "Microsoft",
+			"microsoftonline": "Microsoft Online",
+			"naver":           "Naver",
+			nextcloudKey:      "NextCloud",
+			"okta":            "Okta",
+			"onedrive":        "Onedrive",
+			OpenIDConnectKey:  openIDConnectName,
+			"oura":            "Oura",
+			"patreon":         "Patreon",
+			"paypal":          "Paypal",
+			"salesforce":      "Salesforce",
+			"seatalk":         "SeaTalk",
+			"shopify":         "Shopify",
+			"slack":           "Slack",
+			"soundcloud":      "SoundCloud",
+			"spotify":         "Spotify",
+			"steam":           "Steam",
+			"strava":          "Strava",
+			"stripe":          "Stripe",
+			"tiktok":          "TikTok",
+			"tumblr":          "Tumblr",
+			"twitch":          "Twitch",
+			"twitter":         "Twitter",
+			"typetalk":        "Typetalk",
+			"uber":            "Uber",
+			"vk":              "VK",
+			"wecom":           "WeCom",
+			"wepay":           "Wepay",
+			"xero":            "Xero",
+			"yahoo":           "Yahoo",
+			"yammer":          "Yammer",
+			"yandex":          "Yandex",
+			"zoom":            "Zoom",
 		}
-		AvailableProviderKeys = nil
-		for k := range AvailableProviderNames {
-			AvailableProviderKeys = append(AvailableProviderKeys, k)
-		}
+		AvailableProviderKeys = lo.Keys(AvailableProviderNames)
 		slices.Sort(AvailableProviderKeys)
 	}
 }

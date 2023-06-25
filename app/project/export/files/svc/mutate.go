@@ -21,7 +21,7 @@ func ServiceMutate(m *model.Model, args *model.Args, addHeader bool) (*file.File
 	lo.ForEach(helper.ImportsForTypes("go", "", m.PKs().Types()...), func(imp *golang.Import, _ int) {
 		g.AddImport(imp)
 	})
-	g.AddImport(helper.ImpAppUtil, helper.ImpContext, helper.ImpSQLx, helper.ImpDatabase)
+	g.AddImport(helper.ImpAppUtil, helper.ImpContext, helper.ImpSQLx, helper.ImpDatabase, helper.ImpLo)
 
 	if add, err := serviceCreate(m, args.Audit(m), g); err == nil {
 		g.AddBlocks(add)
@@ -286,10 +286,9 @@ func serviceSave(m *model.Model, g *golang.File) (*golang.Block, error) {
 	} else {
 		q := strings.Join(m.PKs().NamesQuoted(), ", ")
 		ret.W("\tq := database.SQLUpsert(tableQuoted, columnsQuoted, len(models), []string{%s}, columnsQuoted, s.db.Placeholder())", q)
-		ret.W("\tvar data []any")
-		ret.W("\tfor _, model := range models {")
-		ret.W("\t\tdata = append(data, model.ToData()...)")
-		ret.W("\t}")
+		ret.W("\tdata := lo.FlatMap(models, func(model *%s, _ int) []any {", m.Proper())
+		ret.W("\t\treturn model.ToData()")
+		ret.W("\t})")
 		ret.W("\treturn s.db.Insert(ctx, q, tx, logger, data...)")
 	}
 	ret.W("}")
@@ -330,7 +329,7 @@ func serviceAddCreatedUpdated(m *model.Model, ret *golang.Block, g *golang.File,
 	createdCols := m.Columns.WithTag("created")
 	updatedCols := m.Columns.WithTag("updated")
 	if len(createdCols) > 0 || len(updatedCols) > 0 || m.IsRevision() {
-		ret.W("\tfor _, model := range models {")
+		ret.W("\tlo.ForEach(models, func(model *%s, _ int) {", m.Proper())
 		err := serviceLoadCreated(g, ret, m, createdCols, loadCurr)
 		if err != nil {
 			return err
@@ -351,7 +350,7 @@ func serviceAddCreatedUpdated(m *model.Model, ret *golang.Block, g *golang.File,
 			ret.W("\t\t\treturn errors.Wrap(hErr, \"unable to save history\")")
 			ret.W("\t\t}")
 		}
-		ret.W("\t}")
+		ret.W("\t})")
 	}
 	return nil
 }

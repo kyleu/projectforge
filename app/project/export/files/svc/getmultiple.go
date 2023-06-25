@@ -31,11 +31,7 @@ func serviceGetMultipleSinglePK(m *model.Model, dbRef string, enums enum.Enums) 
 	}
 	ret.W("\tret := rows{}")
 	ret.W("\tq := database.SQLSelectSimple(columnsString, %s, s.db.Placeholder(), wc)", tableClauseFor(m))
-	ret.W("\tvals := make([]any, 0, len(%s))", pk.Plural())
-	ret.W("\tfor _, x := range %s {", pk.Plural())
-	ret.W("\t\tvals = append(vals, x)")
-	ret.W("\t}")
-	ret.W("\terr := s.%s.Select(ctx, &ret, q, tx, logger, vals...)", dbRef)
+	ret.W("\terr := s.%s.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(%s)...)", dbRef, pk.Plural())
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, errors.Wrapf(err, \"unable to get %s for [%%%%d] %s\", len(%s))", m.ProperPlural(), pk.Plural(), pk.Plural())
 	ret.W("\t}")
@@ -44,7 +40,7 @@ func serviceGetMultipleSinglePK(m *model.Model, dbRef string, enums enum.Enums) 
 	return ret, nil
 }
 
-func serviceGetMultipleManyPKs(m *model.Model, dbRef string) *golang.Block {
+func serviceGetMultipleManyPKs(m *model.Model, dbRef string, g *golang.File) *golang.Block {
 	ret := golang.NewBlock(serviceGetMultipleName, "func")
 	pks := m.PKs()
 
@@ -75,10 +71,11 @@ func serviceGetMultipleManyPKs(m *model.Model, dbRef string) *golang.Block {
 	}
 	ret.W("\tret := rows{}")
 	ret.W("\tq := database.SQLSelectSimple(columnsString, %s, s.db.Placeholder(), wc)", tableClauseFor(m))
-	ret.W("\tvals := make([]any, 0, len(pks)*%d)", len(pks))
-	ret.W("\tfor _, x := range pks {")
-	ret.W("\t\tvals = append(vals, %s)", strings.Join(refs, ", "))
-	ret.W("\t}")
+
+	ret.W("\tvals := lo.FlatMap(pks, func(x *PK, _ int) []any {")
+	ret.W("\t\treturn []any{%s}", strings.Join(refs, ", "))
+	ret.W("\t})")
+
 	ret.W("\terr := s.%s.Select(ctx, &ret, q, tx, logger, vals...)", dbRef)
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, errors.Wrapf(err, \"unable to get %s for [%%%%d] pks\", len(pks))", m.ProperPlural())

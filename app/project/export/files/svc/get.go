@@ -23,7 +23,7 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 	if len(m.PKs()) > 1 {
 		g.AddImport(helper.ImpFmt)
 	}
-	g.AddImport(helper.ImpAppUtil, helper.ImpContext, helper.ImpErrors, helper.ImpSQLx, helper.ImpFilter, helper.ImpDatabase)
+	g.AddImport(helper.ImpAppUtil, helper.ImpContext, helper.ImpErrors, helper.ImpSQLx, helper.ImpFilter, helper.ImpDatabase, helper.ImpLo)
 	if err := helper.SpecialImports(g, m.IndexedColumns(), m.PackageWithGroup(""), args.Enums); err != nil {
 		return nil, err
 	}
@@ -43,7 +43,7 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 			}
 			g.AddBlocks(x)
 		} else {
-			g.AddBlocks(serviceGetMultipleManyPKs(m, dbRef))
+			g.AddBlocks(serviceGetMultipleManyPKs(m, dbRef, g))
 		}
 	}
 	getBys := map[string]model.Columns{}

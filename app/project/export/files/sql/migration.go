@@ -82,10 +82,10 @@ func sqlCreate(m *model.Model, modules []string, models model.Models) (*golang.B
 			addIndex(ret, m.Name, col.Name)
 		}
 	})
-	for _, rel := range m.Relations {
+	lo.ForEach(m.Relations, func(rel *model.Relation, _ int) {
 		cols := rel.SrcColumns(m)
 		if slices.Equal(cols.Names(), m.PKs().Names()) {
-			continue
+			return
 		}
 		for _, c := range cols {
 			if !(c.PK || c.Indexed) {
@@ -93,7 +93,7 @@ func sqlCreate(m *model.Model, modules []string, models model.Models) (*golang.B
 				break
 			}
 		}
-	}
+	})
 	lo.ForEach(m.Indexes, func(idx *model.Index, _ int) {
 		ret.W(idx.SQL())
 	})

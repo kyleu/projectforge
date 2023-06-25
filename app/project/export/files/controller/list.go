@@ -63,11 +63,10 @@ func controllerList(m *model.Model, grp *model.Column, models model.Models, enum
 		if err != nil {
 			return nil, err
 		}
-
-		ret.W("\t\t%sIDsBy%s := make([]%s, 0, len(ret))", relModel.Camel(), srcCol.Proper(), gt)
-		ret.W("\t\tfor _, x := range ret {")
-		ret.W("\t\t\t%sIDsBy%s = append(%sIDsBy%s, x.%s)", relModel.Camel(), srcCol.Proper(), relModel.Camel(), srcCol.Proper(), srcCol.Proper())
-		ret.W("\t\t}")
+		g.AddImport(helper.ImpLo)
+		ret.W("\t\t%sIDsBy%s := lo.Map(ret, func(x *%s.%s, _ int) %s {", relModel.Camel(), srcCol.Proper(), m.Package, m.Proper(), gt)
+		ret.W("\t\t\treturn x.%s", srcCol.Proper())
+		ret.W("\t\t})")
 		suffix := ""
 		if relModel.IsSoftDelete() {
 			suffix = ", false"

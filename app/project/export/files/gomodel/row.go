@@ -25,6 +25,7 @@ func Row(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	if err := helper.SpecialImports(g, m.Columns, m.PackageWithGroup(""), args.Enums); err != nil {
 		return nil, err
 	}
+	g.AddImport(helper.ImpLo)
 	lo.ForEach(m.Columns, func(col *model.Column, _ int) {
 		if col.Nullable && (col.Type.Key() == types.KeyString || col.Type.Key() == types.KeyInt || col.Type.Key() == types.KeyBool) {
 			g.AddImport(helper.ImpSQL)
@@ -192,11 +193,9 @@ func modelRowArray() *golang.Block {
 func modelRowArrayTransformer(m *model.Model) *golang.Block {
 	ret := golang.NewBlock(fmt.Sprintf("RowTo%s", m.ProperPlural()), "type")
 	ret.W("func (x rows) To%s() %s {", m.ProperPlural(), m.ProperPlural())
-	ret.W("\tret := make(%s, 0, len(x))", m.ProperPlural())
-	ret.W("\tfor _, d := range x {")
-	ret.W("\t\tret = append(ret, d.To%s())", m.Proper())
-	ret.W("\t}")
-	ret.W("\treturn ret")
+	ret.W("\treturn lo.Map(x, func(d *row, _ int) *%s {", m.Proper())
+	ret.W("\t\treturn d.To%s()", m.Proper())
+	ret.W("\t})")
 	ret.W("}")
 	return ret
 }

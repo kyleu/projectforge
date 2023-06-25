@@ -59,21 +59,19 @@ func modelArrayGet(g *golang.File, m *model.Model, enums enum.Enums) (*golang.Bl
 		return nil, err
 	}
 	ret.W("func (%s %s) Get(%s) *%s {", m.FirstLetter(), m.ProperPlural(), args, m.Proper())
-	ret.W("\tfor _, x := range %s {", m.FirstLetter())
-	comps := make([]string, 0, len(m.PKs()))
-	lo.ForEach(m.PKs(), func(pk *model.Column, _ int) {
+
+	comps := lo.Map(m.PKs(), func(pk *model.Column, index int) string {
 		if types.IsList(pk.Type) {
 			g.AddImport(helper.ImpSlices)
-			comps = append(comps, fmt.Sprintf("slices.Equal(x.%s, %s)", pk.Proper(), pk.Camel()))
+			return fmt.Sprintf("slices.Equal(x.%s, %s)", pk.Proper(), pk.Camel())
 		} else {
-			comps = append(comps, fmt.Sprintf("x.%s == %s", pk.Proper(), pk.Camel()))
+			return fmt.Sprintf("x.%s == %s", pk.Proper(), pk.Camel())
 		}
 	})
-	ret.W("\t\tif %s {", strings.Join(comps, " && "))
-	ret.W("\t\t\treturn x")
-	ret.W("\t\t}")
-	ret.W("\t}")
-	ret.W("\treturn nil")
+
+	ret.W("\treturn lo.FindOrElse(%s, nil, func(x *%s) bool {", m.FirstLetter(), m.Proper())
+	ret.W("\t\treturn %s", strings.Join(comps, " && "))
+	ret.W("\t})")
 	ret.W("}")
 	return ret, nil
 }
@@ -97,13 +95,9 @@ func modelArrayGetBy(m *model.Model, col *model.Column, enums enum.Enums) *golan
 	}
 	t, _ := col.ToGoType(m.Package, enums)
 	ret.W("func (%s %s) GetBy%s(%s ...%s) %s {", m.FirstLetter(), m.ProperPlural(), name, col.CamelPlural(), t, m.ProperPlural())
-	ret.W("\tvar ret %s", m.ProperPlural())
-	ret.W("\tfor _, x := range %s {", m.FirstLetter())
-	ret.W("\t\tif lo.Contains(%s, x.%s) {", col.CamelPlural(), col.Proper())
-	ret.W("\t\t\tret = append(ret, x)")
-	ret.W("\t\t}")
-	ret.W("\t}")
-	ret.W("\treturn ret")
+	ret.W("\treturn lo.Filter(%s, func(x *%s, _ int) bool {", m.FirstLetter(), m.Proper())
+	ret.W("\t\treturn lo.Contains(%s, x.%s)", col.CamelPlural(), col.Proper())
+	ret.W("\t})")
 	ret.W("}")
 	return ret
 }
@@ -119,11 +113,9 @@ func modelArrayCol(m *model.Model, col *model.Column, enums enum.Enums) *golang.
 	}
 	t, _ := col.ToGoType(m.Package, enums)
 	ret.W("func (%s %s) %s() []%s {", m.FirstLetter(), m.ProperPlural(), name, t)
-	ret.W("\tret := make([]%s, 0, len(%s)+1)", t, m.FirstLetter())
-	ret.W("\tfor _, x := range %s {", m.FirstLetter())
-	ret.W("\t\tret = append(ret, x.%s)", col.Proper())
-	ret.W("\t}")
-	ret.W("\treturn ret")
+	ret.W("\treturn lo.Map(%s, func(x *%s, _ int) %s {", m.FirstLetter(), m.Proper(), t)
+	ret.W("\t\treturn x.%s", col.Proper())
+	ret.W("\t})")
 	ret.W("}")
 	return ret
 }
@@ -135,9 +127,9 @@ func modelArrayColStrings(m *model.Model, col *model.Column) *golang.Block {
 	ret.W("\tif includeNil {")
 	ret.W("\t\tret = append(ret, \"\")")
 	ret.W("\t}")
-	ret.W("\tfor _, x := range %s {", m.FirstLetter())
+	ret.W("\tlo.ForEach(%s, func(x *%s, _ int) {", m.FirstLetter(), m.Proper())
 	ret.W("\t\tret = append(ret, %s)", model.ToGoString(col.Type, "x."+col.Proper(), true))
-	ret.W("\t}")
+	ret.W("\t})")
 	ret.W("\treturn ret")
 	ret.W("}")
 	return ret
@@ -150,9 +142,9 @@ func modelArrayTitleStrings(m *model.Model) *golang.Block {
 	ret.W("\tif nilTitle != \"\" {")
 	ret.W("\t\tret = append(ret, nilTitle)")
 	ret.W("\t}")
-	ret.W("\tfor _, x := range %s {", m.FirstLetter())
+	ret.W("\tlo.ForEach(%s, func(x *%s, _ int) {", m.FirstLetter(), m.Proper())
 	ret.W("\t\tret = append(ret, x.TitleString())")
-	ret.W("\t}")
+	ret.W("\t})")
 	ret.W("\treturn ret")
 	ret.W("}")
 	return ret
