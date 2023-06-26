@@ -60,7 +60,7 @@ func StreamForm(qw422016 *qt422016.Writer, act string, q string, placeholder str
 	components.StreamSVGRef(qw422016, "search", 22, 22, `icon`, ps)
 //line views/vsearch/Form.html:17
 	qw422016.N().S(`</button>
-      <input class="right" type="text" name="q" style="border-right: 0;" value="`)
+      <input class="right br0" type="text" name="q" value="`)
 //line views/vsearch/Form.html:18
 	qw422016.E().S(q)
 //line views/vsearch/Form.html:18

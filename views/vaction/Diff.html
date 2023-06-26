@@ -98,7 +98,7 @@
       {% if len(line) > 0 %}
         {% switch line[0] %}
         {% case ' ' %}
-        <div title="unchanged" style="color: grey;">{%s line[1:] %}{% if len(line) == 1 %}&nbsp;{% endif %}</div>
+        <div class="color-muted" title="unchanged">{%s line[1:] %}{% if len(line) == 1 %}&nbsp;{% endif %}</div>
         {% case '+' %}
         <div title="added" class="success">{%s line[1:] %}{% if len(line) == 1 %}&nbsp;{% endif %}</div>
         {% case '-' %}

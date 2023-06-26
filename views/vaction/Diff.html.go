@@ -249,7 +249,7 @@ func streamrenderPatch(qw422016 *qt422016.Writer, patch string, as *app.State, p
 //line views/vaction/Diff.html:100
 			case ' ':
 //line views/vaction/Diff.html:100
-				qw422016.N().S(`<div title="unchanged" style="color: grey;">`)
+				qw422016.N().S(`<div class="color-muted" title="unchanged">`)
 //line views/vaction/Diff.html:101
 				qw422016.E().S(line[1:])
 //line views/vaction/Diff.html:101

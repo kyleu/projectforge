@@ -2,6 +2,7 @@ package module
 
 import (
 	"os"
+	"strings"
 
 	"github.com/samber/lo"
 
@@ -54,6 +55,9 @@ func (s *Service) loadFiles(mod *Module, addHeader bool, ret map[string]*file.Fi
 	}
 	for _, f := range fs {
 		if f == configFilename {
+			continue
+		}
+		if strings.HasSuffix(f, ".png") || strings.HasSuffix(f, ".ico") {
 			continue
 		}
 		mode, b, err := fileContent(loader, f)

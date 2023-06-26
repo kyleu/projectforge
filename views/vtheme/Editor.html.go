@@ -35,7 +35,7 @@ func StreamEditor(qw422016 *qt422016.Writer, navTitle string, t *theme.Theme, as
       <thead>
       <tr>
         <th></th>
-        <th class="border-left" colspan="2">
+        <th class="bl" colspan="2">
           <div>Light</div>
           <div id="mockup-light">`)
 //line views/vtheme/Editor.html:16
@@ -43,7 +43,7 @@ func StreamEditor(qw422016 *qt422016.Writer, navTitle string, t *theme.Theme, as
 //line views/vtheme/Editor.html:16
 	qw422016.N().S(`</div>
         </th>
-        <th class="border-left" colspan="2">
+        <th class="bl" colspan="2">
           <div>Dark</div>
           <div id="mockup-dark">`)
 //line views/vtheme/Editor.html:20
@@ -54,9 +54,9 @@ func StreamEditor(qw422016 *qt422016.Writer, navTitle string, t *theme.Theme, as
       </tr>
       <tr>
         <th></th>
-        <th class="border-left">Background</th>
+        <th class="bl">Background</th>
         <th>Foreground</th>
-        <th class="border-left">Background</th>
+        <th class="bl">Background</th>
         <th>Foreground</th>
       </tr>
       </thead>
@@ -69,7 +69,7 @@ func StreamEditor(qw422016 *qt422016.Writer, navTitle string, t *theme.Theme, as
 	qw422016.N().S(`      <tbody>
         <tr>
           <th class="left-align shrink">Main Content</th>
-          <td class="border-left">`)
+          <td class="bl">`)
 //line views/vtheme/Editor.html:38
 	streamcinput(qw422016, lp, "background", t.Light.Background)
 //line views/vtheme/Editor.html:38
@@ -79,7 +79,7 @@ func StreamEditor(qw422016 *qt422016.Writer, navTitle string, t *theme.Theme, as
 	streamcinput(qw422016, lp, "foreground", t.Light.Foreground)
 //line views/vtheme/Editor.html:39
 	qw422016.N().S(`</td>
-          <td class="border-left">`)
+          <td class="bl">`)
 //line views/vtheme/Editor.html:40
 	streamcinput(qw422016, dp, "background", t.Dark.Background)
 //line views/vtheme/Editor.html:40
@@ -92,7 +92,7 @@ func StreamEditor(qw422016 *qt422016.Writer, navTitle string, t *theme.Theme, as
         </tr>
         <tr>
           <th class="left-align shrink">Muted</th>
-          <td class="border-left">`)
+          <td class="bl">`)
 //line views/vtheme/Editor.html:45
 	streamcinput(qw422016, lp, "background-muted", t.Light.BackgroundMuted)
 //line views/vtheme/Editor.html:45
@@ -102,7 +102,7 @@ func StreamEditor(qw422016 *qt422016.Writer, navTitle string, t *theme.Theme, as
 	streamcinput(qw422016, lp, "foreground-muted", t.Light.ForegroundMuted)
 //line views/vtheme/Editor.html:46
 	qw422016.N().S(`</td>
-          <td class="border-left">`)
+          <td class="bl">`)
 //line views/vtheme/Editor.html:47
 	streamcinput(qw422016, dp, "background-muted", t.Dark.BackgroundMuted)
 //line views/vtheme/Editor.html:47
@@ -115,13 +115,13 @@ func StreamEditor(qw422016 *qt422016.Writer, navTitle string, t *theme.Theme, as
         </tr>
         <tr>
           <th class="left-align shrink">Link</th>
-          <td class="border-left"></td>
+          <td class="bl"></td>
           <td>`)
 //line views/vtheme/Editor.html:53
 	streamcinput(qw422016, lp, "link-foreground", t.Light.LinkForeground)
 //line views/vtheme/Editor.html:53
 	qw422016.N().S(`</td>
-          <td class="border-left"></td>
+          <td class="bl"></td>
           <td>`)
 //line views/vtheme/Editor.html:55
 	streamcinput(qw422016, dp, "link-foreground", t.Dark.LinkForeground)
@@ -130,13 +130,13 @@ func StreamEditor(qw422016 *qt422016.Writer, navTitle string, t *theme.Theme, as
         </tr>
         <tr>
           <th class="left-align shrink">Visited Link</th>
-          <td class="border-left"></td>
+          <td class="bl"></td>
           <td>`)
 //line views/vtheme/Editor.html:60
 	streamcinput(qw422016, lp, "link-visited-foreground", t.Light.LinkVisitedForeground)
 //line views/vtheme/Editor.html:60
 	qw422016.N().S(`</td>
-          <td class="border-left"></td>
+          <td class="bl"></td>
           <td>`)
 //line views/vtheme/Editor.html:62
 	streamcinput(qw422016, dp, "link-visited-foreground", t.Dark.LinkVisitedForeground)
@@ -145,7 +145,7 @@ func StreamEditor(qw422016 *qt422016.Writer, navTitle string, t *theme.Theme, as
         </tr>
         <tr>
           <th class="left-align shrink">Navigation</th>
-          <td class="border-left">`)
+          <td class="bl">`)
 //line views/vtheme/Editor.html:66
 	streamcinput(qw422016, lp, "nav-background", t.Light.NavBackground)
 //line views/vtheme/Editor.html:66
@@ -155,7 +155,7 @@ func StreamEditor(qw422016 *qt422016.Writer, navTitle string, t *theme.Theme, as
 	streamcinput(qw422016, lp, "nav-foreground", t.Light.NavForeground)
 //line views/vtheme/Editor.html:67
 	qw422016.N().S(`</td>
-          <td class="border-left">`)
+          <td class="bl">`)
 //line views/vtheme/Editor.html:68
 	streamcinput(qw422016, dp, "nav-background", t.Dark.NavBackground)
 //line views/vtheme/Editor.html:68
@@ -168,7 +168,7 @@ func StreamEditor(qw422016 *qt422016.Writer, navTitle string, t *theme.Theme, as
         </tr>
         <tr>
           <th class="left-align shrink">Menu</th>
-          <td class="border-left">`)
+          <td class="bl">`)
 //line views/vtheme/Editor.html:73
 	streamcinput(qw422016, lp, "menu-background", t.Light.MenuBackground)
 //line views/vtheme/Editor.html:73
@@ -178,7 +178,7 @@ func StreamEditor(qw422016 *qt422016.Writer, navTitle string, t *theme.Theme, as
 	streamcinput(qw422016, lp, "menu-foreground", t.Light.MenuForeground)
 //line views/vtheme/Editor.html:74
 	qw422016.N().S(`</td>
-          <td class="border-left">`)
+          <td class="bl">`)
 //line views/vtheme/Editor.html:75
 	streamcinput(qw422016, dp, "menu-background", t.Dark.MenuBackground)
 //line views/vtheme/Editor.html:75
@@ -191,7 +191,7 @@ func StreamEditor(qw422016 *qt422016.Writer, navTitle string, t *theme.Theme, as
         </tr>
         <tr>
           <th class="left-align shrink">Selected Menu</th>
-          <td class="border-left">`)
+          <td class="bl">`)
 //line views/vtheme/Editor.html:80
 	streamcinput(qw422016, lp, "menu-selected-background", t.Light.MenuSelectedBackground)
 //line views/vtheme/Editor.html:80
@@ -201,7 +201,7 @@ func StreamEditor(qw422016 *qt422016.Writer, navTitle string, t *theme.Theme, as
 	streamcinput(qw422016, lp, "menu-selected-foreground", t.Light.MenuSelectedForeground)
 //line views/vtheme/Editor.html:81
 	qw422016.N().S(`</td>
-          <td class="border-left">`)
+          <td class="bl">`)
 //line views/vtheme/Editor.html:82
 	streamcinput(qw422016, dp, "menu-selected-background", t.Dark.MenuSelectedBackground)
 //line views/vtheme/Editor.html:82

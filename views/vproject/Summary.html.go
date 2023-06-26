@@ -92,7 +92,7 @@ func StreamSummary(qw422016 *qt422016.Writer, prj *project.Project, title string
 //line views/vproject/Summary.html:29
 	if len(ex) > 0 {
 //line views/vproject/Summary.html:29
-		qw422016.N().S(`    <div class="right" style="padding-top: 6px;">
+		qw422016.N().S(`    <div class="right pts">
       <a href="`)
 //line views/vproject/Summary.html:31
 		qw422016.E().S(ex[len(ex)-1].WebPath())

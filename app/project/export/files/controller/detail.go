@@ -12,7 +12,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func controllerDetail(models model.Models, m *model.Model, grp *model.Column, audit bool, g *golang.File, prefix string) *golang.Block {
+func controllerDetail(g *golang.File, models model.Models, m *model.Model, grp *model.Column, audit bool, prefix string) *golang.Block {
 	rrels := models.ReverseRelations(m.Name)
 	ret := blockFor(m, prefix, grp, (len(rrels)*6)+40, "detail")
 	grpHistory := ""
@@ -38,7 +38,7 @@ func controllerDetail(models model.Models, m *model.Model, grp *model.Column, au
 		ret.W("\t\tincDel := cutil.QueryStringBool(rc, \"includeDeleted\")")
 	}
 	ret.WB()
-	argKeys, argVals := getArgs(models, m, rrels, g, ret)
+	argKeys, argVals := getArgs(g, models, m, rrels, ret)
 	revArgKeys, revArgVals := getReverseArgs(models, m, rrels, ret)
 	if audit {
 		msg := "\t\trelatedAuditRecords, err := as.Services.Audit.RecordsForModel(ps.Context, nil, %q, %s, nil, ps.Logger)"
@@ -84,7 +84,7 @@ func controllerDetail(models model.Models, m *model.Model, grp *model.Column, au
 	return ret
 }
 
-func getArgs(models model.Models, m *model.Model, rrels model.Relations, g *golang.File, ret *golang.Block) ([]string, []string) {
+func getArgs(g *golang.File, models model.Models, m *model.Model, rrels model.Relations, ret *golang.Block) ([]string, []string) {
 	var argKeys []string
 	var argVals []string
 	argAdd := func(k string, v string) {

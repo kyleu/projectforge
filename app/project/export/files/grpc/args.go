@@ -65,7 +65,7 @@ func idClauseFor(m *model.Model) (string, string) {
 	return "", ""
 }
 
-func grpcParamsFromRequest(m *model.Model, args string, g *golang.File, enums enum.Enums) (*golang.Block, error) {
+func grpcParamsFromRequest(g *golang.File, m *model.Model, args string, enums enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock("grpcParamsFromRequest", "func")
 	pks := m.PKs()
 	ks, err := pks.GoTypes(m.Package, enums)
@@ -75,7 +75,7 @@ func grpcParamsFromRequest(m *model.Model, args string, g *golang.File, enums en
 	ret.W("func %sParamsFromRequest(%s) (%s, error) {", m.Camel(), args, strings.Join(ks, ", "))
 	zeroVals := strings.Join(pks.ZeroVals(), ", ")
 	for _, col := range pks {
-		err := grpcArgFor(col, ret, zeroVals, g)
+		err := grpcArgFor(g, col, ret, zeroVals)
 		if err != nil {
 			return nil, errors.Wrap(err, "")
 		}
@@ -85,7 +85,7 @@ func grpcParamsFromRequest(m *model.Model, args string, g *golang.File, enums en
 	return ret, nil
 }
 
-func grpcArgFor(col *model.Column, b *golang.Block, zeroVals string, g *golang.File) error {
+func grpcArgFor(g *golang.File, col *model.Column, b *golang.Block, zeroVals string) error {
 	switch col.Type.Key() {
 	case types.KeyBool:
 		b.W("\t%s, err := provider.GetRequestBool(p.R, %q)", col.Camel(), col.Camel())

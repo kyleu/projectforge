@@ -5,6 +5,7 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"{{{ .Package }}}/app/lib/database"
 	"{{{ .Package }}}/app/util"
@@ -32,11 +33,9 @@ func RegisterMigration(title string, content string) {
 }
 
 func GetMigrations() MigrationFiles {
-	ret := make(MigrationFiles, 0, len(databaseMigrations))
-	for _, x := range databaseMigrations {
-		ret = append(ret, &MigrationFile{Title: x.Title, Content: x.Content})
-	}
-	return ret
+	return lo.Map(databaseMigrations, func(x *MigrationFile, _ int) *MigrationFile {
+		return &MigrationFile{Title: x.Title, Content: x.Content}
+	})
 }
 
 func exec(ctx context.Context, file *MigrationFile, s *database.Service, tx *sqlx.Tx, logger util.Logger) (string, error) {

@@ -43,7 +43,7 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 			}
 			g.AddBlocks(x)
 		} else {
-			g.AddBlocks(serviceGetMultipleManyPKs(m, dbRef, g))
+			g.AddBlocks(serviceGetMultipleManyPKs(m, dbRef))
 		}
 	}
 	getBys := map[string]model.Columns{}

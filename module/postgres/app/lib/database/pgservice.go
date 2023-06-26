@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-ini/ini"
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"{{{ .Package }}}/app/util"
 )
@@ -89,11 +90,11 @@ func parseConfigSection(service, file string) (map[string]string, error) {
 		return result, err
 	}
 
-	for key := range validParams {
+	lo.ForEach(lo.Keys(validParams), func(key string, _ int) {
 		if value, err := section.GetKey(key); err == nil {
 			result[key] = value.String()
 		}
-	}
+	})
 
 	return result, nil
 }

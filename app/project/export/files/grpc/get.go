@@ -53,7 +53,7 @@ func grpcSearch(m *model.Model, grpcArgs string, grpcRet string, ga *FileArgs) *
 	return ret
 }
 
-func grpcDetail(m *model.Model, grpcArgs string, grpcRet string, g *golang.File, ga *FileArgs) (*golang.Block, error) {
+func grpcDetail(g *golang.File, m *model.Model, grpcArgs string, grpcRet string, ga *FileArgs) (*golang.Block, error) {
 	ret := golang.NewBlock("grpcDetail", "func")
 	ret.W("func %sDetail%s(%s) %s {", m.Proper(), ga.APISuffix(), grpcArgs, grpcRet)
 	idClause, suffix := idClauseFor(m)

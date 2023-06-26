@@ -545,7 +545,7 @@ func streamdisplayEntry(qw422016 *qt422016.Writer, hist *git.HistoryResult, e *g
 	u += "&commit=" + e.SHA
 
 //line views/vgit/Result.html:173
-	qw422016.N().S(`  <div class="card" style="margin-left: 0;">
+	qw422016.N().S(`  <div class="card ml0">
     <div class="right"><em>`)
 //line views/vgit/Result.html:175
 	qw422016.E().S(util.TimeToFull(e.OccurredTime()))

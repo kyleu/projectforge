@@ -15,8 +15,13 @@ import (
 func Search(args *model.Args, addHeader bool) (*file.File, error) {
 	g := golang.NewFile("search", []string{"app", "lib", "search"}, "generated")
 	if args.Models.HasSearch() {
-		g.AddImport(helper.ImpContext, helper.ImpApp, helper.ImpAppUtil, helper.ImpCutil, helper.AppImport("app/lib/search/result"))
+		g.AddImport(helper.ImpContext, helper.ImpApp, helper.ImpAppUtil, helper.ImpCutil, helper.ImpLo, helper.ImpSearchResult)
 	}
+	lo.ForEach(args.Models, func(m *model.Model, _ int) {
+		if m.HasSearches() {
+			g.AddImport(helper.AppImport("app/" + m.PackageWithGroup("")))
+		}
+	})
 	g.AddBlocks(searchBlock(args))
 	return g.Render(addHeader)
 }
@@ -57,15 +62,14 @@ func searchModel(m *model.Model) []string {
 	add("\t\tif err != nil {")
 	add("\t\t\treturn nil, err")
 	add("\t\t}")
-	add("\t\tres := make(result.Results, 0, len(models))")
-	add("\t\tfor _, m := range models {")
+
+	add("\t\treturn lo.Map(models, func(m *%s.%s, _ int) *result.Result {", m.Package, m.Proper())
 	data := "m"
 	if m.HasTag("big") {
 		data = "nil"
 	}
-	add("\t\t\tres = append(res, result.NewResult(%q, m.String(), m.WebPath(), m.String(), %q, m, %s, params.Q))", m.Package, m.Icon, data)
-	add("\t\t}")
-	add("\t\treturn res, nil")
+	add("\t\t\treturn result.NewResult(%q, m.String(), m.WebPath(), m.String(), %q, m, %s, params.Q)", m.Package, m.Icon, data)
+	add("\t\t}), nil")
 	add("\t}")
 	return ret
 }

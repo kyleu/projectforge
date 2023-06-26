@@ -40,7 +40,7 @@ func serviceGetMultipleSinglePK(m *model.Model, dbRef string, enums enum.Enums) 
 	return ret, nil
 }
 
-func serviceGetMultipleManyPKs(m *model.Model, dbRef string, g *golang.File) *golang.Block {
+func serviceGetMultipleManyPKs(m *model.Model, dbRef string) *golang.Block {
 	ret := golang.NewBlock(serviceGetMultipleName, "func")
 	pks := m.PKs()
 
@@ -59,12 +59,12 @@ func serviceGetMultipleManyPKs(m *model.Model, dbRef string, g *golang.File) *go
 	ret.W("\t\treturn %s{}, nil", m.ProperPlural())
 	ret.W("\t}")
 	ret.W("\twc := \"(\"")
-	ret.W("\tfor idx := range pks {")
+	ret.W("\tlo.ForEach(pks, func(_ *PK, idx int) {")
 	ret.W("\t\tif idx > 0 {")
 	ret.W("\t\t\twc += \" or \"")
 	ret.W("\t\t}")
 	ret.W("\t\twc += fmt.Sprintf(\"(%s)\", %s)", strings.Join(tags, " and "), strings.Join(idxs, ", "))
-	ret.W("\t}")
+	ret.W("\t})")
 	ret.W("\twc += \")\"")
 	if m.IsSoftDelete() {
 		ret.W("\twc = addDeletedClause(wc, includeDeleted)")

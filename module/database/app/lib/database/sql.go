@@ -3,6 +3,8 @@ package database
 import (
 	"fmt"
 	"strings"
+
+	"github.com/samber/lo"
 )
 
 const whereSpaces = " where "
@@ -67,20 +69,22 @@ func SQLInsert(table string, columns []string, rows int, placeholder string) str
 	}
 	colString := strings.Join(columns, ", ")
 	var placeholders []string
-	for i := 0; i < rows; i++ {
-		var ph []string
-		for idx := range columns {
+	lo.Times(rows, func(i int) any {
+		ph := lo.FilterMap(columns, func(_ string, idx int) (string, bool) {
 			switch placeholder {
 			case "$", "":
-				ph = append(ph, fmt.Sprintf("$%d", (i*len(columns))+idx+1))
+				return fmt.Sprintf("$%d", (i*len(columns))+idx+1), true
 			case "?":
-				ph = append(ph, "?")
+				return "?", true
 			case "@":
-				ph = append(ph, fmt.Sprintf("@p%d", (i*len(columns))+idx+1))
+				return fmt.Sprintf("@p%d", (i*len(columns))+idx+1), true
+			default:
+				return "", false
 			}
-		}
+		})
 		placeholders = append(placeholders, "("+strings.Join(ph, ", ")+")")
-	}
+		return nil
+	})
 	return fmt.Sprintf("insert into %s (%s) values %s", table, colString, strings.Join(placeholders, ", "))
 }
 
@@ -98,17 +102,18 @@ func SQLUpdate(table string, columns []string, where string, placeholder string)
 		whereClause = whereSpaces + where
 	}
 
-	stmts := make([]string, 0, len(columns))
-	for i, col := range columns {
+	stmts := lo.FilterMap(columns, func(col string, i int) (string, bool) {
 		switch placeholder {
 		case "$", "":
-			stmts = append(stmts, fmt.Sprintf("%s = $%d", col, i+1))
+			return fmt.Sprintf("%s = $%d", col, i+1), true
 		case "?":
-			stmts = append(stmts, fmt.Sprintf("%s = ?", col))
+			return fmt.Sprintf("%s = ?", col), true
 		case "@":
-			stmts = append(stmts, fmt.Sprintf("%s = @p%d", col, i+1))
+			return fmt.Sprintf("%s = @p%d", col, i+1), true
+		default:
+			return "", false
 		}
-	}
+	})
 	return fmt.Sprintf("update %s set %s%s", table, strings.Join(stmts, ", "), whereClause)
 }
 
@@ -123,12 +128,12 @@ func SQLUpdateReturning(table string, columns []string, where string, returned [
 func SQLUpsert(table string, columns []string, rows int, conflicts []string, updates []string, placeholder string) string {
 	q := SQLInsert(table, columns, rows, placeholder)
 	q += " on conflict (" + strings.Join(conflicts, ", ") + ") do update set "
-	for idx, x := range updates {
+	lo.ForEach(updates, func(x string, idx int) {
 		if idx > 0 {
 			q += ", "
 		}
 		q += fmt.Sprintf("%s = excluded.%s", x, x)
-	}
+	})
 	return q
 }
 

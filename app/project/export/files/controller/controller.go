@@ -35,11 +35,11 @@ func Controller(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 	if len(m.Group) > 0 {
 		prefix = defaultPrefix
 	}
-	cl, err := controllerList(m, nil, args.Models, args.Enums, g, prefix)
+	cl, err := controllerList(g, m, nil, args.Models, args.Enums, prefix)
 	if err != nil {
 		return nil, err
 	}
-	g.AddBlocks(cl, controllerDetail(args.Models, m, nil, args.Audit(m), g, prefix))
+	g.AddBlocks(cl, controllerDetail(g, args.Models, m, nil, args.Audit(m), prefix))
 	if m.IsRevision() {
 		g.AddBlocks(controllerRevision(m, prefix))
 	}

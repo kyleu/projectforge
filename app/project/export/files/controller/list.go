@@ -11,7 +11,7 @@ import (
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func controllerList(m *model.Model, grp *model.Column, models model.Models, enums enum.Enums, g *golang.File, prefix string) (*golang.Block, error) {
+func controllerList(g *golang.File, m *model.Model, grp *model.Column, models model.Models, enums enum.Enums, prefix string) (*golang.Block, error) {
 	ret := blockFor(m, prefix, grp, 0, "list")
 	meth := "List"
 	grpArgs := ""

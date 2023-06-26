@@ -128,7 +128,7 @@ func modelHistoryRows(m *model.Model) *golang.Block {
 	ret.W("type historyRows []*historyRow")
 	ret.WB()
 	ret.W("func (h historyRows) ToHistories() Histories {")
-	ret.W("\treturn lo.Map(%s, func(x *historyRow, _ int) *History {", m.FirstLetter())
+	ret.W("\treturn lo.Map(h, func(x *historyRow, _ int) *History {")
 	ret.W("\t\treturn x.ToHistory()")
 	ret.W("\t})")
 	ret.W("}")

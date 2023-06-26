@@ -29,6 +29,7 @@ var (
 	ImpLo            = golang.NewImport(golang.ImportTypeExternal, "github.com/samber/lo")
 	ImpMSSQL         = golang.NewImport(golang.ImportTypeExternal, "github.com/denisenkom/go-mssqldb").WithAlias("mssql")
 	ImpRouter        = golang.NewImport(golang.ImportTypeExternal, "github.com/fasthttp/router")
+	ImpSearchResult  = AppImport("app/lib/search/result")
 	ImpSlices        = golang.NewImport(golang.ImportTypeExternal, "golang.org/x/exp/slices")
 	ImpSQL           = golang.NewImport(golang.ImportTypeInternal, "database/sql")
 	ImpSQLx          = golang.NewImport(golang.ImportTypeExternal, "github.com/jmoiron/sqlx")

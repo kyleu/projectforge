@@ -17,7 +17,7 @@
     <tbody id="{%s id %}">
       {%- for idx, line := range lines -%}
       <tr style="font-family: monospace;">
-        <td class="shrink" style="padding: 2px var(--padding) 2px 0; border-right: var(--border); vertical-align: top;">{%d idx + 1 %}</td>
+        <td class="shrink br" style="padding: 2px var(--padding) 2px 0; vertical-align: top;">{%d idx + 1 %}</td>
         <td style="padding: 2px var(--padding);"><div style="white-space: pre-wrap; word-wrap: break-word; word-break: break-word;">{%s= line %}</div></td>
       </tr>
       {%- endfor -%}

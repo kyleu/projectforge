@@ -44,7 +44,7 @@ func StreamDisplayTerminal(qw422016 *qt422016.Writer, id string, s string) {
 //line views/components/Terminal.html:18
 	for idx, line := range lines {
 //line views/components/Terminal.html:18
-		qw422016.N().S(`<tr style="font-family: monospace;"><td class="shrink" style="padding: 2px var(--padding) 2px 0; border-right: var(--border); vertical-align: top;">`)
+		qw422016.N().S(`<tr style="font-family: monospace;"><td class="shrink br" style="padding: 2px var(--padding) 2px 0; vertical-align: top;">`)
 //line views/components/Terminal.html:20
 		qw422016.N().D(idx + 1)
 //line views/components/Terminal.html:20

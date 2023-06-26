@@ -2,6 +2,8 @@ package database
 
 import (
 	"strings"
+
+	"github.com/samber/lo"
 )
 
 const (
@@ -16,13 +18,11 @@ func ArrayToString(a []string) string {
 func StringToArray(s string) []string {
 	split := strings.Split(strings.TrimPrefix(strings.TrimSuffix(s, "}"), "{"), ",")
 	ret := make([]string, 0)
-
-	for _, x := range split {
+	lo.ForEach(split, func(x string, _ int) {
 		y := strings.TrimSpace(x)
 		if len(y) > 0 {
 			ret = append(ret, y)
 		}
-	}
-
+	})
 	return ret
 }

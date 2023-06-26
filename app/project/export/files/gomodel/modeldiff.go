@@ -11,7 +11,7 @@ import (
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func modelDiff(m *model.Model, g *golang.File) *golang.Block {
+func modelDiff(g *golang.File, m *model.Model) *golang.Block {
 	ret := golang.NewBlock("Diff"+m.Proper(), "func")
 
 	complexity := lo.Sum(lo.Map(m.Columns, func(col *model.Column, _ int) int {

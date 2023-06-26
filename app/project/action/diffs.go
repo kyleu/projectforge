@@ -25,9 +25,6 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 	if err != nil {
 		return nil, nil, errors.Wrapf(err, "unable to get files from [%d] modules", len(pm.Mods))
 	}
-	srcFiles = lo.Filter(srcFiles, func(f *file.File, _ int) bool {
-		return !(strings.HasSuffix(f.Name, ".png") || strings.HasSuffix(f.Name, ".ico"))
-	})
 
 	if pm.Mods.Get("export") != nil {
 		args, errX := pm.Prj.ModuleArgExport(pm.PSvc, pm.Logger)

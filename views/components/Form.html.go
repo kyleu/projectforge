@@ -1107,7 +1107,7 @@ func StreamSearchForm(qw422016 *qt422016.Writer, action string, fieldKey string,
 //line views/components/Form.html:203
 	StreamSVGRef(qw422016, "search", 22, 22, `icon`, ps)
 //line views/components/Form.html:203
-	qw422016.N().S(`</button><input class="right" type="search" placeholder="`)
+	qw422016.N().S(`</button><input class="right br0" type="search" placeholder="`)
 //line views/components/Form.html:204
 	qw422016.E().S(placeholder)
 //line views/components/Form.html:204
@@ -1119,7 +1119,7 @@ func StreamSearchForm(qw422016 *qt422016.Writer, action string, fieldKey string,
 //line views/components/Form.html:204
 	qw422016.E().S(value)
 //line views/components/Form.html:204
-	qw422016.N().S(`" style="border-right: 0;"><div class="clear"></div></form>`)
+	qw422016.N().S(`"><div class="clear"></div></form>`)
 //line views/components/Form.html:207
 }
 

@@ -1,6 +1,10 @@
 package migrate
 
-import "time"
+import (
+	"time"
+
+	"github.com/samber/lo"
+)
 
 type Migration struct {
 	Idx     int       `json:"idx"`
@@ -25,21 +29,16 @@ func (r *migrationRow) toMigration() *Migration {
 	}
 }
 
-func toMigrations(rs []migrationRow) Migrations {
-	ret := make(Migrations, 0, len(rs))
-	for _, r := range rs {
-		ret = append(ret, r.toMigration())
-	}
-	return ret
+func toMigrations(rs []*migrationRow) Migrations {
+	return lo.Map(rs, func(r *migrationRow, _ int) *Migration {
+		return r.toMigration()
+	})
 }
 
 type Migrations []*Migration
 
 func (m Migrations) GetByIndex(idx int) *Migration {
-	for _, x := range m {
-		if x.Idx == idx {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(m, nil, func(x *Migration) bool {
+		return x.Idx == idx
+	})
 }

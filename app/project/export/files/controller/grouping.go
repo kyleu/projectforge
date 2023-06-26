@@ -19,12 +19,12 @@ func Grouping(m *model.Model, args *model.Args, grp *model.Column, addHeader boo
 	if len(m.Group) > 0 {
 		prefix = defaultPrefix
 	}
-	cl, err := controllerList(m, grp, args.Models, args.Enums, g, prefix)
+	cl, err := controllerList(g, m, grp, args.Models, args.Enums, prefix)
 	if err != nil {
 		return nil, err
 	}
 	g.AddBlocks(
-		controllerGrouped(m, grp, prefix), cl, controllerDetail(args.Models, m, grp, args.Audit(m), g, prefix),
+		controllerGrouped(m, grp, prefix), cl, controllerDetail(g, args.Models, m, grp, args.Audit(m), prefix),
 		controllerCreateForm(m, grp, prefix), controllerCreate(m, grp, prefix),
 		controllerEditForm(m, grp, prefix), controllerEdit(m, grp, prefix), controllerDelete(m, grp, prefix),
 	)

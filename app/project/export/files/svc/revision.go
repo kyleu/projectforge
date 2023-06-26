@@ -22,6 +22,10 @@ func ServiceRevision(m *model.Model, args *model.Args, addHeader bool) (*file.Fi
 	dbRef := args.DBRef()
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "servicerevision")
 	g.AddImport(helper.ImpAppUtil, helper.ImpFmt, helper.ImpStrings, helper.ImpContext, helper.ImpFilter, helper.ImpSQLx, helper.ImpErrors, helper.ImpDatabase)
+	id, err := serviceIDRev(m, dbRef, args.Enums)
+	if err != nil {
+		return nil, err
+	}
 	ar, err := serviceGetAllRevisions(m, dbRef, args.Enums)
 	if err != nil {
 		return nil, err
@@ -34,8 +38,32 @@ func ServiceRevision(m *model.Model, args *model.Args, addHeader bool) (*file.Fi
 	if err != nil {
 		return nil, err
 	}
-	g.AddBlocks(ar, gr, gnr)
+	g.AddBlocks(id, ar, gr, gnr)
 	return g.Render(addHeader)
+}
+
+func serviceIDRev(m *model.Model, dbRef string, enums enum.Enums) (*golang.Block, error) {
+	ret := golang.NewBlock("IDRev", "func")
+	pks := m.PKs()
+	revCol := m.HistoryColumn()
+
+	ret.W("type IDRev struct {")
+	maxColLength := pks.MaxCamelLength()
+	maxTypeLength := pks.MaxGoTypeLength(m.Package, enums)
+	currRevStr := fmt.Sprintf("Current%s", revCol.Proper())
+	if maxColLength < len(currRevStr) {
+		maxColLength = len(currRevStr)
+	}
+	for _, pk := range pks {
+		gt, err := pk.ToGoType(m.Package, enums)
+		if err != nil {
+			return nil, err
+		}
+		ret.W("\t%s %s `db:%q`", util.StringPad(pk.Proper(), maxColLength), util.StringPad(gt, maxTypeLength), pk.Name)
+	}
+	ret.W("\t%s %s `db:\"current_%s\"`", util.StringPad(currRevStr, maxColLength), util.StringPad("int", maxTypeLength), revCol.Name)
+	ret.W("}")
+	return ret, nil
 }
 
 func serviceGetAllRevisions(m *model.Model, dbRef string, enums enum.Enums) (*golang.Block, error) {
@@ -108,7 +136,7 @@ func serviceGetCurrentRevisions(g *golang.File, m *model.Model, dbRef string, en
 	revCol := m.HistoryColumn()
 	pks := m.PKs()
 	ret := golang.NewBlock(fmt.Sprintf("GetCurrent%s", revCol.ProperPlural()), "func")
-	err := serviceGetCurrentRevisionsBlock(m, ret, revCol, pks, enums)
+	err := serviceGetCurrentRevisionsBlock(g, m, ret, revCol, pks, enums)
 	if err != nil {
 		return nil, err
 	}
@@ -123,43 +151,29 @@ func serviceGetCurrentRevisions(g *golang.File, m *model.Model, dbRef string, en
 		}
 	})
 
-	ret.W("\tvar results []*struct {")
-	maxColLength := pks.MaxCamelLength()
-	maxTypeLength := pks.MaxGoTypeLength(m.Package, enums)
-	currRevStr := fmt.Sprintf("Current%s", revCol.Proper())
-	if maxColLength < len(currRevStr) {
-		maxColLength = len(currRevStr)
-	}
-	for _, pk := range pks {
-		gt, err := pk.ToGoType(m.Package, enums)
-		if err != nil {
-			return nil, err
-		}
-		ret.W("\t\t%s %s `db:%q`", util.StringPad(pk.Proper(), maxColLength), util.StringPad(gt, maxTypeLength), pk.Name)
-	}
-	ret.W("\t\t%s %s `db:\"current_%s\"`", util.StringPad(currRevStr, maxColLength), util.StringPad("int", maxTypeLength), revCol.Name)
-	ret.W("\t}")
+	ret.W("\tvar results []*IDRev")
 	ret.W("\terr := s.%s.Select(ctx, &results, q, tx, logger, vals...)", dbRef)
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, errors.Wrap(err, \"unable to get %s\")", m.ProperPlural())
 	ret.W("\t}")
 	ret.WB()
 	ret.W("\tret := make(map[string]int, len(models))")
-	ret.W("\tfor _, model := range models {")
+	ret.W("\tlo.ForEach(models, func(model *%s, _ int) {", m.Proper())
 	ret.W("\t\tcurr := 0")
-	ret.W("\t\tfor _, x := range results {")
+	ret.W("\t\tlo.ForEach(results, func(x *IDRev, _ int) {")
 	ret.W("\t\t\tif %s {", strings.Join(pkComps, " && "))
 	ret.W("\t\t\t\tcurr = x.Current%s", revCol.Proper())
 	ret.W("\t\t\t}")
-	ret.W("\t\t}")
+	ret.W("\t\t})")
 	ret.W("\t\tret[model.String()] = curr")
-	ret.W("\t}")
+	ret.W("\t})")
 	ret.W("\treturn ret, nil")
 	ret.W("}")
 	return ret, nil
 }
 
-func serviceGetCurrentRevisionsBlock(m *model.Model, ret *golang.Block, revCol *model.Column, pks model.Columns, enums enum.Enums) error {
+func serviceGetCurrentRevisionsBlock(g *golang.File, m *model.Model, ret *golang.Block, revCol *model.Column, pks model.Columns, enums enum.Enums) error {
+	g.AddImport(helper.ImpLo)
 	pkWCStr := make([]string, 0, len(pks))
 	pkWCIdx := make([]string, 0, len(pks))
 	pkModelRefs := make([]string, 0, len(pks))
@@ -180,16 +194,14 @@ func serviceGetCurrentRevisionsBlock(m *model.Model, ret *golang.Block, revCol *
 	}
 
 	ret.W(decl, revCol.ProperPlural(), m.Proper(), gt)
-	ret.W("\tstmts := make([]string, 0, len(models))")
-	ret.W("\tfor i := range models {")
-	ret.W("\t\tstmts = append(stmts, fmt.Sprintf(`%s`, %s))", strings.Join(pkWCStr, " and "), strings.Join(pkWCIdx, ", "))
-	ret.W("\t}")
+	ret.W("\tstmts := lo.Map(models, func(_ *%s, i int) string {", m.Proper())
+	ret.W("\t\treturn fmt.Sprintf(`%s`, %s)", strings.Join(pkWCStr, " and "), strings.Join(pkWCIdx, ", "))
+	ret.W("\t})")
 	msg := "\tq := database.SQLSelectSimple(`%s, \"current_%s\"`, tableQuoted, s.db.Placeholder(), strings.Join(stmts, \" or \"))"
 	ret.W(msg, strings.Join(pks.NamesQuoted(), ", "), revCol.Name)
-	ret.W("\tvals := make([]any, 0, len(models))")
-	ret.W("\tfor _, model := range models {")
-	ret.W("\t\tvals = append(vals, %s)", strings.Join(pkModelRefs, ", "))
-	ret.W("\t}")
+	ret.W("\tvals := lo.Map(models, func(model *%s, _ int) any {", m.Proper())
+	ret.W("\t\treturn %s", strings.Join(pkModelRefs, ", "))
+	ret.W("\t})")
 	return nil
 }
 

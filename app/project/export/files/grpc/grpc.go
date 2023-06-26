@@ -92,7 +92,7 @@ func grpcFile(m *model.Model, args *model.Args, ga *FileArgs, addHeader bool) (*
 	if m.HasSearches() {
 		g.AddBlocks(grpcSearch(m, grpcArgs, grpcRet, ga))
 	}
-	if detail, err := grpcDetail(m, grpcArgs, grpcRet, g, ga); err == nil {
+	if detail, err := grpcDetail(g, m, grpcArgs, grpcRet, ga); err == nil {
 		g.AddBlocks(detail)
 	} else {
 		return nil, err
@@ -104,7 +104,7 @@ func grpcFile(m *model.Model, args *model.Args, ga *FileArgs, addHeader bool) (*
 		grpcDelete(m, grpcArgs, grpcRet, ga),
 	)
 	if ga.Grp == nil {
-		b, err := grpcParamsFromRequest(m, grpcArgs, g, args.Enums)
+		b, err := grpcParamsFromRequest(g, m, grpcArgs, args.Enums)
 		if err != nil {
 			return nil, err
 		}

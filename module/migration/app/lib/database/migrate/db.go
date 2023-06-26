@@ -32,7 +32,7 @@ create table migration (
 
 func ListMigrations(ctx context.Context, s *database.Service, params *filter.Params, tx *sqlx.Tx, logger util.Logger) Migrations {
 	params = filter.ParamsWithDefaultOrdering(migrationTable, params, &filter.Ordering{Column: "created", Asc: false})
-	var rows []migrationRow
+	var rows []*migrationRow
 	q := database.SQLSelect("*", migrationTable, "", params.OrderByString(), params.Limit, params.Offset, s.Placeholder())
 	err := s.Select(ctx, &rows, q, tx, logger)
 	if err != nil {

@@ -375,7 +375,7 @@ func StreamModelList(qw422016 *qt422016.Writer, models model.Models, urlPrefix s
 		qw422016.E().S(m.Title())
 //line views/vexport/Overview.html:113
 		qw422016.N().S(`</a></td>
-        <td style="text-align: right;"><em>`)
+        <td class="text-align-right"><em>`)
 //line views/vexport/Overview.html:114
 		qw422016.E().S(prefix)
 //line views/vexport/Overview.html:114

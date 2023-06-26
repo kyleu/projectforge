@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/samber/lo"
+
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/lib/menu"
 	"{{{ .Package }}}/app/util"
@@ -21,12 +23,9 @@ type Sandbox struct {
 type Sandboxes []*Sandbox
 
 func (s Sandboxes) Get(key string) *Sandbox {
-	for _, v := range s {
-		if v.Key == key {
-			return v
-		}
-	}
-	return nil
+	return lo.FindOrElse(s, nil, func(v *Sandbox) bool {
+		return v.Key == key
+	})
 }
 
 // $PF_SECTION_START(sandboxes)$
@@ -37,11 +36,11 @@ var AllSandboxes = Sandboxes{testbed{{{ if .HasModule "wasm" }}}, wasm{{{ end }}
 
 func Menu(_ context.Context) *menu.Item {
 	ret := make(menu.Items, 0, len(AllSandboxes))
-	for _, s := range AllSandboxes {
+	lo.ForEach(AllSandboxes, func(s *Sandbox, _ int) {
 		desc := fmt.Sprintf("Sandbox [%s]", s.Key)
 		rt := fmt.Sprintf("/admin/sandbox/%s", s.Key)
 		ret = append(ret, &menu.Item{Key: s.Key, Title: s.Title, Icon: s.Icon, Description: desc, Route: rt})
-	}
+	})
 	const desc = "Playgrounds for testing new features"
 	return &menu.Item{Key: "sandbox", Title: "Sandboxes", Description: desc, Icon: "play", Route: "/admin/sandbox", Children: ret}
 }
