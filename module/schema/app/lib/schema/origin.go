@@ -1,6 +1,8 @@
 package schema
 
 import (
+	"github.com/samber/lo"
+
 	"{{{ .Package }}}/app/util"
 )
 
@@ -24,30 +26,23 @@ var (
 )
 
 func OriginKeys() []string {
-	ret := make([]string, 0, len(AllOrigins))
-	for _, x := range AllOrigins {
-		ret = append(ret, x.Key)
-	}
-	return ret
+	return lo.Map(AllOrigins, func(x Origin, _ int) string {
+		return x.Key
+	})
 }
 
 func OriginTitles() []string {
-	ret := make([]string, 0, len(AllOrigins))
-	for _, x := range AllOrigins {
-		ret = append(ret, x.Title)
-	}
-	return ret
+	return lo.Map(AllOrigins, func(x Origin, _ int) string {
+		return x.Title
+	})
 }
 
 var AllOrigins = []Origin{OriginMySQL, OriginPostgres, OriginSQLite, OriginSQLServer, OriginGraphQL, OriginProtobuf, OriginJSONSchema, OriginMock}
 
-func OriginFromString(s string) Origin {
-	for _, t := range AllOrigins {
-		if t.Key == s {
-			return t
-		}
-	}
-	return OriginUnknown
+func OriginFromString(key string) Origin {
+	return lo.FindOrElse(AllOrigins, OriginUnknown, func(t Origin) bool {
+		return t.Key == key
+	})
 }
 
 func (t *Origin) String() string {

@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/samber/lo"
+
 	"{{{ .Package }}}/app/util"
 )
 
@@ -17,13 +19,13 @@ type Reference struct {
 }
 
 func ReferenceFromRelation(rel *Relationship, m *Model) *Reference {
-	fields := make([]string, 0, len(rel.SourceFields))
-	for _, x := range rel.SourceFields {
+	fields := lo.FilterMap(rel.SourceFields, func(x string, _ int) (string, bool) {
 		_, col := m.Fields.Get(x)
 		if col != nil {
-			fields = append(fields, col.Name())
+			return col.Name(), true
 		}
-	}
+		return "", false
+	})
 	str := fmt.Sprintf("%s by %s", m.PluralName(), strings.Join(fields, ", "))
 	return &Reference{Key: rel.Key, TargetFields: rel.TargetFields, SourcePkg: m.Pkg, SourceModel: m.Key, SourceFields: rel.SourceFields, str: str}
 }
@@ -39,10 +41,7 @@ func (r *Reference) Debug() string {
 type References []*Reference
 
 func (s References) Get(key string) *Reference {
-	for _, x := range s {
-		if x.Key == key {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(s, nil, func(x *Reference) bool {
+		return x.Key == key
+	})
 }

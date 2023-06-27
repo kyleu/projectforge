@@ -199,8 +199,8 @@ func serviceGetCurrentRevisionsBlock(g *golang.File, m *model.Model, ret *golang
 	ret.W("\t})")
 	msg := "\tq := database.SQLSelectSimple(`%s, \"current_%s\"`, tableQuoted, s.db.Placeholder(), strings.Join(stmts, \" or \"))"
 	ret.W(msg, strings.Join(pks.NamesQuoted(), ", "), revCol.Name)
-	ret.W("\tvals := lo.Map(models, func(model *%s, _ int) any {", m.Proper())
-	ret.W("\t\treturn %s", strings.Join(pkModelRefs, ", "))
+	ret.W("\tvals := lo.FlatMap(models, func(model *%s, _ int) []any {", m.Proper())
+	ret.W("\t\treturn []any{%s}", strings.Join(pkModelRefs, ", "))
 	ret.W("\t})")
 	return nil
 }

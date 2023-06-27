@@ -69,20 +69,18 @@ func (a Accounts) String() string {
 }
 
 func (a Accounts) TitleString() string {
-	ret := make([]string, 0, len(a))
-	for _, x := range a {
-		ret = append(ret, x.TitleString())
-	}
-	return strings.Join(ret, ",")
+	return strings.Join(lo.Map(a, func(x *Account, _ int) string {
+		return x.TitleString()
+	}), ",")
 }
 
 func (a Accounts) Images() []string {
 	ret := make(util.KeyVals[string], 0, len(a))
-	for _, x := range a {
+	lo.ForEach(a, func(x *Account, _ int) {
 		if x.Picture != "" {
 			ret = append(ret, &util.KeyVal[string]{Key: x.Provider, Val: x.Picture})
 		}
-	}
+	})
 	return ret.Values()
 }
 
@@ -103,22 +101,15 @@ func (a Accounts) Sort() {
 }
 
 func (a Accounts) GetByProvider(p string) Accounts {
-	var ret Accounts
-	for _, x := range a {
-		if x.Provider == p {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(a, func(x *Account, _ int) bool {
+		return x.Provider == p
+	})
 }
 
 func (a Accounts) GetByProviderDomain(p string, d string) *Account {
-	for _, x := range a {
-		if x.Provider == p && x.Domain() == d {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(a, nil, func(x *Account) bool {
+		return x.Provider == p && x.Domain() == d
+	})
 }
 
 func (a Accounts) Matches(match string) bool {
@@ -126,13 +117,9 @@ func (a Accounts) Matches(match string) bool {
 		return true
 	}
 	if strings.Contains(match, ",") {
-		xs := util.StringSplitAndTrim(match, ",")
-		for _, x := range xs {
-			if a.Matches(x) {
-				return true
-			}
-		}
-		return false
+		return lo.ContainsBy(util.StringSplitAndTrim(match, ","), func(x string) bool {
+			return a.Matches(x)
+		})
 	}
 	prv, acct := util.StringSplit(match, ':', true)
 	for _, x := range a {
@@ -163,10 +150,7 @@ func (a Accounts) Purge(keys ...string) Accounts {
 }
 
 func AccountsFromString(s string) Accounts {
-	split := util.StringSplitAndTrim(s, ",")
-	ret := make(Accounts, 0, len(split))
-	for _, x := range split {
-		ret = append(ret, accountFromString(x))
-	}
-	return ret
+	return lo.Map(util.StringSplitAndTrim(s, ","), func(x string, _ int) *Account {
+		return accountFromString(x)
+	})
 }

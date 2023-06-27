@@ -4,6 +4,8 @@ import (
 	"reflect"
 	"time"
 
+	"github.com/samber/lo"
+
 	"{{{ .Package }}}/app/lib/types"
 	"{{{ .Package }}}/app/util"
 )
@@ -72,9 +74,7 @@ func (s Fields) Get(key string) (int, *Field) {
 }
 
 func (s Fields) Names() []string {
-	ret := make([]string, 0, len(s))
-	for _, x := range s {
-		ret = append(ret, x.Key)
-	}
-	return ret
+	return lo.Map(s, func(x *Field, _ int) string {
+		return x.Key
+	})
 }

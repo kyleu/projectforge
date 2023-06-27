@@ -7,6 +7,7 @@ import (
 	"time"
 
 	{{{ if .SQLServer }}}mssql "github.com/denisenkom/go-mssqldb"{{{ else }}}"github.com/google/uuid"{{{ end }}}
+	"github.com/samber/lo"
 
 	"{{{ .Package }}}/app/util"
 )
@@ -58,9 +59,7 @@ func (r *recordRow) ToRecord() *Record {
 type recordRows []*recordRow
 
 func (x recordRows) ToRecords() Records {
-	ret := make(Records, 0, len(x))
-	for _, r := range x {
-		ret = append(ret, r.ToRecord())
-	}
-	return ret
+	return lo.Map(x, func(r *recordRow, _ int) *Record {
+		return r.ToRecord()
+	})
 }

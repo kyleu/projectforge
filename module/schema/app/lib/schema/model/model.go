@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"{{{ .Package }}}/app/lib/schema/field"
 	"{{{ .Package }}}/app/util"
@@ -67,8 +68,8 @@ func (m *Model) OrderedMap(data []any) (*util.OrderedMap[any], error) {
 		return nil, errors.Errorf("expected [%d] data elements, found [%d]", len(m.Fields), len(data))
 	}
 	ret := util.NewOrderedMap[any](false, len(m.Fields))
-	for idx, f := range m.Fields {
+	lo.ForEach(m.Fields, func(f *field.Field, idx int) {
 		ret.Append(f.Key, data[idx])
-	}
+	})
 	return ret, nil
 }

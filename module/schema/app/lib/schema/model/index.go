@@ -3,6 +3,8 @@ package model
 import (
 	"strings"
 
+	"github.com/samber/lo"
+
 	"{{{ .Package }}}/app/lib/schema/field"
 )
 
@@ -21,10 +23,7 @@ func (i Index) String() string {
 type Indexes []*Index
 
 func (s Indexes) Get(key string) *Index {
-	for _, x := range s {
-		if x.Key == key {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(s, nil, func(x *Index) bool {
+		return x.Key == key
+	})
 }

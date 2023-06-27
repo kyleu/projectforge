@@ -1,6 +1,8 @@
 package model
 
 import (
+	"github.com/samber/lo"
+
 	"{{{ .Package }}}/app/util"
 )
 
@@ -81,8 +83,8 @@ type Packages []*Package
 
 func ToModelPackage(models Models) *Package {
 	ret := &Package{Key: "_root", Title: "Project Root"}
-	for _, m := range models {
+	lo.ForEach(models, func(m *Model, _ int) {
 		ret.Add(m.Pkg, m)
-	}
+	})
 	return ret
 }

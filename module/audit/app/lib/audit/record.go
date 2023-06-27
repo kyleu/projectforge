@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 
 	"{{{ .Package }}}/app/util"
 )
@@ -136,11 +137,7 @@ func (a *Record) ToData() []any {
 type Records []*Record
 
 func (r Records) ForAudit(id uuid.UUID) Records {
-	var ret Records
-	for _, x := range r {
-		if x.AuditID == id {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(r, func(x *Record, _ int) bool {
+		return x.AuditID == id
+	})
 }

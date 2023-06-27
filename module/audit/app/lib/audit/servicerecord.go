@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"{{{ .Package }}}/app/lib/database"
 	"{{{ .Package }}}/app/lib/filter"
@@ -20,10 +21,10 @@ func (s *Service) RecordsForAudits(ctx context.Context, tx *sqlx.Tx, params *fil
 	ret := recordRows{}
 	vals := make([]any, 0, len(auditIDs))
 	strs := make([]string, 0, len(auditIDs))
-	for _, auditID := range auditIDs {
+	lo.ForEach(auditIDs, func(auditID uuid.UUID, _ int) {
 		vals = append(vals, auditID.String())
 		strs = append(strs, auditID.String())
-	}
+	})
 	err := s.db.Select(ctx, &ret, q, tx, logger, vals...)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get records for audits [%s]", strings.Join(strs, ", "))
@@ -58,9 +59,8 @@ func (s *Service) CreateRecords(ctx context.Context, tx *sqlx.Tx, logger util.Lo
 		return nil
 	}
 	q := database.SQLInsert(recordTableQuoted, recordColumnsQuoted, len(models), s.db.Placeholder())
-	vals := make([]any, 0, len(models)*len(recordColumnsQuoted))
-	for _, arg := range models {
-		vals = append(vals, arg.ToData()...)
-	}
+	vals := lo.FlatMap(models, func(arg *Record, _ int) []any {
+		return arg.ToData()
+	})
 	return s.db.Insert(ctx, q, tx, logger, vals...)
 }

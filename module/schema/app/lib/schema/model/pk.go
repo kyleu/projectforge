@@ -2,6 +2,7 @@ package model
 
 import (
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"{{{ .Package }}}/app/lib/schema/field"
 	"{{{ .Package }}}/app/util"
@@ -9,26 +10,23 @@ import (
 
 func (m *Model) GetPK(logger util.Logger) []string {
 	if m.pk == nil {
-		for _, idx := range m.Indexes {
+		lo.ForEach(m.Indexes, func(idx *Index, _ int) {
 			if idx.Primary {
 				if m.pk != nil && logger != nil {
 					logger.Error("multiple primary keys?!")
 				}
 				m.pk = idx.Fields
 			}
-		}
+		})
 	}
 	return m.pk
 }
 
 func (m *Model) IsPK(key string, logger util.Logger) bool {
 	pk := m.GetPK(logger)
-	for _, col := range pk {
-		if col == key {
-			return true
-		}
-	}
-	return false
+	return lo.ContainsBy(pk, func(col string) bool {
+		return col == key
+	})
 }
 
 func GetValues(src field.Fields, tgt []string, vals []any) ([]any, error) {
@@ -36,14 +34,14 @@ func GetValues(src field.Fields, tgt []string, vals []any) ([]any, error) {
 		return nil, errors.Errorf("[%d] fields provided, but [%d] values expected", len(vals), len(src))
 	}
 	ret := make([]any, 0, len(tgt))
-	for _, t := range tgt {
+	lo.ForEach(tgt, func(t string, _ int) {
 		for idx, f := range src {
 			if f.Key == t {
 				ret = append(ret, vals[idx])
 				break
 			}
 		}
-	}
+	})
 	return ret, nil
 }
 

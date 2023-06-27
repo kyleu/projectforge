@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 
+	"github.com/samber/lo"
 	"github.com/valyala/fasthttp"
 
 	"{{{ .Package }}}/app"
@@ -18,10 +19,9 @@ func GraphQLIndex(rc *fasthttp.RequestCtx) {
 		if len(keys) == 1 {
 			return "/graphql/" + keys[0], nil
 		}
-		counts := make([]int, 0, len(keys))
-		for _, key := range keys {
-			counts = append(counts, as.GraphQL.ExecCount(key))
-		}
+		counts := lo.Map(keys, func(key string, _ int) int {
+			return as.GraphQL.ExecCount(key)
+		})
 		ps.Data = keys
 		return Render(rc, as, &vgraphql.List{Keys: keys, Counts: counts}, ps, "graphql")
 	})

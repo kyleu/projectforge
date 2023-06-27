@@ -1,6 +1,7 @@
 package model
 
 import (
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
 	"{{{ .Package }}}/app/util"
@@ -9,12 +10,9 @@ import (
 type Models []*Model
 
 func (m Models) Get(pkg util.Pkg, key string) *Model {
-	for _, x := range m {
-		if x.Pkg.Equals(pkg) && x.Key == key {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(m, nil, func(x *Model) bool {
+		return x.Pkg.Equals(pkg) && x.Key == key
+	})
 }
 
 func (m Models) Sort() {
@@ -24,9 +22,7 @@ func (m Models) Sort() {
 }
 
 func (m Models) Names() []string {
-	ret := make([]string, 0, len(m))
-	for _, md := range m {
-		ret = append(ret, md.Key)
-	}
-	return ret
+	return lo.Map(m, func(x *Model, _ int) string {
+		return x.Key
+	})
 }

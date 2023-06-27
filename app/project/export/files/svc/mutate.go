@@ -321,7 +321,7 @@ func serviceInsertRevision(m *model.Model) *golang.Block {
 	ret.W("func (s *Service) insert%s(ctx context.Context, tx *sqlx.Tx, logger util.Logger, models ...*%s) error {", m.HistoryColumn().Proper(), m.Proper())
 	ret.W("\tq := database.SQLInsert(table%sQuoted, columns%s, len(models), s.db.Placeholder())", revCol.Proper(), revCol.Proper())
 	ret.W("\tdata := lo.FlatMap(models, func(model *%s, index int) []any {", m.Proper())
-	ret.W("\t\treturn model.ToDataRevision()")
+	ret.W("\t\treturn model.ToData%s()", revCol.Proper())
 	ret.W("\t})")
 	ret.W("\treturn s.db.Insert(ctx, q, tx, logger, data...)")
 	ret.W("}")

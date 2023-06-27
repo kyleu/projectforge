@@ -2,6 +2,7 @@ package schema
 
 import (
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
 	"{{{ .Package }}}/app/lib/schema/model"
@@ -26,12 +27,7 @@ func (s Schemata) GetWithError(key string) (*Schema, error) {
 	if ret := s.Get(key); ret != nil {
 		return ret, nil
 	}
-
-	keys := make([]string, 0, len(s))
-	for k := range s {
-		keys = append(keys, k)
-	}
-	return nil, errors.Errorf("no schema [%s] available among candidates [%s]", key, util.StringArrayOxfordComma(keys, "and"))
+	return nil, errors.Errorf("no schema [%s] available among candidates [%s]", key, util.StringArrayOxfordComma(lo.Keys(s), "and"))
 }
 
 func (s *Schema) AddPath(path string) bool {
