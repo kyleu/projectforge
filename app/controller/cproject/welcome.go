@@ -4,6 +4,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 	"projectforge.dev/projectforge/app/doctor/checks"
+	"projectforge.dev/projectforge/views/vpage"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
@@ -37,6 +38,12 @@ func WelcomeResult(rc *fasthttp.RequestCtx) {
 		frm, err := cutil.ParseForm(rc)
 		if err != nil {
 			return "", err
+		}
+
+		if frm.GetStringOpt("hasloaded") != "true" {
+			rc.URI().QueryArgs().Set("hasloaded", "true")
+			page := &vpage.Load{URL: rc.URI().String(), Title: "Generating and building your project"}
+			return controller.Render(rc, as, page, ps, "Welcome")
 		}
 
 		prj := as.Services.Projects.ByPath(".")

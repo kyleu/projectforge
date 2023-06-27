@@ -57,7 +57,7 @@ func (s *Service) loadFiles(mod *Module, addHeader bool, ret map[string]*file.Fi
 		if f == configFilename {
 			continue
 		}
-		if strings.HasSuffix(f, ".png") || strings.HasSuffix(f, ".ico") {
+		if strings.HasSuffix(f, ".png") || strings.HasSuffix(f, ".ico") || strings.HasSuffix(f, ".icns") {
 			continue
 		}
 		mode, b, err := fileContent(loader, f)

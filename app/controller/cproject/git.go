@@ -12,8 +12,8 @@ import (
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/project/git"
 	"projectforge.dev/projectforge/app/util"
-	"projectforge.dev/projectforge/views/verror"
 	"projectforge.dev/projectforge/views/vgit"
+	"projectforge.dev/projectforge/views/vpage"
 )
 
 var (
@@ -57,7 +57,7 @@ func GitAction(rc *fasthttp.RequestCtx) {
 			if len(argRes.Missing) > 0 {
 				ps.Data = argRes
 				url := fmt.Sprintf("/git/%s/commit", prj.Key)
-				return controller.Render(rc, as, &verror.Args{URL: url, Directions: "Enter your commit message", ArgRes: argRes}, ps, bc...)
+				return controller.Render(rc, as, &vpage.Args{URL: url, Directions: "Enter your commit message", ArgRes: argRes}, ps, bc...)
 			}
 			result, err = as.Services.Git.Commit(ps.Context, prj, argRes.Values["message"], ps.Logger)
 		case git.ActionUndoCommit.Key:
@@ -73,7 +73,7 @@ func GitAction(rc *fasthttp.RequestCtx) {
 			if len(argRes.Missing) > 0 {
 				ps.Data = argRes
 				url := fmt.Sprintf("/git/%s/history", prj.Key)
-				return controller.Render(rc, as, &verror.Args{URL: url, Directions: "Choose your options", ArgRes: argRes}, ps, bc...)
+				return controller.Render(rc, as, &vpage.Args{URL: url, Directions: "Choose your options", ArgRes: argRes}, ps, bc...)
 			}
 			path := argRes.Values["paths"]
 			since, _ := util.TimeFromString(argRes.Values["since"])
@@ -87,7 +87,7 @@ func GitAction(rc *fasthttp.RequestCtx) {
 			if len(argRes.Missing) > 0 {
 				url := fmt.Sprintf("/git/%s/branch", prj.Key)
 				ps.Data = argRes
-				return controller.Render(rc, as, &verror.Args{URL: url, Directions: "Enter your branch name", ArgRes: argRes}, ps, bc...)
+				return controller.Render(rc, as, &vpage.Args{URL: url, Directions: "Enter your branch name", ArgRes: argRes}, ps, bc...)
 			}
 			result, err = as.Services.Git.Commit(ps.Context, prj, argRes.Values["message"], ps.Logger)
 		case git.ActionMagic.Key:
@@ -95,7 +95,7 @@ func GitAction(rc *fasthttp.RequestCtx) {
 			if len(argRes.Missing) > 0 {
 				url := fmt.Sprintf("/git/%s/magic", prj.Key)
 				ps.Data = argRes
-				return controller.Render(rc, as, &verror.Args{URL: url, Directions: "Enter your commit message", ArgRes: argRes}, ps, bc...)
+				return controller.Render(rc, as, &vpage.Args{URL: url, Directions: "Enter your commit message", ArgRes: argRes}, ps, bc...)
 			}
 			dryRun := argRes.Values["dryRun"] == util.BoolTrue
 			result, err = as.Services.Git.Magic(ps.Context, prj, argRes.Values["message"], dryRun, ps.Logger)

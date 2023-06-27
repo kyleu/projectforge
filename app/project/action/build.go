@@ -49,26 +49,31 @@ func (b Builds) Get(key string) *Build {
 	})
 }
 
-var AllBuilds = Builds{
-	{Key: "start", Title: "Start", Description: "Starts the prebuilt project binary", Run: onStart},
-	{Key: "deps", Title: "Dependencies", Description: "Manages Go dependencies", Run: onDeps},
-	{Key: "imports", Title: "Imports", Description: "Reorders the imports", Run: onImports},
-	{Key: "ignored", Title: "Ignored", Description: "Shows files that are ignored by code generation", Run: onIgnored},
-	{Key: "packages", Title: "Packages", Description: "Visualize your application's packages", Run: onPackages},
-	{Key: "cleanup", Title: "Cleanup", Description: "Cleans up file permissions", Run: onCleanup},
-	simpleBuild("build", "Build", "make build"),
-	simpleBuild("clean", "Clean", "make clean"),
-	simpleBuild("tidy", "Tidy", "go mod tidy"),
-	simpleBuild("format", "Format", "bin/format.sh"),
-	simpleBuild("lint", "Lint", "bin/check.sh"),
-	{Key: "clientInstall", Title: "Client Install", Description: ciDesc, Run: func(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
+var (
+	buildStart         = &Build{Key: "start", Title: "Start", Description: "Starts the prebuilt project binary", Run: onStart}
+	buildDeps          = &Build{Key: "deps", Title: "Dependencies", Description: "Manages Go dependencies", Run: onDeps}
+	buildImports       = &Build{Key: "imports", Title: "Imports", Description: "Reorders the imports", Run: onImports}
+	buildIgnored       = &Build{Key: "ignored", Title: "Ignored", Description: "Shows files that are ignored by code generation", Run: onIgnored}
+	buildPackages      = &Build{Key: "packages", Title: "Packages", Description: "Visualize your application's packages", Run: onPackages}
+	buildCleanup       = &Build{Key: "cleanup", Title: "Cleanup", Description: "Cleans up file permissions", Run: onCleanup}
+	buildBuild         = simpleBuild("build", "Build", "make build")
+	buildClean         = simpleBuild("clean", "Clean", "make clean")
+	buildTidy          = simpleBuild("tidy", "Tidy", "go mod tidy")
+	buildFormat        = simpleBuild("format", "Format", "bin/format.sh")
+	buildLint          = simpleBuild("lint", "Lint", "bin/check.sh")
+	buildClientInstall = &Build{Key: "clientInstall", Title: "Client Install", Description: ciDesc, Run: func(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
 		return simpleProc(ctx, "npm install", filepath.Join(pm.Prj.Path, "client"), ret, pm.Logger)
-	}},
-	simpleBuild("clientBuild", "Client Build", "bin/build/client.sh"),
-	{Key: "deployments", Title: "Deployments", Description: "Manages deployments", Run: onDeployments},
-	{Key: "test", Title: "Test", Description: "Does a test", Run: func(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
+	}}
+	buildClientBuild = simpleBuild("clientBuild", "Client Build", "bin/build/client.sh")
+	buildDeployments = &Build{Key: "deployments", Title: "Deployments", Description: "Manages deployments", Run: onDeployments}
+	buildTest        = &Build{Key: "test", Title: "Test", Description: "Does a test", Run: func(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
 		return simpleProc(ctx, "bin/test.sh", pm.Prj.Path, ret, pm.Logger)
-	}},
+	}}
+)
+
+var AllBuilds = Builds{
+	buildStart, buildDeps, buildImports, buildIgnored, buildPackages, buildCleanup, buildBuild, buildClean,
+	buildTidy, buildFormat, buildLint, buildClientInstall, buildClientBuild, buildDeployments, buildTest,
 }
 
 func fullBuild(ctx context.Context, prj *project.Project, r *Result, logger util.Logger) *Result {

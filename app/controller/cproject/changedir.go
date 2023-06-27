@@ -10,7 +10,7 @@ import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
 	"projectforge.dev/projectforge/app/controller/cutil"
-	"projectforge.dev/projectforge/views/verror"
+	"projectforge.dev/projectforge/views/vpage"
 )
 
 var changeDirArgs = cutil.Args{{Key: "dir", Title: "Directory", Description: "Filesystem directory to use as the main working directory"}}
@@ -25,7 +25,7 @@ func ChangeDir(rc *fasthttp.RequestCtx) {
 			d, _ := filepath.Abs(".")
 			argRes.Values["dir"] = d
 			msg := "Choose the working directory to use for loading the main project"
-			return controller.Render(rc, as, &verror.Args{URL: "/welcome/changedir", Directions: msg, ArgRes: argRes}, ps, "Welcome")
+			return controller.Render(rc, as, &vpage.Args{URL: "/welcome/changedir", Directions: msg, ArgRes: argRes}, ps, "Welcome")
 		}
 
 		err := os.Chdir(dir)

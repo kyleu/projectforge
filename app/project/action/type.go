@@ -56,3 +56,14 @@ func (t *Type) UnmarshalJSON(data []byte) error {
 	*t = x
 	return nil
 }
+
+func (t *Type) Expensive(cfg util.ValueMap) bool {
+	switch t.Key {
+	case TypeBuild.Key:
+		switch cfg.GetStringOpt("phase") {
+		case buildDeps.Key, buildLint.Key:
+			return true
+		}
+	}
+	return false
+}

@@ -13,6 +13,7 @@ import (
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/project/svg"
+	"projectforge.dev/projectforge/views/vpage"
 	"projectforge.dev/projectforge/views/vsvg"
 )
 
@@ -130,6 +131,11 @@ func SVGRefreshApp(rc *fasthttp.RequestCtx) {
 		prj, err := getProject(rc, as)
 		if err != nil {
 			return "", err
+		}
+		if string(rc.URI().QueryArgs().Peek("hasloaded")) != "true" {
+			rc.URI().QueryArgs().Set("hasloaded", "true")
+			page := &vpage.Load{URL: rc.URI().String(), Title: "Generating app icons"}
+			return controller.Render(rc, as, page, ps, "projects", prj.Key, "SVG||/svg/"+prj.Key, "Refresh App Icon")
 		}
 		fs := as.Services.Projects.GetFilesystem(prj)
 		err = svg.RefreshAppIcon(ps.Context, prj, fs, ps.Logger)

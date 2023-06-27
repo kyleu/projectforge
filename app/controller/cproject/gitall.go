@@ -1,6 +1,7 @@
 package cproject
 
 import (
+	"projectforge.dev/projectforge/views/vpage"
 	"strconv"
 	"strings"
 
@@ -14,7 +15,6 @@ import (
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/project/git"
 	"projectforge.dev/projectforge/app/util"
-	"projectforge.dev/projectforge/views/verror"
 	"projectforge.dev/projectforge/views/vgit"
 )
 
@@ -45,7 +45,7 @@ func GitActionAll(rc *fasthttp.RequestCtx) {
 				url := "/git/all/history"
 				ps.Data = argRes
 				hidden := map[string]string{"tags": strings.Join(tags, ",")}
-				page := &verror.Args{URL: url, Directions: "Choose your options", ArgRes: argRes, Hidden: hidden}
+				page := &vpage.Args{URL: url, Directions: "Choose your options", ArgRes: argRes, Hidden: hidden}
 				return controller.Render(rc, as, page, ps, "projects", "Git")
 			}
 			results, err = gitHistoryAll(prjs, rc, as, ps)
@@ -55,7 +55,7 @@ func GitActionAll(rc *fasthttp.RequestCtx) {
 				url := "/git/all/magic"
 				ps.Data = argRes
 				hidden := map[string]string{"tags": strings.Join(tags, ",")}
-				page := &verror.Args{URL: url, Directions: "Enter your commit message", ArgRes: argRes, Hidden: hidden}
+				page := &vpage.Args{URL: url, Directions: "Enter your commit message", ArgRes: argRes, Hidden: hidden}
 				return controller.Render(rc, as, page, ps, "projects", "Git")
 			}
 			results, err = gitMagicAll(prjs, rc, as, ps)

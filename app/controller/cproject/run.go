@@ -12,6 +12,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/vaction"
 	"projectforge.dev/projectforge/views/vbuild"
+	"projectforge.dev/projectforge/views/vpage"
 )
 
 const (
@@ -45,6 +46,14 @@ func RunAction(rc *fasthttp.RequestCtx) {
 
 		isBuild := actT.Key == action.TypeBuild.Key
 		phase := cfg.GetStringOpt("phase")
+
+		if actT.Expensive(cfg) {
+			if cfg.GetStringOpt("hasloaded") != "true" {
+				rc.URI().QueryArgs().Set("hasloaded", "true")
+				page := &vpage.Load{URL: rc.URI().String(), Title: fmt.Sprintf("Running [%s] for [%s]", phase, prj.Title())}
+				return controller.Render(rc, as, page, ps, "projects", prj.Key, actT.Title)
+			}
+		}
 
 		if isBuild && phase == "" {
 			ps.Data = action.AllBuilds

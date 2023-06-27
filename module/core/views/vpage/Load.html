@@ -1,0 +1,25 @@
+{% import (
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/views/layout"
+) %}
+
+{% code type Load struct {
+  layout.Basic
+  URL string
+  Title string
+  Message string
+} %}
+
+{% func (p *Load) Body(as *app.State, ps *cutil.PageState) %}
+  {%- code
+    if p.Message == "" {
+      p.Message = "Please wait as your request is processed..."
+    }
+  -%}
+  <div class="card">
+    <h3>{%s p.Title %}</h3>
+    <p>{%s p.Message %}</p>
+  </div>
+  <meta http-equiv="refresh" content="0; url={%s p.URL %}">
+{% endfunc %}
