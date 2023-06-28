@@ -22,7 +22,7 @@ func ServiceRevision(m *model.Model, args *model.Args, addHeader bool) (*file.Fi
 	dbRef := args.DBRef()
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "servicerevision")
 	g.AddImport(helper.ImpAppUtil, helper.ImpFmt, helper.ImpStrings, helper.ImpContext, helper.ImpFilter, helper.ImpSQLx, helper.ImpErrors, helper.ImpDatabase)
-	id, err := serviceIDRev(m, dbRef, args.Enums)
+	id, err := serviceIDRev(m, args.Enums)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +42,7 @@ func ServiceRevision(m *model.Model, args *model.Args, addHeader bool) (*file.Fi
 	return g.Render(addHeader)
 }
 
-func serviceIDRev(m *model.Model, dbRef string, enums enum.Enums) (*golang.Block, error) {
+func serviceIDRev(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock("IDRev", "func")
 	pks := m.PKs()
 	revCol := m.HistoryColumn()

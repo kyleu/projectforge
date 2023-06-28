@@ -42,13 +42,21 @@ func Model(m *model.Model, args *model.Args, addHeader bool) (*file.File, error)
 	if err != nil {
 		return nil, err
 	}
-	g.AddBlocks(str, c, modelRandom(m, args.Enums))
+	rnd, err := modelRandom(m, args.Enums)
+	if err != nil {
+		return nil, err
+	}
+	g.AddBlocks(str, c, rnd)
 	if b, e := modelFromMap(g, m, args.Enums, args.Database()); e == nil {
 		g.AddBlocks(b)
 	} else {
 		return nil, err
 	}
-	g.AddBlocks(modelClone(m), modelString(g, m), modelTitle(m), modelWebPath(g, m), modelDiff(g, m), modelToData(m, m.Columns, ""))
+	mdiff, err := modelDiff(g, m)
+	if err != nil {
+		return nil, err
+	}
+	g.AddBlocks(modelClone(m), modelString(g, m), modelTitle(m), modelWebPath(g, m), mdiff, modelToData(m, m.Columns, ""))
 	if m.IsRevision() {
 		hc := m.HistoryColumns(false)
 		g.AddBlocks(modelToData(m, hc.Const, "Core"), modelToData(m, hc.Var, hc.Col.Proper()))

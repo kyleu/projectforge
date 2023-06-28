@@ -45,13 +45,13 @@ func GetErrorDetail(e error) *ErrorDetail {
 		cause = GetErrorDetail(u.Unwrap())
 	}
 
-	msg := "error"
+	msg := KeyError
 	if e != nil {
 		msg = e.Error()
 	}
 
 	return &ErrorDetail{
-		Type:       "error",
+		Type:       KeyError,
 		Message:    msg,
 		StackTrace: stack,
 		Cause:      cause,

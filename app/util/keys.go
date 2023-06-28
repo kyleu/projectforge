@@ -2,7 +2,6 @@
 package util
 
 const (
-	BoolTrue   = "true"
 	AppKey     = "projectforge"
 	AppName    = "Project Forge"
 	AppSummary = "Build and maintain feature-rich applications using Golang"
@@ -11,6 +10,10 @@ const (
 	AppURL     = "https://projectforge.dev"
 	AppSource  = "https://github.com/kyleu/projectforge"
 	AppLegal   = `Built by <a href="mailto:projectforge@kyleu.com">Kyle U</a>, all rights reserved`
+
+	BoolTrue   = "true"
+	KeyError   = "error"
+	KeyUnknown = "unknown"
 
 	// $PF_SECTION_START(keys)$
 	// $PF_SECTION_END(keys)$.

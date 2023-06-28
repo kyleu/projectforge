@@ -20,16 +20,16 @@ var golang = &doctor.Check{
 	URL:     "https://golang.org",
 	UsedBy:  "All builds",
 	Fn: simpleOut(".", "go", []string{"version"}, func(_ context.Context, r *doctor.Result, out string) *doctor.Result {
-		if r.Status == "error" {
+		if r.Status == util.KeyError {
 			return r
 		}
 		startIdx := strings.Index(out, "go1.")
 		if startIdx == -1 {
-			return r.WithError(&doctor.Error{Code: "unknown", Message: "can't parse result of [go version]"})
+			return r.WithError(&doctor.Error{Code: util.KeyUnknown, Message: "can't parse result of [go version]"})
 		}
 		endIdx := strings.LastIndex(out, " ")
 		if endIdx == -1 || endIdx <= startIdx {
-			return r.WithError(&doctor.Error{Code: "unknown", Message: "can't parse end result of [go version]"})
+			return r.WithError(&doctor.Error{Code: util.KeyUnknown, Message: "can't parse end result of [go version]"})
 		}
 		v := "v" + out[startIdx+2:endIdx]
 		if semver.Compare(v, golangVersion) < 0 {

@@ -87,5 +87,5 @@ func RCRequiredArray(rc *fasthttp.RequestCtx, key string) ([]string, error) {
 
 func QueryStringBool(rc *fasthttp.RequestCtx, key string) bool {
 	x := string(rc.URI().QueryArgs().Peek(key))
-	return x == "true" || x == "t" || x == "True" || x == "TRUE"
+	return x == util.BoolTrue || x == "t" || x == "True" || x == "TRUE"
 }

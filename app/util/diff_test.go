@@ -28,7 +28,7 @@ var diffTests = []*diffTest{
 	{k: "bool.same", l: true, r: true, d: util.Diffs{}},
 	{
 		k: "bool.different", l: true, r: false, d: util.Diffs{
-			&util.Diff{Old: "true", New: "false"},
+			&util.Diff{Old: util.BoolTrue, New: "false"},
 		},
 	},
 	{k: "int.same", l: 1, r: 1, d: util.Diffs{}},
@@ -40,10 +40,10 @@ var diffTests = []*diffTest{
 	{
 		k: "map.missing", l: testObj, r: util.ValueMap{"y": true}, d: util.Diffs{
 			&util.Diff{Path: ".x", Old: "map[y:1]", New: ""},
-			&util.Diff{Path: ".y", Old: "", New: "true"},
+			&util.Diff{Path: ".y", Old: "", New: util.BoolTrue},
 		},
 	},
-	{k: "map.extra", l: testObj, r: util.ValueMap{"x": util.ValueMap{"y": 1, "z": true}}, d: util.Diffs{&util.Diff{Path: ".x.z", Old: "", New: "true"}}},
+	{k: "map.extra", l: testObj, r: util.ValueMap{"x": util.ValueMap{"y": 1, "z": true}}, d: util.Diffs{&util.Diff{Path: ".x.z", Old: "", New: util.BoolTrue}}},
 	{k: "array.same", l: testArr, r: testArr, d: util.Diffs{}},
 	{
 		k: "array.different", l: testArr, r: []any{"y", 2, true}, d: util.Diffs{
@@ -51,7 +51,7 @@ var diffTests = []*diffTest{
 			&util.Diff{Path: ".1", Old: "1", New: "2"},
 		},
 	},
-	{k: "array.missing", l: testArr, r: []any{"x", 1}, d: util.Diffs{&util.Diff{Path: ".2", Old: "true", New: ""}}},
+	{k: "array.missing", l: testArr, r: []any{"x", 1}, d: util.Diffs{&util.Diff{Path: ".2", Old: util.BoolTrue, New: ""}}},
 	{k: "array.extra", l: testArr, r: []any{"x", 1, true, "new"}, d: util.Diffs{&util.Diff{Path: ".3", Old: "", New: "new"}}},
 }
 

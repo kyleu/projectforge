@@ -22,7 +22,7 @@ type BuildInfo struct {
 }
 
 func (b *BuildInfo) String() string {
-	if b.Date == "unknown" {
+	if b.Date == util.KeyUnknown {
 		return b.Version
 	}
 	d, _ := util.TimeFromJS(b.Date)

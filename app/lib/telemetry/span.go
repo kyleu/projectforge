@@ -10,6 +10,8 @@ import (
 	"go.opentelemetry.io/otel/codes"
 	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
 	"go.opentelemetry.io/otel/trace"
+
+	"projectforge.dev/projectforge/app/util"
 )
 
 const disabledMsg = "[telemetry.disabled]"
@@ -48,7 +50,7 @@ func (s *Span) SetStatus(status string, description string) {
 	switch strings.ToLower(status) {
 	case "ok":
 		s.OT.SetStatus(codes.Ok, description)
-	case "error":
+	case util.KeyError:
 		s.OT.SetStatus(codes.Error, description)
 	default:
 		s.OT.SetStatus(codes.Ok, status+": "+description)

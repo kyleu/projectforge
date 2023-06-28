@@ -3,14 +3,14 @@ package cproject
 import (
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
-	"projectforge.dev/projectforge/app/doctor/checks"
-	"projectforge.dev/projectforge/views/vpage"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
 	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/doctor/checks"
 	"projectforge.dev/projectforge/app/project/action"
 	"projectforge.dev/projectforge/app/util"
+	"projectforge.dev/projectforge/views/vpage"
 	"projectforge.dev/projectforge/views/vwelcome"
 )
 
@@ -40,8 +40,8 @@ func WelcomeResult(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 
-		if frm.GetStringOpt("hasloaded") != "true" {
-			rc.URI().QueryArgs().Set("hasloaded", "true")
+		if frm.GetStringOpt("hasloaded") != util.BoolTrue {
+			rc.URI().QueryArgs().Set("hasloaded", util.BoolTrue)
 			page := &vpage.Load{URL: rc.URI().String(), Title: "Generating and building your project"}
 			return controller.Render(rc, as, page, ps, "Welcome")
 		}

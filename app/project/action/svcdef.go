@@ -73,7 +73,7 @@ func ServiceDefinition(p *project.Project) util.ValueMap {
 		}
 		if r == "" {
 			r = l
-			l = "unknown"
+			l = util.KeyUnknown
 		}
 		ch, u := util.StringSplit(r, ',', true)
 		if u == "" {

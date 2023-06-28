@@ -38,7 +38,7 @@ func (r *Result) WithError(err error) *Result {
 	if r.logger != nil {
 		r.logger.Warnf("action error: %+v", err.Error())
 	}
-	r.Status = "error"
+	r.Status = util.KeyError
 	r.Errors = append(r.Errors, msg)
 	return r
 }

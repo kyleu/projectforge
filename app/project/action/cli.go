@@ -18,7 +18,7 @@ func clilog(s string) {
 func cliProject(p *project.Project, modKeys []string) error {
 	clilog(util.AppName + "\nLet's create a new project!\n\n")
 
-	if p.Key == "" || p.Key == "TODO" {
+	if p.Key == "" {
 		path, _ := os.Getwd()
 		if strings.Contains(path, "/") {
 			path = path[strings.LastIndex(path, "/")+1:]
@@ -80,7 +80,7 @@ func cliProject(p *project.Project, modKeys []string) error {
 
 func gatherProjectInfo(p *project.Project) {
 	if p.Info.Org == "" {
-		p.Info.Org = "todo"
+		p.Info.Org = util.KeyUnknown
 	}
 	p.Info.Org = promptString("Enter the github organization that owns this project", p.Info.Org)
 

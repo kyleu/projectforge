@@ -58,8 +58,7 @@ func (t *Type) UnmarshalJSON(data []byte) error {
 }
 
 func (t *Type) Expensive(cfg util.ValueMap) bool {
-	switch t.Key {
-	case TypeBuild.Key:
+	if t.Key == TypeBuild.Key {
 		switch cfg.GetStringOpt("phase") {
 		case buildDeps.Key, buildLint.Key:
 			return true

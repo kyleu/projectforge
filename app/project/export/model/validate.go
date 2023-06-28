@@ -3,9 +3,8 @@ package model
 import (
 	"strings"
 
-	"github.com/samber/lo"
-
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 )
 
 var goKeywords = []string{

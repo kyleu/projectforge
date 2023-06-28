@@ -7,11 +7,11 @@ package controllers
 
 func LongTask(rc *fasthttp.RequestCtx) {
 	controller.Act("long.task", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-        if string(rc.URI().QueryArgs().Peek("hasloaded")) != "true" {
-            rc.URI().QueryArgs().Set("hasloaded", "true")
-            page := &vpage.Load{URL: rc.URI().String(), Title: "Hang Tight"}
-            return controller.Render(rc, as, page, ps, "breadcrumb")
-        }
+		if string(rc.URI().QueryArgs().Peek("hasloaded")) != util.BoolTrue {
+			rc.URI().QueryArgs().Set("hasloaded", util.BoolTrue)
+			page := &vpage.Load{URL: rc.URI().String(), Title: "Hang Tight"}
+			return controller.Render(rc, as, page, ps, "breadcrumb")
+		}
 		return "/welcome", nil
 	})
 }

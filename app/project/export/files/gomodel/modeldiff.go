@@ -3,6 +3,7 @@ package gomodel
 import (
 	"fmt"
 
+	"github.com/pkg/errors"
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/lib/types"
@@ -11,7 +12,7 @@ import (
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func modelDiff(g *golang.File, m *model.Model) *golang.Block {
+func modelDiff(g *golang.File, m *model.Model) (*golang.Block, error) {
 	ret := golang.NewBlock("Diff"+m.Proper(), "func")
 
 	complexity := lo.Sum(lo.Map(m.Columns, func(col *model.Column, _ int) int {
@@ -73,10 +74,10 @@ func modelDiff(g *golang.File, m *model.Model) *golang.Block {
 			}
 			ret.W("\t}")
 		default:
-			ret.W("\tTODO: %s", col.Type.Key())
+			return nil, errors.Errorf("unhandled diff type [%s]", col.Type.Key())
 		}
 	}
 	ret.W("\treturn diffs")
 	ret.W("}")
-	return ret
+	return ret, nil
 }

@@ -39,7 +39,7 @@ func (s *Service) Magic(ctx context.Context, prj *project.Project, message strin
 		}
 	case args.Ahead > 0 && args.Behind > 0:
 		args.Result.Status = "conflicting commits"
-		return args.Result, errors.New("TODO: handle conflicting commits")
+		return args.Result, errors.New("encountered conflicting commits")
 	default:
 		return args.Result, errors.New("invalid git state")
 	}

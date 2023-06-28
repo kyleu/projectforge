@@ -81,7 +81,7 @@ func FileLoader(mods []string, src file.Files, tgt filesystem.FileLoader, includ
 		if t != nil {
 			b, err := tgt.ReadFile(p)
 			if err != nil {
-				ret = append(ret, &Diff{Path: p, Status: &Status{Key: "error", Title: fmt.Sprintf("An error was encountered: %+v", err)}})
+				ret = append(ret, &Diff{Path: p, Status: &Status{Key: util.KeyError, Title: fmt.Sprintf("An error was encountered: %+v", err)}})
 			}
 
 			tgtFile = file.NewFile(p, t.Mode(), b, false, logger)

@@ -61,9 +61,11 @@ var (
 	buildTidy          = simpleBuild("tidy", "Tidy", "go mod tidy")
 	buildFormat        = simpleBuild("format", "Format", "bin/format.sh")
 	buildLint          = simpleBuild("lint", "Lint", "bin/check.sh")
-	buildClientInstall = &Build{Key: "clientInstall", Title: "Client Install", Description: ciDesc, Run: func(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
-		return simpleProc(ctx, "npm install", filepath.Join(pm.Prj.Path, "client"), ret, pm.Logger)
-	}}
+	buildClientInstall = &Build{
+		Key: "clientInstall", Title: "Client Install", Description: ciDesc, Run: func(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
+			return simpleProc(ctx, "npm install", filepath.Join(pm.Prj.Path, "client"), ret, pm.Logger)
+		},
+	}
 	buildClientBuild = simpleBuild("clientBuild", "Client Build", "bin/build/client.sh")
 	buildDeployments = &Build{Key: "deployments", Title: "Deployments", Description: "Manages deployments", Run: onDeployments}
 	buildTest        = &Build{Key: "test", Title: "Test", Description: "Does a test", Run: func(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {

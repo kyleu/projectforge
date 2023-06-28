@@ -22,6 +22,10 @@ type ArgResults struct {
 	Missing []string          `json:"missing,omitempty"`
 }
 
+func (a *ArgResults) HasMissing() bool {
+	return len(a.Missing) > 0
+}
+
 func CollectArgs(rc *fasthttp.RequestCtx, args Args) *ArgResults {
 	ret := make(map[string]string, len(args))
 	var missing []string

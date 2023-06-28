@@ -4,6 +4,8 @@ import (
 	"strings"
 
 	"github.com/samber/lo"
+
+	"projectforge.dev/projectforge/app/util"
 )
 
 type Result struct {
@@ -34,7 +36,7 @@ func (p *Result) CleanSolutions() []string {
 }
 
 func (p *Result) WithError(err *Error) *Result {
-	p.Status = "error"
+	p.Status = util.KeyError
 	p.Errors = append(p.Errors, err)
 	return p
 }
@@ -48,7 +50,7 @@ type Results []*Result
 
 func (r Results) Errors() Results {
 	return lo.Filter(r, func(x *Result, _ int) bool {
-		return x.Status == "error"
+		return x.Status == util.KeyError
 	})
 }
 

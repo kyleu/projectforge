@@ -19,7 +19,7 @@ import (
 func TestList(rc *fasthttp.RequestCtx) {
 	controller.Act("test.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ps.Title = "Tests"
-		ps.Data = "TODO"
+		ps.Data = []string{"bootstrap", "diff"}
 		return controller.Render(rc, as, &vtest.List{}, ps, "Tests")
 	})
 }

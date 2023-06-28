@@ -48,8 +48,8 @@ func RunAction(rc *fasthttp.RequestCtx) {
 		phase := cfg.GetStringOpt("phase")
 
 		if actT.Expensive(cfg) {
-			if cfg.GetStringOpt("hasloaded") != "true" {
-				rc.URI().QueryArgs().Set("hasloaded", "true")
+			if cfg.GetStringOpt("hasloaded") != util.BoolTrue {
+				rc.URI().QueryArgs().Set("hasloaded", util.BoolTrue)
 				page := &vpage.Load{URL: rc.URI().String(), Title: fmt.Sprintf("Running [%s] for [%s]", phase, prj.Title())}
 				return controller.Render(rc, as, page, ps, "projects", prj.Key, actT.Title)
 			}

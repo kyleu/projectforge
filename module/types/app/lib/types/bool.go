@@ -1,6 +1,10 @@
 package types
 
-import "strings"
+import (
+	"strings"
+
+	"{{{ .Package }}}/app/util"
+)
 
 const KeyBool = "bool"
 
@@ -30,7 +34,7 @@ func (x *Bool) From(v any) any {
 		return t
 	case string:
 		lt := strings.ToLower(t)
-		return lt == "true" || lt == "yes" || lt == "t"
+		return lt == util.BoolTrue || lt == "yes" || lt == "t"
 	default:
 		return invalidInput(x.Key(), t)
 	}

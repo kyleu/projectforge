@@ -64,9 +64,8 @@ func modelArrayGet(g *golang.File, m *model.Model, enums enum.Enums) (*golang.Bl
 		if types.IsList(pk.Type) {
 			g.AddImport(helper.ImpSlices)
 			return fmt.Sprintf("slices.Equal(x.%s, %s)", pk.Proper(), pk.Camel())
-		} else {
-			return fmt.Sprintf("x.%s == %s", pk.Proper(), pk.Camel())
 		}
+		return fmt.Sprintf("x.%s == %s", pk.Proper(), pk.Camel())
 	})
 
 	ret.W("\treturn lo.FindOrElse(%s, nil, func(x *%s) bool {", m.FirstLetter(), m.Proper())

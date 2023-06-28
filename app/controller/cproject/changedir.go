@@ -20,7 +20,7 @@ func ChangeDir(rc *fasthttp.RequestCtx) {
 		ps.HideMenu = true
 		argRes := cutil.CollectArgs(rc, changeDirArgs)
 		dir, ok := argRes.Values["dir"]
-		if !ok || dir == "" || len(argRes.Missing) > 0 {
+		if !ok || dir == "" || argRes.HasMissing() {
 			ps.Data = argRes
 			d, _ := filepath.Abs(".")
 			argRes.Values["dir"] = d

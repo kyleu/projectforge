@@ -1,7 +1,6 @@
 package cproject
 
 import (
-	"projectforge.dev/projectforge/views/vpage"
 	"strconv"
 	"strings"
 
@@ -16,6 +15,7 @@ import (
 	"projectforge.dev/projectforge/app/project/git"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/vgit"
+	"projectforge.dev/projectforge/views/vpage"
 )
 
 func GitActionAll(rc *fasthttp.RequestCtx) {
@@ -41,7 +41,7 @@ func GitActionAll(rc *fasthttp.RequestCtx) {
 			results, err = gitOutdatedAll(prjs, as, ps)
 		case git.ActionHistory.Key:
 			argRes := cutil.CollectArgs(rc, gitHistoryArgs)
-			if len(argRes.Missing) > 0 {
+			if argRes.HasMissing() {
 				url := "/git/all/history"
 				ps.Data = argRes
 				hidden := map[string]string{"tags": strings.Join(tags, ",")}
@@ -51,7 +51,7 @@ func GitActionAll(rc *fasthttp.RequestCtx) {
 			results, err = gitHistoryAll(prjs, rc, as, ps)
 		case git.ActionMagic.Key:
 			argRes := cutil.CollectArgs(rc, gitMagicArgs)
-			if len(argRes.Missing) > 0 {
+			if argRes.HasMissing() {
 				url := "/git/all/magic"
 				ps.Data = argRes
 				hidden := map[string]string{"tags": strings.Join(tags, ",")}

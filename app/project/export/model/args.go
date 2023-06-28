@@ -71,7 +71,7 @@ func (a *Args) Database() string {
 	if a.HasModule(SQLServer) {
 		return SQLServer
 	}
-	return "unknown"
+	return util.KeyUnknown
 }
 
 func (a *Args) Audit(m *Model) bool {

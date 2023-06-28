@@ -8,6 +8,8 @@ import (
 	"github.com/hexops/gotextdiff/myers"
 	"github.com/hexops/gotextdiff/span"
 	"github.com/samber/lo"
+
+	"projectforge.dev/projectforge/app/util"
 )
 
 const (
@@ -66,7 +68,7 @@ func changes(src string, edits []gotextdiff.TextEdit) (string, Changes) {
 	ret := make(Changes, 0, len(u.Hunks))
 	lo.ForEach(u.Hunks, func(h *gotextdiff.Hunk, _ int) {
 		lines := lo.Map(h.Lines, func(l gotextdiff.Line, _ int) *Line {
-			t := "unknown"
+			t := util.KeyUnknown
 			switch l.Kind {
 			case gotextdiff.Delete:
 				t = deletedKey

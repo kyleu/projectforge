@@ -30,17 +30,17 @@ func checkRepo(ctx context.Context, r *doctor.Result, logger util.Logger) *docto
 	}
 	exitCode, out, err := telemetry.RunProcessSimple(ctx, "git status", ".", logger)
 	if err != nil {
-		return r.WithError(doctor.NewError("error", "can't run [git status]: %+v", err))
+		return r.WithError(doctor.NewError(util.KeyError, "can't run [git status]: %+v", err))
 	}
 	if exitCode != 0 {
-		return r.WithError(doctor.NewError("error", "can't run [git status]: %s", out))
+		return r.WithError(doctor.NewError(util.KeyError, "can't run [git status]: %s", out))
 	}
 	if out = strings.TrimSpace(out); out == "" {
 		return r.WithError(doctor.NewError("noremote", "no git remote configured", out))
 	}
 	exitCode, _, err = telemetry.RunProcessSimple(ctx, "git log -1", ".", logger)
 	if err != nil {
-		return r.WithError(doctor.NewError("error", "can't run [git log]: %+v", err))
+		return r.WithError(doctor.NewError(util.KeyError, "can't run [git log]: %+v", err))
 	}
 	if exitCode == 128 {
 		return r.WithError(doctor.NewError("nocommit", "git repo must have at least one commit"))

@@ -54,7 +54,7 @@ func GitAction(rc *fasthttp.RequestCtx) {
 			result, err = as.Services.Git.Fetch(ps.Context, prj, ps.Logger)
 		case git.ActionCommit.Key:
 			argRes := cutil.CollectArgs(rc, gitCommitArgs)
-			if len(argRes.Missing) > 0 {
+			if argRes.HasMissing() {
 				ps.Data = argRes
 				url := fmt.Sprintf("/git/%s/commit", prj.Key)
 				return controller.Render(rc, as, &vpage.Args{URL: url, Directions: "Enter your commit message", ArgRes: argRes}, ps, bc...)
@@ -70,7 +70,7 @@ func GitAction(rc *fasthttp.RequestCtx) {
 			result, err = as.Services.Git.Outdated(ps.Context, prj, ps.Logger)
 		case git.ActionHistory.Key:
 			argRes := cutil.CollectArgs(rc, gitHistoryArgs)
-			if len(argRes.Missing) > 0 {
+			if argRes.HasMissing() {
 				ps.Data = argRes
 				url := fmt.Sprintf("/git/%s/history", prj.Key)
 				return controller.Render(rc, as, &vpage.Args{URL: url, Directions: "Choose your options", ArgRes: argRes}, ps, bc...)
@@ -84,7 +84,7 @@ func GitAction(rc *fasthttp.RequestCtx) {
 			result, err = as.Services.Git.History(ps.Context, prj, hist, ps.Logger)
 		case git.ActionBranch.Key:
 			argRes := cutil.CollectArgs(rc, gitBranchArgs)
-			if len(argRes.Missing) > 0 {
+			if argRes.HasMissing() {
 				url := fmt.Sprintf("/git/%s/branch", prj.Key)
 				ps.Data = argRes
 				return controller.Render(rc, as, &vpage.Args{URL: url, Directions: "Enter your branch name", ArgRes: argRes}, ps, bc...)
@@ -92,7 +92,7 @@ func GitAction(rc *fasthttp.RequestCtx) {
 			result, err = as.Services.Git.Commit(ps.Context, prj, argRes.Values["message"], ps.Logger)
 		case git.ActionMagic.Key:
 			argRes := cutil.CollectArgs(rc, gitMagicArgs)
-			if len(argRes.Missing) > 0 {
+			if argRes.HasMissing() {
 				url := fmt.Sprintf("/git/%s/magic", prj.Key)
 				ps.Data = argRes
 				return controller.Render(rc, as, &vpage.Args{URL: url, Directions: "Enter your commit message", ArgRes: argRes}, ps, bc...)

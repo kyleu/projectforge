@@ -59,7 +59,7 @@ func ERsp(msg string, args ...any) (string, error) {
 }
 
 func FlashAndRedir(success bool, msg string, redir string, rc *fasthttp.RequestCtx, ps *cutil.PageState) (string, error) {
-	status := "error"
+	status := util.KeyError
 	if success {
 		status = "success"
 	}

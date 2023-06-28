@@ -13,7 +13,7 @@ var orderArgs = cutil.Args{
 func PlaceOrder(rc *fasthttp.RequestCtx) {
 	controller.Act("place.order", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		argRes := cutil.CollectArgs(rc, orderArgs)
-		if len(argRes.Missing) > 0 {
+		if argRes.HasMissing() {
 			ps.Data = argRes
 			msg := "Choose some options"
 			return controller.Render(rc, as, &vpage.Args{URL: rc.URI().String(), Directions: msg, ArgRes: argRes}, ps, "breadcrumb")

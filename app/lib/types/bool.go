@@ -1,7 +1,11 @@
 // Content managed by Project Forge, see [projectforge.md] for details.
 package types
 
-import "strings"
+import (
+	"strings"
+
+	"projectforge.dev/projectforge/app/util"
+)
 
 const KeyBool = "bool"
 
@@ -31,7 +35,7 @@ func (x *Bool) From(v any) any {
 		return t
 	case string:
 		lt := strings.ToLower(t)
-		return lt == "true" || lt == "yes" || lt == "t"
+		return lt == util.BoolTrue || lt == "yes" || lt == "t"
 	default:
 		return invalidInput(x.Key(), t)
 	}

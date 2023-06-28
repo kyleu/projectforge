@@ -27,7 +27,7 @@ func (x *XML) From(v any) any {
 }
 
 func (x *XML) Default(string) any {
-	return "<todo />"
+	return "<element />"
 }
 
 func NewXML() *Wrapped {

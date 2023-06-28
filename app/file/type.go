@@ -64,7 +64,7 @@ func TypeFromString(s string) Type {
 }
 
 func errorType(msg string) Type {
-	return Type{Key: "error", Title: "Error: " + msg}
+	return Type{Key: util.KeyError, Title: "Error: " + msg}
 }
 
 func (t *Type) String() string {
