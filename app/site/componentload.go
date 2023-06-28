@@ -11,6 +11,7 @@ import (
 
 var componentMetadata = map[string][]string{
 	"accordion":    {"map", "collapsible UI for multiple sections"},
+	"arguments":    {"mail-open", "collect a set of arguments from a web client"},
 	"autocomplete": {"glasses", "enhances an input to support server-driven search"},
 	"code":         {"file-text", "script-free code syntax highlighting with theme support"},
 	"dom":          {"gamepad", "provides TypeScript methods for manipulating the DOM"},
@@ -20,6 +21,7 @@ var componentMetadata = map[string][]string{
 	"icons":        {"icons", "in-document SVG references with theming support"},
 	"jsx":          {"dna", "templates for TypeScript objects, using HTML syntax"},
 	"link":         {"link", "enhances links with confirmation prompts and other utilities"},
+	"loadscreen":   {"refresh", "an interstitial page appearing before a long request"},
 	"markdown":     {"desktop", "renders Markdown as HTML"},
 	"menu":         {"list", "hierarchical menu with icon support and clean markup"},
 	"modal":        {"folder-open", "a modal window that appears over the current page"},
