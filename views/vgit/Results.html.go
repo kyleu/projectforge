@@ -177,7 +177,7 @@ func (p *Results) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
         <div class="bd">
           `)
 //line views/vgit/Results.html:81
-		streamstatusActions(qw422016, x)
+		streamstatusActions(qw422016, x, true)
 //line views/vgit/Results.html:81
 		qw422016.N().S(`
           `)

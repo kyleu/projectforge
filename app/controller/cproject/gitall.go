@@ -59,6 +59,8 @@ func GitActionAll(rc *fasthttp.RequestCtx) {
 				return controller.Render(rc, as, page, ps, "projects", "Git")
 			}
 			results, err = gitMagicAll(prjs, rc, as, ps)
+		case git.ActionUndoCommit.Key:
+			results, err = gitUndoAll(prjs, as, ps)
 		default:
 			err = errors.Errorf("unhandled action [%s] for all projects", a)
 		}
@@ -120,6 +122,13 @@ func gitMagicAll(prjs project.Projects, rc *fasthttp.RequestCtx, as *app.State, 
 	dryRun := cutil.QueryStringBool(rc, "dryRun")
 	results, errs := util.AsyncCollect(prjs, func(prj *project.Project) (*git.Result, error) {
 		return as.Services.Git.Magic(ps.Context, prj, message, dryRun, ps.Logger)
+	})
+	return results, util.ErrorMerge(errs...)
+}
+
+func gitUndoAll(prjs project.Projects, as *app.State, ps *cutil.PageState) (git.Results, error) {
+	results, errs := util.AsyncCollect(prjs, func(prj *project.Project) (*git.Result, error) {
+		return as.Services.Git.UndoCommit(ps.Context, prj, ps.Logger)
 	})
 	return results, util.ErrorMerge(errs...)
 }

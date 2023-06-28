@@ -28,14 +28,17 @@
       {%- endif -%}
     </h3>
     <div class="mt">
-      {%= statusActions(p.Result) %}
+      {%= statusActions(p.Result, false) %}
     </div>
     {%= statusDetail(prj, p.Result) %}
   </div>
 {% endfunc %}
 
-{% func statusActions(r *git.Result) %}
+{% func statusActions(r *git.Result, showProject bool) %}
   {%- code prj := r.Project -%}
+  {%- if showProject -%}
+  <a href="/p/{%s prj.Key %}"><button>View Project</button></a>
+  {%- endif -%}
   {%- for _, t := range r.Actions() -%}
   <a href="/git/{%s prj.Key %}/{%s t.Key %}" title="{%s t.Description %}"><button>{%s t.Title %}</button></a>
   {%- endfor -%}
