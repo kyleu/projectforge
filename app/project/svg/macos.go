@@ -52,10 +52,10 @@ func macOSAssets(ctx context.Context, prj *project.Project, orig string, fs file
 	}
 	err = proc(ctx, "iconutil --convert icns icons.iconset", templatePath, logger)
 	if err != nil {
-		return errors.Wrap(err, "unable to remove temporary macOS [logo.svg]")
+		return errors.Wrap(err, "unable to create [icons.iconset]")
 	}
 	if !fs.Exists(filepath.Join(templatePath, "background.png")) {
-		cmdMsg := "magick -background %q -fill black -font %q -pointsize 48 -size 640x400 -gravity center label:%q background.png"
+		cmdMsg := "convert -background %q -fill black -font %q -pointsize 48 -size 640x400 -gravity center label:%q background.png"
 		cmd := fmt.Sprintf(cmdMsg, prj.Theme.Light.NavBackground, "Helvetica-Neue", prj.Title())
 		err = proc(ctx, cmd, templatePath, logger)
 		if err != nil {
@@ -63,7 +63,7 @@ func macOSAssets(ctx context.Context, prj *project.Project, orig string, fs file
 		}
 	}
 	if !fs.Exists(filepath.Join(templatePath, "background@2x.png")) {
-		cmdMsg := "magick -background %q -fill black -font %q -pointsize 72 -size 1280x800 -gravity center label:%q background@2x.png"
+		cmdMsg := "convert -background %q -fill black -font %q -pointsize 72 -size 1280x800 -gravity center label:%q background@2x.png"
 		cmd := fmt.Sprintf(cmdMsg, prj.Theme.Light.NavBackground, "Helvetica-Neue", prj.Title())
 		err = proc(ctx, cmd, templatePath, logger)
 		if err != nil {

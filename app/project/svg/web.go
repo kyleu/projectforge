@@ -31,7 +31,7 @@ func webAssets(ctx context.Context, _ *project.Project, orig string, fs filesyst
 	}
 	webResize(256, "logo.png", webPath)
 	webResize(64, "favicon.png", webPath)
-	cmd := "magick -density 1000 -background none logo.svg -define icon:auto-resize=128,64,32 favicon.ico"
+	cmd := "convert -density 1000 -background none logo.svg -define icon:auto-resize=128,64,32 favicon.ico"
 	if !fs.Exists(webPath) {
 		_ = fs.CreateDirectory(webPath)
 	}
