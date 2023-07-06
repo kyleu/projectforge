@@ -42,6 +42,10 @@ func (l *Link) ArchString() string {
 		return "MIPS (le, softfloat)"
 	case ArchMIPSSoft:
 		return "MIPS (softfloat)"
+	case ArchPPC64:
+		return "PPC64"
+	case ArchPPC64LE:
+		return "PPC64 (le)"
 	case ArchRISCV64:
 		return "RISC-V 64-bit"
 	case ArchS390X:
@@ -164,6 +168,7 @@ const (
 	ArchMIPSLESoft   = "mipsle_softfloat"
 	ArchMIPSSoft     = "mips_softfloat"
 	ArchPPC64        = "ppc64"
+	ArchPPC64LE      = "ppc64le"
 	ArchRISCV64      = "riscv64"
 	ArchS390X        = "s390x"
 	ArchUniversal    = "all"

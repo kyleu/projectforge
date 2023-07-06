@@ -46,7 +46,6 @@ func calcDownloadLinks(version string) Links {
 			addDefault(mode, os, weird)
 		})
 	}
-
 	addDefault(ModeDesktop, OSMac, ArchUniversal)
 	addDefault(ModeServer, OSMac, ArchAMD64)
 	addDefault(ModeServer, OSMac, ArchARM64)
@@ -62,6 +61,7 @@ func calcDownloadLinks(version string) Links {
 	addDefault(ModeServer, OSLinux, ArchARM64)
 	addARMs(ModeServer, OSLinux)
 	addDefault(ModeServer, OSLinux, ArchPPC64)
+	addDefault(ModeServer, OSLinux, ArchPPC64LE)
 	addDefault(ModeServer, OSLinux, ArchRISCV64)
 	addDefault(ModeServer, OSLinux, ArchS390X)
 	addMIPS(ModeServer, OSLinux)
