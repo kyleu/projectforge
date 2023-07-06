@@ -10,7 +10,7 @@ archives:
 
 brews:
   -
-    tap:
+    repository:
       owner: "kyleu"
       name: "homebrew-kyleu"
     commit_author:

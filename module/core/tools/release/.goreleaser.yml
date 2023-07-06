@@ -14,7 +14,7 @@ archives:
 {{{ if .Build.Homebrew }}}
 brews:
   -
-    tap:
+    repository:
       owner: "{{{ .Info.Org }}}"
       name: "homebrew-{{{ .Info.Org }}}"
     commit_author:
