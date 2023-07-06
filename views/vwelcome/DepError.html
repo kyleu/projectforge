@@ -19,6 +19,8 @@
     <h3>{%= components.SVGRefIcon(`warning`, ps) %} Missing dependencies</h3>
     <div class="mt">Before you can start using {%s util.AppName %}, we need to install some things</div>
     <div class="mt"><a href="">Refresh</a> this page after you have corrected the errors</div>
+    <div class="mt">If your OS path has changed, you may need to restart the shell that started Project Forge</div>
+    <div class="mt"><a href="?override=true"><button>Ignore For Now</button></a></div>
   </div>
   {%- for _, x := range p.Results -%}
   <div class="card">
@@ -33,7 +35,7 @@
       {%- if strings.HasPrefix(s, "#") -%}
       <a target="_blank" href="{%s strings.TrimPrefix(s, `#`) %}">{%s strings.TrimPrefix(s, `#`) %}</a>
       {%- elseif strings.HasPrefix(s, "!") -%}
-      run [<em>{%s strings.TrimPrefix(s, `!`) %}</em>] in this directory
+      run [<em>{%s strings.TrimPrefix(s, `!`) %}</em>]
       {%- else -%}
       {%s s %}
       {%- endif -%}

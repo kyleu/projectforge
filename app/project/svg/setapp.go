@@ -14,8 +14,8 @@ import (
 )
 
 const (
-	pngMsg = "convert -density 1000 -resize %dx%d -define png:exclude-chunks=date,time logo.svg %s"
-	noBG   = "convert -density 1000 -background none -resize %dx%d -define png:exclude-chunks=date,time logo.svg %s"
+	pngMsg = "magick -density 1000 -resize %dx%d -define png:exclude-chunks=date,time logo.svg %s"
+	noBG   = "magick -density 1000 -background none -resize %dx%d -define png:exclude-chunks=date,time logo.svg %s"
 )
 
 func proc(ctx context.Context, cmd string, path string, logger util.Logger) error {

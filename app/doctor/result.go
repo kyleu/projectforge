@@ -1,6 +1,8 @@
 package doctor
 
 import (
+	"fmt"
+	"runtime"
 	"strings"
 
 	"github.com/samber/lo"
@@ -44,6 +46,19 @@ func (p *Result) WithError(err *Error) *Result {
 func (p *Result) AddSolution(msg string) *Result {
 	p.Solutions = append(p.Solutions, msg)
 	return p
+}
+
+func (p *Result) AddPackageSolution(name string, pkg string) *Result {
+	msg := fmt.Sprintf("Install [%s] using your platform's package manager", name)
+	switch runtime.GOOS {
+	case "windows":
+		msg += fmt.Sprintf(" by running [choco install %s]", pkg)
+	case "darwin":
+		msg += fmt.Sprintf(" by running [brew install %s]", pkg)
+	case "linux":
+		msg += fmt.Sprintf(" by running [sudo apt install %s]", pkg)
+	}
+	return p.AddSolution(msg)
 }
 
 type Results []*Result

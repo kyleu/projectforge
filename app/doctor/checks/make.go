@@ -20,7 +20,7 @@ var mke = &doctor.Check{
 
 func solveMake(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Result {
 	if r.Errors.Find("missing") != nil || r.Errors.Find("exitcode") != nil {
-		r.AddSolution(" Install [make] using your platform's package manager")
+		r.AddPackageSolution("Make", "make")
 	}
 	return r
 }

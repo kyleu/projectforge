@@ -20,7 +20,7 @@ var node = &doctor.Check{
 
 func solveNode(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Result {
 	if r.Errors.Find("missing") != nil || r.Errors.Find("exitcode") != nil {
-		r.AddSolution("Install [Node.js] using your platform's package manager")
+		r.AddPackageSolution("Node.js", "nodejs")
 	}
 	return r
 }

@@ -3,7 +3,6 @@ package cproject
 import (
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
-
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
 	"projectforge.dev/projectforge/app/controller/cutil"
@@ -18,8 +17,15 @@ const welcomeMessage = "Welcome to " + util.AppName + "! View this page in a bro
 
 func Welcome(rc *fasthttp.RequestCtx) {
 	controller.Act("welcome", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		override := string(rc.URI().QueryArgs().Peek("override")) == "true"
+		showLoad := override || string(rc.URI().QueryArgs().Peek("loaded")) == "true"
+		if !showLoad {
+			ps.HideMenu = true
+			page := &vpage.Load{URL: "/welcome?loaded=true", Title: "Starting", Message: "Checking some things..."}
+			return controller.Render(rc, as, page, ps, "Welcome")
+		}
 		ch := checks.CheckAll(ps.Context, as.Services.Modules.Modules().Keys(), ps.Logger, "project", "projectforge", "repo").Errors()
-		if len(ch) > 0 {
+		if len(ch) > 0 && (!override) {
 			ps.Title = util.AppName + ": Missing dependencies"
 			ps.Data = ch.ErrorSummary()
 			ps.HideMenu = true

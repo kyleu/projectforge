@@ -94,80 +94,82 @@ func (p *Results) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 //line views/vdoctor/Results.html:41
 		qw422016.N().S(`          </td>
           <td>
+            <div>
 `)
-//line views/vdoctor/Results.html:44
+//line views/vdoctor/Results.html:45
 		for _, s := range r.Solutions {
-//line views/vdoctor/Results.html:45
+//line views/vdoctor/Results.html:46
 			if strings.HasPrefix(s, "#") {
-//line views/vdoctor/Results.html:45
-				qw422016.N().S(`            <div><a target="_blank" href="`)
 //line views/vdoctor/Results.html:46
+				qw422016.N().S(`              <a target="_blank" href="`)
+//line views/vdoctor/Results.html:47
 				qw422016.E().S(strings.TrimPrefix(s, `#`))
-//line views/vdoctor/Results.html:46
+//line views/vdoctor/Results.html:47
 				qw422016.N().S(`">`)
-//line views/vdoctor/Results.html:46
+//line views/vdoctor/Results.html:47
 				qw422016.E().S(strings.TrimPrefix(s, `#`))
-//line views/vdoctor/Results.html:46
-				qw422016.N().S(`</a></div>
-`)
 //line views/vdoctor/Results.html:47
+				qw422016.N().S(`</a>
+`)
+//line views/vdoctor/Results.html:48
 			} else if strings.HasPrefix(s, "!") {
-//line views/vdoctor/Results.html:47
-				qw422016.N().S(`            <div>run [<em>`)
 //line views/vdoctor/Results.html:48
+				qw422016.N().S(`              run [<em>`)
+//line views/vdoctor/Results.html:49
 				qw422016.E().S(strings.TrimPrefix(s, `!`))
-//line views/vdoctor/Results.html:48
-				qw422016.N().S(`</em>] in this directory</div>
-`)
 //line views/vdoctor/Results.html:49
+				qw422016.N().S(`</em>] in this directory
+`)
+//line views/vdoctor/Results.html:50
 			} else {
-//line views/vdoctor/Results.html:49
-				qw422016.N().S(`            <div>`)
 //line views/vdoctor/Results.html:50
-				qw422016.E().S(s)
-//line views/vdoctor/Results.html:50
-				qw422016.N().S(`</div>
-`)
+				qw422016.N().S(`              `)
 //line views/vdoctor/Results.html:51
+				qw422016.E().S(s)
+//line views/vdoctor/Results.html:51
+				qw422016.N().S(`
+`)
+//line views/vdoctor/Results.html:52
 			}
-//line views/vdoctor/Results.html:52
+//line views/vdoctor/Results.html:53
 		}
-//line views/vdoctor/Results.html:52
-		qw422016.N().S(`          </td>
+//line views/vdoctor/Results.html:53
+		qw422016.N().S(`            </div>
+          </td>
         </tr>
 `)
-//line views/vdoctor/Results.html:55
+//line views/vdoctor/Results.html:57
 	}
-//line views/vdoctor/Results.html:55
+//line views/vdoctor/Results.html:57
 	qw422016.N().S(`      </tbody>
     </table>
   </div>
 `)
-//line views/vdoctor/Results.html:59
+//line views/vdoctor/Results.html:61
 }
 
-//line views/vdoctor/Results.html:59
+//line views/vdoctor/Results.html:61
 func (p *Results) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vdoctor/Results.html:59
+//line views/vdoctor/Results.html:61
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vdoctor/Results.html:59
+//line views/vdoctor/Results.html:61
 	p.StreamBody(qw422016, as, ps)
-//line views/vdoctor/Results.html:59
+//line views/vdoctor/Results.html:61
 	qt422016.ReleaseWriter(qw422016)
-//line views/vdoctor/Results.html:59
+//line views/vdoctor/Results.html:61
 }
 
-//line views/vdoctor/Results.html:59
+//line views/vdoctor/Results.html:61
 func (p *Results) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vdoctor/Results.html:59
+//line views/vdoctor/Results.html:61
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vdoctor/Results.html:59
+//line views/vdoctor/Results.html:61
 	p.WriteBody(qb422016, as, ps)
-//line views/vdoctor/Results.html:59
+//line views/vdoctor/Results.html:61
 	qs422016 := string(qb422016.B)
-//line views/vdoctor/Results.html:59
+//line views/vdoctor/Results.html:61
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vdoctor/Results.html:59
+//line views/vdoctor/Results.html:61
 	return qs422016
-//line views/vdoctor/Results.html:59
+//line views/vdoctor/Results.html:61
 }
