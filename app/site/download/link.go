@@ -49,7 +49,7 @@ func (l *Link) ArchString() string {
 	case ArchRISCV64:
 		return "RISC-V 64-bit"
 	case ArchS390X:
-		return "X390x"
+		return "S390x"
 	case ArchUniversal:
 		return "All (Universal)"
 	case ArchWASM:
