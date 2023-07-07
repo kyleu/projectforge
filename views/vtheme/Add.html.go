@@ -29,154 +29,155 @@ var (
 type Add struct {
 	layout.Basic
 	Project string
+	Icon    string
 	Palette string
 	Themes  theme.Themes
 	Title   string
 }
 
-//line views/vtheme/Add.html:16
+//line views/vtheme/Add.html:17
 func (p *Add) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vtheme/Add.html:16
+//line views/vtheme/Add.html:17
 	qw422016.N().S(`
   <div class="card">
 `)
-//line views/vtheme/Add.html:18
+//line views/vtheme/Add.html:19
 	if p.Project == "" {
-//line views/vtheme/Add.html:18
+//line views/vtheme/Add.html:19
 		qw422016.N().S(`    <h3>Add Themes</h3>
 `)
-//line views/vtheme/Add.html:20
+//line views/vtheme/Add.html:21
 	} else {
-//line views/vtheme/Add.html:20
+//line views/vtheme/Add.html:21
 		qw422016.N().S(`    <h3>Set theme for project [`)
-//line views/vtheme/Add.html:21
+//line views/vtheme/Add.html:22
 		qw422016.E().S(p.Project)
-//line views/vtheme/Add.html:21
+//line views/vtheme/Add.html:22
 		qw422016.N().S(`]</h3>
 `)
-//line views/vtheme/Add.html:22
+//line views/vtheme/Add.html:23
 	}
-//line views/vtheme/Add.html:22
+//line views/vtheme/Add.html:23
 	qw422016.N().S(`    <form action="/theme" method="post">
       <input type="hidden" name="palette" value="`)
-//line views/vtheme/Add.html:24
+//line views/vtheme/Add.html:25
 	qw422016.E().S(p.Palette)
-//line views/vtheme/Add.html:24
+//line views/vtheme/Add.html:25
 	qw422016.N().S(`" />
       <table class="mt">
         <tbody>
 `)
-//line views/vtheme/Add.html:27
+//line views/vtheme/Add.html:28
 	for _, t := range p.Themes {
-//line views/vtheme/Add.html:27
+//line views/vtheme/Add.html:28
 		qw422016.N().S(`          <tr>
 `)
-//line views/vtheme/Add.html:29
+//line views/vtheme/Add.html:30
 		if p.Project == "" {
-//line views/vtheme/Add.html:29
+//line views/vtheme/Add.html:30
 			qw422016.N().S(`            <th class="shrink"><input type="checkbox" id="`)
-//line views/vtheme/Add.html:30
+//line views/vtheme/Add.html:31
 			qw422016.E().S(t.Key)
-//line views/vtheme/Add.html:30
+//line views/vtheme/Add.html:31
 			qw422016.N().S(`" name="`)
-//line views/vtheme/Add.html:30
+//line views/vtheme/Add.html:31
 			qw422016.E().S(t.Key)
-//line views/vtheme/Add.html:30
+//line views/vtheme/Add.html:31
 			qw422016.N().S(`" value="true" /></th>
 `)
-//line views/vtheme/Add.html:31
+//line views/vtheme/Add.html:32
 		}
-//line views/vtheme/Add.html:31
+//line views/vtheme/Add.html:32
 		qw422016.N().S(`            <th>
               <label for="`)
-//line views/vtheme/Add.html:33
+//line views/vtheme/Add.html:34
 		qw422016.E().S(t.Key)
-//line views/vtheme/Add.html:33
+//line views/vtheme/Add.html:34
 		qw422016.N().S(`">`)
-//line views/vtheme/Add.html:33
+//line views/vtheme/Add.html:34
 		qw422016.E().S(t.Key)
-//line views/vtheme/Add.html:33
+//line views/vtheme/Add.html:34
 		qw422016.N().S(`</label>
 `)
-//line views/vtheme/Add.html:34
+//line views/vtheme/Add.html:35
 		if p.Project == "" {
-//line views/vtheme/Add.html:34
+//line views/vtheme/Add.html:35
 			qw422016.N().S(`              <a href="/theme/preview/`)
-//line views/vtheme/Add.html:35
+//line views/vtheme/Add.html:36
 			qw422016.E().S(p.Palette)
-//line views/vtheme/Add.html:35
+//line views/vtheme/Add.html:36
 			qw422016.N().S(`/`)
-//line views/vtheme/Add.html:35
+//line views/vtheme/Add.html:36
 			qw422016.E().S(t.Key)
-//line views/vtheme/Add.html:35
+//line views/vtheme/Add.html:36
 			qw422016.N().S(`">Preview</a>
 `)
-//line views/vtheme/Add.html:36
+//line views/vtheme/Add.html:37
 		} else {
-//line views/vtheme/Add.html:36
+//line views/vtheme/Add.html:37
 			qw422016.N().S(`              <a href="/theme/preview/`)
-//line views/vtheme/Add.html:37
+//line views/vtheme/Add.html:38
 			qw422016.E().S(p.Palette)
-//line views/vtheme/Add.html:37
+//line views/vtheme/Add.html:38
 			qw422016.N().S(`/`)
-//line views/vtheme/Add.html:37
+//line views/vtheme/Add.html:38
 			qw422016.E().S(t.Key)
-//line views/vtheme/Add.html:37
+//line views/vtheme/Add.html:38
 			qw422016.N().S(`?project=`)
-//line views/vtheme/Add.html:37
+//line views/vtheme/Add.html:38
 			qw422016.E().S(p.Project)
-//line views/vtheme/Add.html:37
+//line views/vtheme/Add.html:38
 			qw422016.N().S(`">Set</a>
 `)
-//line views/vtheme/Add.html:38
+//line views/vtheme/Add.html:39
 		}
-//line views/vtheme/Add.html:38
+//line views/vtheme/Add.html:39
 		qw422016.N().S(`            </th>
             <th class="shrink" style="background-color: #ffffff; padding: 12px 36px;">`)
-//line views/vtheme/Add.html:40
-		StreamMockupColors(qw422016, p.Title, "", t.Light, true, 5, ps)
-//line views/vtheme/Add.html:40
+//line views/vtheme/Add.html:41
+		StreamMockupColors(qw422016, p.Title, "", t.Light, true, p.Icon, 5, ps)
+//line views/vtheme/Add.html:41
 		qw422016.N().S(`</th>
             <th class="shrink" style="background-color: #121212; padding: 12px 36px;">`)
-//line views/vtheme/Add.html:41
-		StreamMockupColors(qw422016, p.Title, "", t.Dark, true, 5, ps)
-//line views/vtheme/Add.html:41
+//line views/vtheme/Add.html:42
+		StreamMockupColors(qw422016, p.Title, "", t.Dark, true, p.Icon, 5, ps)
+//line views/vtheme/Add.html:42
 		qw422016.N().S(`</th>
           </tr>
 `)
-//line views/vtheme/Add.html:43
+//line views/vtheme/Add.html:44
 	}
-//line views/vtheme/Add.html:43
+//line views/vtheme/Add.html:44
 	qw422016.N().S(`        </tbody>
       </table>
     </form>
   </div>
 `)
-//line views/vtheme/Add.html:48
+//line views/vtheme/Add.html:49
 }
 
-//line views/vtheme/Add.html:48
+//line views/vtheme/Add.html:49
 func (p *Add) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vtheme/Add.html:48
+//line views/vtheme/Add.html:49
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vtheme/Add.html:48
+//line views/vtheme/Add.html:49
 	p.StreamBody(qw422016, as, ps)
-//line views/vtheme/Add.html:48
+//line views/vtheme/Add.html:49
 	qt422016.ReleaseWriter(qw422016)
-//line views/vtheme/Add.html:48
+//line views/vtheme/Add.html:49
 }
 
-//line views/vtheme/Add.html:48
+//line views/vtheme/Add.html:49
 func (p *Add) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vtheme/Add.html:48
+//line views/vtheme/Add.html:49
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vtheme/Add.html:48
+//line views/vtheme/Add.html:49
 	p.WriteBody(qb422016, as, ps)
-//line views/vtheme/Add.html:48
+//line views/vtheme/Add.html:49
 	qs422016 := string(qb422016.B)
-//line views/vtheme/Add.html:48
+//line views/vtheme/Add.html:49
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vtheme/Add.html:48
+//line views/vtheme/Add.html:49
 	return qs422016
-//line views/vtheme/Add.html:48
+//line views/vtheme/Add.html:49
 }

@@ -15,8 +15,9 @@
   font-size: 80%;
 }
 
-.mockup .mock-link:hover {
+.mockup .mock-link:hover, .mockup .mock-link-visited:hover, .mockup .mock-link-selected:hover {
   text-decoration: underline;
+  cursor: pointer;
 }
 
 .mockup .mock-nav {

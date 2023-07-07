@@ -27,7 +27,7 @@ var (
 )
 
 //line views/vtheme/Choice.html:8
-func StreamChoicePanel(qw422016 *qt422016.Writer, themes theme.Themes, indent int, ps *cutil.PageState) {
+func StreamChoicePanel(qw422016 *qt422016.Writer, themes theme.Themes, icon string, indent int, ps *cutil.PageState) {
 //line views/vtheme/Choice.html:9
 	vutil.StreamIndent(qw422016, true, indent)
 //line views/vtheme/Choice.html:9
@@ -51,7 +51,7 @@ func StreamChoicePanel(qw422016 *qt422016.Writer, themes theme.Themes, indent in
 	}
 
 //line views/vtheme/Choice.html:23
-	StreamChoice(qw422016, themes, sel, indent+2, ps)
+	StreamChoice(qw422016, themes, sel, icon, indent+2, ps)
 //line views/vtheme/Choice.html:23
 	qw422016.N().S(`</td>`)
 //line views/vtheme/Choice.html:25
@@ -62,22 +62,22 @@ func StreamChoicePanel(qw422016 *qt422016.Writer, themes theme.Themes, indent in
 }
 
 //line views/vtheme/Choice.html:27
-func WriteChoicePanel(qq422016 qtio422016.Writer, themes theme.Themes, indent int, ps *cutil.PageState) {
+func WriteChoicePanel(qq422016 qtio422016.Writer, themes theme.Themes, icon string, indent int, ps *cutil.PageState) {
 //line views/vtheme/Choice.html:27
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vtheme/Choice.html:27
-	StreamChoicePanel(qw422016, themes, indent, ps)
+	StreamChoicePanel(qw422016, themes, icon, indent, ps)
 //line views/vtheme/Choice.html:27
 	qt422016.ReleaseWriter(qw422016)
 //line views/vtheme/Choice.html:27
 }
 
 //line views/vtheme/Choice.html:27
-func ChoicePanel(themes theme.Themes, indent int, ps *cutil.PageState) string {
+func ChoicePanel(themes theme.Themes, icon string, indent int, ps *cutil.PageState) string {
 //line views/vtheme/Choice.html:27
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vtheme/Choice.html:27
-	WriteChoicePanel(qb422016, themes, indent, ps)
+	WriteChoicePanel(qb422016, themes, icon, indent, ps)
 //line views/vtheme/Choice.html:27
 	qs422016 := string(qb422016.B)
 //line views/vtheme/Choice.html:27
@@ -88,7 +88,7 @@ func ChoicePanel(themes theme.Themes, indent int, ps *cutil.PageState) string {
 }
 
 //line views/vtheme/Choice.html:29
-func StreamChoice(qw422016 *qt422016.Writer, themes theme.Themes, selected string, indent int, ps *cutil.PageState) {
+func StreamChoice(qw422016 *qt422016.Writer, themes theme.Themes, selected string, icon string, indent int, ps *cutil.PageState) {
 //line views/vtheme/Choice.html:30
 	vutil.StreamIndent(qw422016, true, indent)
 //line views/vtheme/Choice.html:30
@@ -122,7 +122,7 @@ func StreamChoice(qw422016 *qt422016.Writer, themes theme.Themes, selected strin
 //line views/vtheme/Choice.html:39
 		}
 //line views/vtheme/Choice.html:40
-		StreamMockupTheme(qw422016, t, true, indent+2, ps)
+		StreamMockupTheme(qw422016, t, true, icon, indent+2, ps)
 //line views/vtheme/Choice.html:40
 		qw422016.N().S(`</label>`)
 //line views/vtheme/Choice.html:42
@@ -135,22 +135,22 @@ func StreamChoice(qw422016 *qt422016.Writer, themes theme.Themes, selected strin
 }
 
 //line views/vtheme/Choice.html:45
-func WriteChoice(qq422016 qtio422016.Writer, themes theme.Themes, selected string, indent int, ps *cutil.PageState) {
+func WriteChoice(qq422016 qtio422016.Writer, themes theme.Themes, selected string, icon string, indent int, ps *cutil.PageState) {
 //line views/vtheme/Choice.html:45
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vtheme/Choice.html:45
-	StreamChoice(qw422016, themes, selected, indent, ps)
+	StreamChoice(qw422016, themes, selected, icon, indent, ps)
 //line views/vtheme/Choice.html:45
 	qt422016.ReleaseWriter(qw422016)
 //line views/vtheme/Choice.html:45
 }
 
 //line views/vtheme/Choice.html:45
-func Choice(themes theme.Themes, selected string, indent int, ps *cutil.PageState) string {
+func Choice(themes theme.Themes, selected string, icon string, indent int, ps *cutil.PageState) string {
 //line views/vtheme/Choice.html:45
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vtheme/Choice.html:45
-	WriteChoice(qb422016, themes, selected, indent, ps)
+	WriteChoice(qb422016, themes, selected, icon, indent, ps)
 //line views/vtheme/Choice.html:45
 	qs422016 := string(qb422016.B)
 //line views/vtheme/Choice.html:45

@@ -27,19 +27,23 @@ var (
 )
 
 //line views/vtheme/Editor.html:8
-func StreamEditor(qw422016 *qt422016.Writer, navTitle string, t *theme.Theme, as *app.State, ps *cutil.PageState) {
+func StreamEditor(qw422016 *qt422016.Writer, title string, navTitle string, t *theme.Theme, icon string, as *app.State, ps *cutil.PageState) {
 //line views/vtheme/Editor.html:8
 	qw422016.N().S(`
   <div class="card">
     <table class="centered min-200">
       <thead>
       <tr>
-        <th></th>
+        <th class="left-align shrink">`)
+//line views/vtheme/Editor.html:13
+	qw422016.E().S(title)
+//line views/vtheme/Editor.html:13
+	qw422016.N().S(`</th>
         <th class="bl" colspan="2">
           <div>Light</div>
           <div id="mockup-light">`)
 //line views/vtheme/Editor.html:16
-	StreamMockupColors(qw422016, navTitle, "", t.Light, false, 5, ps)
+	StreamMockupColors(qw422016, navTitle, "", t.Light, false, icon, 5, ps)
 //line views/vtheme/Editor.html:16
 	qw422016.N().S(`</div>
         </th>
@@ -47,7 +51,7 @@ func StreamEditor(qw422016 *qt422016.Writer, navTitle string, t *theme.Theme, as
           <div>Dark</div>
           <div id="mockup-dark">`)
 //line views/vtheme/Editor.html:20
-	StreamMockupColors(qw422016, navTitle, "", t.Dark, false, 5, ps)
+	StreamMockupColors(qw422016, navTitle, "", t.Dark, false, icon, 5, ps)
 //line views/vtheme/Editor.html:20
 	qw422016.N().S(`</div>
         </th>
@@ -220,22 +224,22 @@ func StreamEditor(qw422016 *qt422016.Writer, navTitle string, t *theme.Theme, as
 }
 
 //line views/vtheme/Editor.html:88
-func WriteEditor(qq422016 qtio422016.Writer, navTitle string, t *theme.Theme, as *app.State, ps *cutil.PageState) {
+func WriteEditor(qq422016 qtio422016.Writer, title string, navTitle string, t *theme.Theme, icon string, as *app.State, ps *cutil.PageState) {
 //line views/vtheme/Editor.html:88
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vtheme/Editor.html:88
-	StreamEditor(qw422016, navTitle, t, as, ps)
+	StreamEditor(qw422016, title, navTitle, t, icon, as, ps)
 //line views/vtheme/Editor.html:88
 	qt422016.ReleaseWriter(qw422016)
 //line views/vtheme/Editor.html:88
 }
 
 //line views/vtheme/Editor.html:88
-func Editor(navTitle string, t *theme.Theme, as *app.State, ps *cutil.PageState) string {
+func Editor(title string, navTitle string, t *theme.Theme, icon string, as *app.State, ps *cutil.PageState) string {
 //line views/vtheme/Editor.html:88
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vtheme/Editor.html:88
-	WriteEditor(qb422016, navTitle, t, as, ps)
+	WriteEditor(qb422016, title, navTitle, t, icon, as, ps)
 //line views/vtheme/Editor.html:88
 	qs422016 := string(qb422016.B)
 //line views/vtheme/Editor.html:88

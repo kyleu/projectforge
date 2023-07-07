@@ -39,7 +39,7 @@ func ThemeEdit(rc *fasthttp.RequestCtx) {
 		}
 		ps.Data = t
 		ps.Title = "Edit theme [" + t.Key + "]"
-		page := &vtheme.Edit{Theme: t}
+		page := &vtheme.Edit{Theme: t, Icon: "app"}
 		return controller.Render(rc, as, page, ps, "admin", "Themes||/admin/theme", t.Key)
 	})
 }

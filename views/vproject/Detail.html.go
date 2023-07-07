@@ -184,7 +184,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <label for="tab-theme" class="label">Theme</label>
     <div class="panel">`)
 //line views/vproject/Detail.html:75
-	StreamDetailTheme(qw422016, prj.Key, prj.Theme, prj.Title(), as, ps)
+	StreamDetailTheme(qw422016, prj.Key, prj.Theme, prj.Title(), prj.IconSafe(), as, ps)
 //line views/vproject/Detail.html:75
 	qw422016.N().S(`</div>
 

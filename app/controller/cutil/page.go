@@ -8,6 +8,7 @@ import (
 
 	"github.com/samber/lo"
 	"github.com/valyala/fasthttp"
+	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cmenu"
@@ -73,6 +74,7 @@ func (p *PageState) AddIcon(keys ...string) {
 	lo.ForEach(keys, func(k string, _ int) {
 		if !lo.Contains(p.Icons, k) {
 			p.Icons = append(p.Icons, k)
+			slices.Sort(p.Icons)
 		}
 	})
 }

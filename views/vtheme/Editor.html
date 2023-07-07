@@ -5,19 +5,19 @@
   "projectforge.dev/projectforge/app/lib/theme"
 ) %}
 
-{% func Editor(navTitle string, t *theme.Theme, as *app.State, ps *cutil.PageState) %}
+{% func Editor(title string, navTitle string, t *theme.Theme, icon string, as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <table class="centered min-200">
       <thead>
       <tr>
-        <th></th>
+        <th class="left-align shrink">{%s title %}</th>
         <th class="bl" colspan="2">
           <div>Light</div>
-          <div id="mockup-light">{%= MockupColors(navTitle, "", t.Light, false, 5, ps) %}</div>
+          <div id="mockup-light">{%= MockupColors(navTitle, "", t.Light, false, icon, 5, ps) %}</div>
         </th>
         <th class="bl" colspan="2">
           <div>Dark</div>
-          <div id="mockup-dark">{%= MockupColors(navTitle, "", t.Dark, false, 5, ps) %}</div>
+          <div id="mockup-dark">{%= MockupColors(navTitle, "", t.Dark, false, icon, 5, ps) %}</div>
         </th>
       </tr>
       <tr>

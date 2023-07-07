@@ -31,7 +31,7 @@ var (
 )
 
 //line views/vtheme/Mockup.html:12
-func StreamMockupTheme(qw422016 *qt422016.Writer, t *theme.Theme, pointer bool, indent int, ps *cutil.PageState) {
+func StreamMockupTheme(qw422016 *qt422016.Writer, t *theme.Theme, pointer bool, icon string, indent int, ps *cutil.PageState) {
 //line views/vtheme/Mockup.html:12
 	qw422016.N().S(`<div class="title small-text">`)
 //line views/vtheme/Mockup.html:13
@@ -39,29 +39,29 @@ func StreamMockupTheme(qw422016 *qt422016.Writer, t *theme.Theme, pointer bool, 
 //line views/vtheme/Mockup.html:13
 	qw422016.N().S(`</div>`)
 //line views/vtheme/Mockup.html:14
-	StreamMockupColors(qw422016, util.AppName, "light", t.Light, pointer, indent, ps)
+	StreamMockupColors(qw422016, util.AppName, "light", t.Light, pointer, icon, indent, ps)
 //line views/vtheme/Mockup.html:15
-	StreamMockupColors(qw422016, util.AppName, "dark", t.Dark, pointer, indent, ps)
+	StreamMockupColors(qw422016, util.AppName, "dark", t.Dark, pointer, icon, indent, ps)
 //line views/vtheme/Mockup.html:16
 }
 
 //line views/vtheme/Mockup.html:16
-func WriteMockupTheme(qq422016 qtio422016.Writer, t *theme.Theme, pointer bool, indent int, ps *cutil.PageState) {
+func WriteMockupTheme(qq422016 qtio422016.Writer, t *theme.Theme, pointer bool, icon string, indent int, ps *cutil.PageState) {
 //line views/vtheme/Mockup.html:16
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vtheme/Mockup.html:16
-	StreamMockupTheme(qw422016, t, pointer, indent, ps)
+	StreamMockupTheme(qw422016, t, pointer, icon, indent, ps)
 //line views/vtheme/Mockup.html:16
 	qt422016.ReleaseWriter(qw422016)
 //line views/vtheme/Mockup.html:16
 }
 
 //line views/vtheme/Mockup.html:16
-func MockupTheme(t *theme.Theme, pointer bool, indent int, ps *cutil.PageState) string {
+func MockupTheme(t *theme.Theme, pointer bool, icon string, indent int, ps *cutil.PageState) string {
 //line views/vtheme/Mockup.html:16
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vtheme/Mockup.html:16
-	WriteMockupTheme(qb422016, t, pointer, indent, ps)
+	WriteMockupTheme(qb422016, t, pointer, icon, indent, ps)
 //line views/vtheme/Mockup.html:16
 	qs422016 := string(qb422016.B)
 //line views/vtheme/Mockup.html:16
@@ -72,7 +72,7 @@ func MockupTheme(t *theme.Theme, pointer bool, indent int, ps *cutil.PageState) 
 }
 
 //line views/vtheme/Mockup.html:18
-func StreamMockupColors(qw422016 *qt422016.Writer, navTitle string, mode string, c *theme.Colors, pointer bool, indent int, ps *cutil.PageState) {
+func StreamMockupColors(qw422016 *qt422016.Writer, navTitle string, mode string, c *theme.Colors, pointer bool, icon string, indent int, ps *cutil.PageState) {
 //line views/vtheme/Mockup.html:20
 	navStyle := fmt.Sprintf("color: %s; background-color: %s;", c.NavForeground, c.NavBackground)
 
@@ -106,7 +106,7 @@ func StreamMockupColors(qw422016 *qt422016.Writer, navTitle string, mode string,
 //line views/vtheme/Mockup.html:41
 	qw422016.N().S(`">`)
 //line views/vtheme/Mockup.html:41
-	components.StreamSVGRef(qw422016, `app`, 12, 12, `icon`, ps)
+	components.StreamSVGRef(qw422016, icon, 12, 12, `icon`, ps)
 //line views/vtheme/Mockup.html:41
 	qw422016.E().S(navTitle)
 //line views/vtheme/Mockup.html:41
@@ -155,22 +155,22 @@ func StreamMockupColors(qw422016 *qt422016.Writer, navTitle string, mode string,
 }
 
 //line views/vtheme/Mockup.html:60
-func WriteMockupColors(qq422016 qtio422016.Writer, navTitle string, mode string, c *theme.Colors, pointer bool, indent int, ps *cutil.PageState) {
+func WriteMockupColors(qq422016 qtio422016.Writer, navTitle string, mode string, c *theme.Colors, pointer bool, icon string, indent int, ps *cutil.PageState) {
 //line views/vtheme/Mockup.html:60
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vtheme/Mockup.html:60
-	StreamMockupColors(qw422016, navTitle, mode, c, pointer, indent, ps)
+	StreamMockupColors(qw422016, navTitle, mode, c, pointer, icon, indent, ps)
 //line views/vtheme/Mockup.html:60
 	qt422016.ReleaseWriter(qw422016)
 //line views/vtheme/Mockup.html:60
 }
 
 //line views/vtheme/Mockup.html:60
-func MockupColors(navTitle string, mode string, c *theme.Colors, pointer bool, indent int, ps *cutil.PageState) string {
+func MockupColors(navTitle string, mode string, c *theme.Colors, pointer bool, icon string, indent int, ps *cutil.PageState) string {
 //line views/vtheme/Mockup.html:60
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vtheme/Mockup.html:60
-	WriteMockupColors(qb422016, navTitle, mode, c, pointer, indent, ps)
+	WriteMockupColors(qb422016, navTitle, mode, c, pointer, icon, indent, ps)
 //line views/vtheme/Mockup.html:60
 	qs422016 := string(qb422016.B)
 //line views/vtheme/Mockup.html:60

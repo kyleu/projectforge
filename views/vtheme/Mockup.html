@@ -9,13 +9,13 @@
   "projectforge.dev/projectforge/views/vutil"
 ) %}
 
-{% func MockupTheme(t *theme.Theme, pointer bool, indent int, ps *cutil.PageState) %}{% stripspace %}
+{% func MockupTheme(t *theme.Theme, pointer bool, icon string, indent int, ps *cutil.PageState) %}{% stripspace %}
   <div class="title small-text">{%s t.Key %}</div>
-  {%= MockupColors(util.AppName, "light", t.Light, pointer, indent, ps) %}
-  {%= MockupColors(util.AppName, "dark", t.Dark, pointer, indent, ps) %}
+  {%= MockupColors(util.AppName, "light", t.Light, pointer, icon, indent, ps) %}
+  {%= MockupColors(util.AppName, "dark", t.Dark, pointer, icon, indent, ps) %}
 {% endstripspace %}{% endfunc %}
 
-{% func MockupColors(navTitle string, mode string, c *theme.Colors, pointer bool, indent int, ps *cutil.PageState) %}{% stripspace %}
+{% func MockupColors(navTitle string, mode string, c *theme.Colors, pointer bool, icon string, indent int, ps *cutil.PageState) %}{% stripspace %}
   {% code
     navStyle := fmt.Sprintf("color: %s; background-color: %s;", c.NavForeground, c.NavBackground)
 
@@ -38,7 +38,7 @@
   %}
   {%= vutil.Indent(true, indent) %}
   <div class="{%s cls %}">
-    <div class="mock-nav" style="{%s navStyle %}">{%= components.SVGRef(`app`, 12, 12, `icon`, ps) %}{%s navTitle %}</div>
+    <div class="mock-nav" style="{%s navStyle %}">{%= components.SVGRef(icon, 12, 12, `icon`, ps) %}{%s navTitle %}</div>
     <div class="mock-menu" style="{%s menuStyle %}">
       <div class="mock-link" style="{%s menuLinkStyle %}">A</div>
       <div class="mock-link-selected" style="{%s menuLinkSelectedStyle %}">B</div>

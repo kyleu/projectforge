@@ -346,7 +346,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vproject/Edit.html:117
 	qw422016.N().S(`    `)
 //line views/vproject/Edit.html:118
-	vtheme.StreamEditor(qw422016, prj.Title(), t, as, ps)
+	vtheme.StreamEditor(qw422016, "Default Theme", prj.Title(), t, prj.IconSafe(), as, ps)
 //line views/vproject/Edit.html:118
 	qw422016.N().S(`
     <div class="card">

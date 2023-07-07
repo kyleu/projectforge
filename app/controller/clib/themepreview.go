@@ -41,10 +41,12 @@ func ThemePalette(rc *fasthttp.RequestCtx) {
 		}
 		prj := string(rc.URI().QueryArgs().Peek("project"))
 		prjTitle := util.AppName
+		prjIcon := "app"
 		if prj != "" {
 			curr, _ := as.Services.Projects.Get(prj)
 			if curr != nil {
 				prjTitle = curr.Title()
+				prjIcon = curr.IconSafe()
 			}
 		}
 		ps.Title = fmt.Sprintf("[%s] Themes", pal)
@@ -55,7 +57,7 @@ func ThemePalette(rc *fasthttp.RequestCtx) {
 		}
 		span.Complete()
 		ps.Data = x
-		return controller.Render(rc, as, &vtheme.Add{Project: prj, Palette: pal, Themes: x, Title: prjTitle}, ps, "admin", "Themes")
+		return controller.Render(rc, as, &vtheme.Add{Project: prj, Icon: prjIcon, Palette: pal, Themes: x, Title: prjTitle}, ps, "admin", "Themes")
 	})
 }
 

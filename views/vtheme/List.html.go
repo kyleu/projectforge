@@ -58,7 +58,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 		qw422016.N().S(`">
           `)
 //line views/vtheme/List.html:23
-		StreamMockupTheme(qw422016, t, true, 5, ps)
+		StreamMockupTheme(qw422016, t, true, "app", 5, ps)
 //line views/vtheme/List.html:23
 		qw422016.N().S(`
         </a>

@@ -10,6 +10,7 @@
 {% code type Edit struct {
   layout.Basic
   Theme *theme.Theme
+  Icon string
 } %}
 
 {% func (p *Edit) Body(as *app.State, ps *cutil.PageState) %}
@@ -23,7 +24,7 @@
         </tbody>
       </table>
     </div>
-    {%= Editor(util.AppName, p.Theme, as, ps) %}
+    {%= Editor("Theme [" + p.Theme.Key + "]", util.AppName, p.Theme, p.Icon, as, ps) %}
     <div class="card">
       <button type="submit">Save All Changes</button>
       <a href="/theme/{%u p.Theme.Key %}"><button type="button">Reset</button></a>
