@@ -60,11 +60,11 @@ func calcDownloadLinks(version string) Links {
 	addDefault(ModeServer, OSLinux, Arch386){{{ if .Build.LinuxARM }}}
 	addDefault(ModeServer, OSLinux, ArchARM64)
 	addARMs(ModeServer, OSLinux){{{ end }}}{{{ if .Build.LinuxOdd }}}
-	addDefault(ModeServer, OSLinux, ArchLoong64)
 	addDefault(ModeServer, OSLinux, ArchPPC64)
 	addDefault(ModeServer, OSLinux, ArchPPC64LE)
 	addDefault(ModeServer, OSLinux, ArchRISCV64)
-	addDefault(ModeServer, OSLinux, ArchS390X){{{ end }}}{{{ if .Build.LinuxMIPS }}}
+	addDefault(ModeServer, OSLinux, ArchS390X)
+	addDefault(ModeServer, OSLinux, ArchLoong64){{{ end }}}{{{ if .Build.LinuxMIPS }}}
 	addMIPS(ModeServer, OSLinux){{{ end }}}{{{ if .Build.Android }}}
 	addDefault(ModeMobile, OSAndroid, "apk")
 	addDefault(ModeMobile, OSAndroid, "aar"){{{ end }}}{{{ if .Build.AIX }}}
