@@ -11,7 +11,7 @@ import (
 )
 
 var AllChecks = doctor.Checks{
-	pf, homebrew, choco, golang, air, qtc, imagemagick, mke, node, git, repo, prj,
+	pf, homebrew, choco, golang, mke, node, git, air, qtc, imagemagick, repo, prj,
 }
 
 func GetCheck(key string) *doctor.Check {

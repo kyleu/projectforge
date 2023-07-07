@@ -14,6 +14,7 @@ func projectRoutes(r *router.Router) {
 	r.GET("/doctor", cproject.Doctor)
 	r.GET("/doctor/all", cproject.DoctorRunAll)
 	r.GET("/doctor/{key}", cproject.DoctorRun)
+	r.GET("/doctor/{key}/solve", cproject.DoctorSolve)
 
 	r.GET("/p", cproject.ProjectList)
 	r.GET("/p/search", cproject.ProjectSearchAll)

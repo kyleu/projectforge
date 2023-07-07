@@ -21,21 +21,21 @@ func Welcome(rc *fasthttp.RequestCtx) {
 		showLoad := override || string(rc.URI().QueryArgs().Peek("loaded")) == "true"
 		if !showLoad {
 			ps.HideMenu = true
-			page := &vpage.Load{URL: "/welcome?loaded=true", Title: "Starting", Message: "Checking some things..."}
+			page := &vpage.Load{URL: "/welcome?loaded=true", Title: "Starting " + util.AppName, Message: "Checking some things..."}
 			return controller.Render(rc, as, page, ps, "Welcome")
 		}
 		ch := checks.CheckAll(ps.Context, as.Services.Modules.Modules().Keys(), ps.Logger, "project", "projectforge", "repo").Errors()
 		if len(ch) > 0 && (!override) {
-			ps.Title = util.AppName + ": Missing dependencies"
+			ps.Title = "Missing Dependencies"
 			ps.Data = ch.ErrorSummary()
 			ps.HideMenu = true
-			return controller.Render(rc, as, &vwelcome.DepError{Results: ch}, ps, "Welcome")
+			return controller.Render(rc, as, &vwelcome.DepError{Results: ch}, ps, "Welcome||/welcome")
 		}
 
 		ps.Title = "Welcome to " + util.AppName
 		ps.Data = welcomeMessage
 		ps.HideMenu = true
-		return controller.Render(rc, as, &vwelcome.Welcome{Project: as.Services.Projects.ByPath(".")}, ps, "Welcome")
+		return controller.Render(rc, as, &vwelcome.Welcome{Project: as.Services.Projects.ByPath(".")}, ps, "Welcome||/welcome")
 	})
 }
 

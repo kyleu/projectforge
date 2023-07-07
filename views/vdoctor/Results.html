@@ -5,6 +5,7 @@
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/doctor"
   "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/layout"
 ) %}
 
@@ -16,46 +17,45 @@
 {% func (p *Results) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>Doctor Results</h3>
+    {%- if errs := p.Results.Errors(); len(errs) == 0 %}
+    <div class="mt success">Success, no errors!</div>
+    {%- else -%}
+    <div class="mt error">{%s util.StringPluralMaybe("Error", len(errs)) %}</div>
+    {%- endif -%}
+  </div>
+  {%- for _, x := range p.Results -%}
+  {%= RenderResult(x, "", ps) %}
+  {%- endfor -%}
+{% endfunc %}
 
-    <table>
-      <thead>
-        <tr>
-          <th>Check</th>
-          <th>Summary</th>
-          <th>Duration</th>
-          <th>Status</th>
-          <th>Errors</th>
-          <th>Solution</th>
-        </tr>
-      </thead>
-      <tbody>
-        {%- for _, r := range p.Results -%}
-        <tr>
-          <td>{%s r.Title %}</td>
-          <td><em>{%s r.Summary %}</em></td>
-          <td>{%s util.MicrosToMillis(r.Duration) %}</td>
-          <td>{%s r.Status %}</td>
-          <td>
-            {%- for _, e := range r.Errors -%}
-            <div>{%s e.String() %}</div>
-            {%- endfor -%}
-          </td>
-          <td>
-            <div>
-              {%- for _, s := range r.Solutions -%}
-              {%- if strings.HasPrefix(s, "#") -%}
-              <a target="_blank" href="{%s strings.TrimPrefix(s, `#`) %}">{%s strings.TrimPrefix(s, `#`) %}</a>
-              {%- elseif strings.HasPrefix(s, "!") -%}
-              run [<em>{%s strings.TrimPrefix(s, `!`) %}</em>] in this directory
-              {%- else -%}
-              {%s s %}
-              {%- endif -%}
-              {%- endfor -%}
-            </div>
-          </td>
-        </tr>
-        {%- endfor -%}
-      </tbody>
-    </table>
+{% func RenderResult(x *doctor.Result, redir string, ps *cutil.PageState) %}
+  <div class="card">
+    <div class="right"><em>{%s util.MicrosToMillis(x.Duration) %}</em> [{%s x.Status %}]</div>
+    <h3>
+      <span title="{%s util.MicrosToMillis(x.Duration) %}">{%s x.Title %}</span>
+      <a href="{%s x.Check.URL %}" title="{%s x.Check.URL %}" target="_blank">{%= components.SVGRef("link", 12, 12, "", ps) %}</a>
+    </h3>
+    <div class="mt"><em>{%s x.Summary %}</em></div>
+    {%- if x.Status == "OK" -%}
+    <div class="mt success">{%s x.Status %}</div>
+    {%- endif -%}
+    {%- for _, e := range x.Errors -%}
+    <div class="mt error" title="{%s e.Code %}">{%s e.String() %}</div>
+    {%- endfor -%}
+    {%- for _, s := range x.Solutions -%}
+    <div class="mt">
+      {%- if strings.HasPrefix(s, "#") -%}
+      <a target="_blank" href="{%s strings.TrimPrefix(s, `#`) %}">{%s strings.TrimPrefix(s, `#`) %}</a>
+      {%- elseif strings.HasPrefix(s, "!") -%}
+      [<em>{%s strings.TrimPrefix(s, `!`) %}</em>]
+      <div class="mt">
+        <a href="/doctor/{%s x.Key %}/solve?return={%s redir %}"><button>Run Command</button></a>
+        <button onclick="navigator.clipboard.writeText('{%s strings.TrimPrefix(s, `!`) %}');">Copy To Clipboard</button>
+      </div>
+      {%- else -%}
+      {%s s %}
+      {%- endif -%}
+    </div>
+    {%- endfor -%}
   </div>
 {% endfunc %}

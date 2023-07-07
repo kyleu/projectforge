@@ -20,10 +20,7 @@ func ProjectStart(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		cmd := fmt.Sprintf("build/debug/%s -v server source:%s", prj.Executable(), util.AppKey)
-		exec, err := as.Services.Exec.NewExec(prj.Key, cmd, prj.Path)
-		if err != nil {
-			return "", err
-		}
+		exec := as.Services.Exec.NewExec(prj.Key, cmd, prj.Path)
 		exec.Link = "/p/" + prj.Key
 		w := func(key string, b []byte) error {
 			m := util.ValueMap{"msg": string(b), "html": string(ansihtml.ConvertToHTML(b))}

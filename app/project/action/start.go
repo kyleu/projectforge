@@ -16,10 +16,7 @@ func onStart(_ context.Context, pm *PrjAndMods, ret *Result) *Result {
 	}
 
 	cmd := fmt.Sprintf("build/debug/%s -v server source:%s", pm.Prj.Executable(), util.AppKey)
-	exec, err := pm.XSvc.NewExec(pm.Prj.Key, cmd, pm.Prj.Path, pm.Prj.Info.EnvVars...)
-	if err != nil {
-		return errorResult(err, TypeDebug, pm.Cfg, pm.Logger)
-	}
+	exec := pm.XSvc.NewExec(pm.Prj.Key, cmd, pm.Prj.Path, pm.Prj.Info.EnvVars...)
 	exec.Link = "/p/" + pm.Prj.Key
 	w := func(key string, b []byte) error {
 		m := util.ValueMap{"msg": string(b), "html": string(ansihtml.ConvertToHTML(b))}
@@ -29,7 +26,7 @@ func onStart(_ context.Context, pm *PrjAndMods, ret *Result) *Result {
 		}
 		return pm.SSvc.WriteChannel(msg, pm.Logger)
 	}
-	err = exec.Start(w)
+	err := exec.Start(w)
 	if err != nil {
 		return errorResult(err, TypeDebug, pm.Cfg, pm.Logger)
 	}

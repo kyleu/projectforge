@@ -83,11 +83,18 @@ func (e *Exec) Wait() error {
 	}
 	exit, err := e.execCmd.Process.Wait()
 	if err != nil {
-		return err
+		_ = e.execCmd.Wait()
+		now := time.Now()
+		for (e.execCmd.ProcessState == nil || !e.execCmd.ProcessState.Exited()) && time.Since(now) < (4*time.Second) {
+			time.Sleep(500 * time.Millisecond)
+		}
+		exit = e.execCmd.ProcessState
 	}
 
 	e.Completed = util.NowPointer()
-	e.ExitCode = exit.ExitCode()
+	if exit != nil {
+		e.ExitCode = exit.ExitCode()
+	}
 	return nil
 }
 

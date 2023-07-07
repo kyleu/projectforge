@@ -53,10 +53,7 @@ func ExecNew(rc *fasthttp.RequestCtx) {
 			path = "."
 		}
 		env := util.StringSplitAndTrim(strings.TrimSpace(frm.GetStringOpt("env")), ",")
-		x, err := as.Services.Exec.NewExec(key, cmd, path, env...)
-		if err != nil {
-			return "", err
-		}{{{ if .HasModule "websocket" }}}
+		x := as.Services.Exec.NewExec(key, cmd, path, env...){{{ if .HasModule "websocket" }}}
 		w := func(key string, b []byte) error {
 			m := util.ValueMap{"msg": string(b), "html": string(ansihtml.ConvertToHTML(b))}
 			msg := &websocket.Message{Channel: key, Cmd: "output", Param: util.ToJSONBytes(m, true)}

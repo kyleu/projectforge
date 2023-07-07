@@ -17,8 +17,7 @@ func NewError(code string, message string, args ...any) *Error {
 }
 
 func (e *Error) String() string {
-	msg := fmt.Sprintf(e.Message, e.Args...)
-	return e.Code + ": " + msg
+	return fmt.Sprintf(e.Message, e.Args...)
 }
 
 type Errors []*Error

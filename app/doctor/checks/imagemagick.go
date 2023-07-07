@@ -27,8 +27,11 @@ func checkImageMagick(_ context.Context, r *doctor.Result, out string) *doctor.R
 }
 
 func solveImageMagick(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Result {
-	if r.Errors.Find("missing") != nil || r.Errors.Find("exitcode") != nil {
-		r.AddSolution("Install [imagemagick] using your platform's package manager")
+	if r.Errors.Find("exitcode") != nil {
+		r.AddSolution("On Windows 10+, Imagemagick's [convert] program is superseded by a Windows utility, delete it or ignore the error")
+	}
+	if r.Errors.Find("missing") != nil {
+		r.AddPackageSolution("Imagemagick", "imagemagick")
 	}
 	return r
 }

@@ -6,155 +6,90 @@ package vwelcome
 
 //line views/vwelcome/DepError.html:1
 import (
-	"strings"
-
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/doctor"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/components"
 	"projectforge.dev/projectforge/views/layout"
+	"projectforge.dev/projectforge/views/vdoctor"
 )
 
-//line views/vwelcome/DepError.html:12
+//line views/vwelcome/DepError.html:11
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vwelcome/DepError.html:12
+//line views/vwelcome/DepError.html:11
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vwelcome/DepError.html:12
+//line views/vwelcome/DepError.html:11
 type DepError struct {
 	layout.Basic
 	Results doctor.Results
 }
 
-//line views/vwelcome/DepError.html:17
+//line views/vwelcome/DepError.html:16
 func (p *DepError) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vwelcome/DepError.html:17
+//line views/vwelcome/DepError.html:16
 	qw422016.N().S(`
   <div class="card">
     <h3>`)
-//line views/vwelcome/DepError.html:19
+//line views/vwelcome/DepError.html:18
 	components.StreamSVGRefIcon(qw422016, `warning`, ps)
-//line views/vwelcome/DepError.html:19
-	qw422016.N().S(` Missing dependencies</h3>
+//line views/vwelcome/DepError.html:18
+	qw422016.N().S(` Missing Dependencies</h3>
     <div class="mt">Before you can start using `)
-//line views/vwelcome/DepError.html:20
+//line views/vwelcome/DepError.html:19
 	qw422016.E().S(util.AppName)
-//line views/vwelcome/DepError.html:20
-	qw422016.N().S(`, we need to install some things</div>
-    <div class="mt"><a href="">Refresh</a> this page after you have corrected the errors</div>
-    <div class="mt">If your OS path has changed, you may need to restart the shell that started Project Forge</div>
-    <div class="mt"><a href="?override=true"><button>Ignore For Now</button></a></div>
+//line views/vwelcome/DepError.html:19
+	qw422016.N().S(`, we need to install some things.</div>
+    <div class="mt"><a href="">Refresh</a> this page after you have corrected the errors.</div>
+    <div class="mt">If your OS path has changed, you may need to restart the terminal that started Project Forge.</div>
+    <div class="mt"><a href="?override=true"><button>Ignore Errors</button></a></div>
   </div>
 `)
-//line views/vwelcome/DepError.html:25
+//line views/vwelcome/DepError.html:24
 	for _, x := range p.Results {
+//line views/vwelcome/DepError.html:24
+		qw422016.N().S(`  `)
 //line views/vwelcome/DepError.html:25
-		qw422016.N().S(`  <div class="card">
-    <div class="right"><em>`)
-//line views/vwelcome/DepError.html:27
-		qw422016.E().S(x.Summary)
-//line views/vwelcome/DepError.html:27
-		qw422016.N().S(`</em></div>
-    <h3>`)
-//line views/vwelcome/DepError.html:28
-		qw422016.E().S(x.Title)
-//line views/vwelcome/DepError.html:28
-		qw422016.N().S(`</h3>
+		vdoctor.StreamRenderResult(qw422016, x, "/welcome", ps)
+//line views/vwelcome/DepError.html:25
+		qw422016.N().S(`
 `)
-//line views/vwelcome/DepError.html:29
-		for _, e := range x.Errors {
-//line views/vwelcome/DepError.html:29
-			qw422016.N().S(`    <div class="mt">`)
-//line views/vwelcome/DepError.html:30
-			qw422016.E().S(e.String())
-//line views/vwelcome/DepError.html:30
-			qw422016.N().S(`</div>
-`)
-//line views/vwelcome/DepError.html:31
-		}
-//line views/vwelcome/DepError.html:32
-		for _, s := range x.Solutions {
-//line views/vwelcome/DepError.html:32
-			qw422016.N().S(`    <div class="mt">
-      Solution:
-`)
-//line views/vwelcome/DepError.html:35
-			if strings.HasPrefix(s, "#") {
-//line views/vwelcome/DepError.html:35
-				qw422016.N().S(`      <a target="_blank" href="`)
-//line views/vwelcome/DepError.html:36
-				qw422016.E().S(strings.TrimPrefix(s, `#`))
-//line views/vwelcome/DepError.html:36
-				qw422016.N().S(`">`)
-//line views/vwelcome/DepError.html:36
-				qw422016.E().S(strings.TrimPrefix(s, `#`))
-//line views/vwelcome/DepError.html:36
-				qw422016.N().S(`</a>
-`)
-//line views/vwelcome/DepError.html:37
-			} else if strings.HasPrefix(s, "!") {
-//line views/vwelcome/DepError.html:37
-				qw422016.N().S(`      run [<em>`)
-//line views/vwelcome/DepError.html:38
-				qw422016.E().S(strings.TrimPrefix(s, `!`))
-//line views/vwelcome/DepError.html:38
-				qw422016.N().S(`</em>]
-`)
-//line views/vwelcome/DepError.html:39
-			} else {
-//line views/vwelcome/DepError.html:39
-				qw422016.N().S(`      `)
-//line views/vwelcome/DepError.html:40
-				qw422016.E().S(s)
-//line views/vwelcome/DepError.html:40
-				qw422016.N().S(`
-`)
-//line views/vwelcome/DepError.html:41
-			}
-//line views/vwelcome/DepError.html:41
-			qw422016.N().S(`    </div>
-`)
-//line views/vwelcome/DepError.html:43
-		}
-//line views/vwelcome/DepError.html:43
-		qw422016.N().S(`  </div>
-`)
-//line views/vwelcome/DepError.html:45
+//line views/vwelcome/DepError.html:26
 	}
-//line views/vwelcome/DepError.html:46
+//line views/vwelcome/DepError.html:27
 }
 
-//line views/vwelcome/DepError.html:46
+//line views/vwelcome/DepError.html:27
 func (p *DepError) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vwelcome/DepError.html:46
+//line views/vwelcome/DepError.html:27
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vwelcome/DepError.html:46
+//line views/vwelcome/DepError.html:27
 	p.StreamBody(qw422016, as, ps)
-//line views/vwelcome/DepError.html:46
+//line views/vwelcome/DepError.html:27
 	qt422016.ReleaseWriter(qw422016)
-//line views/vwelcome/DepError.html:46
+//line views/vwelcome/DepError.html:27
 }
 
-//line views/vwelcome/DepError.html:46
+//line views/vwelcome/DepError.html:27
 func (p *DepError) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vwelcome/DepError.html:46
+//line views/vwelcome/DepError.html:27
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vwelcome/DepError.html:46
+//line views/vwelcome/DepError.html:27
 	p.WriteBody(qb422016, as, ps)
-//line views/vwelcome/DepError.html:46
+//line views/vwelcome/DepError.html:27
 	qs422016 := string(qb422016.B)
-//line views/vwelcome/DepError.html:46
+//line views/vwelcome/DepError.html:27
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vwelcome/DepError.html:46
+//line views/vwelcome/DepError.html:27
 	return qs422016
-//line views/vwelcome/DepError.html:46
+//line views/vwelcome/DepError.html:27
 }
