@@ -127,6 +127,7 @@ builds:
       - "386"
       - "amd64"
       - "arm64"
+      - "loong64"
     mod_timestamp: "{{ .CommitTimestamp }}"
 
   - id: "linux-arm"
@@ -203,6 +204,13 @@ builds:
       - "js"
     goarch:
       - "wasm"
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+  - id: "aix"
+    goos:
+      - "aix"
+    goarch:
+      - "ppc64"
     mod_timestamp: "{{ .CommitTimestamp }}"
 
   - id: "dragonfly"

@@ -42,6 +42,8 @@ func (l *Link) ArchString() string {
 		return "MIPS (le, softfloat)"
 	case ArchMIPSSoft:
 		return "MIPS (softfloat)"
+	case ArchLoong64:
+		return "Loong64"
 	case ArchPPC64:
 		return "PPC64"
 	case ArchPPC64LE:
@@ -67,6 +69,8 @@ func (l *Link) ArchString() string {
 
 func (l *Link) OSString() string {
 	switch l.OS {
+	case OSAIX:
+		return "AIX"
 	case OSAndroid:
 		return "Android"
 	case OSDragonfly:
@@ -139,6 +143,7 @@ const (
 	ModeDesktop = "desktop"
 	ModeMobile  = "mobile"
 
+	OSAIX       = "aix"
 	OSAndroid   = "android"
 	OSDragonfly = "dragonfly"
 	OSFreeBSD   = "freebsd"
@@ -167,6 +172,7 @@ const (
 	ArchMIPSLEHard   = "mipsle_hardfloat"
 	ArchMIPSLESoft   = "mipsle_softfloat"
 	ArchMIPSSoft     = "mips_softfloat"
+	ArchLoong64      = "loong64"
 	ArchPPC64        = "ppc64"
 	ArchPPC64LE      = "ppc64le"
 	ArchRISCV64      = "riscv64"

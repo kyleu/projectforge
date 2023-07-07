@@ -411,6 +411,10 @@
           "description": "if set, generates Linux binaries for weird architectures",
           "type": "boolean"
         },
+        "aix": {
+          "description": "if set, generates AIX binaries",
+          "type": "boolean"
+        },
         "dragonfly": {
           "description": "if set, generates Dragonfly binaries",
           "type": "boolean"
