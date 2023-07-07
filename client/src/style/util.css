@@ -238,6 +238,14 @@
   margin-top: 2px;
 }
 
+.os-windows .icon {
+  margin-top: 0;
+}
+
+.os-linux .icon {
+  margin-top: -1px;
+}
+
 .icon-block {
   margin-right: 4px;
 }

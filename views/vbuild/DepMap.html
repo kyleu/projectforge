@@ -7,7 +7,6 @@
 
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
-  "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/layout"
   "projectforge.dev/projectforge/views/vproject"
@@ -44,7 +43,7 @@
           slices.Sort(depKeys)
         -%}
         {%- for _, k := range depKeys -%}
-        {%- code v := p.Result[k]; println(util.ToJSON(v)) %}
+        {%- code v := p.Result[k] %}
         <li>
           <input id="accordion-{%s k %}" type="checkbox" hidden />
           <label for="accordion-{%s k %}">

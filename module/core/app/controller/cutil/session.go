@@ -1,9 +1,11 @@
 package cutil
 
 import (
-	"context"{{{ if .DatabaseUISaveUser }}}
+	"context"
+	"strings"{{{ if .DatabaseUISaveUser }}}
 	"time"{{{ end }}}
 
+	"github.com/mileusna/useragent"
 	"github.com/valyala/fasthttp"
 
 	"{{{ .Package }}}/app"
@@ -25,7 +27,20 @@ func LoadPageState(as *app.State, rc *fasthttp.RequestCtx, key string, logger ut
 		httpmetrics.InjectHTTP(rc, span)
 	}
 	session, flashes, prof{{{ if .HasModule "oauth" }}}, accts{{{ end }}} := loadSession(ctx, as, rc, logger)
-	params := ParamSetFromRequest(rc){{{ if .HasModule "oauth" }}}
+	params := ParamSetFromRequest(rc)
+	ua := useragent.Parse(string(rc.Request.Header.Peek("User-Agent")))
+	os := strings.ToLower(ua.OS)
+	brws := strings.ToLower(ua.Name)
+	plat := "unknown"
+	if ua.Desktop {
+		plat = "desktop"
+	} else if ua.Tablet {
+		plat = "tablet"
+	} else if ua.Mobile {
+		plat = "mobile"
+	} else if ua.Bot {
+		plat = "bot"
+	}{{{ if .HasModule "oauth" }}}
 
 	isAuthed, _ := user.Check("/", accts)
 	isAdmin, _ := user.Check("/admin", accts){{{ end }}}{{{ if .HasModule "user" }}}
@@ -34,8 +49,9 @@ func LoadPageState(as *app.State, rc *fasthttp.RequestCtx, key string, logger ut
 
 	return &PageState{
 		Method: string(rc.Method()), URI: rc.Request.URI(), Flashes: flashes, Session: session,
+		OS: os, OSVersion: ua.OSVersion, Browser: brws, BrowserVersion: ua.Version, Platform: plat,
 		{{{ if .HasModule "user" }}}User: u, {{{ end }}}Profile: prof, {{{ if .HasModule "oauth" }}}Accounts: accts, Authed: isAuthed, Admin: isAdmin, {{{ end }}}Params: params,
-		Icons: initialIcons, Context: ctx, Span: span, Logger: logger,
+		Icons: initialIcons, Logger: logger, Context: ctx, Span: span,
 	}
 }
 

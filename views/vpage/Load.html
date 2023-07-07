@@ -10,6 +10,7 @@
   URL string
   Title string
   Message string
+  HideInstructions bool
 } %}
 
 {% func (p *Load) Body(as *app.State, ps *cutil.PageState) %}
@@ -21,6 +22,9 @@
   <div class="card">
     <h3>{%s p.Title %}</h3>
     <p>{%s p.Message %}</p>
+    {%- if !p.HideInstructions -%}
+    <div class="mt"><em>Please avoid refreshing the browser or navigating away, your page is loading</em></div>
+    {%- endif -%}
   </div>
   <meta http-equiv="refresh" content="0; url={%s p.URL %}">
 {% endfunc %}

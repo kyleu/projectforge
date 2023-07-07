@@ -2,19 +2,20 @@ package cproject
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
 	"github.com/valyala/fasthttp"
-	"projectforge.dev/projectforge/views"
-	"projectforge.dev/projectforge/views/vpage"
-	"strings"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/doctor"
 	"projectforge.dev/projectforge/app/doctor/checks"
+	"projectforge.dev/projectforge/views"
 	"projectforge.dev/projectforge/views/vdoctor"
+	"projectforge.dev/projectforge/views/vpage"
 )
 
 func Doctor(rc *fasthttp.RequestCtx) {

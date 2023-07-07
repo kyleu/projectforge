@@ -63,15 +63,7 @@ func StreamRender(qw422016 *qt422016.Writer, page layout.Page, as *app.State, ps
 	qw422016.N().S(`</head>
 <body`)
 //line views/Render.html:31
-	if ps.Profile.Mode != `` {
-//line views/Render.html:31
-		qw422016.N().S(` class="`)
-//line views/Render.html:31
-		qw422016.E().S(ps.Profile.ModeClass())
-//line views/Render.html:31
-		qw422016.N().S(`"`)
-//line views/Render.html:31
-	}
+	qw422016.N().S(ps.ClassDecl())
 //line views/Render.html:31
 	qw422016.N().S(`>`)
 //line views/Render.html:31

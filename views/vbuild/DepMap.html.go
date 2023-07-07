@@ -14,26 +14,25 @@ import (
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
-	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/components"
 	"projectforge.dev/projectforge/views/layout"
 	"projectforge.dev/projectforge/views/vproject"
 )
 
-//line views/vbuild/DepMap.html:16
+//line views/vbuild/DepMap.html:15
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vbuild/DepMap.html:16
+//line views/vbuild/DepMap.html:15
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vbuild/DepMap.html:16
+//line views/vbuild/DepMap.html:15
 type DepMap struct {
 	layout.Basic
 	Message string
@@ -41,185 +40,184 @@ type DepMap struct {
 	Tags    []string
 }
 
-//line views/vbuild/DepMap.html:23
+//line views/vbuild/DepMap.html:22
 func (p *DepMap) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vbuild/DepMap.html:23
+//line views/vbuild/DepMap.html:22
 	qw422016.N().S(`
 `)
-//line views/vbuild/DepMap.html:25
+//line views/vbuild/DepMap.html:24
 	suffix := ""
 	if len(p.Tags) > 0 {
 		suffix = "&tags=" + strings.Join(p.Tags, ",")
 	}
 
-//line views/vbuild/DepMap.html:29
+//line views/vbuild/DepMap.html:28
 	qw422016.N().S(`  <div class="card">
     `)
-//line views/vbuild/DepMap.html:31
+//line views/vbuild/DepMap.html:30
 	vproject.StreamAvailActions(qw422016, "Dependency Conflicts", p.Tags, nil, ps)
-//line views/vbuild/DepMap.html:31
+//line views/vbuild/DepMap.html:30
 	qw422016.N().S(`
   </div>
   <div class="card">
 `)
-//line views/vbuild/DepMap.html:34
+//line views/vbuild/DepMap.html:33
 	if p.Message != "" {
-//line views/vbuild/DepMap.html:34
+//line views/vbuild/DepMap.html:33
 		qw422016.N().S(`    <h4 class="mt mb">`)
-//line views/vbuild/DepMap.html:35
+//line views/vbuild/DepMap.html:34
 		qw422016.E().S(p.Message)
-//line views/vbuild/DepMap.html:35
+//line views/vbuild/DepMap.html:34
 		qw422016.N().S(`</h4>
 `)
-//line views/vbuild/DepMap.html:36
+//line views/vbuild/DepMap.html:35
 	}
-//line views/vbuild/DepMap.html:37
+//line views/vbuild/DepMap.html:36
 	if len(p.Result) == 0 {
-//line views/vbuild/DepMap.html:37
+//line views/vbuild/DepMap.html:36
 		qw422016.N().S(`    <div class="mt"><em>No dependency conflicts, nice work!</em></div>
 `)
-//line views/vbuild/DepMap.html:39
+//line views/vbuild/DepMap.html:38
 	}
-//line views/vbuild/DepMap.html:39
+//line views/vbuild/DepMap.html:38
 	qw422016.N().S(`    <div class="mt">
       <ul class="accordion">
 `)
-//line views/vbuild/DepMap.html:43
+//line views/vbuild/DepMap.html:42
 	depKeys := lo.Keys(p.Result)
 	slices.Sort(depKeys)
 
-//line views/vbuild/DepMap.html:46
+//line views/vbuild/DepMap.html:45
 	for _, k := range depKeys {
-//line views/vbuild/DepMap.html:47
+//line views/vbuild/DepMap.html:46
 		v := p.Result[k]
-		println(util.ToJSON(v))
 
-//line views/vbuild/DepMap.html:47
+//line views/vbuild/DepMap.html:46
 		qw422016.N().S(`
         <li>
           <input id="accordion-`)
-//line views/vbuild/DepMap.html:49
+//line views/vbuild/DepMap.html:48
 		qw422016.E().S(k)
-//line views/vbuild/DepMap.html:49
+//line views/vbuild/DepMap.html:48
 		qw422016.N().S(`" type="checkbox" hidden />
           <label for="accordion-`)
-//line views/vbuild/DepMap.html:50
+//line views/vbuild/DepMap.html:49
 		qw422016.E().S(k)
-//line views/vbuild/DepMap.html:50
+//line views/vbuild/DepMap.html:49
 		qw422016.N().S(`">
             <div class="right">`)
-//line views/vbuild/DepMap.html:51
+//line views/vbuild/DepMap.html:50
 		qw422016.N().D(len(v))
-//line views/vbuild/DepMap.html:51
+//line views/vbuild/DepMap.html:50
 		qw422016.N().S(`</div>
             `)
-//line views/vbuild/DepMap.html:52
+//line views/vbuild/DepMap.html:51
 		components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vbuild/DepMap.html:52
+//line views/vbuild/DepMap.html:51
 		qw422016.N().S(` `)
-//line views/vbuild/DepMap.html:52
+//line views/vbuild/DepMap.html:51
 		qw422016.E().S(k)
-//line views/vbuild/DepMap.html:52
+//line views/vbuild/DepMap.html:51
 		qw422016.N().S(`
           </label>
           <div class="bd">
             <ul>
 `)
-//line views/vbuild/DepMap.html:57
+//line views/vbuild/DepMap.html:56
 		vKeys := lo.Keys(v)
 		slices.SortFunc(vKeys, func(l string, r string) bool {
 			return semver.Compare(l, r) < 0
 		})
 
-//line views/vbuild/DepMap.html:62
+//line views/vbuild/DepMap.html:61
 		for i := len(vKeys) - 1; i >= 0; i-- {
-//line views/vbuild/DepMap.html:63
+//line views/vbuild/DepMap.html:62
 			vers := vKeys[i]
 
-//line views/vbuild/DepMap.html:63
+//line views/vbuild/DepMap.html:62
 			qw422016.N().S(`              <li><a href="?phase=deps&key=`)
-//line views/vbuild/DepMap.html:64
+//line views/vbuild/DepMap.html:63
 			qw422016.N().U(k)
-//line views/vbuild/DepMap.html:64
+//line views/vbuild/DepMap.html:63
 			qw422016.N().S(`&version=`)
-//line views/vbuild/DepMap.html:64
+//line views/vbuild/DepMap.html:63
 			qw422016.N().U(vers)
-//line views/vbuild/DepMap.html:64
+//line views/vbuild/DepMap.html:63
 			qw422016.E().S(suffix)
-//line views/vbuild/DepMap.html:64
+//line views/vbuild/DepMap.html:63
 			qw422016.N().S(`" title="Change all projects to use version [`)
-//line views/vbuild/DepMap.html:64
+//line views/vbuild/DepMap.html:63
 			qw422016.E().S(vers)
-//line views/vbuild/DepMap.html:64
+//line views/vbuild/DepMap.html:63
 			qw422016.N().S(`] of [`)
-//line views/vbuild/DepMap.html:64
+//line views/vbuild/DepMap.html:63
 			qw422016.E().S(k)
-//line views/vbuild/DepMap.html:64
+//line views/vbuild/DepMap.html:63
 			qw422016.N().S(`]">`)
-//line views/vbuild/DepMap.html:64
+//line views/vbuild/DepMap.html:63
 			qw422016.E().S(vers)
-//line views/vbuild/DepMap.html:64
+//line views/vbuild/DepMap.html:63
 			qw422016.N().S(`</a>:
                 <ul>
 `)
-//line views/vbuild/DepMap.html:66
+//line views/vbuild/DepMap.html:65
 			for _, prj := range v[vers] {
-//line views/vbuild/DepMap.html:66
+//line views/vbuild/DepMap.html:65
 				qw422016.N().S(`                  <li><a href="/p/`)
-//line views/vbuild/DepMap.html:67
+//line views/vbuild/DepMap.html:66
 				qw422016.E().S(prj)
-//line views/vbuild/DepMap.html:67
+//line views/vbuild/DepMap.html:66
 				qw422016.N().S(`" title="View project">`)
-//line views/vbuild/DepMap.html:67
+//line views/vbuild/DepMap.html:66
 				qw422016.E().S(prj)
-//line views/vbuild/DepMap.html:67
+//line views/vbuild/DepMap.html:66
 				qw422016.N().S(`</a></li>
 `)
-//line views/vbuild/DepMap.html:68
+//line views/vbuild/DepMap.html:67
 			}
-//line views/vbuild/DepMap.html:68
+//line views/vbuild/DepMap.html:67
 			qw422016.N().S(`                </ul>
               </li>
 `)
-//line views/vbuild/DepMap.html:71
+//line views/vbuild/DepMap.html:70
 		}
-//line views/vbuild/DepMap.html:71
+//line views/vbuild/DepMap.html:70
 		qw422016.N().S(`            </ul>
           </div>
         </li>
 `)
-//line views/vbuild/DepMap.html:75
+//line views/vbuild/DepMap.html:74
 	}
-//line views/vbuild/DepMap.html:75
+//line views/vbuild/DepMap.html:74
 	qw422016.N().S(`      </ul>
     </div>
   </div>
 `)
-//line views/vbuild/DepMap.html:79
+//line views/vbuild/DepMap.html:78
 }
 
-//line views/vbuild/DepMap.html:79
+//line views/vbuild/DepMap.html:78
 func (p *DepMap) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vbuild/DepMap.html:79
+//line views/vbuild/DepMap.html:78
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vbuild/DepMap.html:79
+//line views/vbuild/DepMap.html:78
 	p.StreamBody(qw422016, as, ps)
-//line views/vbuild/DepMap.html:79
+//line views/vbuild/DepMap.html:78
 	qt422016.ReleaseWriter(qw422016)
-//line views/vbuild/DepMap.html:79
+//line views/vbuild/DepMap.html:78
 }
 
-//line views/vbuild/DepMap.html:79
+//line views/vbuild/DepMap.html:78
 func (p *DepMap) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vbuild/DepMap.html:79
+//line views/vbuild/DepMap.html:78
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vbuild/DepMap.html:79
+//line views/vbuild/DepMap.html:78
 	p.WriteBody(qb422016, as, ps)
-//line views/vbuild/DepMap.html:79
+//line views/vbuild/DepMap.html:78
 	qs422016 := string(qb422016.B)
-//line views/vbuild/DepMap.html:79
+//line views/vbuild/DepMap.html:78
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vbuild/DepMap.html:79
+//line views/vbuild/DepMap.html:78
 	return qs422016
-//line views/vbuild/DepMap.html:79
+//line views/vbuild/DepMap.html:78
 }
