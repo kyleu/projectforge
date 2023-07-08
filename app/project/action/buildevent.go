@@ -80,7 +80,9 @@ func onIgnored(_ context.Context, pm *PrjAndMods, r *Result) *Result {
 	}
 	res := &module.Result{Keys: []string{"ignored"}, Status: "OK"}
 	lo.ForEach(ign, func(x string, _ int) {
-		res.Diffs = append(res.Diffs, &diff.Diff{Path: x, Status: diff.StatusDifferent})
+		if x != "app/file/header.go" && x != "doc/faq.md" {
+			res.Diffs = append(res.Diffs, &diff.Diff{Path: x, Status: diff.StatusDifferent})
+		}
 	})
 	r.Modules = append(r.Modules, res)
 	return r

@@ -40,38 +40,55 @@ func (p *Debug) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
 	qw422016.E().S(ps.Title)
 //line views/Debug.html:13
 	qw422016.N().S(`</h3>
-    `)
+`)
 //line views/Debug.html:14
-	qw422016.N().S(components.JSON(ps.Data))
+	if s, ok := ps.Data.(string); ok {
 //line views/Debug.html:14
-	qw422016.N().S(`
-  </div>
+		qw422016.N().S(`    <pre>`)
+//line views/Debug.html:15
+		qw422016.E().S(s)
+//line views/Debug.html:15
+		qw422016.N().S(`</pre>
 `)
 //line views/Debug.html:16
+	} else {
+//line views/Debug.html:16
+		qw422016.N().S(`    `)
+//line views/Debug.html:17
+		qw422016.N().S(components.JSON(ps.Data))
+//line views/Debug.html:17
+		qw422016.N().S(`
+`)
+//line views/Debug.html:18
+	}
+//line views/Debug.html:18
+	qw422016.N().S(`  </div>
+`)
+//line views/Debug.html:20
 }
 
-//line views/Debug.html:16
+//line views/Debug.html:20
 func (p *Debug) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/Debug.html:16
+//line views/Debug.html:20
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/Debug.html:16
+//line views/Debug.html:20
 	p.StreamBody(qw422016, as, ps)
-//line views/Debug.html:16
+//line views/Debug.html:20
 	qt422016.ReleaseWriter(qw422016)
-//line views/Debug.html:16
+//line views/Debug.html:20
 }
 
-//line views/Debug.html:16
+//line views/Debug.html:20
 func (p *Debug) Body(as *app.State, ps *cutil.PageState) string {
-//line views/Debug.html:16
+//line views/Debug.html:20
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/Debug.html:16
+//line views/Debug.html:20
 	p.WriteBody(qb422016, as, ps)
-//line views/Debug.html:16
+//line views/Debug.html:20
 	qs422016 := string(qb422016.B)
-//line views/Debug.html:16
+//line views/Debug.html:20
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/Debug.html:16
+//line views/Debug.html:20
 	return qs422016
-//line views/Debug.html:16
+//line views/Debug.html:20
 }

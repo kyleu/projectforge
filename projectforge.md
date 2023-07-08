@@ -15,6 +15,7 @@ The following modules were used to build this project:
 - [marketing](./doc/module/marketing.md)
 - [process](./doc/module/process.md)
 - [search](./doc/module/search.md)
+- [themecatalog](./doc/module/themecatalog.md)
 - [types](./doc/module/types.md)
 - [upgrade](./doc/module/upgrade.md)
 - [websocket](./doc/module/websocket.md)

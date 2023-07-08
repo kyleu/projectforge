@@ -11,7 +11,7 @@ TGT=$1
 [ "$TGT" ] || TGT="0.0.0"
 
 echo "building gomobile for iOS..."
-time gomobile bind -o build/dist/mobile_ios_arm64/projectforgeServer.xcframework -target=ios projectforge.dev/projectforge/app/cmd
+GOARCH=arm64 time gomobile bind -o build/dist/mobile_ios_arm64/projectforgeServer.xcframework -target=ios projectforge.dev/projectforge/app/cmd
 echo "gomobile for iOS completed successfully, building distribution..."
 cd "build/dist/mobile_ios_arm64/projectforgeServer.xcframework"
 zip --symlinks -r "../../projectforge_${TGT}_ios_framework.zip" .

@@ -10,6 +10,10 @@
 {% func (p *Debug) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>{%s ps.Title %}</h3>
+    {%- if s, ok := ps.Data.(string); ok -%}
+    <pre>{%s s %}</pre>
+    {%- else -%}
     {%s= components.JSON(ps.Data) %}
+    {%- endif -%}
   </div>
 {% endfunc %}

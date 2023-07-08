@@ -55,7 +55,8 @@ func (s *Service) Save(t *Theme, logger util.Logger) error {
 
 func (s *Service) loadIfNeeded(logger util.Logger) {
 	if s.cache == nil {
-		s.cache = Themes{ThemeDefault}
+		s.cache = Themes{ThemeDefault}{{{ if .HasModule "themecatalog" }}}
+		s.cache = append(s.cache, CatalogThemes...){{{ end }}}
 		lo.ForEach(s.files.ListJSON(s.root, nil, true, logger), func(key string, _ int) {
 			t := &Theme{}
 			b, err := s.files.ReadFile(filepath.Join(s.root, key+".json"))

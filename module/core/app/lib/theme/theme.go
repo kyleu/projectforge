@@ -1,6 +1,7 @@
 package theme
 
 import (
+	"fmt"
 	"io"
 	"strings"
 
@@ -41,6 +42,33 @@ func (t *Theme) Clone(key string) *Theme {
 
 func (t *Theme) Equals(x *Theme) bool {
 	return t.Light.Equals(x.Light) && t.Dark.Equals(x.Dark)
+}
+
+func (t *Theme) ToGo() string {
+	var ret []string
+	add := func(ind int, s string, args ...any) {
+		ret = append(ret, util.StringRepeat("\t", ind+1)+fmt.Sprintf(s, args...))
+	}
+	addColors := func(c *Colors) {
+		add(2, "Border: %q, LinkDecoration: %q,", c.Border, c.LinkDecoration)
+		add(2, "Foreground: %q, ForegroundMuted: %q,", c.Foreground, c.ForegroundMuted)
+		add(2, "Background: %q, BackgroundMuted: %q,", c.Background, c.BackgroundMuted)
+		add(2, "LinkForeground: %q, LinkVisitedForeground: %q,", c.LinkForeground, c.LinkVisitedForeground)
+		add(2, "NavForeground: %q, NavBackground: %q,", c.NavForeground, c.NavBackground)
+		add(2, "MenuForeground: %q, MenuSelectedForeground: %q,", c.MenuForeground, c.MenuSelectedForeground)
+		add(2, "MenuBackground: %q, MenuSelectedBackground: %q,", c.MenuBackground, c.MenuSelectedBackground)
+		add(2, "ModalBackdrop: %q, Success: %q, Error: %q,", c.ModalBackdrop, c.Success, c.Error)
+	}
+	add(0, "&Theme{")
+	add(1, "Key: %q,", t.Key)
+	add(1, "Light: &Colors{")
+	addColors(t.Light)
+	add(1, "},")
+	add(1, "Dark: &Colors{")
+	addColors(t.Dark)
+	add(1, "},")
+	add(0, "},")
+	return strings.Join(ret, "\n")
 }
 
 type Themes []*Theme

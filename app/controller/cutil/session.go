@@ -4,6 +4,7 @@ package cutil
 import (
 	"context"
 	"strings"
+	"time"
 
 	"github.com/mileusna/useragent"
 	"github.com/valyala/fasthttp"
@@ -29,23 +30,25 @@ func LoadPageState(as *app.State, rc *fasthttp.RequestCtx, key string, logger ut
 	params := ParamSetFromRequest(rc)
 	ua := useragent.Parse(string(rc.Request.Header.Peek("User-Agent")))
 	os := strings.ToLower(ua.OS)
-	brws := strings.ToLower(ua.Name)
-	plat := "unknown"
+	browser := strings.ToLower(ua.Name)
+	platform := "unknown"
 	if ua.Desktop {
-		plat = "desktop"
+		platform = "desktop"
 	} else if ua.Tablet {
-		plat = "tablet"
+		platform = "tablet"
 	} else if ua.Mobile {
-		plat = "mobile"
+		platform = "mobile"
 	} else if ua.Bot {
-		plat = "bot"
+		platform = "bot"
 	}
+	span.Attribute("browser", browser)
+	span.Attribute("os", os)
 
 	return &PageState{
 		Method: string(rc.Method()), URI: rc.Request.URI(), Flashes: flashes, Session: session,
-		OS: os, OSVersion: ua.OSVersion, Browser: brws, BrowserVersion: ua.Version, Platform: plat,
+		OS: os, OSVersion: ua.OSVersion, Browser: browser, BrowserVersion: ua.Version, Platform: platform,
 		Profile: prof, Params: params,
-		Icons: initialIcons, Logger: logger, Context: ctx, Span: span,
+		Icons: initialIcons, Started: time.Now(), Logger: logger, Context: ctx, Span: span,
 	}
 }
 

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/samber/lo"
 	"github.com/valyala/fasthttp"
@@ -66,10 +67,11 @@ type PageState struct {
 	OSVersion      string            `json:"osVersion,omitempty"`
 	Platform       string            `json:"platform,omitempty"`
 	Data           any               `json:"data,omitempty"`
+	Started        time.Time         `json:"started,omitempty"`
+	RenderElapsed  float64           `json:"renderElapsed,omitempty"`
 	Logger         util.Logger       `json:"-"`
 	Context        context.Context   `json:"-"` //nolint:containedctx // properly closed, never directly used
 	Span           *telemetry.Span   `json:"-"`
-	RenderElapsed  float64           `json:"renderElapsed,omitempty"`
 }
 
 func (p *PageState) AddIcon(keys ...string) {

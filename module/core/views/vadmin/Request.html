@@ -1,5 +1,7 @@
 {% import (
+  "github.com/samber/lo"
   "github.com/valyala/fasthttp"
+  "golang.org/x/exp/slices"
 
   "{{{ .Package }}}/app"
   "{{{ .Package }}}/app/controller/cutil"
@@ -52,6 +54,14 @@
           <td>Body Size</td>
           <td>{%d len(p.RC.Request.Body()) %}</td>
         </tr>
+        <tr>
+          <td>Browser</td>
+          <td>{%s ps.Browser %} {%s ps.BrowserVersion %}</td>
+        </tr>
+        <tr>
+          <td>OS</td>
+          <td>{%s ps.OS %} {%s ps.OSVersion %}</td>
+        </tr>
       </tbody>
     </table>
   </div>
@@ -72,10 +82,14 @@
         </tr>
       </thead>
       <tbody>
-        {%- for k, v := range hd -%}
+        {%- code
+          keys := lo.Keys(hd)
+          slices.Sort(keys)
+        -%}
+        {%- for _, k := range keys -%}
         <tr>
           <td class="nowrap">{%s k %}</td>
-          <td>{%s v %}</td>
+          <td>{%s hd[k] %}</td>
         </tr>
         {%- endfor -%}
       </tbody>

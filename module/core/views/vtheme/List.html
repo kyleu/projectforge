@@ -2,7 +2,6 @@
   "{{{ .Package }}}/app"
   "{{{ .Package }}}/app/controller/cutil"
   "{{{ .Package }}}/app/lib/theme"
-  "{{{ .Package }}}/views/components"
   "{{{ .Package }}}/views/layout"
 ) %}
 
@@ -13,8 +12,16 @@
 
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <div class="right"><a href="/theme/new" title="add new theme">{%= components.SVGRefIcon(`plus`, ps) %}</a></div>
-    <h3>Themes</h3>{{{ if .HasModule "filesystem" }}}{{{ else }}}
+    <h3>Add Theme</h3>
+    <div class="mt">
+      <a href="/theme/new" title="add new theme"><button>New Theme</button></a>{{{ if .HasModule "themecatalog" }}}
+      <a href="/theme/catalog/crayola" title="add new theme"><button>Choose Crayola Theme</button></a>
+      <a href="/theme/catalog/css" title="add new theme"><button>Choose CSS Theme</button></a>
+      <a href="/theme/catalog/wikipedia" title="add new theme"><button>Choose Wikipedia Theme</button></a>{{{ end }}}
+    </div>
+  </div>
+  <div class="card">
+    <h3>Current Themes</h3>{{{ if .HasModule "filesystem" }}}{{{ else }}}
     <em>Warning: changes to modules will not be saved between server restarts</em>{{{ end }}}
     <div class="theme-container mt">
       {%- for _, t := range p.Themes -%}

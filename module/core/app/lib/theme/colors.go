@@ -23,8 +23,8 @@ type Colors struct {
 	NavBackground string `json:"nb"`
 
 	MenuForeground         string `json:"mf"`
-	MenuBackground         string `json:"mb"`
 	MenuSelectedForeground string `json:"msf"`
+	MenuBackground         string `json:"mb"`
 	MenuSelectedBackground string `json:"msb"`
 
 	ModalBackdrop string `json:"mbd"`
@@ -49,8 +49,8 @@ func (c *Colors) CSS(key string, indent int) string {
 	prop("color-nav-foreground", c.NavForeground)
 	prop("color-nav-background", c.NavBackground)
 	prop("color-menu-foreground", c.MenuForeground)
-	prop("color-menu-background", c.MenuBackground)
 	prop("color-menu-selected-foreground", c.MenuSelectedForeground)
+	prop("color-menu-background", c.MenuBackground)
 	prop("color-menu-selected-background", c.MenuSelectedBackground)
 	prop("color-modal-backdrop", c.ModalBackdrop)
 	prop("color-success", c.Success)

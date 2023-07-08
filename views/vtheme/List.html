@@ -3,7 +3,6 @@
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/lib/theme"
-  "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/layout"
 ) %}
 
@@ -14,8 +13,16 @@
 
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <div class="right"><a href="/theme/new" title="add new theme">{%= components.SVGRefIcon(`plus`, ps) %}</a></div>
-    <h3>Themes</h3>
+    <h3>Add Theme</h3>
+    <div class="mt">
+      <a href="/theme/new" title="add new theme"><button>New Theme</button></a>
+      <a href="/theme/catalog/crayola" title="add new theme"><button>Choose Crayola Theme</button></a>
+      <a href="/theme/catalog/css" title="add new theme"><button>Choose CSS Theme</button></a>
+      <a href="/theme/catalog/wikipedia" title="add new theme"><button>Choose Wikipedia Theme</button></a>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Current Themes</h3>
     <div class="theme-container mt">
       {%- for _, t := range p.Themes -%}
       <div class="theme-item">

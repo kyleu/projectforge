@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/muesli/gamut"
+	"github.com/samber/lo"
 	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
@@ -13,6 +14,7 @@ import (
 	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/lib/theme"
 	"projectforge.dev/projectforge/app/util"
+	"projectforge.dev/projectforge/views"
 	"projectforge.dev/projectforge/views/vtheme"
 )
 
@@ -52,11 +54,27 @@ func ThemePalette(rc *fasthttp.RequestCtx) {
 		ps.Title = fmt.Sprintf("[%s] Themes", pal)
 		_, span, _ := telemetry.StartSpan(ps.Context, "theme:load", ps.Logger)
 		x, err := theme.PaletteThemes(pal)
+		span.Complete()
 		if err != nil {
 			return "", err
 		}
+		if string(rc.URI().QueryArgs().Peek("t")) == "go" {
+			decls := lo.FilterMap(x, func(t *theme.Theme, _ int) (string, bool) {
+				switch t.Key {
+				case
+					"Cerulean Blue", "Cerise", "Cadet Blue", "Blush", "Blue-Violet", "Blue (1)", "Aquamarine", "Charcoal Grey", "Cornflower",
+					"Granny Smith Apple", "Indigo", "Mauvelous", "Maximum Purple", "Medium Chrome Green", "Melon", "Middle Yellow Red",
+					"Navy Blue", "Pacific Blue", "Piggy Pink", "Periwinkle", "Plum", "Razzamatzz", "Robin's Egg Blue", "Royal Purple",
+					"Salmon", "Sky Blue", "Teal Blue", "Tickle Me Pink", "Tropical Rain Forest", "Turquoise", "Violet (I)", "" +
+						"Wild Blue Yonder", "Yellow-Green", "Yellow-Orange", "Wisteria":
+					return t.ToGo(), true
+				}
+				return "", false
+			})
+			ps.Data = strings.Join(decls, "\n")
+			return controller.Render(rc, as, &views.Debug{}, ps, "admin", "Themes")
+		}
 		span.Complete()
-		ps.Data = x
 		return controller.Render(rc, as, &vtheme.Add{Project: prj, Icon: prjIcon, Palette: pal, Themes: x, Title: prjTitle}, ps, "admin", "Themes")
 	})
 }

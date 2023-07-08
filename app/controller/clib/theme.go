@@ -29,14 +29,14 @@ func ThemeEdit(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
+		if key == theme.ThemeDefault.Key {
+			return controller.FlashAndRedir(false, "Unable to edit default theme", "/theme", rc, ps)
+		}
 		var t *theme.Theme
 		if key == theme.KeyNew {
 			t = theme.ThemeDefault.Clone(key)
 		} else {
 			t = as.Themes.Get(key, ps.Logger)
-		}
-		if t == nil {
-			return "", errors.Wrapf(err, "no theme found with key [%s]", key)
 		}
 		ps.Data = t
 		ps.Title = "Edit theme [" + t.Key + "]"
