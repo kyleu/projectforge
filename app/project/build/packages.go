@@ -46,6 +46,5 @@ func Packages(prj *project.Project, fs filesystem.FileLoader, showAll bool, logg
 			}
 		})
 	}
-	ret.Sort()
-	return ret, nil
+	return ret.Sort(), nil
 }

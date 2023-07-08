@@ -9,6 +9,8 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/valyala/fasthttp"
 	"github.com/valyala/fasthttp/fasthttpadaptor"
+
+	"{{{ .Package }}}/app/util"
 )
 
 var (
@@ -34,7 +36,7 @@ func (p *Metrics) WrapHandler(r *router.Router, includeMetrics bool) fasthttp.Re
 		rc.Request.CopyTo(frc)
 		go computeApproximateRequestSize(frc, reqBytes)
 
-		start := time.Now()
+		start := util.TimeCurrent()
 		r.Handler(rc)
 
 		status := strconv.Itoa(rc.Response.StatusCode())

@@ -151,5 +151,5 @@ func (p *PageState) ClassDecl() string {
 		return ""
 	}
 	classes := strings.Join(ret, " ")
-	return fmt.Sprintf(` class="%s"`, classes)
+	return fmt.Sprintf(` class=%q`, classes)
 }

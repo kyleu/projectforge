@@ -1,6 +1,6 @@
 package types
 
-import "time"
+import "{{{ .Package }}}/app/util"
 
 const KeyTimestampZoned = "timestampZoned"
 
@@ -29,7 +29,7 @@ func (x *TimestampZoned) From(v any) any {
 }
 
 func (x *TimestampZoned) Default(string) any {
-	return time.Now()
+	return util.TimeCurrent()
 }
 
 func NewTimestampZoned() *Wrapped {

@@ -7,7 +7,6 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/lib/search/result"
@@ -103,9 +102,7 @@ func (s *Service) GetModules(keys ...string) (Modules, error) {
 func (s *Service) Keys() []string {
 	s.cacheMu.Lock()
 	defer s.cacheMu.Unlock()
-	keys := lo.Keys(s.cache)
-	slices.Sort(keys)
-	return keys
+	return util.ArraySorted(lo.Keys(s.cache))
 }
 
 func (s *Service) Modules() Modules {

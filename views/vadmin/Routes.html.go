@@ -9,10 +9,10 @@ package vadmin
 //line views/vadmin/Routes.html:2
 import (
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/layout"
 )
 
@@ -43,67 +43,63 @@ func (p *Routes) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <h3>HTTP Routes</h3>
     <ul class="mt">
 `)
-//line views/vadmin/Routes.html:21
-	x := lo.Keys(p.Routes)
-	slices.Sort(x)
-
-//line views/vadmin/Routes.html:24
-	for _, k := range x {
-//line views/vadmin/Routes.html:24
+//line views/vadmin/Routes.html:20
+	for _, k := range util.ArraySorted(lo.Keys(p.Routes)) {
+//line views/vadmin/Routes.html:20
 		qw422016.N().S(`      <li>
         <strong>`)
-//line views/vadmin/Routes.html:26
+//line views/vadmin/Routes.html:22
 		qw422016.E().S(k)
-//line views/vadmin/Routes.html:26
+//line views/vadmin/Routes.html:22
 		qw422016.N().S(`</strong>
         <ul>
 `)
-//line views/vadmin/Routes.html:28
+//line views/vadmin/Routes.html:24
 		for _, r := range p.Routes[k] {
-//line views/vadmin/Routes.html:28
+//line views/vadmin/Routes.html:24
 			qw422016.N().S(`          <li><code>`)
-//line views/vadmin/Routes.html:29
+//line views/vadmin/Routes.html:25
 			qw422016.E().S(r)
-//line views/vadmin/Routes.html:29
+//line views/vadmin/Routes.html:25
 			qw422016.N().S(`</code></li>
 `)
-//line views/vadmin/Routes.html:30
+//line views/vadmin/Routes.html:26
 		}
-//line views/vadmin/Routes.html:30
+//line views/vadmin/Routes.html:26
 		qw422016.N().S(`        </ul>
       </li>
 `)
-//line views/vadmin/Routes.html:33
+//line views/vadmin/Routes.html:29
 	}
-//line views/vadmin/Routes.html:33
+//line views/vadmin/Routes.html:29
 	qw422016.N().S(`    </ul>
   </div>
 `)
-//line views/vadmin/Routes.html:36
+//line views/vadmin/Routes.html:32
 }
 
-//line views/vadmin/Routes.html:36
+//line views/vadmin/Routes.html:32
 func (p *Routes) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vadmin/Routes.html:36
+//line views/vadmin/Routes.html:32
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vadmin/Routes.html:36
+//line views/vadmin/Routes.html:32
 	p.StreamBody(qw422016, as, ps)
-//line views/vadmin/Routes.html:36
+//line views/vadmin/Routes.html:32
 	qt422016.ReleaseWriter(qw422016)
-//line views/vadmin/Routes.html:36
+//line views/vadmin/Routes.html:32
 }
 
-//line views/vadmin/Routes.html:36
+//line views/vadmin/Routes.html:32
 func (p *Routes) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vadmin/Routes.html:36
+//line views/vadmin/Routes.html:32
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vadmin/Routes.html:36
+//line views/vadmin/Routes.html:32
 	p.WriteBody(qb422016, as, ps)
-//line views/vadmin/Routes.html:36
+//line views/vadmin/Routes.html:32
 	qs422016 := string(qb422016.B)
-//line views/vadmin/Routes.html:36
+//line views/vadmin/Routes.html:32
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vadmin/Routes.html:36
+//line views/vadmin/Routes.html:32
 	return qs422016
-//line views/vadmin/Routes.html:36
+//line views/vadmin/Routes.html:32
 }

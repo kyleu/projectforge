@@ -2,7 +2,8 @@ package project
 
 import (
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
+
+	"projectforge.dev/projectforge/app/util"
 )
 
 type Projects []*Project
@@ -28,8 +29,7 @@ func (p Projects) AllModules() []string {
 			}
 		})
 	})
-	slices.Sort(ret)
-	return ret
+	return util.ArraySorted(ret)
 }
 
 func (p Projects) Keys() []string {
@@ -80,6 +80,5 @@ func (p Projects) Tags() []string {
 			}
 		}
 	})
-	slices.Sort(ret)
-	return ret
+	return util.ArraySorted(ret)
 }

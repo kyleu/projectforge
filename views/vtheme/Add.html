@@ -1,45 +1,30 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
 {% import (
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/lib/theme"
+  "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/layout"
 ) %}
 
 {% code type Add struct {
   layout.Basic
-  Project string
-  Icon string
   Palette string
   Themes theme.Themes
-  Title string
 } %}
 
 {% func (p *Add) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    {%- if p.Project == "" -%}
-    <h3>Add Themes</h3>
-    {%- else -%}
-    <h3>Set theme for project [{%s p.Project %}]</h3>
-    {%- endif -%}
+    <h3>Choose Theme</h3>
     <form action="/theme" method="post">
       <input type="hidden" name="palette" value="{%s p.Palette %}" />
       <table class="mt">
         <tbody>
           {%- for _, t := range p.Themes -%}
           <tr>
-            {%- if p.Project == "" -%}
-            <th class="shrink"><input type="checkbox" id="{%s t.Key %}" name="{%s t.Key %}" value="true" /></th>
-            {%- endif -%}
-            <th>
-              <label for="{%s t.Key %}">{%s t.Key %}</label>
-              {%- if p.Project == "" -%}
-              <a href="/theme/preview/{%s p.Palette %}/{%s t.Key %}">Preview</a>
-              {%- else -%}
-              <a href="/theme/preview/{%s p.Palette %}/{%s t.Key %}?project={%s p.Project %}">Set</a>
-              {%- endif -%}
-            </th>
-            <th class="shrink" style="background-color: #ffffff; padding: 12px 36px;">{%= MockupColors(p.Title, "", t.Light, true, p.Icon, 5, ps) %}</th>
-            <th class="shrink" style="background-color: #121212; padding: 12px 36px;">{%= MockupColors(p.Title, "", t.Dark, true, p.Icon, 5, ps) %}</th>
+            <th><a href="/theme/palette/{%s p.Palette %}/{%s t.Key %}">{%s t.Key %}</a></th>
+            <th class="shrink" style="background-color: #ffffff; padding: 12px 36px;">{%= MockupColors(util.AppName, "", t.Light, true, "app", 5, ps) %}</th>
+            <th class="shrink" style="background-color: #121212; padding: 12px 36px;">{%= MockupColors(util.AppName, "", t.Dark, true, "app", 5, ps) %}</th>
           </tr>
           {%- endfor -%}
         </tbody>

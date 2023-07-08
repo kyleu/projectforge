@@ -49,7 +49,7 @@ func ServiceMutate(m *model.Model, args *model.Args, addHeader bool) (*file.File
 		g.AddBlocks(serviceUpsertCore(g, m), serviceInsertRevision(m))
 	}
 	if m.IsSoftDelete() {
-		g.AddImport(helper.ImpTime)
+		g.AddImport(helper.ImpAppUtil)
 		sdel, err := serviceSoftDelete(m, args.Enums)
 		if err != nil {
 			return nil, err
@@ -391,10 +391,10 @@ func serviceSetVal(g *golang.File, c *model.Column, ret *golang.Block, indent in
 	if c.Type.Key() == types.KeyTimestamp || c.Type.Key() == types.KeyDate {
 		if c.Nullable {
 			g.AddImport(helper.ImpAppUtil)
-			ret.W(ind+"model.%s = util.NowPointer()", c.Proper())
+			ret.W(ind+"model.%s = util.TimeCurrentP()", c.Proper())
 		} else {
-			g.AddImport(helper.ImpTime)
-			ret.W(ind+"model.%s = time.Now()", c.Proper())
+			g.AddImport(helper.ImpAppUtil)
+			ret.W(ind+"model.%s = util.TimeCurrent()", c.Proper())
 		}
 	} else {
 		return errors.New("unhandled type [" + c.Type.Key() + "]")

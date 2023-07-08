@@ -1,6 +1,6 @@
 package types
 
-import "time"
+import "{{{ .Package }}}/app/util"
 
 const KeyDate = "date"
 
@@ -29,7 +29,7 @@ func (x *Date) From(v any) any {
 }
 
 func (x *Date) Default(string) any {
-	return time.Now()
+	return util.TimeCurrent()
 }
 
 func NewDate() *Wrapped {

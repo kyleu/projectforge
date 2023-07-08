@@ -18,7 +18,7 @@ func ThemeList(rc *fasthttp.RequestCtx) {
 		ps.Title = "Themes"
 		x := as.Themes.All(ps.Logger)
 		ps.Data = x
-		return controller.Render(rc, as, &vtheme.List{Themes: x}, ps, "admin", "Themes")
+		return controller.Render(rc, as, &vtheme.List{Themes: x}, ps, "Themes||/theme")
 	})
 }
 
@@ -35,12 +35,24 @@ func ThemeEdit(rc *fasthttp.RequestCtx) {
 		if key == theme.KeyNew {
 			t = theme.ThemeDefault.Clone(key)
 		} else {
-			t = as.Themes.Get(key, ps.Logger)
+			t = as.Themes.Get(key, ps.Logger){{{ if .HasModule "themecatalog" }}}
+			if t == nil {
+				if pal := string(rc.URI().QueryArgs().Peek("palette")); pal != "" {
+					themes, err := theme.PaletteThemes(pal)
+					if err != nil {
+						return "", err
+					}
+					t = themes.Get(key)
+				}
+			}{{{ end }}}
+		}
+		if t == nil {
+			return "", errors.Errorf("invalid theme [%s]", key)
 		}
 		ps.Data = t
 		ps.Title = "Edit theme [" + t.Key + "]"
-		page := &vtheme.Edit{Theme: t, Icon: "app"}
-		return controller.Render(rc, as, page, ps, "admin", "Themes||/admin/theme", t.Key)
+		page := &vtheme.Edit{Theme: t, Icon: "app", Exists: as.Themes.FileExists(t.Key)}
+		return controller.Render(rc, as, page, ps, "Themes||/theme", t.Key)
 	})
 }
 
@@ -70,7 +82,7 @@ func ThemeSave(rc *fasthttp.RequestCtx) {
 
 		t := &theme.Theme{Key: newKey, Light: l, Dark: d}
 
-		err = as.Themes.Save(t, ps.Logger)
+		err = as.Themes.Save(t, frm.GetStringOpt("originalKey"), ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to save theme")
 		}
@@ -81,6 +93,20 @@ func ThemeSave(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 
-		return controller.ReturnToReferrer("saved changes to theme ["+newKey+"]", "/", rc, ps)
+		return controller.ReturnToReferrer("saved changes to theme ["+newKey+"]", "/theme", rc, ps)
+	})
+}
+
+func ThemeRemove(rc *fasthttp.RequestCtx) {
+	controller.Act("theme.remove", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		key, err := cutil.RCRequiredString(rc, "key", false)
+		if err != nil {
+			return "", err
+		}
+		err = as.Themes.Remove(key, ps.Logger)
+		if err != nil {
+			return "", errors.Wrap(err, "unable to remove theme")
+		}
+		return controller.ReturnToReferrer("removed theme ["+key+"]", "/theme", rc, ps)
 	})
 }

@@ -1,7 +1,7 @@
 // Content managed by Project Forge, see [projectforge.md] for details.
 package types
 
-import "time"
+import "projectforge.dev/projectforge/app/util"
 
 const KeyTimestamp = "timestamp"
 
@@ -30,7 +30,7 @@ func (x *Timestamp) From(v any) any {
 }
 
 func (x *Timestamp) Default(string) any {
-	return time.Now()
+	return util.TimeCurrent()
 }
 
 func NewTimestamp() *Wrapped {

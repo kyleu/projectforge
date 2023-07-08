@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/project"
@@ -85,7 +84,6 @@ func gitStatus(ctx context.Context, path string, logger util.Logger) (int, int, 
 		}
 		dirty = append(dirty, strings.TrimSpace(line))
 	}
-	slices.Sort(dirty)
 
-	return commitsAhead, commitsBehind, dirty, nil
+	return commitsAhead, commitsBehind, util.ArraySorted(dirty), nil
 }

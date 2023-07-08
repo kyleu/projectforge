@@ -11,6 +11,7 @@
       t = theme.ThemeDefault
     }
   -%}
+  <div class="right"><a href="/p/{%s key %}/edit#theme"><button>Edit Theme</button></a></div>
   <table class="centered">
     <tbody>
       <tr>
@@ -27,8 +28,8 @@
   </table>
   <div class="mt">
     Choose a different theme from
-    <a href="/theme/palette/crayola?project={%s key %}">Crayola</a>,
-    <a href="/theme/palette/css?project={%s key %}">CSS</a>,
-    or <a href="/theme/palette/wikipedia?project={%s key %}">Wikipedia</a>
+    <a href="/p/{%s key %}/palette/crayola">Crayola</a>,
+    <a href="/p/{%s key %}/palette/css">CSS</a>,
+    or <a href="/p/{%s key %}/palette/wikipedia">Wikipedia</a>
   </div>
 {% endfunc %}

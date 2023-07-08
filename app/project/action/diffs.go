@@ -100,11 +100,9 @@ func parse(pm *PrjAndMods) (util.KeyTypeDescs, map[string]int) {
 				configVars = append(configVars, src)
 			}
 		})
-		configVars.Sort()
-
 		for k, v := range mod.PortOffsets {
 			portOffsets[k] = v
 		}
 	})
-	return configVars, portOffsets
+	return configVars.Sort(), portOffsets
 }

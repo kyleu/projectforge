@@ -5,7 +5,8 @@ import (
 	"strings"
 
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
+
+	"projectforge.dev/projectforge/app/util"
 )
 
 type ImportType string
@@ -102,11 +103,9 @@ func (i Imports) RenderHTML() string {
 }
 
 func (i Imports) ByType(t ImportType) []string {
-	ret := lo.FilterMap(i, func(x *Import, _ int) (string, bool) {
+	return util.ArraySorted(lo.FilterMap(i, func(x *Import, _ int) (string, bool) {
 		return x.Render(), x.Type == t
-	})
-	slices.Sort(ret)
-	return ret
+	}))
 }
 
 func (i Imports) Add(imports ...*Import) Imports {

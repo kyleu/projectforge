@@ -3,6 +3,7 @@ package cproject
 import (
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
+
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
 	"projectforge.dev/projectforge/app/controller/cutil"
@@ -17,8 +18,8 @@ const welcomeMessage = "Welcome to " + util.AppName + "! View this page in a bro
 
 func Welcome(rc *fasthttp.RequestCtx) {
 	controller.Act("welcome", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		override := string(rc.URI().QueryArgs().Peek("override")) == "true"
-		showLoad := override || string(rc.URI().QueryArgs().Peek("loaded")) == "true"
+		override := string(rc.URI().QueryArgs().Peek("override")) == util.BoolTrue
+		showLoad := override || string(rc.URI().QueryArgs().Peek("loaded")) == util.BoolTrue
 		if !showLoad {
 			ps.HideMenu = true
 			page := &vpage.Load{URL: "/welcome?loaded=true", Title: "Starting " + util.AppName, Message: "Checking some things..."}

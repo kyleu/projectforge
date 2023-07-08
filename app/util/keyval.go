@@ -73,15 +73,15 @@ func (k *KeyTypeDesc) Array(key string) []string {
 
 type KeyTypeDescs []*KeyTypeDesc
 
-func (k KeyTypeDescs) Sort() {
+func (k KeyTypeDescs) Sort() KeyTypeDescs {
 	slices.SortFunc(k, func(l *KeyTypeDesc, r *KeyTypeDesc) bool {
 		return strings.ToLower(l.Key) < strings.ToLower(r.Key)
 	})
+	return k
 }
 
 func (k KeyTypeDescs) Array(key string) [][]string {
-	k.Sort()
-	return lo.Map(k, func(x *KeyTypeDesc, _ int) []string {
+	return lo.Map(k.Sort(), func(x *KeyTypeDesc, _ int) []string {
 		return x.Array(key)
 	})
 }

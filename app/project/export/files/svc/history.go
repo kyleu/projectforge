@@ -17,7 +17,7 @@ import (
 func ServiceHistory(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 	dbRef := args.DBRef()
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "servicehistory")
-	g.AddImport(helper.ImpContext, helper.ImpUUID, helper.ImpErrors, helper.ImpFmt, helper.ImpTime, helper.ImpStrings)
+	g.AddImport(helper.ImpContext, helper.ImpUUID, helper.ImpErrors, helper.ImpFmt, helper.ImpStrings)
 	g.AddImport(helper.ImpSQLx, helper.ImpAppUtil, helper.ImpDatabase)
 	gh, err := serviceHistoryGetHistories(m, dbRef, args.Enums)
 	if err != nil {
@@ -107,7 +107,7 @@ func serviceHistorySaveHistory(m *model.Model) *golang.Block {
 	ret.W("\t\t%s util.ToJSONBytes(o, true),", util.StringPad("Old:", max))
 	ret.W("\t\t%s util.ToJSONBytes(n, true),", util.StringPad("New:", max))
 	ret.W("\t\t%s util.ToJSONBytes(diffs, true),", util.StringPad("Changes:", max))
-	ret.W("\t\t%s time.Now(),", util.StringPad("Created:", max))
+	ret.W("\t\t%s util.TimeCurrent(),", util.StringPad("Created:", max))
 	ret.W("\t}")
 	ret.W("\thist := h.ToHistory()")
 	ret.W("\terr := s.db.Insert(ctx, q, tx, logger, hist.ToData()...)")

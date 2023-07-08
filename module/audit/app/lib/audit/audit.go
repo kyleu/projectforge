@@ -22,7 +22,10 @@ type Audit struct {
 }
 
 func New(act string, client string, server string, user string, md util.ValueMap, msg string) *Audit {
-	return &Audit{ID: util.UUID(), App: util.AppKey, Act: act, Client: client, Server: server, User: user, Metadata: md, Message: msg, Started: time.Now()}
+	return &Audit{
+		ID: util.UUID(), App: util.AppKey, Act: act, Client: client, Server: server, User: user,
+		Metadata: md, Message: msg, Started: util.TimeCurrent(),
+	}
 }
 
 func Random() *Audit {
@@ -35,8 +38,8 @@ func Random() *Audit {
 		User:      util.RandomString(12),
 		Metadata:  util.RandomValueMap(4),
 		Message:   util.RandomString(12),
-		Started:   time.Now(),
-		Completed: time.Now(),
+		Started:   util.TimeCurrent(),
+		Completed: util.TimeCurrent(),
 	}
 }
 

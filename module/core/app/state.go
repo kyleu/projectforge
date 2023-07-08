@@ -70,7 +70,7 @@ func NewState(debug bool, bi *BuildInfo{{{ if .HasModule "filesystem" }}}, f fil
 		Auth:      as{{{ end }}}{{{ if .HasModule "graphql" }}},
 		GraphQL:   gqls{{{ end }}},
 		Themes:    ts,
-		Started:   time.Now(),
+		Started:   util.TimeCurrent(),
 	}, nil
 }
 

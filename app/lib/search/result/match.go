@@ -45,7 +45,7 @@ type Matches []*Match
 
 func (m Matches) Sort() {
 	slices.SortFunc(m, func(l *Match, r *Match) bool {
-		return l.Key < r.Key
+		return strings.ToLower(l.Key) < strings.ToLower(r.Key)
 	})
 }
 

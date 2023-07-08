@@ -19,17 +19,14 @@ func AppRoutes(as *app.State, logger util.Logger) fasthttp.RequestHandler {
 	r.GET("/", controller.Home)
 	r.GET("/healthcheck", clib.Healthcheck)
 	r.GET("/about", clib.About)
-	r.GET("/theme", clib.ThemeList)
-	r.GET("/theme/{key}", clib.ThemeEdit)
-	r.POST("/theme/{key}", clib.ThemeSave){{{ if .HasModule "search" }}}
-	r.GET(cutil.DefaultSearchPath, clib.Search){{{ end }}}
 
 	r.GET(cutil.DefaultProfilePath, clib.Profile)
 	r.POST(cutil.DefaultProfilePath, clib.ProfileSave){{{ if .HasModule "oauth" }}}
 	r.GET("/auth/{key}", clib.AuthDetail)
 	r.GET("/auth/callback/{key}", clib.AuthCallback)
-	r.GET("/auth/logout/{key}", clib.AuthLogout){{{ end }}}{{{ if.HasModule "export" }}}
-
+	r.GET("/auth/logout/{key}", clib.AuthLogout){{{ end }}}{{{ if .HasModule "search" }}}
+	r.GET(cutil.DefaultSearchPath, clib.Search){{{ end }}}
+	themeRoutes(r){{{ if.HasModule "export" }}}
 	generatedRoutes(r){{{ end }}}
 
 	// $PF_SECTION_START(routes)$

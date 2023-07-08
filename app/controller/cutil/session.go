@@ -4,10 +4,10 @@ package cutil
 import (
 	"context"
 	"strings"
-	"time"
 
 	"github.com/mileusna/useragent"
 	"github.com/valyala/fasthttp"
+	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/csession"
@@ -32,13 +32,14 @@ func LoadPageState(as *app.State, rc *fasthttp.RequestCtx, key string, logger ut
 	os := strings.ToLower(ua.OS)
 	browser := strings.ToLower(ua.Name)
 	platform := "unknown"
-	if ua.Desktop {
+	switch {
+	case ua.Desktop:
 		platform = "desktop"
-	} else if ua.Tablet {
+	case ua.Tablet:
 		platform = "tablet"
-	} else if ua.Mobile {
+	case ua.Mobile:
 		platform = "mobile"
-	} else if ua.Bot {
+	case ua.Bot:
 		platform = "bot"
 	}
 	span.Attribute("browser", browser)
@@ -48,7 +49,7 @@ func LoadPageState(as *app.State, rc *fasthttp.RequestCtx, key string, logger ut
 		Method: string(rc.Method()), URI: rc.Request.URI(), Flashes: flashes, Session: session,
 		OS: os, OSVersion: ua.OSVersion, Browser: browser, BrowserVersion: ua.Version, Platform: platform,
 		Profile: prof, Params: params,
-		Icons: initialIcons, Started: time.Now(), Logger: logger, Context: ctx, Span: span,
+		Icons: slices.Clone(initialIcons), Started: util.TimeCurrent(), Logger: logger, Context: ctx, Span: span,
 	}
 }
 

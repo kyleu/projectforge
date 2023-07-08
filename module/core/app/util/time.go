@@ -10,11 +10,11 @@ type Timer struct {
 }
 
 func TimerStart() *Timer {
-	return &Timer{Started: time.Now().UnixNano()}
+	return &Timer{Started: TimeCurrentNanos()}
 }
 
 func (t *Timer) End() int {
-	t.Completed = time.Now().UnixNano()
+	t.Completed = TimeCurrentNanos()
 	return t.Elapsed()
 }
 
@@ -25,7 +25,7 @@ func (t *Timer) EndString() string {
 
 func (t *Timer) Elapsed() int {
 	if t.Completed == 0 {
-		return int((time.Now().UnixNano() - t.Started) / int64(time.Microsecond))
+		return int((TimeCurrentNanos() - t.Started) / int64(time.Microsecond))
 	}
 	return int((t.Completed - t.Started) / int64(time.Microsecond))
 }
@@ -41,6 +41,6 @@ type EpochTimestamp struct {
 }
 
 func NewEpochTimestamp() *EpochTimestamp {
-	t := time.Now()
-	return &EpochTimestamp{Epoch: t.UnixMilli(), ISO8601: t.Format(time.RFC3339), Time: &t}
+	t := TimeCurrentP()
+	return &EpochTimestamp{Epoch: t.UnixMilli(), ISO8601: t.Format(time.RFC3339), Time: t}
 }

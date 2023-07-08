@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os/exec"
+	"strings"
 	"time"
 
 	"github.com/pkg/errors"
@@ -55,7 +56,7 @@ func (e *Exec) Start(fns ...func(key string, b []byte) error) error {
 	lo.ForEach(fns, func(fn func(key string, b []byte) error, _ int) {
 		w = io.MultiWriter(w, &writer{Key: e.String(), fn: fn})
 	})
-	e.Started = util.NowPointer()
+	e.Started = util.TimeCurrentP()
 	cmd, err := util.StartProcess(e.Cmd, e.Path, nil, w, w, e.Env...)
 	if err != nil {
 		return err
@@ -84,14 +85,13 @@ func (e *Exec) Wait() error {
 	exit, err := e.execCmd.Process.Wait()
 	if err != nil {
 		_ = e.execCmd.Wait()
-		now := time.Now()
-		for (e.execCmd.ProcessState == nil || !e.execCmd.ProcessState.Exited()) && time.Since(now) < (4*time.Second) {
+		for (e.execCmd.ProcessState == nil || !e.execCmd.ProcessState.Exited()) && time.Since(util.TimeCurrent()) < (4*time.Second) {
 			time.Sleep(500 * time.Millisecond)
 		}
 		exit = e.execCmd.ProcessState
 	}
 
-	e.Completed = util.NowPointer()
+	e.Completed = util.TimeCurrentP()
 	if exit != nil {
 		e.ExitCode = exit.ExitCode()
 	}
@@ -124,8 +124,9 @@ func (m Execs) Running() int {
 
 func (m Execs) Sort() {
 	slices.SortFunc(m, func(l *Exec, r *Exec) bool {
-		if l.Key != r.Key {
-			return l.Key < r.Key
+		lk, rk := strings.ToLower(l.Key), strings.ToLower(r.Key)
+		if lk != rk {
+			return lk < rk
 		}
 		return l.Idx < r.Idx
 	})

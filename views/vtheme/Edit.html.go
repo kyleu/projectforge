@@ -32,85 +32,115 @@ var (
 //line views/vtheme/Edit.html:11
 type Edit struct {
 	layout.Basic
-	Theme *theme.Theme
-	Icon  string
+	Theme  *theme.Theme
+	Icon   string
+	Exists bool
 }
 
-//line views/vtheme/Edit.html:17
+//line views/vtheme/Edit.html:18
 func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vtheme/Edit.html:17
+//line views/vtheme/Edit.html:18
 	qw422016.N().S(`
-  <form action="" method="post">
+  <form action="/theme/save" method="post">
+    <input type="hidden" name="originalKey" value="`)
+//line views/vtheme/Edit.html:20
+	qw422016.E().S(p.Theme.Key)
+//line views/vtheme/Edit.html:20
+	qw422016.N().S(`" />
     <div class="card">
-      <div class="right"><a href="#modal-theme"><button type="button">JSON</button></a></div>
-      <h3>`)
-//line views/vtheme/Edit.html:21
-	if p.Theme.Key == theme.KeyNew {
-//line views/vtheme/Edit.html:21
-		qw422016.N().S(`New Theme`)
-//line views/vtheme/Edit.html:21
+      <div class="right">
+`)
+//line views/vtheme/Edit.html:23
+	if p.Exists {
+//line views/vtheme/Edit.html:23
+		qw422016.N().S(`        <a href="/theme/`)
+//line views/vtheme/Edit.html:24
+		qw422016.E().S(p.Theme.Key)
+//line views/vtheme/Edit.html:24
+		qw422016.N().S(`/remove" class="link-confirm" data-message="Are you sure you wish to delete the [`)
+//line views/vtheme/Edit.html:24
+		qw422016.E().S(p.Theme.Key)
+//line views/vtheme/Edit.html:24
+		qw422016.N().S(`] theme?"><button type="button">Remove</button></a>
+`)
+//line views/vtheme/Edit.html:25
 	} else {
-//line views/vtheme/Edit.html:21
-		qw422016.N().S(`Theme Edit`)
-//line views/vtheme/Edit.html:21
+//line views/vtheme/Edit.html:25
+		qw422016.N().S(`        <em>built-in</em>
+`)
+//line views/vtheme/Edit.html:27
 	}
-//line views/vtheme/Edit.html:21
+//line views/vtheme/Edit.html:27
+	qw422016.N().S(`        <a href="#modal-theme"><button type="button">JSON</button></a>
+      </div>
+      <h3>`)
+//line views/vtheme/Edit.html:30
+	if p.Theme.Key == theme.KeyNew {
+//line views/vtheme/Edit.html:30
+		qw422016.N().S(`New Theme`)
+//line views/vtheme/Edit.html:30
+	} else {
+//line views/vtheme/Edit.html:30
+		qw422016.N().S(`Theme Edit`)
+//line views/vtheme/Edit.html:30
+	}
+//line views/vtheme/Edit.html:30
 	qw422016.N().S(`</h3>
       <table class="mt expanded">
         <tbody>
           `)
-//line views/vtheme/Edit.html:24
+//line views/vtheme/Edit.html:33
 	components.StreamTableInput(qw422016, "key", "", "Key", p.Theme.Key, 5)
-//line views/vtheme/Edit.html:24
+//line views/vtheme/Edit.html:33
 	qw422016.N().S(`
         </tbody>
       </table>
     </div>
     `)
-//line views/vtheme/Edit.html:28
+//line views/vtheme/Edit.html:37
 	StreamEditor(qw422016, "Theme ["+p.Theme.Key+"]", util.AppName, p.Theme, p.Icon, as, ps)
-//line views/vtheme/Edit.html:28
+//line views/vtheme/Edit.html:37
 	qw422016.N().S(`
     <div class="card">
       <button type="submit">Save All Changes</button>
       <a href="/theme/`)
-//line views/vtheme/Edit.html:31
+//line views/vtheme/Edit.html:40
 	qw422016.N().U(p.Theme.Key)
-//line views/vtheme/Edit.html:31
+//line views/vtheme/Edit.html:40
 	qw422016.N().S(`"><button type="button">Reset</button></a>
     </div>
   </form>
   `)
-//line views/vtheme/Edit.html:34
+//line views/vtheme/Edit.html:43
 	components.StreamJSONModal(qw422016, "theme", "Theme JSON", p.Theme, 1)
-//line views/vtheme/Edit.html:34
+//line views/vtheme/Edit.html:43
 	qw422016.N().S(`
 `)
-//line views/vtheme/Edit.html:35
+//line views/vtheme/Edit.html:44
 }
 
-//line views/vtheme/Edit.html:35
+//line views/vtheme/Edit.html:44
 func (p *Edit) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vtheme/Edit.html:35
+//line views/vtheme/Edit.html:44
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vtheme/Edit.html:35
+//line views/vtheme/Edit.html:44
 	p.StreamBody(qw422016, as, ps)
-//line views/vtheme/Edit.html:35
+//line views/vtheme/Edit.html:44
 	qt422016.ReleaseWriter(qw422016)
-//line views/vtheme/Edit.html:35
+//line views/vtheme/Edit.html:44
 }
 
-//line views/vtheme/Edit.html:35
+//line views/vtheme/Edit.html:44
 func (p *Edit) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vtheme/Edit.html:35
+//line views/vtheme/Edit.html:44
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vtheme/Edit.html:35
+//line views/vtheme/Edit.html:44
 	p.WriteBody(qb422016, as, ps)
-//line views/vtheme/Edit.html:35
+//line views/vtheme/Edit.html:44
 	qs422016 := string(qb422016.B)
-//line views/vtheme/Edit.html:35
+//line views/vtheme/Edit.html:44
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vtheme/Edit.html:35
+//line views/vtheme/Edit.html:44
 	return qs422016
-//line views/vtheme/Edit.html:35
+//line views/vtheme/Edit.html:44
 }

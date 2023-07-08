@@ -41,63 +41,74 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
     <h3>Add Theme</h3>
     <div class="mt">
       <a href="/theme/new" title="add new theme"><button>New Theme</button></a>
-      <a href="/theme/catalog/crayola" title="add new theme"><button>Choose Crayola Theme</button></a>
-      <a href="/theme/catalog/css" title="add new theme"><button>Choose CSS Theme</button></a>
-      <a href="/theme/catalog/wikipedia" title="add new theme"><button>Choose Wikipedia Theme</button></a>
+      <a href="/theme/palette/crayola" title="add new theme"><button>Choose Crayola Theme</button></a>
+      <a href="/theme/palette/css" title="add new theme"><button>Choose CSS Theme</button></a>
+      <a href="/theme/palette/wikipedia" title="add new theme"><button>Choose Wikipedia Theme</button></a>
+      <hr />
+      <form action="/theme/color/edit" method="get">
+        <div class="mt">
+          <input class="left mrs" type="color" name="color" value="`)
+//line views/vtheme/List.html:25
+	qw422016.E().S(theme.ThemeDefault.Light.NavBackground)
+//line views/vtheme/List.html:25
+	qw422016.N().S(`" />
+          <button type="submit">Custom Color Theme</button>
+        </div>
+      </form>
     </div>
   </div>
   <div class="card">
     <h3>Current Themes</h3>
     <div class="theme-container mt">
 `)
-//line views/vtheme/List.html:27
+//line views/vtheme/List.html:34
 	for _, t := range p.Themes {
-//line views/vtheme/List.html:27
+//line views/vtheme/List.html:34
 		qw422016.N().S(`      <div class="theme-item">
         <a href="/theme/`)
-//line views/vtheme/List.html:29
+//line views/vtheme/List.html:36
 		qw422016.N().U(t.Key)
-//line views/vtheme/List.html:29
+//line views/vtheme/List.html:36
 		qw422016.N().S(`">
           `)
-//line views/vtheme/List.html:30
+//line views/vtheme/List.html:37
 		StreamMockupTheme(qw422016, t, true, "app", 5, ps)
-//line views/vtheme/List.html:30
+//line views/vtheme/List.html:37
 		qw422016.N().S(`
         </a>
       </div>
 `)
-//line views/vtheme/List.html:33
+//line views/vtheme/List.html:40
 	}
-//line views/vtheme/List.html:33
+//line views/vtheme/List.html:40
 	qw422016.N().S(`    </div>
   </div>
 `)
-//line views/vtheme/List.html:36
+//line views/vtheme/List.html:43
 }
 
-//line views/vtheme/List.html:36
+//line views/vtheme/List.html:43
 func (p *List) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vtheme/List.html:36
+//line views/vtheme/List.html:43
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vtheme/List.html:36
+//line views/vtheme/List.html:43
 	p.StreamBody(qw422016, as, ps)
-//line views/vtheme/List.html:36
+//line views/vtheme/List.html:43
 	qt422016.ReleaseWriter(qw422016)
-//line views/vtheme/List.html:36
+//line views/vtheme/List.html:43
 }
 
-//line views/vtheme/List.html:36
+//line views/vtheme/List.html:43
 func (p *List) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vtheme/List.html:36
+//line views/vtheme/List.html:43
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vtheme/List.html:36
+//line views/vtheme/List.html:43
 	p.WriteBody(qb422016, as, ps)
-//line views/vtheme/List.html:36
+//line views/vtheme/List.html:43
 	qs422016 := string(qb422016.B)
-//line views/vtheme/List.html:36
+//line views/vtheme/List.html:43
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vtheme/List.html:36
+//line views/vtheme/List.html:43
 	return qs422016
-//line views/vtheme/List.html:36
+//line views/vtheme/List.html:43
 }

@@ -70,9 +70,9 @@ func randFor(col *model.Column, pkg string, enums enum.Enums) (string, error) {
 			return types.KeyNil, nil
 		}
 		if col.Nullable {
-			return "util.NowPointer()", nil
+			return "util.TimeCurrentP()", nil
 		}
-		return "time.Now()", nil
+		return "util.TimeCurrent()", nil
 	case types.KeyUUID:
 		if col.Nullable {
 			return "util.UUIDP()", nil

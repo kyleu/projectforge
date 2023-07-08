@@ -16,9 +16,16 @@
     <h3>Add Theme</h3>
     <div class="mt">
       <a href="/theme/new" title="add new theme"><button>New Theme</button></a>
-      <a href="/theme/catalog/crayola" title="add new theme"><button>Choose Crayola Theme</button></a>
-      <a href="/theme/catalog/css" title="add new theme"><button>Choose CSS Theme</button></a>
-      <a href="/theme/catalog/wikipedia" title="add new theme"><button>Choose Wikipedia Theme</button></a>
+      <a href="/theme/palette/crayola" title="add new theme"><button>Choose Crayola Theme</button></a>
+      <a href="/theme/palette/css" title="add new theme"><button>Choose CSS Theme</button></a>
+      <a href="/theme/palette/wikipedia" title="add new theme"><button>Choose Wikipedia Theme</button></a>
+      <hr />
+      <form action="/theme/color/edit" method="get">
+        <div class="mt">
+          <input class="left mrs" type="color" name="color" value="{%s theme.ThemeDefault.Light.NavBackground %}" />
+          <button type="submit">Custom Color Theme</button>
+        </div>
+      </form>
     </div>
   </div>
   <div class="card">

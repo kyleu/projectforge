@@ -30,7 +30,7 @@
     buildMap := build.ToMap()
   -%}
   <form action="" method="post">
-    <div class="card">
+    <div class="card" id="details">
       <h3>Project Details</h3>
       <table class="mt min-200 expanded">
         <tbody>
@@ -49,7 +49,7 @@
         </tbody>
       </table>
     </div>
-    <div class="card">
+    <div class="card" id="modules">
       <h3>Modules</h3>
       <table class="mt min-200">
         <tbody>
@@ -67,7 +67,7 @@
         </tbody>
       </table>
     </div>
-    <div class="card">
+    <div class="card" id="metadata">
       <h3>Metadata</h3>
       <table class="mt min-200 expanded">
         <tbody>
@@ -116,7 +116,7 @@
       }
     -%}
     {%= vtheme.Editor("Default Theme", prj.Title(), t, prj.IconSafe(), as, ps) %}
-    <div class="card">
+    <div class="card" id="builds">
       <h3>Builds</h3>
       <table class="mt min-200">
         <tbody>

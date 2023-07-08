@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/util"
 )
@@ -48,8 +47,7 @@ func (f *FileSystem) ListExtension(path string, ext string, ign []string, trimEx
 			ret = append(ret, j)
 		}
 	})
-	slices.Sort(ret)
-	return ret
+	return util.ArraySorted(ret)
 }
 
 func (f *FileSystem) ListDirectories(path string, ign []string, logger util.Logger) []string {
@@ -68,8 +66,7 @@ func (f *FileSystem) ListDirectories(path string, ign []string, logger util.Logg
 		}
 		return "", false
 	})
-	slices.Sort(ret)
-	return ret
+	return util.ArraySorted(ret)
 }
 
 func (f *FileSystem) ListFilesRecursive(path string, ign []string, _ util.Logger) ([]string, error) {
@@ -89,8 +86,7 @@ func (f *FileSystem) ListFilesRecursive(path string, ign []string, _ util.Logger
 	if err != nil {
 		return nil, err
 	}
-	slices.Sort(ret)
-	return ret, nil
+	return util.ArraySorted(ret), nil
 }
 
 func (f *FileSystem) Walk(path string, ign []string, fn func(fp string, info os.FileInfo, err error) error) error {

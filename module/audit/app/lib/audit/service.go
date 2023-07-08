@@ -3,7 +3,6 @@ package audit
 import (
 	"context"
 	"fmt"
-	"time"
 
 	"github.com/pkg/errors"
 
@@ -60,6 +59,6 @@ func (s *Service) ApplyObj(ctx context.Context, a *Audit, l any, r any, t string
 
 func (s *Service) ApplyObjSimple(ctx context.Context, act string, msg string, l any, r any, t string, md util.ValueMap, logger util.Logger) (*Audit, Records, error) {
 	a := New(act, "", "", "", md, msg)
-	a.Completed = time.Now()
+	a.Completed = util.TimeCurrent()
 	return s.ApplyObj(ctx, a, l, r, t, md, logger)
 }

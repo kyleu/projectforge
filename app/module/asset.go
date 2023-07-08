@@ -8,7 +8,6 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/util"
@@ -31,9 +30,7 @@ func (s *Service) AssetURL(ctx context.Context, key string, logger util.Logger) 
 	ret, ok := assetMap[key]
 	if !ok {
 		msg := "no URL available for module [%s] among candidates [%s]"
-		keys := lo.Keys(assetMap)
-		slices.Sort(keys)
-		return "", errors.Errorf(msg, key, strings.Join(keys, ", "))
+		return "", errors.Errorf(msg, key, strings.Join(util.ArraySorted(lo.Keys(assetMap)), ", "))
 	}
 	return ret, nil
 }

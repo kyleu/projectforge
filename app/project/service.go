@@ -8,7 +8,6 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/util"
@@ -87,9 +86,7 @@ func (s *Service) Keys() []string {
 		titles = append(titles, tl)
 	}
 	s.cacheLock.Unlock()
-	slices.Sort(titles)
-
-	return lo.Map(titles, func(title string, _ int) string {
+	return lo.Map(util.ArraySorted(titles), func(title string, _ int) string {
 		return keys[title]
 	})
 }

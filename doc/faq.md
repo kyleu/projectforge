@@ -158,7 +158,7 @@ func CurrentTime(rc *fasthttp.RequestCtx) {
 		// The PageState::Title is used as the HTML title
 		ps.Title = "The current server time for " + util.AppName
 		// For example purposes
-		t := time.Now()
+		t := util.TimeCurrent()
 		// PageState::Data will be rendered as JSON or XML if the Content-Type of the request matches
 		ps.Data = t
 		// The Render method will send the template contents if HTML is requested. The final argument refers to the active menu key

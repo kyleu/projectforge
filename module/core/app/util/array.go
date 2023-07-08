@@ -5,6 +5,8 @@ import (
 	"reflect"
 
 	"github.com/samber/lo"
+	"golang.org/x/exp/constraints"
+	"golang.org/x/exp/slices"
 )
 
 func StringArrayMaxLength(a []string) int {
@@ -41,6 +43,11 @@ func StringArrayFromInterfaces(a []any, maxLength int) []string {
 
 func ArrayRemoveDuplicates[T comparable](x []T) []T {
 	return lo.Uniq(x)
+}
+
+func ArraySorted[T constraints.Ordered](x []T) []T {
+	slices.Sort(x)
+	return x
 }
 
 func InterfaceArrayFrom[T any](x ...T) []any {

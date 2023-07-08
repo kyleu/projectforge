@@ -1,10 +1,10 @@
 <!-- Content managed by Project Forge, see [projectforge.md] for details. -->
 {% import (
   "github.com/samber/lo"
-  "golang.org/x/exp/slices"
 
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/layout"
 ) %}
 
@@ -17,11 +17,7 @@
   <div class="card">
     <h3>HTTP Routes</h3>
     <ul class="mt">
-      {%- code
-        x := lo.Keys(p.Routes)
-        slices.Sort(x)
-      -%}
-      {%- for _, k := range x -%}
+      {%- for _, k := range util.ArraySorted(lo.Keys(p.Routes)) -%}
       <li>
         <strong>{%s k %}</strong>
         <ul>

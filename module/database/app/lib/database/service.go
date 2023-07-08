@@ -128,7 +128,7 @@ func (s *Service) newSpan(
 	ctx context.Context, name string, q string, logger util.Logger,
 ) (time.Time, context.Context, *telemetry.Span, util.Logger) {
 	if ctx == nil {
-		return time.Now(), context.Background(), nil, logger
+		return util.TimeCurrent(), context.Background(), nil, logger
 	}
 	if s.metrics != nil {
 		s.metrics.IncStmt(q, name)
@@ -140,7 +140,7 @@ func (s *Service) newSpan(
 		&telemetry.Attribute{Key: "db.name", Value: s.DatabaseName},
 		&telemetry.Attribute{Key: "db.user", Value: s.Username},
 	)
-	return time.Now(), nc, span, logger
+	return util.TimeCurrent(), nc, span, logger
 }
 
 func (s *Service) complete(q string, op string, span *telemetry.Span, started time.Time, _ util.Logger, err error) {

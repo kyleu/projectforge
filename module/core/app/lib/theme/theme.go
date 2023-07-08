@@ -5,6 +5,7 @@ import (
 	"io"
 	"strings"
 
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
 	"{{{ .Package }}}/app/util"
@@ -73,7 +74,7 @@ func (t *Theme) ToGo() string {
 
 type Themes []*Theme
 
-func (t Themes) Sort() {
+func (t Themes) Sort() Themes {
 	slices.SortFunc(t, func(l *Theme, r *Theme) bool {
 		if l.Key == ThemeDefault.Key {
 			return true
@@ -81,8 +82,9 @@ func (t Themes) Sort() {
 		if r.Key == ThemeDefault.Key {
 			return false
 		}
-		return l.Key < r.Key
+		return strings.ToLower(l.Key) < strings.ToLower(r.Key)
 	})
+	return t
 }
 
 func (t Themes) Replace(n *Theme) Themes {
@@ -94,8 +96,25 @@ func (t Themes) Replace(n *Theme) Themes {
 	}
 	ret := append(Themes{}, t...)
 	ret = append(ret, n)
-	ret.Sort()
-	return ret
+	return ret.Sort()
+}
+
+func (t Themes) Contains(key string) bool {
+	return lo.ContainsBy(t, func(x *Theme) bool {
+		return x.Key == key
+	})
+}
+
+func (t Themes) Get(key string) *Theme {
+	return lo.FindOrElse(t, nil, func(x *Theme) bool {
+		return x.Key == key
+	})
+}
+
+func (t Themes) Remove(key string) Themes {
+	return lo.Filter(t, func(thm *Theme, _ int) bool {
+		return thm.Key != key
+	})
 }
 
 func addLine(sb io.StringWriter, s string, indent int) {

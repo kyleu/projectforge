@@ -56,7 +56,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 
 //line views/vproject/Edit.html:31
 	qw422016.N().S(`  <form action="" method="post">
-    <div class="card">
+    <div class="card" id="details">
       <h3>Project Details</h3>
       <table class="mt min-200 expanded">
         <tbody>
@@ -121,7 +121,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
         </tbody>
       </table>
     </div>
-    <div class="card">
+    <div class="card" id="modules">
       <h3>Modules</h3>
       <table class="mt min-200">
         <tbody>
@@ -165,7 +165,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	qw422016.N().S(`        </tbody>
       </table>
     </div>
-    <div class="card">
+    <div class="card" id="metadata">
       <h3>Metadata</h3>
       <table class="mt min-200 expanded">
         <tbody>
@@ -349,7 +349,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	vtheme.StreamEditor(qw422016, "Default Theme", prj.Title(), t, prj.IconSafe(), as, ps)
 //line views/vproject/Edit.html:118
 	qw422016.N().S(`
-    <div class="card">
+    <div class="card" id="builds">
       <h3>Builds</h3>
       <table class="mt min-200">
         <tbody>

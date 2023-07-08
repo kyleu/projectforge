@@ -2,7 +2,6 @@ package migrate
 
 import (
 	"context"
-	"time"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
@@ -101,6 +100,6 @@ func applyMigration(ctx context.Context, s *database.Service, idx int, file *Mig
 	if err != nil {
 		return err
 	}
-	m := &Migration{Idx: idx, Title: file.Title, Src: sql, Created: time.Now()}
+	m := &Migration{Idx: idx, Title: file.Title, Src: sql, Created: util.TimeCurrent()}
 	return newMigration(ctx, s, m, tx, logger)
 }

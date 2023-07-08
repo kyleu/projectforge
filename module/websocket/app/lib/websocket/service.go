@@ -81,8 +81,7 @@ func (s *Service) ChannelList(params *filter.Params) []string {
 		}
 		idx++
 	})
-	slices.Sort(ret)
-	return ret
+	return util.ArraySorted(ret)
 }
 
 // Returns a Status representing the Connection with the provided ID.

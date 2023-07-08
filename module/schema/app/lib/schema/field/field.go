@@ -2,7 +2,6 @@ package field
 
 import (
 	"reflect"
-	"time"
 
 	"github.com/samber/lo"
 
@@ -56,7 +55,7 @@ func (f *Field) DefaultClean() any {
 	case nil:
 		return f.Type.Default(f.Key)
 	case "now()":
-		return time.Now()
+		return util.TimeCurrent()
 	default:
 		return f.Default
 	}

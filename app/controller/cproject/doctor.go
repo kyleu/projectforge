@@ -13,6 +13,7 @@ import (
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/doctor"
 	"projectforge.dev/projectforge/app/doctor/checks"
+	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views"
 	"projectforge.dev/projectforge/views/vdoctor"
 	"projectforge.dev/projectforge/views/vpage"
@@ -30,7 +31,7 @@ func Doctor(rc *fasthttp.RequestCtx) {
 
 func DoctorRunAll(rc *fasthttp.RequestCtx) {
 	controller.Act("doctor.run.all", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		if string(rc.URI().QueryArgs().Peek("loaded")) != "true" {
+		if string(rc.URI().QueryArgs().Peek("loaded")) != util.BoolTrue {
 			page := &vpage.Load{URL: "/doctor/all?loaded=true", Title: "Running Doctor Checks", Message: "Hang tight..."}
 			return controller.Render(rc, as, page, ps, "Welcome")
 		}
@@ -64,9 +65,9 @@ func DoctorSolve(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		returnUrl := string(rc.URI().QueryArgs().Peek("return"))
-		if returnUrl == "" {
-			returnUrl = "/doctor/all"
+		returnURL := string(rc.URI().QueryArgs().Peek("return"))
+		if returnURL == "" {
+			returnURL = "/doctor/all"
 		}
 
 		c := checks.GetCheck(key)
@@ -98,6 +99,6 @@ func DoctorSolve(rc *fasthttp.RequestCtx) {
 			}
 		}
 
-		return controller.FlashAndRedir(true, "Issue solved", returnUrl, rc, ps)
+		return controller.FlashAndRedir(true, "Issue solved", returnURL, rc, ps)
 	})
 }

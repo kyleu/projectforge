@@ -12,6 +12,7 @@ import (
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
@@ -67,9 +68,7 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 			getBys[col.Name] = model.Columns{col}
 		}
 	})
-	keys := lo.Keys(getBys)
-	slices.Sort(keys)
-	for _, key := range keys {
+	for _, key := range util.ArraySorted(lo.Keys(getBys)) {
 		cols := getBys[key]
 		name := "GetBy" + strings.Join(cols.ProperNames(), "")
 		lo.ForEach(helper.ImportsForTypes("go", "", cols.Types()...), func(imp *golang.Import, _ int) {

@@ -11,12 +11,21 @@
   layout.Basic
   Theme *theme.Theme
   Icon string
+  Exists bool
 } %}
 
 {% func (p *Edit) Body(as *app.State, ps *cutil.PageState) %}
-  <form action="" method="post">
+  <form action="/theme/save" method="post">
+    <input type="hidden" name="originalKey" value="{%s p.Theme.Key %}" />
     <div class="card">
-      <div class="right"><a href="#modal-theme"><button type="button">JSON</button></a></div>
+      <div class="right">
+        {%- if p.Exists -%}
+        <a href="/theme/{%s p.Theme.Key %}/remove" class="link-confirm" data-message="Are you sure you wish to delete the [{%s p.Theme.Key %}] theme?"><button type="button">Remove</button></a>
+        {%- else -%}
+        <em>built-in</em>
+        {%- endif -%}
+        <a href="#modal-theme"><button type="button">JSON</button></a>
+      </div>
       <h3>{% if p.Theme.Key == theme.KeyNew %}New Theme{% else %}Theme Edit{% endif %}</h3>
       <table class="mt expanded">
         <tbody>

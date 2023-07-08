@@ -20,7 +20,7 @@ type Record struct {
 }
 
 func NewRecord(auditID uuid.UUID, t string, pk string, changes util.Diffs, md util.ValueMap) *Record {
-	return &Record{ID: util.UUID(), AuditID: auditID, T: t, PK: pk, Changes: changes, Metadata: md, Occurred: time.Now()}
+	return &Record{ID: util.UUID(), AuditID: auditID, T: t, PK: pk, Changes: changes, Metadata: md, Occurred: util.TimeCurrent()}
 }
 
 func RandomRecord() *Record {
@@ -31,7 +31,7 @@ func RandomRecord() *Record {
 		PK:       util.RandomString(12),
 		Changes:  util.RandomDiffs(2),
 		Metadata: util.RandomValueMap(4),
-		Occurred: time.Now(),
+		Occurred: util.TimeCurrent(),
 	}
 }
 

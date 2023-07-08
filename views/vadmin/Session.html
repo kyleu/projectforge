@@ -3,10 +3,10 @@
   "fmt"
 
   "github.com/samber/lo"
-  "golang.org/x/exp/slices"
 
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/layout"
 ) %}
@@ -23,11 +23,7 @@
     <h3>Values</h3>
     <table class="mt expanded">
       <tbody>
-        {%- code
-          keys := lo.Keys(ps.Session)
-          slices.Sort(keys)
-        -%}
-        {%- for _, k := range keys -%}
+        {%- for _, k := range util.ArraySorted(lo.Keys(ps.Session)) -%}
           {%- code v := ps.Session[k] -%}
           <tr>
             <th class="shrink">{%s k %}</th>

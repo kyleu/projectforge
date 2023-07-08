@@ -1,6 +1,6 @@
 package types
 
-import "time"
+import "{{{ .Package }}}/app/util"
 
 const KeyTime = "time"
 
@@ -29,7 +29,7 @@ func (x *Time) From(v any) any {
 }
 
 func (x *Time) Default(string) any {
-	return time.Now().Format("15:04:05")
+	return util.TimeCurrent().Format("15:04:05")
 }
 
 func NewTime() *Wrapped {

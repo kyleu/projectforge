@@ -18,7 +18,7 @@ type Channel struct {
 }
 
 func newChannel(key string) *Channel {
-	return &Channel{Key: key, LastUpdate: time.Now()}
+	return &Channel{Key: key, LastUpdate: util.TimeCurrent()}
 }
 
 func (s *Service) Join(connID uuid.UUID, ch string, logger util.Logger) (bool, error) {

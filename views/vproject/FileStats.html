@@ -72,14 +72,12 @@
 {% func renderTypes(pth []string, files stats.FileStats, ext string, as *app.State, ps *cutil.PageState) %}
   {%- code
     exts := files.Extensions()
-    extKeys := lo.Keys(exts)
-    slices.Sort(extKeys)
   -%}
   {%- if len(files) == 0 -%}
   <p><em>No files available</em></p>
   {%- else -%}
   <ul>
-    {%- for _, extKey := range extKeys -%}
+    {%- for _, extKey := range util.ArraySorted(lo.Keys(exts)) -%}
     <li><a href="?ext={%s extKey %}{% if len(pth) > 0 %}&pth={%u strings.Join(pth, `/`) %}{% endif %}">{%s extKey %}</a>: {%d exts[extKey] %}</li>
     {%- endfor -%}
   </ul>

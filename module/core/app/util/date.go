@@ -16,11 +16,6 @@ const (
 	dateFmtYMD     = "2006-01-02"
 )
 
-func TimeToday() *time.Time {
-	t := time.Now()
-	return TimeTruncate(&t)
-}
-
 func TimeTruncate(t *time.Time) *time.Time {
 	if t == nil {
 		return nil
@@ -29,8 +24,29 @@ func TimeTruncate(t *time.Time) *time.Time {
 	return &ret
 }
 
+func TimeCurrent() time.Time {
+	return time.Now()
+}
+
+func TimeCurrentP() *time.Time {
+	ret := TimeCurrent()
+	return &ret
+}
+
+func TimeToday() *time.Time {
+	return TimeTruncate(TimeCurrentP())
+}
+
+func TimeCurrentUnix() int64 {
+	return TimeCurrent().Unix()
+}
+
 func TimeCurrentMillis() int64 {
-	return time.Now().UnixMilli()
+	return TimeCurrent().UnixMilli()
+}
+
+func TimeCurrentNanos() int64 {
+	return TimeCurrent().UnixNano()
 }
 
 func TimeRelative(t *time.Time) string {
@@ -111,9 +127,4 @@ func TimeFromYMD(s string) (*time.Time, error) {
 
 func TimeToMap(t time.Time) map[string]any {
 	return map[string]any{"epoch": t.UnixMilli(), "iso8601": t.Format("2006-01-02T15:04:05-0700")}
-}
-
-func NowPointer() *time.Time {
-	ret := time.Now()
-	return &ret
 }

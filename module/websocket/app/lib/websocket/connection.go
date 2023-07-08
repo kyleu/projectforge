@@ -30,7 +30,7 @@ type Connection struct {
 
 // Creates a new Connection.
 func NewConnection(svc string{{{ if .HasModule "user" }}}, usr *dbuser.User{{{ end }}}, profile *user.Profile{{{ if .HasModule "oauth" }}}, accounts user.Accounts{{{ end }}}, socket *websocket.Conn) *Connection {
-	return &Connection{ID: util.UUID(){{{ if .HasModule "user" }}}, User: usr{{{ end }}}, Profile: profile{{{ if .HasModule "oauth" }}}, Accounts: accounts{{{ end }}}, Svc: svc, Started: time.Now(), socket: socket}
+	return &Connection{ID: util.UUID(){{{ if .HasModule "user" }}}, User: usr{{{ end }}}, Profile: profile{{{ if .HasModule "oauth" }}}, Accounts: accounts{{{ end }}}, Svc: svc, Started: util.TimeCurrent(), socket: socket}
 }
 
 // Transforms this Connection to a serializable Status object.

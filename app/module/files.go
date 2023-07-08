@@ -4,10 +4,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/samber/lo"
-
 	"github.com/pkg/errors"
-	"golang.org/x/exp/slices"
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/filesystem"
@@ -27,8 +25,7 @@ func (s *Service) GetFilenames(mods Modules, logger util.Logger) ([]string, erro
 		})
 	}
 	keys := lo.Keys(ret)
-	slices.Sort(keys)
-	return keys, nil
+	return util.ArraySorted(keys), nil
 }
 
 func (s *Service) GetFiles(mods Modules, addHeader bool, logger util.Logger) (file.Files, error) {
@@ -39,10 +36,7 @@ func (s *Service) GetFiles(mods Modules, addHeader bool, logger util.Logger) (fi
 			return nil, errors.Wrapf(err, "unable to load module [%s]", mod.Key)
 		}
 	}
-	keys := lo.Keys(ret)
-	slices.Sort(keys)
-
-	return lo.Map(keys, func(k string, _ int) *file.File {
+	return lo.Map(util.ArraySorted(lo.Keys(ret)), func(k string, _ int) *file.File {
 		return ret[k]
 	}), nil
 }

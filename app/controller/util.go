@@ -47,10 +47,10 @@ func Render(rc *fasthttp.RequestCtx, as *app.State, page layout.Page, ps *cutil.
 			return cutil.RespondDebug(rc, "", ps.Data)
 		}
 	}
-	startNanos := time.Now().UnixNano()
+	startNanos := util.TimeCurrentNanos()
 	rc.Response.Header.SetContentType("text/html; charset=UTF-8")
 	views.WriteRender(rc, page, as, ps)
-	ps.RenderElapsed = float64((time.Now().UnixNano()-startNanos)/int64(time.Microsecond)) / float64(1000)
+	ps.RenderElapsed = float64((util.TimeCurrentNanos()-startNanos)/int64(time.Microsecond)) / float64(1000)
 	return "", nil
 }
 

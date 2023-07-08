@@ -47,6 +47,5 @@ func Search(ctx context.Context, params *Params, as *app.State, page *cutil.Page
 	var ret result.Results = lo.FlatMap(results, func(x result.Results, _ int) []*result.Result {
 		return x
 	})
-	ret.Sort()
-	return ret, errs
+	return ret.Sort(), errs
 }

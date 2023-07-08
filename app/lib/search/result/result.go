@@ -24,11 +24,12 @@ func NewResult(t string, id string, url string, title string, icon string, diff 
 
 type Results []*Result
 
-func (rs Results) Sort() {
+func (rs Results) Sort() Results {
 	slices.SortFunc(rs, func(l *Result, r *Result) bool {
 		if l.Type == r.Type {
 			return strings.ToLower(l.Title) < strings.ToLower(r.Title)
 		}
 		return l.Type < r.Type
 	})
+	return rs
 }

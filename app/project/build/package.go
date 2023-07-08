@@ -29,10 +29,11 @@ func (p Pkgs) Get(s string) *Pkg {
 	})
 }
 
-func (p Pkgs) Sort() {
+func (p Pkgs) Sort() Pkgs {
 	slices.SortFunc(p, func(l *Pkg, r *Pkg) bool {
-		return l.Path < r.Path
+		return strings.ToLower(l.Path) < strings.ToLower(r.Path)
 	})
+	return p
 }
 
 func (p Pkgs) ToGraph(prefix string) string {

@@ -12,6 +12,7 @@ import (
 	"{{{ .Package }}}/app/lib/telemetry"{{{ if .HasModule "oauth" }}}
 	"{{{ .Package }}}/app/lib/user"{{{ end }}}{{{ if.HasModule "marketing" }}}
 	"{{{ .Package }}}/app/site"{{{ end }}}
+	"{{{ .Package }}}/app/util"
 )
 
 func Act(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
@@ -73,7 +74,7 @@ func actComplete(key string, as *app.State, ps *cutil.PageState, rc *fasthttp.Re
 		status = fasthttp.StatusFound
 		rc.SetStatusCode(status)
 	}
-	elapsedMillis := float64((time.Now().UnixNano()-ps.Started.UnixNano())/int64(time.Microsecond)) / float64(1000)
+	elapsedMillis := float64((util.TimeCurrentNanos()-ps.Started.UnixNano())/int64(time.Microsecond)) / float64(1000)
 	defer ps.Close()
 	rc.Response.Header.Set("Server-Timing", fmt.Sprintf("server:dur=%.3f", elapsedMillis))
 	logger = logger.With("elapsed", elapsedMillis)

@@ -30,7 +30,7 @@ var (
 func StreamEditor(qw422016 *qt422016.Writer, title string, navTitle string, t *theme.Theme, icon string, as *app.State, ps *cutil.PageState) {
 //line views/vtheme/Editor.html:8
 	qw422016.N().S(`
-  <div class="card">
+  <div class="card" id="theme">
     <table class="centered min-200">
       <thead>
       <tr>

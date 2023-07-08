@@ -38,12 +38,18 @@ func (s *Service) Get(theme string, logger util.Logger) *Theme {
 	})
 }
 
-func (s *Service) Save(t *Theme, logger util.Logger) error {
+func (s *Service) Save(t *Theme, originalKey string, logger util.Logger) error {
 	if t.Key == ThemeDefault.Key {
 		return errors.New("can't overwrite default theme")
 	}
 	if t.Key == "" || t.Key == KeyNew {
 		t.Key = util.RandomString(12)
+	}
+	if originalKey != t.Key {
+		err := s.Remove(originalKey, logger)
+		if err != nil {
+			return err
+		}
 	}
 	b := util.ToJSONBytes(t, true)
 	err := s.files.WriteFile(filepath.Join(s.root, t.Key+".json"), b, filesystem.DefaultMode, true)
@@ -57,7 +63,6 @@ func (s *Service) Save(t *Theme, logger util.Logger) error {
 func (s *Service) loadIfNeeded(logger util.Logger) {
 	if s.cache == nil {
 		s.cache = Themes{ThemeDefault}
-		s.cache = append(s.cache, CatalogThemes...)
 		lo.ForEach(s.files.ListJSON(s.root, nil, true, logger), func(key string, _ int) {
 			t := &Theme{}
 			b, err := s.files.ReadFile(filepath.Join(s.root, key+".json"))
@@ -71,8 +76,23 @@ func (s *Service) loadIfNeeded(logger util.Logger) {
 			t.Key = key
 			s.cache = append(s.cache, t)
 		})
+		s.cache = append(s.cache, lo.Filter(CatalogThemes, func(t *Theme, _ int) bool {
+			return !s.cache.Contains(t.Key)
+		})...)
 		s.cache.Sort()
 	}
+}
+
+func (s *Service) Remove(key string, logger util.Logger) error {
+	s.cache = s.cache.Remove(key)
+	if !s.FileExists(key) {
+		return nil
+	}
+	return s.files.Remove(filepath.Join(s.root, key+".json"), logger)
+}
+
+func (s *Service) FileExists(key string) bool {
+	return s.files.Exists(filepath.Join(s.root, key+".json"))
 }
 
 func ApplyMap(frm util.ValueMap) *Theme {

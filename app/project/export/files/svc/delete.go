@@ -37,7 +37,7 @@ func serviceSoftDelete(m *model.Model, enums enum.Enums) (*golang.Block, error) 
 	ret.W("func (s *Service) Delete(ctx context.Context, tx *sqlx.Tx, %s, logger util.Logger) error {", args)
 	ret.W("\tcols := []string{%s}", strings.Join(delCols.NamesQuoted(), ", "))
 	ret.W("\tq := database.SQLUpdate(tableQuoted, cols, defaultWC(len(cols)), s.db.Placeholder())")
-	ret.W("\t_, err := s.db.Update(ctx, q, tx, 1, logger, time.Now(), %s)", strings.Join(pks.CamelNames(), ", "))
+	ret.W("\t_, err := s.db.Update(ctx, q, tx, 1, logger, util.TimeCurrent(), %s)", strings.Join(pks.CamelNames(), ", "))
 	ret.W("\treturn err")
 	ret.W("}")
 	return ret, nil
@@ -60,7 +60,7 @@ func serviceSoftDeleteWhere(m *model.Model) *golang.Block {
 	ret.W("func (s *Service) DeleteWhere(%s) error {", argString)
 	ret.W("\tcols := []string{%s}", strings.Join(delCols.NamesQuoted(), ", "))
 	ret.W("\tq := database.SQLUpdate(tableQuoted, cols, wc, s.db.Placeholder())")
-	ret.W("\t_, err := s.db.Update(ctx, q, tx, expected, logger, append([]any{time.Now()}, values...)...)")
+	ret.W("\t_, err := s.db.Update(ctx, q, tx, expected, logger, append([]any{util.TimeCurrent()}, values...)...)")
 	ret.W("\treturn err")
 	ret.W("}")
 	return ret

@@ -2,8 +2,6 @@
   "fmt"
   "strings"
 
-  "golang.org/x/exp/slices"
-
   "{{{ .Package }}}/app"
   "{{{ .Package }}}/app/controller/cutil"
   "{{{ .Package }}}/app/lib/telemetry"
@@ -29,11 +27,7 @@
 <head>{%= page.Head(as, ps) %}</head>
 <body{%s= ps.ClassDecl() %}>{%- if len(ps.Flashes) > 0 -%}{%= renderFlashes(ps.Flashes) %}{%- endif -%}{%= page.Nav(as, ps) %}
 <main id="content"{% if ps.HideMenu %} class="nomenu"{% endif %}>{%= page.Body(as, ps) %}</main>
-{%- code slices.Sort(ps.Icons) -%}
-{% if len(ps.Icons) > 0 %}<div class="icon-list" style="display: none;">{% for _, icon := range ps.Icons %}
-  {%= components.SVG(icon) %}{% endfor %}
-</div>
-{% endif %}</body>
+{%= renderIcons(ps.Icons) %}</body>
 </html>
 {% endfunc %}
 
@@ -51,5 +45,15 @@
         </div>
       {% endfor %}
     </div>
+  {% endif %}
+{% endstripspace %}{% endfunc %}
+
+{% func renderIcons(icons []string) %}{% stripspace %}
+  {% if len(icons) > 0 %}
+    <div class="icon-list" style="display: none;">{% newline %}
+      {% for _, icon := range icons %}
+      {% space %}{% space %}{%= components.SVG(icon) %}{% newline %}
+      {% endfor %}
+    </div>{% newline %}
   {% endif %}
 {% endstripspace %}{% endfunc %}

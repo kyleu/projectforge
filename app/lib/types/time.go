@@ -1,7 +1,7 @@
 // Content managed by Project Forge, see [projectforge.md] for details.
 package types
 
-import "time"
+import "projectforge.dev/projectforge/app/util"
 
 const KeyTime = "time"
 
@@ -30,7 +30,7 @@ func (x *Time) From(v any) any {
 }
 
 func (x *Time) Default(string) any {
-	return time.Now().Format("15:04:05")
+	return util.TimeCurrent().Format("15:04:05")
 }
 
 func NewTime() *Wrapped {

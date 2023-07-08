@@ -66,8 +66,8 @@ func RandomBytes(size int) []byte {
 }
 
 func RandomDate() time.Time {
-	from := time.Now().Unix()
-	to := time.Now().AddDate(2, 0, 0).Unix()
+	from := TimeCurrentUnix()
+	to := TimeCurrent().AddDate(2, 0, 0).Unix()
 
 	rnd, err := rand.Int(rand.Reader, big.NewInt(to-from))
 	if err != nil {

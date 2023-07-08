@@ -3,7 +3,6 @@ package migrate
 import (
 	"context"
 	"database/sql"
-	"time"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
@@ -80,7 +79,7 @@ func removeMigrationByIdx(ctx context.Context, s *database.Service, idx int, tx 
 
 func newMigration(ctx context.Context, s *database.Service, e *Migration, tx *sqlx.Tx, logger util.Logger) error {
 	q := database.SQLInsert("migration", []string{"idx", "title", "src", "created"}, 1, s.Placeholder())
-	return s.Insert(ctx, q, tx, logger, e.Idx, e.Title, e.Src, time.Now())
+	return s.Insert(ctx, q, tx, logger, e.Idx, e.Title, e.Src, util.TimeCurrent())
 }
 
 func maxMigrationIdx(ctx context.Context, s *database.Service, tx *sqlx.Tx, logger util.Logger) int {

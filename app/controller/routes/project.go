@@ -2,7 +2,6 @@ package routes
 
 import (
 	"github.com/fasthttp/router"
-
 	"projectforge.dev/projectforge/app/controller/cproject"
 )
 
@@ -31,6 +30,9 @@ func projectRoutes(r *router.Router) {
 	r.GET("/p/{key}/fs", cproject.ProjectFileRoot)
 	r.GET("/p/{key}/fs/{path:*}", cproject.ProjectFile)
 	r.GET("/p/{key}/search", cproject.ProjectSearch)
+
+	r.GET("/p/{key}/palette/{palette}", cproject.ProjectThemePalette)
+	r.GET("/p/{key}/palette/{palette}/{theme}", cproject.ProjectThemeSave)
 
 	r.GET("/svg/{key}", cproject.SVGList)
 	r.GET("/svg/{key}/x/add", cproject.SVGAdd)
