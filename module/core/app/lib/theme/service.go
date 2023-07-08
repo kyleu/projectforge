@@ -2,7 +2,6 @@ package theme
 
 import (
 	"github.com/pkg/errors"
-	"path/filepath"
 
 	"{{{ .Package }}}/app/util"
 )
@@ -55,14 +54,11 @@ func (s *Service) Save(t *Theme, originalKey string, logger util.Logger) error {
 
 func (s *Service) Remove(key string, logger util.Logger) error {
 	s.cache = s.cache.Remove(key)
-	if !s.FileExists(key) {
-		return nil
-	}
-	return s.files.Remove(filepath.Join(s.root, key+".json"), logger)
+	return nil
 }
 
 func (s *Service) FileExists(key string) bool {
-	return s.files.Exists(filepath.Join(s.root, key+".json"))
+	return false
 }
 
 func (s *Service) loadIfNeeded(logger util.Logger) {
