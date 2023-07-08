@@ -18,6 +18,8 @@ import (
 	"projectforge.dev/projectforge/views/vsvg"
 )
 
+const appString = "app"
+
 func SVGList(rc *fasthttp.RequestCtx) {
 	controller.Act("svg.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prj, err := getProject(rc, as)
@@ -153,7 +155,7 @@ func SVGRemove(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		if key == "app" {
+		if key == appString {
 			return "", errors.New("you can't remove the app icon")
 		}
 		err = svg.Remove(fs, key, ps.Logger)

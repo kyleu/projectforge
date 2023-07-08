@@ -16,6 +16,8 @@ import (
 	"projectforge.dev/projectforge/views/vproject"
 )
 
+const goString = "go"
+
 func ProjectList(rc *fasthttp.RequestCtx) {
 	controller.Act("project.root", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prjs := as.Services.Projects.Projects()
@@ -52,7 +54,7 @@ func ProjectList(rc *fasthttp.RequestCtx) {
 			})
 			_, _ = rc.WriteString(strings.Join(msgs, "\n"))
 			return "", nil
-		case "go":
+		case goString:
 			_, _ = rc.WriteString(strings.Join(mkGoSvcs(prjs), "\n"))
 			return "", nil
 		default:
@@ -68,7 +70,7 @@ func mkGoSvcs(prjs project.Projects) []string {
 	}
 	lo.ForEach(prjs, func(p *project.Project, _ int) {
 		tags := make([]string, 0, len(p.Tags)+2)
-		tags = append(tags, "go", "v2")
+		tags = append(tags, goString, "v2")
 		tags = append(tags, p.Tags...)
 		if p.HasModule("database") {
 			tags = append(tags, "database")

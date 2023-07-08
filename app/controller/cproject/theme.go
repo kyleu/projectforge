@@ -13,7 +13,6 @@ import (
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/lib/theme"
-	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views"
 	"projectforge.dev/projectforge/views/vproject"
 )
@@ -28,14 +27,12 @@ func ProjectThemePalette(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		prjTitle := util.AppName
-		prjIcon := "app"
 		curr, err := as.Services.Projects.Get(prj)
 		if err != nil {
 			return "", err
 		}
-		prjTitle = curr.Title()
-		prjIcon = curr.IconSafe()
+		prjTitle := curr.Title()
+		prjIcon := curr.IconSafe()
 		ps.Title = fmt.Sprintf("[%s] Themes", pal)
 		_, span, _ := telemetry.StartSpan(ps.Context, "theme:load", ps.Logger)
 		x, err := theme.PaletteThemes(pal)
