@@ -7,10 +7,8 @@ import (
 )
 
 var _ = func() any {
-	println("blergh start")
 	m := &master{}
 	m.initStdios()
-	println("blergh stop")
 	return nil
 }()
 

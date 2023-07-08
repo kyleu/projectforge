@@ -38,6 +38,7 @@ require (
 	golang.org/x/mobile v0.0.0-20230531173138-3c911d8e3eda
 	golang.org/x/mod v0.12.0
 	golang.org/x/oauth2 v0.10.0
+	golang.org/x/sys v0.10.0
 	gopkg.in/yaml.v2 v2.4.0
 )
 
@@ -77,7 +78,6 @@ require (
 	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/crypto v0.11.0 // indirect
 	golang.org/x/net v0.12.0 // indirect
-	golang.org/x/sys v0.10.0 // indirect
 	golang.org/x/text v0.11.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20230706204954-ccb25ca9f130 // indirect
