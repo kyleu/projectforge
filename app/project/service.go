@@ -108,3 +108,7 @@ func (s *Service) ByPath(path string) *Project {
 		return v.Path == path
 	})
 }
+
+func (s *Service) Default() *Project {
+	return s.ByPath(".")
+}

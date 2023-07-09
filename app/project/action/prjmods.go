@@ -31,7 +31,7 @@ type PrjAndMods struct {
 
 func getPrjAndMods(ctx context.Context, p *Params) (context.Context, *PrjAndMods, error) {
 	if p.ProjectKey == "" {
-		prj := p.PSvc.ByPath("")
+		prj := p.PSvc.Default()
 		if prj != nil {
 			p.ProjectKey = prj.Key
 		}

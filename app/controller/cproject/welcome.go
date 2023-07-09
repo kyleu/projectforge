@@ -37,7 +37,7 @@ func Welcome(rc *fasthttp.RequestCtx) {
 		ps.Title = "Welcome to " + util.AppName
 		ps.Data = welcomeMessage
 		ps.HideMenu = true
-		return controller.Render(rc, as, &vwelcome.Welcome{Project: as.Services.Projects.ByPath(".")}, ps, "Welcome||/welcome")
+		return controller.Render(rc, as, &vwelcome.Welcome{Project: as.Services.Projects.Default()}, ps, "Welcome||/welcome")
 	})
 }
 
@@ -52,7 +52,7 @@ func WelcomeResult(rc *fasthttp.RequestCtx) {
 		}
 
 		if frm.GetStringOpt("hasloaded") != util.BoolTrue {
-			prj := as.Services.Projects.ByPath(".")
+			prj := as.Services.Projects.Default()
 			mods, err := as.Services.Modules.GetModules(util.StringSplitAndTrim(frm.GetStringOpt("modules"), "||")...)
 			if err != nil {
 				return "", errors.Wrap(err, "can't parse modules")

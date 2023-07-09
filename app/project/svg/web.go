@@ -31,11 +31,10 @@ func webAssets(ctx context.Context, _ *project.Project, orig string, fs filesyst
 	}
 	webResize(256, "logo.png", webPath)
 	webResize(64, "favicon.png", webPath)
-	cmd := "convert -density 1000 -background none logo.svg -define icon:auto-resize=128,64,32 favicon.ico"
 	if !fs.Exists(webPath) {
 		_ = fs.CreateDirectory(webPath)
 	}
-	err = proc(ctx, cmd, webPath, logger)
+	err = proc(ctx, icoMsg, webPath, logger)
 	if err != nil {
 		return errors.Wrap(err, "unable to convert [favicon.ico]")
 	}

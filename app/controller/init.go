@@ -23,7 +23,7 @@ func initAppRequest(as *app.State, ps *cutil.PageState) error {
 		return errors.Wrap(err, "unable to initialize projects")
 	}
 
-	root := as.Services.Projects.ByPath(".")
+	root := as.Services.Projects.Default()
 	p := string(ps.URI.Path())
 	if root.Info == nil && !strings.HasSuffix(p, "/about") && !strings.HasPrefix(p, "/welcome") {
 		ps.ForceRedirect = "/welcome"

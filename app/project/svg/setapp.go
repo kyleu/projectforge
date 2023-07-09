@@ -14,8 +14,11 @@ import (
 )
 
 const (
-	pngMsg = "convert -density 1000 -resize %dx%d -define png:exclude-chunks=date,time logo.svg %s"
-	noBG   = "convert -density 1000 -background none -resize %dx%d -define png:exclude-chunks=date,time logo.svg %s"
+	bgMsg   = "magick -background %q -fill black -font %q -pointsize 48 -size 640x400 -gravity center label:%q background.png"
+	bg2XMsg = "magick -background %q -fill black -font %q -pointsize 72 -size 1280x800 -gravity center label:%q background@2x.png"
+	icoMsg  = "magick -density 1000 -background none logo.png -define icon:auto-resize=128,64,32 favicon.ico"
+	noBG    = "inkscape -w %d -h %d logo.svg -o %s"
+	pngMsg  = "inkscape -w %d -h %d logo.svg -o %s"
 )
 
 func proc(ctx context.Context, cmd string, path string, logger util.Logger) error {

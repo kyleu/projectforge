@@ -21,6 +21,7 @@ require (
 	github.com/mileusna/useragent v1.3.3
 	github.com/muesli/coral v1.0.0
 	github.com/muesli/gamut v0.3.1
+	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.16.0
 	github.com/robert-nix/ansihtml v1.0.1

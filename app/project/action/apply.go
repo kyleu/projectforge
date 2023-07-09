@@ -71,7 +71,7 @@ func Apply(ctx context.Context, p *Params) (ret *Result) {
 		}
 	}
 	if p.ProjectKey == "" {
-		prj := p.PSvc.ByPath(".")
+		prj := p.PSvc.Default()
 		p.ProjectKey = prj.Key
 	}
 

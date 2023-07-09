@@ -15,7 +15,7 @@ var imagemagick = &doctor.Check{
 	Summary: "Renders SVGs for the icon pipeline",
 	URL:     "https://imagemagick.org",
 	UsedBy:  "SVG icon pipeline",
-	Fn:      simpleOut(".", "convert", []string{"-version"}, checkImageMagick),
+	Fn:      simpleOut(".", "magick", []string{"-version"}, checkImageMagick),
 	Solve:   solveImageMagick,
 }
 
@@ -27,9 +27,6 @@ func checkImageMagick(_ context.Context, r *doctor.Result, out string) *doctor.R
 }
 
 func solveImageMagick(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Result {
-	if r.Errors.Find("exitcode") != nil {
-		r.AddSolution("On Windows 10+, Imagemagick's [convert] program is superseded by a Windows utility, delete it or ignore the error")
-	}
 	if r.Errors.Find("missing") != nil {
 		r.AddPackageSolution("Imagemagick", "imagemagick")
 	}
