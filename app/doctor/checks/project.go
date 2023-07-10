@@ -13,7 +13,7 @@ import (
 
 var CurrentModuleDeps map[string][]string
 
-var prj = &doctor.Check{
+var Project = &doctor.Check{
 	Key:     "project",
 	Section: "app",
 	Title:   "Project",

@@ -7,7 +7,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-var mke = &doctor.Check{
+var Make = &doctor.Check{
 	Key:     "make",
 	Section: "build",
 	Title:   "Make",

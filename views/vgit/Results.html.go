@@ -72,13 +72,21 @@ func (p *Results) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 //line views/vgit/Results.html:41
 	qw422016.E().S(tags)
 //line views/vgit/Results.html:41
+	qw422016.N().S(`" title="`)
+//line views/vgit/Results.html:41
+	qw422016.E().S(git.ActionStatus.Description)
+//line views/vgit/Results.html:41
 	qw422016.N().S(`"><button>Status</button></a></td>
-          <td>Build status for all projects</td>
+          <td>Git status for all projects</td>
         </tr>
         <tr>
           <td><a href="/git/all/fetch`)
 //line views/vgit/Results.html:45
 	qw422016.E().S(tags)
+//line views/vgit/Results.html:45
+	qw422016.N().S(`" title="`)
+//line views/vgit/Results.html:45
+	qw422016.E().S(git.ActionFetch.Description)
 //line views/vgit/Results.html:45
 	qw422016.N().S(`"><button>Fetch</button></a></td>
           <td>Fetches updates for all projects</td>
@@ -88,6 +96,10 @@ func (p *Results) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 //line views/vgit/Results.html:49
 	qw422016.E().S(tags)
 //line views/vgit/Results.html:49
+	qw422016.N().S(`" title="`)
+//line views/vgit/Results.html:49
+	qw422016.E().S(git.ActionPull.Description)
+//line views/vgit/Results.html:49
 	qw422016.N().S(`"><button>Pull</button></a></td>
           <td>Pulls commits for all projects</td>
         </tr>
@@ -95,6 +107,10 @@ func (p *Results) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
           <td><a href="/git/all/push`)
 //line views/vgit/Results.html:53
 	qw422016.E().S(tags)
+//line views/vgit/Results.html:53
+	qw422016.N().S(`" title="`)
+//line views/vgit/Results.html:53
+	qw422016.E().S(git.ActionPush.Description)
 //line views/vgit/Results.html:53
 	qw422016.N().S(`"><button>Push</button></a></td>
           <td>Push pending commits for all projects</td>
@@ -104,13 +120,21 @@ func (p *Results) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 //line views/vgit/Results.html:57
 	qw422016.E().S(tags)
 //line views/vgit/Results.html:57
+	qw422016.N().S(`" title="`)
+//line views/vgit/Results.html:57
+	qw422016.E().S(git.ActionMagic.Description)
+//line views/vgit/Results.html:57
 	qw422016.N().S(`"><button>Magic</button></a></td>
-          <td>Runs the magic for all projects</td>
+          <td>Runs the magic for all projects (<em>stash, pull, pop, commit, push</em>)</td>
         </tr>
         <tr>
           <td><a href="/git/all/history`)
 //line views/vgit/Results.html:61
 	qw422016.E().S(tags)
+//line views/vgit/Results.html:61
+	qw422016.N().S(`" title="`)
+//line views/vgit/Results.html:61
+	qw422016.E().S(git.ActionHistory.Description)
 //line views/vgit/Results.html:61
 	qw422016.N().S(`"><button>History</button></a></td>
           <td>View and report the repository's git history</td>

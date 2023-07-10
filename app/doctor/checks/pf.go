@@ -7,7 +7,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-var pf = &doctor.Check{
+var PF = &doctor.Check{
 	Key:     util.AppKey,
 	Section: "app",
 	Title:   util.AppName,

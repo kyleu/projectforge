@@ -9,7 +9,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-var repo = &doctor.Check{
+var Repo = &doctor.Check{
 	Key:     "repo",
 	Section: "release",
 	Title:   "Git Repo",

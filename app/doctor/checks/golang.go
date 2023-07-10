@@ -12,7 +12,7 @@ import (
 
 const golangVersion = "v1.20.0"
 
-var golang = &doctor.Check{
+var Golang = &doctor.Check{
 	Key:     "golang",
 	Section: "build",
 	Title:   "Go",

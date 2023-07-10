@@ -7,7 +7,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-var git = &doctor.Check{
+var Git = &doctor.Check{
 	Key:     "git",
 	Section: "build",
 	Title:   "Git",

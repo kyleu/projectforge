@@ -8,7 +8,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-var imagemagick = &doctor.Check{
+var Imagemagick = &doctor.Check{
 	Key:     "imagemagick",
 	Section: "icons",
 	Title:   "ImageMagick",

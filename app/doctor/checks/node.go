@@ -7,7 +7,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-var node = &doctor.Check{
+var Node = &doctor.Check{
 	Key:     "node",
 	Section: "build",
 	Title:   "Node.js",

@@ -7,11 +7,11 @@ clean: ## Removes builds and compiled templates
 
 .PHONY: dev
 dev: ## Start the project, reloading on changes
-	@bash bin/dev.sh
+	@bin/dev.{{{ .ScriptExt }}}
 
 .PHONY: templates
 templates:
-	@bin/templates.sh
+	@bin/templates.{{{ .ScriptExt }}}
 
 .PHONY: build
 build: templates ## Build all binaries{{{ if .HasModule "wasm" }}}
@@ -25,7 +25,7 @@ build-release: templates ## Build all binaries without debug information, clean 
 
 .PHONY: lint
 lint: ## Run linter
-	@bin/check.sh
+	@bin/check.{{{ .ScriptExt }}}
 
 .PHONY: help
 help:

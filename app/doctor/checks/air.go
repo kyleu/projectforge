@@ -7,7 +7,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-var air = &doctor.Check{
+var Air = &doctor.Check{
 	Key:     "air",
 	Section: "build",
 	Title:   "Air",

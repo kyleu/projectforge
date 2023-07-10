@@ -18,7 +18,7 @@ func contentWithHeader(filename string, t Type, c string, logger util.Logger) st
 	}
 	switch t.Key {
 	case TypeBatch.Key:
-		return "rem " + HeaderContent + "\n" + c
+		return secondLine(c, "rem "+HeaderContent)
 	case TypeCodeowners.Key, TypeDocker.Key, TypeEnv.Key, TypeGraphQL.Key, TypeHCL.Key, TypeMakefile.Key, TypeProperties.Key, TypeYAML.Key:
 		return "# " + HeaderContent + "\n" + c
 	case TypeConf.Key, TypeEditorConfig.Key, TypeESLint.Key, TypeGitIgnore.Key:

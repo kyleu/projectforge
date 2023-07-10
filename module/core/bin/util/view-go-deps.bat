@@ -1,0 +1,11 @@
+@ECHO OFF
+
+rem Uses gomod to visualize the module graph
+rem Requires gomod available on the path
+
+cd %~dpnx0\..\..
+
+echo "building dependency SVG..."
+gomod graph | dot -Tsvg -o tmp\deps.svg
+
+open tmp\deps.svg

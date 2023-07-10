@@ -7,7 +7,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-var homebrew = &doctor.Check{
+var Homebrew = &doctor.Check{
 	Key:       "homebrew",
 	Section:   "build",
 	Title:     "Homebrew",

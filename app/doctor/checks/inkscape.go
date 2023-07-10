@@ -7,7 +7,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-var inkscape = &doctor.Check{
+var Inkscape = &doctor.Check{
 	Key:     "inkscape",
 	Section: "icons",
 	Title:   "Inkscape",
