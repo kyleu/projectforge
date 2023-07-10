@@ -1,4 +1,11 @@
 # Content managed by Project Forge, see [projectforge.md] for details.
+EXT :=
+ifeq ($(OS),Windows_NT)
+	EXT = "bat"
+else
+	EXT = "sh"
+endif
+
 .PHONY: clean
 clean: ## Removes builds and compiled templates
 	@rm -rf tmp/*.hashcode
@@ -7,11 +14,11 @@ clean: ## Removes builds and compiled templates
 
 .PHONY: dev
 dev: ## Start the project, reloading on changes
-	@bin/dev.sh
+	@bin/dev.${EXT}
 
 .PHONY: templates
 templates:
-	@bin/templates.sh
+	@bin/templates.${EXT}
 
 .PHONY: build
 build: templates ## Build all binaries
@@ -23,7 +30,7 @@ build-release: templates ## Build all binaries without debug information, clean 
 
 .PHONY: lint
 lint: ## Run linter
-	@bin/check.sh
+	@bin/check.${EXT}
 
 .PHONY: help
 help:

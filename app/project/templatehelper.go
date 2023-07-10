@@ -2,7 +2,6 @@ package project
 
 import (
 	"fmt"
-	"runtime"
 	"strings"
 
 	"github.com/samber/lo"
@@ -126,11 +125,4 @@ func (t *TemplateContext) Placeholder(idx int) string {
 
 func (t *TemplateContext) SQLServer() bool {
 	return !lo.Contains(t.Modules, "postgres") && lo.Contains(t.Modules, "sqlserver")
-}
-
-func (t *TemplateContext) ScriptExt() string {
-	if runtime.GOOS == "windows" {
-		return "bat"
-	}
-	return "sh"
 }

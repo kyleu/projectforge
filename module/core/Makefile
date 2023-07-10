@@ -1,3 +1,10 @@
+EXT :=
+ifeq ($(OS),Windows_NT)
+	EXT = "bat"
+else
+	EXT = "sh"
+endif
+
 .PHONY: clean
 clean: ## Removes builds and compiled templates
 	@rm -rf tmp/*.hashcode
@@ -7,11 +14,11 @@ clean: ## Removes builds and compiled templates
 
 .PHONY: dev
 dev: ## Start the project, reloading on changes
-	@bin/dev.{{{ .ScriptExt }}}
+	@bin/dev.${EXT}
 
 .PHONY: templates
 templates:
-	@bin/templates.{{{ .ScriptExt }}}
+	@bin/templates.${EXT}
 
 .PHONY: build
 build: templates ## Build all binaries{{{ if .HasModule "wasm" }}}
@@ -25,7 +32,7 @@ build-release: templates ## Build all binaries without debug information, clean 
 
 .PHONY: lint
 lint: ## Run linter
-	@bin/check.{{{ .ScriptExt }}}
+	@bin/check.${EXT}
 
 .PHONY: help
 help:
