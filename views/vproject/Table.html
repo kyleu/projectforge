@@ -32,7 +32,7 @@
       <tbody>
         {%- for _, prj := range prjs -%}
         <tr>
-          <td><a href="/p/{%s prj.Key %}">
+          <td class="shrink"><a href="/p/{%s prj.Key %}">
             {%= components.SVGRef(prj.IconSafe(), 16, 16, "icon", ps) %}
             {% if prj.Key == util.AppKey %}<strong>{% endif %}{%s prj.Title() %}{% if prj.Key == util.AppKey %}</strong>{% endif %}
           </a></td>

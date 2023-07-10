@@ -8,8 +8,9 @@ import (
 
 func projectRoutes(r *router.Router) {
 	r.GET("/welcome", cproject.Welcome)
-	r.POST("/welcome", cproject.WelcomeResult)
+	r.POST("/welcome", cproject.WelcomeLoad)
 	r.GET("/welcome/changedir", cproject.ChangeDir)
+	r.GET("/welcome/process", cproject.WelcomeProcess)
 
 	r.GET("/doctor", cproject.Doctor)
 	r.GET("/doctor/all", cproject.DoctorRunAll)
