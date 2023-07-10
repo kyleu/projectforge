@@ -2,8 +2,6 @@ package checks
 
 import (
 	"context"
-	"strings"
-
 	"projectforge.dev/projectforge/app/doctor"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -20,9 +18,6 @@ var inkscape = &doctor.Check{
 }
 
 func checkInkscape(_ context.Context, r *doctor.Result, out string) *doctor.Result {
-	if !strings.Contains(out, "Inkscape") {
-		return r.WithError(doctor.NewError("invalid", "[convert] is not provided by Inkscape"))
-	}
 	return r
 }
 

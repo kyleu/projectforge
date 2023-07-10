@@ -39,7 +39,7 @@ func docMenuCreate(logger util.Logger) *menu.Item {
 		if p == "." || !strings.HasSuffix(p, ".md") {
 			continue
 		}
-		split := strings.Split(p, "/")
+		split := util.StringSplitAndTrim(p, "/")
 		p = strings.TrimSuffix(p, ".md")
 		mi := ret
 		lo.ForEach(split, func(comp string, idx int) {

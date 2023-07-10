@@ -30,6 +30,12 @@ func projectFromCfg(proto *project.Project, cfg util.ValueMap) *project.Project 
 		return i
 	}
 
+	if strings.Contains(proto.Key, "\\") {
+		_, proto.Key = util.StringSplitLast(proto.Key, '\\', true)
+	}
+	if strings.Contains(proto.Key, "/") {
+		_, proto.Key = util.StringSplitLast(proto.Key, '/', true)
+	}
 	if proto.Package == "" {
 		proto.Package = fmt.Sprintf("github.com/%s/%s", proto.Key, proto.Key)
 	}

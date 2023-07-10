@@ -21,7 +21,7 @@ var imagemagick = &doctor.Check{
 
 func checkImageMagick(_ context.Context, r *doctor.Result, out string) *doctor.Result {
 	if !strings.Contains(out, "ImageMagick") {
-		return r.WithError(doctor.NewError("invalid", "[convert] is not provided by ImageMagick"))
+		return r.WithError(doctor.NewError("invalid", "[magick] is not provided by ImageMagick"))
 	}
 	return r
 }

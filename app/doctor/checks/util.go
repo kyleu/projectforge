@@ -4,6 +4,8 @@ import (
 	"context"
 	"strings"
 
+	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/doctor"
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/lib/telemetry"
@@ -11,7 +13,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func simpleOut(path string, cmd string, args []string, outCheck func(ctx context.Context, r *doctor.Result, out string) *doctor.Result) doctor.CheckFn {
+func simpleOut(path string, cmd string, args []string, outChecks ...func(ctx context.Context, r *doctor.Result, out string) *doctor.Result) doctor.CheckFn {
 	return func(ctx context.Context, r *doctor.Result, logger util.Logger) *doctor.Result {
 		fullCmd := strings.Join(append([]string{cmd}, args...), " ")
 		exitCode, out, err := telemetry.RunProcessSimple(ctx, fullCmd, path, logger)
@@ -21,7 +23,10 @@ func simpleOut(path string, cmd string, args []string, outCheck func(ctx context
 		if exitCode != 0 {
 			return r.WithError(doctor.NewError("exitcode", "[%s] returned [%d] as an exit code", fullCmd, exitCode))
 		}
-		return outCheck(ctx, r, out)
+		lo.ForEach(outChecks, func(outCheck func(ctx context.Context, r *doctor.Result, out string) *doctor.Result, index int) {
+			r = outCheck(ctx, r, out)
+		})
+		return r
 	}
 }
 

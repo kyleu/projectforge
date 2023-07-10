@@ -2,6 +2,7 @@ package action
 
 import (
 	"path"
+	"path/filepath"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -62,7 +63,7 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 				return nil, nil, e
 			}
 			p, n := path.Split(newPath)
-			f.Path = strings.Split(p, "/")
+			f.Path = strings.Split(p, string(filepath.ListSeparator))
 			f.Name = n
 		}
 		err = file.ReplaceSections(f, tgt)

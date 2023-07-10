@@ -37,6 +37,12 @@ type Project struct {
 }
 
 func NewProject(key string, path string) *Project {
+	if strings.Contains(key, "\\") {
+		_, key = util.StringSplitLast(key, '\\', true)
+	}
+	if strings.Contains(key, "/") {
+		_, key = util.StringSplitLast(key, '/', true)
+	}
 	return &Project{Key: key, Version: "0.0.0", Path: path}
 }
 

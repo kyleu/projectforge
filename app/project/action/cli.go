@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -20,8 +21,8 @@ func cliProject(p *project.Project, modKeys []string) error {
 
 	if p.Key == "" {
 		path, _ := os.Getwd()
-		if strings.Contains(path, "/") {
-			path = path[strings.LastIndex(path, "/")+1:]
+		if strings.Contains(path, string(filepath.ListSeparator)) {
+			path = path[strings.LastIndex(path, string(filepath.ListSeparator))+1:]
 		}
 		p.Key = path
 	}

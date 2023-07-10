@@ -4,6 +4,7 @@ package util
 import (
 	"fmt"
 	"hash/fnv"
+	"path/filepath"
 	"strings"
 	"unicode"
 
@@ -39,6 +40,10 @@ func StringSplitAndTrim(s string, delim string) []string {
 		x = strings.TrimSpace(x)
 		return x, len(x) > 0
 	})
+}
+
+func StringSplitPathAndTrim(s string) []string {
+	return StringSplitAndTrim(s, string(filepath.ListSeparator))
 }
 
 func StringPad(s string, size int) string {
