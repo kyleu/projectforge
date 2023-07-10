@@ -21,13 +21,13 @@ func Full(ctx context.Context, prj *project.Project, logger util.Logger) ([]stri
 
 	addLog("building project [%s] in [%s]", prj.Key, prj.Path)
 
-	exitCode, out, err := telemetry.RunProcessSimple(ctx, "bin/templates.sh", prj.Path, logger)
+	exitCode, out, err := telemetry.RunProcessSimple(ctx, "bin/templates."+ScriptExtension, prj.Path, logger)
 	if err != nil {
 		return logs, err
 	}
-	addLog("templates.sh output for [" + prj.Key + "]:\n" + out)
+	addLog("templates." + ScriptExtension + " output for [" + prj.Key + "]:\n" + out)
 	if exitCode != 0 {
-		return logs, errors.Errorf("templates.sh failed with exit code [%d]", exitCode)
+		return logs, errors.Errorf("templates."+ScriptExtension+" failed with exit code [%d]", exitCode)
 	}
 
 	exitCode, out, err = telemetry.RunProcessSimple(ctx, "go mod tidy", prj.Path, logger)
@@ -48,7 +48,7 @@ func Full(ctx context.Context, prj *project.Project, logger util.Logger) ([]stri
 		return logs, errors.Errorf("npm install failed with exit code [%d]", exitCode)
 	}
 
-	exitCode, out, err = telemetry.RunProcessSimple(ctx, "bin/build/client.sh", prj.Path, logger)
+	exitCode, out, err = telemetry.RunProcessSimple(ctx, "bin/build/client."+ScriptExtension, prj.Path, logger)
 	if err != nil {
 		return logs, err
 	}

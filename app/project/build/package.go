@@ -2,11 +2,19 @@ package build
 
 import (
 	"fmt"
+	"runtime"
 	"strings"
 
 	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 )
+
+var ScriptExtension = func() string {
+	if runtime.GOOS == "windows" {
+		return "bat"
+	}
+	return "sh"
+}()
 
 type Pkg struct {
 	Path  string   `json:"path"`
