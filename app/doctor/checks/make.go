@@ -8,14 +8,15 @@ import (
 )
 
 var Make = &doctor.Check{
-	Key:     "make",
-	Section: "build",
-	Title:   "Make",
-	Summary: "Compiles the project",
-	URL:     "https://www.gnu.org/software/make",
-	UsedBy:  "Main server build",
-	Fn:      simpleOut(".", "make", []string{"--version"}, noop),
-	Solve:   solveMake,
+	Key:       "make",
+	Section:   "build",
+	Title:     "Make",
+	Summary:   "Compiles the project",
+	URL:       "https://www.gnu.org/software/make",
+	UsedBy:    "Main server build",
+	Platforms: []string{"!windows"},
+	Fn:        simpleOut(".", "make", []string{"--version"}, noop),
+	Solve:     solveMake,
 }
 
 func solveMake(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Result {

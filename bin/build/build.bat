@@ -9,6 +9,7 @@ os=${1:-darwin}
 arch=${2:-amd64}
 fn=${3:-projectforge}
 
+@ECHO ON
 echo "Building [$os $arch]..."
 env GOOS=$os GOARCH=$arch make build-release
 md build\$os\$arch

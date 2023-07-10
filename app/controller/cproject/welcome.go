@@ -17,7 +17,10 @@ import (
 
 const welcomeMessage = "Welcome to " + util.AppName + "! View this page in a browser to get started."
 
-var exclusions = []string{checks.Golangcilint.Key, checks.Gofumpt.Key, checks.Gotestsum.Key, checks.Project.Key, checks.PF.Key, checks.Repo.Key}
+var exclusions = []string{
+	checks.Golangcilint.Key, checks.Gofumpt.Key, checks.Gotestsum.Key, checks.Imagemagick.Key, checks.Inkscape.Key,
+	checks.Project.Key, checks.PF.Key, checks.Repo.Key,
+}
 
 func Welcome(rc *fasthttp.RequestCtx) {
 	controller.Act("welcome", rc, func(as *app.State, ps *cutil.PageState) (string, error) {

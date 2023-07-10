@@ -48,7 +48,7 @@ func (c *Check) Applies() bool {
 	if len(c.Platforms) == 0 {
 		return true
 	}
-	return lo.Contains(c.Platforms, runtime.GOOS)
+	return lo.Contains(c.Platforms, runtime.GOOS) && (!lo.Contains(c.Platforms, "!"+runtime.GOOS))
 }
 
 type Checks []*Check

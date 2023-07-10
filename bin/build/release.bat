@@ -5,6 +5,5 @@ rem Runs goreleaser
 
 cd %~dpnx0\..\..
 
-[[ -f "$HOME/bin/oauth" ]] && . $HOME/bin/oauth
-
+@ECHO ON
 goreleaser -f ./tools/release/.goreleaser.yml release --timeout 240m --clean

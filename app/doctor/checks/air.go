@@ -8,14 +8,15 @@ import (
 )
 
 var Air = &doctor.Check{
-	Key:     "air",
-	Section: "build",
-	Title:   "Air",
-	Summary: "Used to recompile the project when files change",
-	URL:     "https://github.com/cosmtrek/air",
-	UsedBy:  "[bin/dev.sh]",
-	Fn:      simpleOut(".", "air", []string{"--help"}, noop),
-	Solve:   solveAir,
+	Key:       "air",
+	Section:   "build",
+	Title:     "Air",
+	Summary:   "Used to recompile the project when files change",
+	URL:       "https://github.com/cosmtrek/air",
+	UsedBy:    "[bin/dev.sh]",
+	Platforms: []string{"!windows"},
+	Fn:        simpleOut(".", "air", []string{"--help"}, noop),
+	Solve:     solveAir,
 }
 
 func solveAir(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Result {

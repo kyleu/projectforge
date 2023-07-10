@@ -5,6 +5,7 @@ rem Starts a pprof server using the (previously-recorded) CPU profile at ./tmp/c
 
 cd %~dpnx0\..\..
 
+@ECHO ON
 echo "=== launching profiler for cpu.pprof ==="
 go tool pprof -http=":8000" build\debug\projectforge tmp\cpu.pprof
 

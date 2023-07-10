@@ -5,4 +5,5 @@ rem Builds all the templates using quicktemplate
 
 cd %~dpnx0\..
 
+@ECHO ON
 qtc -ext html -dir "views"

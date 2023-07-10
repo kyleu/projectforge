@@ -6,4 +6,5 @@ rem Requires node, tsc, and esbuild available on the path
 
 cd %~dpnx0\..\..\client
 
+@ECHO ON
 node build.js
