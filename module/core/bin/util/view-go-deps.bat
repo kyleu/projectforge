@@ -5,6 +5,7 @@ rem Requires gomod available on the path
 
 cd %~dpnx0\..\..
 
+@ECHO ON
 echo "building dependency SVG..."
 gomod graph | dot -Tsvg -o tmp\deps.svg
 
