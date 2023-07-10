@@ -109,7 +109,7 @@ func newProjectResult(q string, prjKey string, path string, content []byte) *res
 		return nil
 	}
 
-	_, fn := util.StringSplitLast(path, '/', true)
+	_, fn := util.StringSplitPath(path)
 
 	lines := strings.Split(string(content), "\n")
 

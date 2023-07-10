@@ -21,7 +21,7 @@ func rootCmd() *coral.Command {
 	ret.AddCommand(serverCmd(), siteCmd(), allCmd(), upgradeCmd())
 	// $PF_SECTION_START(cmds)$
 	ret.AddCommand(actionCommands()...)
-	ret.AddCommand(updateCmd())
+	ret.AddCommand(updateCmd(), upCmd())
 	// $PF_SECTION_END(cmds)$
 	ret.AddCommand(versionCmd())
 

@@ -48,6 +48,9 @@
       <a target="_blank" href="{%s strings.TrimPrefix(s, `#`) %}">{%s strings.TrimPrefix(s, `#`) %}</a>
       {%- elseif strings.HasPrefix(s, "!") -%}
       [<em>{%s strings.TrimPrefix(s, `!`) %}</em>]
+      {%- if strings.HasPrefix(s, "!go ") -%}
+      (or make sure <code>{$GOROOT}/bin</code> is on your <code>PATH</code>)
+      {%- endif -%}
       <div class="mt">
         <a href="/doctor/{%s x.Key %}/solve?return={%s redir %}"><button>Run Command</button></a>
         <button onclick="navigator.clipboard.writeText('{%s strings.TrimPrefix(s, `!`) %}');">Copy To Clipboard</button>

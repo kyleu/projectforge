@@ -14,6 +14,15 @@ import (
 )
 
 func projectFromCfg(proto *project.Project, cfg util.ValueMap) *project.Project {
+	clean := func(s string) string {
+		if strings.Contains(s, "\\") {
+			s = util.StringSplitLastOnly(s, '\\', true)
+		}
+		if strings.Contains(s, "/") {
+			s = util.StringSplitLastOnly(s, '/', true)
+		}
+		return ""
+	}
 	str := func(key string, def string) string {
 		ret := cfg.GetStringOpt(key)
 		if ret == "" {
@@ -29,13 +38,9 @@ func projectFromCfg(proto *project.Project, cfg util.ValueMap) *project.Project 
 		}
 		return i
 	}
+	proto.Key = clean(proto.Key)
+	proto.Name = clean(proto.Name)
 
-	if strings.Contains(proto.Key, "\\") {
-		_, proto.Key = util.StringSplitLast(proto.Key, '\\', true)
-	}
-	if strings.Contains(proto.Key, "/") {
-		_, proto.Key = util.StringSplitLast(proto.Key, '/', true)
-	}
 	if proto.Package == "" {
 		proto.Package = fmt.Sprintf("github.com/%s/%s", proto.Key, proto.Key)
 	}

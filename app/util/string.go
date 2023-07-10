@@ -35,11 +35,33 @@ func StringSplitLast(s string, sep byte, cutc bool) (string, string) {
 	return s[:i], s[i:]
 }
 
+func StringSplitLastOnly(s string, sep byte, cutc bool) string {
+	i := strings.LastIndexByte(s, sep)
+	if i < 0 {
+		return s
+	}
+	if cutc {
+		return s[i+1:]
+	}
+	return s[i:]
+}
+
 func StringSplitAndTrim(s string, delim string) []string {
 	return lo.FilterMap(strings.Split(s, delim), func(x string, _ int) (string, bool) {
 		x = strings.TrimSpace(x)
 		return x, len(x) > 0
 	})
+}
+
+func StringSplitPath(s string) (string, string) {
+	i := strings.LastIndexByte(s, '/')
+	if i == -1 {
+		i = strings.LastIndexByte(s, '\\')
+	}
+	if i < 0 {
+		return "", s
+	}
+	return s[:i], s[i+1:]
 }
 
 func StringSplitPathAndTrim(s string) []string {

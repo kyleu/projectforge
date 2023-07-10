@@ -16,17 +16,13 @@ type File struct {
 }
 
 func NewFile(path string, mode os.FileMode, b []byte, addHeader bool, logger util.Logger) *File {
-	p, n := util.StringSplitLast(path, '/', true)
-	if n == "" {
-		n = p
-		p = ""
-	}
+	p, n := util.StringSplitPath(path)
 	t := getType(n)
 	c := string(b)
 	if addHeader {
 		c = contentWithHeader(path, t, c, logger)
 	}
-	return &File{Type: t, Path: util.StringSplitAndTrim(p, "/"), Name: n, Mode: mode, Content: c}
+	return &File{Type: t, Path: util.StringSplitPathAndTrim(p), Name: n, Mode: mode, Content: c}
 }
 
 func (f *File) FullPath() string {
@@ -34,11 +30,7 @@ func (f *File) FullPath() string {
 }
 
 func (f *File) Ext() string {
-	l, r := util.StringSplitLast(f.Name, '.', true)
-	if r == "" {
-		return l
-	}
-	return r
+	return util.StringSplitLastOnly(f.Name, '.', true)
 }
 
 const (

@@ -20,12 +20,10 @@ func (s *Service) load(path string) (json.RawMessage, *Project, error) {
 	cfgPath := filepath.Join(path, ConfigDir, "project.json")
 
 	if curr, _ := os.Stat(cfgPath); curr == nil {
-		l, r := util.StringSplitLast(path, '/', true)
-		if r == "" {
-			r = l
-		}
+		_, r := util.StringSplitPath(path)
 		if r == "." {
 			r, _ = os.Getwd()
+			_, r = util.StringSplitPath(r)
 			if strings.Contains(r, "/") {
 				r = r[strings.LastIndex(r, "/")+1:]
 			}
@@ -45,10 +43,7 @@ func (s *Service) load(path string) (json.RawMessage, *Project, error) {
 	ret := &Project{}
 	err = util.FromJSON(b, &ret)
 	if err != nil {
-		l, r := util.StringSplitLast(path, '/', true)
-		if r == "" {
-			r = l
-		}
+		_, r := util.StringSplitPath(path)
 		if r == "." || r == "" {
 			r = rootKey
 		}

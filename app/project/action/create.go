@@ -26,13 +26,13 @@ func onCreate(ctx context.Context, params *Params) *Result {
 
 	params.ProjectKey = prj.Key
 
-	clilog("Saving project...\n")
+	params.Logger.Info("Saving project...")
 	err := params.PSvc.Save(prj, params.Logger)
 	if err != nil {
 		return ret.WithError(err)
 	}
 
-	clilog("Generating project...\n")
+	params.Logger.Info("Generating project...")
 	_, err = params.PSvc.Refresh(params.Logger)
 	if err != nil {
 		msg := fmt.Sprintf("unable to load newly created project from path [%s]", path)
@@ -49,8 +49,8 @@ func onCreate(ctx context.Context, params *Params) *Result {
 		return ret
 	}
 
-	clilog("Building project...\n")
+	params.Logger.Info("Building project...")
 	fullBuild(ctx, prj, ret, params.Logger)
-	clilog("Build complete!\n")
+	params.Logger.Info("Build complete!")
 	return ret
 }

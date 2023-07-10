@@ -56,7 +56,11 @@ func (p *Result) AddPackageSolution(name string, pkg string) *Result {
 	case "darwin":
 		msg += fmt.Sprintf(" by running [brew install %s]", pkg)
 	case "linux":
-		msg += fmt.Sprintf(" by running [sudo apt install %s]", pkg)
+		if pkg == "golang" {
+			msg += " by running [sudo snap install --classic go] (don't use [apt], it still has an old version)"
+		} else {
+			msg += fmt.Sprintf(" by running [sudo apt install %s]", pkg)
+		}
 	}
 	return p.AddSolution(msg)
 }

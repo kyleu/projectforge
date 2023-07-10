@@ -68,11 +68,7 @@ func newModuleResult(q string, modKey string, path string, content []byte) *resu
 	if !utf8.Valid(content) {
 		return nil
 	}
-
-	fn := path
-	if strings.Contains(path, "/") {
-		_, fn = util.StringSplitLast(path, '/', true)
-	}
+	_, fn := util.StringSplitPath(path)
 
 	lines := strings.Split(string(content), "\n")
 

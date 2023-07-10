@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -21,9 +20,7 @@ func cliProject(p *project.Project, modKeys []string) error {
 
 	if p.Key == "" {
 		path, _ := os.Getwd()
-		if strings.Contains(path, string(filepath.ListSeparator)) {
-			path = path[strings.LastIndex(path, string(filepath.ListSeparator))+1:]
-		}
+		_, path = util.StringSplitPath(path)
 		p.Key = path
 	}
 	p.Key = promptString("Enter a project key; must only contain alphanumerics", p.Key)

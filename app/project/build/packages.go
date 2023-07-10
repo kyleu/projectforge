@@ -22,7 +22,7 @@ func Packages(prj *project.Project, fs filesystem.FileLoader, showAll bool, logg
 		if ((!strings.HasSuffix(f, ".go")) && (!strings.HasSuffix(f, ".html"))) || strings.HasPrefix(f, "module/") {
 			continue
 		}
-		dir, fn := util.StringSplitLast(f, '/', true)
+		dir, fn := util.StringSplitPath(f)
 		pth := path.Join(root, dir)
 		curr := ret.Get(pth)
 		if curr == nil {

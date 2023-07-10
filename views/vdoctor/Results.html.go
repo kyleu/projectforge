@@ -198,67 +198,76 @@ func StreamRenderResult(qw422016 *qt422016.Writer, x *doctor.Result, redir strin
 			qw422016.E().S(strings.TrimPrefix(s, `!`))
 //line views/vdoctor/Results.html:50
 			qw422016.N().S(`</em>]
-      <div class="mt">
+`)
+//line views/vdoctor/Results.html:51
+			if strings.HasPrefix(s, "!go ") {
+//line views/vdoctor/Results.html:51
+				qw422016.N().S(`      (or make sure <code>{$GOROOT}/bin</code> is on your <code>PATH</code>)
+`)
+//line views/vdoctor/Results.html:53
+			}
+//line views/vdoctor/Results.html:53
+			qw422016.N().S(`      <div class="mt">
         <a href="/doctor/`)
-//line views/vdoctor/Results.html:52
+//line views/vdoctor/Results.html:55
 			qw422016.E().S(x.Key)
-//line views/vdoctor/Results.html:52
+//line views/vdoctor/Results.html:55
 			qw422016.N().S(`/solve?return=`)
-//line views/vdoctor/Results.html:52
+//line views/vdoctor/Results.html:55
 			qw422016.E().S(redir)
-//line views/vdoctor/Results.html:52
+//line views/vdoctor/Results.html:55
 			qw422016.N().S(`"><button>Run Command</button></a>
         <button onclick="navigator.clipboard.writeText('`)
-//line views/vdoctor/Results.html:53
+//line views/vdoctor/Results.html:56
 			qw422016.E().S(strings.TrimPrefix(s, `!`))
-//line views/vdoctor/Results.html:53
+//line views/vdoctor/Results.html:56
 			qw422016.N().S(`');">Copy To Clipboard</button>
       </div>
 `)
-//line views/vdoctor/Results.html:55
+//line views/vdoctor/Results.html:58
 		} else {
-//line views/vdoctor/Results.html:55
+//line views/vdoctor/Results.html:58
 			qw422016.N().S(`      `)
-//line views/vdoctor/Results.html:56
+//line views/vdoctor/Results.html:59
 			qw422016.E().S(s)
-//line views/vdoctor/Results.html:56
+//line views/vdoctor/Results.html:59
 			qw422016.N().S(`
 `)
-//line views/vdoctor/Results.html:57
+//line views/vdoctor/Results.html:60
 		}
-//line views/vdoctor/Results.html:57
+//line views/vdoctor/Results.html:60
 		qw422016.N().S(`    </div>
 `)
-//line views/vdoctor/Results.html:59
+//line views/vdoctor/Results.html:62
 	}
-//line views/vdoctor/Results.html:59
+//line views/vdoctor/Results.html:62
 	qw422016.N().S(`  </div>
 `)
-//line views/vdoctor/Results.html:61
+//line views/vdoctor/Results.html:64
 }
 
-//line views/vdoctor/Results.html:61
+//line views/vdoctor/Results.html:64
 func WriteRenderResult(qq422016 qtio422016.Writer, x *doctor.Result, redir string, ps *cutil.PageState) {
-//line views/vdoctor/Results.html:61
+//line views/vdoctor/Results.html:64
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vdoctor/Results.html:61
+//line views/vdoctor/Results.html:64
 	StreamRenderResult(qw422016, x, redir, ps)
-//line views/vdoctor/Results.html:61
+//line views/vdoctor/Results.html:64
 	qt422016.ReleaseWriter(qw422016)
-//line views/vdoctor/Results.html:61
+//line views/vdoctor/Results.html:64
 }
 
-//line views/vdoctor/Results.html:61
+//line views/vdoctor/Results.html:64
 func RenderResult(x *doctor.Result, redir string, ps *cutil.PageState) string {
-//line views/vdoctor/Results.html:61
+//line views/vdoctor/Results.html:64
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vdoctor/Results.html:61
+//line views/vdoctor/Results.html:64
 	WriteRenderResult(qb422016, x, redir, ps)
-//line views/vdoctor/Results.html:61
+//line views/vdoctor/Results.html:64
 	qs422016 := string(qb422016.B)
-//line views/vdoctor/Results.html:61
+//line views/vdoctor/Results.html:64
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vdoctor/Results.html:61
+//line views/vdoctor/Results.html:64
 	return qs422016
-//line views/vdoctor/Results.html:61
+//line views/vdoctor/Results.html:64
 }
