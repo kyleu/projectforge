@@ -2,6 +2,7 @@ package checks
 
 import (
 	"context"
+	"strings"
 
 	"projectforge.dev/projectforge/app/doctor"
 	"projectforge.dev/projectforge/app/util"
@@ -15,8 +16,13 @@ var Air = &doctor.Check{
 	URL:       "https://github.com/cosmtrek/air",
 	UsedBy:    "[bin/dev.sh]",
 	Platforms: []string{"!windows"},
-	Fn:        simpleOut(".", "air", []string{"--help"}, noop),
-	Solve:     solveAir,
+	Fn: simpleOut(".", "air", []string{"--help"}, func(ctx context.Context, r *doctor.Result, out string) *doctor.Result {
+		if strings.Contains(out, "Command 'air' not found") {
+			return r.WithError(doctor.NewError("missing", "[air] is not present on your computer"))
+		}
+		return r
+	}),
+	Solve: solveAir,
 }
 
 func solveAir(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Result {

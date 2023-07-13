@@ -7,6 +7,7 @@ import (
 	"text/template"
 
 	"github.com/pkg/errors"
+	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project"
@@ -57,6 +58,7 @@ func projectFromCfg(proto *project.Project, cfg util.ValueMap) *project.Project 
 	if len(mods) == 0 {
 		mods = []string{"core"}
 	}
+	slices.Sort(mods)
 
 	i := proto.Info
 	if i == nil {
@@ -85,8 +87,10 @@ func projectFromCfg(proto *project.Project, cfg util.ValueMap) *project.Project 
 
 	return &project.Project{
 		Key:     str("key", proto.Key),
-		Version: str("version", proto.Version),
 		Name:    str("name", proto.Name),
+		Icon:    str("icon", proto.Icon),
+		Exec:    str("exec", proto.Icon),
+		Version: str("version", proto.Version),
 		Package: str("package", proto.Package),
 		Args:    str("args", proto.Args),
 		Port:    port,
@@ -120,7 +124,12 @@ func projectFromCfg(proto *project.Project, cfg util.ValueMap) *project.Project 
 			Docs:            docs,
 			ModuleDefs:      md,
 		},
-		Path: proto.Path,
+		Theme:      proto.Theme,
+		Build:      proto.Build,
+		ExportArgs: proto.ExportArgs,
+		Config:     proto.Config,
+		Path:       proto.Path,
+		Parent:     proto.Parent,
 	}
 }
 

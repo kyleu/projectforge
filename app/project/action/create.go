@@ -15,7 +15,11 @@ func onCreate(ctx context.Context, params *Params) *Result {
 		path = "."
 	}
 
-	prj := projectFromCfg(project.NewProject(params.ProjectKey, path), params.Cfg)
+	prj, _ := params.PSvc.Get(params.ProjectKey)
+	if prj == nil {
+		prj = project.NewProject(params.ProjectKey, path)
+	}
+	prj = projectFromCfg(prj, params.Cfg)
 	ret := newResult(TypeCreate, prj, params.Cfg, params.Logger)
 	if params.CLI {
 		err := cliProject(prj, params.MSvc.Keys())

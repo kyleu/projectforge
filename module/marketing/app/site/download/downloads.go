@@ -1,9 +1,9 @@
 package download
 
 import (
-	"fmt"
+	"fmt"{{{ if .Build.HasArm }}}
 
-	"github.com/samber/lo"
+	"github.com/samber/lo"{{{ end }}}
 
 	"{{{ .Package }}}/app/util"
 )

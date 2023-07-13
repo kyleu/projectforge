@@ -9,7 +9,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func up(ctx context.Context) error {
+func upF(ctx context.Context) error {
 	if err := upgradeF(ctx); err != nil {
 		return err
 	}
@@ -17,7 +17,7 @@ func up(ctx context.Context) error {
 }
 
 func upCmd() *coral.Command {
-	f := func(cmd *coral.Command, _ []string) error { return upgradeF(context.Background()) }
+	f := func(cmd *coral.Command, _ []string) error { return upF(context.Background()) }
 	ret := &coral.Command{Use: "up", Short: "Full update and upgrade of " + util.AppName, RunE: f}
 	ret.PersistentFlags().StringVar(&_version, "version", "", "version number to upgrade to")
 	ret.PersistentFlags().BoolVarP(&_force, "force", "f", false, "force upgrade, even if same or earlier")

@@ -33,7 +33,6 @@ type Project struct {
 	Config     util.ValueMap `json:"-"`
 	Path       string        `json:"-"`
 	Parent     string        `json:"-"`
-	Error      string        `json:"-"`
 }
 
 func NewProject(key string, path string) *Project {

@@ -7,7 +7,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-var Qtc = &doctor.Check{
+var QTC = &doctor.Check{
 	Key:     "qtc",
 	Section: "build",
 	Title:   "Quicktemplate",

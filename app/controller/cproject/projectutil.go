@@ -23,6 +23,7 @@ func projectFromForm(frm util.ValueMap, prj *project.Project) error {
 		return x
 	}
 	prj.Name = get("name", prj.Name)
+	prj.Icon = get("icon", prj.Icon)
 	prj.Version = get("version", prj.Version)
 	prj.Package = get("package", prj.Package)
 	if prj.Package == "" {
