@@ -8,5 +8,3 @@ cd %~dp0\..\..
 echo "building dependency SVG..."
 @ECHO ON
 gomod graph | dot -Tsvg -o tmp\deps.svg
-
-open tmp\deps.svg

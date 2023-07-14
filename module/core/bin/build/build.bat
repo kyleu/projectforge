@@ -6,4 +6,4 @@ cd %~dp0\..\..
 
 echo "Building release build, set GOOS/GOARCH to change target..."
 @ECHO ON
-make build-release
+go build -ldflags "-s -w" -trimpath -o build/release/{{{ .Exec }}} .

@@ -8,10 +8,10 @@ echo "Building release build, set GOOS/GOARCH to change target..."
 @ECHO ON
 
 cd client
-npm install
+call npm install
 cd ..
-./bin/build/client.bat
+call ./bin/build/client.bat
 
-./bin/templates.bat
+call ./bin/templates.bat
 go mod tidy
-./bin/build/build.bat
+call ./bin/build/build.bat
