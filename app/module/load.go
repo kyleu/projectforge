@@ -29,6 +29,10 @@ func (s *Service) Load(ctx context.Context, key string, url string, logger util.
 	return s.load(ctx, key, "", url, logger)
 }
 
+func (s *Service) ConfigDirectory() string {
+	return s.config.Root()
+}
+
 func (s *Service) load(ctx context.Context, key string, pth string, url string, logger util.Logger) (Modules, error) {
 	var fs filesystem.FileLoader
 	switch {

@@ -11,6 +11,7 @@
   Module *module.Module
   HTML string
   Usages project.Projects
+  Dir string
 } %}
 
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
@@ -44,6 +45,12 @@
           <th>Sourcecode</th>
           <td><a href="{%s mod.Sourcecode %}" target="_blank">{%s mod.Sourcecode %}</a></td>
         </tr>
+        {%- if p.Dir != "" -%}
+        <tr>
+          <th>File Source</th>
+          <td>{%s p.Dir %}</td>
+        </tr>
+        {%- endif -%}
       </tbody>
     </table>
   </div>

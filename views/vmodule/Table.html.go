@@ -27,20 +27,33 @@ var (
 )
 
 //line views/vmodule/Table.html:9
-func StreamTable(qw422016 *qt422016.Writer, mods module.Modules, full bool, as *app.State, ps *cutil.PageState) {
+func StreamTable(qw422016 *qt422016.Writer, mods module.Modules, full bool, dir string, as *app.State, ps *cutil.PageState) {
 //line views/vmodule/Table.html:9
 	qw422016.N().S(`
   <div class="card">
-    <h3><a href="/m">`)
+`)
 //line views/vmodule/Table.html:11
+	if dir != "" {
+//line views/vmodule/Table.html:11
+		qw422016.N().S(`    <div class="right"><em>`)
+//line views/vmodule/Table.html:12
+		qw422016.E().S(dir)
+//line views/vmodule/Table.html:12
+		qw422016.N().S(`</em></div>
+`)
+//line views/vmodule/Table.html:13
+	}
+//line views/vmodule/Table.html:13
+	qw422016.N().S(`    <h3><a href="/m">`)
+//line views/vmodule/Table.html:14
 	qw422016.E().S(util.StringPlural(len(mods), "Available Module"))
-//line views/vmodule/Table.html:11
+//line views/vmodule/Table.html:14
 	qw422016.N().S(`</a></h3>
     <table class="mt min-200">
 `)
-//line views/vmodule/Table.html:13
+//line views/vmodule/Table.html:16
 	if full {
-//line views/vmodule/Table.html:13
+//line views/vmodule/Table.html:16
 		qw422016.N().S(`      <thead>
         <tr>
           <th class="shrink">Title</th>
@@ -48,67 +61,67 @@ func StreamTable(qw422016 *qt422016.Writer, mods module.Modules, full bool, as *
         </tr>
       </thead>
 `)
-//line views/vmodule/Table.html:20
+//line views/vmodule/Table.html:23
 	}
-//line views/vmodule/Table.html:20
+//line views/vmodule/Table.html:23
 	qw422016.N().S(`      <tbody>
 `)
-//line views/vmodule/Table.html:22
+//line views/vmodule/Table.html:25
 	for _, mod := range mods {
-//line views/vmodule/Table.html:22
+//line views/vmodule/Table.html:25
 		qw422016.N().S(`        <tr>
           <td class="shrink"><a href="/m/`)
-//line views/vmodule/Table.html:24
+//line views/vmodule/Table.html:27
 		qw422016.E().S(mod.Key)
-//line views/vmodule/Table.html:24
+//line views/vmodule/Table.html:27
 		qw422016.N().S(`">`)
-//line views/vmodule/Table.html:24
+//line views/vmodule/Table.html:27
 		components.StreamSVGRef(qw422016, mod.IconSafe(), 16, 16, "icon", ps)
-//line views/vmodule/Table.html:24
+//line views/vmodule/Table.html:27
 		qw422016.N().S(` `)
-//line views/vmodule/Table.html:24
+//line views/vmodule/Table.html:27
 		qw422016.E().S(mod.Title())
-//line views/vmodule/Table.html:24
+//line views/vmodule/Table.html:27
 		qw422016.N().S(`</a></td>
           <td>`)
-//line views/vmodule/Table.html:25
+//line views/vmodule/Table.html:28
 		qw422016.E().S(mod.Description)
-//line views/vmodule/Table.html:25
+//line views/vmodule/Table.html:28
 		qw422016.N().S(`</td>
         </tr>
 `)
-//line views/vmodule/Table.html:27
+//line views/vmodule/Table.html:30
 	}
-//line views/vmodule/Table.html:27
+//line views/vmodule/Table.html:30
 	qw422016.N().S(`      </tbody>
     </table>
   </div>
 `)
-//line views/vmodule/Table.html:31
+//line views/vmodule/Table.html:34
 }
 
-//line views/vmodule/Table.html:31
-func WriteTable(qq422016 qtio422016.Writer, mods module.Modules, full bool, as *app.State, ps *cutil.PageState) {
-//line views/vmodule/Table.html:31
+//line views/vmodule/Table.html:34
+func WriteTable(qq422016 qtio422016.Writer, mods module.Modules, full bool, dir string, as *app.State, ps *cutil.PageState) {
+//line views/vmodule/Table.html:34
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vmodule/Table.html:31
-	StreamTable(qw422016, mods, full, as, ps)
-//line views/vmodule/Table.html:31
+//line views/vmodule/Table.html:34
+	StreamTable(qw422016, mods, full, dir, as, ps)
+//line views/vmodule/Table.html:34
 	qt422016.ReleaseWriter(qw422016)
-//line views/vmodule/Table.html:31
+//line views/vmodule/Table.html:34
 }
 
-//line views/vmodule/Table.html:31
-func Table(mods module.Modules, full bool, as *app.State, ps *cutil.PageState) string {
-//line views/vmodule/Table.html:31
+//line views/vmodule/Table.html:34
+func Table(mods module.Modules, full bool, dir string, as *app.State, ps *cutil.PageState) string {
+//line views/vmodule/Table.html:34
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vmodule/Table.html:31
-	WriteTable(qb422016, mods, full, as, ps)
-//line views/vmodule/Table.html:31
+//line views/vmodule/Table.html:34
+	WriteTable(qb422016, mods, full, dir, as, ps)
+//line views/vmodule/Table.html:34
 	qs422016 := string(qb422016.B)
-//line views/vmodule/Table.html:31
+//line views/vmodule/Table.html:34
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vmodule/Table.html:31
+//line views/vmodule/Table.html:34
 	return qs422016
-//line views/vmodule/Table.html:31
+//line views/vmodule/Table.html:34
 }

@@ -20,7 +20,8 @@ func ModuleList(rc *fasthttp.RequestCtx) {
 		mods := as.Services.Modules.Modules()
 		ps.Title = "Module Listing"
 		ps.Data = mods
-		return controller.Render(rc, as, &vmodule.List{Modules: mods}, ps, "modules")
+		dir := as.Services.Modules.ConfigDirectory()
+		return controller.Render(rc, as, &vmodule.List{Modules: mods, Dir: dir}, ps, "modules")
 	})
 }
 
@@ -46,9 +47,10 @@ func ModuleDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
+		dir := mod.Files.Root()
 		ps.Data = mod
 		ps.Title = mod.Title()
-		return controller.Render(rc, as, &vmodule.Detail{Module: mod, HTML: html, Usages: usages}, ps, "modules", mod.Key)
+		return controller.Render(rc, as, &vmodule.Detail{Module: mod, HTML: html, Usages: usages, Dir: dir}, ps, "modules", mod.Key)
 	})
 }
 

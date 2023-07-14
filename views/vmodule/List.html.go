@@ -29,43 +29,44 @@ var (
 type List struct {
 	layout.Basic
 	Modules module.Modules
+	Dir     string
 }
 
-//line views/vmodule/List.html:13
+//line views/vmodule/List.html:14
 func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vmodule/List.html:13
+//line views/vmodule/List.html:14
 	qw422016.N().S(`
   `)
-//line views/vmodule/List.html:14
-	StreamTable(qw422016, p.Modules, true, as, ps)
-//line views/vmodule/List.html:14
+//line views/vmodule/List.html:15
+	StreamTable(qw422016, p.Modules, true, p.Dir, as, ps)
+//line views/vmodule/List.html:15
 	qw422016.N().S(`
 `)
-//line views/vmodule/List.html:15
+//line views/vmodule/List.html:16
 }
 
-//line views/vmodule/List.html:15
+//line views/vmodule/List.html:16
 func (p *List) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vmodule/List.html:15
+//line views/vmodule/List.html:16
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vmodule/List.html:15
+//line views/vmodule/List.html:16
 	p.StreamBody(qw422016, as, ps)
-//line views/vmodule/List.html:15
+//line views/vmodule/List.html:16
 	qt422016.ReleaseWriter(qw422016)
-//line views/vmodule/List.html:15
+//line views/vmodule/List.html:16
 }
 
-//line views/vmodule/List.html:15
+//line views/vmodule/List.html:16
 func (p *List) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vmodule/List.html:15
+//line views/vmodule/List.html:16
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vmodule/List.html:15
+//line views/vmodule/List.html:16
 	p.WriteBody(qb422016, as, ps)
-//line views/vmodule/List.html:15
+//line views/vmodule/List.html:16
 	qs422016 := string(qb422016.B)
-//line views/vmodule/List.html:15
+//line views/vmodule/List.html:16
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vmodule/List.html:15
+//line views/vmodule/List.html:16
 	return qs422016
-//line views/vmodule/List.html:15
+//line views/vmodule/List.html:16
 }

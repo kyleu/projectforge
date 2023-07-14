@@ -8,8 +8,9 @@
 {% code type List struct {
   layout.Basic
   Modules module.Modules
+  Dir string
 } %}
 
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
-  {%= Table(p.Modules, true, as, ps) %}
+  {%= Table(p.Modules, true, p.Dir, as, ps) %}
 {% endfunc %}
