@@ -2,7 +2,7 @@
   "key": "projectforge",
   "name": "Project Forge",
   "icon": "projectforge",
-  "version": "0.10.23",
+  "version": "0.10.24",
   "package": "projectforge.dev/projectforge",
   "port": 40000,
   "modules": [
