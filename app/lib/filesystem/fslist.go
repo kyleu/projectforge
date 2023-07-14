@@ -38,7 +38,7 @@ func (f *FileSystem) ListExtension(path string, ext string, ign []string, trimEx
 	lo.ForEach(matches, func(j string, _ int) {
 		if !checkIgnore(ignore, j) {
 			idx := strings.LastIndex(j, "/")
-			if idx == 0 {
+			if idx == -1 {
 				idx = strings.LastIndex(j, "\\")
 			}
 			if idx > 0 {
