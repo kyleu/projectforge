@@ -70,7 +70,7 @@ func (t *Theme) ToGo() string {
 	addColors(t.Dark)
 	add(1, "},")
 	add(0, "},")
-	return strings.Join(ret, "\n")
+	return strings.Join(ret, util.StringDefaultLinebreak)
 }
 
 type Themes []*Theme
