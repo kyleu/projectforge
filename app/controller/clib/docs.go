@@ -20,9 +20,8 @@ func Docs(rc *fasthttp.RequestCtx) {
 			return "", errors.New("invalid path")
 		}
 
-		split := util.StringSplitAndTrim(pth, "/")
 		bc := []string{"docs"}
-		bc = append(bc, split...)
+		bc = append(bc, util.StringSplitAndTrim(pth, "/")...)
 
 		title, x, err := doc.HTML("doc:"+pth, pth+".md", func(s string) (string, string, error) {
 			return cutil.FormatCleanMarkup(s, "file")

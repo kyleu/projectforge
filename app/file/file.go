@@ -26,7 +26,7 @@ func NewFile(path string, mode os.FileMode, b []byte, addHeader bool, logger uti
 }
 
 func (f *File) FullPath() string {
-	return filepath.Join(f.Path...) + "/" + f.Name
+	return filepath.Join(filepath.Join(f.Path...), f.Name)
 }
 
 func (f *File) Ext() string {

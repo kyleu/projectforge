@@ -5,12 +5,6 @@ rem Builds the app (or just use make build)
 
 cd %~dp0\..\..
 
-os=${1:-darwin}
-arch=${2:-amd64}
-fn=${3:-projectforge}
-
-echo "Building [$os $arch]..."
+echo "Building release build, set GOOS/GOARCH to change target..."
 @ECHO ON
-env GOOS=$os GOARCH=$arch make build-release
-md build\$os\$arch
-move "build\release\$fn" "build\$os\$arch\$fn"
+make build-release

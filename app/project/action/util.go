@@ -18,8 +18,7 @@ func projectFromCfg(proto *project.Project, cfg util.ValueMap) *project.Project 
 	clean := func(s string) string {
 		if strings.Contains(s, "\\") {
 			s = util.StringSplitLastOnly(s, '\\', true)
-		}
-		if strings.Contains(s, "/") {
+		} else if strings.Contains(s, "/") {
 			s = util.StringSplitLastOnly(s, '/', true)
 		}
 		return ""

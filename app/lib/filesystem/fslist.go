@@ -39,7 +39,10 @@ func (f *FileSystem) ListExtension(path string, ext string, ign []string, trimEx
 		if !checkIgnore(ignore, j) {
 			idx := strings.LastIndex(j, "/")
 			if idx > 0 {
-				j = j[idx+1:]
+				idx = strings.LastIndex(j, "\\")
+				if idx > 0 {
+					j = j[idx+1:]
+				}
 			}
 			if trimExtension {
 				j = strings.TrimSuffix(j, "."+ext)
@@ -118,7 +121,7 @@ func checkIgnore(ignore []string, fp string) bool {
 		switch {
 		case strings.HasPrefix(i, keyPrefix):
 			i = strings.TrimPrefix(i, keyPrefix)
-			if strings.HasSuffix(i, "/") && fp == strings.TrimSuffix(i, "/") {
+			if fp == strings.TrimSuffix(i, "/") || fp == strings.TrimSuffix(i, "\\") {
 				return true
 			}
 			if strings.HasPrefix(fp, i) {
