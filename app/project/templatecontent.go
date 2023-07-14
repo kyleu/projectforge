@@ -17,16 +17,16 @@ func (t *TemplateContext) CIContent() string {
 	case "all":
 		return "on: push"
 	case "tags":
-		return "on:\n  push:\n    tags:\n      - '*'"
+		return "on:" + t.Linebreak + "  push:" + t.Linebreak + "    tags:" + t.Linebreak + "      - '*'"
 	case "versions":
-		return "on:\n  push:\n    tags:\n      - 'v*'"
+		return "on:" + t.Linebreak + "  push:" + t.Linebreak + "    tags:" + t.Linebreak + "      - 'v*'"
 	default:
-		return "on:\n  push:\n    tags:\n      - 'DISABLED_v*'"
+		return "on:" + t.Linebreak + "  push:" + t.Linebreak + "    tags:" + t.Linebreak + "      - 'DISABLED_v*'"
 	}
 }
 
 func (t *TemplateContext) ConfigVarsContent() string {
-	ret, err := util.MarkdownTable([]string{"Name", "Type", "Description"}, t.ConfigVars.Array(t.Key))
+	ret, err := util.MarkdownTable([]string{"Name", "Type", "Description"}, t.ConfigVars.Array(t.Key), t.Linebreak)
 	if err != nil {
 		return "ERROR: " + err.Error()
 	}
@@ -41,7 +41,7 @@ func (t *TemplateContext) ExtraFilesContent() string {
 	lo.ForEach(t.Info.ExtraFiles, func(ef string, _ int) {
 		ret = append(ret, "      - "+ef)
 	})
-	return strings.Join(ret, "\n")
+	return strings.Join(ret, t.Linebreak)
 }
 
 func (t *TemplateContext) ExtraFilesDocker() string {
@@ -85,8 +85,18 @@ func (t *TemplateContext) IgnoredQuoted() string {
 }
 
 func (t *TemplateContext) ExplainPrefix() string {
-	if lo.Contains(t.Modules, "sqlite") && !lo.Contains(t.Modules, "postgres") {
+	if t.HasModulesAny("sqlite", "postgres") {
 		return "explain query plan "
 	}
 	return "explain "
+}
+
+func (t *TemplateContext) HasModulesAny(keys ...string) bool {
+	return lo.ContainsBy(keys, func(key string) bool {
+		return lo.Contains(t.Modules, key)
+	})
+}
+
+func (t *TemplateContext) HasModule(key string) bool {
+	return t.HasModulesAny(key)
 }

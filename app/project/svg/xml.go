@@ -2,6 +2,7 @@ package svg
 
 import (
 	"encoding/xml"
+	"projectforge.dev/projectforge/app/util"
 	"strings"
 )
 
@@ -35,7 +36,7 @@ func cleanMarkup(orig string, color string) (string, string) {
 		if endIdx == -1 {
 			break
 		}
-		orig = strings.TrimPrefix(orig[:startIdx]+orig[endIdx+3:], "\n")
+		orig = strings.TrimPrefix(orig[:startIdx]+orig[endIdx+3:], util.StringDetectLinebreak(orig))
 	}
 	origColored := orig
 	if color != "" {

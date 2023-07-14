@@ -15,7 +15,7 @@ import (
 
 const updateKey = "Update"
 
-func GRPC(m *model.Model, args *model.Args, addHeader bool) (file.Files, error) {
+func GRPC(m *model.Model, args *model.Args, addHeader bool, linebreak string) (file.Files, error) {
 	fileArgs, err := GetGRPCFileArgs(m, args)
 	if err != nil {
 		return nil, errors.Wrap(err, "invalid arguments")
@@ -23,7 +23,7 @@ func GRPC(m *model.Model, args *model.Args, addHeader bool) (file.Files, error) 
 
 	var ret file.Files
 	for _, fa := range fileArgs {
-		g, err := grpcFile(m, args, fa, addHeader)
+		g, err := grpcFile(m, args, fa, addHeader, linebreak)
 		if err != nil {
 			return nil, errors.Wrap(err, "")
 		}
@@ -73,7 +73,7 @@ func GetGRPCFileArgs(m *model.Model, args *model.Args) ([]*FileArgs, error) {
 	return ret, nil
 }
 
-func grpcFile(m *model.Model, args *model.Args, ga *FileArgs, addHeader bool) (*file.File, error) {
+func grpcFile(m *model.Model, args *model.Args, ga *FileArgs, addHeader bool, linebreak string) (*file.File, error) {
 	fn := m.Package
 	if ga.API != "*" {
 		fn += "by" + ga.API
@@ -110,5 +110,5 @@ func grpcFile(m *model.Model, args *model.Args, ga *FileArgs, addHeader bool) (*
 		}
 		g.AddBlocks(grpcFromRequest(m, grpcArgs), b)
 	}
-	return g.Render(addHeader)
+	return g.Render(addHeader, linebreak)
 }

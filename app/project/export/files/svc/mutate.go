@@ -16,7 +16,7 @@ import (
 
 const serviceAssignmentToken = ":="
 
-func ServiceMutate(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
+func ServiceMutate(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "servicemutate")
 	lo.ForEach(helper.ImportsForTypes("go", "", m.PKs().Types()...), func(imp *golang.Import, _ int) {
 		g.AddImport(imp)
@@ -62,7 +62,7 @@ func ServiceMutate(m *model.Model, args *model.Args, addHeader bool) (*file.File
 		}
 		g.AddBlocks(del, serviceDeleteWhere(m))
 	}
-	return g.Render(addHeader)
+	return g.Render(addHeader, linebreak)
 }
 
 func serviceCreate(g *golang.File, m *model.Model, audit bool) (*golang.Block, error) {

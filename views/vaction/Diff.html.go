@@ -236,7 +236,7 @@ func renderDiffs(prjKey string, act action.Type, diffs diff.Diffs, cfg util.Valu
 //line views/vaction/Diff.html:94
 func streamrenderPatch(qw422016 *qt422016.Writer, patch string, as *app.State, ps *cutil.PageState) {
 //line views/vaction/Diff.html:95
-	lines := strings.Split(patch, "\n")
+	lines := util.StringSplitLines(patch)
 
 //line views/vaction/Diff.html:95
 	qw422016.N().S(`<pre>`)

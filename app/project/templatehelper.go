@@ -32,12 +32,8 @@ func (t *TemplateContext) SourceTrimmed() string {
 	return strings.TrimPrefix(strings.TrimPrefix(t.Info.Sourcecode, "http://"), "https://")
 }
 
-func (t *TemplateContext) HasModule(m string) bool {
-	return lo.Contains(t.Modules, m)
-}
-
 func (t *TemplateContext) HasDatabaseModule() bool {
-	return t.HasModule("migration") || t.HasModule("readonlydb")
+	return t.HasModulesAny("migration", "readonlydb")
 }
 
 func (t *TemplateContext) ModuleMarkdown() string {
@@ -45,7 +41,7 @@ func (t *TemplateContext) ModuleMarkdown() string {
 	lo.ForEach(t.Modules, func(m string, _ int) {
 		ret = append(ret, fmt.Sprintf("- [%s](./doc/module/%s.md)", m, m))
 	})
-	return strings.Join(ret, "\n")
+	return strings.Join(ret, t.Linebreak)
 }
 
 func (t *TemplateContext) PortIncremented(i int) int {
@@ -53,12 +49,12 @@ func (t *TemplateContext) PortIncremented(i int) int {
 }
 
 func (t *TemplateContext) BuildAndroid() bool {
-	ret := t.HasModule("android") && t.Build.Android
+	ret := t.HasModulesAny("android") && t.Build.Android
 	return ret
 }
 
 func (t *TemplateContext) BuildIOS() bool {
-	return t.HasModule("ios") && t.Build.IOS
+	return t.HasModulesAny("ios") && t.Build.IOS
 }
 
 func (t *TemplateContext) BuildMobile() bool {
@@ -114,15 +110,15 @@ func (t *TemplateContext) GoBinarySafe() string {
 }
 
 func (t *TemplateContext) Placeholder(idx int) string {
-	if lo.Contains(t.Modules, "postgres") || lo.Contains(t.Modules, "sqlite") {
+	if t.HasModulesAny("postgres", "sqlite") {
 		return fmt.Sprintf("$%d", idx)
 	}
-	if lo.Contains(t.Modules, "sqlserver") {
+	if t.HasModulesAny("sqlserver") {
 		return fmt.Sprintf("@p%d", idx)
 	}
 	return "?"
 }
 
 func (t *TemplateContext) SQLServer() bool {
-	return !lo.Contains(t.Modules, "postgres") && lo.Contains(t.Modules, "sqlserver")
+	return !t.HasModulesAny("postgres") && t.HasModulesAny("sqlserver")
 }

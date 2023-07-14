@@ -92,7 +92,7 @@
 {% endstripspace %}{% endfunc %}
 
 {% func renderPatch(patch string, as *app.State, ps *cutil.PageState) %}{% stripspace %}
-  {% code lines := strings.Split(patch, "\n") %}
+  {% code lines := util.StringSplitLines(patch) %}
   <pre>
     {% for _, line := range lines %}
       {% if len(line) > 0 %}

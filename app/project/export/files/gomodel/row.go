@@ -16,7 +16,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func Row(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
+func Row(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "row")
 	lo.ForEach(helper.ImportsForTypes("row", args.Database(), m.Columns.Types()...), func(imp *golang.Import, _ int) {
 		g.AddImport(imp)
@@ -53,7 +53,7 @@ func Row(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
 		return nil, err
 	}
 	g.AddBlocks(mrm, modelRowArray(), modelRowArrayTransformer(m), defaultWC(m, args.Database()))
-	return g.Render(addHeader)
+	return g.Render(addHeader, linebreak)
 }
 
 func modelTableCols(m *model.Model) (*golang.Block, error) {

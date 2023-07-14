@@ -17,7 +17,7 @@ import (
 
 const commonLine = "  %sBy%s %s.%s"
 
-func detail(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
+func detail(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "Detail.html")
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpLayout)
 	g.AddImport(helper.AppImport("app/" + m.PackageWithGroup("")))
@@ -44,7 +44,7 @@ func detail(m *model.Model, args *model.Args, addHeader bool) (*file.File, error
 		return nil, err
 	}
 	g.AddBlocks(exportViewDetailClass(m, args.Models, args.Audit(m), g), vdb)
-	return g.Render(addHeader)
+	return g.Render(addHeader, linebreak)
 }
 
 func exportViewDetailClass(m *model.Model, models model.Models, audit bool, g *golang.Template) *golang.Block {

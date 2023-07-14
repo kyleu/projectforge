@@ -13,7 +13,7 @@ import (
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func edit(m *model.Model, p *project.Project, args *model.Args, addHeader bool) (*file.File, error) {
+func edit(m *model.Model, p *project.Project, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "Edit.html")
 	lo.ForEach(helper.ImportsForTypes("webedit", "", m.Columns.Types()...), func(imp *golang.Import, _ int) {
 		g.AddImport(imp)
@@ -25,7 +25,7 @@ func edit(m *model.Model, p *project.Project, args *model.Args, addHeader bool) 
 		return nil, err
 	}
 	g.AddBlocks(exportViewEditClass(m), veb)
-	return g.Render(addHeader)
+	return g.Render(addHeader, linebreak)
 }
 
 func exportViewEditClass(m *model.Model) *golang.Block {

@@ -15,6 +15,7 @@ import (
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/lib/theme"
+	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views"
 	"projectforge.dev/projectforge/views/vtheme"
 )
@@ -69,7 +70,7 @@ func ThemePalette(rc *fasthttp.RequestCtx) {
 		if string(rc.URI().QueryArgs().Peek("t")) == "go" {
 			ps.Data = strings.Join(lo.Map(x, func(t *theme.Theme, _ int) string {
 				return t.ToGo()
-			}), "\n")
+			}), util.StringDefaultLinebreak)
 			return controller.Render(rc, as, &views.Debug{}, ps, "Themes")
 		}
 		return controller.Render(rc, as, &vtheme.Add{Palette: pal, Themes: x}, ps, "Themes")

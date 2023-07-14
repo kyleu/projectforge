@@ -107,8 +107,8 @@ func (s *Service) Keys() []string {
 
 func (s *Service) Modules() Modules {
 	return lo.Map(s.Keys(), func(key string, _ int) *Module {
-		p, _ := s.Get(key)
-		return p
+		m, _ := s.Get(key)
+		return m
 	})
 }
 
@@ -138,4 +138,16 @@ func (s *Service) Search(ctx context.Context, q string, logger util.Logger) (res
 		}
 		return nil, false
 	}), nil
+}
+
+func (s *Service) DetectLinebreak(logger util.Logger) string {
+	m, err := s.Get("core")
+	if err != nil {
+		return util.StringDefaultLinebreak
+	}
+	f, err := s.GetFiles(Modules{m}, true, logger)
+	if err != nil || len(f) == 0 {
+		return util.StringDefaultLinebreak
+	}
+	return util.StringDetectLinebreak(f[0].Content)
 }

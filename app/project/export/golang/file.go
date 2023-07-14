@@ -30,10 +30,10 @@ func (f *File) AddBlocks(b ...*Block) {
 	f.Blocks = append(f.Blocks, b...)
 }
 
-func (f *File) Render(addHeader bool) (*file.File, error) {
+func (f *File) Render(addHeader bool, linebreak string) (*file.File, error) {
 	var content []string
 	add := func(s string, args ...any) {
-		content = append(content, fmt.Sprintf(s+"\n", args...))
+		content = append(content, fmt.Sprintf(s+linebreak, args...))
 	}
 
 	if addHeader {
@@ -42,16 +42,16 @@ func (f *File) Render(addHeader bool) (*file.File, error) {
 	add("package %s", f.Package)
 
 	if len(f.Imports) > 0 {
-		add(f.Imports.Render())
+		add(f.Imports.Render(linebreak))
 	}
 
 	lo.ForEach(f.Blocks, func(b *Block, _ int) {
-		add(b.Render())
+		add(b.Render(linebreak))
 	})
 
 	n := f.Name
 	if !strings.HasSuffix(f.Name, ".go") {
 		n += ".go"
 	}
-	return &file.File{Path: f.Path, Name: n, Mode: filesystem.DefaultMode, Content: strings.Join(content, "\n")}, nil
+	return &file.File{Path: f.Path, Name: n, Mode: filesystem.DefaultMode, Content: strings.Join(content, linebreak)}, nil
 }

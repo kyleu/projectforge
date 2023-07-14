@@ -2,7 +2,6 @@ package cmodule
 
 import (
 	"fmt"
-	"strings"
 	"unicode/utf8"
 
 	"github.com/samber/lo"
@@ -70,7 +69,7 @@ func newModuleResult(q string, modKey string, path string, content []byte) *resu
 	}
 	_, fn := util.StringSplitPath(path)
 
-	lines := strings.Split(string(content), "\n")
+	lines := util.StringSplitLines(string(content))
 
 	matches := lo.FlatMap(lines, func(line string, idx int) []*result.Match {
 		return result.MatchesFor(fmt.Sprint(idx+1), line, q)

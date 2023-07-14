@@ -46,7 +46,7 @@ func NewImport(t ImportType, v string) *Import {
 
 type Imports []*Import
 
-func (i Imports) Render() string {
+func (i Imports) Render(linebreak string) string {
 	if len(i) == 1 {
 		return fmt.Sprintf("import %s", i[0].Render())
 	}
@@ -71,10 +71,10 @@ func (i Imports) Render() string {
 	add(app, len(external) > 0 || len(internal) > 0)
 
 	ret = append(ret, ")")
-	return strings.Join(ret, "\n")
+	return strings.Join(ret, linebreak)
 }
 
-func (i Imports) RenderHTML() string {
+func (i Imports) RenderHTML(linebreak string) string {
 	if len(i) == 1 {
 		return fmt.Sprintf("{%% import %s %%}", i[0].Render())
 	}
@@ -99,7 +99,7 @@ func (i Imports) RenderHTML() string {
 	add(app, len(external) > 0 || len(internal) > 0)
 
 	ret = append(ret, ") %%}")
-	return strings.Join(ret, "\n")
+	return strings.Join(ret, linebreak)
 }
 
 func (i Imports) ByType(t ImportType) []string {

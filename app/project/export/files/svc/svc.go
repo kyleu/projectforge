@@ -14,29 +14,29 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func ServiceAll(m *model.Model, args *model.Args, addHeader bool) (file.Files, error) {
-	x, err := Service(m, args, addHeader)
+func ServiceAll(m *model.Model, args *model.Args, addHeader bool, linebreak string) (file.Files, error) {
+	x, err := Service(m, args, addHeader, linebreak)
 	if err != nil {
 		return nil, err
 	}
-	g, err := ServiceGet(m, args, addHeader)
+	g, err := ServiceGet(m, args, addHeader, linebreak)
 	if err != nil {
 		return nil, err
 	}
-	mt, err := ServiceMutate(m, args, addHeader)
+	mt, err := ServiceMutate(m, args, addHeader, linebreak)
 	if err != nil {
 		return nil, err
 	}
 	ret := file.Files{x, g, mt}
 	if m.IsRevision() {
-		r, err := ServiceRevision(m, args, addHeader)
+		r, err := ServiceRevision(m, args, addHeader, linebreak)
 		if err != nil {
 			return nil, err
 		}
 		ret = append(ret, r)
 	}
 	if m.IsHistory() {
-		r, err := ServiceHistory(m, args, addHeader)
+		r, err := ServiceHistory(m, args, addHeader, linebreak)
 		if err != nil {
 			return nil, err
 		}
@@ -45,7 +45,7 @@ func ServiceAll(m *model.Model, args *model.Args, addHeader bool) (file.Files, e
 	return ret, nil
 }
 
-func Service(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
+func Service(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "service")
 	g.AddImport(helper.ImpFilter, helper.ImpDatabase)
 
@@ -56,7 +56,7 @@ func Service(m *model.Model, args *model.Args, addHeader bool) (*file.File, erro
 	}
 
 	g.AddBlocks(serviceStruct(isRO, isAudit), serviceNew(m, isRO, isAudit), serviceDefaultFilters(m))
-	return g.Render(addHeader)
+	return g.Render(addHeader, linebreak)
 }
 
 func serviceStruct(isRO bool, isAudit bool) *golang.Block {

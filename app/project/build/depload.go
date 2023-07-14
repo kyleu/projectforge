@@ -18,7 +18,7 @@ func LoadDepsEasyMode(key string, fs filesystem.FileLoader) (Dependencies, error
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to read [go.mod] for project [%s]", key)
 	}
-	lines := strings.Split(string(bytes), "\n")
+	lines := util.StringSplitLines(string(bytes))
 	ret := make(Dependencies, 0, len(lines))
 	for _, line := range lines {
 		if !(strings.HasPrefix(line, "\t") && strings.Contains(line, " v")) {
@@ -57,7 +57,7 @@ func LoadDeps(
 		return nil, err
 	}
 
-	lines := strings.Split(out, "\n")
+	lines := util.StringSplitLines(out)
 	ret := make(Dependencies, 0, len(lines))
 	for _, l := range lines {
 		if strings.HasPrefix(l, "go list -m:") {
@@ -95,7 +95,7 @@ func loadReferences(ctx context.Context, path string, deps Dependencies, logger 
 		return err
 	}
 
-	for _, line := range strings.Split(out, "\n") {
+	for _, line := range util.StringSplitLines(out) {
 		src, dest := util.StringSplit(line, ' ', true)
 		if src == "" || dest == "" {
 			continue

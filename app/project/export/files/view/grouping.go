@@ -9,11 +9,11 @@ import (
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func Grouping(m *model.Model, grp *model.Column, addHeader bool) (*file.File, error) {
+func Grouping(m *model.Model, grp *model.Column, addHeader bool, linebreak string) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"views", "v" + m.Package}, fmt.Sprintf("%s.html", grp.ProperPlural()))
 	g.AddImport(helper.ImpApp, helper.ImpAppUtil, helper.ImpComponents, helper.ImpCutil, helper.ImpLayout)
 	g.AddBlocks(exportViewGroupedClass(grp), exportViewGroupedBody(m, grp))
-	return g.Render(addHeader)
+	return g.Render(addHeader, linebreak)
 }
 
 func exportViewGroupedClass(grp *model.Column) *golang.Block {

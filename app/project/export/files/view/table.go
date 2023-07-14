@@ -15,7 +15,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func table(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
+func table(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "Table.html")
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpFilter)
 	g.AddImport(helper.AppImport("app/" + m.PackageWithGroup("")))
@@ -27,7 +27,7 @@ func table(m *model.Model, args *model.Args, addHeader bool) (*file.File, error)
 		return nil, err
 	}
 	g.AddBlocks(vtf)
-	return g.Render(addHeader)
+	return g.Render(addHeader, linebreak)
 }
 
 func exportViewTableFunc(m *model.Model, models model.Models, enums enum.Enums, g *golang.Template) (*golang.Block, error) {

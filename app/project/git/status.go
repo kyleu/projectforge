@@ -50,7 +50,7 @@ func gitStatus(ctx context.Context, path string, logger util.Logger) (int, int, 
 		return 0, 0, nil, err
 	}
 
-	lines := util.StringSplitAndTrim(out, "\n")
+	lines := util.StringSplitAndTrim(out, util.StringDetectLinebreak(out))
 
 	commitsAhead, commitsBehind := 0, 0
 	dirty := make([]string, 0, len(lines))

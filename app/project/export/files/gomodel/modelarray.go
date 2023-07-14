@@ -14,7 +14,7 @@ import (
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func Models(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
+func Models(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	name := strings.ToLower(m.CamelPlural())
 	if name == strings.ToLower(m.Camel()) {
 		name += "_array"
@@ -43,7 +43,7 @@ func Models(m *model.Model, args *model.Args, addHeader bool) (*file.File, error
 		}
 	})
 	g.AddBlocks(modelArrayTitleStrings(m), modelArrayClone(m))
-	return g.Render(addHeader)
+	return g.Render(addHeader, linebreak)
 }
 
 func modelArray(m *model.Model) *golang.Block {

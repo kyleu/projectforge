@@ -27,18 +27,19 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 		return nil, nil, errors.Wrapf(err, "unable to get files from [%d] modules", len(pm.Mods))
 	}
 
-	if pm.Mods.Get("export") != nil {
+	if pm.Mods.Get("export") != nil && len(srcFiles) > 0 {
+		linebreak := util.StringDetectLinebreak(srcFiles[0].Content)
 		args, errX := pm.Prj.ModuleArgExport(pm.PSvc, pm.Logger)
 		if errX != nil {
 			return nil, nil, errors.Wrap(errX, "export module arguments are invalid")
 		}
 		args.Modules = pm.Mods.Keys()
-		files, e := pm.ESvc.Files(pm.Prj, args, true)
+		files, e := pm.ESvc.Files(pm.Prj, args, true, linebreak)
 		if e != nil {
 			return nil, nil, errors.Wrap(e, "unable to export code")
 		}
 		srcFiles = append(srcFiles, files...)
-		e = pm.ESvc.Inject(args, srcFiles)
+		e = pm.ESvc.Inject(args, srcFiles, linebreak)
 		if e != nil {
 			return nil, nil, errors.Wrap(e, "unable to inject code")
 		}
@@ -53,7 +54,8 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 
 	pm.Prj.ExportArgs, _ = pm.Prj.ModuleArgExport(pm.PSvc, pm.Logger)
 
-	tCtx := pm.Prj.ToTemplateContext(configVars, portOffsets)
+	lb := util.StringDetectLinebreak(string(pm.File))
+	tCtx := pm.Prj.ToTemplateContext(configVars, portOffsets, lb)
 
 	for _, f := range srcFiles {
 		origPath := f.FullPath()

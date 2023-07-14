@@ -27,7 +27,7 @@ func Deployments(curr string, fs filesystem.FileLoader, fix bool, path string, d
 		}
 
 		hit := util.ValueMap{}
-		lines := strings.Split(string(b), "\n")
+		lines := util.StringSplitLines(string(b))
 
 		df := &diff.Diff{Path: dep, Status: diff.StatusIdentical}
 

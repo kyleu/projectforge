@@ -56,7 +56,7 @@ func (e *customEncoder) EncodeEntry(entry zapcore.Entry, fields []zapcore.Field)
 	msg := entry.Message
 	var msgLines []string
 	if strings.Contains(msg, "\n") {
-		msgLines = strings.Split(msg, "\n")
+		msgLines = util.StringSplitLines(msg)
 		msg = msgLines[0]
 		msgLines = msgLines[1:]
 	}
@@ -82,7 +82,7 @@ func (e *customEncoder) EncodeEntry(entry zapcore.Entry, fields []zapcore.Field)
 	addLine("  " + caller)
 
 	if entry.Stack != "" {
-		st := strings.Split(entry.Stack, "\n")
+		st := util.StringSplitLines(entry.Stack)
 		lo.ForEach(st, func(stl string, _ int) {
 			if strings.Contains(stl, util.AppKey) {
 				stl = Green.Add(stl)

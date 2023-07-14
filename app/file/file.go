@@ -3,7 +3,6 @@ package file
 import (
 	"os"
 	"path/filepath"
-
 	"projectforge.dev/projectforge/app/util"
 )
 
@@ -20,7 +19,7 @@ func NewFile(path string, mode os.FileMode, b []byte, addHeader bool, logger uti
 	t := getType(n)
 	c := string(b)
 	if addHeader {
-		c = contentWithHeader(path, t, c, logger)
+		c = contentWithHeader(path, t, c, util.StringDetectLinebreak(c), logger)
 	}
 	return &File{Type: t, Path: util.StringSplitPathAndTrim(p), Name: n, Mode: mode, Content: c}
 }

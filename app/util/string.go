@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"hash/fnv"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"unicode"
 
@@ -12,6 +13,13 @@ import (
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
 )
+
+var StringDefaultLinebreak = func() string {
+	if runtime.GOOS == "windows" {
+		return "\r\n"
+	}
+	return "\n"
+}()
 
 func StringSplit(s string, sep byte, cutc bool) (string, string) {
 	i := strings.IndexByte(s, sep)
@@ -66,6 +74,17 @@ func StringSplitPath(s string) (string, string) {
 
 func StringSplitPathAndTrim(s string) []string {
 	return StringSplitAndTrim(s, string(filepath.ListSeparator))
+}
+
+func StringDetectLinebreak(s string) string {
+	if strings.Contains(s, "\r\n") {
+		return "\r\n"
+	}
+	return "\n"
+}
+
+func StringSplitLines(s string) []string {
+	return strings.Split(s, StringDetectLinebreak(s))
 }
 
 func StringPad(s string, size int) string {

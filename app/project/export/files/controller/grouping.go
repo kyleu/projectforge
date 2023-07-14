@@ -9,7 +9,7 @@ import (
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func Grouping(m *model.Model, args *model.Args, grp *model.Column, addHeader bool) (*file.File, error) {
+func Grouping(m *model.Model, args *model.Args, grp *model.Column, addHeader bool, linebreak string) (*file.File, error) {
 	name := m.Package + "by" + grp.Name
 	g := golang.NewFile("controller", []string{"app", "controller"}, name)
 	g.AddImport(helper.ImpFmt, helper.ImpErrors, helper.ImpFastHTTP, helper.ImpApp, helper.ImpCutil)
@@ -28,7 +28,7 @@ func Grouping(m *model.Model, args *model.Args, grp *model.Column, addHeader boo
 		controllerCreateForm(m, grp, prefix), controllerCreate(m, grp, prefix),
 		controllerEditForm(m, grp, prefix), controllerEdit(m, grp, prefix), controllerDelete(m, grp, prefix),
 	)
-	return g.Render(addHeader)
+	return g.Render(addHeader, linebreak)
 }
 
 func controllerGrouped(m *model.Model, grp *model.Column, prefix string) *golang.Block {

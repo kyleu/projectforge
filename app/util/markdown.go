@@ -7,7 +7,7 @@ import (
 	"github.com/samber/lo"
 )
 
-func MarkdownTable(header []string, rows [][]string) (string, error) {
+func MarkdownTable(header []string, rows [][]string, linebreak string) (string, error) {
 	maxes := lo.Map(header, func(h string, _ int) int {
 		return len(h)
 	})
@@ -57,5 +57,5 @@ func MarkdownTable(header []string, rows [][]string) (string, error) {
 	lo.ForEach(rows, func(row []string, _ int) {
 		add(row)
 	})
-	return strings.Join(ret, "\n"), nil
+	return strings.Join(ret, linebreak), nil
 }

@@ -12,7 +12,7 @@ import (
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func Migration(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
+func Migration(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"queries", "ddl"}, m.Name+".sql")
 	if m.IsRevision() {
 		drop, err := sqlDrop(m)
@@ -37,7 +37,7 @@ func Migration(m *model.Model, args *model.Args, addHeader bool) (*file.File, er
 		}
 		g.AddBlocks(sc)
 	}
-	return g.Render(addHeader)
+	return g.Render(addHeader, linebreak)
 }
 
 func sqlDrop(m *model.Model) (*golang.Block, error) {

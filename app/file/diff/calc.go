@@ -83,8 +83,10 @@ func changes(src string, edits []gotextdiff.TextEdit) (string, Changes) {
 	})
 	patch := fmt.Sprint(u)
 	patch = strings.TrimPrefix(patch, "--- ")
+	patch = strings.TrimPrefix(patch, "\r")
 	patch = strings.TrimPrefix(patch, "\n")
 	patch = strings.TrimPrefix(patch, "+++ ")
+	patch = strings.TrimPrefix(patch, "\r")
 	patch = strings.TrimPrefix(patch, "\n")
 	return patch, ret
 }

@@ -42,8 +42,8 @@ func (b *Block) WE(indent int, prefix ...string) {
 	)
 }
 
-func (b *Block) Render() string {
-	return strings.Join(b.Lines, "\n")
+func (b *Block) Render(linebreak string) string {
+	return strings.Join(b.Lines, linebreak)
 }
 
 type Blocks []*Block

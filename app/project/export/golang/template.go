@@ -36,10 +36,10 @@ func (f *Template) AddBlocks(b ...*Block) {
 	f.Blocks = append(f.Blocks, b...)
 }
 
-func (f *Template) Render(addHeader bool) (*file.File, error) {
+func (f *Template) Render(addHeader bool, linebreak string) (*file.File, error) {
 	var content []string
 	add := func(s string, args ...any) {
-		content = append(content, fmt.Sprintf(s+"\n", args...))
+		content = append(content, fmt.Sprintf(s+linebreak, args...))
 	}
 
 	if addHeader {
@@ -50,13 +50,13 @@ func (f *Template) Render(addHeader bool) (*file.File, error) {
 		}
 	}
 	if len(f.Imports) > 0 {
-		add(f.Imports.RenderHTML())
+		add(f.Imports.RenderHTML(linebreak))
 	}
 
 	lo.ForEach(f.Blocks, func(b *Block, _ int) {
-		add(b.Render())
+		add(b.Render(linebreak))
 	})
 
 	n := f.Name
-	return &file.File{Path: f.Path, Name: n, Mode: filesystem.DefaultMode, Content: strings.Join(content, "\n")}, nil
+	return &file.File{Path: f.Path, Name: n, Mode: filesystem.DefaultMode, Content: strings.Join(content, linebreak)}, nil
 }

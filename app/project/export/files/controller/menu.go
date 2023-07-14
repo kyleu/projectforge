@@ -13,11 +13,11 @@ import (
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func Menu(args *model.Args, addHeader bool) (*file.File, error) {
+func Menu(args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	g := golang.NewFile("cmenu", []string{"app", "controller", "cmenu"}, "generated")
 	g.AddImport(helper.ImpAppMenu)
 	g.AddBlocks(menuBlock(args))
-	return g.Render(addHeader)
+	return g.Render(addHeader, linebreak)
 }
 
 func menuBlock(args *model.Args) *golang.Block {

@@ -88,7 +88,7 @@ func getKey(logger Logger) []byte {
 		_encryptKey = GetEnv(env)
 		if _encryptKey == "" {
 			if logger != nil {
-				logger.Warnf("using default encryption key\nset environment variable [%s] to save sessions between restarts", env)
+				logger.Warnf("using default encryption key; set environment variable [%s] to save sessions between restarts", env)
 			}
 			_encryptKey = AppKey + "_secret"
 		}

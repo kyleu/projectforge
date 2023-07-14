@@ -2,6 +2,7 @@ package action
 
 import (
 	"context"
+	"projectforge.dev/projectforge/app/util"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -58,7 +59,8 @@ func auditHeader(ctx context.Context, fn string, pm *PrjAndMods, ret *Result) er
 	if err != nil {
 		return err
 	}
-	lines := strings.Split(string(content), "\n")
+	c := string(content)
+	lines := util.StringSplitLines(c)
 	var hit bool
 	fixed := make([]string, 0, len(lines))
 	lo.ForEach(lines, func(line string, _ int) {
@@ -69,7 +71,7 @@ func auditHeader(ctx context.Context, fn string, pm *PrjAndMods, ret *Result) er
 		}
 	})
 	if hit {
-		final := strings.Join(fixed, "\n")
+		final := strings.Join(fixed, util.StringDetectLinebreak(c))
 		err = tgt.WriteFile(fn, []byte(final), stat.Mode(), true)
 		if err != nil {
 			return errors.Wrapf(err, "can't overwrite file at path [%s]", fn)

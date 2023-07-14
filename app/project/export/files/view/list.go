@@ -12,12 +12,12 @@ import (
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func list(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
+func list(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "List.html")
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpFilter, helper.ImpLayout)
 	g.AddImport(helper.AppImport("app/" + m.PackageWithGroup("")))
 	g.AddBlocks(exportViewListClass(m, args.Models, g), exportViewListBody(m, args.Models))
-	return g.Render(addHeader)
+	return g.Render(addHeader, linebreak)
 }
 
 func exportViewListClass(m *model.Model, models model.Models, g *golang.Template) *golang.Block {

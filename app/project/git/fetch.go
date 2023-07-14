@@ -17,7 +17,7 @@ func (s *Service) Fetch(ctx context.Context, prj *project.Project, logger util.L
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to fetch")
 	}
-	count := lo.CountBy(strings.Split(x, "\n"), func(line string) bool {
+	count := lo.CountBy(util.StringSplitLines(x), func(line string) bool {
 		return strings.HasPrefix(line, "   ")
 	})
 	status := ok

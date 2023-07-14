@@ -9,11 +9,11 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func template(svgs []*SVG) string {
+func template(svgs []*SVG, linebreak string) string {
 	out := strings.Builder{}
 	w := func(s string) {
 		out.WriteString(s)
-		out.WriteString("\n")
+		out.WriteString(linebreak)
 	}
 
 	maxKeyLength := 0

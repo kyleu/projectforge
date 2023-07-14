@@ -60,7 +60,7 @@ func GetErrorDetail(e error) *ErrorDetail {
 
 func TraceDetail(trace errors.StackTrace) []ErrorFrame {
 	s := fmt.Sprintf("%+v", trace)
-	lines := strings.Split(s, "\n")
+	lines := StringSplitLines(s)
 	var validLines []string
 
 	lo.ForEach(lines, func(line string, _ int) {

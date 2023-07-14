@@ -74,7 +74,7 @@ func logResult(t action.Type, r *action.Result) {
 				_logger.Infof("%s [%s]:", d.Path, d.Status)
 				lo.ForEach(d.Changes, func(c *diff.Change, _ int) {
 					lo.ForEach(c.Lines, func(l *diff.Line, _ int) {
-						_logger.Info(strings.TrimSuffix(l.String(), "\n"))
+						_logger.Info(strings.TrimSuffix(strings.TrimSuffix(l.String(), "\n"), "\r"))
 					})
 				})
 			})

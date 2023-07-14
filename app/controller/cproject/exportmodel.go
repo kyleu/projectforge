@@ -2,6 +2,7 @@ package cproject
 
 import (
 	"fmt"
+	"projectforge.dev/projectforge/app/util"
 
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
@@ -22,7 +23,7 @@ func ProjectExportModelDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Data = mdl
 
-		fls, err := files.ModelAll(mdl, prj, args, true)
+		fls, err := files.ModelAll(mdl, prj, args, true, util.StringDefaultLinebreak)
 		if err != nil {
 			ps.Logger.Warnf("unable to generate files for model [%s]", mdl.Name)
 		}

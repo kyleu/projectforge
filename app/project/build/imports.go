@@ -45,18 +45,19 @@ func importsFor(self string, fix bool, fs filesystem.FileLoader, fn string, targ
 	if err != nil {
 		return nil, nil, errors.Wrapf(err, "unable to read file [%s]", fn)
 	}
+	str := string(content)
 	stat, err := fs.Stat(fn)
 	if err != nil {
 		return nil, nil, err
 	}
-	_, fixed, diffs, err := processFileImports(fn, strings.Split(string(content), "\n"), self)
+	_, fixed, diffs, err := processFileImports(fn, util.StringSplitLines(str), self)
 	ret = append(ret, diffs...)
 	if err != nil {
 		return nil, nil, errors.Wrapf(err, "unable to process imports for [%s]", fn)
 	}
 	if fix && len(diffs) > 0 {
 		if targetPath == "" || fn == targetPath {
-			newContent := strings.Join(fixed, "\n")
+			newContent := strings.Join(fixed, str)
 			err = fs.WriteFile(fn, []byte(newContent), stat.Mode(), true)
 			if err != nil {
 				return nil, nil, errors.Wrapf(err, "unable to write file [%s]", fn)

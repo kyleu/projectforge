@@ -1,14 +1,14 @@
 <!-- Content managed by Project Forge, see [projectforge.md] for details. -->
 {% import (
-  "strings"
-
   "github.com/robert-nix/ansihtml"
+
+  "projectforge.dev/projectforge/app/util"
 ) %}
 
 {% func DisplayTerminal(id string, s string) %}{% stripspace %}
   {%- code
     raw := string(ansihtml.ConvertToHTML([]byte(s)))
-    lines := strings.Split(raw, "\n")
+    lines := util.StringSplitLines(raw)
     if len(lines) > 0 && lines[len(lines) - 1] == "" {
       lines = lines[:len(lines) - 1]
     }

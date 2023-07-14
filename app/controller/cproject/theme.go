@@ -2,6 +2,7 @@ package cproject
 
 import (
 	"fmt"
+	"projectforge.dev/projectforge/app/util"
 	"strings"
 
 	"github.com/muesli/gamut"
@@ -43,7 +44,7 @@ func ProjectThemePalette(rc *fasthttp.RequestCtx) {
 		if string(rc.URI().QueryArgs().Peek("t")) == "go" {
 			ps.Data = strings.Join(lo.Map(x, func(t *theme.Theme, _ int) string {
 				return t.ToGo()
-			}), "\n")
+			}), util.StringDefaultLinebreak)
 			return controller.Render(rc, as, &views.Debug{}, ps, "admin", "Themes")
 		}
 		span.Complete()

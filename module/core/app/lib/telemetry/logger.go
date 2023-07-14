@@ -33,6 +33,9 @@ func (e *ErrHandler) Handle(err error) {
 		if idx := strings.Index(msg, "\":"); idx > -1 {
 			msg = strings.TrimSpace(msg[idx+2:])
 		}
+		if strings.Contains(msg, "connectex") {
+			msg = "connection failure"
+		}
 		e.logger.Warn("telemetry seems to be unavailable: [" + msg + "] (this message will appear only once)")
 		e.hasPrinted = true
 		return

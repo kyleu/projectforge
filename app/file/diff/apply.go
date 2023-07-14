@@ -1,6 +1,7 @@
 package diff
 
 import (
+	"projectforge.dev/projectforge/app/util"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -17,7 +18,7 @@ type cmd struct {
 }
 
 func Apply(b []byte, d *Diff) ([]byte, error) {
-	lines := strings.Split(string(b), "\n")
+	lines := util.StringSplitLines(string(b))
 	cmds := lo.Map(d.Changes, func(c *Change, _ int) *cmd {
 		return loadCmd(c, false)
 	})
@@ -26,11 +27,11 @@ func Apply(b []byte, d *Diff) ([]byte, error) {
 		return nil, errors.Wrap(err, "unable to apply commands")
 	}
 
-	return []byte(strings.Join(newLines, "\n")), nil
+	return []byte(strings.Join(newLines, util.StringDetectLinebreak(string(b)))), nil
 }
 
 func ApplyInverse(b []byte, d *Diff) ([]byte, error) {
-	lines := strings.Split(string(b), "\n")
+	lines := util.StringSplitLines(string(b))
 	cmds := lo.Map(d.Changes, func(c *Change, _ int) *cmd {
 		return loadCmd(c, true)
 	})
@@ -39,7 +40,7 @@ func ApplyInverse(b []byte, d *Diff) ([]byte, error) {
 		return nil, errors.Wrap(err, "unable to apply commands")
 	}
 
-	return []byte(strings.Join(newLines, "\n")), nil
+	return []byte(strings.Join(newLines, util.StringDetectLinebreak(string(b)))), nil
 }
 
 func applyCmds(lines []string, cmds ...*cmd) ([]string, error) {
@@ -62,7 +63,7 @@ func applyCmds(lines []string, cmds ...*cmd) ([]string, error) {
 func loadCmd(c *Change, inverse bool) *cmd {
 	x := &cmd{From: c.From, To: c.To}
 	lo.ForEach(c.Lines, func(l *Line, _ int) {
-		lv := strings.TrimSuffix(l.V, "\n")
+		lv := strings.TrimSuffix(strings.TrimSuffix(l.V, "\n"), "\r")
 		switch l.T {
 		case contextKey:
 			if len(x.Deleted) == 0 && len(x.Added) == 0 {

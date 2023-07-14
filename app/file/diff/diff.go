@@ -117,7 +117,7 @@ func FileLoader(mods []string, src file.Files, tgt filesystem.FileLoader, includ
 
 func matchesModules(s *file.File, mods []string, tgtFile *file.File) (bool, error) {
 	if idx := strings.Index(s.Content, file.ModulePrefix); idx > 1 {
-		lines := strings.Split(s.Content, "\n")
+		lines := util.StringSplitLines(s.Content)
 		line, lineIdx, _ := lo.FindIndexOf(lines, func(line string) bool {
 			return strings.Contains(line, file.ModulePrefix)
 		})
@@ -137,7 +137,7 @@ func matchesModules(s *file.File, mods []string, tgtFile *file.File) (bool, erro
 		})
 		if hasAllMods {
 			if tgtFile != nil {
-				tgtFile.Content = strings.Join(slices.Delete(lines, lineIdx, lineIdx), "\n")
+				tgtFile.Content = strings.Join(slices.Delete(lines, lineIdx, lineIdx), util.StringDetectLinebreak(s.Content))
 			}
 		} else {
 			return false, nil

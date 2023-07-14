@@ -18,7 +18,7 @@ import (
 
 const incDel = ", includeDeleted bool"
 
-func ServiceRevision(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
+func ServiceRevision(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	dbRef := args.DBRef()
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "servicerevision")
 	g.AddImport(helper.ImpAppUtil, helper.ImpFmt, helper.ImpStrings, helper.ImpContext, helper.ImpFilter, helper.ImpSQLx, helper.ImpErrors, helper.ImpDatabase)
@@ -39,7 +39,7 @@ func ServiceRevision(m *model.Model, args *model.Args, addHeader bool) (*file.Fi
 		return nil, err
 	}
 	g.AddBlocks(id, ar, gr, gnr)
-	return g.Render(addHeader)
+	return g.Render(addHeader, linebreak)
 }
 
 func serviceIDRev(m *model.Model, enums enum.Enums) (*golang.Block, error) {

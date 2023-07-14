@@ -3,6 +3,7 @@ package svg
 import (
 	"encoding/xml"
 	"fmt"
+	"projectforge.dev/projectforge/app/util"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -10,9 +11,10 @@ import (
 )
 
 func Transform(tgt string, b []byte, url string) (*SVG, error) {
+	c := string(b)
 	x := &xmlNode{}
 	if err := xml.Unmarshal(b, x); err != nil {
-		return nil, errors.Wrapf(err, "unable to parse XML from [%s]", string(b))
+		return nil, errors.Wrapf(err, "unable to parse XML from [%s]", c)
 	}
 	if x.XMLName.Local != "svg" {
 		return nil, errors.New("root element must be [svg]")
@@ -21,10 +23,10 @@ func Transform(tgt string, b []byte, url string) (*SVG, error) {
 	if vb == "" {
 		return nil, errors.New("no [viewBox] available in <svg> attributes")
 	}
-
+	linebreak := util.StringDetectLinebreak(c)
 	var markup string
 	add := func(s string) {
-		markup += s + "\n"
+		markup += s + linebreak
 	}
 
 	add("<!-- imported from " + url + " -->")

@@ -73,11 +73,11 @@ func (f *FileSystem) ListFilesRecursive(path string, ign []string, _ util.Logger
 	p := f.getPath(path)
 	var ret []string
 	err := filepath.Walk(p, func(fp string, info os.FileInfo, err error) error {
-		m := strings.TrimPrefix(fp, p+"/")
+		m := strings.TrimPrefix(strings.TrimPrefix(fp, p+"\\"), p+"/")
 		if checkIgnore(ignore, m) {
 			return nil
 		}
-		if info != nil && (!info.IsDir()) && strings.Contains(fp, "/") {
+		if info != nil && (!info.IsDir()) && (strings.Contains(fp, "/") || strings.Contains(fp, "\\")) {
 			ret = append(ret, m)
 		}
 		return nil
@@ -92,7 +92,7 @@ func (f *FileSystem) Walk(path string, ign []string, fn func(fp string, info os.
 	ignore := buildIgnore(ign)
 	p := f.getPath(path)
 	err := filepath.Walk(p, func(fp string, info os.FileInfo, err error) error {
-		m := strings.TrimPrefix(fp, p+"/")
+		m := strings.TrimPrefix(strings.TrimPrefix(fp, p+"\\"), p+"/")
 		if checkIgnore(ignore, m) {
 			return nil
 		}

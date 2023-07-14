@@ -2,6 +2,7 @@ package checks
 
 import (
 	"context"
+	"fmt"
 
 	"projectforge.dev/projectforge/app/doctor"
 	"projectforge.dev/projectforge/app/util"
@@ -20,7 +21,8 @@ var PF = &doctor.Check{
 
 func solvePF(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Result {
 	if r.Errors.Find("missing") != nil || r.Errors.Find("exitcode") != nil {
-		r.AddSolution("Install [" + util.AppName + "] by following the instructions at [" + util.AppURL + "]")
+		msg := "Install [%s] by following the instructions at [%s], and ensure [%s] is on your path"
+		r.AddSolution(fmt.Sprintf(msg, util.AppName, util.AppURL, util.AppKey))
 	}
 	return r
 }

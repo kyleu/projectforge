@@ -12,7 +12,7 @@ import (
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func Search(args *model.Args, addHeader bool) (*file.File, error) {
+func Search(args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	g := golang.NewFile("search", []string{"app", "lib", "search"}, "generated")
 	if args.Models.HasSearch() {
 		g.AddImport(helper.ImpContext, helper.ImpApp, helper.ImpAppUtil, helper.ImpCutil, helper.ImpLo, helper.ImpSearchResult)
@@ -23,7 +23,7 @@ func Search(args *model.Args, addHeader bool) (*file.File, error) {
 		}
 	})
 	g.AddBlocks(searchBlock(args))
-	return g.Render(addHeader)
+	return g.Render(addHeader, linebreak)
 }
 
 func searchBlock(args *model.Args) *golang.Block {

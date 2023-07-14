@@ -34,7 +34,7 @@ func Packages(prj *project.Project, fs filesystem.FileLoader, showAll bool, logg
 		if err != nil {
 			return nil, err
 		}
-		lines := strings.Split(string(bs), "\n")
+		lines := util.StringSplitLines(string(bs))
 		imps, _, _, err := processFileImports(fn, lines, root)
 		if err != nil {
 			return nil, err

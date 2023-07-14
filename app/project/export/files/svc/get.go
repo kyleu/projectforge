@@ -15,7 +15,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
+func ServiceGet(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	dbRef := args.DBRef()
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "serviceget")
 	lo.ForEach(helper.ImportsForTypes("go", "", m.PKs().Types()...), func(imp *golang.Import, _ int) {
@@ -104,7 +104,7 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool) (*file.File, e
 		}
 	}
 	g.AddBlocks(serviceListSQL(m, args.DBRef()))
-	return g.Render(addHeader)
+	return g.Render(addHeader, linebreak)
 }
 
 func serviceGrouped(m *model.Model, grp *model.Column, dbRef string) *golang.Block {

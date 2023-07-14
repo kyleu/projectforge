@@ -5,7 +5,7 @@ import (
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func All(args *model.Args, files file.Files) error {
+func All(args *model.Args, files file.Files, linebreak string) error {
 	if args == nil {
 		return nil
 	}
@@ -23,7 +23,7 @@ func All(args *model.Args, files file.Files) error {
 		case "app/services.go":
 			err = Services(f, args)
 		case grpcCall:
-			err = GRPC(f, args)
+			err = GRPC(f, args, linebreak)
 		}
 		if err != nil {
 			return err

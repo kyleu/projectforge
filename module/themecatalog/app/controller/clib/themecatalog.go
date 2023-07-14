@@ -14,6 +14,7 @@ import (
 	"{{{ .Package }}}/app/controller/cutil"
 	"{{{ .Package }}}/app/lib/telemetry"
 	"{{{ .Package }}}/app/lib/theme"
+	"{{{ .Package }}}/app/util"
 	"{{{ .Package }}}/views"
 	"{{{ .Package }}}/views/vtheme"
 )
@@ -68,7 +69,7 @@ func ThemePalette(rc *fasthttp.RequestCtx) {
 		if string(rc.URI().QueryArgs().Peek("t")) == "go" {
 			ps.Data = strings.Join(lo.Map(x, func(t *theme.Theme, _ int) string {
 				return t.ToGo()
-			}), "\n")
+			}), util.StringDefaultLinebreak)
 			return controller.Render(rc, as, &views.Debug{}, ps, "Themes")
 		}
 		return controller.Render(rc, as, &vtheme.Add{Palette: pal, Themes: x}, ps, "Themes")

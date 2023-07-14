@@ -8,37 +8,37 @@ import (
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func All(m *model.Model, p *project.Project, args *model.Args, addHeader bool) (file.Files, error) {
+func All(m *model.Model, p *project.Project, args *model.Args, addHeader bool, linebreak string) (file.Files, error) {
 	var calls file.Files
 	var f *file.File
 	var err error
 
-	f, err = list(m, args, addHeader)
+	f, err = list(m, args, addHeader, linebreak)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't render list template")
 	}
 	calls = append(calls, f)
 
-	f, err = table(m, args, addHeader)
+	f, err = table(m, args, addHeader, linebreak)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't render table template")
 	}
 	calls = append(calls, f)
 
-	f, err = detail(m, args, addHeader)
+	f, err = detail(m, args, addHeader, linebreak)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't render detail template")
 	}
 	calls = append(calls, f)
 
-	f, err = edit(m, p, args, addHeader)
+	f, err = edit(m, p, args, addHeader, linebreak)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't render edit template")
 	}
 	calls = append(calls, f)
 
 	for _, grp := range m.GroupedColumns() {
-		f, err = Grouping(m, grp, addHeader)
+		f, err = Grouping(m, grp, addHeader, linebreak)
 		if err != nil {
 			return nil, errors.Wrap(err, "can't view controller for group ["+grp.Title()+"]")
 		}
@@ -46,7 +46,7 @@ func All(m *model.Model, p *project.Project, args *model.Args, addHeader bool) (
 	}
 
 	if m.IsHistory() {
-		f, err = history(m, args, addHeader)
+		f, err = history(m, args, addHeader, linebreak)
 		if err != nil {
 			return nil, errors.Wrap(err, "can't render history template")
 		}

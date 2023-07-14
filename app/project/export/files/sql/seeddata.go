@@ -20,14 +20,14 @@ const (
 	nullStr = "null"
 )
 
-func SeedData(m *model.Model, _ *model.Args) (*file.File, error) {
+func SeedData(m *model.Model, _ *model.Args, linebreak string) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"queries", "seeddata"}, fmt.Sprintf("seed_%s.sql", m.Name))
 	seed, err := sqlSeedData(m)
 	if err != nil {
 		return nil, err
 	}
 	g.AddBlocks(seed)
-	return g.Render(false)
+	return g.Render(false, linebreak)
 }
 
 func sqlSeedData(m *model.Model) (*golang.Block, error) {

@@ -14,7 +14,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func Model(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
+func Model(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, strings.ToLower(m.Camel()))
 	lo.ForEach(helper.ImportsForTypes("go", "", m.Columns.Types()...), func(imp *golang.Import, _ int) {
 		g.AddImport(imp)
@@ -61,7 +61,7 @@ func Model(m *model.Model, args *model.Args, addHeader bool) (*file.File, error)
 		hc := m.HistoryColumns(false)
 		g.AddBlocks(modelToData(m, hc.Const, "Core"), modelToData(m, hc.Var, hc.Col.Proper()))
 	}
-	return g.Render(addHeader)
+	return g.Render(addHeader, linebreak)
 }
 
 func modelPK(m *model.Model, enums enum.Enums) (*golang.Block, error) {

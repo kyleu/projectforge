@@ -14,7 +14,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func ServiceHistory(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
+func ServiceHistory(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	dbRef := args.DBRef()
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "servicehistory")
 	g.AddImport(helper.ImpContext, helper.ImpUUID, helper.ImpErrors, helper.ImpFmt, helper.ImpStrings)
@@ -24,7 +24,7 @@ func ServiceHistory(m *model.Model, args *model.Args, addHeader bool) (*file.Fil
 		return nil, err
 	}
 	g.AddBlocks(serviceHistoryVars(m), serviceHistoryGetHistory(m, dbRef), gh, serviceHistorySaveHistory(m))
-	return g.Render(addHeader)
+	return g.Render(addHeader, linebreak)
 }
 
 func serviceHistoryVars(m *model.Model) *golang.Block {

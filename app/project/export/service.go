@@ -18,7 +18,7 @@ func NewService() *Service {
 	return &Service{}
 }
 
-func (s *Service) Files(p *project.Project, args *model.Args, addHeader bool) (f file.Files, e error) {
+func (s *Service) Files(p *project.Project, args *model.Args, addHeader bool, linebreak string) (f file.Files, e error) {
 	defer func() {
 		if rec := recover(); rec != nil {
 			if err, ok := rec.(error); ok {
@@ -28,11 +28,11 @@ func (s *Service) Files(p *project.Project, args *model.Args, addHeader bool) (f
 			}
 		}
 	}()
-	f, e = files.All(p, args, addHeader)
+	f, e = files.All(p, args, addHeader, linebreak)
 	return
 }
 
-func (s *Service) Inject(args *model.Args, fs file.Files) (e error) {
+func (s *Service) Inject(args *model.Args, fs file.Files, linebreak string) (e error) {
 	defer func() {
 		if rec := recover(); rec != nil {
 			if err, ok := rec.(error); ok {
@@ -42,6 +42,6 @@ func (s *Service) Inject(args *model.Args, fs file.Files) (e error) {
 			}
 		}
 	}()
-	e = inject.All(args, fs)
+	e = inject.All(args, fs, linebreak)
 	return
 }

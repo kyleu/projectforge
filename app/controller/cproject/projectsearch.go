@@ -2,7 +2,6 @@ package cproject
 
 import (
 	"fmt"
-	"strings"
 	"unicode/utf8"
 
 	"github.com/pkg/errors"
@@ -111,7 +110,7 @@ func newProjectResult(q string, prjKey string, path string, content []byte) *res
 
 	_, fn := util.StringSplitPath(path)
 
-	lines := strings.Split(string(content), "\n")
+	lines := util.StringSplitLines(string(content))
 
 	matches := lo.FlatMap(lines, func(line string, idx int) []*result.Match {
 		return result.MatchesFor(fmt.Sprint(idx+1), line, q)

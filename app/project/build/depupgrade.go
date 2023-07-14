@@ -56,7 +56,8 @@ func bumpGoMod(ctx context.Context, prj *project.Project, fs filesystem.FileLoad
 	if err != nil {
 		return errors.Wrap(err, "unable to read [go.mod]")
 	}
-	lines := strings.Split(string(bts), "\n")
+	str := string(bts)
+	lines := util.StringSplitLines(str)
 
 	for _, dep := range deps {
 		logger.Infof("upgrading [%s] dependency [%s] from [%s] to [%s]", prj.Key, dep.Key, dep.Version, dep.Available)
@@ -78,7 +79,7 @@ func bumpGoMod(ctx context.Context, prj *project.Project, fs filesystem.FileLoad
 		}
 	}
 
-	final := strings.Join(lines, "\n")
+	final := strings.Join(lines, util.StringDetectLinebreak(str))
 	err = fs.WriteFile(gomod, []byte(final), filesystem.DefaultMode, true)
 	if err != nil {
 		return errors.Wrap(err, "unable to write [go.mod]")

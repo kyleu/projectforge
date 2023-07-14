@@ -105,13 +105,13 @@ func promptString(query string, curr string) string {
 	} else {
 		clilog(" (default: " + curr + ")")
 	}
-	clilog("\n")
+	clilog(util.StringDefaultLinebreak)
 	clilog(" > ")
 	text, err := bufio.NewReader(os.Stdin).ReadString('\n')
 	if err != nil {
-		clilog("error: " + err.Error() + "\n")
+		clilog("error: " + err.Error() + util.StringDefaultLinebreak)
 	}
-	text = strings.TrimSuffix(text, "\n")
+	text = strings.TrimSuffix(strings.TrimSuffix(text, "\n"), "\r")
 	if text == "" {
 		text = curr
 	}

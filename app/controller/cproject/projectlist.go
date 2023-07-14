@@ -46,16 +46,16 @@ func ProjectList(rc *fasthttp.RequestCtx) {
 			msgs := lo.Map(prjs, func(p *project.Project, _ int) string {
 				return fmt.Sprintf("%s: %d", p.Key, p.Port)
 			})
-			_, _ = rc.WriteString(strings.Join(msgs, "\n"))
+			_, _ = rc.WriteString(strings.Join(msgs, util.StringDefaultLinebreak))
 			return "", nil
 		case "versions":
 			msgs := lo.Map(prjs, func(p *project.Project, _ int) string {
 				return fmt.Sprintf("%s: %s", p.Key, p.Version)
 			})
-			_, _ = rc.WriteString(strings.Join(msgs, "\n"))
+			_, _ = rc.WriteString(strings.Join(msgs, util.StringDefaultLinebreak))
 			return "", nil
 		case goString:
-			_, _ = rc.WriteString(strings.Join(mkGoSvcs(prjs), "\n"))
+			_, _ = rc.WriteString(strings.Join(mkGoSvcs(prjs), util.StringDefaultLinebreak))
 			return "", nil
 		default:
 			return controller.Render(rc, as, &vproject.List{Projects: prjs, Execs: execs, Tags: tags}, ps, "projects")

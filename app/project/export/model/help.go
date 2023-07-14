@@ -64,7 +64,7 @@ func (c *Column) Help(enums enum.Enums) (string, error) {
 	return ret, nil
 }
 
-func (m *Model) Help(enums enum.Enums) (string, error) {
+func (m *Model) Help(enums enum.Enums, linebreak string) (string, error) {
 	ret := make([]string, 0, len(m.Columns)+1)
 	ret = append(ret, "")
 	for _, x := range m.Columns {
@@ -74,5 +74,5 @@ func (m *Model) Help(enums enum.Enums) (string, error) {
 		}
 		ret = append(ret, " - "+ch)
 	}
-	return strings.Join(ret, "\n"), nil
+	return strings.Join(ret, linebreak), nil
 }

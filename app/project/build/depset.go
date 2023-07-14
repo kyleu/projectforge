@@ -25,7 +25,8 @@ func SetDepsMap(ctx context.Context, projects project.Projects, dep *Dependency,
 		if err != nil {
 			return nil, errors.Wrapf(err, "unable to read [go.mod] for project [%s]", item.Key)
 		}
-		lines := strings.Split(string(bytes), "\n")
+		str := string(bytes)
+		lines := util.StringSplitLines(str)
 		ret := make([]string, 0, len(lines))
 		for _, line := range lines {
 			if strings.Contains(line, dep.Key+" ") {
@@ -51,7 +52,7 @@ func SetDepsMap(ctx context.Context, projects project.Projects, dep *Dependency,
 		}
 		if matched {
 			affected++
-			content := strings.Join(ret, "\n")
+			content := strings.Join(ret, util.StringDetectLinebreak(str))
 			err = fs.WriteFile(gomod, []byte(content), filesystem.DefaultMode, true)
 			if err != nil {
 				return nil, errors.Wrap(err, "unable to write [go.mod]")
@@ -89,7 +90,8 @@ func SetDepsProject(ctx context.Context, prjs project.Projects, key string, pSvc
 	if err != nil {
 		return "", errors.Wrapf(err, "unable to read [go.mod] for project [%s]", key)
 	}
-	lines := strings.Split(string(bytes), "\n")
+	str := string(bytes)
+	lines := util.StringSplitLines(str)
 	ret := make([]string, 0, len(lines))
 	for _, line := range lines {
 		hit, pline, errChild := setDepProcessLine(line, curr, key)
@@ -102,7 +104,7 @@ func SetDepsProject(ctx context.Context, prjs project.Projects, key string, pSvc
 		}
 	}
 	if affected > 0 {
-		content := strings.Join(ret, "\n")
+		content := strings.Join(ret, util.StringDetectLinebreak(str))
 		err = fs.WriteFile(gomod, []byte(content), filesystem.DefaultMode, true)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to write [go.mod]")

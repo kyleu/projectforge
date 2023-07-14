@@ -1,6 +1,7 @@
 package file
 
 import (
+	"projectforge.dev/projectforge/app/util"
 	"strings"
 
 	"github.com/samber/lo"
@@ -13,7 +14,7 @@ func (f Files) String() string {
 	lo.ForEach(f, func(file *File, _ int) {
 		sb.WriteString(" - ")
 		sb.WriteString(file.FullPath())
-		sb.WriteString("\n")
+		sb.WriteString(util.StringDetectLinebreak(file.Content))
 	})
 	return sb.String()
 }

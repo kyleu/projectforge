@@ -81,7 +81,7 @@ func addChild(p string, name string) *menu.Item {
 		panic(err)
 	}
 
-	lines := strings.Split(string(b), "\n")
+	lines := util.StringSplitLines(string(b))
 	for _, line := range lines {
 		if strings.HasPrefix(line, "#") {
 			for strings.HasPrefix(line, "#") {

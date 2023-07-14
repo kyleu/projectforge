@@ -10,7 +10,7 @@ import (
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func history(m *model.Model, args *model.Args, addHeader bool) (*file.File, error) {
+func history(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "History.html")
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpLayout, helper.ImpFilter)
 	g.AddImport(helper.AppImport("app/" + m.PackageWithGroup("")))
@@ -22,7 +22,7 @@ func history(m *model.Model, args *model.Args, addHeader bool) (*file.File, erro
 		return nil, err
 	}
 	g.AddBlocks(exportViewHistoryClass(m), exportViewHistoryBody(m), evht)
-	return g.Render(addHeader)
+	return g.Render(addHeader, linebreak)
 }
 
 func exportViewHistoryClass(m *model.Model) *golang.Block {

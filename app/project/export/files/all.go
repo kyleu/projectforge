@@ -11,14 +11,14 @@ import (
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func All(p *project.Project, args *model.Args, addHeader bool) (file.Files, error) {
+func All(p *project.Project, args *model.Args, addHeader bool, linebreak string) (file.Files, error) {
 	if err := args.Validate(); err != nil {
 		return nil, errors.Wrap(err, "invalid export arguments")
 	}
 	ret := make(file.Files, 0, (len(args.Models)*10)+len(args.Enums))
 
 	for _, e := range args.Enums {
-		call, err := goenum.Enum(e, addHeader)
+		call, err := goenum.Enum(e, addHeader, linebreak)
 		if err != nil {
 			return nil, errors.Wrapf(err, "error processing enum [%s]", e.Name)
 		}
@@ -26,27 +26,27 @@ func All(p *project.Project, args *model.Args, addHeader bool) (file.Files, erro
 	}
 
 	for _, m := range args.Models {
-		calls, err := ModelAll(m, p, args, addHeader)
+		calls, err := ModelAll(m, p, args, addHeader, linebreak)
 		if err != nil {
 			return nil, errors.Wrapf(err, "error processing model [%s]", m.Name)
 		}
 		ret = append(ret, calls...)
 	}
 
-	x, err := controller.Routes(args, addHeader)
+	x, err := controller.Routes(args, addHeader, linebreak)
 	if err != nil {
 		return nil, err
 	}
 	ret = append(ret, x)
 
-	x, err = controller.Menu(args, addHeader)
+	x, err = controller.Menu(args, addHeader, linebreak)
 	if err != nil {
 		return nil, err
 	}
 	ret = append(ret, x)
 
 	if args.HasModule("search") {
-		x, err = controller.Search(args, addHeader)
+		x, err = controller.Search(args, addHeader, linebreak)
 		if err != nil {
 			return nil, err
 		}
@@ -54,21 +54,21 @@ func All(p *project.Project, args *model.Args, addHeader bool) (file.Files, erro
 	}
 
 	if args.HasModule("migration") {
-		f, err := sql.MigrationAll(args.Models.Sorted(), args.Enums, addHeader)
+		f, err := sql.MigrationAll(args.Models.Sorted(), args.Enums, addHeader, linebreak)
 		if err != nil {
 			return nil, errors.Wrap(err, "can't render SQL \"all\" migration")
 		}
 		ret = append(ret, f)
 	}
 	if args.Models.HasSeedData() {
-		f, err := sql.SeedDataAll(args.Models)
+		f, err := sql.SeedDataAll(args.Models, linebreak)
 		if err != nil {
 			return nil, errors.Wrap(err, "can't render SQL \"all\" migration")
 		}
 		ret = append(ret, f)
 	}
 	if len(args.Enums) > 0 {
-		f, err := sql.Types(args.Enums, addHeader)
+		f, err := sql.Types(args.Enums, addHeader, linebreak)
 		if err != nil {
 			return nil, errors.Wrap(err, "can't render SQL types")
 		}

@@ -8,9 +8,9 @@ package components
 
 //line views/components/Terminal.html:2
 import (
-	"strings"
-
 	"github.com/robert-nix/ansihtml"
+
+	"projectforge.dev/projectforge/app/util"
 )
 
 //line views/components/Terminal.html:8
@@ -30,7 +30,7 @@ var (
 func StreamDisplayTerminal(qw422016 *qt422016.Writer, id string, s string) {
 //line views/components/Terminal.html:10
 	raw := string(ansihtml.ConvertToHTML([]byte(s)))
-	lines := strings.Split(raw, "\n")
+	lines := util.StringSplitLines(raw)
 	if len(lines) > 0 && lines[len(lines)-1] == "" {
 		lines = lines[:len(lines)-1]
 	}

@@ -21,7 +21,11 @@ func Run(fs filesystem.FileLoader, tgt string, logger util.Logger) (int, error) 
 		return 0, err
 	}
 
-	out := template(svgs)
+	if len(svgs) == 0 {
+		return 0, errors.New("no SVGs available")
+	}
+
+	out := template(svgs, util.StringDetectLinebreak(svgs[0].Markup))
 
 	err = writeFile(fs, tgt, out)
 	if err != nil {
