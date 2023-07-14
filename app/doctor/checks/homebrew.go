@@ -15,6 +15,7 @@ var Homebrew = &doctor.Check{
 	URL:       "https://brew.sh",
 	UsedBy:    "Package manager for macOS",
 	Platforms: []string{"darwin"},
+	Core:      true,
 	Fn:        simpleOut(".", "brew", []string{"--help"}, noop),
 	Solve:     solveHomebrew,
 }

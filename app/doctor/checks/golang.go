@@ -19,6 +19,7 @@ var Golang = &doctor.Check{
 	Summary: "The main programming language",
 	URL:     "https://golang.org",
 	UsedBy:  "All builds",
+	Core:    true,
 	Fn: simpleOut(".", "go", []string{"version"}, func(_ context.Context, r *doctor.Result, out string) *doctor.Result {
 		if r.Status == util.KeyError {
 			return r

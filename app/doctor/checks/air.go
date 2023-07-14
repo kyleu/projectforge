@@ -16,6 +16,7 @@ var Air = &doctor.Check{
 	URL:       "https://github.com/cosmtrek/air",
 	UsedBy:    "[bin/dev.sh]",
 	Platforms: []string{"!windows"},
+	Core:      true,
 	Fn: simpleOut(".", "air", []string{"--help"}, func(ctx context.Context, r *doctor.Result, out string) *doctor.Result {
 		if strings.Contains(out, "Command 'air' not found") {
 			return r.WithError(doctor.NewError("missing", "[air] is not present on your computer"))

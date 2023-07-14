@@ -15,6 +15,7 @@ var Choco = &doctor.Check{
 	URL:       "https://chocolatey.org",
 	UsedBy:    "Package manager for Windows",
 	Platforms: []string{"windows"},
+	Core:      true,
 	Fn:        simpleOut(".", "choco", []string{"--help"}, noop),
 	Solve:     solveChoco,
 }

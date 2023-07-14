@@ -5,6 +5,7 @@ go 1.20
 require (
 	github.com/alecthomas/chroma v0.10.0
 	github.com/araddon/dateparse v0.0.0-20210429162001-6b43995a97de
+	github.com/buildkite/shellwords v0.0.0-20180315110454-59467a9b8e10
 	github.com/coreos/go-semver v0.3.1
 	github.com/dustin/go-humanize v1.0.1
 	github.com/fasthttp/router v1.4.19
@@ -16,7 +17,6 @@ require (
 	github.com/hexops/gotextdiff v1.0.3
 	github.com/iancoleman/strcase v0.2.0
 	github.com/json-iterator/go v1.1.12
-	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
 	github.com/kirsle/configdir v0.0.0-20170128060238-e45d2f54772f
 	github.com/mileusna/useragent v1.3.3
 	github.com/muesli/coral v1.0.0

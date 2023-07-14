@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"path/filepath"
+	"runtime"
 
 	"github.com/pkg/errors"
 
@@ -57,7 +58,11 @@ func Full(ctx context.Context, prj *project.Project, logger util.Logger) ([]stri
 		return logs, errors.Errorf("client build failed with exit code [%d]", exitCode)
 	}
 
-	exitCode, out, err = telemetry.RunProcessSimple(ctx, "make build", prj.Path, logger)
+	makeCmd := "make build"
+	if runtime.GOOS == "windows" {
+		makeCmd = fmt.Sprintf(`go build -ldflags "-s -w" -trimpath -o build/release/%s.exe`, prj.Executable())
+	}
+	exitCode, out, err = telemetry.RunProcessSimple(ctx, makeCmd, prj.Path, logger)
 	if err != nil {
 		return logs, err
 	}

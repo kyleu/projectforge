@@ -14,6 +14,7 @@ var NPM = &doctor.Check{
 	Summary: "Download JavaScript dependencies",
 	URL:     "https://www.npmjs.com/",
 	UsedBy:  "Build of [client] TypeScript project and css pipeline",
+	Core:    true,
 	Fn:      simpleOut(".", "npm", []string{"-v"}, noop),
 	Solve:   solveNPM,
 }

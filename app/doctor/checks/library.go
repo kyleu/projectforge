@@ -19,6 +19,12 @@ func GetCheck(key string) *doctor.Check {
 	return AllChecks.Get(key)
 }
 
+func Core(core bool) doctor.Checks {
+	return lo.Filter(AllChecks, func(c *doctor.Check, _ int) bool {
+		return c.Core == core
+	})
+}
+
 func ForModules(modules []string) doctor.Checks {
 	var ret doctor.Checks
 	lo.ForEach(AllChecks, func(c *doctor.Check, _ int) {

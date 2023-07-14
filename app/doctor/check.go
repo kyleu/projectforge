@@ -24,6 +24,7 @@ type Check struct {
 	UsedBy    string   `json:"usedBy,omitempty"`
 	Modules   []string `json:"modules,omitempty"`
 	Platforms []string `json:"platforms,omitempty"`
+	Core      bool     `json:"core,omitempty"`
 	Fn        CheckFn  `json:"-"`
 	Solve     SolveFn  `json:"-"`
 }
@@ -56,5 +57,11 @@ type Checks []*Check
 func (c Checks) Get(key string) *Check {
 	return lo.FindOrElse(c, nil, func(x *Check) bool {
 		return x.Key == key
+	})
+}
+
+func (c Checks) Keys() []string {
+	return lo.Map(c, func(c *Check, _ int) string {
+		return c.Key
 	})
 }

@@ -14,6 +14,7 @@ var Node = &doctor.Check{
 	Summary: "Builds our web assets",
 	URL:     "https://nodejs.org",
 	UsedBy:  "Build of [client] TypeScript project and css pipeline",
+	Core:    true,
 	Fn:      simpleOut(".", "node", []string{"-v"}, noop),
 	Solve:   solveNode,
 }

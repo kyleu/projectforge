@@ -17,11 +17,6 @@ import (
 
 const welcomeMessage = "Welcome to " + util.AppName + "! View this page in a browser to get started."
 
-var exclusions = []string{
-	checks.Golangcilint.Key, checks.Gofumpt.Key, checks.Gotestsum.Key, checks.Imagemagick.Key, checks.Inkscape.Key,
-	checks.Project.Key, checks.PF.Key, checks.Repo.Key,
-}
-
 func Welcome(rc *fasthttp.RequestCtx) {
 	controller.Act("welcome", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		override := string(rc.URI().QueryArgs().Peek("override")) == util.BoolTrue
@@ -31,7 +26,7 @@ func Welcome(rc *fasthttp.RequestCtx) {
 			page := &vpage.Load{URL: "/welcome?loaded=true", Title: "Starting " + util.AppName, Message: "Checking some things..."}
 			return controller.Render(rc, as, page, ps, "Welcome")
 		}
-		ch := checks.CheckAll(ps.Context, as.Services.Modules.Modules().Keys(), ps.Logger, exclusions...).Errors()
+		ch := checks.CheckAll(ps.Context, as.Services.Modules.Modules().Keys(), ps.Logger, checks.Core(false).Keys()...).Errors()
 		if len(ch) > 0 && (!override) {
 			ps.Title = "Missing Dependencies"
 			ps.Data = ch.ErrorSummary()

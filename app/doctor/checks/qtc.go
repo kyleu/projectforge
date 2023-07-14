@@ -14,6 +14,7 @@ var QTC = &doctor.Check{
 	Summary: "Compiles HTML and SQL templates at build time",
 	URL:     "https://github.com/valyala/quicktemplate/qtc",
 	UsedBy:  "Main server build",
+	Core:    true,
 	Fn:      simpleOut(".", "qtc", []string{"--help"}, noop),
 	Solve:   solveQTC,
 }

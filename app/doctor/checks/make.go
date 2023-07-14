@@ -15,6 +15,7 @@ var Make = &doctor.Check{
 	URL:       "https://www.gnu.org/software/make",
 	UsedBy:    "Main server build",
 	Platforms: []string{"!windows"},
+	Core:      true,
 	Fn:        simpleOut(".", "make", []string{"--version"}, noop),
 	Solve:     solveMake,
 }
