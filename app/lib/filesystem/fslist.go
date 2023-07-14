@@ -38,11 +38,11 @@ func (f *FileSystem) ListExtension(path string, ext string, ign []string, trimEx
 	lo.ForEach(matches, func(j string, _ int) {
 		if !checkIgnore(ignore, j) {
 			idx := strings.LastIndex(j, "/")
-			if idx > 0 {
+			if idx == 0 {
 				idx = strings.LastIndex(j, "\\")
-				if idx > 0 {
-					j = j[idx+1:]
-				}
+			}
+			if idx > 0 {
+				j = j[idx+1:]
 			}
 			if trimExtension {
 				j = strings.TrimSuffix(j, "."+ext)

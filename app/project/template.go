@@ -72,9 +72,6 @@ func (p *Project) ToTemplateContext(configVars util.KeyTypeDescs, portOffsets ma
 	if ret.Name == "" {
 		ret.Name = ret.Key
 	}
-	if ret.Exec == "" {
-		ret.Exec = ret.Key
-	}
 	if ret.Args == "" {
 		if p.HasModule("marketing") {
 			ret.Args = " -v --addr=0.0.0.0 all"

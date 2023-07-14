@@ -57,10 +57,12 @@ var (
 	buildPackages      = &Build{Key: "packages", Title: "Packages", Description: "Visualize your application's packages", Run: onPackages}
 	buildCleanup       = &Build{Key: "cleanup", Title: "Cleanup", Description: "Cleans up file permissions", Run: onCleanup}
 	buildBuild         = simpleBuild("build", "Build", "make build")
+	buildFull          = &Build{Key: "full", Title: "Full Build", Description: "Builds the TypeScript and Go code", Run: onFull}
 	buildClean         = simpleBuild("clean", "Clean", "make clean")
 	buildTidy          = simpleBuild("tidy", "Tidy", "go mod tidy")
 	buildFormat        = simpleBuild("format", "Format", filepath.Join("bin", "format"+build.ScriptExtension))
 	buildLint          = simpleBuild("lint", "Lint", filepath.Join("bin", "check."+build.ScriptExtension))
+	buildTemplates     = simpleBuild("templates", "Templates", filepath.Join("bin", "templates."+build.ScriptExtension))
 	buildClientInstall = &Build{
 		Key: "clientInstall", Title: "Client Install", Description: ciDesc, Run: func(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
 			return simpleProc(ctx, "npm install", filepath.Join(pm.Prj.Path, "client"), ret, pm.Logger)
@@ -74,8 +76,8 @@ var (
 )
 
 var AllBuilds = Builds{
-	buildStart, buildDeps, buildImports, buildIgnored, buildPackages, buildCleanup, buildBuild, buildClean,
-	buildTidy, buildFormat, buildLint, buildClientInstall, buildClientBuild, buildDeployments, buildTest,
+	buildStart, buildDeps, buildImports, buildIgnored, buildPackages, buildCleanup, buildBuild, buildFull, buildClean,
+	buildTidy, buildFormat, buildLint, buildTemplates, buildClientInstall, buildClientBuild, buildDeployments, buildTest,
 }
 
 func fullBuild(ctx context.Context, prj *project.Project, r *Result, logger util.Logger) *Result {

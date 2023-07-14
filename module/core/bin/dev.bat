@@ -7,4 +7,4 @@ cd %~dp0\..
 echo "Windows doesn't allow reloading... sorry"
 @ECHO ON
 go.exe build -gcflags "all=-N -l" -o build/debug/{{{ .Exec }}}.exe .
-build\debug\{{{ .Exec }}}.exe -v --addr=0.0.0.0 {{{ .Key }}}
+build\debug\{{{ .Exec }}}.exe -v --addr=0.0.0.0 {{{ if .HasModule "marketing" }}}all{{{ else }}}server{{{ end }}}

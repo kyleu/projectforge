@@ -108,6 +108,17 @@ func onCleanup(_ context.Context, pm *PrjAndMods, r *Result) *Result {
 	return r
 }
 
+func onFull(ctx context.Context, pm *PrjAndMods, r *Result) *Result {
+	t := util.TimerStart()
+	logs, err := build.Full(ctx, pm.Prj, pm.Logger)
+	r.Modules = append(r.Modules, &module.Result{Keys: []string{"fullbuild"}, Status: "OK", Duration: t.End()})
+	r.Logs = append(r.Logs, logs...)
+	if err != nil {
+		return r.WithError(err)
+	}
+	return r
+}
+
 func onDeployments(_ context.Context, pm *PrjAndMods, r *Result) *Result {
 	if pm.Prj.Info == nil || len(pm.Prj.Info.Deployments) == 0 {
 		return r

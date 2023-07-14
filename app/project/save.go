@@ -6,6 +6,7 @@ import (
 	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/lib/theme"
 	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/model"
 	"projectforge.dev/projectforge/app/util"
@@ -15,6 +16,12 @@ func (s *Service) Save(prj *Project, logger util.Logger) error {
 	fn := ConfigDir + "/project.json"
 	if prj.Icon == DefaultIcon {
 		prj.Icon = ""
+	}
+	if prj.Exec == prj.Key {
+		prj.Exec = ""
+	}
+	if prj.Theme != nil && prj.Theme.Equals(theme.ThemeDefault) {
+		prj.Theme = nil
 	}
 	tgtFS := s.GetFilesystem(prj)
 	j := util.ToJSON(prj)
