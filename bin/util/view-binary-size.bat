@@ -3,7 +3,7 @@ rem Content managed by Project Forge, see [projectforge.md] for details.
 
 rem Visualizes space usage for the release binary
 
-cd %~dpnx0\..\..
+cd %~dp0\..\..
 
 @ECHO ON
 make build-release

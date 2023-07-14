@@ -33,6 +33,7 @@ func (s *Service) load(path string) (json.RawMessage, *Project, error) {
 		}
 		ret := NewProject(r, path)
 		ret.Name = fmt.Sprintf("%s (missing)", r)
+		ret.Error = "missing [.projectforge/project.json]"
 		return nil, ret, nil
 	}
 	b, err := os.ReadFile(cfgPath)
