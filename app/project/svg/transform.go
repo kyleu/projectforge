@@ -3,11 +3,12 @@ package svg
 import (
 	"encoding/xml"
 	"fmt"
-	"projectforge.dev/projectforge/app/util"
 	"strings"
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
+
+	"projectforge.dev/projectforge/app/util"
 )
 
 func Transform(tgt string, b []byte, url string) (*SVG, error) {

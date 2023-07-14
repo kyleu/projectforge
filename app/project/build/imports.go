@@ -57,7 +57,7 @@ func importsFor(self string, fix bool, fs filesystem.FileLoader, fn string, targ
 	}
 	if fix && len(diffs) > 0 {
 		if targetPath == "" || fn == targetPath {
-			newContent := strings.Join(fixed, str)
+			newContent := strings.Join(fixed, util.StringDetectLinebreak(str))
 			err = fs.WriteFile(fn, []byte(newContent), stat.Mode(), true)
 			if err != nil {
 				return nil, nil, errors.Wrapf(err, "unable to write file [%s]", fn)

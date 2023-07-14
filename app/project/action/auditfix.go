@@ -2,13 +2,13 @@ package action
 
 import (
 	"context"
-	"projectforge.dev/projectforge/app/util"
 	"strings"
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func auditRemove(ctx context.Context, fn string, pm *PrjAndMods, ret *Result) error {

@@ -2,7 +2,6 @@ package cproject
 
 import (
 	"fmt"
-	"projectforge.dev/projectforge/app/util"
 	"strings"
 
 	"github.com/muesli/gamut"
@@ -14,6 +13,7 @@ import (
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/lib/theme"
+	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views"
 	"projectforge.dev/projectforge/views/vproject"
 )

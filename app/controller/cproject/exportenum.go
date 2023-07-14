@@ -2,7 +2,6 @@ package cproject
 
 import (
 	"fmt"
-	"projectforge.dev/projectforge/app/util"
 
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
@@ -12,6 +11,7 @@ import (
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/files/goenum"
+	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/vexport"
 )
 

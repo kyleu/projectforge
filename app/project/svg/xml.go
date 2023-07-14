@@ -2,8 +2,9 @@ package svg
 
 import (
 	"encoding/xml"
-	"projectforge.dev/projectforge/app/util"
 	"strings"
+
+	"projectforge.dev/projectforge/app/util"
 )
 
 type xmlNode struct {
