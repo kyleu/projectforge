@@ -2,11 +2,17 @@ package action
 
 import (
 	"bufio"
+	"context"
 	"fmt"
 	"os"
 	"strconv"
 	"strings"
 
+	"github.com/pkg/errors"
+	"github.com/samber/lo"
+
+	"projectforge.dev/projectforge/app/doctor"
+	"projectforge.dev/projectforge/app/doctor/checks"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -15,9 +21,17 @@ func clilog(s string) {
 	print(s) //nolint:forbidigo
 }
 
-func cliProject(p *project.Project, modKeys []string) error {
+func cliProject(ctx context.Context, p *project.Project, modKeys []string, logger util.Logger) error {
 	clilog(util.AppName + "\nLet's create a new project!\n\n")
 
+	clilog("checking a few things...")
+	errResults := checks.CheckAll(ctx, p.Modules, logger, checks.Core(false).Keys()...).Errors()
+	if len(errResults) > 0 {
+		msgs := lo.Map(errResults, func(r *doctor.Result, _ int) string {
+			return r.ErrorString()
+		})
+		return errors.New(strings.Join(msgs, util.StringDefaultLinebreak))
+	}
 	if p.Key == "" {
 		path, _ := os.Getwd()
 		_, path = util.StringSplitPath(path)

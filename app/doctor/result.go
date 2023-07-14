@@ -65,6 +65,19 @@ func (p *Result) AddPackageSolution(name string, pkg string) *Result {
 	return p.AddSolution(msg)
 }
 
+func (p *Result) ErrorString() string {
+	if len(p.Errors) == 0 && len(p.Solutions) == 0 {
+		return ""
+	}
+	msg := lo.Map(p.Errors, func(e *Error, _ int) string {
+		return e.String()
+	})
+	msg = append(msg, lo.Map(p.Solutions, func(s string, _ int) string {
+		return "   Solution: " + s
+	})...)
+	return strings.Join(msg, util.StringDefaultLinebreak)
+}
+
 type Results []*Result
 
 func (r Results) Errors() Results {

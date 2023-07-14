@@ -22,7 +22,7 @@ func onCreate(ctx context.Context, params *Params) *Result {
 	prj = projectFromCfg(prj, params.Cfg)
 	ret := newResult(TypeCreate, prj, params.Cfg, params.Logger)
 	if params.CLI {
-		err := cliProject(prj, params.MSvc.Keys())
+		err := cliProject(ctx, prj, params.MSvc.Keys(), params.Logger)
 		if err != nil {
 			return ret.WithError(err)
 		}
