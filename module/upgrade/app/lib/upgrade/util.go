@@ -76,5 +76,7 @@ func overwrite(content []byte) error {
 		return err
 	}
 
+	_ = os.Remove(oldFN)
+
 	return nil
 }

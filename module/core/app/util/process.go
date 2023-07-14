@@ -5,6 +5,7 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"runtime"
 	"strings"
 
 	"github.com/kballard/go-shellquote"
@@ -12,14 +13,19 @@ import (
 )
 
 func StartProcess(cmd string, path string, in io.Reader, out io.Writer, er io.Writer, env ...string) (*exec.Cmd, error) {
-	args, _ := shellquote.Split(cmd)
+	var args []string
+	if runtime.GOOS == "windows" {
+		args = strings.Split(cmd, " ")
+	} else {
+		args, _ = shellquote.Split(cmd)
+	}
 	if len(args) == 0 {
 		return nil, errors.New("no arguments provided")
 	}
 	firstArg := args[0]
 
 	var err error
-	if !strings.Contains(firstArg, "/") {
+	if !strings.Contains(firstArg, "/") && !strings.Contains(firstArg, "\\") {
 		firstArg, err = exec.LookPath(firstArg)
 		if err != nil {
 			return nil, errors.Wrapf(err, "unable to look up cmd [%s]", firstArg)
