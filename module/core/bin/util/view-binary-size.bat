@@ -2,7 +2,7 @@
 
 rem Visualizes space usage for the release binary
 
-cd %~dpnx0\..\..
+cd %~dp0\..\..
 
 @ECHO ON
 make build-release

@@ -2,7 +2,7 @@
 
 rem Builds all the templates using quicktemplate
 
-cd %~dpnx0\..
+cd %~dp0\..
 
 @ECHO ON
 {{{ if .HasModule "database" }}}qtc -ext sql -dir "queries"

@@ -2,9 +2,9 @@
 
 rem Starts a pprof server using the (previously-recorded) CPU profile at ./tmp/cpu.pprof
 
-cd %~dpnx0\..\..
+cd %~dp0\..\..
 
-@ECHO ON
 echo "=== launching profiler for cpu.pprof ==="
+@ECHO ON
 go tool pprof -http=":8000" build\debug\{{{ .Exec }}} tmp\cpu.pprof
 

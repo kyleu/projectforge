@@ -2,8 +2,8 @@
 
 rem Runs eslint for the TypeScript project
 
-cd %~dpnx0\..\client
+cd %~dp0\..\client
 
-@ECHO ON
 echo "=== linting client ==="
+@ECHO ON
 eslint --ext .js,.ts,.tsx .

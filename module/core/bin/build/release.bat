@@ -2,7 +2,7 @@
 
 rem Runs goreleaser
 
-cd %~dpnx0\..\..
+cd %~dp0\..\..
 
 @ECHO ON
 goreleaser -f ./tools/release/.goreleaser.yml release --timeout 240m --clean
