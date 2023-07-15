@@ -24,7 +24,7 @@ func clilog(s string) {
 func cliProject(ctx context.Context, p *project.Project, modKeys []string, logger util.Logger) error {
 	clilog(util.AppName + "\nLet's create a new project!\n\n")
 
-	clilog("checking a few things...")
+	clilog("Checking a few things...\n")
 	errResults := checks.CheckAll(ctx, p.Modules, logger, checks.Core(false).Keys()...).Errors()
 	if len(errResults) > 0 {
 		msgs := lo.Map(errResults, func(r *doctor.Result, _ int) string {
@@ -32,12 +32,13 @@ func cliProject(ctx context.Context, p *project.Project, modKeys []string, logge
 		})
 		return errors.New(strings.Join(msgs, util.StringDefaultLinebreak))
 	}
+	clilog("\nAll good!\n\n")
 	if p.Key == "" {
 		path, _ := os.Getwd()
 		_, path = util.StringSplitPath(path)
 		p.Key = path
 	}
-	p.Key = promptString("Enter a project key; must only contain alphanumerics", p.Key)
+	p.Key = promptString("Enter a project key; must only contain alphanumerics", strings.ToLower(p.Key))
 
 	if p.Name == "" {
 		p.Name = p.Key
@@ -112,7 +113,11 @@ func gatherProjectInfo(p *project.Project) {
 	p.Info.Sourcecode = promptString("Enter this project's source repository", p.Info.Sourcecode)
 }
 
+var promptTotal = 0
+
 func promptString(query string, curr string) string {
+	promptTotal++
+	clilog(fmt.Sprint(promptTotal) + ": ")
 	clilog(query)
 	if curr == "" {
 		clilog(" (optional)")
