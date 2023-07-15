@@ -7,6 +7,7 @@ import (
 	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/app/project/build"
 )
 
 func onCreate(ctx context.Context, params *Params) *Result {
@@ -54,7 +55,8 @@ func onCreate(ctx context.Context, params *Params) *Result {
 	}
 
 	params.Logger.Info("Building project...")
+	ret.Modules = nil
 	fullBuild(ctx, prj, ret, params.Logger)
-	params.Logger.Info("Build complete!")
+	params.Logger.Info("Your project is ready! Run [bin/dev." + build.ScriptExtension + "] to start your application")
 	return ret
 }
