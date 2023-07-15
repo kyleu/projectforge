@@ -10,9 +10,10 @@ import (
 )
 
 type Block struct {
-	Key   string   `json:"key"`
-	Type  string   `json:"type"`
-	Lines []string `json:"lines"`
+	Key      string   `json:"key"`
+	Type     string   `json:"type"`
+	Lines    []string `json:"lines"`
+	SkipDecl bool     `json:"skipDecl,omitempty"`
 }
 
 func NewBlock(k string, t string) *Block {
@@ -81,7 +82,7 @@ func (b *Block) NoLineDecl() string {
 		println(x)
 	}
 
-	if len(ret) == 0 || b.ContainsText("{%") {
+	if len(ret) == 0 || b.SkipDecl || b.ContainsText("{%") {
 		return ""
 	}
 	x := fmt.Sprintf("//nolint:%s", strings.Join(ret, ","))

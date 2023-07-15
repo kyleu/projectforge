@@ -9,7 +9,7 @@ import (
 	"{{{ .Package }}}/app/lib/menu"
 )
 
-func graphQLMenu(ctx context.Context, gqlSvc *graphql.Service) *menu.Item {
+func graphQLMenu(_ context.Context, gqlSvc *graphql.Service) *menu.Item {
 	l := gqlSvc.Keys()
 	kids := make(menu.Items, 0, len(l))
 	titles := gqlSvc.Titles()

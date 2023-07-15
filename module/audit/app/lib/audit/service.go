@@ -57,7 +57,9 @@ func (s *Service) ApplyObj(ctx context.Context, a *Audit, l any, r any, t string
 	return s.Apply(ctx, a, logger, rec)
 }
 
-func (s *Service) ApplyObjSimple(ctx context.Context, act string, msg string, l any, r any, t string, md util.ValueMap, logger util.Logger) (*Audit, Records, error) {
+func (s *Service) ApplyObjSimple(
+	ctx context.Context, act string, msg string, l any, r any, t string, md util.ValueMap, logger util.Logger,
+) (*Audit, Records, error) {
 	a := New(act, "", "", "", md, msg)
 	a.Completed = util.TimeCurrent()
 	return s.ApplyObj(ctx, a, l, r, t, md, logger)

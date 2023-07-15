@@ -100,7 +100,7 @@ func applyModelProperty(m *model.Model, prop string, val any) error {
 	return nil
 }
 
-func applyFieldProperty(m *model.Model, f *field.Field, prop string, val any) error {
+func applyFieldProperty(_ *model.Model, f *field.Field, prop string, val any) error {
 	switch prop {
 	case KeyTitle:
 		f.Title = fmt.Sprintf("%v", val)

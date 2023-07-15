@@ -11,9 +11,9 @@ import (
 )
 
 var homeContent = util.ValueMap{
-	"_": util.AppName,
+	util.AppKey: util.AppName,
 	"urls": map[string]string{
-		"TODO": "/todo",
+		"home": "/",
 	},
 }
 

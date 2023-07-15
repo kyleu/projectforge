@@ -1,6 +1,8 @@
 package model
 
 import (
+	"fmt"
+
 	"projectforge.dev/projectforge/app/lib/types"
 )
 
@@ -37,4 +39,12 @@ func TypeToViewString(t types.Type, prop string, nullable bool) string {
 	default:
 		return "{%%s " + ret + " %%}"
 	}
+}
+
+func DetectLL(msg string, args ...any) string {
+	ret := fmt.Sprintf(msg, args...)
+	if len(ret) > 160 {
+		return ret + " //nolint:lll"
+	}
+	return ret
 }

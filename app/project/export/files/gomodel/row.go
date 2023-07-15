@@ -58,6 +58,7 @@ func Row(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*f
 
 func modelTableCols(m *model.Model) (*golang.Block, error) {
 	ret := golang.NewBlock("Columns", "procedural")
+	ret.SkipDecl = true
 	ret.W("var (")
 	ret.W("\ttable         = %q", m.Name)
 	ret.W("\ttableQuoted   = fmt.Sprintf(\"%%q\", table)")
@@ -69,9 +70,9 @@ func modelTableCols(m *model.Model) (*golang.Block, error) {
 		hcp := hc.Col.Proper()
 		ret.WB()
 		constCols := strings.Join(hc.Const.NamesQuoted(), ", ")
-		ret.W("\tcolumns%s = util.StringArrayQuoted([]string{%s})", util.StringPad("Core", len(hcp)), constCols)
+		ret.W(model.DetectLL("\tcolumns%s = util.StringArrayQuoted([]string{%s})", util.StringPad("Core", len(hcp)), constCols))
 		varCols := strings.Join(hc.Var.NamesQuoted(), ", ")
-		ret.W("\tcolumns%s = util.StringArrayQuoted([]string{%s})", hcp, varCols)
+		ret.W(model.DetectLL("\tcolumns%s = util.StringArrayQuoted([]string{%s})", hcp, varCols))
 		ret.WB()
 		ret.W("\ttable%s       = table + \"_%s\"", hcp, hc.Col.Name)
 		ret.W("\ttable%sQuoted = fmt.Sprintf(\"%%%%q\", table%s)", hcp, hcp)
@@ -87,7 +88,8 @@ func modelTableCols(m *model.Model) (*golang.Block, error) {
 			}
 		}
 		joinClause += strings.Join(joins, " and ")
-		ret.W("\ttables%s = fmt.Sprintf(`%s`, table, table%s) //nolint", util.StringPad("Joined", len(hcp)+5), joinClause, hcp)
+		msg := "\ttables%s = fmt.Sprintf(`%s`, table, table%s)"
+		ret.W(model.DetectLL(msg, util.StringPad("Joined", len(hcp)+5), joinClause, hcp))
 	}
 	ret.W(")")
 	return ret, nil

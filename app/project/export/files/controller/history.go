@@ -15,11 +15,12 @@ func controllerHistory(m *model.Model, prefix string) *golang.Block {
 	ret.W("\t\tif err != nil {")
 	ret.W("\t\t\treturn \"\", errors.Wrap(err, \"must provide [historyID] as an argument\")")
 	ret.W("\t\t}")
-	ret.W("\t\thist, err := as.Services.%s.GetHistory(ps.Context, nil, *histID, ps.Logger)", m.Proper())
+	ret.W("\t\thistModel, err := as.Services.%s.GetHistory(ps.Context, nil, *histID, ps.Logger)", m.Proper())
 	ret.WE(2, `""`)
-	ret.W("\t\tps.Title = hist.ID.String()")
-	ret.W("\t\tps.Data = hist")
-	ret.W("\t\treturn %sRender(rc, as, &v%s.History{Model: ret, History: hist}, ps, %s, ret.String(), hist.ID.String())", prefix, m.Package, m.Breadcrumbs())
+	ret.W("\t\tps.Title = histModel.ID.String()")
+	ret.W("\t\tps.Data = histModel")
+	msg := "\t\treturn %sRender(rc, as, &v%s.History{Model: ret, History: histModel}, ps, %s, ret.String(), histModel.ID.String())"
+	ret.W(msg, prefix, m.Package, m.Breadcrumbs())
 	ret.W("\t})")
 	ret.W("}")
 	return ret
