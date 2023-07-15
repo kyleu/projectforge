@@ -1,0 +1,37 @@
+package gomodel
+
+import (
+	"fmt"
+	"strings"
+
+	"github.com/samber/lo"
+
+	"projectforge.dev/projectforge/app/lib/types"
+	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/project/export/model"
+)
+
+func modelClone(m *model.Model) *golang.Block {
+	ret := golang.NewBlock("Clone", "func")
+	ret.W("func (%s *%s) Clone() *%s {", m.FirstLetter(), m.Proper(), m.Proper())
+	calls := lo.Map(m.Columns, func(col *model.Column, _ int) string {
+		decl := col.Proper()
+		switch col.Type.Key() {
+		case types.KeyMap, types.KeyValueMap, types.KeyReference:
+			decl += ".Clone()"
+		}
+		return fmt.Sprintf("%s.%s,", m.FirstLetter(), decl)
+	})
+	lines := JoinLines(calls, " ", 120)
+	if len(lines) == 1 && len(lines[0]) < 100 {
+		ret.W("\treturn &%s{%s}", m.Proper(), strings.TrimSuffix(lines[0], ","))
+	} else {
+		ret.W("\treturn &%s{", m.Proper())
+		lo.ForEach(lines, func(l string, _ int) {
+			ret.W("\t\t%s", l)
+		})
+		ret.W("\t}")
+	}
+	ret.W("}")
+	return ret
+}

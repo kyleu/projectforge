@@ -29,7 +29,7 @@ func (s Sandboxes) Get(key string) *Sandbox {
 }
 
 // $PF_SECTION_START(sandboxes)$
-// AllSandboxes is a list of all sandboxes, in order
+
 var AllSandboxes = Sandboxes{testbed{{{ if .HasModule "wasm" }}}, wasm{{{ end }}}}
 
 // $PF_SECTION_END(sandboxes)$

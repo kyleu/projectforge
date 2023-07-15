@@ -13,11 +13,13 @@ import (
 	"github.com/samber/lo"
 )
 
+var winLB, saneLB = "\r\n", "\n"
+
 var StringDefaultLinebreak = func() string {
 	if runtime.GOOS == "windows" {
-		return "\r\n"
+		return winLB
 	}
-	return "\n"
+	return saneLB
 }()
 
 func StringSplit(s string, sep byte, cutc bool) (string, string) {
@@ -76,10 +78,10 @@ func StringSplitPathAndTrim(s string) []string {
 }
 
 func StringDetectLinebreak(s string) string {
-	if strings.Contains(s, "\r\n") {
-		return "\r\n"
+	if strings.Contains(s, winLB) {
+		return winLB
 	}
-	return "\n"
+	return saneLB
 }
 
 func StringSplitLines(s string) []string {

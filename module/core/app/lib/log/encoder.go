@@ -1,5 +1,4 @@
 {{{ if .HasModule "wasm" }}}//go:build !js
-// +build !js
 
 {{{ end }}}package log
 

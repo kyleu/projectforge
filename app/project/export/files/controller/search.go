@@ -29,7 +29,6 @@ func Search(args *model.Args, addHeader bool, linebreak string) (*file.File, err
 func searchBlock(args *model.Args) *golang.Block {
 	ret := golang.NewBlock("menu", "func")
 	keys := make([]string, 0, len(args.Models))
-	ret.W("//nolint:gocognit")
 	ret.W("func generatedSearch() []Provider {")
 	lo.ForEach(args.Models, func(m *model.Model, _ int) {
 		if m.HasSearches() {

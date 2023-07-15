@@ -240,9 +240,6 @@ func serviceGetByCols(key string, m *model.Model, cols model.Columns, dbRef stri
 	}
 	msg := "func (s *Service) %s(ctx context.Context, tx *sqlx.Tx, %s, params *filter.Params%s, logger util.Logger) (%s, error) {"
 	msg = fmt.Sprintf(msg, key, args, getSuffix(m), m.ProperPlural())
-	if len(msg) > 160 {
-		msg += " //nolint:lll"
-	}
 	ret.W(msg)
 	ret.W("\tparams = filters(params)")
 	placeholder := ""

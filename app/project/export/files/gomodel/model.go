@@ -121,15 +121,24 @@ func modelConstructor(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 func modelToData(m *model.Model, cols model.Columns, suffix string) *golang.Block {
 	ret := golang.NewBlock(m.Proper(), "func")
 	ret.W("func (%s *%s) ToData%s() []any {", m.FirstLetter(), m.Proper(), suffix)
-	refs := lo.Map(cols, func(c *model.Column, _ int) string {
+	calls := lo.Map(cols, func(c *model.Column, _ int) string {
 		// case types.KeyAny, types.KeyMap:
 		//	ret.W("\t%sArg := util.ToJSONBytes(%s.%s, true)", c.Camel(), m.FirstLetter(), c.Proper())
 		//	return fmt.Sprintf("%sArg", c.Camel())
 		// default:
-		return fmt.Sprintf("%s.%s", m.FirstLetter(), c.Proper())
+		return fmt.Sprintf("%s.%s,", m.FirstLetter(), c.Proper())
 		//}
 	})
-	ret.W("\treturn []any{%s}", strings.Join(refs, ", "))
+	lines := JoinLines(calls, " ", 120)
+	if len(lines) == 1 && len(lines[0]) < 100 {
+		ret.W("\treturn []any{%s}", strings.TrimSuffix(lines[0], ","))
+	} else {
+		ret.W("\treturn []any{")
+		lo.ForEach(lines, func(l string, _ int) {
+			ret.W("\t\t%s", l)
+		})
+		ret.W("\t}")
+	}
 	ret.W("}")
 	return ret
 }

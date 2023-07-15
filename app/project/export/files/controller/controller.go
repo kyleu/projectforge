@@ -114,15 +114,12 @@ func controllerArgFor(col *model.Column, b *golang.Block, retVal string, indent 
 	}
 }
 
-func blockFor(m *model.Model, prefix string, grp *model.Column, expectedLines int, keys ...string) *golang.Block {
+func blockFor(m *model.Model, prefix string, grp *model.Column, keys ...string) *golang.Block {
 	properKeys := lo.Map(keys, func(k string, _ int) string {
 		return util.StringToTitle(k)
 	})
 	name := m.Proper() + withGroupName(strings.Join(properKeys, ""), grp)
 	ret := golang.NewBlock(name, "func")
-	if expectedLines > 100 {
-		ret.W("//nolint:funlen,gocognit")
-	}
 	ret.W("func %s(rc *fasthttp.RequestCtx) {", name)
 	grpStr := ""
 	if grp != nil {

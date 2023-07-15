@@ -14,7 +14,7 @@ import (
 
 func controllerDetail(g *golang.File, models model.Models, m *model.Model, grp *model.Column, audit bool, prefix string) *golang.Block {
 	rrels := models.ReverseRelations(m.Name)
-	ret := blockFor(m, prefix, grp, (len(rrels)*6)+40, "detail")
+	ret := blockFor(m, prefix, grp, "detail")
 	grpHistory := ""
 	if grp != nil {
 		controllerArgFor(grp, ret, `""`, 2)

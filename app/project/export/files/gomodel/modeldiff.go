@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/pkg/errors"
-	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
@@ -15,25 +14,6 @@ import (
 func modelDiff(g *golang.File, m *model.Model) (*golang.Block, error) {
 	ret := golang.NewBlock("Diff"+m.Proper(), "func")
 
-	complexity := lo.Sum(lo.Map(m.Columns, func(col *model.Column, _ int) int {
-		switch col.Type.Key() {
-		case types.KeyAny, types.KeyList, types.KeyMap, types.KeyValueMap, types.KeyReference:
-			return 2
-		case types.KeyBool, types.KeyInt, types.KeyFloat:
-			return 4
-		case types.KeyEnum:
-			return 4
-		case types.KeyString:
-			return 2
-		case types.KeyDate, types.KeyTimestamp, types.KeyUUID:
-			return 6
-		default:
-			return 2
-		}
-	}))
-	if complexity > 42 {
-		ret.W("//nolint:gocognit")
-	}
 	ret.W("func (%s *%s) Diff(%sx *%s) util.Diffs {", m.FirstLetter(), m.Proper(), m.FirstLetter(), m.Proper())
 	ret.W("\tvar diffs util.Diffs")
 	for _, col := range m.Columns {
@@ -62,9 +42,6 @@ func modelDiff(g *golang.File, m *model.Model) (*golang.Block, error) {
 			if col.Nullable {
 				msg := "\tif (%s == nil && %s != nil) || (%s != nil && %s == nil) || (%s != nil && %s != nil && *%s != *%s) {"
 				line := fmt.Sprintf(msg, l, r, l, r, l, r, l, r)
-				if len(line) > 152 {
-					line += " //nolint:lll"
-				}
 				ret.W(line)
 				g.AddImport(helper.ImpFmt)
 				ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, fmt.Sprint(%s), fmt.Sprint(%s))) //nolint:gocritic // it's nullable", col.Camel(), l, r)

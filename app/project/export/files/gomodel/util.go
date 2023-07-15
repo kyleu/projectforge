@@ -10,24 +10,27 @@ import (
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
-	"projectforge.dev/projectforge/app/util"
 )
 
-func modelClone(m *model.Model) *golang.Block {
-	ret := golang.NewBlock("Clone", "func")
-	ret.W("func (%s *%s) Clone() *%s {", m.FirstLetter(), m.Proper(), m.Proper())
-	ret.W("\treturn &%s{", m.Proper())
-	max := m.Columns.MaxCamelLength() + 1
-	lo.ForEach(m.Columns, func(col *model.Column, _ int) {
-		decl := col.Proper()
-		switch col.Type.Key() {
-		case types.KeyMap, types.KeyValueMap, types.KeyReference:
-			decl += ".Clone()"
+func JoinLines(ss []string, delim string, maxLen int) []string {
+	if maxLen == 0 {
+		return []string{strings.Join(ss, delim)}
+	}
+	var ret []string
+	var curr string
+	lo.ForEach(ss, func(s string, _ int) {
+		if curr != "" && (len(curr)+len(delim)+len(s)) > maxLen {
+			ret = append(ret, curr)
+			curr = ""
 		}
-		ret.W("\t\t%s %s.%s,", util.StringPad(col.Proper()+":", max), m.FirstLetter(), decl)
+		if curr != "" {
+			curr += delim
+		}
+		curr += s
 	})
-	ret.W("\t}")
-	ret.W("}")
+	if curr != "" {
+		ret = append(ret, curr)
+	}
 	return ret
 }
 

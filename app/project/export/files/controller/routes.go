@@ -28,13 +28,6 @@ func Routes(args *model.Args, addHeader bool, linebreak string) (*file.File, err
 
 func routes(args *model.Args) *golang.Block {
 	ret := golang.NewBlock("routes", "func")
-	complexity := lo.Sum(lo.Map(args.Models, func(m *model.Model, _ int) int {
-		return (len(m.GroupedColumns()) * 7) + 8
-	}))
-	if complexity > 80 {
-		ret.W("//nolint:funlen")
-	}
-
 	ret.W("func generatedRoutes(r *router.Router) {")
 	rct := routeContent(args)
 	lo.ForEach(rct, func(x string, _ int) {

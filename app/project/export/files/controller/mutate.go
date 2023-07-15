@@ -11,7 +11,7 @@ import (
 )
 
 func controllerCreateForm(m *model.Model, grp *model.Column, prefix string) *golang.Block {
-	ret := blockFor(m, prefix, grp, 0, "create", "form")
+	ret := blockFor(m, prefix, grp, "create", "form")
 	if grp != nil {
 		controllerArgFor(grp, ret, `""`, 2)
 	}
@@ -33,7 +33,7 @@ func controllerCreateForm(m *model.Model, grp *model.Column, prefix string) *gol
 }
 
 func controllerCreateFormRandom(m *model.Model, prefix string) *golang.Block {
-	ret := blockFor(m, prefix, nil, 0, "create", "form", "random")
+	ret := blockFor(m, prefix, nil, "create", "form", "random")
 	ret.W("\t\tret := %s.Random()", m.Package)
 	ret.W("\t\tps.Title = \"Create Random %s\"", m.Proper())
 	ret.W("\t\tps.Data = ret")
@@ -44,7 +44,7 @@ func controllerCreateFormRandom(m *model.Model, prefix string) *golang.Block {
 }
 
 func controllerCreate(m *model.Model, grp *model.Column, prefix string) *golang.Block {
-	ret := blockFor(m, prefix, grp, 0, "create")
+	ret := blockFor(m, prefix, grp, "create")
 	if grp != nil {
 		controllerArgFor(grp, ret, `""`, 2)
 	}
@@ -65,7 +65,7 @@ func controllerCreate(m *model.Model, grp *model.Column, prefix string) *golang.
 }
 
 func controllerEditForm(m *model.Model, grp *model.Column, prefix string) *golang.Block {
-	ret := blockFor(m, prefix, grp, 0, "edit", "form")
+	ret := blockFor(m, prefix, grp, "edit", "form")
 	if m.IsRevision() {
 		ret.W("\t\trc.SetUserValue(\"includeDeleted\", true)")
 	}
@@ -84,7 +84,7 @@ func controllerEditForm(m *model.Model, grp *model.Column, prefix string) *golan
 }
 
 func controllerEdit(m *model.Model, grp *model.Column, prefix string) *golang.Block {
-	ret := blockFor(m, prefix, grp, 0, "edit")
+	ret := blockFor(m, prefix, grp, "edit")
 	if m.IsRevision() {
 		ret.W("\t\trc.SetUserValue(\"includeDeleted\", true)")
 	}
@@ -114,7 +114,7 @@ func controllerEdit(m *model.Model, grp *model.Column, prefix string) *golang.Bl
 }
 
 func controllerDelete(m *model.Model, grp *model.Column, prefix string) *golang.Block {
-	ret := blockFor(m, prefix, grp, 0, "delete")
+	ret := blockFor(m, prefix, grp, "delete")
 	if grp != nil {
 		controllerArgFor(grp, ret, `""`, 2)
 	}
