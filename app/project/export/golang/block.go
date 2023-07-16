@@ -77,11 +77,6 @@ func (b *Block) NoLineDecl() string {
 	if b.LineComplexity() >= 20 {
 		ret = append(ret, "gocognit")
 	}
-	if b.ContainsText("func (e *Estimate) Diff(") {
-		x := b.LineComplexity()
-		println(x)
-	}
-
 	if len(ret) == 0 || b.SkipDecl || b.ContainsText("{%") {
 		return ""
 	}

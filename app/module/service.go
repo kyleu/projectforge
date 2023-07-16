@@ -10,7 +10,6 @@ import (
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/lib/search/result"
-	"projectforge.dev/projectforge/app/project/export"
 	"projectforge.dev/projectforge/app/util"
 )
 
@@ -27,15 +26,13 @@ type Service struct {
 	cache       map[string]*Module
 	cacheMu     sync.Mutex
 	filesystems map[string]filesystem.FileLoader
-	expSvc      *export.Service
 }
 
 func NewService(ctx context.Context, config filesystem.FileLoader, logger util.Logger) *Service {
 	local := filesystem.NewFileSystem("module")
 	config = filesystem.NewFileSystem(filepath.Join(config.Root(), "module"))
 	fs := map[string]filesystem.FileLoader{}
-	es := export.NewService()
-	ret := &Service{local: local, config: config, cache: map[string]*Module{}, filesystems: fs, expSvc: es}
+	ret := &Service{local: local, config: config, cache: map[string]*Module{}, filesystems: fs}
 
 	_, err := ret.LoadNative(ctx, logger, nativeModuleKeys...)
 	if err != nil {
@@ -138,16 +135,4 @@ func (s *Service) Search(ctx context.Context, q string, logger util.Logger) (res
 		}
 		return nil, false
 	}), nil
-}
-
-func (s *Service) DetectLinebreak(logger util.Logger) string {
-	m, err := s.Get("core")
-	if err != nil {
-		return util.StringDefaultLinebreak
-	}
-	f, err := s.GetFiles(Modules{m}, true, logger)
-	if err != nil || len(f) == 0 {
-		return util.StringDefaultLinebreak
-	}
-	return util.StringDetectLinebreak(f[0].Content)
 }

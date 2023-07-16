@@ -46,6 +46,13 @@ func projectFromForm(frm util.ValueMap, prj *project.Project) error {
 		prj.Info = &project.Info{}
 	}
 	prj.Info.Org = get("org", prj.Info.Org)
+	if prj.Info.Org == "" {
+		prj.Info.Org = prj.Key
+		if prj.Info.Org == "" {
+			prj.Info.Org = "unknown"
+		}
+	}
+
 	prj.Info.AuthorID = get("authorID", prj.Info.AuthorID)
 	prj.Info.AuthorName = get("authorName", prj.Info.AuthorName)
 	prj.Info.AuthorEmail = get("authorEmail", prj.Info.AuthorEmail)
@@ -66,6 +73,16 @@ func projectFromForm(frm util.ValueMap, prj *project.Project) error {
 	prj.Info.GoBinary = get("goBinary", prj.Info.GoBinary)
 	prj.Info.ExtraFiles = util.StringSplitAndTrim(get("extraFiles", strings.Join(prj.Info.ExtraFiles, ", ")), ",")
 	prj.Info.Deployments = util.StringSplitAndTrim(get("deployments", strings.Join(prj.Info.Deployments, ", ")), ",")
+
+	if prj.Package == "" {
+		prj.Package = "github.com/" + prj.Info.Org + "/" + prj.Key
+	}
+	if prj.Info.Homepage == "" {
+		prj.Info.Homepage = "https://github.com/" + prj.Info.Org + "/" + prj.Key
+	}
+	if prj.Info.Sourcecode == "" {
+		prj.Info.Sourcecode = "https://github.com/" + prj.Info.Org + "/" + prj.Key
+	}
 
 	prj.Build = project.BuildFromMap(frm)
 	if prj.Build.Empty() {

@@ -22,6 +22,9 @@ func (s *Service) Save(prj *Project, logger util.Logger) error {
 	}
 	if prj.Theme != nil && prj.Theme.Equals(theme.ThemeDefault) {
 		prj.Theme = nil
+		defer func() {
+			prj.Theme = theme.ThemeDefault
+		}()
 	}
 	tgtFS := s.GetFilesystem(prj)
 	j := util.ToJSON(prj)

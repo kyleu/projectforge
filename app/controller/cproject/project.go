@@ -3,6 +3,7 @@ package cproject
 import (
 	"fmt"
 
+	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
@@ -49,7 +50,24 @@ func ProjectCreate(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		key := frm.GetStringOpt("key")
+		if key == "" {
+			return "", errors.New("Must provide a non-empty value for [key]")
+		}
 		prj.Key = key
+
+		curr, _ := as.Services.Projects.Get(prj.Key)
+		if curr != nil {
+			if prj.Path == "" {
+				prj.Path = curr.Path
+			}
+			if prj.Path != curr.Path {
+				return "", errors.Errorf("Path cannot change to [%s], original project is in [%s]", prj.Path, curr.Path)
+			}
+			if prj.Path == "" || prj.Path == "." {
+				return "", errors.New("You can't recreate the default project; instead, edit it through the UI")
+			}
+		}
+
 		err = as.Services.Projects.Save(prj, ps.Logger)
 		if err != nil {
 			return controller.ERsp("unable to save project: %+v", err)

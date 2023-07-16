@@ -197,37 +197,36 @@ func (p *Welcome) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
           sourcecode.value = "https://github.com/" + org.value + "/" + key.value;
         }
       }
-      console.log();
     }
 
     document.addEventListener("DOMContentLoaded", initForm);
   </script>
 `)
-//line views/vwelcome/Welcome.html:97
+//line views/vwelcome/Welcome.html:96
 }
 
-//line views/vwelcome/Welcome.html:97
+//line views/vwelcome/Welcome.html:96
 func (p *Welcome) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vwelcome/Welcome.html:97
+//line views/vwelcome/Welcome.html:96
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vwelcome/Welcome.html:97
+//line views/vwelcome/Welcome.html:96
 	p.StreamBody(qw422016, as, ps)
-//line views/vwelcome/Welcome.html:97
+//line views/vwelcome/Welcome.html:96
 	qt422016.ReleaseWriter(qw422016)
-//line views/vwelcome/Welcome.html:97
+//line views/vwelcome/Welcome.html:96
 }
 
-//line views/vwelcome/Welcome.html:97
+//line views/vwelcome/Welcome.html:96
 func (p *Welcome) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vwelcome/Welcome.html:97
+//line views/vwelcome/Welcome.html:96
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vwelcome/Welcome.html:97
+//line views/vwelcome/Welcome.html:96
 	p.WriteBody(qb422016, as, ps)
-//line views/vwelcome/Welcome.html:97
+//line views/vwelcome/Welcome.html:96
 	qs422016 := string(qb422016.B)
-//line views/vwelcome/Welcome.html:97
+//line views/vwelcome/Welcome.html:96
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vwelcome/Welcome.html:97
+//line views/vwelcome/Welcome.html:96
 	return qs422016
-//line views/vwelcome/Welcome.html:97
+//line views/vwelcome/Welcome.html:96
 }

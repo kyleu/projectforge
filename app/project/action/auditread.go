@@ -44,7 +44,13 @@ func getModuleFiles(pm *PrjAndMods) ([]string, error) {
 		}
 		args.Modules = pm.Mods.Keys()
 
-		files, e := pm.ESvc.Files(pm.Prj, args, true, pm.MSvc.DetectLinebreak(pm.Logger))
+		lb := util.StringDefaultLinebreak
+		modContent, _ := pm.PSvc.GetFilesystem(pm.Prj).ReadFile("go.mod")
+		if modContent != nil {
+			lb = util.StringDetectLinebreak(string(modContent))
+		}
+
+		files, e := pm.ESvc.Files(pm.Prj, args, true, lb)
 		if e != nil {
 			return nil, err
 		}
