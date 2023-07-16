@@ -123,7 +123,16 @@ source:
 universal_binaries:
 - id: "darwin"
   replace: false
-  name_template: '{{ .ProjectName }}'{{{ end }}}
+  name_template: '{{ .ProjectName }}'
+  hooks:
+    # This is a good place to put one-time use scripts
+    post:{{{ if .BuildAndroid }}}
+      - "./bin/build/android.sh {{ .Version }}"{{{ end }}}{{{ if .BuildIOS }}}
+      - "./bin/build/ios.sh {{ .Version }}"{{{ end }}}{{{ if .Build.Desktop }}}
+      - "./bin/build/desktop.release.sh {{ .Version }}"{{{ end }}}{{{ if .Build.Notarize }}}
+      - "./tools/notarize/notarize.sh"{{{ end }}}
+      # $PF_SECTION_START(extrascripts)$
+      # $PF_SECTION_END(extrascripts)${{{ end }}}
 {{{ if .Build.Simple }}}
 builds:
   - id: "linux"
@@ -194,15 +203,6 @@ builds:
     goarch:
       - "amd64"
     mod_timestamp: "{{ .CommitTimestamp }}"{{{ .GoBinaryContent }}}
-    hooks:
-      # This build uses only one architecture, and is a good place to put one-time use scripts
-      post:{{{ if .BuildAndroid }}}
-        - "./bin/build/android.sh {{ .Version }}"{{{ end }}}{{{ if .BuildIOS }}}
-        - "./bin/build/ios.sh {{ .Version }}"{{{ end }}}{{{ if .Build.Desktop }}}
-        - "./bin/build/desktop.release.sh {{ .Version }}"{{{ end }}}{{{ if .Build.Notarize }}}
-        - "./tools/notarize/notarize.sh"{{{ end }}}
-        # $PF_SECTION_START(extrascripts)$
-        # $PF_SECTION_END(extrascripts)$
 {{{ if .Build.X86 }}}
   - id: "windows_386"
     goos:

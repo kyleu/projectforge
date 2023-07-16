@@ -21,19 +21,19 @@ func serviceGetMultipleSinglePK(m *model.Model, dbRef string, enums enum.Enums) 
 		return nil, err
 	}
 	msg := "func (s *Service) %s(ctx context.Context, tx *sqlx.Tx%s, logger util.Logger, %s ...%s) (%s, error) {"
-	ret.W(msg, serviceGetMultipleName, getSuffix(m), pk.Plural(), t, m.ProperPlural())
-	ret.W("\tif len(%s) == 0 {", pk.Plural())
+	ret.W(msg, serviceGetMultipleName, getSuffix(m), pk.CamelPlural(), t, m.ProperPlural())
+	ret.W("\tif len(%s) == 0 {", pk.CamelPlural())
 	ret.W("\t\treturn %s{}, nil", m.ProperPlural())
 	ret.W("\t}")
-	ret.W("\twc := database.SQLInClause(%q, len(%s), 0, s.db.Placeholder())", pk.Name, pk.Plural())
+	ret.W("\twc := database.SQLInClause(%q, len(%s), 0, s.db.Placeholder())", pk.Name, pk.CamelPlural())
 	if m.IsSoftDelete() {
 		ret.W("\twc = addDeletedClause(wc, includeDeleted)")
 	}
 	ret.W("\tret := rows{}")
 	ret.W("\tq := database.SQLSelectSimple(columnsString, %s, s.db.Placeholder(), wc)", tableClauseFor(m))
-	ret.W("\terr := s.%s.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(%s)...)", dbRef, pk.Plural())
+	ret.W("\terr := s.%s.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(%s)...)", dbRef, pk.CamelPlural())
 	ret.W("\tif err != nil {")
-	ret.W("\t\treturn nil, errors.Wrapf(err, \"unable to get %s for [%%%%d] %s\", len(%s))", m.ProperPlural(), pk.Plural(), pk.Plural())
+	ret.W("\t\treturn nil, errors.Wrapf(err, \"unable to get %s for [%%%%d] %s\", len(%s))", m.ProperPlural(), pk.CamelPlural(), pk.CamelPlural())
 	ret.W("\t}")
 	ret.W("\treturn ret.To%s(), nil", m.ProperPlural())
 	ret.W("}")

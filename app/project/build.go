@@ -93,20 +93,20 @@ type BuildOption struct {
 }
 
 var AllBuildOptions = []*BuildOption{
+	{Key: "simple", Title: "Simple", Description: "Only build Linux amd64 and a single Docker image (ignores all other build options)"},
+
 	{Key: "publish", Title: "Publish", Description: "The release process will publish a full release"},
 	{Key: "private", Title: "Private", Description: "This project is not public (affects publishing)"},
 	{Key: "changelog", Title: "Changelog", Description: "Generate changelogs from Github commits"},
 	{Key: "testsFail", Title: "Tests Fail", Description: "If set, Docker build will fail unless all tests pass"},
 
-	{Key: "desktop", Title: "Desktop", Description: "Webview-based applications for the three major operating systems"},
-	{Key: "notarize", Title: "Notarize", Description: "Sends build artifacts to Apple for notarization"},
+	{Key: "desktop", Title: "Desktop", Description: "Webview-based applications for the three major operating systems (requires \"desktop\" module)"},
+	{Key: "notarize", Title: "Notarize", Description: "Sends build artifacts to Apple for notarization (requires \"notarize\" module)"},
 	{Key: "signing", Title: "Signing", Description: "Signs the checksums using gpg"},
 
-	{Key: "simple", Title: "Simple", Description: "Only build Linux amd64 and a single Docker image"},
-
-	{Key: "android", Title: "Android", Description: "Builds the application as an Android library and webview-based APK"},
-	{Key: "ios", Title: "iOS", Description: "Builds the application as an iOS framework and webview-based app"},
-	{Key: "wasm", Title: "WASM", Description: "Builds the application for WebAssembly"},
+	{Key: "android", Title: "Android", Description: "Builds the application as an Android library and webview-based APK (requires \"android\" module)"},
+	{Key: "ios", Title: "iOS", Description: "Builds the application as an iOS framework and webview-based app (requires \"ios\" module)"},
+	{Key: "wasm", Title: "WASM", Description: "Builds the application for WebAssembly (requires \"wasm\" module)"},
 	{Key: "x86", Title: "32-bit x86", Description: "Builds 32-bit versions of the products"},
 
 	{Key: "windows-arm", Title: "Windows ARM", Description: "Builds the application for Windows on ARM and ARM64 architectures"},
