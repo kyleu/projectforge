@@ -111,6 +111,7 @@ func projectFromCfg(proto *project.Project, cfg util.ValueMap) *project.Project 
 			Homebrew:        str("homebrew", i.Homebrew),
 			Bundle:          str("bundle", i.Bundle),
 			SigningIdentity: str("signingIdentity", i.SigningIdentity),
+			NotarizeEmail:   str("notarizeEmail", i.NotarizeEmail),
 			Slack:           str("slack", i.Slack),
 			Channels:        util.StringSplitAndTrim(str("channels", strings.Join(i.Channels, ", ")), ","),
 			JavaPackage:     str("javaPackage", i.JavaPackage),

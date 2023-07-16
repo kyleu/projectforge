@@ -137,6 +137,10 @@
           "description": "keychain identity to use for signing binaries",
           "type": "string"
         },
+        "notarizeEmail": {
+          "description": "Email address used for Apple notarization, defaults to owner",
+          "type": "string"
+        },
         "slack": {
           "description": "Slack webhook for notifying after successful releases",
           "type": "string"

@@ -42,6 +42,7 @@
     "description": "Project Forge creates and manages applications written in the Go programming language. Using code generation, the latest technology, and a strong standard library, Project Forge will help manage your project's code, assets, UI and UX.",
     "bundle": "com.kyleu.projectforge",
     "signingIdentity": "Developer ID Application: Kyle Unverferth (C6S478FYLD)",
+    "notarizeEmail": "kyle@kyleu.com",
     "javaPackage": "dev.projectforge"
   },
   "build": {

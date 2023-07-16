@@ -7,7 +7,7 @@ notarize {
 }
 
 apple_id {
-  username = "{{{ .Info.AuthorEmail }}}"
+  username = "{{{ .Info.NotarizationEmail }}}"
   password = "@env:APPLE_PASSWORD"
 }
 

@@ -41,6 +41,7 @@ type Info struct {
 	Homebrew        string            `json:"homebrew,omitempty"`
 	Bundle          string            `json:"bundle,omitempty"`
 	SigningIdentity string            `json:"signingIdentity,omitempty"`
+	NotarizeEmail   string            `json:"notarizeEmail,omitempty"`
 	Slack           string            `json:"slack,omitempty"`
 	Channels        []string          `json:"channels,omitempty"`
 	JavaPackage     string            `json:"javaPackage,omitempty"`
@@ -78,4 +79,11 @@ func (i *Info) AuthorIDSafe() string {
 		ret = append(ret, x)
 	})
 	return strings.Join(ret, " ")
+}
+
+func (i *Info) NotarizationEmail() string {
+	if i.NotarizeEmail != "" {
+		return i.NotarizeEmail
+	}
+	return i.AuthorEmail
 }

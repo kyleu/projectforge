@@ -90,8 +90,10 @@
           {%- endif -%}
           {%- if prj.HasModule("notarize") -%}
           {%= components.TableInput("signingIdentity", "", "Signing Identity", info.SigningIdentity, 5, project.Helpers["signingIdentity"]...) %}
+          {%= components.TableInput("notarizeEmail", "", "Notarize Email", info.NotarizeEmail, 5, project.Helpers["notarizeEmail"]...) %}
           {%- else -%}
           <input type="hidden" name="signingIdentity" value="{%s info.SigningIdentity %}" />
+          <input type="hidden" name="notarizeEmail" value="{%s info.NotarizeEmail %}" />
           {%- endif -%}
           {%= components.TableInput("slack", "", "Slack Webhook", info.Slack, 5, project.Helpers["slack"]...) %}
           {%= components.TableInput("channels", "", "Channels", strings.Join(info.Channels, ", "), 5, project.Helpers["channels"]...) %}

@@ -258,133 +258,143 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 		components.StreamTableInput(qw422016, "signingIdentity", "", "Signing Identity", info.SigningIdentity, 5, project.Helpers["signingIdentity"]...)
 //line views/vproject/Edit.html:92
 		qw422016.N().S(`
-`)
-//line views/vproject/Edit.html:93
-	} else {
-//line views/vproject/Edit.html:93
-		qw422016.N().S(`          <input type="hidden" name="signingIdentity" value="`)
-//line views/vproject/Edit.html:94
-		qw422016.E().S(info.SigningIdentity)
-//line views/vproject/Edit.html:94
-		qw422016.N().S(`" />
-`)
-//line views/vproject/Edit.html:95
-	}
-//line views/vproject/Edit.html:95
-	qw422016.N().S(`          `)
-//line views/vproject/Edit.html:96
-	components.StreamTableInput(qw422016, "slack", "", "Slack Webhook", info.Slack, 5, project.Helpers["slack"]...)
-//line views/vproject/Edit.html:96
-	qw422016.N().S(`
           `)
-//line views/vproject/Edit.html:97
-	components.StreamTableInput(qw422016, "channels", "", "Channels", strings.Join(info.Channels, ", "), 5, project.Helpers["channels"]...)
-//line views/vproject/Edit.html:97
-	qw422016.N().S(`
-`)
-//line views/vproject/Edit.html:98
-	if prj.HasModule("android") {
-//line views/vproject/Edit.html:98
-		qw422016.N().S(`          `)
-//line views/vproject/Edit.html:99
-		components.StreamTableInput(qw422016, "javaPackage", "", "Java Package", info.JavaPackage, 5, project.Helpers["javaPackage"]...)
-//line views/vproject/Edit.html:99
+//line views/vproject/Edit.html:93
+		components.StreamTableInput(qw422016, "notarizeEmail", "", "Notarize Email", info.NotarizeEmail, 5, project.Helpers["notarizeEmail"]...)
+//line views/vproject/Edit.html:93
 		qw422016.N().S(`
 `)
-//line views/vproject/Edit.html:100
+//line views/vproject/Edit.html:94
 	} else {
-//line views/vproject/Edit.html:100
-		qw422016.N().S(`          <input type="hidden" name="javaPackage" value="`)
-//line views/vproject/Edit.html:101
-		qw422016.E().S(info.JavaPackage)
-//line views/vproject/Edit.html:101
+//line views/vproject/Edit.html:94
+		qw422016.N().S(`          <input type="hidden" name="signingIdentity" value="`)
+//line views/vproject/Edit.html:95
+		qw422016.E().S(info.SigningIdentity)
+//line views/vproject/Edit.html:95
+		qw422016.N().S(`" />
+          <input type="hidden" name="notarizeEmail" value="`)
+//line views/vproject/Edit.html:96
+		qw422016.E().S(info.NotarizeEmail)
+//line views/vproject/Edit.html:96
 		qw422016.N().S(`" />
 `)
-//line views/vproject/Edit.html:102
+//line views/vproject/Edit.html:97
 	}
-//line views/vproject/Edit.html:102
+//line views/vproject/Edit.html:97
 	qw422016.N().S(`          `)
+//line views/vproject/Edit.html:98
+	components.StreamTableInput(qw422016, "slack", "", "Slack Webhook", info.Slack, 5, project.Helpers["slack"]...)
+//line views/vproject/Edit.html:98
+	qw422016.N().S(`
+          `)
+//line views/vproject/Edit.html:99
+	components.StreamTableInput(qw422016, "channels", "", "Channels", strings.Join(info.Channels, ", "), 5, project.Helpers["channels"]...)
+//line views/vproject/Edit.html:99
+	qw422016.N().S(`
+`)
+//line views/vproject/Edit.html:100
+	if prj.HasModule("android") {
+//line views/vproject/Edit.html:100
+		qw422016.N().S(`          `)
+//line views/vproject/Edit.html:101
+		components.StreamTableInput(qw422016, "javaPackage", "", "Java Package", info.JavaPackage, 5, project.Helpers["javaPackage"]...)
+//line views/vproject/Edit.html:101
+		qw422016.N().S(`
+`)
+//line views/vproject/Edit.html:102
+	} else {
+//line views/vproject/Edit.html:102
+		qw422016.N().S(`          <input type="hidden" name="javaPackage" value="`)
 //line views/vproject/Edit.html:103
+		qw422016.E().S(info.JavaPackage)
+//line views/vproject/Edit.html:103
+		qw422016.N().S(`" />
+`)
+//line views/vproject/Edit.html:104
+	}
+//line views/vproject/Edit.html:104
+	qw422016.N().S(`          `)
+//line views/vproject/Edit.html:105
 	components.StreamTableInput(qw422016, "goVersion", "", "Go Version", info.GoVersion, 5, project.Helpers["goVersion"]...)
-//line views/vproject/Edit.html:103
+//line views/vproject/Edit.html:105
 	qw422016.N().S(`
           `)
-//line views/vproject/Edit.html:104
+//line views/vproject/Edit.html:106
 	components.StreamTableInput(qw422016, "goBinary", "", "Go Binary", info.GoBinary, 5, project.Helpers["goBinary"]...)
-//line views/vproject/Edit.html:104
+//line views/vproject/Edit.html:106
 	qw422016.N().S(`
           `)
-//line views/vproject/Edit.html:105
+//line views/vproject/Edit.html:107
 	components.StreamTableInput(qw422016, "extraFiles", "", "Extra Files", strings.Join(info.ExtraFiles, ", "), 5, project.Helpers["extraFiles"]...)
-//line views/vproject/Edit.html:105
+//line views/vproject/Edit.html:107
 	qw422016.N().S(`
           `)
-//line views/vproject/Edit.html:106
+//line views/vproject/Edit.html:108
 	components.StreamTableInput(qw422016, "deployments", "", "Deployments", strings.Join(info.Deployments, ", "), 5, project.Helpers["deployments"]...)
-//line views/vproject/Edit.html:106
+//line views/vproject/Edit.html:108
 	qw422016.N().S(`
           `)
-//line views/vproject/Edit.html:107
+//line views/vproject/Edit.html:109
 	components.StreamTableTextarea(qw422016, "envvars", "", "Env Vars", 8, util.ToJSON(info.EnvVars), 5, project.Helpers["envvars"]...)
-//line views/vproject/Edit.html:107
+//line views/vproject/Edit.html:109
 	qw422016.N().S(`
           `)
-//line views/vproject/Edit.html:108
+//line views/vproject/Edit.html:110
 	components.StreamTableTextarea(qw422016, "docs", "", "Documentation", 8, util.ToJSON(info.Docs), 5, project.Helpers["docs"]...)
-//line views/vproject/Edit.html:108
+//line views/vproject/Edit.html:110
 	qw422016.N().S(`
         </tbody>
       </table>
     </div>
 `)
-//line views/vproject/Edit.html:113
+//line views/vproject/Edit.html:115
 	t := prj.Theme
 	if t == nil {
 		t = theme.ThemeDefault
 	}
 
-//line views/vproject/Edit.html:117
+//line views/vproject/Edit.html:119
 	qw422016.N().S(`    `)
-//line views/vproject/Edit.html:118
+//line views/vproject/Edit.html:120
 	vtheme.StreamEditor(qw422016, "Default Theme", prj.Title(), t, prj.IconSafe(), as, ps)
-//line views/vproject/Edit.html:118
+//line views/vproject/Edit.html:120
 	qw422016.N().S(`
     <div class="card" id="builds">
       <h3>Builds</h3>
       <table class="mt min-200">
         <tbody>
 `)
-//line views/vproject/Edit.html:123
+//line views/vproject/Edit.html:125
 	for _, o := range project.AllBuildOptions {
-//line views/vproject/Edit.html:123
+//line views/vproject/Edit.html:125
 		qw422016.N().S(`        <tr>
           <th class="shrink">`)
-//line views/vproject/Edit.html:125
+//line views/vproject/Edit.html:127
 		qw422016.E().S(o.Title)
-//line views/vproject/Edit.html:125
+//line views/vproject/Edit.html:127
 		qw422016.N().S(`</th>
           <td><label><input type="checkbox" name="build-`)
-//line views/vproject/Edit.html:126
+//line views/vproject/Edit.html:128
 		qw422016.E().S(o.Key)
-//line views/vproject/Edit.html:126
+//line views/vproject/Edit.html:128
 		qw422016.N().S(`" value="true" `)
-//line views/vproject/Edit.html:126
+//line views/vproject/Edit.html:128
 		if buildMap[o.Key] {
-//line views/vproject/Edit.html:126
+//line views/vproject/Edit.html:128
 			qw422016.N().S(` checked="checked" `)
-//line views/vproject/Edit.html:126
+//line views/vproject/Edit.html:128
 		}
-//line views/vproject/Edit.html:126
+//line views/vproject/Edit.html:128
 		qw422016.N().S(`/> `)
-//line views/vproject/Edit.html:126
+//line views/vproject/Edit.html:128
 		qw422016.E().S(o.Description)
-//line views/vproject/Edit.html:126
+//line views/vproject/Edit.html:128
 		qw422016.N().S(`</label></td>
         </tr>
 `)
-//line views/vproject/Edit.html:128
+//line views/vproject/Edit.html:130
 	}
-//line views/vproject/Edit.html:128
+//line views/vproject/Edit.html:130
 	qw422016.N().S(`        </tbody>
       </table>
     </div>
@@ -394,31 +404,31 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
     </div>
   </form>
 `)
-//line views/vproject/Edit.html:137
+//line views/vproject/Edit.html:139
 }
 
-//line views/vproject/Edit.html:137
+//line views/vproject/Edit.html:139
 func (p *Edit) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vproject/Edit.html:137
+//line views/vproject/Edit.html:139
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/Edit.html:137
+//line views/vproject/Edit.html:139
 	p.StreamBody(qw422016, as, ps)
-//line views/vproject/Edit.html:137
+//line views/vproject/Edit.html:139
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/Edit.html:137
+//line views/vproject/Edit.html:139
 }
 
-//line views/vproject/Edit.html:137
+//line views/vproject/Edit.html:139
 func (p *Edit) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vproject/Edit.html:137
+//line views/vproject/Edit.html:139
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/Edit.html:137
+//line views/vproject/Edit.html:139
 	p.WriteBody(qb422016, as, ps)
-//line views/vproject/Edit.html:137
+//line views/vproject/Edit.html:139
 	qs422016 := string(qb422016.B)
-//line views/vproject/Edit.html:137
+//line views/vproject/Edit.html:139
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/Edit.html:137
+//line views/vproject/Edit.html:139
 	return qs422016
-//line views/vproject/Edit.html:137
+//line views/vproject/Edit.html:139
 }

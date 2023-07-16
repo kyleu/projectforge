@@ -8,7 +8,7 @@ notarize {
 }
 
 apple_id {
-  username = "projectforge@kyleu.com"
+  username = "kyle@kyleu.com"
   password = "@env:APPLE_PASSWORD"
 }
 

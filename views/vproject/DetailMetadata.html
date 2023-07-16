@@ -59,6 +59,12 @@
         <th>Signing Identity</th>
         <td>{%s info.SigningIdentity %}</td>
       </tr>
+      {%- if info.NotarizeEmail != "" -%}
+      <tr>
+        <th>Notarize Email</th>
+        <td>{%s info.NotarizeEmail %} &lt;<a href="mailto:{%s info.NotarizeEmail %}">{%s info.NotarizeEmail %}</a>&gt;</td>
+      </tr>
+      {%- endif -%}
       <tr>
         <th>Slack Webhook</th>
         <td>{%s info.Slack %}</td>
