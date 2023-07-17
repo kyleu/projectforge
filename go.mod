@@ -11,7 +11,7 @@ require (
 	github.com/fasthttp/router v1.4.19
 	github.com/fasthttp/websocket v1.5.3
 	github.com/gertd/go-pluralize v0.2.1
-	github.com/gomarkdown/markdown v0.0.0-20230714230225-84ecad09a30a
+	github.com/gomarkdown/markdown v0.0.0-20230716120725-531d2d74bc12
 	github.com/google/go-github/v39 v39.2.0
 	github.com/google/uuid v1.3.0
 	github.com/hexops/gotextdiff v1.0.3

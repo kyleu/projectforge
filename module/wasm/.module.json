@@ -5,6 +5,5 @@
   "authorName": "Kyle U",
   "authorEmail": "kyle@kyleu.com",
   "license": "CC0",
-  "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/wasm",
-  "requires": ["sandbox"]
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/wasm"
 }
