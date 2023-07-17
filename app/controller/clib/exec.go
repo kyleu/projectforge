@@ -57,7 +57,7 @@ func ExecNew(rc *fasthttp.RequestCtx) {
 		x := as.Services.Exec.NewExec(key, cmd, path, env...)
 		w := func(key string, b []byte) error {
 			m := util.ValueMap{"msg": string(b), "html": string(ansihtml.ConvertToHTML(b))}
-			msg := &websocket.Message{Channel: key, Cmd: "output", Param: util.ToJSONBytes(m, true)}
+			msg := &websocket.Message{Channel: x.String(), Cmd: "output", Param: util.ToJSONBytes(m, true)}
 			return as.Services.Socket.WriteChannel(msg, ps.Logger)
 		}
 		err = x.Start(w)

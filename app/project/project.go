@@ -38,7 +38,7 @@ type Project struct {
 
 func NewProject(key string, path string) *Project {
 	_, key = util.StringSplitPath(key)
-	return &Project{Key: key, Version: "0.0.0", Path: path, Modules: []string{"core"}, Info: &Info{}, Theme: theme.ThemeDefault, Build: &Build{}}
+	return &Project{Key: key, Version: "0.0.0", Path: path, Modules: []string{"core"}, Theme: theme.ThemeDefault}
 }
 
 func (p *Project) Title() string {
