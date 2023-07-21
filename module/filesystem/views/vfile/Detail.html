@@ -1,12 +1,16 @@
 {% import (
+  "encoding/base64"
   "path/filepath"
   "unicode/utf8"
 
   "{{{ .Package }}}/app"
   "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/lib/filesystem"
+  "{{{ .Package }}}/app/util"
 ) %}
 
 {% func Detail(path []string, b []byte, urlPrefix string, as *app.State, ps *cutil.PageState) %}
+  <div class="right"><em>{%s util.ByteSizeSI(int64(len(b))) %}</em></div>
   <h3>{%- for idx, p := range path -%}/<a href="{%s urlPrefix %}/{%s filepath.Join(path[:idx + 1]...) %}">{%s p %}</a>{%- endfor -%}</h3>
   <div class="mt">
     {%- if len(b) > (1024 * 128) -%}
@@ -15,7 +19,33 @@
     {%- code out, _ := cutil.FormatFilename(string(b), path[len(path)-1]) -%}
     {%s= out %}
     {%- else -%}
-    <em>File is binary, which is unsupported for the file viewer</em>
+
+    {%- if imgType := filesystem.ImageType(path...); imgType != "" -%}
+    <img src="data:image/{%s imgType %};base64,{%s base64.StdEncoding.EncodeToString(b) %}" />
+    <hr />
+    {%- endif -%}
+
+    {%- code exif, err := filesystem.ExifExtract(b) -%}
+    {%- if err == nil -%}
+    <table>
+      <thead>
+        <tr>
+          <th>EXIF Name</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        {%- for k, v := range exif -%}
+        <tr>
+          <td>{%s k %}</td>
+          <td>{%v v %}</td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+    {%- else -%}
+    <em>File is binary and contains no exif header</em>
+    {%- endif -%}
     {%- endif -%}
   </div>
 {% endfunc %}
