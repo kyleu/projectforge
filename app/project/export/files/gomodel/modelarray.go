@@ -60,7 +60,7 @@ func modelArrayGet(g *golang.File, m *model.Model, enums enum.Enums) (*golang.Bl
 	}
 	ret.W("func (%s %s) Get(%s) *%s {", m.FirstLetter(), m.ProperPlural(), args, m.Proper())
 
-	comps := lo.Map(m.PKs(), func(pk *model.Column, index int) string {
+	comps := lo.Map(m.PKs(), func(pk *model.Column, _ int) string {
 		if types.IsList(pk.Type) {
 			g.AddImport(helper.ImpSlices)
 			return fmt.Sprintf("slices.Equal(x.%s, %s)", pk.Proper(), pk.Camel())

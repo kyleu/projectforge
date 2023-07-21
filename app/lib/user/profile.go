@@ -2,7 +2,7 @@
 package user
 
 type Profile struct {
-	Name  string `json:"name"`
+	Name  string `json:"name,omitempty"`
 	Mode  string `json:"mode,omitempty"`
 	Theme string `json:"theme,omitempty"`
 }

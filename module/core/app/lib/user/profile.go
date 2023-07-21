@@ -4,10 +4,10 @@ import "github.com/google/uuid"
 {{{ end }}}
 type Profile struct {
 {{{ if .HasModule "user" }}}	ID    uuid.UUID `json:"id"`
-	Name  string    `json:"name"`
+	Name  string    `json:"name,omitempty"`
 	Mode  string    `json:"mode,omitempty"`
 	Theme string    `json:"theme,omitempty"`
-{{{ else }}}	Name  string `json:"name"`
+{{{ else }}}	Name  string `json:"name,omitempty"`
 	Mode  string `json:"mode,omitempty"`
 	Theme string `json:"theme,omitempty"`
 {{{ end }}}}

@@ -23,7 +23,7 @@ func simpleOut(path string, cmd string, args []string, outChecks ...func(ctx con
 		if exitCode != 0 {
 			return r.WithError(doctor.NewError("exitcode", "[%s] returned [%d] as an exit code", fullCmd, exitCode))
 		}
-		lo.ForEach(outChecks, func(outCheck func(ctx context.Context, r *doctor.Result, out string) *doctor.Result, index int) {
+		lo.ForEach(outChecks, func(outCheck func(ctx context.Context, r *doctor.Result, out string) *doctor.Result, _ int) {
 			r = outCheck(ctx, r, out)
 		})
 		return r

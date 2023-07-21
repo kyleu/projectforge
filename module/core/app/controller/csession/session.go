@@ -59,12 +59,14 @@ func GetFromSession(key string, websess util.ValueMap) (string, error) {
 }
 
 func SaveProfile(n *user.Profile, rc *fasthttp.RequestCtx, sess util.ValueMap, logger util.Logger) error {
+	if n != nil && n.Name == "" {
+		n.Name = user.DefaultProfile.Name
+	}
 	if n == nil || n.Equals(user.DefaultProfile) {
-		err := RemoveFromSession("profile", rc, sess, logger)
-		if err != nil {
-			return errors.Wrap(err, "unable to remove profile from session")
-		}
-		return nil
+		return errors.Wrap(RemoveFromSession("profile", rc, sess, logger), "unable to remove profile from session")
+	}
+	if n.Name == user.DefaultProfile.Name {
+		n.Name = ""
 	}
 	err := StoreInSession("profile", util.ToJSON(n), rc, sess, logger)
 	if err != nil {
