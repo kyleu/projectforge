@@ -1,5 +1,6 @@
 // Content managed by Project Forge, see [projectforge.md] for details.
 import "./client.css";
+import {audit} from "./audit";
 import {menuInit} from "./menu";
 import {modeInit} from "./mode";
 import {flashInit} from "./flash";
@@ -24,6 +25,7 @@ declare global {
       tags: (el: HTMLElement) => void;
       Socket: unknown;
     };
+    audit: (s: string, ...args: any) => void;
   }
 }
 
@@ -43,6 +45,7 @@ export function init(): void {
   linkInit();
   modalInit();
   themeInit();
+  window.audit = audit;
   appInit();
 }
 

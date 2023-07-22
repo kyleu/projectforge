@@ -1,5 +1,6 @@
 import "./client.css";{{{ if .HasModule "jsx" }}}
 import {JSX} from "./jsx"; // eslint-disable-line @typescript-eslint/no-unused-vars{{{ end }}}
+import {audit} from "./audit";
 import {menuInit} from "./menu";
 import {modeInit} from "./mode";
 import {flashInit} from "./flash";
@@ -23,8 +24,9 @@ declare global {
       flash: (key: string, level: "success" | "error", msg: string) => void;
       tags: (el: HTMLElement) => void;{{{ if .HasModule "websocket" }}}
       Socket: unknown;{{{ end }}}
-    };{{{ if .HasModule "jsx" }}}
-    "JSX": (tag: string, attrs: unknown[]) => HTMLElement;{{{ end }}}
+    };
+    audit: (s: string, ...args: any) => void;{{{ if .HasModule "jsx" }}}
+    JSX: (tag: string, attrs: unknown[]) => HTMLElement;{{{ end }}}
   }
 }
 
@@ -43,7 +45,8 @@ export function init(): void {
   modeInit();
   linkInit();
   modalInit();
-  themeInit();{{{ if .HasModule "jsx" }}}
+  themeInit();
+  window.audit = audit;{{{ if .HasModule "jsx" }}}
   window.JSX = JSX;{{{ end }}}
   appInit();
 }

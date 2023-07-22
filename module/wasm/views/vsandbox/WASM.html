@@ -16,6 +16,10 @@
   <h3>{%= components.SVGRefIcon(`gift`, ps) %}{%s util.AppName %} WASM</h3>
   <em id="load-status">Loading...</em>
 </div>
+<div class="card">
+  <h3>Audits</h3>
+  <ul id="audit-log"></ul>
+</div>
 <script>
   function wasmInit(ms) {
     document.getElementById("load-status").innerText = "Loaded in [" + ms + "ms]";
