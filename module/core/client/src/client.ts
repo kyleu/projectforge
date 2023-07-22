@@ -25,7 +25,7 @@ declare global {
       tags: (el: HTMLElement) => void;{{{ if .HasModule "websocket" }}}
       Socket: unknown;{{{ end }}}
     };
-    audit: (s: string, ...args: any) => void;{{{ if .HasModule "jsx" }}}
+    audit: (s: string, ...args: any) => void; // eslint-disable-line @typescript-eslint/no-explicit-any{{{ if .HasModule "jsx" }}}
     JSX: (tag: string, attrs: unknown[]) => HTMLElement;{{{ end }}}
   }
 }
