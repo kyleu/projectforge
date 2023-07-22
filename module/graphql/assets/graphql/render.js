@@ -6,9 +6,11 @@ search
   .forEach(function (entry) {
     var eq = entry.indexOf('=');
     if (eq >= 0) {
-      parameters[decodeURIComponent(entry.slice(0, eq))] = decodeURIComponent(
-        entry.slice(eq + 1),
-      );
+      const key = decodeURIComponent(entry.slice(0, eq));
+      if (key.startsWith("__") || key === "toString") {
+        throw "nice try";
+      }
+      parameters[key] = decodeURIComponent(entry.slice(eq + 1));
     }
   });
 

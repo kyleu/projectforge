@@ -23,6 +23,9 @@ func EncryptMessage(key []byte, message string, logger Logger) (string, error) {
 	}
 
 	byteMsg := []byte(message)
+	if len(byteMsg) > 1024*1024*64 {
+		return "", errors.New("message is too large")
+	}
 	cipherText := make([]byte, aes.BlockSize+len(byteMsg))
 	iv := cipherText[:aes.BlockSize]
 	if _, err = io.ReadFull(rand.Reader, iv); err != nil {

@@ -52,7 +52,9 @@ func NewService(onOpen ConnectEvent, handler Handler, onClose ConnectEvent) *Ser
 
 var (
 	systemID     = *util.UUIDFromString("FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF")
-	systemStatus = &Status{ID: systemID, Username: "System Broadcast", Channels: []string{systemID.String()}}
+	systemStatus = &Status{
+		ID: systemID, Username: util.GetEnv("system_username", "System Broadcast"), Channels: []string{systemID.String()},
+	}
 )
 
 // Returns an array of Connection statuses based on the parameters.
