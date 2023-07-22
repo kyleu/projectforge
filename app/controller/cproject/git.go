@@ -79,8 +79,8 @@ func GitAction(rc *fasthttp.RequestCtx) {
 			since, _ := util.TimeFromString(argRes.Values["since"])
 			authors := util.StringSplitAndTrim(argRes.Values["authors"], ",")
 			commit := string(rc.URI().QueryArgs().Peek("commit"))
-			limit, _ := strconv.Atoi(argRes.Values["limit"])
-			hist := &git.HistoryResult{Path: path, Since: since, Authors: authors, Commit: commit, Limit: limit}
+			limit, _ := strconv.ParseInt(argRes.Values["limit"], 10, 32)
+			hist := &git.HistoryResult{Path: path, Since: since, Authors: authors, Commit: commit, Limit: int(limit)}
 			result, err = as.Services.Git.History(ps.Context, prj, hist, ps.Logger)
 		case git.ActionBranch.Key:
 			argRes := cutil.CollectArgs(rc, gitBranchArgs)

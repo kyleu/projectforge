@@ -30,7 +30,8 @@ func projectFromForm(frm util.ValueMap, prj *project.Project) error {
 		prj.Package = "github.com/org/" + prj.Key
 	}
 	prj.Args = get("args", prj.Args)
-	prj.Port, _ = strconv.Atoi(get("port", fmt.Sprintf("%d", prj.Port)))
+	prt, _ := strconv.ParseInt(get("port", fmt.Sprintf("%d", prj.Port)), 10, 32)
+	prj.Port = int(prt)
 	if prj.Port == 0 {
 		prj.Port = 10000
 	}

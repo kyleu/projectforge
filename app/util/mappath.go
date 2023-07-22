@@ -56,13 +56,13 @@ func getPath(i any, allowMissing bool, path ...string) (any, error) {
 		}
 		return getPath(ret, allowMissing, path[1:]...)
 	case []any:
-		i, err := strconv.Atoi(k)
+		i, err := strconv.ParseInt(k, 10, 32)
 		if err != nil {
 			return nil, errors.Errorf("path [%s] refers to an slice, but can't be parsed as an index", k)
 		}
 		var ret any
-		if len(t) > i {
-			ret = t[i]
+		if len(t) > int(i) {
+			ret = t[int(i)]
 		}
 		return getPath(ret, allowMissing, path[1:]...)
 	default:

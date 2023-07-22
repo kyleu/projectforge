@@ -36,8 +36,8 @@ func (x *Int) String() string {
 func (x *Int) From(v any) any {
 	switch t := v.(type) {
 	case string:
-		ret, _ := strconv.Atoi(t)
-		return ret
+		ret, _ := strconv.ParseInt(t, 10, 32)
+		return int(ret)
 	case int:
 		return t
 	case int32:

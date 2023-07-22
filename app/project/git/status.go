@@ -63,19 +63,21 @@ func gitStatus(ctx context.Context, path string, logger util.Logger) (int, int, 
 					end = strings.Index(l, "]")
 				}
 				l = strings.TrimSpace(l[:end])
-				commitsAhead, err = strconv.Atoi(l)
+				ca, err := strconv.ParseInt(l, 10, 32)
 				if err != nil {
 					return 0, 0, nil, errors.Wrap(err, "invalid [ahead] block")
 				}
+				commitsAhead = int(ca)
 			}
 			if i := strings.Index(line, "behind "); i > -1 {
 				l := line[i+7:]
 				end := strings.Index(l, "]")
 				l = strings.TrimSpace(l[:end])
-				commitsBehind, err = strconv.Atoi(l)
+				cb, err := strconv.ParseInt(l, 10, 32)
 				if err != nil {
 					return 0, 0, nil, errors.Wrap(err, "invalid [behind] block")
 				}
+				commitsBehind = int(cb)
 			}
 			continue
 		}

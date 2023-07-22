@@ -33,7 +33,7 @@
     <div class="right"><em>{%s util.MicrosToMillis(x.Duration) %}</em> [{%s x.Status %}]</div>
     <h3>
       <span title="{%s util.MicrosToMillis(x.Duration) %}">{%s x.Title %}</span>
-      <a href="{%s x.Check.URL %}" title="{%s x.Check.URL %}" target="_blank">{%= components.SVGRef("link", 12, 12, "", ps) %}</a>
+      <a href="{%s x.Check.URL %}" title="{%s x.Check.URL %}" target="_blank" rel="noopener noreferrer">{%= components.SVGRef("link", 12, 12, "", ps) %}</a>
     </h3>
     <div class="mt"><em>{%s x.Summary %}</em></div>
     {%- if x.Status == "OK" -%}
@@ -45,7 +45,7 @@
     {%- for _, s := range x.Solutions -%}
     <div class="mt">
       {%- if strings.HasPrefix(s, "#") -%}
-      <a target="_blank" href="{%s strings.TrimPrefix(s, `#`) %}">{%s strings.TrimPrefix(s, `#`) %}</a>
+      <a target="_blank" href="{%s strings.TrimPrefix(s, `#`) %}" rel="noopener noreferrer">{%s strings.TrimPrefix(s, `#`) %}</a>
       {%- elseif strings.HasPrefix(s, "!") -%}
       [<em>{%s strings.TrimPrefix(s, `!`) %}</em>]
       {%- if strings.HasPrefix(s, "!go ") -%}

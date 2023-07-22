@@ -103,7 +103,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vmodule/Detail.html:46
 	qw422016.E().S(mod.Sourcecode)
 //line views/vmodule/Detail.html:46
-	qw422016.N().S(`" target="_blank">`)
+	qw422016.N().S(`" target="_blank" rel="noopener noreferrer">`)
 //line views/vmodule/Detail.html:46
 	qw422016.E().S(mod.Sourcecode)
 //line views/vmodule/Detail.html:46

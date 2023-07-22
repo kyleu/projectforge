@@ -134,7 +134,7 @@ func StreamRenderResult(qw422016 *qt422016.Writer, x *doctor.Result, redir strin
 //line views/vdoctor/Results.html:36
 	qw422016.E().S(x.Check.URL)
 //line views/vdoctor/Results.html:36
-	qw422016.N().S(`" target="_blank">`)
+	qw422016.N().S(`" target="_blank" rel="noopener noreferrer">`)
 //line views/vdoctor/Results.html:36
 	components.StreamSVGRef(qw422016, "link", 12, 12, "", ps)
 //line views/vdoctor/Results.html:36
@@ -184,7 +184,7 @@ func StreamRenderResult(qw422016 *qt422016.Writer, x *doctor.Result, redir strin
 //line views/vdoctor/Results.html:48
 			qw422016.E().S(strings.TrimPrefix(s, `#`))
 //line views/vdoctor/Results.html:48
-			qw422016.N().S(`">`)
+			qw422016.N().S(`" rel="noopener noreferrer">`)
 //line views/vdoctor/Results.html:48
 			qw422016.E().S(strings.TrimPrefix(s, `#`))
 //line views/vdoctor/Results.html:48

@@ -108,10 +108,10 @@ func gitHistoryAll(prjs project.Projects, rc *fasthttp.RequestCtx, as *app.State
 	path := string(rc.URI().QueryArgs().Peek("path"))
 	since, _ := util.TimeFromString(string(rc.URI().QueryArgs().Peek("since")))
 	authors := util.StringSplitAndTrim(string(rc.URI().QueryArgs().Peek("authors")), ",")
-	limit, _ := strconv.Atoi(string(rc.URI().QueryArgs().Peek("limit")))
+	limit, _ := strconv.ParseInt(string(rc.URI().QueryArgs().Peek("limit")), 10, 32)
 	commit := string(rc.URI().QueryArgs().Peek("commit"))
 	results, errs := util.AsyncCollect(prjs, func(prj *project.Project) (*git.Result, error) {
-		hist := &git.HistoryResult{Path: path, Since: since, Authors: authors, Commit: commit, Limit: limit}
+		hist := &git.HistoryResult{Path: path, Since: since, Authors: authors, Commit: commit, Limit: int(limit)}
 		return as.Services.Git.History(ps.Context, prj, hist, ps.Logger)
 	})
 	return results, util.ErrorMerge(errs...)

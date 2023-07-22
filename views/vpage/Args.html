@@ -38,8 +38,8 @@
           {%- case "textarea" -%}
           {%= components.TableTextarea(arg.Key, "", arg.Title, 12, v, 5, arg.Description) %}
           {%- case "number", "int" -%}
-          {%- code i, _ := strconv.Atoi(v) -%}
-          {%= components.TableInputNumber(arg.Key, "", arg.Title, i, 5, arg.Description) %}
+          {%- code i, _ := strconv.ParseInt(v, 10, 32) -%}
+          {%= components.TableInputNumber(arg.Key, "", arg.Title, int(i), 5, arg.Description) %}
           {%- default -%}
           {%= components.TableInput(arg.Key, "", arg.Title, v, 5, arg.Description) %}
           {%- endswitch -%}

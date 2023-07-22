@@ -72,7 +72,8 @@ func valueInt(path string, r any, allowEmpty bool) (int, error) {
 	case float64:
 		return int(t), nil
 	case string:
-		return strconv.Atoi(t)
+		ret, err := strconv.ParseInt(t, 10, 32)
+		return int(ret), err
 	case nil:
 		if !allowEmpty {
 			return 0, errors.Errorf("could not find int for path [%s]", path)

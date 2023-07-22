@@ -120,7 +120,7 @@ func sqlSeedDataColumns(m *model.Model, block *golang.Block, tableName string, c
 				case string:
 					vs = append(vs, "'"+cellStr+"'")
 				default:
-					vs = append(vs, "'"+util.ToJSONCompact(cell)+"'")
+					vs = append(vs, "'"+strings.ReplaceAll(util.ToJSONCompact(cell), "'", "''")+"'")
 				}
 			default:
 				if cellStr == nilStr {

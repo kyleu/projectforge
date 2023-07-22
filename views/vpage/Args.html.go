@@ -112,12 +112,12 @@ func (p *Args) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vpage/Args.html:40
 		case "number", "int":
 //line views/vpage/Args.html:41
-			i, _ := strconv.Atoi(v)
+			i, _ := strconv.ParseInt(v, 10, 32)
 
 //line views/vpage/Args.html:41
 			qw422016.N().S(`          `)
 //line views/vpage/Args.html:42
-			components.StreamTableInputNumber(qw422016, arg.Key, "", arg.Title, i, 5, arg.Description)
+			components.StreamTableInputNumber(qw422016, arg.Key, "", arg.Title, int(i), 5, arg.Description)
 //line views/vpage/Args.html:42
 			qw422016.N().S(`
 `)

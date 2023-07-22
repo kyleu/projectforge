@@ -73,7 +73,8 @@ func cliProject(ctx context.Context, p *project.Project, modKeys []string, logge
 	if p.Port == 0 {
 		p.Port = 20000
 	}
-	p.Port, _ = strconv.Atoi(promptString("Enter the default port your http server will run on", fmt.Sprint(p.Port)))
+	prt, _ := strconv.ParseInt(promptString("Enter the default port your http server will run on", fmt.Sprint(p.Port)), 10, 32)
+	p.Port = int(prt)
 
 	const msg = "Enter the modules your project will use as a comma-separated list (or \"all\") from choices"
 	modPromptString := fmt.Sprintf("%s:\n  %s", msg, strings.Join(modKeys, ", "))

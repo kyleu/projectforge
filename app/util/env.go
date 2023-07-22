@@ -32,7 +32,6 @@ func ReplaceEnvVars(s string, logger Logger) string {
 			return ReplaceEnvVars(strings.Replace(s, orig, o, 1), logger)
 		}
 	}
-
 	return s
 }
 
@@ -59,22 +58,18 @@ func GetEnvBool(name string, defaultValue bool) bool {
 
 func GetEnvInt(name string, defaultValue int) int {
 	v := GetEnv(name, "")
-
-	i, err := strconv.Atoi(v)
+	i, err := strconv.ParseInt(v, 10, 32)
 	if err != nil {
 		return defaultValue
 	}
-
-	return i
+	return int(i)
 }
 
 func GetEnvDuration(name string, defaultValue time.Duration) time.Duration {
 	v := GetEnv(name, "")
-
 	ret, err := time.ParseDuration(v)
 	if err != nil {
 		return defaultValue
 	}
-
 	return ret
 }

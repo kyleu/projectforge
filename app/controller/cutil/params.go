@@ -34,7 +34,7 @@ func apply(ps filter.ParamSet, qk string, qv string) filter.ParamSet {
 		curr.Orderings = append(curr.Orderings, &filter.Ordering{Column: qv, Asc: asc})
 	case strings.HasSuffix(qk, ".l"):
 		curr := getCurr(ps, strings.TrimSuffix(qk, ".l"))
-		li, err := strconv.ParseInt(qv, 10, 64)
+		li, err := strconv.ParseInt(qv, 10, 32)
 		if err == nil {
 			curr.Limit = int(li)
 			max := 1000
@@ -44,7 +44,7 @@ func apply(ps filter.ParamSet, qk string, qv string) filter.ParamSet {
 		}
 	case strings.HasSuffix(qk, ".x"):
 		curr := getCurr(ps, strings.TrimSuffix(qk, ".x"))
-		xi, err := strconv.ParseInt(qv, 10, 64)
+		xi, err := strconv.ParseInt(qv, 10, 32)
 		if err == nil {
 			curr.Offset = int(xi)
 		}

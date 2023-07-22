@@ -165,7 +165,7 @@ func ToGoViewString(t types.Type, prop string, nullable bool, format string, ver
 			return "<pre>{%%s " + ToGoString(t, prop, false) + " %%}</pre>"
 		case FmtURL:
 			x := "{%%" + key + " " + ToGoString(t, prop, false) + " %%}"
-			return fmt.Sprintf("<a href=%q target=\"_blank\">%s</a>", x, x)
+			return fmt.Sprintf("<a href=%q target=\"_blank\" rel=\"noopener noreferrer\">%s</a>", x, x)
 		case FmtCountry:
 			if verbose {
 				return "{%%" + key + " " + ToGoString(t, prop, false) + " %%} {%%s util.CountryFlag(" + ToGoString(t, prop, false) + ") %%}"

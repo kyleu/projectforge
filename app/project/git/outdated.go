@@ -53,9 +53,9 @@ func gitOutdated(ctx context.Context, path string, logger util.Logger) (string, 
 	if err != nil {
 		return "", 0, err
 	}
-	numCommits, err := strconv.Atoi(strings.TrimSpace(out))
+	numCommits, err := strconv.ParseInt(strings.TrimSpace(out), 10, 32)
 	if err != nil {
 		return "", 0, err
 	}
-	return latestTag, numCommits, nil
+	return latestTag, int(numCommits), nil
 }

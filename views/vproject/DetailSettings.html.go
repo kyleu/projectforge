@@ -63,7 +63,7 @@ func StreamDetailSettings(qw422016 *qt422016.Writer, prj *project.Project, as *a
 //line views/vproject/DetailSettings.html:27
 	qw422016.E().S(prj.Package)
 //line views/vproject/DetailSettings.html:27
-	qw422016.N().S(`" target="_blank">`)
+	qw422016.N().S(`" target="_blank" rel="noopener noreferrer">`)
 //line views/vproject/DetailSettings.html:27
 	qw422016.E().S(prj.Package)
 //line views/vproject/DetailSettings.html:27
@@ -83,7 +83,7 @@ func StreamDetailSettings(qw422016 *qt422016.Writer, prj *project.Project, as *a
 //line views/vproject/DetailSettings.html:35
 	qw422016.N().D(prj.Port)
 //line views/vproject/DetailSettings.html:35
-	qw422016.N().S(`" target="_blank">`)
+	qw422016.N().S(`" target="_blank" rel="noopener noreferrer">`)
 //line views/vproject/DetailSettings.html:35
 	qw422016.N().D(prj.Port)
 //line views/vproject/DetailSettings.html:35

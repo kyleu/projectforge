@@ -32,11 +32,11 @@ func projectFromCfg(proto *project.Project, cfg util.ValueMap) *project.Project 
 	}
 	integer := func(key string, def int) int {
 		s := str(key, "")
-		i, err := strconv.Atoi(s)
+		i, err := strconv.ParseInt(s, 10, 32)
 		if err != nil {
 			return def
 		}
-		return i
+		return int(i)
 	}
 	proto.Key = clean(proto.Key)
 	proto.Name = clean(proto.Name)

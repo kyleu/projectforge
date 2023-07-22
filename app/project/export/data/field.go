@@ -32,11 +32,11 @@ func (f *Field) UnknownIdx() int {
 		return -1
 	}
 	s := strings.TrimPrefix(f.Name, unknownKey)
-	i, err := strconv.Atoi(s)
+	i, err := strconv.ParseInt(s, 10, 32)
 	if err != nil {
 		return -2
 	}
-	return i
+	return int(i)
 }
 
 type Fields []*Field

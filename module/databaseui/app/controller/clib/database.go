@@ -62,8 +62,8 @@ func DatabaseAction(rc *fasthttp.RequestCtx) {
 			return "/admin/database/" + svc.Key + "/recent", nil
 		case "recent":
 			if idxStr := string(rc.URI().QueryArgs().Peek("idx")); idxStr != "" {
-				idx, _ := strconv.Atoi(idxStr)
-				st := database.GetDebugStatement(svc.Key, idx)
+				idx, _ := strconv.ParseInt(idxStr, 10, 32)
+				st := database.GetDebugStatement(svc.Key, int(idx))
 				if st != nil {
 					return controller.Render(rc, as, &vdatabase.Statement{Statement: st}, ps, bc...)
 				}

@@ -157,7 +157,7 @@ func StreamTable(qw422016 *qt422016.Writer, prjs project.Projects, tags []string
 //line views/vproject/Table.html:41
 			qw422016.N().D(prj.Port)
 //line views/vproject/Table.html:41
-			qw422016.N().S(`]" target="_blank">`)
+			qw422016.N().S(`]" target="_blank" rel="noopener noreferrer">`)
 //line views/vproject/Table.html:41
 			qw422016.N().D(prj.Port)
 //line views/vproject/Table.html:41

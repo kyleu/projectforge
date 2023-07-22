@@ -91,7 +91,7 @@ func streamrenderDiffs(qw422016 *qt422016.Writer, prjKey string, act action.Type
 //line views/vaction/Diff.html:44
 			qw422016.E().S(d.Path)
 //line views/vaction/Diff.html:44
-			qw422016.N().S(`" target="_blank">`)
+			qw422016.N().S(`" target="_blank" rel="noopener noreferrer">`)
 //line views/vaction/Diff.html:44
 			qw422016.E().S(d.Path)
 //line views/vaction/Diff.html:44

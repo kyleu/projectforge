@@ -55,13 +55,13 @@ func PostgresParamsFromService() (*PostgresServiceParams, error) {
 		return nil, err
 	}
 
-	port, err := strconv.Atoi(paramMap["port"])
+	port, err := strconv.ParseInt(paramMap["port"], 10, 32)
 	if err != nil {
 		port = 5432
 	}
 	params := PostgresServiceParams{
 		Host:        paramMap["host"],
-		Port:        port,
+		Port:        int(port),
 		Username:    paramMap["user"],
 		Password:    paramMap["password"],
 		Database:    paramMap["dbname"],

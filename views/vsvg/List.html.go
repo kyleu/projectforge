@@ -64,7 +64,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
   <div class="card">
     <h3>Add a new icon</h3>
     <p>
-      To add an icon to your application, enter a key from <a href="https://icons8.com/line-awesome" target="_blank">Line Awesome</a>.
+      To add an icon to your application, enter a key from <a href="https://icons8.com/line-awesome" target="_blank" rel="noopener noreferrer">Line Awesome</a>.
       Instead of an icon key, you may also provide a URL to any SVG.
       The SVG will be rewritten with attribution.
     </p>

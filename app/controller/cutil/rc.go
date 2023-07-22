@@ -66,7 +66,8 @@ func RCRequiredInt(rc *fasthttp.RequestCtx, key string) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-	return strconv.Atoi(s)
+	ret, err := strconv.ParseInt(s, 10, 32)
+	return int(ret), err
 }
 
 func RCRequiredUUID(rc *fasthttp.RequestCtx, key string) (*uuid.UUID, error) {

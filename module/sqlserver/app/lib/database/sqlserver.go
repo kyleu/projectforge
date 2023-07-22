@@ -36,7 +36,8 @@ func SQLServerParamsFromEnv(key string, defaultUser string, prefix string) *SQLS
 	}
 	p := 0
 	if x := util.GetEnv(prefix + "db_port"); x != "" {
-		p, _ = strconv.Atoi(x)
+		px, _ := strconv.ParseInt(x, 10, 32)
+		p = int(px)
 	}
 	u := defaultUser
 	if x := util.GetEnv(prefix + "db_user"); x != "" {
@@ -56,7 +57,8 @@ func SQLServerParamsFromEnv(key string, defaultUser string, prefix string) *SQLS
 	}
 	mc := 16
 	if x := util.GetEnv(prefix + "db_max_connections"); x != "" {
-		mc, _ = strconv.Atoi(x)
+		mcx, _ := strconv.ParseInt(x, 10, 32)
+		mc = int(mcx)
 	}
 	debug := false
 	if x := util.GetEnv(prefix + "db_debug"); x != "" {

@@ -129,7 +129,7 @@ func StreamSourceCode(qw422016 *qt422016.Writer) {
 	qw422016.N().S(`
 <div class="card">
   <h3>Source Code</h3>
-  <p>The project is available on <a href="https://github.com/kyleu/projectforge" target="_blank">GitHub</a></p>
+  <p>The project is available on <a href="https://github.com/kyleu/projectforge" target="_blank" rel="noopener noreferrer">GitHub</a></p>
 </div>
 `)
 //line views/About.html:42

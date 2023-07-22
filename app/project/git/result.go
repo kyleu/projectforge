@@ -63,8 +63,8 @@ func (s *Result) DataString(k string) string {
 }
 
 func (s *Result) DataInt(k string) int {
-	ret, _ := strconv.Atoi(s.DataString(k))
-	return ret
+	ret, _ := strconv.ParseInt(s.DataString(k), 10, 32)
+	return int(ret)
 }
 
 func (s *Result) DataStringArray(k string) []string {
