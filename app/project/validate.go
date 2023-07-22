@@ -81,11 +81,16 @@ func validateBuild(p *Project, e func(code string, msg string, args ...any)) {
 	if p.Build.Desktop && !lo.Contains(p.Modules, "desktop") {
 		e("config", "Desktop is enabled, but module [desktop] isn't included")
 	}
+
 	if p.Build.IOS && !lo.Contains(p.Modules, "ios") {
 		e("config", "IOS is enabled, but module [ios] isn't included")
 	}
+
 	if p.Build.Android && !lo.Contains(p.Modules, "android") {
 		e("config", "Android is enabled, but module [android] isn't included")
+	}
+	if p.Build.Android && lo.Contains(p.Modules, "android") && p.Info.JavaPackage == "" {
+		e("config", "Android is enabled, but [Java Package] isn't set")
 	}
 
 	if p.Build.Notarize && p.Info.SigningIdentity == "" {
