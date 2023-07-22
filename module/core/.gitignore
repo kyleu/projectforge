@@ -4,7 +4,9 @@
 /.idea
 /.scannerwork
 /build
-/tmp
+/tmp {{{ if .HasModule "wasm" }}}
+
+/assets/wasm/*.wasm{{{ end }}}
 
 /client/node_modules
 
