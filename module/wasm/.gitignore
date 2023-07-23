@@ -6,6 +6,8 @@
 /build
 /tmp
 
+/assets/wasm/*.wasm
+
 /client/node_modules
 
 .DS_Store
