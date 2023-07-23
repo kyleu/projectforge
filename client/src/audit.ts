@@ -1,22 +1,26 @@
 // Content managed by Project Forge, see [projectforge.md] for details.
 import {opt} from "./dom";
 
-export function audit(msg: string, code: boolean, ...args: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
-  const out = msg.replace(/\{(\d+)\}/gu, (match, number) => {
-    return typeof args[number] === "undefined" ? match : args[number];
-  });
+export function audit(msg: string, ...codes: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
   const el = opt("#audit-log");
   if (el) {
-    const li = document.createElement("li");
-    if (code) {
-      const pre = document.createElement("pre");
-      pre.innerText = out;
-      li.appendChild(pre);
-    } else {
-      li.innerText = out;
-    }
-    el.appendChild(li);
+    el.appendChild(renderAudit(msg, ...codes));
   } else {
-    console.log("### Audit ###\n" + out);
+    console.log("### Audit ###\n" + msg, ...codes);
   }
+}
+
+function renderAudit(msg: string, ...codes: any) {
+  const li = document.createElement("li");
+  li.innerText = msg;
+  for (const code of codes) {
+    const pre = document.createElement("pre");
+    if (typeof code === "string") {
+      pre.innerText = code;
+    } else {
+      pre.innerText = JSON.stringify(code, null, 2);
+    }
+    li.appendChild(pre);
+  }
+  return li;
 }
