@@ -35,16 +35,12 @@ func (t *Type) String() string {
 	return t.Key
 }
 
-func (t *Type) MarshalJSON() ([]byte, error) {
-	return util.ToJSONBytes(t.Key, false), nil
+func (t *Type) MarshalText() ([]byte, error) {
+	return []byte(t.Key), nil
 }
 
-func (t *Type) UnmarshalJSON(data []byte) error {
-	var s string
-	if err := util.FromJSON(data, &s); err != nil {
-		return err
-	}
-	x, err := modelTypeFromString(s)
+func (t *Type) UnmarshalText(data []byte) error {
+	x, err := modelTypeFromString(string(data))
 	if err != nil {
 		return err
 	}
