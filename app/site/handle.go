@@ -67,6 +67,8 @@ func Handle(path []string, as *app.State, ps *cutil.PageState) (string, layout.P
 		page, err = mdTemplate("This static page describes the technology used in "+util.AppName, "technology.md", "shield", ps)
 	case keyFAQ:
 		page, err = mdTemplate("Frequently asked questions about "+util.AppName, "faq.md", "book", ps)
+	case keyGallery:
+		page = &vsite.Gallery{}
 	default:
 		page, err = mdTemplate("Documentation for "+util.AppName, path[0]+".md", "", ps)
 		if err != nil {

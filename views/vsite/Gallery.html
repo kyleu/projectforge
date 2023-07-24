@@ -1,0 +1,33 @@
+{% import (
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/layout"
+) %}
+
+{% code type Gallery struct { layout.Basic } %}
+
+{% func (p *Gallery) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`app`, ps) %}{%s util.AppName %}</h3>
+  </div>
+
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`hourglass`, ps) %}Performance</h3>
+    <div class="mt only-light"><img style="width: 100%; max-width: 800px;" loading="lazy" src="/assets/tutorial/devtools-light.png" /></div>
+    <div class="mt only-dark"><img style="width: 100%; max-width: 800px;" loading="lazy" src="/assets/tutorial/devtools-dark.png" /></div>
+  </div>
+
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`cog`, ps) %}Settings</h3>
+    <div class="mt only-light"><img style="width: 100%; max-width: 800px;" loading="lazy" src="/assets/tutorial/settings-light.png" /></div>
+    <div class="mt only-dark"><img style="width: 100%; max-width: 800px;" loading="lazy" src="/assets/tutorial/settings-dark.png" /></div>
+  </div>
+
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`app`, ps) %}Themes</h3>
+    <div class="mt only-light"><img style="width: 100%; max-width: 800px;" loading="lazy" src="/assets/tutorial/themes-light.png" /></div>
+    <div class="mt only-dark"><img style="width: 100%; max-width: 800px;" loading="lazy" src="/assets/tutorial/themes-dark.png" /></div>
+  </div>
+{% endfunc %}

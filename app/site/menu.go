@@ -20,6 +20,7 @@ const (
 	keyFeatures    = "features"
 	keyInstall     = "install"
 	keyTech        = "technology"
+	keyGallery     = "gallery"
 )
 
 func Menu(_ context.Context, as *app.State, _ *user.Profile, logger util.Logger) menu.Items {
@@ -32,6 +33,7 @@ func Menu(_ context.Context, as *app.State, _ *user.Profile, logger util.Logger)
 		{Key: keyContrib, Title: "Contributing", Icon: "cog", Route: "/" + keyContrib},
 		{Key: keyTech, Title: "Technology", Icon: "shield", Route: "/" + keyTech},
 		{Key: keyFAQ, Title: "FAQ", Icon: "book", Route: "/" + keyFAQ},
+		{Key: keyGallery, Title: "Gallery", Icon: "flag", Route: "/" + keyGallery},
 		{Key: keyAbout, Title: "About", Icon: "question", Route: "/" + keyAbout},
 	}
 }
