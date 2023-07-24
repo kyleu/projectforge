@@ -2,8 +2,6 @@ package schema
 
 import (
 	"github.com/samber/lo"
-
-	"{{{ .Package }}}/app/util"
 )
 
 type Origin struct {
