@@ -1,9 +1,5 @@
 package model
 
-import (
-	"{{{ .Package }}}/app/util"
-)
-
 type Type struct {
 	Key    string
 	Title  string
