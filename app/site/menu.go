@@ -18,13 +18,14 @@ const (
 	keyDownload    = "download"
 	keyFAQ         = "faq"
 	keyFeatures    = "features"
+	keyGallery     = "gallery"
 	keyInstall     = "install"
 	keyTech        = "technology"
-	keyGallery     = "gallery"
 )
 
 func Menu(_ context.Context, as *app.State, _ *user.Profile, logger util.Logger) menu.Items {
 	return menu.Items{
+		{Key: keyGallery, Title: "Gallery", Icon: "flag", Route: "/" + keyGallery},
 		{Key: keyInstall, Title: "Install", Icon: "code", Route: "/" + keyInstall},
 		{Key: keyDownload, Title: "Download", Icon: "download", Route: "/" + keyDownload},
 		{Key: keyFeatures, Title: "Features", Icon: "bolt", Route: "/" + keyFeatures, Children: featuresMenu(as.Services.Modules)},
@@ -33,7 +34,6 @@ func Menu(_ context.Context, as *app.State, _ *user.Profile, logger util.Logger)
 		{Key: keyContrib, Title: "Contributing", Icon: "cog", Route: "/" + keyContrib},
 		{Key: keyTech, Title: "Technology", Icon: "shield", Route: "/" + keyTech},
 		{Key: keyFAQ, Title: "FAQ", Icon: "book", Route: "/" + keyFAQ},
-		{Key: keyGallery, Title: "Gallery", Icon: "flag", Route: "/" + keyGallery},
 		{Key: keyAbout, Title: "About", Icon: "question", Route: "/" + keyAbout},
 	}
 }

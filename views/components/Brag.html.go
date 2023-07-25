@@ -34,7 +34,7 @@ func StreamBragApp(qw422016 *qt422016.Writer) {
 
     <p>
       Project Forge applications can support any UI framework, but the included UI renders a JS-dependency-free page, heavily optimized for speed and modern UX.
-      The about page is animated, themed, and responsive, and only creates three requests (HTML, CSS, JS) totaling less than 40KB zipped.
+      The about page is animated, themed, and responsive, and only creates three requests (HTML, CSS, JS) totaling less than 20KB zipped.
       It serves in less than a millisecond, and renders in Chrome in less than 20ms.
       Progressive enhancement is provided by an included ESBuild TypeScript project, though all functionality is supported with JavaScript disabled.
     </p>

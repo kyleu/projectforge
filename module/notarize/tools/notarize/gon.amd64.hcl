@@ -1,10 +1,10 @@
 source = ["./build/dist/darwin_darwin_amd64_v1/{{{ .Exec }}}"]
-bundle_id = "{{{ .Info.Bundle }}}"
+bundle_id = "{{{ .Info.Bundle }}}"{{{ if .HasModule "desktop"}}}
 
 notarize {
   path = "./build/dist/{{{ .Exec }}}_{{{ .Version }}}_darwin_amd64_desktop.dmg"
   bundle_id = "{{{ .Info.Bundle }}}"
-}
+}{{{ end }}}
 
 apple_id {
   username = "{{{ .Info.NotarizationEmail }}}"

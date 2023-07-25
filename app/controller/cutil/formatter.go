@@ -126,6 +126,7 @@ func FormatCleanMarkup(s string, icon string) (string, string, error) {
 		ret = strings.ReplaceAll(ret, "</h2>", "</h4>")
 		ret = strings.ReplaceAll(ret, "<h1>", "<h3 style=\"margin-top: 0;\">")
 		ret = strings.ReplaceAll(ret, "</h1>", "</h3>")
+		ret = strings.ReplaceAll(ret, "<a href=\"http", "<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"http")
 	}
 	return title, ret, nil
 }

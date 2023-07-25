@@ -49,8 +49,8 @@ func (p *Gallery) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 	components.StreamSVGRefIcon(qw422016, `hourglass`, ps)
 //line views/vsite/Gallery.html:17
 	qw422016.N().S(`Performance</h3>
-    <div class="mt only-light"><img style="width: 100%; max-width: 800px;" loading="lazy" src="/assets/tutorial/devtools-light.png" /></div>
-    <div class="mt only-dark"><img style="width: 100%; max-width: 800px;" loading="lazy" src="/assets/tutorial/devtools-dark.png" /></div>
+    <div class="mt only-light"><img style="width: 100%; max-width: 800px;" loading="lazy" src="/assets/gallery/devtools-light.png" /></div>
+    <div class="mt only-dark"><img style="width: 100%; max-width: 800px;" loading="lazy" src="/assets/gallery/devtools-dark.png" /></div>
   </div>
 
   <div class="card">
@@ -59,18 +59,18 @@ func (p *Gallery) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 	components.StreamSVGRefIcon(qw422016, `cog`, ps)
 //line views/vsite/Gallery.html:23
 	qw422016.N().S(`Settings</h3>
-    <div class="mt only-light"><img style="width: 100%; max-width: 800px;" loading="lazy" src="/assets/tutorial/settings-light.png" /></div>
-    <div class="mt only-dark"><img style="width: 100%; max-width: 800px;" loading="lazy" src="/assets/tutorial/settings-dark.png" /></div>
+    <div class="mt only-light"><img style="width: 100%; max-width: 800px;" loading="lazy" src="/assets/gallery/settings-light.png" /></div>
+    <div class="mt only-dark"><img style="width: 100%; max-width: 800px;" loading="lazy" src="/assets/gallery/settings-dark.png" /></div>
   </div>
 
   <div class="card">
     <h3>`)
 //line views/vsite/Gallery.html:29
-	components.StreamSVGRefIcon(qw422016, `app`, ps)
+	components.StreamSVGRefIcon(qw422016, `ice-cream`, ps)
 //line views/vsite/Gallery.html:29
 	qw422016.N().S(`Themes</h3>
-    <div class="mt only-light"><img style="width: 100%; max-width: 800px;" loading="lazy" src="/assets/tutorial/themes-light.png" /></div>
-    <div class="mt only-dark"><img style="width: 100%; max-width: 800px;" loading="lazy" src="/assets/tutorial/themes-dark.png" /></div>
+    <div class="mt only-light"><img style="width: 100%; max-width: 800px;" loading="lazy" src="/assets/gallery/themes-light.png" /></div>
+    <div class="mt only-dark"><img style="width: 100%; max-width: 800px;" loading="lazy" src="/assets/gallery/themes-dark.png" /></div>
   </div>
 `)
 //line views/vsite/Gallery.html:33

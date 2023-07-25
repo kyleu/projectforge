@@ -41,9 +41,9 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
     <h3>Add Theme</h3>
     <div class="mt">
       <a href="/theme/new" title="add new theme"><button>New Theme</button></a>
-      <a href="/theme/palette/crayola" title="add new theme"><button>Choose Crayola Theme</button></a>
-      <a href="/theme/palette/css" title="add new theme"><button>Choose CSS Theme</button></a>
-      <a href="/theme/palette/wikipedia" title="add new theme"><button>Choose Wikipedia Theme</button></a>
+      <a href="/theme/palette/crayola" title="add new theme"><button>Choose from Crayola colors</button></a>
+      <a href="/theme/palette/css" title="add new theme"><button>Choose from CSS colors</button></a>
+      <a href="/theme/palette/wikipedia" title="add new theme"><button>Choose from Wikipedia colors</button></a>
       <hr />
       <form action="/theme/color/edit" method="get">
         <div class="mt">

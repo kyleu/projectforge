@@ -19,8 +19,8 @@
 - [configdir][14]
 - [pkg/errors][15]
 - [prometheus][16]
-- [opentelemetry][17]
-- [lo][18]{{{ if .HasModule "database" }}}
+- [lo][17]
+- [opentelemetry][18]{{{ if .HasModule "database" }}}
 - [sqlx][19]{{{ end }}}{{{ if .HasModule "postgres" }}}
 - [pgx][20]{{{ end }}}{{{ if .HasModule "mysql" }}}
 - [mysql][21]{{{ end }}}{{{ if .HasModule "sqlite" }}}
