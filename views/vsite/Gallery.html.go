@@ -72,32 +72,42 @@ func (p *Gallery) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
     <div class="mt only-light"><img style="width: 100%; max-width: 800px;" loading="lazy" src="/assets/gallery/themes-light.png" /></div>
     <div class="mt only-dark"><img style="width: 100%; max-width: 800px;" loading="lazy" src="/assets/gallery/themes-dark.png" /></div>
   </div>
+
+  <div class="card">
+    <h3>`)
+//line views/vsite/Gallery.html:35
+	components.StreamSVGRefIcon(qw422016, `info`, ps)
+//line views/vsite/Gallery.html:35
+	qw422016.N().S(`App Info</h3>
+    <div class="mt only-light"><img style="width: 100%; max-width: 800px;" loading="lazy" src="/assets/gallery/appinfo-light.png" /></div>
+    <div class="mt only-dark"><img style="width: 100%; max-width: 800px;" loading="lazy" src="/assets/gallery/appinfo-dark.png" /></div>
+  </div>
 `)
-//line views/vsite/Gallery.html:33
+//line views/vsite/Gallery.html:39
 }
 
-//line views/vsite/Gallery.html:33
+//line views/vsite/Gallery.html:39
 func (p *Gallery) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsite/Gallery.html:33
+//line views/vsite/Gallery.html:39
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsite/Gallery.html:33
+//line views/vsite/Gallery.html:39
 	p.StreamBody(qw422016, as, ps)
-//line views/vsite/Gallery.html:33
+//line views/vsite/Gallery.html:39
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsite/Gallery.html:33
+//line views/vsite/Gallery.html:39
 }
 
-//line views/vsite/Gallery.html:33
+//line views/vsite/Gallery.html:39
 func (p *Gallery) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsite/Gallery.html:33
+//line views/vsite/Gallery.html:39
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsite/Gallery.html:33
+//line views/vsite/Gallery.html:39
 	p.WriteBody(qb422016, as, ps)
-//line views/vsite/Gallery.html:33
+//line views/vsite/Gallery.html:39
 	qs422016 := string(qb422016.B)
-//line views/vsite/Gallery.html:33
+//line views/vsite/Gallery.html:39
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsite/Gallery.html:33
+//line views/vsite/Gallery.html:39
 	return qs422016
-//line views/vsite/Gallery.html:33
+//line views/vsite/Gallery.html:39
 }

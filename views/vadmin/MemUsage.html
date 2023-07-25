@@ -16,6 +16,7 @@
 {% func (p *MemUsage) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>Memory Usage</h3>
+    <em>Better formatting is coming soon</em>
     {%s= components.JSON(p.Mem) %}
   </div>
 {% endfunc %}

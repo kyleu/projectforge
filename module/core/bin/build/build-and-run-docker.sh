@@ -9,6 +9,6 @@ cd $dir/../..
 echo "Building [linux amd64]..."
 GOOS=linux GOARCH=amd64 make build
 mv ./build/debug/{{{ .Exec }}} .
-docker build -t={{{ .Key }}} -f=./tools/release/Dockerfile .
+docker build -t={{{ .Key }}} -f=./tools/release/Dockerfile.release .
 rm ./{{{ .Exec }}}
 docker run -it {{{ .Key }}}

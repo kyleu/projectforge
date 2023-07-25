@@ -45,12 +45,12 @@ dockers:
     image_templates:
       - "ghcr.io/kyleu/projectforge:{{ trimprefix .Tag \"v\" }}"
       - "ghcr.io/kyleu/projectforge:latest"
-    dockerfile: ./tools/release/Dockerfile
+    dockerfile: ./tools/release/Dockerfile.release
   -
     image_templates:
       - "ghcr.io/kyleu/projectforge:{{ trimprefix .Tag \"v\" }}-debug"
       - "ghcr.io/kyleu/projectforge:latest-debug"
-    dockerfile: ./tools/release/debug.Dockerfile
+    dockerfile: ./tools/release/Dockerfile.debug
 
 dist: "build/dist"
 

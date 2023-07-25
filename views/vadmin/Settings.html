@@ -29,8 +29,8 @@
     <div class="card flex-grow-1 flex-basis-0">
       <h3>{%= components.SVGRefIcon(`archive`, ps) %}Admin Functions</h3>
       <ul class="mt">
+        <li><a href="/admin/server">App Information</a></li>
         <li><a href="/admin/modules">View Go modules</a></li>
-        <li><a href="/admin/gc">Collect garbage</a></li>
         <li><a href="/theme">Edit Themes</a></li>
         <li><a href="/admin/exec">Managed Processes</a></li>
       </ul>
@@ -48,10 +48,11 @@
     <div class="card flex-grow-1 flex-basis-0">
       <h3>{%= components.SVGRefIcon(`cog`, ps) %}App Profiling</h3>
       <ul class="mt">
+        <li><a href="/admin/memusage">Memory Usage</a></li>
+        <li><a href="/admin/gc">Collect garbage</a></li>
+        <li><a href="/admin/heap">Write memory dump</a></li>
         <li><a href="/admin/cpu/start">Start CPU profile</a></li>
         <li><a href="/admin/cpu/stop">Stop CPU profile</a></li>
-        <li><a href="/admin/heap">Write memory dump</a></li>
-        <li><a href="/admin/memusage">Memory Usage</a></li>
       </ul>
     </div>
   </div>

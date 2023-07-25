@@ -41,38 +41,39 @@ func (p *MemUsage) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 	qw422016.N().S(`
   <div class="card">
     <h3>Memory Usage</h3>
+    <em>Better formatting is coming soon</em>
     `)
-//line views/vadmin/MemUsage.html:19
+//line views/vadmin/MemUsage.html:20
 	qw422016.N().S(components.JSON(p.Mem))
-//line views/vadmin/MemUsage.html:19
+//line views/vadmin/MemUsage.html:20
 	qw422016.N().S(`
   </div>
 `)
-//line views/vadmin/MemUsage.html:21
+//line views/vadmin/MemUsage.html:22
 }
 
-//line views/vadmin/MemUsage.html:21
+//line views/vadmin/MemUsage.html:22
 func (p *MemUsage) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vadmin/MemUsage.html:21
+//line views/vadmin/MemUsage.html:22
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vadmin/MemUsage.html:21
+//line views/vadmin/MemUsage.html:22
 	p.StreamBody(qw422016, as, ps)
-//line views/vadmin/MemUsage.html:21
+//line views/vadmin/MemUsage.html:22
 	qt422016.ReleaseWriter(qw422016)
-//line views/vadmin/MemUsage.html:21
+//line views/vadmin/MemUsage.html:22
 }
 
-//line views/vadmin/MemUsage.html:21
+//line views/vadmin/MemUsage.html:22
 func (p *MemUsage) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vadmin/MemUsage.html:21
+//line views/vadmin/MemUsage.html:22
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vadmin/MemUsage.html:21
+//line views/vadmin/MemUsage.html:22
 	p.WriteBody(qb422016, as, ps)
-//line views/vadmin/MemUsage.html:21
+//line views/vadmin/MemUsage.html:22
 	qs422016 := string(qb422016.B)
-//line views/vadmin/MemUsage.html:21
+//line views/vadmin/MemUsage.html:22
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vadmin/MemUsage.html:21
+//line views/vadmin/MemUsage.html:22
 	return qs422016
-//line views/vadmin/MemUsage.html:21
+//line views/vadmin/MemUsage.html:22
 }

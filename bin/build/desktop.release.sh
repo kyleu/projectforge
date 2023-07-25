@@ -10,7 +10,7 @@ cd $dir/../..
 TGT=$1
 [ "$TGT" ] || TGT="v0.0.0"
 
-docker build -f tools/desktop/Dockerfile -t projectforge .
+docker build -f tools/desktop/Dockerfile.desktop -t projectforge .
 
 rm -rf tmp/release
 mkdir -p tmp/release

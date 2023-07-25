@@ -10,6 +10,6 @@ cd $dir/../..
 echo "Building [linux amd64]..."
 GOOS=linux GOARCH=amd64 make build
 mv ./build/debug/projectforge .
-docker build -t=projectforge -f=./tools/release/Dockerfile .
+docker build -t=projectforge -f=./tools/release/Dockerfile.release .
 rm ./projectforge
 docker run -it projectforge

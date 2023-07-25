@@ -10,39 +10,32 @@
 
 {% code type Modules struct {
   layout.Basic
-  Info *util.DebugInfo
+  Modules []*debug.Module
 } %}
 
 {% func (p *Modules) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%s util.AppName %} v{%s as.BuildInfo.Version %}</h3>
-    <ul class="mt">
-      {%- for _, k := range p.Info.Tags.Order -%}
-      <li><strong>{%s k %}</strong>: {%s p.Info.Tags.GetSimple(k) %}</li>
-      {%- endfor -%}
-    </ul>
+    <div class="right">{%s util.AppName %} v{%s as.BuildInfo.Version %}</div>
+    <h3>Go Modules</h3>
+    {%= moduleTable(p.Modules) %}
   </div>
-  {%= moduleList(p.Info.Mods) %}
 {% endfunc %}
 
-{% func moduleList(Mods []*debug.Module) %}
-  <div class="card">
-    <h3>Go Modules</h3>
-    <table class="mt">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Version</th>
-        </tr>
-      </thead>
-      <tbody>
-        {%- for _, m := range Mods -%}
-        <tr>
-          <td><a href="https://{%s m.Path %}" target="_blank" rel="noopener noreferrer">{%s m.Path %}</a></td>
-          <td title="{%s m.Sum %}">{%s m.Version %}</td>
-        </tr>
-        {%- endfor -%}
-      </tbody>
-    </table>
-  </div>
+{% func moduleTable(Mods []*debug.Module) %}
+  <table class="mt">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Version</th>
+      </tr>
+    </thead>
+    <tbody>
+      {%- for _, m := range Mods -%}
+      <tr>
+        <td><a href="https://{%s m.Path %}" target="_blank" rel="noopener noreferrer">{%s m.Path %}</a></td>
+        <td title="{%s m.Sum %}">{%s m.Version %}</td>
+      </tr>
+      {%- endfor -%}
+    </tbody>
+  </table>
 {% endfunc %}

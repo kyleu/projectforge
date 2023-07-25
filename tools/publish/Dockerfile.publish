@@ -1,0 +1,36 @@
+# Content managed by Project Forge, see [projectforge.md] for details.
+FROM --platform=linux/amd64 ubuntu:latest
+
+RUN apt-get update
+
+RUN apt-get install -y --no-install-recommends build-essential ca-certificates curl
+
+# Golang
+RUN curl -L -o /tmp/go.tar.gz https://go.dev/dl/go1.20.6.linux-amd64.tar.gz
+RUN tar -C /usr/local -xzf /tmp/go.tar.gz
+
+RUN groupadd -r projectforge && useradd -r -g projectforge projectforge
+RUN mkdir -p /home/projectforge
+RUN chown projectforge /home/projectforge
+USER projectforge
+
+ENV PATH="${PATH}:/usr/local/go/bin:/home/projectforge/go/bin"
+
+RUN go install github.com/cosmtrek/air@latest
+RUN go install github.com/valyala/quicktemplate/qtc@latest
+RUN go install gotest.tools/gotestsum@latest
+RUN go install mvdan.cc/gofumpt@latest
+
+WORKDIR /home/projectforge/src
+
+COPY --chown=projectforge "./go.mod" "/home/projectforge/src/go.mod"
+COPY --chown=projectforge "./go.sum" "/home/projectforge/src/go.sum"
+
+RUN go mod download
+
+COPY --chown=projectforge . /home/projectforge/src/
+
+RUN make build
+
+RUN mkdir -p /home/projectforge/build
+RUN cp ./build/debug/projectforge ~/build/projectforge

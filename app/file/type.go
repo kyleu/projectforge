@@ -14,12 +14,15 @@ type Type struct {
 	Title    string
 }
 
+var dockerfileSuffixes = []string{"Dockerfile", "Dockerfile.debug", "Dockerfile.desktop", "Dockerfile.publish", "Dockerfile.release"}
+
 var (
 	TypeBatch        = Type{Key: "batch", Suffixes: []string{".bat"}, Title: "Windows batch file"}
 	TypeCodeowners   = Type{Key: "codeowners", Suffixes: []string{"CODEOWNERS"}, Title: "Code owners source control file"}
 	TypeConf         = Type{Key: "conf", Suffixes: []string{".conf"}, Title: "Configuration file"}
 	TypeCSS          = Type{Key: "css", Suffixes: []string{".css"}, Title: "Cascading Stylesheet"}
-	TypeDocker       = Type{Key: "docker", Suffixes: []string{"Dockerfile"}, Title: "Docker build configuration"}
+	TypeDocker       = Type{Key: "docker", Suffixes: dockerfileSuffixes, Title: "Docker build configuration"}
+	TypeDockerIgnore = Type{Key: "dockerignore", Suffixes: []string{".dockerignore"}, Title: "Docker ignore configuration"}
 	TypeEditorConfig = Type{Key: "editorconfig", Suffixes: []string{".editorconfig"}, Title: "IDE configuration and styling"}
 	TypeEntitlements = Type{Key: "entitlements", Suffixes: []string{".entitlements"}, Title: "Apple entitlements file"}
 	TypeEnv          = Type{Key: "env", Suffixes: []string{".env"}, Title: "Shell environment files"}
@@ -51,7 +54,7 @@ var (
 )
 
 var AllTypes = []Type{
-	TypeBatch, TypeCodeowners, TypeConf, TypeCSS, TypeDocker, TypeEditorConfig, TypeEntitlements, TypeEnv,
+	TypeBatch, TypeCodeowners, TypeConf, TypeCSS, TypeDocker, TypeDockerIgnore, TypeEditorConfig, TypeEntitlements, TypeEnv,
 	TypeESLint, TypeGitIgnore, TypeGo, TypeGoMod, TypeGradle, TypeGraphQL, TypeHCL, TypeHTML, TypeIcons, TypeIgnore,
 	TypeJavaScript, TypeJSON, TypeKotlin, TypeMakefile, TypeMarkdown, TypePList, TypeProperties,
 	TypeProtobuf, TypeShell, TypeSQL, TypeSVG, TypeSwift, TypeTypeScript, TypeXML, TypeYAML,

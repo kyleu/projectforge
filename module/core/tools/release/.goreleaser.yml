@@ -55,12 +55,12 @@ dockers:
     image_templates:
       - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:{{ trimprefix .Tag \"v\" }}"
       - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:latest"
-    dockerfile: ./tools/release/Dockerfile{{{ .ExtraFilesContent }}}{{{ if .Build.Simple }}}{{{ else }}}
+    dockerfile: ./tools/release/Dockerfile.release{{{ .ExtraFilesContent }}}{{{ if .Build.Simple }}}{{{ else }}}
   -
     image_templates:
       - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:{{ trimprefix .Tag \"v\" }}-debug"
       - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:latest-debug"
-    dockerfile: ./tools/release/debug.Dockerfile{{{ .ExtraFilesContent }}}{{{ end }}}
+    dockerfile: ./tools/release/Dockerfile.debug{{{ .ExtraFilesContent }}}{{{ end }}}
 
 dist: "build/dist"
 {{{ if .Build.NFPMS }}}

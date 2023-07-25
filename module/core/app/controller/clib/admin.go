@@ -2,7 +2,6 @@ package clib
 
 import (
 	"fmt"
-	"os"
 	"runtime"
 	"runtime/pprof"
 	"strings"
@@ -29,10 +28,14 @@ func Admin(rc *fasthttp.RequestCtx) {
 			return controller.Render(rc, as, {{{ if .HasModule "oauth" }}}&vadmin.Settings{Perms: user.GetPermissions()}{{{ else }}}&vadmin.Settings{}{{{ end }}}, ps, "admin")
 		}
 		switch path[0] {
+		case "server":
+			info := util.DebugGetInfo(as.BuildInfo.Version, as.Started)
+			ps.Data = info
+			return controller.Render(rc, as, &vadmin.ServerInfo{Info: info}, ps, "admin", "Server Information")
 		case "cpu":
 			switch path[1] {
 			case "start":
-				err := startCPUProfile()
+				err := util.DebugStartCPUProfile()
 				if err != nil {
 					return "", err
 				}
@@ -49,14 +52,13 @@ func Admin(rc *fasthttp.RequestCtx) {
 			msg := fmt.Sprintf("ran garbage collection in [%s]", timer.EndString())
 			return controller.FlashAndRedir(true, msg, "/admin", rc, ps)
 		case "heap":
-			err := takeHeapProfile()
+			err := util.DebugTakeHeapProfile()
 			if err != nil {
 				return "", err
 			}
 			return controller.FlashAndRedir(true, "wrote heap profile", "/admin", rc, ps)
 		case "memusage":
-			x := &runtime.MemStats{}
-			runtime.ReadMemStats(x)
+			x := util.DebugMemStats()
 			ps.Data = x
 			return controller.Render(rc, as, &vadmin.MemUsage{Mem: x}, ps, "admin", "Memory Usage"){{{ if .HasModule "migration" }}}
 		case "migrations":
@@ -65,13 +67,10 @@ func Admin(rc *fasthttp.RequestCtx) {
 			ps.Data = util.ValueMap{"available": ms, "applied": am}
 			return controller.Render(rc, as, &vadmin.Migrations{Available: ms, Applied: am}, ps, "admin", "Migrations"){{{ end }}}
 		case "modules":
-			di, err := util.GetDebugInfo()
-			if err != nil {
-				return "", err
-			}
+			di := util.DebugBuildInfo().Deps
 			ps.Title = "Modules"
 			ps.Data = di
-			return controller.Render(rc, as, &vadmin.Modules{Info: di}, ps, "admin", "Modules"){{{ if .HasModule "queue" }}}
+			return controller.Render(rc, as, &vadmin.Modules{Modules: di}, ps, "admin", "Modules"){{{ if .HasModule "queue" }}}
 		case "queue":
 			ps.Title = "Queue Debug"
 			ps.Data = as.Services.Publisher
@@ -100,20 +99,4 @@ func Admin(rc *fasthttp.RequestCtx) {
 			return "", errors.Errorf("unhandled admin action [%s]", path[0])
 		}
 	})
-}
-
-func startCPUProfile() error {
-	f, err := os.Create("./tmp/cpu.pprof")
-	if err != nil {
-		return err
-	}
-	return pprof.StartCPUProfile(f)
-}
-
-func takeHeapProfile() error {
-	f, err := os.Create("./tmp/mem.pprof")
-	if err != nil {
-		return err
-	}
-	return pprof.WriteHeapProfile(f)
 }

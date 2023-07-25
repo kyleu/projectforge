@@ -1,0 +1,35 @@
+FROM --platform=linux/amd64 ubuntu:latest
+
+RUN apt-get update
+
+RUN apt-get install -y --no-install-recommends build-essential ca-certificates curl
+
+# Golang
+RUN curl -L -o /tmp/go.tar.gz https://go.dev/dl/go1.20.6.linux-amd64.tar.gz
+RUN tar -C /usr/local -xzf /tmp/go.tar.gz
+
+RUN groupadd -r {{{ .Exec }}} && useradd -r -g {{{ .Exec }}} {{{ .Exec }}}
+RUN mkdir -p /home/{{{ .Exec }}}
+RUN chown {{{ .Exec }}} /home/{{{ .Exec }}}
+USER {{{ .Exec }}}
+
+ENV PATH="${PATH}:/usr/local/go/bin:/home/{{{ .Exec }}}/go/bin"
+
+RUN go install github.com/cosmtrek/air@latest
+RUN go install github.com/valyala/quicktemplate/qtc@latest
+RUN go install gotest.tools/gotestsum@latest
+RUN go install mvdan.cc/gofumpt@latest
+
+WORKDIR /home/{{{ .Exec }}}/src
+
+COPY --chown={{{ .Exec }}} "./go.mod" "/home/{{{ .Exec }}}/src/go.mod"
+COPY --chown={{{ .Exec }}} "./go.sum" "/home/{{{ .Exec }}}/src/go.sum"
+
+RUN go mod download
+
+COPY --chown={{{ .Exec }}} . /home/{{{ .Exec }}}/src/
+
+RUN make build
+
+RUN mkdir -p /home/{{{ .Exec }}}/build
+RUN cp ./build/debug/{{{ .Exec }}} ~/build/{{{ .Exec }}}

@@ -1,0 +1,38 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/views/layout"
+) %}
+
+{% code type ServerInfo struct {
+  layout.Basic
+  Info *util.DebugInfo
+} %}
+
+{% func (p *ServerInfo) Body(as *app.State, ps *cutil.PageState) %}
+  {%= renderTags("Server Information", p.Info.ServerTags) %}
+  {%= renderTags("Runtime Information", p.Info.RuntimeTags) %}
+  {%= renderTags("App Information", p.Info.AppTags) %}
+  <div class="card">
+    <h3>Go Modules</h3>
+    {%= moduleTable(p.Info.Mods) %}
+  </div>
+{% endfunc %}
+
+{% func renderTags(title string, tags *util.OrderedMap[string]) %}
+  <div class="card">
+    <h3>{%s title %}</h3>
+    <table class="mt min-200">
+      <tbody>
+      {%- for _, k := range tags.Order -%}
+      <tr>
+        <th class="shrink">{%s k %}</th>
+        <td>{%s tags.GetSimple(k) %}</td>
+      </tr>
+      {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
+{% endfunc %}

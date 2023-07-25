@@ -1,3 +1,4 @@
+# $PF_GENERATE_ONCE$
 .git
 .goreleaser.yml
 .idea
