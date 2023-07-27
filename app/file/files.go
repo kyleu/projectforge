@@ -1,10 +1,11 @@
 package file
 
 import (
-	"projectforge.dev/projectforge/app/util"
 	"strings"
 
 	"github.com/samber/lo"
+
+	"projectforge.dev/projectforge/app/util"
 )
 
 type Files []*File

@@ -1,11 +1,12 @@
 package diff
 
 import (
-	"projectforge.dev/projectforge/app/util"
 	"strings"
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
+
+	"projectforge.dev/projectforge/app/util"
 )
 
 type cmd struct {
