@@ -68,10 +68,7 @@
   </div>
   {%- if p.RC.Request.Header.Len() > 0 -%}
   {%- code
-    hd := make(map[string]string, p.RC.Request.Header.Len())
-    p.RC.Request.Header.VisitAll(func(k, v []byte) {
-      hd[string(k)] = string(v)
-    })
+    hd := cutil.RequestHeadersMap(p.RC)
   -%}
   <div class="card">
     <h3>Headers</h3>

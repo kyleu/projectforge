@@ -139,12 +139,9 @@ func (p *Request) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 //line views/vadmin/Request.html:69
 	if p.RC.Request.Header.Len() > 0 {
 //line views/vadmin/Request.html:71
-		hd := make(map[string]string, p.RC.Request.Header.Len())
-		p.RC.Request.Header.VisitAll(func(k, v []byte) {
-			hd[string(k)] = string(v)
-		})
+		hd := cutil.RequestHeadersMap(p.RC)
 
-//line views/vadmin/Request.html:75
+//line views/vadmin/Request.html:72
 		qw422016.N().S(`  <div class="card">
     <h3>Headers</h3>
     <table>
@@ -156,67 +153,67 @@ func (p *Request) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
       </thead>
       <tbody>
 `)
-//line views/vadmin/Request.html:87
+//line views/vadmin/Request.html:84
 		keys := lo.Keys(hd)
 		slices.Sort(keys)
 
-//line views/vadmin/Request.html:90
+//line views/vadmin/Request.html:87
 		for _, k := range keys {
-//line views/vadmin/Request.html:90
+//line views/vadmin/Request.html:87
 			qw422016.N().S(`        <tr>
           <td class="nowrap">`)
-//line views/vadmin/Request.html:92
+//line views/vadmin/Request.html:89
 			qw422016.E().S(k)
-//line views/vadmin/Request.html:92
+//line views/vadmin/Request.html:89
 			qw422016.N().S(`</td>
           <td>`)
-//line views/vadmin/Request.html:93
+//line views/vadmin/Request.html:90
 			qw422016.E().S(hd[k])
-//line views/vadmin/Request.html:93
+//line views/vadmin/Request.html:90
 			qw422016.N().S(`</td>
         </tr>
 `)
-//line views/vadmin/Request.html:95
+//line views/vadmin/Request.html:92
 		}
-//line views/vadmin/Request.html:95
+//line views/vadmin/Request.html:92
 		qw422016.N().S(`      </tbody>
     </table>
   </div>
 `)
-//line views/vadmin/Request.html:99
+//line views/vadmin/Request.html:96
 	}
-//line views/vadmin/Request.html:99
+//line views/vadmin/Request.html:96
 	qw422016.N().S(`  `)
-//line views/vadmin/Request.html:100
+//line views/vadmin/Request.html:97
 	components.StreamJSONModal(qw422016, "ps", "Page State", ps, 1)
-//line views/vadmin/Request.html:100
+//line views/vadmin/Request.html:97
 	qw422016.N().S(`
 `)
-//line views/vadmin/Request.html:101
+//line views/vadmin/Request.html:98
 }
 
-//line views/vadmin/Request.html:101
+//line views/vadmin/Request.html:98
 func (p *Request) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vadmin/Request.html:101
+//line views/vadmin/Request.html:98
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vadmin/Request.html:101
+//line views/vadmin/Request.html:98
 	p.StreamBody(qw422016, as, ps)
-//line views/vadmin/Request.html:101
+//line views/vadmin/Request.html:98
 	qt422016.ReleaseWriter(qw422016)
-//line views/vadmin/Request.html:101
+//line views/vadmin/Request.html:98
 }
 
-//line views/vadmin/Request.html:101
+//line views/vadmin/Request.html:98
 func (p *Request) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vadmin/Request.html:101
+//line views/vadmin/Request.html:98
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vadmin/Request.html:101
+//line views/vadmin/Request.html:98
 	p.WriteBody(qb422016, as, ps)
-//line views/vadmin/Request.html:101
+//line views/vadmin/Request.html:98
 	qs422016 := string(qb422016.B)
-//line views/vadmin/Request.html:101
+//line views/vadmin/Request.html:98
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vadmin/Request.html:101
+//line views/vadmin/Request.html:98
 	return qs422016
-//line views/vadmin/Request.html:101
+//line views/vadmin/Request.html:98
 }

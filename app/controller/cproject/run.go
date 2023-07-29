@@ -31,7 +31,7 @@ func RunAction(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 
-		cfg := util.ValueMap{}
+		cfg := cutil.QueryArgsMap(rc)
 		actT := action.TypeFromString(actS)
 		prj, err := as.Services.Projects.Get(tgt)
 		if err != nil {
@@ -39,10 +39,9 @@ func RunAction(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = fmt.Sprintf("[%s] %s", actT.Title, prj.Title())
 
-		cfg["path"] = prj.Path
-		rc.QueryArgs().VisitAll(func(k []byte, v []byte) {
-			cfg[string(k)] = string(v)
-		})
+		if curr, ok := cfg["path"]; !ok || curr == "" {
+			cfg["path"] = prj.Path
+		}
 
 		isBuild := actT.Key == action.TypeBuild.Key
 		phase := cfg.GetStringOpt("phase")

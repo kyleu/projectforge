@@ -13,10 +13,6 @@ import (
 )
 
 func RequestCtxToMap(rc *fasthttp.RequestCtx, data any) util.ValueMap {
-	reqHeaders := make(map[string]string, rc.Request.Header.Len())
-	rc.Request.Header.VisitAll(func(k, v []byte) {
-		reqHeaders[string(k)] = string(v)
-	})
 	req := util.ValueMap{
 		"id":          rc.ID(),
 		"url":         rc.URI().String(),
@@ -24,18 +20,14 @@ func RequestCtxToMap(rc *fasthttp.RequestCtx, data any) util.ValueMap {
 		"host":        string(rc.Request.URI().Host()),
 		"path":        string(rc.Request.URI().Path()),
 		"queryString": string(rc.Request.URI().QueryString()),
-		"headers":     reqHeaders,
+		"headers":     RequestHeadersMap(rc),
 		"bodySize":    len(rc.Request.Body()),
 		"string":      rc.Request.String(),
 	}
-	rspHeaders := make(map[string]string, rc.Response.Header.Len())
-	rc.Response.Header.VisitAll(func(k, v []byte) {
-		rspHeaders[string(k)] = string(v)
-	})
 	rsp := util.ValueMap{
 		"code":     rc.Response.StatusCode(),
 		"bodySize": len(rc.Response.Body()),
-		"headers":  rspHeaders,
+		"headers":  ResponseHeadersMap(rc),
 		"string":   rc.Response.String(),
 	}
 	return util.ValueMap{"data": data, "request": req, "response": rsp}
@@ -89,4 +81,29 @@ func RCRequiredArray(rc *fasthttp.RequestCtx, key string) ([]string, error) {
 func QueryStringBool(rc *fasthttp.RequestCtx, key string) bool {
 	x := string(rc.URI().QueryArgs().Peek(key))
 	return x == util.BoolTrue || x == "t" || x == "True" || x == "TRUE"
+}
+
+func QueryArgsMap(rc *fasthttp.RequestCtx) util.ValueMap {
+	ret := make(util.ValueMap, rc.QueryArgs().Len())
+	rc.QueryArgs().VisitAll(func(k []byte, v []byte) {
+		curr, _ := ret.GetStringArray(string(k), true)
+		ret[string(k)] = append(curr, string(v))
+	})
+	return ret
+}
+
+func RequestHeadersMap(rc *fasthttp.RequestCtx) map[string]string {
+	ret := make(map[string]string, rc.Request.Header.Len())
+	rc.Request.Header.VisitAll(func(k, v []byte) {
+		ret[string(k)] = string(v)
+	})
+	return ret
+}
+
+func ResponseHeadersMap(rc *fasthttp.RequestCtx) map[string]string {
+	ret := make(map[string]string, rc.Request.Header.Len())
+	rc.Response.Header.VisitAll(func(k, v []byte) {
+		ret[string(k)] = string(v)
+	})
+	return ret
 }

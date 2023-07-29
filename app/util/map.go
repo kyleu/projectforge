@@ -19,6 +19,12 @@ func ValueMapFor(kvs ...any) ValueMap {
 	return ret
 }
 
+func (m ValueMap) ToStringMap() map[string]string {
+	return lo.MapValues(m, func(_ any, key string) string {
+		return m.GetStringOpt(key)
+	})
+}
+
 func (m ValueMap) KeysAndValues() ([]string, []any) {
 	cols := ArraySorted(lo.Keys(m))
 	vals := lo.Map(cols, func(col string, _ int) any {

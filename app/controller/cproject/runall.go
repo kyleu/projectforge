@@ -20,10 +20,7 @@ func RunAllActions(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		cfg := util.ValueMap{}
-		rc.QueryArgs().VisitAll(func(k []byte, v []byte) {
-			cfg[string(k)] = string(v)
-		})
+		cfg := cutil.QueryArgsMap(rc)
 		prjs := as.Services.Projects.Projects()
 		tags := util.StringSplitAndTrim(string(rc.URI().QueryArgs().Peek("tags")), ",")
 		if len(tags) == 0 {
