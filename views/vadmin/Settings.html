@@ -14,14 +14,14 @@
 {% func (p *Settings) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     {%- if util.AppSource != "" -%}
-    <div class="right"><a href="{%s util.AppSource %}"><button>Github</button></a></div>
+    <div class="right"><a target="_blank" rel="noopener noreferrer" href="{%s util.AppSource %}"><button>Github</button></a></div>
     {%- endif -%}
     <h3 title="github:{%s as.BuildInfo.Commit %}">{%= components.SVGRefIcon(`cog`, ps) %}{%s util.AppName %} {%s as.BuildInfo.String() %}</h3>
     {%- if util.AppLegal != "" -%}
     <div class="mt">{%s= util.AppLegal %}</div>
     {%- endif -%}
     {%- if util.AppURL != "" -%}
-    <p><a href="{%s= util.AppURL %}">{%s= util.AppURL %}</a></p>
+    <p><a target="_blank" rel="noopener noreferrer" href="{%s= util.AppURL %}">{%s= util.AppURL %}</a></p>
     {%- endif -%}
   </div>
 

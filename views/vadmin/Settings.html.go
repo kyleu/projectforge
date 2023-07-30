@@ -42,7 +42,7 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vadmin/Settings.html:16
 	if util.AppSource != "" {
 //line views/vadmin/Settings.html:16
-		qw422016.N().S(`    <div class="right"><a href="`)
+		qw422016.N().S(`    <div class="right"><a target="_blank" rel="noopener noreferrer" href="`)
 //line views/vadmin/Settings.html:17
 		qw422016.E().S(util.AppSource)
 //line views/vadmin/Settings.html:17
@@ -81,7 +81,7 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vadmin/Settings.html:23
 	if util.AppURL != "" {
 //line views/vadmin/Settings.html:23
-		qw422016.N().S(`    <p><a href="`)
+		qw422016.N().S(`    <p><a target="_blank" rel="noopener noreferrer" href="`)
 //line views/vadmin/Settings.html:24
 		qw422016.N().S(util.AppURL)
 //line views/vadmin/Settings.html:24

@@ -32,7 +32,7 @@
     <tbody>
       {%- for _, m := range Mods -%}
       <tr>
-        <td><a href="https://{%s m.Path %}" target="_blank" rel="noopener noreferrer">{%s m.Path %}</a></td>
+        <td><a target="_blank" rel="noopener noreferrer" href="https://{%s m.Path %}">{%s m.Path %}</a></td>
         <td title="{%s m.Sum %}">{%s m.Version %}</td>
       </tr>
       {%- endfor -%}

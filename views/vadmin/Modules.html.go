@@ -103,11 +103,11 @@ func streammoduleTable(qw422016 *qt422016.Writer, Mods []*debug.Module) {
 	for _, m := range Mods {
 //line views/vadmin/Modules.html:33
 		qw422016.N().S(`      <tr>
-        <td><a href="https://`)
+        <td><a target="_blank" rel="noopener noreferrer" href="https://`)
 //line views/vadmin/Modules.html:35
 		qw422016.E().S(m.Path)
 //line views/vadmin/Modules.html:35
-		qw422016.N().S(`" target="_blank" rel="noopener noreferrer">`)
+		qw422016.N().S(`">`)
 //line views/vadmin/Modules.html:35
 		qw422016.E().S(m.Path)
 //line views/vadmin/Modules.html:35
