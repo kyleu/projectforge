@@ -160,7 +160,6 @@ builds:
       - "386"{{{ end }}}
       - "amd64"
       - "arm64"
-      - "loong64"
     mod_timestamp: "{{ .CommitTimestamp }}"{{{ .GoBinaryContent }}}
 {{{ if .Build.LinuxARM }}}
   - id: "linux-arm"
@@ -191,6 +190,7 @@ builds:
     goos:
       - "linux"
     goarch:
+      - "loong64"
       - "ppc64"
       - "ppc64le"
       - "riscv64"
