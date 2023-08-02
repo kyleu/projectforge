@@ -75,7 +75,6 @@ func (n Nodes) Merge(x Nodes) Nodes {
 		} else {
 			ret = append(ret, xn)
 		}
-
 	}
 	return ret
 }

@@ -41,8 +41,10 @@ func Welcome(rc *fasthttp.RequestCtx) {
 	})
 }
 
-var activeWelcomeProject *project.Project
-var activeWelcomeForm util.ValueMap
+var (
+	activeWelcomeProject *project.Project
+	activeWelcomeForm    util.ValueMap
+)
 
 func WelcomeLoad(rc *fasthttp.RequestCtx) {
 	controller.Act("welcome.load", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
