@@ -11,6 +11,7 @@ type FileLoader interface {
 	Root() string
 	Clone() FileLoader
 	PeekFile(path string, maxSize int) ([]byte, error)
+	Size(path string) int
 	ReadFile(path string) ([]byte, error)
 	CreateDirectory(path string) error
 	WriteFile(path string, content []byte, mode os.FileMode, overwrite bool) error
@@ -19,6 +20,7 @@ type FileLoader interface {
 	Move(src string, tgt string) error
 	ListFiles(path string, ignore []string, logger util.Logger) []os.DirEntry
 	ListFilesRecursive(path string, ignore []string, logger util.Logger) ([]string, error)
+	ListTree(cfg util.ValueMap, path string, ignore []string, logger util.Logger, tags ...string) (*Tree, error)
 	ListJSON(path string, ignore []string, trimExtension bool, logger util.Logger) []string
 	ListExtension(path string, ext string, ignore []string, trimExtension bool, logger util.Logger) []string
 	ListDirectories(path string, ignore []string, logger util.Logger) []string

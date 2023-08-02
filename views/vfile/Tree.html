@@ -1,0 +1,78 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+	"path"
+  "strings"
+
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/lib/filesystem"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/vutil"
+) %}
+
+{% func Tree(t *filesystem.Tree, urlPrefix string, actions func(p string, n *filesystem.Node) map[string]string, as *app.State, ps *cutil.PageState) %}{% stripspace %}
+  {%= vutil.Indent(true, 2) %}
+  <ul class="accordion">
+    {%= treeNodes(t.Nodes, "", urlPrefix, actions, as, ps, 2) %}
+  {%= vutil.Indent(true, 2) %}
+  </ul>
+{% endstripspace %}{% endfunc %}
+
+{% func treeNode(n *filesystem.Node, pth string, urlPrefix string, actions func(p string, n *filesystem.Node) map[string]string, as *app.State, ps *cutil.PageState, indent int) %}{% stripspace %}
+  {% code
+    pathID := n.Name
+    if pth != "" {
+      pathID = pth + "/" + pathID
+    }
+    pathID = strings.ReplaceAll(pathID, "/", "__")
+  %}
+  {%= vutil.Indent(true, indent) %}
+  <li>
+    {%= vutil.Indent(true, indent + 1) %}
+    <input id="accordion-{%s pathID %}" type="checkbox" hidden />
+    {%= vutil.Indent(true, indent + 1) %}
+    <label for="accordion-{%s pathID %}">
+      {%- code
+        var acts map[string]string
+        if actions != nil {
+          acts = actions(pth, n)
+        }
+      -%}
+      <div class="right">
+        {%- if n.Size > 0 -%}
+        <em>{%s util.ByteSizeSI(int64(n.Size)) %}</em>{% space %}
+        {%- endif -%}
+        {%- for k, v := range acts -%}
+        <a href="{%s v %}">{%s k %}</a>
+        {%- endfor -%}
+      </div>
+      {%= components.ExpandCollapse(indent + 2, ps) %}
+      {%- if n.Dir -%}
+      {%= components.SVGRef(`folder`, 15, 15, ``, ps) %}
+      {%- else -%}
+      {%= components.SVGRef(`file`, 15, 15, ``, ps) %}
+      {%- endif -%}
+      {% space %}{%s n.Name %}
+      {%= vutil.Indent(true, indent + 1) %}
+    </label>
+    {%= vutil.Indent(true, indent + 1) %}
+    <div class="bd">
+      {%- if len(n.Children) > 0 -%}
+        {%= vutil.Indent(true, indent + 2) %}
+        <ul class="accordion" style="margin-left: {%d (indent / 3) * 6 %}px; margin-bottom: 0;">
+          {%= treeNodes(n.Children, path.Join(pth, n.Name), urlPrefix, actions, as, ps, indent + 3) %}
+        {%= vutil.Indent(true, indent + 2) %}
+        </ul>
+      {%- endif -%}
+    {%= vutil.Indent(true, indent + 1) %}
+    </div>
+  {%= vutil.Indent(true, indent) %}
+  </li>
+{% endstripspace %}{% endfunc %}
+
+{% func treeNodes(nodes filesystem.Nodes, pth string, urlPrefix string, actions func(p string, n *filesystem.Node) map[string]string, as *app.State, ps *cutil.PageState, indent int) %}{% stripspace %}
+  {%- for _, n := range nodes -%}
+  {%= treeNode(n, pth, urlPrefix, actions, as, ps, indent + 1) %}
+  {%- endfor -%}
+{% endstripspace %}{% endfunc %}

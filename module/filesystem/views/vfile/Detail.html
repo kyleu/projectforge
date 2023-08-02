@@ -9,9 +9,19 @@
   "{{{ .Package }}}/app/util"
 ) %}
 
-{% func Detail(path []string, b []byte, urlPrefix string, as *app.State, ps *cutil.PageState) %}
-  <div class="right"><em>{%s util.ByteSizeSI(int64(len(b))) %}</em></div>
-  <h3>{%- for idx, p := range path -%}/<a href="{%s urlPrefix %}/{%s filepath.Join(path[:idx + 1]...) %}">{%s p %}</a>{%- endfor -%}</h3>
+{% func Detail(path []string, b []byte, urlPrefix string, additionalLinks map[string]string, as *app.State, ps *cutil.PageState) %}
+  <div class="right"></div>
+  <h3>
+    {%- if additionalLinks != nil && len(additionalLinks) > 0 -%}
+    <div class="right">
+      {%- for k, v := range additionalLinks -%}
+      <a href="{%s v %}"><button>{%s k %}</button></a>
+      {%- endfor -%}
+    </div>
+    {%- endif -%}
+    {%- for idx, p := range path -%}/<a href="{%s urlPrefix %}/{%s filepath.Join(path[:idx + 1]...) %}">{%s p %}</a>{%- endfor -%}
+    <em>({%s util.ByteSizeSI(int64(len(b))) %})</em>
+  </h3>
   <div class="mt">
     {%- if len(b) > (1024 * 128) -%}
     <em>File is {%d len(b) %} bytes, which is too large for the file viewer</em>

@@ -37,7 +37,7 @@
   -%}
   <div class="card">
     <h3>{%= components.SVGRefIcon(p.Module.Icon, ps) %}{%s p.Module.Title() %}</h3>
-    {%= vfile.Detail(p.Path, b, u, as, ps) %}
+    {%= vfile.Detail(p.Path, b, u, nil, as, ps) %}
   </div>
   {%- endif -%}
 {% endfunc %}

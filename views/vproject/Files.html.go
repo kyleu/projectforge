@@ -95,7 +95,7 @@ func (p *Files) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
 		qw422016.N().S(`  <div class="card">
     `)
 //line views/vproject/Files.html:40
-		vfile.StreamDetail(qw422016, p.Path, b, u, as, ps)
+		vfile.StreamDetail(qw422016, p.Path, b, u, nil, as, ps)
 //line views/vproject/Files.html:40
 		qw422016.N().S(`
   </div>

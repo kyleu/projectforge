@@ -27,6 +27,20 @@ func (f *FileSystem) PeekFile(path string, maxSize int) ([]byte, error) {
 	return b[:size], nil
 }
 
+func (f *FileSystem) Size(path string) int {
+	file, err := os.Open(f.getPath(path))
+	if err != nil {
+		return -1
+	}
+	defer func() { _ = file.Close() }()
+
+	stat, _ := file.Stat()
+	if stat == nil {
+		return -1
+	}
+	return int(stat.Size())
+}
+
 func (f *FileSystem) ReadFile(path string) ([]byte, error) {
 	b, err := os.ReadFile(f.getPath(path))
 	if err != nil {

@@ -60,7 +60,7 @@ var (
 	buildFull          = &Build{Key: "full", Title: "Full Build", Description: "Builds the TypeScript and Go code", Run: onFull}
 	buildClean         = simpleBuild("clean", "Clean", "make clean")
 	buildTidy          = simpleBuild("tidy", "Tidy", "go mod tidy")
-	buildFormat        = simpleBuild("format", "Format", filepath.Join("bin", "format"+build.ScriptExtension))
+	buildFormat        = simpleBuild("format", "Format", filepath.Join("bin", "format."+build.ScriptExtension))
 	buildLint          = simpleBuild("lint", "Lint", filepath.Join("bin", "check."+build.ScriptExtension))
 	buildTemplates     = simpleBuild("templates", "Templates", filepath.Join("bin", "templates."+build.ScriptExtension))
 	buildClientInstall = &Build{
