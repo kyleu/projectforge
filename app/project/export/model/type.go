@@ -2,6 +2,7 @@ package model
 
 import (
 	"fmt"
+
 	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/lib/types"

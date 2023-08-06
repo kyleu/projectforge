@@ -24,10 +24,7 @@ func ModuleSearch(rc *fasthttp.RequestCtx) {
 		}
 
 		q := string(rc.URI().QueryArgs().Peek("q"))
-		params := &search.Params{
-			Q:  q,
-			PS: nil,
-		}
+		params := &search.Params{Q: q, PS: nil}
 
 		var res result.Results
 		if q != "" {
