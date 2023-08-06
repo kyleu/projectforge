@@ -2,7 +2,6 @@ package model
 
 import (
 	"fmt"
-
 	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/lib/types"
@@ -128,7 +127,14 @@ func ToGoViewString(t types.Type, prop string, nullable bool, format string, ver
 	case types.KeyBool:
 		return "{%%v " + prop + " %%}"
 	case types.KeyInt:
-		return "{%%d " + prop + " %%}"
+		switch format {
+		case FmtSI:
+			return "{%%s util.ByteSizeSI(int64(" + prop + ")) %%}"
+		case "":
+			return "{%%d " + prop + " %%}"
+		default:
+			return "INVALID_INT_FORMAT[" + format + "]"
+		}
 	case types.KeyFloat:
 		return "{%%f " + prop + " %%}"
 	case types.KeyList:
@@ -173,8 +179,10 @@ func ToGoViewString(t types.Type, prop string, nullable bool, format string, ver
 			return "{%%" + key + " " + ToGoString(t, prop, false) + " %%}"
 		case FmtSelect:
 			return "<strong>{%%" + key + " " + ToGoString(t, prop, false) + " %%}</strong>"
-		default:
+		case "":
 			return "{%%" + key + " " + ToGoString(t, prop, false) + " %%}"
+		default:
+			return "INVALID_STRING_FORMAT[" + format + "]"
 		}
 	default:
 		return "{%%v " + ToGoString(t, prop, false) + " %%}"

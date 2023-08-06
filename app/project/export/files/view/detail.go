@@ -25,6 +25,9 @@ func detail(m *model.Model, args *model.Args, addHeader bool, linebreak string) 
 	if len(rrs) > 0 {
 		g.AddImport(helper.ImpFilter)
 	}
+	if m.Columns.HasFormat(model.FmtSI) {
+		g.AddImport(helper.ImpAppUtil)
+	}
 	lo.ForEach(rrs, func(rel *model.Relation, _ int) {
 		rm := args.Models.Get(rel.Table)
 		g.AddImport(helper.AppImport("app/" + rm.PackageWithGroup("")))

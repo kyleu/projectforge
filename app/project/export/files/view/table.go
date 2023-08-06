@@ -19,7 +19,7 @@ func table(m *model.Model, args *model.Args, addHeader bool, linebreak string) (
 	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "Table.html")
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpFilter)
 	g.AddImport(helper.AppImport("app/" + m.PackageWithGroup("")))
-	if m.Columns.HasFormat(model.FmtCountry) {
+	if m.Columns.HasFormat(model.FmtCountry) || m.Columns.HasFormat(model.FmtSI) {
 		g.AddImport(helper.ImpAppUtil)
 	}
 	vtf, err := exportViewTableFunc(m, args.Models, args.Enums, g)

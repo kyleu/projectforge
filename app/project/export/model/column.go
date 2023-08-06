@@ -16,6 +16,7 @@ const (
 	FmtCode    = "code"
 	FmtCountry = "country"
 	FmtHTML    = "html"
+	FmtSI      = "si"
 	FmtURL     = "url"
 	FmtSelect  = "select"
 )

@@ -58,7 +58,10 @@
     </label>
     {%= vutil.Indent(true, indent + 1) %}
     <div class="bd">
-      {%- if len(n.Children) > 0 -%}
+      {%- if len(n.Children) == 0 -%}
+        {%= vutil.Indent(true, indent + 2) %}
+        <div>{%s n.Name %}</div>
+      {%- else -%}
         {%= vutil.Indent(true, indent + 2) %}
         <ul class="accordion" style="margin-left: {%d (indent / 3) * 6 %}px; margin-bottom: 0;">
           {%= treeNodes(n.Children, path.Join(pth, n.Name), urlPrefix, actions, as, ps, indent + 3) %}

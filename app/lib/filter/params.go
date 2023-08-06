@@ -36,7 +36,7 @@ func (p *Params) Sanitize(key string, defaultOrderings ...*Ordering) *Params {
 	if p == nil {
 		p = &Params{Key: key}
 	}
-	if p.Limit == 0 || p.Limit > 10000 {
+	if p.Limit == 0 || p.Limit > 100000 {
 		p.Limit = MaxRowsDefault
 	}
 	if p.Offset < 0 {

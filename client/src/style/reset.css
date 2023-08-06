@@ -21,6 +21,7 @@ hr {
 pre {
   font-family: monospace, monospace;
   font-size: 1em;
+  margin: 0;
 }
 
 a {
