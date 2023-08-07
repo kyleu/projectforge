@@ -33,6 +33,9 @@ func Models(m *model.Model, args *model.Args, addHeader bool, linebreak string) 
 		return nil, err
 	}
 	g.AddBlocks(ag)
+	if len(m.PKs()) > 1 {
+		g.AddBlocks(modelArrayToPKs(m))
+	}
 	lo.ForEach(m.PKs(), func(pk *model.Column, _ int) {
 		if pk.Proper() != "Title" {
 			if pk.Type.Key() != types.KeyList {
@@ -130,6 +133,16 @@ func modelArrayColStrings(m *model.Model, col *model.Column) *golang.Block {
 	ret.W("\t\tret = append(ret, %s)", model.ToGoString(col.Type, "x."+col.Proper(), true))
 	ret.W("\t})")
 	ret.W("\treturn ret")
+	ret.W("}")
+	return ret
+}
+
+func modelArrayToPKs(m *model.Model) *golang.Block {
+	ret := golang.NewBlock(fmt.Sprintf("%sArrayToPKs", m.Proper()), "func")
+	ret.W("func (%s %s) ToPKs() []*PK {", m.FirstLetter(), m.ProperPlural())
+	ret.W("\treturn lo.Map(%s, func(x *%s, _ int) *PK {", m.FirstLetter(), m.Proper())
+	ret.W("\t\treturn x.ToPK()")
+	ret.W("\t})")
 	ret.W("}")
 	return ret
 }

@@ -63,6 +63,9 @@
           {%- endfor -%}
         </td>
       </tr>
+      {%- if model.SortIndex != 0 -%}
+      <tr><th>Sort Index</th><td>{%d model.SortIndex %}</td></tr>
+      {%- endif -%}
       {%- if model.TitleOverride != "" -%}
       <tr><th>Title Override</th><td>{%s model.TitleOverride %}</td></tr>
       {%- endif -%}

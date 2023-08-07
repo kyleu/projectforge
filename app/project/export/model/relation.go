@@ -1,6 +1,7 @@
 package model
 
 import (
+	"projectforge.dev/projectforge/app/lib/types"
 	"strings"
 
 	"github.com/samber/lo"
@@ -19,7 +20,7 @@ func (r *Relation) SrcColumns(m *Model) Columns {
 	return colsFor(r.Src, m)
 }
 
-func (r *Relation) SrcQuoted() any {
+func (r *Relation) SrcQuoted() string {
 	return strings.Join(util.StringArrayQuoted(r.Src), ", ")
 }
 
@@ -27,15 +28,19 @@ func (r *Relation) TgtColumns(m *Model) Columns {
 	return colsFor(r.Tgt, m)
 }
 
-func (r *Relation) TgtQuoted() any {
+func (r *Relation) TgtQuoted() string {
 	return strings.Join(util.StringArrayQuoted(r.Tgt), ", ")
 }
 
-func (r *Relation) WebPath(src *Model, tgt *Model, prefix string) any {
+func (r *Relation) WebPath(src *Model, tgt *Model, prefix string) string {
 	url := "`/" + tgt.Route() + "`"
 	lo.ForEach(r.Src, func(s string, _ int) {
 		c := src.Columns.Get(s)
-		url += "+`/`+" + c.ToGoString(prefix)
+		x := c.ToGoString(prefix)
+		if types.IsString(c.Type) {
+			x = "url.QueryEscape(" + x + ")"
+		}
+		url += "+`/`+" + x
 	})
 	return url
 }

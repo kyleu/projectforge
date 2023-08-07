@@ -69,7 +69,7 @@ func SQLInsert(table string, columns []string, rows int, placeholder string) str
 	}
 	colString := strings.Join(columns, ", ")
 	var placeholders []string
-	lo.Times(rows, func(i int) any {
+	lo.Times(rows, func(i int) struct{} {
 		ph := lo.FilterMap(columns, func(_ string, idx int) (string, bool) {
 			switch placeholder {
 			case "$", "":
@@ -83,7 +83,7 @@ func SQLInsert(table string, columns []string, rows int, placeholder string) str
 			}
 		})
 		placeholders = append(placeholders, "("+strings.Join(ph, ", ")+")")
-		return nil
+		return struct{}{}
 	})
 	return fmt.Sprintf("insert into %s (%s) values %s", table, colString, strings.Join(placeholders, ", "))
 }

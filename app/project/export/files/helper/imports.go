@@ -36,6 +36,7 @@ var (
 	ImpStrconv       = golang.NewImport(golang.ImportTypeInternal, "strconv")
 	ImpStrings       = golang.NewImport(golang.ImportTypeInternal, "strings")
 	ImpTime          = golang.NewImport(golang.ImportTypeInternal, "time")
+	ImpURL           = golang.NewImport(golang.ImportTypeInternal, "net/url")
 	ImpUUID          = golang.NewImport(golang.ImportTypeExternal, "github.com/google/uuid")
 )
 

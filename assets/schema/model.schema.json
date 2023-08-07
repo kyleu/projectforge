@@ -140,7 +140,7 @@
         },
         "format": {
           "description": "used for strings, controls output format in UI",
-          "enum": ["code", "country", "html", "select", "url"]
+          "enum": ["code", "codehidden", "country", "html", "select", "si", "url"]
         },
         "values": {
           "description": "when format is \"select\", this controls the available values",

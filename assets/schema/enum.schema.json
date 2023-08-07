@@ -14,7 +14,10 @@
     },
     "group": {
       "description": "when set, places this enum inside a folder group",
-      "type": "string"
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
     },
     "description": {
       "description": "used in UI and documentation",

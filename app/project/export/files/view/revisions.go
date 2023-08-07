@@ -11,7 +11,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func exportViewDetailRevisions(ret *golang.Block, m *model.Model, enums enum.Enums) error {
+func exportViewDetailRevisions(g *golang.Template, ret *golang.Block, m *model.Model, enums enum.Enums) error {
 	hc := m.HistoryColumns(false)
 	ret.W("  {%%%%- if len(p.%s) > 1 -%%%%}", hc.Col.ProperPlural())
 	ret.W("  <div class=\"card\">")

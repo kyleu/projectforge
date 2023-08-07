@@ -1,6 +1,7 @@
 package cproject
 
 import (
+	"strconv"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -38,6 +39,8 @@ func exportModelFromForm(frm util.ValueMap, m *model.Model) error {
 	}
 	m.Ordering = ords
 
+	sIdx, _ := strconv.ParseInt(get("sortIndex", "0"), 64, 10)
+	m.SortIndex = int(sIdx)
 	m.Search = util.StringSplitAndTrim(get("search", strings.Join(m.Search, ",")), ",")
 	m.History = get("history", m.History)
 	m.Tags = util.StringSplitAndTrim(get("tags", strings.Join(m.Tags, ",")), ",")

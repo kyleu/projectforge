@@ -44,7 +44,7 @@ func menuContent(args *model.Args) []string {
 		out = append(out, "\treturn menu.Items{}")
 	} else {
 		out = append(out, "\treturn menu.Items{")
-		lo.ForEach(menuItemsFor(args.Groups, args.Models), func(x *menu.Item, _ int) {
+		lo.ForEach(menuItemsFor(args.Groups, args.Models.SortedDisplay()), func(x *menu.Item, _ int) {
 			out = append(out, menuSerialize(x, "\t\t")...)
 		})
 		out = append(out, "\t}")

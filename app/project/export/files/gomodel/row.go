@@ -27,7 +27,7 @@ func Row(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*f
 	}
 	g.AddImport(helper.ImpLo)
 	lo.ForEach(m.Columns, func(col *model.Column, _ int) {
-		if col.Nullable && (col.Type.Key() == types.KeyString || col.Type.Key() == types.KeyInt || col.Type.Key() == types.KeyBool) {
+		if col.Nullable && (types.IsString(col.Type) || types.IsInt(col.Type) || types.IsBool(col.Type)) {
 			g.AddImport(helper.ImpSQL)
 		}
 		if col.Type.Key() == types.KeyUUID && args.Database() == model.SQLServer {

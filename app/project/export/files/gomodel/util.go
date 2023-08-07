@@ -83,10 +83,14 @@ func modelWebPath(g *golang.File, m *model.Model) *golang.Block {
 		} else {
 			p += " + \"/\" + "
 		}
-		if types.IsStringList(pk.Type) {
+		switch {
+		case types.IsStringList(pk.Type):
 			g.AddImport(helper.ImpStrings)
 			p += fmt.Sprintf(`strings.Join(%s, ",")`, pk.ToGoString(m.FirstLetter()+"."))
-		} else {
+		case types.IsString(pk.Type):
+			g.AddImport(helper.ImpURL)
+			p += "url.QueryEscape(" + pk.ToGoString(m.FirstLetter()+".") + ")"
+		default:
 			p += pk.ToGoString(m.FirstLetter() + ".")
 		}
 	})

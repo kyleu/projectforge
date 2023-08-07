@@ -27,7 +27,7 @@ func SpecialImports(g *golang.File, cols model.Columns, pkg string, enums enum.E
 				return err
 			}
 			if e.PackageWithGroup("") != pkg {
-				g.AddImport(AppImport(e.PackageWithGroup("app/")))
+				g.AddImport(AppImport(e.PackageWithGroup("app")))
 			}
 		}
 	}

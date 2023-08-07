@@ -52,12 +52,14 @@ func (e *Enum) Camel() string {
 
 func (e *Enum) PackageWithGroup(prefix string) string {
 	if len(e.Group) == 0 {
+		if len(prefix) > 0 && !strings.HasSuffix(prefix, "/") {
+			prefix += "/"
+		}
 		return prefix + e.Package
 	}
-	x := lo.Map(e.Group, func(g string, _ int) string {
-		return prefix + g
-	})
-	x = append(x, prefix+e.Package)
+	x := []string{prefix}
+	x = append(x, e.Group...)
+	x = append(x, e.Package)
 	return strings.Join(x, "/")
 }
 

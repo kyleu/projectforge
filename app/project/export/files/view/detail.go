@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/samber/lo"
-
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/enum"
@@ -114,7 +113,7 @@ func exportViewDetailBody(g *golang.Template, m *model.Model, audit bool, models
 	ret.W("    </table>")
 	ret.W("  </div>")
 	if m.IsRevision() {
-		if err := exportViewDetailRevisions(ret, m, enums); err != nil {
+		if err := exportViewDetailRevisions(g, ret, m, enums); err != nil {
 			return nil, err
 		}
 	}
@@ -206,12 +205,23 @@ func viewDetailColumn(g *golang.Template, ret *golang.Block, models model.Models
 		return
 	}
 
+	if types.IsString(col.Type) {
+		g.AddImport(helper.ImpURL)
+	}
+
 	var toStrings string
 	lo.ForEach(rels, func(rel *model.Relation, _ int) {
 		relModel := models.Get(rel.Table)
 		lCols := rel.SrcColumns(m)
 		lNames := strings.Join(lCols.ProperNames(), "")
 
+		relTitles := relModel.Columns.WithTag("title")
+		if len(relTitles) == 0 {
+			relTitles = relModel.PKs()
+		}
+		if len(relTitles) == 1 && relTitles[0].Name == col.Name {
+			return
+		}
 		msg := "{%%%% if p.%sBy%s != nil %%%%} ({%%%%s p.%sBy%s.TitleString() %%%%}){%%%% endif %%%%}"
 		toStrings += fmt.Sprintf(msg, relModel.Proper(), lNames, relModel.Proper(), lNames)
 	})
@@ -232,10 +242,11 @@ func viewDetailColumn(g *golang.Template, ret *golang.Block, models model.Models
 				g.AddImport(helper.ImpFmt)
 			}
 			relModel := models.Get(rel.Table)
+			wp := rel.WebPath(m, relModel, modelKey)
 			if col.Nullable {
-				ret.W(msg, ind, modelKey, col.Proper(), relModel.Title(), rel.WebPath(m, relModel, modelKey), relModel.Icon)
+				ret.W(msg, ind, modelKey, col.Proper(), relModel.Title(), wp, relModel.Icon)
 			} else {
-				ret.W(msgNotNull, ind, relModel.Title(), rel.WebPath(m, relModel, modelKey), relModel.Icon)
+				ret.W(msgNotNull, ind, relModel.Title(), wp, relModel.Icon)
 			}
 		}
 	})

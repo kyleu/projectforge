@@ -2,11 +2,13 @@ package model
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/enum"
+	"projectforge.dev/projectforge/app/util"
 )
 
 const (
@@ -168,6 +170,17 @@ func ToGoViewString(t types.Type, prop string, nullable bool, format string, ver
 		switch format {
 		case FmtCode:
 			return "<pre>{%%s " + ToGoString(t, prop, false) + " %%}</pre>"
+		case FmtCodeHidden:
+			_, p := util.StringSplitLast(prop, '.', true)
+			ret := make([]string, 0, 30)
+			ret = append(ret, "<ul class=\"accordion\">")
+			ret = append(ret, "<li>")
+			ret = append(ret, "<input id=\"accordion-"+p+"\" type=\"checkbox\" hidden />")
+			ret = append(ret, "<label class=\"no-padding\" for=\"accordion-"+p+"\"><em>(click to show)</em></label>")
+			ret = append(ret, "<div class=\"bd\"><pre>{%%s "+ToGoString(t, prop, false)+" %%}</pre></div>")
+			ret = append(ret, "</li>")
+			ret = append(ret, "</ul>")
+			return strings.Join(ret, "")
 		case FmtHTML:
 			return "<pre>{%%s " + ToGoString(t, prop, false) + " %%}</pre>"
 		case FmtURL:
@@ -242,7 +255,11 @@ func AsEnumInstance(t types.Type, enums enum.Enums) (*enum.Enum, error) {
 	if err != nil {
 		return nil, err
 	}
-	return enums.Get(e.Ref), nil
+	ret := enums.Get(e.Ref)
+	if ret == nil {
+		return nil, errors.Errorf("no enum found with name [%s]", e.Ref)
+	}
+	return ret, nil
 }
 
 func AsRef(t types.Type) (*types.Reference, error) {

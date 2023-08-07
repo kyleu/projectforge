@@ -33,6 +33,18 @@ func TypeAs[T Type](t Type) T {
 	return l
 }
 
+func IsString(t Type) bool {
+	return t.Key() == KeyString
+}
+
+func IsBool(t Type) bool {
+	return t.Key() == KeyBool
+}
+
+func IsInt(t Type) bool {
+	return t.Key() == KeyInt
+}
+
 func IsList(t Type) bool {
 	return t.Key() == KeyList
 }

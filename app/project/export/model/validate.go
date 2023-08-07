@@ -40,18 +40,21 @@ func (m *Model) Validate(mods []string, models Models, groups Groups) error {
 	}
 	if m.IsSoftDelete() {
 		if d := m.Columns.WithTag("deleted"); len(d) != 1 {
-			return errors.New("when set to soft delete, model must have one column tagged [deleted]")
+			return errors.Errorf("when set to soft delete, model [%s] must have one column tagged [deleted]", m.Name)
 		}
+	}
+	if dupes := lo.FindDuplicates(m.Columns.Names()); len(dupes) > 0 {
+		return errors.Errorf("model [%s] has duplicates columns [%s]", m.Name, strings.Join(dupes, ", "))
 	}
 	for _, col := range m.Columns {
 		if lo.Contains(goKeywords, col.Name) {
-			return errors.Errorf("column [%s] uses reserved keyword", col.Name)
+			return errors.Errorf("model [%s] column [%s] uses reserved keyword", m.Name, col.Name)
 		}
 	}
 	for _, rel := range m.Relations {
 		for _, s := range rel.Src {
 			if m.Columns.Get(s) == nil {
-				return errors.Errorf("relation [%s] references missing source column [%s]", rel.Name, s)
+				return errors.Errorf("model [%s] relation [%s] references missing source column [%s]", m.Name, rel.Name, s)
 			}
 		}
 	}

@@ -56,12 +56,35 @@ func Model(m *model.Model, args *model.Args, addHeader bool, linebreak string) (
 	if err != nil {
 		return nil, err
 	}
-	g.AddBlocks(modelClone(m), modelString(g, m), modelTitle(m), modelWebPath(g, m), mdiff, modelToData(m, m.Columns, ""))
+
+	g.AddBlocks(modelClone(m), modelString(g, m), modelTitle(m))
+	if len(m.PKs()) > 1 {
+		if pk, e := modelToPK(m, args.Enums); e == nil {
+			g.AddBlocks(pk)
+		} else {
+			return nil, err
+		}
+	}
+	g.AddBlocks(modelWebPath(g, m), mdiff, modelToData(m, m.Columns, ""))
 	if m.IsRevision() {
 		hc := m.HistoryColumns(false)
 		g.AddBlocks(modelToData(m, hc.Const, "Core"), modelToData(m, hc.Var, hc.Col.Proper()))
 	}
 	return g.Render(addHeader, linebreak)
+}
+
+func modelToPK(m *model.Model, enums enum.Enums) (*golang.Block, error) {
+	ret := golang.NewBlock("PK", "struct")
+	ret.W("func (%s *%s) ToPK() *PK {", m.FirstLetter(), m.Proper())
+	ret.W("\treturn &PK{")
+	pks := m.PKs()
+	maxColLength := pks.MaxCamelLength() + 1
+	for _, c := range pks {
+		ret.W("\t\t%s %s.%s,", util.StringPad(c.Proper()+":", maxColLength), m.FirstLetter(), c.Proper())
+	}
+	ret.W("\t}")
+	ret.W("}")
+	return ret, nil
 }
 
 func modelPK(m *model.Model, enums enum.Enums) (*golang.Block, error) {

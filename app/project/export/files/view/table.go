@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/samber/lo"
-
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/enum"
@@ -96,6 +95,10 @@ func viewTableColumn(
 		return
 	}
 
+	if types.IsString(col.Type) {
+		g.AddImport(helper.ImpURL)
+	}
+
 	var toStrings string
 	lo.ForEach(rels, func(rel *model.Relation, idx int) {
 		relModel := models.Get(rel.Table)
@@ -107,6 +110,13 @@ func viewTableColumn(
 		k := relModel.CamelPlural()
 		if prefix != "" {
 			k = prefix + relModel.ProperPlural()
+		}
+		relTitles := relModel.Columns.WithTag("title")
+		if len(relTitles) == 0 {
+			relTitles = relModel.PKs()
+		}
+		if len(relTitles) == 1 && relTitles[0].Name == tgtCol.Name {
+			return
 		}
 		if srcCol.Nullable && !tgtCol.Nullable {
 			get := fmt.Sprintf("%sBy%s.Get(*%s%s)", k, srcCol.Proper(), modelKey, srcCol.Proper())

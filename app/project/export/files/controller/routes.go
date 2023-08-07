@@ -16,7 +16,7 @@ func Routes(args *model.Args, addHeader bool, linebreak string) (*file.File, err
 	g := golang.NewFile("routes", []string{"app", "controller", "routes"}, "generated")
 	g.AddImport(helper.ImpRouter)
 	g.AddBlocks(routes(args))
-	lo.ForEach(args.Models, func(m *model.Model, _ int) {
+	lo.ForEach(args.Models.SortedDisplay(), func(m *model.Model, _ int) {
 		if len(m.Group) == 0 {
 			g.AddImport(helper.ImpAppController)
 		} else {
@@ -39,7 +39,7 @@ func routes(args *model.Args) *golang.Block {
 
 func routeContent(args *model.Args) []string {
 	out := make([]string, 0, 100)
-	lo.ForEach(args.Models, func(m *model.Model, _ int) {
+	lo.ForEach(args.Models.SortedDisplay(), func(m *model.Model, _ int) {
 		out = append(out, routeModelContent(m)...)
 	})
 	return out

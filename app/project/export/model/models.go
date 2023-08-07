@@ -41,6 +41,17 @@ func (m Models) Sorted() Models {
 	return ret
 }
 
+func (m Models) SortedDisplay() Models {
+	ret := slices.Clone(m)
+	slices.SortFunc(ret, func(l *Model, r *Model) bool {
+		if l.SortIndex == r.SortIndex {
+			return l.Name < r.Name
+		}
+		return l.SortIndex < r.SortIndex
+	})
+	return ret
+}
+
 func (m Models) withDeps(mdl *Model) Models {
 	var deps Models
 	lo.ForEach(mdl.Relations, func(rel *Relation, _ int) {

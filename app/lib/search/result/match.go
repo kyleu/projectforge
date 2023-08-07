@@ -102,14 +102,14 @@ func MatchesFor(key string, x any, q string) Matches {
 		return maybe(strings.Contains(strings.ToLower(s), q), s)
 	case reflect.Struct:
 		var ret Matches
-		lo.Times(v.NumField(), func(i int) any {
+		lo.Times(v.NumField(), func(i int) struct{} {
 			if f := v.Field(i); f.CanSet() {
 				n := v.Type().Field(i).Name
 				if m := MatchesFor(appendKey(n), v.Field(i).Interface(), q); m != nil {
 					ret = append(ret, m...)
 				}
 			}
-			return nil
+			return struct{}{}
 		})
 		return ret
 	default:

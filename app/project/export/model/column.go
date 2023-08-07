@@ -13,12 +13,13 @@ import (
 )
 
 const (
-	FmtCode    = "code"
-	FmtCountry = "country"
-	FmtHTML    = "html"
-	FmtSI      = "si"
-	FmtURL     = "url"
-	FmtSelect  = "select"
+	FmtCode       = "code"
+	FmtCodeHidden = "codehidden"
+	FmtCountry    = "country"
+	FmtHTML       = "html"
+	FmtSelect     = "select"
+	FmtSI         = "si"
+	FmtURL        = "url"
 )
 
 type Column struct {

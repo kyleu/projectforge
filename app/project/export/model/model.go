@@ -19,6 +19,7 @@ type Model struct {
 	Description    string           `json:"description,omitempty"`
 	Icon           string           `json:"icon,omitempty"`
 	Ordering       filter.Orderings `json:"ordering,omitempty"`
+	SortIndex      int              `json:"sortIndex,omitempty"`
 	Search         []string         `json:"search,omitempty"`
 	History        string           `json:"history,omitempty"`
 	Tags           []string         `json:"tags,omitempty"`
@@ -146,7 +147,7 @@ func (m *Model) AllSearches(database string) []string {
 	lo.ForEach(m.Columns, func(c *Column, _ int) {
 		if c.Search {
 			x := c.Name
-			if c.Type.Key() != types.KeyString {
+			if !types.IsString(c.Type) {
 				if database == SQLServer {
 					x = fmt.Sprintf("cast(%s as nvarchar(2048))", c.Name)
 				} else {

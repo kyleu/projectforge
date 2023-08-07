@@ -49,9 +49,9 @@ func RandomBool() bool {
 
 func RandomValueMap(keys int) ValueMap {
 	ret := ValueMap{}
-	lo.Times(keys, func(_ int) any {
+	lo.Times(keys, func(_ int) struct{} {
 		ret[RandomString(4)] = RandomString(10)
-		return nil
+		return struct{}{}
 	})
 	return ret
 }
