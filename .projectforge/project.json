@@ -13,6 +13,7 @@
     "dockerpublish",
     "filesystem",
     "ios",
+    "jsx",
     "marketing",
     "notarize",
     "process",

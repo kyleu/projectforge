@@ -129,7 +129,7 @@ func controllerDelete(m *model.Model, grp *model.Column, prefix string) *golang.
 	ret.W("\t\t\treturn \"\", errors.Wrapf(err, \"unable to delete %s [%%%%s]\", ret.String())", m.TitleLower())
 	ret.W("\t\t}")
 	ret.W("\t\tmsg := fmt.Sprintf(\"" + m.Proper() + " [%%s] deleted\", ret.String())")
-	ret.W("\t\treturn %sFlashAndRedir(true, msg, \"/%s\", rc, ps)", prefix, m.Camel())
+	ret.W("\t\treturn %sFlashAndRedir(true, msg, \"/%s\", rc, ps)", prefix, m.Route())
 	ret.W("\t})")
 	ret.W("}")
 	return ret

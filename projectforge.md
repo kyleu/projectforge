@@ -13,6 +13,7 @@ The following modules were used to build this project:
 - [dockerpublish](./doc/module/dockerpublish.md)
 - [filesystem](./doc/module/filesystem.md)
 - [ios](./doc/module/ios.md)
+- [jsx](./doc/module/jsx.md)
 - [marketing](./doc/module/marketing.md)
 - [notarize](./doc/module/notarize.md)
 - [process](./doc/module/process.md)

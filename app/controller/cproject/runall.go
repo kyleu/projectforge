@@ -34,8 +34,8 @@ func RunAllActions(rc *fasthttp.RequestCtx) {
 		actT := action.TypeFromString(actS)
 
 		if actT.Key == action.TypeBuild.Key {
-			switch cfg["phase"] {
-			case nil:
+			switch cfg.GetStringOpt("phase") {
+			case "":
 				ps.Title = "Build All Projects"
 				page := &vaction.Results{T: actT, Cfg: cfg, Projects: prjs, Ctxs: nil, Tags: tags, IsBuild: true}
 				return controller.Render(rc, as, page, ps, "projects", actT.Title)
