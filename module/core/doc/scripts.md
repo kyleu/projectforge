@@ -6,7 +6,7 @@ There's a variety of shell scripts available in `./bin`. Here's a few of them:
 - `build/android.sh`: Builds the Android library and application{{{ end }}}
 - `build/build.sh`: Builds the app (or just use make build)
 - `build/client.sh`: Uses `esbuild` to compile the scripts in `client`
-- `build/client-watch.sh`: Builds the TypeScript resources, then watches for changes via `watchexec`{{{ if .HasModule "desktop" }}}
+- `build/client-watch.sh`: Builds the TypeScript resources, then watches for changes via `watchexec`{{{ if .BuildDesktop }}}
 - `build/desktop.sh`: Uses `tools/desktop` to build a desktop application
 - `build/desktop-release.sh`: Meant to be run as part of the release process, builds desktop apps{{{ end }}}{{{ if .HasModule "ios" }}}
 - `build/ios.sh`: Builds the iOS framework and application{{{ end }}}

@@ -51,16 +51,16 @@ func calcDownloadLinks(version string) Links {
 			addDefault(mode, os, weird)
 		})
 	}{{{ end }}}
-{{{ if .Build.Desktop }}}
+{{{ if .BuildDesktop }}}
 	addDefault(ModeDesktop, OSMac, ArchUniversal){{{ end }}}
 	addDefault(ModeServer, OSMac, ArchAMD64)
 	addDefault(ModeServer, OSMac, ArchARM64)
-	addDefault(ModeServer, OSMac, ArchUniversal){{{ if .Build.Desktop }}}
+	addDefault(ModeServer, OSMac, ArchUniversal){{{ if .BuildDesktop }}}
 	addDefault(ModeDesktop, OSWindows, ArchAMD64){{{ end }}}
 	addDefault(ModeServer, OSWindows, ArchAMD64)
 	addDefault(ModeServer, OSWindows, Arch386){{{ if .Build.WindowsARM }}}
 	addDefault(ModeServer, OSWindows, ArchARM64)
-	addARMs(ModeServer, OSWindows){{{ end }}}{{{ if .Build.Desktop }}}
+	addARMs(ModeServer, OSWindows){{{ end }}}{{{ if .BuildDesktop }}}
 	addDefault(ModeDesktop, OSLinux, ArchAMD64){{{ end }}}
 	addDefault(ModeServer, OSLinux, ArchAMD64)
 	addDefault(ModeServer, OSLinux, Arch386){{{ if .Build.LinuxARM }}}
@@ -71,7 +71,7 @@ func calcDownloadLinks(version string) Links {
 	addDefault(ModeServer, OSLinux, ArchRISCV64)
 	addDefault(ModeServer, OSLinux, ArchS390X)
 	addDefault(ModeServer, OSLinux, ArchLoong64){{{ end }}}{{{ if .Build.LinuxMIPS }}}
-	addMIPS(ModeServer, OSLinux){{{ end }}}{{{ if .Build.Android }}}
+	addMIPS(ModeServer, OSLinux){{{ end }}}{{{ if .BuildAndroid }}}
 	addDefault(ModeMobile, OSAndroid, "apk")
 	addDefault(ModeMobile, OSAndroid, "aar"){{{ end }}}{{{ if .Build.AIX }}}
 	addDefault(ModeServer, OSAIX, ArchPPC64){{{ end }}}{{{ if .Build.Dragonfly }}}
@@ -80,9 +80,9 @@ func calcDownloadLinks(version string) Links {
 	addDefault(ModeServer, OSFreeBSD, Arch386)
 	addDefault(ModeServer, OSFreeBSD, ArchARM64)
 	addARMs(ModeServer, OSFreeBSD){{{ end }}}{{{ if .Build.Illumos }}}
-	addDefault(ModeServer, OSIllumos, ArchAMD64){{{ end }}}{{{ if .Build.IOS }}}
+	addDefault(ModeServer, OSIllumos, ArchAMD64){{{ end }}}{{{ if .BuildIOS }}}
 	addDefault(ModeMobile, OSIOS, "app")
-	addDefault(ModeMobile, OSIOS, "framework"){{{ end }}}{{{ if .Build.WASM }}}
+	addDefault(ModeMobile, OSIOS, "framework"){{{ end }}}{{{ if .BuildWASM }}}
 	addDefault(ModeServer, OSJS, ArchWASM){{{ end }}}{{{ if .Build.NetBSD }}}
 	addDefault(ModeServer, OSNetBSD, ArchAMD64)
 	addDefault(ModeServer, OSNetBSD, Arch386)

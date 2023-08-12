@@ -1,5 +1,5 @@
 source = ["./build/dist/darwin_darwin_amd64_v1/{{{ .Exec }}}"]
-bundle_id = "{{{ .Info.Bundle }}}"{{{ if .HasModule "desktop"}}}
+bundle_id = "{{{ .Info.Bundle }}}"{{{ if .BuildDesktop }}}
 
 notarize {
   path = "./build/dist/{{{ .Exec }}}_{{{ .Version }}}_darwin_amd64_desktop.dmg"

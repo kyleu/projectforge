@@ -1,10 +1,10 @@
 # Releasing
 
-{{{ .Name }}} uses `goreleaser` to create build artifacts. 
+{{{ .Name }}} uses `goreleaser` to create build artifacts.
 
-You can release to GitHub using `./bin/build/release.sh`, or test the release by running `./bin/build/release-test.sh`. 
+You can release to GitHub using `./bin/build/release.sh`, or test the release by running `./bin/build/release-test.sh`.
 
-Your releases are available at {{{ .Info.Sourcecode }}}/releases 
+Your releases are available at {{{ .Info.Sourcecode }}}/releases
 
 ### Checksums
 
@@ -29,7 +29,7 @@ The build will produce `apk`, `deb`, and `rpm` packages for each supported Linux
 ### BOM
 
 The build will create a bill of materials for each binary
-{{{ end }}}{{{ if .Build.Notarize }}}
+{{{ end }}}{{{ if .BuildNotarize }}}
 ### Notarization
 
 Release binaries for macOS and iOS are notarized using Apple Notarization services
@@ -49,7 +49,7 @@ The source code will be bundled in the release, available as `{{{ .Key }}}_x.x.x
 ### Universal Binaries
 
 A universal macOS app will be created, containing the complete app for x86-64 and ARM
-{{{ if .Build.Desktop }}}
+{{{ if .BuildDesktop }}}
 ### Desktop Build
 
 A standalone desktop application, bundling the server and a web view, will be built for Linux, macOS, and Windows
@@ -57,7 +57,7 @@ A standalone desktop application, bundling the server and a web view, will be bu
 ### Mobile Build
 
 A standalone mobile app, bundling the server and a web view, will be built for Android and iOS
-{{{ end }}}{{{ if .Build.WASM }}}
+{{{ end }}}{{{ if .BuildWASM }}}
 ### Web Build
 
 The server is compiled to WASM and available as a WebAssembly module{{{ end }}}

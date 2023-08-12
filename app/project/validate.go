@@ -81,21 +81,38 @@ func validateBuild(p *Project, e func(code string, msg string, args ...any)) {
 	if p.Build.Desktop && !lo.Contains(p.Modules, "desktop") {
 		e("config", "Desktop is enabled, but module [desktop] isn't included")
 	}
+	if p.Build.Desktop && lo.Contains(p.Modules, "desktop") && p.Info.Bundle == "" {
+		e("config", "Desktop build is enabled, but [Bundle] isn't set")
+	}
 
 	if p.Build.IOS && !lo.Contains(p.Modules, "ios") {
-		e("config", "IOS is enabled, but module [ios] isn't included")
+		e("config", "iOS build is enabled, but module [ios] isn't included")
+	}
+	if p.Build.IOS && lo.Contains(p.Modules, "ios") && p.Info.Bundle == "" {
+		e("config", "iOS build is enabled, but [Bundle] isn't set")
 	}
 
 	if p.Build.Android && !lo.Contains(p.Modules, "android") {
-		e("config", "Android is enabled, but module [android] isn't included")
+		e("config", "Android build is enabled, but module [android] isn't included")
 	}
 	if p.Build.Android && lo.Contains(p.Modules, "android") && p.Info.JavaPackage == "" {
-		e("config", "Android is enabled, but [Java Package] isn't set")
+		e("config", "Android build is enabled, but [Java Package] isn't set")
 	}
 
+	if p.Build.Notarize && !lo.Contains(p.Modules, "notarize") {
+		e("config", "Notarize build is enabled, but module [notarize] isn't included")
+	}
 	if p.Build.Notarize && p.Info.SigningIdentity == "" {
 		e("config", "Notarizing is enabled, but [Signing Identity] isn't set")
 	}
+	if p.Build.Notarize && p.Info.Bundle == "" {
+		e("config", "Notarizing is enabled, but [Bundle] isn't set")
+	}
+
+	if p.Build.WASM && !lo.Contains(p.Modules, "wasm") {
+		e("config", "WASM build is enabled, but module [wasm] isn't included")
+	}
+
 	if p.Info.Homepage == "" {
 		e("config", "No homepage set")
 	}
@@ -116,6 +133,9 @@ func validateBuild(p *Project, e func(code string, msg string, args ...any)) {
 func validateExport(p *Project, e func(code string, msg string, args ...any)) {
 	if p.ExportArgs == nil {
 		return
+	}
+	if err := p.ExportArgs.Validate(); err != nil {
+		e("export", err.Error())
 	}
 	if err := p.ExportArgs.Models.Validate(p.Modules, p.ExportArgs.Groups); err != nil {
 		e("export", err.Error())
