@@ -222,7 +222,7 @@ builds:
       - "6"
       - "7"
     mod_timestamp: "{{ .CommitTimestamp }}"{{{ .GoBinaryContent }}}
-{{{ end }}}{{{ if .BuildWASM }}}
+{{{ end }}}{{{ if .Build.WASM }}}
   - id: "js"
     goos:
       - "js"

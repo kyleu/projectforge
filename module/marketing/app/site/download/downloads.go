@@ -82,7 +82,7 @@ func calcDownloadLinks(version string) Links {
 	addARMs(ModeServer, OSFreeBSD){{{ end }}}{{{ if .Build.Illumos }}}
 	addDefault(ModeServer, OSIllumos, ArchAMD64){{{ end }}}{{{ if .BuildIOS }}}
 	addDefault(ModeMobile, OSIOS, "app")
-	addDefault(ModeMobile, OSIOS, "framework"){{{ end }}}{{{ if .BuildWASM }}}
+	addDefault(ModeMobile, OSIOS, "framework"){{{ end }}}{{{ if .Build.WASM }}}
 	addDefault(ModeServer, OSJS, ArchWASM){{{ end }}}{{{ if .Build.NetBSD }}}
 	addDefault(ModeServer, OSNetBSD, ArchAMD64)
 	addDefault(ModeServer, OSNetBSD, Arch386)
