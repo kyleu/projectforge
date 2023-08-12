@@ -40,7 +40,11 @@
       </tr>
       <tr>
         <th>Tags</th>
-        <td>{%s strings.Join(prj.Tags, ", ") %}</td>
+        <td>
+          {%- for i, tag := range prj.Tags %}
+          <a href="/p?tags={%s tag %}">{%s tag %}</a>{% if i < len(prj.Tags)-1 %},{% endif %}
+          {%- endfor %}
+        </td>
       </tr>
       <tr>
         <th>Path</th>
