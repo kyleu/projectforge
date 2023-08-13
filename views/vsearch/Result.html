@@ -36,7 +36,7 @@
     <li>
       <em>{%s m.Key %}</em>:
       {%- code split := m.ValueSplit(params.Q) -%}
-      {%- for _, x := range split -%}{% if strings.ToLower(x) == strings.ToLower(params.Q) %}<strong>{%s x %}</strong>{% else %}{%s x %}{% endif %}{%- endfor -%}
+      {%- for _, x := range split -%}{% if strings.EqualFold(x, params.Q) %}<strong>{%s x %}</strong>{% else %}{%s x %}{% endif %}{%- endfor -%}
     </li>
     {%- endfor -%}
   </ul>

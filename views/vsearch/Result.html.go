@@ -177,7 +177,7 @@ func StreamMatch(qw422016 *qt422016.Writer, params *search.Params, matches resul
 //line views/vsearch/Result.html:39
 		for _, x := range split {
 //line views/vsearch/Result.html:39
-			if strings.ToLower(x) == strings.ToLower(params.Q) {
+			if strings.EqualFold(x, params.Q) {
 //line views/vsearch/Result.html:39
 				qw422016.N().S(`<strong>`)
 //line views/vsearch/Result.html:39

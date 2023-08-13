@@ -71,7 +71,7 @@ func reverseDiff(dest string, d *diff.Diff, logger util.Logger) ([]byte, error) 
 			}
 		}
 
-		pre, post := strings.Join(preCtx, ""), strings.Join(postCtx, "")
+		pre, _, post := strings.Join(preCtx, ""), strings.Join(postCtx, ""), strings.Join(addedCtx, "")
 		deleted := strings.Join(deletedCtx, "")
 
 		preIdx := strings.Index(dest, pre)
