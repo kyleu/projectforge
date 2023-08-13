@@ -16,6 +16,7 @@ var (
 )
 
 func TestTree_Flatten(t *testing.T) {
+	t.Parallel()
 	s := testTree.Flatten()
 	if !slices.Equal(s, testTreeString) {
 		t.Errorf("invalid tree string [%s]", s)

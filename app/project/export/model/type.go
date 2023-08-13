@@ -173,13 +173,15 @@ func ToGoViewString(t types.Type, prop string, nullable bool, format string, ver
 		case FmtCodeHidden:
 			_, p := util.StringSplitLast(prop, '.', true)
 			ret := make([]string, 0, 30)
-			ret = append(ret, "<ul class=\"accordion\">")
-			ret = append(ret, "<li>")
-			ret = append(ret, "<input id=\"accordion-"+p+"\" type=\"checkbox\" hidden />")
-			ret = append(ret, "<label class=\"no-padding\" for=\"accordion-"+p+"\"><em>(click to show)</em></label>")
-			ret = append(ret, "<div class=\"bd\"><pre>{%%s "+ToGoString(t, prop, false)+" %%}</pre></div>")
-			ret = append(ret, "</li>")
-			ret = append(ret, "</ul>")
+			ret = append(ret,
+				"<ul class=\"accordion\">",
+				"<li>",
+				"<input id=\"accordion-"+p+"\" type=\"checkbox\" hidden />",
+				"<label class=\"no-padding\" for=\"accordion-"+p+"\"><em>(click to show)</em></label>",
+				"<div class=\"bd\"><pre>{%%s "+ToGoString(t, prop, false)+" %%}</pre></div>",
+				"</li>",
+				"</ul>",
+			)
 			return strings.Join(ret, "")
 		case FmtHTML:
 			return "<pre>{%%s " + ToGoString(t, prop, false) + " %%}</pre>"

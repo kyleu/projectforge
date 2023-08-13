@@ -3,12 +3,12 @@ package cproject
 import (
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
-	"projectforge.dev/projectforge/app/project"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/doctor/checks"
+	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/project/action"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/vpage"

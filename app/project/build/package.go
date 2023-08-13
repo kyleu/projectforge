@@ -10,7 +10,7 @@ import (
 )
 
 var ScriptExtension = func() string {
-	if runtime.GOOS == "windows" {
+	if runtime.GOOS == OSWindows {
 		return "bat"
 	}
 	return "sh"

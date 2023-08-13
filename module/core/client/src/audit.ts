@@ -1,15 +1,6 @@
 import {opt} from "./dom";
 
-export function audit(msg: string, ...codes: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
-  const el = opt("#audit-log");
-  if (el) {
-    el.appendChild(renderAudit(msg, ...codes));
-  } else {
-    console.log("### Audit ###\n" + msg, ...codes);
-  }
-}
-
-function renderAudit(msg: string, ...codes: any) {
+function renderAudit(msg: string, ...codes: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
   const li = document.createElement("li");
   li.innerText = msg;
   for (const code of codes) {
@@ -22,4 +13,13 @@ function renderAudit(msg: string, ...codes: any) {
     li.appendChild(pre);
   }
   return li;
+}
+
+export function audit(msg: string, ...codes: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
+  const el = opt("#audit-log");
+  if (el) {
+    el.appendChild(renderAudit(msg, ...codes));
+  } else {
+    console.log("### Audit ###\n" + msg, ...codes);
+  }
 }

@@ -59,7 +59,7 @@ func Full(ctx context.Context, prj *project.Project, logger util.Logger) ([]stri
 	}
 
 	makeCmd := "make build"
-	if runtime.GOOS == "windows" {
+	if runtime.GOOS == OSWindows {
 		makeCmd = fmt.Sprintf(`go build -ldflags "-s -w" -trimpath -o build/release/%s.exe`, prj.Executable())
 	}
 	exitCode, out, err = telemetry.RunProcessSimple(ctx, makeCmd, prj.Path, logger)

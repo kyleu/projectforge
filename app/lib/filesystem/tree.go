@@ -18,11 +18,11 @@ type Node struct {
 	Tags     []string `json:"tags,omitempty"`
 }
 
-func (n *Node) Get(path ...string) *Node {
-	if len(path) == 0 {
+func (n *Node) Get(pth ...string) *Node {
+	if len(pth) == 0 {
 		return n
 	}
-	return n.Children.Get(path...)
+	return n.Children.Get(pth...)
 }
 
 func (n *Node) Flatten(curr string) []string {
@@ -51,13 +51,13 @@ func (n Nodes) Sort() Nodes {
 	return n
 }
 
-func (n Nodes) Get(path ...string) *Node {
-	if len(path) == 0 {
+func (n Nodes) Get(pth ...string) *Node {
+	if len(pth) == 0 {
 		return nil
 	}
 	for _, x := range n {
-		if x.Name == path[0] {
-			return x.Get(path[1:]...)
+		if x.Name == pth[0] {
+			return x.Get(pth[1:]...)
 		}
 	}
 	return nil
@@ -83,7 +83,6 @@ func (n Nodes) Merge(x Nodes) Nodes {
 type Tree struct {
 	Nodes  Nodes         `json:"nodes,omitempty"`
 	Config util.ValueMap `json:"config,omitempty"`
-	keys   []string
 }
 
 func (t Tree) Flatten() []string {
@@ -113,7 +112,7 @@ func (f *FileSystem) listNodes(pth string, ign []string, logger util.Logger, tag
 }
 
 func (f *FileSystem) ListTree(cfg util.ValueMap, pth string, ign []string, logger util.Logger, tags ...string) (*Tree, error) {
-	nodes, err := f.listNodes(pth, ign, logger)
+	nodes, err := f.listNodes(pth, ign, logger, tags...)
 	if err != nil {
 		return nil, err
 	}

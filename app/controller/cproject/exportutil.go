@@ -39,7 +39,7 @@ func exportModelFromForm(frm util.ValueMap, m *model.Model) error {
 	}
 	m.Ordering = ords
 
-	sIdx, _ := strconv.ParseInt(get("sortIndex", "0"), 64, 10)
+	sIdx, _ := strconv.ParseInt(get("sortIndex", "0"), 10, 64)
 	m.SortIndex = int(sIdx)
 	m.Search = util.StringSplitAndTrim(get("search", strings.Join(m.Search, ",")), ",")
 	m.History = get("history", m.History)

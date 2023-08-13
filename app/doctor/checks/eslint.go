@@ -18,7 +18,7 @@ var ESLint = &doctor.Check{
 	Solve:   solveESLint,
 }
 
-func checkESLint(_ context.Context, r *doctor.Result, out string) *doctor.Result {
+func checkESLint(_ context.Context, r *doctor.Result, _ string) *doctor.Result {
 	return r
 }
 

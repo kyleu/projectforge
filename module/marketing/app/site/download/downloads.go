@@ -7,12 +7,14 @@ import (
 
 	"{{{ .Package }}}/app/util"
 )
-
+{{{ if .IsArmAndMips }}}
 var (
 	arms = []string{ArchARMV5, ArchARMV6, ArchARMV7}
 	mips = []string{ArchMIPS64Hard, ArchMIPS64Soft, ArchMIPS64LEHard, ArchMIPS64LESoft, ArchMIPSHard, ArchMIPSSoft, ArchMIPSLEHard, ArchMIPSLESoft}
 )
-
+{{{ else if .Build.HasArm }}}var arms = []string{ArchARMV5, ArchARMV6, ArchARMV7}
+{{{ else if .Build.LinuxMIPS }}}var mips = []string{ArchMIPS64Hard, ArchMIPS64Soft, ArchMIPS64LEHard, ArchMIPS64LESoft, ArchMIPSHard, ArchMIPSSoft, ArchMIPSLEHard, ArchMIPSLESoft}
+{{{ end }}}
 func GetLinks(version string) Links {
 	if availableLinks == nil {
 		availableLinks = calcDownloadLinks(version)

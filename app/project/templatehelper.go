@@ -81,6 +81,10 @@ func (t *TemplateContext) IsNotarized() bool {
 	return t.HasModule("notarize") && t.Build != nil && t.Build.Notarize
 }
 
+func (t *TemplateContext) IsArmAndMips() bool {
+	return t.Build.HasArm() && t.Build.LinuxMIPS
+}
+
 func (t *TemplateContext) DatabaseUIOpts() (bool, bool, bool) {
 	cfg, _ := t.Config.GetMap("databaseui", true)
 	if len(cfg) == 0 {

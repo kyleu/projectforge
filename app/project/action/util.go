@@ -21,7 +21,7 @@ func projectFromCfg(proto *project.Project, cfg util.ValueMap) *project.Project 
 		} else if strings.Contains(s, "/") {
 			s = util.StringSplitLastOnly(s, '/', true)
 		}
-		return ""
+		return s
 	}
 	str := func(key string, def string) string {
 		ret := cfg.GetStringOpt(key)
@@ -59,6 +59,37 @@ func projectFromCfg(proto *project.Project, cfg util.ValueMap) *project.Project 
 	}
 	slices.Sort(mods)
 
+	return &project.Project{
+		Key:        str("key", proto.Key),
+		Name:       str("name", proto.Name),
+		Icon:       str("icon", proto.Icon),
+		Exec:       str("exec", proto.Icon),
+		Version:    str("version", proto.Version),
+		Package:    str("package", proto.Package),
+		Args:       str("args", proto.Args),
+		Port:       port,
+		Modules:    mods,
+		Ignore:     util.StringSplitAndTrim(str("ignore", strings.Join(proto.Ignore, ", ")), ","),
+		Tags:       util.StringSplitAndTrim(str("tags", strings.Join(proto.Tags, ", ")), ","),
+		Info:       infoFromCfg(proto, cfg),
+		Theme:      proto.Theme,
+		Build:      proto.Build,
+		ExportArgs: proto.ExportArgs,
+		Config:     proto.Config,
+		Path:       proto.Path,
+		Parent:     proto.Parent,
+	}
+}
+
+func infoFromCfg(proto *project.Project, cfg util.ValueMap) *project.Info {
+	str := func(key string, def string) string {
+		ret := cfg.GetStringOpt(key)
+		if ret == "" {
+			return def
+		}
+		return ret
+	}
+
 	i := proto.Info
 	if i == nil {
 		i = &project.Info{License: "Proprietary"}
@@ -74,62 +105,43 @@ func projectFromCfg(proto *project.Project, cfg util.ValueMap) *project.Project 
 		_ = util.FromJSON([]byte(x), &cfgVars)
 	}
 
-	envVars := i.EnvVars
-	if x := cfg.GetStringOpt("envvars"); x != "" {
-		_ = util.FromJSON([]byte(x), &envVars)
-	}
-
 	docs := i.Docs
 	if x := cfg.GetStringOpt("docs"); x != "" {
 		_ = util.FromJSON([]byte(x), &docs)
 	}
 
-	return &project.Project{
-		Key:     str("key", proto.Key),
-		Name:    str("name", proto.Name),
-		Icon:    str("icon", proto.Icon),
-		Exec:    str("exec", proto.Icon),
-		Version: str("version", proto.Version),
-		Package: str("package", proto.Package),
-		Args:    str("args", proto.Args),
-		Port:    port,
-		Modules: mods,
-		Ignore:  util.StringSplitAndTrim(str("ignore", strings.Join(proto.Ignore, ", ")), ","),
-		Tags:    util.StringSplitAndTrim(str("tags", strings.Join(proto.Tags, ", ")), ","),
-		Info: &project.Info{
-			Org:             str("org", i.Org),
-			AuthorID:        str("author_id", i.AuthorID),
-			AuthorName:      str("author_name", i.AuthorName),
-			AuthorEmail:     str("author_email", i.AuthorEmail),
-			Team:            str("team", i.Team),
-			License:         str("license", i.License),
-			Homepage:        str("homepage", i.Homepage),
-			Sourcecode:      str("sourcecode", i.Sourcecode),
-			Summary:         str("summary", i.Summary),
-			Description:     str("description", i.Description),
-			CI:              str("ci", i.CI),
-			Homebrew:        str("homebrew", i.Homebrew),
-			Bundle:          str("bundle", i.Bundle),
-			SigningIdentity: str("signingIdentity", i.SigningIdentity),
-			NotarizeEmail:   str("notarizeEmail", i.NotarizeEmail),
-			Slack:           str("slack", i.Slack),
-			Channels:        util.StringSplitAndTrim(str("channels", strings.Join(i.Channels, ", ")), ","),
-			JavaPackage:     str("javaPackage", i.JavaPackage),
-			GoVersion:       str("goVersion", i.GoBinary),
-			GoBinary:        str("goBinary", i.GoBinary),
-			ConfigVars:      cfgVars,
-			ExtraFiles:      util.StringSplitAndTrim(str("extraFiles", strings.Join(i.ExtraFiles, ", ")), ","),
-			Deployments:     util.StringSplitAndTrim(str("deployments", strings.Join(i.Deployments, ", ")), ","),
-			EnvVars:         envVars,
-			Docs:            docs,
-			ModuleDefs:      md,
-		},
-		Theme:      proto.Theme,
-		Build:      proto.Build,
-		ExportArgs: proto.ExportArgs,
-		Config:     proto.Config,
-		Path:       proto.Path,
-		Parent:     proto.Parent,
+	envVars := i.EnvVars
+	if x := cfg.GetStringOpt("envvars"); x != "" {
+		_ = util.FromJSON([]byte(x), &envVars)
+	}
+
+	return &project.Info{
+		Org:             str("org", i.Org),
+		AuthorID:        str("author_id", i.AuthorID),
+		AuthorName:      str("author_name", i.AuthorName),
+		AuthorEmail:     str("author_email", i.AuthorEmail),
+		Team:            str("team", i.Team),
+		License:         str("license", i.License),
+		Homepage:        str("homepage", i.Homepage),
+		Sourcecode:      str("sourcecode", i.Sourcecode),
+		Summary:         str("summary", i.Summary),
+		Description:     str("description", i.Description),
+		CI:              str("ci", i.CI),
+		Homebrew:        str("homebrew", i.Homebrew),
+		Bundle:          str("bundle", i.Bundle),
+		SigningIdentity: str("signingIdentity", i.SigningIdentity),
+		NotarizeEmail:   str("notarizeEmail", i.NotarizeEmail),
+		Slack:           str("slack", i.Slack),
+		Channels:        util.StringSplitAndTrim(str("channels", strings.Join(i.Channels, ", ")), ","),
+		JavaPackage:     str("javaPackage", i.JavaPackage),
+		GoVersion:       str("goVersion", i.GoBinary),
+		GoBinary:        str("goBinary", i.GoBinary),
+		ConfigVars:      cfgVars,
+		ExtraFiles:      util.StringSplitAndTrim(str("extraFiles", strings.Join(i.ExtraFiles, ", ")), ","),
+		Deployments:     util.StringSplitAndTrim(str("deployments", strings.Join(i.Deployments, ", ")), ","),
+		EnvVars:         envVars,
+		Docs:            docs,
+		ModuleDefs:      md,
 	}
 }
 

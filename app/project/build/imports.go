@@ -11,6 +11,8 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+const OSWindows = "windows"
+
 func Imports(self string, fix bool, targetPath string, fs filesystem.FileLoader, logger util.Logger) ([]string, diff.Diffs, error) {
 	var logs []string
 	var ret diff.Diffs

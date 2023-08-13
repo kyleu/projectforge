@@ -8,7 +8,7 @@ import (
 )
 
 // Initialize system dependencies for the marketing site.
-func initSite(as *app.State, logger util.Logger) {
+func initSite(*app.State, util.Logger) {
 }
 
 // Configure marketing site data for each request.

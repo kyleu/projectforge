@@ -73,7 +73,7 @@ func Model(m *model.Model, args *model.Args, addHeader bool, linebreak string) (
 	return g.Render(addHeader, linebreak)
 }
 
-func modelToPK(m *model.Model, enums enum.Enums) (*golang.Block, error) {
+func modelToPK(m *model.Model, _ enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock("PK", "struct")
 	ret.W("func (%s *%s) ToPK() *PK {", m.FirstLetter(), m.Proper())
 	ret.W("\treturn &PK{")

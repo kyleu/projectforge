@@ -24,6 +24,7 @@ func Validate(p *Project, moduleDeps map[string][]string) []*ValidationError {
 	validateBasic(p, e)
 	validateModuleDeps(p.Modules, moduleDeps, e)
 	validateModuleConfig(p, e)
+	validateInfo(p, e)
 	validateBuild(p, e)
 	validateExport(p, e)
 
@@ -112,7 +113,9 @@ func validateBuild(p *Project, e func(code string, msg string, args ...any)) {
 	if p.Build.WASM && !lo.Contains(p.Modules, "wasm") {
 		e("config", "WASM build is enabled, but module [wasm] isn't included")
 	}
+}
 
+func validateInfo(p *Project, e func(code string, msg string, args ...any)) {
 	if p.Info.Homepage == "" {
 		e("config", "No homepage set")
 	}
