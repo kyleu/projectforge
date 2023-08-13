@@ -7,11 +7,12 @@ import (
 )
 
 type Arg struct {
-	Key         string `json:"key"`
-	Title       string `json:"title"`
-	Description string `json:"description,omitempty"`
-	Type        string `json:"type,omitempty"`
-	Default     string `json:"default,omitempty"`
+	Key         string   `json:"key"`
+	Title       string   `json:"title"`
+	Description string   `json:"description,omitempty"`
+	Type        string   `json:"type,omitempty"`
+	Default     string   `json:"default,omitempty"`
+	Choices     []string `json:"choices,omitempty"`
 }
 
 type Args []*Arg

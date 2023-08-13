@@ -126,7 +126,7 @@ func (p *Args) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vpage/Args.html:43
 			qw422016.N().S(`          `)
 //line views/vpage/Args.html:44
-			components.StreamTableInput(qw422016, arg.Key, "", arg.Title, v, 5, arg.Description)
+			components.StreamTableDatalist(qw422016, arg.Key, "", arg.Title, v, arg.Choices, nil, 5, arg.Description)
 //line views/vpage/Args.html:44
 			qw422016.N().S(`
 `)

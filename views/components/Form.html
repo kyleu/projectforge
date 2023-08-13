@@ -101,6 +101,7 @@
   {%= vutil.Indent(true, indent ) %}
   <input id="{%s id %}" list="{%s id %}-list" name="{%s key %}" value="{%s value %}"{%= phFor(placeholder) %} />
   {%= vutil.Indent(true, indent ) %}
+  {%- if len(opts) > 0 -%}
   <datalist id="{%s id %}-list">
     {% for idx, opt := range opts %}
       {% code
@@ -114,6 +115,7 @@
     {% endfor %}
   {%= vutil.Indent(true, indent) %}
   </datalist>
+  {%- endif -%}
 {% endstripspace %}{% endfunc %}
 
 {% func FormRadio(key string, value string, opts []string, titles []string, indent int) %}{% stripspace %}
