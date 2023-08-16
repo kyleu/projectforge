@@ -1,0 +1,34 @@
+{% import (
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/views/components"
+  "{{{ .Package }}}/views/layout"
+) %}
+
+{% code type List struct {
+  layout.Basic
+  Scripts []string
+} %}
+
+{% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <div class="right"><a href="/admin/scripting/new"><button>New</button></a></div>
+    <h3>{%= components.SVGRefIcon(`sitemap`, ps) %} Scripts</h3>
+    <div class="mt">
+      <table class="min-200">
+        <thead>
+          <tr>
+            <th class="shrink">Name</th>
+          </tr>
+        </thead>
+        <tbody>
+          {%- for _, x := range p.Scripts -%}
+          <tr>
+            <td><a href="/admin/scripting/{%s x %}">{%s x %}</a></td>
+          </tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endfunc %}

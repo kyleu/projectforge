@@ -29,13 +29,13 @@ func AppRoutes(as *app.State, logger util.Logger) fasthttp.RequestHandler {
 	// $PF_SECTION_START(routes)$
 	moduleRoutes(r)
 	projectRoutes(r)
-	execRoutes(r)
 	// $PF_SECTION_END(routes)$
 
 	r.GET("/docs", clib.Docs)
 	r.GET("/docs/{path:*}", clib.Docs)
 
 	r.GET("/admin", clib.Admin)
+	execRoutes(r)
 	r.GET("/admin/{path:*}", clib.Admin)
 	r.POST("/admin/{path:*}", clib.Admin)
 

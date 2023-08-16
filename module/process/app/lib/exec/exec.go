@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"net/url"
 	"os/exec"
 	"strings"
 	"time"
@@ -45,7 +46,7 @@ func NewExec(key string, idx int, cmd string, path string, envvars ...string) *E
 }
 
 func (e *Exec) WebPath() string {
-	return fmt.Sprintf("/admin/exec/%s/%d", e.Key, e.Idx)
+	return fmt.Sprintf("/admin/exec/%s/%d", url.QueryEscape(e.Key), e.Idx)
 }
 
 func (e *Exec) Start(fns ...func(key string, b []byte) error) error {

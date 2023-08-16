@@ -1,0 +1,10 @@
+{
+  "name": "Scripting",
+  "icon": "file-code",
+  "description": "Allows the execution of JavaScript files using a built-in interpreter",
+  "authorName": "Kyle U",
+  "authorEmail": "kyle@kyleu.com",
+  "license": "CC0",
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/scripting",
+  "requires": ["filesystem"]
+}
