@@ -12,6 +12,7 @@
   layout.Basic
   Path string
   Script string
+  LoadResult any
   Results map[string]map[string]any
 } %}
 
@@ -28,11 +29,17 @@
       {%- endif -%}
     </div>
   </div>
+  {% if p.LoadResult != nil -%}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`cog`, ps) %} Load Result</h3>
+    {%= components.JSON(p.LoadResult) %}
+  </div>
+  {%- endif -%}
   {% for _, f := range util.ArraySorted(lo.Keys(p.Results)) -%}
     {%- code res := p.Results[f] -%}
     {% if len(res) > 0 -%}
     <div class="card">
-      <h3>{%= components.SVGRefIcon(`play`, ps) %} [{%s f %}] Results</h3>
+      <h3>{%= components.SVGRefIcon(`play`, ps) %} [{%s f %}] Example Results</h3>
       <div class="mt">
         <table class="expanded min-200">
           <thead>

@@ -31,7 +31,10 @@ func (s *Service) LoadScript(pth string, logger util.Logger) (string, error) {
 	filePath := filepath.Join(s.Path, pth)
 	b, err := s.FS.ReadFile(filePath)
 	if err != nil {
-		return "", err
+		b, err = s.FS.ReadFile(filePath + ".js")
+		if err != nil {
+			return "", err
+		}
 	}
 	sc := string(b)
 	return sc, nil
