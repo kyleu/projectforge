@@ -1,14 +1,14 @@
 package clib
 
 import (
-	"strings"
+	"net/url"
 
+	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller"
 	"{{{ .Package }}}/app/controller/cutil"
-	"{{{ .Package }}}/app/util"
 	"{{{ .Package }}}/views/vscripting"
 )
 
@@ -21,8 +21,6 @@ func ScriptingList(rc *fasthttp.RequestCtx) {
 	})
 }
 
-var Examples = [][]any{{"a"}, {"b"}, {"c"}}
-
 func ScriptingDetail(rc *fasthttp.RequestCtx) {
 	controller.Act("scripting.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		key, err := cutil.RCRequiredString(rc, "key", true)
@@ -33,17 +31,94 @@ func ScriptingDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		res := make(map[string]any, len(Examples))
-		for _, ex := range Examples {
-			x, err := as.Services.Script.RunScript(src, "test", ex...)
-			if err != nil {
-				return "", err
-			}
-			xKey := strings.TrimPrefix(strings.TrimSuffix(util.ToJSONCompact(ex), "]"), "[")
-			res[xKey] = x
+		vm, err := as.Services.Script.LoadVM(src)
+		if err != nil {
+			return "", err
+		}
+		res, err := as.Services.Script.RunExamples(vm)
+		if err != nil {
+			return "", err
 		}
 		ps.Title = "Scripting"
 		ps.Data = map[string]any{"script": src, "results": res}
 		return controller.Render(rc, as, &vscripting.Detail{Path: key, Script: src, Results: res}, ps, "scripting", key)
+	})
+}
+
+func ScriptingNew(rc *fasthttp.RequestCtx) {
+	controller.Act("scripting.new", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ps.Title = "New Script"
+		return controller.Render(rc, as, &vscripting.Form{}, ps, "scripting", "New")
+	})
+}
+
+func ScriptingCreate(rc *fasthttp.RequestCtx) {
+	controller.Act("scripting.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		frm, err := cutil.ParseForm(rc)
+		if err != nil {
+			return "", err
+		}
+		pth := frm.GetStringOpt("path")
+		if pth == "" {
+			return "", errors.New("must provide path")
+		}
+		content := frm.GetStringOpt("content")
+		if content == "" {
+			return "", errors.New("content is required")
+		}
+		err = as.Services.Script.SaveScript(pth, content, ps.Logger)
+		if err != nil {
+			return "", err
+		}
+		return controller.FlashAndRedir(true, "Scripting created", "/admin/scripting/"+url.QueryEscape(pth), rc, ps)
+	})
+}
+
+func ScriptingForm(rc *fasthttp.RequestCtx) {
+	controller.Act("scripting.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		key, err := cutil.RCRequiredString(rc, "key", true)
+		if err != nil {
+			return "", err
+		}
+		sc, err := as.Services.Script.LoadScript(key, ps.Logger)
+		ps.Title = "Edit [" + key + "]"
+		ps.Data = sc
+		return controller.Render(rc, as, &vscripting.Form{Path: key, Content: sc}, ps, "scripting", key, "Edit")
+	})
+}
+
+func ScriptingSave(rc *fasthttp.RequestCtx) {
+	controller.Act("scripting.save", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		key, err := cutil.RCRequiredString(rc, "key", true)
+		if err != nil {
+			return "", err
+		}
+		frm, err := cutil.ParseForm(rc)
+		if err != nil {
+			return "", err
+		}
+		content := frm.GetStringOpt("content")
+		if content == "" {
+			return "", errors.New("content is required")
+		}
+		err = as.Services.Script.SaveScript(key, content, ps.Logger)
+		if err != nil {
+			return "", err
+		}
+		return controller.FlashAndRedir(true, "Scripting saved", "/admin/scripting/"+url.QueryEscape(key), rc, ps)
+	})
+}
+
+func ScriptingDelete(rc *fasthttp.RequestCtx) {
+	controller.Act("scripting.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		key, err := cutil.RCRequiredString(rc, "key", true)
+		if err != nil {
+			return "", err
+		}
+		err = as.Services.Script.DeleteScript(key, ps.Logger)
+		if err != nil {
+			return "", err
+		}
+		return controller.FlashAndRedir(true, "Script deleted", "/admin/scripting", rc, ps)
 	})
 }

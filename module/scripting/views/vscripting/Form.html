@@ -1,0 +1,32 @@
+{% import (
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/views/components"
+  "{{{ .Package }}}/views/layout"
+) %}
+
+{% code type Form struct {
+  layout.Basic
+  Path string
+  Content string
+} %}
+
+{% func (p *Form) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    {%- if p.Path == "" -%}
+    <h3>{%= components.SVGRefIcon(`file-code`, ps) %} New Script</h3>
+    {%- else -%}
+    <div class="right"><a href="/admin/scripting/{%u p.Path %}/delete" onclick="return confirm('Are you sure you wish to delete script [{%s p.Path %}]?')"><button>Delete</button></a></div>
+    <h3>{%= components.SVGRefIcon(`file-code`, ps) %} Script [{%s p.Path %}]</h3>
+    {%- endif -%}
+    <form action="" class="mt" method="post">
+      <table class="mt expanded">
+        <tbody>
+          {% if p.Path == "" %}{%= components.TableInput("path", "", "Path", p.Path, 5, "Path to script") %}{% endif %}
+          {%= components.TableTextarea("content", "", "Content", 12, p.Content, 5, "Script contents") %}
+          <tr><td colspan="2"><button type="submit">Save Script</button></td></tr>
+        </tbody>
+      </table>
+    </form>
+  </div>
+{% endfunc %}

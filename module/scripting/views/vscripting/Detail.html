@@ -1,4 +1,6 @@
 {% import (
+  "github.com/samber/lo"
+
   "{{{ .Package }}}/app"
   "{{{ .Package }}}/app/controller/cutil"
   "{{{ .Package }}}/app/util"
@@ -10,12 +12,12 @@
   layout.Basic
   Path string
   Script string
-  Results map[string]any
+  Results map[string]map[string]any
 } %}
 
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <div class="right"><a href="/scripting/{%u p.Path %}/edit"><button type="button">Edit</button></a></div>
+    <div class="right"><a href="/admin/scripting/{%u p.Path %}/edit"><button type="button">Edit</button></a></div>
     <h3>{%= components.SVGRefIcon(`file-code`, ps) %} {%s p.Path %}</h3>
     <div class="mt">
       {%- code out, err := cutil.FormatLang(p.Script, "js") -%}
@@ -26,27 +28,31 @@
       {%- endif -%}
     </div>
   </div>
-  {% if len(p.Results) > 0 -%}
-  <div class="card">
-    <h3>{%= components.SVGRefIcon(`play`, ps) %} Results</h3>
-    <div class="mt">
-      <table class="expanded min-200">
-        <thead>
-          <tr>
-            <th class="shrink">Example</th>
-            <th>Result</th>
-          </tr>
-        </thead>
-        <tbody>
-          {%- for k, v := range p.Results -%}
-          <tr>
-            <td><pre>{%s k %}</pre></td>
-            <td><pre>{%s util.ToJSONCompact(v) %}</pre></td>
-          </tr>
-          {%- endfor -%}
-        </tbody>
-      </table>
+  {% for _, f := range util.ArraySorted(lo.Keys(p.Results)) -%}
+    {%- code res := p.Results[f] -%}
+    {% if len(res) > 0 -%}
+    <div class="card">
+      <h3>{%= components.SVGRefIcon(`play`, ps) %} [{%s f %}] Results</h3>
+      <div class="mt">
+        <table class="expanded min-200">
+          <thead>
+            <tr>
+              <th class="shrink">Example</th>
+              <th>Result</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%- for _, k := range util.ArraySorted(lo.Keys(res)) -%}
+            {%- code v := res[k] -%}
+            <tr>
+              <td><pre>{%s k %}</pre></td>
+              <td><pre>{%s util.ToJSONCompact(v) %}</pre></td>
+            </tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
-  {%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
 {% endfunc %}
