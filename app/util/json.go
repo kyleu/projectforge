@@ -38,6 +38,18 @@ func FromJSON(msg json.RawMessage, tgt any) error {
 	return jsoniterParser.Unmarshal(msg, tgt)
 }
 
+func FromJSONString(msg json.RawMessage) (string, error) {
+	var tgt string
+	err := jsoniterParser.Unmarshal(msg, &tgt)
+	return tgt, err
+}
+
+func FromJSONMap(msg json.RawMessage) (ValueMap, error) {
+	var tgt ValueMap
+	err := jsoniterParser.Unmarshal(msg, &tgt)
+	return tgt, err
+}
+
 func FromJSONInterface(msg json.RawMessage) (any, error) {
 	var tgt any
 	err := FromJSON(msg, &tgt)

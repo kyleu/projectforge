@@ -36,8 +36,7 @@ func (e *customEncoder) EncodeEntry(entry zapcore.Entry, fields []zapcore.Field)
 	out := b.Bytes()
 	b.Free()
 
-	data := util.ValueMap{}
-	err = util.FromJSON(out, &data)
+	data, err := util.FromJSONMap(out)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't parse logging JSON")
 	}
