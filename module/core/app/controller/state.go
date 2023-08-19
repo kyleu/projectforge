@@ -34,7 +34,7 @@ func SetSiteState(a *app.State, logger util.Logger) {
 func handleError(key string, as *app.State, ps *cutil.PageState, rc *fasthttp.RequestCtx, err error) (string, error) {
 	rc.SetStatusCode(fasthttp.StatusInternalServerError)
 
-	ps.Logger.Errorf("error running action [%s]: %+v", key, err)
+	ps.LogError("error running action [%s]: %+v", key, err)
 
 	if len(ps.Breadcrumbs) == 0 {
 		bc := util.StringSplitAndTrim(string(rc.URI().Path()), "/")

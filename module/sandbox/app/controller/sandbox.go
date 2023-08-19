@@ -41,7 +41,7 @@ func SandboxRun(rc *fasthttp.RequestCtx) {
 		ps.Data = ret
 		if sb.Key == "testbed" {
 			return Render(rc, as, &vsandbox.Testbed{}, ps, "sandbox", sb.Key)
-		}{{{ if .HasModule "wasm" }}}
+		}{{{ if .HasModule "wasmclient" }}}
 		if sb.Key == "wasm" {
 			return Render(rc, as, &vsandbox.WASM{}, ps, "sandbox", sb.Key)
 		}{{{ end }}}

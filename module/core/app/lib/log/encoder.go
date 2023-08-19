@@ -1,4 +1,4 @@
-{{{ if .HasModule "wasm" }}}//go:build !js
+{{{ if .HasModule "wasmserver" }}}//go:build !js
 
 {{{ end }}}package log
 

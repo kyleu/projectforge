@@ -57,7 +57,7 @@ A standalone desktop application, bundling the server and a web view, will be bu
 ### Mobile Build
 
 A standalone mobile app, bundling the server and a web view, will be built for Android and iOS
-{{{ end }}}{{{ if .Build.WASM }}}
+{{{ end }}}{{{ if .BuildWASM }}}
 ### Web Build
 
 The server is compiled to WASM and available as a WebAssembly module{{{ end }}}

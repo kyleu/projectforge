@@ -9,10 +9,17 @@
     <tbody>
       {%- for _, mKey := range modKeys -%}
       {%- code mod := mods.Get(mKey) -%}
+      {%- if mod == nil -%}
+      <tr>
+        <td class="shrink"><a href="/m/{%s mKey %}">{%s mKey %}</a></td>
+        <td><div class="error">Error: no module named [{%s mKey %}]</div></td>
+      </tr>
+      {%- else -%}
       <tr>
         <td class="shrink"><a href="/m/{%s mod.Key %}">{%s mod.Title() %}</a></td>
         <td><em>{%s mod.Description %}</em></td>
       </tr>
+      {%- endif -%}
       {%- endfor -%}
     </tbody>
   </table>

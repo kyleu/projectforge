@@ -41,7 +41,7 @@ func StreamRender(qw422016 *qt422016.Writer, page layout.Page, as *app.State, ps
 		span.Complete()
 		x := recover()
 		if x != nil {
-			ps.Logger.Errorf("error processing template [%T]: %+v", x, x)
+			ps.LogError("error processing template [%T]: %+v", x, x)
 			panic(x)
 		}
 	}()

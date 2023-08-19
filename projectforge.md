@@ -21,4 +21,5 @@ The following modules were used to build this project:
 - [themecatalog](./doc/module/themecatalog.md)
 - [types](./doc/module/types.md)
 - [upgrade](./doc/module/upgrade.md)
+- [wasmserver](./doc/module/wasmserver.md)
 - [websocket](./doc/module/websocket.md)

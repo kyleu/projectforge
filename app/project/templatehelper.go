@@ -65,6 +65,10 @@ func (t *TemplateContext) BuildMobile() bool {
 	return t.BuildIOS() || t.BuildAndroid()
 }
 
+func (t *TemplateContext) BuildWASM() bool {
+	return t.HasModulesAny("wasmserver") && t.Build.WASM
+}
+
 func (t *TemplateContext) BuildNotarize() bool {
 	return t.HasModulesAny("notarize") && t.Build.Notarize
 }

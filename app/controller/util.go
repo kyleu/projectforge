@@ -22,7 +22,7 @@ func Render(rc *fasthttp.RequestCtx, as *app.State, page layout.Page, ps *cutil.
 	defer func() {
 		x := recover()
 		if x != nil {
-			ps.Logger.Errorf("error processing template: %+v", x)
+			ps.LogError("error processing template: %+v", x)
 			switch t := x.(type) {
 			case error:
 				ed := util.GetErrorDetail(t)

@@ -30,7 +30,7 @@ func (s Sandboxes) Get(key string) *Sandbox {
 
 // $PF_SECTION_START(sandboxes)$
 
-var AllSandboxes = Sandboxes{testbed{{{ if .HasModule "wasm" }}}, wasm{{{ end }}}}
+var AllSandboxes = Sandboxes{testbed{{{ if .HasModule "wasmclient" }}}, wasm{{{ end }}}}
 
 // $PF_SECTION_END(sandboxes)$
 

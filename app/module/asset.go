@@ -4,6 +4,7 @@ import (
 	"context"
 	"io"
 	"net/http"
+	"path"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -14,9 +15,10 @@ import (
 )
 
 const (
-	assetURL    = "https://api.github.com/repos/kyleu/projectforge/releases/latest"
-	assetPrefix = "projectforge_module_"
-	assetSuffix = ".zip"
+	assetURL       = "https://api.github.com/repos/kyleu/projectforge/releases/latest"
+	backupAssetURL = "https://projectforge.dev/modules"
+	assetPrefix    = "projectforge_module_"
+	assetSuffix    = ".zip"
 )
 
 var assetMap map[string]string
@@ -53,12 +55,13 @@ func loadAssetMap(ctx context.Context, logger util.Logger) error {
 	if err != nil {
 		return errors.Wrapf(err, "unable to create request from [%s]", assetURL)
 	}
+	req.Header.Set("Access-Control-Allow-Origin", "*")
 	rsp, err := httpClient.Do(req)
 	if err != nil {
-		return errors.Wrapf(err, "unable to get release asset from [%s]", assetURL)
+		return loadBackupAssetMap(logger)
 	}
 	if rsp.StatusCode != 200 {
-		return errors.Errorf("release asset [%s] returned status [%s]", assetURL, rsp.Status)
+		return errors.Errorf("release asset [%s] returned status [%d]", assetURL, rsp.StatusCode)
 	}
 	bts, err := io.ReadAll(rsp.Body)
 	if err != nil {
@@ -74,6 +77,14 @@ func loadAssetMap(ctx context.Context, logger util.Logger) error {
 			key := strings.TrimSuffix(asset.Name[len(assetPrefix):], assetSuffix)
 			assetMap[key] = asset.URL
 		}
+	})
+	return nil
+}
+
+func loadBackupAssetMap(logger util.Logger) error {
+	logger.Info("unable to download assets from github, using backup option")
+	lo.ForEach(nativeModuleKeys, func(key string, _ int) {
+		assetMap[key] = path.Join(backupAssetURL, key+".zip")
 	})
 	return nil
 }

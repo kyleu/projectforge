@@ -77,7 +77,7 @@ nfpms:
       - rpm
 {{{ end }}}
 release:
-  draft: {{{ if .Build.Publish }}}false{{{ else }}}true{{{ end }}}
+  draft: false
   header: |
     ## {{ .Version }} ({{ .Date }})
     See {{{ .Info.Homepage }}} for download links and documentation
@@ -222,7 +222,7 @@ builds:
       - "6"
       - "7"
     mod_timestamp: "{{ .CommitTimestamp }}"{{{ .GoBinaryContent }}}
-{{{ end }}}{{{ if .Build.WASM }}}
+{{{ end }}}{{{ if .BuildWASM }}}
   - id: "js"
     goos:
       - "js"

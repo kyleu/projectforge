@@ -31,7 +31,7 @@ func NewServices(ctx context.Context, st *State, logger util.Logger) (*Services,
 	}
 	{{{ end }}}return &Services{
 		{{{ if.HasModule "process" }}}Exec:   exec.NewService(),
-		{{{ end }}}{{{ if.HasModule "scripting" }}}Script: scripting.NewService(),
+		{{{ end }}}{{{ if.HasModule "scripting" }}}Script: scripting.NewService(st.FS, "scripts"),
 		{{{ end }}}{{{ if.HasModule "websocket" }}}Socket: websocket.NewService(nil, nil, nil),
 		{{{ end}}}{{{ if.HasModule "export" }}}// $PF_INJECT_START(refs)$
 		// $PF_INJECT_END(refs)${{{ end }}}

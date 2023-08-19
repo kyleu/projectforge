@@ -1,11 +1,10 @@
 # $PF_GENERATE_ONCE$
+.DS_Store
 /.env
 /.vscode
 /.idea
-/.scannerwork
+/.scannerwork{{{ if .HasModule "wasmclient" }}}
+/assets/wasm/*.wasm{{{ end }}}
 /build
-/tmp
-
 /client/node_modules
-
-.DS_Store
+/tmp

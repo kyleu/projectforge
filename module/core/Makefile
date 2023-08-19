@@ -14,13 +14,13 @@ templates:
 	@bin/templates.sh
 
 .PHONY: build
-build: templates ## Build all binaries{{{ if .HasModule "wasm" }}}
-	@GOOS=js GOARCH=wasm {{{ .GoBinarySafe }}} build -o ./assets/wasm/{{{ .Key }}}.wasm ./app/wasm/...{{{ end }}}
+build: templates ## Build all binaries{{{ if .HasModule "wasmclient" }}}
+	@GOOS=js GOARCH=wasm {{{ .GoBinarySafe }}} build -o ./assets/wasm/{{{ .Exec }}}.wasm ./app/wasm/...{{{ end }}}
 	@{{{ .GoBinarySafe }}} build -gcflags "all=-N -l" -o build/debug/{{{ .Exec }}} .
 
 .PHONY: build-release
-build-release: templates ## Build all binaries without debug information, clean up after{{{ if .HasModule "wasm" }}}
-	@GOOS=js GOARCH=wasm {{{ .GoBinarySafe }}} build -o ./assets/wasm/{{{ .Key }}}.wasm ./app/wasm/...{{{ end }}}
+build-release: templates ## Build all binaries without debug information, clean up after{{{ if .HasModule "wasmclient" }}}
+	@GOOS=js GOARCH=wasm {{{ .GoBinarySafe }}} build -o ./assets/wasm/{{{ .Exec }}}.wasm ./app/wasm/...{{{ end }}}
 	@{{{ .GoBinarySafe }}} build -ldflags '-s -w' -trimpath -o build/release/{{{ .Exec }}} .
 
 .PHONY: lint

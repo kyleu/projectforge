@@ -1,0 +1,59 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WebAssembly Project Forge</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta property="og:title" content="WebAssembly Project Forge">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="logo.svg">
+  <meta property="og:locale" content="en_US">
+  <meta name="theme-color" content="#72a0c1" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#00415d" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="logo.svg" type="image/svg+xml">
+  <style>
+    /* theme: default */
+    :root { --border: 1px solid #dddddd; --link-text-decoration: none; --color-foreground: #000000; --color-foreground-muted: #777777; --color-background: #ffffff; --color-background-muted: #e3ebf2; --color-link-foreground: #455d6f; --color-link-visited-foreground: #303e4a; --color-nav-foreground: #000000; --color-nav-background: #72a0c1; --color-menu-foreground: #000000; --color-menu-selected-foreground: #000000; --color-menu-background: #acc5da; --color-menu-selected-background: #72a0c1; --color-modal-backdrop: rgba(77, 77, 77, .7); --color-success: #008000; --color-error: #ff0000;}
+    .mode-light { --border: 1px solid #dddddd; --link-text-decoration: none; --color-foreground: #000000; --color-foreground-muted: #777777; --color-background: #ffffff; --color-background-muted: #e3ebf2; --color-link-foreground: #455d6f; --color-link-visited-foreground: #303e4a; --color-nav-foreground: #000000; --color-nav-background: #72a0c1; --color-menu-foreground: #000000; --color-menu-selected-foreground: #000000; --color-menu-background: #acc5da; --color-menu-selected-background: #72a0c1; --color-modal-backdrop: rgba(77, 77, 77, .7); --color-success: #008000; --color-error: #ff0000;}
+    .mode-dark { --border: 1px solid #666666; --link-text-decoration: none; --color-foreground: #ffffff; --color-foreground-muted: #777777; --color-background: #121212; --color-background-muted: #0f1e28; --color-link-foreground: #6f889b; --color-link-visited-foreground: #9eaebb; --color-nav-foreground: #ffffff; --color-nav-background: #00415d; --color-menu-foreground: #eeeeee; --color-menu-selected-foreground: #ffffff; --color-menu-background: #0e2939; --color-menu-selected-background: #00415d; --color-modal-backdrop: rgba(33, 33, 33, .7); --color-success: #008000; --color-error: #ff0000;}
+
+    @media (prefers-color-scheme: dark) {
+      :root { --border: 1px solid #666666; --link-text-decoration: none; --color-foreground: #ffffff; --color-foreground-muted: #777777; --color-background: #121212; --color-background-muted: #0f1e28; --color-link-foreground: #6f889b; --color-link-visited-foreground: #9eaebb; --color-nav-foreground: #ffffff; --color-nav-background: #00415d; --color-menu-foreground: #eeeeee; --color-menu-selected-foreground: #ffffff; --color-menu-background: #0e2939; --color-menu-selected-background: #00415d; --color-modal-backdrop: rgba(33, 33, 33, .7); --color-success: #008000; --color-error: #ff0000;}
+      .mode-light { --border: 1px solid #dddddd; --link-text-decoration: none; --color-foreground: #000000; --color-foreground-muted: #777777; --color-background: #ffffff; --color-background-muted: #e3ebf2; --color-link-foreground: #455d6f; --color-link-visited-foreground: #303e4a; --color-nav-foreground: #000000; --color-nav-background: #72a0c1; --color-menu-foreground: #000000; --color-menu-selected-foreground: #000000; --color-menu-background: #acc5da; --color-menu-selected-background: #72a0c1; --color-modal-backdrop: rgba(77, 77, 77, .7); --color-success: #008000; --color-error: #ff0000;}
+      .mode-dark { --border: 1px solid #666666; --link-text-decoration: none; --color-foreground: #ffffff; --color-foreground-muted: #777777; --color-background: #121212; --color-background-muted: #0f1e28; --color-link-foreground: #6f889b; --color-link-visited-foreground: #9eaebb; --color-nav-foreground: #ffffff; --color-nav-background: #00415d; --color-menu-foreground: #eeeeee; --color-menu-selected-foreground: #ffffff; --color-menu-background: #0e2939; --color-menu-selected-background: #00415d; --color-modal-backdrop: rgba(33, 33, 33, .7); --color-success: #008000; --color-error: #ff0000;}
+    }
+  </style>
+  <link rel="stylesheet" media="screen" href="client.css">
+  <script type="text/javascript" src="client.js"></script>
+  <script src="wasm_exec.js"></script>
+  <script>
+    function wasmInit(ms) {
+      document.getElementById("load-status").innerText = "Loaded in [" + ms + "ms]";
+    }
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      if (!WebAssembly.instantiateStreaming) {
+        WebAssembly.instantiateStreaming = async (resp, importObject) => {
+          const source = await (await resp).arrayBuffer();
+          return await WebAssembly.instantiate(source, importObject);
+        };
+      }
+
+      const start = new Date().getTime();
+      const go = new Go();
+      WebAssembly.instantiateStreaming(fetch("projectforge.wasm"), go.importObject).then((result) => {
+        go.run(result.instance);
+        wasmInit(new Date().getTime() - start);
+      });
+    });
+  </script>
+</head>
+<body>
+  <div class="card">
+    <h3>Project Forge</h3>
+    <div class="mt">Hello!</div>
+    <div class="mt"><em id="load-status">Loading...</em></div>
+  </div>
+</body>

@@ -110,8 +110,8 @@ func validateBuild(p *Project, e func(code string, msg string, args ...any)) {
 		e("config", "Notarizing is enabled, but [Bundle] isn't set")
 	}
 
-	if p.Build.WASM && !lo.Contains(p.Modules, "wasm") {
-		e("config", "WASM build is enabled, but module [wasm] isn't included")
+	if p.Build.WASM && !lo.Contains(p.Modules, "wasmserver") {
+		e("config", "WASM build is enabled, but module [wasmserver] isn't included")
 	}
 }
 

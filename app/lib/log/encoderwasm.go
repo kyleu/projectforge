@@ -1,5 +1,5 @@
 // Content managed by Project Forge, see [projectforge.md] for details.
-//go:build !js
+//go:build js
 
 package log
 
@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	"github.com/samber/lo"
 	"go.uber.org/zap/buffer"
 	"go.uber.org/zap/zapcore"
 
@@ -52,24 +51,20 @@ func (e *customEncoder) EncodeEntry(entry zapcore.Entry, fields []zapcore.Field)
 	}
 
 	lvl := fmt.Sprintf("%-5v", entry.Level.CapitalString())
-	lvl = levelToColor[entry.Level.String()].Add(lvl)
 	tm := entry.Time.Format(timeFormat)
 
 	msg := entry.Message
 	var msgLines []string
 	if strings.Contains(msg, "\n") {
-		msgLines = util.StringSplitLines(msg)
+		msgLines = strings.Split(msg, "\n")
 		msg = msgLines[0]
 		msgLines = msgLines[1:]
 	}
 
-	addLine(fmt.Sprintf("[%s] %s %s", lvl, tm, Cyan.Add(msg)))
-	lo.ForEach(msgLines, func(ml string, _ int) {
-		if strings.Contains(ml, util.AppKey) {
-			ml = Green.Add(ml)
-		}
-		addLine("  " + Cyan.Add(ml))
-	})
+	addLine(fmt.Sprintf("[%s] %s %s", lvl, tm, msg))
+	for _, ml := range msgLines {
+		addLine("  " + ml)
+	}
 	if len(data) > 0 {
 		addLine("  " + util.ToJSONCompact(data))
 	}
@@ -84,13 +79,10 @@ func (e *customEncoder) EncodeEntry(entry zapcore.Entry, fields []zapcore.Field)
 	addLine("  " + caller)
 
 	if entry.Stack != "" {
-		st := util.StringSplitLines(entry.Stack)
-		lo.ForEach(st, func(stl string, _ int) {
-			if strings.Contains(stl, util.AppKey) {
-				stl = Green.Add(stl)
-			}
+		st := strings.Split(entry.Stack, "\n")
+		for _, stl := range st {
 			addLine("  " + stl)
-		})
+		}
 	}
 	return ret, nil
 }

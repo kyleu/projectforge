@@ -51,8 +51,8 @@ func ServiceDefinition(p *project.Project) util.ValueMap {
 			tags = append(tags, "database:"+x)
 		case "temporal":
 			tags = append(tags, "workflow:"+x)
-		case "wasm":
-			tags = append(tags, "build:"+x)
+		case "wasmserver":
+			tags = append(tags, "build:wasm")
 		}
 	})
 

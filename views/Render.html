@@ -18,7 +18,7 @@
     span.Complete()
 		x := recover()
 		if x != nil {
-      ps.Logger.Errorf("error processing template [%T]: %+v", x, x)
+      ps.LogError("error processing template [%T]: %+v", x, x)
       panic(x)
 		}
 	}()
