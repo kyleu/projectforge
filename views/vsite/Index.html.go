@@ -74,59 +74,63 @@ func (p *Index) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
         A database management application, basically. It does other stuff too.
       </li>
       <li>
+        <a href="https://npn.dev" target="_blank" rel="noopener noreferrer">NPN</a> (<em><a href="https://github.com/kyleu/npn" target="_blank" rel="noopener noreferrer">GitHub</a></em>):
+        Basically Postman, it helps you explore and test HTTP services with a focus on speed and correctness.
+      </li>
+      <li>
         <a href="https://solitaire.kyleu.dev" target="_blank" rel="noopener noreferrer">Solitaire</a> (<em><a href="https://github.com/kyleu/solitaire" target="_blank" rel="noopener noreferrer">GitHub</a></em>):
-        An example game, mainly exists to show the features of Project Forge projects
+        An example game, mainly exists to show the features of Project Forge projects.
       </li>
       <li>
         <a href="https://loadtoad.kyleu.dev" target="_blank" rel="noopener noreferrer">Load Toad</a> (<em><a href="https://github.com/kyleu/loadtoad" target="_blank" rel="noopener noreferrer">Load Toad</a></em>):
-        A tool for uploading HTTP Archives (<code>.har</code> files) and running load tests
+        A tool for uploading HTTP Archives (<code>.har</code> files) and running load tests.
       </li>
     </ul>
     <div class="mt"><em>More examples coming soon...</em></div>
   </div>
   `)
-//line views/vsite/Index.html:44
+//line views/vsite/Index.html:48
 	components.StreamBragProject(qw422016)
-//line views/vsite/Index.html:44
+//line views/vsite/Index.html:48
 	qw422016.N().S(`
   <div class="card">
     <h3>Licensing</h3>
     <div class="mt">
       `)
-//line views/vsite/Index.html:48
+//line views/vsite/Index.html:52
 	qw422016.E().S(util.AppName)
-//line views/vsite/Index.html:48
+//line views/vsite/Index.html:52
 	qw422016.N().S(` is <a href="https://choosealicense.com/licenses/mit/">MIT</a> licensed,
       and the modules are <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>.
     </div>
     <div class="mt">Your project is your own, use any license you'd like.</div>
   </div>
 `)
-//line views/vsite/Index.html:53
+//line views/vsite/Index.html:57
 }
 
-//line views/vsite/Index.html:53
+//line views/vsite/Index.html:57
 func (p *Index) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsite/Index.html:53
+//line views/vsite/Index.html:57
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsite/Index.html:53
+//line views/vsite/Index.html:57
 	p.StreamBody(qw422016, as, ps)
-//line views/vsite/Index.html:53
+//line views/vsite/Index.html:57
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsite/Index.html:53
+//line views/vsite/Index.html:57
 }
 
-//line views/vsite/Index.html:53
+//line views/vsite/Index.html:57
 func (p *Index) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsite/Index.html:53
+//line views/vsite/Index.html:57
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsite/Index.html:53
+//line views/vsite/Index.html:57
 	p.WriteBody(qb422016, as, ps)
-//line views/vsite/Index.html:53
+//line views/vsite/Index.html:57
 	qs422016 := string(qb422016.B)
-//line views/vsite/Index.html:53
+//line views/vsite/Index.html:57
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsite/Index.html:53
+//line views/vsite/Index.html:57
 	return qs422016
-//line views/vsite/Index.html:53
+//line views/vsite/Index.html:57
 }

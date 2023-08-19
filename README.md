@@ -49,14 +49,16 @@ A project managed by Project Forge...
 Work with your team to estimate work, track your progress, and gather feedback.
 
 - [Admini](https://admini.dev) ([GitHub](https://github.com/kyleu/admini)):
-A database management application, basically. It does other stuff too.
+  A database management application, basically. It does other stuff too.
+
+- [NPN](https://npn.dev) ([GitHub](https://github.com/kyleu/npn)):
+  Basically Postman, it helps you explore and test HTTP services with a focus on speed and correctness.
 
 - [Solitaire](https://solitaire.kyleu.dev) ([GitHub](https://github.com/kyleu/solitaire)):
-  An example game, mainly exists to show the features of Project Forge projects
+  An example game, mainly exists to show the features of Project Forge projects.
 
 - [Load Toad](https://loadtoad.kyleu.dev) ([GitHub](https://github.com/kyleu/loadtoad)):
-  A tool for uploading HTTP Archives (`.har` files) and running load tests
-
+  A tool for uploading HTTP Archives (`.har` files) and running load tests.
 
 _More examples coming soon..._
 
