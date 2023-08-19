@@ -41,7 +41,7 @@ func (s *Service) Join(connID uuid.UUID, ch string, logger util.Logger) (bool, e
 	}
 	if !lo.Contains(curr.ConnIDs, connID) {
 		curr.ConnIDs = append(curr.ConnIDs, connID)
-	}{{{ if .HasModule "user" }}}
+	}{{{ if .HasUser }}}
 	return created, s.sendOnlineUpdate(ch, conn.ID, conn.Profile.ID, true, logger){{{ else }}}
 	return created, s.sendOnlineUpdate(ch, conn.ID, conn.ID, true, logger){{{ end }}}
 }
@@ -66,7 +66,7 @@ func (s *Service) Leave(connID uuid.UUID, ch string, logger util.Logger) (bool, 
 		return true, nil
 	}
 
-	s.channels[ch].ConnIDs = filteredConns{{{ if .HasModule "user" }}}
+	s.channels[ch].ConnIDs = filteredConns{{{ if .HasUser }}}
 	return false, s.sendOnlineUpdate(ch, conn.ID, conn.Profile.ID, false, logger){{{ else }}}
 	return false, s.sendOnlineUpdate(ch, conn.ID, conn.ID, false, logger){{{ end }}}
 }

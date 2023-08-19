@@ -12,7 +12,7 @@ The about page is animated, themed, and responsive, and only creates three reque
 It serves in less than a millisecond, and renders in Chrome in less than 20ms.
 Progressive enhancement is provided by an included ESBuild TypeScript project, though all functionality is supported with JavaScript disabled.
 
-Your application can (optionally) build for _every_ platform; desktop and mobile webview apps, WASM, universal macOS binaries, frickin' Plan9 and Solaris.
+Your application can (optionally) build for _every_ platform; desktop and mobile webview apps, WASM, and notarized universal macOS binaries.
 If you enable all the build options, it will produce almost 60 builds for various platforms. They all produce a ~20MB native binary.
 The binaries produced can be configured to auto-upgrade from GitHub Releases, or be upgraded by the user using a CLI or UI (module "upgrade" must be in your project).
 CI/CD workflows based on GitHub Actions are provided, handling building, testing, linting, and publishing to GitHub Releases (and any configured Docker repos).

@@ -30,7 +30,7 @@ func (s *Service) GetOnline(key string) []uuid.UUID {
 	}
 	online := make([]uuid.UUID, 0)
 	lo.ForEach(ch.ConnIDs, func(cID uuid.UUID, _ int) {
-		c, ok := s.connections[cID]{{{ if .HasModule "user" }}}
+		c, ok := s.connections[cID]{{{ if .HasUser }}}
 		if ok && c != nil && (!lo.Contains(online, c.Profile.ID)) {
 			online = append(online, c.Profile.ID)
 		}{{{ else }}}

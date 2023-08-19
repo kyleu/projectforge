@@ -56,7 +56,7 @@
       <table class="expanded">
         <thead>
           <tr>
-            <th class="shrink">ID</th>{{{ if .HasModule "user" }}}
+            <th class="shrink">ID</th>{{{ if .HasUser }}}
             <th>User ID</th>{{{ end }}}
             <th>Profile Name</th>
             <th>Service</th>
@@ -67,7 +67,7 @@
         <tbody>
           {%- for _, x := range p.Connections -%}
           <tr>
-            <td class="shrink"><a href="/admin/sockets/conn/{%s x.ID.String() %}">{%s x.ID.String() %}</a></td>{{{ if .HasModule "user" }}}
+            <td class="shrink"><a href="/admin/sockets/conn/{%s x.ID.String() %}">{%s x.ID.String() %}</a></td>{{{ if .HasUser }}}
             <td><a href="/admin/db/user/{%s x.Profile.ID.String() %}">{%s x.Profile.ID.String() %}</a></td>{{{ end }}}
             <td>{%s x.Profile.String() %}</td>
             <td>{%s x.Svc %}</td>
@@ -113,7 +113,7 @@
     <h3>Send Message</h3>
     <form action="/admin/sockets/conn/{%s p.Connection.ID.String() %}/send" method="post">
       <table class="mt expanded">
-        <tbody>{{{ if .HasModule "user" }}}
+        <tbody>{{{ if .HasUser }}}
           {%= components.TableInput("from", "", "From", ps.Profile.ID.String(), 5, "The user this message is from") %}{{{ else }}}
           {%= components.TableInput("from", "", "From", p.Connection.ID.String(), 5, "The connection this message is from") %}{{{ end }}}
           {%= components.TableInput("channel", "", "Channel", "", 5, "The channel this message is for") %}
@@ -135,7 +135,7 @@
         <tr>
           <th>Connection ID</th>
           <td>{%s c.ID.String() %}</td>
-        </tr>{{{ if .HasModule "user" }}}
+        </tr>{{{ if .HasUser }}}
         <tr>
           <th>User ID</th>
           <td><a href="/admin/db/user/{%s c.Profile.ID.String() %}">{%s c.Profile.ID.String() %}</a></td>

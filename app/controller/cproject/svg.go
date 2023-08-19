@@ -108,6 +108,11 @@ func SVGSetApp(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
+		if string(rc.URI().QueryArgs().Peek("hasloaded")) != util.BoolTrue {
+			rc.URI().QueryArgs().Set("hasloaded", util.BoolTrue)
+			page := &vpage.Load{URL: rc.URI().String(), Title: "Generating icons"}
+			return controller.Render(rc, as, page, ps, "projects", prj.Key, "SVG||/svg/"+prj.Key, "App Icon")
+		}
 		content, err := svg.Content(fs, key)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to read SVG ["+key+"]")

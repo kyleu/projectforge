@@ -9,6 +9,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
+	"golang.org/x/exp/slices"
 
 	"{{{ .Package }}}/app/util"
 )
@@ -71,6 +72,18 @@ func (s *Service) WriteChannel(message *Message, logger util.Logger, except ...u
 		}
 	})
 	s.WriteTap(message, logger)
+	return nil
+}
+
+func (s *Service) Broadcast(message *Message, logger util.Logger, except ...uuid.UUID) error {
+	logger.Debug(fmt.Sprintf("broadcasting message [%v::%v] to [%v] connections", message.Channel, message.Cmd, len(s.connections)))
+	for id, _ := range s.connections {
+		if !slices.Contains(except, id) {
+			go func() {
+				_ = s.WriteMessage(id, message, logger)
+			}()
+		}
+	}
 	return nil
 }
 

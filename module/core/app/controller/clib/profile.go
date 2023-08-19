@@ -10,7 +10,7 @@ import (
 	"{{{ .Package }}}/app/controller"
 	"{{{ .Package }}}/app/controller/csession"
 	"{{{ .Package }}}/app/controller/cutil"
-	"{{{ .Package }}}/app/lib/theme"{{{ if .HasModule "user" }}}
+	"{{{ .Package }}}/app/lib/theme"{{{ if .HasUser }}}
 	"{{{ .Package }}}/app/util"{{{ end }}}
 	"{{{ .Package }}}/views/vprofile"
 )
@@ -69,7 +69,7 @@ func ProfileSave(rc *fasthttp.RequestCtx) {
 		n.Theme = frm.GetStringOpt("theme")
 		if n.Theme == theme.ThemeDefault.Key {
 			n.Theme = ""
-		}{{{ if .HasModule "user" }}}
+		}{{{ if .HasUser }}}
 		if ps.Profile.ID == util.UUIDDefault {
 			n.ID = util.UUID()
 		} else {
@@ -79,7 +79,7 @@ func ProfileSave(rc *fasthttp.RequestCtx) {
 		err = csession.SaveProfile(n, rc, ps.Session, ps.Logger)
 		if err != nil {
 			return "", err
-		}{{{ if .HasModule "user" }}}
+		}{{{ if .HasUser }}}
 
 		curr, _ := as.Services.User.Get(ps.Context, nil, ps.Profile.ID, ps.Logger)
 		if curr != nil {

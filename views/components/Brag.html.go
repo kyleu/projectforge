@@ -40,7 +40,7 @@ func StreamBragApp(qw422016 *qt422016.Writer) {
     </p>
 
     <p>
-      Your application can (optionally) build for <em>every</em> platform; desktop and mobile webview apps, WASM, universal macOS binaries, frickin' Plan9 and Solaris.
+      Your application can (optionally) build for <em>every</em> platform; desktop and mobile webview apps, WASM, and notarized universal macOS binaries.
       If you enable all the build options, it will produce almost 60 builds for various platforms. They all produce a ~20MB native binary.
       The binaries produced can be configured to auto-upgrade from GitHub Releases, or be upgraded by the user using a CLI or UI (module "upgrade" must be in your project).
       CI/CD workflows based on GitHub Actions are provided, handling building, testing, linting, and publishing to GitHub Releases (and any configured Docker repos).

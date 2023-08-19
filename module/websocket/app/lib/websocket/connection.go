@@ -9,14 +9,14 @@ import (
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 
-	"{{{ .Package }}}/app/lib/user"{{{ if .HasModule "user" }}}
+	"{{{ .Package }}}/app/lib/user"{{{ if .HasUser }}}
 	dbuser "{{{ .Package }}}/app/user"{{{ end }}}
 	"{{{ .Package }}}/app/util"
 )
 
 // Represents a user's WebSocket session.
 type Connection struct {
-	ID       uuid.UUID     `json:"id"`{{{ if .HasModule "user" }}}
+	ID       uuid.UUID     `json:"id"`{{{ if .HasUser }}}
 	User     *dbuser.User  `json:"user,omitempty"`{{{ end }}}
 	Profile  *user.Profile `json:"profile,omitempty"`{{{ if .HasModule "oauth" }}}
 	Accounts user.Accounts `json:"accounts,omitempty"`{{{ end }}}
@@ -29,8 +29,8 @@ type Connection struct {
 }
 
 // Creates a new Connection.
-func NewConnection(svc string{{{ if .HasModule "user" }}}, usr *dbuser.User{{{ end }}}, profile *user.Profile{{{ if .HasModule "oauth" }}}, accounts user.Accounts{{{ end }}}, socket *websocket.Conn) *Connection {
-	return &Connection{ID: util.UUID(){{{ if .HasModule "user" }}}, User: usr{{{ end }}}, Profile: profile{{{ if .HasModule "oauth" }}}, Accounts: accounts{{{ end }}}, Svc: svc, Started: util.TimeCurrent(), socket: socket}
+func NewConnection(svc string{{{ if .HasUser }}}, usr *dbuser.User{{{ end }}}, profile *user.Profile{{{ if .HasModule "oauth" }}}, accounts user.Accounts{{{ end }}}, socket *websocket.Conn) *Connection {
+	return &Connection{ID: util.UUID(){{{ if .HasUser }}}, User: usr{{{ end }}}, Profile: profile{{{ if .HasModule "oauth" }}}, Accounts: accounts{{{ end }}}, Svc: svc, Started: util.TimeCurrent(), socket: socket}
 }
 
 // Transforms this Connection to a serializable Status object.
@@ -39,7 +39,7 @@ func (c *Connection) ToStatus() *Status {
 		return &Status{ID: c.ID, Username: c.Profile.Name, Channels: nil}
 	}
 	return &Status{ID: c.ID, Username: c.Profile.Name, Channels: c.Channels}
-}{{{ if .HasModule "user" }}}
+}{{{ if .HasUser }}}
 
 func (c *Connection) Username() string {
 	if c.User != nil {

@@ -6,9 +6,6 @@ cd $dir/../..
 
 pwd
 
-TGT=$1
-[ "$TGT" ] || TGT="v0.0.0"
-
 echo "packaging modules..."
 
 function z {
@@ -16,10 +13,13 @@ function z {
   cd $1
   touch *
   touch .*
-  zip -r -X "../../build/dist/projectforge_module_$1.zip" .
+  zip -q -r -X "../../build/dist/projectforge_module_$1.zip" .
+  cp "../../build/dist/projectforge_module_$1.zip" "../../assets/module/$1.zip"
   cd ..
 }
 
+mkdir -p build/dist
+mkdir -p assets/module
 cd module
 for d in * ; do
   if [ -d "$d" ]; then

@@ -16,7 +16,7 @@ import (
 	"{{{ .Package }}}/app/lib/menu"
 	"{{{ .Package }}}/app/lib/telemetry"
 	"{{{ .Package }}}/app/lib/theme"
-	"{{{ .Package }}}/app/lib/user"{{{ if .HasModule "user" }}}
+	"{{{ .Package }}}/app/lib/user"{{{ if .HasUser }}}
 	dbuser "{{{ .Package }}}/app/user"{{{ end }}}
 	"{{{ .Package }}}/app/util"
 )
@@ -45,7 +45,7 @@ type PageState struct {
 	Menu           menu.Items        `json:"menu,omitempty"`
 	Breadcrumbs    cmenu.Breadcrumbs `json:"breadcrumbs,omitempty"`
 	Flashes        []string          `json:"flashes,omitempty"`
-	Session        util.ValueMap     `json:"-"`{{{ if .HasModule "user" }}}
+	Session        util.ValueMap     `json:"-"`{{{ if .HasUser }}}
 	User           *dbuser.User      `json:"user,omitempty"`{{{ end }}}
 	Profile        *user.Profile     `json:"profile,omitempty"`{{{ if .HasModule "oauth" }}}
 	Accounts       user.Accounts     `json:"accounts,omitempty"`{{{ end }}}
@@ -88,7 +88,7 @@ func (p *PageState) TitleString() string {
 		return util.AppName
 	}
 	return fmt.Sprintf("%s - %s", p.Title, util.AppName)
-}{{{ if .HasModule "user" }}}
+}{{{ if .HasUser }}}
 
 func (p *PageState) Username() string {
 	if p.User != nil {

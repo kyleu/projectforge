@@ -1,9 +1,9 @@
 package user
-{{{ if .HasModule "user" }}}
+{{{ if .HasUser }}}
 import "github.com/google/uuid"
 {{{ end }}}
 type Profile struct {
-{{{ if .HasModule "user" }}}	ID    uuid.UUID `json:"id"`
+{{{ if .HasUser }}}	ID    uuid.UUID `json:"id"`
 	Name  string    `json:"name,omitempty"`
 	Mode  string    `json:"mode,omitempty"`
 	Theme string    `json:"theme,omitempty"`
@@ -19,7 +19,7 @@ func (p *Profile) String() string {
 }
 
 func (p *Profile) Clone() *Profile {
-	{{{ if .HasModule "user" }}}return &Profile{ID: p.ID, Name: p.Name, Mode: p.Mode, Theme: p.Theme}{{{ else }}}return &Profile{Name: p.Name, Mode: p.Mode, Theme: p.Theme}{{{ end }}}
+	{{{ if .HasUser }}}return &Profile{ID: p.ID, Name: p.Name, Mode: p.Mode, Theme: p.Theme}{{{ else }}}return &Profile{Name: p.Name, Mode: p.Mode, Theme: p.Theme}{{{ end }}}
 }
 
 func (p *Profile) ModeClass() string {

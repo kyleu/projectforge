@@ -16,7 +16,7 @@ import (
 
 const (
 	assetURL       = "https://api.github.com/repos/kyleu/projectforge/releases/latest"
-	backupAssetURL = "https://projectforge.dev/modules"
+	backupAssetURL = "https://projectforge.dev/assets/module"
 	assetPrefix    = "projectforge_module_"
 	assetSuffix    = ".zip"
 )

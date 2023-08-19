@@ -1,11 +1,10 @@
 /.vscode
 /.idea
+/.projectforge/additional-projects.json
 /.scannerwork
+/assets/module
 /build
+/client/node_modules
 /data
 /rules.json
 /tmp
-
-/client/node_modules
-
-.projectforge/additional-projects.json

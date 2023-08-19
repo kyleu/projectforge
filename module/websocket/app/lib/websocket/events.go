@@ -8,14 +8,14 @@ import (
 	"github.com/pkg/errors"
 
 	"{{{ .Package }}}/app/lib/telemetry"
-	"{{{ .Package }}}/app/lib/user"{{{ if .HasModule "user" }}}
+	"{{{ .Package }}}/app/lib/user"{{{ if .HasUser }}}
 	dbuser "{{{ .Package }}}/app/user"{{{ end }}}
 	"{{{ .Package }}}/app/util"
 )
 
 // Registers a new Connection for this Service using the provided user.Profile and websocket.Conn.
-func (s *Service) Register({{{ if .HasModule "user" }}}u *dbuser.User, {{{ end }}}profile *user.Profile{{{ if .HasModule "oauth" }}}, accts user.Accounts{{{ end }}}, c *websocket.Conn, logger util.Logger) (*Connection, error) {
-	conn := NewConnection("system", {{{ if .HasModule "user" }}}u, {{{ end }}}profile{{{ if .HasModule "oauth" }}}, accts{{{ end }}}, c)
+func (s *Service) Register({{{ if .HasUser }}}u *dbuser.User, {{{ end }}}profile *user.Profile{{{ if .HasModule "oauth" }}}, accts user.Accounts{{{ end }}}, c *websocket.Conn, logger util.Logger) (*Connection, error) {
+	conn := NewConnection("system", {{{ if .HasUser }}}u, {{{ end }}}profile{{{ if .HasModule "oauth" }}}, accts{{{ end }}}, c)
 	s.connectionsMu.Lock()
 	defer s.connectionsMu.Unlock()
 	s.connections[conn.ID] = conn

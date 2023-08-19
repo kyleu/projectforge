@@ -81,6 +81,10 @@ func (t *TemplateContext) HasSlack() bool {
 	return t.Info.Slack != ""
 }
 
+func (t *TemplateContext) HasUser() bool {
+	return t.HasModulesAny("user")
+}
+
 func (t *TemplateContext) IsNotarized() bool {
 	return t.HasModule("notarize") && t.Build != nil && t.Build.Notarize
 }

@@ -46,14 +46,14 @@ func LoadPageState(as *app.State, rc *fasthttp.RequestCtx, key string, logger ut
 	span.Attribute("os", os){{{ if .HasModule "oauth" }}}
 
 	isAuthed, _ := user.Check("/", accts)
-	isAdmin, _ := user.Check("/admin", accts){{{ end }}}{{{ if .HasModule "user" }}}
+	isAdmin, _ := user.Check("/admin", accts){{{ end }}}{{{ if .HasUser }}}
 
 	u, _ := as.Services.User.Get(ctx, nil, prof.ID, logger){{{ end }}}
 
 	return &PageState{
 		Method: string(rc.Method()), URI: rc.Request.URI(), Flashes: flashes, Session: session,
 		OS: os, OSVersion: ua.OSVersion, Browser: browser, BrowserVersion: ua.Version, Platform: platform,
-		{{{ if .HasModule "user" }}}User: u, {{{ end }}}Profile: prof, {{{ if .HasModule "oauth" }}}Accounts: accts, Authed: isAuthed, Admin: isAdmin, {{{ end }}}Params: params,
+		{{{ if .HasUser }}}User: u, {{{ end }}}Profile: prof, {{{ if .HasModule "oauth" }}}Accounts: accts, Authed: isAuthed, Admin: isAdmin, {{{ end }}}Params: params,
 		Icons: slices.Clone(initialIcons), Started: util.TimeCurrent(), Logger: logger, Context: ctx, Span: span,
 	}
 }
@@ -93,7 +93,7 @@ func loadSession({{{ if .DatabaseUISaveUser }}}ctx{{{ else }}}_{{{ end }}} conte
 		if ok {
 			accts = user.AccountsFromString(authS)
 		}
-	}{{{ end }}}{{{ if .HasModule "user" }}}
+	}{{{ end }}}{{{ if .HasUser }}}
 
 	if prof.ID == util.UUIDDefault {
 		prof.ID = util.UUID(){{{ if .DatabaseUISaveUser }}}
