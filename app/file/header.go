@@ -27,7 +27,19 @@ func contentWithHeader(filename string, t Type, c string, linebreak string, logg
 		return c
 	case TypeCSS.Key:
 		return "/* " + HeaderContent + " */" + linebreak + c
-	case TypeGo.Key, TypeGoMod.Key, TypeGradle.Key, TypeJavaScript.Key, TypeKotlin.Key, TypeSwift.Key, TypeTypeScript.Key:
+	case TypeGo.Key:
+		if strings.HasPrefix(c, "//go:build") {
+			return secondLine(c, linebreak+"// "+HeaderContent, linebreak)
+		} else if strings.Index(c, "}}}//go:build") > -1 {
+			tok := "{{{ end }}}"
+			idx := strings.Index(c, tok)
+			if idx == -1 {
+				return c
+			}
+			return c[0:idx+len(tok)] + linebreak + "// " + HeaderContent + linebreak + c[idx+len(tok):]
+		}
+		return "// " + HeaderContent + linebreak + c
+	case TypeGoMod.Key, TypeGradle.Key, TypeJavaScript.Key, TypeKotlin.Key, TypeSwift.Key, TypeTypeScript.Key:
 		return "// " + HeaderContent + linebreak + c
 	case TypeHTML.Key:
 		return "<!-- " + HeaderContent + " -->" + linebreak + c

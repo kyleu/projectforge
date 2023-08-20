@@ -51,7 +51,7 @@ func loadAssetMap(ctx context.Context, logger util.Logger) error {
 	logger.Infof("loading assets from [%s]", assetURL)
 	assetMap = map[string]string{}
 	httpClient := telemetry.WrapHTTPClient(http.DefaultClient)
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, assetURL, http.NoBody)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, assetURL, nil)
 	if err != nil {
 		return errors.Wrapf(err, "unable to create request from [%s]", assetURL)
 	}

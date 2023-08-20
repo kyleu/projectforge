@@ -3,8 +3,7 @@
 /.env
 /.vscode
 /.idea
-/.scannerwork{{{ if .HasModule "wasmclient" }}}
-/assets/wasm/*.wasm{{{ end }}}
+/.scannerwork
 /build
 /client/node_modules
 /tmp

@@ -1,6 +1,5 @@
 // $PF_GENERATE_ONCE$
 //go:build js
-
 package main
 
 import (

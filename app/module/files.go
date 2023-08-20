@@ -1,7 +1,7 @@
 package module
 
 import (
-	"os"
+	"io/fs"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -64,7 +64,7 @@ func (s *Service) loadFiles(mod *Module, addHeader bool, ret map[string]*file.Fi
 	return nil
 }
 
-func fileContent(files filesystem.FileLoader, path string) (os.FileMode, []byte, error) {
+func fileContent(files filesystem.FileLoader, path string) (fs.FileMode, []byte, error) {
 	stat, err := files.Stat(path)
 	if err != nil {
 		return 0, nil, errors.Wrapf(err, "file [%s] not found", path)
@@ -73,5 +73,5 @@ func fileContent(files filesystem.FileLoader, path string) (os.FileMode, []byte,
 	if err != nil {
 		return 0, nil, err
 	}
-	return stat.Mode(), b, nil
+	return stat.Mode, b, nil
 }

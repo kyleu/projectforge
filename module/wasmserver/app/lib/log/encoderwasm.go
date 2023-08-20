@@ -1,5 +1,4 @@
 //go:build js
-
 package log
 
 import (

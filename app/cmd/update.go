@@ -6,7 +6,6 @@ import (
 	"github.com/muesli/coral"
 	"github.com/pkg/errors"
 
-	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -15,10 +14,11 @@ func updateF(ctx context.Context) error {
 	if err := initIfNeeded(); err != nil {
 		return errors.Wrap(err, "error initializing application")
 	}
-
 	_logger.Infof("updating " + util.AppName + " modules...")
-	fs := filesystem.NewFileSystem(_flags.ConfigDir)
-	mSvc := module.NewService(ctx, fs, _logger)
+	mSvc, err := module.NewService(ctx, _flags.ConfigDir, _logger)
+	if err != nil {
+		return err
+	}
 	for _, mod := range mSvc.Modules() {
 		url := mod.URL
 		var err error

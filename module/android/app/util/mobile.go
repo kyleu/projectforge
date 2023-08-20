@@ -1,5 +1,4 @@
 //go:build android
-
 package util
 
 import (

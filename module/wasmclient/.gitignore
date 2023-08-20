@@ -1,0 +1,10 @@
+# $PF_GENERATE_ONCE$
+.DS_Store
+/.env
+/.vscode
+/.idea
+/.scannerwork
+/assets/wasm/*.wasm
+/build
+/client/node_modules
+/tmp

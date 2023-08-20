@@ -7,7 +7,6 @@ import (
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/lib/exec"
-	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/project/action"
@@ -16,8 +15,7 @@ import (
 )
 
 func runToCompletion(ctx context.Context, projectKey string, t action.Type, cfg util.ValueMap) *action.Result {
-	fs := filesystem.NewFileSystem(_flags.ConfigDir)
-	mSvc := module.NewService(ctx, fs, _logger)
+	mSvc, _ := module.NewService(ctx, _flags.ConfigDir, _logger)
 	pSvc := project.NewService()
 	eSvc := export.NewService()
 	xSvc := exec.NewService()

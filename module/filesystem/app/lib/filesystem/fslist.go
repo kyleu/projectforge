@@ -1,6 +1,7 @@
 package filesystem
 
 import (
+	"io/fs"
 	"os"
 	"path/filepath"
 	"strings"
@@ -12,13 +13,13 @@ import (
 
 var defaultIgnore = []string{".DS_Store$", "^.git/", "^.idea/", "^build/", "^client/node_modules", ".html.go$", ".sql.go$"}
 
-func (f *FileSystem) ListFiles(path string, ign []string, logger util.Logger) []os.DirEntry {
+func (f *FileSystem) ListFiles(path string, ign []string, logger util.Logger) []fs.DirEntry {
 	ignore := buildIgnore(ign)
 	infos, err := os.ReadDir(filepath.Join(f.root, path))
 	if err != nil {
 		logger.Warnf("cannot list files in path [%s]: %+v", path, err)
 	}
-	return lo.Reject(infos, func(info os.DirEntry, _ int) bool {
+	return lo.Reject(infos, func(info fs.DirEntry, _ int) bool {
 		return checkIgnore(ignore, info.Name())
 	})
 }
@@ -62,7 +63,7 @@ func (f *FileSystem) ListDirectories(path string, ign []string, logger util.Logg
 	if err != nil {
 		logger.Warnf("cannot list path [%s]: %+v", path, err)
 	}
-	ret := lo.FilterMap(files, func(f os.DirEntry, _ int) (string, bool) {
+	ret := lo.FilterMap(files, func(f fs.DirEntry, _ int) (string, bool) {
 		if f.IsDir() && !checkIgnore(ignore, f.Name()) {
 			return f.Name(), true
 		}
@@ -75,7 +76,7 @@ func (f *FileSystem) ListFilesRecursive(path string, ign []string, _ util.Logger
 	ignore := buildIgnore(ign)
 	p := f.getPath(path)
 	var ret []string
-	err := filepath.Walk(p, func(fp string, info os.FileInfo, err error) error {
+	err := filepath.Walk(p, func(fp string, info fs.FileInfo, err error) error {
 		m := strings.TrimPrefix(strings.TrimPrefix(fp, p+"\\"), p+"/")
 		if checkIgnore(ignore, m) {
 			return nil
@@ -91,10 +92,10 @@ func (f *FileSystem) ListFilesRecursive(path string, ign []string, _ util.Logger
 	return util.ArraySorted(ret), nil
 }
 
-func (f *FileSystem) Walk(path string, ign []string, fn func(fp string, info os.FileInfo, err error) error) error {
+func (f *FileSystem) Walk(path string, ign []string, fn func(fp string, info fs.FileInfo, err error) error) error {
 	ignore := buildIgnore(ign)
 	p := f.getPath(path)
-	err := filepath.Walk(p, func(fp string, info os.FileInfo, err error) error {
+	err := filepath.Walk(p, func(fp string, info fs.FileInfo, err error) error {
 		m := strings.TrimPrefix(strings.TrimPrefix(fp, p+"\\"), p+"/")
 		if checkIgnore(ignore, m) {
 			return nil

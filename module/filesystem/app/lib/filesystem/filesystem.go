@@ -1,6 +1,8 @@
-package filesystem
+{{{ if .HasModule "wasmserver" }}}//go:build !js
+{{{ end }}}package filesystem
 
 import (
+	"io/fs"
 	"os"
 	"path/filepath"
 	"strings"
@@ -9,8 +11,8 @@ import (
 )
 
 var (
-	DirectoryMode = os.FileMode(0o755)
-	DefaultMode   = os.FileMode(0o644)
+	DirectoryMode = fs.FileMode(0o755)
+	DefaultMode   = fs.FileMode(0o644)
 )
 
 type FileSystem struct {
@@ -39,16 +41,16 @@ func (f *FileSystem) Clone() FileLoader {
 	return NewFileSystem(f.root)
 }
 
-func (f *FileSystem) Stat(path string) (os.FileInfo, error) {
+func (f *FileSystem) Stat(path string) (*FileInfo, error) {
 	p := f.getPath(path)
 	s, err := os.Stat(p)
-	if err == nil {
-		return s, nil
+	if err != nil {
+		return nil, err
 	}
-	return nil, err
+	return &FileInfo{Name: s.Name(), Size: s.Size(), Mode: s.Mode(), ModTime: s.ModTime(), IsDir: s.IsDir(), Sys: s.Sys()}, nil
 }
 
-func (f *FileSystem) SetMode(path string, mode os.FileMode) error {
+func (f *FileSystem) SetMode(path string, mode fs.FileMode) error {
 	p := f.getPath(path)
 	return os.Chmod(p, mode)
 }
@@ -63,7 +65,7 @@ func (f *FileSystem) IsDir(path string) bool {
 	if s == nil || err != nil {
 		return false
 	}
-	return s.IsDir()
+	return s.IsDir
 }
 
 func (f *FileSystem) CreateDirectory(path string) error {

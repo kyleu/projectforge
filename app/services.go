@@ -23,14 +23,13 @@ type Services struct {
 }
 
 func NewServices(ctx context.Context, st *State, rootLogger util.Logger) (*Services, error) {
-	return &Services{
-		Modules:  module.NewService(ctx, st.Files, rootLogger),
-		Projects: project.NewService(),
-		Export:   export.NewService(),
-		Git:      git.NewService(),
-		Exec:     exec.NewService(),
-		Socket:   websocket.NewService(nil, socketHandler, nil),
-	}, nil
+	ms, err := module.NewService(ctx, st.Files.Root(), rootLogger)
+	if err != nil {
+		return nil, err
+	}
+	ps, es, gs, xs := project.NewService(), export.NewService(), git.NewService(), exec.NewService()
+	ws := websocket.NewService(nil, socketHandler, nil)
+	return &Services{Modules: ms, Projects: ps, Export: es, Git: gs, Exec: xs, Socket: ws}, nil
 }
 
 func (s *Services) Close(_ context.Context, _ util.Logger) error {

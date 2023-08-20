@@ -1,6 +1,6 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
 //go:build test_all || !func_test
 
+// Content managed by Project Forge, see [projectforge.md] for details.
 package util_test
 
 import (

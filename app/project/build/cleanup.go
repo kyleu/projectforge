@@ -27,7 +27,7 @@ func Cleanup(fs filesystem.FileLoader, logger util.Logger) ([]string, diff.Diffs
 		if err != nil {
 			return nil, nil, errors.Wrapf(err, "can't stat file [%s]", fn)
 		}
-		if st.Mode() != filesystem.DefaultMode {
+		if st.Mode != filesystem.DefaultMode {
 			ret = append(ret, &diff.Diff{Path: fn, Status: diff.StatusDifferent, Patch: "fixed mode"})
 			err = fs.SetMode(fn, filesystem.DefaultMode)
 			if err != nil {

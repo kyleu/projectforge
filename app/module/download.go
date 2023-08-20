@@ -18,7 +18,7 @@ func (s *Service) Download(ctx context.Context, key string, url string, logger u
 		return errors.New("must provide URL")
 	}
 	logger.Infof("downloading module [%s] from URL [%s]", key, url)
-	req, err := http.NewRequestWithContext(context.Background(), "GET", url, http.NoBody)
+	req, err := http.NewRequestWithContext(context.Background(), "GET", url, nil)
 	if err != nil {
 		return errors.Wrapf(err, "invalid URL [%s] for module [%s]", url, key)
 	}

@@ -2,6 +2,7 @@
 package filesystem
 
 import (
+	"io/fs"
 	"os"
 	"path/filepath"
 
@@ -20,9 +21,9 @@ func (f *FileSystem) CopyFile(src string, tgt string) error {
 		return err
 	}
 
-	var mode os.FileMode
+	var mode fs.FileMode
 	if stat, e := f.Stat(src); stat != nil && e == nil {
-		mode = stat.Mode()
+		mode = stat.Mode
 	}
 
 	err = f.WriteFile(tgt, input, mode, false)

@@ -72,7 +72,7 @@ func auditHeader(ctx context.Context, fn string, pm *PrjAndMods, ret *Result) er
 	})
 	if hit {
 		final := strings.Join(fixed, util.StringDetectLinebreak(c))
-		err = tgt.WriteFile(fn, []byte(final), stat.Mode(), true)
+		err = tgt.WriteFile(fn, []byte(final), stat.Mode, true)
 		if err != nil {
 			return errors.Wrapf(err, "can't overwrite file at path [%s]", fn)
 		}

@@ -8,7 +8,7 @@ package vfile
 
 //line views/vfile/List.html:2
 import (
-	"os"
+	"io/fs"
 	"path/filepath"
 
 	"projectforge.dev/projectforge/app"
@@ -31,7 +31,7 @@ var (
 )
 
 //line views/vfile/List.html:12
-func StreamList(qw422016 *qt422016.Writer, path []string, files []os.DirEntry, fs filesystem.FileLoader, urlPrefix string, as *app.State, ps *cutil.PageState) {
+func StreamList(qw422016 *qt422016.Writer, path []string, files []fs.DirEntry, fl filesystem.FileLoader, urlPrefix string, as *app.State, ps *cutil.PageState) {
 //line views/vfile/List.html:12
 	qw422016.N().S(`
   <h3><a href="`)
@@ -95,22 +95,22 @@ func StreamList(qw422016 *qt422016.Writer, path []string, files []os.DirEntry, f
 }
 
 //line views/vfile/List.html:29
-func WriteList(qq422016 qtio422016.Writer, path []string, files []os.DirEntry, fs filesystem.FileLoader, urlPrefix string, as *app.State, ps *cutil.PageState) {
+func WriteList(qq422016 qtio422016.Writer, path []string, files []fs.DirEntry, fl filesystem.FileLoader, urlPrefix string, as *app.State, ps *cutil.PageState) {
 //line views/vfile/List.html:29
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vfile/List.html:29
-	StreamList(qw422016, path, files, fs, urlPrefix, as, ps)
+	StreamList(qw422016, path, files, fl, urlPrefix, as, ps)
 //line views/vfile/List.html:29
 	qt422016.ReleaseWriter(qw422016)
 //line views/vfile/List.html:29
 }
 
 //line views/vfile/List.html:29
-func List(path []string, files []os.DirEntry, fs filesystem.FileLoader, urlPrefix string, as *app.State, ps *cutil.PageState) string {
+func List(path []string, files []fs.DirEntry, fl filesystem.FileLoader, urlPrefix string, as *app.State, ps *cutil.PageState) string {
 //line views/vfile/List.html:29
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vfile/List.html:29
-	WriteList(qb422016, path, files, fs, urlPrefix, as, ps)
+	WriteList(qb422016, path, files, fl, urlPrefix, as, ps)
 //line views/vfile/List.html:29
 	qs422016 := string(qb422016.B)
 //line views/vfile/List.html:29

@@ -24,14 +24,8 @@
       .mode-dark { --border: 1px solid #666666; --link-text-decoration: none; --color-foreground: #ffffff; --color-foreground-muted: #777777; --color-background: #121212; --color-background-muted: #0f1e28; --color-link-foreground: #6f889b; --color-link-visited-foreground: #9eaebb; --color-nav-foreground: #ffffff; --color-nav-background: #00415d; --color-menu-foreground: #eeeeee; --color-menu-selected-foreground: #ffffff; --color-menu-background: #0e2939; --color-menu-selected-background: #00415d; --color-modal-backdrop: rgba(33, 33, 33, .7); --color-success: #008000; --color-error: #ff0000;}
     }
   </style>
-  <link rel="stylesheet" media="screen" href="client.css">
-  <script type="text/javascript" src="client.js"></script>
-  <script src="wasm_exec.js"></script>
-  <script>
-    function wasmInit(ms) {
-      document.getElementById("load-status").innerText = "Loaded in [" + ms + "ms]";
-    }
-  </script>
+  <script type="text/javascript" src="wasm_exec.js"></script>
+  <script type="text/javascript" src="server.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       if (!WebAssembly.instantiateStreaming) {

@@ -1,13 +1,14 @@
 package filesystem
 
 import (
+	"io/fs"
 	"os"
 	"path/filepath"
 
 	"github.com/pkg/errors"
 )
 
-func (f *FileSystem) WriteFile(path string, content []byte, mode os.FileMode, overwrite bool) error {
+func (f *FileSystem) WriteFile(path string, content []byte, mode fs.FileMode, overwrite bool) error {
 	p := f.getPath(path)
 	s, err := os.Stat(p)
 	if os.IsExist(err) && !overwrite {

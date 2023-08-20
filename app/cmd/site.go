@@ -42,7 +42,10 @@ func startSite(flags *Flags) error {
 
 func loadSite(flags *Flags, logger util.Logger) (fasthttp.RequestHandler, util.Logger, error) {
 	r := routes.SiteRoutes(logger)
-	f := filesystem.NewFileSystem(flags.ConfigDir)
+	f, err := filesystem.NewFileSystem(flags.ConfigDir, false, "")
+	if err != nil {
+		return nil, logger, err
+	}
 
 	telemetryDisabled := util.GetEnvBool("disable_telemetry", false)
 	st, err := app.NewState(flags.Debug, _buildInfo, f, !telemetryDisabled, flags.Port, logger)
