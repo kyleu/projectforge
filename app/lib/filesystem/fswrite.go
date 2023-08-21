@@ -2,38 +2,36 @@
 package filesystem
 
 import (
-	"io/fs"
-	"os"
 	"path/filepath"
 
 	"github.com/pkg/errors"
 )
 
-func (f *FileSystem) WriteFile(path string, content []byte, mode fs.FileMode, overwrite bool) error {
+func (f *FileSystem) WriteFile(path string, content []byte, mode FileMode, overwrite bool) error {
 	p := f.getPath(path)
-	s, err := os.Stat(p)
-	if os.IsExist(err) && !overwrite {
+	s, _ := f.f.Stat(p)
+	if s != nil && s.Size() > 0 && !overwrite {
 		return errors.Errorf("file [%s] exists, will not overwrite", p)
 	}
 	if mode == 0 {
 		if s == nil {
 			mode = DefaultMode
 		} else {
-			mode = s.Mode()
+			mode = FileMode(s.Mode())
 		}
 	}
 	dd := filepath.Dir(path)
-	err = f.CreateDirectory(dd)
+	err := f.CreateDirectory(dd)
 	if err != nil {
 		return errors.Wrapf(err, "unable to create data directory [%s]", dd)
 	}
-	file, err := os.Create(p)
+	file, err := f.f.Create(p)
 	if err != nil {
 		return errors.Wrapf(err, "unable to create file [%s]", p)
 	}
-	err = file.Chmod(mode)
+	err = f.SetMode(p, mode)
 	if err != nil {
-		return errors.Wrapf(err, "unable to set mode [%s] for file [%s]", mode.String(), p)
+		return errors.Wrapf(err, "unable to set mode [%d] for file [%s]", mode, p)
 	}
 	defer func() { _ = file.Close() }()
 	_, err = file.Write(content)

@@ -3,12 +3,12 @@ package cutil
 import (
 	"context"
 	"fmt"
+	"slices"
 	"strings"
 	"time"
 
 	"github.com/samber/lo"
 	"github.com/valyala/fasthttp"
-	"golang.org/x/exp/slices"
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller/cmenu"

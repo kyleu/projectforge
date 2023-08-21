@@ -1,8 +1,8 @@
 {% import (
+  "slices"
   "strings"
 
   "github.com/samber/lo"
-  "golang.org/x/exp/slices"
   "golang.org/x/mod/semver"
 
   "projectforge.dev/projectforge/app"
@@ -51,8 +51,8 @@
             <ul>
               {%- code
                 vKeys := lo.Keys(v)
-                slices.SortFunc(vKeys, func(l string, r string) bool {
-                  return semver.Compare(l, r) < 0
+                slices.SortFunc(vKeys, func(l string, r string) int {
+                  return semver.Compare(l, r)
                 })
               -%}
               {%- for i := len(vKeys)-1; i >= 0; i-- -%}

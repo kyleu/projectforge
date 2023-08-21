@@ -8,7 +8,7 @@ package vadmin
 
 //line views/vadmin/Sitemap.html:2
 import (
-	"golang.org/x/exp/slices"
+	"slices"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cmenu"

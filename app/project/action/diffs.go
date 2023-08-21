@@ -20,8 +20,6 @@ const (
 )
 
 func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
-	tgt := pm.PSvc.GetFilesystem(pm.Prj)
-
 	srcFiles, err := pm.MSvc.GetFiles(pm.Mods, true, pm.Logger)
 	if err != nil {
 		return nil, nil, errors.Wrapf(err, "unable to get files from [%d] modules", len(pm.Mods))
@@ -29,9 +27,9 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 
 	if pm.Mods.Get("export") != nil && len(srcFiles) > 0 {
 		linebreak := util.StringDetectLinebreak(srcFiles[0].Content)
-		args, errX := pm.Prj.ModuleArgExport(pm.PSvc, pm.Logger)
-		if errX != nil {
-			return nil, nil, errors.Wrap(errX, "export module arguments are invalid")
+		args, e := pm.Prj.ModuleArgExport(pm.PSvc, pm.Logger)
+		if e != nil {
+			return nil, nil, errors.Wrap(e, "export module arguments are invalid")
 		}
 		args.Modules = pm.Mods.Keys()
 		files, e := pm.ESvc.Files(pm.Prj, args, true, linebreak)
@@ -56,6 +54,11 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 
 	lb := util.StringDetectLinebreak(string(pm.File))
 	tCtx := pm.Prj.ToTemplateContext(configVars, portOffsets, lb)
+
+	tgt, err := pm.PSvc.GetFilesystem(pm.Prj)
+	if err != nil {
+		return nil, nil, err
+	}
 
 	for _, f := range srcFiles {
 		origPath := f.FullPath()

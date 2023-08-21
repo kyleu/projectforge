@@ -1,9 +1,11 @@
 package filesystem
 
 import (
-	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
+	"cmp"
 	"io/fs"
+	"slices"
+
+	"github.com/samber/lo"
 )
 
 var (
@@ -46,8 +48,8 @@ func FileInfosFromFS(x []fs.FileInfo) FileInfos {
 }
 
 func (f FileInfos) Sorted() FileInfos {
-	slices.SortFunc(f, func(l *FileInfo, r *FileInfo) bool {
-		return l.Name < r.Name
+	slices.SortFunc(f, func(l *FileInfo, r *FileInfo) int {
+		return cmp.Compare(l.Name, r.Name)
 	})
 	return f
 }

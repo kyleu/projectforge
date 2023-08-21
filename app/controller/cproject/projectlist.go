@@ -1,12 +1,13 @@
 package cproject
 
 import (
+	"cmp"
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/samber/lo"
 	"github.com/valyala/fasthttp"
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
@@ -30,12 +31,12 @@ func ProjectList(rc *fasthttp.RequestCtx) {
 
 		switch string(rc.QueryArgs().Peek("sort")) {
 		case "package":
-			slices.SortFunc(prjs, func(l *project.Project, r *project.Project) bool {
-				return l.Package < r.Package
+			slices.SortFunc(prjs, func(l *project.Project, r *project.Project) int {
+				return cmp.Compare(l.Package, r.Package)
 			})
 		case "port":
-			slices.SortFunc(prjs, func(l *project.Project, r *project.Project) bool {
-				return l.Port < r.Port
+			slices.SortFunc(prjs, func(l *project.Project, r *project.Project) int {
+				return cmp.Compare(l.Port, r.Port)
 			})
 		}
 

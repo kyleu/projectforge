@@ -1,12 +1,13 @@
 package cproject
 
 import (
+	"cmp"
+	"slices"
 	"strconv"
 	"strings"
 
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
@@ -67,8 +68,8 @@ func GitActionAll(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		slices.SortFunc(results, func(l *git.Result, r *git.Result) bool {
-			return strings.ToLower(l.Project.Title()) < strings.ToLower(r.Project.Title())
+		slices.SortFunc(results, func(l *git.Result, r *git.Result) int {
+			return cmp.Compare(strings.ToLower(l.Project.Title()), strings.ToLower(r.Project.Title()))
 		})
 		ps.Title = "[git] All Projects"
 		ps.Data = results

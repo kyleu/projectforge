@@ -3,16 +3,17 @@ package exec
 
 import (
 	"bytes"
+	"cmp"
 	"fmt"
 	"io"
 	"net/url"
 	"os/exec"
+	"slices"
 	"strings"
 	"time"
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/util"
 )
@@ -125,11 +126,11 @@ func (m Execs) Running() int {
 }
 
 func (m Execs) Sort() {
-	slices.SortFunc(m, func(l *Exec, r *Exec) bool {
+	slices.SortFunc(m, func(l *Exec, r *Exec) int {
 		lk, rk := strings.ToLower(l.Key), strings.ToLower(r.Key)
 		if lk != rk {
-			return lk < rk
+			return cmp.Compare(lk, rk)
 		}
-		return l.Idx < r.Idx
+		return cmp.Compare(l.Idx, r.Idx)
 	})
 }

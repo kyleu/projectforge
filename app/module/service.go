@@ -28,17 +28,22 @@ type Service struct {
 	filesystems map[string]filesystem.FileLoader
 }
 
-func NewService(ctx context.Context, config filesystem.FileLoader, logger util.Logger) *Service {
-	local := filesystem.NewFileSystem("module")
-	config = filesystem.NewFileSystem(filepath.Join(config.Root(), "module"))
+func NewService(ctx context.Context, root string, logger util.Logger) (*Service, error) {
+	local, err := filesystem.NewFileSystem("module", false, "")
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to load config filesystem")
+	}
+	config, err := filesystem.NewFileSystem(filepath.Join(root, "module"), false, "")
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to load config filesystem")
+	}
 	fs := map[string]filesystem.FileLoader{}
 	ret := &Service{local: local, config: config, cache: map[string]*Module{}, filesystems: fs}
-
-	_, err := ret.LoadNative(ctx, logger, nativeModuleKeys...)
+	_, err = ret.LoadNative(ctx, logger, nativeModuleKeys...)
 	if err != nil {
-		logger.Errorf("unable to load [core] module: %+v", err)
+		return nil, errors.Wrap(err, "unable to load native modules")
 	}
-	return ret
+	return ret, nil
 }
 
 func (s *Service) GetFilesystem(key string) filesystem.FileLoader {

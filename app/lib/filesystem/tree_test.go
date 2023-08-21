@@ -2,9 +2,8 @@
 package filesystem_test
 
 import (
+	"slices"
 	"testing"
-
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
 )

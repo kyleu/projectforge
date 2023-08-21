@@ -115,7 +115,11 @@ func loadReferences(ctx context.Context, path string, deps Dependencies, logger 
 func LoadDepsMap(projects project.Projects, minVersions int, pSvc *project.Service) (map[string]map[string][]string, error) {
 	ret := map[string]map[string][]string{}
 	for _, prj := range projects {
-		deps, err := LoadDepsEasyMode(prj.Key, pSvc.GetFilesystem(prj))
+		pfs, err := pSvc.GetFilesystem(prj)
+		if err != nil {
+			return nil, err
+		}
+		deps, err := LoadDepsEasyMode(prj.Key, pfs)
 		if err != nil {
 			return nil, err
 		}

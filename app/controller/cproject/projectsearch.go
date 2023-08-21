@@ -78,8 +78,11 @@ func searchProject(prj *project.Project, q string, as *app.State, logger util.Lo
 		return nil, nil
 	}
 	var res result.Results
-	fs := as.Services.Projects.GetFilesystem(prj)
-	files, err := fs.ListFilesRecursive("", append([]string{".png$"}, prj.Ignore...), logger)
+	pfs, err := as.Services.Projects.GetFilesystem(prj)
+	if err != nil {
+		return nil, err
+	}
+	files, err := pfs.ListFilesRecursive("", append([]string{".png$"}, prj.Ignore...), logger)
 	if err != nil {
 		return nil, err
 	}
@@ -88,7 +91,7 @@ func searchProject(prj *project.Project, q string, as *app.State, logger util.Lo
 		if len(res) > 100 {
 			continue
 		}
-		content, err := fs.ReadFile(path)
+		content, err := pfs.ReadFile(path)
 		if err != nil {
 			return nil, err
 		}

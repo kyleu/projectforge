@@ -1,10 +1,10 @@
 package build
 
 import (
+	"slices"
 	"strings"
 
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 )
 
 type Dependency struct {

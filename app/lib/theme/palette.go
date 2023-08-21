@@ -2,11 +2,13 @@
 package theme
 
 import (
+	"cmp"
+	"slices"
+
 	"github.com/muesli/gamut"
 	"github.com/muesli/gamut/palette"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/util"
 )
@@ -65,8 +67,8 @@ func getPalette(pal string) (*gamut.Palette, error) {
 
 func paletteColors(p gamut.Palette) gamut.Colors {
 	ret := p.Colors()
-	slices.SortFunc(ret, func(l gamut.Color, r gamut.Color) bool {
-		return l.Name < r.Name
+	slices.SortFunc(ret, func(l gamut.Color, r gamut.Color) int {
+		return cmp.Compare(l.Name, r.Name)
 	})
 	return ret
 }

@@ -2,11 +2,12 @@ package util
 
 import (
 	"bytes"
+	"cmp"
 	"encoding/json"
 	"encoding/xml"
+	"slices"
 
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 )
 
 type OrderedMap[V any] struct {
@@ -76,7 +77,9 @@ func (o *OrderedMap[V]) UnmarshalJSON(b []byte) error {
 	})
 
 	if o.Lexical {
-		slices.SortFunc(o.Order, func(l string, r string) bool { return index[l] < index[r] })
+		slices.SortFunc(o.Order, func(l string, r string) int {
+			return cmp.Compare(index[l], index[r])
+		})
 	}
 	return nil
 }

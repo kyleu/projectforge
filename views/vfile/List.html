@@ -1,6 +1,5 @@
 <!-- Content managed by Project Forge, see [projectforge.md] for details. -->
 {% import (
-  "io/fs"
   "path/filepath"
 
   "projectforge.dev/projectforge/app"
@@ -9,21 +8,21 @@
   "projectforge.dev/projectforge/views/components"
 ) %}
 
-{% func List(path []string, files []fs.DirEntry, fl filesystem.FileLoader, urlPrefix string, as *app.State, ps *cutil.PageState) %}
+{% func List(path []string, files filesystem.FileInfos, fl filesystem.FileLoader, urlPrefix string, as *app.State, ps *cutil.PageState) %}
   <h3><a href="{%s urlPrefix %}">.</a>{%- for idx, p := range path -%}/<a href="{%s urlPrefix %}/{%s filepath.Join(path[:idx + 1]...) %}">{%s p %}</a>{%- endfor -%}</h3>
   <div class="mt">
   {%- for _, f := range files -%}
     {%- code
       icon := "file"
-      if f.IsDir() {
+      if f.IsDir {
         icon = "folder"
       }
       x := []string{urlPrefix}
       x = append(x, path...)
-      x = append(x, f.Name())
+      x = append(x, f.Name)
       u := filepath.Join(x...)
     -%}
-    <div><a href="{%s u %}">{%= components.SVGRef(icon, 16, 16, `icon`, ps) %}{%s f.Name() %}</a></div>
+    <div><a href="{%s u %}">{%= components.SVGRef(icon, 16, 16, `icon`, ps) %}{%s f.Name %}</a></div>
   {%- endfor -%}
   </div>
 {% endfunc %}

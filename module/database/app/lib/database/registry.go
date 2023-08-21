@@ -1,11 +1,11 @@
 package database
 
 import (
+	"slices"
 	"sync"
 
 	"github.com/pkg/errors"
-	"golang.org/x/exp/maps"
-	"golang.org/x/exp/slices"
+	"github.com/samber/lo"
 
 	"{{{ .Package }}}/app/util"
 )
@@ -37,7 +37,7 @@ func RegistryGet(key string) (*Service, error) {
 }
 
 func RegistryKeys() []string {
-	ret := maps.Keys(serviceRegistry)
+	ret := lo.Keys(serviceRegistry)
 	slices.Sort(ret)
 	return ret
 }

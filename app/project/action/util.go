@@ -2,12 +2,12 @@ package action
 
 import (
 	"fmt"
+	"slices"
 	"strconv"
 	"strings"
 	"text/template"
 
 	"github.com/pkg/errors"
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project"

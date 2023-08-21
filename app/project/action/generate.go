@@ -37,7 +37,10 @@ func onGenerate(pm *PrjAndMods) *Result {
 		return ret.WithError(err)
 	}
 
-	tgtFS := pm.PSvc.GetFilesystem(pm.Prj)
+	tgtFS, err := pm.PSvc.GetFilesystem(pm.Prj)
+	if err != nil {
+		return ret.WithError(err)
+	}
 	for _, f := range dfs {
 		switch f.Status {
 		case diff.StatusIdentical, diff.StatusMissing, diff.StatusSkipped:

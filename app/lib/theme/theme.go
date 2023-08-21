@@ -2,12 +2,13 @@
 package theme
 
 import (
+	"cmp"
 	"fmt"
 	"io"
+	"slices"
 	"strings"
 
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/util"
 )
@@ -76,14 +77,14 @@ func (t *Theme) ToGo() string {
 type Themes []*Theme
 
 func (t Themes) Sort() Themes {
-	slices.SortFunc(t, func(l *Theme, r *Theme) bool {
+	slices.SortFunc(t, func(l *Theme, r *Theme) int {
 		if l.Key == ThemeDefault.Key {
-			return true
+			return 0
 		}
 		if r.Key == ThemeDefault.Key {
-			return false
+			return 0
 		}
-		return strings.ToLower(l.Key) < strings.ToLower(r.Key)
+		return cmp.Compare(strings.ToLower(l.Key), strings.ToLower(r.Key))
 	})
 	return t
 }

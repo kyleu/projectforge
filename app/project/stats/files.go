@@ -56,19 +56,15 @@ func listDir(fs filesystem.FileLoader, logger util.Logger, pth ...string) (FileS
 	curr := fs.ListFiles(filepath.Join(pth...), ignores, logger)
 	ret := make(FileStats, 0, len(curr))
 	for _, f := range curr {
-		s := newFileStat(pth, f.Name(), f.IsDir())
-		inf, err := f.Info()
-		if err != nil {
-			return nil, err
-		}
-		if f.IsDir() {
-			kids, err := listDir(fs, logger, filepath.Join(append(pth, f.Name())...))
+		s := newFileStat(pth, f.Name, f.IsDir)
+		if f.IsDir {
+			kids, err := listDir(fs, logger, filepath.Join(append(pth, f.Name)...))
 			if err != nil {
 				return nil, err
 			}
 			s.Kids = kids
 		} else {
-			s.Size = inf.Size()
+			s.Size = f.Size
 		}
 		ret = append(ret, s)
 	}

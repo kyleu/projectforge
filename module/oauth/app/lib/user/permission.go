@@ -1,10 +1,10 @@
 package user
 
 import (
+	"cmp"
 	"fmt"
+	"slices"
 	"strings"
-
-	"golang.org/x/exp/slices"
 
 	"{{{ .Package }}}/app/util"
 )
@@ -58,11 +58,11 @@ func (p Permission) String() string {
 type Permissions []*Permission
 
 func (p Permissions) Sort() {
-	slices.SortFunc(p, func(l *Permission, r *Permission) bool {
+	slices.SortFunc(p, func(l *Permission, r *Permission) int {
 		if l.Path == r.Path {
-			return l.Match < r.Match
+			return cmp.Compare(l.Match, r.Match)
 		}
-		return l.Path < r.Path
+		return cmp.Compare(l.Path, r.Path)
 	})
 }
 

@@ -1,12 +1,12 @@
 package util
 
 import (
+	"cmp"
 	"fmt"
 	"reflect"
+	"slices"
 
 	"github.com/samber/lo"
-	"golang.org/x/exp/constraints"
-	"golang.org/x/exp/slices"
 )
 
 func StringArrayMaxLength(a []string) int {
@@ -45,7 +45,7 @@ func ArrayRemoveDuplicates[T comparable](x []T) []T {
 	return lo.Uniq(x)
 }
 
-func ArraySorted[T constraints.Ordered](x []T) []T {
+func ArraySorted[T cmp.Ordered](x []T) []T {
 	slices.Sort(x)
 	return x
 }

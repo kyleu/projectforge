@@ -2,10 +2,10 @@ package model
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/enum"

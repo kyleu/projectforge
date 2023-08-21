@@ -1,8 +1,10 @@
 package model
 
 import (
+	"cmp"
+	"slices"
+
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 
 	"{{{ .Package }}}/app/util"
 )
@@ -16,8 +18,8 @@ func (m Models) Get(pkg util.Pkg, key string) *Model {
 }
 
 func (m Models) Sort() {
-	slices.SortFunc(m, func(l *Model, r *Model) bool {
-		return l.Key < r.Key
+	slices.SortFunc(m, func(l *Model, r *Model) int {
+		return cmp.Compare(l.Key, r.Key)
 	})
 }
 

@@ -35,18 +35,18 @@ func (s *Service) ConfigDirectory() string {
 
 func (s *Service) load(ctx context.Context, key string, pth string, url string, logger util.Logger) (Modules, error) {
 	var fs filesystem.FileLoader
+	var err error
 	switch {
 	case s.local.IsDir(key):
-		fs = filesystem.NewFileSystem(filepath.Join(s.local.Root(), key))
+		fs, err = filesystem.NewFileSystem(filepath.Join(s.local.Root(), key), false, "")
 	case s.config.IsDir(key):
-		fs = filesystem.NewFileSystem(filepath.Join(s.config.Root(), key))
+		fs, err = filesystem.NewFileSystem(filepath.Join(s.config.Root(), key), false, "")
 	case pth != "":
-		fs = filesystem.NewFileSystem(pth)
+		fs, err = filesystem.NewFileSystem(pth, false, "")
 		if key == "*" {
 			return s.loadDirectory(ctx, pth, url, fs, logger)
 		}
 	default:
-		var err error
 		if url == "" {
 			url, err = s.AssetURL(ctx, key, logger)
 			if err != nil {
@@ -57,8 +57,12 @@ func (s *Service) load(ctx context.Context, key string, pth string, url string, 
 		if err != nil {
 			return nil, errors.Wrapf(err, "error downloading module [%s]", key)
 		}
-		fs = filesystem.NewFileSystem(filepath.Join(s.config.Root(), key))
+		fs, err = filesystem.NewFileSystem(filepath.Join(s.config.Root(), key), false, "")
 	}
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to load project file [%s]", key)
+	}
+
 	if !fs.Exists(configFilename) {
 		const msg = "file [%s] does not exist in path for module [%s] using root [%s]"
 		return nil, errors.Errorf(msg, configFilename, key, fs.Root())

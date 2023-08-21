@@ -1,10 +1,11 @@
 package grpc
 
 import (
+	"cmp"
 	"fmt"
+	"slices"
 
 	"github.com/pkg/errors"
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
@@ -67,8 +68,8 @@ func GetGRPCFileArgs(m *model.Model, args *model.Args) ([]*FileArgs, error) {
 			ret = append(ret, &FileArgs{Class: grpcClass, Pkg: grpcPackage, CPkg: cPkg, API: k, Grp: g})
 		}
 	}
-	slices.SortFunc(ret, func(l *FileArgs, r *FileArgs) bool {
-		return l.API < r.API
+	slices.SortFunc(ret, func(l *FileArgs, r *FileArgs) int {
+		return cmp.Compare(l.API, r.API)
 	})
 	return ret, nil
 }

@@ -2,12 +2,13 @@
 package cmenu
 
 import (
+	"cmp"
 	"io/fs"
 	"path"
+	"slices"
 	"strings"
 
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/lib/menu"
 	"projectforge.dev/projectforge/app/util"
@@ -47,8 +48,8 @@ func docMenuCreate(logger util.Logger) *menu.Item {
 			addFolder := func() {
 				i := &menu.Item{Key: name, Title: util.StringToCamel(name), Icon: "folder"}
 				mi.Children = append(mi.Children, i)
-				slices.SortFunc(mi.Children, func(l *menu.Item, r *menu.Item) bool {
-					return l.Title < r.Title
+				slices.SortFunc(mi.Children, func(l *menu.Item, r *menu.Item) int {
+					return cmp.Compare(l.Title, r.Title)
 				})
 				mi = i
 			}
@@ -67,8 +68,8 @@ func docMenuCreate(logger util.Logger) *menu.Item {
 			}
 		})
 	}
-	slices.SortFunc(ret.Children, func(l *menu.Item, r *menu.Item) bool {
-		return l.Title < r.Title
+	slices.SortFunc(ret.Children, func(l *menu.Item, r *menu.Item) int {
+		return cmp.Compare(l.Title, r.Title)
 	})
 
 	return ret

@@ -2,9 +2,9 @@
 package result
 
 import (
+	"cmp"
+	"slices"
 	"strings"
-
-	"golang.org/x/exp/slices"
 )
 
 type Result struct {
@@ -25,11 +25,11 @@ func NewResult(t string, id string, url string, title string, icon string, diff 
 type Results []*Result
 
 func (rs Results) Sort() Results {
-	slices.SortFunc(rs, func(l *Result, r *Result) bool {
+	slices.SortFunc(rs, func(l *Result, r *Result) int {
 		if l.Type == r.Type {
-			return strings.ToLower(l.Title) < strings.ToLower(r.Title)
+			return cmp.Compare(strings.ToLower(l.Title), strings.ToLower(r.Title))
 		}
-		return l.Type < r.Type
+		return cmp.Compare(l.Type, r.Type)
 	})
 	return rs
 }

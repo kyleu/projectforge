@@ -2,8 +2,6 @@
 package filesystem
 
 import (
-	"io/fs"
-	"os"
 	"path/filepath"
 
 	"github.com/pkg/errors"
@@ -14,7 +12,7 @@ import (
 func (f *FileSystem) Remove(path string, logger util.Logger) error {
 	p := f.getPath(path)
 	logger.Warnf("removing file at path [%s]", p)
-	if err := os.Remove(p); err != nil {
+	if err := f.f.Remove(p); err != nil {
 		return errors.Wrapf(err, "error removing file [%s]", path)
 	}
 	return nil
@@ -25,13 +23,16 @@ func (f *FileSystem) RemoveRecursive(path string, logger util.Logger) error {
 		return nil
 	}
 	p := f.getPath(path)
-	s, err := os.Stat(p)
+	s, err := f.f.Stat(p)
 	if err != nil {
 		return errors.Wrapf(err, "unable to stat file [%s]", path)
 	}
 	if s.IsDir() {
-		var files []fs.DirEntry
-		files, err = os.ReadDir(p)
+		dir, err := f.f.Open(p)
+		if err != nil {
+			logger.Warnf("cannot open path [%s] for removal: %+v", path, err)
+		}
+		files, err := dir.Readdir(0)
 		if err != nil {
 			logger.Warnf("cannot read path [%s] for removal: %+v", path, err)
 		}
@@ -42,7 +43,7 @@ func (f *FileSystem) RemoveRecursive(path string, logger util.Logger) error {
 			}
 		}
 	}
-	err = os.Remove(p)
+	err = f.f.Remove(p)
 	if err != nil {
 		return errors.Wrapf(err, "unable to remove file [%s]", path)
 	}

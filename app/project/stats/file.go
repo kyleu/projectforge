@@ -2,10 +2,10 @@ package stats
 
 import (
 	"path/filepath"
+	"slices"
 	"strings"
 
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 )
 
 type FileStat struct {

@@ -67,7 +67,11 @@ func ProjectExportEnumCreate(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to parse enum from form")
 		}
 
-		err = as.Services.Projects.SaveExportEnum(as.Services.Projects.GetFilesystem(prj), mdl)
+		pfs, err := as.Services.Projects.GetFilesystem(prj)
+		if err != nil {
+			return "", err
+		}
+		err = as.Services.Projects.SaveExportEnum(pfs, mdl)
 		if err != nil {
 			return "", err
 		}
@@ -115,8 +119,11 @@ func ProjectExportEnumSave(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse enum from form")
 		}
-
-		err = as.Services.Projects.SaveExportEnum(as.Services.Projects.GetFilesystem(prj), e)
+		pfs, err := as.Services.Projects.GetFilesystem(prj)
+		if err != nil {
+			return "", err
+		}
+		err = as.Services.Projects.SaveExportEnum(pfs, e)
 		if err != nil {
 			return "", err
 		}
@@ -133,8 +140,11 @@ func ProjectExportEnumDelete(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-
-		err = as.Services.Projects.DeleteExportEnum(as.Services.Projects.GetFilesystem(prj), mdl.Name, ps.Logger)
+		pfs, err := as.Services.Projects.GetFilesystem(prj)
+		if err != nil {
+			return "", err
+		}
+		err = as.Services.Projects.DeleteExportEnum(pfs, mdl.Name, ps.Logger)
 		if err != nil {
 			return "", err
 		}

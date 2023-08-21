@@ -18,7 +18,11 @@ const gomod = "go.mod"
 func OnDepsUpgrade(ctx context.Context, prj *project.Project, up string, o string, n string, pSvc *project.Service, logger util.Logger) error {
 	var deps Dependencies
 	if up == "all" {
-		curr, err := LoadDeps(ctx, prj.Key, prj.Path, true, pSvc.GetFilesystem(prj), false, logger)
+		pfs, err := pSvc.GetFilesystem(prj)
+		if err != nil {
+			return err
+		}
+		curr, err := LoadDeps(ctx, prj.Key, prj.Path, true, pfs, false, logger)
 		if err != nil {
 			return err
 		}
@@ -43,8 +47,11 @@ func OnDepsUpgrade(ctx context.Context, prj *project.Project, up string, o strin
 
 func upgradeDeps(ctx context.Context, prj *project.Project, deps Dependencies, pSvc *project.Service, logger util.Logger) error {
 	logger.Infof("upgrading [%d] dependencies for [%s]", len(deps), prj.Key)
-	fs := pSvc.GetFilesystem(prj)
-	err := bumpGoMod(ctx, prj, fs, deps, logger)
+	fs, err := pSvc.GetFilesystem(prj)
+	if err != nil {
+		return err
+	}
+	err = bumpGoMod(ctx, prj, fs, deps, logger)
 	if err != nil {
 		return err
 	}

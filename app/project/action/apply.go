@@ -1,13 +1,14 @@
 package action
 
 import (
+	"cmp"
 	"context"
 	"fmt"
+	"slices"
 	"strings"
 	"sync"
 
 	"github.com/pkg/errors"
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/lib/telemetry"
@@ -32,8 +33,8 @@ func ApplyAll(ctx context.Context, prjs project.Projects, actT Type, cfg util.Va
 		}
 		return &ResultContext{Prj: prj, Cfg: c, Res: result}, nil
 	})
-	slices.SortFunc(results, func(l *ResultContext, r *ResultContext) bool {
-		return strings.ToLower(l.Prj.Title()) < strings.ToLower(r.Prj.Title())
+	slices.SortFunc(results, func(l *ResultContext, r *ResultContext) int {
+		return cmp.Compare(strings.ToLower(l.Prj.Title()), strings.ToLower(r.Prj.Title()))
 	})
 	return results
 }

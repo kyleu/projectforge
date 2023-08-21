@@ -1,21 +1,21 @@
 package file
 
 import (
-	"io/fs"
 	"path/filepath"
 
+	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/util"
 )
 
 type File struct {
-	Type    Type        `json:"type"`
-	Path    []string    `json:"path,omitempty"`
-	Name    string      `json:"name"`
-	Mode    fs.FileMode `json:"mode,omitempty"`
-	Content string      `json:"-"`
+	Type    Type                `json:"type"`
+	Path    []string            `json:"path,omitempty"`
+	Name    string              `json:"name"`
+	Mode    filesystem.FileMode `json:"mode,omitempty"`
+	Content string              `json:"-"`
 }
 
-func NewFile(path string, mode fs.FileMode, b []byte, addHeader bool, logger util.Logger) *File {
+func NewFile(path string, mode filesystem.FileMode, b []byte, addHeader bool, logger util.Logger) *File {
 	p, n := util.StringSplitPath(path)
 	t := getType(n)
 	c := string(b)

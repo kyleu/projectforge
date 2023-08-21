@@ -98,8 +98,11 @@ func (p *Project) WebPath() string {
 
 func (p *Project) ModuleArgExport(pSvc *Service, logger util.Logger) (*model.Args, error) {
 	if p.ExportArgs == nil && p.HasModule("export") {
-		var err error
-		p.ExportArgs, err = pSvc.loadExportArgs(pSvc.GetFilesystem(p), logger)
+		fs, err := pSvc.GetFilesystem(p)
+		if err != nil {
+			return nil, err
+		}
+		p.ExportArgs, err = pSvc.loadExportArgs(fs, logger)
 		if err != nil {
 			return nil, err
 		}

@@ -3,7 +3,6 @@ package filesystem
 
 import (
 	"io/fs"
-	"os"
 	"path/filepath"
 	"strings"
 
@@ -12,17 +11,24 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-var defaultIgnore = []string{".DS_Store$", "^.git/", "^.idea/", "^build/", "^client/node_modules", ".html.go$", ".sql.go$"}
-
-func (f *FileSystem) ListFiles(path string, ign []string, logger util.Logger) []fs.DirEntry {
+func (f *FileSystem) ListFiles(path string, ign []string, logger util.Logger) FileInfos {
 	ignore := buildIgnore(ign)
-	infos, err := os.ReadDir(filepath.Join(f.root, path))
+	p := f.getPath(path)
+	dir, err := f.f.Open(p)
+	if err != nil {
+		logger.Warnf("unable to open path [%s]", p)
+		return nil
+	}
+
+	infos, err := dir.Readdir(0)
 	if err != nil {
 		logger.Warnf("cannot list files in path [%s]: %+v", path, err)
 	}
-	return lo.Reject(infos, func(info fs.DirEntry, _ int) bool {
-		return checkIgnore(ignore, info.Name())
+	ret := FileInfosFromFS(infos)
+	ret = lo.Reject(ret, func(info *FileInfo, _ int) bool {
+		return checkIgnore(ignore, info.Name)
 	})
+	return ret.Sorted()
 }
 
 func (f *FileSystem) ListJSON(path string, ign []string, trimExtension bool, logger util.Logger) []string {
@@ -30,47 +36,24 @@ func (f *FileSystem) ListJSON(path string, ign []string, trimExtension bool, log
 }
 
 func (f *FileSystem) ListExtension(path string, ext string, ign []string, trimExtension bool, logger util.Logger) []string {
-	ignore := buildIgnore(ign)
-	matches, err := filepath.Glob(f.getPath(path, "*."+ext))
-	if err != nil {
-		logger.Warnf("cannot list [%s] in path [%s]: %+v", ext, path, err)
-	}
-	ret := make([]string, 0, len(matches))
-	lo.ForEach(matches, func(j string, _ int) {
-		if !checkIgnore(ignore, j) {
-			idx := strings.LastIndex(j, "/")
-			if idx == -1 {
-				idx = strings.LastIndex(j, "\\")
-			}
-			if idx > 0 {
-				j = j[idx+1:]
-			}
-			if trimExtension {
-				j = strings.TrimSuffix(j, "."+ext)
-			}
-			ret = append(ret, j)
-		}
+	ret := lo.Filter(f.ListFiles(path, ign, logger), func(f *FileInfo, _ int) bool {
+		return strings.HasSuffix(f.Name, "."+ext)
 	})
-	return util.ArraySorted(ret)
+	return lo.Map(ret, func(x *FileInfo, index int) string {
+		if trimExtension {
+			return strings.TrimSuffix(x.Name, "."+ext)
+		}
+		return x.Name
+	})
 }
 
 func (f *FileSystem) ListDirectories(path string, ign []string, logger util.Logger) []string {
-	ignore := buildIgnore(ign)
-	if !f.Exists(path) {
-		return nil
-	}
-	p := f.getPath(path)
-	files, err := os.ReadDir(p)
-	if err != nil {
-		logger.Warnf("cannot list path [%s]: %+v", path, err)
-	}
-	ret := lo.FilterMap(files, func(f fs.DirEntry, _ int) (string, bool) {
-		if f.IsDir() && !checkIgnore(ignore, f.Name()) {
-			return f.Name(), true
-		}
-		return "", false
+	ret := lo.Filter(f.ListFiles(path, ign, logger), func(f *FileInfo, _ int) bool {
+		return f.IsDir
 	})
-	return util.ArraySorted(ret)
+	return lo.Map(ret, func(x *FileInfo, index int) string {
+		return x.Name
+	})
 }
 
 func (f *FileSystem) ListFilesRecursive(path string, ign []string, _ util.Logger) ([]string, error) {
@@ -93,7 +76,7 @@ func (f *FileSystem) ListFilesRecursive(path string, ign []string, _ util.Logger
 	return util.ArraySorted(ret), nil
 }
 
-func (f *FileSystem) Walk(path string, ign []string, fn func(fp string, info fs.FileInfo, err error) error) error {
+func (f *FileSystem) Walk(path string, ign []string, fn func(fp string, info *FileInfo, err error) error) error {
 	ignore := buildIgnore(ign)
 	p := f.getPath(path)
 	err := filepath.Walk(p, func(fp string, info fs.FileInfo, err error) error {
@@ -101,40 +84,7 @@ func (f *FileSystem) Walk(path string, ign []string, fn func(fp string, info fs.
 		if checkIgnore(ignore, m) {
 			return nil
 		}
-		return fn(fp, info, err)
+		return fn(fp, FileInfoFromFS(info), err)
 	})
 	return err
-}
-
-func buildIgnore(ign []string) []string {
-	ret := append([]string{}, defaultIgnore...)
-	ret = append(ret, ign...)
-	return ret
-}
-
-const (
-	keyPrefix = "^"
-	keySuffix = "$"
-)
-
-func checkIgnore(ignore []string, fp string) bool {
-	for _, i := range ignore {
-		switch {
-		case strings.HasPrefix(i, keyPrefix):
-			i = strings.TrimPrefix(i, keyPrefix)
-			if fp == strings.TrimSuffix(i, "/") || fp == strings.TrimSuffix(i, "\\") {
-				return true
-			}
-			if strings.HasPrefix(fp, i) {
-				return true
-			}
-		case strings.HasSuffix(i, keySuffix):
-			if strings.HasSuffix(fp, strings.TrimSuffix(i, keySuffix)) {
-				return true
-			}
-		case fp == i:
-			return true
-		}
-	}
-	return false
 }

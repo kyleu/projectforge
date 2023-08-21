@@ -2,10 +2,11 @@
 package filesystem
 
 import (
+	"cmp"
 	"path"
+	"slices"
 
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/util"
 )
@@ -45,8 +46,8 @@ func (n Nodes) Flatten(curr string) []string {
 }
 
 func (n Nodes) Sort() Nodes {
-	slices.SortFunc(n, func(l *Node, r *Node) bool {
-		return l.Name < r.Name
+	slices.SortFunc(n, func(l *Node, r *Node) int {
+		return cmp.Compare(l.Name, r.Name)
 	})
 	return n
 }
@@ -91,30 +92,4 @@ func (t Tree) Flatten() []string {
 
 func (t Tree) Merge(x *Tree) *Tree {
 	return &Tree{Nodes: t.Nodes.Merge(x.Nodes), Config: t.Config.Merge(x.Config)}
-}
-
-func (f *FileSystem) listNodes(pth string, ign []string, logger util.Logger, tags ...string) (Nodes, error) {
-	files := f.ListFiles(pth, ign, logger)
-	nodes := make(Nodes, 0, len(files))
-	for _, de := range files {
-		x := path.Join(pth, de.Name())
-		if de.IsDir() {
-			kids, err := f.listNodes(x, ign, logger)
-			if err != nil {
-				return nil, err
-			}
-			nodes = append(nodes, &Node{Name: de.Name(), Dir: true, Children: kids, Tags: tags})
-		} else {
-			nodes = append(nodes, &Node{Name: de.Name(), Tags: tags, Size: f.Size(x)})
-		}
-	}
-	return nodes.Sort(), nil
-}
-
-func (f *FileSystem) ListTree(cfg util.ValueMap, pth string, ign []string, logger util.Logger, tags ...string) (*Tree, error) {
-	nodes, err := f.listNodes(pth, ign, logger, tags...)
-	if err != nil {
-		return nil, err
-	}
-	return &Tree{Config: cfg, Nodes: nodes}, nil
 }

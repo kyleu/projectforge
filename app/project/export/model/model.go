@@ -2,10 +2,10 @@ package model
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/lib/filter"
 	"projectforge.dev/projectforge/app/lib/types"

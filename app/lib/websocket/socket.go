@@ -4,13 +4,13 @@ package websocket
 import (
 	"context"
 	"fmt"
+	"slices"
 	"sync/atomic"
 
 	"github.com/fasthttp/websocket"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/util"
 )

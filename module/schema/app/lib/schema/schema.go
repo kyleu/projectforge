@@ -1,9 +1,10 @@
 package schema
 
 import (
+	"slices"
+
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 
 	"{{{ .Package }}}/app/lib/schema/model"
 	"{{{ .Package }}}/app/util"

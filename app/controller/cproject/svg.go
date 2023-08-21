@@ -26,9 +26,11 @@ func SVGList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		fs := as.Services.Projects.GetFilesystem(prj)
-
-		icons, contents, err := svg.Contents(fs, ps.Logger)
+		pfs, err := as.Services.Projects.GetFilesystem(prj)
+		if err != nil {
+			return "", err
+		}
+		icons, contents, err := svg.Contents(pfs, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to list project SVGs")
 		}
@@ -62,7 +64,11 @@ func SVGBuild(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		count, err := svg.Build(as.Services.Projects.GetFilesystem(prj), ps.Logger)
+		pfs, err := as.Services.Projects.GetFilesystem(prj)
+		if err != nil {
+			return "", err
+		}
+		count, err := svg.Build(pfs, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -86,13 +92,15 @@ func SVGAdd(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		fs := as.Services.Projects.GetFilesystem(prj)
-
-		x, err := svg.AddToProject(fs, src, tgt)
+		pfs, err := as.Services.Projects.GetFilesystem(prj)
 		if err != nil {
 			return "", err
 		}
-		_, err = svg.Build(as.Services.Projects.GetFilesystem(prj), ps.Logger)
+		x, err := svg.AddToProject(pfs, src, tgt)
+		if err != nil {
+			return "", err
+		}
+		_, err = svg.Build(pfs, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -145,8 +153,11 @@ func SVGRefreshApp(rc *fasthttp.RequestCtx) {
 			page := &vpage.Load{URL: rc.URI().String(), Title: "Generating app icons"}
 			return controller.Render(rc, as, page, ps, "projects", prj.Key, "SVG||/svg/"+prj.Key, "Refresh App Icon")
 		}
-		fs := as.Services.Projects.GetFilesystem(prj)
-		err = svg.RefreshAppIcon(ps.Context, prj, fs, ps.Logger)
+		pfs, err := as.Services.Projects.GetFilesystem(prj)
+		if err != nil {
+			return "", err
+		}
+		err = svg.RefreshAppIcon(ps.Context, prj, pfs, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to refresh app icon")
 		}
@@ -180,11 +191,14 @@ func prjAndIcon(rc *fasthttp.RequestCtx, as *app.State) (*project.Project, files
 	if err != nil {
 		return nil, nil, "", err
 	}
-	fs := as.Services.Projects.GetFilesystem(prj)
+	pfs, err := as.Services.Projects.GetFilesystem(prj)
+	if err != nil {
+		return nil, nil, "", err
+	}
 
 	key, err := cutil.RCRequiredString(rc, "icon", false)
 	if err != nil {
 		return nil, nil, "", err
 	}
-	return prj, fs, key, nil
+	return prj, pfs, key, nil
 }

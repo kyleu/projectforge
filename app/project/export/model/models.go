@@ -1,9 +1,10 @@
 package model
 
 import (
+	"cmp"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
+	"slices"
 
 	"projectforge.dev/projectforge/app/util"
 )
@@ -43,11 +44,11 @@ func (m Models) Sorted() Models {
 
 func (m Models) SortedDisplay() Models {
 	ret := slices.Clone(m)
-	slices.SortFunc(ret, func(l *Model, r *Model) bool {
+	slices.SortFunc(ret, func(l *Model, r *Model) int {
 		if l.SortIndex == r.SortIndex {
-			return l.Name < r.Name
+			return cmp.Compare(l.Name, r.Name)
 		}
-		return l.SortIndex < r.SortIndex
+		return cmp.Compare(l.SortIndex, r.SortIndex)
 	})
 	return ret
 }

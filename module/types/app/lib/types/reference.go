@@ -1,9 +1,8 @@
 package types
 
 import (
+	"slices"
 	"strings"
-
-	"golang.org/x/exp/slices"
 
 	"{{{ .Package }}}/app/util"
 )

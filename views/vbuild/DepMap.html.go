@@ -6,10 +6,10 @@ package vbuild
 
 //line views/vbuild/DepMap.html:1
 import (
+	"slices"
 	"strings"
 
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 	"golang.org/x/mod/semver"
 
 	"projectforge.dev/projectforge/app"
@@ -122,8 +122,8 @@ func (p *DepMap) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 `)
 //line views/vbuild/DepMap.html:53
 		vKeys := lo.Keys(v)
-		slices.SortFunc(vKeys, func(l string, r string) bool {
-			return semver.Compare(l, r) < 0
+		slices.SortFunc(vKeys, func(l string, r string) int {
+			return semver.Compare(l, r)
 		})
 
 //line views/vbuild/DepMap.html:58

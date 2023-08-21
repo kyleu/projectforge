@@ -2,11 +2,12 @@
 package util
 
 import (
+	"cmp"
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 )
 
 type KeyValInt struct {
@@ -74,8 +75,8 @@ func (k *KeyTypeDesc) Array(key string) []string {
 type KeyTypeDescs []*KeyTypeDesc
 
 func (k KeyTypeDescs) Sort() KeyTypeDescs {
-	slices.SortFunc(k, func(l *KeyTypeDesc, r *KeyTypeDesc) bool {
-		return strings.ToLower(l.Key) < strings.ToLower(r.Key)
+	slices.SortFunc(k, func(l *KeyTypeDesc, r *KeyTypeDesc) int {
+		return cmp.Compare(strings.ToLower(l.Key), strings.ToLower(r.Key))
 	})
 	return k
 }

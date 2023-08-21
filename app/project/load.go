@@ -56,7 +56,11 @@ func (s *Service) load(path string) (json.RawMessage, *Project, error) {
 	}
 	ret.Path = path
 
-	fs := s.GetFilesystem(ret)
+	fs, err := s.GetFilesystem(ret)
+	if err != nil {
+		return nil, nil, err
+	}
+
 	if ret.Config, err = s.loadModuleConfig(fs); err != nil {
 		return b, nil, err
 	}

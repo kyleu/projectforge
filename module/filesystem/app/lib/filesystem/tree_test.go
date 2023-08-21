@@ -1,9 +1,8 @@
 package filesystem_test
 
 import (
+	"slices"
 	"testing"
-
-	"golang.org/x/exp/slices"
 
 	"{{{ .Package }}}/app/lib/filesystem"
 )

@@ -17,13 +17,16 @@ func SetDepsMap(ctx context.Context, projects project.Projects, dep *Dependency,
 	logger.Infof("upgrading dependency [%s] to [%s]", dep.Key, dep.Version)
 	var affected int
 
-	_, errs := util.AsyncCollect(projects, func(item *project.Project) (any, error) {
+	_, errs := util.AsyncCollect(projects, func(p *project.Project) (any, error) {
 		t := util.TimerStart()
-		fs := pSvc.GetFilesystem(item)
-		var matched bool
-		bytes, err := fs.ReadFile(gomod)
+		pfs, err := pSvc.GetFilesystem(p)
 		if err != nil {
-			return nil, errors.Wrapf(err, "unable to read [go.mod] for project [%s]", item.Key)
+			return nil, err
+		}
+		var matched bool
+		bytes, err := pfs.ReadFile(gomod)
+		if err != nil {
+			return nil, errors.Wrapf(err, "unable to read [go.mod] for project [%s]", p.Key)
 		}
 		str := string(bytes)
 		lines := util.StringSplitLines(str)
@@ -32,7 +35,7 @@ func SetDepsMap(ctx context.Context, projects project.Projects, dep *Dependency,
 			if strings.Contains(line, dep.Key+" ") {
 				start := strings.Index(line, " v")
 				if start == -1 {
-					return nil, errors.Errorf("project [%s] does not contain a version in [%s]", item.Key, line)
+					return nil, errors.Errorf("project [%s] does not contain a version in [%s]", p.Key, line)
 				}
 				start++
 				offset := strings.Index(line[start:], " ")
@@ -53,15 +56,15 @@ func SetDepsMap(ctx context.Context, projects project.Projects, dep *Dependency,
 		if matched {
 			affected++
 			content := strings.Join(ret, util.StringDetectLinebreak(str))
-			err = fs.WriteFile(gomod, []byte(content), filesystem.DefaultMode, true)
+			err = pfs.WriteFile(gomod, []byte(content), filesystem.DefaultMode, true)
 			if err != nil {
 				return nil, errors.Wrap(err, "unable to write [go.mod]")
 			}
-			_, _, err = telemetry.RunProcessSimple(ctx, "go mod tidy", item.Path, logger)
+			_, _, err = telemetry.RunProcessSimple(ctx, "go mod tidy", p.Path, logger)
 			if err != nil {
-				return nil, errors.Wrapf(err, "unable to run [go mod tidy] in path [%s]", item.Path)
+				return nil, errors.Wrapf(err, "unable to run [go mod tidy] in path [%s]", p.Path)
 			}
-			logger.Infof("completed upgrade of [%s] in [%s]", item.Key, util.MicrosToMillis(t.End()))
+			logger.Infof("completed upgrade of [%s] in [%s]", p.Key, util.MicrosToMillis(t.End()))
 		}
 		return nil, nil
 	})
@@ -85,8 +88,11 @@ func SetDepsProject(ctx context.Context, prjs project.Projects, key string, pSvc
 	if err != nil {
 		return "", errors.Wrap(err, "")
 	}
-	fs := pSvc.GetFilesystem(tgt)
-	bytes, err := fs.ReadFile(gomod)
+	pfs, err := pSvc.GetFilesystem(tgt)
+	if err != nil {
+		return "", err
+	}
+	bytes, err := pfs.ReadFile(gomod)
 	if err != nil {
 		return "", errors.Wrapf(err, "unable to read [go.mod] for project [%s]", key)
 	}
@@ -105,7 +111,7 @@ func SetDepsProject(ctx context.Context, prjs project.Projects, key string, pSvc
 	}
 	if affected > 0 {
 		content := strings.Join(ret, util.StringDetectLinebreak(str))
-		err = fs.WriteFile(gomod, []byte(content), filesystem.DefaultMode, true)
+		err = pfs.WriteFile(gomod, []byte(content), filesystem.DefaultMode, true)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to write [go.mod]")
 		}

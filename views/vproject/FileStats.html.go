@@ -7,10 +7,10 @@ package vproject
 //line views/vproject/FileStats.html:1
 import (
 	"path/filepath"
+	"slices"
 	"strings"
 
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"

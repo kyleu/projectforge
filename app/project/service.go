@@ -34,16 +34,19 @@ func NewService() *Service {
 	}
 }
 
-func (s *Service) GetFilesystem(prj *Project) filesystem.FileLoader {
+func (s *Service) GetFilesystem(prj *Project) (filesystem.FileLoader, error) {
 	s.fsLock.Lock()
 	defer s.fsLock.Unlock()
 	curr, ok := s.filesystems[prj.Key]
 	if ok {
-		return curr
+		return curr, nil
 	}
-	fs := filesystem.NewFileSystem(prj.Path)
+	fs, err := filesystem.NewFileSystem(prj.Path, false, "")
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to create filesystem for path [%s]", prj.Path)
+	}
 	s.filesystems[prj.Key] = fs
-	return fs
+	return fs, nil
 }
 
 func (s *Service) Refresh(logger util.Logger) (Projects, error) {

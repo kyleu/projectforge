@@ -3,9 +3,10 @@ package filesystem
 
 import (
 	"cmp"
-	"github.com/samber/lo"
 	"io/fs"
 	"slices"
+
+	"github.com/samber/lo"
 )
 
 var (

@@ -1,12 +1,13 @@
 package build
 
 import (
+	"cmp"
 	"fmt"
 	"runtime"
+	"slices"
 	"strings"
 
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 )
 
 var ScriptExtension = func() string {
@@ -38,8 +39,8 @@ func (p Pkgs) Get(s string) *Pkg {
 }
 
 func (p Pkgs) Sort() Pkgs {
-	slices.SortFunc(p, func(l *Pkg, r *Pkg) bool {
-		return strings.ToLower(l.Path) < strings.ToLower(r.Path)
+	slices.SortFunc(p, func(l *Pkg, r *Pkg) int {
+		return cmp.Compare(strings.ToLower(l.Path), strings.ToLower(r.Path))
 	})
 	return p
 }

@@ -60,7 +60,11 @@ func ProjectFileStats(rc *fasthttp.RequestCtx) {
 		dir := string(rc.URI().QueryArgs().Peek("dir"))
 		pth := util.StringSplitAndTrim(dir, "/")
 		ext := string(rc.URI().QueryArgs().Peek("ext"))
-		ret, err := stats.GetFileStats(as.Services.Projects.GetFilesystem(prj), dir, ps.Logger)
+		pfs, err := as.Services.Projects.GetFilesystem(prj)
+		if err != nil {
+			return "", err
+		}
+		ret, err := stats.GetFileStats(pfs, dir, ps.Logger)
 		if err != nil {
 			return "", err
 		}

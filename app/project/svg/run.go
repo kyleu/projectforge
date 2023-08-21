@@ -1,11 +1,12 @@
 package svg
 
 import (
+	"cmp"
 	"path/filepath"
+	"slices"
 	"strings"
 
 	"github.com/pkg/errors"
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/util"
@@ -60,8 +61,8 @@ func loadSVGs(fs filesystem.FileLoader, logger util.Logger) ([]*SVG, error) {
 		svgs = append(svgs, &SVG{Key: key, Markup: mk})
 	}
 
-	slices.SortFunc(svgs, func(l *SVG, r *SVG) bool {
-		return l.Key < r.Key
+	slices.SortFunc(svgs, func(l *SVG, r *SVG) int {
+		return cmp.Compare(l.Key, r.Key)
 	})
 
 	return svgs, nil

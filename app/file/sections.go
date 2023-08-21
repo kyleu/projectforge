@@ -1,12 +1,13 @@
 package file
 
 import (
+	"cmp"
+	"slices"
 	"strings"
 	"unicode/utf8"
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
 )
@@ -99,14 +100,13 @@ func (s sections) Get(key string) *section {
 }
 
 func (s sections) Sort() {
-	slices.SortFunc(s, func(l *section, r *section) bool {
-		return l.Start > r.Start
+	slices.SortFunc(s, func(l *section, r *section) int {
+		return -cmp.Compare(l.Start, r.Start)
 	})
 }
 
 func sectionIndexes(s string, prefix string) (sections, error) {
 	var ret sections
-
 	for idx, c := range s {
 		if c == '$' && len(s) > idx+len(prefix) {
 			candidate := s[idx : idx+len(prefix)]

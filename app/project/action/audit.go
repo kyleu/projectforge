@@ -45,18 +45,18 @@ func onAudit(ctx context.Context, pm *PrjAndMods) *Result {
 
 func auditRun(pm *PrjAndMods, ret *Result) error {
 	timer := util.TimerStart()
-	tgt := pm.PSvc.GetFilesystem(pm.Prj)
-
+	tgt, err := pm.PSvc.GetFilesystem(pm.Prj)
+	if err != nil {
+		return err
+	}
 	generated, err := getGeneratedFiles(tgt, pm.Prj.Ignore, pm.Logger)
 	if err != nil {
 		return err
 	}
-
 	src, err := getModuleFiles(pm)
 	if err != nil {
 		return err
 	}
-
 	audits := lo.FilterMap(generated, func(g string, _ int) (*diff.Diff, bool) {
 		if !lo.Contains(src, g) {
 			if (!strings.HasSuffix(g, "client.js.map")) && (!strings.HasSuffix(g, "client.css.map")) && (!strings.HasSuffix(g, "file/header.go")) {
@@ -65,7 +65,6 @@ func auditRun(pm *PrjAndMods, ret *Result) error {
 		}
 		return nil, false
 	})
-
 	empty, err := getEmptyFolders(tgt, pm.Prj.Ignore, pm.Logger)
 	if err != nil {
 		return err
@@ -73,13 +72,11 @@ func auditRun(pm *PrjAndMods, ret *Result) error {
 	lo.ForEach(empty, func(e string, _ int) {
 		audits = append(audits, &diff.Diff{Path: e, Status: diff.StatusMissing})
 	})
-
 	sch, err := schemaCheck(pm)
 	if err != nil {
 		return err
 	}
 	ret.Errors = append(ret.Errors, sch...)
-
 	mr := &module.Result{Keys: pm.Mods.Keys(), Status: "OK", Diffs: audits, Duration: timer.End()}
 	ret.Modules = append(ret.Modules, mr)
 	return nil

@@ -2,9 +2,9 @@ package controller
 
 import (
 	"fmt"
+	"slices"
 
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/menu"

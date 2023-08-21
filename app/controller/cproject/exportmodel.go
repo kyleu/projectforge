@@ -85,7 +85,11 @@ func ProjectExportModelCreate(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to parse model from form")
 		}
 
-		err = as.Services.Projects.SaveExportModel(as.Services.Projects.GetFilesystem(prj), mdl)
+		pfs, err := as.Services.Projects.GetFilesystem(prj)
+		if err != nil {
+			return "", err
+		}
+		err = as.Services.Projects.SaveExportModel(pfs, mdl)
 		if err != nil {
 			return "", err
 		}
@@ -134,7 +138,11 @@ func ProjectExportModelSave(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to parse model from form")
 		}
 
-		err = as.Services.Projects.SaveExportModel(as.Services.Projects.GetFilesystem(prj), mdl)
+		pfs, err := as.Services.Projects.GetFilesystem(prj)
+		if err != nil {
+			return "", err
+		}
+		err = as.Services.Projects.SaveExportModel(pfs, mdl)
 		if err != nil {
 			return "", err
 		}
@@ -152,7 +160,11 @@ func ProjectExportModelDelete(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 
-		err = as.Services.Projects.DeleteExportModel(as.Services.Projects.GetFilesystem(prj), mdl.Name, ps.Logger)
+		pfs, err := as.Services.Projects.GetFilesystem(prj)
+		if err != nil {
+			return "", err
+		}
+		err = as.Services.Projects.DeleteExportModel(pfs, mdl.Name, ps.Logger)
 		if err != nil {
 			return "", err
 		}

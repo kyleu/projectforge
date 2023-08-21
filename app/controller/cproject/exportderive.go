@@ -56,7 +56,11 @@ func ProjectExportModelDerive(rc *fasthttp.RequestCtx) {
 		}
 
 		if cutil.QueryStringBool(rc, "save") {
-			err = as.Services.Projects.SaveExportModel(as.Services.Projects.GetFilesystem(prj), mdl)
+			pfs, err := as.Services.Projects.GetFilesystem(prj)
+			if err != nil {
+				return "", err
+			}
+			err = as.Services.Projects.SaveExportModel(pfs, mdl)
 			if err != nil {
 				return "", err
 			}

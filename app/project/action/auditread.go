@@ -2,10 +2,10 @@ package action
 
 import (
 	"path"
+	"slices"
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/filesystem"
@@ -17,7 +17,6 @@ func getGeneratedFiles(tgt filesystem.FileLoader, ignore []string, logger util.L
 	if err != nil {
 		return nil, err
 	}
-
 	var ret []string
 	for _, fn := range filenames {
 		b, e := tgt.PeekFile(fn, 1024)
@@ -36,20 +35,21 @@ func getModuleFiles(pm *PrjAndMods) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	if pm.Mods.Get("export") != nil {
 		args, err := pm.Prj.ModuleArgExport(pm.PSvc, pm.Logger)
 		if err != nil {
 			return nil, err
 		}
 		args.Modules = pm.Mods.Keys()
-
 		lb := util.StringDefaultLinebreak
-		modContent, _ := pm.PSvc.GetFilesystem(pm.Prj).ReadFile("go.mod")
+		pfs, err := pm.PSvc.GetFilesystem(pm.Prj)
+		if err != nil {
+			return nil, err
+		}
+		modContent, _ := pfs.ReadFile("go.mod")
 		if modContent != nil {
 			lb = util.StringDetectLinebreak(string(modContent))
 		}
-
 		files, e := pm.ESvc.Files(pm.Prj, args, true, lb)
 		if e != nil {
 			return nil, err

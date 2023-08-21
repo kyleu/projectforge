@@ -67,6 +67,6 @@ func (s *Service) addAdditional(path string, logger util.Logger) {
 	})
 	if !hit {
 		add = append(add, path)
-		_ = os.WriteFile(s.getAdditionalFilename(), util.ToJSONBytes(add, true), filesystem.DefaultMode)
+		_ = os.WriteFile(s.getAdditionalFilename(), util.ToJSONBytes(add, true), os.FileMode(filesystem.DefaultMode))
 	}
 }

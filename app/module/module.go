@@ -1,8 +1,9 @@
 package module
 
 import (
+	"cmp"
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
+	"slices"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/util"
@@ -63,8 +64,8 @@ func (m Modules) Keys() []string {
 }
 
 func (m Modules) Sort() Modules {
-	slices.SortFunc(m, func(l *Module, r *Module) bool {
-		return l.Priority < r.Priority
+	slices.SortFunc(m, func(l *Module, r *Module) int {
+		return cmp.Compare(l.Priority, r.Priority)
 	})
 	return m
 }

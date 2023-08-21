@@ -1,14 +1,15 @@
 package project
 
 import (
+	"cmp"
 	"encoding/json"
 	"fmt"
 	"path"
 	"path/filepath"
+	"slices"
 	"strings"
 
 	"github.com/pkg/errors"
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/project/export/data"
@@ -69,8 +70,8 @@ func (s *Service) loadExportArgs(fs filesystem.FileLoader, logger util.Logger) (
 	}
 	args.Models = append(args.Models, jsonModels...)
 	if len(args.Models) > 0 {
-		slices.SortFunc(args.Models, func(l *model.Model, r *model.Model) bool {
-			return l.Name < r.Name
+		slices.SortFunc(args.Models, func(l *model.Model, r *model.Model) int {
+			return cmp.Compare(l.Name, r.Name)
 		})
 	}
 

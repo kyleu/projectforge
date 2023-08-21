@@ -2,12 +2,13 @@
 package result
 
 import (
+	"cmp"
 	"fmt"
 	"reflect"
+	"slices"
 	"strings"
 
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 )
 
 type Match struct {
@@ -44,8 +45,8 @@ func (m *Match) ValueSplit(q string) []string {
 type Matches []*Match
 
 func (m Matches) Sort() {
-	slices.SortFunc(m, func(l *Match, r *Match) bool {
-		return strings.ToLower(l.Key) < strings.ToLower(r.Key)
+	slices.SortFunc(m, func(l *Match, r *Match) int {
+		return cmp.Compare(strings.ToLower(l.Key), strings.ToLower(r.Key))
 	})
 }
 

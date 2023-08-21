@@ -30,7 +30,10 @@ func auditRemove(ctx context.Context, fn string, pm *PrjAndMods, ret *Result) er
 		}
 		return nil
 	}
-	tgt := pm.PSvc.GetFilesystem(pm.Prj)
+	tgt, err := pm.PSvc.GetFilesystem(pm.Prj)
+	if err != nil {
+		return err
+	}
 	ret.AddLog("removed [%s]", fn)
 	return tgt.Remove(fn, pm.Logger)
 }
@@ -50,7 +53,10 @@ func auditHeader(ctx context.Context, fn string, pm *PrjAndMods, ret *Result) er
 		}
 		return nil
 	}
-	tgt := pm.PSvc.GetFilesystem(pm.Prj)
+	tgt, err := pm.PSvc.GetFilesystem(pm.Prj)
+	if err != nil {
+		return err
+	}
 	stat, err := tgt.Stat(fn)
 	if err != nil {
 		return err

@@ -2,11 +2,11 @@ package cutil
 
 import (
 	"context"
+	"slices"
 	"strings"
 
 	"github.com/mileusna/useragent"
 	"github.com/valyala/fasthttp"
-	"golang.org/x/exp/slices"
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller/csession"

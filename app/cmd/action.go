@@ -2,12 +2,12 @@ package cmd
 
 import (
 	"context"
+	"slices"
 	"strings"
 
 	"github.com/muesli/coral"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 
 	"projectforge.dev/projectforge/app/file/diff"
 	"projectforge.dev/projectforge/app/module"

@@ -1,14 +1,10 @@
 // Content managed by Project Forge, see [projectforge.md] for details.
 package filesystem
 
-import (
-	"os"
-
-	"github.com/pkg/errors"
-)
+import "github.com/pkg/errors"
 
 func (f *FileSystem) PeekFile(path string, maxSize int) ([]byte, error) {
-	file, err := os.Open(f.getPath(path))
+	file, err := f.f.Open(f.getPath(path))
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to open file [%s]", path)
 	}
@@ -28,7 +24,7 @@ func (f *FileSystem) PeekFile(path string, maxSize int) ([]byte, error) {
 }
 
 func (f *FileSystem) Size(path string) int {
-	file, err := os.Open(f.getPath(path))
+	file, err := f.f.Open(f.getPath(path))
 	if err != nil {
 		return -1
 	}
@@ -42,9 +38,25 @@ func (f *FileSystem) Size(path string) int {
 }
 
 func (f *FileSystem) ReadFile(path string) ([]byte, error) {
-	b, err := os.ReadFile(f.getPath(path))
+	file, err := f.f.Open(f.getPath(path))
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to open file [%s]", path)
+	}
+	defer func() { _ = file.Close() }()
+
+	stat, _ := file.Stat()
+	if stat.Size() == 0 {
+		return nil, nil
+	}
+
+	b := make([]byte, stat.Size())
+
+	size, err := file.Read(b)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to read file [%s]", path)
+	}
+	if int64(size) != stat.Size() {
+		return nil, errors.Wrapf(err, "file [%s] size [%d] does not match expected size [%d]", path, size, stat.Size())
 	}
 	return b, nil
 }

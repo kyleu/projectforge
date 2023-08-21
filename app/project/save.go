@@ -26,9 +26,12 @@ func (s *Service) Save(prj *Project, logger util.Logger) error {
 			prj.Theme = theme.ThemeDefault
 		}()
 	}
-	tgtFS := s.GetFilesystem(prj)
+	tgtFS, err := s.GetFilesystem(prj)
+	if err != nil {
+		return err
+	}
 	j := util.ToJSON(prj)
-	err := tgtFS.WriteFile(fn, []byte(j), filesystem.DefaultMode, true)
+	err = tgtFS.WriteFile(fn, []byte(j), filesystem.DefaultMode, true)
 	if err != nil {
 		return errors.Wrapf(err, "unable to write project file to [%s]", fn)
 	}
