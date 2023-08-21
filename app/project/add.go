@@ -1,7 +1,6 @@
 package project
 
 import (
-	"os"
 	"path/filepath"
 	"strings"
 
@@ -36,29 +35,29 @@ func (s *Service) add(path string, parent *Project) (*Project, error) {
 	return p, nil
 }
 
-func (s *Service) getAdditionalFilename() string {
+func (s *Service) getAdditionalFilename(fs filesystem.FileLoader) string {
 	ret := ".projectforge/additional-projects.json"
-	if _, err := os.Stat(ret); err == nil {
+	if _, err := fs.Stat(ret); err == nil {
 		return ret
 	}
 	return s.additional
 }
 
-func (s *Service) getAdditional(logger util.Logger) ([]string, bool) {
-	additionalContent, err := os.ReadFile(s.getAdditionalFilename())
+func (s *Service) getAdditional(fs filesystem.FileLoader, logger util.Logger) ([]string, bool) {
+	additionalContent, err := fs.ReadFile(s.getAdditionalFilename(fs))
 	if err != nil {
 		return nil, false
 	}
 	var additional []string
 	err = util.FromJSON(additionalContent, &additional)
 	if err != nil {
-		logger.Warnf("unable to parse additional projects from [%s]: %+v", s.getAdditionalFilename(), err)
+		logger.Warnf("unable to parse additional projects from [%s]: %+v", s.getAdditionalFilename(fs), err)
 	}
 	return additional, true
 }
 
-func (s *Service) addAdditional(path string, logger util.Logger) {
-	add, ok := s.getAdditional(logger)
+func (s *Service) addAdditional(path string, fs filesystem.FileLoader, logger util.Logger) {
+	add, ok := s.getAdditional(fs, logger)
 	if !ok {
 		return
 	}
@@ -67,6 +66,6 @@ func (s *Service) addAdditional(path string, logger util.Logger) {
 	})
 	if !hit {
 		add = append(add, path)
-		_ = os.WriteFile(s.getAdditionalFilename(), util.ToJSONBytes(add, true), os.FileMode(filesystem.DefaultMode))
+		_ = fs.WriteFile(s.getAdditionalFilename(fs), util.ToJSONBytes(add, true), filesystem.DefaultMode, true)
 	}
 }

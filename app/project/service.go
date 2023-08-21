@@ -55,7 +55,8 @@ func (s *Service) Refresh(logger util.Logger) (Projects, error) {
 	if err != nil {
 		return nil, err
 	}
-	if add, ok := s.getAdditional(logger); ok {
+	fs, _ := filesystem.NewFileSystem(".", false, "")
+	if add, ok := s.getAdditional(fs, logger); ok {
 		for _, a := range add {
 			if _, err := s.add(a, root); err != nil {
 				return nil, err

@@ -19,7 +19,8 @@ const rootKey = "root"
 func (s *Service) load(path string) (json.RawMessage, *Project, error) {
 	cfgPath := filepath.Join(path, ConfigDir, "project.json")
 
-	if curr, _ := os.Stat(cfgPath); curr == nil {
+	rootfs, _ := filesystem.NewFileSystem(".", false, "")
+	if curr, _ := rootfs.Stat(cfgPath); curr == nil {
 		_, r := util.StringSplitPath(path)
 		if r == "." {
 			r, _ = os.Getwd()
@@ -36,7 +37,7 @@ func (s *Service) load(path string) (json.RawMessage, *Project, error) {
 		ret.Error = "missing [.projectforge/project.json]"
 		return nil, ret, nil
 	}
-	b, err := os.ReadFile(cfgPath)
+	b, err := rootfs.ReadFile(cfgPath)
 	if err != nil {
 		return nil, nil, err
 	}

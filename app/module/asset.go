@@ -2,13 +2,12 @@ package module
 
 import (
 	"context"
+	"github.com/pkg/errors"
+	"github.com/samber/lo"
 	"io"
 	"net/http"
 	"path"
 	"strings"
-
-	"github.com/pkg/errors"
-	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/util"

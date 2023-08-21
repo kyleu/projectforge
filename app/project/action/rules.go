@@ -1,7 +1,7 @@
 package action
 
 import (
-	"os"
+	"projectforge.dev/projectforge/app/lib/filesystem"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -54,7 +54,8 @@ func onRules(pm *PrjAndMods) *Result {
 		})
 	})
 
-	b, err := os.ReadFile("rules.json")
+	fs, _ := filesystem.NewFileSystem(".", false, "")
+	b, err := fs.ReadFile("rules.json")
 	if err != nil {
 		return ret.WithError(err)
 	}

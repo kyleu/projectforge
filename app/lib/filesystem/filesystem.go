@@ -7,44 +7,54 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/mandelsoft/vfs/pkg/memoryfs"
-	"github.com/mandelsoft/vfs/pkg/osfs"
-	"github.com/mandelsoft/vfs/pkg/readonlyfs"
-	"github.com/mandelsoft/vfs/pkg/vfs"
 	"github.com/pkg/errors"
+	"github.com/spf13/afero"
 )
+
+var memFS, osFS afero.Fs
+
+func MemFS() afero.Fs {
+	if memFS == nil {
+		memFS = afero.NewMemMapFs()
+	}
+	return memFS
+}
+
+func OSFS() afero.Fs {
+	if osFS == nil {
+		osFS = afero.NewOsFs()
+	}
+	return osFS
+}
 
 type FileSystem struct {
 	Mode     string `json:"mode,omitempty"`
 	ReadOnly bool   `json:"readOnly,omitempty"`
 	root     string
-	f        vfs.FileSystem
+	f        afero.Fs
 }
 
 var _ FileLoader = (*FileSystem)(nil)
 
 func NewFileSystem(root string, readonly bool, mode string) (*FileSystem, error) {
-	if mode == "" {
-		mode = "file"
-	}
-	var f vfs.FileSystem
+	var f afero.Fs
 	switch mode {
 	case "memory":
-		f = memoryfs.New()
+		f = MemFS()
 	case "file":
-		f = osfs.New()
+		f = OSFS()
 	case "":
 		switch runtime.GOOS {
 		case "js":
-			f = memoryfs.New()
+			f = MemFS()
 		default:
-			f = osfs.New()
+			f = OSFS()
 		}
 	default:
 		return nil, errors.Errorf("invalid filesystem mode [%s]", mode)
 	}
 	if readonly {
-		f = readonlyfs.New(f)
+		f = afero.NewReadOnlyFs(f)
 	}
 	return &FileSystem{root: root, f: f}, nil
 }

@@ -53,7 +53,8 @@ func (s *Service) Save(prj *Project, logger util.Logger) error {
 	}
 
 	if prj.Path != "" && prj.Path != "." {
-		s.addAdditional(prj.Path, logger)
+		fs, _ := filesystem.NewFileSystem(".", false, "")
+		s.addAdditional(prj.Path, fs, logger)
 	}
 	return nil
 }
