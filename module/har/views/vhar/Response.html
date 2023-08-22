@@ -1,0 +1,55 @@
+{% import (
+  "fmt"
+
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/lib/har"
+  "{{{ .Package }}}/app/util"
+) %}
+
+{% func RenderResponse(key string, r *har.Response, ps *cutil.PageState) %}
+  <table class="min-200 expanded">
+    <tbody>
+      <tr>
+        <th class="shrink">Status</th>
+        <td>{%d r.Status %}: {%s r.StatusText %}</td>
+      </tr>
+      {%- if r.RedirectURL != "" -%}
+      <tr>
+        <th class="shrink">Redirect URL</th>
+        <td>{%s r.RedirectURL %}</td>
+      </tr>
+      {%- endif -%}
+      <tr>
+        <th class="shrink">Headers </th>
+        <td>{%= renderNVPsHidden(fmt.Sprintf("response-header-%s", key), "Header", r.Headers, r.HeadersSize, ps) %}</td>
+      </tr>
+      <tr>
+        <th class="shrink">Content Type</th>
+        <td>{%s r.ContentType() %}</td>
+      </tr>
+      {%- if len(r.Cookies) > 0 -%}
+      <tr>
+        <th class="shrink">Cookies</th>
+        <td>{%= renderCookiesHidden(fmt.Sprintf("response-cookies-%s", key), r.Cookies, ps) %}</td>
+      </tr>
+      {%- endif -%}
+      {%- if r.Content != nil && r.Content.Text != "" -%}
+      <tr>
+        <th class="shrink">Body</th>
+        <td>
+          <div class="right"><em>{%s util.ByteSizeSI(int64(r.Content.Size)) %}</em></div>
+          <ul class="accordion">
+            <li>
+              <input id="accordion-response-body-{%s key %}" type="checkbox" hidden />
+              <label class="no-padding" for="accordion-response-body-{%s key %}"><em>(click to show)</em></label>
+              <div class="bd">
+                <pre>{%s r.Content.Text %}</pre>
+              </div>
+            </li>
+          </ul>
+        </td>
+      </tr>
+      {%- endif -%}
+    </tbody>
+  </table>
+{% endfunc %}

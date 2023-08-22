@@ -1,0 +1,63 @@
+{% import (
+  "fmt"
+
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/lib/har"
+  "{{{ .Package }}}/app/util"
+  "{{{ .Package }}}/views/components"
+  "{{{ .Package }}}/views/layout"
+) %}
+
+{% code type Detail struct {
+  layout.Basic
+  Har *har.Log
+} %}
+
+{% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <div class="right">
+      <a href="{%s p.Har.WebPath() %}/delete" class="link-confirm" data-message="Are you sure?"><button>Delete</button></a>
+      <a href="{%s p.Har.WebPath() %}/run"><button>Run</button></a>
+    </div>
+    <h3>{%= components.SVGRefIcon(`book`, ps) %} {%s p.Har.Key %}</h3>
+    <div class="mt">
+      {%s util.MicrosToMillis(p.Har.Entries.TotalDuration()) %} elapsed, downloaded {%s util.ByteSizeSI(int64(p.Har.Entries.TotalResponseBodySize())) %}
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>{%d len(p.Har.Entries) %} {%s util.StringPluralMaybe("Entry", len(p.Har.Entries)) %}</h3>
+    <div class="mts">
+      <ul class="accordion">
+        {%- for i, e := range p.Har.Entries -%}
+        {%- code
+          key := fmt.Sprintf("%d", i)
+          e = e.Cleaned()
+        -%}
+        <li>
+          <input id="accordion-entry-{%s key %}" type="checkbox" hidden />
+          <label for="accordion-entry-{%s key %}">
+            {%= RenderEntryOptions(key, e, false) %}
+            {%= components.ExpandCollapse(3, ps) %} {%s e.Request.Method %} {%s e.String() %}
+            <div class="clear"></div>
+          </label>
+          <div class="bd">
+            {%= RenderEntry(key, e, ps) %}
+          </div>
+          {%= RenderEntryModals(key, e, false) %}
+        </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+  <script>
+    function clip(k) {
+      if (!navigator.clipboard) {
+        return;
+      }
+      const el = document.getElementById("modal-entry-" + k + "-curl-data");
+      navigator.clipboard.writeText(el.innerText);
+    }
+  </script>
+{% endfunc %}

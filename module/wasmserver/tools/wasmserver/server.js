@@ -1,3 +1,8 @@
+function startApp() {
+  wasmLoad();
+  // initServiceWorker();
+}
+
 async function initServiceWorker() {
   if (navigator.serviceWorker === undefined) {
     return;

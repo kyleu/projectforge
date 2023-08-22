@@ -3,13 +3,13 @@ package main
 
 import (
 	"os"
-
+	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/cmd"
 	"projectforge.dev/projectforge/app/lib/log"
 )
 
 func main() {
-	logger, err := cmd.WASM()
+	logger, err := cmd.Run(&app.BuildInfo{Version: "-wasm", Commit: "unknown", Date: "unknown"})
 	if err != nil {
 		const msg = "exiting due to error"
 		if logger == nil {

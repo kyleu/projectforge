@@ -11,6 +11,7 @@ mkdir -p ./build/wasm
 cp ./tools/wasmserver/index.html ./build/wasm/index.html
 cp ./tools/wasmserver/wasm_exec.js ./build/wasm/wasm_exec.js
 cp ./tools/wasmserver/server.js ./build/wasm/server.js
+cp ./tools/wasmserver/sw.js ./build/wasm/sw.js
 cp ./assets/logo.svg ./build/wasm/logo.svg
 
 echo "building Project Forge WASM server library..."

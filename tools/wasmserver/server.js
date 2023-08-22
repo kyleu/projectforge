@@ -1,4 +1,9 @@
 // Content managed by Project Forge, see [projectforge.md] for details.
+function startApp() {
+  wasmLoad();
+  // initServiceWorker();
+}
+
 async function initServiceWorker() {
   if (navigator.serviceWorker === undefined) {
     return;

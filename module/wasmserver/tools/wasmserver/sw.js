@@ -1,4 +1,3 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
 const skipCache = false;
 
 self.addEventListener("install", (event) => {
@@ -10,10 +9,6 @@ self.addEventListener("install", (event) => {
 self.addEventListener("fetch", (event) => {
   event.respondWith(handleFetch(event.request));
 });
-
-self.addEventListener('activate', (event) => {
-  event.waitUntil(clients.claim())
-})
 
 async function handleFetch(request) {
   if (request.url.indexOf("/app") > -1) {

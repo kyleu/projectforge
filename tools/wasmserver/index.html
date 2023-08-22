@@ -27,21 +27,7 @@
   <script type="text/javascript" src="wasm_exec.js"></script>
   <script type="text/javascript" src="server.js"></script>
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      if (!WebAssembly.instantiateStreaming) {
-        WebAssembly.instantiateStreaming = async (resp, importObject) => {
-          const source = await (await resp).arrayBuffer();
-          return await WebAssembly.instantiate(source, importObject);
-        };
-      }
-
-      const start = new Date().getTime();
-      const go = new Go();
-      WebAssembly.instantiateStreaming(fetch("projectforge.wasm"), go.importObject).then((result) => {
-        go.run(result.instance);
-        wasmInit(new Date().getTime() - start);
-      });
-    });
+    document.addEventListener("DOMContentLoaded", startApp);
   </script>
 </head>
 <body>
