@@ -1,15 +1,15 @@
 // Content managed by Project Forge, see [projectforge.md] for details.
-package main
+package cmd
 
 import (
 	"os"
+
 	"projectforge.dev/projectforge/app"
-	"projectforge.dev/projectforge/app/cmd"
 	"projectforge.dev/projectforge/app/lib/log"
 )
 
-func main() {
-	logger, err := cmd.Run(&app.BuildInfo{Version: "-wasm", Commit: "unknown", Date: "unknown"})
+func Entrypoint(bi *app.BuildInfo) {
+	logger, err := Run(bi)
 	if err != nil {
 		const msg = "exiting due to error"
 		if logger == nil {

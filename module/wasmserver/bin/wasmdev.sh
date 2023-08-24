@@ -1,5 +1,4 @@
 #!/bin/bash
-# Content managed by Project Forge, see [projectforge.md] for details.
 
 ## Starts the app in wasm mode, please run `./bin/build/wasmserver.sh` before starting this.
 

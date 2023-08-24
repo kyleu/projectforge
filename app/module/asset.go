@@ -2,12 +2,14 @@ package module
 
 import (
 	"context"
-	"github.com/pkg/errors"
-	"github.com/samber/lo"
 	"io"
 	"net/http"
 	"path"
+	"runtime"
 	"strings"
+
+	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/util"
@@ -47,8 +49,11 @@ type ghRsp struct {
 }
 
 func loadAssetMap(ctx context.Context, logger util.Logger) error {
-	logger.Infof("loading assets from [%s]", assetURL)
 	assetMap = map[string]string{}
+	if runtime.GOOS == "js" {
+		return loadBackupAssetMap(logger)
+	}
+	logger.Infof("loading assets from [%s]", assetURL)
 	httpClient := telemetry.WrapHTTPClient(http.DefaultClient)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, assetURL, nil)
 	if err != nil {

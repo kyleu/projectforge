@@ -18,7 +18,7 @@ func rootF(*coral.Command, []string) error {
 func rootCmd() *coral.Command {
 	short := fmt.Sprintf("%s %s - %s", util.AppName, _buildInfo.Version, util.AppSummary)
 	ret := &coral.Command{Use: util.AppKey, Short: short, RunE: rootF}
-	ret.AddCommand(serverCmd(), siteCmd(), allCmd(), upgradeCmd())
+	ret.AddCommand(serverCmd(), siteCmd(), allCmd(), upgradeCmd(), wasmCmd())
 	// $PF_SECTION_START(cmds)$
 	ret.AddCommand(actionCommands()...)
 	ret.AddCommand(updateCmd(), upCmd())

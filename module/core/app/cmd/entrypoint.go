@@ -1,14 +1,14 @@
-package main
+package cmd
 
 import (
 	"os"
 
-	"{{{ .Package }}}/app/cmd"
+	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/lib/log"
 )
 
-func main() {
-	logger, err := cmd.WASM()
+func Entrypoint(bi *app.BuildInfo) {
+	logger, err := Run(bi)
 	if err != nil {
 		const msg = "exiting due to error"
 		if logger == nil {

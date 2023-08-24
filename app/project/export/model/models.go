@@ -2,9 +2,10 @@ package model
 
 import (
 	"cmp"
+	"slices"
+
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"slices"
 
 	"projectforge.dev/projectforge/app/util"
 )

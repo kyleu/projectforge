@@ -47,7 +47,9 @@ echo $TGT
 pat="^[0-9]"
 if [[ $TGT =~ $pat ]]; then
   sed -i.bak -e "s/version = \\\"[v]*[0-9]*[0-9]\.[0-9]*[0-9]\.[0-9]*[0-9]\\\"/version = \"${TGT}\"/g" ./main.go
-  rm -f "./main.go.bak"{{{ if .UsesLib }}}
+  rm -f "./main.go.bak"{{{ if .BuildWASM }}}
+  sed -i.bak -e "s/version = \\\"[v]*[0-9]*[0-9]\.[0-9]*[0-9]\.[0-9]*[0-9]\\\"/version = \"${TGT}\"/g" ./tools/wasmserver/main.go
+  rm -f "./tools/wasmserver/main.go.bak"{{{ end }}}{{{ if .UsesLib }}}
   sed -i.bak -e "s/Version: \\\"[v]*[0-9]*[0-9]\.[0-9]*[0-9]\.[0-9]*[0-9]\\\"/Version: \"${TGT}\"/g" ./app/cmd/lib.go
   rm -f ./app/cmd/lib.go.bak{{{ end }}}{{{ if .BuildNotarize }}}
   sed -i.bak -e "s/\\_[v]*[0-9]*[0-9]\.[0-9]*[0-9]\.[0-9]*[0-9]_/_${TGT}\\_/g" ./tools/notarize/gon.amd64.hcl

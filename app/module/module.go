@@ -2,8 +2,9 @@ package module
 
 import (
 	"cmp"
-	"github.com/samber/lo"
 	"slices"
+
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/util"
