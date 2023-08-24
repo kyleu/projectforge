@@ -39,14 +39,15 @@ changelog:{{{ if .Build.Changelog }}}
 
 checksum:
   name_template: "checksums.txt"
-  extra_files:{{{ if .BuildNotarize }}}
-    - glob: "./build/dist/*_notarized.zip"{{{ end }}}{{{ if .BuildDesktop }}}
+  extra_files:{{{ if .BuildDesktop }}}
     - glob: "./build/dist/*_desktop.dmg"
     - glob: "./build/dist/*_desktop.zip"{{{ end }}}{{{ if .BuildAndroid }}}
     - glob: "./build/dist/*_aar.zip"
     - glob: "./build/dist/*_apk.zip"{{{ end }}}{{{ if .BuildIOS }}}
     - glob: "./build/dist/*_framework.zip"
-    - glob: "./build/dist/*_app.zip"{{{ end }}}
+    - glob: "./build/dist/*_app.zip"{{{ end }}}{{{ if .BuildWASM }}}
+    - glob: "./build/dist/*_wasm_html.zip"{{{ end }}}{{{ if .BuildNotarize }}}
+    - glob: "./build/dist/*_notarized.zip"{{{ end }}}
     # $PF_SECTION_START(checksums)$
     # $PF_SECTION_END(checksums)$
 
@@ -86,14 +87,15 @@ release:
     - [MacOS Universal]({{{ .Info.Sourcecode }}}/releases/download/{{ .Tag }}/{{{ .Key }}}_{{ .Version }}_darwin_all.zip)
     - [Windows Intel 64 bit]({{{ .Info.Sourcecode }}}/releases/download/{{ .Tag }}/{{{ .Key }}}_{{ .Version }}_windows_amd64.zip)
 
-  extra_files:{{{ if .BuildNotarize }}}
-    - glob: "./build/dist/*_notarized.zip"{{{ end }}}{{{ if .BuildDesktop }}}
+  extra_files:{{{ if .BuildDesktop }}}
     - glob: "./build/dist/*.dmg"
     - glob: "./build/dist/*_desktop.zip"{{{ end }}}{{{ if .BuildAndroid }}}
     - glob: "./build/dist/*_aar.zip"
     - glob: "./build/dist/*_apk.zip"{{{ end }}}{{{ if .BuildIOS }}}
     - glob: "./build/dist/*_framework.zip"
-    - glob: "./build/dist/*_app.zip"{{{ end }}}
+    - glob: "./build/dist/*_app.zip"{{{ end }}}{{{ if .BuildWASM }}}
+    - glob: "./build/dist/*_wasm_html.zip"{{{ end }}}{{{ if .BuildNotarize }}}
+    - glob: "./build/dist/*_notarized.zip"{{{ end }}}
     # $PF_SECTION_START(releasefiles)$
     # $PF_SECTION_END(releasefiles)$
 {{{ if .Build.BOM }}}
@@ -126,7 +128,8 @@ universal_binaries:
   name_template: '{{ .ProjectName }}'
   hooks:
     # This is a good place to put one-time use scripts
-    post:{{{ if .BuildAndroid }}}
+    post:{{{ if .BuildWASM }}}
+      - "./bin/build/wasmrelease.sh {{ .Version }}"{{{ end }}}{{{ if .BuildAndroid }}}
       - "./bin/build/android.sh {{ .Version }}"{{{ end }}}{{{ if .BuildIOS }}}
       - "./bin/build/ios.sh {{ .Version }}"{{{ end }}}{{{ if .BuildDesktop }}}
       - "./bin/build/desktop.release.sh {{ .Version }}"{{{ end }}}{{{ if .BuildNotarize }}}
