@@ -59,75 +59,47 @@ func (p *Testbed) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 //line views/Testbed.html:19
 	qw422016.N().S(`  </div>
   <script>
+    async function foo(ab) {
+      var byteArray = [];
+      for (var i = 0; i < ab.length; ++i) {
+        byteArray.push(ab.charCodeAt(i) & 0xff)
+      }
+      return byteArray;
+    }
+
     (async () => {
       const req = new Request("https://google.com/foo?x=1&y=2", {method: "POST", body: "HELLO!"});
       req.headers.append("Host", "google.com");
       req.headers.append("foo", "bar");
-
-      const url = new URL(req.url);
-      const host = url.host;
-      const path = url.pathname;
-      let query = url.searchParams.toString();
-      if (query.length > 0) {
-        query = '?' + query;
-      }
-
-      const ret = [`)
-//line views/Testbed.html:19
-	qw422016.N().S("`")
-//line views/Testbed.html:19
-	qw422016.N().S(`${req.method} ${path}${query} HTTP/1.1`)
-//line views/Testbed.html:19
-	qw422016.N().S("`")
-//line views/Testbed.html:19
-	qw422016.N().S(`];
-      req.headers.append("Host", url.host);
-      for (const x of req.headers.entries()) {
-        ret.push(`)
-//line views/Testbed.html:19
-	qw422016.N().S("`")
-//line views/Testbed.html:19
-	qw422016.N().S(`${x[0]}: ${x[1]}`)
-//line views/Testbed.html:19
-	qw422016.N().S("`")
-//line views/Testbed.html:19
-	qw422016.N().S(`);
-      }
-      const body = await req.arrayBuffer();
-      if (body.byteLength > 0) {
-        ret.push("");
-        var enc = new TextDecoder("utf-8");
-        ret.push(enc.decode(body));
-      }
-      console.log(ret.join("\n"));
+      debugger
     })();
   </script>
 `)
-//line views/Testbed.html:49
+//line views/Testbed.html:37
 }
 
-//line views/Testbed.html:49
+//line views/Testbed.html:37
 func (p *Testbed) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/Testbed.html:49
+//line views/Testbed.html:37
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/Testbed.html:49
+//line views/Testbed.html:37
 	p.StreamBody(qw422016, as, ps)
-//line views/Testbed.html:49
+//line views/Testbed.html:37
 	qt422016.ReleaseWriter(qw422016)
-//line views/Testbed.html:49
+//line views/Testbed.html:37
 }
 
-//line views/Testbed.html:49
+//line views/Testbed.html:37
 func (p *Testbed) Body(as *app.State, ps *cutil.PageState) string {
-//line views/Testbed.html:49
+//line views/Testbed.html:37
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/Testbed.html:49
+//line views/Testbed.html:37
 	p.WriteBody(qb422016, as, ps)
-//line views/Testbed.html:49
+//line views/Testbed.html:37
 	qs422016 := string(qb422016.B)
-//line views/Testbed.html:49
+//line views/Testbed.html:37
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/Testbed.html:49
+//line views/Testbed.html:37
 	return qs422016
-//line views/Testbed.html:49
+//line views/Testbed.html:37
 }

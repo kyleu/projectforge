@@ -98,8 +98,7 @@ self.addEventListener('message', (event) => {
 
 function isApp(url) {
   const test = (s) => url.pathname.endsWith(s);
-  return url.pathname === "/" || test("favicon.ico") || test("logo.svg") || test("projectforge.wasm") ||
-      test("httpraw.js") || test("server.js") || test("sw.js") || test("wasm_exec.js");
+  return test("favicon.ico") || test("logo.svg") || test("projectforge.wasm") || test("server.js") || test("sw.js") || test("wasm_exec.js");
 }
 
 self.addEventListener("fetch", (event) => {

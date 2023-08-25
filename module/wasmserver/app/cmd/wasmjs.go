@@ -9,9 +9,6 @@ import (
 	"github.com/muesli/coral"
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
-
-	"{{{ .Package }}}/app/controller/cutil"
-	"{{{ .Package }}}/app/util"
 )
 
 const keyWASM = "wasm"
@@ -70,10 +67,6 @@ func WASMProcess(req js.Value) (js.Value, error) {
 	if err != nil {
 		return js.Null(), err
 	}
-	err = debugRC(rc)
-	if err != nil {
-		return js.Null(), err
-	}
 	return createResponse(rc)
 }
 
@@ -84,6 +77,12 @@ func populateRequest(req js.Value, rc *fasthttp.RequestCtx) error {
 	method := req.Get("method").String()
 	rc.Request.Header.SetMethod(method)
 
+	ab := req.Call("text")
+	if ab.IsNull() || ab.IsUndefined() {
+		return nil
+	}
+	body := ab.String()
+	rc.Request.SetBody([]byte(body))
 	return nil
 }
 
@@ -115,9 +114,4 @@ func createResponse(rc *fasthttp.RequestCtx) (js.Value, error) {
 	opts := map[string]any{"status": rc.Response.StatusCode(), "headers": hd}
 	x := rspClass.New(js.ValueOf(string(rspBytes)), js.ValueOf(opts))
 	return x, nil
-}
-
-func debugRC(rc *fasthttp.RequestCtx) error {
-	println(util.ToJSON(cutil.RequestCtxToMap(rc, nil)))
-	return nil
 }

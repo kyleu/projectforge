@@ -19,31 +19,19 @@
     {%- endif -%}
   </div>
   <script>
+    async function foo(ab) {
+      var byteArray = [];
+      for (var i = 0; i < ab.length; ++i) {
+        byteArray.push(ab.charCodeAt(i) & 0xff)
+      }
+      return byteArray;
+    }
+
     (async () => {
       const req = new Request("https://google.com/foo?x=1&y=2", {method: "POST", body: "HELLO!"});
       req.headers.append("Host", "google.com");
       req.headers.append("foo", "bar");
-
-      const url = new URL(req.url);
-      const host = url.host;
-      const path = url.pathname;
-      let query = url.searchParams.toString();
-      if (query.length > 0) {
-        query = '?' + query;
-      }
-
-      const ret = [`${req.method} ${path}${query} HTTP/1.1`];
-      req.headers.append("Host", url.host);
-      for (const x of req.headers.entries()) {
-        ret.push(`${x[0]}: ${x[1]}`);
-      }
-      const body = await req.arrayBuffer();
-      if (body.byteLength > 0) {
-        ret.push("");
-        var enc = new TextDecoder("utf-8");
-        ret.push(enc.decode(body));
-      }
-      console.log(ret.join("\n"));
+      debugger
     })();
   </script>
 {% endfunc %}
