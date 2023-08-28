@@ -58,48 +58,51 @@ func (p *Testbed) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 	}
 //line views/Testbed.html:19
 	qw422016.N().S(`  </div>
-  <script>
-    async function foo(ab) {
-      var byteArray = [];
-      for (var i = 0; i < ab.length; ++i) {
-        byteArray.push(ab.charCodeAt(i) & 0xff)
-      }
-      return byteArray;
-    }
-
-    (async () => {
-      const req = new Request("https://google.com/foo?x=1&y=2", {method: "POST", body: "HELLO!"});
-      req.headers.append("Host", "google.com");
-      req.headers.append("foo", "bar");
-      debugger
-    })();
-  </script>
+  <div class="card">
+    <form action="" method="post">
+      <h3>`)
+//line views/Testbed.html:23
+	components.StreamSVGRefIcon(qw422016, `cog`, ps)
+//line views/Testbed.html:23
+	qw422016.N().S(`Form Test</h3>
+      <div class="mt">
+        <textarea class="full-width" name="x" rows="8" placeholder="">`)
+//line views/Testbed.html:25
+	qw422016.E().V(p.Param)
+//line views/Testbed.html:25
+	qw422016.N().S(`</textarea>
+      </div>
+      <div class="mt">
+        <button type="submit">Test</button>
+      </div>
+    </form>
+  </div>
 `)
-//line views/Testbed.html:37
+//line views/Testbed.html:32
 }
 
-//line views/Testbed.html:37
+//line views/Testbed.html:32
 func (p *Testbed) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/Testbed.html:37
+//line views/Testbed.html:32
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/Testbed.html:37
+//line views/Testbed.html:32
 	p.StreamBody(qw422016, as, ps)
-//line views/Testbed.html:37
+//line views/Testbed.html:32
 	qt422016.ReleaseWriter(qw422016)
-//line views/Testbed.html:37
+//line views/Testbed.html:32
 }
 
-//line views/Testbed.html:37
+//line views/Testbed.html:32
 func (p *Testbed) Body(as *app.State, ps *cutil.PageState) string {
-//line views/Testbed.html:37
+//line views/Testbed.html:32
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/Testbed.html:37
+//line views/Testbed.html:32
 	p.WriteBody(qb422016, as, ps)
-//line views/Testbed.html:37
+//line views/Testbed.html:32
 	qs422016 := string(qb422016.B)
-//line views/Testbed.html:37
+//line views/Testbed.html:32
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/Testbed.html:37
+//line views/Testbed.html:32
 	return qs422016
-//line views/Testbed.html:37
+//line views/Testbed.html:32
 }

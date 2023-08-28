@@ -58,10 +58,6 @@ table .noresize {
   padding: var(--padding-small);
 }
 
-table.full-width {
-  width: 100%;
-}
-
 @supports (-moz-appearance:none) {
   table .resize {
     min-width: 100%;

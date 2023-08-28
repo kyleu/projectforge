@@ -1,13 +1,13 @@
 importScripts("wasm_exec.js");
 
-const wasmURI = "projectforge.wasm";
+const wasmURI = "{{{ .Exec }}}.wasm";
 let WasmApp, WasmAppStatus;
 
 function getLog(s) {
   return "### ServiceWorker: " + s;
 }
 
-const explodedPromise = () => {
+function explodedPromise() {
   var status = "pending", value = null;
   const get = () => ({ status, value });
   var resolve, reject;
@@ -24,7 +24,7 @@ const explodedPromise = () => {
     };
   });
   return [promise, get, resolve, reject];
-};
+}
 
 const loadWasmApp = (() => {
   var locked = false;
@@ -95,31 +95,44 @@ self.addEventListener('message', (event) => {
   }
 });
 
-function isApp(url) {
-  const test = (s) => url.pathname.endsWith(s);
-  return test("favicon.ico") || test("logo.svg") || test("projectforge.wasm") || test("server.js") || test("sw.js") || test("wasm_exec.js");
+function isLocal(url) {
+  if (url.toString().startsWith("{{{ .Info.Homepage }}}")) {
+    return true;
+  }
+  for (const s of ["favicon.ico", "logo.svg", "{{{ .Exec }}}.wasm", "server.js", "sw.js", "wasm_exec.js"]) {
+    if (url.pathname.endsWith(s)) {
+      return true;
+    }
+  }
+  return false;
 }
 
 self.addEventListener("fetch", (event) => {
   let url = new URL(event.request.url);
-  let shouldOverride = url.origin === event.target.location.origin && !isApp(url) && WasmAppStatus().status === "resolved";
+  const sameOrigin = url.origin === event.target.location.origin;
+  let shouldOverride = sameOrigin && !isLocal(url) && WasmAppStatus().status === "resolved";
   console.log(getLog("fetch event received"), { overriding: shouldOverride, method: event.request.method, url, event });
   if (!shouldOverride) {
     return;
   }
   event.respondWith((async () => {
     try {
-      return getResponse(event.request)
+      const headers = [];
+      event.request.headers.forEach((value, key) => {
+        headers.push([key, value]);
+      });
+      const reqBody = await event.request.text();
+      return getResponse(event.request, headers, reqBody);
     } catch (error) {
       console.error(getLog("error calling wasm app"), { error, event });
     }
   })());
 });
 
-async function getResponse(req) {
+async function getResponse(req, headers, reqBody) {
   await WasmApp;
   console.log(getLog("request to wasm app"), req);
-  const rsp = goFetch(req, Response);
+  const rsp = goFetch(req, headers, reqBody);
   console.log(getLog("response received from wasm app"), rsp);
   return rsp
 }

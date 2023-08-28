@@ -142,6 +142,10 @@
   overflow: auto;
 }
 
+.full-width {
+  width: 100%;
+}
+
 .nowrap {
   white-space: nowrap;
 }
