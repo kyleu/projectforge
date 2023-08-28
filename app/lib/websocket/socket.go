@@ -78,10 +78,11 @@ func (s *Service) WriteChannel(message *Message, logger util.Logger, except ...u
 
 func (s *Service) Broadcast(message *Message, logger util.Logger, except ...uuid.UUID) error {
 	logger.Debug(fmt.Sprintf("broadcasting message [%v::%v] to [%v] connections", message.Channel, message.Cmd, len(s.connections)))
-	for id, _ := range s.connections {
+	for id := range s.connections {
 		if !slices.Contains(except, id) {
+			closureID := id
 			go func() {
-				_ = s.WriteMessage(id, message, logger)
+				_ = s.WriteMessage(closureID, message, logger)
 			}()
 		}
 	}

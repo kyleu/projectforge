@@ -116,8 +116,6 @@ func processFileImports(fn string, lines []string, self string) ([]string, []str
 	}
 
 	ret = append(ret, &diff.Diff{Path: fn, Status: diff.StatusDifferent, Patch: fmt.Sprintf("%s: %s", fn, chkErr.Error())})
-	if chkErr != nil {
-	}
 
 	fixed := make([]string, 0, len(lines))
 	fixed = append(fixed, lines[:start+1]...)

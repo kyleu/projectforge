@@ -83,15 +83,9 @@ func testFS(testDir string, fs filesystem.FileLoader, removeWhenDone bool) error
 func fixWD() {
 	wd, _ := os.Getwd()
 	origwd := wd
-	if strings.HasSuffix(wd, "/filesystem") {
-		wd = strings.TrimSuffix(wd, "/filesystem")
-	}
-	if strings.HasSuffix(wd, "/lib") {
-		wd = strings.TrimSuffix(wd, "/lib")
-	}
-	if strings.HasSuffix(wd, "/app") {
-		wd = strings.TrimSuffix(wd, "/app")
-	}
+	wd = strings.TrimSuffix(wd, "/filesystem")
+	wd = strings.TrimSuffix(wd, "/lib")
+	wd = strings.TrimSuffix(wd, "/app")
 	if wd != origwd {
 		_ = os.Chdir(wd)
 	}

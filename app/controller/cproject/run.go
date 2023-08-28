@@ -3,7 +3,6 @@ package cproject
 import (
 	"fmt"
 
-
 	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"

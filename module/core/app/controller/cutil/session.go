@@ -48,7 +48,7 @@ func LoadPageState(as *app.State, rc *fasthttp.RequestCtx, key string, logger ut
 	isAuthed, _ := user.Check("/", accts)
 	isAdmin, _ := user.Check("/admin", accts){{{ end }}}{{{ if .HasUser }}}
 
-	u, _ := as.Services.User.Get(ctx, nil, prof.ID, logger){{{ end }}}
+	u, _ := as.User(ctx, prof.ID, logger){{{ end }}}
 
 	return &PageState{
 		Method: string(rc.Method()), URI: rc.Request.URI(), Flashes: flashes, Session: session,

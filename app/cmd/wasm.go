@@ -18,6 +18,6 @@ func wasmCmd() *coral.Command {
 	return ret
 }
 
-func startWASM(flags *Flags) error {
+func startWASM(_ *Flags) error {
 	return errors.New("The WASM command can only be run from WebAssembly")
 }

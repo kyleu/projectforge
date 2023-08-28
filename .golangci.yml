@@ -10,8 +10,6 @@ output:
 linters-settings:
   cyclop:
     max-complexity: 32
-  depguard:
-    list-type: blacklist
   dupl:
     threshold: 512
   exhaustive:
@@ -93,7 +91,7 @@ linters:
     - cyclop
     # - deadcode # deprecated
     - decorder
-    - depguard
+    # - depguard
     - dogsled
     # - dupl
     - durationcheck

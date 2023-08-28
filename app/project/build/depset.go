@@ -13,6 +13,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+//nolint:gocognit
 func SetDepsMap(ctx context.Context, projects project.Projects, dep *Dependency, pSvc *project.Service, logger util.Logger) (string, error) {
 	logger.Infof("upgrading dependency [%s] to [%s]", dep.Key, dep.Version)
 	var affected int

@@ -60,6 +60,8 @@ func GitActionAll(rc *fasthttp.RequestCtx) {
 				return controller.Render(rc, as, page, ps, "projects", "Git")
 			}
 			results, err = gitMagicAll(prjs, rc, as, ps)
+		case git.ActionPush.Key:
+			results, err = gitPushAll(prjs, as, ps)
 		case git.ActionUndoCommit.Key:
 			results, err = gitUndoAll(prjs, as, ps)
 		default:
@@ -94,6 +96,13 @@ func gitFetchAll(prjs project.Projects, as *app.State, ps *cutil.PageState) (git
 func gitPullAll(prjs project.Projects, as *app.State, ps *cutil.PageState) (git.Results, error) {
 	results, errs := util.AsyncCollect(prjs, func(prj *project.Project) (*git.Result, error) {
 		return as.Services.Git.Pull(ps.Context, prj, ps.Logger)
+	})
+	return results, util.ErrorMerge(errs...)
+}
+
+func gitPushAll(prjs project.Projects, as *app.State, ps *cutil.PageState) (git.Results, error) {
+	results, errs := util.AsyncCollect(prjs, func(prj *project.Project) (*git.Result, error) {
+		return as.Services.Git.Push(ps.Context, prj, ps.Logger)
 	})
 	return results, util.ErrorMerge(errs...)
 }

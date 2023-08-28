@@ -4,14 +4,17 @@ import (
 	"context"
 	"fmt"
 	"sync"
-	"time"
+	"time"{{{ if .HasUser }}}
+
+	"github.com/google/uuid"{{{ end }}}
 {{{ if .HasModule "oauth" }}}
 	"{{{ .Package }}}/app/lib/auth"{{{ end }}}{{{ if .HasDatabaseModule }}}
 	"{{{ .Package }}}/app/lib/database"{{{ end }}}{{{ if .HasModule "filesystem" }}}
 	"{{{ .Package }}}/app/lib/filesystem"{{{ end }}}{{{ if .HasModule "graphql" }}}
 	"{{{ .Package }}}/app/lib/graphql"{{{ end }}}
 	"{{{ .Package }}}/app/lib/telemetry"
-	"{{{ .Package }}}/app/lib/theme"
+	"{{{ .Package }}}/app/lib/theme"{{{ if .HasUser }}}
+	"{{{ .Package }}}/app/user"{{{ end }}}
 	"{{{ .Package }}}/app/util"
 )
 
@@ -86,4 +89,11 @@ func (s State) Close(ctx context.Context, logger util.Logger) error {
 		logger.Errorf("error closing GraphQL service: %+v", err)
 	}
 	{{{ end }}}return s.Services.Close(ctx, logger)
-}
+}{{{ if .HasUser }}}
+
+func (s State) User(ctx context.Context, id uuid.UUID, logger util.Logger) (*user.User, error) {
+	if s.Services == nil || s.Services.User == nil {
+		return nil, nil
+	}
+	return s.Services.User.Get(ctx, nil, id, logger)
+}{{{ end }}}

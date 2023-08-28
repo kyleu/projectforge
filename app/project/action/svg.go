@@ -21,7 +21,7 @@ func onSVG(ctx context.Context, pm *PrjAndMods) *Result {
 
 	if pm.Cfg.GetStringOpt("mode") == refreshMode {
 		ret.AddLog("refreshing app SVG for project [%s]", pm.Prj.Key)
-		err := svg.RefreshAppIcon(ctx, pm.Prj, fs, pm.Logger)
+		err = svg.RefreshAppIcon(ctx, pm.Prj, fs, pm.Logger)
 		if err != nil {
 			return errorResult(err, TypeSVG, pm.Cfg, pm.Logger)
 		}

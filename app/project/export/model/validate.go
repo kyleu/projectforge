@@ -15,7 +15,6 @@ var goKeywords = []string{
 
 var reservedNames = map[string][]string{"audit": {"audit", "audit_record"}}
 
-//nolint:gocognit
 func (m *Model) Validate(mods []string, models Models, groups Groups) error {
 	if len(m.PKs()) == 0 {
 		return errors.Errorf("model [%s] has no primary key", m.Name)

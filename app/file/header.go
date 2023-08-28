@@ -30,7 +30,8 @@ func contentWithHeader(filename string, t Type, c string, linebreak string, logg
 	case TypeGo.Key:
 		if strings.HasPrefix(c, "//go:build") {
 			return secondLine(c, linebreak+"// "+HeaderContent, linebreak)
-		} else if strings.Index(c, "}}}//go:build") > -1 {
+		}
+		if strings.Contains(c, "}}}//go:build") {
 			tok := "{{{ end }}}"
 			idx := strings.Index(c, tok)
 			if idx == -1 {

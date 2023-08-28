@@ -32,7 +32,7 @@ func iconset(img image.Image) ([]byte, error) {
 			return nil, err
 		}
 
-		lenByt := make([]byte, 4, 4)
+		lenByt := make([]byte, 4)
 		binary.BigEndian.PutUint32(lenByt, uint32(imgBuf.Len()+8))
 
 		// Iterate through every OSType and append the icon to iconBuffers
@@ -49,7 +49,7 @@ func iconset(img image.Image) ([]byte, error) {
 		}
 	}
 
-	lenByt := make([]byte, 4, 4)
+	lenByt := make([]byte, 4)
 	binary.BigEndian.PutUint32(lenByt, uint32(iconBuffers.Len()+8))
 
 	data := icnsHeader

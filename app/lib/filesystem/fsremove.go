@@ -28,13 +28,13 @@ func (f *FileSystem) RemoveRecursive(path string, logger util.Logger) error {
 		return errors.Wrapf(err, "unable to stat file [%s]", path)
 	}
 	if s.IsDir() {
-		dir, err := f.f.Open(p)
-		if err != nil {
-			logger.Warnf("cannot open path [%s] for removal: %+v", path, err)
+		dir, e := f.f.Open(p)
+		if e != nil {
+			logger.Warnf("cannot open path [%s] for removal: %+v", path, e)
 		}
-		files, err := dir.Readdir(0)
-		if err != nil {
-			logger.Warnf("cannot read path [%s] for removal: %+v", path, err)
+		files, e := dir.Readdir(0)
+		if e != nil {
+			logger.Warnf("cannot read path [%s] for removal: %+v", path, e)
 		}
 		for _, file := range files {
 			err = f.RemoveRecursive(filepath.Join(path, file.Name()), logger)
