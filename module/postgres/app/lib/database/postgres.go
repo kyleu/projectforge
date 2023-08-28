@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"strconv"
 
-	// load postgres driver.
 	_ "github.com/jackc/pgx/v4/stdlib"
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"

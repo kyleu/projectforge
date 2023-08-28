@@ -1,6 +1,7 @@
 package build
 
 import (
+	"slices"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -19,6 +20,7 @@ func check(imports []string, orig []string) ([]string, []string, error) {
 	var imps []string
 	var lastSep bool
 	first, third, self := util.ValueMap{}, util.ValueMap{}, util.ValueMap{}
+	firsts, thirds, selfs := []string{}, []string{}, []string{}
 
 	observe := func(key string, i string) {
 		lo.ForEach(observed, func(ob string, _ int) {
@@ -28,7 +30,7 @@ func check(imports []string, orig []string) ([]string, []string, error) {
 		})
 		observed = append(observed, i)
 	}
-	clear := func() {
+	clr := func() {
 		observed = []string{}
 	}
 	chk := func(tgt int, msg string) {
@@ -37,7 +39,7 @@ func check(imports []string, orig []string) ([]string, []string, error) {
 				err = errors.New("missing separator")
 			}
 			state = tgt
-			clear()
+			clr()
 		}
 		lastSep = false
 		if state > tgt {
@@ -51,35 +53,51 @@ func check(imports []string, orig []string) ([]string, []string, error) {
 		case sepKey:
 			if state != 0 && lastLine != "" {
 				state++
-				clear()
+				clr()
 			}
 			lastSep = true
 		case firstKey:
+			if state > 1 {
+				err = errors.New("invalid ordering")
+			}
 			if state != 1 {
 				state = 1
-				clear()
+				clr()
 			}
 			lastSep = false
 			if state > 1 {
 				err = errors.New("1st party")
 			}
+			chk(1, "1st party")
 			first[i] = orig[idx]
+			firsts = append(firsts, i)
 			imps = append(imps, imp)
 			observe(i, "1st party")
 		case thirdKey:
 			chk(2, "3rd party")
 			third[i] = orig[idx]
+			thirds = append(thirds, i)
 			imps = append(imps, imp)
 			observe(i, "3rd party")
 		case selfKey:
 			chk(3, "self")
 			self[i] = orig[idx]
+			selfs = append(selfs, i)
 			imps = append(imps, imp)
 			observe(i, selfKey)
 		default:
 			return nil, nil, errors.New("invalid type")
 		}
 		lastLine = l
+	}
+	if !slices.IsSorted(firsts) {
+		err = errors.New("first-party imports are not sorted")
+	}
+	if !slices.IsSorted(thirds) {
+		err = errors.New("third-party imports are not sorted")
+	}
+	if !slices.IsSorted(selfs) {
+		err = errors.New("this app's imports are not sorted")
 	}
 	return imps, makeResult(first, third, self), err
 }

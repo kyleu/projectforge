@@ -1,12 +1,12 @@
 package action
 
 import (
-	"projectforge.dev/projectforge/app/lib/filesystem"
 	"strings"
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
 
+	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/project/export/model"
 	"projectforge.dev/projectforge/app/project/svg"
 	"projectforge.dev/projectforge/app/util"

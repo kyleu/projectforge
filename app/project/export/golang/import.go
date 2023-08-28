@@ -1,12 +1,12 @@
 package golang
 
 import (
+	"cmp"
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/samber/lo"
-
-	"projectforge.dev/projectforge/app/util"
 )
 
 type ImportType string
@@ -103,9 +103,19 @@ func (i Imports) RenderHTML(linebreak string) string {
 }
 
 func (i Imports) ByType(t ImportType) []string {
-	return util.ArraySorted(lo.FilterMap(i, func(x *Import, _ int) (string, bool) {
+	ret := lo.FilterMap(i, func(x *Import, _ int) (string, bool) {
 		return x.Render(), x.Type == t
-	}))
+	})
+	slices.SortFunc(ret, func(l string, r string) int {
+		if lIdx := strings.Index(l, " "); lIdx > -1 {
+			l = l[lIdx+1:]
+		}
+		if rIdx := strings.Index(r, " "); rIdx > -1 {
+			r = r[rIdx+1:]
+		}
+		return cmp.Compare(l, r)
+	})
+	return ret
 }
 
 func (i Imports) Add(imports ...*Import) Imports {
