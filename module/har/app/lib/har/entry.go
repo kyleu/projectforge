@@ -94,6 +94,40 @@ func (e *Entry) ToRequest(ctx context.Context, ignoreCookies bool) (*http.Reques
 	return req, nil
 }
 
+func (e *Entry) WithReplacementsMap(repls map[string]string, vars util.ValueMap) *Entry {
+	if len(repls) == 0 {
+		return e
+	}
+	startToken, endToken := "{{", "}}"
+	return e.WithReplacements(func(s string) string {
+		for k, v := range repls {
+			if v == "" {
+				v = k
+			}
+			if strings.Contains(v, "||") {
+				v = util.StringSplitAndTrim(v, "||")[0]
+			}
+			sIdx := strings.Index(v, startToken)
+			for sIdx > -1 {
+				eIdx := strings.Index(v, endToken)
+				if eIdx == -1 {
+					return "missing end token [" + endToken + "]"
+				}
+				match := v[sIdx+3 : eIdx]
+				r := startToken + match + endToken
+				variable := vars.GetStringOpt(strings.TrimSpace(match))
+				if variable == "" {
+					return "missing variable [" + strings.TrimSpace(match) + "]"
+				}
+				v = strings.Replace(v, r, variable, 1)
+				sIdx = strings.Index(v, startToken)
+			}
+			s = strings.ReplaceAll(s, k, v)
+		}
+		return s
+	})
+}
+
 func (e *Entry) WithReplacements(repls func(s string) string) *Entry {
 	ret := e.Clone()
 	ret.Request = ret.Request.WithReplacements(repls)
@@ -148,34 +182,7 @@ func (e Entries) WithReplacementsMap(repls map[string]string, vars util.ValueMap
 	if len(repls) == 0 {
 		return e
 	}
-	startToken, endToken := "{{", "}}"
-	return e.WithReplacements(func(s string) string {
-		for k, v := range repls {
-			if v == "" {
-				v = k
-			}
-			if strings.Contains(v, "||") {
-				v = util.StringSplitAndTrim(v, "||")[0]
-			}
-			sIdx := strings.Index(v, startToken)
-			for sIdx > -1 {
-				eIdx := strings.Index(v, endToken)
-				if eIdx == -1 {
-					return "missing end token [" + endToken + "]"
-				}
-				match := v[sIdx+3 : eIdx]
-				r := startToken + match + endToken
-				variable := vars.GetStringOpt(strings.TrimSpace(match))
-				if variable == "" {
-					return "missing variable [" + strings.TrimSpace(match) + "]"
-				}
-				v = strings.Replace(v, r, variable, 1)
-				sIdx = strings.Index(v, startToken)
-			}
-			s = strings.ReplaceAll(s, k, v)
-		}
-		return s
-	})
+	return e.WithReplacementsMap(repls, vars)
 }
 
 func (e Entries) WithReplacements(repl func(s string) string) Entries {
