@@ -36,6 +36,9 @@ type FileSystem struct {
 var _ FileLoader = (*FileSystem)(nil)
 
 func NewFileSystem(root string, readonly bool, mode string) (*FileSystem, error) {
+	if strings.HasPrefix(root, "./") {
+		root = root[2:]
+	}
 	var f afero.Fs
 	switch mode {
 	case "memory":
