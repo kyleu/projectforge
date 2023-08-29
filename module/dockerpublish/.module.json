@@ -1,9 +1,0 @@
-{
-  "name": "Docker Publish",
-  "icon": "star",
-  "description": "Provides a docker build for CI and publishing",
-  "authorName": "Kyle U",
-  "authorEmail": "kyle@kyleu.com",
-  "license": "CC0",
-  "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/dockerpublish"
-}

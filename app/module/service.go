@@ -14,7 +14,7 @@ import (
 )
 
 var nativeModuleKeys = []string{
-	"android", "audit", "core", "database", "databaseui", "desktop", "dockerpublish", "docbrowse",
+	"android", "audit", "core", "database", "databaseui", "desktop", "docbrowse",
 	"export", "expression", "filesystem", "graphql", "har", "ios", "jsx", "marketing", "migration", "mysql",
 	"notarize", "oauth", "postgres", "process", "readonlydb", "sandbox", "schema", "scripting", "search", "sqlite", "sqlserver",
 	"themecatalog", "types", "upgrade", "user", "wasmclient", "wasmserver", "websocket",

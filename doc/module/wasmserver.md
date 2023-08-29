@@ -11,4 +11,6 @@ Licensed under [CC0](https://creativecommons.org/publicdomain/zero/1.0)
 
 ### Usage
 
-To use your app with only WebAssembly, no server process required, run `./bin/build/wasmserver.sh`, then host the files in ./tools/wasmserver in an HTTP server (sadly, it won't work with `file://` urls).
+To use your app with only WebAssembly, no server process required, run `./bin/build/wasmserver.sh`, then host the files in ./tools/wasmserver in an HTTP server (it won't work with `file://` urls, and requires SSL for servers other than `localhost`).
+
+This is of limited utility, since ServiceWorkers aren't allowed to set cookies or other forbidden headers, so the app is quite limited. 
