@@ -8,7 +8,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-const defaultGoVersion = "1.21"
+const DefaultGoVersion = "1.21"
 
 type Doc struct {
 	Name     string `json:"name"`

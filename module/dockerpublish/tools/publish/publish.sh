@@ -6,7 +6,7 @@ set -euo pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $dir/../..
 
-echo "Building publishing Docker image..."
+echo "Building Docker \"publish\" image..."
 docker build -f tools/publish/Dockerfile.publish -t {{{ .Exec }}}-publish .
 
 # TODO: Remove

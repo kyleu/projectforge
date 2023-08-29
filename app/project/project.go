@@ -110,3 +110,10 @@ func (p *Project) ModuleArgExport(pSvc *Service, logger util.Logger) (*model.Arg
 	}
 	return p.ExportArgs, nil
 }
+
+func (p *Project) GoVersion() string {
+	if p.Info == nil || p.Info.GoVersion == "" {
+		return DefaultGoVersion
+	}
+	return p.Info.GoVersion
+}

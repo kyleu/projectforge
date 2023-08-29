@@ -121,7 +121,7 @@ func (t *TemplateContext) DatabaseUISaveUser() bool {
 
 func (t *TemplateContext) GoVersionSafe() string {
 	if t.Info.GoVersion == "" {
-		return defaultGoVersion
+		return DefaultGoVersion
 	}
 	return t.Info.GoVersion
 }

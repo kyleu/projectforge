@@ -14,7 +14,7 @@ import (
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func Models(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
+func Models(m *model.Model, args *model.Args, addHeader bool, goVersion string, linebreak string) (*file.File, error) {
 	name := strings.ToLower(m.CamelPlural())
 	if name == strings.ToLower(m.Camel()) {
 		name += "_array"
@@ -26,9 +26,10 @@ func Models(m *model.Model, args *model.Args, addHeader bool, linebreak string) 
 	lo.ForEach(helper.ImportsForTypes("string", "", m.PKs().Types()...), func(imp *golang.Import, _ int) {
 		g.AddImport(imp)
 	})
-	g.AddImport(helper.ImpSlices, helper.ImpLo)
+	g.AddImport(helper.ImpSlicesForGo(goVersion))
+	g.AddImport(helper.ImpLo)
 	g.AddBlocks(modelArray(m))
-	ag, err := modelArrayGet(g, m, args.Enums)
+	ag, err := modelArrayGet(g, m, args.Enums, goVersion)
 	if err != nil {
 		return nil, err
 	}
@@ -55,7 +56,7 @@ func modelArray(m *model.Model) *golang.Block {
 	return ret
 }
 
-func modelArrayGet(g *golang.File, m *model.Model, enums enum.Enums) (*golang.Block, error) {
+func modelArrayGet(g *golang.File, m *model.Model, enums enum.Enums, goVersion string) (*golang.Block, error) {
 	ret := golang.NewBlock(m.Proper()+"ArrayGet", "func")
 	args, err := m.PKs().Args(m.Package, enums)
 	if err != nil {
@@ -65,7 +66,7 @@ func modelArrayGet(g *golang.File, m *model.Model, enums enum.Enums) (*golang.Bl
 
 	comps := lo.Map(m.PKs(), func(pk *model.Column, _ int) string {
 		if types.IsList(pk.Type) {
-			g.AddImport(helper.ImpSlices)
+			g.AddImport(helper.ImpSlicesForGo(goVersion))
 			return fmt.Sprintf("slices.Equal(x.%s, %s)", pk.Proper(), pk.Camel())
 		}
 		return fmt.Sprintf("x.%s == %s", pk.Proper(), pk.Camel())

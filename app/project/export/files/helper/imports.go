@@ -2,6 +2,8 @@ package helper
 
 import (
 	"fmt"
+	"golang.org/x/mod/semver"
+	"projectforge.dev/projectforge/app/project"
 
 	"github.com/samber/lo"
 
@@ -31,6 +33,7 @@ var (
 	ImpRouter        = golang.NewImport(golang.ImportTypeExternal, "github.com/fasthttp/router")
 	ImpSearchResult  = AppImport("app/lib/search/result")
 	ImpSlices        = golang.NewImport(golang.ImportTypeInternal, "slices")
+	ImpSlices119     = golang.NewImport(golang.ImportTypeExternal, "golang.org/x/exp/slices")
 	ImpSQL           = golang.NewImport(golang.ImportTypeInternal, "database/sql")
 	ImpSQLx          = golang.NewImport(golang.ImportTypeExternal, "github.com/jmoiron/sqlx")
 	ImpStrconv       = golang.NewImport(golang.ImportTypeInternal, "strconv")
@@ -42,6 +45,14 @@ var (
 
 func AppImport(path string) *golang.Import {
 	return &golang.Import{Type: golang.ImportTypeApp, Value: "{{{ .Package }}}/" + path}
+}
+
+func ImpSlicesForGo(v string) *golang.Import {
+	c := semver.Compare("v"+v, "v"+project.DefaultGoVersion)
+	if c < 0 {
+		return ImpSlices119
+	}
+	return ImpSlices
 }
 
 func ImportsForTypes(ctx string, database string, ts ...types.Type) golang.Imports {

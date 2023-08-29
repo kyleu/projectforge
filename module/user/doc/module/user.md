@@ -12,7 +12,8 @@ Licensed under [CC0](https://creativecommons.org/publicdomain/zero/1.0)
 
 - A user profile is provided in the session, new users are saved in the database
 
-No implementation of a User is provided. Either provide your own, or have Project Forge generate one by making a new file:
+A default implementation of a User is provided, saving records on the filesystem. 
+Either make it your own by editing the files, or have Project Forge generate one by making a new export model file:
 
 `./.projectforge/export/models/user.json` (`database` and `export` modules are required)
 

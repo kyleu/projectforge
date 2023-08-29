@@ -14,7 +14,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func ServiceAll(m *model.Model, args *model.Args, addHeader bool, linebreak string) (file.Files, error) {
+func ServiceAll(m *model.Model, args *model.Args, addHeader bool, goVersion string, linebreak string) (file.Files, error) {
 	x, err := Service(m, args, addHeader, linebreak)
 	if err != nil {
 		return nil, err
@@ -29,7 +29,7 @@ func ServiceAll(m *model.Model, args *model.Args, addHeader bool, linebreak stri
 	}
 	ret := file.Files{x, g, mt}
 	if m.IsRevision() {
-		r, err := ServiceRevision(m, args, addHeader, linebreak)
+		r, err := ServiceRevision(m, args, addHeader, goVersion, linebreak)
 		if err != nil {
 			return nil, err
 		}

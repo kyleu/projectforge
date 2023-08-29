@@ -18,7 +18,7 @@ import (
 
 const incDel = ", includeDeleted bool"
 
-func ServiceRevision(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
+func ServiceRevision(m *model.Model, args *model.Args, addHeader bool, goVersion string, linebreak string) (*file.File, error) {
 	dbRef := args.DBRef()
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "servicerevision")
 	g.AddImport(helper.ImpAppUtil, helper.ImpFmt, helper.ImpStrings, helper.ImpContext, helper.ImpFilter, helper.ImpSQLx, helper.ImpErrors, helper.ImpDatabase)
@@ -34,7 +34,7 @@ func ServiceRevision(m *model.Model, args *model.Args, addHeader bool, linebreak
 	if err != nil {
 		return nil, err
 	}
-	gnr, err := serviceGetCurrentRevisions(g, m, dbRef, args.Enums)
+	gnr, err := serviceGetCurrentRevisions(g, m, dbRef, args.Enums, goVersion)
 	if err != nil {
 		return nil, err
 	}
@@ -132,7 +132,7 @@ func serviceGetRevision(m *model.Model, dbRef string, enums enum.Enums) (*golang
 	return ret, nil
 }
 
-func serviceGetCurrentRevisions(g *golang.File, m *model.Model, dbRef string, enums enum.Enums) (*golang.Block, error) {
+func serviceGetCurrentRevisions(g *golang.File, m *model.Model, dbRef string, enums enum.Enums, goVersion string) (*golang.Block, error) {
 	revCol := m.HistoryColumn()
 	pks := m.PKs()
 	ret := golang.NewBlock(fmt.Sprintf("GetCurrent%s", revCol.ProperPlural()), "func")
@@ -144,7 +144,7 @@ func serviceGetCurrentRevisions(g *golang.File, m *model.Model, dbRef string, en
 	pkComps := make([]string, 0, len(pks))
 	lo.ForEach(pks, func(pk *model.Column, idx int) {
 		if types.IsStringList(pk.Type) {
-			g.AddImport(helper.ImpSlices)
+			g.AddImport(helper.ImpSlicesForGo(goVersion))
 			pkComps = append(pkComps, fmt.Sprintf("slices.Equal(x.%s, model.%s)", pk.Proper(), pk.Proper()))
 		} else {
 			pkComps = append(pkComps, fmt.Sprintf("x.%s == model.%s", pk.Proper(), pk.Proper()))

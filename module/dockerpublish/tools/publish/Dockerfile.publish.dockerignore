@@ -1,2 +1,3 @@
 Dockerfile.publish
-Dockerfile.publish.dockerignore
+build/
+.git/

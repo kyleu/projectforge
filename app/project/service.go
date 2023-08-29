@@ -58,8 +58,10 @@ func (s *Service) Refresh(logger util.Logger) (Projects, error) {
 	fs, _ := filesystem.NewFileSystem(".", false, "")
 	if add, ok := s.getAdditional(fs, logger); ok {
 		for _, a := range add {
-			if _, err := s.add(a, root); err != nil {
-				return nil, err
+			if !strings.HasPrefix(a, "#") {
+				if _, err := s.add(a, root); err != nil {
+					return nil, err
+				}
 			}
 		}
 	}

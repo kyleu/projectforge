@@ -42,7 +42,7 @@ var Helpers = func() map[string][]string {
 	add("slack", "Slack webhook for notifying after successful releases")
 	add("channels", "Various communication channels used by this project")
 	add("javaPackage", "The Java package used by the Android application")
-	add("goVersion", "The version used for Go, defaults to \""+defaultGoVersion+"\"")
+	add("goVersion", "The version used for Go, defaults to \""+DefaultGoVersion+"\"")
 	add("goBinary", "The binary used for Go, defaults to \"go\"")
 	add("configVars", "Configuration variables for code generation")
 	add("extraFiles", "Additional files to include in the builds")

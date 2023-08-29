@@ -18,7 +18,7 @@ func ModelAll(m *model.Model, p *project.Project, args *model.Args, addHeader bo
 	var calls file.Files
 	var f *file.File
 
-	fs, err := basics(m, args, addHeader, linebreak)
+	fs, err := basics(m, args, addHeader, p.GoVersion(), linebreak)
 	if err != nil {
 		return nil, err
 	}
@@ -63,7 +63,7 @@ func ModelAll(m *model.Model, p *project.Project, args *model.Args, addHeader bo
 	return calls, nil
 }
 
-func basics(m *model.Model, args *model.Args, addHeader bool, linebreak string) (file.Files, error) {
+func basics(m *model.Model, args *model.Args, addHeader bool, goVersion string, linebreak string) (file.Files, error) {
 	var calls file.Files
 	f, err := gomodel.Model(m, args, addHeader, linebreak)
 	if err != nil {
@@ -71,7 +71,7 @@ func basics(m *model.Model, args *model.Args, addHeader bool, linebreak string) 
 	}
 	calls = append(calls, f)
 
-	f, err = gomodel.Models(m, args, addHeader, linebreak)
+	f, err = gomodel.Models(m, args, addHeader, goVersion, linebreak)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't render models")
 	}
@@ -91,7 +91,7 @@ func basics(m *model.Model, args *model.Args, addHeader bool, linebreak string) 
 	}
 	calls = append(calls, f)
 
-	fs, err := svc.ServiceAll(m, args, addHeader, linebreak)
+	fs, err := svc.ServiceAll(m, args, addHeader, goVersion, linebreak)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't render service")
 	}
