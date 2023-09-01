@@ -2,12 +2,12 @@ package helper
 
 import (
 	"fmt"
-	"golang.org/x/mod/semver"
-	"projectforge.dev/projectforge/app/project"
 
 	"github.com/samber/lo"
+	"golang.org/x/mod/semver"
 
 	"projectforge.dev/projectforge/app/lib/types"
+	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
 )
