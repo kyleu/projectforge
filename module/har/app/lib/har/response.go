@@ -52,6 +52,13 @@ func (r *Response) Size() int {
 	return len(r.Content.Text)
 }
 
+func (r *Response) BodyString() string {
+	if r.Content == nil {
+		return ""
+	}
+	return r.Content.Text
+}
+
 func (r *Response) ContentType() string {
 	return r.Headers.GetValue("content-type")
 }

@@ -1,6 +1,7 @@
 {% import (
   "{{{ .Package }}}/app"
   "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/util"
   "{{{ .Package }}}/views/components"
   "{{{ .Package }}}/views/layout"
 ) %}
@@ -8,6 +9,7 @@
 {% code type List struct {
   layout.Basic
   Scripts []string
+  Sizes map[string]int
 } %}
 
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
@@ -19,12 +21,14 @@
         <thead>
           <tr>
             <th class="shrink">Name</th>
+            <th class="text-align-right">Size</th>
           </tr>
         </thead>
         <tbody>
           {%- for _, x := range p.Scripts -%}
           <tr>
             <td><a href="/admin/scripting/{%s x %}">{%s x %}</a></td>
+            <td class="text-align-right">{%s util.ByteSizeSI(int64(p.Sizes[x])) %}</td>
           </tr>
           {%- endfor -%}
         </tbody>

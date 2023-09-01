@@ -16,9 +16,9 @@ import (
 func ScriptingList(rc *fasthttp.RequestCtx) {
 	controller.Act("scripting.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ps.Title = "Scripting"
-		ret := as.Services.Script.ListScripts(ps.Logger)
+		ret, sizes := as.Services.Script.ListScriptSizes(ps.Logger)
 		ps.Data = ret
-		return controller.Render(rc, as, &vscripting.List{Scripts: ret}, ps, "scripting")
+		return controller.Render(rc, as, &vscripting.List{Scripts: ret, Sizes: sizes}, ps, "scripting")
 	})
 }
 

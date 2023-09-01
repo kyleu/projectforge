@@ -113,7 +113,7 @@ func (e *Entry) WithReplacementsMap(repls map[string]string, vars util.ValueMap)
 				if eIdx == -1 {
 					return "missing end token [" + endToken + "]"
 				}
-				match := v[sIdx+3 : eIdx]
+				match := v[sIdx+len(startToken) : eIdx]
 				r := startToken + match + endToken
 				variable := vars.GetStringOpt(strings.TrimSpace(match))
 				if variable == "" {

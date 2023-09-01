@@ -66,7 +66,14 @@ func (e Entries) Find(s *Selector) (Entries, error) {
 	}
 	if s.Mime != "" && s.Mime != "*" {
 		ret = lo.Filter(ret, func(e *Entry, _ int) bool {
-			return matches(s.Mime, e.Response.Content.MimeType)
+			if e.Response.Content == nil {
+				return false
+			}
+			tst := e.Response.Content.MimeType
+			if idx := strings.Index(tst, ";"); idx > -1 {
+				tst = tst[:idx]
+			}
+			return matches(s.Mime, tst)
 		})
 	}
 	if s.Idx > 0 {
