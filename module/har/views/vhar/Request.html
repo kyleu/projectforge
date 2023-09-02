@@ -37,7 +37,16 @@
       {%- if r.PostData != nil -%}
       <tr>
         <th class="shrink">Body  <em>{%s util.ByteSizeSI(int64(r.BodySize)) %}</em></th>
-        <td>{%s r.PostData.String() %}</td>
+        <td>
+          {%s r.PostData.String() %}
+          {%- if len(r.PostData.Params) > 0 -%}
+          <ul>
+            {%- for _, param := range r.PostData.Params -%}
+            <li><strong>{%s param.Name %}</strong>: {%s param.Value %}</li>
+            {%- endfor -%}
+          </ul>
+          {%- endif -%}
+        </td>
       </tr>
       {%- endif -%}
     </tbody>

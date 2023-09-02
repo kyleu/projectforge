@@ -117,7 +117,7 @@ func (e *Entry) WithReplacementsMap(repls map[string]string, vars util.ValueMap)
 				r := startToken + match + endToken
 				variable := vars.GetStringOpt(strings.TrimSpace(match))
 				if variable == "" {
-					return "missing variable [" + strings.TrimSpace(match) + "]"
+					// return "missing variable [" + strings.TrimSpace(match) + "]"
 				}
 				v = strings.Replace(v, r, variable, 1)
 				sIdx = strings.Index(v, startToken)
@@ -182,7 +182,9 @@ func (e Entries) WithReplacementsMap(repls map[string]string, vars util.ValueMap
 	if len(repls) == 0 {
 		return e
 	}
-	return e.WithReplacementsMap(repls, vars)
+	return lo.Map(e, func(ent *Entry, _ int) *Entry {
+		return ent.WithReplacementsMap(repls, vars)
+	})
 }
 
 func (e Entries) WithReplacements(repl func(s string) string) Entries {
