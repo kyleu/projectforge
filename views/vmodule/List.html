@@ -2,6 +2,8 @@
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/module"
+  "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/layout"
 ) %}
 
@@ -12,5 +14,17 @@
 } %}
 
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
-  {%= Table(p.Modules, true, p.Dir, as, ps) %}
+  <div class="card">
+    {%- if p.Dir != "" -%}
+    <div class="right"><em>{%s p.Dir %}</em></div>
+    {%- endif -%}
+    <h3><a href="/m">{%s util.StringPlural(len(p.Modules), "Available Module") %}</a></h3>
+  </div>
+  {%- for _, mod := range p.Modules -%}
+  <div class="card">
+    <div class="left mrs"><a href="/m/{%s mod.Key %}">{%= components.SVGRef(mod.IconSafe(), 40, 40, "", ps) %}</a></div>
+    <a href="/m/{%s mod.Key %}"><strong>{%s mod.Title() %}</strong></a>
+    <div><em>{%s mod.Description %}</em></div>
+  </div>
+  {%- endfor -%}
 {% endfunc %}

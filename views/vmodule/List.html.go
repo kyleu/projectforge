@@ -9,64 +9,112 @@ import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/module"
+	"projectforge.dev/projectforge/app/util"
+	"projectforge.dev/projectforge/views/components"
 	"projectforge.dev/projectforge/views/layout"
 )
 
-//line views/vmodule/List.html:8
+//line views/vmodule/List.html:10
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vmodule/List.html:8
+//line views/vmodule/List.html:10
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vmodule/List.html:8
+//line views/vmodule/List.html:10
 type List struct {
 	layout.Basic
 	Modules module.Modules
 	Dir     string
 }
 
-//line views/vmodule/List.html:14
+//line views/vmodule/List.html:16
 func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vmodule/List.html:14
+//line views/vmodule/List.html:16
 	qw422016.N().S(`
-  `)
-//line views/vmodule/List.html:15
-	StreamTable(qw422016, p.Modules, true, p.Dir, as, ps)
-//line views/vmodule/List.html:15
-	qw422016.N().S(`
+  <div class="card">
 `)
-//line views/vmodule/List.html:16
+//line views/vmodule/List.html:18
+	if p.Dir != "" {
+//line views/vmodule/List.html:18
+		qw422016.N().S(`    <div class="right"><em>`)
+//line views/vmodule/List.html:19
+		qw422016.E().S(p.Dir)
+//line views/vmodule/List.html:19
+		qw422016.N().S(`</em></div>
+`)
+//line views/vmodule/List.html:20
+	}
+//line views/vmodule/List.html:20
+	qw422016.N().S(`    <h3><a href="/m">`)
+//line views/vmodule/List.html:21
+	qw422016.E().S(util.StringPlural(len(p.Modules), "Available Module"))
+//line views/vmodule/List.html:21
+	qw422016.N().S(`</a></h3>
+  </div>
+`)
+//line views/vmodule/List.html:23
+	for _, mod := range p.Modules {
+//line views/vmodule/List.html:23
+		qw422016.N().S(`  <div class="card">
+    <div class="left mrs"><a href="/m/`)
+//line views/vmodule/List.html:25
+		qw422016.E().S(mod.Key)
+//line views/vmodule/List.html:25
+		qw422016.N().S(`">`)
+//line views/vmodule/List.html:25
+		components.StreamSVGRef(qw422016, mod.IconSafe(), 40, 40, "", ps)
+//line views/vmodule/List.html:25
+		qw422016.N().S(`</a></div>
+    <a href="/m/`)
+//line views/vmodule/List.html:26
+		qw422016.E().S(mod.Key)
+//line views/vmodule/List.html:26
+		qw422016.N().S(`"><strong>`)
+//line views/vmodule/List.html:26
+		qw422016.E().S(mod.Title())
+//line views/vmodule/List.html:26
+		qw422016.N().S(`</strong></a>
+    <div><em>`)
+//line views/vmodule/List.html:27
+		qw422016.E().S(mod.Description)
+//line views/vmodule/List.html:27
+		qw422016.N().S(`</em></div>
+  </div>
+`)
+//line views/vmodule/List.html:29
+	}
+//line views/vmodule/List.html:30
 }
 
-//line views/vmodule/List.html:16
+//line views/vmodule/List.html:30
 func (p *List) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vmodule/List.html:16
+//line views/vmodule/List.html:30
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vmodule/List.html:16
+//line views/vmodule/List.html:30
 	p.StreamBody(qw422016, as, ps)
-//line views/vmodule/List.html:16
+//line views/vmodule/List.html:30
 	qt422016.ReleaseWriter(qw422016)
-//line views/vmodule/List.html:16
+//line views/vmodule/List.html:30
 }
 
-//line views/vmodule/List.html:16
+//line views/vmodule/List.html:30
 func (p *List) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vmodule/List.html:16
+//line views/vmodule/List.html:30
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vmodule/List.html:16
+//line views/vmodule/List.html:30
 	p.WriteBody(qb422016, as, ps)
-//line views/vmodule/List.html:16
+//line views/vmodule/List.html:30
 	qs422016 := string(qb422016.B)
-//line views/vmodule/List.html:16
+//line views/vmodule/List.html:30
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vmodule/List.html:16
+//line views/vmodule/List.html:30
 	return qs422016
-//line views/vmodule/List.html:16
+//line views/vmodule/List.html:30
 }

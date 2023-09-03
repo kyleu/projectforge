@@ -4,6 +4,7 @@
   "{{{ .Package }}}/app/controller/cutil"
   "{{{ .Package }}}/app/lib/har"
   "{{{ .Package }}}/app/util"
+  "{{{ .Package }}}/views/components"
 ) %}
 
 {% func RenderResponse(key string, r *har.Response, ps *cutil.PageState) %}
@@ -43,7 +44,11 @@
               <input id="accordion-response-body-{%s key %}" type="checkbox" hidden />
               <label class="no-padding" for="accordion-response-body-{%s key %}"><em>(click to show)</em></label>
               <div class="bd">
+                {%- if r.Content.JSON != nil -%}
+                {%= components.JSON(r.Content.JSON) %}
+                {%- else -%}
                 <pre>{%s r.Content.Text %}</pre>
+                {%- endif -%}
               </div>
             </li>
           </ul>

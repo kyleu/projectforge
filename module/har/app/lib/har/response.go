@@ -1,11 +1,16 @@
 package har
 
 import (
+	"bytes"
+	"compress/gzip"
 	"io"
-	"log"
 	"net/http"
+	"strings"
 
+	"github.com/andybalholm/brotli"
 	"github.com/samber/lo"
+
+	"{{{ .Package }}}/app/util"
 )
 
 type Response struct {
@@ -21,14 +26,14 @@ type Response struct {
 	Comment     string   `json:"comment,omitempty"`
 }
 
-func ResponseFromHTTP(r *http.Response) *Response {
+func ResponseFromHTTP(r *http.Response) (*Response, error) {
 	cooks := lo.Map(r.Cookies(), func(c *http.Cookie, _ int) *Cookie {
 		exp := c.Expires.Format("2006-01-02T15:04:05.000Z")
 		return &Cookie{Name: c.Name, Value: c.Value, Path: c.Path, Domain: c.Domain, Expires: exp, HTTPOnly: c.HttpOnly, Secure: c.Secure}
 	})
 	bodyBytes, err := io.ReadAll(r.Body)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 	var headers NVPs
 	for k, vs := range r.Header {
@@ -36,10 +41,30 @@ func ResponseFromHTTP(r *http.Response) *Response {
 			headers = append(headers, &NVP{Name: k, Value: v})
 		}
 	}
-	body := string(bodyBytes)
-	content := &Content{Size: len(body), Text: body}
+	enc := headers.GetValue("Content-Encoding")
+	switch enc {
+	case "gzip":
+		zr, err := gzip.NewReader(bytes.NewReader(bodyBytes))
+		if err != nil {
+			return nil, err
+		}
+		defer func() { _ = zr.Close() }()
+		bodyBytes, err = io.ReadAll(zr)
+		if err != nil {
+			return nil, err
+		}
+	case "br":
+		br := brotli.NewReader(bytes.NewReader(bodyBytes))
+		bodyBytes, err = io.ReadAll(br)
+		if err != nil {
+			return nil, err
+		}
+	}
+	var js any
+	_ = util.FromJSON(bodyBytes, &js)
+	content := &Content{Size: len(bodyBytes), Text: string(bodyBytes), JSON: js}
 	ret := &Response{Status: r.StatusCode, StatusText: r.Status, Cookies: cooks, Headers: headers, Content: content, BodySize: content.Size}
-	return ret
+	return ret, nil
 }
 
 func (r *Response) Size() int {
@@ -60,7 +85,11 @@ func (r *Response) BodyString() string {
 }
 
 func (r *Response) ContentType() string {
-	return r.Headers.GetValue("content-type")
+	ret := r.Headers.GetValue("content-type")
+	if idx := strings.LastIndex(ret, ";"); idx > -1 {
+		ret = ret[:idx]
+	}
+	return ret
 }
 
 func (r *Response) WithReplacements(repl func(s string) string) *Response {
@@ -68,6 +97,7 @@ func (r *Response) WithReplacements(repl func(s string) string) *Response {
 		Size: r.Content.Size, Compression: r.Content.Compression, MimeType: repl(r.Content.MimeType),
 		Text: repl(r.Content.Text), Encoding: r.Content.Encoding, Comment: r.Content.Comment, File: repl(r.Content.File),
 	}
+	_ = util.FromJSON([]byte(r.Content.Text), &c.JSON)
 	return &Response{
 		Status:      r.Status,
 		StatusText:  r.StatusText,
