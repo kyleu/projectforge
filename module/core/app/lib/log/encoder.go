@@ -1,5 +1,4 @@
-{{{ if .BuildWASM }}}//go:build !js
-{{{ end }}}package log
+package log
 
 import (
 	"fmt"
@@ -17,11 +16,12 @@ const timeFormat = "15:04:05.000000"
 
 type customEncoder struct {
 	zapcore.Encoder
-	pool buffer.Pool
+	colored bool
+	pool    buffer.Pool
 }
 
-func newEncoder(cfg zapcore.EncoderConfig) *customEncoder {
-	return &customEncoder{Encoder: zapcore.NewJSONEncoder(cfg), pool: buffer.NewPool()}
+func newEncoder(cfg zapcore.EncoderConfig, colored bool) *customEncoder {
+	return &customEncoder{Encoder: zapcore.NewJSONEncoder(cfg), colored: colored, pool: buffer.NewPool()}
 }
 
 func (e *customEncoder) Clone() zapcore.Encoder {
@@ -29,6 +29,14 @@ func (e *customEncoder) Clone() zapcore.Encoder {
 }
 
 func (e *customEncoder) EncodeEntry(entry zapcore.Entry, fields []zapcore.Field) (*buffer.Buffer, error) {
+	go func() {
+		recentMU.Lock()
+		defer recentMU.Unlock()
+		RecentLogs = append(RecentLogs, &entry)
+		if len(RecentLogs) > 50 {
+			RecentLogs = RecentLogs[1:]
+		}
+	}()
 	b, err := e.Encoder.EncodeEntry(entry, fields)
 	if err != nil {
 		return nil, errors.Wrap(err, "logging error")
@@ -49,7 +57,9 @@ func (e *customEncoder) EncodeEntry(entry zapcore.Entry, fields []zapcore.Field)
 	}
 
 	lvl := fmt.Sprintf("%-5v", entry.Level.CapitalString())
-	lvl = levelToColor[entry.Level.String()].Add(lvl)
+	if e.colored {
+		lvl = levelToColor[entry.Level.String()].Add(lvl)
+	}
 	tm := entry.Time.Format(timeFormat)
 
 	msg := entry.Message
@@ -60,12 +70,21 @@ func (e *customEncoder) EncodeEntry(entry zapcore.Entry, fields []zapcore.Field)
 		msgLines = msgLines[1:]
 	}
 
-	addLine(fmt.Sprintf("[%s] %s %s", lvl, tm, Cyan.Add(msg)))
+	if e.colored {
+		addLine(fmt.Sprintf("[%s] %s %s", lvl, tm, Cyan.Add(msg)))
+	} else {
+		addLine(fmt.Sprintf("[%s] %s %s", lvl, tm, msg))
+	}
+
 	lo.ForEach(msgLines, func(ml string, _ int) {
-		if strings.Contains(ml, util.AppKey) {
-			ml = Green.Add(ml)
+		if e.colored {
+			if strings.Contains(ml, util.AppKey) {
+				ml = Green.Add(ml)
+			}
+			addLine("  " + Cyan.Add(ml))
+		} else {
+			addLine("  " + ml)
 		}
-		addLine("  " + Cyan.Add(ml))
 	})
 	if len(data) > 0 {
 		addLine("  " + util.ToJSONCompact(data))
@@ -74,10 +93,6 @@ func (e *customEncoder) EncodeEntry(entry zapcore.Entry, fields []zapcore.Field)
 	if entry.Caller.Function != "" {
 		caller += " (" + entry.Caller.Function + ")"
 	}
-	// idx := strings.Index(caller, "github.com/")
-	// if idx > 0 {
-	// 	caller = caller[idx:]
-	// }
 	addLine("  " + caller)
 
 	if entry.Stack != "" {

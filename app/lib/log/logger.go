@@ -2,7 +2,9 @@
 package log
 
 import (
+	"runtime"
 	"strings"
+	"sync"
 
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
@@ -12,6 +14,11 @@ import (
 )
 
 const keyCustom = "custom"
+
+var (
+	RecentLogs []*zapcore.Entry
+	recentMU   = &sync.Mutex{}
+)
 
 func InitLogging(debug bool) (util.Logger, error) {
 	var logger *zap.Logger
@@ -37,7 +44,7 @@ func CreateTestLogger() (util.Logger, error) {
 
 func initDevLogging(lvl zapcore.Level) (*zap.Logger, error) {
 	_ = zap.RegisterEncoder(keyCustom, func(cfg zapcore.EncoderConfig) (zapcore.Encoder, error) {
-		return newEncoder(cfg), nil
+		return newEncoder(cfg, runtime.GOOS == "js"), nil
 	})
 	config := zap.NewDevelopmentConfig()
 	config.EncoderConfig = zapcore.EncoderConfig{}

@@ -21,7 +21,7 @@
   </div>
 {% endfunc %}
 
-{% func moduleTable(Mods []*debug.Module) %}
+{% func moduleTable(mods []*debug.Module) %}
   <table class="mt">
     <thead>
       <tr>
@@ -30,7 +30,7 @@
       </tr>
     </thead>
     <tbody>
-      {%- for _, m := range Mods -%}
+      {%- for _, m := range mods -%}
       <tr>
         <td><a target="_blank" rel="noopener noreferrer" href="https://{%s m.Path %}">{%s m.Path %}</a></td>
         <td title="{%s m.Sum %}">{%s m.Version %}</td>

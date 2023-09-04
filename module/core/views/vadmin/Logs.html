@@ -1,0 +1,42 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "go.uber.org/zap/zapcore"
+
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/util"
+  "{{{ .Package }}}/views/layout"
+) %}
+
+{% code type Logs struct {
+  layout.Basic
+  Logs []*zapcore.Entry
+} %}
+
+{% func (p *Logs) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>Recent Logs</h3>
+    {%= logTable(p.Logs) %}
+  </div>
+{% endfunc %}
+
+{% func logTable(logs []*zapcore.Entry) %}
+  <table class="mt">
+    <thead>
+      <tr>
+        <th>Level</th>
+        <th>Message</th>
+        <th>Occurred</th>
+      </tr>
+    </thead>
+    <tbody>
+      {%- for _, l := range logs -%}
+      <tr>
+        <td>{%s l.Level.String() %}</td>
+        <td>{%s l.Message %}</td>
+        <td>{%s util.TimeRelative(&l.Time) %}</td>
+      </tr>
+      {%- endfor -%}
+    </tbody>
+  </table>
+{% endfunc %}

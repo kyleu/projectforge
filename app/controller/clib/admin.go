@@ -13,6 +13,7 @@ import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
 	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/lib/log"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/vadmin"
 )
@@ -56,6 +57,10 @@ func Admin(rc *fasthttp.RequestCtx) {
 				return "", err
 			}
 			return controller.FlashAndRedir(true, "wrote heap profile", "/admin", rc, ps)
+		case "logs":
+			x := util.DebugMemStats()
+			ps.Data = x
+			return controller.Render(rc, as, &vadmin.Logs{Logs: log.RecentLogs}, ps, "admin", "Recent Logs")
 		case "memusage":
 			x := util.DebugMemStats()
 			ps.Data = x
