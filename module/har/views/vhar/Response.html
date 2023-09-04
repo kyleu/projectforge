@@ -1,10 +1,10 @@
 {% import (
   "fmt"
+  "strings"
 
   "{{{ .Package }}}/app/controller/cutil"
   "{{{ .Package }}}/app/lib/har"
   "{{{ .Package }}}/app/util"
-  "{{{ .Package }}}/views/components"
 ) %}
 
 {% func RenderResponse(key string, r *har.Response, ps *cutil.PageState) %}
@@ -38,14 +38,14 @@
       <tr>
         <th class="shrink">Body</th>
         <td>
-          <div class="right"><em>{%s util.ByteSizeSI(int64(r.Content.Size)) %}</em></div>
+          <div class="right"><em>{%s r.Content.MimeType %}, {%s util.ByteSizeSI(int64(r.Content.Size)) %}</em></div>
           <ul class="accordion">
             <li>
               <input id="accordion-response-body-{%s key %}" type="checkbox" hidden />
               <label class="no-padding" for="accordion-response-body-{%s key %}"><em>(click to show)</em></label>
               <div class="bd">
-                {%- if r.Content.JSON != nil -%}
-                {%= components.JSON(r.Content.JSON) %}
+                {%- if strings.HasPrefix(r.ContentType(), "image/") -%}
+                <img style="border: var(--border)" src="data:{%s r.ContentType() %};base64,{%s r.Content.Text %}" />
                 {%- else -%}
                 <pre>{%s r.Content.Text %}</pre>
                 {%- endif -%}

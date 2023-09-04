@@ -18,11 +18,14 @@
   <div class="card">
     <div class="right">
       <a href="{%s p.Har.WebPath() %}/delete" class="link-confirm" data-message="Are you sure?"><button>Delete</button></a>
-      <a href="{%s p.Har.WebPath() %}/run"><button>Run</button></a>
     </div>
     <h3>{%= components.SVGRefIcon(`book`, ps) %} {%s p.Har.Key %}</h3>
     <div class="mt">
       {%s util.MicrosToMillis(p.Har.Entries.TotalDuration()) %} elapsed, downloaded {%s util.ByteSizeSI(int64(p.Har.Entries.TotalResponseBodySize())) %}
+    </div>
+    <div class="mt">
+      <a href="{%s p.Har.WebPath() %}/run"><button>Run</button></a>
+      <a href="{%s p.Har.WebPath() %}/bench"><button>Benchmark</button></a>
     </div>
   </div>
 
@@ -37,9 +40,9 @@
         -%}
         <li>
           <input id="accordion-entry-{%s key %}" type="checkbox" hidden />
-          <label for="accordion-entry-{%s key %}">
+          <label title="{%s e.Request.URL %}" for="accordion-entry-{%s key %}">
             {%= RenderEntryOptions(key, e, false) %}
-            {%= components.ExpandCollapse(3, ps) %} {%s e.Request.Method %} {%s e.String() %}
+            {%= components.ExpandCollapse(3, ps) %} {%s e.String() %}
             <div class="clear"></div>
           </label>
           <div class="bd">

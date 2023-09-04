@@ -163,6 +163,15 @@ func (e Entries) Trimmed() Entries {
 	})
 }
 
+func (e Entries) WithJSON() Entries {
+	return lo.Map(e, func(x *Entry, _ int) *Entry {
+		if x.Response.ContentType() == "application/json" && x.Response.Content != nil && x.Response.Content.Text != "" {
+			_ = util.FromJSON([]byte(x.Response.Content.Text), &x.Response.Content.JSON)
+		}
+		return x
+	})
+}
+
 func (e Entries) TotalDuration() int {
 	return lo.SumBy(e, func(x *Entry) int {
 		return x.Duration()
