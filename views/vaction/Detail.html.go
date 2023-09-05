@@ -69,11 +69,7 @@ func StreamDetail(qw422016 *qt422016.Writer, cfg util.ValueMap, res *action.Resu
 		qw422016.N().S(`  <div class="card">
     <div class="right">`)
 //line views/vaction/Detail.html:26
-		qw422016.N().D(len(res.Errors))
-//line views/vaction/Detail.html:26
-		qw422016.N().S(` `)
-//line views/vaction/Detail.html:26
-		qw422016.E().S(util.StringPluralMaybe("error", len(res.Errors)))
+		qw422016.E().S(util.StringPlural(len(res.Errors), "error"))
 //line views/vaction/Detail.html:26
 		qw422016.N().S(`</div>
     <h3>Errors</h3>
@@ -151,7 +147,7 @@ func StreamDetail(qw422016 *qt422016.Writer, cfg util.ValueMap, res *action.Resu
 		qw422016.N().S(`</div>
       <h3>`)
 //line views/vaction/Detail.html:64
-		qw422016.E().S(util.StringPluralMaybe("Module", len(mr.Keys)))
+		qw422016.E().S(util.StringPlural(len(mr.Keys), "Module"))
 //line views/vaction/Detail.html:64
 		qw422016.N().S(` [`)
 //line views/vaction/Detail.html:64

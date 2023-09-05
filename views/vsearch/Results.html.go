@@ -102,7 +102,7 @@ func (p *Results) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
   <div class="card">
     <h3>`)
 //line views/vsearch/Results.html:36
-		qw422016.E().S(util.StringPluralMaybe("Error", len(p.Errors)))
+		qw422016.E().S(util.StringPlural(len(p.Errors), "Error"))
 //line views/vsearch/Results.html:36
 		qw422016.N().S(`</h3>
     <ul class="mt">

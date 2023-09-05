@@ -57,7 +57,7 @@
   <ul class="accordion">
     <li>
       <input id="accordion-cookies-{%s key %}" type="checkbox" hidden />
-      <label class="no-padding" for="accordion-cookies-{%s key %}">{%d len(cookies) %} {%s util.StringPluralMaybe("Cookie", len(cookies)) %} <em>(click to show)</em></label>
+      <label class="no-padding" for="accordion-cookies-{%s key %}">{%s util.StringPlural(len(cookies), "Cookie") %} <em>(click to show)</em></label>
       <div class="bd">{%= renderCookies(key, cookies, ps) %}</div>
     </li>
   </ul>
@@ -110,7 +110,7 @@
         {%- if size > 0 -%}
         <div class="right"><em>{%s util.ByteSizeSI(int64(size)) %}</em></div>
         {%- endif -%}
-        {%d len(nvps) %} {%s util.StringPluralMaybe(title, len(nvps)) %}
+        {%s util.StringPlural(len(nvps), title) %}
         <em>(click to show)</em>
       </label>
       <div class="bd">{%= renderNVPs(nvps, ps) %}</div>

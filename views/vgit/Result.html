@@ -72,7 +72,7 @@
         <th class="shrink">Ahead By</th>
         <td>
           <div class="right"><a href="/git/{%s prj.Key %}/push"><button>Push</button></a></div>
-          {%d delta %} {%s util.StringPluralMaybe("commit", delta) %}
+          {%s util.StringPlural(delta, "commit") %}
         </td>
       </tr>
       {%- endif -%}
@@ -81,7 +81,7 @@
         <th class="shrink">Behind By</th>
         <td>
           <div class="right"><a href="/git/{%s prj.Key %}/pull"><button>Pull</button></a></div>
-          {%d delta %} {%s util.StringPluralMaybe("commit", delta) %}
+          {%s util.StringPlural(delta, "commit") %}
         </td>
       </tr>
       {%- endif -%}

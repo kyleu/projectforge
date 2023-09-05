@@ -30,7 +30,7 @@ func startServer(flags *Flags) error {
 		return errors.Wrap(err, "error initializing application")
 	}
 
-	st, r, _, err := loadServer(flags, _logger)
+	st, r, logger, err := loadServer(flags, _logger)
 	if err != nil {
 		return err
 	}
@@ -40,7 +40,7 @@ func startServer(flags *Flags) error {
 		return err
 	}
 
-	err = st.Close(context.Background(), _logger)
+	err = st.Close(context.Background(), logger)
 	if err != nil {
 		return errors.Wrap(err, "unable to close application")
 	}

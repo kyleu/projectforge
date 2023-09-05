@@ -26,7 +26,7 @@ func newEncoder(cfg zapcore.EncoderConfig, colored bool) *customEncoder {
 }
 
 func (e *customEncoder) Clone() zapcore.Encoder {
-	return &customEncoder{Encoder: e.Encoder.Clone(), pool: e.pool}
+	return &customEncoder{Encoder: e.Encoder.Clone(), colored: e.colored, pool: e.pool}
 }
 
 func (e *customEncoder) EncodeEntry(entry zapcore.Entry, fields []zapcore.Field) (*buffer.Buffer, error) {

@@ -131,6 +131,17 @@
   </tr>
 {% endstripspace %}{% endfunc %}
 
+{% func TableFileUpload(key string, id string, title string, indent int, help ...string) %}{% stripspace %}
+  {%- code id = cutil.CleanID(key, id) -%}
+  <tr>
+    {%= vutil.Indent(true, indent + 1) %}
+    <th class="shrink"><label for="{%s id %}"{%= titleFor(help) %}>{%s title %}</label></th>
+    {%= vutil.Indent(true, indent + 1) %}
+    <td>{%= FormFileUpload(key, id, indent, help...) %}</td>
+  {%= vutil.Indent(true, indent) %}
+  </tr>
+{% endstripspace %}{% endfunc %}
+
 {% func TableRadio(key string, title string, value string, opts []string, titles []string, indent int, help ...string) %}{% stripspace %}
   <tr>
     {%= vutil.Indent(true, indent + 1) %}

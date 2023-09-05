@@ -33,7 +33,7 @@ func Migrate(ctx context.Context, s *database.Service, logger util.Logger) error
 
 	if len(databaseMigrations) > maxIdx+1 {
 		c := len(databaseMigrations) - maxIdx
-		logger.Infof("applying [%d] database %s...", c, util.StringPluralMaybe("migration", c))
+		logger.Infof("applying [%s]...", util.StringPlural(c, "migration"))
 	}
 
 	for i, file := range databaseMigrations {
@@ -47,7 +47,7 @@ func Migrate(ctx context.Context, s *database.Service, logger util.Logger) error
 		return err
 	}
 
-	logger.Infof("verified [%d] database %s", maxIdx, util.StringPluralMaybe("migration", maxIdx))
+	logger.Infof("verified [%s]", util.StringPlural(maxIdx, "migration"))
 	return nil
 }
 

@@ -23,7 +23,7 @@ type magicArgs struct {
 }
 
 func (s *Service) magicCommit(a *magicArgs, add func(string, ...any)) error {
-	add("committing [%d] %s with message [%s]", a.Dirty, util.StringPluralMaybe("file", a.Dirty), a.Message)
+	add("committing [%s] with message [%s]", util.StringPlural(a.Dirty, "file"), a.Message)
 	if !a.DryRun {
 		x, err := s.Commit(a.Ctx, a.Prj, a.Message, a.Logger)
 		if err != nil {
@@ -35,7 +35,7 @@ func (s *Service) magicCommit(a *magicArgs, add func(string, ...any)) error {
 }
 
 func (s *Service) magicPull(a *magicArgs, add func(string, ...any)) error {
-	add("pulling [%d] %s from [%s]", a.Behind, util.StringPluralMaybe("commit", a.Behind), a.Branch)
+	add("pulling [%s] from [%s]", util.StringPlural(a.Behind, "commit"), a.Branch)
 	if !a.DryRun {
 		x, err := s.Pull(a.Ctx, a.Prj, a.Logger)
 		if err != nil {
@@ -47,7 +47,7 @@ func (s *Service) magicPull(a *magicArgs, add func(string, ...any)) error {
 }
 
 func (s *Service) magicPush(a *magicArgs, count int, add func(string, ...any)) error {
-	add("pushing [%d] %s to [%s]", count, util.StringPluralMaybe("commit", count), a.Branch)
+	add("pushing [%s] to [%s]", util.StringPlural(count, "commit"), a.Branch)
 	if !a.DryRun {
 		x, err := s.Push(a.Ctx, a.Prj, a.Logger)
 		if err != nil {
@@ -59,7 +59,7 @@ func (s *Service) magicPush(a *magicArgs, count int, add func(string, ...any)) e
 }
 
 func (s *Service) magicStash(a *magicArgs, add func(string, ...any)) error {
-	add("stashing [%d] changed %s", a.Dirty, util.StringPluralMaybe("file", a.Dirty))
+	add("stashing [%s]", util.StringPlural(a.Dirty, "file"))
 	if !a.DryRun {
 		_, err := s.gitStash(a.Ctx, a.Prj, a.Logger)
 		if err != nil {
@@ -71,7 +71,7 @@ func (s *Service) magicStash(a *magicArgs, add func(string, ...any)) error {
 }
 
 func (s *Service) magicStashPop(a *magicArgs, add func(string, ...any)) error {
-	add("restoring [%d] stashed %s", a.Dirty, util.StringPluralMaybe("file", a.Dirty))
+	add("restoring [%s] from stash", util.StringPlural(a.Dirty, "file"))
 	if !a.DryRun {
 		_, err := s.gitStashPop(a.Ctx, a.Prj, a.Logger)
 		if err != nil {

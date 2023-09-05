@@ -2,6 +2,8 @@
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/app/project/export/derive"
+  "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/layout"
 ) %}
@@ -9,17 +11,19 @@
 {% code type DeriveForm struct {
   layout.Basic
   Project *project.Project
+  Result  derive.Result
+  Form util.ValueMap
 } %}
 
 {% func (p *DeriveForm) Body(as *app.State, ps *cutil.PageState) %}
-  <form action="" method="post" class="mt expanded">
-    <div class="card">
-      <h3>{%= components.SVGRefIcon(`dna`, ps) %}Import Model</h3>
+  <div class="card">
+    <form action="" method="post" class="mt expanded">
+      <h3>{%= components.SVGRefIcon(`dna`, ps) %}Import</h3>
       <table class="mt min-200 expanded">
         <tbody>
-          {%= components.TableInput("name", "", "Name", "", 5, "If provided, overrides the detected model name") %}
-          {%= components.TableInput("pkg", "", "Package", "", 5, "If provided, overrides the detected package") %}
-          {%= components.TableTextarea("content", "", "Content", 16, "", 5, "Try pasting any ol' thing, it'll figure it out") %}
+          {%= components.TableInput("name", "", "Name", p.Form.GetStringOpt("name"), 5, "If provided, overrides the detected model name") %}
+          {%= components.TableInput("pkg", "", "Package", p.Form.GetStringOpt("pkg"), 5, "If provided, overrides the detected package") %}
+          {%= components.TableTextarea("content", "", "Content", 4, p.Form.GetStringOpt("content"), 5, "Try pasting any ol' thing, it'll figure it out") %}
           <tr>
             <td colspan="2">
               <button type="submit">Save</button>
@@ -28,6 +32,16 @@
           </tr>
         </tbody>
       </table>
-    </div>
-  </form>
+    </form>
+  </div>
+  {%- if p.Result != nil -%}
+  {%= DeriveResult(p.Result, as, ps) %}
+  {%- endif -%}
+{% endfunc %}
+
+{% func DeriveResult(r derive.Result, as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`play`, ps) %}Results</h3>
+    {%= components.JSON(r) %}
+  </div>
 {% endfunc %}

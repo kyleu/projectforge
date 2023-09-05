@@ -749,326 +749,373 @@ func FormDatalist(key string, id string, value string, opts []string, titles []s
 }
 
 //line views/components/Form.html:121
-func StreamFormRadio(qw422016 *qt422016.Writer, key string, value string, opts []string, titles []string, indent int) {
+func StreamFormFileUpload(qw422016 *qt422016.Writer, key string, id string, indent int, placeholder ...string) {
 //line views/components/Form.html:122
-	for idx, opt := range opts {
+	vutil.StreamIndent(qw422016, true, indent)
+//line views/components/Form.html:122
+	qw422016.N().S(`<input id="`)
+//line views/components/Form.html:123
+	qw422016.E().S(id)
+//line views/components/Form.html:123
+	qw422016.N().S(`" name="`)
+//line views/components/Form.html:123
+	qw422016.E().S(key)
+//line views/components/Form.html:123
+	qw422016.N().S(`" type="file" multiple="multiple"`)
+//line views/components/Form.html:123
+	streamphFor(qw422016, placeholder)
+//line views/components/Form.html:123
+	qw422016.N().S(`/>`)
 //line views/components/Form.html:124
-		title := opt
-		if idx < len(titles) {
-			title = titles[idx]
-		}
-
-//line views/components/Form.html:129
-		vutil.StreamIndent(qw422016, true, indent)
-//line views/components/Form.html:130
-		if opt == value {
-//line views/components/Form.html:130
-			qw422016.N().S(`<label class="radio-label"><input type="radio" name="`)
-//line views/components/Form.html:131
-			qw422016.E().S(key)
-//line views/components/Form.html:131
-			qw422016.N().S(`" value="`)
-//line views/components/Form.html:131
-			qw422016.E().S(opt)
-//line views/components/Form.html:131
-			qw422016.N().S(`" checked="checked" />`)
-//line views/components/Form.html:131
-			qw422016.N().S(` `)
-//line views/components/Form.html:131
-			qw422016.E().S(title)
-//line views/components/Form.html:131
-			qw422016.N().S(`</label>`)
-//line views/components/Form.html:132
-		} else {
-//line views/components/Form.html:132
-			qw422016.N().S(`<label class="radio-label"><input type="radio" name="`)
-//line views/components/Form.html:133
-			qw422016.E().S(key)
-//line views/components/Form.html:133
-			qw422016.N().S(`" value="`)
-//line views/components/Form.html:133
-			qw422016.E().S(opt)
-//line views/components/Form.html:133
-			qw422016.N().S(`" />`)
-//line views/components/Form.html:133
-			qw422016.N().S(` `)
-//line views/components/Form.html:133
-			qw422016.E().S(title)
-//line views/components/Form.html:133
-			qw422016.N().S(`</label>`)
-//line views/components/Form.html:134
-		}
-//line views/components/Form.html:135
-	}
-//line views/components/Form.html:136
 }
 
-//line views/components/Form.html:136
-func WriteFormRadio(qq422016 qtio422016.Writer, key string, value string, opts []string, titles []string, indent int) {
-//line views/components/Form.html:136
+//line views/components/Form.html:124
+func WriteFormFileUpload(qq422016 qtio422016.Writer, key string, id string, indent int, placeholder ...string) {
+//line views/components/Form.html:124
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/Form.html:136
-	StreamFormRadio(qw422016, key, value, opts, titles, indent)
-//line views/components/Form.html:136
+//line views/components/Form.html:124
+	StreamFormFileUpload(qw422016, key, id, indent, placeholder...)
+//line views/components/Form.html:124
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/Form.html:136
+//line views/components/Form.html:124
 }
 
-//line views/components/Form.html:136
-func FormRadio(key string, value string, opts []string, titles []string, indent int) string {
-//line views/components/Form.html:136
+//line views/components/Form.html:124
+func FormFileUpload(key string, id string, indent int, placeholder ...string) string {
+//line views/components/Form.html:124
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/Form.html:136
-	WriteFormRadio(qb422016, key, value, opts, titles, indent)
-//line views/components/Form.html:136
+//line views/components/Form.html:124
+	WriteFormFileUpload(qb422016, key, id, indent, placeholder...)
+//line views/components/Form.html:124
 	qs422016 := string(qb422016.B)
-//line views/components/Form.html:136
+//line views/components/Form.html:124
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/Form.html:136
+//line views/components/Form.html:124
 	return qs422016
-//line views/components/Form.html:136
+//line views/components/Form.html:124
 }
 
-//line views/components/Form.html:138
-func StreamFormCheckbox(qw422016 *qt422016.Writer, key string, values []string, opts []string, titles []string, indent int) {
-//line views/components/Form.html:139
+//line views/components/Form.html:126
+func StreamFormRadio(qw422016 *qt422016.Writer, key string, value string, opts []string, titles []string, indent int) {
+//line views/components/Form.html:127
 	for idx, opt := range opts {
-//line views/components/Form.html:141
+//line views/components/Form.html:129
 		title := opt
 		if idx < len(titles) {
 			title = titles[idx]
 		}
 
-//line views/components/Form.html:146
+//line views/components/Form.html:134
 		vutil.StreamIndent(qw422016, true, indent)
-//line views/components/Form.html:147
-		if lo.Contains(values, opt) {
-//line views/components/Form.html:147
-			qw422016.N().S(`<label><input type="checkbox" name="`)
-//line views/components/Form.html:148
+//line views/components/Form.html:135
+		if opt == value {
+//line views/components/Form.html:135
+			qw422016.N().S(`<label class="radio-label"><input type="radio" name="`)
+//line views/components/Form.html:136
 			qw422016.E().S(key)
-//line views/components/Form.html:148
+//line views/components/Form.html:136
 			qw422016.N().S(`" value="`)
-//line views/components/Form.html:148
+//line views/components/Form.html:136
 			qw422016.E().S(opt)
-//line views/components/Form.html:148
+//line views/components/Form.html:136
 			qw422016.N().S(`" checked="checked" />`)
-//line views/components/Form.html:148
+//line views/components/Form.html:136
 			qw422016.N().S(` `)
-//line views/components/Form.html:148
+//line views/components/Form.html:136
 			qw422016.E().S(title)
-//line views/components/Form.html:148
+//line views/components/Form.html:136
 			qw422016.N().S(`</label>`)
-//line views/components/Form.html:149
+//line views/components/Form.html:137
 		} else {
-//line views/components/Form.html:149
-			qw422016.N().S(`<label><input type="checkbox" name="`)
-//line views/components/Form.html:150
+//line views/components/Form.html:137
+			qw422016.N().S(`<label class="radio-label"><input type="radio" name="`)
+//line views/components/Form.html:138
 			qw422016.E().S(key)
-//line views/components/Form.html:150
+//line views/components/Form.html:138
 			qw422016.N().S(`" value="`)
-//line views/components/Form.html:150
+//line views/components/Form.html:138
 			qw422016.E().S(opt)
-//line views/components/Form.html:150
+//line views/components/Form.html:138
 			qw422016.N().S(`" />`)
-//line views/components/Form.html:150
+//line views/components/Form.html:138
 			qw422016.N().S(` `)
-//line views/components/Form.html:150
+//line views/components/Form.html:138
 			qw422016.E().S(title)
-//line views/components/Form.html:150
+//line views/components/Form.html:138
 			qw422016.N().S(`</label>`)
-//line views/components/Form.html:151
+//line views/components/Form.html:139
 		}
+//line views/components/Form.html:140
+	}
+//line views/components/Form.html:141
+}
+
+//line views/components/Form.html:141
+func WriteFormRadio(qq422016 qtio422016.Writer, key string, value string, opts []string, titles []string, indent int) {
+//line views/components/Form.html:141
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/components/Form.html:141
+	StreamFormRadio(qw422016, key, value, opts, titles, indent)
+//line views/components/Form.html:141
+	qt422016.ReleaseWriter(qw422016)
+//line views/components/Form.html:141
+}
+
+//line views/components/Form.html:141
+func FormRadio(key string, value string, opts []string, titles []string, indent int) string {
+//line views/components/Form.html:141
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/components/Form.html:141
+	WriteFormRadio(qb422016, key, value, opts, titles, indent)
+//line views/components/Form.html:141
+	qs422016 := string(qb422016.B)
+//line views/components/Form.html:141
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/components/Form.html:141
+	return qs422016
+//line views/components/Form.html:141
+}
+
+//line views/components/Form.html:143
+func StreamFormCheckbox(qw422016 *qt422016.Writer, key string, values []string, opts []string, titles []string, indent int) {
+//line views/components/Form.html:144
+	for idx, opt := range opts {
+//line views/components/Form.html:146
+		title := opt
+		if idx < len(titles) {
+			title = titles[idx]
+		}
+
+//line views/components/Form.html:151
+		vutil.StreamIndent(qw422016, true, indent)
 //line views/components/Form.html:152
 		if lo.Contains(values, opt) {
 //line views/components/Form.html:152
-			qw422016.N().S(`<br />`)
+			qw422016.N().S(`<label><input type="checkbox" name="`)
+//line views/components/Form.html:153
+			qw422016.E().S(key)
+//line views/components/Form.html:153
+			qw422016.N().S(`" value="`)
+//line views/components/Form.html:153
+			qw422016.E().S(opt)
+//line views/components/Form.html:153
+			qw422016.N().S(`" checked="checked" />`)
+//line views/components/Form.html:153
+			qw422016.N().S(` `)
+//line views/components/Form.html:153
+			qw422016.E().S(title)
+//line views/components/Form.html:153
+			qw422016.N().S(`</label>`)
 //line views/components/Form.html:154
-		}
+		} else {
+//line views/components/Form.html:154
+			qw422016.N().S(`<label><input type="checkbox" name="`)
 //line views/components/Form.html:155
-	}
+			qw422016.E().S(key)
+//line views/components/Form.html:155
+			qw422016.N().S(`" value="`)
+//line views/components/Form.html:155
+			qw422016.E().S(opt)
+//line views/components/Form.html:155
+			qw422016.N().S(`" />`)
+//line views/components/Form.html:155
+			qw422016.N().S(` `)
+//line views/components/Form.html:155
+			qw422016.E().S(title)
+//line views/components/Form.html:155
+			qw422016.N().S(`</label>`)
 //line views/components/Form.html:156
-}
-
-//line views/components/Form.html:156
-func WriteFormCheckbox(qq422016 qtio422016.Writer, key string, values []string, opts []string, titles []string, indent int) {
-//line views/components/Form.html:156
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/Form.html:156
-	StreamFormCheckbox(qw422016, key, values, opts, titles, indent)
-//line views/components/Form.html:156
-	qt422016.ReleaseWriter(qw422016)
-//line views/components/Form.html:156
-}
-
-//line views/components/Form.html:156
-func FormCheckbox(key string, values []string, opts []string, titles []string, indent int) string {
-//line views/components/Form.html:156
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/Form.html:156
-	WriteFormCheckbox(qb422016, key, values, opts, titles, indent)
-//line views/components/Form.html:156
-	qs422016 := string(qb422016.B)
-//line views/components/Form.html:156
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/Form.html:156
-	return qs422016
-//line views/components/Form.html:156
-}
-
-//line views/components/Form.html:158
-func StreamFormInputTags(qw422016 *qt422016.Writer, key string, id string, values []string, ps *cutil.PageState, placeholder ...string) {
+		}
+//line views/components/Form.html:157
+		if lo.Contains(values, opt) {
+//line views/components/Form.html:157
+			qw422016.N().S(`<br />`)
+//line views/components/Form.html:159
+		}
 //line views/components/Form.html:160
+	}
+//line views/components/Form.html:161
+}
+
+//line views/components/Form.html:161
+func WriteFormCheckbox(qq422016 qtio422016.Writer, key string, values []string, opts []string, titles []string, indent int) {
+//line views/components/Form.html:161
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/components/Form.html:161
+	StreamFormCheckbox(qw422016, key, values, opts, titles, indent)
+//line views/components/Form.html:161
+	qt422016.ReleaseWriter(qw422016)
+//line views/components/Form.html:161
+}
+
+//line views/components/Form.html:161
+func FormCheckbox(key string, values []string, opts []string, titles []string, indent int) string {
+//line views/components/Form.html:161
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/components/Form.html:161
+	WriteFormCheckbox(qb422016, key, values, opts, titles, indent)
+//line views/components/Form.html:161
+	qs422016 := string(qb422016.B)
+//line views/components/Form.html:161
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/components/Form.html:161
+	return qs422016
+//line views/components/Form.html:161
+}
+
+//line views/components/Form.html:163
+func StreamFormInputTags(qw422016 *qt422016.Writer, key string, id string, values []string, ps *cutil.PageState, placeholder ...string) {
+//line views/components/Form.html:165
 	ps.AddIcon("times")
 	ps.AddIcon("plus")
 
-//line views/components/Form.html:162
+//line views/components/Form.html:167
 	qw422016.N().S(`<div class="tag-editor">`)
-//line views/components/Form.html:164
+//line views/components/Form.html:169
 	if id == "" {
-//line views/components/Form.html:164
+//line views/components/Form.html:169
 		qw422016.N().S(`<input class="result" name="`)
-//line views/components/Form.html:165
+//line views/components/Form.html:170
 		qw422016.E().S(key)
-//line views/components/Form.html:165
+//line views/components/Form.html:170
 		qw422016.N().S(`" value="`)
-//line views/components/Form.html:165
+//line views/components/Form.html:170
 		qw422016.E().S(strings.Join(values, `, `))
-//line views/components/Form.html:165
+//line views/components/Form.html:170
 		qw422016.N().S(`"`)
-//line views/components/Form.html:165
+//line views/components/Form.html:170
 		streamphFor(qw422016, placeholder)
-//line views/components/Form.html:165
+//line views/components/Form.html:170
 		qw422016.N().S(`/>`)
-//line views/components/Form.html:166
+//line views/components/Form.html:171
 	} else {
-//line views/components/Form.html:166
+//line views/components/Form.html:171
 		qw422016.N().S(`<input class="result" id="`)
-//line views/components/Form.html:167
+//line views/components/Form.html:172
 		qw422016.E().S(id)
-//line views/components/Form.html:167
+//line views/components/Form.html:172
 		qw422016.N().S(`" name="`)
-//line views/components/Form.html:167
+//line views/components/Form.html:172
 		qw422016.E().S(key)
-//line views/components/Form.html:167
+//line views/components/Form.html:172
 		qw422016.N().S(`" value="`)
-//line views/components/Form.html:167
+//line views/components/Form.html:172
 		qw422016.E().S(strings.Join(values, `, `))
-//line views/components/Form.html:167
+//line views/components/Form.html:172
 		qw422016.N().S(`"`)
-//line views/components/Form.html:167
+//line views/components/Form.html:172
 		streamphFor(qw422016, placeholder)
-//line views/components/Form.html:167
+//line views/components/Form.html:172
 		qw422016.N().S(`/>`)
-//line views/components/Form.html:168
+//line views/components/Form.html:173
 	}
-//line views/components/Form.html:168
+//line views/components/Form.html:173
 	qw422016.N().S(`<div class="tags"></div><div class="clear"></div></div>`)
-//line views/components/Form.html:172
+//line views/components/Form.html:177
 }
 
-//line views/components/Form.html:172
+//line views/components/Form.html:177
 func WriteFormInputTags(qq422016 qtio422016.Writer, key string, id string, values []string, ps *cutil.PageState, placeholder ...string) {
-//line views/components/Form.html:172
+//line views/components/Form.html:177
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/Form.html:172
+//line views/components/Form.html:177
 	StreamFormInputTags(qw422016, key, id, values, ps, placeholder...)
-//line views/components/Form.html:172
+//line views/components/Form.html:177
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/Form.html:172
+//line views/components/Form.html:177
 }
 
-//line views/components/Form.html:172
+//line views/components/Form.html:177
 func FormInputTags(key string, id string, values []string, ps *cutil.PageState, placeholder ...string) string {
-//line views/components/Form.html:172
+//line views/components/Form.html:177
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/Form.html:172
+//line views/components/Form.html:177
 	WriteFormInputTags(qb422016, key, id, values, ps, placeholder...)
-//line views/components/Form.html:172
+//line views/components/Form.html:177
 	qs422016 := string(qb422016.B)
-//line views/components/Form.html:172
+//line views/components/Form.html:177
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/Form.html:172
+//line views/components/Form.html:177
 	return qs422016
-//line views/components/Form.html:172
+//line views/components/Form.html:177
 }
 
-//line views/components/Form.html:174
-func StreamFormInputFile(qw422016 *qt422016.Writer, key string, id string, label string, value string) {
-//line views/components/Form.html:175
-	if id == "" {
-//line views/components/Form.html:175
-		qw422016.N().S(`<label for="key"><input type="file" name="`)
-//line views/components/Form.html:176
-		qw422016.E().S(key)
-//line views/components/Form.html:176
-		qw422016.N().S(`" value="`)
-//line views/components/Form.html:176
-		qw422016.E().S(value)
-//line views/components/Form.html:176
-		qw422016.N().S(`"/>`)
-//line views/components/Form.html:176
-		qw422016.E().S(label)
-//line views/components/Form.html:176
-		qw422016.N().S(`</label>`)
-//line views/components/Form.html:177
-	} else {
-//line views/components/Form.html:177
-		qw422016.N().S(`<label id="`)
-//line views/components/Form.html:178
-		qw422016.E().S(id)
-//line views/components/Form.html:178
-		qw422016.N().S(`" for="`)
-//line views/components/Form.html:178
-		qw422016.E().S(key)
-//line views/components/Form.html:178
-		qw422016.N().S(`"><input type="file" name="`)
-//line views/components/Form.html:178
-		qw422016.E().S(key)
-//line views/components/Form.html:178
-		qw422016.N().S(`" value="`)
-//line views/components/Form.html:178
-		qw422016.E().S(value)
-//line views/components/Form.html:178
-		qw422016.N().S(`"/>`)
-//line views/components/Form.html:178
-		qw422016.E().S(label)
-//line views/components/Form.html:178
-		qw422016.N().S(`</label>`)
 //line views/components/Form.html:179
-	}
+func StreamFormInputFile(qw422016 *qt422016.Writer, key string, id string, label string, value string) {
 //line views/components/Form.html:180
-}
-
+	if id == "" {
 //line views/components/Form.html:180
-func WriteFormInputFile(qq422016 qtio422016.Writer, key string, id string, label string, value string) {
-//line views/components/Form.html:180
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/Form.html:180
-	StreamFormInputFile(qw422016, key, id, label, value)
-//line views/components/Form.html:180
-	qt422016.ReleaseWriter(qw422016)
-//line views/components/Form.html:180
-}
-
-//line views/components/Form.html:180
-func FormInputFile(key string, id string, label string, value string) string {
-//line views/components/Form.html:180
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/Form.html:180
-	WriteFormInputFile(qb422016, key, id, label, value)
-//line views/components/Form.html:180
-	qs422016 := string(qb422016.B)
-//line views/components/Form.html:180
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/Form.html:180
-	return qs422016
-//line views/components/Form.html:180
-}
-
+		qw422016.N().S(`<label for="key"><input type="file" name="`)
+//line views/components/Form.html:181
+		qw422016.E().S(key)
+//line views/components/Form.html:181
+		qw422016.N().S(`" value="`)
+//line views/components/Form.html:181
+		qw422016.E().S(value)
+//line views/components/Form.html:181
+		qw422016.N().S(`"/>`)
+//line views/components/Form.html:181
+		qw422016.E().S(label)
+//line views/components/Form.html:181
+		qw422016.N().S(`</label>`)
 //line views/components/Form.html:182
-func StreamSearchForm(qw422016 *qt422016.Writer, action string, fieldKey string, placeholder string, value string, ps *cutil.PageState) {
+	} else {
+//line views/components/Form.html:182
+		qw422016.N().S(`<label id="`)
+//line views/components/Form.html:183
+		qw422016.E().S(id)
+//line views/components/Form.html:183
+		qw422016.N().S(`" for="`)
+//line views/components/Form.html:183
+		qw422016.E().S(key)
+//line views/components/Form.html:183
+		qw422016.N().S(`"><input type="file" name="`)
+//line views/components/Form.html:183
+		qw422016.E().S(key)
+//line views/components/Form.html:183
+		qw422016.N().S(`" value="`)
+//line views/components/Form.html:183
+		qw422016.E().S(value)
+//line views/components/Form.html:183
+		qw422016.N().S(`"/>`)
+//line views/components/Form.html:183
+		qw422016.E().S(label)
+//line views/components/Form.html:183
+		qw422016.N().S(`</label>`)
 //line views/components/Form.html:184
+	}
+//line views/components/Form.html:185
+}
+
+//line views/components/Form.html:185
+func WriteFormInputFile(qq422016 qtio422016.Writer, key string, id string, label string, value string) {
+//line views/components/Form.html:185
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/components/Form.html:185
+	StreamFormInputFile(qw422016, key, id, label, value)
+//line views/components/Form.html:185
+	qt422016.ReleaseWriter(qw422016)
+//line views/components/Form.html:185
+}
+
+//line views/components/Form.html:185
+func FormInputFile(key string, id string, label string, value string) string {
+//line views/components/Form.html:185
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/components/Form.html:185
+	WriteFormInputFile(qb422016, key, id, label, value)
+//line views/components/Form.html:185
+	qs422016 := string(qb422016.B)
+//line views/components/Form.html:185
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/components/Form.html:185
+	return qs422016
+//line views/components/Form.html:185
+}
+
+//line views/components/Form.html:187
+func StreamSearchForm(qw422016 *qt422016.Writer, action string, fieldKey string, placeholder string, value string, ps *cutil.PageState) {
+//line views/components/Form.html:189
 	if fieldKey == "" {
 		fieldKey = "q"
 	}
@@ -1086,112 +1133,112 @@ func StreamSearchForm(qw422016 *qt422016.Writer, action string, fieldKey string,
 		m[k] = curr
 	})
 
-//line views/components/Form.html:200
+//line views/components/Form.html:205
 	qw422016.N().S(`<form action="`)
-//line views/components/Form.html:201
+//line views/components/Form.html:206
 	qw422016.E().S(action)
-//line views/components/Form.html:201
+//line views/components/Form.html:206
 	qw422016.N().S(`" method="get" class="">`)
-//line views/components/Form.html:202
+//line views/components/Form.html:207
 	for k, v := range m {
-//line views/components/Form.html:202
+//line views/components/Form.html:207
 		qw422016.N().S(`<input type="hidden" name="`)
-//line views/components/Form.html:203
+//line views/components/Form.html:208
 		qw422016.E().S(k)
-//line views/components/Form.html:203
+//line views/components/Form.html:208
 		qw422016.N().S(`" value="`)
-//line views/components/Form.html:203
+//line views/components/Form.html:208
 		qw422016.E().S(v)
-//line views/components/Form.html:203
+//line views/components/Form.html:208
 		qw422016.N().S(`" />`)
-//line views/components/Form.html:204
+//line views/components/Form.html:209
 	}
-//line views/components/Form.html:204
+//line views/components/Form.html:209
 	qw422016.N().S(`<button class="right" type="submit">`)
-//line views/components/Form.html:205
+//line views/components/Form.html:210
 	StreamSVGRef(qw422016, "search", 22, 22, `icon`, ps)
-//line views/components/Form.html:205
+//line views/components/Form.html:210
 	qw422016.N().S(`</button><input class="right br0" type="search" placeholder="`)
-//line views/components/Form.html:206
-	qw422016.E().S(placeholder)
-//line views/components/Form.html:206
-	qw422016.N().S(`" name="`)
-//line views/components/Form.html:206
-	qw422016.E().S(fieldKey)
-//line views/components/Form.html:206
-	qw422016.N().S(`" value="`)
-//line views/components/Form.html:206
-	qw422016.E().S(value)
-//line views/components/Form.html:206
-	qw422016.N().S(`"><div class="clear"></div></form>`)
-//line views/components/Form.html:209
-}
-
-//line views/components/Form.html:209
-func WriteSearchForm(qq422016 qtio422016.Writer, action string, fieldKey string, placeholder string, value string, ps *cutil.PageState) {
-//line views/components/Form.html:209
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/Form.html:209
-	StreamSearchForm(qw422016, action, fieldKey, placeholder, value, ps)
-//line views/components/Form.html:209
-	qt422016.ReleaseWriter(qw422016)
-//line views/components/Form.html:209
-}
-
-//line views/components/Form.html:209
-func SearchForm(action string, fieldKey string, placeholder string, value string, ps *cutil.PageState) string {
-//line views/components/Form.html:209
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/Form.html:209
-	WriteSearchForm(qb422016, action, fieldKey, placeholder, value, ps)
-//line views/components/Form.html:209
-	qs422016 := string(qb422016.B)
-//line views/components/Form.html:209
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/Form.html:209
-	return qs422016
-//line views/components/Form.html:209
-}
-
 //line views/components/Form.html:211
-func streamphFor(qw422016 *qt422016.Writer, phs []string) {
-//line views/components/Form.html:212
-	if len(phs) > 0 {
-//line views/components/Form.html:212
-		qw422016.N().S(` `)
-//line views/components/Form.html:212
-		qw422016.N().S(`placeholder="`)
-//line views/components/Form.html:212
-		qw422016.E().S(strings.Join(phs, "; "))
-//line views/components/Form.html:212
-		qw422016.N().S(`"`)
-//line views/components/Form.html:212
-	}
-//line views/components/Form.html:213
+	qw422016.E().S(placeholder)
+//line views/components/Form.html:211
+	qw422016.N().S(`" name="`)
+//line views/components/Form.html:211
+	qw422016.E().S(fieldKey)
+//line views/components/Form.html:211
+	qw422016.N().S(`" value="`)
+//line views/components/Form.html:211
+	qw422016.E().S(value)
+//line views/components/Form.html:211
+	qw422016.N().S(`"><div class="clear"></div></form>`)
+//line views/components/Form.html:214
 }
 
-//line views/components/Form.html:213
-func writephFor(qq422016 qtio422016.Writer, phs []string) {
-//line views/components/Form.html:213
+//line views/components/Form.html:214
+func WriteSearchForm(qq422016 qtio422016.Writer, action string, fieldKey string, placeholder string, value string, ps *cutil.PageState) {
+//line views/components/Form.html:214
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/Form.html:213
-	streamphFor(qw422016, phs)
-//line views/components/Form.html:213
+//line views/components/Form.html:214
+	StreamSearchForm(qw422016, action, fieldKey, placeholder, value, ps)
+//line views/components/Form.html:214
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/Form.html:213
+//line views/components/Form.html:214
 }
 
-//line views/components/Form.html:213
-func phFor(phs []string) string {
-//line views/components/Form.html:213
+//line views/components/Form.html:214
+func SearchForm(action string, fieldKey string, placeholder string, value string, ps *cutil.PageState) string {
+//line views/components/Form.html:214
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/Form.html:213
-	writephFor(qb422016, phs)
-//line views/components/Form.html:213
+//line views/components/Form.html:214
+	WriteSearchForm(qb422016, action, fieldKey, placeholder, value, ps)
+//line views/components/Form.html:214
 	qs422016 := string(qb422016.B)
-//line views/components/Form.html:213
+//line views/components/Form.html:214
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/Form.html:213
+//line views/components/Form.html:214
 	return qs422016
-//line views/components/Form.html:213
+//line views/components/Form.html:214
+}
+
+//line views/components/Form.html:216
+func streamphFor(qw422016 *qt422016.Writer, phs []string) {
+//line views/components/Form.html:217
+	if len(phs) > 0 {
+//line views/components/Form.html:217
+		qw422016.N().S(` `)
+//line views/components/Form.html:217
+		qw422016.N().S(`placeholder="`)
+//line views/components/Form.html:217
+		qw422016.E().S(strings.Join(phs, "; "))
+//line views/components/Form.html:217
+		qw422016.N().S(`"`)
+//line views/components/Form.html:217
+	}
+//line views/components/Form.html:218
+}
+
+//line views/components/Form.html:218
+func writephFor(qq422016 qtio422016.Writer, phs []string) {
+//line views/components/Form.html:218
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/components/Form.html:218
+	streamphFor(qw422016, phs)
+//line views/components/Form.html:218
+	qt422016.ReleaseWriter(qw422016)
+//line views/components/Form.html:218
+}
+
+//line views/components/Form.html:218
+func phFor(phs []string) string {
+//line views/components/Form.html:218
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/components/Form.html:218
+	writephFor(qb422016, phs)
+//line views/components/Form.html:218
+	qs422016 := string(qb422016.B)
+//line views/components/Form.html:218
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/components/Form.html:218
+	return qs422016
+//line views/components/Form.html:218
 }

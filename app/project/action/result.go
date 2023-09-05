@@ -114,7 +114,7 @@ func (r *Result) StatusLog() string {
 	if fileCount == 0 {
 		return "<em>no changes</em>"
 	}
-	return fmt.Sprintf("%d %s", fileCount, util.StringPluralMaybe("change", fileCount))
+	return util.StringPlural(fileCount, "change")
 }
 
 type ResultContext struct {

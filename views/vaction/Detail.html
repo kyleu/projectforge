@@ -23,7 +23,7 @@
   {%- endif -%}
   {%- if len(res.Errors) > 0 -%}
   <div class="card">
-    <div class="right">{%d len(res.Errors) %} {%s util.StringPluralMaybe("error", len(res.Errors)) %}</div>
+    <div class="right">{%s util.StringPlural(len(res.Errors), "error") %}</div>
     <h3>Errors</h3>
     <ul class="mt">
       {%- for _, e := range res.Errors -%}
@@ -61,7 +61,7 @@
     -%}
     <div class="card">
       <div class="right">{%s util.MicrosToMillis(mr.Duration) %}</div>
-      <h3>{%s util.StringPluralMaybe("Module", len(mr.Keys)) %} [{%s= links %}]</h3>
+      <h3>{%s util.StringPlural(len(mr.Keys), "Module") %} [{%s= links %}]</h3>
       <div class="right">{%s= res.StatusLog() %}</div>
       <em>{%s mr.Status %}</em>
       {%- if len(mr.Actions) > 0 -%}

@@ -30,7 +30,7 @@
   </div>
 
   <div class="card">
-    <h3>{%d len(p.Har.Entries) %} {%s util.StringPluralMaybe("Entry", len(p.Har.Entries)) %}</h3>
+    <h3>{%s util.StringPlural(len(p.Har.Entries), "Entry") %}</h3>
     <div class="mts">
       <ul class="accordion">
         {%- for i, e := range p.Har.Entries -%}

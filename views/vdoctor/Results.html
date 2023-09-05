@@ -20,7 +20,7 @@
     {%- if errs := p.Results.Errors(); len(errs) == 0 %}
     <div class="mt success">Success, no errors!</div>
     {%- else -%}
-    <div class="mt error">{%s util.StringPluralMaybe("Error", len(errs)) %}</div>
+    <div class="mt error">{%s util.StringPlural(len(errs), "Error") %}</div>
     {%- endif -%}
   </div>
   {%- for _, x := range p.Results -%}

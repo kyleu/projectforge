@@ -16,7 +16,7 @@
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`database`, ps) %}Databases</h3>
-    <em>{%d len(p.Keys) %} {%s util.StringPluralMaybe("database", len(p.Keys)) %} available</em>
+    <em>{%s util.StringPlural(len(p.Keys), "database") %} available</em>
   </div>
   {%- for _, key := range p.Keys -%}
   <div class="card">

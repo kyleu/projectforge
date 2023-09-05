@@ -53,7 +53,7 @@ func (p *Results) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 //line views/vdoctor/Results.html:22
 		qw422016.N().S(`    <div class="mt error">`)
 //line views/vdoctor/Results.html:23
-		qw422016.E().S(util.StringPluralMaybe("Error", len(errs)))
+		qw422016.E().S(util.StringPlural(len(errs), "Error"))
 //line views/vdoctor/Results.html:23
 		qw422016.N().S(`</div>
 `)

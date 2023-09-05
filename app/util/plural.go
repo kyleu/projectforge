@@ -44,18 +44,8 @@ func StringForms(s string) (string, string) {
 }
 
 func StringPlural(count int, s string) string {
-	var x string
-	if count == 1 {
-		x = StringToSingular(s)
-	} else {
-		x = StringToPlural(s)
-	}
-	return fmt.Sprintf("%d %s", count, x)
-}
-
-func StringPluralMaybe(s string, count int) string {
 	if count == 1 || count == -1 {
-		return StringToSingular(s)
+		return fmt.Sprintf("%d %s", count, StringToSingular(s))
 	}
-	return StringToPlural(s)
+	return fmt.Sprintf("%d %s", count, StringToPlural(s))
 }

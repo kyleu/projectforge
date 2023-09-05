@@ -160,7 +160,7 @@ func exportViewDetailReverseRelations(ret *golang.Block, m *model.Model, models 
 		ret.W("        <label for=\"accordion-%s\">", tgtName)
 		ret.W("          {%%= components.ExpandCollapse(3, ps) %%}")
 		ret.W("          {%%%%= components.SVGRefIcon(`%s`, ps) %%%%}", tgt.Icon)
-		msg := "          {%%%%d len(p.Rel%s) %%%%} {%%%%s util.StringPluralMaybe(\"%s\", len(p.Rel%s)) %%%%} by [%s]"
+		msg := "          {%%%%s util.StringPlural(len(p.Rel%s), \"%s\") %%%%} by [%s]"
 		ret.W(msg, tgtName, tgt.Title(), tgtName, strings.Join(tgtCols.Names(), ", "))
 		ret.W("        </label>")
 		ret.W("        <div class=\"bd\">")

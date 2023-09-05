@@ -44,7 +44,7 @@ func CreateTestLogger() (util.Logger, error) {
 
 func initDevLogging(lvl zapcore.Level) (*zap.Logger, error) {
 	_ = zap.RegisterEncoder(keyCustom, func(cfg zapcore.EncoderConfig) (zapcore.Encoder, error) {
-		return newEncoder(cfg, runtime.GOOS == "js"), nil
+		return newEncoder(cfg, runtime.GOOS != "js"), nil
 	})
 	config := zap.NewDevelopmentConfig()
 	config.EncoderConfig = zapcore.EncoderConfig{}

@@ -263,11 +263,7 @@ func streamstatusDetail(qw422016 *qt422016.Writer, prj *project.Project, r *git.
 		qw422016.N().S(`/push"><button>Push</button></a></div>
           `)
 //line views/vgit/Result.html:75
-		qw422016.N().D(delta)
-//line views/vgit/Result.html:75
-		qw422016.N().S(` `)
-//line views/vgit/Result.html:75
-		qw422016.E().S(util.StringPluralMaybe("commit", delta))
+		qw422016.E().S(util.StringPlural(delta, "commit"))
 //line views/vgit/Result.html:75
 		qw422016.N().S(`
         </td>
@@ -288,11 +284,7 @@ func streamstatusDetail(qw422016 *qt422016.Writer, prj *project.Project, r *git.
 		qw422016.N().S(`/pull"><button>Pull</button></a></div>
           `)
 //line views/vgit/Result.html:84
-		qw422016.N().D(delta)
-//line views/vgit/Result.html:84
-		qw422016.N().S(` `)
-//line views/vgit/Result.html:84
-		qw422016.E().S(util.StringPluralMaybe("commit", delta))
+		qw422016.E().S(util.StringPlural(delta, "commit"))
 //line views/vgit/Result.html:84
 		qw422016.N().S(`
         </td>

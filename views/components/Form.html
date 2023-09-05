@@ -118,6 +118,11 @@
   {%- endif -%}
 {% endstripspace %}{% endfunc %}
 
+{% func FormFileUpload(key string, id string, indent int, placeholder ...string) %}{% stripspace %}
+  {%= vutil.Indent(true, indent ) %}
+  <input id="{%s id %}" name="{%s key %}" type="file" multiple="multiple" {%= phFor(placeholder) %} />
+{% endstripspace %}{% endfunc %}
+
 {% func FormRadio(key string, value string, opts []string, titles []string, indent int) %}{% stripspace %}
   {% for idx, opt := range opts %}
     {% code

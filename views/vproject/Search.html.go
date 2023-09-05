@@ -116,7 +116,7 @@ func streamsearchResults(qw422016 *qt422016.Writer, prj *project.Project, params
   <div class="card">
     <h3>`)
 //line views/vproject/Search.html:36
-		qw422016.E().S(util.StringPluralMaybe("Error", len(errors)))
+		qw422016.E().S(util.StringPlural(len(errors), "Error"))
 //line views/vproject/Search.html:36
 		qw422016.N().S(`</h3>
     <ul class="mt">

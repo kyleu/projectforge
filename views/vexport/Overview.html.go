@@ -353,7 +353,7 @@ func StreamModelList(qw422016 *qt422016.Writer, models model.Models, urlPrefix s
 			prefix += strings.Join(m.Group, "/") + ", "
 		}
 		if len(m.SeedData) > 0 {
-			prefix += fmt.Sprintf("%d seed %s, ", len(m.SeedData), util.StringPluralMaybe("row", len(m.SeedData)))
+			prefix += fmt.Sprintf("%s of seed data", util.StringPlural(len(m.SeedData), "row"))
 		}
 
 //line views/vexport/Overview.html:111
@@ -379,11 +379,7 @@ func StreamModelList(qw422016 *qt422016.Writer, models model.Models, urlPrefix s
 //line views/vexport/Overview.html:114
 		qw422016.E().S(prefix)
 //line views/vexport/Overview.html:114
-		qw422016.N().D(len(m.Columns))
-//line views/vexport/Overview.html:114
-		qw422016.N().S(` `)
-//line views/vexport/Overview.html:114
-		qw422016.E().S(util.StringPluralMaybe("field", len(m.Columns)))
+		qw422016.E().S(util.StringPlural(len(m.Columns), "field"))
 //line views/vexport/Overview.html:114
 		qw422016.N().S(`</em></td>
       </tr>

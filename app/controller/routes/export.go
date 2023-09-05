@@ -17,8 +17,8 @@ func exportRoutes(r *router.Router) {
 
 	r.GET("/p/{key}/export/models/create/new", cproject.ProjectExportModelNew)
 	r.POST("/p/{key}/export/models/create/new", cproject.ProjectExportModelCreate)
-	r.GET("/p/{key}/export/models/create/derive", cproject.ProjectExportModelDeriveForm)
-	r.POST("/p/{key}/export/models/create/derive", cproject.ProjectExportModelDerive)
+	r.GET("/p/{key}/export/models/create/derive", cproject.ProjectExportDeriveForm)
+	r.POST("/p/{key}/export/models/create/derive", cproject.ProjectExportDerive)
 	r.GET("/p/{key}/export/models/{model}", cproject.ProjectExportModelDetail)
 	r.GET("/p/{key}/export/models/{model}/seeddata", cproject.ProjectExportModelSeedData)
 	r.GET("/p/{key}/export/models/{model}/edit", cproject.ProjectExportModelForm)
