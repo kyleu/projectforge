@@ -10,6 +10,7 @@
 ) %}
 
 {% func Menu(ps *cutil.PageState) %}{% stripspace %}
+  {% if len(ps.Menu) > 0 %}
   <div class="menu-container">
     {%= vutil.Indent(true, 2) %}
     <div class="menu">
@@ -24,6 +25,7 @@
     </div>
   {%= vutil.Indent(true, 1) %}
   </div>
+  {% endif %}
 {% endstripspace %}{% endfunc %}
 
 {% func MenuItem(i *menu.Item, path []string, breadcrumbs cmenu.Breadcrumbs, indent int, ps *cutil.PageState) %}{% stripspace %}
@@ -37,7 +39,7 @@
   {% elseif len(i.Children) > 0 %}
     {% code itemID := strings.Join(path, "--")%}
     {%= vutil.Indent(true, indent + 1) %}
-    {% if active %}<li class="active">{% else %}<li>{% endif %}
+    {% if active %}<li class="active" data-menu-key="{%s i.Key %}">{% else %}<li data-menu-key="{%s i.Key %}">{% endif %}
       {%= vutil.Indent(true, indent + 2) %}
       <input id="{%s itemID %}-input" type="checkbox"{% if active %}{% space %}checked="checked"{% endif %}{% space %}hidden />
       {%= vutil.Indent(true, indent + 2) %}
@@ -82,7 +84,7 @@
       }
     %}
     {%= vutil.Indent(true, indent + 1) %}
-    <li>
+    <li data-menu-key="{%s i.Key %}">
       <a class="{%s finalClass %}" href="{%s i.Route %}" title="{%s i.Desc() %}">
         {% if i.Badge != "" %}
           {%= vutil.Indent(true, indent + 3) %}

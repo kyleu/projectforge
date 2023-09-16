@@ -101,7 +101,19 @@
   padding-left: calc(var(--menu-padding) * 6);
 }
 
-.level-1, .level-2, .level-3, .level-4, .level-5 {
+.level-6 .label-item, .level-6 label {
+  padding-left: calc(var(--menu-padding) * 7);
+}
+
+.level-7 .label-item, .level-7 label {
+  padding-left: calc(var(--menu-padding) * 8);
+}
+
+.level-8 .label-item, .level-8 label {
+  padding-left: calc(var(--menu-padding) * 8);
+}
+
+.level-1, .level-2, .level-3, .level-4, .level-5, .level-6, .level-7, .level-8 {
   height: 100%;
   max-height: 0;
   overflow: hidden;
