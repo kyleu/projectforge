@@ -28,7 +28,7 @@ func ScriptingDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		src, err := as.Services.Script.LoadScript(key, ps.Logger)
+		key, src, err := as.Services.Script.LoadScript(key, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -82,7 +82,7 @@ func ScriptingForm(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		sc, err := as.Services.Script.LoadScript(key, ps.Logger)
+		key, sc, err := as.Services.Script.LoadScript(key, ps.Logger)
 		ps.Title = "Edit [" + key + "]"
 		ps.Data = sc
 		return controller.Render(rc, as, &vscripting.Form{Path: key, Content: sc}, ps, "scripting", key, "Edit")

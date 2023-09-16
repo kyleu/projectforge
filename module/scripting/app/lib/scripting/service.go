@@ -36,18 +36,19 @@ func (s *Service) ListScriptSizes(logger util.Logger) ([]string, map[string]int)
 	})
 }
 
-func (s *Service) LoadScript(pth string, logger util.Logger) (string, error) {
+func (s *Service) LoadScript(pth string, logger util.Logger) (string, string, error) {
 	logger.Infof("loading script [%s]", pth)
 	filePath := filepath.Join(s.Path, pth)
 	b, err := s.FS.ReadFile(filePath)
 	if err != nil {
+		pth = pth + ".js"
 		b, err = s.FS.ReadFile(filePath + ".js")
 		if err != nil {
-			return "", err
+			return "", "", err
 		}
 	}
 	sc := string(b)
-	return sc, nil
+	return pth, sc, nil
 }
 
 func (s *Service) SaveScript(pth string, content string, logger util.Logger) error {
@@ -72,7 +73,7 @@ func (s *Service) Size(scr string) int {
 
 func (s *Service) SearchScripts(ctx context.Context, ps filter.ParamSet, q string, logger util.Logger) (result.Results, error) {
 	return lo.FilterMap(s.ListScripts(logger), func(fn string, _ int) (*result.Result, bool) {
-		scr, _ := s.LoadScript(fn, logger)
+		fn, scr, _ := s.LoadScript(fn, logger)
 		res := result.NewResult("script", fn, "/admin/scripting/"+fn, fn, "file-code", scr, scr, q)
 		if len(res.Matches) > 0 {
 			return res, true
