@@ -32,6 +32,8 @@ type Column struct {
 	Indexed    bool           `json:"indexed,omitempty"`
 	Display    string         `json:"display,omitempty"`
 	Format     string         `json:"format,omitempty"`
+	Example    string         `json:"example,omitempty"`
+	Validation string         `json:"validation,omitempty"`
 	Values     []string       `json:"values,omitempty"`
 	Tags       []string       `json:"tags,omitempty"`
 	HelpString string         `json:"helpString,omitempty"`
@@ -39,8 +41,8 @@ type Column struct {
 
 func (c *Column) Clone() *Column {
 	return &Column{
-		Name: c.Name, Type: c.Type, PK: c.PK, Nullable: c.Nullable, Search: c.Search, SQLDefault: c.SQLDefault,
-		Display: c.Display, Format: c.Format, Values: c.Values, Tags: c.Tags, HelpString: c.HelpString,
+		Name: c.Name, Type: c.Type, PK: c.PK, Nullable: c.Nullable, Search: c.Search, SQLDefault: c.SQLDefault, Display: c.Display,
+		Format: c.Format, Example: c.Example, Validation: c.Validation, Values: c.Values, Tags: c.Tags, HelpString: c.HelpString,
 	}
 }
 

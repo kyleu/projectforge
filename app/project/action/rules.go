@@ -107,6 +107,10 @@ func applyRules(pm *PrjAndMods, rules map[string]string) error {
 				col.Display = v
 			case "format":
 				col.Format = v
+			case "example":
+				col.Example = v
+			case "validation":
+				col.Validation = v
 			case keyTag:
 				col.AddTag(v)
 			case keyTags:

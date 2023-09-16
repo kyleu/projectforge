@@ -116,7 +116,14 @@ func modelStruct(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 			return nil, err
 		}
 		goType := util.StringPad(gt, maxTypeLength)
-		ret.W("\t%s %s `json:%q`", util.StringPad(c.Proper(), maxColLength), goType, c.Camel()+modelJSONSuffix(c))
+		tag := fmt.Sprintf("json:%q", c.Camel()+modelJSONSuffix(c))
+		if c.Validation != "" {
+			tag += fmt.Sprintf(",validate:%q", c.Validation)
+		}
+		if c.Example != "" {
+			tag += fmt.Sprintf(",fake:%q", c.Example)
+		}
+		ret.W("\t%s %s `%s`", util.StringPad(c.Proper(), maxColLength), goType, tag)
 	}
 	ret.W("}")
 	return ret, nil
