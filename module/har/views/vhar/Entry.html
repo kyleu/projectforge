@@ -1,6 +1,5 @@
 {% import (
   "fmt"
-  "strings"
 
   "{{{ .Package }}}/app/controller/cutil"
   "{{{ .Package }}}/app/lib/har"
@@ -40,26 +39,41 @@
 {% endfunc %}
 
 {% func RenderEntry(key string, e *har.Entry, ps *cutil.PageState) %}
-  <table class="min-200 expanded">
-    <tbody>
-      <tr>
-        <th class="shrink">Duration</th>
-        <td>{%s util.MicrosToMillis(e.Duration()) %}
-          <em>{%s strings.Join(e.PageTimings.Strings(), ", ") %}</em>
-        </td>
-      </tr>
-      <tr>
-        <th class="shrink">Request</th>
-        <td>{%= RenderRequest(key, e.Request, ps) %}</td>
-      </tr>
-      <tr>
-        <th class="shrink">Response Size</th>
-        <td>{%s util.ByteSizeSI(int64(e.Response.Size())) %}</td>
-      </tr>
-      <tr>
-        <th class="shrink">Response</th>
-        <td>{%= RenderResponse(key, e.Response, ps) %}</td>
-      </tr>
-    </tbody>
-  </table>
+  <ul class="accordion">
+    <li>
+      <input id="accordion-entry-{%s key %}-duration" type="checkbox" hidden />
+      <label for="accordion-entry-{%s key %}-duration">
+        <div class="right"><em>{%s util.MicrosToMillis(e.Duration()) %}</em></div>
+        {%= components.ExpandCollapse(3, ps) %} Duration
+      </label>
+      <div class="bd">
+        <table class="min-200 expanded">
+          <tbody>
+            {%- for k, v := range e.PageTimings.Map() -%}
+            <tr>
+              <th class="shrink">{%s k %}</th>
+              <td>{%s v %}</td>
+            </tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+      </div>
+    </li>
+    <li>
+      <input id="accordion-entry-{%s key %}-request" type="checkbox" hidden />
+      <label for="accordion-entry-{%s key %}-request">
+        <div class="right"><em>{%s e.Request.Method %}</em></div>
+        {%= components.ExpandCollapse(3, ps) %} Request
+      </label>
+      <div class="bd">{%= RenderRequest(key, e.Request, ps) %}</div>
+    </li>
+    <li>
+      <input id="accordion-entry-{%s key %}-response" type="checkbox" hidden />
+      <label for="accordion-entry-{%s key %}-response">
+        <div class="right"><em>{%s e.Response.StatusText %}</em></div>
+        {%= components.ExpandCollapse(3, ps) %} Response
+      </label>
+      <div class="bd">{%= RenderResponse(key, e.Response, ps) %}</div>
+    </li>
+  </ul>
 {% endfunc %}

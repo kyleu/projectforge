@@ -24,10 +24,6 @@
         <th class="shrink">Headers </th>
         <td>{%= renderNVPsHidden(fmt.Sprintf("response-header-%s", key), "Header", r.Headers, r.HeadersSize, ps) %}</td>
       </tr>
-      <tr>
-        <th class="shrink">Content Type</th>
-        <td>{%s r.ContentType() %}</td>
-      </tr>
       {%- if len(r.Cookies) > 0 -%}
       <tr>
         <th class="shrink">Cookies</th>
@@ -38,7 +34,7 @@
       <tr>
         <th class="shrink">Body</th>
         <td>
-          <div class="right"><em>{%s r.Content.MimeType %}, {%s util.ByteSizeSI(int64(r.Content.Size)) %}</em></div>
+          <div class="right"><em>{% if r.ContentType() != "" %}{%s r.ContentType() %}, {% endif %}{%s util.ByteSizeSI(int64(r.Content.Size)) %}</em></div>
           <ul class="accordion">
             <li>
               <input id="accordion-response-body-{%s key %}" type="checkbox" hidden />

@@ -23,10 +23,13 @@
     <div class="mt">
       {%s util.MicrosToMillis(p.Har.Entries.TotalDuration()) %} elapsed, downloaded {%s util.ByteSizeSI(int64(p.Har.Entries.TotalResponseBodySize())) %}
     </div>
+    <!-- $PF_SECTION_START(actions)$ -->
     <div class="mt">
       <a href="{%s p.Har.WebPath() %}/run"><button>Run</button></a>
       <a href="{%s p.Har.WebPath() %}/bench"><button>Benchmark</button></a>
+      <a href="{%s p.Har.WebPath() %}/trim"><button>Trim</button></a>
     </div>
+    <!-- $PF_SECTION_END(actions)$ -->
   </div>
 
   <div class="card">

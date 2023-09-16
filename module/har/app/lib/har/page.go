@@ -35,32 +35,41 @@ type PageTimings struct {
 	Comment  string `json:"comment,omitempty"`
 }
 
-func (p *PageTimings) Strings() []string {
+func (p *PageTimings) Map() map[string]string {
 	mult := 1000
 	if p.IsMicros {
 		mult = 1
 	}
-	var ret []string
+	ret := make(map[string]string, 10)
 	if p.Blocked > 0 {
-		ret = append(ret, fmt.Sprintf("blocked: %s", util.MicrosToMillis(p.Blocked*mult)))
+		ret["Blocked"] = util.MicrosToMillis(p.Blocked * mult)
 	}
 	if p.DNS > 0 {
-		ret = append(ret, fmt.Sprintf("dns: %s", util.MicrosToMillis(p.DNS*mult)))
+		ret["DNS"] = util.MicrosToMillis(p.DNS * mult)
 	}
 	if p.Connect > 0 {
-		ret = append(ret, fmt.Sprintf("connect: %s", util.MicrosToMillis(p.Connect*mult)))
+		ret["Connect"] = util.MicrosToMillis(p.Connect * mult)
 	}
 	if p.Send > 0 {
-		ret = append(ret, fmt.Sprintf("send: %s", util.MicrosToMillis(p.Send*mult)))
+		ret["Send"] = util.MicrosToMillis(p.Send * mult)
 	}
 	if p.Wait > 0 {
-		ret = append(ret, fmt.Sprintf("wait: %s", util.MicrosToMillis(p.Wait*mult)))
+		ret["Wait"] = util.MicrosToMillis(p.Wait * mult)
 	}
 	// if p.Receive > 0 {
-	// 	ret = append(ret, fmt.Sprintf("receive: %s", util.MicrosToMillis(p.Receive*mult)))
+	// 	ret["Receive"] = util.MicrosToMillis(p.Receive * mult)
 	// }
 	if p.SSL > 0 {
-		ret = append(ret, fmt.Sprintf("ssl: %s", util.MicrosToMillis(p.SSL*mult)))
+		ret["SSL"] = util.MicrosToMillis(p.SSL * mult)
+	}
+	return ret
+}
+
+func (p *PageTimings) Strings() []string {
+	m := p.Map()
+	ret := make([]string, 0, len(m))
+	for k, v := range m {
+		ret = append(ret, fmt.Sprintf("%s: %s", k, v))
 	}
 	return ret
 }

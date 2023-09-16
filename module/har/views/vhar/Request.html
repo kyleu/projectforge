@@ -36,14 +36,22 @@
       {%- endif -%}
       {%- if r.PostData != nil -%}
       <tr>
-        <th class="shrink">Body  <em>{%s util.ByteSizeSI(int64(r.BodySize)) %}</em></th>
+        <th class="shrink">Body</th>
         <td>
-          {%s r.PostData.String() %}
+          <div class="right"><em>{% if r.PostData.MimeType != "" %}{%s r.PostData.MimeType %}, {% endif %}{%s util.ByteSizeSI(int64(r.BodySize)) %}</em></div>
           {%- if len(r.PostData.Params) > 0 -%}
           <ul>
             {%- for _, param := range r.PostData.Params -%}
             <li><strong>{%s param.Name %}</strong>: {%s param.Value %}</li>
             {%- endfor -%}
+          </ul>
+          {%- elseif r.PostData.Text != "" -%}
+          <ul class="accordion">
+            <li>
+              <input id="accordion-request-body-{%s key %}" type="checkbox" hidden />
+              <label class="no-padding" for="accordion-request-body-{%s key %}"><em>(click to show)</em></label>
+              <div class="bd"><pre>{%s r.PostData.Text %}</pre></div>
+            </li>
           </ul>
           {%- endif -%}
         </td>
