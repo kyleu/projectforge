@@ -40,7 +40,7 @@ func ScriptingDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Scripting"
+		ps.Title = key
 		ps.Data = map[string]any{"script": src, "results": res}
 		page := &vscripting.Detail{Path: key, Script: src, LoadResult: loadResult, Results: res}
 		return controller.Render(rc, as, page, ps, "scripting", key)
@@ -83,6 +83,9 @@ func ScriptingForm(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		key, sc, err := as.Services.Script.LoadScript(key, ps.Logger)
+		if err != nil {
+			return "", err
+		}
 		ps.Title = "Edit [" + key + "]"
 		ps.Data = sc
 		return controller.Render(rc, as, &vscripting.Form{Path: key, Content: sc}, ps, "scripting", key, "Edit")

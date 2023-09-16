@@ -63,19 +63,21 @@ func (s *Service) Save(t *Theme, originalKey string, logger util.Logger) error {
 func (s *Service) loadIfNeeded(logger util.Logger) {
 	if s.cache == nil {
 		s.cache = Themes{ThemeDefault}
-		lo.ForEach(s.files.ListJSON(s.root, nil, true, logger), func(key string, _ int) {
-			t := &Theme{}
-			b, err := s.files.ReadFile(filepath.Join(s.root, key+".json"))
-			if err != nil {
-				logger.Warnf("can't load theme [%s]: %+v", key, err)
-			}
-			err = util.FromJSON(b, t)
-			if err != nil {
-				logger.Warnf("can't load theme [%s]: %+v", key, err)
-			}
-			t.Key = key
-			s.cache = append(s.cache, t)
-		})
+		if s.files.IsDir(s.root) {
+			lo.ForEach(s.files.ListJSON(s.root, nil, true, logger), func(key string, _ int) {
+				t := &Theme{}
+				b, err := s.files.ReadFile(filepath.Join(s.root, key+".json"))
+				if err != nil {
+					logger.Warnf("can't load theme [%s]: %+v", key, err)
+				}
+				err = util.FromJSON(b, t)
+				if err != nil {
+					logger.Warnf("can't load theme [%s]: %+v", key, err)
+				}
+				t.Key = key
+				s.cache = append(s.cache, t)
+			})
+		}
 		s.cache = append(s.cache, lo.Filter(CatalogThemes, func(t *Theme, _ int) bool {
 			return !s.cache.Contains(t.Key)
 		})...)

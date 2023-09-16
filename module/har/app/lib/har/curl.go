@@ -22,9 +22,9 @@ func (e *Entry) Curl() string {
 		command += " \\\n  -b \"" + strings.Join(cookies, "&") + "\""
 	}
 	for _, h := range e.Request.Headers {
-		if h.Name == "Accept-Encoding" && strings.Contains(h.Value, "br") {
+		if h.Name == "Accept-Encoding" && strings.Contains(h.Value, encBrotli) {
 			encs := lo.Filter(util.StringSplitAndTrim(h.Value, ","), func(x string, _ int) bool {
-				return x == "deflate" || x == "gzip"
+				return x == encDeflate || x == encGzip
 			})
 			h = &NVP{Name: h.Name, Value: strings.Join(encs, ", "), Comment: h.Comment}
 		}

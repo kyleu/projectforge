@@ -32,7 +32,7 @@ func Derive(name string, pkg string, content string, logger util.Logger) Result 
 	return ret.AddSection("error", (&Section{}).AddError(errors.Errorf("content isn't valid JSON or a valid path [%s]", content)))
 }
 
-func deriveFileContent(fn string, content string, ret Result, logger util.Logger) Result {
+func deriveFileContent(fn string, content string, ret Result, _ util.Logger) Result {
 	s := &Section{}
 	s.AddLog("loading file [%s] (%s)", fn, util.ByteSizeSI(int64(len(content))))
 
@@ -49,7 +49,7 @@ func deriveDirectory(fn string, fs filesystem.FileLoader, ret Result, logger uti
 	return ret.AddSection(fn, s)
 }
 
-func deriveJSON(name string, pkg string, js any, ret Result, logger util.Logger) Result {
+func deriveJSON(name string, pkg string, js any, ret Result, _ util.Logger) Result {
 	switch t := js.(type) {
 	case map[string]any:
 		return deriveJSONObject(name, pkg, t, ret)
@@ -69,7 +69,7 @@ func deriveJSONObject(name string, pkg string, m map[string]any, ret Result) Res
 	return ret.AddSection(name, (&Section{}).AddModel(&model.Model{Name: name, Package: pkg, Icon: "star", Columns: cols, SeedData: seedData}))
 }
 
-func deriveExtractColumns(prefix string, childMap util.ValueMap) (model.Columns, [][]any, error) {
+func deriveExtractColumns(_ string, childMap util.ValueMap) (model.Columns, [][]any, error) {
 	var ret model.Columns
 	var sd [][]any
 	for k, v := range childMap {

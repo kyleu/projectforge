@@ -81,8 +81,8 @@ func (s *Service) Save(log *Log) error {
 	return s.FS.WriteFile(fn, b, filesystem.DefaultMode, true)
 }
 
-func (s *Service) Search(ctx context.Context, ps filter.ParamSet, q string, logger util.Logger) (result.Results, error) {
-	return lo.FilterMap(s.List(logger), func(fn string, _ int) (*result.Result, bool) {
+func (s *Service) Search(_ context.Context, _ filter.ParamSet, q string, logger util.Logger) (result.Results, error) {
+	f := func(fn string, _ int) (*result.Result, bool) {
 		log, err := s.Load(fn)
 		if err != nil {
 			logger.Warnf("error loading har [%s]: %+v", fn, err)
@@ -93,5 +93,6 @@ func (s *Service) Search(ctx context.Context, ps filter.ParamSet, q string, logg
 			return res, true
 		}
 		return nil, false
-	}), nil
+	}
+	return lo.FilterMap(s.List(logger), f), nil
 }

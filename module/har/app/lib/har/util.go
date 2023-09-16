@@ -23,7 +23,7 @@ type NVPs []*NVP
 func (p NVPs) GetValue(n string) string {
 	n = strings.ToLower(n)
 	for _, x := range p {
-		if strings.ToLower(x.Name) == n {
+		if strings.EqualFold(x.Name, n) {
 			return x.Value
 		}
 	}

@@ -50,14 +50,5 @@ func wireFunctions(key string, vm *goja.Runtime, logger util.Logger) error {
 	if err := vm.Set("randomString", util.RandomString); err != nil {
 		return err
 	}
-	if err := vm.Set("microsToMillis", util.MicrosToMillis); err != nil {
-		return err
-	}
-	if err := vm.Set("getEnv", util.GetEnv); err != nil {
-		return err
-	}
-	if err := vm.Set("replaceEnvVars", util.ReplaceEnvVars); err != nil {
-		return err
-	}
-	return nil
+	return vm.Set("microsToMillis", util.MicrosToMillis)
 }
