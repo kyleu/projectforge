@@ -35,6 +35,13 @@ type PageTimings struct {
 	Comment  string `json:"comment,omitempty"`
 }
 
+func (p *PageTimings) Elapsed() int {
+	if p.Total > 0 {
+		return p.Total
+	}
+	return p.Blocked + p.DNS + p.Connect + p.SSL + p.Wait + p.Receive + p.SSL
+}
+
 func (p *PageTimings) Map() map[string]string {
 	mult := 1000
 	if p.IsMicros {
