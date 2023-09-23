@@ -40,87 +40,89 @@ func (p *Diffs) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
 	qw422016.N().S(`
   <div class="card">
     <h3>Diffs</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Filename</th>
-          <th>Source</th>
-          <th>Target</th>
-          <th>Edits</th>
-          <th>Changes</th>
-          <th>Patch</th>
-        </tr>
-      </thead>
-      <tbody>
+    <div class="overflow full-width">
+      <table>
+        <thead>
+          <tr>
+            <th>Filename</th>
+            <th>Source</th>
+            <th>Target</th>
+            <th>Edits</th>
+            <th>Changes</th>
+            <th>Patch</th>
+          </tr>
+        </thead>
+        <tbody>
 `)
-//line views/vtest/Diffs.html:31
+//line views/vtest/Diffs.html:32
 	for _, r := range p.Results {
-//line views/vtest/Diffs.html:31
-		qw422016.N().S(`        <tr>
-          <td>`)
-//line views/vtest/Diffs.html:33
+//line views/vtest/Diffs.html:32
+		qw422016.N().S(`          <tr>
+            <td>`)
+//line views/vtest/Diffs.html:34
 		qw422016.E().S(r.Filename)
-//line views/vtest/Diffs.html:33
-		qw422016.N().S(`</td>
-          <td>`)
 //line views/vtest/Diffs.html:34
+		qw422016.N().S(`</td>
+            <td>`)
+//line views/vtest/Diffs.html:35
 		qw422016.E().S(r.Src)
-//line views/vtest/Diffs.html:34
-		qw422016.N().S(`</td>
-          <td>`)
 //line views/vtest/Diffs.html:35
+		qw422016.N().S(`</td>
+            <td>`)
+//line views/vtest/Diffs.html:36
 		qw422016.E().S(r.Tgt)
-//line views/vtest/Diffs.html:35
+//line views/vtest/Diffs.html:36
 		qw422016.N().S(`</td>
-          <td><pre>`)
-//line views/vtest/Diffs.html:36
+            <td><pre>`)
+//line views/vtest/Diffs.html:37
 		qw422016.E().S(util.ToJSON(r.Edits))
-//line views/vtest/Diffs.html:36
-		qw422016.N().S(`</pre></td>
-          <td><pre>`)
 //line views/vtest/Diffs.html:37
+		qw422016.N().S(`</pre></td>
+            <td><pre>`)
+//line views/vtest/Diffs.html:38
 		qw422016.E().S(util.ToJSON(r.Changes))
-//line views/vtest/Diffs.html:37
-		qw422016.N().S(`</pre></td>
-          <td><pre>`)
 //line views/vtest/Diffs.html:38
+		qw422016.N().S(`</pre></td>
+            <td><pre>`)
+//line views/vtest/Diffs.html:39
 		qw422016.E().S(fmt.Sprint(r.Patch))
-//line views/vtest/Diffs.html:38
+//line views/vtest/Diffs.html:39
 		qw422016.N().S(`</pre></td>
-        </tr>
+          </tr>
 `)
-//line views/vtest/Diffs.html:40
+//line views/vtest/Diffs.html:41
 	}
-//line views/vtest/Diffs.html:40
-	qw422016.N().S(`      </tbody>
-    </table>
+//line views/vtest/Diffs.html:41
+	qw422016.N().S(`        </tbody>
+      </table>
+    </div>
   </div>
 `)
-//line views/vtest/Diffs.html:44
+//line views/vtest/Diffs.html:46
 }
 
-//line views/vtest/Diffs.html:44
+//line views/vtest/Diffs.html:46
 func (p *Diffs) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vtest/Diffs.html:44
+//line views/vtest/Diffs.html:46
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vtest/Diffs.html:44
+//line views/vtest/Diffs.html:46
 	p.StreamBody(qw422016, as, ps)
-//line views/vtest/Diffs.html:44
+//line views/vtest/Diffs.html:46
 	qt422016.ReleaseWriter(qw422016)
-//line views/vtest/Diffs.html:44
+//line views/vtest/Diffs.html:46
 }
 
-//line views/vtest/Diffs.html:44
+//line views/vtest/Diffs.html:46
 func (p *Diffs) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vtest/Diffs.html:44
+//line views/vtest/Diffs.html:46
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vtest/Diffs.html:44
+//line views/vtest/Diffs.html:46
 	p.WriteBody(qb422016, as, ps)
-//line views/vtest/Diffs.html:44
+//line views/vtest/Diffs.html:46
 	qs422016 := string(qb422016.B)
-//line views/vtest/Diffs.html:44
+//line views/vtest/Diffs.html:46
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vtest/Diffs.html:44
+//line views/vtest/Diffs.html:46
 	return qs422016
-//line views/vtest/Diffs.html:44
+//line views/vtest/Diffs.html:46
 }

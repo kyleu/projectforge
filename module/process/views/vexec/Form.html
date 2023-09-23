@@ -18,17 +18,19 @@
   <form action="" method="post" class="mt expanded">
     <div class="card">
       <h3>{%= components.SVGRefIcon("terminal", ps) %}New Process</h3>
-      <table class="mt min-200 expanded">
-        <tbody>
-          {%= components.TableInput("key", "", "Key", x.Key, 5, "optional, defaults to command") %}
-          {%= components.TableInput("cmd", "", "Command", x.Cmd, 5, "command to execute, with arguments") %}
-          {%= components.TableInput("path", "", "Path", x.Path, 5) %}
-          {%= components.TableTextarea("env", "", "Env Vars", len(x.Env), strings.Join(x.Env, "\n"), 5) %}
-          <tr>
-            <td colspan="2"><button class="mt" type="submit">Create</button></td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="overflow full-width">
+        <table class="mt min-200 expanded">
+          <tbody>
+            {%= components.TableInput("key", "", "Key", x.Key, 5, "optional, defaults to command") %}
+            {%= components.TableInput("cmd", "", "Command", x.Cmd, 5, "command to execute, with arguments") %}
+            {%= components.TableInput("path", "", "Path", x.Path, 5) %}
+            {%= components.TableTextarea("env", "", "Env Vars", len(x.Env), strings.Join(x.Env, "\n"), 5) %}
+            <tr>
+              <td colspan="2"><button class="mt" type="submit">Create</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </form>
 {% endfunc %}

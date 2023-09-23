@@ -13,21 +13,23 @@
   <div class="card">
     <h3>Tap Activity</h3>
     <em>Shows all WebSocket traffic in real-time</em>
-    <table class="mt">
-      <thead>
-        <tr>
-          <th>From</th>
-          <th>Channel</th>
-          <th>Command</th>
-          <th>Param</th>
-        </tr>
-      </thead>
-      <tbody id="tap-logs">
-        <tr>
-          <td colspan="4">Connecting...</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="overflow full-width">
+      <table class="mt">
+        <thead>
+          <tr>
+            <th>From</th>
+            <th>Channel</th>
+            <th>Command</th>
+            <th>Param</th>
+          </tr>
+        </thead>
+        <tbody id="tap-logs">
+          <tr>
+            <td colspan="4">Connecting...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
   <script>
     function open() {

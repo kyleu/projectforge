@@ -8,53 +8,55 @@
 ) %}
 
 {% func DetailSettings(prj *project.Project, as *app.State, ps *cutil.PageState) %}
-  <table class="min-200 full-width">
-    <tbody>
-      <tr>
-        <th class="shrink">Key</th>
-        <td>{%s prj.Key %}</td>
-      </tr>
-      <tr>
-        <th>Name</th>
-        <td>{%s prj.Name %}</td>
-      </tr>
-      <tr>
-        <th>Version</th>
-        <td>{%s prj.Version %}</td>
-      </tr>
-      <tr>
-        <th>Package</th>
-        <td><a href="https://{%s prj.Package %}" target="_blank" rel="noopener noreferrer">{%s prj.Package %}</a></td>
-      </tr>
-      <tr>
-        <th>Args</th>
-        <td>{%s prj.Args %}</td>
-      </tr>
-      <tr>
-        <th>Port</th>
-        <td><a href="http://localhost:{%d prj.Port %}" target="_blank" rel="noopener noreferrer">{%d prj.Port %}</a></td>
-      </tr>
-      <tr>
-        <th>Ignore</th>
-        <td>{%s strings.Join(prj.Ignore, ", ") %}</td>
-      </tr>
-      <tr>
-        <th>Tags</th>
-        <td>
-          {%- for i, tag := range prj.Tags %}
-          <a href="/p?tags={%s tag %}">{%s tag %}</a>{% if i < len(prj.Tags)-1 %},{% endif %}
-          {%- endfor %}
-        </td>
-      </tr>
-      <tr>
-        <th>Path</th>
-        <td>{%s prj.Path %}</td>
-      </tr>
-      <tr>
-        <th>JSON</th>
-        <td><a href="#modal-{%s prj.Key %}"><button type="button">JSON</button></a></td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="overflow full-width">
+    <table class="min-200 full-width">
+      <tbody>
+        <tr>
+          <th class="shrink">Key</th>
+          <td>{%s prj.Key %}</td>
+        </tr>
+        <tr>
+          <th>Name</th>
+          <td>{%s prj.Name %}</td>
+        </tr>
+        <tr>
+          <th>Version</th>
+          <td>{%s prj.Version %}</td>
+        </tr>
+        <tr>
+          <th>Package</th>
+          <td><a href="https://{%s prj.Package %}" target="_blank" rel="noopener noreferrer">{%s prj.Package %}</a></td>
+        </tr>
+        <tr>
+          <th>Args</th>
+          <td>{%s prj.Args %}</td>
+        </tr>
+        <tr>
+          <th>Port</th>
+          <td><a href="http://localhost:{%d prj.Port %}" target="_blank" rel="noopener noreferrer">{%d prj.Port %}</a></td>
+        </tr>
+        <tr>
+          <th>Ignore</th>
+          <td>{%s strings.Join(prj.Ignore, ", ") %}</td>
+        </tr>
+        <tr>
+          <th>Tags</th>
+          <td>
+            {%- for i, tag := range prj.Tags %}
+            <a href="/p?tags={%s tag %}">{%s tag %}</a>{% if i < len(prj.Tags)-1 %},{% endif %}
+            {%- endfor %}
+          </td>
+        </tr>
+        <tr>
+          <th>Path</th>
+          <td>{%s prj.Path %}</td>
+        </tr>
+        <tr>
+          <th>JSON</th>
+          <td><a href="#modal-{%s prj.Key %}"><button type="button">JSON</button></a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
   {%= components.JSONModal(prj.Key, "Project JSON", prj, 1) %}
 {% endfunc %}

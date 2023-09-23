@@ -45,88 +45,92 @@
 {% endfunc %}
 
 {% func statusDetail(prj *project.Project, r *git.Result) %}
-  <table class="mt min-200">
-    <tbody>
-      <tr>
-        <th class="shrink">Status</th>
-        <td>{%s r.Status %}</td>
-      </tr>
-      <tr>
-        <th class="shrink">Branch</th>
-        <td>{%s r.DataString("branch") %}</td>
-      </tr>
-      {%- if r.DataString("commitMessage") != "" -%}
-      <tr>
-        <th class="shrink">Commit Message</th>
-        <td>{%s r.DataString("commitMessage") %}</td>
-      </tr>
-      {%- endif -%}
-      {%- if r.DataString("commit") != "" -%}
-      <tr>
-        <th class="shrink">Commit Results</th>
-        <td><pre>{%s= r.DataString("commit") %}</pre></td>
-      </tr>
-      {%- endif -%}
-      {%- if delta := r.DataInt("commitsAhead"); delta > 0 -%}
-      <tr>
-        <th class="shrink">Ahead By</th>
-        <td>
-          <div class="right"><a href="/git/{%s prj.Key %}/push"><button>Push</button></a></div>
-          {%s util.StringPlural(delta, "commit") %}
-        </td>
-      </tr>
-      {%- endif -%}
-      {%- if delta := r.DataInt("commitsBehind"); delta > 0 -%}
-      <tr>
-        <th class="shrink">Behind By</th>
-        <td>
-          <div class="right"><a href="/git/{%s prj.Key %}/pull"><button>Pull</button></a></div>
-          {%s util.StringPlural(delta, "commit") %}
-        </td>
-      </tr>
-      {%- endif -%}
-      {%- if len(r.DataStringArray("logs")) > 0 -%}
-      <tr>
-        <th class="shrink">Logs</th>
-        <td>
-          <table>
-            <tbody>
-              {%- for idx, l := range r.DataStringArray("logs") -%}
-              <tr><td class="shrink"><em>{%d idx+1 %}</em>:</td><td>{%s l %}</td></tr>
+  <div class="overflow full-width">
+    <table class="mt min-200">
+      <tbody>
+        <tr>
+          <th class="shrink">Status</th>
+          <td>{%s r.Status %}</td>
+        </tr>
+        <tr>
+          <th class="shrink">Branch</th>
+          <td>{%s r.DataString("branch") %}</td>
+        </tr>
+        {%- if r.DataString("commitMessage") != "" -%}
+        <tr>
+          <th class="shrink">Commit Message</th>
+          <td>{%s r.DataString("commitMessage") %}</td>
+        </tr>
+        {%- endif -%}
+        {%- if r.DataString("commit") != "" -%}
+        <tr>
+          <th class="shrink">Commit Results</th>
+          <td><pre>{%s= r.DataString("commit") %}</pre></td>
+        </tr>
+        {%- endif -%}
+        {%- if delta := r.DataInt("commitsAhead"); delta > 0 -%}
+        <tr>
+          <th class="shrink">Ahead By</th>
+          <td>
+            <div class="right"><a href="/git/{%s prj.Key %}/push"><button>Push</button></a></div>
+            {%s util.StringPlural(delta, "commit") %}
+          </td>
+        </tr>
+        {%- endif -%}
+        {%- if delta := r.DataInt("commitsBehind"); delta > 0 -%}
+        <tr>
+          <th class="shrink">Behind By</th>
+          <td>
+            <div class="right"><a href="/git/{%s prj.Key %}/pull"><button>Pull</button></a></div>
+            {%s util.StringPlural(delta, "commit") %}
+          </td>
+        </tr>
+        {%- endif -%}
+        {%- if len(r.DataStringArray("logs")) > 0 -%}
+        <tr>
+          <th class="shrink">Logs</th>
+          <td>
+            <div class="overflow full-width">
+              <table>
+                <tbody>
+                  {%- for idx, l := range r.DataStringArray("logs") -%}
+                  <tr><td class="shrink"><em>{%d idx+1 %}</em>:</td><td>{%s l %}</td></tr>
+                  {%- endfor -%}
+                </tbody>
+              </table>
+            </div>
+          </td>
+        </tr>
+        {%- endif -%}
+
+        <tr>
+          <th class="shrink">Dirty Files</th>
+          <td>
+            {%- code dirt := r.DataStringArray("dirty") -%}
+            {%- if len(dirt) > 0 -%}
+            <div class="right"><a href="/git/{%s prj.Key %}/commit"><button>Commit</button></a></div>
+            <ul>
+              {%- for _, d := range dirt -%}
+              <li>{%s d %}</li>
               {%- endfor -%}
-            </tbody>
-          </table>
-        </td>
-      </tr>
-      {%- endif -%}
+            </ul>
+            {%- else -%}
+            <em>none</em>
+            {%- endif -%}
+          </td>
+        </tr>
 
-      <tr>
-        <th class="shrink">Dirty Files</th>
-        <td>
-          {%- code dirt := r.DataStringArray("dirty") -%}
-          {%- if len(dirt) > 0 -%}
-          <div class="right"><a href="/git/{%s prj.Key %}/commit"><button>Commit</button></a></div>
-          <ul>
-            {%- for _, d := range dirt -%}
-            <li>{%s d %}</li>
-            {%- endfor -%}
-          </ul>
-          {%- else -%}
-          <em>none</em>
-          {%- endif -%}
-        </td>
-      </tr>
-
-      {%- if hist := r.History(); hist != nil -%}
-      {%= displayHistory(hist) %}
-      {%- elseif cleanData := r.CleanData(); len(cleanData) > 0 -%}
-      <tr>
-        <th class="shrink">Data</th>
-        <td>{%= components.JSON(cleanData) %}</td>
-      </tr>
-      {%- endif -%}
-    </tbody>
-  </table>
+        {%- if hist := r.History(); hist != nil -%}
+        {%= displayHistory(hist) %}
+        {%- elseif cleanData := r.CleanData(); len(cleanData) > 0 -%}
+        <tr>
+          <th class="shrink">Data</th>
+          <td>{%= components.JSON(cleanData) %}</td>
+        </tr>
+        {%- endif -%}
+      </tbody>
+    </table>
+  </div>
 {% endfunc %}
 
 {% func displayHistory(hist *git.HistoryResult) %}

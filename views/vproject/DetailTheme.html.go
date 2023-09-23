@@ -41,72 +41,74 @@ func StreamDetailTheme(qw422016 *qt422016.Writer, key string, t *theme.Theme, ti
 	qw422016.E().S(key)
 //line views/vproject/DetailTheme.html:14
 	qw422016.N().S(`/edit#theme"><button>Edit Theme</button></a></div>
-  <table class="centered">
-    <tbody>
-      <tr>
-        <th>
-          <div>Light</div>
-          <div id="mockup-light">`)
-//line views/vproject/DetailTheme.html:20
+  <div class="overflow full-width">
+    <table class="centered">
+      <tbody>
+        <tr>
+          <th>
+            <div>Light</div>
+            <div id="mockup-light">`)
+//line views/vproject/DetailTheme.html:21
 	vtheme.StreamMockupColors(qw422016, title, "", t.Light, false, icon, 6, ps)
-//line views/vproject/DetailTheme.html:20
+//line views/vproject/DetailTheme.html:21
 	qw422016.N().S(`</div>
-        </th>
-        <th>
-          <div>Dark</div>
-          <div id="mockup-dark">`)
-//line views/vproject/DetailTheme.html:24
+          </th>
+          <th>
+            <div>Dark</div>
+            <div id="mockup-dark">`)
+//line views/vproject/DetailTheme.html:25
 	vtheme.StreamMockupColors(qw422016, title, "", t.Dark, false, icon, 6, ps)
-//line views/vproject/DetailTheme.html:24
+//line views/vproject/DetailTheme.html:25
 	qw422016.N().S(`</div>
-        </th>
-      </tr>
-    </tbody>
-  </table>
+          </th>
+        </tr>
+      </tbody>
+    </table>
+  </div>
   <div class="mt">
     Choose a different theme from
     <a href="/p/`)
-//line views/vproject/DetailTheme.html:31
+//line views/vproject/DetailTheme.html:33
 	qw422016.E().S(key)
-//line views/vproject/DetailTheme.html:31
+//line views/vproject/DetailTheme.html:33
 	qw422016.N().S(`/palette/crayola">Crayola</a>,
     <a href="/p/`)
-//line views/vproject/DetailTheme.html:32
+//line views/vproject/DetailTheme.html:34
 	qw422016.E().S(key)
-//line views/vproject/DetailTheme.html:32
+//line views/vproject/DetailTheme.html:34
 	qw422016.N().S(`/palette/css">CSS</a>,
     or <a href="/p/`)
-//line views/vproject/DetailTheme.html:33
+//line views/vproject/DetailTheme.html:35
 	qw422016.E().S(key)
-//line views/vproject/DetailTheme.html:33
+//line views/vproject/DetailTheme.html:35
 	qw422016.N().S(`/palette/wikipedia">Wikipedia</a>
   </div>
 `)
-//line views/vproject/DetailTheme.html:35
+//line views/vproject/DetailTheme.html:37
 }
 
-//line views/vproject/DetailTheme.html:35
+//line views/vproject/DetailTheme.html:37
 func WriteDetailTheme(qq422016 qtio422016.Writer, key string, t *theme.Theme, title string, icon string, as *app.State, ps *cutil.PageState) {
-//line views/vproject/DetailTheme.html:35
+//line views/vproject/DetailTheme.html:37
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/DetailTheme.html:35
+//line views/vproject/DetailTheme.html:37
 	StreamDetailTheme(qw422016, key, t, title, icon, as, ps)
-//line views/vproject/DetailTheme.html:35
+//line views/vproject/DetailTheme.html:37
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/DetailTheme.html:35
+//line views/vproject/DetailTheme.html:37
 }
 
-//line views/vproject/DetailTheme.html:35
+//line views/vproject/DetailTheme.html:37
 func DetailTheme(key string, t *theme.Theme, title string, icon string, as *app.State, ps *cutil.PageState) string {
-//line views/vproject/DetailTheme.html:35
+//line views/vproject/DetailTheme.html:37
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/DetailTheme.html:35
+//line views/vproject/DetailTheme.html:37
 	WriteDetailTheme(qb422016, key, t, title, icon, as, ps)
-//line views/vproject/DetailTheme.html:35
+//line views/vproject/DetailTheme.html:37
 	qs422016 := string(qb422016.B)
-//line views/vproject/DetailTheme.html:35
+//line views/vproject/DetailTheme.html:37
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/DetailTheme.html:35
+//line views/vproject/DetailTheme.html:37
 	return qs422016
-//line views/vproject/DetailTheme.html:35
+//line views/vproject/DetailTheme.html:37
 }

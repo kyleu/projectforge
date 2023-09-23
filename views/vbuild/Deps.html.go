@@ -89,12 +89,13 @@ func (p *Deps) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vbuild/Deps.html:36
 	if len(p.Dependencies) == 0 {
 //line views/vbuild/Deps.html:36
-		qw422016.N().S(`      <em>no dependencies, somehow</em>
+		qw422016.N().S(`    <em>no dependencies, somehow</em>
 `)
 //line views/vbuild/Deps.html:38
 	} else {
 //line views/vbuild/Deps.html:38
-		qw422016.N().S(`      <table class="mt">
+		qw422016.N().S(`    <div class="overflow full-width">
+      <table class="mt">
         <thead>
         <tr>
           <th>Dependency</th>
@@ -106,125 +107,126 @@ func (p *Deps) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
         </thead>
         <tbody>
 `)
-//line views/vbuild/Deps.html:50
+//line views/vbuild/Deps.html:51
 		for _, d := range p.Dependencies {
-//line views/vbuild/Deps.html:50
+//line views/vbuild/Deps.html:51
 			qw422016.N().S(`        <tr>
           <td>
             <ul class="accordion">
               <li>
                 <input id="accordion-`)
-//line views/vbuild/Deps.html:55
+//line views/vbuild/Deps.html:56
 			qw422016.E().S(d.Key)
-//line views/vbuild/Deps.html:55
+//line views/vbuild/Deps.html:56
 			qw422016.N().S(`" type="checkbox" hidden />
                 <label for="accordion-`)
-//line views/vbuild/Deps.html:56
+//line views/vbuild/Deps.html:57
 			qw422016.E().S(d.Key)
-//line views/vbuild/Deps.html:56
+//line views/vbuild/Deps.html:57
 			qw422016.N().S(`">`)
-//line views/vbuild/Deps.html:56
+//line views/vbuild/Deps.html:57
 			components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vbuild/Deps.html:56
+//line views/vbuild/Deps.html:57
 			qw422016.N().S(` `)
-//line views/vbuild/Deps.html:56
+//line views/vbuild/Deps.html:57
 			qw422016.E().S(d.Key)
-//line views/vbuild/Deps.html:56
+//line views/vbuild/Deps.html:57
 			qw422016.N().S(`</label>
                 <div class="bd">
 `)
-//line views/vbuild/Deps.html:58
+//line views/vbuild/Deps.html:59
 			for _, r := range d.References {
-//line views/vbuild/Deps.html:58
+//line views/vbuild/Deps.html:59
 				qw422016.N().S(`                  <div>`)
-//line views/vbuild/Deps.html:59
+//line views/vbuild/Deps.html:60
 				qw422016.E().S(r)
-//line views/vbuild/Deps.html:59
+//line views/vbuild/Deps.html:60
 				qw422016.N().S(`</div>
 `)
-//line views/vbuild/Deps.html:60
+//line views/vbuild/Deps.html:61
 			}
-//line views/vbuild/Deps.html:60
+//line views/vbuild/Deps.html:61
 			qw422016.N().S(`                </div>
               </li>
             </ul>
           </td>
           <td>`)
-//line views/vbuild/Deps.html:65
+//line views/vbuild/Deps.html:66
 			qw422016.N().D(len(d.References))
-//line views/vbuild/Deps.html:65
+//line views/vbuild/Deps.html:66
 			qw422016.N().S(`</td>
           <td>`)
-//line views/vbuild/Deps.html:66
+//line views/vbuild/Deps.html:67
 			qw422016.E().S(d.Version)
-//line views/vbuild/Deps.html:66
+//line views/vbuild/Deps.html:67
 			qw422016.N().S(`</td>
           <td>`)
-//line views/vbuild/Deps.html:67
+//line views/vbuild/Deps.html:68
 			qw422016.E().S(d.Available)
-//line views/vbuild/Deps.html:67
+//line views/vbuild/Deps.html:68
 			qw422016.N().S(`</td>
           <td>
 `)
-//line views/vbuild/Deps.html:69
+//line views/vbuild/Deps.html:70
 			if d.Available != "" && d.Available != "(deprecated)" && d.Available != "(retracted)" {
-//line views/vbuild/Deps.html:69
+//line views/vbuild/Deps.html:70
 				qw422016.N().S(`            <a href="?phase=deps&upgrade=`)
-//line views/vbuild/Deps.html:70
+//line views/vbuild/Deps.html:71
 				qw422016.N().U(d.Key)
-//line views/vbuild/Deps.html:70
+//line views/vbuild/Deps.html:71
 				qw422016.N().S(`&old=`)
-//line views/vbuild/Deps.html:70
+//line views/vbuild/Deps.html:71
 				qw422016.N().U(d.Version)
-//line views/vbuild/Deps.html:70
+//line views/vbuild/Deps.html:71
 				qw422016.N().S(`&new=`)
-//line views/vbuild/Deps.html:70
+//line views/vbuild/Deps.html:71
 				qw422016.N().U(d.Available)
-//line views/vbuild/Deps.html:70
+//line views/vbuild/Deps.html:71
 				qw422016.N().S(`"><button>Upgrade</button></a>
 `)
-//line views/vbuild/Deps.html:71
+//line views/vbuild/Deps.html:72
 			}
-//line views/vbuild/Deps.html:71
+//line views/vbuild/Deps.html:72
 			qw422016.N().S(`          </td>
         </tr>
 `)
-//line views/vbuild/Deps.html:74
+//line views/vbuild/Deps.html:75
 		}
-//line views/vbuild/Deps.html:74
+//line views/vbuild/Deps.html:75
 		qw422016.N().S(`        </tbody>
       </table>
+    </div>
 `)
-//line views/vbuild/Deps.html:77
+//line views/vbuild/Deps.html:79
 	}
-//line views/vbuild/Deps.html:77
+//line views/vbuild/Deps.html:79
 	qw422016.N().S(`  </div>
 `)
-//line views/vbuild/Deps.html:79
+//line views/vbuild/Deps.html:81
 }
 
-//line views/vbuild/Deps.html:79
+//line views/vbuild/Deps.html:81
 func (p *Deps) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vbuild/Deps.html:79
+//line views/vbuild/Deps.html:81
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vbuild/Deps.html:79
+//line views/vbuild/Deps.html:81
 	p.StreamBody(qw422016, as, ps)
-//line views/vbuild/Deps.html:79
+//line views/vbuild/Deps.html:81
 	qt422016.ReleaseWriter(qw422016)
-//line views/vbuild/Deps.html:79
+//line views/vbuild/Deps.html:81
 }
 
-//line views/vbuild/Deps.html:79
+//line views/vbuild/Deps.html:81
 func (p *Deps) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vbuild/Deps.html:79
+//line views/vbuild/Deps.html:81
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vbuild/Deps.html:79
+//line views/vbuild/Deps.html:81
 	p.WriteBody(qb422016, as, ps)
-//line views/vbuild/Deps.html:79
+//line views/vbuild/Deps.html:81
 	qs422016 := string(qb422016.B)
-//line views/vbuild/Deps.html:79
+//line views/vbuild/Deps.html:81
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vbuild/Deps.html:79
+//line views/vbuild/Deps.html:81
 	return qs422016
-//line views/vbuild/Deps.html:79
+//line views/vbuild/Deps.html:81
 }

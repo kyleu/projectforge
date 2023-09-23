@@ -86,61 +86,63 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	}
 //line views/vtheme/Edit.html:30
 	qw422016.N().S(`</h3>
-      <table class="mt expanded">
-        <tbody>
-          `)
-//line views/vtheme/Edit.html:33
+      <div class="overflow full-width">
+        <table class="mt expanded">
+          <tbody>
+            `)
+//line views/vtheme/Edit.html:34
 	components.StreamTableInput(qw422016, "key", "", "Key", p.Theme.Key, 5)
-//line views/vtheme/Edit.html:33
+//line views/vtheme/Edit.html:34
 	qw422016.N().S(`
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      </div>
     </div>
     `)
-//line views/vtheme/Edit.html:37
+//line views/vtheme/Edit.html:39
 	StreamEditor(qw422016, "Theme ["+p.Theme.Key+"]", util.AppName, p.Theme, p.Icon, as, ps)
-//line views/vtheme/Edit.html:37
+//line views/vtheme/Edit.html:39
 	qw422016.N().S(`
     <div class="card">
       <button type="submit">Save All Changes</button>
       <a href="/theme/`)
-//line views/vtheme/Edit.html:40
+//line views/vtheme/Edit.html:42
 	qw422016.N().U(p.Theme.Key)
-//line views/vtheme/Edit.html:40
+//line views/vtheme/Edit.html:42
 	qw422016.N().S(`"><button type="button">Reset</button></a>
     </div>
   </form>
   `)
-//line views/vtheme/Edit.html:43
+//line views/vtheme/Edit.html:45
 	components.StreamJSONModal(qw422016, "theme", "Theme JSON", p.Theme, 1)
-//line views/vtheme/Edit.html:43
+//line views/vtheme/Edit.html:45
 	qw422016.N().S(`
 `)
-//line views/vtheme/Edit.html:44
+//line views/vtheme/Edit.html:46
 }
 
-//line views/vtheme/Edit.html:44
+//line views/vtheme/Edit.html:46
 func (p *Edit) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vtheme/Edit.html:44
+//line views/vtheme/Edit.html:46
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vtheme/Edit.html:44
+//line views/vtheme/Edit.html:46
 	p.StreamBody(qw422016, as, ps)
-//line views/vtheme/Edit.html:44
+//line views/vtheme/Edit.html:46
 	qt422016.ReleaseWriter(qw422016)
-//line views/vtheme/Edit.html:44
+//line views/vtheme/Edit.html:46
 }
 
-//line views/vtheme/Edit.html:44
+//line views/vtheme/Edit.html:46
 func (p *Edit) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vtheme/Edit.html:44
+//line views/vtheme/Edit.html:46
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vtheme/Edit.html:44
+//line views/vtheme/Edit.html:46
 	p.WriteBody(qb422016, as, ps)
-//line views/vtheme/Edit.html:44
+//line views/vtheme/Edit.html:46
 	qs422016 := string(qb422016.B)
-//line views/vtheme/Edit.html:44
+//line views/vtheme/Edit.html:46
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vtheme/Edit.html:44
+//line views/vtheme/Edit.html:46
 	return qs422016
-//line views/vtheme/Edit.html:44
+//line views/vtheme/Edit.html:46
 }

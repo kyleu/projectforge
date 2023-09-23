@@ -35,101 +35,105 @@ func StreamDetail(qw422016 *qt422016.Writer, cfg util.ValueMap, res *action.Resu
 //line views/vaction/Detail.html:9
 		qw422016.N().S(`  <div class="card">
     <h3>Config</h3>
-    <table>
-      <tbody>
-`)
-//line views/vaction/Detail.html:14
-		for _, k := range cfg.Keys() {
-//line views/vaction/Detail.html:14
-			qw422016.N().S(`        <tr>
-          <th class="shrink">`)
-//line views/vaction/Detail.html:16
-			qw422016.E().S(k)
-//line views/vaction/Detail.html:16
-			qw422016.N().S(`</th>
-          <td>`)
-//line views/vaction/Detail.html:17
-			qw422016.E().V(cfg[k])
-//line views/vaction/Detail.html:17
-			qw422016.N().S(`</td>
-        </tr>
-`)
-//line views/vaction/Detail.html:19
-		}
-//line views/vaction/Detail.html:19
-		qw422016.N().S(`      </tbody>
-    </table>
-  </div>
-`)
-//line views/vaction/Detail.html:23
-	}
-//line views/vaction/Detail.html:24
-	if len(res.Errors) > 0 {
-//line views/vaction/Detail.html:24
-		qw422016.N().S(`  <div class="card">
-    <div class="right">`)
-//line views/vaction/Detail.html:26
-		qw422016.E().S(util.StringPlural(len(res.Errors), "error"))
-//line views/vaction/Detail.html:26
-		qw422016.N().S(`</div>
-    <h3>Errors</h3>
-    <ul class="mt">
-`)
-//line views/vaction/Detail.html:29
-		for _, e := range res.Errors {
-//line views/vaction/Detail.html:29
-			qw422016.N().S(`      <li class="error">`)
-//line views/vaction/Detail.html:30
-			qw422016.E().S(e)
-//line views/vaction/Detail.html:30
-			qw422016.N().S(`</li>
-`)
-//line views/vaction/Detail.html:31
-		}
-//line views/vaction/Detail.html:31
-		qw422016.N().S(`    </ul>
-  </div>
-`)
-//line views/vaction/Detail.html:34
-	}
-//line views/vaction/Detail.html:35
-	if len(res.Logs) > 0 {
-//line views/vaction/Detail.html:35
-		qw422016.N().S(`  <div class="card">
-    <h3>Logs</h3>
-    <div class="mt">
+    <div class="overflow full-width">
       <table>
         <tbody>
 `)
-//line views/vaction/Detail.html:41
-		for idx, l := range res.Logs {
-//line views/vaction/Detail.html:41
+//line views/vaction/Detail.html:15
+		for _, k := range cfg.Keys() {
+//line views/vaction/Detail.html:15
 			qw422016.N().S(`          <tr>
-            <td class="shrink">`)
-//line views/vaction/Detail.html:43
-			qw422016.N().D(idx + 1)
-//line views/vaction/Detail.html:43
+            <th class="shrink">`)
+//line views/vaction/Detail.html:17
+			qw422016.E().S(k)
+//line views/vaction/Detail.html:17
+			qw422016.N().S(`</th>
+            <td>`)
+//line views/vaction/Detail.html:18
+			qw422016.E().V(cfg[k])
+//line views/vaction/Detail.html:18
 			qw422016.N().S(`</td>
-            <td><code>`)
-//line views/vaction/Detail.html:44
-			qw422016.E().S(l)
-//line views/vaction/Detail.html:44
-			qw422016.N().S(`</code></td>
           </tr>
 `)
-//line views/vaction/Detail.html:46
+//line views/vaction/Detail.html:20
 		}
-//line views/vaction/Detail.html:46
+//line views/vaction/Detail.html:20
 		qw422016.N().S(`        </tbody>
       </table>
     </div>
   </div>
 `)
-//line views/vaction/Detail.html:51
+//line views/vaction/Detail.html:25
 	}
-//line views/vaction/Detail.html:52
+//line views/vaction/Detail.html:26
+	if len(res.Errors) > 0 {
+//line views/vaction/Detail.html:26
+		qw422016.N().S(`  <div class="card">
+    <div class="right">`)
+//line views/vaction/Detail.html:28
+		qw422016.E().S(util.StringPlural(len(res.Errors), "error"))
+//line views/vaction/Detail.html:28
+		qw422016.N().S(`</div>
+    <h3>Errors</h3>
+    <ul class="mt">
+`)
+//line views/vaction/Detail.html:31
+		for _, e := range res.Errors {
+//line views/vaction/Detail.html:31
+			qw422016.N().S(`      <li class="error">`)
+//line views/vaction/Detail.html:32
+			qw422016.E().S(e)
+//line views/vaction/Detail.html:32
+			qw422016.N().S(`</li>
+`)
+//line views/vaction/Detail.html:33
+		}
+//line views/vaction/Detail.html:33
+		qw422016.N().S(`    </ul>
+  </div>
+`)
+//line views/vaction/Detail.html:36
+	}
+//line views/vaction/Detail.html:37
+	if len(res.Logs) > 0 {
+//line views/vaction/Detail.html:37
+		qw422016.N().S(`  <div class="card">
+    <h3>Logs</h3>
+    <div class="mt">
+      <div class="overflow full-width">
+        <table>
+          <tbody>
+`)
+//line views/vaction/Detail.html:44
+		for idx, l := range res.Logs {
+//line views/vaction/Detail.html:44
+			qw422016.N().S(`            <tr>
+              <td class="shrink">`)
+//line views/vaction/Detail.html:46
+			qw422016.N().D(idx + 1)
+//line views/vaction/Detail.html:46
+			qw422016.N().S(`</td>
+              <td><code>`)
+//line views/vaction/Detail.html:47
+			qw422016.E().S(l)
+//line views/vaction/Detail.html:47
+			qw422016.N().S(`</code></td>
+            </tr>
+`)
+//line views/vaction/Detail.html:49
+		}
+//line views/vaction/Detail.html:49
+		qw422016.N().S(`          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+`)
+//line views/vaction/Detail.html:55
+	}
+//line views/vaction/Detail.html:56
 	for _, mr := range res.Modules {
-//line views/vaction/Detail.html:54
+//line views/vaction/Detail.html:58
 		links := ""
 		for mIdx, mk := range mr.Keys {
 			if mIdx > 0 {
@@ -138,101 +142,101 @@ func StreamDetail(qw422016 *qt422016.Writer, cfg util.ValueMap, res *action.Resu
 			links += `<a href="/m/` + mk + `">` + mk + `</a>`
 		}
 
-//line views/vaction/Detail.html:61
+//line views/vaction/Detail.html:65
 		qw422016.N().S(`    <div class="card">
       <div class="right">`)
-//line views/vaction/Detail.html:63
+//line views/vaction/Detail.html:67
 		qw422016.E().S(util.MicrosToMillis(mr.Duration))
-//line views/vaction/Detail.html:63
+//line views/vaction/Detail.html:67
 		qw422016.N().S(`</div>
       <h3>`)
-//line views/vaction/Detail.html:64
+//line views/vaction/Detail.html:68
 		qw422016.E().S(util.StringPlural(len(mr.Keys), "Module"))
-//line views/vaction/Detail.html:64
+//line views/vaction/Detail.html:68
 		qw422016.N().S(` [`)
-//line views/vaction/Detail.html:64
+//line views/vaction/Detail.html:68
 		qw422016.N().S(links)
-//line views/vaction/Detail.html:64
+//line views/vaction/Detail.html:68
 		qw422016.N().S(`]</h3>
       <div class="right">`)
-//line views/vaction/Detail.html:65
+//line views/vaction/Detail.html:69
 		qw422016.N().S(res.StatusLog())
-//line views/vaction/Detail.html:65
+//line views/vaction/Detail.html:69
 		qw422016.N().S(`</div>
       <em>`)
-//line views/vaction/Detail.html:66
+//line views/vaction/Detail.html:70
 		qw422016.E().S(mr.Status)
-//line views/vaction/Detail.html:66
+//line views/vaction/Detail.html:70
 		qw422016.N().S(`</em>
 `)
-//line views/vaction/Detail.html:67
+//line views/vaction/Detail.html:71
 		if len(mr.Actions) > 0 {
-//line views/vaction/Detail.html:67
+//line views/vaction/Detail.html:71
 			qw422016.N().S(`      <h4>Actions</h4>
 `)
-//line views/vaction/Detail.html:69
+//line views/vaction/Detail.html:73
 			for _, a := range mr.Actions {
-//line views/vaction/Detail.html:69
+//line views/vaction/Detail.html:73
 				qw422016.N().S(`        <a href="`)
-//line views/vaction/Detail.html:70
+//line views/vaction/Detail.html:74
 				qw422016.E().S(a.URL())
-//line views/vaction/Detail.html:70
+//line views/vaction/Detail.html:74
 				qw422016.N().S(`"><button>`)
-//line views/vaction/Detail.html:70
+//line views/vaction/Detail.html:74
 				qw422016.E().S(a.Title)
-//line views/vaction/Detail.html:70
+//line views/vaction/Detail.html:74
 				qw422016.N().S(`</button></a>
 `)
-//line views/vaction/Detail.html:71
+//line views/vaction/Detail.html:75
 			}
-//line views/vaction/Detail.html:72
+//line views/vaction/Detail.html:76
 		}
-//line views/vaction/Detail.html:73
+//line views/vaction/Detail.html:77
 		diffs := mr.DiffsFiltered(includeSkipped)
 
-//line views/vaction/Detail.html:74
+//line views/vaction/Detail.html:78
 		if len(diffs) > 0 {
-//line views/vaction/Detail.html:74
+//line views/vaction/Detail.html:78
 			qw422016.N().S(`      <div class="overflow">
       `)
-//line views/vaction/Detail.html:76
+//line views/vaction/Detail.html:80
 			streamrenderDiffs(qw422016, res.Project.Key, res.Action, diffs, cfg, as, ps)
-//line views/vaction/Detail.html:76
+//line views/vaction/Detail.html:80
 			qw422016.N().S(`
       </div>
 `)
-//line views/vaction/Detail.html:78
+//line views/vaction/Detail.html:82
 		}
-//line views/vaction/Detail.html:78
+//line views/vaction/Detail.html:82
 		qw422016.N().S(`    </div>
 `)
-//line views/vaction/Detail.html:80
+//line views/vaction/Detail.html:84
 	}
-//line views/vaction/Detail.html:81
+//line views/vaction/Detail.html:85
 }
 
-//line views/vaction/Detail.html:81
+//line views/vaction/Detail.html:85
 func WriteDetail(qq422016 qtio422016.Writer, cfg util.ValueMap, res *action.Result, includeSkipped bool, as *app.State, ps *cutil.PageState) {
-//line views/vaction/Detail.html:81
+//line views/vaction/Detail.html:85
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vaction/Detail.html:81
+//line views/vaction/Detail.html:85
 	StreamDetail(qw422016, cfg, res, includeSkipped, as, ps)
-//line views/vaction/Detail.html:81
+//line views/vaction/Detail.html:85
 	qt422016.ReleaseWriter(qw422016)
-//line views/vaction/Detail.html:81
+//line views/vaction/Detail.html:85
 }
 
-//line views/vaction/Detail.html:81
+//line views/vaction/Detail.html:85
 func Detail(cfg util.ValueMap, res *action.Result, includeSkipped bool, as *app.State, ps *cutil.PageState) string {
-//line views/vaction/Detail.html:81
+//line views/vaction/Detail.html:85
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vaction/Detail.html:81
+//line views/vaction/Detail.html:85
 	WriteDetail(qb422016, cfg, res, includeSkipped, as, ps)
-//line views/vaction/Detail.html:81
+//line views/vaction/Detail.html:85
 	qs422016 := string(qb422016.B)
-//line views/vaction/Detail.html:81
+//line views/vaction/Detail.html:85
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vaction/Detail.html:81
+//line views/vaction/Detail.html:85
 	return qs422016
-//line views/vaction/Detail.html:81
+//line views/vaction/Detail.html:85
 }

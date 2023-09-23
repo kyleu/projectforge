@@ -33,18 +33,20 @@
       The SVG will be rewritten with attribution.
     </p>
     <form action="/svg/{%s p.Project.Key %}/x/add" method="get">
-      <table>
-        <tbody>
-          <tr>
-            <th class="shrink"><label for="input-src">Source Key</label></th>
-            <td><input id="input-src" name="src" value="" /></td>
-          </tr>
-          <tr>
-            <th class="shrink"><label for="input-tgt">Target Key</label></th>
-            <td><input id="input-tgt" name="tgt" value="" /></td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="overflow full-width">
+        <table>
+          <tbody>
+            <tr>
+              <th class="shrink"><label for="input-src">Source Key</label></th>
+              <td><input id="input-src" name="src" value="" /></td>
+            </tr>
+            <tr>
+              <th class="shrink"><label for="input-tgt">Target Key</label></th>
+              <td><input id="input-tgt" name="tgt" value="" /></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       <div class="mt">
         <button type="submit">Add/Update SVG</button>
       </div>

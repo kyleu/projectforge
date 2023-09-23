@@ -28,11 +28,13 @@
         <a href="#modal-theme"><button type="button">JSON</button></a>
       </div>
       <h3>{% if p.Theme.Key == theme.KeyNew %}New Theme{% else %}Theme Edit{% endif %}</h3>
-      <table class="mt expanded">
-        <tbody>
-          {%= components.TableInput("key", "", "Key", p.Theme.Key, 5) %}
-        </tbody>
-      </table>
+      <div class="overflow full-width">
+        <table class="mt expanded">
+          <tbody>
+            {%= components.TableInput("key", "", "Key", p.Theme.Key, 5) %}
+          </tbody>
+        </table>
+      </div>
     </div>
     {%= Editor("Theme [" + p.Theme.Key + "]", util.AppName, p.Theme, p.Icon, as, ps) %}
     <div class="card">

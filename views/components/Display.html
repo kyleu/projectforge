@@ -55,18 +55,20 @@
   {%- if len(value) == 0 -%}
   <em>no changes</em>
   {%- else -%}
-  <table>
-    <tbody>
-      {%- for _, d := range value -%}
-      <tr>
-        <td><code>{%s d.Path %}</code></td>
-        <td><code class="error">{%s d.Old %}</code></td>
-        <td>→</td>
-        <td><code class="success">{%s d.New %}</code></td>
-      </tr>
-      {%- endfor -%}
-    </tbody>
-  </table>
+  <div class="overflow full-width">
+    <table>
+      <tbody>
+        {%- for _, d := range value -%}
+        <tr>
+          <td><code>{%s d.Path %}</code></td>
+          <td><code class="error">{%s d.Old %}</code></td>
+          <td>→</td>
+          <td><code class="success">{%s d.New %}</code></td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
   {%- endif -%}
 {% endstripspace %}{% endfunc %}
 
@@ -74,38 +76,40 @@
   {%- if len(maps) == 0 -%}
   <em>no results</em>
   {%- else -%}
-  <table>
-    <thead>
-    <tr>
-      {%- for _, k := range maps[0].Keys() -%}
-      {%= TableHeaderSimple("map", k, k, "", params, nil, ps) %}
-      {%- endfor -%}
-    </tr>
-    </thead>
-    <tbody>
-      {%- for _, m := range maps -%}
+  <div class="overflow full-width">
+    <table>
+      <thead>
       <tr>
-        {%- for _, k := range m.Keys() -%}
-        {%- code
-          res := ""
-          switch t := m[k].(type) {
-          case string:
-            res = t
-          case []byte:
-            res = string(t)
-          default:
-            res = fmt.Sprint(m[k])
-          }
-        -%}
-        {%- if preserveWhitespace -%}
-        <td class="prews">{%s res %}</td>
-        {%- else -%}
-        <td>{%s res %}</td>
-        {%- endif -%}
+        {%- for _, k := range maps[0].Keys() -%}
+        {%= TableHeaderSimple("map", k, k, "", params, nil, ps) %}
         {%- endfor -%}
       </tr>
-      {%- endfor -%}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {%- for _, m := range maps -%}
+        <tr>
+          {%- for _, k := range m.Keys() -%}
+          {%- code
+            res := ""
+            switch t := m[k].(type) {
+            case string:
+              res = t
+            case []byte:
+              res = string(t)
+            default:
+              res = fmt.Sprint(m[k])
+            }
+          -%}
+          {%- if preserveWhitespace -%}
+          <td class="prews">{%s res %}</td>
+          {%- else -%}
+          <td>{%s res %}</td>
+          {%- endif -%}
+          {%- endfor -%}
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
   {%- endif -%}
 {% endstripspace %}{% endfunc %}

@@ -7,83 +7,85 @@
 
 {% func Editor(title string, navTitle string, t *theme.Theme, icon string, as *app.State, ps *cutil.PageState) %}
   <div class="card" id="theme">
-    <table class="centered min-200">
-      <thead>
-      <tr>
-        <th class="left-align shrink">{%s title %}</th>
-        <th class="bl" colspan="2">
-          <div>Light</div>
-          <div id="mockup-light">{%= MockupColors(navTitle, "", t.Light, false, icon, 5, ps) %}</div>
-        </th>
-        <th class="bl" colspan="2">
-          <div>Dark</div>
-          <div id="mockup-dark">{%= MockupColors(navTitle, "", t.Dark, false, icon, 5, ps) %}</div>
-        </th>
-      </tr>
-      <tr>
-        <th></th>
-        <th class="bl">Background</th>
-        <th>Foreground</th>
-        <th class="bl">Background</th>
-        <th>Foreground</th>
-      </tr>
-      </thead>
-      {%- code
-        const lp = "light"
-        const dp = "dark"
-      -%}
-      <tbody>
+    <div class="overflow full-width">
+      <table class="centered min-200">
+        <thead>
         <tr>
-          <th class="left-align shrink">Main Content</th>
-          <td class="bl">{%= cinput(lp, "background", t.Light.Background) %}</td>
-          <td>{%= cinput(lp, "foreground", t.Light.Foreground) %}</td>
-          <td class="bl">{%= cinput(dp, "background", t.Dark.Background) %}</td>
-          <td>{%= cinput(dp, "foreground", t.Dark.Foreground) %}</td>
+          <th class="left-align shrink">{%s title %}</th>
+          <th class="bl" colspan="2">
+            <div>Light</div>
+            <div id="mockup-light">{%= MockupColors(navTitle, "", t.Light, false, icon, 5, ps) %}</div>
+          </th>
+          <th class="bl" colspan="2">
+            <div>Dark</div>
+            <div id="mockup-dark">{%= MockupColors(navTitle, "", t.Dark, false, icon, 5, ps) %}</div>
+          </th>
         </tr>
         <tr>
-          <th class="left-align shrink">Muted</th>
-          <td class="bl">{%= cinput(lp, "background-muted", t.Light.BackgroundMuted) %}</td>
-          <td>{%= cinput(lp, "foreground-muted", t.Light.ForegroundMuted) %}</td>
-          <td class="bl">{%= cinput(dp, "background-muted", t.Dark.BackgroundMuted) %}</td>
-          <td>{%= cinput(dp, "foreground-muted", t.Dark.ForegroundMuted) %}</td>
+          <th></th>
+          <th class="bl">Background</th>
+          <th>Foreground</th>
+          <th class="bl">Background</th>
+          <th>Foreground</th>
         </tr>
-        <tr>
-          <th class="left-align shrink">Link</th>
-          <td class="bl"></td>
-          <td>{%= cinput(lp, "link-foreground", t.Light.LinkForeground) %}</td>
-          <td class="bl"></td>
-          <td>{%= cinput(dp, "link-foreground", t.Dark.LinkForeground) %}</td>
-        </tr>
-        <tr>
-          <th class="left-align shrink">Visited Link</th>
-          <td class="bl"></td>
-          <td>{%= cinput(lp, "link-visited-foreground", t.Light.LinkVisitedForeground) %}</td>
-          <td class="bl"></td>
-          <td>{%= cinput(dp, "link-visited-foreground", t.Dark.LinkVisitedForeground) %}</td>
-        </tr>
-        <tr>
-          <th class="left-align shrink">Navigation</th>
-          <td class="bl">{%= cinput(lp, "nav-background", t.Light.NavBackground) %}</td>
-          <td>{%= cinput(lp, "nav-foreground", t.Light.NavForeground) %}</td>
-          <td class="bl">{%= cinput(dp, "nav-background", t.Dark.NavBackground) %}</td>
-          <td>{%= cinput(dp, "nav-foreground", t.Dark.NavForeground) %}</td>
-        </tr>
-        <tr>
-          <th class="left-align shrink">Menu</th>
-          <td class="bl">{%= cinput(lp, "menu-background", t.Light.MenuBackground) %}</td>
-          <td>{%= cinput(lp, "menu-foreground", t.Light.MenuForeground) %}</td>
-          <td class="bl">{%= cinput(dp, "menu-background", t.Dark.MenuBackground) %}</td>
-          <td>{%= cinput(dp, "menu-foreground", t.Dark.MenuForeground) %}</td>
-        </tr>
-        <tr>
-          <th class="left-align shrink">Selected Menu</th>
-          <td class="bl">{%= cinput(lp, "menu-selected-background", t.Light.MenuSelectedBackground) %}</td>
-          <td>{%= cinput(lp, "menu-selected-foreground", t.Light.MenuSelectedForeground) %}</td>
-          <td class="bl">{%= cinput(dp, "menu-selected-background", t.Dark.MenuSelectedBackground) %}</td>
-          <td>{%= cinput(dp, "menu-selected-foreground", t.Dark.MenuSelectedForeground) %}</td>
-        </tr>
-      </tbody>
-    </table>
+        </thead>
+        {%- code
+          const lp = "light"
+          const dp = "dark"
+        -%}
+        <tbody>
+          <tr>
+            <th class="left-align shrink">Main Content</th>
+            <td class="bl">{%= cinput(lp, "background", t.Light.Background) %}</td>
+            <td>{%= cinput(lp, "foreground", t.Light.Foreground) %}</td>
+            <td class="bl">{%= cinput(dp, "background", t.Dark.Background) %}</td>
+            <td>{%= cinput(dp, "foreground", t.Dark.Foreground) %}</td>
+          </tr>
+          <tr>
+            <th class="left-align shrink">Muted</th>
+            <td class="bl">{%= cinput(lp, "background-muted", t.Light.BackgroundMuted) %}</td>
+            <td>{%= cinput(lp, "foreground-muted", t.Light.ForegroundMuted) %}</td>
+            <td class="bl">{%= cinput(dp, "background-muted", t.Dark.BackgroundMuted) %}</td>
+            <td>{%= cinput(dp, "foreground-muted", t.Dark.ForegroundMuted) %}</td>
+          </tr>
+          <tr>
+            <th class="left-align shrink">Link</th>
+            <td class="bl"></td>
+            <td>{%= cinput(lp, "link-foreground", t.Light.LinkForeground) %}</td>
+            <td class="bl"></td>
+            <td>{%= cinput(dp, "link-foreground", t.Dark.LinkForeground) %}</td>
+          </tr>
+          <tr>
+            <th class="left-align shrink">Visited Link</th>
+            <td class="bl"></td>
+            <td>{%= cinput(lp, "link-visited-foreground", t.Light.LinkVisitedForeground) %}</td>
+            <td class="bl"></td>
+            <td>{%= cinput(dp, "link-visited-foreground", t.Dark.LinkVisitedForeground) %}</td>
+          </tr>
+          <tr>
+            <th class="left-align shrink">Navigation</th>
+            <td class="bl">{%= cinput(lp, "nav-background", t.Light.NavBackground) %}</td>
+            <td>{%= cinput(lp, "nav-foreground", t.Light.NavForeground) %}</td>
+            <td class="bl">{%= cinput(dp, "nav-background", t.Dark.NavBackground) %}</td>
+            <td>{%= cinput(dp, "nav-foreground", t.Dark.NavForeground) %}</td>
+          </tr>
+          <tr>
+            <th class="left-align shrink">Menu</th>
+            <td class="bl">{%= cinput(lp, "menu-background", t.Light.MenuBackground) %}</td>
+            <td>{%= cinput(lp, "menu-foreground", t.Light.MenuForeground) %}</td>
+            <td class="bl">{%= cinput(dp, "menu-background", t.Dark.MenuBackground) %}</td>
+            <td>{%= cinput(dp, "menu-foreground", t.Dark.MenuForeground) %}</td>
+          </tr>
+          <tr>
+            <th class="left-align shrink">Selected Menu</th>
+            <td class="bl">{%= cinput(lp, "menu-selected-background", t.Light.MenuSelectedBackground) %}</td>
+            <td>{%= cinput(lp, "menu-selected-foreground", t.Light.MenuSelectedForeground) %}</td>
+            <td class="bl">{%= cinput(dp, "menu-selected-background", t.Dark.MenuSelectedBackground) %}</td>
+            <td>{%= cinput(dp, "menu-selected-foreground", t.Dark.MenuSelectedForeground) %}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 {% endfunc %}
 

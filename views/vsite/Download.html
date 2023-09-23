@@ -28,29 +28,31 @@
   <div class="card">
     <h3>{%= components.SVGRefIcon(icon, ps) %}{%s title %}</h3>
     <em>{%s desc %}</em>
-    <table class="mt">
-      <tbody>
-        {%- code var currentOS string -%}
-        {%- for _, link := range modeLinks -%}
-        {%- if currentOS != link.OS -%}
-        {%- if currentOS != "" -%}
-          </td>
-        </tr>
-        {%- endif -%}
-        {%- code currentOS = link.OS -%}
-        <tr>
-          <td style="width: 25%;">{%= components.SVGRef(link.OSIcon(), 20, 20, "icon", ps) %}{%s link.OSString() %}</td>
-          <td>
-        {%- endif -%}
-            {%- if link.OS == download.OSLinux && (link.Arch == download.ArchPPC64 || link.Arch == download.ArchMIPS64Hard || link.Arch == download.ArchMIPSHard) -%}
-            <div class="mt"></div>
-            {%- endif -%}
-            <a href="https://github.com/kyleu/projectforge/releases/download/v{%s v %}/{%s link.URL %}"><button>{%s link.ArchString() %}</button></a>
-        {%- endfor -%}
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="overflow full-width">
+      <table class="mt">
+        <tbody>
+          {%- code var currentOS string -%}
+          {%- for _, link := range modeLinks -%}
+          {%- if currentOS != link.OS -%}
+          {%- if currentOS != "" -%}
+            </td>
+          </tr>
+          {%- endif -%}
+          {%- code currentOS = link.OS -%}
+          <tr>
+            <td style="width: 25%;">{%= components.SVGRef(link.OSIcon(), 20, 20, "icon", ps) %}{%s link.OSString() %}</td>
+            <td>
+          {%- endif -%}
+              {%- if link.OS == download.OSLinux && (link.Arch == download.ArchPPC64 || link.Arch == download.ArchMIPS64Hard || link.Arch == download.ArchMIPSHard) -%}
+              <div class="mt"></div>
+              {%- endif -%}
+              <a href="https://github.com/kyleu/projectforge/releases/download/v{%s v %}/{%s link.URL %}"><button>{%s link.ArchString() %}</button></a>
+          {%- endfor -%}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
   {%- endif -%}
 {% endfunc %}

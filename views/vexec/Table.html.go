@@ -31,135 +31,137 @@ var (
 func StreamTable(qw422016 *qt422016.Writer, execs exec.Execs, as *app.State, ps *cutil.PageState) {
 //line views/vexec/Table.html:9
 	qw422016.N().S(`
-  <table class="mt expanded">
-    <thead>
-      <tr>
-        <th class="shrink">Key</th>
-        <th>#</th>
-        <th>Started</th>
-        <th>Completed</th>
-        <th>Exit</th>
-      </tr>
-    </thead>
-    <tbody>
+  <div class="overflow full-width">
+    <table class="mt expanded">
+      <thead>
+        <tr>
+          <th class="shrink">Key</th>
+          <th>#</th>
+          <th>Started</th>
+          <th>Completed</th>
+          <th>Exit</th>
+        </tr>
+      </thead>
+      <tbody>
 `)
-//line views/vexec/Table.html:21
+//line views/vexec/Table.html:22
 	if len(execs) == 0 {
-//line views/vexec/Table.html:21
-		qw422016.N().S(`      <tr><td colspan="2"><em>no processes</em></td></tr>
+//line views/vexec/Table.html:22
+		qw422016.N().S(`        <tr><td colspan="2"><em>no processes</em></td></tr>
 `)
-//line views/vexec/Table.html:23
-	}
 //line views/vexec/Table.html:24
+	}
+//line views/vexec/Table.html:25
 	for _, exec := range execs {
-//line views/vexec/Table.html:24
-		qw422016.N().S(`      <tr>
-        <td class="shrink"><a href="`)
-//line views/vexec/Table.html:26
+//line views/vexec/Table.html:25
+		qw422016.N().S(`        <tr>
+          <td class="shrink"><a href="`)
+//line views/vexec/Table.html:27
 		qw422016.E().S(exec.WebPath())
-//line views/vexec/Table.html:26
+//line views/vexec/Table.html:27
 		qw422016.N().S(`">`)
-//line views/vexec/Table.html:26
+//line views/vexec/Table.html:27
 		qw422016.E().S(exec.Key)
-//line views/vexec/Table.html:26
-		qw422016.N().S(`</a></td>
-        <td><a href="`)
 //line views/vexec/Table.html:27
+		qw422016.N().S(`</a></td>
+          <td><a href="`)
+//line views/vexec/Table.html:28
 		qw422016.E().S(exec.WebPath())
-//line views/vexec/Table.html:27
+//line views/vexec/Table.html:28
 		qw422016.N().S(`">`)
-//line views/vexec/Table.html:27
+//line views/vexec/Table.html:28
 		qw422016.N().D(exec.Idx)
-//line views/vexec/Table.html:27
+//line views/vexec/Table.html:28
 		qw422016.N().S(`</a></td>
-        <td><span title="`)
-//line views/vexec/Table.html:28
+          <td><span title="`)
+//line views/vexec/Table.html:29
 		qw422016.E().S(util.TimeToFull(exec.Started))
-//line views/vexec/Table.html:28
+//line views/vexec/Table.html:29
 		qw422016.N().S(`">`)
-//line views/vexec/Table.html:28
+//line views/vexec/Table.html:29
 		if exec.Started == nil {
-//line views/vexec/Table.html:28
+//line views/vexec/Table.html:29
 			qw422016.N().S(`-`)
-//line views/vexec/Table.html:28
+//line views/vexec/Table.html:29
 		} else {
-//line views/vexec/Table.html:28
+//line views/vexec/Table.html:29
 			qw422016.E().S(util.TimeRelative(exec.Started))
-//line views/vexec/Table.html:28
-		}
-//line views/vexec/Table.html:28
-		qw422016.N().S(`</span></td>
-        <td><span title="`)
 //line views/vexec/Table.html:29
+		}
+//line views/vexec/Table.html:29
+		qw422016.N().S(`</span></td>
+          <td><span title="`)
+//line views/vexec/Table.html:30
 		qw422016.E().S(util.TimeToFull(exec.Completed))
-//line views/vexec/Table.html:29
+//line views/vexec/Table.html:30
 		qw422016.N().S(`">`)
-//line views/vexec/Table.html:29
+//line views/vexec/Table.html:30
 		if exec.Completed == nil {
-//line views/vexec/Table.html:29
+//line views/vexec/Table.html:30
 			qw422016.N().S(`-`)
-//line views/vexec/Table.html:29
+//line views/vexec/Table.html:30
 		} else {
-//line views/vexec/Table.html:29
+//line views/vexec/Table.html:30
 			qw422016.E().S(util.TimeRelative(exec.Completed))
-//line views/vexec/Table.html:29
+//line views/vexec/Table.html:30
 		}
-//line views/vexec/Table.html:29
+//line views/vexec/Table.html:30
 		qw422016.N().S(`</span></td>
-        <td>`)
-//line views/vexec/Table.html:30
+          <td>`)
+//line views/vexec/Table.html:31
 		if exec.Completed != nil {
-//line views/vexec/Table.html:30
+//line views/vexec/Table.html:31
 			if exec.ExitCode == 0 {
-//line views/vexec/Table.html:30
+//line views/vexec/Table.html:31
 				qw422016.N().S(`<span class="success">0</span>`)
-//line views/vexec/Table.html:30
+//line views/vexec/Table.html:31
 			} else {
-//line views/vexec/Table.html:30
+//line views/vexec/Table.html:31
 				qw422016.N().S(`<span class="error">`)
-//line views/vexec/Table.html:30
+//line views/vexec/Table.html:31
 				qw422016.N().D(exec.ExitCode)
-//line views/vexec/Table.html:30
+//line views/vexec/Table.html:31
 				qw422016.N().S(`</span>`)
-//line views/vexec/Table.html:30
+//line views/vexec/Table.html:31
 			}
-//line views/vexec/Table.html:30
+//line views/vexec/Table.html:31
 		}
-//line views/vexec/Table.html:30
+//line views/vexec/Table.html:31
 		qw422016.N().S(`</td>
-      </tr>
+        </tr>
 `)
-//line views/vexec/Table.html:32
+//line views/vexec/Table.html:33
 	}
-//line views/vexec/Table.html:32
-	qw422016.N().S(`    </tbody>
-  </table>
+//line views/vexec/Table.html:33
+	qw422016.N().S(`      </tbody>
+    </table>
+  </div>
 `)
-//line views/vexec/Table.html:35
+//line views/vexec/Table.html:37
 }
 
-//line views/vexec/Table.html:35
+//line views/vexec/Table.html:37
 func WriteTable(qq422016 qtio422016.Writer, execs exec.Execs, as *app.State, ps *cutil.PageState) {
-//line views/vexec/Table.html:35
+//line views/vexec/Table.html:37
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexec/Table.html:35
+//line views/vexec/Table.html:37
 	StreamTable(qw422016, execs, as, ps)
-//line views/vexec/Table.html:35
+//line views/vexec/Table.html:37
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexec/Table.html:35
+//line views/vexec/Table.html:37
 }
 
-//line views/vexec/Table.html:35
+//line views/vexec/Table.html:37
 func Table(execs exec.Execs, as *app.State, ps *cutil.PageState) string {
-//line views/vexec/Table.html:35
+//line views/vexec/Table.html:37
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexec/Table.html:35
+//line views/vexec/Table.html:37
 	WriteTable(qb422016, execs, as, ps)
-//line views/vexec/Table.html:35
+//line views/vexec/Table.html:37
 	qs422016 := string(qb422016.B)
-//line views/vexec/Table.html:35
+//line views/vexec/Table.html:37
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexec/Table.html:35
+//line views/vexec/Table.html:37
 	return qs422016
-//line views/vexec/Table.html:35
+//line views/vexec/Table.html:37
 }

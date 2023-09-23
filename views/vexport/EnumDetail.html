@@ -42,48 +42,52 @@
 {% endfunc %}
 
 {% func enumSummary(pKey string, enum *enum.Enum, as *app.State, ps *cutil.PageState) %}
-  <table class="mt min-200 full-width">
-    <tbody>
-      <tr><th class="shrink">Name</th><td>{%s enum.Name %}</td></tr>
-      <tr><th>Package</th><td>{%s enum.Package %}</td></tr>
-      {%- if len(enum.Group) > 0 -%}
-      <tr><th>Group</th><td>{%s strings.Join(enum.Group, "/") %}</td></tr>
-      {%- endif -%}
-      <tr><th>Description</th><td>{%s enum.Description %}</td></tr>
-      {%- if enum.TitleOverride != "" -%}
-      <tr><th>Title Override</th><td>{%s enum.TitleOverride %}</td></tr>
-      {%- endif -%}
-      {%- if enum.ProperOverride != "" -%}
-      <tr><th>Proper Override</th><td>{%s enum.ProperOverride %}</td></tr>
-      {%- endif -%}
-      {%- if enum.RouteOverride != "" -%}
-      <tr><th>Route Override</th><td>{%s enum.RouteOverride %}</td></tr>
-      {%- endif -%}
-      {%- if len(enum.Tags) > 0 -%}
-      <tr><th>Tags</th><td>{%s strings.Join(enum.Tags, ", ") %}</td></tr>
-      {%- endif -%}
-    </tbody>
-  </table>
+  <div class="overflow full-width">
+    <table class="mt min-200 full-width">
+      <tbody>
+        <tr><th class="shrink">Name</th><td>{%s enum.Name %}</td></tr>
+        <tr><th>Package</th><td>{%s enum.Package %}</td></tr>
+        {%- if len(enum.Group) > 0 -%}
+        <tr><th>Group</th><td>{%s strings.Join(enum.Group, "/") %}</td></tr>
+        {%- endif -%}
+        <tr><th>Description</th><td>{%s enum.Description %}</td></tr>
+        {%- if enum.TitleOverride != "" -%}
+        <tr><th>Title Override</th><td>{%s enum.TitleOverride %}</td></tr>
+        {%- endif -%}
+        {%- if enum.ProperOverride != "" -%}
+        <tr><th>Proper Override</th><td>{%s enum.ProperOverride %}</td></tr>
+        {%- endif -%}
+        {%- if enum.RouteOverride != "" -%}
+        <tr><th>Route Override</th><td>{%s enum.RouteOverride %}</td></tr>
+        {%- endif -%}
+        {%- if len(enum.Tags) > 0 -%}
+        <tr><th>Tags</th><td>{%s strings.Join(enum.Tags, ", ") %}</td></tr>
+        {%- endif -%}
+      </tbody>
+    </table>
+  </div>
 {% endfunc %}
 
 {% func enumValues(enum *enum.Enum, as *app.State, ps *cutil.PageState) %}
   {%- if len(enum.Values) == 0 -%}
   <p><em>no values</em></p>
   {%- else -%}
-  <table class="mt min-200 full-width">
-    <thead>
-      <tr>
-        <th>Name</th>
-      </tr>
-    </thead>
-    <tbody>
-      {%- for _, v := range enum.Values -%}
-      <tr>
-        <td>{%s v %}</td>
-      </tr>
-      {%- endfor -%}
-    </tbody>
-  </table>
+  <div class="overflow full-width">
+    <table class="mt min-200 full-width">
+      <thead>
+        <tr>
+          <th>Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        {%- for _, v := range enum.Values -%}
+        <tr>
+          <td>{%s v %}</td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
   {%- endif -%}
 {% endfunc %}
 

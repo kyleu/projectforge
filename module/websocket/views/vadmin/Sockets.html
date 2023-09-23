@@ -53,30 +53,32 @@
       {%- if len(p.Connections) == 0 -%}
       <em>no active connections</em>
       {%- else -%}
-      <table class="expanded">
-        <thead>
-          <tr>
-            <th class="shrink">ID</th>{{{ if .HasUser }}}
-            <th>User ID</th>{{{ end }}}
-            <th>Profile Name</th>
-            <th>Service</th>
-            <th>Channels</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {%- for _, x := range p.Connections -%}
-          <tr>
-            <td class="shrink"><a href="/admin/sockets/conn/{%s x.ID.String() %}">{%s x.ID.String() %}</a></td>{{{ if .HasUser }}}
-            <td><a href="/admin/db/user/{%s x.Profile.ID.String() %}">{%s x.Profile.ID.String() %}</a></td>{{{ end }}}
-            <td>{%s x.Profile.String() %}</td>
-            <td>{%s x.Svc %}</td>
-            <td>{%s strings.Join(x.Channels, ", ") %}</td>
-            <td class="shrink"><a href="#modal-conn-{%s x.ID.String() %}"><button type="button">JSON</button></a></td>
-          </tr>
-          {%- endfor -%}
-        </tbody>
-      </table>
+      <div class="overflow full-width">
+        <table class="expanded">
+          <thead>
+            <tr>
+              <th class="shrink">ID</th>{{{ if .HasUser }}}
+              <th>User ID</th>{{{ end }}}
+              <th>Profile Name</th>
+              <th>Service</th>
+              <th>Channels</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {%- for _, x := range p.Connections -%}
+            <tr>
+              <td class="shrink"><a href="/admin/sockets/conn/{%s x.ID.String() %}">{%s x.ID.String() %}</a></td>{{{ if .HasUser }}}
+              <td><a href="/admin/db/user/{%s x.Profile.ID.String() %}">{%s x.Profile.ID.String() %}</a></td>{{{ end }}}
+              <td>{%s x.Profile.String() %}</td>
+              <td>{%s x.Svc %}</td>
+              <td>{%s strings.Join(x.Channels, ", ") %}</td>
+              <td class="shrink"><a href="#modal-conn-{%s x.ID.String() %}"><button type="button">JSON</button></a></td>
+            </tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+      </div>
       {%- endif -%}
     </div>
   </div>
@@ -112,16 +114,18 @@
   <div class="card">
     <h3>Send Message</h3>
     <form action="/admin/sockets/conn/{%s p.Connection.ID.String() %}/send" method="post">
-      <table class="mt expanded">
-        <tbody>{{{ if .HasUser }}}
-          {%= components.TableInput("from", "", "From", ps.Profile.ID.String(), 5, "The user this message is from") %}{{{ else }}}
-          {%= components.TableInput("from", "", "From", p.Connection.ID.String(), 5, "The connection this message is from") %}{{{ end }}}
-          {%= components.TableInput("channel", "", "Channel", "", 5, "The channel this message is for") %}
-          {%= components.TableInput("cmd", "", "Command", "", 5, "The command for this message") %}
-          {%= components.TableTextarea("param", "", "Parameter", 8, "", 5, "JSON object message payload") %}
-          <tr><td colspan="2"><button type="submit">Send</button></td></tr>
-        </tbody>
-      </table>
+      <div class="overflow full-width">
+        <table class="mt expanded">
+          <tbody>{{{ if .HasUser }}}
+            {%= components.TableInput("from", "", "From", ps.Profile.ID.String(), 5, "The user this message is from") %}{{{ else }}}
+            {%= components.TableInput("from", "", "From", p.Connection.ID.String(), 5, "The connection this message is from") %}{{{ end }}}
+            {%= components.TableInput("channel", "", "Channel", "", 5, "The channel this message is for") %}
+            {%= components.TableInput("cmd", "", "Command", "", 5, "The command for this message") %}
+            {%= components.TableTextarea("param", "", "Parameter", 8, "", 5, "JSON object message payload") %}
+            <tr><td colspan="2"><button type="submit">Send</button></td></tr>
+          </tbody>
+        </table>
+      </div>
     </form>
   </div>
 {% endfunc %}
@@ -130,34 +134,36 @@
   <div class="card">
     <div class="right"><a href="#modal-connection-{%s c.ID.String() %}"><button type="button">JSON</button></a></div>
     <h3>{%s c.ID.String() %} ({%s c.Username() %})</h3>
-    <table class="mt expanded">
-      <tbody>
-        <tr>
-          <th>Connection ID</th>
-          <td>{%s c.ID.String() %}</td>
-        </tr>{{{ if .HasUser }}}
-        <tr>
-          <th>User ID</th>
-          <td><a href="/admin/db/user/{%s c.Profile.ID.String() %}">{%s c.Profile.ID.String() %}</a></td>
-        </tr>{{{ end }}}
-        <tr>
-          <th>Name</th>
-          <td>{%s c.Username() %}</td>
-        </tr>
-        <tr>
-          <th>Theme</th>
-          <td>{%s c.Profile.Theme %}</td>
-        </tr>
-        <tr>
-          <th>Service</th>
-          <td>{%s c.Svc %}</td>
-        </tr>
-        <tr>
-          <th>Channels</th>
-          <td>{%s strings.Join(c.Channels, ", ") %}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="overflow full-width">
+      <table class="mt expanded">
+        <tbody>
+          <tr>
+            <th>Connection ID</th>
+            <td>{%s c.ID.String() %}</td>
+          </tr>{{{ if .HasUser }}}
+          <tr>
+            <th>User ID</th>
+            <td><a href="/admin/db/user/{%s c.Profile.ID.String() %}">{%s c.Profile.ID.String() %}</a></td>
+          </tr>{{{ end }}}
+          <tr>
+            <th>Name</th>
+            <td>{%s c.Username() %}</td>
+          </tr>
+          <tr>
+            <th>Theme</th>
+            <td>{%s c.Profile.Theme %}</td>
+          </tr>
+          <tr>
+            <th>Service</th>
+            <td>{%s c.Svc %}</td>
+          </tr>
+          <tr>
+            <th>Channels</th>
+            <td>{%s strings.Join(c.Channels, ", ") %}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
   {%= components.JSONModal("connection-" + c.ID.String(), "Connection [" + c.ID.String() + "] JSON", c, 1) %}
 {% endfunc %}

@@ -78,12 +78,13 @@ func (p *Args) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vpage/Args.html:25
 	}
 //line views/vpage/Args.html:25
-	qw422016.N().S(`      <table class="mt min-200 expanded">
-        <tbody>
+	qw422016.N().S(`      <div class="overflow full-width">
+        <table class="mt min-200 expanded">
+          <tbody>
 `)
-//line views/vpage/Args.html:28
+//line views/vpage/Args.html:29
 	for _, arg := range p.ArgRes.Args {
-//line views/vpage/Args.html:30
+//line views/vpage/Args.html:31
 		v := p.ArgRes.Values[arg.Key]
 		if v == "" {
 			v = arg.Default
@@ -93,83 +94,84 @@ func (p *Args) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 			title = title[:50] + "..."
 		}
 
-//line views/vpage/Args.html:39
+//line views/vpage/Args.html:40
 		switch arg.Type {
-//line views/vpage/Args.html:40
+//line views/vpage/Args.html:41
 		case "bool":
-//line views/vpage/Args.html:40
-			qw422016.N().S(`          `)
 //line views/vpage/Args.html:41
+			qw422016.N().S(`            `)
+//line views/vpage/Args.html:42
 			components.StreamTableBoolean(qw422016, arg.Key, title, v == "true", 5, arg.Description)
-//line views/vpage/Args.html:41
+//line views/vpage/Args.html:42
 			qw422016.N().S(`
 `)
-//line views/vpage/Args.html:42
+//line views/vpage/Args.html:43
 		case "textarea":
-//line views/vpage/Args.html:42
-			qw422016.N().S(`          `)
 //line views/vpage/Args.html:43
+			qw422016.N().S(`            `)
+//line views/vpage/Args.html:44
 			components.StreamTableTextarea(qw422016, arg.Key, "", title, 12, v, 5, arg.Description)
-//line views/vpage/Args.html:43
+//line views/vpage/Args.html:44
 			qw422016.N().S(`
 `)
-//line views/vpage/Args.html:44
-		case "number", "int":
 //line views/vpage/Args.html:45
+		case "number", "int":
+//line views/vpage/Args.html:46
 			i, _ := strconv.ParseInt(v, 10, 32)
 
-//line views/vpage/Args.html:45
-			qw422016.N().S(`          `)
 //line views/vpage/Args.html:46
+			qw422016.N().S(`            `)
+//line views/vpage/Args.html:47
 			components.StreamTableInputNumber(qw422016, arg.Key, "", title, int(i), 5, arg.Description)
-//line views/vpage/Args.html:46
+//line views/vpage/Args.html:47
 			qw422016.N().S(`
 `)
-//line views/vpage/Args.html:47
+//line views/vpage/Args.html:48
 		default:
-//line views/vpage/Args.html:47
-			qw422016.N().S(`          `)
 //line views/vpage/Args.html:48
+			qw422016.N().S(`            `)
+//line views/vpage/Args.html:49
 			components.StreamTableDatalist(qw422016, arg.Key, "", title, v, arg.Choices, nil, 5, arg.Description)
-//line views/vpage/Args.html:48
+//line views/vpage/Args.html:49
 			qw422016.N().S(`
 `)
-//line views/vpage/Args.html:49
+//line views/vpage/Args.html:50
 		}
-//line views/vpage/Args.html:50
+//line views/vpage/Args.html:51
 	}
-//line views/vpage/Args.html:50
-	qw422016.N().S(`        </tbody>
-      </table>
+//line views/vpage/Args.html:51
+	qw422016.N().S(`          </tbody>
+        </table>
+      </div>
       <button class="mt" type="submit">Submit</button>
     </form>
   </div>
 `)
-//line views/vpage/Args.html:56
+//line views/vpage/Args.html:58
 }
 
-//line views/vpage/Args.html:56
+//line views/vpage/Args.html:58
 func (p *Args) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vpage/Args.html:56
+//line views/vpage/Args.html:58
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vpage/Args.html:56
+//line views/vpage/Args.html:58
 	p.StreamBody(qw422016, as, ps)
-//line views/vpage/Args.html:56
+//line views/vpage/Args.html:58
 	qt422016.ReleaseWriter(qw422016)
-//line views/vpage/Args.html:56
+//line views/vpage/Args.html:58
 }
 
-//line views/vpage/Args.html:56
+//line views/vpage/Args.html:58
 func (p *Args) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vpage/Args.html:56
+//line views/vpage/Args.html:58
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vpage/Args.html:56
+//line views/vpage/Args.html:58
 	p.WriteBody(qb422016, as, ps)
-//line views/vpage/Args.html:56
+//line views/vpage/Args.html:58
 	qs422016 := string(qb422016.B)
-//line views/vpage/Args.html:56
+//line views/vpage/Args.html:58
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vpage/Args.html:56
+//line views/vpage/Args.html:58
 	return qs422016
-//line views/vpage/Args.html:56
+//line views/vpage/Args.html:58
 }

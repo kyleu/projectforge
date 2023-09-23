@@ -20,17 +20,19 @@
   {%- if len(ps.Session) > 0 -%}
   <div class="card">
     <h3>Values</h3>
-    <table class="mt expanded">
-      <tbody>
-        {%- for _, k := range util.ArraySorted(lo.Keys(ps.Session)) -%}
-          {%- code v := ps.Session[k] -%}
-          <tr>
-            <th class="shrink">{%s k %}</th>
-            <td>{%s fmt.Sprint(v) %}</td>
-          </tr>
-        {%- endfor -%}
-      </tbody>
-    </table>
+    <div class="overflow full-width">
+      <table class="mt expanded">
+        <tbody>
+          {%- for _, k := range util.ArraySorted(lo.Keys(ps.Session)) -%}
+            {%- code v := ps.Session[k] -%}
+            <tr>
+              <th class="shrink">{%s k %}</th>
+              <td>{%s fmt.Sprint(v) %}</td>
+            </tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
   </div>
   {%- else -%}
   <div class="card">
@@ -44,26 +46,28 @@
   {%- if len(ps.Accounts) > 0 -%}
   <div class="card">
     <h3>Accounts</h3>
-    <table class="mt">
-      <thead>
+    <div class="overflow full-width">
+      <table class="mt">
+        <thead>
+          <tr>
+            <th>Provider</th>
+            <th>Email</th>
+            <th>Token</th>
+            <th>Picture</th>
+          </tr>
+        </thead>
+        <tbody>
+        {%- for _, acct := range ps.Accounts -%}
         <tr>
-          <th>Provider</th>
-          <th>Email</th>
-          <th>Token</th>
-          <th>Picture</th>
+          <td>{%s acct.Provider %}</td>
+          <td>{%s acct.Email %}</td>
+          <td><div class="break-word">{%s acct.Token %}</div></td>
+          <td>{%s acct.Picture %}</td>
         </tr>
-      </thead>
-      <tbody>
-      {%- for _, acct := range ps.Accounts -%}
-      <tr>
-        <td>{%s acct.Provider %}</td>
-        <td>{%s acct.Email %}</td>
-        <td><div class="break-word">{%s acct.Token %}</div></td>
-        <td>{%s acct.Picture %}</td>
-      </tr>
-      {%- endfor -%}
-      </tbody>
-    </table>
+        {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
   </div>
   {%- endif -%}{{{ end }}}
 {% endfunc %}

@@ -59,48 +59,52 @@
 {% endfunc %}
 
 {% func statementValues(s *database.DebugStatement) %}
-  <table>
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Values</th>
-      </tr>
-    </thead>
-    <tbody>
-      {%- for idx, v := range s.Values -%}
-      <tr>
-        <td>{%d idx+1 %}</td>
-        <td>{%= components.JSON(v) %}</td>
-      </tr>
-      {%- endfor -%}
-    </tbody>
-  </table>
+  <div class="overflow full-width">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Values</th>
+        </tr>
+      </thead>
+      <tbody>
+        {%- for idx, v := range s.Values -%}
+        <tr>
+          <td>{%d idx+1 %}</td>
+          <td>{%= components.JSON(v) %}</td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
 {% endfunc %}
 
 {% func statementOut(s *database.DebugStatement) %}
   {%- if len(s.Out) == 0 -%}
   <em>no results</em>
   {%- else -%}
-  <table>
-    <thead>
-      <tr>
-        <th class="shrink">Idx</th>
-        <th>Result</th>
-      </tr>
-    </thead>
-    <tbody>
-      {%- for idx, v := range s.Out -%}
-      <tr>
-        <td>{%d idx+1 %}</td>
-        <td>{%= components.JSON(v) %}</td>
-      </tr>
-      {%- endfor -%}
-      {%- if s.Count > len(s.Out) -%}
-      <tr>
-        <td colspan="2">...and {%d s.Count - len(s.Out) %} additional rows</td>
-      </tr>
-      {%- endif -%}
-    </tbody>
-  </table>
+  <div class="overflow full-width">
+    <table>
+      <thead>
+        <tr>
+          <th class="shrink">Idx</th>
+          <th>Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        {%- for idx, v := range s.Out -%}
+        <tr>
+          <td>{%d idx+1 %}</td>
+          <td>{%= components.JSON(v) %}</td>
+        </tr>
+        {%- endfor -%}
+        {%- if s.Count > len(s.Out) -%}
+        <tr>
+          <td colspan="2">...and {%d s.Count - len(s.Out) %} additional rows</td>
+        </tr>
+        {%- endif -%}
+      </tbody>
+    </table>
+  </div>
   {%- endif -%}
 {% endfunc %}

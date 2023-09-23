@@ -100,57 +100,59 @@ func streamrenderTags(qw422016 *qt422016.Writer, title string, tags *util.Ordere
 	qw422016.E().S(title)
 //line views/vadmin/ServerInfo.html:26
 	qw422016.N().S(`</h3>
-    <table class="mt min-200">
-      <tbody>
+    <div class="overflow full-width">
+      <table class="mt min-200">
+        <tbody>
 `)
-//line views/vadmin/ServerInfo.html:29
+//line views/vadmin/ServerInfo.html:30
 	for _, k := range tags.Order {
-//line views/vadmin/ServerInfo.html:29
-		qw422016.N().S(`      <tr>
-        <th class="shrink">`)
-//line views/vadmin/ServerInfo.html:31
+//line views/vadmin/ServerInfo.html:30
+		qw422016.N().S(`        <tr>
+          <th class="shrink">`)
+//line views/vadmin/ServerInfo.html:32
 		qw422016.E().S(k)
-//line views/vadmin/ServerInfo.html:31
+//line views/vadmin/ServerInfo.html:32
 		qw422016.N().S(`</th>
-        <td>`)
-//line views/vadmin/ServerInfo.html:32
+          <td>`)
+//line views/vadmin/ServerInfo.html:33
 		qw422016.E().S(tags.GetSimple(k))
-//line views/vadmin/ServerInfo.html:32
+//line views/vadmin/ServerInfo.html:33
 		qw422016.N().S(`</td>
-      </tr>
+        </tr>
 `)
-//line views/vadmin/ServerInfo.html:34
+//line views/vadmin/ServerInfo.html:35
 	}
-//line views/vadmin/ServerInfo.html:34
-	qw422016.N().S(`      </tbody>
-    </table>
+//line views/vadmin/ServerInfo.html:35
+	qw422016.N().S(`        </tbody>
+      </table>
+    </div>
   </div>
 `)
-//line views/vadmin/ServerInfo.html:38
+//line views/vadmin/ServerInfo.html:40
 }
 
-//line views/vadmin/ServerInfo.html:38
+//line views/vadmin/ServerInfo.html:40
 func writerenderTags(qq422016 qtio422016.Writer, title string, tags *util.OrderedMap[string]) {
-//line views/vadmin/ServerInfo.html:38
+//line views/vadmin/ServerInfo.html:40
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vadmin/ServerInfo.html:38
+//line views/vadmin/ServerInfo.html:40
 	streamrenderTags(qw422016, title, tags)
-//line views/vadmin/ServerInfo.html:38
+//line views/vadmin/ServerInfo.html:40
 	qt422016.ReleaseWriter(qw422016)
-//line views/vadmin/ServerInfo.html:38
+//line views/vadmin/ServerInfo.html:40
 }
 
-//line views/vadmin/ServerInfo.html:38
+//line views/vadmin/ServerInfo.html:40
 func renderTags(title string, tags *util.OrderedMap[string]) string {
-//line views/vadmin/ServerInfo.html:38
+//line views/vadmin/ServerInfo.html:40
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vadmin/ServerInfo.html:38
+//line views/vadmin/ServerInfo.html:40
 	writerenderTags(qb422016, title, tags)
-//line views/vadmin/ServerInfo.html:38
+//line views/vadmin/ServerInfo.html:40
 	qs422016 := string(qb422016.B)
-//line views/vadmin/ServerInfo.html:38
+//line views/vadmin/ServerInfo.html:40
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vadmin/ServerInfo.html:38
+//line views/vadmin/ServerInfo.html:40
 	return qs422016
-//line views/vadmin/ServerInfo.html:38
+//line views/vadmin/ServerInfo.html:40
 }

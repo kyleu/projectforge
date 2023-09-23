@@ -28,75 +28,77 @@ func StreamBuildOptions(qw422016 *qt422016.Writer, key string) {
 	qw422016.N().S(`
   <div class="card">
     <h3>Build your project</h3>
-    <table class="mt">
-      <thead>
-        <tr>
-          <th>Action</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
+    <div class="overflow full-width">
+      <table class="mt">
+        <thead>
+          <tr>
+            <th>Action</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
 `)
-//line views/vbuild/BuildOptions.html:16
+//line views/vbuild/BuildOptions.html:17
 	for _, b := range action.AllBuilds {
-//line views/vbuild/BuildOptions.html:16
-		qw422016.N().S(`        <tr>
-          <td><a href="/run/`)
-//line views/vbuild/BuildOptions.html:18
+//line views/vbuild/BuildOptions.html:17
+		qw422016.N().S(`          <tr>
+            <td><a href="/run/`)
+//line views/vbuild/BuildOptions.html:19
 		qw422016.E().S(key)
-//line views/vbuild/BuildOptions.html:18
+//line views/vbuild/BuildOptions.html:19
 		qw422016.N().S(`/build?phase=`)
-//line views/vbuild/BuildOptions.html:18
+//line views/vbuild/BuildOptions.html:19
 		qw422016.E().S(b.Key)
-//line views/vbuild/BuildOptions.html:18
+//line views/vbuild/BuildOptions.html:19
 		qw422016.N().S(`" title="`)
-//line views/vbuild/BuildOptions.html:18
+//line views/vbuild/BuildOptions.html:19
 		qw422016.E().S(b.Description)
-//line views/vbuild/BuildOptions.html:18
+//line views/vbuild/BuildOptions.html:19
 		qw422016.N().S(`"><button>`)
-//line views/vbuild/BuildOptions.html:18
+//line views/vbuild/BuildOptions.html:19
 		qw422016.E().S(b.Title)
-//line views/vbuild/BuildOptions.html:18
+//line views/vbuild/BuildOptions.html:19
 		qw422016.N().S(`</button></a></td>
-          <td>`)
-//line views/vbuild/BuildOptions.html:19
+            <td>`)
+//line views/vbuild/BuildOptions.html:20
 		qw422016.E().S(b.Description)
-//line views/vbuild/BuildOptions.html:19
+//line views/vbuild/BuildOptions.html:20
 		qw422016.N().S(`</td>
-        </tr>
+          </tr>
 `)
-//line views/vbuild/BuildOptions.html:21
+//line views/vbuild/BuildOptions.html:22
 	}
-//line views/vbuild/BuildOptions.html:21
-	qw422016.N().S(`      </tbody>
-    </table>
+//line views/vbuild/BuildOptions.html:22
+	qw422016.N().S(`        </tbody>
+      </table>
+    </div>
   </div>
 `)
-//line views/vbuild/BuildOptions.html:25
+//line views/vbuild/BuildOptions.html:27
 }
 
-//line views/vbuild/BuildOptions.html:25
+//line views/vbuild/BuildOptions.html:27
 func WriteBuildOptions(qq422016 qtio422016.Writer, key string) {
-//line views/vbuild/BuildOptions.html:25
+//line views/vbuild/BuildOptions.html:27
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vbuild/BuildOptions.html:25
+//line views/vbuild/BuildOptions.html:27
 	StreamBuildOptions(qw422016, key)
-//line views/vbuild/BuildOptions.html:25
+//line views/vbuild/BuildOptions.html:27
 	qt422016.ReleaseWriter(qw422016)
-//line views/vbuild/BuildOptions.html:25
+//line views/vbuild/BuildOptions.html:27
 }
 
-//line views/vbuild/BuildOptions.html:25
+//line views/vbuild/BuildOptions.html:27
 func BuildOptions(key string) string {
-//line views/vbuild/BuildOptions.html:25
+//line views/vbuild/BuildOptions.html:27
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vbuild/BuildOptions.html:25
+//line views/vbuild/BuildOptions.html:27
 	WriteBuildOptions(qb422016, key)
-//line views/vbuild/BuildOptions.html:25
+//line views/vbuild/BuildOptions.html:27
 	qs422016 := string(qb422016.B)
-//line views/vbuild/BuildOptions.html:25
+//line views/vbuild/BuildOptions.html:27
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vbuild/BuildOptions.html:25
+//line views/vbuild/BuildOptions.html:27
 	return qs422016
-//line views/vbuild/BuildOptions.html:25
+//line views/vbuild/BuildOptions.html:27
 }

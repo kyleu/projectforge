@@ -38,22 +38,24 @@
 
     {%- code exif, err := filesystem.ExifExtract(b) -%}
     {%- if err == nil -%}
-    <table>
-      <thead>
-        <tr>
-          <th>EXIF Name</th>
-          <th>Value</th>
-        </tr>
-      </thead>
-      <tbody>
-        {%- for k, v := range exif -%}
-        <tr>
-          <td>{%s k %}</td>
-          <td>{%v v %}</td>
-        </tr>
-        {%- endfor -%}
-      </tbody>
-    </table>
+    <div class="overflow full-width">
+      <table>
+        <thead>
+          <tr>
+            <th>EXIF Name</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          {%- for k, v := range exif -%}
+          <tr>
+            <td>{%s k %}</td>
+            <td>{%v v %}</td>
+          </tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
     {%- else -%}
     <em>File is binary and contains no exif header</em>
     {%- endif -%}

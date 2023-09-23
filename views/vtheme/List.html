@@ -30,14 +30,16 @@
   </div>
   <div class="card">
     <h3>Current Themes</h3>
-    <div class="theme-container mt">
-      {%- for _, t := range p.Themes -%}
-      <div class="theme-item">
-        <a href="/theme/{%u t.Key %}">
-          {%= MockupTheme(t, true, "app", 5, ps) %}
-        </a>
+    <div class="overflow full-width">
+      <div class="theme-container mt">
+        {%- for _, t := range p.Themes -%}
+        <div class="theme-item">
+          <a href="/theme/{%u t.Key %}">
+            {%= MockupTheme(t, true, "app", 5, ps) %}
+          </a>
+        </div>
+        {%- endfor -%}
       </div>
-      {%- endfor -%}
     </div>
   </div>
 {% endfunc %}

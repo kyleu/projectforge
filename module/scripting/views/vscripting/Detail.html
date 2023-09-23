@@ -41,23 +41,25 @@
     <div class="card">
       <h3>{%= components.SVGRefIcon(`play`, ps) %} [{%s f %}] Example Results</h3>
       <div class="mt">
-        <table class="expanded min-200">
-          <thead>
-            <tr>
-              <th class="shrink">Example</th>
-              <th>Result</th>
-            </tr>
-          </thead>
-          <tbody>
-            {%- for _, k := range util.ArraySorted(lo.Keys(res)) -%}
-            {%- code v := res[k] -%}
-            <tr>
-              <td><pre>{%s k %}</pre></td>
-              <td><pre>{%s util.ToJSONCompact(v) %}</pre></td>
-            </tr>
-            {%- endfor -%}
-          </tbody>
-        </table>
+        <div class="overflow full-width">
+          <table class="expanded min-200">
+            <thead>
+              <tr>
+                <th class="shrink">Example</th>
+                <th>Result</th>
+              </tr>
+            </thead>
+            <tbody>
+              {%- for _, k := range util.ArraySorted(lo.Keys(res)) -%}
+              {%- code v := res[k] -%}
+              <tr>
+                <td><pre>{%s k %}</pre></td>
+                <td><pre>{%s util.ToJSONCompact(v) %}</pre></td>
+              </tr>
+              {%- endfor -%}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
     {%- endif -%}

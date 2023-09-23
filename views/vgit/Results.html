@@ -29,40 +29,42 @@
     {%= vproject.AvailActions("Git " + p.Action.Title, p.Tags, p.Projects.Tags(), ps) %}
   </div>
   <div class="card">
-    <table class="min-200">
-      <thead>
-        <tr>
-          <th class="shrink">Git Action</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><a href="/git{%s tags %}" title="{%s git.ActionStatus.Description %}"><button>Status</button></a></td>
-          <td>Git status for all projects</td>
-        </tr>
-        <tr>
-          <td><a href="/git/all/fetch{%s tags %}" title="{%s git.ActionFetch.Description %}"><button>Fetch</button></a></td>
-          <td>Fetches updates for all projects</td>
-        </tr>
-        <tr>
-          <td><a href="/git/all/pull{%s tags %}" title="{%s git.ActionPull.Description %}"><button>Pull</button></a></td>
-          <td>Pulls commits for all projects</td>
-        </tr>
-        <tr>
-          <td><a href="/git/all/push{%s tags %}" title="{%s git.ActionPush.Description %}"><button>Push</button></a></td>
-          <td>Push pending commits for all projects</td>
-        </tr>
-        <tr>
-          <td><a href="/git/all/magic{%s tags %}" title="{%s git.ActionMagic.Description %}"><button>Magic</button></a></td>
-          <td>Runs the magic for all projects (<em>stash, pull, pop, commit, push</em>)</td>
-        </tr>
-        <tr>
-          <td><a href="/git/all/history{%s tags %}" title="{%s git.ActionHistory.Description %}"><button>History</button></a></td>
-          <td>View and report the repository's git history</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="overflow full-width">
+      <table class="min-200">
+        <thead>
+          <tr>
+            <th class="shrink">Git Action</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="/git{%s tags %}" title="{%s git.ActionStatus.Description %}"><button>Status</button></a></td>
+            <td>Git status for all projects</td>
+          </tr>
+          <tr>
+            <td><a href="/git/all/fetch{%s tags %}" title="{%s git.ActionFetch.Description %}"><button>Fetch</button></a></td>
+            <td>Fetches updates for all projects</td>
+          </tr>
+          <tr>
+            <td><a href="/git/all/pull{%s tags %}" title="{%s git.ActionPull.Description %}"><button>Pull</button></a></td>
+            <td>Pulls commits for all projects</td>
+          </tr>
+          <tr>
+            <td><a href="/git/all/push{%s tags %}" title="{%s git.ActionPush.Description %}"><button>Push</button></a></td>
+            <td>Push pending commits for all projects</td>
+          </tr>
+          <tr>
+            <td><a href="/git/all/magic{%s tags %}" title="{%s git.ActionMagic.Description %}"><button>Magic</button></a></td>
+            <td>Runs the magic for all projects (<em>stash, pull, pop, commit, push</em>)</td>
+          </tr>
+          <tr>
+            <td><a href="/git/all/history{%s tags %}" title="{%s git.ActionHistory.Description %}"><button>History</button></a></td>
+            <td>View and report the repository's git history</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
   <div class="card">
     <ul class="accordion">

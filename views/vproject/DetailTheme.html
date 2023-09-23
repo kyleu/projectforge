@@ -12,20 +12,22 @@
     }
   -%}
   <div class="right"><a href="/p/{%s key %}/edit#theme"><button>Edit Theme</button></a></div>
-  <table class="centered">
-    <tbody>
-      <tr>
-        <th>
-          <div>Light</div>
-          <div id="mockup-light">{%= vtheme.MockupColors(title, "", t.Light, false, icon, 6, ps) %}</div>
-        </th>
-        <th>
-          <div>Dark</div>
-          <div id="mockup-dark">{%= vtheme.MockupColors(title, "", t.Dark, false, icon, 6, ps) %}</div>
-        </th>
-      </tr>
-    </tbody>
-  </table>
+  <div class="overflow full-width">
+    <table class="centered">
+      <tbody>
+        <tr>
+          <th>
+            <div>Light</div>
+            <div id="mockup-light">{%= vtheme.MockupColors(title, "", t.Light, false, icon, 6, ps) %}</div>
+          </th>
+          <th>
+            <div>Dark</div>
+            <div id="mockup-dark">{%= vtheme.MockupColors(title, "", t.Dark, false, icon, 6, ps) %}</div>
+          </th>
+        </tr>
+      </tbody>
+    </table>
+  </div>
   <div class="mt">
     Choose a different theme from
     <a href="/p/{%s key %}/palette/crayola">Crayola</a>,

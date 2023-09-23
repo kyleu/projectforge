@@ -30,14 +30,16 @@
   <div class="card">
     <h3>Current Themes</h3>{{{ if .HasModule "filesystem" }}}{{{ else }}}
     <em>Warning: changes to modules will not be saved between server restarts</em>{{{ end }}}
-    <div class="theme-container mt">
-      {%- for _, t := range p.Themes -%}
-      <div class="theme-item">
-        <a href="/theme/{%u t.Key %}">
-          {%= MockupTheme(t, true, "app", 5, ps) %}
-        </a>
+    <div class="overflow full-width">
+      <div class="theme-container mt">
+        {%- for _, t := range p.Themes -%}
+        <div class="theme-item">
+          <a href="/theme/{%u t.Key %}">
+            {%= MockupTheme(t, true, "app", 5, ps) %}
+          </a>
+        </div>
+        {%- endfor -%}
       </div>
-      {%- endfor -%}
     </div>
   </div>
 {% endfunc %}

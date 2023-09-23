@@ -47,116 +47,118 @@ func (p *DeriveForm) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cu
 	components.StreamSVGRefIcon(qw422016, `dna`, ps)
 //line views/vexport/DeriveForm.html:21
 	qw422016.N().S(`Import</h3>
-      <table class="mt min-200 expanded">
-        <tbody>
-          `)
-//line views/vexport/DeriveForm.html:24
+      <div class="overflow full-width">
+        <table class="mt min-200 expanded">
+          <tbody>
+            `)
+//line views/vexport/DeriveForm.html:25
 	components.StreamTableInput(qw422016, "name", "", "Name", p.Form.GetStringOpt("name"), 5, "If provided, overrides the detected model name")
-//line views/vexport/DeriveForm.html:24
-	qw422016.N().S(`
-          `)
 //line views/vexport/DeriveForm.html:25
+	qw422016.N().S(`
+            `)
+//line views/vexport/DeriveForm.html:26
 	components.StreamTableInput(qw422016, "pkg", "", "Package", p.Form.GetStringOpt("pkg"), 5, "If provided, overrides the detected package")
-//line views/vexport/DeriveForm.html:25
-	qw422016.N().S(`
-          `)
 //line views/vexport/DeriveForm.html:26
+	qw422016.N().S(`
+            `)
+//line views/vexport/DeriveForm.html:27
 	components.StreamTableTextarea(qw422016, "content", "", "Content", 4, p.Form.GetStringOpt("content"), 5, "Try pasting any ol' thing, it'll figure it out")
-//line views/vexport/DeriveForm.html:26
+//line views/vexport/DeriveForm.html:27
 	qw422016.N().S(`
-          <tr>
-            <td colspan="2">
-              <button type="submit">Save</button>
-              <button type="reset">Reset</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+            <tr>
+              <td colspan="2">
+                <button type="submit">Save</button>
+                <button type="reset">Reset</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </form>
   </div>
 `)
-//line views/vexport/DeriveForm.html:37
+//line views/vexport/DeriveForm.html:39
 	if p.Result != nil {
-//line views/vexport/DeriveForm.html:37
+//line views/vexport/DeriveForm.html:39
 		qw422016.N().S(`  `)
-//line views/vexport/DeriveForm.html:38
+//line views/vexport/DeriveForm.html:40
 		StreamDeriveResult(qw422016, p.Result, as, ps)
-//line views/vexport/DeriveForm.html:38
+//line views/vexport/DeriveForm.html:40
 		qw422016.N().S(`
 `)
-//line views/vexport/DeriveForm.html:39
+//line views/vexport/DeriveForm.html:41
 	}
-//line views/vexport/DeriveForm.html:40
+//line views/vexport/DeriveForm.html:42
 }
 
-//line views/vexport/DeriveForm.html:40
+//line views/vexport/DeriveForm.html:42
 func (p *DeriveForm) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vexport/DeriveForm.html:40
+//line views/vexport/DeriveForm.html:42
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/DeriveForm.html:40
+//line views/vexport/DeriveForm.html:42
 	p.StreamBody(qw422016, as, ps)
-//line views/vexport/DeriveForm.html:40
+//line views/vexport/DeriveForm.html:42
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/DeriveForm.html:40
+//line views/vexport/DeriveForm.html:42
 }
 
-//line views/vexport/DeriveForm.html:40
+//line views/vexport/DeriveForm.html:42
 func (p *DeriveForm) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vexport/DeriveForm.html:40
+//line views/vexport/DeriveForm.html:42
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/DeriveForm.html:40
+//line views/vexport/DeriveForm.html:42
 	p.WriteBody(qb422016, as, ps)
-//line views/vexport/DeriveForm.html:40
+//line views/vexport/DeriveForm.html:42
 	qs422016 := string(qb422016.B)
-//line views/vexport/DeriveForm.html:40
+//line views/vexport/DeriveForm.html:42
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/DeriveForm.html:40
+//line views/vexport/DeriveForm.html:42
 	return qs422016
-//line views/vexport/DeriveForm.html:40
+//line views/vexport/DeriveForm.html:42
 }
 
-//line views/vexport/DeriveForm.html:42
+//line views/vexport/DeriveForm.html:44
 func StreamDeriveResult(qw422016 *qt422016.Writer, r derive.Result, as *app.State, ps *cutil.PageState) {
-//line views/vexport/DeriveForm.html:42
+//line views/vexport/DeriveForm.html:44
 	qw422016.N().S(`
   <div class="card">
     <h3>`)
-//line views/vexport/DeriveForm.html:44
+//line views/vexport/DeriveForm.html:46
 	components.StreamSVGRefIcon(qw422016, `play`, ps)
-//line views/vexport/DeriveForm.html:44
+//line views/vexport/DeriveForm.html:46
 	qw422016.N().S(`Results</h3>
     `)
-//line views/vexport/DeriveForm.html:45
+//line views/vexport/DeriveForm.html:47
 	components.StreamJSON(qw422016, r)
-//line views/vexport/DeriveForm.html:45
+//line views/vexport/DeriveForm.html:47
 	qw422016.N().S(`
   </div>
 `)
-//line views/vexport/DeriveForm.html:47
+//line views/vexport/DeriveForm.html:49
 }
 
-//line views/vexport/DeriveForm.html:47
+//line views/vexport/DeriveForm.html:49
 func WriteDeriveResult(qq422016 qtio422016.Writer, r derive.Result, as *app.State, ps *cutil.PageState) {
-//line views/vexport/DeriveForm.html:47
+//line views/vexport/DeriveForm.html:49
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/DeriveForm.html:47
+//line views/vexport/DeriveForm.html:49
 	StreamDeriveResult(qw422016, r, as, ps)
-//line views/vexport/DeriveForm.html:47
+//line views/vexport/DeriveForm.html:49
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/DeriveForm.html:47
+//line views/vexport/DeriveForm.html:49
 }
 
-//line views/vexport/DeriveForm.html:47
+//line views/vexport/DeriveForm.html:49
 func DeriveResult(r derive.Result, as *app.State, ps *cutil.PageState) string {
-//line views/vexport/DeriveForm.html:47
+//line views/vexport/DeriveForm.html:49
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/DeriveForm.html:47
+//line views/vexport/DeriveForm.html:49
 	WriteDeriveResult(qb422016, r, as, ps)
-//line views/vexport/DeriveForm.html:47
+//line views/vexport/DeriveForm.html:49
 	qs422016 := string(qb422016.B)
-//line views/vexport/DeriveForm.html:47
+//line views/vexport/DeriveForm.html:49
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/DeriveForm.html:47
+//line views/vexport/DeriveForm.html:49
 	return qs422016
-//line views/vexport/DeriveForm.html:47
+//line views/vexport/DeriveForm.html:49
 }

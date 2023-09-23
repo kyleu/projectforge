@@ -47,16 +47,18 @@
         {%= components.ExpandCollapse(3, ps) %} Duration
       </label>
       <div class="bd">
-        <table class="min-200 expanded">
-          <tbody>
-            {%- for k, v := range e.PageTimings.Map() -%}
-            <tr>
-              <th class="shrink">{%s k %}</th>
-              <td>{%s v %}</td>
-            </tr>
-            {%- endfor -%}
-          </tbody>
-        </table>
+        <div class="overflow full-width">
+          <table class="min-200 expanded">
+            <tbody>
+              {%- for k, v := range e.PageTimings.Map() -%}
+              <tr>
+                <th class="shrink">{%s k %}</th>
+                <td>{%s v %}</td>
+              </tr>
+              {%- endfor -%}
+            </tbody>
+          </table>
+        </div>
       </div>
     </li>
     <li>

@@ -19,40 +19,42 @@
   {%= Summary(mod, nil, ps) %}
   <div class="card">
     <h3>Details</h3>
-    <table class="mt">
-      <tbody>
-        <tr>
-          <th>Key</th>
-          <td>{%s mod.Key %}</td>
-        </tr>
-        <tr>
-          <th>Name</th>
-          <td>{%s mod.Name %}</td>
-        </tr>
-        <tr>
-          <th>Description</th>
-          <td>{%s mod.Description %}</td>
-        </tr>
-        <tr>
-          <th>Author</th>
-          <td><a href="mailto:{%s mod.AuthorEmail %}">{%s mod.AuthorName %}</a></td>
-        </tr>
-        <tr>
-          <th>License</th>
-          <td>{%s mod.License %}</td>
-        </tr>
-        <tr>
-          <th>Sourcecode</th>
-          <td><a href="{%s mod.Sourcecode %}" target="_blank" rel="noopener noreferrer">{%s mod.Sourcecode %}</a></td>
-        </tr>
-        {%- if p.Dir != "" -%}
-        <tr>
-          <th>File Source</th>
-          <td>{%s p.Dir %}</td>
-        </tr>
-        {%- endif -%}
-      </tbody>
-    </table>
+    <div class="overflow full-width">
+      <table class="mt">
+        <tbody>
+          <tr>
+            <th>Key</th>
+            <td>{%s mod.Key %}</td>
+          </tr>
+          <tr>
+            <th>Name</th>
+            <td>{%s mod.Name %}</td>
+          </tr>
+          <tr>
+            <th>Description</th>
+            <td>{%s mod.Description %}</td>
+          </tr>
+          <tr>
+            <th>Author</th>
+            <td><a href="mailto:{%s mod.AuthorEmail %}">{%s mod.AuthorName %}</a></td>
+          </tr>
+          <tr>
+            <th>License</th>
+            <td>{%s mod.License %}</td>
+          </tr>
+          <tr>
+            <th>Sourcecode</th>
+            <td><a href="{%s mod.Sourcecode %}" target="_blank" rel="noopener noreferrer">{%s mod.Sourcecode %}</a></td>
+          </tr>
+          {%- if p.Dir != "" -%}
+          <tr>
+            <th>File Source</th>
+            <td>{%s p.Dir %}</td>
+          </tr>
+          {%- endif -%}
+        </tbody>
+      </table>
+    </div>
   </div>
   {%- if p.HTML != "" -%}
   <div class="card">

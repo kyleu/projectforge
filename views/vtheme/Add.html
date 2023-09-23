@@ -18,17 +18,19 @@
     <h3>Choose Theme</h3>
     <form action="/theme" method="post">
       <input type="hidden" name="palette" value="{%s p.Palette %}" />
-      <table class="mt">
-        <tbody>
-          {%- for _, t := range p.Themes -%}
-          <tr>
-            <th><a href="/theme/palette/{%s p.Palette %}/{%s t.Key %}">{%s t.Key %}</a></th>
-            <th class="shrink" style="background-color: #ffffff; padding: 12px 36px;">{%= MockupColors(util.AppName, "", t.Light, true, "app", 5, ps) %}</th>
-            <th class="shrink" style="background-color: #121212; padding: 12px 36px;">{%= MockupColors(util.AppName, "", t.Dark, true, "app", 5, ps) %}</th>
-          </tr>
-          {%- endfor -%}
-        </tbody>
-      </table>
+      <div class="overflow full-width">
+        <table class="mt">
+          <tbody>
+            {%- for _, t := range p.Themes -%}
+            <tr>
+              <th><a href="/theme/palette/{%s p.Palette %}/{%s t.Key %}">{%s t.Key %}</a></th>
+              <th class="shrink" style="background-color: #ffffff; padding: 12px 36px;">{%= MockupColors(util.AppName, "", t.Light, true, "app", 5, ps) %}</th>
+              <th class="shrink" style="background-color: #121212; padding: 12px 36px;">{%= MockupColors(util.AppName, "", t.Dark, true, "app", 5, ps) %}</th>
+            </tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+      </div>
     </form>
   </div>
 {% endfunc %}

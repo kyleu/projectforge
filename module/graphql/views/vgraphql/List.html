@@ -18,22 +18,24 @@
     {%- if len(p.Keys) == 0 -%}
     <p><em>no schemata available</em></p>
     {%- else -%}
-    <table class="mt">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th class="shrink">Exec Count</th>
-        </tr>
-      </thead>
-      <tbody>
-        {%- for idx, k := range p.Keys -%}
-        <tr>
-          <td><a href="/graphql/{%s k %}">{%s titles[k] %}</a></td>
-          <td>{%d p.Counts[idx] %}</td>
-        </tr>
-        {%- endfor -%}
-      </tbody>
-    </table>
+    <div class="overflow full-width">
+      <table class="mt">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th class="shrink">Exec Count</th>
+          </tr>
+        </thead>
+        <tbody>
+          {%- for idx, k := range p.Keys -%}
+          <tr>
+            <td><a href="/graphql/{%s k %}">{%s titles[k] %}</a></td>
+            <td>{%d p.Counts[idx] %}</td>
+          </tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
     {%- endif -%}
   </div>
 {% endfunc %}

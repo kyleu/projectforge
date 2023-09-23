@@ -52,61 +52,63 @@ func (p *Form) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	components.StreamSVGRefIcon(qw422016, "terminal", ps)
 //line views/vexec/Form.html:21
 	qw422016.N().S(`New Process</h3>
-      <table class="mt min-200 expanded">
-        <tbody>
-          `)
-//line views/vexec/Form.html:24
+      <div class="overflow full-width">
+        <table class="mt min-200 expanded">
+          <tbody>
+            `)
+//line views/vexec/Form.html:25
 	components.StreamTableInput(qw422016, "key", "", "Key", x.Key, 5, "optional, defaults to command")
-//line views/vexec/Form.html:24
-	qw422016.N().S(`
-          `)
 //line views/vexec/Form.html:25
+	qw422016.N().S(`
+            `)
+//line views/vexec/Form.html:26
 	components.StreamTableInput(qw422016, "cmd", "", "Command", x.Cmd, 5, "command to execute, with arguments")
-//line views/vexec/Form.html:25
-	qw422016.N().S(`
-          `)
 //line views/vexec/Form.html:26
+	qw422016.N().S(`
+            `)
+//line views/vexec/Form.html:27
 	components.StreamTableInput(qw422016, "path", "", "Path", x.Path, 5)
-//line views/vexec/Form.html:26
-	qw422016.N().S(`
-          `)
 //line views/vexec/Form.html:27
+	qw422016.N().S(`
+            `)
+//line views/vexec/Form.html:28
 	components.StreamTableTextarea(qw422016, "env", "", "Env Vars", len(x.Env), strings.Join(x.Env, "\n"), 5)
-//line views/vexec/Form.html:27
+//line views/vexec/Form.html:28
 	qw422016.N().S(`
-          <tr>
-            <td colspan="2"><button class="mt" type="submit">Create</button></td>
-          </tr>
-        </tbody>
-      </table>
+            <tr>
+              <td colspan="2"><button class="mt" type="submit">Create</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </form>
 `)
-//line views/vexec/Form.html:35
+//line views/vexec/Form.html:37
 }
 
-//line views/vexec/Form.html:35
+//line views/vexec/Form.html:37
 func (p *Form) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vexec/Form.html:35
+//line views/vexec/Form.html:37
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexec/Form.html:35
+//line views/vexec/Form.html:37
 	p.StreamBody(qw422016, as, ps)
-//line views/vexec/Form.html:35
+//line views/vexec/Form.html:37
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexec/Form.html:35
+//line views/vexec/Form.html:37
 }
 
-//line views/vexec/Form.html:35
+//line views/vexec/Form.html:37
 func (p *Form) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vexec/Form.html:35
+//line views/vexec/Form.html:37
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexec/Form.html:35
+//line views/vexec/Form.html:37
 	p.WriteBody(qb422016, as, ps)
-//line views/vexec/Form.html:35
+//line views/vexec/Form.html:37
 	qs422016 := string(qb422016.B)
-//line views/vexec/Form.html:35
+//line views/vexec/Form.html:37
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexec/Form.html:35
+//line views/vexec/Form.html:37
 	return qs422016
-//line views/vexec/Form.html:35
+//line views/vexec/Form.html:37
 }

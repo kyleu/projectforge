@@ -24,15 +24,17 @@
 {% func renderTags(title string, tags *util.OrderedMap[string]) %}
   <div class="card">
     <h3>{%s title %}</h3>
-    <table class="mt min-200">
-      <tbody>
-      {%- for _, k := range tags.Order -%}
-      <tr>
-        <th class="shrink">{%s k %}</th>
-        <td>{%s tags.GetSimple(k) %}</td>
-      </tr>
-      {%- endfor -%}
-      </tbody>
-    </table>
+    <div class="overflow full-width">
+      <table class="mt min-200">
+        <tbody>
+        {%- for _, k := range tags.Order -%}
+        <tr>
+          <th class="shrink">{%s k %}</th>
+          <td>{%s tags.GetSimple(k) %}</td>
+        </tr>
+        {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
   </div>
 {% endfunc %}

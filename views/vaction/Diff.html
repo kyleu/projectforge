@@ -25,70 +25,72 @@
     </div>
     {%- endif -%}
     {%- endswitch -%}
-    <table>
-      <thead>
-        <tr>
-          <th class="shrink">Path</th>
-          <th class="shrink">Status</th>
-          <th class="shrink">Actions</th>
-          <th class="shrink">Patch</th>
-        </tr>
-      </thead>
-      <tbody>
-      {%- for _, d := range diffs -%}
-        <tr>
-          <td class="shrink">
-            {%- if strings.Contains(d.Path, "..") || d.Status.Key == diff.StatusNew.Key -%}
-            {%s d.Path %}
-            {%- else -%}
-            <a href="/p/{%s prjKey %}/fs/{%s d.Path %}" target="_blank" rel="noopener noreferrer">{%s d.Path %}</a>
-            {%- endif -%}
-          </td>
-          <td>{%s d.Status.StringFor(act.Key) %}</td>
-          <td>
-            {%- switch act.Key -%}
-            {%- case "audit" -%}
-            <form action="/run/{%s prjKey %}/audit" method="get">
-              <input type="hidden" name="file" value="{%s d.Path %}" />
-              <button type="submit" name="fix" value="remove" title="Remove file from project">Purge</button>{% space %}
-              {%- if d.Status.Key == diff.StatusDifferent.Key -%}
-              <button type="submit" name="fix" value="header" title="Remove header from file">Fix</button>
+    <div class="overflow full-width">
+      <table>
+        <thead>
+          <tr>
+            <th class="shrink">Path</th>
+            <th class="shrink">Status</th>
+            <th class="shrink">Actions</th>
+            <th class="shrink">Patch</th>
+          </tr>
+        </thead>
+        <tbody>
+        {%- for _, d := range diffs -%}
+          <tr>
+            <td class="shrink">
+              {%- if strings.Contains(d.Path, "..") || d.Status.Key == diff.StatusNew.Key -%}
+              {%s d.Path %}
+              {%- else -%}
+              <a href="/p/{%s prjKey %}/fs/{%s d.Path %}" target="_blank" rel="noopener noreferrer">{%s d.Path %}</a>
               {%- endif -%}
-            </form>
-            {%- case "preview" -%}
-            <form action="/run/{%s prjKey %}/generate" method="get">
-              <input type="hidden" name="file" value="{%s d.Path %}" />
-              {%- if d.Status.String() != "new" -%}
-              <!--{% space %}<button type="submit" name="to" value="module" title="Incorporate change into module">&lt;-</button>{% space %}-->{% space %}
-              {%- endif -%}
-              <button type="submit" name="to" value="project" title="Overwrite project changes with module version">-&gt;</button>
-            </form>
-            {%- case "build" -%}
-              {%- switch cfg.GetStringOpt("phase") -%}
-              {%- case "imports" -%}
-                <form action="/run/{%s prjKey %}/build" method="get">
-                  <input type="hidden" name="fix" value="true" />
-                  <input type="hidden" name="phase" value="imports" />
-                  <input type="hidden" name="file" value="{%s d.Path %}" />
-                  <button type="submit" title="Reorder modules">Fix</button>
-                </form>
-              {%- case "deployments" -%}
-                {%- if d.Status != diff.StatusIdentical -%}
-                <form action="/run/{%s prjKey %}/build" method="get">
-                  <input type="hidden" name="fix" value="true" />
-                  <input type="hidden" name="phase" value="deployments" />
-                  <input type="hidden" name="file" value="{%s d.Path %}" />
-                  <button type="submit" title="Update deployment">Fix</button>
-                </form>
+            </td>
+            <td>{%s d.Status.StringFor(act.Key) %}</td>
+            <td>
+              {%- switch act.Key -%}
+              {%- case "audit" -%}
+              <form action="/run/{%s prjKey %}/audit" method="get">
+                <input type="hidden" name="file" value="{%s d.Path %}" />
+                <button type="submit" name="fix" value="remove" title="Remove file from project">Purge</button>{% space %}
+                {%- if d.Status.Key == diff.StatusDifferent.Key -%}
+                <button type="submit" name="fix" value="header" title="Remove header from file">Fix</button>
                 {%- endif -%}
+              </form>
+              {%- case "preview" -%}
+              <form action="/run/{%s prjKey %}/generate" method="get">
+                <input type="hidden" name="file" value="{%s d.Path %}" />
+                {%- if d.Status.String() != "new" -%}
+                <!--{% space %}<button type="submit" name="to" value="module" title="Incorporate change into module">&lt;-</button>{% space %}-->{% space %}
+                {%- endif -%}
+                <button type="submit" name="to" value="project" title="Overwrite project changes with module version">-&gt;</button>
+              </form>
+              {%- case "build" -%}
+                {%- switch cfg.GetStringOpt("phase") -%}
+                {%- case "imports" -%}
+                  <form action="/run/{%s prjKey %}/build" method="get">
+                    <input type="hidden" name="fix" value="true" />
+                    <input type="hidden" name="phase" value="imports" />
+                    <input type="hidden" name="file" value="{%s d.Path %}" />
+                    <button type="submit" title="Reorder modules">Fix</button>
+                  </form>
+                {%- case "deployments" -%}
+                  {%- if d.Status != diff.StatusIdentical -%}
+                  <form action="/run/{%s prjKey %}/build" method="get">
+                    <input type="hidden" name="fix" value="true" />
+                    <input type="hidden" name="phase" value="deployments" />
+                    <input type="hidden" name="file" value="{%s d.Path %}" />
+                    <button type="submit" title="Update deployment">Fix</button>
+                  </form>
+                  {%- endif -%}
+                {%- endswitch -%}
               {%- endswitch -%}
-            {%- endswitch -%}
-          </td>
-          <td>{%= renderPatch(d.Patch, as, ps) %}</td>
-        </tr>
-      {%- endfor -%}
-      </tbody>
-    </table>
+            </td>
+            <td>{%= renderPatch(d.Patch, as, ps) %}</td>
+          </tr>
+        {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
 {% endstripspace %}{% endfunc %}
 
 {% func renderPatch(patch string, as *app.State, ps *cutil.PageState) %}{% stripspace %}

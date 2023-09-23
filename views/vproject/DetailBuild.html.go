@@ -33,60 +33,62 @@ func StreamDetailBuild(qw422016 *qt422016.Writer, build *project.Build, as *app.
 	buildMap := build.ToMap()
 
 //line views/vproject/DetailBuild.html:8
-	qw422016.N().S(`  <table class="min-200 full-width">
-    <tbody>
+	qw422016.N().S(`  <div class="overflow full-width">
+    <table class="min-200 full-width">
+      <tbody>
 `)
-//line views/vproject/DetailBuild.html:11
+//line views/vproject/DetailBuild.html:12
 	for _, o := range project.AllBuildOptions {
-//line views/vproject/DetailBuild.html:12
+//line views/vproject/DetailBuild.html:13
 		if buildMap[o.Key] {
-//line views/vproject/DetailBuild.html:12
-			qw422016.N().S(`    <tr>
-      <th class="shrink">`)
-//line views/vproject/DetailBuild.html:14
+//line views/vproject/DetailBuild.html:13
+			qw422016.N().S(`      <tr>
+        <th class="shrink">`)
+//line views/vproject/DetailBuild.html:15
 			qw422016.E().S(o.Title)
-//line views/vproject/DetailBuild.html:14
+//line views/vproject/DetailBuild.html:15
 			qw422016.N().S(`</th>
-      <td>`)
-//line views/vproject/DetailBuild.html:15
+        <td>`)
+//line views/vproject/DetailBuild.html:16
 			qw422016.E().S(o.Description)
-//line views/vproject/DetailBuild.html:15
+//line views/vproject/DetailBuild.html:16
 			qw422016.N().S(`</td>
-    </tr>
+      </tr>
 `)
-//line views/vproject/DetailBuild.html:17
+//line views/vproject/DetailBuild.html:18
 		}
-//line views/vproject/DetailBuild.html:18
+//line views/vproject/DetailBuild.html:19
 	}
-//line views/vproject/DetailBuild.html:18
-	qw422016.N().S(`    </tbody>
-  </table>
+//line views/vproject/DetailBuild.html:19
+	qw422016.N().S(`      </tbody>
+    </table>
+  </div>
 `)
-//line views/vproject/DetailBuild.html:21
+//line views/vproject/DetailBuild.html:23
 }
 
-//line views/vproject/DetailBuild.html:21
+//line views/vproject/DetailBuild.html:23
 func WriteDetailBuild(qq422016 qtio422016.Writer, build *project.Build, as *app.State, ps *cutil.PageState) {
-//line views/vproject/DetailBuild.html:21
+//line views/vproject/DetailBuild.html:23
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/DetailBuild.html:21
+//line views/vproject/DetailBuild.html:23
 	StreamDetailBuild(qw422016, build, as, ps)
-//line views/vproject/DetailBuild.html:21
+//line views/vproject/DetailBuild.html:23
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/DetailBuild.html:21
+//line views/vproject/DetailBuild.html:23
 }
 
-//line views/vproject/DetailBuild.html:21
+//line views/vproject/DetailBuild.html:23
 func DetailBuild(build *project.Build, as *app.State, ps *cutil.PageState) string {
-//line views/vproject/DetailBuild.html:21
+//line views/vproject/DetailBuild.html:23
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/DetailBuild.html:21
+//line views/vproject/DetailBuild.html:23
 	WriteDetailBuild(qb422016, build, as, ps)
-//line views/vproject/DetailBuild.html:21
+//line views/vproject/DetailBuild.html:23
 	qs422016 := string(qb422016.B)
-//line views/vproject/DetailBuild.html:21
+//line views/vproject/DetailBuild.html:23
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/DetailBuild.html:21
+//line views/vproject/DetailBuild.html:23
 	return qs422016
-//line views/vproject/DetailBuild.html:21
+//line views/vproject/DetailBuild.html:23
 }

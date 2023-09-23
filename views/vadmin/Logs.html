@@ -22,22 +22,24 @@
 {% endfunc %}
 
 {% func logTable(logs []*zapcore.Entry) %}
-  <table class="mt">
-    <thead>
-      <tr>
-        <th>Level</th>
-        <th>Message</th>
-        <th>Occurred</th>
-      </tr>
-    </thead>
-    <tbody>
-      {%- for _, l := range logs -%}
-      <tr>
-        <td>{%s l.Level.String() %}</td>
-        <td>{%s l.Message %}</td>
-        <td>{%s util.TimeRelative(&l.Time) %}</td>
-      </tr>
-      {%- endfor -%}
-    </tbody>
-  </table>
+  <div class="overflow full-width">
+    <table class="mt">
+      <thead>
+        <tr>
+          <th>Level</th>
+          <th>Message</th>
+          <th>Occurred</th>
+        </tr>
+      </thead>
+      <tbody>
+        {%- for _, l := range logs -%}
+        <tr>
+          <td>{%s l.Level.String() %}</td>
+          <td>{%s l.Message %}</td>
+          <td>{%s util.TimeRelative(&l.Time) %}</td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
 {% endfunc %}

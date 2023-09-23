@@ -90,70 +90,72 @@ func (p *Modules) Body(as *app.State, ps *cutil.PageState) string {
 func streammoduleTable(qw422016 *qt422016.Writer, mods []*debug.Module) {
 //line views/vadmin/Modules.html:24
 	qw422016.N().S(`
-  <table class="mt">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Version</th>
-      </tr>
-    </thead>
-    <tbody>
+  <div class="overflow full-width">
+    <table class="mt">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Version</th>
+        </tr>
+      </thead>
+      <tbody>
 `)
-//line views/vadmin/Modules.html:33
+//line views/vadmin/Modules.html:34
 	for _, m := range mods {
-//line views/vadmin/Modules.html:33
-		qw422016.N().S(`      <tr>
-        <td><a target="_blank" rel="noopener noreferrer" href="https://`)
-//line views/vadmin/Modules.html:35
+//line views/vadmin/Modules.html:34
+		qw422016.N().S(`        <tr>
+          <td><a target="_blank" rel="noopener noreferrer" href="https://`)
+//line views/vadmin/Modules.html:36
 		qw422016.E().S(m.Path)
-//line views/vadmin/Modules.html:35
+//line views/vadmin/Modules.html:36
 		qw422016.N().S(`">`)
-//line views/vadmin/Modules.html:35
+//line views/vadmin/Modules.html:36
 		qw422016.E().S(m.Path)
-//line views/vadmin/Modules.html:35
+//line views/vadmin/Modules.html:36
 		qw422016.N().S(`</a></td>
-        <td title="`)
-//line views/vadmin/Modules.html:36
+          <td title="`)
+//line views/vadmin/Modules.html:37
 		qw422016.E().S(m.Sum)
-//line views/vadmin/Modules.html:36
+//line views/vadmin/Modules.html:37
 		qw422016.N().S(`">`)
-//line views/vadmin/Modules.html:36
+//line views/vadmin/Modules.html:37
 		qw422016.E().S(m.Version)
-//line views/vadmin/Modules.html:36
+//line views/vadmin/Modules.html:37
 		qw422016.N().S(`</td>
-      </tr>
+        </tr>
 `)
-//line views/vadmin/Modules.html:38
+//line views/vadmin/Modules.html:39
 	}
-//line views/vadmin/Modules.html:38
-	qw422016.N().S(`    </tbody>
-  </table>
+//line views/vadmin/Modules.html:39
+	qw422016.N().S(`      </tbody>
+    </table>
+  </div>
 `)
-//line views/vadmin/Modules.html:41
+//line views/vadmin/Modules.html:43
 }
 
-//line views/vadmin/Modules.html:41
+//line views/vadmin/Modules.html:43
 func writemoduleTable(qq422016 qtio422016.Writer, mods []*debug.Module) {
-//line views/vadmin/Modules.html:41
+//line views/vadmin/Modules.html:43
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vadmin/Modules.html:41
+//line views/vadmin/Modules.html:43
 	streammoduleTable(qw422016, mods)
-//line views/vadmin/Modules.html:41
+//line views/vadmin/Modules.html:43
 	qt422016.ReleaseWriter(qw422016)
-//line views/vadmin/Modules.html:41
+//line views/vadmin/Modules.html:43
 }
 
-//line views/vadmin/Modules.html:41
+//line views/vadmin/Modules.html:43
 func moduleTable(mods []*debug.Module) string {
-//line views/vadmin/Modules.html:41
+//line views/vadmin/Modules.html:43
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vadmin/Modules.html:41
+//line views/vadmin/Modules.html:43
 	writemoduleTable(qb422016, mods)
-//line views/vadmin/Modules.html:41
+//line views/vadmin/Modules.html:43
 	qs422016 := string(qb422016.B)
-//line views/vadmin/Modules.html:41
+//line views/vadmin/Modules.html:43
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vadmin/Modules.html:41
+//line views/vadmin/Modules.html:43
 	return qs422016
-//line views/vadmin/Modules.html:41
+//line views/vadmin/Modules.html:43
 }

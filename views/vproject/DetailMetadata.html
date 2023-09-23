@@ -5,169 +5,173 @@
 ) %}
 
 {% func DetailMetadata(info *project.Info, as *app.State, ps *cutil.PageState) %}
-  <table class="min-200 full-width">
-    <tbody>
-      <tr class="shrink">
-        <th class="shrink">Organization</th>
-        <td>{%s info.Org %}</td>
-      </tr>
-      <tr>
-        <th>Author ID</th>
-        <td>{%s info.AuthorID %}</td>
-      </tr>
-      <tr>
-        <th>Author</th>
-        <td>{%s info.AuthorName %} &lt;<a href="mailto:{%s info.AuthorEmail %}">{%s info.AuthorEmail %}</a>&gt;</td>
-      </tr>
-      <tr>
-        <th>Team</th>
-        <td>{%s info.Team %}</td>
-      </tr>
-      <tr>
-        <th>License</th>
-        <td>{%s info.License %}</td>
-      </tr>
-      <tr>
-        <th>Homepage</th>
-        <td>{%s info.Homepage %}</td>
-      </tr>
-      <tr>
-        <th>Source Code</th>
-        <td>{%s info.Sourcecode %}</td>
-      </tr>
-      <tr>
-        <th>Summary</th>
-        <td>{%s info.Summary %}</td>
-      </tr>
-      <tr>
-        <th>Description</th>
-        <td>{%s info.Description %}</td>
-      </tr>
-      <tr>
-        <th>CI</th>
-        <td>{%s info.CI %}</td>
-      </tr>
-      <tr>
-        <th>Homebrew</th>
-        <td>{%s info.Homebrew %}</td>
-      </tr>
-      <tr>
-        <th>Bundle</th>
-        <td>{%s info.Bundle %}</td>
-      </tr>
-      <tr>
-        <th>Signing Identity</th>
-        <td>{%s info.SigningIdentity %}</td>
-      </tr>
-      {%- if info.NotarizeEmail != "" -%}
-      <tr>
-        <th>Notarize Email</th>
-        <td>{%s info.NotarizeEmail %} &lt;<a href="mailto:{%s info.NotarizeEmail %}">{%s info.NotarizeEmail %}</a>&gt;</td>
-      </tr>
-      {%- endif -%}
-      <tr>
-        <th>Slack Webhook</th>
-        <td>{%s info.Slack %}</td>
-      </tr>
-      <tr>
-        <th>Channels</th>
-        <td>
-          {%- for _, x := range info.Channels -%}
-          <div>{%s x %}</div>
-          {%- endfor -%}
-        </td>
-      </tr>
-      <tr>
-        <th>Java Package</th>
-        <td>{%s info.JavaPackage %}</td>
-      </tr>
-      <tr>
-        <th>Go Binary</th>
-        <td>{%s info.GoBinary %}</td>
-      </tr>
-      <tr>
-        <th>Go Version</th>
-        <td>{%s info.GoVersion %}</td>
-      </tr>
-      <tr>
-        <th>Extra Files</th>
-        <td>
-          {%- if len(info.ExtraFiles) == 0 -%}
-          <em>none</em>
-          {%- else -%}
-          <ul>
-            {%- for _, x := range info.ExtraFiles -%}
-            <li>{%s x %}</li>
+  <div class="overflow full-width">
+    <table class="min-200 full-width">
+      <tbody>
+        <tr class="shrink">
+          <th class="shrink">Organization</th>
+          <td>{%s info.Org %}</td>
+        </tr>
+        <tr>
+          <th>Author ID</th>
+          <td>{%s info.AuthorID %}</td>
+        </tr>
+        <tr>
+          <th>Author</th>
+          <td>{%s info.AuthorName %} &lt;<a href="mailto:{%s info.AuthorEmail %}">{%s info.AuthorEmail %}</a>&gt;</td>
+        </tr>
+        <tr>
+          <th>Team</th>
+          <td>{%s info.Team %}</td>
+        </tr>
+        <tr>
+          <th>License</th>
+          <td>{%s info.License %}</td>
+        </tr>
+        <tr>
+          <th>Homepage</th>
+          <td>{%s info.Homepage %}</td>
+        </tr>
+        <tr>
+          <th>Source Code</th>
+          <td>{%s info.Sourcecode %}</td>
+        </tr>
+        <tr>
+          <th>Summary</th>
+          <td>{%s info.Summary %}</td>
+        </tr>
+        <tr>
+          <th>Description</th>
+          <td>{%s info.Description %}</td>
+        </tr>
+        <tr>
+          <th>CI</th>
+          <td>{%s info.CI %}</td>
+        </tr>
+        <tr>
+          <th>Homebrew</th>
+          <td>{%s info.Homebrew %}</td>
+        </tr>
+        <tr>
+          <th>Bundle</th>
+          <td>{%s info.Bundle %}</td>
+        </tr>
+        <tr>
+          <th>Signing Identity</th>
+          <td>{%s info.SigningIdentity %}</td>
+        </tr>
+        {%- if info.NotarizeEmail != "" -%}
+        <tr>
+          <th>Notarize Email</th>
+          <td>{%s info.NotarizeEmail %} &lt;<a href="mailto:{%s info.NotarizeEmail %}">{%s info.NotarizeEmail %}</a>&gt;</td>
+        </tr>
+        {%- endif -%}
+        <tr>
+          <th>Slack Webhook</th>
+          <td>{%s info.Slack %}</td>
+        </tr>
+        <tr>
+          <th>Channels</th>
+          <td>
+            {%- for _, x := range info.Channels -%}
+            <div>{%s x %}</div>
             {%- endfor -%}
-          </ul>
-          {%- endif -%}
-        </td>
-      </tr>
-      <tr>
-        <th>Deployments</th>
-        <td>
-          {%- if len(info.Deployments) == 0 -%}
-          <em>none</em>
-          {%- else -%}
-          <ul>
-            {%- for _, x := range info.Deployments -%}
-            <li>{%s x %}</li>
-            {%- endfor -%}
-          </ul>
-          {%- endif -%}
-        </td>
-      </tr>
-      <tr>
-        <th>Env Vars</th>
-        <td>
-          {%- if len(info.EnvVars) == 0 -%}
-          <em>none</em>
-          {%- else -%}
-          <ul>
-            {%- for _, x := range info.EnvVars -%}
-            <li>{%s x %}</li>
-            {%- endfor -%}
-          </ul>
-          {%- endif -%}
-        </td>
-      </tr>
-      <tr>
-        <th>Config Vars</th>
-        <td>
-          {%- if len(info.ConfigVars) == 0 -%}
-          <em>no config vars</em>
-          {%- else -%}
-          <table>
-            <thead>
-              <tr>
-                <th>Key</th>
-                <th>Type</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              {%- for _, cv := range info.ConfigVars -%}
-              <tr>
-                <td><code>{%s cv.Key %}</code></td>
-                <td>{%s cv.Type %}</td>
-                <td>{%s cv.Description %}</td>
-              </tr>
+          </td>
+        </tr>
+        <tr>
+          <th>Java Package</th>
+          <td>{%s info.JavaPackage %}</td>
+        </tr>
+        <tr>
+          <th>Go Binary</th>
+          <td>{%s info.GoBinary %}</td>
+        </tr>
+        <tr>
+          <th>Go Version</th>
+          <td>{%s info.GoVersion %}</td>
+        </tr>
+        <tr>
+          <th>Extra Files</th>
+          <td>
+            {%- if len(info.ExtraFiles) == 0 -%}
+            <em>none</em>
+            {%- else -%}
+            <ul>
+              {%- for _, x := range info.ExtraFiles -%}
+              <li>{%s x %}</li>
               {%- endfor -%}
-            </tbody>
-          </table>
-          {%- endif -%}
-        </td>
-      </tr>
-      {%- if len(info.ModuleDefs) > 0 -%}
-      <tr>
-        <th>Module Definitions</th>
-        <td>
-          {%- for _, x := range info.ModuleDefs -%}
-          <a href="/m/{%s x.Key %}">{%s x.Key %}</a> <em>({%s x.Path %})</em><br />
-          {%- endfor -%}
-        </td>
-      </tr>
-      {%- endif -%}
-    </tbody>
-  </table>
+            </ul>
+            {%- endif -%}
+          </td>
+        </tr>
+        <tr>
+          <th>Deployments</th>
+          <td>
+            {%- if len(info.Deployments) == 0 -%}
+            <em>none</em>
+            {%- else -%}
+            <ul>
+              {%- for _, x := range info.Deployments -%}
+              <li>{%s x %}</li>
+              {%- endfor -%}
+            </ul>
+            {%- endif -%}
+          </td>
+        </tr>
+        <tr>
+          <th>Env Vars</th>
+          <td>
+            {%- if len(info.EnvVars) == 0 -%}
+            <em>none</em>
+            {%- else -%}
+            <ul>
+              {%- for _, x := range info.EnvVars -%}
+              <li>{%s x %}</li>
+              {%- endfor -%}
+            </ul>
+            {%- endif -%}
+          </td>
+        </tr>
+        <tr>
+          <th>Config Vars</th>
+          <td>
+            {%- if len(info.ConfigVars) == 0 -%}
+            <em>no config vars</em>
+            {%- else -%}
+            <div class="overflow full-width">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Key</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {%- for _, cv := range info.ConfigVars -%}
+                  <tr>
+                    <td><code>{%s cv.Key %}</code></td>
+                    <td>{%s cv.Type %}</td>
+                    <td>{%s cv.Description %}</td>
+                  </tr>
+                  {%- endfor -%}
+                </tbody>
+              </table>
+            </div>
+            {%- endif -%}
+          </td>
+        </tr>
+        {%- if len(info.ModuleDefs) > 0 -%}
+        <tr>
+          <th>Module Definitions</th>
+          <td>
+            {%- for _, x := range info.ModuleDefs -%}
+            <a href="/m/{%s x.Key %}">{%s x.Key %}</a> <em>({%s x.Path %})</em><br />
+            {%- endfor -%}
+          </td>
+        </tr>
+        {%- endif -%}
+      </tbody>
+    </table>
+  </div>
 {% endfunc %}

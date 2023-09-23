@@ -9,16 +9,18 @@
   {%- if len(cfg) > 0 -%}
   <div class="card">
     <h3>Config</h3>
-    <table>
-      <tbody>
-        {%- for _, k := range cfg.Keys() -%}
-        <tr>
-          <th class="shrink">{%s k %}</th>
-          <td>{%v cfg[k] %}</td>
-        </tr>
-        {%- endfor -%}
-      </tbody>
-    </table>
+    <div class="overflow full-width">
+      <table>
+        <tbody>
+          {%- for _, k := range cfg.Keys() -%}
+          <tr>
+            <th class="shrink">{%s k %}</th>
+            <td>{%v cfg[k] %}</td>
+          </tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
   </div>
   {%- endif -%}
   {%- if len(res.Errors) > 0 -%}
@@ -36,16 +38,18 @@
   <div class="card">
     <h3>Logs</h3>
     <div class="mt">
-      <table>
-        <tbody>
-          {%- for idx, l := range res.Logs -%}
-          <tr>
-            <td class="shrink">{%d idx + 1 %}</td>
-            <td><code>{%s l %}</code></td>
-          </tr>
-          {%- endfor -%}
-        </tbody>
-      </table>
+      <div class="overflow full-width">
+        <table>
+          <tbody>
+            {%- for idx, l := range res.Logs -%}
+            <tr>
+              <td class="shrink">{%d idx + 1 %}</td>
+              <td><code>{%s l %}</code></td>
+            </tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
   {%- endif -%}

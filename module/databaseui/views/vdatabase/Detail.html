@@ -61,30 +61,32 @@
       <em>No recent statements</em>
       {%- endif -%}
     {%- else -%}
-    <table>
-      <thead>
-      <tr>
-        <th>SQL</th>
-        <th>Values</th>
-        <th>Count</th>
-        <th>Message</th>
-        <th>Duration</th>
-      </tr>
-      </thead>
-      <tbody>
-        {%- for _, s := range recent -%}
+    <div class="overflow full-width">
+      <table>
+        <thead>
         <tr>
-          <td>
-            <a href="?idx={%d s.Index %}">{%s s.SQLTrimmed(100) %}</a>
-          </td>
-          <td>{%d len(s.Values) %}</td>
-          <td>{%d s.Count %}</td>
-          <td>{%s s.Message %}</td>
-          <td>{%s util.MicrosToMillis(s.Timing) %}</td>
+          <th>SQL</th>
+          <th>Values</th>
+          <th>Count</th>
+          <th>Message</th>
+          <th>Duration</th>
         </tr>
-        {%- endfor -%}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {%- for _, s := range recent -%}
+          <tr>
+            <td>
+              <a href="?idx={%d s.Index %}">{%s s.SQLTrimmed(100) %}</a>
+            </td>
+            <td>{%d len(s.Values) %}</td>
+            <td>{%d s.Count %}</td>
+            <td>{%s s.Message %}</td>
+            <td>{%s util.MicrosToMillis(s.Timing) %}</td>
+          </tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
     {%- endif -%}
   </div>
 {% endfunc %}
@@ -92,32 +94,34 @@
 {% func tableSizes(key string, sizes database.TableSizes, as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>Table Sizes</h3>
-    <table>
-      <thead>
-      <tr>{{{ if .HasModule "postgres" }}}
-        <th>Schema</th>{{{ end }}}
-        <th>Name</th>
-        <th title="(estimated)">Rows*</th>{{{ if .HasModule "postgres" }}}
-        <th>Total</th>
-        <th>Index</th>
-        <th>Toast</th>
-        <th>Table</th>{{{ end }}}
-      </tr>
-      </thead>
-      <tbody>
-      {%- for _, size := range sizes -%}
-      <tr>{{{ if .HasModule "postgres" }}}
-        <td>{%s size.Schema %}</td>{{{ end }}}
-        <td><a href="/admin/database/{%s key %}/tables/{%s size.Schema %}/{%s size.Name %}">{%s size.Name %}</a></td>
-        <td>{%s size.Rows %}</td>{{{ if .HasModule "postgres" }}}
-        <td>{%s size.Total.String %}</td>
-        <td>{%s size.Index.String %}</td>
-        <td>{%s size.Toast.String %}</td>
-        <td>{%s size.Table.String %}</td>{{{ end }}}
-      </tr>
-      {%- endfor -%}
-      </tbody>
-    </table>
+    <div class="overflow full-width">
+      <table>
+        <thead>
+        <tr>{{{ if .HasModule "postgres" }}}
+          <th>Schema</th>{{{ end }}}
+          <th>Name</th>
+          <th title="(estimated)">Rows*</th>{{{ if .HasModule "postgres" }}}
+          <th>Total</th>
+          <th>Index</th>
+          <th>Toast</th>
+          <th>Table</th>{{{ end }}}
+        </tr>
+        </thead>
+        <tbody>
+        {%- for _, size := range sizes -%}
+        <tr>{{{ if .HasModule "postgres" }}}
+          <td>{%s size.Schema %}</td>{{{ end }}}
+          <td><a href="/admin/database/{%s key %}/tables/{%s size.Schema %}/{%s size.Name %}">{%s size.Name %}</a></td>
+          <td>{%s size.Rows %}</td>{{{ if .HasModule "postgres" }}}
+          <td>{%s size.Total.String %}</td>
+          <td>{%s size.Index.String %}</td>
+          <td>{%s size.Toast.String %}</td>
+          <td>{%s size.Table.String %}</td>{{{ end }}}
+        </tr>
+        {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
   </div>
 {% endfunc %}
 
@@ -146,8 +150,9 @@
     <div class="right">{%s util.MicrosToMillis(timing) %}</div>
     <h3>Results</h3>
     {%- if len(results) == 0 -%}
-      <em>No rows returned</em>
+    <em>No rows returned</em>
     {%- else -%}
+    <div class="overflow full-width">
       <table class="mt expanded">
         <thead>
           <tr>
@@ -166,6 +171,7 @@
           {%- endfor -%}
         </tbody>
       </table>
+    </div>
     {%- endif -%}
   </div>
   {%- endif -%}
@@ -181,30 +187,32 @@
       </div>
       <div class="modal-body">
         <form action="/admin/database/{%s svc.Key %}/enable">
-          <table>
-            <tbody>
-              {%- code trc := svc.Tracing() %}
-              <tr>
-                <td><label><input type="radio" name="tracing" value=""{% if trc == `` %} checked="checked"{% endif %}> No Tracing</label></td>
-                <td><em>Fastest configuration, no tracing overhead</em></td>
-              </tr>
-              <tr>
-                <td><label><input type="radio" name="tracing" value="statement"{% if trc == `statement` %} checked="checked"{% endif %}> Save Queries</label></td>
-                <td><em>Save most recent 100 SQL statements with timing information</em></td>
-              </tr>
-              <tr>
-                <td><label><input type="radio" name="tracing" value="values"{% if trc == `values` %} checked="checked"{% endif %}> Save Results</label></td>
-                <td><em>Saves SQL, timing, and the results of the query</em></td>
-              </tr>
-              <tr>
-                <td><label><input type="radio" name="tracing" value="analyze"{% if trc == `analyze` %} checked="checked"{% endif %}> Analyze Queries</label></td>
-                <td><em>In addition to the above, runs an explain plan on each query</em></td>
-              </tr>
-              <tr>
-                <td colspan="2"><button>Submit</button></td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="overflow full-width">
+            <table>
+              <tbody>
+                {%- code trc := svc.Tracing() %}
+                <tr>
+                  <td><label><input type="radio" name="tracing" value=""{% if trc == `` %} checked="checked"{% endif %}> No Tracing</label></td>
+                  <td><em>Fastest configuration, no tracing overhead</em></td>
+                </tr>
+                <tr>
+                  <td><label><input type="radio" name="tracing" value="statement"{% if trc == `statement` %} checked="checked"{% endif %}> Save Queries</label></td>
+                  <td><em>Save most recent 100 SQL statements with timing information</em></td>
+                </tr>
+                <tr>
+                  <td><label><input type="radio" name="tracing" value="values"{% if trc == `values` %} checked="checked"{% endif %}> Save Results</label></td>
+                  <td><em>Saves SQL, timing, and the results of the query</em></td>
+                </tr>
+                <tr>
+                  <td><label><input type="radio" name="tracing" value="analyze"{% if trc == `analyze` %} checked="checked"{% endif %}> Analyze Queries</label></td>
+                  <td><em>In addition to the above, runs an explain plan on each query</em></td>
+                </tr>
+                <tr>
+                  <td colspan="2"><button>Submit</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </form>
       </div>
     </div>

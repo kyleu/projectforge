@@ -73,18 +73,20 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	qw422016.E().S(p.Project.Key)
 //line views/vsvg/List.html:35
 	qw422016.N().S(`/x/add" method="get">
-      <table>
-        <tbody>
-          <tr>
-            <th class="shrink"><label for="input-src">Source Key</label></th>
-            <td><input id="input-src" name="src" value="" /></td>
-          </tr>
-          <tr>
-            <th class="shrink"><label for="input-tgt">Target Key</label></th>
-            <td><input id="input-tgt" name="tgt" value="" /></td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="overflow full-width">
+        <table>
+          <tbody>
+            <tr>
+              <th class="shrink"><label for="input-src">Source Key</label></th>
+              <td><input id="input-src" name="src" value="" /></td>
+            </tr>
+            <tr>
+              <th class="shrink"><label for="input-tgt">Target Key</label></th>
+              <td><input id="input-tgt" name="tgt" value="" /></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       <div class="mt">
         <button type="submit">Add/Update SVG</button>
       </div>
@@ -94,63 +96,63 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
     <h3>Current Icons</h3>
     <div class="flex-wrap">
 `)
-//line views/vsvg/List.html:56
+//line views/vsvg/List.html:58
 	for _, k := range p.Keys {
-//line views/vsvg/List.html:56
+//line views/vsvg/List.html:58
 		qw422016.N().S(`      <div class="icon-container">
         <a href="/svg/`)
-//line views/vsvg/List.html:58
+//line views/vsvg/List.html:60
 		qw422016.E().S(p.Project.Key)
-//line views/vsvg/List.html:58
+//line views/vsvg/List.html:60
 		qw422016.N().S(`/`)
-//line views/vsvg/List.html:58
+//line views/vsvg/List.html:60
 		qw422016.E().S(k)
-//line views/vsvg/List.html:58
+//line views/vsvg/List.html:60
 		qw422016.N().S(`">
           <div>`)
-//line views/vsvg/List.html:59
+//line views/vsvg/List.html:61
 		qw422016.N().S(strings.ReplaceAll(p.Contents[k], "svg-"+k, "svg-"+k+"_adhoc"))
-//line views/vsvg/List.html:59
+//line views/vsvg/List.html:61
 		qw422016.N().S(`</div>
           <div>`)
-//line views/vsvg/List.html:60
+//line views/vsvg/List.html:62
 		qw422016.E().S(k)
-//line views/vsvg/List.html:60
+//line views/vsvg/List.html:62
 		qw422016.N().S(`</div>
         </a>
       </div>
 `)
-//line views/vsvg/List.html:63
+//line views/vsvg/List.html:65
 	}
-//line views/vsvg/List.html:63
+//line views/vsvg/List.html:65
 	qw422016.N().S(`    </div>
   </div>
 `)
-//line views/vsvg/List.html:66
+//line views/vsvg/List.html:68
 }
 
-//line views/vsvg/List.html:66
+//line views/vsvg/List.html:68
 func (p *List) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsvg/List.html:66
+//line views/vsvg/List.html:68
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsvg/List.html:66
+//line views/vsvg/List.html:68
 	p.StreamBody(qw422016, as, ps)
-//line views/vsvg/List.html:66
+//line views/vsvg/List.html:68
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsvg/List.html:66
+//line views/vsvg/List.html:68
 }
 
-//line views/vsvg/List.html:66
+//line views/vsvg/List.html:68
 func (p *List) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsvg/List.html:66
+//line views/vsvg/List.html:68
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsvg/List.html:66
+//line views/vsvg/List.html:68
 	p.WriteBody(qb422016, as, ps)
-//line views/vsvg/List.html:66
+//line views/vsvg/List.html:68
 	qs422016 := string(qb422016.B)
-//line views/vsvg/List.html:66
+//line views/vsvg/List.html:68
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsvg/List.html:66
+//line views/vsvg/List.html:68
 	return qs422016
-//line views/vsvg/List.html:66
+//line views/vsvg/List.html:68
 }

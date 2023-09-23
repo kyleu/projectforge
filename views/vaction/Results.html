@@ -61,20 +61,22 @@
       tags = "&tags=" + strings.Join(currTags, ",")
     }
   -%}
-  <table class="min-200">
-    <thead>
-      <tr>
-        <th class="shrink">Build Action</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      {%- for _, b := range action.AllBuilds -%}
-      <tr>
-        <td><a href="/run/build?phase={%s b.Key %}{%s tags %}" title="{%s b.Description %}"><button>{%s b.Title %}</button></a></td>
-        <td>{%s b.Description %}</td>
-      </tr>
-      {%- endfor -%}
-    </tbody>
-  </table>
+  <div class="overflow full-width">
+    <table class="min-200">
+      <thead>
+        <tr>
+          <th class="shrink">Build Action</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        {%- for _, b := range action.AllBuilds -%}
+        <tr>
+          <td><a href="/run/build?phase={%s b.Key %}{%s tags %}" title="{%s b.Description %}"><button>{%s b.Title %}</button></a></td>
+          <td>{%s b.Description %}</td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
 {% endfunc %}

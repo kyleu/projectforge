@@ -47,71 +47,73 @@ func (p *Add) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pag
 	qw422016.E().S(p.Palette)
 //line views/vtheme/Add.html:20
 	qw422016.N().S(`" />
-      <table class="mt">
-        <tbody>
+      <div class="overflow full-width">
+        <table class="mt">
+          <tbody>
 `)
-//line views/vtheme/Add.html:23
+//line views/vtheme/Add.html:24
 	for _, t := range p.Themes {
-//line views/vtheme/Add.html:23
-		qw422016.N().S(`          <tr>
-            <th><a href="/theme/palette/`)
-//line views/vtheme/Add.html:25
+//line views/vtheme/Add.html:24
+		qw422016.N().S(`            <tr>
+              <th><a href="/theme/palette/`)
+//line views/vtheme/Add.html:26
 		qw422016.E().S(p.Palette)
-//line views/vtheme/Add.html:25
+//line views/vtheme/Add.html:26
 		qw422016.N().S(`/`)
-//line views/vtheme/Add.html:25
+//line views/vtheme/Add.html:26
 		qw422016.E().S(t.Key)
-//line views/vtheme/Add.html:25
+//line views/vtheme/Add.html:26
 		qw422016.N().S(`">`)
-//line views/vtheme/Add.html:25
+//line views/vtheme/Add.html:26
 		qw422016.E().S(t.Key)
-//line views/vtheme/Add.html:25
+//line views/vtheme/Add.html:26
 		qw422016.N().S(`</a></th>
-            <th class="shrink" style="background-color: #ffffff; padding: 12px 36px;">`)
-//line views/vtheme/Add.html:26
+              <th class="shrink" style="background-color: #ffffff; padding: 12px 36px;">`)
+//line views/vtheme/Add.html:27
 		StreamMockupColors(qw422016, util.AppName, "", t.Light, true, "app", 5, ps)
-//line views/vtheme/Add.html:26
-		qw422016.N().S(`</th>
-            <th class="shrink" style="background-color: #121212; padding: 12px 36px;">`)
 //line views/vtheme/Add.html:27
+		qw422016.N().S(`</th>
+              <th class="shrink" style="background-color: #121212; padding: 12px 36px;">`)
+//line views/vtheme/Add.html:28
 		StreamMockupColors(qw422016, util.AppName, "", t.Dark, true, "app", 5, ps)
-//line views/vtheme/Add.html:27
+//line views/vtheme/Add.html:28
 		qw422016.N().S(`</th>
-          </tr>
+            </tr>
 `)
-//line views/vtheme/Add.html:29
+//line views/vtheme/Add.html:30
 	}
-//line views/vtheme/Add.html:29
-	qw422016.N().S(`        </tbody>
-      </table>
+//line views/vtheme/Add.html:30
+	qw422016.N().S(`          </tbody>
+        </table>
+      </div>
     </form>
   </div>
 `)
-//line views/vtheme/Add.html:34
+//line views/vtheme/Add.html:36
 }
 
-//line views/vtheme/Add.html:34
+//line views/vtheme/Add.html:36
 func (p *Add) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vtheme/Add.html:34
+//line views/vtheme/Add.html:36
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vtheme/Add.html:34
+//line views/vtheme/Add.html:36
 	p.StreamBody(qw422016, as, ps)
-//line views/vtheme/Add.html:34
+//line views/vtheme/Add.html:36
 	qt422016.ReleaseWriter(qw422016)
-//line views/vtheme/Add.html:34
+//line views/vtheme/Add.html:36
 }
 
-//line views/vtheme/Add.html:34
+//line views/vtheme/Add.html:36
 func (p *Add) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vtheme/Add.html:34
+//line views/vtheme/Add.html:36
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vtheme/Add.html:34
+//line views/vtheme/Add.html:36
 	p.WriteBody(qb422016, as, ps)
-//line views/vtheme/Add.html:34
+//line views/vtheme/Add.html:36
 	qs422016 := string(qb422016.B)
-//line views/vtheme/Add.html:34
+//line views/vtheme/Add.html:36
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vtheme/Add.html:34
+//line views/vtheme/Add.html:36
 	return qs422016
-//line views/vtheme/Add.html:34
+//line views/vtheme/Add.html:36
 }

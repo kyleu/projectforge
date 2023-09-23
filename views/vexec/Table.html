@@ -7,29 +7,31 @@
 ) %}
 
 {% func Table(execs exec.Execs, as *app.State, ps *cutil.PageState) %}
-  <table class="mt expanded">
-    <thead>
-      <tr>
-        <th class="shrink">Key</th>
-        <th>#</th>
-        <th>Started</th>
-        <th>Completed</th>
-        <th>Exit</th>
-      </tr>
-    </thead>
-    <tbody>
-      {%- if len(execs) == 0 -%}
-      <tr><td colspan="2"><em>no processes</em></td></tr>
-      {%- endif -%}
-      {%- for _, exec := range execs -%}
-      <tr>
-        <td class="shrink"><a href="{%s exec.WebPath() %}">{%s exec.Key %}</a></td>
-        <td><a href="{%s exec.WebPath() %}">{%d exec.Idx %}</a></td>
-        <td><span title="{%s util.TimeToFull(exec.Started) %}">{% if exec.Started == nil %}-{% else %}{%s util.TimeRelative(exec.Started) %}{% endif %}</span></td>
-        <td><span title="{%s util.TimeToFull(exec.Completed) %}">{% if exec.Completed == nil %}-{% else %}{%s util.TimeRelative(exec.Completed) %}{% endif %}</span></td>
-        <td>{% if exec.Completed != nil %}{% if exec.ExitCode == 0 %}<span class="success">0</span>{% else %}<span class="error">{%d exec.ExitCode %}</span>{% endif %}{% endif %}</td>
-      </tr>
-      {%- endfor -%}
-    </tbody>
-  </table>
+  <div class="overflow full-width">
+    <table class="mt expanded">
+      <thead>
+        <tr>
+          <th class="shrink">Key</th>
+          <th>#</th>
+          <th>Started</th>
+          <th>Completed</th>
+          <th>Exit</th>
+        </tr>
+      </thead>
+      <tbody>
+        {%- if len(execs) == 0 -%}
+        <tr><td colspan="2"><em>no processes</em></td></tr>
+        {%- endif -%}
+        {%- for _, exec := range execs -%}
+        <tr>
+          <td class="shrink"><a href="{%s exec.WebPath() %}">{%s exec.Key %}</a></td>
+          <td><a href="{%s exec.WebPath() %}">{%d exec.Idx %}</a></td>
+          <td><span title="{%s util.TimeToFull(exec.Started) %}">{% if exec.Started == nil %}-{% else %}{%s util.TimeRelative(exec.Started) %}{% endif %}</span></td>
+          <td><span title="{%s util.TimeToFull(exec.Completed) %}">{% if exec.Completed == nil %}-{% else %}{%s util.TimeRelative(exec.Completed) %}{% endif %}</span></td>
+          <td>{% if exec.Completed != nil %}{% if exec.ExitCode == 0 %}<span class="success">0</span>{% else %}<span class="error">{%d exec.ExitCode %}</span>{% endif %}{% endif %}</td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
 {% endfunc %}

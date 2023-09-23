@@ -43,7 +43,7 @@ table .shrink {
   white-space: nowrap;
 }
 
-.min-200 > tr > th, .min-200 > thead > tr > th, .min-200 > tbody > tr > th, .min-200 > tr > td, .min-200 > thead > tr > td, .min-200 > tbody > tr > td {
+.min-200 > tr > th:first-child, .min-200 > thead > tr > th:first-child, .min-200 > tbody > tr > th:first-child, .min-200 > tr > td:first-child, .min-200 > thead > tr > td:first-child, .min-200 > tbody > tr > td:first-child {
   min-width: 200px;
 }
 

@@ -38,21 +38,23 @@ func (p *SocketTap) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
   <div class="card">
     <h3>Tap Activity</h3>
     <em>Shows all WebSocket traffic in real-time</em>
-    <table class="mt">
-      <thead>
-        <tr>
-          <th>From</th>
-          <th>Channel</th>
-          <th>Command</th>
-          <th>Param</th>
-        </tr>
-      </thead>
-      <tbody id="tap-logs">
-        <tr>
-          <td colspan="4">Connecting...</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="overflow full-width">
+      <table class="mt">
+        <thead>
+          <tr>
+            <th>From</th>
+            <th>Channel</th>
+            <th>Command</th>
+            <th>Param</th>
+          </tr>
+        </thead>
+        <tbody id="tap-logs">
+          <tr>
+            <td colspan="4">Connecting...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
   <script>
     function open() {
@@ -94,31 +96,31 @@ func (p *SocketTap) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
     });
   </script>
 `)
-//line views/vadmin/SocketTap.html:71
+//line views/vadmin/SocketTap.html:73
 }
 
-//line views/vadmin/SocketTap.html:71
+//line views/vadmin/SocketTap.html:73
 func (p *SocketTap) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vadmin/SocketTap.html:71
+//line views/vadmin/SocketTap.html:73
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vadmin/SocketTap.html:71
+//line views/vadmin/SocketTap.html:73
 	p.StreamBody(qw422016, as, ps)
-//line views/vadmin/SocketTap.html:71
+//line views/vadmin/SocketTap.html:73
 	qt422016.ReleaseWriter(qw422016)
-//line views/vadmin/SocketTap.html:71
+//line views/vadmin/SocketTap.html:73
 }
 
-//line views/vadmin/SocketTap.html:71
+//line views/vadmin/SocketTap.html:73
 func (p *SocketTap) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vadmin/SocketTap.html:71
+//line views/vadmin/SocketTap.html:73
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vadmin/SocketTap.html:71
+//line views/vadmin/SocketTap.html:73
 	p.WriteBody(qb422016, as, ps)
-//line views/vadmin/SocketTap.html:71
+//line views/vadmin/SocketTap.html:73
 	qs422016 := string(qb422016.B)
-//line views/vadmin/SocketTap.html:71
+//line views/vadmin/SocketTap.html:73
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vadmin/SocketTap.html:71
+//line views/vadmin/SocketTap.html:73
 	return qs422016
-//line views/vadmin/SocketTap.html:71
+//line views/vadmin/SocketTap.html:73
 }

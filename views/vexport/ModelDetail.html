@@ -47,131 +47,139 @@
 {% endfunc %}
 
 {% func modelSummary(pKey string, model *model.Model, as *app.State, ps *cutil.PageState) %}
-  <table class="mt min-200 full-width">
-    <tbody>
-      <tr><th class="shrink">Name</th><td>{%s model.Name %}</td></tr>
-      <tr><th>Package</th><td>{%s model.Package %}</td></tr>
-      {%- if len(model.Group) > 0 -%}
-      <tr><th>Group</th><td>{%s strings.Join(model.Group, "/") %}</td></tr>
-      {%- endif -%}
-      <tr><th>Description</th><td>{%s model.Description %}</td></tr>
-      <tr>
-        <th>Ordering</th>
-        <td>
-          {%- for _, x := range model.Ordering -%}
-          <div>{%s x.String() %}</div>
-          {%- endfor -%}
-        </td>
-      </tr>
-      {%- if model.SortIndex != 0 -%}
-      <tr><th>Sort Index</th><td>{%d model.SortIndex %}</td></tr>
-      {%- endif -%}
-      {%- if model.TitleOverride != "" -%}
-      <tr><th>Title Override</th><td>{%s model.TitleOverride %}</td></tr>
-      {%- endif -%}
-      {%- if model.ProperOverride != "" -%}
-      <tr><th>Proper Override</th><td>{%s model.ProperOverride %}</td></tr>
-      {%- endif -%}
-      {%- if model.RouteOverride != "" -%}
-      <tr><th>Route Override</th><td>{%s model.RouteOverride %}</td></tr>
-      {%- endif -%}
-      {%- if len(model.GroupedColumns()) > 0 -%}
-      <tr><th>Groupings</th><td>{%s strings.Join(model.GroupedColumns().Names(), ", ") %}</td></tr>
-      {%- endif -%}
-      {%- if len(model.Tags) > 0 -%}
-      <tr><th>Tags</th><td>{%s strings.Join(model.Tags, ", ") %}</td></tr>
-      {%- endif -%}
-      {%- if len(model.Search) > 0 -%}
-      <tr><th>Search</th><td>{%s strings.Join(model.Search, ", ") %}</td></tr>
-      {%- endif -%}
-      {%- if len(model.History) > 0 -%}
-      <tr><th>History</th><td>{%s model.History %}</td></tr>
-      {%- endif -%}
-      {%- if len(model.SeedData) > 0 -%}
-      <tr><th>Seed Data</th><td><a href="/p/{%s pKey %}/export/models/{%s model.Name %}/seeddata">{%d len(model.SeedData) %} rows</a></td></tr>
-      {%- endif -%}
-      {%- if len(model.Config) > 0 -%}
-      <tr><th>Config</th><td>{%= components.JSON(model.Config) %}</td></tr>
-      {%- endif -%}
-    </tbody>
-  </table>
+  <div class="overflow full-width">
+    <table class="mt min-200 full-width">
+      <tbody>
+        <tr><th class="shrink">Name</th><td>{%s model.Name %}</td></tr>
+        <tr><th>Package</th><td>{%s model.Package %}</td></tr>
+        {%- if len(model.Group) > 0 -%}
+        <tr><th>Group</th><td>{%s strings.Join(model.Group, "/") %}</td></tr>
+        {%- endif -%}
+        <tr><th>Description</th><td>{%s model.Description %}</td></tr>
+        <tr>
+          <th>Ordering</th>
+          <td>
+            {%- for _, x := range model.Ordering -%}
+            <div>{%s x.String() %}</div>
+            {%- endfor -%}
+          </td>
+        </tr>
+        {%- if model.SortIndex != 0 -%}
+        <tr><th>Sort Index</th><td>{%d model.SortIndex %}</td></tr>
+        {%- endif -%}
+        {%- if model.TitleOverride != "" -%}
+        <tr><th>Title Override</th><td>{%s model.TitleOverride %}</td></tr>
+        {%- endif -%}
+        {%- if model.ProperOverride != "" -%}
+        <tr><th>Proper Override</th><td>{%s model.ProperOverride %}</td></tr>
+        {%- endif -%}
+        {%- if model.RouteOverride != "" -%}
+        <tr><th>Route Override</th><td>{%s model.RouteOverride %}</td></tr>
+        {%- endif -%}
+        {%- if len(model.GroupedColumns()) > 0 -%}
+        <tr><th>Groupings</th><td>{%s strings.Join(model.GroupedColumns().Names(), ", ") %}</td></tr>
+        {%- endif -%}
+        {%- if len(model.Tags) > 0 -%}
+        <tr><th>Tags</th><td>{%s strings.Join(model.Tags, ", ") %}</td></tr>
+        {%- endif -%}
+        {%- if len(model.Search) > 0 -%}
+        <tr><th>Search</th><td>{%s strings.Join(model.Search, ", ") %}</td></tr>
+        {%- endif -%}
+        {%- if len(model.History) > 0 -%}
+        <tr><th>History</th><td>{%s model.History %}</td></tr>
+        {%- endif -%}
+        {%- if len(model.SeedData) > 0 -%}
+        <tr><th>Seed Data</th><td><a href="/p/{%s pKey %}/export/models/{%s model.Name %}/seeddata">{%d len(model.SeedData) %} rows</a></td></tr>
+        {%- endif -%}
+        {%- if len(model.Config) > 0 -%}
+        <tr><th>Config</th><td>{%= components.JSON(model.Config) %}</td></tr>
+        {%- endif -%}
+      </tbody>
+    </table>
+  </div>
 {% endfunc %}
 
 {% func modelColumns(model *model.Model, as *app.State, ps *cutil.PageState) %}
   {%- if len(model.Columns) == 0 -%}
   <p><em>no columns</em></p>
   {%- else -%}
-  <table class="mt min-200 full-width">
-    <thead>
-      <tr>
-        <th class="shrink">Name</th>
-        <th>Type</th>
-        <th>Format</th>
-        <th>Example</th>
-        <th>Validation</th>
-        <th>Indexed</th>
-        <th>Unique</th>
-        <th>Tags</th>
-      </tr>
-    </thead>
-    <tbody>
-      {%- for _, col := range model.Columns -%}
-      <tr>
-        <td>{%s col.Name %}</td>
-        <td>{%s col.Type.String() %}</td>
-        <td>{%s col.Format %}</td>
-        <td>{%s col.Example %}</td>
-        <td>{%s col.Validation %}</td>
-        <td>{% if col.Indexed || model.Relations.ContainsSource(col.Name) %}{%= components.SVGRef("check", 15, 15, "icon", ps) %}{% endif %}</td>
-        <td>{% if col.HasTag("unique") %}{%= components.SVGRef("check", 15, 15, "icon", ps) %}{% endif %}</td>
-        <td>{%s strings.Join(col.Tags, ", ") %}</td>
-      </tr>
-      {%- endfor -%}
-    </tbody>
-  </table>
+  <div class="overflow full-width">
+    <table class="mt min-200 full-width">
+      <thead>
+        <tr>
+          <th class="shrink">Name</th>
+          <th>Type</th>
+          <th>Format</th>
+          <th>Example</th>
+          <th>Validation</th>
+          <th>Indexed</th>
+          <th>Unique</th>
+          <th>Tags</th>
+        </tr>
+      </thead>
+      <tbody>
+        {%- for _, col := range model.Columns -%}
+        <tr>
+          <td>{%s col.Name %}</td>
+          <td>{%s col.Type.String() %}</td>
+          <td>{%s col.Format %}</td>
+          <td>{%s col.Example %}</td>
+          <td>{%s col.Validation %}</td>
+          <td>{% if col.Indexed || model.Relations.ContainsSource(col.Name) %}{%= components.SVGRef("check", 15, 15, "icon", ps) %}{% endif %}</td>
+          <td>{% if col.HasTag("unique") %}{%= components.SVGRef("check", 15, 15, "icon", ps) %}{% endif %}</td>
+          <td>{%s strings.Join(col.Tags, ", ") %}</td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
   {%- endif -%}
 {% endfunc %}
 
 {% func modelRelations(model *model.Model, as *app.State, ps *cutil.PageState) %}
-  <table class="mt min-200 full-width">
-    <thead>
-      <tr>
-        <th class="shrink">Name</th>
-        <th>Source</th>
-        <th>Table</th>
-        <th>Target</th>
-      </tr>
-    </thead>
-    <tbody>
-      {%- for _, rel := range model.Relations -%}
-      <tr>
-        <td>{%s rel.Name %}</td>
-        <td>{%s strings.Join(rel.Src, ", ") %}</td>
-        <td>{%s rel.Table %}</td>
-        <td>{%s strings.Join(rel.Tgt, ", ") %}</td>
-      </tr>
-      {%- endfor -%}
-    </tbody>
-  </table>
+  <div class="overflow full-width">
+    <table class="mt min-200 full-width">
+      <thead>
+        <tr>
+          <th class="shrink">Name</th>
+          <th>Source</th>
+          <th>Table</th>
+          <th>Target</th>
+        </tr>
+      </thead>
+      <tbody>
+        {%- for _, rel := range model.Relations -%}
+        <tr>
+          <td>{%s rel.Name %}</td>
+          <td>{%s strings.Join(rel.Src, ", ") %}</td>
+          <td>{%s rel.Table %}</td>
+          <td>{%s strings.Join(rel.Tgt, ", ") %}</td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
 {% endfunc %}
 
 {% func modelIndexes(model *model.Model, as *app.State, ps *cutil.PageState) %}
-  <table class="mt min-200 full-width">
-    <thead>
-      <tr>
-        <th class="shrink">Name</th>
-        <th>Declaration</th>
-      </tr>
-    </thead>
-    <tbody>
-      {%- for _, idx := range model.Indexes -%}
-      <tr>
-        <td>{%s idx.Name %}</td>
-        <td>{%s idx.Decl %}</td>
-      </tr>
-      {%- endfor -%}
-    </tbody>
-  </table>
+  <div class="overflow full-width">
+    <table class="mt min-200 full-width">
+      <thead>
+        <tr>
+          <th class="shrink">Name</th>
+          <th>Declaration</th>
+        </tr>
+      </thead>
+      <tbody>
+        {%- for _, idx := range model.Indexes -%}
+        <tr>
+          <td>{%s idx.Name %}</td>
+          <td>{%s idx.Decl %}</td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
 {% endfunc %}
 
 {% func modelFiles(model *model.Model, fls file.Files, as *app.State, ps *cutil.PageState) %}

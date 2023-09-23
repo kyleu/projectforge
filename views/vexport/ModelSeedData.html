@@ -20,24 +20,26 @@
   <div class="card">
     <h3>{%= components.SVGRefIcon(m.IconSafe(), ps) %}{%s m.Name %} Seed Data</h3>
     <div class="mt overflow">
-      <table>
-        <thead>
-          <tr>
-            {%- for _, x := range p.Model.Columns -%}
-            <th>{%s x.Name %}</th>
+      <div class="overflow full-width">
+        <table>
+          <thead>
+            <tr>
+              {%- for _, x := range p.Model.Columns -%}
+              <th>{%s x.Name %}</th>
+              {%- endfor -%}
+            </tr>
+          </thead>
+          <tbody>
+            {%- for _, row := range p.Model.SeedData -%}
+            <tr>
+              {%- for _, cell := range row -%}
+              <td>{%s fmt.Sprint(cell) %}</td>
+              {%- endfor -%}
+            </tr>
             {%- endfor -%}
-          </tr>
-        </thead>
-        <tbody>
-          {%- for _, row := range p.Model.SeedData -%}
-          <tr>
-            {%- for _, cell := range row -%}
-            <td>{%s fmt.Sprint(cell) %}</td>
-            {%- endfor -%}
-          </tr>
-          {%- endfor -%}
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 {% endfunc %}

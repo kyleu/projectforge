@@ -9,22 +9,24 @@
 ) %}
 
 {%- func errorStack(ed *util.ErrorDetail) -%}
-    <table>
-      <tbody>
-      {%- for _, f := range util.TraceDetail(ed.StackTrace) -%}
-        <tr>
-          <td>
-            {%- if strings.Contains(f.Key, util.AppKey) -%}
-            <div class="error-key error-owned">{%s f.Key %}</div>
-            {%- else -%}
-            <div class="error-key">{%s f.Key %}</div>
-            {%- endif -%}
-            <div class="error-location">{%s f.Loc %}</div>
-          </td>
-        </tr>
-      {%- endfor -%}
-      </tbody>
-    </table>
+    <div class="overflow full-width">
+      <table>
+        <tbody>
+        {%- for _, f := range util.TraceDetail(ed.StackTrace) -%}
+          <tr>
+            <td>
+              {%- if strings.Contains(f.Key, util.AppKey) -%}
+              <div class="error-key error-owned">{%s f.Key %}</div>
+              {%- else -%}
+              <div class="error-key">{%s f.Key %}</div>
+              {%- endif -%}
+              <div class="error-location">{%s f.Loc %}</div>
+            </td>
+          </tr>
+        {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
 {%- endfunc -%}
 
 {% code type Error struct {

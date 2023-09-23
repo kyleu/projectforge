@@ -25,41 +25,43 @@
         <a href="#modal-theme"><button type="button">Theme</button></a>
       </div>
       <h3>Profile</h3>
-      <table class="mt expanded">
-        <tbody>
-          {%= components.TableInput("name", "", "Name", ps.Username(), 5) %}
-          <tr>
-            <th class="shrink"><label>Mode</label></th>
-            <td>
-              <label>
-                {%- if p.Profile.Mode == "" -%}
-                <input type="radio" class="mode-input" name="mode" value="" checked="checked" />
-                {%- else -%}
-                <input type="radio" class="mode-input" name="mode" value="" />
-                {%- endif -%}
-                System Default
-              </label>
-              <label>
-                {%- if p.Profile.Mode == "light" -%}
-                <input type="radio" class="mode-input" name="mode" value="light" checked="checked" />
-                {%- else -%}
-                <input type="radio" class="mode-input" name="mode" value="light" />
-                {%- endif -%}
-                Light
-              </label>
-              <label>
-                {%- if p.Profile.Mode == "dark" -%}
-                <input type="radio" class="mode-input" name="mode" value="dark" checked="checked" />
-                {%- else -%}
-                <input type="radio" class="mode-input" name="mode" value="dark" />
-                {%- endif -%}
-                Dark
-              </label>
-            </td>
-          </tr>
-          {%= vtheme.ChoicePanel(as.Themes.All(ps.Logger), "app", 5, ps) %}
-        </tbody>
-      </table>
+      <div class="overflow full-width">
+        <table class="mt expanded">
+          <tbody>
+            {%= components.TableInput("name", "", "Name", ps.Username(), 5) %}
+            <tr>
+              <th class="shrink"><label>Mode</label></th>
+              <td>
+                <label>
+                  {%- if p.Profile.Mode == "" -%}
+                  <input type="radio" class="mode-input" name="mode" value="" checked="checked" />
+                  {%- else -%}
+                  <input type="radio" class="mode-input" name="mode" value="" />
+                  {%- endif -%}
+                  System Default
+                </label>
+                <label>
+                  {%- if p.Profile.Mode == "light" -%}
+                  <input type="radio" class="mode-input" name="mode" value="light" checked="checked" />
+                  {%- else -%}
+                  <input type="radio" class="mode-input" name="mode" value="light" />
+                  {%- endif -%}
+                  Light
+                </label>
+                <label>
+                  {%- if p.Profile.Mode == "dark" -%}
+                  <input type="radio" class="mode-input" name="mode" value="dark" checked="checked" />
+                  {%- else -%}
+                  <input type="radio" class="mode-input" name="mode" value="dark" />
+                  {%- endif -%}
+                  Dark
+                </label>
+              </td>
+            </tr>
+            {%= vtheme.ChoicePanel(as.Themes.All(ps.Logger), "app", 5, ps) %}
+          </tbody>
+        </table>
+      </div>
       <div class="mt">
         <button type="submit">Save All Changes</button>
         <button type="reset">Reset</button>

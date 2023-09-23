@@ -36,52 +36,52 @@ func StreamDisplayTerminal(qw422016 *qt422016.Writer, id string, s string) {
 	}
 
 //line views/components/Terminal.html:15
-	qw422016.N().S(`<table class="mt"><tbody id="`)
-//line views/components/Terminal.html:17
+	qw422016.N().S(`<div class="overflow full-width"><table class="mt"><tbody id="`)
+//line views/components/Terminal.html:18
 	qw422016.E().S(id)
-//line views/components/Terminal.html:17
+//line views/components/Terminal.html:18
 	qw422016.N().S(`">`)
-//line views/components/Terminal.html:18
+//line views/components/Terminal.html:19
 	for idx, line := range lines {
-//line views/components/Terminal.html:18
+//line views/components/Terminal.html:19
 		qw422016.N().S(`<tr style="font-family: monospace;"><td class="shrink br" style="padding: 2px var(--padding) 2px 0; vertical-align: top;">`)
-//line views/components/Terminal.html:20
+//line views/components/Terminal.html:21
 		qw422016.N().D(idx + 1)
-//line views/components/Terminal.html:20
+//line views/components/Terminal.html:21
 		qw422016.N().S(`</td><td style="padding: 2px var(--padding);"><div style="white-space: pre-wrap; word-wrap: break-word; word-break: break-word;">`)
-//line views/components/Terminal.html:21
+//line views/components/Terminal.html:22
 		qw422016.N().S(line)
-//line views/components/Terminal.html:21
+//line views/components/Terminal.html:22
 		qw422016.N().S(`</div></td></tr>`)
-//line views/components/Terminal.html:23
+//line views/components/Terminal.html:24
 	}
-//line views/components/Terminal.html:23
-	qw422016.N().S(`</tbody></table>`)
-//line views/components/Terminal.html:26
+//line views/components/Terminal.html:24
+	qw422016.N().S(`</tbody></table></div>`)
+//line views/components/Terminal.html:28
 }
 
-//line views/components/Terminal.html:26
+//line views/components/Terminal.html:28
 func WriteDisplayTerminal(qq422016 qtio422016.Writer, id string, s string) {
-//line views/components/Terminal.html:26
+//line views/components/Terminal.html:28
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/Terminal.html:26
+//line views/components/Terminal.html:28
 	StreamDisplayTerminal(qw422016, id, s)
-//line views/components/Terminal.html:26
+//line views/components/Terminal.html:28
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/Terminal.html:26
+//line views/components/Terminal.html:28
 }
 
-//line views/components/Terminal.html:26
+//line views/components/Terminal.html:28
 func DisplayTerminal(id string, s string) string {
-//line views/components/Terminal.html:26
+//line views/components/Terminal.html:28
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/Terminal.html:26
+//line views/components/Terminal.html:28
 	WriteDisplayTerminal(qb422016, id, s)
-//line views/components/Terminal.html:26
+//line views/components/Terminal.html:28
 	qs422016 := string(qb422016.B)
-//line views/components/Terminal.html:26
+//line views/components/Terminal.html:28
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/Terminal.html:26
+//line views/components/Terminal.html:28
 	return qs422016
-//line views/components/Terminal.html:26
+//line views/components/Terminal.html:28
 }

@@ -54,78 +54,80 @@ func (p *ModelSeedData) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps 
 //line views/vexport/ModelSeedData.html:21
 	qw422016.N().S(` Seed Data</h3>
     <div class="mt overflow">
-      <table>
-        <thead>
-          <tr>
+      <div class="overflow full-width">
+        <table>
+          <thead>
+            <tr>
 `)
-//line views/vexport/ModelSeedData.html:26
+//line views/vexport/ModelSeedData.html:27
 	for _, x := range p.Model.Columns {
-//line views/vexport/ModelSeedData.html:26
-		qw422016.N().S(`            <th>`)
 //line views/vexport/ModelSeedData.html:27
+		qw422016.N().S(`              <th>`)
+//line views/vexport/ModelSeedData.html:28
 		qw422016.E().S(x.Name)
-//line views/vexport/ModelSeedData.html:27
+//line views/vexport/ModelSeedData.html:28
 		qw422016.N().S(`</th>
 `)
-//line views/vexport/ModelSeedData.html:28
+//line views/vexport/ModelSeedData.html:29
 	}
-//line views/vexport/ModelSeedData.html:28
-	qw422016.N().S(`          </tr>
-        </thead>
-        <tbody>
+//line views/vexport/ModelSeedData.html:29
+	qw422016.N().S(`            </tr>
+          </thead>
+          <tbody>
 `)
-//line views/vexport/ModelSeedData.html:32
+//line views/vexport/ModelSeedData.html:33
 	for _, row := range p.Model.SeedData {
-//line views/vexport/ModelSeedData.html:32
-		qw422016.N().S(`          <tr>
+//line views/vexport/ModelSeedData.html:33
+		qw422016.N().S(`            <tr>
 `)
-//line views/vexport/ModelSeedData.html:34
+//line views/vexport/ModelSeedData.html:35
 		for _, cell := range row {
-//line views/vexport/ModelSeedData.html:34
-			qw422016.N().S(`            <td>`)
 //line views/vexport/ModelSeedData.html:35
+			qw422016.N().S(`              <td>`)
+//line views/vexport/ModelSeedData.html:36
 			qw422016.E().S(fmt.Sprint(cell))
-//line views/vexport/ModelSeedData.html:35
+//line views/vexport/ModelSeedData.html:36
 			qw422016.N().S(`</td>
 `)
-//line views/vexport/ModelSeedData.html:36
+//line views/vexport/ModelSeedData.html:37
 		}
-//line views/vexport/ModelSeedData.html:36
-		qw422016.N().S(`          </tr>
+//line views/vexport/ModelSeedData.html:37
+		qw422016.N().S(`            </tr>
 `)
-//line views/vexport/ModelSeedData.html:38
+//line views/vexport/ModelSeedData.html:39
 	}
-//line views/vexport/ModelSeedData.html:38
-	qw422016.N().S(`        </tbody>
-      </table>
+//line views/vexport/ModelSeedData.html:39
+	qw422016.N().S(`          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 `)
-//line views/vexport/ModelSeedData.html:43
+//line views/vexport/ModelSeedData.html:45
 }
 
-//line views/vexport/ModelSeedData.html:43
+//line views/vexport/ModelSeedData.html:45
 func (p *ModelSeedData) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vexport/ModelSeedData.html:43
+//line views/vexport/ModelSeedData.html:45
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/ModelSeedData.html:43
+//line views/vexport/ModelSeedData.html:45
 	p.StreamBody(qw422016, as, ps)
-//line views/vexport/ModelSeedData.html:43
+//line views/vexport/ModelSeedData.html:45
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/ModelSeedData.html:43
+//line views/vexport/ModelSeedData.html:45
 }
 
-//line views/vexport/ModelSeedData.html:43
+//line views/vexport/ModelSeedData.html:45
 func (p *ModelSeedData) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vexport/ModelSeedData.html:43
+//line views/vexport/ModelSeedData.html:45
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/ModelSeedData.html:43
+//line views/vexport/ModelSeedData.html:45
 	p.WriteBody(qb422016, as, ps)
-//line views/vexport/ModelSeedData.html:43
+//line views/vexport/ModelSeedData.html:45
 	qs422016 := string(qb422016.B)
-//line views/vexport/ModelSeedData.html:43
+//line views/vexport/ModelSeedData.html:45
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/ModelSeedData.html:43
+//line views/vexport/ModelSeedData.html:45
 	return qs422016
-//line views/vexport/ModelSeedData.html:43
+//line views/vexport/ModelSeedData.html:45
 }

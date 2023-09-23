@@ -75,104 +75,108 @@ func (p *Welcome) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 	components.StreamSVGRefIcon(qw422016, `app`, ps)
 //line views/vwelcome/Welcome.html:35
 	qw422016.N().S(` Create your project</h3>
-      <table class="mt min-200 expanded">
-        <tbody>
-          `)
-//line views/vwelcome/Welcome.html:38
+      <div class="overflow full-width">
+        <table class="mt min-200 expanded">
+          <tbody>
+            `)
+//line views/vwelcome/Welcome.html:39
 	components.StreamTableInput(qw422016, "key", "welcome-key", "Key", prj.Key, 5, project.Helpers["key"]...)
-//line views/vwelcome/Welcome.html:38
-	qw422016.N().S(`
-          `)
 //line views/vwelcome/Welcome.html:39
+	qw422016.N().S(`
+            `)
+//line views/vwelcome/Welcome.html:40
 	components.StreamTableInput(qw422016, "name", "welcome-name", "Name", strings.TrimSuffix(prj.Name, " (missing)"), 5, project.Helpers["name"]...)
-//line views/vwelcome/Welcome.html:39
-	qw422016.N().S(`
-          `)
 //line views/vwelcome/Welcome.html:40
+	qw422016.N().S(`
+            `)
+//line views/vwelcome/Welcome.html:41
 	components.StreamTableInput(qw422016, "version", "welcome-version", "Version", prj.Version, 5, project.Helpers["version"]...)
-//line views/vwelcome/Welcome.html:40
-	qw422016.N().S(`
-          `)
 //line views/vwelcome/Welcome.html:41
+	qw422016.N().S(`
+            `)
+//line views/vwelcome/Welcome.html:42
 	components.StreamTableInput(qw422016, "org", "welcome-org", "Organization", info.Org, 5, project.Helpers["org"]...)
-//line views/vwelcome/Welcome.html:41
-	qw422016.N().S(`
-          `)
 //line views/vwelcome/Welcome.html:42
+	qw422016.N().S(`
+            `)
+//line views/vwelcome/Welcome.html:43
 	components.StreamTableInput(qw422016, "package", "welcome-package", "Package", prj.Package, 5, project.Helpers["package"]...)
-//line views/vwelcome/Welcome.html:42
-	qw422016.N().S(`
-          `)
 //line views/vwelcome/Welcome.html:43
+	qw422016.N().S(`
+            `)
+//line views/vwelcome/Welcome.html:44
 	components.StreamTableInput(qw422016, "homepage", "welcome-homepage", "Homepage", info.Homepage, 5, project.Helpers["homepage"]...)
-//line views/vwelcome/Welcome.html:43
-	qw422016.N().S(`
-          `)
 //line views/vwelcome/Welcome.html:44
+	qw422016.N().S(`
+            `)
+//line views/vwelcome/Welcome.html:45
 	components.StreamTableInput(qw422016, "sourcecode", "welcome-sourcecode", "Source Code", info.Sourcecode, 5, project.Helpers["sourcecode"]...)
-//line views/vwelcome/Welcome.html:44
-	qw422016.N().S(`
-          `)
 //line views/vwelcome/Welcome.html:45
+	qw422016.N().S(`
+            `)
+//line views/vwelcome/Welcome.html:46
 	components.StreamTableInput(qw422016, "summary", "welcome-summary", "Summary", info.Summary, 5, project.Helpers["summary"]...)
-//line views/vwelcome/Welcome.html:45
-	qw422016.N().S(`
-          `)
 //line views/vwelcome/Welcome.html:46
+	qw422016.N().S(`
+            `)
+//line views/vwelcome/Welcome.html:47
 	components.StreamTableInputNumber(qw422016, "port", "welcome-port", "Port", prj.Port, 5, project.Helpers["port"]...)
-//line views/vwelcome/Welcome.html:46
-	qw422016.N().S(`
-          `)
 //line views/vwelcome/Welcome.html:47
+	qw422016.N().S(`
+            `)
+//line views/vwelcome/Welcome.html:48
 	components.StreamTableInput(qw422016, "license", "welcome-license", "License", info.License, 5, project.Helpers["license"]...)
-//line views/vwelcome/Welcome.html:47
+//line views/vwelcome/Welcome.html:48
 	qw422016.N().S(`
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      </div>
     </div>
     <div class="card">
       <h3>Modules</h3>
-      <table class="mt min-200">
-        <tbody>
+      <div class="overflow full-width">
+        <table class="mt min-200">
+          <tbody>
 `)
-//line views/vwelcome/Welcome.html:55
+//line views/vwelcome/Welcome.html:58
 	for _, mod := range as.Services.Modules.Modules() {
-//line views/vwelcome/Welcome.html:55
-		qw422016.N().S(`        <tr>
-          <th class="shrink">
-            <label>
-              <input type="checkbox" name="modules" value="`)
-//line views/vwelcome/Welcome.html:59
+//line views/vwelcome/Welcome.html:58
+		qw422016.N().S(`          <tr>
+            <th class="shrink">
+              <label>
+                <input type="checkbox" name="modules" value="`)
+//line views/vwelcome/Welcome.html:62
 		qw422016.E().S(mod.Key)
-//line views/vwelcome/Welcome.html:59
+//line views/vwelcome/Welcome.html:62
 		qw422016.N().S(`"`)
-//line views/vwelcome/Welcome.html:59
+//line views/vwelcome/Welcome.html:62
 		if prj.HasModule(mod.Key) || mod.Key == `core` {
-//line views/vwelcome/Welcome.html:59
+//line views/vwelcome/Welcome.html:62
 			qw422016.N().S(`checked="checked"`)
-//line views/vwelcome/Welcome.html:59
+//line views/vwelcome/Welcome.html:62
 		}
-//line views/vwelcome/Welcome.html:59
+//line views/vwelcome/Welcome.html:62
 		qw422016.N().S(`/>
-              &nbsp;`)
-//line views/vwelcome/Welcome.html:60
+                &nbsp;`)
+//line views/vwelcome/Welcome.html:63
 		qw422016.E().S(mod.Title())
-//line views/vwelcome/Welcome.html:60
+//line views/vwelcome/Welcome.html:63
 		qw422016.N().S(`
-            </label>
-          </th>
-          <td>`)
-//line views/vwelcome/Welcome.html:63
+              </label>
+            </th>
+            <td>`)
+//line views/vwelcome/Welcome.html:66
 		qw422016.E().S(mod.Description)
-//line views/vwelcome/Welcome.html:63
+//line views/vwelcome/Welcome.html:66
 		qw422016.N().S(`</td>
-        </tr>
+          </tr>
 `)
-//line views/vwelcome/Welcome.html:65
+//line views/vwelcome/Welcome.html:68
 	}
-//line views/vwelcome/Welcome.html:65
-	qw422016.N().S(`        </tbody>
-      </table>
+//line views/vwelcome/Welcome.html:68
+	qw422016.N().S(`          </tbody>
+        </table>
+      </div>
     </div>
     <div class="card">
       <button type="submit">Save</button>
@@ -202,31 +206,31 @@ func (p *Welcome) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
     document.addEventListener("DOMContentLoaded", initForm);
   </script>
 `)
-//line views/vwelcome/Welcome.html:96
+//line views/vwelcome/Welcome.html:100
 }
 
-//line views/vwelcome/Welcome.html:96
+//line views/vwelcome/Welcome.html:100
 func (p *Welcome) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vwelcome/Welcome.html:96
+//line views/vwelcome/Welcome.html:100
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vwelcome/Welcome.html:96
+//line views/vwelcome/Welcome.html:100
 	p.StreamBody(qw422016, as, ps)
-//line views/vwelcome/Welcome.html:96
+//line views/vwelcome/Welcome.html:100
 	qt422016.ReleaseWriter(qw422016)
-//line views/vwelcome/Welcome.html:96
+//line views/vwelcome/Welcome.html:100
 }
 
-//line views/vwelcome/Welcome.html:96
+//line views/vwelcome/Welcome.html:100
 func (p *Welcome) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vwelcome/Welcome.html:96
+//line views/vwelcome/Welcome.html:100
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vwelcome/Welcome.html:96
+//line views/vwelcome/Welcome.html:100
 	p.WriteBody(qb422016, as, ps)
-//line views/vwelcome/Welcome.html:96
+//line views/vwelcome/Welcome.html:100
 	qs422016 := string(qb422016.B)
-//line views/vwelcome/Welcome.html:96
+//line views/vwelcome/Welcome.html:100
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vwelcome/Welcome.html:96
+//line views/vwelcome/Welcome.html:100
 	return qs422016
-//line views/vwelcome/Welcome.html:96
+//line views/vwelcome/Welcome.html:100
 }

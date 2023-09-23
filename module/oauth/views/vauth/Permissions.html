@@ -7,24 +7,26 @@
   {%- if len(perms) > 0 -%}
   <div class="card">
     <h3>Permissions</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Path</th>
-          <th>Match</th>
-          <th>Allow</th>
-        </tr>
-      </thead>
-      <tbody>
-        {%- for _, p := range perms -%}
-        <tr>
-          <td>{%s p.Path %}</td>
-          <td>{%s p.Match %}</td>
-          <td>{%v p.Allow %}</td>
-        </tr>
-        {%- endfor -%}
-      </tbody>
-    </table>
+    <div class="overflow full-width">
+      <table>
+        <thead>
+          <tr>
+            <th>Path</th>
+            <th>Match</th>
+            <th>Allow</th>
+          </tr>
+        </thead>
+        <tbody>
+          {%- for _, p := range perms -%}
+          <tr>
+            <td>{%s p.Path %}</td>
+            <td>{%s p.Match %}</td>
+            <td>{%v p.Allow %}</td>
+          </tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
   </div>
   {%- endif -%}
 {% endfunc %}

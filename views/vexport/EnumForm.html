@@ -26,20 +26,22 @@
     <div class="card">
       <div class="right"><a href="{%s u %}" onclick="return confirm('Are you sure you wish to remove this export enum?')"><button type="button">Delete</button></a></div>
       <h3>{%= components.SVGRefIcon(e.IconSafe(), ps) %}{% if e.Name == "" %}New Enum{% else %}Edit {%s e.Name %}{% endif %}</h3>
-      <table class="mt min-200 expanded">
-        <tbody>
-          {%= components.TableInput("name", "", "Name", e.Name, 5, export.Helpers["enum.name"]...) %}
-          {%= components.TableInput("package", "", "Package", e.Package, 5, export.Helpers["enum.package"]...) %}
-          {%= components.TableInput("group", "", "Group", strings.Join(e.Group, "/"), 5, export.Helpers["enum.group"]...) %}
-          {%= components.TableInput("description", "", "Description", e.Description, 5, export.Helpers["enum.description"]...) %}
-          {%= components.TableInput("icon", "", "Icon", e.Icon, 5, export.Helpers["enum.icon"]...) %}
-          {%= components.TableInput("tags", "", "Tags", strings.Join(e.Tags, `, `), 5, export.Helpers["enum.tags"]...) %}
-          {%= components.TableInput("titleOverride", "", "Title Override", e.TitleOverride, 5, export.Helpers["enum.titleOverride"]...) %}
-          {%= components.TableInput("properOverride", "", "Proper Override", e.ProperOverride, 5, export.Helpers["enum.properOverride"]...) %}
-          {%= components.TableTextarea("values", "", "Values", 3, strings.Join(e.Values, "\n"), 5, export.Helpers["enum.values"]...) %}
-          {%= components.TableTextarea("config", "", "Config", 3, util.ToJSON(e.Config), 5, export.Helpers["enum.config"]...) %}
-        </tbody>
-      </table>
+      <div class="overflow full-width">
+        <table class="mt min-200 expanded">
+          <tbody>
+            {%= components.TableInput("name", "", "Name", e.Name, 5, export.Helpers["enum.name"]...) %}
+            {%= components.TableInput("package", "", "Package", e.Package, 5, export.Helpers["enum.package"]...) %}
+            {%= components.TableInput("group", "", "Group", strings.Join(e.Group, "/"), 5, export.Helpers["enum.group"]...) %}
+            {%= components.TableInput("description", "", "Description", e.Description, 5, export.Helpers["enum.description"]...) %}
+            {%= components.TableInput("icon", "", "Icon", e.Icon, 5, export.Helpers["enum.icon"]...) %}
+            {%= components.TableInput("tags", "", "Tags", strings.Join(e.Tags, `, `), 5, export.Helpers["enum.tags"]...) %}
+            {%= components.TableInput("titleOverride", "", "Title Override", e.TitleOverride, 5, export.Helpers["enum.titleOverride"]...) %}
+            {%= components.TableInput("properOverride", "", "Proper Override", e.ProperOverride, 5, export.Helpers["enum.properOverride"]...) %}
+            {%= components.TableTextarea("values", "", "Values", 3, strings.Join(e.Values, "\n"), 5, export.Helpers["enum.values"]...) %}
+            {%= components.TableTextarea("config", "", "Config", 3, util.ToJSON(e.Config), 5, export.Helpers["enum.config"]...) %}
+          </tbody>
+        </table>
+      </div>
     </div>
     <div class="card">
       <button type="submit">Save</button>

@@ -32,84 +32,90 @@
   <form action="" method="post">
     <div class="card" id="details">
       <h3>Project Details</h3>
-      <table class="mt min-200 expanded">
-        <tbody>
-          {%- if prj.Key == "" -%}
-          {%= components.TableInput("key", "", "Key", prj.Key, 5, project.Helpers["key"]...) %}
-          {%- endif -%}
-          {%= components.TableInput("name", "", "Name", strings.TrimSuffix(prj.Name, " (missing)"), 5, project.Helpers["name"]...) %}
-          {%= components.TableInput("icon", "", "Icon", prj.Icon, 5, project.Helpers["icon"]...) %}
-          {%= components.TableInput("version", "", "Version", prj.Version, 5, project.Helpers["version"]...) %}
-          {%= components.TableInput("package", "", "Package", prj.Package, 5, project.Helpers["package"]...) %}
-          {%= components.TableInput("args", "", "Args", prj.Args, 5, project.Helpers["args"]...) %}
-          {%= components.TableInputNumber("port", "", "Port", prj.Port, 5, project.Helpers["port"]...) %}
-          {%= components.TableInput("ignore", "", "Ignore", strings.Join(prj.Ignore, ", "), 5, project.Helpers["ignore"]...) %}
-          {%= components.TableInput("tags", "", "Tags", strings.Join(prj.Tags, ", "), 5, project.Helpers["tags"]...) %}
-          {%= components.TableInput("path", "", "Path", prj.Path, 5, project.Helpers["path"]...) %}
-        </tbody>
-      </table>
+      <div class="overflow full-width">
+        <table class="mt min-200 expanded">
+          <tbody>
+            {%- if prj.Key == "" -%}
+            {%= components.TableInput("key", "", "Key", prj.Key, 5, project.Helpers["key"]...) %}
+            {%- endif -%}
+            {%= components.TableInput("name", "", "Name", strings.TrimSuffix(prj.Name, " (missing)"), 5, project.Helpers["name"]...) %}
+            {%= components.TableInput("icon", "", "Icon", prj.Icon, 5, project.Helpers["icon"]...) %}
+            {%= components.TableInput("version", "", "Version", prj.Version, 5, project.Helpers["version"]...) %}
+            {%= components.TableInput("package", "", "Package", prj.Package, 5, project.Helpers["package"]...) %}
+            {%= components.TableInput("args", "", "Args", prj.Args, 5, project.Helpers["args"]...) %}
+            {%= components.TableInputNumber("port", "", "Port", prj.Port, 5, project.Helpers["port"]...) %}
+            {%= components.TableInput("ignore", "", "Ignore", strings.Join(prj.Ignore, ", "), 5, project.Helpers["ignore"]...) %}
+            {%= components.TableInput("tags", "", "Tags", strings.Join(prj.Tags, ", "), 5, project.Helpers["tags"]...) %}
+            {%= components.TableInput("path", "", "Path", prj.Path, 5, project.Helpers["path"]...) %}
+          </tbody>
+        </table>
+      </div>
     </div>
     <div class="card" id="modules">
       <h3>Modules</h3>
-      <table class="mt min-200">
-        <tbody>
-        {%- for _, mod := range as.Services.Modules.Modules() -%}
-        <tr>
-          <th class="shrink">
-            <label>
-              <input type="checkbox" name="modules" value="{%s mod.Key %}"{%- if prj.HasModule(mod.Key) -%} checked="checked"{%- endif -%} />
-              &nbsp;{%s mod.Title() %}
-            </label>
-          </th>
-          <td>{%s mod.Description %}</td>
-        </tr>
-        {%- endfor -%}
-        </tbody>
-      </table>
+      <div class="overflow full-width">
+        <table class="mt min-200">
+          <tbody>
+          {%- for _, mod := range as.Services.Modules.Modules() -%}
+          <tr>
+            <th class="shrink">
+              <label>
+                <input type="checkbox" name="modules" value="{%s mod.Key %}"{%- if prj.HasModule(mod.Key) -%} checked="checked"{%- endif -%} />
+                &nbsp;{%s mod.Title() %}
+              </label>
+            </th>
+            <td>{%s mod.Description %}</td>
+          </tr>
+          {%- endfor -%}
+          </tbody>
+        </table>
+      </div>
     </div>
     <div class="card" id="metadata">
       <h3>Metadata</h3>
-      <table class="mt min-200 expanded">
-        <tbody>
-          {%= components.TableInput("org", "", "Organization", info.Org, 5, project.Helpers["org"]...) %}
-          {%= components.TableInput("authorID", "", "Author ID", info.AuthorID, 5, project.Helpers["authorID"]...) %}
-          {%= components.TableInput("authorName", "", "Author Name", info.AuthorName, 5, project.Helpers["authorName"]...) %}
-          {%= components.TableInput("authorEmail", "", "Author Email", info.AuthorEmail, 5, project.Helpers["authorEmail"]...) %}
-          {%= components.TableInput("team", "", "Team", info.Team, 5, project.Helpers["team"]...) %}
-          {%= components.TableInput("license", "", "License", info.License, 5, project.Helpers["license"]...) %}
-          {%= components.TableInput("homepage", "", "Homepage", info.Homepage, 5, project.Helpers["homepage"]...) %}
-          {%= components.TableInput("sourcecode", "", "Source Code", info.Sourcecode, 5, project.Helpers["sourcecode"]...) %}
-          {%= components.TableInput("summary", "", "Summary", info.Summary, 5, project.Helpers["summary"]...) %}
-          {%= components.TableTextarea("description", "", "Description", 8, info.Description, 5, project.Helpers["description"]...) %}
-          {%= components.TableSelect("ci", "", "CI", info.CI, []string{"all", "tags", "versions", ""}, []string{"All pushes", "All tags", "Version tags", "No CI"}, 5, project.Helpers["ci"]...) %}
-          {%= components.TableInput("homebrew", "", "Homebrew", info.Homebrew, 5, project.Helpers["homebrew"]...) %}
-          {%- if prj.HasModule("notarize") || prj.HasModule("desktop") || prj.HasModule("ios") -%}
-          {%= components.TableInput("bundle", "", "Bundle", info.Bundle, 5, project.Helpers["bundle"]...) %}
-          {%- else -%}
-          <input type="hidden" name="bundle" value="{%s info.Bundle %}" />
-          {%- endif -%}
-          {%- if prj.HasModule("notarize") -%}
-          {%= components.TableInput("signingIdentity", "", "Signing Identity", info.SigningIdentity, 5, project.Helpers["signingIdentity"]...) %}
-          {%= components.TableInput("notarizeEmail", "", "Notarize Email", info.NotarizeEmail, 5, project.Helpers["notarizeEmail"]...) %}
-          {%- else -%}
-          <input type="hidden" name="signingIdentity" value="{%s info.SigningIdentity %}" />
-          <input type="hidden" name="notarizeEmail" value="{%s info.NotarizeEmail %}" />
-          {%- endif -%}
-          {%= components.TableInput("slack", "", "Slack Webhook", info.Slack, 5, project.Helpers["slack"]...) %}
-          {%= components.TableInput("channels", "", "Channels", strings.Join(info.Channels, ", "), 5, project.Helpers["channels"]...) %}
-          {%- if prj.HasModule("android") -%}
-          {%= components.TableInput("javaPackage", "", "Java Package", info.JavaPackage, 5, project.Helpers["javaPackage"]...) %}
-          {%- else -%}
-          <input type="hidden" name="javaPackage" value="{%s info.JavaPackage %}" />
-          {%- endif -%}
-          {%= components.TableInput("goVersion", "", "Go Version", info.GoVersion, 5, project.Helpers["goVersion"]...) %}
-          {%= components.TableInput("goBinary", "", "Go Binary", info.GoBinary, 5, project.Helpers["goBinary"]...) %}
-          {%= components.TableInput("extraFiles", "", "Extra Files", strings.Join(info.ExtraFiles, ", "), 5, project.Helpers["extraFiles"]...) %}
-          {%= components.TableInput("deployments", "", "Deployments", strings.Join(info.Deployments, ", "), 5, project.Helpers["deployments"]...) %}
-          {%= components.TableTextarea("envvars", "", "Env Vars", 8, util.ToJSON(info.EnvVars), 5, project.Helpers["envvars"]...) %}
-          {%= components.TableTextarea("docs", "", "Documentation", 8, util.ToJSON(info.Docs), 5, project.Helpers["docs"]...) %}
-        </tbody>
-      </table>
+      <div class="overflow full-width">
+        <table class="mt min-200 expanded">
+          <tbody>
+            {%= components.TableInput("org", "", "Organization", info.Org, 5, project.Helpers["org"]...) %}
+            {%= components.TableInput("authorID", "", "Author ID", info.AuthorID, 5, project.Helpers["authorID"]...) %}
+            {%= components.TableInput("authorName", "", "Author Name", info.AuthorName, 5, project.Helpers["authorName"]...) %}
+            {%= components.TableInput("authorEmail", "", "Author Email", info.AuthorEmail, 5, project.Helpers["authorEmail"]...) %}
+            {%= components.TableInput("team", "", "Team", info.Team, 5, project.Helpers["team"]...) %}
+            {%= components.TableInput("license", "", "License", info.License, 5, project.Helpers["license"]...) %}
+            {%= components.TableInput("homepage", "", "Homepage", info.Homepage, 5, project.Helpers["homepage"]...) %}
+            {%= components.TableInput("sourcecode", "", "Source Code", info.Sourcecode, 5, project.Helpers["sourcecode"]...) %}
+            {%= components.TableInput("summary", "", "Summary", info.Summary, 5, project.Helpers["summary"]...) %}
+            {%= components.TableTextarea("description", "", "Description", 8, info.Description, 5, project.Helpers["description"]...) %}
+            {%= components.TableSelect("ci", "", "CI", info.CI, []string{"all", "tags", "versions", ""}, []string{"All pushes", "All tags", "Version tags", "No CI"}, 5, project.Helpers["ci"]...) %}
+            {%= components.TableInput("homebrew", "", "Homebrew", info.Homebrew, 5, project.Helpers["homebrew"]...) %}
+            {%- if prj.HasModule("notarize") || prj.HasModule("desktop") || prj.HasModule("ios") -%}
+            {%= components.TableInput("bundle", "", "Bundle", info.Bundle, 5, project.Helpers["bundle"]...) %}
+            {%- else -%}
+            <input type="hidden" name="bundle" value="{%s info.Bundle %}" />
+            {%- endif -%}
+            {%- if prj.HasModule("notarize") -%}
+            {%= components.TableInput("signingIdentity", "", "Signing Identity", info.SigningIdentity, 5, project.Helpers["signingIdentity"]...) %}
+            {%= components.TableInput("notarizeEmail", "", "Notarize Email", info.NotarizeEmail, 5, project.Helpers["notarizeEmail"]...) %}
+            {%- else -%}
+            <input type="hidden" name="signingIdentity" value="{%s info.SigningIdentity %}" />
+            <input type="hidden" name="notarizeEmail" value="{%s info.NotarizeEmail %}" />
+            {%- endif -%}
+            {%= components.TableInput("slack", "", "Slack Webhook", info.Slack, 5, project.Helpers["slack"]...) %}
+            {%= components.TableInput("channels", "", "Channels", strings.Join(info.Channels, ", "), 5, project.Helpers["channels"]...) %}
+            {%- if prj.HasModule("android") -%}
+            {%= components.TableInput("javaPackage", "", "Java Package", info.JavaPackage, 5, project.Helpers["javaPackage"]...) %}
+            {%- else -%}
+            <input type="hidden" name="javaPackage" value="{%s info.JavaPackage %}" />
+            {%- endif -%}
+            {%= components.TableInput("goVersion", "", "Go Version", info.GoVersion, 5, project.Helpers["goVersion"]...) %}
+            {%= components.TableInput("goBinary", "", "Go Binary", info.GoBinary, 5, project.Helpers["goBinary"]...) %}
+            {%= components.TableInput("extraFiles", "", "Extra Files", strings.Join(info.ExtraFiles, ", "), 5, project.Helpers["extraFiles"]...) %}
+            {%= components.TableInput("deployments", "", "Deployments", strings.Join(info.Deployments, ", "), 5, project.Helpers["deployments"]...) %}
+            {%= components.TableTextarea("envvars", "", "Env Vars", 8, util.ToJSON(info.EnvVars), 5, project.Helpers["envvars"]...) %}
+            {%= components.TableTextarea("docs", "", "Documentation", 8, util.ToJSON(info.Docs), 5, project.Helpers["docs"]...) %}
+          </tbody>
+        </table>
+      </div>
     </div>
     {%- code
       t := prj.Theme
@@ -120,16 +126,18 @@
     {%= vtheme.Editor("Default Theme", prj.Title(), t, prj.IconSafe(), as, ps) %}
     <div class="card" id="builds">
       <h3>Builds</h3>
-      <table class="mt min-200">
-        <tbody>
-        {%- for _, o := range project.AllBuildOptions -%}
-        <tr>
-          <th class="shrink">{%s o.Title %}</th>
-          <td><label><input type="checkbox" name="build-{%s o.Key %}" value="true" {% if buildMap[o.Key] %} checked="checked" {% endif %}/> {%s o.Description %}</label></td>
-        </tr>
-        {%- endfor -%}
-        </tbody>
-      </table>
+      <div class="overflow full-width">
+        <table class="mt min-200">
+          <tbody>
+          {%- for _, o := range project.AllBuildOptions -%}
+          <tr>
+            <th class="shrink">{%s o.Title %}</th>
+            <td><label><input type="checkbox" name="build-{%s o.Key %}" value="true" {% if buildMap[o.Key] %} checked="checked" {% endif %}/> {%s o.Description %}</label></td>
+          </tr>
+          {%- endfor -%}
+          </tbody>
+        </table>
+      </div>
     </div>
     <div class="card">
       <button type="submit">Save</button>

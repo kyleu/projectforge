@@ -8,33 +8,35 @@
 
 {% func RecordTable(models audit.Records, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
   {%- code prms := params.Get("audit_record", nil, ps.Logger) -%}
-  <table class="mt">
-    <thead>
-      <tr>
-        {%= components.TableHeaderSimple("audit_record", "id", "ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("audit_record", "audit_id", "Audit ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("audit_record", "t", "T", "Type of the target object", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("audit_record", "pk", "Pk", "Primary key of the target object", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("audit_record", "changes", "Changes", "Count of change", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("audit_record", "metadata", "Metadata", "Count of metadata fields", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("audit_record", "occurred", "Occurred", "Timestamp representing the time the event occurred", prms, ps.URI, ps) %}
-      </tr>
-    </thead>
-    <tbody>
-      {%- for _, model := range models -%}
-      <tr>
-        <td><a href="/admin/audit/record/{%= components.DisplayUUID(&model.ID) %}">{%= components.DisplayUUID(&model.ID) %}</a></td>
-        <td>
-          <div class="icon">{%= components.DisplayUUID(&model.AuditID) %}</div>
-          <a title="Audit" href="{%s `/admin/audit/`+model.AuditID.String() %}">{%= components.SVGRefIcon("cog", ps) %}</a>
-        </td>
-        <td>{%s model.T %}</td>
-        <td>{%s model.PK %}</td>
-        <td>{%= components.DisplayDiffs(model.Changes) %}</td>
-        <td>{%d len(model.Metadata) %}</td>
-        <td>{%= components.DisplayTimestamp(&model.Occurred) %}</td>
-      </tr>
-      {%- endfor -%}
-    </tbody>
-  </table>
+  <div class="overflow full-width">
+    <table class="mt">
+      <thead>
+        <tr>
+          {%= components.TableHeaderSimple("audit_record", "id", "ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
+          {%= components.TableHeaderSimple("audit_record", "audit_id", "Audit ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
+          {%= components.TableHeaderSimple("audit_record", "t", "T", "Type of the target object", prms, ps.URI, ps) %}
+          {%= components.TableHeaderSimple("audit_record", "pk", "Pk", "Primary key of the target object", prms, ps.URI, ps) %}
+          {%= components.TableHeaderSimple("audit_record", "changes", "Changes", "Count of change", prms, ps.URI, ps) %}
+          {%= components.TableHeaderSimple("audit_record", "metadata", "Metadata", "Count of metadata fields", prms, ps.URI, ps) %}
+          {%= components.TableHeaderSimple("audit_record", "occurred", "Occurred", "Timestamp representing the time the event occurred", prms, ps.URI, ps) %}
+        </tr>
+      </thead>
+      <tbody>
+        {%- for _, model := range models -%}
+        <tr>
+          <td><a href="/admin/audit/record/{%= components.DisplayUUID(&model.ID) %}">{%= components.DisplayUUID(&model.ID) %}</a></td>
+          <td>
+            <div class="icon">{%= components.DisplayUUID(&model.AuditID) %}</div>
+            <a title="Audit" href="{%s `/admin/audit/`+model.AuditID.String() %}">{%= components.SVGRefIcon("cog", ps) %}</a>
+          </td>
+          <td>{%s model.T %}</td>
+          <td>{%s model.PK %}</td>
+          <td>{%= components.DisplayDiffs(model.Changes) %}</td>
+          <td>{%d len(model.Metadata) %}</td>
+          <td>{%= components.DisplayTimestamp(&model.Occurred) %}</td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
 {% endfunc %}

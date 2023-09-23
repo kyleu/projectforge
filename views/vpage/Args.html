@@ -23,33 +23,35 @@
       {%- for k, v := range p.Hidden -%}
       <input type="hidden" name="{%s k %}" value="{%s v %}" />
       {%- endfor -%}
-      <table class="mt min-200 expanded">
-        <tbody>
-          {%- for _, arg := range p.ArgRes.Args -%}
-          {%- code
-            v := p.ArgRes.Values[arg.Key]
-            if v == "" {
-              v = arg.Default
-            }
-            title := arg.Title
-            if len(title) > 50 {
-              title = title[:50] + "..."
-            }
-          -%}
-          {%- switch arg.Type -%}
-          {%- case "bool" -%}
-          {%= components.TableBoolean(arg.Key, title, v == "true", 5, arg.Description) %}
-          {%- case "textarea" -%}
-          {%= components.TableTextarea(arg.Key, "", title, 12, v, 5, arg.Description) %}
-          {%- case "number", "int" -%}
-          {%- code i, _ := strconv.ParseInt(v, 10, 32) -%}
-          {%= components.TableInputNumber(arg.Key, "", title, int(i), 5, arg.Description) %}
-          {%- default -%}
-          {%= components.TableDatalist(arg.Key, "", title, v, arg.Choices, nil, 5, arg.Description) %}
-          {%- endswitch -%}
-          {%- endfor -%}
-        </tbody>
-      </table>
+      <div class="overflow full-width">
+        <table class="mt min-200 expanded">
+          <tbody>
+            {%- for _, arg := range p.ArgRes.Args -%}
+            {%- code
+              v := p.ArgRes.Values[arg.Key]
+              if v == "" {
+                v = arg.Default
+              }
+              title := arg.Title
+              if len(title) > 50 {
+                title = title[:50] + "..."
+              }
+            -%}
+            {%- switch arg.Type -%}
+            {%- case "bool" -%}
+            {%= components.TableBoolean(arg.Key, title, v == "true", 5, arg.Description) %}
+            {%- case "textarea" -%}
+            {%= components.TableTextarea(arg.Key, "", title, 12, v, 5, arg.Description) %}
+            {%- case "number", "int" -%}
+            {%- code i, _ := strconv.ParseInt(v, 10, 32) -%}
+            {%= components.TableInputNumber(arg.Key, "", title, int(i), 5, arg.Description) %}
+            {%- default -%}
+            {%= components.TableDatalist(arg.Key, "", title, v, arg.Choices, nil, 5, arg.Description) %}
+            {%- endswitch -%}
+            {%- endfor -%}
+          </tbody>
+        </table>
+      </div>
       <button class="mt" type="submit">Submit</button>
     </form>
   </div>

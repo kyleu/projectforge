@@ -21,17 +21,19 @@
   {%- if len(ps.Session) > 0 -%}
   <div class="card">
     <h3>Values</h3>
-    <table class="mt expanded">
-      <tbody>
-        {%- for _, k := range util.ArraySorted(lo.Keys(ps.Session)) -%}
-          {%- code v := ps.Session[k] -%}
-          <tr>
-            <th class="shrink">{%s k %}</th>
-            <td>{%s fmt.Sprint(v) %}</td>
-          </tr>
-        {%- endfor -%}
-      </tbody>
-    </table>
+    <div class="overflow full-width">
+      <table class="mt expanded">
+        <tbody>
+          {%- for _, k := range util.ArraySorted(lo.Keys(ps.Session)) -%}
+            {%- code v := ps.Session[k] -%}
+            <tr>
+              <th class="shrink">{%s k %}</th>
+              <td>{%s fmt.Sprint(v) %}</td>
+            </tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
   </div>
   {%- else -%}
   <div class="card">

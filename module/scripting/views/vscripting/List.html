@@ -17,22 +17,24 @@
     <div class="right"><a href="/admin/scripting/new"><button>New</button></a></div>
     <h3>{%= components.SVGRefIcon(`sitemap`, ps) %} Scripts</h3>
     <div class="mt">
-      <table class="min-200">
-        <thead>
-          <tr>
-            <th class="shrink">Name</th>
-            <th class="text-align-right">Size</th>
-          </tr>
-        </thead>
-        <tbody>
-          {%- for _, x := range p.Scripts -%}
-          <tr>
-            <td><a href="/admin/scripting/{%s x %}">{%s x %}</a></td>
-            <td class="text-align-right">{%s util.ByteSizeSI(int64(p.Sizes[x])) %}</td>
-          </tr>
-          {%- endfor -%}
-        </tbody>
-      </table>
+      <div class="overflow full-width">
+        <table class="min-200">
+          <thead>
+            <tr>
+              <th class="shrink">Name</th>
+              <th class="text-align-right">Size</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%- for _, x := range p.Scripts -%}
+            <tr>
+              <td><a href="/admin/scripting/{%s x %}">{%s x %}</a></td>
+              <td class="text-align-right">{%s util.ByteSizeSI(int64(p.Sizes[x])) %}</td>
+            </tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 {% endfunc %}

@@ -34,8 +34,9 @@
     <div class="right"><a href="?phase=deps&upgrade=all" onclick="return confirm('You sure about this?')"><button>Upgrade All</button></a></div>
     <h3>Dependencies</h3>
     {%- if len(p.Dependencies) == 0 -%}
-      <em>no dependencies, somehow</em>
+    <em>no dependencies, somehow</em>
     {%- else -%}
+    <div class="overflow full-width">
       <table class="mt">
         <thead>
         <tr>
@@ -74,6 +75,7 @@
         {%- endfor -%}
         </tbody>
       </table>
+    </div>
     {%- endif -%}
   </div>
 {% endfunc %}

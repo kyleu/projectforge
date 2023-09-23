@@ -194,72 +194,74 @@ func StreamAvailBuildActions(qw422016 *qt422016.Writer, currTags []string) {
 	}
 
 //line views/vaction/Results.html:63
-	qw422016.N().S(`  <table class="min-200">
-    <thead>
-      <tr>
-        <th class="shrink">Build Action</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
+	qw422016.N().S(`  <div class="overflow full-width">
+    <table class="min-200">
+      <thead>
+        <tr>
+          <th class="shrink">Build Action</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
 `)
-//line views/vaction/Results.html:72
+//line views/vaction/Results.html:73
 	for _, b := range action.AllBuilds {
-//line views/vaction/Results.html:72
-		qw422016.N().S(`      <tr>
-        <td><a href="/run/build?phase=`)
-//line views/vaction/Results.html:74
+//line views/vaction/Results.html:73
+		qw422016.N().S(`        <tr>
+          <td><a href="/run/build?phase=`)
+//line views/vaction/Results.html:75
 		qw422016.E().S(b.Key)
-//line views/vaction/Results.html:74
+//line views/vaction/Results.html:75
 		qw422016.E().S(tags)
-//line views/vaction/Results.html:74
+//line views/vaction/Results.html:75
 		qw422016.N().S(`" title="`)
-//line views/vaction/Results.html:74
+//line views/vaction/Results.html:75
 		qw422016.E().S(b.Description)
-//line views/vaction/Results.html:74
+//line views/vaction/Results.html:75
 		qw422016.N().S(`"><button>`)
-//line views/vaction/Results.html:74
+//line views/vaction/Results.html:75
 		qw422016.E().S(b.Title)
-//line views/vaction/Results.html:74
+//line views/vaction/Results.html:75
 		qw422016.N().S(`</button></a></td>
-        <td>`)
-//line views/vaction/Results.html:75
+          <td>`)
+//line views/vaction/Results.html:76
 		qw422016.E().S(b.Description)
-//line views/vaction/Results.html:75
+//line views/vaction/Results.html:76
 		qw422016.N().S(`</td>
-      </tr>
+        </tr>
 `)
-//line views/vaction/Results.html:77
+//line views/vaction/Results.html:78
 	}
-//line views/vaction/Results.html:77
-	qw422016.N().S(`    </tbody>
-  </table>
+//line views/vaction/Results.html:78
+	qw422016.N().S(`      </tbody>
+    </table>
+  </div>
 `)
-//line views/vaction/Results.html:80
+//line views/vaction/Results.html:82
 }
 
-//line views/vaction/Results.html:80
+//line views/vaction/Results.html:82
 func WriteAvailBuildActions(qq422016 qtio422016.Writer, currTags []string) {
-//line views/vaction/Results.html:80
+//line views/vaction/Results.html:82
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vaction/Results.html:80
+//line views/vaction/Results.html:82
 	StreamAvailBuildActions(qw422016, currTags)
-//line views/vaction/Results.html:80
+//line views/vaction/Results.html:82
 	qt422016.ReleaseWriter(qw422016)
-//line views/vaction/Results.html:80
+//line views/vaction/Results.html:82
 }
 
-//line views/vaction/Results.html:80
+//line views/vaction/Results.html:82
 func AvailBuildActions(currTags []string) string {
-//line views/vaction/Results.html:80
+//line views/vaction/Results.html:82
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vaction/Results.html:80
+//line views/vaction/Results.html:82
 	WriteAvailBuildActions(qb422016, currTags)
-//line views/vaction/Results.html:80
+//line views/vaction/Results.html:82
 	qs422016 := string(qb422016.B)
-//line views/vaction/Results.html:80
+//line views/vaction/Results.html:82
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vaction/Results.html:80
+//line views/vaction/Results.html:82
 	return qs422016
-//line views/vaction/Results.html:80
+//line views/vaction/Results.html:82
 }
