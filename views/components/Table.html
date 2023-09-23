@@ -7,6 +7,7 @@
   "github.com/google/uuid"
 
   "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/vutil"
 ) %}
 
@@ -177,6 +178,15 @@
     <th class="shrink"><label for="{%s id %}">{%s title %}</label></th>
     <td>
       {%= FormInputFile(key, id, label, value) %}
+    </td>
+  </tr>
+{% endstripspace %}{% endfunc %}
+
+{% func TableRichEditor(key string, id string, title string, columns []*util.ModelDesc, value []any, placeholder ...string) %}{% stripspace %}
+  <tr>
+    <th class="shrink"><label for="{%s id %}">{%s title %}</label></th>
+    <td>
+      {%= FormRichEditor(key, id, columns, value, placeholder...) %}
     </td>
   </tr>
 {% endstripspace %}{% endfunc %}

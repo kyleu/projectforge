@@ -184,6 +184,13 @@
   {% endif %}
 {% endstripspace %}{% endfunc %}
 
+{% func FormRichEditor(key string, id string, columns []*util.ModelDesc, value []any, placeholder ...string) %}{% stripspace %}
+  {% code if value == nil { value = []any{} } %}
+  <div class="rich-editor" data-key="{%s key %}" data-columns="{%j util.ToJSONCompact(columns) %}">
+    {%= FormTextarea(key, id, 8, util.ToJSON(value), placeholder...) %}
+  </div>
+{% endstripspace %}{% endfunc %}
+
 {% func SearchForm(action string, fieldKey string, placeholder string, value string, ps *cutil.PageState) %}{% stripspace %}
   {% code
     if fieldKey == "" {

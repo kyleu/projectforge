@@ -86,3 +86,12 @@ func (k KeyTypeDescs) Array(key string) [][]string {
 		return x.Array(key)
 	})
 }
+
+type ModelDesc struct {
+	Key         string `json:"key"`
+	Title       string `json:"title"`
+	Description string `json:"description,omitempty"`
+	Type        string `json:"type,omitempty"`
+}
+
+type ModelDescs []*ModelDesc

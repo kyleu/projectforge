@@ -5,12 +5,15 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )
+
+var allowedRoutes = []string{"/about", "/admin", "/testbed", "/welcome"}
 
 // Initialize app-specific system dependencies.
 func initApp(*app.State, util.Logger) {
@@ -21,13 +24,12 @@ func initAppRequest(as *app.State, ps *cutil.PageState) error {
 	if err := initProjects(ps.Context, as, ps.Logger); err != nil {
 		return errors.Wrap(err, "unable to initialize projects")
 	}
-
 	root := as.Services.Projects.Default()
-	p := string(ps.URI.Path())
-	if root.Info == nil && !strings.HasSuffix(p, "/about") && !strings.HasPrefix(p, "/welcome") && !strings.HasPrefix(p, "/admin") {
+	if root.Info == nil && !lo.ContainsBy(allowedRoutes, func(r string) bool {
+		return strings.HasSuffix(string(ps.URI.Path()), r)
+	}) {
 		ps.ForceRedirect = "/welcome"
 	}
-
 	return nil
 }
 

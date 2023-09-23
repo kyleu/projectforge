@@ -10,6 +10,7 @@ import {autocompleteInit} from "./autocomplete";
 import {modalInit} from "./modal";
 import {tagsInit} from "./tags";
 import {editorInit} from "./editor";
+import {formInit} from "./form";
 import {themeInit} from "./theme";{{{ if .HasModule "websocket" }}}
 import {socketInit} from "./socket";{{{ end }}}
 import {appInit} from "./app";
@@ -31,7 +32,7 @@ declare global {
 }
 
 export function init(): void {
-  const [s, i] = editorInit();
+  const [s, i] = formInit();
   window.{{{ .CleanKey }}} = {
     relativeTime: timeInit(),
     autocomplete: autocompleteInit(),
@@ -46,6 +47,7 @@ export function init(): void {
   linkInit();
   modalInit();
   themeInit();
+  editorInit();
   window.audit = audit;{{{ if .HasModule "jsx" }}}
   window.JSX = JSX;{{{ end }}}
   appInit();

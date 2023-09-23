@@ -1,5 +1,12 @@
 package filter
 
+import "{{{ .Package }}}/app/util"
+
+var OrderingModelDescs = util.ModelDescs{
+	{Key: "column", Title: "Column", Description: "The name of the column to sort by"},
+	{Key: "asc", Title: "Ascending", Description: "Determines if this ordering is applied ascending or descending"},
+}
+
 type Ordering struct {
 	Column string `json:"column"`
 	Asc    bool   `json:"asc"`

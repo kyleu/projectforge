@@ -22,6 +22,23 @@ const (
 	FmtURL        = "url"
 )
 
+var ColumnModelDescs = util.ModelDescs{
+	{Key: "name", Title: "Name", Description: "The name of the column"},
+	// {Key: "type", Title: "Type", Description: "The X of the column"},
+	// {Key: "pk", Title: "PK", Description: "The X of the column"},
+	// {Key: "nullable", Title: "Nullable", Description: "The X of the column"},
+	// {Key: "search", Title: "Search", Description: "The X of the column"},
+	// {Key: "sqlDefault", Title: "SQL Default", Description: "The X of the column"},
+	// {Key: "indexed", Title: "Indexed", Description: "The X of the column"},
+	{Key: "display", Title: "Display", Description: "The display setting of the column's value"},
+	{Key: "format", Title: "Format", Description: "The formatting applied to the column's value"},
+	{Key: "example", Title: "Example", Description: "Example annotation for the column's value"},
+	{Key: "validation", Title: "Validation", Description: "Validation annotation for the column's value"},
+	// {Key: "values", Title: "Values", Description: "The X of the column"},
+	// {Key: "tags", Title: "Tags", Description: "The X of the column"},
+	// {Key: "helpstring", Title: "Help String", Description: "The X of the column"},
+}
+
 type Column struct {
 	Name       string         `json:"name"`
 	Type       *types.Wrapped `json:"type"`

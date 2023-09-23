@@ -1,6 +1,15 @@
 package model
 
-import "fmt"
+import (
+	"fmt"
+
+	"projectforge.dev/projectforge/app/util"
+)
+
+var IndexModelDescs = util.ModelDescs{
+	{Key: "name", Title: "Name", Description: "The name of the index"},
+	{Key: "decl", Title: "Declaration", Description: "The declaration of the index"},
+}
 
 type Index struct {
 	Name   string `json:"name"`
