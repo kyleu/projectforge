@@ -19,8 +19,13 @@
 #flash-container .flash {
   background-color: var(--color-background-muted);
   opacity: 1;
-  -webkit-transition: opacity 500ms linear;
   transition: opacity 500ms linear;
+}
+
+@media (prefers-reduced-motion) {
+  #flash-container .flash {
+    transition: none;
+  }
 }
 
 #flash-container .flash .content {

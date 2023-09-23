@@ -19,6 +19,12 @@
   transition: padding 400ms linear;
 }
 
+@media (prefers-reduced-motion) {
+  .drag-container .container {
+    transition: none;
+  }
+}
+
 .drag-container .handle {
   margin-right: 8px;
   cursor: move;

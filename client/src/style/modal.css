@@ -29,6 +29,12 @@
   transition: all .4s;
 }
 
+@media (prefers-reduced-motion) {
+  .modal {
+    transition: none;
+  }
+}
+
 .modal:target {
   visibility: visible !important;
   opacity: 1;

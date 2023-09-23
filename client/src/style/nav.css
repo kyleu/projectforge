@@ -17,6 +17,12 @@
   margin: 16px 12px 0 12px;
 }
 
+@media (prefers-reduced-motion) {
+  #navbar .menu-toggle {
+    transition: none;
+  }
+}
+
 #navbar .menu-toggle a {
   color: var(--color-nav-foreground);
 }
@@ -84,6 +90,30 @@ input[type=checkbox]:checked ~ .menu-toggle > .diagonal.part-2 {
   box-sizing: border-box;
   transform: rotate(-135deg);
   margin-top: -9px;
+}
+
+@media (prefers-reduced-motion) {
+  .menu-toggle .spinner {
+    transition: none;
+  }
+  .menu-toggle .horizontal {
+    transition: none;
+  }
+  .menu-toggle .diagonal.part-1 {
+    transition: none;
+  }
+  .menu-toggle .diagonal.part-2 {
+    transition: none;
+  }
+  input[type=checkbox]:checked ~ .menu-toggle > .horizontal {
+    transition: none;
+  }
+  input[type=checkbox]:checked ~ .menu-toggle > .diagonal.part-1 {
+    transition: none;
+  }
+  input[type=checkbox]:checked ~ .menu-toggle > .diagonal.part-2 {
+    transition: none;
+  }
 }
 
 #navbar .logo {

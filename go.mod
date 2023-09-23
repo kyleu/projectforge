@@ -12,7 +12,7 @@ require (
 	github.com/fasthttp/router v1.4.20
 	github.com/fasthttp/websocket v1.5.4
 	github.com/gertd/go-pluralize v0.2.1
-	github.com/gomarkdown/markdown v0.0.0-20230916125811-7478c230c7cd
+	github.com/gomarkdown/markdown v0.0.0-20230922112808-5421fefb8386
 	github.com/google/go-github/v39 v39.2.0
 	github.com/google/uuid v1.3.1
 	github.com/hexops/gotextdiff v1.0.3
@@ -28,7 +28,7 @@ require (
 	github.com/robert-nix/ansihtml v1.0.1
 	github.com/samber/lo v1.38.1
 	github.com/santhosh-tekuri/jsonschema v1.2.4
-	github.com/spf13/afero v1.9.5
+	github.com/spf13/afero v1.10.0
 	github.com/valyala/fasthttp v1.50.0
 	github.com/valyala/quicktemplate v1.7.0
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.44.0
@@ -37,7 +37,7 @@ require (
 	go.opentelemetry.io/otel/sdk v1.18.0
 	go.opentelemetry.io/otel/trace v1.18.0
 	go.uber.org/zap v1.26.0
-	golang.org/x/mobile v0.0.0-20230906132913-2077a3224571
+	golang.org/x/mobile v0.0.0-20230922142353-e2f452493d57
 	golang.org/x/mod v0.12.0
 	golang.org/x/oauth2 v0.12.0
 	golang.org/x/sys v0.12.0
@@ -53,7 +53,7 @@ require (
 	github.com/dsoprea/go-logging v0.0.0-20200710184922-b02d349568dd // indirect
 	github.com/dsoprea/go-utility/v2 v2.0.0-20221003172846-a3e1774ef349 // indirect
 	github.com/felixge/httpsnoop v1.0.3 // indirect
-	github.com/go-errors/errors v1.5.0 // indirect
+	github.com/go-errors/errors v1.5.1 // indirect
 	github.com/go-logr/logr v1.2.4 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/golang/geo v0.0.0-20230421003525-6adc56603217 // indirect
@@ -61,7 +61,7 @@ require (
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.18.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
-	github.com/klauspost/compress v1.16.7 // indirect
+	github.com/klauspost/compress v1.17.0 // indirect
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.4 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
@@ -70,7 +70,7 @@ require (
 	github.com/muesli/kmeans v0.3.1 // indirect
 	github.com/prometheus/client_model v0.4.0 // indirect
 	github.com/prometheus/common v0.44.0 // indirect
-	github.com/prometheus/procfs v0.11.1 // indirect
+	github.com/prometheus/procfs v0.12.0 // indirect
 	github.com/savsgio/gotils v0.0.0-20230208104028-c358bd845dee // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
@@ -84,8 +84,8 @@ require (
 	golang.org/x/net v0.15.0 // indirect
 	golang.org/x/text v0.13.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20230913181813-007df8e322eb // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20230913181813-007df8e322eb // indirect
-	google.golang.org/grpc v1.58.1 // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20230920204549-e6e6cdab5c13 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20230920204549-e6e6cdab5c13 // indirect
+	google.golang.org/grpc v1.58.2 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
 )

@@ -22,6 +22,12 @@
   color: var(--color-nav-foreground);
 }
 
+@media (prefers-reduced-motion) {
+  .search input {
+    transition: none;
+  }
+}
+
 .search input + div {
   position: relative;
   height: 20px;
@@ -42,6 +48,12 @@
   stroke-dashoffset: 271.908;
   stroke-dasharray: 59 212.908;
   transition: all 0.6s ease;
+}
+
+@media (prefers-reduced-motion) {
+  .search input + div svg {
+    transition: none;
+  }
 }
 
 .search input:not(:placeholder-shown), .search input:focus {

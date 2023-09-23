@@ -12,6 +12,12 @@
   transition: transform 250ms ease-in-out;
 }
 
+@media (prefers-reduced-motion) {
+  .menu-container {
+    transition: none;
+  }
+}
+
 @media (max-width: 800px) {
   .menu-container {
     transform: translateX(calc(-1 * var(--menu-width)));

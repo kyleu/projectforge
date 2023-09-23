@@ -82,6 +82,12 @@ button {
   min-height: calc(100% - var(--nav-height));
 }
 
+@media (prefers-reduced-motion) {
+  #content {
+    transition: none;
+  }
+}
+
 #content.nomenu {
   margin-left: 0;
 }
