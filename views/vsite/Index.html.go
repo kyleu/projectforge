@@ -70,6 +70,10 @@ func (p *Index) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
         Work with your team to estimate work, track your progress, and gather feedback.
       </li>
       <li>
+        <a href="https://todo.kyleu.dev" target="_blank" rel="noopener noreferrer">TODO Forge</a> (<em><a href="https://github.com/kyleu/todoforge" target="_blank" rel="noopener noreferrer">GitHub</a></em>):
+        Manages collections of todo items. Almost entirely generated using Project Forge.
+      </li>
+      <li>
         <a href="https://admini.dev" target="_blank" rel="noopener noreferrer">Admini</a> (<em><a href="https://github.com/kyleu/admini" target="_blank" rel="noopener noreferrer">GitHub</a></em>):
         A database management application, basically. It does other stuff too.
       </li>
@@ -89,48 +93,48 @@ func (p *Index) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
     <div class="mt"><em>More examples coming soon...</em></div>
   </div>
   `)
-//line views/vsite/Index.html:48
+//line views/vsite/Index.html:52
 	components.StreamBragProject(qw422016)
-//line views/vsite/Index.html:48
+//line views/vsite/Index.html:52
 	qw422016.N().S(`
   <div class="card">
     <h3>Licensing</h3>
     <div class="mt">
       `)
-//line views/vsite/Index.html:52
+//line views/vsite/Index.html:56
 	qw422016.E().S(util.AppName)
-//line views/vsite/Index.html:52
+//line views/vsite/Index.html:56
 	qw422016.N().S(` is <a href="https://choosealicense.com/licenses/mit/">MIT</a> licensed,
       and the modules are <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>.
     </div>
     <div class="mt">Your project is your own, use any license you'd like.</div>
   </div>
 `)
-//line views/vsite/Index.html:57
+//line views/vsite/Index.html:61
 }
 
-//line views/vsite/Index.html:57
+//line views/vsite/Index.html:61
 func (p *Index) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsite/Index.html:57
+//line views/vsite/Index.html:61
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsite/Index.html:57
+//line views/vsite/Index.html:61
 	p.StreamBody(qw422016, as, ps)
-//line views/vsite/Index.html:57
+//line views/vsite/Index.html:61
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsite/Index.html:57
+//line views/vsite/Index.html:61
 }
 
-//line views/vsite/Index.html:57
+//line views/vsite/Index.html:61
 func (p *Index) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsite/Index.html:57
+//line views/vsite/Index.html:61
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsite/Index.html:57
+//line views/vsite/Index.html:61
 	p.WriteBody(qb422016, as, ps)
-//line views/vsite/Index.html:57
+//line views/vsite/Index.html:61
 	qs422016 := string(qb422016.B)
-//line views/vsite/Index.html:57
+//line views/vsite/Index.html:61
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsite/Index.html:57
+//line views/vsite/Index.html:61
 	return qs422016
-//line views/vsite/Index.html:57
+//line views/vsite/Index.html:61
 }

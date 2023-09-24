@@ -49,7 +49,7 @@ A project managed by Project Forge...
 Work with your team to estimate work, track your progress, and gather feedback.
 
 - [TODO Forge](https://todo.kyleu.dev) ([GitHub](https://github.com/kyleu/todoforge)):
-  A tool for uploading HTTP Archives (`.har` files) and running load tests.
+  Manages collections of todo items. Almost entirely generated using Project Forge.
 
 - [Load Toad](https://loadtoad.kyleu.dev) ([GitHub](https://github.com/kyleu/loadtoad)):
   A tool for uploading HTTP Archives (`.har` files) and running load tests.
