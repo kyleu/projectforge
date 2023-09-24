@@ -10,8 +10,6 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-const SQLServer = "sqlserver"
-
 type Args struct {
 	Config     util.ValueMap              `json:"config,omitempty"`
 	ConfigFile json.RawMessage            `json:"-"`
@@ -22,6 +20,7 @@ type Args struct {
 	Groups     Groups                     `json:"groups,omitempty"`
 	GroupsFile json.RawMessage            `json:"-"`
 	Modules    []string                   `json:"-"`
+	Database   string                     `json:"-"`
 }
 
 func (a *Args) HasModule(key string) bool {
@@ -33,6 +32,17 @@ func (a *Args) DBRef() string {
 		return "dbRead"
 	}
 	return "db"
+}
+
+func (a *Args) DatabaseNow() string {
+	switch a.Database {
+	case util.DatabaseSQLite:
+		return "current_timestamp"
+	case util.DatabaseSQLServer:
+		return "getdate()"
+	default:
+		return "now()"
+	}
 }
 
 func (a *Args) Validate() error {
@@ -59,19 +69,6 @@ func (a *Args) Validate() error {
 		packages[m.Package] = struct{}{}
 	}
 	return nil
-}
-
-func (a *Args) Database() string {
-	if a.HasModule("postgres") {
-		return "postgres"
-	}
-	if a.HasModule("sqlite") {
-		return "sqlite"
-	}
-	if a.HasModule(SQLServer) {
-		return SQLServer
-	}
-	return util.KeyUnknown
 }
 
 func (a *Args) Audit(m *Model) bool {

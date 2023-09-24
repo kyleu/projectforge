@@ -68,6 +68,7 @@ func projectFromForm(frm util.ValueMap, prj *project.Project) error {
 	prj.Info.Bundle = get("bundle", prj.Info.Bundle)
 	prj.Info.SigningIdentity = get("signingIdentity", prj.Info.SigningIdentity)
 	prj.Info.NotarizeEmail = get("notarizeEmail", prj.Info.NotarizeEmail)
+	prj.Info.DatabaseEngine = get("databaseEngine", prj.Info.DatabaseEngine)
 	prj.Info.Slack = get("slack", prj.Info.Slack)
 	prj.Info.Channels = util.StringSplitAndTrim(get("channels", strings.Join(prj.Info.Channels, ", ")), ",")
 	prj.Info.JavaPackage = get("javaPackage", prj.Info.JavaPackage)

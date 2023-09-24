@@ -42,6 +42,7 @@ type Info struct {
 	Bundle          string            `json:"bundle,omitempty"`
 	SigningIdentity string            `json:"signingIdentity,omitempty"`
 	NotarizeEmail   string            `json:"notarizeEmail,omitempty"`
+	DatabaseEngine  string            `json:"databaseEngine,omitempty"`
 	Slack           string            `json:"slack,omitempty"`
 	Channels        []string          `json:"channels,omitempty"`
 	JavaPackage     string            `json:"javaPackage,omitempty"`

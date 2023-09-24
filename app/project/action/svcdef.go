@@ -39,15 +39,17 @@ func ServiceDefinition(p *project.Project) util.ValueMap {
 			tags = append(tags, "graphql:"+x)
 		case "grpc":
 			tags = append(tags, "transport:"+x)
-		case "mysql":
+		case util.DatabaseMySQL:
 			tags = append(tags, "database:"+x)
 		case "oauth":
 			tags = append(tags, "auth:"+x)
-		case "postgres":
+		case util.DatabasePostgreSQL:
 			tags = append(tags, "database:"+x)
 		case "queue":
 			tags = append(tags, x+":kafka")
-		case "sqlite":
+		case util.DatabaseSQLite:
+			tags = append(tags, "database:"+x)
+		case util.DatabaseSQLServer:
 			tags = append(tags, "database:"+x)
 		case "temporal":
 			tags = append(tags, "workflow:"+x)

@@ -100,6 +100,11 @@
             <input type="hidden" name="signingIdentity" value="{%s info.SigningIdentity %}" />
             <input type="hidden" name="notarizeEmail" value="{%s info.NotarizeEmail %}" />
             {%- endif -%}
+            {%- if len(prj.DatabaseEngines()) > 0 -%}
+            {%= components.TableSelect("databaseEngine", "", "Database Engine", info.DatabaseEngine, []string{"", util.DatabaseMySQL, util.DatabasePostgreSQL, util.DatabaseSQLite, util.DatabaseSQLServer}, []string{"not specified", "MySQL", "PostgreSQL", "SQLite", "SQL Server"}, 5, project.Helpers["databaseEngine"]...) %}
+            {%- else -%}
+            <input type="hidden" name="databaseEngine" value="{%s info.DatabaseEngine %}" />
+            {%- endif -%}
             {%= components.TableInput("slack", "", "Slack Webhook", info.Slack, 5, project.Helpers["slack"]...) %}
             {%= components.TableInput("channels", "", "Channels", strings.Join(info.Channels, ", "), 5, project.Helpers["channels"]...) %}
             {%- if prj.HasModule("android") -%}

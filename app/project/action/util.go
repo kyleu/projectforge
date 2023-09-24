@@ -131,6 +131,7 @@ func infoFromCfg(proto *project.Project, cfg util.ValueMap) *project.Info {
 		Bundle:          str("bundle", i.Bundle),
 		SigningIdentity: str("signingIdentity", i.SigningIdentity),
 		NotarizeEmail:   str("notarizeEmail", i.NotarizeEmail),
+		DatabaseEngine:  str("databaseEngine", i.DatabaseEngine),
 		Slack:           str("slack", i.Slack),
 		Channels:        util.StringSplitAndTrim(str("channels", strings.Join(i.Channels, ", ")), ","),
 		JavaPackage:     str("javaPackage", i.JavaPackage),

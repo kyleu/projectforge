@@ -161,7 +161,7 @@ func exportViewDetailReverseRelations(ret *golang.Block, m *model.Model, models 
 		ret.W("          {%%= components.ExpandCollapse(3, ps) %%}")
 		ret.W("          {%%%%= components.SVGRefIcon(`%s`, ps) %%%%}", tgt.Icon)
 		msg := "          {%%%%s util.StringPlural(len(p.Rel%s), \"%s\") %%%%} by [%s]"
-		ret.W(msg, tgtName, tgt.Title(), tgtName, strings.Join(tgtCols.Names(), ", "))
+		ret.W(msg, tgtName, tgt.Title(), strings.Join(tgtCols.Titles(), ", "))
 		ret.W("        </label>")
 		ret.W("        <div class=\"bd\">")
 		ret.W("          {%%%%- if len(p.Rel%s) == 0 -%%%%}", tgtName)

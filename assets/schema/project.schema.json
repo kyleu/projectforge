@@ -141,6 +141,10 @@
           "description": "Email address used for Apple notarization, defaults to owner",
           "type": "string"
         },
+        "databaseEngine": {
+          "description": "Email address used for Apple notarization, defaults to owner",
+          "enum": ["mysql", "postgresql", "sqlite", "sqlserver"]
+        },
         "slack": {
           "description": "Slack webhook for notifying after successful releases",
           "type": "string"

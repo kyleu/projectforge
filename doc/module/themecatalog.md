@@ -3,7 +3,7 @@
 
 This is a module for [Project Forge](https://projectforge.dev). It includes a dozen default themes, and facilities to create additional.
 
-https://github.com/kyleu/projectforge/tree/master/module/sqlserver
+https://github.com/kyleu/projectforge/tree/master/module/themecatalog
 
 ### License
 

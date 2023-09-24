@@ -85,18 +85,18 @@ func (t *TemplateContext) IgnoredQuoted() string {
 }
 
 func (t *TemplateContext) ExplainPrefix() string {
-	if t.HasModulesAny("sqlite", "postgres") {
+	if t.HasModules(util.DatabasePostgreSQL, util.DatabaseSQLite) {
 		return "explain query plan "
 	}
 	return "explain "
 }
 
-func (t *TemplateContext) HasModulesAny(keys ...string) bool {
+func (t *TemplateContext) HasModules(keys ...string) bool {
 	return lo.ContainsBy(keys, func(key string) bool {
 		return lo.Contains(t.Modules, key)
 	})
 }
 
 func (t *TemplateContext) HasModule(key string) bool {
-	return t.HasModulesAny(key)
+	return t.HasModules(key)
 }

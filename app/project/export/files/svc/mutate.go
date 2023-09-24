@@ -28,13 +28,13 @@ func ServiceMutate(m *model.Model, args *model.Args, addHeader bool, linebreak s
 	} else {
 		return nil, err
 	}
-	if upd, err := serviceUpdate(g, m, args.Audit(m), args.Database()); err == nil {
+	if upd, err := serviceUpdate(g, m, args.Audit(m), args.Database); err == nil {
 		g.AddBlocks(upd)
 	} else {
 		return nil, err
 	}
 	if m.IsRevision() || m.IsHistory() {
-		if updIN, err := serviceUpdateIfNeeded(g, m, args.Database()); err == nil {
+		if updIN, err := serviceUpdateIfNeeded(g, m, args.Database); err == nil {
 			g.AddBlocks(updIN)
 		} else {
 			return nil, err
@@ -166,7 +166,7 @@ func serviceUpdate(g *golang.File, m *model.Model, audit bool, database string) 
 		ret.W("\treturn nil")
 	} else {
 		placeholder := ""
-		if database == model.SQLServer {
+		if database == util.DatabaseSQLServer {
 			placeholder = "@"
 		}
 		ret.W("\tq := database.SQLUpdate(tableQuoted, columnsQuoted, %q, s.db.Placeholder())", pks.WhereClause(len(m.Columns), placeholder))
@@ -248,7 +248,7 @@ func serviceUpdateIfNeeded(g *golang.File, m *model.Model, database string) (*go
 		ret.W("\treturn nil")
 	} else {
 		placeholder := ""
-		if database == model.SQLServer {
+		if database == util.DatabaseSQLServer {
 			placeholder = "@"
 		}
 		ret.W("\tq := database.SQLUpdate(tableQuoted, columnsQuoted, %q, s.db.Placeholder())", pks.WhereClause(len(m.Columns), placeholder))

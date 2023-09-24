@@ -148,7 +148,7 @@ func (m *Model) AllSearches(database string) []string {
 		if c.Search {
 			x := c.Name
 			if !types.IsString(c.Type) {
-				if database == SQLServer {
+				if database == util.DatabaseSQLServer {
 					x = fmt.Sprintf("cast(%s as nvarchar(2048))", c.Name)
 				} else {
 					x = fmt.Sprintf("%s::text", c.Name)

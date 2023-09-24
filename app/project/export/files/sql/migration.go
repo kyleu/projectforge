@@ -20,7 +20,7 @@ func Migration(m *model.Model, args *model.Args, addHeader bool, linebreak strin
 			return nil, err
 		}
 		g.AddBlocks(drop)
-		cr, err := sqlCreateRevision(m, args.Modules, args.Models)
+		cr, err := sqlCreateRevision(m, args.Modules, args.DatabaseNow(), args.Models)
 		if err != nil {
 			return nil, err
 		}
@@ -31,7 +31,7 @@ func Migration(m *model.Model, args *model.Args, addHeader bool, linebreak strin
 			return nil, err
 		}
 		g.AddBlocks(drop)
-		sc, err := sqlCreate(m, args.Modules, args.Models)
+		sc, err := sqlCreate(m, args.Modules, args.DatabaseNow(), args.Models)
 		if err != nil {
 			return nil, err
 		}
@@ -54,7 +54,7 @@ func sqlDrop(m *model.Model) (*golang.Block, error) {
 	return ret, nil
 }
 
-func sqlCreate(m *model.Model, modules []string, models model.Models) (*golang.Block, error) {
+func sqlCreate(m *model.Model, modules []string, now string, models model.Models) (*golang.Block, error) {
 	ret := golang.NewBlock("SQLCreate", "sql")
 	ret.W("-- {%% func " + m.Proper() + "Create() %%}")
 	ret.W("create table if not exists %q (", m.Name)
@@ -97,7 +97,7 @@ func sqlCreate(m *model.Model, modules []string, models model.Models) (*golang.B
 	lo.ForEach(m.Indexes, func(idx *model.Index, _ int) {
 		ret.W(idx.SQL())
 	})
-	sqlHistory(ret, m, modules)
+	sqlHistory(ret, m, modules, now)
 	ret.W("-- {%% endfunc %%}")
 	return ret, nil
 }

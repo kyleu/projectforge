@@ -18,7 +18,7 @@ import (
 
 func Row(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "row")
-	lo.ForEach(helper.ImportsForTypes("row", args.Database(), m.Columns.Types()...), func(imp *golang.Import, _ int) {
+	lo.ForEach(helper.ImportsForTypes("row", args.Database, m.Columns.Types()...), func(imp *golang.Import, _ int) {
 		g.AddImport(imp)
 	})
 	g.AddImport(helper.ImpStrings, helper.ImpAppUtil, helper.ImpFmt)
@@ -30,7 +30,7 @@ func Row(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*f
 		if col.Nullable && (types.IsString(col.Type) || types.IsInt(col.Type) || types.IsBool(col.Type)) {
 			g.AddImport(helper.ImpSQL)
 		}
-		if col.Type.Key() == types.KeyUUID && args.Database() == model.SQLServer {
+		if col.Type.Key() == types.KeyUUID && args.Database == util.DatabaseSQLServer {
 			if col.Nullable {
 				g.AddImport(helper.ImpDatabase)
 			} else {
@@ -43,16 +43,16 @@ func Row(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*f
 	} else {
 		return nil, err
 	}
-	mrow, err := modelRow(m, args.Enums, args.Database())
+	mrow, err := modelRow(m, args.Enums, args.Database)
 	if err != nil {
 		return nil, err
 	}
 	g.AddBlocks(mrow)
-	mrm, err := modelRowToModel(g, m, args.Database())
+	mrm, err := modelRowToModel(g, m, args.Database)
 	if err != nil {
 		return nil, err
 	}
-	g.AddBlocks(mrm, modelRowArray(), modelRowArrayTransformer(m), defaultWC(m, args.Database()))
+	g.AddBlocks(mrm, modelRowArray(), modelRowArrayTransformer(m), defaultWC(m, args.Database))
 	return g.Render(addHeader, linebreak)
 }
 
@@ -166,7 +166,7 @@ func modelRowToModel(g *golang.File, m *model.Model, database string) (*golang.B
 				default:
 					refs = append(refs, fmt.Sprintf("%s r.%s", k, c.Proper()))
 				}
-			case database == model.SQLServer && c.Type.Key() == types.KeyUUID:
+			case database == util.DatabaseSQLServer && c.Type.Key() == types.KeyUUID:
 				if c.Nullable {
 					refs = append(refs, fmt.Sprintf("%s database.UUIDFromGUID(r.%s)", k, c.Proper()))
 				} else {
@@ -209,7 +209,7 @@ func defaultWC(m *model.Model, database string) *golang.Block {
 	wc := make([]string, 0, len(c))
 	idxs := make([]string, 0, len(c))
 	lo.ForEach(c, func(col *model.Column, idx int) {
-		if database == model.SQLServer {
+		if database == util.DatabaseSQLServer {
 			wc = append(wc, fmt.Sprintf("%q = @p%%%%d", col.Name))
 		} else {
 			wc = append(wc, fmt.Sprintf("%q = $%%%%d", col.Name))

@@ -107,6 +107,7 @@ func (p *Project) ModuleArgExport(pSvc *Service, logger util.Logger) (*model.Arg
 			return nil, err
 		}
 		p.ExportArgs.Modules = p.Modules
+		p.ExportArgs.Database = p.DatabaseEngineDefault()
 	}
 	return p.ExportArgs, nil
 }
@@ -116,4 +117,32 @@ func (p *Project) GoVersion() string {
 		return DefaultGoVersion
 	}
 	return p.Info.GoVersion
+}
+
+func (p *Project) DatabaseEngines() []string {
+	ret := make([]string, 0, 4)
+	if p.HasModule(util.DatabaseMySQL) {
+		ret = append(ret, util.DatabaseMySQL)
+	}
+	if p.HasModule(util.DatabasePostgreSQL) {
+		ret = append(ret, util.DatabasePostgreSQL)
+	}
+	if p.HasModule(util.DatabaseSQLite) {
+		ret = append(ret, util.DatabaseSQLite)
+	}
+	if p.HasModule(util.DatabaseSQLServer) {
+		ret = append(ret, util.DatabaseSQLServer)
+	}
+	return ret
+}
+
+func (p *Project) DatabaseEngineDefault() string {
+	if p.Info != nil && p.Info.DatabaseEngine != "" {
+		return p.Info.DatabaseEngine
+	}
+	engines := p.DatabaseEngines()
+	if len(engines) == 1 {
+		return engines[0]
+	}
+	return util.DatabasePostgreSQL
 }

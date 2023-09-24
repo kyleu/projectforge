@@ -143,7 +143,7 @@ func (c *Column) BC() string {
 }
 
 func (c *Column) NeedsErr(_ string, database string) bool {
-	if database == SQLServer && c.Type.Key() == types.KeyUUID && c.Nullable {
+	if database == util.DatabaseSQLServer && c.Type.Key() == types.KeyUUID && c.Nullable {
 		return true
 	}
 	if c.Type.Scalar() {

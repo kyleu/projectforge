@@ -66,6 +66,12 @@
           <td>{%s info.NotarizeEmail %} &lt;<a href="mailto:{%s info.NotarizeEmail %}">{%s info.NotarizeEmail %}</a>&gt;</td>
         </tr>
         {%- endif -%}
+        {%- if info.DatabaseEngine != "" -%}
+        <tr>
+          <th>Database Engine</th>
+          <td>{%s info.DatabaseEngine %}</td>
+        </tr>
+        {%- endif -%}
         <tr>
           <th>Slack Webhook</th>
           <td>{%s info.Slack %}</td>

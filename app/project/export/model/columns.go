@@ -83,6 +83,12 @@ func (c Columns) ProperNames() []string {
 	})
 }
 
+func (c Columns) Titles() []string {
+	return lo.Map(c, func(x *Column, _ int) string {
+		return x.Title()
+	})
+}
+
 func (c Columns) TitlesLower() []string {
 	return lo.Map(c, func(x *Column, _ int) string {
 		return x.TitleLower()

@@ -9,6 +9,7 @@ import (
 	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func serviceSearch(m *model.Model, grp *model.Column, dbRef string, enums enum.Enums, database string) (*golang.Block, error) {
@@ -26,7 +27,7 @@ func serviceSearch(m *model.Model, grp *model.Column, dbRef string, enums enum.E
 		}
 	})
 	eq, like := "$1", "$2"
-	if database == model.SQLServer {
+	if database == util.DatabaseSQLServer {
 		eq, like = "@p1", "@p2"
 	}
 	var params []string

@@ -27,12 +27,13 @@ type TemplateContext struct {
 	Modules    []string `json:"modules,omitempty"`
 	Tags       []string `json:"tags,omitempty"`
 
-	ExportArgs *model.Args   `json:"exportArgs,omitempty"`
-	Config     util.ValueMap `json:"config,omitempty"`
-	Info       *Info         `json:"info,omitempty"`
-	Build      *Build        `json:"build,omitempty"`
-	Theme      *theme.Theme  `json:"theme,omitempty"`
-	Linebreak  string        `json:"-"`
+	ExportArgs     *model.Args   `json:"exportArgs,omitempty"`
+	Config         util.ValueMap `json:"config,omitempty"`
+	Info           *Info         `json:"info,omitempty"`
+	Build          *Build        `json:"build,omitempty"`
+	Theme          *theme.Theme  `json:"theme,omitempty"`
+	DatabaseEngine string        `json:"databaseEngine,omitempty"`
+	Linebreak      string        `json:"-"`
 }
 
 func (p *Project) ToTemplateContext(configVars util.KeyTypeDescs, portOffsets map[string]int, linebreak string) *TemplateContext {
@@ -66,7 +67,7 @@ func (p *Project) ToTemplateContext(configVars util.KeyTypeDescs, portOffsets ma
 		Key: p.Key, Name: p.Name, Exec: p.Executable(), Version: p.Version,
 		Package: p.Package, Args: p.Args, Port: p.Port, ConfigVars: cv, PortOffsets: portOffsets,
 		Ignore: p.Ignore, IgnoreGrep: ignoreGrep, Modules: p.Modules, Tags: p.Tags,
-		ExportArgs: p.ExportArgs, Config: p.Config, Info: i, Build: b, Theme: t, Linebreak: linebreak,
+		ExportArgs: p.ExportArgs, Config: p.Config, Info: i, Build: b, Theme: t, DatabaseEngine: p.DatabaseEngineDefault(), Linebreak: linebreak,
 	}
 
 	if ret.Name == "" {

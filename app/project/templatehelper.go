@@ -5,6 +5,8 @@ import (
 	"strings"
 
 	"github.com/samber/lo"
+
+	"projectforge.dev/projectforge/app/util"
 )
 
 const goStdBin = "go"
@@ -33,7 +35,7 @@ func (t *TemplateContext) SourceTrimmed() string {
 }
 
 func (t *TemplateContext) HasDatabaseModule() bool {
-	return t.HasModulesAny("migration", "readonlydb")
+	return t.HasModules("migration", "readonlydb")
 }
 
 func (t *TemplateContext) ModuleMarkdown() string {
@@ -49,16 +51,16 @@ func (t *TemplateContext) PortIncremented(i int) int {
 }
 
 func (t *TemplateContext) BuildAndroid() bool {
-	ret := t.HasModulesAny("android") && t.Build.Android
+	ret := t.HasModules("android") && t.Build.Android
 	return ret
 }
 
 func (t *TemplateContext) BuildIOS() bool {
-	return t.HasModulesAny("ios") && t.Build.IOS
+	return t.HasModules("ios") && t.Build.IOS
 }
 
 func (t *TemplateContext) BuildDesktop() bool {
-	return t.HasModulesAny("desktop") && t.Build.Desktop
+	return t.HasModules("desktop") && t.Build.Desktop
 }
 
 func (t *TemplateContext) BuildMobile() bool {
@@ -66,11 +68,11 @@ func (t *TemplateContext) BuildMobile() bool {
 }
 
 func (t *TemplateContext) BuildWASM() bool {
-	return t.HasModulesAny("wasmserver") && t.Build.WASM
+	return t.HasModules("wasmserver") && t.Build.WASM
 }
 
 func (t *TemplateContext) BuildNotarize() bool {
-	return t.HasModulesAny("notarize") && t.Build.Notarize
+	return t.HasModules("notarize") && t.Build.Notarize
 }
 
 func (t *TemplateContext) UsesLib() bool {
@@ -82,7 +84,7 @@ func (t *TemplateContext) HasSlack() bool {
 }
 
 func (t *TemplateContext) HasUser() bool {
-	return t.HasModulesAny("user")
+	return t.HasModules("user")
 }
 
 func (t *TemplateContext) IsNotarized() bool {
@@ -134,15 +136,22 @@ func (t *TemplateContext) GoBinarySafe() string {
 }
 
 func (t *TemplateContext) Placeholder(idx int) string {
-	if t.HasModulesAny("postgres", "sqlite") {
+	if t.DatabaseEngine == util.DatabasePostgreSQL || t.DatabaseEngine == util.DatabaseSQLite {
 		return fmt.Sprintf("$%d", idx)
 	}
-	if t.HasModulesAny("sqlserver") {
+	if t.DatabaseEngine == util.DatabaseSQLServer {
 		return fmt.Sprintf("@p%d", idx)
 	}
 	return "?"
 }
 
+func (t *TemplateContext) TypeUUID() string {
+	if t.DatabaseEngine == util.DatabaseSQLite {
+		return "text"
+	}
+	return "uuid"
+}
+
 func (t *TemplateContext) SQLServer() bool {
-	return !t.HasModulesAny("postgres") && t.HasModulesAny("sqlserver")
+	return t.DatabaseEngine == util.DatabaseSQLServer
 }

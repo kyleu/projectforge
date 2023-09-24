@@ -32,7 +32,7 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool, linebreak stri
 	g.AddBlocks(serviceCount(g, m, args.DBRef()))
 	pkLen := len(m.PKs())
 	if pkLen > 0 {
-		gbpk, err := serviceGetByPK(m, dbRef, args.Enums, args.Database())
+		gbpk, err := serviceGetByPK(m, dbRef, args.Enums, args.Database)
 		if err != nil {
 			return nil, err
 		}
@@ -77,7 +77,7 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool, linebreak stri
 		returnMultiple := lo.ContainsBy(cols, func(x *model.Column) bool {
 			return !x.HasTag("unique")
 		})
-		gb, err := serviceGetBy(name, m, cols, returnMultiple, dbRef, args.Enums, args.Database())
+		gb, err := serviceGetBy(name, m, cols, returnMultiple, dbRef, args.Enums, args.Database)
 		if err != nil {
 			return nil, err
 		}
@@ -86,7 +86,7 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool, linebreak stri
 
 	if m.HasSearches() {
 		g.AddImport(helper.ImpStrings)
-		ss, err := serviceSearch(m, nil, dbRef, args.Enums, args.Database())
+		ss, err := serviceSearch(m, nil, dbRef, args.Enums, args.Database)
 		if err != nil {
 			return nil, err
 		}
@@ -95,7 +95,7 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool, linebreak stri
 	for _, grp := range m.GroupedColumns() {
 		if !grp.PK {
 			if m.HasSearches() {
-				ss, err := serviceSearch(m, grp, dbRef, args.Enums, args.Database())
+				ss, err := serviceSearch(m, grp, dbRef, args.Enums, args.Database)
 				if err != nil {
 					return nil, err
 				}
@@ -243,7 +243,7 @@ func serviceGetByCols(key string, m *model.Model, cols model.Columns, dbRef stri
 	ret.W(msg)
 	ret.W("\tparams = filters(params)")
 	placeholder := ""
-	if database == model.SQLServer {
+	if database == util.DatabaseSQLServer {
 		placeholder = "@"
 	}
 	ret.W("\twc := %q", cols.WhereClause(0, placeholder))

@@ -9,7 +9,7 @@ import (
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func sqlCreateRevision(m *model.Model, modules []string, models model.Models) (*golang.Block, error) {
+func sqlCreateRevision(m *model.Model, modules []string, now string, models model.Models) (*golang.Block, error) {
 	pks := m.PKs()
 	hc := m.HistoryColumns(true)
 
@@ -70,7 +70,7 @@ func sqlCreateRevision(m *model.Model, modules []string, models model.Models) (*
 		ret.W(idx.SQL())
 	})
 
-	sqlHistory(ret, m, modules)
+	sqlHistory(ret, m, modules, now)
 	ret.W("-- {%% endfunc %%}")
 	return ret, nil
 }
