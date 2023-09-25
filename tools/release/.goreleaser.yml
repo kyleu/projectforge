@@ -58,7 +58,7 @@ dist: "build/dist"
 nfpms:
   -
     vendor: "Kyle U"
-    homepage: "https://projectforge.dev}"
+    homepage: "https://projectforge.dev"
     maintainer: "Kyle U <projectforge@kyleu.com>"
     description: "Project Forge creates and manages applications written in the Go programming language. Using code generation, the latest technology, and a strong standard library, Project Forge will help manage your project's code, assets, UI and UX."
     license: "Proprietary"
