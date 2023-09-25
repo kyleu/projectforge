@@ -68,7 +68,7 @@ dist: "build/dist"
 nfpms:
   -
     vendor: "{{{ .Info.AuthorName }}}"
-    homepage: "{{{ .Info.Homepage }}}}"
+    homepage: "{{{ .Info.Homepage }}}"
     maintainer: "{{{ .Info.AuthorName }}} <{{{ .Info.AuthorEmail }}}>"
     description: "{{{ .Info.Description }}}"
     license: "{{{ .Info.License }}}"
