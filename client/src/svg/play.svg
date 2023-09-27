@@ -1,5 +1,5 @@
 <!-- imported from https://raw.githubusercontent.com/icons8/line-awesome/master/svg/play-solid.svg -->
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 128 128">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 32 32">
   <symbol id="svg-play" viewBox="0 0 32 32">
     <path class="svg-fill" d="M 9 5.15625 L 9 26.84375 L 10.53125 25.84375 L 25.84375 16 L 10.53125 6.15625 Z M 11 8.8125 L 22.15625 16 L 11 23.1875 Z" />
   </symbol>
