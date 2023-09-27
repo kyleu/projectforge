@@ -1,6 +1,6 @@
 //go:build test_all || !func_test
 
-// Content managed by Project Forge, see [projectforge.md] for details.
+// Package result - Content managed by Project Forge, see [projectforge.md] for details.
 package result_test
 
 import (

@@ -1,3 +1,4 @@
+// Package app
 package app // import "projectforge.dev/projectforge/app"
 
 import (

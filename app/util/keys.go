@@ -1,4 +1,4 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
+// Package util - Content managed by Project Forge, see [projectforge.md] for details.
 package util
 
 const (
@@ -15,7 +15,7 @@ const (
 	KeyError   = "error"
 	KeyUnknown = "unknown"
 
-	// $PF_SECTION_START(keys)$
+	// $PF_SECTION_START(keys)$.
 	DatabaseMySQL      = "mysql"
 	DatabasePostgreSQL = "postgres"
 	DatabaseSQLite     = "sqlite"

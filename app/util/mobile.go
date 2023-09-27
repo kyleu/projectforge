@@ -1,6 +1,6 @@
 //go:build android
 
-// Content managed by Project Forge, see [projectforge.md] for details.
+// Package util - Content managed by Project Forge, see [projectforge.md] for details.
 package util
 
 import (

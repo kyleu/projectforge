@@ -1,4 +1,4 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
+// Package types - Content managed by Project Forge, see [projectforge.md] for details.
 package types
 
 var valueMapInst = &Map{K: NewString(), V: NewAny()}

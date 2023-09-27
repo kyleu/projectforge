@@ -1,4 +1,4 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
+// Package assets - Content managed by Project Forge, see [projectforge.md] for details.
 package assets
 
 import (

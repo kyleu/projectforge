@@ -1,4 +1,4 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
+// Package menu - Content managed by Project Forge, see [projectforge.md] for details.
 package menu
 
 import "github.com/samber/lo"

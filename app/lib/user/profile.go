@@ -1,4 +1,4 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
+// Package user - Content managed by Project Forge, see [projectforge.md] for details.
 package user
 
 type Profile struct {
