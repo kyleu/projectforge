@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 
 	"projectforge.dev/projectforge/app/lib/exec"
+	"projectforge.dev/projectforge/app/lib/help"
 	"projectforge.dev/projectforge/app/lib/websocket"
 	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/project"
@@ -20,6 +21,7 @@ type Services struct {
 	Git      *git.Service
 	Exec     *exec.Service
 	Socket   *websocket.Service
+	Help     *help.Service
 }
 
 func NewServices(ctx context.Context, st *State, rootLogger util.Logger) (*Services, error) {
@@ -27,9 +29,13 @@ func NewServices(ctx context.Context, st *State, rootLogger util.Logger) (*Servi
 	if err != nil {
 		return nil, err
 	}
+	hs, err := help.NewService(rootLogger)
+	if err != nil {
+		return nil, err
+	}
 	ps, es, gs, xs := project.NewService(), export.NewService(), git.NewService(), exec.NewService()
 	ws := websocket.NewService(nil, socketHandler, nil)
-	return &Services{Modules: ms, Projects: ps, Export: es, Git: gs, Exec: xs, Socket: ws}, nil
+	return &Services{Modules: ms, Projects: ps, Export: es, Git: gs, Exec: xs, Socket: ws, Help: hs}, nil
 }
 
 func (s *Services) Close(_ context.Context, _ util.Logger) error {

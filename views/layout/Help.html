@@ -1,0 +1,35 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "strings"
+
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/views/components"
+) %}
+
+{% func Help(as *app.State, ps *cutil.PageState) %}{% stripspace %}
+  {% code
+    title := ps.Title
+    if title == "" {
+      title = util.AppName
+    }
+  %}
+  {% if hlp := as.Services.Help.HTML(ps.Action); hlp != "" %}
+  <a class="help-link" title="Help for this page" data-key="{%s strings.TrimSuffix(ps.Action, `.action`) %}" href="#help">
+    {%= components.SVGRef(`question`, 24, 24, ``, ps) %}
+  </a>
+  <div id="help" class="modal" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h3>{%= components.SVGRefIcon(`question`, ps) %}Help -{% space %}{%s title %}</h3>
+      </div>
+      <div class="modal-body">
+        <div class="mt">{%s= hlp %}</div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+{% endstripspace %}{% endfunc %}
