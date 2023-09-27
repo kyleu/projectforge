@@ -14,7 +14,6 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-// Represents a user's WebSocket session.
 type Connection struct {
 	ID       uuid.UUID     `json:"id"`{{{ if .HasUser }}}
 	User     *dbuser.User  `json:"user,omitempty"`{{{ end }}}
@@ -28,12 +27,10 @@ type Connection struct {
 	mu       sync.Mutex
 }
 
-// Creates a new Connection.
 func NewConnection(svc string{{{ if .HasUser }}}, usr *dbuser.User{{{ end }}}, profile *user.Profile{{{ if .HasModule "oauth" }}}, accounts user.Accounts{{{ end }}}, socket *websocket.Conn) *Connection {
 	return &Connection{ID: util.UUID(){{{ if .HasUser }}}, User: usr{{{ end }}}, Profile: profile{{{ if .HasModule "oauth" }}}, Accounts: accounts{{{ end }}}, Svc: svc, Started: util.TimeCurrent(), socket: socket}
 }
 
-// Transforms this Connection to a serializable Status object.
 func (c *Connection) ToStatus() *Status {
 	if c.Channels == nil {
 		return &Status{ID: c.ID, Username: c.Profile.Name, Channels: nil}
@@ -52,7 +49,6 @@ func (c *Connection) Username() string {
 	return c.Profile.Name
 }{{{ end }}}
 
-// Writes bytes to this Connection, you should probably use a helper method.
 func (c *Connection) Write(b []byte) error {
 	c.mu.Lock()
 	defer c.mu.Unlock()
@@ -63,13 +59,11 @@ func (c *Connection) Write(b []byte) error {
 	return nil
 }
 
-// Reads bytes from this Connection, you should probably use a helper method.
 func (c *Connection) Read() ([]byte, error) {
 	_, message, err := c.socket.ReadMessage()
 	return message, errors.Wrap(err, "unable to write to websocket")
 }
 
-// Closes the backing socket.
 func (c *Connection) Close() error {
 	return c.socket.Close()
 }

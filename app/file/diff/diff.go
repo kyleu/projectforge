@@ -84,7 +84,14 @@ func FileLoader(mods []string, src file.Files, tgt filesystem.FileLoader, includ
 				ret = append(ret, &Diff{Path: p, Status: &Status{Key: util.KeyError, Title: fmt.Sprintf("An error was encountered: %+v", err)}})
 			}
 
-			tgtFile = file.NewFile(p, t.Mode, b, false, logger)
+			pkg := ""
+			if t.Name != "" {
+				spl := strings.Split(t.Name, "/")
+				if len(spl) > 1 {
+					pkg = spl[len(spl)-2]
+				}
+			}
+			tgtFile = file.NewFile(p, t.Mode, b, false, pkg, logger)
 
 			if strings.Contains(tgtFile.Content, file.IgnorePattern) {
 				skip = true

@@ -8,8 +8,8 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-const (
-	WebAuthKey  = "auth"
+const ({{{ if .HasModule "oauth" }}}
+	WebAuthKey  = "auth"{{{ end }}}
 	WebFlashKey = "flash"
 	ReferKey    = "refer"
 )

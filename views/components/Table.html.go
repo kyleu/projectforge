@@ -993,7 +993,7 @@ func TableInputFile(key string, id string, title string, label string, value str
 }
 
 //line views/components/Table.html:185
-func StreamTableRichEditor(qw422016 *qt422016.Writer, key string, id string, title string, columns []*util.ModelDesc, value []any, placeholder ...string) {
+func StreamTableRichEditor(qw422016 *qt422016.Writer, key string, id string, title string, columns []*util.FieldDesc, value []any, placeholder ...string) {
 //line views/components/Table.html:185
 	qw422016.N().S(`<tr><th class="shrink"><label for="`)
 //line views/components/Table.html:187
@@ -1012,7 +1012,7 @@ func StreamTableRichEditor(qw422016 *qt422016.Writer, key string, id string, tit
 }
 
 //line views/components/Table.html:192
-func WriteTableRichEditor(qq422016 qtio422016.Writer, key string, id string, title string, columns []*util.ModelDesc, value []any, placeholder ...string) {
+func WriteTableRichEditor(qq422016 qtio422016.Writer, key string, id string, title string, columns []*util.FieldDesc, value []any, placeholder ...string) {
 //line views/components/Table.html:192
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/components/Table.html:192
@@ -1023,7 +1023,7 @@ func WriteTableRichEditor(qq422016 qtio422016.Writer, key string, id string, tit
 }
 
 //line views/components/Table.html:192
-func TableRichEditor(key string, id string, title string, columns []*util.ModelDesc, value []any, placeholder ...string) string {
+func TableRichEditor(key string, id string, title string, columns []*util.FieldDesc, value []any, placeholder ...string) string {
 //line views/components/Table.html:192
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/components/Table.html:192

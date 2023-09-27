@@ -1,5 +1,5 @@
 // Package app - $PF_GENERATE_ONCE$
-package app
+package app // import {{{ .Package }}}
 
 import (
 	"context"{{{ if .HasModule "migration" }}}
@@ -7,7 +7,8 @@ import (
 	"github.com/pkg/errors"
 
 	"{{{ .Package }}}/app/lib/database/migrate"{{{ end}}}{{{ if.HasModule "process" }}}
-	"{{{ .Package }}}/app/lib/exec"{{{ end }}}{{{ if.HasModule "scripting" }}}
+	"{{{ .Package }}}/app/lib/exec"{{{ end }}}{{{ if .HasModule "help" }}}
+	"{{{ .Package }}}/app/lib/help"{{{ end }}}{{{ if.HasModule "scripting" }}}
 	"{{{ .Package }}}/app/lib/scripting"{{{ end }}}{{{ if.HasModule "websocket" }}}
 	"{{{ .Package }}}/app/lib/websocket"{{{ end }}}{{{ if .HasModule "migration" }}}
 	"{{{ .Package }}}/queries/migrations"{{{ end }}}
@@ -19,7 +20,8 @@ type Services struct {
 	// $PF_INJECT_END(services)${{{ end }}}{{{ if.HasModule "process" }}}
 	Exec   *exec.Service{{{ end }}}{{{ if.HasModule "scripting" }}}
 	Script *scripting.Service{{{ end }}}{{{ if.HasModule "websocket" }}}
-	Socket *websocket.Service{{{ end }}}
+	Socket *websocket.Service{{{ end }}}{{{ if.HasModule "help" }}}
+	Help   *help.Service{{{ end }}}
 	// add your dependencies here
 }
 
@@ -33,6 +35,7 @@ func NewServices(ctx context.Context, st *State, logger util.Logger) (*Services,
 		{{{ if.HasModule "process" }}}Exec:   exec.NewService(),
 		{{{ end }}}{{{ if.HasModule "scripting" }}}Script: scripting.NewService(st.FS, "scripts"),
 		{{{ end }}}{{{ if.HasModule "websocket" }}}Socket: websocket.NewService(nil, nil, nil),
+		{{{ end}}}{{{ if.HasModule "help" }}}Help:   help.NewService(logger),
 		{{{ end}}}{{{ if.HasModule "export" }}}// $PF_INJECT_START(refs)$
 		// $PF_INJECT_END(refs)${{{ end }}}
 	}, nil

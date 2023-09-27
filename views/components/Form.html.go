@@ -1114,7 +1114,7 @@ func FormInputFile(key string, id string, label string, value string) string {
 }
 
 //line views/components/Form.html:187
-func StreamFormRichEditor(qw422016 *qt422016.Writer, key string, id string, columns []*util.ModelDesc, value []any, placeholder ...string) {
+func StreamFormRichEditor(qw422016 *qt422016.Writer, key string, id string, columns []*util.FieldDesc, value []any, placeholder ...string) {
 //line views/components/Form.html:188
 	if value == nil {
 		value = []any{}
@@ -1138,7 +1138,7 @@ func StreamFormRichEditor(qw422016 *qt422016.Writer, key string, id string, colu
 }
 
 //line views/components/Form.html:192
-func WriteFormRichEditor(qq422016 qtio422016.Writer, key string, id string, columns []*util.ModelDesc, value []any, placeholder ...string) {
+func WriteFormRichEditor(qq422016 qtio422016.Writer, key string, id string, columns []*util.FieldDesc, value []any, placeholder ...string) {
 //line views/components/Form.html:192
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/components/Form.html:192
@@ -1149,7 +1149,7 @@ func WriteFormRichEditor(qq422016 qtio422016.Writer, key string, id string, colu
 }
 
 //line views/components/Form.html:192
-func FormRichEditor(key string, id string, columns []*util.ModelDesc, value []any, placeholder ...string) string {
+func FormRichEditor(key string, id string, columns []*util.FieldDesc, value []any, placeholder ...string) string {
 //line views/components/Form.html:192
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/components/Form.html:192

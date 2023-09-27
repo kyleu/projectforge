@@ -26,9 +26,9 @@ func enumStruct(e *enum.Enum) *golang.Block {
 	ret.W("type %s string", e.Proper())
 	ret.WB()
 	ret.W("const (")
-	max := util.StringArrayMaxLength(e.ValuesCamel())
+	maxCount := util.StringArrayMaxLength(e.ValuesCamel())
 	pl := len(e.Proper())
-	maxColLength := max + pl
+	maxColLength := maxCount + pl
 	lo.ForEach(e.Values, func(v string, _ int) {
 		ret.W("\t%s %s = %q", util.StringPad(e.Proper()+util.StringToCamel(v), maxColLength), e.Proper(), v)
 	})

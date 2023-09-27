@@ -11,8 +11,7 @@ type simpleEncoder struct {
 	pool buffer.Pool
 }
 
-//nolint:revive
-func SimpleEncoder(cfg zapcore.EncoderConfig) *simpleEncoder {
+func createSimpleEncoder(cfg zapcore.EncoderConfig) *simpleEncoder {
 	return &simpleEncoder{Encoder: zapcore.NewJSONEncoder(cfg), pool: buffer.NewPool()}
 }
 

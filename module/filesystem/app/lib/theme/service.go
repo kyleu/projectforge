@@ -32,13 +32,13 @@ func (s *Service) Clear() {
 }
 
 func (s *Service) Get(theme string, logger util.Logger) *Theme {
-	return lo.FindOrElse(s.All(logger), ThemeDefault, func(t *Theme) bool {
+	return lo.FindOrElse(s.All(logger), Default, func(t *Theme) bool {
 		return t.Key == theme
 	})
 }
 
 func (s *Service) Save(t *Theme, originalKey string, logger util.Logger) error {
-	if t.Key == ThemeDefault.Key {
+	if t.Key == Default.Key {
 		return errors.New("can't overwrite default theme")
 	}
 	if t.Key == "" || t.Key == KeyNew {
@@ -61,7 +61,7 @@ func (s *Service) Save(t *Theme, originalKey string, logger util.Logger) error {
 
 func (s *Service) loadIfNeeded(logger util.Logger) {
 	if s.cache == nil {
-		s.cache = Themes{ThemeDefault}
+		s.cache = Themes{Default}
 		if s.files.IsDir(s.root) {
 			lo.ForEach(s.files.ListJSON(s.root, nil, true, logger), func(key string, _ int) {
 				t := &Theme{}
@@ -97,7 +97,7 @@ func (s *Service) FileExists(key string) bool {
 }
 
 func ApplyMap(frm util.ValueMap) *Theme {
-	orig := ThemeDefault
+	orig := Default
 
 	l := orig.Light.Clone().ApplyMap(frm, "light-")
 	d := orig.Dark.Clone().ApplyMap(frm, "dark-")

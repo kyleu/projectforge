@@ -26,7 +26,7 @@ func FormatJSON(v any) (string, error) {
 func FormatLang(content string, lang string) (string, error) {
 	l := lexers.Get(lang)
 	return FormatString(content, l)
-}
+}{{{ if .HasModule "migration" }}}
 
 func FormatLangIgnoreErrors(content string, lang string) string {
 	ret, err := FormatLang(content, lang)
@@ -34,7 +34,7 @@ func FormatLangIgnoreErrors(content string, lang string) string {
 		return fmt.Sprintf("encoding error: %s\n%s", err.Error(), content)
 	}
 	return ret
-}
+}{{{ end }}}
 
 func FormatFilename(content string, filename string) (string, error) {
 	l := lexers.Match(filename)

@@ -75,7 +75,7 @@ func exportModelFromForm(frm util.ValueMap, m *model.Model) error {
 	}
 	m.Indexes = idxs
 
-	sd := [][]any{}
+	var sd [][]any
 	err = util.FromJSON([]byte(get("seedData", util.ToJSON(m.SeedData))), &sd)
 	if err != nil {
 		return errors.Wrap(err, "invalid seed data")

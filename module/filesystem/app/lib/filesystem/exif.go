@@ -3,7 +3,7 @@ package filesystem
 import (
 	"strings"
 
-	exif "github.com/dsoprea/go-exif/v3"
+	"github.com/dsoprea/go-exif/v3"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
 

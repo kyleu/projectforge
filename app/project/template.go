@@ -47,7 +47,7 @@ func (p *Project) ToTemplateContext(configVars util.KeyTypeDescs, portOffsets ma
 	}
 	t := p.Theme
 	if t == nil {
-		t = theme.ThemeDefault
+		t = theme.Default
 	}
 
 	var ignoreGrep string

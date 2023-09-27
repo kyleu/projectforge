@@ -92,7 +92,7 @@ func projectFromForm(frm util.ValueMap, prj *project.Project) error {
 		prj.Build = nil
 	}
 	prj.Theme = theme.ApplyMap(frm)
-	if prj.Theme.Equals(theme.ThemeDefault) {
+	if prj.Theme.Equals(theme.Default) {
 		prj.Theme = nil
 	}
 	return nil

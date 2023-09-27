@@ -45,7 +45,11 @@ func StreamAvailActions(qw422016 *qt422016.Writer, title string, currTags []stri
 //line views/vproject/AvailActions.html:17
 	qw422016.N().S(`
   <h3>
-    <a href="/p">All Projects</a>`)
+    <a href="/p">`)
+//line views/vproject/AvailActions.html:19
+	components.StreamSVGRefIcon(qw422016, `code`, ps)
+//line views/vproject/AvailActions.html:19
+	qw422016.N().S(`All Projects</a>`)
 //line views/vproject/AvailActions.html:19
 	if len(currTags) > 0 {
 //line views/vproject/AvailActions.html:19

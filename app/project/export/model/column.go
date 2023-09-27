@@ -22,14 +22,14 @@ const (
 	FmtURL        = "url"
 )
 
-var ColumnModelDescs = util.ModelDescs{
+var ColumnFieldDescs = util.FieldDescs{
 	{Key: "name", Title: "Name", Description: "The name of the column"},
-	// {Key: "type", Title: "Type", Description: "The X of the column"},
-	// {Key: "pk", Title: "PK", Description: "The X of the column"},
-	// {Key: "nullable", Title: "Nullable", Description: "The X of the column"},
-	// {Key: "search", Title: "Search", Description: "The X of the column"},
+	{Key: "type", Title: "Type", Description: "The type of the column"},
+	{Key: "pk", Title: "PK", Description: "Indicates if this column is a primary key"},
+	{Key: "nullable", Title: "Nullable", Description: "Indicates if this column is nullable"},
+	{Key: "search", Title: "Search", Description: "Indicates if this column is included in search"},
 	// {Key: "sqlDefault", Title: "SQL Default", Description: "The X of the column"},
-	// {Key: "indexed", Title: "Indexed", Description: "The X of the column"},
+	{Key: "indexed", Title: "Indexed", Description: "Indicates if this column is indexed"},
 	{Key: "display", Title: "Display", Description: "The display setting of the column's value"},
 	{Key: "format", Title: "Format", Description: "The formatting applied to the column's value"},
 	{Key: "example", Title: "Example", Description: "Example annotation for the column's value"},

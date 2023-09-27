@@ -10,7 +10,6 @@ import (
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/file/diff"
-	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/util"
 )
 
@@ -42,24 +41,14 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 			return nil, nil, errors.Wrap(e, "unable to inject code")
 		}
 	}
-	if pm.Mods.Get("datadog") != nil {
-		svc := ServiceDefinition(pm.Prj)
-		f := file.NewFile("doc/service.json", filesystem.DefaultMode, util.ToJSONBytes(svc, true), false, pm.Logger)
-		srcFiles = append(srcFiles, f)
-	}
-
 	configVars, portOffsets := parse(pm)
-
 	pm.Prj.ExportArgs, _ = pm.Prj.ModuleArgExport(pm.PSvc, pm.Logger)
-
 	lb := util.StringDetectLinebreak(string(pm.File))
 	tCtx := pm.Prj.ToTemplateContext(configVars, portOffsets, lb)
-
 	tgt, err := pm.PSvc.GetFilesystem(pm.Prj)
 	if err != nil {
 		return nil, nil, err
 	}
-
 	for _, f := range srcFiles {
 		origPath := f.FullPath()
 		if strings.Contains(origPath, delimStart) {
@@ -76,19 +65,16 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 			return nil, nil, err
 		}
 	}
-
 	for _, f := range srcFiles {
 		f.Content, err = runTemplateFile(f, tCtx)
 		if err != nil {
 			return nil, nil, err
 		}
 	}
-
 	dfs, err := diff.FileLoader(pm.Mods.Keys(), srcFiles, tgt, false, pm.Logger)
 	if err != nil {
 		return nil, nil, err
 	}
-
 	return srcFiles, dfs, nil
 }
 

@@ -13,7 +13,7 @@ type SQLiteParams struct {
 }
 
 func OpenSQLite(ctx context.Context, prefix string, logger util.Logger) (*Service, error) {
-	envParams := SQLiteParamsFromEnv(util.AppKey, util.AppKey, prefix)
+	envParams := SQLiteParamsFromEnv(util.AppKey, prefix)
 	return OpenSQLiteDatabase(ctx, util.AppKey, envParams, logger)
 }
 
@@ -21,7 +21,7 @@ func OpenDefaultSQLite(ctx context.Context, logger util.Logger) (*Service, error
 	return OpenSQLite(ctx, "", logger)
 }
 
-func SQLiteParamsFromEnv(key string, defaultUser string, prefix string) *SQLiteParams {
+func SQLiteParamsFromEnv(_ string, prefix string) *SQLiteParams {
 	f := util.AppKey + ".sqlite"
 	if x := util.GetEnv(prefix + "db_file"); x != "" {
 		f = x

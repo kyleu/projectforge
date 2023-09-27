@@ -67,7 +67,7 @@ func searchModel(m *model.Model) []string {
 	if m.HasTag("big") {
 		data = "nil"
 	}
-	add("\t\t\treturn result.NewResult(%q, m.String(), m.WebPath(), m.String(), %q, m, %s, params.Q)", m.Package, m.Icon, data)
+	add("\t\t\treturn result.NewResult(%q, m.String(), m.WebPath(), m.TitleString(), %q, m, %s, params.Q)", m.Package, m.Icon, data)
 	add("\t\t}), nil")
 	add("\t}")
 	return ret

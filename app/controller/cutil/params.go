@@ -37,9 +37,9 @@ func apply(ps filter.ParamSet, qk string, qv string) filter.ParamSet {
 		li, err := strconv.ParseInt(qv, 10, 32)
 		if err == nil {
 			curr.Limit = int(li)
-			max := 100000
-			if curr.Limit > max {
-				curr.Limit = max
+			maxCount := 100000
+			if curr.Limit > maxCount {
+				curr.Limit = maxCount
 			}
 		}
 	case strings.HasSuffix(qk, ".x"):

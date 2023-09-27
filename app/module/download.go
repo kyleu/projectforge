@@ -14,7 +14,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func (s *Service) Download(ctx context.Context, key string, url string, logger util.Logger) error {
+func (s *Service) Download(_ context.Context, key string, url string, logger util.Logger) error {
 	if url == "" {
 		return errors.New("must provide URL")
 	}

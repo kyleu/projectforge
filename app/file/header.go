@@ -12,7 +12,7 @@ func ContainsHeader(s string) bool {
 	return strings.Contains(s, HeaderContent) || strings.Contains(s, "$PF_IGNORE$")
 }
 
-func contentWithHeader(filename string, t Type, c string, linebreak string, logger util.Logger) string {
+func contentWithHeader(filename string, t Type, c string, linebreak string, pkg string, logger util.Logger) string {
 	if strings.Contains(c, IgnorePattern) {
 		return c
 	}
@@ -28,8 +28,12 @@ func contentWithHeader(filename string, t Type, c string, linebreak string, logg
 	case TypeCSS.Key:
 		return "/* " + HeaderContent + " */" + linebreak + c
 	case TypeGo.Key:
+		goLine := "// " + HeaderContent
+		if pkg != "" {
+			goLine = "// Package " + pkg + " - " + HeaderContent
+		}
 		if strings.HasPrefix(c, "//go:build") {
-			return secondLine(c, linebreak+"// "+HeaderContent, linebreak)
+			return secondLine(c, linebreak+goLine, linebreak)
 		}
 		if strings.Contains(c, "}}}//go:build") {
 			tok := "{{{ end }}}"
@@ -37,9 +41,9 @@ func contentWithHeader(filename string, t Type, c string, linebreak string, logg
 			if idx == -1 {
 				return c
 			}
-			return c[0:idx+len(tok)] + linebreak + "// " + HeaderContent + linebreak + c[idx+len(tok):]
+			return c[0:idx+len(tok)] + linebreak + goLine + linebreak + c[idx+len(tok):]
 		}
-		return "// " + HeaderContent + linebreak + c
+		return goLine + linebreak + c
 	case TypeGoMod.Key, TypeGradle.Key, TypeJavaScript.Key, TypeKotlin.Key, TypeSwift.Key, TypeTypeScript.Key:
 		return "// " + HeaderContent + linebreak + c
 	case TypeHTML.Key:

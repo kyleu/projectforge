@@ -13,7 +13,6 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-// Registers a new Connection for this Service using the provided user.Profile and websocket.Conn.
 func (s *Service) Register({{{ if .HasUser }}}u *dbuser.User, {{{ end }}}profile *user.Profile{{{ if .HasModule "oauth" }}}, accts user.Accounts{{{ end }}}, c *websocket.Conn, logger util.Logger) (*Connection, error) {
 	conn := NewConnection("system", {{{ if .HasUser }}}u, {{{ end }}}profile{{{ if .HasModule "oauth" }}}, accts{{{ end }}}, c)
 	s.connectionsMu.Lock()
@@ -29,7 +28,6 @@ func (s *Service) Register({{{ if .HasUser }}}u *dbuser.User, {{{ end }}}profile
 	return conn, nil
 }
 
-// Sends a message to a provided Connection ID.
 func OnMessage(ctx context.Context, s *Service, connID uuid.UUID, message *Message, logger util.Logger) error {
 	ctx, span, logger := telemetry.StartSpan(ctx, "message::"+message.Cmd, logger)
 	defer span.Complete()
@@ -48,7 +46,6 @@ func OnMessage(ctx context.Context, s *Service, connID uuid.UUID, message *Messa
 	return s.handler(ctx, s, c, message.Channel, message.Cmd, message.Param, logger)
 }
 
-// Removes a Connection from this Service.
 func (s *Service) Disconnect(connID uuid.UUID, logger util.Logger) (bool, error) {
 	conn, ok := s.connections[connID]
 	if !ok {

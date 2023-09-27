@@ -34,12 +34,12 @@
   <em>empty</em>
   {% endif %}
   {% code
-    max := 3
+    maxCount := 3
     display := value
     var extra int
-    if len(value) > max {
-      extra = len(value) - max
-      display = display[:max]
+    if len(value) > maxCount {
+      extra = len(value) - maxCount
+      display = display[:maxCount]
     }
   %}
   {% if extra > 0 %}<span title="{%s strings.Join(value, `, `) %}">{% endif %}

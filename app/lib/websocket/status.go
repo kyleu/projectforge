@@ -5,7 +5,6 @@ import (
 	"github.com/google/uuid"
 )
 
-// Serializable representation of a Connection.
 type Status struct {
 	ID       uuid.UUID `json:"id"`
 	Username string    `json:"username"`

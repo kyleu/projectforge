@@ -1,6 +1,6 @@
 # Types
 
-This is a module for [Project Forge](https://projectforge.dev). It provides classes for representing persistent user records 
+This is a module for [Project Forge](https://projectforge.dev). It provides classes for representing persistent user records and wires them throughout the application 
 
 https://github.com/kyleu/projectforge/tree/master/module/user
 

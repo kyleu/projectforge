@@ -4,5 +4,9 @@
 }
 
 .markdown h2, .markdown h3, .markdown h4 {
-  margin: var(--padding) 0;
+  margin: calc(var(--padding) * 2) 0 var(--padding) 0;
+}
+
+.markdown li {
+  margin-top: var(--padding-small);
 }

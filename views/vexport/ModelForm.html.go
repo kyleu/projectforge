@@ -160,7 +160,7 @@ func (p *ModelForm) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
       <div class="mt expanded">
         `)
 //line views/vexport/ModelForm.html:55
-	components.StreamFormRichEditor(qw422016, "columns", "input-columns", model.ColumnModelDescs, util.InterfaceArrayFrom(m.Columns...), export.Helpers["model.columns"]...)
+	components.StreamFormRichEditor(qw422016, "columns", "input-columns", model.ColumnFieldDescs, util.InterfaceArrayFrom(m.Columns...), export.Helpers["model.columns"]...)
 //line views/vexport/ModelForm.html:55
 	qw422016.N().S(`
       </div>
@@ -182,7 +182,7 @@ func (p *ModelForm) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
       <div class="mt expanded">
         `)
 //line views/vexport/ModelForm.html:65
-	components.StreamFormRichEditor(qw422016, "relations", "input-relations", model.RelationModelDescs, util.InterfaceArrayFrom(m.Relations...), export.Helpers["model.relations"]...)
+	components.StreamFormRichEditor(qw422016, "relations", "input-relations", model.RelationFieldDescs, util.InterfaceArrayFrom(m.Relations...), export.Helpers["model.relations"]...)
 //line views/vexport/ModelForm.html:65
 	qw422016.N().S(`
       </div>
@@ -204,7 +204,7 @@ func (p *ModelForm) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
       <div class="mt expanded">
         `)
 //line views/vexport/ModelForm.html:75
-	components.StreamFormRichEditor(qw422016, "indexes", "input-indexes", model.IndexModelDescs, util.InterfaceArrayFrom(m.Indexes...), export.Helpers["model.indexes"]...)
+	components.StreamFormRichEditor(qw422016, "indexes", "input-indexes", model.IndexFieldDescs, util.InterfaceArrayFrom(m.Indexes...), export.Helpers["model.indexes"]...)
 //line views/vexport/ModelForm.html:75
 	qw422016.N().S(`
       </div>

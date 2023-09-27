@@ -21,10 +21,15 @@ import (
 var AppRoutesList map[string][]string
 
 func Admin(rc *fasthttp.RequestCtx) {
-	controller.Act("admin", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		path := util.StringSplitAndTrim(strings.TrimPrefix(string(rc.URI().Path()), "/admin"), "/")
+	path := util.StringSplitAndTrim(strings.TrimPrefix(string(rc.URI().Path()), "/admin"), "/")
+	key := "admin"
+	if len(path) > 0 {
+		key += "." + strings.Join(path, ".")
+	}
+	controller.Act(key, rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		if len(path) == 0 {
 			ps.Title = "Administration"
+			ps.Data = "administration"
 			return controller.Render(rc, as, &vadmin.Settings{}, ps, "admin")
 		}
 		switch path[0] {
@@ -58,8 +63,8 @@ func Admin(rc *fasthttp.RequestCtx) {
 			}
 			return controller.FlashAndRedir(true, "wrote heap profile", "/admin", rc, ps)
 		case "logs":
-			x := util.DebugMemStats()
-			ps.Data = x
+			ps.Title = "Recent Logs"
+			ps.Data = log.RecentLogs
 			return controller.Render(rc, as, &vadmin.Logs{Logs: log.RecentLogs}, ps, "admin", "Recent Logs")
 		case "memusage":
 			x := util.DebugMemStats()
@@ -72,7 +77,7 @@ func Admin(rc *fasthttp.RequestCtx) {
 			return controller.Render(rc, as, &vadmin.Modules{Modules: di}, ps, "admin", "Modules")
 		case "request":
 			ps.Title = "Request Debug"
-			ps.Data = cutil.RequestCtxToMap(rc, nil)
+			ps.Data = cutil.RequestCtxToMap(rc, as, ps)
 			return controller.Render(rc, as, &vadmin.Request{RC: rc}, ps, "admin", "Request")
 		case "routes":
 			ps.Title = "HTTP Routes"

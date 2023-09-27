@@ -38,6 +38,7 @@ var (
 )
 
 type PageState struct {
+	Action         string            `json:"action,omitempty"`
 	Title          string            `json:"title,omitempty"`
 	Description    string            `json:"description,omitempty"`
 	Method         string            `json:"method,omitempty"`
@@ -94,7 +95,7 @@ func (p *PageState) Username() string {
 
 func (p *PageState) Clean(_ *fasthttp.RequestCtx, as *app.State) error {
 	if p.Profile != nil && p.Profile.Theme == "" {
-		p.Profile.Theme = theme.ThemeDefault.Key
+		p.Profile.Theme = theme.Default.Key
 	}
 	if p.RootIcon == "" {
 		p.RootIcon = defaultIcon

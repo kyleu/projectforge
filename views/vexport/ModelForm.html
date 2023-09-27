@@ -52,7 +52,7 @@
       </div>
       <h3 title="{%s strings.Join(export.Helpers[`model.columns`], `; `) %}">{%= components.SVGRefIcon(`first-aid`, ps) %}Columns</h3>
       <div class="mt expanded">
-        {%= components.FormRichEditor("columns", "input-columns", model.ColumnModelDescs, util.InterfaceArrayFrom(m.Columns...), export.Helpers["model.columns"]...) %}
+        {%= components.FormRichEditor("columns", "input-columns", model.ColumnFieldDescs, util.InterfaceArrayFrom(m.Columns...), export.Helpers["model.columns"]...) %}
       </div>
     </div>
     <div class="card">
@@ -62,7 +62,7 @@
       </div>
       <h3 title="{%s strings.Join(export.Helpers[`model.relations`], `; `) %}">{%= components.SVGRefIcon(`social`, ps) %}Relations</h3>
       <div class="mt expanded">
-        {%= components.FormRichEditor("relations", "input-relations", model.RelationModelDescs, util.InterfaceArrayFrom(m.Relations...), export.Helpers["model.relations"]...) %}
+        {%= components.FormRichEditor("relations", "input-relations", model.RelationFieldDescs, util.InterfaceArrayFrom(m.Relations...), export.Helpers["model.relations"]...) %}
       </div>
     </div>
     <div class="card">
@@ -72,7 +72,7 @@
       </div>
       <h3 title="{%s strings.Join(export.Helpers[`model.indexes`], `; `) %}">{%= components.SVGRefIcon(`star`, ps) %}Indexes</h3>
       <div class="mt expanded">
-        {%= components.FormRichEditor("indexes", "input-indexes", model.IndexModelDescs, util.InterfaceArrayFrom(m.Indexes...), export.Helpers["model.indexes"]...) %}
+        {%= components.FormRichEditor("indexes", "input-indexes", model.IndexFieldDescs, util.InterfaceArrayFrom(m.Indexes...), export.Helpers["model.indexes"]...) %}
       </div>
     </div>
     <div class="card">

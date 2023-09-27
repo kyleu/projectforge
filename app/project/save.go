@@ -20,10 +20,10 @@ func (s *Service) Save(prj *Project, logger util.Logger) error {
 	if prj.Exec == prj.Key {
 		prj.Exec = ""
 	}
-	if prj.Theme != nil && prj.Theme.Equals(theme.ThemeDefault) {
+	if prj.Theme != nil && prj.Theme.Equals(theme.Default) {
 		prj.Theme = nil
 		defer func() {
-			prj.Theme = theme.ThemeDefault
+			prj.Theme = theme.Default
 		}()
 	}
 	tgtFS, err := s.GetFilesystem(prj)

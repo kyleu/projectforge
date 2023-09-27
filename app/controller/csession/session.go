@@ -10,7 +10,6 @@ import (
 )
 
 const (
-	WebAuthKey  = "auth"
 	WebFlashKey = "flash"
 	ReferKey    = "refer"
 )

@@ -26,6 +26,8 @@ func exportRoutes(r *router.Router) {
 	r.GET("/p/{key}/export/models/{model}/delete", cproject.ProjectExportModelDelete)
 
 	r.GET("/p/{key}/export/enums/{enum}", cproject.ProjectExportEnumDetail)
+	r.GET("/p/{key}/export/enums/new", cproject.ProjectExportEnumNew)
+	r.POST("/p/{key}/export/enums/new", cproject.ProjectExportEnumCreate)
 	r.GET("/p/{key}/export/enums/{enum}/edit", cproject.ProjectExportEnumForm)
 	r.POST("/p/{key}/export/enums/{enum}/edit", cproject.ProjectExportEnumSave)
 	r.GET("/p/{key}/export/enums/{enum}/delete", cproject.ProjectExportEnumDelete)

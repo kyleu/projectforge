@@ -16,7 +16,7 @@ var (
 	TypeAudit    = Type{Key: "audit", Title: "Audit", Icon: "scale", Description: "Audits the project files, detecting invalid files and empty folders"}
 	TypeBuild    = Type{Key: "build", Title: "Build", Icon: "hammer", Description: "Builds the project, many options available"}
 	TypeCreate   = Type{Key: "create", Title: "Create", Icon: "folder-plus", Description: "Creates a new project"}
-	TypeDebug    = Type{Key: "debug", Title: "Debug", Icon: "bug", Description: "Dumps a ton of information about the project"}
+	TypeDebug    = Type{Key: "debug", Title: "Debug", Icon: "bug", Description: "Dumps information about the project"}
 	TypeDoctor   = Type{Key: "doctor", Title: "Doctor", Icon: "first-aid", Description: "Makes sure your machine has the required dependencies"}
 	TypeGenerate = Type{Key: "generate", Title: "Generate", Icon: "forward", Description: "Applies pending changes to files as required"}
 	TypePreview  = Type{Key: "preview", Title: "Preview", Icon: "play", Description: "Show what would happen if you generate"}

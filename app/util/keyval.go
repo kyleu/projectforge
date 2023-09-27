@@ -87,11 +87,11 @@ func (k KeyTypeDescs) Array(key string) [][]string {
 	})
 }
 
-type ModelDesc struct {
+type FieldDesc struct {
 	Key         string `json:"key"`
 	Title       string `json:"title"`
 	Description string `json:"description,omitempty"`
 	Type        string `json:"type,omitempty"`
 }
 
-type ModelDescs []*ModelDesc
+type FieldDescs []*FieldDesc

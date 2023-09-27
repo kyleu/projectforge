@@ -18,7 +18,6 @@ func Content(path string) ([]byte, error) {
 	if err != nil {
 		return nil, errors.Wrapf(err, "error reading doc asset at [%s]", path)
 	}
-
 	return data, nil
 }
 

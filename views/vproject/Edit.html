@@ -125,7 +125,7 @@
     {%- code
       t := prj.Theme
       if t == nil {
-        t = theme.ThemeDefault
+        t = theme.Default
       }
     -%}
     {%= vtheme.Editor("Default Theme", prj.Title(), t, prj.IconSafe(), as, ps) %}

@@ -96,18 +96,18 @@ func serviceHistorySaveHistory(m *model.Model) *golang.Block {
 	ret.W("\t}")
 	ret.W("\tq := database.SQLInsert(historyTableQuoted, historyColumns, 1, s.db.Placeholder())")
 	ret.W("\th := &historyRow{")
-	max := m.PKs().MaxCamelLength() + len(m.Proper()) + 1
-	if max < 8 {
-		max = 8
+	maxCount := m.PKs().MaxCamelLength() + len(m.Proper()) + 1
+	if maxCount < 8 {
+		maxCount = 8
 	}
-	ret.W("\t\t%s util.UUID(),", util.StringPad("ID:", max))
+	ret.W("\t\t%s util.UUID(),", util.StringPad("ID:", maxCount))
 	lo.ForEach(m.PKs(), func(pk *model.Column, _ int) {
-		ret.W("\t\t%s o.%s,", util.StringPad(m.Proper()+pk.Proper()+":", max), pk.Proper())
+		ret.W("\t\t%s o.%s,", util.StringPad(m.Proper()+pk.Proper()+":", maxCount), pk.Proper())
 	})
-	ret.W("\t\t%s util.ToJSONBytes(o, true),", util.StringPad("Old:", max))
-	ret.W("\t\t%s util.ToJSONBytes(n, true),", util.StringPad("New:", max))
-	ret.W("\t\t%s util.ToJSONBytes(diffs, true),", util.StringPad("Changes:", max))
-	ret.W("\t\t%s util.TimeCurrent(),", util.StringPad("Created:", max))
+	ret.W("\t\t%s util.ToJSONBytes(o, true),", util.StringPad("Old:", maxCount))
+	ret.W("\t\t%s util.ToJSONBytes(n, true),", util.StringPad("New:", maxCount))
+	ret.W("\t\t%s util.ToJSONBytes(diffs, true),", util.StringPad("Changes:", maxCount))
+	ret.W("\t\t%s util.TimeCurrent(),", util.StringPad("Created:", maxCount))
 	ret.W("\t}")
 	ret.W("\thist := h.ToHistory()")
 	ret.W("\terr := s.db.Insert(ctx, q, tx, logger, hist.ToData()...)")

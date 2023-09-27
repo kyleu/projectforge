@@ -61,16 +61,14 @@ func NewState(debug bool, bi *BuildInfo{{{ if .HasModule "filesystem" }}}, f fil
 		return nil, loadLocationError
 	}
 
-	_ = telemetry.InitializeIfNeeded(enableTelemetry, bi.Version, logger){{{ if .HasModule "oauth" }}}
-	as := auth.NewService("", port, logger){{{ end }}}
-	gqls := graphql.NewService(){{{ end }}}
+	_ = telemetry.InitializeIfNeeded(enableTelemetry, bi.Version, logger)
 
 	return &State{
 		Debug:     debug,
 		BuildInfo: bi{{{ if .HasModule "filesystem" }}},
 		Files:     f{{{ end }}}{{{ if .HasModule "oauth" }}},
-		Auth:      as{{{ end }}}{{{ if .HasModule "graphql" }}},
-		GraphQL:   gqls{{{ end }}},
+		Auth:      auth.NewService("", port, logger){{{ end }}}{{{ if .HasModule "graphql" }}},
+		GraphQL:   graphql.NewService(){{{ end }}},
 		Themes:    theme.NewService({{{ if .HasModule "filesystem" }}}f{{{ end }}}),
 		Started:   util.TimeCurrent(),
 	}, nil

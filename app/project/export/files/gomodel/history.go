@@ -35,24 +35,24 @@ func History(m *model.Model, args *model.Args, addHeader bool, linebreak string)
 func modelHistory(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock(m.Proper()+"History", "struct")
 	ret.W("type History struct {")
-	max := m.PKs().MaxCamelLength() + len(m.Camel())
-	if max < 7 {
-		max = 7
+	maxCount := m.PKs().MaxCamelLength() + len(m.Camel())
+	if maxCount < 7 {
+		maxCount = 7
 	}
 	tmax := 13
-	ret.W("\t%s %s `json:\"id\"`", util.StringPad("ID", max), util.StringPad("uuid.UUID", tmax))
+	ret.W("\t%s %s `json:\"id\"`", util.StringPad("ID", maxCount), util.StringPad("uuid.UUID", tmax))
 	for _, pk := range m.PKs() {
 		gt, err := pk.ToGoType(m.Package, enums)
 		if err != nil {
 			return nil, err
 		}
 		goType := util.StringPad(gt, tmax)
-		ret.W("\t%s %s `json:\"%s%s\"`", util.StringPad(m.Proper()+pk.Proper(), max), goType, m.Camel(), pk.Proper())
+		ret.W("\t%s %s `json:\"%s%s\"`", util.StringPad(m.Proper()+pk.Proper(), maxCount), goType, m.Camel(), pk.Proper())
 	}
-	ret.W("\t%s util.ValueMap `json:\"o,omitempty\"`", util.StringPad("Old", max))
-	ret.W("\t%s util.ValueMap `json:\"n,omitempty\"`", util.StringPad("New", max))
-	ret.W("\t%s util.Diffs    `json:\"c,omitempty\"`", util.StringPad("Changes", max))
-	ret.W("\t%s time.Time     `json:\"created\"`", util.StringPad("Created", max))
+	ret.W("\t%s util.ValueMap `json:\"o,omitempty\"`", util.StringPad("Old", maxCount))
+	ret.W("\t%s util.ValueMap `json:\"n,omitempty\"`", util.StringPad("New", maxCount))
+	ret.W("\t%s util.Diffs    `json:\"c,omitempty\"`", util.StringPad("Changes", maxCount))
+	ret.W("\t%s time.Time     `json:\"created\"`", util.StringPad("Created", maxCount))
 	ret.W("}")
 	return ret, nil
 }
@@ -83,24 +83,24 @@ func modelHistories(m *model.Model) *golang.Block {
 func modelHistoryRow(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock(m.Proper()+"HistoryRow", "struct")
 	ret.W("type historyRow struct {")
-	max := m.PKs().MaxCamelLength() + len(m.Camel())
-	if max < 7 {
-		max = 7
+	maxCount := m.PKs().MaxCamelLength() + len(m.Camel())
+	if maxCount < 7 {
+		maxCount = 7
 	}
 	tmax := 15
-	ret.W("\t%s %s `db:\"id\"`", util.StringPad("ID", max), util.StringPad("uuid.UUID", tmax))
+	ret.W("\t%s %s `db:\"id\"`", util.StringPad("ID", maxCount), util.StringPad("uuid.UUID", tmax))
 	for _, pk := range m.PKs() {
 		gt, err := pk.ToGoType(m.Package, enums)
 		if err != nil {
 			return nil, err
 		}
 		goType := util.StringPad(gt, tmax)
-		ret.W("\t%s %s `db:\"%s_%s\"`", util.StringPad(m.Proper()+pk.Proper(), max), goType, m.Name, pk.Name)
+		ret.W("\t%s %s `db:\"%s_%s\"`", util.StringPad(m.Proper()+pk.Proper(), maxCount), goType, m.Name, pk.Name)
 	}
-	ret.W("\t%s json.RawMessage `db:\"o\"`", util.StringPad("Old", max))
-	ret.W("\t%s json.RawMessage `db:\"n\"`", util.StringPad("New", max))
-	ret.W("\t%s json.RawMessage `db:\"c\"`", util.StringPad("Changes", max))
-	ret.W("\t%s time.Time       `db:\"created\"`", util.StringPad("Created", max))
+	ret.W("\t%s json.RawMessage `db:\"o\"`", util.StringPad("Old", maxCount))
+	ret.W("\t%s json.RawMessage `db:\"n\"`", util.StringPad("New", maxCount))
+	ret.W("\t%s json.RawMessage `db:\"c\"`", util.StringPad("Changes", maxCount))
+	ret.W("\t%s time.Time       `db:\"created\"`", util.StringPad("Created", maxCount))
 	ret.W("}")
 	return ret, nil
 }

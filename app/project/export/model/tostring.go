@@ -6,10 +6,6 @@ import (
 	"projectforge.dev/projectforge/app/lib/types"
 )
 
-func ColToString(c *Column, prefix string) string {
-	return TypeToString(c.Type, prefix+c.Proper())
-}
-
 func TypeToString(t types.Type, prop string) string {
 	switch t.Key() {
 	case types.KeyUUID:
@@ -17,10 +13,6 @@ func TypeToString(t types.Type, prop string) string {
 	default:
 		return prop
 	}
-}
-
-func ColToViewString(c *Column, prefix string) string {
-	return TypeToViewString(c.Type, prefix+c.Proper(), c.Nullable)
 }
 
 func TypeToViewString(t types.Type, prop string, nullable bool) string {

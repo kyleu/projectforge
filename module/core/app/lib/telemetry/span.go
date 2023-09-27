@@ -21,28 +21,28 @@ type Span struct {
 }
 
 func (s *Span) TraceID() string {
-	if s == nil || !enabled {
+	if s == nil || !Enabled {
 		return disabledMsg
 	}
 	return s.OT.SpanContext().TraceID().String()
 }
 
 func (s *Span) SpanID() string {
-	if s == nil || !enabled {
+	if s == nil || !Enabled {
 		return disabledMsg
 	}
 	return s.OT.SpanContext().SpanID().String()
 }
 
 func (s *Span) SetName(name string) {
-	if s == nil || !enabled {
+	if s == nil || !Enabled {
 		return
 	}
 	s.OT.SetName(name)
 }
 
 func (s *Span) SetStatus(status string, description string) {
-	if s == nil || !enabled {
+	if s == nil || !Enabled {
 		return
 	}
 	s.statusSet = true
@@ -57,14 +57,14 @@ func (s *Span) SetStatus(status string, description string) {
 }
 
 func (s *Span) Attribute(k string, v any) {
-	if s == nil || !enabled {
+	if s == nil || !Enabled {
 		return
 	}
 	s.Attributes(&Attribute{Key: k, Value: v})
 }
 
 func (s *Span) Attributes(attrs ...*Attribute) {
-	if s == nil || !enabled {
+	if s == nil || !Enabled {
 		return
 	}
 	ot := lo.Map(attrs, func(attr *Attribute, _ int) attribute.KeyValue {
@@ -74,7 +74,7 @@ func (s *Span) Attributes(attrs ...*Attribute) {
 }
 
 func (s *Span) Event(name string, attrs ...*Attribute) {
-	if s == nil || !enabled {
+	if s == nil || !Enabled {
 		return
 	}
 	s.OT.AddEvent(name)
@@ -87,7 +87,7 @@ func (s *Span) Event(name string, attrs ...*Attribute) {
 }
 
 func (s *Span) OnError(err error) {
-	if s == nil || !enabled {
+	if s == nil || !Enabled {
 		return
 	}
 	s.OT.RecordError(err)
@@ -95,7 +95,7 @@ func (s *Span) OnError(err error) {
 
 // Complete must be called, usually through a `defer` block.
 func (s *Span) Complete() {
-	if s == nil || !enabled {
+	if s == nil || !Enabled {
 		return
 	}
 	if !s.statusSet {
@@ -105,7 +105,7 @@ func (s *Span) Complete() {
 }
 
 func (s *Span) SetHTTPStatus(code int) {
-	if s == nil || !enabled {
+	if s == nil || !Enabled {
 		return
 	}
 	s.Attribute("http.status_code", code)
@@ -114,7 +114,7 @@ func (s *Span) SetHTTPStatus(code int) {
 }
 
 func (s *Span) String() string {
-	if s == nil || !enabled {
+	if s == nil || !Enabled {
 		return disabledMsg
 	}
 	return s.SpanID() + "::" + s.TraceID()

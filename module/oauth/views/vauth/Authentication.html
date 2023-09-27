@@ -14,15 +14,15 @@
   -%}
   <div class="card">
     <div class="right"><a href="#modal-available"><button type="button">Available</button></a></div>
-    <h3>{%= components.SVGRefIcon(`user`, ps) %}Authentication</h3>
+    <h3>{%= components.SVGRefIcon(`profile`, ps) %}Authentication</h3>
     {%- if len(prvs) == 0 -%}
     <em class="mt">no authentication providers configured, why not <a href="#modal-available">add one</a>?</em>
     {%- else -%}
-    <ul class="mt">
+    <table class="mt">
       {%- for _, prv := range prvs -%}
-      <li><a href="/auth/{%u prv.ID %}?refer={%u `/admin` %}">{%s auth.AvailableProviderNames[prv.ID] %}</a></li>
+      <tr><td><a href="/auth/{%u prv.ID %}?refer={%u `/admin` %}">{%s auth.AvailableProviderNames[prv.ID] %}</a></td></tr>
       {%- endfor -%}
-    </ul>
+    </table>
     {%- endif -%}
   </div>
 
@@ -34,17 +34,19 @@
         <h2>Available Authentication Providers</h2>
       </div>
       <div class="modal-body">
-        <ul>
+        <table>
           {%- for _, x := range auth.AvailableProviderKeys -%}
-          <li title="{%s auth.ProviderUsage(x, prvs.Contains(x)) %}">
+          <tr>
             {%- if prvs.Contains(x) -%}
-            {%s auth.AvailableProviderNames[x] %}
+            <td class="nowrap"><em>{%s auth.AvailableProviderNames[x] %}</em></td>
+            <td><em>{%s auth.ProviderUsage(x, prvs.Contains(x)) %}</em></td>
             {%- else -%}
-            <em>{%s auth.AvailableProviderNames[x] %}</em>
+            <td class="nowrap">{%s auth.AvailableProviderNames[x] %}</td>
+            <td>{%s auth.ProviderUsage(x, prvs.Contains(x)) %}</td>
             {%- endif -%}
-          </li>
+          </tr>
           {%- endfor -%}
-        </ul>
+        </table>
       </div>
     </div>
   </div>

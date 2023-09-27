@@ -51,7 +51,7 @@ func LoadPageState(as *app.State, rc *fasthttp.RequestCtx, key string, logger ut
 	u, _ := as.User(ctx, prof.ID, logger){{{ end }}}
 
 	return &PageState{
-		Method: string(rc.Method()), URI: rc.Request.URI(), Flashes: flashes, Session: session,
+		Action: key, Method: string(rc.Method()), URI: rc.Request.URI(), Flashes: flashes, Session: session,
 		OS: os, OSVersion: ua.OSVersion, Browser: browser, BrowserVersion: ua.Version, Platform: platform,
 		{{{ if .HasUser }}}User: u, {{{ end }}}Profile: prof, {{{ if .HasModule "oauth" }}}Accounts: accts, Authed: isAuthed, Admin: isAdmin, {{{ end }}}Params: params,
 		Icons: slices.Clone(initialIcons), Started: util.TimeCurrent(), Logger: logger, Context: ctx, Span: span,

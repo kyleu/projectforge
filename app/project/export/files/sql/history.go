@@ -10,7 +10,7 @@ import (
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func sqlHistory(ret *golang.Block, m *model.Model, modules []string, now string) {
+func sqlHistory(ret *golang.Block, m *model.Model, _ []string, now string) {
 	if m.IsHistory() {
 		ret.WB()
 		ret.W("create table if not exists %q (", m.Name+"_history")

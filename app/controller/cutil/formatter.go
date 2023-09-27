@@ -29,14 +29,6 @@ func FormatLang(content string, lang string) (string, error) {
 	return FormatString(content, l)
 }
 
-func FormatLangIgnoreErrors(content string, lang string) string {
-	ret, err := FormatLang(content, lang)
-	if err != nil {
-		return fmt.Sprintf("encoding error: %s\n%s", err.Error(), content)
-	}
-	return ret
-}
-
 func FormatFilename(content string, filename string) (string, error) {
 	l := lexers.Match(filename)
 	if l == nil {

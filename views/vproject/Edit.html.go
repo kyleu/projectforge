@@ -376,7 +376,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vproject/Edit.html:126
 	t := prj.Theme
 	if t == nil {
-		t = theme.ThemeDefault
+		t = theme.Default
 	}
 
 //line views/vproject/Edit.html:130

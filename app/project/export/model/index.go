@@ -6,7 +6,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-var IndexModelDescs = util.ModelDescs{
+var IndexFieldDescs = util.FieldDescs{
 	{Key: "name", Title: "Name", Description: "The name of the index"},
 	{Key: "decl", Title: "Declaration", Description: "The declaration of the index"},
 }

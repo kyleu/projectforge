@@ -9,7 +9,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-var RelationModelDescs = util.ModelDescs{
+var RelationFieldDescs = util.FieldDescs{
 	{Key: "name", Title: "Name", Description: "The name of the relation"},
 	{Key: "src", Title: "Source", Description: "The source columns of the relation"},
 	{Key: "table", Title: "Table", Description: "The target table of the relation"},

@@ -9,28 +9,28 @@ import (
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 
+	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func RequestCtxToMap(rc *fasthttp.RequestCtx, data any) util.ValueMap {
+func RequestCtxToMap(rc *fasthttp.RequestCtx, as *app.State, ps *PageState) util.ValueMap {
 	req := util.ValueMap{
-		"id":          rc.ID(),
-		"url":         rc.URI().String(),
-		"protocol":    string(rc.Request.URI().Scheme()),
-		"host":        string(rc.Request.URI().Host()),
-		"path":        string(rc.Request.URI().Path()),
-		"queryString": string(rc.Request.URI().QueryString()),
-		"headers":     RequestHeadersMap(rc),
-		"bodySize":    len(rc.Request.Body()),
-		"string":      rc.Request.String(),
+		"url": rc.URI().String(), "protocol": string(rc.Request.URI().Scheme()),
+		"host": string(rc.Request.URI().Host()), "path": string(rc.Request.URI().Path()),
+		"queryString": string(rc.Request.URI().QueryString()), "headers": RequestHeadersMap(rc),
+		"bodySize": len(rc.Request.Body()),
 	}
-	rsp := util.ValueMap{
-		"code":     rc.Response.StatusCode(),
-		"bodySize": len(rc.Response.Body()),
-		"headers":  ResponseHeadersMap(rc),
-		"string":   rc.Response.String(),
+	rsp := util.ValueMap{"code": rc.Response.StatusCode(), "bodySize": len(rc.Response.Body()), "headers": ResponseHeadersMap(rc)}
+	action := util.ValueMap{
+		"action": ps.Action, "admin": ps.Admin, "authed": ps.Authed,
+		"redirect": ps.ForceRedirect, "flashes": ps.Flashes, "breadcrumbs": ps.Breadcrumbs,
+		"browser": ps.Browser, "browserVersion": ps.BrowserVersion, "os": ps.OS, "osVersion": ps.OSVersion, "platform": ps.Platform,
+		"description": ps.Description, "title": ps.Title, "started": ps.Started, "help": as.Services.Help.Contains(ps.Action),
 	}
-	return util.ValueMap{"data": data, "request": req, "response": rsp}
+	ret := util.ValueMap{"action": action, "data": ps.Data, "request": req, "response": rsp}
+	// $PF_SECTION_START(debugstuff)$
+	// $PF_SECTION_END(debugstuff)$
+	return ret
 }
 
 func RCRequiredString(rc *fasthttp.RequestCtx, key string, allowEmpty bool) (string, error) {

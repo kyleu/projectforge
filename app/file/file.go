@@ -15,12 +15,12 @@ type File struct {
 	Content string              `json:"-"`
 }
 
-func NewFile(path string, mode filesystem.FileMode, b []byte, addHeader bool, logger util.Logger) *File {
+func NewFile(path string, mode filesystem.FileMode, b []byte, addHeader bool, pkg string, logger util.Logger) *File {
 	p, n := util.StringSplitPath(path)
 	t := getType(n)
 	c := string(b)
 	if addHeader {
-		c = contentWithHeader(path, t, c, util.StringDetectLinebreak(c), logger)
+		c = contentWithHeader(path, t, c, util.StringDetectLinebreak(c), pkg, logger)
 	}
 	return &File{Type: t, Path: util.StringSplitPathAndTrim(p), Name: n, Mode: mode, Content: c}
 }

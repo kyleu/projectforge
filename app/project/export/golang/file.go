@@ -37,7 +37,11 @@ func (f *File) Render(addHeader bool, linebreak string) (*file.File, error) {
 	}
 
 	if addHeader {
-		content = append(content, fmt.Sprintf("// %s", file.HeaderContent))
+		if f.Package == "" {
+			content = append(content, fmt.Sprintf("// %s", file.HeaderContent))
+		} else {
+			content = append(content, fmt.Sprintf("// Package %s - %s", f.Package, file.HeaderContent))
+		}
 	}
 	add("package %s", f.Package)
 

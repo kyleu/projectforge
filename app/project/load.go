@@ -66,7 +66,7 @@ func (s *Service) load(path string) (json.RawMessage, *Project, error) {
 		return b, nil, err
 	}
 	if ret.Theme == nil {
-		ret.Theme = theme.ThemeDefault
+		ret.Theme = theme.Default
 	}
 	return b, ret, nil
 }

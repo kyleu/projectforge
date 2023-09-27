@@ -189,12 +189,12 @@ func StreamDisplayStringArray(qw422016 *qt422016.Writer, value []string) {
 //line views/components/Display.html:35
 	}
 //line views/components/Display.html:37
-	max := 3
+	maxCount := 3
 	display := value
 	var extra int
-	if len(value) > max {
-		extra = len(value) - max
-		display = display[:max]
+	if len(value) > maxCount {
+		extra = len(value) - maxCount
+		display = display[:maxCount]
 	}
 
 //line views/components/Display.html:45

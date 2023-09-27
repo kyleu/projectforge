@@ -60,7 +60,12 @@ function createTable(cols: Column[], rows: { [key: string]: unknown; }[]): HTMLE
     allTds.push(tds);
   });
   tbl.appendChild(tbody);
-  return tbl;
+
+  const div = document.createElement("div");
+  div.classList.add("overflow");
+  div.classList.add("full-width");
+  div.appendChild(tbl);
+  return div;
 }
 
 export function createEditor(el: HTMLElement): void {
@@ -77,18 +82,24 @@ export function createEditor(el: HTMLElement): void {
     throw new Error("input value for element [" + key + "] of type [" + typeof curr + "] must be an array");
   }
 
-  const tbl = createTable(columns, curr);
+  let tbl = createTable(columns, curr);
 
   els(".toggle-editor-" + key).forEach((toggle) => {
     toggle.innerText = "Edit";
     toggle.onclick = () => {
       if (toggle.innerText === "Edit") {
         toggle.innerText = "View";
-        tbl.hidden = true;
+        tbl.remove();
         inp.hidden = false;
       } else {
         toggle.innerText = "Edit";
-        tbl.hidden = false;
+        tbl.remove();
+        curr = JSON.parse(inp.value);
+        if (curr === undefined || curr === null) {
+          curr = [];
+        }
+        tbl = createTable(columns, curr);
+        el.appendChild(tbl);
         inp.hidden = true;
       }
     };

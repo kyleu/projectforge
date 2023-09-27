@@ -15,7 +15,7 @@ import (
 
 var nativeModuleKeys = []string{
 	"android", "audit", "core", "database", "databaseui", "desktop", "docbrowse",
-	"export", "expression", "filesystem", "graphql", "har", "ios", "jsx", "marketing", "migration", util.DatabaseMySQL,
+	"export", "expression", "filesystem", "graphql", "har", "help", "ios", "jsx", "marketing", "migration", util.DatabaseMySQL,
 	"notarize", "oauth", util.DatabasePostgreSQL, "process", "readonlydb", "sandbox", "schema", "scripting", "search",
 	util.DatabaseSQLite, util.DatabaseSQLServer, "themecatalog", "types", "upgrade", "user", "wasmclient", "wasmserver", "websocket",
 }
@@ -132,7 +132,7 @@ func (s *Service) Register(ctx context.Context, root string, key string, path st
 	return ret, nil
 }
 
-func (s *Service) Search(ctx context.Context, q string, logger util.Logger) (result.Results, error) {
+func (s *Service) Search(_ context.Context, q string, _ util.Logger) (result.Results, error) {
 	return lo.FilterMap(s.Modules(), func(mod *Module, _ int) (*result.Result, bool) {
 		res := result.NewResult("module", mod.Key, mod.WebPath(), mod.Title(), mod.IconSafe(), mod, mod, q)
 		if len(res.Matches) > 0 {

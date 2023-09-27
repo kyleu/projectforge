@@ -120,15 +120,16 @@ func (i Imports) ByType(t ImportType) []string {
 
 func (i Imports) Add(imports ...*Import) Imports {
 	if i == nil {
-		return append(Imports{}, imports...)
+		return slices.Clone(imports)
 	}
+	ret := slices.Clone(i)
 	lo.ForEach(imports, func(imp *Import, _ int) {
-		hit := lo.ContainsBy(i, func(x *Import) bool {
+		hit := lo.ContainsBy(ret, func(x *Import) bool {
 			return x.Value == imp.Value
 		})
 		if !hit {
-			i = append(i, imp)
+			ret = append(ret, imp)
 		}
 	})
-	return i
+	return ret
 }

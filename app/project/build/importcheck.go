@@ -20,7 +20,7 @@ func check(imports []string, orig []string) ([]string, []string, error) {
 	var imps []string
 	var lastSep bool
 	first, third, self := util.ValueMap{}, util.ValueMap{}, util.ValueMap{}
-	firsts, thirds, selfs := []string{}, []string{}, []string{}
+	var firsts, thirds, selfs []string
 
 	observe := func(key string, i string) {
 		lo.ForEach(observed, func(ob string, _ int) {

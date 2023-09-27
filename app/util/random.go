@@ -22,8 +22,8 @@ func RandomString(length int) string {
 }
 
 func RandomInt(maxExclusive int) int {
-	max := big.NewInt(int64(maxExclusive))
-	ret, err := rand.Int(rand.Reader, max)
+	maxCount := big.NewInt(int64(maxExclusive))
+	ret, err := rand.Int(rand.Reader, maxCount)
 	if err != nil {
 		panic(errMsg(err))
 	}
@@ -31,8 +31,8 @@ func RandomInt(maxExclusive int) int {
 }
 
 func RandomFloat(maxExclusive int) float64 {
-	max := big.NewInt(int64(maxExclusive) * 1000)
-	ret, err := rand.Int(rand.Reader, max)
+	maxCount := big.NewInt(int64(maxExclusive) * 1000)
+	ret, err := rand.Int(rand.Reader, maxCount)
 	if err != nil {
 		panic(errMsg(err))
 	}

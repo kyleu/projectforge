@@ -57,7 +57,14 @@ func (s *Service) loadFiles(mod *Module, addHeader bool, ret map[string]*file.Fi
 		if err != nil {
 			return err
 		}
-		fl := file.NewFile(f, mode, b, addHeader, logger)
+		pkg := ""
+		if f != "" {
+			spl := strings.Split(f, "/")
+			if len(spl) > 1 {
+				pkg = spl[len(spl)-2]
+			}
+		}
+		fl := file.NewFile(f, mode, b, addHeader, pkg, logger)
 		ret[fl.FullPath()] = fl
 	}
 	return nil

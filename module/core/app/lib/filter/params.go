@@ -33,7 +33,7 @@ func ParamsWithDefaultOrdering(key string, params *Params, orderings ...*Orderin
 
 func (p *Params) Sanitize(key string, defaultOrderings ...*Ordering) *Params {
 	if p == nil {
-		p = &Params{Key: key}
+		return &Params{Key: key, Orderings: defaultOrderings}
 	}
 	if p.Limit == 0 || p.Limit > 100000 {
 		p.Limit = MaxRowsDefault
@@ -42,7 +42,7 @@ func (p *Params) Sanitize(key string, defaultOrderings ...*Ordering) *Params {
 		p.Offset = 0
 	}
 	if len(p.Orderings) == 0 {
-		p = p.CloneOrdering(defaultOrderings...)
+		return p.CloneOrdering(defaultOrderings...)
 	}
 	return p
 }

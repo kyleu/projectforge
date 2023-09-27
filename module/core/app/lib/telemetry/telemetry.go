@@ -16,8 +16,8 @@ import (
 )
 
 var (
+	Enabled        = true
 	initialized    = false
-	enabled        = true
 	tracerProvider *sdktrace.TracerProvider
 )
 
