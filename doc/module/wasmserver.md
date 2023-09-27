@@ -1,7 +1,7 @@
 <!--- Content managed by Project Forge, see [projectforge.md] for details. -->
 # WebAssembly
 
-This is a module for [Project Forge](https://projectforge.dev). It allows you to build your http server, but load it as a WebAssembly module. 
+This is a module for [Project Forge](https://projectforge.dev). It allows you to build your http server as normal, but load it as a WebAssembly module or Service Worker. 
 
 https://github.com/kyleu/projectforge/tree/master/module/wasmserver
 

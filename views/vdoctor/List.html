@@ -21,13 +21,13 @@
   <div class="card">
     <div class="right"><a href="/doctor/all"><button>Run All Checks</button></a></div>
     <h3>Checks</h3>
-    <ul class="mt">
+    <table class="mt">
       {%- for _, c := range p.Checks -%}
-        <li>
-          <div class="right"><em>{%s c.Summary %}</em></div>
-          <a href="/doctor/{%s c.Key %}">{%s c.Title %}</a>
-        </li>
+      <tr>
+        <td><a href="/doctor/{%s c.Key %}">{%s c.Title %}</a></td>
+        <td><div class="right"><em>{%s c.Summary %}</em></div></td>
+      </tr>
       {%- endfor -%}
-    </ul>
+    </table>
   </div>
 {% endfunc %}

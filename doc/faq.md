@@ -1,20 +1,79 @@
 # FAQ
 
-## What is Project Forge?
+1. [What is Project Forge?](#faq-1)
+2. [What modules are available?](#faq-2)
+3. [What CLI commands are available?](#faq-3)
+4. [What actions are available for my project from the UI?](#faq-4)
+5. [What build options are available?](#faq-5)
+6. [What git actions are available?](#faq-6)
+7. [How do I make a new HTTP action?](#faq-7)
+8. [What is provided in the TypeScript application?](#faq-8)
+9. [How do I use custom modules?](#faq-9)
+10. [How do I manage more than one Project Forge project at once?](#faq-10)
+11. [How are static assets served?](#faq-11)
+12. [How do I work with SVG icons?](#faq-12)
+13. [What's this PF_SECTION crap?](#faq-13)
+14. [What administrative functions are available?](#faq-14)
+15. [How can I secure my application?](#faq-15)
+16. [What options are available for the HTML menu and breadcrumbs?](#faq-16)
+17. [What search facilities are available?](#faq-17)
+18. [What utility methods are available for my app?](#faq-18)
+19. [How do I add a new model to the "export" facilities?](#faq-19)
+
+## What is Project Forge?<a name="faq-1"></a>
 
 [Project Forge](https://projectforge.dev) helps you build and maintain feature-rich applications written in the Go programming language.
 
 It's a code-generation platform that uses modules, which are self-contained features for your app.
 All managed projects expose a web and CLI interface, and additional modules are available for everything from OAuth to database access.
 
-## What CLI commands are available?
+
+## What modules are available?<a name="faq-2"></a>
+
+- `android`: Webview-based application and Android build
+- `audit`: Audit framework for tracking changes in the system
+- `core`: Common utilities for a Go application
+- `database`: API for accessing relational databases
+- `databaseui`: UI for registered databases, allows auditing and tracing
+- `desktop`: Desktop application for all major operating systems, using the system's webview
+- `docbrowse`: UI for browsing the Markdown documentation as HTML
+- `export`: Generates code based on the project's schema
+- `expression`: CEL engine for evaluating arbitrary expressions
+- `filesystem`: An abstraction around local and remote filesystems
+- `graphql`: Supports GraphQL APIs within your application
+- `har`: Utilities for working with HTTP Archive files
+- `help`: Markdown-backed help files that integrate into the UI
+- `ios`: Webview-based application and iOS build
+- `jsx`: A custom JSX engine for reactive UIs without React
+- `marketing`: Serves a website for downloads, tutorials, and marketing
+- `migration`: Database migrations and a common database service
+- `mysql`: API for accessing MySQL databases
+- `notarize`: Sends files to Apple for notarization
+- `oauth`: Login and session management for many OAuth providers
+- `postgres`: API for accessing PostgreSQL databases
+- `process`: Framework and UI for managing system processes.
+- `readonlydb`: Read-only database connection
+- `sandbox`: Useful playgrounds for testing custom functions
+- `schema`: Classes for representing a collection of custom models
+- `search`: Adds search facilities to the top-level navigation bar
+- `sqlite`: Provides an API for accessing SQLite databases
+- `themecatalog`: A dozen default themes, and facilities to create additional
+- `types`: Classes for representing common data types
+- `upgrade`: In-place version upgrades using Github Releases
+- `user`: Classes for representing persistent user records, application usage
+- `wasmclient`: WASM library and HTML host for a custom WASM application
+- `wasmserver`: Runs your unmodified HTTP server as a Service Worker
+- `websocket`: API for hosting WebSocket connections
+
+
+## What CLI commands are available?<a name="faq-3"></a>
 
 - `all`: (default action) Starts the main http server on port 40000 and the marketing site on port 40001
-- `audit`: Audits the project files, detecting invalid files and empty folders
+- `audit`: Audits the project files, detecting invalid files and configuration
 - `build`: Builds the project, many options available, see below
 - `completion`: Generate the autocompletion script for the specified shell
 - `create`: Creates a new project
-- `debug`: Dumps a ton of information about the project
+- `debug`: Dumps information about the project
 - `doctor`: Makes sure your machine has the required dependencies
 - `generate`: Applies pending changes to files as required
 - `git`: Handles git operations, many options available, see below
@@ -29,7 +88,18 @@ All managed projects expose a web and CLI interface, and additional modules are 
 - `version`: Displays the version and exits
 
 
-## What build options are available?
+## What actions are available for my project from  the UI?<a name="faq-4"></a>
+
+- `preview`: Show what would happen if you generate
+- `generate`: Applies pending changes to files as required
+- `audit`: Audits the project files, detecting invalid files and configuration
+- `build`: Builds the project, many options available, see below
+- `files`: Browse your project's filesystem
+- `svg`: Options for managing the SVG icons in the system
+- `git`: Handles git operations, many options available, see below
+
+
+## What build options are available?<a name="faq-5"></a>
 
 - `build`: Runs [make build]
 - `clean`: Runs [make clean]
@@ -46,7 +116,7 @@ All managed projects expose a web and CLI interface, and additional modules are 
 - `tidy`: Runs [go mod tidy]
 
 
-## What git actions are available?
+## What git actions are available?<a name="faq-6"></a>
 
 Common git actions like `status`, `fetch`, `pull` and `commit` do exactly what you'd expect.
 There's also a `magic` action, which is a little crazy:
@@ -56,109 +126,7 @@ There's also a `magic` action, which is a little crazy:
 - If commits exist that haven't been pushed, it will push them
 
 
-## What modules are available?
-
-- `android`: Webview-based application and Android build
-- `audit`: Using the database module, provides an audit framework for tracking changes
-- `core`: Provides common utilities for a Go application
-- `database`: Provides an API for accessing relational databases
-- `databaseui`: Provides a UI for registered databases
-- `desktop`: Provides a desktop application using the system's webview
-- `docbrowse`: Provides a UI for browsing the documentation
-- `export`: Generates code based on the project's schema
-- `expression`: Exposes CEL engine for evaluating arbitrary expressions
-- `filesystem`: Provides an abstraction around local and remote filesystems
-- `graphql`: Supports GraphQL APIs within your application
-- `ios`: Webview-based application and iOS build
-- `marketing`: Provides a website for downloads, tutorials, and marketing
-- `migration`: Database migrations and a common PostgreSQL or SQLite database
-- `mysql`: Provides an API for accessing MySQL databases
-- `notarize`: Sends files to Apple for notarization
-- `oauth`: Provides logins and session management for many OAuth providers
-- `postgres`: Provides an API for accessing PostgreSQL databases
-- `readonlydb`: Adds a read-only database connection
-- `sandbox`: Useful playgrounds for testing custom functions
-- `schema`: Classes for representing a collection of models; depends on the types module
-- `search`: Adds search facilities to the top-level navigation bar
-- `sqlite`: Provides an API for accessing SQLite databases
-- `types`: Classes for representing common data types
-- `upgrade`: Provides in-place version upgrades using Github Releases
-- `websocket`: Provides an API for hosting WebSocket connections
-
-
-## What actions are available for my project from the UI?
-
-TODO
-
-
-## What is provided in the TypeScript application?
-
-TODO
-
-
-## How do I use custom modules?
-
-TODO
-
-
-## How do I manage more than one Project Forge project at once?
-
-TODO
-
-
-## How are static assets served?
-
-TODO
-
-
-## How do I work with SVG icons?
-
-To see available icons, click the `SVG` button on your project's page.
-To add a new icon, enter the name of the icon from [Line Awesome](https://icons8.com/line-awesome) or paste a URL.
-When added, the icon is rewritten to support themes/styling and references.
-
-To reference an icon, add `{%= components.SVG("star") %}` in your template.
-
-
-## What's this PF_SECTION crap?
-
-Most files are either fully-generated by Project Forge, or completely custom to your application.
-Some files are managed but also support custom code. The text you place inside a PF_SECTION will be preserved when your project is updated.
-
-As always, adding `$PF_IGNORE$` at the top of your file causes it to be skipped entirely.
-
-
-## What administrative functions are available?
-
-Assuming you've got access, going to `/admin` will show you the available actions:
-
-- CPU/memory profiling and visualization, runtime heap dumps
-- Garbage collection management and metrics
-- View your projects Go modules, internal and external
-- Theme management, with theme catalogs and live preview
-- Lots of HTTP tools, for investigating sessions or request
-
-
-## How can I secure my application?
-
-
-## What options are available for the HTML menu and breadcrumbs?
-
-
-## What search facilities are available?
-
-
-## What utility methods are available for my app?
-
-_So many_. See the files in `./app/util`, there's a ton of juicy stuff.
-
-
-## How do I add a new model and service?
-
-TODO
-
-
-## How do I make a new HTTP action?
+## How do I make a new HTTP action?<a name="faq-7"></a>
 
 Create a new file in `app/controller` or a child directory, then add your method.
 The usual form is:
@@ -210,3 +178,103 @@ Templates are written in [quicktemplate](https://github.com/valyala/quicktemplat
 ```
 
 The `layout.Basic` renders menu and navigation, and is swappable for custom response types.
+
+
+## What is provided in the TypeScript application?<a name="faq-8"></a>
+
+The TypeScript project (available at `./client`) is dependency-free, lightweight, and is built with ESBuild.
+Most code is wired in automatically when the build's `.js` output is requested. 
+See the code in `./client/src` for details.
+
+CSS is also built by ESBuild, see `./client/src/client.css` and the files in `./client/src/style`.
+
+
+## How do I use custom modules?<a name="faq-9"></a>
+
+If you want to make your own module, you can load it in Project Forge by adding the following section to the "info" object in `./.projectforge/project.json`:
+
+```json
+{
+  "moduleDefs": [
+    {
+      "key": "foo",
+      "path": "./module_foo",
+      "url": "https://github.com/me/foo"
+    },
+    {
+      "key": "*",
+      "path": "../modules",
+      "url": "https://github.com/me/modules"
+    }
+  ]
+}
+```
+
+
+## How do I manage more than one Project Forge project at once?<a name="faq-10"></a>
+
+Create the file `./projectforge/additional-projects.json`, containing a JSON array of string paths to other projects.
+
+
+## How are static assets served?<a name="faq-11"></a>
+
+Assets are embedded into the servier binary at build time using Go's `embed` package.
+This brings a lot of advantages, but you'll need to rebuild before you see changes to your assets.
+The script `./bin/dev.sh` handles the rebuild/restart automatically.
+
+
+## How do I work with SVG icons?<a name="faq-12"></a>
+
+To see available icons, click the `SVG` button on your project's page.
+To add a new icon, enter the name of the icon from [Line Awesome](https://icons8.com/line-awesome) or paste a URL.
+When added, the icon is rewritten to support themes/styling and references.
+
+To reference an icon, add `{%= components.SVG("star") %}` in your template.
+Other helper methods available, see `./views/compnents/SVG.html`
+
+
+## What's this PF_SECTION crap?<a name="faq-13"></a>
+
+Most files are either fully-generated by Project Forge, or completely custom to your application.
+Some files are managed but also support custom code. The text you place inside a PF_SECTION will be preserved when your project is updated.
+
+As always, adding `$PF_IGNORE$` at the top of your file causes it to be skipped entirely.
+
+
+## What administrative functions are available?<a name="faq-14"></a>
+
+Assuming you've got access, going to `/admin` will show you the available actions:
+
+- CPU/memory profiling and visualization, runtime heap dumps
+- Garbage collection management and metrics
+- View your projects Go modules, internal and external
+- Theme management, with theme catalogs and live preview
+- Lots of HTTP tools, for investigating sessions or request
+
+
+## How can I secure my application?<a name="faq-15"></a>
+
+TODO
+
+
+## What options are available for the HTML menu and breadcrumbs?<a name="faq-16"></a>
+
+TODO
+
+
+## What search facilities are available?<a name="faq-17"></a>
+
+TODO
+
+
+## What utility methods are available for my app?<a name="faq-18"></a>
+
+_So many_. See the files in `./app/util`, there's a ton of juicy stuff.
+
+
+## How do I add a new model to the "export" facilities?<a name="faq-19"></a>
+
+Export configuration is stored in `./.projectforge/export`.
+A rudimentary UI is provided in the "Export" section of your project's page. 
+To be honest, the easiest way to do this is to copy/paste and modify an existing model definition.
+There's some good examples at [rituals.dev](https://github.com/kyleu/rituals/tree/master/.projectforge/export/models).

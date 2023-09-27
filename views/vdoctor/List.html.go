@@ -57,32 +57,32 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
   <div class="card">
     <div class="right"><a href="/doctor/all"><button>Run All Checks</button></a></div>
     <h3>Checks</h3>
-    <ul class="mt">
+    <table class="mt">
 `)
 //line views/vdoctor/List.html:25
 	for _, c := range p.Checks {
 //line views/vdoctor/List.html:25
-		qw422016.N().S(`        <li>
-          <div class="right"><em>`)
+		qw422016.N().S(`      <tr>
+        <td><a href="/doctor/`)
 //line views/vdoctor/List.html:27
-		qw422016.E().S(c.Summary)
-//line views/vdoctor/List.html:27
-		qw422016.N().S(`</em></div>
-          <a href="/doctor/`)
-//line views/vdoctor/List.html:28
 		qw422016.E().S(c.Key)
-//line views/vdoctor/List.html:28
+//line views/vdoctor/List.html:27
 		qw422016.N().S(`">`)
-//line views/vdoctor/List.html:28
+//line views/vdoctor/List.html:27
 		qw422016.E().S(c.Title)
+//line views/vdoctor/List.html:27
+		qw422016.N().S(`</a></td>
+        <td><div class="right"><em>`)
 //line views/vdoctor/List.html:28
-		qw422016.N().S(`</a>
-        </li>
+		qw422016.E().S(c.Summary)
+//line views/vdoctor/List.html:28
+		qw422016.N().S(`</em></div></td>
+      </tr>
 `)
 //line views/vdoctor/List.html:30
 	}
 //line views/vdoctor/List.html:30
-	qw422016.N().S(`    </ul>
+	qw422016.N().S(`    </table>
   </div>
 `)
 //line views/vdoctor/List.html:33

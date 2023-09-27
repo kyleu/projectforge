@@ -147,11 +147,7 @@ func streamsitemapItemDetail(qw422016 *qt422016.Writer, i *menu.Item, path []str
 //line views/vadmin/Sitemap.html:44
 	vutil.StreamIndent(qw422016, true, indent)
 //line views/vadmin/Sitemap.html:44
-	qw422016.N().S(`<li><div class="right"><em>`)
-//line views/vadmin/Sitemap.html:46
-	qw422016.E().S(i.Desc())
-//line views/vadmin/Sitemap.html:46
-	qw422016.N().S(`</em></div>`)
+	qw422016.N().S(`<li><div class="mts">`)
 //line views/vadmin/Sitemap.html:47
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/vadmin/Sitemap.html:47
@@ -173,58 +169,64 @@ func streamsitemapItemDetail(qw422016 *qt422016.Writer, i *menu.Item, path []str
 //line views/vadmin/Sitemap.html:52
 	qw422016.E().S(i.Title)
 //line views/vadmin/Sitemap.html:52
-	qw422016.N().S(`</a>`)
+	qw422016.N().S(`</a><div><em>`)
 //line views/vadmin/Sitemap.html:54
+	qw422016.E().S(i.Desc())
+//line views/vadmin/Sitemap.html:54
+	qw422016.N().S(`</em></div>`)
+//line views/vadmin/Sitemap.html:55
 	if len(i.Children) > 0 {
-//line views/vadmin/Sitemap.html:54
+//line views/vadmin/Sitemap.html:55
 		qw422016.N().S(`<ul class="level-`)
-//line views/vadmin/Sitemap.html:55
-		qw422016.N().D(len(path))
-//line views/vadmin/Sitemap.html:55
-		qw422016.N().S(`">`)
 //line views/vadmin/Sitemap.html:56
-		for _, kid := range i.Children {
+		qw422016.N().D(len(path))
+//line views/vadmin/Sitemap.html:56
+		qw422016.N().S(`">`)
 //line views/vadmin/Sitemap.html:57
-			if kid.Key != "" {
+		for _, kid := range i.Children {
 //line views/vadmin/Sitemap.html:58
-				streamsitemapItemDetail(qw422016, kid, append(slices.Clone(path), i.Key), breadcrumbs, indent+2, ps)
+			if kid.Key != "" {
 //line views/vadmin/Sitemap.html:59
+				streamsitemapItemDetail(qw422016, kid, append(slices.Clone(path), i.Key), breadcrumbs, indent+2, ps)
+//line views/vadmin/Sitemap.html:60
 			}
-//line views/vadmin/Sitemap.html:60
+//line views/vadmin/Sitemap.html:61
 		}
-//line views/vadmin/Sitemap.html:60
+//line views/vadmin/Sitemap.html:61
 		qw422016.N().S(`</ul>`)
-//line views/vadmin/Sitemap.html:62
+//line views/vadmin/Sitemap.html:63
 	}
 //line views/vadmin/Sitemap.html:63
+	qw422016.N().S(`</div>`)
+//line views/vadmin/Sitemap.html:65
 	vutil.StreamIndent(qw422016, true, indent)
-//line views/vadmin/Sitemap.html:63
+//line views/vadmin/Sitemap.html:65
 	qw422016.N().S(`</li>`)
-//line views/vadmin/Sitemap.html:65
+//line views/vadmin/Sitemap.html:67
 }
 
-//line views/vadmin/Sitemap.html:65
+//line views/vadmin/Sitemap.html:67
 func writesitemapItemDetail(qq422016 qtio422016.Writer, i *menu.Item, path []string, breadcrumbs cmenu.Breadcrumbs, indent int, ps *cutil.PageState) {
-//line views/vadmin/Sitemap.html:65
+//line views/vadmin/Sitemap.html:67
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vadmin/Sitemap.html:65
+//line views/vadmin/Sitemap.html:67
 	streamsitemapItemDetail(qw422016, i, path, breadcrumbs, indent, ps)
-//line views/vadmin/Sitemap.html:65
+//line views/vadmin/Sitemap.html:67
 	qt422016.ReleaseWriter(qw422016)
-//line views/vadmin/Sitemap.html:65
+//line views/vadmin/Sitemap.html:67
 }
 
-//line views/vadmin/Sitemap.html:65
+//line views/vadmin/Sitemap.html:67
 func sitemapItemDetail(i *menu.Item, path []string, breadcrumbs cmenu.Breadcrumbs, indent int, ps *cutil.PageState) string {
-//line views/vadmin/Sitemap.html:65
+//line views/vadmin/Sitemap.html:67
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vadmin/Sitemap.html:65
+//line views/vadmin/Sitemap.html:67
 	writesitemapItemDetail(qb422016, i, path, breadcrumbs, indent, ps)
-//line views/vadmin/Sitemap.html:65
+//line views/vadmin/Sitemap.html:67
 	qs422016 := string(qb422016.B)
-//line views/vadmin/Sitemap.html:65
+//line views/vadmin/Sitemap.html:67
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vadmin/Sitemap.html:65
+//line views/vadmin/Sitemap.html:67
 	return qs422016
-//line views/vadmin/Sitemap.html:65
+//line views/vadmin/Sitemap.html:67
 }

@@ -43,23 +43,25 @@
 {% func sitemapItemDetail(i *menu.Item, path []string, breadcrumbs cmenu.Breadcrumbs, indent int, ps *cutil.PageState) %}{% stripspace %}
   {%= vutil.Indent(true, indent) %}
   <li>
-    <div class="right"><em>{%s i.Desc() %}</em></div>
-    {%= vutil.Indent(true, indent + 1) %}
-    <a href="{%s i.Route %}" title="{%s i.Desc() %}">
-      {% if i.Icon != "" %}
-        {%= components.SVGRef(i.Icon, 16, 16, "icon", ps) %}
-      {% endif %}
-      {%s i.Title %}
-    </a>
-    {% if len(i.Children) > 0 %}
-    <ul class="level-{%d len(path) %}">
-      {% for _, kid := range i.Children %}
-        {% if kid.Key != "" %}
-          {%= sitemapItemDetail(kid, append(slices.Clone(path), i.Key), breadcrumbs, indent + 2, ps) %}
+    <div class="mts">
+      {%= vutil.Indent(true, indent + 1) %}
+      <a href="{%s i.Route %}" title="{%s i.Desc() %}">
+        {% if i.Icon != "" %}
+          {%= components.SVGRef(i.Icon, 16, 16, "icon", ps) %}
         {% endif %}
-      {% endfor %}
-    </ul>
-    {% endif %}
+        {%s i.Title %}
+      </a>
+      <div><em>{%s i.Desc() %}</em></div>
+      {% if len(i.Children) > 0 %}
+      <ul class="level-{%d len(path) %}">
+        {% for _, kid := range i.Children %}
+          {% if kid.Key != "" %}
+            {%= sitemapItemDetail(kid, append(slices.Clone(path), i.Key), breadcrumbs, indent + 2, ps) %}
+          {% endif %}
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </div>
   {%= vutil.Indent(true, indent) %}
   </li>
 {% endstripspace %}{% endfunc %}

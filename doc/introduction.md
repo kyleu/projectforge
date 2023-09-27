@@ -1,8 +1,8 @@
 # Introduction
 
-[Project Forge](https://projectforge.dev) is an application that allows you to generate, manage, and grow web applications built using the Go language.
+[Project Forge](https://projectforge.dev) is an application that allows you to generate, manage, and grow web applications built using the Go programming language.
 You control your application's features, provided via "modules" that enable everything from databases to OAuth.
-When creating a new application with Project Forge, a standard Golang project is created, including a ton of utilities and APIs to help you build the application you want, without compromise.
+When creating a new application with Project Forge, a standard Golang project is created, which includes utilities and APIs to help you build the application you want, without compromise.
 
 All projects managed by Project Forge provide an HTTP server based on [fasthttp](https://github.com/valyala/fasthttp), and use [quicktemplate](https://github.com/valyala/quicktemplate) for HTML templates (and SQL, if enabled).
 An MVC framework is provided (but not required) that handles content negotiation, hierarchical menus, breadcrumbs, OAuth to dozens of providers, stateless user profiles, dark mode support, SVG management, syntax highlighting, form components, and embedded assets.

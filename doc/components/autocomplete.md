@@ -32,4 +32,4 @@ The result of the `title` function must include the search content or the browse
 </script>
 ```
 
-If you use the `export` module in your app, autocompletes will be generated automatically for model relationships.  
+If you use the `export` module in your app, autocompletes will be generated automatically for the relationships of models tagged `search`.  

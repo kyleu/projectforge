@@ -54,7 +54,7 @@ func (p *About) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
 	qw422016.N().S(`</em>
   </div>
   <div class="card">
-    <h3>Help</h3>
+    <h3>About</h3>
 `)
 //line views/About.html:19
 	qw422016.N().S(`    <p>Using code generation, the latest technology, and a strong standard library, Project Forge will help manage your project's code, assets, UI and UX.</p>
@@ -63,138 +63,146 @@ func (p *About) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
 	components.StreamBragApp(qw422016)
 //line views/About.html:21
 	qw422016.N().S(`
+`)
+//line views/About.html:22
+	qw422016.N().S(`  </div>
+  <div class="card">
+    <h3>Help</h3>
+`)
+//line views/About.html:26
+	qw422016.N().S(`    Pages with help files, like this one, have a <a href="#help">link</a> in the upper-right.
   </div>
   `)
-//line views/About.html:23
+//line views/About.html:29
 	components.StreamBragProject(qw422016)
-//line views/About.html:23
+//line views/About.html:29
 	qw422016.N().S(`
   <div class="card">
     <h3>Licensing</h3>
     <div class="mt">
       `)
-//line views/About.html:27
+//line views/About.html:33
 	qw422016.E().S(util.AppName)
-//line views/About.html:27
+//line views/About.html:33
 	qw422016.N().S(` is <a href="https://choosealicense.com/licenses/mit/">MIT</a> licensed,
       and the modules are <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>.
     </div>
     <div class="mt">Your project is your own, use any license you'd like.</div>
 `)
-//line views/About.html:31
+//line views/About.html:37
 	qw422016.N().S(`  </div>
   `)
-//line views/About.html:33
+//line views/About.html:39
 	StreamSourceCode(qw422016)
-//line views/About.html:33
+//line views/About.html:39
 	qw422016.N().S(`
   `)
-//line views/About.html:34
+//line views/About.html:40
 	StreamFeedback(qw422016)
-//line views/About.html:34
+//line views/About.html:40
 	qw422016.N().S(`
 `)
-//line views/About.html:35
+//line views/About.html:41
 }
 
-//line views/About.html:35
+//line views/About.html:41
 func (p *About) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/About.html:35
+//line views/About.html:41
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/About.html:35
+//line views/About.html:41
 	p.StreamBody(qw422016, as, ps)
-//line views/About.html:35
+//line views/About.html:41
 	qt422016.ReleaseWriter(qw422016)
-//line views/About.html:35
+//line views/About.html:41
 }
 
-//line views/About.html:35
+//line views/About.html:41
 func (p *About) Body(as *app.State, ps *cutil.PageState) string {
-//line views/About.html:35
+//line views/About.html:41
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/About.html:35
+//line views/About.html:41
 	p.WriteBody(qb422016, as, ps)
-//line views/About.html:35
+//line views/About.html:41
 	qs422016 := string(qb422016.B)
-//line views/About.html:35
+//line views/About.html:41
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/About.html:35
+//line views/About.html:41
 	return qs422016
-//line views/About.html:35
+//line views/About.html:41
 }
 
-//line views/About.html:37
+//line views/About.html:43
 func StreamSourceCode(qw422016 *qt422016.Writer) {
-//line views/About.html:37
+//line views/About.html:43
 	qw422016.N().S(`
 <div class="card">
   <h3>Source Code</h3>
   <p>The project is available on <a href="https://github.com/kyleu/projectforge" target="_blank" rel="noopener noreferrer">GitHub</a></p>
 </div>
 `)
-//line views/About.html:42
+//line views/About.html:48
 }
 
-//line views/About.html:42
+//line views/About.html:48
 func WriteSourceCode(qq422016 qtio422016.Writer) {
-//line views/About.html:42
+//line views/About.html:48
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/About.html:42
+//line views/About.html:48
 	StreamSourceCode(qw422016)
-//line views/About.html:42
+//line views/About.html:48
 	qt422016.ReleaseWriter(qw422016)
-//line views/About.html:42
+//line views/About.html:48
 }
 
-//line views/About.html:42
+//line views/About.html:48
 func SourceCode() string {
-//line views/About.html:42
+//line views/About.html:48
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/About.html:42
+//line views/About.html:48
 	WriteSourceCode(qb422016)
-//line views/About.html:42
+//line views/About.html:48
 	qs422016 := string(qb422016.B)
-//line views/About.html:42
+//line views/About.html:48
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/About.html:42
+//line views/About.html:48
 	return qs422016
-//line views/About.html:42
+//line views/About.html:48
 }
 
-//line views/About.html:44
+//line views/About.html:50
 func StreamFeedback(qw422016 *qt422016.Writer) {
-//line views/About.html:44
+//line views/About.html:50
 	qw422016.N().S(`
 <div class="card">
   <h3>Feedback</h3>
   <p>For now, email <a href="mailto:projectforge@kyleu.com">Kyle U</a></p>
 </div>
 `)
-//line views/About.html:49
+//line views/About.html:55
 }
 
-//line views/About.html:49
+//line views/About.html:55
 func WriteFeedback(qq422016 qtio422016.Writer) {
-//line views/About.html:49
+//line views/About.html:55
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/About.html:49
+//line views/About.html:55
 	StreamFeedback(qw422016)
-//line views/About.html:49
+//line views/About.html:55
 	qt422016.ReleaseWriter(qw422016)
-//line views/About.html:49
+//line views/About.html:55
 }
 
-//line views/About.html:49
+//line views/About.html:55
 func Feedback() string {
-//line views/About.html:49
+//line views/About.html:55
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/About.html:49
+//line views/About.html:55
 	WriteFeedback(qb422016)
-//line views/About.html:49
+//line views/About.html:55
 	qs422016 := string(qb422016.B)
-//line views/About.html:49
+//line views/About.html:55
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/About.html:49
+//line views/About.html:55
 	return qs422016
-//line views/About.html:49
+//line views/About.html:55
 }

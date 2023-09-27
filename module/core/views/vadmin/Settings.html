@@ -41,43 +41,46 @@
     </ul>
   </div>{{{ end }}}
 
-  <div class="flex-wrap flex-align-stretch">
-    <div class="card flex-grow-1 flex-basis-0">
-      <h3>{%= components.SVGRefIcon(`archive`, ps) %}Admin Functions</h3>
-      <ul class="mt">
-        <li><a href="/admin/server">App Information</a></li>
-        <li><a href="/admin/modules">View Go modules</a></li>{{{ if.HasModule "migration" }}}
-        <li><a href="/admin/migrations">View database migrations</a></li>{{{ end }}}{{{ if .HasModule "queue" }}}
-        <li><a href="/admin/queue">Queue Statistics</a></li>{{{ end }}}
-        <li><a href="/theme">Edit Themes</a></li>{{{ if .HasModule "process" }}}
-        <li><a href="/admin/exec">Managed Processes</a></li>{{{ end }}}{{{ if .HasModule "scripting" }}}
-        <li><a href="/admin/scripting">Script Files</a></li>{{{ end }}}
-        <li><a href="/admin/logs">Recent Logs</a></li>
-      </ul>
-    </div>
-    <div class="card flex-grow-1 flex-basis-0">
-      <h3>{%= components.SVGRefIcon(`bolt`, ps) %}HTTP Methods</h3>
-      <ul class="mt">
-        <li><a href="/admin/sitemap">Sitemap</a></li>
-        <li><a href="/admin/routes">View HTTP routes</a></li>
-        <li><a href="/admin/session">Parse and display session</a></li>
-        <li><a href="/admin/request">Debug HTTP request</a></li>{{{ if .HasModule "websocket" }}}
-        <li><a href="/admin/sockets">Active WebSockets</a></li>{{{ end }}}
-      </ul>
-    </div>
-    <div class="card flex-grow-1 flex-basis-0">
-      <h3>{%= components.SVGRefIcon(`cog`, ps) %}App Profiling</h3>
-      <ul class="mt">
-        <li><a href="/admin/memusage">Memory Usage</a></li>
-        <li><a href="/admin/gc">Collect garbage</a></li>
-        <li><a href="/admin/heap">Write memory dump</a></li>
-        <li><a href="/admin/cpu/start">Start CPU profile</a></li>
-        <li><a href="/admin/cpu/stop">Stop CPU profile</a></li>
-      </ul>
-    </div>
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`archive`, ps) %}Admin Functions</h3>
+    {%= settingsLink("/admin/server", "archive", "App Information", "All sorts of info about the server and runtime", ps) %}
+    {%= settingsLink("/admin/modules", "archive", "Go Modules", "The Go modules used by " + util.AppName, ps) %}{{{ if.HasModule "migration" }}}
+    {%= settingsLink("/admin/migrations", "archive", "Database Migrations", "Shows the full content of all database SQL migrations", ps) %}{{{ end }}}{{{ if .HasModule "queue" }}}
+    {%= settingsLink("/admin/queue", "archive", "Queue Statistics", "Manages the queue consumers and producers", ps) %}{{{ end }}}
+    {%= settingsLink("/theme", "archive", "Edit Themes", "Configure the design themes available to end users", ps) %}{{{ if .HasModule "process" }}}
+    {%= settingsLink("/admin/exec", "archive", "Managed Processes", "Manage OS processes from within this app", ps) %}{{{ end }}}{{{ if .HasModule "scripting" }}}
+    {%= settingsLink("/admin/scripting", "archive", "Script Files", "View and run the JavaScript files managed by the server", ps) %}{{{ end }}}
+    {%= settingsLink("/admin/logs", "archive", "Recent Logs", "Displays the 100 most recent app logs", ps) %}
+    <div class="clear"></div>
+  </div>
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`bolt`, ps) %}HTTP Methods</h3>
+    {%= settingsLink("/admin/sitemap", "bolt", "Sitemap", "Displays the HTTP actions that are available, with documentation", ps) %}
+    {%= settingsLink("/admin/routes", "bolt", "HTTP routes", "Enumerates all registered HTTP routes, by method", ps) %}
+    {%= settingsLink("/admin/session", "bolt", "User Session", "View the user session, including all cookies and settings", ps) %}
+    {%= settingsLink("/admin/request", "bolt", "Debug HTTP Request", "Full debug view of an HTTP request from your browser", ps) %}{{{ if .HasModule "websocket" }}}
+    {%= settingsLink("/admin/sockets", "bolt", "Active WebSockets", "Manage the active WebSockets in this server", ps) %}{{{ end }}}
+    <div class="clear"></div>
+  </div>
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`cog`, ps) %}App Profiling</h3>
+    {%= settingsLink("/admin/memusage", "cog", "Memory Usage", "Detailed memory usage statistics", ps) %}
+    {%= settingsLink("/admin/gc", "cog", "Collect Garbage", "Runs the Go garbage collector", ps) %}
+    {%= settingsLink("/admin/heap", "cog", "Write Memory Dump", "Writes a memory dump to <em>./tmp/mem.pprof</em>, use script to view", ps) %}
+    {%= settingsLink("/admin/cpu/start", "cog", "Start CPU Profile", "Profiles the CPU using <em>./tmp/cpu.pprof</em>, use script to view", ps) %}
+    {%= settingsLink("/admin/cpu/stop", "cog", "Stop CPU Profile", "Stops the active CPU profile", ps) %}
+    <div class="clear"></div>
   </div>{{{ if.HasModule "oauth" }}}
 
   {%= vauth.Authentication(as, ps) %}
 
   {%= vauth.Permissions(p.Perms, as) %}{{{ end }}}
 {% endfunc %}
+
+{% func settingsLink(href string, icon string, title string, description string, ps *cutil.PageState) %}{% stripspace %}
+  <hr class="clear" />
+  <div class="mts">
+    <a href="{%s href %}"><strong>{%s title %}</strong></a>
+    <div><em>{%s= description %}</em></div>
+  </div>
+{% endstripspace %}{% endfunc %}

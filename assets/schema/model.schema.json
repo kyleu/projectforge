@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "http://projectforge.dev/schemas/model.schema.json",
+  "$id": "https://projectforge.dev/schemas/model.schema.json",
   "title": "Model",
   "type": "object",
   "properties": {

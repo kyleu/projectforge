@@ -1,9 +1,9 @@
 # Project Forge
 ![app logo](./assets/favicon.png)
 
-[Project Forge](https://projectforge.dev) is an application that allows you to generate, manage, and grow web applications built using the Go language.
+[Project Forge](https://projectforge.dev) is an application that allows you to generate, manage, and grow web applications built using the Go programming language.
 You control your application's features, provided via "modules" that enable everything from databases to OAuth.
-When creating a new application with Project Forge, a standard Golang project is created, including a ton of utilities and APIs to help you build the application you want, without compromise.
+When creating a new application with Project Forge, a standard Golang project is created, which includes utilities and APIs to help you build the application you want, without compromise.
 
 All projects managed by Project Forge provide an HTTP server based on [fasthttp](https://github.com/valyala/fasthttp), and use [quicktemplate](https://github.com/valyala/quicktemplate) for HTML templates (and SQL, if enabled).
 An MVC framework is provided (but not required) that handles content negotiation, hierarchical menus, breadcrumbs, OAuth to dozens of providers, stateless user profiles, dark mode support, SVG management, syntax highlighting, form components, and embedded assets.
@@ -47,21 +47,27 @@ A project managed by Project Forge...
 
 - [Rituals.dev](https://rituals.dev) ([GitHub](https://github.com/kyleu/rituals)):
 Work with your team to estimate work, track your progress, and gather feedback.
+  - It's a full websocket-driven rich client application, but also works fine without JavaScript
 
 - [TODO Forge](https://todo.kyleu.dev) ([GitHub](https://github.com/kyleu/todoforge)):
-  Manages collections of todo items. Almost entirely generated using Project Forge.
+  Manages collections of todo items.
+  - Almost entirely generated using Project Forge, this is a "stock" application
 
 - [Load Toad](https://loadtoad.kyleu.dev) ([GitHub](https://github.com/kyleu/loadtoad)):
   A tool for uploading HTTP Archives (`.har` files) and running load tests.
+  - Also supports client-defined JavaScript, executed in-process on the server 
 
 - [Admini](https://admini.dev) ([GitHub](https://github.com/kyleu/admini)):
   A database management application, basically. It does other stuff too.
+  - This one is weird, it tried to build a user-defined admin app, but it just ended up looking like a 1990's web portal
 
 - [NPN](https://npn.dev) ([GitHub](https://github.com/kyleu/npn)):
   Basically Postman, it helps you explore and test HTTP services with a focus on speed and correctness.
+  - This uses a Vue.js-based rich client application, and a websocket to handle communication
 
 - [Solitaire](https://solitaire.kyleu.dev) ([GitHub](https://github.com/kyleu/solitaire)):
-  An example game, mainly exists to show the features of Project Forge projects.
+  An example game, not really anything right now.
+  - It mainly exists as a testbed for me, and to show the features of Project Forge projects
 
 _More examples coming soon..._
 

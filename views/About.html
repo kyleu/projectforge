@@ -15,10 +15,16 @@
     <em>v{%s as.BuildInfo.Version %}, started {%s util.TimeRelative(&as.Started) %}</em>
   </div>
   <div class="card">
-    <h3>Help</h3>
-    {%- comment %}$PF_SECTION_START(help)${% endcomment -%}
+    <h3>About</h3>
+    {%- comment %}$PF_SECTION_START(about)${% endcomment -%}
     <p>Using code generation, the latest technology, and a strong standard library, Project Forge will help manage your project's code, assets, UI and UX.</p>
     {%= components.BragApp() %}
+    {%- comment %}$PF_SECTION_END(about)${% endcomment -%}
+  </div>
+  <div class="card">
+    <h3>Help</h3>
+    {%- comment %}$PF_SECTION_START(help)${% endcomment -%}
+    Pages with help files, like this one, have a <a href="#help">link</a> in the upper-right.
   </div>
   {%= components.BragProject() %}
   <div class="card">
