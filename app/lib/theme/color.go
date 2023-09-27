@@ -1,4 +1,4 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
+// Package theme - Content managed by Project Forge, see [projectforge.md] for details.
 package theme
 
 import (
@@ -30,7 +30,7 @@ func themeColors(c color.Color) (*Colors, *Colors) {
 	darkTints := gamut.Tints(dark, 4)
 	darkShades := gamut.Shades(dark, 4)
 
-	x := ThemeDefault.Clone("")
+	x := Default.Clone("")
 
 	l := x.Light
 	l.NavBackground = hex(light)

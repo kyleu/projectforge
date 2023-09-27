@@ -49,7 +49,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
         <div class="mt">
           <input class="left mrs" type="color" name="color" value="`)
 //line views/vtheme/List.html:25
-	qw422016.E().S(theme.ThemeDefault.Light.NavBackground)
+	qw422016.E().S(theme.Default.Light.NavBackground)
 //line views/vtheme/List.html:25
 	qw422016.N().S(`" />
           <button type="submit">Custom Color Theme</button>

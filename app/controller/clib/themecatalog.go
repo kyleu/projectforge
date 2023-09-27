@@ -87,7 +87,7 @@ func ThemePaletteEdit(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		if key == theme.ThemeDefault.Key {
+		if key == theme.Default.Key {
 			return controller.FlashAndRedir(false, "Unable to edit default theme", "/theme", rc, ps)
 		}
 		themes, err := theme.PaletteThemes(palette)

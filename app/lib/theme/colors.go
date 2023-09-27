@@ -1,4 +1,4 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
+// Package theme - Content managed by Project Forge, see [projectforge.md] for details.
 package theme
 
 import (
@@ -37,7 +37,7 @@ func (c *Colors) CSS(key string, indent int) string {
 	sb := &strings.Builder{}
 	sb.WriteString(key + " {")
 	prop := func(k string, v string) {
-		fmt.Fprintf(sb, " --%s: %s;", k, v)
+		_, _ = fmt.Fprintf(sb, " --%s: %s;", k, v)
 	}
 	prop("border", c.Border)
 	prop("link-text-decoration", c.LinkDecoration)

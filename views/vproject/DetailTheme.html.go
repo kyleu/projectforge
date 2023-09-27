@@ -32,7 +32,7 @@ func StreamDetailTheme(qw422016 *qt422016.Writer, key string, t *theme.Theme, ti
 `)
 //line views/vproject/DetailTheme.html:10
 	if t == nil {
-		t = theme.ThemeDefault
+		t = theme.Default
 	}
 
 //line views/vproject/DetailTheme.html:13

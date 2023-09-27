@@ -67,7 +67,7 @@ func ProfileSave(rc *fasthttp.RequestCtx) {
 		n.Name = frm.GetStringOpt("name")
 		n.Mode = frm.GetStringOpt("mode")
 		n.Theme = frm.GetStringOpt("theme")
-		if n.Theme == theme.ThemeDefault.Key {
+		if n.Theme == theme.Default.Key {
 			n.Theme = ""
 		}{{{ if .HasUser }}}
 		if ps.Profile.ID == util.UUIDDefault {

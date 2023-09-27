@@ -63,7 +63,6 @@ func NewState(debug bool, bi *BuildInfo{{{ if .HasModule "filesystem" }}}, f fil
 
 	_ = telemetry.InitializeIfNeeded(enableTelemetry, bi.Version, logger){{{ if .HasModule "oauth" }}}
 	as := auth.NewService("", port, logger){{{ end }}}
-	ts := theme.NewService({{{ if .HasModule "filesystem" }}}f{{{ end }}}){{{ if .HasModule "graphql" }}}
 	gqls := graphql.NewService(){{{ end }}}
 
 	return &State{
@@ -72,7 +71,7 @@ func NewState(debug bool, bi *BuildInfo{{{ if .HasModule "filesystem" }}}, f fil
 		Files:     f{{{ end }}}{{{ if .HasModule "oauth" }}},
 		Auth:      as{{{ end }}}{{{ if .HasModule "graphql" }}},
 		GraphQL:   gqls{{{ end }}},
-		Themes:    ts,
+		Themes:    theme.NewService({{{ if .HasModule "filesystem" }}}f{{{ end }}}),
 		Started:   util.TimeCurrent(),
 	}, nil
 }

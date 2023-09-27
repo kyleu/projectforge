@@ -8,7 +8,7 @@
 {% func DetailTheme(key string, t *theme.Theme, title string, icon string, as *app.State, ps *cutil.PageState) %}
   {%- code
     if t == nil {
-      t = theme.ThemeDefault
+      t = theme.Default
     }
   -%}
   <div class="right"><a href="/p/{%s key %}/edit#theme"><button>Edit Theme</button></a></div>

@@ -36,7 +36,7 @@ func (c *Colors) CSS(key string, indent int) string {
 	sb := &strings.Builder{}
 	sb.WriteString(key + " {")
 	prop := func(k string, v string) {
-		fmt.Fprintf(sb, " --%s: %s;", k, v)
+		_, _ = fmt.Fprintf(sb, " --%s: %s;", k, v)
 	}
 	prop("border", c.Border)
 	prop("link-text-decoration", c.LinkDecoration)

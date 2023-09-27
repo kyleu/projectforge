@@ -4,7 +4,7 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-var ThemeDefault = func() *Theme {
+var Default = func() *Theme {
 	nbl := "{{{ .Theme.Light.NavBackground }}}"
 	if o := util.GetEnv("app_nav_color_light"); o != "" {
 		nbl = o

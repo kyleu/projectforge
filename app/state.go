@@ -53,13 +53,12 @@ func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, enableTelemetr
 	}
 
 	_ = telemetry.InitializeIfNeeded(enableTelemetry, bi.Version, logger)
-	ts := theme.NewService(f)
 
 	return &State{
 		Debug:     debug,
 		BuildInfo: bi,
 		Files:     f,
-		Themes:    ts,
+		Themes:    theme.NewService(f),
 		Started:   util.TimeCurrent(),
 	}, nil
 }

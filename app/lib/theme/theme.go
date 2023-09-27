@@ -1,4 +1,4 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
+// Package theme - Content managed by Project Forge, see [projectforge.md] for details.
 package theme
 
 import (
@@ -78,10 +78,10 @@ type Themes []*Theme
 
 func (t Themes) Sort() Themes {
 	slices.SortFunc(t, func(l *Theme, r *Theme) int {
-		if l.Key == ThemeDefault.Key {
+		if l.Key == Default.Key {
 			return 0
 		}
-		if r.Key == ThemeDefault.Key {
+		if r.Key == Default.Key {
 			return 0
 		}
 		return cmp.Compare(strings.ToLower(l.Key), strings.ToLower(r.Key))

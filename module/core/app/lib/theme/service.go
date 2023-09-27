@@ -32,11 +32,11 @@ func (s *Service) Get(theme string, logger util.Logger) *Theme {
 			return t
 		}
 	}
-	return ThemeDefault
+	return Default
 }
 
 func (s *Service) Save(t *Theme, originalKey string, logger util.Logger) error {
-	if t.Key == ThemeDefault.Key {
+	if t.Key == Default.Key {
 		return errors.New("can't overwrite default theme")
 	}
 	if t.Key == "" || t.Key == KeyNew {
@@ -63,7 +63,7 @@ func (s *Service) FileExists(key string) bool {
 
 func (s *Service) loadIfNeeded(logger util.Logger) {
 	if s.cache == nil {
-		s.cache = Themes{ThemeDefault}{{{ if .HasModule "themecatalog" }}}
+		s.cache = Themes{Default}{{{ if .HasModule "themecatalog" }}}
 		s.cache = append(s.cache, CatalogThemes...){{{ end }}}
 	}
 }
