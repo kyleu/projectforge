@@ -23,7 +23,7 @@
   </form>
   {%- endif -%}
   {%= Help(as, ps) %}
-  <a class="profile" href="{%s ps.ProfilePath %}">
+  <a class="profile" title="Settings" href="{%s ps.ProfilePath %}">
     {%= components.SVGRef(`profile`, 24, 24, ``, ps) %}
   </a>
   {%- if !ps.HideMenu -%}

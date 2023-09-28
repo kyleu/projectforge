@@ -26,12 +26,13 @@ func List() ([]string, error) {
 	return ret, nil
 }
 
-func Content(path string) ([]byte, error) {
+func Content(path string) (string, error) {
 	data, err := FS.ReadFile(path)
 	if err != nil {
-		return nil, errors.Wrapf(err, "error reading doc asset at [%s]", path)
+		return "", errors.Wrapf(err, "error reading doc asset at [%s]", path)
 	}
-	return data, nil
+	body := strings.TrimSpace(string(data))
+	return body, nil
 }
 
 func HTML(path string) (string, string, error) {
@@ -42,5 +43,5 @@ func HTML(path string) (string, string, error) {
 	if err != nil {
 		return "", "", err
 	}
-	return string(data), string(markdown.ToHTML(data, nil, nil)), nil
+	return data, string(markdown.ToHTML([]byte(data), nil, nil)), nil
 }

@@ -31,6 +31,9 @@ var (
 
 //line views/layout/Help.html:11
 func StreamHelp(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
+//line views/layout/Help.html:11
+	qw422016.N().S(`
+`)
 //line views/layout/Help.html:13
 	title := ps.Title
 	if title == "" {
@@ -38,31 +41,46 @@ func StreamHelp(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
 	}
 
 //line views/layout/Help.html:18
-	if hlp := as.Services.Help.HTML(ps.Action); hlp != "" {
-//line views/layout/Help.html:18
-		qw422016.N().S(`<a class="help-link" title="Help for this page" data-key="`)
+	if as.Services.Help != nil {
 //line views/layout/Help.html:19
-		qw422016.E().S(strings.TrimSuffix(ps.Action, `.action`))
+		if hlp := as.Services.Help.HTML(ps.Action); hlp != "" {
 //line views/layout/Help.html:19
-		qw422016.N().S(`" href="#help">`)
+			qw422016.N().S(`  <a class="help-link" title="Help for this page" data-key="`)
 //line views/layout/Help.html:20
-		components.StreamSVGRef(qw422016, `question`, 24, 24, ``, ps)
+			qw422016.E().S(strings.TrimSuffix(ps.Action, `.action`))
 //line views/layout/Help.html:20
-		qw422016.N().S(`</a><div id="help" class="modal" style="display: none;"><a class="backdrop" href="#"></a><div class="modal-content"><div class="modal-header"><a href="#" class="modal-close">×</a><h3>`)
-//line views/layout/Help.html:27
-		components.StreamSVGRefIcon(qw422016, `question`, ps)
-//line views/layout/Help.html:27
-		qw422016.N().S(`Help -`)
-//line views/layout/Help.html:27
-		qw422016.N().S(` `)
-//line views/layout/Help.html:27
-		qw422016.E().S(title)
-//line views/layout/Help.html:27
-		qw422016.N().S(`</h3></div><div class="modal-body"><div class="mt">`)
-//line views/layout/Help.html:30
-		qw422016.N().S(hlp)
-//line views/layout/Help.html:30
-		qw422016.N().S(`</div></div></div></div>`)
+			qw422016.N().S(`" href="#help">`)
+//line views/layout/Help.html:20
+			components.StreamSVGRef(qw422016, `question`, 24, 24, ``, ps)
+//line views/layout/Help.html:20
+			qw422016.N().S(`</a>
+  <div id="help" class="modal" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h3>`)
+//line views/layout/Help.html:26
+			components.StreamSVGRefIcon(qw422016, `question`, ps)
+//line views/layout/Help.html:26
+			qw422016.N().S(`Help - `)
+//line views/layout/Help.html:26
+			qw422016.E().S(title)
+//line views/layout/Help.html:26
+			qw422016.N().S(`</h3>
+      </div>
+      <div class="modal-body">
+        <div class="mt">`)
+//line views/layout/Help.html:29
+			qw422016.N().S(hlp)
+//line views/layout/Help.html:29
+			qw422016.N().S(`</div>
+      </div>
+    </div>
+  </div>
+`)
+//line views/layout/Help.html:33
+		}
 //line views/layout/Help.html:34
 	}
 //line views/layout/Help.html:35

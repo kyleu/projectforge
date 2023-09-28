@@ -22,7 +22,12 @@ const (
 )
 
 func RunAction(rc *fasthttp.RequestCtx) {
-	controller.Act("run.action", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+	actQ, _ := cutil.RCRequiredString(rc, "act", false)
+	act := "run.action." + actQ
+	if phase := string(rc.URI().QueryArgs().Peek("phase")); phase != "" {
+		act += "." + phase
+	}
+	controller.Act(act, rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		cfg, actT, prj, err := loadActionProject(rc, as)
 		if err != nil {
 			return "", err

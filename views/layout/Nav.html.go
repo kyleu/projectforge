@@ -89,7 +89,7 @@ func StreamNav(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
 	StreamHelp(qw422016, as, ps)
 //line views/layout/Nav.html:25
 	qw422016.N().S(`
-  <a class="profile" href="`)
+  <a class="profile" title="Settings" href="`)
 //line views/layout/Nav.html:26
 	qw422016.E().S(ps.ProfilePath)
 //line views/layout/Nav.html:26

@@ -76,7 +76,7 @@ func (p *Index) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
         <ul><li>Almost entirely generated using Project Forge, this is a "stock" application. Provides desktop, mobile, and WASM apps</li></ul>
       </li>
       <li class="mts">
-        <strong><a href="https://loadtoad.kyleu.dev" target="_blank" rel="noopener noreferrer">Load Toad</a></strong> (<em><a href="https://github.com/kyleu/loadtoad" target="_blank" rel="noopener noreferrer">Load Toad</a></em>):
+        <strong><a href="https://loadtoad.kyleu.dev" target="_blank" rel="noopener noreferrer">Load Toad</a></strong> (<em><a href="https://github.com/kyleu/loadtoad" target="_blank" rel="noopener noreferrer">GitHub</a></em>):
         A tool for uploading HTTP Archives (<code>.har</code> files) and running load tests.
         <ul><li>Also supports client-defined JavaScript, executed in-process on the server</li></ul>
       </li>

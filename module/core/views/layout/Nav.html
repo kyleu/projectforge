@@ -22,7 +22,7 @@
   </form>
   {%- endif -%}{{{ end }}}{{{ if .HasModule "help" }}}
   {%= Help(as, ps) %}{{{ end }}}
-  <a class="profile"{{{ if .HasModule "oauth" }}} title="{%s ps.AuthString() %}"{{{ end }}} href="{%s ps.ProfilePath %}">
+  <a class="profile"{{{ if .HasModule "oauth" }}} title="{%s ps.AuthString() %}"{{{ else }}} title="Settings"{{{ end }}} href="{%s ps.ProfilePath %}">
     {{{ if .HasModule "oauth" }}}{%- if i := ps.Accounts.Image(); i != "" -%}
     <img style="width: 24px; height: 24px;" src="{%s i %}" />
     {%- else -%}
