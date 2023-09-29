@@ -7,7 +7,7 @@ import (
 	"time"{{{ if .HasUser }}}
 
 	"github.com/google/uuid"{{{ end }}}
-{{{ if .HasModule "oauth" }}}
+{{{ if .HasAccount }}}
 	"{{{ .Package }}}/app/lib/auth"{{{ end }}}{{{ if .HasDatabaseModule }}}
 	"{{{ .Package }}}/app/lib/database"{{{ end }}}{{{ if .HasModule "filesystem" }}}
 	"{{{ .Package }}}/app/lib/filesystem"{{{ end }}}{{{ if .HasModule "graphql" }}}
@@ -37,7 +37,7 @@ func (b *BuildInfo) String() string {
 type State struct {
 	Debug     bool
 	BuildInfo *BuildInfo{{{ if .HasModule "filesystem" }}}
-	Files     filesystem.FileLoader{{{ end }}}{{{ if .HasModule "oauth" }}}
+	Files     filesystem.FileLoader{{{ end }}}{{{ if .HasAccount }}}
 	Auth      *auth.Service{{{ end }}}{{{ if .HasModule "migration" }}}
 	DB        *database.Service{{{ end }}}{{{ if .HasModule "readonlydb" }}}
 	DBRead    *database.Service{{{ end }}}{{{ if .HasModule "graphql" }}}
@@ -47,7 +47,7 @@ type State struct {
 	Started   time.Time
 }
 
-func NewState(debug bool, bi *BuildInfo{{{ if .HasModule "filesystem" }}}, f filesystem.FileLoader{{{ end }}}, enableTelemetry bool, {{{ if .HasModule "oauth" }}}port{{{ else }}}_{{{ end }}} uint16, logger util.Logger) (*State, error) {
+func NewState(debug bool, bi *BuildInfo{{{ if .HasModule "filesystem" }}}, f filesystem.FileLoader{{{ end }}}, enableTelemetry bool, {{{ if .HasAccount }}}port{{{ else }}}_{{{ end }}} uint16, logger util.Logger) (*State, error) {
 	var loadLocationError error
 	once.Do(func() {
 		loc, err := time.LoadLocation("UTC")
@@ -66,7 +66,7 @@ func NewState(debug bool, bi *BuildInfo{{{ if .HasModule "filesystem" }}}, f fil
 	return &State{
 		Debug:     debug,
 		BuildInfo: bi{{{ if .HasModule "filesystem" }}},
-		Files:     f{{{ end }}}{{{ if .HasModule "oauth" }}},
+		Files:     f{{{ end }}}{{{ if .HasAccount }}},
 		Auth:      auth.NewService("", port, logger){{{ end }}}{{{ if .HasModule "graphql" }}},
 		GraphQL:   graphql.NewService(){{{ end }}},
 		Themes:    theme.NewService({{{ if .HasModule "filesystem" }}}f{{{ end }}}),

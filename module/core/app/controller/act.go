@@ -9,7 +9,7 @@ import (
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller/cutil"
-	"{{{ .Package }}}/app/lib/telemetry"{{{ if .HasModule "oauth" }}}
+	"{{{ .Package }}}/app/lib/telemetry"{{{ if .HasAccount }}}
 	"{{{ .Package }}}/app/lib/user"{{{ end }}}{{{ if.HasModule "marketing" }}}
 	"{{{ .Package }}}/app/site"{{{ end }}}
 	"{{{ .Package }}}/app/util"
@@ -17,7 +17,7 @@ import (
 
 func Act(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
 	as := _currentAppState
-	ps := cutil.LoadPageState(as, rc, key, _currentAppRootLogger){{{ if .HasModule "oauth" }}}
+	ps := cutil.LoadPageState(as, rc, key, _currentAppRootLogger){{{ if .HasAccount }}}
 	if allowed, reason := user.Check(string(ps.URI.Path()), ps.Accounts); !allowed {
 		f = Unauthorized(rc, reason, ps.Accounts)
 	}{{{ end }}}
@@ -30,7 +30,7 @@ func Act(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.Pa
 func ActSite(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
 	as := _currentSiteState
 	ps := cutil.LoadPageState(as, rc, key, _currentSiteRootLogger)
-	ps.Menu = site.Menu(ps.Context, as, ps.Profile{{{ if .HasModule "oauth" }}}, ps.Accounts{{{ end }}}, ps.Logger){{{ if .HasModule "oauth" }}}
+	ps.Menu = site.Menu(ps.Context, as, ps.Profile{{{ if .HasAccount }}}, ps.Accounts{{{ end }}}, ps.Logger){{{ if .HasAccount }}}
 	if allowed, reason := user.Check(string(ps.URI.Path()), ps.Accounts); !allowed {
 		f = Unauthorized(rc, reason, ps.Accounts)
 	}{{{ end }}}

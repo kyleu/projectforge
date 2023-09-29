@@ -13,7 +13,7 @@ import (
 	"{{{ .Package }}}/app/controller"
 	"{{{ .Package }}}/app/controller/cutil"{{{ if .HasModule "migration" }}}
 	"{{{ .Package }}}/app/lib/database/migrate"{{{ end }}}
-	"{{{ .Package }}}/app/lib/log"{{{ if .HasModule "oauth" }}}
+	"{{{ .Package }}}/app/lib/log"{{{ if .HasAccount }}}
 	"{{{ .Package }}}/app/lib/user"{{{ end }}}
 	"{{{ .Package }}}/app/util"
 	"{{{ .Package }}}/views/vadmin"
@@ -31,7 +31,7 @@ func Admin(rc *fasthttp.RequestCtx) {
 		if len(path) == 0 {
 			ps.Title = "Administration"
 			ps.Data = "administration"
-			return controller.Render(rc, as, {{{ if .HasModule "oauth" }}}&vadmin.Settings{Perms: user.GetPermissions()}{{{ else }}}&vadmin.Settings{}{{{ end }}}, ps, "admin")
+			return controller.Render(rc, as, {{{ if .HasAccount }}}&vadmin.Settings{Perms: user.GetPermissions()}{{{ else }}}&vadmin.Settings{}{{{ end }}}, ps, "admin")
 		}
 		switch path[0] {
 		case "server":

@@ -22,8 +22,8 @@
   </form>
   {%- endif -%}{{{ end }}}{{{ if .HasModule "help" }}}
   {%= Help(as, ps) %}{{{ end }}}
-  <a class="profile"{{{ if .HasModule "oauth" }}} title="{%s ps.AuthString() %}"{{{ else }}} title="Settings"{{{ end }}} href="{%s ps.ProfilePath %}">
-    {{{ if .HasModule "oauth" }}}{%- if i := ps.Accounts.Image(); i != "" -%}
+  <a class="profile"{{{ if .HasAccount }}} title="{%s ps.AuthString() %}"{{{ else }}} title="Settings"{{{ end }}} href="{%s ps.ProfilePath %}">
+    {{{ if .HasAccount }}}{%- if i := ps.Accounts.Image(); i != "" -%}
     <img style="width: 24px; height: 24px;" src="{%s i %}" />
     {%- else -%}
     {%= components.SVGRef(`profile`, 24, 24, ``, ps) %}

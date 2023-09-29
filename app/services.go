@@ -30,11 +30,7 @@ func NewServices(ctx context.Context, st *State, rootLogger util.Logger) (*Servi
 	if err != nil {
 		return nil, err
 	}
-	hs, err := help.NewService(rootLogger)
-	if err != nil {
-		return nil, err
-	}
-	ps, es, gs, xs := project.NewService(), export.NewService(), git.NewService(), exec.NewService()
+	ps, es, gs, xs, hs := project.NewService(), export.NewService(), git.NewService(), exec.NewService(), help.NewService(rootLogger)
 	ws := websocket.NewService(nil, socketHandler, nil)
 	return &Services{Modules: ms, Projects: ps, Export: es, Git: gs, Exec: xs, Socket: ws, Help: hs}, nil
 }

@@ -37,117 +37,117 @@ var (
 //line views/vproject/Detail.html:17
 type Detail struct {
 	layout.Basic
-	Project   *project.Project
-	Modules   module.Modules
-	GitResult *git.Result
-	Execs     exec.Execs
+	Project    *project.Project
+	Modules    module.Modules
+	GitResult  *git.Result
+	Execs      exec.Execs
+	Validation []*project.ValidationError
 }
 
-//line views/vproject/Detail.html:25
+//line views/vproject/Detail.html:26
 func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vproject/Detail.html:25
+//line views/vproject/Detail.html:26
 	qw422016.N().S(`
 `)
-//line views/vproject/Detail.html:26
+//line views/vproject/Detail.html:27
 	prj := p.Project
 
-//line views/vproject/Detail.html:26
+//line views/vproject/Detail.html:27
 	qw422016.N().S(`  `)
-//line views/vproject/Detail.html:27
+//line views/vproject/Detail.html:28
 	StreamSummary(qw422016, prj, "", p.GitResult, nil, nil, p.Execs, ps)
-//line views/vproject/Detail.html:27
+//line views/vproject/Detail.html:28
 	qw422016.N().S(`
 
+`)
+//line views/vproject/Detail.html:30
+	if len(p.Validation) > 0 {
+//line views/vproject/Detail.html:30
+		qw422016.N().S(`  <div class="card">
+    <h3>`)
+//line views/vproject/Detail.html:32
+		components.StreamSVGRefIcon(qw422016, "crosshairs", ps)
+//line views/vproject/Detail.html:32
+		qw422016.N().S(`Project Errors</h3>
+    <ul>
+`)
+//line views/vproject/Detail.html:34
+		for _, validation := range p.Validation {
+//line views/vproject/Detail.html:34
+			qw422016.N().S(`      <li class="mts"><span class="error">`)
+//line views/vproject/Detail.html:35
+			qw422016.E().S(validation.Code)
+//line views/vproject/Detail.html:35
+			qw422016.N().S(`</span>: `)
+//line views/vproject/Detail.html:35
+			qw422016.E().S(validation.Message)
+//line views/vproject/Detail.html:35
+			qw422016.N().S(`</li>
+`)
+//line views/vproject/Detail.html:36
+		}
+//line views/vproject/Detail.html:36
+		qw422016.N().S(`    </ul>
+  </div>
+`)
+//line views/vproject/Detail.html:39
+	}
+//line views/vproject/Detail.html:39
+	qw422016.N().S(`
   <div class="tabs padded">
     <input name="type" type="radio" id="tab-settings" class="input" checked="checked" />
     <label for="tab-settings" class="label">Settings</label>
     <div class="panel">`)
-//line views/vproject/Detail.html:32
+//line views/vproject/Detail.html:44
 	StreamDetailSettings(qw422016, prj, as, ps)
-//line views/vproject/Detail.html:32
+//line views/vproject/Detail.html:44
 	qw422016.N().S(`</div>
 
 `)
-//line views/vproject/Detail.html:34
+//line views/vproject/Detail.html:46
 	if prj.Info != nil {
-//line views/vproject/Detail.html:34
+//line views/vproject/Detail.html:46
 		qw422016.N().S(`      <input name="type" type="radio" id="tab-metadata" class="input"/>
       <label for="tab-metadata" class="label">Metadata</label>
       <div class="panel">`)
-//line views/vproject/Detail.html:37
+//line views/vproject/Detail.html:49
 		StreamDetailMetadata(qw422016, prj.Info, as, ps)
-//line views/vproject/Detail.html:37
+//line views/vproject/Detail.html:49
 		qw422016.N().S(`</div>
 
 `)
-//line views/vproject/Detail.html:39
+//line views/vproject/Detail.html:51
 		ea, _ := p.Project.ModuleArgExport(as.Services.Projects, ps.Logger)
 
-//line views/vproject/Detail.html:40
+//line views/vproject/Detail.html:52
 		if ea != nil {
-//line views/vproject/Detail.html:40
+//line views/vproject/Detail.html:52
 			qw422016.N().S(`      <input name="type" type="radio" id="tab-modulearg-export" class="input"/>
       <label for="tab-modulearg-export" class="label">Export</label>
       <div class="panel">
         <a href="/p/`)
-//line views/vproject/Detail.html:44
+//line views/vproject/Detail.html:56
 			qw422016.E().S(p.Project.Key)
-//line views/vproject/Detail.html:44
+//line views/vproject/Detail.html:56
 			qw422016.N().S(`/export"><button>`)
-//line views/vproject/Detail.html:44
+//line views/vproject/Detail.html:56
 			components.StreamSVGRef(qw422016, "wrench", 15, 15, "icon", ps)
-//line views/vproject/Detail.html:44
+//line views/vproject/Detail.html:56
 			qw422016.N().S(`Manage</button></a>
         <hr />
 `)
-//line views/vproject/Detail.html:46
+//line views/vproject/Detail.html:58
 			if ea.Config != nil && util.ToJSONCompact(ea.Config) != "{}" {
-//line views/vproject/Detail.html:46
+//line views/vproject/Detail.html:58
 				qw422016.N().S(`        <h3>`)
-//line views/vproject/Detail.html:47
+//line views/vproject/Detail.html:59
 				components.StreamSVGRefIcon(qw422016, `print`, ps)
-//line views/vproject/Detail.html:47
+//line views/vproject/Detail.html:59
 				qw422016.N().S(`Export Configuration</h3>
         <div class="clear"></div>
         `)
-//line views/vproject/Detail.html:49
-				components.StreamJSON(qw422016, ea.Config)
-//line views/vproject/Detail.html:49
-				qw422016.N().S(`
-        <hr />
-`)
-//line views/vproject/Detail.html:51
-			}
-//line views/vproject/Detail.html:52
-			if len(ea.Groups) > 0 {
-//line views/vproject/Detail.html:52
-				qw422016.N().S(`        <h3>`)
-//line views/vproject/Detail.html:53
-				components.StreamSVGRefIcon(qw422016, `users`, ps)
-//line views/vproject/Detail.html:53
-				qw422016.N().S(`Groups</h3>
-        <div class="mt clear"></div>
-        `)
-//line views/vproject/Detail.html:55
-				vexport.StreamGroupList(qw422016, ea.Groups, 4)
-//line views/vproject/Detail.html:55
-				qw422016.N().S(`
-        <hr />
-`)
-//line views/vproject/Detail.html:57
-			}
-//line views/vproject/Detail.html:58
-			if len(ea.Enums) > 0 {
-//line views/vproject/Detail.html:58
-				qw422016.N().S(`        <h3>`)
-//line views/vproject/Detail.html:59
-				components.StreamSVGRefIcon(qw422016, `hammer`, ps)
-//line views/vproject/Detail.html:59
-				qw422016.N().S(`Enums</h3>
-        <div class="mt clear"></div>
-        `)
 //line views/vproject/Detail.html:61
-				vexport.StreamEnumList(qw422016, ea.Enums, fmt.Sprintf("/p/%s/export/enums", p.Project.Key), as, ps)
+				components.StreamJSON(qw422016, ea.Config)
 //line views/vproject/Detail.html:61
 				qw422016.N().S(`
         <hr />
@@ -155,105 +155,141 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vproject/Detail.html:63
 			}
 //line views/vproject/Detail.html:64
-			if len(ea.Models) > 0 {
+			if len(ea.Groups) > 0 {
 //line views/vproject/Detail.html:64
+				qw422016.N().S(`        <h3>`)
+//line views/vproject/Detail.html:65
+				components.StreamSVGRefIcon(qw422016, `users`, ps)
+//line views/vproject/Detail.html:65
+				qw422016.N().S(`Groups</h3>
+        <div class="mt clear"></div>
+        `)
+//line views/vproject/Detail.html:67
+				vexport.StreamGroupList(qw422016, ea.Groups, 4)
+//line views/vproject/Detail.html:67
+				qw422016.N().S(`
+        <hr />
+`)
+//line views/vproject/Detail.html:69
+			}
+//line views/vproject/Detail.html:70
+			if len(ea.Enums) > 0 {
+//line views/vproject/Detail.html:70
+				qw422016.N().S(`        <h3>`)
+//line views/vproject/Detail.html:71
+				components.StreamSVGRefIcon(qw422016, `hammer`, ps)
+//line views/vproject/Detail.html:71
+				qw422016.N().S(`Enums</h3>
+        <div class="mt clear"></div>
+        `)
+//line views/vproject/Detail.html:73
+				vexport.StreamEnumList(qw422016, ea.Enums, fmt.Sprintf("/p/%s/export/enums", p.Project.Key), as, ps)
+//line views/vproject/Detail.html:73
+				qw422016.N().S(`
+        <hr />
+`)
+//line views/vproject/Detail.html:75
+			}
+//line views/vproject/Detail.html:76
+			if len(ea.Models) > 0 {
+//line views/vproject/Detail.html:76
 				qw422016.N().S(`        <h3 class="mt">`)
-//line views/vproject/Detail.html:65
+//line views/vproject/Detail.html:77
 				components.StreamSVGRefIcon(qw422016, `list`, ps)
-//line views/vproject/Detail.html:65
+//line views/vproject/Detail.html:77
 				qw422016.N().S(`Models</h3>
         <div class="clear"></div>
         `)
-//line views/vproject/Detail.html:67
+//line views/vproject/Detail.html:79
 				vexport.StreamModelList(qw422016, ea.Models, fmt.Sprintf("/p/%s/export/models", p.Project.Key), as, ps)
-//line views/vproject/Detail.html:67
+//line views/vproject/Detail.html:79
 				qw422016.N().S(`
 `)
-//line views/vproject/Detail.html:68
+//line views/vproject/Detail.html:80
 			}
-//line views/vproject/Detail.html:68
+//line views/vproject/Detail.html:80
 			qw422016.N().S(`      </div>
 `)
-//line views/vproject/Detail.html:70
+//line views/vproject/Detail.html:82
 		}
-//line views/vproject/Detail.html:71
+//line views/vproject/Detail.html:83
 	}
-//line views/vproject/Detail.html:71
+//line views/vproject/Detail.html:83
 	qw422016.N().S(`
     <input name="type" type="radio" id="tab-theme" class="input"/>
     <label for="tab-theme" class="label">Theme</label>
     <div class="panel">`)
-//line views/vproject/Detail.html:75
+//line views/vproject/Detail.html:87
 	StreamDetailTheme(qw422016, prj.Key, prj.Theme, prj.Title(), prj.IconSafe(), as, ps)
-//line views/vproject/Detail.html:75
+//line views/vproject/Detail.html:87
 	qw422016.N().S(`</div>
 
     <input name="type" type="radio" id="tab-modules" class="input"/>
     <label for="tab-modules" class="label">Modules</label>
     <div class="panel">`)
-//line views/vproject/Detail.html:79
+//line views/vproject/Detail.html:91
 	StreamDetailModules(qw422016, prj.Modules, p.Modules, as, ps)
-//line views/vproject/Detail.html:79
+//line views/vproject/Detail.html:91
 	qw422016.N().S(`</div>
 
 `)
-//line views/vproject/Detail.html:81
+//line views/vproject/Detail.html:93
 	if len(p.Execs) > 0 {
-//line views/vproject/Detail.html:81
+//line views/vproject/Detail.html:93
 		qw422016.N().S(`    <input name="type" type="radio" id="tab-execs" class="input"/>
     <label for="tab-execs" class="label">Processes</label>
     <div class="panel">`)
-//line views/vproject/Detail.html:84
+//line views/vproject/Detail.html:96
 		vexec.StreamTable(qw422016, p.Execs, as, ps)
-//line views/vproject/Detail.html:84
+//line views/vproject/Detail.html:96
 		qw422016.N().S(`</div>
 `)
-//line views/vproject/Detail.html:85
+//line views/vproject/Detail.html:97
 	}
-//line views/vproject/Detail.html:85
+//line views/vproject/Detail.html:97
 	qw422016.N().S(`
 `)
-//line views/vproject/Detail.html:87
+//line views/vproject/Detail.html:99
 	if prj.Build != nil && !prj.Build.Empty() {
-//line views/vproject/Detail.html:87
+//line views/vproject/Detail.html:99
 		qw422016.N().S(`    <input name="type" type="radio" id="tab-builds" class="input"/>
     <label for="tab-builds" class="label">Builds</label>
     <div class="panel">`)
-//line views/vproject/Detail.html:90
+//line views/vproject/Detail.html:102
 		StreamDetailBuild(qw422016, prj.Build, as, ps)
-//line views/vproject/Detail.html:90
+//line views/vproject/Detail.html:102
 		qw422016.N().S(`</div>
 `)
-//line views/vproject/Detail.html:91
+//line views/vproject/Detail.html:103
 	}
-//line views/vproject/Detail.html:91
+//line views/vproject/Detail.html:103
 	qw422016.N().S(`  </div>
 `)
-//line views/vproject/Detail.html:93
+//line views/vproject/Detail.html:105
 }
 
-//line views/vproject/Detail.html:93
+//line views/vproject/Detail.html:105
 func (p *Detail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vproject/Detail.html:93
+//line views/vproject/Detail.html:105
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/Detail.html:93
+//line views/vproject/Detail.html:105
 	p.StreamBody(qw422016, as, ps)
-//line views/vproject/Detail.html:93
+//line views/vproject/Detail.html:105
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/Detail.html:93
+//line views/vproject/Detail.html:105
 }
 
-//line views/vproject/Detail.html:93
+//line views/vproject/Detail.html:105
 func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vproject/Detail.html:93
+//line views/vproject/Detail.html:105
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/Detail.html:93
+//line views/vproject/Detail.html:105
 	p.WriteBody(qb422016, as, ps)
-//line views/vproject/Detail.html:93
+//line views/vproject/Detail.html:105
 	qs422016 := string(qb422016.B)
-//line views/vproject/Detail.html:93
+//line views/vproject/Detail.html:105
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/Detail.html:93
+//line views/vproject/Detail.html:105
 	return qs422016
-//line views/vproject/Detail.html:93
+//line views/vproject/Detail.html:105
 }

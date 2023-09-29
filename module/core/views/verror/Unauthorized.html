@@ -1,6 +1,6 @@
 {% import (
   "{{{ .Package }}}/app"
-  "{{{ .Package }}}/app/controller/cutil"{{{ if .HasModule "oauth" }}}
+  "{{{ .Package }}}/app/controller/cutil"{{{ if .HasAccount }}}
   "{{{ .Package }}}/app/lib/user"{{{ end }}}
   "{{{ .Package }}}/views/layout"
 ) %}
@@ -8,7 +8,7 @@
 {% code type Unauthorized struct {
   layout.Basic
   Path string
-  Message string{{{ if .HasModule "oauth" }}}
+  Message string{{{ if .HasAccount }}}
   Accounts user.Accounts{{{ end }}}
 } %}
 
@@ -16,7 +16,7 @@
   <div class="card">
     <h3>Unauthorized</h3>
     <em>{%s p.Message %}</em>
-    <p>You're not authorized to view <code>{%s p.Path %}</code></p>{{{ if.HasModule "oauth" }}}
+    <p>You're not authorized to view <code>{%s p.Path %}</code></p>{{{ if.HasAccount }}}
     {%- if len(p.Accounts) == 0 -%}
     <p>Sorry about that, maybe try <a href="{%s as.Auth.LoginURL() %}">logging in</a>?</p>
     {%- endif -%}{{{ end }}}

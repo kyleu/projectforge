@@ -50,15 +50,15 @@ func (b Builds) Get(key string) *Build {
 }
 
 var (
+	buildFull          = &Build{Key: "full", Title: "Full Build", Description: "Builds the TypeScript and Go code", Run: onFull}
+	buildBuild         = simpleBuild("build", "Build", "make build")
 	buildStart         = &Build{Key: "start", Title: "Start", Description: "Starts the prebuilt project binary", Run: onStart}
+	buildClean         = simpleBuild("clean", "Clean", "make clean")
 	buildDeps          = &Build{Key: "deps", Title: "Dependencies", Description: "Manages Go dependencies", Run: onDeps}
 	buildImports       = &Build{Key: "imports", Title: "Imports", Description: "Reorders the imports", Run: onImports}
 	buildIgnored       = &Build{Key: "ignored", Title: "Ignored", Description: "Shows files that are ignored by code generation", Run: onIgnored}
 	buildPackages      = &Build{Key: "packages", Title: "Packages", Description: "Visualize your application's packages", Run: onPackages}
 	buildCleanup       = &Build{Key: "cleanup", Title: "Cleanup", Description: "Cleans up file permissions", Run: onCleanup}
-	buildBuild         = simpleBuild("build", "Build", "make build")
-	buildFull          = &Build{Key: "full", Title: "Full Build", Description: "Builds the TypeScript and Go code", Run: onFull}
-	buildClean         = simpleBuild("clean", "Clean", "make clean")
 	buildTidy          = simpleBuild("tidy", "Tidy", "go mod tidy")
 	buildFormat        = simpleBuild("format", "Format", filepath.Join("bin", "format."+build.ScriptExtension))
 	buildLint          = simpleBuild("lint", "Lint", filepath.Join("bin", "check."+build.ScriptExtension))
@@ -70,13 +70,13 @@ var (
 	}
 	buildClientBuild = simpleBuild("clientBuild", "Client Build", filepath.Join("bin", "build", "client."+build.ScriptExtension))
 	buildDeployments = &Build{Key: "deployments", Title: "Deployments", Description: "Manages deployments", Run: onDeployments}
-	buildTest        = &Build{Key: "test", Title: "Test", Description: "Does a test", Run: func(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
+	buildTest        = &Build{Key: "test", Title: "Test", Description: "Runs unit tests", Run: func(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
 		return simpleProc(ctx, filepath.Join("bin", "test."+build.ScriptExtension), pm.Prj.Path, ret, pm.Logger)
 	}}
 )
 
 var AllBuilds = Builds{
-	buildStart, buildDeps, buildImports, buildIgnored, buildPackages, buildCleanup, buildBuild, buildFull, buildClean,
+	buildFull, buildBuild, buildStart, buildClean, buildDeps, buildImports, buildIgnored, buildPackages, buildCleanup,
 	buildTidy, buildFormat, buildLint, buildTemplates, buildClientInstall, buildClientBuild, buildDeployments, buildTest,
 }
 

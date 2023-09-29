@@ -1,11 +1,11 @@
 {% import (
   "{{{ .Package }}}/app"
-  "{{{ .Package }}}/app/controller/cutil"{{{ if .HasModule "oauth" }}}
+  "{{{ .Package }}}/app/controller/cutil"{{{ if .HasAccount }}}
   "{{{ .Package }}}/app/lib/auth"{{{ end }}}
   "{{{ .Package }}}/app/lib/theme"
   "{{{ .Package }}}/app/lib/user"
   "{{{ .Package }}}/views/components"
-  "{{{ .Package }}}/views/layout"{{{ if .HasModule "oauth" }}}
+  "{{{ .Package }}}/views/layout"{{{ if .HasAccount }}}
   "{{{ .Package }}}/views/vauth"{{{ end }}}
   "{{{ .Package }}}/views/vtheme"
 ) %}
@@ -13,12 +13,12 @@
 {% code type Profile struct {
   layout.Basic
   Profile *user.Profile
-  Theme *theme.Theme{{{ if .HasModule "oauth" }}}
+  Theme *theme.Theme{{{ if .HasAccount }}}
   Providers auth.Providers{{{ end }}}
   Referrer string
 } %}
 
-{% func (p *Profile) Body(as *app.State, ps *cutil.PageState) %}{{{ if .HasModule "oauth" }}}
+{% func (p *Profile) Body(as *app.State, ps *cutil.PageState) %}{{{ if .HasAccount }}}
   {%= vauth.SigninTable(p.Providers, p.Referrer, as, ps) %}{{{ end }}}
   <form action="" method="post">
     <input name="referrer" type="hidden" value="{%s p.Referrer %}" />

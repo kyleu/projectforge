@@ -21,7 +21,7 @@ func AppRoutes(as *app.State, logger util.Logger) fasthttp.RequestHandler {
 	r.GET("/about", clib.About)
 
 	r.GET(cutil.DefaultProfilePath, clib.Profile)
-	r.POST(cutil.DefaultProfilePath, clib.ProfileSave){{{ if .HasModule "oauth" }}}
+	r.POST(cutil.DefaultProfilePath, clib.ProfileSave){{{ if .HasAccount }}}
 	r.GET("/auth/{key}", clib.AuthDetail)
 	r.GET("/auth/callback/{key}", clib.AuthCallback)
 	r.GET("/auth/logout/{key}", clib.AuthLogout){{{ end }}}{{{ if .HasModule "search" }}}

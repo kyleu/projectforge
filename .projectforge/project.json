@@ -50,6 +50,7 @@
     "javaPackage": "dev.projectforge"
   },
   "build": {
+    "changelog": true,
     "desktop": true,
     "notarize": true,
     "signing": true,

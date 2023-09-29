@@ -1,15 +1,15 @@
 {% import (
   "{{{ .Package }}}/app"
-  "{{{ .Package }}}/app/controller/cutil"{{{ if .HasModule "oauth" }}}
+  "{{{ .Package }}}/app/controller/cutil"{{{ if .HasAccount }}}
   "{{{ .Package }}}/app/lib/user"{{{ end }}}
   "{{{ .Package }}}/app/util"
   "{{{ .Package }}}/views/components"
-  "{{{ .Package }}}/views/layout"{{{ if.HasModule "oauth" }}}
+  "{{{ .Package }}}/views/layout"{{{ if.HasAccount }}}
   "{{{ .Package }}}/views/vauth"{{{ end }}}
 ) %}
 
 {% code type Settings struct {
-  layout.Basic{{{ if .HasModule "oauth" }}}
+  layout.Basic{{{ if .HasAccount }}}
   Perms user.Permissions{{{ end }}}
 } %}
 
@@ -70,7 +70,7 @@
     {%= settingsLink("/admin/cpu/start", "cog", "Start CPU Profile", "Profiles the CPU using <em>./tmp/cpu.pprof</em>, use script to view", ps) %}
     {%= settingsLink("/admin/cpu/stop", "cog", "Stop CPU Profile", "Stops the active CPU profile", ps) %}
     <div class="clear"></div>
-  </div>{{{ if.HasModule "oauth" }}}
+  </div>{{{ if.HasAccount }}}
 
   {%= vauth.Authentication(as, ps) %}
 

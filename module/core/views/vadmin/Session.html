@@ -42,7 +42,7 @@
   <div class="card">
     <h3>Profile</h3>
     <div class="mt">{%= components.JSON(ps.Profile) %}</div>
-  </div>{{{ if .HasModule "oauth" }}}
+  </div>{{{ if .HasAccount }}}
   {%- if len(ps.Accounts) > 0 -%}
   <div class="card">
     <h3>Accounts</h3>

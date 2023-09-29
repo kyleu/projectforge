@@ -30,7 +30,7 @@ var Default = func() *Theme {
 		Dark: &Colors{
 			Border: "1px solid #666666", LinkDecoration: "none",
 			Foreground: "#ffffff", ForegroundMuted: "#777777",
-			Background: "#121212", BackgroundMuted: "#0f1e28",
+			Background: "#121212", BackgroundMuted: "#1f4055",
 			LinkForeground: "#6f889b", LinkVisitedForeground: "#9eaebb",
 			NavForeground: "#ffffff", NavBackground: nbd,
 			MenuForeground: "#eeeeee", MenuSelectedForeground: "#ffffff",

@@ -11,13 +11,13 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-func (s *Service) Create(ctx context.Context, logger util.Logger, models ...*User) error {
+func (s *Service) Create(ctx context.Context, logger util.Logger, _ any, models ...*User) error {
 	return s.Save(ctx, logger, models...)
 }
 
-func (s *Service) CreateIfNeeded(ctx context.Context, userID uuid.UUID, username string, tx *sqlx.Tx, logger util.Logger) error {
-	if curr, _ := s.Get(ctx, tx, userID, logger); curr == nil {
-		err := s.Create(ctx, tx, logger, &User{ID: userID, Name: username, Created: time.Now()})
+func (s *Service) CreateIfNeeded(ctx context.Context, userID uuid.UUID, username string, _ any, logger util.Logger) error {
+	if curr, _ := s.Get(ctx, nil, userID, logger); curr == nil {
+		err := s.Create(ctx, logger, &User{ID: userID, Name: username, Created: time.Now()})
 		if err != nil {
 			return err
 		}

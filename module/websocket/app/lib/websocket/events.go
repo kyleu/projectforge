@@ -13,8 +13,8 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-func (s *Service) Register({{{ if .HasUser }}}u *dbuser.User, {{{ end }}}profile *user.Profile{{{ if .HasModule "oauth" }}}, accts user.Accounts{{{ end }}}, c *websocket.Conn, logger util.Logger) (*Connection, error) {
-	conn := NewConnection("system", {{{ if .HasUser }}}u, {{{ end }}}profile{{{ if .HasModule "oauth" }}}, accts{{{ end }}}, c)
+func (s *Service) Register({{{ if .HasUser }}}u *dbuser.User, {{{ end }}}profile *user.Profile{{{ if .HasAccount }}}, accts user.Accounts{{{ end }}}, c *websocket.Conn, logger util.Logger) (*Connection, error) {
+	conn := NewConnection("system", {{{ if .HasUser }}}u, {{{ end }}}profile{{{ if .HasAccount }}}, accts{{{ end }}}, c)
 	s.connectionsMu.Lock()
 	defer s.connectionsMu.Unlock()
 	s.connections[conn.ID] = conn

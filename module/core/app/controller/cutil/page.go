@@ -48,7 +48,7 @@ type PageState struct {
 	Flashes        []string          `json:"flashes,omitempty"`
 	Session        util.ValueMap     `json:"-"`{{{ if .HasUser }}}
 	User           *dbuser.User      `json:"user,omitempty"`{{{ end }}}
-	Profile        *user.Profile     `json:"profile,omitempty"`{{{ if .HasModule "oauth" }}}
+	Profile        *user.Profile     `json:"profile,omitempty"`{{{ if .HasAccount }}}
 	Accounts       user.Accounts     `json:"accounts,omitempty"`{{{ end }}}
 	Authed         bool              `json:"authed,omitempty"`
 	Admin          bool              `json:"admin,omitempty"`
@@ -103,19 +103,20 @@ func (p *PageState) AuthString() string {
 	if p.User != nil {
 		n = p.User.Name
 	}
-	msg := fmt.Sprintf("signed in as %s", n)
+	msg := fmt.Sprintf("signed in as %s", n){{{ if .HasAccount }}}
 	if len(p.Accounts) == 0 {
 		if n == user.DefaultProfile.Name {
 			return "click to sign in"
 		}
 		return msg
 	}
-	return fmt.Sprintf("%s using [%s]", msg, p.Accounts.TitleString())
+	return fmt.Sprintf("%s using [%s]", msg, p.Accounts.TitleString()){{{ else }}}
+	return msg{{{ end }}}
 }{{{ else }}}
 
 func (p *PageState) Username() string {
 	return p.Profile.Name
-}{{{ if .HasModule "oauth" }}}
+}{{{ if .HasAccount }}}
 
 func (p *PageState) AuthString() string {
 	n := p.Profile.String()

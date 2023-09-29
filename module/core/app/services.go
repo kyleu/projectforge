@@ -11,7 +11,8 @@ import (
 	"{{{ .Package }}}/app/lib/help"{{{ end }}}{{{ if.HasModule "scripting" }}}
 	"{{{ .Package }}}/app/lib/scripting"{{{ end }}}{{{ if.HasModule "websocket" }}}
 	"{{{ .Package }}}/app/lib/websocket"{{{ end }}}{{{ if .HasModule "migration" }}}
-	"{{{ .Package }}}/queries/migrations"{{{ end }}}
+	"{{{ .Package }}}/queries/migrations"{{{ end }}}{{{ if.HasUser }}}
+	"{{{ .Package }}}/app/user"{{{ end }}}
 	"{{{ .Package }}}/app/util"
 )
 
@@ -20,7 +21,8 @@ type Services struct {
 	// $PF_INJECT_END(services)${{{ end }}}{{{ if.HasModule "process" }}}
 	Exec   *exec.Service{{{ end }}}{{{ if.HasModule "scripting" }}}
 	Script *scripting.Service{{{ end }}}{{{ if.HasModule "websocket" }}}
-	Socket *websocket.Service{{{ end }}}{{{ if.HasModule "help" }}}
+	Socket *websocket.Service{{{ end }}}{{{ if.HasUser }}}
+	User   *user.Service{{{ end }}}{{{ if.HasModule "help" }}}
 	Help   *help.Service{{{ end }}}
 	// add your dependencies here
 }
@@ -35,6 +37,7 @@ func NewServices(ctx context.Context, st *State, logger util.Logger) (*Services,
 		{{{ if.HasModule "process" }}}Exec:   exec.NewService(),
 		{{{ end }}}{{{ if.HasModule "scripting" }}}Script: scripting.NewService(st.FS, "scripts"),
 		{{{ end }}}{{{ if.HasModule "websocket" }}}Socket: websocket.NewService(nil, nil, nil),
+		{{{ end }}}{{{ if.HasUser }}}User:   user.NewService(st.Files, logger),
 		{{{ end}}}{{{ if.HasModule "help" }}}Help:   help.NewService(logger),
 		{{{ end}}}{{{ if.HasModule "export" }}}// $PF_INJECT_START(refs)$
 		// $PF_INJECT_END(refs)${{{ end }}}

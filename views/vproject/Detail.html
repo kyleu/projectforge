@@ -20,11 +20,23 @@
   Modules module.Modules
   GitResult *git.Result
   Execs exec.Execs
+  Validation []*project.ValidationError
 } %}
 
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
   {%- code prj := p.Project -%}
   {%= Summary(prj, "", p.GitResult, nil, nil, p.Execs, ps) %}
+
+  {%- if len(p.Validation) > 0 -%}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon("crosshairs", ps) %}Project Errors</h3>
+    <ul>
+      {%- for _, validation := range p.Validation -%}
+      <li class="mts"><span class="error">{%s validation.Code %}</span>: {%s validation.Message %}</li>
+      {%- endfor -%}
+    </ul>
+  </div>
+  {%- endif -%}
 
   <div class="tabs padded">
     <input name="type" type="radio" id="tab-settings" class="input" checked="checked" />

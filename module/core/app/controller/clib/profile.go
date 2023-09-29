@@ -3,7 +3,7 @@ package clib
 import (
 	"net/url"
 
-	{{{ if .HasModule "oauth" }}}"github.com/pkg/errors"
+	{{{ if .HasAccount }}}"github.com/pkg/errors"
 	{{{ end }}}"github.com/valyala/fasthttp"
 
 	"{{{ .Package }}}/app"
@@ -30,7 +30,7 @@ func ProfileSite(rc *fasthttp.RequestCtx) {
 func profileAction(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (string, error) {
 	ps.Title = "Profile"
 	ps.Data = ps.Profile
-	thm := as.Themes.Get(ps.Profile.Theme, ps.Logger){{{ if .HasModule "oauth" }}}
+	thm := as.Themes.Get(ps.Profile.Theme, ps.Logger){{{ if .HasAccount }}}
 
 	prvs, err := as.Auth.Providers(ps.Logger)
 	if err != nil {
@@ -46,7 +46,7 @@ func profileAction(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) 
 		}
 	}
 
-	page := &vprofile.Profile{Profile: ps.Profile, Theme: thm, {{{ if .HasModule "oauth" }}}Providers: prvs, {{{ end }}}Referrer: redir}
+	page := &vprofile.Profile{Profile: ps.Profile, Theme: thm, {{{ if .HasAccount }}}Providers: prvs, {{{ end }}}Referrer: redir}
 	return controller.Render(rc, as, page, ps, "Profile")
 }
 
@@ -83,10 +83,10 @@ func ProfileSave(rc *fasthttp.RequestCtx) {
 
 		curr, _ := as.Services.User.Get(ps.Context, nil, ps.Profile.ID, ps.Logger)
 		if curr != nil {
-			curr.Name = n.Name
+			curr.Name = n.Name{{{ if .HasAccount }}}
 			if curr.Picture == "" {
 				curr.Picture = ps.Accounts.Image()
-			}
+			}{{{ end }}}
 			err = as.Services.User.Update(ps.Context, nil, curr, ps.Logger)
 			if err != nil {
 				return "", err

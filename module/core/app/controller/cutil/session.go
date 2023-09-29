@@ -26,7 +26,7 @@ func LoadPageState(as *app.State, rc *fasthttp.RequestCtx, key string, logger ut
 	if !telemetry.SkipControllerMetrics {
 		httpmetrics.InjectHTTP(rc, span)
 	}
-	session, flashes, prof{{{ if .HasModule "oauth" }}}, accts{{{ end }}} := loadSession(ctx, as, rc, logger)
+	session, flashes, prof{{{ if .HasAccount }}}, accts{{{ end }}} := loadSession(ctx, as, rc, logger)
 	params := ParamSetFromRequest(rc)
 	ua := useragent.Parse(string(rc.Request.Header.Peek("User-Agent")))
 	os := strings.ToLower(ua.OS)
@@ -43,7 +43,7 @@ func LoadPageState(as *app.State, rc *fasthttp.RequestCtx, key string, logger ut
 		platform = "bot"
 	}
 	span.Attribute("browser", browser)
-	span.Attribute("os", os){{{ if .HasModule "oauth" }}}
+	span.Attribute("os", os){{{ if .HasAccount }}}
 
 	isAuthed, _ := user.Check("/", accts)
 	isAdmin, _ := user.Check("/admin", accts){{{ end }}}{{{ if .HasUser }}}
@@ -53,12 +53,12 @@ func LoadPageState(as *app.State, rc *fasthttp.RequestCtx, key string, logger ut
 	return &PageState{
 		Action: key, Method: string(rc.Method()), URI: rc.Request.URI(), Flashes: flashes, Session: session,
 		OS: os, OSVersion: ua.OSVersion, Browser: browser, BrowserVersion: ua.Version, Platform: platform,
-		{{{ if .HasUser }}}User: u, {{{ end }}}Profile: prof, {{{ if .HasModule "oauth" }}}Accounts: accts, Authed: isAuthed, Admin: isAdmin, {{{ end }}}Params: params,
+		{{{ if .HasUser }}}User: u, {{{ end }}}Profile: prof, {{{ if .HasAccount }}}Accounts: accts, Authed: isAuthed, Admin: isAdmin, {{{ end }}}Params: params,
 		Icons: slices.Clone(initialIcons), Started: util.TimeCurrent(), Logger: logger, Context: ctx, Span: span,
 	}
 }
 
-func loadSession({{{ if .DatabaseUISaveUser }}}ctx{{{ else }}}_{{{ end }}} context.Context, {{{ if .DatabaseUISaveUser }}}as{{{ else }}}_{{{ end }}} *app.State, rc *fasthttp.RequestCtx, logger util.Logger) (util.ValueMap, []string, *user.Profile{{{ if .HasModule "oauth" }}}, user.Accounts{{{ end }}}) {
+func loadSession({{{ if .DatabaseUISaveUser }}}ctx{{{ else }}}_{{{ end }}} context.Context, {{{ if .DatabaseUISaveUser }}}as{{{ else }}}_{{{ end }}} *app.State, rc *fasthttp.RequestCtx, logger util.Logger) (util.ValueMap, []string, *user.Profile{{{ if .HasAccount }}}, user.Accounts{{{ end }}}) {
 	sessionBytes := rc.Request.Header.Cookie(util.AppKey)
 	session := util.ValueMap{}
 	if len(sessionBytes) > 0 {
@@ -84,7 +84,7 @@ func loadSession({{{ if .DatabaseUISaveUser }}}ctx{{{ else }}}_{{{ end }}} conte
 	prof, err := loadProfile(session)
 	if err != nil {
 		logger.Warnf("can't load profile: %+v", err)
-	}{{{ if .HasModule "oauth" }}}
+	}{{{ if .HasAccount }}}
 
 	var accts user.Accounts
 	authX, ok := session[csession.WebAuthKey]
@@ -97,7 +97,7 @@ func loadSession({{{ if .DatabaseUISaveUser }}}ctx{{{ else }}}_{{{ end }}} conte
 
 	if prof.ID == util.UUIDDefault {
 		prof.ID = util.UUID(){{{ if .DatabaseUISaveUser }}}
-		u := &usr.User{ID: prof.ID, Name: prof.Name{{{ if .HasModule "oauth" }}}, Picture: accts.Image(){{{ end }}}, Created: util.TimeCurrent()}
+		u := &usr.User{ID: prof.ID, Name: prof.Name{{{ if .HasAccount }}}, Picture: accts.Image(){{{ end }}}, Created: util.TimeCurrent()}
 		err = as.Services.User.Save(ctx, nil, logger, u)
 		if err != nil {
 			logger.Warnf("unable to save user [%s]", prof.ID.String())
@@ -107,11 +107,11 @@ func loadSession({{{ if .DatabaseUISaveUser }}}ctx{{{ else }}}_{{{ end }}} conte
 		err = csession.SaveSession(rc, session, logger)
 		if err != nil {
 			logger.Warnf("unable to save session for user [%s]", prof.ID.String())
-			return nil, nil, prof, nil
+			return nil, nil, prof{{{ if .HasAccount }}}, nil{{{ end }}}
 		}
 	}{{{ end }}}
 
-	return session, flashes, prof{{{ if .HasModule "oauth" }}}, accts{{{ end }}}
+	return session, flashes, prof{{{ if .HasAccount }}}, accts{{{ end }}}
 }
 
 func loadProfile(session util.ValueMap) (*user.Profile, error) {

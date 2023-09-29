@@ -17,7 +17,7 @@ func SiteRoutes(logger util.Logger) fasthttp.RequestHandler {
 	r.GET("/", controller.Site)
 
 	r.GET(cutil.DefaultProfilePath, clib.ProfileSite)
-	r.POST(cutil.DefaultProfilePath, clib.ProfileSave){{{ if .HasModule "oauth" }}}
+	r.POST(cutil.DefaultProfilePath, clib.ProfileSave){{{ if .HasAccount }}}
 	r.GET("/auth/{key}", clib.AuthDetail)
 	r.GET("/auth/callback/{key}", clib.AuthCallback)
 	r.GET("/auth/logout/{key}", clib.AuthLogout){{{ end }}}

@@ -2,16 +2,22 @@ package project
 
 import (
 	"fmt"
+	"slices"
+	"strings"
 
 	"github.com/samber/lo"
+
+	"projectforge.dev/projectforge/app/lib/filesystem"
 )
+
+type validationAddErrFn func(code string, msg string, args ...any)
 
 type ValidationError struct {
 	Code    string `json:"code"`
 	Message string `json:"message"`
 }
 
-func Validate(p *Project, moduleDeps map[string][]string) []*ValidationError {
+func Validate(p *Project, fs filesystem.FileLoader, moduleDeps map[string][]string) []*ValidationError {
 	var ret []*ValidationError
 
 	e := func(code string, msg string, args ...any) {
@@ -22,6 +28,7 @@ func Validate(p *Project, moduleDeps map[string][]string) []*ValidationError {
 	}
 
 	validateBasic(p, e)
+	validateFilesystem(p, e, fs)
 	validateModuleDeps(p.Modules, moduleDeps, e)
 	validateModuleConfig(p, e)
 	validateInfo(p, e)
@@ -31,7 +38,7 @@ func Validate(p *Project, moduleDeps map[string][]string) []*ValidationError {
 	return ret
 }
 
-func validateBasic(p *Project, e func(code string, msg string, args ...any)) {
+func validateBasic(p *Project, e validationAddErrFn) {
 	if p.Port == 0 {
 		e("port", "port must be a non-zero integer")
 	}
@@ -47,7 +54,7 @@ func validateBasic(p *Project, e func(code string, msg string, args ...any)) {
 	}
 }
 
-func validateModuleDeps(modules []string, deps map[string][]string, e func(code string, msg string, args ...any)) {
+func validateModuleDeps(modules []string, deps map[string][]string, e validationAddErrFn) {
 	if deps == nil {
 		return
 	}
@@ -62,7 +69,7 @@ func validateModuleDeps(modules []string, deps map[string][]string, e func(code 
 	})
 }
 
-func validateModuleConfig(p *Project, e func(code string, msg string, args ...any)) {
+func validateModuleConfig(p *Project, e validationAddErrFn) {
 	if p.HasModule("desktop") && (!p.Build.Desktop) {
 		e("desktop-disabled", "desktop module is enabled, but desktop build isn't set")
 	}
@@ -74,7 +81,7 @@ func validateModuleConfig(p *Project, e func(code string, msg string, args ...an
 	}
 }
 
-func validateBuild(p *Project, e func(code string, msg string, args ...any)) {
+func validateBuild(p *Project, e validationAddErrFn) {
 	if p.Build == nil {
 		p.Build = &Build{}
 	}
@@ -115,7 +122,7 @@ func validateBuild(p *Project, e func(code string, msg string, args ...any)) {
 	}
 }
 
-func validateInfo(p *Project, e func(code string, msg string, args ...any)) {
+func validateInfo(p *Project, e validationAddErrFn) {
 	if p.Info.Homepage == "" {
 		e("config", "No homepage set")
 	}
@@ -133,7 +140,7 @@ func validateInfo(p *Project, e func(code string, msg string, args ...any)) {
 	}
 }
 
-func validateExport(p *Project, e func(code string, msg string, args ...any)) {
+func validateExport(p *Project, e validationAddErrFn) {
 	if p.ExportArgs == nil {
 		return
 	}
@@ -142,5 +149,58 @@ func validateExport(p *Project, e func(code string, msg string, args ...any)) {
 	}
 	if err := p.ExportArgs.Models.Validate(p.Modules, p.ExportArgs.Groups); err != nil {
 		e("export", err.Error())
+	}
+}
+
+func validateFilesystem(p *Project, e validationAddErrFn, fs filesystem.FileLoader) {
+	if fs == nil {
+		e("missing-filesystem", "The project filesystem does not exist")
+		return
+	}
+	if !fs.Exists(".projectforge/project.json") {
+		e("project-file", "the project definition file (.projectforge/project.json) is missing")
+	}
+	if !fs.Exists("app/services.go") {
+		e("needs-generate", "some generated files are missing, run the \"Generate\" action")
+		return
+	}
+
+	if !fs.Exists("go.mod") {
+		e("missing-files", "this project needs to be generated using the button above, or using the CLI")
+		return
+	}
+	if !fs.Exists("views/Home.html.go") {
+		e("no-template-build", "it looks like your templates haven't been generated, perform a build or run \"bin/templates.sh\"")
+		return
+	}
+	if !fs.Exists("go.sum") {
+		e("go-dependencies", "the Go dependencies file is missing, run \"go mod tidy\" or perform a full build")
+		return
+	}
+	if !fs.Exists("client/package-lock.json") {
+		e("ts-dependencies", "the TypeScript dependencies file is missing, run \"npm i\" or perform a full build")
+		return
+	}
+	if !fs.Exists("assets/client.css") {
+		e("front-end-build", "the TypeScript build output is missing, run \"bin/build/client.sh\" or perform a full build")
+		return
+	}
+	if !fs.Exists("build/debug/"+p.Executable()) && !fs.Exists("build/debug/"+p.Executable()+".exe") {
+		e("needs-build", "your project hasn't been built recently, run a build using the buttons above")
+		return
+	}
+
+	if slices.Contains(p.Modules, "export") {
+		if !fs.Exists(".projectforge/export") {
+			e("missing-export-directory", "the project uses the export module, but doesn't have directory [./projectforge/export]")
+		}
+	}
+
+	if b, err := fs.ReadFile("client/src/svg/app.svg"); err == nil {
+		if strings.Contains(string(b), "default_icon") {
+			e("default-icon", "this project uses the default application icon, choose a new one using the SVG manager")
+		}
+	} else {
+		e("no-icon", "the file that defines the main icon (client/src/svg/app.svg) is missing")
 	}
 }

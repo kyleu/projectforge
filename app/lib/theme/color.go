@@ -47,7 +47,7 @@ func themeColors(c color.Color) (*Colors, *Colors) {
 	d.MenuSelectedBackground = hex(dark)
 	d.LinkForeground = hex(darkTints[1])
 	d.LinkVisitedForeground = hex(darkTints[2])
-	d.BackgroundMuted = hex(darkShades[2])
+	d.BackgroundMuted = hex(darkShades[1])
 	// d.ForegroundMuted = hex(darkTints[3])
 
 	return l, d

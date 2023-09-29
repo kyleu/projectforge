@@ -30,84 +30,72 @@ var (
 //line views/vaction/Result.html:10
 type Result struct {
 	layout.Basic
-	Ctx     *action.ResultContext
-	IsBuild bool
+	Ctx *action.ResultContext
 }
 
-//line views/vaction/Result.html:16
+//line views/vaction/Result.html:15
 func (p *Result) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vaction/Result.html:16
+//line views/vaction/Result.html:15
 	qw422016.N().S(`
 `)
-//line views/vaction/Result.html:17
+//line views/vaction/Result.html:16
 	if p.Ctx.Prj != nil {
+//line views/vaction/Result.html:16
+		qw422016.N().S(`  `)
 //line views/vaction/Result.html:17
-		qw422016.N().S(`  `)
-//line views/vaction/Result.html:18
 		vproject.StreamSummary(qw422016, p.Ctx.Prj, p.Ctx.Title(), nil, nil, &p.Ctx.Res.Action, nil, ps)
-//line views/vaction/Result.html:18
+//line views/vaction/Result.html:17
 		qw422016.N().S(`
 `)
-//line views/vaction/Result.html:19
+//line views/vaction/Result.html:18
 	}
-//line views/vaction/Result.html:20
-	if p.IsBuild {
-//line views/vaction/Result.html:20
-		qw422016.N().S(`  `)
-//line views/vaction/Result.html:21
-		vproject.StreamSummary(qw422016, p.Ctx.Prj, p.Ctx.Title(), nil, nil, &p.Ctx.Res.Action, nil, ps)
-//line views/vaction/Result.html:21
-		qw422016.N().S(`
-`)
-//line views/vaction/Result.html:22
-	}
-//line views/vaction/Result.html:22
+//line views/vaction/Result.html:18
 	qw422016.N().S(`
   <div class="card">
     <div class="right">`)
-//line views/vaction/Result.html:25
+//line views/vaction/Result.html:21
 	qw422016.E().S(util.MicrosToMillis(p.Ctx.Res.Duration))
-//line views/vaction/Result.html:25
+//line views/vaction/Result.html:21
 	qw422016.N().S(`</div>
     <h3>Result</h3>
     <p>`)
-//line views/vaction/Result.html:27
+//line views/vaction/Result.html:23
 	qw422016.E().S(p.Ctx.Res.Status)
-//line views/vaction/Result.html:27
+//line views/vaction/Result.html:23
 	qw422016.N().S(`</p>
   </div>
 
   `)
-//line views/vaction/Result.html:30
+//line views/vaction/Result.html:26
 	StreamDetail(qw422016, p.Ctx.Cfg, p.Ctx.Res, false, as, ps)
-//line views/vaction/Result.html:30
+//line views/vaction/Result.html:26
 	qw422016.N().S(`
 `)
-//line views/vaction/Result.html:31
+//line views/vaction/Result.html:27
 }
 
-//line views/vaction/Result.html:31
+//line views/vaction/Result.html:27
 func (p *Result) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vaction/Result.html:31
+//line views/vaction/Result.html:27
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vaction/Result.html:31
+//line views/vaction/Result.html:27
 	p.StreamBody(qw422016, as, ps)
-//line views/vaction/Result.html:31
+//line views/vaction/Result.html:27
 	qt422016.ReleaseWriter(qw422016)
-//line views/vaction/Result.html:31
+//line views/vaction/Result.html:27
 }
 
-//line views/vaction/Result.html:31
+//line views/vaction/Result.html:27
 func (p *Result) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vaction/Result.html:31
+//line views/vaction/Result.html:27
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vaction/Result.html:31
+//line views/vaction/Result.html:27
 	p.WriteBody(qb422016, as, ps)
-//line views/vaction/Result.html:31
+//line views/vaction/Result.html:27
 	qs422016 := string(qb422016.B)
-//line views/vaction/Result.html:31
+//line views/vaction/Result.html:27
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vaction/Result.html:31
+//line views/vaction/Result.html:27
 	return qs422016
-//line views/vaction/Result.html:31
+//line views/vaction/Result.html:27
 }

@@ -25,11 +25,11 @@ var Project = &doctor.Check{
 }
 
 func checkProject(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Result {
-	p, _, r := loadRootProject(r)
+	p, fs, r := loadRootProject(r)
 	if len(r.Errors) > 0 {
 		return r
 	}
-	lo.ForEach(project.Validate(p, CurrentModuleDeps), func(err *project.ValidationError, _ int) {
+	lo.ForEach(project.Validate(p, fs, CurrentModuleDeps), func(err *project.ValidationError, _ int) {
 		r = r.WithError(doctor.NewError("config", "[%s]: %s", err.Code, err.Message))
 	})
 	return r

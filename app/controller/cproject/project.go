@@ -23,9 +23,12 @@ func ProjectDetail(rc *fasthttp.RequestCtx) {
 		mods := as.Services.Modules.Modules()
 		gitStatus, _ := as.Services.Git.Status(ps.Context, prj, ps.Logger)
 		execs := as.Services.Exec.Execs.GetByKey(prj.Key)
+		fs, _ := as.Services.Projects.GetFilesystem(prj)
+		validation := project.Validate(prj, fs, as.Services.Modules.Deps())
 		ps.Title = fmt.Sprintf("%s (project %s)", prj.Title(), prj.Key)
 		ps.Data = prj
-		return controller.Render(rc, as, &vproject.Detail{Project: prj, Modules: mods, GitResult: gitStatus, Execs: execs}, ps, "projects", prj.Key)
+		page := &vproject.Detail{Project: prj, Modules: mods, GitResult: gitStatus, Execs: execs, Validation: validation}
+		return controller.Render(rc, as, page, ps, "projects", prj.Key)
 	})
 }
 

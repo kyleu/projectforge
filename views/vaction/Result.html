@@ -10,14 +10,10 @@
 {% code type Result struct {
   layout.Basic
   Ctx *action.ResultContext
-  IsBuild bool
 } %}
 
 {% func (p *Result) Body(as *app.State, ps *cutil.PageState) %}
   {%- if p.Ctx.Prj != nil -%}
-  {%= vproject.Summary(p.Ctx.Prj, p.Ctx.Title(), nil, nil, &p.Ctx.Res.Action, nil, ps) %}
-  {%- endif -%}
-  {%- if p.IsBuild -%}
   {%= vproject.Summary(p.Ctx.Prj, p.Ctx.Title(), nil, nil, &p.Ctx.Res.Action, nil, ps) %}
   {%- endif -%}
 

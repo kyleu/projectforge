@@ -73,7 +73,7 @@ func RunAction(rc *fasthttp.RequestCtx) {
 			return controller.Render(rc, as, page, ps, "projects", prj.Key, actT.Title)
 		}
 
-		page := &vaction.Result{Ctx: &action.ResultContext{Prj: prj, Cfg: cfg, Res: result}, IsBuild: actT.Key == action.TypeBuild.Key}
+		page := &vaction.Result{Ctx: &action.ResultContext{Prj: prj, Cfg: cfg, Res: result}}
 		return controller.Render(rc, as, page, ps, "projects", prj.Key, actT.Title)
 	})
 }

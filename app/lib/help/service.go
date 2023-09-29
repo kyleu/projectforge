@@ -12,13 +12,13 @@ type Service struct {
 	Entries Entries
 }
 
-func NewService(logger util.Logger) (*Service, error) {
+func NewService(logger util.Logger) *Service {
 	entries, err := loadEntries(logger)
 	if err != nil {
-		return nil, errors.Wrap(err, "unable to load help entries")
+		logger.Warnf("unable to load help entries: %+v", err)
 	}
 	logger.Debugf("loaded [%d] help entries", len(entries))
-	return &Service{Entries: entries}, nil
+	return &Service{Entries: entries}
 }
 
 func (s *Service) HTML(key string) string {

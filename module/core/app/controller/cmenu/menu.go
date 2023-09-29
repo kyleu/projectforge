@@ -17,7 +17,7 @@ func MenuFor(
 	var ret menu.Items
 	var data any
 	// $PF_SECTION_START(routes_start)$
-	// $PF_SECTION_END(routes_start)${{{ if.HasModule "export" }}}{{{ if .HasModule "oauth" }}}
+	// $PF_SECTION_END(routes_start)${{{ if.HasModule "export" }}}{{{ if .HasAccount }}}
 	if isAdmin {
 		ret = append(ret, generatedMenu()...)
 	}{{{ else }}}

@@ -17,7 +17,7 @@ import (
 type Connection struct {
 	ID       uuid.UUID     `json:"id"`{{{ if .HasUser }}}
 	User     *dbuser.User  `json:"user,omitempty"`{{{ end }}}
-	Profile  *user.Profile `json:"profile,omitempty"`{{{ if .HasModule "oauth" }}}
+	Profile  *user.Profile `json:"profile,omitempty"`{{{ if .HasAccount }}}
 	Accounts user.Accounts `json:"accounts,omitempty"`{{{ end }}}
 	Svc      string        `json:"svc,omitempty"`
 	ModelID  *uuid.UUID    `json:"modelID,omitempty"`
@@ -27,8 +27,8 @@ type Connection struct {
 	mu       sync.Mutex
 }
 
-func NewConnection(svc string{{{ if .HasUser }}}, usr *dbuser.User{{{ end }}}, profile *user.Profile{{{ if .HasModule "oauth" }}}, accounts user.Accounts{{{ end }}}, socket *websocket.Conn) *Connection {
-	return &Connection{ID: util.UUID(){{{ if .HasUser }}}, User: usr{{{ end }}}, Profile: profile{{{ if .HasModule "oauth" }}}, Accounts: accounts{{{ end }}}, Svc: svc, Started: util.TimeCurrent(), socket: socket}
+func NewConnection(svc string{{{ if .HasUser }}}, usr *dbuser.User{{{ end }}}, profile *user.Profile{{{ if .HasAccount }}}, accounts user.Accounts{{{ end }}}, socket *websocket.Conn) *Connection {
+	return &Connection{ID: util.UUID(){{{ if .HasUser }}}, User: usr{{{ end }}}, Profile: profile{{{ if .HasAccount }}}, Accounts: accounts{{{ end }}}, Svc: svc, Started: util.TimeCurrent(), socket: socket}
 }
 
 func (c *Connection) ToStatus() *Status {

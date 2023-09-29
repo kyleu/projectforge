@@ -83,6 +83,10 @@ func (t *TemplateContext) HasSlack() bool {
 	return t.Info.Slack != ""
 }
 
+func (t *TemplateContext) HasAccount() bool {
+	return t.HasModules("oauth")
+}
+
 func (t *TemplateContext) HasUser() bool {
 	return t.HasModules("user")
 }

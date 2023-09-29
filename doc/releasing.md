@@ -11,6 +11,10 @@ Your releases are available at https://github.com/kyleu/projectforge/releases
 
 All release binaries are checksummed, available in `checksums.txt` in the root of the release
 
+### Changelog
+
+A changelog will be created based on the commit history, including all authors and messages
+
 ### Docker Images
 
 Multiple Docker images will be created. The main image is `ghcr.io/kyleu/projectforge/x.x.x`, and a debug image is provided at `ghcr.io/kyleu/projectforge/x.x.x-debug` that includes `delve` for debugging
