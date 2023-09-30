@@ -17,9 +17,9 @@ import (
 func ThemeList(rc *fasthttp.RequestCtx) {
 	controller.Act("theme.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ps.Title = "Themes"
-		x := as.Themes.All(ps.Logger)
-		ps.Data = x
-		return controller.Render(rc, as, &vtheme.List{Themes: x}, ps, "Themes||/theme")
+		th := as.Themes.All(ps.Logger)
+		ps.Data = th
+		return controller.Render(rc, as, &vtheme.List{Themes: th}, ps, "Themes||/theme")
 	})
 }
 
@@ -50,8 +50,8 @@ func ThemeEdit(rc *fasthttp.RequestCtx) {
 		if t == nil {
 			return "", errors.Errorf("invalid theme [%s]", key)
 		}
-		ps.Data = t
 		ps.Title = "Edit theme [" + t.Key + "]"
+		ps.Data = t
 		page := &vtheme.Edit{Theme: t, Icon: "app", Exists: as.Themes.FileExists(t.Key)}
 		return controller.Render(rc, as, page, ps, "Themes||/theme", t.Key)
 	})

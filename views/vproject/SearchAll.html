@@ -36,10 +36,10 @@
           </div>
           {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef(prj.IconSafe(), 16, 16, "icon", ps) %} {%s prj.Title() %}
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
           {%= Summary(prj, "Search", nil, nil, nil, nil, ps) %}
           {%= searchResults(prj, p.Params, res, nil, as, ps) %}
-        </div>
+        </div></div></div>
       </li>
       {%- endfor -%}
     </ul>

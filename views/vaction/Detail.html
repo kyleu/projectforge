@@ -54,30 +54,23 @@
   </div>
   {%- endif -%}
   {%- for _, mr := range res.Modules -%}
-    {%- code
-      links := ""
-      for mIdx, mk := range mr.Keys {
-        if mIdx > 0 {
-          links += ", "
-        }
-        links += `<a href="/m/` + mk + `">` + mk + `</a>`
-      }
-    -%}
     <div class="card">
       <div class="right">{%s util.MicrosToMillis(mr.Duration) %}</div>
-      <h3>{%s util.StringPlural(len(mr.Keys), "Module") %} [{%s= links %}]</h3>
+      <h3>{%s util.StringPlural(len(mr.Keys), "Module") %}</h3>
       <div class="right">{%s= res.StatusLog() %}</div>
-      <em>{%s mr.Status %}</em>
-      {%- if len(mr.Actions) > 0 -%}
-      <h4>Actions</h4>
-      {%- for _, a := range mr.Actions -%}
-        <a href="{%s a.URL() %}"><button>{%s a.Title %}</button></a>
-      {%- endfor -%}
-      {%- endif -%}
-      {%- code diffs := mr.DiffsFiltered(includeSkipped) -%}
-      {%- if len(diffs) > 0 -%}
-      <div class="overflow">
-      {%= renderDiffs(res.Project.Key, res.Action, diffs, cfg, as, ps) %}
+      <div class="mts">
+        <em>{%s mr.Status %}</em>
+        {%- if len(mr.Actions) > 0 -%}
+        <h4>Actions</h4>
+        {%- for _, a := range mr.Actions -%}
+          <a href="{%s a.URL() %}"><button>{%s a.Title %}</button></a>
+        {%- endfor -%}
+        {%- endif -%}
+        {%- code diffs := mr.DiffsFiltered(includeSkipped) -%}
+        {%- if len(diffs) > 0 -%}
+        <div class="overflow">
+        {%= renderDiffs(res.Project.Key, res.Action, diffs, cfg, as, ps) %}
+        </div>
       </div>
       {%- endif -%}
     </div>

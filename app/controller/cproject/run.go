@@ -33,6 +33,7 @@ func RunAction(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		ps.Title = fmt.Sprintf("[%s] %s", actT.Title, prj.Title())
+		ps.Data = actT
 		if curr, ok := cfg["path"]; !ok || curr == "" {
 			cfg["path"] = prj.Path
 		}
@@ -61,7 +62,6 @@ func RunAction(rc *fasthttp.RequestCtx) {
 			return redir, nil
 		}
 		ps.Data = result
-
 		if isBuild {
 			if phase == depsKey {
 				return runDeps(prj, result, rc, as, ps)

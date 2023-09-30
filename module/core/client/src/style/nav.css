@@ -144,4 +144,8 @@ input[type=checkbox]:checked ~ .menu-toggle > .diagonal.part-2 {
 #navbar .help-link {
   margin: 12px 0 0 12px;
   color: var(--color-nav-foreground);
+}
+
+#help .modal-body {
+  padding-top: 0;
 }{{{ end }}}

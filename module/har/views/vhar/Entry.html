@@ -46,7 +46,7 @@
         <div class="right"><em>{%s util.MicrosToMillis(e.Duration()) %}</em></div>
         {%= components.ExpandCollapse(3, ps) %} Duration
       </label>
-      <div class="bd">
+      <div class="bd-animated"><div><div>
         <div class="overflow full-width">
           <table class="min-200 expanded">
             <tbody>
@@ -59,7 +59,7 @@
             </tbody>
           </table>
         </div>
-      </div>
+      </div></div></div>
     </li>
     <li>
       <input id="accordion-entry-{%s key %}-request" type="checkbox" hidden />
@@ -67,7 +67,9 @@
         <div class="right"><em>{%s e.Request.Method %}</em></div>
         {%= components.ExpandCollapse(3, ps) %} Request
       </label>
-      <div class="bd">{%= RenderRequest(key, e.Request, ps) %}</div>
+      <div class="bd-animated"><div><div>
+        {%= RenderRequest(key, e.Request, ps) %}
+      </div></div></div>
     </li>
     <li>
       <input id="accordion-entry-{%s key %}-response" type="checkbox" hidden />
@@ -75,7 +77,9 @@
         <div class="right"><em>{%s e.Response.StatusText %}</em></div>
         {%= components.ExpandCollapse(3, ps) %} Response
       </label>
-      <div class="bd">{%= RenderResponse(key, e.Response, ps) %}</div>
+      <div class="bd-animated"><div><div>
+        {%= RenderResponse(key, e.Response, ps) %}
+      </div></div></div>
     </li>
   </ul>
 {% endfunc %}

@@ -4,8 +4,9 @@ import "strings"
 
 type Entry struct {
 	Key      string `json:"key"`
-	Markdown string `json:"markdown"`
-	HTML     string `json:"html"`
+	Title    string `json:"title,omitempty"`
+	Markdown string `json:"markdown,omitempty"`
+	HTML     string `json:"html,omitempty"`
 }
 
 type Entries []*Entry

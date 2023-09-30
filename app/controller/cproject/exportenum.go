@@ -21,8 +21,6 @@ func ProjectExportEnumDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Data = e
-
 		fl, err := goenum.Enum(e, true, util.StringDefaultLinebreak)
 		if err != nil {
 			ps.Logger.Warnf("unable to generate files for enum [%s]", e.Name)
@@ -30,6 +28,7 @@ func ProjectExportEnumDetail(rc *fasthttp.RequestCtx) {
 
 		bc := []string{"projects", prj.Key, fmt.Sprintf("Export||/p/%s/export", prj.Key), e.Title()}
 		ps.Title = fmt.Sprintf("[%s] %s", prj.Key, e.Name)
+		ps.Data = e
 		return controller.Render(rc, as, &vexport.EnumDetail{Project: prj, Enum: e, File: fl}, ps, bc...)
 	})
 }
@@ -42,9 +41,9 @@ func ProjectExportEnumNew(rc *fasthttp.RequestCtx) {
 		}
 
 		e := &enum.Enum{}
-		ps.Data = e
 		bc := []string{"projects", prj.Key, fmt.Sprintf("Export||/p/%s/export", prj.Key), "New"}
 		ps.Title = fmt.Sprintf("[%s] New Enum", prj.Key)
+		ps.Data = e
 		return controller.Render(rc, as, &vexport.EnumForm{Project: prj, Enum: e}, ps, bc...)
 	})
 }
@@ -89,8 +88,6 @@ func ProjectExportEnumForm(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 
-		ps.Data = e
-
 		bc := []string{
 			"projects",
 			prj.Key,
@@ -99,6 +96,7 @@ func ProjectExportEnumForm(rc *fasthttp.RequestCtx) {
 			"Edit",
 		}
 		ps.Title = fmt.Sprintf("[%s] %s", prj.Key, e.Name)
+		ps.Data = e
 		return controller.Render(rc, as, &vexport.EnumForm{Project: prj, Enum: e}, ps, bc...)
 	})
 }

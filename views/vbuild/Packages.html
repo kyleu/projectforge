@@ -59,7 +59,7 @@
           <label for="accordion-{%s prj.Key %}">
             {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef(prj.IconSafe(), 16, 16, "icon", ps) %} {%s prj.Title() %}
           </label>
-          <div class="bd">
+          <div class="bd-animated"><div><div>
             {%= vproject.Summary(prj, "Packages", nil, nil, nil, nil, ps) %}
             {%- if res != nil && len(res.Errors) > 0 -%}
             <div class="card">
@@ -73,7 +73,7 @@
               <h3>Package Graph</h3>
               {%= renderPackages(prj, pkgs) %}
             </div>
-          </div>
+          </div></div></div>
         </li>
         {%- endfor -%}
       </ul>

@@ -241,7 +241,7 @@ func StreamMenuItem(qw422016 *qt422016.Writer, i *menu.Item, path []string, brea
 //line views/layout/Menu.html:67
 		vutil.StreamIndent(qw422016, true, indent+2)
 //line views/layout/Menu.html:67
-		qw422016.N().S(`<ul class="level-`)
+		qw422016.N().S(`<ul class="menu-content level-`)
 //line views/layout/Menu.html:68
 		qw422016.N().D(len(path))
 //line views/layout/Menu.html:68

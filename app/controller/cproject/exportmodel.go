@@ -21,15 +21,13 @@ func ProjectExportModelDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Data = mdl
-
 		fls, err := files.ModelAll(mdl, prj, args, true, util.StringDefaultLinebreak)
 		if err != nil {
 			ps.Logger.Warnf("unable to generate files for model [%s]", mdl.Name)
 		}
-
 		bc := []string{"projects", prj.Key, fmt.Sprintf("Export||/p/%s/export", prj.Key), mdl.Title()}
 		ps.Title = fmt.Sprintf("[%s] %s", prj.Key, mdl.Name)
+		ps.Data = mdl
 		return controller.Render(rc, as, &vexport.ModelDetail{Project: prj, Model: mdl, Files: fls}, ps, bc...)
 	})
 }
@@ -40,12 +38,11 @@ func ProjectExportModelSeedData(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Data = mdl
-
 		xbc := fmt.Sprintf("Export||/p/%s/export", prj.Key)
 		mbc := fmt.Sprintf("%s||/p/%s/export/models/%s", mdl.Title(), prj.Key, mdl.Name)
 		bc := []string{"projects", prj.Key, xbc, mbc, "Seed Data"}
 		ps.Title = fmt.Sprintf("[%s] %s", prj.Key, mdl.Name)
+		ps.Data = mdl
 		return controller.Render(rc, as, &vexport.ModelSeedData{Project: prj, Model: mdl}, ps, bc...)
 	})
 }
@@ -56,13 +53,10 @@ func ProjectExportModelNew(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-
 		mdl := &model.Model{}
-
-		ps.Data = mdl
-
 		bc := []string{"projects", prj.Key, fmt.Sprintf("Export||/p/%s/export", prj.Key), "New"}
 		ps.Title = fmt.Sprintf("[%s] New Model", prj.Key)
+		ps.Data = mdl
 		return controller.Render(rc, as, &vexport.ModelForm{Project: prj, Model: mdl, Examples: model.Examples}, ps, bc...)
 	})
 }
@@ -106,9 +100,6 @@ func ProjectExportModelForm(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-
-		ps.Data = mdl
-
 		bc := []string{
 			"projects",
 			prj.Key,
@@ -117,6 +108,7 @@ func ProjectExportModelForm(rc *fasthttp.RequestCtx) {
 			"Edit",
 		}
 		ps.Title = fmt.Sprintf("[%s] %s", prj.Key, mdl.Name)
+		ps.Data = mdl
 		return controller.Render(rc, as, &vexport.ModelForm{Project: prj, Model: mdl, Examples: model.Examples}, ps, bc...)
 	})
 }

@@ -6,7 +6,6 @@ import (
 	"io/fs"
 	"strings"
 
-	"github.com/gomarkdown/markdown"
 	"github.com/pkg/errors"
 )
 
@@ -34,15 +33,4 @@ func Content(path string) (string, error) {
 	}
 	body := strings.TrimSpace(string(data))
 	return body, nil
-}
-
-func HTML(path string) (string, string, error) {
-	if !strings.HasSuffix(path, ".md") {
-		path += ".md"
-	}
-	data, err := Content(path)
-	if err != nil {
-		return "", "", err
-	}
-	return data, string(markdown.ToHTML([]byte(data), nil, nil)), nil
 }

@@ -57,7 +57,7 @@
       {%= vutil.Indent(true, indent + 1) %}
     </label>
     {%= vutil.Indent(true, indent + 1) %}
-    <div class="bd">
+    <div class="bd-animated"><div><div>
       {%- if len(n.Children) == 0 -%}
         {%= vutil.Indent(true, indent + 2) %}
         <div>{%s n.Name %}</div>
@@ -69,7 +69,7 @@
         </ul>
       {%- endif -%}
     {%= vutil.Indent(true, indent + 1) %}
-    </div>
+    </div></div></div>
   {%= vutil.Indent(true, indent) %}
   </li>
 {% endstripspace %}{% endfunc %}

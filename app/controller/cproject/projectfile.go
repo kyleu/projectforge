@@ -2,7 +2,6 @@ package cproject
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/samber/lo"
 	"github.com/valyala/fasthttp"
@@ -46,7 +45,8 @@ func ProjectFile(rc *fasthttp.RequestCtx) {
 			bcAppend += "/" + x
 			bc = append(bc, x+bcAppend)
 		})
-		ps.Title = fmt.Sprintf("[%s] /%s", prj.Key, strings.Join(path, "/"))
+		ps.Title = fmt.Sprintf("[%s] /%s", prj.Key, pathS)
+		ps.Data = pathS
 		return controller.Render(rc, as, &vproject.Files{Project: prj, Path: path}, ps, bc...)
 	})
 }
@@ -68,8 +68,8 @@ func ProjectFileStats(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Data = ret
 		ps.Title = fmt.Sprintf("[%s] File Stats", prj.Key)
+		ps.Data = ret
 		page := &vproject.FileStats{Project: prj, Path: pth, Ext: ext, Files: ret}
 		return controller.Render(rc, as, page, ps, "projects", prj.Key, "File Stats")
 	})

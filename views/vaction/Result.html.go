@@ -58,11 +58,11 @@ func (p *Result) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vaction/Result.html:21
 	qw422016.N().S(`</div>
     <h3>Result</h3>
-    <p>`)
+    <div class="mts">`)
 //line views/vaction/Result.html:23
 	qw422016.E().S(p.Ctx.Res.Status)
 //line views/vaction/Result.html:23
-	qw422016.N().S(`</p>
+	qw422016.N().S(`</div>
   </div>
 
   `)

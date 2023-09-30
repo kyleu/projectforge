@@ -161,7 +161,7 @@ func streamtreeNode(qw422016 *qt422016.Writer, n *filesystem.Node, pth string, u
 //line views/vfile/Tree.html:59
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/vfile/Tree.html:59
-	qw422016.N().S(`<div class="bd">`)
+	qw422016.N().S(`<div class="bd-animated"><div><div>`)
 //line views/vfile/Tree.html:61
 	if len(n.Children) == 0 {
 //line views/vfile/Tree.html:62
@@ -193,7 +193,7 @@ func streamtreeNode(qw422016 *qt422016.Writer, n *filesystem.Node, pth string, u
 //line views/vfile/Tree.html:71
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/vfile/Tree.html:71
-	qw422016.N().S(`</div>`)
+	qw422016.N().S(`</div></div></div>`)
 //line views/vfile/Tree.html:73
 	vutil.StreamIndent(qw422016, true, indent)
 //line views/vfile/Tree.html:73

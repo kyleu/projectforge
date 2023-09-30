@@ -1,4 +1,5 @@
 // $PF_GENERATE_ONCE$
-export function appInit(): void { // eslint-disable-line @typescript-eslint/no-empty-function
+// eslint-disable-next-line @typescript-eslint/no-empty-function,no-empty-function
+export function appInit(): void {
   // noop
 }

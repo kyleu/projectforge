@@ -17,14 +17,42 @@
   padding: var(--padding-small);
 }
 
+.accordion .bd-animated {
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 200ms;
+}
+
+@media (prefers-reduced-motion) {
+  .accordion .bd-animated {
+    transition: none;
+  }
+}
+
+.accordion .bd-animated > div {
+  height: auto;
+  overflow: hidden;
+}
+
+.accordion .bd-animated > div > div {
+  padding: var(--padding-small);
+}
+
 .accordion label {
   display: block;
   cursor: pointer;
+  user-select: none;
   padding: var(--padding-small);
 }
 
 .accordion input[type=checkbox]:checked ~ .bd {
   display: block;
+}
+
+.accordion input[type=checkbox]:checked ~ .bd-animated {
+  grid-template-rows: 1fr;
 }
 
 .accordion input[type=checkbox] ~ label .expand {

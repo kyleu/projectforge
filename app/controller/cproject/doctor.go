@@ -75,6 +75,7 @@ func DoctorSolve(rc *fasthttp.RequestCtx) {
 		ret := c.Check(ps.Context, ps.Logger)
 		if len(ret.Solutions) == 0 {
 			ps.Title = fmt.Sprintf("No solution available for [%s]", c.Title)
+			ps.Data = c
 			return controller.Render(rc, as, &views.Debug{}, ps, "doctor", c.Title)
 		}
 		execs := lo.FilterMap(ret.Solutions, func(sol string, _ int) (string, bool) {
@@ -85,6 +86,7 @@ func DoctorSolve(rc *fasthttp.RequestCtx) {
 		})
 		if len(execs) == 0 {
 			ps.Title = fmt.Sprintf("No solution for [%s] can be solved automatically", c.Title)
+			ps.Data = c
 			return controller.Render(rc, as, &views.Debug{}, ps, "doctor", c.Title)
 		}
 		for idx, ex := range execs {

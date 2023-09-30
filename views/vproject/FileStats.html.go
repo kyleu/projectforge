@@ -355,7 +355,7 @@ func streamrenderFileStat(qw422016 *qt422016.Writer, pth []string, f *stats.File
 	streamrenderFileStatSummary(qw422016, f, ext, ps)
 //line views/vproject/FileStats.html:90
 	qw422016.N().S(`</label>
-    <div class="bd">
+    <div class="bd-animated"><div><div>
 `)
 //line views/vproject/FileStats.html:92
 	if len(f.Kids) > 0 {
@@ -375,7 +375,7 @@ func streamrenderFileStat(qw422016 *qt422016.Writer, pth []string, f *stats.File
 		}
 //line views/vproject/FileStats.html:96
 		qw422016.N().S(`      </ul>
-    </div>
+    </div></div></div>
     `)
 //line views/vproject/FileStats.html:99
 	}

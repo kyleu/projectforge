@@ -7,16 +7,20 @@ It's an accordion. No JavaScript required. You'll need to import `views/componen
   <li>
     <input id="accordion-a" type="checkbox" hidden />
     <label for="accordion-a">{%= components.ExpandCollapse(3, ps) %} Option A</label>
-    <div class="bd">Option A!</div>
+    <div class="bd-animated"><div><div>
+      Option A!
+    </div></div></div>
   </li>
   <li>
     <input id="accordion-b" type="checkbox" hidden />
     <label for="accordion-b">{%= components.ExpandCollapse(3, ps) %} Option B</label>
-    <div class="bd">Option B!</div>
+    <div class="bd-animated"><div><div>
+      Option B!
+    </div></div></div>
   </li>
   <li>
-    <input id="accordion-c" type="checkbox" hidden />
-    <label for="accordion-c">{%= components.ExpandCollapse(3, ps) %} Option C</label>
+    <input id="accordion-b" type="checkbox" hidden />
+    <label for="accordion-b">{%= components.ExpandCollapse(3, ps) %} Option C (not animated)</label>
     <div class="bd">Option C!</div>
   </li>
 </ul>

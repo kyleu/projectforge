@@ -29,4 +29,22 @@
       </div>
     </form>
   </div>
+
+  <div class="card">
+    <ul class="accordion">
+      <li>
+        <input id="temp1" type="checkbox" hidden />
+        <label for="temp1">
+          {%= components.ExpandCollapse(3, ps) %} Toggle
+        </label>
+        <div class="bd-animated">
+          <div class="wrapper">
+            <div class="padded">
+              Content!
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
 {% endfunc %}

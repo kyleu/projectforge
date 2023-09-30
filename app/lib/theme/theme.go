@@ -25,8 +25,7 @@ func (t *Theme) CSS(indent int) string {
 		return t.css
 	}
 	sb := &strings.Builder{}
-	sb.WriteString("/* theme: " + t.Key + " */\n")
-	sb.WriteString(t.Light.CSS(":root", indent))
+	sb.WriteString(t.Light.CSS(":root", 0))
 	sb.WriteString(t.Light.CSS(".mode-light", indent))
 	sb.WriteString(t.Dark.CSS(".mode-dark", indent))
 	addLine(sb, "", indent)

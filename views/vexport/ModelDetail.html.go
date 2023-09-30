@@ -670,7 +670,7 @@ func streammodelFiles(qw422016 *qt422016.Writer, model *model.Model, fls file.Fi
 		qw422016.E().S(f.FullPath())
 //line views/vexport/ModelDetail.html:191
 		qw422016.N().S(`</label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
 `)
 //line views/vexport/ModelDetail.html:193
 		out, err := cutil.FormatLang(f.Content, f.Ext())
@@ -689,7 +689,7 @@ func streammodelFiles(qw422016 *qt422016.Writer, model *model.Model, fls file.Fi
 		}
 //line views/vexport/ModelDetail.html:194
 		qw422016.N().S(`
-        </div>
+        </div></div></div>
       </li>
 `)
 //line views/vexport/ModelDetail.html:197

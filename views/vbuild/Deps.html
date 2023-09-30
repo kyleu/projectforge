@@ -55,11 +55,11 @@
               <li>
                 <input id="accordion-{%s d.Key %}" type="checkbox" hidden />
                 <label for="accordion-{%s d.Key %}">{%= components.ExpandCollapse(3, ps) %} {%s d.Key %}</label>
-                <div class="bd">
+                <div class="bd-animated"><div><div>
                   {%- for _, r := range d.References -%}
                   <div>{%s r %}</div>
                   {%- endfor -%}
-                </div>
+                </div></div></div>
               </li>
             </ul>
           </td>

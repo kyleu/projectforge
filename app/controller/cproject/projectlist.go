@@ -25,8 +25,6 @@ func ProjectList(rc *fasthttp.RequestCtx) {
 		if len(tags) > 0 {
 			prjs = prjs.WithTags(tags...)
 		}
-		ps.Title = "Project Listing"
-
 		switch string(rc.QueryArgs().Peek("sort")) {
 		case "package":
 			slices.SortFunc(prjs, func(l *project.Project, r *project.Project) int {
@@ -37,7 +35,6 @@ func ProjectList(rc *fasthttp.RequestCtx) {
 				return cmp.Compare(l.Port, r.Port)
 			})
 		}
-
 		ps.Title = "All Projects"
 		ps.Data = prjs
 		switch string(rc.QueryArgs().Peek("fmt")) {

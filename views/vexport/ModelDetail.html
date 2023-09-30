@@ -189,10 +189,10 @@
       <li>
         <input id="accordion-{%s f.FullPath() %}" type="checkbox" hidden />
         <label for="accordion-{%s f.FullPath() %}">{%= components.ExpandCollapse(3, ps) %} {%s f.FullPath() %}</label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
           {%- code out, err := cutil.FormatLang(f.Content, f.Ext()) -%}
           {% if err == nil %}{%s= out %}{% else %}{%s err.Error() %}{% endif %}
-        </div>
+        </div></div></div>
       </li>
       {%- endfor -%}
     </ul>

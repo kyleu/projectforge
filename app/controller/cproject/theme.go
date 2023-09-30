@@ -34,18 +34,20 @@ func ProjectThemePalette(rc *fasthttp.RequestCtx) {
 		}
 		prjTitle := curr.Title()
 		prjIcon := curr.IconSafe()
-		ps.Title = fmt.Sprintf("[%s] Themes", pal)
 		_, span, _ := telemetry.StartSpan(ps.Context, "theme:load", ps.Logger)
 		x, err := theme.PaletteThemes(pal)
 		span.Complete()
 		if err != nil {
 			return "", err
 		}
+		ps.Title = fmt.Sprintf("[%s] Themes", pal)
 		if string(rc.URI().QueryArgs().Peek("t")) == "go" {
 			ps.Data = strings.Join(lo.Map(x, func(t *theme.Theme, _ int) string {
 				return t.ToGo()
 			}), util.StringDefaultLinebreak)
 			return controller.Render(rc, as, &views.Debug{}, ps, "admin", "Themes")
+		} else {
+			ps.Data = pal
 		}
 		span.Complete()
 		page := &vproject.ThemePalette{Project: prj, Icon: prjIcon, Palette: pal, Themes: x, Title: prjTitle}

@@ -1,6 +1,10 @@
 package help
 
 import (
+	"slices"
+	"strings"
+
+	"github.com/gomarkdown/markdown"
 	"github.com/pkg/errors"
 
 	"{{{ .Package }}}/app/util"
@@ -20,16 +24,12 @@ func NewService(logger util.Logger) *Service {
 	return &Service{Entries: entries}
 }
 
-func (s *Service) HTML(key string) string {
-	ret := s.Entries.Get(key)
-	if ret == nil {
-		return ""
-	}
-	return ret.HTML
+func (s *Service) Entry(key string) *Entry {
+	return s.Entries.Get(key)
 }
 
 func (s *Service) Contains(key string) bool {
-	return s.Entries.Get(key) != nil
+	return s.Entry(key) != nil
 }
 
 func loadEntries(logger util.Logger) (Entries, error) {
@@ -37,13 +37,50 @@ func loadEntries(logger util.Logger) (Entries, error) {
 	if err != nil {
 		logger.Errorf("unable to build documentation menu: %+v", err)
 	}
+	hd, ft := "", ""
+	if slices.Contains(keys, "_header") {
+		hd, _ = help.Content("_header.md")
+	}
+	if slices.Contains(keys, "_footer") {
+		ft, _ = help.Content("_footer.md")
+	}
 	ret := make(Entries, 0, len(keys))
 	for _, key := range keys {
-		md, html, err := help.HTML(key)
+		if key == "_header" || key == "_footer" {
+			continue
+		}
+		ent, err := entryFor(key, hd, ft, 4)
 		if err != nil {
 			return nil, errors.Wrapf(err, "unable to load help file [%s]", key)
 		}
-		ret = append(ret, &Entry{Key: key, Markdown: md, HTML: html})
+		ret = append(ret, ent)
 	}
 	return ret, nil
+}
+
+func entryFor(key string, hd string, ft string, indent int) (*Entry, error) {
+	path := key
+	if !strings.HasSuffix(path, ".md") {
+		path += ".md"
+	}
+	md, err := help.Content(path)
+	if err != nil {
+		return nil, err
+	}
+	title := ""
+	if strings.HasPrefix(md, "#") {
+		if idx := strings.Index(md, "\n"); idx > -1 {
+			title = strings.TrimSpace(strings.ReplaceAll(md[:idx], "#", ""))
+			md = strings.TrimSpace(md[idx:])
+		}
+	}
+	if hd != "" {
+		md = hd + "\n\n" + md
+	}
+	if ft != "" {
+		md += "\n\n" + ft
+	}
+	html := strings.TrimSpace(string(markdown.ToHTML([]byte(md), nil, nil)))
+	html = strings.Join(util.StringSplitLinesIndented(html, indent, false, false), "\n")
+	return &Entry{Key: key, Title: title, Markdown: md, HTML: html}, nil
 }

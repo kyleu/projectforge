@@ -63,7 +63,25 @@ func StreamRender(qw422016 *qt422016.Writer, page layout.Page, as *app.State, ps
 //line views/Render.html:29
 	qw422016.N().S(ps.ClassDecl())
 //line views/Render.html:29
-	qw422016.N().S(`>`)
+	if ps.Action != "" {
+//line views/Render.html:29
+		qw422016.N().S(` `)
+//line views/Render.html:29
+		qw422016.N().S(`data-action="`)
+//line views/Render.html:29
+		qw422016.E().S(ps.Action)
+//line views/Render.html:29
+		qw422016.N().S(`"`)
+//line views/Render.html:29
+	}
+//line views/Render.html:29
+	qw422016.N().S(` `)
+//line views/Render.html:29
+	qw422016.N().S(`data-version="`)
+//line views/Render.html:29
+	qw422016.E().S(as.BuildInfo.Version)
+//line views/Render.html:29
+	qw422016.N().S(`">`)
 //line views/Render.html:29
 	if len(ps.Flashes) > 0 {
 //line views/Render.html:29

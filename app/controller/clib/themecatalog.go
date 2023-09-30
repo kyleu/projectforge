@@ -31,9 +31,9 @@ func ThemeColor(rc *fasthttp.RequestCtx) {
 			col = "#" + col
 		}
 		ps.Title = fmt.Sprintf("[%s] Theme", col)
-		x := theme.ColorTheme(col, gamut.Hex(col))
-		ps.Data = x
-		return controller.Render(rc, as, &vtheme.Edit{Theme: x, Icon: "app"}, ps, "Themes||/theme", col)
+		th := theme.ColorTheme(col, gamut.Hex(col))
+		ps.Data = th
+		return controller.Render(rc, as, &vtheme.Edit{Theme: th, Icon: "app"}, ps, "Themes||/theme", col)
 	})
 }
 
@@ -47,8 +47,8 @@ func ThemeColorEdit(rc *fasthttp.RequestCtx) {
 			return "", errors.New("provided color must be a hex string")
 		}
 		t := theme.ColorTheme(strings.TrimPrefix(color, "#"), gamut.Hex(color))
-		ps.Data = t
 		ps.Title = "Edit theme [" + t.Key + "]"
+		ps.Data = t
 		page := &vtheme.Edit{Theme: t, Icon: "app", Exists: as.Themes.FileExists(t.Key)}
 		return controller.Render(rc, as, page, ps, "Themes||/theme", t.Key)
 	})
@@ -62,18 +62,20 @@ func ThemePalette(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = fmt.Sprintf("[%s] Themes", pal)
 		_, span, _ := telemetry.StartSpan(ps.Context, "theme:load", ps.Logger)
-		x, err := theme.PaletteThemes(pal)
+		thms, err := theme.PaletteThemes(pal)
 		span.Complete()
 		if err != nil {
 			return "", err
 		}
 		if string(rc.URI().QueryArgs().Peek("t")) == "go" {
-			ps.Data = strings.Join(lo.Map(x, func(t *theme.Theme, _ int) string {
+			ps.Data = strings.Join(lo.Map(thms, func(t *theme.Theme, _ int) string {
 				return t.ToGo()
 			}), util.StringDefaultLinebreak)
 			return controller.Render(rc, as, &views.Debug{}, ps, "Themes")
+		} else {
+			ps.Data = thms
 		}
-		return controller.Render(rc, as, &vtheme.Add{Palette: pal, Themes: x}, ps, "Themes")
+		return controller.Render(rc, as, &vtheme.Add{Palette: pal, Themes: thms}, ps, "Themes")
 	})
 }
 
@@ -98,8 +100,8 @@ func ThemePaletteEdit(rc *fasthttp.RequestCtx) {
 		if t == nil {
 			return "", errors.Errorf("invalid theme [%s] for palette [%s]", key, palette)
 		}
-		ps.Data = t
 		ps.Title = "Edit theme [" + t.Key + "]"
+		ps.Data = t
 		return controller.Render(rc, as, &vtheme.Edit{Theme: t, Icon: "app"}, ps, "Themes||/theme", t.Key)
 	})
 }

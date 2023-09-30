@@ -65,7 +65,7 @@
       {%= vutil.Indent(true, indent + 2) %}
       </label>
       {%= vutil.Indent(true, indent + 2) %}
-      <ul class="level-{%d len(path) %}">
+      <ul class="menu-content level-{%d len(path) %}">
         {% for _, i := range i.Children %}
           {%= MenuItem(i, path, breadcrumbs, indent + 2, ps) %}
         {% endfor %}

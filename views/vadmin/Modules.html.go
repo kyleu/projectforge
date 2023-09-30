@@ -90,21 +90,21 @@ func (p *Modules) Body(as *app.State, ps *cutil.PageState) string {
 func streammoduleTable(qw422016 *qt422016.Writer, mods []*debug.Module) {
 //line views/vadmin/Modules.html:24
 	qw422016.N().S(`
-  <div class="overflow full-width">
-    <table class="mt">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Version</th>
-        </tr>
-      </thead>
-      <tbody>
+    <div class="overflow full-width">
+      <table class="mt">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Version</th>
+          </tr>
+        </thead>
+        <tbody>
 `)
 //line views/vadmin/Modules.html:34
 	for _, m := range mods {
 //line views/vadmin/Modules.html:34
-		qw422016.N().S(`        <tr>
-          <td><a target="_blank" rel="noopener noreferrer" href="https://`)
+		qw422016.N().S(`          <tr>
+            <td><a target="_blank" rel="noopener noreferrer" href="https://`)
 //line views/vadmin/Modules.html:36
 		qw422016.E().S(m.Path)
 //line views/vadmin/Modules.html:36
@@ -113,7 +113,7 @@ func streammoduleTable(qw422016 *qt422016.Writer, mods []*debug.Module) {
 		qw422016.E().S(m.Path)
 //line views/vadmin/Modules.html:36
 		qw422016.N().S(`</a></td>
-          <td title="`)
+            <td title="`)
 //line views/vadmin/Modules.html:37
 		qw422016.E().S(m.Sum)
 //line views/vadmin/Modules.html:37
@@ -122,14 +122,14 @@ func streammoduleTable(qw422016 *qt422016.Writer, mods []*debug.Module) {
 		qw422016.E().S(m.Version)
 //line views/vadmin/Modules.html:37
 		qw422016.N().S(`</td>
-        </tr>
+          </tr>
 `)
 //line views/vadmin/Modules.html:39
 	}
 //line views/vadmin/Modules.html:39
-	qw422016.N().S(`      </tbody>
-    </table>
-  </div>
+	qw422016.N().S(`        </tbody>
+      </table>
+    </div>
 `)
 //line views/vadmin/Modules.html:43
 }

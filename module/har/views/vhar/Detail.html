@@ -48,9 +48,9 @@
             {%= components.ExpandCollapse(3, ps) %} {%s e.String() %}
             <div class="clear"></div>
           </label>
-          <div class="bd">
-            {%= RenderEntry(key, e, ps) %}
-          </div>
+          <div class="bd-animated"><div><div>
+          {%= RenderEntry(key, e, ps) %}
+          </div></div></div>
           {%= RenderEntryModals(key, e, false) %}
         </li>
         {%- endfor -%}

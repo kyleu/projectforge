@@ -8,24 +8,27 @@
 ) %}
 
 {% func Help(as *app.State, ps *cutil.PageState) %}
+  {%- if as.Services.Help != nil -%}
+  {%- if hlp := as.Services.Help.Entry(ps.Action); hlp != nil -%}
   {%- code
-    title := ps.Title
+    title := hlp.Title
+    if title == "" {
+      title = ps.Title
+    }
     if title == "" {
       title = util.AppName
     }
   -%}
-  {%- if as.Services.Help != nil -%}
-  {%- if hlp := as.Services.Help.HTML(ps.Action); hlp != "" -%}
   <a class="help-link" title="Help for this page" data-key="{%s strings.TrimSuffix(ps.Action, `.action`) %}" href="#help">{%= components.SVGRef(`question`, 24, 24, ``, ps) %}</a>
   <div id="help" class="modal" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
       <div class="modal-header">
         <a href="#" class="modal-close">×</a>
-        <h3>{%= components.SVGRefIcon(`question`, ps) %}Help - {%s title %}</h3>
+        <h3>{%= components.SVGRefIcon(`question`, ps) %}Help: {%s title %}</h3>
       </div>
       <div class="modal-body">
-        <div class="mt">{%s= hlp %}</div>
+        {%s= hlp.HTML %}
       </div>
     </div>
   </div>

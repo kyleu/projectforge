@@ -29,6 +29,7 @@ func socketRoute(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState, pa
 	switch path[0] {
 	case "tap":
 		ps.Title = "WebSocket Tap"
+		ps.Data = ps.Title
 		return controller.Render(rc, as, &vadmin.SocketTap{}, ps, bc("Tap")...)
 	case "tap-socket":
 		_, err := as.Services.Socket.RegisterTap(rc, ps.Logger)

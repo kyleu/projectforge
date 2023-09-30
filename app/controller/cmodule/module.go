@@ -48,8 +48,8 @@ func ModuleDetail(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		dir := mod.Files.Root()
-		ps.Data = mod
 		ps.Title = mod.Title()
+		ps.Data = mod
 		return controller.Render(rc, as, &vmodule.Detail{Module: mod, HTML: html, Usages: usages, Dir: dir}, ps, "modules", mod.Key)
 	})
 }
@@ -59,14 +59,11 @@ func getModule(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*mo
 	if err != nil {
 		return nil, err
 	}
-
 	mod, err := as.Services.Modules.Get(key)
 	if err != nil {
 		return nil, err
 	}
-
 	ps.Title = mod.Title()
 	ps.Data = mod
-
 	return mod, nil
 }

@@ -117,7 +117,7 @@ func (p *DepMap) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vbuild/DepMap.html:48
 		qw422016.N().S(`
           </label>
-          <div class="bd">
+          <div class="bd-animated"><div><div>
             <ul>
 `)
 //line views/vbuild/DepMap.html:53
@@ -180,7 +180,7 @@ func (p *DepMap) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 		}
 //line views/vbuild/DepMap.html:67
 		qw422016.N().S(`            </ul>
-          </div>
+          </div></div></div>
         </li>
 `)
 //line views/vbuild/DepMap.html:71

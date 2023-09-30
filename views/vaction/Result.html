@@ -20,7 +20,7 @@
   <div class="card">
     <div class="right">{%s util.MicrosToMillis(p.Ctx.Res.Duration) %}</div>
     <h3>Result</h3>
-    <p>{%s p.Ctx.Res.Status %}</p>
+    <div class="mts">{%s p.Ctx.Res.Status %}</div>
   </div>
 
   {%= Detail(p.Ctx.Cfg, p.Ctx.Res, false, as, ps) %}

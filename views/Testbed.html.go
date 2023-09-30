@@ -77,32 +77,54 @@ func (p *Testbed) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
       </div>
     </form>
   </div>
+
+  <div class="card">
+    <ul class="accordion">
+      <li>
+        <input id="temp1" type="checkbox" hidden />
+        <label for="temp1">
+          `)
+//line views/Testbed.html:38
+	components.StreamExpandCollapse(qw422016, 3, ps)
+//line views/Testbed.html:38
+	qw422016.N().S(` Toggle
+        </label>
+        <div class="bd-animated">
+          <div class="wrapper">
+            <div class="padded">
+              Content!
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
 `)
-//line views/Testbed.html:32
+//line views/Testbed.html:50
 }
 
-//line views/Testbed.html:32
+//line views/Testbed.html:50
 func (p *Testbed) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/Testbed.html:32
+//line views/Testbed.html:50
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/Testbed.html:32
+//line views/Testbed.html:50
 	p.StreamBody(qw422016, as, ps)
-//line views/Testbed.html:32
+//line views/Testbed.html:50
 	qt422016.ReleaseWriter(qw422016)
-//line views/Testbed.html:32
+//line views/Testbed.html:50
 }
 
-//line views/Testbed.html:32
+//line views/Testbed.html:50
 func (p *Testbed) Body(as *app.State, ps *cutil.PageState) string {
-//line views/Testbed.html:32
+//line views/Testbed.html:50
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/Testbed.html:32
+//line views/Testbed.html:50
 	p.WriteBody(qb422016, as, ps)
-//line views/Testbed.html:32
+//line views/Testbed.html:50
 	qs422016 := string(qb422016.B)
-//line views/Testbed.html:32
+//line views/Testbed.html:50
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/Testbed.html:32
+//line views/Testbed.html:50
 	return qs422016
-//line views/Testbed.html:32
+//line views/Testbed.html:50
 }

@@ -89,6 +89,22 @@ func StringSplitLines(s string) []string {
 	return strings.Split(s, StringDetectLinebreak(s))
 }
 
+func StringSplitLinesIndented(s string, indent int, indentFirstLine bool, includeEmptyLines bool) []string {
+	ind := StringRepeat("  ", indent)
+	lines := StringSplitLines(s)
+	ret := make([]string, 0, len(lines))
+	for idx, line := range lines {
+		if (!includeEmptyLines) && strings.TrimSpace(line) == "" {
+			continue
+		}
+		if indentFirstLine || idx > 0 {
+			line = ind + line
+		}
+		ret = append(ret, line)
+	}
+	return ret
+}
+
 func StringPad(s string, size int) string {
 	return StringPadRight(s, size, ' ')
 }

@@ -34,25 +34,28 @@ func StreamHelp(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
 //line views/layout/Help.html:11
 	qw422016.N().S(`
 `)
-//line views/layout/Help.html:13
-	title := ps.Title
-	if title == "" {
-		title = util.AppName
-	}
-
-//line views/layout/Help.html:18
+//line views/layout/Help.html:12
 	if as.Services.Help != nil {
-//line views/layout/Help.html:19
-		if hlp := as.Services.Help.HTML(ps.Action); hlp != "" {
-//line views/layout/Help.html:19
+//line views/layout/Help.html:13
+		if hlp := as.Services.Help.Entry(ps.Action); hlp != nil {
+//line views/layout/Help.html:15
+			title := hlp.Title
+			if title == "" {
+				title = ps.Title
+			}
+			if title == "" {
+				title = util.AppName
+			}
+
+//line views/layout/Help.html:22
 			qw422016.N().S(`  <a class="help-link" title="Help for this page" data-key="`)
-//line views/layout/Help.html:20
+//line views/layout/Help.html:23
 			qw422016.E().S(strings.TrimSuffix(ps.Action, `.action`))
-//line views/layout/Help.html:20
+//line views/layout/Help.html:23
 			qw422016.N().S(`" href="#help">`)
-//line views/layout/Help.html:20
+//line views/layout/Help.html:23
 			components.StreamSVGRef(qw422016, `question`, 24, 24, ``, ps)
-//line views/layout/Help.html:20
+//line views/layout/Help.html:23
 			qw422016.N().S(`</a>
   <div id="help" class="modal" style="display: none;">
     <a class="backdrop" href="#"></a>
@@ -60,54 +63,54 @@ func StreamHelp(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
       <div class="modal-header">
         <a href="#" class="modal-close">×</a>
         <h3>`)
-//line views/layout/Help.html:26
+//line views/layout/Help.html:29
 			components.StreamSVGRefIcon(qw422016, `question`, ps)
-//line views/layout/Help.html:26
-			qw422016.N().S(`Help - `)
-//line views/layout/Help.html:26
+//line views/layout/Help.html:29
+			qw422016.N().S(`Help: `)
+//line views/layout/Help.html:29
 			qw422016.E().S(title)
-//line views/layout/Help.html:26
+//line views/layout/Help.html:29
 			qw422016.N().S(`</h3>
       </div>
       <div class="modal-body">
-        <div class="mt">`)
-//line views/layout/Help.html:29
-			qw422016.N().S(hlp)
-//line views/layout/Help.html:29
-			qw422016.N().S(`</div>
+        `)
+//line views/layout/Help.html:32
+			qw422016.N().S(hlp.HTML)
+//line views/layout/Help.html:32
+			qw422016.N().S(`
       </div>
     </div>
   </div>
 `)
-//line views/layout/Help.html:33
+//line views/layout/Help.html:36
 		}
-//line views/layout/Help.html:34
+//line views/layout/Help.html:37
 	}
-//line views/layout/Help.html:35
+//line views/layout/Help.html:38
 }
 
-//line views/layout/Help.html:35
+//line views/layout/Help.html:38
 func WriteHelp(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/layout/Help.html:35
+//line views/layout/Help.html:38
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/layout/Help.html:35
+//line views/layout/Help.html:38
 	StreamHelp(qw422016, as, ps)
-//line views/layout/Help.html:35
+//line views/layout/Help.html:38
 	qt422016.ReleaseWriter(qw422016)
-//line views/layout/Help.html:35
+//line views/layout/Help.html:38
 }
 
-//line views/layout/Help.html:35
+//line views/layout/Help.html:38
 func Help(as *app.State, ps *cutil.PageState) string {
-//line views/layout/Help.html:35
+//line views/layout/Help.html:38
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/layout/Help.html:35
+//line views/layout/Help.html:38
 	WriteHelp(qb422016, as, ps)
-//line views/layout/Help.html:35
+//line views/layout/Help.html:38
 	qs422016 := string(qb422016.B)
-//line views/layout/Help.html:35
+//line views/layout/Help.html:38
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/layout/Help.html:35
+//line views/layout/Help.html:38
 	return qs422016
-//line views/layout/Help.html:35
+//line views/layout/Help.html:38
 }

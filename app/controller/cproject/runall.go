@@ -15,7 +15,12 @@ import (
 )
 
 func RunAllActions(rc *fasthttp.RequestCtx) {
-	controller.Act("run.all.actions", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+	helpKey := "run.all"
+	actKey, _ := cutil.RCRequiredString(rc, "act", false)
+	if actKey != "" {
+		helpKey += "." + actKey
+	}
+	controller.Act(helpKey, rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		actS, err := cutil.RCRequiredString(rc, "act", false)
 		if err != nil {
 			return "", err
@@ -37,6 +42,7 @@ func RunAllActions(rc *fasthttp.RequestCtx) {
 			switch cfg.GetStringOpt("phase") {
 			case "":
 				ps.Title = "Build All Projects"
+				ps.Data = prjs
 				page := &vaction.Results{T: actT, Cfg: cfg, Projects: prjs, Ctxs: nil, Tags: tags, IsBuild: true}
 				return controller.Render(rc, as, page, ps, "projects", actT.Title)
 			case depsKey:

@@ -97,8 +97,8 @@ func mdTemplate(description string, path string, icon string, ps *cutil.PageStat
 	if err != nil {
 		return nil, err
 	}
-	ps.Data = siteData(title, "description", description)
 	ps.Title = title
+	ps.Data = siteData(title, "description", description)
 	page := &vsite.MarkdownPage{Title: title, HTML: html}
 	return page, nil
 }

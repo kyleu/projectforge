@@ -51,7 +51,9 @@
               <li>
                 <input id="accordion-request-body-{%s key %}" type="checkbox" hidden />
                 <label class="no-padding" for="accordion-request-body-{%s key %}"><em>(click to show)</em></label>
-                <div class="bd"><pre>{%s r.PostData.Text %}</pre></div>
+                <div class="bd-animated"><div><div>
+                  <pre>{%s r.PostData.Text %}</pre>
+                </div></div></div>
               </li>
             </ul>
             {%- endif -%}
@@ -68,7 +70,9 @@
     <li>
       <input id="accordion-cookies-{%s key %}" type="checkbox" hidden />
       <label class="no-padding" for="accordion-cookies-{%s key %}">{%s util.StringPlural(len(cookies), "Cookie") %} <em>(click to show)</em></label>
-      <div class="bd">{%= renderCookies(key, cookies, ps) %}</div>
+      <div class="bd-animated"><div><div>
+        {%= renderCookies(key, cookies, ps) %}
+      </div></div></div>
     </li>
   </ul>
 {% endfunc %}
@@ -96,7 +100,9 @@
               <li>
                 <input id="accordion-{%s key %}-cookie-{%d i %}" type="checkbox" hidden />
                 <label class="no-padding" for="accordion-{%s key %}-cookie-{%d i %}">{%s c.Value[:64] %}...</label>
-                <div class="bd">{%s c.Value %}</div>
+                <div class="bd-animated"><div><div>
+                  {%s c.Value %}
+                </div></div></div>
               </li>
             </ul>
             {%- else -%}
@@ -125,7 +131,9 @@
         {%s util.StringPlural(len(nvps), title) %}
         <em>(click to show)</em>
       </label>
-      <div class="bd">{%= renderNVPs(nvps, ps) %}</div>
+      <div class="bd-animated"><div><div>
+        {%= renderNVPs(nvps, ps) %}
+      </div></div></div>
     </li>
   </ul>
 {% endfunc %}
