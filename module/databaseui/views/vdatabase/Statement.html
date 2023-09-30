@@ -27,7 +27,7 @@
         <li>
           <input id="accordion-sql" type="checkbox" hidden />
           <label for="accordion-sql">{%= components.ExpandCollapse(3, ps) %} SQL</label>
-          <div class="bd-animated"><div><div>
+          <div class="bd"><div><div>
             {%= statementSQL(s) %}
           </div></div></div>
         </li>
@@ -35,7 +35,7 @@
         <li>
           <input id="accordion-values" type="checkbox" hidden />
           <label for="accordion-values">{%= components.ExpandCollapse(3, ps) %} Values</label>
-          <div class="bd-animated"><div><div>
+          <div class="bd"><div><div>
             {%= statementValues(s) %}
           </div></div></div>
         </li>
@@ -43,7 +43,7 @@
         <li>
           <input id="accordion-out" type="checkbox" hidden />
           <label for="accordion-out">{%= components.ExpandCollapse(3, ps) %} Result</label>
-          <div class="bd-animated"><div><div>
+          <div class="bd"><div><div>
             {%= statementOut(s) %}
           </div></div></div>
         </li>
@@ -51,7 +51,7 @@
         <li>
           <input id="accordion-extra" type="checkbox" hidden />
           <label for="accordion-extra">{%= components.ExpandCollapse(3, ps) %} Query Plan</label>
-          <div class="bd-animated"><div><div>
+          <div class="bd"><div><div>
             {%= components.DisplayMaps(s.Extra, nil, true, ps) %}
           </div></div></div>
         </li>

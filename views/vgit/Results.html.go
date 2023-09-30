@@ -200,7 +200,7 @@ func (p *Results) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 		}
 //line views/vgit/Results.html:80
 		qw422016.N().S(`        </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
           `)
 //line views/vgit/Results.html:83
 		streamstatusActions(qw422016, x, true)

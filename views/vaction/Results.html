@@ -44,7 +44,7 @@
           {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef(x.Prj.IconSafe(), 16, 16, "icon", ps) %}
           {% if x.Prj.Key == util.AppKey %}<strong>{% endif %}{%s x.Prj.Title() %}{% if x.Prj.Key == util.AppKey %}</strong>{% endif %}
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
           {%= vproject.Summary(x.Prj, x.Title(), nil, nil, &x.Res.Action, nil, ps) %}
           {%= Detail(x.Cfg, x.Res, false, as, ps) %}
         </div></div></div>

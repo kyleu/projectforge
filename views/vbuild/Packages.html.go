@@ -170,7 +170,7 @@ func (p *PackagesAll) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *c
 //line views/vbuild/Packages.html:60
 		qw422016.N().S(`
           </label>
-          <div class="bd-animated"><div><div>
+          <div class="bd"><div><div>
             `)
 //line views/vbuild/Packages.html:63
 		vproject.StreamSummary(qw422016, prj, "Packages", nil, nil, nil, nil, ps)

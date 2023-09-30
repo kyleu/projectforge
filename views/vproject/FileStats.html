@@ -88,7 +88,7 @@
   <li>
     <input id="accordion-{%s f.FullPath() %}" type="checkbox" hidden />
     <label for="accordion-{%s f.FullPath() %}">{%= renderFileStatSummary(f, ext, ps) %}</label>
-    <div class="bd-animated"><div><div>
+    <div class="bd"><div><div>
       {%- if len(f.Kids) > 0 -%}
       <ul class="accordion">
         {%- for _, k := range f.Kids -%}

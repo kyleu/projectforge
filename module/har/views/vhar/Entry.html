@@ -46,7 +46,7 @@
         <div class="right"><em>{%s util.MicrosToMillis(e.Duration()) %}</em></div>
         {%= components.ExpandCollapse(3, ps) %} Duration
       </label>
-      <div class="bd-animated"><div><div>
+      <div class="bd"><div><div>
         <div class="overflow full-width">
           <table class="min-200 expanded">
             <tbody>
@@ -67,7 +67,7 @@
         <div class="right"><em>{%s e.Request.Method %}</em></div>
         {%= components.ExpandCollapse(3, ps) %} Request
       </label>
-      <div class="bd-animated"><div><div>
+      <div class="bd"><div><div>
         {%= RenderRequest(key, e.Request, ps) %}
       </div></div></div>
     </li>
@@ -77,7 +77,7 @@
         <div class="right"><em>{%s e.Response.StatusText %}</em></div>
         {%= components.ExpandCollapse(3, ps) %} Response
       </label>
-      <div class="bd-animated"><div><div>
+      <div class="bd"><div><div>
         {%= RenderResponse(key, e.Response, ps) %}
       </div></div></div>
     </li>

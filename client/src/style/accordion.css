@@ -13,11 +13,6 @@
 }
 
 .accordion .bd {
-  display: none;
-  padding: var(--padding-small);
-}
-
-.accordion .bd-animated {
   padding: 0;
   margin: 0;
   display: grid;
@@ -26,17 +21,22 @@
 }
 
 @media (prefers-reduced-motion) {
-  .accordion .bd-animated {
+  .accordion .bd {
     transition: none;
   }
 }
 
-.accordion .bd-animated > div {
+.accordion .bd-no-animation {
+  display: none;
+  padding: var(--padding-small);
+}
+
+.accordion .bd > div {
   height: auto;
   overflow: hidden;
 }
 
-.accordion .bd-animated > div > div {
+.accordion .bd > div > div {
   padding: var(--padding-small);
 }
 
@@ -47,11 +47,11 @@
   padding: var(--padding-small);
 }
 
-.accordion input[type=checkbox]:checked ~ .bd {
+.accordion input[type=checkbox]:checked ~ .bd-no-animation {
   display: block;
 }
 
-.accordion input[type=checkbox]:checked ~ .bd-animated {
+.accordion input[type=checkbox]:checked ~ .bd {
   grid-template-rows: 1fr;
 }
 

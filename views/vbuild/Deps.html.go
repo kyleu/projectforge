@@ -132,7 +132,7 @@ func (p *Deps) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 			qw422016.E().S(d.Key)
 //line views/vbuild/Deps.html:57
 			qw422016.N().S(`</label>
-                <div class="bd-animated"><div><div>
+                <div class="bd"><div><div>
 `)
 //line views/vbuild/Deps.html:59
 			for _, r := range d.References {

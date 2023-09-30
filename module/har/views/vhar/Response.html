@@ -40,7 +40,7 @@
               <li>
                 <input id="accordion-response-body-{%s key %}" type="checkbox" hidden />
                 <label class="no-padding" for="accordion-response-body-{%s key %}"><em>(click to show)</em></label>
-                <div class="bd-animated"><div><div>
+                <div class="bd"><div><div>
                   {%- if strings.HasPrefix(r.ContentType(), "image/") -%}
                   <img style="border: var(--border)" src="data:{%s r.ContentType() %};base64,{%s r.Content.Text %}" />
                   {%- else -%}

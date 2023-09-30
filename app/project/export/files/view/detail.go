@@ -163,7 +163,7 @@ func exportViewDetailReverseRelations(ret *golang.Block, m *model.Model, models 
 		msg := "          {%%%%s util.StringPlural(len(p.Rel%s), \"%s\") %%%%} by [%s]"
 		ret.W(msg, tgtName, tgt.Title(), strings.Join(tgtCols.Titles(), ", "))
 		ret.W("        </label>")
-		ret.W("        <div class=\"bd-animated\"><div><div>")
+		ret.W("        <div class=\"bd\"><div><div>")
 		ret.W("          {%%%%- if len(p.Rel%s) == 0 -%%%%}", tgtName)
 		ret.W("          <em>no related %s</em>", tgt.TitlePlural())
 		ret.W("          {%%- else -%%}")

@@ -89,7 +89,7 @@ func (p *Testbed) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 //line views/Testbed.html:38
 	qw422016.N().S(` Toggle
         </label>
-        <div class="bd-animated">
+        <div class="bd">
           <div class="wrapper">
             <div class="padded">
               Content!

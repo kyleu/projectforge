@@ -355,7 +355,7 @@ func streamenumFiles(qw422016 *qt422016.Writer, enum *enum.Enum, f *file.File, a
 	qw422016.E().S(f.FullPath())
 //line views/vexport/EnumDetail.html:99
 	qw422016.N().S(`</label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vexport/EnumDetail.html:101
 	out, err := cutil.FormatLang(f.Content, f.Ext())
