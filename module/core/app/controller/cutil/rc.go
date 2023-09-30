@@ -19,12 +19,13 @@ func RequestCtxToMap(rc *fasthttp.RequestCtx, as *app.State, ps *PageState) util
 		"queryString": string(rc.Request.URI().QueryString()), "headers": RequestHeadersMap(rc),
 		"bodySize": len(rc.Request.Body()),
 	}
-	rsp := util.ValueMap{"code": rc.Response.StatusCode(), "bodySize": len(rc.Response.Body()), "headers": ResponseHeadersMap(rc)}
+	rsp := util.ValueMap{"code": rc.Response.StatusCode(), "bodySize": len(rc.Response.Body()), "headers": ResponseHeadersMap(rc)}{{{ if .HasModule "help" }}}
+	hasHelp := as.Services != nil && as.Services.Help != nil && as.Services.Help.Contains(ps.Action){{{ end }}}
 	action := util.ValueMap{
 		"action": ps.Action, "admin": ps.Admin, "authed": ps.Authed,
 		"redirect": ps.ForceRedirect, "flashes": ps.Flashes, "breadcrumbs": ps.Breadcrumbs,
 		"browser": ps.Browser, "browserVersion": ps.BrowserVersion, "os": ps.OS, "osVersion": ps.OSVersion, "platform": ps.Platform,
-		"description": ps.Description, "title": ps.Title, "started": ps.Started,{{{ if .HasModule "help" }}} "help": as.Services.Help.Contains(ps.Action),{{{ end }}}
+		"description": ps.Description, "title": ps.Title, "started": ps.Started,{{{ if .HasModule "help" }}} "help": hasHelp,{{{ end }}}
 	}
 	ret := util.ValueMap{"action": action, "data": ps.Data, "request": req, "response": rsp}
 	// $PF_SECTION_START(debugstuff)$

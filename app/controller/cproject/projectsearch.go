@@ -38,7 +38,6 @@ func ProjectSearch(rc *fasthttp.RequestCtx) {
 
 		ps.Title = fmt.Sprintf("[%s] Project Results", prj.Title())
 		ps.Data = res
-		// page := &vsearch.Results{Params: params, Results: res, SearchPath: fmt.Sprintf("/p/%s/search", prj.Key)}
 		page := &vproject.Search{Project: prj, Params: params, Results: res}
 		return controller.Render(rc, as, page, ps, "projects", prj.Key, "Search")
 	})

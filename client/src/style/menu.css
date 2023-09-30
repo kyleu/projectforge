@@ -33,6 +33,7 @@
   margin: 0;
   list-style: none;
   padding: 0;
+  overflow: hidden;
 }
 
 .menu-container .item, .menu-container label {
@@ -120,13 +121,19 @@
 }
 
 .menu-content {
-  height: 100%;
-  max-height: 0;
-  overflow: hidden;
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 200ms;
 }
 
-.menu-container input[type=checkbox]:checked + label + ul {
-  max-height: 10000px;
+@media (prefers-reduced-motion) {
+  .menu-content {
+    transition: none;
+  }
+}
+
+.menu-container input[type=checkbox]:checked + label + .menu-content {
+  grid-template-rows: 1fr;
 }
 
 .menu-container input[type=checkbox] + label .expand {

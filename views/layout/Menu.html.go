@@ -241,28 +241,36 @@ func StreamMenuItem(qw422016 *qt422016.Writer, i *menu.Item, path []string, brea
 //line views/layout/Menu.html:67
 		vutil.StreamIndent(qw422016, true, indent+2)
 //line views/layout/Menu.html:67
-		qw422016.N().S(`<ul class="menu-content level-`)
+		qw422016.N().S(`<div class="menu-content level-`)
 //line views/layout/Menu.html:68
 		qw422016.N().D(len(path))
 //line views/layout/Menu.html:68
 		qw422016.N().S(`">`)
 //line views/layout/Menu.html:69
-		for _, i := range i.Children {
-//line views/layout/Menu.html:70
-			StreamMenuItem(qw422016, i, path, breadcrumbs, indent+2, ps)
+		vutil.StreamIndent(qw422016, true, indent+3)
+//line views/layout/Menu.html:69
+		qw422016.N().S(`<ul>`)
 //line views/layout/Menu.html:71
+		for _, i := range i.Children {
+//line views/layout/Menu.html:72
+			StreamMenuItem(qw422016, i, path, breadcrumbs, indent+3, ps)
+//line views/layout/Menu.html:73
 		}
-//line views/layout/Menu.html:72
-		vutil.StreamIndent(qw422016, true, indent+2)
-//line views/layout/Menu.html:72
+//line views/layout/Menu.html:74
+		vutil.StreamIndent(qw422016, true, indent+3)
+//line views/layout/Menu.html:74
 		qw422016.N().S(`</ul>`)
-//line views/layout/Menu.html:74
-		vutil.StreamIndent(qw422016, true, indent+1)
-//line views/layout/Menu.html:74
-		qw422016.N().S(`</li>`)
 //line views/layout/Menu.html:76
-	} else {
+		vutil.StreamIndent(qw422016, true, indent+2)
+//line views/layout/Menu.html:76
+		qw422016.N().S(`</div>`)
 //line views/layout/Menu.html:78
+		vutil.StreamIndent(qw422016, true, indent+1)
+//line views/layout/Menu.html:78
+		qw422016.N().S(`</li>`)
+//line views/layout/Menu.html:80
+	} else {
+//line views/layout/Menu.html:82
 		finalClass := "item"
 		if active {
 			finalClass += " active"
@@ -271,75 +279,75 @@ func StreamMenuItem(qw422016 *qt422016.Writer, i *menu.Item, path []string, brea
 			finalClass += " final"
 		}
 
-//line views/layout/Menu.html:86
+//line views/layout/Menu.html:90
 		vutil.StreamIndent(qw422016, true, indent+1)
-//line views/layout/Menu.html:86
+//line views/layout/Menu.html:90
 		qw422016.N().S(`<li data-menu-key="`)
-//line views/layout/Menu.html:87
+//line views/layout/Menu.html:91
 		qw422016.E().S(i.Key)
-//line views/layout/Menu.html:87
+//line views/layout/Menu.html:91
 		qw422016.N().S(`"><a class="`)
-//line views/layout/Menu.html:88
-		qw422016.E().S(finalClass)
-//line views/layout/Menu.html:88
-		qw422016.N().S(`" href="`)
-//line views/layout/Menu.html:88
-		qw422016.E().S(i.Route)
-//line views/layout/Menu.html:88
-		qw422016.N().S(`" title="`)
-//line views/layout/Menu.html:88
-		qw422016.E().S(i.Desc())
-//line views/layout/Menu.html:88
-		qw422016.N().S(`">`)
-//line views/layout/Menu.html:89
-		if i.Badge != "" {
-//line views/layout/Menu.html:90
-			vutil.StreamIndent(qw422016, true, indent+3)
-//line views/layout/Menu.html:90
-			qw422016.N().S(`<div class="badge">`)
-//line views/layout/Menu.html:91
-			qw422016.E().S(i.Badge)
-//line views/layout/Menu.html:91
-			qw422016.N().S(`</div>`)
 //line views/layout/Menu.html:92
-		}
+		qw422016.E().S(finalClass)
+//line views/layout/Menu.html:92
+		qw422016.N().S(`" href="`)
+//line views/layout/Menu.html:92
+		qw422016.E().S(i.Route)
+//line views/layout/Menu.html:92
+		qw422016.N().S(`" title="`)
+//line views/layout/Menu.html:92
+		qw422016.E().S(i.Desc())
+//line views/layout/Menu.html:92
+		qw422016.N().S(`">`)
 //line views/layout/Menu.html:93
-		if i.Icon != "" {
+		if i.Badge != "" {
 //line views/layout/Menu.html:94
-			components.StreamSVGRef(qw422016, i.Icon, 16, 16, "icon", ps)
+			vutil.StreamIndent(qw422016, true, indent+3)
+//line views/layout/Menu.html:94
+			qw422016.N().S(`<div class="badge">`)
 //line views/layout/Menu.html:95
+			qw422016.E().S(i.Badge)
+//line views/layout/Menu.html:95
+			qw422016.N().S(`</div>`)
+//line views/layout/Menu.html:96
 		}
-//line views/layout/Menu.html:96
-		qw422016.E().S(i.Title)
-//line views/layout/Menu.html:96
-		qw422016.N().S(`</a></li>`)
+//line views/layout/Menu.html:97
+		if i.Icon != "" {
+//line views/layout/Menu.html:98
+			components.StreamSVGRef(qw422016, i.Icon, 16, 16, "icon", ps)
 //line views/layout/Menu.html:99
+		}
+//line views/layout/Menu.html:100
+		qw422016.E().S(i.Title)
+//line views/layout/Menu.html:100
+		qw422016.N().S(`</a></li>`)
+//line views/layout/Menu.html:103
 	}
-//line views/layout/Menu.html:100
+//line views/layout/Menu.html:104
 }
 
-//line views/layout/Menu.html:100
+//line views/layout/Menu.html:104
 func WriteMenuItem(qq422016 qtio422016.Writer, i *menu.Item, path []string, breadcrumbs cmenu.Breadcrumbs, indent int, ps *cutil.PageState) {
-//line views/layout/Menu.html:100
+//line views/layout/Menu.html:104
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/layout/Menu.html:100
+//line views/layout/Menu.html:104
 	StreamMenuItem(qw422016, i, path, breadcrumbs, indent, ps)
-//line views/layout/Menu.html:100
+//line views/layout/Menu.html:104
 	qt422016.ReleaseWriter(qw422016)
-//line views/layout/Menu.html:100
+//line views/layout/Menu.html:104
 }
 
-//line views/layout/Menu.html:100
+//line views/layout/Menu.html:104
 func MenuItem(i *menu.Item, path []string, breadcrumbs cmenu.Breadcrumbs, indent int, ps *cutil.PageState) string {
-//line views/layout/Menu.html:100
+//line views/layout/Menu.html:104
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/layout/Menu.html:100
+//line views/layout/Menu.html:104
 	WriteMenuItem(qb422016, i, path, breadcrumbs, indent, ps)
-//line views/layout/Menu.html:100
+//line views/layout/Menu.html:104
 	qs422016 := string(qb422016.B)
-//line views/layout/Menu.html:100
+//line views/layout/Menu.html:104
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/layout/Menu.html:100
+//line views/layout/Menu.html:104
 	return qs422016
-//line views/layout/Menu.html:100
+//line views/layout/Menu.html:104
 }

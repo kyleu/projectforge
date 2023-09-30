@@ -65,12 +65,16 @@
       {%= vutil.Indent(true, indent + 2) %}
       </label>
       {%= vutil.Indent(true, indent + 2) %}
-      <ul class="menu-content level-{%d len(path) %}">
-        {% for _, i := range i.Children %}
-          {%= MenuItem(i, path, breadcrumbs, indent + 2, ps) %}
-        {% endfor %}
+      <div class="menu-content level-{%d len(path) %}">
+        {%= vutil.Indent(true, indent + 3) %}
+        <ul>
+          {% for _, i := range i.Children %}
+            {%= MenuItem(i, path, breadcrumbs, indent + 3, ps) %}
+          {% endfor %}
+          {%= vutil.Indent(true, indent + 3) %}
+        </ul>
       {%= vutil.Indent(true, indent + 2) %}
-      </ul>
+      </div>
       {%= vutil.Indent(true, indent + 1) %}
     </li>
   {% else %}
