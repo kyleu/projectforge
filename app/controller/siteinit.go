@@ -3,6 +3,7 @@ package controller
 
 import (
 	"context"
+	"projectforge.dev/projectforge/app/lib/help"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
@@ -16,7 +17,8 @@ func initSite(as *app.State, logger util.Logger) {
 	if err != nil {
 		logger.Errorf("unable to initialize site: %+v", err)
 	}
-	as.Services = &app.Services{Modules: mod}
+	hlp := help.NewService(logger)
+	as.Services = &app.Services{Help: hlp, Modules: mod}
 }
 
 // Configure marketing site data for each request.

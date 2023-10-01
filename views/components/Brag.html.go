@@ -81,7 +81,7 @@ func StreamBragProject(qw422016 *qt422016.Writer) {
 	qw422016.N().S(`
   <div class="card">
     <h3>A project managed by Project Forge...</h3>
-    <ul class="mt">
+    <ul class="mts padded">
       <li>Is written in the Go programming language, using the latest versions and dependencies</li>
       <li>Has a beautiful and fast HTML UI, no JavaScript required</li>
       <li>Optimizes for speed and developer experience, sub-second turnaround times</li>

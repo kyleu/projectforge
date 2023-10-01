@@ -55,15 +55,6 @@
   grid-template-rows: 1fr;
 }
 
-.accordion input[type=checkbox] ~ label .expand {
-  display: block;
-}
-.accordion input[type=checkbox] ~ label .collapse {
-  display: none;
-}
-.accordion input[type=checkbox]:checked ~ label .expand {
-  display: none;
-}
-.accordion input[type=checkbox]:checked ~ label .collapse {
-  display: block;
+.accordion input[type=checkbox]:checked ~ label .expand-collapse {
+  transform: rotate(90deg);
 }

@@ -136,18 +136,6 @@
   grid-template-rows: 1fr;
 }
 
-.menu-container input[type=checkbox] + label .expand {
-  display: inline;
-}
-
-.menu-container input[type=checkbox] + label .collapse {
-  display: none;
-}
-
-.menu-container input[type=checkbox]:checked + label .expand {
-  display: none;
-}
-
-.menu-container input[type=checkbox]:checked + label .collapse {
-  display: inline;
+.menu-container input[type=checkbox]:checked + label .expand-collapse {
+  transform: rotate(90deg);
 }

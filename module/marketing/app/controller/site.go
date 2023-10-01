@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"strings"
+
 	"github.com/valyala/fasthttp"
 
 	"{{{ .Package }}}/app"
@@ -11,8 +13,12 @@ import (
 )
 
 func Site(rc *fasthttp.RequestCtx) {
-	ActSite("site", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		path := util.StringSplitAndTrim(string(rc.Request.URI().Path()), "/")
+	path := util.StringSplitAndTrim(string(rc.Request.URI().Path()), "/")
+	action := "site"
+	if len(path) > 0 {
+		action += "." + strings.Join(path, ".")
+	}
+	ActSite(action, rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		redir, page, bc, err := site.Handle(path, as, ps)
 		if err != nil {
 			return "", err

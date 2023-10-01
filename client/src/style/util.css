@@ -194,10 +194,17 @@
   white-space: pre;
 }
 
-.expand, .collapse {
+.expand-collapse {
   float: left;
   margin-top: 2px;
   margin-right: 4px;
+  transition: transform 200ms;
+}
+
+@media (prefers-reduced-motion) {
+  .expand-collapse {
+    transition: none;
+  }
 }
 
 .sort-title {
@@ -316,4 +323,11 @@
 
 .toggle input[type=checkbox]:checked ~ .x {
   display: block;
+}
+
+ul.padded > li {
+  padding-top: var(--padding-small);
+}
+ul.padded > li:first-child {
+  padding-top: 0;
 }

@@ -53,7 +53,9 @@ func loadEntries(logger util.Logger) (Entries, error) {
 		if err != nil {
 			return nil, errors.Wrapf(err, "unable to load help file [%s]", key)
 		}
-		ret = append(ret, ent)
+		if ent != nil && !strings.Contains(ent.Title, "!") {
+			ret = append(ret, ent)
+		}
 	}
 	return ret, nil
 }
