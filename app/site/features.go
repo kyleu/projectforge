@@ -17,7 +17,7 @@ import (
 
 func featuresMenu(mSvc *module.Service) menu.Items {
 	return lo.Map(mSvc.Modules(), func(m *module.Module, _ int) *menu.Item {
-		return &menu.Item{Key: m.Key, Title: m.Title(), Description: m.Description, Icon: m.Icon, Route: "/features/" + m.Key}
+		return &menu.Item{Key: m.Key, Title: m.Title(), Description: m.Description, Icon: m.IconSafe(), Route: "/features/" + m.Key}
 	})
 }
 
