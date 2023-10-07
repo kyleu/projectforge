@@ -383,6 +383,10 @@
           "description": "if set, signs the results with PGP",
           "type": "boolean"
         },
+        "safeMode": {
+          "description": "if set, limits dangerous activities",
+          "type": "boolean"
+        },
         "simple": {
           "description": "if set, skips extra files like debug images",
           "type": "boolean"

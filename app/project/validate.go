@@ -17,7 +17,7 @@ type ValidationError struct {
 	Message string `json:"message"`
 }
 
-func Validate(p *Project, fs filesystem.FileLoader, moduleDeps map[string][]string) []*ValidationError {
+func Validate(p *Project, fs filesystem.FileLoader, moduleDeps map[string][]string, dangerous []string) []*ValidationError {
 	var ret []*ValidationError
 
 	e := func(code string, msg string, args ...any) {
@@ -30,7 +30,7 @@ func Validate(p *Project, fs filesystem.FileLoader, moduleDeps map[string][]stri
 	validateBasic(p, e)
 	validateFilesystem(p, e, fs)
 	validateModuleDeps(p.Modules, moduleDeps, e)
-	validateModuleConfig(p, e)
+	validateModuleConfig(p, e, dangerous)
 	validateInfo(p, e)
 	validateBuild(p, e)
 	validateExport(p, e)
@@ -69,7 +69,7 @@ func validateModuleDeps(modules []string, deps map[string][]string, e validation
 	})
 }
 
-func validateModuleConfig(p *Project, e validationAddErrFn) {
+func validateModuleConfig(p *Project, e validationAddErrFn, dangerous []string) {
 	if p.HasModule("desktop") && (!p.Build.Desktop) {
 		e("desktop-disabled", "desktop module is enabled, but desktop build isn't set")
 	}
@@ -78,6 +78,13 @@ func validateModuleConfig(p *Project, e validationAddErrFn) {
 	}
 	if p.HasModule("android") && (!p.Build.Android) {
 		e("android-disabled", "Android module is enabled, but Android build isn't set")
+	}
+	if p.Build.SafeMode {
+		lo.ForEach(dangerous, func(m string, _ int) {
+			if p.HasModule(m) {
+				e("dangerous-module", "Safe mode is enabled for this project, but dangerous module [%s] is enabled", m)
+			}
+		})
 	}
 }
 

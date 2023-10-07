@@ -6,6 +6,7 @@
   "authorEmail": "kyle@kyleu.com",
   "license": "CC0",
   "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/process",
+  "dangerous": true,
   "requires": ["websocket"],
   "priority": 20
 }

@@ -35,7 +35,7 @@ func onAudit(ctx context.Context, pm *PrjAndMods) *Result {
 		return errorResult(err, TypeAudit, pm.Cfg, pm.Logger)
 	}
 	fs, _ := pm.PSvc.GetFilesystem(pm.Prj)
-	errs := project.Validate(pm.Prj, fs, pm.MSvc.Deps())
+	errs := project.Validate(pm.Prj, fs, pm.MSvc.Deps(), pm.MSvc.Dangerous())
 	lo.ForEach(errs, func(err *project.ValidationError, _ int) {
 		ret = ret.WithError(errors.Errorf("%s: %s", err.Code, err.Message))
 	})

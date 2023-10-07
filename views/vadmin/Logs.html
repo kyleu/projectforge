@@ -34,7 +34,17 @@
       <tbody>
         {%- for _, l := range logs -%}
         <tr>
-          <td>{%s l.Level.String() %}</td>
+          <td>
+            {%- code lv := l.Level.String() -%}
+            {%- switch lv -%}
+            {%- case "debug", "trace" -%}
+            <em>debug</em>
+            {%- case "error", "fatal" -%}
+            <div class="error">error</div>
+            {%- default -%}
+            {%s lv %}
+            {%- endswitch -%}
+          </td>
           <td>{%s l.Message %}</td>
           <td>{%s util.TimeRelative(&l.Time) %}</td>
         </tr>

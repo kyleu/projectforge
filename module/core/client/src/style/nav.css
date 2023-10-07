@@ -139,6 +139,11 @@ input[type=checkbox]:checked ~ .menu-toggle > .diagonal.part-2 {
 #navbar .profile {
   margin: 12px;
   color: var(--color-nav-foreground);
+}
+
+#navbar .breadcrumb-icon {
+  padding-top: 10px;
+  padding-right: var(--padding-small);
 }{{{ if .HasModule "help" }}}
 
 #navbar .help-link {

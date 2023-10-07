@@ -25,6 +25,7 @@
     {%- if util.AppURL != "" -%}
     <p><a target="_blank" rel="noopener noreferrer" href="{%s= util.AppURL %}">{%s= util.AppURL %}</a></p>
     {%- endif -%}
+    <em>This page is for the settings of the application. To change your user preferences, such as themes, <a href="/profile">edit your profile</a>.</em>
   </div>{{{ if.HasModule "audit" }}}
 
   <div class="card">
@@ -65,10 +66,10 @@
   <div class="card">
     <h3>{%= components.SVGRefIcon(`cog`, ps) %}App Profiling</h3>
     {%= settingsLink("/admin/memusage", "cog", "Memory Usage", "Detailed memory usage statistics", ps) %}
-    {%= settingsLink("/admin/gc", "cog", "Collect Garbage", "Runs the Go garbage collector", ps) %}
+    {%= settingsLink("/admin/gc", "cog", "Collect Garbage", "Runs the Go garbage collector", ps) %}{{{ if .DangerousOK }}}
     {%= settingsLink("/admin/heap", "cog", "Write Memory Dump", "Writes a memory dump to <em>./tmp/mem.pprof</em>, use script to view", ps) %}
     {%= settingsLink("/admin/cpu/start", "cog", "Start CPU Profile", "Profiles the CPU using <em>./tmp/cpu.pprof</em>, use script to view", ps) %}
-    {%= settingsLink("/admin/cpu/stop", "cog", "Stop CPU Profile", "Stops the active CPU profile", ps) %}
+    {%= settingsLink("/admin/cpu/stop", "cog", "Stop CPU Profile", "Stops the active CPU profile", ps) %}{{{ end }}}
     <div class="clear"></div>
   </div>{{{ if.HasAccount }}}
 

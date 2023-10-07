@@ -36,7 +36,7 @@ func DoctorRunAll(rc *fasthttp.RequestCtx) {
 			return controller.Render(rc, as, page, ps, "Welcome")
 		}
 		prjs := as.Services.Projects.Projects()
-		checks.CurrentModuleDeps = as.Services.Modules.Deps()
+		checks.SetModules(as.Services.Modules.Deps(), as.Services.Modules.Dangerous())
 		ret := checks.CheckAll(ps.Context, prjs.AllModules(), ps.Logger)
 		ps.Title = "Doctor Results"
 		ps.Data = ret
@@ -51,7 +51,7 @@ func DoctorRun(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		c := checks.GetCheck(key)
-		checks.CurrentModuleDeps = as.Services.Modules.Deps()
+		checks.SetModules(as.Services.Modules.Deps(), as.Services.Modules.Dangerous())
 		ret := c.Check(ps.Context, ps.Logger)
 		ps.Title = c.Title + " Result"
 		ps.Data = ret
@@ -71,7 +71,7 @@ func DoctorSolve(rc *fasthttp.RequestCtx) {
 		}
 
 		c := checks.GetCheck(key)
-		checks.CurrentModuleDeps = as.Services.Modules.Deps()
+		checks.SetModules(as.Services.Modules.Deps(), as.Services.Modules.Dangerous())
 		ret := c.Check(ps.Context, ps.Logger)
 		if len(ret.Solutions) == 0 {
 			ps.Title = fmt.Sprintf("No solution available for [%s]", c.Title)

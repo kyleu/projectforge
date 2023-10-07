@@ -21,6 +21,7 @@ type Module struct {
 	Sourcecode  string                `json:"sourcecode,omitempty"`
 	ConfigVars  util.KeyTypeDescs     `json:"configVars,omitempty"`
 	PortOffsets map[string]int        `json:"portOffsets,omitempty"`
+	Dangerous   bool                  `json:"dangerous,omitempty"`
 	Requires    []string              `json:"requires,omitempty"`
 	Priority    int                   `json:"priority,omitempty"`
 	Files       filesystem.FileLoader `json:"-"`

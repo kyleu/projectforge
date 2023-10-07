@@ -55,81 +55,90 @@ func StreamSummary(qw422016 *qt422016.Writer, mod *module.Module, args util.Valu
 	qw422016.E().S(mod.Title())
 //line views/vmodule/Summary.html:20
 	qw422016.N().S(`</h3>
-    <div class="mt">
 `)
-//line views/vmodule/Summary.html:22
+//line views/vmodule/Summary.html:21
+	if mod.Dangerous {
+//line views/vmodule/Summary.html:21
+		qw422016.N().S(`    <em title="this module allows admins to perform actions that modify the server">dangerous module</em>
+`)
+//line views/vmodule/Summary.html:23
+	}
+//line views/vmodule/Summary.html:23
+	qw422016.N().S(`    <div class="mt">
+`)
+//line views/vmodule/Summary.html:25
 	if len(path) == 0 {
-//line views/vmodule/Summary.html:22
+//line views/vmodule/Summary.html:25
 		qw422016.N().S(`      <a href="/m/`)
-//line views/vmodule/Summary.html:23
+//line views/vmodule/Summary.html:26
 		qw422016.E().S(mod.Key)
-//line views/vmodule/Summary.html:23
+//line views/vmodule/Summary.html:26
 		qw422016.N().S(`/fs"><button>Filesystem</button></a>
 `)
-//line views/vmodule/Summary.html:24
+//line views/vmodule/Summary.html:27
 	} else {
-//line views/vmodule/Summary.html:25
+//line views/vmodule/Summary.html:28
 		var ctx []string
 
-//line views/vmodule/Summary.html:26
+//line views/vmodule/Summary.html:29
 		for _, pth := range path {
-//line views/vmodule/Summary.html:27
+//line views/vmodule/Summary.html:30
 			ctx = append(ctx, pth)
 
-//line views/vmodule/Summary.html:27
+//line views/vmodule/Summary.html:30
 			qw422016.N().S(`      <a href="/m/`)
-//line views/vmodule/Summary.html:28
+//line views/vmodule/Summary.html:31
 			qw422016.E().S(mod.Key)
-//line views/vmodule/Summary.html:28
+//line views/vmodule/Summary.html:31
 			qw422016.N().S(`/fs/`)
-//line views/vmodule/Summary.html:28
+//line views/vmodule/Summary.html:31
 			qw422016.E().S(strings.Join(ctx, `/`))
-//line views/vmodule/Summary.html:28
+//line views/vmodule/Summary.html:31
 			qw422016.N().S(`"><button>`)
-//line views/vmodule/Summary.html:28
+//line views/vmodule/Summary.html:31
 			qw422016.E().S(pth)
-//line views/vmodule/Summary.html:28
+//line views/vmodule/Summary.html:31
 			qw422016.N().S(`}</button></a>
 `)
-//line views/vmodule/Summary.html:29
+//line views/vmodule/Summary.html:32
 		}
-//line views/vmodule/Summary.html:30
+//line views/vmodule/Summary.html:33
 	}
-//line views/vmodule/Summary.html:30
+//line views/vmodule/Summary.html:33
 	qw422016.N().S(`      <a href="#modal-module"><button type="button">JSON</button></a>
     </div>
   </div>
   `)
-//line views/vmodule/Summary.html:34
+//line views/vmodule/Summary.html:37
 	components.StreamJSONModal(qw422016, "module", "Module JSON", mod, 1)
-//line views/vmodule/Summary.html:34
+//line views/vmodule/Summary.html:37
 	qw422016.N().S(`
 `)
-//line views/vmodule/Summary.html:35
+//line views/vmodule/Summary.html:38
 }
 
-//line views/vmodule/Summary.html:35
+//line views/vmodule/Summary.html:38
 func WriteSummary(qq422016 qtio422016.Writer, mod *module.Module, args util.ValueMap, ps *cutil.PageState, path ...string) {
-//line views/vmodule/Summary.html:35
+//line views/vmodule/Summary.html:38
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vmodule/Summary.html:35
+//line views/vmodule/Summary.html:38
 	StreamSummary(qw422016, mod, args, ps, path...)
-//line views/vmodule/Summary.html:35
+//line views/vmodule/Summary.html:38
 	qt422016.ReleaseWriter(qw422016)
-//line views/vmodule/Summary.html:35
+//line views/vmodule/Summary.html:38
 }
 
-//line views/vmodule/Summary.html:35
+//line views/vmodule/Summary.html:38
 func Summary(mod *module.Module, args util.ValueMap, ps *cutil.PageState, path ...string) string {
-//line views/vmodule/Summary.html:35
+//line views/vmodule/Summary.html:38
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vmodule/Summary.html:35
+//line views/vmodule/Summary.html:38
 	WriteSummary(qb422016, mod, args, ps, path...)
-//line views/vmodule/Summary.html:35
+//line views/vmodule/Summary.html:38
 	qs422016 := string(qb422016.B)
-//line views/vmodule/Summary.html:35
+//line views/vmodule/Summary.html:38
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vmodule/Summary.html:35
+//line views/vmodule/Summary.html:38
 	return qs422016
-//line views/vmodule/Summary.html:35
+//line views/vmodule/Summary.html:38
 }

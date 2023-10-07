@@ -2,8 +2,8 @@ package clib
 
 import (
 	"fmt"
-	"runtime"
-	"runtime/pprof"
+	"runtime"{{{ if .DangerousOK }}}
+	"runtime/pprof"{{{ end }}}
 	"strings"
 
 	"github.com/pkg/errors"
@@ -37,7 +37,7 @@ func Admin(rc *fasthttp.RequestCtx) {
 		case "server":
 			info := util.DebugGetInfo(as.BuildInfo.Version, as.Started)
 			ps.Data = info
-			return controller.Render(rc, as, &vadmin.ServerInfo{Info: info}, ps, "admin", "App Information")
+			return controller.Render(rc, as, &vadmin.ServerInfo{Info: info}, ps, "admin", "App Information"){{{ if .DangerousOK }}}
 		case "cpu":
 			switch path[1] {
 			case "start":
@@ -51,18 +51,18 @@ func Admin(rc *fasthttp.RequestCtx) {
 				return controller.FlashAndRedir(true, "stopped CPU profile", "/admin", rc, ps)
 			default:
 				return "", errors.Errorf("unhandled CPU profile action [%s]", path[1])
-			}
+			}{{{ end }}}
 		case "gc":
 			timer := util.TimerStart()
 			runtime.GC()
 			msg := fmt.Sprintf("ran garbage collection in [%s]", timer.EndString())
-			return controller.FlashAndRedir(true, msg, "/admin", rc, ps)
+			return controller.FlashAndRedir(true, msg, "/admin", rc, ps){{{ if .DangerousOK }}}
 		case "heap":
 			err := util.DebugTakeHeapProfile()
 			if err != nil {
 				return "", err
 			}
-			return controller.FlashAndRedir(true, "wrote heap profile", "/admin", rc, ps)
+			return controller.FlashAndRedir(true, "wrote heap profile", "/admin", rc, ps){{{ end }}}
 		case "logs":
 			ps.Title = "Recent Logs"
 			ps.Data = log.RecentLogs

@@ -21,7 +21,7 @@ func (i *Item) AddChild(child *Item) {
 
 func (i *Item) Desc() string {
 	if i.Description != "" {
-		return i.Title + ": " + i.Description
+		return i.Description
 	}
 	return i.Title
 }

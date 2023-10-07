@@ -11,7 +11,15 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-var CurrentModuleDeps map[string][]string
+var (
+	currentModuleDeps       map[string][]string
+	currentDangerousModules []string
+)
+
+func SetModules(deps map[string][]string, dangerous []string) {
+	currentModuleDeps = deps
+	currentDangerousModules = dangerous
+}
 
 var Project = &doctor.Check{
 	Key:     "project",
@@ -29,7 +37,7 @@ func checkProject(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Re
 	if len(r.Errors) > 0 {
 		return r
 	}
-	lo.ForEach(project.Validate(p, fs, CurrentModuleDeps), func(err *project.ValidationError, _ int) {
+	lo.ForEach(project.Validate(p, fs, currentModuleDeps, currentDangerousModules), func(err *project.ValidationError, _ int) {
 		r = r.WithError(doctor.NewError("config", "[%s]: %s", err.Code, err.Message))
 	})
 	return r

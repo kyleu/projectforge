@@ -6,6 +6,7 @@
   "authorEmail": "kyle@kyleu.com",
   "license": "CC0",
   "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/audit",
+  "dangerous": true,
   "requires": ["database"],
   "priority": 20
 }

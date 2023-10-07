@@ -142,6 +142,11 @@ input[type=checkbox]:checked ~ .menu-toggle > .diagonal.part-2 {
   color: var(--color-nav-foreground);
 }
 
+#navbar .breadcrumb-icon {
+  padding-top: 10px;
+  padding-right: var(--padding-small);
+}
+
 #navbar .help-link {
   margin: 12px 0 0 12px;
   color: var(--color-nav-foreground);

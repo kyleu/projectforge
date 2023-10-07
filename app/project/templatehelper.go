@@ -38,6 +38,10 @@ func (t *TemplateContext) HasDatabaseModule() bool {
 	return t.HasModules("migration", "readonlydb")
 }
 
+func (t *TemplateContext) DangerousOK() bool {
+	return !t.Build.SafeMode
+}
+
 func (t *TemplateContext) ModuleMarkdown() string {
 	ret := make([]string, 0, len(t.Modules))
 	lo.ForEach(t.Modules, func(m string, _ int) {

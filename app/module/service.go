@@ -120,6 +120,12 @@ func (s *Service) Deps() map[string][]string {
 	})
 }
 
+func (s *Service) Dangerous() []string {
+	return lo.FilterMap(s.Modules(), func(m *Module, _ int) (string, bool) {
+		return m.Key, m.Dangerous
+	})
+}
+
 func (s *Service) Register(ctx context.Context, root string, key string, path string, u string, logger util.Logger) ([]string, error) {
 	var ret []string
 	_, added, err := s.AddIfNeeded(ctx, key, filepath.Join(root, path), u, logger)

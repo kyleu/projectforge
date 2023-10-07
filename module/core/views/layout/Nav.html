@@ -2,9 +2,7 @@
   "strings"
 
   "{{{ .Package }}}/app"
-  "{{{ .Package }}}/app/controller/cmenu"
   "{{{ .Package }}}/app/controller/cutil"
-  "{{{ .Package }}}/app/lib/menu"
   "{{{ .Package }}}/views/components"
   "{{{ .Package }}}/views/vutil"
 ) %}
@@ -13,7 +11,7 @@
 <nav id="navbar">
   <a class="logo" href="{%s ps.RootPath %}" title="{%s ps.RootTitle %} {%s as.BuildInfo.String() %}">{%= components.SVGRef(ps.RootIcon, 32, 32, ``, ps) %}</a>
   <div class="breadcrumbs">
-    <a class="link" href="{%s ps.RootPath %}">{%s ps.RootTitle %}</a>{%= NavItems(ps.Menu, ps.Breadcrumbs) %}
+    <a class="link" href="{%s ps.RootPath %}">{%s ps.RootTitle %}</a>{%= NavItems(ps) %}
   </div>{{{ if .HasModule "search" }}}
   {%- if ps.SearchPath != "-" -%}
   <form action="{%s ps.SearchPath %}" class="search" title="search">
@@ -36,10 +34,10 @@
   {%- endif -%}
 </nav>{% endfunc %}
 
-{% func NavItems(m menu.Items, breadcrumbs cmenu.Breadcrumbs) %}{% stripspace %}
-  {% for idx, bc := range breadcrumbs %}
+{% func NavItems(ps *cutil.PageState) %}{% stripspace %}
+  {% for idx, bc := range ps.Breadcrumbs %}
     {% code
-      i := m.GetByPath(breadcrumbs[:idx + 1])
+      i := ps.Menu.GetByPath(ps.Breadcrumbs[:idx + 1])
     %}
     {%= vutil.Indent(true, 2) %}
     <span class="separator">/</span>
@@ -53,9 +51,9 @@
           bc = bc[:bci]
         }
       %}
-      <a class="link" href="{%s bcLink %}">{%s bc %}</a>
+      <a class="link" href="{%s bcLink %}">{%= components.SVGRef("play", 28, 28, "breadcrumb-icon", ps) %} {%s bc %}</a>
     {% else %}
-      <a class="link" href="{%s i.Route %}">{%s i.Title %}</a>
+      <a class="link" href="{%s i.Route %}">{%= components.SVGRef(i.Icon, 28, 28, "breadcrumb-icon", ps) %} {%s i.Title %}</a>
     {% endif %}
   {% endfor %}
 {% endstripspace %}{% endfunc %}

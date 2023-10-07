@@ -97,55 +97,80 @@ func streamlogTable(qw422016 *qt422016.Writer, logs []*zapcore.Entry) {
 	for _, l := range logs {
 //line views/vadmin/Logs.html:35
 		qw422016.N().S(`        <tr>
-          <td>`)
-//line views/vadmin/Logs.html:37
-		qw422016.E().S(l.Level.String())
-//line views/vadmin/Logs.html:37
-		qw422016.N().S(`</td>
-          <td>`)
+          <td>
+`)
 //line views/vadmin/Logs.html:38
+		lv := l.Level.String()
+
+//line views/vadmin/Logs.html:39
+		switch lv {
+//line views/vadmin/Logs.html:40
+		case "debug", "trace":
+//line views/vadmin/Logs.html:40
+			qw422016.N().S(`            <em>debug</em>
+`)
+//line views/vadmin/Logs.html:42
+		case "error", "fatal":
+//line views/vadmin/Logs.html:42
+			qw422016.N().S(`            <div class="error">error</div>
+`)
+//line views/vadmin/Logs.html:44
+		default:
+//line views/vadmin/Logs.html:44
+			qw422016.N().S(`            `)
+//line views/vadmin/Logs.html:45
+			qw422016.E().S(lv)
+//line views/vadmin/Logs.html:45
+			qw422016.N().S(`
+`)
+//line views/vadmin/Logs.html:46
+		}
+//line views/vadmin/Logs.html:46
+		qw422016.N().S(`          </td>
+          <td>`)
+//line views/vadmin/Logs.html:48
 		qw422016.E().S(l.Message)
-//line views/vadmin/Logs.html:38
+//line views/vadmin/Logs.html:48
 		qw422016.N().S(`</td>
           <td>`)
-//line views/vadmin/Logs.html:39
+//line views/vadmin/Logs.html:49
 		qw422016.E().S(util.TimeRelative(&l.Time))
-//line views/vadmin/Logs.html:39
+//line views/vadmin/Logs.html:49
 		qw422016.N().S(`</td>
         </tr>
 `)
-//line views/vadmin/Logs.html:41
+//line views/vadmin/Logs.html:51
 	}
-//line views/vadmin/Logs.html:41
+//line views/vadmin/Logs.html:51
 	qw422016.N().S(`      </tbody>
     </table>
   </div>
 `)
-//line views/vadmin/Logs.html:45
+//line views/vadmin/Logs.html:55
 }
 
-//line views/vadmin/Logs.html:45
+//line views/vadmin/Logs.html:55
 func writelogTable(qq422016 qtio422016.Writer, logs []*zapcore.Entry) {
-//line views/vadmin/Logs.html:45
+//line views/vadmin/Logs.html:55
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vadmin/Logs.html:45
+//line views/vadmin/Logs.html:55
 	streamlogTable(qw422016, logs)
-//line views/vadmin/Logs.html:45
+//line views/vadmin/Logs.html:55
 	qt422016.ReleaseWriter(qw422016)
-//line views/vadmin/Logs.html:45
+//line views/vadmin/Logs.html:55
 }
 
-//line views/vadmin/Logs.html:45
+//line views/vadmin/Logs.html:55
 func logTable(logs []*zapcore.Entry) string {
-//line views/vadmin/Logs.html:45
+//line views/vadmin/Logs.html:55
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vadmin/Logs.html:45
+//line views/vadmin/Logs.html:55
 	writelogTable(qb422016, logs)
-//line views/vadmin/Logs.html:45
+//line views/vadmin/Logs.html:55
 	qs422016 := string(qb422016.B)
-//line views/vadmin/Logs.html:45
+//line views/vadmin/Logs.html:55
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vadmin/Logs.html:45
+//line views/vadmin/Logs.html:55
 	return qs422016
-//line views/vadmin/Logs.html:45
+//line views/vadmin/Logs.html:55
 }
