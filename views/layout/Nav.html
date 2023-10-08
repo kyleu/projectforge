@@ -4,13 +4,14 @@
 
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/vutil"
 ) %}
 
 {% func Nav(as *app.State, ps *cutil.PageState) %}
 <nav id="navbar">
-  <a class="logo" href="{%s ps.RootPath %}" title="{%s ps.RootTitle %} {%s as.BuildInfo.String() %}">{%= components.SVGRef(ps.RootIcon, 32, 32, ``, ps) %}</a>
+  <a class="logo" href="{%s ps.RootPath %}" title="{%s util.AppName %} {%s as.BuildInfo.String() %}">{%= components.SVGRef(ps.RootIcon, 32, 32, ``, ps) %}</a>
   <div class="breadcrumbs">
     <a class="link" href="{%s ps.RootPath %}">{%s ps.RootTitle %}</a>{%= NavItems(ps) %}
   </div>
@@ -48,7 +49,7 @@
           bc = bc[:bci]
         }
       %}
-      <a class="link" href="{%s bcLink %}">{%= components.SVGRef("play", 28, 28, "breadcrumb-icon", ps) %} {%s bc %}</a>
+      <a class="link" href="{%s bcLink %}">{%s bc %}</a>
     {% else %}
       <a class="link" href="{%s i.Route %}">{%= components.SVGRef(i.Icon, 28, 28, "breadcrumb-icon", ps) %} {%s i.Title %}</a>
     {% endif %}
