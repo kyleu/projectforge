@@ -64,59 +64,57 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vmodule/List.html:23
 	for _, mod := range p.Modules {
 //line views/vmodule/List.html:23
-		qw422016.N().S(`  <div class="card">
-    <div class="left mrs"><a href="/m/`)
-//line views/vmodule/List.html:25
+		qw422016.N().S(`  <a class="link-section" href="/m/`)
+//line views/vmodule/List.html:24
 		qw422016.E().S(mod.Key)
-//line views/vmodule/List.html:25
-		qw422016.N().S(`">`)
-//line views/vmodule/List.html:25
+//line views/vmodule/List.html:24
+		qw422016.N().S(`">
+    <div class="card">
+      <div class="left mrs">`)
+//line views/vmodule/List.html:26
 		components.StreamSVGRef(qw422016, mod.IconSafe(), 40, 40, "", ps)
-//line views/vmodule/List.html:25
-		qw422016.N().S(`</a></div>
-    <a href="/m/`)
 //line views/vmodule/List.html:26
-		qw422016.E().S(mod.Key)
-//line views/vmodule/List.html:26
-		qw422016.N().S(`"><strong>`)
-//line views/vmodule/List.html:26
+		qw422016.N().S(`</div>
+      <strong class="highlight">`)
+//line views/vmodule/List.html:27
 		qw422016.E().S(mod.Title())
-//line views/vmodule/List.html:26
-		qw422016.N().S(`</strong></a>
-    <div><em>`)
 //line views/vmodule/List.html:27
+		qw422016.N().S(`</strong>
+      <div><em>`)
+//line views/vmodule/List.html:28
 		qw422016.E().S(mod.Description)
-//line views/vmodule/List.html:27
+//line views/vmodule/List.html:28
 		qw422016.N().S(`</em></div>
-  </div>
+    </div>
+  </a>
 `)
-//line views/vmodule/List.html:29
+//line views/vmodule/List.html:31
 	}
-//line views/vmodule/List.html:30
+//line views/vmodule/List.html:32
 }
 
-//line views/vmodule/List.html:30
+//line views/vmodule/List.html:32
 func (p *List) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vmodule/List.html:30
+//line views/vmodule/List.html:32
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vmodule/List.html:30
+//line views/vmodule/List.html:32
 	p.StreamBody(qw422016, as, ps)
-//line views/vmodule/List.html:30
+//line views/vmodule/List.html:32
 	qt422016.ReleaseWriter(qw422016)
-//line views/vmodule/List.html:30
+//line views/vmodule/List.html:32
 }
 
-//line views/vmodule/List.html:30
+//line views/vmodule/List.html:32
 func (p *List) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vmodule/List.html:30
+//line views/vmodule/List.html:32
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vmodule/List.html:30
+//line views/vmodule/List.html:32
 	p.WriteBody(qb422016, as, ps)
-//line views/vmodule/List.html:30
+//line views/vmodule/List.html:32
 	qs422016 := string(qb422016.B)
-//line views/vmodule/List.html:30
+//line views/vmodule/List.html:32
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vmodule/List.html:30
+//line views/vmodule/List.html:32
 	return qs422016
-//line views/vmodule/List.html:30
+//line views/vmodule/List.html:32
 }

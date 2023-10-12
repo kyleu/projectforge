@@ -4,7 +4,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/pkg/errors"
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
@@ -21,12 +20,6 @@ func (s *Service) add(path string, parent *Project) (*Project, error) {
 	}
 	if parent != nil {
 		p.Parent = parent.Key
-	}
-	s.cacheLock.Lock()
-	curr, ok := s.cache[p.Key]
-	s.cacheLock.Unlock()
-	if ok {
-		return nil, errors.Errorf("can't overwrite cache entry for project [%s] located at [%s]", curr.Key, curr.Path)
 	}
 	s.cacheLock.Lock()
 	s.cache[p.Key] = p
