@@ -1,0 +1,9 @@
+{
+  "name": "Playwright",
+  "icon": "playwright",
+  "description": "Adds a project for testing the UI using playwright.dev",
+  "authorName": "Kyle U",
+  "authorEmail": "kyle@kyleu.com",
+  "license": "CC0",
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/playwright"
+}
