@@ -8,7 +8,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   use: {
-    baseURL: process.env.TEST_URL || 'http://localhost:{{{ .Port }}}',
+    baseURL: process.env.TEST_URL || 'http://127.0.0.1:{{{ .Port }}}',
     trace: 'on-first-retry',
   },
   projects: [
@@ -22,9 +22,10 @@ export default defineConfig({
   ],
   webServer: {
     command: "../../build/release/{{{ .Exec }}}",
-    url: "https://localhost:{{{ .Port }}}",
+    url: "http://127.0.0.1:{{{ .Port }}}",
     reuseExistingServer: !process.env.CI,
     stdout: 'pipe',
     stderr: 'pipe',
+    timeout: 5000
   },
 });

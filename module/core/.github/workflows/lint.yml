@@ -7,7 +7,9 @@ on:
       - main
       - master
   pull_request:
-    branches: [ main, master ]
+    branches:
+      - main
+      - master
 permissions:
   contents: read
 jobs:
