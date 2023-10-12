@@ -325,6 +325,19 @@
   display: block;
 }
 
+.btn-icon {
+  padding: 4px 4px 0 4px;
+  margin: 0;
+}
+
+.link-section:hover {
+  text-decoration: none;
+}
+
+.link-section:hover .highlight {
+  text-decoration: underline;
+}
+
 ul.padded > li {
   padding-top: var(--padding-small);
 }

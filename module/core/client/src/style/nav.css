@@ -142,7 +142,7 @@ input[type=checkbox]:checked ~ .menu-toggle > .diagonal.part-2 {
 }
 
 #navbar .breadcrumb-icon {
-  padding-top: 10px;
+  padding-top: 9px;
   padding-right: var(--padding-small);
 }{{{ if .HasModule "help" }}}
 
