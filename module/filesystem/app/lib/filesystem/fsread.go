@@ -1,6 +1,9 @@
 package filesystem
 
-import "github.com/pkg/errors"
+import (
+	"github.com/pkg/errors"
+	"io"
+)
 
 func (f *FileSystem) PeekFile(path string, maxSize int) ([]byte, error) {
 	file, err := f.f.Open(f.getPath(path))
@@ -58,4 +61,9 @@ func (f *FileSystem) ReadFile(path string) ([]byte, error) {
 		return nil, errors.Wrapf(err, "file [%s] size [%d] does not match expected size [%d]", path, size, stat.Size())
 	}
 	return b, nil
+}
+
+func (f *FileSystem) FileReader(fn string) (io.Reader, error) {
+	p := f.getPath(fn)
+	return f.f.Open(p)
 }

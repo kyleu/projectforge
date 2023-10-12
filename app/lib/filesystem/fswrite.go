@@ -2,6 +2,8 @@
 package filesystem
 
 import (
+	"io"
+	"os"
 	"path/filepath"
 
 	"github.com/pkg/errors"
@@ -39,4 +41,15 @@ func (f *FileSystem) WriteFile(path string, content []byte, mode FileMode, overw
 		return errors.Wrapf(err, "unable to write content to file [%s]", p)
 	}
 	return nil
+}
+
+func (f *FileSystem) FileWriter(fn string, createIfNeeded bool) (io.Writer, error) {
+	p := f.getPath(fn)
+	if createIfNeeded && !f.Exists(p) {
+		_, err := f.f.Create(p)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return f.f.OpenFile(p, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
 }

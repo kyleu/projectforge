@@ -1,7 +1,11 @@
 // Package filesystem - Content managed by Project Forge, see [projectforge.md] for details.
 package filesystem
 
-import "projectforge.dev/projectforge/app/util"
+import (
+	"io"
+
+	"projectforge.dev/projectforge/app/util"
+)
 
 type FileLoader interface {
 	Root() string
@@ -9,8 +13,10 @@ type FileLoader interface {
 	PeekFile(path string, maxSize int) ([]byte, error)
 	Size(path string) int
 	ReadFile(path string) ([]byte, error)
+	FileReader(fn string) (io.Reader, error)
 	CreateDirectory(path string) error
 	WriteFile(path string, content []byte, mode FileMode, overwrite bool) error
+	FileWriter(fn string, createIfNeeded bool) (io.Writer, error)
 	CopyFile(src string, tgt string) error
 	CopyRecursive(src string, tgt string, ignore []string, logger util.Logger) error
 	Move(src string, tgt string) error
