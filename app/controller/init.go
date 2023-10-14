@@ -3,6 +3,7 @@ package controller
 import (
 	"context"
 	"strings"
+	"sync"
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
@@ -33,7 +34,11 @@ func initAppRequest(as *app.State, ps *cutil.PageState) error {
 	return nil
 }
 
+var initProjectsMu = sync.Mutex{}
+
 func initProjects(ctx context.Context, as *app.State, logger util.Logger) error {
+	initProjectsMu.Lock()
+	defer initProjectsMu.Unlock()
 	prjs, err := as.Services.Projects.Refresh(logger)
 	if err != nil {
 		return errors.Wrap(err, "can't load projects")

@@ -27,9 +27,11 @@ func AppRoutes(as *app.State, logger util.Logger) fasthttp.RequestHandler {
 	themeRoutes(r)
 
 	// $PF_SECTION_START(routes)$
-	r.ANY("/testbed", controller.Testbed)
 	moduleRoutes(r)
 	projectRoutes(r)
+
+	r.GET("/testbed", controller.Testbed)
+	r.POST("/testbed", controller.Testbed)
 	// $PF_SECTION_END(routes)$
 
 	r.GET("/docs", clib.Docs)

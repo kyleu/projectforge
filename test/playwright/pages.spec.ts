@@ -1,3 +1,4 @@
+// Content managed by Project Forge, see [projectforge.md] for details.
 import {test, expect, Page, TestInfo} from "@playwright/test";
 
 const pageTest = async(page: Page, testInfo: TestInfo, key: string, path: string) => {
