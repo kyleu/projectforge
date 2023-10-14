@@ -31,7 +31,7 @@ jobs:
 
       - name: "Install dependencies"
         working-directory: "./test/playwright"
-        run: "npm ci"
+        run: "npm install"
 
       - name: "Install Playwright Browsers"
         working-directory: "./test/playwright"
