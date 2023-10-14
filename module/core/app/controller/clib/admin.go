@@ -37,7 +37,7 @@ func Admin(rc *fasthttp.RequestCtx) {
 		case "server":
 			info := util.DebugGetInfo(as.BuildInfo.Version, as.Started)
 			ps.Data = info
-			return controller.Render(rc, as, &vadmin.ServerInfo{Info: info}, ps, "admin", "App Information"){{{ if .DangerousOK }}}
+			return controller.Render(rc, as, &vadmin.ServerInfo{Info: info}, ps, "admin", "App Information**cog"){{{ if .DangerousOK }}}
 		case "cpu":
 			switch path[1] {
 			case "start":
@@ -66,41 +66,41 @@ func Admin(rc *fasthttp.RequestCtx) {
 		case "logs":
 			ps.Title = "Recent Logs"
 			ps.Data = log.RecentLogs
-			return controller.Render(rc, as, &vadmin.Logs{Logs: log.RecentLogs}, ps, "admin", "Recent Logs")
+			return controller.Render(rc, as, &vadmin.Logs{Logs: log.RecentLogs}, ps, "admin", "Recent Logs**folder")
 		case "memusage":
 			x := util.DebugMemStats()
 			ps.Data = x
-			return controller.Render(rc, as, &vadmin.MemUsage{Mem: x}, ps, "admin", "Memory Usage"){{{ if .HasModule "migration" }}}
+			return controller.Render(rc, as, &vadmin.MemUsage{Mem: x}, ps, "admin", "Memory Usage**desktop"){{{ if .HasModule "migration" }}}
 		case "migrations":
 			ms := migrate.GetMigrations()
 			am := migrate.ListMigrations(ps.Context, as.DB, nil, nil, ps.Logger)
 			ps.Data = util.ValueMap{"available": ms, "applied": am}
-			return controller.Render(rc, as, &vadmin.Migrations{Available: ms, Applied: am}, ps, "admin", "Migrations"){{{ end }}}
+			return controller.Render(rc, as, &vadmin.Migrations{Available: ms, Applied: am}, ps, "admin", "Migrations**database"){{{ end }}}
 		case "modules":
 			di := util.DebugBuildInfo().Deps
 			ps.Title = "Modules"
 			ps.Data = di
-			return controller.Render(rc, as, &vadmin.Modules{Modules: di}, ps, "admin", "Modules"){{{ if .HasModule "queue" }}}
+			return controller.Render(rc, as, &vadmin.Modules{Modules: di}, ps, "admin", "Modules**robot"){{{ if .HasModule "queue" }}}
 		case "queue":
 			ps.Title = "Queue Debug"
 			ps.Data = as.Services.Publisher
-			return controller.Render(rc, as, &vadmin.Queue{Con: as.Services.Consumer, Pub: as.Services.Publisher}, ps, "admin", "Queue"){{{ end }}}
+			return controller.Render(rc, as, &vadmin.Queue{Con: as.Services.Consumer, Pub: as.Services.Publisher}, ps, "admin", "Queue**database"){{{ end }}}
 		case "request":
 			ps.Title = "Request Debug"
 			ps.Data = cutil.RequestCtxToMap(rc, as, ps)
-			return controller.Render(rc, as, &vadmin.Request{RC: rc}, ps, "admin", "Request")
+			return controller.Render(rc, as, &vadmin.Request{RC: rc}, ps, "admin", "Request**download")
 		case "routes":
 			ps.Title = "HTTP Routes"
 			ps.Data = AppRoutesList
-			return controller.Render(rc, as, &vadmin.Routes{Routes: AppRoutesList}, ps, "admin", "Routes")
+			return controller.Render(rc, as, &vadmin.Routes{Routes: AppRoutesList}, ps, "admin", "Routes**folder")
 		case "session":
 			ps.Title = "Session Debug"
 			ps.Data = ps.Session
-			return controller.Render(rc, as, &vadmin.Session{}, ps, "admin", "Session")
+			return controller.Render(rc, as, &vadmin.Session{}, ps, "admin", "Session**play")
 		case "sitemap":
 			ps.Title = "Sitemap"
 			ps.Data = ps.Menu
-			return controller.Render(rc, as, &vadmin.Sitemap{}, ps, "admin", "Sitemap"){{{ if .HasModule "websocket" }}}
+			return controller.Render(rc, as, &vadmin.Sitemap{}, ps, "admin", "Sitemap**graph"){{{ if .HasModule "websocket" }}}
 		case "sockets":
 			return socketRoute(rc, as, ps, path[1:]...){{{ end }}}
 		// $PF_SECTION_START(admin-actions)$

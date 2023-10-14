@@ -20,7 +20,7 @@ type Item struct {
 }
 
 func ItemFromString(bc string) *Item {
-	icon := "star"
+	icon := "file"
 	if iconIdx := strings.Index(bc, "**"); iconIdx > 0 {
 		icon = bc[iconIdx+2:]
 		bc = bc[:iconIdx]

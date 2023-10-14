@@ -30,7 +30,7 @@ func socketRoute(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState, pa
 	case "tap":
 		ps.Title = "WebSocket Tap"
 		ps.Data = ps.Title
-		return controller.Render(rc, as, &vadmin.SocketTap{}, ps, bc("Tap")...)
+		return controller.Render(rc, as, &vadmin.SocketTap{}, ps, bc("Tap**search")...)
 	case "tap-socket":
 		_, err := as.Services.Socket.RegisterTap(rc, ps.Logger)
 		if err != nil {
@@ -44,7 +44,7 @@ func socketRoute(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState, pa
 		ch := as.Services.Socket.GetChannel(path[1])
 		members := as.Services.Socket.GetAllMembers(path[1])
 		ps.Data = ch
-		return controller.Render(rc, as, &vadmin.Channel{Channel: ch, Members: members}, ps, bc("Channel", ch.Key)...)
+		return controller.Render(rc, as, &vadmin.Channel{Channel: ch, Members: members}, ps, bc("Channel", ch.Key+"**eye")...)
 	case "conn":
 		if len(path) == 0 {
 			return "", errors.New("no connection ID in path")
@@ -59,7 +59,7 @@ func socketRoute(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState, pa
 				return "", errors.Errorf("no connection with ID [%s]", id.String())
 			}
 			ps.Data = c
-			return controller.Render(rc, as, &vadmin.Connection{Connection: c}, ps, bc("Connection", c.ID.String())...)
+			return controller.Render(rc, as, &vadmin.Connection{Connection: c}, ps, bc("Connection**eye", c.ID.String()+"**eye")...)
 		}
 		frm, _ := cutil.ParseForm(rc)
 		fromStr := frm.GetStringOpt("from")

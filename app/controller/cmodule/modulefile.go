@@ -22,7 +22,7 @@ func ModuleFileRoot(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = fmt.Sprintf("[%s] Files", mod.Key)
 		ps.Data = mod
-		return controller.Render(rc, as, &vmodule.Files{Module: mod}, ps, "modules", mod.Key, "Files")
+		return controller.Render(rc, as, &vmodule.Files{Module: mod}, ps, "modules", mod.Key, "Files**folder")
 	})
 }
 
@@ -39,7 +39,7 @@ func ModuleFile(rc *fasthttp.RequestCtx) {
 		}
 		path := util.StringSplitAndTrim(pathS, "/")
 		bcAppend := "||/m/" + mod.Key + "/fs"
-		bc := []string{"modules", mod.Key, "Files" + bcAppend}
+		bc := []string{"modules", mod.Key, "Files" + bcAppend + "**folder"}
 		lo.ForEach(path, func(x string, _ int) {
 			bcAppend += "/" + x
 			b := x + bcAppend

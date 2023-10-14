@@ -41,7 +41,7 @@ func profileAction(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) 
 	}
 
 	page := &vprofile.Profile{Profile: ps.Profile, Theme: thm, Referrer: redir}
-	return controller.Render(rc, as, page, ps, "Profile")
+	return controller.Render(rc, as, page, ps, "Profile**profile")
 }
 
 func ProfileSave(rc *fasthttp.RequestCtx) {
