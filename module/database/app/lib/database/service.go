@@ -51,7 +51,7 @@ func NewService(typ *DBType, key string, dbName string, schName string, username
 	ret := &Service{Key: key, DatabaseName: dbName, SchemaName: schName, Username: username, Debug: debug, Type: typ, db: db, metrics: m}
 	err = ret.Healthcheck(dbName, db)
 	if err != nil {
-		return nil, errors.Wrap(err, "unable to run healthcheck")
+		return ret, errors.Wrap(err, "unable to run healthcheck")
 	}
 	register(ret, logger)
 	return ret, nil

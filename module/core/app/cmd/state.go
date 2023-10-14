@@ -57,7 +57,7 @@ func buildDefaultAppState(flags *Flags, logger util.Logger) (*app.State, error) 
 		st.DBRead, err = database.OpenSQLServerDatabase(ctx, rKey, paramsR, logger){{{ end }}}{{{ end }}}{{{ end }}}
 	}
 	if err != nil {
-		logger.Errorf("unable to open default read-only database: %+v", err)
+		logger.Errorf("unable to open default read-only database: %v", err)
 	}
 	st.DBRead.ReadOnly = true{{{ end }}}
 	svcs, err := app.NewServices(ctx, st, logger)
