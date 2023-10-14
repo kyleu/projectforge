@@ -129,22 +129,44 @@ input[type=checkbox]:checked ~ .menu-toggle > .diagonal.part-2 {
   overflow: hidden;
 }
 
-#navbar .search-image {
-  display: block !important;
-}
-
 #navbar .breadcrumbs a {
   color: var(--color-nav-foreground);
+}
+
+#navbar .nav-root-icon {
+  display: none;
+}
+
+#navbar .breadcrumb-icon {
+  padding-top: 10px;
+}
+
+#navbar .nav-item-title {
+  padding-left: var(--padding-small);
+}
+
+@media (max-width: 800px) {
+  #navbar .nav-root-icon {
+    display: inline;
+  }
+  #navbar .nav-root-item {
+    display: none;
+  }
+  #navbar .nav-item-title {
+    display: none;
+  }
+  #navbar .last .nav-item-title {
+    display: inline;
+  }
+}
+
+#navbar .search-image {
+  display: block !important;
 }
 
 #navbar .profile {
   margin: 12px;
   color: var(--color-nav-foreground);
-}
-
-#navbar .breadcrumb-icon {
-  padding-top: 9px;
-  padding-right: var(--padding-small);
 }
 
 #navbar .help-link {
