@@ -9,12 +9,12 @@ import (
 )
 
 func (s *Service) Commit(ctx context.Context, prj *project.Project, msg string, logger util.Logger) (*Result, error) {
+	if prj.Key == "pftest" {
+		msg = "."
+	}
 	result, err := gitCommit(ctx, prj.Path, msg, logger)
 	if err != nil {
 		return nil, err
-	}
-	if prj.Key == "pftest" {
-		msg = "."
 	}
 	return NewResult(prj, ok, util.ValueMap{"commit": result, "commitMessage": msg}), nil
 }

@@ -1,5 +1,6 @@
 node_modules/
 /test-results/
+/playwright-assets/
 /playwright-report/
 /playwright/.cache/
 /package-lock.json
