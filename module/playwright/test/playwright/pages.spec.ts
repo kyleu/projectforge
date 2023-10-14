@@ -10,11 +10,11 @@ const pageTest = async(page: Page, testInfo: TestInfo, browserName: string, key:
 test.describe("pages", () => {
   test('home', async ({ page, browserName }, testInfo) => {
     await pageTest(page, testInfo, browserName, "home", "/");
-    await expect(page).toHaveTitle(/Project Forge/);
+    await expect(page).toHaveTitle(/{{{ .Title }}}/);
   });
 
   test('about', async ({ page, browserName }, testInfo) => {
     await pageTest(page, testInfo, browserName, "about", "/about");
-    await expect(page).toHaveTitle(/Project Forge/);
+    await expect(page).toHaveTitle(/{{{ .Title }}}/);
   });
 });
