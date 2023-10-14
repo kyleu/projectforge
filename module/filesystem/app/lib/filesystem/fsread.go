@@ -1,8 +1,9 @@
 package filesystem
 
 import (
-	"github.com/pkg/errors"
 	"io"
+
+	"github.com/pkg/errors"
 )
 
 func (f *FileSystem) PeekFile(path string, maxSize int) ([]byte, error) {
