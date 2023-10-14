@@ -193,7 +193,7 @@ func StreamNavItem(qw422016 *qt422016.Writer, link string, title string, icon st
 //line views/layout/Nav.html:40
 	qw422016.N().S(`</span>`)
 //line views/layout/Nav.html:41
-	if link != "" {
+	if link != "" || last {
 //line views/layout/Nav.html:41
 		qw422016.N().S(`</a>`)
 //line views/layout/Nav.html:43

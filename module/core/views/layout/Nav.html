@@ -36,12 +36,12 @@
 </nav>{% endfunc %}
 
 {% func NavItem(link string, title string, icon string, last bool, ps *cutil.PageState) %}{% stripspace %}
-  {% if link != "" %}
+  {% if link != "" || last %}
   <a class="link{% if last %}{% space %}last{% endif %}" href="{%s link %}">
   {% endif %}
     <span title="{%s title %}">{%= components.SVGRef(icon, 18, 28, "breadcrumb-icon", ps) %}</span>
     <span class="nav-item-title">{%s title %}</span>
-  {% if link != "" %}
+  {% if link != "" || last %}
   </a>
   {% endif %}
 {% endstripspace %}{% endfunc %}

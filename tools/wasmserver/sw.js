@@ -97,7 +97,7 @@ self.addEventListener('message', (event) => {
 });
 
 function isLocal(url) {
-  if (url.toString().startsWith("https://projectforge.dev")) {
+  if (url.toString().startsWith("https://projectforge.dev/")) {
     return true;
   }
   for (const s of ["favicon.ico", "logo.svg", "projectforge.wasm", "server.js", "sw.js", "wasm_exec.js"]) {

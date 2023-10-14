@@ -96,7 +96,7 @@ self.addEventListener('message', (event) => {
 });
 
 function isLocal(url) {
-  if (url.toString().startsWith("{{{ .Info.Homepage }}}")) {
+  if (url.toString().startsWith("{{{ .Info.Homepage }}}/")) {
     return true;
   }
   for (const s of ["favicon.ico", "logo.svg", "{{{ .Exec }}}.wasm", "server.js", "sw.js", "wasm_exec.js"]) {

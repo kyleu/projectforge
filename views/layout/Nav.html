@@ -38,7 +38,7 @@
   {% endif %}
     <span title="{%s title %}">{%= components.SVGRef(icon, 18, 28, "breadcrumb-icon", ps) %}</span>
     <span class="nav-item-title">{%s title %}</span>
-  {% if link != "" %}
+  {% if link != "" || last %}
   </a>
   {% endif %}
 {% endstripspace %}{% endfunc %}
