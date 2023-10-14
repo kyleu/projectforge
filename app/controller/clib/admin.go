@@ -82,7 +82,7 @@ func Admin(rc *fasthttp.RequestCtx) {
 		case "routes":
 			ps.Title = "HTTP Routes"
 			ps.Data = AppRoutesList
-			return controller.Render(rc, as, &vadmin.Routes{Routes: AppRoutesList}, ps, "admin", "Request")
+			return controller.Render(rc, as, &vadmin.Routes{Routes: AppRoutesList}, ps, "admin", "Routes")
 		case "session":
 			ps.Title = "Session Debug"
 			ps.Data = ps.Session
