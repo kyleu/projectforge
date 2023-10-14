@@ -159,7 +159,7 @@ func Nav(as *app.State, ps *cutil.PageState) string {
 //line views/layout/Nav.html:35
 func StreamNavItem(qw422016 *qt422016.Writer, link string, title string, icon string, last bool, ps *cutil.PageState) {
 //line views/layout/Nav.html:36
-	if link != "" {
+	if link != "" || last {
 //line views/layout/Nav.html:36
 		qw422016.N().S(`<a class="link`)
 //line views/layout/Nav.html:37
