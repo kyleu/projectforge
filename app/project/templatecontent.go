@@ -100,3 +100,7 @@ func (t *TemplateContext) HasModules(keys ...string) bool {
 func (t *TemplateContext) HasModule(key string) bool {
 	return t.HasModules(key)
 }
+
+func (t *TemplateContext) Public() bool {
+	return t.Build == nil || !t.Build.Private
+}

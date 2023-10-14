@@ -1,17 +1,19 @@
 name: playwright
 on:
   push:
-    tags:
-      - "*"
     branches:
       - main
-      - master
-  pull_request:
-    branches:
-      - main
-      - master
+      - master{{{ if .Public }}}
+
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false{{{ end }}}
+
 jobs:
   playwright:
     runs-on: "ubuntu-latest"
@@ -62,4 +64,16 @@ jobs:
         with:
           name: "playwright-report"
           path: "./test/playwright/playwright-report/"
-          retention-days: 30
+          retention-days: 30{{{ if .Public }}}
+
+      - name: "Setup Pages"
+        uses: actions/configure-pages@v3
+
+      - name: "Upload Pages Artifact"
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: "./test/playwright/playwright-report"
+
+      - name: "Deploy to GitHub Pages"
+        id: deployment
+        uses: actions/deploy-pages@v2{{{ end }}}
