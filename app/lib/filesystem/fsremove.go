@@ -11,7 +11,9 @@ import (
 
 func (f *FileSystem) Remove(path string, logger util.Logger) error {
 	p := f.getPath(path)
-	logger.Warnf("removing file at path [%s]", p)
+	if logger != nil {
+		logger.Warnf("removing file at path [%s]", p)
+	}
 	if err := f.f.Remove(p); err != nil {
 		return errors.Wrapf(err, "error removing file [%s]", path)
 	}
@@ -29,11 +31,11 @@ func (f *FileSystem) RemoveRecursive(path string, logger util.Logger) error {
 	}
 	if s.IsDir() {
 		dir, e := f.f.Open(p)
-		if e != nil {
+		if e != nil && logger != nil {
 			logger.Warnf("cannot open path [%s] for removal: %+v", path, e)
 		}
 		files, e := dir.Readdir(0)
-		if e != nil {
+		if e != nil && logger != nil {
 			logger.Warnf("cannot read path [%s] for removal: %+v", path, e)
 		}
 		for _, file := range files {

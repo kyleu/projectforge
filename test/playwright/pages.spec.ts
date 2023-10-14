@@ -4,7 +4,7 @@ import {test, expect, Page, TestInfo} from "@playwright/test";
 const pageTest = async(page: Page, testInfo: TestInfo, browserName: string, key: string, path: string) => {
   await page.goto(path);
   const fn = `${key}/${browserName}`;
-  const ss = await page.screenshot({path: `playwright-assets/screenshots/${fn}.png`, fullPage: true});
+  const ss = await page.screenshot({fullPage: true});
   await testInfo.attach(fn, { body: ss, contentType: "image/png" });
 }
 

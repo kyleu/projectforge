@@ -35,7 +35,7 @@ func buildDefaultAppState(flags *Flags, logger util.Logger) (*app.State, error) 
 
 	db, err := database.OpenDefaultSQLServer(ctx, logger){{{ end }}}{{{ end }}}{{{ end }}}
 	if err != nil {
-		return nil, err
+		logger.Errorf("unable to open default database: %+v", err)
 	}
 	st.DB = db{{{ end }}}{{{ if .HasModule "readonlydb" }}}
 	roSuffix := "_readonly"

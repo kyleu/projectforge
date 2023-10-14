@@ -16,12 +16,14 @@ func (f *FileSystem) ListFiles(path string, ign []string, logger util.Logger) Fi
 	p := f.getPath(path)
 	dir, err := f.f.Open(p)
 	if err != nil {
-		logger.Warnf("unable to open path [%s]", p)
+		if logger != nil {
+			logger.Warnf("unable to open path [%s]", p)
+		}
 		return nil
 	}
 
 	infos, err := dir.Readdir(0)
-	if err != nil {
+	if err != nil && logger != nil {
 		logger.Warnf("cannot list files in path [%s]: %+v", path, err)
 	}
 	ret := FileInfosFromFS(infos)
