@@ -88,7 +88,7 @@ func StreamNav(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
 		qw422016.E().S(ps.SearchPath)
 //line views/layout/Nav.html:19
 		qw422016.N().S(`" class="search" title="search">
-    <input type="search" name="q" placeholder=" " />
+    <input id="search-input" type="search" name="q" placeholder=" " />
     <div class="search-image" style="display: none;"><svg><use xlink:href="#svg-searchbox" /></svg></div>
   </form>
 `)

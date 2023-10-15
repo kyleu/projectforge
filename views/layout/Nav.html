@@ -17,7 +17,7 @@
   </div>
   {%- if ps.SearchPath != "-" -%}
   <form action="{%s ps.SearchPath %}" class="search" title="search">
-    <input type="search" name="q" placeholder=" " />
+    <input id="search-input" type="search" name="q" placeholder=" " />
     <div class="search-image" style="display: none;"><svg><use xlink:href="#svg-searchbox" /></svg></div>
   </form>
   {%- endif -%}

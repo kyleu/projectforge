@@ -1,4 +1,21 @@
-import {defineConfig, devices} from "@playwright/test";
+import {defineConfig, devices, PlaywrightTestOptions, PlaywrightWorkerOptions, Project} from "@playwright/test";
+
+const prj = (
+  name: string, device: string, channel: string, width: number, height: number, dark: boolean = false, reduceMotion: boolean = false,
+): Project<PlaywrightTestOptions & PlaywrightWorkerOptions> => {
+  return {
+    name,
+    use: {
+      ...devices[device],
+      channel,
+      colorScheme: (dark ? "dark" : "light"),
+      contextOptions: {reducedMotion: reduceMotion ? "reduce" : "no-preference"},
+      trace: "on",
+      viewport: {width, height},
+      video: {mode: "on", size: {width, height}}
+    },
+  };
+}
 
 export default defineConfig({
   testDir: ".",
@@ -8,26 +25,26 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: "html",
   use: {
-    baseURL: process.env.TEST_URL || "http://127.0.0.1:{{{ .Port }}}",
-    trace: "on",
-    video: {
-      mode: "on",
-    },
+    baseURL: process.env.TEST_URL || "http://127.0.0.1:40000",
   },
   projects: [
-    {name: "chrome", use: {...devices["Desktop Chrome"], channel: "chrome"}},
-    {name: "chrome.nomotion", use: {...devices["Desktop Chrome"], channel: "chrome", contextOptions: {reducedMotion: "reduce"}}},
-    {name: "chrome.dark", use: {...devices["Desktop Chrome"], channel: "chrome", colorScheme: "dark"}},
-    {name: "chrome.dark.nomotion", use: {...devices["Desktop Chrome"], channel: "chrome", colorScheme: "dark", contextOptions: {reducedMotion: "reduce"}}},
-    {name: "chrome.mobile", use: {...devices["Pixel 5"]}},
-    {name: "edge", use: {...devices["Desktop Edge"], channel: "msedge"}},
-    {name: "firefox", use: {...devices["Desktop Firefox"]}},
-    {name: "safari", use: {...devices["Desktop Safari"]}},
-    {name: "safari.mobile", use: {...devices["iPhone 12"]}},
+    prj("chrome", "Desktop Chrome", "chrome", 1280, 720, false, false),
+    prj("chrome.nomotion", "Desktop Chrome", "chrome", 1280, 720, false, true),
+    prj("chrome.dark", "Desktop Chrome", "chrome", 1280, 720, true, false),
+    prj("chrome.dark.nomotion", "Desktop Chrome", "chrome", 1280, 720, true, true),
+    prj("chrome.mobile", "Pixel 5", "", 393, 727, false, false),
+    prj("edge", "Desktop Edge", "msedge", 1280, 720, false, false),
+    prj("firefox", "Desktop Firefox", "", 1280, 720, false, false),
+    prj("safari", "Desktop Safari", "", 1280, 720, false, false),
+    prj("safari.mobile", "iPhone 12", "", 390, 664, false, false),
+    prj("safari.mobile.nomotion", "iPhone 12", "", 390, 664, false, true),
+    prj("safari.mobile.dark", "iPhone 12", "", 390, 664, true, false),
+    prj("safari.mobile.landscape", "iPhone 12 landscape", "", 750, 340, false, false),
+    prj("safari.mobile.landscape.dark", "iPhone 12 landscape", "", 750, 340, true, false),
   ],
   webServer: {
-    command: "../../build/release/{{{ .Exec }}}",
-    url: "http://127.0.0.1:{{{ .Port }}}",
+    command: "../../build/release/projectforge",
+    url: "http://127.0.0.1:40000",
     reuseExistingServer: !process.env.CI,
     stdout: "pipe",
     stderr: "pipe",
