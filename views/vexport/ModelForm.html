@@ -35,6 +35,7 @@
             {%= components.TableInput("description", "", "Description", m.Description, 5, export.Helpers["model.description"]...) %}
             {%= components.TableInput("icon", "", "Icon", m.Icon, 5, export.Helpers["model.icon"]...) %}
             {%= components.TableTextarea("ordering", "", "Ordering", 3, util.ToJSON(m.Ordering), 5, export.Helpers["model.ordering"]...) %}
+            {%= components.TableSelect("view", "", "View", m.View, []string{"", "rich"}, []string{"Default", "Rich"}, 5, export.Helpers["model.view"]...) %}
             {%= components.TableInput("search", "", "Search", strings.Join(m.Search, `, `), 5, export.Helpers["model.search"]...) %}
             {%= components.TableInput("history", "", "History", m.History, 5, export.Helpers["model.history"]...) %}
             {%= components.TableInput("tags", "", "Tags", strings.Join(m.Tags, `, `), 5, export.Helpers["model.tags"]...) %}

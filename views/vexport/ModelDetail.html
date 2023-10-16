@@ -82,6 +82,9 @@
         {%- if len(model.Tags) > 0 -%}
         <tr><th>Tags</th><td>{%s strings.Join(model.Tags, ", ") %}</td></tr>
         {%- endif -%}
+        {%- if model.View != "" -%}
+        <tr><th>View</th><td>{%s model.View %}</td></tr>
+        {%- endif -%}
         {%- if len(model.Search) > 0 -%}
         <tr><th>Search</th><td>{%s strings.Join(model.Search, ", ") %}</td></tr>
         {%- endif -%}

@@ -13,6 +13,7 @@ var Helpers = func() map[string][]string {
 	add("model.description", "description")
 	add("model.icon", "icon")
 	add("model.ordering", "ordering")
+	add("model.view", "view")
 	add("model.search", "search")
 	add("model.history", "history")
 	add("model.tags", "tags")

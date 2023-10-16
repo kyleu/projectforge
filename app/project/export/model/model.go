@@ -20,6 +20,7 @@ type Model struct {
 	Icon           string           `json:"icon,omitempty"`
 	Ordering       filter.Orderings `json:"ordering,omitempty"`
 	SortIndex      int              `json:"sortIndex,omitempty"`
+	View           string           `json:"view,omitempty"`
 	Search         []string         `json:"search,omitempty"`
 	History        string           `json:"history,omitempty"`
 	Tags           []string         `json:"tags,omitempty"`
@@ -40,7 +41,7 @@ func (m *Model) HasTag(t string) bool {
 }
 
 func (m *Model) AddTag(t string) {
-	if !lo.Contains(m.Tags, t) {
+	if !m.HasTag(t) {
 		m.Tags = append(m.Tags, t)
 		slices.Sort(m.Tags)
 	}

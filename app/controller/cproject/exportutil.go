@@ -41,6 +41,7 @@ func exportModelFromForm(frm util.ValueMap, m *model.Model) error {
 
 	sIdx, _ := strconv.ParseInt(get("sortIndex", "0"), 10, 64)
 	m.SortIndex = int(sIdx)
+	m.View = get("view", m.View)
 	m.Search = util.StringSplitAndTrim(get("search", strings.Join(m.Search, ",")), ",")
 	m.History = get("history", m.History)
 	m.Tags = util.StringSplitAndTrim(get("tags", strings.Join(m.Tags, ",")), ",")
