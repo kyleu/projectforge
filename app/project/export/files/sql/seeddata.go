@@ -20,9 +20,9 @@ const (
 	nullStr = "null"
 )
 
-func SeedData(m *model.Model, _ *model.Args, linebreak string) (*file.File, error) {
+func SeedData(m *model.Model, args *model.Args, linebreak string) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"queries", "seeddata"}, fmt.Sprintf("seed_%s.sql", m.Name))
-	seed, err := sqlSeedData(m)
+	seed, err := sqlSeedData(m, args.Database)
 	if err != nil {
 		return nil, err
 	}
@@ -30,21 +30,21 @@ func SeedData(m *model.Model, _ *model.Args, linebreak string) (*file.File, erro
 	return g.Render(false, linebreak)
 }
 
-func sqlSeedData(m *model.Model) (*golang.Block, error) {
+func sqlSeedData(m *model.Model, database string) (*golang.Block, error) {
 	ret := golang.NewBlock("SQLCreate", "sql")
 	ret.W("-- {%% func " + m.Proper() + "SeedData() %%}")
 	if m.History == model.RevisionType {
-		err := sqlSeedDataColumns(m, ret, m.Name, m.HistoryColumns(true).Const)
+		err := sqlSeedDataColumns(m, ret, m.Name, m.HistoryColumns(true).Const, database)
 		if err != nil {
 			return nil, err
 		}
 		ret.WB()
-		err = sqlSeedDataColumns(m, ret, m.Name+"_"+m.HistoryColumn().Name, m.HistoryColumns(true).Var)
+		err = sqlSeedDataColumns(m, ret, m.Name+"_"+m.HistoryColumn().Name, m.HistoryColumns(true).Var, database)
 		if err != nil {
 			return nil, err
 		}
 	} else {
-		err := sqlSeedDataColumns(m, ret, m.Name, m.Columns)
+		err := sqlSeedDataColumns(m, ret, m.Name, m.Columns, database)
 		if err != nil {
 			return nil, err
 		}
@@ -54,7 +54,7 @@ func sqlSeedData(m *model.Model) (*golang.Block, error) {
 }
 
 //nolint:gocognit
-func sqlSeedDataColumns(m *model.Model, block *golang.Block, tableName string, cols model.Columns) error {
+func sqlSeedDataColumns(m *model.Model, block *golang.Block, tableName string, cols model.Columns, database string) error {
 	block.W("insert into %q (", tableName)
 	block.W("  " + strings.Join(cols.NamesQuoted(), ", "))
 	block.W(") values (")

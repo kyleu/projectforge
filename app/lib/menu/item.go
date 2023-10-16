@@ -19,8 +19,11 @@ type Item struct {
 	Children    Items  `json:"children,omitempty"`
 }
 
-func ItemFromString(bc string) *Item {
-	icon := "file"
+func ItemFromString(bc string, dflt string) *Item {
+	icon := dflt
+	if icon == "" {
+		icon = "file"
+	}
 	if iconIdx := strings.Index(bc, "**"); iconIdx > 0 {
 		icon = bc[iconIdx+2:]
 		bc = bc[:iconIdx]

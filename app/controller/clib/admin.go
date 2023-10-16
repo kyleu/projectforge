@@ -32,11 +32,12 @@ func Admin(rc *fasthttp.RequestCtx) {
 			ps.Data = "administration"
 			return controller.Render(rc, as, &vadmin.Settings{}, ps, "admin")
 		}
+		ps.DefaultNavIcon = "cog"
 		switch path[0] {
 		case "server":
 			info := util.DebugGetInfo(as.BuildInfo.Version, as.Started)
 			ps.Data = info
-			return controller.Render(rc, as, &vadmin.ServerInfo{Info: info}, ps, "admin", "App Information**cog")
+			return controller.Render(rc, as, &vadmin.ServerInfo{Info: info}, ps, "admin", "App Information")
 		case "cpu":
 			switch path[1] {
 			case "start":

@@ -39,9 +39,9 @@ func profileAction(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) 
 			redir = u.Path
 		}
 	}
-
+	ps.DefaultNavIcon = "profile"
 	page := &vprofile.Profile{Profile: ps.Profile, Theme: thm, Referrer: redir}
-	return controller.Render(rc, as, page, ps, "Profile**profile")
+	return controller.Render(rc, as, page, ps, "Profile")
 }
 
 func ProfileSave(rc *fasthttp.RequestCtx) {

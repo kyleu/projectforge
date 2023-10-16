@@ -51,7 +51,7 @@
     {% code
       i := ps.Menu.GetByPath(ps.Breadcrumbs[:idx + 1])
       if i == nil {
-        i = menu.ItemFromString(bc)
+        i = menu.ItemFromString(bc, ps.DefaultNavIcon)
       }
     %}
     {%= vutil.Indent(true, 2) %}

@@ -33,11 +33,12 @@ func Admin(rc *fasthttp.RequestCtx) {
 			ps.Data = "administration"
 			return controller.Render(rc, as, {{{ if .HasAccount }}}&vadmin.Settings{Perms: user.GetPermissions()}{{{ else }}}&vadmin.Settings{}{{{ end }}}, ps, "admin")
 		}
+		ps.DefaultNavIcon = "cog"
 		switch path[0] {
 		case "server":
 			info := util.DebugGetInfo(as.BuildInfo.Version, as.Started)
 			ps.Data = info
-			return controller.Render(rc, as, &vadmin.ServerInfo{Info: info}, ps, "admin", "App Information**cog"){{{ if .DangerousOK }}}
+			return controller.Render(rc, as, &vadmin.ServerInfo{Info: info}, ps, "admin", "App Information"){{{ if .DangerousOK }}}
 		case "cpu":
 			switch path[1] {
 			case "start":

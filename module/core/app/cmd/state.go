@@ -6,7 +6,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"{{{ .Package }}}/app"{{{ if .HasDatabaseModule }}}
+	"{{{ .Package }}}/app"{{{ if .HasModules "migration" "readonlydb" }}}
 	"{{{ .Package }}}/app/lib/database"{{{ end }}}{{{ if .HasModule "filesystem" }}}
 	"{{{ .Package }}}/app/lib/filesystem"{{{ end }}}
 	"{{{ .Package }}}/app/lib/telemetry"

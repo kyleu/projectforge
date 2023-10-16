@@ -234,7 +234,7 @@ func StreamNavItems(qw422016 *qt422016.Writer, ps *cutil.PageState) {
 //line views/layout/Nav.html:49
 		i := ps.Menu.GetByPath(ps.Breadcrumbs[:idx+1])
 		if i == nil {
-			i = menu.ItemFromString(bc)
+			i = menu.ItemFromString(bc, ps.DefaultNavIcon)
 		}
 
 //line views/layout/Nav.html:54

@@ -31,7 +31,8 @@ func ExecForm(rc *fasthttp.RequestCtx) {
 		x := &exec.Exec{}
 		ps.Title = "New Process"
 		ps.Data = x
-		return controller.Render(rc, as, &vexec.Form{Exec: x}, ps, "exec", "New Process**file")
+		ps.DefaultNavIcon = "file"
+		return controller.Render(rc, as, &vexec.Form{Exec: x}, ps, "exec", "New Process")
 	})
 }
 
@@ -76,7 +77,8 @@ func ExecDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = ex.String()
 		ps.Data = ex
-		return controller.Render(rc, as, &vexec.Detail{Exec: ex}, ps, "exec", ex.String()+"**file")
+		ps.DefaultNavIcon = "file"
+		return controller.Render(rc, as, &vexec.Detail{Exec: ex}, ps, "exec", ex.String())
 	})
 }
 

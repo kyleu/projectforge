@@ -34,10 +34,6 @@ func (t *TemplateContext) SourceTrimmed() string {
 	return strings.TrimPrefix(strings.TrimPrefix(t.Info.Sourcecode, "http://"), "https://")
 }
 
-func (t *TemplateContext) HasDatabaseModule() bool {
-	return t.HasModules("migration", "readonlydb")
-}
-
 func (t *TemplateContext) DangerousOK() bool {
 	return !t.Build.SafeMode
 }

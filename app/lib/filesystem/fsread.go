@@ -3,6 +3,7 @@ package filesystem
 
 import (
 	"io"
+	"os"
 
 	"github.com/pkg/errors"
 )
@@ -42,25 +43,23 @@ func (f *FileSystem) Size(path string) int {
 }
 
 func (f *FileSystem) ReadFile(path string) ([]byte, error) {
-	file, err := f.f.Open(f.getPath(path))
-	if err != nil {
-		return nil, errors.Wrapf(err, "unable to open file [%s]", path)
-	}
-	defer func() { _ = file.Close() }()
+	size, err := func() (int64, error) {
+		file, err := f.f.Open(f.getPath(path))
+		if err != nil {
+			return 0, errors.Wrapf(err, "unable to open file [%s]", path)
+		}
+		defer func() { _ = file.Close() }()
 
-	stat, _ := file.Stat()
-	if stat.Size() == 0 {
-		return nil, nil
-	}
+		stat, _ := file.Stat()
+		return stat.Size(), nil
+	}()
 
-	b := make([]byte, stat.Size())
-
-	size, err := file.Read(b)
+	b, err := os.ReadFile(f.getPath(path))
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to read file [%s]", path)
 	}
-	if int64(size) != stat.Size() {
-		return nil, errors.Wrapf(err, "file [%s] size [%d] does not match expected size [%d]", path, size, stat.Size())
+	if int64(len(b)) != size {
+		return nil, errors.Errorf("file [%s] size [%d] does not match expected size [%d]", path, len(b), size)
 	}
 	return b, nil
 }

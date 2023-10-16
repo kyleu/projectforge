@@ -8,7 +8,7 @@ import (
 
 	"github.com/google/uuid"{{{ end }}}
 {{{ if .HasAccount }}}
-	"{{{ .Package }}}/app/lib/auth"{{{ end }}}{{{ if .HasDatabaseModule }}}
+	"{{{ .Package }}}/app/lib/auth"{{{ end }}}{{{ if .HasModules "migration" "readonlydb" }}}
 	"{{{ .Package }}}/app/lib/database"{{{ end }}}{{{ if .HasModule "filesystem" }}}
 	"{{{ .Package }}}/app/lib/filesystem"{{{ end }}}{{{ if .HasModule "graphql" }}}
 	"{{{ .Package }}}/app/lib/graphql"{{{ end }}}

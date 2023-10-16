@@ -33,7 +33,8 @@ func ThemeColor(rc *fasthttp.RequestCtx) {
 		ps.Title = fmt.Sprintf("[%s] Theme", col)
 		th := theme.ColorTheme(col, gamut.Hex(col))
 		ps.Data = th
-		return controller.Render(rc, as, &vtheme.Edit{Theme: th, Icon: "app"}, ps, "Themes||/theme**gift", col)
+		ps.DefaultNavIcon = "gift"
+		return controller.Render(rc, as, &vtheme.Edit{Theme: th, Icon: "app"}, ps, "Themes||/theme", col)
 	})
 }
 
@@ -49,8 +50,9 @@ func ThemeColorEdit(rc *fasthttp.RequestCtx) {
 		t := theme.ColorTheme(strings.TrimPrefix(color, "#"), gamut.Hex(color))
 		ps.Title = "Edit theme [" + t.Key + "]"
 		ps.Data = t
+		ps.DefaultNavIcon = "gift"
 		page := &vtheme.Edit{Theme: t, Icon: "app", Exists: as.Themes.FileExists(t.Key)}
-		return controller.Render(rc, as, page, ps, "Themes||/theme**gift", t.Key)
+		return controller.Render(rc, as, page, ps, "Themes||/theme", t.Key)
 	})
 }
 
@@ -75,7 +77,8 @@ func ThemePalette(rc *fasthttp.RequestCtx) {
 		} else {
 			ps.Data = thms
 		}
-		return controller.Render(rc, as, &vtheme.Add{Palette: pal, Themes: thms}, ps, "Themes||/theme**gift", "Palette**gift")
+		ps.DefaultNavIcon = "gift"
+		return controller.Render(rc, as, &vtheme.Add{Palette: pal, Themes: thms}, ps, "Themes||/theme", "Palette")
 	})
 }
 
@@ -102,6 +105,7 @@ func ThemePaletteEdit(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = "Edit theme [" + t.Key + "]"
 		ps.Data = t
-		return controller.Render(rc, as, &vtheme.Edit{Theme: t, Icon: "app"}, ps, "Themes||/theme**gift", t.Key+"**gift")
+		ps.DefaultNavIcon = "gift"
+		return controller.Render(rc, as, &vtheme.Edit{Theme: t, Icon: "app"}, ps, "Themes||/theme", t.Key)
 	})
 }
