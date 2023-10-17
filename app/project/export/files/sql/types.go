@@ -9,25 +9,28 @@ import (
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/util"
 )
 
-func Types(enums enum.Enums, addHeader bool, linebreak string) (*file.File, error) {
+func Types(enums enum.Enums, addHeader bool, linebreak string, database string) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"queries", "ddl"}, "types.sql")
-	g.AddBlocks(typesDrop(enums), typesCreate(enums))
+	g.AddBlocks(typesDrop(enums, database), typesCreate(enums, database))
 	return g.Render(addHeader, linebreak)
 }
 
-func typesDrop(enums enum.Enums) *golang.Block {
+func typesDrop(enums enum.Enums, database string) *golang.Block {
 	ret := golang.NewBlock("TypesDrop", "sql")
 	ret.W("-- {%% func TypesDrop() %%}")
 	for i := len(enums) - 1; i >= 0; i-- {
-		ret.W("drop type if exists %q;", enums[i].Name)
+		if database != util.DatabaseSQLite {
+			ret.W("drop type if exists %q;", enums[i].Name)
+		}
 	}
 	ret.W("-- {%% endfunc %%}")
 	return ret
 }
 
-func typesCreate(enums enum.Enums) *golang.Block {
+func typesCreate(enums enum.Enums, database string) *golang.Block {
 	ret := golang.NewBlock("SQLCreateAll", "sql")
 	ret.W("-- {%% func TypesCreate() %%}")
 	lo.ForEach(enums, func(e *enum.Enum, _ int) {
@@ -36,11 +39,15 @@ func typesCreate(enums enum.Enums) *golang.Block {
 		lo.ForEach(e.Values, func(x string, _ int) {
 			q = append(q, fmt.Sprintf("'%s'", strings.ReplaceAll(x, "'", "''")))
 		})
-		ret.W("do $$ begin")
-		ret.W("  create type %q as enum (%s);", e.Name, strings.Join(q, ", "))
-		ret.W("exception")
-		ret.W("  when duplicate_object then null;")
-		ret.W("end $$;")
+		if database == util.DatabaseSQLite {
+			ret.W("-- skipping definition of enum [%s], since SQLite does not support custom types", e.Name)
+		} else {
+			ret.W("do $$ begin")
+			ret.W("  create type %q as enum (%s);", e.Name, strings.Join(q, ", "))
+			ret.W("exception")
+			ret.W("  when duplicate_object then null;")
+			ret.W("end $$;")
+		}
 	})
 	ret.W("-- {%% endfunc %%}")
 	return ret

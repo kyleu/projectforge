@@ -184,7 +184,9 @@ func ToGoViewString(t types.Type, prop string, nullable bool, format string, ver
 			)
 			return strings.Join(ret, "")
 		case FmtHTML:
-			return "<pre>{%%s " + ToGoString(t, prop, false) + " %%}</pre>"
+			return "{%%= components.Format(" + ToGoString(t, prop, false) + ", \"html\") %%}</pre>"
+		case FmtJSON:
+			return "{%%= components.Format(" + ToGoString(t, prop, false) + ", \"json\") %%}</pre>"
 		case FmtURL:
 			x := "{%%" + key + " " + ToGoString(t, prop, false) + " %%}"
 			return fmt.Sprintf("<a href=%q target=\"_blank\" rel=\"noopener noreferrer\">%s</a>", x, x)

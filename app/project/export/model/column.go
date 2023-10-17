@@ -17,6 +17,7 @@ const (
 	FmtCodeHidden = "codehidden"
 	FmtCountry    = "country"
 	FmtHTML       = "html"
+	FmtJSON       = "json"
 	FmtSelect     = "select"
 	FmtSI         = "si"
 	FmtURL        = "url"

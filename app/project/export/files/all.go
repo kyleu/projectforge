@@ -68,7 +68,7 @@ func All(p *project.Project, args *model.Args, addHeader bool, linebreak string)
 		ret = append(ret, f)
 	}
 	if len(args.Enums) > 0 {
-		f, err := sql.Types(args.Enums, addHeader, linebreak)
+		f, err := sql.Types(args.Enums, addHeader, linebreak, args.Database)
 		if err != nil {
 			return nil, errors.Wrap(err, "can't render SQL types")
 		}

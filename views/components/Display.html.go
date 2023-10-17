@@ -422,3 +422,47 @@ func DisplayMaps(maps []util.ValueMap, params *filter.Params, preserveWhitespace
 	return qs422016
 //line views/components/Display.html:115
 }
+
+//line views/components/Display.html:117
+func StreamFormat(qw422016 *qt422016.Writer, v string, ext string) {
+//line views/components/Display.html:118
+	out, err := cutil.FormatLang(v, ext)
+
+//line views/components/Display.html:119
+	if err == nil {
+//line views/components/Display.html:120
+		qw422016.N().S(out)
+//line views/components/Display.html:121
+	} else {
+//line views/components/Display.html:122
+		qw422016.E().S(err.Error())
+//line views/components/Display.html:123
+	}
+//line views/components/Display.html:124
+}
+
+//line views/components/Display.html:124
+func WriteFormat(qq422016 qtio422016.Writer, v string, ext string) {
+//line views/components/Display.html:124
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/components/Display.html:124
+	StreamFormat(qw422016, v, ext)
+//line views/components/Display.html:124
+	qt422016.ReleaseWriter(qw422016)
+//line views/components/Display.html:124
+}
+
+//line views/components/Display.html:124
+func Format(v string, ext string) string {
+//line views/components/Display.html:124
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/components/Display.html:124
+	WriteFormat(qb422016, v, ext)
+//line views/components/Display.html:124
+	qs422016 := string(qb422016.B)
+//line views/components/Display.html:124
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/components/Display.html:124
+	return qs422016
+//line views/components/Display.html:124
+}

@@ -113,3 +113,12 @@
   </div>
   {%- endif -%}
 {% endstripspace %}{% endfunc %}
+
+{% func Format(v string, ext string) %}{% stripspace %}
+  {% code out, err := cutil.FormatLang(v, ext) %}
+  {% if err == nil %}
+    {%s= out %}
+  {% else %}
+    {%s err.Error() %}
+  {% endif %}
+{% endstripspace %}{% endfunc %}

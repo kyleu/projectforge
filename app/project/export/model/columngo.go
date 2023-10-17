@@ -74,7 +74,7 @@ func (c *Column) ToGoEditString(prefix string, format string, id string, enums e
 		return fmt.Sprintf(`{%%%%= components.TableInputUUID(%q, %q, %q, %s, 5, %q) %%%%}`, c.Camel(), id, c.Title(), gs, h), nil
 	case types.KeyString:
 		switch format {
-		case FmtCode, FmtCodeHidden, FmtHTML:
+		case FmtCode, FmtCodeHidden, FmtHTML, FmtJSON:
 			return fmt.Sprintf(`{%%%%= components.TableTextarea(%q, %q, %q, 8, %s, 5, %q) %%%%}`, c.Camel(), id, c.Title(), c.ToGoString(prefix), h), nil
 		case FmtSelect:
 			if len(c.Values) == 0 {
