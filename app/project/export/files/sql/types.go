@@ -36,8 +36,8 @@ func typesCreate(enums enum.Enums, database string) *golang.Block {
 	lo.ForEach(enums, func(e *enum.Enum, _ int) {
 		// create type model_service as enum ('team', 'sprint', 'estimate', 'standup', 'retro', 'story', 'feedback', 'report');
 		q := make([]string, 0, len(e.Values))
-		lo.ForEach(e.Values, func(x string, _ int) {
-			q = append(q, fmt.Sprintf("'%s'", strings.ReplaceAll(x, "'", "''")))
+		lo.ForEach(e.Values, func(x *enum.Value, _ int) {
+			q = append(q, fmt.Sprintf("'%s'", strings.ReplaceAll(x.Key, "'", "''")))
 		})
 		if database == util.DatabaseSQLite {
 			ret.W("-- skipping definition of enum [%s], since SQLite does not support custom types", e.Name)

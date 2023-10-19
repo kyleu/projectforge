@@ -218,59 +218,79 @@ func StreamMenuItem(qw422016 *qt422016.Writer, i *menu.Item, path []string, brea
 		}
 //line views/layout/Menu.html:60
 		if i.Route != "" {
-//line views/layout/Menu.html:60
-			qw422016.N().S(`<a href="`)
 //line views/layout/Menu.html:61
-			qw422016.E().S(i.Route)
+			if i.Warning != "" {
 //line views/layout/Menu.html:61
-			qw422016.N().S(`">`)
-//line views/layout/Menu.html:61
-			qw422016.E().S(i.Title)
-//line views/layout/Menu.html:61
-			qw422016.N().S(`</a>`)
+				qw422016.N().S(`<a class="link-confirm" data-message="`)
 //line views/layout/Menu.html:62
-		} else {
+				qw422016.E().S(i.Warning)
+//line views/layout/Menu.html:62
+				qw422016.N().S(`" href="`)
+//line views/layout/Menu.html:62
+				qw422016.E().S(i.Route)
+//line views/layout/Menu.html:62
+				qw422016.N().S(`">`)
+//line views/layout/Menu.html:62
+				qw422016.E().S(i.Title)
+//line views/layout/Menu.html:62
+				qw422016.N().S(`</a>`)
 //line views/layout/Menu.html:63
-			qw422016.E().S(i.Title)
+			} else {
+//line views/layout/Menu.html:63
+				qw422016.N().S(`<a href="`)
 //line views/layout/Menu.html:64
+				qw422016.E().S(i.Route)
+//line views/layout/Menu.html:64
+				qw422016.N().S(`">`)
+//line views/layout/Menu.html:64
+				qw422016.E().S(i.Title)
+//line views/layout/Menu.html:64
+				qw422016.N().S(`</a>`)
+//line views/layout/Menu.html:65
+			}
+//line views/layout/Menu.html:66
+		} else {
+//line views/layout/Menu.html:67
+			qw422016.E().S(i.Title)
+//line views/layout/Menu.html:68
 		}
-//line views/layout/Menu.html:65
+//line views/layout/Menu.html:69
 		vutil.StreamIndent(qw422016, true, indent+2)
-//line views/layout/Menu.html:65
+//line views/layout/Menu.html:69
 		qw422016.N().S(`</label>`)
-//line views/layout/Menu.html:67
-		vutil.StreamIndent(qw422016, true, indent+2)
-//line views/layout/Menu.html:67
-		qw422016.N().S(`<div class="menu-content level-`)
-//line views/layout/Menu.html:68
-		qw422016.N().D(len(path))
-//line views/layout/Menu.html:68
-		qw422016.N().S(`">`)
-//line views/layout/Menu.html:69
-		vutil.StreamIndent(qw422016, true, indent+3)
-//line views/layout/Menu.html:69
-		qw422016.N().S(`<ul>`)
 //line views/layout/Menu.html:71
-		for _, i := range i.Children {
-//line views/layout/Menu.html:72
-			StreamMenuItem(qw422016, i, path, breadcrumbs, indent+3, ps)
-//line views/layout/Menu.html:73
-		}
-//line views/layout/Menu.html:74
-		vutil.StreamIndent(qw422016, true, indent+3)
-//line views/layout/Menu.html:74
-		qw422016.N().S(`</ul>`)
-//line views/layout/Menu.html:76
 		vutil.StreamIndent(qw422016, true, indent+2)
+//line views/layout/Menu.html:71
+		qw422016.N().S(`<div class="menu-content level-`)
+//line views/layout/Menu.html:72
+		qw422016.N().D(len(path))
+//line views/layout/Menu.html:72
+		qw422016.N().S(`">`)
+//line views/layout/Menu.html:73
+		vutil.StreamIndent(qw422016, true, indent+3)
+//line views/layout/Menu.html:73
+		qw422016.N().S(`<ul>`)
+//line views/layout/Menu.html:75
+		for _, i := range i.Children {
 //line views/layout/Menu.html:76
-		qw422016.N().S(`</div>`)
+			StreamMenuItem(qw422016, i, path, breadcrumbs, indent+3, ps)
+//line views/layout/Menu.html:77
+		}
 //line views/layout/Menu.html:78
-		vutil.StreamIndent(qw422016, true, indent+1)
+		vutil.StreamIndent(qw422016, true, indent+3)
 //line views/layout/Menu.html:78
-		qw422016.N().S(`</li>`)
+		qw422016.N().S(`</ul>`)
 //line views/layout/Menu.html:80
-	} else {
+		vutil.StreamIndent(qw422016, true, indent+2)
+//line views/layout/Menu.html:80
+		qw422016.N().S(`</div>`)
 //line views/layout/Menu.html:82
+		vutil.StreamIndent(qw422016, true, indent+1)
+//line views/layout/Menu.html:82
+		qw422016.N().S(`</li>`)
+//line views/layout/Menu.html:84
+	} else {
+//line views/layout/Menu.html:86
 		finalClass := "item"
 		if active {
 			finalClass += " active"
@@ -278,76 +298,105 @@ func StreamMenuItem(qw422016 *qt422016.Writer, i *menu.Item, path []string, brea
 		if final {
 			finalClass += " final"
 		}
-
-//line views/layout/Menu.html:90
-		vutil.StreamIndent(qw422016, true, indent+1)
-//line views/layout/Menu.html:90
-		qw422016.N().S(`<li data-menu-key="`)
-//line views/layout/Menu.html:91
-		qw422016.E().S(i.Key)
-//line views/layout/Menu.html:91
-		qw422016.N().S(`"><a class="`)
-//line views/layout/Menu.html:92
-		qw422016.E().S(finalClass)
-//line views/layout/Menu.html:92
-		qw422016.N().S(`" href="`)
-//line views/layout/Menu.html:92
-		qw422016.E().S(i.Route)
-//line views/layout/Menu.html:92
-		qw422016.N().S(`" title="`)
-//line views/layout/Menu.html:92
-		qw422016.E().S(i.Desc())
-//line views/layout/Menu.html:92
-		qw422016.N().S(`">`)
-//line views/layout/Menu.html:93
-		if i.Badge != "" {
-//line views/layout/Menu.html:94
-			vutil.StreamIndent(qw422016, true, indent+3)
-//line views/layout/Menu.html:94
-			qw422016.N().S(`<div class="badge">`)
-//line views/layout/Menu.html:95
-			qw422016.E().S(i.Badge)
-//line views/layout/Menu.html:95
-			qw422016.N().S(`</div>`)
-//line views/layout/Menu.html:96
+		if i.Warning != "" {
+			finalClass += " link-confirm"
 		}
+
 //line views/layout/Menu.html:97
-		if i.Icon != "" {
+		vutil.StreamIndent(qw422016, true, indent+1)
+//line views/layout/Menu.html:97
+		qw422016.N().S(`<li data-menu-key="`)
 //line views/layout/Menu.html:98
-			components.StreamSVGRef(qw422016, i.Icon, 16, 16, "icon", ps)
+		qw422016.E().S(i.Key)
+//line views/layout/Menu.html:98
+		qw422016.N().S(`">`)
 //line views/layout/Menu.html:99
-		}
+		if i.Warning != "" {
+//line views/layout/Menu.html:99
+			qw422016.N().S(`<a class="`)
 //line views/layout/Menu.html:100
-		qw422016.E().S(i.Title)
+			qw422016.E().S(finalClass)
 //line views/layout/Menu.html:100
-		qw422016.N().S(`</a></li>`)
+			qw422016.N().S(`" data-message="`)
+//line views/layout/Menu.html:100
+			qw422016.E().S(i.Warning)
+//line views/layout/Menu.html:100
+			qw422016.N().S(`" href="`)
+//line views/layout/Menu.html:100
+			qw422016.E().S(i.Route)
+//line views/layout/Menu.html:100
+			qw422016.N().S(`" title="`)
+//line views/layout/Menu.html:100
+			qw422016.E().S(i.Desc())
+//line views/layout/Menu.html:100
+			qw422016.N().S(`">`)
+//line views/layout/Menu.html:101
+		} else {
+//line views/layout/Menu.html:101
+			qw422016.N().S(`<a class="`)
+//line views/layout/Menu.html:102
+			qw422016.E().S(finalClass)
+//line views/layout/Menu.html:102
+			qw422016.N().S(`" href="`)
+//line views/layout/Menu.html:102
+			qw422016.E().S(i.Route)
+//line views/layout/Menu.html:102
+			qw422016.N().S(`" title="`)
+//line views/layout/Menu.html:102
+			qw422016.E().S(i.Desc())
+//line views/layout/Menu.html:102
+			qw422016.N().S(`">`)
 //line views/layout/Menu.html:103
+		}
+//line views/layout/Menu.html:104
+		if i.Badge != "" {
+//line views/layout/Menu.html:105
+			vutil.StreamIndent(qw422016, true, indent+3)
+//line views/layout/Menu.html:105
+			qw422016.N().S(`<div class="badge">`)
+//line views/layout/Menu.html:106
+			qw422016.E().S(i.Badge)
+//line views/layout/Menu.html:106
+			qw422016.N().S(`</div>`)
+//line views/layout/Menu.html:107
+		}
+//line views/layout/Menu.html:108
+		if i.Icon != "" {
+//line views/layout/Menu.html:109
+			components.StreamSVGRef(qw422016, i.Icon, 16, 16, "icon", ps)
+//line views/layout/Menu.html:110
+		}
+//line views/layout/Menu.html:111
+		qw422016.E().S(i.Title)
+//line views/layout/Menu.html:111
+		qw422016.N().S(`</a></li>`)
+//line views/layout/Menu.html:114
 	}
-//line views/layout/Menu.html:104
+//line views/layout/Menu.html:115
 }
 
-//line views/layout/Menu.html:104
+//line views/layout/Menu.html:115
 func WriteMenuItem(qq422016 qtio422016.Writer, i *menu.Item, path []string, breadcrumbs cmenu.Breadcrumbs, indent int, ps *cutil.PageState) {
-//line views/layout/Menu.html:104
+//line views/layout/Menu.html:115
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/layout/Menu.html:104
+//line views/layout/Menu.html:115
 	StreamMenuItem(qw422016, i, path, breadcrumbs, indent, ps)
-//line views/layout/Menu.html:104
+//line views/layout/Menu.html:115
 	qt422016.ReleaseWriter(qw422016)
-//line views/layout/Menu.html:104
+//line views/layout/Menu.html:115
 }
 
-//line views/layout/Menu.html:104
+//line views/layout/Menu.html:115
 func MenuItem(i *menu.Item, path []string, breadcrumbs cmenu.Breadcrumbs, indent int, ps *cutil.PageState) string {
-//line views/layout/Menu.html:104
+//line views/layout/Menu.html:115
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/layout/Menu.html:104
+//line views/layout/Menu.html:115
 	WriteMenuItem(qb422016, i, path, breadcrumbs, indent, ps)
-//line views/layout/Menu.html:104
+//line views/layout/Menu.html:115
 	qs422016 := string(qb422016.B)
-//line views/layout/Menu.html:104
+//line views/layout/Menu.html:115
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/layout/Menu.html:104
+//line views/layout/Menu.html:115
 	return qs422016
-//line views/layout/Menu.html:104
+//line views/layout/Menu.html:115
 }

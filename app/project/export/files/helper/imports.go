@@ -16,12 +16,13 @@ var (
 	ImpAudit         = AppImport("app/lib/audit")
 	ImpApp           = AppImport("app")
 	ImpAppController = AppImport("app/controller")
+	ImpAppDatabase   = AppImport("app/lib/database")
 	ImpAppMenu       = AppImport("app/lib/menu")
 	ImpAppUtil       = AppImport("app/util")
 	ImpContext       = golang.NewImport(golang.ImportTypeInternal, "context")
 	ImpComponents    = AppImport("views/components")
 	ImpCutil         = AppImport("app/controller/cutil")
-	ImpDatabase      = AppImport("app/lib/database")
+	ImpDBDriver      = golang.NewImport(golang.ImportTypeInternal, "database/sql/driver")
 	ImpErrors        = golang.NewImport(golang.ImportTypeExternal, "github.com/pkg/errors")
 	ImpFastHTTP      = golang.NewImport(golang.ImportTypeExternal, "github.com/valyala/fasthttp")
 	ImpFilter        = AppImport("app/lib/filter")
@@ -41,6 +42,7 @@ var (
 	ImpTime          = golang.NewImport(golang.ImportTypeInternal, "time")
 	ImpURL           = golang.NewImport(golang.ImportTypeInternal, "net/url")
 	ImpUUID          = golang.NewImport(golang.ImportTypeExternal, "github.com/google/uuid")
+	ImpXML           = golang.NewImport(golang.ImportTypeInternal, "encoding/xml")
 )
 
 func AppImport(path string) *golang.Import {

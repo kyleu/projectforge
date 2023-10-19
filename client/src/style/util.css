@@ -194,6 +194,10 @@
   white-space: pre;
 }
 
+.prewsl {
+  white-space: pre-line;
+}
+
 .expand-collapse {
   float: left;
   margin-top: 2px;

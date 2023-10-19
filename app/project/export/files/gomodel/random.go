@@ -43,9 +43,15 @@ func randFor(col *model.Column, pkg string, enums enum.Enums) (string, error) {
 			return "", err
 		}
 		if pkg == et.PackageWithGroup("") {
+			if et.Simple() {
+				return fmt.Sprintf("%s(util.RandomString(12))", et.Proper()), nil
+			}
+			return fmt.Sprintf("All%s.Random()", et.ProperPlural()), nil
+		}
+		if et.Simple() {
 			return fmt.Sprintf("%s(util.RandomString(12))", et.Proper()), nil
 		}
-		return fmt.Sprintf("%s.%s(util.RandomString(12))", et.Package, et.Proper()), nil
+		return fmt.Sprintf("%s.All%s.Random()", et.Package, et.ProperPlural()), nil
 	case types.KeyInt:
 		return "util.RandomInt(10000)", nil
 	case types.KeyFloat:
@@ -58,9 +64,11 @@ func randFor(col *model.Column, pkg string, enums enum.Enums) (string, error) {
 		return nilKey, nil
 	case types.KeyString:
 		switch col.Format {
-		case model.FmtHTML:
+		case model.FmtHTML.Key:
 			return "\"<h3>\" + util.RandomString(6) + \"</h3>\"", nil
-		case model.FmtURL:
+		case model.FmtIcon.Key:
+			return "util.RandomIcon()", nil
+		case model.FmtURL.Key:
 			return "\"https://\" + util.RandomString(6) + \".com/\" + util.RandomString(6)", nil
 		default:
 			return "util.RandomString(12)", nil

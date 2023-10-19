@@ -32,7 +32,7 @@ func Row(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*f
 		}
 		if col.Type.Key() == types.KeyUUID && args.Database == util.DatabaseSQLServer {
 			if col.Nullable {
-				g.AddImport(helper.ImpDatabase)
+				g.AddImport(helper.ImpAppDatabase)
 			} else {
 				g.AddImport(helper.ImpMSSQL)
 			}

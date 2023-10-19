@@ -6,12 +6,13 @@ import (
 	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/lib/types"
+	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func modelDiff(g *golang.File, m *model.Model) (*golang.Block, error) {
+func modelDiff(g *golang.File, m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock("Diff"+m.Proper(), "func")
 
 	ret.W("func (%s *%s) Diff(%sx *%s) util.Diffs {", m.FirstLetter(), m.Proper(), m.FirstLetter(), m.Proper())
@@ -31,8 +32,16 @@ func modelDiff(g *golang.File, m *model.Model) (*golang.Block, error) {
 			ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, fmt.Sprint(%s), fmt.Sprint(%s)))", col.Camel(), l, r)
 			ret.W("\t}")
 		case types.KeyEnum:
+			e, err := model.AsEnumInstance(col.Type, enums)
+			if err != nil {
+				return nil, err
+			}
 			ret.W("\tif %s != %s {", l, r)
-			ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, string(%s), string(%s)))", col.Camel(), l, r)
+			if e.Simple() {
+				ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, string(%s), string(%s)))", col.Camel(), l, r)
+			} else {
+				ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, %s.Key, %s.Key))", col.Camel(), l, r)
+			}
 			ret.W("\t}")
 		case types.KeyString:
 			ret.W("\tif %s != %s {", l, r)

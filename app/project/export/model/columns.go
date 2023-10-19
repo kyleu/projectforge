@@ -37,9 +37,15 @@ func (c Columns) WithTag(t string) Columns {
 	})
 }
 
-func (c Columns) WithoutTag(t string) Columns {
+func (c Columns) WithoutTags(t ...string) Columns {
 	return lo.Reject(c, func(col *Column, _ int) bool {
-		return col.HasTag(t)
+		return len(lo.Intersect(col.Tags, t)) > 0
+	})
+}
+
+func (c Columns) WithFormat(f string) Columns {
+	return lo.Filter(c, func(col *Column, _ int) bool {
+		return col.Format == f
 	})
 }
 

@@ -12,6 +12,7 @@ type Group struct {
 	Key         string   `json:"key"`
 	Title       string   `json:"title,omitempty"`
 	Description string   `json:"description,omitempty"`
+	Route       string   `json:"route,omitempty"`
 	Icon        string   `json:"icon,omitempty"`
 	Tags        []string `json:"tags,omitempty"`
 	Children    Groups   `json:"children,omitempty"`

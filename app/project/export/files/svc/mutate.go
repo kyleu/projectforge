@@ -21,7 +21,7 @@ func ServiceMutate(m *model.Model, args *model.Args, addHeader bool, linebreak s
 	lo.ForEach(helper.ImportsForTypes("go", "", m.PKs().Types()...), func(imp *golang.Import, _ int) {
 		g.AddImport(imp)
 	})
-	g.AddImport(helper.ImpAppUtil, helper.ImpContext, helper.ImpSQLx, helper.ImpDatabase, helper.ImpLo)
+	g.AddImport(helper.ImpAppUtil, helper.ImpContext, helper.ImpSQLx, helper.ImpAppDatabase, helper.ImpLo)
 
 	if add, err := serviceCreate(g, m, args.Audit(m)); err == nil {
 		g.AddBlocks(add)

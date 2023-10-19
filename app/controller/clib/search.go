@@ -23,6 +23,7 @@ func Search(rc *fasthttp.RequestCtx) {
 			ps.Title = fmt.Sprintf("[%s] %s", q, ps.Title)
 		}
 		ps.Data = results
+		ps.DefaultNavIcon = "search"
 		bc := []string{"Search||/search"}
 		if q != "" {
 			bc = append(bc, q)

@@ -16,6 +16,7 @@ type Item struct {
 	Badge       string `json:"badge,omitempty"`
 	Icon        string `json:"icon,omitempty"`
 	Route       string `json:"route,omitempty"`
+	Warning     string `json:"warning,omitempty"`
 	Children    Items  `json:"children,omitempty"`
 }
 

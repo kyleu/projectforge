@@ -58,7 +58,11 @@
           {%= components.SVGRef(i.Icon, 16, 16, "icon", ps) %}
         {% endif %}
         {% if i.Route != "" %}
-          <a href="{%s i.Route %}">{%s i.Title %}</a>
+          {% if i.Warning != "" %}
+            <a class="link-confirm" data-message="{%s i.Warning %}" href="{%s i.Route %}">{%s i.Title %}</a>
+          {% else %}
+            <a href="{%s i.Route %}">{%s i.Title %}</a>
+          {% endif %}
         {% else %}
           {%s i.Title %}
         {% endif %}
@@ -86,10 +90,17 @@
       if final {
         finalClass += " final"
       }
+      if i.Warning != "" {
+        finalClass += " link-confirm"
+      }
     %}
     {%= vutil.Indent(true, indent + 1) %}
     <li data-menu-key="{%s i.Key %}">
+      {% if i.Warning != "" %}
+      <a class="{%s finalClass %}" data-message="{%s i.Warning %}" href="{%s i.Route %}" title="{%s i.Desc() %}">
+      {% else %}
       <a class="{%s finalClass %}" href="{%s i.Route %}" title="{%s i.Desc() %}">
+      {% endif %}
         {% if i.Badge != "" %}
           {%= vutil.Indent(true, indent + 3) %}
           <div class="badge">{%s i.Badge %}</div>

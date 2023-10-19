@@ -1,6 +1,7 @@
 <!-- Content managed by Project Forge, see [projectforge.md] for details. -->
 {% import (
   "fmt"
+  "strings"
 
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
@@ -22,6 +23,14 @@
     {% else %}
       <svg class="{%s cls %}" style="{%s style %}"><use xlink:href="#svg-{%s k %}" /></svg>
     {% endif %}
+  {% endif %}
+{% endstripspace %}{% endfunc %}
+
+{% func Icon(k string, size int, cls string, ps *cutil.PageState) %}{% stripspace %}
+  {% if strings.Contains(k, "/") %}
+    <img src="{%s k %}" style="width: {%d size %}px; height: {%d size %}px;" />
+  {% else %}
+    {%= SVGRef(k, size, size, cls, ps) %}
   {% endif %}
 {% endstripspace %}{% endfunc %}
 

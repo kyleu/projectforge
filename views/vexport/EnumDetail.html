@@ -29,11 +29,7 @@
   </div>
   <div class="card">
     <h3>{%= components.SVGRefIcon(`star`, ps) %} Values</h3>
-    <ul class="mt">
-      {%- for _, x := range e.Values -%}
-      <li><code>{%s x %}</code></li>
-      {%- endfor -%}
-    </ul>
+    {%= enumValues(e, as, ps) %}
   </div>{%- if p.File != nil -%}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`file`, ps) %} Exported Files</h3>
@@ -76,13 +72,17 @@
     <table class="mt min-200 full-width">
       <thead>
         <tr>
-          <th>Name</th>
+          <th class="shrink">Name</th>
+          <th>Title</th>
+          <th>Description</th>
         </tr>
       </thead>
       <tbody>
         {%- for _, v := range enum.Values -%}
         <tr>
-          <td>{%s v %}</td>
+          <td>{%s v.Key %}</td>
+          <td>{%s v.Title %}</td>
+          <td>{%s v.Description %}</td>
         </tr>
         {%- endfor -%}
       </tbody>

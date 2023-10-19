@@ -37,7 +37,7 @@
             {%= components.TableInput("tags", "", "Tags", strings.Join(e.Tags, `, `), 5, export.Helpers["enum.tags"]...) %}
             {%= components.TableInput("titleOverride", "", "Title Override", e.TitleOverride, 5, export.Helpers["enum.titleOverride"]...) %}
             {%= components.TableInput("properOverride", "", "Proper Override", e.ProperOverride, 5, export.Helpers["enum.properOverride"]...) %}
-            {%= components.TableTextarea("values", "", "Values", 3, strings.Join(e.Values, "\n"), 5, export.Helpers["enum.values"]...) %}
+            {%= components.TableTextarea("values", "", "Values", 3, util.ToJSON(e.Values), 5, export.Helpers["enum.values"]...) %}
             {%= components.TableTextarea("config", "", "Config", 3, util.ToJSON(e.Config), 5, export.Helpers["enum.config"]...) %}
           </tbody>
         </table>

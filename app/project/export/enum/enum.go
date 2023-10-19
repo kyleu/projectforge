@@ -17,7 +17,7 @@ type Enum struct {
 	Group          []string      `json:"group,omitempty"`
 	Description    string        `json:"description,omitempty"`
 	Icon           string        `json:"icon,omitempty"`
-	Values         []string      `json:"values,omitempty"`
+	Values         Values        `json:"values,omitempty"`
 	Tags           []string      `json:"tags,omitempty"`
 	TitleOverride  string        `json:"title,omitempty"`
 	ProperOverride string        `json:"proper,omitempty"`
@@ -39,6 +39,18 @@ func (e *Enum) Proper() string {
 	return util.StringToCamel(e.ProperOverride)
 }
 
+func (e *Enum) ProperPlural() string {
+	ret := util.StringToPlural(e.Proper())
+	if ret == e.Proper() {
+		return ret + "Set"
+	}
+	return ret
+}
+
+func (e *Enum) FirstLetter() any {
+	return strings.ToLower(e.Name[0:1])
+}
+
 func (e *Enum) IconSafe() string {
 	if _, ok := util.SVGLibrary[e.Icon]; ok {
 		return e.Icon
@@ -57,7 +69,10 @@ func (e *Enum) PackageWithGroup(prefix string) string {
 		}
 		return prefix + e.Package
 	}
-	x := []string{prefix}
+	var x []string
+	if prefix != "" {
+		x = append(x, prefix)
+	}
 	x = append(x, e.Group...)
 	x = append(x, e.Package)
 	return strings.Join(x, "/")
@@ -76,9 +91,13 @@ func (e *Enum) Breadcrumbs() string {
 }
 
 func (e *Enum) ValuesCamel() []string {
-	return lo.Map(e.Values, func(x string, _ int) string {
-		return util.StringToCamel(x)
+	return lo.Map(e.Values, func(x *Value, _ int) string {
+		return util.StringToCamel(x.Key)
 	})
+}
+
+func (e *Enum) Simple() bool {
+	return e.Values.AllSimple()
 }
 
 type Enums []*Enum

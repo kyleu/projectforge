@@ -67,7 +67,7 @@ func menuItemsFor(groups model.Groups, models model.Models) menu.Items {
 
 func menuItemForGroup(g *model.Group, models model.Models, pth ...string) *menu.Item {
 	np := append(slices.Clone(pth), g.Key)
-	ret := &menu.Item{Key: g.Key, Title: g.TitleSafe(), Description: g.Description, Icon: g.IconSafe()}
+	ret := &menu.Item{Key: g.Key, Title: g.TitleSafe(), Description: g.Description, Icon: g.IconSafe(), Route: g.Route}
 	lo.ForEach(g.Children, func(child *model.Group, _ int) {
 		ret.Children = append(ret.Children, menuItemForGroup(child, models, np...))
 	})

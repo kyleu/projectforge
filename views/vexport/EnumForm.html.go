@@ -121,7 +121,7 @@ func (p *EnumForm) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 	qw422016.N().S(`
             `)
 //line views/vexport/EnumForm.html:40
-	components.StreamTableTextarea(qw422016, "values", "", "Values", 3, strings.Join(e.Values, "\n"), 5, export.Helpers["enum.values"]...)
+	components.StreamTableTextarea(qw422016, "values", "", "Values", 3, util.ToJSON(e.Values), 5, export.Helpers["enum.values"]...)
 //line views/vexport/EnumForm.html:40
 	qw422016.N().S(`
             `)

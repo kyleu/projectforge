@@ -1,6 +1,8 @@
 package gomodel
 
 import (
+	"fmt"
+
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
 
@@ -15,7 +17,7 @@ func modelFromMap(g *golang.File, m *model.Model, enums enum.Enums, database str
 	ret := golang.NewBlock(m.Package+"FromForm", "func")
 	ret.W("func FromMap(m util.ValueMap, setPK bool) (*%s, error) {", m.Proper())
 	ret.W("\tret := &%s{}", m.Proper())
-	cols := m.Columns.WithoutTag("created").WithoutTag("updated").WithoutTag(model.RevisionType)
+	cols := m.Columns.WithoutTags("created", "updated", model.RevisionType)
 	needsErr := lo.ContainsBy(cols, func(c *model.Column) bool {
 		return c.NeedsErr(m.Name, database)
 	})
@@ -71,16 +73,22 @@ func forCols(g *golang.File, ret *golang.Block, indent int, m *model.Model, enum
 			catchErr("err")
 			ret.W(ind+"ret.%s = %sArg", col.Proper(), col.Camel())
 		case col.Type.Key() == types.KeyEnum:
-			ret.W(ind+"ret%s, err := m.Parse%s(%q, true, true)", col.Proper(), col.ToGoMapParse(), col.Camel())
-			catchErr("err")
 			e, err := model.AsEnumInstance(col.Type, enums)
 			if err != nil {
 				return err
 			}
-			if e.PackageWithGroup("") == m.PackageWithGroup("") {
-				ret.W(ind+"ret.%s = %s(ret%s)", col.Proper(), e.Proper(), col.Proper())
+			ret.W(ind+"ret%s, err := m.Parse%s(%q, true, true)", col.Proper(), col.ToGoMapParse(), col.Camel())
+			catchErr("err")
+			enumRef := ""
+			if e.Simple() {
+				enumRef = fmt.Sprintf("%s(ret%s)", e.Proper(), col.Proper())
 			} else {
-				ret.W(ind+"ret.%s = %s.%s(ret%s)", col.Proper(), e.Package, e.Proper(), col.Proper())
+				enumRef = fmt.Sprintf("All%s.Get(ret%s, nil)", e.ProperPlural(), col.Proper())
+			}
+			if e.PackageWithGroup("") == m.PackageWithGroup("") {
+				ret.W(ind+"ret.%s = %s", col.Proper(), enumRef)
+			} else {
+				ret.W(ind+"ret.%s = %s.%s", col.Proper(), e.Package, enumRef)
 			}
 		case col.Nullable || col.Type.Scalar():
 			ret.W(ind+"ret.%s, err = m.Parse%s(%q, true, true)", col.Proper(), col.ToGoMapParse(), col.Camel())

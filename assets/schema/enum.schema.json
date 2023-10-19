@@ -29,10 +29,34 @@
     },
     "values": {
       "description": "the possible values of this enum's members",
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "description": "the name of the enum, lowercase and underscore-delimited",
+                "type": "string"
+              },
+              "title": {
+                "description": "the title of this enum",
+                "type": "string"
+              },
+              "description": {
+                "description": "used in UI and documentation",
+                "type": "string"
+              }
+            }
+          }
+        }
+      ]
     },
     "tags": {
       "description": "simple flags for this model; unused",

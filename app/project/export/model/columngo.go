@@ -9,7 +9,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-const msgTextarea = `{%%%%= components.TableTextarea(%q, %q, %q, 8, util.ToJSON(%s), 5, %q) %%%%}`
+const msgTextarea = `{%%%%= components.TableTextarea(%q, %q, %q, 8, util.ToJSON(%s), 5, %s) %%%%}`
 
 func (c *Column) ToSQLType() (string, error) {
 	ret, err := ToSQLType(c.Type)
@@ -35,21 +35,28 @@ func (c *Column) ToGoEditString(prefix string, format string, id string, enums e
 	case types.KeyAny:
 		return fmt.Sprintf(msgTextarea, c.Camel(), id, c.Title(), c.ToGoString(prefix), h), nil
 	case types.KeyBool:
-		return fmt.Sprintf(`{%%%%= components.TableBoolean(%q, %q, %s, 5, %q) %%%%}`, c.Camel(), c.Title(), prefix+c.Proper(), h), nil
-	// case types.KeyEnum:
-	//	return fmt.Sprintf(`{%%%%= components.TableInput(%q, %q, string(%s), 5, %q) %%%%}`, c.Camel(), c.Title(), c.ToGoString(prefix), h), nil
+		return fmt.Sprintf(`{%%%%= components.TableBoolean(%q, %q, %s, 5, %s) %%%%}`, c.Camel(), c.Title(), prefix+c.Proper(), h), nil
 	case types.KeyEnum:
 		e, err := AsEnumInstance(c.Type, enums)
 		if err != nil {
 			return "", err
 		}
-		eRef := strings.Join(util.StringArrayQuoted(e.Values), ", ")
-		msg := `{%%%%= components.TableSelect(%q, %q, %q, string(%s), []string{%s}, []string{%s}, 5, %q) %%%%}`
-		return fmt.Sprintf(msg, c.Camel(), id, c.Title(), c.ToGoString(prefix), eRef, eRef, h), nil
+		ePrefix := fmt.Sprintf("All%s", e.ProperPlural())
+		if e.Package != "" {
+			ePrefix = e.Package + "." + ePrefix
+		}
+		eKeys := ePrefix + ".Keys()"
+		eTitles := ePrefix + ".Strings()"
+		call := fmt.Sprintf("%s%s.Key", prefix, c.Proper())
+		if e.Simple() {
+			call = fmt.Sprintf("string(%s)", c.ToGoString(prefix))
+		}
+		msg := `{%%%%= components.TableSelect(%q, %q, %q, %s, %s, %s, 5, %s) %%%%}`
+		return fmt.Sprintf(msg, c.Camel(), id, c.Title(), call, eKeys, eTitles, h), nil
 	case types.KeyInt:
-		return fmt.Sprintf(`{%%%%= components.TableInputNumber(%q, %q, %q, %s, 5, %q) %%%%}`, c.Camel(), id, c.Title(), prefix+c.Proper(), h), nil
+		return fmt.Sprintf(`{%%%%= components.TableInputNumber(%q, %q, %q, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), prefix+c.Proper(), h), nil
 	case types.KeyFloat:
-		return fmt.Sprintf(`{%%%%= components.TableInputFloat(%q, %q, %q, %s, 5, %q) %%%%}`, c.Camel(), id, c.Title(), prefix+c.Proper(), h), nil
+		return fmt.Sprintf(`{%%%%= components.TableInputFloat(%q, %q, %q, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), prefix+c.Proper(), h), nil
 	case types.KeyList, types.KeyMap, types.KeyValueMap:
 		return fmt.Sprintf(msgTextarea, c.Camel(), id, c.Title(), c.ToGoString(prefix), h), nil
 	case types.KeyReference:
@@ -59,35 +66,35 @@ func (c *Column) ToGoEditString(prefix string, format string, id string, enums e
 		if !c.Nullable {
 			gs = "&" + gs
 		}
-		return fmt.Sprintf(`{%%%%= components.TableInputTimestampDay(%q, %q, %q, %s, 5, %q) %%%%}`, c.Camel(), id, c.Title(), gs, h), nil
+		return fmt.Sprintf(`{%%%%= components.TableInputTimestampDay(%q, %q, %q, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), gs, h), nil
 	case types.KeyTimestamp:
 		gs := c.ToGoString(prefix)
 		if !c.Nullable {
 			gs = "&" + gs
 		}
-		return fmt.Sprintf(`{%%%%= components.TableInputTimestamp(%q, %q, %q, %s, 5, %q) %%%%}`, c.Camel(), id, c.Title(), gs, h), nil
+		return fmt.Sprintf(`{%%%%= components.TableInputTimestamp(%q, %q, %q, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), gs, h), nil
 	case types.KeyUUID:
 		gs := prefix + c.Proper()
 		if !c.Nullable {
 			gs = "&" + gs
 		}
-		return fmt.Sprintf(`{%%%%= components.TableInputUUID(%q, %q, %q, %s, 5, %q) %%%%}`, c.Camel(), id, c.Title(), gs, h), nil
+		return fmt.Sprintf(`{%%%%= components.TableInputUUID(%q, %q, %q, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), gs, h), nil
 	case types.KeyString:
 		switch format {
-		case FmtCode, FmtCodeHidden, FmtHTML, FmtJSON:
-			return fmt.Sprintf(`{%%%%= components.TableTextarea(%q, %q, %q, 8, %s, 5, %q) %%%%}`, c.Camel(), id, c.Title(), c.ToGoString(prefix), h), nil
-		case FmtSelect:
+		case FmtCode.Key, FmtCodeHidden.Key, FmtHTML.Key, FmtJSON.Key:
+			return fmt.Sprintf(`{%%%%= components.TableTextarea(%q, %q, %q, 8, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), c.ToGoString(prefix), h), nil
+		case FmtSelect.Key:
 			if len(c.Values) == 0 {
-				return fmt.Sprintf(`{%%%%= components.TableInput(%q, %q, %q, %s, 5, %q) %%%%}`, c.Camel(), id, c.Title(), c.ToGoString(prefix), h), nil
+				return fmt.Sprintf(`{%%%%= components.TableInput(%q, %q, %q, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), c.ToGoString(prefix), h), nil
 			}
-			sel := `{%%%%= components.TableSelect(%q, "", %q, %s, %s, nil, 5, %q) %%%%}`
+			sel := `{%%%%= components.TableSelect(%q, "", %q, %s, %s, nil, 5, %s) %%%%}`
 			opts := "[]string{" + strings.Join(util.StringArrayQuoted(c.Values), ", ") + "}"
 			return fmt.Sprintf(sel, c.Camel(), c.Title(), c.ToGoString(prefix), opts, h), nil
 		default:
-			return fmt.Sprintf(`{%%%%= components.TableInput(%q, %q, %q, %s, 5, %q) %%%%}`, c.Camel(), id, c.Title(), c.ToGoString(prefix), h), nil
+			return fmt.Sprintf(`{%%%%= components.TableInput(%q, %q, %q, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), c.ToGoString(prefix), h), nil
 		}
 	default:
-		return fmt.Sprintf(`{%%%%= components.TableInput(%q, %q, %q, %s, 5, %q) %%%%}`, c.Camel(), id, c.Title(), c.ToGoString(prefix), h), nil
+		return fmt.Sprintf(`{%%%%= components.TableInput(%q, %q, %q, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), c.ToGoString(prefix), h), nil
 	}
 }
 

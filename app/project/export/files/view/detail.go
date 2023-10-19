@@ -25,7 +25,7 @@ func detail(m *model.Model, args *model.Args, addHeader bool, linebreak string) 
 	if len(rrs) > 0 {
 		g.AddImport(helper.ImpFilter)
 	}
-	if m.Columns.HasFormat(model.FmtSI) {
+	if m.Columns.HasFormat(model.FmtSI.Key) {
 		g.AddImport(helper.ImpAppUtil)
 	}
 	lo.ForEach(rrs, func(rel *model.Relation, _ int) {
@@ -33,6 +33,12 @@ func detail(m *model.Model, args *model.Args, addHeader bool, linebreak string) 
 		g.AddImport(helper.AppImport("app/" + rm.PackageWithGroup("")))
 		if rm.PackageWithGroup("") != m.PackageWithGroup("") {
 			g.AddImport(helper.AppImport("views/" + rm.PackageWithGroup("v")))
+		}
+	})
+	lo.ForEach(m.Columns, func(c *model.Column, _ int) {
+		if c.Type.Key() == types.KeyEnum {
+			e, _ := model.AsEnumInstance(c.Type, args.Enums)
+			g.AddImport(helper.AppImport("app/" + e.PackageWithGroup("")))
 		}
 	})
 	if len(rrs) > 0 || m.IsRevision() || m.IsHistory() || args.Audit(m) {
@@ -59,7 +65,7 @@ func exportViewDetailClass(m *model.Model, models model.Models, audit bool, g *g
 	if m.IsHistory() {
 		ret.W("  Histories %s.Histories", m.Package)
 	}
-	if m.Columns.HasFormat(model.FmtCountry) {
+	if m.Columns.HasFormat(model.FmtCountry.Key) {
 		g.AddImport(helper.ImpAppUtil)
 	}
 	lo.ForEach(m.Relations, func(rel *model.Relation, _ int) {
@@ -101,14 +107,24 @@ func exportViewDetailBody(g *golang.Template, m *model.Model, audit bool, models
 	ret.W("    <table class=\"mt\">")
 	ret.W("      <tbody>")
 	for _, col := range m.Columns {
+		if col.HasTag("debug-only") {
+			ret.W(`        {%%- if as.Debug -%%}`)
+		}
 		ret.W("        <tr>")
 		h, err := col.Help(enums)
 		if err != nil {
 			return nil, err
 		}
-		ret.W(`          <th class="shrink" title="%s">%s</th>`, h, col.Title())
-		viewDetailColumn(g, ret, models, m, false, col, "p.Model.", 5)
+		hlp := h
+		if !strings.HasPrefix(hlp, "\"") {
+			hlp = "\"{%%s " + hlp + " %%}\""
+		}
+		ret.W(`          <th class="shrink" title=%s>%s</th>`, hlp, col.Title())
+		viewDetailColumn(g, ret, models, m, false, col, "p.Model.", 5, enums)
 		ret.W("        </tr>")
+		if col.HasTag("debug-only") {
+			ret.W(`        {%%- endif -%%}`)
+		}
 	}
 	ret.W("      </tbody>")
 	ret.W("    </table>")
@@ -159,7 +175,7 @@ func exportViewDetailReverseRelations(ret *golang.Block, m *model.Model, models 
 		ret.W("        <input id=\"accordion-%s\" type=\"checkbox\" hidden />", tgtName)
 		ret.W("        <label for=\"accordion-%s\">", tgtName)
 		ret.W("          {%%= components.ExpandCollapse(3, ps) %%}")
-		ret.W("          {%%%%= components.SVGRefIcon(`%s`, ps) %%%%}", tgt.Icon)
+		ret.W("          {%%%%= components.SVGRef(`%s`, 16, 16, `icon`, ps) %%%%}", tgt.Icon)
 		msg := "          {%%%%s util.StringPlural(len(p.Rel%s), \"%s\") %%%%} by [%s]"
 		ret.W(msg, tgtName, tgt.Title(), strings.Join(tgtCols.Titles(), ", "))
 		ret.W("        </label>")
@@ -188,20 +204,22 @@ func exportViewDetailReverseRelations(ret *golang.Block, m *model.Model, models 
 	ret.W("  </div>")
 }
 
-func viewDetailColumn(g *golang.Template, ret *golang.Block, models model.Models, m *model.Model, link bool, col *model.Column, modelKey string, indent int) {
+func viewDetailColumn(
+	g *golang.Template, ret *golang.Block, models model.Models, m *model.Model, link bool, col *model.Column, modelKey string, indent int, enums enum.Enums,
+) {
 	ind := util.StringRepeat("  ", indent)
 	rels := m.RelationsFor(col)
 	if len(rels) == 0 {
 		switch {
 		case col.PK && link:
-			ret.W(ind+"<td><a href=%q>%s</a></td>", m.LinkURL(modelKey), col.ToGoViewString(modelKey, true, false))
+			ret.W(ind+"<td><a href=%q>%s</a></td>", m.LinkURL(modelKey, enums), col.ToGoViewString(modelKey, true, false, enums, "detail"))
 		case col.HasTag("grouped"):
-			u := fmt.Sprintf("/%s/%s/%s", m.Route(), col.TitleLower(), col.ToGoViewString(modelKey, false, true))
-			ret.W(ind+"<td><a href=%q>%s</a></td>", u, col.ToGoViewString(modelKey, true, false))
+			u := fmt.Sprintf("/%s/%s/%s", m.Route(), col.TitleLower(), col.ToGoViewString(modelKey, false, true, enums, "simple"))
+			ret.W(ind+"<td><a href=%q>%s</a></td>", u, col.ToGoViewString(modelKey, true, false, enums, "detail"))
 		case col.HasTag("title"):
-			ret.W(ind + "<td><strong>" + col.ToGoViewString(modelKey, true, false) + "</strong></td>")
+			ret.W(ind + "<td><strong>" + col.ToGoViewString(modelKey, true, false, enums, "detail") + "</strong></td>")
 		default:
-			ret.W(ind + "<td>" + col.ToGoViewString(modelKey, true, false) + "</td>")
+			ret.W(ind + "<td>" + col.ToGoViewString(modelKey, true, false, enums, "detail") + "</td>")
 		}
 		return
 	}
@@ -229,9 +247,9 @@ func viewDetailColumn(g *golang.Template, ret *golang.Block, models model.Models
 
 	ret.W(ind + "<td class=\"nowrap\">")
 	if col.PK && link {
-		ret.W(ind + "  <a href=\"" + m.LinkURL(modelKey) + "\">" + col.ToGoViewString(modelKey, true, false) + toStrings + "</a>")
+		ret.W(ind + "  <a href=\"" + m.LinkURL(modelKey, enums) + "\">" + col.ToGoViewString(modelKey, true, false, enums, "detail") + toStrings + "</a>")
 	} else {
-		ret.W(ind + "  " + col.ToGoViewString(modelKey, true, false) + toStrings)
+		ret.W(ind + "  " + col.ToGoViewString(modelKey, true, false, enums, "detail") + toStrings)
 	}
 	const l = "<a title=%q href=\"{%%%%s %s %%%%}\">{%%%%= components.SVGRef(%q, 18, 18, \"\", ps) %%%%}</a>"
 	const msgNotNull = "%s  " + l

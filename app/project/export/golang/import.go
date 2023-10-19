@@ -51,25 +51,7 @@ func (i Imports) Render(linebreak string) string {
 		return fmt.Sprintf("import %s", i[0].Render())
 	}
 	ret := []string{"import ("}
-
-	add := func(x []string, lf bool) {
-		if len(x) > 0 {
-			if lf {
-				ret = append(ret, "")
-			}
-			lo.ForEach(x, func(item string, _ int) {
-				ret = append(ret, fmt.Sprintf("\t%s", item))
-			})
-		}
-	}
-
-	internal := i.ByType(ImportTypeInternal)
-	external := i.ByType(ImportTypeExternal)
-	app := i.ByType(ImportTypeApp)
-	add(internal, false)
-	add(external, len(internal) > 0)
-	add(app, len(external) > 0 || len(internal) > 0)
-
+	ret = append(ret, i.toStrings("\t")...)
 	ret = append(ret, ")")
 	return strings.Join(ret, linebreak)
 }
@@ -79,6 +61,13 @@ func (i Imports) RenderHTML(linebreak string) string {
 		return fmt.Sprintf("{%% import %s %%}", i[0].Render())
 	}
 	ret := []string{"{%% import ("}
+	ret = append(ret, i.toStrings("  ")...)
+	ret = append(ret, ") %%}")
+	return strings.Join(ret, linebreak)
+}
+
+func (i Imports) toStrings(whitespace string) []string {
+	var ret []string
 
 	add := func(x []string, lf bool) {
 		if len(x) > 0 {
@@ -86,23 +75,22 @@ func (i Imports) RenderHTML(linebreak string) string {
 				ret = append(ret, "")
 			}
 			lo.ForEach(x, func(item string, _ int) {
-				ret = append(ret, fmt.Sprintf("  %s", item))
+				ret = append(ret, whitespace+item)
 			})
 		}
 	}
 
-	internal := i.ByType(ImportTypeInternal)
-	external := i.ByType(ImportTypeExternal)
-	app := i.ByType(ImportTypeApp)
+	internal := i.renderByType(ImportTypeInternal)
+	external := i.renderByType(ImportTypeExternal)
+	app := i.renderByType(ImportTypeApp)
 	add(internal, false)
 	add(external, len(internal) > 0)
 	add(app, len(external) > 0 || len(internal) > 0)
 
-	ret = append(ret, ") %%}")
-	return strings.Join(ret, linebreak)
+	return ret
 }
 
-func (i Imports) ByType(t ImportType) []string {
+func (i Imports) renderByType(t ImportType) []string {
 	ret := lo.FilterMap(i, func(x *Import, _ int) (string, bool) {
 		return x.Render(), x.Type == t
 	})

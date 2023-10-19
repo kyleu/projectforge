@@ -61,7 +61,7 @@ func exportViewListBody(m *model.Model, models model.Models) *golang.Block {
 		ret.W("    <h3>{%%%%= components.SVGRefIcon(`"+m.Icon+"`, ps) %%%%}{%%%%s ps.Title %%%%} <a href=\"/%s/new\"><button>New</button></a></h3>", m.Route())
 		ret.W("    <div class=\"clear\"></div>")
 		ret.W("    {%%- if p.SearchQuery != \"\" -%%}")
-		ret.W("    <em>Search results for [{%%s p.SearchQuery %%}]</em>")
+		ret.W("    <em>Search results for [{%%s p.SearchQuery %%}]</em> (<a href=\"?\">clear</a>)")
 		ret.W("    {%%- endif -%%}")
 	}
 	ret.W("    {%%- if len(p.Models) == 0 -%%}")

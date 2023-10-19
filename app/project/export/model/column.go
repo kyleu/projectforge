@@ -12,17 +12,6 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-const (
-	FmtCode       = "code"
-	FmtCodeHidden = "codehidden"
-	FmtCountry    = "country"
-	FmtHTML       = "html"
-	FmtJSON       = "json"
-	FmtSelect     = "select"
-	FmtSI         = "si"
-	FmtURL        = "url"
-)
-
 var ColumnFieldDescs = util.FieldDescs{
 	{Key: "name", Title: "Name", Description: "The name of the column"},
 	{Key: "type", Title: "Type", Description: "The type of the column"},
@@ -115,8 +104,8 @@ func (c *Column) ToGoString(prefix string) string {
 	return ToGoString(c.Type, prefix+c.Proper(), false)
 }
 
-func (c *Column) ToGoViewString(prefix string, verbose bool, url bool) string {
-	return ToGoViewString(c.Type, prefix+c.Proper(), c.Nullable, c.Format, verbose, url)
+func (c *Column) ToGoViewString(prefix string, verbose bool, url bool, enums enum.Enums, src string) string {
+	return ToGoViewString(c.Type, prefix+c.Proper(), c.Nullable, c.Format, verbose, url, enums, src)
 }
 
 func (c *Column) ToGoType(pkg string, enums enum.Enums) (string, error) {

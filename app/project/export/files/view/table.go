@@ -2,6 +2,7 @@ package view
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/samber/lo"
@@ -19,9 +20,15 @@ func table(m *model.Model, args *model.Args, addHeader bool, linebreak string) (
 	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "Table.html")
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpFilter)
 	g.AddImport(helper.AppImport("app/" + m.PackageWithGroup("")))
-	if m.Columns.HasFormat(model.FmtCountry) || m.Columns.HasFormat(model.FmtSI) {
+	if m.Columns.HasFormat(model.FmtCountry.Key) || m.Columns.HasFormat(model.FmtSI.Key) {
 		g.AddImport(helper.ImpAppUtil)
 	}
+	lo.ForEach(m.Columns, func(c *model.Column, _ int) {
+		if c.Type.Key() == types.KeyEnum {
+			e, _ := model.AsEnumInstance(c.Type, args.Enums)
+			g.AddImport(helper.AppImport("app/" + e.PackageWithGroup("")))
+		}
+	})
 	vtf, err := exportViewTableFunc(m, args.Models, args.Enums, g)
 	if err != nil {
 		return nil, err
@@ -31,7 +38,10 @@ func table(m *model.Model, args *model.Args, addHeader bool, linebreak string) (
 }
 
 func exportViewTableFunc(m *model.Model, models model.Models, enums enum.Enums, g *golang.Template) (*golang.Block, error) {
-	summCols := m.Columns.ForDisplay("summary")
+	xCols := m.Columns.ForDisplay("summary")
+	firstCols := xCols.WithTag("list-first")
+	restCols := xCols.WithoutTags("list-first")
+	summCols := append(slices.Clone(firstCols), restCols...)
 	ret := golang.NewBlock("Table", "func")
 	suffix := ""
 	lo.ForEach(m.Relations, func(rel *model.Relation, _ int) {
@@ -52,7 +62,11 @@ func exportViewTableFunc(m *model.Model, models model.Models, enums enum.Enums, 
 		if err != nil {
 			return nil, err
 		}
-		call := fmt.Sprintf("components.TableHeaderSimple(%q, %q, %q, %q, prms, ps.URI, ps)", m.Package, col.Name, util.StringToTitle(col.Name), h)
+		title := util.StringToTitle(col.Name)
+		if col.HasTag("no-title") {
+			title = ""
+		}
+		call := fmt.Sprintf("components.TableHeaderSimple(%q, %q, %q, %s, prms, ps.URI, ps)", m.Package, col.Name, title, h)
 		ret.W("        {%%= " + call + " %%}")
 	}
 	ret.W("      </tr>")
@@ -61,7 +75,7 @@ func exportViewTableFunc(m *model.Model, models model.Models, enums enum.Enums, 
 	ret.W("      {%%- for _, model := range models -%%}")
 	ret.W("      <tr>")
 	lo.ForEach(summCols, func(col *model.Column, _ int) {
-		viewTableColumn(g, ret, models, m, true, col, "model.", "", 4)
+		viewTableColumn(g, ret, models, m, true, col, "model.", "", 4, enums)
 	})
 	ret.W("      </tr>")
 	ret.W("      {%%- endfor -%%}")
@@ -77,21 +91,24 @@ func exportViewTableFunc(m *model.Model, models model.Models, enums enum.Enums, 
 }
 
 func viewTableColumn(
-	g *golang.Template, ret *golang.Block, models model.Models, m *model.Model, link bool, col *model.Column, modelKey string, prefix string, indent int,
+	g *golang.Template, ret *golang.Block, models model.Models, m *model.Model, link bool,
+	col *model.Column, modelKey string, prefix string, indent int, enums enum.Enums,
 ) {
 	ind := util.StringRepeat("  ", indent)
 	rels := m.RelationsFor(col)
 	if len(rels) == 0 {
 		switch {
 		case col.PK && link:
-			ret.W(ind+"<td><a href=%q>%s</a></td>", m.LinkURL(modelKey), col.ToGoViewString(modelKey, true, false))
+			ret.W(ind+"<td><a href=%q>%s</a></td>", m.LinkURL(modelKey, enums), col.ToGoViewString(modelKey, true, false, enums, "table"))
+		case col.HasTag("link") && link:
+			ret.W(ind+"<td><a href=%q>%s</a></td>", m.LinkURL(modelKey, enums), col.ToGoViewString(modelKey, true, false, enums, "table"))
 		case col.HasTag("grouped"):
-			u := fmt.Sprintf("/%s/%s/%s", m.Route(), col.TitleLower(), col.ToGoViewString(modelKey, false, true))
-			ret.W(ind+"<td><a href=%q>%s</a></td>", u, col.ToGoViewString(modelKey, true, false))
+			u := fmt.Sprintf("/%s/%s/%s", m.Route(), col.TitleLower(), col.ToGoViewString(modelKey, false, true, enums, "simple"))
+			ret.W(ind+"<td><a href=%q>%s</a></td>", u, col.ToGoViewString(modelKey, true, false, enums, "table"))
 		case col.HasTag("title"):
-			ret.W(ind + "<td><strong>" + col.ToGoViewString(modelKey, true, false) + "</strong></td>")
+			ret.W(ind + "<td><strong>" + col.ToGoViewString(modelKey, true, false, enums, "table") + "</strong></td>")
 		default:
-			ret.W(ind + "<td>" + col.ToGoViewString(modelKey, true, false) + "</td>")
+			ret.W(ind + "<td>" + col.ToGoViewString(modelKey, true, false, enums, "table") + "</td>")
 		}
 		return
 	}
@@ -104,9 +121,9 @@ func viewTableColumn(
 
 	ret.W(ind + "<td class=\"nowrap\">")
 	if col.PK && link {
-		ret.W(ind + "  <a href=\"" + m.LinkURL(modelKey) + "\">" + col.ToGoViewString(modelKey, true, false) + toStrings + "</a>")
+		ret.W(ind + "  <a href=\"" + m.LinkURL(modelKey, enums) + "\">" + col.ToGoViewString(modelKey, true, false, enums, "table") + toStrings + "</a>")
 	} else {
-		ret.W(ind + "  " + col.ToGoViewString(modelKey, true, false) + toStrings)
+		ret.W(ind + "  " + col.ToGoViewString(modelKey, true, false, enums, "table") + toStrings)
 	}
 	const l = "<a title=%q href=\"{%%%%s %s %%%%}\">{%%%%= components.SVGRef(%q, 18, 18, \"\", ps) %%%%}</a>"
 	const msgNotNull = "%s  " + l

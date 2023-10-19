@@ -14,14 +14,14 @@ func history(m *model.Model, args *model.Args, addHeader bool, linebreak string)
 	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "History.html")
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpLayout, helper.ImpFilter)
 	g.AddImport(helper.AppImport("app/" + m.PackageWithGroup("")))
-	if m.Columns.HasFormat(model.FmtCountry) {
+	if m.Columns.HasFormat(model.FmtCountry.Key) {
 		g.AddImport(helper.ImpAppUtil)
 	}
 	evht, err := exportViewHistoryTable(m, args.Enums)
 	if err != nil {
 		return nil, err
 	}
-	g.AddBlocks(exportViewHistoryClass(m), exportViewHistoryBody(m), evht)
+	g.AddBlocks(exportViewHistoryClass(m), exportViewHistoryBody(m, args.Enums), evht)
 	return g.Render(addHeader, linebreak)
 }
 
@@ -35,7 +35,7 @@ func exportViewHistoryClass(m *model.Model) *golang.Block {
 	return ret
 }
 
-func exportViewHistoryBody(m *model.Model) *golang.Block {
+func exportViewHistoryBody(m *model.Model, enums enum.Enums) *golang.Block {
 	ret := golang.NewBlock("HistoryBody", "func")
 	ret.W("{%% func (p *History) Body(as *app.State, ps *cutil.PageState) %%}")
 	ret.W("  <div class=\"card\">")
@@ -52,7 +52,7 @@ func exportViewHistoryBody(m *model.Model) *golang.Block {
 		x.Name = m.Proper() + x.Proper()
 		ret.W("        <tr>")
 		ret.W("          <th class=\"shrink\">%s</th>", x.Title())
-		ret.W("          <td><a href=\"{%%%%s p.Model.WebPath() %%%%}\">%s</a></td>", x.ToGoViewString("p.History.", true, false))
+		ret.W("          <td><a href=\"{%%%%s p.Model.WebPath() %%%%}\">%s</a></td>", x.ToGoViewString("p.History.", true, false, enums, "detail"))
 		ret.W("        </tr>")
 	})
 	ret.W("        <tr>")
@@ -87,19 +87,19 @@ func exportViewHistoryTable(m *model.Model, enums enum.Enums) (*golang.Block, er
 	ret.W("    <thead>")
 	ret.W("      <tr>")
 	addHeader := func(key string, title string, help string) {
-		const msg = "        {%%%%= components.TableHeaderSimple(\"%s_history\", %q, %q, %q, prms, ps.URI, ps) %%%%}"
+		const msg = "        {%%%%= components.TableHeaderSimple(\"%s_history\", %q, %q, %s, prms, ps.URI, ps) %%%%}"
 		ret.W(msg, m.Name, key, title, help)
 	}
-	addHeader("id", "ID", "System-generated history UUID identifier")
+	addHeader("id", "ID", "\"System-generated history UUID identifier\"")
 	for _, pk := range m.PKs() {
-		h, err := model.Help(pk.Type, pk.Format, enums)
+		h, err := model.Help(pk.Type, pk.Format, pk.Nullable, enums)
 		if err != nil {
 			return nil, err
 		}
 		addHeader(m.Package+"_"+pk.Name, m.Title()+" "+pk.Title(), h)
 	}
-	addHeader("c", "Changes", "Object changes")
-	addHeader("created", "Created", "Time when history was created")
+	addHeader("c", "Changes", "\"Object changes\"")
+	addHeader("created", "Created", "\"Time when history was created\"")
 	ret.W("      </tr>")
 	ret.W("    </thead>")
 	ret.W("    <tbody>")
@@ -109,7 +109,7 @@ func exportViewHistoryTable(m *model.Model, enums enum.Enums) (*golang.Block, er
 	lo.ForEach(m.PKs(), func(pk *model.Column, idx int) {
 		x := pk.Clone()
 		x.Name = m.Proper() + x.Proper()
-		ret.W("        <td><a href=\"{%%s model.WebPath() %%}\">" + x.ToGoViewString("h.", true, false) + "</a></td>")
+		ret.W("        <td><a href=\"{%%s model.WebPath() %%}\">" + x.ToGoViewString("h.", true, false, enums, "list") + "</a></td>")
 	})
 	ret.W("        <td>{%%= components.DisplayDiffs(h.Changes) %%}</td>")
 	ret.W("        <td>{%%= components.DisplayTimestamp(&h.Created) %%}</td>")

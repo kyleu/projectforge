@@ -126,10 +126,14 @@ func exportEnumFromForm(frm util.ValueMap, e *enum.Enum) error {
 	e.TitleOverride = get("titleOverride", e.TitleOverride)
 	e.ProperOverride = get("properOverride", e.ProperOverride)
 
-	e.Values = util.StringSplitAndTrim(get("values", strings.Join(e.Values, "\n")), "\n")
+	valuesStr := get("values", util.ToJSON(e.Values))
+	err := util.FromJSON([]byte(valuesStr), &e.Values)
+	if err != nil {
+		return err
+	}
 
 	cfg := util.ValueMap{}
-	err := util.FromJSON([]byte(get("config", util.ToJSON(e.Config))), &cfg)
+	err = util.FromJSON([]byte(get("config", util.ToJSON(e.Config))), &cfg)
 	if err != nil {
 		return errors.Wrap(err, "invalid config")
 	}

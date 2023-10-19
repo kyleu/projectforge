@@ -18,7 +18,7 @@ func ServiceHistory(m *model.Model, args *model.Args, addHeader bool, linebreak 
 	dbRef := args.DBRef()
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "servicehistory")
 	g.AddImport(helper.ImpContext, helper.ImpUUID, helper.ImpErrors, helper.ImpFmt, helper.ImpStrings)
-	g.AddImport(helper.ImpSQLx, helper.ImpAppUtil, helper.ImpDatabase)
+	g.AddImport(helper.ImpSQLx, helper.ImpAppUtil, helper.ImpAppDatabase)
 	gh, err := serviceHistoryGetHistories(m, dbRef, args.Enums)
 	if err != nil {
 		return nil, err

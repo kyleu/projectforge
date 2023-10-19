@@ -19,7 +19,7 @@
       {%= components.JSONModal(res.Type + "-" + res.ID, res.Type, res.Data, 3) %}
       {%- endif -%}
     </div>
-    <h3><a href="{%s res.URL %}">{% if res.Icon != "" %}{%= components.SVGRefIcon(res.Icon, ps) %}{% endif %}{% if res.Title == "" %}{%s res.URL %}{% else %}{%s res.Title %}{% endif %}</a></h3>
+    <h3>{% if res.Icon != "" %}<a href="{%s res.URL %}">{%= components.Icon(res.Icon, 18, "", ps) %}</a>{% space %}{% endif %}<a href="{%s res.URL %}">{% if res.Title == "" %}{%s res.URL %}{% else %}{%s res.Title %}{% endif %}</a></h3>
     <p>{%= Match(params, res.Matches) %}</p>
     {%- if res.HTML != "" -%}
     <div>{%s= res.HTML %}</div>

@@ -52,7 +52,7 @@ func Model(m *model.Model, args *model.Args, addHeader bool, linebreak string) (
 	} else {
 		return nil, err
 	}
-	mdiff, err := modelDiff(g, m)
+	mdiff, err := modelDiff(g, m, args.Enums)
 	if err != nil {
 		return nil, err
 	}

@@ -7,6 +7,7 @@ import (
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
@@ -20,6 +21,12 @@ func edit(m *model.Model, p *project.Project, args *model.Args, addHeader bool, 
 	})
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpLayout)
 	g.AddImport(helper.AppImport("app/" + m.PackageWithGroup("")))
+	lo.ForEach(m.Columns, func(c *model.Column, _ int) {
+		if c.Type.Key() == types.KeyEnum {
+			e, _ := model.AsEnumInstance(c.Type, args.Enums)
+			g.AddImport(helper.AppImport("app/" + e.PackageWithGroup("")))
+		}
+	})
 	veb, err := exportViewEditBody(m, p, args)
 	if err != nil {
 		return nil, err
@@ -60,7 +67,7 @@ func exportViewEditBody(m *model.Model, p *project.Project, args *model.Args) (*
 	ret.W("    {%%- endif -%%}")
 	ret.W("      <table class=\"mt expanded\">")
 	ret.W("        <tbody>")
-	editCols := m.Columns.WithoutTag("created").WithoutTag("updated")
+	editCols := m.Columns.WithoutTags("created", "updated")
 	for _, col := range editCols {
 		id := ""
 		if len(m.RelationsFor(col)) > 0 {

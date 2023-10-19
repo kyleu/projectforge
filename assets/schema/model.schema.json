@@ -140,7 +140,7 @@
         },
         "format": {
           "description": "used for strings, controls output format in UI",
-          "enum": ["code", "codehidden", "country", "html", "json", "select", "si", "url"]
+          "enum": ["code", "codehidden", "country","html", "icon", "json", "linebreaks", "select", "si", "url"]
         },
         "values": {
           "description": "when format is \"select\", this controls the available values",
@@ -153,7 +153,7 @@
           "description": "tags controlling the column's code behavior",
           "type": "array",
           "items": {
-            "enum": ["omitempty", "const", "created", "deleted", "grouped", "revision", "title", "unique", "updated"]
+            "enum": ["const", "created", "debug-only", "deleted", "grouped", "link", "list-first", "no-title", "omitempty", "revision", "title", "unique", "updated"]
           }
         },
         "helpString": {

@@ -22,7 +22,7 @@ func OpenSQLiteDatabase(ctx context.Context, key string, params *SQLiteParams, l
 	if params.File == "" {
 		return nil, errors.New("need filename for SQLite database")
 	}
-	db, err := sqlx.Open("sqlite", params.File)
+	db, err := sqlx.Open("sqlite", params.File+"?cache=shared&_journal=WAL&_timeout=10000&_fk=true")
 	if err != nil {
 		return nil, errors.Wrap(err, "error opening database")
 	}

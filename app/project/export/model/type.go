@@ -28,7 +28,7 @@ func ToGoType(t types.Type, nullable bool, pkg string, enums enum.Enums) (string
 		if err != nil {
 			return "", err
 		}
-		if e.PackageWithGroup("") == pkg {
+		if e.Package == pkg {
 			ret = e.Proper()
 		} else {
 			ret = e.Package + "." + e.Proper()
@@ -123,15 +123,18 @@ func ToGoString(t types.Type, prop string, alwaysString bool) string {
 	}
 }
 
-func ToGoViewString(t types.Type, prop string, nullable bool, format string, verbose bool, url bool) string {
+func ToGoViewString(t types.Type, prop string, nullable bool, format string, verbose bool, url bool, enums enum.Enums, src string) string {
 	switch t.Key() {
 	case types.KeyAny:
+		if src == "simple" {
+			return "{%%v " + prop + " %%}"
+		}
 		return "{%%= components.JSON(" + prop + ") %%}"
 	case types.KeyBool:
 		return "{%%v " + prop + " %%}"
 	case types.KeyInt:
 		switch format {
-		case FmtSI:
+		case FmtSI.Key:
 			return "{%%s util.ByteSizeSI(int64(" + prop + ")) %%}"
 		case "":
 			return "{%%d " + prop + " %%}"
@@ -141,17 +144,29 @@ func ToGoViewString(t types.Type, prop string, nullable bool, format string, ver
 	case types.KeyFloat:
 		return "{%%f " + prop + " %%}"
 	case types.KeyList:
+		if src == "simple" {
+			return "{%%v " + prop + " %%}"
+		}
 		if types.IsStringList(t) {
 			return "{%%= components.DisplayStringArray(" + prop + ") %%}"
 		}
 		return "{%%= components.JSON(" + prop + ") %%}"
 	case types.KeyMap, types.KeyValueMap, types.KeyReference:
+		if src == "simple" {
+			return "{%%v " + prop + " %%}"
+		}
 		return "{%%= components.JSON(" + prop + ") %%}"
 	case types.KeyDate:
 		if nullable {
 			return "{%%= components.DisplayTimestampDay(" + prop + ") %%}"
 		}
 		return "{%%= components.DisplayTimestampDay(&" + prop + ") %%}"
+	case types.KeyEnum:
+		e, _ := AsEnumInstance(t, enums)
+		if e == nil || e.Simple() {
+			return "{%%v " + ToGoString(t, prop, false) + " %%}"
+		}
+		return "{%%s " + ToGoString(t, prop, false) + ".String() %%}"
 	case types.KeyTimestamp:
 		if nullable {
 			return "{%%= components.DisplayTimestamp(" + prop + ") %%}"
@@ -167,10 +182,15 @@ func ToGoViewString(t types.Type, prop string, nullable bool, format string, ver
 		if url {
 			key = "u"
 		}
+		if src == "simple" {
+			return "{%%" + key + " " + prop + " %%}"
+		}
 		switch format {
-		case FmtCode:
+		case FmtCode.Key:
 			return "<pre>{%%s " + ToGoString(t, prop, false) + " %%}</pre>"
-		case FmtCodeHidden:
+		case FmtLinebreaks.Key:
+			return "<div class=\"prewsl\">{%%s " + ToGoString(t, prop, false) + " %%}</div>"
+		case FmtCodeHidden.Key:
 			_, p := util.StringSplitLast(prop, '.', true)
 			ret := make([]string, 0, 30)
 			ret = append(ret,
@@ -183,19 +203,25 @@ func ToGoViewString(t types.Type, prop string, nullable bool, format string, ver
 				"</ul>",
 			)
 			return strings.Join(ret, "")
-		case FmtHTML:
+		case FmtHTML.Key:
 			return "{%%= components.Format(" + ToGoString(t, prop, false) + ", \"html\") %%}</pre>"
-		case FmtJSON:
+		case FmtJSON.Key:
 			return "{%%= components.Format(" + ToGoString(t, prop, false) + ", \"json\") %%}</pre>"
-		case FmtURL:
+		case FmtURL.Key:
 			x := "{%%" + key + " " + ToGoString(t, prop, false) + " %%}"
 			return fmt.Sprintf("<a href=%q target=\"_blank\" rel=\"noopener noreferrer\">%s</a>", x, x)
-		case FmtCountry:
+		case FmtIcon.Key:
+			size := "18"
+			if src == "detail" {
+				size = "64"
+			}
+			return "{%%= components.Icon(" + ToGoString(t, prop, false) + ", " + size + ", \"\", ps) %%}"
+		case FmtCountry.Key:
 			if verbose {
 				return "{%%" + key + " " + ToGoString(t, prop, false) + " %%} {%%s util.CountryFlag(" + ToGoString(t, prop, false) + ") %%}"
 			}
 			return "{%%" + key + " " + ToGoString(t, prop, false) + " %%}"
-		case FmtSelect:
+		case FmtSelect.Key:
 			return "<strong>{%%" + key + " " + ToGoString(t, prop, false) + " %%}</strong>"
 		case "":
 			return "{%%" + key + " " + ToGoString(t, prop, false) + " %%}"

@@ -67,7 +67,11 @@ func searchModel(m *model.Model) []string {
 	if m.HasTag("big") {
 		data = "nil"
 	}
-	add("\t\t\treturn result.NewResult(%q, m.String(), m.WebPath(), m.TitleString(), %q, m, %s, params.Q)", m.Package, m.Icon, data)
+	icon := fmt.Sprintf("%q", m.Icon)
+	if icons := m.Columns.WithFormat("icon"); len(icons) == 1 {
+		icon = fmt.Sprintf("%s.%s", data, icons[0].Proper())
+	}
+	add("\t\t\treturn result.NewResult(%q, m.String(), m.WebPath(), m.TitleString(), %s, m, %s, params.Q)", m.Package, icon, data)
 	add("\t\t}), nil")
 	add("\t}")
 	return ret

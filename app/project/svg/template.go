@@ -43,5 +43,10 @@ func template(svgs []*SVG, linebreak string) string {
 	w("//nolint:lll")
 	w("var SVGIconKeys = []string{" + strings.Join(keys, ", ") + "}")
 
+	w("")
+	w("func RandomIcon() string {")
+	w("\treturn SVGIconKeys[RandomInt(len(SVGIconKeys))]")
+	w("}")
+
 	return out.String()
 }

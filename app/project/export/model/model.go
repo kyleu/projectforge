@@ -9,6 +9,7 @@ import (
 
 	"projectforge.dev/projectforge/app/lib/filter"
 	"projectforge.dev/projectforge/app/lib/types"
+	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/util"
 )
 
@@ -74,11 +75,11 @@ func (m *Model) IsHistory() bool {
 	return m.History == HistoryType
 }
 
-func (m *Model) LinkURL(prefix string) string {
+func (m *Model) LinkURL(prefix string, enums enum.Enums) string {
 	pks := m.PKs()
 	linkURL := "/" + m.Route()
 	lo.ForEach(pks, func(pk *Column, _ int) {
-		linkURL += "/" + pk.ToGoViewString(prefix, false, true)
+		linkURL += "/" + pk.ToGoViewString(prefix, false, true, enums, "simple")
 	})
 	return linkURL
 }

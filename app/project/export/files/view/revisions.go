@@ -25,7 +25,7 @@ func exportViewDetailRevisions(_ *golang.Template, ret *golang.Block, m *model.M
 		if err != nil {
 			return err
 		}
-		msg := "components.TableHeaderSimple(%q, %q, %q, %q, prms, ps.URI, ps)"
+		msg := "components.TableHeaderSimple(%q, %q, %q, %s, prms, ps.URI, ps)"
 		call := fmt.Sprintf(msg, m.Package, col.Name, util.StringToTitle(col.Name), h)
 		ret.W("          {%%= " + call + " %%}")
 		return nil
@@ -48,12 +48,12 @@ func exportViewDetailRevisions(_ *golang.Template, ret *golang.Block, m *model.M
 	ret.W("      <tbody>")
 	ret.W("        {%%- for _, model := range p." + hc.Col.ProperPlural() + " -%%}")
 	ret.W("        <tr>")
-	linkURL := m.LinkURL("model.") + "/" + hc.Col.Camel() + "/" + hc.Col.ToGoViewString("model.", false, true)
+	linkURL := m.LinkURL("model.", enums) + "/" + hc.Col.Camel() + "/" + hc.Col.ToGoViewString("model.", false, true, enums, "simple")
 	addView := func(col *model.Column) {
-		if col.PK || col.HasTag(model.RevisionType) {
-			ret.W("          <td><a href=\"" + linkURL + "\">" + col.ToGoViewString("model.", true, false) + "</a></td>")
+		if col.PK || col.HasTag(model.RevisionType) || col.HasTag("link") {
+			ret.W("          <td><a href=\"" + linkURL + "\">" + col.ToGoViewString("model.", true, false, enums, "detail") + "</a></td>")
 		} else {
-			ret.W("          <td>" + col.ToGoViewString("model.", true, false) + "</td>")
+			ret.W("          <td>" + col.ToGoViewString("model.", true, false, enums, "detail") + "</td>")
 		}
 	}
 	lo.ForEach(m.PKs(), func(pk *model.Column, idx int) {
