@@ -154,9 +154,6 @@
     {% else %}
       <label><input type="checkbox" name="{%s key %}" value="{%s opt %}" />{% space %}{%s title %}</label>
     {% endif %}
-    {% if lo.Contains(values, opt) %}
-      <br />
-    {% endif %}
   {% endfor %}
 {% endstripspace %}{% endfunc %}
 

@@ -75,6 +75,12 @@ func StringArrayOxfordComma(names []string, separator string) string {
 	return ret
 }
 
+func ArrayTransform[T any, U any](x []T, f func(T) U) []U {
+	return lo.Map(x, func(i T, _ int) U {
+		return f(i)
+	})
+}
+
 func ArrayRemoveNil[T any](x []*T) []*T {
 	return lo.Reject(x, func(item *T, _ int) bool {
 		return item == nil

@@ -907,7 +907,7 @@ func StreamTableCheckbox(qw422016 *qt422016.Writer, key string, title string, va
 //line views/components/Table.html:167
 	vutil.StreamIndent(qw422016, true, indent+1)
 //line views/components/Table.html:167
-	qw422016.N().S(`<td>`)
+	qw422016.N().S(`<td class="checkboxes">`)
 //line views/components/Table.html:169
 	StreamFormCheckbox(qw422016, key, values, opts, titles, indent+2)
 //line views/components/Table.html:170

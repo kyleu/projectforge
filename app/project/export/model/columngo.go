@@ -57,7 +57,17 @@ func (c *Column) ToGoEditString(prefix string, format string, id string, enums e
 		return fmt.Sprintf(`{%%%%= components.TableInputNumber(%q, %q, %q, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), prefix+c.Proper(), h), nil
 	case types.KeyFloat:
 		return fmt.Sprintf(`{%%%%= components.TableInputFloat(%q, %q, %q, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), prefix+c.Proper(), h), nil
-	case types.KeyList, types.KeyMap, types.KeyValueMap:
+	case types.KeyList:
+		lt := types.TypeAs[*types.List](c.Type)
+		e, _ := AsEnumInstance(lt.V, enums)
+		if e != nil {
+			return fmt.Sprintf(
+				`{%%%%= components.TableCheckbox(%q, %q, %s.Keys(), %s.All%s.Keys(), %s.All%s.Strings(), 5, %s.All%s.Help()) %%%%}`,
+				c.Camel(), c.Title(), c.ToGoString(prefix), e.Package, e.ProperPlural(), e.Package, e.ProperPlural(), e.Package, e.ProperPlural(),
+			), nil
+		}
+		return fmt.Sprintf(msgTextarea, c.Camel(), id, c.Title(), c.ToGoString(prefix), h), nil
+	case types.KeyMap, types.KeyValueMap:
 		return fmt.Sprintf(msgTextarea, c.Camel(), id, c.Title(), c.ToGoString(prefix), h), nil
 	case types.KeyReference:
 		return fmt.Sprintf(msgTextarea, c.Camel(), id, c.Title(), prefix+c.Proper(), h), nil
@@ -105,7 +115,7 @@ func (c *Column) ToGoMapParse() string {
 func toGoMapParse(t types.Type) string {
 	switch t.Key() {
 	case types.KeyAny:
-		return "Interface"
+		return ""
 	case types.KeyBool:
 		return "Bool"
 	case types.KeyInt:

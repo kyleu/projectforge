@@ -96,8 +96,14 @@ func importsForTypeCtxGo(t types.Type) golang.Imports {
 func importsForTypeCtxRow(t types.Type, database string) golang.Imports {
 	switch t.Key() {
 	case types.KeyAny:
+		if database == util.DatabaseSQLite {
+			return nil
+		}
 		return golang.Imports{ImpJSON}
 	case types.KeyList, types.KeyMap, types.KeyValueMap, types.KeyReference:
+		if database == util.DatabaseSQLite {
+			return golang.Imports{ImpAppUtil}
+		}
 		return golang.Imports{ImpJSON, ImpAppUtil}
 	case types.KeyDate, types.KeyTimestamp:
 		return golang.Imports{ImpTime}
@@ -137,7 +143,13 @@ func importsForTypeCtxWebEdit(t types.Type) golang.Imports {
 	switch t.Key() {
 	case types.KeyAny:
 		return golang.Imports{ImpAppUtil, ImpFmt}
-	case types.KeyList, types.KeyMap, types.KeyValueMap, types.KeyReference:
+	case types.KeyList:
+		lt := types.TypeAs[*types.List](t)
+		if x := types.TypeAs[*types.Enum](lt.V); x != nil {
+			return golang.Imports{}
+		}
+		return golang.Imports{ImpAppUtil}
+	case types.KeyMap, types.KeyValueMap, types.KeyReference:
 		return golang.Imports{ImpAppUtil}
 	default:
 		return nil

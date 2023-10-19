@@ -22,7 +22,15 @@
 .tabs .label {
   width: auto;
   cursor: pointer;
-  padding: 8px;
+  padding: var(--padding-small);
+  margin-left: var(--padding-small);
+  transition: background-color 250ms linear;
+}
+
+@media (prefers-reduced-motion) {
+  .tabs .label {
+    transition: none;
+  }
 }
 
 .tabs .input:checked + .label {

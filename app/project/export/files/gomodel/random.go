@@ -57,6 +57,10 @@ func randFor(col *model.Column, pkg string, enums enum.Enums) (string, error) {
 	case types.KeyFloat:
 		return "util.RandomFloat(1000)", nil
 	case types.KeyList:
+		e, _ := model.AsEnumInstance(col.Type.ListType(), enums)
+		if e != nil {
+			return fmt.Sprintf("%s{All%s.Random(), All%s.Random()}", e.ProperPlural(), e.ProperPlural(), e.ProperPlural()), nil
+		}
 		return nilKey, nil
 	case types.KeyMap, types.KeyValueMap:
 		return "util.RandomValueMap(4)", nil

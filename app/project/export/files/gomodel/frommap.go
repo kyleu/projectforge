@@ -90,6 +90,16 @@ func forCols(g *golang.File, ret *golang.Block, indent int, m *model.Model, enum
 			} else {
 				ret.W(ind+"ret.%s = %s.%s", col.Proper(), e.Package, enumRef)
 			}
+		case col.Type.Key() == types.KeyList:
+			lt := types.TypeAs[*types.List](col.Type)
+			if e, _ := model.AsEnumInstance(lt.V, enums); e != nil {
+				ret.W(ind+"ret%s, err := m.Parse%s(%q, true, true)", col.Proper(), col.ToGoMapParse(), col.Camel())
+				catchErr("err")
+				ret.W(ind+"ret.%s = %sParse(nil, ret%s...)", col.Proper(), e.Proper(), col.Proper())
+			} else {
+				ret.W(ind+"ret.%s, err = m.Parse%s(%q, true, true)", col.Proper(), col.ToGoMapParse(), col.Camel())
+				catchErr("err")
+			}
 		case col.Nullable || col.Type.Scalar():
 			ret.W(ind+"ret.%s, err = m.Parse%s(%q, true, true)", col.Proper(), col.ToGoMapParse(), col.Camel())
 			catchErr("err")

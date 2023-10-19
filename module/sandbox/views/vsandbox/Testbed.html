@@ -9,10 +9,10 @@
 {% code type Testbed struct { layout.Basic } %}
 
 {% func (p *Testbed) Body(as *app.State, ps *cutil.PageState) %}
-{%= icons(as, ps) %}
 {%= tabs(as, ps) %}
 {%= accordion(as, ps) %}
 {%= modal(as, ps) %}
+{%= icons(as, ps) %}
 {% endfunc %}
 
 {%- func icons(as *app.State, ps *cutil.PageState) -%}

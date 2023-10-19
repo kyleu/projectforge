@@ -7,6 +7,7 @@ import (
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
@@ -65,10 +66,10 @@ func Model(m *model.Model, args *model.Args, addHeader bool, linebreak string) (
 			return nil, err
 		}
 	}
-	g.AddBlocks(modelWebPath(g, m), mdiff, modelToData(m, m.Columns, ""))
+	g.AddBlocks(modelWebPath(g, m), mdiff, modelToData(m, m.Columns, "", args.Database))
 	if m.IsRevision() {
 		hc := m.HistoryColumns(false)
-		g.AddBlocks(modelToData(m, hc.Const, "Core"), modelToData(m, hc.Var, hc.Col.Proper()))
+		g.AddBlocks(modelToData(m, hc.Const, "Core", args.Database), modelToData(m, hc.Var, hc.Col.Proper(), args.Database))
 	}
 	return g.Render(addHeader, linebreak)
 }
@@ -148,16 +149,16 @@ func modelConstructor(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	return ret, nil
 }
 
-func modelToData(m *model.Model, cols model.Columns, suffix string) *golang.Block {
+func modelToData(m *model.Model, cols model.Columns, suffix string, database string) *golang.Block {
 	ret := golang.NewBlock(m.Proper(), "func")
 	ret.W("func (%s *%s) ToData%s() []any {", m.FirstLetter(), m.Proper(), suffix)
 	calls := lo.Map(cols, func(c *model.Column, _ int) string {
-		// case types.KeyAny, types.KeyMap:
-		//	ret.W("\t%sArg := util.ToJSONBytes(%s.%s, true)", c.Camel(), m.FirstLetter(), c.Proper())
-		//	return fmt.Sprintf("%sArg", c.Camel())
-		// default:
-		return fmt.Sprintf("%s.%s,", m.FirstLetter(), c.Proper())
-		//}
+		switch {
+		case c.Type.Key() == types.KeyList && database == util.DatabaseSQLite:
+			return fmt.Sprintf("util.ToJSON(%s.%s),", m.FirstLetter(), c.Proper())
+		default:
+			return fmt.Sprintf("%s.%s,", m.FirstLetter(), c.Proper())
+		}
 	})
 	lines := JoinLines(calls, " ", 120)
 	if len(lines) == 1 && len(lines[0]) < 100 {

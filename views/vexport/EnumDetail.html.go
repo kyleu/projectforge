@@ -266,8 +266,8 @@ func streamenumValues(qw422016 *qt422016.Writer, enum *enum.Enum, as *app.State,
     <table class="mt min-200 full-width">
       <thead>
         <tr>
-          <th class="shrink">Name</th>
-          <th>Title</th>
+          <th class="shrink">Key</th>
+          <th>Name</th>
           <th>Description</th>
         </tr>
       </thead>
@@ -284,7 +284,7 @@ func streamenumValues(qw422016 *qt422016.Writer, enum *enum.Enum, as *app.State,
 			qw422016.N().S(`</td>
           <td>`)
 //line views/vexport/EnumDetail.html:84
-			qw422016.E().S(v.Title)
+			qw422016.E().S(v.Name)
 //line views/vexport/EnumDetail.html:84
 			qw422016.N().S(`</td>
           <td>`)

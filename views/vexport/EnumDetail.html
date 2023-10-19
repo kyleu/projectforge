@@ -72,8 +72,8 @@
     <table class="mt min-200 full-width">
       <thead>
         <tr>
-          <th class="shrink">Name</th>
-          <th>Title</th>
+          <th class="shrink">Key</th>
+          <th>Name</th>
           <th>Description</th>
         </tr>
       </thead>
@@ -81,7 +81,7 @@
         {%- for _, v := range enum.Values -%}
         <tr>
           <td>{%s v.Key %}</td>
-          <td>{%s v.Title %}</td>
+          <td>{%s v.Name %}</td>
           <td>{%s v.Description %}</td>
         </tr>
         {%- endfor -%}

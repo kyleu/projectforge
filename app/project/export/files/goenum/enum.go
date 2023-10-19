@@ -22,10 +22,21 @@ func Enum(e *enum.Enum, addHeader bool, linebreak string) (*file.File, error) {
 		g.AddBlocks(enumStructSimple(e)...)
 	} else {
 		g.AddBlocks(enumStructComplex(e, g)...)
+		g.AddBlocks(enumStructParse(e))
 		g.AddBlocks(enumStructCollection(e, g)...)
 		g.AddBlocks(enumStructValues(e, g))
 	}
 	return g.Render(addHeader, linebreak)
+}
+
+func enumStructParse(e *enum.Enum) *golang.Block {
+	ret := golang.NewBlock(e.Proper(), "parse")
+	ret.W("func %sParse(logger util.Logger, strings ...string) %s {", e.Proper(), e.ProperPlural())
+	ret.W("\treturn lo.Map(strings, func(x string, _ int) %s {", e.Proper())
+	ret.W("\t\treturn All%s.Get(x, logger)", e.ProperPlural())
+	ret.W("\t})")
+	ret.W("}")
+	return ret
 }
 
 func enumStructSimple(e *enum.Enum) []*golang.Block {
@@ -49,14 +60,14 @@ func enumStructComplex(e *enum.Enum, g *golang.File) []*golang.Block {
 	structBlock := golang.NewBlock(e.Proper(), "struct")
 	structBlock.W("type %s struct {", e.Proper())
 	structBlock.W("\tKey         string")
-	structBlock.W("\tTitle       string")
+	structBlock.W("\tName       string")
 	structBlock.W("\tDescription string")
 	structBlock.W("}")
 
 	fnStringBlock := golang.NewBlock(e.Proper()+".String", "method")
 	fnStringBlock.W("func (%s %s) String() string {", e.FirstLetter(), e.Proper())
-	fnStringBlock.W("\tif %s.Title != \"\" {", e.FirstLetter())
-	fnStringBlock.W("\t\treturn %s.Title", e.FirstLetter())
+	fnStringBlock.W("\tif %s.Name != \"\" {", e.FirstLetter())
+	fnStringBlock.W("\t\treturn %s.Name", e.FirstLetter())
 	fnStringBlock.W("\t}")
 	fnStringBlock.W("\treturn %s.Key", e.FirstLetter())
 	fnStringBlock.W("}")
@@ -123,13 +134,6 @@ func enumStructCollection(e *enum.Enum, g *golang.File) []*golang.Block {
 	ksBlock.W("\t})")
 	ksBlock.W("}")
 
-	tsBlock := golang.NewBlock(e.ProperPlural()+"Titles", "method")
-	tsBlock.W("func (%s %s) Titles() []string {", e.FirstLetter(), e.ProperPlural())
-	tsBlock.W("\treturn lo.Map(%s, func(x %s, _ int) string {", e.FirstLetter(), e.Proper())
-	tsBlock.W("\t\treturn x.Title")
-	tsBlock.W("\t})")
-	tsBlock.W("}")
-
 	strBlock := golang.NewBlock(e.ProperPlural()+"Strings", "method")
 	strBlock.W("func (%s %s) Strings() []string {", e.FirstLetter(), e.ProperPlural())
 	strBlock.W("\treturn lo.Map(%s, func(x %s, _ int) string {", e.FirstLetter(), e.Proper())
@@ -153,7 +157,7 @@ func enumStructCollection(e *enum.Enum, g *golang.File) []*golang.Block {
 	gBlock.W("\tif logger != nil {")
 	gBlock.W("\t\tlogger.Warn(msg)")
 	gBlock.W("\t}")
-	gBlock.W("\treturn %s{Key: \"_error\", Title: \"error: \" + msg}", e.Proper())
+	gBlock.W("\treturn %s{Key: \"_error\", Name: \"error: \" + msg}", e.Proper())
 	gBlock.W("}")
 
 	rBlock := golang.NewBlock(e.ProperPlural()+"Random", "method")
@@ -161,7 +165,7 @@ func enumStructCollection(e *enum.Enum, g *golang.File) []*golang.Block {
 	rBlock.W("\treturn %s[util.RandomInt(len(%s))]", e.FirstLetter(), e.FirstLetter())
 	rBlock.W("}")
 
-	return []*golang.Block{tBlock, ksBlock, tsBlock, strBlock, fnHelpBlock, gBlock, rBlock}
+	return []*golang.Block{tBlock, ksBlock, strBlock, fnHelpBlock, gBlock, rBlock}
 }
 
 func enumStructValues(e *enum.Enum, g *golang.File) *golang.Block {
@@ -176,8 +180,8 @@ func enumStructValues(e *enum.Enum, g *golang.File) *golang.Block {
 		n := e.Proper() + util.StringToCamel(v.Key)
 		names = append(names, n)
 		msg := fmt.Sprintf("\t%s = %s{Key: %q", util.StringPad(n, maxColLength), e.Proper(), v.Key)
-		if v.Title != "" {
-			msg += fmt.Sprintf(", Title: %q", v.Title)
+		if v.Name != "" {
+			msg += fmt.Sprintf(", Name: %q", v.Name)
 		}
 		if v.Description != "" {
 			msg += fmt.Sprintf(", Description: %q", v.Description)

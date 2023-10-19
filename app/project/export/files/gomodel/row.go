@@ -48,7 +48,7 @@ func Row(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*f
 		return nil, err
 	}
 	g.AddBlocks(mrow)
-	mrm, err := modelRowToModel(g, m, args.Database)
+	mrm, err := modelRowToModel(g, m, args.Enums, args.Database)
 	if err != nil {
 		return nil, err
 	}
@@ -111,7 +111,7 @@ func modelRow(m *model.Model, enums enum.Enums, database string) (*golang.Block,
 	return ret, nil
 }
 
-func modelRowToModel(g *golang.File, m *model.Model, database string) (*golang.Block, error) {
+func modelRowToModel(g *golang.File, m *model.Model, enums enum.Enums, database string) (*golang.Block, error) {
 	ret := golang.NewBlock(m.Proper(), "func")
 	ret.W("func (r *row) To%s() *%s {", m.Proper(), m.Proper())
 	ret.W("\tif r == nil {")
@@ -127,12 +127,19 @@ func modelRowToModel(g *golang.File, m *model.Model, database string) (*golang.B
 			ret.W("\t_ = util.FromJSON(r.%s, &%sArg)", c.Proper(), c.Camel())
 			refs = append(refs, fmt.Sprintf("%s %sArg", k, c.Camel()))
 		case types.KeyList:
-			t := "any"
-			if c.Type.IsListOf(types.NewString()) {
-				t = "string"
+			t := "[]any"
+			decoder := "r." + c.Proper()
+			switch c.Type.ListType().Key() {
+			case types.KeyString:
+				t = "[]string"
+			case types.KeyEnum:
+				if e, _ := model.AsEnumInstance(c.Type.ListType(), enums); e != nil {
+					t = e.ProperPlural()
+					decoder = "[]byte(" + decoder + ")"
+				}
 			}
-			ret.W("\t%sArg := []%s{}", c.Camel(), t)
-			ret.W("\t_ = util.FromJSON(r.%s, &%sArg)", c.Proper(), c.Camel())
+			ret.W("\t%sArg := %s{}", c.Camel(), t)
+			ret.W("\t_ = util.FromJSON(%s, &%sArg)", decoder, c.Camel())
 			refs = append(refs, fmt.Sprintf("%s %sArg", k, c.Camel()))
 		case types.KeyMap, types.KeyValueMap:
 			ret.W("\t%sArg := util.ValueMap{}", c.Camel())

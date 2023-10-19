@@ -56,11 +56,10 @@ func (x *Wrapped) EnumKey() string {
 	return e.Ref
 }
 
-func (x *Wrapped) IsListOf(tgt *Wrapped) bool {
-	switch t := x.T.(type) {
-	case *List:
-		return t.V.Equals(tgt)
-	default:
-		return false
+func (x *Wrapped) ListType() Type {
+	l := TypeAs[*List](x)
+	if l != nil {
+		return l.V
 	}
+	return nil
 }

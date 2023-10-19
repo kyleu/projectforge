@@ -38,9 +38,21 @@ func ToGoType(t types.Type, nullable bool, pkg string, enums enum.Enums) (string
 	case types.KeyFloat:
 		ret = "float64"
 	case types.KeyList:
-		if types.IsStringList(t) {
+		lt := types.TypeAs[*types.List](t)
+		switch lt.V.Key() {
+		case types.KeyString:
 			ret = goTypeStringArray
-		} else {
+		case types.KeyEnum:
+			e, err := AsEnumInstance(lt.V, enums)
+			if err != nil {
+				return "", err
+			}
+			if e.Package == pkg {
+				ret = e.ProperPlural()
+			} else {
+				ret = e.Package + "." + e.ProperPlural()
+			}
+		default:
 			ret = goTypeAnyArray
 		}
 	case types.KeyMap, types.KeyValueMap:
@@ -73,6 +85,9 @@ func ToGoType(t types.Type, nullable bool, pkg string, enums enum.Enums) (string
 func ToGoRowType(t types.Type, nullable bool, pkg string, enums enum.Enums, database string) (string, error) {
 	switch t.Key() {
 	case types.KeyAny, types.KeyList, types.KeyMap, types.KeyValueMap, types.KeyReference:
+		if database == util.DatabaseSQLite {
+			return "string", nil
+		}
 		return "json.RawMessage", nil
 	default:
 		if t.Key() == types.KeyUUID && database == util.DatabaseSQLServer {
@@ -123,7 +138,7 @@ func ToGoString(t types.Type, prop string, alwaysString bool) string {
 	}
 }
 
-func ToGoViewString(t types.Type, prop string, nullable bool, format string, verbose bool, url bool, enums enum.Enums, src string) string {
+func ToGoViewString(t *types.Wrapped, prop string, nullable bool, format string, verbose bool, url bool, enums enum.Enums, src string) string {
 	switch t.Key() {
 	case types.KeyAny:
 		if src == "simple" {
@@ -147,10 +162,22 @@ func ToGoViewString(t types.Type, prop string, nullable bool, format string, ver
 		if src == "simple" {
 			return "{%%v " + prop + " %%}"
 		}
-		if types.IsStringList(t) {
-			return "{%%= components.DisplayStringArray(" + prop + ") %%}"
+		lt := t.ListType()
+		if lt == nil {
+			lt = types.NewString()
 		}
-		return "{%%= components.JSON(" + prop + ") %%}"
+		switch lt.Key() {
+		case types.KeyEnum:
+			e, _ := AsEnumInstance(lt, enums)
+			if e == nil {
+				return "ERROR: invalid enum [" + lt.String() + "]"
+			}
+			return "{%%= components.DisplayStringArray(" + prop + ".Strings()) %%}"
+		case types.KeyString:
+			return "{%%= components.DisplayStringArray(" + prop + ") %%}"
+		default:
+			return "{%%= components.JSON(" + prop + ") %%}"
+		}
 	case types.KeyMap, types.KeyValueMap, types.KeyReference:
 		if src == "simple" {
 			return "{%%v " + prop + " %%}"

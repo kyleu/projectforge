@@ -348,3 +348,7 @@ ul.padded > li {
 ul.padded > li:first-child {
   padding-top: 0;
 }
+
+.checkboxes label {
+  display: block;
+}
