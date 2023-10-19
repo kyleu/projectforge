@@ -103,7 +103,7 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool, linebreak stri
 			}
 		}
 	}
-	g.AddBlocks(serviceListSQL(m, args.DBRef()))
+	g.AddBlocks(serviceListSQL(m, args.DBRef()), serviceRandom(m))
 	return g.Render(addHeader, linebreak)
 }
 
@@ -275,6 +275,20 @@ func serviceListSQL(m *model.Model, dbRef string) *golang.Block {
 	ret.W("\t\treturn nil, errors.Wrap(err, \"unable to get %s using custom SQL\")", m.TitlePluralLower())
 	ret.W("\t}")
 	ret.W("\treturn ret.To%s(), nil", m.ProperPlural())
+	ret.W("}")
+	return ret
+}
+
+func serviceRandom(m *model.Model) *golang.Block {
+	ret := golang.NewBlock("Random", "func")
+	ret.W("func (s *Service) Random(ctx context.Context, tx *sqlx.Tx, logger util.Logger) (*%s, error) {", m.Proper())
+	ret.W("\tret := &row{}")
+	ret.W("\tq := database.SQLSelect(columnsString, tableQuoted, \"\", \"random()\", 1, 0, s.db.Placeholder())")
+	ret.W("\terr := s.db.Get(ctx, ret, q, tx, logger)")
+	ret.W("\tif err != nil {")
+	ret.W("\t\treturn nil, errors.Wrap(err, \"unable to get random %s\")", m.TitlePluralLower())
+	ret.W("\t}")
+	ret.W("\treturn ret.To%s(), nil", m.Proper())
 	ret.W("}")
 	return ret
 }
