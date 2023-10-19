@@ -25,7 +25,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: "html",
   use: {
-    baseURL: process.env.TEST_URL || "http://127.0.0.1:40000",
+    baseURL: process.env.TEST_URL || "http://127.0.0.1:{{{ .Port }}}",
   },
   projects: [
     prj("chrome", "Desktop Chrome", "chrome", 1280, 720, false, false),
@@ -43,8 +43,8 @@ export default defineConfig({
     prj("safari.mobile.landscape.dark", "iPhone 12 landscape", "", 750, 340, true, false),
   ],
   webServer: {
-    command: "../../build/release/projectforge",
-    url: "http://127.0.0.1:40000",
+    command: "../../build/release/{{{ .Exec }}}",
+    url: "http://127.0.0.1:{{{ .Port }}}",
     reuseExistingServer: !process.env.CI,
     stdout: "pipe",
     stderr: "pipe",
