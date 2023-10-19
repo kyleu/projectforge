@@ -117,7 +117,7 @@ func modelStruct(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 			return nil, err
 		}
 		goType := util.StringPad(gt, maxTypeLength)
-		tag := fmt.Sprintf("json:%q", c.Camel()+modelJSONSuffix(c))
+		tag := fmt.Sprintf("json:\"%s\"", c.Camel()+modelJSONSuffix(c))
 		if c.Validation != "" {
 			tag += fmt.Sprintf(",validate:%q", c.Validation)
 		}
@@ -131,10 +131,7 @@ func modelStruct(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 }
 
 func modelJSONSuffix(c *model.Column) string {
-	if c.Nullable || c.HasTag("omitempty") {
-		return ",omitempty"
-	}
-	return ""
+	return ",omitempty"
 }
 
 func modelConstructor(m *model.Model, enums enum.Enums) (*golang.Block, error) {

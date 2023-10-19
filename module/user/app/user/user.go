@@ -10,10 +10,10 @@ import (
 )
 
 type User struct {
-	ID      uuid.UUID  `json:"id"`
-	Name    string     `json:"name"`
-	Picture string     `json:"picture"`
-	Created time.Time  `json:"created"`
+	ID      uuid.UUID  `json:"id,omitempty"`
+	Name    string     `json:"name,omitempty"`
+	Picture string     `json:"picture,omitempty"`
+	Created time.Time  `json:"created,omitempty"`
 	Updated *time.Time `json:"updated,omitempty"`
 }
 
