@@ -51,12 +51,6 @@ func ArraySorted[T cmp.Ordered](x []T) []T {
 	return x
 }
 
-func InterfaceArrayFrom[T any](x ...T) []any {
-	return lo.Map(x, func(item T, idx int) any {
-		return item
-	})
-}
-
 func StringArrayOxfordComma(names []string, separator string) string {
 	ret := ""
 	lo.ForEach(names, func(name string, idx int) {

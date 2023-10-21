@@ -165,11 +165,11 @@ func exportViewDetailReverseRelations(ret *golang.Block, m *model.Model, models 
 		ret.W("          {%%- else -%%}")
 		ret.W("          <div class=\"overflow clear\">")
 		var addons string
-		if m.CanTraverseRelation() {
-			lo.ForEach(tgt.Relations, func(_ *model.Relation, _ int) {
+		lo.ForEach(tgt.Relations, func(r *model.Relation, _ int) {
+			if len(r.Tgt) == 1 {
 				addons += ", nil"
-			})
-		}
+			}
+		})
 		if m.PackageWithGroup("") == tgt.PackageWithGroup("") {
 			ret.W("            {%%%%= Table(p.Rel%s%s, p.Params, as, ps) %%%%}", tgtName, addons)
 		} else {

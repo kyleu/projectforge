@@ -76,7 +76,7 @@ func controllerList(g *golang.File, m *model.Model, grp *model.Column, models mo
 			g.AddImport(helper.ImpAppUtil)
 			c = "util.ArrayDereference(" + c + ")"
 		}
-		call := "\t\t%sBy%s, err := as.Services.%s.GetMultiple(ps.Context, nil%s, ps.Logger, %s...)"
+		call := "\t\t%sBy%s, err := as.Services.%s.GetMultiple(ps.Context, nil, nil%s, ps.Logger, %s...)"
 		ret.W(call, relModel.CamelPlural(), srcCol.Proper(), relModel.Proper(), suffix, c)
 		ret.WE(2, `""`)
 

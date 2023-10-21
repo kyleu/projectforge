@@ -44,12 +44,12 @@ func (m ValueMap) ParseArray(path string, allowMissing bool, allowEmpty bool) ([
 		if (!allowEmpty) && len(t) == 0 {
 			return nil, errors.New("empty array")
 		}
-		return InterfaceArrayFrom(t...), nil
+		return lo.ToAnySlice(t), nil
 	case []int:
 		if (!allowEmpty) && len(t) == 0 {
 			return nil, errors.New("empty array")
 		}
-		return InterfaceArrayFrom(t...), nil
+		return lo.ToAnySlice(t), nil
 	case nil:
 		if !allowEmpty {
 			return nil, errors.Errorf("could not find array for path [%s]", path)

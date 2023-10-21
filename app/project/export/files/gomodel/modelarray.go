@@ -33,26 +33,32 @@ func Models(m *model.Model, args *model.Args, addHeader bool, goVersion string, 
 	if err != nil {
 		return nil, err
 	}
+
 	ag, err := modelArrayGet(g, m, m.PKs(), args.Enums, goVersion)
 	if err != nil {
 		return nil, err
 	}
 	g.AddBlocks(ag)
-	if len(m.PKs()) > 1 {
-		g.AddBlocks(modelArrayToPKs(m))
-	}
-	lo.ForEach(m.IndexedColumns(true), func(col *model.Column, _ int) {
-		if col.Type.Key() != types.KeyList {
-			g.AddBlocks(modelArrayGetByMulti(m, col, args.Enums), modelArrayGetBySingle(m, col, args.Enums))
-		}
-	})
+
 	lo.ForEach(m.PKs(), func(pk *model.Column, _ int) {
 		if pk.Proper() != "Title" {
 			g.AddBlocks(modelArrayCol(m, pk, args.Enums))
 			g.AddBlocks(modelArrayColStrings(m, pk))
 		}
 	})
-	g.AddBlocks(modelArrayTitleStrings(m), modelArrayClone(m))
+	g.AddBlocks(modelArrayTitleStrings(m))
+	if len(m.PKs()) > 1 {
+		g.AddBlocks(modelArrayToPKs(m))
+	}
+	lo.ForEach(m.IndexedColumns(true), func(col *model.Column, _ int) {
+		if col.Type.Key() != types.KeyList {
+			if !col.PK {
+				g.AddBlocks(modelArrayCol(m, col, args.Enums))
+			}
+			g.AddBlocks(modelArrayGetBySingle(m, col, args.Enums), modelArrayGetByMulti(m, col, args.Enums))
+		}
+	})
+	g.AddBlocks(modelArrayClone(m))
 	return g.Render(addHeader, linebreak)
 }
 
@@ -133,8 +139,8 @@ func modelArrayCol(m *model.Model, col *model.Column, enums enum.Enums) *golang.
 	}
 	t, _ := col.ToGoType(m.Package, enums)
 	ret.W("func (%s %s) %s() []%s {", m.FirstLetter(), m.ProperPlural(), name, t)
-	ret.W("\treturn lo.Map(%s, func(x *%s, _ int) %s {", m.FirstLetter(), m.Proper(), t)
-	ret.W("\t\treturn x.%s", col.Proper())
+	ret.W("\treturn lo.Map(%s, func(xx *%s, _ int) %s {", m.FirstLetter(), m.Proper(), t)
+	ret.W("\t\treturn xx.%s", col.Proper())
 	ret.W("\t})")
 	ret.W("}")
 	return ret

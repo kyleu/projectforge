@@ -38,16 +38,17 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool, linebreak stri
 		}
 		g.AddBlocks(gbpk)
 		if pkLen == 1 {
-			x, err := serviceGetMultipleSinglePK(m, dbRef, args.Enums)
+			x, err := serviceGetMultipleSingleCol(m, "GetMultiple", m.PKs()[0], dbRef, args.Enums)
 			if err != nil {
 				return nil, err
 			}
 			g.AddBlocks(x)
 		} else {
-			g.AddBlocks(serviceGetMultipleManyPKs(m, dbRef))
+			g.AddBlocks(serviceGetMultipleManyCols(m, "GetMultiple", m.PKs(), dbRef))
 		}
 	}
 	getBys := map[string]model.Columns{}
+	var doExtra []string
 	if pkLen > 1 {
 		lo.ForEach(m.PKs(), func(pkCol *model.Column, _ int) {
 			getBys[pkCol.Name] = model.Columns{pkCol}
@@ -60,6 +61,7 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool, linebreak stri
 	})
 	lo.ForEach(m.IndexedColumns(false), func(col *model.Column, _ int) {
 		getBys[col.Name] = model.Columns{col}
+		doExtra = append(doExtra, col.Name)
 	})
 	for _, key := range util.ArraySorted(lo.Keys(getBys)) {
 		cols := getBys[key]
@@ -70,11 +72,24 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool, linebreak stri
 		returnMultiple := lo.ContainsBy(cols, func(x *model.Column) bool {
 			return !x.HasTag("unique")
 		})
-		gb, err := serviceGetBy(name, m, cols, returnMultiple, dbRef, args.Enums, args.Database)
+		sb, err := serviceGetBy(name, m, cols, returnMultiple, dbRef, args.Enums, args.Database)
 		if err != nil {
 			return nil, err
 		}
-		g.AddBlocks(gb)
+		g.AddBlocks(sb)
+		if slices.Contains(doExtra, key) {
+			if len(cols) == 1 {
+				n := cols[0].ProperPlural()
+				if cols[0].ProperPlural() == cols[0].Proper() {
+					n += "Set"
+				}
+				pb, err := serviceGetMultipleSingleCol(m, "GetBy"+n, cols[0], dbRef, args.Enums)
+				if err != nil {
+					return nil, err
+				}
+				g.AddBlocks(pb)
+			}
+		}
 	}
 
 	if m.HasSearches() {

@@ -142,7 +142,7 @@ func processList(cell any, cellStr string) string {
 	if !ok {
 		s, ok := cell.([]string)
 		if ok {
-			a = util.InterfaceArrayFrom(s...)
+			a = lo.ToAnySlice(s)
 		} else {
 			str, ok := cell.(string)
 			if ok {

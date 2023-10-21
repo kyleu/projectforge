@@ -11,50 +11,47 @@ import (
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-const serviceGetMultipleName = "GetMultiple"
-
-func serviceGetMultipleSinglePK(m *model.Model, dbRef string, enums enum.Enums) (*golang.Block, error) {
-	ret := golang.NewBlock(serviceGetMultipleName, "func")
-	pk := m.PKs()[0]
-	t, err := model.ToGoType(pk.Type, pk.Nullable, m.Package, enums)
+func serviceGetMultipleSingleCol(m *model.Model, name string, col *model.Column, dbRef string, enums enum.Enums) (*golang.Block, error) {
+	ret := golang.NewBlock(name, "func")
+	t, err := model.ToGoType(col.Type, col.Nullable, m.Package, enums)
 	if err != nil {
 		return nil, err
 	}
-	msg := "func (s *Service) %s(ctx context.Context, tx *sqlx.Tx%s, logger util.Logger, %s ...%s) (%s, error) {"
-	ret.W(msg, serviceGetMultipleName, getSuffix(m), pk.CamelPlural(), t, m.ProperPlural())
-	ret.W("\tif len(%s) == 0 {", pk.CamelPlural())
+	msg := "func (s *Service) %s(ctx context.Context, tx *sqlx.Tx, params *filter.Params%s, logger util.Logger, %s ...%s) (%s, error) {"
+	ret.W(msg, name, getSuffix(m), col.CamelPlural(), t, m.ProperPlural())
+	ret.W("\tif len(%s) == 0 {", col.CamelPlural())
 	ret.W("\t\treturn %s{}, nil", m.ProperPlural())
 	ret.W("\t}")
-	ret.W("\twc := database.SQLInClause(%q, len(%s), 0, s.db.Placeholder())", pk.Name, pk.CamelPlural())
+	ret.W("\tparams = filters(params)")
+	ret.W("\twc := database.SQLInClause(%q, len(%s), 0, s.db.Placeholder())", col.Name, col.CamelPlural())
 	if m.IsSoftDelete() {
 		ret.W("\twc = addDeletedClause(wc, includeDeleted)")
 	}
+	ret.W("\tq := database.SQLSelect(columnsString, %s, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())", tableClauseFor(m))
 	ret.W("\tret := rows{}")
-	ret.W("\tq := database.SQLSelectSimple(columnsString, %s, s.db.Placeholder(), wc)", tableClauseFor(m))
-	ret.W("\terr := s.%s.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(%s)...)", dbRef, pk.CamelPlural())
+	ret.W("\terr := s.%s.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(%s)...)", dbRef, col.CamelPlural())
 	ret.W("\tif err != nil {")
-	ret.W("\t\treturn nil, errors.Wrapf(err, \"unable to get %s for [%%%%d] %s\", len(%s))", m.ProperPlural(), pk.CamelPlural(), pk.CamelPlural())
+	ret.W("\t\treturn nil, errors.Wrapf(err, \"unable to get %s for [%%%%d] %s\", len(%s))", m.ProperPlural(), col.CamelPlural(), col.CamelPlural())
 	ret.W("\t}")
 	ret.W("\treturn ret.To%s(), nil", m.ProperPlural())
 	ret.W("}")
 	return ret, nil
 }
 
-func serviceGetMultipleManyPKs(m *model.Model, dbRef string) *golang.Block {
-	ret := golang.NewBlock(serviceGetMultipleName, "func")
-	pks := m.PKs()
+func serviceGetMultipleManyCols(m *model.Model, name string, cols model.Columns, dbRef string) *golang.Block {
+	ret := golang.NewBlock(name, "func")
 
-	tags := make([]string, 0, len(pks))
-	idxs := make([]string, 0, len(pks))
-	refs := make([]string, 0, len(pks))
-	lo.ForEach(pks, func(pk *model.Column, idx int) {
+	tags := make([]string, 0, len(cols))
+	idxs := make([]string, 0, len(cols))
+	refs := make([]string, 0, len(cols))
+	lo.ForEach(cols, func(pk *model.Column, idx int) {
 		tags = append(tags, fmt.Sprintf("%s = $%%%%d", pk.Name))
-		idxs = append(idxs, fmt.Sprintf("(idx*%d)+%d", len(pks), idx+1))
+		idxs = append(idxs, fmt.Sprintf("(idx*%d)+%d", len(cols), idx+1))
 		refs = append(refs, fmt.Sprintf("x.%s", pk.Proper()))
 	})
 
 	msg := "func (s *Service) %s(ctx context.Context, tx *sqlx.Tx%s, logger util.Logger, pks ...*PK) (%s, error) {"
-	ret.W(msg, serviceGetMultipleName, getSuffix(m), m.ProperPlural())
+	ret.W(msg, name, getSuffix(m), m.ProperPlural())
 	ret.W("\tif len(pks) == 0 {")
 	ret.W("\t\treturn %s{}, nil", m.ProperPlural())
 	ret.W("\t}")

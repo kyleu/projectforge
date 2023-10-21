@@ -22,6 +22,9 @@ func Search(rc *fasthttp.RequestCtx) {
 		if q != "" {
 			ps.Title = fmt.Sprintf("[%s] %s", q, ps.Title)
 		}
+		if len(results) == 1 && results[0].URL != "" {
+			return controller.FlashAndRedir(true, "single search result found", results[0].URL, rc, ps)
+		}
 		ps.Data = results
 		ps.DefaultNavIcon = "search"
 		bc := []string{"Search||/search"}
