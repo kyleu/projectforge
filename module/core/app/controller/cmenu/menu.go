@@ -16,18 +16,16 @@ func MenuFor(
 ) (menu.Items, any, error) {
 	var ret menu.Items
 	var data any
-	// $PF_SECTION_START(routes_start)$
-	// $PF_SECTION_END(routes_start)${{{ if.HasModule "export" }}}{{{ if .HasAccount }}}
+	// $PF_SECTION_START(routes)$ {{{ if.HasModule "export" }}}{{{ if .HasAccount }}}
 	if isAdmin {
 		ret = append(ret, generatedMenu()...)
 	}{{{ else }}}
 	ret = append(ret, generatedMenu()...){{{ end }}}{{{ end }}}
-	// $PF_SECTION_START(routes_end)$
 	// This is your menu, feel free to customize it
 	admin := &menu.Item{Key: "admin", Title: "Settings", Description: "System-wide settings and preferences", Icon: "cog", Route: "/admin"}
 	ret = append(ret, {{{ if .HasModule "graphql" }}}graphQLMenu(ctx, as.GraphQL), menu.Separator, {{{end}}}{{{ if .HasModule "sandbox" }}}sandbox.Menu(ctx), menu.Separator, {{{ end }}}admin{{{ if .HasModule "docbrowse" }}}, menu.Separator, docMenu(logger){{{ end }}})
 	const aboutDesc = "Get assistance and advice for using " + util.AppName
 	ret = append(ret, &menu.Item{Key: "about", Title: "About", Description: aboutDesc, Icon: "question", Route: "/about"})
-	// $PF_SECTION_END(routes_end)$
+	// $PF_SECTION_END(routes)$
 	return ret, data, nil
 }

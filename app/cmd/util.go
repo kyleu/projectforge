@@ -62,6 +62,10 @@ func initIfNeeded() error {
 		_flags.ConfigDir = configdir.LocalConfig(util.AppName)
 		_ = configdir.MakePath(_flags.ConfigDir)
 	}
+	err := util.InitAcronyms()
+	if err != nil {
+		return err
+	}
 	l, err := log.InitLogging(_flags.Debug)
 	if err != nil {
 		return err

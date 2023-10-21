@@ -104,3 +104,10 @@ func (t *TemplateContext) HasModule(key string) bool {
 func (t *TemplateContext) Public() bool {
 	return t.Build == nil || !t.Build.Private
 }
+
+func (t *TemplateContext) Acronyms() string {
+	if t.Info == nil || len(t.Info.Acronyms) == 0 {
+		return ""
+	}
+	return strings.Join(util.StringArrayQuoted(t.Info.Acronyms), ", ")
+}

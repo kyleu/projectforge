@@ -4,13 +4,5 @@
   "title": "Config",
   "type": "object",
   "properties": {
-    "grpcClass": {
-      "description": "when set, overrides the gRPC class for generated code",
-      "type": "string"
-    },
-    "grpcPackage": {
-      "description": "when set, overrides the gRPC package for generated code",
-      "type": "string"
-    }
   }
 }

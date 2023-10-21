@@ -17,7 +17,7 @@ func modelFromMap(g *golang.File, m *model.Model, enums enum.Enums, database str
 	ret := golang.NewBlock(m.Package+"FromForm", "func")
 	ret.W("func FromMap(m util.ValueMap, setPK bool) (*%s, error) {", m.Proper())
 	ret.W("\tret := &%s{}", m.Proper())
-	cols := m.Columns.WithoutTags("created", "updated", model.RevisionType)
+	cols := m.Columns.WithoutTags("created", "updated")
 	needsErr := lo.ContainsBy(cols, func(c *model.Column) bool {
 		return c.NeedsErr(m.Name, database)
 	})

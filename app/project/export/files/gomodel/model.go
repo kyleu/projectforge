@@ -67,10 +67,6 @@ func Model(m *model.Model, args *model.Args, addHeader bool, linebreak string) (
 		}
 	}
 	g.AddBlocks(modelWebPath(g, m), mdiff, modelToData(m, m.Columns, "", args.Database))
-	if m.IsRevision() {
-		hc := m.HistoryColumns(false)
-		g.AddBlocks(modelToData(m, hc.Const, "Core", args.Database), modelToData(m, hc.Var, hc.Col.Proper(), args.Database))
-	}
 	return g.Render(addHeader, linebreak)
 }
 

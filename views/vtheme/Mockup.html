@@ -6,7 +6,6 @@
   "projectforge.dev/projectforge/app/lib/theme"
   "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
-  "projectforge.dev/projectforge/views/vutil"
 ) %}
 
 {% func MockupTheme(t *theme.Theme, pointer bool, icon string, indent int, ps *cutil.PageState) %}{% stripspace %}
@@ -36,7 +35,7 @@
       cls += " pointer"
     }
   %}
-  {%= vutil.Indent(true, indent) %}
+  {%= components.Indent(true, indent) %}
   <div class="{%s cls %}">
     <div class="mock-nav" style="{%s navStyle %}">{%= components.SVGRef(icon, 12, 12, `icon`, ps) %}{%s navTitle %}</div>
     <div class="mock-menu" style="{%s menuStyle %}">

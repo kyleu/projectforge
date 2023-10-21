@@ -52,10 +52,6 @@
         "type": "string"
       }
     },
-    "history": {
-      "description": "used to track the history of a column",
-      "enum": ["history", "revision", "audit"]
-    },
     "tags": {
       "description": "flags for this model that control generated code",
       "type": "array",
@@ -153,7 +149,7 @@
           "description": "tags controlling the column's code behavior",
           "type": "array",
           "items": {
-            "enum": ["const", "created", "debug-only", "deleted", "grouped", "link", "list-first", "no-title", "omitempty", "revision", "title", "unique", "updated"]
+            "enum": ["const", "created", "debug-only", "deleted", "link", "list-first", "no-title", "omitempty", "title", "unique", "updated"]
           }
         },
         "helpString": {

@@ -1,6 +1,8 @@
 package model
 
 import (
+	"slices"
+
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/util"
@@ -36,6 +38,17 @@ func (g *Group) TitleSafe() string {
 	return g.Title
 }
 
+func (g *Group) Proper() string {
+	return util.StringToCamel(g.Key)
+}
+
+func (g *Group) String() string {
+	if g.Title == "" {
+		return g.Key
+	}
+	return g.Title
+}
+
 type Groups []*Group
 
 func (g Groups) Get(keys ...string) *Group {
@@ -51,4 +64,18 @@ func (g Groups) Get(keys ...string) *Group {
 		}
 	}
 	return nil
+}
+
+func (g Groups) Flatten() Groups {
+	ret := slices.Clone(g)
+	for _, x := range g {
+		ret = append(ret, x.Children.Flatten()...)
+	}
+	return ret
+}
+
+func (g Groups) Strings(prefix string) []string {
+	return lo.Map(g, func(x *Group, _ int) string {
+		return prefix + x.Proper()
+	})
 }

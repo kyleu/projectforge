@@ -25,7 +25,7 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool, linebreak stri
 		g.AddImport(helper.ImpFmt)
 	}
 	g.AddImport(helper.ImpAppUtil, helper.ImpContext, helper.ImpErrors, helper.ImpSQLx, helper.ImpFilter, helper.ImpAppDatabase, helper.ImpLo)
-	if err := helper.SpecialImports(g, m.IndexedColumns(), m.PackageWithGroup(""), args.Enums); err != nil {
+	if err := helper.SpecialImports(g, m.IndexedColumns(true), m.PackageWithGroup(""), args.Enums); err != nil {
 		return nil, err
 	}
 	g.AddBlocks(serviceList(m, args.DBRef()))
@@ -53,20 +53,13 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool, linebreak stri
 			getBys[pkCol.Name] = model.Columns{pkCol}
 		})
 	}
-	lo.ForEach(m.GroupedColumns(), func(grp *model.Column, _ int) {
-		g.AddImport(helper.ImpAppUtil)
-		g.AddBlocks(serviceGrouped(m, grp, args.DBRef()))
-		getBys[grp.Name] = model.Columns{grp}
-	})
 	lo.ForEach(m.Relations, func(rel *model.Relation, _ int) {
 		cols := rel.SrcColumns(m)
 		colStr := strings.Join(cols.Names(), ",")
 		getBys[colStr] = cols
 	})
-	lo.ForEach(m.Columns, func(col *model.Column, _ int) {
-		if col.Indexed {
-			getBys[col.Name] = model.Columns{col}
-		}
+	lo.ForEach(m.IndexedColumns(false), func(col *model.Column, _ int) {
+		getBys[col.Name] = model.Columns{col}
 	})
 	for _, key := range util.ArraySorted(lo.Keys(getBys)) {
 		cols := getBys[key]
@@ -92,42 +85,8 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool, linebreak stri
 		}
 		g.AddBlocks(ss)
 	}
-	for _, grp := range m.GroupedColumns() {
-		if !grp.PK {
-			if m.HasSearches() {
-				ss, err := serviceSearch(m, grp, dbRef, args.Enums, args.Database)
-				if err != nil {
-					return nil, err
-				}
-				g.AddBlocks(ss)
-			}
-		}
-	}
 	g.AddBlocks(serviceListSQL(m, args.DBRef()), serviceRandom(m))
 	return g.Render(addHeader, linebreak)
-}
-
-func serviceGrouped(m *model.Model, grp *model.Column, dbRef string) *golang.Block {
-	name := "Get" + grp.ProperPlural()
-	ret := golang.NewBlock(name, "func")
-	ret.W("func (s *Service) %s(ctx context.Context, tx *sqlx.Tx%s, logger util.Logger) ([]*util.KeyValInt, error) {", name, getSuffix(m))
-	ret.W("\twc := \"\"")
-	if m.IsSoftDelete() {
-		delCols := m.Columns.WithTag("deleted")
-		ret.W("\tif !includeDeleted {")
-		ret.W("\t\twc = %q", delCols[0].NameQuoted()+" is null")
-		ret.W("\t}")
-	}
-	cols := fmt.Sprintf("%q as key, count(*) as val", grp.Name)
-	ret.W("\tq := database.SQLSelectGrouped(%q, %s, wc, %q, %q, 0, 0, s.db.Placeholder())", cols, tableClauseFor(m), `"`+grp.Name+`"`, `"`+grp.Name+`"`)
-	ret.W("\tvar ret []*util.KeyValInt")
-	ret.W("\terr := s.%s.Select(ctx, &ret, q, tx, logger)", dbRef)
-	ret.W("\tif err != nil {")
-	ret.W("\t\treturn nil, errors.Wrap(err, \"unable to get %s by %s\")", m.TitlePluralLower(), grp.TitleLower())
-	ret.W("\t}")
-	ret.W("\treturn ret, nil")
-	ret.W("}")
-	return ret
 }
 
 func serviceList(m *model.Model, dbRef string) *golang.Block {
@@ -294,8 +253,5 @@ func serviceRandom(m *model.Model) *golang.Block {
 }
 
 func tableClauseFor(m *model.Model) string {
-	if m.IsRevision() {
-		return "tablesJoined"
-	}
 	return "tableQuoted"
 }

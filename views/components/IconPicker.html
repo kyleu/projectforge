@@ -2,14 +2,13 @@
 {% import (
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/util"
-  "projectforge.dev/projectforge/views/vutil"
 ) %}
 
 {% func IconPicker(key string, selected string, ps *cutil.PageState, indent int) %}{% stripspace %}
-  {%= vutil.Indent(true, indent) %}
+  {%= Indent(true, indent) %}
   <div class="choice">
     {% for _, k := range util.SVGIconKeys %}
-      {%= vutil.Indent(true, indent + 1) %}
+      {%= Indent(true, indent + 1) %}
       <label title="{%s k %}">
         {% if k == selected %}
           <input type="radio" name="{%s key %}" value="{%s k %}" checked="checked" />
@@ -20,8 +19,8 @@
         {%= SVGRef(k, 48, 48, "", ps) %}
       </label>
     {% endfor %}
-    {%= vutil.Indent(true, indent + 1) %}
+    {%= Indent(true, indent + 1) %}
     <div class="clear"></div>
-  {%= vutil.Indent(true, indent) %}
+  {%= Indent(true, indent) %}
   </div>
 {% endstripspace %}{% endfunc %}

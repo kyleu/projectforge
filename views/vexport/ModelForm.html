@@ -37,7 +37,6 @@
             {%= components.TableTextarea("ordering", "", "Ordering", 3, util.ToJSON(m.Ordering), 5, export.Helpers["model.ordering"]...) %}
             {%= components.TableSelect("view", "", "View", m.View, []string{"", "rich"}, []string{"Default", "Rich"}, 5, export.Helpers["model.view"]...) %}
             {%= components.TableInput("search", "", "Search", strings.Join(m.Search, `, `), 5, export.Helpers["model.search"]...) %}
-            {%= components.TableInput("history", "", "History", m.History, 5, export.Helpers["model.history"]...) %}
             {%= components.TableInput("tags", "", "Tags", strings.Join(m.Tags, `, `), 5, export.Helpers["model.tags"]...) %}
             {%= components.TableInput("titleOverride", "", "Title Override", m.TitleOverride, 5, export.Helpers["model.titleOverride"]...) %}
             {%= components.TableInput("properOverride", "", "Proper Override", m.ProperOverride, 5, export.Helpers["model.properOverride"]...) %}

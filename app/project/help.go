@@ -48,8 +48,9 @@ var Helpers = func() map[string][]string {
 	add("configVars", "Configuration variables for code generation")
 	add("extraFiles", "Additional files to include in the builds")
 	add("deployments", "Files that track deployment of this app")
-	add("envvars", "additional environment variables used by this project")
-	add("docs", "documentation resources for this project")
+	add("envvars", "Additional environment variables used by this project")
+	add("docs", "Documentation resources for this project")
+	add("acronyms", "Custom acronyms, intended to be displayed capitalized")
 
 	return ret
 }()

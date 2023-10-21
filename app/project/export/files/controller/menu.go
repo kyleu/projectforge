@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/samber/lo"
 
@@ -11,90 +12,115 @@ import (
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func Menu(args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	g := golang.NewFile("cmenu", []string{"app", "controller", "cmenu"}, "generated")
 	g.AddImport(helper.ImpAppMenu)
-	g.AddBlocks(menuBlock(args))
+	groups, names, orphans := sortModels(args)
+	g.AddBlocks(menuBlockV(args, groups, names), menuBlockGM(args, orphans))
 	return g.Render(addHeader, linebreak)
 }
 
-func menuBlock(args *model.Args) *golang.Block {
-	ret := golang.NewBlock("menu", "func")
-	ret.W("func generatedMenu() menu.Items {")
-	rct := menuContent(args)
-	lo.ForEach(rct, func(x string, _ int) {
-		ret.W(x)
-	})
-	if len(rct) == 0 {
-		ret.W("\treturn nil")
-	}
-	ret.W("}")
-	return ret
-}
-
-func menuContent(args *model.Args) []string {
-	if len(args.Models) == 0 && len(args.Groups) == 0 {
-		return nil
-	}
-	out := make([]string, 0, len(args.Models)+len(args.Groups))
-
-	if len(args.Groups) == 0 && len(args.Models) == 0 {
-		out = append(out, "\treturn menu.Items{}")
-	} else {
-		out = append(out, "\treturn menu.Items{")
-		lo.ForEach(menuItemsFor(args.Groups, args.Models.SortedDisplay()), func(x *menu.Item, _ int) {
-			out = append(out, menuSerialize(x, "\t\t")...)
-		})
-		out = append(out, "\t}")
-	}
-	return out
-}
-
-func menuItemsFor(groups model.Groups, models model.Models) menu.Items {
-	ret := make(menu.Items, 0, len(groups)+len(models))
-	lo.ForEach(groups, func(g *model.Group, _ int) {
-		ret = append(ret, menuItemForGroup(g, models))
-	})
-	lo.ForEach(models, func(m *model.Model, _ int) {
+func sortModels(args *model.Args) (map[string][]string, []string, []string) {
+	groups := map[string][]string{}
+	names := make([]string, 0, len(args.Models)+len(args.Groups))
+	orphans := make([]string, 0)
+	lo.ForEach(args.Models, func(m *model.Model, _ int) {
+		n := m.ProperWithGroup(args.Acronyms)
+		names = append(names, n)
 		if len(m.Group) == 0 {
-			ret = append(ret, menuItemForModel(m, models))
+			orphans = append(orphans, n)
+		} else {
+			gn := m.Group[len(m.Group)-1]
+			curr := groups[gn]
+			groups[gn] = append(curr, "menuItem"+n)
 		}
 	})
-	return ret
+	return groups, names, orphans
 }
 
-func menuItemForGroup(g *model.Group, models model.Models, pth ...string) *menu.Item {
-	np := append(slices.Clone(pth), g.Key)
-	ret := &menu.Item{Key: g.Key, Title: g.TitleSafe(), Description: g.Description, Icon: g.IconSafe(), Route: g.Route}
-	lo.ForEach(g.Children, func(child *model.Group, _ int) {
-		ret.Children = append(ret.Children, menuItemForGroup(child, models, np...))
+func menuBlockV(args *model.Args, groups map[string][]string, names []string) *golang.Block {
+	nameLength := util.StringArrayMaxLength(names)
+	lines := lo.Map(args.Models, func(m *model.Model, _ int) string {
+		n := util.StringPad(m.ProperWithGroup(args.Acronyms), nameLength)
+		i := menuSerialize(menuItemForModel(m, args.Models, args.Acronyms), "", true)
+		return fmt.Sprintf("\tmenuItem%s = %s", n, strings.Join(i, "\n"))
 	})
-	matches := models.ForGroup(np...)
-	lo.ForEach(matches, func(m *model.Model, _ int) {
-		ret.Children = append(ret.Children, menuItemForModel(m, models))
-	})
-	return ret
-}
+	slices.Sort(lines)
 
-func menuItemForModel(m *model.Model, models model.Models) *menu.Item {
-	ret := &menu.Item{Key: m.Package, Title: m.TitlePlural(), Description: m.Description, Icon: m.Icon, Route: m.Route()}
-	if len(m.GroupedColumns()) > 0 {
-		lo.ForEach(m.GroupedColumns(), func(g *model.Column, _ int) {
-			desc := fmt.Sprintf("%s from %s", g.ProperPlural(), m.Plural())
-			kid := &menu.Item{Key: g.Camel(), Title: g.ProperPlural(), Description: desc, Icon: m.Icon, Route: m.Route() + "/" + g.Camel()}
-			ret.Children = append(ret.Children, kid)
-		})
+	flatGroups := args.Groups.Flatten()
+	maxGroupLength := util.StringArrayMaxLength(flatGroups.Strings(""))
+	if len(lines) > 0 && len(flatGroups) > 0 {
+		lines = append(lines, "")
 	}
+	for _, grp := range flatGroups {
+		k, g := grp.Key, groups[grp.Key]
+		n := util.StringToCamel(k, args.Acronyms...)
+		msg := fmt.Sprintf("\tmenuGroup%s = &menu.Item{Key: %q, Title: %q", util.StringPad(n, maxGroupLength), grp.Key, grp.String())
+		if grp.Icon != "" {
+			msg += fmt.Sprintf(", Icon: %q", grp.Icon)
+		}
+		if grp.Route != "" {
+			msg += fmt.Sprintf(", Route: %q", grp.Route)
+		}
+		if len(grp.Children) > 0 || len(g) > 0 {
+			items := append(slices.Clone(g), grp.Children.Strings("menuGroup")...)
+			msg += fmt.Sprintf(", Children: menu.Items{%s}", strings.Join(items, ", "))
+		}
+		msg += "}"
+		lines = append(lines, msg)
+	}
+
+	v := golang.NewBlock("items", "var")
+	switch len(lines) {
+	case 0:
+		// noop
+	case 1:
+		v.W("var " + strings.TrimSpace(lines[0]))
+	default:
+		v.W("var (")
+		lo.ForEach(lines, func(l string, _ int) {
+			v.W(l)
+		})
+		v.W(")")
+	}
+
+	return v
+}
+
+func menuBlockGM(args *model.Args, orphans []string) *golang.Block {
+	gm := golang.NewBlock("generatedMenu", "func")
+	gm.W("func generatedMenu() menu.Items {")
+	gm.W("\treturn menu.Items{")
+	for _, g := range args.Groups {
+		gm.W("\t\tmenuGroup%s,", util.StringToCamel(g.Proper(), args.Acronyms...))
+	}
+	for _, o := range orphans {
+		gm.W("\t\tmenuItem" + o + ",")
+	}
+	gm.W("\t}")
+	gm.W("}")
+
+	return gm
+}
+
+func menuItemForModel(m *model.Model, models model.Models, acronyms []string) *menu.Item {
+	w := m.ProperWithGroup(acronyms)
+	ret := &menu.Item{Key: m.Package, Title: m.TitlePlural(), Description: m.Description, Icon: m.Icon, Route: m.Route(), Warning: w}
 	lo.ForEach(models.ForGroup(append(slices.Clone(m.Group), m.Name)...), func(x *model.Model, _ int) {
-		kid := menuItemForModel(x, models)
+		kid := menuItemForModel(x, models, acronyms)
 		ret.Children = append(ret.Children, kid)
 	})
 	return ret
 }
 
-func menuSerialize(m *menu.Item, prefix string) []string {
+func menuSerialize(m *menu.Item, prefix string, top bool) []string {
+	ws := ""
+	if !top {
+		ws = "\t"
+	}
 	var out []string
 	var rt string
 	if m.Route != "" {
@@ -106,13 +132,12 @@ func menuSerialize(m *menu.Item, prefix string) []string {
 	}
 	args := fmt.Sprintf("Key: %q, Title: %q, %sIcon: %q%s", m.Key, m.Title, desc, m.Icon, rt)
 	if len(m.Children) == 0 {
-		out = append(out, prefix+"&menu.Item{"+args+"},")
+		out = append(out, ws+prefix+"&menu.Item{"+args+"}")
 	} else {
-		out = append(out, prefix+"&menu.Item{"+args+", Children: menu.Items{")
-		lo.ForEach(m.Children, func(kid *menu.Item, _ int) {
-			out = append(out, menuSerialize(kid, prefix+"\t")...)
+		kids := lo.Map(m.Children, func(kid *menu.Item, _ int) string {
+			return "menuItem" + kid.Warning
 		})
-		out = append(out, prefix+"}},")
+		out = append(out, ws+prefix+"&menu.Item{"+args+", Children: menu.Items{"+strings.Join(kids, ", ")+"}}")
 	}
 	return out
 }

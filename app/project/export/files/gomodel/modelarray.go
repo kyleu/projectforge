@@ -20,7 +20,7 @@ func Models(m *model.Model, args *model.Args, addHeader bool, goVersion string, 
 		name += "_array"
 	}
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, name)
-	lo.ForEach(helper.ImportsForTypes("go", "", m.PKs().Types()...), func(imp *golang.Import, _ int) {
+	lo.ForEach(helper.ImportsForTypes("go", "", m.IndexedColumns(true).Types()...), func(imp *golang.Import, _ int) {
 		g.AddImport(imp)
 	})
 	lo.ForEach(helper.ImportsForTypes("string", "", m.PKs().Types()...), func(imp *golang.Import, _ int) {
@@ -29,7 +29,11 @@ func Models(m *model.Model, args *model.Args, addHeader bool, goVersion string, 
 	g.AddImport(helper.ImpSlicesForGo(goVersion))
 	g.AddImport(helper.ImpLo)
 	g.AddBlocks(modelArray(m))
-	ag, err := modelArrayGet(g, m, args.Enums, goVersion)
+	err := helper.SpecialImports(g, m.IndexedColumns(true), m.PackageWithGroup(""), args.Enums)
+	if err != nil {
+		return nil, err
+	}
+	ag, err := modelArrayGet(g, m, m.PKs(), args.Enums, goVersion)
 	if err != nil {
 		return nil, err
 	}
@@ -37,11 +41,13 @@ func Models(m *model.Model, args *model.Args, addHeader bool, goVersion string, 
 	if len(m.PKs()) > 1 {
 		g.AddBlocks(modelArrayToPKs(m))
 	}
+	lo.ForEach(m.IndexedColumns(true), func(col *model.Column, _ int) {
+		if col.Type.Key() != types.KeyList {
+			g.AddBlocks(modelArrayGetByMulti(m, col, args.Enums), modelArrayGetBySingle(m, col, args.Enums))
+		}
+	})
 	lo.ForEach(m.PKs(), func(pk *model.Column, _ int) {
 		if pk.Proper() != "Title" {
-			if pk.Type.Key() != types.KeyList {
-				g.AddBlocks(modelArrayGetBy(m, pk, args.Enums))
-			}
 			g.AddBlocks(modelArrayCol(m, pk, args.Enums))
 			g.AddBlocks(modelArrayColStrings(m, pk))
 		}
@@ -56,9 +62,9 @@ func modelArray(m *model.Model) *golang.Block {
 	return ret
 }
 
-func modelArrayGet(g *golang.File, m *model.Model, enums enum.Enums, goVersion string) (*golang.Block, error) {
+func modelArrayGet(g *golang.File, m *model.Model, cols model.Columns, enums enum.Enums, goVersion string) (*golang.Block, error) {
 	ret := golang.NewBlock(m.Proper()+"ArrayGet", "func")
-	args, err := m.PKs().Args(m.Package, enums)
+	args, err := cols.Args(m.Package, enums)
 	if err != nil {
 		return nil, err
 	}
@@ -87,7 +93,7 @@ func modelArrayClone(m *model.Model) *golang.Block {
 	return ret
 }
 
-func modelArrayGetBy(m *model.Model, col *model.Column, enums enum.Enums) *golang.Block {
+func modelArrayGetByMulti(m *model.Model, col *model.Column, enums enum.Enums) *golang.Block {
 	ret := golang.NewBlock(fmt.Sprintf("%sArrayGetBy%s", m.Proper(), col.Proper()), "func")
 	name := col.ProperPlural()
 	if name == col.Proper() {
@@ -98,8 +104,19 @@ func modelArrayGetBy(m *model.Model, col *model.Column, enums enum.Enums) *golan
 	}
 	t, _ := col.ToGoType(m.Package, enums)
 	ret.W("func (%s %s) GetBy%s(%s ...%s) %s {", m.FirstLetter(), m.ProperPlural(), name, col.CamelPlural(), t, m.ProperPlural())
-	ret.W("\treturn lo.Filter(%s, func(x *%s, _ int) bool {", m.FirstLetter(), m.Proper())
-	ret.W("\t\treturn lo.Contains(%s, x.%s)", col.CamelPlural(), col.Proper())
+	ret.W("\treturn lo.Filter(%s, func(xx *%s, _ int) bool {", m.FirstLetter(), m.Proper())
+	ret.W("\t\treturn lo.Contains(%s, xx.%s)", col.CamelPlural(), col.Proper())
+	ret.W("\t})")
+	ret.W("}")
+	return ret
+}
+
+func modelArrayGetBySingle(m *model.Model, col *model.Column, enums enum.Enums) *golang.Block {
+	ret := golang.NewBlock(fmt.Sprintf("%sArrayGetBy%s", m.Proper(), col.Proper()), "func")
+	t, _ := col.ToGoType(m.Package, enums)
+	ret.W("func (%s %s) GetBy%s(%s %s) %s {", m.FirstLetter(), m.ProperPlural(), col.Proper(), col.Camel(), t, m.ProperPlural())
+	ret.W("\treturn lo.Filter(%s, func(xx *%s, _ int) bool {", m.FirstLetter(), m.Proper())
+	ret.W("\t\treturn xx.%s == %s", col.Proper(), col.Camel())
 	ret.W("\t})")
 	ret.W("}")
 	return ret

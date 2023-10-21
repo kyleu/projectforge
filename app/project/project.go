@@ -108,6 +108,7 @@ func (p *Project) ModuleArgExport(pSvc *Service, logger util.Logger) (*model.Arg
 		}
 		p.ExportArgs.Modules = p.Modules
 		p.ExportArgs.Database = p.DatabaseEngineDefault()
+		p.ExportArgs.Acronyms = p.Info.Acronyms
 	}
 	return p.ExportArgs, nil
 }

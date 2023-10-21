@@ -14,41 +14,22 @@ import (
 
 func Migration(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"queries", "ddl"}, m.Name+".sql")
-	if m.IsRevision() {
-		drop, err := sqlDrop(m)
-		if err != nil {
-			return nil, err
-		}
-		g.AddBlocks(drop)
-		cr, err := sqlCreateRevision(m, args.Modules, args.DatabaseNow(), args.Models)
-		if err != nil {
-			return nil, err
-		}
-		g.AddBlocks(cr)
-	} else {
-		drop, err := sqlDrop(m)
-		if err != nil {
-			return nil, err
-		}
-		g.AddBlocks(drop)
-		sc, err := sqlCreate(m, args.Modules, args.DatabaseNow(), args.Models)
-		if err != nil {
-			return nil, err
-		}
-		g.AddBlocks(sc)
+	drop, err := sqlDrop(m)
+	if err != nil {
+		return nil, err
 	}
+	g.AddBlocks(drop)
+	sc, err := sqlCreate(m, args.Modules, args.DatabaseNow(), args.Models)
+	if err != nil {
+		return nil, err
+	}
+	g.AddBlocks(sc)
 	return g.Render(addHeader, linebreak)
 }
 
 func sqlDrop(m *model.Model) (*golang.Block, error) {
 	ret := golang.NewBlock("SQLDrop", "sql")
 	ret.W("-- {%% func " + m.Proper() + "Drop() %%}")
-	if m.IsHistory() {
-		ret.W("drop table if exists %q;", fmt.Sprintf("%s_history", m.Name))
-	}
-	if m.IsRevision() {
-		ret.W("drop table if exists %q;", fmt.Sprintf("%s_%s", m.Name, m.HistoryColumn().Name))
-	}
 	ret.W("drop table if exists %q;", m.Name)
 	ret.W("-- {%% endfunc %%}")
 	return ret, nil
@@ -97,7 +78,6 @@ func sqlCreate(m *model.Model, modules []string, now string, models model.Models
 	lo.ForEach(m.Indexes, func(idx *model.Index, _ int) {
 		ret.W(idx.SQL())
 	})
-	sqlHistory(ret, m, modules, now)
 	ret.W("-- {%% endfunc %%}")
 	return ret, nil
 }

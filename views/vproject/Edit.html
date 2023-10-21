@@ -118,6 +118,7 @@
             {%= components.TableInput("deployments", "", "Deployments", strings.Join(info.Deployments, ", "), 5, project.Helpers["deployments"]...) %}
             {%= components.TableTextarea("envvars", "", "Env Vars", 8, util.ToJSON(info.EnvVars), 5, project.Helpers["envvars"]...) %}
             {%= components.TableTextarea("docs", "", "Documentation", 8, util.ToJSON(info.Docs), 5, project.Helpers["docs"]...) %}
+            {%= components.TableInputTags("acronyms", "", "Acronyms", info.Acronyms, ps, 5, project.Helpers["acronyms"]...) %}
           </tbody>
         </table>
       </div>

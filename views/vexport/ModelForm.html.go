@@ -121,28 +121,23 @@ func (p *ModelForm) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
 	qw422016.N().S(`
             `)
 //line views/vexport/ModelForm.html:40
-	components.StreamTableInput(qw422016, "history", "", "History", m.History, 5, export.Helpers["model.history"]...)
+	components.StreamTableInput(qw422016, "tags", "", "Tags", strings.Join(m.Tags, `, `), 5, export.Helpers["model.tags"]...)
 //line views/vexport/ModelForm.html:40
 	qw422016.N().S(`
             `)
 //line views/vexport/ModelForm.html:41
-	components.StreamTableInput(qw422016, "tags", "", "Tags", strings.Join(m.Tags, `, `), 5, export.Helpers["model.tags"]...)
+	components.StreamTableInput(qw422016, "titleOverride", "", "Title Override", m.TitleOverride, 5, export.Helpers["model.titleOverride"]...)
 //line views/vexport/ModelForm.html:41
 	qw422016.N().S(`
             `)
 //line views/vexport/ModelForm.html:42
-	components.StreamTableInput(qw422016, "titleOverride", "", "Title Override", m.TitleOverride, 5, export.Helpers["model.titleOverride"]...)
+	components.StreamTableInput(qw422016, "properOverride", "", "Proper Override", m.ProperOverride, 5, export.Helpers["model.properOverride"]...)
 //line views/vexport/ModelForm.html:42
 	qw422016.N().S(`
             `)
 //line views/vexport/ModelForm.html:43
-	components.StreamTableInput(qw422016, "properOverride", "", "Proper Override", m.ProperOverride, 5, export.Helpers["model.properOverride"]...)
-//line views/vexport/ModelForm.html:43
-	qw422016.N().S(`
-            `)
-//line views/vexport/ModelForm.html:44
 	components.StreamTableTextarea(qw422016, "config", "", "Config", 3, util.ToJSON(m.Config), 5, export.Helpers["model.config"]...)
-//line views/vexport/ModelForm.html:44
+//line views/vexport/ModelForm.html:43
 	qw422016.N().S(`
           </tbody>
         </table>
@@ -154,19 +149,19 @@ func (p *ModelForm) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
         <button type="button" class="toggle-editor-columns">View</button>
       </div>
       <h3 title="`)
-//line views/vexport/ModelForm.html:54
+//line views/vexport/ModelForm.html:53
 	qw422016.E().S(strings.Join(export.Helpers[`model.columns`], `; `))
-//line views/vexport/ModelForm.html:54
+//line views/vexport/ModelForm.html:53
 	qw422016.N().S(`">`)
-//line views/vexport/ModelForm.html:54
+//line views/vexport/ModelForm.html:53
 	components.StreamSVGRefIcon(qw422016, `first-aid`, ps)
-//line views/vexport/ModelForm.html:54
+//line views/vexport/ModelForm.html:53
 	qw422016.N().S(`Columns</h3>
       <div class="mt expanded">
         `)
-//line views/vexport/ModelForm.html:56
+//line views/vexport/ModelForm.html:55
 	components.StreamFormRichEditor(qw422016, "columns", "input-columns", model.ColumnFieldDescs, util.InterfaceArrayFrom(m.Columns...), export.Helpers["model.columns"]...)
-//line views/vexport/ModelForm.html:56
+//line views/vexport/ModelForm.html:55
 	qw422016.N().S(`
       </div>
     </div>
@@ -176,19 +171,19 @@ func (p *ModelForm) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
         <button type="button" class="toggle-editor-relations">View</button>
       </div>
       <h3 title="`)
-//line views/vexport/ModelForm.html:64
+//line views/vexport/ModelForm.html:63
 	qw422016.E().S(strings.Join(export.Helpers[`model.relations`], `; `))
-//line views/vexport/ModelForm.html:64
+//line views/vexport/ModelForm.html:63
 	qw422016.N().S(`">`)
-//line views/vexport/ModelForm.html:64
+//line views/vexport/ModelForm.html:63
 	components.StreamSVGRefIcon(qw422016, `social`, ps)
-//line views/vexport/ModelForm.html:64
+//line views/vexport/ModelForm.html:63
 	qw422016.N().S(`Relations</h3>
       <div class="mt expanded">
         `)
-//line views/vexport/ModelForm.html:66
+//line views/vexport/ModelForm.html:65
 	components.StreamFormRichEditor(qw422016, "relations", "input-relations", model.RelationFieldDescs, util.InterfaceArrayFrom(m.Relations...), export.Helpers["model.relations"]...)
-//line views/vexport/ModelForm.html:66
+//line views/vexport/ModelForm.html:65
 	qw422016.N().S(`
       </div>
     </div>
@@ -198,19 +193,19 @@ func (p *ModelForm) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
         <button type="button" class="toggle-editor-indexes">View</button>
       </div>
       <h3 title="`)
-//line views/vexport/ModelForm.html:74
+//line views/vexport/ModelForm.html:73
 	qw422016.E().S(strings.Join(export.Helpers[`model.indexes`], `; `))
-//line views/vexport/ModelForm.html:74
+//line views/vexport/ModelForm.html:73
 	qw422016.N().S(`">`)
-//line views/vexport/ModelForm.html:74
+//line views/vexport/ModelForm.html:73
 	components.StreamSVGRefIcon(qw422016, `star`, ps)
-//line views/vexport/ModelForm.html:74
+//line views/vexport/ModelForm.html:73
 	qw422016.N().S(`Indexes</h3>
       <div class="mt expanded">
         `)
-//line views/vexport/ModelForm.html:76
+//line views/vexport/ModelForm.html:75
 	components.StreamFormRichEditor(qw422016, "indexes", "input-indexes", model.IndexFieldDescs, util.InterfaceArrayFrom(m.Indexes...), export.Helpers["model.indexes"]...)
-//line views/vexport/ModelForm.html:76
+//line views/vexport/ModelForm.html:75
 	qw422016.N().S(`
       </div>
     </div>
@@ -220,42 +215,42 @@ func (p *ModelForm) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
     </div>
   </form>
 `)
-//line views/vexport/ModelForm.html:84
+//line views/vexport/ModelForm.html:83
 	for k, v := range p.Examples {
-//line views/vexport/ModelForm.html:84
+//line views/vexport/ModelForm.html:83
 		qw422016.N().S(`  `)
-//line views/vexport/ModelForm.html:85
+//line views/vexport/ModelForm.html:84
 		components.StreamJSONModal(qw422016, k, "["+k+"] Example", v, 1)
-//line views/vexport/ModelForm.html:85
+//line views/vexport/ModelForm.html:84
 		qw422016.N().S(`
 `)
-//line views/vexport/ModelForm.html:86
+//line views/vexport/ModelForm.html:85
 	}
-//line views/vexport/ModelForm.html:87
+//line views/vexport/ModelForm.html:86
 }
 
-//line views/vexport/ModelForm.html:87
+//line views/vexport/ModelForm.html:86
 func (p *ModelForm) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vexport/ModelForm.html:87
+//line views/vexport/ModelForm.html:86
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/ModelForm.html:87
+//line views/vexport/ModelForm.html:86
 	p.StreamBody(qw422016, as, ps)
-//line views/vexport/ModelForm.html:87
+//line views/vexport/ModelForm.html:86
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/ModelForm.html:87
+//line views/vexport/ModelForm.html:86
 }
 
-//line views/vexport/ModelForm.html:87
+//line views/vexport/ModelForm.html:86
 func (p *ModelForm) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vexport/ModelForm.html:87
+//line views/vexport/ModelForm.html:86
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/ModelForm.html:87
+//line views/vexport/ModelForm.html:86
 	p.WriteBody(qb422016, as, ps)
-//line views/vexport/ModelForm.html:87
+//line views/vexport/ModelForm.html:86
 	qs422016 := string(qb422016.B)
-//line views/vexport/ModelForm.html:87
+//line views/vexport/ModelForm.html:86
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/ModelForm.html:87
+//line views/vexport/ModelForm.html:86
 	return qs422016
-//line views/vexport/ModelForm.html:87
+//line views/vexport/ModelForm.html:86
 }

@@ -37,21 +37,5 @@ func All(m *model.Model, p *project.Project, args *model.Args, addHeader bool, l
 	}
 	calls = append(calls, f)
 
-	for _, grp := range m.GroupedColumns() {
-		f, err = Grouping(m, grp, addHeader, linebreak)
-		if err != nil {
-			return nil, errors.Wrap(err, "can't view controller for group ["+grp.Title()+"]")
-		}
-		calls = append(calls, f)
-	}
-
-	if m.IsHistory() {
-		f, err = history(m, args, addHeader, linebreak)
-		if err != nil {
-			return nil, errors.Wrap(err, "can't render history template")
-		}
-		calls = append(calls, f)
-	}
-
 	return calls, nil
 }

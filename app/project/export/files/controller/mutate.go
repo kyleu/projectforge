@@ -66,9 +66,6 @@ func controllerCreate(m *model.Model, grp *model.Column, prefix string) *golang.
 
 func controllerEditForm(m *model.Model, grp *model.Column, prefix string) *golang.Block {
 	ret := blockFor(m, prefix, grp, "edit", "form")
-	if m.IsRevision() {
-		ret.W("\t\trc.SetUserValue(\"includeDeleted\", true)")
-	}
 	if grp != nil {
 		controllerArgFor(grp, ret, `""`, 2)
 	}
@@ -85,9 +82,6 @@ func controllerEditForm(m *model.Model, grp *model.Column, prefix string) *golan
 
 func controllerEdit(m *model.Model, grp *model.Column, prefix string) *golang.Block {
 	ret := blockFor(m, prefix, grp, "edit")
-	if m.IsRevision() {
-		ret.W("\t\trc.SetUserValue(\"includeDeleted\", true)")
-	}
 	if grp != nil {
 		controllerArgFor(grp, ret, `""`, 2)
 	}

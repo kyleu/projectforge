@@ -4,7 +4,6 @@
   "{{{ .Package }}}/app/lib/menu"
   "{{{ .Package }}}/app/util"
   "{{{ .Package }}}/views/components"
-  "{{{ .Package }}}/views/vutil"
 ) %}
 
 {% func Nav(as *app.State, ps *cutil.PageState) %}
@@ -54,9 +53,9 @@
         i = menu.ItemFromString(bc, ps.DefaultNavIcon)
       }
     %}
-    {%= vutil.Indent(true, 2) %}
+    {%= components.Indent(true, 2) %}
     <span class="separator">/</span>
-    {%= vutil.Indent(true, 2) %}
+    {%= components.Indent(true, 2) %}
     {%= NavItem(i.Route, i.Title, i.Icon, idx == len(ps.Breadcrumbs) - 1, ps) %}
   {% endfor %}
 {% endstripspace %}{% endfunc %}

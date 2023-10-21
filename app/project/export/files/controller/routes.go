@@ -58,20 +58,6 @@ func routeModelContent(m *model.Model) []string {
 		pkg = m.LastGroup("c", "")
 	}
 
-	lo.ForEach(m.GroupedColumns(), func(grp *model.Column, _ int) {
-		pathExtra := fmt.Sprintf("/%s/{%s}", grp.Camel(), grp.Camel())
-		callSuffix := fmt.Sprintf("By%s", grp.Proper())
-
-		g := fmt.Sprintf("\tr.GET(\"/%s/%s\", %s.%s%sList)", m.Route(), grp.Camel(), pkg, m.Proper(), grp.Proper())
-		l := fmt.Sprintf("\tr.GET(\"/%s%s\", %s.%sList%s)", m.Route(), pathExtra, pkg, m.Proper(), callSuffix)
-		nf := fmt.Sprintf("\tr.GET(\"/%s%s/new\", %s.%sCreateForm%s)", m.Route(), pathExtra, pkg, m.Proper(), callSuffix)
-		ns := fmt.Sprintf("\tr.POST(\"/%s%s/new\", %s.%sCreate%s)", m.Route(), pathExtra, pkg, m.Proper(), callSuffix)
-		d := fmt.Sprintf("\tr.GET(\"/%s%s/%s\", %s.%sDetail%s)", m.Route(), pathExtra, pkn, pkg, m.Proper(), callSuffix)
-		ef := fmt.Sprintf("\tr.GET(\"/%s%s/%s/edit\", %s.%sEditForm%s)", m.Route(), pathExtra, pkn, pkg, m.Proper(), callSuffix)
-		es := fmt.Sprintf("\tr.POST(\"/%s%s/%s/edit\", %s.%sEdit%s)", m.Route(), pathExtra, pkn, pkg, m.Proper(), callSuffix)
-		out = append(out, g, l, nf, ns, d, ef, es)
-	})
-
 	l := fmt.Sprintf("\tr.GET(\"/%s\", %s.%sList)", m.Route(), pkg, m.Proper())
 	nr := fmt.Sprintf("\tr.GET(\"/%s/random\", %s.%sCreateFormRandom)", m.Route(), pkg, m.Proper())
 	nf := fmt.Sprintf("\tr.GET(\"/%s/new\", %s.%sCreateForm)", m.Route(), pkg, m.Proper())
@@ -81,14 +67,5 @@ func routeModelContent(m *model.Model) []string {
 	es := fmt.Sprintf("\tr.POST(\"/%s/%s/edit\", %s.%sEdit)", m.Route(), pkn, pkg, m.Proper())
 	dl := fmt.Sprintf("\tr.GET(\"/%s/%s/delete\", %s.%sDelete)", m.Route(), pkn, pkg, m.Proper())
 	out = append(out, l, nr, nf, ns, d, ef, es, dl)
-	if m.IsHistory() {
-		const msg = "\tr.GET(\"/%s/%s/history/{historyID}\", %s.%sHistory)"
-		out = append(out, fmt.Sprintf(msg, m.Route(), strings.Join(pkNames, "/"), pkg, m.Proper()))
-	}
-	if m.IsRevision() {
-		rc := m.HistoryColumn()
-		const msg = "\tr.GET(\"/%s/%s/%s/{%s}\", %s.%s%s)"
-		out = append(out, fmt.Sprintf(msg, m.Route(), strings.Join(pkNames, "/"), rc.Name, rc.Name, pkg, m.Proper(), rc.Proper()))
-	}
 	return out
 }

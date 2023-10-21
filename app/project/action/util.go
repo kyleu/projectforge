@@ -142,6 +142,7 @@ func infoFromCfg(proto *project.Project, cfg util.ValueMap) *project.Info {
 		Deployments:     util.StringSplitAndTrim(str("deployments", strings.Join(i.Deployments, ", ")), ","),
 		EnvVars:         envVars,
 		Docs:            docs,
+		Acronyms:        util.StringSplitAndTrim(str("acronyms", strings.Join(i.Acronyms, ", ")), ","),
 		ModuleDefs:      md,
 	}
 }

@@ -14,22 +14,6 @@ const (
 	incFalse = ", false"
 )
 
-func checkRev(ret *golang.Block, m *model.Model) {
-	if !m.IsRevision() {
-		return
-	}
-	hc := m.HistoryColumn()
-	incDel := ""
-	if m.IsSoftDelete() {
-		incDel = incFalse
-	}
-	prmsStr := m.PKs().ToRefs("ret.")
-	ret.W("\t\tprms := ps.Params.Get(%q, nil, ps.Logger).Sanitize(%q)", m.Package, m.Package)
-	const msg = "\t\t%s, err := as.Services.%s.GetAll%s(ps.Context, nil, %s, prms%s, ps.Logger)"
-	ret.W(msg, hc.CamelPlural(), m.Proper(), hc.ProperPlural(), prmsStr, incDel)
-	ret.WE(2, `""`)
-}
-
 func checkGrp(ret *golang.Block, grp *model.Column, override ...string) {
 	if grp == nil {
 		return

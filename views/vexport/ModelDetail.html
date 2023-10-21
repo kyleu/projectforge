@@ -76,9 +76,6 @@
         {%- if model.RouteOverride != "" -%}
         <tr><th>Route Override</th><td>{%s model.RouteOverride %}</td></tr>
         {%- endif -%}
-        {%- if len(model.GroupedColumns()) > 0 -%}
-        <tr><th>Groupings</th><td>{%s strings.Join(model.GroupedColumns().Names(), ", ") %}</td></tr>
-        {%- endif -%}
         {%- if len(model.Tags) > 0 -%}
         <tr><th>Tags</th><td>{%s strings.Join(model.Tags, ", ") %}</td></tr>
         {%- endif -%}
@@ -87,9 +84,6 @@
         {%- endif -%}
         {%- if len(model.Search) > 0 -%}
         <tr><th>Search</th><td>{%s strings.Join(model.Search, ", ") %}</td></tr>
-        {%- endif -%}
-        {%- if len(model.History) > 0 -%}
-        <tr><th>History</th><td>{%s model.History %}</td></tr>
         {%- endif -%}
         {%- if len(model.SeedData) > 0 -%}
         <tr><th>Seed Data</th><td><a href="/p/{%s pKey %}/export/models/{%s model.Name %}/seeddata">{%d len(model.SeedData) %} rows</a></td></tr>

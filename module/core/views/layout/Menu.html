@@ -5,24 +5,23 @@
   "{{{ .Package }}}/app/controller/cutil"
   "{{{ .Package }}}/app/lib/menu"
   "{{{ .Package }}}/views/components"
-  "{{{ .Package }}}/views/vutil"
 ) %}
 
 {% func Menu(ps *cutil.PageState) %}{% stripspace %}
   {% if len(ps.Menu) > 0 %}
   <div class="menu-container">
-    {%= vutil.Indent(true, 2) %}
+    {%= components.Indent(true, 2) %}
     <div class="menu">
-      {%= vutil.Indent(true, 3) %}
+      {%= components.Indent(true, 3) %}
       <ul class="level-0">
         {% for _, i := range ps.Menu %}
           {%= MenuItem(i, []string{}, ps.Breadcrumbs, 3, ps) %}
         {% endfor %}
-      {%= vutil.Indent(true, 3) %}
+      {%= components.Indent(true, 3) %}
       </ul>
-    {%= vutil.Indent(true, 2) %}
+    {%= components.Indent(true, 2) %}
     </div>
-  {%= vutil.Indent(true, 1) %}
+  {%= components.Indent(true, 1) %}
   </div>
   {% endif %}
 {% endstripspace %}{% endfunc %}
@@ -33,26 +32,26 @@
     active, final := breadcrumbs.Active(i, path)
   %}
   {% if i.Key == "" %}
-    {%= vutil.Indent(true, indent + 1) %}
+    {%= components.Indent(true, indent + 1) %}
     <li class="separator"></li>
   {% elseif len(i.Children) > 0 %}
     {% code itemID := strings.Join(path, "--")%}
-    {%= vutil.Indent(true, indent + 1) %}
+    {%= components.Indent(true, indent + 1) %}
     {% if active %}<li class="active" data-menu-key="{%s i.Key %}">{% else %}<li data-menu-key="{%s i.Key %}">{% endif %}
-      {%= vutil.Indent(true, indent + 2) %}
+      {%= components.Indent(true, indent + 2) %}
       <input id="{%s itemID %}-input" type="checkbox"{% if active %}{% space %}checked="checked"{% endif %}{% space %}hidden />
-      {%= vutil.Indent(true, indent + 2) %}
+      {%= components.Indent(true, indent + 2) %}
       {% if final %}<label class="final" for="{%s itemID %}-input" title="{%s i.Desc() %}">{% else %}<label for="{%s itemID %}-input" title="{%s i.Desc() %}">{% endif %}
         {% if i.Route != "" %}
-          {%= vutil.Indent(true, indent + 3) %}
+          {%= components.Indent(true, indent + 3) %}
           <a class="label-link" href="{%s i.Route %}">{%= components.SVGRef(`link`, 15, 15, ``, ps) %}</a>
         {% endif %}
         {%= components.ExpandCollapse(indent + 3, ps) %}
         {% if i.Badge != "" %}
-          {%= vutil.Indent(true, indent + 3) %}
+          {%= components.Indent(true, indent + 3) %}
           <div class="badge">{%s i.Badge %}</div>
         {% endif %}
-        {%= vutil.Indent(true, indent + 3) %}
+        {%= components.Indent(true, indent + 3) %}
         {% if i.Icon != "" %}
           {%= components.SVGRef(i.Icon, 16, 16, "icon", ps) %}
         {% endif %}
@@ -65,20 +64,20 @@
         {% else %}
           {%s i.Title %}
         {% endif %}
-      {%= vutil.Indent(true, indent + 2) %}
+      {%= components.Indent(true, indent + 2) %}
       </label>
-      {%= vutil.Indent(true, indent + 2) %}
+      {%= components.Indent(true, indent + 2) %}
       <div class="menu-content level-{%d len(path) %}">
-        {%= vutil.Indent(true, indent + 3) %}
+        {%= components.Indent(true, indent + 3) %}
         <ul>
           {% for _, i := range i.Children %}
             {%= MenuItem(i, path, breadcrumbs, indent + 3, ps) %}
           {% endfor %}
-          {%= vutil.Indent(true, indent + 3) %}
+          {%= components.Indent(true, indent + 3) %}
         </ul>
-      {%= vutil.Indent(true, indent + 2) %}
+      {%= components.Indent(true, indent + 2) %}
       </div>
-      {%= vutil.Indent(true, indent + 1) %}
+      {%= components.Indent(true, indent + 1) %}
     </li>
   {% else %}
     {% code
@@ -93,7 +92,7 @@
         finalClass += " link-confirm"
       }
     %}
-    {%= vutil.Indent(true, indent + 1) %}
+    {%= components.Indent(true, indent + 1) %}
     <li data-menu-key="{%s i.Key %}">
       {% if i.Warning != "" %}
       <a class="{%s finalClass %}" data-message="{%s i.Warning %}" href="{%s i.Route %}" title="{%s i.Desc() %}">
@@ -101,7 +100,7 @@
       <a class="{%s finalClass %}" href="{%s i.Route %}" title="{%s i.Desc() %}">
       {% endif %}
         {% if i.Badge != "" %}
-          {%= vutil.Indent(true, indent + 3) %}
+          {%= components.Indent(true, indent + 3) %}
           <div class="badge">{%s i.Badge %}</div>
         {% endif %}
         {% if i.Icon != "" %}

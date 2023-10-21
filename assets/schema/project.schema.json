@@ -232,6 +232,13 @@
             "additionalProperties": false
           }
         },
+        "acronyms": {
+          "description": "custom acronyms intended to be displayed capitalized",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "moduleDefs": {
           "description": "describes additional module to include in this project",
           "type": "array",

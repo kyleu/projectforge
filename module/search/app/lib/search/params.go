@@ -1,7 +1,12 @@
 package search
 
 import (
+	"strings"
+
+	"github.com/samber/lo"
+
 	"{{{ .Package }}}/app/lib/filter"
+	"{{{ .Package }}}/app/util"
 )
 
 type Params struct {
@@ -9,6 +14,28 @@ type Params struct {
 	PS filter.ParamSet `json:"ps,omitempty"`
 }
 
-func (r *Params) String() string {
-	return r.Q
+func (p *Params) String() string {
+	return p.Q
+}
+
+func (p *Params) Parts() []string {
+	return util.StringSplitAndTrim(p.Q, " ")
+}
+
+func (p *Params) General() []string {
+	return lo.Filter(p.Parts(), func(x string, _ int) bool {
+		return !strings.Contains(x, ":")
+	})
+}
+
+func (p *Params) Keyed() map[string]string {
+	x := lo.Filter(p.Parts(), func(x string, _ int) bool {
+		return strings.Contains(x, ":")
+	})
+	ret := make(map[string]string, len(x))
+	lo.ForEach(x, func(s string, _ int) {
+		k, v := util.StringSplit(s, ':', true)
+		ret[k] = v
+	})
+	return ret
 }

@@ -76,6 +76,7 @@ func projectFromForm(frm util.ValueMap, prj *project.Project) error {
 	prj.Info.GoBinary = get("goBinary", prj.Info.GoBinary)
 	prj.Info.ExtraFiles = util.StringSplitAndTrim(get("extraFiles", strings.Join(prj.Info.ExtraFiles, ", ")), ",")
 	prj.Info.Deployments = util.StringSplitAndTrim(get("deployments", strings.Join(prj.Info.Deployments, ", ")), ",")
+	prj.Info.Acronyms = util.StringSplitAndTrim(get("acronyms", strings.Join(prj.Info.Acronyms, ", ")), ",")
 
 	if prj.Package == "" {
 		prj.Package = "github.com/" + prj.Info.Org + "/" + prj.Key

@@ -43,7 +43,6 @@ func exportModelFromForm(frm util.ValueMap, m *model.Model) error {
 	m.SortIndex = int(sIdx)
 	m.View = get("view", m.View)
 	m.Search = util.StringSplitAndTrim(get("search", strings.Join(m.Search, ",")), ",")
-	m.History = get("history", m.History)
 	m.Tags = util.StringSplitAndTrim(get("tags", strings.Join(m.Tags, ",")), ",")
 	m.TitleOverride = get("titleOverride", m.TitleOverride)
 	m.ProperOverride = get("properOverride", m.ProperOverride)

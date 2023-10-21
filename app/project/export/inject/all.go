@@ -9,21 +9,10 @@ func All(args *model.Args, files file.Files, linebreak string) error {
 	if args == nil {
 		return nil
 	}
-	grpcCall := ""
-	if args.HasModule("grpc") {
-		grpcPackage := args.Config.GetStringOpt("grpcPackage")
-		if grpcPackage == "" {
-			grpcPackage = "grpc"
-		}
-		grpcCall = "app/" + grpcPackage + "/handle.go"
-	}
 	for _, f := range files {
 		var err error
-		switch f.FullPath() {
-		case "app/services.go":
+		if f.FullPath() == "app/services.go" {
 			err = Services(f, args)
-		case grpcCall:
-			err = GRPC(f, args, linebreak)
 		}
 		if err != nil {
 			return err

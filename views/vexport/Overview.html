@@ -10,7 +10,6 @@
   "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/layout"
-  "projectforge.dev/projectforge/views/vutil"
 ) %}
 
 {% code type Overview struct {
@@ -58,20 +57,26 @@
 {% endfunc %}
 
 {% func GroupList(groups model.Groups, indent int) %}{% stripspace %}
-  {%= vutil.Indent(true, indent) %}
+  {%= components.Indent(true, indent) %}
   <ul>
     {%- for _, g := range groups -%}
-    {%= vutil.Indent(true, indent+1) %}
+    {%= components.Indent(true, indent+1) %}
     <li>
-      {%= vutil.Indent(true, indent+2) %}
-      {%s g.Key %}
-      {% if len(g.Children) > 0 %}
-      {%= GroupList(g.Children, indent + 3) %}
+      {%= components.Indent(true, indent+2) %}
+      {%s g.String() %}
+      {% if g.Description != "" %}
+      :{% space %}{%s g.Description %}
       {% endif %}
-    {%= vutil.Indent(true, indent+1) %}
+      {% if g.Route != "" %}
+      {% space %}(<em><code>/{%s g.Route %}</code></em>)
+      {% endif %}
+      {% if len(g.Children) > 0 %}
+        {%= GroupList(g.Children, indent + 3) %}
+      {% endif %}
+    {%= components.Indent(true, indent+1) %}
     </li>
     {%- endfor -%}
-  {%= vutil.Indent(true, indent) %}
+  {%= components.Indent(true, indent) %}
   </ul>
 {% endstripspace %}{% endfunc %}
 

@@ -2,17 +2,17 @@
 {% import (
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/lib/theme"
-  "projectforge.dev/projectforge/views/vutil"
+  "projectforge.dev/projectforge/views/components"
 ) %}
 
 {% func ChoicePanel(themes theme.Themes, icon string, indent int, ps *cutil.PageState) %}{% stripspace %}
-  {%= vutil.Indent(true, indent) %}
+  {%= components.Indent(true, indent) %}
   <tr>
-    {%= vutil.Indent(true, indent + 1) %}
+    {%= components.Indent(true, indent + 1) %}
     <th class="shrink"><label>Theme</label></th>
-    {%= vutil.Indent(true, indent + 1) %}
+    {%= components.Indent(true, indent + 1) %}
     <td>
-      {%= vutil.Indent(true, indent + 2) %}
+      {%= components.Indent(true, indent + 2) %}
       <div class="right"><a href="/theme">Edit Themes</a></div>
       <div class="clear"></div>
       {% code
@@ -23,15 +23,15 @@
       %}
       {%= Choice(themes, sel, icon, indent + 2, ps) %}
     </td>
-  {%= vutil.Indent(true, indent) %}
+  {%= components.Indent(true, indent) %}
   </tr>
 {% endstripspace %}{% endfunc %}
 
 {% func Choice(themes theme.Themes, selected string, icon string, indent int, ps *cutil.PageState) %}{% stripspace %}
-  {%= vutil.Indent(true, indent) %}
+  {%= components.Indent(true, indent) %}
   <div class="choice">
     {% for _, t := range themes %}
-      {%= vutil.Indent(true, indent + 1) %}
+      {%= components.Indent(true, indent + 1) %}
       <label title="{%s t.Key %}">
         {% if t.Key == selected %}
           <input type="radio" name="theme" value="{%s t.Key %}" checked="checked" />
@@ -41,6 +41,6 @@
         {%= MockupTheme(t, true, icon, indent + 2, ps) %}
       </label>
     {% endfor %}
-  {%= vutil.Indent(true, indent) %}
+  {%= components.Indent(true, indent) %}
   </div>
 {% endstripspace %}{% endfunc %}

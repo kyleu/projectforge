@@ -33,21 +33,9 @@ func SeedData(m *model.Model, args *model.Args, linebreak string) (*file.File, e
 func sqlSeedData(m *model.Model, database string) (*golang.Block, error) {
 	ret := golang.NewBlock("SQLCreate", "sql")
 	ret.W("-- {%% func " + m.Proper() + "SeedData() %%}")
-	if m.History == model.RevisionType {
-		err := sqlSeedDataColumns(m, ret, m.Name, m.HistoryColumns(true).Const, database)
-		if err != nil {
-			return nil, err
-		}
-		ret.WB()
-		err = sqlSeedDataColumns(m, ret, m.Name+"_"+m.HistoryColumn().Name, m.HistoryColumns(true).Var, database)
-		if err != nil {
-			return nil, err
-		}
-	} else {
-		err := sqlSeedDataColumns(m, ret, m.Name, m.Columns, database)
-		if err != nil {
-			return nil, err
-		}
+	err := sqlSeedDataColumns(m, ret, m.Name, m.Columns, database)
+	if err != nil {
+		return nil, err
 	}
 	ret.W("-- {%% endfunc %%}")
 	return ret, nil

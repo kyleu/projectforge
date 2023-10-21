@@ -8,7 +8,6 @@
 
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/util"
-  "projectforge.dev/projectforge/views/vutil"
 ) %}
 
 {% func FormInput(key string, id string, value string, placeholder ...string) %}{% stripspace %}
@@ -86,21 +85,21 @@
           title = titles[idx]
         }
       %}
-      {%= vutil.Indent(true, indent + 1) %}
+      {%= Indent(true, indent + 1) %}
       {% if opt == value %}
         <option selected="selected" value="{%s opt %}">{%s title %}</option>
       {% else %}
         <option value="{%s opt %}">{%s title %}</option>
       {% endif %}
     {% endfor %}
-  {%= vutil.Indent(true, indent) %}
+  {%= Indent(true, indent) %}
   </select>
 {% endstripspace %}{% endfunc %}
 
 {% func FormDatalist(key string, id string, value string, opts []string, titles []string, indent int, placeholder ...string) %}{% stripspace %}
-  {%= vutil.Indent(true, indent ) %}
+  {%= Indent(true, indent ) %}
   <input id="{%s id %}" list="{%s id %}-list" name="{%s key %}" value="{%s value %}"{%= phFor(placeholder) %} />
-  {%= vutil.Indent(true, indent ) %}
+  {%= Indent(true, indent ) %}
   {%- if len(opts) > 0 -%}
   <datalist id="{%s id %}-list">
     {% for idx, opt := range opts %}
@@ -110,16 +109,16 @@
           title = titles[idx]
         }
       %}
-      {%= vutil.Indent(true, indent + 1) %}
+      {%= Indent(true, indent + 1) %}
       <option value="{%s opt %}">{%s title %}</option>
     {% endfor %}
-  {%= vutil.Indent(true, indent) %}
+  {%= Indent(true, indent) %}
   </datalist>
   {%- endif -%}
 {% endstripspace %}{% endfunc %}
 
 {% func FormFileUpload(key string, id string, indent int, placeholder ...string) %}{% stripspace %}
-  {%= vutil.Indent(true, indent ) %}
+  {%= Indent(true, indent ) %}
   <input id="{%s id %}" name="{%s key %}" type="file" multiple="multiple" {%= phFor(placeholder) %} />
 {% endstripspace %}{% endfunc %}
 
@@ -131,7 +130,7 @@
         title = titles[idx]
       }
     %}
-    {%= vutil.Indent(true, indent) %}
+    {%= Indent(true, indent) %}
     {% if opt == value %}
       <label class="radio-label"><input type="radio" name="{%s key %}" value="{%s opt %}" checked="checked" />{% space %}{%s title %}</label>
     {% else %}
@@ -148,7 +147,7 @@
         title = titles[idx]
       }
     %}
-    {%= vutil.Indent(true, indent) %}
+    {%= Indent(true, indent) %}
     {% if lo.Contains(values, opt) %}
       <label><input type="checkbox" name="{%s key %}" value="{%s opt %}" checked="checked" />{% space %}{%s title %}</label>
     {% else %}

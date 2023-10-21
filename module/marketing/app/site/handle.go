@@ -69,7 +69,7 @@ func mdTemplate(description string, path string, icon string, ps *cutil.PageStat
 		icon = "cog"
 	}
 	title, html, err := doc.HTML(path, path, func(s string) (string, string, error) {
-		return cutil.FormatCleanMarkup(s, icon)
+		return cutil.FormatMarkdownClean(s, icon)
 	})
 	if err != nil {
 		return nil, err

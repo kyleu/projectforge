@@ -23,7 +23,6 @@ type Model struct {
 	SortIndex      int              `json:"sortIndex,omitempty"`
 	View           string           `json:"view,omitempty"`
 	Search         []string         `json:"search,omitempty"`
-	History        string           `json:"history,omitempty"`
 	Tags           []string         `json:"tags,omitempty"`
 	TitleOverride  string           `json:"title,omitempty"`
 	ProperOverride string           `json:"proper,omitempty"`
@@ -33,8 +32,6 @@ type Model struct {
 	Relations      Relations        `json:"relations,omitempty"`
 	Indexes        Indexes          `json:"indexes,omitempty"`
 	SeedData       [][]any          `json:"seedData,omitempty"`
-	historyMap     *HistoryMap
-	historyMapDB   *HistoryMap
 }
 
 func (m *Model) HasTag(t string) bool {
@@ -52,10 +49,6 @@ func (m *Model) PKs() Columns {
 	return m.Columns.PKs()
 }
 
-func (m *Model) GroupedColumns() Columns {
-	return m.Columns.WithTag("grouped")
-}
-
 func (m *Model) IsSoftDelete() bool {
 	return m.HasTag("softDelete")
 }
@@ -65,14 +58,6 @@ func (m *Model) SoftDeleteSuffix() string {
 		return ", true"
 	}
 	return ""
-}
-
-func (m *Model) IsRevision() bool {
-	return m.History == RevisionType
-}
-
-func (m *Model) IsHistory() bool {
-	return m.History == HistoryType
 }
 
 func (m *Model) LinkURL(prefix string, enums enum.Enums) string {
@@ -123,8 +108,8 @@ func (m *Model) Breadcrumbs() string {
 	return strings.Join(ret, ", ")
 }
 
-func (m *Model) IndexedColumns() Columns {
-	ret := m.GroupedColumns()
+func (m *Model) IndexedColumns(includePK bool) Columns {
+	var ret Columns
 	a := func(c *Column) {
 		for _, x := range ret {
 			if x.Name == c.Name {
@@ -134,7 +119,7 @@ func (m *Model) IndexedColumns() Columns {
 		ret = append(ret, c)
 	}
 	lo.ForEach(m.Columns, func(c *Column, _ int) {
-		if c.Indexed || c.PK {
+		if c.Indexed || (includePK && c.PK) || m.Relations.ContainsSource(c.Name) {
 			a(c)
 		}
 	})
@@ -167,4 +152,11 @@ func (m *Model) AllSearches(database string) []string {
 
 func (m *Model) HasSearches() bool {
 	return len(m.AllSearches("")) > 0
+}
+
+func (m *Model) ProperWithGroup(extraAcronyms []string) string {
+	if len(m.Group) > 0 {
+		return util.StringToCamel(m.Group[len(m.Group)-1], extraAcronyms...) + util.StringToCamel(m.Package, extraAcronyms...)
+	}
+	return m.Proper()
 }

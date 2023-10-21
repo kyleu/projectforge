@@ -100,7 +100,7 @@ func FormatMarkdown(s string) (string, error) {
 	return s, nil
 }
 
-func FormatCleanMarkup(s string, icon string) (string, string, error) {
+func FormatMarkdownClean(s string, icon string) (string, string, error) {
 	ret, err := FormatMarkdown(s)
 	if err != nil {
 		return "", "", err

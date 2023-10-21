@@ -213,6 +213,7 @@
 
 .sort-title {
   padding-right: 24px;
+  white-space: nowrap;
 }
 
 .sort-icon {

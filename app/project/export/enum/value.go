@@ -12,20 +12,26 @@ type valueMarshal struct {
 	Key         string `json:"key"`
 	Name        string `json:"name,omitempty"`
 	Description string `json:"description,omitempty"`
+	Default     bool   `json:"default,omitempty"`
 }
 
 type Value struct {
 	Key         string
 	Name        string
 	Description string
+	Default     bool
 	Simple      bool
+}
+
+func (x *Value) Proper() string {
+	return util.StringToCamel(x.Key)
 }
 
 func (x *Value) MarshalJSON() ([]byte, error) {
 	if x.Simple {
 		return util.ToJSONBytes(x.Key, false), nil
 	}
-	return util.ToJSONBytes(&valueMarshal{Key: x.Key, Name: x.Name, Description: x.Description}, false), nil
+	return util.ToJSONBytes(&valueMarshal{Key: x.Key, Name: x.Name, Description: x.Description, Default: x.Default}, false), nil
 }
 
 func (x *Value) UnmarshalJSON(data []byte) error {
@@ -37,6 +43,7 @@ func (x *Value) UnmarshalJSON(data []byte) error {
 		x.Key = v.Key
 		x.Name = v.Name
 		x.Description = v.Description
+		x.Default = v.Default
 		x.Simple = false
 		return nil
 	}
@@ -47,6 +54,7 @@ func (x *Value) UnmarshalJSON(data []byte) error {
 	x.Key = str
 	x.Name = ""
 	x.Description = ""
+	x.Default = false
 	x.Simple = true
 	return nil
 }
@@ -62,6 +70,12 @@ func (v Values) Keys() []string {
 func (v Values) AllSimple() bool {
 	return !lo.ContainsBy(v, func(x *Value) bool {
 		return (!x.Simple) || x.Name != "" || x.Description != ""
+	})
+}
+
+func (v Values) Default() *Value {
+	return lo.FindOrElse(v, nil, func(x *Value) bool {
+		return x.Default
 	})
 }
 

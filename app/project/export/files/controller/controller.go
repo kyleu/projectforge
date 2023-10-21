@@ -40,16 +40,10 @@ func Controller(m *model.Model, args *model.Args, addHeader bool, linebreak stri
 		return nil, err
 	}
 	g.AddBlocks(cl, controllerDetail(g, args.Models, m, nil, args.Audit(m), prefix))
-	if m.IsRevision() {
-		g.AddBlocks(controllerRevision(m, prefix))
-	}
 	g.AddBlocks(
 		controllerCreateForm(m, nil, prefix), controllerCreateFormRandom(m, prefix), controllerCreate(m, nil, prefix),
 		controllerEditForm(m, nil, prefix), controllerEdit(m, nil, prefix), controllerDelete(m, nil, prefix),
 	)
-	if m.IsHistory() {
-		g.AddBlocks(controllerHistory(m, prefix))
-	}
 	g.AddBlocks(controllerModelFromPath(m), controllerModelFromForm(m))
 	return g.Render(addHeader, linebreak)
 }

@@ -27,16 +27,6 @@ func (m *Model) Validate(mods []string, models Models, groups Groups) error {
 			return errors.Errorf("model [%s] uses name which is reserved by [%s]", m.Name, mod)
 		}
 	}
-	if m.IsRevision() {
-		hc := m.HistoryColumns(true)
-		if hc.Err != nil {
-			return hc.Err
-		}
-		hc = m.HistoryColumns(false)
-		if hc.Err != nil {
-			return hc.Err
-		}
-	}
 	if m.IsSoftDelete() {
 		if d := m.Columns.WithTag("deleted"); len(d) != 1 {
 			return errors.Errorf("when set to soft delete, model [%s] must have one column tagged [deleted]", m.Name)

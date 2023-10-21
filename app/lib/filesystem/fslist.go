@@ -41,7 +41,7 @@ func (f *FileSystem) ListExtension(path string, ext string, ign []string, trimEx
 	ret := lo.Filter(f.ListFiles(path, ign, logger), func(f *FileInfo, _ int) bool {
 		return strings.HasSuffix(f.Name, "."+ext)
 	})
-	return lo.Map(ret, func(x *FileInfo, index int) string {
+	return lo.Map(ret, func(x *FileInfo, _ int) string {
 		if trimExtension {
 			return strings.TrimSuffix(x.Name, "."+ext)
 		}
@@ -53,7 +53,7 @@ func (f *FileSystem) ListDirectories(path string, ign []string, logger util.Logg
 	ret := lo.Filter(f.ListFiles(path, ign, logger), func(f *FileInfo, _ int) bool {
 		return f.IsDir
 	})
-	return lo.Map(ret, func(x *FileInfo, index int) string {
+	return lo.Map(ret, func(x *FileInfo, _ int) string {
 		return x.Name
 	})
 }

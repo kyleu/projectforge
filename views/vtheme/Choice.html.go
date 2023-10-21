@@ -10,7 +10,7 @@ package vtheme
 import (
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/theme"
-	"projectforge.dev/projectforge/views/vutil"
+	"projectforge.dev/projectforge/views/components"
 )
 
 //line views/vtheme/Choice.html:8
@@ -29,19 +29,19 @@ var (
 //line views/vtheme/Choice.html:8
 func StreamChoicePanel(qw422016 *qt422016.Writer, themes theme.Themes, icon string, indent int, ps *cutil.PageState) {
 //line views/vtheme/Choice.html:9
-	vutil.StreamIndent(qw422016, true, indent)
+	components.StreamIndent(qw422016, true, indent)
 //line views/vtheme/Choice.html:9
 	qw422016.N().S(`<tr>`)
 //line views/vtheme/Choice.html:11
-	vutil.StreamIndent(qw422016, true, indent+1)
+	components.StreamIndent(qw422016, true, indent+1)
 //line views/vtheme/Choice.html:11
 	qw422016.N().S(`<th class="shrink"><label>Theme</label></th>`)
 //line views/vtheme/Choice.html:13
-	vutil.StreamIndent(qw422016, true, indent+1)
+	components.StreamIndent(qw422016, true, indent+1)
 //line views/vtheme/Choice.html:13
 	qw422016.N().S(`<td>`)
 //line views/vtheme/Choice.html:15
-	vutil.StreamIndent(qw422016, true, indent+2)
+	components.StreamIndent(qw422016, true, indent+2)
 //line views/vtheme/Choice.html:15
 	qw422016.N().S(`<div class="right"><a href="/theme">Edit Themes</a></div><div class="clear"></div>`)
 //line views/vtheme/Choice.html:19
@@ -55,7 +55,7 @@ func StreamChoicePanel(qw422016 *qt422016.Writer, themes theme.Themes, icon stri
 //line views/vtheme/Choice.html:24
 	qw422016.N().S(`</td>`)
 //line views/vtheme/Choice.html:26
-	vutil.StreamIndent(qw422016, true, indent)
+	components.StreamIndent(qw422016, true, indent)
 //line views/vtheme/Choice.html:26
 	qw422016.N().S(`</tr>`)
 //line views/vtheme/Choice.html:28
@@ -90,13 +90,13 @@ func ChoicePanel(themes theme.Themes, icon string, indent int, ps *cutil.PageSta
 //line views/vtheme/Choice.html:30
 func StreamChoice(qw422016 *qt422016.Writer, themes theme.Themes, selected string, icon string, indent int, ps *cutil.PageState) {
 //line views/vtheme/Choice.html:31
-	vutil.StreamIndent(qw422016, true, indent)
+	components.StreamIndent(qw422016, true, indent)
 //line views/vtheme/Choice.html:31
 	qw422016.N().S(`<div class="choice">`)
 //line views/vtheme/Choice.html:33
 	for _, t := range themes {
 //line views/vtheme/Choice.html:34
-		vutil.StreamIndent(qw422016, true, indent+1)
+		components.StreamIndent(qw422016, true, indent+1)
 //line views/vtheme/Choice.html:34
 		qw422016.N().S(`<label title="`)
 //line views/vtheme/Choice.html:35
@@ -128,7 +128,7 @@ func StreamChoice(qw422016 *qt422016.Writer, themes theme.Themes, selected strin
 //line views/vtheme/Choice.html:43
 	}
 //line views/vtheme/Choice.html:44
-	vutil.StreamIndent(qw422016, true, indent)
+	components.StreamIndent(qw422016, true, indent)
 //line views/vtheme/Choice.html:44
 	qw422016.N().S(`</div>`)
 //line views/vtheme/Choice.html:46

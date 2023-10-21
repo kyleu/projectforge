@@ -2,6 +2,7 @@ package model
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -46,6 +47,24 @@ func (c Columns) WithoutTags(t ...string) Columns {
 func (c Columns) WithFormat(f string) Columns {
 	return lo.Filter(c, func(col *Column, _ int) bool {
 		return col.Format == f
+	})
+}
+
+func (c Columns) WithoutFormats(f ...string) Columns {
+	return lo.Reject(c, func(col *Column, _ int) bool {
+		return slices.Contains(f, col.Format)
+	})
+}
+
+func (c Columns) WithDisplay(f string) Columns {
+	return lo.Filter(c, func(col *Column, _ int) bool {
+		return col.Display == f
+	})
+}
+
+func (c Columns) WithoutDisplays(f ...string) Columns {
+	return lo.Reject(c, func(col *Column, _ int) bool {
+		return slices.Contains(f, col.Display)
 	})
 }
 

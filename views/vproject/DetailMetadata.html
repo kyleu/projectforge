@@ -167,6 +167,49 @@
             {%- endif -%}
           </td>
         </tr>
+        <tr>
+          <th>Documentation</th>
+          <td>
+            {%- if len(info.Docs) == 0 -%}
+            <em>none</em>
+            {%- else -%}
+            <div class="overflow full-width">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Provider</th>
+                    <th>URL</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {%- for _, d := range info.Docs -%}
+                  <tr>
+                    <td><code>{%s d.Name %}</code></td>
+                    <td>{%s d.Provider %}</td>
+                    <td>{%s d.URL %}</td>
+                  </tr>
+                  {%- endfor -%}
+                </tbody>
+              </table>
+            </div>
+            {%- endif -%}
+          </td>
+        </tr>
+        <tr>
+          <th>Acronyms</th>
+          <td>
+            {%- if len(info.Acronyms) == 0 -%}
+            <em>none</em>
+            {%- else -%}
+            <ul>
+              {%- for _, x := range info.Acronyms -%}
+              <li><code>{%s x %}</code></li>
+              {%- endfor -%}
+            </ul>
+            {%- endif -%}
+          </td>
+        </tr>
         {%- if len(info.ModuleDefs) > 0 -%}
         <tr>
           <th>Module Definitions</th>

@@ -65,32 +65,6 @@ func modelTableCols(m *model.Model) (*golang.Block, error) {
 	ret.W("\tcolumns       = []string{%s}", strings.Join(m.Columns.NamesQuoted(), ", "))
 	ret.W("\tcolumnsQuoted = util.StringArrayQuoted(columns)")
 	ret.W("\tcolumnsString = strings.Join(columnsQuoted, \", \")")
-	if m.IsRevision() {
-		hc := m.HistoryColumns(true)
-		hcp := hc.Col.Proper()
-		ret.WB()
-		constCols := strings.Join(hc.Const.NamesQuoted(), ", ")
-		ret.W(model.DetectLL("\tcolumns%s = util.StringArrayQuoted([]string{%s})", util.StringPad("Core", len(hcp)), constCols))
-		varCols := strings.Join(hc.Var.NamesQuoted(), ", ")
-		ret.W(model.DetectLL("\tcolumns%s = util.StringArrayQuoted([]string{%s})", hcp, varCols))
-		ret.WB()
-		ret.W("\ttable%s       = table + \"_%s\"", hcp, hc.Col.Name)
-		ret.W("\ttable%sQuoted = fmt.Sprintf(\"%%%%q\", table%s)", hcp, hcp)
-		joinClause := fmt.Sprintf("%%%%q %s join %%%%q %sr on ", m.FirstLetter(), m.FirstLetter())
-		var joins []string
-		for idx, col := range hc.Const {
-			if col.PK || col.HasTag("current_revision") {
-				rCol := hc.Var[idx]
-				if !(rCol.PK || rCol.HasTag(model.RevisionType)) {
-					return nil, errors.Errorf("invalid revision column [%s] at index [%d]", rCol.Name, idx)
-				}
-				joins = append(joins, fmt.Sprintf("%s.%s = %sr.%s", m.FirstLetter(), col.NameQuoted(), m.FirstLetter(), rCol.NameQuoted()))
-			}
-		}
-		joinClause += strings.Join(joins, " and ")
-		msg := "\ttables%s = fmt.Sprintf(`%s`, table, table%s)"
-		ret.W(model.DetectLL(msg, util.StringPad("Joined", len(hcp)+5), joinClause, hcp))
-	}
 	ret.W(")")
 	return ret, nil
 }
@@ -132,6 +106,9 @@ func modelRowToModel(g *golang.File, m *model.Model, enums enum.Enums, database 
 			switch c.Type.ListType().Key() {
 			case types.KeyString:
 				t = "[]string"
+				if database == util.DatabaseSQLite {
+					decoder = "[]byte(" + decoder + ")"
+				}
 			case types.KeyEnum:
 				if e, _ := model.AsEnumInstance(c.Type.ListType(), enums); e != nil {
 					t = e.ProperPlural()

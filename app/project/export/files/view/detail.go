@@ -12,7 +12,6 @@ import (
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
-	"projectforge.dev/projectforge/app/util"
 )
 
 const commonLine = "  %sBy%s %s.%s"
@@ -41,7 +40,7 @@ func detail(m *model.Model, args *model.Args, addHeader bool, linebreak string) 
 			g.AddImport(helper.AppImport("app/" + e.PackageWithGroup("")))
 		}
 	})
-	if len(rrs) > 0 || m.IsRevision() || m.IsHistory() || args.Audit(m) {
+	if len(rrs) > 0 || args.Audit(m) {
 		g.AddImport(helper.ImpFilter)
 	}
 	if args.Audit(m) {
@@ -62,9 +61,6 @@ func exportViewDetailClass(m *model.Model, models model.Models, audit bool, g *g
 	ret.W("  layout.Basic")
 	ret.W("  Model *%s.%s", m.Package, m.Proper())
 	rrs := models.ReverseRelations(m.Name)
-	if m.IsHistory() {
-		ret.W("  Histories %s.Histories", m.Package)
-	}
 	if m.Columns.HasFormat(model.FmtCountry.Key) {
 		g.AddImport(helper.ImpAppUtil)
 	}
@@ -76,7 +72,7 @@ func exportViewDetailClass(m *model.Model, models model.Models, audit bool, g *g
 		ret.W(commonLine, relModel.Proper(), relNames, "*"+relModel.Package, relModel.Proper())
 	})
 
-	if len(rrs) > 0 || m.IsRevision() || m.IsHistory() || audit {
+	if len(rrs) > 0 || audit {
 		ret.W("  Params filter.ParamSet")
 	}
 	lo.ForEach(rrs, func(rel *model.Relation, _ int) {
@@ -84,9 +80,6 @@ func exportViewDetailClass(m *model.Model, models model.Models, audit bool, g *g
 		rCols := rel.TgtColumns(rm)
 		ret.W(commonLine, "Rel"+rm.ProperPlural(), strings.Join(rCols.ProperNames(), ""), rm.Package, rm.ProperPlural())
 	})
-	if m.IsRevision() {
-		ret.W("  %s %s.%s", m.HistoryColumn().ProperPlural(), m.Package, m.ProperPlural())
-	}
 	if audit {
 		ret.W("  AuditRecords audit.Records")
 	}
@@ -129,19 +122,6 @@ func exportViewDetailBody(g *golang.Template, m *model.Model, audit bool, models
 	ret.W("      </tbody>")
 	ret.W("    </table>")
 	ret.W("  </div>")
-	if m.IsRevision() {
-		if err := exportViewDetailRevisions(g, ret, m, enums); err != nil {
-			return nil, err
-		}
-	}
-	if m.IsHistory() {
-		ret.W("  {%%- if len(p.Histories) > 0 -%%}")
-		ret.W("  <div class=\"card\">")
-		ret.W("    <h3>Histories</h3>")
-		ret.W("    {%%= HistoryTable(p.Model, p.Histories, p.Params, as, ps) %%}")
-		ret.W("  </div>")
-		ret.W("  {%%- endif -%%}")
-	}
 	ret.W("  {%%- comment %%}$PF_SECTION_START(extra)${%% endcomment -%%}")
 	ret.W("  {%%- comment %%}$PF_SECTION_END(extra)${%% endcomment -%%}")
 	exportViewDetailReverseRelations(ret, m, models, g)
@@ -202,72 +182,4 @@ func exportViewDetailReverseRelations(ret *golang.Block, m *model.Model, models 
 	})
 	ret.W("    </ul>")
 	ret.W("  </div>")
-}
-
-func viewDetailColumn(
-	g *golang.Template, ret *golang.Block, models model.Models, m *model.Model, link bool, col *model.Column, modelKey string, indent int, enums enum.Enums,
-) {
-	ind := util.StringRepeat("  ", indent)
-	rels := m.RelationsFor(col)
-	if len(rels) == 0 {
-		switch {
-		case col.PK && link:
-			ret.W(ind+"<td><a href=%q>%s</a></td>", m.LinkURL(modelKey, enums), col.ToGoViewString(modelKey, true, false, enums, "detail"))
-		case col.HasTag("grouped"):
-			u := fmt.Sprintf("/%s/%s/%s", m.Route(), col.TitleLower(), col.ToGoViewString(modelKey, false, true, enums, "simple"))
-			ret.W(ind+"<td><a href=%q>%s</a></td>", u, col.ToGoViewString(modelKey, true, false, enums, "detail"))
-		case col.HasTag("title"):
-			ret.W(ind + "<td><strong>" + col.ToGoViewString(modelKey, true, false, enums, "detail") + "</strong></td>")
-		default:
-			ret.W(ind + "<td>" + col.ToGoViewString(modelKey, true, false, enums, "detail") + "</td>")
-		}
-		return
-	}
-
-	if types.IsString(col.Type) {
-		g.AddImport(helper.ImpURL)
-	}
-
-	var toStrings string
-	lo.ForEach(rels, func(rel *model.Relation, _ int) {
-		relModel := models.Get(rel.Table)
-		lCols := rel.SrcColumns(m)
-		lNames := strings.Join(lCols.ProperNames(), "")
-
-		relTitles := relModel.Columns.WithTag("title")
-		if len(relTitles) == 0 {
-			relTitles = relModel.PKs()
-		}
-		if len(relTitles) == 1 && relTitles[0].Name == col.Name {
-			return
-		}
-		msg := "{%%%% if p.%sBy%s != nil %%%%} ({%%%%s p.%sBy%s.TitleString() %%%%}){%%%% endif %%%%}"
-		toStrings += fmt.Sprintf(msg, relModel.Proper(), lNames, relModel.Proper(), lNames)
-	})
-
-	ret.W(ind + "<td class=\"nowrap\">")
-	if col.PK && link {
-		ret.W(ind + "  <a href=\"" + m.LinkURL(modelKey, enums) + "\">" + col.ToGoViewString(modelKey, true, false, enums, "detail") + toStrings + "</a>")
-	} else {
-		ret.W(ind + "  " + col.ToGoViewString(modelKey, true, false, enums, "detail") + toStrings)
-	}
-	const l = "<a title=%q href=\"{%%%%s %s %%%%}\">{%%%%= components.SVGRef(%q, 18, 18, \"\", ps) %%%%}</a>"
-	const msgNotNull = "%s  " + l
-	const msg = "%s  {%%%% if %s%s != nil %%%%}" + l + "{%%%% endif %%%%}"
-	lo.ForEach(rels, func(rel *model.Relation, _ int) {
-		if lo.Contains(rel.Src, col.Name) {
-			switch col.Type.Key() {
-			case types.KeyBool, types.KeyInt, types.KeyFloat:
-				g.AddImport(helper.ImpFmt)
-			}
-			relModel := models.Get(rel.Table)
-			wp := rel.WebPath(m, relModel, modelKey)
-			if col.Nullable {
-				ret.W(msg, ind, modelKey, col.Proper(), relModel.Title(), wp, relModel.Icon)
-			} else {
-				ret.W(msgNotNull, ind, relModel.Title(), wp, relModel.Icon)
-			}
-		}
-	})
-	ret.W(ind + "</td>")
 }

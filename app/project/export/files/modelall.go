@@ -7,7 +7,6 @@ import (
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/project/export/files/controller"
 	"projectforge.dev/projectforge/app/project/export/files/gomodel"
-	"projectforge.dev/projectforge/app/project/export/files/grpc"
 	"projectforge.dev/projectforge/app/project/export/files/sql"
 	"projectforge.dev/projectforge/app/project/export/files/svc"
 	"projectforge.dev/projectforge/app/project/export/files/view"
@@ -23,14 +22,6 @@ func ModelAll(m *model.Model, p *project.Project, args *model.Args, addHeader bo
 		return nil, err
 	}
 	calls = append(calls, fs...)
-
-	for _, grp := range m.GroupedColumns() {
-		f, err = controller.Grouping(m, args, grp, addHeader, linebreak)
-		if err != nil {
-			return nil, errors.Wrap(err, "can't render controller for group ["+grp.Title()+"]")
-		}
-		calls = append(calls, f)
-	}
 
 	if args.HasModule("migration") {
 		f, err = sql.Migration(m, args, addHeader, linebreak)
@@ -53,13 +44,6 @@ func ModelAll(m *model.Model, p *project.Project, args *model.Args, addHeader bo
 	}
 	calls = append(calls, fs...)
 
-	if args.HasModule("grpc") && args.Config.GetStringOpt("grpcPackage") != "" {
-		fs, err := grpc.GRPC(m, args, addHeader, linebreak)
-		if err != nil {
-			return nil, err
-		}
-		calls = append(calls, fs...)
-	}
 	return calls, nil
 }
 
@@ -76,14 +60,6 @@ func basics(m *model.Model, args *model.Args, addHeader bool, goVersion string, 
 		return nil, errors.Wrap(err, "can't render models")
 	}
 	calls = append(calls, f)
-
-	if m.IsHistory() {
-		f, err = gomodel.History(m, args, addHeader, linebreak)
-		if err != nil {
-			return nil, errors.Wrap(err, "can't render History")
-		}
-		calls = append(calls, f)
-	}
 
 	f, err = gomodel.Row(m, args, addHeader, linebreak)
 	if err != nil {

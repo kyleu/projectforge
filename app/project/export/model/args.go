@@ -18,6 +18,7 @@ type Args struct {
 	Models     Models                     `json:"models,omitempty"`
 	ModelFiles map[string]json.RawMessage `json:"-"`
 	Groups     Groups                     `json:"groups,omitempty"`
+	Acronyms   []string                   `json:"acronyms,omitempty"`
 	GroupsFile json.RawMessage            `json:"-"`
 	Modules    []string                   `json:"-"`
 	Database   string                     `json:"-"`

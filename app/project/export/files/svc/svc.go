@@ -14,6 +14,8 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+const incDel = ", includeDeleted bool"
+
 func ServiceAll(m *model.Model, args *model.Args, addHeader bool, goVersion string, linebreak string) (file.Files, error) {
 	x, err := Service(m, args, addHeader, linebreak)
 	if err != nil {
@@ -27,22 +29,7 @@ func ServiceAll(m *model.Model, args *model.Args, addHeader bool, goVersion stri
 	if err != nil {
 		return nil, err
 	}
-	ret := file.Files{x, g, mt}
-	if m.IsRevision() {
-		r, err := ServiceRevision(m, args, addHeader, goVersion, linebreak)
-		if err != nil {
-			return nil, err
-		}
-		ret = append(ret, r)
-	}
-	if m.IsHistory() {
-		r, err := ServiceHistory(m, args, addHeader, linebreak)
-		if err != nil {
-			return nil, err
-		}
-		ret = append(ret, r)
-	}
-	return ret, nil
+	return file.Files{x, g, mt}, nil
 }
 
 func Service(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {

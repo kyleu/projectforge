@@ -8,14 +8,13 @@
   "projectforge.dev/projectforge/app/lib/filesystem"
   "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
-  "projectforge.dev/projectforge/views/vutil"
 ) %}
 
 {% func Tree(t *filesystem.Tree, urlPrefix string, actions func(p string, n *filesystem.Node) map[string]string, as *app.State, ps *cutil.PageState) %}{% stripspace %}
-  {%= vutil.Indent(true, 2) %}
+  {%= components.Indent(true, 2) %}
   <ul class="accordion">
     {%= treeNodes(t.Nodes, "", urlPrefix, actions, as, ps, 2) %}
-  {%= vutil.Indent(true, 2) %}
+  {%= components.Indent(true, 2) %}
   </ul>
 {% endstripspace %}{% endfunc %}
 
@@ -27,11 +26,11 @@
     }
     pathID = strings.ReplaceAll(pathID, "/", "__")
   %}
-  {%= vutil.Indent(true, indent) %}
+  {%= components.Indent(true, indent) %}
   <li>
-    {%= vutil.Indent(true, indent + 1) %}
+    {%= components.Indent(true, indent + 1) %}
     <input id="accordion-{%s pathID %}" type="checkbox" hidden />
-    {%= vutil.Indent(true, indent + 1) %}
+    {%= components.Indent(true, indent + 1) %}
     <label for="accordion-{%s pathID %}">
       {%- code
         var acts map[string]string
@@ -54,23 +53,23 @@
       {%= components.SVGRef(`file`, 15, 15, ``, ps) %}
       {%- endif -%}
       {% space %}{%s n.Name %}
-      {%= vutil.Indent(true, indent + 1) %}
+      {%= components.Indent(true, indent + 1) %}
     </label>
-    {%= vutil.Indent(true, indent + 1) %}
+    {%= components.Indent(true, indent + 1) %}
     <div class="bd"><div><div>
       {%- if len(n.Children) == 0 -%}
-        {%= vutil.Indent(true, indent + 2) %}
+        {%= components.Indent(true, indent + 2) %}
         <div>{%s n.Name %}</div>
       {%- else -%}
-        {%= vutil.Indent(true, indent + 2) %}
+        {%= components.Indent(true, indent + 2) %}
         <ul class="accordion" style="margin-left: {%d (indent / 3) * 6 %}px; margin-bottom: 0;">
           {%= treeNodes(n.Children, path.Join(pth, n.Name), urlPrefix, actions, as, ps, indent + 3) %}
-        {%= vutil.Indent(true, indent + 2) %}
+        {%= components.Indent(true, indent + 2) %}
         </ul>
       {%- endif -%}
-    {%= vutil.Indent(true, indent + 1) %}
+    {%= components.Indent(true, indent + 1) %}
     </div></div></div>
-  {%= vutil.Indent(true, indent) %}
+  {%= components.Indent(true, indent) %}
   </li>
 {% endstripspace %}{% endfunc %}
 

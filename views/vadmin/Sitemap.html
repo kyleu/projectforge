@@ -8,7 +8,6 @@
   "projectforge.dev/projectforge/app/lib/menu"
   "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/layout"
-  "projectforge.dev/projectforge/views/vutil"
 ) %}
 
 {% code type Sitemap struct {
@@ -25,26 +24,26 @@
 {% endfunc %}
 
 {% func SitemapDetail(m menu.Items, indent int, ps *cutil.PageState) %}{% stripspace %}
-  {%= vutil.Indent(true, 1) %}
+  {%= components.Indent(true, 1) %}
   <div class="mt">
-    {%= vutil.Indent(true, 2) %}
+    {%= components.Indent(true, 2) %}
     <ul class="level-0">
       {% for _, i := range m %}
         {% if i.Key != "" %}
           {%= sitemapItemDetail(i, []string{}, ps.Breadcrumbs, 3, ps) %}
         {% endif %}
       {% endfor %}
-    {%= vutil.Indent(true, 2) %}
+    {%= components.Indent(true, 2) %}
     </ul>
-  {%= vutil.Indent(true, 1) %}
+  {%= components.Indent(true, 1) %}
   </div>
 {% endstripspace %}{% endfunc %}
 
 {% func sitemapItemDetail(i *menu.Item, path []string, breadcrumbs cmenu.Breadcrumbs, indent int, ps *cutil.PageState) %}{% stripspace %}
-  {%= vutil.Indent(true, indent) %}
+  {%= components.Indent(true, indent) %}
   <li>
     <div class="mts">
-      {%= vutil.Indent(true, indent + 1) %}
+      {%= components.Indent(true, indent + 1) %}
       <a href="{%s i.Route %}" title="{%s i.Desc() %}">
         {% if i.Icon != "" %}
           {%= components.SVGRef(i.Icon, 16, 16, "icon", ps) %}
@@ -62,6 +61,6 @@
       </ul>
       {% endif %}
     </div>
-  {%= vutil.Indent(true, indent) %}
+  {%= components.Indent(true, indent) %}
   </li>
 {% endstripspace %}{% endfunc %}

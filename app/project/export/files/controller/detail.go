@@ -23,11 +23,6 @@ func controllerDetail(g *golang.File, models model.Models, m *model.Model, grp *
 	ret.W("\t\tret, err := %sFromPath(rc, as, ps)", m.Package)
 	ret.WE(2, `""`)
 	checkGrp(ret, grp)
-	checkRev(ret, m)
-	if m.IsHistory() {
-		ret.W("\t\th, err := as.Services.%s.GetHistories(ps.Context, nil, %s, ps.Logger)", m.Proper(), m.PKs().ToRefs("ret."))
-		ret.WE(2, `""`)
-	}
 	ret.W("\t\tps.Title = ret.TitleString() + \" (%s)\"", m.Title())
 	ret.W("\t\tps.Data = ret")
 
@@ -123,15 +118,8 @@ func getArgs(g *golang.File, models model.Models, m *model.Model, rrels model.Re
 	if len(m.Relations) > 0 {
 		ret.WB()
 	}
-	if m.IsRevision() || m.IsHistory() || len(rrels) > 0 {
+	if len(rrels) > 0 {
 		argAdd("Params", "ps.Params")
-	}
-	if m.IsRevision() {
-		revCol := m.HistoryColumn()
-		argAdd(revCol.ProperPlural(), revCol.CamelPlural())
-	}
-	if m.IsHistory() {
-		argAdd("Histories", "h")
 	}
 	return argKeys, argVals
 }

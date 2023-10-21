@@ -49,7 +49,7 @@ func enumStructSimple(e *enum.Enum) []*golang.Block {
 	pl := len(e.Proper())
 	maxColLength := maxCount + pl
 	lo.ForEach(e.Values, func(v *enum.Value, _ int) {
-		cBlock.W("\t%s %s = %q", util.StringPad(e.Proper()+util.StringToCamel(v.Key), maxColLength), e.Proper(), v.Key)
+		cBlock.W("\t%s %s = %q", util.StringPad(e.Proper()+v.Proper(), maxColLength), e.Proper(), v.Key)
 	})
 	cBlock.W(")")
 	return []*golang.Block{tBlock, cBlock}
@@ -60,7 +60,7 @@ func enumStructComplex(e *enum.Enum, g *golang.File) []*golang.Block {
 	structBlock := golang.NewBlock(e.Proper(), "struct")
 	structBlock.W("type %s struct {", e.Proper())
 	structBlock.W("\tKey         string")
-	structBlock.W("\tName       string")
+	structBlock.W("\tName        string")
 	structBlock.W("\tDescription string")
 	structBlock.W("}")
 
@@ -153,6 +153,11 @@ func enumStructCollection(e *enum.Enum, g *golang.File) []*golang.Block {
 	gBlock.W("\t\t\treturn value")
 	gBlock.W("\t\t}")
 	gBlock.W("\t}")
+	if def := e.Values.Default(); def != nil {
+		gBlock.W("\tif key == \"\" {")
+		gBlock.W("\t\treturn %s%s", e.Proper(), def.Proper())
+		gBlock.W("\t}")
+	}
 	gBlock.W("\tmsg := fmt.Sprintf(\"unable to find [%s] enum with key [%%%%s]\", key)", e.Proper())
 	gBlock.W("\tif logger != nil {")
 	gBlock.W("\t\tlogger.Warn(msg)")
@@ -177,7 +182,7 @@ func enumStructValues(e *enum.Enum, g *golang.File) *golang.Block {
 	pl := len(e.Proper())
 	maxColLength := maxCount + pl
 	lo.ForEach(e.Values, func(v *enum.Value, _ int) {
-		n := e.Proper() + util.StringToCamel(v.Key)
+		n := e.Proper() + v.Proper()
 		names = append(names, n)
 		msg := fmt.Sprintf("\t%s = %s{Key: %q", util.StringPad(n, maxColLength), e.Proper(), v.Key)
 		if v.Name != "" {
