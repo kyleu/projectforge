@@ -188,3 +188,9 @@ func CountryFlag(code string) string {
 	const flagBaseIndex = '\U0001F1E6' - 'a'
 	return string(rune(code[0])+flagBaseIndex) + string(rune(code[1])+flagBaseIndex)
 }
+
+var filenameReplacer = strings.NewReplacer("/", "-", "\\", "-", "?", "-", "%", "-", "*", "-", ":", "-", "|", "-", "\"", "-", "<", "-", ">", "-")
+
+func Filename(s string) string {
+	return filenameReplacer.Replace(s)
+}

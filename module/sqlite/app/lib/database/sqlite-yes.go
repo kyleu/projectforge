@@ -3,6 +3,7 @@ package database
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
@@ -22,9 +23,14 @@ func OpenSQLiteDatabase(ctx context.Context, key string, params *SQLiteParams, l
 	if params.File == "" {
 		return nil, errors.New("need filename for SQLite database")
 	}
-	db, err := sqlx.Open("sqlite", params.File+"?cache=shared&_journal=WAL&_timeout=10000&_fk=true")
+	u := fmt.Sprintf("file:%s?cache=shared&_journal=WAL&_timeout=10000&_foreign_keys=on", params.File)
+	db, err := sqlx.Open("sqlite", u)
 	if err != nil {
 		return nil, errors.Wrap(err, "error opening database")
+	}
+	_, err = db.Exec("PRAGMA foreign_keys = ON")
+	if err != nil {
+		return nil, errors.Wrap(err, "error enabling foreign keys")
 	}
 	return NewService(typeSQLite, key, key, params.Schema, "sqlite", params.Debug, db, logger)
 }
