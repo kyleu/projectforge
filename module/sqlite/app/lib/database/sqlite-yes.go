@@ -23,14 +23,10 @@ func OpenSQLiteDatabase(ctx context.Context, key string, params *SQLiteParams, l
 	if params.File == "" {
 		return nil, errors.New("need filename for SQLite database")
 	}
-	u := fmt.Sprintf("file:%s?cache=shared&_journal=WAL&_timeout=10000&_foreign_keys=on", params.File)
+	u := fmt.Sprintf("file:%s?_pragma=foreign_keys(1)&cache=shared&_timeout=10000", params.File)
 	db, err := sqlx.Open("sqlite", u)
 	if err != nil {
 		return nil, errors.Wrap(err, "error opening database")
-	}
-	_, err = db.Exec("PRAGMA foreign_keys = ON")
-	if err != nil {
-		return nil, errors.Wrap(err, "error enabling foreign keys")
 	}
 	return NewService(typeSQLite, key, key, params.Schema, "sqlite", params.Debug, db, logger)
 }
