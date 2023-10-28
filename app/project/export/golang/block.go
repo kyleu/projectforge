@@ -14,6 +14,7 @@ type Block struct {
 	Type     string   `json:"type"`
 	Lines    []string `json:"lines"`
 	SkipDecl bool     `json:"skipDecl,omitempty"`
+	Lints    []string `json:"lints,omitempty"`
 }
 
 func NewBlock(k string, t string) *Block {
@@ -46,10 +47,16 @@ func (b *Block) WE(indent int, prefix ...string) {
 }
 
 func (b *Block) Render(linebreak string) string {
-	if d := b.NoLineDecl(); d != "" {
-		return strings.Join(append([]string{d}, b.Lines...), linebreak)
+	d := b.NoLineDecl()
+	if d == "" {
+		if len(b.Lints) == 0 {
+			return strings.Join(b.Lines, linebreak)
+		}
+		line := "//nolint:" + strings.Join(b.Lints, ", ")
+		return strings.Join(append([]string{line}, b.Lines...), linebreak)
 	}
-	return strings.Join(b.Lines, linebreak)
+	line := strings.Join(append([]string{d}, b.Lints...), ", ")
+	return strings.Join(append([]string{line}, b.Lines...), linebreak)
 }
 
 func (b *Block) LineCount() int {
@@ -62,7 +69,10 @@ func (b *Block) LineMaxLength() int {
 
 func (b *Block) LineComplexity() int {
 	return lo.SumBy(b.Lines, func(l string) int {
-		return strings.Count(l, "if ") + strings.Count(l, "&& ") + strings.Count(l, "|| ") + strings.Count(l, "case ")
+		tests := []string{"if ", "else ", "switch ", "select ", "for ", "break", "continue", "&&", "||"}
+		return lo.Sum(lo.Map(tests, func(x string, _ int) int {
+			return strings.Count(l, x)
+		}))
 	})
 }
 
@@ -74,7 +84,7 @@ func (b *Block) NoLineDecl() string {
 	if b.LineMaxLength() > 160 {
 		ret = append(ret, "lll")
 	}
-	if b.LineComplexity() >= 20 {
+	if b.LineComplexity() >= 28 {
 		ret = append(ret, "gocognit")
 	}
 	if len(ret) == 0 || b.SkipDecl || b.ContainsText("{%") {

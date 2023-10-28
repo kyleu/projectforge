@@ -92,6 +92,7 @@ func menuBlockV(args *model.Args, groups map[string][]string, names []string) *g
 
 func menuBlockGM(args *model.Args, orphans []string) *golang.Block {
 	gm := golang.NewBlock("generatedMenu", "func")
+	gm.Lints = append(gm.Lints, "unused")
 	gm.W("func generatedMenu() menu.Items {")
 	gm.W("\treturn menu.Items{")
 	for _, g := range args.Groups {
