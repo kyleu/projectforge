@@ -144,29 +144,7 @@ func modelRowToModel(g *golang.File, m *model.Model, enums enum.Enums, database 
 			ret.W("\t_ = util.FromJSON(r.%s, %sArg)", c.Proper(), c.Camel())
 			refs = append(refs, fmt.Sprintf("%s %sArg", k, c.Camel()))
 		default:
-			switch {
-			case c.Type.Scalar() && c.Nullable:
-				switch c.Type.Key() {
-				case types.KeyString:
-					refs = append(refs, fmt.Sprintf("%s r.%s.String", k, c.Proper()))
-				case types.KeyInt:
-					refs = append(refs, fmt.Sprintf("%s int(r.%s.Int64)", k, c.Proper()))
-				case types.KeyFloat:
-					refs = append(refs, fmt.Sprintf("%s r.%s.Float64", k, c.Proper()))
-				case types.KeyBool:
-					refs = append(refs, fmt.Sprintf("%s r.%s.Bool", k, c.Proper()))
-				default:
-					refs = append(refs, fmt.Sprintf("%s r.%s", k, c.Proper()))
-				}
-			case database == util.DatabaseSQLServer && c.Type.Key() == types.KeyUUID:
-				if c.Nullable {
-					refs = append(refs, fmt.Sprintf("%s database.UUIDFromGUID(r.%s)", k, c.Proper()))
-				} else {
-					refs = append(refs, fmt.Sprintf("%s util.UUIDFromStringOK(r.%s.String())", k, c.Proper()))
-				}
-			default:
-				refs = append(refs, fmt.Sprintf("%s r.%s", k, c.Proper()))
-			}
+			refs = append(refs, defaultRowToModel(k, c, database)...)
 		}
 	}
 	ret.W("\treturn &%s{", m.Proper())
@@ -176,6 +154,34 @@ func modelRowToModel(g *golang.File, m *model.Model, enums enum.Enums, database 
 	ret.W("\t}")
 	ret.W("}")
 	return ret, nil
+}
+
+func defaultRowToModel(k string, c *model.Column, database string) []string {
+	var refs []string
+	switch {
+	case c.Type.Scalar() && c.Nullable:
+		switch c.Type.Key() {
+		case types.KeyString:
+			refs = append(refs, fmt.Sprintf("%s r.%s.String", k, c.Proper()))
+		case types.KeyInt:
+			refs = append(refs, fmt.Sprintf("%s int(r.%s.Int64)", k, c.Proper()))
+		case types.KeyFloat:
+			refs = append(refs, fmt.Sprintf("%s r.%s.Float64", k, c.Proper()))
+		case types.KeyBool:
+			refs = append(refs, fmt.Sprintf("%s r.%s.Bool", k, c.Proper()))
+		default:
+			refs = append(refs, fmt.Sprintf("%s r.%s", k, c.Proper()))
+		}
+	case database == util.DatabaseSQLServer && c.Type.Key() == types.KeyUUID:
+		if c.Nullable {
+			refs = append(refs, fmt.Sprintf("%s database.UUIDFromGUID(r.%s)", k, c.Proper()))
+		} else {
+			refs = append(refs, fmt.Sprintf("%s util.UUIDFromStringOK(r.%s.String())", k, c.Proper()))
+		}
+	default:
+		refs = append(refs, fmt.Sprintf("%s r.%s", k, c.Proper()))
+	}
+	return refs
 }
 
 func modelRowArray() *golang.Block {

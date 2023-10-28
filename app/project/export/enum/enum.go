@@ -6,6 +6,7 @@ import (
 
 	"github.com/samber/lo"
 
+	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/util"
 )
 
@@ -69,11 +70,11 @@ func (e *Enum) ExtraFields() map[string]string {
 			typ := ""
 			switch v.(type) {
 			case string:
-				typ = "string"
+				typ = types.KeyString
 			case float64:
-				typ = "float"
+				typ = types.KeyFloat
 			case int, int32, int64:
-				typ = "int"
+				typ = types.KeyInt
 			}
 			ret[k] = typ
 		}

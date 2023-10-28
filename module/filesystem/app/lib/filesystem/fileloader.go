@@ -1,6 +1,7 @@
 package filesystem
 
 import (
+	"context"
 	"io"
 
 	"{{{ .Package }}}/app/util"
@@ -32,6 +33,6 @@ type FileLoader interface {
 	IsDir(path string) bool
 	Remove(path string, logger util.Logger) error
 	RemoveRecursive(pt string, logger util.Logger) error
-	Download(url string, path string, overwrite bool, logger util.Logger) (int, error)
+	Download(ctx context.Context, url string, path string, overwrite bool, logger util.Logger) (int, error)
 	String() string
 }

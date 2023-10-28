@@ -18,6 +18,8 @@ import (
 	"projectforge.dev/projectforge/views/vexec"
 )
 
+const execIcon = "file"
+
 func ExecList(rc *fasthttp.RequestCtx) {
 	controller.Act("exec.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ps.SetTitleAndData("Processes", as.Services.Exec.Execs)
@@ -29,7 +31,7 @@ func ExecForm(rc *fasthttp.RequestCtx) {
 	controller.Act("exec.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		x := &exec.Exec{}
 		ps.SetTitleAndData("New Process", x)
-		ps.DefaultNavIcon = "file"
+		ps.DefaultNavIcon = execIcon
 		return controller.Render(rc, as, &vexec.Form{Exec: x}, ps, "exec", "New Process")
 	})
 }
@@ -74,7 +76,7 @@ func ExecDetail(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		ps.SetTitleAndData(ex.String(), ex)
-		ps.DefaultNavIcon = "file"
+		ps.DefaultNavIcon = execIcon
 		return controller.Render(rc, as, &vexec.Detail{Exec: ex}, ps, "exec", ex.String())
 	})
 }

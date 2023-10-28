@@ -6,12 +6,13 @@ import (
 
 	"github.com/samber/lo"
 
+	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func enumValues(e *enum.Enum, g *golang.File) *golang.Block {
+func enumValues(e *enum.Enum) *golang.Block {
 	b := golang.NewBlock(e.Proper(), "vars")
 	b.W("var (")
 
@@ -34,7 +35,7 @@ func enumValues(e *enum.Enum, g *golang.File) *golang.Block {
 		}
 		for extraKey, extraType := range e.ExtraFields() {
 			t := v.Extra.GetStringOpt(extraKey)
-			if extraType == "string" || extraType == "" {
+			if extraType == types.KeyString || extraType == "" {
 				t = "\"" + t + "\""
 			}
 			msg += fmt.Sprintf(", %s: %s", util.StringToCamel(extraKey), t)

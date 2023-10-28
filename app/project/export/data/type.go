@@ -57,9 +57,9 @@ func typeFor(t string, ex []any) (*types.Wrapped, []string, error) {
 	}
 
 	switch t {
-	case "bool":
+	case types.KeyBool:
 		return types.NewBool(), tags, nil
-	case "int", "float":
+	case types.KeyInt, types.KeyFloat:
 		isFloat := lo.ContainsBy(ex, func(e any) bool {
 			if fl, ok := e.(float64); ok {
 				if fl != math.Round(fl) || fl > 1000000000000 {
@@ -72,7 +72,7 @@ func typeFor(t string, ex []any) (*types.Wrapped, []string, error) {
 			return types.NewFloat(64), tags, nil
 		}
 		return types.NewInt(64), tags, nil
-	case "string":
+	case types.KeyString:
 		return types.NewString(), tags, nil
 	case "ulong":
 		return types.NewInt(64), tags, nil

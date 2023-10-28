@@ -31,7 +31,7 @@ func ModelAll(m *model.Model, p *project.Project, args *model.Args, addHeader bo
 		calls = append(calls, f)
 	}
 	if len(m.SeedData) > 0 {
-		f, err = sql.SeedData(m, args, linebreak)
+		f, err = sql.SeedData(m, linebreak)
 		if err != nil {
 			return nil, errors.Wrap(err, "can't render SQL seed data")
 		}
@@ -53,7 +53,15 @@ func basics(m *model.Model, args *model.Args, addHeader bool, goVersion string, 
 	if err != nil {
 		return nil, errors.Wrap(err, "can't render model")
 	}
-	calls = append(calls, f)
+	fd, err := gomodel.ModelDiff(m, args, addHeader, linebreak)
+	if err != nil {
+		return nil, errors.Wrap(err, "can't render model")
+	}
+	fm, err := gomodel.ModelMap(m, args, addHeader, linebreak)
+	if err != nil {
+		return nil, errors.Wrap(err, "can't render model")
+	}
+	calls = append(calls, f, fd, fm)
 
 	f, err = gomodel.Models(m, args, addHeader, goVersion, linebreak)
 	if err != nil {
@@ -67,7 +75,7 @@ func basics(m *model.Model, args *model.Args, addHeader bool, goVersion string, 
 	}
 	calls = append(calls, f)
 
-	fs, err := svc.ServiceAll(m, args, addHeader, goVersion, linebreak)
+	fs, err := svc.ServiceAll(m, args, addHeader, linebreak)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't render service")
 	}

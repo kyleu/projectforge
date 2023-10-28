@@ -64,7 +64,7 @@ func (m *Model) LinkURL(prefix string, enums enum.Enums) string {
 	pks := m.PKs()
 	linkURL := "/" + m.Route()
 	lo.ForEach(pks, func(pk *Column, _ int) {
-		linkURL += "/" + pk.ToGoViewString(prefix, false, true, enums, "simple")
+		linkURL += "/" + pk.ToGoViewString(prefix, false, true, enums, util.KeySimple)
 	})
 	return linkURL
 }

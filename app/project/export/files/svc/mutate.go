@@ -140,6 +140,7 @@ func serviceAuditApply(g *golang.File, m *model.Model, ret *golang.Block) {
 	ret.WE(1)
 }
 
+//nolint:unused
 func serviceUpdateIfNeeded(g *golang.File, m *model.Model, database string) (*golang.Block, error) {
 	ret := golang.NewBlock("UpdateIfNeeded", "func")
 	ret.W("func (s *Service) UpdateIfNeeded(ctx context.Context, tx *sqlx.Tx, model *%s, logger util.Logger) error {", m.Proper())

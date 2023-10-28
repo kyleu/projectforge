@@ -55,7 +55,7 @@ func All(p *project.Project, args *model.Args, addHeader bool, linebreak string)
 	}
 
 	if args.HasModule("graphql") {
-		x, err = gql.GQLAll(args.Models, args.Enums, addHeader, linebreak)
+		x, err = gql.All(args.Models, args.Enums, addHeader, linebreak)
 		if err != nil {
 			return nil, err
 		}

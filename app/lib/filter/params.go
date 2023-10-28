@@ -11,7 +11,10 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-const MaxRows, PageSize = 10000, 100
+const (
+	PageSize = 100
+	MaxRows  = 10000
+)
 
 var AllowedColumns = map[string][]string{}
 
@@ -37,7 +40,7 @@ func (p *Params) Sanitize(key string, defaultOrderings ...*Ordering) *Params {
 		return &Params{Key: key, Orderings: defaultOrderings}
 	}
 	if p.Limit == 0 || p.Limit > MaxRows {
-		p.Limit = MaxRows
+		p.Limit = PageSize
 	}
 	if p.Offset < 0 {
 		p.Offset = 0

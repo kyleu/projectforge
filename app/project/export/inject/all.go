@@ -5,7 +5,7 @@ import (
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func All(args *model.Args, files file.Files, linebreak string) error {
+func All(args *model.Args, files file.Files) error {
 	if args == nil {
 		return nil
 	}

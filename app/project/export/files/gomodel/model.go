@@ -20,7 +20,7 @@ func Model(m *model.Model, args *model.Args, addHeader bool, linebreak string) (
 	lo.ForEach(helper.ImportsForTypes("go", "", m.Columns.Types()...), func(imp *golang.Import, _ int) {
 		g.AddImport(imp)
 	})
-	lo.ForEach(helper.ImportsForTypes("string", "", m.PKs().Types()...), func(imp *golang.Import, _ int) {
+	lo.ForEach(helper.ImportsForTypes(types.KeyString, "", m.PKs().Types()...), func(imp *golang.Import, _ int) {
 		g.AddImport(imp)
 	})
 	g.AddImport(helper.ImpAppUtil)
@@ -43,20 +43,7 @@ func Model(m *model.Model, args *model.Args, addHeader bool, linebreak string) (
 	if err != nil {
 		return nil, err
 	}
-	rnd, err := modelRandom(m, args.Enums)
-	if err != nil {
-		return nil, err
-	}
-	g.AddBlocks(str, c, rnd)
-	if b, e := modelFromMap(g, m, args.Enums, args.Database); e == nil {
-		g.AddBlocks(b)
-	} else {
-		return nil, err
-	}
-	mdiff, err := modelDiff(g, m, args.Enums)
-	if err != nil {
-		return nil, err
-	}
+	g.AddBlocks(str, c)
 
 	g.AddBlocks(modelClone(m), modelString(g, m), modelTitle(m))
 	if len(m.PKs()) > 1 {
@@ -66,7 +53,13 @@ func Model(m *model.Model, args *model.Args, addHeader bool, linebreak string) (
 			return nil, err
 		}
 	}
-	g.AddBlocks(modelWebPath(g, m), mdiff, modelToData(m, m.Columns, "", args.Database))
+
+	rnd, err := modelRandom(m, args.Enums)
+	if err != nil {
+		return nil, err
+	}
+
+	g.AddBlocks(rnd, modelWebPath(g, m), modelToData(m, m.Columns, "", args.Database))
 	return g.Render(addHeader, linebreak)
 }
 
@@ -113,7 +106,7 @@ func modelStruct(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 			return nil, err
 		}
 		goType := util.StringPad(gt, maxTypeLength)
-		tag := fmt.Sprintf("json:\"%s\"", c.Camel()+modelJSONSuffix(c))
+		tag := fmt.Sprintf("json:%q", c.Camel()+modelJSONSuffix(c))
 		if c.Validation != "" {
 			tag += fmt.Sprintf(",validate:%q", c.Validation)
 		}
@@ -126,7 +119,7 @@ func modelStruct(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	return ret, nil
 }
 
-func modelJSONSuffix(c *model.Column) string {
+func modelJSONSuffix(_ *model.Column) string {
 	return ",omitempty"
 }
 

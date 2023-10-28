@@ -2,15 +2,20 @@
 package filesystem
 
 import (
+	"context"
 	"io"
 	"net/http"
+	"strings"
 
 	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/util"
 )
 
-func (f *FileSystem) Download(url string, path string, overwrite bool, logger util.Logger) (int, error) {
+func (f *FileSystem) Download(ctx context.Context, url string, path string, overwrite bool, _ util.Logger) (int, error) {
+	if !strings.HasPrefix(url, "https://") {
+		return 0, errors.New("only [https] requests are supported")
+	}
 	if f.Exists(path) && !overwrite {
 		return 0, errors.Errorf("file [%s] exists", path)
 	}
@@ -18,11 +23,18 @@ func (f *FileSystem) Download(url string, path string, overwrite bool, logger ut
 	if err != nil {
 		return 0, errors.Wrapf(err, "unable to open file at path [%s]", path)
 	}
-	rsp, err := http.Get(url)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, http.NoBody)
+	if err != nil {
+		return 0, errors.Wrapf(err, "unable to make request for url [%s]", url)
+	}
+	rsp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return 0, errors.Wrapf(err, "unable to load url [%s]", url)
 	}
-	if rsp.StatusCode != 200 {
+	defer func() {
+		_ = rsp.Body.Close()
+	}()
+	if rsp.StatusCode != http.StatusOK {
 		return 0, errors.Errorf("response from url [%s] has status [%d], expected [200]", url, rsp.StatusCode)
 	}
 	x, err := io.Copy(w, rsp.Body)

@@ -2,9 +2,11 @@ package gomodel
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/pkg/errors"
 
+	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
@@ -12,7 +14,20 @@ import (
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func modelDiff(g *golang.File, m *model.Model, enums enum.Enums) (*golang.Block, error) {
+func ModelDiff(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
+	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, strings.ToLower(m.Camel())+"diff")
+	g.AddImport(helper.ImpAppUtil)
+
+	mdiff, err := modelDiffBlock(g, m, args.Enums)
+	if err != nil {
+		return nil, err
+	}
+	g.AddBlocks(mdiff)
+
+	return g.Render(addHeader, linebreak)
+}
+
+func modelDiffBlock(g *golang.File, m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock("Diff"+m.Proper(), "func")
 
 	ret.W("func (%s *%s) Diff(%sx *%s) util.Diffs {", m.FirstLetter(), m.Proper(), m.FirstLetter(), m.Proper())

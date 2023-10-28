@@ -118,7 +118,7 @@ func (c *Column) ToGoRowType(pkg string, enums enum.Enums, database string) (str
 
 func (c *Column) ShouldDisplay(k string) bool {
 	switch c.Display {
-	case "detail":
+	case util.KeyDetail:
 		return k == c.Display
 	default:
 		return true

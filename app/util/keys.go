@@ -20,5 +20,8 @@ const (
 	DatabasePostgreSQL = "postgres"
 	DatabaseSQLite     = "sqlite"
 	DatabaseSQLServer  = "sqlserver"
+
+	KeyDetail = "detail"
+	KeySimple = "simple"
 	// $PF_SECTION_END(keys)$.
 )

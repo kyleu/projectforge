@@ -53,6 +53,9 @@ func (f *FileSystem) ReadFile(path string) ([]byte, error) {
 		stat, _ := file.Stat()
 		return stat.Size(), nil
 	}()
+	if err != nil {
+		return nil, err
+	}
 
 	b, err := os.ReadFile(f.getPath(path))
 	if err != nil {

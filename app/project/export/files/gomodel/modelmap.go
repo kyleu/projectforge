@@ -2,16 +2,34 @@ package gomodel
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
 
+	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/enum"
+	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
 	"projectforge.dev/projectforge/app/util"
 )
+
+func ModelMap(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
+	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, strings.ToLower(m.Camel())+"map")
+	g.AddImport(helper.ImpAppUtil)
+	err := helper.SpecialImports(g, m.Columns, m.PackageWithGroup(""), args.Enums)
+	if err != nil {
+		return nil, err
+	}
+	if b, e := modelFromMap(g, m, args.Enums, args.Database); e == nil {
+		g.AddBlocks(b)
+	} else {
+		return nil, err
+	}
+	return g.Render(addHeader, linebreak)
+}
 
 func modelFromMap(g *golang.File, m *model.Model, enums enum.Enums, database string) (*golang.Block, error) {
 	ret := golang.NewBlock(m.Package+"FromForm", "func")
@@ -79,7 +97,7 @@ func forCols(g *golang.File, ret *golang.Block, indent int, m *model.Model, enum
 			}
 			ret.W(ind+"ret%s, err := m.Parse%s(%q, true, true)", col.Proper(), col.ToGoMapParse(), col.Camel())
 			catchErr("err")
-			enumRef := ""
+			var enumRef string
 			if e.Simple() {
 				enumRef = fmt.Sprintf("%s(ret%s)", e.Proper(), col.Proper())
 			} else {

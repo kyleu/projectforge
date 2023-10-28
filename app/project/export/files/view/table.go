@@ -23,7 +23,7 @@ func table(m *model.Model, args *model.Args, addHeader bool, linebreak string) (
 	if m.Columns.HasFormat(model.FmtCountry.Key) || m.Columns.HasFormat(model.FmtSI.Key) {
 		g.AddImport(helper.ImpAppUtil)
 	}
-	lo.ForEach(m.Columns.WithoutDisplays("detail"), func(c *model.Column, _ int) {
+	lo.ForEach(m.Columns.WithoutDisplays(util.KeyDetail), func(c *model.Column, _ int) {
 		if c.Type.Key() == types.KeyEnum {
 			e, _ := model.AsEnumInstance(c.Type, args.Enums)
 			g.AddImport(helper.AppImport("app/" + e.PackageWithGroup("")))

@@ -2,16 +2,15 @@ package model
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/enum"
-	"projectforge.dev/projectforge/app/util"
 )
 
 const (
+	keyJSONB          = "jsonb"
 	goTypeIntArray    = "[]int"
 	goTypeStringArray = "[]string"
 	goTypeAnyArray    = "[]any"
@@ -85,36 +84,6 @@ func ToGoType(t types.Type, nullable bool, pkg string, enums enum.Enums) (string
 	return ret, nil
 }
 
-func ToGoRowType(t types.Type, nullable bool, pkg string, enums enum.Enums, database string) (string, error) {
-	switch t.Key() {
-	case types.KeyAny, types.KeyList, types.KeyMap, types.KeyValueMap, types.KeyReference:
-		if database == util.DatabaseSQLite {
-			return "string", nil
-		}
-		return "json.RawMessage", nil
-	default:
-		if t.Key() == types.KeyUUID && database == util.DatabaseSQLServer {
-			if nullable {
-				return "*any", nil
-			}
-			return "mssql.UniqueIdentifier", nil
-		}
-		if t.Scalar() && nullable {
-			switch t.Key() {
-			case types.KeyString:
-				return "sql.NullString", nil
-			case types.KeyInt:
-				return "sql.NullInt64", nil
-			case types.KeyFloat:
-				return "sql.NullFloat64", nil
-			case types.KeyBool:
-				return "sql.NullBool", nil
-			}
-		}
-		return ToGoType(t, nullable, pkg, enums)
-	}
-}
-
 func ToGoString(t types.Type, prop string, alwaysString bool) string {
 	switch t.Key() {
 	case types.KeyAny, types.KeyBool, types.KeyInt, types.KeyFloat:
@@ -139,207 +108,4 @@ func ToGoString(t types.Type, prop string, alwaysString bool) string {
 	default:
 		return prop
 	}
-}
-
-func ToGoViewString(t *types.Wrapped, prop string, nullable bool, format string, verbose bool, url bool, enums enum.Enums, src string) string {
-	switch t.Key() {
-	case types.KeyAny:
-		if src == "simple" {
-			return "{%%v " + prop + " %%}"
-		}
-		return "{%%= components.JSON(" + prop + ") %%}"
-	case types.KeyBool:
-		return "{%%v " + prop + " %%}"
-	case types.KeyInt:
-		switch format {
-		case FmtSI.Key:
-			return "{%%s util.ByteSizeSI(int64(" + prop + ")) %%}"
-		case "":
-			return "{%%d " + prop + " %%}"
-		default:
-			return "INVALID_INT_FORMAT[" + format + "]"
-		}
-	case types.KeyFloat:
-		return "{%%f " + prop + " %%}"
-	case types.KeyList:
-		if src == "simple" {
-			return "{%%v " + prop + " %%}"
-		}
-		lt := t.ListType()
-		if lt == nil {
-			lt = types.NewString()
-		}
-		switch lt.Key() {
-		case types.KeyString:
-			return "{%%= components.DisplayStringArray(" + prop + ") %%}"
-		case types.KeyInt:
-			return "{%%= components.DisplayIntArray(" + prop + ") %%}"
-		case types.KeyEnum:
-			e, _ := AsEnumInstance(lt, enums)
-			if e == nil {
-				return "ERROR: invalid enum [" + lt.String() + "]"
-			}
-			return "{%%= components.DisplayStringArray(" + prop + ".Strings()) %%}"
-		default:
-			return "{%%= components.JSON(" + prop + ") %%}"
-		}
-	case types.KeyMap, types.KeyValueMap, types.KeyReference:
-		if src == "simple" {
-			return "{%%v " + prop + " %%}"
-		}
-		return "{%%= components.JSON(" + prop + ") %%}"
-	case types.KeyDate:
-		if nullable {
-			return "{%%= components.DisplayTimestampDay(" + prop + ") %%}"
-		}
-		return "{%%= components.DisplayTimestampDay(&" + prop + ") %%}"
-	case types.KeyEnum:
-		e, _ := AsEnumInstance(t, enums)
-		if e == nil || e.Simple() {
-			return "{%%v " + ToGoString(t, prop, false) + " %%}"
-		}
-		return "{%%s " + ToGoString(t, prop, false) + ".String() %%}"
-	case types.KeyTimestamp:
-		if nullable {
-			return "{%%= components.DisplayTimestamp(" + prop + ") %%}"
-		}
-		return "{%%= components.DisplayTimestamp(&" + prop + ") %%}"
-	case types.KeyUUID:
-		if nullable {
-			return "{%%= components.DisplayUUID(" + prop + ") %%}"
-		}
-		return "{%%= components.DisplayUUID(&" + prop + ") %%}"
-	case types.KeyString:
-		key := "s"
-		if url {
-			key = "u"
-		}
-		if src == "simple" {
-			return "{%%" + key + " " + prop + " %%}"
-		}
-		switch format {
-		case FmtCode.Key:
-			return "<pre>{%%s " + ToGoString(t, prop, false) + " %%}</pre>"
-		case FmtLinebreaks.Key:
-			return "<div class=\"prewsl\">{%%s " + ToGoString(t, prop, false) + " %%}</div>"
-		case FmtCodeHidden.Key:
-			_, p := util.StringSplitLast(prop, '.', true)
-			ret := make([]string, 0, 30)
-			ret = append(ret,
-				"<ul class=\"accordion\">",
-				"<li>",
-				"<input id=\"accordion-"+p+"\" type=\"checkbox\" hidden />",
-				"<label class=\"no-padding\" for=\"accordion-"+p+"\"><em>(click to show)</em></label>",
-				"<div class=\"bd\"><pre>{%%s "+ToGoString(t, prop, false)+" %%}</pre></div>",
-				"</li>",
-				"</ul>",
-			)
-			return strings.Join(ret, "")
-		case FmtHTML.Key:
-			return "{%%= components.Format(" + ToGoString(t, prop, false) + ", \"html\") %%}</pre>"
-		case FmtJSON.Key:
-			return "{%%= components.Format(" + ToGoString(t, prop, false) + ", \"json\") %%}</pre>"
-		case FmtURL.Key:
-			x := "{%%" + key + " " + ToGoString(t, prop, false) + " %%}"
-			return fmt.Sprintf("<a href=%q target=\"_blank\" rel=\"noopener noreferrer\">%s</a>", x, x)
-		case FmtIcon.Key:
-			size := "18"
-			if src == "detail" {
-				size = "64"
-			}
-			return "{%%= components.Icon(" + ToGoString(t, prop, false) + ", " + size + ", \"\", ps) %%}"
-		case FmtCountry.Key:
-			if verbose {
-				return "{%%" + key + " " + ToGoString(t, prop, false) + " %%} {%%s util.CountryFlag(" + ToGoString(t, prop, false) + ") %%}"
-			}
-			return "{%%" + key + " " + ToGoString(t, prop, false) + " %%}"
-		case FmtSelect.Key:
-			return "<strong>{%%" + key + " " + ToGoString(t, prop, false) + " %%}</strong>"
-		case "":
-			return "{%%" + key + " " + ToGoString(t, prop, false) + " %%}"
-		default:
-			return "INVALID_STRING_FORMAT[" + format + "]"
-		}
-	default:
-		return "{%%v " + ToGoString(t, prop, false) + " %%}"
-	}
-}
-
-const keyJSONB = "jsonb"
-
-func ToSQLType(t types.Type) (string, error) {
-	switch t.Key() {
-	case types.KeyAny:
-		return keyJSONB, nil
-	case types.KeyBool:
-		return "boolean", nil
-	case types.KeyEnum:
-		e, err := AsEnum(t)
-		if err != nil {
-			return "", err
-		}
-		return e.Ref, nil
-	case types.KeyInt:
-		i := types.TypeAs[*types.Int](t)
-		if i != nil && i.Bits == 64 {
-			return "bigint", nil
-		}
-		return "int", nil
-	case types.KeyFloat:
-		return "double precision", nil
-	case types.KeyList, types.KeyMap, types.KeyValueMap, types.KeyReference:
-		return keyJSONB, nil
-	case types.KeyString:
-		return "text", nil
-	case types.KeyDate, types.KeyTimestamp:
-		return "timestamp", nil
-	case types.KeyUUID:
-		return "uuid", nil
-	default:
-		return "sql-error-invalid-type", nil
-	}
-}
-
-func AsEnum(t types.Type) (*types.Enum, error) {
-	w, ok := t.(*types.Wrapped)
-	if ok {
-		t = w.T
-	}
-	ref, ok := t.(*types.Enum)
-	if !ok {
-		return nil, errors.Errorf("InvalidType(%T)", w.T)
-	}
-	return ref, nil
-}
-
-func AsEnumInstance(t types.Type, enums enum.Enums) (*enum.Enum, error) {
-	e, err := AsEnum(t)
-	if err != nil {
-		return nil, err
-	}
-	ret := enums.Get(e.Ref)
-	if ret == nil {
-		return nil, errors.Errorf("no enum found with name [%s]", e.Ref)
-	}
-	return ret, nil
-}
-
-func AsRef(t types.Type) (*types.Reference, error) {
-	w, ok := t.(*types.Wrapped)
-	if ok {
-		t = w.T
-	}
-	ref, ok := t.(*types.Reference)
-	if !ok {
-		return nil, errors.Errorf("InvalidType(%T)", w.T)
-	}
-	return ref, nil
-}
-
-func asRefK(t types.Type) string {
-	ref, err := AsRef(t)
-	if err != nil {
-		return fmt.Sprintf("ERROR: %s", err.Error())
-	}
-	return ref.K
 }

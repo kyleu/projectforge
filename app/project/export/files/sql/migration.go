@@ -19,7 +19,7 @@ func Migration(m *model.Model, args *model.Args, addHeader bool, linebreak strin
 		return nil, err
 	}
 	g.AddBlocks(drop)
-	sc, err := sqlCreate(m, args.Modules, args.DatabaseNow(), args.Models)
+	sc, err := sqlCreate(m, args.Models)
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +35,7 @@ func sqlDrop(m *model.Model) (*golang.Block, error) {
 	return ret, nil
 }
 
-func sqlCreate(m *model.Model, modules []string, now string, models model.Models) (*golang.Block, error) {
+func sqlCreate(m *model.Model, models model.Models) (*golang.Block, error) {
 	ret := golang.NewBlock("SQLCreate", "sql")
 	ret.W("-- {%% func " + m.Proper() + "Create() %%}")
 	ret.W("create table if not exists %q (", m.Name)

@@ -1,7 +1,8 @@
 package goenum
 
 import (
-	"golang.org/x/exp/maps"
+	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
@@ -16,7 +17,7 @@ func structComplex(e *enum.Enum, g *golang.File) []*golang.Block {
 	structBlock.W("\tName        string")
 	structBlock.W("\tDescription string")
 	structBlock.W("\tIcon        string")
-	extraKeys := maps.Keys(e.ExtraFields())
+	extraKeys := lo.Keys(e.ExtraFields())
 	if len(extraKeys) > 0 {
 		maxLength := util.StringArrayMaxLength(extraKeys)
 		structBlock.WB()

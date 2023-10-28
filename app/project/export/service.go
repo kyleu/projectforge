@@ -32,7 +32,7 @@ func (s *Service) Files(p *project.Project, args *model.Args, addHeader bool, li
 	return
 }
 
-func (s *Service) Inject(args *model.Args, fs file.Files, linebreak string) (e error) {
+func (s *Service) Inject(args *model.Args, fs file.Files) (e error) {
 	defer func() {
 		if rec := recover(); rec != nil {
 			if err, ok := rec.(error); ok {
@@ -42,6 +42,6 @@ func (s *Service) Inject(args *model.Args, fs file.Files, linebreak string) (e e
 			}
 		}
 	}()
-	e = inject.All(args, fs, linebreak)
+	e = inject.All(args, fs)
 	return
 }

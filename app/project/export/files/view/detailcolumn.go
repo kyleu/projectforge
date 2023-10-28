@@ -20,7 +20,7 @@ func viewDetailColumn(
 	ind := util.StringRepeat("  ", indent)
 	rels := m.RelationsFor(col)
 	if len(rels) == 0 {
-		viewString := col.ToGoViewString(modelKey, true, false, enums, "detail")
+		viewString := col.ToGoViewString(modelKey, true, false, enums, util.KeyDetail)
 		ret.W(colRow(ind, col, m.LinkURL(modelKey, enums), viewString, link))
 		return
 	}
@@ -33,9 +33,9 @@ func viewDetailColumn(
 
 	ret.W(ind + "<td class=\"nowrap\">")
 	if col.PK && link {
-		ret.W(ind + "  <a href=\"" + m.LinkURL(modelKey, enums) + "\">" + col.ToGoViewString(modelKey, true, false, enums, "detail") + toStrings + "</a>")
+		ret.W(ind + "  <a href=\"" + m.LinkURL(modelKey, enums) + "\">" + col.ToGoViewString(modelKey, true, false, enums, util.KeyDetail) + toStrings + "</a>")
 	} else {
-		ret.W(ind + "  " + col.ToGoViewString(modelKey, true, false, enums, "detail") + toStrings)
+		ret.W(ind + "  " + col.ToGoViewString(modelKey, true, false, enums, util.KeyDetail) + toStrings)
 	}
 	const l = "<a title=%q href=\"{%%%%s %s %%%%}\">{%%%%= components.SVGRef(%q, 18, 18, \"\", ps) %%%%}</a>"
 	const msgNotNull = "%s  " + l

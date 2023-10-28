@@ -36,7 +36,7 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 			return nil, nil, errors.Wrap(e, "unable to export code")
 		}
 		srcFiles = append(srcFiles, files...)
-		e = pm.ESvc.Inject(args, srcFiles, linebreak)
+		e = pm.ESvc.Inject(args, srcFiles)
 		if e != nil {
 			return nil, nil, errors.Wrap(e, "unable to inject code")
 		}

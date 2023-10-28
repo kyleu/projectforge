@@ -23,7 +23,7 @@ func Models(m *model.Model, args *model.Args, addHeader bool, goVersion string, 
 	lo.ForEach(helper.ImportsForTypes("go", "", m.IndexedColumns(true).Types()...), func(imp *golang.Import, _ int) {
 		g.AddImport(imp)
 	})
-	lo.ForEach(helper.ImportsForTypes("string", "", m.PKs().Types()...), func(imp *golang.Import, _ int) {
+	lo.ForEach(helper.ImportsForTypes(types.KeyString, "", m.PKs().Types()...), func(imp *golang.Import, _ int) {
 		g.AddImport(imp)
 	})
 	g.AddImport(helper.ImpSlicesForGo(goVersion))

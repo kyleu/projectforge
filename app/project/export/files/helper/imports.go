@@ -69,7 +69,7 @@ func importsForType(ctx string, t types.Type, database string) golang.Imports {
 		return importsForTypeCtxGo(t)
 	case "row":
 		return importsForTypeCtxRow(t, database)
-	case "string":
+	case types.KeyString:
 		return importsForTypeCtxString(t)
 	case "parse":
 		return importsForTypeCtxParse(t)

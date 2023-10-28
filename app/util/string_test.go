@@ -50,6 +50,7 @@ var titleTests = []*StringTest{
 
 func TestToTitle(t *testing.T) {
 	t.Parallel()
+	_ = util.InitAcronyms()
 	for _, test := range titleTests {
 		err := test.Test()
 		if err != nil {

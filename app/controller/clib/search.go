@@ -13,20 +13,21 @@ import (
 	"projectforge.dev/projectforge/views/vsearch"
 )
 
+const searchKey = "search"
+
 func Search(rc *fasthttp.RequestCtx) {
-	controller.Act("search", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+	controller.Act(searchKey, rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		q := string(rc.URI().QueryArgs().Peek("q"))
 		params := &search.Params{Q: q, PS: ps.Params}
 		results, errs := search.Search(ps.Context, params, as, ps)
-		ps.Title = "Search Results"
+		ps.SetTitleAndData("Search Results", results)
 		if q != "" {
 			ps.Title = fmt.Sprintf("[%s] %s", q, ps.Title)
 		}
 		if len(results) == 1 && results[0].URL != "" {
 			return controller.FlashAndRedir(true, "single search result found", results[0].URL, rc, ps)
 		}
-		ps.Data = results
-		ps.DefaultNavIcon = "search"
+		ps.DefaultNavIcon = searchKey
 		bc := []string{"Search||/search"}
 		if q != "" {
 			bc = append(bc, q)

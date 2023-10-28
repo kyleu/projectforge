@@ -16,7 +16,7 @@ import (
 
 const incDel = ", includeDeleted bool"
 
-func ServiceAll(m *model.Model, args *model.Args, addHeader bool, goVersion string, linebreak string) (file.Files, error) {
+func ServiceAll(m *model.Model, args *model.Args, addHeader bool, linebreak string) (file.Files, error) {
 	x, err := Service(m, args, addHeader, linebreak)
 	if err != nil {
 		return nil, err

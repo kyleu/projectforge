@@ -7,7 +7,7 @@ import (
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func GQLAll(models model.Models, enums enum.Enums, addHeader bool, linebreak string) (*file.File, error) {
+func All(models model.Models, enums enum.Enums, addHeader bool, linebreak string) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"app", "gql"}, "generated.graphql")
 	headerBlock := golang.NewBlock("header", "graphql")
 	headerBlock.W("### This file contains generated definitions of generated models and enums")
@@ -24,11 +24,11 @@ func GQLAll(models model.Models, enums enum.Enums, addHeader bool, linebreak str
 
 func enumBlocks(g *golang.Template, enums enum.Enums) {
 	for _, e := range enums {
-		g.AddBlocks(enumBlock(g, e))
+		g.AddBlocks(enumBlock(e))
 	}
 }
 
-func enumBlock(g *golang.Template, e *enum.Enum) *golang.Block {
+func enumBlock(e *enum.Enum) *golang.Block {
 	ret := golang.NewBlock("enum:"+e.Name, "graphql")
 	ret.WB()
 	ret.W("# Enum Type [%s]", e.Title())
@@ -37,11 +37,11 @@ func enumBlock(g *golang.Template, e *enum.Enum) *golang.Block {
 
 func modelBlocks(g *golang.Template, models model.Models, enums enum.Enums) {
 	for _, m := range models {
-		g.AddBlocks(modelBlock(g, m, enums))
+		g.AddBlocks(modelBlock(m, enums))
 	}
 }
 
-func modelBlock(g *golang.Template, m *model.Model, enums enum.Enums) *golang.Block {
+func modelBlock(m *model.Model, _ enum.Enums) *golang.Block {
 	ret := golang.NewBlock("model:"+m.Name, "graphql")
 	ret.WB()
 	ret.W("# Model Class [%s]", m.Title())

@@ -32,7 +32,7 @@ func ThemeColor(rc *fasthttp.RequestCtx) {
 		}
 		th := theme.ColorTheme(col, gamut.Hex(col))
 		ps.SetTitleAndData(fmt.Sprintf("[%s] Theme", col), th)
-		ps.DefaultNavIcon = "gift"
+		ps.DefaultNavIcon = themeIcon
 		return controller.Render(rc, as, &vtheme.Edit{Theme: th, Icon: "app"}, ps, "Themes||/theme", col)
 	})
 }
@@ -48,7 +48,7 @@ func ThemeColorEdit(rc *fasthttp.RequestCtx) {
 		}
 		t := theme.ColorTheme(strings.TrimPrefix(color, "#"), gamut.Hex(color))
 		ps.SetTitleAndData("Edit theme ["+t.Key+"]", t)
-		ps.DefaultNavIcon = "gift"
+		ps.DefaultNavIcon = themeIcon
 		page := &vtheme.Edit{Theme: t, Icon: "app", Exists: as.Themes.FileExists(t.Key)}
 		return controller.Render(rc, as, page, ps, "Themes||/theme", t.Key)
 	})
@@ -60,22 +60,20 @@ func ThemePalette(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = fmt.Sprintf("[%s] Themes", pal)
 		_, span, _ := telemetry.StartSpan(ps.Context, "theme:load", ps.Logger)
 		thms, err := theme.PaletteThemes(pal)
 		span.Complete()
 		if err != nil {
 			return "", err
 		}
+		ps.SetTitleAndData(fmt.Sprintf("[%s] Themes", pal), thms)
 		if string(rc.URI().QueryArgs().Peek("t")) == "go" {
 			ps.Data = strings.Join(lo.Map(thms, func(t *theme.Theme, _ int) string {
 				return t.ToGo()
 			}), util.StringDefaultLinebreak)
 			return controller.Render(rc, as, &views.Debug{}, ps, "Themes")
-		} else {
-			ps.Data = thms
 		}
-		ps.DefaultNavIcon = "gift"
+		ps.DefaultNavIcon = themeIcon
 		return controller.Render(rc, as, &vtheme.Add{Palette: pal, Themes: thms}, ps, "Themes||/theme", "Palette")
 	})
 }
@@ -102,7 +100,7 @@ func ThemePaletteEdit(rc *fasthttp.RequestCtx) {
 			return "", errors.Errorf("invalid theme [%s] for palette [%s]", key, palette)
 		}
 		ps.SetTitleAndData("Edit theme ["+t.Key+"]", t)
-		ps.DefaultNavIcon = "gift"
+		ps.DefaultNavIcon = themeIcon
 		return controller.Render(rc, as, &vtheme.Edit{Theme: t, Icon: "app"}, ps, "Themes||/theme", t.Key)
 	})
 }

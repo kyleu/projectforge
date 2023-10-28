@@ -13,11 +13,13 @@ import (
 	"{{{ .Package }}}/views/vtheme"
 )
 
+const themeIcon = "gift"
+
 func ThemeList(rc *fasthttp.RequestCtx) {
 	controller.Act("theme.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		th := as.Themes.All(ps.Logger)
 		ps.SetTitleAndData("Themes", th)
-		ps.DefaultNavIcon = "gift"
+		ps.DefaultNavIcon = themeIcon
 		return controller.Render(rc, as, &vtheme.List{Themes: th}, ps, "Themes||/theme")
 	})
 }
@@ -50,7 +52,7 @@ func ThemeEdit(rc *fasthttp.RequestCtx) {
 			return "", errors.Errorf("invalid theme [%s]", key)
 		}
 		ps.SetTitleAndData("Edit theme ["+t.Key+"]", t)
-		ps.DefaultNavIcon = "gift"
+		ps.DefaultNavIcon = themeIcon
 		page := &vtheme.Edit{Theme: t, Icon: "app", Exists: as.Themes.FileExists(t.Key)}
 		return controller.Render(rc, as, page, ps, "Themes||/theme", t.Key)
 	})

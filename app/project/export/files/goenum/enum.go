@@ -18,12 +18,12 @@ func Enum(e *enum.Enum, addHeader bool, linebreak string) (*file.File, error) {
 	} else {
 		g.AddBlocks(structComplex(e, g)...)
 		g.AddBlocks(enumStructParse(e))
-		coll, err := structCollection(e, g)
+		coll, err := structCollection(e)
 		if err != nil {
 			return nil, err
 		}
 		g.AddBlocks(coll...)
-		g.AddBlocks(enumValues(e, g))
+		g.AddBlocks(enumValues(e))
 	}
 	return g.Render(addHeader, linebreak)
 }
