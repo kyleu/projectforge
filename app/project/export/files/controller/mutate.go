@@ -20,10 +20,14 @@ func controllerCreateForm(m *model.Model, grp *model.Column, prefix string) *gol
 		decls = append(decls, fmt.Sprintf("%s: %sArg", grp.Proper(), grp.Camel()))
 	}
 	ret.W("\t\tret := &%s{%s}", m.ClassRef(), strings.Join(decls, ", "))
+	ret.W("\t\tif string(rc.QueryArgs().Peek(\"prototype\")) == \"random\" {")
+	ret.W("\t\t\tret = %s.Random()", m.Package)
+	ret.W("\t\t}")
+
 	if grp == nil {
-		ret.W("\t\tps.Title = \"Create [" + m.Proper() + "]\"")
+		ret.W("\t\tps.SetTitleAndData(\"Create [" + m.Proper() + "]\", ret)")
 	} else {
-		ret.W("\t\tps.Title = fmt.Sprintf(\"Create ["+m.Proper()+"] for %s [%%%%s]\", %sArg)", grp.TitleLower(), grp.Camel())
+		ret.W("\t\tps.SetTitleAndData(fmt.Sprintf(\"Create ["+m.Proper()+"] for %s [%%%%s]\", %sArg), ret)", grp.TitleLower(), grp.Camel())
 	}
 	ret.W("\t\tps.Data = ret")
 	ret.W("\t\treturn %sRender(rc, as, &v%s.Edit{Model: ret, IsNew: true}, ps, %s%s, \"Create\")", prefix, m.Package, m.Breadcrumbs(), grp.BC())
@@ -32,12 +36,13 @@ func controllerCreateForm(m *model.Model, grp *model.Column, prefix string) *gol
 	return ret
 }
 
-func controllerCreateFormRandom(m *model.Model, prefix string) *golang.Block {
-	ret := blockFor(m, prefix, nil, "create", "form", "random")
-	ret.W("\t\tret := %s.Random()", m.Package)
-	ret.W("\t\tps.Title = \"Create Random %s\"", m.Proper())
-	ret.W("\t\tps.Data = ret")
-	ret.W("\t\treturn %sRender(rc, as, &v%s.Edit{Model: ret, IsNew: true}, ps, %s, \"Create\")", prefix, m.Package, m.Breadcrumbs())
+func controllerRandom(m *model.Model, prefix string) *golang.Block {
+	ret := blockFor(m, prefix, nil, "random")
+	ret.W("\t\tret, err := as.Services.%s.Random(ps.Context, nil, ps.Logger)", m.Proper())
+	ret.W("\t\tif err != nil {")
+	ret.W("\t\t\treturn \"\", errors.Wrap(err, \"unable to find random %s\")", m.Proper())
+	ret.W("\t\t}")
+	ret.W("\t\treturn ret.WebPath(), nil")
 	ret.W("\t})")
 	ret.W("}")
 	return ret
@@ -72,8 +77,7 @@ func controllerEditForm(m *model.Model, grp *model.Column, prefix string) *golan
 	ret.W("\t\tret, err := %sFromPath(rc, as, ps)", m.Package)
 	ret.WE(2, `""`)
 	checkGrp(ret, grp)
-	ret.W("\t\tps.Title = \"Edit \" + ret.String()")
-	ret.W("\t\tps.Data = ret")
+	ret.W("\t\tps.SetTitleAndData(\"Edit \"+ret.String(), ret)")
 	ret.W("\t\treturn %sRender(rc, as, &v%s.Edit{Model: ret}, ps, %s%s, ret.String())", prefix, m.Package, m.Breadcrumbs(), grp.BC())
 	ret.W("\t})")
 	ret.W("}")

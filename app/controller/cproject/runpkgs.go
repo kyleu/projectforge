@@ -26,8 +26,7 @@ func runPkgs(prj *project.Project, res *action.Result, rc *fasthttp.RequestCtx, 
 	if !ok {
 		return "", errors.Errorf("data is of type [%T], expected [Pkgs]", res.Data)
 	}
-	ps.Title = fmt.Sprintf("[%s] Packages", prj.Key)
-	ps.Data = pkgs
+	ps.SetTitleAndData(fmt.Sprintf("[%s] Packages", prj.Key), pkgs)
 	return controller.Render(rc, as, &vbuild.Packages{Project: prj, BuildResult: res, Packages: pkgs}, ps, "projects", prj.Key, "Packages")
 }
 
@@ -49,8 +48,7 @@ func runAllPkgs(cfg util.ValueMap, prjs project.Projects, rc *fasthttp.RequestCt
 		return "", nil
 	})
 
-	ps.Title = "Packages"
-	ps.Data = pkgs
+	ps.SetTitleAndData("Packages", pkgs)
 	page := &vbuild.PackagesAll{Projects: prjs, Results: ret, Packages: pkgs}
 	return controller.Render(rc, as, page, ps, "projects", "Packages")
 }

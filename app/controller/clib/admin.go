@@ -28,8 +28,7 @@ func Admin(rc *fasthttp.RequestCtx) {
 	}
 	controller.Act(key, rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		if len(path) == 0 {
-			ps.Title = "Administration"
-			ps.Data = "administration"
+			ps.SetTitleAndData("Administration", "administration")
 			return controller.Render(rc, as, &vadmin.Settings{}, ps, "admin")
 		}
 		ps.DefaultNavIcon = "cog"
@@ -64,8 +63,7 @@ func Admin(rc *fasthttp.RequestCtx) {
 			}
 			return controller.FlashAndRedir(true, "wrote heap profile", "/admin", rc, ps)
 		case "logs":
-			ps.Title = "Recent Logs"
-			ps.Data = log.RecentLogs
+			ps.SetTitleAndData("Recent Logs", log.RecentLogs)
 			return controller.Render(rc, as, &vadmin.Logs{Logs: log.RecentLogs}, ps, "admin", "Recent Logs**folder")
 		case "memusage":
 			x := util.DebugMemStats()
@@ -73,24 +71,19 @@ func Admin(rc *fasthttp.RequestCtx) {
 			return controller.Render(rc, as, &vadmin.MemUsage{Mem: x}, ps, "admin", "Memory Usage**desktop")
 		case "modules":
 			di := util.DebugBuildInfo().Deps
-			ps.Title = "Modules"
-			ps.Data = di
+			ps.SetTitleAndData("Modules", di)
 			return controller.Render(rc, as, &vadmin.Modules{Modules: di}, ps, "admin", "Modules**robot")
 		case "request":
-			ps.Title = "Request Debug"
-			ps.Data = cutil.RequestCtxToMap(rc, as, ps)
+			ps.SetTitleAndData("Request Debug", cutil.RequestCtxToMap(rc, as, ps))
 			return controller.Render(rc, as, &vadmin.Request{RC: rc}, ps, "admin", "Request**download")
 		case "routes":
-			ps.Title = "HTTP Routes"
-			ps.Data = AppRoutesList
+			ps.SetTitleAndData("HTTP Routes", AppRoutesList)
 			return controller.Render(rc, as, &vadmin.Routes{Routes: AppRoutesList}, ps, "admin", "Routes**folder")
 		case "session":
-			ps.Title = "Session Debug"
-			ps.Data = ps.Session
+			ps.SetTitleAndData("Session Debug", ps.Session)
 			return controller.Render(rc, as, &vadmin.Session{}, ps, "admin", "Session**play")
 		case "sitemap":
-			ps.Title = "Sitemap"
-			ps.Data = ps.Menu
+			ps.SetTitleAndData("Sitemap", ps.Menu)
 			return controller.Render(rc, as, &vadmin.Sitemap{}, ps, "admin", "Sitemap**graph")
 		case "sockets":
 			return socketRoute(rc, as, ps, path[1:]...)

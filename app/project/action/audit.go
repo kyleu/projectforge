@@ -2,6 +2,7 @@ package action
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -10,6 +11,8 @@ import (
 	"projectforge.dev/projectforge/app/file/diff"
 	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/app/project/export/enum"
+	"projectforge.dev/projectforge/app/project/export/model"
 	"projectforge.dev/projectforge/app/util"
 )
 
@@ -57,11 +60,10 @@ func auditRun(pm *PrjAndMods, ret *Result) error {
 	if err != nil {
 		return err
 	}
+
 	audits := lo.FilterMap(generated, func(g string, _ int) (*diff.Diff, bool) {
-		if !lo.Contains(src, g) {
-			if (!strings.HasSuffix(g, "client.js.map")) && (!strings.HasSuffix(g, "client.css.map")) && (!strings.HasSuffix(g, "file/header.go")) {
-				return &diff.Diff{Path: g, Status: diff.StatusDifferent}, true
-			}
+		if !lo.Contains(src, g) && !isBad(g) {
+			return &diff.Diff{Path: g, Status: diff.StatusDifferent}, true
 		}
 		return nil, false
 	})
@@ -72,6 +74,22 @@ func auditRun(pm *PrjAndMods, ret *Result) error {
 	lo.ForEach(empty, func(e string, _ int) {
 		audits = append(audits, &diff.Diff{Path: e, Status: diff.StatusMissing})
 	})
+
+	if pm.EArgs != nil {
+		lo.ForEach(pm.EArgs.Models, func(m *model.Model, _ int) {
+			names := m.Columns.Names()
+			if uniq := lo.Uniq(names); len(uniq) != len(names) {
+				ret.Errors = append(ret.Errors, fmt.Sprintf("model [%s] contains duplicate column names", m.Name))
+			}
+		})
+		lo.ForEach(pm.EArgs.Enums, func(e *enum.Enum, _ int) {
+			keys := e.Values.Keys()
+			if uniq := lo.Uniq(keys); len(uniq) != len(keys) {
+				ret.Errors = append(ret.Errors, fmt.Sprintf("enum [%s] contains duplicate keys", e.Name))
+			}
+		})
+	}
+
 	sch, err := schemaCheck(pm)
 	if err != nil {
 		return err
@@ -80,4 +98,15 @@ func auditRun(pm *PrjAndMods, ret *Result) error {
 	mr := &module.Result{Keys: pm.Mods.Keys(), Status: "OK", Diffs: audits, Duration: timer.End()}
 	ret.Modules = append(ret.Modules, mr)
 	return nil
+}
+
+var badFiles = []string{"client.js.map", "client.css.map", "file/header.go"}
+
+func isBad(s string) bool {
+	for _, bad := range badFiles {
+		if strings.HasSuffix(s, bad) {
+			return true
+		}
+	}
+	return false
 }

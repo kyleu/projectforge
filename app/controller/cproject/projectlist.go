@@ -35,8 +35,7 @@ func ProjectList(rc *fasthttp.RequestCtx) {
 				return cmp.Compare(l.Port, r.Port)
 			})
 		}
-		ps.Title = "All Projects"
-		ps.Data = prjs
+		ps.SetTitleAndData("All Projects", prjs)
 		switch string(rc.QueryArgs().Peek("fmt")) {
 		case "ports":
 			msgs := lo.Map(prjs, func(p *project.Project, _ int) string {

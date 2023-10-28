@@ -32,8 +32,7 @@ func RunAction(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = fmt.Sprintf("[%s] %s", actT.Title, prj.Title())
-		ps.Data = actT
+		ps.SetTitleAndData(fmt.Sprintf("[%s] %s", actT.Title, prj.Title()), actT)
 		if curr, ok := cfg["path"]; !ok || curr == "" {
 			cfg["path"] = prj.Path
 		}

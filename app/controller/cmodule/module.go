@@ -18,8 +18,7 @@ import (
 func ModuleList(rc *fasthttp.RequestCtx) {
 	controller.Act("module.root", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		mods := as.Services.Modules.Modules()
-		ps.Title = "Module Listing"
-		ps.Data = mods
+		ps.SetTitleAndData("Module Listing", mods)
 		dir := as.Services.Modules.ConfigDirectory()
 		return controller.Render(rc, as, &vmodule.List{Modules: mods, Dir: dir}, ps, "modules")
 	})
@@ -48,8 +47,7 @@ func ModuleDetail(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		dir := mod.Files.Root()
-		ps.Title = mod.Title()
-		ps.Data = mod
+		ps.SetTitleAndData(mod.Title(), mod)
 		return controller.Render(rc, as, &vmodule.Detail{Module: mod, HTML: html, Usages: usages, Dir: dir}, ps, "modules", mod.Key)
 	})
 }
@@ -63,7 +61,6 @@ func getModule(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*mo
 	if err != nil {
 		return nil, err
 	}
-	ps.Title = mod.Title()
-	ps.Data = mod
+	ps.SetTitleAndData(mod.Title(), mod)
 	return mod, nil
 }

@@ -19,6 +19,14 @@ func (s ParamSet) Get(key string, allowed []string, logger util.Logger) *Params 
 	return x.Filtered(allowed, logger).Sanitize(key)
 }
 
+func (s ParamSet) Specifies(key string) bool {
+	x, ok := s[key]
+	if !ok {
+		return false
+	}
+	return !x.IsDefault()
+}
+
 func (s ParamSet) String() string {
 	return strings.Join(lo.Map(lo.Values(s), func(p *Params, _ int) string {
 		return p.String()

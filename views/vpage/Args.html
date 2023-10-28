@@ -28,7 +28,7 @@
           <tbody>
             {%- for _, arg := range p.ArgRes.Args -%}
             {%- code
-              v := p.ArgRes.Values[arg.Key]
+              v := p.ArgRes.Values.GetStringOpt(arg.Key)
               if v == "" {
                 v = arg.Default
               }

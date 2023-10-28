@@ -43,9 +43,12 @@ func (f *Template) Render(addHeader bool, linebreak string) (*file.File, error) 
 	}
 
 	if addHeader {
-		if strings.HasSuffix(f.Name, ".sql") {
+		switch {
+		case strings.HasSuffix(f.Name, ".sql"):
 			content = append(content, fmt.Sprintf("-- %s", file.HeaderContent))
-		} else {
+		case strings.HasSuffix(f.Name, ".graphql"):
+			content = append(content, fmt.Sprintf("# %s", file.HeaderContent))
+		default:
 			content = append(content, fmt.Sprintf("<!-- %s -->", file.HeaderContent))
 		}
 	}

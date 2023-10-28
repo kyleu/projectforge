@@ -42,7 +42,7 @@ func StreamMenu(qw422016 *qt422016.Writer, ps *cutil.PageState) {
 //line views/layout/Menu.html:16
 		components.StreamIndent(qw422016, true, 3)
 //line views/layout/Menu.html:16
-		qw422016.N().S(`<ul class="level-0">`)
+		qw422016.N().S(`<menu class="level-0">`)
 //line views/layout/Menu.html:18
 		for _, i := range ps.Menu {
 //line views/layout/Menu.html:19
@@ -52,7 +52,7 @@ func StreamMenu(qw422016 *qt422016.Writer, ps *cutil.PageState) {
 //line views/layout/Menu.html:21
 		components.StreamIndent(qw422016, true, 3)
 //line views/layout/Menu.html:21
-		qw422016.N().S(`</ul>`)
+		qw422016.N().S(`</menu>`)
 //line views/layout/Menu.html:23
 		components.StreamIndent(qw422016, true, 2)
 //line views/layout/Menu.html:23
@@ -268,7 +268,7 @@ func StreamMenuItem(qw422016 *qt422016.Writer, i *menu.Item, path []string, brea
 //line views/layout/Menu.html:72
 		components.StreamIndent(qw422016, true, indent+3)
 //line views/layout/Menu.html:72
-		qw422016.N().S(`<ul>`)
+		qw422016.N().S(`<menu>`)
 //line views/layout/Menu.html:74
 		for _, i := range i.Children {
 //line views/layout/Menu.html:75
@@ -278,7 +278,7 @@ func StreamMenuItem(qw422016 *qt422016.Writer, i *menu.Item, path []string, brea
 //line views/layout/Menu.html:77
 		components.StreamIndent(qw422016, true, indent+3)
 //line views/layout/Menu.html:77
-		qw422016.N().S(`</ul>`)
+		qw422016.N().S(`</menu>`)
 //line views/layout/Menu.html:79
 		components.StreamIndent(qw422016, true, indent+2)
 //line views/layout/Menu.html:79

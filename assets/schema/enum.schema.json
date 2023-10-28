@@ -52,6 +52,14 @@
               "description": {
                 "description": "used in UI and documentation",
                 "type": "string"
+              },
+              "icon": {
+                "description": "used in UI, often in place of the name",
+                "type": "string"
+              },
+              "extras": {
+                "description": "extra fields attached to enum values",
+                "type": "object"
               }
             }
           }

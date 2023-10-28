@@ -20,8 +20,7 @@ import (
 func HarList(rc *fasthttp.RequestCtx) {
 	controller.Act("har.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := as.Services.Har.List(ps.Logger)
-		ps.Data = ret
-		ps.Title = "Archives"
+		ps.SetTitleAndData("Archives", ret)
 		return controller.Render(rc, as, &vhar.List{Hars: ret}, ps, "har")
 	})
 }
@@ -36,8 +35,7 @@ func HarDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Archive [" + key + "]"
-		ps.Data = ret
+		ps.SetTitleAndData("Archive ["+key+"]", ret)
 		return controller.Render(rc, as, &vhar.Detail{Har: ret}, ps, "har", ret.Key)
 	})
 }
@@ -77,7 +75,7 @@ func HarTrim(rc *fasthttp.RequestCtx) {
 			return controller.Render(rc, as, &vpage.Args{URL: url, Directions: "Select the requests to trim", ArgRes: argRes}, ps, "har", h.Key, "Trim")
 		}
 		originalCount := len(h.Entries)
-		h.Entries, err = h.Entries.Find(&har.Selector{URL: argRes.Values["url"], Mime: argRes.Values["mime"]})
+		h.Entries, err = h.Entries.Find(&har.Selector{URL: argRes.Values.GetStringOpt("url"), Mime: argRes.Values.GetStringOpt("mime")})
 		if err != nil {
 			return "", err
 		}

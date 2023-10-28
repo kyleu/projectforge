@@ -34,7 +34,7 @@
   <em>empty</em>
   {% endif %}
   {% code
-    maxCount := 3
+    maxCount := 5
     display := value
     var extra int
     if len(value) > maxCount {
@@ -49,6 +49,14 @@
   {% endfor %}
   {% if extra > 0 %}, <em>and{% space %}{%d extra %}{% space %}more...</em>{% endif %}
   {% if extra > 0 %}</span>{% endif %}
+{% endstripspace %}{% endfunc %}
+
+{% func DisplayIntArray(value []int) %}{% stripspace %}
+  {%= DisplayStringArray(util.ArrayToStringArray(value)) %}
+{% endstripspace %}{% endfunc %}
+
+{% func DisplayFloatArray(value []float64) %}{% stripspace %}
+  {%= DisplayStringArray(util.ArrayToStringArray(value)) %}
 {% endstripspace %}{% endfunc %}
 
 {% func DisplayDiffs(value util.Diffs) %}{% stripspace %}

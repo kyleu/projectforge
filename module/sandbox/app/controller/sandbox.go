@@ -12,8 +12,7 @@ import (
 
 func SandboxList(rc *fasthttp.RequestCtx) {
 	Act("sandbox.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ps.Title = "Sandboxes"
-		ps.Data = sandbox.AllSandboxes
+		ps.SetTitleAndData("Sandboxes", sandbox.AllSandboxes)
 		return Render(rc, as, &vsandbox.List{}, ps, "sandbox")
 	})
 }
@@ -37,8 +36,7 @@ func SandboxRun(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = sb.Title
-		ps.Data = ret
+		ps.SetTitleAndData(sb.Title, ret)
 		if sb.Key == "testbed" {
 			return Render(rc, as, &vsandbox.Testbed{}, ps, "sandbox", sb.Key)
 		}{{{ if .HasModule "wasmclient" }}}

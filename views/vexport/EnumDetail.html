@@ -47,6 +47,7 @@
         <tr><th>Group</th><td>{%s strings.Join(enum.Group, "/") %}</td></tr>
         {%- endif -%}
         <tr><th>Description</th><td>{%s enum.Description %}</td></tr>
+        <tr><th>Icon</th><td>{%s enum.IconSafe() %}</td></tr>
         {%- if enum.TitleOverride != "" -%}
         <tr><th>Title Override</th><td>{%s enum.TitleOverride %}</td></tr>
         {%- endif -%}
@@ -75,6 +76,9 @@
           <th class="shrink">Key</th>
           <th>Name</th>
           <th>Description</th>
+          {%- for x := range enum.ExtraFields() -%}
+          <th>{%s x %}</th>
+          {%- endfor -%}
         </tr>
       </thead>
       <tbody>
@@ -83,6 +87,9 @@
           <td>{%s v.Key %}</td>
           <td>{%s v.Name %}</td>
           <td>{%s v.Description %}</td>
+          {%- for x := range enum.ExtraFields() -%}
+          <td>{%v v.Extra[x] %}</td>
+          {%- endfor -%}
         </tr>
         {%- endfor -%}
       </tbody>

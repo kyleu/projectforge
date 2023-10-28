@@ -1,0 +1,25 @@
+package goenum
+
+import (
+	"github.com/samber/lo"
+
+	"projectforge.dev/projectforge/app/project/export/enum"
+	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/util"
+)
+
+func structSimple(e *enum.Enum) []*golang.Block {
+	tBlock := golang.NewBlock(e.Proper(), "typealias")
+	tBlock.W("type %s string", e.Proper())
+
+	cBlock := golang.NewBlock(e.Proper(), "constvar")
+	cBlock.W("const (")
+	maxCount := util.StringArrayMaxLength(e.ValuesCamel())
+	pl := len(e.Proper())
+	maxColLength := maxCount + pl
+	lo.ForEach(e.Values, func(v *enum.Value, _ int) {
+		cBlock.W("\t%s %s = %q", util.StringPad(e.Proper()+v.Proper(), maxColLength), e.Proper(), v.Key)
+	})
+	cBlock.W(")")
+	return []*golang.Block{tBlock, cBlock}
+}

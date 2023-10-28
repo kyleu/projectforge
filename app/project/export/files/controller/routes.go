@@ -59,13 +59,13 @@ func routeModelContent(m *model.Model) []string {
 	}
 
 	l := fmt.Sprintf("\tr.GET(\"/%s\", %s.%sList)", m.Route(), pkg, m.Proper())
-	nr := fmt.Sprintf("\tr.GET(\"/%s/random\", %s.%sCreateFormRandom)", m.Route(), pkg, m.Proper())
-	nf := fmt.Sprintf("\tr.GET(\"/%s/new\", %s.%sCreateForm)", m.Route(), pkg, m.Proper())
-	ns := fmt.Sprintf("\tr.POST(\"/%s/new\", %s.%sCreate)", m.Route(), pkg, m.Proper())
+	nf := fmt.Sprintf("\tr.GET(\"/%s/_new\", %s.%sCreateForm)", m.Route(), pkg, m.Proper())
+	ns := fmt.Sprintf("\tr.POST(\"/%s/_new\", %s.%sCreate)", m.Route(), pkg, m.Proper())
+	nr := fmt.Sprintf("\tr.GET(\"/%s/_random\", %s.%sRandom)", m.Route(), pkg, m.Proper())
 	d := fmt.Sprintf("\tr.GET(\"/%s/%s\", %s.%sDetail)", m.Route(), pkn, pkg, m.Proper())
 	ef := fmt.Sprintf("\tr.GET(\"/%s/%s/edit\", %s.%sEditForm)", m.Route(), pkn, pkg, m.Proper())
 	es := fmt.Sprintf("\tr.POST(\"/%s/%s/edit\", %s.%sEdit)", m.Route(), pkn, pkg, m.Proper())
 	dl := fmt.Sprintf("\tr.GET(\"/%s/%s/delete\", %s.%sDelete)", m.Route(), pkn, pkg, m.Proper())
-	out = append(out, l, nr, nf, ns, d, ef, es, dl)
+	out = append(out, l, nf, ns, nr, d, ef, es, dl)
 	return out
 }

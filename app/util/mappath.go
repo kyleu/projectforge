@@ -11,12 +11,9 @@ import (
 )
 
 func (m ValueMap) GetPath(path string, allowMissing bool) (any, error) {
-	if !strings.Contains(path, ".") {
-		ret, ok := m[path]
-		if !ok && !allowMissing {
-			return nil, errors.Errorf("invalid path [%s]", path)
-		}
-		return ret, nil
+	match, ok := m[path]
+	if ok {
+		return match, nil
 	}
 	r := csv.NewReader(strings.NewReader(path)) // to support quoted strings like files."readme.txt".size
 	r.Comma = '.'

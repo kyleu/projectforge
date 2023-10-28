@@ -171,8 +171,7 @@ func DatabaseSQLRun(rc *fasthttp.RequestCtx) {
 			_ = tx.Rollback()
 		}{{{ end }}}
 
-		ps.Title = "SQL Results"
-		ps.Data = results
+		ps.SetTitleAndData("SQL Results", results)
 		page := &vdatabase.Detail{Mode: "sql", Svc: svc, SQL: sql, Columns: columns, Results: results, Timing: elapsed, Commit: commit}
 		return controller.Render(rc, as, page, ps, "admin", "Database||/admin/database", svc.Key+"||/admin/database/"+svc.Key, "Results")
 	})

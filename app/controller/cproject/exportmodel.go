@@ -26,8 +26,7 @@ func ProjectExportModelDetail(rc *fasthttp.RequestCtx) {
 			ps.Logger.Warnf("unable to generate files for model [%s]", mdl.Name)
 		}
 		bc := []string{"projects", prj.Key, fmt.Sprintf("Export||/p/%s/export", prj.Key), mdl.Title()}
-		ps.Title = fmt.Sprintf("[%s] %s", prj.Key, mdl.Name)
-		ps.Data = mdl
+		ps.SetTitleAndData(fmt.Sprintf("[%s] %s", prj.Key, mdl.Name), mdl)
 		return controller.Render(rc, as, &vexport.ModelDetail{Project: prj, Model: mdl, Files: fls}, ps, bc...)
 	})
 }
@@ -41,8 +40,7 @@ func ProjectExportModelSeedData(rc *fasthttp.RequestCtx) {
 		xbc := fmt.Sprintf("Export||/p/%s/export", prj.Key)
 		mbc := fmt.Sprintf("%s||/p/%s/export/models/%s", mdl.Title(), prj.Key, mdl.Name)
 		bc := []string{"projects", prj.Key, xbc, mbc, "Seed Data"}
-		ps.Title = fmt.Sprintf("[%s] %s", prj.Key, mdl.Name)
-		ps.Data = mdl
+		ps.SetTitleAndData(fmt.Sprintf("[%s] %s", prj.Key, mdl.Name), mdl)
 		return controller.Render(rc, as, &vexport.ModelSeedData{Project: prj, Model: mdl}, ps, bc...)
 	})
 }
@@ -55,8 +53,7 @@ func ProjectExportModelNew(rc *fasthttp.RequestCtx) {
 		}
 		mdl := &model.Model{}
 		bc := []string{"projects", prj.Key, fmt.Sprintf("Export||/p/%s/export", prj.Key), "New"}
-		ps.Title = fmt.Sprintf("[%s] New Model", prj.Key)
-		ps.Data = mdl
+		ps.SetTitleAndData(fmt.Sprintf("[%s] New Model", prj.Key), mdl)
 		return controller.Render(rc, as, &vexport.ModelForm{Project: prj, Model: mdl, Examples: model.Examples}, ps, bc...)
 	})
 }
@@ -107,8 +104,7 @@ func ProjectExportModelForm(rc *fasthttp.RequestCtx) {
 			mdl.Title() + "||/p/" + prj.Key + "/export/models/" + mdl.Name,
 			"Edit",
 		}
-		ps.Title = fmt.Sprintf("[%s] %s", prj.Key, mdl.Name)
-		ps.Data = mdl
+		ps.SetTitleAndData(fmt.Sprintf("[%s] %s", prj.Key, mdl.Name), mdl)
 		return controller.Render(rc, as, &vexport.ModelForm{Project: prj, Model: mdl, Examples: model.Examples}, ps, bc...)
 	})
 }

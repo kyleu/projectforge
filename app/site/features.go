@@ -23,8 +23,7 @@ func featuresMenu(mSvc *module.Service) menu.Items {
 
 func featureList(as *app.State, ps *cutil.PageState) (layout.Page, error) {
 	mods := as.Services.Modules.Modules()
-	ps.Title = "Available Modules"
-	ps.Data = mods
+	ps.SetTitleAndData("Available Modules", mods)
 	return &vsite.FeatureList{Modules: mods}, nil
 }
 
@@ -48,8 +47,7 @@ func featureDetail(key string, as *app.State, ps *cutil.PageState) (layout.Page,
 	if err != nil {
 		return nil, err
 	}
-	ps.Title = mod.Title()
-	ps.Data = mod
+	ps.SetTitleAndData(mod.Title(), mod)
 	return &vsite.FeatureDetail{Module: mod, HTML: html}, nil
 }
 

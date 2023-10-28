@@ -64,6 +64,7 @@
 .mt0 {
   margin-top: 0;
 }
+
 .mb {
   margin-bottom: var(--padding);
 }
@@ -343,10 +344,10 @@
   text-decoration: underline;
 }
 
-ul.padded > li {
+ul.padded > li, menu.padded > li {
   padding-top: var(--padding-small);
 }
-ul.padded > li:first-child {
+ul.padded > li:first-child, menu.padded > li:first-child {
   padding-top: 0;
 }
 

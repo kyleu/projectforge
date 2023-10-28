@@ -63,27 +63,6 @@ func (m ValueMap) ParseInt(path string, allowMissing bool, allowEmpty bool) (int
 	return valueInt(path, result, allowEmpty)
 }
 
-func valueInt(path string, r any, allowEmpty bool) (int, error) {
-	switch t := r.(type) {
-	case int:
-		return t, nil
-	case int64:
-		return int(t), nil
-	case float64:
-		return int(t), nil
-	case string:
-		ret, err := strconv.ParseInt(t, 10, 32)
-		return int(ret), err
-	case nil:
-		if !allowEmpty {
-			return 0, errors.Errorf("could not find int for path [%s]", path)
-		}
-		return 0, nil
-	default:
-		return 0, invalidTypeError(path, "int", t)
-	}
-}
-
 func (m ValueMap) ParseString(path string, allowMissing bool, allowEmpty bool) (string, error) {
 	result, err := m.GetPath(path, allowMissing)
 	if err != nil {
@@ -190,4 +169,66 @@ func decorateError(m ValueMap, path string, t string, err error) error {
 
 func invalidTypeError(path string, t string, observed any) error {
 	return errors.Errorf("unable to parse [%s] at path [%s], invalid type [%T]", t, path, observed)
+}
+
+func valueInt(path string, r any, allowEmpty bool) (int, error) {
+	switch t := r.(type) {
+	case int:
+		return t, nil
+	case int64:
+		return int(t), nil
+	case float64:
+		return int(t), nil
+	case string:
+		ret, err := strconv.ParseInt(t, 10, 32)
+		return int(ret), err
+	case nil:
+		if !allowEmpty {
+			return 0, errors.Errorf("could not find int for path [%s]", path)
+		}
+		return 0, nil
+	default:
+		return 0, invalidTypeError(path, "int", t)
+	}
+}
+
+func valueFloat(path string, r any, allowEmpty bool) (float64, error) {
+	switch t := r.(type) {
+	case int:
+		return float64(t), nil
+	case int64:
+		return float64(t), nil
+	case float64:
+		return t, nil
+	case string:
+		ret, err := strconv.ParseFloat(t, 32)
+		return ret, err
+	case nil:
+		if !allowEmpty {
+			return 0, errors.Errorf("could not find float for path [%s]", path)
+		}
+		return 0, nil
+	default:
+		return 0, invalidTypeError(path, "float", t)
+	}
+}
+
+func valueMap(path string, r any, allowEmpty bool) (ValueMap, error) {
+	switch t := r.(type) {
+	case ValueMap:
+		return t, nil
+	case map[string]any:
+		return t, nil
+	case string:
+		return FromJSONMap([]byte(t))
+	case []byte:
+		return FromJSONMap(t)
+	case nil:
+		if !allowEmpty {
+			return nil, errors.Errorf("could not find int for path [%s]", path)
+		}
+		return ValueMap{}, nil
+	default:
+		return nil, invalidTypeError(path, "int", t)
+	}
 }

@@ -79,7 +79,7 @@ func modelRow(m *model.Model, enums enum.Enums, database string) (*golang.Block,
 		if err != nil {
 			return nil, err
 		}
-		ret.W("\t%s %s `db:%q`", util.StringPad(c.Proper(), maxColLength), util.StringPad(gdt, maxTypeLength), c.Name)
+		ret.W("\t%s %s `db:%q json:%q`", util.StringPad(c.Proper(), maxColLength), util.StringPad(gdt, maxTypeLength), c.Name, c.Name)
 	}
 	ret.W("}")
 	return ret, nil
@@ -109,6 +109,11 @@ func modelRowToModel(g *golang.File, m *model.Model, enums enum.Enums, database 
 				if database == util.DatabaseSQLite {
 					decoder = "[]byte(" + decoder + ")"
 				}
+			case types.KeyInt:
+				t = "[]int"
+				if database == util.DatabaseSQLite {
+					decoder = "[]byte(" + decoder + ")"
+				}
 			case types.KeyEnum:
 				if e, _ := model.AsEnumInstance(c.Type.ListType(), enums); e != nil {
 					t = e.ProperPlural()
@@ -119,8 +124,11 @@ func modelRowToModel(g *golang.File, m *model.Model, enums enum.Enums, database 
 			ret.W("\t_ = util.FromJSON(%s, &%sArg)", decoder, c.Camel())
 			refs = append(refs, fmt.Sprintf("%s %sArg", k, c.Camel()))
 		case types.KeyMap, types.KeyValueMap:
-			ret.W("\t%sArg := util.ValueMap{}", c.Camel())
-			ret.W("\t_ = util.FromJSON(r.%s, &%sArg)", c.Proper(), c.Camel())
+			decoder := "r." + c.Proper()
+			if database == util.DatabaseSQLite {
+				decoder = "[]byte(" + decoder + ")"
+			}
+			ret.W("\t%sArg, _ := util.FromJSONMap(%s)", c.Camel(), decoder)
 			refs = append(refs, fmt.Sprintf("%s %sArg", k, c.Camel()))
 		case types.KeyReference:
 			ref, err := model.AsRef(c.Type)

@@ -1,4 +1,8 @@
 #navbar {
+  top: 0;
+  position: fixed;
+  z-index: 1;
+  width: 100%;
   height: var(--nav-height);
   display: flex;
   color: var(--color-nav-foreground);

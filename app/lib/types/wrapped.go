@@ -57,7 +57,7 @@ func (x *Wrapped) EnumKey() string {
 	return e.Ref
 }
 
-func (x *Wrapped) ListType() Type {
+func (x *Wrapped) ListType() *Wrapped {
 	l := TypeAs[*List](x)
 	if l != nil {
 		return l.V

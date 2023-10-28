@@ -14,7 +14,6 @@ import (
 
 func GraphQLIndex(rc *fasthttp.RequestCtx) {
 	Act("graphql.index", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ps.Title = "GraphQL List"
 		keys := as.GraphQL.Keys()
 		if len(keys) == 1 {
 			return "/graphql/" + keys[0], nil
@@ -22,7 +21,7 @@ func GraphQLIndex(rc *fasthttp.RequestCtx) {
 		counts := lo.Map(keys, func(key string, _ int) int {
 			return as.GraphQL.ExecCount(key)
 		})
-		ps.Data = keys
+		ps.SetTitleAndData("GraphQL List", keys)
 		return Render(rc, as, &vgraphql.List{Keys: keys, Counts: counts}, ps, "graphql")
 	})
 }

@@ -49,8 +49,7 @@ func ModuleSearch(rc *fasthttp.RequestCtx) {
 			}
 		}
 
-		ps.Title = fmt.Sprintf("[%s] Module Results", mod.Title())
-		ps.Data = mod
+		ps.SetTitleAndData(fmt.Sprintf("[%s] Module Results", mod.Title()), mod)
 		page := &vmodule.Search{Module: mod, Params: params, Results: res}
 		return controller.Render(rc, as, page, ps, "modules", mod.Key, "Search**archive")
 	})

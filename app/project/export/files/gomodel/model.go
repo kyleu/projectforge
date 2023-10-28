@@ -147,7 +147,7 @@ func modelToData(m *model.Model, cols model.Columns, suffix string, database str
 	ret.W("func (%s *%s) ToData%s() []any {", m.FirstLetter(), m.Proper(), suffix)
 	calls := lo.Map(cols, func(c *model.Column, _ int) string {
 		switch {
-		case c.Type.Key() == types.KeyList && database == util.DatabaseSQLite:
+		case (c.Type.Key() == types.KeyList || c.Type.Key() == types.KeyMap) && database == util.DatabaseSQLite:
 			return fmt.Sprintf("util.ToJSON(%s.%s),", m.FirstLetter(), c.Proper())
 		default:
 			return fmt.Sprintf("%s.%s,", m.FirstLetter(), c.Proper())

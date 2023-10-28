@@ -22,8 +22,7 @@ func ProjectExportOverview(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		bc := []string{"projects", prj.Key, "Export"}
-		ps.Title = fmt.Sprintf("[%s] Export", prj.Key)
-		ps.Data = args
+		ps.SetTitleAndData(fmt.Sprintf("[%s] Export", prj.Key), args)
 		return controller.Render(rc, as, &vexport.Overview{Project: prj, Args: args}, ps, bc...)
 	})
 }

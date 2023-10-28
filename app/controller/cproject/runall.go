@@ -3,11 +3,13 @@ package cproject
 import (
 	"fmt"
 
+	"github.com/samber/lo"
 	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
 	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/project/action"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views"
@@ -31,7 +33,19 @@ func RunAllActions(rc *fasthttp.RequestCtx) {
 		if len(tags) == 0 {
 			prjs = prjs.WithoutTags("all-skip")
 		} else {
-			prjs = prjs.WithTags(tags...)
+			filtered := prjs.WithTags(tags...)
+			if len(filtered) == 0 && len(tags) == 1 {
+				key := tags[0]
+				if key[0] == '-' {
+					prjs = lo.Filter(prjs, func(x *project.Project, _ int) bool {
+						return x.Key != key[1:]
+					})
+				} else {
+					prjs = project.Projects{prjs.Get(key)}
+				}
+			} else {
+				prjs = filtered
+			}
 		}
 		if actS == "start" {
 			return runAllStart(rc, as, ps)
@@ -41,8 +55,7 @@ func RunAllActions(rc *fasthttp.RequestCtx) {
 		if actT.Key == action.TypeBuild.Key {
 			switch cfg.GetStringOpt("phase") {
 			case "":
-				ps.Title = "Build All Projects"
-				ps.Data = prjs
+				ps.SetTitleAndData("Build All Projects", prjs)
 				page := &vaction.Results{T: actT, Cfg: cfg, Projects: prjs, Ctxs: nil, Tags: tags, IsBuild: true}
 				return controller.Render(rc, as, page, ps, "projects", actT.Title)
 			case depsKey:
@@ -54,16 +67,13 @@ func RunAllActions(rc *fasthttp.RequestCtx) {
 
 		results := action.ApplyAll(ps.Context, prjs, actT, cfg, as, ps.Logger)
 
-		ps.Title = fmt.Sprintf("[%s] All Projects", actT.Title)
-		ps.Data = results
+		ps.SetTitleAndData(fmt.Sprintf("[%s] All Projects", actT.Title), results)
 		page := &vaction.Results{T: actT, Cfg: cfg, Projects: prjs, Ctxs: results, Tags: tags}
 		return controller.Render(rc, as, page, ps, "projects", actT.Title)
 	})
 }
 
 func runAllStart(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (string, error) {
-	ps.Title = "Start All"
-	ps.Data = "???"
-	page := &views.Debug{}
-	return controller.Render(rc, as, page, ps, "projects", "Start")
+	ps.SetTitleAndData("Start All", "TODO")
+	return controller.Render(rc, as, &views.Debug{}, ps, "projects", "Start")
 }

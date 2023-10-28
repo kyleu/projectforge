@@ -22,8 +22,7 @@ func ProjectExportDeriveForm(rc *fasthttp.RequestCtx) {
 		}
 
 		bc := []string{"projects", prj.Key, fmt.Sprintf("Export||/p/%s/export", prj.Key), "Derive"}
-		ps.Title = fmt.Sprintf("[%s] Derive Model", prj.Key)
-		ps.Data = &model.Model{}
+		ps.SetTitleAndData(fmt.Sprintf("[%s] Derive Model", prj.Key), &model.Model{})
 		return controller.Render(rc, as, &vexport.DeriveForm{Project: prj}, ps, bc...)
 	})
 }
@@ -64,8 +63,7 @@ func ProjectExportDerive(rc *fasthttp.RequestCtx) {
 				}
 			}
 		}
-		ps.Title = fmt.Sprintf("[%s] Derive Model", prj.Key)
-		ps.Data = res
+		ps.SetTitleAndData(fmt.Sprintf("[%s] Derive Model", prj.Key), res)
 		bc := []string{"projects", prj.Key, fmt.Sprintf("Export||/p/%s/export", prj.Key), "Derive"}
 		return controller.Render(rc, as, &vexport.DeriveForm{Project: prj, Result: res, Form: frm}, ps, bc...)
 	})

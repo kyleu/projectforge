@@ -1,9 +1,9 @@
 /* Content managed by Project Forge, see [projectforge.md] for details. */
 #flash-container {
-  position: absolute;
+  position: fixed;
   top: 0;
   right: 0;
-  z-index: 1;
+  z-index: 2;
 }
 
 #flash-container input:checked ~ * {

@@ -43,7 +43,7 @@ func (f *FileSystem) WriteFile(path string, content []byte, mode FileMode, overw
 	return nil
 }
 
-func (f *FileSystem) FileWriter(fn string, createIfNeeded bool) (io.Writer, error) {
+func (f *FileSystem) FileWriter(fn string, createIfNeeded bool, appendMode bool) (io.Writer, error) {
 	p := f.getPath(fn)
 	if createIfNeeded && !f.Exists(p) {
 		_, err := f.f.Create(p)
@@ -51,5 +51,9 @@ func (f *FileSystem) FileWriter(fn string, createIfNeeded bool) (io.Writer, erro
 			return nil, err
 		}
 	}
-	return f.f.OpenFile(p, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
+	mode := os.O_WRONLY
+	if appendMode {
+		mode = os.O_APPEND | os.O_WRONLY
+	}
+	return f.f.OpenFile(p, mode, os.ModeAppend)
 }

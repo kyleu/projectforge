@@ -4,6 +4,8 @@ package cutil
 import (
 	"github.com/samber/lo"
 	"github.com/valyala/fasthttp"
+
+	"projectforge.dev/projectforge/app/util"
 )
 
 type Arg struct {
@@ -18,9 +20,9 @@ type Arg struct {
 type Args []*Arg
 
 type ArgResults struct {
-	Args    Args              `json:"args"`
-	Values  map[string]string `json:"values"`
-	Missing []string          `json:"missing,omitempty"`
+	Args    Args          `json:"args"`
+	Values  util.ValueMap `json:"values"`
+	Missing []string      `json:"missing,omitempty"`
 }
 
 func (a *ArgResults) HasMissing() bool {
@@ -28,7 +30,7 @@ func (a *ArgResults) HasMissing() bool {
 }
 
 func CollectArgs(rc *fasthttp.RequestCtx, args Args) *ArgResults {
-	ret := make(map[string]string, len(args))
+	ret := make(util.ValueMap, len(args))
 	var missing []string
 	lo.ForEach(args, func(arg *Arg, _ int) {
 		qa := rc.URI().QueryArgs()

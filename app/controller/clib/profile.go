@@ -27,8 +27,7 @@ func ProfileSite(rc *fasthttp.RequestCtx) {
 }
 
 func profileAction(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (string, error) {
-	ps.Title = "Profile"
-	ps.Data = ps.Profile
+	ps.SetTitleAndData("Profile", ps.Profile)
 	thm := as.Themes.Get(ps.Profile.Theme, ps.Logger)
 
 	redir := "/"

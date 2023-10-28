@@ -25,8 +25,7 @@ func ProjectDetail(rc *fasthttp.RequestCtx) {
 		execs := as.Services.Exec.Execs.GetByKey(prj.Key)
 		fs, _ := as.Services.Projects.GetFilesystem(prj)
 		validation := project.Validate(prj, fs, as.Services.Modules.Deps(), as.Services.Modules.Dangerous())
-		ps.Title = fmt.Sprintf("%s (project %s)", prj.Title(), prj.Key)
-		ps.Data = prj
+		ps.SetTitleAndData(fmt.Sprintf("%s (project %s)", prj.Title(), prj.Key), prj)
 		page := &vproject.Detail{Project: prj, Modules: mods, GitResult: gitStatus, Execs: execs, Validation: validation}
 		return controller.Render(rc, as, page, ps, "projects", prj.Key)
 	})
@@ -35,8 +34,7 @@ func ProjectDetail(rc *fasthttp.RequestCtx) {
 func ProjectForm(rc *fasthttp.RequestCtx) {
 	controller.Act("project.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prj := project.NewProject("", ".")
-		ps.Title = "New Project"
-		ps.Data = prj
+		ps.SetTitleAndData("New Project", prj)
 		return controller.Render(rc, as, &vproject.Edit{Project: prj}, ps, "projects", "New")
 	})
 }
@@ -85,8 +83,7 @@ func ProjectEdit(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = fmt.Sprintf("Edit %s (project %s)", prj.Title(), prj.Key)
-		ps.Data = prj
+		ps.SetTitleAndData(fmt.Sprintf("Edit %s (project %s)", prj.Title(), prj.Key), prj)
 		return controller.Render(rc, as, &vproject.Edit{Project: prj}, ps, "projects", prj.Key)
 	})
 }

@@ -152,7 +152,7 @@ func exportViewDetailReverseRelations(ret *golang.Block, m *model.Model, models 
 		tgtCols := rel.TgtColumns(tgt)
 		tgtName := fmt.Sprintf("%sBy%s", tgt.ProperPlural(), strings.Join(tgtCols.ProperNames(), ""))
 		ret.W("      <li>")
-		ret.W("        <input id=\"accordion-%s\" type=\"checkbox\" hidden />", tgtName)
+		ret.W("        <input id=\"accordion-%s\" type=\"checkbox\" hidden=\"hidden\"{%%%% if p.Params.Specifies(`%s`) %%%%} checked=\"checked\"{%%%% endif %%%%} />", tgtName, tgt.Package)
 		ret.W("        <label for=\"accordion-%s\">", tgtName)
 		ret.W("          {%%= components.ExpandCollapse(3, ps) %%}")
 		ret.W("          {%%%%= components.SVGRef(`%s`, 16, 16, `icon`, ps) %%%%}", tgt.Icon)

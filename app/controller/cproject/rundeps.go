@@ -32,8 +32,7 @@ func runDeps(prj *project.Project, res *action.Result, rc *fasthttp.RequestCtx, 
 	if !ok {
 		return "", errors.Errorf("data is of type [%T], expected [Dependencies]", res.Data)
 	}
-	ps.Title = fmt.Sprintf("[%s] Dependencies", prj.Key)
-	ps.Data = deps
+	ps.SetTitleAndData(fmt.Sprintf("[%s] Dependencies", prj.Key), deps)
 	return controller.Render(rc, as, &vbuild.Deps{Project: prj, BuildResult: res, Dependencies: deps}, ps, "projects", prj.Key, "Dependency Management")
 }
 
@@ -61,8 +60,7 @@ func runAllDeps(cfg util.ValueMap, prjs project.Projects, tags []string, rc *fas
 	if err != nil {
 		return "", errors.Wrap(err, "")
 	}
-	ps.Title = "Dependency Merge"
-	ps.Data = ret
+	ps.SetTitleAndData("Dependency Merge", ret)
 	page := &vbuild.DepMap{Message: msg, Result: ret, Tags: tags}
 	return controller.Render(rc, as, page, ps, "projects", "Dependencies")
 }

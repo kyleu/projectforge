@@ -18,8 +18,7 @@ import (
 
 func TestList(rc *fasthttp.RequestCtx) {
 	controller.Act("test.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ps.Title = "Tests"
-		ps.Data = []string{"bootstrap", "diff"}
+		ps.SetTitleAndData("Tests", []string{"bootstrap", "diff"})
 		return controller.Render(rc, as, &vtest.List{}, ps, "Tests")
 	})
 }
@@ -30,8 +29,7 @@ func TestRun(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Test [" + key + "]"
-		ps.Data = key
+		ps.SetTitleAndData("Test ["+key+"]", key)
 		bc := []string{"Tests||/test"}
 
 		var page layout.Page
@@ -41,8 +39,7 @@ func TestRun(rc *fasthttp.RequestCtx) {
 				return x.Calc()
 			})
 			bc = append(bc, "Diff")
-			ps.Title = "Diff Test"
-			ps.Data = ret
+			ps.SetTitleAndData("Diff Test", ret)
 			page = &vtest.Diffs{Results: ret}
 		case "bootstrap":
 			cfg := util.ValueMap{}

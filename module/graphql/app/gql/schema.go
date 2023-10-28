@@ -2,33 +2,63 @@
 package gql
 
 import (
-	_ "embed"
+	"embed"
+	"fmt"
+	"path"
+	"strings"
+
+	"github.com/samber/lo"
 
 	"{{{ .Package }}}/app/lib/graphql"
 	"{{{ .Package }}}/app/util"
 )
 
-//go:embed schema.graphql
-var schemaString string
+//go:embed *
+var FS embed.FS
 
 type Schema struct {
 	svc *graphql.Service
 	sch string
 }
 
-func NewSchema(svc *graphql.Service) *Schema {
-	ret := &Schema{svc: svc, sch: schemaString}
-	err := ret.svc.RegisterStringSchema(util.AppKey, util.AppName, ret.sch, ret)
+func NewSchema(svc *graphql.Service) (*Schema, error) {
+	sch, err := read("schema.graphql", 0)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
-	return ret
+	ret := &Schema{svc: svc, sch: sch}
+	err = ret.svc.RegisterStringSchema(util.AppKey, util.AppName, ret.sch, ret)
+	if err != nil {
+		return nil, err
+	}
+	return ret, nil
 }
 
-func (s *Schema) Hello() string {
-	return "Howdy!"
-}
+const (
+	includePrefix = "## include["
+	includeSuffix = "]"
+)
 
-func (s *Schema) Kill() string {
-	return "OK!"
+func read(fn string, depth int) (string, error) {
+	b, err := FS.ReadFile(fn)
+	if err != nil {
+		return "", err
+	}
+	lines := util.StringSplitLines(string(b))
+	converted := lo.Map(lines, func(l string, _ int) string {
+		s, e := strings.Index(l, includePrefix), strings.Index(l, includeSuffix)
+		if s == -1 {
+			return l
+		}
+		tgt, _ := path.Split(fn)
+		tgt = path.Join(tgt, l[s+len(includePrefix):e])
+		child, err := read(tgt, depth+1)
+		if err != nil {
+			return fmt.Sprintf("ERROR: %+v", err)
+		}
+
+		return child
+	})
+	ret := strings.Join(converted, "\n")
+	return ret, nil
 }

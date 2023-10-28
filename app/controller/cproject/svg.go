@@ -35,8 +35,7 @@ func SVGList(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to list project SVGs")
 		}
 
-		ps.Title = "SVG Tools"
-		ps.Data = icons
+		ps.SetTitleAndData("SVG Tools", icons)
 		return controller.Render(rc, as, &vsvg.List{Project: prj, Keys: icons, Contents: contents}, ps, "projects", prj.Key, "SVG")
 	})
 }
@@ -52,8 +51,7 @@ func SVGDetail(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to read SVG ["+key+"]")
 		}
 		x := &svg.SVG{Key: key, Markup: content}
-		ps.Title = "SVG [" + key + "]"
-		ps.Data = x
+		ps.SetTitleAndData("SVG ["+key+"]", x)
 		return controller.Render(rc, as, &vsvg.View{Project: prj, SVG: x}, ps, "projects", prj.Key, "SVG||/svg/"+prj.Key, key)
 	})
 }
@@ -104,8 +102,7 @@ func SVGAdd(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "SVG [" + x.Key + "]"
-		ps.Data = x
+		ps.SetTitleAndData("SVG ["+x.Key+"]", x)
 		return controller.Render(rc, as, &vsvg.View{Project: prj, SVG: x}, ps, "projects", prj.Key, "SVG||/svg/"+prj.Key, x.Key)
 	})
 }

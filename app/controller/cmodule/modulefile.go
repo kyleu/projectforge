@@ -20,8 +20,7 @@ func ModuleFileRoot(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = fmt.Sprintf("[%s] Files", mod.Key)
-		ps.Data = mod
+		ps.SetTitleAndData(fmt.Sprintf("[%s] Files", mod.Key), mod)
 		return controller.Render(rc, as, &vmodule.Files{Module: mod}, ps, "modules", mod.Key, "Files**folder")
 	})
 }
@@ -45,8 +44,7 @@ func ModuleFile(rc *fasthttp.RequestCtx) {
 			b := x + bcAppend
 			bc = append(bc, b)
 		})
-		ps.Title = fmt.Sprintf("[%s] /%s", mod.Key, strings.Join(path, "/"))
-		ps.Data = pathS
+		ps.SetTitleAndData(fmt.Sprintf("[%s] /%s", mod.Key, strings.Join(path, "/")), pathS)
 		return controller.Render(rc, as, &vmodule.Files{Module: mod, Path: path}, ps, bc...)
 	})
 }

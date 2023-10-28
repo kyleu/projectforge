@@ -1,5 +1,5 @@
 .menu-container {
-  position: absolute;
+  position: fixed;
   top: var(--nav-height);
   left: 0;
   width: var(--menu-width);
@@ -25,10 +25,12 @@
 }
 
 .menu-container .menu {
+  color: var(--color-menu-foreground);
+  background-color: var(--color-menu-background);
   padding: var(--padding) 0 calc(var(--padding) * 2) 0;
 }
 
-.menu-container ul {
+.menu-container ul, .menu-container menu {
   margin: 0;
   list-style: none;
   padding: 0;

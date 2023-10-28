@@ -32,13 +32,12 @@ func Handle(path []string, as *app.State, ps *cutil.PageState) (string, layout.P
 		ps.HeaderContent = fmt.Sprintf(msg, util.AppSource, util.AppSource, util.AppSource, util.AppSource)
 		return "", &vsite.GoSource{}, path, nil
 	case keyAbout:
-		ps.Title = "About " + util.AppName
-		ps.Data = util.AppName + " v" + as.BuildInfo.Version
+		ps.SetTitleAndData("About "+util.AppName, util.AppName+" v"+as.BuildInfo.Version)
 		page = &views.About{}
 	case keyDownload:
 		dls := download.GetLinks(as.BuildInfo.Version)
-		ps.Title = "Downloads"
-		ps.Data = util.ValueMap{"base": "https://{{{ .Package }}}/releases/download/v" + as.BuildInfo.Version, "links": dls}
+		data := util.ValueMap{"base": "https://{{{ .Package }}}/releases/download/v" + as.BuildInfo.Version, "links": dls}
+		ps.SetTitleAndData("Downloads", data)
 		page = &vsite.Download{Links: dls}
 	case keyInstall:
 		page, err = mdTemplate("This static page contains installation instructions", "installation.md", "code", ps)
@@ -74,8 +73,7 @@ func mdTemplate(description string, path string, icon string, ps *cutil.PageStat
 	if err != nil {
 		return nil, err
 	}
-	ps.Data = siteData(title, "description", description)
-	ps.Title = title
+	ps.SetTitleAndData(title, siteData(title, "description", description))
 	page := &vsite.MarkdownPage{Title: title, HTML: html}
 	return page, nil
 }

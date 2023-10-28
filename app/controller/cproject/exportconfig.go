@@ -26,8 +26,7 @@ func ProjectExportConfigForm(rc *fasthttp.RequestCtx) {
 		ps.Data = args
 
 		bc := []string{"projects", prj.Key, "Export"}
-		ps.Title = fmt.Sprintf("[%s] Export", prj.Key)
-		ps.Data = args.Config
+		ps.SetTitleAndData(fmt.Sprintf("[%s] Export", prj.Key), args.Config)
 		return controller.Render(rc, as, &vexport.ConfigForm{Project: prj, Cfg: args.Config}, ps, bc...)
 	})
 }

@@ -7,6 +7,7 @@ import (
 	"reflect"
 	"slices"
 
+	"github.com/pkg/errors"
 	"github.com/samber/lo"
 )
 
@@ -14,6 +15,12 @@ func StringArrayMaxLength(a []string) int {
 	return len(lo.MaxBy(a, func(x string, max string) bool {
 		return len(x) > len(max)
 	}))
+}
+
+func ArrayToStringArray[T any](a []T) []string {
+	return lo.Map(a, func(x T, _ int) string {
+		return fmt.Sprint(x)
+	})
 }
 
 func StringArrayQuoted(a []string) []string {
@@ -126,4 +133,16 @@ func ArrayLastN[V any](items []V, n int) []V {
 		return items
 	}
 	return items[len(items)-n:]
+}
+
+func MapError[T any, U any](xa []T, f func(el T, idx int) (U, error)) ([]U, error) {
+	ret := make([]U, 0, len(xa))
+	for i, x := range xa {
+		candidate, err := f(x, i)
+		if err != nil {
+			return nil, errors.Wrapf(err, "error processing element [%d]", i)
+		}
+		ret = append(ret, candidate)
+	}
+	return ret, nil
 }

@@ -2,6 +2,7 @@ package gomodel
 
 import (
 	"fmt"
+	"slices"
 
 	"github.com/pkg/errors"
 
@@ -20,7 +21,7 @@ func modelRandom(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	ret.W("\treturn &%s{", m.Proper())
 	maxColLength := m.Columns.MaxCamelLength() + 1
 	for _, col := range m.Columns {
-		rnd, err := randFor(col, m.PackageWithGroup(""), enums)
+		rnd, err := randForCol(col, m.PackageWithGroup(""), enums)
 		if err != nil {
 			return nil, err
 		}
@@ -31,14 +32,18 @@ func modelRandom(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	return ret, nil
 }
 
-func randFor(col *model.Column, pkg string, enums enum.Enums) (string, error) {
-	switch col.Type.Key() {
+func randForCol(col *model.Column, pkg string, enums enum.Enums) (string, error) {
+	return randForType(col.Type, col.Format, col.Nullable, col.Tags, pkg, enums)
+}
+
+func randForType(t *types.Wrapped, format string, nullable bool, tags []string, pkg string, enums enum.Enums) (string, error) {
+	switch t.Key() {
 	case types.KeyAny:
 		return types.KeyNil, nil
 	case types.KeyBool:
 		return "util.RandomBool()", nil
 	case types.KeyEnum:
-		et, err := model.AsEnumInstance(col.Type, enums)
+		et, err := model.AsEnumInstance(t, enums)
 		if err != nil {
 			return "", err
 		}
@@ -57,10 +62,11 @@ func randFor(col *model.Column, pkg string, enums enum.Enums) (string, error) {
 	case types.KeyFloat:
 		return "util.RandomFloat(1000)", nil
 	case types.KeyList:
-		lt := col.Type.ListType()
+		lt := t.ListType()
 		switch lt.Key() {
-		case types.KeyString:
-			return "[]string{util.RandomString(12), util.RandomString(12)}", nil
+		case types.KeyString, types.KeyInt, types.KeyFloat:
+			x, _ := randForType(lt, "", false, nil, pkg, enums)
+			return fmt.Sprintf("[]%s{%s, %s}", lt.Key(), x, x), nil
 		case types.KeyEnum:
 			e, _ := model.AsEnumInstance(lt, enums)
 			if e != nil {
@@ -74,7 +80,7 @@ func randFor(col *model.Column, pkg string, enums enum.Enums) (string, error) {
 	case types.KeyReference:
 		return nilKey, nil
 	case types.KeyString:
-		switch col.Format {
+		switch format {
 		case model.FmtHTML.Key:
 			return "\"<h3>\" + util.RandomString(6) + \"</h3>\"", nil
 		case model.FmtIcon.Key:
@@ -85,19 +91,19 @@ func randFor(col *model.Column, pkg string, enums enum.Enums) (string, error) {
 			return "util.RandomString(12)", nil
 		}
 	case types.KeyDate, types.KeyTimestamp:
-		if col.HasTag("deleted") {
+		if slices.Contains(tags, "deleted") {
 			return types.KeyNil, nil
 		}
-		if col.Nullable {
+		if nullable {
 			return "util.TimeCurrentP()", nil
 		}
 		return "util.TimeCurrent()", nil
 	case types.KeyUUID:
-		if col.Nullable {
+		if nullable {
 			return "util.UUIDP()", nil
 		}
 		return "util.UUID()", nil
 	default:
-		return "", errors.Errorf("unhandled x type [%s]", col.Type.String())
+		return "", errors.Errorf("unhandled x type [%s]", t.String())
 	}
 }

@@ -9,7 +9,7 @@ import (
 	"github.com/samber/lo"
 )
 
-func (m ValueMap) ParseArray(path string, allowMissing bool, allowEmpty bool) ([]any, error) {
+func (m ValueMap) ParseArray(path string, allowMissing bool, allowEmpty bool, coerce bool) ([]any, error) {
 	result, err := m.GetPath(path, allowMissing)
 	if err != nil {
 		return nil, errors.Wrap(err, "invalid array")
@@ -22,7 +22,10 @@ func (m ValueMap) ParseArray(path string, allowMissing bool, allowEmpty bool) ([
 		var ret []any
 		err := FromJSON([]byte(t), &ret)
 		if err != nil {
-			return nil, decorateError(m, path, "time", errors.Wrap(err, "invalid JSON"))
+			if coerce {
+				return lo.ToAnySlice(StringSplitAndTrim(t, ",")), nil
+			}
+			return nil, decorateError(m, path, "json", errors.Wrap(err, "invalid JSON string"))
 		}
 		return ret, err
 	case []byte:
@@ -32,7 +35,10 @@ func (m ValueMap) ParseArray(path string, allowMissing bool, allowEmpty bool) ([
 		var ret []any
 		err := FromJSON(t, &ret)
 		if err != nil {
-			return nil, decorateError(m, path, "time", errors.Wrap(err, "invalid JSON"))
+			if coerce {
+				return lo.ToAnySlice(StringSplitAndTrim(string(t), ",")), nil
+			}
+			return nil, decorateError(m, path, "json", errors.Wrap(err, "invalid JSON bytes"))
 		}
 		return ret, err
 	case []any:
@@ -60,8 +66,18 @@ func (m ValueMap) ParseArray(path string, allowMissing bool, allowEmpty bool) ([
 	}
 }
 
+func (m ValueMap) ParseArrayString(path string, allowMissing bool, allowEmpty bool) ([]string, error) {
+	a, err := m.ParseArray(path, allowMissing, allowEmpty, true)
+	if err != nil {
+		return nil, err
+	}
+	return lo.Map(a, func(x any, _ int) string {
+		return fmt.Sprint(x)
+	}), nil
+}
+
 func (m ValueMap) ParseArrayInt(path string, allowMissing bool, allowEmpty bool) ([]int, error) {
-	a, err := m.ParseArray(path, allowMissing, allowEmpty)
+	a, err := m.ParseArray(path, allowMissing, allowEmpty, true)
 	if err != nil {
 		return nil, err
 	}
@@ -76,12 +92,34 @@ func (m ValueMap) ParseArrayInt(path string, allowMissing bool, allowEmpty bool)
 	return ia, nil
 }
 
-func (m ValueMap) ParseArrayString(path string, allowMissing bool, allowEmpty bool) ([]string, error) {
-	a, err := m.ParseArray(path, allowMissing, allowEmpty)
+func (m ValueMap) ParseArrayFloat(path string, allowMissing bool, allowEmpty bool) ([]float64, error) {
+	a, err := m.ParseArray(path, allowMissing, allowEmpty, true)
 	if err != nil {
 		return nil, err
 	}
-	return lo.Map(a, func(x any, _ int) string {
-		return fmt.Sprint(x)
-	}), nil
+	fa := make([]float64, 0, len(a))
+	for idx, x := range a {
+		f, err := valueFloat(fmt.Sprintf("%s.%d", path, idx), x, allowEmpty)
+		if err != nil {
+			return nil, err
+		}
+		fa = append(fa, f)
+	}
+	return fa, nil
+}
+
+func (m ValueMap) ParseArrayMap(path string, allowMissing bool, allowEmpty bool) ([]ValueMap, error) {
+	a, err := m.ParseArray(path, allowMissing, allowEmpty, false)
+	if err != nil {
+		return nil, err
+	}
+	ma := make([]ValueMap, 0, len(a))
+	for idx, x := range a {
+		m, err := valueMap(fmt.Sprintf("%s.%d", path, idx), x, allowEmpty)
+		if err != nil {
+			return nil, err
+		}
+		ma = append(ma, m)
+	}
+	return ma, nil
 }

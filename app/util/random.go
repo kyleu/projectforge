@@ -31,20 +31,12 @@ func RandomInt(maxExclusive int) int {
 }
 
 func RandomFloat(maxExclusive int) float64 {
-	maxCount := big.NewInt(int64(maxExclusive) * 1000)
-	ret, err := rand.Int(rand.Reader, maxCount)
-	if err != nil {
-		panic(errMsg(err))
-	}
-	return float64(ret.Int64()) / 1000
+	ret := RandomInt(maxExclusive * 1000)
+	return float64(ret) / 1000
 }
 
 func RandomBool() bool {
-	ret, err := rand.Int(rand.Reader, big.NewInt(1))
-	if err != nil {
-		panic(errMsg(err))
-	}
-	return ret.Int64() == 1
+	return RandomInt(2) == 0
 }
 
 func RandomValueMap(keys int) ValueMap {
@@ -68,13 +60,8 @@ func RandomBytes(size int) []byte {
 func RandomDate() time.Time {
 	from := TimeCurrentUnix()
 	to := TimeCurrent().AddDate(2, 0, 0).Unix()
-
-	rnd, err := rand.Int(rand.Reader, big.NewInt(to-from))
-	if err != nil {
-		panic(errMsg(err))
-	}
-
-	return time.Unix(from+rnd.Int64(), 0)
+	rnd := RandomInt(int(to - from))
+	return time.Unix(from+int64(rnd), 0)
 }
 
 func RandomDiffs(size int) Diffs {

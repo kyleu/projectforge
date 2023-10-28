@@ -28,14 +28,12 @@ func Welcome(rc *fasthttp.RequestCtx) {
 		}
 		ch := checks.CheckAll(ps.Context, as.Services.Modules.Modules().Keys(), ps.Logger, checks.Core(false).Keys()...).Errors()
 		if len(ch) > 0 && (!override) {
-			ps.Title = "Missing Dependencies"
-			ps.Data = ch.ErrorSummary()
+			ps.SetTitleAndData("Missing Dependencies", ch.ErrorSummary())
 			ps.HideMenu = true
 			return controller.Render(rc, as, &vwelcome.DepError{Results: ch}, ps, "Welcome||/welcome")
 		}
 
-		ps.Title = "Welcome to " + util.AppName
-		ps.Data = welcomeMessage
+		ps.SetTitleAndData("Welcome to "+util.AppName, welcomeMessage)
 		ps.HideMenu = true
 		return controller.Render(rc, as, &vwelcome.Welcome{Project: as.Services.Projects.Default()}, ps, "Welcome||/welcome")
 	})

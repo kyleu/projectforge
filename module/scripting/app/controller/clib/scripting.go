@@ -15,9 +15,8 @@ import (
 
 func ScriptingList(rc *fasthttp.RequestCtx) {
 	controller.Act("scripting.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ps.Title = "Scripting"
 		ret, sizes := as.Services.Script.ListScriptSizes(ps.Logger)
-		ps.Data = ret
+		ps.SetTitleAndData("Scripting", ret)
 		return controller.Render(rc, as, &vscripting.List{Scripts: ret, Sizes: sizes}, ps, "scripting")
 	})
 }
@@ -86,8 +85,7 @@ func ScriptingForm(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Edit [" + key + "]"
-		ps.Data = sc
+		ps.SetTitleAndData("Edit ["+key+"]", sc)
 		return controller.Render(rc, as, &vscripting.Form{Path: key, Content: sc}, ps, "scripting", key, "Edit")
 	})
 }

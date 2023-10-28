@@ -62,6 +62,25 @@ func (e *Enum) Camel() string {
 	return util.StringToLowerCamel(e.Name)
 }
 
+func (e *Enum) ExtraFields() map[string]string {
+	ret := map[string]string{}
+	for _, v := range e.Values {
+		for k, v := range v.Extra {
+			typ := ""
+			switch v.(type) {
+			case string:
+				typ = "string"
+			case float64:
+				typ = "float"
+			case int, int32, int64:
+				typ = "int"
+			}
+			ret[k] = typ
+		}
+	}
+	return ret
+}
+
 func (e *Enum) PackageWithGroup(prefix string) string {
 	if len(e.Group) == 0 {
 		if len(prefix) > 0 && !strings.HasSuffix(prefix, "/") {

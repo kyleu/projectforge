@@ -24,8 +24,8 @@ func ChangeDir(rc *fasthttp.RequestCtx) {
 		}
 		ps.HideMenu = true
 		argRes := cutil.CollectArgs(rc, changeDirArgs)
-		dir, ok := argRes.Values["dir"]
-		if !ok || dir == "" || argRes.HasMissing() {
+		dir, err := argRes.Values.GetString("dir", false)
+		if err != nil || dir == "" || argRes.HasMissing() {
 			ps.Data = argRes
 			d, _ := filepath.Abs(".")
 			argRes.Values["dir"] = d
@@ -33,7 +33,7 @@ func ChangeDir(rc *fasthttp.RequestCtx) {
 			return controller.Render(rc, as, &vpage.Args{URL: "/welcome/changedir", Directions: msg, ArgRes: argRes}, ps, "Welcome")
 		}
 
-		err := os.Chdir(dir)
+		err = os.Chdir(dir)
 		if err != nil {
 			fs, err := filesystem.NewFileSystem(dir, false, "")
 			if err != nil {

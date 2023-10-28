@@ -9,16 +9,20 @@ import (
 )
 
 type valueMarshal struct {
-	Key         string `json:"key"`
-	Name        string `json:"name,omitempty"`
-	Description string `json:"description,omitempty"`
-	Default     bool   `json:"default,omitempty"`
+	Key         string        `json:"key"`
+	Name        string        `json:"name,omitempty"`
+	Description string        `json:"description,omitempty"`
+	Icon        string        `json:"icon,omitempty"`
+	Default     bool          `json:"default,omitempty"`
+	Extra       util.ValueMap `json:"extra,omitempty"`
 }
 
 type Value struct {
 	Key         string
 	Name        string
 	Description string
+	Icon        string
+	Extra       util.ValueMap
 	Default     bool
 	Simple      bool
 }
@@ -31,7 +35,8 @@ func (x *Value) MarshalJSON() ([]byte, error) {
 	if x.Simple {
 		return util.ToJSONBytes(x.Key, false), nil
 	}
-	return util.ToJSONBytes(&valueMarshal{Key: x.Key, Name: x.Name, Description: x.Description, Default: x.Default}, false), nil
+	marshaller := &valueMarshal{Key: x.Key, Name: x.Name, Description: x.Description, Icon: x.Icon, Extra: x.Extra, Default: x.Default}
+	return util.ToJSONBytes(marshaller, false), nil
 }
 
 func (x *Value) UnmarshalJSON(data []byte) error {
@@ -43,6 +48,8 @@ func (x *Value) UnmarshalJSON(data []byte) error {
 		x.Key = v.Key
 		x.Name = v.Name
 		x.Description = v.Description
+		x.Icon = v.Icon
+		x.Extra = v.Extra
 		x.Default = v.Default
 		x.Simple = false
 		return nil
@@ -54,6 +61,8 @@ func (x *Value) UnmarshalJSON(data []byte) error {
 	x.Key = str
 	x.Name = ""
 	x.Description = ""
+	x.Icon = ""
+	x.Extra = util.ValueMap{}
 	x.Default = false
 	x.Simple = true
 	return nil
@@ -69,7 +78,7 @@ func (v Values) Keys() []string {
 
 func (v Values) AllSimple() bool {
 	return !lo.ContainsBy(v, func(x *Value) bool {
-		return (!x.Simple) || x.Name != "" || x.Description != ""
+		return (!x.Simple) || x.Name != "" || x.Description != "" || x.Icon != "" || len(x.Extra) > 0
 	})
 }
 

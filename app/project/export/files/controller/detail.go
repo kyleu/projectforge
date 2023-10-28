@@ -23,9 +23,7 @@ func controllerDetail(g *golang.File, models model.Models, m *model.Model, grp *
 	ret.W("\t\tret, err := %sFromPath(rc, as, ps)", m.Package)
 	ret.WE(2, `""`)
 	checkGrp(ret, grp)
-	ret.W("\t\tps.Title = ret.TitleString() + \" (%s)\"", m.Title())
-	ret.W("\t\tps.Data = ret")
-
+	ret.W("\t\tps.SetTitleAndData(ret.TitleString()+\" (%s)\", ret)", m.Title())
 	_, shouldIncDel := lo.Find(rrels, func(r *model.Relation) bool {
 		return models.Get(r.Table).IsSoftDelete()
 	})
@@ -49,11 +47,11 @@ func controllerDetail(g *golang.File, models model.Models, m *model.Model, grp *
 		})
 		argStr := strings.Join(args, ", ")
 		if audit {
-			msg := "\t\treturn %sRender(rc, as, &v%s.Detail{%s, AuditRecords: relatedAuditRecords}, ps, %s%s, ret.String())"
-			ret.W(msg, prefix, m.Package, argStr, m.Breadcrumbs(), grpHistory)
+			msg := "\t\treturn %sRender(rc, as, &v%s.Detail{%s, AuditRecords: relatedAuditRecords}, ps, %s%s, %s)"
+			ret.W(msg, prefix, m.Package, argStr, m.Breadcrumbs(), grpHistory, bcFor(m))
 		} else {
-			msg := "\t\treturn %sRender(rc, as, &v%s.Detail{%s}, ps, %s%s, ret.String())"
-			ret.W(msg, prefix, m.Package, argStr, m.Breadcrumbs(), grpHistory)
+			msg := "\t\treturn %sRender(rc, as, &v%s.Detail{%s}, ps, %s%s, %s)"
+			ret.W(msg, prefix, m.Package, argStr, m.Breadcrumbs(), grpHistory, bcFor(m))
 		}
 	} else {
 		ret.W("\t\treturn %sRender(rc, as, &v%s.Detail{", prefix, m.Package)
@@ -72,11 +70,19 @@ func controllerDetail(g *golang.File, models model.Models, m *model.Model, grp *
 			ret.WB()
 			ret.W("\t\t\tAuditRecords: relatedAuditRecords,")
 		}
-		ret.W("\t\t}, ps, %s%s, ret.String())", m.Breadcrumbs(), grpHistory)
+		ret.W("\t\t}, ps, %s%s, %s)", m.Breadcrumbs(), grpHistory, bcFor(m))
 	}
 	ret.W("\t})")
 	ret.W("}")
 	return ret
+}
+
+func bcFor(m *model.Model) any {
+	icon := m.Icon
+	if icons := m.Columns.WithFormat("icon"); len(icons) > 0 {
+		return fmt.Sprintf("ret.TitleString()+\"**\"+ret.%s", icons[0].Proper())
+	}
+	return fmt.Sprintf("ret.TitleString()+\"**%s\"", icon)
 }
 
 func getArgs(g *golang.File, models model.Models, m *model.Model, rrels model.Relations, ret *golang.Block) ([]string, []string) {

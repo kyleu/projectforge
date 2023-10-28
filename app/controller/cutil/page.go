@@ -159,3 +159,8 @@ func (p *PageState) ClassDecl() string {
 	classes := strings.Join(ret, " ")
 	return fmt.Sprintf(` class=%q`, classes)
 }
+
+func (p *PageState) SetTitleAndData(title string, data any) {
+	p.Title = title
+	p.Data = data
+}

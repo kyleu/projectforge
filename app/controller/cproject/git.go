@@ -59,7 +59,7 @@ func GitAction(rc *fasthttp.RequestCtx) {
 				url := fmt.Sprintf("/git/%s/commit", prj.Key)
 				return controller.Render(rc, as, &vpage.Args{URL: url, Directions: "Enter your commit message", ArgRes: argRes}, ps, bc...)
 			}
-			result, err = as.Services.Git.Commit(ps.Context, prj, argRes.Values["message"], ps.Logger)
+			result, err = as.Services.Git.Commit(ps.Context, prj, argRes.Values.GetStringOpt("message"), ps.Logger)
 		case git.ActionUndoCommit.Key:
 			result, err = as.Services.Git.UndoCommit(ps.Context, prj, ps.Logger)
 		case git.ActionPull.Key:
@@ -75,11 +75,11 @@ func GitAction(rc *fasthttp.RequestCtx) {
 				url := fmt.Sprintf("/git/%s/history", prj.Key)
 				return controller.Render(rc, as, &vpage.Args{URL: url, Directions: "Choose your options", ArgRes: argRes}, ps, bc...)
 			}
-			path := argRes.Values["paths"]
-			since, _ := util.TimeFromString(argRes.Values["since"])
-			authors := util.StringSplitAndTrim(argRes.Values["authors"], ",")
+			path := argRes.Values.GetStringOpt("paths")
+			since, _ := util.TimeFromString(argRes.Values.GetStringOpt("since"))
+			authors := util.StringSplitAndTrim(argRes.Values.GetStringOpt("authors"), ",")
 			commit := string(rc.URI().QueryArgs().Peek("commit"))
-			limit, _ := strconv.ParseInt(argRes.Values["limit"], 10, 32)
+			limit, _ := strconv.ParseInt(argRes.Values.GetStringOpt("limit"), 10, 32)
 			hist := &git.HistoryResult{Path: path, Since: since, Authors: authors, Commit: commit, Limit: int(limit)}
 			result, err = as.Services.Git.History(ps.Context, prj, hist, ps.Logger)
 		case git.ActionBranch.Key:
@@ -89,7 +89,7 @@ func GitAction(rc *fasthttp.RequestCtx) {
 				ps.Data = argRes
 				return controller.Render(rc, as, &vpage.Args{URL: url, Directions: "Enter your branch name", ArgRes: argRes}, ps, bc...)
 			}
-			result, err = as.Services.Git.Commit(ps.Context, prj, argRes.Values["message"], ps.Logger)
+			result, err = as.Services.Git.Commit(ps.Context, prj, argRes.Values.GetStringOpt("message"), ps.Logger)
 		case git.ActionMagic.Key:
 			argRes := cutil.CollectArgs(rc, gitMagicArgs)
 			if argRes.HasMissing() {
@@ -97,8 +97,8 @@ func GitAction(rc *fasthttp.RequestCtx) {
 				ps.Data = argRes
 				return controller.Render(rc, as, &vpage.Args{URL: url, Directions: "Enter your commit message", ArgRes: argRes}, ps, bc...)
 			}
-			dryRun := argRes.Values["dryRun"] == util.BoolTrue
-			result, err = as.Services.Git.Magic(ps.Context, prj, argRes.Values["message"], dryRun, ps.Logger)
+			dryRun := argRes.Values.GetStringOpt("dryRun") == util.BoolTrue
+			result, err = as.Services.Git.Magic(ps.Context, prj, argRes.Values.GetStringOpt("message"), dryRun, ps.Logger)
 		default:
 			err = errors.Errorf("unhandled action [%s]", a)
 		}

@@ -12,6 +12,7 @@ import (
 )
 
 const (
+	goTypeIntArray    = "[]int"
 	goTypeStringArray = "[]string"
 	goTypeAnyArray    = "[]any"
 )
@@ -42,6 +43,8 @@ func ToGoType(t types.Type, nullable bool, pkg string, enums enum.Enums) (string
 		switch lt.V.Key() {
 		case types.KeyString:
 			ret = goTypeStringArray
+		case types.KeyInt:
+			ret = goTypeIntArray
 		case types.KeyEnum:
 			e, err := AsEnumInstance(lt.V, enums)
 			if err != nil {
@@ -167,14 +170,16 @@ func ToGoViewString(t *types.Wrapped, prop string, nullable bool, format string,
 			lt = types.NewString()
 		}
 		switch lt.Key() {
+		case types.KeyString:
+			return "{%%= components.DisplayStringArray(" + prop + ") %%}"
+		case types.KeyInt:
+			return "{%%= components.DisplayIntArray(" + prop + ") %%}"
 		case types.KeyEnum:
 			e, _ := AsEnumInstance(lt, enums)
 			if e == nil {
 				return "ERROR: invalid enum [" + lt.String() + "]"
 			}
 			return "{%%= components.DisplayStringArray(" + prop + ".Strings()) %%}"
-		case types.KeyString:
-			return "{%%= components.DisplayStringArray(" + prop + ") %%}"
 		default:
 			return "{%%= components.JSON(" + prop + ") %%}"
 		}

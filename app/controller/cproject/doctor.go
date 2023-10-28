@@ -23,8 +23,7 @@ func Doctor(rc *fasthttp.RequestCtx) {
 	controller.Act("doctor", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prjs := as.Services.Projects.Projects()
 		ret := checks.ForModules(prjs.AllModules())
-		ps.Title = "Doctor"
-		ps.Data = ret
+		ps.SetTitleAndData("Doctor", ret)
 		return controller.Render(rc, as, &vdoctor.List{Checks: ret}, ps, "doctor")
 	})
 }
@@ -38,8 +37,7 @@ func DoctorRunAll(rc *fasthttp.RequestCtx) {
 		prjs := as.Services.Projects.Projects()
 		checks.SetModules(as.Services.Modules.Deps(), as.Services.Modules.Dangerous())
 		ret := checks.CheckAll(ps.Context, prjs.AllModules(), ps.Logger)
-		ps.Title = "Doctor Results"
-		ps.Data = ret
+		ps.SetTitleAndData("Doctor Results", ret)
 		return controller.Render(rc, as, &vdoctor.Results{Results: ret}, ps, "doctor", "All")
 	})
 }
@@ -53,8 +51,7 @@ func DoctorRun(rc *fasthttp.RequestCtx) {
 		c := checks.GetCheck(key)
 		checks.SetModules(as.Services.Modules.Deps(), as.Services.Modules.Dangerous())
 		ret := c.Check(ps.Context, ps.Logger)
-		ps.Title = c.Title + " Result"
-		ps.Data = ret
+		ps.SetTitleAndData(c.Title+" Result", ret)
 		return controller.Render(rc, as, &vdoctor.Results{Results: doctor.Results{ret}}, ps, "doctor", c.Title)
 	})
 }
@@ -74,8 +71,7 @@ func DoctorSolve(rc *fasthttp.RequestCtx) {
 		checks.SetModules(as.Services.Modules.Deps(), as.Services.Modules.Dangerous())
 		ret := c.Check(ps.Context, ps.Logger)
 		if len(ret.Solutions) == 0 {
-			ps.Title = fmt.Sprintf("No solution available for [%s]", c.Title)
-			ps.Data = c
+			ps.SetTitleAndData(fmt.Sprintf("No solution available for [%s]", c.Title), c)
 			return controller.Render(rc, as, &views.Debug{}, ps, "doctor", c.Title)
 		}
 		execs := lo.FilterMap(ret.Solutions, func(sol string, _ int) (string, bool) {
@@ -85,8 +81,7 @@ func DoctorSolve(rc *fasthttp.RequestCtx) {
 			return strings.TrimPrefix(sol, "!"), true
 		})
 		if len(execs) == 0 {
-			ps.Title = fmt.Sprintf("No solution for [%s] can be solved automatically", c.Title)
-			ps.Data = c
+			ps.SetTitleAndData(fmt.Sprintf("No solution for [%s] can be solved automatically", c.Title), c)
 			return controller.Render(rc, as, &views.Debug{}, ps, "doctor", c.Title)
 		}
 		for idx, ex := range execs {

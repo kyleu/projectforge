@@ -6,6 +6,14 @@
   margin: var(--padding) 0;
 }
 
+/* single-line */
+pre.chroma {
+  width: auto;
+  overflow: auto;
+  display: block;
+  padding-bottom: var(--padding);
+}
+
 /* LineTableTD */
 .chroma .lntd:last-child {
   width: 100%;

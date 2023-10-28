@@ -27,3 +27,7 @@ input.combined {
 button.combined {
   padding: var(--padding-small);
 }
+
+.large-buttons button {
+  padding: var(--padding-small);
+}

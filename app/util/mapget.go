@@ -18,7 +18,33 @@ func (m ValueMap) GetRequired(k string) (any, error) {
 }
 
 func (m ValueMap) GetArray(key string, allowEmpty bool) ([]any, error) {
-	return m.ParseArray(key, false, allowEmpty)
+	return m.ParseArray(key, false, allowEmpty, false)
+}
+
+func (m ValueMap) GetArrayOpt(key string) []any {
+	ret, _ := m.ParseArray(key, false, true, false)
+	return ret
+}
+
+func (m ValueMap) GetStringArray(key string, allowEmpty bool) ([]string, error) {
+	return m.ParseArrayString(key, false, allowEmpty)
+}
+
+func (m ValueMap) GetStringArrayOpt(key string) []string {
+	ret, _ := m.ParseArrayString(key, false, true)
+	return ret
+}
+
+func (m ValueMap) GetIntArray(key string, allowEmpty bool) ([]int, error) {
+	return m.ParseArrayInt(key, false, allowEmpty)
+}
+
+func (m ValueMap) GetFloatArray(key string, allowEmpty bool) ([]float64, error) {
+	return m.ParseArrayFloat(key, false, allowEmpty)
+}
+
+func (m ValueMap) GetMapArray(key string, allowEmpty bool) ([]ValueMap, error) {
+	return m.ParseArrayMap(key, false, allowEmpty)
 }
 
 func (m ValueMap) GetBool(key string, allowEmpty bool) (bool, error) {
@@ -48,8 +74,18 @@ func (m ValueMap) GetFloat(key string, allowEmpty bool) (float64, error) {
 	return m.ParseFloat(key, false, allowEmpty)
 }
 
+func (m ValueMap) GetFloatOpt(key string) float64 {
+	ret, _ := m.ParseFloat(key, false, true)
+	return ret
+}
+
 func (m ValueMap) GetMap(key string, allowEmpty bool) (ValueMap, error) {
 	return m.ParseMap(key, false, allowEmpty)
+}
+
+func (m ValueMap) GetMapOpt(key string) ValueMap {
+	ret, _ := m.ParseMap(key, false, true)
+	return ret
 }
 
 func (m ValueMap) GetString(key string, allowEmpty bool) (string, error) {
@@ -69,16 +105,28 @@ func (m ValueMap) GetStringPtr(key string) *string {
 	return &ret
 }
 
-func (m ValueMap) GetStringArray(key string, allowEmpty bool) ([]string, error) {
-	return m.ParseArrayString(key, false, allowEmpty)
-}
-
 func (m ValueMap) GetTime(key string, allowEmpty bool) (*time.Time, error) {
 	return m.ParseTime(key, false, allowEmpty)
 }
 
+func (m ValueMap) GetTimeOpt(key string) time.Time {
+	ret, _ := m.ParseTime(key, true, true)
+	if ret == nil {
+		return time.Time{}
+	}
+	return *ret
+}
+
 func (m ValueMap) GetUUID(key string, allowEmpty bool) (*uuid.UUID, error) {
 	return m.ParseUUID(key, false, allowEmpty)
+}
+
+func (m ValueMap) GetUUIDOpt(key string) uuid.UUID {
+	ret, _ := m.ParseUUID(key, true, true)
+	if ret == nil {
+		return uuid.UUID{}
+	}
+	return *ret
 }
 
 func (m ValueMap) GetType(key string, ret any) error {

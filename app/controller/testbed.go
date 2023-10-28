@@ -15,8 +15,7 @@ func Testbed(rc *fasthttp.RequestCtx) {
 		if len(frm) > 0 {
 			ret = frm.GetStringOpt("x")
 		}
-		ps.Title = "Testbed"
-		ps.Data = ret
+		ps.SetTitleAndData("Testbed", ret)
 		return Render(rc, as, &views.Testbed{Param: ret}, ps)
 	})
 }

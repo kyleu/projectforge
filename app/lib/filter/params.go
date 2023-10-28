@@ -11,7 +11,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-const MaxRowsDefault = 100
+const MaxRows, PageSize = 10000, 100
 
 var AllowedColumns = map[string][]string{}
 
@@ -36,8 +36,8 @@ func (p *Params) Sanitize(key string, defaultOrderings ...*Ordering) *Params {
 	if p == nil {
 		return &Params{Key: key, Orderings: defaultOrderings}
 	}
-	if p.Limit == 0 || p.Limit > 100000 {
-		p.Limit = MaxRowsDefault
+	if p.Limit == 0 || p.Limit > MaxRows {
+		p.Limit = MaxRows
 	}
 	if p.Offset < 0 {
 		p.Offset = 0
@@ -77,7 +77,7 @@ func (p *Params) HasNextPage(count int) bool {
 func (p *Params) NextPage() *Params {
 	limit := p.Limit
 	if limit == 0 {
-		limit = MaxRowsDefault
+		limit = PageSize
 	}
 	offset := p.Offset + limit
 	if offset < 0 {
@@ -93,7 +93,7 @@ func (p *Params) HasPreviousPage() bool {
 func (p *Params) PreviousPage() *Params {
 	limit := p.Limit
 	if limit == 0 {
-		limit = MaxRowsDefault
+		limit = PageSize
 	}
 	offset := p.Offset - limit
 	if offset < 0 {
@@ -146,6 +146,10 @@ func (p *Params) Filtered(available []string, logger util.Logger) *Params {
 		return &Params{Key: p.Key, Orderings: allowed, Limit: p.Limit, Offset: p.Offset}
 	}
 	return p
+}
+
+func (p *Params) IsDefault() bool {
+	return p.Offset == 0 && p.Limit == 0 && len(p.Orderings) == 0
 }
 
 func (p *Params) String() string {

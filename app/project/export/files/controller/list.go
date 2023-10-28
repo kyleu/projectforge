@@ -42,9 +42,7 @@ func controllerList(g *golang.File, m *model.Model, grp *model.Column, models mo
 		ret.W("\t\tret, err := as.Services.%s.%s(ps.Context, nil%s, prms%s, ps.Logger)", m.Proper(), meth, grpArgs, suffix)
 	}
 	ret.WE(2, `""`)
-	ret.W("\t\tps.Title = %q", m.TitlePlural())
-	ret.W("\t\tps.Data = ret")
-
+	ret.W("\t\tps.SetTitleAndData(%q, ret)", m.TitlePlural())
 	var toStrings string
 	for _, rel := range m.Relations {
 		relModel := models.Get(rel.Table)

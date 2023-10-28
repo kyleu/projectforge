@@ -7,6 +7,7 @@ import (
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/project/export/files/controller"
 	"projectforge.dev/projectforge/app/project/export/files/goenum"
+	"projectforge.dev/projectforge/app/project/export/files/gql"
 	"projectforge.dev/projectforge/app/project/export/files/sql"
 	"projectforge.dev/projectforge/app/project/export/model"
 )
@@ -47,6 +48,14 @@ func All(p *project.Project, args *model.Args, addHeader bool, linebreak string)
 
 	if args.HasModule("search") {
 		x, err = controller.Search(args, addHeader, linebreak)
+		if err != nil {
+			return nil, err
+		}
+		ret = append(ret, x)
+	}
+
+	if args.HasModule("graphql") {
+		x, err = gql.GQLAll(args.Models, args.Enums, addHeader, linebreak)
 		if err != nil {
 			return nil, err
 		}

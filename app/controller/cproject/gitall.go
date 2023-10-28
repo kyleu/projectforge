@@ -73,8 +73,7 @@ func GitActionAll(rc *fasthttp.RequestCtx) {
 		slices.SortFunc(results, func(l *git.Result, r *git.Result) int {
 			return cmp.Compare(strings.ToLower(l.Project.Title()), strings.ToLower(r.Project.Title()))
 		})
-		ps.Title = "[git] All Projects"
-		ps.Data = results
+		ps.SetTitleAndData("[git] All Projects", results)
 		return controller.Render(rc, as, &vgit.Results{Action: action, Results: results, Projects: prjs, Tags: tags}, ps, "projects", "Git")
 	})
 }

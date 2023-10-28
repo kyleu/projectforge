@@ -14,12 +14,12 @@
     {%= components.Indent(true, 2) %}
     <div class="menu">
       {%= components.Indent(true, 3) %}
-      <ul class="level-0">
+      <menu class="level-0">
         {% for _, i := range ps.Menu %}
           {%= MenuItem(i, []string{}, ps.Breadcrumbs, 3, ps) %}
         {% endfor %}
       {%= components.Indent(true, 3) %}
-      </ul>
+      </menu>
     {%= components.Indent(true, 2) %}
     </div>
   {%= components.Indent(true, 1) %}
@@ -70,12 +70,12 @@
       {%= components.Indent(true, indent + 2) %}
       <div class="menu-content level-{%d len(path) %}">
         {%= components.Indent(true, indent + 3) %}
-        <ul>
+        <menu>
           {% for _, i := range i.Children %}
             {%= MenuItem(i, path, breadcrumbs, indent + 3, ps) %}
           {% endfor %}
           {%= components.Indent(true, indent + 3) %}
-        </ul>
+        </menu>
       {%= components.Indent(true, indent + 2) %}
       </div>
       {%= components.Indent(true, indent + 1) %}

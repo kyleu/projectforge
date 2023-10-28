@@ -23,7 +23,7 @@ func OpenSQLiteDatabase(ctx context.Context, key string, params *SQLiteParams, l
 	if params.File == "" {
 		return nil, errors.New("need filename for SQLite database")
 	}
-	u := fmt.Sprintf("file:%s?_pragma=foreign_keys(1)&cache=shared&_timeout=10000", params.File)
+	u := fmt.Sprintf("file:%s?_pragma=foreign_keys(1)&_pragma=busy_timeout(10000)&_pragma=trusted_schema(0)", params.File)
 	db, err := sqlx.Open("sqlite", u)
 	if err != nil {
 		return nil, errors.Wrap(err, "error opening database")

@@ -27,7 +27,7 @@ func Models(m *model.Model, args *model.Args, addHeader bool, goVersion string, 
 		g.AddImport(imp)
 	})
 	g.AddImport(helper.ImpSlicesForGo(goVersion))
-	g.AddImport(helper.ImpLo)
+	g.AddImport(helper.ImpLo, helper.ImpAppUtil)
 	g.AddBlocks(modelArray(m))
 	err := helper.SpecialImports(g, m.IndexedColumns(true), m.PackageWithGroup(""), args.Enums)
 	if err != nil {
@@ -58,7 +58,7 @@ func Models(m *model.Model, args *model.Args, addHeader bool, goVersion string, 
 			g.AddBlocks(modelArrayGetBySingle(m, col, args.Enums), modelArrayGetByMulti(m, col, args.Enums))
 		}
 	})
-	g.AddBlocks(modelArrayClone(m))
+	g.AddBlocks(modelArrayRandom(m), modelArrayClone(m))
 	return g.Render(addHeader, linebreak)
 }
 
@@ -89,6 +89,17 @@ func modelArrayGet(g *golang.File, m *model.Model, cols model.Columns, enums enu
 	ret.W("\t})")
 	ret.W("}")
 	return ret, nil
+}
+
+func modelArrayRandom(m *model.Model) *golang.Block {
+	ret := golang.NewBlock(m.Proper()+"ArrayRandom", "func")
+	ret.W("func (%s %s) Random() *%s {", m.FirstLetter(), m.ProperPlural(), m.Proper())
+	ret.W("\tif len(%s) == 0 {", m.FirstLetter())
+	ret.W("\t\treturn nil")
+	ret.W("\t}")
+	ret.W("\treturn %s[util.RandomInt(len(%s))]", m.FirstLetter(), m.FirstLetter())
+	ret.W("}")
+	return ret
 }
 
 func modelArrayClone(m *model.Model) *golang.Block {

@@ -28,8 +28,8 @@ func Docs(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to load documentation from [%s]", pth)
 		}
-		ps.Title = title
-		ps.Data, _ = doc.Content(pth + ".md")
+		c, _ := doc.Content(pth + ".md")
+		ps.SetTitleAndData(title, c)
 		return controller.Render(rc, as, &vdoc.MarkdownPage{Title: pth, HTML: x}, ps, bc...)
 	})
 }

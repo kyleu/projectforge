@@ -85,7 +85,7 @@ func (p *Args) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vpage/Args.html:29
 	for _, arg := range p.ArgRes.Args {
 //line views/vpage/Args.html:31
-		v := p.ArgRes.Values[arg.Key]
+		v := p.ArgRes.Values.GetStringOpt(arg.Key)
 		if v == "" {
 			v = arg.Default
 		}

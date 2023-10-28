@@ -1,11 +1,5 @@
 # $PF_GENERATE_ONCE$
-scalar Time
-scalar UUID
-
-type Query {
-  hello: String!
-}
-
-type Mutation {
-  kill: String!
-}
+## include[scalars.graphql]{{{ if .HasModule "export" }}}
+## include[generated.graphql]{{{ end }}}
+## include[query.graphql]
+## include[mutation.graphql]

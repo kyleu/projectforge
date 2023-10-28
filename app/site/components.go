@@ -28,8 +28,7 @@ func componentsMenu(logger util.Logger) menu.Items {
 }
 
 func componentList(ps *cutil.PageState) (layout.Page, error) {
-	ps.Title = "Available Components"
-	ps.Data = vsite.AllComponents
+	ps.SetTitleAndData("Available Components", vsite.AllComponents)
 	return &vsite.ComponentList{}, nil
 }
 
@@ -39,8 +38,7 @@ func componentDetail(key string, ps *cutil.PageState) (layout.Page, error) {
 		return nil, errors.Errorf("no component available with key [%s]", key)
 	}
 	ps.AddIcon(c.Icon)
-	ps.Title = c.Title
-	ps.Data = c
+	ps.SetTitleAndData(c.Title, c)
 	return &vsite.ComponentDetail{Component: c}, nil
 }
 
