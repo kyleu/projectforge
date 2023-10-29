@@ -30,8 +30,8 @@ func Enum(e *enum.Enum, addHeader bool, linebreak string) (*file.File, error) {
 
 func enumStructParse(e *enum.Enum) *golang.Block {
 	ret := golang.NewBlock(e.Proper(), "parse")
-	ret.W("func %sParse(logger util.Logger, strings ...string) %s {", e.Proper(), e.ProperPlural())
-	ret.W("\treturn lo.Map(strings, func(x string, _ int) %s {", e.Proper())
+	ret.W("func %sParse(logger util.Logger, keys ...string) %s {", e.Proper(), e.ProperPlural())
+	ret.W("\treturn lo.Map(keys, func(x string, _ int) %s {", e.Proper())
 	ret.W("\t\treturn All%s.Get(x, logger)", e.ProperPlural())
 	ret.W("\t})")
 	ret.W("}")

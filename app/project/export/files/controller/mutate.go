@@ -20,7 +20,7 @@ func controllerCreateForm(m *model.Model, grp *model.Column, prefix string) *gol
 		decls = append(decls, fmt.Sprintf("%s: %sArg", grp.Proper(), grp.Camel()))
 	}
 	ret.W("\t\tret := &%s{%s}", m.ClassRef(), strings.Join(decls, ", "))
-	ret.W("\t\tif string(rc.QueryArgs().Peek(\"prototype\")) == \"random\" {")
+	ret.W("\t\tif string(rc.QueryArgs().Peek(\"prototype\")) == util.KeyRandom {")
 	ret.W("\t\t\tret = %s.Random()", m.Package)
 	ret.W("\t\t}")
 

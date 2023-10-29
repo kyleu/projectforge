@@ -27,7 +27,7 @@ func Controller(m *model.Model, args *model.Args, addHeader bool, linebreak stri
 	if len(m.Group) > 0 {
 		g.AddImport(helper.ImpAppController)
 	}
-	g.AddImport(helper.ImpFmt, helper.ImpErrors, helper.ImpFastHTTP, helper.ImpApp, helper.ImpCutil)
+	g.AddImport(helper.ImpFmt, helper.ImpErrors, helper.ImpFastHTTP, helper.ImpApp, helper.ImpAppUtil, helper.ImpCutil)
 	g.AddImport(helper.AppImport("app/" + m.PackageWithGroup("")))
 	g.AddImport(helper.AppImport("views/" + m.PackageWithGroup("v")))
 

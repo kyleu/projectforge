@@ -2,10 +2,13 @@ package golang
 
 import (
 	"fmt"
+	"github.com/uudashr/gocognit"
+	"go/parser"
+	"go/token"
+	"slices"
 	"strings"
 
 	"github.com/samber/lo"
-
 	"projectforge.dev/projectforge/app/util"
 )
 
@@ -46,17 +49,21 @@ func (b *Block) WE(indent int, prefix ...string) {
 	)
 }
 
-func (b *Block) Render(linebreak string) string {
-	d := b.NoLineDecl()
+func (b *Block) Render(linebreak string) (string, error) {
+	d, err := b.NoLineDecl(linebreak)
+	if err != nil {
+		return "", err
+	}
+
 	if d == "" {
 		if len(b.Lints) == 0 {
-			return strings.Join(b.Lines, linebreak)
+			return strings.Join(b.Lines, linebreak), nil
 		}
 		line := "//nolint:" + strings.Join(b.Lints, ", ")
-		return strings.Join(append([]string{line}, b.Lines...), linebreak)
+		return strings.Join(append([]string{line}, b.Lines...), linebreak), nil
 	}
 	line := strings.Join(append([]string{d}, b.Lints...), ", ")
-	return strings.Join(append([]string{line}, b.Lines...), linebreak)
+	return strings.Join(append([]string{line}, b.Lines...), linebreak), nil
 }
 
 func (b *Block) LineCount() int {
@@ -76,22 +83,28 @@ func (b *Block) LineComplexity() int {
 	})
 }
 
-func (b *Block) NoLineDecl() string {
+func (b *Block) NoLineDecl(linebreak string) (string, error) {
 	var ret []string
-	if b.LineCount() > 100 {
+	if b.LineCount() > 102 && strings.Contains(b.Lines[0], "func") {
 		ret = append(ret, "funlen")
 	}
 	if b.LineMaxLength() > 160 {
 		ret = append(ret, "lll")
 	}
-	if b.LineComplexity() >= 28 {
-		ret = append(ret, "gocognit")
+
+	fset := token.NewFileSet()
+	if f, _ := parser.ParseFile(fset, "temp.go", strings.Join(append([]string{"package x"}, b.Lines...), linebreak), 0); f != nil {
+		for _, complexity := range gocognit.ComplexityStats(f, fset, nil) {
+			if complexity.Complexity > 30 && !slices.Contains(ret, "gocognit") {
+				ret = append(ret, "gocognit")
+			}
+		}
 	}
 	if len(ret) == 0 || b.SkipDecl || b.ContainsText("{%") {
-		return ""
+		return "", nil
 	}
 	x := fmt.Sprintf("//nolint:%s", strings.Join(ret, ","))
-	return x
+	return x, nil
 }
 
 func (b *Block) ContainsText(s string) bool {

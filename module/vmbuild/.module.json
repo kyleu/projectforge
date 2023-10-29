@@ -1,0 +1,10 @@
+{
+  "name": "VM Build",
+  "icon": "desktop",
+  "description": "Provides a macOS build pipeline for building and running your app using a tart VM",
+  "authorName": "Kyle U",
+  "authorEmail": "kyle@kyleu.com",
+  "license": "CC0",
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/vmbuild",
+  "priority": 20
+}

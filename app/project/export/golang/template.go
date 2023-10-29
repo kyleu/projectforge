@@ -56,9 +56,13 @@ func (f *Template) Render(addHeader bool, linebreak string) (*file.File, error) 
 		add(f.Imports.RenderHTML(linebreak))
 	}
 
-	lo.ForEach(f.Blocks, func(b *Block, _ int) {
-		add(b.Render(linebreak))
-	})
+	for _, b := range f.Blocks {
+		x, err := b.Render(linebreak)
+		if err != nil {
+			return nil, err
+		}
+		add(x)
+	}
 
 	n := f.Name
 	return &file.File{Path: f.Path, Name: n, Mode: filesystem.DefaultMode, Content: strings.Join(content, linebreak)}, nil

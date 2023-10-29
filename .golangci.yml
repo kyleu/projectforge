@@ -16,7 +16,7 @@ linters-settings:
     default-signifies-exhaustive: true
   funlen:
     lines: 100
-    statements: 80
+    statements: 100
   gci:
     sections:
       - standard

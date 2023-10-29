@@ -106,7 +106,6 @@ func populateRequest(req js.Value, headers js.Value, reqBody js.Value, rc *fasth
 	if body == "" {
 		return nil
 	}
-	println("REQ BODY [" + body + "]")
 	rc.Request.SetBody([]byte(body))
 	return nil
 }

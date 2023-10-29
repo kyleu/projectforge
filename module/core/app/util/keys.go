@@ -12,6 +12,7 @@ const (
 
 	BoolTrue   = "true"
 	KeyError   = "error"
+	KeyRandom  = "random"
 	KeyUnknown = "unknown"
 
 	// $PF_SECTION_START(keys)$

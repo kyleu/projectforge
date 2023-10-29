@@ -29,6 +29,7 @@ require (
 	github.com/samber/lo v1.38.1
 	github.com/santhosh-tekuri/jsonschema v1.2.4
 	github.com/spf13/afero v1.10.0
+	github.com/uudashr/gocognit v1.1.2
 	github.com/valyala/fasthttp v1.50.0
 	github.com/valyala/quicktemplate v1.7.0
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.45.0
@@ -83,6 +84,7 @@ require (
 	golang.org/x/exp v0.0.0-20231006140011-7918f672742d // indirect
 	golang.org/x/net v0.17.0 // indirect
 	golang.org/x/text v0.13.0 // indirect
+	golang.org/x/tools v0.14.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20231016165738-49dd2c1f3d0b // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20231016165738-49dd2c1f3d0b // indirect

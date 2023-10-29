@@ -62,7 +62,11 @@ func modelTableCols(m *model.Model) (*golang.Block, error) {
 	ret.W("var (")
 	ret.W("\ttable         = %q", m.Name)
 	ret.W("\ttableQuoted   = fmt.Sprintf(\"%%q\", table)")
-	ret.W("\tcolumns       = []string{%s}", strings.Join(m.Columns.NamesQuoted(), ", "))
+	cols := fmt.Sprintf("\tcolumns       = []string{%s}", strings.Join(m.Columns.NamesQuoted(), ", "))
+	if len(cols) > 160 {
+		cols += " //nolint:lll"
+	}
+	ret.W(cols)
 	ret.W("\tcolumnsQuoted = util.StringArrayQuoted(columns)")
 	ret.W("\tcolumnsString = strings.Join(columnsQuoted, \", \")")
 	ret.W(")")
