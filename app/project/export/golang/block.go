@@ -2,13 +2,14 @@ package golang
 
 import (
 	"fmt"
-	"github.com/uudashr/gocognit"
 	"go/parser"
 	"go/token"
 	"slices"
 	"strings"
 
 	"github.com/samber/lo"
+	"github.com/uudashr/gocognit"
+
 	"projectforge.dev/projectforge/app/util"
 )
 
