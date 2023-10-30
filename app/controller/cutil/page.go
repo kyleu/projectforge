@@ -78,9 +78,9 @@ func (p *PageState) AddIcon(keys ...string) {
 	lo.ForEach(keys, func(k string, _ int) {
 		if !lo.Contains(p.Icons, k) {
 			p.Icons = append(p.Icons, k)
-			slices.Sort(p.Icons)
 		}
 	})
+	slices.Sort(p.Icons)
 }
 
 func (p *PageState) TitleString() string {

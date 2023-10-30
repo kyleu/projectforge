@@ -1,12 +1,11 @@
 <!-- Content managed by Project Forge, see [projectforge.md] for details. -->
 {% import (
-  "slices"
-
   "github.com/samber/lo"
   "github.com/valyala/fasthttp"
 
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/layout"
 ) %}
@@ -84,11 +83,7 @@
           </tr>
         </thead>
         <tbody>
-          {%- code
-            keys := lo.Keys(hd)
-            slices.Sort(keys)
-          -%}
-          {%- for _, k := range keys -%}
+          {%- for _, k := range util.ArraySorted(lo.Keys(hd)) -%}
           <tr>
             <td class="nowrap">{%s k %}</td>
             <td>{%s hd[k] %}</td>

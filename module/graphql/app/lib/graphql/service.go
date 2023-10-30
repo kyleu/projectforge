@@ -1,8 +1,6 @@
 package graphql
 
 import (
-	"slices"
-
 	"github.com/graph-gophers/graphql-go"
 	otelgraphql "github.com/graph-gophers/graphql-go/trace/otel"
 	"github.com/pkg/errors"
@@ -39,9 +37,7 @@ func (s *Service) RegisterStringSchema(key string, title string, content string,
 }
 
 func (s *Service) Keys() []string {
-	ret := lo.Keys(s.schemata)
-	slices.Sort(ret)
-	return ret
+	return util.ArraySorted(lo.Keys(s.schemata))
 }
 
 func (s *Service) Titles() map[string]string {
