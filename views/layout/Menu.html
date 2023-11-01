@@ -40,7 +40,7 @@
     {%= components.Indent(true, indent + 1) %}
     {% if active %}<li class="active" data-menu-key="{%s i.Key %}">{% else %}<li data-menu-key="{%s i.Key %}">{% endif %}
       {%= components.Indent(true, indent + 2) %}
-      <input id="{%s itemID %}-input" type="checkbox"{% if active %}{% space %}checked="checked"{% endif %}{% space %}hidden />
+      <input id="{%s itemID %}-input" type="checkbox"{% if active %}{% space %}checked="checked"{% endif %}{% space %}hidden="hidden" />
       {%= components.Indent(true, indent + 2) %}
       {% if final %}<label class="final" for="{%s itemID %}-input" title="{%s i.Desc() %}">{% else %}<label for="{%s itemID %}-input" title="{%s i.Desc() %}">{% endif %}
         {% if i.Route != "" %}

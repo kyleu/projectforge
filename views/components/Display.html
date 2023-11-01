@@ -64,18 +64,28 @@
   <em>no changes</em>
   {%- else -%}
   <div class="overflow full-width">
-    <table>
-      <tbody>
-        {%- for _, d := range value -%}
-        <tr>
-          <td><code>{%s d.Path %}</code></td>
-          <td><code class="error">{%s d.Old %}</code></td>
-          <td>→</td>
-          <td><code class="success">{%s d.New %}</code></td>
-        </tr>
-        {%- endfor -%}
-      </tbody>
-    </table>
+    <div class="overflow full-width">
+      <table class="mt expanded">
+        <thead>
+          <tr>
+            <th>Path</th>
+            <th>Old</th>
+            <th></th>
+            <th>New</th>
+          </tr>
+        </thead>
+        <tbody>
+          {%- for _, d := range value -%}
+          <tr>
+            <td style="width: 30%;"><code>{%s d.Path %}</code></td>
+            <td style="width: 30%;"><code><em>{%s d.Old %}</em></code></td>
+            <td style="width: 10%;">→</td>
+            <td style="width: 30%;"><code class="success">{%s d.New %}</code></td>
+          </tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
   </div>
   {%- endif -%}
 {% endstripspace %}{% endfunc %}

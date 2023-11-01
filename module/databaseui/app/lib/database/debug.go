@@ -51,6 +51,13 @@ func (s *DebugStatement) SQLTrimmed(maxLength int) string {
 	return s.SQL
 }
 
+func (s *DebugStatement) ErrorTrimmed(maxLength int) string {
+	if len(s.Error) > maxLength {
+		return s.Error[:maxLength] + "..."
+	}
+	return s.Error
+}
+
 func (s *DebugStatement) Complete(count int, msg string, err error, output ...any) {
 	s.Count = count
 	s.Message = msg

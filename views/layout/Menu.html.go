@@ -148,7 +148,7 @@ func StreamMenuItem(qw422016 *qt422016.Writer, i *menu.Item, path []string, brea
 //line views/layout/Menu.html:43
 		qw422016.N().S(` `)
 //line views/layout/Menu.html:43
-		qw422016.N().S(`hidden />`)
+		qw422016.N().S(`hidden="hidden" />`)
 //line views/layout/Menu.html:44
 		components.StreamIndent(qw422016, true, indent+2)
 //line views/layout/Menu.html:45

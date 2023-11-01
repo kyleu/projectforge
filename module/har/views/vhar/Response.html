@@ -38,7 +38,7 @@
             <div class="right"><em>{% if r.ContentType() != "" %}{%s r.ContentType() %}, {% endif %}{%s util.ByteSizeSI(int64(r.Content.Size)) %}</em></div>
             <ul class="accordion">
               <li>
-                <input id="accordion-response-body-{%s key %}" type="checkbox" hidden />
+                <input id="accordion-response-body-{%s key %}" type="checkbox" hidden="hidden" />
                 <label class="no-padding" for="accordion-response-body-{%s key %}"><em>(click to show)</em></label>
                 <div class="bd"><div><div>
                   {%- if strings.HasPrefix(r.ContentType(), "image/") -%}

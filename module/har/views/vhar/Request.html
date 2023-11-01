@@ -49,7 +49,7 @@
             {%- elseif r.PostData.Text != "" -%}
             <ul class="accordion">
               <li>
-                <input id="accordion-request-body-{%s key %}" type="checkbox" hidden />
+                <input id="accordion-request-body-{%s key %}" type="checkbox" hidden="hidden" />
                 <label class="no-padding" for="accordion-request-body-{%s key %}"><em>(click to show)</em></label>
                 <div class="bd"><div><div>
                   <pre>{%s r.PostData.Text %}</pre>
@@ -68,7 +68,7 @@
 {% func renderCookiesHidden(key string, cookies har.Cookies, ps *cutil.PageState) %}
   <ul class="accordion">
     <li>
-      <input id="accordion-cookies-{%s key %}" type="checkbox" hidden />
+      <input id="accordion-cookies-{%s key %}" type="checkbox" hidden="hidden" />
       <label class="no-padding" for="accordion-cookies-{%s key %}">{%s util.StringPlural(len(cookies), "Cookie") %} <em>(click to show)</em></label>
       <div class="bd"><div><div>
         {%= renderCookies(key, cookies, ps) %}
@@ -98,7 +98,7 @@
             {%- if len(c.Value) > 64 -%}
             <ul class="accordion">
               <li>
-                <input id="accordion-{%s key %}-cookie-{%d i %}" type="checkbox" hidden />
+                <input id="accordion-{%s key %}-cookie-{%d i %}" type="checkbox" hidden="hidden" />
                 <label class="no-padding" for="accordion-{%s key %}-cookie-{%d i %}">{%s c.Value[:64] %}...</label>
                 <div class="bd"><div><div>
                   {%s c.Value %}
@@ -123,7 +123,7 @@
 {% func renderNVPsHidden(key string, title string, nvps har.NVPs, size int, ps *cutil.PageState) %}
   <ul class="accordion">
     <li>
-      <input id="accordion-{%s key %}" type="checkbox" hidden />
+      <input id="accordion-{%s key %}" type="checkbox" hidden="hidden" />
       <label class="no-padding" for="accordion-{%s key %}">
         {%- if size > 0 -%}
         <div class="right"><em>{%s util.ByteSizeSI(int64(size)) %}</em></div>

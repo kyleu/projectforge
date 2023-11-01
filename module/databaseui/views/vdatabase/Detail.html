@@ -68,6 +68,7 @@
           <th>SQL</th>
           <th>Values</th>
           <th>Count</th>
+          <th>Status</th>
           <th>Message</th>
           <th>Duration</th>
         </tr>
@@ -80,6 +81,13 @@
             </td>
             <td>{%d len(s.Values) %}</td>
             <td>{%d s.Count %}</td>
+            <td>
+              {%- if s.Error == "" -%}
+              OK
+              {%- else -%}
+              <span class="error">[error]: {%s s.ErrorTrimmed(100) %}</span>
+              {%- endif -%}
+            </td>
             <td>{%s s.Message %}</td>
             <td>{%s util.MicrosToMillis(s.Timing) %}</td>
           </tr>

@@ -42,7 +42,7 @@
           e = e.Cleaned()
         -%}
         <li>
-          <input id="accordion-entry-{%s key %}" type="checkbox" hidden />
+          <input id="accordion-entry-{%s key %}" type="checkbox" hidden="hidden" />
           <label title="{%s e.Request.URL %}" for="accordion-entry-{%s key %}">
             {%= RenderEntryOptions(key, e, false) %}
             {%= components.ExpandCollapse(3, ps) %} {%s e.String() %}

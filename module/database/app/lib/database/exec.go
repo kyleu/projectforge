@@ -44,7 +44,7 @@ func (s *Service) Delete(ctx context.Context, q string, tx *sqlx.Tx, expected in
 func (s *Service) DeleteOne(ctx context.Context, q string, tx *sqlx.Tx, logger util.Logger, values ...any) error {
 	_, err := s.Delete(ctx, q, tx, 1, logger, values...)
 	if err != nil {
-		return errors.Wrap(err, errMessage("delete", q, values)+"")
+		return sqlErrMessage(err, "delete", q, values)
 	}
 	return err
 }
@@ -67,7 +67,7 @@ func (s *Service) execUnknown(ctx context.Context, op string, q string, tx *sqlx
 		ret, err = tx.ExecContext(ctx, q, values...)
 	}
 	if err != nil {
-		return 0, errors.Wrap(err, errMessage(op, q, values)+"")
+		return 0, sqlErrMessage(err, op, q, values)
 	}
 	aff, _ := ret.RowsAffected()
 	return int(aff), nil
@@ -84,7 +84,7 @@ func (s *Service) process(
 	aff, err := s.execUnknown(ctx, op, q, tx, logger, values...)
 	defer f(aff, msg, err)
 	if err != nil {
-		return 0, errors.Wrap(err, errMessage(past, q, values))
+		return 0, sqlErrMessage(err, past, q, values)
 	}
 	if expected > -1 && aff != expected {
 		const msg = "expected [%d] %s row(s), but [%d] records affected from sql [%s] with values [%s]"

@@ -41,7 +41,7 @@
 {% func RenderEntry(key string, e *har.Entry, ps *cutil.PageState) %}
   <ul class="accordion">
     <li>
-      <input id="accordion-entry-{%s key %}-duration" type="checkbox" hidden />
+      <input id="accordion-entry-{%s key %}-duration" type="checkbox" hidden="hidden" />
       <label for="accordion-entry-{%s key %}-duration">
         <div class="right"><em>{%s util.MicrosToMillis(e.Duration()) %}</em></div>
         {%= components.ExpandCollapse(3, ps) %} Duration
@@ -62,7 +62,7 @@
       </div></div></div>
     </li>
     <li>
-      <input id="accordion-entry-{%s key %}-request" type="checkbox" hidden />
+      <input id="accordion-entry-{%s key %}-request" type="checkbox" hidden="hidden" />
       <label for="accordion-entry-{%s key %}-request">
         <div class="right"><em>{%s e.Request.Method %}</em></div>
         {%= components.ExpandCollapse(3, ps) %} Request
@@ -72,7 +72,7 @@
       </div></div></div>
     </li>
     <li>
-      <input id="accordion-entry-{%s key %}-response" type="checkbox" hidden />
+      <input id="accordion-entry-{%s key %}-response" type="checkbox" hidden="hidden" />
       <label for="accordion-entry-{%s key %}-response">
         <div class="right"><em>{%s e.Response.StatusText %}</em></div>
         {%= components.ExpandCollapse(3, ps) %} Response

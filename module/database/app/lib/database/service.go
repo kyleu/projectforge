@@ -96,8 +96,12 @@ func (s *Service) Placeholder() string {
 	return s.Type.Placeholder
 }
 
-func errMessage(t string, q string, values []any) string {
-	return fmt.Sprintf("error running %s sql [%s] with values [%s]", t, strings.TrimSpace(q), valueStrings(values))
+func sqlErrMessage(err error, t string, q string, values []any) error {
+	if err == nil {
+		return errors.New("nil passed as argument, unable to create error")
+	}
+	msg := fmt.Sprintf("error [%s] running %s sql [%s] with values [%s]", err.Error(), t, strings.TrimSpace(q), valueStrings(values))
+	return errors.Wrap(err, msg)
 }
 
 type logFunc func(count int, msg string, err error, output ...any)

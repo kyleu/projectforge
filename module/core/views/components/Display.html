@@ -4,6 +4,7 @@
   "time"
 
   "github.com/google/uuid"
+  "github.com/samber/lo"
 
   "{{{ .Package }}}/app/controller/cutil"
   "{{{ .Package }}}/app/lib/filter"
@@ -63,19 +64,55 @@
   <em>no changes</em>
   {%- else -%}
   <div class="overflow full-width">
-    <table>
-      <tbody>
-        {%- for _, d := range value -%}
-        <tr>
-          <td><code>{%s d.Path %}</code></td>
-          <td><code class="error">{%s d.Old %}</code></td>
-          <td>→</td>
-          <td><code class="success">{%s d.New %}</code></td>
-        </tr>
-        {%- endfor -%}
-      </tbody>
-    </table>
+    <div class="overflow full-width">
+      <table class="expanded">
+        <thead>
+          <tr>
+            <th>Path</th>
+            <th>Old</th>
+            <th></th>
+            <th>New</th>
+          </tr>
+        </thead>
+        <tbody>
+          {%- for _, d := range value -%}
+          <tr>
+            <td style="width: 30%;"><code>{%s d.Path %}</code></td>
+            <td style="width: 30%;"><code><em>{%s d.Old %}</em></code></td>
+            <td style="width: 10%;">→</td>
+            <td style="width: 30%;"><code class="success">{%s d.New %}</code></td>
+          </tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
   </div>
+  {%- endif -%}
+{% endstripspace %}{% endfunc %}
+
+{% func DisplayDiffsSet(key string, value util.DiffsSet, ps *cutil.PageState) %}{% stripspace %}
+  {%- if len(value) == 0 -%}
+  <em>no changes</em>
+  {%- else -%}
+  <ul class="accordion">
+    {%- for idx, k := range util.ArraySorted[string](lo.Keys(value)) -%}
+    {%- if idx < 100 -%}
+    <li>
+      <input id="accordion-{%s k %}-{%d idx %}" type="checkbox" hidden="hidden" />
+      <label for="accordion-{%s k %}-{%d idx %}">{%= ExpandCollapse(3, ps) %} {%s k %}</label>
+      <div class="bd"><div><div>
+        {%= DisplayDiffs(value[k]) %}
+      </div></div></div>
+    </li>
+    {%- endif -%}
+    {%- if idx == 100 -%}
+    <li>
+      <input id="accordion-{%s k %}-extras" type="checkbox" hidden="hidden" />
+      <label for="accordion-{%s k %}-extras">...and{% space %}{%d len(value) - 100 %}{% space %}extra</label>
+    </li>
+    {%- endif -%}
+    {%- endfor -%}
+  </ul>
   {%- endif -%}
 {% endstripspace %}{% endfunc %}
 

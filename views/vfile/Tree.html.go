@@ -92,7 +92,7 @@ func streamtreeNode(qw422016 *qt422016.Writer, n *filesystem.Node, pth string, u
 //line views/vfile/Tree.html:32
 	qw422016.E().S(pathID)
 //line views/vfile/Tree.html:32
-	qw422016.N().S(`" type="checkbox" hidden />`)
+	qw422016.N().S(`" type="checkbox" hidden="hidden" />`)
 //line views/vfile/Tree.html:33
 	components.StreamIndent(qw422016, true, indent+1)
 //line views/vfile/Tree.html:33
