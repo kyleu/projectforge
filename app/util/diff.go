@@ -40,6 +40,8 @@ func (d Diffs) StringVerbose() string {
 	}), "; ")
 }
 
+type DiffsSet map[string]Diffs
+
 func DiffObjects(l any, r any, path ...string) Diffs {
 	return DiffObjectsIgnoring(l, r, nil, path...)
 }
