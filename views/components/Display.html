@@ -97,9 +97,7 @@
   {%- else -%}
   <ul class="accordion">
     {%- for idx, k := range util.ArraySorted[string](lo.Keys(value)) -%}
-      {% code
-        dk, u := util.StringSplitLast(k, '^', true)
-      %}
+      {% code dk, u := util.StringSplitLast(k, '^', true) %}
       {%- if idx < 100 -%}
         <li>
           <input id="accordion-{%s k %}-{%d idx %}" type="checkbox" hidden="hidden" />
