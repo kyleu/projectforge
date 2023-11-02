@@ -27,9 +27,11 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool, linebreak stri
 		g.AddImport(helper.ImpFmt)
 	}
 	g.AddImport(helper.ImpAppUtil, helper.ImpContext, helper.ImpErrors, helper.ImpSQLx, helper.ImpFilter, helper.ImpAppDatabase, helper.ImpLo)
-	if err := helper.SpecialImports(g, m.IndexedColumns(true), m.PackageWithGroup(""), args.Enums); err != nil {
+	imps, err := helper.SpecialImports(m.IndexedColumns(true), m.PackageWithGroup(""), args.Enums)
+	if err != nil {
 		return nil, err
 	}
+	g.AddImport(imps...)
 	g.AddBlocks(serviceList(m, args.DBRef()))
 	g.AddBlocks(serviceCount(g, m, args.DBRef()))
 	pkLen := len(m.PKs())

@@ -22,10 +22,17 @@ func Row(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*f
 		g.AddImport(imp)
 	})
 	g.AddImport(helper.ImpStrings, helper.ImpAppUtil, helper.ImpFmt)
-	if err := helper.SpecialImports(g, m.Columns, m.PackageWithGroup(""), args.Enums); err != nil {
+	imps, err := helper.SpecialImports(m.Columns, m.PackageWithGroup(""), args.Enums)
+	if err != nil {
 		return nil, err
 	}
+	g.AddImport(imps...)
 	g.AddImport(helper.ImpLo)
+	imps, err = helper.EnumImports(m.Columns.Types(), m.PackageWithGroup(""), args.Enums)
+	if err != nil {
+		return nil, err
+	}
+	g.AddImport(imps...)
 	lo.ForEach(m.Columns, func(col *model.Column, _ int) {
 		if col.Nullable && (types.IsString(col.Type) || types.IsInt(col.Type) || types.IsBool(col.Type)) {
 			g.AddImport(helper.ImpSQL)
@@ -121,6 +128,9 @@ func modelRowToModel(g *golang.File, m *model.Model, enums enum.Enums, database 
 			case types.KeyEnum:
 				if e, _ := model.AsEnumInstance(c.Type.ListType(), enums); e != nil {
 					t = e.ProperPlural()
+					if e.PackageWithGroup("") != m.PackageWithGroup("") {
+						t = e.Package + "." + t
+					}
 					decoder = "[]byte(" + decoder + ")"
 				}
 			}

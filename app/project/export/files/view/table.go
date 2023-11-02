@@ -8,7 +8,6 @@ import (
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/file"
-	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
@@ -23,12 +22,11 @@ func table(m *model.Model, args *model.Args, addHeader bool, linebreak string) (
 	if m.Columns.HasFormat(model.FmtCountry.Key) || m.Columns.HasFormat(model.FmtSI.Key) {
 		g.AddImport(helper.ImpAppUtil)
 	}
-	lo.ForEach(m.Columns.WithoutDisplays(util.KeyDetail), func(c *model.Column, _ int) {
-		if c.Type.Key() == types.KeyEnum {
-			e, _ := model.AsEnumInstance(c.Type, args.Enums)
-			g.AddImport(helper.AppImport("app/" + e.PackageWithGroup("")))
-		}
-	})
+	imps, err := helper.EnumImports(m.Columns.WithoutDisplays(util.KeyDetail).Types(), m.PackageWithGroup(""), args.Enums)
+	if err != nil {
+		return nil, err
+	}
+	g.AddImport(imps...)
 	vtf, err := exportViewTableFunc(m, args.Models, args.Enums, g)
 	if err != nil {
 		return nil, err

@@ -34,10 +34,21 @@ func detail(m *model.Model, args *model.Args, addHeader bool, linebreak string) 
 			g.AddImport(helper.AppImport("views/" + rm.PackageWithGroup("v")))
 		}
 	})
+	imps, err := helper.EnumImports(m.Columns.Types(), m.PackageWithGroup(""), args.Enums)
+	if err != nil {
+		return nil, err
+	}
+	g.AddImport(imps...)
 	lo.ForEach(m.Columns, func(c *model.Column, _ int) {
-		if c.Type.Key() == types.KeyEnum {
+		switch c.Type.Key() {
+		case types.KeyEnum:
 			e, _ := model.AsEnumInstance(c.Type, args.Enums)
 			g.AddImport(helper.AppImport("app/" + e.PackageWithGroup("")))
+		case types.KeyList:
+			if t := c.Type.ListType(); t != nil && t.Key() == types.KeyEnum {
+				e, _ := model.AsEnumInstance(t, args.Enums)
+				g.AddImport(helper.AppImport("app/" + e.PackageWithGroup("")))
+			}
 		}
 	})
 	if len(rrs) > 0 || args.Audit(m) {

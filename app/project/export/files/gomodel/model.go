@@ -24,10 +24,16 @@ func Model(m *model.Model, args *model.Args, addHeader bool, linebreak string) (
 		g.AddImport(imp)
 	})
 	g.AddImport(helper.ImpAppUtil)
-	err := helper.SpecialImports(g, m.Columns, m.PackageWithGroup(""), args.Enums)
+	imps, err := helper.SpecialImports(m.Columns, m.PackageWithGroup(""), args.Enums)
 	if err != nil {
 		return nil, err
 	}
+	g.AddImport(imps...)
+	imps, err = helper.EnumImports(m.Columns.Types(), m.PackageWithGroup(""), args.Enums)
+	if err != nil {
+		return nil, err
+	}
+	g.AddImport(imps...)
 	if len(m.PKs()) > 1 {
 		pk, e := modelPK(m, args.Enums)
 		if e != nil {

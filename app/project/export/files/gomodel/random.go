@@ -70,7 +70,14 @@ func randForType(t *types.Wrapped, format string, nullable bool, tags []string, 
 		case types.KeyEnum:
 			e, _ := model.AsEnumInstance(lt, enums)
 			if e != nil {
-				return fmt.Sprintf("%s{All%s.Random(), All%s.Random()}", e.ProperPlural(), e.ProperPlural(), e.ProperPlural()), nil
+				eRef := e.ProperPlural()
+				xRef := "All"+e.ProperPlural()
+				if e.PackageWithGroup("") != pkg {
+					eRef = e.Package + "." + eRef
+					xRef = e.Package + "." + xRef
+				}
+
+				return fmt.Sprintf("%s{%s.Random(), %s.Random()}", eRef, xRef, xRef), nil
 			}
 			return nilKey, nil
 		}

@@ -97,21 +97,27 @@
   {%- else -%}
   <ul class="accordion">
     {%- for idx, k := range util.ArraySorted[string](lo.Keys(value)) -%}
-    {%- if idx < 100 -%}
-    <li>
-      <input id="accordion-{%s k %}-{%d idx %}" type="checkbox" hidden="hidden" />
-      <label for="accordion-{%s k %}-{%d idx %}">{%= ExpandCollapse(3, ps) %} {%s k %}</label>
-      <div class="bd"><div><div>
-        {%= DisplayDiffs(value[k]) %}
-      </div></div></div>
-    </li>
-    {%- endif -%}
-    {%- if idx == 100 -%}
-    <li>
-      <input id="accordion-{%s k %}-extras" type="checkbox" hidden="hidden" />
-      <label for="accordion-{%s k %}-extras">...and{% space %}{%d len(value) - 100 %}{% space %}extra</label>
-    </li>
-    {%- endif -%}
+      {% code
+        dk, u := util.StringSplitLast(k, '^', true)
+      %}
+      {%- if idx < 100 -%}
+        <li>
+          <input id="accordion-{%s k %}-{%d idx %}" type="checkbox" hidden="hidden" />
+          <label for="accordion-{%s k %}-{%d idx %}">
+            {%= ExpandCollapse(3, ps) %}
+            {% if u != "" %}<a href="{%s u %}">{%s dk %}</a>{% else %}{%s dk %}{% endif %}
+          </label>
+          <div class="bd"><div><div>
+            {%= DisplayDiffs(value[k]) %}
+          </div></div></div>
+        </li>
+      {%- endif -%}
+      {%- if idx == 100 -%}
+        <li>
+          <input id="accordion-{%s k %}-extras" type="checkbox" hidden="hidden" />
+          <label for="accordion-{%s k %}-extras">...and{% space %}{%d len(value) - 100 %}{% space %}extra</label>
+        </li>
+      {%- endif -%}
     {%- endfor -%}
   </ul>
   {%- endif -%}

@@ -19,10 +19,16 @@ import (
 func ModelMap(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, strings.ToLower(m.Camel())+"map")
 	g.AddImport(helper.ImpAppUtil)
-	err := helper.SpecialImports(g, m.Columns, m.PackageWithGroup(""), args.Enums)
+	imps, err := helper.SpecialImports(m.Columns, m.PackageWithGroup(""), args.Enums)
 	if err != nil {
 		return nil, err
 	}
+	g.AddImport(imps...)
+	imps, err = helper.EnumImports(m.Columns.Types(), m.PackageWithGroup(""), args.Enums)
+	if err != nil {
+		return nil, err
+	}
+	g.AddImport(imps...)
 	if b, e := modelFromMap(g, m, args.Enums, args.Database); e == nil {
 		g.AddBlocks(b)
 	} else {
@@ -113,7 +119,11 @@ func forCols(g *golang.File, ret *golang.Block, indent int, m *model.Model, enum
 			if e, _ := model.AsEnumInstance(lt.V, enums); e != nil {
 				ret.W(ind+"ret%s, err := m.Parse%s(%q, true, true)", col.Proper(), col.ToGoMapParse(), col.Camel())
 				catchErr("err")
-				ret.W(ind+"ret.%s = %sParse(nil, ret%s...)", col.Proper(), e.Proper(), col.Proper())
+				eRef := e.Proper()
+				if e.PackageWithGroup("") != m.PackageWithGroup("") {
+					eRef = e.Package + "." + eRef
+				}
+				ret.W(ind+"ret.%s = %sParse(nil, ret%s...)", col.Proper(), eRef, col.Proper())
 			} else {
 				ret.W(ind+"ret.%s, err = m.Parse%s(%q, true, true)", col.Proper(), col.ToGoMapParse(), col.Camel())
 				catchErr("err")

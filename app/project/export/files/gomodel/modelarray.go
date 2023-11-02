@@ -29,17 +29,17 @@ func Models(m *model.Model, args *model.Args, addHeader bool, goVersion string, 
 	g.AddImport(helper.ImpSlicesForGo(goVersion))
 	g.AddImport(helper.ImpLo, helper.ImpAppUtil)
 	g.AddBlocks(modelArray(m))
-	err := helper.SpecialImports(g, m.IndexedColumns(true), m.PackageWithGroup(""), args.Enums)
+
+	imps, err := helper.SpecialImports(m.IndexedColumns(true), m.PackageWithGroup(""), args.Enums)
 	if err != nil {
 		return nil, err
 	}
-
+	g.AddImport(imps...)
 	ag, err := modelArrayGet(g, m, m.PKs(), args.Enums, goVersion)
 	if err != nil {
 		return nil, err
 	}
 	g.AddBlocks(ag)
-
 	lo.ForEach(m.PKs(), func(pk *model.Column, _ int) {
 		if pk.Proper() != "Title" {
 			g.AddBlocks(modelArrayCol(m, pk, args.Enums))
