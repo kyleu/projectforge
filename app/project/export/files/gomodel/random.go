@@ -71,7 +71,7 @@ func randForType(t *types.Wrapped, format string, nullable bool, tags []string, 
 			e, _ := model.AsEnumInstance(lt, enums)
 			if e != nil {
 				eRef := e.ProperPlural()
-				xRef := "All"+e.ProperPlural()
+				xRef := "All" + e.ProperPlural()
 				if e.PackageWithGroup("") != pkg {
 					eRef = e.Package + "." + eRef
 					xRef = e.Package + "." + xRef
