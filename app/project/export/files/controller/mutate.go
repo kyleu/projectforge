@@ -36,7 +36,11 @@ func controllerCreateForm(m *model.Model, grp *model.Column, models model.Models
 			encounteredRelTables = append(encounteredRelTables, rel.Table)
 		}
 		ret.W("\t\t\tif err == nil && random%s != nil {", relModel.Proper())
-		ret.W("\t\t\t\tret.%s = random%s.%s", srcCol.Proper(), relModel.Proper(), tgtCol.Proper())
+		var ref string
+		if srcCol.Nullable && !tgtCol.Nullable {
+			ref = "&"
+		}
+		ret.W("\t\t\t\tret.%s = %srandom%s.%s", srcCol.Proper(), ref, relModel.Proper(), tgtCol.Proper())
 		ret.W("\t\t\t}")
 	}
 
