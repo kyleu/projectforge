@@ -2,6 +2,7 @@ package controller
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/samber/lo"
@@ -10,7 +11,7 @@ import (
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func controllerCreateForm(m *model.Model, grp *model.Column, prefix string) *golang.Block {
+func controllerCreateForm(m *model.Model, grp *model.Column, models model.Models, prefix string) *golang.Block {
 	ret := blockFor(m, prefix, grp, "create", "form")
 	if grp != nil {
 		controllerArgFor(grp, ret, `""`, 2)
@@ -22,6 +23,23 @@ func controllerCreateForm(m *model.Model, grp *model.Column, prefix string) *gol
 	ret.W("\t\tret := &%s{%s}", m.ClassRef(), strings.Join(decls, ", "))
 	ret.W("\t\tif string(rc.QueryArgs().Peek(\"prototype\")) == util.KeyRandom {")
 	ret.W("\t\t\tret = %s.Random()", m.Package)
+	var encounteredRelTables []string
+	for _, rel := range m.Relations {
+		relModel := models.Get(rel.Table)
+		if !relModel.CanTraverseRelation() {
+			continue
+		}
+		srcCol := rel.SrcColumns(m)[0]
+		tgtCol := rel.TgtColumns(relModel)[0]
+		if !slices.Contains(encounteredRelTables, rel.Table) {
+			ret.W("\t\t\trandom%s, err := as.Services.%s.Random(ps.Context, nil, ps.Logger)", relModel.Proper(), relModel.Proper())
+			encounteredRelTables = append(encounteredRelTables, rel.Table)
+		}
+		ret.W("\t\t\tif err == nil && random%s != nil {", relModel.Proper())
+		ret.W("\t\t\t\tret.%s = random%s.%s", srcCol.Proper(), relModel.Proper(), tgtCol.Proper())
+		ret.W("\t\t\t}")
+	}
+
 	ret.W("\t\t}")
 
 	if grp == nil {

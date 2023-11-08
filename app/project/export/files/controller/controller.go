@@ -41,7 +41,7 @@ func Controller(m *model.Model, args *model.Args, addHeader bool, linebreak stri
 	}
 	g.AddBlocks(cl, controllerDetail(g, args.Models, m, nil, args.Audit(m), prefix))
 	g.AddBlocks(
-		controllerCreateForm(m, nil, prefix), controllerRandom(m, prefix), controllerCreate(m, nil, prefix),
+		controllerCreateForm(m, nil, args.Models, prefix), controllerRandom(m, prefix), controllerCreate(m, nil, prefix),
 		controllerEditForm(m, nil, prefix), controllerEdit(m, nil, prefix), controllerDelete(m, nil, prefix),
 	)
 	g.AddBlocks(controllerModelFromPath(m), controllerModelFromForm(m))

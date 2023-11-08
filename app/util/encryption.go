@@ -11,6 +11,7 @@ import (
 	"io"
 	"strings"
 
+	"github.com/google/uuid"
 	"github.com/pkg/errors"
 )
 
@@ -76,6 +77,14 @@ func HashFNV32(s string) uint32 {
 	h := fnv.New32a()
 	_, _ = h.Write([]byte(s))
 	return h.Sum32()
+}
+
+func HashFNV128UUID(s string) uuid.UUID {
+	h := fnv.New128a()
+	_, _ = h.Write([]byte(s))
+	b := h.Sum(make([]byte, 0, 16))
+	ret, _ := uuid.FromBytes(b)
+	return ret
 }
 
 // HashSHA256 returns a Base64-encoded string representing the SHA-256 hash of the argument.
