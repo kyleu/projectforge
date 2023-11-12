@@ -46,7 +46,8 @@ func EnumImports(ts types.Types, pkg string, enums enum.Enums) (golang.Imports, 
 				ret = append(ret, AppImport("app/"+ep))
 			}
 		case types.KeyList:
-			if x := (t.(*types.Wrapped)).ListType(); t != nil && x.Key() == types.KeyEnum {
+			w, _ := t.(*types.Wrapped)
+			if x := w.ListType(); t != nil && x.Key() == types.KeyEnum {
 				e, _ := model.AsEnumInstance(x, enums)
 				ep := e.PackageWithGroup("")
 				if ep != pkg {

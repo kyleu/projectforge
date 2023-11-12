@@ -45,10 +45,10 @@ func Row(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*f
 			}
 		}
 	})
-	if tc, err := modelTableCols(m); err == nil {
+	if tc, err2 := modelTableCols(m); err2 == nil {
 		g.AddBlocks(tc)
 	} else {
-		return nil, err
+		return nil, err2
 	}
 	mrow, err := modelRow(m, args.Enums, args.Database)
 	if err != nil {
@@ -96,6 +96,7 @@ func modelRow(m *model.Model, enums enum.Enums, database string) (*golang.Block,
 	return ret, nil
 }
 
+//nolint:gocognit
 func modelRowToModel(g *golang.File, m *model.Model, enums enum.Enums, database string) (*golang.Block, error) {
 	ret := golang.NewBlock(m.Proper(), "func")
 	ret.W("func (r *row) To%s() *%s {", m.Proper(), m.Proper())
