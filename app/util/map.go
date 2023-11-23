@@ -19,10 +19,51 @@ func ValueMapFor(kvs ...any) ValueMap {
 	return ret
 }
 
-func (m ValueMap) ToStringMap() map[string]string {
-	return lo.MapValues(m, func(_ any, key string) string {
-		return m.GetStringOpt(key)
+func (m ValueMap) Add(kvs ...any) {
+	for i := 0; i < len(kvs); i += 2 {
+		k, ok := kvs[i].(string)
+		if !ok {
+			k = fmt.Sprintf("error-invalid-type:%T", kvs[i])
+		}
+		m[k] = kvs[i+1]
+	}
+}
+
+func (m ValueMap) Merge(args ...ValueMap) ValueMap {
+	ret := m.Clone()
+	lo.ForEach(args, func(arg ValueMap, _ int) {
+		for k, v := range arg {
+			ret[k] = v
+		}
 	})
+	return ret
+}
+
+func (m ValueMap) Filter(keys []string) ValueMap {
+	filteredMap := ValueMap{}
+	lo.ForEach(keys, func(key string, _ int) {
+		if data, ok := m[key]; ok {
+			filteredMap[key] = data
+		}
+	})
+	return filteredMap
+}
+
+func (m ValueMap) Overwrite(sourceMap ValueMap) ValueMap {
+	destMap := m.Clone()
+	for key, data := range sourceMap {
+		destMap[key] = data
+	}
+	return destMap
+}
+
+func (m ValueMap) HasKey(key string) bool {
+	_, ok := m[key]
+	return ok
+}
+
+func (m ValueMap) Keys() []string {
+	return ArraySorted(lo.Keys(m))
 }
 
 func (m ValueMap) KeysAndValues() ([]string, []any) {
@@ -33,9 +74,30 @@ func (m ValueMap) KeysAndValues() ([]string, []any) {
 	return cols, vals
 }
 
-const selectedSuffix = "--selected"
+func (m ValueMap) Clone() ValueMap {
+	ret := make(ValueMap, len(m))
+	for k, v := range m {
+		ret[k] = v
+	}
+	return ret
+}
+
+func (m ValueMap) ToStringMap() map[string]string {
+	return lo.MapValues(m, func(_ any, key string) string {
+		return m.GetStringOpt(key)
+	})
+}
+
+func (m ValueMap) ToQueryString() string {
+	params := url.Values{}
+	for k, v := range m {
+		params.Add(k, fmt.Sprint(v))
+	}
+	return params.Encode()
+}
 
 func (m ValueMap) AsChanges() (ValueMap, error) {
+	const selectedSuffix = "--selected"
 	var keys []string
 	vals := ValueMap{}
 
@@ -57,46 +119,6 @@ func (m ValueMap) AsChanges() (ValueMap, error) {
 	}), nil
 }
 
-func (m ValueMap) Keys() []string {
-	return ArraySorted(lo.Keys(m))
-}
-
-func (m ValueMap) Merge(args ...ValueMap) ValueMap {
-	ret := m.Clone()
-	lo.ForEach(args, func(arg ValueMap, _ int) {
-		for k, v := range arg {
-			ret[k] = v
-		}
-	})
-	return ret
-}
-
-func (m ValueMap) Add(kvs ...any) {
-	for i := 0; i < len(kvs); i += 2 {
-		k, ok := kvs[i].(string)
-		if !ok {
-			k = fmt.Sprintf("error-invalid-type:%T", kvs[i])
-		}
-		m[k] = kvs[i+1]
-	}
-}
-
-func (m ValueMap) Clone() ValueMap {
-	ret := make(ValueMap, len(m))
-	for k, v := range m {
-		ret[k] = v
-	}
-	return ret
-}
-
-func (m ValueMap) ToQueryString() string {
-	params := url.Values{}
-	for k, v := range m {
-		params.Add(k, fmt.Sprint(v))
-	}
-	return params.Encode()
-}
-
 func (m ValueMap) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 	tokens := []xml.Token{start}
 	for key, value := range m {
@@ -115,22 +137,4 @@ func (m ValueMap) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 		}
 	}
 	return e.Flush()
-}
-
-func (m ValueMap) Filter(keys []string) ValueMap {
-	filteredMap := ValueMap{}
-	lo.ForEach(keys, func(key string, _ int) {
-		if data, ok := m[key]; ok {
-			filteredMap[key] = data
-		}
-	})
-	return filteredMap
-}
-
-func (m ValueMap) Overwrite(sourceMap ValueMap) ValueMap {
-	destMap := m.Clone()
-	for key, data := range sourceMap {
-		destMap[key] = data
-	}
-	return destMap
 }

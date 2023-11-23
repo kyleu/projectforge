@@ -87,7 +87,7 @@ func ExecSocket(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		err = as.Services.Socket.Upgrade(ps.Context, rc, ex.String(){{{ if .HasAccount }}}, ps.User{{{ end }}}, ps.Profile{{{ if .HasAccount }}}, ps.Accounts{{{ end }}}, ps.Logger)
+		err = as.Services.Socket.Upgrade(ps.Context, rc, ex.String(){{{ if .HasUser }}}, ps.User{{{ end }}}, ps.Profile{{{ if .HasAccount }}}, ps.Accounts{{{ end }}}, ps.Logger)
 		if err != nil {
 			ps.Logger.Warn("unable to upgrade connection to websocket")
 			return "", err

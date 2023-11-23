@@ -35,7 +35,7 @@ func NewServices(ctx context.Context, st *State, logger util.Logger) (*Services,
 	}
 	{{{ end }}}return &Services{
 		{{{ if.HasModule "process" }}}Exec:   exec.NewService(),
-		{{{ end }}}{{{ if.HasModule "scripting" }}}Script: scripting.NewService(st.FS, "scripts"),
+		{{{ end }}}{{{ if.HasModule "scripting" }}}Script: scripting.NewService(st.Files, "scripts"),
 		{{{ end }}}{{{ if.HasModule "websocket" }}}Socket: websocket.NewService(nil, nil, nil),
 		{{{ end }}}{{{ if.HasUser }}}User:   user.NewService(st.Files, logger),
 		{{{ end}}}{{{ if.HasModule "help" }}}Help:   help.NewService(logger),

@@ -1,8 +1,8 @@
 import {defineConfig, devices, PlaywrightTestOptions, PlaywrightWorkerOptions, Project} from "@playwright/test";
 
 const prj = (
-  name: string, device: string, channel: string, width: number, height: number,
-  dark: boolean = false, reduceMotion: boolean = false, jsDisabled: boolean = false,
+    name: string, device: string, channel: string, width: number, height: number,
+    dark: boolean = false, reduceMotion: boolean = false, jsDisabled: boolean = false,
 ): Project<PlaywrightTestOptions & PlaywrightWorkerOptions> => {
   return {
     name,
@@ -25,7 +25,11 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
-  reporter: "html",
+  reporter: [
+    ["html"],
+    ["json", { outputFile: "playwright-report/results.json"}],
+    ["list"]
+  ],
   use: {
     baseURL: process.env.TEST_URL || "http://127.0.0.1:{{{ .Port }}}",
   },

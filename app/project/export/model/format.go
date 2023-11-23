@@ -16,6 +16,7 @@ var (
 	FmtLinebreaks = Format{Key: "linebreaks", Title: "Linebreaks", Description: ""}
 	FmtSelect     = Format{Key: "select", Title: "Select Box", Description: ""}
 	FmtSI         = Format{Key: "si", Title: "SI Units", Description: ""}
+	FmtTags       = Format{Key: "tags", Title: "Tags", Description: ""}
 	FmtURL        = Format{Key: "url", Title: "URL", Description: ""}
 
 	AllFormats = Formats{FmtCode, FmtCodeHidden, FmtCountry, FmtHTML, FmtJSON, FmtSelect, FmtSI, FmtURL}

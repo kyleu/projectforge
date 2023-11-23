@@ -136,7 +136,7 @@
         },
         "format": {
           "description": "used for strings, controls output format in UI",
-          "enum": ["code", "codehidden", "country","html", "icon", "json", "linebreaks", "select", "si", "url"]
+          "enum": ["code", "codehidden", "country","html", "icon", "json", "linebreaks", "select", "si", "tags", "url"]
         },
         "values": {
           "description": "when format is \"select\", this controls the available values",
