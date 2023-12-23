@@ -48,7 +48,7 @@ func (m *Module) WebPath() string {
 }
 
 func (m *Module) DocPath() string {
-	return "doc/module/" + m.Key + ".md"
+	return "doc/module/" + m.Key + util.ExtMarkdown
 }
 
 type Modules []*Module

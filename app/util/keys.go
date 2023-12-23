@@ -16,6 +16,9 @@ const (
 	KeyRandom  = "random"
 	KeyUnknown = "unknown"
 
+	ExtJSON     = ".json"
+	ExtMarkdown = ".md"
+
 	// $PF_SECTION_START(keys)$.
 	DatabaseMySQL      = "mysql"
 	DatabasePostgreSQL = "postgres"
@@ -24,5 +27,14 @@ const (
 
 	KeyDetail = "detail"
 	KeySimple = "simple"
+
+	ExtCSS  = ".css"
+	ExtGo   = ".go"
+	ExtHTML = ".html"
+	ExtJS   = ".js"
+	ExtMod  = ".mod"
+	ExtSQL  = ".sql"
+	ExtSVG  = ".svg"
+	ExtTS   = ".ts"
 	// $PF_SECTION_END(keys)$.
 )

@@ -19,7 +19,7 @@ const commonLine = "  %sBy%s %s.%s"
 func detail(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "Detail.html")
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpLayout)
-	g.AddImport(helper.AppImport("app/" + m.PackageWithGroup("")))
+	g.AddImport(helper.AppImport(m.PackageWithGroup("")))
 	rrs := args.Models.ReverseRelations(m.Name)
 	if len(rrs) > 0 {
 		g.AddImport(helper.ImpFilter)
@@ -29,9 +29,9 @@ func detail(m *model.Model, args *model.Args, addHeader bool, linebreak string) 
 	}
 	lo.ForEach(rrs, func(rel *model.Relation, _ int) {
 		rm := args.Models.Get(rel.Table)
-		g.AddImport(helper.AppImport("app/" + rm.PackageWithGroup("")))
+		g.AddImport(helper.AppImport(rm.PackageWithGroup("")))
 		if rm.PackageWithGroup("") != m.PackageWithGroup("") {
-			g.AddImport(helper.AppImport("views/" + rm.PackageWithGroup("v")))
+			g.AddImport(helper.ViewImport(rm.PackageWithGroup("v")))
 		}
 	})
 	imps, err := helper.EnumImports(m.Columns.Types(), m.PackageWithGroup(""), args.Enums)
@@ -43,11 +43,11 @@ func detail(m *model.Model, args *model.Args, addHeader bool, linebreak string) 
 		switch c.Type.Key() {
 		case types.KeyEnum:
 			e, _ := model.AsEnumInstance(c.Type, args.Enums)
-			g.AddImport(helper.AppImport("app/" + e.PackageWithGroup("")))
+			g.AddImport(helper.AppImport(e.PackageWithGroup("")))
 		case types.KeyList:
 			if t := c.Type.ListType(); t != nil && t.Key() == types.KeyEnum {
 				e, _ := model.AsEnumInstance(t, args.Enums)
-				g.AddImport(helper.AppImport("app/" + e.PackageWithGroup("")))
+				g.AddImport(helper.AppImport(e.PackageWithGroup("")))
 			}
 		}
 	})
@@ -55,8 +55,8 @@ func detail(m *model.Model, args *model.Args, addHeader bool, linebreak string) 
 		g.AddImport(helper.ImpFilter)
 	}
 	if args.Audit(m) {
-		g.AddImport(helper.AppImport("app/lib/audit"))
-		g.AddImport(helper.AppImport("views/vaudit"))
+		g.AddImport(helper.AppImport("lib/audit"))
+		g.AddImport(helper.ViewImport("vaudit"))
 	}
 	vdb, err := exportViewDetailBody(g, m, args.Audit(m), args.Models, args.Enums)
 	if err != nil {
@@ -79,7 +79,7 @@ func exportViewDetailClass(m *model.Model, models model.Models, audit bool, g *g
 		relModel := models.Get(rel.Table)
 		relCols := rel.SrcColumns(m)
 		relNames := strings.Join(relCols.ProperNames(), "")
-		g.AddImport(helper.AppImport("app/" + relModel.PackageWithGroup("")))
+		g.AddImport(helper.AppImport(relModel.PackageWithGroup("")))
 		ret.W(commonLine, relModel.Proper(), relNames, "*"+relModel.Package, relModel.Proper())
 	})
 

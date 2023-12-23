@@ -28,7 +28,7 @@ func SpecialImports(cols model.Columns, pkg string, enums enum.Enums) (golang.Im
 				return nil, err
 			}
 			if e.PackageWithGroup("") != pkg {
-				ret = append(ret, AppImport(e.PackageWithGroup("app")))
+				ret = append(ret, AppImport(e.PackageWithGroup("")))
 			}
 		}
 	}
@@ -43,7 +43,7 @@ func EnumImports(ts types.Types, pkg string, enums enum.Enums) (golang.Imports, 
 			e, _ := model.AsEnumInstance(t, enums)
 			ep := e.PackageWithGroup("")
 			if ep != pkg {
-				ret = append(ret, AppImport("app/"+ep))
+				ret = append(ret, AppImport(ep))
 			}
 		case types.KeyList:
 			w, _ := t.(*types.Wrapped)
@@ -51,7 +51,7 @@ func EnumImports(ts types.Types, pkg string, enums enum.Enums) (golang.Imports, 
 				e, _ := model.AsEnumInstance(x, enums)
 				ep := e.PackageWithGroup("")
 				if ep != pkg {
-					ret = append(ret, AppImport("app/"+ep))
+					ret = append(ret, AppImport(ep))
 				}
 			}
 		}

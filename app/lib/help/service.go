@@ -63,8 +63,8 @@ func loadEntries(logger util.Logger) (Entries, error) {
 
 func entryFor(key string, hd string, ft string, indent int) (*Entry, error) {
 	path := key
-	if !strings.HasSuffix(path, ".md") {
-		path += ".md"
+	if !strings.HasSuffix(path, util.ExtMarkdown) {
+		path += util.ExtMarkdown
 	}
 	md, err := help.Content(path)
 	if err != nil {

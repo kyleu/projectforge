@@ -46,7 +46,7 @@ func Handle(path []string, as *app.State, ps *cutil.PageState) (string, layout.P
 	case keyTech:
 		page, err = mdTemplate("This static page describes the technology used in "+util.AppName, "technology.md", "shield", ps)
 	default:
-		page, err = mdTemplate("Documentation for "+util.AppName, path[0]+".md", "", ps)
+		page, err = mdTemplate("Documentation for "+util.AppName, path[0]+util.ExtMarkdown, "", ps)
 		if err != nil {
 			page = &verror.NotFound{Path: "/" + strings.Join(path, "/")}
 			err = nil

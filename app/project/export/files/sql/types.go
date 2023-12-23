@@ -20,19 +20,19 @@ func Types(enums enum.Enums, addHeader bool, linebreak string, database string) 
 
 func typesDrop(enums enum.Enums, database string) *golang.Block {
 	ret := golang.NewBlock("TypesDrop", "sql")
-	ret.W("-- {%% func TypesDrop() %%}")
+	ret.W(sqlFunc("TypesDrop"))
 	for i := len(enums) - 1; i >= 0; i-- {
 		if database != util.DatabaseSQLite {
 			ret.W("drop type if exists %q;", enums[i].Name)
 		}
 	}
-	ret.W("-- {%% endfunc %%}")
+	ret.W(sqlEnd())
 	return ret
 }
 
 func typesCreate(enums enum.Enums, database string) *golang.Block {
 	ret := golang.NewBlock("SQLCreateAll", "sql")
-	ret.W("-- {%% func TypesCreate() %%}")
+	ret.W(sqlFunc("TypesCreate"))
 	lo.ForEach(enums, func(e *enum.Enum, _ int) {
 		// create type model_service as enum ('team', 'sprint', 'estimate', 'standup', 'retro', 'story', 'feedback', 'report');
 		q := make([]string, 0, len(e.Values))
@@ -49,6 +49,6 @@ func typesCreate(enums enum.Enums, database string) *golang.Block {
 			ret.W("end $$;")
 		}
 	})
-	ret.W("-- {%% endfunc %%}")
+	ret.W(sqlEnd())
 	return ret
 }

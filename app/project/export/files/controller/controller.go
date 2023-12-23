@@ -28,8 +28,8 @@ func Controller(m *model.Model, args *model.Args, addHeader bool, linebreak stri
 		g.AddImport(helper.ImpAppController)
 	}
 	g.AddImport(helper.ImpFmt, helper.ImpErrors, helper.ImpFastHTTP, helper.ImpApp, helper.ImpAppUtil, helper.ImpCutil)
-	g.AddImport(helper.AppImport("app/" + m.PackageWithGroup("")))
-	g.AddImport(helper.AppImport("views/" + m.PackageWithGroup("v")))
+	g.AddImport(helper.AppImport(m.PackageWithGroup("")))
+	g.AddImport(helper.ViewImport(m.PackageWithGroup("v")))
 
 	var prefix string
 	if len(m.Group) > 0 {

@@ -43,7 +43,7 @@ func componentDetail(key string, ps *cutil.PageState) (layout.Page, error) {
 }
 
 func componentTemplate(key string) (string, string, error) {
-	title, html, err := doc.HTML("components:"+key, "components/"+key+".md", func(s string) (string, string, error) {
+	title, html, err := doc.HTML("components:"+key, "components/"+key+util.ExtMarkdown, func(s string) (string, string, error) {
 		ret, err := cutil.FormatMarkdown(s)
 		if err != nil {
 			return "", "", err

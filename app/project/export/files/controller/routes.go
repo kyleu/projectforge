@@ -20,7 +20,7 @@ func Routes(args *model.Args, addHeader bool, linebreak string) (*file.File, err
 		if len(m.Group) == 0 {
 			g.AddImport(helper.ImpAppController)
 		} else {
-			g.AddImport(helper.AppImport("app/controller/" + m.GroupString("c", "")))
+			g.AddImport(helper.AppImport("controller/" + m.GroupString("c", "")))
 		}
 	})
 	return g.Render(addHeader, linebreak)

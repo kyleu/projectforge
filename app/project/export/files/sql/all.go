@@ -17,27 +17,27 @@ func MigrationAll(models model.Models, enums enum.Enums, addHeader bool, linebre
 
 func sqlDropAll(models model.Models, enums enum.Enums) *golang.Block {
 	ret := golang.NewBlock("SQLDropAll", "sql")
-	ret.W("-- {%% func DropAll() %%}")
+	ret.W(sqlFunc("DropAll"))
 	for i := len(models) - 1; i >= 0; i-- {
-		ret.W("-- {%%%%= %sDrop() %%%%}", models[i].Proper())
+		ret.W(sqlCall(models[i].Proper() + "Drop"))
 	}
 	if len(enums) > 1 {
-		ret.W("-- {%%= TypesDrop() %%}")
+		ret.W(sqlCall("TypesDrop"))
 	}
-	ret.W("-- {%% endfunc %%}")
+	ret.W(sqlEnd())
 	return ret
 }
 
 func sqlCreateAll(models model.Models, enums enum.Enums) *golang.Block {
 	ret := golang.NewBlock("SQLCreateAll", "sql")
-	ret.W("-- {%% func CreateAll() %%}")
+	ret.W(sqlFunc("CreateAll"))
 	if len(enums) > 0 {
-		ret.W("-- {%%= TypesCreate() %%}")
+		ret.W(sqlCall("TypesCreate"))
 	}
 	lo.ForEach(models, func(m *model.Model, _ int) {
 		ret.W("-- {%%%%= %sCreate() %%%%}", m.Proper())
 	})
-	ret.W("-- {%% endfunc %%}")
+	ret.W(sqlEnd())
 	return ret
 }
 
@@ -50,12 +50,12 @@ func SeedDataAll(models model.Models, linebreak string) (*file.File, error) {
 
 func sqlSeedAll(models model.Models) *golang.Block {
 	ret := golang.NewBlock("SQLSeedDataAll", "sql")
-	ret.W("-- {%% func SeedDataAll() %%}")
+	ret.W(sqlFunc("SeedDataAll"))
 	lo.ForEach(models, func(m *model.Model, _ int) {
 		if len(m.SeedData) > 0 {
 			ret.W("-- {%%%%= %sSeedData() %%%%}", m.Proper())
 		}
 	})
-	ret.W("-- {%% endfunc %%}")
+	ret.W(sqlEnd())
 	return ret
 }

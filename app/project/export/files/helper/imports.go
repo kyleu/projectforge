@@ -13,26 +13,26 @@ import (
 )
 
 var (
-	ImpAudit         = AppImport("app/lib/audit")
-	ImpApp           = AppImport("app")
-	ImpAppController = AppImport("app/controller")
-	ImpAppDatabase   = AppImport("app/lib/database")
-	ImpAppMenu       = AppImport("app/lib/menu")
-	ImpAppUtil       = AppImport("app/util")
+	ImpAudit         = AppImport("lib/audit")
+	ImpApp           = &golang.Import{Type: golang.ImportTypeApp, Value: "{{{ .Package }}}/app"}
+	ImpAppController = AppImport("controller")
+	ImpAppDatabase   = AppImport("lib/database")
+	ImpAppMenu       = AppImport("lib/menu")
+	ImpAppUtil       = AppImport("util")
 	ImpContext       = golang.NewImport(golang.ImportTypeInternal, "context")
-	ImpComponents    = AppImport("views/components")
-	ImpCutil         = AppImport("app/controller/cutil")
+	ImpComponents    = ViewImport("components")
+	ImpCutil         = AppImport("controller/cutil")
 	ImpDBDriver      = golang.NewImport(golang.ImportTypeInternal, "database/sql/driver")
 	ImpErrors        = golang.NewImport(golang.ImportTypeExternal, "github.com/pkg/errors")
 	ImpFastHTTP      = golang.NewImport(golang.ImportTypeExternal, "github.com/valyala/fasthttp")
-	ImpFilter        = AppImport("app/lib/filter")
+	ImpFilter        = AppImport("lib/filter")
 	ImpFmt           = golang.NewImport(golang.ImportTypeInternal, "fmt")
 	ImpJSON          = golang.NewImport(golang.ImportTypeInternal, "encoding/json")
-	ImpLayout        = AppImport("views/layout")
+	ImpLayout        = ViewImport("layout")
 	ImpLo            = golang.NewImport(golang.ImportTypeExternal, "github.com/samber/lo")
 	ImpMSSQL         = golang.NewImport(golang.ImportTypeExternal, "github.com/denisenkom/go-mssqldb").WithAlias("mssql")
 	ImpRouter        = golang.NewImport(golang.ImportTypeExternal, "github.com/fasthttp/router")
-	ImpSearchResult  = AppImport("app/lib/search/result")
+	ImpSearchResult  = AppImport("lib/search/result")
 	ImpSlices        = golang.NewImport(golang.ImportTypeInternal, "slices")
 	ImpSlices119     = golang.NewImport(golang.ImportTypeExternal, "golang.org/x/exp/slices")
 	ImpSQL           = golang.NewImport(golang.ImportTypeInternal, "database/sql")
@@ -46,7 +46,11 @@ var (
 )
 
 func AppImport(path string) *golang.Import {
-	return &golang.Import{Type: golang.ImportTypeApp, Value: "{{{ .Package }}}/" + path}
+	return &golang.Import{Type: golang.ImportTypeApp, Value: "{{{ .Package }}}/app/" + path}
+}
+
+func ViewImport(path string) *golang.Import {
+	return &golang.Import{Type: golang.ImportTypeApp, Value: "{{{ .Package }}}/views/" + path}
 }
 
 func ImpSlicesForGo(v string) *golang.Import {

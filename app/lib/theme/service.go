@@ -52,7 +52,7 @@ func (s *Service) Save(t *Theme, originalKey string, logger util.Logger) error {
 		}
 	}
 	b := util.ToJSONBytes(t, true)
-	err := s.files.WriteFile(filepath.Join(s.root, t.Key+".json"), b, filesystem.DefaultMode, true)
+	err := s.files.WriteFile(filepath.Join(s.root, t.Key+util.ExtJSON), b, filesystem.DefaultMode, true)
 	if err != nil {
 		logger.Warnf("can't save theme [%s]: %+v", t.Key, err)
 	}
@@ -66,7 +66,7 @@ func (s *Service) loadIfNeeded(logger util.Logger) {
 		if s.files.IsDir(s.root) {
 			lo.ForEach(s.files.ListJSON(s.root, nil, true, logger), func(key string, _ int) {
 				t := &Theme{}
-				b, err := s.files.ReadFile(filepath.Join(s.root, key+".json"))
+				b, err := s.files.ReadFile(filepath.Join(s.root, key+util.ExtJSON))
 				if err != nil {
 					logger.Warnf("can't load theme [%s]: %+v", key, err)
 				}
@@ -90,11 +90,11 @@ func (s *Service) Remove(key string, logger util.Logger) error {
 	if !s.FileExists(key) {
 		return nil
 	}
-	return s.files.Remove(filepath.Join(s.root, key+".json"), logger)
+	return s.files.Remove(filepath.Join(s.root, key+util.ExtJSON), logger)
 }
 
 func (s *Service) FileExists(key string) bool {
-	return s.files.Exists(filepath.Join(s.root, key+".json"))
+	return s.files.Exists(filepath.Join(s.root, key+util.ExtJSON))
 }
 
 func ApplyMap(frm util.ValueMap) *Theme {

@@ -19,7 +19,7 @@ func edit(m *model.Model, p *project.Project, args *model.Args, addHeader bool, 
 		g.AddImport(imp)
 	})
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpLayout)
-	g.AddImport(helper.AppImport("app/" + m.PackageWithGroup("")))
+	g.AddImport(helper.AppImport(m.PackageWithGroup("")))
 
 	imps, err := helper.EnumImports(m.Columns.Types(), m.PackageWithGroup(""), args.Enums)
 	if err != nil {

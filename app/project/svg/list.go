@@ -14,12 +14,12 @@ import (
 func List(fs filesystem.FileLoader, logger util.Logger) ([]string, error) {
 	files := fs.ListExtension(svgPath, "svg", nil, false, logger)
 	return lo.Map(files, func(key string, _ int) string {
-		return strings.TrimSuffix(key, ".svg")
+		return strings.TrimSuffix(key, util.ExtSVG)
 	}), nil
 }
 
 func Content(fs filesystem.FileLoader, key string) (string, error) {
-	c, err := fs.ReadFile(filepath.Join(svgPath, key+".svg"))
+	c, err := fs.ReadFile(filepath.Join(svgPath, key+util.ExtSVG))
 	if err != nil {
 		return "", errors.Wrapf(err, "unable to read svg file [%s]", key)
 	}
@@ -27,7 +27,7 @@ func Content(fs filesystem.FileLoader, key string) (string, error) {
 }
 
 func Remove(fs filesystem.FileLoader, key string, logger util.Logger) error {
-	return fs.Remove(filepath.Join(svgPath, key+".svg"), logger)
+	return fs.Remove(filepath.Join(svgPath, key+util.ExtSVG), logger)
 }
 
 func Contents(fs filesystem.FileLoader, logger util.Logger) ([]string, map[string]string, error) {

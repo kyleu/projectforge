@@ -67,7 +67,8 @@ func (c *Column) ToGoEditString(prefix string, format string, id string, enums e
 			), nil
 		}
 		if c.Display == FmtTags.Key && lt.V.Key() == types.KeyString {
-			return fmt.Sprintf(`{%%%%= components.TableInputTags(%q, util.StringToTitle(%q), %q, %s, ps, 5, %s) %%%%}`, c.Camel(), id, c.Title(), c.ToGoString(prefix), h), nil
+			msg := `{%%%%= components.TableInputTags(%q, util.StringToTitle(%q), %q, %s, ps, 5, %s) %%%%}`
+			return fmt.Sprintf(msg, c.Camel(), id, c.Title(), c.ToGoString(prefix), h), nil
 		}
 		return fmt.Sprintf(msgTextarea, c.Camel(), id, c.Title(), c.ToGoString(prefix), h), nil
 	case types.KeyMap, types.KeyValueMap:

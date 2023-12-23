@@ -15,6 +15,9 @@ const (
 	KeyRandom  = "random"
 	KeyUnknown = "unknown"
 
+	ExtJSON     = ".json"
+	ExtMarkdown = ".md"
+
 	// $PF_SECTION_START(keys)$
 	// $PF_SECTION_END(keys)$.
 )

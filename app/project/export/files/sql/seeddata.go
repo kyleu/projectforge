@@ -32,12 +32,12 @@ func SeedData(m *model.Model, linebreak string) (*file.File, error) {
 
 func sqlSeedData(m *model.Model) (*golang.Block, error) {
 	ret := golang.NewBlock("SQLCreate", "sql")
-	ret.W("-- {%% func " + m.Proper() + "SeedData() %%}")
+	ret.W(sqlFunc(m.Proper() + "SeedData"))
 	err := sqlSeedDataColumns(m, ret, m.Name, m.Columns)
 	if err != nil {
 		return nil, err
 	}
-	ret.W("-- {%% endfunc %%}")
+	ret.W(sqlEnd())
 	return ret, nil
 }
 

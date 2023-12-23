@@ -144,7 +144,7 @@ func getJSONModels(cfg util.ValueMap, groups model.Groups, fs filesystem.FileLoa
 	jsonModelFiles := make(map[string]json.RawMessage, len(jsonFiles))
 	jsonModels := make(model.Models, 0, len(jsonFiles))
 	for idx, jsonFile := range jsonFiles {
-		if !strings.HasSuffix(jsonFile, ".json") {
+		if !strings.HasSuffix(jsonFile, util.ExtJSON) {
 			continue
 		}
 		if strings.Contains(jsonFile, ".min.") {

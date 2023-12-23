@@ -114,7 +114,7 @@ func getArgs(g *golang.File, models model.Models, m *model.Model, rrels model.Re
 		if len(conditions) == 0 {
 			ret.W("\t\t%sBy%s, _ := as.Services.%s.Get(ps.Context, nil, %s%s, ps.Logger)", rm.Camel(), lNames, rm.Proper(), strings.Join(args, ", "), suffix)
 		} else {
-			g.AddImport(helper.AppImport("app/" + rm.PackageWithGroup("")))
+			g.AddImport(helper.AppImport(rm.PackageWithGroup("")))
 			ret.W("\t\tvar %sBy%s *%s.%s", rm.Camel(), lNames, rm.Package, rm.Proper())
 			ret.W("\t\tif %s {", strings.Join(conditions, " && "))
 			ret.W("\t\t\t%sBy%s, _ = as.Services.%s.Get(ps.Context, nil, %s%s, ps.Logger)", rm.Camel(), lNames, rm.Proper(), strings.Join(args, ", "), suffix)

@@ -19,7 +19,7 @@ func Search(args *model.Args, addHeader bool, linebreak string) (*file.File, err
 	}
 	lo.ForEach(args.Models, func(m *model.Model, _ int) {
 		if m.HasSearches() {
-			g.AddImport(helper.AppImport("app/" + m.PackageWithGroup("")))
+			g.AddImport(helper.AppImport(m.PackageWithGroup("")))
 		}
 	})
 	g.AddBlocks(searchBlock(args))

@@ -132,7 +132,7 @@
         },
         "display": {
           "description": "if set to \"detail\", will omit column from listing tables",
-          "enum": ["detail", "url"]
+          "enum": ["detail", "tags", "url"]
         },
         "format": {
           "description": "used for strings, controls output format in UI",

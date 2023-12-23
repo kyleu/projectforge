@@ -1,7 +1,11 @@
 // Package help - Content managed by Project Forge, see [projectforge.md] for details.
 package help
 
-import "strings"
+import (
+	"strings"
+
+	"projectforge.dev/projectforge/app/util"
+)
 
 type Entry struct {
 	Key      string `json:"key"`
@@ -13,7 +17,7 @@ type Entry struct {
 type Entries []*Entry
 
 func (e Entries) Get(key string) *Entry {
-	key = strings.TrimSuffix(key, ".md")
+	key = strings.TrimSuffix(key, util.ExtMarkdown)
 	for _, x := range e {
 		if x.Key == key {
 			return x

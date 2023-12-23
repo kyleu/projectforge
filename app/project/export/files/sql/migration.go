@@ -10,10 +10,11 @@ import (
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func Migration(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
-	g := golang.NewGoTemplate([]string{"queries", "ddl"}, m.Name+".sql")
+	g := golang.NewGoTemplate([]string{"queries", "ddl"}, m.Name+util.ExtSQL)
 	drop, err := sqlDrop(m)
 	if err != nil {
 		return nil, err
@@ -29,15 +30,15 @@ func Migration(m *model.Model, args *model.Args, addHeader bool, linebreak strin
 
 func sqlDrop(m *model.Model) (*golang.Block, error) {
 	ret := golang.NewBlock("SQLDrop", "sql")
-	ret.W("-- {%% func " + m.Proper() + "Drop() %%}")
+	ret.W(sqlFunc(m.Proper() + "Drop"))
 	ret.W("drop table if exists %q;", m.Name)
-	ret.W("-- {%% endfunc %%}")
+	ret.W(sqlEnd())
 	return ret, nil
 }
 
 func sqlCreate(m *model.Model, models model.Models) (*golang.Block, error) {
 	ret := golang.NewBlock("SQLCreate", "sql")
-	ret.W("-- {%% func " + m.Proper() + "Create() %%}")
+	ret.W(sqlFunc(m.Proper() + "Create"))
 	ret.W("create table if not exists %q (", m.Name)
 	for _, col := range m.Columns {
 		st, err := col.ToSQLType()
@@ -78,7 +79,7 @@ func sqlCreate(m *model.Model, models model.Models) (*golang.Block, error) {
 	lo.ForEach(m.Indexes, func(idx *model.Index, _ int) {
 		ret.W(idx.SQL())
 	})
-	ret.W("-- {%% endfunc %%}")
+	ret.W(sqlEnd())
 	return ret, nil
 }
 

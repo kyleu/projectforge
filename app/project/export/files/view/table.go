@@ -18,7 +18,7 @@ import (
 func table(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "Table.html")
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpFilter)
-	g.AddImport(helper.AppImport("app/" + m.PackageWithGroup("")))
+	g.AddImport(helper.AppImport(m.PackageWithGroup("")))
 	if m.Columns.HasFormat(model.FmtCountry.Key) || m.Columns.HasFormat(model.FmtSI.Key) {
 		g.AddImport(helper.ImpAppUtil)
 	}
@@ -46,7 +46,7 @@ func exportViewTableFunc(m *model.Model, models model.Models, enums enum.Enums, 
 		if relModel := models.Get(rel.Table); relModel.CanTraverseRelation() {
 			relCols := rel.SrcColumns(m)
 			relNames := strings.Join(relCols.ProperNames(), "")
-			g.AddImport(helper.AppImport("app/" + relModel.PackageWithGroup("")))
+			g.AddImport(helper.AppImport(relModel.PackageWithGroup("")))
 			suffix += fmt.Sprintf(", %sBy%s %s.%s", relModel.CamelPlural(), relNames, relModel.Package, relModel.ProperPlural())
 		}
 	})

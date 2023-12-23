@@ -40,9 +40,9 @@ func Cleanup(fs filesystem.FileLoader, logger util.Logger) ([]string, diff.Diffs
 }
 
 func matches(fn string) bool {
-	return strings.HasSuffix(fn, ".go") ||
-		strings.HasSuffix(fn, ".js") || strings.HasSuffix(fn, ".ts") ||
-		strings.HasSuffix(fn, ".css") || strings.HasSuffix(fn, ".svg") ||
-		strings.HasSuffix(fn, ".mod") || strings.HasSuffix(fn, ".json") ||
-		strings.HasSuffix(fn, ".html") || strings.HasSuffix(fn, ".sql")
+	return strings.HasSuffix(fn, util.ExtGo) ||
+		strings.HasSuffix(fn, util.ExtJS) || strings.HasSuffix(fn, util.ExtTS) ||
+		strings.HasSuffix(fn, util.ExtCSS) || strings.HasSuffix(fn, util.ExtSVG) ||
+		strings.HasSuffix(fn, util.ExtMod) || strings.HasSuffix(fn, util.ExtJSON) ||
+		strings.HasSuffix(fn, util.ExtHTML) || strings.HasSuffix(fn, util.ExtSQL)
 }

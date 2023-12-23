@@ -53,7 +53,7 @@ func loadSVGs(fs filesystem.FileLoader, logger util.Logger) ([]*SVG, error) {
 		if err != nil {
 			return nil, err
 		}
-		key := strings.TrimSuffix(f, ".svg")
+		key := strings.TrimSuffix(f, util.ExtSVG)
 		mk, err := markup(key, b)
 		if err != nil {
 			return nil, err

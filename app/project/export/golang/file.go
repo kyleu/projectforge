@@ -6,6 +6,7 @@ import (
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/util"
 )
 
 type File struct {
@@ -56,8 +57,8 @@ func (f *File) Render(addHeader bool, linebreak string) (*file.File, error) {
 	}
 
 	n := f.Name
-	if !strings.HasSuffix(f.Name, ".go") {
-		n += ".go"
+	if !strings.HasSuffix(f.Name, util.ExtGo) {
+		n += util.ExtGo
 	}
 	return &file.File{Path: f.Path, Name: n, Mode: filesystem.DefaultMode, Content: strings.Join(content, linebreak)}, nil
 }

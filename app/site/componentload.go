@@ -5,6 +5,7 @@ import (
 
 	"github.com/samber/lo"
 
+	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/doc"
 	"projectforge.dev/projectforge/views/vsite"
 )
@@ -41,13 +42,13 @@ func loadComponents() (vsite.Components, error) {
 	}
 	ret := make(vsite.Components, 0, len(files))
 	for _, file := range files {
-		key := strings.TrimSuffix(file.Name(), ".md")
+		key := strings.TrimSuffix(file.Name(), util.ExtMarkdown)
 		md := lo.ValueOr(componentMetadata, key, []string{"star", "a web component without documentation"})
 		title, html, err := componentTemplate(key)
 		if err != nil {
 			return nil, err
 		}
-		ret = append(ret, &vsite.Component{Key: strings.TrimSuffix(file.Name(), ".md"), Title: title, Description: md[1], Icon: md[0], HTML: html})
+		ret = append(ret, &vsite.Component{Key: strings.TrimSuffix(file.Name(), util.ExtMarkdown), Title: title, Description: md[1], Icon: md[0], HTML: html})
 	}
 	return ret, nil
 }

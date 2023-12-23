@@ -15,7 +15,7 @@ import (
 func list(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "List.html")
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpFilter, helper.ImpLayout)
-	g.AddImport(helper.AppImport("app/" + m.PackageWithGroup("")))
+	g.AddImport(helper.AppImport(m.PackageWithGroup("")))
 	g.AddBlocks(exportViewListClass(m, args.Models, g), exportViewListBody(m, args.Models))
 	return g.Render(addHeader, linebreak)
 }
@@ -29,7 +29,7 @@ func exportViewListClass(m *model.Model, models model.Models, g *golang.Template
 		relModel := models.Get(rel.Table)
 		relCols := rel.SrcColumns(m)
 		relNames := strings.Join(relCols.ProperNames(), "")
-		g.AddImport(helper.AppImport("app/" + relModel.PackageWithGroup("")))
+		g.AddImport(helper.AppImport(relModel.PackageWithGroup("")))
 		ret.W(commonLine, relModel.ProperPlural(), relNames, relModel.Package, relModel.ProperPlural())
 	})
 	ret.W("  Params filter.ParamSet")

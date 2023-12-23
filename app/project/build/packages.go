@@ -19,7 +19,7 @@ func Packages(prj *project.Project, fs filesystem.FileLoader, showAll bool, logg
 	}
 	root := prj.Package
 	for _, f := range files {
-		if ((!strings.HasSuffix(f, ".go")) && (!strings.HasSuffix(f, ".html"))) || strings.HasPrefix(f, "module/") {
+		if ((!strings.HasSuffix(f, util.ExtGo)) && (!strings.HasSuffix(f, util.ExtHTML))) || strings.HasPrefix(f, "module/") {
 			continue
 		}
 		dir, fn := util.StringSplitPath(f)

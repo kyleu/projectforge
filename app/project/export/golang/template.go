@@ -8,6 +8,7 @@ import (
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/util"
 )
 
 type Template struct {
@@ -44,7 +45,7 @@ func (f *Template) Render(addHeader bool, linebreak string) (*file.File, error) 
 
 	if addHeader {
 		switch {
-		case strings.HasSuffix(f.Name, ".sql"):
+		case strings.HasSuffix(f.Name, util.ExtSQL):
 			content = append(content, fmt.Sprintf("-- %s", file.HeaderContent))
 		case strings.HasSuffix(f.Name, ".graphql"):
 			content = append(content, fmt.Sprintf("# %s", file.HeaderContent))

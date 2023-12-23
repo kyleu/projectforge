@@ -6,6 +6,8 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+
+	"{{{ .Package }}}/app/util"
 )
 
 //go:embed *.md
@@ -18,8 +20,8 @@ func List() ([]string, error) {
 	}
 	ret := make([]string, 0, len(files))
 	for _, f := range files {
-		if strings.HasSuffix(f.Name(), ".md") {
-			ret = append(ret, strings.TrimSuffix(f.Name(), ".md"))
+		if strings.HasSuffix(f.Name(), util.ExtMarkdown) {
+			ret = append(ret, strings.TrimSuffix(f.Name(), util.ExtMarkdown))
 		}
 	}
 	return ret, nil
