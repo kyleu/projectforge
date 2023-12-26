@@ -1,5 +1,5 @@
 # Content managed by Project Forge, see [projectforge.md] for details.
-FROM --platform=linux/amd64 ghcr.io/gythialy/golang-cross:v1.21.0 AS builder
+FROM --platform=linux/amd64 ghcr.io/gythialy/golang-cross:v1.21.5-0 AS builder
 
 LABEL maintainer="projectforge@kyleu.com"
 ENV PATH=${OSX_CROSS_PATH}/target/bin:$PATH:${GOPATH}/bin
