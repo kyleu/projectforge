@@ -13,7 +13,7 @@ echo "starting macOS desktop build..."
 GOOS=darwin GOARCH=amd64 CC=o64-clang CXX=o64-clang++ go build -o ../../dist/darwin_amd64/projectforge
 
 echo "starting macOS arm64 desktop build..."
-GOOS=darwin GOARCH=arm64 CC=aarch64-apple-darwin21.4-clang CXX=aarch64-apple-darwin23-clang++ go build -o ../../dist/darwin_arm64/projectforge
+GOOS=darwin GOARCH=arm64 CC=aarch64-apple-darwin23-clang CXX=aarch64-apple-darwin23-clang++ go build -o ../../dist/darwin_arm64/projectforge
 
 echo "starting Linux desktop build..."
 GOOS=linux GOARCH=amd64 go build -o ../../dist/linux_amd64/projectforge
