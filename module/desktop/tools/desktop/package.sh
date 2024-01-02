@@ -12,7 +12,7 @@ echo "starting macOS desktop build..."
 GOOS=darwin GOARCH=amd64 CC=o64-clang CXX=o64-clang++ go build -o ../../dist/darwin_amd64/{{{ .Exec }}}
 
 echo "starting macOS arm64 desktop build..."
-GOOS=darwin GOARCH=arm64 CC=aarch64-apple-darwin23-clang CXX=aarch64-apple-darwin23-clang++ go build -o ../../dist/darwin_arm64/{{{ .Exec }}}
+GOOS=darwin GOARCH=arm64 CC=aarch64-apple-darwin22-clang CXX=aarch64-apple-darwin22-clang++ go build -o ../../dist/darwin_arm64/{{{ .Exec }}}
 
 echo "starting Linux desktop build..."
 GOOS=linux GOARCH=amd64 go build -o ../../dist/linux_amd64/{{{ .Exec }}}
