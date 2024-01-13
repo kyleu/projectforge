@@ -27,7 +27,7 @@ var (
 )
 
 //line views/components/Terminal.html:8
-func StreamDisplayTerminal(qw422016 *qt422016.Writer, id string, s string) {
+func StreamTerminal(qw422016 *qt422016.Writer, id string, s string) {
 //line views/components/Terminal.html:10
 	raw := string(ansihtml.ConvertToHTML([]byte(s)))
 	lines := util.StringSplitLines(raw)
@@ -61,22 +61,22 @@ func StreamDisplayTerminal(qw422016 *qt422016.Writer, id string, s string) {
 }
 
 //line views/components/Terminal.html:28
-func WriteDisplayTerminal(qq422016 qtio422016.Writer, id string, s string) {
+func WriteTerminal(qq422016 qtio422016.Writer, id string, s string) {
 //line views/components/Terminal.html:28
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/components/Terminal.html:28
-	StreamDisplayTerminal(qw422016, id, s)
+	StreamTerminal(qw422016, id, s)
 //line views/components/Terminal.html:28
 	qt422016.ReleaseWriter(qw422016)
 //line views/components/Terminal.html:28
 }
 
 //line views/components/Terminal.html:28
-func DisplayTerminal(id string, s string) string {
+func Terminal(id string, s string) string {
 //line views/components/Terminal.html:28
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/components/Terminal.html:28
-	WriteDisplayTerminal(qb422016, id, s)
+	WriteTerminal(qb422016, id, s)
 //line views/components/Terminal.html:28
 	qs422016 := string(qb422016.B)
 //line views/components/Terminal.html:28

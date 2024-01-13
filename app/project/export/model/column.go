@@ -23,6 +23,7 @@ var ColumnFieldDescs = util.FieldDescs{
 	{Key: "display", Title: "Display", Description: "The display setting of the column's value"},
 	{Key: "format", Title: "Format", Description: "The formatting applied to the column's value"},
 	{Key: "example", Title: "Example", Description: "Example annotation for the column's value"},
+	{Key: "json", Title: "JSON", Description: "JSON field name to use instead of [name]"},
 	{Key: "validation", Title: "Validation", Description: "Validation annotation for the column's value"},
 	// {Key: "values", Title: "Values", Description: "The X of the column"},
 	// {Key: "tags", Title: "Tags", Description: "The X of the column"},
@@ -39,6 +40,7 @@ type Column struct {
 	Indexed    bool           `json:"indexed,omitempty"`
 	Display    string         `json:"display,omitempty"`
 	Format     string         `json:"format,omitempty"`
+	JSON       string         `json:"json,omitempty"`
 	Example    string         `json:"example,omitempty"`
 	Validation string         `json:"validation,omitempty"`
 	Values     []string       `json:"values,omitempty"`
@@ -49,7 +51,7 @@ type Column struct {
 func (c *Column) Clone() *Column {
 	return &Column{
 		Name: c.Name, Type: c.Type, PK: c.PK, Nullable: c.Nullable, Search: c.Search, SQLDefault: c.SQLDefault, Display: c.Display,
-		Format: c.Format, Example: c.Example, Validation: c.Validation, Values: c.Values, Tags: c.Tags, HelpString: c.HelpString,
+		Format: c.Format, Example: c.Example, JSON: c.JSON, Validation: c.Validation, Values: c.Values, Tags: c.Tags, HelpString: c.HelpString,
 	}
 }
 

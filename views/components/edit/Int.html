@@ -1,0 +1,35 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/views/components"
+) %}
+
+{% func Int(key string, id string, value any, placeholder ...string) %}{% stripspace %}
+  {% if id == "" %}
+    <input name="{%s key %}" type="number" value="{%v value %}"{%= components.PlaceholderFor(placeholder) %} />
+  {% else %}
+    <input id="{%s id %}" name="{%s key %}" type="number" value="{%v value %}"{%= components.PlaceholderFor(placeholder) %} />
+  {% endif %}
+{% endstripspace %}{% endfunc %}
+
+{% func IntVertical(key string, id string, title string, value int, indent int, help ...string) %}{% stripspace %}
+  {%- code id = cutil.CleanID(key, id) -%}
+  <div class="mb expanded">
+    {%= components.Indent(true, indent + 1) %}
+    <label for="{%s id %}"><em class="title">{%s title %}</em></label>
+    {%= components.Indent(true, indent + 1) %}
+    <div class="mt">{%= Int(key, id, value, help...) %}</div>
+  {%= components.Indent(true, indent) %}
+  </div>
+{% endstripspace %}{% endfunc %}
+
+{% func IntTable(key string, id string, title string, value int, indent int, help ...string) %}{% stripspace %}
+  {%- code id = cutil.CleanID(key, id) -%}
+  <tr>
+    {%= components.Indent(true, indent + 1) %}
+    <th class="shrink"><label for="{%s id %}"{%= components.TitleFor(help) %}>{%s title %}</label></th>
+    {%= components.Indent(true, indent + 1) %}
+    <td>{%= Int(key, id, value, help...) %}</td>
+  {%= components.Indent(true, indent) %}
+  </tr>
+{% endstripspace %}{% endfunc %}

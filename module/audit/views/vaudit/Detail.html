@@ -4,6 +4,7 @@
   "{{{ .Package }}}/app/lib/audit"
   "{{{ .Package }}}/app/lib/filter"
   "{{{ .Package }}}/views/components"
+  "{{{ .Package }}}/views/components/view"
   "{{{ .Package }}}/views/layout"
 ) %}
 
@@ -26,7 +27,7 @@
         <tbody>
           <tr>
             <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">ID</th>
-            <td>{%= components.DisplayUUID(&p.Model.ID) %}</td>
+            <td>{%= view.UUID(&p.Model.ID) %}</td>
           </tr>
           <tr>
             <th class="shrink" title="String text">App</th>
@@ -58,11 +59,11 @@
           </tr>
           <tr>
             <th class="shrink" title="Date and time, in almost any format">Started</th>
-            <td>{%= components.DisplayTimestamp(&p.Model.Started) %}</td>
+            <td>{%= view.Timestamp(&p.Model.Started) %}</td>
           </tr>
           <tr>
             <th class="shrink" title="Date and time, in almost any format">Completed</th>
-            <td>{%= components.DisplayTimestamp(&p.Model.Completed) %}</td>
+            <td>{%= view.Timestamp(&p.Model.Completed) %}</td>
           </tr>
         </tbody>
       </table>

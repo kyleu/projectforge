@@ -73,7 +73,7 @@
   </div>
   <div class="card">
     <h3>{%= components.SVGRef("database", 20, 20, `icon`, ps) %} Output</h3>
-    {%= components.DisplayTerminal("console-list", p.Exec.Buffer.String()) %}
+    {%= components.Terminal("console-list", p.Exec.Buffer.String()) %}
   </div>{{{ if .HasModule "websocket" }}}
 
   <script>

@@ -12,7 +12,7 @@ import (
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
-	"projectforge.dev/projectforge/views/components"
+	"projectforge.dev/projectforge/views/components/edit"
 	"projectforge.dev/projectforge/views/layout"
 )
 
@@ -101,7 +101,7 @@ func (p *Args) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vpage/Args.html:41
 			qw422016.N().S(`            `)
 //line views/vpage/Args.html:42
-			components.StreamTableBoolean(qw422016, arg.Key, title, v == "true", 5, arg.Description)
+			edit.StreamBoolTable(qw422016, arg.Key, title, v == "true", 5, arg.Description)
 //line views/vpage/Args.html:42
 			qw422016.N().S(`
 `)
@@ -110,7 +110,7 @@ func (p *Args) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vpage/Args.html:43
 			qw422016.N().S(`            `)
 //line views/vpage/Args.html:44
-			components.StreamTableTextarea(qw422016, arg.Key, "", title, 12, v, 5, arg.Description)
+			edit.StreamTextareaTable(qw422016, arg.Key, "", title, 12, v, 5, arg.Description)
 //line views/vpage/Args.html:44
 			qw422016.N().S(`
 `)
@@ -122,7 +122,7 @@ func (p *Args) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vpage/Args.html:46
 			qw422016.N().S(`            `)
 //line views/vpage/Args.html:47
-			components.StreamTableInputNumber(qw422016, arg.Key, "", title, int(i), 5, arg.Description)
+			edit.StreamIntTable(qw422016, arg.Key, "", title, int(i), 5, arg.Description)
 //line views/vpage/Args.html:47
 			qw422016.N().S(`
 `)
@@ -131,7 +131,7 @@ func (p *Args) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vpage/Args.html:48
 			qw422016.N().S(`            `)
 //line views/vpage/Args.html:49
-			components.StreamTableDatalist(qw422016, arg.Key, "", title, v, arg.Choices, nil, 5, arg.Description)
+			edit.StreamDatalistTable(qw422016, arg.Key, "", title, v, arg.Choices, nil, 5, arg.Description)
 //line views/vpage/Args.html:49
 			qw422016.N().S(`
 `)

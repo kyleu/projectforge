@@ -1,0 +1,67 @@
+{% import (
+  "time"
+
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/util"
+  "{{{ .Package }}}/views/components"
+) %}
+
+{% func Timestamp(key string, id string, value *time.Time, placeholder ...string) %}{% stripspace %}
+  {% if id == "" %}
+    <input name="{%s key %}" type="datetime-local" value="{%s util.TimeToFull(value) %}"{%= components.PlaceholderFor(placeholder) %} />
+  {% else %}
+    <input id="{%s id %}" name="{%s key %}" type="datetime-local" value="{%s util.TimeToFull(value) %}"{%= components.PlaceholderFor(placeholder) %} />
+  {% endif %}
+{% endstripspace %}{% endfunc %}
+
+{% func TimestampVertical(key string, id string, title string, value *time.Time, indent int, help ...string) %}{% stripspace %}
+  {%- code id = cutil.CleanID(key, id) -%}
+  <div class="mb expanded">
+    {%= components.Indent(true, indent + 1) %}
+    <label for="{%s id %}"><em class="title">{%s title %}</em></label>
+    {%= components.Indent(true, indent + 1) %}
+    <div class="mt">{%= Timestamp(key, id, value, help...) %}</div>
+  {%= components.Indent(true, indent) %}
+  </div>
+{% endstripspace %}{% endfunc %}
+
+{% func TimestampTable(key string, id string, title string, value *time.Time, indent int, help ...string) %}{% stripspace %}
+  {%- code id = cutil.CleanID(key, id) -%}
+  <tr>
+    {%= components.Indent(true, indent + 1) %}
+    <th class="shrink"><label for="{%s id %}"{%= components.TitleFor(help) %}>{%s title %}</label></th>
+    {%= components.Indent(true, indent + 1) %}
+    <td>{%= Timestamp(key, id, value, help...) %}</td>
+  {%= components.Indent(true, indent) %}
+  </tr>
+{% endstripspace %}{% endfunc %}
+
+{% func TimestampDay(key string, id string, value *time.Time, placeholder ...string) %}{% stripspace %}
+  {% if id == "" %}
+    <input name="{%s key %}" type="date" value="{%s util.TimeToYMD(value) %}"{%= components.PlaceholderFor(placeholder) %} />
+  {% else %}
+    <input id="{%s id %}" name="{%s key %}" type="date" value="{%s util.TimeToYMD(value) %}"{%= components.PlaceholderFor(placeholder) %} />
+  {% endif %}
+{% endstripspace %}{% endfunc %}
+
+{% func TimestampDayVertical(key string, id string, title string, value *time.Time, indent int, help ...string) %}{% stripspace %}
+  {%- code id = cutil.CleanID(key, id) -%}
+  <div class="mb expanded">
+    {%= components.Indent(true, indent + 1) %}
+    <label for="{%s id %}"><em class="title">{%s title %}</em></label>
+    {%= components.Indent(true, indent + 1) %}
+    <div class="mt">{%= TimestampDay(key, id, value, help...) %}</div>
+  {%= components.Indent(true, indent) %}
+  </div>
+{% endstripspace %}{% endfunc %}
+
+{% func TimestampDayTable(key string, id string, title string, value *time.Time, indent int, help ...string) %}{% stripspace %}
+  {%- code id = cutil.CleanID(key, id) -%}
+  <tr>
+    {%= components.Indent(true, indent + 1) %}
+    <th class="shrink"><label for="{%s id %}"{%= components.TitleFor(help) %}>{%s title %}</label></th>
+    {%= components.Indent(true, indent + 1) %}
+    <td>{%= TimestampDay(key, id, value, help...) %}</td>
+  {%= components.Indent(true, indent) %}
+  </tr>
+{% endstripspace %}{% endfunc %}

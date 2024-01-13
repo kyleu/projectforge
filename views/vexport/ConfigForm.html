@@ -4,6 +4,7 @@
   "projectforge.dev/projectforge/app/project"
   "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/components/edit"
   "projectforge.dev/projectforge/views/layout"
 ) %}
 
@@ -18,7 +19,7 @@
     <div class="card">
       <h3>{%= components.SVGRefIcon(`print`, ps) %}{%s p.Project.Title() %} Export Configuration</h3>
       <div class="mt">
-        {%= components.FormTextarea("cfg", "input-cfg", 16, util.ToJSON(p.Cfg), "JSON object") %}
+        {%= edit.Textarea("cfg", "input-cfg", 16, util.ToJSON(p.Cfg), "JSON object") %}
       </div>
       <div class="mt">
         <button type="submit">Save</button>

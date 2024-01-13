@@ -18,7 +18,7 @@ const commonLine = "  %sBy%s %s.%s"
 
 func detail(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "Detail.html")
-	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpLayout)
+	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpComponentsView, helper.ImpCutil, helper.ImpLayout)
 	g.AddImport(helper.AppImport(m.PackageWithGroup("")))
 	rrs := args.Models.ReverseRelations(m.Name)
 	if len(rrs) > 0 {

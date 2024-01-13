@@ -243,7 +243,7 @@ func serviceGetByCols(key string, m *model.Model, cols model.Columns, dbRef stri
 	lo.ForEach(cols, func(c *model.Column, _ int) {
 		decls = append(decls, c.Camel()+" [%%v]")
 	})
-	ret.W("\t\treturn nil, errors.Wrapf(err, \"unable to get %s by %s\", %s)", m.Plural(), strings.Join(decls, ", "), sj)
+	ret.W("\t\treturn nil, errors.Wrapf(err, \"unable to get %s by %s\", %s)", m.TitlePlural(), strings.Join(decls, ", "), sj)
 	ret.W("\t}")
 	ret.W("\treturn ret.To%s(), nil", m.ProperPlural())
 	ret.W("}")

@@ -8,6 +8,12 @@ import (
 	"github.com/pkg/errors"
 )
 
+type Writer interface {
+	io.Writer
+	io.WriterAt
+	io.Closer
+}
+
 func (f *FileSystem) WriteFile(path string, content []byte, mode FileMode, overwrite bool) error {
 	p := f.getPath(path)
 	s, _ := f.f.Stat(p)
@@ -42,7 +48,7 @@ func (f *FileSystem) WriteFile(path string, content []byte, mode FileMode, overw
 	return nil
 }
 
-func (f *FileSystem) FileWriter(fn string, createIfNeeded bool, appendMode bool) (io.Writer, error) {
+func (f *FileSystem) FileWriter(fn string, createIfNeeded bool, appendMode bool) (Writer, error) {
 	p := f.getPath(fn)
 	if createIfNeeded && !f.Exists(p) {
 		_, err := f.f.Create(p)

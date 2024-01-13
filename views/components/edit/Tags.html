@@ -1,0 +1,45 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "strings"
+
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/views/components"
+) %}
+
+{% func Tags(key string, id string, values []string, ps *cutil.PageState, placeholder ...string) %}{% stripspace %}
+  {%- code
+    ps.AddIcon("times")
+    ps.AddIcon("plus")
+  -%}
+  <div class="tag-editor">
+    {% if id == "" %}
+      <input class="result" name="{%s key %}" value="{%s strings.Join(values, `, `) %}"{%= components.PlaceholderFor(placeholder) %} />
+    {% else %}
+      <input class="result" id="{%s id %}" name="{%s key %}" value="{%s strings.Join(values, `, `) %}"{%= components.PlaceholderFor(placeholder) %} />
+    {% endif %}
+    <div class="tags"></div>
+    <div class="clear"></div>
+  </div>
+{% endstripspace %}{% endfunc %}
+
+{% func TagsVertical(key string, id string, title string, values []string, ps *cutil.PageState, indent int, help ...string) %}{% stripspace %}
+  {%- code id = cutil.CleanID(key, id) -%}
+  <div class="mb expanded">
+    {%= components.Indent(true, indent + 1) %}
+    <label for="{%s id %}"><em class="title">{%s title %}</em></label>
+    {%= components.Indent(true, indent + 1) %}
+    <div class="mt">{%= Tags(key, id, values, ps, help...) %}</div>
+  {%= components.Indent(true, indent) %}
+  </div>
+{% endstripspace %}{% endfunc %}
+
+{% func TagsTable(key string, id string, title string, values []string, ps *cutil.PageState, indent int, help ...string) %}{% stripspace %}
+  {%- code id = cutil.CleanID(key, id) -%}
+  <tr>
+    {%= components.Indent(true, indent + 1) %}
+    <th class="shrink"><label for="{%s id %}"{%= components.TitleFor(help) %}>{%s title %}</label></th>
+    {%= components.Indent(true, indent + 1) %}
+    <td>{%= Tags(key, id, values, ps, help...) %}</td>
+  {%= components.Indent(true, indent) %}
+  </tr>
+{% endstripspace %}{% endfunc %}

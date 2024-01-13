@@ -1,0 +1,39 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "github.com/google/uuid"
+
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/views/components"
+) %}
+
+{% func UUID(key string, id string, value *uuid.UUID, placeholder ...string) %}{% stripspace %}
+  {%- code
+    v := ""
+    if value != nil {
+      v = value.String()
+    }
+  -%}
+  {%= String(key, id, v, placeholder...) %}
+{% endstripspace %}{% endfunc %}
+
+{% func UUIDVertical(key string, id string, title string, value *uuid.UUID, indent int, help ...string) %}{% stripspace %}
+  {%- code id = cutil.CleanID(key, id) -%}
+  <div class="mb expanded">
+    {%= components.Indent(true, indent + 1) %}
+    <label for="{%s id %}"><em class="title">{%s title %}</em></label>
+    {%= components.Indent(true, indent + 1) %}
+    <div class="mt">{%= UUID(key, id, value, help...) %}</div>
+  {%= components.Indent(true, indent) %}
+  </div>
+{% endstripspace %}{% endfunc %}
+
+{% func UUIDTable(key string, id string, title string, value *uuid.UUID, indent int, help ...string) %}{% stripspace %}
+  {%- code id = cutil.CleanID(key, id) -%}
+  <tr>
+    {%= components.Indent(true, indent + 1) %}
+    <th class="shrink"><label for="{%s id %}"{%= components.TitleFor(help) %}>{%s title %}</label></th>
+    {%= components.Indent(true, indent + 1) %}
+    <td>{%= UUID(key, id, value, help...) %}</td>
+  {%= components.Indent(true, indent) %}
+  </tr>
+{% endstripspace %}{% endfunc %}

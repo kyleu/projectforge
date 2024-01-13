@@ -1,0 +1,7 @@
+{% import "github.com/google/uuid" %}
+
+{% func UUID(value *uuid.UUID) %}{% stripspace %}
+  {%- if value != nil -%}
+  {%s value.String() %}
+  {%- endif -%}
+{% endstripspace %}{% endfunc %}

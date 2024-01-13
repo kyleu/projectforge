@@ -5,6 +5,7 @@
   "{{{ .Package }}}/app/lib/theme"
   "{{{ .Package }}}/app/lib/user"
   "{{{ .Package }}}/views/components"
+  "{{{ .Package }}}/views/components/edit"
   "{{{ .Package }}}/views/layout"{{{ if .HasAccount }}}
   "{{{ .Package }}}/views/vauth"{{{ end }}}
   "{{{ .Package }}}/views/vtheme"
@@ -31,7 +32,7 @@
       <div class="overflow full-width">
         <table class="mt expanded">
           <tbody>
-            {%= components.TableInput("name", "", "Name", ps.Username(), 5) %}
+            {%= edit.StringTable("name", "", "Name", ps.Username(), 5) %}
             <tr>
               <th class="shrink"><label>Mode</label></th>
               <td>

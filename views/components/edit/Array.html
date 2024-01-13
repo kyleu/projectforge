@@ -1,0 +1,178 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "github.com/samber/lo"
+
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/views/components"
+) %}
+
+{% func Select(key string, id string, value string, opts []string, titles []string, indent int) %}{% stripspace %}
+  <select name="{%s key %}"{% if id != `` %}{% space %}id="{%s id %}"{% endif %}>
+    {% for idx, opt := range opts %}
+      {% code
+        title := opt
+        if idx < len(titles) {
+          title = titles[idx]
+        }
+      %}
+      {%= components.Indent(true, indent + 1) %}
+      {% if opt == value %}
+        <option selected="selected" value="{%s opt %}">{%s title %}</option>
+      {% else %}
+        <option value="{%s opt %}">{%s title %}</option>
+      {% endif %}
+    {% endfor %}
+  {%= components.Indent(true, indent) %}
+  </select>
+{% endstripspace %}{% endfunc %}
+
+{% func SelectVertical(key string, id string, title string, value string, opts []string, titles []string, indent int, help ...string) %}{% stripspace %}
+  {%- code id = cutil.CleanID(key, id) -%}
+  <div class="mb expanded">
+    {%= components.Indent(true, indent + 1) %}
+    <label for="{%s id %}"><em class="title">{%s title %}</em></label>
+    {%= components.Indent(true, indent + 1) %}
+    <div class="mt">{%= Select(key, id, value, opts, titles, indent) %}</div>
+  {%= components.Indent(true, indent) %}
+  </div>
+{% endstripspace %}{% endfunc %}
+
+{% func SelectTable(key string, id string, title string, value string, opts []string, titles []string, indent int, help ...string) %}{% stripspace %}
+  {%- code id = cutil.CleanID(key, id) -%}
+  <tr>
+    {%= components.Indent(true, indent + 1) %}
+    <th class="shrink"><label for="{%s id %}"{%= components.TitleFor(help) %}>{%s title %}</label></th>
+    {%= components.Indent(true, indent + 1) %}
+    <td>{%= Select(key, id, value, opts, titles, indent) %}</td>
+  {%= components.Indent(true, indent) %}
+  </tr>
+{% endstripspace %}{% endfunc %}
+
+{% func Datalist(key string, id string, value string, opts []string, titles []string, indent int, placeholder ...string) %}{% stripspace %}
+  {%= components.Indent(true, indent ) %}
+  <input id="{%s id %}" list="{%s id %}-list" name="{%s key %}" value="{%s value %}"{%= components.PlaceholderFor(placeholder) %} />
+  {%= components.Indent(true, indent ) %}
+  {%- if len(opts) > 0 -%}
+  <datalist id="{%s id %}-list">
+    {% for idx, opt := range opts %}
+      {% code
+        title := opt
+        if idx < len(titles) {
+          title = titles[idx]
+        }
+      %}
+      {%= components.Indent(true, indent + 1) %}
+      <option value="{%s opt %}">{%s title %}</option>
+    {% endfor %}
+  {%= components.Indent(true, indent) %}
+  </datalist>
+  {%- endif -%}
+{% endstripspace %}{% endfunc %}
+
+{% func DatalistVertical(key string, id string, title string, value string, opts []string, titles []string, indent int, help ...string) %}{% stripspace %}
+  {%- code id = cutil.CleanID(key, id) -%}
+  <div class="mb expanded">
+    {%= components.Indent(true, indent + 1) %}
+    <label for="{%s id %}"><em class="title">{%s title %}</em></label>
+    {%= components.Indent(true, indent + 1) %}
+    <div class="mt">{%= Datalist(key, id, value, opts, titles, indent) %}</div>
+  {%= components.Indent(true, indent) %}
+  </div>
+{% endstripspace %}{% endfunc %}
+
+{% func DatalistTable(key string, id string, title string, value string, opts []string, titles []string, indent int, help ...string) %}{% stripspace %}
+  {%- code id = cutil.CleanID(key, id) -%}
+  <tr>
+    {%= components.Indent(true, indent + 1) %}
+    <th class="shrink"><label for="{%s id %}"{%= components.TitleFor(help) %}>{%s title %}</label></th>
+    {%= components.Indent(true, indent + 1) %}
+    <td>{%= Datalist(key, id, value, opts, titles, indent) %}</td>
+  {%= components.Indent(true, indent) %}
+  </tr>
+{% endstripspace %}{% endfunc %}
+
+{% func Radio(key string, value string, opts []string, titles []string, indent int) %}{% stripspace %}
+  {% for idx, opt := range opts %}
+    {% code
+      title := opt
+      if idx < len(titles) {
+        title = titles[idx]
+      }
+    %}
+    {%= components.Indent(true, indent) %}
+    {% if opt == value %}
+      <label class="radio-label"><input type="radio" name="{%s key %}" value="{%s opt %}" checked="checked" />{% space %}{%s title %}</label>
+    {% else %}
+      <label class="radio-label"><input type="radio" name="{%s key %}" value="{%s opt %}" />{% space %}{%s title %}</label>
+    {% endif %}
+  {% endfor %}
+{% endstripspace %}{% endfunc %}
+
+{% func RadioVertical(key string, title string, value string, opts []string, titles []string, indent int, help ...string) %}{% stripspace %}
+  <div class="mb expanded">
+    {%= components.Indent(true, indent + 1) %}
+    <div>{%= components.TitleFor(help) %}>{%s title %}</div>
+    {%= components.Indent(true, indent + 1) %}
+    <div class="mt">
+      {%= Radio(key, value, opts, titles, indent + 2) %}
+    {%= components.Indent(true, indent + 1) %}
+    </div>
+  {%= components.Indent(true, indent) %}
+  </div>
+{% endstripspace %}{% endfunc %}
+
+{% func RadioTable(key string, title string, value string, opts []string, titles []string, indent int, help ...string) %}{% stripspace %}
+  <tr>
+    {%= components.Indent(true, indent + 1) %}
+    <th class="shrink"><label{%= components.TitleFor(help) %}>{%s title %}</label></th>
+    {%= components.Indent(true, indent + 1) %}
+    <td>
+      {%= Radio(key, value, opts, titles, indent + 2) %}
+    {%= components.Indent(true, indent + 1) %}
+    </td>
+  {%= components.Indent(true, indent) %}
+  </tr>
+{% endstripspace %}{% endfunc %}
+
+{% func Checkbox(key string, values []string, opts []string, titles []string, indent int) %}{% stripspace %}
+  {% for idx, opt := range opts %}
+    {% code
+      title := opt
+      if idx < len(titles) {
+        title = titles[idx]
+      }
+    %}
+    {%= components.Indent(true, indent) %}
+    {% if lo.Contains(values, opt) %}
+      <label><input type="checkbox" name="{%s key %}" value="{%s opt %}" checked="checked" />{% space %}{%s title %}</label>
+    {% else %}
+      <label><input type="checkbox" name="{%s key %}" value="{%s opt %}" />{% space %}{%s title %}</label>
+    {% endif %}
+  {% endfor %}
+{% endstripspace %}{% endfunc %}
+
+{% func CheckboxVertical(key string, title string, values []string, opts []string, titles []string, indent int, help ...string) %}{% stripspace %}
+  <div class="mb expanded">
+    {%= components.Indent(true, indent + 1) %}
+    <div>{%s title %}</div>
+    {%= components.Indent(true, indent + 1) %}
+    <div class="mt">
+      {%= Checkbox(key, values, opts, titles, indent + 2) %}
+    {%= components.Indent(true, indent + 1) %}
+    </div>
+  {%= components.Indent(true, indent) %}
+  </div>
+{% endstripspace %}{% endfunc %}
+
+{% func CheckboxTable(key string, title string, values []string, opts []string, titles []string, indent int, help ...string) %}{% stripspace %}
+  <tr>
+    {%= components.Indent(true, indent + 1) %}
+    <th class="shrink"><label>{%s title %}</label></th>
+    {%= components.Indent(true, indent + 1) %}
+    <td class="checkboxes">
+      {%= Checkbox(key, values, opts, titles, indent + 2) %}
+    {%= components.Indent(true, indent + 1) %}
+    </td>
+  {%= components.Indent(true, indent) %}
+  </tr>
+{% endstripspace %}{% endfunc %}

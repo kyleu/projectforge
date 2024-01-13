@@ -78,6 +78,8 @@ func (o *OrderedMap[V]) UnmarshalJSON(b []byte) error {
 	})
 
 	if o.Lexical {
+		slices.Sort(o.Order)
+	} else {
 		slices.SortFunc(o.Order, func(l string, r string) int {
 			return cmp.Compare(index[l], index[r])
 		})

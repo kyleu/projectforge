@@ -39,7 +39,11 @@ func Model(m *model.Model, args *model.Args, addHeader bool, linebreak string) (
 		if e != nil {
 			return nil, e
 		}
-		g.AddBlocks(pk)
+		pkString, e := modelPKString(m, args.Enums)
+		if e != nil {
+			return nil, e
+		}
+		g.AddBlocks(pk, pkString)
 	}
 	str, err := modelStruct(m, args.Enums)
 	if err != nil {
@@ -83,24 +87,6 @@ func modelToPK(m *model.Model, _ enum.Enums) (*golang.Block, error) {
 	return ret, nil
 }
 
-func modelPK(m *model.Model, enums enum.Enums) (*golang.Block, error) {
-	ret := golang.NewBlock("PK", "struct")
-	ret.W("type PK struct {")
-	pks := m.PKs()
-	maxColLength := pks.MaxCamelLength()
-	maxTypeLength := pks.MaxGoTypeLength(m.Package, enums)
-	for _, c := range pks {
-		gt, err := c.ToGoType(m.Package, enums)
-		if err != nil {
-			return nil, err
-		}
-		goType := util.StringPad(gt, maxTypeLength)
-		ret.W("\t%s %s `json:%q`", util.StringPad(c.Proper(), maxColLength), goType, c.Camel()+modelJSONSuffix(c))
-	}
-	ret.W("}")
-	return ret, nil
-}
-
 func modelStruct(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock(m.Proper(), "struct")
 	ret.W("type %s struct {", m.Proper())
@@ -112,7 +98,12 @@ func modelStruct(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 			return nil, err
 		}
 		goType := util.StringPad(gt, maxTypeLength)
-		tag := fmt.Sprintf("json:%q", c.Camel()+modelJSONSuffix(c))
+		tag := ""
+		if c.JSON == "" {
+			tag = fmt.Sprintf("json:%q", c.Camel()+modelJSONSuffix(c))
+		} else {
+			tag = fmt.Sprintf("json:%q", c.JSON+modelJSONSuffix(c))
+		}
 		if c.Validation != "" {
 			tag += fmt.Sprintf(",validate:%q", c.Validation)
 		}

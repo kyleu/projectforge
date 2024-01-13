@@ -2,7 +2,6 @@ package filesystem
 
 import (
 	"context"
-	"io"
 
 	"{{{ .Package }}}/app/util"
 )
@@ -13,10 +12,10 @@ type FileLoader interface {
 	PeekFile(path string, maxSize int) ([]byte, error)
 	Size(path string) int
 	ReadFile(path string) ([]byte, error)
-	FileReader(fn string) (io.Reader, error)
+	FileReader(fn string) (Reader, error)
 	CreateDirectory(path string) error
 	WriteFile(path string, content []byte, mode FileMode, overwrite bool) error
-	FileWriter(fn string, createIfNeeded bool, appendMode bool) (io.Writer, error)
+	FileWriter(fn string, createIfNeeded bool, appendMode bool) (Writer, error)
 	CopyFile(src string, tgt string) error
 	CopyRecursive(src string, tgt string, ignore []string, logger util.Logger) error
 	Move(src string, tgt string) error
@@ -34,5 +33,6 @@ type FileLoader interface {
 	Remove(path string, logger util.Logger) error
 	RemoveRecursive(pt string, logger util.Logger) error
 	Download(ctx context.Context, url string, path string, overwrite bool, logger util.Logger) (int, error)
+	UnzipToDir(src string, dest string) (*util.OrderedMap[int64], error)
 	String() string
 }

@@ -5,7 +5,7 @@
   "projectforge.dev/projectforge/app/util"
 ) %}
 
-{% func DisplayTerminal(id string, s string) %}{% stripspace %}
+{% func Terminal(id string, s string) %}{% stripspace %}
   {%- code
     raw := string(ansihtml.ConvertToHTML([]byte(s)))
     lines := util.StringSplitLines(raw)

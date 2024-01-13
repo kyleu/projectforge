@@ -4,6 +4,7 @@
   "{{{ .Package }}}/app/lib/theme"
   "{{{ .Package }}}/app/util"
   "{{{ .Package }}}/views/components"
+  "{{{ .Package }}}/views/components/edit"
   "{{{ .Package }}}/views/layout"
 ) %}
 
@@ -30,7 +31,7 @@
       <div class="overflow full-width">
         <table class="mt expanded">
           <tbody>
-            {%= components.TableInput("key", "", "Key", p.Theme.Key, 5) %}
+            {%= edit.StringTable("key", "", "Key", p.Theme.Key, 5) %}
           </tbody>
         </table>
       </div>

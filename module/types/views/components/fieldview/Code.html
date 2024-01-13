@@ -1,8 +1,0 @@
-{% import (
-  "{{{ .Package }}}/app/controller/cutil"
-) %}
-
-{% func Code(content string, lang string) %}{% stripspace %}
-  {% code out, err := cutil.FormatLang(content, lang) %}
-  {% if err == nil %}{%s= out %}{% else %}{%s err.Error() %}{% endif %}
-{% endstripspace %}{% endfunc %}

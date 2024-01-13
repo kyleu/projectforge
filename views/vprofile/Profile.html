@@ -5,6 +5,7 @@
   "projectforge.dev/projectforge/app/lib/theme"
   "projectforge.dev/projectforge/app/lib/user"
   "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/components/edit"
   "projectforge.dev/projectforge/views/layout"
   "projectforge.dev/projectforge/views/vtheme"
 ) %}
@@ -28,7 +29,7 @@
       <div class="overflow full-width">
         <table class="mt expanded">
           <tbody>
-            {%= components.TableInput("name", "", "Name", ps.Username(), 5) %}
+            {%= edit.StringTable("name", "", "Name", ps.Username(), 5) %}
             <tr>
               <th class="shrink"><label>Mode</label></th>
               <td>

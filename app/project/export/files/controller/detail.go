@@ -34,8 +34,18 @@ func controllerDetail(g *golang.File, models model.Models, m *model.Model, grp *
 	argKeys, argVals := getArgs(g, models, m, rrels, ret)
 	revArgKeys, revArgVals := getReverseArgs(models, m, rrels, ret)
 	if audit {
-		msg := "\t\trelatedAuditRecords, err := as.Services.Audit.RecordsForModel(ps.Context, nil, %q, %s, nil, ps.Logger)"
-		ret.W(msg, m.Name, m.PKs().ToGoStrings("ret."))
+		pks := m.PKs()
+		if len(pks) > 1 {
+			fields := lo.Map(pks, func(pk *model.Column, _ int) string {
+				return fmt.Sprintf("%s: ret.%s", pk.Proper(), pk.Proper())
+			})
+			ret.W("\t\tpk := &%s.PK{%s}", m.Package, strings.Join(fields, ", "))
+			msg := "\t\trelatedAuditRecords, err := as.Services.Audit.RecordsForModel(ps.Context, nil, %q, pk.String(), nil, ps.Logger)"
+			ret.W(msg, m.Name)
+		} else {
+			msg := "\t\trelatedAuditRecords, err := as.Services.Audit.RecordsForModel(ps.Context, nil, %q, %s, nil, ps.Logger)"
+			ret.W(msg, m.Name, m.PKs().ToGoStrings("ret."))
+		}
 		ret.W("\t\tif err != nil {")
 		ret.W("\t\t\treturn \"\", errors.Wrapf(err, \"unable to retrieve related audit records\")")
 		ret.W("\t\t}")

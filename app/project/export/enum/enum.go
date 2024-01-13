@@ -63,23 +63,55 @@ func (e *Enum) Camel() string {
 	return util.StringToLowerCamel(e.Name)
 }
 
-func (e *Enum) ExtraFields() map[string]string {
-	ret := map[string]string{}
+func (e *Enum) ExtraFields() *util.OrderedMap[string] {
+	ret := util.NewOrderedMap[string](false, 0)
 	for _, v := range e.Values {
-		for k, v := range v.Extra {
+		for _, k := range v.Extra.Order {
+			x := v.Extra.GetSimple(k)
+			if _, exists := ret.Get(k); exists {
+				continue
+			}
 			typ := ""
-			switch v.(type) {
+			switch x.(type) {
 			case string:
 				typ = types.KeyString
 			case float64:
 				typ = types.KeyFloat
 			case int, int32, int64:
 				typ = types.KeyInt
+			case bool:
+				typ = types.KeyBool
 			}
-			ret[k] = typ
+			if x := e.Config.GetStringOpt("type:" + k); x != "" {
+				switch x {
+				case types.KeyString:
+					typ = types.KeyString
+				case types.KeyInt:
+					typ = types.KeyInt
+				case types.KeyFloat:
+					typ = types.KeyFloat
+				case types.KeyBool:
+					typ = types.KeyBool
+				case types.KeyTimestamp:
+					typ = types.KeyTimestamp
+				default:
+					typ = "unknown config type [" + x + "]"
+				}
+			}
+			ret.Append(k, typ)
 		}
 	}
 	return ret
+}
+
+func (e *Enum) ExtraFieldValues(k string) ([]any, bool) {
+	ret := make([]any, 0, len(e.Values))
+	for _, v := range e.Values {
+		if x, ok := v.Extra.Get(k); ok && x != nil {
+			ret = append(ret, x)
+		}
+	}
+	return ret, len(lo.Uniq(ret)) == len(ret)
 }
 
 func (e *Enum) PackageWithGroup(prefix string) string {

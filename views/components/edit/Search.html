@@ -1,0 +1,34 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/views/components"
+) %}
+
+{% func SearchForm(action string, fieldKey string, placeholder string, value string, ps *cutil.PageState) %}{% stripspace %}
+  {% code
+    if fieldKey == "" {
+      fieldKey = "q"
+    }
+    m := map[string]string{}
+    ps.URI.QueryArgs().VisitAll(func(key []byte, value []byte) {
+      k, v := string(key), string(value)
+      if k == fieldKey {
+        return
+      }
+      curr, ok := m[k]
+      if ok {
+        curr += ","
+      }
+      curr += v
+      m[k] = curr
+    })
+  %}
+  <form action="{%s action %}" method="get" class="">
+    {% for k, v := range m %}
+    <input type="hidden" name="{%s k %}" value="{%s v %}" />
+    {% endfor %}
+    <button class="right" type="submit">{%= components.SVGRef("search", 22, 22, `icon`, ps) %}</button>
+    <input class="right br0" type="search" placeholder="{%s placeholder %}" name="{%s fieldKey %}" value="{%s value %}">
+    <div class="clear"></div>
+  </form>
+{% endstripspace %}{% endfunc %}

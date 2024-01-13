@@ -69,6 +69,7 @@
   {%- if len(enum.Values) == 0 -%}
   <p><em>no values</em></p>
   {%- else -%}
+  {%- code ef := enum.ExtraFields() -%}
   <div class="overflow full-width">
     <table class="mt min-200 full-width">
       <thead>
@@ -76,7 +77,7 @@
           <th class="shrink">Key</th>
           <th>Name</th>
           <th>Description</th>
-          {%- for x := range enum.ExtraFields() -%}
+          {%- for _, x := range ef.Order -%}
           <th>{%s x %}</th>
           {%- endfor -%}
         </tr>
@@ -87,8 +88,8 @@
           <td>{%s v.Key %}</td>
           <td>{%s v.Name %}</td>
           <td>{%s v.Description %}</td>
-          {%- for x := range enum.ExtraFields() -%}
-          <td>{%v v.Extra[x] %}</td>
+          {%- for _, x := range ef.Order -%}
+          <td>{%v v.Extra.GetSimple(x) %}</td>
           {%- endfor -%}
         </tr>
         {%- endfor -%}

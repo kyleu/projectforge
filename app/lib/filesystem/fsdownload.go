@@ -19,10 +19,6 @@ func (f *FileSystem) Download(ctx context.Context, url string, path string, over
 	if f.Exists(path) && !overwrite {
 		return 0, errors.Errorf("file [%s] exists", path)
 	}
-	w, err := f.FileWriter(path, true, false)
-	if err != nil {
-		return 0, errors.Wrapf(err, "unable to open file at path [%s]", path)
-	}
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, http.NoBody)
 	if err != nil {
 		return 0, errors.Wrapf(err, "unable to make request for url [%s]", url)
@@ -36,6 +32,10 @@ func (f *FileSystem) Download(ctx context.Context, url string, path string, over
 	}()
 	if rsp.StatusCode != http.StatusOK {
 		return 0, errors.Errorf("response from url [%s] has status [%d], expected [200]", url, rsp.StatusCode)
+	}
+	w, err := f.FileWriter(path, true, false)
+	if err != nil {
+		return 0, errors.Wrapf(err, "unable to open file at path [%s]", path)
 	}
 	x, err := io.Copy(w, rsp.Body)
 	if err != nil {

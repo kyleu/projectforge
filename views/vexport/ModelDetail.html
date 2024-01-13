@@ -108,6 +108,7 @@
           <th>Type</th>
           <th>Format</th>
           <th>Example</th>
+          <th>JSON</th>
           <th>Validation</th>
           <th>Indexed</th>
           <th>Unique</th>
@@ -121,6 +122,7 @@
           <td>{%s col.Type.String() %}</td>
           <td>{%s col.Format %}</td>
           <td>{%s col.Example %}</td>
+          <td>{%s col.JSON %}</td>
           <td>{%s col.Validation %}</td>
           <td>{% if col.Indexed || model.Relations.ContainsSource(col.Name) %}{%= components.SVGRef("check", 15, 15, "icon", ps) %}{% endif %}</td>
           <td>{% if col.HasTag("unique") %}{%= components.SVGRef("check", 15, 15, "icon", ps) %}{% endif %}</td>

@@ -36,15 +36,15 @@ func ToGoViewString(t *types.Wrapped, prop string, nullable bool, format string,
 		}
 		switch lt.Key() {
 		case types.KeyString:
-			return "{%%= components.DisplayStringArray(" + prop + ") %%}"
+			return "{%%= view.StringArray(" + prop + ") %%}"
 		case types.KeyInt:
-			return "{%%= components.DisplayIntArray(" + prop + ") %%}"
+			return "{%%= view.IntArray(" + prop + ") %%}"
 		case types.KeyEnum:
 			e, _ := AsEnumInstance(lt, enums)
 			if e == nil {
 				return "ERROR: invalid enum [" + lt.String() + "]"
 			}
-			return "{%%= components.DisplayStringArray(" + prop + ".Strings()) %%}"
+			return "{%%= view.StringArray(" + prop + ".Strings()) %%}"
 		default:
 			return "{%%= components.JSON(" + prop + ") %%}"
 		}
@@ -55,9 +55,9 @@ func ToGoViewString(t *types.Wrapped, prop string, nullable bool, format string,
 		return "{%%= components.JSON(" + prop + ") %%}"
 	case types.KeyDate:
 		if nullable {
-			return "{%%= components.DisplayTimestampDay(" + prop + ") %%}"
+			return "{%%= view.TimestampDay(" + prop + ") %%}"
 		}
-		return "{%%= components.DisplayTimestampDay(&" + prop + ") %%}"
+		return "{%%= view.TimestampDay(&" + prop + ") %%}"
 	case types.KeyEnum:
 		e, _ := AsEnumInstance(t, enums)
 		if e == nil || e.Simple() {
@@ -66,14 +66,14 @@ func ToGoViewString(t *types.Wrapped, prop string, nullable bool, format string,
 		return "{%%s " + ToGoString(t, prop, false) + ".String() %%}"
 	case types.KeyTimestamp:
 		if nullable {
-			return "{%%= components.DisplayTimestamp(" + prop + ") %%}"
+			return "{%%= view.Timestamp(" + prop + ") %%}"
 		}
-		return "{%%= components.DisplayTimestamp(&" + prop + ") %%}"
+		return "{%%= view.Timestamp(&" + prop + ") %%}"
 	case types.KeyUUID:
 		if nullable {
-			return "{%%= components.DisplayUUID(" + prop + ") %%}"
+			return "{%%= view.UUID(" + prop + ") %%}"
 		}
-		return "{%%= components.DisplayUUID(&" + prop + ") %%}"
+		return "{%%= view.UUID(&" + prop + ") %%}"
 	case types.KeyString:
 		return goViewStringForString(url, src, t, prop, format, verbose)
 	default:

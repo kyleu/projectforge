@@ -4,7 +4,7 @@
   "{{{ .Package }}}/app"
   "{{{ .Package }}}/app/controller/cutil"
   "{{{ .Package }}}/app/lib/database/migrate"
-  "{{{ .Package }}}/views/components"
+  "{{{ .Package }}}/views/components/view"
   "{{{ .Package }}}/views/layout"
 ) %}
 
@@ -25,7 +25,7 @@
       {%- if curr == nil -%}
       <em>Not Applied</em>
       {%- else -%}
-      Applied {%= components.DisplayTimestamp(&curr.Created) %}
+      Applied {%= view.Timestamp(&curr.Created) %}
       {%- endif -%}
     </div>
     <h3>{%s mf.Title %}</h3>

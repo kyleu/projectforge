@@ -1,0 +1,18 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "time"
+
+  "projectforge.dev/projectforge/app/util"
+) %}
+
+{% func Timestamp(value *time.Time) %}{% stripspace %}
+  <span class="nowrap">{%s util.TimeToFull(value) %}</span>
+{% endstripspace %}{% endfunc %}
+
+{% func TimestampRelative(value *time.Time) %}{% stripspace %}
+  <span class="nowrap reltime" data-time="{%s util.TimeToFull(value) %}">{%s util.TimeRelative(value) %}</span>
+{% endstripspace %}{% endfunc %}
+
+{% func TimestampDay(value *time.Time) %}{% stripspace %}
+  {%s util.TimeToYMD(value) %}
+{% endstripspace %}{% endfunc %}

@@ -1,0 +1,61 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "strings"
+
+  "projectforge.dev/projectforge/app/controller/cutil"
+) %}
+
+{% func String(value string, classes ...string) %}{% stripspace %}
+  {% if len(classes) == 0 %}
+    {%s value %}
+  {% else %}
+    <span class="{%s strings.Join(classes, ` `) %}">{%s value %}</span>
+  {% endif %}
+{% endstripspace %}{% endfunc %}
+
+{% func StringRich(value string, code bool, maxLength int, classes ...string) %}{% stripspace %}
+  {% code if maxLength > 0 && len(value) > maxLength {
+    value = value[:maxLength]
+  } %}
+  {% if code %}
+  {% if len(classes) == 0 %}
+    <pre>{%s value %}</pre>
+  {% else %}
+    <pre class="{%s strings.Join(classes, ` `) %}">{%s value %}</pre>
+  {% endif %}
+  {% else %}
+    {%= String(value, classes...) %}
+  {% endif %}
+{% endstripspace %}{% endfunc %}
+
+{% func StringArray(value []string) %}{% stripspace %}
+  {% if len(value) == 0 %}
+  <em>empty</em>
+  {% endif %}
+  {% code
+    maxCount := 5
+    display := value
+    var extra int
+    if len(value) > maxCount {
+      extra = len(value) - maxCount
+      display = display[:maxCount]
+    }
+  %}
+  {% if extra > 0 %}<span title="{%s strings.Join(value, `, `) %}">{% endif %}
+  {%- for idx, v := range display -%}
+  {% if idx > 0 %},{% space %}{% endif %}
+  {%s v %}
+  {% endfor %}
+  {% if extra > 0 %}, <em>and{% space %}{%d extra %}{% space %}more...</em>{% endif %}
+  {% if extra > 0 %}</span>{% endif %}
+{% endstripspace %}{% endfunc %}
+
+
+{% func Format(v string, ext string) %}{% stripspace %}
+  {% code out, err := cutil.FormatLang(v, ext) %}
+  {% if err == nil %}
+    {%s= out %}
+  {% else %}
+    {%s err.Error() %}
+  {% endif %}
+{% endstripspace %}{% endfunc %}

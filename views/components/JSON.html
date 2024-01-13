@@ -39,10 +39,16 @@
       _ = util.FromJSON(b, &v)
     }
   %}
-  {% code out, err := cutil.FormatJSON(v) %}
-  {% if err == nil %}
-    {%s= out %}
+  {% code json := util.ToJSONBytes(v, true) %}
+  {% if len(json) > (1024 * 256) %}
+    <div class="mt"><em>This JSON is too large (<strong>{%s util.ByteSizeSI(int64(len(json))) %}</strong>), highlighting is disabled</em></div>
+    <pre class="mt">{%s string(json) %}</pre>
   {% else %}
-    {%s err.Error() %}
+    {% code out, err := cutil.FormatLang(string(json), "json") %}
+    {% if err == nil %}
+      {%s= out %}
+    {% else %}
+      {%s err.Error() %}
+    {% endif %}
   {% endif %}
 {% endstripspace %}{% endfunc %}

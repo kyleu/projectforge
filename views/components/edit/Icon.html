@@ -1,0 +1,58 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/views/components"
+) %}
+
+{% func IconPicker(key string, selected string, ps *cutil.PageState, indent int) %}{% stripspace %}
+  {%= components.Indent(true, indent) %}
+  <div class="choice">
+    {% for _, k := range util.SVGIconKeys %}
+      {%= components.Indent(true, indent + 1) %}
+      <label title="{%s k %}">
+        {% if k == selected %}
+          <input type="radio" name="{%s key %}" value="{%s k %}" checked="checked" />
+        {% else %}
+          <input type="radio" name="{%s key %}" value="{%s k %}" />
+        {% endif %}
+        {% space %}
+        {%= components.SVGRef(k, 48, 48, "", ps) %}
+      </label>
+    {% endfor %}
+    {%= components.Indent(true, indent + 1) %}
+    <div class="clear"></div>
+  {%= components.Indent(true, indent) %}
+  </div>
+{% endstripspace %}{% endfunc %}
+
+{% func IconPickerVertical(key string, title string, value string, ps *cutil.PageState, indent int) %}{% stripspace %}
+  <div class="mb expanded">
+    {%= components.Indent(true, indent + 1) %}
+    <em class="title">{%s title %}</em>
+    {%= components.Indent(true, indent + 1) %}
+    <div class="mt">{%= IconPicker(key, value, ps, indent) %}</div>
+  {%= components.Indent(true, indent) %}
+  </div>
+{% endstripspace %}{% endfunc %}
+
+{% func Icons(key string, title string, value string, ps *cutil.PageState, indent int) %}{% stripspace %}
+  <div class="mb expanded">
+    {%= components.Indent(true, indent + 1) %}
+    <em class="title">{%s title %}</em>
+    {%= components.Indent(true, indent + 1) %}
+    <div class="mt">{%= IconPicker(key, value, ps, indent) %}</div>
+  {%= components.Indent(true, indent) %}
+  </div>
+{% endstripspace %}{% endfunc %}
+
+{% func IconsTable(key string, title string, value string, ps *cutil.PageState, indent int, help ...string) %}{% stripspace %}
+  <tr>
+    {%= components.Indent(true, indent + 1) %}
+    <th class="shrink"><label>{%s title %}</label></th>
+    {%= components.Indent(true, indent + 1) %}
+    <td>{%= Icons(key, title, value, ps, indent + 2) %}
+    </td>
+  {%= components.Indent(true, indent) %}
+  </tr>
+{% endstripspace %}{% endfunc %}

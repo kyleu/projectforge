@@ -35,9 +35,9 @@ func goViewStringForString(url bool, src string, t *types.Wrapped, prop string, 
 		)
 		return strings.Join(ret, "")
 	case FmtHTML.Key:
-		return "{%%= components.Format(" + ToGoString(t, prop, false) + ", \"html\") %%}</pre>"
+		return "{%%= view.Format(" + ToGoString(t, prop, false) + ", \"html\") %%}</pre>"
 	case FmtJSON.Key:
-		return "{%%= components.Format(" + ToGoString(t, prop, false) + ", \"json\") %%}</pre>"
+		return "{%%= view.Format(" + ToGoString(t, prop, false) + ", \"json\") %%}</pre>"
 	case FmtURL.Key:
 		x := "{%%" + key + " " + ToGoString(t, prop, false) + " %%}"
 		return fmt.Sprintf("<a href=%q target=\"_blank\" rel=\"noopener noreferrer\">%s</a>", x, x)
@@ -55,7 +55,7 @@ func goViewStringForString(url bool, src string, t *types.Wrapped, prop string, 
 	case FmtSelect.Key:
 		return "<strong>{%%" + key + " " + ToGoString(t, prop, false) + " %%}</strong>"
 	case "":
-		return "{%%" + key + " " + ToGoString(t, prop, false) + " %%}"
+		return "{%%= view.String(" + prop + ") %%}"
 	default:
 		return "INVALID_STRING_FORMAT[" + format + "]"
 	}

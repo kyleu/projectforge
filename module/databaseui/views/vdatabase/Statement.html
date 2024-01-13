@@ -4,6 +4,7 @@
   "{{{ .Package }}}/app/lib/database"
   "{{{ .Package }}}/app/util"
   "{{{ .Package }}}/views/components"
+  "{{{ .Package }}}/views/components/view"
   "{{{ .Package }}}/views/layout"
 ) %}
 
@@ -52,7 +53,7 @@
           <input id="accordion-extra" type="checkbox" hidden="hidden" />
           <label for="accordion-extra">{%= components.ExpandCollapse(3, ps) %} Query Plan</label>
           <div class="bd"><div><div>
-            {%= components.DisplayMaps(s.Extra, nil, true, ps) %}
+            {%= view.MapArray(s.Extra, nil, true, ps) %}
           </div></div></div>
         </li>
         {%- endif -%}

@@ -7,60 +7,149 @@
 package components
 
 //line views/components/Indent.html:2
+import "strings"
+
+//line views/components/Indent.html:4
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/components/Indent.html:2
+//line views/components/Indent.html:4
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/components/Indent.html:2
+//line views/components/Indent.html:4
 func StreamIndent(qw422016 *qt422016.Writer, br bool, level int) {
-//line views/components/Indent.html:3
+//line views/components/Indent.html:5
 	if br {
-//line views/components/Indent.html:3
+//line views/components/Indent.html:5
 		qw422016.N().S(`
 `)
-//line views/components/Indent.html:3
+//line views/components/Indent.html:5
 	}
-//line views/components/Indent.html:4
-	for i := 0; i < level; i++ {
-//line views/components/Indent.html:5
-		qw422016.N().S(` `)
-//line views/components/Indent.html:5
-		qw422016.N().S(` `)
 //line views/components/Indent.html:6
+	for i := 0; i < level; i++ {
+//line views/components/Indent.html:7
+		qw422016.N().S(` `)
+//line views/components/Indent.html:7
+		qw422016.N().S(` `)
+//line views/components/Indent.html:8
 	}
-//line views/components/Indent.html:7
+//line views/components/Indent.html:9
 }
 
-//line views/components/Indent.html:7
+//line views/components/Indent.html:9
 func WriteIndent(qq422016 qtio422016.Writer, br bool, level int) {
-//line views/components/Indent.html:7
+//line views/components/Indent.html:9
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/Indent.html:7
+//line views/components/Indent.html:9
 	StreamIndent(qw422016, br, level)
-//line views/components/Indent.html:7
+//line views/components/Indent.html:9
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/Indent.html:7
+//line views/components/Indent.html:9
 }
 
-//line views/components/Indent.html:7
+//line views/components/Indent.html:9
 func Indent(br bool, level int) string {
-//line views/components/Indent.html:7
+//line views/components/Indent.html:9
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/Indent.html:7
+//line views/components/Indent.html:9
 	WriteIndent(qb422016, br, level)
-//line views/components/Indent.html:7
+//line views/components/Indent.html:9
 	qs422016 := string(qb422016.B)
-//line views/components/Indent.html:7
+//line views/components/Indent.html:9
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/Indent.html:7
+//line views/components/Indent.html:9
 	return qs422016
-//line views/components/Indent.html:7
+//line views/components/Indent.html:9
+}
+
+//line views/components/Indent.html:11
+func StreamPlaceholderFor(qw422016 *qt422016.Writer, phs []string) {
+//line views/components/Indent.html:12
+	if len(phs) > 0 {
+//line views/components/Indent.html:12
+		qw422016.N().S(` `)
+//line views/components/Indent.html:12
+		qw422016.N().S(`placeholder="`)
+//line views/components/Indent.html:12
+		qw422016.E().S(strings.Join(phs, "; "))
+//line views/components/Indent.html:12
+		qw422016.N().S(`"`)
+//line views/components/Indent.html:12
+	}
+//line views/components/Indent.html:13
+}
+
+//line views/components/Indent.html:13
+func WritePlaceholderFor(qq422016 qtio422016.Writer, phs []string) {
+//line views/components/Indent.html:13
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/components/Indent.html:13
+	StreamPlaceholderFor(qw422016, phs)
+//line views/components/Indent.html:13
+	qt422016.ReleaseWriter(qw422016)
+//line views/components/Indent.html:13
+}
+
+//line views/components/Indent.html:13
+func PlaceholderFor(phs []string) string {
+//line views/components/Indent.html:13
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/components/Indent.html:13
+	WritePlaceholderFor(qb422016, phs)
+//line views/components/Indent.html:13
+	qs422016 := string(qb422016.B)
+//line views/components/Indent.html:13
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/components/Indent.html:13
+	return qs422016
+//line views/components/Indent.html:13
+}
+
+//line views/components/Indent.html:15
+func StreamTitleFor(qw422016 *qt422016.Writer, help []string) {
+//line views/components/Indent.html:16
+	if len(help) > 0 {
+//line views/components/Indent.html:16
+		qw422016.N().S(` `)
+//line views/components/Indent.html:16
+		qw422016.N().S(`title="`)
+//line views/components/Indent.html:16
+		qw422016.E().S(strings.Join(help, "; "))
+//line views/components/Indent.html:16
+		qw422016.N().S(`"`)
+//line views/components/Indent.html:16
+	}
+//line views/components/Indent.html:17
+}
+
+//line views/components/Indent.html:17
+func WriteTitleFor(qq422016 qtio422016.Writer, help []string) {
+//line views/components/Indent.html:17
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/components/Indent.html:17
+	StreamTitleFor(qw422016, help)
+//line views/components/Indent.html:17
+	qt422016.ReleaseWriter(qw422016)
+//line views/components/Indent.html:17
+}
+
+//line views/components/Indent.html:17
+func TitleFor(help []string) string {
+//line views/components/Indent.html:17
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/components/Indent.html:17
+	WriteTitleFor(qb422016, help)
+//line views/components/Indent.html:17
+	qs422016 := string(qb422016.B)
+//line views/components/Indent.html:17
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/components/Indent.html:17
+	return qs422016
+//line views/components/Indent.html:17
 }

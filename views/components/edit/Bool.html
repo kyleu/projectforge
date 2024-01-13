@@ -1,0 +1,33 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import "fmt" %}
+
+{% func Bool(key string, id string, x any, nullable bool) %}{% stripspace %}
+  {% code b, isBool := x.(bool) %}
+  {% if isBool && b %}
+    <label class="radiolabel"><input value="true" name="{%s key %}" type="radio" checked="checked" /> true</label>
+  {% else %}
+    <label class="radiolabel"><input value="true" name="{%s key %}" type="radio" /> true</label>
+  {% endif %}
+
+  {% if isBool && !b %}
+    <label class="radiolabel"><input value="false" name="{%s key %}" type="radio" checked="checked" /> false</label>
+  {% else %}
+    <label class="radiolabel"><input value="false" name="{%s key %}" type="radio" /> false</label>
+  {% endif %}
+
+  {% if nullable %}
+    {% if x == nil %}
+      <label class="radiolabel"><input value="∅" name="{%s key %}" type="radio" checked="checked" /> nil</label>
+    {% else %}
+      <label class="radiolabel"><input value="∅" name="{%s key %}" type="radio" /> nil</label>
+    {% endif %}
+  {% endif %}
+{% endstripspace %}{% endfunc %}
+
+{% func BoolVertical(key string, title string, value bool, indent int, help ...string) %}{% stripspace %}
+  {%= RadioVertical(key, title, fmt.Sprint(value), []string{"true", "false"}, []string{"True", "False"}, indent) %}
+{% endstripspace %}{% endfunc %}
+
+{% func BoolTable(key string, title string, value bool, indent int, help ...string) %}{% stripspace %}
+  {%= RadioTable(key, title, fmt.Sprint(value), []string{"true", "false"}, []string{"True", "False"}, indent) %}
+{% endstripspace %}{% endfunc %}

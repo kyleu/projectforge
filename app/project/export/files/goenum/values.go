@@ -33,10 +33,27 @@ func enumValues(e *enum.Enum) *golang.Block {
 		if v.Icon != "" {
 			msg += fmt.Sprintf(", Icon: %q", v.Icon)
 		}
-		for extraKey, extraType := range e.ExtraFields() {
-			t := v.Extra.GetStringOpt(extraKey)
-			if extraType == types.KeyString || extraType == "" {
+		ef := e.ExtraFields()
+		for _, extraKey := range ef.Order {
+			t := fmt.Sprint(v.Extra.GetSimple(extraKey))
+			switch ef.GetSimple(extraKey) {
+			case types.KeyString, "":
+				if t == "" {
+					continue
+				}
 				t = "\"" + t + "\""
+			case types.KeyTimestamp:
+				if t == "<nil>" {
+					continue
+				}
+				t = "util.TimeFromStringSimple(\"" + t + "\")"
+			case types.KeyBool:
+				if t == "<nil>" {
+					t = "false"
+				}
+				if t == "false" {
+					continue
+				}
 			}
 			msg += fmt.Sprintf(", %s: %s", util.StringToCamel(extraKey), t)
 		}

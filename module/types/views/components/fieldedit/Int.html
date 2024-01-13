@@ -1,7 +1,0 @@
-{% import (
-  "{{{ .Package }}}/views/components"
-) %}
-
-{% func Int(x any, k string) %}{% stripspace %}
-  {%= components.FormInputNumber(k, "", x) %}
-{% endstripspace %}{% endfunc %}

@@ -1,0 +1,28 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import "projectforge.dev/projectforge/views/components" %}
+
+{% func File(key string, id string, label string, value string, placeholder ...string) %}{% stripspace %}
+  {% if id == "" %}
+    <label for="key"><input type="file" name="{%s key %}" value="{%s value %}" {%= components.PlaceholderFor(placeholder) %}/>{%s label %}</label>
+  {% else %}
+    <label id="{%s id %}" for="{%s key %}"><input type="file" name="{%s key %}" value="{%s value %}" {%= components.PlaceholderFor(placeholder) %}/>{%s label %}</label>
+  {% endif %}
+{% endstripspace %}{% endfunc %}
+
+{% func FileTable(key string, id string, title string, label string, value string) %}{% stripspace %}
+  <tr>
+    <th class="shrink"><label for="{%s id %}">{%s title %}</label></th>
+    <td>
+      {%= File(key, id, label, value) %}
+    </td>
+  </tr>
+{% endstripspace %}{% endfunc %}
+
+{% func FileMultiple(key string, id string, label string, value string, placeholder ...string) %}{% stripspace %}
+  {% if id == "" %}
+    <label for="key"><input type="file" name="{%s key %}" value="{%s value %}" multiple="multiple" {%= components.PlaceholderFor(placeholder) %}/>{%s label %}</label>
+  {% else %}
+    <label id="{%s id %}" for="{%s key %}"><input type="file" name="{%s key %}" value="{%s value %}" multiple="multiple" {%= components.PlaceholderFor(placeholder) %}/>{%s label %}</label>
+  {% endif %}
+{% endstripspace %}{% endfunc %}
+

@@ -9,12 +9,12 @@ import (
 )
 
 type valueMarshal struct {
-	Key         string        `json:"key"`
-	Name        string        `json:"name,omitempty"`
-	Description string        `json:"description,omitempty"`
-	Icon        string        `json:"icon,omitempty"`
-	Default     bool          `json:"default,omitempty"`
-	Extra       util.ValueMap `json:"extra,omitempty"`
+	Key         string                `json:"key"`
+	Name        string                `json:"name,omitempty"`
+	Description string                `json:"description,omitempty"`
+	Icon        string                `json:"icon,omitempty"`
+	Default     bool                  `json:"default,omitempty"`
+	Extra       *util.OrderedMap[any] `json:"extra,omitempty"`
 }
 
 type Value struct {
@@ -22,7 +22,7 @@ type Value struct {
 	Name        string
 	Description string
 	Icon        string
-	Extra       util.ValueMap
+	Extra       *util.OrderedMap[any]
 	Default     bool
 	Simple      bool
 }
@@ -50,6 +50,9 @@ func (x *Value) UnmarshalJSON(data []byte) error {
 		x.Description = v.Description
 		x.Icon = v.Icon
 		x.Extra = v.Extra
+		if x.Extra == nil {
+			x.Extra = util.NewOrderedMap[any](false, 0)
+		}
 		x.Default = v.Default
 		x.Simple = false
 		return nil
@@ -62,7 +65,7 @@ func (x *Value) UnmarshalJSON(data []byte) error {
 	x.Name = ""
 	x.Description = ""
 	x.Icon = ""
-	x.Extra = util.ValueMap{}
+	x.Extra = util.NewOrderedMap[any](false, 0)
 	x.Default = false
 	x.Simple = true
 	return nil
@@ -78,7 +81,7 @@ func (v Values) Keys() []string {
 
 func (v Values) AllSimple() bool {
 	return !lo.ContainsBy(v, func(x *Value) bool {
-		return (!x.Simple) || x.Name != "" || x.Description != "" || x.Icon != "" || len(x.Extra) > 0
+		return (!x.Simple) || x.Name != "" || x.Description != "" || x.Icon != "" || len(x.Extra.Map) > 0
 	})
 }
 

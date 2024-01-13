@@ -1,7 +1,17 @@
 <!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import "strings" %}
+
 {% func Indent(br bool, level int) %}{% stripspace %}
   {% if br %}{% newline %}{% endif %}
   {% for i := 0; i < level; i ++ %}
     {% space %}{% space %}
   {% endfor %}
+{% endstripspace %}{% endfunc %}
+
+{% func PlaceholderFor(phs []string) %}{% stripspace %}
+  {% if len(phs) > 0 %}{% space %}placeholder="{%s strings.Join(phs, "; ") %}"{% endif %}
+{% endstripspace %}{% endfunc %}
+
+{% func TitleFor(help []string) %}{% stripspace %}
+  {% if len(help) > 0 %}{% space %}title="{%s strings.Join(help, "; ") %}"{% endif %}
 {% endstripspace %}{% endfunc %}

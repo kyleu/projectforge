@@ -1,8 +1,0 @@
-<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
-{% import (
-  "projectforge.dev/projectforge/views/components"
-) %}
-
-{% func Int(x any, k string) %}{% stripspace %}
-  {%= components.FormInputNumber(k, "", x) %}
-{% endstripspace %}{% endfunc %}

@@ -1,0 +1,8 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import "github.com/google/uuid" %}
+
+{% func UUID(value *uuid.UUID) %}{% stripspace %}
+  {%- if value != nil -%}
+  {%s value.String() %}
+  {%- endif -%}
+{% endstripspace %}{% endfunc %}

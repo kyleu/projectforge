@@ -195,7 +195,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(` Output</h3>
     `)
 //line views/vexec/Detail.html:77
-	components.StreamDisplayTerminal(qw422016, "console-list", p.Exec.Buffer.String())
+	components.StreamTerminal(qw422016, "console-list", p.Exec.Buffer.String())
 //line views/vexec/Detail.html:77
 	qw422016.N().S(`
   </div>

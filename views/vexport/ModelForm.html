@@ -11,6 +11,7 @@
   "projectforge.dev/projectforge/app/project/export/model"
   "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/components/edit"
   "projectforge.dev/projectforge/views/layout"
 ) %}
 
@@ -31,18 +32,18 @@
       <div class="overflow full-width">
         <table class="mt min-200 expanded">
           <tbody>
-            {%= components.TableInput("name", "", "Name", m.Name, 5, export.Helpers["model.name"]...) %}
-            {%= components.TableInput("package", "", "Package", m.Package, 5, export.Helpers["model.package"]...) %}
-            {%= components.TableInput("group", "", "Group", strings.Join(m.Group, "/"), 5, export.Helpers["model.group"]...) %}
-            {%= components.TableInput("description", "", "Description", m.Description, 5, export.Helpers["model.description"]...) %}
-            {%= components.TableInput("icon", "", "Icon", m.Icon, 5, export.Helpers["model.icon"]...) %}
-            {%= components.TableTextarea("ordering", "", "Ordering", 3, util.ToJSON(m.Ordering), 5, export.Helpers["model.ordering"]...) %}
-            {%= components.TableSelect("view", "", "View", m.View, []string{"", "rich"}, []string{"Default", "Rich"}, 5, export.Helpers["model.view"]...) %}
-            {%= components.TableInput("search", "", "Search", strings.Join(m.Search, `, `), 5, export.Helpers["model.search"]...) %}
-            {%= components.TableInput("tags", "", "Tags", strings.Join(m.Tags, `, `), 5, export.Helpers["model.tags"]...) %}
-            {%= components.TableInput("titleOverride", "", "Title Override", m.TitleOverride, 5, export.Helpers["model.titleOverride"]...) %}
-            {%= components.TableInput("properOverride", "", "Proper Override", m.ProperOverride, 5, export.Helpers["model.properOverride"]...) %}
-            {%= components.TableTextarea("config", "", "Config", 3, util.ToJSON(m.Config), 5, export.Helpers["model.config"]...) %}
+            {%= edit.StringTable("name", "", "Name", m.Name, 5, export.Helpers["model.name"]...) %}
+            {%= edit.StringTable("package", "", "Package", m.Package, 5, export.Helpers["model.package"]...) %}
+            {%= edit.StringTable("group", "", "Group", strings.Join(m.Group, "/"), 5, export.Helpers["model.group"]...) %}
+            {%= edit.StringTable("description", "", "Description", m.Description, 5, export.Helpers["model.description"]...) %}
+            {%= edit.StringTable("icon", "", "Icon", m.Icon, 5, export.Helpers["model.icon"]...) %}
+            {%= edit.TextareaTable("ordering", "", "Ordering", 3, util.ToJSON(m.Ordering), 5, export.Helpers["model.ordering"]...) %}
+            {%= edit.SelectTable("view", "", "View", m.View, []string{"", "rich"}, []string{"Default", "Rich"}, 5, export.Helpers["model.view"]...) %}
+            {%= edit.StringTable("search", "", "Search", strings.Join(m.Search, `, `), 5, export.Helpers["model.search"]...) %}
+            {%= edit.StringTable("tags", "", "Tags", strings.Join(m.Tags, `, `), 5, export.Helpers["model.tags"]...) %}
+            {%= edit.StringTable("titleOverride", "", "Title Override", m.TitleOverride, 5, export.Helpers["model.titleOverride"]...) %}
+            {%= edit.StringTable("properOverride", "", "Proper Override", m.ProperOverride, 5, export.Helpers["model.properOverride"]...) %}
+            {%= edit.TextareaTable("config", "", "Config", 3, util.ToJSON(m.Config), 5, export.Helpers["model.config"]...) %}
           </tbody>
         </table>
       </div>
@@ -54,7 +55,7 @@
       </div>
       <h3 title="{%s strings.Join(export.Helpers[`model.columns`], `; `) %}">{%= components.SVGRefIcon(`first-aid`, ps) %}Columns</h3>
       <div class="mt expanded">
-        {%= components.FormRichEditor("columns", "input-columns", model.ColumnFieldDescs, lo.ToAnySlice(m.Columns), export.Helpers["model.columns"]...) %}
+        {%= edit.RichEditor("columns", "input-columns", model.ColumnFieldDescs, lo.ToAnySlice(m.Columns), export.Helpers["model.columns"]...) %}
       </div>
     </div>
     <div class="card">
@@ -64,7 +65,7 @@
       </div>
       <h3 title="{%s strings.Join(export.Helpers[`model.relations`], `; `) %}">{%= components.SVGRefIcon(`social`, ps) %}Relations</h3>
       <div class="mt expanded">
-        {%= components.FormRichEditor("relations", "input-relations", model.RelationFieldDescs, lo.ToAnySlice(m.Relations), export.Helpers["model.relations"]...) %}
+        {%= edit.RichEditor("relations", "input-relations", model.RelationFieldDescs, lo.ToAnySlice(m.Relations), export.Helpers["model.relations"]...) %}
       </div>
     </div>
     <div class="card">
@@ -74,7 +75,7 @@
       </div>
       <h3 title="{%s strings.Join(export.Helpers[`model.indexes`], `; `) %}">{%= components.SVGRefIcon(`star`, ps) %}Indexes</h3>
       <div class="mt expanded">
-        {%= components.FormRichEditor("indexes", "input-indexes", model.IndexFieldDescs, lo.ToAnySlice(m.Indexes), export.Helpers["model.indexes"]...) %}
+        {%= edit.RichEditor("indexes", "input-indexes", model.IndexFieldDescs, lo.ToAnySlice(m.Indexes), export.Helpers["model.indexes"]...) %}
       </div>
     </div>
     <div class="card">

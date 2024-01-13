@@ -8,6 +8,7 @@
   "projectforge.dev/projectforge/app/project/export/model"
   "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/components/edit"
   "projectforge.dev/projectforge/views/layout"
 ) %}
 
@@ -24,7 +25,7 @@
       <div class="right"><a href="#modal-groups"><button type="button">Example</button></a></div>
       <h3 title="{%s strings.Join(export.Helpers[`model.columns`], `; `) %}">{%= components.SVGRefIcon(`users`, ps) %}Groups</h3>
       <div class="mt expanded">
-        {%= components.FormTextarea("groups", "input-groups", 24, util.ToJSON(p.Groups), export.Helpers["model.groups"]...) %}
+        {%= edit.Textarea("groups", "input-groups", 24, util.ToJSON(p.Groups), export.Helpers["model.groups"]...) %}
       </div>
       <div class="mt">
         <button type="submit">Save</button>

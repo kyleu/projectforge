@@ -1,0 +1,112 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/views/components"
+) %}
+
+{% func String(key string, id string, value string, placeholder ...string) %}{% stripspace %}
+  {% if id == "" %}
+    <input name="{%s key %}" value="{%s value %}"{%= components.PlaceholderFor(placeholder) %} />
+  {% else %}
+    <input id="{%s id %}" name="{%s key %}" value="{%s value %}"{%= components.PlaceholderFor(placeholder) %} />
+  {% endif %}
+{% endstripspace %}{% endfunc %}
+
+{% func StringVertical(key string, id string, title string, value string, indent int, help ...string) %}{% stripspace %}
+  {%- code id = cutil.CleanID(key, id) -%}
+  <div class="mb expanded">
+    {%= components.Indent(true, indent + 1) %}
+    <label for="{%s id %}"><em class="title">{%s title %}</em></label>
+    {%= components.Indent(true, indent + 1) %}
+    <div class="mt">{%= String(key, id, value, help...) %}</div>
+  {%= components.Indent(true, indent) %}
+  </div>
+{% endstripspace %}{% endfunc %}
+
+{% func StringTable(key string, id string, title string, value string, indent int, help ...string) %}{% stripspace %}
+  {%- code id = cutil.CleanID(key, id) -%}
+  <tr>
+    {%= components.Indent(true, indent + 1) %}
+    <th class="shrink"><label for="{%s id %}"{%= components.TitleFor(help) %}>{%s title %}</label></th>
+    {%= components.Indent(true, indent + 1) %}
+    <td>{%= String(key, id, value, help...) %}</td>
+  {%= components.Indent(true, indent) %}
+  </tr>
+{% endstripspace %}{% endfunc %}
+
+{% func Password(key string, id string, value string, placeholder ...string) %}{% stripspace %}
+  {% if id == "" %}
+    <input name="{%s key %}" type="password" value="{%s value %}"{%= components.PlaceholderFor(placeholder) %} />
+  {% else %}
+    <input id="{%s id %}" name="{%s key %}" type="password" value="{%s value %}"{%= components.PlaceholderFor(placeholder) %} />
+  {% endif %}
+{% endstripspace %}{% endfunc %}
+
+{% func PasswordVertical(key string, id string, title string, value string, indent int, help ...string) %}{% stripspace %}
+  {%- code id = cutil.CleanID(key, id) -%}
+  <div class="mb expanded">
+    {%= components.Indent(true, indent + 1) %}
+    <label for="{%s id %}"><em class="title">{%s title %}</em></label>
+    {%= components.Indent(true, indent + 1) %}
+    <div class="mt">{%= Password(key, id, value, help...) %}</div>
+  {%= components.Indent(true, indent) %}
+  </div>
+{% endstripspace %}{% endfunc %}
+
+{% func PasswordTable(key string, id string, title string, value string, indent int, help ...string) %}{% stripspace %}
+  {%- code id = cutil.CleanID(key, id) -%}
+  <tr>
+    {%= components.Indent(true, indent + 1) %}
+    <th class="shrink"><label for="{%s id %}"{%= components.TitleFor(help) %}>{%s title %}</label></th>
+    {%= components.Indent(true, indent + 1) %}
+    <td>{%= Password(key, id, value, help...) %}</td>
+  {%= components.Indent(true, indent) %}
+  </tr>
+{% endstripspace %}{% endfunc %}
+
+{% func Textarea(key string, id string, rows int, value string, placeholder ...string) %}{% stripspace %}
+  {% if id == "" %}
+    <textarea rows="{%d rows %}" name="{%s key %}"{%= components.PlaceholderFor(placeholder) %}>{%s value %}</textarea>
+  {% else %}
+    <textarea rows="{%d rows %}" id="{%s id %}" name="{%s key %}"{%= components.PlaceholderFor(placeholder) %}>{%s value %}</textarea>
+  {% endif %}
+{% endstripspace %}{% endfunc %}
+
+{% func TextareaVertical(key string, id string, title string, rows int, value string, indent int, help ...string) %}{% stripspace %}
+  {%- code id = cutil.CleanID(key, id) -%}
+  <div class="mb expanded">
+    {%= components.Indent(true, indent + 1) %}
+    <label for="{%s id %}"><em class="title">{%s title %}</em></label>
+    {%= components.Indent(true, indent + 1) %}
+    <div class="mt">{%= Textarea(key, id, rows, value, help...) %}</div>
+  {%= components.Indent(true, indent) %}
+  </div>
+{% endstripspace %}{% endfunc %}
+
+{% func TextareaTable(key string, id string, title string, rows int, value string, indent int, help ...string) %}{% stripspace %}
+  {%- code id = cutil.CleanID(key, id) -%}
+  <tr>
+    {%= components.Indent(true, indent + 1) %}
+    <th class="shrink"><label for="{%s id %}"{%= components.TitleFor(help) %}>{%s title %}</label></th>
+    {%= components.Indent(true, indent + 1) %}
+    <td>{%= Textarea(key, id, rows, value, help...) %}</td>
+  {%= components.Indent(true, indent) %}
+  </tr>
+{% endstripspace %}{% endfunc %}
+
+{% func RichEditor(key string, id string, columns []*util.FieldDesc, value []any, placeholder ...string) %}{% stripspace %}
+  {% code if value == nil { value = []any{} } %}
+  <div class="rich-editor" data-key="{%s key %}" data-columns="{%j util.ToJSONCompact(columns) %}">
+    {%= Textarea(key, id, 8, util.ToJSON(value), placeholder...) %}
+  </div>
+{% endstripspace %}{% endfunc %}
+
+{% func RichEditorTable(key string, id string, title string, columns []*util.FieldDesc, value []any, placeholder ...string) %}{% stripspace %}
+  <tr>
+    <th class="shrink"><label for="{%s id %}">{%s title %}</label></th>
+    <td>
+      {%= RichEditor(key, id, columns, value, placeholder...) %}
+    </td>
+  </tr>
+{% endstripspace %}{% endfunc %}

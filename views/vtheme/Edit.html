@@ -5,6 +5,7 @@
   "projectforge.dev/projectforge/app/lib/theme"
   "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/components/edit"
   "projectforge.dev/projectforge/views/layout"
 ) %}
 
@@ -31,7 +32,7 @@
       <div class="overflow full-width">
         <table class="mt expanded">
           <tbody>
-            {%= components.TableInput("key", "", "Key", p.Theme.Key, 5) %}
+            {%= edit.StringTable("key", "", "Key", p.Theme.Key, 5) %}
           </tbody>
         </table>
       </div>

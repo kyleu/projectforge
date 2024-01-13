@@ -91,43 +91,62 @@ func StreamJSON(qw422016 *qt422016.Writer, v any) {
 	}
 
 //line views/components/JSON.html:42
-	out, err := cutil.FormatJSON(v)
+	json := util.ToJSONBytes(v, true)
 
 //line views/components/JSON.html:43
-	if err == nil {
+	if len(json) > (1024 * 256) {
+//line views/components/JSON.html:43
+		qw422016.N().S(`<div class="mt"><em>This JSON is too large (<strong>`)
 //line views/components/JSON.html:44
-		qw422016.N().S(out)
+		qw422016.E().S(util.ByteSizeSI(int64(len(json))))
+//line views/components/JSON.html:44
+		qw422016.N().S(`</strong>), highlighting is disabled</em></div><pre class="mt">`)
 //line views/components/JSON.html:45
-	} else {
+		qw422016.E().S(string(json))
+//line views/components/JSON.html:45
+		qw422016.N().S(`</pre>`)
 //line views/components/JSON.html:46
-		qw422016.E().S(err.Error())
+	} else {
 //line views/components/JSON.html:47
+		out, err := cutil.FormatLang(string(json), "json")
+
+//line views/components/JSON.html:48
+		if err == nil {
+//line views/components/JSON.html:49
+			qw422016.N().S(out)
+//line views/components/JSON.html:50
+		} else {
+//line views/components/JSON.html:51
+			qw422016.E().S(err.Error())
+//line views/components/JSON.html:52
+		}
+//line views/components/JSON.html:53
 	}
-//line views/components/JSON.html:48
+//line views/components/JSON.html:54
 }
 
-//line views/components/JSON.html:48
+//line views/components/JSON.html:54
 func WriteJSON(qq422016 qtio422016.Writer, v any) {
-//line views/components/JSON.html:48
+//line views/components/JSON.html:54
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/JSON.html:48
+//line views/components/JSON.html:54
 	StreamJSON(qw422016, v)
-//line views/components/JSON.html:48
+//line views/components/JSON.html:54
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/JSON.html:48
+//line views/components/JSON.html:54
 }
 
-//line views/components/JSON.html:48
+//line views/components/JSON.html:54
 func JSON(v any) string {
-//line views/components/JSON.html:48
+//line views/components/JSON.html:54
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/JSON.html:48
+//line views/components/JSON.html:54
 	WriteJSON(qb422016, v)
-//line views/components/JSON.html:48
+//line views/components/JSON.html:54
 	qs422016 := string(qb422016.B)
-//line views/components/JSON.html:48
+//line views/components/JSON.html:54
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/JSON.html:48
+//line views/components/JSON.html:54
 	return qs422016
-//line views/components/JSON.html:48
+//line views/components/JSON.html:54
 }

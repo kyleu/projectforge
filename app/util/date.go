@@ -95,6 +95,11 @@ func TimeFromString(s string) (*time.Time, error) {
 	return &ret, nil
 }
 
+func TimeFromStringSimple(s string) *time.Time {
+	ret, _ := TimeFromString(s)
+	return ret
+}
+
 func TimeFromStringFmt(s string, fmt string) (*time.Time, error) {
 	if s == "" {
 		return nil, nil

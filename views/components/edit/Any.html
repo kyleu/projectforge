@@ -1,0 +1,79 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "fmt"
+
+  "projectforge.dev/projectforge/app/lib/types"
+) %}
+
+{% func Any(key string, id string, x any, t *types.Wrapped) %}{% stripspace %}
+  {% switch t.Key() %}
+  {% case types.KeyAny %}
+    {%= Default(key, id, x, t) %}
+  {% case types.KeyBit %}
+    {%= Default(key, id, x, t) %}
+  {% case types.KeyBool %}
+    {%= Bool(key, id, x, false) %}
+  {% case types.KeyByte %}
+    {%= Default(key, id, x, t) %}
+  {% case types.KeyChar %}
+    {%= Default(key, id, x, t) %}
+  {% case types.KeyDate %}
+    {%= Default(key, id, x, t) %}
+  {% case types.KeyEnum %}
+    <span title="enum:{%s t.T.(*types.Enum).Ref %}">{%v x %}</span>
+  {% case types.KeyEnumValue %}
+    {%= Default(key, id, x, t) %}
+  {% case types.KeyError %}
+    {%= Default(key, id, x, t) %}
+  {% case types.KeyFloat %}
+    {%= Default(key, id, x, t) %}
+  {% case types.KeyInt %}
+    {%= Int(key, id, x) %}
+  {% case types.KeyJSON %}
+    {%= Default(key, id, x, t) %}
+  {% case types.KeyList %}
+    {%= Default(key, id, x, t) %}
+  {% case types.KeyMap %}
+    {%= Default(key, id, x, t) %}
+  {% case types.KeyMethod %}
+    {%= Default(key, id, x, t) %}
+  {% case types.KeyNil %}
+    {%= Default(key, id, x, t) %}
+  {% case types.KeyOption %}
+    {%= Option(key, id, x, t.T.(*types.Option)) %}
+  {% case types.KeyRange %}
+    {%= Default(key, id, x, t) %}
+  {% case types.KeyReference %}
+    {%= Default(key, id, x, t) %}
+  {% case types.KeySet %}
+    {%= Default(key, id, x, t) %}
+  {% case types.KeyString %}
+    {%= String(key, id, fmt.Sprint(x)) %}
+  {% case types.KeyTime %}
+    {%= Default(key, id, x, t) %}
+  {% case types.KeyTimestamp %}
+    {%= Default(key, id, x, t) %}
+  {% case types.KeyTimestampZoned %}
+    {%= Default(key, id, x, t) %}
+  {% case types.KeyUnknown %}
+    {%= Default(key, id, x, t) %}
+  {% case types.KeyUUID %}
+    {%= Default(key, id, x, t) %}
+  {% case types.KeyValueMap %}
+    {%= Default(key, id, x, t) %}
+  {% case types.KeyXML %}
+    {%= Default(key, id, x, t) %}
+  {% default %}
+    {%= Default(key, id, x, t) %}
+  {% endswitch %}
+{% endstripspace %}{% endfunc %}
+
+{% func Default(key string, id string, x any, t types.Type) %}{% stripspace %}
+  {% code
+    msg := fmt.Sprintf("unhandled type: %s (%T)", t.String(), x)
+    if x == nil {
+      x = "∅"
+    }
+  %}
+  <input title="{%s msg %}" value="{%v x %}" name="{%s key %}" id="{%s id %}" />
+{% endstripspace %}{% endfunc %}

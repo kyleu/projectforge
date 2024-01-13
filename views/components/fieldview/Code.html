@@ -1,9 +1,0 @@
-<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
-{% import (
-  "projectforge.dev/projectforge/app/controller/cutil"
-) %}
-
-{% func Code(content string, lang string) %}{% stripspace %}
-  {% code out, err := cutil.FormatLang(content, lang) %}
-  {% if err == nil %}{%s= out %}{% else %}{%s err.Error() %}{% endif %}
-{% endstripspace %}{% endfunc %}

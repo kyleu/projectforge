@@ -4,6 +4,7 @@
   "{{{ .Package }}}/app/lib/audit"
   "{{{ .Package }}}/app/lib/filter"
   "{{{ .Package }}}/views/components"
+  "{{{ .Package }}}/views/components/view"
 ) %}
 
 {% func RecordTable(models audit.Records, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
@@ -24,16 +25,16 @@
       <tbody>
         {%- for _, model := range models -%}
         <tr>
-          <td><a href="/admin/audit/record/{%= components.DisplayUUID(&model.ID) %}">{%= components.DisplayUUID(&model.ID) %}</a></td>
+          <td><a href="/admin/audit/record/{%= view.UUID(&model.ID) %}">{%= view.UUID(&model.ID) %}</a></td>
           <td>
-            <div class="icon">{%= components.DisplayUUID(&model.AuditID) %}</div>
+            <div class="icon">{%= view.UUID(&model.AuditID) %}</div>
             <a title="Audit" href="{%s `/admin/audit/`+model.AuditID.String() %}">{%= components.SVGRefIcon("cog", ps) %}</a>
           </td>
           <td>{%s model.T %}</td>
           <td>{%s model.PK %}</td>
-          <td>{%= components.DisplayDiffs(model.Changes) %}</td>
+          <td>{%= view.Diffs(model.Changes) %}</td>
           <td>{%d len(model.Metadata) %}</td>
-          <td>{%= components.DisplayTimestamp(&model.Occurred) %}</td>
+          <td>{%= view.Timestamp(&model.Occurred) %}</td>
         </tr>
         {%- endfor -%}
       </tbody>

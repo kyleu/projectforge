@@ -4,6 +4,7 @@
   "{{{ .Package }}}/app/lib/audit"
   "{{{ .Package }}}/app/lib/filter"
   "{{{ .Package }}}/views/components"
+  "{{{ .Package }}}/views/components/view"
 ) %}
 
 {% func Table(models audit.Audits, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
@@ -25,14 +26,14 @@
       <tbody>
         {%- for _, model := range models -%}
         <tr>
-          <td><a href="/admin/audit/{%= components.DisplayUUID(&model.ID) %}">{%= components.DisplayUUID(&model.ID) %}</a></td>
+          <td><a href="/admin/audit/{%= view.UUID(&model.ID) %}">{%= view.UUID(&model.ID) %}</a></td>
           <td>{%s model.App %}</td>
           <td>{%s model.Act %}</td>
           <td>{%s model.Client %}</td>
           <td>{%s model.Server %}</td>
           <td>{%s model.User %}</td>
-          <td>{%= components.DisplayTimestamp(&model.Started) %}</td>
-          <td>{%= components.DisplayTimestamp(&model.Completed) %}</td>
+          <td>{%= view.Timestamp(&model.Started) %}</td>
+          <td>{%= view.Timestamp(&model.Completed) %}</td>
         </tr>
         {%- endfor -%}
       </tbody>

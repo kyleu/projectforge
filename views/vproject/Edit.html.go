@@ -13,7 +13,7 @@ import (
 	"projectforge.dev/projectforge/app/lib/theme"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
-	"projectforge.dev/projectforge/views/components"
+	"projectforge.dev/projectforge/views/components/edit"
 	"projectforge.dev/projectforge/views/layout"
 	"projectforge.dev/projectforge/views/vtheme"
 )
@@ -67,7 +67,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vproject/Edit.html:38
 		qw422016.N().S(`            `)
 //line views/vproject/Edit.html:39
-		components.StreamTableInput(qw422016, "key", "", "Key", prj.Key, 5, project.Helpers["key"]...)
+		edit.StreamStringTable(qw422016, "key", "", "Key", prj.Key, 5, project.Helpers["key"]...)
 //line views/vproject/Edit.html:39
 		qw422016.N().S(`
 `)
@@ -76,47 +76,47 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vproject/Edit.html:40
 	qw422016.N().S(`            `)
 //line views/vproject/Edit.html:41
-	components.StreamTableInput(qw422016, "name", "", "Name", strings.TrimSuffix(prj.Name, " (missing)"), 5, project.Helpers["name"]...)
+	edit.StreamStringTable(qw422016, "name", "", "Name", strings.TrimSuffix(prj.Name, " (missing)"), 5, project.Helpers["name"]...)
 //line views/vproject/Edit.html:41
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:42
-	components.StreamTableInput(qw422016, "icon", "", "Icon", prj.Icon, 5, project.Helpers["icon"]...)
+	edit.StreamStringTable(qw422016, "icon", "", "Icon", prj.Icon, 5, project.Helpers["icon"]...)
 //line views/vproject/Edit.html:42
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:43
-	components.StreamTableInput(qw422016, "version", "", "Version", prj.Version, 5, project.Helpers["version"]...)
+	edit.StreamStringTable(qw422016, "version", "", "Version", prj.Version, 5, project.Helpers["version"]...)
 //line views/vproject/Edit.html:43
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:44
-	components.StreamTableInput(qw422016, "package", "", "Package", prj.Package, 5, project.Helpers["package"]...)
+	edit.StreamStringTable(qw422016, "package", "", "Package", prj.Package, 5, project.Helpers["package"]...)
 //line views/vproject/Edit.html:44
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:45
-	components.StreamTableInput(qw422016, "args", "", "Args", prj.Args, 5, project.Helpers["args"]...)
+	edit.StreamStringTable(qw422016, "args", "", "Args", prj.Args, 5, project.Helpers["args"]...)
 //line views/vproject/Edit.html:45
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:46
-	components.StreamTableInputNumber(qw422016, "port", "", "Port", prj.Port, 5, project.Helpers["port"]...)
+	edit.StreamIntTable(qw422016, "port", "", "Port", prj.Port, 5, project.Helpers["port"]...)
 //line views/vproject/Edit.html:46
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:47
-	components.StreamTableInput(qw422016, "ignore", "", "Ignore", strings.Join(prj.Ignore, ", "), 5, project.Helpers["ignore"]...)
+	edit.StreamStringTable(qw422016, "ignore", "", "Ignore", strings.Join(prj.Ignore, ", "), 5, project.Helpers["ignore"]...)
 //line views/vproject/Edit.html:47
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:48
-	components.StreamTableInput(qw422016, "tags", "", "Tags", strings.Join(prj.Tags, ", "), 5, project.Helpers["tags"]...)
+	edit.StreamStringTable(qw422016, "tags", "", "Tags", strings.Join(prj.Tags, ", "), 5, project.Helpers["tags"]...)
 //line views/vproject/Edit.html:48
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:49
-	components.StreamTableInput(qw422016, "path", "", "Path", prj.Path, 5, project.Helpers["path"]...)
+	edit.StreamStringTable(qw422016, "path", "", "Path", prj.Path, 5, project.Helpers["path"]...)
 //line views/vproject/Edit.html:49
 	qw422016.N().S(`
           </tbody>
@@ -176,62 +176,62 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
           <tbody>
             `)
 //line views/vproject/Edit.html:79
-	components.StreamTableInput(qw422016, "org", "", "Organization", info.Org, 5, project.Helpers["org"]...)
+	edit.StreamStringTable(qw422016, "org", "", "Organization", info.Org, 5, project.Helpers["org"]...)
 //line views/vproject/Edit.html:79
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:80
-	components.StreamTableInput(qw422016, "authorID", "", "Author ID", info.AuthorID, 5, project.Helpers["authorID"]...)
+	edit.StreamStringTable(qw422016, "authorID", "", "Author ID", info.AuthorID, 5, project.Helpers["authorID"]...)
 //line views/vproject/Edit.html:80
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:81
-	components.StreamTableInput(qw422016, "authorName", "", "Author Name", info.AuthorName, 5, project.Helpers["authorName"]...)
+	edit.StreamStringTable(qw422016, "authorName", "", "Author Name", info.AuthorName, 5, project.Helpers["authorName"]...)
 //line views/vproject/Edit.html:81
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:82
-	components.StreamTableInput(qw422016, "authorEmail", "", "Author Email", info.AuthorEmail, 5, project.Helpers["authorEmail"]...)
+	edit.StreamStringTable(qw422016, "authorEmail", "", "Author Email", info.AuthorEmail, 5, project.Helpers["authorEmail"]...)
 //line views/vproject/Edit.html:82
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:83
-	components.StreamTableInput(qw422016, "team", "", "Team", info.Team, 5, project.Helpers["team"]...)
+	edit.StreamStringTable(qw422016, "team", "", "Team", info.Team, 5, project.Helpers["team"]...)
 //line views/vproject/Edit.html:83
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:84
-	components.StreamTableInput(qw422016, "license", "", "License", info.License, 5, project.Helpers["license"]...)
+	edit.StreamStringTable(qw422016, "license", "", "License", info.License, 5, project.Helpers["license"]...)
 //line views/vproject/Edit.html:84
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:85
-	components.StreamTableInput(qw422016, "homepage", "", "Homepage", info.Homepage, 5, project.Helpers["homepage"]...)
+	edit.StreamStringTable(qw422016, "homepage", "", "Homepage", info.Homepage, 5, project.Helpers["homepage"]...)
 //line views/vproject/Edit.html:85
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:86
-	components.StreamTableInput(qw422016, "sourcecode", "", "Source Code", info.Sourcecode, 5, project.Helpers["sourcecode"]...)
+	edit.StreamStringTable(qw422016, "sourcecode", "", "Source Code", info.Sourcecode, 5, project.Helpers["sourcecode"]...)
 //line views/vproject/Edit.html:86
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:87
-	components.StreamTableInput(qw422016, "summary", "", "Summary", info.Summary, 5, project.Helpers["summary"]...)
+	edit.StreamStringTable(qw422016, "summary", "", "Summary", info.Summary, 5, project.Helpers["summary"]...)
 //line views/vproject/Edit.html:87
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:88
-	components.StreamTableTextarea(qw422016, "description", "", "Description", 8, info.Description, 5, project.Helpers["description"]...)
+	edit.StreamTextareaTable(qw422016, "description", "", "Description", 8, info.Description, 5, project.Helpers["description"]...)
 //line views/vproject/Edit.html:88
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:89
-	components.StreamTableSelect(qw422016, "ci", "", "CI", info.CI, []string{"all", "tags", "versions", ""}, []string{"All pushes", "All tags", "Version tags", "No CI"}, 5, project.Helpers["ci"]...)
+	edit.StreamSelectTable(qw422016, "ci", "", "CI", info.CI, []string{"all", "tags", "versions", ""}, []string{"All pushes", "All tags", "Version tags", "No CI"}, 5, project.Helpers["ci"]...)
 //line views/vproject/Edit.html:89
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:90
-	components.StreamTableInput(qw422016, "homebrew", "", "Homebrew", info.Homebrew, 5, project.Helpers["homebrew"]...)
+	edit.StreamStringTable(qw422016, "homebrew", "", "Homebrew", info.Homebrew, 5, project.Helpers["homebrew"]...)
 //line views/vproject/Edit.html:90
 	qw422016.N().S(`
 `)
@@ -240,7 +240,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vproject/Edit.html:91
 		qw422016.N().S(`            `)
 //line views/vproject/Edit.html:92
-		components.StreamTableInput(qw422016, "bundle", "", "Bundle", info.Bundle, 5, project.Helpers["bundle"]...)
+		edit.StreamStringTable(qw422016, "bundle", "", "Bundle", info.Bundle, 5, project.Helpers["bundle"]...)
 //line views/vproject/Edit.html:92
 		qw422016.N().S(`
 `)
@@ -260,12 +260,12 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vproject/Edit.html:96
 		qw422016.N().S(`            `)
 //line views/vproject/Edit.html:97
-		components.StreamTableInput(qw422016, "signingIdentity", "", "Signing Identity", info.SigningIdentity, 5, project.Helpers["signingIdentity"]...)
+		edit.StreamStringTable(qw422016, "signingIdentity", "", "Signing Identity", info.SigningIdentity, 5, project.Helpers["signingIdentity"]...)
 //line views/vproject/Edit.html:97
 		qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:98
-		components.StreamTableInput(qw422016, "notarizeEmail", "", "Notarize Email", info.NotarizeEmail, 5, project.Helpers["notarizeEmail"]...)
+		edit.StreamStringTable(qw422016, "notarizeEmail", "", "Notarize Email", info.NotarizeEmail, 5, project.Helpers["notarizeEmail"]...)
 //line views/vproject/Edit.html:98
 		qw422016.N().S(`
 `)
@@ -290,7 +290,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vproject/Edit.html:103
 		qw422016.N().S(`            `)
 //line views/vproject/Edit.html:104
-		components.StreamTableSelect(qw422016, "databaseEngine", "", "Database Engine", info.DatabaseEngine, []string{"", util.DatabaseMySQL, util.DatabasePostgreSQL, util.DatabaseSQLite, util.DatabaseSQLServer}, []string{"not specified", "MySQL", "PostgreSQL", "SQLite", "SQL Server"}, 5, project.Helpers["databaseEngine"]...)
+		edit.StreamSelectTable(qw422016, "databaseEngine", "", "Database Engine", info.DatabaseEngine, []string{"", util.DatabaseMySQL, util.DatabasePostgreSQL, util.DatabaseSQLite, util.DatabaseSQLServer}, []string{"not specified", "MySQL", "PostgreSQL", "SQLite", "SQL Server"}, 5, project.Helpers["databaseEngine"]...)
 //line views/vproject/Edit.html:104
 		qw422016.N().S(`
 `)
@@ -308,12 +308,12 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vproject/Edit.html:107
 	qw422016.N().S(`            `)
 //line views/vproject/Edit.html:108
-	components.StreamTableInput(qw422016, "slack", "", "Slack Webhook", info.Slack, 5, project.Helpers["slack"]...)
+	edit.StreamStringTable(qw422016, "slack", "", "Slack Webhook", info.Slack, 5, project.Helpers["slack"]...)
 //line views/vproject/Edit.html:108
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:109
-	components.StreamTableInput(qw422016, "channels", "", "Channels", strings.Join(info.Channels, ", "), 5, project.Helpers["channels"]...)
+	edit.StreamStringTable(qw422016, "channels", "", "Channels", strings.Join(info.Channels, ", "), 5, project.Helpers["channels"]...)
 //line views/vproject/Edit.html:109
 	qw422016.N().S(`
 `)
@@ -322,7 +322,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vproject/Edit.html:110
 		qw422016.N().S(`            `)
 //line views/vproject/Edit.html:111
-		components.StreamTableInput(qw422016, "javaPackage", "", "Java Package", info.JavaPackage, 5, project.Helpers["javaPackage"]...)
+		edit.StreamStringTable(qw422016, "javaPackage", "", "Java Package", info.JavaPackage, 5, project.Helpers["javaPackage"]...)
 //line views/vproject/Edit.html:111
 		qw422016.N().S(`
 `)
@@ -340,37 +340,37 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vproject/Edit.html:114
 	qw422016.N().S(`            `)
 //line views/vproject/Edit.html:115
-	components.StreamTableInput(qw422016, "goVersion", "", "Go Version", info.GoVersion, 5, project.Helpers["goVersion"]...)
+	edit.StreamStringTable(qw422016, "goVersion", "", "Go Version", info.GoVersion, 5, project.Helpers["goVersion"]...)
 //line views/vproject/Edit.html:115
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:116
-	components.StreamTableInput(qw422016, "goBinary", "", "Go Binary", info.GoBinary, 5, project.Helpers["goBinary"]...)
+	edit.StreamStringTable(qw422016, "goBinary", "", "Go Binary", info.GoBinary, 5, project.Helpers["goBinary"]...)
 //line views/vproject/Edit.html:116
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:117
-	components.StreamTableInput(qw422016, "extraFiles", "", "Extra Files", strings.Join(info.ExtraFiles, ", "), 5, project.Helpers["extraFiles"]...)
+	edit.StreamStringTable(qw422016, "extraFiles", "", "Extra Files", strings.Join(info.ExtraFiles, ", "), 5, project.Helpers["extraFiles"]...)
 //line views/vproject/Edit.html:117
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:118
-	components.StreamTableInput(qw422016, "deployments", "", "Deployments", strings.Join(info.Deployments, ", "), 5, project.Helpers["deployments"]...)
+	edit.StreamStringTable(qw422016, "deployments", "", "Deployments", strings.Join(info.Deployments, ", "), 5, project.Helpers["deployments"]...)
 //line views/vproject/Edit.html:118
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:119
-	components.StreamTableTextarea(qw422016, "envvars", "", "Env Vars", 8, util.ToJSON(info.EnvVars), 5, project.Helpers["envvars"]...)
+	edit.StreamTextareaTable(qw422016, "envvars", "", "Env Vars", 8, util.ToJSON(info.EnvVars), 5, project.Helpers["envvars"]...)
 //line views/vproject/Edit.html:119
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:120
-	components.StreamTableTextarea(qw422016, "docs", "", "Documentation", 8, util.ToJSON(info.Docs), 5, project.Helpers["docs"]...)
+	edit.StreamTextareaTable(qw422016, "docs", "", "Documentation", 8, util.ToJSON(info.Docs), 5, project.Helpers["docs"]...)
 //line views/vproject/Edit.html:120
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:121
-	components.StreamTableInputTags(qw422016, "acronyms", "", "Acronyms", info.Acronyms, ps, 5, project.Helpers["acronyms"]...)
+	edit.StreamTagsTable(qw422016, "acronyms", "", "Acronyms", info.Acronyms, ps, 5, project.Helpers["acronyms"]...)
 //line views/vproject/Edit.html:121
 	qw422016.N().S(`
           </tbody>

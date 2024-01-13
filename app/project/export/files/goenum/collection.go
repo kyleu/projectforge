@@ -1,11 +1,7 @@
 package goenum
 
 import (
-	"slices"
-
 	"github.com/pkg/errors"
-	"github.com/samber/lo"
-
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/golang"
@@ -23,14 +19,22 @@ func structCollection(e *enum.Enum) ([]*golang.Block, error) {
 	ret := []*golang.Block{tBlock, ksBlock, strBlock, fnHelpBlock, gBlock, gnBlock}
 
 	ef := e.ExtraFields()
-	efks := lo.Keys(ef)
-	slices.Sort(efks)
-	for _, efk := range efks {
-		efkBlock, err := blockGetByProp(e, efk, ef[efk])
-		if err != nil {
-			return nil, err
+	for _, efk := range ef.Order {
+		f := ef.GetSimple(efk)
+		_, unique := e.ExtraFieldValues(efk)
+		if unique {
+			efkBlock, err := blockGetByPropUnique(e, efk, f)
+			if err != nil {
+				return nil, err
+			}
+			ret = append(ret, efkBlock)
+		} else {
+			efkBlock, err := blockGetByPropShared(e, efk, f)
+			if err != nil {
+				return nil, err
+			}
+			ret = append(ret, efkBlock)
 		}
-		ret = append(ret, efkBlock)
 	}
 
 	rBlock := blockRandom(e)
@@ -110,32 +114,61 @@ func blockGetByName(e *enum.Enum) *golang.Block {
 	return gnBlock
 }
 
-func blockGetByProp(e *enum.Enum, efk string, t string) (*golang.Block, error) {
+func blockGetByPropUnique(e *enum.Enum, efk string, t string) (*golang.Block, error) {
 	prop := util.StringToCamel(efk)
 	dflt := "\"\""
+	goType := t
 	switch t {
 	case types.KeyString:
 		// noop
+	case types.KeyInt:
+		dflt = "0"
+	case types.KeyFloat:
+		dflt = "0"
+	case types.KeyBool:
+		dflt = "false"
+	case types.KeyTimestamp:
+		dflt = "nil"
+		goType = "*time.Time"
 	default:
 		return nil, errors.Errorf("unable to create enum helper for type [%s]", t)
 	}
-	gxBlock := golang.NewBlock(e.ProperPlural()+"GetBy"+t, "method")
-	gxBlock.W("func (%s %s) GetBy%s(x %s, logger util.Logger) %s {", e.FirstLetter(), e.ProperPlural(), prop, t, e.Proper())
+	gxBlock := golang.NewBlock(e.ProperPlural()+"GetBy"+efk, "method")
+	gxBlock.W("func (%s %s) GetBy%s(input %s, logger util.Logger) %s {", e.FirstLetter(), e.ProperPlural(), prop, goType, e.Proper())
 	gxBlock.W("\tfor _, value := range %s {", e.FirstLetter())
-	gxBlock.W("\t\tif value.%s == x {", prop)
+	gxBlock.W("\t\tif value.%s == input {", prop)
 	gxBlock.W("\t\t\treturn value")
 	gxBlock.W("\t\t}")
 	gxBlock.W("\t}")
 	if def := e.Values.Default(); def != nil {
-		gxBlock.W("\tif x == %s {", dflt)
+		gxBlock.W("\tif input == %s {", dflt)
 		gxBlock.W("\t\treturn %s%s", e.Proper(), def.Proper())
 		gxBlock.W("\t}")
 	}
-	gxBlock.W("\tmsg := fmt.Sprintf(\"unable to find [%s] with %s [%%%%s]\", x)", e.Proper(), prop)
+	gxBlock.W("\tmsg := fmt.Sprintf(\"unable to find [%s] with %s [%%%%s]\", input)", e.Proper(), prop)
 	gxBlock.W("\tif logger != nil {")
 	gxBlock.W("\t\tlogger.Warn(msg)")
 	gxBlock.W("\t}")
 	gxBlock.W("\treturn %s{Key: \"_error\", Name: \"error: \" + msg}", e.Proper())
+	gxBlock.W("}")
+	return gxBlock, nil
+}
+
+func blockGetByPropShared(e *enum.Enum, efk string, t string) (*golang.Block, error) {
+	prop := util.StringToCamel(efk)
+	goType := t
+	if t == types.KeyTimestamp {
+		goType = "*time.Time"
+	}
+	gxBlock := golang.NewBlock(e.ProperPlural()+"GetBy"+efk, "method")
+	gxBlock.W("func (%s %s) GetBy%s(input %s, logger util.Logger) %s {", e.FirstLetter(), e.ProperPlural(), prop, goType, e.ProperPlural())
+	gxBlock.W("\tvar ret = %s", e.FirstLetter())
+	gxBlock.W("\tfor _, value := range %s {", e.FirstLetter())
+	gxBlock.W("\t\tif value.%s == input {", prop)
+	gxBlock.W("\t\t\tret = append(ret, value)")
+	gxBlock.W("\t\t}")
+	gxBlock.W("\t}")
+	gxBlock.W("\treturn ret")
 	gxBlock.W("}")
 	return gxBlock, nil
 }

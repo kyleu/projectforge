@@ -4,6 +4,7 @@
   "{{{ .Package }}}/app/lib/audit"
   "{{{ .Package }}}/app/util"
   "{{{ .Package }}}/views/components"
+  "{{{ .Package }}}/views/components/edit"
   "{{{ .Package }}}/views/layout"
 ) %}
 
@@ -27,16 +28,16 @@
       <div class="overflow full-width">
         <table class="mt expanded">
           <tbody>
-            {% if p.IsNew %}{%= components.TableInput("id", "", "ID", p.Model.ID.String(), 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}{% endif %}
-            {%= components.TableInput("app", "", "App", p.Model.App, 5, "String text") %}
-            {%= components.TableInput("act", "", "Act", p.Model.Act, 5, "String text") %}
-            {%= components.TableInput("client", "", "Client", p.Model.Client, 5, "String text") %}
-            {%= components.TableInput("server", "", "Server", p.Model.Server, 5, "String text") %}
-            {%= components.TableInput("user", "", "User", p.Model.User, 5, "String text") %}
-            {%= components.TableTextarea("metadata", "", "Metadata", 8, util.ToJSON(p.Model.Metadata), 5, "JSON object") %}
-            {%= components.TableInput("message", "", "Message", p.Model.Message, 5, "String text") %}
-            {%= components.TableInputTimestamp("started", "", "Started", &p.Model.Started, 5, "Date and time, in almost any format") %}
-            {%= components.TableInputTimestamp("completed", "", "Completed", &p.Model.Completed, 5, "Date and time, in almost any format") %}
+            {% if p.IsNew %}{%= edit.StringTable("id", "", "ID", p.Model.ID.String(), 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}{% endif %}
+            {%= edit.StringTable("app", "", "App", p.Model.App, 5, "String text") %}
+            {%= edit.StringTable("act", "", "Act", p.Model.Act, 5, "String text") %}
+            {%= edit.StringTable("client", "", "Client", p.Model.Client, 5, "String text") %}
+            {%= edit.StringTable("server", "", "Server", p.Model.Server, 5, "String text") %}
+            {%= edit.StringTable("user", "", "User", p.Model.User, 5, "String text") %}
+            {%= edit.TextareaTable("metadata", "", "Metadata", 8, util.ToJSON(p.Model.Metadata), 5, "JSON object") %}
+            {%= edit.StringTable("message", "", "Message", p.Model.Message, 5, "String text") %}
+            {%= edit.TimestampTable("started", "", "Started", &p.Model.Started, 5, "Date and time, in almost any format") %}
+            {%= edit.TimestampTable("completed", "", "Completed", &p.Model.Completed, 5, "Date and time, in almost any format") %}
             <tr><td colspan="2"><button type="submit">Save Changes</button></td></tr>
           </tbody>
         </table>

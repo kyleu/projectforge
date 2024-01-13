@@ -18,7 +18,7 @@ func edit(m *model.Model, p *project.Project, args *model.Args, addHeader bool, 
 	lo.ForEach(helper.ImportsForTypes("webedit", "", m.Columns.Types()...), func(imp *golang.Import, _ int) {
 		g.AddImport(imp)
 	})
-	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpLayout)
+	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpComponentsEdit, helper.ImpCutil, helper.ImpLayout)
 	g.AddImport(helper.AppImport(m.PackageWithGroup("")))
 
 	imps, err := helper.EnumImports(m.Columns.Types(), m.PackageWithGroup(""), args.Enums)

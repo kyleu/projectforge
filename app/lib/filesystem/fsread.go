@@ -8,6 +8,12 @@ import (
 	"github.com/pkg/errors"
 )
 
+type Reader interface {
+	io.Reader
+	io.ReaderAt
+	io.Closer
+}
+
 func (f *FileSystem) PeekFile(path string, maxSize int) ([]byte, error) {
 	file, err := f.f.Open(f.getPath(path))
 	if err != nil {
@@ -67,7 +73,7 @@ func (f *FileSystem) ReadFile(path string) ([]byte, error) {
 	return b, nil
 }
 
-func (f *FileSystem) FileReader(fn string) (io.Reader, error) {
+func (f *FileSystem) FileReader(fn string) (Reader, error) {
 	p := f.getPath(fn)
 	return f.f.Open(p)
 }

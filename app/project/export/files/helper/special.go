@@ -3,6 +3,8 @@ package helper
 import (
 	"strings"
 
+	"github.com/pkg/errors"
+
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/golang"
@@ -40,7 +42,10 @@ func EnumImports(ts types.Types, pkg string, enums enum.Enums) (golang.Imports, 
 	for _, t := range ts {
 		switch t.Key() {
 		case types.KeyEnum:
-			e, _ := model.AsEnumInstance(t, enums)
+			e, err := model.AsEnumInstance(t, enums)
+			if err != nil {
+				return nil, err
+			}
 			ep := e.PackageWithGroup("")
 			if ep != pkg {
 				ret = append(ret, AppImport(ep))
@@ -48,7 +53,10 @@ func EnumImports(ts types.Types, pkg string, enums enum.Enums) (golang.Imports, 
 		case types.KeyList:
 			w, _ := t.(*types.Wrapped)
 			if x := w.ListType(); t != nil && x.Key() == types.KeyEnum {
-				e, _ := model.AsEnumInstance(x, enums)
+				e, err := model.AsEnumInstance(x, enums)
+				if err != nil {
+					return nil, errors.Wrapf(err, "unable to find list's enum [%s]", x.EnumKey())
+				}
 				ep := e.PackageWithGroup("")
 				if ep != pkg {
 					ret = append(ret, AppImport(ep))

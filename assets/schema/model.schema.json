@@ -138,6 +138,14 @@
           "description": "used for strings, controls output format in UI",
           "enum": ["code", "codehidden", "country","html", "icon", "json", "linebreaks", "select", "si", "tags", "url"]
         },
+        "example": {
+          "description": "default example value to use when editing",
+          "type": "string"
+        },
+        "json": {
+          "description": "the JSON field name to use when serializing, defaults to [name]",
+          "type": "string"
+        },
         "values": {
           "description": "when format is \"select\", this controls the available values",
           "type": "array",

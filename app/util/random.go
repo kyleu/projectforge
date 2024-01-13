@@ -64,6 +64,15 @@ func RandomDate() time.Time {
 	return time.Unix(from+int64(rnd), 0)
 }
 
+func RandomElements[T any](l []T, x int) []T {
+	if len(l) <= x {
+		return lo.Shuffle(l)
+	}
+	return lo.Map(lo.Range(x), func(_ int, _ int) T {
+		return l[RandomInt(len(l))]
+	})
+}
+
 func RandomDiffs(size int) Diffs {
 	return lo.Times(size, func(_ int) *Diff {
 		return &Diff{Path: RandomString(8), Old: RandomString(12), New: RandomString(12)}

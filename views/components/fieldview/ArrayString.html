@@ -1,6 +1,0 @@
-<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
-{% func ArrayString(v []string) %}{% stripspace %}
-  {% for idx , x := range v %}
-    {%= String(x) %}{% if idx < len(v) - 1 %},{% space %}{% endif %}
-  {% endfor %}
-{% endstripspace %}{% endfunc %}

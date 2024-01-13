@@ -9,6 +9,7 @@
   "projectforge.dev/projectforge/app/project/export/enum"
   "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/components/edit"
   "projectforge.dev/projectforge/views/layout"
 ) %}
 
@@ -29,16 +30,16 @@
       <div class="overflow full-width">
         <table class="mt min-200 expanded">
           <tbody>
-            {%= components.TableInput("name", "", "Name", e.Name, 5, export.Helpers["enum.name"]...) %}
-            {%= components.TableInput("package", "", "Package", e.Package, 5, export.Helpers["enum.package"]...) %}
-            {%= components.TableInput("group", "", "Group", strings.Join(e.Group, "/"), 5, export.Helpers["enum.group"]...) %}
-            {%= components.TableInput("description", "", "Description", e.Description, 5, export.Helpers["enum.description"]...) %}
-            {%= components.TableInput("icon", "", "Icon", e.Icon, 5, export.Helpers["enum.icon"]...) %}
-            {%= components.TableInput("tags", "", "Tags", strings.Join(e.Tags, `, `), 5, export.Helpers["enum.tags"]...) %}
-            {%= components.TableInput("titleOverride", "", "Title Override", e.TitleOverride, 5, export.Helpers["enum.titleOverride"]...) %}
-            {%= components.TableInput("properOverride", "", "Proper Override", e.ProperOverride, 5, export.Helpers["enum.properOverride"]...) %}
-            {%= components.TableTextarea("values", "", "Values", 3, util.ToJSON(e.Values), 5, export.Helpers["enum.values"]...) %}
-            {%= components.TableTextarea("config", "", "Config", 3, util.ToJSON(e.Config), 5, export.Helpers["enum.config"]...) %}
+            {%= edit.StringTable("name", "", "Name", e.Name, 5, export.Helpers["enum.name"]...) %}
+            {%= edit.StringTable("package", "", "Package", e.Package, 5, export.Helpers["enum.package"]...) %}
+            {%= edit.StringTable("group", "", "Group", strings.Join(e.Group, "/"), 5, export.Helpers["enum.group"]...) %}
+            {%= edit.StringTable("description", "", "Description", e.Description, 5, export.Helpers["enum.description"]...) %}
+            {%= edit.StringTable("icon", "", "Icon", e.Icon, 5, export.Helpers["enum.icon"]...) %}
+            {%= edit.StringTable("tags", "", "Tags", strings.Join(e.Tags, `, `), 5, export.Helpers["enum.tags"]...) %}
+            {%= edit.StringTable("titleOverride", "", "Title Override", e.TitleOverride, 5, export.Helpers["enum.titleOverride"]...) %}
+            {%= edit.StringTable("properOverride", "", "Proper Override", e.ProperOverride, 5, export.Helpers["enum.properOverride"]...) %}
+            {%= edit.TextareaTable("values", "", "Values", 3, util.ToJSON(e.Values), 5, export.Helpers["enum.values"]...) %}
+            {%= edit.TextareaTable("config", "", "Config", 3, util.ToJSON(e.Config), 5, export.Helpers["enum.config"]...) %}
           </tbody>
         </table>
       </div>

@@ -1,0 +1,83 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "fmt"
+
+  "projectforge.dev/projectforge/app/lib/types"
+  "projectforge.dev/projectforge/views/components"
+) %}
+
+{% func Any(x any, t *types.Wrapped) %}{% stripspace %}
+  {% switch t.Key() %}
+  {% case types.KeyAny %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeyBit %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeyBool %}
+    {%= Bool(x.(bool)) %}
+  {% case types.KeyByte %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeyChar %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeyDate %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeyEnum %}
+    <span title="enum:{%s t.T.(*types.Enum).Ref %}">{%v x %}</span>
+  {% case types.KeyEnumValue %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeyError %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeyFloat %}
+    {%= Float(x.(float64)) %}
+  {% case types.KeyInt %}
+    {%= Int(x.(int)) %}
+  {% case types.KeyJSON %}
+    {%= components.JSON(x) %}
+  {% case types.KeyList %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeyMap %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeyMethod %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeyNil %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeyOption %}
+    {% if x == nil %}
+      <em>∅</em>
+    {% else %}
+      {%= Any(x, t.T.(*types.Option).V) %}
+    {% endif %}
+  {% case types.KeyRange %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeyReference %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeySet %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeyString %}
+    {%= String(x.(string)) %}
+  {% case types.KeyTime %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeyTimestamp %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeyTimestampZoned %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeyUnknown %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeyUUID %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeyValueMap %}
+    {%= Default(x, t.String()) %}
+  {% case types.KeyXML %}
+    {%= Default(x, t.String()) %}
+  {% default %}
+    {%= Default(x, t.String()) %}
+  {% endswitch %}
+{% endstripspace %}{% endfunc %}
+
+{% func Default(x any, t string) %}{% stripspace %}
+  {% code msg := fmt.Sprintf("unhandled type: %s (%T)", t, x) %}
+  <span title="{%s msg %}">{%v x %}</span>
+{% endstripspace %}{% endfunc %}
+
+{% func Type(v types.Type) %}{% stripspace %}
+  {%s v.String() %}
+{% endstripspace %}{% endfunc %}

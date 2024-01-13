@@ -15,6 +15,9 @@ import (
 func list(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "List.html")
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpFilter, helper.ImpLayout)
+	if m.HasSearches() {
+		g.AddImport(helper.ImpComponentsEdit)
+	}
 	g.AddImport(helper.AppImport(m.PackageWithGroup("")))
 	g.AddBlocks(exportViewListClass(m, args.Models, g), exportViewListBody(m, args.Models))
 	return g.Render(addHeader, linebreak)
@@ -57,7 +60,7 @@ func exportViewListBody(m *model.Model, models model.Models) *golang.Block {
 		ret.W("    <div class=\"right\"><a href=\"/%s/_new\"><button>New</button></a></div>", m.Route())
 		ret.W("    <h3>{%%= components.SVGRefIcon(`" + m.Icon + "`, ps) %%}{%%s ps.Title %%}</h3>")
 	} else {
-		ret.W(`    <div class="right">{%%%%= components.SearchForm("", "q", "Search %s", p.SearchQuery, ps) %%%%}</div>`, m.Plural())
+		ret.W(`    <div class="right">{%%%%= edit.SearchForm("", "q", "Search %s", p.SearchQuery, ps) %%%%}</div>`, m.TitlePlural())
 		ret.W(`    <div class="right mrs large-buttons">`)
 		ret.W(`      {%%%%- if len(p.Models) > 0 -%%%%}<a href="/%s/_random"><button>Random</button></a>{%%%%- endif -%%%%}`, m.Route())
 		ret.W(`      <a href="/%s/_new"><button>New</button></a>`, m.Route())

@@ -1,8 +1,7 @@
 package goenum
 
 import (
-	"github.com/samber/lo"
-
+	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
@@ -17,12 +16,17 @@ func structComplex(e *enum.Enum, g *golang.File) []*golang.Block {
 	structBlock.W("\tName        string")
 	structBlock.W("\tDescription string")
 	structBlock.W("\tIcon        string")
-	extraKeys := lo.Keys(e.ExtraFields())
+	ef := e.ExtraFields()
+	extraKeys := ef.Order
 	if len(extraKeys) > 0 {
 		maxLength := util.StringArrayMaxLength(extraKeys)
 		structBlock.WB()
 		for _, x := range extraKeys {
-			structBlock.W("\t%s string", util.StringPad(util.StringToCamel(x), maxLength))
+			t := ef.GetSimple(x)
+			if t == types.KeyTimestamp {
+				t = "*time.Time"
+			}
+			structBlock.W("\t%s %s", util.StringPad(util.StringToCamel(x), maxLength), t)
 		}
 	}
 	structBlock.W("}")
@@ -36,7 +40,7 @@ func structComplex(e *enum.Enum, g *golang.File) []*golang.Block {
 	fnStringBlock.W("}")
 
 	fnJSONOutBlock := golang.NewBlock(e.Proper()+".MarshalJSON", "method")
-	fnJSONOutBlock.W("func (%s *%s) MarshalJSON() ([]byte, error) {", e.FirstLetter(), e.Proper())
+	fnJSONOutBlock.W("func (%s %s) MarshalJSON() ([]byte, error) {", e.FirstLetter(), e.Proper())
 	fnJSONOutBlock.W("\treturn util.ToJSONBytes(%s.Key, false), nil", e.FirstLetter())
 	fnJSONOutBlock.W("}")
 
@@ -75,9 +79,9 @@ func structComplex(e *enum.Enum, g *golang.File) []*golang.Block {
 	fnScanBlock.W("\tif value == nil {")
 	fnScanBlock.W("\t\treturn nil")
 	fnScanBlock.W("\t}")
-	fnScanBlock.W("\tif sv, err := driver.String.ConvertValue(value); err == nil {")
-	fnScanBlock.W("\t\tif v, ok := sv.(string); ok {")
-	fnScanBlock.W("\t\t\t*%s = All%s.Get(v, nil)", e.FirstLetter(), e.ProperPlural())
+	fnScanBlock.W("\tif converted, err := driver.String.ConvertValue(value); err == nil {")
+	fnScanBlock.W("\t\tif str, ok := converted.(string); ok {")
+	fnScanBlock.W("\t\t\t*%s = All%s.Get(str, nil)", e.FirstLetter(), e.ProperPlural())
 	fnScanBlock.W("\t\t\treturn nil")
 	fnScanBlock.W("\t\t}")
 	fnScanBlock.W("\t}")
