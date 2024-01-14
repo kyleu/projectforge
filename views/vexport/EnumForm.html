@@ -45,16 +45,7 @@
         </table>
       </div>
     </div>
-    <div class="card">
-      <div class="right">
-        <a href="#modal-values"><button type="button">Example</button></a>
-        <button type="button" class="toggle-editor-values">View</button>
-      </div>
-      <h3 title="{%s strings.Join(export.Helpers[`enum.values`], `; `) %}">{%= components.SVGRefIcon(`star`, ps) %}Values</h3>
-      <div class="mt expanded">
-        {%= edit.RichEditor("values", "input-values", enum.ValueFieldDescs, lo.ToAnySlice(e.Values), export.Helpers["model.values"]...) %}
-      </div>
-    </div>
+    {%= edit.RichEditorCard("values", "input-values", "Values", ps, `<a href="#modal-values"><button type="button">Example</button></a>`, "star", enum.ValueFieldDescs, lo.ToAnySlice(e.Values), export.Helpers["enum.values"]...) %}
     <div class="card">
       <button type="submit">Save</button>
       <button type="reset">Reset</button>

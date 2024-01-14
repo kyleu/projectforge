@@ -146,114 +146,63 @@ func (p *ModelForm) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
         </table>
       </div>
     </div>
-    <div class="card">
-      <div class="right">
-        <a href="#modal-columns"><button type="button">Example</button></a>
-        <button type="button" class="toggle-editor-columns">View</button>
-      </div>
-      <h3 title="`)
-//line views/vexport/ModelForm.html:56
-	qw422016.E().S(strings.Join(export.Helpers[`model.columns`], `; `))
-//line views/vexport/ModelForm.html:56
-	qw422016.N().S(`">`)
-//line views/vexport/ModelForm.html:56
-	components.StreamSVGRefIcon(qw422016, `first-aid`, ps)
-//line views/vexport/ModelForm.html:56
-	qw422016.N().S(`Columns</h3>
-      <div class="mt expanded">
-        `)
-//line views/vexport/ModelForm.html:58
-	edit.StreamRichEditor(qw422016, "columns", "input-columns", model.ColumnFieldDescs, lo.ToAnySlice(m.Columns), export.Helpers["model.columns"]...)
-//line views/vexport/ModelForm.html:58
+    `)
+//line views/vexport/ModelForm.html:51
+	edit.StreamRichEditorCard(qw422016, "columns", "input-columns", "Columns", ps, `<a href="#modal-columns"><button type="button">Example</button></a>`, "first-aid", model.ColumnFieldDescs, lo.ToAnySlice(m.Columns), export.Helpers["model.columns"]...)
+//line views/vexport/ModelForm.html:51
 	qw422016.N().S(`
-      </div>
-    </div>
-    <div class="card">
-      <div class="right">
-        <a href="#modal-relations"><button type="button">Example</button></a>
-        <button type="button" class="toggle-editor-relations">View</button>
-      </div>
-      <h3 title="`)
-//line views/vexport/ModelForm.html:66
-	qw422016.E().S(strings.Join(export.Helpers[`model.relations`], `; `))
-//line views/vexport/ModelForm.html:66
-	qw422016.N().S(`">`)
-//line views/vexport/ModelForm.html:66
-	components.StreamSVGRefIcon(qw422016, `social`, ps)
-//line views/vexport/ModelForm.html:66
-	qw422016.N().S(`Relations</h3>
-      <div class="mt expanded">
-        `)
-//line views/vexport/ModelForm.html:68
-	edit.StreamRichEditor(qw422016, "relations", "input-relations", model.RelationFieldDescs, lo.ToAnySlice(m.Relations), export.Helpers["model.relations"]...)
-//line views/vexport/ModelForm.html:68
+    `)
+//line views/vexport/ModelForm.html:52
+	edit.StreamRichEditorCard(qw422016, "relations", "input-relations", "Relations", ps, `<a href="#modal-relations"><button type="button">Example</button></a>`, "social", model.RelationFieldDescs, lo.ToAnySlice(m.Relations), export.Helpers["model.relations"]...)
+//line views/vexport/ModelForm.html:52
 	qw422016.N().S(`
-      </div>
-    </div>
-    <div class="card">
-      <div class="right">
-        <a href="#modal-indexes"><button type="button">Example</button></a>
-        <button type="button" class="toggle-editor-indexes">View</button>
-      </div>
-      <h3 title="`)
-//line views/vexport/ModelForm.html:76
-	qw422016.E().S(strings.Join(export.Helpers[`model.indexes`], `; `))
-//line views/vexport/ModelForm.html:76
-	qw422016.N().S(`">`)
-//line views/vexport/ModelForm.html:76
-	components.StreamSVGRefIcon(qw422016, `star`, ps)
-//line views/vexport/ModelForm.html:76
-	qw422016.N().S(`Indexes</h3>
-      <div class="mt expanded">
-        `)
-//line views/vexport/ModelForm.html:78
-	edit.StreamRichEditor(qw422016, "indexes", "input-indexes", model.IndexFieldDescs, lo.ToAnySlice(m.Indexes), export.Helpers["model.indexes"]...)
-//line views/vexport/ModelForm.html:78
+    `)
+//line views/vexport/ModelForm.html:53
+	edit.StreamRichEditorCard(qw422016, "indexes", "input-indexes", "Indexes", ps, `<a href="#modal-indexes"><button type="button">Example</button></a>`, "star", model.IndexFieldDescs, lo.ToAnySlice(m.Indexes), export.Helpers["model.indexes"]...)
+//line views/vexport/ModelForm.html:53
 	qw422016.N().S(`
-      </div>
-    </div>
     <div class="card">
       <button type="submit">Save</button>
       <button type="reset">Reset</button>
     </div>
   </form>
 `)
-//line views/vexport/ModelForm.html:86
+//line views/vexport/ModelForm.html:59
 	for k, v := range p.Examples {
-//line views/vexport/ModelForm.html:86
+//line views/vexport/ModelForm.html:59
 		qw422016.N().S(`  `)
-//line views/vexport/ModelForm.html:87
+//line views/vexport/ModelForm.html:60
 		components.StreamJSONModal(qw422016, k, "["+k+"] Example", v, 1)
-//line views/vexport/ModelForm.html:87
+//line views/vexport/ModelForm.html:60
 		qw422016.N().S(`
 `)
-//line views/vexport/ModelForm.html:88
+//line views/vexport/ModelForm.html:61
 	}
-//line views/vexport/ModelForm.html:89
+//line views/vexport/ModelForm.html:62
 }
 
-//line views/vexport/ModelForm.html:89
+//line views/vexport/ModelForm.html:62
 func (p *ModelForm) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vexport/ModelForm.html:89
+//line views/vexport/ModelForm.html:62
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/ModelForm.html:89
+//line views/vexport/ModelForm.html:62
 	p.StreamBody(qw422016, as, ps)
-//line views/vexport/ModelForm.html:89
+//line views/vexport/ModelForm.html:62
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/ModelForm.html:89
+//line views/vexport/ModelForm.html:62
 }
 
-//line views/vexport/ModelForm.html:89
+//line views/vexport/ModelForm.html:62
 func (p *ModelForm) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vexport/ModelForm.html:89
+//line views/vexport/ModelForm.html:62
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/ModelForm.html:89
+//line views/vexport/ModelForm.html:62
 	p.WriteBody(qb422016, as, ps)
-//line views/vexport/ModelForm.html:89
+//line views/vexport/ModelForm.html:62
 	qs422016 := string(qb422016.B)
-//line views/vexport/ModelForm.html:89
+//line views/vexport/ModelForm.html:62
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/ModelForm.html:89
+//line views/vexport/ModelForm.html:62
 	return qs422016
-//line views/vexport/ModelForm.html:89
+//line views/vexport/ModelForm.html:62
 }

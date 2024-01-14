@@ -35,7 +35,7 @@ function createTableRow(cols: Column[], x: { [key: string]: unknown; }): [HTMLEl
       const em = document.createElement("em");
       em.innerText = "-";
       c.appendChild(em);
-    } else if (col.type === "code") {
+    } else if (col.type === "code" || col.type === "json") {
       const pre = document.createElement("pre");
       pre.innerText = JSON.stringify(v, null, 2);
       c.appendChild(pre);
@@ -67,6 +67,8 @@ function createTable(cols: Column[], rows: { [key: string]: unknown; }[]): HTMLE
   return div;
 }
 
+const rawLabel = "Raw JSON";
+
 export function createEditor(el: HTMLElement): void {
   const key = el.dataset.key ?? "editor";
   const columnsStr = el.dataset.columns ?? "[]";
@@ -84,14 +86,18 @@ export function createEditor(el: HTMLElement): void {
   let tbl = createTable(columns, curr);
 
   els(".toggle-editor-" + key).forEach((toggle) => {
-    toggle.innerText = "Edit";
+    if (toggle.innerText === "") {
+      toggle.innerText = "Editor";
+    }
+    const editorLabel = toggle.innerText;
+    toggle.innerText = rawLabel;
     toggle.onclick = () => {
-      if (toggle.innerText === "Edit") {
-        toggle.innerText = "View";
+      if (toggle.innerText === rawLabel) {
+        toggle.innerText = editorLabel;
         tbl.remove();
         inp.hidden = false;
       } else {
-        toggle.innerText = "Edit";
+        toggle.innerText = rawLabel;
         tbl.remove();
         curr = JSON.parse(inp.value);
         if (curr === undefined || curr === null) {
@@ -102,6 +108,7 @@ export function createEditor(el: HTMLElement): void {
         inp.hidden = true;
       }
     };
+    toggle.style.display = "inline";
   });
 
   el.appendChild(tbl);

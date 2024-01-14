@@ -69,7 +69,12 @@ func Model(m *model.Model, args *model.Args, addHeader bool, linebreak string) (
 		return nil, err
 	}
 
-	g.AddBlocks(rnd, modelWebPath(g, m), modelToData(m, m.Columns, "", args.Database))
+	fd, err := modelFieldDescs(m, args.Enums)
+	if err != nil {
+		return nil, err
+	}
+
+	g.AddBlocks(rnd, modelWebPath(g, m), modelToData(m, m.Columns, "", args.Database), fd)
 	return g.Render(addHeader, linebreak)
 }
 

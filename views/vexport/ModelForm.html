@@ -48,36 +48,9 @@
         </table>
       </div>
     </div>
-    <div class="card">
-      <div class="right">
-        <a href="#modal-columns"><button type="button">Example</button></a>
-        <button type="button" class="toggle-editor-columns">View</button>
-      </div>
-      <h3 title="{%s strings.Join(export.Helpers[`model.columns`], `; `) %}">{%= components.SVGRefIcon(`first-aid`, ps) %}Columns</h3>
-      <div class="mt expanded">
-        {%= edit.RichEditor("columns", "input-columns", model.ColumnFieldDescs, lo.ToAnySlice(m.Columns), export.Helpers["model.columns"]...) %}
-      </div>
-    </div>
-    <div class="card">
-      <div class="right">
-        <a href="#modal-relations"><button type="button">Example</button></a>
-        <button type="button" class="toggle-editor-relations">View</button>
-      </div>
-      <h3 title="{%s strings.Join(export.Helpers[`model.relations`], `; `) %}">{%= components.SVGRefIcon(`social`, ps) %}Relations</h3>
-      <div class="mt expanded">
-        {%= edit.RichEditor("relations", "input-relations", model.RelationFieldDescs, lo.ToAnySlice(m.Relations), export.Helpers["model.relations"]...) %}
-      </div>
-    </div>
-    <div class="card">
-      <div class="right">
-        <a href="#modal-indexes"><button type="button">Example</button></a>
-        <button type="button" class="toggle-editor-indexes">View</button>
-      </div>
-      <h3 title="{%s strings.Join(export.Helpers[`model.indexes`], `; `) %}">{%= components.SVGRefIcon(`star`, ps) %}Indexes</h3>
-      <div class="mt expanded">
-        {%= edit.RichEditor("indexes", "input-indexes", model.IndexFieldDescs, lo.ToAnySlice(m.Indexes), export.Helpers["model.indexes"]...) %}
-      </div>
-    </div>
+    {%= edit.RichEditorCard("columns", "input-columns", "Columns", ps, `<a href="#modal-columns"><button type="button">Example</button></a>`, "first-aid",  model.ColumnFieldDescs, lo.ToAnySlice(m.Columns), export.Helpers["model.columns"]...) %}
+    {%= edit.RichEditorCard("relations", "input-relations", "Relations", ps, `<a href="#modal-relations"><button type="button">Example</button></a>`, "social",  model.RelationFieldDescs, lo.ToAnySlice(m.Relations), export.Helpers["model.relations"]...) %}
+    {%= edit.RichEditorCard("indexes", "input-indexes", "Indexes", ps, `<a href="#modal-indexes"><button type="button">Example</button></a>`, "star",  model.IndexFieldDescs, lo.ToAnySlice(m.Indexes), export.Helpers["model.indexes"]...) %}
     <div class="card">
       <button type="submit">Save</button>
       <button type="reset">Reset</button>

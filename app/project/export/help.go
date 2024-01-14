@@ -6,7 +6,7 @@ var Helpers = func() map[string][]string {
 		ret[k] = []string{v}
 	}
 
-	// project
+	add("enum.values", "Possible values for this enumeration")
 	add("model.name", "The name, usually corresponding to the name of your database table")
 	add("model.package", "package")
 	add("model.group", "The model's group, as a path, like [foo/bar]")

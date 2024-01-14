@@ -131,70 +131,53 @@ func (p *EnumForm) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
         </table>
       </div>
     </div>
-    <div class="card">
-      <div class="right">
-        <a href="#modal-values"><button type="button">Example</button></a>
-        <button type="button" class="toggle-editor-values">View</button>
-      </div>
-      <h3 title="`)
-//line views/vexport/EnumForm.html:53
-	qw422016.E().S(strings.Join(export.Helpers[`enum.values`], `; `))
-//line views/vexport/EnumForm.html:53
-	qw422016.N().S(`">`)
-//line views/vexport/EnumForm.html:53
-	components.StreamSVGRefIcon(qw422016, `star`, ps)
-//line views/vexport/EnumForm.html:53
-	qw422016.N().S(`Values</h3>
-      <div class="mt expanded">
-        `)
-//line views/vexport/EnumForm.html:55
-	edit.StreamRichEditor(qw422016, "values", "input-values", enum.ValueFieldDescs, lo.ToAnySlice(e.Values), export.Helpers["model.values"]...)
-//line views/vexport/EnumForm.html:55
+    `)
+//line views/vexport/EnumForm.html:48
+	edit.StreamRichEditorCard(qw422016, "values", "input-values", "Values", ps, `<a href="#modal-values"><button type="button">Example</button></a>`, "star", enum.ValueFieldDescs, lo.ToAnySlice(e.Values), export.Helpers["enum.values"]...)
+//line views/vexport/EnumForm.html:48
 	qw422016.N().S(`
-      </div>
-    </div>
     <div class="card">
       <button type="submit">Save</button>
       <button type="reset">Reset</button>
     </div>
   </form>
 `)
-//line views/vexport/EnumForm.html:63
+//line views/vexport/EnumForm.html:54
 	for k, v := range p.Examples {
-//line views/vexport/EnumForm.html:63
+//line views/vexport/EnumForm.html:54
 		qw422016.N().S(`  `)
-//line views/vexport/EnumForm.html:64
+//line views/vexport/EnumForm.html:55
 		components.StreamJSONModal(qw422016, k, "["+k+"] Example", v, 1)
-//line views/vexport/EnumForm.html:64
+//line views/vexport/EnumForm.html:55
 		qw422016.N().S(`
 `)
-//line views/vexport/EnumForm.html:65
+//line views/vexport/EnumForm.html:56
 	}
-//line views/vexport/EnumForm.html:66
+//line views/vexport/EnumForm.html:57
 }
 
-//line views/vexport/EnumForm.html:66
+//line views/vexport/EnumForm.html:57
 func (p *EnumForm) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vexport/EnumForm.html:66
+//line views/vexport/EnumForm.html:57
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/EnumForm.html:66
+//line views/vexport/EnumForm.html:57
 	p.StreamBody(qw422016, as, ps)
-//line views/vexport/EnumForm.html:66
+//line views/vexport/EnumForm.html:57
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/EnumForm.html:66
+//line views/vexport/EnumForm.html:57
 }
 
-//line views/vexport/EnumForm.html:66
+//line views/vexport/EnumForm.html:57
 func (p *EnumForm) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vexport/EnumForm.html:66
+//line views/vexport/EnumForm.html:57
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/EnumForm.html:66
+//line views/vexport/EnumForm.html:57
 	p.WriteBody(qb422016, as, ps)
-//line views/vexport/EnumForm.html:66
+//line views/vexport/EnumForm.html:57
 	qs422016 := string(qb422016.B)
-//line views/vexport/EnumForm.html:66
+//line views/vexport/EnumForm.html:57
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/EnumForm.html:66
+//line views/vexport/EnumForm.html:57
 	return qs422016
-//line views/vexport/EnumForm.html:66
+//line views/vexport/EnumForm.html:57
 }

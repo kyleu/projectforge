@@ -1,19 +1,38 @@
 {% import (
+  "strings"
+
+  "{{{ .Package }}}/app/controller/cutil"
   "{{{ .Package }}}/app/util"
+  "{{{ .Package }}}/views/components"
 ) %}
 
-{% func RichEditor(key string, id string, columns []*util.FieldDesc, value []any, placeholder ...string) %}{% stripspace %}
-  {% code if value == nil { value = []any{} } %}
+{% func RichEditor(key string, id string, columns []*util.FieldDesc, values []any, placeholder ...string) %}{% stripspace %}
+  {% code if values == nil { values = []any{} } %}
   <div class="rich-editor" data-key="{%s key %}" data-columns="{%j util.ToJSONCompact(columns) %}">
-    {%= Textarea(key, id, 8, util.ToJSON(value), placeholder...) %}
+    {%= Textarea(key, id, 8, util.ToJSON(values), placeholder...) %}
   </div>
 {% endstripspace %}{% endfunc %}
 
-{% func RichEditorTable(key string, id string, title string, columns []*util.FieldDesc, value []any, placeholder ...string) %}{% stripspace %}
+{% func RichEditorTable(key string, id string, title string, columns []*util.FieldDesc, values []any, placeholder ...string) %}{% stripspace %}
   <tr>
     <th class="shrink"><label for="{%s id %}">{%s title %}</label></th>
     <td>
-      {%= RichEditor(key, id, columns, value, placeholder...) %}
+      {%= RichEditor(key, id, columns, values, placeholder...) %}
     </td>
   </tr>
+{% endstripspace %}{% endfunc %}
+
+{% func RichEditorCard(key string, id string, title string, ps *cutil.PageState, headerExtra string, icon string, columns []*util.FieldDesc, values []any, placeholder ...string) %}{% stripspace %}
+  <div class="card">
+    <div class="right">
+      {%- if headerExtra != "" -%}
+      {%s= headerExtra %}{% space %}
+      {%- endif -%}
+      <button type="button" class="toggle-editor toggle-editor-{%s key %}">Editor</button>
+    </div>
+    <h3 title="{%s strings.Join(placeholder, `; `) %}">{% if icon != "" %}{%= components.SVGRefIcon(icon, ps) %}{% endif %}{%s title %}</h3>
+    <div class="mt expanded">
+      {%= RichEditor(key, "input-" + key, columns, values, placeholder...) %}
+    </div>
+  </div>
 {% endstripspace %}{% endfunc %}
