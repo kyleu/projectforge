@@ -8,6 +8,15 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+var ValueFieldDescs = util.FieldDescs{
+	{Key: "key", Title: "Key", Description: "The key of the enum"},
+	{Key: "name", Title: "Name", Description: "The name of the enum"},
+	{Key: "description", Title: "Description", Description: "The description of the enum"},
+	{Key: "icon", Title: "Icon", Description: "The icon of the enum", Type: "icon"},
+	{Key: "default", Title: "Default", Description: "Indicates if this is the default value", Type: "bool"},
+	// {Key: "extra", Title: "Extra", Description: "The X of the column"},
+}
+
 type valueMarshal struct {
 	Key         string                `json:"key"`
 	Name        string                `json:"name,omitempty"`
@@ -50,9 +59,6 @@ func (x *Value) UnmarshalJSON(data []byte) error {
 		x.Description = v.Description
 		x.Icon = v.Icon
 		x.Extra = v.Extra
-		if x.Extra == nil {
-			x.Extra = util.NewOrderedMap[any](false, 0)
-		}
 		x.Default = v.Default
 		x.Simple = false
 		return nil
@@ -65,7 +71,7 @@ func (x *Value) UnmarshalJSON(data []byte) error {
 	x.Name = ""
 	x.Description = ""
 	x.Icon = ""
-	x.Extra = util.NewOrderedMap[any](false, 0)
+	x.Extra = nil
 	x.Default = false
 	x.Simple = true
 	return nil
@@ -81,7 +87,7 @@ func (v Values) Keys() []string {
 
 func (v Values) AllSimple() bool {
 	return !lo.ContainsBy(v, func(x *Value) bool {
-		return (!x.Simple) || x.Name != "" || x.Description != "" || x.Icon != "" || len(x.Extra.Map) > 0
+		return (!x.Simple) || x.Name != "" || x.Description != "" || x.Icon != "" || (x.Extra != nil && len(x.Extra.Map) > 0)
 	})
 }
 

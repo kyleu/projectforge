@@ -2,6 +2,8 @@
   "fmt"
   "strings"
 
+  "github.com/samber/lo"
+
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/project"
@@ -38,10 +40,19 @@
             {%= edit.StringTable("tags", "", "Tags", strings.Join(e.Tags, `, `), 5, export.Helpers["enum.tags"]...) %}
             {%= edit.StringTable("titleOverride", "", "Title Override", e.TitleOverride, 5, export.Helpers["enum.titleOverride"]...) %}
             {%= edit.StringTable("properOverride", "", "Proper Override", e.ProperOverride, 5, export.Helpers["enum.properOverride"]...) %}
-            {%= edit.TextareaTable("values", "", "Values", 3, util.ToJSON(e.Values), 5, export.Helpers["enum.values"]...) %}
             {%= edit.TextareaTable("config", "", "Config", 3, util.ToJSON(e.Config), 5, export.Helpers["enum.config"]...) %}
           </tbody>
         </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="right">
+        <a href="#modal-values"><button type="button">Example</button></a>
+        <button type="button" class="toggle-editor-values">View</button>
+      </div>
+      <h3 title="{%s strings.Join(export.Helpers[`enum.values`], `; `) %}">{%= components.SVGRefIcon(`star`, ps) %}Values</h3>
+      <div class="mt expanded">
+        {%= edit.RichEditor("values", "input-values", enum.ValueFieldDescs, lo.ToAnySlice(e.Values), export.Helpers["model.values"]...) %}
       </div>
     </div>
     <div class="card">

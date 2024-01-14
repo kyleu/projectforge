@@ -18,6 +18,7 @@ The following modules were used to build this project:
 - [notarize](./doc/module/notarize.md)
 - [playwright](./doc/module/playwright.md)
 - [process](./doc/module/process.md)
+- [richedit](./doc/module/richedit.md)
 - [search](./doc/module/search.md)
 - [themecatalog](./doc/module/themecatalog.md)
 - [types](./doc/module/types.md)

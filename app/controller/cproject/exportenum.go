@@ -42,7 +42,7 @@ func ProjectExportEnumNew(rc *fasthttp.RequestCtx) {
 		e := &enum.Enum{}
 		bc := []string{"projects", prj.Key, fmt.Sprintf("Export||/p/%s/export", prj.Key), "New"}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] New Enum", prj.Key), e)
-		return controller.Render(rc, as, &vexport.EnumForm{Project: prj, Enum: e}, ps, bc...)
+		return controller.Render(rc, as, &vexport.EnumForm{Project: prj, Enum: e, Examples: enum.Examples}, ps, bc...)
 	})
 }
 
@@ -94,7 +94,7 @@ func ProjectExportEnumForm(rc *fasthttp.RequestCtx) {
 			"Edit",
 		}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] %s", prj.Key, e.Name), e)
-		return controller.Render(rc, as, &vexport.EnumForm{Project: prj, Enum: e}, ps, bc...)
+		return controller.Render(rc, as, &vexport.EnumForm{Project: prj, Enum: e, Examples: enum.Examples}, ps, bc...)
 	})
 }
 

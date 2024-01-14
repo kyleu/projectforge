@@ -1,0 +1,19 @@
+{% import (
+  "{{{ .Package }}}/app/util"
+) %}
+
+{% func RichEditor(key string, id string, columns []*util.FieldDesc, value []any, placeholder ...string) %}{% stripspace %}
+  {% code if value == nil { value = []any{} } %}
+  <div class="rich-editor" data-key="{%s key %}" data-columns="{%j util.ToJSONCompact(columns) %}">
+    {%= Textarea(key, id, 8, util.ToJSON(value), placeholder...) %}
+  </div>
+{% endstripspace %}{% endfunc %}
+
+{% func RichEditorTable(key string, id string, title string, columns []*util.FieldDesc, value []any, placeholder ...string) %}{% stripspace %}
+  <tr>
+    <th class="shrink"><label for="{%s id %}">{%s title %}</label></th>
+    <td>
+      {%= RichEditor(key, id, columns, value, placeholder...) %}
+    </td>
+  </tr>
+{% endstripspace %}{% endfunc %}

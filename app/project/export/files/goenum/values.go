@@ -35,7 +35,10 @@ func enumValues(e *enum.Enum) *golang.Block {
 		}
 		ef := e.ExtraFields()
 		for _, extraKey := range ef.Order {
-			t := fmt.Sprint(v.Extra.GetSimple(extraKey))
+			var t string
+			if v.Extra != nil {
+				t = fmt.Sprint(v.Extra.GetSimple(extraKey))
+			}
 			switch ef.GetSimple(extraKey) {
 			case types.KeyString, "":
 				if t == "" {
@@ -43,7 +46,7 @@ func enumValues(e *enum.Enum) *golang.Block {
 				}
 				t = "\"" + t + "\""
 			case types.KeyTimestamp:
-				if t == "<nil>" {
+				if t == "<nil>" || t == "" {
 					continue
 				}
 				t = "util.TimeFromStringSimple(\"" + t + "\")"
@@ -51,7 +54,7 @@ func enumValues(e *enum.Enum) *golang.Block {
 				if t == "<nil>" {
 					t = "false"
 				}
-				if t == "false" {
+				if t == "false" || t == "" {
 					continue
 				}
 			}

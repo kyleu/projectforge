@@ -1,7 +1,6 @@
 <!-- Content managed by Project Forge, see [projectforge.md] for details. -->
 {% import (
   "projectforge.dev/projectforge/app/controller/cutil"
-  "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
 ) %}
 
@@ -92,21 +91,5 @@
     {%= components.Indent(true, indent + 1) %}
     <td>{%= Textarea(key, id, rows, value, help...) %}</td>
   {%= components.Indent(true, indent) %}
-  </tr>
-{% endstripspace %}{% endfunc %}
-
-{% func RichEditor(key string, id string, columns []*util.FieldDesc, value []any, placeholder ...string) %}{% stripspace %}
-  {% code if value == nil { value = []any{} } %}
-  <div class="rich-editor" data-key="{%s key %}" data-columns="{%j util.ToJSONCompact(columns) %}">
-    {%= Textarea(key, id, 8, util.ToJSON(value), placeholder...) %}
-  </div>
-{% endstripspace %}{% endfunc %}
-
-{% func RichEditorTable(key string, id string, title string, columns []*util.FieldDesc, value []any, placeholder ...string) %}{% stripspace %}
-  <tr>
-    <th class="shrink"><label for="{%s id %}">{%s title %}</label></th>
-    <td>
-      {%= RichEditor(key, id, columns, value, placeholder...) %}
-    </td>
   </tr>
 {% endstripspace %}{% endfunc %}

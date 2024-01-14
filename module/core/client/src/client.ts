@@ -8,8 +8,8 @@ import {linkInit} from "./link";
 import {timeInit} from "./time";
 import {autocompleteInit} from "./autocomplete";
 import {modalInit} from "./modal";
-import {tagsInit} from "./tags";
-import {editorInit} from "./editor";
+import {tagsInit} from "./tags";{{{ if .HasModule "richedit" }}}
+import {editorInit} from "./editor";{{{ end }}}
 import {formInit} from "./form";
 import {themeInit} from "./theme";{{{ if .HasModule "websocket" }}}
 import {socketInit} from "./socket";{{{ end }}}
@@ -46,8 +46,8 @@ export function init(): void {
   modeInit();
   linkInit();
   modalInit();
-  themeInit();
-  editorInit();
+  themeInit();{{{ if .HasModule "richedit" }}}
+  editorInit();{{{ end }}}
   window.audit = audit;{{{ if .HasModule "jsx" }}}
   window.JSX = JSX;{{{ end }}}
   appInit();

@@ -66,6 +66,9 @@ func (e *Enum) Camel() string {
 func (e *Enum) ExtraFields() *util.OrderedMap[string] {
 	ret := util.NewOrderedMap[string](false, 0)
 	for _, v := range e.Values {
+		if v.Extra == nil {
+			continue
+		}
 		for _, k := range v.Extra.Order {
 			x := v.Extra.GetSimple(k)
 			if _, exists := ret.Get(k); exists {
@@ -107,6 +110,9 @@ func (e *Enum) ExtraFields() *util.OrderedMap[string] {
 func (e *Enum) ExtraFieldValues(k string) ([]any, bool) {
 	ret := make([]any, 0, len(e.Values))
 	for _, v := range e.Values {
+		if v.Extra == nil {
+			continue
+		}
 		if x, ok := v.Extra.Get(k); ok && x != nil {
 			ret = append(ret, x)
 		}

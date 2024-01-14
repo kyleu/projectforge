@@ -89,7 +89,11 @@
           <td>{%s v.Name %}</td>
           <td>{%s v.Description %}</td>
           {%- for _, x := range ef.Order -%}
+          {%- if v.Extra == nil -%}
+          <td></td>
+          {%- else -%}
           <td>{%v v.Extra.GetSimple(x) %}</td>
+          {%- endif -%}
           {%- endfor -%}
         </tr>
         {%- endfor -%}

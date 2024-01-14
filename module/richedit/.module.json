@@ -1,0 +1,9 @@
+{
+  "name": "Rich Editor",
+  "icon": "pencil",
+  "description": "It provides a rich editing experience with a decent fallback when scripting is disabled",
+  "authorName": "Kyle U",
+  "authorEmail": "kyle@kyleu.com",
+  "license": "CC0",
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/richedit"
+}

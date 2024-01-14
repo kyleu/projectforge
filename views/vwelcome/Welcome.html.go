@@ -185,7 +185,7 @@ func (p *Welcome) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
     </div>
   </form>
   <script>
-    function initForm() {
+    function initWelcomeForm() {
       var key = document.getElementById("welcome-key");
       var homepage = document.getElementById("welcome-homepage");
       var org = document.getElementById("welcome-org");
@@ -204,7 +204,7 @@ func (p *Welcome) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
       }
     }
 
-    document.addEventListener("DOMContentLoaded", initForm);
+    document.addEventListener("DOMContentLoaded", initWelcomeForm);
   </script>
 `)
 //line views/vwelcome/Welcome.html:101

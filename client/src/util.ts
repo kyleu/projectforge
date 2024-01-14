@@ -20,9 +20,8 @@ export function expandCollapse(extra?: string) {
   if (!extra) {
     extra = "";
   }
-  const e = svgRef("right", 15, "expand");
-  const c = svgRef("down", 15, "collapse");
-  return {"__html": e + c + extra};
+  const e = svgRef("right", 15, "expand-collapse");
+  return {"__html": e + extra};
 }
 
 export function focusDelay(el: HTMLInputElement | HTMLTextAreaElement) {
