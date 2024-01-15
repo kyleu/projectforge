@@ -29,7 +29,7 @@ var (
 )
 
 //line views/components/edit/RichEdit.html:10
-func StreamRichEditor(qw422016 *qt422016.Writer, key string, id string, columns []*util.FieldDesc, values []any, placeholder ...string) {
+func StreamRichEditor(qw422016 *qt422016.Writer, key string, id string, title string, columns []*util.FieldDesc, values []any, placeholder ...string) {
 //line views/components/edit/RichEdit.html:11
 	if values == nil {
 		values = []any{}
@@ -39,6 +39,10 @@ func StreamRichEditor(qw422016 *qt422016.Writer, key string, id string, columns 
 	qw422016.N().S(`<div class="rich-editor" data-key="`)
 //line views/components/edit/RichEdit.html:12
 	qw422016.E().S(key)
+//line views/components/edit/RichEdit.html:12
+	qw422016.N().S(`" data-title="`)
+//line views/components/edit/RichEdit.html:12
+	qw422016.E().S(title)
 //line views/components/edit/RichEdit.html:12
 	qw422016.N().S(`" data-columns="`)
 //line views/components/edit/RichEdit.html:12
@@ -53,22 +57,22 @@ func StreamRichEditor(qw422016 *qt422016.Writer, key string, id string, columns 
 }
 
 //line views/components/edit/RichEdit.html:15
-func WriteRichEditor(qq422016 qtio422016.Writer, key string, id string, columns []*util.FieldDesc, values []any, placeholder ...string) {
+func WriteRichEditor(qq422016 qtio422016.Writer, key string, id string, title string, columns []*util.FieldDesc, values []any, placeholder ...string) {
 //line views/components/edit/RichEdit.html:15
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/components/edit/RichEdit.html:15
-	StreamRichEditor(qw422016, key, id, columns, values, placeholder...)
+	StreamRichEditor(qw422016, key, id, title, columns, values, placeholder...)
 //line views/components/edit/RichEdit.html:15
 	qt422016.ReleaseWriter(qw422016)
 //line views/components/edit/RichEdit.html:15
 }
 
 //line views/components/edit/RichEdit.html:15
-func RichEditor(key string, id string, columns []*util.FieldDesc, values []any, placeholder ...string) string {
+func RichEditor(key string, id string, title string, columns []*util.FieldDesc, values []any, placeholder ...string) string {
 //line views/components/edit/RichEdit.html:15
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/components/edit/RichEdit.html:15
-	WriteRichEditor(qb422016, key, id, columns, values, placeholder...)
+	WriteRichEditor(qb422016, key, id, title, columns, values, placeholder...)
 //line views/components/edit/RichEdit.html:15
 	qs422016 := string(qb422016.B)
 //line views/components/edit/RichEdit.html:15
@@ -91,7 +95,7 @@ func StreamRichEditorTable(qw422016 *qt422016.Writer, key string, id string, tit
 //line views/components/edit/RichEdit.html:19
 	qw422016.N().S(`</label></th><td>`)
 //line views/components/edit/RichEdit.html:21
-	StreamRichEditor(qw422016, key, id, columns, values, placeholder...)
+	StreamRichEditor(qw422016, key, id, title, columns, values, placeholder...)
 //line views/components/edit/RichEdit.html:21
 	qw422016.N().S(`</td></tr>`)
 //line views/components/edit/RichEdit.html:24
@@ -156,7 +160,7 @@ func StreamRichEditorCard(qw422016 *qt422016.Writer, key string, id string, titl
 //line views/components/edit/RichEdit.html:34
 	qw422016.N().S(`</h3><div class="mt expanded">`)
 //line views/components/edit/RichEdit.html:36
-	StreamRichEditor(qw422016, key, "input-"+key, columns, values, placeholder...)
+	StreamRichEditor(qw422016, key, "input-"+key, title, columns, values, placeholder...)
 //line views/components/edit/RichEdit.html:36
 	qw422016.N().S(`</div></div>`)
 //line views/components/edit/RichEdit.html:39

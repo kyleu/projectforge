@@ -14,7 +14,7 @@ import (
 
 var ColumnFieldDescs = util.FieldDescs{
 	{Key: "name", Title: "Name", Description: "The name of the column"},
-	{Key: "type", Title: "Type", Description: "The type of the column", Type: "json"},
+	{Key: "type", Title: "Type", Description: "The type of the column", Type: "type"},
 	{Key: "pk", Title: "PK", Description: "Indicates if this column is a primary key"},
 	{Key: "nullable", Title: "Nullable", Description: "Indicates if this column is nullable"},
 	{Key: "search", Title: "Search", Description: "Indicates if this column is included in search"},

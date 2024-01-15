@@ -1,14 +1,14 @@
 {% import (
   "strings"
 
-  "{{{ .Package }}}/app/controller/cutil"
-  "{{{ .Package }}}/app/util"
-  "{{{ .Package }}}/views/components"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/views/components"
 ) %}
 
-{% func RichEditor(key string, id string, columns []*util.FieldDesc, values []any, placeholder ...string) %}{% stripspace %}
+{% func RichEditor(key string, id string, title string, columns []*util.FieldDesc, values []any, placeholder ...string) %}{% stripspace %}
   {% code if values == nil { values = []any{} } %}
-  <div class="rich-editor" data-key="{%s key %}" data-columns="{%j util.ToJSONCompact(columns) %}">
+  <div class="rich-editor" data-key="{%s key %}" data-title="{%s title %}" data-columns="{%j util.ToJSONCompact(columns) %}">
     {%= Textarea(key, id, 8, util.ToJSON(values), placeholder...) %}
   </div>
 {% endstripspace %}{% endfunc %}
@@ -17,7 +17,7 @@
   <tr>
     <th class="shrink"><label for="{%s id %}">{%s title %}</label></th>
     <td>
-      {%= RichEditor(key, id, columns, values, placeholder...) %}
+      {%= RichEditor(key, id, title, columns, values, placeholder...) %}
     </td>
   </tr>
 {% endstripspace %}{% endfunc %}
@@ -32,7 +32,7 @@
     </div>
     <h3 title="{%s strings.Join(placeholder, `; `) %}">{% if icon != "" %}{%= components.SVGRefIcon(icon, ps) %}{% endif %}{%s title %}</h3>
     <div class="mt expanded">
-      {%= RichEditor(key, "input-" + key, columns, values, placeholder...) %}
+      {%= RichEditor(key, "input-" + key, title, columns, values, placeholder...) %}
     </div>
   </div>
 {% endstripspace %}{% endfunc %}

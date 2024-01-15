@@ -1,5 +1,6 @@
 // Content managed by Project Forge, see [projectforge.md] for details.
 import {els, req} from "./dom";
+import {modalGetBody, modalGetOrCreate, modalSetTitle} from "./modal";
 
 type Column = {
   key: string
@@ -25,39 +26,67 @@ function createTableHead(cols: Column[]): HTMLElement {
   return thead;
 }
 
-function createTableRow(cols: Column[], x: { [key: string]: unknown; }): [HTMLElement, HTMLElement[]] {
-  const r = document.createElement("tr");
-  const tds: HTMLElement[] = [];
-  cols.forEach((col) => {
-    const c = document.createElement("td");
-    tds.push(c);
-    const v = x[col.key];
-    if (v === undefined || v === null) {
-      const em = document.createElement("em");
-      em.innerText = "-";
-      c.appendChild(em);
-    } else if (col.type === "code" || col.type === "json") {
-      const pre = document.createElement("pre");
-      pre.innerText = JSON.stringify(v, null, 2);
-      c.appendChild(pre);
-    } else {
+function rowEdit(idx: number, cols: Column[], x: { [p: string]: unknown }) {
+  return () => {
+    const objectEditor = document.createElement("pre");
+    objectEditor.innerText = JSON.stringify(x, null, 2);
+
+    const modal = modalGetOrCreate("rich-editor", "Rich Editor");
+    modalSetTitle(modal, "Editing row [" + idx + "]");
+    modalGetBody(modal).replaceChildren(objectEditor);
+    window.location.href = "#modal-rich-editor";
+
+    console.log("!", idx, cols, x);
+  }
+}
+
+function createTableCell(col: Column, v: unknown): HTMLElement {
+  const c = document.createElement("td");
+  if (v === undefined || v === null) {
+    const em = document.createElement("em");
+    em.innerText = "-";
+    c.appendChild(em);
+  } else if (col.type === "code" || col.type === "json") {
+    const pre = document.createElement("pre");
+    pre.innerText = JSON.stringify(v, null, 2);
+    c.appendChild(pre);
+  } else if (col.type === "type") {
+    if (typeof v === "string") {
       c.innerText = v.toString();
+    } else {
+      if (typeof v === "object") {
+        c.innerText = (v as any)["k"].toString();
+      } else {
+        const pre = document.createElement("pre");
+        pre.innerText = JSON.stringify(v, null, 2);
+        c.appendChild(pre);
+      }
     }
+  } else {
+    c.innerText = v.toString();
+  }
+  return c;
+}
+
+function createTableRow(idx: number, cols: Column[], x: { [key: string]: unknown; }): HTMLElement {
+  const r = document.createElement("tr");
+  r.dataset.index = idx.toString();
+  cols.forEach((col) => {
+    const c = createTableCell(col, x[col.key]);
     r.appendChild(c);
   });
-  return [r, tds];
+  r.onclick = rowEdit(idx, cols, x);
+  return r;
 }
 
 function createTable(cols: Column[], rows: { [key: string]: unknown; }[]): HTMLElement {
   const tbl = document.createElement("table");
-  const allTds: HTMLElement[][] = [];
   tbl.classList.add("min-200");
   tbl.appendChild(createTableHead(cols));
   const tbody = document.createElement("tbody");
-  rows.forEach((row) => {
-    const [tr, tds] = createTableRow(cols, row);
+  rows.forEach((row, idx) => {
+    const tr = createTableRow(idx, cols, row);
     tbody.appendChild(tr);
-    allTds.push(tds);
   });
   tbl.appendChild(tbody);
 
