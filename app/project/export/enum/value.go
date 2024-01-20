@@ -40,6 +40,10 @@ func (x *Value) Proper() string {
 	return util.StringToCamel(x.Key)
 }
 
+func (x *Value) Title() string {
+	return util.StringToTitle(x.Key)
+}
+
 func (x *Value) MarshalJSON() ([]byte, error) {
 	if x.Simple {
 		return util.ToJSONBytes(x.Key, false), nil
@@ -100,7 +104,7 @@ func (v Values) Default() *Value {
 func (v Values) Titles() []string {
 	return lo.Map(v, func(x *Value, _ int) string {
 		if x.Name != "" {
-			return x.Name
+			return x.Title()
 		}
 		return x.Key
 	})

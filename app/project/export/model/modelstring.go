@@ -18,7 +18,7 @@ func (m *Model) CamelPlural() string {
 
 func (m *Model) Title() string {
 	if m.TitleOverride == "" {
-		return m.Proper()
+		return util.StringToTitle(m.Name)
 	}
 	return m.TitleOverride
 }

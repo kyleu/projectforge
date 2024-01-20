@@ -10,7 +10,6 @@ export function modalInit() {
 }
 
 export function modalNew(key: string, title: string) {
-  console.log("creating modal");
   const el = document.createElement("div");
   el.classList.add("modal");
   el.id = "modal-" + key;

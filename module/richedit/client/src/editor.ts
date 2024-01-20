@@ -1,147 +1,77 @@
 import {els, req} from "./dom";
-import {modalGetBody, modalGetOrCreate, modalSetTitle} from "./modal";
-
-type Column = {
-  key: string
-  title: string
-  description?: string
-  type?: string
-};
-
-function createTableHead(cols: Column[]): HTMLElement {
-  const thead = document.createElement("thead");
-  const r = document.createElement("tr");
-  let first = true;
-  cols.forEach((col) => {
-    const c = document.createElement("th");
-    if (first) {
-      c.classList.add("shrink");
-      first = false;
-    }
-    c.innerText = col.title;
-    r.appendChild(c);
-  });
-  thead.appendChild(r);
-  return thead;
-}
-
-function rowEdit(idx: number, cols: Column[], x: { [p: string]: unknown }) {
-  return () => {
-    const objectEditor = document.createElement("pre");
-    objectEditor.innerText = JSON.stringify(x, null, 2);
-
-    const modal = modalGetOrCreate("rich-editor", "Rich Editor");
-    modalSetTitle(modal, "Editing row [" + idx + "]");
-    modalGetBody(modal).replaceChildren(objectEditor);
-    window.location.href = "#modal-rich-editor";
-
-    console.log("!", idx, cols, x);
-  }
-}
-
-function createTableCell(col: Column, v: unknown): HTMLElement {
-  const c = document.createElement("td");
-  if (v === undefined || v === null) {
-    const em = document.createElement("em");
-    em.innerText = "-";
-    c.appendChild(em);
-  } else if (col.type === "code" || col.type === "json") {
-    const pre = document.createElement("pre");
-    pre.innerText = JSON.stringify(v, null, 2);
-    c.appendChild(pre);
-  } else if (col.type === "type") {
-    if (typeof v === "string") {
-      c.innerText = v.toString();
-    } else {
-      if (typeof v === "object") {
-        c.innerText = (v as any)["k"].toString();
-      } else {
-        const pre = document.createElement("pre");
-        pre.innerText = JSON.stringify(v, null, 2);
-        c.appendChild(pre);
-      }
-    }
-  } else {
-    c.innerText = v.toString();
-  }
-  return c;
-}
-
-function createTableRow(idx: number, cols: Column[], x: { [key: string]: unknown; }): HTMLElement {
-  const r = document.createElement("tr");
-  r.dataset.index = idx.toString();
-  cols.forEach((col) => {
-    const c = createTableCell(col, x[col.key]);
-    r.appendChild(c);
-  });
-  r.onclick = rowEdit(idx, cols, x);
-  return r;
-}
-
-function createTable(cols: Column[], rows: { [key: string]: unknown; }[]): HTMLElement {
-  const tbl = document.createElement("table");
-  tbl.classList.add("min-200");
-  tbl.appendChild(createTableHead(cols));
-  const tbody = document.createElement("tbody");
-  rows.forEach((row, idx) => {
-    const tr = createTableRow(idx, cols, row);
-    tbody.appendChild(tr);
-  });
-  tbl.appendChild(tbody);
-
-  const div = document.createElement("div");
-  div.classList.add("overflow");
-  div.classList.add("full-width");
-  div.appendChild(tbl);
-  return div;
-}
+import {createTable} from "./editortable";
+import type {Column, Editor} from "./editortypes";
 
 const rawLabel = "Raw JSON";
 
-export function createEditor(el: HTMLElement): void {
+function extractEditor(el: HTMLElement) {
   const key = el.dataset.key ?? "editor";
+  const title = el.dataset.title ?? "Object";
   const columnsStr = el.dataset.columns ?? "[]";
   const columns: Column[] = JSON.parse(columnsStr.replace(/\\"/gu, "\""));
 
   const inp: HTMLTextAreaElement = req<HTMLTextAreaElement>("textarea", el);
-  let curr: Column[] = JSON.parse(inp.value);
+  let curr: any[] = JSON.parse(inp.value);
   if (curr === undefined || curr === null) {
     curr = [];
   }
   if (!Array.isArray(curr)) {
     throw new Error("input value for element [" + key + "] of type [" + typeof curr + "] must be an array");
   }
+  inp.hidden = true;
 
-  let tbl = createTable(columns, curr);
+  const e: Editor = {key: key, title: title, columns: columns, textarea: inp, rows: curr}
 
-  els(".toggle-editor-" + key).forEach((toggle) => {
+  let tbl = createTable(e);
+  el.appendChild(tbl);
+
+  return e;
+}
+
+function editorShow(el: HTMLElement, e: Editor) {
+  els(".toggle-editor-" + e.key).forEach((toggle) => {
+    toggle.innerText = rawLabel;
+  });
+  e.rows = JSON.parse(e.textarea.value);
+  if (e.rows === undefined || e.rows === null) {
+    e.rows = [];
+  }
+  e.table?.remove();
+  createTable(e);
+  el.appendChild(e.table!);
+  e.textarea.hidden = true;
+}
+
+function editorHide(e: Editor, editorLabel: string) {
+  els(".toggle-editor-" + e.key).forEach((toggle) => {
+    toggle.innerText = editorLabel;
+  });
+  e.table?.remove();
+  e.textarea.value = JSON.stringify(e.rows, null, 2);
+  e.textarea.hidden = false;
+}
+
+function wireToggles(el: HTMLElement, e: Editor) {
+  els(".toggle-editor-" + e.key).forEach((toggle) => {
     if (toggle.innerText === "") {
       toggle.innerText = "Editor";
     }
     const editorLabel = toggle.innerText;
     toggle.innerText = rawLabel;
+    toggle.style.display = "inline";
     toggle.onclick = () => {
       if (toggle.innerText === rawLabel) {
-        toggle.innerText = editorLabel;
-        tbl.remove();
-        inp.hidden = false;
+        editorHide(e, editorLabel);
       } else {
-        toggle.innerText = rawLabel;
-        tbl.remove();
-        curr = JSON.parse(inp.value);
-        if (curr === undefined || curr === null) {
-          curr = [];
-        }
-        tbl = createTable(columns, curr);
-        el.appendChild(tbl);
-        inp.hidden = true;
+        editorShow(el, e)
       }
     };
-    toggle.style.display = "inline";
   });
+}
 
-  el.appendChild(tbl);
-  inp.hidden = true;
+export function createEditor(el: HTMLElement): void {
+  const e = extractEditor(el);
+  wireToggles(el, e)
 }
 
 export function editorInit() {

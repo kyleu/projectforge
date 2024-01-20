@@ -38,6 +38,10 @@
   overflow: hidden;
 }
 
+.menu-container li {
+  white-space: nowrap;
+}
+
 .menu-container .item, .menu-container label {
   display: block;
   padding: 4px 0;

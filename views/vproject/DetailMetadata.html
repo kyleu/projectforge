@@ -30,11 +30,19 @@
         </tr>
         <tr>
           <th>Homepage</th>
-          <td>{%s info.Homepage %}</td>
+          {%- if info.Homepage == "" -%}
+          <td><em>-</em></td>
+          {%- else -%}
+          <td><a target="_blank" rel="noopener noreferrer" href="{%s info.Homepage %}">{%s info.Homepage %}</a></td>
+          {%- endif -%}
         </tr>
         <tr>
           <th>Source Code</th>
-          <td>{%s info.Sourcecode %}</td>
+          {%- if info.Sourcecode == "" -%}
+          <td><em>-</em></td>
+          {%- else -%}
+          <td><a target="_blank" rel="noopener noreferrer" href="{%s info.Sourcecode %}">{%s info.Sourcecode %}</a></td>
+          {%- endif -%}
         </tr>
         <tr>
           <th>Summary</th>

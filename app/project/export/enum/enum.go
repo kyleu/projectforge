@@ -28,7 +28,7 @@ type Enum struct {
 
 func (e *Enum) Title() string {
 	if e.TitleOverride == "" {
-		return e.Proper()
+		return util.StringToTitle(e.Name)
 	}
 	return e.TitleOverride
 }

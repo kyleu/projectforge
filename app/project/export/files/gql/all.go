@@ -31,7 +31,7 @@ func enumBlocks(g *golang.Template, enums enum.Enums) {
 func enumBlock(e *enum.Enum) *golang.Block {
 	ret := golang.NewBlock("enum:"+e.Name, "graphql")
 	ret.WB()
-	ret.W("# Enum Type [%s]", e.Title())
+	ret.W("# Enum Type [%s]", e.Proper())
 	return ret
 }
 
