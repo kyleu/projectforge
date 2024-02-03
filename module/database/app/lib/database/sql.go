@@ -9,15 +9,15 @@ import (
 
 const whereSpaces = " where "
 
-func SQLSelect(columns string, tables string, where string, orderBy string, limit int, offset int, placeholder string) string {
-	return SQLSelectGrouped(columns, tables, where, "", orderBy, limit, offset, placeholder)
+func SQLSelect(columns string, tables string, where string, orderBy string, limit int, offset int, dbt *DBType) string {
+	return SQLSelectGrouped(columns, tables, where, "", orderBy, limit, offset, dbt)
 }
 
-func SQLSelectSimple(columns string, tables string, placeholder string, where ...string) string {
-	return SQLSelectGrouped(columns, tables, strings.Join(where, " and "), "", "", 0, 0, placeholder)
+func SQLSelectSimple(columns string, tables string, dbt *DBType, where ...string) string {
+	return SQLSelectGrouped(columns, tables, strings.Join(where, " and "), "", "", 0, 0, dbt)
 }
 
-func SQLSelectGrouped(columns string, tables string, where string, groupBy string, orderBy string, limit int, offset int, placeholder string) string {
+func SQLSelectGrouped(columns string, tables string, where string, groupBy string, orderBy string, limit int, offset int, dbt *DBType) string {
 	if columns == "" {
 		columns = "*"
 	}
@@ -39,7 +39,7 @@ func SQLSelectGrouped(columns string, tables string, where string, groupBy strin
 
 	limitClause := ""
 	offsetClause := ""
-	if placeholder == "@" {
+	if dbt.Placeholder == "@" {
 		prefix := ""
 		if limit > 0 {
 			if orderBy == "" {
@@ -63,24 +63,15 @@ func SQLSelectGrouped(columns string, tables string, where string, groupBy strin
 	return "select " + columns + " from " + tables + whereClause + groupByClause + orderByClause + limitClause + offsetClause
 }
 
-func SQLInsert(table string, columns []string, rows int, placeholder string) string {
+func SQLInsert(table string, columns []string, rows int, dbt *DBType) string {
 	if rows <= 0 {
 		rows = 1
 	}
 	colString := strings.Join(columns, ", ")
 	var placeholders []string
 	lo.Times(rows, func(i int) struct{} {
-		ph := lo.FilterMap(columns, func(_ string, idx int) (string, bool) {
-			switch placeholder {
-			case "$", "":
-				return fmt.Sprintf("$%d", (i*len(columns))+idx+1), true
-			case "?":
-				return "?", true
-			case "@":
-				return fmt.Sprintf("@p%d", (i*len(columns))+idx+1), true
-			default:
-				return "", false
-			}
+		ph := lo.Map(columns, func(_ string, idx int) string {
+			return dbt.PlaceholderFor((i * len(columns)) + idx + 1)
 		})
 		placeholders = append(placeholders, "("+strings.Join(ph, ", ")+")")
 		return struct{}{}
@@ -88,44 +79,35 @@ func SQLInsert(table string, columns []string, rows int, placeholder string) str
 	return fmt.Sprintf("insert into %s (%s) values %s", table, colString, strings.Join(placeholders, ", "))
 }
 
-func SQLInsertReturning(table string, columns []string, rows int, returning []string, placeholder string) string {
-	q := SQLInsert(table, columns, rows, placeholder)
+func SQLInsertReturning(table string, columns []string, rows int, returning []string, dbt *DBType) string {
+	q := SQLInsert(table, columns, rows, dbt)
 	if len(returning) > 0 {
 		q += " returning " + strings.Join(returning, ", ")
 	}
 	return q
 }
 
-func SQLUpdate(table string, columns []string, where string, placeholder string) string {
+func SQLUpdate(table string, columns []string, where string, dbt *DBType) string {
 	whereClause := ""
 	if len(where) > 0 {
 		whereClause = whereSpaces + where
 	}
 
 	stmts := lo.FilterMap(columns, func(col string, i int) (string, bool) {
-		switch placeholder {
-		case "$", "":
-			return fmt.Sprintf("%s = $%d", col, i+1), true
-		case "?":
-			return fmt.Sprintf("%s = ?", col), true
-		case "@":
-			return fmt.Sprintf("%s = @p%d", col, i+1), true
-		default:
-			return "", false
-		}
+		return fmt.Sprintf("%s = %s", col, dbt.PlaceholderFor(i+1)), true
 	})
 	return fmt.Sprintf("update %s set %s%s", table, strings.Join(stmts, ", "), whereClause)
 }
 
-func SQLUpdateReturning(table string, columns []string, where string, returned []string, placeholder string) string {
-	q := SQLUpdate(table, columns, where, placeholder)
+func SQLUpdateReturning(table string, columns []string, where string, returned []string, dbt *DBType) string {
+	q := SQLUpdate(table, columns, where, dbt)
 	if len(returned) > 0 {
 		q += " returning " + strings.Join(returned, ", ")
 	}
 	return q
 }
 
-{{{ if .SQLServer }}}func SQLUpsert(table string, columns []string, rows int, conflicts []string, updates []string, placeholder string) string {
+{{{ if .SQLServer }}}func SQLUpsert(table string, columns []string, rows int, conflicts []string, updates []string, dbt *DBType) string {
 	colNames := strings.Join(columns, ", ")
 	params := make([]string, 0, rows)
 	for rowIdx := range lo.Range(rows) {
@@ -147,8 +129,8 @@ func SQLUpdateReturning(table string, columns []string, where string, returned [
 	}), ", ")
 	sql := `merge into %s using (values %s) as source (%s) on %s when matched then update set %s when not matched then insert (%s) values (%s);`
 	return fmt.Sprintf(sql, table, atSymbols, colNames, sourceJoin, assignments, colNames, vals)
-}{{{ else }}}func SQLUpsert(table string, columns []string, rows int, conflicts []string, updates []string, placeholder string) string {
-	q := SQLInsert(table, columns, rows, placeholder)
+}{{{ else }}}func SQLUpsert(table string, columns []string, rows int, conflicts []string, updates []string, dbt *DBType) string {
+	q := SQLInsert(table, columns, rows, dbt)
 	q += " on conflict (" + strings.Join(conflicts, ", ") + ") do update set "
 	lo.ForEach(updates, func(x string, idx int) {
 		if idx > 0 {
@@ -159,14 +141,14 @@ func SQLUpdateReturning(table string, columns []string, where string, returned [
 	return q
 }{{{ end }}}
 
-func SQLDelete(table string, where string, placeholder string) string {
+func SQLDelete(table string, where string, _ *DBType) string {
 	if strings.TrimSpace(where) == "" {
-		return fmt.Sprintf("attempt to delete from [%s] using placeholder [%s] with empty where clause", table, placeholder)
+		return fmt.Sprintf("attempt to delete from [%s] with empty where clause", table)
 	}
 	return "delete from " + table + whereSpaces + where
 }
 
-func SQLInClause(column string, numParams int, offset int, placeholder string) string {
+func SQLInClause(column string, numParams int, offset int, dbt *DBType) string {
 	resBuilder := strings.Builder{}
 	for index := 0; index < numParams; index++ {
 		if index == 0 {
@@ -174,14 +156,7 @@ func SQLInClause(column string, numParams int, offset int, placeholder string) s
 		} else {
 			resBuilder.WriteString(", ")
 		}
-		switch placeholder {
-		case "$", "":
-			resBuilder.WriteString(fmt.Sprintf("$%d", index+offset+1))
-		case "?":
-			resBuilder.WriteString("?")
-		case "@":
-			resBuilder.WriteString(fmt.Sprintf("@p%d", index+offset+1))
-		}
+		resBuilder.WriteString(dbt.PlaceholderFor(index + offset + 1))
 	}
 	resBuilder.WriteString(")")
 	return resBuilder.String()

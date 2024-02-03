@@ -17,14 +17,6 @@ import (
 	"{{{ .Package }}}/queries/schema"{{{ end }}}
 )
 
-type DBType struct {
-	Key               string `json:"key"`
-	Title             string `json:"title"`
-	Quote             string `json:"-"`
-	Placeholder       string `json:"-"`
-	SupportsReturning bool   `json:"-"`
-}
-
 type Service struct {
 	Key          string  `json:"key"`
 	DatabaseName string  `json:"database,omitempty"`
@@ -90,10 +82,6 @@ func (s *Service) Stats() sql.DBStats {
 
 func (s *Service) Prepare(ctx context.Context, q string) (*sqlx.Stmt, error) {
 	return s.db.PreparexContext(ctx, q)
-}
-
-func (s *Service) Placeholder() string {
-	return s.Type.Placeholder
 }
 
 func sqlErrMessage(err error, t string, q string, values []any) error {

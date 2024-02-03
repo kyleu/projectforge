@@ -108,7 +108,7 @@ func DatabaseTableView(rc *fasthttp.RequestCtx) {
 			tbl = fmt.Sprintf("%q.%q", schema, table)
 		}
 
-		q := database.SQLSelect("*", tbl, "", prms.OrderByString(), prms.Limit, prms.Offset, "")
+		q := database.SQLSelect("*", tbl, "", prms.OrderByString(), prms.Limit, prms.Offset, svc.Type)
 		res, err := svc.QueryRows(ps.Context, q, nil, ps.Logger)
 		ps.Data = res
 		bc := []string{"admin", "Database||/admin/database", fmt.Sprintf("%s||/admin/database/%s", svc.Key, svc.Key), "Tables"}

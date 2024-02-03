@@ -23,11 +23,11 @@ func serviceGetMultipleSingleCol(m *model.Model, name string, col *model.Column,
 	ret.W("\t\treturn %s{}, nil", m.ProperPlural())
 	ret.W("\t}")
 	ret.W("\tparams = filters(params)")
-	ret.W("\twc := database.SQLInClause(%q, len(%s), 0, s.db.Placeholder())", col.Name, col.CamelPlural())
+	ret.W("\twc := database.SQLInClause(%q, len(%s), 0, s.db.Type)", col.Name, col.CamelPlural())
 	if m.IsSoftDelete() {
 		ret.W("\twc = addDeletedClause(wc, includeDeleted)")
 	}
-	ret.W("\tq := database.SQLSelect(columnsString, %s, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())", tableClause)
+	ret.W("\tq := database.SQLSelect(columnsString, %s, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Type)", tableClause)
 	ret.W("\tret := rows{}")
 	ret.W("\terr := s.%s.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(%s)...)", dbRef, col.CamelPlural())
 	ret.W("\tif err != nil {")
@@ -67,7 +67,7 @@ func serviceGetMultipleManyCols(m *model.Model, name string, cols model.Columns,
 		ret.W("\twc = addDeletedClause(wc, includeDeleted)")
 	}
 	ret.W("\tret := rows{}")
-	ret.W("\tq := database.SQLSelectSimple(columnsString, %s, s.db.Placeholder(), wc)", tableClause)
+	ret.W("\tq := database.SQLSelectSimple(columnsString, %s, s.db.Type, wc)", tableClause)
 
 	ret.W("\tvals := lo.FlatMap(pks, func(x *PK, _ int) []any {")
 	ret.W("\t\treturn []any{%s}", strings.Join(refs, ", "))

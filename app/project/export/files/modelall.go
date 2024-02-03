@@ -31,7 +31,7 @@ func ModelAll(m *model.Model, p *project.Project, args *model.Args, addHeader bo
 		calls = append(calls, f)
 	}
 	if len(m.SeedData) > 0 {
-		f, err = sql.SeedData(m, linebreak)
+		f, err = sql.SeedData(m, args.Database, linebreak)
 		if err != nil {
 			return nil, errors.Wrap(err, "can't render SQL seed data")
 		}

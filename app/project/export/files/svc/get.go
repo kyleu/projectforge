@@ -81,7 +81,7 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool, linebreak stri
 		}
 		g.AddBlocks(ss)
 	}
-	g.AddBlocks(serviceListSQL(m, args.DBRef()), serviceRandom(m))
+	g.AddBlocks(serviceListSQL(m, args.DBRef()), serviceRandom(m, args.Database))
 	return g.Render(addHeader, linebreak)
 }
 
@@ -125,7 +125,7 @@ func serviceList(m *model.Model, dbRef string) *golang.Block {
 		ret.W("\t\twc = %q", delCols[0].NameQuoted()+" is null")
 		ret.W("\t}")
 	}
-	ret.W("\tq := database.SQLSelect(columnsString, %s, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())", tableClause)
+	ret.W("\tq := database.SQLSelect(columnsString, %s, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Type)", tableClause)
 	ret.W("\tret := rows{}")
 	ret.W("\terr := s.%s.Select(ctx, &ret, q, tx, logger)", dbRef)
 	ret.W("\tif err != nil {")
@@ -153,7 +153,7 @@ func serviceCount(g *golang.File, m *model.Model, dbRef string) *golang.Block {
 		ret.W("\t\t}")
 		ret.W("\t}")
 	}
-	ret.W("\tq := database.SQLSelectSimple(\"count(*) as x\", %s, s.db.Placeholder(), whereClause)", tableClause)
+	ret.W("\tq := database.SQLSelectSimple(\"count(*) as x\", %s, s.db.Type, whereClause)", tableClause)
 	ret.W("\tret, err := s.%s.SingleInt(ctx, q, tx, logger, args...)", dbRef)
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn 0, errors.Wrap(err, \"unable to get count of %s\")", m.TitlePluralLower())
@@ -198,7 +198,7 @@ func serviceGet(key string, m *model.Model, cols model.Columns, dbRef string, en
 		ret.W("\twc = addDeletedClause(wc, includeDeleted)")
 	}
 	ret.W("\tret := &row{}")
-	ret.W("\tq := database.SQLSelectSimple(columnsString, %s, s.db.Placeholder(), wc)", tableClause)
+	ret.W("\tq := database.SQLSelectSimple(columnsString, %s, s.db.Type, wc)", tableClause)
 	ret.W("\terr := s.%s.Get(ctx, ret, q, tx, logger, %s)", dbRef, strings.Join(cols.CamelNames(), ", "))
 	ret.W("\tif err != nil {")
 	sj := strings.Join(cols.CamelNames(), ", ")
@@ -234,7 +234,7 @@ func serviceGetByCols(key string, m *model.Model, cols model.Columns, dbRef stri
 	if m.IsSoftDelete() {
 		ret.W("\twc = addDeletedClause(wc, includeDeleted)")
 	}
-	ret.W("\tq := database.SQLSelect(columnsString, %s, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())", tableClause)
+	ret.W("\tq := database.SQLSelect(columnsString, %s, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Type)", tableClause)
 	ret.W("\tret := rows{}")
 	ret.W("\terr := s.%s.Select(ctx, &ret, q, tx, logger, %s)", dbRef, strings.Join(cols.CamelNames(), ", "))
 	ret.W("\tif err != nil {")
@@ -263,11 +263,15 @@ func serviceListSQL(m *model.Model, dbRef string) *golang.Block {
 	return ret
 }
 
-func serviceRandom(m *model.Model) *golang.Block {
+func serviceRandom(m *model.Model, database string) *golang.Block {
 	ret := golang.NewBlock("Random", "func")
 	ret.W("func (s *Service) Random(ctx context.Context, tx *sqlx.Tx, logger util.Logger) (*%s, error) {", m.Proper())
 	ret.W("\tret := &row{}")
-	ret.W("\tq := database.SQLSelect(columnsString, tableQuoted, \"\", \"random()\", 1, 0, s.db.Placeholder())")
+	rnd := "random()"
+	if database == util.DatabaseSQLServer {
+		rnd = "newid()"
+	}
+	ret.W("\tq := database.SQLSelect(columnsString, tableQuoted, \"\", %q, 1, 0, s.db.Type)", rnd)
 	ret.W("\terr := s.db.Get(ctx, ret, q, tx, logger)")
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, errors.Wrap(err, \"unable to get random %s\")", m.TitlePluralLower())

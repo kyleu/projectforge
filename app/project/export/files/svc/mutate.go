@@ -65,7 +65,7 @@ func serviceCreate(g *golang.File, m *model.Model, audit bool) (*golang.Block, e
 	if err := serviceAddCreatedUpdated(g, m, ret, false); err != nil {
 		return nil, err
 	}
-	ret.W("\tq := database.SQLInsert(tableQuoted, columnsQuoted, len(models), s.db.Placeholder())")
+	ret.W("\tq := database.SQLInsert(tableQuoted, columnsQuoted, len(models), s.db.Type)")
 
 	if audit {
 		ret.W("\tvals := make([]any, 0, len(models)*len(columnsQuoted))")
@@ -132,7 +132,7 @@ func serviceUpdate(g *golang.File, m *model.Model, audit bool, database string) 
 	if database == util.DatabaseSQLServer {
 		placeholder = "@"
 	}
-	ret.W("\tq := database.SQLUpdate(tableQuoted, columnsQuoted, %q, s.db.Placeholder())", pks.WhereClause(len(m.Columns), placeholder))
+	ret.W("\tq := database.SQLUpdate(tableQuoted, columnsQuoted, %q, s.db.Type)", pks.WhereClause(len(m.Columns), placeholder))
 	ret.W("\tdata := model.ToData()")
 	ret.W("\tdata = append(data, %s)", strings.Join(pkVals, ", "))
 	token := "="
@@ -188,7 +188,7 @@ func serviceUpdateIfNeeded(g *golang.File, m *model.Model, database string) (*go
 	if database == util.DatabaseSQLServer {
 		placeholder = "@"
 	}
-	ret.W("\tq := database.SQLUpdate(tableQuoted, columnsQuoted, %q, s.db.Placeholder())", pks.WhereClause(len(m.Columns), placeholder))
+	ret.W("\tq := database.SQLUpdate(tableQuoted, columnsQuoted, %q, s.db.Type)", pks.WhereClause(len(m.Columns), placeholder))
 	ret.W("\tdata := model.ToData()")
 	ret.W("\tdata = append(data, %s)", strings.Join(pkVals, ", "))
 	token := "="
@@ -214,7 +214,7 @@ func serviceSave(g *golang.File, m *model.Model) (*golang.Block, error) {
 	}
 	q := strings.Join(m.PKs().NamesQuoted(), ", ")
 	pkOpt := ""
-	ret.W("\tq := database.SQLUpsert(tableQuoted%s, columnsQuoted, len(models), []string{%s}, columnsQuoted, s.db.Placeholder())", pkOpt, q)
+	ret.W("\tq := database.SQLUpsert(tableQuoted%s, columnsQuoted, len(models), []string{%s}, columnsQuoted, s.db.Type)", pkOpt, q)
 	ret.W("\tdata := lo.FlatMap(models, func(model *%s, _ int) []any {", m.Proper())
 	ret.W("\t\treturn model.ToData()")
 	ret.W("\t})")

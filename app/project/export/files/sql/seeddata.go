@@ -21,9 +21,9 @@ const (
 	sqlIndent = "  "
 )
 
-func SeedData(m *model.Model, linebreak string) (*file.File, error) {
+func SeedData(m *model.Model, database string, linebreak string) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"queries", "seeddata"}, fmt.Sprintf("seed_%s.sql", m.Name))
-	seed, err := sqlSeedData(m)
+	seed, err := sqlSeedData(m, database)
 	if err != nil {
 		return nil, err
 	}
@@ -31,10 +31,10 @@ func SeedData(m *model.Model, linebreak string) (*file.File, error) {
 	return g.Render(false, linebreak)
 }
 
-func sqlSeedData(m *model.Model) (*golang.Block, error) {
+func sqlSeedData(m *model.Model, database string) (*golang.Block, error) {
 	ret := golang.NewBlock("SQLCreate", "sql")
 	ret.W(sqlFunc(m.Proper() + "SeedData"))
-	err := sqlSeedDataColumns(m, ret, m.Name, m.Columns)
+	err := sqlSeedDataColumns(m, ret, m.Name, m.Columns, database)
 	if err != nil {
 		return nil, err
 	}
@@ -43,7 +43,7 @@ func sqlSeedData(m *model.Model) (*golang.Block, error) {
 }
 
 //nolint:gocognit
-func sqlSeedDataColumns(m *model.Model, block *golang.Block, tableName string, cols model.Columns) error {
+func sqlSeedDataColumns(m *model.Model, block *golang.Block, tableName string, cols model.Columns, database string) error {
 	block.W("insert into %q (", tableName)
 	block.W(sqlIndent + strings.Join(cols.NamesQuoted(), ", "))
 	block.W(") values (")
@@ -124,7 +124,11 @@ func sqlSeedDataColumns(m *model.Model, block *golang.Block, tableName string, c
 			block.W("), (")
 		}
 	}
-	block.W(") on conflict do nothing;")
+	if database == util.DatabaseSQLServer {
+		block.W(");")
+	} else {
+		block.W(") on conflict do nothing;")
+	}
 	return nil
 }
 

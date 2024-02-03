@@ -2,6 +2,7 @@ package audit
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	"github.com/google/uuid"
@@ -16,8 +17,8 @@ import (
 
 func (s *Service) RecordsForAudits(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, auditIDs ...uuid.UUID) (Records, error) {
 	params = params.Sanitize("audit_record", &filter.Ordering{Column: "occurred"})
-	wc := database.SQLInClause("audit_id", len(auditIDs), 0, "{{{ if .SQLServer }}}@{{{ else }}}${{{ end }}}")
-	q := database.SQLSelect(recordColumnsString, recordTableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	wc := database.SQLInClause("audit_id", len(auditIDs), 0, s.db.Type)
+	q := database.SQLSelect(recordColumnsString, recordTableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Type)
 	ret := recordRows{}
 	vals := make([]any, 0, len(auditIDs))
 	strs := make([]string, 0, len(auditIDs))
@@ -35,7 +36,7 @@ func (s *Service) RecordsForAudits(ctx context.Context, tx *sqlx.Tx, params *fil
 func (s *Service) RecordsForModel(ctx context.Context, tx *sqlx.Tx, t string, pk string, params *filter.Params, logger util.Logger) (Records, error) {
 	params = params.Sanitize("audit_record", &filter.Ordering{Column: "occurred"})
 	wc := "t = {{{ .Placeholder 1 }}} and pk = {{{ .Placeholder 2 }}}"
-	q := database.SQLSelect(recordColumnsString, recordTableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	q := database.SQLSelect(recordColumnsString, recordTableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Type)
 	ret := recordRows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, t, pk)
 	if err != nil {
@@ -45,7 +46,8 @@ func (s *Service) RecordsForModel(ctx context.Context, tx *sqlx.Tx, t string, pk
 }
 
 func (s *Service) GetRecord(ctx context.Context, tx *sqlx.Tx, id uuid.UUID, logger util.Logger) (*Record, error) {
-	q := database.SQLSelectSimple(recordColumnsString, recordTableQuoted, s.db.Placeholder(), "id = {{{ .Placeholder 1 }}}")
+	wc := fmt.Sprintf("%s = %s", s.db.Type.Quoted("id"), s.db.Type.PlaceholderFor(1))
+	q := database.SQLSelectSimple(recordColumnsString, recordTableQuoted, s.db.Type, wc)
 	ret := &recordRow{}
 	err := s.db.Get(ctx, ret, q, tx, logger, id)
 	if err != nil {
@@ -58,7 +60,7 @@ func (s *Service) CreateRecords(ctx context.Context, tx *sqlx.Tx, logger util.Lo
 	if len(models) == 0 {
 		return nil
 	}
-	q := database.SQLInsert(recordTableQuoted, recordColumnsQuoted, len(models), s.db.Placeholder())
+	q := database.SQLInsert(recordTableQuoted, recordColumnsQuoted, len(models), s.db.Type)
 	vals := lo.FlatMap(models, func(arg *Record, _ int) []any {
 		return arg.ToData()
 	})
