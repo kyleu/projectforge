@@ -5,7 +5,7 @@
 
 set -euo pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd $dir/..
+cd "$dir/.."
 
 # uncommitted file checks
 git update-index -q --ignore-submodules --refresh

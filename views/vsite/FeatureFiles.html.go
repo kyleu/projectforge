@@ -44,7 +44,7 @@ func (p *FeatureFiles) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *
 //line views/vsite/FeatureFiles.html:20
 	mod := p.Module
 	fs := as.Services.Modules.GetFilesystem(mod.Key)
-	u := "/features/" + mod.Key + "/files"
+	u := mod.FeaturesFilePath()
 
 //line views/vsite/FeatureFiles.html:23
 	qw422016.N().S(`

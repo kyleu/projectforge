@@ -59,7 +59,7 @@ All managed projects expose a web and CLI interface, and additional modules are 
 - `sqlite`: Provides an API for accessing SQLite databases
 - `themecatalog`: A dozen default themes, and facilities to create additional
 - `types`: Classes for representing common data types
-- `upgrade`: In-place version upgrades using Github Releases
+- `upgrade`: In-place version upgrades using GitHub Releases
 - `user`: Classes for representing persistent user records, application usage
 - `wasmclient`: WASM library and HTML host for a custom WASM application
 - `wasmserver`: Runs your unmodified HTTP server as a Service Worker

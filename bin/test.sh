@@ -5,7 +5,7 @@
 
 set -euo pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd $dir/..
+cd "$dir/.."
 
 do_clean=false
 do_watch=false

@@ -12,7 +12,7 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-func createGithubClient(ctx context.Context) *github.Client {
+func createGitHubClient(ctx context.Context) *github.Client {
 	client := http.DefaultClient
 	if token := util.GetEnv("github_token"); token != "" {
 		src := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: token})

@@ -69,6 +69,10 @@ func modelTableCols(m *model.Model) (*golang.Block, error) {
 	ret.W("var (")
 	ret.W("\ttable         = %q", m.Name)
 	ret.W("\ttableQuoted   = fmt.Sprintf(\"%%q\", table)")
+	// if database == util.DatabaseSQLServer {
+	//	ret.W("\tpk            = []string{%s}", strings.Join(m.PKs().NamesQuoted(), ", "))
+	//	ret.W("\tpkQuoted      = util.StringArrayQuoted(pk)")
+	//}
 	cols := fmt.Sprintf("\tcolumns       = []string{%s}", strings.Join(m.Columns.NamesQuoted(), ", "))
 	if len(cols) > 160 {
 		cols += " //nolint:lll"
@@ -101,6 +105,9 @@ func modelRow(g *golang.File, m *model.Model, enums enum.Enums, database string)
 
 //nolint:gocognit
 func modelRowToModel(g *golang.File, m *model.Model, enums enum.Enums, database string) (*golang.Block, error) {
+	ba := func(decoder string) string {
+		return "[]byte(" + decoder + ")"
+	}
 	ret := golang.NewBlock(m.Proper(), "func")
 	ret.W("func (r *row) To%s() *%s {", m.Proper(), m.Proper())
 	ret.W("\tif r == nil {")
@@ -121,13 +128,13 @@ func modelRowToModel(g *golang.File, m *model.Model, enums enum.Enums, database 
 			switch c.Type.ListType().Key() {
 			case types.KeyString:
 				t = "[]string"
-				if database == util.DatabaseSQLite {
-					decoder = "[]byte(" + decoder + ")"
+				if database == util.DatabaseSQLite || database == util.DatabaseSQLServer {
+					decoder = ba(decoder)
 				}
 			case types.KeyInt:
 				t = "[]int"
-				if database == util.DatabaseSQLite {
-					decoder = "[]byte(" + decoder + ")"
+				if database == util.DatabaseSQLite || database == util.DatabaseSQLServer {
+					decoder = ba(decoder)
 				}
 			case types.KeyEnum:
 				if e, _ := model.AsEnumInstance(c.Type.ListType(), enums); e != nil {
@@ -135,7 +142,7 @@ func modelRowToModel(g *golang.File, m *model.Model, enums enum.Enums, database 
 					if e.PackageWithGroup("") != m.PackageWithGroup("") {
 						t = e.Package + "." + t
 					}
-					decoder = "[]byte(" + decoder + ")"
+					decoder = ba(decoder)
 				}
 			}
 			ret.W("\t%sArg := %s{}", c.Camel(), t)
@@ -143,8 +150,8 @@ func modelRowToModel(g *golang.File, m *model.Model, enums enum.Enums, database 
 			refs = append(refs, fmt.Sprintf("%s %sArg", k, c.Camel()))
 		case types.KeyMap, types.KeyValueMap:
 			decoder := "r." + c.Proper()
-			if database == util.DatabaseSQLite {
-				decoder = "[]byte(" + decoder + ")"
+			if database == util.DatabaseSQLite || database == util.DatabaseSQLServer {
+				decoder = ba(decoder)
 			}
 			ret.W("\t%sArg, _ := util.FromJSONMap(%s)", c.Camel(), decoder)
 			refs = append(refs, fmt.Sprintf("%s %sArg", k, c.Camel()))

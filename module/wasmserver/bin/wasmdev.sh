@@ -6,6 +6,6 @@
 
 set -euo pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd $dir/..
+cd "$dir/.."
 
 npx http-server build/wasm --port 40009 --ext html --gzip --brotli --cors

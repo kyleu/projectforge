@@ -51,9 +51,9 @@ func (p *FeatureList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *c
 	for _, mod := range p.Modules {
 //line views/vsite/FeatureList.html:19
 		qw422016.N().S(`      <li class="mt">
-        <a href="/features/`)
+        <a href="`)
 //line views/vsite/FeatureList.html:21
-		qw422016.E().S(mod.Key)
+		qw422016.E().S(mod.FeaturesPath())
 //line views/vsite/FeatureList.html:21
 		qw422016.N().S(`">`)
 //line views/vsite/FeatureList.html:21

@@ -73,7 +73,7 @@ func ProjectCreate(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return controller.ERsp("unable to save project: %+v", err)
 		}
-		return controller.FlashAndRedir(true, "Created project ["+prj.Title()+"]", "/p/"+prj.Key, rc, ps)
+		return controller.FlashAndRedir(true, "Created project ["+prj.Title()+"]", prj.WebPath(), rc, ps)
 	})
 }
 
@@ -107,6 +107,6 @@ func ProjectSave(rc *fasthttp.RequestCtx) {
 			return controller.ERsp("unable to save project: %+v", err)
 		}
 
-		return controller.FlashAndRedir(true, "Saved changes", "/p/"+prj.Key, rc, ps)
+		return controller.FlashAndRedir(true, "Saved changes", prj.WebPath(), rc, ps)
 	})
 }

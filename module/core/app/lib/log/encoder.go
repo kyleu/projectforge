@@ -12,7 +12,10 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-const timeFormat = "15:04:05.000000"
+const (
+	timeFormat = "15:04:05.000000"
+	logIndent  = "  "
+)
 
 type customEncoder struct {
 	zapcore.Encoder
@@ -81,19 +84,19 @@ func (e *customEncoder) EncodeEntry(entry zapcore.Entry, fields []zapcore.Field)
 			if strings.Contains(ml, util.AppKey) {
 				ml = Green.Add(ml)
 			}
-			addLine("  " + Cyan.Add(ml))
+			addLine(logIndent + Cyan.Add(ml))
 		} else {
-			addLine("  " + ml)
+			addLine(logIndent + ml)
 		}
 	})
 	if len(data) > 0 {
-		addLine("  " + util.ToJSONCompact(data))
+		addLine(logIndent + util.ToJSONCompact(data))
 	}
 	caller := entry.Caller.String()
 	if entry.Caller.Function != "" {
 		caller += " (" + entry.Caller.Function + ")"
 	}
-	addLine("  " + caller)
+	addLine(logIndent + caller)
 
 	if entry.Stack != "" {
 		st := util.StringSplitLines(entry.Stack)
@@ -101,7 +104,7 @@ func (e *customEncoder) EncodeEntry(entry zapcore.Entry, fields []zapcore.Field)
 			if strings.Contains(stl, util.AppKey) {
 				stl = Green.Add(stl)
 			}
-			addLine("  " + stl)
+			addLine(logIndent + stl)
 		})
 	}
 	return ret, nil

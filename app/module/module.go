@@ -47,6 +47,14 @@ func (m *Module) WebPath() string {
 	return "/m/" + m.Key
 }
 
+func (m *Module) FeaturesPath() string {
+	return "/features/" + m.Key
+}
+
+func (m *Module) FeaturesFilePath() string {
+	return m.FeaturesPath() + "/files"
+}
+
 func (m *Module) DocPath() string {
 	return "doc/module/" + m.Key + util.ExtMarkdown
 }

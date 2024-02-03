@@ -101,7 +101,7 @@ func ProjectExportModelForm(rc *fasthttp.RequestCtx) {
 			"projects",
 			prj.Key,
 			fmt.Sprintf("Export||/p/%s/export", prj.Key),
-			mdl.Title() + "||/p/" + prj.Key + "/export/models/" + mdl.Name,
+			mdl.Title() + "||" + prj.WebPath() + "/export/models/" + mdl.Name,
 			"Edit",
 		}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] %s", prj.Key, mdl.Name), mdl)

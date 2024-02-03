@@ -6,7 +6,7 @@
 
 set -euo pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd $dir/../..
+cd "$dir/../.."
 
 echo "building dependency SVG..."
 gomod graph | dot -Tsvg -o ./tmp/deps.svg

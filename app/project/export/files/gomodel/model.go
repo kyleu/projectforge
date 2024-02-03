@@ -39,7 +39,7 @@ func Model(m *model.Model, args *model.Args, addHeader bool, linebreak string) (
 		if e != nil {
 			return nil, e
 		}
-		pkString, e := modelPKString(m, args.Enums)
+		pkString, e := modelPKString(m)
 		if e != nil {
 			return nil, e
 		}
@@ -69,7 +69,7 @@ func Model(m *model.Model, args *model.Args, addHeader bool, linebreak string) (
 		return nil, err
 	}
 
-	fd, err := modelFieldDescs(m, args.Enums)
+	fd, err := modelFieldDescs(m)
 	if err != nil {
 		return nil, err
 	}
@@ -103,7 +103,7 @@ func modelStruct(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 			return nil, err
 		}
 		goType := util.StringPad(gt, maxTypeLength)
-		tag := ""
+		var tag string
 		if c.JSON == "" {
 			tag = fmt.Sprintf("json:%q", c.Camel()+modelJSONSuffix(c))
 		} else {
@@ -142,7 +142,7 @@ func modelToData(m *model.Model, cols model.Columns, suffix string, database str
 	ret.W("func (%s *%s) ToData%s() []any {", m.FirstLetter(), m.Proper(), suffix)
 	calls := lo.Map(cols, func(c *model.Column, _ int) string {
 		switch {
-		case (c.Type.Key() == types.KeyList || c.Type.Key() == types.KeyMap) && database == util.DatabaseSQLite:
+		case (c.Type.Key() == types.KeyList || c.Type.Key() == types.KeyMap) && (database == util.DatabaseSQLite || database == util.DatabaseSQLServer):
 			return fmt.Sprintf("util.ToJSON(%s.%s),", m.FirstLetter(), c.Proper())
 		default:
 			return fmt.Sprintf("%s.%s,", m.FirstLetter(), c.Proper())

@@ -6,7 +6,13 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-const HeaderContent = "Content managed by Project Forge, see [projectforge.md] for details."
+const (
+	HeaderContent = "Content managed by Project Forge, see [projectforge.md] for details."
+
+	headerCommentPound   = "# "
+	headerCommentSlashes = "// "
+	headerCommentXML     = "<!-- "
+)
 
 func ContainsHeader(s string) bool {
 	return strings.Contains(s, HeaderContent) || strings.Contains(s, "$PF_IGNORE$")
@@ -20,7 +26,7 @@ func contentWithHeader(filename string, t Type, c string, linebreak string, pkg 
 	case TypeBatch.Key:
 		return secondLine(c, "rem "+HeaderContent, linebreak)
 	case TypeCodeowners.Key, TypeDocker.Key, TypeDockerIgnore.Key, TypeEnv.Key, TypeGraphQL.Key, TypeHCL.Key, TypeMakefile.Key, TypeProperties.Key, TypeYAML.Key:
-		return "# " + HeaderContent + linebreak + c
+		return headerCommentPound + HeaderContent + linebreak + c
 	case TypeConf.Key, TypeEditorConfig.Key, TypeESLint.Key, TypeGitIgnore.Key:
 		return c
 	case TypeIcons.Key, TypeIgnore.Key, TypeJSON.Key, TypePList.Key, TypeProtobuf.Key, TypeSVG.Key:
@@ -28,9 +34,9 @@ func contentWithHeader(filename string, t Type, c string, linebreak string, pkg 
 	case TypeCSS.Key:
 		return "/* " + HeaderContent + " */" + linebreak + c
 	case TypeGo.Key:
-		goLine := "// " + HeaderContent
+		goLine := headerCommentSlashes + HeaderContent
 		if pkg != "" {
-			goLine = "// Package " + pkg + " - " + HeaderContent
+			goLine = headerCommentSlashes + "Package " + pkg + " - " + HeaderContent
 		}
 		if strings.HasPrefix(c, "//go:build") {
 			return secondLine(c, linebreak+goLine, linebreak)
@@ -45,17 +51,17 @@ func contentWithHeader(filename string, t Type, c string, linebreak string, pkg 
 		}
 		return goLine + linebreak + c
 	case TypeGoMod.Key, TypeGradle.Key, TypeJavaScript.Key, TypeKotlin.Key, TypeSwift.Key, TypeTypeScript.Key:
-		return "// " + HeaderContent + linebreak + c
+		return headerCommentSlashes + HeaderContent + linebreak + c
 	case TypeHTML.Key:
-		return "<!-- " + HeaderContent + " -->" + linebreak + c
+		return headerCommentXML + HeaderContent + " -->" + linebreak + c
 	case TypeMarkdown.Key:
 		return "<!--- " + HeaderContent + " -->" + linebreak + c
 	case TypeSQL.Key:
 		return "-- " + HeaderContent + linebreak + c
 	case TypeShell.Key:
-		return secondLine(c, "# "+HeaderContent, linebreak)
+		return secondLine(c, headerCommentPound+HeaderContent, linebreak)
 	case TypeEntitlements.Key, TypeXML.Key:
-		return secondLine(c, "<!-- "+HeaderContent+" -->", linebreak)
+		return secondLine(c, headerCommentXML+HeaderContent+" -->", linebreak)
 	default:
 		logger.Warnf("unhandled header for file [%s], of type [%s]", filename, t.Key)
 		return c

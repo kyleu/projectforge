@@ -22,4 +22,4 @@ You can find it in `app/services.go`.
 
 ### CLI Actions
 
-- Start at `/app/cmd/run.go`; to add your own CLI actions, create a new [Coral](https://github.com/muesli/coral) action in [cmd](/m/core/fs/app/cmd)
+- Start at `/app/cmd/run.go`; to add your own CLI actions, create a new [Coral](https://github.com/muesli/coral) action in `/cmd`

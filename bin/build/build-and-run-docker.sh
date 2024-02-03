@@ -5,7 +5,7 @@
 
 set -euo pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd $dir/../..
+cd "$dir/../.."
 
 echo "Building [linux amd64]..."
 GOOS=linux GOARCH=amd64 make build

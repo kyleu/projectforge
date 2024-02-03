@@ -58,7 +58,7 @@ func exportViewListBody(m *model.Model, models model.Models) *golang.Block {
 	ret.W("  <div class=\"card\">")
 	if !m.HasSearches() {
 		ret.W("    <div class=\"right\"><a href=\"/%s/_new\"><button>New</button></a></div>", m.Route())
-		ret.W("    <h3>{%%= components.SVGRefIcon(`" + m.Icon + "`, ps) %%}{%%s ps.Title %%}</h3>")
+		ret.W("    <h3>" + svgRef(m.Icon) + "{%%s ps.Title %%}</h3>")
 	} else {
 		ret.W(`    <div class="right">{%%%%= edit.SearchForm("", "q", "Search %s", p.SearchQuery, ps) %%%%}</div>`, m.TitlePlural())
 		ret.W(`    <div class="right mrs large-buttons">`)

@@ -6,7 +6,7 @@
 
 set -euo pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd $dir/../../client
+cd "$dir/../../client"
 
 echo "Watching TypeScript compilation for [client/src]..."
 watchexec --exts css,ts,tsx node build.js

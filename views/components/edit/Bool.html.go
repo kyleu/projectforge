@@ -7,137 +7,140 @@
 package edit
 
 //line views/components/edit/Bool.html:2
-import "fmt"
+import (
+	"fmt"
 
-//line views/components/edit/Bool.html:4
+	"projectforge.dev/projectforge/app/util"
+)
+
+//line views/components/edit/Bool.html:8
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/components/edit/Bool.html:4
+//line views/components/edit/Bool.html:8
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/components/edit/Bool.html:4
+//line views/components/edit/Bool.html:8
 func StreamBool(qw422016 *qt422016.Writer, key string, id string, x any, nullable bool) {
-//line views/components/edit/Bool.html:5
+//line views/components/edit/Bool.html:9
 	b, isBool := x.(bool)
 
-//line views/components/edit/Bool.html:6
-	if isBool && b {
-//line views/components/edit/Bool.html:6
-		qw422016.N().S(`<label class="radiolabel"><input value="true" name="`)
-//line views/components/edit/Bool.html:7
-		qw422016.E().S(key)
-//line views/components/edit/Bool.html:7
-		qw422016.N().S(`" type="radio" checked="checked" /> true</label>`)
-//line views/components/edit/Bool.html:8
-	} else {
-//line views/components/edit/Bool.html:8
-		qw422016.N().S(`<label class="radiolabel"><input value="true" name="`)
-//line views/components/edit/Bool.html:9
-		qw422016.E().S(key)
-//line views/components/edit/Bool.html:9
-		qw422016.N().S(`" type="radio" /> true</label>`)
 //line views/components/edit/Bool.html:10
-	}
-//line views/components/edit/Bool.html:12
-	if isBool && !b {
-//line views/components/edit/Bool.html:12
-		qw422016.N().S(`<label class="radiolabel"><input value="false" name="`)
-//line views/components/edit/Bool.html:13
+	if isBool && b {
+//line views/components/edit/Bool.html:10
+		qw422016.N().S(`<label class="radiolabel"><input value="`)
+//line views/components/edit/Bool.html:11
+		qw422016.E().S(util.BoolTrue)
+//line views/components/edit/Bool.html:11
+		qw422016.N().S(`" name="`)
+//line views/components/edit/Bool.html:11
 		qw422016.E().S(key)
-//line views/components/edit/Bool.html:13
-		qw422016.N().S(`" type="radio" checked="checked" /> false</label>`)
-//line views/components/edit/Bool.html:14
+//line views/components/edit/Bool.html:11
+		qw422016.N().S(`" type="radio" checked="checked" />`)
+//line views/components/edit/Bool.html:11
+		qw422016.E().S(util.BoolTrue)
+//line views/components/edit/Bool.html:11
+		qw422016.N().S(`</label>`)
+//line views/components/edit/Bool.html:12
 	} else {
-//line views/components/edit/Bool.html:14
-		qw422016.N().S(`<label class="radiolabel"><input value="false" name="`)
-//line views/components/edit/Bool.html:15
+//line views/components/edit/Bool.html:12
+		qw422016.N().S(`<label class="radiolabel"><input value="`)
+//line views/components/edit/Bool.html:13
+		qw422016.E().S(util.BoolTrue)
+//line views/components/edit/Bool.html:13
+		qw422016.N().S(`" name="`)
+//line views/components/edit/Bool.html:13
 		qw422016.E().S(key)
-//line views/components/edit/Bool.html:15
-		qw422016.N().S(`" type="radio" /> false</label>`)
+//line views/components/edit/Bool.html:13
+		qw422016.N().S(`" type="radio" />`)
+//line views/components/edit/Bool.html:13
+		qw422016.E().S(util.BoolTrue)
+//line views/components/edit/Bool.html:13
+		qw422016.N().S(`</label>`)
+//line views/components/edit/Bool.html:14
+	}
 //line views/components/edit/Bool.html:16
-	}
+	if isBool && !b {
+//line views/components/edit/Bool.html:16
+		qw422016.N().S(`<label class="radiolabel"><input value="`)
+//line views/components/edit/Bool.html:17
+		qw422016.E().S(util.BoolFalse)
+//line views/components/edit/Bool.html:17
+		qw422016.N().S(`" name="`)
+//line views/components/edit/Bool.html:17
+		qw422016.E().S(key)
+//line views/components/edit/Bool.html:17
+		qw422016.N().S(`" type="radio" checked="checked" />`)
+//line views/components/edit/Bool.html:17
+		qw422016.E().S(util.BoolFalse)
+//line views/components/edit/Bool.html:17
+		qw422016.N().S(`</label>`)
 //line views/components/edit/Bool.html:18
-	if nullable {
+	} else {
+//line views/components/edit/Bool.html:18
+		qw422016.N().S(`<label class="radiolabel"><input value="`)
 //line views/components/edit/Bool.html:19
-		if x == nil {
+		qw422016.E().S(util.BoolFalse)
 //line views/components/edit/Bool.html:19
-			qw422016.N().S(`<label class="radiolabel"><input value="∅" name="`)
+		qw422016.N().S(`" name="`)
+//line views/components/edit/Bool.html:19
+		qw422016.E().S(key)
+//line views/components/edit/Bool.html:19
+		qw422016.N().S(`" type="radio" />`)
+//line views/components/edit/Bool.html:19
+		qw422016.E().S(util.BoolFalse)
+//line views/components/edit/Bool.html:19
+		qw422016.N().S(`</label>`)
 //line views/components/edit/Bool.html:20
-			qw422016.E().S(key)
-//line views/components/edit/Bool.html:20
-			qw422016.N().S(`" type="radio" checked="checked" /> nil</label>`)
-//line views/components/edit/Bool.html:21
-		} else {
-//line views/components/edit/Bool.html:21
-			qw422016.N().S(`<label class="radiolabel"><input value="∅" name="`)
-//line views/components/edit/Bool.html:22
-			qw422016.E().S(key)
-//line views/components/edit/Bool.html:22
-			qw422016.N().S(`" type="radio" /> nil</label>`)
-//line views/components/edit/Bool.html:23
-		}
-//line views/components/edit/Bool.html:24
 	}
+//line views/components/edit/Bool.html:22
+	if nullable {
+//line views/components/edit/Bool.html:23
+		if x == nil {
+//line views/components/edit/Bool.html:23
+			qw422016.N().S(`<label class="radiolabel"><input value="∅" name="`)
+//line views/components/edit/Bool.html:24
+			qw422016.E().S(key)
+//line views/components/edit/Bool.html:24
+			qw422016.N().S(`" type="radio" checked="checked" /> nil</label>`)
 //line views/components/edit/Bool.html:25
-}
-
+		} else {
 //line views/components/edit/Bool.html:25
-func WriteBool(qq422016 qtio422016.Writer, key string, id string, x any, nullable bool) {
-//line views/components/edit/Bool.html:25
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/edit/Bool.html:25
-	StreamBool(qw422016, key, id, x, nullable)
-//line views/components/edit/Bool.html:25
-	qt422016.ReleaseWriter(qw422016)
-//line views/components/edit/Bool.html:25
-}
-
-//line views/components/edit/Bool.html:25
-func Bool(key string, id string, x any, nullable bool) string {
-//line views/components/edit/Bool.html:25
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/edit/Bool.html:25
-	WriteBool(qb422016, key, id, x, nullable)
-//line views/components/edit/Bool.html:25
-	qs422016 := string(qb422016.B)
-//line views/components/edit/Bool.html:25
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/edit/Bool.html:25
-	return qs422016
-//line views/components/edit/Bool.html:25
-}
-
+			qw422016.N().S(`<label class="radiolabel"><input value="∅" name="`)
+//line views/components/edit/Bool.html:26
+			qw422016.E().S(key)
+//line views/components/edit/Bool.html:26
+			qw422016.N().S(`" type="radio" /> nil</label>`)
 //line views/components/edit/Bool.html:27
-func StreamBoolVertical(qw422016 *qt422016.Writer, key string, title string, value bool, indent int, help ...string) {
+		}
 //line views/components/edit/Bool.html:28
-	StreamRadioVertical(qw422016, key, title, fmt.Sprint(value), []string{"true", "false"}, []string{"True", "False"}, indent)
+	}
 //line views/components/edit/Bool.html:29
 }
 
 //line views/components/edit/Bool.html:29
-func WriteBoolVertical(qq422016 qtio422016.Writer, key string, title string, value bool, indent int, help ...string) {
+func WriteBool(qq422016 qtio422016.Writer, key string, id string, x any, nullable bool) {
 //line views/components/edit/Bool.html:29
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/components/edit/Bool.html:29
-	StreamBoolVertical(qw422016, key, title, value, indent, help...)
+	StreamBool(qw422016, key, id, x, nullable)
 //line views/components/edit/Bool.html:29
 	qt422016.ReleaseWriter(qw422016)
 //line views/components/edit/Bool.html:29
 }
 
 //line views/components/edit/Bool.html:29
-func BoolVertical(key string, title string, value bool, indent int, help ...string) string {
+func Bool(key string, id string, x any, nullable bool) string {
 //line views/components/edit/Bool.html:29
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/components/edit/Bool.html:29
-	WriteBoolVertical(qb422016, key, title, value, indent, help...)
+	WriteBool(qb422016, key, id, x, nullable)
 //line views/components/edit/Bool.html:29
 	qs422016 := string(qb422016.B)
 //line views/components/edit/Bool.html:29
@@ -148,29 +151,29 @@ func BoolVertical(key string, title string, value bool, indent int, help ...stri
 }
 
 //line views/components/edit/Bool.html:31
-func StreamBoolTable(qw422016 *qt422016.Writer, key string, title string, value bool, indent int, help ...string) {
+func StreamBoolVertical(qw422016 *qt422016.Writer, key string, title string, value bool, indent int, help ...string) {
 //line views/components/edit/Bool.html:32
-	StreamRadioTable(qw422016, key, title, fmt.Sprint(value), []string{"true", "false"}, []string{"True", "False"}, indent)
+	StreamRadioVertical(qw422016, key, title, fmt.Sprint(value), []string{util.BoolTrue, util.BoolFalse}, []string{"True", "False"}, indent)
 //line views/components/edit/Bool.html:33
 }
 
 //line views/components/edit/Bool.html:33
-func WriteBoolTable(qq422016 qtio422016.Writer, key string, title string, value bool, indent int, help ...string) {
+func WriteBoolVertical(qq422016 qtio422016.Writer, key string, title string, value bool, indent int, help ...string) {
 //line views/components/edit/Bool.html:33
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/components/edit/Bool.html:33
-	StreamBoolTable(qw422016, key, title, value, indent, help...)
+	StreamBoolVertical(qw422016, key, title, value, indent, help...)
 //line views/components/edit/Bool.html:33
 	qt422016.ReleaseWriter(qw422016)
 //line views/components/edit/Bool.html:33
 }
 
 //line views/components/edit/Bool.html:33
-func BoolTable(key string, title string, value bool, indent int, help ...string) string {
+func BoolVertical(key string, title string, value bool, indent int, help ...string) string {
 //line views/components/edit/Bool.html:33
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/components/edit/Bool.html:33
-	WriteBoolTable(qb422016, key, title, value, indent, help...)
+	WriteBoolVertical(qb422016, key, title, value, indent, help...)
 //line views/components/edit/Bool.html:33
 	qs422016 := string(qb422016.B)
 //line views/components/edit/Bool.html:33
@@ -178,4 +181,37 @@ func BoolTable(key string, title string, value bool, indent int, help ...string)
 //line views/components/edit/Bool.html:33
 	return qs422016
 //line views/components/edit/Bool.html:33
+}
+
+//line views/components/edit/Bool.html:35
+func StreamBoolTable(qw422016 *qt422016.Writer, key string, title string, value bool, indent int, help ...string) {
+//line views/components/edit/Bool.html:36
+	StreamRadioTable(qw422016, key, title, fmt.Sprint(value), []string{util.BoolTrue, util.BoolFalse}, []string{"True", "False"}, indent)
+//line views/components/edit/Bool.html:37
+}
+
+//line views/components/edit/Bool.html:37
+func WriteBoolTable(qq422016 qtio422016.Writer, key string, title string, value bool, indent int, help ...string) {
+//line views/components/edit/Bool.html:37
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/components/edit/Bool.html:37
+	StreamBoolTable(qw422016, key, title, value, indent, help...)
+//line views/components/edit/Bool.html:37
+	qt422016.ReleaseWriter(qw422016)
+//line views/components/edit/Bool.html:37
+}
+
+//line views/components/edit/Bool.html:37
+func BoolTable(key string, title string, value bool, indent int, help ...string) string {
+//line views/components/edit/Bool.html:37
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/components/edit/Bool.html:37
+	WriteBoolTable(qb422016, key, title, value, indent, help...)
+//line views/components/edit/Bool.html:37
+	qs422016 := string(qb422016.B)
+//line views/components/edit/Bool.html:37
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/components/edit/Bool.html:37
+	return qs422016
+//line views/components/edit/Bool.html:37
 }

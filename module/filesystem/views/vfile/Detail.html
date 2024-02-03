@@ -31,7 +31,7 @@
     {%- else -%}
 
     {%- if imgType := filesystem.ImageType(path...); imgType != "" -%}
-    <img src="data:image/{%s imgType %};base64,{%s base64.StdEncoding.EncodeToString(b) %}" />
+    <img alt="Image of type [{%s imgType %}]" src="data:image/{%s imgType %};base64,{%s base64.StdEncoding.EncodeToString(b) %}" />
     <hr />
     {%- endif -%}
 

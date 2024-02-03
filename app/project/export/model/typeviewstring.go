@@ -18,7 +18,7 @@ func goViewStringForString(url bool, src string, t *types.Wrapped, prop string, 
 	}
 	switch format {
 	case FmtCode.Key:
-		return "<pre>{%%s " + ToGoString(t, prop, false) + " %%}</pre>"
+		return "<pre class=\"prewsw\">{%%s " + ToGoString(t, prop, false) + " %%}</pre>"
 	case FmtLinebreaks.Key:
 		return "<div class=\"prewsl\">{%%s " + ToGoString(t, prop, false) + " %%}</div>"
 	case FmtCodeHidden.Key:
@@ -34,10 +34,8 @@ func goViewStringForString(url bool, src string, t *types.Wrapped, prop string, 
 			"</ul>",
 		)
 		return strings.Join(ret, "")
-	case FmtHTML.Key:
-		return "{%%= view.Format(" + ToGoString(t, prop, false) + ", \"html\") %%}</pre>"
-	case FmtJSON.Key:
-		return "{%%= view.Format(" + ToGoString(t, prop, false) + ", \"json\") %%}</pre>"
+	case FmtJSON.Key, FmtHTML.Key, FmtSQL.Key:
+		return "{%%= view.Format(" + ToGoString(t, prop, false) + ", \"" + format + "\") %%}"
 	case FmtURL.Key:
 		x := "{%%" + key + " " + ToGoString(t, prop, false) + " %%}"
 		return fmt.Sprintf("<a href=%q target=\"_blank\" rel=\"noopener noreferrer\">%s</a>", x, x)

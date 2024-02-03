@@ -96,7 +96,7 @@ var AllBuildOptions = []*BuildOption{
 	{Key: "simple", Title: "Simple", Description: "Only build Linux amd64 and a single Docker image (ignores all other build options)"},
 
 	{Key: "private", Title: "Private", Description: "This project is not public (affects publishing)"},
-	{Key: "changelog", Title: "Changelog", Description: "Generate changelogs from Github commits"},
+	{Key: "changelog", Title: "Changelog", Description: "Generate changelogs from GitHub commits"},
 	{Key: "testsFail", Title: "Tests Fail", Description: "If set, Docker build will fail unless all tests pass"},
 
 	{Key: "desktop", Title: "Desktop", Description: "Webview-based applications for the three major operating systems (requires \"desktop\" module)"},

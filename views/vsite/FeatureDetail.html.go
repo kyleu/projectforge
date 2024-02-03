@@ -38,9 +38,9 @@ func (p *FeatureDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps 
 //line views/vsite/FeatureDetail.html:15
 	qw422016.N().S(`
   <div class="card">
-    <div class="right"><a href="/features/`)
+    <div class="right"><a href="`)
 //line views/vsite/FeatureDetail.html:17
-	qw422016.E().S(p.Module.Key)
+	qw422016.E().S(p.Module.FeaturesPath())
 //line views/vsite/FeatureDetail.html:17
 	qw422016.N().S(`/files"><button>Files</button></a></div>
     <h3>`)

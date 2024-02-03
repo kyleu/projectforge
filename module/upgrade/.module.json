@@ -1,7 +1,7 @@
 {
   "name": "Upgrade",
   "icon": "dna",
-  "description": "Provides in-place version upgrades using Github Releases",
+  "description": "Provides in-place version upgrades using GitHub Releases",
   "authorName": "Kyle U",
   "authorEmail": "kyle@kyleu.com",
   "license": "CC0",

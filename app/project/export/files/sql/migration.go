@@ -15,12 +15,12 @@ import (
 
 func Migration(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"queries", "ddl"}, m.Name+util.ExtSQL)
-	drop, err := sqlDrop(m)
+	drop, err := sqlDrop(m, args.Database)
 	if err != nil {
 		return nil, err
 	}
 	g.AddBlocks(drop)
-	sc, err := sqlCreate(m, args.Models)
+	sc, err := sqlCreate(m, args.Models, args.Database)
 	if err != nil {
 		return nil, err
 	}
@@ -28,20 +28,30 @@ func Migration(m *model.Model, args *model.Args, addHeader bool, linebreak strin
 	return g.Render(addHeader, linebreak)
 }
 
-func sqlDrop(m *model.Model) (*golang.Block, error) {
+func sqlDrop(m *model.Model, database string) (*golang.Block, error) {
 	ret := golang.NewBlock("SQLDrop", "sql")
 	ret.W(sqlFunc(m.Proper() + "Drop"))
-	ret.W("drop table if exists %q;", m.Name)
+	if database == util.DatabaseSQLServer {
+		ret.W("if exists (select * from sysobjects where name='%s' and xtype='U')", m.Name)
+		ret.W("drop table %q;", m.Name)
+	} else {
+		ret.W("drop table if exists %q;", m.Name)
+	}
 	ret.W(sqlEnd())
 	return ret, nil
 }
 
-func sqlCreate(m *model.Model, models model.Models) (*golang.Block, error) {
+func sqlCreate(m *model.Model, models model.Models, database string) (*golang.Block, error) {
 	ret := golang.NewBlock("SQLCreate", "sql")
 	ret.W(sqlFunc(m.Proper() + "Create"))
-	ret.W("create table if not exists %q (", m.Name)
+	if database == util.DatabaseSQLServer {
+		ret.W("if not exists (select * from sysobjects where name='%s' and xtype='U')", m.Name)
+		ret.W("create table %q (", m.Name)
+	} else {
+		ret.W("create table if not exists %q (", m.Name)
+	}
 	for _, col := range m.Columns {
-		st, err := col.ToSQLType()
+		st, err := col.ToSQLType(database)
 		if err != nil {
 			return nil, err
 		}
@@ -61,7 +71,7 @@ func sqlCreate(m *model.Model, models model.Models) (*golang.Block, error) {
 	// var indexes [][]string
 	lo.ForEach(m.Columns, func(col *model.Column, _ int) {
 		if (col.PK && len(pks) > 1) || col.Indexed {
-			addIndex(ret, m.Name, col.Name)
+			addIndex(database, ret, m.Name, col.Name)
 		}
 	})
 	lo.ForEach(m.Relations, func(rel *model.Relation, _ int) {
@@ -71,7 +81,7 @@ func sqlCreate(m *model.Model, models model.Models) (*golang.Block, error) {
 		}
 		for _, c := range cols {
 			if !(c.PK || c.Indexed) {
-				addIndex(ret, m.Name, cols.Names()...)
+				addIndex(database, ret, m.Name, cols.Names()...)
 				break
 			}
 		}
@@ -83,11 +93,16 @@ func sqlCreate(m *model.Model, models model.Models) (*golang.Block, error) {
 	return ret, nil
 }
 
-func addIndex(ret *golang.Block, tbl string, names ...string) {
+func addIndex(database string, ret *golang.Block, tbl string, names ...string) {
 	name := fmt.Sprintf("%s__%s_idx", tbl, strings.Join(names, "_"))
 	quoted := lo.Map(names, func(n string, _ int) string {
 		return fmt.Sprintf("%q", n)
 	})
 	ret.WB()
-	ret.W("create index if not exists %q on %q (%s);", name, tbl, strings.Join(quoted, ", "))
+	if database == util.DatabaseSQLServer {
+		ret.W("if not exists (select * from sys.indexes where name='%s' and object_id=object_id('%s'))", tbl, name)
+		ret.W("create index %q on %q (%s);", name, tbl, strings.Join(quoted, ", "))
+	} else {
+		ret.W("create index if not exists %q on %q (%s);", name, tbl, strings.Join(quoted, ", "))
+	}
 }

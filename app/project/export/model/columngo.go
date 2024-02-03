@@ -11,8 +11,8 @@ import (
 
 const msgTextarea = `{%%%%= edit.TextareaTable(%q, %q, %q, 8, util.ToJSON(%s), 5, %s) %%%%}`
 
-func (c *Column) ToSQLType() (string, error) {
-	ret, err := ToSQLType(c.Type)
+func (c *Column) ToSQLType(database string) (string, error) {
+	ret, err := ToSQLType(c.Type, database)
 	if err != nil {
 		return "", err
 	}
@@ -95,7 +95,7 @@ func (c *Column) ToGoEditString(prefix string, format string, id string, enums e
 		return fmt.Sprintf(`{%%%%= edit.UUIDTable(%q, %q, %q, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), gs, h), nil
 	case types.KeyString:
 		switch format {
-		case FmtCode.Key, FmtCodeHidden.Key, FmtHTML.Key, FmtJSON.Key:
+		case FmtCode.Key, FmtCodeHidden.Key, FmtHTML.Key, FmtJSON.Key, FmtSQL.Key:
 			return fmt.Sprintf(`{%%%%= edit.TextareaTable(%q, %q, %q, 8, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), c.ToGoString(prefix), h), nil
 		case FmtSelect.Key:
 			if len(c.Values) == 0 {
@@ -155,7 +155,7 @@ func (c *Column) ZeroVal() string {
 	case types.KeyAny:
 		return types.KeyNil
 	case types.KeyBool:
-		return "false"
+		return util.BoolFalse
 	case types.KeyList:
 		return types.KeyNil
 	case types.KeyInt:

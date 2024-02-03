@@ -10,6 +10,7 @@ import (
 	"projectforge.dev/projectforge/app/controller"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/websocket"
+	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )
 
@@ -19,9 +20,9 @@ func ProjectStart(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		cmd := fmt.Sprintf("build/debug/%s -v server source:%s", prj.Executable(), util.AppKey)
+		cmd := fmt.Sprintf("%s%s -v server source:%s", project.DebugOutputDir, prj.Executable(), util.AppKey)
 		exec := as.Services.Exec.NewExec(prj.Key, cmd, prj.Path)
-		exec.Link = "/p/" + prj.Key
+		exec.Link = prj.WebPath()
 		w := func(key string, b []byte) error {
 			m := util.ValueMap{"msg": string(b), "html": string(ansihtml.ConvertToHTML(b))}
 			msg := &websocket.Message{Channel: key, Cmd: "output", Param: util.ToJSONBytes(m, true)}

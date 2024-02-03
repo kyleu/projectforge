@@ -2,6 +2,7 @@ package util
 
 import (
 	"fmt"
+	"math"
 )
 
 func MicrosToMillis(i int) string {
@@ -13,5 +14,9 @@ func MicrosToMillis(i int) string {
 	}
 
 	x := float64(ms) + (float64(i%div) / float64(div))
+	if x == math.Round(x) {
+		return fmt.Sprintf("%dms", ms)
+	}
+
 	return fmt.Sprintf("%.3f", x) + "ms"
 }

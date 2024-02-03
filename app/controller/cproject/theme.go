@@ -73,7 +73,7 @@ func ProjectThemeSave(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		msg := fmt.Sprintf("set theme to [%s:%s]", pallette, thm.Key)
-		return controller.FlashAndRedir(true, msg, "/p/"+p.Key, rc, ps)
+		return controller.FlashAndRedir(true, msg, p.WebPath(), rc, ps)
 	})
 }
 

@@ -136,7 +136,7 @@
         },
         "format": {
           "description": "used for strings, controls output format in UI",
-          "enum": ["code", "codehidden", "country","html", "icon", "json", "linebreaks", "select", "si", "tags", "url"]
+          "enum": ["code", "codehidden", "country","html", "icon", "json", "linebreaks", "select", "si", "sql", "tags", "url"]
         },
         "example": {
           "description": "default example value to use when editing",

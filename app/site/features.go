@@ -17,7 +17,7 @@ import (
 
 func featuresMenu(mSvc *module.Service) menu.Items {
 	return lo.Map(mSvc.Modules(), func(m *module.Module, _ int) *menu.Item {
-		return &menu.Item{Key: m.Key, Title: m.Title(), Description: m.Description, Icon: m.IconSafe(), Route: "/features/" + m.Key}
+		return &menu.Item{Key: m.Key, Title: m.Title(), Description: m.Description, Icon: m.IconSafe(), Route: m.FeaturesPath()}
 	})
 }
 
@@ -58,17 +58,17 @@ func featureFiles(path []string, as *app.State, ps *cutil.PageState) ([]string, 
 	if path[2] != "files" {
 		return path, nil, errors.New("invalid file path")
 	}
-	u := "/features/" + path[1] + "/files"
+	mod, err := as.Services.Modules.Get(path[1])
+	if err != nil {
+		return path, nil, err
+	}
+	u := mod.FeaturesFilePath()
 	bc := append([]string{}, path[:2]...)
 	bc = append(bc, "Files||"+u)
 	lo.ForEach(path[3:], func(x string, _ int) {
 		u += "/" + x
 		bc = append(bc, x+"||"+u)
 	})
-	mod, err := as.Services.Modules.Get(path[1])
-	if err != nil {
-		return path, nil, err
-	}
 	ps.Data = mod
 	return bc, &vsite.FeatureFiles{Module: mod, Path: path[3:]}, nil
 }

@@ -27,7 +27,7 @@ var diffTests = []*diffTest{
 	{k: "bool.same", l: true, r: true, d: util.Diffs{}},
 	{
 		k: "bool.different", l: true, r: false, d: util.Diffs{
-			&util.Diff{Old: util.BoolTrue, New: "false"},
+			&util.Diff{Old: util.BoolTrue, New: util.BoolFalse},
 		},
 	},
 	{k: "int.same", l: 1, r: 1, d: util.Diffs{}},

@@ -4,7 +4,7 @@
 
 set -eo pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd $dir/../..
+cd "$dir/../.."
 
 TGT=$1
 [ "$TGT" ] || TGT="v0.0.0"

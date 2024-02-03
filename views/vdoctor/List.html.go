@@ -47,7 +47,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vdoctor/List.html:18
 	qw422016.E().S(util.AppName)
 //line views/vdoctor/List.html:18
-	qw422016.N().S(` doctor makes sure you're able to run all of the utilities required to work with a `)
+	qw422016.N().S(` doctor makes sure you're able to run all the utilities required to work with a `)
 //line views/vdoctor/List.html:18
 	qw422016.E().S(util.AppName)
 //line views/vdoctor/List.html:18

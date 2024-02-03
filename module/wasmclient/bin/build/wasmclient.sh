@@ -4,7 +4,7 @@
 
 set -eo pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd $dir/../..
+cd "$dir/../.."
 
 echo "building {{{ .Name }}} WASM client library..."
 mkdir -p build/wasm

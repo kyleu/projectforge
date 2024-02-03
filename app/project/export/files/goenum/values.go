@@ -52,9 +52,9 @@ func enumValues(e *enum.Enum) *golang.Block {
 				t = "util.TimeFromStringSimple(\"" + t + "\")"
 			case types.KeyBool:
 				if t == "<nil>" {
-					t = "false"
+					t = util.BoolFalse
 				}
-				if t == "false" || t == "" {
+				if t == util.BoolFalse || t == "" {
 					continue
 				}
 			}

@@ -10,6 +10,8 @@ import (
 	"projectforge.dev/projectforge/app/lib/filesystem"
 )
 
+const DebugOutputDir = "build/debug/"
+
 type validationAddErrFn func(code string, msg string, args ...any)
 
 type ValidationError struct {
@@ -192,7 +194,7 @@ func validateFilesystem(p *Project, e validationAddErrFn, fs filesystem.FileLoad
 		e("front-end-build", "the TypeScript build output is missing, run \"bin/build/client.sh\" or perform a full build")
 		return
 	}
-	if !fs.Exists("build/debug/"+p.Executable()) && !fs.Exists("build/debug/"+p.Executable()+".exe") {
+	if !fs.Exists(DebugOutputDir+p.Executable()) && !fs.Exists(DebugOutputDir+p.Executable()+".exe") {
 		e("needs-build", "your project hasn't been built recently, run a build using the buttons above")
 		return
 	}

@@ -1,17 +1,21 @@
-{% import "fmt" %}
+{% import (
+  "fmt"
+
+  "{{{ .Package }}}/app/util"
+) %}
 
 {% func Bool(key string, id string, x any, nullable bool) %}{% stripspace %}
   {% code b, isBool := x.(bool) %}
   {% if isBool && b %}
-    <label class="radiolabel"><input value="true" name="{%s key %}" type="radio" checked="checked" /> true</label>
+    <label class="radiolabel"><input value="{%s util.BoolTrue %}" name="{%s key %}" type="radio" checked="checked" /> {%s util.BoolTrue %}</label>
   {% else %}
-    <label class="radiolabel"><input value="true" name="{%s key %}" type="radio" /> true</label>
+    <label class="radiolabel"><input value="{%s util.BoolTrue %}" name="{%s key %}" type="radio" /> {%s util.BoolTrue %}</label>
   {% endif %}
 
   {% if isBool && !b %}
-    <label class="radiolabel"><input value="false" name="{%s key %}" type="radio" checked="checked" /> false</label>
+    <label class="radiolabel"><input value="{%s util.BoolFalse %}" name="{%s key %}" type="radio" checked="checked" /> {%s util.BoolFalse %}</label>
   {% else %}
-    <label class="radiolabel"><input value="false" name="{%s key %}" type="radio" /> false</label>
+    <label class="radiolabel"><input value="{%s util.BoolFalse %}" name="{%s key %}" type="radio" /> {%s util.BoolFalse %}</label>
   {% endif %}
 
   {% if nullable %}
@@ -24,9 +28,9 @@
 {% endstripspace %}{% endfunc %}
 
 {% func BoolVertical(key string, title string, value bool, indent int, help ...string) %}{% stripspace %}
-  {%= RadioVertical(key, title, fmt.Sprint(value), []string{"true", "false"}, []string{"True", "False"}, indent) %}
+  {%= RadioVertical(key, title, fmt.Sprint(value), []string{util.BoolTrue, util.BoolFalse}, []string{"True", "False"}, indent) %}
 {% endstripspace %}{% endfunc %}
 
 {% func BoolTable(key string, title string, value bool, indent int, help ...string) %}{% stripspace %}
-  {%= RadioTable(key, title, fmt.Sprint(value), []string{"true", "false"}, []string{"True", "False"}, indent) %}
+  {%= RadioTable(key, title, fmt.Sprint(value), []string{util.BoolTrue, util.BoolFalse}, []string{"True", "False"}, indent) %}
 {% endstripspace %}{% endfunc %}

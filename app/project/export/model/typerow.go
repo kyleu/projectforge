@@ -9,7 +9,7 @@ import (
 func ToGoRowType(t types.Type, nullable bool, pkg string, enums enum.Enums, database string) (string, error) {
 	switch t.Key() {
 	case types.KeyAny, types.KeyList, types.KeyMap, types.KeyValueMap, types.KeyReference:
-		if database == util.DatabaseSQLite {
+		if database == util.DatabaseSQLite || database == util.DatabaseSQLServer {
 			return types.KeyString, nil
 		}
 		return "json.RawMessage", nil

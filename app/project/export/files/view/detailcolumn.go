@@ -14,10 +14,12 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+const viewIndent = "  "
+
 func viewDetailColumn(
 	g *golang.Template, ret *golang.Block, models model.Models, m *model.Model, link bool, col *model.Column, modelKey string, indent int, enums enum.Enums,
 ) {
-	ind := util.StringRepeat("  ", indent)
+	ind := util.StringRepeat(viewIndent, indent)
 	rels := m.RelationsFor(col)
 	if len(rels) == 0 {
 		viewString := col.ToGoViewString(modelKey, true, false, enums, util.KeyDetail)
@@ -35,7 +37,7 @@ func viewDetailColumn(
 	if col.PK && link {
 		ret.W(ind + "  <a href=\"" + m.LinkURL(modelKey, enums) + "\">" + col.ToGoViewString(modelKey, true, false, enums, util.KeyDetail) + toStrings + "</a>")
 	} else {
-		ret.W(ind + "  " + col.ToGoViewString(modelKey, true, false, enums, util.KeyDetail) + toStrings)
+		ret.W(ind + viewIndent + col.ToGoViewString(modelKey, true, false, enums, util.KeyDetail) + toStrings)
 	}
 	const l = "<a title=%q href=\"{%%%%s %s %%%%}\">{%%%%= components.SVGRef(%q, 18, 18, \"\", ps) %%%%}</a>"
 	const msgNotNull = "%s  " + l

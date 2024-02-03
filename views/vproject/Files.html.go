@@ -44,7 +44,7 @@ func (p *Files) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
 //line views/vproject/Files.html:20
 	prj := p.Project
 	fs, _ := as.Services.Projects.GetFilesystem(prj)
-	u := "/p/" + prj.Key + "/fs"
+	u := prj.WebPath() + "/fs"
 	pth := filepath.Join(p.Path...)
 
 //line views/vproject/Files.html:24

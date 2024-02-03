@@ -105,8 +105,6 @@ func loadReferences(ctx context.Context, path string, deps Dependencies, logger 
 		curr := deps.Get(dest)
 		if curr != nil {
 			curr.AddRef(src)
-			// } else {
-			//	return errors.Errorf("missing dependency entry for [%s] in path [%s]", dest, path)
 		}
 	}
 	return nil

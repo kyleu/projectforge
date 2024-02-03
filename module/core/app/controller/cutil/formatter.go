@@ -50,7 +50,7 @@ func FormatString(content string, l chroma.Lexer) (string, error) {
 	}
 	s := styles.MonokaiLight
 	var f *html.Formatter
-	if strings.Contains(content, "\n") {
+	if strings.Contains(strings.TrimSpace(content), "\n") {
 		if lineNums == nil {
 			lineNums = html.New(html.WithClasses(true), html.WithLineNumbers(true), html.LineNumbersInTable(true))
 		}

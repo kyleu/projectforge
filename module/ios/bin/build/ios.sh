@@ -4,7 +4,7 @@
 
 set -eo pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd $dir/../..
+cd "$dir/../.."
 
 TGT=$1
 [ "$TGT" ] || TGT="0.0.0"
@@ -16,7 +16,7 @@ cd "build/dist/mobile_ios_arm64/{{{ .Key }}}Server.xcframework"
 zip --symlinks -r "../../{{{ .Key }}}_${TGT}_ios_framework.zip" .
 
 echo "Building iOS app..."
-cd $dir/../../tools/ios
+cd "$dir/../../tools/ios"
 
 rm -rf ../../build/dist/mobile_ios_app_arm64
 mkdir -p ../../build/dist/mobile_ios_app_arm64

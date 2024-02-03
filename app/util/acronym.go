@@ -44,7 +44,7 @@ func InitAcronyms(extras ...string) error {
 	if len(acronyms) > 0 {
 		return errors.New("double initialization of acronyms")
 	}
-	x := []string{"Api", "Html", "Id", "Ip", "Json", "Xml", "Uri", "Url"}
+	x := []string{"Api", "Html", "Id", "Ip", "Json", "Sql", "Xml", "Uri", "Url"}
 	x = append(x, lo.Map(extras, func(s string, _ int) string {
 		return strings.ToUpper(s[:1]) + strings.ToLower(s[1:])
 	})...)

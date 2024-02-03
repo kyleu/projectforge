@@ -82,7 +82,7 @@
       "type": "object",
       "properties": {
         "org": {
-          "description": "the Github organization responsible for this project",
+          "description": "the GitHub organization responsible for this project",
           "type": "string"
         },
         "authorID": {
@@ -363,7 +363,7 @@
       "type": "object",
       "properties": {
         "publish": {
-          "description": "if set, publishes this release to Github",
+          "description": "if set, publishes this release to GitHub",
           "type": "boolean"
         },
         "private": {

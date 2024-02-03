@@ -2,6 +2,7 @@ package filesystem_test
 
 import (
 	"os"
+	"path"
 	"strings"
 	"testing"
 
@@ -10,6 +11,8 @@ import (
 	"{{{ .Package }}}/app/lib/filesystem"
 	"{{{ .Package }}}/app/lib/log"
 )
+
+const testFile = "foo.txt"
 
 func TestFileSystem(t *testing.T) {
 	t.Parallel()
@@ -39,11 +42,11 @@ func testFS(testDir string, fs filesystem.FileLoader, removeWhenDone bool) error
 		return err
 	}
 
-	if err := fs.WriteFile(testDir+"/foo.txt", []byte(content), filesystem.DefaultMode, false); err != nil {
+	if err := fs.WriteFile(path.Join(testDir, testFile), []byte(content), filesystem.DefaultMode, false); err != nil {
 		return err
 	}
 
-	if b, err := fs.ReadFile(testDir + "/foo.txt"); err != nil || string(b) != content {
+	if b, err := fs.ReadFile(path.Join(testDir, testFile)); err != nil || string(b) != content {
 		if err != nil {
 			return err
 		}
@@ -54,14 +57,14 @@ func testFS(testDir string, fs filesystem.FileLoader, removeWhenDone bool) error
 	if len(files) != 1 {
 		return errors.Errorf("expected [%d] files, observed [%d]", 1, len(files))
 	}
-	if files[0].Name != "foo.txt" {
-		return errors.Errorf("expected [%s] filename, observed [%s]", "foo.txt", files[0].Name)
+	if files[0].Name != testFile {
+		return errors.Errorf("expected [%s] filename, observed [%s]", testFile, files[0].Name)
 	}
 	if files[0].Size != 18 {
 		return errors.Errorf("expected [%d] file size, observed [%d]", 18, files[0].Size)
 	}
 
-	if err := fs.Remove(testDir+"/foo.txt", logger); err != nil {
+	if err := fs.Remove(path.Join(testDir, testFile), logger); err != nil {
 		return err
 	}
 

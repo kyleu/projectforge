@@ -54,7 +54,7 @@ func onDeps(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
 	if err != nil {
 		return ret.WithError(err)
 	}
-	deps, err := build.LoadDeps(ctx, pm.Prj.Key, pm.Prj.Path, upd != "false", pfs, showAll, pm.Logger)
+	deps, err := build.LoadDeps(ctx, pm.Prj.Key, pm.Prj.Path, upd != util.BoolFalse, pfs, showAll, pm.Logger)
 	ret.Data = deps
 	if err != nil {
 		return ret.WithError(err)

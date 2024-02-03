@@ -125,7 +125,29 @@ func SQLUpdateReturning(table string, columns []string, where string, returned [
 	return q
 }
 
-func SQLUpsert(table string, columns []string, rows int, conflicts []string, updates []string, placeholder string) string {
+{{{ if .SQLServer }}}func SQLUpsert(table string, columns []string, rows int, conflicts []string, updates []string, placeholder string) string {
+	colNames := strings.Join(columns, ", ")
+	params := make([]string, 0, rows)
+	for rowIdx := range lo.Range(rows) {
+		cols := make([]string, 0, len(columns))
+		for colIdx := range columns {
+			cols = append(cols, fmt.Sprintf("@p%d", (rowIdx*len(columns))+colIdx+1))
+		}
+		params = append(params, fmt.Sprintf("(%s)", strings.Join(cols, ", ")))
+	}
+	atSymbols := strings.Join(params, ", ")
+	sourceJoin := strings.Join(lo.Map(conflicts, func(pk string, _ int) string {
+		return fmt.Sprintf("%s.%s = source.%s", table, pk, pk)
+	}), " and ")
+	assignments := strings.Join(lo.Map(updates, func(c string, _ int) string {
+		return fmt.Sprintf("%s = \"source\".%s", c, c)
+	}), ", ")
+	vals := strings.Join(lo.Map(updates, func(c string, _ int) string {
+		return fmt.Sprintf("source.%s", c)
+	}), ", ")
+	sql := `merge into %s using (values %s) as source (%s) on %s when matched then update set %s when not matched then insert (%s) values (%s);`
+	return fmt.Sprintf(sql, table, atSymbols, colNames, sourceJoin, assignments, colNames, vals)
+}{{{ else }}}func SQLUpsert(table string, columns []string, rows int, conflicts []string, updates []string, placeholder string) string {
 	q := SQLInsert(table, columns, rows, placeholder)
 	q += " on conflict (" + strings.Join(conflicts, ", ") + ") do update set "
 	lo.ForEach(updates, func(x string, idx int) {
@@ -135,7 +157,7 @@ func SQLUpsert(table string, columns []string, rows int, conflicts []string, upd
 		q += fmt.Sprintf("%s = excluded.%s", x, x)
 	})
 	return q
-}
+}{{{ end }}}
 
 func SQLDelete(table string, where string, placeholder string) string {
 	if strings.TrimSpace(where) == "" {

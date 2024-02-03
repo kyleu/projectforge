@@ -52,6 +52,14 @@ function intInput(id: string, col: Column, x: { [p: string]: unknown }) {
   return input;
 }
 
+function typeInput(id: string, col: Column, x: { [p: string]: unknown }) {
+  const textarea = document.createElement("textarea");
+  textarea.name = col.key;
+  textarea.id = id;
+  textarea.value = JSON.stringify(x[col.key], null, 2);
+  return textarea;
+}
+
 export function createEditorInput(id: string, col: Column, x: { [p: string]: unknown }): HTMLElement {
   const t = typeKey(col.type);
   switch (t) {
@@ -59,6 +67,8 @@ export function createEditorInput(id: string, col: Column, x: { [p: string]: unk
       return boolInput(col, x);
     case "int":
       return intInput(id, col, x);
+    case "type":
+      return typeInput(id, col, x);
     default:
       return stringInput(id, col, x);
   }

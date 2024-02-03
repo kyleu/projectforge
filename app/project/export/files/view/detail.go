@@ -16,6 +16,10 @@ import (
 
 const commonLine = "  %sBy%s %s.%s"
 
+func svgRef(icon string) string {
+	return "{%%= components.SVGRefIcon(`" + icon + "`, ps) %%}"
+}
+
 func detail(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "Detail.html")
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpComponentsView, helper.ImpCutil, helper.ImpLayout)
@@ -106,7 +110,8 @@ func exportViewDetailBody(g *golang.Template, m *model.Model, audit bool, models
 	ret.W("      <a href=\"#modal-%s\"><button type=\"button\">JSON</button></a>", m.Camel())
 	ret.W("      <a href=\"{%%s p.Model.WebPath() %%}/edit\"><button>{%%= components.SVGRef(\"edit\", 15, 15, \"icon\", ps) %%}Edit</button></a>")
 	ret.W("    </div>")
-	ret.W("    <h3>{%%= components.SVGRefIcon(`" + m.Icon + "`, ps) %%} {%%s p.Model.TitleString() %%}</h3>")
+	ret.W("    <h3>" + svgRef(m.Icon) + " {%%s p.Model.TitleString() %%}</h3>")
+
 	ret.W("    <div><a href=\"/" + m.Route() + "\"><em>" + m.Title() + "</em></a></div>")
 	ret.W("    <table class=\"mt\">")
 	ret.W("      <tbody>")

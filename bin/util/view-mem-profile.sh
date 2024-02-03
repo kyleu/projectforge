@@ -5,7 +5,7 @@
 
 set -euo pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd $dir/../..
+cd "$dir/../.."
 
 echo "=== launching profiler for mem.pprof ==="
 go tool pprof -http=":8000" ./build/debug/projectforge ./tmp/mem.pprof

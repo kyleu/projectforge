@@ -17,7 +17,7 @@
         q = args.GetStringOpt(`q`)
       }
     -%}
-    {%= vsearch.Form("/p/" + prj.Key + "/search", q, "Search Files", nil, ps) %}
+    {%= vsearch.Form(prj.WebPath() + "/search", q, "Search Files", nil, ps) %}
     <h3>
       <a href="/p/{%s prj.Key %}">{%= components.SVGRefIcon(prj.IconSafe(), ps) %} {%s prj.Title() %}</a>{% if title != "" %}:
       <a href="">{%s title %}</a>{%- endif -%}

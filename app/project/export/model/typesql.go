@@ -1,14 +1,28 @@
 package model
 
-import "projectforge.dev/projectforge/app/lib/types"
+import (
+	"fmt"
 
-func ToSQLType(t types.Type) (string, error) {
+	"projectforge.dev/projectforge/app/lib/types"
+	"projectforge.dev/projectforge/app/util"
+)
+
+func ToSQLType(t types.Type, database string) (string, error) {
 	switch t.Key() {
 	case types.KeyAny:
+		if database == util.DatabaseSQLServer {
+			return "text", nil
+		}
 		return keyJSONB, nil
 	case types.KeyBool:
+		if database == util.DatabaseSQLServer {
+			return "bit", nil
+		}
 		return "boolean", nil
 	case types.KeyEnum:
+		if database == util.DatabaseSQLServer {
+			return "nvarchar(255)", nil
+		}
 		e, err := AsEnum(t)
 		if err != nil {
 			return "", err
@@ -23,12 +37,31 @@ func ToSQLType(t types.Type) (string, error) {
 	case types.KeyFloat:
 		return "double precision", nil
 	case types.KeyList, types.KeyMap, types.KeyValueMap, types.KeyReference:
+		if database == util.DatabaseSQLServer {
+			return "nvarchar(max)", nil
+		}
 		return keyJSONB, nil
 	case types.KeyString:
+		if database == util.DatabaseSQLServer {
+			s, ok := types.Wrap(t).T.(*types.String)
+			if !ok {
+				return "nvarchar(max)", nil
+			}
+			if s.MaxLength > 0 {
+				return fmt.Sprintf("nvarchar(%d)", s.MaxLength), nil
+			}
+			return "nvarchar(max)", nil
+		}
 		return "text", nil
 	case types.KeyDate, types.KeyTimestamp:
+		if database == util.DatabaseSQLServer {
+			return "datetime", nil
+		}
 		return "timestamp", nil
 	case types.KeyUUID:
+		if database == util.DatabaseSQLServer {
+			return "uniqueidentifier", nil
+		}
 		return "uuid", nil
 	default:
 		return "sql-error-invalid-type", nil

@@ -5,7 +5,7 @@
 
 set -euo pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd $dir
+cd "$dir"
 
 go install github.com/cosmtrek/air@latest
 go install github.com/valyala/quicktemplate/qtc@latest

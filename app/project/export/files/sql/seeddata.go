@@ -16,8 +16,9 @@ import (
 )
 
 const (
-	nilStr  = "<nil>"
-	nullStr = "null"
+	nilStr    = "<nil>"
+	nullStr   = "null"
+	sqlIndent = "  "
 )
 
 func SeedData(m *model.Model, linebreak string) (*file.File, error) {
@@ -44,7 +45,7 @@ func sqlSeedData(m *model.Model) (*golang.Block, error) {
 //nolint:gocognit
 func sqlSeedDataColumns(m *model.Model, block *golang.Block, tableName string, cols model.Columns) error {
 	block.W("insert into %q (", tableName)
-	block.W("  " + strings.Join(cols.NamesQuoted(), ", "))
+	block.W(sqlIndent + strings.Join(cols.NamesQuoted(), ", "))
 	block.W(") values (")
 	for idx, row := range m.SeedData {
 		if len(row) != len(m.Columns) {
@@ -118,7 +119,7 @@ func sqlSeedDataColumns(m *model.Model, block *golang.Block, tableName string, c
 				vs = append(vs, cellStr)
 			}
 		}
-		block.W("  " + strings.Join(vs, ", "))
+		block.W(sqlIndent + strings.Join(vs, ", "))
 		if idx < len(m.SeedData)-1 {
 			block.W("), (")
 		}

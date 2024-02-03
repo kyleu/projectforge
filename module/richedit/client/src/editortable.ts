@@ -1,5 +1,5 @@
 import {rowEditHandler} from "./editorobject";
-import type {Column, Editor} from "./editortypes";
+import {type Column, type Editor, type Type, typeToString} from "./editortypes";
 
 function createTableHead(cols: Column[]): HTMLElement {
   const thead = document.createElement("thead");
@@ -30,15 +30,9 @@ function createTableCell(col: Column, v: unknown): HTMLElement {
     c.appendChild(pre);
   } else if (col.type === "type") {
     if (typeof v === "string") {
-      c.innerText = v.toString();
+      c.innerText = v;
     } else {
-      if (typeof v === "object") {
-        c.innerText = (v as any)["k"].toString();
-      } else {
-        const pre = document.createElement("pre");
-        pre.innerText = JSON.stringify(v, null, 2);
-        c.appendChild(pre);
-      }
+      c.innerText = typeToString(v as Type);
     }
   } else {
     c.innerText = v.toString();

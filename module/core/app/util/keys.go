@@ -11,6 +11,7 @@ const (
 	AppLegal   = `Built by <a href="mailto:{{{ .Info.AuthorEmail }}}">{{{ .Info.AuthorName }}}</a>, all rights reserved`
 
 	BoolTrue   = "true"
+	BoolFalse  = "false"
 	KeyError   = "error"
 	KeyRandom  = "random"
 	KeyUnknown = "unknown"

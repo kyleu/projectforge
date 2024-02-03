@@ -1,12 +1,11 @@
 package gomodel
 
 import (
-	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func modelFieldDescs(m *model.Model, enums enum.Enums) (*golang.Block, error) {
+func modelFieldDescs(m *model.Model) (*golang.Block, error) {
 	ret := golang.NewBlock(m.Proper(), "struct")
 	ret.W("var FieldDescs = util.FieldDescs{")
 	for _, c := range m.Columns {

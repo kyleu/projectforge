@@ -1,9 +1,9 @@
 {% import (
   "strings"
 
-  "projectforge.dev/projectforge/app/controller/cutil"
-  "projectforge.dev/projectforge/app/util"
-  "projectforge.dev/projectforge/views/components"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/util"
+  "{{{ .Package }}}/views/components"
 ) %}
 
 {% func RichEditor(key string, id string, title string, columns []*util.FieldDesc, values []any, placeholder ...string) %}{% stripspace %}

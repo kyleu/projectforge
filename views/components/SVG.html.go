@@ -142,7 +142,11 @@ func StreamIcon(qw422016 *qt422016.Writer, k string, size int, cls string, ps *c
 //line views/components/SVG.html:30
 	if strings.Contains(k, "/") {
 //line views/components/SVG.html:30
-		qw422016.N().S(`<img src="`)
+		qw422016.N().S(`<img alt="SVG icon [`)
+//line views/components/SVG.html:31
+		qw422016.E().S(k)
+//line views/components/SVG.html:31
+		qw422016.N().S(`]" src="`)
 //line views/components/SVG.html:31
 		qw422016.E().S(k)
 //line views/components/SVG.html:31

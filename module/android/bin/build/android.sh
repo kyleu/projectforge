@@ -4,7 +4,7 @@
 
 set -eo pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd $dir/../..
+cd "$dir/../.."
 
 TGT=$1
 [ "$TGT" ] || TGT="0.0.0"
@@ -17,7 +17,7 @@ cd "build/dist/mobile_android_arm64"
 zip -r "../{{{ .Key }}}_${TGT}_android_aar.zip" .
 
 echo "creating Android project..."
-cd $dir/../..
+cd "$dir/../.."
 mkdir -p build/dist/mobile_android_app_arm64
 cp -R tools/android/* build/dist/mobile_android_app_arm64
 

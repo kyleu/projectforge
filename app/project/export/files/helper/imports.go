@@ -102,12 +102,12 @@ func importsForTypeCtxGo(t types.Type) golang.Imports {
 func importsForTypeCtxRow(t types.Type, database string) golang.Imports {
 	switch t.Key() {
 	case types.KeyAny:
-		if database == util.DatabaseSQLite {
+		if database == util.DatabaseSQLite || database == util.DatabaseSQLServer {
 			return nil
 		}
 		return golang.Imports{ImpJSON}
 	case types.KeyList, types.KeyMap, types.KeyValueMap, types.KeyReference:
-		if database == util.DatabaseSQLite {
+		if database == util.DatabaseSQLite || database == util.DatabaseSQLServer {
 			return golang.Imports{ImpAppUtil}
 		}
 		return golang.Imports{ImpJSON, ImpAppUtil}

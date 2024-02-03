@@ -46,7 +46,7 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vadmin/Settings.html:17
 		qw422016.E().S(util.AppSource)
 //line views/vadmin/Settings.html:17
-		qw422016.N().S(`"><button>Github</button></a></div>
+		qw422016.N().S(`"><button>GitHub</button></a></div>
 `)
 //line views/vadmin/Settings.html:18
 	}

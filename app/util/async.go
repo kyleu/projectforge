@@ -9,14 +9,14 @@ import (
 	"github.com/samber/lo"
 )
 
-func AsyncCollect[T any, R any](items []T, f func(item T) (R, error)) ([]R, []error) {
+func AsyncCollect[T any, R any](items []T, f func(x T) (R, error)) ([]R, []error) {
 	ret := make([]R, 0, len(items))
 	var errs []error
 	mu := sync.Mutex{}
 	wg := sync.WaitGroup{}
 	wg.Add(len(items))
-	lo.ForEach(items, func(item T, _ int) {
-		i := item
+	lo.ForEach(items, func(x T, _ int) {
+		i := x
 		go func() {
 			r, err := f(i)
 			mu.Lock()
@@ -33,14 +33,14 @@ func AsyncCollect[T any, R any](items []T, f func(item T) (R, error)) ([]R, []er
 	return ret, errs
 }
 
-func AsyncCollectMap[T any, K comparable, R any](items []T, k func(item T) K, f func(item T) (R, error)) (map[K]R, map[K]error) {
+func AsyncCollectMap[T any, K comparable, R any](items []T, k func(x T) K, f func(x T) (R, error)) (map[K]R, map[K]error) {
 	ret := make(map[K]R, len(items))
 	errs := map[K]error{}
 	mu := sync.Mutex{}
 	wg := sync.WaitGroup{}
 	wg.Add(len(items))
-	lo.ForEach(items, func(item T, _ int) {
-		i := item
+	lo.ForEach(items, func(x T, _ int) {
+		i := x
 		go func() {
 			key := k(i)
 			r, err := f(i)
@@ -58,7 +58,7 @@ func AsyncCollectMap[T any, K comparable, R any](items []T, k func(item T) K, f 
 	return ret, errs
 }
 
-func AsyncRateLimit[T any, R any](items []T, f func(item T) (R, error), maxConcurrent int, timeout time.Duration) ([]R, []error) {
+func AsyncRateLimit[T any, R any](items []T, f func(x T) (R, error), maxConcurrent int, timeout time.Duration) ([]R, []error) {
 	ret := make([]R, 0, len(items))
 	var errs []error
 	mu := sync.Mutex{}

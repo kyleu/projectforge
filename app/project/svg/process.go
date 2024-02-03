@@ -11,7 +11,10 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-const svgPath = "client/src/svg"
+const (
+	svgPath       = "client/src/svg"
+	ghLineAwesome = "https://raw.githubusercontent.com/icons8/line-awesome/master/svg/"
+)
 
 func AddToProject(fs filesystem.FileLoader, src string, tgt string) (*SVG, error) {
 	ret, err := load(src, tgt)
@@ -29,7 +32,7 @@ func AddToProject(fs filesystem.FileLoader, src string, tgt string) (*SVG, error
 func load(src string, tgt string) (*SVG, error) {
 	url := src
 	if !strings.HasPrefix(src, "http") {
-		url = "https://raw.githubusercontent.com/icons8/line-awesome/master/svg/" + src + util.ExtSVG
+		url = ghLineAwesome + src + util.ExtSVG
 	}
 	var b []byte
 	cl := &fasthttp.Client{}
@@ -38,7 +41,7 @@ func load(src string, tgt string) (*SVG, error) {
 		if !strings.HasPrefix(src, "http") {
 			origErr := err
 			origURL := url
-			url = "https://raw.githubusercontent.com/icons8/line-awesome/master/svg/" + src + "-solid.svg"
+			url = ghLineAwesome + src + "-solid.svg"
 			status, b, err = cl.Get(b, url)
 			if err != nil {
 				return nil, errors.Wrapf(origErr, "unable to call URL [%s]", origURL)

@@ -5,7 +5,7 @@
 
 set -euo pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd $dir/..
+cd "$dir/.."
 
 echo "=== linting ==="
 golangci-lint run --fix --max-issues-per-linter=0 --sort-results --skip-dirs "/data|/assets/module|/module|/testproject" ./...

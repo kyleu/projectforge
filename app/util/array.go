@@ -83,14 +83,14 @@ func ArrayTransform[T any, U any](x []T, f func(T) U) []U {
 }
 
 func ArrayRemoveNil[T any](x []*T) []*T {
-	return lo.Reject(x, func(item *T, _ int) bool {
-		return item == nil
+	return lo.Reject(x, func(el *T, _ int) bool {
+		return el == nil
 	})
 }
 
 func ArrayDereference[T any](x []*T) []T {
-	return lo.Map(x, func(item *T, _ int) T {
-		return lo.FromPtr(item)
+	return lo.Map(x, func(el *T, _ int) T {
+		return lo.FromPtr(el)
 	})
 }
 

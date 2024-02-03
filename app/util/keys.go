@@ -12,6 +12,7 @@ const (
 	AppLegal   = `Built by <a href="mailto:projectforge@kyleu.com">Kyle U</a>, all rights reserved`
 
 	BoolTrue   = "true"
+	BoolFalse  = "false"
 	KeyError   = "error"
 	KeyRandom  = "random"
 	KeyUnknown = "unknown"

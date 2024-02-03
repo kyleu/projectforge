@@ -32,7 +32,7 @@ func SQLiteParamsFromEnv(_ string, prefix string) *SQLiteParams {
 	}
 	debug := false
 	if x := util.GetEnv(prefix + "db_debug"); x != "" {
-		debug = x != falseKey
+		debug = x != util.BoolFalse
 	}
 	return &SQLiteParams{File: f, Schema: s, Debug: debug}
 }

@@ -195,6 +195,10 @@
   white-space: pre;
 }
 
+.prewsw {
+  white-space: pre-wrap;
+}
+
 .prewsl {
   white-space: pre-line;
 }

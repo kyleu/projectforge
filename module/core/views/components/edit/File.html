@@ -2,9 +2,9 @@
 
 {% func File(key string, id string, label string, value string, placeholder ...string) %}{% stripspace %}
   {% if id == "" %}
-    <label for="key"><input type="file" name="{%s key %}" value="{%s value %}" {%= components.PlaceholderFor(placeholder) %}/>{%s label %}</label>
+    <label><input type="file" name="{%s key %}" value="{%s value %}" {%= components.PlaceholderFor(placeholder) %}/>{%s label %}</label>
   {% else %}
-    <label id="{%s id %}" for="{%s key %}"><input type="file" name="{%s key %}" value="{%s value %}" {%= components.PlaceholderFor(placeholder) %}/>{%s label %}</label>
+    <label><input id="{%s id %}" type="file" name="{%s key %}" value="{%s value %}" {%= components.PlaceholderFor(placeholder) %}/>{%s label %}</label>
   {% endif %}
 {% endstripspace %}{% endfunc %}
 
@@ -19,9 +19,18 @@
 
 {% func FileMultiple(key string, id string, label string, value string, placeholder ...string) %}{% stripspace %}
   {% if id == "" %}
-    <label for="key"><input type="file" name="{%s key %}" value="{%s value %}" multiple="multiple" {%= components.PlaceholderFor(placeholder) %}/>{%s label %}</label>
+    <label><input type="file" name="{%s key %}" value="{%s value %}" multiple="multiple" {%= components.PlaceholderFor(placeholder) %}/>{%s label %}</label>
   {% else %}
-    <label id="{%s id %}" for="{%s key %}"><input type="file" name="{%s key %}" value="{%s value %}" multiple="multiple" {%= components.PlaceholderFor(placeholder) %}/>{%s label %}</label>
+    <label><input id="{%s id %}" type="file" name="{%s key %}" value="{%s value %}" multiple="multiple" {%= components.PlaceholderFor(placeholder) %}/>{%s label %}</label>
   {% endif %}
+{% endstripspace %}{% endfunc %}
+
+{% func FileMultipleTable(key string, id string, title string, label string, value string) %}{% stripspace %}
+  <tr>
+    <th class="shrink"><label for="{%s id %}">{%s title %}</label></th>
+    <td>
+      {%= FileMultiple(key, id, label, value) %}
+    </td>
+  </tr>
 {% endstripspace %}{% endfunc %}
 

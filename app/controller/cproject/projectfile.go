@@ -38,7 +38,7 @@ func ProjectFile(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		path := util.StringSplitAndTrim(pathS, "/")
-		bcAppend := "||/p/" + prj.Key + "/fs"
+		bcAppend := "||" + prj.WebPath() + "/fs"
 		bc := []string{"projects", prj.Key, "Files" + bcAppend}
 		lo.ForEach(path, func(x string, _ int) {
 			bcAppend += "/" + x

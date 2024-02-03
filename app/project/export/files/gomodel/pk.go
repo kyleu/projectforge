@@ -27,7 +27,7 @@ func modelPK(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	return ret, nil
 }
 
-func modelPKString(m *model.Model, enums enum.Enums) (*golang.Block, error) {
+func modelPKString(m *model.Model) (*golang.Block, error) {
 	ret := golang.NewBlock("PKString", "func")
 	ret.W("func (p *PK) String() string {")
 	pks := m.PKs()

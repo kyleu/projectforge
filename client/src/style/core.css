@@ -59,6 +59,7 @@ input, button, textarea, select {
 button {
   padding: 3px var(--padding-small);
   border-color: var(--color-menu-background);
+  cursor: pointer;
 }
 
 .button-link {

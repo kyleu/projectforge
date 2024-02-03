@@ -2,6 +2,7 @@ package goenum
 
 import (
 	"github.com/pkg/errors"
+
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/golang"
@@ -126,7 +127,7 @@ func blockGetByPropUnique(e *enum.Enum, efk string, t string) (*golang.Block, er
 	case types.KeyFloat:
 		dflt = "0"
 	case types.KeyBool:
-		dflt = "false"
+		dflt = util.BoolFalse
 	case types.KeyTimestamp:
 		dflt = "nil"
 		goType = "*time.Time"

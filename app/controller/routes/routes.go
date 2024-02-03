@@ -30,9 +30,6 @@ func AppRoutes(as *app.State, logger util.Logger) fasthttp.RequestHandler {
 	moduleRoutes(r)
 	projectRoutes(r)
 
-	r.GET("/parse", controller.ParseForm)
-	r.POST("/parse", controller.Parse)
-
 	r.GET("/testbed", controller.Testbed)
 	r.POST("/testbed", controller.Testbed)
 	// $PF_SECTION_END(routes)$

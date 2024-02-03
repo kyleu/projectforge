@@ -119,7 +119,11 @@ func StreamDetail(qw422016 *qt422016.Writer, path []string, b []byte, urlPrefix 
 //line views/vfile/Detail.html:34
 		if imgType := filesystem.ImageType(path...); imgType != "" {
 //line views/vfile/Detail.html:34
-			qw422016.N().S(`    <img src="data:image/`)
+			qw422016.N().S(`    <img alt="Image of type [`)
+//line views/vfile/Detail.html:35
+			qw422016.E().S(imgType)
+//line views/vfile/Detail.html:35
+			qw422016.N().S(`]" src="data:image/`)
 //line views/vfile/Detail.html:35
 			qw422016.E().S(imgType)
 //line views/vfile/Detail.html:35

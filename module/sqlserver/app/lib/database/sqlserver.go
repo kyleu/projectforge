@@ -62,7 +62,7 @@ func SQLServerParamsFromEnv(key string, defaultUser string, prefix string) *SQLS
 	}
 	debug := false
 	if x := util.GetEnv(prefix + "db_debug"); x != "" {
-		debug = x != falseKey
+		debug = x != util.BoolFalse
 	}
 	return &SQLServerParams{Host: h, Port: p, Username: u, Password: pw, Database: d, Schema: s, MaxConns: mc, Debug: debug}
 }

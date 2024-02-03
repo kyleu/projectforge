@@ -24,7 +24,7 @@ func ServiceMutate(m *model.Model, args *model.Args, addHeader bool, linebreak s
 	g.AddImport(helper.ImpAppUtil, helper.ImpContext, helper.ImpSQLx, helper.ImpAppDatabase, helper.ImpLo)
 
 	if add, err := serviceCreate(g, m, args.Audit(m)); err == nil {
-		g.AddBlocks(add)
+		g.AddBlocks(add, serviceCreateChunked(m))
 	} else {
 		return nil, err
 	}
@@ -83,6 +83,22 @@ func serviceCreate(g *golang.File, m *model.Model, audit bool) (*golang.Block, e
 	ret.W("\treturn s.db.Insert(ctx, q, tx, logger, vals...)")
 	ret.W("}")
 	return ret, nil
+}
+
+func serviceCreateChunked(m *model.Model) *golang.Block {
+	ret := golang.NewBlock("CreateChunked", "func")
+	ret.W("func (s *Service) CreateChunked(ctx context.Context, tx *sqlx.Tx, chunkSize int, logger util.Logger, models ...*%s) error {", m.Proper())
+	ret.W("\tfor idx, chunk := range lo.Chunk(models, chunkSize) {")
+	ret.W("\t\tif logger != nil {")
+	ret.W("\t\t\tlogger.Infof(\"saving %s [%%%%d-%%%%d]\", idx*chunkSize, ((idx+1)*chunkSize)-1)", m.TitlePluralLower())
+	ret.W("\t\t}")
+	ret.W("\t\tif err := s.Create(ctx, tx, logger, chunk...); err != nil {")
+	ret.W("\t\t\treturn err")
+	ret.W("\t\t}")
+	ret.W("\t}")
+	ret.W("\treturn nil")
+	ret.W("}")
+	return ret
 }
 
 func serviceUpdate(g *golang.File, m *model.Model, audit bool, database string) (*golang.Block, error) {
@@ -197,7 +213,8 @@ func serviceSave(g *golang.File, m *model.Model) (*golang.Block, error) {
 		return nil, err
 	}
 	q := strings.Join(m.PKs().NamesQuoted(), ", ")
-	ret.W("\tq := database.SQLUpsert(tableQuoted, columnsQuoted, len(models), []string{%s}, columnsQuoted, s.db.Placeholder())", q)
+	pkOpt := ""
+	ret.W("\tq := database.SQLUpsert(tableQuoted%s, columnsQuoted, len(models), []string{%s}, columnsQuoted, s.db.Placeholder())", pkOpt, q)
 	ret.W("\tdata := lo.FlatMap(models, func(model *%s, _ int) []any {", m.Proper())
 	ret.W("\t\treturn model.ToData()")
 	ret.W("\t})")
@@ -211,7 +228,11 @@ func serviceSaveChunked(m *model.Model) *golang.Block {
 	ret.W("func (s *Service) SaveChunked(ctx context.Context, tx *sqlx.Tx, chunkSize int, logger util.Logger, models ...*%s) error {", m.Proper())
 	ret.W("\tfor idx, chunk := range lo.Chunk(models, chunkSize) {")
 	ret.W("\t\tif logger != nil {")
-	ret.W("\t\t\tlogger.Infof(\"saving %s [%%%%d-%%%%d]\", idx*chunkSize, ((idx+1)*chunkSize)-1)", m.TitlePluralLower())
+	ret.W("\t\t\tcount := ((idx + 1) * chunkSize) - 1")
+	ret.W("\t\t\tif len(models) < count {")
+	ret.W("\t\t\t\tcount = len(models)")
+	ret.W("\t\t\t}")
+	ret.W("\t\t\tlogger.Infof(\"saving %s [%%%%d-%%%%d]\", idx*chunkSize, count)", m.TitlePluralLower())
 	ret.W("\t\t}")
 	ret.W("\t\tif err := s.Save(ctx, tx, logger, chunk...); err != nil {")
 	ret.W("\t\t\treturn err")

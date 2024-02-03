@@ -18,7 +18,7 @@ type Service struct {
 }
 
 func NewService(ctx context.Context, logger util.Logger) *Service {
-	return &Service{logger: logger, client: createGithubClient(ctx)}
+	return &Service{logger: logger, client: createGitHubClient(ctx)}
 }
 
 func (s *Service) UpgradeIfNeeded(ctx context.Context, o string, n string, force bool) error {

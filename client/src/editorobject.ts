@@ -4,15 +4,14 @@ import type {Editor} from "./editortypes";
 import {modalGetBody, modalGetOrCreate, modalSetTitle} from "./modal";
 import {createTable} from "./editortable";
 
-function createEditorButtons(x: { [p: string]: unknown }, onComplete: (row: { [p: string]: unknown }) => void) {
+function createEditorButtons() {
   const btns = document.createElement("div");
   btns.classList.add("mt");
 
   const applyBtn = document.createElement("button");
   btns.appendChild(applyBtn);
   applyBtn.innerText = "Apply";
-  applyBtn.type = "button";
-  applyBtn.onclick = () => onComplete(x);
+  applyBtn.type = "submit";
 
   const spacer = document.createElement("span");
   btns.appendChild(spacer);
@@ -38,6 +37,7 @@ function createEditor(e: Editor, x: { [p: string]: unknown }, onComplete: (row: 
   div.appendChild(form);
   form.classList.add("expanded");
   form.onsubmit = () => {
+    onComplete(editCopy);
     return false;
   }
 
@@ -69,7 +69,7 @@ function createEditor(e: Editor, x: { [p: string]: unknown }, onComplete: (row: 
     td.appendChild(input);
   });
 
-  form.appendChild(createEditorButtons(editCopy, onComplete));
+  form.appendChild(createEditorButtons());
 
   return div;
 }

@@ -28,7 +28,7 @@
 
 {% func Icon(k string, size int, cls string, ps *cutil.PageState) %}{% stripspace %}
   {% if strings.Contains(k, "/") %}
-    <img src="{%s k %}" style="width: {%d size %}px; height: {%d size %}px;" />
+    <img alt="SVG icon [{%s k %}]" src="{%s k %}" style="width: {%d size %}px; height: {%d size %}px;" />
   {% else %}
     {%= SVGRef(k, size, size, cls, ps) %}
   {% endif %}

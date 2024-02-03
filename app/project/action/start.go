@@ -7,6 +7,7 @@ import (
 	"github.com/robert-nix/ansihtml"
 
 	"projectforge.dev/projectforge/app/lib/websocket"
+	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )
 
@@ -15,9 +16,9 @@ func onStart(_ context.Context, pm *PrjAndMods, ret *Result) *Result {
 		ret = newResult(TypeDebug, pm.Prj, pm.Cfg, pm.Logger)
 	}
 
-	cmd := fmt.Sprintf("build/debug/%s -v server source:%s", pm.Prj.Executable(), util.AppKey)
+	cmd := fmt.Sprintf("%s%s -v server source:%s", project.DebugOutputDir, pm.Prj.Executable(), util.AppKey)
 	exec := pm.XSvc.NewExec(pm.Prj.Key, cmd, pm.Prj.Path, pm.Prj.Info.EnvVars...)
-	exec.Link = "/p/" + pm.Prj.Key
+	exec.Link = pm.Prj.WebPath()
 	w := func(key string, b []byte) error {
 		m := util.ValueMap{"msg": string(b), "html": string(ansihtml.ConvertToHTML(b))}
 		msg := &websocket.Message{Channel: key, Cmd: "output", Param: util.ToJSONBytes(m, true)}
