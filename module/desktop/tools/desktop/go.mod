@@ -1,6 +1,6 @@
 module {{{ .Package }}}/tools/desktop
 
-go 1.21
+go 1.22
 
 require (
 	{{{ .Package }}} v0.0.0

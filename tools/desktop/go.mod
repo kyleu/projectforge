@@ -1,7 +1,7 @@
 // Content managed by Project Forge, see [projectforge.md] for details.
 module projectforge.dev/projectforge/tools/desktop
 
-go 1.21
+go 1.22
 
 require (
 	projectforge.dev/projectforge v0.0.0

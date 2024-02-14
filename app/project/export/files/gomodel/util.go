@@ -58,12 +58,16 @@ func modelString(g *golang.File, m *model.Model) *golang.Block {
 	return ret
 }
 
-func modelTitle(m *model.Model) *golang.Block {
+func modelTitle(g *golang.File, m *model.Model) *golang.Block {
 	ret := golang.NewBlock("Title", "func")
 	ret.W("func (%s *%s) TitleString() string {", m.FirstLetter(), m.Proper())
 	if titles := m.Columns.WithTag("title"); len(titles) > 0 {
 		toStrings := lo.Map(titles, func(title *model.Column, _ int) string {
-			return model.ToGoString(title.Type, fmt.Sprintf("%s.%s", m.FirstLetter(), title.Proper()), true)
+			x := model.ToGoString(title.Type, fmt.Sprintf("%s.%s", m.FirstLetter(), title.Proper()), true)
+			if strings.HasPrefix(x, "fmt.") {
+				g.AddImport(helper.ImpFmt)
+			}
+			return x
 		})
 		ret.W("\treturn %s", strings.Join(toStrings, " + \" / \" + "))
 	} else {
