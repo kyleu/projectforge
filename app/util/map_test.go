@@ -20,7 +20,7 @@ func assert(t *testing.T, name string, a any, b any, err error, messages ...stri
 	}
 	msg := fmt.Sprintf("%s [%v != %v]", name, a, b)
 	lo.ForEach(messages, func(m string, _ int) {
-		if len(m) > 0 {
+		if m != "" {
 			msg += "  " + m
 		}
 	})

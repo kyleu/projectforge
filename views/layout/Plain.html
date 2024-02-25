@@ -1,0 +1,24 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/util"
+) %}
+
+{% code
+  type Plain struct {}
+  var _ Page = (*Plain)(nil)
+%}
+{% func (p *Plain) Head(as *app.State, ps *cutil.PageState) %}
+  <meta charset="UTF-8">
+  <title>{%s ps.TitleString() %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  {% if ps.Description != "" %}<meta property="description" content="{%s ps.Description %}">
+  {% endif %}<meta property="og:title" content="{%s ps.TitleString() %}">
+  <meta property="og:image" content="/assets/{%u util.AppKey %}.svg">
+  <meta property="og:locale" content="en_US">{%s= ps.HeaderContent %}
+  <link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
+{% endfunc %}
+{% func (p *Plain) Nav(as *app.State, ps *cutil.PageState) %}{% endfunc %}
+{% func (p *Plain) Menu(ps *cutil.PageState) %}{% endfunc %}
+{% func (p *Plain) Body(as *app.State, ps *cutil.PageState) %}default body{% endfunc %}

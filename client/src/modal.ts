@@ -55,7 +55,7 @@ export function modalGetOrCreate(key: string, title: string): HTMLElement {
     }
     return el;
   }
-  return modalNew(key, title)
+  return modalNew(key, title);
 }
 
 export function modalGetBody(m: HTMLElement) {

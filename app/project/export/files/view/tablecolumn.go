@@ -59,7 +59,7 @@ func viewTableColumn(
 }
 
 func getTableColumnStrings(m *model.Model, modelKey string, rels model.Relations, models model.Models, prefix string) string {
-	ret := lo.FilterMap(rels, func(rel *model.Relation, idx int) (string, bool) {
+	ret := lo.FilterMap(rels, func(rel *model.Relation, _ int) (string, bool) {
 		relModel := models.Get(rel.Table)
 		if !relModel.CanTraverseRelation() {
 			return "", false

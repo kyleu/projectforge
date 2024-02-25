@@ -10,7 +10,7 @@ var UUIDDefault = uuid.UUID{}
 func UUIDFromString(s string) *uuid.UUID {
 	var retID *uuid.UUID
 
-	if len(s) > 0 {
+	if s != "" {
 		s, err := uuid.Parse(s)
 		if err == nil {
 			retID = &s
@@ -21,7 +21,7 @@ func UUIDFromString(s string) *uuid.UUID {
 }
 
 func UUIDFromStringOK(s string) uuid.UUID {
-	if len(s) > 0 {
+	if s != "" {
 		s, err := uuid.Parse(s)
 		if err == nil {
 			return s

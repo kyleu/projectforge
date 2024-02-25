@@ -81,11 +81,12 @@ func projectFromForm(frm util.ValueMap, prj *project.Project) error {
 	if prj.Package == "" {
 		prj.Package = "github.com/" + prj.Info.Org + "/" + prj.Key
 	}
+	gh := "https://github.com/" + prj.Info.Org + "/" + prj.Key
 	if prj.Info.Homepage == "" {
-		prj.Info.Homepage = "https://github.com/" + prj.Info.Org + "/" + prj.Key
+		prj.Info.Homepage = gh
 	}
 	if prj.Info.Sourcecode == "" {
-		prj.Info.Sourcecode = "https://github.com/" + prj.Info.Org + "/" + prj.Key
+		prj.Info.Sourcecode = gh
 	}
 
 	prj.Build = project.BuildFromMap(frm)

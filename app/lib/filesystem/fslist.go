@@ -63,6 +63,9 @@ func (f *FileSystem) ListFilesRecursive(path string, ign []string, _ util.Logger
 	p := f.getPath(path)
 	var ret []string
 	err := filepath.Walk(p, func(fp string, info fs.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
 		m := strings.TrimPrefix(strings.TrimPrefix(fp, p+"\\"), p+"/")
 		if checkIgnore(ignore, m) {
 			return nil

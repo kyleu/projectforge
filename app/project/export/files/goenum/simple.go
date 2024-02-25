@@ -8,6 +8,8 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+const timePointer = "*time.Time"
+
 func structSimple(e *enum.Enum) []*golang.Block {
 	tBlock := golang.NewBlock(e.Proper(), "typealias")
 	tBlock.W("type %s string", e.Proper())

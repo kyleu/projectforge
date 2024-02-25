@@ -18,7 +18,7 @@ func (s *Service) RegisterTap(rc *fasthttp.RequestCtx, logger util.Logger) (uuid
 		defer s.tapsMu.Unlock()
 		s.taps[id] = conn
 		onMessage := func(m *Message) error {
-			logger.Errorf("message received from tap socket")
+			logger.Errorf("message [%s:%s] received from tap socket", m.Channel, m.Cmd)
 			return nil
 		}
 		onDisconnect := func() error {

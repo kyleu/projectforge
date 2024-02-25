@@ -68,7 +68,7 @@ func parseYAMLForm(rc *fasthttp.RequestCtx) (util.ValueMap, error) {
 func parseHTTPForm(rc *fasthttp.RequestCtx) (util.ValueMap, error) {
 	f := rc.PostArgs()
 	ret := make(util.ValueMap, f.Len())
-	f.VisitAll(func(key []byte, value []byte) {
+	f.VisitAll(func(key []byte, _ []byte) {
 		k := string(key)
 		xs := f.PeekMulti(k)
 		v := lo.Map(xs, func(x []byte, _ int) string {

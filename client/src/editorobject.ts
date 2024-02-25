@@ -22,7 +22,9 @@ function createEditorButtons() {
   cancelBtn.innerText = "Cancel";
   cancelBtn.type = "button";
   // cancelBtn.onclick = () => window.history.back();
-  cancelBtn.onclick = () => window.location.href = "#";
+  cancelBtn.onclick = () => {
+    window.location.href = "#";
+  };
 
   return btns;
 }
@@ -39,7 +41,7 @@ function createEditor(e: Editor, x: { [p: string]: unknown }, onComplete: (row: 
   form.onsubmit = () => {
     onComplete(editCopy);
     return false;
-  }
+  };
 
   const t = document.createElement("table");
   form.appendChild(t);
@@ -77,7 +79,9 @@ function createEditor(e: Editor, x: { [p: string]: unknown }, onComplete: (row: 
 function onEditComplete(e: Editor, idx: number, row: { [p: string]: unknown }) {
   e.rows[idx] = row;
   e.textarea.value = JSON.stringify(e.rows, null, 2);
-  e.table!.replaceWith(createTable(e));
+  if (e.table) {
+    e.table.replaceWith(createTable(e));
+  }
   window.location.href = "#";
 }
 
@@ -87,9 +91,9 @@ export function rowEditHandler(idx: number, e: Editor, x: { [p: string]: unknown
     modalSetTitle(modal, "Editing Row");
     const onComplete = (row: { [p: string]: unknown }) => {
       onEditComplete(e, idx, row);
-    }
+    };
     const objectEditor = createEditor(e, x, onComplete);
     modalGetBody(modal).replaceChildren(objectEditor);
     window.location.href = "#modal-rich-editor";
-  }
+  };
 }

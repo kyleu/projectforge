@@ -5,21 +5,21 @@ function stringInput(id: string, col: Column, x: { [p: string]: unknown }, onCha
   const input = document.createElement("input");
   input.name = col.key;
   input.id = id;
-  let v = x[col.key];
+  const v = x[col.key];
   if (v !== null && v) {
     input.value = v.toString();
   }
   if (!onChange) {
     onChange = () => {
       x[col.key] = input.value;
-    }
+    };
   }
   input.onchange = onChange;
   return input;
 }
 
 function boolInput(col: Column, x: { [p: string]: unknown }) {
-  let vx = x[col.key];
+  const vx = x[col.key];
   const v = vx !== null && (vx === "true" || vx === true);
 
   const div = document.createElement("div");
@@ -30,13 +30,13 @@ function boolInput(col: Column, x: { [p: string]: unknown }) {
     const input = document.createElement("input");
     label.appendChild(input);
     input.name = col.key;
-    input.type = "radio"
+    input.type = "radio";
     input.value = b ? "true" : "false";
-    input.checked = v == b;
+    input.checked = v === b;
     input.onclick = () => {
       x[col.key] = b;
       return true;
-    }
+    };
     const span = document.createElement("span");
     label.appendChild(span);
     span.innerText = b ? " True " : " False ";
@@ -46,7 +46,7 @@ function boolInput(col: Column, x: { [p: string]: unknown }) {
 
 function intInput(id: string, col: Column, x: { [p: string]: unknown }) {
   const input = stringInput(id, col, x, () => {
-    x[col.key] = parseInt(input.value);
+    x[col.key] = parseInt(input.value, 10);
   });
   input.type = "number";
   return input;

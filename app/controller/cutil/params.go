@@ -13,7 +13,7 @@ import (
 func ParamSetFromRequest(rc *fasthttp.RequestCtx) filter.ParamSet {
 	ret := filter.ParamSet{}
 	args := rc.URI().QueryArgs()
-	args.VisitAll(func(key []byte, value []byte) {
+	args.VisitAll(func(key []byte, _ []byte) {
 		qk := string(key)
 		if strings.Contains(qk, ".") {
 			ret = apply(ret, qk, string(args.Peek(qk)))

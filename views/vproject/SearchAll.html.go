@@ -121,33 +121,32 @@ func (p *SearchAll) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
 //line views/vproject/SearchAll.html:44
 	qw422016.N().S(`    </ul>
   </div>
-</div>
 `)
-//line views/vproject/SearchAll.html:48
+//line views/vproject/SearchAll.html:47
 }
 
-//line views/vproject/SearchAll.html:48
+//line views/vproject/SearchAll.html:47
 func (p *SearchAll) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vproject/SearchAll.html:48
+//line views/vproject/SearchAll.html:47
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/SearchAll.html:48
+//line views/vproject/SearchAll.html:47
 	p.StreamBody(qw422016, as, ps)
-//line views/vproject/SearchAll.html:48
+//line views/vproject/SearchAll.html:47
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/SearchAll.html:48
+//line views/vproject/SearchAll.html:47
 }
 
-//line views/vproject/SearchAll.html:48
+//line views/vproject/SearchAll.html:47
 func (p *SearchAll) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vproject/SearchAll.html:48
+//line views/vproject/SearchAll.html:47
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/SearchAll.html:48
+//line views/vproject/SearchAll.html:47
 	p.WriteBody(qb422016, as, ps)
-//line views/vproject/SearchAll.html:48
+//line views/vproject/SearchAll.html:47
 	qs422016 := string(qb422016.B)
-//line views/vproject/SearchAll.html:48
+//line views/vproject/SearchAll.html:47
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/SearchAll.html:48
+//line views/vproject/SearchAll.html:47
 	return qs422016
-//line views/vproject/SearchAll.html:48
+//line views/vproject/SearchAll.html:47
 }

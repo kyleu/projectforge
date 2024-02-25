@@ -31,7 +31,6 @@ type ErrorDetail struct {
 func GetErrorDetail(e error) *ErrorDetail {
 	var stack errors.StackTrace
 
-	//nolint:errorlint
 	t, ok := e.(stackTracer)
 	if ok {
 		stack = t.StackTrace()
@@ -39,7 +38,6 @@ func GetErrorDetail(e error) *ErrorDetail {
 
 	var cause *ErrorDetail
 
-	//nolint:errorlint
 	u, ok := e.(unwrappable)
 	if ok {
 		cause = GetErrorDetail(u.Unwrap())
@@ -64,8 +62,7 @@ func TraceDetail(trace errors.StackTrace) []ErrorFrame {
 	var validLines []string
 
 	lo.ForEach(lines, func(line string, _ int) {
-		l := strings.TrimSpace(line)
-		if len(l) > 0 {
+		if l := strings.TrimSpace(line); l != "" {
 			validLines = append(validLines, l)
 		}
 	})

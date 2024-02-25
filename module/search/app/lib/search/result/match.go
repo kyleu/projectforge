@@ -35,7 +35,7 @@ func (m *Match) ValueSplit(q string) []string {
 
 		idx = strings.Index(vl, ql)
 	}
-	if len(cut) > 0 {
+	if cut != "" {
 		ret = append(ret, cut)
 	}
 	return ret

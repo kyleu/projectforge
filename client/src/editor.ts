@@ -12,7 +12,7 @@ function extractEditor(el: HTMLElement) {
   const columns: Column[] = JSON.parse(columnsStr.replace(/\\"/gu, "\""));
 
   const inp: HTMLTextAreaElement = req<HTMLTextAreaElement>("textarea", el);
-  let curr: any[] = JSON.parse(inp.value);
+  let curr: unknown[] = JSON.parse(inp.value);
   if (curr === undefined || curr === null) {
     curr = [];
   }
@@ -21,9 +21,9 @@ function extractEditor(el: HTMLElement) {
   }
   inp.hidden = true;
 
-  const e: Editor = {key: key, title: title, columns: columns, textarea: inp, rows: curr}
+  const e: Editor = {key: key, title: title, columns: columns, textarea: inp, rows: curr};
 
-  let tbl = createTable(e);
+  const tbl = createTable(e);
   el.appendChild(tbl);
 
   return e;
@@ -39,7 +39,9 @@ function editorShow(el: HTMLElement, e: Editor) {
   }
   e.table?.remove();
   createTable(e);
-  el.appendChild(e.table!);
+  if (e.table) {
+    el.appendChild(e.table);
+  }
   e.textarea.hidden = true;
 }
 
@@ -64,7 +66,7 @@ function wireToggles(el: HTMLElement, e: Editor) {
       if (toggle.innerText === rawLabel) {
         editorHide(e, editorLabel);
       } else {
-        editorShow(el, e)
+        editorShow(el, e);
       }
     };
   });
@@ -72,7 +74,7 @@ function wireToggles(el: HTMLElement, e: Editor) {
 
 export function createEditor(el: HTMLElement): void {
   const e = extractEditor(el);
-  wireToggles(el, e)
+  wireToggles(el, e);
 }
 
 export function editorInit() {

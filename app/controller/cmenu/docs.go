@@ -26,7 +26,7 @@ func docMenu(logger util.Logger) *menu.Item {
 
 func docMenuCreate(logger util.Logger) *menu.Item {
 	var paths []string
-	err := fs.WalkDir(doc.FS, ".", func(path string, d fs.DirEntry, err error) error {
+	err := fs.WalkDir(doc.FS, ".", func(path string, _ fs.DirEntry, err error) error {
 		paths = append(paths, path)
 		return err
 	})

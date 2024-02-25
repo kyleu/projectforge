@@ -103,13 +103,14 @@ func gatherProjectInfo(p *project.Project) {
 	}
 	p.Package = promptString("Enter your project's package", p.Package)
 
+	ph := "https://" + p.Package
 	if p.Info.Homepage == "" {
-		p.Info.Homepage = "https://" + p.Package
+		p.Info.Homepage = ph
 	}
 	p.Info.Homepage = promptString("Enter this project's home page", p.Info.Homepage)
 
 	if p.Info.Sourcecode == "" {
-		p.Info.Sourcecode = "https://" + p.Package
+		p.Info.Sourcecode = ph
 	}
 	p.Info.Sourcecode = promptString("Enter this project's source repository", p.Info.Sourcecode)
 }

@@ -26,7 +26,7 @@ func actionF(ctx context.Context, t action.Type, args []string) error {
 }
 
 func actionCmd(ctx context.Context, t action.Type) *coral.Command {
-	f := func(cmd *coral.Command, args []string) error { return actionF(ctx, t, args) }
+	f := func(_ *coral.Command, args []string) error { return actionF(ctx, t, args) }
 	var aliases []string
 	switch t.Key {
 	case action.TypeCreate.Key:
@@ -40,7 +40,7 @@ func actionCmd(ctx context.Context, t action.Type) *coral.Command {
 	if t.Key == action.TypeBuild.Key {
 		lo.ForEach(action.AllBuilds, func(x *action.Build, _ int) {
 			k := x.Key
-			fx := func(cmd *coral.Command, args []string) error {
+			fx := func(_ *coral.Command, args []string) error {
 				return actionF(ctx, t, append(slices.Clone(args), k))
 			}
 			ret.AddCommand(&coral.Command{Use: x.Key, Short: x.Description, RunE: fx})

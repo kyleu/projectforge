@@ -38,6 +38,6 @@ func updateF(ctx context.Context) error {
 }
 
 func updateCmd() *coral.Command {
-	f := func(cmd *coral.Command, _ []string) error { return updateF(context.Background()) }
+	f := func(_ *coral.Command, _ []string) error { return updateF(context.Background()) }
 	return &coral.Command{Use: "update", Short: "Refreshes downloaded assets such as modules", RunE: f}
 }

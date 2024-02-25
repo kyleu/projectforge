@@ -47,7 +47,7 @@ func ThemeColorEdit(rc *fasthttp.RequestCtx) {
 			return "", errors.New("provided color must be a hex string")
 		}
 		t := theme.ColorTheme(strings.TrimPrefix(color, "#"), gamut.Hex(color))
-		ps.SetTitleAndData("Edit theme ["+t.Key+"]", t)
+		ps.SetTitleAndData("Edit theme colors ["+t.Key+"]", t)
 		ps.DefaultNavIcon = themeIcon
 		page := &vtheme.Edit{Theme: t, Icon: "app", Exists: as.Themes.FileExists(t.Key)}
 		return controller.Render(rc, as, page, ps, "Themes||/theme", t.Key)
@@ -99,7 +99,7 @@ func ThemePaletteEdit(rc *fasthttp.RequestCtx) {
 		if t == nil {
 			return "", errors.Errorf("invalid theme [%s] for palette [%s]", key, palette)
 		}
-		ps.SetTitleAndData("Edit theme ["+t.Key+"]", t)
+		ps.SetTitleAndData("Edit theme palette ["+t.Key+"]", t)
 		ps.DefaultNavIcon = themeIcon
 		return controller.Render(rc, as, &vtheme.Edit{Theme: t, Icon: "app"}, ps, "Themes||/theme", t.Key)
 	})

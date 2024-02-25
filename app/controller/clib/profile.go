@@ -44,7 +44,7 @@ func profileAction(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) 
 }
 
 func ProfileSave(rc *fasthttp.RequestCtx) {
-	controller.Act("profile.save", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+	controller.Act("profile.save", rc, func(_ *app.State, ps *cutil.PageState) (string, error) {
 		frm, err := cutil.ParseForm(rc)
 		if err != nil {
 			return "", err

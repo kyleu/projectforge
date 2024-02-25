@@ -122,7 +122,7 @@ func (e *Enum) ExtraFieldValues(k string) ([]any, bool) {
 
 func (e *Enum) PackageWithGroup(prefix string) string {
 	if len(e.Group) == 0 {
-		if len(prefix) > 0 && !strings.HasSuffix(prefix, "/") {
+		if prefix != "" && !strings.HasSuffix(prefix, "/") {
 			prefix += "/"
 		}
 		return prefix + e.Package

@@ -57,7 +57,7 @@ func StringSplitLastOnly(s string, sep byte, cutc bool) string {
 func StringSplitAndTrim(s string, delim string) []string {
 	return lo.FilterMap(strings.Split(s, delim), func(x string, _ int) (string, bool) {
 		x = strings.TrimSpace(x)
-		return x, len(x) > 0
+		return x, x != ""
 	})
 }
 

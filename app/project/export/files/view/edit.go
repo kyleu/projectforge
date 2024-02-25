@@ -46,7 +46,7 @@ func exportViewEditClass(m *model.Model) *golang.Block {
 
 func exportViewEditBody(m *model.Model, p *project.Project, args *model.Args) (*golang.Block, error) {
 	editURL := "/" + m.Route()
-	lo.ForEach(m.PKs(), func(pk *model.Column, idx int) {
+	lo.ForEach(m.PKs(), func(pk *model.Column, _ int) {
 		editURL += "/{%% " + pk.ToGoString("p.Model.") + " %%}"
 	})
 

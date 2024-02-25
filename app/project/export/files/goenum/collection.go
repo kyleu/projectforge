@@ -130,7 +130,7 @@ func blockGetByPropUnique(e *enum.Enum, efk string, t string) (*golang.Block, er
 		dflt = util.BoolFalse
 	case types.KeyTimestamp:
 		dflt = "nil"
-		goType = "*time.Time"
+		goType = timePointer
 	default:
 		return nil, errors.Errorf("unable to create enum helper for type [%s]", t)
 	}
@@ -159,7 +159,7 @@ func blockGetByPropShared(e *enum.Enum, efk string, t string) (*golang.Block, er
 	prop := util.StringToCamel(efk)
 	goType := t
 	if t == types.KeyTimestamp {
-		goType = "*time.Time"
+		goType = timePointer
 	}
 	gxBlock := golang.NewBlock(e.ProperPlural()+"GetBy"+efk, "method")
 	gxBlock.W("func (%s %s) GetBy%s(input %s, logger util.Logger) %s {", e.FirstLetter(), e.ProperPlural(), prop, goType, e.ProperPlural())

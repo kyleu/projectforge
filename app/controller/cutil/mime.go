@@ -88,7 +88,7 @@ func RespondYAML(rc *fasthttp.RequestCtx, filename string, body any) (string, er
 
 func RespondMIME(filename string, mime string, ext string, ba []byte, rc *fasthttp.RequestCtx) (string, error) {
 	rc.Response.Header.SetContentType(mime + "; charset=UTF-8")
-	if len(filename) > 0 {
+	if filename != "" {
 		if !strings.HasSuffix(filename, "."+ext) {
 			filename = filename + "." + ext
 		}
