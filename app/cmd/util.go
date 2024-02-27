@@ -70,6 +70,7 @@ func initIfNeeded() error {
 	if err != nil {
 		return err
 	}
+	util.DEBUG = _flags.Debug
 	_logger = l
 	_initialized = true
 	return nil

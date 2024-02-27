@@ -163,7 +163,7 @@ func blockGetByPropShared(e *enum.Enum, efk string, t string) (*golang.Block, er
 	}
 	gxBlock := golang.NewBlock(e.ProperPlural()+"GetBy"+efk, "method")
 	gxBlock.W("func (%s %s) GetBy%s(input %s, logger util.Logger) %s {", e.FirstLetter(), e.ProperPlural(), prop, goType, e.ProperPlural())
-	gxBlock.W("\tvar ret = %s", e.FirstLetter())
+	gxBlock.W("\tret := %s", e.FirstLetter())
 	gxBlock.W("\tfor _, value := range %s {", e.FirstLetter())
 	gxBlock.W("\t\tif value.%s == input {", prop)
 	gxBlock.W("\t\t\tret = append(ret, value)")

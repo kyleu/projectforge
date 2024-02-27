@@ -10,7 +10,7 @@ var OrderingFieldDescs = util.FieldDescs{
 
 type Ordering struct {
 	Column string `json:"column"`
-	Asc    bool   `json:"asc"`
+	Asc    bool   `json:"asc,omitempty"`
 }
 
 func (o Ordering) String() string {

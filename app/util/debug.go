@@ -11,6 +11,8 @@ import (
 	"time"
 )
 
+var DEBUG = false
+
 type DebugInfo struct {
 	ServerTags  *OrderedMap[string]
 	AppTags     *OrderedMap[string]
