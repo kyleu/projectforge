@@ -14,6 +14,7 @@ import (
 type MigrationFile struct {
 	Title   string
 	Content string
+	Tags    []string
 }
 
 type MigrationFiles []*MigrationFile
@@ -28,8 +29,8 @@ func AddMigration(mf *MigrationFile) {
 	databaseMigrations = append(databaseMigrations, mf)
 }
 
-func RegisterMigration(title string, content string) {
-	AddMigration(&MigrationFile{Title: title, Content: content})
+func RegisterMigration(title string, content string, tags ...string) {
+	AddMigration(&MigrationFile{Title: title, Content: content, Tags: tags})
 }
 
 func GetMigrations() MigrationFiles {

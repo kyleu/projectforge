@@ -2,16 +2,18 @@ package migrate
 
 import (
 	"context"
+	"slices"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"{{{ .Package }}}/app/lib/database"
 	"{{{ .Package }}}/app/lib/telemetry"
 	"{{{ .Package }}}/app/util"
 )
 
-func Migrate(ctx context.Context, s *database.Service, logger util.Logger) error {
+func Migrate(ctx context.Context, s *database.Service, logger util.Logger, matchesTags ...string) error {
 	logger = logger.With("svc", "migrate")
 	ctx, span, logger := telemetry.StartSpan(ctx, "database:migrate", logger)
 	defer span.Complete()
@@ -29,14 +31,20 @@ func Migrate(ctx context.Context, s *database.Service, logger util.Logger) error
 		_ = tx.Rollback()
 	}()
 
+	migs := lo.Filter(databaseMigrations, func(m *MigrationFile, _ int) bool {
+		return len(matchesTags) == 0 || lo.ContainsBy(matchesTags, func(x string) bool {
+			return slices.Contains(m.Tags, x)
+		})
+	})
+
 	maxIdx := maxMigrationIdx(ctx, s, tx, logger)
 
-	if len(databaseMigrations) > maxIdx+1 {
-		c := len(databaseMigrations) - maxIdx
+	if len(migs) > maxIdx+1 {
+		c := len(migs) - maxIdx
 		logger.Infof("applying [%s]...", util.StringPlural(c, "migration"))
 	}
 
-	for i, file := range databaseMigrations {
+	for i, file := range migs {
 		err = run(ctx, maxIdx, i, file, s, tx, logger)
 		if err != nil {
 			return errors.Wrapf(err, "error running database migration [%s]", file.Title)
