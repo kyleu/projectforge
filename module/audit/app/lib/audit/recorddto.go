@@ -1,8 +1,8 @@
 package audit
 
 import (
-	{{{ if .SQLServer }}}{{{ else }}}"encoding/json"
-	{{{ end }}}"fmt"
+	{{{ if .SQLServer }}}{{{ else }}}{{{ if .SQLite }}}{{{ else }}}"encoding/json"
+	{{{ end }}}{{{ end }}}"fmt"
 	"strings"
 	"time"
 
@@ -28,6 +28,14 @@ var (
 	Changes  string                 `db:"changes"`
 	Metadata string                 `db:"metadata"`
 	Occurred time.Time              `db:"occurred"`
+}{{{ else }}}{{{ if .SQLite }}}type recordRow struct {
+	ID       uuid.UUID `db:"id"`
+	AuditID  uuid.UUID `db:"audit_id"`
+	T        string    `db:"t"`
+	PK       string    `db:"pk"`
+	Changes  string    `db:"changes"`
+	Metadata string    `db:"metadata"`
+	Occurred time.Time `db:"occurred"`
 }{{{ else }}}type recordRow struct {
 	ID       uuid.UUID       `db:"id"`
 	AuditID  uuid.UUID       `db:"audit_id"`
@@ -36,7 +44,7 @@ var (
 	Changes  json.RawMessage `db:"changes"`
 	Metadata json.RawMessage `db:"metadata"`
 	Occurred time.Time       `db:"occurred"`
-}{{{ end }}}
+}{{{ end }}}{{{ end }}}
 
 func (r *recordRow) ToRecord() *Record {
 	if r == nil {
@@ -49,11 +57,15 @@ func (r *recordRow) ToRecord() *Record {
 	return &Record{
 		ID: util.UUIDFromStringOK(r.ID.String()), AuditID: util.UUIDFromStringOK(r.AuditID.String()), T: r.T, PK: r.PK,
 		Changes: changesArg, Metadata: metadataArg, Occurred: r.Occurred,
-	}{{{ else }}}
+	}{{{ else }}}{{{ if .SQLite }}}
+	_ = util.FromJSON([]byte(r.Changes), &changesArg)
+	metadataArg := util.ValueMap{}
+	_ = util.FromJSON([]byte(r.Metadata), &metadataArg)
+	return &Record{ID: r.ID, AuditID: r.AuditID, T: r.T, PK: r.PK, Changes: changesArg, Metadata: metadataArg, Occurred: r.Occurred}{{{ else }}}
 	_ = util.FromJSON(r.Changes, &changesArg)
 	metadataArg := util.ValueMap{}
 	_ = util.FromJSON(r.Metadata, &metadataArg)
-	return &Record{ID: r.ID, AuditID: r.AuditID, T: r.T, PK: r.PK, Changes: changesArg, Metadata: metadataArg, Occurred: r.Occurred}{{{ end }}}
+	return &Record{ID: r.ID, AuditID: r.AuditID, T: r.T, PK: r.PK, Changes: changesArg, Metadata: metadataArg, Occurred: r.Occurred}{{{ end }}}{{{ end }}}
 }
 
 type recordRows []*recordRow

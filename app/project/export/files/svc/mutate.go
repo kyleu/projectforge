@@ -33,7 +33,7 @@ func ServiceMutate(m *model.Model, args *model.Args, addHeader bool, linebreak s
 	} else {
 		return nil, err
 	}
-	if save, err := serviceSave(g, m); err == nil {
+	if save, err := serviceSave(g, m, args.Audit(m)); err == nil {
 		g.AddBlocks(save, serviceSaveChunked(m))
 	} else {
 		return nil, err
@@ -71,7 +71,7 @@ func serviceCreate(g *golang.File, m *model.Model, audit bool) (*golang.Block, e
 		ret.W("\tvals := make([]any, 0, len(models)*len(columnsQuoted))")
 		ret.W("\tfor _, arg := range models {")
 		msg := "\t\t_, _, err := s.audit.ApplyObjSimple(ctx, \"%s.create\", \"created new %s\", nil, arg, %q, nil, logger)"
-		ret.W(msg, m.Proper(), m.TitleLower(), m.Proper())
+		ret.W(msg, m.Proper(), m.TitleLower(), m.Name)
 		ret.WE(2)
 		ret.W("\t\tvals = append(vals, arg.ToData()...)")
 		ret.W("\t}")
@@ -152,7 +152,7 @@ func serviceUpdate(g *golang.File, m *model.Model, audit bool, database string) 
 func serviceAuditApply(g *golang.File, m *model.Model, ret *golang.Block) {
 	g.AddImport(helper.ImpFmt)
 	ret.W("\tmsg := fmt.Sprintf(\"updated %s [%%%%s]\", model.String())", m.Title())
-	ret.W("\t_, _, err = s.audit.ApplyObjSimple(ctx, \"%s.update\", msg, curr, model, %q, nil, logger)", m.Proper(), m.Proper())
+	ret.W("\t_, _, err = s.audit.ApplyObjSimple(ctx, \"%s.update\", msg, curr, model, %q, nil, logger)", m.Proper(), m.Name)
 	ret.WE(1)
 }
 
@@ -202,7 +202,7 @@ func serviceUpdateIfNeeded(g *golang.File, m *model.Model, database string) (*go
 	return ret, nil
 }
 
-func serviceSave(g *golang.File, m *model.Model) (*golang.Block, error) {
+func serviceSave(g *golang.File, m *model.Model, audit bool) (*golang.Block, error) {
 	ret := golang.NewBlock("Save", "func")
 	ret.W("func (s *Service) Save(ctx context.Context, tx *sqlx.Tx, logger util.Logger, models ...*%s) error {", m.Proper())
 	ret.W("\tif len(models) == 0 {")
@@ -218,6 +218,26 @@ func serviceSave(g *golang.File, m *model.Model) (*golang.Block, error) {
 	ret.W("\tdata := lo.FlatMap(models, func(model *%s, _ int) []any {", m.Proper())
 	ret.W("\t\treturn model.ToData()")
 	ret.W("\t})")
+	if audit {
+		if len(m.PKs()) == 1 {
+			pk := m.PKs()[0]
+			ret.W("\tcurr, err := s.GetMultiple(ctx, tx, nil, logger, %s(models).%s()...)", m.ProperPlural(), pk.ProperPlural())
+		} else {
+			ret.W("\tcurr, err := s.GetMultiple(ctx, tx, nil, logger, %s(models).ToPKs()...)", m.ProperPlural())
+		}
+		ret.W("\tif err != nil {")
+		ret.W("\t\treturn err")
+		ret.W("\t}")
+		ret.W("\tfor _, arg := range models {")
+		ret.W("\t\tif x := curr.Get(%s); x != nil {", m.PKs().ToRefs("arg."))
+		msg := "\t\t\t_, _, err := s.audit.ApplyObjSimple(ctx, \"%s.create\", \"created new %s\", x, arg, %q, nil, logger)"
+		ret.W(msg, m.Proper(), m.Camel(), m.Name)
+		ret.W("\t\t\tif err != nil {")
+		ret.W("\t\t\t\treturn err")
+		ret.W("\t\t\t}")
+		ret.W("\t\t}")
+		ret.W("\t}")
+	}
 	ret.W("\treturn s.db.Insert(ctx, q, tx, logger, data...)")
 	ret.W("}")
 	return ret, nil

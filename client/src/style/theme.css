@@ -88,3 +88,19 @@
   border: 3px solid var(--color-background-muted);
   background-color: var(--color-background-muted);
 }
+
+.only-light-theme { display: inline-block; }
+.only-dark-theme { display: none; }
+.mode-light .only-light-theme { display: inline-block; }
+.mode-light .only-dark-theme { display: none; }
+.mode-dark .only-light-theme { display: none; }
+.mode-dark .only-dark-theme { display: inline-block; }
+
+@media (prefers-color-scheme: dark) {
+  .only-light-theme { display: none; }
+  .only-dark-theme { display: inline-block; }
+  .mode-light .only-light-theme { display: inline-block; }
+  .mode-light .only-dark-theme { display: none; }
+  .mode-dark .only-light-theme { display: none; }
+  .mode-dark .only-dark-theme { display: inline-block; }
+}

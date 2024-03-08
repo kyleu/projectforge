@@ -50,7 +50,7 @@ func serviceGetMultipleManyCols(m *model.Model, name string, cols model.Columns,
 		refs = append(refs, fmt.Sprintf("x.%s", pk.Proper()))
 	})
 
-	msg := "func (s *Service) %s(ctx context.Context, tx *sqlx.Tx%s, logger util.Logger, pks ...*PK) (%s, error) {"
+	msg := "func (s *Service) %s(ctx context.Context, tx *sqlx.Tx, params *filter.Params%s, logger util.Logger, pks ...*PK) (%s, error) {"
 	ret.W(msg, name, getSuffix(m), m.ProperPlural())
 	ret.W("\tif len(pks) == 0 {")
 	ret.W("\t\treturn %s{}, nil", m.ProperPlural())
@@ -67,7 +67,8 @@ func serviceGetMultipleManyCols(m *model.Model, name string, cols model.Columns,
 		ret.W("\twc = addDeletedClause(wc, includeDeleted)")
 	}
 	ret.W("\tret := rows{}")
-	ret.W("\tq := database.SQLSelectSimple(columnsString, %s, s.db.Type, wc)", tableClause)
+	ret.W("\tparams = filters(params)")
+	ret.W("\tq := database.SQLSelect(columnsString, %s, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Type)", tableClause)
 
 	ret.W("\tvals := lo.FlatMap(pks, func(x *PK, _ int) []any {")
 	ret.W("\t\treturn []any{%s}", strings.Join(refs, ", "))

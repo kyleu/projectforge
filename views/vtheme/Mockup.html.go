@@ -88,93 +88,94 @@ func StreamMockupColors(qw422016 *qt422016.Writer, navTitle string, mode string,
 	if mode != "" {
 		cls += " only-" + mode
 	}
+	cls += "-theme"
 	if pointer {
 		cls += " pointer"
 	}
 
-//line views/vtheme/Mockup.html:38
+//line views/vtheme/Mockup.html:39
 	components.StreamIndent(qw422016, true, indent)
-//line views/vtheme/Mockup.html:38
+//line views/vtheme/Mockup.html:39
 	qw422016.N().S(`<div class="`)
-//line views/vtheme/Mockup.html:39
+//line views/vtheme/Mockup.html:40
 	qw422016.E().S(cls)
-//line views/vtheme/Mockup.html:39
+//line views/vtheme/Mockup.html:40
 	qw422016.N().S(`"><div class="mock-nav" style="`)
-//line views/vtheme/Mockup.html:40
+//line views/vtheme/Mockup.html:41
 	qw422016.E().S(navStyle)
-//line views/vtheme/Mockup.html:40
+//line views/vtheme/Mockup.html:41
 	qw422016.N().S(`">`)
-//line views/vtheme/Mockup.html:40
+//line views/vtheme/Mockup.html:41
 	components.StreamSVGRef(qw422016, icon, 12, 12, `icon`, ps)
-//line views/vtheme/Mockup.html:40
+//line views/vtheme/Mockup.html:41
 	qw422016.E().S(navTitle)
-//line views/vtheme/Mockup.html:40
+//line views/vtheme/Mockup.html:41
 	qw422016.N().S(`</div><div class="mock-menu" style="`)
-//line views/vtheme/Mockup.html:41
+//line views/vtheme/Mockup.html:42
 	qw422016.E().S(menuStyle)
-//line views/vtheme/Mockup.html:41
+//line views/vtheme/Mockup.html:42
 	qw422016.N().S(`"><div class="mock-link" style="`)
-//line views/vtheme/Mockup.html:42
+//line views/vtheme/Mockup.html:43
 	qw422016.E().S(menuLinkStyle)
-//line views/vtheme/Mockup.html:42
+//line views/vtheme/Mockup.html:43
 	qw422016.N().S(`">A</div><div class="mock-link-selected" style="`)
-//line views/vtheme/Mockup.html:43
+//line views/vtheme/Mockup.html:44
 	qw422016.E().S(menuLinkSelectedStyle)
-//line views/vtheme/Mockup.html:43
+//line views/vtheme/Mockup.html:44
 	qw422016.N().S(`">B</div><div class="mock-link" style="`)
-//line views/vtheme/Mockup.html:44
+//line views/vtheme/Mockup.html:45
 	qw422016.E().S(menuLinkStyle)
-//line views/vtheme/Mockup.html:44
+//line views/vtheme/Mockup.html:45
 	qw422016.N().S(`">C</div><div class="mock-link" style="`)
-//line views/vtheme/Mockup.html:45
+//line views/vtheme/Mockup.html:46
 	qw422016.E().S(menuLinkStyle)
-//line views/vtheme/Mockup.html:45
+//line views/vtheme/Mockup.html:46
 	qw422016.N().S(`">D</div></div><div class="mock-main" style="`)
-//line views/vtheme/Mockup.html:47
+//line views/vtheme/Mockup.html:48
 	qw422016.E().S(mainStyle)
-//line views/vtheme/Mockup.html:47
+//line views/vtheme/Mockup.html:48
 	qw422016.N().S(`"><div class="mock-muted" style="`)
-//line views/vtheme/Mockup.html:48
+//line views/vtheme/Mockup.html:49
 	qw422016.E().S(mutedStyle)
-//line views/vtheme/Mockup.html:48
+//line views/vtheme/Mockup.html:49
 	qw422016.N().S(`">Welcome!</div><div><div class="mock-list">Here's some links:</div><ul><li class="mock-link" style="`)
-//line views/vtheme/Mockup.html:52
+//line views/vtheme/Mockup.html:53
 	qw422016.E().S(linkStyle)
-//line views/vtheme/Mockup.html:52
+//line views/vtheme/Mockup.html:53
 	qw422016.N().S(`">New</li><li class="mock-link" style="`)
-//line views/vtheme/Mockup.html:53
+//line views/vtheme/Mockup.html:54
 	qw422016.E().S(linkStyle)
-//line views/vtheme/Mockup.html:53
+//line views/vtheme/Mockup.html:54
 	qw422016.N().S(`">Also New</li><li class="mock-link-visited" style="`)
-//line views/vtheme/Mockup.html:54
+//line views/vtheme/Mockup.html:55
 	qw422016.E().S(linkVisitedStyle)
-//line views/vtheme/Mockup.html:54
+//line views/vtheme/Mockup.html:55
 	qw422016.N().S(`">Visited</li></ul></div></div></div>`)
-//line views/vtheme/Mockup.html:59
+//line views/vtheme/Mockup.html:60
 }
 
-//line views/vtheme/Mockup.html:59
+//line views/vtheme/Mockup.html:60
 func WriteMockupColors(qq422016 qtio422016.Writer, navTitle string, mode string, c *theme.Colors, pointer bool, icon string, indent int, ps *cutil.PageState) {
-//line views/vtheme/Mockup.html:59
+//line views/vtheme/Mockup.html:60
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vtheme/Mockup.html:59
+//line views/vtheme/Mockup.html:60
 	StreamMockupColors(qw422016, navTitle, mode, c, pointer, icon, indent, ps)
-//line views/vtheme/Mockup.html:59
+//line views/vtheme/Mockup.html:60
 	qt422016.ReleaseWriter(qw422016)
-//line views/vtheme/Mockup.html:59
+//line views/vtheme/Mockup.html:60
 }
 
-//line views/vtheme/Mockup.html:59
+//line views/vtheme/Mockup.html:60
 func MockupColors(navTitle string, mode string, c *theme.Colors, pointer bool, icon string, indent int, ps *cutil.PageState) string {
-//line views/vtheme/Mockup.html:59
+//line views/vtheme/Mockup.html:60
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vtheme/Mockup.html:59
+//line views/vtheme/Mockup.html:60
 	WriteMockupColors(qb422016, navTitle, mode, c, pointer, icon, indent, ps)
-//line views/vtheme/Mockup.html:59
+//line views/vtheme/Mockup.html:60
 	qs422016 := string(qb422016.B)
-//line views/vtheme/Mockup.html:59
+//line views/vtheme/Mockup.html:60
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vtheme/Mockup.html:59
+//line views/vtheme/Mockup.html:60
 	return qs422016
-//line views/vtheme/Mockup.html:59
+//line views/vtheme/Mockup.html:60
 }

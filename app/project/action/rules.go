@@ -35,7 +35,7 @@ func onRules(pm *PrjAndMods) *Result {
 	})
 	lo.ForEach(pm.EArgs.Models, func(m *model.Model, _ int) {
 		for lo.Contains(forbidden, m.Icon) {
-			idx := util.StringHash(m.Name) % uint32(len(cleanIcons))
+			idx := util.HashFNV32(m.Name) % uint32(len(cleanIcons))
 			m.Icon = cleanIcons[idx]
 		}
 		m.AddTag("audit")

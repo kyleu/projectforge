@@ -1,8 +1,8 @@
 package audit
 
 import (
-	{{{ if .SQLServer }}}{{{ else }}}"encoding/json"
-	{{{ end }}}"fmt"
+	{{{ if .SQLServer }}}{{{ else }}}{{{ if .SQLite }}}{{{ else }}}"encoding/json"
+	{{{ end }}}{{{ end }}}"fmt"
 	"strings"
 	"time"
 
@@ -32,6 +32,17 @@ var (
 	Message   string                 `db:"message"`
 	Started   time.Time              `db:"started"`
 	Completed time.Time              `db:"completed"`
+}{{{ else }}}{{{ if .SQLite }}}type row struct {
+	ID        uuid.UUID `db:"id"`
+	App       string    `db:"app"`
+	Act       string    `db:"act"`
+	Client    string    `db:"client"`
+	Server    string    `db:"server"`
+	User      string    `db:"user"`
+	Metadata  string    `db:"metadata"`
+	Message   string    `db:"message"`
+	Started   time.Time `db:"started"`
+	Completed time.Time `db:"completed"`
 }{{{ else }}}type row struct {
 	ID        uuid.UUID       `db:"id"`
 	App       string          `db:"app"`
@@ -43,14 +54,14 @@ var (
 	Message   string          `db:"message"`
 	Started   time.Time       `db:"started"`
 	Completed time.Time       `db:"completed"`
-}{{{ end }}}
+}{{{ end }}}{{{ end }}}
 
 func (r *row) ToAudit() *Audit {
 	if r == nil {
 		return nil
 	}
 	metadataArg := util.ValueMap{}
-	_ = util.FromJSON({{{ if .SQLServer }}}[]byte(r.Metadata){{{ else }}}r.Metadata{{{ end }}}, &metadataArg)
+	_ = util.FromJSON({{{ if .SQLServer }}}[]byte(r.Metadata){{{ else }}}{{{ if .SQLite }}}[]byte(r.Metadata){{{ else }}}r.Metadata{{{ end }}}{{{ end }}}, &metadataArg)
 	return &Audit{
 		ID: {{{ if .SQLServer }}}util.UUIDFromStringOK(r.ID.String()){{{ else }}}r.ID{{{ end }}}, App: r.App, Act: r.Act, Client: r.Client, Server: r.Server, User: r.User,
 		Metadata: metadataArg, Message: r.Message, Started: r.Started, Completed: r.Completed,

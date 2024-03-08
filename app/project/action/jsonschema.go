@@ -96,11 +96,11 @@ func loadSchemata() error {
 	c.Draft = jsonschema.Draft7
 
 	x := func(k string) error {
-		b, _, err := assets.EmbedAsset("schema/" + k + ".schema.json")
+		e, err := assets.Embed("schema/" + k + ".schema.json")
 		if err != nil {
 			return err
 		}
-		err = c.AddResource(k, bytes.NewReader(b))
+		err = c.AddResource(k, bytes.NewReader(e.Bytes))
 		if err != nil {
 			return err
 		}

@@ -3,6 +3,7 @@
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/assets"
 ) %}
 
 {% func Head(as *app.State, ps *cutil.PageState) %}
@@ -17,9 +18,9 @@
   <meta property="og:locale" content="en_US">
   <meta name="theme-color" content="{%s thm.Light.NavBackground %}" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="{%s thm.Dark.NavBackground %}" media="(prefers-color-scheme: dark)">{%s= ps.HeaderContent %}
-  <link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
+  <link rel="icon" href="{%s assets.URL(`logo.svg`) %}" type="image/svg+xml">
   <style>
     {%s= thm.CSS(2) %}  </style>
-  <link rel="stylesheet" media="screen" href="/assets/client.css">
-  <script type="text/javascript" src="/assets/client.js"></script>
+  <link rel="stylesheet" media="screen" href="{%s assets.URL(`client.css`) %}">
+  <script type="text/javascript" src="{%s assets.URL(`client.js`) %}"></script>
 {% endfunc %}

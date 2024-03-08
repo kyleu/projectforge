@@ -25,14 +25,13 @@ func (t *Theme) CSS(indent int) string {
 		return t.css
 	}
 	sb := &strings.Builder{}
-	sb.WriteString(t.Light.CSS(":root", 0))
-	sb.WriteString(t.Light.CSS(".mode-light", indent))
+	sb.WriteString(t.Light.CSS(".mode-light", 0))
 	sb.WriteString(t.Dark.CSS(".mode-dark", indent))
-	addLine(sb, "", indent)
+	addLine(sb, "@media (prefers-color-scheme: light) {", indent)
+	sb.WriteString(t.Light.CSS(":root", indent+1))
+	addLine(sb, "}", indent)
 	addLine(sb, "@media (prefers-color-scheme: dark) {", indent)
 	sb.WriteString(t.Dark.CSS(":root", indent+1))
-	sb.WriteString(t.Light.CSS(".mode-light", indent+1))
-	sb.WriteString(t.Dark.CSS(".mode-dark", indent+1))
 	addLine(sb, "}", indent)
 	t.css = sb.String()
 	return t.css

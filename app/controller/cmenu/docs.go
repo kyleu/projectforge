@@ -37,7 +37,7 @@ func docMenuCreate(logger util.Logger) *menu.Item {
 
 	ret := &menu.Item{Key: "docs", Title: "Documentation", Icon: "folder"}
 	for _, p := range paths {
-		if p == "." || !strings.HasSuffix(p, util.ExtMarkdown) {
+		if p == "." || strings.HasPrefix(p, "module/") || !strings.HasSuffix(p, util.ExtMarkdown) {
 			continue
 		}
 		split := util.StringSplitAndTrim(p, "/")

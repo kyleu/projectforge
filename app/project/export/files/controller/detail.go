@@ -41,7 +41,7 @@ func controllerDetail(g *golang.File, models model.Models, m *model.Model, grp *
 			})
 			ret.W("\t\tpk := &%s.PK{%s}", m.Package, strings.Join(fields, ", "))
 			msg := "\t\trelatedAuditRecords, err := as.Services.Audit.RecordsForModel(ps.Context, nil, %q, pk.String(), nil, ps.Logger)"
-			ret.W(msg, m.Name)
+			ret.W(msg, m.Proper())
 		} else {
 			msg := "\t\trelatedAuditRecords, err := as.Services.Audit.RecordsForModel(ps.Context, nil, %q, %s, nil, ps.Logger)"
 			ret.W(msg, m.Name, m.PKs().ToGoStrings("ret."))

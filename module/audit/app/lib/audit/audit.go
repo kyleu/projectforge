@@ -161,7 +161,7 @@ func (a *Audit) Diff(ax *Audit) util.Diffs {
 }
 
 func (a *Audit) ToData() []any {
-	return {{{ if .SQLServer }}}[]any{a.ID.String(), a.App, a.Act, a.Client, a.Server, a.User, util.ToJSON(a.Metadata), a.Message, a.Started, a.Completed}{{{ else }}}[]any{a.ID, a.App, a.Act, a.Client, a.Server, a.User, a.Metadata, a.Message, a.Started, a.Completed}{{{ end }}}
+	return {{{ .AuditData }}}
 }
 
 type Audits []*Audit

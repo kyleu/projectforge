@@ -7,18 +7,17 @@ import (
 	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app/controller/cutil"
-	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/assets"
 )
 
 func Favicon(rc *fasthttp.RequestCtx) {
-	data, contentType, err := assets.EmbedAsset("favicon.ico")
-	assetResponse(rc, data, contentType, err)
+	e, err := assets.Embed("favicon.ico")
+	assetResponse(rc, e, err)
 }
 
 func RobotsTxt(rc *fasthttp.RequestCtx) {
-	data, contentType, err := assets.EmbedAsset("robots.txt")
-	assetResponse(rc, data, contentType, err)
+	e, err := assets.Embed("robots.txt")
+	assetResponse(rc, e, err)
 }
 
 func Static(rc *fasthttp.RequestCtx) {
@@ -27,20 +26,18 @@ func Static(rc *fasthttp.RequestCtx) {
 	if strings.Contains(p, "../") {
 		rc.Error("invalid path", fasthttp.StatusNotFound)
 	} else {
-		data, contentType, e := assets.EmbedAsset(p)
-		assetResponse(rc, data, contentType, e)
+		e, err := assets.Embed(p)
+		assetResponse(rc, e, err)
 	}
 }
 
-func assetResponse(rc *fasthttp.RequestCtx, data []byte, contentType string, err error) {
+func assetResponse(rc *fasthttp.RequestCtx, e *assets.Entry, err error) {
 	if err == nil {
-		rc.Response.Header.SetContentType(contentType)
-		if !util.DEBUG {
-			rc.Response.Header.Set("Cache-Control", "public, max-age=300")
-		}
+		rc.Response.Header.SetContentType(e.Mime)
+		rc.Response.Header.Set("Cache-Control", "public, max-age=3600")
 		rc.SetStatusCode(fasthttp.StatusOK)
 		cutil.WriteCORS(rc)
-		_, _ = rc.Write(data)
+		_, _ = rc.Write(e.Bytes)
 	} else {
 		rc.Error(err.Error(), fasthttp.StatusNotFound)
 	}

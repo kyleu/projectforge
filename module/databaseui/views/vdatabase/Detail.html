@@ -105,10 +105,10 @@
     <div class="overflow full-width">
       <table>
         <thead>
-        <tr>{{{ if .HasModule "postgres" }}}
+        <tr>{{{ if .PostgreSQL }}}
           <th>Schema</th>{{{ end }}}
           <th>Name</th>
-          <th title="(estimated)">Rows*</th>{{{ if .HasModule "postgres" }}}
+          <th title="(estimated)">Rows*</th>{{{ if .PostgreSQL }}}
           <th>Total</th>
           <th>Index</th>
           <th>Toast</th>
@@ -117,10 +117,10 @@
         </thead>
         <tbody>
         {%- for _, size := range sizes -%}
-        <tr>{{{ if .HasModule "postgres" }}}
+        <tr>{{{ if .PostgreSQL }}}
           <td>{%s size.Schema %}</td>{{{ end }}}
           <td><a href="/admin/database/{%s key %}/tables/{%s size.Schema %}/{%s size.Name %}">{%s size.Name %}</a></td>
-          <td>{%s size.Rows %}</td>{{{ if .HasModule "postgres" }}}
+          <td>{%s size.Rows %}</td>{{{ if .PostgreSQL }}}
           <td>{%s size.Total.String %}</td>
           <td>{%s size.Index.String %}</td>
           <td>{%s size.Toast.String %}</td>

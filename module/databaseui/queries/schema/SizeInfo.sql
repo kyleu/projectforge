@@ -1,5 +1,5 @@
 -- {% func SizeInfo() %}
-{{{ if .HasModule "postgres" }}}with recursive
+{{{ if .PostgreSQL }}}with recursive
   pg_inherit(inhrelid, inhparent) as (
     select inhrelid, inhparent
     from pg_inherits

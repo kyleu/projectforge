@@ -1,7 +1,7 @@
 package database
 
 import (
-	"context"{{{ if .HasModule "sqlite" }}}{{{ if .HasModule "postgres" }}}{{{ else }}}
+	"context"{{{ if .SQLite }}}{{{ if .PostgreSQL }}}{{{ else }}}
 	"fmt"{{{ end }}}{{{ end }}}
 
 	"github.com/samber/lo"
@@ -67,7 +67,7 @@ func (s *Service) Sizes(ctx context.Context, logger util.Logger) (TableSizes, er
 	err := s.Select(ctx, &ret, q, nil, logger)
 	if err != nil {
 		return nil, err
-	}{{{ if .HasModule "sqlite" }}}{{{ if .HasModule "postgres" }}}{{{ else }}}
+	}{{{ if .SQLite }}}{{{ if .PostgreSQL }}}{{{ else }}}
 	for _, r := range ret {
 		sizeq := fmt.Sprintf("select count(*) as x from %q", r.TableName)
 		rowEstimate, err := s.SingleInt(ctx, sizeq, nil, logger, r.TableName)

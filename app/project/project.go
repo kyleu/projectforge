@@ -145,5 +145,8 @@ func (p *Project) DatabaseEngineDefault() string {
 	if len(engines) == 1 {
 		return engines[0]
 	}
-	return util.DatabasePostgreSQL
+	if len(engines) > 1 {
+		return util.DatabasePostgreSQL
+	}
+	return ""
 }

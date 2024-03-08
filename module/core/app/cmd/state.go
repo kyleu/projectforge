@@ -27,11 +27,11 @@ func buildDefaultAppState(flags *Flags, logger util.Logger) (*app.State, error) 
 
 	ctx, span, logger := telemetry.StartSpan(context.Background(), "app:init", logger)
 	defer span.Complete()
-	t := util.TimerStart(){{{ if .HasModule "migration" }}}{{{ if .HasModule "postgres" }}}
+	t := util.TimerStart(){{{ if .HasModule "migration" }}}{{{ if .PostgreSQL }}}
 
-	db, err := database.OpenDefaultPostgres(ctx, logger){{{ else }}}{{{ if .HasModule "sqlite" }}}
+	db, err := database.OpenDefaultPostgres(ctx, logger){{{ else }}}{{{ if .SQLite }}}
 
-	db, err := database.OpenDefaultSQLite(ctx, logger){{{ else }}}{{{ if .HasModule "sqlserver" }}}
+	db, err := database.OpenDefaultSQLite(ctx, logger){{{ else }}}{{{ if .SQLServer }}}
 
 	db, err := database.OpenDefaultSQLServer(ctx, logger){{{ end }}}{{{ end }}}{{{ end }}}
 	if err != nil {
@@ -42,18 +42,18 @@ func buildDefaultAppState(flags *Flags, logger util.Logger) (*app.State, error) 
 	rKey := util.AppKey + roSuffix
 	if x := util.GetEnv("read_db_host", ""); x != "" {
 		paramsR := database.PostgresParamsFromEnv(rKey, rKey, "read_")
-		logger.Infof("using [%s:%s] for read-only database pool", paramsR.Host, paramsR.Database){{{ if .HasModule "postgres" }}}
-		st.DBRead, err = database.OpenPostgresDatabase(ctx, rKey, paramsR, logger){{{ else }}}{{{ if .HasModule "sqlite" }}}
-		st.DBRead, err = database.OpenSQLiteDatabase(ctx, rKey, paramsR, logger){{{ else }}}{{{ if .HasModule "sqlserver" }}}
+		logger.Infof("using [%s:%s] for read-only database pool", paramsR.Host, paramsR.Database){{{ if .PostgreSQL }}}
+		st.DBRead, err = database.OpenPostgresDatabase(ctx, rKey, paramsR, logger){{{ else }}}{{{ if .SQLite }}}
+		st.DBRead, err = database.OpenSQLiteDatabase(ctx, rKey, paramsR, logger){{{ else }}}{{{ if .SQLServer }}}
 		st.DBRead, err = database.OpenSQLServerDatabase(ctx, rKey, paramsR, logger){{{ end }}}{{{ end }}}{{{ end }}}
 	} else {
 		paramsR := database.PostgresParamsFromEnv(rKey, util.AppKey, "")
 		if strings.HasSuffix(paramsR.Database, roSuffix) {
 			paramsR.Database = util.AppKey
 		}
-		logger.Infof("using default database as read-only database pool"){{{ if .HasModule "postgres" }}}
-		st.DBRead, err = database.OpenPostgresDatabase(ctx, rKey, paramsR, logger){{{ else }}}{{{ if .HasModule "sqlite" }}}
-		st.DBRead, err = database.OpenSQLiteDatabase(ctx, rKey, paramsR, logger){{{ else }}}{{{ if .HasModule "sqlserver" }}}
+		logger.Infof("using default database as read-only database pool"){{{ if .PostgreSQL }}}
+		st.DBRead, err = database.OpenPostgresDatabase(ctx, rKey, paramsR, logger){{{ else }}}{{{ if .SQLite }}}
+		st.DBRead, err = database.OpenSQLiteDatabase(ctx, rKey, paramsR, logger){{{ else }}}{{{ if .SQLServer }}}
 		st.DBRead, err = database.OpenSQLServerDatabase(ctx, rKey, paramsR, logger){{{ end }}}{{{ end }}}{{{ end }}}
 	}
 	if err != nil {

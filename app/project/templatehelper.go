@@ -159,3 +159,15 @@ func (t *TemplateContext) TypeUUID() string {
 func (t *TemplateContext) SQLServer() bool {
 	return t.DatabaseEngine == util.DatabaseSQLServer
 }
+
+func (t *TemplateContext) SQLite() bool {
+	return t.DatabaseEngine == util.DatabaseSQLite
+}
+
+func (t *TemplateContext) PostgreSQL() bool {
+	return t.DatabaseEngine == util.DatabasePostgreSQL
+}
+
+func (t *TemplateContext) MySQL() bool {
+	return t.DatabaseEngine == util.DatabasePostgreSQL
+}
