@@ -141,8 +141,9 @@ func modelToData(m *model.Model, cols model.Columns, suffix string, database str
 	ret := golang.NewBlock(m.Proper(), "func")
 	ret.W("func (%s *%s) ToData%s() []any {", m.FirstLetter(), m.Proper(), suffix)
 	calls := lo.Map(cols, func(c *model.Column, _ int) string {
+		tk := c.Type.Key()
 		switch {
-		case (c.Type.Key() == types.KeyList || c.Type.Key() == types.KeyMap) && (database == util.DatabaseSQLite || database == util.DatabaseSQLServer):
+		case (tk == types.KeyAny || tk == types.KeyList || tk == types.KeyMap || tk == types.KeyReference) && (helper.SimpleJSON(database)):
 			return fmt.Sprintf("util.ToJSON(%s.%s),", m.FirstLetter(), c.Proper())
 		default:
 			return fmt.Sprintf("%s.%s,", m.FirstLetter(), c.Proper())

@@ -27,7 +27,11 @@ func (x *Map) Scalar() bool {
 }
 
 func (x *Map) String() string {
-	return fmt.Sprintf("%s[%s]%s", x.Key(), x.K.String(), x.V.String())
+	k, v := x.K.String(), x.V.String()
+	if k == "string" && v == "any" {
+		return x.Key()
+	}
+	return fmt.Sprintf("%s[%s]%s", x.Key(), k, v)
 }
 
 func (x *Map) From(v any) any {

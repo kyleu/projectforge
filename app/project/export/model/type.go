@@ -12,6 +12,7 @@ import (
 const (
 	keyJSONB          = "jsonb"
 	goTypeIntArray    = "[]int"
+	goTypeMapArray    = "[]util.ValueMap"
 	goTypeStringArray = "[]string"
 	goTypeAnyArray    = "[]any"
 )
@@ -54,6 +55,8 @@ func ToGoType(t types.Type, nullable bool, pkg string, enums enum.Enums) (string
 			} else {
 				ret = e.Package + "." + e.ProperPlural()
 			}
+		case types.KeyMap, types.KeyValueMap:
+			ret = goTypeMapArray
 		default:
 			ret = goTypeAnyArray
 		}

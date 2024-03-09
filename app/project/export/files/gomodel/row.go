@@ -120,7 +120,11 @@ func modelRowToModel(g *golang.File, m *model.Model, enums enum.Enums, database 
 		switch c.Type.Key() {
 		case types.KeyAny:
 			ret.W("\tvar %sArg any", c.Camel())
-			ret.W("\t_ = util.FromJSON(r.%s, &%sArg)", c.Proper(), c.Camel())
+			if helper.SimpleJSON(database) {
+				ret.W("\t_ = util.FromJSON([]byte(r.%s), &%sArg)", c.Proper(), c.Camel())
+			} else {
+				ret.W("\t_ = util.FromJSON(r.%s, &%sArg)", c.Proper(), c.Camel())
+			}
 			refs = append(refs, fmt.Sprintf("%s %sArg", k, c.Camel()))
 		case types.KeyList:
 			t := "[]any"
@@ -128,12 +132,17 @@ func modelRowToModel(g *golang.File, m *model.Model, enums enum.Enums, database 
 			switch c.Type.ListType().Key() {
 			case types.KeyString:
 				t = "[]string"
-				if database == util.DatabaseSQLite || database == util.DatabaseSQLServer {
+				if helper.SimpleJSON(database) {
 					decoder = ba(decoder)
 				}
 			case types.KeyInt:
 				t = "[]int"
-				if database == util.DatabaseSQLite || database == util.DatabaseSQLServer {
+				if helper.SimpleJSON(database) {
+					decoder = ba(decoder)
+				}
+			case types.KeyMap, types.KeyValueMap:
+				t = "[]util.ValueMap"
+				if helper.SimpleJSON(database) {
 					decoder = ba(decoder)
 				}
 			case types.KeyEnum:
@@ -145,17 +154,21 @@ func modelRowToModel(g *golang.File, m *model.Model, enums enum.Enums, database 
 					decoder = ba(decoder)
 				}
 			}
-			ret.W("\t%sArg := %s{}", c.Camel(), t)
+			ret.W("\tvar %sArg %s", c.Camel(), t)
 			ret.W("\t_ = util.FromJSON(%s, &%sArg)", decoder, c.Camel())
 			refs = append(refs, fmt.Sprintf("%s %sArg", k, c.Camel()))
 		case types.KeyMap, types.KeyValueMap:
 			decoder := "r." + c.Proper()
-			if database == util.DatabaseSQLite || database == util.DatabaseSQLServer {
+			if helper.SimpleJSON(database) {
 				decoder = ba(decoder)
 			}
 			ret.W("\t%sArg, _ := util.FromJSONMap(%s)", c.Camel(), decoder)
 			refs = append(refs, fmt.Sprintf("%s %sArg", k, c.Camel()))
 		case types.KeyReference:
+			decoder := "r." + c.Proper()
+			if helper.SimpleJSON(database) {
+				decoder = ba(decoder)
+			}
 			ref, err := model.AsRef(c.Type)
 			if err != nil {
 				return nil, errors.Wrap(err, "invalid ref")
@@ -166,7 +179,7 @@ func modelRowToModel(g *golang.File, m *model.Model, enums enum.Enums, database 
 				ret.W("\t%sArg := &%s.%s{}", c.Camel(), ref.Pkg.Last(), ref.K)
 				g.AddImport(golang.NewImport(golang.ImportTypeApp, ref.Pkg.ToPath()))
 			}
-			ret.W("\t_ = util.FromJSON(r.%s, %sArg)", c.Proper(), c.Camel())
+			ret.W("\t_ = util.FromJSON(%s, %sArg)", decoder, c.Camel())
 			refs = append(refs, fmt.Sprintf("%s %sArg", k, c.Camel()))
 		default:
 			refs = append(refs, defaultRowToModel(k, c, database)...)

@@ -9,7 +9,12 @@ import (
 	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/util"
 )
+
+func SimpleJSON(database string) bool {
+	return database == util.DatabaseSQLite || database == util.DatabaseSQLServer
+}
 
 func SpecialImports(cols model.Columns, pkg string, enums enum.Enums) (golang.Imports, error) {
 	var ret golang.Imports

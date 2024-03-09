@@ -2,7 +2,6 @@ package files
 
 import (
 	"github.com/pkg/errors"
-	"projectforge.dev/projectforge/app/project/export/files/svc"
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project"
@@ -10,6 +9,7 @@ import (
 	"projectforge.dev/projectforge/app/project/export/files/goenum"
 	"projectforge.dev/projectforge/app/project/export/files/gql"
 	"projectforge.dev/projectforge/app/project/export/files/sql"
+	"projectforge.dev/projectforge/app/project/export/files/svc"
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
