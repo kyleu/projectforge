@@ -36,10 +36,6 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 			return nil, nil, errors.Wrap(e, "unable to export code")
 		}
 		srcFiles = append(srcFiles, files...)
-		e = pm.ESvc.Inject(args, srcFiles)
-		if e != nil {
-			return nil, nil, errors.Wrap(e, "unable to inject code")
-		}
 	}
 	configVars, portOffsets := parse(pm)
 	pm.Prj.ExportArgs, _ = pm.Prj.ModuleArgExport(pm.PSvc, pm.Logger)

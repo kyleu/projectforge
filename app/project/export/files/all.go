@@ -2,6 +2,7 @@ package files
 
 import (
 	"github.com/pkg/errors"
+	"projectforge.dev/projectforge/app/project/export/files/svc"
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project"
@@ -32,6 +33,14 @@ func All(p *project.Project, args *model.Args, addHeader bool, linebreak string)
 			return nil, errors.Wrapf(err, "error processing model [%s]", m.Name)
 		}
 		ret = append(ret, calls...)
+	}
+
+	if args.HasModule("export") {
+		x, err := svc.Services(args, addHeader, linebreak)
+		if err != nil {
+			return nil, err
+		}
+		ret = append(ret, x)
 	}
 
 	x, err := controller.Routes(args, addHeader, linebreak)

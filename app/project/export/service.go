@@ -8,7 +8,6 @@ import (
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/project/export/files"
-	"projectforge.dev/projectforge/app/project/export/inject"
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
@@ -29,19 +28,5 @@ func (s *Service) Files(p *project.Project, args *model.Args, addHeader bool, li
 		}
 	}()
 	f, e = files.All(p, args, addHeader, linebreak)
-	return
-}
-
-func (s *Service) Inject(args *model.Args, fs file.Files) (e error) {
-	defer func() {
-		if rec := recover(); rec != nil {
-			if err, ok := rec.(error); ok {
-				e = err
-			} else {
-				e = errors.New(fmt.Sprint(rec))
-			}
-		}
-	}()
-	e = inject.All(args, fs)
 	return
 }
