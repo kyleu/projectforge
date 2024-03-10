@@ -9,6 +9,7 @@ import (
 	"github.com/kirsle/configdir"
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
+	"github.com/valyala/fasthttp/reuseport"
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/lib/log"
@@ -76,7 +77,7 @@ func initIfNeeded() error {
 }
 
 func listen(address string, port uint16) (uint16, net.Listener, error) {
-	l, err := net.Listen("tcp", fmt.Sprintf("%s:%d", address, port))
+	l, err := reuseport.Listen("tcp4", fmt.Sprintf("%s:%d", address, port))
 	if err != nil {
 		return port, nil, errors.Wrapf(err, "unable to listen on port [%d]", port)
 	}
