@@ -70,6 +70,9 @@
         {%- if model.TitleOverride != "" -%}
         <tr><th>Title Override</th><td>{%s model.TitleOverride %}</td></tr>
         {%- endif -%}
+        {%- if model.PluralOverride != "" -%}
+        <tr><th>Plural Override</th><td>{%s model.PluralOverride %}</td></tr>
+        {%- endif -%}
         {%- if model.ProperOverride != "" -%}
         <tr><th>Proper Override</th><td>{%s model.ProperOverride %}</td></tr>
         {%- endif -%}

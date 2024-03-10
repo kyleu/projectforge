@@ -36,35 +36,35 @@ func StreamDetailTheme(qw422016 *qt422016.Writer, key string, t *theme.Theme, ti
 	}
 
 //line views/vproject/DetailTheme.html:13
-	qw422016.N().S(`  <div class="right"><a href="/p/`)
-//line views/vproject/DetailTheme.html:14
-	qw422016.E().S(key)
-//line views/vproject/DetailTheme.html:14
-	qw422016.N().S(`/edit#theme"><button>Edit Theme</button></a></div>
-  <div class="overflow full-width">
+	qw422016.N().S(`  <div class="overflow full-width">
     <table class="centered">
       <tbody>
         <tr>
           <th>
             <div>Light</div>
             <div id="mockup-light">`)
-//line views/vproject/DetailTheme.html:21
+//line views/vproject/DetailTheme.html:20
 	vtheme.StreamMockupColors(qw422016, title, "", t.Light, false, icon, 6, ps)
-//line views/vproject/DetailTheme.html:21
+//line views/vproject/DetailTheme.html:20
 	qw422016.N().S(`</div>
           </th>
           <th>
             <div>Dark</div>
             <div id="mockup-dark">`)
-//line views/vproject/DetailTheme.html:25
+//line views/vproject/DetailTheme.html:24
 	vtheme.StreamMockupColors(qw422016, title, "", t.Dark, false, icon, 6, ps)
-//line views/vproject/DetailTheme.html:25
+//line views/vproject/DetailTheme.html:24
 	qw422016.N().S(`</div>
           </th>
         </tr>
       </tbody>
     </table>
   </div>
+  <div><a href="/p/`)
+//line views/vproject/DetailTheme.html:30
+	qw422016.E().S(key)
+//line views/vproject/DetailTheme.html:30
+	qw422016.N().S(`/edit#theme"><button>Edit Theme</button></a></div>
   <div class="mt">
     Choose a different theme from
     <a href="/p/`)

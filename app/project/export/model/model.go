@@ -25,6 +25,7 @@ type Model struct {
 	Search         []string         `json:"search,omitempty"`
 	Tags           []string         `json:"tags,omitempty"`
 	TitleOverride  string           `json:"title,omitempty"`
+	PluralOverride string           `json:"plural,omitempty"`
 	ProperOverride string           `json:"proper,omitempty"`
 	RouteOverride  string           `json:"route,omitempty"`
 	Config         util.ValueMap    `json:"config,omitempty"`
@@ -32,6 +33,7 @@ type Model struct {
 	Relations      Relations        `json:"relations,omitempty"`
 	Indexes        Indexes          `json:"indexes,omitempty"`
 	SeedData       [][]any          `json:"seedData,omitempty"`
+	Links          Links            `json:"links"`
 }
 
 func (m *Model) HasTag(t string) bool {

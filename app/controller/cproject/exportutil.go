@@ -45,6 +45,7 @@ func exportModelFromForm(frm util.ValueMap, m *model.Model) error {
 	m.Search = util.StringSplitAndTrim(get("search", strings.Join(m.Search, ",")), ",")
 	m.Tags = util.StringSplitAndTrim(get("tags", strings.Join(m.Tags, ",")), ",")
 	m.TitleOverride = get("titleOverride", m.TitleOverride)
+	m.PluralOverride = get("pluralOverride", m.PluralOverride)
 	m.ProperOverride = get("properOverride", m.ProperOverride)
 
 	cfg := util.ValueMap{}

@@ -43,6 +43,9 @@ func (m *Model) TitlePluralLower() string {
 }
 
 func (m *Model) Plural() string {
+	if m.PluralOverride != "" {
+		return m.PluralOverride
+	}
 	ret := util.StringToPlural(m.Name)
 	if ret == m.Name {
 		return ret + "Set"

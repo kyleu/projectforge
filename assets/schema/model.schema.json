@@ -63,6 +63,10 @@
       "description": "overrides the computed title",
       "type": "string"
     },
+    "plural": {
+      "description": "overrides the computed plural form",
+      "type": "string"
+    },
     "proper": {
       "description": "overrides the computed proper-case version of the name",
       "type": "string"
@@ -95,6 +99,14 @@
       "items": {
         "$ref": "#/$defs/index"
       }
+    },
+    "seedData": {
+      "description": "initial seed data for this model, in `[][]string` form",
+      "type": "array"
+    },
+    "links": {
+      "description": "additional links to display for this model",
+      "type": "array"
     }
   },
   "required": [
