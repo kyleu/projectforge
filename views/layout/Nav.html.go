@@ -89,182 +89,223 @@ func StreamNav(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
 		qw422016.N().S(`" class="search" title="search">
     <input id="search-input" type="search" name="q" placeholder=" " />
     <div class="search-image" style="display: none;"><svg><use xlink:href="#svg-searchbox" /></svg></div>
-  </form>`)
-//line views/layout/Nav.html:21
+  </form>
+`)
+//line views/layout/Nav.html:22
 	}
 //line views/layout/Nav.html:22
+	qw422016.N().S(`  `)
+//line views/layout/Nav.html:23
 	StreamHelp(qw422016, as, ps)
-//line views/layout/Nav.html:22
-	qw422016.N().S(`  <a class="profile" title="Settings" href="`)
-//line views/layout/Nav.html:22
-	qw422016.E().S(ps.ProfilePath)
-//line views/layout/Nav.html:22
-	qw422016.N().S(`">`)
-//line views/layout/Nav.html:22
-	components.StreamSVGRef(qw422016, `profile`, 24, 24, ``, ps)
-//line views/layout/Nav.html:22
-	qw422016.N().S(`</a>
+//line views/layout/Nav.html:23
+	qw422016.N().S(`
+  `)
+//line views/layout/Nav.html:24
+	StreamProfileLink(qw422016, as, ps)
+//line views/layout/Nav.html:24
+	qw422016.N().S(`
 `)
-//line views/layout/Nav.html:23
+//line views/layout/Nav.html:25
 	if !ps.HideMenu {
-//line views/layout/Nav.html:23
+//line views/layout/Nav.html:25
 		qw422016.N().S(`  <input type="checkbox" id="menu-toggle-input" style="display: none;" />
   <label class="menu-toggle" for="menu-toggle-input"><div class="spinner diagonal part-1"></div><div class="spinner horizontal"></div><div class="spinner diagonal part-2"></div></label>
   `)
-//line views/layout/Nav.html:26
+//line views/layout/Nav.html:28
 		StreamMenu(qw422016, ps)
-//line views/layout/Nav.html:26
+//line views/layout/Nav.html:28
 		qw422016.N().S(`
 `)
-//line views/layout/Nav.html:27
+//line views/layout/Nav.html:29
 	}
-//line views/layout/Nav.html:27
+//line views/layout/Nav.html:29
 	qw422016.N().S(`</nav>`)
-//line views/layout/Nav.html:28
-}
-
-//line views/layout/Nav.html:28
-func WriteNav(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/layout/Nav.html:28
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/layout/Nav.html:28
-	StreamNav(qw422016, as, ps)
-//line views/layout/Nav.html:28
-	qt422016.ReleaseWriter(qw422016)
-//line views/layout/Nav.html:28
-}
-
-//line views/layout/Nav.html:28
-func Nav(as *app.State, ps *cutil.PageState) string {
-//line views/layout/Nav.html:28
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/layout/Nav.html:28
-	WriteNav(qb422016, as, ps)
-//line views/layout/Nav.html:28
-	qs422016 := string(qb422016.B)
-//line views/layout/Nav.html:28
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/layout/Nav.html:28
-	return qs422016
-//line views/layout/Nav.html:28
+//line views/layout/Nav.html:30
 }
 
 //line views/layout/Nav.html:30
-func StreamNavItem(qw422016 *qt422016.Writer, link string, title string, icon string, last bool, ps *cutil.PageState) {
-//line views/layout/Nav.html:31
-	if link != "" || last {
-//line views/layout/Nav.html:31
-		qw422016.N().S(`<a class="link`)
-//line views/layout/Nav.html:32
-		if last {
-//line views/layout/Nav.html:32
-			qw422016.N().S(` `)
-//line views/layout/Nav.html:32
-			qw422016.N().S(`last`)
-//line views/layout/Nav.html:32
-		}
-//line views/layout/Nav.html:32
-		qw422016.N().S(`" href="`)
-//line views/layout/Nav.html:32
-		qw422016.E().S(link)
-//line views/layout/Nav.html:32
-		qw422016.N().S(`">`)
-//line views/layout/Nav.html:33
-	}
-//line views/layout/Nav.html:33
-	qw422016.N().S(`<span title="`)
-//line views/layout/Nav.html:34
-	qw422016.E().S(title)
-//line views/layout/Nav.html:34
-	qw422016.N().S(`">`)
-//line views/layout/Nav.html:34
-	components.StreamSVGRef(qw422016, icon, 18, 28, "breadcrumb-icon", ps)
-//line views/layout/Nav.html:34
-	qw422016.N().S(`</span><span class="nav-item-title">`)
-//line views/layout/Nav.html:35
-	qw422016.E().S(title)
-//line views/layout/Nav.html:35
-	qw422016.N().S(`</span>`)
-//line views/layout/Nav.html:36
-	if link != "" || last {
-//line views/layout/Nav.html:36
-		qw422016.N().S(`</a>`)
-//line views/layout/Nav.html:38
-	}
-//line views/layout/Nav.html:39
-}
-
-//line views/layout/Nav.html:39
-func WriteNavItem(qq422016 qtio422016.Writer, link string, title string, icon string, last bool, ps *cutil.PageState) {
-//line views/layout/Nav.html:39
+func WriteNav(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
+//line views/layout/Nav.html:30
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/layout/Nav.html:39
-	StreamNavItem(qw422016, link, title, icon, last, ps)
-//line views/layout/Nav.html:39
+//line views/layout/Nav.html:30
+	StreamNav(qw422016, as, ps)
+//line views/layout/Nav.html:30
 	qt422016.ReleaseWriter(qw422016)
-//line views/layout/Nav.html:39
+//line views/layout/Nav.html:30
 }
 
-//line views/layout/Nav.html:39
-func NavItem(link string, title string, icon string, last bool, ps *cutil.PageState) string {
-//line views/layout/Nav.html:39
+//line views/layout/Nav.html:30
+func Nav(as *app.State, ps *cutil.PageState) string {
+//line views/layout/Nav.html:30
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/layout/Nav.html:39
-	WriteNavItem(qb422016, link, title, icon, last, ps)
-//line views/layout/Nav.html:39
+//line views/layout/Nav.html:30
+	WriteNav(qb422016, as, ps)
+//line views/layout/Nav.html:30
 	qs422016 := string(qb422016.B)
-//line views/layout/Nav.html:39
+//line views/layout/Nav.html:30
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/layout/Nav.html:39
+//line views/layout/Nav.html:30
 	return qs422016
-//line views/layout/Nav.html:39
+//line views/layout/Nav.html:30
+}
+
+//line views/layout/Nav.html:32
+func StreamNavItem(qw422016 *qt422016.Writer, link string, title string, icon string, last bool, ps *cutil.PageState) {
+//line views/layout/Nav.html:33
+	if link != "" || last {
+//line views/layout/Nav.html:33
+		qw422016.N().S(`<a class="link`)
+//line views/layout/Nav.html:34
+		if last {
+//line views/layout/Nav.html:34
+			qw422016.N().S(` `)
+//line views/layout/Nav.html:34
+			qw422016.N().S(`last`)
+//line views/layout/Nav.html:34
+		}
+//line views/layout/Nav.html:34
+		qw422016.N().S(`" href="`)
+//line views/layout/Nav.html:34
+		qw422016.E().S(link)
+//line views/layout/Nav.html:34
+		qw422016.N().S(`">`)
+//line views/layout/Nav.html:35
+	}
+//line views/layout/Nav.html:35
+	qw422016.N().S(`<span title="`)
+//line views/layout/Nav.html:36
+	qw422016.E().S(title)
+//line views/layout/Nav.html:36
+	qw422016.N().S(`">`)
+//line views/layout/Nav.html:36
+	components.StreamSVGRef(qw422016, icon, 18, 28, "breadcrumb-icon", ps)
+//line views/layout/Nav.html:36
+	qw422016.N().S(`</span><span class="nav-item-title">`)
+//line views/layout/Nav.html:37
+	qw422016.E().S(title)
+//line views/layout/Nav.html:37
+	qw422016.N().S(`</span>`)
+//line views/layout/Nav.html:38
+	if link != "" || last {
+//line views/layout/Nav.html:38
+		qw422016.N().S(`</a>`)
+//line views/layout/Nav.html:40
+	}
+//line views/layout/Nav.html:41
 }
 
 //line views/layout/Nav.html:41
+func WriteNavItem(qq422016 qtio422016.Writer, link string, title string, icon string, last bool, ps *cutil.PageState) {
+//line views/layout/Nav.html:41
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/layout/Nav.html:41
+	StreamNavItem(qw422016, link, title, icon, last, ps)
+//line views/layout/Nav.html:41
+	qt422016.ReleaseWriter(qw422016)
+//line views/layout/Nav.html:41
+}
+
+//line views/layout/Nav.html:41
+func NavItem(link string, title string, icon string, last bool, ps *cutil.PageState) string {
+//line views/layout/Nav.html:41
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/layout/Nav.html:41
+	WriteNavItem(qb422016, link, title, icon, last, ps)
+//line views/layout/Nav.html:41
+	qs422016 := string(qb422016.B)
+//line views/layout/Nav.html:41
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/layout/Nav.html:41
+	return qs422016
+//line views/layout/Nav.html:41
+}
+
+//line views/layout/Nav.html:43
 func StreamNavItems(qw422016 *qt422016.Writer, ps *cutil.PageState) {
-//line views/layout/Nav.html:42
-	for idx, bc := range ps.Breadcrumbs {
 //line views/layout/Nav.html:44
+	for idx, bc := range ps.Breadcrumbs {
+//line views/layout/Nav.html:46
 		i := ps.Menu.GetByPath(ps.Breadcrumbs[:idx+1])
 		if i == nil {
 			i = menu.ItemFromString(bc, ps.DefaultNavIcon)
 		}
 
-//line views/layout/Nav.html:49
-		components.StreamIndent(qw422016, true, 2)
-//line views/layout/Nav.html:49
-		qw422016.N().S(`<span class="separator">/</span>`)
 //line views/layout/Nav.html:51
 		components.StreamIndent(qw422016, true, 2)
-//line views/layout/Nav.html:52
-		StreamNavItem(qw422016, i.Route, i.Title, i.Icon, idx == len(ps.Breadcrumbs)-1, ps)
+//line views/layout/Nav.html:51
+		qw422016.N().S(`<span class="separator">/</span>`)
 //line views/layout/Nav.html:53
+		components.StreamIndent(qw422016, true, 2)
+//line views/layout/Nav.html:54
+		StreamNavItem(qw422016, i.Route, i.Title, i.Icon, idx == len(ps.Breadcrumbs)-1, ps)
+//line views/layout/Nav.html:55
 	}
-//line views/layout/Nav.html:54
+//line views/layout/Nav.html:56
 }
 
-//line views/layout/Nav.html:54
+//line views/layout/Nav.html:56
 func WriteNavItems(qq422016 qtio422016.Writer, ps *cutil.PageState) {
-//line views/layout/Nav.html:54
+//line views/layout/Nav.html:56
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/layout/Nav.html:54
+//line views/layout/Nav.html:56
 	StreamNavItems(qw422016, ps)
-//line views/layout/Nav.html:54
+//line views/layout/Nav.html:56
 	qt422016.ReleaseWriter(qw422016)
-//line views/layout/Nav.html:54
+//line views/layout/Nav.html:56
 }
 
-//line views/layout/Nav.html:54
+//line views/layout/Nav.html:56
 func NavItems(ps *cutil.PageState) string {
-//line views/layout/Nav.html:54
+//line views/layout/Nav.html:56
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/layout/Nav.html:54
+//line views/layout/Nav.html:56
 	WriteNavItems(qb422016, ps)
-//line views/layout/Nav.html:54
+//line views/layout/Nav.html:56
 	qs422016 := string(qb422016.B)
-//line views/layout/Nav.html:54
+//line views/layout/Nav.html:56
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/layout/Nav.html:54
+//line views/layout/Nav.html:56
 	return qs422016
-//line views/layout/Nav.html:54
+//line views/layout/Nav.html:56
+}
+
+//line views/layout/Nav.html:58
+func StreamProfileLink(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
+//line views/layout/Nav.html:58
+	qw422016.N().S(`<a class="profile" title="Settings" href="`)
+//line views/layout/Nav.html:59
+	qw422016.E().S(ps.ProfilePath)
+//line views/layout/Nav.html:59
+	qw422016.N().S(`">`)
+//line views/layout/Nav.html:60
+	components.StreamSVGRef(qw422016, `profile`, 24, 24, ``, ps)
+//line views/layout/Nav.html:60
+	qw422016.N().S(`</a>`)
+//line views/layout/Nav.html:62
+}
+
+//line views/layout/Nav.html:62
+func WriteProfileLink(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
+//line views/layout/Nav.html:62
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/layout/Nav.html:62
+	StreamProfileLink(qw422016, as, ps)
+//line views/layout/Nav.html:62
+	qt422016.ReleaseWriter(qw422016)
+//line views/layout/Nav.html:62
+}
+
+//line views/layout/Nav.html:62
+func ProfileLink(as *app.State, ps *cutil.PageState) string {
+//line views/layout/Nav.html:62
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/layout/Nav.html:62
+	WriteProfileLink(qb422016, as, ps)
+//line views/layout/Nav.html:62
+	qs422016 := string(qb422016.B)
+//line views/layout/Nav.html:62
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/layout/Nav.html:62
+	return qs422016
+//line views/layout/Nav.html:62
 }

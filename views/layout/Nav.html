@@ -18,8 +18,10 @@
   <form action="{%s ps.SearchPath %}" class="search" title="search">
     <input id="search-input" type="search" name="q" placeholder=" " />
     <div class="search-image" style="display: none;"><svg><use xlink:href="#svg-searchbox" /></svg></div>
-  </form>{%- endif -%}
-{%= Help(as, ps) %}  <a class="profile" title="Settings" href="{%s ps.ProfilePath %}">{%= components.SVGRef(`profile`, 24, 24, ``, ps) %}</a>
+  </form>
+  {%- endif -%}
+  {%= Help(as, ps) %}
+  {%= ProfileLink(as, ps) %}
   {%- if !ps.HideMenu -%}
   <input type="checkbox" id="menu-toggle-input" style="display: none;" />
   <label class="menu-toggle" for="menu-toggle-input"><div class="spinner diagonal part-1"></div><div class="spinner horizontal"></div><div class="spinner diagonal part-2"></div></label>
@@ -51,4 +53,10 @@
     {%= components.Indent(true, 2) %}
     {%= NavItem(i.Route, i.Title, i.Icon, idx == len(ps.Breadcrumbs) - 1, ps) %}
   {% endfor %}
+{% endstripspace %}{% endfunc %}
+
+{% func ProfileLink(as *app.State, ps *cutil.PageState) %}{% stripspace %}
+  <a class="profile" title="Settings" href="{%s ps.ProfilePath %}">
+      {%= components.SVGRef(`profile`, 24, 24, ``, ps) %}
+  </a>
 {% endstripspace %}{% endfunc %}

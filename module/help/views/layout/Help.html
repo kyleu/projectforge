@@ -7,31 +7,43 @@
   "{{{ .Package }}}/views/components"
 ) %}
 
-{% func Help(as *app.State, ps *cutil.PageState) %}
+{% func Help(as *app.State, ps *cutil.PageState) %}{% stripspace %}
   {%- if as.Services.Help != nil -%}
-  {%- if hlp := as.Services.Help.Entry(ps.Action); hlp != nil -%}
-  {%- code
-    title := hlp.Title
-    if title == "" {
-      title = ps.Title
-    }
-    if title == "" {
-      title = util.AppName
-    }
-  -%}
-  <a class="help-link" title="Help for this page" data-key="{%s strings.TrimSuffix(ps.Action, `.action`) %}" href="#help">{%= components.SVGRef(`question`, 24, 24, ``, ps) %}</a>
-  <div id="help" class="modal" style="display: none;">
-    <a class="backdrop" href="#"></a>
-    <div class="modal-content">
-      <div class="modal-header">
-        <a href="#" class="modal-close">×</a>
-        <h3>{%= components.SVGRefIcon(`question`, ps) %}Help: {%s title %}</h3>
-      </div>
-      <div class="modal-body">
-        {%s= hlp.HTML %}
-      </div>
-    </div>
-  </div>
-  {%- endif -%}
-  {%- endif -%}
-{% endfunc %}
+    {%- code hlp := as.Services.Help.Entry(ps.Action) -%}
+      {%- if hlp == nil -%}
+        <!-- no help file for [{%s ps.Action %}] -->
+        {%- else -%}
+        {%- code
+          title := hlp.Title
+          if title == "" {
+            title = ps.Title
+          }
+          if title == "" {
+            title = util.AppName
+          }
+        -%}
+        <a class="help-link" title="Help for this page" data-key="{%s strings.TrimSuffix(ps.Action, `.action`) %}" href="#help">{%= components.SVGRef(`question`, 24, 24, ``, ps) %}</a>
+        {%= components.Indent(true, 1) %}
+        <div id="help" class="modal" style="display: none;">
+          {%= components.Indent(true, 2) %}
+          <a class="backdrop" href="#"></a>
+          {%= components.Indent(true, 2) %}
+          <div class="modal-content">
+            {%= components.Indent(true, 3) %}
+            <div class="modal-header">
+              <a href="#" class="modal-close">×</a>
+              <h3>{%= components.SVGRefIcon(`question`, ps) %}Help: {%s title %}</h3>
+            </div>
+            {%= components.Indent(true, 3) %}
+            <div class="modal-body">
+              {%= components.Indent(true, 4) %}
+              {%s= hlp.HTML %}
+            {%= components.Indent(true, 3) %}
+            </div>
+          {%= components.Indent(true, 2) %}
+          </div>
+        {%= components.Indent(true, 1) %}
+        </div>
+      {%- endif -%}
+    {%- endif -%}
+{% endstripspace %}{% endfunc %}
