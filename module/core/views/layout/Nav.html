@@ -17,10 +17,8 @@
   <form action="{%s ps.SearchPath %}" class="search" title="search">
     <input id="search-input" type="search" name="q" placeholder=" " />
     <div class="search-image" style="display: none;"><svg><use xlink:href="#svg-searchbox" /></svg></div>
-  </form>
-  {%- endif -%}{{{ end }}}{{{ if .HasModule "help" }}}
-  {%= Help(as, ps) %}{{{ end }}}
-  <a class="profile"{{{ if .HasAccount }}} title="{%s ps.AuthString() %}"{{{ else }}} title="Settings"{{{ end }}} href="{%s ps.ProfilePath %}">
+  </form>{%- endif -%}{{{ end }}}{{{ if .HasModule "help" }}}
+{%= Help(as, ps) %}{{{ end }}}  <a class="profile"{{{ if .HasAccount }}} title="{%s ps.AuthString() %}"{{{ else }}} title="Settings"{{{ end }}} href="{%s ps.ProfilePath %}">
     {{{ if .HasAccount }}}{%- if i := ps.Accounts.Image(); i != "" -%}
     <img style="width: 24px; height: 24px;" src="{%s i %}" />
     {%- else -%}
