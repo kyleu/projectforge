@@ -169,7 +169,15 @@
           "description": "tags controlling the column's code behavior",
           "type": "array",
           "items": {
-            "enum": ["const", "created", "debug-only", "deleted", "link", "list-first", "no-title", "omitempty", "title", "unique", "updated"]
+            "oneOf": [
+              {
+                "enum": ["const", "created", "debug-only", "deleted", "link", "list-first", "no-title", "omitempty", "title", "unique", "updated"]
+              },
+              {
+                "type": "string",
+                "pattern": "^fn:"
+              }
+            ]
           }
         },
         "helpString": {

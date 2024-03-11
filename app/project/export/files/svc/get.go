@@ -52,6 +52,7 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool, linebreak stri
 		}
 	}
 	getBys := map[string]model.Columns{}
+	titles := map[string]string{}
 	var doExtra []string
 	if pkLen > 1 {
 		lo.ForEach(m.PKs(), func(pkCol *model.Column, _ int) {
@@ -67,8 +68,17 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool, linebreak stri
 		getBys[col.Name] = model.Columns{col}
 		doExtra = append(doExtra, col.Name)
 	})
+	lo.ForEach(m.Columns, func(col *model.Column, _ int) {
+		lo.ForEach(col.Tags, func(tag string, index int) {
+			if strings.HasPrefix(tag, "fn:") {
+				fn := strings.TrimPrefix(tag, "fn:")
+				getBys[fn] = append(getBys[fn], col)
+				titles[fn] = fn
+			}
+		})
+	})
 	for _, key := range util.ArraySorted(lo.Keys(getBys)) {
-		err := writeGetBy(key, getBys[key], doExtra, dbRef, m, args, g)
+		err := writeGetBy(key, getBys[key], doExtra, titles[key], dbRef, m, args, g)
 		if err != nil {
 			return nil, err
 		}
@@ -85,8 +95,10 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool, linebreak stri
 	return g.Render(addHeader, linebreak)
 }
 
-func writeGetBy(key string, cols model.Columns, doExtra []string, dbRef string, m *model.Model, args *model.Args, g *golang.File) error {
-	name := "GetBy" + strings.Join(cols.ProperNames(), "")
+func writeGetBy(key string, cols model.Columns, doExtra []string, name string, dbRef string, m *model.Model, args *model.Args, g *golang.File) error {
+	if name == "" {
+		name = "GetBy" + strings.Join(cols.ProperNames(), "")
+	}
 	lo.ForEach(helper.ImportsForTypes("go", "", cols.Types()...), func(imp *golang.Import, _ int) {
 		g.AddImport(imp)
 	})
