@@ -3,34 +3,86 @@ package util
 
 import (
 	"time"
+
+	"github.com/araddon/dateparse"
+	"github.com/dustin/go-humanize"
+	"github.com/pkg/errors"
 )
 
-type Timer struct {
-	Started   int64 `json:"started"`
-	Completed int64 `json:"complete"`
-}
-
-func TimerStart() *Timer {
-	return &Timer{Started: TimeCurrentNanos()}
-}
-
-func (t *Timer) End() int {
-	t.Completed = TimeCurrentNanos()
-	return t.Elapsed()
-}
-
-func (t *Timer) EndString() string {
-	t.End()
-	return t.String()
-}
-
-func (t *Timer) Elapsed() int {
-	if t.Completed == 0 {
-		return int((TimeCurrentNanos() - t.Started) / int64(time.Microsecond))
+func TimeTruncate(t *time.Time) *time.Time {
+	if t == nil {
+		return nil
 	}
-	return int((t.Completed - t.Started) / int64(time.Microsecond))
+	ret := time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location())
+	return &ret
 }
 
-func (t *Timer) String() string {
-	return MicrosToMillis(t.Elapsed())
+func TimeCurrent() time.Time {
+	return time.Now()
+}
+
+func TimeCurrentP() *time.Time {
+	ret := TimeCurrent()
+	return &ret
+}
+
+func TimeToday() *time.Time {
+	return TimeTruncate(TimeCurrentP())
+}
+
+func TimeCurrentUnix() int64 {
+	return TimeCurrent().Unix()
+}
+
+func TimeCurrentMillis() int64 {
+	return TimeCurrent().UnixMilli()
+}
+
+func TimeCurrentNanos() int64 {
+	return TimeCurrent().UnixNano()
+}
+
+func TimeRelative(t *time.Time) string {
+	if t == nil {
+		return "<never>"
+	}
+	return humanize.Time(*t)
+}
+
+func TimeToMap(t time.Time) map[string]any {
+	return map[string]any{"epoch": t.UnixMilli(), "iso8601": t.Format("2006-01-02T15:04:05-0700")}
+}
+
+func TimeToString(d *time.Time, fmt string) string {
+	if d == nil {
+		return ""
+	}
+	return d.Format(fmt)
+}
+
+func TimeFromString(s string) (*time.Time, error) {
+	if s == "" {
+		return nil, nil
+	}
+	ret, err := dateparse.ParseLocal(s)
+	if err != nil {
+		return nil, errors.New("invalid date string [" + s + "]")
+	}
+	return &ret, nil
+}
+
+func TimeFromStringSimple(s string) *time.Time {
+	ret, _ := TimeFromString(s)
+	return ret
+}
+
+func TimeFromStringFmt(s string, fmt string) (*time.Time, error) {
+	if s == "" {
+		return nil, nil
+	}
+	ret, err := time.Parse(fmt, s)
+	if err != nil {
+		return nil, errors.New("invalid date string [" + s + "], expected [" + fmt + "]")
+	}
+	return &ret, nil
 }
