@@ -18,6 +18,7 @@ type Group struct {
 	Icon        string   `json:"icon,omitempty"`
 	Tags        []string `json:"tags,omitempty"`
 	Children    Groups   `json:"children,omitempty"`
+	Provided    bool     `json:"provided,omitempty"`
 }
 
 func (g *Group) HasTag(t string) bool {

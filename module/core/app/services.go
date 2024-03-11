@@ -35,7 +35,7 @@ func NewServices(ctx context.Context, st *State, logger util.Logger) (*Services,
 	}
 	{{{ end }}}{{{ if .HasModule "audit" }}}auditSvc := audit.NewService(st.DB, logger)
 	{{{ end }}}return &Services{
-		{{{ if.HasModule "export" }}}GeneratedServices: initGeneratedServices(ctx, st.DB{{{ if .HasModule "audit" }}}, auditSvc{{{ end }}}, logger),
+		{{{ if.HasModule "export" }}}GeneratedServices: initGeneratedServices(ctx, st.DB{{{ if .HasModule "readonlydb" }}}, st.DBRead{{{ end }}}{{{ if .HasModule "audit" }}}, auditSvc{{{ end }}}, logger),
 
 		{{{ end }}}{{{ if .HasModule "audit" }}}Audit:  auditSvc,
 		{{{ end }}}{{{ if.HasModule "process" }}}Exec:   exec.NewService(),

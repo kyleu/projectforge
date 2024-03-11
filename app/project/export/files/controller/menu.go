@@ -56,6 +56,9 @@ func menuBlockV(args *model.Args, groups map[string][]string, names []string) *g
 		lines = append(lines, "")
 	}
 	for _, grp := range flatGroups {
+		if grp.Provided {
+			continue
+		}
 		k, g := grp.Key, groups[grp.Key]
 		n := util.StringToCamel(k, args.Acronyms...)
 		msg := fmt.Sprintf("\tmenuGroup%s = &menu.Item{Key: %q, Title: %q", util.StringPad(n, maxGroupLength), grp.Key, grp.String())
@@ -96,7 +99,9 @@ func menuBlockGM(args *model.Args, orphans []string) *golang.Block {
 	gm.W("func generatedMenu() menu.Items {")
 	gm.W("\treturn menu.Items{")
 	for _, g := range args.Groups {
-		gm.W("\t\tmenuGroup%s,", util.StringToCamel(g.Proper(), args.Acronyms...))
+		if !g.Provided {
+			gm.W("\t\tmenuGroup%s,", util.StringToCamel(g.Proper(), args.Acronyms...))
+		}
 	}
 	for _, o := range orphans {
 		gm.W("\t\tmenuItem" + o + ",")

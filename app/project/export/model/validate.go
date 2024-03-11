@@ -49,8 +49,21 @@ func (m *Model) Validate(mods []string, models Models, groups Groups) error {
 	}
 	if len(m.Group) > 0 {
 		if groups.Get(m.Group...) == nil {
-			if len(m.Group) != 1 && models.Get(m.Group[0]) == nil {
-				return errors.Errorf("model [%s] references undefined group [%s]", m.Name, strings.Join(m.Group, "/"))
+			if len(m.Group) == 1 && models.Get(m.Group[0]) == nil {
+				return errors.Errorf("model [%s] references undefined group [%s], and no model matches", m.Name, strings.Join(m.Group, "/"))
+			}
+			if len(m.Group) > 1 {
+				var cool bool
+				for _, x := range models {
+					mg := strings.Join(m.Group, "/")
+					xg := strings.Join(x.Group, "/") + "/" + x.Name
+					if mg == xg {
+						cool = true
+					}
+				}
+				if !cool {
+					return errors.Errorf("model [%s] references undefined group [%s], and no model matches", m.Name, strings.Join(m.Group, "/"))
+				}
 			}
 		}
 	}
