@@ -78,10 +78,7 @@ func Admin(rc *fasthttp.RequestCtx) {
 		case "modules":
 			di := util.DebugBuildInfo().Deps
 			ps.SetTitleAndData("Modules", di)
-			return controller.Render(rc, as, &vadmin.Modules{Modules: di}, ps, "admin", "Modules**robot"){{{ if .HasModule "queue" }}}
-		case "queue":
-			ps.SetTitleAndData("Queue Debug", as.Services.Publisher)
-			return controller.Render(rc, as, &vadmin.Queue{Con: as.Services.Consumer, Pub: as.Services.Publisher}, ps, "admin", "Queue**database"){{{ end }}}
+			return controller.Render(rc, as, &vadmin.Modules{Modules: di}, ps, "admin", "Modules**robot")
 		case "request":
 			ps.SetTitleAndData("Request Debug", cutil.RequestCtxToMap(rc, as, ps))
 			return controller.Render(rc, as, &vadmin.Request{RC: rc}, ps, "admin", "Request**download")
