@@ -33,7 +33,7 @@ type Model struct {
 	Relations      Relations        `json:"relations,omitempty"`
 	Indexes        Indexes          `json:"indexes,omitempty"`
 	SeedData       [][]any          `json:"seedData,omitempty"`
-	Links          Links            `json:"links"`
+	Links          Links            `json:"links,omitempty"`
 }
 
 func (m *Model) HasTag(t string) bool {

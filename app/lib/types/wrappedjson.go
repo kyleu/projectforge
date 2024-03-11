@@ -16,8 +16,8 @@ type wrappedUnmarshal struct {
 
 func (x *Wrapped) MarshalJSON() ([]byte, error) {
 	b := util.ToJSONBytes(x.T, false)
-	// needs better detection
-	if len(b) == 2 {
+	s := string(b)
+	if s == "{}" || (x.T.Key() == KeyMap && s == `{"k":"string","v":"any"}`) || (x.T.Key() == KeyList && s == `{"v":"any"}`) {
 		return util.ToJSONBytes(x.K, false), nil
 	}
 	return util.ToJSONBytes(wrappedUnmarshal{K: x.K, T: b}, false), nil

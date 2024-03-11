@@ -45,6 +45,7 @@ func File(src *file.File, tgt *file.File) *Diff {
 		ret.Status = StatusMissing
 	case tgt == nil:
 		ret.Status = StatusNew
+		ret.Patch = fmt.Sprintf("[new file, %s]", util.ByteSizeSI(int64(len(src.Content))))
 	default:
 		d := Calc(ret.Path, src.Content, tgt.Content)
 		if len(d.Changes) > 0 {
