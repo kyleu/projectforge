@@ -1,0 +1,20 @@
+{% import (
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/views/components"
+  "{{{ .Package }}}/views/layout"
+) %}
+
+{% code type Options struct {
+  layout.Basic
+} %}
+
+{% func (p *Options) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`notebook`, ps) %}Notebook</h3>
+    <p>The notebook service isn't running. Here are your options:</p>
+    <div>
+      <a href="/notebook/action/start"><button>Start Server</button></a>
+    </div>
+  </div>
+{% endfunc %}

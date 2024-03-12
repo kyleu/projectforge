@@ -1,0 +1,9 @@
+{
+  "name": "Notebook",
+  "icon": "notebook",
+  "description": "Provides an Observable Framework notebook",
+  "authorName": "Kyle U",
+  "authorEmail": "kyle@kyleu.com",
+  "license": "CC0",
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/notebook"
+}

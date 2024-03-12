@@ -1,0 +1,34 @@
+{% import (
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/util"
+  "{{{ .Package }}}/views/components"
+  "{{{ .Package }}}/views/layout"
+) %}
+
+{% code type Notebook struct {
+  layout.Basic
+} %}
+
+{% func (p *Notebook) Body(as *app.State, ps *cutil.PageState) %}
+  <style>
+    html {
+      height: 100%;
+    }
+    body {
+      min-height: 100%;
+    }
+    .iframe-container {
+      height: calc(100vh - var(--nav-height));
+    }
+    .iframe {
+      width: 100%;
+      height: calc(100% - 4px);
+      border: 0;
+    }
+  </style>
+  <div class="iframe-container">
+    <h3 style="display: none;">{%= components.SVGRefIcon(`notebook`, ps) %}Notebook</h3>
+    <iframe class="iframe" src="http://localhost:{%d util.AppPort + 10 %}/"></iframe>
+  </div>
+{% endfunc %}

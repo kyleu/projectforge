@@ -3,6 +3,7 @@ package action
 import (
 	"context"
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -67,7 +68,11 @@ func auditRun(pm *PrjAndMods, ret *Result) error {
 		}
 		return nil, false
 	})
-	empty, err := getEmptyFolders(tgt, pm.Prj.Ignore, pm.Logger)
+	ign := slices.Clone(pm.Prj.Ignore)
+	if pm.Prj.HasModule("notebook") {
+		ign = append(ign, "notebook")
+	}
+	empty, err := getEmptyFolders(tgt, ign, pm.Logger)
 	if err != nil {
 		return err
 	}
