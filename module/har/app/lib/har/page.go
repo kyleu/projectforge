@@ -23,23 +23,23 @@ type PageTiming struct {
 }
 
 type PageTimings struct {
-	IsMicros bool   `json:"isMicros,omitempty"`
-	Total    int    `json:"total,omitempty"`
-	Blocked  int    `json:"blocked,omitempty"`
-	DNS      int    `json:"dns,omitempty"`
-	Connect  int    `json:"connect,omitempty"`
-	Send     int    `json:"send,omitempty"`
-	Wait     int    `json:"wait,omitempty"`
-	Receive  int    `json:"receive,omitempty"`
-	SSL      int    `json:"ssl,omitempty"`
-	Comment  string `json:"comment,omitempty"`
+	IsMicros bool    `json:"isMicros,omitempty"`
+	Total    float64 `json:"total,omitempty"`
+	Blocked  float64 `json:"blocked,omitempty"`
+	DNS      float64 `json:"dns,omitempty"`
+	Connect  float64 `json:"connect,omitempty"`
+	Send     float64 `json:"send,omitempty"`
+	Wait     float64 `json:"wait,omitempty"`
+	Receive  float64 `json:"receive,omitempty"`
+	SSL      float64 `json:"ssl,omitempty"`
+	Comment  string  `json:"comment,omitempty"`
 }
 
 func (p *PageTimings) Elapsed() int {
 	if p.Total > 0 {
-		return p.Total
+		return int(p.Total)
 	}
-	return p.Blocked + p.DNS + p.Connect + p.SSL + p.Wait + p.Receive + p.SSL
+	return int(p.Blocked + p.DNS + p.Connect + p.SSL + p.Wait + p.Receive + p.SSL)
 }
 
 func (p *PageTimings) Map() map[string]string {
@@ -49,25 +49,25 @@ func (p *PageTimings) Map() map[string]string {
 	}
 	ret := make(map[string]string, 10)
 	if p.Blocked > 0 {
-		ret["Blocked"] = util.MicrosToMillis(p.Blocked * mult)
+		ret["Blocked"] = util.MicrosToMillis(int(p.Blocked) * mult)
 	}
 	if p.DNS > 0 {
-		ret["DNS"] = util.MicrosToMillis(p.DNS * mult)
+		ret["DNS"] = util.MicrosToMillis(int(p.DNS) * mult)
 	}
 	if p.Connect > 0 {
-		ret["Connect"] = util.MicrosToMillis(p.Connect * mult)
+		ret["Connect"] = util.MicrosToMillis(int(p.Connect) * mult)
 	}
 	if p.Send > 0 {
-		ret["Send"] = util.MicrosToMillis(p.Send * mult)
+		ret["Send"] = util.MicrosToMillis(int(p.Send) * mult)
 	}
 	if p.Wait > 0 {
-		ret["Wait"] = util.MicrosToMillis(p.Wait * mult)
+		ret["Wait"] = util.MicrosToMillis(int(p.Wait) * mult)
 	}
 	// if p.Receive > 0 {
-	// 	ret["Receive"] = util.MicrosToMillis(p.Receive * mult)
+	// 	ret["Receive"] = util.MicrosToMillis(int(p.Receive) * mult)
 	// }
 	if p.SSL > 0 {
-		ret["SSL"] = util.MicrosToMillis(p.SSL * mult)
+		ret["SSL"] = util.MicrosToMillis(int(p.SSL) * mult)
 	}
 	return ret
 }

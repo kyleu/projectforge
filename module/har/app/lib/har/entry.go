@@ -35,7 +35,7 @@ func (e *Entry) String() string {
 }
 
 func (e *Entry) Duration() int {
-	return e.PageTimings.Wait * 1000
+	return int(e.PageTimings.Wait) * 1000
 }
 
 func (e *Entry) Clone() *Entry {

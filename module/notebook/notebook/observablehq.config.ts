@@ -6,5 +6,5 @@ export default {
   pager: true,
   root: "docs",
   output: "dist",
-  search: true,
+  search: true
 };

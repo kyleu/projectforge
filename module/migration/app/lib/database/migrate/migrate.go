@@ -3,6 +3,7 @@ package migrate
 import (
 	"context"
 	"slices"
+	"strings"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
@@ -20,7 +21,7 @@ func Migrate(ctx context.Context, s *database.Service, logger util.Logger, match
 
 	err := createMigrationTableIfNeeded(ctx, s, nil, logger)
 	if err != nil {
-		return errors.Wrap(err, "unable to create migration table")
+		return errors.Wrapf(err, "unable to create migration table for database [%s]", s.Key)
 	}
 
 	tx, err := s.StartTransaction(logger)
@@ -31,17 +32,33 @@ func Migrate(ctx context.Context, s *database.Service, logger util.Logger, match
 		_ = tx.Rollback()
 	}()
 
+	var positiveTags, negativeTags []string
+	for _, t := range matchesTags {
+		if strings.HasPrefix(t, "-") {
+			negativeTags = append(negativeTags, strings.TrimPrefix(t, "-"))
+		} else {
+			positiveTags = append(positiveTags, t)
+		}
+	}
+
 	migs := lo.Filter(databaseMigrations, func(m *MigrationFile, _ int) bool {
-		return len(matchesTags) == 0 || lo.ContainsBy(matchesTags, func(x string) bool {
+		if len(matchesTags) == 0 {
+			return true
+		}
+		good := len(positiveTags) == 0 || lo.ContainsBy(positiveTags, func(x string) bool {
 			return slices.Contains(m.Tags, x)
 		})
+		bad := lo.ContainsBy(negativeTags, func(x string) bool {
+			return slices.Contains(m.Tags, x)
+		})
+		return good && !bad
 	})
 
 	maxIdx := maxMigrationIdx(ctx, s, tx, logger)
 
 	if len(migs) > maxIdx+1 {
 		c := len(migs) - maxIdx
-		logger.Infof("applying [%s]...", util.StringPlural(c, "migration"))
+		logger.Infof("applying [%s] to database [%s]...", util.StringPlural(c, "migration"), s.Key)
 	}
 
 	for i, file := range migs {
@@ -55,7 +72,7 @@ func Migrate(ctx context.Context, s *database.Service, logger util.Logger, match
 		return err
 	}
 
-	logger.Infof("verified [%s]", util.StringPlural(maxIdx, "migration"))
+	logger.Infof("verified [%s] in database [%s]", util.StringPlural(maxIdx, "migration"), s.Key)
 	return nil
 }
 

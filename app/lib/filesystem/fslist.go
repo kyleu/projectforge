@@ -3,6 +3,7 @@ package filesystem
 
 import (
 	"io/fs"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -70,7 +71,7 @@ func (f *FileSystem) ListFilesRecursive(path string, ign []string, _ util.Logger
 		if checkIgnore(ignore, m) {
 			return nil
 		}
-		if info != nil && (!info.IsDir()) && (strings.Contains(fp, "/") || strings.Contains(fp, "\\")) {
+		if info != nil && (!info.IsDir()) && (info.Mode()&os.ModeSymlink != os.ModeSymlink) && (strings.Contains(fp, "/") || strings.Contains(fp, "\\")) {
 			ret = append(ret, m)
 		}
 		return nil
