@@ -11,7 +11,10 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-var baseURL = fmt.Sprintf("http://localhost:%d/", util.AppPort+10)
+var (
+	BaseURL       = fmt.Sprintf("http://localhost:%d/", util.AppPort+10)
+	FavoritePages = util.NewOrderedMap[string](false, 10)
+)
 
 type Service struct {
 	FS filesystem.FileLoader
@@ -23,7 +26,7 @@ func NewService() *Service {
 }
 
 func (s *Service) Status() string {
-	rsp, err := http.DefaultClient.Get(baseURL)
+	rsp, err := http.DefaultClient.Get(BaseURL)
 	if err != nil {
 		return "not-started"
 	}

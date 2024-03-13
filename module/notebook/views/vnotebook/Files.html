@@ -1,5 +1,6 @@
 {% import (
   "path/filepath"
+  "strings"
 
   "{{{ .Package }}}/app"
   "{{{ .Package }}}/app/controller/cutil"
@@ -18,17 +19,23 @@
 {% func (p *Files) Body(as *app.State, ps *cutil.PageState) %}
   {%- code
     u := "/notebook/files"
-    pth := filepath.Join(p.Path...)
+    editPath := filepath.Join(p.Path...)
+    hasView := strings.HasSuffix(editPath, ".md")
     isDir := p.FS.IsDir(filepath.Join(p.Path...))
   -%}
   <div class="card">
     {%- if !isDir -%}
-    <div class="right"><a href="/notebook/edit/{%s= pth %}"><button type="button">Edit</button></a></div>
+    <div class="right">
+      {%- if hasView -%}
+      <a href="/notebook/view/{%s= strings.TrimSuffix(editPath, `.md`) %}"><button type="button">View</button></a>
+      {%- endif -%}
+      <a href="/notebook/edit/{%s= editPath %}"><button type="button">Edit</button></a>
+    </div>
     {%- endif -%}
     <h3>{%= components.SVGRefIcon(`notebook`, ps) %}Notebook Files</h3>
   </div>
   {%- if isDir -%}
-  {%- code files := p.FS.ListFiles(pth, nil, ps.Logger) -%}
+  {%- code files := p.FS.ListFiles(editPath, nil, ps.Logger) -%}
   <div class="card">
     {%= vfile.List(p.Path, files, p.FS, u, as, ps) %}
   </div>

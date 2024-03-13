@@ -16,15 +16,22 @@ import (
 	"{{{ .Package }}}/views/vnotebook"
 )
 
+var NotebookBaseURL = fmt.Sprintf("http://localhost:%d", util.AppPort+10)
+
 func Notebook(rc *fasthttp.RequestCtx) {
-	controller.Act("notebook", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+	controller.Act("notebook.view", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		if !ps.Admin {
+			return controller.Unauthorized(rc, "", ps.Accounts)(as, ps)
+		}
 		status := as.Services.Notebook.Status()
 		if status == "running" {
-			ps.SetTitleAndData("Notebook", "view-in-browser")
-			return controller.Render(rc, as, &vnotebook.Notebook{}, ps, "notebook")
+			pathS, _ := cutil.RCRequiredString(rc, "path", false)
+			path := util.StringSplitAndTrim(pathS, "/")
+			ps.SetTitleAndData("Notebook", path)
+			return controller.Render(rc, as, &vnotebook.Notebook{BaseURL: NotebookBaseURL, Path: pathS}, ps, "notebook", pathS)
 		}
 		ps.SetTitleAndData("Notebook Options", status)
-		return controller.Render(rc, as, &vnotebook.Options{}, ps, "notebook")
+		return controller.Render(rc, as, &vnotebook.Options{}, ps)
 	})
 }
 
@@ -39,7 +46,7 @@ func NotebookFiles(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrap(err, "error listing files")
 		}
-		ps.SetTitleAndData(fmt.Sprintf("[Notebook] /%s", pathS), files)
+		ps.SetTitleAndData(fmt.Sprintf("Notebook File /%s", pathS), files)
 		return controller.Render(rc, as, &vnotebook.Files{Path: path, FS: as.Services.Notebook.FS}, ps, bc...)
 	})
 }
@@ -56,6 +63,7 @@ func NotebookFileEdit(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		ret := string(b)
+		ps.SetTitleAndData(fmt.Sprintf("Notebook File /%s", pathS), path)
 		return controller.Render(rc, as, &vnotebook.FileEdit{Path: path, Content: ret}, ps, bc...)
 	})
 }

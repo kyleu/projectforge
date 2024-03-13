@@ -1,13 +1,14 @@
 {% import (
   "{{{ .Package }}}/app"
   "{{{ .Package }}}/app/controller/cutil"
-  "{{{ .Package }}}/app/util"
   "{{{ .Package }}}/views/components"
   "{{{ .Package }}}/views/layout"
 ) %}
 
 {% code type Notebook struct {
   layout.Basic
+  BaseURL string
+  Path string
 } %}
 
 {% func (p *Notebook) Body(as *app.State, ps *cutil.PageState) %}
@@ -29,6 +30,6 @@
   </style>
   <div class="iframe-container">
     <h3 style="display: none;">{%= components.SVGRefIcon(`notebook`, ps) %}Notebook</h3>
-    <iframe class="iframe" src="http://localhost:{%d util.AppPort + 10 %}/"></iframe>
+    <iframe class="iframe" src="{%s p.BaseURL %}/{%s p.Path %}"></iframe>
   </div>
 {% endfunc %}
