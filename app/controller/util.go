@@ -25,7 +25,7 @@ func Render(rc *fasthttp.RequestCtx, as *app.State, page layout.Page, ps *cutil.
 			ps.LogError("error processing template: %+v", x)
 			switch t := x.(type) {
 			case error:
-				ed := util.GetErrorDetail(t)
+				ed := util.GetErrorDetail(t, ps.Admin)
 				verror.WriteDetail(rc, ed, as, ps)
 			default:
 				ed := &util.ErrorDetail{Type: fmt.Sprintf("%T", x), Message: fmt.Sprint(t)}

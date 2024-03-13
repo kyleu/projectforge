@@ -15,27 +15,31 @@ func Options(rc *fasthttp.RequestCtx) {
 	rc.SetStatusCode(fasthttp.StatusOK)
 }
 
-func NotFound(rc *fasthttp.RequestCtx) {
+func NotFoundAction(rc *fasthttp.RequestCtx) {
 	Act("notfound", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		return NotFoundResponse(rc)(as, ps)
+	})
+}
+
+func NotFoundResponse(rc *fasthttp.RequestCtx) func(as *app.State, ps *cutil.PageState) (string, error) {
+	return func(as *app.State, ps *cutil.PageState) (string, error) {
 		cutil.WriteCORS(rc)
-		rc.Response.Header.Set("Content-Type", "text/html; charset=utf-8")
 		rc.SetStatusCode(fasthttp.StatusNotFound)
 		path := string(rc.Request.URI().Path())
 		ps.Logger.Warnf("%s %s returned [%d]", string(rc.Method()), path, fasthttp.StatusNotFound)
 		if ps.Title == "" {
 			ps.Title = "Page not found"
 		}
-		ps.Data = ps.Title
+		ps.Data = util.ValueMap{"status": "notfound", "statusCode": fasthttp.StatusNotFound, "message": ps.Title}
 		bc := util.StringSplitAndTrim(string(rc.URI().Path()), "/")
 		bc = append(bc, "Not Found")
 		return Render(rc, as, &verror.NotFound{Path: path}, ps, bc...)
-	})
+	}
 }
 
 func Unauthorized(rc *fasthttp.RequestCtx, reason string) func(as *app.State, ps *cutil.PageState) (string, error) {
 	return func(as *app.State, ps *cutil.PageState) (string, error) {
 		cutil.WriteCORS(rc)
-		rc.Response.Header.Set("Content-Type", "text/html; charset=utf-8")
 		rc.SetStatusCode(fasthttp.StatusUnauthorized)
 		path := string(rc.Request.URI().Path())
 		ps.Logger.Warnf("%s %s returned [%d]", string(rc.Method()), path, fasthttp.StatusNotFound)
@@ -44,7 +48,10 @@ func Unauthorized(rc *fasthttp.RequestCtx, reason string) func(as *app.State, ps
 		if ps.Title == "" {
 			ps.Title = "Unauthorized"
 		}
-		ps.Data = ps.Title
+		if reason == "" {
+			reason = "no access"
+		}
+		ps.Data = util.ValueMap{"status": "unauthorized", "statusCode": fasthttp.StatusUnauthorized, "message": reason}
 		return Render(rc, as, &verror.Unauthorized{Path: path, Message: reason}, ps, bc...)
 	}
 }

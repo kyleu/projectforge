@@ -29,7 +29,7 @@ func SiteRoutes(logger util.Logger) fasthttp.RequestHandler {
 
 	r.OPTIONS("/", controller.Options)
 	r.OPTIONS("/{_:*}", controller.Options)
-	r.NotFound = controller.NotFound
+	r.NotFound = controller.NotFoundAction
 
 	p := httpmetrics.NewMetrics("marketing_site", logger)
 	return fasthttp.CompressHandlerLevel(p.WrapHandler(r, false), fasthttp.CompressBestSpeed)

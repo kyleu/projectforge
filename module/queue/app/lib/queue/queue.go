@@ -80,8 +80,7 @@ func (q *Queue) Receive(ctx context.Context, tx *sqlx.Tx, topic string, logger u
 	if ret == nil {
 		return nil, nil
 	}
-	var param any
-	err = util.FromJSON([]byte(ret.Param), &param)
+	param, err := util.FromJSONAny([]byte(ret.Param))
 	if err != nil {
 		return nil, err
 	}

@@ -1,10 +1,11 @@
 export default {
+  root: "docs",
+  output: "dist",
+  theme: ["default", "wide"],
   title: "{{{ .Name }}}",
-  header: "",
+  sidebar: true,
   footer: "",
   toc: true,
   pager: true,
-  root: "docs",
-  output: "dist",
   search: true
 };

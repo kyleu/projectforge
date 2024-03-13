@@ -120,21 +120,19 @@ func (m ValueMap) AsChanges() (ValueMap, error) {
 }
 
 func (m ValueMap) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
-	tokens := []xml.Token{start}
-	for key, value := range m {
-		t := xml.StartElement{Name: xml.Name{Space: "", Local: key}}
-		x, err := xml.Marshal(value)
-		if err != nil {
-			return err
-		}
-		tokens = append(tokens, t, xml.CharData(x), xml.EndElement{Name: t.Name})
+	err := e.EncodeToken(xml.StartElement{Name: xml.Name{Local: "map"}})
+	if err != nil {
+		return err
 	}
-	tokens = append(tokens, xml.EndElement{Name: start.Name})
-	for _, t := range tokens {
-		err := e.EncodeToken(t)
+	for key, value := range m {
+		err = e.EncodeElement(value, xml.StartElement{Name: xml.Name{Local: key}})
 		if err != nil {
 			return err
 		}
+	}
+	err = e.EncodeToken(xml.EndElement{Name: xml.Name{Local: "map"}})
+	if err != nil {
+		return err
 	}
 	return e.Flush()
 }

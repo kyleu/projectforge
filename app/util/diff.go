@@ -102,9 +102,8 @@ func diffType(l any, r any, ignored []string, recursed bool, path ...string) Dif
 	default:
 		lj, rj := ToJSONCompact(l), ToJSONCompact(r)
 		if !recursed && (strings.HasPrefix(lj, "{") || strings.HasPrefix(lj, "[")) {
-			var lx, rx any
-			_ = FromJSON([]byte(lj), &lx)
-			_ = FromJSON([]byte(rj), &rx)
+			lx, _ := FromJSONAny([]byte(lj))
+			rx, _ := FromJSONAny([]byte(rj))
 			ret = append(ret, diffType(lx, rx, ignored, true, path...)...)
 		} else if lj != rj {
 			ret = append(ret, NewDiff(strings.Join(path, "."), lj, rj))

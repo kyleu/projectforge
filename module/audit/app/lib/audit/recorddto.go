@@ -52,15 +52,13 @@ func (r *recordRow) ToRecord() *Record {
 	}
 	changesArg := util.Diffs{}{{{ if .SQLServer }}}
 	_ = util.FromJSON([]byte(r.Changes), &changesArg)
-	metadataArg := util.ValueMap{}
-	_ = util.FromJSON([]byte(r.Metadata), &metadataArg)
+	metadataArg, _ := util.FromJSONMap([]byte(r.Metadata))
 	return &Record{
 		ID: util.UUIDFromStringOK(r.ID.String()), AuditID: util.UUIDFromStringOK(r.AuditID.String()), T: r.T, PK: r.PK,
 		Changes: changesArg, Metadata: metadataArg, Occurred: r.Occurred,
 	}{{{ else }}}{{{ if .SQLite }}}
 	_ = util.FromJSON([]byte(r.Changes), &changesArg)
-	metadataArg := util.ValueMap{}
-	_ = util.FromJSON([]byte(r.Metadata), &metadataArg)
+	metadataArg, _ := util.FromJSONMap([]byte(r.Metadata))
 	return &Record{ID: r.ID, AuditID: r.AuditID, T: r.T, PK: r.PK, Changes: changesArg, Metadata: metadataArg, Occurred: r.Occurred}{{{ else }}}
 	_ = util.FromJSON(r.Changes, &changesArg)
 	metadataArg := util.ValueMap{}

@@ -167,7 +167,7 @@ func (p *Request) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 			qw422016.N().S(`</td>
             <td>`)
 //line views/vadmin/Request.html:89
-			qw422016.E().S(hd[k])
+			qw422016.E().S(hd.GetStringOpt(k))
 //line views/vadmin/Request.html:89
 			qw422016.N().S(`</td>
           </tr>

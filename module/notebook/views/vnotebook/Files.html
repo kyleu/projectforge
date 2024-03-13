@@ -1,0 +1,46 @@
+{% import (
+  "path/filepath"
+
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/lib/filesystem"
+  "{{{ .Package }}}/views/components"
+  "{{{ .Package }}}/views/layout"
+  "{{{ .Package }}}/views/vfile"
+) %}
+
+{% code type Files struct {
+  layout.Basic
+  FS filesystem.FileLoader
+  Path []string
+} %}
+
+{% func (p *Files) Body(as *app.State, ps *cutil.PageState) %}
+  {%- code
+    u := "/notebook/files"
+    pth := filepath.Join(p.Path...)
+    isDir := p.FS.IsDir(filepath.Join(p.Path...))
+  -%}
+  <div class="card">
+    {%- if !isDir -%}
+    <div class="right"><a href="/notebook/edit/{%s= pth %}"><button type="button">Edit</button></a></div>
+    {%- endif -%}
+    <h3>{%= components.SVGRefIcon(`notebook`, ps) %}Notebook Files</h3>
+  </div>
+  {%- if isDir -%}
+  {%- code files := p.FS.ListFiles(pth, nil, ps.Logger) -%}
+  <div class="card">
+    {%= vfile.List(p.Path, files, p.FS, u, as, ps) %}
+  </div>
+  {%- else -%}
+  {%- code
+    b, err := p.FS.ReadFile(filepath.Join(p.Path...))
+    if err != nil {
+      panic(err)
+    }
+  -%}
+  <div class="card">
+    {%= vfile.Detail(p.Path, b, u, nil, as, ps) %}
+  </div>
+  {%- endif -%}
+{% endfunc %}

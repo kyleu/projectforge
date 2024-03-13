@@ -29,11 +29,11 @@ func (p *Params) General() []string {
 	})
 }
 
-func (p *Params) Keyed() map[string]string {
+func (p *Params) Keyed() util.ValueMap {
 	x := lo.Filter(p.Parts(), func(x string, _ int) bool {
 		return strings.Contains(x, ":")
 	})
-	ret := make(map[string]string, len(x))
+	ret := make(util.ValueMap, len(x))
 	lo.ForEach(x, func(s string, _ int) {
 		k, v := util.StringSplit(s, ':', true)
 		ret[k] = v

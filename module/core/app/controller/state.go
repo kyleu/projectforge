@@ -50,7 +50,7 @@ func handleError(key string, as *app.State, ps *cutil.PageState, rc *fasthttp.Re
 		return "", cleanErr
 	}
 
-	e := util.GetErrorDetail(err)
+	e := util.GetErrorDetail(err, ps.Admin)
 	ps.Data = e
 	redir, renderErr := Render(rc, as, &verror.Error{Err: e}, ps)
 	if renderErr != nil {

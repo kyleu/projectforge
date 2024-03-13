@@ -50,7 +50,7 @@ func FromJSONMap(msg json.RawMessage) (ValueMap, error) {
 	return tgt, err
 }
 
-func FromJSONInterface(msg json.RawMessage) (any, error) {
+func FromJSONAny(msg json.RawMessage) (any, error) {
 	var tgt any
 	err := FromJSON(msg, &tgt)
 	return tgt, err

@@ -1,7 +1,6 @@
 package cutil
 
 import (
-	"encoding/xml"
 	"fmt"
 	"net/url"
 	"strings"
@@ -69,8 +68,7 @@ type XMLResponse struct {
 }
 
 func RespondXML(rc *fasthttp.RequestCtx, filename string, body any) (string, error) {
-	body = XMLResponse{Result: body}
-	b, err := xml.Marshal(body)
+	b, err := util.ToXMLBytes(body, true)
 	if err != nil {
 		return "", errors.Wrapf(err, "can't serialize response of type [%T] to XML", body)
 	}

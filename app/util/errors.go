@@ -18,40 +18,40 @@ type unwrappable interface {
 }
 
 type ErrorFrame struct {
-	Key string
-	Loc string
+	Key string `json:"key" xml:"key"`
+	Loc string `json:"loc" xml:"loc"`
 }
 
 type ErrorDetail struct {
-	Type       string            `json:"type"`
-	Message    string            `json:"message"`
-	StackTrace errors.StackTrace `json:"-"`
-	Cause      *ErrorDetail      `json:"cause,omitempty"`
+	Type       string            `json:"type" xml:"type"`
+	Message    string            `json:"message" xml:"message"`
+	Stack      []ErrorFrame      `json:"stack,omitempty" xml:"stack,omitempty"`
+	StackTrace errors.StackTrace `json:"-" xml:"-"`
+	Cause      *ErrorDetail      `json:"cause,omitempty" xml:"cause,omitempty"`
 }
 
-func GetErrorDetail(e error) *ErrorDetail {
+func GetErrorDetail(e error, includeStack bool) *ErrorDetail {
 	var stack errors.StackTrace
-
-	t, ok := e.(stackTracer)
-	if ok {
-		stack = t.StackTrace()
-	}
-
 	var cause *ErrorDetail
 
-	u, ok := e.(unwrappable)
-	if ok {
-		cause = GetErrorDetail(u.Unwrap())
+	if includeStack {
+		t, ok := e.(stackTracer)
+		if ok {
+			stack = t.StackTrace()
+		}
+		u, ok := e.(unwrappable)
+		if ok {
+			cause = GetErrorDetail(u.Unwrap(), includeStack)
+		}
 	}
-
 	msg := KeyError
 	if e != nil {
 		msg = e.Error()
 	}
-
 	return &ErrorDetail{
 		Type:       KeyError,
 		Message:    msg,
+		Stack:      TraceDetail(stack),
 		StackTrace: stack,
 		Cause:      cause,
 	}

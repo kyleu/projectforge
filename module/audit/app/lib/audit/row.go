@@ -60,8 +60,7 @@ func (r *row) ToAudit() *Audit {
 	if r == nil {
 		return nil
 	}
-	metadataArg := util.ValueMap{}
-	_ = util.FromJSON({{{ if .SQLServer }}}[]byte(r.Metadata){{{ else }}}{{{ if .SQLite }}}[]byte(r.Metadata){{{ else }}}r.Metadata{{{ end }}}{{{ end }}}, &metadataArg)
+	metadataArg, _ := util.FromJSONMap({{{ if .SQLServer }}}[]byte(r.Metadata){{{ else }}}{{{ if .SQLite }}}[]byte(r.Metadata){{{ else }}}r.Metadata{{{ end }}}{{{ end }}})
 	return &Audit{
 		ID: {{{ if .SQLServer }}}util.UUIDFromStringOK(r.ID.String()){{{ else }}}r.ID{{{ end }}}, App: r.App, Act: r.Act, Client: r.Client, Server: r.Server, User: r.User,
 		Metadata: metadataArg, Message: r.Message, Started: r.Started, Completed: r.Completed,

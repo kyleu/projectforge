@@ -48,7 +48,7 @@ func AppRoutes(as *app.State, logger util.Logger) fasthttp.RequestHandler {
 
 	r.OPTIONS("/", controller.Options)
 	r.OPTIONS("/{_:*}", controller.Options)
-	r.NotFound = controller.NotFound
+	r.NotFound = controller.NotFoundAction
 
 	clib.AppRoutesList = r.List()
 

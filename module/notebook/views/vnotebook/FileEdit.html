@@ -1,0 +1,30 @@
+{% import (
+  "path/filepath"
+
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/views/components"
+  "{{{ .Package }}}/views/layout"
+) %}
+
+{% code type FileEdit struct {
+  layout.Basic
+  Path []string
+  Content string
+} %}
+
+{% func (p *FileEdit) Body(as *app.State, ps *cutil.PageState) %}
+  {%- code
+    pth := filepath.Join(p.Path...)
+  -%}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`notebook`, ps) %}Edit Notebook File [{%s pth %}]</h3>
+    <form class="mt expanded" action="" method="post">
+      <textarea name="content" rows="{%d 32 %}">{%s p.Content %}</textarea>
+      <div class="mt">
+        <button type="submit">Save Changes</button>
+        <a href="/notebook/files/{%s pth %}"><button type="button">Cancel</button></a>
+      </div>
+    </form>
+  </div>
+{% endfunc %}

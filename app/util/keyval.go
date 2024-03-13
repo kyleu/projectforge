@@ -10,29 +10,6 @@ import (
 	"github.com/samber/lo"
 )
 
-type KeyValInt struct {
-	Key   string `json:"key" db:"key"`
-	Count int    `json:"val" db:"val"`
-}
-
-func (k KeyValInt) String() string {
-	return fmt.Sprintf("%s: %d", k.Key, k.Count)
-}
-
-type KeyValInts []*KeyValInt
-
-func (k KeyValInts) ToMap() map[string]int {
-	return lo.Associate(k, func(x *KeyValInt) (string, int) {
-		return x.Key, x.Count
-	})
-}
-
-func (k KeyValInts) String() string {
-	return strings.Join(lo.Map(k, func(x *KeyValInt, _ int) string {
-		return x.String()
-	}), ", ")
-}
-
 type KeyVal[T any] struct {
 	Key string `json:"key" db:"key"`
 	Val T      `json:"val" db:"val"`

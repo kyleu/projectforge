@@ -86,7 +86,7 @@
           {%- for _, k := range util.ArraySorted(lo.Keys(hd)) -%}
           <tr>
             <td class="nowrap">{%s k %}</td>
-            <td>{%s hd[k] %}</td>
+            <td>{%s hd.GetStringOpt(k) %}</td>
           </tr>
           {%- endfor -%}
         </tbody>

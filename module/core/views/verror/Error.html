@@ -12,7 +12,7 @@
     <div class="overflow full-width">
       <table>
         <tbody>
-        {%- for _, f := range util.TraceDetail(ed.StackTrace) -%}
+        {%- for _, f := range ed.Stack -%}
           <tr>
             <td>
               {%- if strings.Contains(f.Key, util.AppKey) -%}

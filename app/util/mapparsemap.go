@@ -27,8 +27,7 @@ func (m ValueMap) ParseMap(path string, allowMissing bool, allowEmpty bool) (Val
 		if strings.TrimSpace(t) == "" {
 			return nil, nil
 		}
-		ret := ValueMap{}
-		err := FromJSON([]byte(t), &ret)
+		ret, err := FromJSONMap([]byte(t))
 		if err != nil {
 			return nil, decorateError(m, path, "time", errors.Wrap(err, "invalid JSON"))
 		}
@@ -37,8 +36,7 @@ func (m ValueMap) ParseMap(path string, allowMissing bool, allowEmpty bool) (Val
 		if len(t) == 0 {
 			return nil, nil
 		}
-		ret := ValueMap{}
-		err := FromJSON(t, &ret)
+		ret, err := FromJSONMap(t)
 		if err != nil {
 			return nil, decorateError(m, path, "time", errors.Wrap(err, "invalid JSON"))
 		}

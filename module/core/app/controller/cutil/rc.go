@@ -92,16 +92,16 @@ func QueryArgsMap(rc *fasthttp.RequestCtx) util.ValueMap {
 	return ret
 }
 
-func RequestHeadersMap(rc *fasthttp.RequestCtx) map[string]string {
-	ret := make(map[string]string, rc.Request.Header.Len())
+func RequestHeadersMap(rc *fasthttp.RequestCtx) util.ValueMap {
+	ret := make(util.ValueMap, rc.Request.Header.Len())
 	rc.Request.Header.VisitAll(func(k, v []byte) {
 		ret[string(k)] = string(v)
 	})
 	return ret
 }
 
-func ResponseHeadersMap(rc *fasthttp.RequestCtx) map[string]string {
-	ret := make(map[string]string, rc.Request.Header.Len())
+func ResponseHeadersMap(rc *fasthttp.RequestCtx) util.ValueMap {
+	ret := make(util.ValueMap, rc.Request.Header.Len())
 	rc.Response.Header.VisitAll(func(k, v []byte) {
 		ret[string(k)] = string(v)
 	})

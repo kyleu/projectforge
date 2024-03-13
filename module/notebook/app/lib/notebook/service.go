@@ -7,16 +7,19 @@ import (
 	"github.com/pkg/errors"
 
 	"{{{ .Package }}}/app/lib/exec"
+	"{{{ .Package }}}/app/lib/filesystem"
 	"{{{ .Package }}}/app/util"
 )
 
 var baseURL = fmt.Sprintf("http://localhost:%d/", util.AppPort+10)
 
 type Service struct {
+	FS filesystem.FileLoader
 }
 
 func NewService() *Service {
-	return &Service{}
+	fs, _ := filesystem.NewFileSystem("notebook/docs", false, "")
+	return &Service{FS: fs}
 }
 
 func (s *Service) Status() string {
