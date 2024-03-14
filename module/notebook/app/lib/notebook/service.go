@@ -6,7 +6,6 @@ import (
 
 	"github.com/pkg/errors"
 
-	"{{{ .Package }}}/app/lib/exec"
 	"{{{ .Package }}}/app/lib/filesystem"
 	"{{{ .Package }}}/app/util"
 )
@@ -36,7 +35,7 @@ func (s *Service) Status() string {
 	return "running"
 }
 
-func (s *Service) Start(execSvc *exec.Service) error {
+func (s *Service) Start() error {
 	if s.Status() == "running" {
 		return errors.Errorf("can't start notebook, something is already listening on port [%d]", util.AppPort+10)
 	}

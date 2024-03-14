@@ -112,7 +112,7 @@ func NotebookAction(rc *fasthttp.RequestCtx) {
 		}
 		switch act {
 		case "start":
-			err = as.Services.Notebook.Start(as.Services.Exec)
+			err = as.Services.Notebook.Start()
 			return controller.FlashAndRedir(true, "Notebook started", "/notebook", rc, ps)
 		default:
 			return "", errors.Errorf("invalid notebook action [%s]", act)
