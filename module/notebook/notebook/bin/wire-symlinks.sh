@@ -1,6 +1,6 @@
 #!/bin/bash
 # $PF_GENERATE_ONCE$
-## Starts the notebook in dev mode
+## Creates symlinks in the data directory
 
 set -euo pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"

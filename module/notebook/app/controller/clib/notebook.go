@@ -28,10 +28,14 @@ func Notebook(rc *fasthttp.RequestCtx) {
 			pathS, _ := cutil.RCRequiredString(rc, "path", false)
 			path := util.StringSplitAndTrim(pathS, "/")
 			ps.SetTitleAndData("Notebook", path)
-			return controller.Render(rc, as, &vnotebook.Notebook{BaseURL: NotebookBaseURL, Path: pathS}, ps, "notebook", pathS)
+			bc := []string{"notebook"}
+			if pathS != "" {
+				bc = append(bc, pathS)
+			}
+			return controller.Render(rc, as, &vnotebook.Notebook{BaseURL: NotebookBaseURL, Path: pathS}, ps, bc...)
 		}
 		ps.SetTitleAndData("Notebook Options", status)
-		return controller.Render(rc, as, &vnotebook.Options{}, ps)
+		return controller.Render(rc, as, &vnotebook.Options{}, ps, "notebook")
 	})
 }
 

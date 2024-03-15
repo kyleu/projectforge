@@ -21,39 +21,36 @@ func SQLSelectGrouped(columns string, tables string, where string, groupBy strin
 	if columns == "" {
 		columns = "*"
 	}
-
 	whereClause := ""
 	if len(where) > 0 {
 		whereClause = whereSpaces + where
 	}
-
 	groupByClause := ""
 	if len(groupBy) > 0 {
 		groupByClause = " group by " + groupBy
 	}
-
 	orderByClause := ""
 	if len(orderBy) > 0 {
 		orderByClause = " order by " + orderBy
 	}
-
+	if dbt.Placeholder == "@" {
+		switch {
+		case limit == 0 && offset == 0:
+			return "select " + columns + " from " + tables + whereClause + groupByClause + orderByClause
+		case limit > 0 && offset == 0:
+			limitClause := fmt.Sprintf("top %d ", limit)
+			return "select " + limitClause + columns + " from " + tables + whereClause + groupByClause + orderByClause
+		case offset > 0:
+			if orderByClause == "" {
+				orderByClause = " order by (select null)"
+			}
+			offsetClause := fmt.Sprintf(" offset %d rows", offset)
+			limitClause := fmt.Sprintf(" fetch next %d rows only", limit)
+			return "select " + columns + " from " + tables + whereClause + groupByClause + orderByClause + offsetClause + limitClause
+		}
+	}
 	limitClause := ""
 	offsetClause := ""
-	if dbt.Placeholder == "@" {
-		prefix := ""
-		if limit > 0 {
-			if orderBy == "" {
-				prefix = fmt.Sprintf("top %d ", limit)
-			} else {
-				limitClause = fmt.Sprintf(" fetch next %d rows only", limit)
-			}
-		}
-		if len(orderBy) > 0 && (offset > 0 || limit > 0) {
-			offsetClause = fmt.Sprintf(" offset %d rows", offset)
-		}
-		return "select " + prefix + columns + " from " + tables + whereClause + groupByClause + orderByClause + offsetClause + limitClause
-	}
-
 	if limit > 0 {
 		limitClause = fmt.Sprintf(" limit %d", limit)
 	}
