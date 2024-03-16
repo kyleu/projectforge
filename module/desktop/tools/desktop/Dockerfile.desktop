@@ -14,7 +14,11 @@ ADD "./go.sum" "/src/go.sum"
 RUN go mod download
 
 ADD . /src/
-RUN /src/tools/desktop/package.sh
+RUN /src/tools/desktop/bin/prepare.sh
+RUN /src/tools/desktop/bin/macos-amd64.sh
+RUN /src/tools/desktop/bin/macos-arm64.sh
+RUN /src/tools/desktop/bin/linux-amd64.sh
+RUN /src/tools/desktop/bin/windows-amd64.sh
 
 FROM ubuntu:bionic
 COPY --from=builder /src/dist /dist
