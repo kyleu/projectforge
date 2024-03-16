@@ -5,5 +5,12 @@
   "authorName": "Kyle U",
   "authorEmail": "kyle@kyleu.com",
   "license": "CC0",
-  "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/notebook"
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/notebook",
+  "configVars": [
+    {
+      "key": "notebook_base_url",
+      "type": "string",
+      "description": "base URL of the notebook server, defaults to [app port + 10]"
+    }
+  ]
 }

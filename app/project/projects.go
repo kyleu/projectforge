@@ -82,3 +82,9 @@ func (p Projects) Tags() []string {
 	})
 	return util.ArraySorted(ret)
 }
+
+func (p Projects) ToCSV() ([]string, [][]string) {
+	return Fields, lo.Map(p, func(prj *Project, _ int) []string {
+		return prj.Strings()
+	})
+}

@@ -116,7 +116,7 @@ func exportViewDetailBody(g *golang.Template, m *model.Model, audit bool, models
 		ret.W("    <div class=\"mt\">")
 		for _, link := range m.Links {
 			paths := lo.Map(m.PKs(), func(pk *model.Column, _ int) string {
-				return "{%%s p.Model." + model.ToGoString(pk.Type, pk.Proper(), true) + " %%}"
+				return "{%%s p.Model." + model.ToGoString(pk.Type, pk.Nullable, pk.Proper(), true) + " %%}"
 			})
 			u := strings.ReplaceAll(link.URL, "{}", strings.Join(paths, "/"))
 			ret.W("      <a href=%q><button type=\"button\">%s</button></a>", u, link.Title)

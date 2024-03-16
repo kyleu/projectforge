@@ -3,6 +3,7 @@ package notebook
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/pkg/errors"
 
@@ -10,22 +11,22 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-var (
-	BaseURL       = fmt.Sprintf("http://localhost:%d/", util.AppPort+10)
-	FavoritePages = util.NewOrderedMap[string](false, 10)
-)
+var FavoritePages = util.NewOrderedMap[string](false, 10)
 
 type Service struct {
-	FS filesystem.FileLoader
+	BaseURL string                `json:"baseURL"`
+	FS      filesystem.FileLoader `json:"-"`
 }
 
 func NewService() *Service {
+	baseURL := util.GetEnv("notebook_base_url", fmt.Sprintf("http://localhost:%d", util.AppPort+10))
+	baseURL = strings.TrimSuffix(baseURL, "/")
 	fs, _ := filesystem.NewFileSystem("notebook/docs", false, "")
-	return &Service{FS: fs}
+	return &Service{BaseURL: baseURL, FS: fs}
 }
 
 func (s *Service) Status() string {
-	rsp, err := http.DefaultClient.Get(BaseURL)
+	rsp, err := http.DefaultClient.Get(s.BaseURL)
 	if err != nil {
 		return "not-started"
 	}

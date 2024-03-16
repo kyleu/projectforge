@@ -61,9 +61,9 @@ func ToGoViewString(t *types.Wrapped, prop string, nullable bool, format string,
 	case types.KeyEnum:
 		e, _ := AsEnumInstance(t, enums)
 		if e == nil || e.Simple() {
-			return "{%%v " + ToGoString(t, prop, false) + " %%}"
+			return "{%%v " + ToGoString(t, nullable, prop, false) + " %%}"
 		}
-		return "{%%s " + ToGoString(t, prop, false) + ".String() %%}"
+		return "{%%s " + ToGoString(t, nullable, prop, false) + ".String() %%}"
 	case types.KeyTimestamp:
 		if nullable {
 			return "{%%= view.Timestamp(" + prop + ") %%}"
@@ -75,8 +75,8 @@ func ToGoViewString(t *types.Wrapped, prop string, nullable bool, format string,
 		}
 		return "{%%= view.UUID(&" + prop + ") %%}"
 	case types.KeyString:
-		return goViewStringForString(url, src, t, prop, format, verbose)
+		return goViewStringForString(url, src, t, nullable, prop, format, verbose)
 	default:
-		return "{%%v " + ToGoString(t, prop, false) + " %%}"
+		return "{%%v " + ToGoString(t, nullable, prop, false) + " %%}"
 	}
 }

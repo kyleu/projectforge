@@ -12,33 +12,11 @@ import (
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func JoinLines(ss []string, delim string, maxLen int) []string {
-	if maxLen == 0 {
-		return []string{strings.Join(ss, delim)}
-	}
-	var ret []string
-	var curr string
-	lo.ForEach(ss, func(s string, _ int) {
-		if curr != "" && (len(curr)+len(delim)+len(s)) > maxLen {
-			ret = append(ret, curr)
-			curr = ""
-		}
-		if curr != "" {
-			curr += delim
-		}
-		curr += s
-	})
-	if curr != "" {
-		ret = append(ret, curr)
-	}
-	return ret
-}
-
 func modelString(g *golang.File, m *model.Model) *golang.Block {
 	ret := golang.NewBlock("String", "func")
 	ret.W("func (%s *%s) String() string {", m.FirstLetter(), m.Proper())
 	if pks := m.PKs(); len(pks) == 1 {
-		ret.W("\treturn %s", model.ToGoString(pks[0].Type, fmt.Sprintf("%s.%s", m.FirstLetter(), pks[0].Proper()), false))
+		ret.W("\treturn %s", model.ToGoString(pks[0].Type, pks[0].Nullable, fmt.Sprintf("%s.%s", m.FirstLetter(), pks[0].Proper()), false))
 	} else {
 		g.AddImport(helper.ImpFmt)
 		s := "\treturn fmt.Sprintf(\""
@@ -63,7 +41,7 @@ func modelTitle(g *golang.File, m *model.Model) *golang.Block {
 	ret.W("func (%s *%s) TitleString() string {", m.FirstLetter(), m.Proper())
 	if titles := m.Columns.WithTag("title"); len(titles) > 0 {
 		toStrings := lo.Map(titles, func(title *model.Column, _ int) string {
-			x := model.ToGoString(title.Type, fmt.Sprintf("%s.%s", m.FirstLetter(), title.Proper()), true)
+			x := model.ToGoString(title.Type, title.Nullable, fmt.Sprintf("%s.%s", m.FirstLetter(), title.Proper()), true)
 			if strings.HasPrefix(x, "fmt.") {
 				g.AddImport(helper.ImpFmt)
 			}

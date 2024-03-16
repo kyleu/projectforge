@@ -15,9 +15,11 @@ import (
 )
 
 const (
-	mimeJSON = "application/json"
-	mimeXML  = "text/xml"
-	mimeYAML = "application/x-yaml"
+	mimeCSV   = "text/csv"
+	mimeDebug = "text/plain"
+	mimeJSON  = "application/json"
+	mimeXML   = "text/xml"
+	mimeYAML  = "application/x-yaml"
 )
 
 var (
@@ -57,6 +59,14 @@ func WriteCORS(rc *fasthttp.RequestCtx) {
 
 func RespondDebug(rc *fasthttp.RequestCtx, as *app.State, filename string, ps *PageState) (string, error) {
 	return RespondJSON(rc, filename, RequestCtxToMap(rc, as, ps))
+}
+
+func RespondCSV(rc *fasthttp.RequestCtx, filename string, body any) (string, error) {
+	b, err := util.ToCSVBytes(body)
+	if err != nil {
+		return "", err
+	}
+	return RespondMIME(filename, mimeCSV, "csv", b, rc)
 }
 
 func RespondJSON(rc *fasthttp.RequestCtx, filename string, body any) (string, error) {
@@ -111,7 +121,9 @@ func GetContentType(rc *fasthttp.RequestCtx) string {
 	t := string(rc.URI().QueryArgs().Peek("t"))
 	switch t {
 	case "debug":
-		return t
+		return mimeDebug
+	case "csv":
+		return mimeCSV
 	case "json":
 		return mimeJSON
 	case "xml":
@@ -123,8 +135,16 @@ func GetContentType(rc *fasthttp.RequestCtx) string {
 	}
 }
 
+func IsContentTypeCSV(c string) bool {
+	return c == mimeCSV
+}
+
+func IsContentTypeDebug(c string) bool {
+	return c == mimeDebug
+}
+
 func IsContentTypeJSON(c string) bool {
-	return c == "application/json" || c == "text/json"
+	return c == mimeJSON || c == "text/json"
 }
 
 func IsContentTypeXML(c string) bool {
@@ -132,5 +152,5 @@ func IsContentTypeXML(c string) bool {
 }
 
 func IsContentTypeYAML(c string) bool {
-	return c == "application/x-yaml" || c == "text/yaml"
+	return c == mimeYAML || c == "text/yaml"
 }

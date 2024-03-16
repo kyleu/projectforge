@@ -58,7 +58,7 @@ func Models(m *model.Model, args *model.Args, addHeader bool, goVersion string, 
 			g.AddBlocks(modelArrayGetBySingle(m, col, args.Enums), modelArrayGetByMulti(m, col, args.Enums))
 		}
 	})
-	g.AddBlocks(modelArrayRandom(m), modelArrayClone(m))
+	g.AddBlocks(modelArrayToCSV(m), modelArrayRandom(m), modelArrayClone(m))
 	return g.Render(addHeader, linebreak)
 }
 
@@ -165,7 +165,7 @@ func modelArrayColStrings(m *model.Model, col *model.Column) *golang.Block {
 	ret.W("\t\tret = append(ret, \"\")")
 	ret.W("\t}")
 	ret.W("\tlo.ForEach(%s, func(x *%s, _ int) {", m.FirstLetter(), m.Proper())
-	ret.W("\t\tret = append(ret, %s)", model.ToGoString(col.Type, "x."+col.Proper(), true))
+	ret.W("\t\tret = append(ret, %s)", model.ToGoString(col.Type, col.Nullable, "x."+col.Proper(), true))
 	ret.W("\t})")
 	ret.W("\treturn ret")
 	ret.W("}")

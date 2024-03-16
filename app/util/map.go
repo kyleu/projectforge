@@ -82,6 +82,10 @@ func (m ValueMap) Clone() ValueMap {
 	return ret
 }
 
+func (m ValueMap) String() string {
+	return ToJSONCompact(m)
+}
+
 func (m ValueMap) ToStringMap() map[string]string {
 	return lo.MapValues(m, func(_ any, key string) string {
 		return m.GetStringOpt(key)

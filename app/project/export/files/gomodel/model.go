@@ -68,13 +68,14 @@ func Model(m *model.Model, args *model.Args, addHeader bool, linebreak string) (
 	if err != nil {
 		return nil, err
 	}
+	g.AddBlocks(rnd, modelStrings(g, m), modelToCSV(m))
 
 	fd, err := modelFieldDescs(m)
 	if err != nil {
 		return nil, err
 	}
 
-	g.AddBlocks(rnd, modelWebPath(g, m), modelToData(m, m.Columns, "", args.Database), fd)
+	g.AddBlocks(modelWebPath(g, m), modelToData(m, m.Columns, "", args.Database), fd)
 	return g.Render(addHeader, linebreak)
 }
 
@@ -149,7 +150,7 @@ func modelToData(m *model.Model, cols model.Columns, suffix string, database str
 			return fmt.Sprintf("%s.%s,", m.FirstLetter(), c.Proper())
 		}
 	})
-	lines := JoinLines(calls, " ", 120)
+	lines := util.JoinLines(calls, " ", 120)
 	if len(lines) == 1 && len(lines[0]) < 100 {
 		ret.W("\treturn []any{%s}", strings.TrimSuffix(lines[0], ","))
 	} else {

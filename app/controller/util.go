@@ -2,6 +2,7 @@
 package controller
 
 import (
+	"bytes"
 	"fmt"
 	"strings"
 	"time"
@@ -36,15 +37,21 @@ func Render(rc *fasthttp.RequestCtx, as *app.State, page layout.Page, ps *cutil.
 	ps.Breadcrumbs = append(ps.Breadcrumbs, breadcrumbs...)
 	ct := cutil.GetContentType(rc)
 	if ps.Data != nil {
+		var fn string
+		if bytes.Equal(rc.URI().QueryArgs().Peek("download"), []byte("true")) {
+			fn = ps.Action
+		}
 		switch {
+		case cutil.IsContentTypeCSV(ct):
+			return cutil.RespondCSV(rc, fn, ps.Data)
 		case cutil.IsContentTypeJSON(ct):
-			return cutil.RespondJSON(rc, "", ps.Data)
+			return cutil.RespondJSON(rc, fn, ps.Data)
 		case cutil.IsContentTypeXML(ct):
-			return cutil.RespondXML(rc, "", ps.Data)
+			return cutil.RespondXML(rc, fn, ps.Data)
 		case cutil.IsContentTypeYAML(ct):
-			return cutil.RespondYAML(rc, "", ps.Data)
-		case ct == "debug":
-			return cutil.RespondDebug(rc, as, "", ps)
+			return cutil.RespondYAML(rc, fn, ps.Data)
+		case cutil.IsContentTypeDebug(ct):
+			return cutil.RespondDebug(rc, as, fn, ps)
 		}
 	}
 	startNanos := util.TimeCurrentNanos()

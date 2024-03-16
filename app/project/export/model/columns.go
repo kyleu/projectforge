@@ -120,10 +120,13 @@ func (c Columns) TitlesLower() []string {
 	})
 }
 
-func (c Columns) ToGoStrings(prefix string) string {
+func (c Columns) ToGoStrings(prefix string, alwaysString bool, maxLength int) string {
 	ret := lo.Map(c, func(x *Column, _ int) string {
-		return ToGoString(x.Type, prefix+x.Proper(), false)
+		return ToGoString(x.Type, x.Nullable, prefix+x.Proper(), alwaysString)
 	})
+	if maxLength == 0 {
+		return strings.Join(ret, ", ")
+	}
 	return strings.Join(ret, ", ")
 }
 

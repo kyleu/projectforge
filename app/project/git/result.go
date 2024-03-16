@@ -9,6 +9,8 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+var ResultFields = []string{"Project", "Status", "Data", "Error"}
+
 type Result struct {
 	Project *project.Project `json:"-"`
 	Status  string           `json:"status"`
@@ -20,30 +22,30 @@ func NewResult(prj *project.Project, status string, data util.ValueMap) *Result 
 	return &Result{Project: prj, Status: status, Data: data}
 }
 
-func (s *Result) Actions() Actions {
+func (r *Result) Actions() Actions {
 	ret := Actions{ActionStatus}
-	if s.Status == "no repo" {
+	if r.Status == "no repo" {
 		return append(ret, ActionCreateRepo)
 	}
 	ret = append(ret, ActionFetch)
-	if dirty := s.DataStringArray("dirty"); len(dirty) > 0 {
+	if dirty := r.DataStringArray("dirty"); len(dirty) > 0 {
 		ret = append(ret, ActionCommit)
 	}
-	if s.DataInt("commitsAhead") > 0 {
+	if r.DataInt("commitsAhead") > 0 {
 		ret = append(ret, ActionPush)
 	}
-	if s.DataInt("commitsBehind") > 0 {
+	if r.DataInt("commitsBehind") > 0 {
 		ret = append(ret, ActionPull)
 	}
 	ret = append(ret, ActionUndoCommit, ActionMagic, ActionHistory)
 	return ret
 }
 
-func (s *Result) History() *HistoryResult {
-	if s.Data == nil {
+func (r *Result) History() *HistoryResult {
+	if r.Data == nil {
 		return nil
 	}
-	if x, ok := s.Data["history"]; ok {
+	if x, ok := r.Data["history"]; ok {
 		h := &HistoryResult{}
 		_ = util.CycleJSON(x, h)
 		return h
@@ -51,34 +53,48 @@ func (s *Result) History() *HistoryResult {
 	return nil
 }
 
-func (s *Result) CleanData() util.ValueMap {
-	return lo.OmitByKeys(s.Data, []string{"branch", "dirty", "status"})
+func (r *Result) CleanData() util.ValueMap {
+	return lo.OmitByKeys(r.Data, []string{"branch", "dirty", "status"})
 }
 
-func (s *Result) DataString(k string) string {
-	if s.Data == nil {
+func (r *Result) DataString(k string) string {
+	if r.Data == nil {
 		return ""
 	}
-	return s.Data.GetStringOpt(k)
+	return r.Data.GetStringOpt(k)
 }
 
-func (s *Result) DataInt(k string) int {
-	ret, _ := strconv.ParseInt(s.DataString(k), 10, 32)
+func (r *Result) DataInt(k string) int {
+	ret, _ := strconv.ParseInt(r.DataString(k), 10, 32)
 	return int(ret)
 }
 
-func (s *Result) DataStringArray(k string) []string {
-	if s.Data == nil {
+func (r *Result) DataStringArray(k string) []string {
+	if r.Data == nil {
 		return nil
 	}
-	ret, _ := s.Data.GetStringArray(k, true)
+	ret, _ := r.Data.GetStringArray(k, true)
 	return ret
+}
+
+func (r *Result) Strings() []string {
+	return []string{r.Project.Key, r.Status, r.Data.String(), r.Error}
+}
+
+func (r *Result) ToCSV() ([]string, [][]string) {
+	return ResultFields, [][]string{r.Strings()}
 }
 
 type Results []*Result
 
-func (s Results) Get(key string) *Result {
-	return lo.FindOrElse(s, nil, func(x *Result) bool {
+func (r Results) Get(key string) *Result {
+	return lo.FindOrElse(r, nil, func(x *Result) bool {
 		return x.Project.Key == key
+	})
+}
+
+func (r Results) ToCSV() ([]string, [][]string) {
+	return ResultFields, lo.Map(r, func(x *Result, _ int) []string {
+		return x.Strings()
 	})
 }

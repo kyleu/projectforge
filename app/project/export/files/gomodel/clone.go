@@ -2,6 +2,7 @@ package gomodel
 
 import (
 	"fmt"
+	"projectforge.dev/projectforge/app/util"
 	"strings"
 
 	"github.com/samber/lo"
@@ -22,7 +23,7 @@ func modelClone(m *model.Model) *golang.Block {
 		}
 		return fmt.Sprintf("%s.%s,", m.FirstLetter(), decl)
 	})
-	lines := JoinLines(calls, " ", 120)
+	lines := util.JoinLines(calls, " ", 120)
 	if len(lines) == 1 && len(lines[0]) < 100 {
 		ret.W("\treturn &%s{%s}", m.Proper(), strings.TrimSuffix(lines[0], ","))
 	} else {

@@ -17,13 +17,15 @@ import (
 
 func Act(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
 	as := _currentAppState
-	ps := cutil.LoadPageState(as, rc, key, _currentAppRootLogger){{{ if .HasAccount }}}
-	if allowed, reason := user.Check(string(ps.URI.Path()), ps.Accounts); !allowed {
-		f = Unauthorized(rc, reason, ps.Accounts)
-	}{{{ end }}}
+	ps := cutil.LoadPageState(as, rc, key, _currentAppRootLogger)
 	if err := initAppRequest(as, ps); err != nil {
 		ps.Logger.Warnf("%+v", err)
-	}
+	}{{{ if .HasAccount }}}
+	if !ps.Admin {
+		if allowed, reason := user.Check(string(ps.URI.Path()), ps.Accounts); !allowed {
+			f = Unauthorized(rc, reason, ps.Accounts)
+		}
+	}{{{ end }}}
 	actComplete(key, as, ps, rc, f)
 }
 {{{ if.HasModule "marketing" }}}

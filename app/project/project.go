@@ -1,6 +1,7 @@
 package project
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/samber/lo"
@@ -149,4 +150,17 @@ func (p *Project) DatabaseEngineDefault() string {
 		return util.DatabasePostgreSQL
 	}
 	return ""
+}
+
+var Fields = []string{"Key", "Name", "Icon", "Exec", "Version", "Package", "Args", "Port", "Modules", "Ignore", "Tags", "Theme", "Path", "Parent", "Error"}
+
+func (p *Project) ToCSV() ([]string, [][]string) {
+	return Fields, [][]string{p.Strings()}
+}
+
+func (p *Project) Strings() []string {
+	return []string{
+		p.Key, p.Name, p.Icon, p.Exec, p.Version, p.Package, p.Args, fmt.Sprint(p.Port), strings.Join(p.Modules, ","),
+		strings.Join(p.Ignore, ","), strings.Join(p.Tags, ","), p.Theme.Key, p.Path, p.Parent, p.Error,
+	}
 }

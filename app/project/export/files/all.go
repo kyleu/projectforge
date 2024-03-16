@@ -2,12 +2,12 @@ package files
 
 import (
 	"github.com/pkg/errors"
-
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/project/export/files/controller"
 	"projectforge.dev/projectforge/app/project/export/files/goenum"
 	"projectforge.dev/projectforge/app/project/export/files/gql"
+	"projectforge.dev/projectforge/app/project/export/files/script"
 	"projectforge.dev/projectforge/app/project/export/files/sql"
 	"projectforge.dev/projectforge/app/project/export/files/svc"
 	"projectforge.dev/projectforge/app/project/export/model"
@@ -35,15 +35,13 @@ func All(p *project.Project, args *model.Args, addHeader bool, linebreak string)
 		ret = append(ret, calls...)
 	}
 
-	if args.HasModule("export") {
-		x, err := svc.Services(args, addHeader, linebreak)
-		if err != nil {
-			return nil, err
-		}
-		ret = append(ret, x)
+	x, err := svc.Services(args, addHeader, linebreak)
+	if err != nil {
+		return nil, err
 	}
+	ret = append(ret, x)
 
-	x, err := controller.Routes(args, addHeader, linebreak)
+	x, err = controller.Routes(args, addHeader, linebreak)
 	if err != nil {
 		return nil, err
 	}
@@ -78,6 +76,15 @@ func All(p *project.Project, args *model.Args, addHeader bool, linebreak string)
 		}
 		ret = append(ret, f)
 	}
+
+	if args.HasModule("notebook") {
+		x, err := script.NotebookScript(p, args, addHeader, linebreak)
+		if err != nil {
+			return nil, err
+		}
+		ret = append(ret, x)
+	}
+
 	if args.Models.HasSeedData() {
 		f, err := sql.SeedDataAll(args.Models, linebreak)
 		if err != nil {

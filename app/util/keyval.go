@@ -72,3 +72,9 @@ type FieldDesc struct {
 }
 
 type FieldDescs []*FieldDesc
+
+func (d FieldDescs) Keys() []string {
+	return lo.Map(d, func(x *FieldDesc, _ int) string {
+		return x.Key
+	})
+}

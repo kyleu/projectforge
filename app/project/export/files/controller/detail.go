@@ -44,7 +44,7 @@ func controllerDetail(g *golang.File, models model.Models, m *model.Model, grp *
 			ret.W(msg, m.Proper())
 		} else {
 			msg := "\t\trelatedAuditRecords, err := as.Services.Audit.RecordsForModel(ps.Context, nil, %q, %s, nil, ps.Logger)"
-			ret.W(msg, m.Name, m.PKs().ToGoStrings("ret."))
+			ret.W(msg, m.Name, m.PKs().ToGoStrings("ret.", false, 160))
 		}
 		ret.W("\t\tif err != nil {")
 		ret.W("\t\t\treturn \"\", errors.Wrapf(err, \"unable to retrieve related audit records\")")

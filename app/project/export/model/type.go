@@ -87,26 +87,45 @@ func ToGoType(t types.Type, nullable bool, pkg string, enums enum.Enums) (string
 	return ret, nil
 }
 
-func ToGoString(t types.Type, prop string, alwaysString bool) string {
+func ToGoString(t types.Type, nullable bool, prop string, alwaysString bool) string {
 	switch t.Key() {
 	case types.KeyAny, types.KeyBool, types.KeyInt, types.KeyFloat:
 		return fmt.Sprintf("fmt.Sprint(%s)", prop)
 	case types.KeyList:
 		if alwaysString {
+			if nullable {
+				return fmt.Sprintf("util.ToJSON(%s)", prop)
+			}
 			return fmt.Sprintf("util.ToJSON(&%s)", prop)
 		}
 		return prop
+	case types.KeyEnum:
+		if alwaysString {
+			return fmt.Sprintf("%s.String()", prop)
+		}
+		return prop
+	case types.KeyMap, types.KeyValueMap:
+		return fmt.Sprintf("%s.String()", prop)
 	case types.KeyDate:
 		if alwaysString {
+			if nullable {
+				return fmt.Sprintf("util.TimeToYMD(%s)", prop)
+			}
 			return fmt.Sprintf("util.TimeToYMD(&%s)", prop)
 		}
 		return prop
 	case types.KeyTimestamp, types.KeyTimestampZoned:
 		if alwaysString {
+			if nullable {
+				return fmt.Sprintf("util.TimeToFull(%s)", prop)
+			}
 			return fmt.Sprintf("util.TimeToFull(&%s)", prop)
 		}
 		return prop
 	case types.KeyUUID, types.KeyReference:
+		if alwaysString && nullable {
+			return fmt.Sprintf("util.StringNullable(%s)", prop)
+		}
 		return fmt.Sprintf("%s.String()", prop)
 	default:
 		return prop

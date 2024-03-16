@@ -3,6 +3,7 @@ package util
 import (
 	"fmt"
 	"path/filepath"
+	"reflect"
 	"runtime"
 	"strings"
 
@@ -185,4 +186,11 @@ var filenameReplacer = strings.NewReplacer("/", "-", "\\", "-", "?", "-", "%", "
 
 func Filename(s string) string {
 	return filenameReplacer.Replace(s)
+}
+
+func StringNullable(s fmt.Stringer) string {
+	if s == nil || reflect.ValueOf(s).IsNil() {
+		return ""
+	}
+	return s.String()
 }

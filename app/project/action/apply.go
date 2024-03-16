@@ -16,7 +16,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func ApplyAll(ctx context.Context, prjs project.Projects, actT Type, cfg util.ValueMap, as *app.State, logger util.Logger) []*ResultContext {
+func ApplyAll(ctx context.Context, prjs project.Projects, actT Type, cfg util.ValueMap, as *app.State, logger util.Logger) ResultContexts {
 	serial := cfg.GetBoolOpt("serial") || cfg.GetStringOpt("mode") == refreshMode
 	mu := sync.Mutex{}
 	mSvc, pSvc, eSvc, xSvc := as.Services.Modules, as.Services.Projects, as.Services.Export, as.Services.Exec

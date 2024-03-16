@@ -16,13 +16,8 @@ import (
 	"{{{ .Package }}}/views/vnotebook"
 )
 
-var NotebookBaseURL = fmt.Sprintf("http://localhost:%d", util.AppPort+10)
-
 func Notebook(rc *fasthttp.RequestCtx) {
 	controller.Act("notebook.view", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		if !ps.Admin {
-			return controller.Unauthorized(rc, "", ps.Accounts)(as, ps)
-		}
 		status := as.Services.Notebook.Status()
 		if status == "running" {
 			pathS, _ := cutil.RCRequiredString(rc, "path", false)
@@ -32,7 +27,7 @@ func Notebook(rc *fasthttp.RequestCtx) {
 			if pathS != "" {
 				bc = append(bc, pathS)
 			}
-			return controller.Render(rc, as, &vnotebook.Notebook{BaseURL: NotebookBaseURL, Path: pathS}, ps, bc...)
+			return controller.Render(rc, as, &vnotebook.Notebook{BaseURL: as.Services.Notebook.BaseURL, Path: pathS}, ps, bc...)
 		}
 		ps.SetTitleAndData("Notebook Options", status)
 		return controller.Render(rc, as, &vnotebook.Options{}, ps, "notebook")
@@ -41,9 +36,6 @@ func Notebook(rc *fasthttp.RequestCtx) {
 
 func NotebookFiles(rc *fasthttp.RequestCtx) {
 	controller.Act("notebook.files", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		if !ps.Admin {
-			return controller.Unauthorized(rc, "", ps.Accounts)(as, ps)
-		}
 		pathS, path, bc := notebookGetText(rc)
 		fs := as.Services.Notebook.FS
 		files, err := fs.ListTree(nil, pathS, []string{"cache"}, ps.Logger)
@@ -57,9 +49,6 @@ func NotebookFiles(rc *fasthttp.RequestCtx) {
 
 func NotebookFileEdit(rc *fasthttp.RequestCtx) {
 	controller.Act("notebook.edit", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		if !ps.Admin {
-			return controller.Unauthorized(rc, "", ps.Accounts)(as, ps)
-		}
 		pathS, path, bc := notebookGetText(rc)
 		bc = append(bc, "Edit**edit")
 		b, err := as.Services.Notebook.FS.ReadFile(pathS)
@@ -74,9 +63,6 @@ func NotebookFileEdit(rc *fasthttp.RequestCtx) {
 
 func NotebookFileSave(rc *fasthttp.RequestCtx) {
 	controller.Act("notebook.save", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		if !ps.Admin {
-			return controller.Unauthorized(rc, "", ps.Accounts)(as, ps)
-		}
 		pathS, _, _ := notebookGetText(rc)
 		msg := "Notebook file saved"
 

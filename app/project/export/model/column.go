@@ -103,7 +103,7 @@ func (c *Column) AddTag(t string) {
 }
 
 func (c *Column) ToGoString(prefix string) string {
-	return ToGoString(c.Type, prefix+c.Proper(), false)
+	return ToGoString(c.Type, c.Nullable, prefix+c.Proper(), false)
 }
 
 func (c *Column) ToGoViewString(prefix string, verbose bool, url bool, enums enum.Enums, src string) string {
