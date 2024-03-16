@@ -2,7 +2,6 @@ package gomodel
 
 import (
 	"fmt"
-	"projectforge.dev/projectforge/app/util"
 	"strings"
 
 	"github.com/samber/lo"
@@ -10,6 +9,7 @@ import (
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func modelClone(m *model.Model) *golang.Block {

@@ -1,10 +1,11 @@
 package gomodel
 
 import (
+	"strings"
+
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
-	"strings"
 )
 
 func modelStrings(g *golang.File, m *model.Model) *golang.Block {
