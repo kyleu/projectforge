@@ -3,7 +3,7 @@ source = ["./build/dist/darwin_darwin_all/projectforge"]
 bundle_id = "com.kyleu.projectforge"
 
 notarize {
-  path = "./build/dist/projectforge_1.0.27_darwin_all_desktop.dmg"
+  path = "./build/dist/projectforge_1.1.0_darwin_all_desktop.dmg"
   bundle_id = "com.kyleu.projectforge"
 }
 
@@ -17,10 +17,10 @@ sign {
 }
 
 dmg {
-  output_path = "./build/dist/projectforge_1.0.27_darwin_all.dmg"
+  output_path = "./build/dist/projectforge_1.1.0_darwin_all.dmg"
   volume_name = "Project Forge"
 }
 
 zip {
-  output_path = "./build/dist/projectforge_1.0.27_darwin_all_notarized.zip"
+  output_path = "./build/dist/projectforge_1.1.0_darwin_all_notarized.zip"
 }
