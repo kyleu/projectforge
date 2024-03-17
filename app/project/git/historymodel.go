@@ -19,13 +19,13 @@ type HistoryResult struct {
 }
 
 type HistoryEntry struct {
-	Headers     map[string]string `json:"headers" xml:"headers"`
-	SHA         string            `json:"sha" xml:"sha"`
-	AuthorName  string            `json:"authorName" xml:"authorName"`
-	AuthorEmail string            `json:"authorEmail" xml:"authorEmail"`
-	Message     string            `json:"message" xml:"message"`
-	Occurred    string            `json:"occurred" xml:"occurred"`
-	Files       HistoryFiles      `json:"files" xml:"files"`
+	Headers     util.ValueMap `json:"headers" xml:"headers"`
+	SHA         string        `json:"sha" xml:"sha"`
+	AuthorName  string        `json:"authorName" xml:"authorName"`
+	AuthorEmail string        `json:"authorEmail" xml:"authorEmail"`
+	Message     string        `json:"message" xml:"message"`
+	Occurred    string        `json:"occurred" xml:"occurred"`
+	Files       HistoryFiles  `json:"files" xml:"files"`
 }
 
 func (h *HistoryEntry) OccurredTime() *time.Time {
