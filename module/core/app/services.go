@@ -13,8 +13,8 @@ import (
 )
 
 type Services struct {
-	CoreServices
-	GeneratedServices
+	CoreServices{{{ if .HasModule "export" }}}
+	GeneratedServices{{{ end }}}
 
 	// add your dependencies here
 }
