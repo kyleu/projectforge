@@ -21,9 +21,7 @@ type Entry struct {
 	Hash  string
 }
 
-var (
-	cache = map[string]*Entry{}
-)
+var cache = map[string]*Entry{}
 
 func Embed(path string) (*Entry, error) {
 	if path == "embed.go" {

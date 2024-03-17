@@ -1,9 +1,11 @@
 package notebook
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/pkg/errors"
 
@@ -26,12 +28,18 @@ func NewService() *Service {
 }
 
 func (s *Service) Status() string {
-	rsp, err := http.DefaultClient.Get(s.BaseURL)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, s.BaseURL, http.NoBody)
+	if err != nil {
+		return "internal-error"
+	}
+	rsp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return "not-started"
 	}
 	if rsp.StatusCode != 200 {
-		return "invalid"
+		return "invalid-response"
 	}
 	return "running"
 }

@@ -59,6 +59,10 @@ func Services(args *model.Args, addHeader bool, linebreak string) (*file.File, e
 
 func servicesStruct(svcs []string) *golang.Block {
 	ret := golang.NewBlock("genStruct", "struct")
+	if len(svcs) == 0 {
+		ret.W("type GeneratedServices struct{}")
+		return ret
+	}
 	ret.W("type GeneratedServices struct {")
 	for _, svc := range svcs {
 		ret.W("\t" + svc)
@@ -70,6 +74,11 @@ func servicesStruct(svcs []string) *golang.Block {
 func servicesInitFn(refs []string, params string) *golang.Block {
 	ret := golang.NewBlock("initGeneratedServices", "func")
 	ret.W("func initGeneratedServices(ctx context.Context, %s, logger util.Logger) GeneratedServices {", params)
+	if len(refs) == 0 {
+		ret.W("\treturn GeneratedServices{}")
+		ret.W("}")
+		return ret
+	}
 	ret.W("\treturn GeneratedServices{")
 	for _, svc := range refs {
 		ret.W("\t\t" + svc)

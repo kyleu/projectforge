@@ -19,7 +19,10 @@ func Menu(args *model.Args, addHeader bool, linebreak string) (*file.File, error
 	g := golang.NewFile("cmenu", []string{"app", "controller", "cmenu"}, "generated")
 	g.AddImport(helper.ImpAppMenu)
 	groups, names, orphans := sortModels(args)
-	g.AddBlocks(menuBlockV(args, groups, names), menuBlockGM(args, orphans))
+	if vBlock := menuBlockV(args, groups, names); len(vBlock.Lines) > 0 {
+		g.AddBlocks(vBlock)
+	}
+	g.AddBlocks(menuBlockGM(args, orphans))
 	return g.Render(addHeader, linebreak)
 }
 
@@ -95,18 +98,22 @@ func menuBlockV(args *model.Args, groups map[string][]string, names []string) *g
 
 func menuBlockGM(args *model.Args, orphans []string) *golang.Block {
 	gm := golang.NewBlock("generatedMenu", "func")
-	gm.Lints = append(gm.Lints, "unused")
+	// gm.Lints = append(gm.Lints, "unused")
 	gm.W("func generatedMenu() menu.Items {")
-	gm.W("\treturn menu.Items{")
-	for _, g := range args.Groups {
-		if !g.Provided {
-			gm.W("\t\tmenuGroup%s,", util.StringToCamel(g.Proper(), args.Acronyms...))
+	if len(args.Groups) == 0 && len(orphans) == 0 {
+		gm.W("\treturn menu.Items{}")
+	} else {
+		gm.W("\treturn menu.Items{")
+		for _, g := range args.Groups {
+			if !g.Provided {
+				gm.W("\t\tmenuGroup%s,", util.StringToCamel(g.Proper(), args.Acronyms...))
+			}
 		}
+		for _, o := range orphans {
+			gm.W("\t\tmenuItem" + o + ",")
+		}
+		gm.W("\t}")
 	}
-	for _, o := range orphans {
-		gm.W("\t\tmenuItem" + o + ",")
-	}
-	gm.W("\t}")
 	gm.W("}")
 
 	return gm

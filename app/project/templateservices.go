@@ -51,7 +51,7 @@ func (t *TemplateContext) servicesNames() ([]string, []string, int) {
 func (t *TemplateContext) ServicesDefinition() string {
 	svcs, names, maxNameLength := t.servicesNames()
 	if len(svcs) == 0 {
-		return "type CoreServices struct {}"
+		return "type CoreServices struct{}"
 	}
 	ret := util.NewStringSlice([]string{"type CoreServices struct {"})
 	types := lo.Map(svcs, func(svc string, _ int) string {

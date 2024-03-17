@@ -74,7 +74,7 @@ func (s *Service) execUnknown(ctx context.Context, op string, q string, tx *sqlx
 }
 
 func (s *Service) process(
-		ctx context.Context, op string, key string, past string, q string, tx *sqlx.Tx, expected int, logger util.Logger, values ...any,
+	ctx context.Context, op string, key string, past string, q string, tx *sqlx.Tx, expected int, logger util.Logger, values ...any,
 ) (int, error) {
 	if s.ReadOnly {
 		return 0, errors.Errorf("cannot run [%q] statements in read-only database [%s]", op, q)
