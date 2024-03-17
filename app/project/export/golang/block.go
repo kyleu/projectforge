@@ -85,26 +85,26 @@ func (b *Block) LineComplexity() int {
 }
 
 func (b *Block) NoLineDecl(linebreak string) (string, error) {
-	var ret []string
+	ret := &util.StringSlice{}
 	if b.LineCount() > 102 && strings.Contains(b.Lines[0], "func") {
-		ret = append(ret, "funlen")
+		ret.Push("funlen")
 	}
 	if b.LineMaxLength() > 160 {
-		ret = append(ret, "lll")
+		ret.Push("lll")
 	}
 
 	fset := token.NewFileSet()
 	if f, _ := parser.ParseFile(fset, "temp.go", strings.Join(append([]string{"package x"}, b.Lines...), linebreak), 0); f != nil {
 		for _, complexity := range gocognit.ComplexityStats(f, fset, nil) {
-			if complexity.Complexity > 30 && !slices.Contains(ret, "gocognit") {
-				ret = append(ret, "gocognit")
+			if complexity.Complexity > 30 && !slices.Contains(ret.Slice, "gocognit") {
+				ret.Push("gocognit")
 			}
 		}
 	}
-	if len(ret) == 0 || b.SkipDecl || b.ContainsText("{%") {
+	if len(ret.Slice) == 0 || b.SkipDecl || b.ContainsText("{%") {
 		return "", nil
 	}
-	x := fmt.Sprintf("//nolint:%s", strings.Join(ret, ","))
+	x := fmt.Sprintf("//nolint:%s", ret.Join(","))
 	return x, nil
 }
 

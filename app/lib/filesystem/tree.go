@@ -38,11 +38,11 @@ func (n *Node) Flatten(curr string) []string {
 type Nodes []*Node
 
 func (n Nodes) Flatten(curr string) []string {
-	ret := make([]string, 0, len(n))
+	ret := util.NewStringSlice(make([]string, 0, len(n)))
 	for _, node := range n {
-		ret = append(ret, node.Flatten(curr)...)
+		ret.Push(node.Flatten(curr)...)
 	}
-	return ret
+	return ret.Slice
 }
 
 func (n Nodes) Sort() Nodes {

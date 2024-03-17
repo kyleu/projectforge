@@ -46,9 +46,9 @@ func (t *Theme) Equals(x *Theme) bool {
 }
 
 func (t *Theme) ToGo() string {
-	var ret []string
+	ret := &util.StringSlice{}
 	add := func(ind int, s string, args ...any) {
-		ret = append(ret, util.StringRepeat("\t", ind+1)+fmt.Sprintf(s, args...))
+		ret.Push(util.StringRepeat("\t", ind+1) + fmt.Sprintf(s, args...))
 	}
 	addColors := func(c *Colors) {
 		add(2, "Border: %q, LinkDecoration: %q,", c.Border, c.LinkDecoration)
@@ -69,7 +69,7 @@ func (t *Theme) ToGo() string {
 	addColors(t.Dark)
 	add(1, "},")
 	add(0, "},")
-	return strings.Join(ret, util.StringDefaultLinebreak)
+	return ret.Join(util.StringDefaultLinebreak)
 }
 
 type Themes []*Theme

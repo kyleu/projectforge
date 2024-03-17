@@ -103,11 +103,11 @@ func (m *Model) GroupString(prefix string, dflt string) string {
 }
 
 func (m *Model) Breadcrumbs() string {
-	ret := lo.Map(m.Group, func(g string, _ int) string {
+	ret := util.NewStringSlice(lo.Map(m.Group, func(g string, _ int) string {
 		return fmt.Sprintf("%q", strings.ToLower(g))
-	})
-	ret = append(ret, fmt.Sprintf("%q", m.Package))
-	return strings.Join(ret, ", ")
+	}))
+	ret.Pushf("%q", m.Package)
+	return ret.Join(", ")
 }
 
 func (m *Model) IndexedColumns(includePK bool) Columns {
@@ -132,7 +132,7 @@ func (m *Model) AllSearches(database string) []string {
 	if !m.HasTag("search") {
 		return m.Search
 	}
-	ret := slices.Clone(m.Search)
+	ret := util.NewStringSlice(slices.Clone(m.Search))
 	lo.ForEach(m.Columns, func(c *Column, _ int) {
 		if c.Search {
 			x := c.Name
@@ -146,10 +146,10 @@ func (m *Model) AllSearches(database string) []string {
 					x = fmt.Sprintf("%s::text", c.Name)
 				}
 			}
-			ret = append(ret, "lower("+x+")")
+			ret.Push("lower(" + x + ")")
 		}
 	})
-	return ret
+	return ret.Slice
 }
 
 func (m *Model) HasSearches() bool {

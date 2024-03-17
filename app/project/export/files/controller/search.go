@@ -10,6 +10,7 @@ import (
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func Search(args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
@@ -45,24 +46,21 @@ func searchBlock(args *model.Args) *golang.Block {
 }
 
 func searchModel(m *model.Model) []string {
-	var ret []string
-	add := func(s string, args ...any) {
-		ret = append(ret, fmt.Sprintf(s, args...))
-	}
-	add("\t%sFunc := func(ctx context.Context, params *Params, as *app.State, page *cutil.PageState, logger util.Logger) (result.Results, error) {", m.Package)
+	ret := &util.StringSlice{}
+	ret.Pushf("\t%sFunc := func(ctx context.Context, params *Params, as *app.State, page *cutil.PageState, logger util.Logger) (result.Results, error) {", m.Package)
 	if !m.HasTag("public") {
-		add("\t\tif !page.Admin {")
-		add("\t\t\treturn nil, nil")
-		add("\t\t}")
+		ret.Push("\t\tif !page.Admin {")
+		ret.Push("\t\t\treturn nil, nil")
+		ret.Push("\t\t}")
 	}
-	add("\t\tprm := params.PS.Get(%q, nil, logger).Sanitize(%q).WithLimit(5)", m.Package, m.Package)
+	ret.Pushf("\t\tprm := params.PS.Get(%q, nil, logger).Sanitize(%q).WithLimit(5)", m.Package, m.Package)
 	const msg = "\t\tmodels, err := as.Services.%s.Search(ctx, params.Q, nil, prm%s, logger)"
-	add(msg, m.Proper(), m.SoftDeleteSuffix())
-	add("\t\tif err != nil {")
-	add("\t\t\treturn nil, err")
-	add("\t\t}")
+	ret.Pushf(msg, m.Proper(), m.SoftDeleteSuffix())
+	ret.Push("\t\tif err != nil {")
+	ret.Push("\t\t\treturn nil, err")
+	ret.Push("\t\t}")
 
-	add("\t\treturn lo.Map(models, func(m *%s.%s, _ int) *result.Result {", m.Package, m.Proper())
+	ret.Pushf("\t\treturn lo.Map(models, func(m *%s.%s, _ int) *result.Result {", m.Package, m.Proper())
 	data := "m"
 	if m.HasTag("big") {
 		data = "nil"
@@ -71,8 +69,8 @@ func searchModel(m *model.Model) []string {
 	if icons := m.Columns.WithFormat("icon"); len(icons) == 1 {
 		icon = fmt.Sprintf("%s.%s", data, icons[0].Proper())
 	}
-	add("\t\t\treturn result.NewResult(%q, m.String(), m.WebPath(), m.TitleString(), %s, m, %s, params.Q)", m.Package, icon, data)
-	add("\t\t}), nil")
-	add("\t}")
-	return ret
+	ret.Pushf("\t\t\treturn result.NewResult(%q, m.String(), m.WebPath(), m.TitleString(), %s, m, %s, params.Q)", m.Package, icon, data)
+	ret.Push("\t\t}), nil")
+	ret.Push("\t}")
+	return ret.Slice
 }

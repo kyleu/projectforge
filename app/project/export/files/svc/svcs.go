@@ -15,7 +15,7 @@ import (
 
 func Services(args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	g := golang.NewFile("app", []string{"app"}, "generated")
-	g.AddImport(helper.ImpContext, helper.ImpAppDatabase, helper.ImpAppUtil)
+	g.AddImport(helper.ImpContext, helper.ImpAppUtil)
 	if args.HasModule("audit") {
 		g.AddImport(helper.ImpAudit)
 	}
@@ -30,10 +30,7 @@ func Services(args *model.Args, addHeader bool, linebreak string) (*file.File, e
 		}
 	})
 
-	initParamsArr := []string{"dbSvc *database.Service"}
-	if args.HasModule("readonlydb") {
-		initParamsArr = append(initParamsArr, "dbReadSvc *database.Service")
-	}
+	initParamsArr := []string{"st *State"}
 	if args.HasModule("audit") {
 		initParamsArr = append(initParamsArr, "audSvc *audit.Service")
 	}
@@ -44,9 +41,9 @@ func Services(args *model.Args, addHeader bool, linebreak string) (*file.File, e
 	lo.ForEach(args.Models, func(m *model.Model, _ int) {
 		svcs = append(svcs, fmt.Sprintf("%s *%s.Service", util.StringPad(m.Proper(), svcSize), m.Package))
 
-		refParamsArr := []string{"dbSvc"}
+		refParamsArr := []string{"st.DB"}
 		if args.HasModule("readonlydb") && !m.HasTag("audit") {
-			refParamsArr = append(refParamsArr, "dbReadSvc")
+			refParamsArr = append(refParamsArr, "st.DBRead")
 		}
 		if args.HasModule("audit") && m.HasTag("audit") {
 			refParamsArr = append(refParamsArr, "audSvc")

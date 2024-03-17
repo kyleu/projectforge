@@ -2,7 +2,6 @@ package model
 
 import (
 	"fmt"
-	"strings"
 
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/util"
@@ -23,8 +22,8 @@ func goViewStringForString(url bool, src string, t *types.Wrapped, nullable bool
 		return "<div class=\"prewsl\">{%%s " + ToGoString(t, nullable, prop, false) + " %%}</div>"
 	case FmtCodeHidden.Key:
 		_, p := util.StringSplitLast(prop, '.', true)
-		ret := make([]string, 0, 30)
-		ret = append(ret,
+		ret := util.NewStringSlice(make([]string, 0, 30))
+		ret.Push(
 			"<ul class=\"accordion\">",
 			"<li>",
 			"<input id=\"accordion-"+p+"\" type=\"checkbox\" hidden />",
@@ -33,7 +32,7 @@ func goViewStringForString(url bool, src string, t *types.Wrapped, nullable bool
 			"</li>",
 			"</ul>",
 		)
-		return strings.Join(ret, "")
+		return ret.Join("")
 	case FmtJSON.Key, FmtHTML.Key, FmtSQL.Key:
 		return "{%%= view.Format(" + ToGoString(t, nullable, prop, false) + ", \"" + format + "\") %%}"
 	case FmtURL.Key:

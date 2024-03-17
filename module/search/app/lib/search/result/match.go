@@ -8,6 +8,8 @@ import (
 	"strings"
 
 	"github.com/samber/lo"
+
+	"{{{ .Package }}}/app/util"
 )
 
 type Match struct {
@@ -23,12 +25,12 @@ func (m *Match) ValueSplit(q string) []string {
 	if idx == -1 {
 		return []string{cut}
 	}
-	var ret []string
+	ret := &util.StringSlice{}
 	for idx > -1 {
 		if idx > 0 {
-			ret = append(ret, cut[:idx])
+			ret.Push(cut[:idx])
 		}
-		ret = append(ret, cut[idx:idx+len(ql)])
+		ret.Push(cut[idx : idx+len(ql)])
 
 		cut = cut[idx+len(ql):]
 		vl = vl[idx+len(ql):]
@@ -36,9 +38,9 @@ func (m *Match) ValueSplit(q string) []string {
 		idx = strings.Index(vl, ql)
 	}
 	if cut != "" {
-		ret = append(ret, cut)
+		ret.Push(cut)
 	}
-	return ret
+	return ret.Slice
 }
 
 type Matches []*Match

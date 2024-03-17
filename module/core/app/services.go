@@ -2,12 +2,22 @@
 package app // import {{{ .Package }}}
 
 import (
-	"context"
+	"context"{{{ if .HasModule "migration" }}}
 
-	{{{ .ServicesImports }}}
+	"github.com/pkg/errors"{{{ end }}}
+	{{{ if .HasModule "audit" }}}
+	"{{{ .Package }}}/app/lib/audit"{{{ end }}}{{{ if .HasModule "migration" }}}
+	"{{{ .Package }}}/app/lib/database/migrate"{{{ end }}}
+	"{{{ .Package }}}/app/util"{{{ if .HasModule "migration" }}}
+	"{{{ .Package }}}/queries/migrations"{{{ end }}}
 )
 
-{{{ .ServicesDefinition }}}
+type Services struct {
+	CoreServices
+	GeneratedServices
+
+	// add your dependencies here
+}
 
 func NewServices(ctx context.Context, st *State, logger util.Logger) (*Services, error) {
 	{{{ if .HasModule "migration" }}}migrations.LoadMigrations(st.Debug)
@@ -16,7 +26,10 @@ func NewServices(ctx context.Context, st *State, logger util.Logger) (*Services,
 		return nil, errors.Wrap(err, "unable to run database migrations")
 	}
 	{{{ end }}}{{{ if .HasModule "audit" }}}auditSvc := audit.NewService(st.DB, logger)
-	{{{ end }}}return {{{ .ServicesConstructor }}}, nil
+	{{{ end }}}return &Services{
+		CoreServices:      initCoreServices(ctx, st{{{ if .HasModule "audit" }}}, auditSvc{{{ end }}}, logger),{{{ if .HasModule "export" }}}
+		GeneratedServices: initGeneratedServices(ctx, st{{{ if .HasModule "audit" }}}, auditSvc{{{ end }}}, logger),{{{ end }}}
+	}, nil
 }
 
 func (s *Services) Close(_ context.Context, _ util.Logger) error {

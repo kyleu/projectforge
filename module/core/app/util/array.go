@@ -28,8 +28,8 @@ func StringArrayQuoted(a []string) []string {
 	})
 }
 
-func StringArrayFromInterfaces(a []any, maxLength int) []string {
-	ret := make([]string, 0, len(a))
+func StringArrayFromAny(a []any, maxLength int) []string {
+	ret := NewStringSlice(make([]string, 0, len(a)))
 	lo.ForEach(a, func(x any, _ int) {
 		var v string
 		switch t := x.(type) {
@@ -43,9 +43,9 @@ func StringArrayFromInterfaces(a []any, maxLength int) []string {
 		if maxLength > 0 && len(v) > maxLength {
 			v = v[:maxLength] + "... (truncated)"
 		}
-		ret = append(ret, v)
+		ret.Push(v)
 	})
-	return ret
+	return ret.Slice
 }
 
 func ArrayRemoveDuplicates[T comparable](x []T) []T {

@@ -198,40 +198,39 @@ func (c Columns) WhereClause(offset int, placeholder string) string {
 }
 
 func (c Columns) GoTypeKeys(pkg string, enums enum.Enums) ([]string, error) {
-	ret := make([]string, 0, len(c))
+	ret := util.NewStringSlice(make([]string, 0, len(c)))
 	for _, x := range c {
 		gt, err := x.ToGoType(pkg, enums)
 		if err != nil {
 			return nil, err
 		}
-
-		ret = append(ret, gt)
+		ret.Push(gt)
 	}
-	return ret, nil
+	return ret.Slice, nil
 }
 
 func (c Columns) GoTypes(pkg string, enums enum.Enums) ([]string, error) {
-	ret := make([]string, 0, len(c))
+	ret := util.NewStringSlice(make([]string, 0, len(c)))
 	for _, x := range c {
 		gt, err := x.ToGoType(pkg, enums)
 		if err != nil {
 			return nil, err
 		}
-		ret = append(ret, gt)
+		ret.Push(gt)
 	}
-	return ret, nil
+	return ret.Slice, nil
 }
 
 func (c Columns) GoRowTypes(pkg string, enums enum.Enums, database string) ([]string, error) {
-	ret := make([]string, 0, len(c))
+	ret := util.NewStringSlice(make([]string, 0, len(c)))
 	for _, x := range c {
 		gdt, err := x.ToGoRowType(pkg, enums, database)
 		if err != nil {
 			return nil, err
 		}
-		ret = append(ret, gdt)
+		ret.Push(gdt)
 	}
-	return ret, nil
+	return ret.Slice, nil
 }
 
 func (c Columns) MaxCamelLength() int {

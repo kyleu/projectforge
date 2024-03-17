@@ -1,7 +1,6 @@
 package project
 
 import (
-	"fmt"
 	"slices"
 	"strings"
 
@@ -11,16 +10,19 @@ import (
 )
 
 var (
-	templateServicesOrder = []string{"audit", "user", "har", "process", "scripting", "websocket", "help"}
+	templateServicesOrder = []string{"audit", "user", "har", "process", "notebook", "scripting", "websocket", "help"}
 	templateServicesNames = map[string]string{
-		"audit": "Audit", "har": "Har", "process": "Exec", "scripting": "Script", "websocket": "Socket", "user": "User", "help": "Help",
+		"audit": "Audit", "har": "Har", "process": "Exec", "scripting": "Script", "notebook": "Notebook",
+		"websocket": "Socket", "user": "User", "help": "Help",
 	}
 	templateServicesKeys = map[string]string{
-		"audit": "audit", "har": "har", "process": "exec", "scripting": "scripting", "websocket": "websocket", "user": "user", "help": "help",
+		"audit": "audit", "har": "har", "process": "exec", "scripting": "scripting", "notebook": "notebook",
+		"websocket": "websocket", "user": "user", "help": "help",
 	}
 	templateServicesRefs = map[string]string{
 		"audit":     "auditSvc",
-		"har":       "har.NewServices(st.Files)",
+		"har":       "har.NewService(st.Files)",
+		"notebook":  "notebook.NewService()",
 		"process":   "exec.NewService()",
 		"scripting": "scripting.NewService(st.Files, \"scripts\")",
 		"user":      "user.NewService(st.Files, logger)",
@@ -33,6 +35,9 @@ func (t *TemplateContext) servicesNames() ([]string, []string, int) {
 	var svcs []string
 	for _, key := range templateServicesOrder {
 		if t.HasModule(key) {
+			if key == "user" && t.ExportArgs != nil && t.ExportArgs.Models.Get("user") != nil {
+				continue
+			}
 			svcs = append(svcs, key)
 		}
 	}
@@ -44,85 +49,57 @@ func (t *TemplateContext) servicesNames() ([]string, []string, int) {
 }
 
 func (t *TemplateContext) ServicesDefinition() string {
-	ret := []string{"type Services struct {"}
-	w := func(msg string, args ...any) {
-		ret = append(ret, fmt.Sprintf(msg, args...))
-	}
-
 	svcs, names, maxNameLength := t.servicesNames()
+	if len(svcs) == 0 {
+		return "type CoreServices struct {}"
+	}
+	ret := util.NewStringSlice([]string{"type CoreServices struct {"})
 	types := lo.Map(svcs, func(svc string, _ int) string {
 		return "*" + templateServicesKeys[svc] + ".Service"
 	})
-
-	if t.HasModule("export") {
-		w("\tGeneratedServices")
-		w("")
-	}
-	w("\t// add your dependencies here")
-	w("")
 	for idx := range svcs {
-		w("\t%s %s", util.StringPad(names[idx], maxNameLength), types[idx])
+		ret.Pushf("\t%s %s", util.StringPad(names[idx], maxNameLength), types[idx])
 	}
-	w("}")
-	return strings.Join(ret, "\n")
+	ret.Push("}")
+	return ret.Join("\n")
 }
 
 func (t *TemplateContext) ServicesImports() string {
-	ret := []string{}
-	w := func(msg string, args ...any) {
-		ret = append(ret, fmt.Sprintf(msg, args...))
-	}
-
-	if t.HasModule("migration") {
-		w("\t\"github.com/pkg/errors\"")
-		w("")
-	}
-
-	var keys []string
-	for _, key := range templateServicesOrder {
-		if t.HasModule(key) {
-			keys = append(keys, templateServicesKeys[key])
+	svcs, _, _ := t.servicesNames()
+	ret := &util.StringSlice{}
+	for _, svc := range svcs {
+		if svc == "user" {
+			continue
 		}
+		ret.Pushf("\t\"%s/app/lib/%s\"", t.Package, templateServicesKeys[svc])
 	}
-	if t.HasModule("migration") {
-		keys = append(keys, "database/migrate")
+	ret.Sort()
+	if slices.Contains(svcs, "user") {
+		ret.Pushf("\t\"%s/app/user\"", t.Package)
 	}
-	slices.Sort(keys)
-	for _, svc := range keys {
-		w("\t\"%s/app/lib/%s\"", t.Package, svc)
-	}
-	w("\t\"%s/app/util\"", t.Package)
-	if t.HasModule("migration") {
-		w("\t\"%s/queries/migrations\"", t.Package)
-	}
-	return strings.TrimPrefix(strings.Join(ret, "\n"), "\t")
+	ret.Pushf("\t\"%s/app/util\"", t.Package)
+	return strings.TrimPrefix(ret.Join("\n"), "\t")
 }
 
 func (t *TemplateContext) ServicesConstructor() string {
-	ret := []string{"&Services{"}
-	w := func(msg string, args ...any) {
-		ret = append(ret, fmt.Sprintf(msg, args...))
-	}
-
 	svcs, names, maxNameLength := t.servicesNames()
+	if len(svcs) == 0 {
+		return "CoreServices{}"
+	}
+	ret := util.NewStringSlice([]string{"CoreServices{"})
 	refs := lo.Map(svcs, func(svc string, _ int) string {
 		return templateServicesRefs[svc]
 	})
-
-	if t.HasModule("export") {
-		args := ""
-		if t.HasModule("readonlydb") {
-			args += ", st.DBRead"
-		}
-		if t.HasModule("audit") {
-			args += ", auditSvc"
-		}
-		w("\t\tGeneratedServices: initGeneratedServices(ctx, st.DB%s, logger),", args)
-		w("")
+	args := ""
+	if t.HasModule("audit") {
+		args += ", auditSvc"
 	}
-	for idx := range svcs {
-		w("\t\t%s %s,", util.StringPad(names[idx]+":", maxNameLength+1), refs[idx])
+	for idx, key := range svcs {
+		if key == "user" && t.ExportArgs != nil && t.ExportArgs.Models.Get("user") != nil {
+			continue
+		}
+		ret.Pushf("\t\t%s %s,", util.StringPad(names[idx]+":", maxNameLength+1), refs[idx])
 	}
-	w("\t}")
-	return strings.Join(ret, "\n")
+	ret.Push("\t}")
+	return ret.Join("\n")
 }

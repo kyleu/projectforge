@@ -122,20 +122,20 @@ func (p *Project) GoVersion() string {
 }
 
 func (p *Project) DatabaseEngines() []string {
-	ret := make([]string, 0, 4)
+	ret := util.NewStringSlice(make([]string, 0, 4))
 	if p.HasModule(util.DatabaseMySQL) {
-		ret = append(ret, util.DatabaseMySQL)
+		ret.Push(util.DatabaseMySQL)
 	}
 	if p.HasModule(util.DatabasePostgreSQL) {
-		ret = append(ret, util.DatabasePostgreSQL)
+		ret.Push(util.DatabasePostgreSQL)
 	}
 	if p.HasModule(util.DatabaseSQLite) {
-		ret = append(ret, util.DatabaseSQLite)
+		ret.Push(util.DatabaseSQLite)
 	}
 	if p.HasModule(util.DatabaseSQLServer) {
-		ret = append(ret, util.DatabaseSQLServer)
+		ret.Push(util.DatabaseSQLServer)
 	}
-	return ret
+	return ret.Slice
 }
 
 func (p *Project) DatabaseEngineDefault() string {

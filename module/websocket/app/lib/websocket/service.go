@@ -70,15 +70,15 @@ func (s *Service) UserList(params *filter.Params) Statuses {
 
 func (s *Service) ChannelList(params *filter.Params) []string {
 	params = filter.ParamsWithDefaultOrdering("channel", params)
-	ret := make([]string, 0)
+	ret := &util.StringSlice{}
 	idx := 0
 	lo.ForEach(lo.Keys(s.channels), func(conn string, _ int) {
 		if idx >= params.Offset && (params.Limit == 0 || idx < params.Limit) {
-			ret = append(ret, conn)
+			ret.Push(conn)
 		}
 		idx++
 	})
-	return util.ArraySorted(ret)
+	return util.ArraySorted(ret.Slice)
 }
 
 func (s *Service) GetByID(id uuid.UUID, logger util.Logger) *Status {

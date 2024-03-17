@@ -21,15 +21,15 @@ func (p Projects) Root() *Project {
 }
 
 func (p Projects) AllModules() []string {
-	var ret []string
+	ret := &util.StringSlice{}
 	lo.ForEach(p, func(prj *Project, _ int) {
 		lo.ForEach(prj.Modules, func(mod string, _ int) {
-			if !lo.Contains(ret, mod) {
-				ret = append(ret, mod)
+			if !lo.Contains(ret.Slice, mod) {
+				ret.Push(mod)
 			}
 		})
 	})
-	return util.ArraySorted(ret)
+	return util.ArraySorted(ret.Slice)
 }
 
 func (p Projects) Keys() []string {
@@ -71,16 +71,16 @@ func (p Projects) WithoutTags(tags ...string) Projects {
 }
 
 func (p Projects) Tags() []string {
-	var ret []string
+	ret := &util.StringSlice{}
 	lo.ForEach(p, func(prj *Project, _ int) {
 		for _, t := range prj.Tags {
-			if !lo.Contains(ret, t) {
-				ret = append(ret, t)
+			if !lo.Contains(ret.Slice, t) {
+				ret.Push(t)
 				break
 			}
 		}
 	})
-	return util.ArraySorted(ret)
+	return util.ArraySorted(ret.Slice)
 }
 
 func (p Projects) ToCSV() ([]string, [][]string) {

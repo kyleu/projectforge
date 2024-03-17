@@ -31,7 +31,7 @@ func SetDepsMap(ctx context.Context, projects project.Projects, dep *Dependency,
 		}
 		str := string(bytes)
 		lines := util.StringSplitLines(str)
-		ret := make([]string, 0, len(lines))
+		ret := util.NewStringSlice(make([]string, 0, len(lines)))
 		for _, line := range lines {
 			if strings.Contains(line, dep.Key+" ") {
 				start := strings.Index(line, " v")
@@ -45,18 +45,18 @@ func SetDepsMap(ctx context.Context, projects project.Projects, dep *Dependency,
 				}
 				curr := line[start : start+offset]
 				if curr == dep.Version {
-					ret = append(ret, line)
+					ret.Push(line)
 				} else {
 					matched = true
-					ret = append(ret, strings.Replace(line, curr, dep.Version, 1))
+					ret.Push(strings.Replace(line, curr, dep.Version, 1))
 				}
 			} else {
-				ret = append(ret, line)
+				ret.Push(line)
 			}
 		}
 		if matched {
 			affected++
-			content := strings.Join(ret, util.StringDetectLinebreak(str))
+			content := ret.Join(util.StringDetectLinebreak(str))
 			err = pfs.WriteFile(gomod, []byte(content), filesystem.DefaultMode, true)
 			if err != nil {
 				return nil, errors.Wrap(err, "unable to write [go.mod]")
@@ -99,19 +99,19 @@ func SetDepsProject(ctx context.Context, prjs project.Projects, key string, pSvc
 	}
 	str := string(bytes)
 	lines := util.StringSplitLines(str)
-	ret := make([]string, 0, len(lines))
+	ret := util.NewStringSlice(make([]string, 0, len(lines)))
 	for _, line := range lines {
 		hit, pline, errChild := setDepProcessLine(line, curr, key)
 		if errChild != nil {
 			return "", errChild
 		}
-		ret = append(ret, pline)
+		ret.Push(pline)
 		if hit {
 			affected++
 		}
 	}
 	if affected > 0 {
-		content := strings.Join(ret, util.StringDetectLinebreak(str))
+		content := ret.Join(util.StringDetectLinebreak(str))
 		err = pfs.WriteFile(gomod, []byte(content), filesystem.DefaultMode, true)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to write [go.mod]")

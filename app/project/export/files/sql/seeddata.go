@@ -156,16 +156,16 @@ func processList(cell any, cellStr string) string {
 			return "'[\"error:invalid_type\"]'"
 		}
 	}
-	ret := make([]string, 0, len(a))
+	ret := util.NewStringSlice(make([]string, 0, len(a)))
 	lo.ForEach(a, func(x any, _ int) {
 		switch t := x.(type) {
 		case string:
-			ret = append(ret, "\""+t+"\"")
+			ret.Pushf("%q", t)
 		default:
-			ret = append(ret, fmt.Sprint(t))
+			ret.Push(fmt.Sprint(t))
 		}
 	})
-	return "'[" + clean(strings.Join(ret, ", ")) + "]'"
+	return "'[" + clean(ret.Join(", ")) + "]'"
 }
 
 var cleanRpl *strings.Replacer

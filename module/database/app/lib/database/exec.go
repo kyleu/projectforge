@@ -74,7 +74,7 @@ func (s *Service) execUnknown(ctx context.Context, op string, q string, tx *sqlx
 }
 
 func (s *Service) process(
-	ctx context.Context, op string, key string, past string, q string, tx *sqlx.Tx, expected int, logger util.Logger, values ...any,
+		ctx context.Context, op string, key string, past string, q string, tx *sqlx.Tx, expected int, logger util.Logger, values ...any,
 ) (int, error) {
 	if s.ReadOnly {
 		return 0, errors.Errorf("cannot run [%q] statements in read-only database [%s]", op, q)
@@ -94,6 +94,6 @@ func (s *Service) process(
 }
 
 func valueStrings(values []any) string {
-	ret := util.StringArrayFromInterfaces(values, 256)
+	ret := util.StringArrayFromAny(values, 256)
 	return strings.Join(ret, ", ")
 }

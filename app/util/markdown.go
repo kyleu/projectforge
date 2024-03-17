@@ -2,8 +2,6 @@
 package util
 
 import (
-	"strings"
-
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
 )
@@ -23,7 +21,7 @@ func MarkdownTable(header []string, rows [][]string, linebreak string) (string, 
 		})
 	}
 
-	ret := make([]string, 0, len(rows))
+	ret := NewStringSlice(make([]string, 0, len(rows)))
 	add := func(x []string) {
 		line := "| "
 		lo.ForEach(x, func(v string, vi int) {
@@ -37,7 +35,7 @@ func MarkdownTable(header []string, rows [][]string, linebreak string) (string, 
 			}
 		})
 		line += " |"
-		ret = append(ret, line)
+		ret.Push(line)
 	}
 
 	add(header)
@@ -53,12 +51,12 @@ func MarkdownTable(header []string, rows [][]string, linebreak string) (string, 
 		}
 	})
 	divider += "-|"
-	ret = append(ret, divider)
+	ret.Push(divider)
 
 	lo.ForEach(rows, func(row []string, _ int) {
 		add(row)
 	})
-	return strings.Join(ret, linebreak), nil
+	return ret.Join(linebreak), nil
 }
 
 func MarkdownTableParse(md string) ([]string, [][]string) {

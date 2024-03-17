@@ -2,12 +2,13 @@ package build
 
 import (
 	"cmp"
-	"fmt"
 	"runtime"
 	"slices"
 	"strings"
 
 	"github.com/samber/lo"
+
+	"projectforge.dev/projectforge/app/util"
 )
 
 var ScriptExtension = func() string {
@@ -49,9 +50,9 @@ func (p Pkgs) ToGraph(prefix string) string {
 	if prefix != "" {
 		prefix += "/"
 	}
-	var ret []string
+	ret := &util.StringSlice{}
 	add := func(s string, args ...any) {
-		ret = append(ret, fmt.Sprintf(s, args...))
+		ret.Pushf(s, args...)
 	}
 	add("graph LR;")
 	lo.ForEach(p, func(pkg *Pkg, _ int) {
@@ -59,5 +60,5 @@ func (p Pkgs) ToGraph(prefix string) string {
 			add("\t%s --> %s", strings.TrimPrefix(pkg.Path, prefix), strings.TrimPrefix(d, prefix))
 		})
 	})
-	return strings.Join(ret, "\n")
+	return ret.Join("\n")
 }

@@ -128,15 +128,15 @@ func (s *Service) Dangerous() []string {
 }
 
 func (s *Service) Register(ctx context.Context, root string, key string, path string, u string, logger util.Logger) ([]string, error) {
-	var ret []string
+	ret := &util.StringSlice{}
 	_, added, err := s.AddIfNeeded(ctx, key, filepath.Join(root, path), u, logger)
 	if err != nil {
 		return nil, err
 	}
 	if added {
-		ret = append(ret, key)
+		ret.Push(key)
 	}
-	return ret, nil
+	return ret.Slice, nil
 }
 
 func (s *Service) Search(_ context.Context, q string, _ util.Logger) (result.Results, error) {

@@ -2,7 +2,6 @@ package module
 
 import (
 	"bytes"
-	"fmt"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -12,7 +11,7 @@ import (
 )
 
 func (s *Service) UpdateFile(mods Modules, d *diff.Diff, logger util.Logger) ([]string, error) {
-	var ret []string
+	ret := &util.StringSlice{}
 	for _, mod := range mods {
 		loader := s.GetFilesystem(mod.Key)
 		if !loader.Exists(d.Path) {
@@ -29,7 +28,7 @@ func (s *Service) UpdateFile(mods Modules, d *diff.Diff, logger util.Logger) ([]
 		}
 		if len(newContent) > 0 {
 			if bytes.Equal(b, newContent) {
-				ret = append(ret, fmt.Sprintf("no changes required to [%s] for module [%s]", d.Path, mod.Key))
+				ret.Pushf("no changes required to [%s] for module [%s]", d.Path, mod.Key)
 			} else {
 				_ = mode
 				return nil, errors.Errorf("unable to merge change into module")
@@ -37,11 +36,11 @@ func (s *Service) UpdateFile(mods Modules, d *diff.Diff, logger util.Logger) ([]
 				//if err != nil {
 				//	return nil, err
 				//}
-				//ret = append(ret, fmt.Sprintf("wrote [%d] bytes to [%s] for module [%s]", len(newContent), d.Path, mod.Key))
+				//ret.Pushf("wrote [%d] bytes to [%s] for module [%s]", len(newContent), d.Path, mod.Key)
 			}
 		}
 	}
-	return ret, nil
+	return ret.Slice, nil
 }
 
 func reverseDiff(dest string, d *diff.Diff, logger util.Logger) ([]byte, error) {

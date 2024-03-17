@@ -1,5 +1,7 @@
 <!-- Content managed by Project Forge, see [projectforge.md] for details. -->
 {% import (
+  "strings"
+
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/views/components"
 ) %}
@@ -12,7 +14,7 @@
     m := map[string]string{}
     ps.URI.QueryArgs().VisitAll(func(key []byte, value []byte) {
       k, v := string(key), string(value)
-      if k == fieldKey {
+      if k == fieldKey || strings.HasSuffix(k, ".x") {
         return
       }
       curr, ok := m[k]

@@ -19,13 +19,13 @@ func List() ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	ret := make([]string, 0, len(files))
+	ret := util.NewStringSlice(make([]string, 0, len(files)))
 	for _, f := range files {
 		if strings.HasSuffix(f.Name(), util.ExtMarkdown) {
-			ret = append(ret, strings.TrimSuffix(f.Name(), util.ExtMarkdown))
+			ret.Push(strings.TrimSuffix(f.Name(), util.ExtMarkdown))
 		}
 	}
-	return ret, nil
+	return ret.Slice, nil
 }
 
 func Content(path string) (string, error) {

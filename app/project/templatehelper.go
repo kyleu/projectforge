@@ -43,11 +43,9 @@ func (t *TemplateContext) DangerousOK() bool {
 }
 
 func (t *TemplateContext) ModuleMarkdown() string {
-	ret := make([]string, 0, len(t.Modules))
-	lo.ForEach(t.Modules, func(m string, _ int) {
-		ret = append(ret, fmt.Sprintf("- [%s](./doc/module/%s.md)", m, m))
-	})
-	return strings.Join(ret, t.Linebreak)
+	return strings.Join(lo.Map(t.Modules, func(m string, _ int) string {
+		return fmt.Sprintf("- [%s](./doc/module/%s.md)", m, m)
+	}), t.Linebreak)
 }
 
 func (t *TemplateContext) PortIncremented(i int) int {

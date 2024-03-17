@@ -45,20 +45,19 @@ func ApplyInverse(b []byte, d *Diff) ([]byte, error) {
 }
 
 func applyCmds(lines []string, cmds ...*cmd) ([]string, error) {
-	ret := make([]string, 0, len(lines))
+	ret := util.NewStringSlice(make([]string, 0, len(lines)))
 	currIdx := 0
-
 	lo.ForEach(cmds, func(c *cmd, _ int) {
 		for ; currIdx <= c.From+1; currIdx++ {
-			ret = append(ret, lines[currIdx])
+			ret.Push(lines[currIdx])
 		}
-		ret = append(ret, c.Added...)
+		ret.Push(c.Added...)
 		currIdx += len(c.Deleted)
 	})
 	for ; currIdx < len(lines); currIdx++ {
-		ret = append(ret, lines[currIdx])
+		ret.Push(lines[currIdx])
 	}
-	return ret, nil
+	return ret.Slice, nil
 }
 
 func loadCmd(c *Change, inverse bool) *cmd {

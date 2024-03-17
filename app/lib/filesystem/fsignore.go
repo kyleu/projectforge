@@ -1,14 +1,18 @@
 // Package filesystem - Content managed by Project Forge, see [projectforge.md] for details.
 package filesystem
 
-import "strings"
+import (
+	"strings"
+
+	"projectforge.dev/projectforge/app/util"
+)
 
 var defaultIgnore = []string{".DS_Store$", "^.git/", "^.idea/", "^build/", "^client/node_modules", ".html.go$", ".sql.go$"}
 
 func buildIgnore(ign []string) []string {
-	ret := append([]string{}, defaultIgnore...)
-	ret = append(ret, ign...)
-	return ret
+	ret := util.NewStringSlice(append([]string{}, defaultIgnore...))
+	ret.Push(ign...)
+	return ret.Slice
 }
 
 const (

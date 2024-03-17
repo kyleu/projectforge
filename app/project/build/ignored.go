@@ -1,7 +1,6 @@
 package build
 
 import (
-	"fmt"
 	"slices"
 	"strings"
 
@@ -19,15 +18,15 @@ func Ignored(prj *project.Project, fs filesystem.FileLoader, logger util.Logger)
 	if err != nil {
 		return nil, err
 	}
-	var ret []string
+	ret := &util.StringSlice{}
 	lo.ForEach(files, func(f string, _ int) {
 		content, err := fs.ReadFile(f)
 		if err != nil {
-			ret = append(ret, fmt.Sprintf("ERROR[%s]: %s", err.Error(), f))
+			ret.Pushf("ERROR[%s]: %s", err.Error(), f)
 		}
 		if strings.Contains(string(content), file.IgnorePattern) {
-			ret = append(ret, f)
+			ret.Push(f)
 		}
 	})
-	return ret, nil
+	return ret.Slice, nil
 }

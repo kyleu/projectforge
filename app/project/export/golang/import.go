@@ -7,6 +7,8 @@ import (
 	"strings"
 
 	"github.com/samber/lo"
+
+	"projectforge.dev/projectforge/app/util"
 )
 
 type ImportType string
@@ -50,32 +52,31 @@ func (i Imports) Render(linebreak string) string {
 	if len(i) == 1 {
 		return fmt.Sprintf("import %s", i[0].Render())
 	}
-	ret := []string{"import ("}
-	ret = append(ret, i.toStrings("\t")...)
-	ret = append(ret, ")")
-	return strings.Join(ret, linebreak)
+	ret := util.NewStringSlice([]string{"import ("})
+	ret.Push(i.toStrings("\t")...)
+	ret.Push(")")
+	return ret.Join(linebreak)
 }
 
 func (i Imports) RenderHTML(linebreak string) string {
 	if len(i) == 1 {
 		return fmt.Sprintf("{%% import %s %%}", i[0].Render())
 	}
-	ret := []string{"{%% import ("}
-	ret = append(ret, i.toStrings("  ")...)
-	ret = append(ret, ") %%}")
-	return strings.Join(ret, linebreak)
+	ret := util.NewStringSlice([]string{"{%% import ("})
+	ret.Push(i.toStrings("  ")...)
+	ret.Push(") %%}")
+	return ret.Join(linebreak)
 }
 
 func (i Imports) toStrings(whitespace string) []string {
-	var ret []string
-
+	ret := &util.StringSlice{}
 	add := func(x []string, lf bool) {
 		if len(x) > 0 {
 			if lf {
-				ret = append(ret, "")
+				ret.Push("")
 			}
 			lo.ForEach(x, func(item string, _ int) {
-				ret = append(ret, whitespace+item)
+				ret.Push(whitespace + item)
 			})
 		}
 	}
@@ -87,7 +88,7 @@ func (i Imports) toStrings(whitespace string) []string {
 	add(external, len(internal) > 0)
 	add(app, len(external) > 0 || len(internal) > 0)
 
-	return ret
+	return ret.Slice
 }
 
 func (i Imports) renderByType(t ImportType) []string {

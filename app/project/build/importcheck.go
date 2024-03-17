@@ -103,26 +103,26 @@ func check(imports []string, orig []string) ([]string, []string, error) {
 }
 
 func makeResult(first util.ValueMap, third util.ValueMap, self util.ValueMap) []string {
-	ret := make([]string, 0, len(first)+len(third)+len(self))
+	ret := util.NewStringSlice(make([]string, 0, len(first)+len(third)+len(self)))
 	lo.ForEach(first.Keys(), func(k string, _ int) {
 		s, _ := first[k].(string)
-		ret = append(ret, s)
+		ret.Push(s)
 	})
 	if len(first) > 0 && (len(third) > 0 || len(self) > 0) {
-		ret = append(ret, "")
+		ret.Push("")
 	}
 	lo.ForEach(third.Keys(), func(k string, _ int) {
 		s, _ := third[k].(string)
-		ret = append(ret, s)
+		ret.Push(s)
 	})
 	if len(third) > 0 && len(self) > 0 {
-		ret = append(ret, "")
+		ret.Push("")
 	}
 	lo.ForEach(self.Keys(), func(k string, _ int) {
 		s, _ := self[k].(string)
-		ret = append(ret, s)
+		ret.Push(s)
 	})
-	return ret
+	return ret.Slice
 }
 
 func importType(i string, self string) string {

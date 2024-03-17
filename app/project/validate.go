@@ -33,7 +33,6 @@ func Validate(p *Project, fs filesystem.FileLoader, moduleDeps map[string][]stri
 	validateFilesystem(p, e, fs)
 	validateModuleDeps(p.Modules, moduleDeps, e)
 	validateModuleConfig(p, e, dangerous)
-	validateModuleServices(p.Modules, fs, e)
 	validateInfo(p, e)
 	validateBuild(p, e)
 	validateExport(p, e)
@@ -68,23 +67,6 @@ func validateModuleDeps(modules []string, deps map[string][]string, e validation
 					e("missing-dependency", "module [%s] requires [%s], which is not included in the project", m, curr)
 				}
 			})
-		}
-	})
-}
-
-func validateModuleServices(modules []string, fs filesystem.FileLoader, e validationAddErrFn) {
-	b, err := fs.ReadFile("app/services.go")
-	if err != nil {
-		e("missing-file", "missing [app/services.go]")
-	}
-
-	servicesContent := string(b)
-	lo.ForEach(modules, func(m string, _ int) {
-		if key := templateServicesKeys[m]; key != "" && key != "user" {
-			svc := fmt.Sprintf("*%s.Service", key)
-			if !strings.Contains(servicesContent, svc) {
-				e("missing-services-reference", "module [%s] requires [%s], which is not included in [app/services.go]", m, svc)
-			}
 		}
 	})
 }

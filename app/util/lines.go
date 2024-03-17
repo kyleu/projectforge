@@ -10,11 +10,11 @@ func JoinLines(ss []string, delim string, maxLen int) []string {
 	if maxLen == 0 {
 		return []string{strings.Join(ss, delim)}
 	}
-	var ret []string
+	ret := &StringSlice{}
 	var curr string
 	lo.ForEach(ss, func(s string, _ int) {
 		if curr != "" && (len(curr)+len(delim)+len(s)) > maxLen {
-			ret = append(ret, curr)
+			ret.Push(curr)
 			curr = ""
 		}
 		if curr != "" {
@@ -23,9 +23,9 @@ func JoinLines(ss []string, delim string, maxLen int) []string {
 		curr += s
 	})
 	if curr != "" {
-		ret = append(ret, curr)
+		ret.Push(curr)
 	}
-	return ret
+	return ret.Slice
 }
 
 func JoinLinesFull(ss []string, delim string, maxLen int, prefix string, indent string, suffix string) string {

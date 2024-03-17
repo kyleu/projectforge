@@ -3,10 +3,10 @@ package action
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 
 	"github.com/santhosh-tekuri/jsonschema"
 
+	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/assets"
 )
 
@@ -19,26 +19,26 @@ func schemaCheck(pm *PrjAndMods) ([]string, error) {
 			return nil, err
 		}
 	}
-	var ret []string
+	ret := &util.StringSlice{}
 	prj, err := schemaProject(schemata["project"], pm.File)
 	if err != nil {
 		return nil, err
 	}
-	ret = append(ret, prj...)
+	ret.Push(prj...)
 
 	if pm.EArgs != nil {
 		args, err := schemaConfig(schemata["config"], pm.EArgs.ConfigFile)
 		if err != nil {
 			return nil, err
 		}
-		ret = append(ret, args...)
+		ret.Push(args...)
 
 		for k, v := range pm.EArgs.EnumFiles {
 			enum, err := schemaEnum(schemata["enum"], k, v)
 			if err != nil {
 				return nil, err
 			}
-			ret = append(ret, enum...)
+			ret.Push(enum...)
 		}
 
 		for k, v := range pm.EArgs.ModelFiles {
@@ -46,49 +46,49 @@ func schemaCheck(pm *PrjAndMods) ([]string, error) {
 			if err != nil {
 				return nil, err
 			}
-			ret = append(ret, model...)
+			ret.Push(model...)
 		}
 	}
-	return ret, nil
+	return ret.Slice, nil
 }
 
 func schemaProject(sch *jsonschema.Schema, f json.RawMessage) ([]string, error) {
-	var ret []string
+	ret := &util.StringSlice{}
 	err := sch.Validate(bytes.NewReader(f))
 	if err != nil {
-		ret = append(ret, fmt.Sprintf("[project.json]: %v", err))
+		ret.Pushf("[project.json]: %v", err)
 	}
-	return ret, nil
+	return ret.Slice, nil
 }
 
 func schemaConfig(sch *jsonschema.Schema, f json.RawMessage) ([]string, error) {
 	if len(f) == 0 {
 		return nil, nil
 	}
-	var ret []string
+	ret := &util.StringSlice{}
 	err := sch.Validate(bytes.NewReader(f))
 	if err != nil {
-		ret = append(ret, fmt.Sprintf("[config.json]: %v", err))
+		ret.Pushf("[config.json]: %v", err)
 	}
-	return ret, nil
+	return ret.Slice, nil
 }
 
 func schemaEnum(sch *jsonschema.Schema, k string, f json.RawMessage) ([]string, error) {
-	var ret []string
+	ret := &util.StringSlice{}
 	err := sch.Validate(bytes.NewReader(f))
 	if err != nil {
-		ret = append(ret, fmt.Sprintf("[enum/%s.json]: %v", k, err))
+		ret.Pushf("[enum/%s.json]: %v", k, err)
 	}
-	return ret, nil
+	return ret.Slice, nil
 }
 
 func schemaModel(sch *jsonschema.Schema, k string, f json.RawMessage) ([]string, error) {
-	var ret []string
+	ret := &util.StringSlice{}
 	err := sch.Validate(bytes.NewReader(f))
 	if err != nil {
-		ret = append(ret, fmt.Sprintf("[model/%s.json]: %v", k, err))
+		ret.Pushf("[model/%s.json]: %v", k, err)
 	}
-	return ret, nil
+	return ret.Slice, nil
 }
 
 func loadSchemata() error {

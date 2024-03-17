@@ -37,20 +37,19 @@ func (t *TemplateContext) ExtraFilesContent() string {
 	if t.Info == nil || len(t.Info.ExtraFiles) == 0 {
 		return ""
 	}
-	ret := []string{"\n    extra_files:"}
+	ret := util.NewStringSlice([]string{"\n    extra_files:"})
 	lo.ForEach(t.Info.ExtraFiles, func(ef string, _ int) {
-		ret = append(ret, "      - "+ef)
+		ret.Push("      - " + ef)
 	})
-	return strings.Join(ret, t.Linebreak)
+	return ret.Join(t.Linebreak)
 }
 
 func (t *TemplateContext) ExtraFilesDocker() string {
 	if t.Info == nil || len(t.Info.ExtraFiles) == 0 {
 		return ""
 	}
-	ret := make([]string, 0, len(t.Info.ExtraFiles))
-	lo.ForEach(t.Info.ExtraFiles, func(ef string, _ int) {
-		ret = append(ret, fmt.Sprintf("\nCOPY %s /%s", ef, ef))
+	ret := lo.Map(t.Info.ExtraFiles, func(ef string, _ int) string {
+		return fmt.Sprintf("\nCOPY %s /%s", ef, ef)
 	})
 	return strings.Join(ret, "")
 }
@@ -66,22 +65,18 @@ func (t *TemplateContext) IgnoredSetting() string {
 	if len(t.Ignore) == 0 {
 		return ""
 	}
-	ret := make([]string, 0, len(t.Ignore))
-	lo.ForEach(t.Ignore, func(i string, _ int) {
-		ret = append(ret, "/"+strings.TrimPrefix(i, "^"))
-	})
-	return " --skip-dirs \"" + strings.Join(ret, "|") + "\""
+	return " --skip-dirs \"" + strings.Join(lo.Map(t.Ignore, func(i string, _ int) string {
+		return "/" + strings.TrimPrefix(i, "^")
+	}), "|") + "\""
 }
 
 func (t *TemplateContext) IgnoredQuoted() string {
 	if len(t.Ignore) == 0 {
 		return ""
 	}
-	ret := make([]string, 0, len(t.Ignore))
-	lo.ForEach(t.Ignore, func(i string, _ int) {
-		ret = append(ret, fmt.Sprintf(", %q", strings.TrimPrefix(i, "^")))
-	})
-	return strings.Join(ret, "")
+	return strings.Join(lo.Map(t.Ignore, func(i string, _ int) string {
+		return fmt.Sprintf(", %q", strings.TrimPrefix(i, "^"))
+	}), "")
 }
 
 func (t *TemplateContext) ExplainPrefix() string {
@@ -113,4 +108,27 @@ func (t *TemplateContext) Acronyms() string {
 		return ""
 	}
 	return strings.Join(util.StringArrayQuoted(t.Info.Acronyms), ", ")
+}
+
+func (t *TemplateContext) CoreStruct() string {
+	ret := &util.StringSlice{}
+	if t.HasModule("") {
+		ret.Push("...")
+	}
+	if t.HasModule("") {
+		ret.Push("...")
+	}
+	if t.HasModule("") {
+		ret.Push("...")
+	}
+	if t.HasModule("") {
+		ret.Push("...")
+	}
+	if t.HasModule("") {
+		ret.Push("...")
+	}
+	if t.HasModule("") {
+		ret.Push("...")
+	}
+	return ret.Join("\n")
 }

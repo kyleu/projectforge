@@ -1,4 +1,6 @@
 {% import (
+  "strings"
+
   "{{{ .Package }}}/app/controller/cutil"
   "{{{ .Package }}}/views/components"
 ) %}
@@ -11,7 +13,7 @@
     m := map[string]string{}
     ps.URI.QueryArgs().VisitAll(func(key []byte, value []byte) {
       k, v := string(key), string(value)
-      if k == fieldKey {
+      if k == fieldKey || strings.HasSuffix(k, ".x") {
         return
       }
       curr, ok := m[k]

@@ -17,17 +17,17 @@ func getGeneratedFiles(tgt filesystem.FileLoader, ignore []string, logger util.L
 	if err != nil {
 		return nil, err
 	}
-	var ret []string
+	ret := &util.StringSlice{}
 	for _, fn := range filenames {
 		b, e := tgt.PeekFile(fn, 1024)
 		if e != nil {
 			return nil, e
 		}
 		if file.ContainsHeader(string(b)) {
-			ret = append(ret, fn)
+			ret.Push(fn)
 		}
 	}
-	return ret, nil
+	return ret.Slice, nil
 }
 
 func getModuleFiles(pm *PrjAndMods) ([]string, error) {
@@ -62,12 +62,12 @@ func getModuleFiles(pm *PrjAndMods) ([]string, error) {
 }
 
 func getEmptyFolders(tgt filesystem.FileLoader, ignore []string, logger util.Logger, pth ...string) ([]string, error) {
-	var ret []string
+	ret := &util.StringSlice{}
 	pStr := path.Join(pth...)
 	fc := len(tgt.ListFiles(pStr, nil, logger))
 	ds := tgt.ListDirectories(pStr, ignore, logger)
 	if fc == 0 && len(ds) == 0 {
-		ret = append(ret, pStr)
+		ret.Push(pStr)
 	}
 	for _, d := range ds {
 		p := append(slices.Clone(pth), d)
@@ -75,7 +75,7 @@ func getEmptyFolders(tgt filesystem.FileLoader, ignore []string, logger util.Log
 		if err != nil {
 			return nil, errors.Wrapf(err, "unable to get empty folders for [%s/%s]", path.Join(p...), d)
 		}
-		ret = append(ret, childRes...)
+		ret.Push(childRes...)
 	}
-	return ret, nil
+	return ret.Slice, nil
 }

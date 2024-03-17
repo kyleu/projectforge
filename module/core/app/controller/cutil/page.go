@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"slices"
-	"strings"
 	"time"
 
 	"github.com/samber/lo"
@@ -177,23 +176,23 @@ func (p *PageState) LogError(msg string, args ...any) {
 }
 
 func (p *PageState) ClassDecl() string {
-	var ret []string
+	ret := &util.StringSlice{}
 	if p.Profile.Mode != "" {
-		ret = append(ret, p.Profile.ModeClass())
+		ret.Push(p.Profile.ModeClass())
 	}
 	if p.Browser != "" {
-		ret = append(ret, "browser-"+p.Browser)
+		ret.Push("browser-" + p.Browser)
 	}
 	if p.OS != "" {
-		ret = append(ret, "os-"+p.OS)
+		ret.Push("os-" + p.OS)
 	}
 	if p.Platform != "" {
-		ret = append(ret, "platform-"+p.Platform)
+		ret.Push("platform-" + p.Platform)
 	}
-	if len(ret) == 0 {
+	if ret.Empty() {
 		return ""
 	}
-	classes := strings.Join(ret, " ")
+	classes := ret.Join(" ")
 	return fmt.Sprintf(` class=%q`, classes)
 }
 

@@ -72,15 +72,15 @@ func (i *Info) AuthorIDSafe() string {
 		return i.AuthorEmail
 	}
 	spl := util.StringSplitAndTrim(i.AuthorID, " ")
-	ret := make([]string, 0, len(spl))
+	ret := util.NewStringSlice(make([]string, 0, len(spl)))
 	lo.ForEach(spl, func(x string, _ int) {
 		x = strings.ReplaceAll(x, ",", "")
 		if !strings.HasPrefix(x, "@") {
 			x = "@" + x
 		}
-		ret = append(ret, x)
+		ret.Push(x)
 	})
-	return strings.Join(ret, " ")
+	return ret.Join(" ")
 }
 
 func (i *Info) NotarizationEmail() string {
