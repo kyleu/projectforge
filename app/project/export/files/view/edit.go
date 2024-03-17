@@ -60,7 +60,7 @@ func exportViewEditBody(m *model.Model, p *project.Project, args *model.Args) (*
 	ret.W("    <h3>" + svgRef(m.Icon) + " New " + m.Title() + "</h3>")
 	ret.W("    <form action=\"/%s/_new\" class=\"mt\" method=\"post\">", m.Route())
 	ret.W("    {%%- else -%%}")
-	ret.W("    <div class=\"right\"><a href=\"{%%s p.Model.WebPath() %%}/delete\" onclick=\"return confirm('" + delMsg + "')\"><button>Delete</button></a></div>")
+	ret.W("    <div class=\"right\"><a class=\"link-confirm\" href=\"{%%s p.Model.WebPath() %%}/delete\" data-message=\"" + delMsg + "\"><button>Delete</button></a></div>")
 	ret.W("    <h3>" + svgRef(m.Icon) + " Edit " + m.Title() + " [{%%s p.Model.String() %%}]</h3>")
 	ret.W("    <form action=\"\" method=\"post\">")
 	ret.W("    {%%- endif -%%}")

@@ -61,7 +61,7 @@ func (p *View) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	qw422016.E().S(p.SVG.Key)
 //line views/vsvg/View.html:23
 	qw422016.N().S(`/setapp" title="Overwrite the current app icon and favicon assets"><button>Set app icon</button></a></li>
-          <li class="mt"><a href="/svg/`)
+          <li class="mt"><a class="link-confirm" href="/svg/`)
 //line views/vsvg/View.html:24
 	qw422016.E().S(p.Project.Key)
 //line views/vsvg/View.html:24
@@ -69,7 +69,7 @@ func (p *View) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vsvg/View.html:24
 	qw422016.E().S(p.SVG.Key)
 //line views/vsvg/View.html:24
-	qw422016.N().S(`/remove" title="Remove this icon from the application" onclick="return confirm('Are you sure you want to remove this icon?')"><button>Remove</button></a></li>
+	qw422016.N().S(`/remove" title="Remove this icon from the application" data-message="Are you sure you want to remove this icon?"><button>Remove</button></a></li>
         </ul>
       </div>
     </div>

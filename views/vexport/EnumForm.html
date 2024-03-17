@@ -27,7 +27,7 @@
   {%- code u := fmt.Sprintf("/p/%s/export/enums/%s/delete", p.Project.Key, e.Name) -%}
   <form action="" method="post" class="mt expanded">
     <div class="card">
-      <div class="right"><a href="{%s u %}" onclick="return confirm('Are you sure you wish to remove this export enum?')"><button type="button">Delete</button></a></div>
+      <div class="right"><a class="link-confirm" href="{%s u %}" data-message="Are you sure you wish to remove this export enum?"><button type="button">Delete</button></a></div>
       <h3>{%= components.SVGRefIcon(e.IconSafe(), ps) %}{% if e.Name == "" %}New Enum{% else %}Edit {%s e.Name %}{% endif %}</h3>
       <div class="overflow full-width">
         <table class="mt min-200 expanded">

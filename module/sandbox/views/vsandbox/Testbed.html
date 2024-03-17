@@ -2,7 +2,9 @@
 {% import (
   "{{{ .Package }}}/app"
   "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/util"
   "{{{ .Package }}}/views/components"
+  "{{{ .Package }}}/views/components/view"
   "{{{ .Package }}}/views/layout"
 ) %}
 
@@ -13,14 +15,8 @@
 {%= accordion(as, ps) %}
 {%= modal(as, ps) %}
 {%= icons(as, ps) %}
+{%= script(as, ps) %}
 {% endfunc %}
-
-{%- func icons(as *app.State, ps *cutil.PageState) -%}
-  <div class="card">
-    <h3>SVG Icons</h3>
-    {%= components.IconGallery(as, ps) %}
-  </div>
-{%- endfunc -%}
 
 {%- func tabs(as *app.State, ps *cutil.PageState) -%}
   <div class="card">
@@ -72,6 +68,43 @@
       <div class="modal-body">
         Here's a modal body!
       </div>
+    </div>
+  </div>
+{%- endfunc -%}
+
+{%- func icons(as *app.State, ps *cutil.PageState) -%}
+  <div class="card">
+    <h3>SVG Icons</h3>
+    {%= components.IconGallery(as, ps) %}
+  </div>
+{%- endfunc -%}
+
+{%- func script(as *app.State, ps *cutil.PageState) -%}
+  <div class="card">
+    <div class="right"><a class="link-confirm" href="/about" data-message="Are you sure you want to go to the about page?"><button>Safe Link</button></a></div>
+    <h3>JavaScript</h3>
+    <div class="mt">
+      {%- code t := util.TimeCurrentP() -%}
+      <table class="mt min-200">
+        <tbody>
+          <tr>
+            <th>Timestamp</th>
+            <td>{%= view.Timestamp(t) %}</td>
+          </tr>
+          <tr>
+            <th>Timestamp (ms)</th>
+            <td>{%= view.TimestampMillis(t) %}</td>
+          </tr>
+          <tr>
+            <th>Relative</th>
+            <td>{%= view.TimestampRelative(t, true) %}</td>
+          </tr>
+          <tr>
+            <th>Relative (live)</th>
+            <td>{%= view.TimestampRelative(t, false) %}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 {%- endfunc -%}

@@ -31,7 +31,7 @@
   {%- endif -%}
 
   <div class="card">
-    <div class="right"><a href="?phase=deps&upgrade=all" onclick="return confirm('You sure about this?')"><button>Upgrade All</button></a></div>
+    <div class="right"><a class="link-confirm" href="?phase=deps&upgrade=all" data-message="You sure about this?"><button>Upgrade All</button></a></div>
     <h3>Dependencies</h3>
     {%- if len(p.Dependencies) == 0 -%}
     <em>no dependencies, somehow</em>

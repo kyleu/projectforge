@@ -83,7 +83,7 @@ func (p *Deps) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vbuild/Deps.html:31
 	qw422016.N().S(`
   <div class="card">
-    <div class="right"><a href="?phase=deps&upgrade=all" onclick="return confirm('You sure about this?')"><button>Upgrade All</button></a></div>
+    <div class="right"><a class="link-confirm" href="?phase=deps&upgrade=all" data-message="You sure about this?"><button>Upgrade All</button></a></div>
     <h3>Dependencies</h3>
 `)
 //line views/vbuild/Deps.html:36

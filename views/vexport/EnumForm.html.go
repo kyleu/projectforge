@@ -57,11 +57,11 @@ func (p *EnumForm) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vexport/EnumForm.html:27
 	qw422016.N().S(`  <form action="" method="post" class="mt expanded">
     <div class="card">
-      <div class="right"><a href="`)
+      <div class="right"><a class="link-confirm" href="`)
 //line views/vexport/EnumForm.html:30
 	qw422016.E().S(u)
 //line views/vexport/EnumForm.html:30
-	qw422016.N().S(`" onclick="return confirm('Are you sure you wish to remove this export enum?')"><button type="button">Delete</button></a></div>
+	qw422016.N().S(`" data-message="Are you sure you wish to remove this export enum?"><button type="button">Delete</button></a></div>
       <h3>`)
 //line views/vexport/EnumForm.html:31
 	components.StreamSVGRefIcon(qw422016, e.IconSafe(), ps)

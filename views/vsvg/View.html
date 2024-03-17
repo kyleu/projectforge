@@ -21,7 +21,7 @@
       <div class="r">
         <ul>
           <li><a href="/svg/{%s p.Project.Key %}/{%s p.SVG.Key %}/setapp" title="Overwrite the current app icon and favicon assets"><button>Set app icon</button></a></li>
-          <li class="mt"><a href="/svg/{%s p.Project.Key %}/{%s p.SVG.Key %}/remove" title="Remove this icon from the application" onclick="return confirm('Are you sure you want to remove this icon?')"><button>Remove</button></a></li>
+          <li class="mt"><a class="link-confirm" href="/svg/{%s p.Project.Key %}/{%s p.SVG.Key %}/remove" title="Remove this icon from the application" data-message="Are you sure you want to remove this icon?"><button>Remove</button></a></li>
         </ul>
       </div>
     </div>

@@ -6,8 +6,27 @@ export function utc(date: Date) {
   return new Date(u).toISOString().substring(0, 19).replace("T", " ");
 }
 
-export function relativeTime(time: string, el?: HTMLElement): string {
-  const str = (time || "").replace(/-/gu, "/").replace(/[TZ]/gu, " ") + " UTC";
+export function wireTime(el: HTMLElement) {
+  const tsStr = el.dataset.timestamp;
+  if (tsStr === "") {
+    console.log("invalid timestamp [" + tsStr + "]", el);
+    return;
+  }
+  const ts = new Date(tsStr);
+
+  let fmt = el.dataset.format;
+  if (fmt === "") {
+    fmt = "yyyy-MM-dd hh:mm:ss";
+  }
+  const tsEl = document.createElement("span");
+  tsEl.title = ts.toISOString();
+  tsEl.innerText = ts.toLocaleString();
+  el.replaceChildren(tsEl);
+}
+
+export function relativeTime(el: HTMLElement): string {
+  const timestamp = el.dataset.timestamp;
+  const str = (timestamp || "").replace(/-/gu, "/").replace(/[TZ]/gu, " ") + " UTC";
   const date = new Date(str);
   const diff = (new Date().getTime() - date.getTime()) / 1000;
   const dayDiff = Math.floor(diff / 86400);
@@ -53,14 +72,17 @@ export function relativeTime(time: string, el?: HTMLElement): string {
   }
   if (el) {
     el.innerText = ret;
-    setTimeout(() => relativeTime(time, el), timeoutSeconds * 1000);
+    setTimeout(() => relativeTime(el), timeoutSeconds * 1000);
   }
   return ret;
 }
 
 export function timeInit() {
-  els(".reltime").forEach((el) => {
-    relativeTime(el.dataset.time || "", el);
+  els(".timestamp").forEach((el) => {
+    wireTime(el);
   });
-  return relativeTime;
+  els(".reltime").forEach((el) => {
+    relativeTime(el);
+  });
+  return [wireTime, relativeTime];
 }
