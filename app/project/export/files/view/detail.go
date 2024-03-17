@@ -123,13 +123,14 @@ func exportViewDetailBody(g *golang.Template, m *model.Model, audit bool, models
 		}
 		ret.W("    </div>")
 	}
-	ret.W("    <table class=\"mt\">")
-	ret.W("      <tbody>")
+	ret.W("    <div class=\"mt overflow full-width\">")
+	ret.W("      <table>")
+	ret.W("        <tbody>")
 	for _, col := range m.Columns {
 		if col.HasTag("debug-only") {
-			ret.W(`        {%%- if as.Debug -%%}`)
+			ret.W(`          {%%- if as.Debug -%%}`)
 		}
-		ret.W("        <tr>")
+		ret.W("          <tr>")
 		h, err := col.Help(enums)
 		if err != nil {
 			return nil, err
@@ -138,15 +139,16 @@ func exportViewDetailBody(g *golang.Template, m *model.Model, audit bool, models
 		if !strings.HasPrefix(hlp, "\"") {
 			hlp = "\"{%%s " + hlp + " %%}\""
 		}
-		ret.W(`          <th class="shrink" title=%s>%s</th>`, hlp, col.Title())
-		viewDetailColumn(g, ret, models, m, false, col, "p.Model.", 5, enums)
-		ret.W("        </tr>")
+		ret.W(`            <th class="shrink" title=%s>%s</th>`, hlp, col.Title())
+		viewDetailColumn(g, ret, models, m, false, col, "p.Model.", 6, enums)
+		ret.W("          </tr>")
 		if col.HasTag("debug-only") {
-			ret.W(`        {%%- endif -%%}`)
+			ret.W(`          {%%- endif -%%}`)
 		}
 	}
-	ret.W("      </tbody>")
-	ret.W("    </table>")
+	ret.W("        </tbody>")
+	ret.W("      </table>")
+	ret.W("    </div>")
 	ret.W("  </div>")
 	ret.W("  {%%- comment %%}$PF_SECTION_START(extra)${%% endcomment -%%}")
 	ret.W("  {%%- comment %%}$PF_SECTION_END(extra)${%% endcomment -%%}")

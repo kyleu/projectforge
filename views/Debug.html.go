@@ -44,11 +44,11 @@ func (p *Debug) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
 //line views/Debug.html:14
 	if s, ok := ps.Data.(string); ok {
 //line views/Debug.html:14
-		qw422016.N().S(`    <pre class="mt">`)
+		qw422016.N().S(`    <div class="overflow full-width"><pre class="mt">`)
 //line views/Debug.html:15
 		qw422016.E().S(s)
 //line views/Debug.html:15
-		qw422016.N().S(`</pre>
+		qw422016.N().S(`</pre></div>
 `)
 //line views/Debug.html:16
 	} else {

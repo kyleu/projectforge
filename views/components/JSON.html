@@ -15,9 +15,7 @@
       <div class="modal-body">
         <div id="modal-{%s key %}-data" hidden="hidden" style="display:none;">{%s util.ToJSON(item) %}</div>
         <button onclick="clip('{%s key %}');">Copy to clipboard</button>
-        <div class="mt">
-          {%= JSON(item) %}
-        </div>
+        {%= JSON(item) %}
       </div>
     </div>
   </div>
@@ -42,13 +40,15 @@
   {% code json := util.ToJSONBytes(v, true) %}
   {% if len(json) > (1024 * 256) %}
     <div class="mt"><em>This JSON is too large (<strong>{%s util.ByteSizeSI(int64(len(json))) %}</strong>), highlighting is disabled</em></div>
-    <pre class="mt">{%s string(json) %}</pre>
+    <div class="mt overflow full-width">
+      <pre>{%s string(json) %}</pre>
+    </div>
   {% else %}
     {% code out, err := cutil.FormatLang(string(json), "json") %}
     {% if err == nil %}
-      {%s= out %}
+      <div class="mt overflow full-width">{%s= out %}</div>
     {% else %}
-      {%s err.Error() %}
+      <div class="mt error">{%s err.Error() %}</div>
     {% endif %}
   {% endif %}
 {% endstripspace %}{% endfunc %}
