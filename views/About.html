@@ -4,6 +4,7 @@
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/components/view"
   "projectforge.dev/projectforge/views/layout"
 ) %}
 
@@ -12,7 +13,7 @@
 {% func (p *About) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`app`, ps) %}{%s util.AppName %}</h3>
-    <em>v{%s as.BuildInfo.Version %}, started {%s util.TimeRelative(&as.Started) %}</em>
+    <em>v{%s as.BuildInfo.Version %}, started {%= view.TimestampRelative(&as.Started, false) %}</em>
   </div>
   <div class="card">
     <h3>About</h3>
