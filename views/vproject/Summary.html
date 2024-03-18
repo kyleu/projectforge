@@ -3,13 +3,12 @@
   "projectforge.dev/projectforge/app/lib/exec"
   "projectforge.dev/projectforge/app/project"
   "projectforge.dev/projectforge/app/project/action"
-  "projectforge.dev/projectforge/app/project/git"
   "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/vsearch"
 ) %}
 
-{% func Summary(prj *project.Project, title string, gitResult *git.Result, args util.ValueMap, act *action.Type, ex exec.Execs, ps *cutil.PageState, path ...string) %}
+{% func Summary(prj *project.Project, title string, args util.ValueMap, act *action.Type, ex exec.Execs, ps *cutil.PageState, path ...string) %}
   <div class="card">
     {%- code
       q := ""
@@ -38,7 +37,7 @@
       {%- endfor -%}
       <a href="/p/{%s prj.Key %}/fs" title="Explore the project's files"><button>{%= components.SVGRef("folder", 15, 15, "icon", ps) %}Files</button></a>
       <a href="/svg/{%s prj.Key %}" title="Add new SVGs and set the app icon"><button>{%= components.SVGRef("icons", 15, 15, "icon", ps) %}SVG</button></a>
-      <a href="/git/{%s prj.Key %}" title="{%- if gitResult == nil -%}Source control status for this project{% else %}{%s gitResult.Status %}{%- endif -%}"><button>{%= components.SVGRef("git", 15, 15, "icon", ps) %}Git</button></a>
+      <a href="/git/{%s prj.Key %}" title="Source control status for this project"><button>{%= components.SVGRef("git", 15, 15, "icon", ps) %}Git</button></a>
     </div>
   </div>
 {% endfunc %}

@@ -43,7 +43,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	qw422016.N().S(`
   `)
 //line views/vsvg/List.html:20
-	vproject.StreamSummary(qw422016, p.Project, "SVG", nil, nil, &action.TypeSVG, nil, ps)
+	vproject.StreamSummary(qw422016, p.Project, "SVG", nil, &action.TypeSVG, nil, ps)
 //line views/vsvg/List.html:20
 	qw422016.N().S(`
   <div class="card">

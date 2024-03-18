@@ -21,12 +21,11 @@ func ProjectDetail(rc *fasthttp.RequestCtx) {
 		}
 		prj.ExportArgs, _ = prj.ModuleArgExport(as.Services.Projects, ps.Logger)
 		mods := as.Services.Modules.Modules()
-		gitStatus, _ := as.Services.Git.Status(ps.Context, prj, ps.Logger)
 		execs := as.Services.Exec.Execs.GetByKey(prj.Key)
 		fs, _ := as.Services.Projects.GetFilesystem(prj)
 		validation := project.Validate(prj, fs, as.Services.Modules.Deps(), as.Services.Modules.Dangerous())
 		ps.SetTitleAndData(fmt.Sprintf("%s (project %s)", prj.Title(), prj.Key), prj)
-		page := &vproject.Detail{Project: prj, Modules: mods, GitResult: gitStatus, Execs: execs, Validation: validation}
+		page := &vproject.Detail{Project: prj, Modules: mods, Execs: execs, Validation: validation}
 		return controller.Render(rc, as, page, ps, "projects", prj.Key)
 	})
 }

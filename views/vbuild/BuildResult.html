@@ -3,7 +3,6 @@
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/project"
   "projectforge.dev/projectforge/app/project/action"
-  "projectforge.dev/projectforge/app/project/git"
   "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/layout"
   "projectforge.dev/projectforge/views/vaction"
@@ -15,7 +14,6 @@
   Project *project.Project
   Cfg util.ValueMap
   BuildResult *action.Result
-  GitResult *git.Result
 } %}
 
 {% func (p *BuildResult) Body(as *app.State, ps *cutil.PageState) %}
@@ -26,7 +24,7 @@
       title = p.BuildResult.Title()
     }
   -%}
-  {%= vproject.Summary(prj, title, p.GitResult, nil, &action.TypeBuild, nil, ps) %}
+  {%= vproject.Summary(prj, title, nil, &action.TypeBuild, nil, ps) %}
   {%= BuildOptions(prj.Key) %}
   {%- if p.BuildResult != nil -%}
   {%- code br := p.BuildResult -%}

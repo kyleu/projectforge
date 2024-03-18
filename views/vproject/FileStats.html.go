@@ -54,7 +54,7 @@ func (p *FileStats) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
 //line views/vproject/FileStats.html:28
 	qw422016.N().S(`  `)
 //line views/vproject/FileStats.html:29
-	StreamSummary(qw422016, prj, "/"+strings.Join(p.Path, "/"), nil, nil, nil, nil, ps)
+	StreamSummary(qw422016, prj, "/"+strings.Join(p.Path, "/"), nil, nil, nil, ps)
 //line views/vproject/FileStats.html:29
 	qw422016.N().S(`
   <div class="card">

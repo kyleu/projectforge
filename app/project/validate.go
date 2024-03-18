@@ -81,7 +81,7 @@ func validateModuleConfig(p *Project, e validationAddErrFn, dangerous []string) 
 	if p.HasModule("android") && (!p.Build.Android) {
 		e("android-disabled", "Android module is enabled, but Android build isn't set")
 	}
-	if p.Build.SafeMode {
+	if p.Build != nil && p.Build.SafeMode {
 		lo.ForEach(dangerous, func(m string, _ int) {
 			if p.HasModule(m) {
 				e("dangerous-module", "Safe mode is enabled for this project, but dangerous module [%s] is enabled", m)

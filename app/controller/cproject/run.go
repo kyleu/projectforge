@@ -47,7 +47,7 @@ func RunAction(rc *fasthttp.RequestCtx) {
 		}
 		if isBuild && phase == "" {
 			ps.Data = action.AllBuilds
-			page := &vbuild.BuildResult{Project: prj, Cfg: cfg, BuildResult: nil, GitResult: nil}
+			page := &vbuild.BuildResult{Project: prj, Cfg: cfg}
 			return controller.Render(rc, as, page, ps, "projects", prj.Key, actT.Title)
 		}
 		result := action.Apply(ps.Context, actionParams(prj.Key, actT, cfg, as, ps.Logger))

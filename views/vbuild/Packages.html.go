@@ -48,7 +48,7 @@ func (p *Packages) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vbuild/Packages.html:20
 	qw422016.N().S(`  `)
 //line views/vbuild/Packages.html:21
-	vproject.StreamSummary(qw422016, prj, "Packages", nil, nil, &action.TypeBuild, nil, ps)
+	vproject.StreamSummary(qw422016, prj, "Packages", nil, &action.TypeBuild, nil, ps)
 //line views/vbuild/Packages.html:21
 	qw422016.N().S(`
   `)
@@ -173,7 +173,7 @@ func (p *PackagesAll) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *c
           <div class="bd"><div><div>
             `)
 //line views/vbuild/Packages.html:63
-		vproject.StreamSummary(qw422016, prj, "Packages", nil, nil, nil, nil, ps)
+		vproject.StreamSummary(qw422016, prj, "Packages", nil, nil, nil, ps)
 //line views/vbuild/Packages.html:63
 		qw422016.N().S(`
 `)
