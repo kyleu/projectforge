@@ -2,11 +2,11 @@ package clib
 
 import (
 	"fmt"
+	"net/http"
 	"strings"
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller"
@@ -16,40 +16,40 @@ import (
 	"{{{ .Package }}}/views/vnotebook"
 )
 
-func Notebook(rc *fasthttp.RequestCtx) {
-	controller.Act("notebook.view", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func Notebook(w http.ResponseWriter, r *http.Request) {
+	controller.Act("notebook.view", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		status := as.Services.Notebook.Status()
 		if status == "running" {
-			pathS, _ := cutil.RCRequiredString(rc, "path", false)
+			pathS, _ := cutil.RCRequiredString(r, "path", false)
 			path := util.StringSplitAndTrim(pathS, "/")
 			ps.SetTitleAndData("Notebook", path)
 			bc := []string{"notebook"}
 			if pathS != "" {
 				bc = append(bc, pathS)
 			}
-			return controller.Render(rc, as, &vnotebook.Notebook{BaseURL: as.Services.Notebook.BaseURL, Path: pathS}, ps, bc...)
+			return controller.Render(w, r, as, &vnotebook.Notebook{BaseURL: as.Services.Notebook.BaseURL, Path: pathS}, ps, bc...)
 		}
 		ps.SetTitleAndData("Notebook Options", status)
-		return controller.Render(rc, as, &vnotebook.Options{}, ps, "notebook")
+		return controller.Render(w, r, as, &vnotebook.Options{}, ps, "notebook")
 	})
 }
 
-func NotebookFiles(rc *fasthttp.RequestCtx) {
-	controller.Act("notebook.files", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		pathS, path, bc := notebookGetText(rc)
+func NotebookFiles(w http.ResponseWriter, r *http.Request) {
+	controller.Act("notebook.files", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		pathS, path, bc := notebookGetText(r)
 		fs := as.Services.Notebook.FS
 		files, err := fs.ListTree(nil, pathS, []string{"cache"}, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "error listing files")
 		}
 		ps.SetTitleAndData(fmt.Sprintf("Notebook File /%s", pathS), files)
-		return controller.Render(rc, as, &vnotebook.Files{Path: path, FS: as.Services.Notebook.FS}, ps, bc...)
+		return controller.Render(w, r, as, &vnotebook.Files{Path: path, FS: as.Services.Notebook.FS}, ps, bc...)
 	})
 }
 
-func NotebookFileEdit(rc *fasthttp.RequestCtx) {
-	controller.Act("notebook.edit", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		pathS, path, bc := notebookGetText(rc)
+func NotebookFileEdit(w http.ResponseWriter, r *http.Request) {
+	controller.Act("notebook.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		pathS, path, bc := notebookGetText(r)
 		bc = append(bc, "Edit**edit")
 		b, err := as.Services.Notebook.FS.ReadFile(pathS)
 		if err != nil {
@@ -57,16 +57,16 @@ func NotebookFileEdit(rc *fasthttp.RequestCtx) {
 		}
 		ret := string(b)
 		ps.SetTitleAndData(fmt.Sprintf("Notebook File /%s", pathS), path)
-		return controller.Render(rc, as, &vnotebook.FileEdit{Path: path, Content: ret}, ps, bc...)
+		return controller.Render(w, r, as, &vnotebook.FileEdit{Path: path, Content: ret}, ps, bc...)
 	})
 }
 
-func NotebookFileSave(rc *fasthttp.RequestCtx) {
-	controller.Act("notebook.save", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		pathS, _, _ := notebookGetText(rc)
+func NotebookFileSave(w http.ResponseWriter, r *http.Request) {
+	controller.Act("notebook.save", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		pathS, _, _ := notebookGetText(r)
 		msg := "Notebook file saved"
 
-		frm, err := cutil.ParseForm(rc)
+		frm, err := cutil.ParseForm(r, ps.RequestBody)
 		if err != nil {
 			return "", err
 		}
@@ -90,28 +90,28 @@ func NotebookFileSave(rc *fasthttp.RequestCtx) {
 				return "", err
 			}
 		}
-		return controller.FlashAndRedir(true, msg, "/notebook/files/"+pathS, rc, ps)
+		return controller.FlashAndRedir(true, msg, "/notebook/files/"+pathS, w, ps)
 	})
 }
 
-func NotebookAction(rc *fasthttp.RequestCtx) {
-	controller.Act("notebook.action", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		act, err := cutil.RCRequiredString(rc, "act", false)
+func NotebookAction(w http.ResponseWriter, r *http.Request) {
+	controller.Act("notebook.action", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		act, err := cutil.RCRequiredString(r, "act", false)
 		if err != nil {
 			return "", err
 		}
 		switch act {
 		case "start":
 			err = as.Services.Notebook.Start()
-			return controller.FlashAndRedir(true, "Notebook started", "/notebook", rc, ps)
+			return controller.FlashAndRedir(true, "Notebook started", "/notebook", w, ps)
 		default:
 			return "", errors.Errorf("invalid notebook action [%s]", act)
 		}
 	})
 }
 
-func notebookGetText(rc *fasthttp.RequestCtx) (string, []string, []string) {
-	pathS, _ := cutil.RCRequiredString(rc, "path", false)
+func notebookGetText(r *http.Request) (string, []string, []string) {
+	pathS, _ := cutil.RCRequiredString(r, "path", false)
 	path := util.StringSplitAndTrim(pathS, "/")
 	bcAppend := "||/notebook/files"
 	bc := []string{"notebook", "files"}

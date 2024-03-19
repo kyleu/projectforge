@@ -2,9 +2,9 @@ package cproject
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/pkg/errors"
-	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
@@ -13,9 +13,9 @@ import (
 	"projectforge.dev/projectforge/views/vproject"
 )
 
-func ProjectDetail(rc *fasthttp.RequestCtx) {
-	controller.Act("project.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(rc, as)
+func ProjectDetail(w http.ResponseWriter, r *http.Request) {
+	controller.Act("project.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, err := getProject(r, as)
 		if err != nil {
 			return "", err
 		}
@@ -26,21 +26,21 @@ func ProjectDetail(rc *fasthttp.RequestCtx) {
 		validation := project.Validate(prj, fs, as.Services.Modules.Deps(), as.Services.Modules.Dangerous())
 		ps.SetTitleAndData(fmt.Sprintf("%s (project %s)", prj.Title(), prj.Key), prj)
 		page := &vproject.Detail{Project: prj, Modules: mods, Execs: execs, Validation: validation}
-		return controller.Render(rc, as, page, ps, "projects", prj.Key)
+		return controller.Render(w, r, as, page, ps, "projects", prj.Key)
 	})
 }
 
-func ProjectForm(rc *fasthttp.RequestCtx) {
-	controller.Act("project.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func ProjectForm(w http.ResponseWriter, r *http.Request) {
+	controller.Act("project.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prj := project.NewProject("", ".")
 		ps.SetTitleAndData("New Project", prj)
-		return controller.Render(rc, as, &vproject.Edit{Project: prj}, ps, "projects", "New")
+		return controller.Render(w, r, as, &vproject.Edit{Project: prj}, ps, "projects", "New")
 	})
 }
 
-func ProjectCreate(rc *fasthttp.RequestCtx) {
-	controller.Act("project.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		frm, err := cutil.ParseForm(rc)
+func ProjectCreate(w http.ResponseWriter, r *http.Request) {
+	controller.Act("project.create", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		frm, err := cutil.ParseForm(r, ps.RequestBody)
 		if err != nil {
 			return "", err
 		}
@@ -72,28 +72,28 @@ func ProjectCreate(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return controller.ERsp("unable to save project: %+v", err)
 		}
-		return controller.FlashAndRedir(true, "Created project ["+prj.Title()+"]", prj.WebPath(), rc, ps)
+		return controller.FlashAndRedir(true, "Created project ["+prj.Title()+"]", prj.WebPath(), w, ps)
 	})
 }
 
-func ProjectEdit(rc *fasthttp.RequestCtx) {
-	controller.Act("project.edit", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(rc, as)
+func ProjectEdit(w http.ResponseWriter, r *http.Request) {
+	controller.Act("project.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, err := getProject(r, as)
 		if err != nil {
 			return "", err
 		}
 		ps.SetTitleAndData(fmt.Sprintf("Edit %s (project %s)", prj.Title(), prj.Key), prj)
-		return controller.Render(rc, as, &vproject.Edit{Project: prj}, ps, "projects", prj.Key)
+		return controller.Render(w, r, as, &vproject.Edit{Project: prj}, ps, "projects", prj.Key)
 	})
 }
 
-func ProjectSave(rc *fasthttp.RequestCtx) {
-	controller.Act("project.save", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		frm, err := cutil.ParseForm(rc)
+func ProjectSave(w http.ResponseWriter, r *http.Request) {
+	controller.Act("project.save", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		frm, err := cutil.ParseForm(r, ps.RequestBody)
 		if err != nil {
 			return "", err
 		}
-		prj, err := getProject(rc, as)
+		prj, err := getProject(r, as)
 		if err != nil {
 			return "", err
 		}
@@ -106,6 +106,6 @@ func ProjectSave(rc *fasthttp.RequestCtx) {
 			return controller.ERsp("unable to save project: %+v", err)
 		}
 
-		return controller.FlashAndRedir(true, "Saved changes", prj.WebPath(), rc, ps)
+		return controller.FlashAndRedir(true, "Saved changes", prj.WebPath(), w, ps)
 	})
 }

@@ -2,11 +2,11 @@ package cproject
 
 import (
 	"fmt"
+	"net/http"
 	"strings"
 
 	"github.com/muesli/gamut"
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
@@ -18,13 +18,13 @@ import (
 	"projectforge.dev/projectforge/views/vproject"
 )
 
-func ProjectThemePalette(rc *fasthttp.RequestCtx) {
-	controller.Act("project.theme.palette", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		pal, err := cutil.RCRequiredString(rc, "palette", false)
+func ProjectThemePalette(w http.ResponseWriter, r *http.Request) {
+	controller.Act("project.theme.palette", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		pal, err := cutil.RCRequiredString(r, "palette", false)
 		if err != nil {
 			return "", err
 		}
-		prj, err := cutil.RCRequiredString(rc, "key", false)
+		prj, err := cutil.RCRequiredString(r, "key", false)
 		if err != nil {
 			return "", err
 		}
@@ -41,25 +41,25 @@ func ProjectThemePalette(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] Themes", pal), pal)
-		if string(rc.URI().QueryArgs().Peek("t")) == "go" {
+		if r.URL.Query().Get("t") == "go" {
 			ps.Data = strings.Join(lo.Map(x, func(t *theme.Theme, _ int) string {
 				return t.ToGo()
 			}), util.StringDefaultLinebreak)
-			return controller.Render(rc, as, &views.Debug{}, ps, "admin", "Themes")
+			return controller.Render(w, r, as, &views.Debug{}, ps, "admin", "Themes")
 		}
 		span.Complete()
 		page := &vproject.ThemePalette{Project: prj, Icon: prjIcon, Palette: pal, Themes: x, Title: prjTitle}
-		return controller.Render(rc, as, page, ps, "admin", "Themes")
+		return controller.Render(w, r, as, page, ps, "admin", "Themes")
 	})
 }
 
-func ProjectThemeSave(rc *fasthttp.RequestCtx) {
-	controller.Act("project.theme.save", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		pallette, thm, err := themeFromRC(rc)
+func ProjectThemeSave(w http.ResponseWriter, r *http.Request) {
+	controller.Act("project.theme.save", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		pallette, thm, err := themeFromRC(r)
 		if err != nil {
 			return "", err
 		}
-		prj, err := cutil.RCRequiredString(rc, "key", false)
+		prj, err := cutil.RCRequiredString(r, "key", false)
 		if err != nil {
 			return "", err
 		}
@@ -73,19 +73,19 @@ func ProjectThemeSave(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		msg := fmt.Sprintf("set theme to [%s:%s]", pallette, thm.Key)
-		return controller.FlashAndRedir(true, msg, p.WebPath(), rc, ps)
+		return controller.FlashAndRedir(true, msg, p.WebPath(), w, ps)
 	})
 }
 
-func themeFromRC(rc *fasthttp.RequestCtx) (string, *theme.Theme, error) {
-	if color, err := cutil.RCRequiredString(rc, "color", false); err == nil {
+func themeFromRC(r *http.Request) (string, *theme.Theme, error) {
+	if color, err := cutil.RCRequiredString(r, "color", false); err == nil {
 		return color, theme.ColorTheme(color, gamut.Hex(color)), nil
 	}
-	pal, err := cutil.RCRequiredString(rc, "palette", false)
+	pal, err := cutil.RCRequiredString(r, "palette", false)
 	if err != nil {
 		return "", nil, err
 	}
-	themeKey, err := cutil.RCRequiredString(rc, "theme", false)
+	themeKey, err := cutil.RCRequiredString(r, "theme", false)
 	if err != nil {
 		return "", nil, err
 	}

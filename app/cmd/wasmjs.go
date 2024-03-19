@@ -6,6 +6,7 @@ package cmd
 
 import (
 	"context"
+	"net/http"
 	"syscall/js"
 
 	"github.com/muesli/coral"
@@ -15,7 +16,7 @@ import (
 
 const keyWASM = "wasm"
 
-var _router fasthttp.RequestHandler
+var _router http.Handler
 
 func wasmCmd() *coral.Command {
 	short := "Starts the server and exposes a WebAssembly application to scripts"
@@ -112,7 +113,7 @@ func populateRequest(req js.Value, headers js.Value, reqBody js.Value, rc *fasth
 	return nil
 }
 
-func runRequest(rc *fasthttp.RequestCtx) (e error) {
+func runRequest(w http.ResponseWriter, r *http.Request) (e error) {
 	if _router == nil {
 		return errors.New("didn't start app through the WASM action, no active router")
 	}
@@ -129,7 +130,7 @@ func runRequest(rc *fasthttp.RequestCtx) (e error) {
 	return nil
 }
 
-func createResponse(rc *fasthttp.RequestCtx) (js.Value, error) {
+func createResponse(w http.ResponseWriter, r *http.Request) (js.Value, error) {
 	rspClass := js.Global().Get("Response")
 	hd := js.Global().Get("Headers").New()
 	for _, b := range rc.Response.Header.PeekKeys() {

@@ -3,8 +3,8 @@
 For the server side, a controller action must be created:
 
 ```go
-func MySocket(rc *fasthttp.RequestCtx) {
-	controller.Act("my.socket", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func MySocket(w http.ResponseWriter, r *http.Request) {
+	controller.Act("my.socket", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		channel := "channel-a"
 		err = as.Services.Socket.Upgrade(rc, channel, ps.Profile, ps.Logger)
 		return "", err

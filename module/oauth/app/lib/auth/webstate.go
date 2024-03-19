@@ -2,27 +2,25 @@ package auth
 
 import (
 	"encoding/base64"
+	"net/http"
 	"net/url"
 
 	"github.com/markbates/goth"
 	"github.com/pkg/errors"
-	"github.com/valyala/fasthttp"
 
 	"{{{ .Package }}}/app/util"
 )
 
-func setState(rc *fasthttp.RequestCtx) string {
-	state := rc.QueryArgs().Peek("state")
+func getState(r *http.Request) string {
+	state := r.URL.Query().Get("state")
 	if len(state) > 0 {
 		return string(state)
 	}
-
 	nonceBytes := util.RandomBytes(64)
-
 	return base64.URLEncoding.EncodeToString(nonceBytes)
 }
 
-func validateState(rc *fasthttp.RequestCtx, sess goth.Session) error {
+func validateState(w http.ResponseWriter, r *http.Request, sess goth.Session) error {
 	rawAuthURL, err := sess.GetAuthURL()
 	if err != nil {
 		return err
@@ -34,7 +32,7 @@ func validateState(rc *fasthttp.RequestCtx, sess goth.Session) error {
 	}
 
 	originalState := authURL.Query().Get("state")
-	qs := string(rc.QueryArgs().Peek("state"))
+	qs := r.URL.Query().Get("state")
 	if originalState != "" && (originalState != qs) {
 		return errors.New("state token mismatch")
 	}

@@ -54,6 +54,14 @@ func (m Models) SortedDisplay() Models {
 	return ret
 }
 
+func (m Models) SortedRoutes() Models {
+	ret := slices.Clone(m)
+	slices.SortFunc(ret, func(l *Model, r *Model) int {
+		return cmp.Compare(r.PackageWithGroup(""), l.PackageWithGroup(""))
+	})
+	return ret
+}
+
 func (m Models) withDeps(mdl *Model) Models {
 	var deps Models
 	lo.ForEach(mdl.Relations, func(rel *Relation, _ int) {

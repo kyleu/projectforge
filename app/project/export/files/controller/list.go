@@ -27,7 +27,7 @@ func controllerList(g *golang.File, m *model.Model, grp *model.Column, models mo
 	}
 	if m.HasSearches() {
 		g.AddImport(helper.ImpStrings)
-		ret.W("\t\tq := strings.TrimSpace(string(rc.URI().QueryArgs().Peek(\"q\")))")
+		ret.W("\t\tq := strings.TrimSpace(r.URL.Query().Get(\"q\"))")
 	}
 	ret.W("\t\tprms := ps.Params.Get(%q, nil, ps.Logger).Sanitize(%q)", m.Package, m.Package)
 	if grpArgs == "" && m.HasSearches() {
@@ -85,7 +85,7 @@ func controllerList(g *golang.File, m *model.Model, grp *model.Column, models mo
 		searchSuffix += ", SearchQuery: q"
 	}
 	ret.W("\t\tpage := &v%s.List{Models: ret%s, Params: ps.Params%s}", m.Package, toStrings, searchSuffix)
-	render := "\t\treturn %sRender(rc, as, page, ps, %s%s)"
+	render := "\t\treturn %sRender(w, r, as, page, ps, %s%s)"
 	ret.W(render, prefix, m.Breadcrumbs(), grp.BC())
 	ret.W("\t})")
 	ret.W("}")

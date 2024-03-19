@@ -2,12 +2,14 @@
 package cutil
 
 import (
+	"bytes"
 	"context"
+	"io"
+	"net/http"
 	"slices"
 	"strings"
 
 	"github.com/mileusna/useragent"
-	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/csession"
@@ -17,18 +19,21 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-var initialIcons = []string{"searchbox"}
+var (
+	initialIcons = []string{"searchbox"}
+	MaxBodySize  = int64(1024 * 1024 * 128) // 128MB
+)
 
-func LoadPageState(as *app.State, rc *fasthttp.RequestCtx, key string, logger util.Logger) *PageState {
-	parentCtx, logger := httpmetrics.ExtractHeaders(rc, logger)
+func LoadPageState(as *app.State, w http.ResponseWriter, r *http.Request, key string, logger util.Logger) *PageState {
+	parentCtx, logger := httpmetrics.ExtractHeaders(r, logger)
 	ctx, span, logger := telemetry.StartSpan(parentCtx, "http:"+key, logger)
-	span.Attribute("path", string(rc.Request.URI().Path()))
+	span.Attribute("path", r.URL.Path)
 	if !telemetry.SkipControllerMetrics {
-		httpmetrics.InjectHTTP(rc, span)
+		httpmetrics.InjectHTTP(200, r, span)
 	}
-	session, flashes, prof := loadSession(ctx, as, rc, logger)
-	params := ParamSetFromRequest(rc)
-	ua := useragent.Parse(string(rc.Request.Header.Peek("User-Agent")))
+	session, flashes, prof := loadSession(ctx, as, w, r, logger)
+	params := ParamSetFromRequest(r)
+	ua := useragent.Parse(r.Header.Get("User-Agent"))
 	os := strings.ToLower(ua.OS)
 	browser := strings.ToLower(ua.Name)
 	platform := "unknown"
@@ -44,33 +49,36 @@ func LoadPageState(as *app.State, rc *fasthttp.RequestCtx, key string, logger ut
 	}
 	span.Attribute("browser", browser)
 	span.Attribute("os", os)
+	b, _ := io.ReadAll(http.MaxBytesReader(w, r.Body, MaxBodySize))
+	r.Body = io.NopCloser(bytes.NewBuffer(b))
 
 	return &PageState{
-		Action: key, Method: string(rc.Method()), URI: rc.Request.URI(), Flashes: flashes, Session: session,
+		Action: key, Method: r.Method, URI: r.URL, Flashes: flashes, Session: session,
 		OS: os, OSVersion: ua.OSVersion, Browser: browser, BrowserVersion: ua.Version, Platform: platform,
 		Profile: prof, Params: params,
-		Icons: slices.Clone(initialIcons), Started: util.TimeCurrent(), Logger: logger, Context: ctx, Span: span,
+		Icons: slices.Clone(initialIcons), Started: util.TimeCurrent(), Logger: logger, Context: ctx, Span: span, RequestBody: b,
 	}
 }
 
-func loadSession(_ context.Context, _ *app.State, rc *fasthttp.RequestCtx, logger util.Logger) (util.ValueMap, []string, *user.Profile) {
-	sessionBytes := rc.Request.Header.Cookie(util.AppKey)
-	session := util.ValueMap{}
-	if len(sessionBytes) > 0 {
-		dec, err := util.DecryptMessage(nil, string(sessionBytes), logger)
-		if err != nil {
-			logger.Warnf("error decrypting session: %+v", err)
-		}
-		err = util.FromJSON([]byte(dec), &session)
-		if err != nil {
-			session = util.ValueMap{}
-		}
+func loadSession(_ context.Context, _ *app.State, w http.ResponseWriter, r *http.Request, logger util.Logger) (util.ValueMap, []string, *user.Profile) {
+	c, _ := r.Cookie(util.AppKey)
+	if c == nil || c.Value == "" {
+		return util.ValueMap{}, nil, user.DefaultProfile.Clone()
+	}
+
+	dec, err := util.DecryptMessage(nil, c.Value, logger)
+	if err != nil {
+		logger.Warnf("error decrypting session: %+v", err)
+	}
+	session, err := util.FromJSONMap([]byte(dec))
+	if err != nil {
+		session = util.ValueMap{}
 	}
 
 	flashes := util.StringSplitAndTrim(session.GetStringOpt(csession.WebFlashKey), ";")
 	if len(flashes) > 0 {
 		delete(session, csession.WebFlashKey)
-		err := csession.SaveSession(rc, session, logger)
+		err := csession.SaveSession(w, session, logger)
 		if err != nil {
 			logger.Warnf("can't save session: %+v", err)
 		}

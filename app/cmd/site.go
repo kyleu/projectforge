@@ -3,11 +3,11 @@ package cmd
 
 import (
 	"fmt"
+	"net/http"
 	"runtime"
 
 	"github.com/muesli/coral"
 	"github.com/pkg/errors"
-	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
@@ -36,12 +36,15 @@ func startSite(flags *Flags) error {
 		return err
 	}
 
-	_, err = listenandserve(util.AppName, flags.Address, flags.Port, r)
+	_, err = listenandserve(flags.Address, flags.Port, r)
 	return err
 }
 
-func loadSite(flags *Flags, logger util.Logger) (fasthttp.RequestHandler, util.Logger, error) {
-	r := routes.SiteRoutes(logger)
+func loadSite(flags *Flags, logger util.Logger) (http.Handler, util.Logger, error) {
+	r, err := routes.SiteRoutes(logger)
+	if err != nil {
+		return nil, logger, err
+	}
 	f, err := filesystem.NewFileSystem(flags.ConfigDir, false, "")
 	if err != nil {
 		return nil, logger, err

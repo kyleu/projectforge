@@ -2,9 +2,9 @@ package clib
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/pkg/errors"
-	"github.com/valyala/fasthttp"
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller"
@@ -15,43 +15,43 @@ import (
 
 const signinMsg = "signed in using %s as [%s]"
 
-func AuthDetail(rc *fasthttp.RequestCtx) {
-	controller.Act("auth.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prv, err := getProvider(as, rc, ps.Logger)
+func AuthDetail(w http.ResponseWriter, r *http.Request) {
+	controller.Act("auth.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prv, err := getProvider(as, r, ps.Logger)
 		if err != nil {
 			return "", err
 		}
-		u, _, err := auth.CompleteUserAuth(prv, rc, ps.Session, ps.Logger)
+		u, _, err := auth.CompleteUserAuth(prv, w, r, ps.Session, ps.Logger)
 		if err == nil {
 			msg := fmt.Sprintf(signinMsg, auth.AvailableProviderNames[prv.ID], u.Email)
-			return controller.ReturnToReferrer(msg, cutil.DefaultProfilePath, rc, ps)
+			return controller.ReturnToReferrer(msg, cutil.DefaultProfilePath, w, ps)
 		}
-		return auth.BeginAuthHandler(prv, rc, ps.Session, ps.Logger)
+		return auth.BeginAuthHandler(prv, w, r, ps.Session, ps.Logger)
 	})
 }
 
-func AuthCallback(rc *fasthttp.RequestCtx) {
-	controller.Act("auth.callback", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prv, err := getProvider(as, rc, ps.Logger)
+func AuthCallback(w http.ResponseWriter, r *http.Request) {
+	controller.Act("auth.callback", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prv, err := getProvider(as, r, ps.Logger)
 		if err != nil {
 			return "", err
 		}
-		u, _, err := auth.CompleteUserAuth(prv, rc, ps.Session, ps.Logger)
+		u, _, err := auth.CompleteUserAuth(prv, w, r, ps.Session, ps.Logger)
 		if err != nil {
 			return "", err
 		}
 		msg := fmt.Sprintf(signinMsg, auth.AvailableProviderNames[prv.ID], u.Email)
-		return controller.ReturnToReferrer(msg, cutil.DefaultProfilePath, rc, ps)
+		return controller.ReturnToReferrer(msg, cutil.DefaultProfilePath, w, ps)
 	})
 }
 
-func AuthLogout(rc *fasthttp.RequestCtx) {
-	controller.Act("auth.logout", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := cutil.RCRequiredString(rc, "key", false)
+func AuthLogout(w http.ResponseWriter, r *http.Request) {
+	controller.Act("auth.logout", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		key, err := cutil.RCRequiredString(r, "key", false)
 		if err != nil {
 			return "", err
 		}
-		err = auth.Logout(rc, ps.Session, ps.Logger, key)
+		err = auth.Logout(w, r, ps.Session, ps.Logger, key)
 		if err != nil {
 			return "", err
 		}
@@ -60,8 +60,8 @@ func AuthLogout(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func getProvider(as *app.State, rc *fasthttp.RequestCtx, logger util.Logger) (*auth.Provider, error) {
-	key, err := cutil.RCRequiredString(rc, "key", false)
+func getProvider(as *app.State, r *http.Request, logger util.Logger) (*auth.Provider, error) {
+	key, err := cutil.RCRequiredString(r, "key", false)
 	if err != nil {
 		return nil, err
 	}

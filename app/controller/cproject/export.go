@@ -2,8 +2,7 @@ package cproject
 
 import (
 	"fmt"
-
-	"github.com/valyala/fasthttp"
+	"net/http"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
@@ -11,9 +10,9 @@ import (
 	"projectforge.dev/projectforge/views/vexport"
 )
 
-func ProjectExportOverview(rc *fasthttp.RequestCtx) {
-	controller.Act("project.export.overview", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(rc, as)
+func ProjectExportOverview(w http.ResponseWriter, r *http.Request) {
+	controller.Act("project.export.overview", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, err := getProject(r, as)
 		if err != nil {
 			return "", err
 		}
@@ -23,6 +22,6 @@ func ProjectExportOverview(rc *fasthttp.RequestCtx) {
 		}
 		bc := []string{"projects", prj.Key, "Export"}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] Export", prj.Key), args)
-		return controller.Render(rc, as, &vexport.Overview{Project: prj, Args: args}, ps, bc...)
+		return controller.Render(w, r, as, &vexport.Overview{Project: prj, Args: args}, ps, bc...)
 	})
 }

@@ -23,14 +23,14 @@ var (
 )
 
 //line views/components/view/Int.html:4
-func StreamInt(qw422016 *qt422016.Writer, i int) {
+func StreamInt(qw422016 *qt422016.Writer, i any) {
 //line views/components/view/Int.html:5
-	qw422016.N().D(i)
+	qw422016.E().V(i)
 //line views/components/view/Int.html:6
 }
 
 //line views/components/view/Int.html:6
-func WriteInt(qq422016 qtio422016.Writer, i int) {
+func WriteInt(qq422016 qtio422016.Writer, i any) {
 //line views/components/view/Int.html:6
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/components/view/Int.html:6
@@ -41,7 +41,7 @@ func WriteInt(qq422016 qtio422016.Writer, i int) {
 }
 
 //line views/components/view/Int.html:6
-func Int(i int) string {
+func Int(i any) string {
 //line views/components/view/Int.html:6
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/components/view/Int.html:6
@@ -56,14 +56,14 @@ func Int(i int) string {
 }
 
 //line views/components/view/Int.html:8
-func StreamIntArray(qw422016 *qt422016.Writer, value []int) {
+func StreamIntArray(qw422016 *qt422016.Writer, value []any) {
 //line views/components/view/Int.html:9
 	StreamStringArray(qw422016, util.ArrayToStringArray(value))
 //line views/components/view/Int.html:10
 }
 
 //line views/components/view/Int.html:10
-func WriteIntArray(qq422016 qtio422016.Writer, value []int) {
+func WriteIntArray(qq422016 qtio422016.Writer, value []any) {
 //line views/components/view/Int.html:10
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/components/view/Int.html:10
@@ -74,7 +74,7 @@ func WriteIntArray(qq422016 qtio422016.Writer, value []int) {
 }
 
 //line views/components/view/Int.html:10
-func IntArray(value []int) string {
+func IntArray(value []any) string {
 //line views/components/view/Int.html:10
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/components/view/Int.html:10

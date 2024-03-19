@@ -3,12 +3,12 @@ package cmd
 import (
 	"fmt"
 	"net"
+	"net/http"
 	"strconv"
 	"sync"
 
 	"github.com/kirsle/configdir"
 	"github.com/pkg/errors"
-	"github.com/valyala/fasthttp"
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/lib/log"
@@ -92,25 +92,22 @@ func listen(address string, port uint16) (uint16, net.Listener, error) {
 	return port, l, nil
 }
 
-var (
-	maxHeaderSize = 1024 * 256
-	maxBodySize   = 1024 * 1024 * 128
-)
+var maxHeaderSize = 1024 * 256
 
-func serve(name string, listener net.Listener, h fasthttp.RequestHandler) error {
-	x := &fasthttp.Server{Handler: h, Name: name, ReadBufferSize: maxHeaderSize, NoDefaultServerHeader: true, MaxRequestBodySize: maxBodySize}
+func serve(listener net.Listener, h http.Handler) error {
+	x := &http.Server{Handler: h, MaxHeaderBytes: maxHeaderSize}
 	if err := x.Serve(listener); err != nil {
 		return errors.Wrap(err, "unable to run http server")
 	}
 	return nil
 }
 
-func listenandserve(name string, addr string, port uint16, h fasthttp.RequestHandler) (uint16, error) {
+func listenandserve(addr string, port uint16, h http.Handler) (uint16, error) {
 	p, l, err := listen(addr, port)
 	if err != nil {
 		return p, err
 	}
-	err = serve(name, l, h)
+	err = serve(l, h)
 	if err != nil {
 		return p, err
 	}

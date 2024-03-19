@@ -27,7 +27,7 @@ func Controller(m *model.Model, args *model.Args, addHeader bool, linebreak stri
 	if len(m.Group) > 0 {
 		g.AddImport(helper.ImpAppController)
 	}
-	g.AddImport(helper.ImpFmt, helper.ImpErrors, helper.ImpFastHTTP, helper.ImpApp, helper.ImpAppUtil, helper.ImpCutil)
+	g.AddImport(helper.ImpFmt, helper.ImpErrors, helper.ImpHTTP, helper.ImpApp, helper.ImpAppUtil, helper.ImpCutil)
 	g.AddImport(helper.AppImport(m.PackageWithGroup("")))
 	g.AddImport(helper.ViewImport(m.PackageWithGroup("v")))
 
@@ -57,12 +57,12 @@ func controllerArgFor(col *model.Column, b *golang.Block, retVal string, indent 
 	}
 	switch col.Type.Key() {
 	case types.KeyBool:
-		add("%sArg, err := cutil.RCRequiredBool(rc, %q)", col.Camel(), col.Camel())
+		add("%sArg, err := cutil.RCRequiredBool(r, %q)", col.Camel(), col.Camel())
 		add("if err != nil {")
 		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as a boolean argument\")", retVal, col.Camel())
 		add("}")
 	case types.KeyInt:
-		add("%sArgStr, err := cutil.RCRequiredString(rc, %q, false)", col.Camel(), col.Camel())
+		add("%sArgStr, err := cutil.RCRequiredString(r, %q, false)", col.Camel(), col.Camel())
 		add("if err != nil {")
 		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as an argument\")", retVal, col.Camel())
 		add("}")
@@ -72,7 +72,7 @@ func controllerArgFor(col *model.Column, b *golang.Block, retVal string, indent 
 		add("}")
 		add("%sArg := int(%sArgX)", col.Camel(), col.Camel())
 	case types.KeyFloat:
-		add("%sArgStr, err := cutil.RCRequiredString(rc, %q, false)", col.Camel(), col.Camel())
+		add("%sArgStr, err := cutil.RCRequiredString(r, %q, false)", col.Camel(), col.Camel())
 		add("if err != nil {")
 		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as an argument\")", retVal, col.Camel())
 		add("}")
@@ -81,7 +81,7 @@ func controllerArgFor(col *model.Column, b *golang.Block, retVal string, indent 
 		add("\treturn %s, errors.Wrap(err, \"field [%s] must be a valid a valid floating-point number\")", retVal, col.Camel())
 		add("}")
 	case types.KeyString:
-		add("%sArg, err := cutil.RCRequiredString(rc, %q, false)", col.Camel(), col.Camel())
+		add("%sArg, err := cutil.RCRequiredString(r, %q, false)", col.Camel(), col.Camel())
 		add("if err != nil {")
 		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as a string argument\")", retVal, col.Camel())
 		add("}")
@@ -90,12 +90,12 @@ func controllerArgFor(col *model.Column, b *golang.Block, retVal string, indent 
 			add("// ERROR: invalid list argument [%s]", col.Type.String())
 			break
 		}
-		add("%sArg, err := cutil.RCRequiredArray(rc, %q)", col.Camel(), col.Camel())
+		add("%sArg, err := cutil.RCRequiredArray(r, %q)", col.Camel(), col.Camel())
 		add("if err != nil {")
 		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as an comma-separated argument\")", retVal, col.Camel())
 		add("}")
 	case types.KeyUUID:
-		add("%sArgStr, err := cutil.RCRequiredString(rc, %q, false)", col.Camel(), col.Camel())
+		add("%sArgStr, err := cutil.RCRequiredString(r, %q, false)", col.Camel(), col.Camel())
 		add("if err != nil {")
 		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as an argument\")", retVal, col.Camel())
 		add("}")
@@ -115,12 +115,12 @@ func blockFor(m *model.Model, prefix string, grp *model.Column, keys ...string) 
 	})
 	name := m.Proper() + withGroupName(strings.Join(properKeys, ""), grp)
 	ret := golang.NewBlock(name, "func")
-	ret.W("func %s(rc *fasthttp.RequestCtx) {", name)
+	ret.W("func %s(w http.ResponseWriter, r *http.Request) {", name)
 	grpStr := ""
 	if grp != nil {
 		grpStr = grp.Name + "."
 	}
-	ret.W("\t%sAct(\"%s.%s%s\", rc, func(as *app.State, ps *cutil.PageState) (string, error) {", prefix, m.Package, grpStr, strings.Join(keys, "."))
+	ret.W("\t%sAct(\"%s.%s%s\", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {", prefix, m.Package, grpStr, strings.Join(keys, "."))
 	return ret
 }
 

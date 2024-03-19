@@ -1,9 +1,9 @@
 {% import "{{{ .Package }}}/app/util" %}
 
-{% func Float(f float64) %}{% stripspace %}
+{% func Float(f any) %}{% stripspace %}
   {%v f %}
 {% endstripspace %}{% endfunc %}
 
-{% func FloatArray(value []float64) %}{% stripspace %}
+{% func FloatArray(value []any) %}{% stripspace %}
   {%= StringArray(util.ArrayToStringArray(value)) %}
 {% endstripspace %}{% endfunc %}

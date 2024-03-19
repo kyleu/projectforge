@@ -2,11 +2,11 @@ package cproject
 
 import (
 	"fmt"
+	"net/http"
 	"strings"
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
@@ -19,32 +19,32 @@ import (
 	"projectforge.dev/projectforge/views/vpage"
 )
 
-func Doctor(rc *fasthttp.RequestCtx) {
-	controller.Act("doctor", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func Doctor(w http.ResponseWriter, r *http.Request) {
+	controller.Act("doctor", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prjs := as.Services.Projects.Projects()
 		ret := checks.ForModules(prjs.AllModules())
 		ps.SetTitleAndData("Doctor", ret)
-		return controller.Render(rc, as, &vdoctor.List{Checks: ret}, ps, "doctor")
+		return controller.Render(w, r, as, &vdoctor.List{Checks: ret}, ps, "doctor")
 	})
 }
 
-func DoctorRunAll(rc *fasthttp.RequestCtx) {
-	controller.Act("doctor.run.all", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		if string(rc.URI().QueryArgs().Peek("loaded")) != util.BoolTrue {
+func DoctorRunAll(w http.ResponseWriter, r *http.Request) {
+	controller.Act("doctor.run.all", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		if r.URL.Query().Get("loaded") != util.BoolTrue {
 			page := &vpage.Load{URL: "/doctor/all?loaded=true", Title: "Running Doctor Checks", Message: "Hang tight..."}
-			return controller.Render(rc, as, page, ps, "Welcome")
+			return controller.Render(w, r, as, page, ps, "Welcome")
 		}
 		prjs := as.Services.Projects.Projects()
 		checks.SetModules(as.Services.Modules.Deps(), as.Services.Modules.Dangerous())
 		ret := checks.CheckAll(ps.Context, prjs.AllModules(), ps.Logger)
 		ps.SetTitleAndData("Doctor Results", ret)
-		return controller.Render(rc, as, &vdoctor.Results{Results: ret}, ps, "doctor", "All")
+		return controller.Render(w, r, as, &vdoctor.Results{Results: ret}, ps, "doctor", "All")
 	})
 }
 
-func DoctorRun(rc *fasthttp.RequestCtx) {
-	controller.Act("doctor.run", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := cutil.RCRequiredString(rc, "key", false)
+func DoctorRun(w http.ResponseWriter, r *http.Request) {
+	controller.Act("doctor.run", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		key, err := cutil.RCRequiredString(r, "key", false)
 		if err != nil {
 			return "", err
 		}
@@ -52,17 +52,17 @@ func DoctorRun(rc *fasthttp.RequestCtx) {
 		checks.SetModules(as.Services.Modules.Deps(), as.Services.Modules.Dangerous())
 		ret := c.Check(ps.Context, ps.Logger)
 		ps.SetTitleAndData(c.Title+" Result", ret)
-		return controller.Render(rc, as, &vdoctor.Results{Results: doctor.Results{ret}}, ps, "doctor", c.Title)
+		return controller.Render(w, r, as, &vdoctor.Results{Results: doctor.Results{ret}}, ps, "doctor", c.Title)
 	})
 }
 
-func DoctorSolve(rc *fasthttp.RequestCtx) {
-	controller.Act("doctor.solve", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := cutil.RCRequiredString(rc, "key", false)
+func DoctorSolve(w http.ResponseWriter, r *http.Request) {
+	controller.Act("doctor.solve", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		key, err := cutil.RCRequiredString(r, "key", false)
 		if err != nil {
 			return "", err
 		}
-		returnURL := string(rc.URI().QueryArgs().Peek("return"))
+		returnURL := r.URL.Query().Get("return")
 		if returnURL == "" {
 			returnURL = "/doctor/all"
 		}
@@ -72,7 +72,7 @@ func DoctorSolve(rc *fasthttp.RequestCtx) {
 		ret := c.Check(ps.Context, ps.Logger)
 		if len(ret.Solutions) == 0 {
 			ps.SetTitleAndData(fmt.Sprintf("No solution available for [%s]", c.Title), c)
-			return controller.Render(rc, as, &views.Debug{}, ps, "doctor", c.Title)
+			return controller.Render(w, r, as, &views.Debug{}, ps, "doctor", c.Title)
 		}
 		execs := lo.FilterMap(ret.Solutions, func(sol string, _ int) (string, bool) {
 			if !strings.HasPrefix(sol, "!") {
@@ -82,7 +82,7 @@ func DoctorSolve(rc *fasthttp.RequestCtx) {
 		})
 		if len(execs) == 0 {
 			ps.SetTitleAndData(fmt.Sprintf("No solution for [%s] can be solved automatically", c.Title), c)
-			return controller.Render(rc, as, &views.Debug{}, ps, "doctor", c.Title)
+			return controller.Render(w, r, as, &views.Debug{}, ps, "doctor", c.Title)
 		}
 		for idx, ex := range execs {
 			exec := as.Services.Exec.NewExec(fmt.Sprintf("solve-%s-%d", c.Key, idx), ex, ".")
@@ -96,6 +96,6 @@ func DoctorSolve(rc *fasthttp.RequestCtx) {
 			}
 		}
 
-		return controller.FlashAndRedir(true, "Issue solved", returnURL, rc, ps)
+		return controller.FlashAndRedir(true, "Issue solved", returnURL, w, ps)
 	})
 }

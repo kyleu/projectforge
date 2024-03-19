@@ -53,6 +53,11 @@
       "description": "sets the navigation color for users with dark mode, defaults to theme color"
     },
     {
+      "key": "compression_enabled",
+      "type": "bool",
+      "description": "when set, compresses HTTP responses based on the request headers"
+    },
+    {
       "key": "{key}_encryption_key",
       "type": "string",
       "description": "encryption key for web sessions, defaults to `{key}_secret`, warns if missing"

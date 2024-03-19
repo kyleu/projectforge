@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/valyala/fasthttp"
+	"net/http"
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller/cutil"
@@ -10,16 +10,16 @@ import (
 	"{{{ .Package }}}/views/vsandbox"
 )
 
-func SandboxList(rc *fasthttp.RequestCtx) {
-	Act("sandbox.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func SandboxList(w http.ResponseWriter, r *http.Request) {
+	Act("sandbox.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ps.SetTitleAndData("Sandboxes", sandbox.AllSandboxes)
-		return Render(rc, as, &vsandbox.List{}, ps, "sandbox")
+		return Render(w, r, as, &vsandbox.List{}, ps, "sandbox")
 	})
 }
 
-func SandboxRun(rc *fasthttp.RequestCtx) {
-	Act("sandbox.run", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := cutil.RCRequiredString(rc, "key", false)
+func SandboxRun(w http.ResponseWriter, r *http.Request) {
+	Act("sandbox.run", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		key, err := cutil.RCRequiredString(r, "key", false)
 		if err != nil {
 			return "", err
 		}
@@ -38,11 +38,11 @@ func SandboxRun(rc *fasthttp.RequestCtx) {
 		}
 		ps.SetTitleAndData(sb.Title, ret)
 		if sb.Key == "testbed" {
-			return Render(rc, as, &vsandbox.Testbed{}, ps, "sandbox", sb.Key)
+			return Render(w, r, as, &vsandbox.Testbed{}, ps, "sandbox", sb.Key)
 		}{{{ if .HasModule "wasmclient" }}}
 		if sb.Key == "wasm" {
-			return Render(rc, as, &vsandbox.WASM{}, ps, "sandbox", sb.Key)
+			return Render(w, r, as, &vsandbox.WASM{}, ps, "sandbox", sb.Key)
 		}{{{ end }}}
-		return Render(rc, as, &vsandbox.Run{Key: key, Title: sb.Title, Icon: sb.Icon, Result: ret}, ps, "sandbox", sb.Key)
+		return Render(w, r, as, &vsandbox.Run{Key: key, Title: sb.Title, Icon: sb.Icon, Result: ret}, ps, "sandbox", sb.Key)
 	})
 }

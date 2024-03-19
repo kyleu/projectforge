@@ -2,9 +2,9 @@ package clib
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/pkg/errors"
-	"github.com/valyala/fasthttp"
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller"
@@ -18,20 +18,20 @@ const auditDefaultTitle = "Audits"
 
 var auditBreadcrumb = "Audit||/admin/audit"
 
-func AuditList(rc *fasthttp.RequestCtx) {
-	controller.Act("audit.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func AuditList(w http.ResponseWriter, r *http.Request) {
+	controller.Act("audit.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret, err := as.Services.Audit.List(ps.Context, nil, ps.Params.Get("audit", nil, ps.Logger), ps.Logger)
 		if err != nil {
 			return "", err
 		}
 		ps.SetTitleAndData(auditDefaultTitle, ret)
-		return controller.Render(rc, as, &vaudit.List{Models: ret, Params: ps.Params}, ps, "admin", "Audit")
+		return controller.Render(w, r, as, &vaudit.List{Models: ret, Params: ps.Params}, ps, "admin", "Audit")
 	})
 }
 
-func AuditDetail(rc *fasthttp.RequestCtx) {
-	controller.Act("audit.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := auditFromPath(rc, as, ps)
+func AuditDetail(w http.ResponseWriter, r *http.Request) {
+	controller.Act("audit.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := auditFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -40,29 +40,29 @@ func AuditDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child auditrecords")
 		}
-		return controller.Render(rc, as, &vaudit.Detail{Model: ret, Params: ps.Params, Records: records}, ps, "admin", auditBreadcrumb, ret.String())
+		return controller.Render(w, r, as, &vaudit.Detail{Model: ret, Params: ps.Params, Records: records}, ps, "admin", auditBreadcrumb, ret.String())
 	})
 }
 
-func AuditCreateForm(rc *fasthttp.RequestCtx) {
-	controller.Act("audit.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func AuditCreateForm(w http.ResponseWriter, r *http.Request) {
+	controller.Act("audit.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &audit.Audit{}
 		ps.SetTitleAndData("Create [Audit]", ret)
-		return controller.Render(rc, as, &vaudit.Edit{Model: ret, IsNew: true}, ps, "admin", auditBreadcrumb, "Create")
+		return controller.Render(w, r, as, &vaudit.Edit{Model: ret, IsNew: true}, ps, "admin", auditBreadcrumb, "Create")
 	})
 }
 
-func AuditCreateFormRandom(rc *fasthttp.RequestCtx) {
-	controller.Act("audit.create.form.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func AuditCreateFormRandom(w http.ResponseWriter, r *http.Request) {
+	controller.Act("audit.create.form.random", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := audit.Random()
 		ps.SetTitleAndData("Create Random [Audit]", ret)
-		return controller.Render(rc, as, &vaudit.Edit{Model: ret, IsNew: true}, ps, "admin", auditBreadcrumb, "Create")
+		return controller.Render(w, r, as, &vaudit.Edit{Model: ret, IsNew: true}, ps, "admin", auditBreadcrumb, "Create")
 	})
 }
 
-func AuditCreate(rc *fasthttp.RequestCtx) {
-	controller.Act("audit.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := auditFromForm(rc, true)
+func AuditCreate(w http.ResponseWriter, r *http.Request) {
+	controller.Act("audit.create", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := auditFromForm(r, ps.RequestBody, true)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse Audit from form")
 		}
@@ -71,28 +71,28 @@ func AuditCreate(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to save newly-created Audit")
 		}
 		msg := fmt.Sprintf("Audit [%s] created", ret.String())
-		return controller.FlashAndRedir(true, msg, ret.WebPath(), rc, ps)
+		return controller.FlashAndRedir(true, msg, ret.WebPath(), w, ps)
 	})
 }
 
-func AuditEditForm(rc *fasthttp.RequestCtx) {
-	controller.Act("audit.edit.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := auditFromPath(rc, as, ps)
+func AuditEditForm(w http.ResponseWriter, r *http.Request) {
+	controller.Act("audit.edit.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := auditFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit ["+ret.String()+"]", ret)
-		return controller.Render(rc, as, &vaudit.Edit{Model: ret}, ps, "admin", auditBreadcrumb, ret.String())
+		return controller.Render(w, r, as, &vaudit.Edit{Model: ret}, ps, "admin", auditBreadcrumb, ret.String())
 	})
 }
 
-func AuditEdit(rc *fasthttp.RequestCtx) {
-	controller.Act("audit.edit", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := auditFromPath(rc, as, ps)
+func AuditEdit(w http.ResponseWriter, r *http.Request) {
+	controller.Act("audit.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := auditFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
-		frm, err := auditFromForm(rc, false)
+		frm, err := auditFromForm(r, ps.RequestBody, false)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse Audit from form")
 		}
@@ -102,13 +102,13 @@ func AuditEdit(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to update Audit [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("Audit [%s] updated", frm.String())
-		return controller.FlashAndRedir(true, msg, frm.WebPath(), rc, ps)
+		return controller.FlashAndRedir(true, msg, frm.WebPath(), w, ps)
 	})
 }
 
-func AuditDelete(rc *fasthttp.RequestCtx) {
-	controller.Act("audit.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := auditFromPath(rc, as, ps)
+func AuditDelete(w http.ResponseWriter, r *http.Request) {
+	controller.Act("audit.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := auditFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -117,13 +117,13 @@ func AuditDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete audit [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Audit [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/admin/audit", rc, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/audit", w, ps)
 	})
 }
 
-func RecordDetail(rc *fasthttp.RequestCtx) {
-	controller.Act("audit.record.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := recordFromPath(rc, as, ps)
+func RecordDetail(w http.ResponseWriter, r *http.Request) {
+	controller.Act("audit.record.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := recordFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -132,12 +132,12 @@ func RecordDetail(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		ps.SetTitleAndData(ret.String(), ret)
-		return controller.Render(rc, as, &vaudit.RecordDetail{Model: ret, Audit: aud}, ps, "admin", auditBreadcrumb, ret.String())
+		return controller.Render(w, r, as, &vaudit.RecordDetail{Model: ret, Audit: aud}, ps, "admin", auditBreadcrumb, ret.String())
 	})
 }
 
-func auditFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*audit.Audit, error) {
-	idArgStr, err := cutil.RCRequiredString(rc, "id", false)
+func auditFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*audit.Audit, error) {
+	idArgStr, err := cutil.RCRequiredString(r, "id", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [id] as an argument")
 	}
@@ -149,16 +149,16 @@ func auditFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) 
 	return as.Services.Audit.Get(ps.Context, nil, idArg, ps.Logger)
 }
 
-func auditFromForm(rc *fasthttp.RequestCtx, setPK bool) (*audit.Audit, error) {
-	frm, err := cutil.ParseForm(rc)
+func auditFromForm(r *http.Request, requestBody []byte, setPK bool) (*audit.Audit, error) {
+	frm, err := cutil.ParseForm(r, requestBody)
 	if err != nil {
 		return nil, err
 	}
 	return audit.FromMap(frm, setPK)
 }
 
-func recordFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*audit.Record, error) {
-	idArgStr, err := cutil.RCRequiredString(rc, "id", false)
+func recordFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*audit.Record, error) {
+	idArgStr, err := cutil.RCRequiredString(r, "id", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [id] as an argument")
 	}

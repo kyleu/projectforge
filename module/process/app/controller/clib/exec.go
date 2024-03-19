@@ -2,11 +2,11 @@ package clib
 
 import (
 	"fmt"
+	"net/http"
 	"strings"
 
 	"github.com/pkg/errors"{{{ if .HasModule "websocket" }}}
 	"github.com/robert-nix/ansihtml"{{{ end }}}
-	"github.com/valyala/fasthttp"
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller"
@@ -19,25 +19,25 @@ import (
 
 const execIcon = "file"
 
-func ExecList(rc *fasthttp.RequestCtx) {
-	controller.Act("exec.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func ExecList(w http.ResponseWriter, r *http.Request) {
+	controller.Act("exec.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ps.SetTitleAndData("Processes", as.Services.Exec.Execs)
-		return controller.Render(rc, as, &vexec.List{Execs: as.Services.Exec.Execs}, ps, "exec")
+		return controller.Render(w, r, as, &vexec.List{Execs: as.Services.Exec.Execs}, ps, "exec")
 	})
 }
 
-func ExecForm(rc *fasthttp.RequestCtx) {
-	controller.Act("exec.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func ExecForm(w http.ResponseWriter, r *http.Request) {
+	controller.Act("exec.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		x := &exec.Exec{}
 		ps.SetTitleAndData("New Process", x)
 		ps.DefaultNavIcon = execIcon
-		return controller.Render(rc, as, &vexec.Form{Exec: x}, ps, "exec", "New Process")
+		return controller.Render(w, r, as, &vexec.Form{Exec: x}, ps, "exec", "New Process")
 	})
 }
 
-func ExecNew(rc *fasthttp.RequestCtx) {
-	controller.Act("exec.new", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		frm, err := cutil.ParseForm(rc)
+func ExecNew(w http.ResponseWriter, r *http.Request) {
+	controller.Act("exec.new", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		frm, err := cutil.ParseForm(r, ps.RequestBody)
 		if err != nil {
 			return "", err
 		}
@@ -55,39 +55,39 @@ func ExecNew(rc *fasthttp.RequestCtx) {
 		}
 		env := util.StringSplitAndTrim(strings.TrimSpace(frm.GetStringOpt("env")), ",")
 		x := as.Services.Exec.NewExec(key, cmd, path, env...){{{ if .HasModule "websocket" }}}
-		w := func(key string, b []byte) error {
+		wf := func(key string, b []byte) error {
 			m := util.ValueMap{"msg": string(b), "html": string(ansihtml.ConvertToHTML(b))}
 			msg := &websocket.Message{Channel: key, Cmd: "output", Param: util.ToJSONBytes(m, true)}
 			return as.Services.Socket.WriteChannel(msg, ps.Logger)
 		}
-		err = x.Start(w){{{ else }}}
+		err = x.Start(wf){{{ else }}}
 		err = x.Start(){{{ end }}}
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, "started process", x.WebPath(), rc, ps)
+		return controller.FlashAndRedir(true, "started process", x.WebPath(), w, ps)
 	})
 }
 
-func ExecDetail(rc *fasthttp.RequestCtx) {
-	controller.Act("exec.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ex, err := getExecRC(rc, as)
+func ExecDetail(w http.ResponseWriter, r *http.Request) {
+	controller.Act("exec.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ex, err := getExecRC(r, as)
 		if err != nil {
 			return "", err
 		}
 		ps.SetTitleAndData(ex.String(), ex)
 		ps.DefaultNavIcon = execIcon
-		return controller.Render(rc, as, &vexec.Detail{Exec: ex}, ps, "exec", ex.String())
+		return controller.Render(w, r, as, &vexec.Detail{Exec: ex}, ps, "exec", ex.String())
 	})
 }
 {{{ if .HasModule "websocket" }}}
-func ExecSocket(rc *fasthttp.RequestCtx) {
-	controller.Act("exec.socket", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ex, err := getExecRC(rc, as)
+func ExecSocket(w http.ResponseWriter, r *http.Request) {
+	controller.Act("exec.socket", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ex, err := getExecRC(r, as)
 		if err != nil {
 			return "", err
 		}
-		err = as.Services.Socket.Upgrade(ps.Context, rc, ex.String(){{{ if .HasUser }}}, ps.User{{{ end }}}, ps.Profile{{{ if .HasAccount }}}, ps.Accounts{{{ end }}}, ps.Logger)
+		err = as.Services.Socket.Upgrade(ps.Context, w, r, ex.String(){{{ if .HasUser }}}, ps.User{{{ end }}}, ps.Profile{{{ if .HasAccount }}}, ps.Accounts{{{ end }}}, ps.Logger)
 		if err != nil {
 			ps.Logger.Warn("unable to upgrade connection to websocket")
 			return "", err
@@ -96,9 +96,9 @@ func ExecSocket(rc *fasthttp.RequestCtx) {
 	})
 }
 {{{ end }}}
-func ExecKill(rc *fasthttp.RequestCtx) {
-	controller.Act("exec.kill", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		proc, err := getExecRC(rc, as)
+func ExecKill(w http.ResponseWriter, r *http.Request) {
+	controller.Act("exec.kill", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		proc, err := getExecRC(r, as)
 		if err != nil {
 			return "", err
 		}
@@ -106,16 +106,16 @@ func ExecKill(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, fmt.Sprintf("Killed process [%s]", proc.String()), "/admin/exec", rc, ps)
+		return controller.FlashAndRedir(true, fmt.Sprintf("Killed process [%s]", proc.String()), "/admin/exec", w, ps)
 	})
 }
 
-func getExecRC(rc *fasthttp.RequestCtx, as *app.State) (*exec.Exec, error) {
-	key, err := cutil.RCRequiredString(rc, "key", false)
+func getExecRC(r *http.Request, as *app.State) (*exec.Exec, error) {
+	key, err := cutil.RCRequiredString(r, "key", false)
 	if err != nil {
 		return nil, err
 	}
-	idx, err := cutil.RCRequiredInt(rc, "idx")
+	idx, err := cutil.RCRequiredInt(r, "idx")
 	if err != nil {
 		return nil, err
 	}

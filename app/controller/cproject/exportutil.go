@@ -1,11 +1,11 @@
 package cproject
 
 import (
+	"net/http"
 	"strconv"
 	"strings"
 
 	"github.com/pkg/errors"
-	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
@@ -86,12 +86,12 @@ func exportModelFromForm(frm util.ValueMap, m *model.Model) error {
 	return nil
 }
 
-func exportLoadModel(rc *fasthttp.RequestCtx, as *app.State, logger util.Logger) (*project.Project, *model.Model, *model.Args, error) {
-	prj, args, err := exportLoadPrjArgs(rc, as, logger)
+func exportLoadModel(r *http.Request, as *app.State, logger util.Logger) (*project.Project, *model.Model, *model.Args, error) {
+	prj, args, err := exportLoadPrjArgs(r, as, logger)
 	if err != nil {
 		return nil, nil, nil, err
 	}
-	modelKey, err := cutil.RCRequiredString(rc, "model", false)
+	modelKey, err := cutil.RCRequiredString(r, "model", false)
 	if err != nil {
 		return nil, nil, nil, err
 	}
@@ -141,12 +141,12 @@ func exportEnumFromForm(frm util.ValueMap, e *enum.Enum) error {
 	return nil
 }
 
-func exportLoadEnum(rc *fasthttp.RequestCtx, as *app.State, logger util.Logger) (*project.Project, *enum.Enum, *model.Args, error) {
-	prj, args, err := exportLoadPrjArgs(rc, as, logger)
+func exportLoadEnum(r *http.Request, as *app.State, logger util.Logger) (*project.Project, *enum.Enum, *model.Args, error) {
+	prj, args, err := exportLoadPrjArgs(r, as, logger)
 	if err != nil {
 		return nil, nil, nil, err
 	}
-	enumKey, err := cutil.RCRequiredString(rc, "enum", false)
+	enumKey, err := cutil.RCRequiredString(r, "enum", false)
 	if err != nil {
 		return nil, nil, nil, err
 	}
@@ -163,8 +163,8 @@ func exportLoadEnum(rc *fasthttp.RequestCtx, as *app.State, logger util.Logger) 
 	return prj, en, args, nil
 }
 
-func exportLoadPrjArgs(rc *fasthttp.RequestCtx, as *app.State, logger util.Logger) (*project.Project, *model.Args, error) {
-	prj, err := getProject(rc, as)
+func exportLoadPrjArgs(r *http.Request, as *app.State, logger util.Logger) (*project.Project, *model.Args, error) {
+	prj, err := getProject(r, as)
 	if err != nil {
 		return nil, nil, err
 	}

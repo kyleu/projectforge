@@ -2,9 +2,9 @@ package cproject
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/pkg/errors"
-	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
@@ -14,27 +14,27 @@ import (
 	"projectforge.dev/projectforge/views/vexport"
 )
 
-func ProjectExportDeriveForm(rc *fasthttp.RequestCtx) {
-	controller.Act("project.export.derive.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(rc, as)
+func ProjectExportDeriveForm(w http.ResponseWriter, r *http.Request) {
+	controller.Act("project.export.derive.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, err := getProject(r, as)
 		if err != nil {
 			return "", err
 		}
 
 		bc := []string{"projects", prj.Key, fmt.Sprintf("Export||/p/%s/export", prj.Key), "Derive"}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] Derive Model", prj.Key), &model.Model{})
-		return controller.Render(rc, as, &vexport.DeriveForm{Project: prj}, ps, bc...)
+		return controller.Render(w, r, as, &vexport.DeriveForm{Project: prj}, ps, bc...)
 	})
 }
 
-func ProjectExportDerive(rc *fasthttp.RequestCtx) {
-	controller.Act("project.export.derive", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(rc, as)
+func ProjectExportDerive(w http.ResponseWriter, r *http.Request) {
+	controller.Act("project.export.derive", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, err := getProject(r, as)
 		if err != nil {
 			return "", err
 		}
 
-		frm, err := cutil.ParseForm(rc)
+		frm, err := cutil.ParseForm(r, ps.RequestBody)
 		if err != nil {
 			return "", err
 		}
@@ -47,7 +47,7 @@ func ProjectExportDerive(rc *fasthttp.RequestCtx) {
 		}
 
 		res := derive.Derive(name, pkg, content, ps.Logger)
-		if cutil.QueryStringBool(rc, "save") {
+		if cutil.QueryStringBool(r, "save") {
 			pfs, err := as.Services.Projects.GetFilesystem(prj)
 			if err != nil {
 				return "", err
@@ -65,6 +65,6 @@ func ProjectExportDerive(rc *fasthttp.RequestCtx) {
 		}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] Derive Model", prj.Key), res)
 		bc := []string{"projects", prj.Key, fmt.Sprintf("Export||/p/%s/export", prj.Key), "Derive"}
-		return controller.Render(rc, as, &vexport.DeriveForm{Project: prj, Result: res, Form: frm}, ps, bc...)
+		return controller.Render(w, r, as, &vexport.DeriveForm{Project: prj, Result: res, Form: frm}, ps, bc...)
 	})
 }

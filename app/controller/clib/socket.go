@@ -3,10 +3,10 @@ package clib
 
 import (
 	"fmt"
+	"net/http"
 	"strings"
 
 	"github.com/pkg/errors"
-	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
@@ -18,22 +18,22 @@ import (
 
 const socketIcon = "eye"
 
-func socketRoute(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState, path ...string) (string, error) {
+func socketRoute(w http.ResponseWriter, r *http.Request, as *app.State, ps *cutil.PageState, path ...string) (string, error) {
 	bc := func(extra ...string) []string {
 		return append([]string{"admin", "Sockets||/admin/sockets"}, extra...)
 	}
 	if len(path) == 0 {
 		chans, conns, taps := as.Services.Socket.Status()
 		ps.SetTitleAndData("Sockets", util.ValueMap{"channels": chans, "connections": conns})
-		return controller.Render(rc, as, &vadmin.Sockets{Channels: chans, Connections: conns, Taps: taps}, ps, bc()...)
+		return controller.Render(w, r, as, &vadmin.Sockets{Channels: chans, Connections: conns, Taps: taps}, ps, bc()...)
 	}
 	switch path[0] {
 	case "tap":
 		ps.SetTitleAndData("WebSocket Tap", "tap")
 		ps.DefaultNavIcon = "search"
-		return controller.Render(rc, as, &vadmin.SocketTap{}, ps, bc("Tap")...)
+		return controller.Render(w, r, as, &vadmin.SocketTap{}, ps, bc("Tap")...)
 	case "tap-socket":
-		_, err := as.Services.Socket.RegisterTap(rc, ps.Logger)
+		_, err := as.Services.Socket.RegisterTap(w, r, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to register tap socket")
 		}
@@ -46,7 +46,7 @@ func socketRoute(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState, pa
 		members := as.Services.Socket.GetAllMembers(path[1])
 		ps.Data = ch
 		ps.DefaultNavIcon = socketIcon
-		return controller.Render(rc, as, &vadmin.Channel{Channel: ch, Members: members}, ps, bc("Channel", ch.Key)...)
+		return controller.Render(w, r, as, &vadmin.Channel{Channel: ch, Members: members}, ps, bc("Channel", ch.Key)...)
 	case "conn":
 		if len(path) == 0 {
 			return "", errors.New("no connection ID in path")
@@ -62,9 +62,9 @@ func socketRoute(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState, pa
 			}
 			ps.Data = c
 			ps.DefaultNavIcon = socketIcon
-			return controller.Render(rc, as, &vadmin.Connection{Connection: c}, ps, bc("Connection", c.ID.String())...)
+			return controller.Render(w, r, as, &vadmin.Connection{Connection: c}, ps, bc("Connection", c.ID.String())...)
 		}
-		frm, _ := cutil.ParseForm(rc)
+		frm, _ := cutil.ParseForm(r, ps.RequestBody)
 		fromStr := frm.GetStringOpt("from")
 		from := util.UUIDFromString(fromStr)
 		channel := frm.GetStringOpt("channel")
@@ -80,7 +80,7 @@ func socketRoute(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState, pa
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, "sent message", fmt.Sprintf("/admin/sockets/conn/%s", id.String()), rc, ps)
+		return controller.FlashAndRedir(true, "sent message", fmt.Sprintf("/admin/sockets/conn/%s", id.String()), w, ps)
 	default:
 		return "", errors.Errorf("invalid path [%s]", strings.Join(path, "/"))
 	}

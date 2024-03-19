@@ -2,10 +2,10 @@ package cmodule
 
 import (
 	"fmt"
+	"net/http"
 	"strings"
 
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
@@ -14,25 +14,25 @@ import (
 	"projectforge.dev/projectforge/views/vmodule"
 )
 
-func ModuleFileRoot(rc *fasthttp.RequestCtx) {
-	controller.Act("module.file.root", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		mod, err := getModule(rc, as, ps)
+func ModuleFileRoot(w http.ResponseWriter, r *http.Request) {
+	controller.Act("module.file.root", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		mod, err := getModule(r, as, ps)
 		if err != nil {
 			return "", err
 		}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] Files", mod.Key), mod)
-		return controller.Render(rc, as, &vmodule.Files{Module: mod}, ps, "modules", mod.Key, "Files**folder")
+		return controller.Render(w, r, as, &vmodule.Files{Module: mod}, ps, "modules", mod.Key, "Files**folder")
 	})
 }
 
-func ModuleFile(rc *fasthttp.RequestCtx) {
-	controller.Act("module.file", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		mod, err := getModule(rc, as, ps)
+func ModuleFile(w http.ResponseWriter, r *http.Request) {
+	controller.Act("module.file", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		mod, err := getModule(r, as, ps)
 		if err != nil {
 			return "", err
 		}
 
-		pathS, err := cutil.RCRequiredString(rc, "path", false)
+		pathS, err := cutil.RCRequiredString(r, "path", false)
 		if err != nil {
 			return "", err
 		}
@@ -45,6 +45,6 @@ func ModuleFile(rc *fasthttp.RequestCtx) {
 			bc = append(bc, b)
 		})
 		ps.SetTitleAndData(fmt.Sprintf("[%s] /%s", mod.Key, strings.Join(path, "/")), pathS)
-		return controller.Render(rc, as, &vmodule.Files{Module: mod, Path: path}, ps, bc...)
+		return controller.Render(w, r, as, &vmodule.Files{Module: mod, Path: path}, ps, bc...)
 	})
 }

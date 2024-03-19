@@ -2,8 +2,7 @@ package cproject
 
 import (
 	"fmt"
-
-	"github.com/valyala/fasthttp"
+	"net/http"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
@@ -21,14 +20,14 @@ const (
 	pkgsKey = "packages"
 )
 
-func RunAction(rc *fasthttp.RequestCtx) {
-	actQ, _ := cutil.RCRequiredString(rc, "act", false)
+func RunAction(w http.ResponseWriter, r *http.Request) {
+	actQ, _ := cutil.RCRequiredString(r, "act", false)
 	act := "run.action." + actQ
-	if phase := string(rc.URI().QueryArgs().Peek("phase")); phase != "" {
+	if phase := r.URL.Query().Get("phase"); phase != "" {
 		act += "." + phase
 	}
-	controller.Act(act, rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		cfg, actT, prj, err := loadActionProject(rc, as)
+	controller.Act(act, w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		cfg, actT, prj, err := loadActionProject(r, as)
 		if err != nil {
 			return "", err
 		}
@@ -40,15 +39,15 @@ func RunAction(rc *fasthttp.RequestCtx) {
 		phase := cfg.GetStringOpt("phase")
 		if actT.Expensive(cfg) {
 			if cfg.GetStringOpt("hasloaded") != util.BoolTrue {
-				rc.URI().QueryArgs().Set("hasloaded", util.BoolTrue)
-				page := &vpage.Load{URL: rc.URI().String(), Title: fmt.Sprintf("Running [%s] for [%s]", phase, prj.Title())}
-				return controller.Render(rc, as, page, ps, "projects", prj.Key, actT.Title)
+				r.URL.Query().Set("hasloaded", util.BoolTrue)
+				page := &vpage.Load{URL: r.URL.String(), Title: fmt.Sprintf("Running [%s] for [%s]", phase, prj.Title())}
+				return controller.Render(w, r, as, page, ps, "projects", prj.Key, actT.Title)
 			}
 		}
 		if isBuild && phase == "" {
 			ps.Data = action.AllBuilds
 			page := &vbuild.BuildResult{Project: prj, Cfg: cfg}
-			return controller.Render(rc, as, page, ps, "projects", prj.Key, actT.Title)
+			return controller.Render(w, r, as, page, ps, "projects", prj.Key, actT.Title)
 		}
 		result := action.Apply(ps.Context, actionParams(prj.Key, actT, cfg, as, ps.Logger))
 		if result == nil {
@@ -63,32 +62,32 @@ func RunAction(rc *fasthttp.RequestCtx) {
 		ps.Data = result
 		if isBuild {
 			if phase == depsKey {
-				return runDeps(prj, result, rc, as, ps)
+				return runDeps(prj, result, w, r, as, ps)
 			}
 			if phase == pkgsKey {
-				return runPkgs(prj, result, rc, as, ps)
+				return runPkgs(prj, result, w, r, as, ps)
 			}
 			page := &vbuild.BuildResult{Project: prj, Cfg: cfg, BuildResult: result}
-			return controller.Render(rc, as, page, ps, "projects", prj.Key, actT.Title)
+			return controller.Render(w, r, as, page, ps, "projects", prj.Key, actT.Title)
 		}
 
 		page := &vaction.Result{Ctx: &action.ResultContext{Prj: prj, Cfg: cfg, Res: result}}
-		return controller.Render(rc, as, page, ps, "projects", prj.Key, actT.Title)
+		return controller.Render(w, r, as, page, ps, "projects", prj.Key, actT.Title)
 	})
 }
 
-func loadActionProject(rc *fasthttp.RequestCtx, as *app.State) (util.ValueMap, action.Type, *project.Project, error) {
-	actS, err := cutil.RCRequiredString(rc, "act", false)
+func loadActionProject(r *http.Request, as *app.State) (util.ValueMap, action.Type, *project.Project, error) {
+	actS, err := cutil.RCRequiredString(r, "act", false)
 	if err != nil {
 		return nil, action.TypeTest, nil, err
 	}
 	actT := action.TypeFromString(actS)
-	tgt, err := cutil.RCRequiredString(rc, "key", false)
+	tgt, err := cutil.RCRequiredString(r, "key", false)
 	if err != nil {
 		return nil, actT, nil, err
 	}
 
-	cfg := cutil.QueryArgsMap(rc)
+	cfg := cutil.QueryArgsMap(r)
 	prj, err := as.Services.Projects.Get(tgt)
 	if err != nil {
 		return nil, actT, nil, err

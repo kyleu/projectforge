@@ -1,36 +1,32 @@
 package routes
 
 import (
-	"github.com/fasthttp/router"
-	"github.com/valyala/fasthttp"
+	"net/http"
+
+	"github.com/gorilla/mux"
 
 	"{{{ .Package }}}/app/controller"
 	"{{{ .Package }}}/app/controller/clib"
 	"{{{ .Package }}}/app/controller/cutil"
-	"{{{ .Package }}}/app/lib/telemetry/httpmetrics"
 	"{{{ .Package }}}/app/util"
 )
 
-func SiteRoutes(logger util.Logger) fasthttp.RequestHandler {
-	r := router.New()
+func SiteRoutes(logger util.Logger) (http.Handler, error) {
+	r := mux.NewRouter()
 
-	r.GET("/", controller.Site)
+	makeRoute(r, http.MethodGet, cutil.DefaultProfilePath, clib.ProfileSite)
+	makeRoute(r, http.MethodPost, cutil.DefaultProfilePath, clib.ProfileSave){{{ if .HasAccount }}}
+	makeRoute(r, http.MethodGet, "/auth/{key}", clib.AuthDetail)
+	makeRoute(r, http.MethodGet, "/auth/callback/{key}", clib.AuthCallback)
+	makeRoute(r, http.MethodGet, "/auth/logout/{key}", clib.AuthLogout){{{ end }}}
 
-	r.GET(cutil.DefaultProfilePath, clib.ProfileSite)
-	r.POST(cutil.DefaultProfilePath, clib.ProfileSave){{{ if .HasAccount }}}
-	r.GET("/auth/{key}", clib.AuthDetail)
-	r.GET("/auth/callback/{key}", clib.AuthCallback)
-	r.GET("/auth/logout/{key}", clib.AuthLogout){{{ end }}}
+	makeRoute(r, http.MethodGet, "/favicon.ico", clib.Favicon)
+	makeRoute(r, http.MethodGet, "/assets/{path:.*}", clib.Static)
 
-	r.GET("/favicon.ico", clib.Favicon)
-	r.GET("/assets/{_:*}", clib.Static)
+	makeRoute(r, http.MethodGet, "/", controller.Site)
 
-	r.GET("/{path:*}", controller.Site)
+	makeRoute(r, http.MethodOptions, "/", controller.Options)
+	r.HandleFunc("/", controller.NotFoundAction)
 
-	r.OPTIONS("/", controller.Options)
-	r.OPTIONS("/{_:*}", controller.Options)
-	r.NotFound = controller.NotFoundAction
-
-	p := httpmetrics.NewMetrics("marketing_site", logger)
-	return fasthttp.CompressHandlerLevel(p.WrapHandler(r, false), fasthttp.CompressBestSpeed)
+	return cutil.WireRouter(r, logger)
 }

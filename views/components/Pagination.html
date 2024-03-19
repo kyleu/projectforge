@@ -1,11 +1,11 @@
 <!-- Content managed by Project Forge, see [projectforge.md] for details. -->
 {% import (
-  "github.com/valyala/fasthttp"
+  "net/url"
 
   "projectforge.dev/projectforge/app/lib/filter"
 ) %}
 
-{% func Pagination(count int, params *filter.Params, u *fasthttp.URI) %}{% stripspace %}
+{% func Pagination(count int, params *filter.Params, u *url.URL) %}{% stripspace %}
   {% if params != nil %}
     {% if params.HasNextPage(count) %}
       <div class="right">

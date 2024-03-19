@@ -1,10 +1,10 @@
 <!-- Content managed by Project Forge, see [projectforge.md] for details. -->
 {% import "projectforge.dev/projectforge/app/util" %}
 
-{% func Int(i int) %}{% stripspace %}
-  {%d i %}
+{% func Int(i any) %}{% stripspace %}
+  {%v i %}
 {% endstripspace %}{% endfunc %}
 
-{% func IntArray(value []int) %}{% stripspace %}
+{% func IntArray(value []any) %}{% stripspace %}
   {%= StringArray(util.ArrayToStringArray(value)) %}
 {% endstripspace %}{% endfunc %}

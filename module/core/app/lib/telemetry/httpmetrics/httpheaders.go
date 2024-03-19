@@ -2,10 +2,11 @@ package httpmetrics
 
 import (
 	"context"
+	"net/http"
 
-	"github.com/valyala/fasthttp"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/propagation"
+	"golang.org/x/exp/maps"
 
 	"{{{ .Package }}}/app/util"
 )
@@ -13,11 +14,11 @@ import (
 var _ propagation.TextMapCarrier = (*headerCarrier)(nil)
 
 type headerCarrier struct {
-	h *fasthttp.RequestHeader
+	h http.Header
 }
 
 func (hc headerCarrier) Get(key string) string {
-	return string(hc.h.Peek(key))
+	return hc.h.Get(key)
 }
 
 func (hc headerCarrier) Set(key string, value string) {
@@ -25,13 +26,9 @@ func (hc headerCarrier) Set(key string, value string) {
 }
 
 func (hc headerCarrier) Keys() []string {
-	var keys []string
-	hc.h.VisitAll(func(key []byte, _ []byte) {
-		keys = append(keys, string(key))
-	})
-	return keys
+	return maps.Keys(hc.h)
 }
 
-func ExtractHeaders(rc *fasthttp.RequestCtx, logger util.Logger) (context.Context, util.Logger) {
-	return otel.GetTextMapPropagator().Extract(rc, headerCarrier{h: &rc.Request.Header}), logger
+func ExtractHeaders(r *http.Request, logger util.Logger) (context.Context, util.Logger) {
+	return otel.GetTextMapPropagator().Extract(r.Context(), headerCarrier{h: r.Header}), logger
 }

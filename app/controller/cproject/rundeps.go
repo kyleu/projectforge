@@ -2,10 +2,10 @@ package cproject
 
 import (
 	"fmt"
+	"net/http"
 	"strings"
 
 	"github.com/pkg/errors"
-	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
@@ -24,7 +24,7 @@ func actionParams(tgt string, t action.Type, cfg util.ValueMap, as *app.State, l
 	}
 }
 
-func runDeps(prj *project.Project, res *action.Result, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (string, error) {
+func runDeps(prj *project.Project, res *action.Result, w http.ResponseWriter, r *http.Request, as *app.State, ps *cutil.PageState) (string, error) {
 	if res.HasErrors() {
 		return "", errors.Errorf(strings.Join(res.Errors, ", "))
 	}
@@ -33,10 +33,10 @@ func runDeps(prj *project.Project, res *action.Result, rc *fasthttp.RequestCtx, 
 		return "", errors.Errorf("data is of type [%T], expected [Dependencies]", res.Data)
 	}
 	ps.SetTitleAndData(fmt.Sprintf("[%s] Dependencies", prj.Key), deps)
-	return controller.Render(rc, as, &vbuild.Deps{Project: prj, BuildResult: res, Dependencies: deps}, ps, "projects", prj.Key, "Dependency Management")
+	return controller.Render(w, r, as, &vbuild.Deps{Project: prj, BuildResult: res, Dependencies: deps}, ps, "projects", prj.Key, "Dependency Management")
 }
 
-func runAllDeps(cfg util.ValueMap, prjs project.Projects, tags []string, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (string, error) {
+func runAllDeps(cfg util.ValueMap, prjs project.Projects, tags []string, w http.ResponseWriter, r *http.Request, as *app.State, ps *cutil.PageState) (string, error) {
 	var msg string
 	key := cfg.GetStringOpt("key")
 	if pj := cfg.GetStringOpt("project"); pj != "" {
@@ -62,5 +62,5 @@ func runAllDeps(cfg util.ValueMap, prjs project.Projects, tags []string, rc *fas
 	}
 	ps.SetTitleAndData("Dependency Merge", ret)
 	page := &vbuild.DepMap{Message: msg, Result: ret, Tags: tags}
-	return controller.Render(rc, as, page, ps, "projects", "Dependencies")
+	return controller.Render(w, r, as, page, ps, "projects", "Dependencies")
 }

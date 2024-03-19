@@ -4,11 +4,11 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"runtime"
 
 	"github.com/muesli/coral"
 	"github.com/pkg/errors"
-	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
@@ -35,7 +35,7 @@ func startServer(flags *Flags) error {
 		return err
 	}
 
-	_, err = listenandserve(util.AppName, flags.Address, flags.Port, r)
+	_, err = listenandserve(flags.Address, flags.Port, r)
 	if err != nil {
 		return err
 	}
@@ -48,7 +48,7 @@ func startServer(flags *Flags) error {
 	return nil
 }
 
-func loadServer(flags *Flags, logger util.Logger) (*app.State, fasthttp.RequestHandler, util.Logger, error) {
+func loadServer(flags *Flags, logger util.Logger) (*app.State, http.Handler, util.Logger, error) {
 	st, err := buildDefaultAppState(flags, logger)
 	if err != nil {
 		return nil, nil, logger, err
@@ -56,7 +56,10 @@ func loadServer(flags *Flags, logger util.Logger) (*app.State, fasthttp.RequestH
 	logger.Infof("started %s v%s using address [%s:%d] on %s:%s", util.AppName, _buildInfo.Version, flags.Address, flags.Port, runtime.GOOS, runtime.GOARCH)
 
 	controller.SetAppState(st, logger)
-	r := routes.AppRoutes(st, logger)
+	r, err := routes.AppRoutes(st, logger)
+	if err != nil {
+		return nil, nil, logger, err
+	}
 
 	return st, r, logger, nil
 }

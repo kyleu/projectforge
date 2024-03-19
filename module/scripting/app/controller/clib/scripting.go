@@ -1,10 +1,10 @@
 package clib
 
 import (
+	"net/http"
 	"net/url"
 
 	"github.com/pkg/errors"
-	"github.com/valyala/fasthttp"
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller"
@@ -13,17 +13,17 @@ import (
 	"{{{ .Package }}}/views/vscripting"
 )
 
-func ScriptingList(rc *fasthttp.RequestCtx) {
-	controller.Act("scripting.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func ScriptingList(w http.ResponseWriter, r *http.Request) {
+	controller.Act("scripting.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret, sizes := as.Services.Script.ListScriptSizes(ps.Logger)
 		ps.SetTitleAndData("Scripting", ret)
-		return controller.Render(rc, as, &vscripting.List{Scripts: ret, Sizes: sizes}, ps, "scripting")
+		return controller.Render(w, r, as, &vscripting.List{Scripts: ret, Sizes: sizes}, ps, "scripting")
 	})
 }
 
-func ScriptingDetail(rc *fasthttp.RequestCtx) {
-	controller.Act("scripting.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := cutil.RCRequiredString(rc, "key", true)
+func ScriptingDetail(w http.ResponseWriter, r *http.Request) {
+	controller.Act("scripting.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		key, err := cutil.RCRequiredString(r, "key", true)
 		if err != nil {
 			return "", err
 		}
@@ -42,20 +42,20 @@ func ScriptingDetail(rc *fasthttp.RequestCtx) {
 		ps.Title = key
 		ps.Data = map[string]any{"script": src, "results": res}
 		page := &vscripting.Detail{Path: key, Script: src, LoadResult: loadResult, Results: res}
-		return controller.Render(rc, as, page, ps, "scripting", key)
+		return controller.Render(w, r, as, page, ps, "scripting", key)
 	})
 }
 
-func ScriptingNew(rc *fasthttp.RequestCtx) {
-	controller.Act("scripting.new", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func ScriptingNew(w http.ResponseWriter, r *http.Request) {
+	controller.Act("scripting.new", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ps.Title = "New Script"
-		return controller.Render(rc, as, &vscripting.Form{}, ps, "scripting", "New")
+		return controller.Render(w, r, as, &vscripting.Form{}, ps, "scripting", "New")
 	})
 }
 
-func ScriptingCreate(rc *fasthttp.RequestCtx) {
-	controller.Act("scripting.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		frm, err := cutil.ParseForm(rc)
+func ScriptingCreate(w http.ResponseWriter, r *http.Request) {
+	controller.Act("scripting.create", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		frm, err := cutil.ParseForm(r, ps.RequestBody)
 		if err != nil {
 			return "", err
 		}
@@ -71,13 +71,13 @@ func ScriptingCreate(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, "Scripting created", "/admin/scripting/"+url.QueryEscape(pth), rc, ps)
+		return controller.FlashAndRedir(true, "Scripting created", "/admin/scripting/"+url.QueryEscape(pth), w, ps)
 	})
 }
 
-func ScriptingForm(rc *fasthttp.RequestCtx) {
-	controller.Act("scripting.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := cutil.RCRequiredString(rc, "key", true)
+func ScriptingForm(w http.ResponseWriter, r *http.Request) {
+	controller.Act("scripting.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		key, err := cutil.RCRequiredString(r, "key", true)
 		if err != nil {
 			return "", err
 		}
@@ -86,17 +86,17 @@ func ScriptingForm(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit ["+key+"]", sc)
-		return controller.Render(rc, as, &vscripting.Form{Path: key, Content: sc}, ps, "scripting", key, "Edit")
+		return controller.Render(w, r, as, &vscripting.Form{Path: key, Content: sc}, ps, "scripting", key, "Edit")
 	})
 }
 
-func ScriptingSave(rc *fasthttp.RequestCtx) {
-	controller.Act("scripting.save", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := cutil.RCRequiredString(rc, "key", true)
+func ScriptingSave(w http.ResponseWriter, r *http.Request) {
+	controller.Act("scripting.save", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		key, err := cutil.RCRequiredString(r, "key", true)
 		if err != nil {
 			return "", err
 		}
-		frm, err := cutil.ParseForm(rc)
+		frm, err := cutil.ParseForm(r, ps.RequestBody)
 		if err != nil {
 			return "", err
 		}
@@ -108,13 +108,13 @@ func ScriptingSave(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, "Scripting saved", "/admin/scripting/"+url.QueryEscape(key), rc, ps)
+		return controller.FlashAndRedir(true, "Scripting saved", "/admin/scripting/"+url.QueryEscape(key), w, ps)
 	})
 }
 
-func ScriptingDelete(rc *fasthttp.RequestCtx) {
-	controller.Act("scripting.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := cutil.RCRequiredString(rc, "key", true)
+func ScriptingDelete(w http.ResponseWriter, r *http.Request) {
+	controller.Act("scripting.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		key, err := cutil.RCRequiredString(r, "key", true)
 		if err != nil {
 			return "", err
 		}
@@ -122,6 +122,6 @@ func ScriptingDelete(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, "Script deleted", "/admin/scripting", rc, ps)
+		return controller.FlashAndRedir(true, "Script deleted", "/admin/scripting", w, ps)
 	})
 }

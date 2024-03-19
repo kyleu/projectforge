@@ -1,8 +1,9 @@
 package clib
 
 import (
+	"net/http"
+
 	"github.com/pkg/errors"
-	"github.com/valyala/fasthttp"
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller"
@@ -15,23 +16,23 @@ import (
 
 const themeIcon = "gift"
 
-func ThemeList(rc *fasthttp.RequestCtx) {
-	controller.Act("theme.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func ThemeList(w http.ResponseWriter, r *http.Request) {
+	controller.Act("theme.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		th := as.Themes.All(ps.Logger)
 		ps.SetTitleAndData("Themes", th)
 		ps.DefaultNavIcon = themeIcon
-		return controller.Render(rc, as, &vtheme.List{Themes: th}, ps, "Themes||/theme")
+		return controller.Render(w, r, as, &vtheme.List{Themes: th}, ps, "Themes||/theme")
 	})
 }
 
-func ThemeEdit(rc *fasthttp.RequestCtx) {
-	controller.Act("theme.edit", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := cutil.RCRequiredString(rc, "key", false)
+func ThemeEdit(w http.ResponseWriter, r *http.Request) {
+	controller.Act("theme.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		key, err := cutil.RCRequiredString(r, "key", false)
 		if err != nil {
 			return "", err
 		}
 		if key == theme.Default.Key {
-			return controller.FlashAndRedir(false, "Unable to edit default theme", "/theme", rc, ps)
+			return controller.FlashAndRedir(false, "Unable to edit default theme", "/theme", w, ps)
 		}
 		var t *theme.Theme
 		if key == theme.KeyNew {
@@ -39,7 +40,7 @@ func ThemeEdit(rc *fasthttp.RequestCtx) {
 		} else {
 			t = as.Themes.Get(key, ps.Logger){{{ if .HasModule "themecatalog" }}}
 			if t == nil {
-				if pal := string(rc.URI().QueryArgs().Peek("palette")); pal != "" {
+				if pal := r.URL.Query().Get("palette"); pal != "" {
 					themes, err := theme.PaletteThemes(pal)
 					if err != nil {
 						return "", err
@@ -54,17 +55,17 @@ func ThemeEdit(rc *fasthttp.RequestCtx) {
 		ps.SetTitleAndData("Edit theme ["+t.Key+"]", t)
 		ps.DefaultNavIcon = themeIcon
 		page := &vtheme.Edit{Theme: t, Icon: "app", Exists: as.Themes.FileExists(t.Key)}
-		return controller.Render(rc, as, page, ps, "Themes||/theme", t.Key)
+		return controller.Render(w, r, as, page, ps, "Themes||/theme", t.Key)
 	})
 }
 
-func ThemeSave(rc *fasthttp.RequestCtx) {
-	controller.Act("theme.save", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := cutil.RCRequiredString(rc, "key", false)
+func ThemeSave(w http.ResponseWriter, r *http.Request) {
+	controller.Act("theme.save", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		key, err := cutil.RCRequiredString(r, "key", false)
 		if err != nil {
 			return "", err
 		}
-		frm, err := cutil.ParseForm(rc)
+		frm, err := cutil.ParseForm(r, ps.RequestBody)
 		if err != nil {
 			return "", err
 		}
@@ -90,18 +91,18 @@ func ThemeSave(rc *fasthttp.RequestCtx) {
 		}
 
 		ps.Profile.Theme = newKey
-		err = csession.SaveProfile(ps.Profile, rc, ps.Session, ps.Logger)
+		err = csession.SaveProfile(ps.Profile, w, ps.Session, ps.Logger)
 		if err != nil {
 			return "", err
 		}
 
-		return controller.ReturnToReferrer("saved changes to theme ["+newKey+"]", "/theme", rc, ps)
+		return controller.ReturnToReferrer("saved changes to theme ["+newKey+"]", "/theme", w, ps)
 	})
 }
 
-func ThemeRemove(rc *fasthttp.RequestCtx) {
-	controller.Act("theme.remove", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := cutil.RCRequiredString(rc, "key", false)
+func ThemeRemove(w http.ResponseWriter, r *http.Request) {
+	controller.Act("theme.remove", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		key, err := cutil.RCRequiredString(r, "key", false)
 		if err != nil {
 			return "", err
 		}
@@ -109,6 +110,6 @@ func ThemeRemove(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to remove theme")
 		}
-		return controller.ReturnToReferrer("removed theme ["+key+"]", "/theme", rc, ps)
+		return controller.ReturnToReferrer("removed theme ["+key+"]", "/theme", w, ps)
 	})
 }

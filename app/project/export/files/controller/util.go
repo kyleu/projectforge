@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	incDel   = "cutil.QueryStringBool(rc, \"includeDeleted\")"
+	incDel   = "cutil.QueryStringBool(r, \"includeDeleted\")"
 	incFalse = ", false"
 )
 
@@ -29,7 +29,7 @@ func checkGrp(ret *golang.Block, grp *model.Column, override ...string) {
 
 func controllerModelFromPath(m *model.Model) *golang.Block {
 	ret := golang.NewBlock(m.Proper()+"FromPath", "func")
-	ret.W("func %sFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*%s, error) {", m.Package, m.ClassRef())
+	ret.W("func %sFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*%s, error) {", m.Package, m.ClassRef())
 	pks := m.PKs()
 	lo.ForEach(pks, func(col *model.Column, _ int) {
 		controllerArgFor(col, ret, "nil", 1)
@@ -40,7 +40,7 @@ func controllerModelFromPath(m *model.Model) *golang.Block {
 	suffix := ""
 	if m.IsSoftDelete() {
 		suffix = ", includeDeleted"
-		ret.W("\tincludeDeleted := rc.UserValue(\"includeDeleted\") != nil || " + incDel)
+		ret.W("\tincludeDeleted := " + incDel)
 	}
 	ret.W("\treturn as.Services.%s.Get(ps.Context, nil, %s%s, ps.Logger)", m.Proper(), strings.Join(args, ", "), suffix)
 	ret.W("}")

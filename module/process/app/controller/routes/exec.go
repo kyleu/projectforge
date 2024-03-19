@@ -1,16 +1,18 @@
 package routes
 
 import (
-	"github.com/fasthttp/router"
+	"net/http"
+
+	"github.com/gorilla/mux"
 
 	"{{{ .Package }}}/app/controller/clib"
 )
 
-func execRoutes(r *router.Router) {
-	r.GET("/admin/exec", clib.ExecList)
-	r.GET("/admin/exec/new", clib.ExecForm)
-	r.POST("/admin/exec/new", clib.ExecNew)
-	r.GET("/admin/exec/{key}/{idx}", clib.ExecDetail){{{ if .HasModule "websocket" }}}
-	r.GET("/admin/exec/{key}/{idx}/connect", clib.ExecSocket){{{ end }}}
-	r.GET("/admin/exec/{key}/{idx}/kill", clib.ExecKill)
+func execRoutes(r *mux.Router) {
+	makeRoute(r, http.MethodGet, "/admin/exec", clib.ExecList)
+	makeRoute(r, http.MethodGet, "/admin/exec/new", clib.ExecForm)
+	makeRoute(r, http.MethodPost, "/admin/exec/new", clib.ExecNew)
+	makeRoute(r, http.MethodGet, "/admin/exec/{key}/{idx}", clib.ExecDetail){{{ if .HasModule "websocket" }}}
+	makeRoute(r, http.MethodGet, "/admin/exec/{key}/{idx}/connect", clib.ExecSocket){{{ end }}}
+	makeRoute(r, http.MethodGet, "/admin/exec/{key}/{idx}/kill", clib.ExecKill)
 }

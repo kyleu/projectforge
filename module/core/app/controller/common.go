@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/valyala/fasthttp"
+	"net/http"
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller/cutil"{{{ if .HasAccount }}}
@@ -10,40 +10,39 @@ import (
 	"{{{ .Package }}}/views/verror"
 )
 
-func Options(rc *fasthttp.RequestCtx) {
-	cutil.WriteCORS(rc)
-	rc.SetStatusCode(fasthttp.StatusOK)
+func Options(w http.ResponseWriter, r *http.Request) {
+	cutil.WriteCORS(w)
+	w.WriteHeader(http.StatusOK)
 }
 
-func NotFoundAction(rc *fasthttp.RequestCtx) {
-	Act("notfound", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		return NotFoundResponse(rc)(as, ps)
+func NotFoundAction(w http.ResponseWriter, r *http.Request) {
+	Act("notfound", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		return NotFoundResponse(w, r)(as, ps)
 	})
 }
 
-func NotFoundResponse(rc *fasthttp.RequestCtx) func(as *app.State, ps *cutil.PageState) (string, error) {
+func NotFoundResponse(w http.ResponseWriter, r *http.Request) func(as *app.State, ps *cutil.PageState) (string, error) {
 	return func(as *app.State, ps *cutil.PageState) (string, error) {
-		cutil.WriteCORS(rc)
-		rc.SetStatusCode(fasthttp.StatusNotFound)
-		path := string(rc.Request.URI().Path())
-		ps.Logger.Warnf("%s %s returned [%d]", string(rc.Method()), path, fasthttp.StatusNotFound)
+		cutil.WriteCORS(w)
+		w.WriteHeader(http.StatusNotFound)
+		ps.Logger.Warnf("%s %s returned [%d]", r.Method, r.URL.Path, http.StatusNotFound)
 		if ps.Title == "" {
 			ps.Title = "Page not found"
 		}
-		ps.Data = util.ValueMap{"status": "notfound", "statusCode": fasthttp.StatusNotFound, "message": ps.Title}
-		bc := util.StringSplitAndTrim(string(rc.URI().Path()), "/")
+		ps.Data = util.ValueMap{"status": "notfound", "statusCode": http.StatusNotFound, "message": ps.Title}
+		bc := util.StringSplitAndTrim(r.URL.Path, "/")
 		bc = append(bc, "Not Found")
-		return Render(rc, as, &verror.NotFound{Path: path}, ps, bc...)
+		return Render(w, r, as, &verror.NotFound{Path: r.URL.Path}, ps, bc...)
 	}
 }
 
-func Unauthorized(rc *fasthttp.RequestCtx, reason string{{{ if .HasAccount }}}, accounts user.Accounts{{{ end }}}) func(as *app.State, ps *cutil.PageState) (string, error) {
+func Unauthorized(w http.ResponseWriter, r *http.Request, reason string{{{ if .HasAccount }}}, accounts user.Accounts{{{ end }}}) func(as *app.State, ps *cutil.PageState) (string, error) {
 	return func(as *app.State, ps *cutil.PageState) (string, error) {
-		cutil.WriteCORS(rc)
-		rc.SetStatusCode(fasthttp.StatusUnauthorized)
-		path := string(rc.Request.URI().Path())
-		ps.Logger.Warnf("%s %s returned [%d]", string(rc.Method()), path, fasthttp.StatusNotFound)
-		bc := util.StringSplitAndTrim(string(rc.URI().Path()), "/")
+		cutil.WriteCORS(w)
+		w.WriteHeader(http.StatusUnauthorized)
+		path := r.URL.Path
+		ps.Logger.Warnf("%s %s returned [%d]", r.Method, path, http.StatusUnauthorized)
+		bc := util.StringSplitAndTrim(r.URL.Path, "/")
 		bc = append(bc, "Unauthorized")
 		if ps.Title == "" {
 			ps.Title = "Unauthorized"
@@ -55,7 +54,7 @@ func Unauthorized(rc *fasthttp.RequestCtx, reason string{{{ if .HasAccount }}}, 
 				reason = "no access"
 			}{{{ else }}}reason = "no access"{{{ end }}}
 		}
-		ps.Data = util.ValueMap{"status": "unauthorized", "statusCode": fasthttp.StatusUnauthorized, "message": reason}
-		return Render(rc, as, &verror.Unauthorized{Path: path, Message: reason{{{ if .HasAccount }}}, Accounts: accounts{{{ end }}}}, ps, bc...)
+		ps.Data = util.ValueMap{"status": "unauthorized", "statusCode": http.StatusUnauthorized, "message": reason}
+		return Render(w, r, as, &verror.Unauthorized{Path: path, Message: reason{{{ if .HasAccount }}}, Accounts: accounts{{{ end }}}}, ps, bc...)
 	}
 }

@@ -2,13 +2,13 @@
 package clib
 
 import (
-	"github.com/valyala/fasthttp"
+	"net/http"
 
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func Healthcheck(rc *fasthttp.RequestCtx) {
+func Healthcheck(w http.ResponseWriter, r *http.Request) {
 	x := util.ValueMap{"status": "OK"}
-	_, _ = cutil.RespondJSON(rc, "", x)
+	_, _ = cutil.RespondJSON(w, "", x)
 }

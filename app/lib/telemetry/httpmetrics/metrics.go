@@ -2,10 +2,10 @@
 package httpmetrics
 
 import (
+	"net/http"
 	"sync"
 
 	"github.com/prometheus/client_golang/prometheus"
-	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/util"
@@ -37,20 +37,20 @@ func NewMetrics(key string, logger util.Logger) *Metrics {
 	return m
 }
 
-func InjectHTTP(rc *fasthttp.RequestCtx, span *telemetry.Span) {
+func InjectHTTP(statusCode int, r *http.Request, span *telemetry.Span) {
 	span.Attributes(
-		&telemetry.Attribute{Key: "http.host", Value: string(rc.Request.Host())},
-		&telemetry.Attribute{Key: "http.method", Value: string(rc.Method())},
-		&telemetry.Attribute{Key: "http.url", Value: string(rc.Request.RequestURI())},
-		&telemetry.Attribute{Key: "http.scheme", Value: string(rc.Request.URI().Scheme())},
+		&telemetry.Attribute{Key: "http.host", Value: r.Host},
+		&telemetry.Attribute{Key: "http.method", Value: r.Method},
+		&telemetry.Attribute{Key: "http.url", Value: r.URL.String()},
+		&telemetry.Attribute{Key: "http.scheme", Value: r.URL.Scheme},
 	)
-	if b := rc.Request.Header.Peek("User-Agent"); len(b) > 0 {
-		span.Attribute("http.user_agent", string(b))
+	if s := r.Header.Get("User-Agent"); s != "" {
+		span.Attribute("http.user_agent", s)
 	}
-	if b := rc.Request.Header.Peek("Content-Length"); len(b) > 0 {
-		span.Attribute("http.request_content_length", string(b))
+	if s := r.Header.Get("Content-Length"); s != "" {
+		span.Attribute("http.request_content_length", s)
 	}
-	span.SetHTTPStatus(rc.Response.StatusCode())
+	span.SetHTTPStatus(statusCode)
 }
 
 func registerHTTPMetrics(logger util.Logger) {

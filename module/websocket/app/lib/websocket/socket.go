@@ -6,8 +6,8 @@ import (
 	"slices"
 	"sync/atomic"
 
-	"github.com/fasthttp/websocket"
 	"github.com/google/uuid"
+	"github.com/gorilla/websocket"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
 

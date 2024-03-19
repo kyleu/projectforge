@@ -2,11 +2,11 @@ package cproject
 
 import (
 	"fmt"
+	"net/http"
 	"strings"
 	"sync"
 
 	"github.com/pkg/errors"
-	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
@@ -18,7 +18,7 @@ import (
 	"projectforge.dev/projectforge/views/vbuild"
 )
 
-func runPkgs(prj *project.Project, res *action.Result, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (string, error) {
+func runPkgs(prj *project.Project, res *action.Result, w http.ResponseWriter, r *http.Request, as *app.State, ps *cutil.PageState) (string, error) {
 	if res.HasErrors() {
 		return "", errors.Errorf(strings.Join(res.Errors, ", "))
 	}
@@ -27,10 +27,10 @@ func runPkgs(prj *project.Project, res *action.Result, rc *fasthttp.RequestCtx, 
 		return "", errors.Errorf("data is of type [%T], expected [Pkgs]", res.Data)
 	}
 	ps.SetTitleAndData(fmt.Sprintf("[%s] Packages", prj.Key), pkgs)
-	return controller.Render(rc, as, &vbuild.Packages{Project: prj, BuildResult: res, Packages: pkgs}, ps, "projects", prj.Key, "Packages")
+	return controller.Render(w, r, as, &vbuild.Packages{Project: prj, BuildResult: res, Packages: pkgs}, ps, "projects", prj.Key, "Packages")
 }
 
-func runAllPkgs(cfg util.ValueMap, prjs project.Projects, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (string, error) {
+func runAllPkgs(cfg util.ValueMap, prjs project.Projects, w http.ResponseWriter, r *http.Request, as *app.State, ps *cutil.PageState) (string, error) {
 	mu := sync.Mutex{}
 	ret := map[string]*action.Result{}
 	pkgs := map[string]build.Pkgs{}
@@ -50,5 +50,5 @@ func runAllPkgs(cfg util.ValueMap, prjs project.Projects, rc *fasthttp.RequestCt
 
 	ps.SetTitleAndData("Packages", pkgs)
 	page := &vbuild.PackagesAll{Projects: prjs, Results: ret, Packages: pkgs}
-	return controller.Render(rc, as, page, ps, "projects", "Packages")
+	return controller.Render(w, r, as, page, ps, "projects", "Packages")
 }

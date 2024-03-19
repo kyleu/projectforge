@@ -2,8 +2,7 @@ package cproject
 
 import (
 	"fmt"
-
-	"github.com/valyala/fasthttp"
+	"net/http"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
@@ -13,9 +12,9 @@ import (
 	"projectforge.dev/projectforge/views/vexport"
 )
 
-func ProjectExportGroupsEdit(rc *fasthttp.RequestCtx) {
-	controller.Act("project.export.groups.edit", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(rc, as)
+func ProjectExportGroupsEdit(w http.ResponseWriter, r *http.Request) {
+	controller.Act("project.export.groups.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, err := getProject(r, as)
 		if err != nil {
 			return "", err
 		}
@@ -27,17 +26,17 @@ func ProjectExportGroupsEdit(rc *fasthttp.RequestCtx) {
 		bc := []string{"projects", prj.Key, fmt.Sprintf("Export||/p/%s/export", prj.Key), "Groups"}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] Groups", prj.Key), args.Groups)
 		ex := model.Groups{{Key: "foo", Title: "Foo", Description: "The foos!", Icon: "star", Children: model.Groups{{Key: "bar"}}}}
-		return controller.Render(rc, as, &vexport.GroupForm{Project: prj, Groups: args.Groups, Example: ex}, ps, bc...)
+		return controller.Render(w, r, as, &vexport.GroupForm{Project: prj, Groups: args.Groups, Example: ex}, ps, bc...)
 	})
 }
 
-func ProjectExportGroupsSave(rc *fasthttp.RequestCtx) {
-	controller.Act("project.export.groups.save", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(rc, as)
+func ProjectExportGroupsSave(w http.ResponseWriter, r *http.Request) {
+	controller.Act("project.export.groups.save", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, err := getProject(r, as)
 		if err != nil {
 			return "", err
 		}
-		frm, err := cutil.ParseForm(rc)
+		frm, err := cutil.ParseForm(r, ps.RequestBody)
 		if err != nil {
 			return "", err
 		}
@@ -59,6 +58,6 @@ func ProjectExportGroupsSave(rc *fasthttp.RequestCtx) {
 
 		msg := "groups saved successfully"
 		u := fmt.Sprintf("/p/%s/export", prj.Key)
-		return controller.FlashAndRedir(true, msg, u, rc, ps)
+		return controller.FlashAndRedir(true, msg, u, w, ps)
 	})
 }

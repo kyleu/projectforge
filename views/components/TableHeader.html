@@ -1,12 +1,12 @@
 <!-- Content managed by Project Forge, see [projectforge.md] for details. -->
 {% import (
-  "github.com/valyala/fasthttp"
+  "net/url"
 
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/lib/filter"
 ) %}
 
-{% func TableHeader(section string, key string, title string, params *filter.Params, icon string, u *fasthttp.URI, tooltip string, sortable bool, cls string, resizable bool, ps *cutil.PageState) %}{% stripspace %}
+{% func TableHeader(section string, key string, title string, params *filter.Params, icon string, u *url.URL, tooltip string, sortable bool, cls string, resizable bool, ps *cutil.PageState) %}{% stripspace %}
   <th class="{% if cls != `` %}{%s cls %}{% space %}{% endif %}no-padding" scope="col">
     <div class="{% if resizable %}resize{% else %}noresize{% endif %}">
       {% if !sortable %}
@@ -31,11 +31,11 @@
   </th>
 {% endstripspace %}{% endfunc %}
 
-{% func TableHeaderSimple(section string, key string, title string, tooltip string, params *filter.Params, u *fasthttp.URI, ps *cutil.PageState) %}{% stripspace %}
+{% func TableHeaderSimple(section string, key string, title string, tooltip string, params *filter.Params, u *url.URL, ps *cutil.PageState) %}{% stripspace %}
   {%= TableHeader(section, key, title, params, "", u, tooltip, u != nil, "", false, ps) %}
 {% endstripspace %}{% endfunc %}
 
-{% func thNormal(section string, key string, title string, params *filter.Params, icon string, u *fasthttp.URI, tooltip string, ps *cutil.PageState) %}{% stripspace %}
+{% func thNormal(section string, key string, title string, params *filter.Params, icon string, u *url.URL, tooltip string, ps *cutil.PageState) %}{% stripspace %}
   <a class="sort-hover" href="?{%s= params.CloneOrdering(&filter.Ordering{Column: key, Asc: true}).ToQueryString(u) %}" title="{%s tooltip %}">
     <div class="sort-icon" title="click to sort by this column, ascending">{%= SVGRef(`down`, 0, 0, ``, ps) %}</div>
     <div class="sort-title">
@@ -48,7 +48,7 @@
   </a>
 {% endstripspace %}{% endfunc %}
 
-{% func thSorted(asc bool, section string, key string, title string, params *filter.Params, icon string, u *fasthttp.URI, tooltip string, ps *cutil.PageState) %}{% stripspace %}
+{% func thSorted(asc bool, section string, key string, title string, params *filter.Params, icon string, u *url.URL, tooltip string, ps *cutil.PageState) %}{% stripspace %}
   {% code
     ascStr := "ascending"
     dirStr := "up"

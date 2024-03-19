@@ -2,10 +2,10 @@ package cproject
 
 import (
 	"fmt"
+	"net/http"
 	"strconv"
 
 	"github.com/pkg/errors"
-	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
@@ -31,10 +31,10 @@ var (
 	gitMagicArgs   = cutil.Args{messageArg, dryRunArg}
 )
 
-func GitAction(rc *fasthttp.RequestCtx) {
-	a, _ := cutil.RCRequiredString(rc, "act", false)
-	controller.Act("git.action."+a, rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := cutil.RCRequiredString(rc, "key", false)
+func GitAction(w http.ResponseWriter, r *http.Request) {
+	a, _ := cutil.RCRequiredString(r, "act", false)
+	controller.Act("git.action."+a, w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		key, err := cutil.RCRequiredString(r, "key", false)
 		if err != nil {
 			return "", err
 		}
@@ -53,11 +53,11 @@ func GitAction(rc *fasthttp.RequestCtx) {
 		case git.ActionFetch.Key:
 			result, err = as.Services.Git.Fetch(ps.Context, prj, ps.Logger)
 		case git.ActionCommit.Key:
-			argRes := cutil.CollectArgs(rc, gitCommitArgs)
+			argRes := cutil.CollectArgs(r, gitCommitArgs)
 			if argRes.HasMissing() {
 				ps.Data = argRes
 				url := fmt.Sprintf("/git/%s/commit", prj.Key)
-				return controller.Render(rc, as, &vpage.Args{URL: url, Directions: "Enter your commit message", ArgRes: argRes}, ps, bc...)
+				return controller.Render(w, r, as, &vpage.Args{URL: url, Directions: "Enter your commit message", ArgRes: argRes}, ps, bc...)
 			}
 			result, err = as.Services.Git.Commit(ps.Context, prj, argRes.Values.GetStringOpt("message"), ps.Logger)
 		case git.ActionUndoCommit.Key:
@@ -69,33 +69,33 @@ func GitAction(rc *fasthttp.RequestCtx) {
 		case git.ActionOutdated.Key:
 			result, err = as.Services.Git.Outdated(ps.Context, prj, ps.Logger)
 		case git.ActionHistory.Key:
-			argRes := cutil.CollectArgs(rc, gitHistoryArgs)
+			argRes := cutil.CollectArgs(r, gitHistoryArgs)
 			if argRes.HasMissing() {
 				ps.Data = argRes
 				url := fmt.Sprintf("/git/%s/history", prj.Key)
-				return controller.Render(rc, as, &vpage.Args{URL: url, Directions: "Choose your options", ArgRes: argRes}, ps, bc...)
+				return controller.Render(w, r, as, &vpage.Args{URL: url, Directions: "Choose your options", ArgRes: argRes}, ps, bc...)
 			}
 			path := argRes.Values.GetStringOpt("paths")
 			since, _ := util.TimeFromString(argRes.Values.GetStringOpt("since"))
 			authors := util.StringSplitAndTrim(argRes.Values.GetStringOpt("authors"), ",")
-			commit := string(rc.URI().QueryArgs().Peek("commit"))
+			commit := r.URL.Query().Get("commit")
 			limit, _ := strconv.ParseInt(argRes.Values.GetStringOpt("limit"), 10, 32)
 			hist := &git.HistoryResult{Path: path, Since: since, Authors: authors, Commit: commit, Limit: int(limit)}
 			result, err = as.Services.Git.History(ps.Context, prj, hist, ps.Logger)
 		case git.ActionBranch.Key:
-			argRes := cutil.CollectArgs(rc, gitBranchArgs)
+			argRes := cutil.CollectArgs(r, gitBranchArgs)
 			if argRes.HasMissing() {
 				url := fmt.Sprintf("/git/%s/branch", prj.Key)
 				ps.Data = argRes
-				return controller.Render(rc, as, &vpage.Args{URL: url, Directions: "Enter your branch name", ArgRes: argRes}, ps, bc...)
+				return controller.Render(w, r, as, &vpage.Args{URL: url, Directions: "Enter your branch name", ArgRes: argRes}, ps, bc...)
 			}
 			result, err = as.Services.Git.Commit(ps.Context, prj, argRes.Values.GetStringOpt("message"), ps.Logger)
 		case git.ActionMagic.Key:
-			argRes := cutil.CollectArgs(rc, gitMagicArgs)
+			argRes := cutil.CollectArgs(r, gitMagicArgs)
 			if argRes.HasMissing() {
 				url := fmt.Sprintf("/git/%s/magic", prj.Key)
 				ps.Data = argRes
-				return controller.Render(rc, as, &vpage.Args{URL: url, Directions: "Enter your commit message", ArgRes: argRes}, ps, bc...)
+				return controller.Render(w, r, as, &vpage.Args{URL: url, Directions: "Enter your commit message", ArgRes: argRes}, ps, bc...)
 			}
 			dryRun := argRes.Values.GetStringOpt("dryRun") == util.BoolTrue
 			result, err = as.Services.Git.Magic(ps.Context, prj, argRes.Values.GetStringOpt("message"), dryRun, ps.Logger)
@@ -116,6 +116,6 @@ func GitAction(rc *fasthttp.RequestCtx) {
 			result.Data = result.Data.Merge(statusResult.Data)
 		}
 		ps.Data = result
-		return controller.Render(rc, as, &vgit.Result{Action: actn, Result: result}, ps, bc...)
+		return controller.Render(w, r, as, &vgit.Result{Action: actn, Result: result}, ps, bc...)
 	})
 }

@@ -1,17 +1,19 @@
 package routes
 
 import (
-	"github.com/fasthttp/router"
+	"net/http"
+
+	"github.com/gorilla/mux"
 
 	"{{{ .Package }}}/app/controller/clib"
 )
 
-func notebookRoutes(r *router.Router) {
-	r.GET("/notebook", clib.Notebook)
-	r.GET("/notebook/view/{path:*}", clib.Notebook)
-	r.GET("/notebook/files", clib.NotebookFiles)
-	r.GET("/notebook/files/{path:*}", clib.NotebookFiles)
-	r.GET("/notebook/edit/{path:*}", clib.NotebookFileEdit)
-	r.POST("/notebook/edit/{path:*}", clib.NotebookFileSave)
-	r.GET("/notebook/action/{act}", clib.NotebookAction)
+func notebookRoutes(r *mux.Router) {
+	makeRoute(r, http.MethodGet, "/notebook", clib.Notebook)
+	makeRoute(r, http.MethodGet, "/notebook/view/{path:.*}", clib.Notebook)
+	makeRoute(r, http.MethodGet, "/notebook/files", clib.NotebookFiles)
+	makeRoute(r, http.MethodGet, "/notebook/files/{path:.*}", clib.NotebookFiles)
+	makeRoute(r, http.MethodGet, "/notebook/edit/{path:.*}", clib.NotebookFileEdit)
+	makeRoute(r, http.MethodPost, "/notebook/edit/{path:.*}", clib.NotebookFileSave)
+	makeRoute(r, http.MethodGet, "/notebook/action/{act}", clib.NotebookAction)
 }

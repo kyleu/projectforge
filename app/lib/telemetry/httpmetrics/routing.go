@@ -2,79 +2,48 @@
 package httpmetrics
 
 import (
-	"strconv"
-	"sync"
+	"net/http"
 	"time"
 
-	"github.com/fasthttp/router"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"github.com/valyala/fasthttp"
-	"github.com/valyala/fasthttp/fasthttpadaptor"
+	"github.com/gorilla/mux"
 
 	"projectforge.dev/projectforge/app/util"
 )
 
-var (
-	defaultMetricPath  = "/metrics"
-	requestHandlerPool sync.Pool
-)
+var defaultMetricPath = "/metrics"
 
-func prometheusHandler() fasthttp.RequestHandler {
-	return fasthttpadaptor.NewFastHTTPHandler(promhttp.Handler())
-}
-
-func (p *Metrics) WrapHandler(r *router.Router, includeMetrics bool) fasthttp.RequestHandler {
-	if includeMetrics {
-		r.GET(p.MetricsPath, prometheusHandler())
-	}
-	return func(rc *fasthttp.RequestCtx) {
-		if includeMetrics && string(rc.Request.URI().Path()) == defaultMetricPath {
-			r.Handler(rc)
-			return
-		}
+func (p *Metrics) WrapHandler(mux *mux.Router) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
 		reqBytes := make(chan int)
-		frc := acquireRequestFromPool()
-		rc.Request.CopyTo(frc)
-		go computeApproximateRequestSize(frc, reqBytes)
+		go computeApproximateRequestSize(r, reqBytes)
 
 		start := util.TimeCurrent()
-		r.Handler(rc)
-
-		status := strconv.Itoa(rc.Response.StatusCode())
+		mux.ServeHTTP(w, r)
 		elapsed := float64(time.Since(start)) / float64(time.Second)
-		rspBytes := float64(len(rc.Response.Body()))
+		// status := strconv.Itoa(rc.Response.StatusCode())
+		status := "200"
+		// rspBytes := float64(len(rc.Response.Body()))
+		rspBytes := 100.0
 
 		reqDur.WithLabelValues(p.Key, status).Observe(elapsed)
-		reqCnt.WithLabelValues(p.Key, status, string(rc.Method())).Inc()
+		reqCnt.WithLabelValues(p.Key, status, r.Method).Inc()
 		reqSize.Observe(float64(<-reqBytes))
 		rspSize.Observe(rspBytes)
 	}
 }
 
-func computeApproximateRequestSize(rc *fasthttp.Request, out chan int) {
+func computeApproximateRequestSize(r *http.Request, out chan int) {
 	s := 0
-	if rc.URI() != nil {
-		s += len(rc.URI().Path())
-		s += len(rc.URI().Host())
+	if r.URL != nil {
+		s += len(r.URL.Path)
+		s += len(r.URL.Host)
 	}
-	s += len(rc.Header.Method())
+	s += len(r.Method)
 	s += len("HTTP/1.1")
-	rc.Header.VisitAll(func(key []byte, value []byte) {
-		if string(key) != "Host" {
-			s += len(key) + len(value)
+	for k, v := range r.Header {
+		if k != "Host" {
+			s += len(k) + len(v)
 		}
-	})
-	if rc.Header.ContentLength() != -1 {
-		s += rc.Header.ContentLength()
 	}
 	out <- s
-}
-
-func acquireRequestFromPool() *fasthttp.Request {
-	rp := requestHandlerPool.Get()
-	if rp == nil {
-		return &fasthttp.Request{}
-	}
-	frc, _ := rp.(*fasthttp.Request)
-	return frc
 }

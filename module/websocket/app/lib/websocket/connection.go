@@ -5,8 +5,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/fasthttp/websocket"
 	"github.com/google/uuid"
+	"github.com/gorilla/websocket"
 	"github.com/pkg/errors"
 
 	"{{{ .Package }}}/app/lib/user"{{{ if .HasUser }}}

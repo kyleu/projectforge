@@ -2,8 +2,7 @@ package clib
 
 import (
 	"fmt"
-
-	"github.com/valyala/fasthttp"
+	"net/http"
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller"
@@ -14,9 +13,9 @@ import (
 
 const searchKey = "search"
 
-func Search(rc *fasthttp.RequestCtx) {
-	controller.Act(searchKey, rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		q := string(rc.URI().QueryArgs().Peek("q"))
+func Search(w http.ResponseWriter, r *http.Request) {
+	controller.Act(searchKey, w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		q := r.URL.Query().Get("q")
 		params := &search.Params{Q: q, PS: ps.Params}
 		results, errs := search.Search(ps.Context, params, as, ps)
 		ps.SetTitleAndData("Search Results", results)
@@ -24,13 +23,13 @@ func Search(rc *fasthttp.RequestCtx) {
 			ps.Title = fmt.Sprintf("[%s] %s", q, ps.Title)
 		}
 		if len(results) == 1 && results[0].URL != "" {
-			return controller.FlashAndRedir(true, "single search result found", results[0].URL, rc, ps)
+			return controller.FlashAndRedir(true, "single search result found", results[0].URL, w, ps)
 		}
 		ps.DefaultNavIcon = searchKey
 		bc := []string{"Search||/search"}
 		if q != "" {
 			bc = append(bc, q)
 		}
-		return controller.Render(rc, as, &vsearch.Results{Params: params, Results: results, Errors: errs}, ps, bc...)
+		return controller.Render(w, r, as, &vsearch.Results{Params: params, Results: results, Errors: errs}, ps, bc...)
 	})
 }

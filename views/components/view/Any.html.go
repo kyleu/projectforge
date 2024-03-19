@@ -78,11 +78,11 @@ func StreamAny(qw422016 *qt422016.Writer, x any, t *types.Wrapped) {
 //line views/components/view/Any.html:29
 	case types.KeyFloat:
 //line views/components/view/Any.html:30
-		StreamFloat(qw422016, x.(float64))
+		StreamFloat(qw422016, x)
 //line views/components/view/Any.html:31
 	case types.KeyInt:
 //line views/components/view/Any.html:32
-		StreamInt(qw422016, x.(int))
+		StreamInt(qw422016, x)
 //line views/components/view/Any.html:33
 	case types.KeyJSON:
 //line views/components/view/Any.html:34

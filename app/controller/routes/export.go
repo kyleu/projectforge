@@ -1,34 +1,36 @@
 package routes
 
 import (
-	"github.com/fasthttp/router"
+	"net/http"
+
+	"github.com/gorilla/mux"
 
 	"projectforge.dev/projectforge/app/controller/cproject"
 )
 
-func exportRoutes(r *router.Router) {
-	r.GET("/p/{key}/export", cproject.ProjectExportOverview)
+func exportRoutes(r *mux.Router) {
+	makeRoute(r, http.MethodGet, "/p/{key}/export", cproject.ProjectExportOverview)
 
-	r.GET("/p/{key}/export/config", cproject.ProjectExportConfigForm)
-	r.POST("/p/{key}/export/config", cproject.ProjectExportConfigSave)
+	makeRoute(r, http.MethodGet, "/p/{key}/export/config", cproject.ProjectExportConfigForm)
+	makeRoute(r, http.MethodPost, "/p/{key}/export/config", cproject.ProjectExportConfigSave)
 
-	r.GET("/p/{key}/export/groups", cproject.ProjectExportGroupsEdit)
-	r.POST("/p/{key}/export/groups", cproject.ProjectExportGroupsSave)
+	makeRoute(r, http.MethodGet, "/p/{key}/export/groups", cproject.ProjectExportGroupsEdit)
+	makeRoute(r, http.MethodPost, "/p/{key}/export/groups", cproject.ProjectExportGroupsSave)
 
-	r.GET("/p/{key}/export/models/create/new", cproject.ProjectExportModelNew)
-	r.POST("/p/{key}/export/models/create/new", cproject.ProjectExportModelCreate)
-	r.GET("/p/{key}/export/models/create/derive", cproject.ProjectExportDeriveForm)
-	r.POST("/p/{key}/export/models/create/derive", cproject.ProjectExportDerive)
-	r.GET("/p/{key}/export/models/{model}", cproject.ProjectExportModelDetail)
-	r.GET("/p/{key}/export/models/{model}/seeddata", cproject.ProjectExportModelSeedData)
-	r.GET("/p/{key}/export/models/{model}/edit", cproject.ProjectExportModelForm)
-	r.POST("/p/{key}/export/models/{model}/edit", cproject.ProjectExportModelSave)
-	r.GET("/p/{key}/export/models/{model}/delete", cproject.ProjectExportModelDelete)
+	makeRoute(r, http.MethodGet, "/p/{key}/export/models/create/new", cproject.ProjectExportModelNew)
+	makeRoute(r, http.MethodPost, "/p/{key}/export/models/create/new", cproject.ProjectExportModelCreate)
+	makeRoute(r, http.MethodGet, "/p/{key}/export/models/create/derive", cproject.ProjectExportDeriveForm)
+	makeRoute(r, http.MethodPost, "/p/{key}/export/models/create/derive", cproject.ProjectExportDerive)
+	makeRoute(r, http.MethodGet, "/p/{key}/export/models/{model}", cproject.ProjectExportModelDetail)
+	makeRoute(r, http.MethodGet, "/p/{key}/export/models/{model}/seeddata", cproject.ProjectExportModelSeedData)
+	makeRoute(r, http.MethodGet, "/p/{key}/export/models/{model}/edit", cproject.ProjectExportModelForm)
+	makeRoute(r, http.MethodPost, "/p/{key}/export/models/{model}/edit", cproject.ProjectExportModelSave)
+	makeRoute(r, http.MethodGet, "/p/{key}/export/models/{model}/delete", cproject.ProjectExportModelDelete)
 
-	r.GET("/p/{key}/export/enums/{enum}", cproject.ProjectExportEnumDetail)
-	r.GET("/p/{key}/export/enums/new", cproject.ProjectExportEnumNew)
-	r.POST("/p/{key}/export/enums/new", cproject.ProjectExportEnumCreate)
-	r.GET("/p/{key}/export/enums/{enum}/edit", cproject.ProjectExportEnumForm)
-	r.POST("/p/{key}/export/enums/{enum}/edit", cproject.ProjectExportEnumSave)
-	r.GET("/p/{key}/export/enums/{enum}/delete", cproject.ProjectExportEnumDelete)
+	makeRoute(r, http.MethodGet, "/p/{key}/export/enums/{enum}", cproject.ProjectExportEnumDetail)
+	makeRoute(r, http.MethodGet, "/p/{key}/export/enums/new", cproject.ProjectExportEnumNew)
+	makeRoute(r, http.MethodPost, "/p/{key}/export/enums/new", cproject.ProjectExportEnumCreate)
+	makeRoute(r, http.MethodGet, "/p/{key}/export/enums/{enum}/edit", cproject.ProjectExportEnumForm)
+	makeRoute(r, http.MethodPost, "/p/{key}/export/enums/{enum}/edit", cproject.ProjectExportEnumSave)
+	makeRoute(r, http.MethodGet, "/p/{key}/export/enums/{enum}/delete", cproject.ProjectExportEnumDelete)
 }

@@ -38,7 +38,7 @@ func ToGoViewString(t *types.Wrapped, prop string, nullable bool, format string,
 		case types.KeyString:
 			return "{%%= view.StringArray(" + prop + ") %%}"
 		case types.KeyInt:
-			return "{%%= view.IntArray(" + prop + ") %%}"
+			return "{%%= view.IntArray(util.ArrayFromAny(" + prop + ")) %%}"
 		case types.KeyEnum:
 			e, _ := AsEnumInstance(lt, enums)
 			if e == nil {

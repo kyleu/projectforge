@@ -2,9 +2,9 @@ package cproject
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/pkg/errors"
-	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
@@ -15,9 +15,9 @@ import (
 	"projectforge.dev/projectforge/views/vexport"
 )
 
-func ProjectExportModelDetail(rc *fasthttp.RequestCtx) {
-	controller.Act("project.export.model.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, mdl, args, err := exportLoadModel(rc, as, ps.Logger)
+func ProjectExportModelDetail(w http.ResponseWriter, r *http.Request) {
+	controller.Act("project.export.model.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, mdl, args, err := exportLoadModel(r, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -27,13 +27,13 @@ func ProjectExportModelDetail(rc *fasthttp.RequestCtx) {
 		}
 		bc := []string{"projects", prj.Key, fmt.Sprintf("Export||/p/%s/export", prj.Key), mdl.Title()}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] %s", prj.Key, mdl.Name), mdl)
-		return controller.Render(rc, as, &vexport.ModelDetail{Project: prj, Model: mdl, Files: fls}, ps, bc...)
+		return controller.Render(w, r, as, &vexport.ModelDetail{Project: prj, Model: mdl, Files: fls}, ps, bc...)
 	})
 }
 
-func ProjectExportModelSeedData(rc *fasthttp.RequestCtx) {
-	controller.Act("project.export.seed.data", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, mdl, _, err := exportLoadModel(rc, as, ps.Logger)
+func ProjectExportModelSeedData(w http.ResponseWriter, r *http.Request) {
+	controller.Act("project.export.seed.data", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, mdl, _, err := exportLoadModel(r, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -41,31 +41,31 @@ func ProjectExportModelSeedData(rc *fasthttp.RequestCtx) {
 		mbc := fmt.Sprintf("%s||/p/%s/export/models/%s", mdl.Title(), prj.Key, mdl.Name)
 		bc := []string{"projects", prj.Key, xbc, mbc, "Seed Data"}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] %s", prj.Key, mdl.Name), mdl)
-		return controller.Render(rc, as, &vexport.ModelSeedData{Project: prj, Model: mdl}, ps, bc...)
+		return controller.Render(w, r, as, &vexport.ModelSeedData{Project: prj, Model: mdl}, ps, bc...)
 	})
 }
 
-func ProjectExportModelNew(rc *fasthttp.RequestCtx) {
-	controller.Act("project.export.model.new", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(rc, as)
+func ProjectExportModelNew(w http.ResponseWriter, r *http.Request) {
+	controller.Act("project.export.model.new", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, err := getProject(r, as)
 		if err != nil {
 			return "", err
 		}
 		mdl := &model.Model{}
 		bc := []string{"projects", prj.Key, fmt.Sprintf("Export||/p/%s/export", prj.Key), "New"}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] New Model", prj.Key), mdl)
-		return controller.Render(rc, as, &vexport.ModelForm{Project: prj, Model: mdl, Examples: model.Examples}, ps, bc...)
+		return controller.Render(w, r, as, &vexport.ModelForm{Project: prj, Model: mdl, Examples: model.Examples}, ps, bc...)
 	})
 }
 
-func ProjectExportModelCreate(rc *fasthttp.RequestCtx) {
-	controller.Act("project.export.model.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(rc, as)
+func ProjectExportModelCreate(w http.ResponseWriter, r *http.Request) {
+	controller.Act("project.export.model.create", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, err := getProject(r, as)
 		if err != nil {
 			return "", err
 		}
 
-		frm, err := cutil.ParseForm(rc)
+		frm, err := cutil.ParseForm(r, ps.RequestBody)
 		if err != nil {
 			return "", err
 		}
@@ -87,13 +87,13 @@ func ProjectExportModelCreate(rc *fasthttp.RequestCtx) {
 
 		msg := "model created successfully"
 		u := fmt.Sprintf("/p/%s/export/models/%s", prj.Key, mdl.Name)
-		return controller.FlashAndRedir(true, msg, u, rc, ps)
+		return controller.FlashAndRedir(true, msg, u, w, ps)
 	})
 }
 
-func ProjectExportModelForm(rc *fasthttp.RequestCtx) {
-	controller.Act("project.export.model.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, mdl, _, err := exportLoadModel(rc, as, ps.Logger)
+func ProjectExportModelForm(w http.ResponseWriter, r *http.Request) {
+	controller.Act("project.export.model.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, mdl, _, err := exportLoadModel(r, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -105,18 +105,18 @@ func ProjectExportModelForm(rc *fasthttp.RequestCtx) {
 			"Edit",
 		}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] %s", prj.Key, mdl.Name), mdl)
-		return controller.Render(rc, as, &vexport.ModelForm{Project: prj, Model: mdl, Examples: model.Examples}, ps, bc...)
+		return controller.Render(w, r, as, &vexport.ModelForm{Project: prj, Model: mdl, Examples: model.Examples}, ps, bc...)
 	})
 }
 
-func ProjectExportModelSave(rc *fasthttp.RequestCtx) {
-	controller.Act("project.export.model.save", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, mdl, _, err := exportLoadModel(rc, as, ps.Logger)
+func ProjectExportModelSave(w http.ResponseWriter, r *http.Request) {
+	controller.Act("project.export.model.save", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, mdl, _, err := exportLoadModel(r, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}
 
-		frm, err := cutil.ParseForm(rc)
+		frm, err := cutil.ParseForm(r, ps.RequestBody)
 		if err != nil {
 			return "", err
 		}
@@ -137,13 +137,13 @@ func ProjectExportModelSave(rc *fasthttp.RequestCtx) {
 
 		msg := "model saved successfully"
 		u := fmt.Sprintf("/p/%s/export/models/%s", prj.Key, mdl.Name)
-		return controller.FlashAndRedir(true, msg, u, rc, ps)
+		return controller.FlashAndRedir(true, msg, u, w, ps)
 	})
 }
 
-func ProjectExportModelDelete(rc *fasthttp.RequestCtx) {
-	controller.Act("project.export.model.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, mdl, _, err := exportLoadModel(rc, as, ps.Logger)
+func ProjectExportModelDelete(w http.ResponseWriter, r *http.Request) {
+	controller.Act("project.export.model.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, mdl, _, err := exportLoadModel(r, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -158,6 +158,6 @@ func ProjectExportModelDelete(rc *fasthttp.RequestCtx) {
 		}
 
 		msg := "model deleted successfully"
-		return controller.FlashAndRedir(true, msg, fmt.Sprintf("/p/%s/export", prj.Key), rc, ps)
+		return controller.FlashAndRedir(true, msg, fmt.Sprintf("/p/%s/export", prj.Key), w, ps)
 	})
 }

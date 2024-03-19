@@ -1,10 +1,10 @@
 package cmodule
 
 import (
+	"net/http"
 	"strings"
 
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
@@ -15,18 +15,18 @@ import (
 	"projectforge.dev/projectforge/views/vmodule"
 )
 
-func ModuleList(rc *fasthttp.RequestCtx) {
-	controller.Act("module.root", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func ModuleList(w http.ResponseWriter, r *http.Request) {
+	controller.Act("module.root", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		mods := as.Services.Modules.Modules()
 		ps.SetTitleAndData("Module Listing", mods)
 		dir := as.Services.Modules.ConfigDirectory()
-		return controller.Render(rc, as, &vmodule.List{Modules: mods, Dir: dir}, ps, "modules")
+		return controller.Render(w, r, as, &vmodule.List{Modules: mods, Dir: dir}, ps, "modules")
 	})
 }
 
-func ModuleDetail(rc *fasthttp.RequestCtx) {
-	controller.Act("module.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		mod, err := getModule(rc, as, ps)
+func ModuleDetail(w http.ResponseWriter, r *http.Request) {
+	controller.Act("module.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		mod, err := getModule(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -48,12 +48,12 @@ func ModuleDetail(rc *fasthttp.RequestCtx) {
 		}
 		dir := mod.Files.Root()
 		ps.SetTitleAndData(mod.Title(), mod)
-		return controller.Render(rc, as, &vmodule.Detail{Module: mod, HTML: html, Usages: usages, Dir: dir}, ps, "modules", mod.Key)
+		return controller.Render(w, r, as, &vmodule.Detail{Module: mod, HTML: html, Usages: usages, Dir: dir}, ps, "modules", mod.Key)
 	})
 }
 
-func getModule(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*module.Module, error) {
-	key, err := cutil.RCRequiredString(rc, "key", true)
+func getModule(r *http.Request, as *app.State, ps *cutil.PageState) (*module.Module, error) {
+	key, err := cutil.RCRequiredString(r, "key", true)
 	if err != nil {
 		return nil, err
 	}

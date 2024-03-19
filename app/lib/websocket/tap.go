@@ -2,34 +2,38 @@
 package websocket
 
 import (
-	"github.com/fasthttp/websocket"
+	"net/http"
+
 	"github.com/google/uuid"
+	"github.com/gorilla/websocket"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app/util"
 )
 
-func (s *Service) RegisterTap(rc *fasthttp.RequestCtx, logger util.Logger) (uuid.UUID, error) {
+func (s *Service) RegisterTap(w http.ResponseWriter, r *http.Request, logger util.Logger) (uuid.UUID, error) {
 	id := util.UUID()
-	err := upgrader.Upgrade(rc, func(conn *websocket.Conn) {
-		s.tapsMu.Lock()
-		defer s.tapsMu.Unlock()
-		s.taps[id] = conn
-		onMessage := func(m *Message) error {
-			logger.Errorf("message [%s:%s] received from tap socket", m.Channel, m.Cmd)
-			return nil
-		}
-		onDisconnect := func() error {
-			s.RemoveTap(id, logger)
-			return nil
-		}
-		err := ReadSocketLoop(id, conn, onMessage, onDisconnect, logger)
-		if err != nil {
-			logger.Errorf("error registering tap socket [%s]: %s", id.String(), err.Error())
-		}
-	})
+	conn, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		return id, err
+	}
+
+	s.tapsMu.Lock()
+	defer s.tapsMu.Unlock()
+	s.taps[id] = conn
+	onMessage := func(m *Message) error {
+		logger.Errorf("message [%s:%s] received from tap socket", m.Channel, m.Cmd)
+		return nil
+	}
+	onDisconnect := func() error {
+		s.RemoveTap(id, logger)
+		return nil
+	}
+	err = ReadSocketLoop(id, conn, onMessage, onDisconnect, logger)
+	if err != nil {
+		logger.Errorf("error registering tap socket [%s]: %s", id.String(), err.Error())
+	}
 	if err != nil {
 		return id, errors.Wrapf(err, "error registering tap [%s]: %s", id.String(), err.Error())
 	}

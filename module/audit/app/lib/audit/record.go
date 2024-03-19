@@ -105,7 +105,7 @@ func (a *Record) String() string {
 }
 
 func (a *Record) WebPath() string {
-	return "/admin/audit/record" + "/" + a.ID.String()
+	return "/admin/audit/record/" + a.ID.String() + "/view"
 }
 
 func (a *Record) Diff(ax *Record) util.Diffs {

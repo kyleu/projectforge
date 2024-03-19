@@ -8,7 +8,7 @@ package components
 
 //line views/components/Pagination.html:2
 import (
-	"github.com/valyala/fasthttp"
+	"net/url"
 
 	"projectforge.dev/projectforge/app/lib/filter"
 )
@@ -27,7 +27,7 @@ var (
 )
 
 //line views/components/Pagination.html:8
-func StreamPagination(qw422016 *qt422016.Writer, count int, params *filter.Params, u *fasthttp.URI) {
+func StreamPagination(qw422016 *qt422016.Writer, count int, params *filter.Params, u *url.URL) {
 //line views/components/Pagination.html:9
 	if params != nil {
 //line views/components/Pagination.html:10
@@ -56,7 +56,7 @@ func StreamPagination(qw422016 *qt422016.Writer, count int, params *filter.Param
 }
 
 //line views/components/Pagination.html:21
-func WritePagination(qq422016 qtio422016.Writer, count int, params *filter.Params, u *fasthttp.URI) {
+func WritePagination(qq422016 qtio422016.Writer, count int, params *filter.Params, u *url.URL) {
 //line views/components/Pagination.html:21
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/components/Pagination.html:21
@@ -67,7 +67,7 @@ func WritePagination(qq422016 qtio422016.Writer, count int, params *filter.Param
 }
 
 //line views/components/Pagination.html:21
-func Pagination(count int, params *filter.Params, u *fasthttp.URI) string {
+func Pagination(count int, params *filter.Params, u *url.URL) string {
 //line views/components/Pagination.html:21
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/components/Pagination.html:21

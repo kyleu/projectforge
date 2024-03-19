@@ -34,7 +34,7 @@ func Lib(path string) int32 {
 	logger.Infof("%s library started on port [%d]", util.AppName, port)
 
 	go func() {
-		e := serve(util.AppKey, listener, r)
+		e := serve(listener, r)
 		if e != nil {
 			panic(errors.WithStack(e))
 		}

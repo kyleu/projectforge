@@ -27,7 +27,7 @@ func initAppRequest(as *app.State, ps *cutil.PageState) error {
 	}
 	root := as.Services.Projects.Default()
 	if root.Info == nil && !lo.ContainsBy(allowedRoutes, func(r string) bool {
-		return strings.HasSuffix(string(ps.URI.Path()), r)
+		return strings.HasSuffix(string(ps.URI.Path), r)
 	}) {
 		ps.ForceRedirect = "/welcome"
 	}

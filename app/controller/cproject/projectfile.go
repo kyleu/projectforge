@@ -2,9 +2,9 @@ package cproject
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
@@ -14,26 +14,26 @@ import (
 	"projectforge.dev/projectforge/views/vproject"
 )
 
-func ProjectFileRoot(rc *fasthttp.RequestCtx) {
-	controller.Act("project.file.root", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(rc, as)
+func ProjectFileRoot(w http.ResponseWriter, r *http.Request) {
+	controller.Act("project.file.root", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, err := getProject(r, as)
 		if err != nil {
 			return "", err
 		}
 
 		ps.SetTitleAndData(fmt.Sprintf("%s (project %s)", prj.Title(), prj.Key), prj)
-		return controller.Render(rc, as, &vproject.Files{Project: prj}, ps, "projects", prj.Key, "Files")
+		return controller.Render(w, r, as, &vproject.Files{Project: prj}, ps, "projects", prj.Key, "Files")
 	})
 }
 
-func ProjectFile(rc *fasthttp.RequestCtx) {
-	controller.Act("project.file", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(rc, as)
+func ProjectFile(w http.ResponseWriter, r *http.Request) {
+	controller.Act("project.file", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, err := getProject(r, as)
 		if err != nil {
 			return "", err
 		}
 
-		pathS, err := cutil.RCRequiredString(rc, "path", false)
+		pathS, err := cutil.RCRequiredString(r, "path", false)
 		if err != nil {
 			return "", err
 		}
@@ -45,19 +45,19 @@ func ProjectFile(rc *fasthttp.RequestCtx) {
 			bc = append(bc, x+bcAppend)
 		})
 		ps.SetTitleAndData(fmt.Sprintf("[%s] /%s", prj.Key, pathS), pathS)
-		return controller.Render(rc, as, &vproject.Files{Project: prj, Path: path}, ps, bc...)
+		return controller.Render(w, r, as, &vproject.Files{Project: prj, Path: path}, ps, bc...)
 	})
 }
 
-func ProjectFileStats(rc *fasthttp.RequestCtx) {
-	controller.Act("project.file.stats", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(rc, as)
+func ProjectFileStats(w http.ResponseWriter, r *http.Request) {
+	controller.Act("project.file.stats", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, err := getProject(r, as)
 		if err != nil {
 			return "", err
 		}
-		dir := string(rc.URI().QueryArgs().Peek("dir"))
+		dir := r.URL.Query().Get("dir")
 		pth := util.StringSplitAndTrim(dir, "/")
-		ext := string(rc.URI().QueryArgs().Peek("ext"))
+		ext := r.URL.Query().Get("ext")
 		pfs, err := as.Services.Projects.GetFilesystem(prj)
 		if err != nil {
 			return "", err
@@ -68,6 +68,6 @@ func ProjectFileStats(rc *fasthttp.RequestCtx) {
 		}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] File Stats", prj.Key), ret)
 		page := &vproject.FileStats{Project: prj, Path: pth, Ext: ext, Files: ret}
-		return controller.Render(rc, as, page, ps, "projects", prj.Key, "File Stats")
+		return controller.Render(w, r, as, page, ps, "projects", prj.Key, "File Stats")
 	})
 }

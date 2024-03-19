@@ -1,6 +1,8 @@
 // Package types - Content managed by Project Forge, see [projectforge.md] for details.
 package types
 
+import "projectforge.dev/projectforge/app/util"
+
 const KeyJSON = "json"
 
 type JSON struct {
@@ -27,6 +29,10 @@ func (x *JSON) String() string {
 }
 
 func (x *JSON) From(v any) any {
+	if s, ok := v.(string); ok {
+		ret, _ := util.FromJSONAny([]byte(s))
+		return ret
+	}
 	return invalidInput(x.Key(), v)
 }
 

@@ -12,8 +12,7 @@
       fieldKey = "q"
     }
     m := map[string]string{}
-    ps.URI.QueryArgs().VisitAll(func(key []byte, value []byte) {
-      k, v := string(key), string(value)
+    for k, v := range ps.URI.Query() {
       if k == fieldKey || strings.HasSuffix(k, ".x") {
         return
       }
@@ -21,9 +20,9 @@
       if ok {
         curr += ","
       }
-      curr += v
+      curr += strings.Join(v, ",")
       m[k] = curr
-    })
+  }
   %}
   <form action="{%s action %}" method="get" class="">
     {% for k, v := range m %}

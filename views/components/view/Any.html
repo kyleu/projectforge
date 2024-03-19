@@ -27,9 +27,9 @@
   {% case types.KeyError %}
     {%= Default(x, t.String()) %}
   {% case types.KeyFloat %}
-    {%= Float(x.(float64)) %}
+    {%= Float(x) %}
   {% case types.KeyInt %}
-    {%= Int(x.(int)) %}
+    {%= Int(x) %}
   {% case types.KeyJSON %}
     {%= components.JSON(x) %}
   {% case types.KeyList %}

@@ -2,10 +2,10 @@ package clib
 
 import (
 	"fmt"
+	"net/http"
 	"strconv"
 
 	"github.com/pkg/errors"
-	"github.com/valyala/fasthttp"
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller"
@@ -17,8 +17,8 @@ import (
 
 const KeyAnalyze = "analyze"
 
-func DatabaseList(rc *fasthttp.RequestCtx) {
-	controller.Act("database.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func DatabaseList(w http.ResponseWriter, r *http.Request) {
+	controller.Act("database.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		keys := database.RegistryKeys()
 		if len(keys) == 1 {
 			return "/admin/database/" + keys[0], nil
@@ -31,51 +31,51 @@ func DatabaseList(rc *fasthttp.RequestCtx) {
 			}
 			svcs[key] = svc
 		}
-		return controller.Render(rc, as, &vdatabase.List{Keys: keys, Services: svcs}, ps, "admin", "Database")
+		return controller.Render(w, r, as, &vdatabase.List{Keys: keys, Services: svcs}, ps, "admin", "Database")
 	})
 }
 
-func DatabaseDetail(rc *fasthttp.RequestCtx) {
-	controller.Act("database.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		svc, err := getDatabaseService(rc)
+func DatabaseDetail(w http.ResponseWriter, r *http.Request) {
+	controller.Act("database.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		svc, err := getDatabaseService(r)
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(rc, as, &vdatabase.Detail{Mode: "", Svc: svc}, ps, "admin", "Database||/admin/database", svc.Key)
+		return controller.Render(w, r, as, &vdatabase.Detail{Mode: "", Svc: svc}, ps, "admin", "Database||/admin/database", svc.Key)
 	})
 }
 
-func DatabaseAction(rc *fasthttp.RequestCtx) {
-	controller.Act("database.action", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		svc, err := getDatabaseService(rc)
+func DatabaseAction(w http.ResponseWriter, r *http.Request) {
+	controller.Act("database.action", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		svc, err := getDatabaseService(r)
 		if err != nil {
 			return "", err
 		}
-		act, err := cutil.RCRequiredString(rc, "act", true)
+		act, err := cutil.RCRequiredString(r, "act", true)
 		if err != nil {
 			return "", err
 		}
 		bc := []string{"admin", "Database||/admin/database", fmt.Sprintf("%s||/admin/database/%s", svc.Key, svc.Key), act}
 		switch act {
 		case "enable":
-			_ = svc.EnableTracing(string(rc.URI().QueryArgs().Peek("tracing")), ps.Logger)
+			_ = svc.EnableTracing(r.URL.Query().Get("tracing"), ps.Logger)
 			return "/admin/database/" + svc.Key + "/recent", nil
 		case "recent":
-			if idxStr := string(rc.URI().QueryArgs().Peek("idx")); idxStr != "" {
+			if idxStr := r.URL.Query().Get("idx"); idxStr != "" {
 				idx, _ := strconv.ParseInt(idxStr, 10, 32)
 				st := database.GetDebugStatement(svc.Key, int(idx))
 				if st != nil {
-					return controller.Render(rc, as, &vdatabase.Statement{Statement: st}, ps, bc...)
+					return controller.Render(w, r, as, &vdatabase.Statement{Statement: st}, ps, bc...)
 				}
 			}
 			recent := database.GetDebugStatements(svc.Key)
-			return controller.Render(rc, as, &vdatabase.Detail{Mode: "recent", Svc: svc, Recent: recent}, ps, bc...)
+			return controller.Render(w, r, as, &vdatabase.Detail{Mode: "recent", Svc: svc, Recent: recent}, ps, bc...)
 		case "tables":
 			sizes, dberr := svc.Sizes(ps.Context, ps.Logger)
 			if dberr != nil {
 				return "", errors.Wrapf(dberr, "unable to calculate sizes for database [%s]", svc.Key)
 			}
-			return controller.Render(rc, as, &vdatabase.Detail{Mode: "tables", Svc: svc, Sizes: sizes}, ps, bc...)
+			return controller.Render(w, r, as, &vdatabase.Detail{Mode: "tables", Svc: svc, Sizes: sizes}, ps, bc...)
 		case KeyAnalyze:
 			t := util.TimerStart()
 			var tmp []any
@@ -84,24 +84,24 @@ func DatabaseAction(rc *fasthttp.RequestCtx) {
 				return "", err
 			}
 			msg := fmt.Sprintf("Analyzed database in [%s]", util.MicrosToMillis(t.End()))
-			return controller.FlashAndRedir(true, msg, "/admin/database/"+svc.Key+"/tables", rc, ps){{{ if .DatabaseUISQLEditor }}}
+			return controller.FlashAndRedir(true, msg, "/admin/database/"+svc.Key+"/tables", w, ps){{{ if .DatabaseUISQLEditor }}}
 		case "sql":
-			return controller.Render(rc, as, &vdatabase.Detail{Mode: "sql", Svc: svc, SQL: "select 1;"}, ps, bc...){{{ end }}}
+			return controller.Render(w, r, as, &vdatabase.Detail{Mode: "sql", Svc: svc, SQL: "select 1;"}, ps, bc...){{{ end }}}
 		default:
 			return "", errors.Errorf("invalid database action [%s]", act)
 		}
 	})
 }
 
-func DatabaseTableView(rc *fasthttp.RequestCtx) {
-	controller.Act("database.sql.run", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func DatabaseTableView(w http.ResponseWriter, r *http.Request) {
+	controller.Act("database.sql.run", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prms := ps.Params.Get("table", []string{"*"}, ps.Logger).Sanitize("table")
-		svc, err := getDatabaseService(rc)
+		svc, err := getDatabaseService(r)
 		if err != nil {
 			return "", err
 		}
-		schema, _ := cutil.RCRequiredString(rc, "schema", true)
-		table, _ := cutil.RCRequiredString(rc, "table", true)
+		schema, _ := cutil.RCRequiredString(r, "schema", true)
+		table, _ := cutil.RCRequiredString(r, "table", true)
 
 		tbl := fmt.Sprintf("%q", table)
 		if schema != "default" {
@@ -112,21 +112,22 @@ func DatabaseTableView(rc *fasthttp.RequestCtx) {
 		res, err := svc.QueryRows(ps.Context, q, nil, ps.Logger)
 		ps.Data = res
 		bc := []string{"admin", "Database||/admin/database", fmt.Sprintf("%s||/admin/database/%s", svc.Key, svc.Key), "Tables"}
-		return controller.Render(rc, as, &vdatabase.Results{Svc: svc, Schema: schema, Table: table, Results: res, Params: prms, Error: err}, ps, bc...)
+		return controller.Render(w, r, as, &vdatabase.Results{Svc: svc, Schema: schema, Table: table, Results: res, Params: prms, Error: err}, ps, bc...)
 	})
 }{{{ if .DatabaseUISQLEditor }}}
 
-func DatabaseSQLRun(rc *fasthttp.RequestCtx) {
-	controller.Act("database.sql.run", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		svc, err := getDatabaseService(rc)
+func DatabaseSQLRun(w http.ResponseWriter, r *http.Request) {
+	controller.Act("database.sql.run", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		svc, err := getDatabaseService(r)
 		if err != nil {
 			return "", err
 		}
-		f := rc.PostArgs()
-		sql := string(f.Peek("sql"))
-		c := string(f.Peek("commit"))
+		_ = r.ParseForm()
+		f := r.PostForm
+		sql := f.Get("sql")
+		c := f.Get("commit")
 		commit := c == util.BoolTrue
-		action := string(f.Peek("action"))
+		action := f.Get("action")
 		if action == KeyAnalyze {
 			sql = "explain analyze " + sql
 		}
@@ -173,12 +174,12 @@ func DatabaseSQLRun(rc *fasthttp.RequestCtx) {
 
 		ps.SetTitleAndData("SQL Results", results)
 		page := &vdatabase.Detail{Mode: "sql", Svc: svc, SQL: sql, Columns: columns, Results: results, Timing: elapsed, Commit: commit}
-		return controller.Render(rc, as, page, ps, "admin", "Database||/admin/database", svc.Key+"||/admin/database/"+svc.Key, "Results")
+		return controller.Render(w, r, as, page, ps, "admin", "Database||/admin/database", svc.Key+"||/admin/database/"+svc.Key, "Results")
 	})
 }{{{ end }}}
 
-func getDatabaseService(rc *fasthttp.RequestCtx) (*database.Service, error) {
-	key, err := cutil.RCRequiredString(rc, "key", true)
+func getDatabaseService(r *http.Request) (*database.Service, error) {
+	key, err := cutil.RCRequiredString(r, "key", true)
 	if err != nil {
 		return nil, err
 	}

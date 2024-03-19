@@ -6,8 +6,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/fasthttp/websocket"
 	"github.com/google/uuid"
+	"github.com/gorilla/websocket"
 	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/lib/user"

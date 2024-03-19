@@ -2,10 +2,10 @@ package cmodule
 
 import (
 	"fmt"
+	"net/http"
 	"unicode/utf8"
 
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
@@ -16,14 +16,14 @@ import (
 	"projectforge.dev/projectforge/views/vmodule"
 )
 
-func ModuleSearch(rc *fasthttp.RequestCtx) {
-	controller.Act("module.search", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		mod, err := getModule(rc, as, ps)
+func ModuleSearch(w http.ResponseWriter, r *http.Request) {
+	controller.Act("module.search", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		mod, err := getModule(r, as, ps)
 		if err != nil {
 			return "", err
 		}
 
-		q := string(rc.URI().QueryArgs().Peek("q"))
+		q := r.URL.Query().Get("q")
 		params := &search.Params{Q: q, PS: nil}
 
 		var res result.Results
@@ -51,7 +51,7 @@ func ModuleSearch(rc *fasthttp.RequestCtx) {
 
 		ps.SetTitleAndData(fmt.Sprintf("[%s] Module Results", mod.Title()), mod)
 		page := &vmodule.Search{Module: mod, Params: params, Results: res}
-		return controller.Render(rc, as, page, ps, "modules", mod.Key, "Search**archive")
+		return controller.Render(w, r, as, page, ps, "modules", mod.Key, "Search**archive")
 	})
 }
 

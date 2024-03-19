@@ -1,15 +1,17 @@
 package routes
 
 import (
-	"github.com/fasthttp/router"
+	"net/http"
+
+	"github.com/gorilla/mux"
 
 	"{{{ .Package }}}/app/controller/clib"
 )
 
-func harRoutes(r *router.Router) {
-	r.GET("/har", clib.HarList)
-	r.POST("/har", clib.HarUpload)
-	r.GET("/har/{key}", clib.HarDetail)
-	r.GET("/har/{key}/delete", clib.HarDelete)
-	r.GET("/har/{key}/trim", clib.HarTrim)
+func harRoutes(r *mux.Router) {
+	makeRoute(r, http.MethodGet, "/har", clib.HarList)
+	makeRoute(r, http.MethodPost, "/har", clib.HarUpload)
+	makeRoute(r, http.MethodGet, "/har/{key}", clib.HarDetail)
+	makeRoute(r, http.MethodGet, "/har/{key}/delete", clib.HarDelete)
+	makeRoute(r, http.MethodGet, "/har/{key}/trim", clib.HarTrim)
 }

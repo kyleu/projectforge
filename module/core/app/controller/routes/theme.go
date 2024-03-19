@@ -1,19 +1,16 @@
 package routes
 
 import (
-	"github.com/fasthttp/router"
+	"net/http"
+
+	"github.com/gorilla/mux"
 
 	"{{{ .Package }}}/app/controller/clib"
 )
 
-func themeRoutes(r *router.Router) {
-	r.GET("/theme", clib.ThemeList)
-	r.GET("/theme/{key}", clib.ThemeEdit)
-	r.POST("/theme/{key}", clib.ThemeSave)
-	r.GET("/theme/{key}/remove", clib.ThemeRemove){{{ if .HasModule "themecatalog" }}}
-
-	r.GET("/theme/color/{color}", clib.ThemeColor)
-	r.GET("/theme/color/edit", clib.ThemeColorEdit)
-	r.GET("/theme/palette/{palette}", clib.ThemePalette)
-	r.GET("/theme/palette/{palette}/{theme}", clib.ThemePaletteEdit){{{ end }}}
+func themeRoutes(r *mux.Router) {
+	makeRoute(r, http.MethodGet, "/theme", clib.ThemeList)
+	makeRoute(r, http.MethodGet, "/theme/{key}", clib.ThemeEdit)
+	makeRoute(r, http.MethodPost, "/theme/{key}", clib.ThemeSave)
+	makeRoute(r, http.MethodGet, "/theme/{key}/remove", clib.ThemeRemove)
 }

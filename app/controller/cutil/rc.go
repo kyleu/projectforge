@@ -2,25 +2,24 @@
 package cutil
 
 import (
+	"net/http"
 	"net/url"
 	"strconv"
 
 	"github.com/google/uuid"
+	"github.com/gorilla/mux"
 	"github.com/pkg/errors"
-	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func RequestCtxToMap(rc *fasthttp.RequestCtx, as *app.State, ps *PageState) util.ValueMap {
+func RequestCtxToMap(w http.ResponseWriter, r *http.Request, as *app.State, ps *PageState) util.ValueMap {
 	req := util.ValueMap{
-		"url": rc.URI().String(), "protocol": string(rc.Request.URI().Scheme()),
-		"host": string(rc.Request.URI().Host()), "path": string(rc.Request.URI().Path()),
-		"queryString": string(rc.Request.URI().QueryString()), "headers": RequestHeadersMap(rc),
-		"bodySize": len(rc.Request.Body()),
+		"url": r.URL.String(), "protocol": r.URL.Scheme,
+		"host": r.URL.Host, "path": r.URL.Path,
+		"queryString": r.URL.RawQuery, "headers": r.Header,
 	}
-	rsp := util.ValueMap{"code": rc.Response.StatusCode(), "bodySize": len(rc.Response.Body()), "headers": ResponseHeadersMap(rc)}
 	hasHelp := as.Services != nil && as.Services.Help != nil && as.Services.Help.Contains(ps.Action)
 	action := util.ValueMap{
 		"action": ps.Action, "admin": ps.Admin, "authed": ps.Authed,
@@ -28,15 +27,15 @@ func RequestCtxToMap(rc *fasthttp.RequestCtx, as *app.State, ps *PageState) util
 		"browser": ps.Browser, "browserVersion": ps.BrowserVersion, "os": ps.OS, "osVersion": ps.OSVersion, "platform": ps.Platform,
 		"description": ps.Description, "title": ps.Title, "started": ps.Started, "help": hasHelp,
 	}
-	ret := util.ValueMap{"action": action, "data": ps.Data, "request": req, "response": rsp}
+	ret := util.ValueMap{"action": action, "data": ps.Data, "request": req}
 	// $PF_SECTION_START(debugstuff)$
 	// $PF_SECTION_END(debugstuff)$
 	return ret
 }
 
-func RCRequiredString(rc *fasthttp.RequestCtx, key string, allowEmpty bool) (string, error) {
-	v, ok := rc.UserValue(key).(string)
-	if !ok || ((!allowEmpty) && v == "") {
+func RCRequiredString(r *http.Request, key string, allowEmpty bool) (string, error) {
+	v := mux.Vars(r)[key]
+	if (!allowEmpty) && v == "" {
 		return v, errors.Errorf("must provide [%s] in path", key)
 	}
 	v, err := url.QueryUnescape(v)
@@ -46,16 +45,16 @@ func RCRequiredString(rc *fasthttp.RequestCtx, key string, allowEmpty bool) (str
 	return v, nil
 }
 
-func RCRequiredBool(rc *fasthttp.RequestCtx, key string) (bool, error) {
-	ret, err := RCRequiredString(rc, key, true)
+func RCRequiredBool(r *http.Request, key string) (bool, error) {
+	ret, err := RCRequiredString(r, key, true)
 	if err != nil {
 		return false, err
 	}
 	return ret == util.BoolTrue, nil
 }
 
-func RCRequiredInt(rc *fasthttp.RequestCtx, key string) (int, error) {
-	s, err := RCRequiredString(rc, key, true)
+func RCRequiredInt(r *http.Request, key string) (int, error) {
+	s, err := RCRequiredString(r, key, true)
 	if err != nil {
 		return 0, err
 	}
@@ -63,48 +62,59 @@ func RCRequiredInt(rc *fasthttp.RequestCtx, key string) (int, error) {
 	return int(ret), err
 }
 
-func RCRequiredUUID(rc *fasthttp.RequestCtx, key string) (*uuid.UUID, error) {
-	ret, err := RCRequiredString(rc, key, true)
+func RCRequiredUUID(r *http.Request, key string) (*uuid.UUID, error) {
+	ret, err := RCRequiredString(r, key, true)
 	if err != nil {
 		return nil, err
 	}
 	return util.UUIDFromString(ret), nil
 }
 
-func RCRequiredArray(rc *fasthttp.RequestCtx, key string) ([]string, error) {
-	ret, err := RCRequiredString(rc, key, true)
+func RCRequiredArray(r *http.Request, key string) ([]string, error) {
+	ret, err := RCRequiredString(r, key, true)
 	if err != nil {
 		return nil, err
 	}
 	return util.StringSplitAndTrim(ret, ","), nil
 }
 
-func QueryStringBool(rc *fasthttp.RequestCtx, key string) bool {
-	x := string(rc.URI().QueryArgs().Peek(key))
+func QueryStringBool(r *http.Request, key string) bool {
+	x := r.URL.Query().Get(key)
 	return x == util.BoolTrue || x == "t" || x == "True" || x == "TRUE"
 }
 
-func QueryArgsMap(rc *fasthttp.RequestCtx) util.ValueMap {
-	ret := make(util.ValueMap, rc.QueryArgs().Len())
-	rc.QueryArgs().VisitAll(func(k []byte, v []byte) {
-		curr, _ := ret.GetStringArray(string(k), true)
-		ret[string(k)] = append(curr, string(v))
-	})
+func QueryArgsMap(r *http.Request) util.ValueMap {
+	ret := make(util.ValueMap, len(r.Header))
+	for k, v := range r.URL.Query() {
+		if len(v) == 1 {
+			ret[k] = v[0]
+		} else {
+			ret[k] = v
+		}
+	}
 	return ret
 }
 
-func RequestHeadersMap(rc *fasthttp.RequestCtx) util.ValueMap {
-	ret := make(util.ValueMap, rc.Request.Header.Len())
-	rc.Request.Header.VisitAll(func(k, v []byte) {
-		ret[string(k)] = string(v)
-	})
+func RequestHeadersMap(r *http.Request) util.ValueMap {
+	ret := make(util.ValueMap, len(r.Header))
+	for k, v := range r.Header {
+		if len(v) == 1 {
+			ret[k] = v[0]
+		} else {
+			ret[k] = v
+		}
+	}
 	return ret
 }
 
-func ResponseHeadersMap(rc *fasthttp.RequestCtx) util.ValueMap {
-	ret := make(util.ValueMap, rc.Request.Header.Len())
-	rc.Response.Header.VisitAll(func(k, v []byte) {
-		ret[string(k)] = string(v)
-	})
+func ResponseHeadersMap(w http.ResponseWriter) util.ValueMap {
+	ret := make(util.ValueMap, len(w.Header()))
+	for k, v := range w.Header() {
+		if len(v) == 1 {
+			ret[k] = v[0]
+		} else {
+			ret[k] = v
+		}
+	}
 	return ret
 }

@@ -1,58 +1,60 @@
 package routes
 
 import (
-	"github.com/fasthttp/router"
+	"net/http"
+
+	"github.com/gorilla/mux"
 
 	"projectforge.dev/projectforge/app/controller/cproject"
 )
 
-func projectRoutes(r *router.Router) {
-	r.GET("/welcome", cproject.Welcome)
-	r.POST("/welcome", cproject.WelcomeLoad)
-	r.GET("/welcome/changedir", cproject.ChangeDir)
-	r.GET("/welcome/process", cproject.WelcomeProcess)
+func projectRoutes(r *mux.Router) {
+	makeRoute(r, http.MethodGet, "/welcome", cproject.Welcome)
+	makeRoute(r, http.MethodPost, "/welcome", cproject.WelcomeLoad)
+	makeRoute(r, http.MethodGet, "/welcome/changedir", cproject.ChangeDir)
+	makeRoute(r, http.MethodGet, "/welcome/process", cproject.WelcomeProcess)
 
-	r.GET("/doctor", cproject.Doctor)
-	r.GET("/doctor/all", cproject.DoctorRunAll)
-	r.GET("/doctor/{key}", cproject.DoctorRun)
-	r.GET("/doctor/{key}/solve", cproject.DoctorSolve)
+	makeRoute(r, http.MethodGet, "/doctor", cproject.Doctor)
+	makeRoute(r, http.MethodGet, "/doctor/all", cproject.DoctorRunAll)
+	makeRoute(r, http.MethodGet, "/doctor/{key}", cproject.DoctorRun)
+	makeRoute(r, http.MethodGet, "/doctor/{key}/solve", cproject.DoctorSolve)
 
-	r.GET("/p", cproject.ProjectList)
-	r.GET("/p/search", cproject.ProjectSearchAll)
-	r.GET("/p/new", cproject.ProjectForm)
-	r.POST("/p/new", cproject.ProjectCreate)
-	r.GET("/p/{key}", cproject.ProjectDetail)
-	r.GET("/p/{key}/edit", cproject.ProjectEdit)
-	r.POST("/p/{key}/edit", cproject.ProjectSave)
-	r.GET("/p/{key}/stats", cproject.ProjectFileStats)
-	r.GET("/p/{key}/start", cproject.ProjectStart)
+	makeRoute(r, http.MethodGet, "/p", cproject.ProjectList)
+	makeRoute(r, http.MethodGet, "/p/search", cproject.ProjectSearchAll)
+	makeRoute(r, http.MethodGet, "/p/new", cproject.ProjectForm)
+	makeRoute(r, http.MethodPost, "/p/new", cproject.ProjectCreate)
+	makeRoute(r, http.MethodGet, "/p/{key}", cproject.ProjectDetail)
+	makeRoute(r, http.MethodGet, "/p/{key}/edit", cproject.ProjectEdit)
+	makeRoute(r, http.MethodPost, "/p/{key}/edit", cproject.ProjectSave)
+	makeRoute(r, http.MethodGet, "/p/{key}/stats", cproject.ProjectFileStats)
+	makeRoute(r, http.MethodGet, "/p/{key}/start", cproject.ProjectStart)
 
 	exportRoutes(r)
 
-	r.GET("/p/{key}/fs", cproject.ProjectFileRoot)
-	r.GET("/p/{key}/fs/{path:*}", cproject.ProjectFile)
-	r.GET("/p/{key}/search", cproject.ProjectSearch)
+	makeRoute(r, http.MethodGet, "/p/{key}/fs", cproject.ProjectFileRoot)
+	makeRoute(r, http.MethodGet, "/p/{key}/fs/{path:.*}", cproject.ProjectFile)
+	makeRoute(r, http.MethodGet, "/p/{key}/search", cproject.ProjectSearch)
 
-	r.GET("/p/{key}/palette/{palette}", cproject.ProjectThemePalette)
-	r.GET("/p/{key}/palette/{palette}/{theme}", cproject.ProjectThemeSave)
+	makeRoute(r, http.MethodGet, "/p/{key}/palette/{palette}", cproject.ProjectThemePalette)
+	makeRoute(r, http.MethodGet, "/p/{key}/palette/{palette}/{theme}", cproject.ProjectThemeSave)
 
-	r.GET("/svg/{key}", cproject.SVGList)
-	r.GET("/svg/{key}/x/add", cproject.SVGAdd)
-	r.GET("/svg/{key}/x/build", cproject.SVGBuild)
-	r.GET("/svg/{key}/x/refreshapp", cproject.SVGRefreshApp)
-	r.GET("/svg/{key}/{icon}", cproject.SVGDetail)
-	r.GET("/svg/{key}/{icon}/setapp", cproject.SVGSetApp)
-	r.GET("/svg/{key}/{icon}/remove", cproject.SVGRemove)
+	makeRoute(r, http.MethodGet, "/svg/{key}", cproject.SVGList)
+	makeRoute(r, http.MethodGet, "/svg/{key}/x/add", cproject.SVGAdd)
+	makeRoute(r, http.MethodGet, "/svg/{key}/x/build", cproject.SVGBuild)
+	makeRoute(r, http.MethodGet, "/svg/{key}/x/refreshapp", cproject.SVGRefreshApp)
+	makeRoute(r, http.MethodGet, "/svg/{key}/{icon}", cproject.SVGDetail)
+	makeRoute(r, http.MethodGet, "/svg/{key}/{icon}/setapp", cproject.SVGSetApp)
+	makeRoute(r, http.MethodGet, "/svg/{key}/{icon}/remove", cproject.SVGRemove)
 
-	r.GET("/git", cproject.GitActionAll)
-	r.GET("/git/all/{act}", cproject.GitActionAll)
+	makeRoute(r, http.MethodGet, "/git", cproject.GitActionAll)
+	makeRoute(r, http.MethodGet, "/git/all/{act}", cproject.GitActionAll)
 
-	r.GET("/git/{key}", cproject.GitAction)
-	r.GET("/git/{key}/{act}", cproject.GitAction)
+	makeRoute(r, http.MethodGet, "/git/{key}", cproject.GitAction)
+	makeRoute(r, http.MethodGet, "/git/{key}/{act}", cproject.GitAction)
 
-	r.GET("/run/{act}", cproject.RunAllActions)
-	r.GET("/run/{key}/{act}", cproject.RunAction)
+	makeRoute(r, http.MethodGet, "/run/{act}", cproject.RunAllActions)
+	makeRoute(r, http.MethodGet, "/run/{key}/{act}", cproject.RunAction)
 
-	r.GET("/test", cproject.TestList)
-	r.GET("/test/{key}", cproject.TestRun)
+	makeRoute(r, http.MethodGet, "/test", cproject.TestList)
+	makeRoute(r, http.MethodGet, "/test/{key}", cproject.TestRun)
 }

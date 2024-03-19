@@ -5,12 +5,12 @@ This component is useful as an interstitial page appearing before a long request
 ```go
 package controllers
 
-func LongTask(rc *fasthttp.RequestCtx) {
-	controller.Act("long.task", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		if string(rc.URI().QueryArgs().Peek("hasloaded")) != util.BoolTrue {
-			rc.URI().QueryArgs().Set("hasloaded", util.BoolTrue)
-			page := &vpage.Load{URL: rc.URI().String(), Title: "Hang Tight"}
-			return controller.Render(rc, as, page, ps, "breadcrumb")
+func LongTask(w http.ResponseWriter, r *http.Request) {
+	controller.Act("long.task", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		if r.URL.Query().Get("hasloaded") != util.BoolTrue {
+			r.URL.Query().Set("hasloaded", util.BoolTrue)
+			page := &vpage.Load{URL: r.URL.String(), Title: "Hang Tight"}
+			return controller.Render(w, r, as, page, ps, "breadcrumb")
 		}
 		return "/welcome", nil
 	})

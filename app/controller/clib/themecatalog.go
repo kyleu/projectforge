@@ -3,12 +3,12 @@ package clib
 
 import (
 	"fmt"
+	"net/http"
 	"strings"
 
 	"github.com/muesli/gamut"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
@@ -20,9 +20,9 @@ import (
 	"projectforge.dev/projectforge/views/vtheme"
 )
 
-func ThemeColor(rc *fasthttp.RequestCtx) {
-	controller.Act("theme.color", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		col, err := cutil.RCRequiredString(rc, "color", false)
+func ThemeColor(w http.ResponseWriter, r *http.Request) {
+	controller.Act("theme.color", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		col, err := cutil.RCRequiredString(r, "color", false)
 		if err != nil {
 			return "", err
 		}
@@ -33,13 +33,13 @@ func ThemeColor(rc *fasthttp.RequestCtx) {
 		th := theme.ColorTheme(col, gamut.Hex(col))
 		ps.SetTitleAndData(fmt.Sprintf("[%s] Theme", col), th)
 		ps.DefaultNavIcon = themeIcon
-		return controller.Render(rc, as, &vtheme.Edit{Theme: th, Icon: "app"}, ps, "Themes||/theme", col)
+		return controller.Render(w, r, as, &vtheme.Edit{Theme: th, Icon: "app"}, ps, "Themes||/theme", col)
 	})
 }
 
-func ThemeColorEdit(rc *fasthttp.RequestCtx) {
-	controller.Act("theme.color.edit", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		color := string(rc.URI().QueryArgs().Peek("color"))
+func ThemeColorEdit(w http.ResponseWriter, r *http.Request) {
+	controller.Act("theme.color.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		color := r.URL.Query().Get("color")
 		if color == "" {
 			return "", errors.New("must provide color in query string")
 		}
@@ -50,13 +50,13 @@ func ThemeColorEdit(rc *fasthttp.RequestCtx) {
 		ps.SetTitleAndData("Edit theme colors ["+t.Key+"]", t)
 		ps.DefaultNavIcon = themeIcon
 		page := &vtheme.Edit{Theme: t, Icon: "app", Exists: as.Themes.FileExists(t.Key)}
-		return controller.Render(rc, as, page, ps, "Themes||/theme", t.Key)
+		return controller.Render(w, r, as, page, ps, "Themes||/theme", t.Key)
 	})
 }
 
-func ThemePalette(rc *fasthttp.RequestCtx) {
-	controller.Act("theme.palette", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		pal, err := cutil.RCRequiredString(rc, "palette", false)
+func ThemePalette(w http.ResponseWriter, r *http.Request) {
+	controller.Act("theme.palette", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		pal, err := cutil.RCRequiredString(r, "palette", false)
 		if err != nil {
 			return "", err
 		}
@@ -67,29 +67,29 @@ func ThemePalette(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] Themes", pal), thms)
-		if string(rc.URI().QueryArgs().Peek("t")) == "go" {
+		if r.URL.Query().Get("t") == "go" {
 			ps.Data = strings.Join(lo.Map(thms, func(t *theme.Theme, _ int) string {
 				return t.ToGo()
 			}), util.StringDefaultLinebreak)
-			return controller.Render(rc, as, &views.Debug{}, ps, "Themes")
+			return controller.Render(w, r, as, &views.Debug{}, ps, "Themes")
 		}
 		ps.DefaultNavIcon = themeIcon
-		return controller.Render(rc, as, &vtheme.Add{Palette: pal, Themes: thms}, ps, "Themes||/theme", "Palette")
+		return controller.Render(w, r, as, &vtheme.Add{Palette: pal, Themes: thms}, ps, "Themes||/theme", "Palette")
 	})
 }
 
-func ThemePaletteEdit(rc *fasthttp.RequestCtx) {
-	controller.Act("theme.palette.edit", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		palette, err := cutil.RCRequiredString(rc, "palette", false)
+func ThemePaletteEdit(w http.ResponseWriter, r *http.Request) {
+	controller.Act("theme.palette.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		palette, err := cutil.RCRequiredString(r, "palette", false)
 		if err != nil {
 			return "", err
 		}
-		key, err := cutil.RCRequiredString(rc, "theme", false)
+		key, err := cutil.RCRequiredString(r, "theme", false)
 		if err != nil {
 			return "", err
 		}
 		if key == theme.Default.Key {
-			return controller.FlashAndRedir(false, "Unable to edit default theme", "/theme", rc, ps)
+			return controller.FlashAndRedir(false, "Unable to edit default theme", "/theme", w, ps)
 		}
 		themes, err := theme.PaletteThemes(palette)
 		if err != nil {
@@ -101,6 +101,6 @@ func ThemePaletteEdit(rc *fasthttp.RequestCtx) {
 		}
 		ps.SetTitleAndData("Edit theme palette ["+t.Key+"]", t)
 		ps.DefaultNavIcon = themeIcon
-		return controller.Render(rc, as, &vtheme.Edit{Theme: t, Icon: "app"}, ps, "Themes||/theme", t.Key)
+		return controller.Render(w, r, as, &vtheme.Edit{Theme: t, Icon: "app"}, ps, "Themes||/theme", t.Key)
 	})
 }

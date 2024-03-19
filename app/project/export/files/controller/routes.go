@@ -15,7 +15,7 @@ import (
 func Routes(args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	g := golang.NewFile("routes", []string{"app", "controller", "routes"}, "generated")
 	g.AddImport(helper.ImpRouter)
-	g.AddBlocks(routes(args))
+	g.AddBlocks(routes(g, args))
 	lo.ForEach(args.Models.SortedDisplay(), func(m *model.Model, _ int) {
 		if len(m.Group) == 0 {
 			g.AddImport(helper.ImpAppController)
@@ -26,10 +26,13 @@ func Routes(args *model.Args, addHeader bool, linebreak string) (*file.File, err
 	return g.Render(addHeader, linebreak)
 }
 
-func routes(args *model.Args) *golang.Block {
+func routes(g *golang.File, args *model.Args) *golang.Block {
 	ret := golang.NewBlock("routes", "func")
-	ret.W("func generatedRoutes(r *router.Router) {")
+	ret.W("func generatedRoutes(r *mux.Router) {")
 	rct := routeContent(args)
+	if len(rct) > 0 {
+		g.AddImport(helper.ImpHTTP)
+	}
 	lo.ForEach(rct, func(x string, _ int) {
 		ret.W(x)
 	})
@@ -39,7 +42,7 @@ func routes(args *model.Args) *golang.Block {
 
 func routeContent(args *model.Args) []string {
 	out := make([]string, 0, 100)
-	lo.ForEach(args.Models.SortedDisplay(), func(m *model.Model, _ int) {
+	lo.ForEach(args.Models.SortedRoutes(), func(m *model.Model, _ int) {
 		out = append(out, routeModelContent(m)...)
 	})
 	return out
@@ -58,14 +61,14 @@ func routeModelContent(m *model.Model) []string {
 		pkg = m.LastGroup("c", "")
 	}
 
-	l := fmt.Sprintf("\tr.GET(\"/%s\", %s.%sList)", m.Route(), pkg, m.Proper())
-	nf := fmt.Sprintf("\tr.GET(\"/%s/_new\", %s.%sCreateForm)", m.Route(), pkg, m.Proper())
-	ns := fmt.Sprintf("\tr.POST(\"/%s/_new\", %s.%sCreate)", m.Route(), pkg, m.Proper())
-	nr := fmt.Sprintf("\tr.GET(\"/%s/_random\", %s.%sRandom)", m.Route(), pkg, m.Proper())
-	d := fmt.Sprintf("\tr.GET(\"/%s/%s\", %s.%sDetail)", m.Route(), pkn, pkg, m.Proper())
-	ef := fmt.Sprintf("\tr.GET(\"/%s/%s/edit\", %s.%sEditForm)", m.Route(), pkn, pkg, m.Proper())
-	es := fmt.Sprintf("\tr.POST(\"/%s/%s/edit\", %s.%sEdit)", m.Route(), pkn, pkg, m.Proper())
-	dl := fmt.Sprintf("\tr.GET(\"/%s/%s/delete\", %s.%sDelete)", m.Route(), pkn, pkg, m.Proper())
+	l := fmt.Sprintf("\tmakeRoute(r, http.MethodGet, \"/%s\", %s.%sList)", m.Route(), pkg, m.Proper())
+	nf := fmt.Sprintf("\tmakeRoute(r, http.MethodGet, \"/%s/_new\", %s.%sCreateForm)", m.Route(), pkg, m.Proper())
+	ns := fmt.Sprintf("\tmakeRoute(r, http.MethodPost, \"/%s/_new\", %s.%sCreate)", m.Route(), pkg, m.Proper())
+	nr := fmt.Sprintf("\tmakeRoute(r, http.MethodGet, \"/%s/_random\", %s.%sRandom)", m.Route(), pkg, m.Proper())
+	d := fmt.Sprintf("\tmakeRoute(r, http.MethodGet, \"/%s/%s\", %s.%sDetail)", m.Route(), pkn, pkg, m.Proper())
+	ef := fmt.Sprintf("\tmakeRoute(r, http.MethodGet, \"/%s/%s/edit\", %s.%sEditForm)", m.Route(), pkn, pkg, m.Proper())
+	es := fmt.Sprintf("\tmakeRoute(r, http.MethodPost, \"/%s/%s/edit\", %s.%sEdit)", m.Route(), pkn, pkg, m.Proper())
+	dl := fmt.Sprintf("\tmakeRoute(r, http.MethodGet, \"/%s/%s/delete\", %s.%sDelete)", m.Route(), pkn, pkg, m.Proper())
 	out = append(out, l, nf, ns, nr, d, ef, es, dl)
 	return out
 }

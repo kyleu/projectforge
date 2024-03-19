@@ -2,9 +2,8 @@
 package controller
 
 import (
+	"net/http"
 	"strings"
-
-	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
@@ -13,23 +12,23 @@ import (
 	"projectforge.dev/projectforge/views/verror"
 )
 
-func Site(rc *fasthttp.RequestCtx) {
-	path := util.StringSplitAndTrim(string(rc.Request.URI().Path()), "/")
+func Site(w http.ResponseWriter, r *http.Request) {
+	path := util.StringSplitAndTrim(string(r.URL.Path), "/")
 	action := "site"
 	if len(path) > 0 {
 		action += "." + strings.Join(path, ".")
 	}
-	ActSite(action, rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+	ActSite(action, w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		redir, page, bc, err := site.Handle(path, as, ps)
 		if err != nil {
 			return "", err
 		}
 		if _, ok := page.(*verror.NotFound); ok {
-			rc.Response.SetStatusCode(404)
+			w.WriteHeader(http.StatusNotFound)
 		}
 		if redir != "" {
 			return redir, nil
 		}
-		return Render(rc, as, page, ps, bc...)
+		return Render(w, r, as, page, ps, bc...)
 	})
 }

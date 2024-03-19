@@ -20,7 +20,7 @@ func controllerDetail(g *golang.File, models model.Models, m *model.Model, grp *
 		controllerArgFor(grp, ret, `""`, 2)
 		grpHistory = fmt.Sprintf(", %q", grp.Camel())
 	}
-	ret.W("\t\tret, err := %sFromPath(rc, as, ps)", m.Package)
+	ret.W("\t\tret, err := %sFromPath(r, as, ps)", m.Package)
 	ret.WE(2, `""`)
 	checkGrp(ret, grp)
 	ret.W("\t\tps.SetTitleAndData(ret.TitleString()+\" (%s)\", ret)", m.Title())
@@ -28,7 +28,7 @@ func controllerDetail(g *golang.File, models model.Models, m *model.Model, grp *
 		return models.Get(r.Table).IsSoftDelete()
 	})
 	if shouldIncDel {
-		ret.W("\t\tincDel := cutil.QueryStringBool(rc, \"includeDeleted\")")
+		ret.W("\t\tincDel := cutil.QueryStringBool(r, \"includeDeleted\")")
 	}
 	ret.WB()
 	argKeys, argVals := getArgs(g, models, m, rrels, ret)
@@ -57,14 +57,14 @@ func controllerDetail(g *golang.File, models model.Models, m *model.Model, grp *
 		})
 		argStr := strings.Join(args, ", ")
 		if audit {
-			msg := "\t\treturn %sRender(rc, as, &v%s.Detail{%s, AuditRecords: relatedAuditRecords}, ps, %s%s, %s)"
+			msg := "\t\treturn %sRender(w, r, as, &v%s.Detail{%s, AuditRecords: relatedAuditRecords}, ps, %s%s, %s)"
 			ret.W(msg, prefix, m.Package, argStr, m.Breadcrumbs(), grpHistory, bcFor(m))
 		} else {
-			msg := "\t\treturn %sRender(rc, as, &v%s.Detail{%s}, ps, %s%s, %s)"
+			msg := "\t\treturn %sRender(w, r, as, &v%s.Detail{%s}, ps, %s%s, %s)"
 			ret.W(msg, prefix, m.Package, argStr, m.Breadcrumbs(), grpHistory, bcFor(m))
 		}
 	} else {
-		ret.W("\t\treturn %sRender(rc, as, &v%s.Detail{", prefix, m.Package)
+		ret.W("\t\treturn %sRender(w, r, as, &v%s.Detail{", prefix, m.Package)
 		keyPad := util.StringArrayMaxLength(argKeys) + 1
 		lo.ForEach(argKeys, func(k string, idx int) {
 			ret.W("\t\t\t%s %s,", util.StringPad(k+":", keyPad), argVals[idx])

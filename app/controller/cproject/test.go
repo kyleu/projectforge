@@ -1,9 +1,10 @@
 package cproject
 
 import (
+	"net/http"
+
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
@@ -16,16 +17,16 @@ import (
 	"projectforge.dev/projectforge/views/vtest"
 )
 
-func TestList(rc *fasthttp.RequestCtx) {
-	controller.Act("test.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func TestList(w http.ResponseWriter, r *http.Request) {
+	controller.Act("test.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ps.SetTitleAndData("Tests", []string{"bootstrap", "diff"})
-		return controller.Render(rc, as, &vtest.List{}, ps, "Tests")
+		return controller.Render(w, r, as, &vtest.List{}, ps, "Tests")
 	})
 }
 
-func TestRun(rc *fasthttp.RequestCtx) {
-	controller.Act("test.run", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := cutil.RCRequiredString(rc, "key", false)
+func TestRun(w http.ResponseWriter, r *http.Request) {
+	controller.Act("test.run", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		key, err := cutil.RCRequiredString(r, "key", false)
 		if err != nil {
 			return "", err
 		}
@@ -63,6 +64,6 @@ func TestRun(rc *fasthttp.RequestCtx) {
 		default:
 			return "", errors.New("invalid test [" + key + "]")
 		}
-		return controller.Render(rc, as, page, ps, bc...)
+		return controller.Render(w, r, as, page, ps, bc...)
 	})
 }

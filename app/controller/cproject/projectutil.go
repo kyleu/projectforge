@@ -2,10 +2,9 @@ package cproject
 
 import (
 	"fmt"
+	"net/http"
 	"strconv"
 	"strings"
-
-	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
@@ -100,8 +99,8 @@ func projectFromForm(frm util.ValueMap, prj *project.Project) error {
 	return nil
 }
 
-func getProject(rc *fasthttp.RequestCtx, as *app.State) (*project.Project, error) {
-	key, err := cutil.RCRequiredString(rc, "key", true)
+func getProject(r *http.Request, as *app.State) (*project.Project, error) {
+	key, err := cutil.RCRequiredString(r, "key", true)
 	if err != nil {
 		return nil, err
 	}

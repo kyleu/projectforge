@@ -2,10 +2,10 @@ package cproject
 
 import (
 	"fmt"
+	"net/http"
 	"strings"
 
 	"github.com/pkg/errors"
-	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
@@ -20,9 +20,9 @@ import (
 
 const appString = "app"
 
-func SVGList(rc *fasthttp.RequestCtx) {
-	controller.Act("svg.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(rc, as)
+func SVGList(w http.ResponseWriter, r *http.Request) {
+	controller.Act("svg.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, err := getProject(r, as)
 		if err != nil {
 			return "", err
 		}
@@ -36,13 +36,13 @@ func SVGList(rc *fasthttp.RequestCtx) {
 		}
 
 		ps.SetTitleAndData("SVG Tools", icons)
-		return controller.Render(rc, as, &vsvg.List{Project: prj, Keys: icons, Contents: contents}, ps, "projects", prj.Key, "SVG")
+		return controller.Render(w, r, as, &vsvg.List{Project: prj, Keys: icons, Contents: contents}, ps, "projects", prj.Key, "SVG")
 	})
 }
 
-func SVGDetail(rc *fasthttp.RequestCtx) {
-	controller.Act("svg.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, fs, key, err := prjAndIcon(rc, as)
+func SVGDetail(w http.ResponseWriter, r *http.Request) {
+	controller.Act("svg.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, fs, key, err := prjAndIcon(r, as)
 		if err != nil {
 			return "", err
 		}
@@ -52,13 +52,13 @@ func SVGDetail(rc *fasthttp.RequestCtx) {
 		}
 		x := &svg.SVG{Key: key, Markup: content}
 		ps.SetTitleAndData("SVG ["+key+"]", x)
-		return controller.Render(rc, as, &vsvg.View{Project: prj, SVG: x}, ps, "projects", prj.Key, "SVG||/svg/"+prj.Key, key)
+		return controller.Render(w, r, as, &vsvg.View{Project: prj, SVG: x}, ps, "projects", prj.Key, "SVG||/svg/"+prj.Key, key)
 	})
 }
 
-func SVGBuild(rc *fasthttp.RequestCtx) {
-	controller.Act("svg.build", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(rc, as)
+func SVGBuild(w http.ResponseWriter, r *http.Request) {
+	controller.Act("svg.build", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, err := getProject(r, as)
 		if err != nil {
 			return "", err
 		}
@@ -71,22 +71,22 @@ func SVGBuild(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		msg := fmt.Sprintf("Parsed [%d] SVG files", count)
-		return controller.FlashAndRedir(true, msg, "/svg/"+prj.Key, rc, ps)
+		return controller.FlashAndRedir(true, msg, "/svg/"+prj.Key, w, ps)
 	})
 }
 
-func SVGAdd(rc *fasthttp.RequestCtx) {
-	controller.Act("svg.add", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		qa := rc.URI().QueryArgs()
-		src := strings.TrimSpace(string(qa.Peek("src")))
+func SVGAdd(w http.ResponseWriter, r *http.Request) {
+	controller.Act("svg.add", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		qa := r.URL.Query()
+		src := strings.TrimSpace(string(qa.Get("src")))
 		if src == "" {
 			return controller.ERsp("must provide [src]")
 		}
-		tgt := string(qa.Peek("tgt"))
+		tgt := string(qa.Get("tgt"))
 		if tgt == "" {
 			tgt = strings.TrimSuffix(src, "-solid")
 		}
-		prj, err := getProject(rc, as)
+		prj, err := getProject(r, as)
 		if err != nil {
 			return "", err
 		}
@@ -103,20 +103,20 @@ func SVGAdd(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		ps.SetTitleAndData("SVG ["+x.Key+"]", x)
-		return controller.Render(rc, as, &vsvg.View{Project: prj, SVG: x}, ps, "projects", prj.Key, "SVG||/svg/"+prj.Key, x.Key)
+		return controller.Render(w, r, as, &vsvg.View{Project: prj, SVG: x}, ps, "projects", prj.Key, "SVG||/svg/"+prj.Key, x.Key)
 	})
 }
 
-func SVGSetApp(rc *fasthttp.RequestCtx) {
-	controller.Act("svg.set.app", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, fs, key, err := prjAndIcon(rc, as)
+func SVGSetApp(w http.ResponseWriter, r *http.Request) {
+	controller.Act("svg.set.app", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, fs, key, err := prjAndIcon(r, as)
 		if err != nil {
 			return "", err
 		}
-		if string(rc.URI().QueryArgs().Peek("hasloaded")) != util.BoolTrue {
-			rc.URI().QueryArgs().Set("hasloaded", util.BoolTrue)
-			page := &vpage.Load{URL: rc.URI().String(), Title: "Generating icons"}
-			return controller.Render(rc, as, page, ps, "projects", prj.Key, "SVG||/svg/"+prj.Key, "App Icon")
+		if r.URL.Query().Get("hasloaded") != util.BoolTrue {
+			r.URL.Query().Set("hasloaded", util.BoolTrue)
+			page := &vpage.Load{URL: r.URL.String(), Title: "Generating icons"}
+			return controller.Render(w, r, as, page, ps, "projects", prj.Key, "SVG||/svg/"+prj.Key, "App Icon")
 		}
 		content, err := svg.Content(fs, key)
 		if err != nil {
@@ -135,20 +135,20 @@ func SVGSetApp(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, "set SVG ["+key+"] as app icon", "/svg/"+prj.Key, rc, ps)
+		return controller.FlashAndRedir(true, "set SVG ["+key+"] as app icon", "/svg/"+prj.Key, w, ps)
 	})
 }
 
-func SVGRefreshApp(rc *fasthttp.RequestCtx) {
-	controller.Act("svg.refresh.app", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(rc, as)
+func SVGRefreshApp(w http.ResponseWriter, r *http.Request) {
+	controller.Act("svg.refresh.app", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, err := getProject(r, as)
 		if err != nil {
 			return "", err
 		}
-		if string(rc.URI().QueryArgs().Peek("hasloaded")) != util.BoolTrue {
-			rc.URI().QueryArgs().Set("hasloaded", util.BoolTrue)
-			page := &vpage.Load{URL: rc.URI().String(), Title: "Generating app icons"}
-			return controller.Render(rc, as, page, ps, "projects", prj.Key, "SVG||/svg/"+prj.Key, "Refresh App Icon")
+		if r.URL.Query().Get("hasloaded") != util.BoolTrue {
+			r.URL.Query().Set("hasloaded", util.BoolTrue)
+			page := &vpage.Load{URL: r.URL.String(), Title: "Generating app icons"}
+			return controller.Render(w, r, as, page, ps, "projects", prj.Key, "SVG||/svg/"+prj.Key, "Refresh App Icon")
 		}
 		pfs, err := as.Services.Projects.GetFilesystem(prj)
 		if err != nil {
@@ -158,13 +158,13 @@ func SVGRefreshApp(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to refresh app icon")
 		}
-		return controller.FlashAndRedir(true, "refreshed app icon", "/svg/"+prj.Key, rc, ps)
+		return controller.FlashAndRedir(true, "refreshed app icon", "/svg/"+prj.Key, w, ps)
 	})
 }
 
-func SVGRemove(rc *fasthttp.RequestCtx) {
-	controller.Act("svg.remove", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, fs, key, err := prjAndIcon(rc, as)
+func SVGRemove(w http.ResponseWriter, r *http.Request) {
+	controller.Act("svg.remove", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, fs, key, err := prjAndIcon(r, as)
 		if err != nil {
 			return "", err
 		}
@@ -179,12 +179,12 @@ func SVGRemove(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, "removed SVG ["+key+"]", "/svg/"+prj.Key, rc, ps)
+		return controller.FlashAndRedir(true, "removed SVG ["+key+"]", "/svg/"+prj.Key, w, ps)
 	})
 }
 
-func prjAndIcon(rc *fasthttp.RequestCtx, as *app.State) (*project.Project, filesystem.FileLoader, string, error) {
-	prj, err := getProject(rc, as)
+func prjAndIcon(r *http.Request, as *app.State) (*project.Project, filesystem.FileLoader, string, error) {
+	prj, err := getProject(r, as)
 	if err != nil {
 		return nil, nil, "", err
 	}
@@ -193,7 +193,7 @@ func prjAndIcon(rc *fasthttp.RequestCtx, as *app.State) (*project.Project, files
 		return nil, nil, "", err
 	}
 
-	key, err := cutil.RCRequiredString(rc, "icon", false)
+	key, err := cutil.RCRequiredString(r, "icon", false)
 	if err != nil {
 		return nil, nil, "", err
 	}

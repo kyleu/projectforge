@@ -1,8 +1,9 @@
 package cutil
 
 import (
+	"net/http"
+
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"{{{ .Package }}}/app/util"
 )
@@ -28,15 +29,15 @@ func (a *ArgResults) HasMissing() bool {
 	return len(a.Missing) > 0
 }
 
-func CollectArgs(rc *fasthttp.RequestCtx, args Args) *ArgResults {
+func CollectArgs(r *http.Request, args Args) *ArgResults {
 	ret := make(util.ValueMap, len(args))
 	var missing []string
 	lo.ForEach(args, func(arg *Arg, _ int) {
-		qa := rc.URI().QueryArgs()
+		qa := r.URL.Query()
 		if !qa.Has(arg.Key) {
 			missing = append(missing, arg.Key)
 		}
-		ret[arg.Key] = string(qa.Peek(arg.Key))
+		ret[arg.Key] = qa.Get(arg.Key)
 	})
 	return &ArgResults{Args: args, Values: ret, Missing: missing}
 }

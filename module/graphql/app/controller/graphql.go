@@ -2,9 +2,9 @@ package controller
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller/cutil"
@@ -12,8 +12,8 @@ import (
 	"{{{ .Package }}}/views/vgraphql"
 )
 
-func GraphQLIndex(rc *fasthttp.RequestCtx) {
-	Act("graphql.index", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func GraphQLIndex(w http.ResponseWriter, r *http.Request) {
+	Act("graphql.index", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		keys := as.GraphQL.Keys()
 		if len(keys) == 1 {
 			return "/graphql/" + keys[0], nil
@@ -22,13 +22,13 @@ func GraphQLIndex(rc *fasthttp.RequestCtx) {
 			return as.GraphQL.ExecCount(key)
 		})
 		ps.SetTitleAndData("GraphQL List", keys)
-		return Render(rc, as, &vgraphql.List{Keys: keys, Counts: counts}, ps, "graphql")
+		return Render(w, r, as, &vgraphql.List{Keys: keys, Counts: counts}, ps, "graphql")
 	})
 }
 
-func GraphQLDetail(rc *fasthttp.RequestCtx) {
-	Act("graphql.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := cutil.RCRequiredString(rc, "key", false)
+func GraphQLDetail(w http.ResponseWriter, r *http.Request) {
+	Act("graphql.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		key, err := cutil.RCRequiredString(r, "key", false)
 		if err != nil {
 			return "", err
 		}
@@ -43,17 +43,17 @@ func GraphQLDetail(rc *fasthttp.RequestCtx) {
 		if len(titles) > 1 {
 			bc = append(bc, key)
 		}
-		return Render(rc, as, &vgraphql.Detail{Key: key}, ps, bc...)
+		return Render(w, r, as, &vgraphql.Detail{Key: key}, ps, bc...)
 	})
 }
 
-func GraphQLRun(rc *fasthttp.RequestCtx) {
-	Act("graphql.run", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := cutil.RCRequiredString(rc, "key", false)
+func GraphQLRun(w http.ResponseWriter, r *http.Request) {
+	Act("graphql.run", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		key, err := cutil.RCRequiredString(r, "key", false)
 		if err != nil {
 			return "", err
 		}
-		frm, err := cutil.ParseForm(rc)
+		frm, err := cutil.ParseForm(r, ps.RequestBody)
 		if err != nil {
 			return "", err
 		}
@@ -68,6 +68,6 @@ func GraphQLRun(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return cutil.RespondMIME("", "application/json", "json", util.ToJSONBytes(rsp, true), rc)
+		return cutil.RespondMIME("", "application/json", "json", util.ToJSONBytes(rsp, true), w)
 	})
 }

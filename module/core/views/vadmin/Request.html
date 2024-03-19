@@ -1,6 +1,7 @@
 {% import (
+  "net/http"
+
   "github.com/samber/lo"
-  "github.com/valyala/fasthttp"
 
   "{{{ .Package }}}/app"
   "{{{ .Package }}}/app/controller/cutil"
@@ -11,7 +12,8 @@
 
 {% code type Request struct {
   layout.Basic
-  RC *fasthttp.RequestCtx
+  Rsp http.ResponseWriter
+  Req *http.Request
 } %}
 
 {% func (p *Request) Body(as *app.State, ps *cutil.PageState) %}
@@ -28,32 +30,28 @@
         </thead>
         <tbody>
           <tr>
-            <td>ID</td>
-            <td>{%dul p.RC.ID() %}</td>
-          </tr>
-          <tr>
             <td>URL</td>
-            <td>{%s p.RC.URI().String() %}</td>
+            <td>{%s p.Req.URL.String() %}</td>
           </tr>
           <tr>
             <td>Protocol</td>
-            <td>{%s string(p.RC.Request.URI().Scheme()) %}</td>
+            <td>{%s p.Req.URL.Scheme %}</td>
           </tr>
           <tr>
             <td>Host</td>
-            <td>{%s string(p.RC.Request.URI().Host()) %}</td>
+            <td>{%s p.Req.URL.Host %}</td>
           </tr>
           <tr>
             <td>Path</td>
-            <td>{%s string(p.RC.Request.URI().Path()) %}</td>
+            <td>{%s p.Req.URL.Path %}</td>
           </tr>
           <tr>
             <td>Query String</td>
-            <td>{%s string(p.RC.Request.URI().QueryString()) %}</td>
+            <td>{%s p.Req.URL.RawQuery %}</td>
           </tr>
           <tr>
             <td>Body Size</td>
-            <td>{%d len(p.RC.Request.Body()) %}</td>
+            <td>{%s util.ByteSizeSI(int64(len(ps.RequestBody))) %}</td>
           </tr>
           <tr>
             <td>Browser</td>
@@ -67,10 +65,8 @@
       </table>
     </div>
   </div>
-  {%- if p.RC.Request.Header.Len() > 0 -%}
-  {%- code
-    hd := cutil.RequestHeadersMap(p.RC)
-  -%}
+  {%- if len(p.Req.Header) > 0 -%}
+  {%- code hd := cutil.RequestHeadersMap(p.Req) -%}
   <div class="card">
     <h3>Headers</h3>
     <div class="overflow full-width">

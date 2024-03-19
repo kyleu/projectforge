@@ -2,8 +2,9 @@
 package clib
 
 import (
+	"net/http"
+
 	"github.com/pkg/errors"
-	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
@@ -13,9 +14,9 @@ import (
 	"projectforge.dev/projectforge/views/vdoc"
 )
 
-func Docs(rc *fasthttp.RequestCtx) {
-	controller.Act("docs", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		pth, _ := cutil.RCRequiredString(rc, "path", false)
+func Docs(w http.ResponseWriter, r *http.Request) {
+	controller.Act("docs", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		pth, _ := cutil.RCRequiredString(r, "path", false)
 		if pth == "" {
 			return "", errors.New("invalid path")
 		}
@@ -31,6 +32,6 @@ func Docs(rc *fasthttp.RequestCtx) {
 		}
 		c, _ := doc.Content(pth + util.ExtMarkdown)
 		ps.SetTitleAndData(title, c)
-		return controller.Render(rc, as, &vdoc.MarkdownPage{Title: pth, HTML: x}, ps, bc...)
+		return controller.Render(w, r, as, &vdoc.MarkdownPage{Title: pth, HTML: x}, ps, bc...)
 	})
 }

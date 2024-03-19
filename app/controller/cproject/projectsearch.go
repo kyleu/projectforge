@@ -2,11 +2,11 @@ package cproject
 
 import (
 	"fmt"
+	"net/http"
 	"unicode/utf8"
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
@@ -18,14 +18,14 @@ import (
 	"projectforge.dev/projectforge/views/vproject"
 )
 
-func ProjectSearch(rc *fasthttp.RequestCtx) {
-	controller.Act("project.search", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(rc, as)
+func ProjectSearch(w http.ResponseWriter, r *http.Request) {
+	controller.Act("project.search", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, err := getProject(r, as)
 		if err != nil {
 			return "", err
 		}
 
-		q := string(rc.URI().QueryArgs().Peek("q"))
+		q := r.URL.Query().Get("q")
 		params := &search.Params{
 			Q:  q,
 			PS: nil,
@@ -38,18 +38,18 @@ func ProjectSearch(rc *fasthttp.RequestCtx) {
 
 		ps.SetTitleAndData(fmt.Sprintf("[%s] Project Results", prj.Title()), res)
 		page := &vproject.Search{Project: prj, Params: params, Results: res}
-		return controller.Render(rc, as, page, ps, "projects", prj.Key, "Search")
+		return controller.Render(w, r, as, page, ps, "projects", prj.Key, "Search")
 	})
 }
 
-func ProjectSearchAll(rc *fasthttp.RequestCtx) {
-	controller.Act("project.search.all", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func ProjectSearchAll(w http.ResponseWriter, r *http.Request) {
+	controller.Act("project.search.all", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prjs := as.Services.Projects.Projects()
-		tags := util.StringSplitAndTrim(string(rc.URI().QueryArgs().Peek("tags")), ",")
+		tags := util.StringSplitAndTrim(r.URL.Query().Get("tags"), ",")
 		if len(tags) > 0 {
 			prjs = prjs.WithTags(tags...)
 		}
-		q := string(rc.URI().QueryArgs().Peek("q"))
+		q := r.URL.Query().Get("q")
 		params := &search.Params{
 			Q:  q,
 			PS: nil,
@@ -66,7 +66,7 @@ func ProjectSearchAll(rc *fasthttp.RequestCtx) {
 		}
 		ps.SetTitleAndData("Project Search Results", ret)
 		page := &vproject.SearchAll{Params: params, Projects: prjs, Tags: tags, Results: ret}
-		return controller.Render(rc, as, page, ps, "projects", "Search")
+		return controller.Render(w, r, as, page, ps, "projects", "Search")
 	})
 }
 

@@ -1,23 +1,20 @@
 package cutil
 
 import (
+	"net/http"
 	"strconv"
 	"strings"
-
-	"github.com/valyala/fasthttp"
 
 	"{{{ .Package }}}/app/lib/filter"
 )
 
-func ParamSetFromRequest(rc *fasthttp.RequestCtx) filter.ParamSet {
+func ParamSetFromRequest(r *http.Request) filter.ParamSet {
 	ret := filter.ParamSet{}
-	args := rc.URI().QueryArgs()
-	args.VisitAll(func(key []byte, _ []byte) {
-		qk := string(key)
-		if strings.Contains(qk, ".") {
-			ret = apply(ret, qk, string(args.Peek(qk)))
+	for k, v := range r.URL.Query() {
+		if strings.Contains(k, ".") {
+			ret = apply(ret, k, strings.Join(v, ","))
 		}
-	})
+	}
 	return ret
 }
 

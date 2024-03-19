@@ -2,12 +2,12 @@ package cproject
 
 import (
 	"cmp"
+	"net/http"
 	"slices"
 	"strconv"
 	"strings"
 
 	"github.com/pkg/errors"
-	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
@@ -19,11 +19,11 @@ import (
 	"projectforge.dev/projectforge/views/vpage"
 )
 
-func GitActionAll(rc *fasthttp.RequestCtx) {
-	a, _ := cutil.RCRequiredString(rc, "act", false)
-	controller.Act("git.all."+a, rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func GitActionAll(w http.ResponseWriter, r *http.Request) {
+	a, _ := cutil.RCRequiredString(r, "act", false)
+	controller.Act("git.all."+a, w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prjs := as.Services.Projects.Projects()
-		tags := util.StringSplitAndTrim(string(rc.URI().QueryArgs().Peek("tags")), ",")
+		tags := util.StringSplitAndTrim(r.URL.Query().Get("tags"), ",")
 		if len(tags) > 0 {
 			prjs = prjs.WithTags(tags...)
 		}
@@ -41,25 +41,25 @@ func GitActionAll(rc *fasthttp.RequestCtx) {
 		case git.ActionOutdated.Key:
 			results, err = gitOutdatedAll(prjs, as, ps)
 		case git.ActionHistory.Key:
-			argRes := cutil.CollectArgs(rc, gitHistoryArgs)
+			argRes := cutil.CollectArgs(r, gitHistoryArgs)
 			if argRes.HasMissing() {
 				url := "/git/all/history"
 				ps.Data = argRes
 				hidden := map[string]string{"tags": strings.Join(tags, ",")}
 				page := &vpage.Args{URL: url, Directions: "Choose your options", ArgRes: argRes, Hidden: hidden}
-				return controller.Render(rc, as, page, ps, "projects", "Git")
+				return controller.Render(w, r, as, page, ps, "projects", "Git")
 			}
-			results, err = gitHistoryAll(prjs, rc, as, ps)
+			results, err = gitHistoryAll(prjs, r, as, ps)
 		case git.ActionMagic.Key:
-			argRes := cutil.CollectArgs(rc, gitMagicArgs)
+			argRes := cutil.CollectArgs(r, gitMagicArgs)
 			if argRes.HasMissing() {
 				url := "/git/all/magic"
 				ps.Data = argRes
 				hidden := map[string]string{"tags": strings.Join(tags, ",")}
 				page := &vpage.Args{URL: url, Directions: "Enter your commit message", ArgRes: argRes, Hidden: hidden}
-				return controller.Render(rc, as, page, ps, "projects", "Git")
+				return controller.Render(w, r, as, page, ps, "projects", "Git")
 			}
-			results, err = gitMagicAll(prjs, rc, as, ps)
+			results, err = gitMagicAll(prjs, r, as, ps)
 		case git.ActionPush.Key:
 			results, err = gitPushAll(prjs, as, ps)
 		case git.ActionUndoCommit.Key:
@@ -74,7 +74,7 @@ func GitActionAll(rc *fasthttp.RequestCtx) {
 			return cmp.Compare(strings.ToLower(l.Project.Title()), strings.ToLower(r.Project.Title()))
 		})
 		ps.SetTitleAndData("[git] All Projects", results)
-		return controller.Render(rc, as, &vgit.Results{Action: action, Results: results, Projects: prjs, Tags: tags}, ps, "projects", "Git")
+		return controller.Render(w, r, as, &vgit.Results{Action: action, Results: results, Projects: prjs, Tags: tags}, ps, "projects", "Git")
 	})
 }
 
@@ -113,12 +113,12 @@ func gitOutdatedAll(prjs project.Projects, as *app.State, ps *cutil.PageState) (
 	return results, util.ErrorMerge(errs...)
 }
 
-func gitHistoryAll(prjs project.Projects, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (git.Results, error) {
-	path := string(rc.URI().QueryArgs().Peek("path"))
-	since, _ := util.TimeFromString(string(rc.URI().QueryArgs().Peek("since")))
-	authors := util.StringSplitAndTrim(string(rc.URI().QueryArgs().Peek("authors")), ",")
-	limit, _ := strconv.ParseInt(string(rc.URI().QueryArgs().Peek("limit")), 10, 32)
-	commit := string(rc.URI().QueryArgs().Peek("commit"))
+func gitHistoryAll(prjs project.Projects, r *http.Request, as *app.State, ps *cutil.PageState) (git.Results, error) {
+	path := r.URL.Query().Get("path")
+	since, _ := util.TimeFromString(r.URL.Query().Get("since"))
+	authors := util.StringSplitAndTrim(r.URL.Query().Get("authors"), ",")
+	limit, _ := strconv.ParseInt(r.URL.Query().Get("limit"), 10, 32)
+	commit := r.URL.Query().Get("commit")
 	results, errs := util.AsyncCollect(prjs, func(prj *project.Project) (*git.Result, error) {
 		hist := &git.HistoryResult{Path: path, Since: since, Authors: authors, Commit: commit, Limit: int(limit)}
 		return as.Services.Git.History(ps.Context, prj, hist, ps.Logger)
@@ -126,9 +126,9 @@ func gitHistoryAll(prjs project.Projects, rc *fasthttp.RequestCtx, as *app.State
 	return results, util.ErrorMerge(errs...)
 }
 
-func gitMagicAll(prjs project.Projects, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (git.Results, error) {
-	message := string(rc.URI().QueryArgs().Peek("message"))
-	dryRun := cutil.QueryStringBool(rc, "dryRun")
+func gitMagicAll(prjs project.Projects, r *http.Request, as *app.State, ps *cutil.PageState) (git.Results, error) {
+	message := r.URL.Query().Get("message")
+	dryRun := cutil.QueryStringBool(r, "dryRun")
 	results, errs := util.AsyncCollect(prjs, func(prj *project.Project) (*git.Result, error) {
 		return as.Services.Git.Magic(ps.Context, prj, message, dryRun, ps.Logger)
 	})

@@ -3,11 +3,12 @@ package cutil
 import (
 	"context"
 	"fmt"
+	"net/http"
+	"net/url"
 	"slices"
 	"time"
 
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller/cmenu"
@@ -41,7 +42,7 @@ type PageState struct {
 	Title          string            `json:"title,omitempty"`
 	Description    string            `json:"description,omitempty"`
 	Method         string            `json:"method,omitempty"`
-	URI            *fasthttp.URI     `json:"-"`
+	URI            *url.URL          `json:"-"`
 	Menu           menu.Items        `json:"menu,omitempty"`
 	Breadcrumbs    cmenu.Breadcrumbs `json:"breadcrumbs,omitempty"`
 	Flashes        []string          `json:"flashes,omitempty"`
@@ -70,6 +71,7 @@ type PageState struct {
 	Data           any               `json:"data,omitempty"`
 	Started        time.Time         `json:"started,omitempty"`
 	RenderElapsed  float64           `json:"renderElapsed,omitempty"`
+	RequestBody    []byte            `json:"-"`
 	Logger         util.Logger       `json:"-"`
 	Context        context.Context   `json:"-"` //nolint:containedctx // properly closed, never directly used
 	Span           *telemetry.Span   `json:"-"`
@@ -130,7 +132,7 @@ func (p *PageState) AuthString() string {
 	return fmt.Sprintf("%s using [%s]", msg, p.Accounts.TitleString())
 }{{{ end }}}{{{ end }}}
 
-func (p *PageState) Clean(_ *fasthttp.RequestCtx, as *app.State) error {
+func (p *PageState) Clean(_ *http.Request, as *app.State) error {
 	if p.Profile != nil && p.Profile.Theme == "" {
 		p.Profile.Theme = theme.Default.Key
 	}

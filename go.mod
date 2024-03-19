@@ -3,18 +3,19 @@ module projectforge.dev/projectforge
 go 1.22
 
 require (
+	github.com/CAFxX/httpcompression v0.0.9
 	github.com/alecthomas/chroma v0.10.0
 	github.com/araddon/dateparse v0.0.0-20210429162001-6b43995a97de
 	github.com/buildkite/shellwords v0.0.0-20180315110454-59467a9b8e10
 	github.com/coreos/go-semver v0.3.1
 	github.com/dsoprea/go-exif/v3 v3.0.1
 	github.com/dustin/go-humanize v1.0.1
-	github.com/fasthttp/router v1.5.0
-	github.com/fasthttp/websocket v1.5.8
 	github.com/gertd/go-pluralize v0.2.1
 	github.com/gomarkdown/markdown v0.0.0-20231222211730-1d6d20845b47
 	github.com/google/go-github/v39 v39.2.0
 	github.com/google/uuid v1.6.0
+	github.com/gorilla/mux v1.8.1
+	github.com/gorilla/websocket v1.5.1
 	github.com/hexops/gotextdiff v1.0.3
 	github.com/iancoleman/strcase v0.2.0
 	github.com/json-iterator/go v1.1.12
@@ -38,6 +39,7 @@ require (
 	go.opentelemetry.io/otel/sdk v1.24.0
 	go.opentelemetry.io/otel/trace v1.24.0
 	go.uber.org/zap v1.27.0
+	golang.org/x/exp v0.0.0-20240314144324-c7f7c6466f7f
 	golang.org/x/mobile v0.0.0-20240213143359-d1f7d3436075
 	golang.org/x/mod v0.15.0
 	golang.org/x/oauth2 v0.18.0
@@ -71,7 +73,6 @@ require (
 	github.com/prometheus/client_model v0.6.0 // indirect
 	github.com/prometheus/common v0.50.0 // indirect
 	github.com/prometheus/procfs v0.13.0 // indirect
-	github.com/savsgio/gotils v0.0.0-20240303185622-093b76447511 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/xrash/smetrics v0.0.0-20240312152122-5f08fbb34913 // indirect
@@ -80,7 +81,6 @@ require (
 	go.opentelemetry.io/proto/otlp v1.1.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/crypto v0.21.0 // indirect
-	golang.org/x/exp v0.0.0-20240314144324-c7f7c6466f7f // indirect
 	golang.org/x/net v0.22.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/tools v0.18.0 // indirect

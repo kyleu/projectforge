@@ -3,10 +3,10 @@ package clib
 import (
 	"fmt"
 	"io"
+	"net/http"
 	"strings"
 
 	"github.com/pkg/errors"
-	"github.com/valyala/fasthttp"
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller"
@@ -17,17 +17,17 @@ import (
 	"{{{ .Package }}}/views/vpage"
 )
 
-func HarList(rc *fasthttp.RequestCtx) {
-	controller.Act("har.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func HarList(w http.ResponseWriter, r *http.Request) {
+	controller.Act("har.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := as.Services.Har.List(ps.Logger)
 		ps.SetTitleAndData("Archives", ret)
-		return controller.Render(rc, as, &vhar.List{Hars: ret}, ps, "har")
+		return controller.Render(w, r, as, &vhar.List{Hars: ret}, ps, "har")
 	})
 }
 
-func HarDetail(rc *fasthttp.RequestCtx) {
-	controller.Act("har.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := cutil.RCRequiredString(rc, "key", true)
+func HarDetail(w http.ResponseWriter, r *http.Request) {
+	controller.Act("har.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		key, err := cutil.RCRequiredString(r, "key", true)
 		if err != nil {
 			return "", err
 		}
@@ -36,13 +36,13 @@ func HarDetail(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		ps.SetTitleAndData("Archive ["+key+"]", ret)
-		return controller.Render(rc, as, &vhar.Detail{Har: ret}, ps, "har", ret.Key)
+		return controller.Render(w, r, as, &vhar.Detail{Har: ret}, ps, "har", ret.Key)
 	})
 }
 
-func HarDelete(rc *fasthttp.RequestCtx) {
-	controller.Act("har.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := cutil.RCRequiredString(rc, "key", true)
+func HarDelete(w http.ResponseWriter, r *http.Request) {
+	controller.Act("har.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		key, err := cutil.RCRequiredString(r, "key", true)
 		if err != nil {
 			return "", err
 		}
@@ -50,13 +50,13 @@ func HarDelete(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, "Archive deleted", "/har", rc, ps)
+		return controller.FlashAndRedir(true, "Archive deleted", "/har", w, ps)
 	})
 }
 
-func HarTrim(rc *fasthttp.RequestCtx) {
-	controller.Act("har.trim", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := cutil.RCRequiredString(rc, "key", true)
+func HarTrim(w http.ResponseWriter, r *http.Request) {
+	controller.Act("har.trim", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		key, err := cutil.RCRequiredString(r, "key", true)
 		if err != nil {
 			return "", err
 		}
@@ -68,11 +68,11 @@ func HarTrim(rc *fasthttp.RequestCtx) {
 			{Key: "url", Title: "URL", Description: "matches against the URL (add \"*\" on either side to match wildcards)", Type: "string"},
 			{Key: "mime", Title: "MIME", Description: "matches against the MIME type of the response", Type: "string", Choices: []string{"application/json"}},
 		}
-		argRes := cutil.CollectArgs(rc, trimArgs)
+		argRes := cutil.CollectArgs(r, trimArgs)
 		if argRes.HasMissing() {
 			url := fmt.Sprintf("%s/trim", h.WebPath())
 			ps.Data = argRes
-			return controller.Render(rc, as, &vpage.Args{URL: url, Directions: "Select the requests to trim", ArgRes: argRes}, ps, "har", h.Key, "Trim")
+			return controller.Render(w, r, as, &vpage.Args{URL: url, Directions: "Select the requests to trim", ArgRes: argRes}, ps, "har", h.Key, "Trim")
 		}
 		originalCount := len(h.Entries)
 		h.Entries, err = h.Entries.Find(&har.Selector{URL: argRes.Values.GetStringOpt("url"), Mime: argRes.Values.GetStringOpt("mime")})
@@ -81,23 +81,23 @@ func HarTrim(rc *fasthttp.RequestCtx) {
 		}
 		newCount := len(h.Entries)
 		if newCount == originalCount {
-			return controller.FlashAndRedir(true, "no changes needed", h.WebPath(), rc, ps)
+			return controller.FlashAndRedir(true, "no changes needed", h.WebPath(), w, ps)
 		}
 		err = as.Services.Har.Save(h)
 		if err != nil {
 			return "", err
 		}
 		msg := fmt.Sprintf("Trimmed [%d] entries from archive", originalCount-newCount)
-		return controller.FlashAndRedir(true, msg, h.WebPath(), rc, ps)
+		return controller.FlashAndRedir(true, msg, h.WebPath(), w, ps)
 	})
 }
 
-func HarUpload(rc *fasthttp.RequestCtx) {
-	controller.Act("har.upload", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		mpfrm, err := rc.MultipartForm()
-		if err != nil {
+func HarUpload(w http.ResponseWriter, r *http.Request) {
+	controller.Act("har.upload", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		if err := r.ParseMultipartForm(cutil.MaxBodySize); err != nil {
 			return "", err
 		}
+		mpfrm := r.MultipartForm
 		name := strings.Join(mpfrm.Value["n"], "")
 		fileHeaders, ok := mpfrm.File["f"]
 		if !ok {
@@ -139,6 +139,6 @@ func HarUpload(rc *fasthttp.RequestCtx) {
 		}
 		msg := fmt.Sprintf("Created [%s] (%s)", name, util.ByteSizeSI(fileHeader.Size))
 		redir := "/har/" + name
-		return controller.FlashAndRedir(true, msg, redir, rc, ps)
+		return controller.FlashAndRedir(true, msg, redir, w, ps)
 	})
 }

@@ -2,9 +2,9 @@ package cproject
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
@@ -16,20 +16,20 @@ import (
 	"projectforge.dev/projectforge/views/vaction"
 )
 
-func RunAllActions(rc *fasthttp.RequestCtx) {
+func RunAllActions(w http.ResponseWriter, r *http.Request) {
 	helpKey := "run.all"
-	actKey, _ := cutil.RCRequiredString(rc, "act", false)
+	actKey, _ := cutil.RCRequiredString(r, "act", false)
 	if actKey != "" {
 		helpKey += "." + actKey
 	}
-	controller.Act(helpKey, rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		actS, err := cutil.RCRequiredString(rc, "act", false)
+	controller.Act(helpKey, w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		actS, err := cutil.RCRequiredString(r, "act", false)
 		if err != nil {
 			return "", err
 		}
-		cfg := cutil.QueryArgsMap(rc)
+		cfg := cutil.QueryArgsMap(r)
 		prjs := as.Services.Projects.Projects()
-		tags := util.StringSplitAndTrim(string(rc.URI().QueryArgs().Peek("tags")), ",")
+		tags := util.StringSplitAndTrim(r.URL.Query().Get("tags"), ",")
 		if len(tags) == 0 {
 			prjs = prjs.WithoutTags("all-skip")
 		} else {
@@ -48,7 +48,7 @@ func RunAllActions(rc *fasthttp.RequestCtx) {
 			}
 		}
 		if actS == "start" {
-			return runAllStart(rc, as, ps)
+			return runAllStart(w, r, as, ps)
 		}
 		actT := action.TypeFromString(actS)
 
@@ -57,11 +57,11 @@ func RunAllActions(rc *fasthttp.RequestCtx) {
 			case "":
 				ps.SetTitleAndData("Build All Projects", prjs)
 				page := &vaction.Results{T: actT, Cfg: cfg, Projects: prjs, Ctxs: nil, Tags: tags, IsBuild: true}
-				return controller.Render(rc, as, page, ps, "projects", actT.Title)
+				return controller.Render(w, r, as, page, ps, "projects", actT.Title)
 			case depsKey:
-				return runAllDeps(cfg, prjs, tags, rc, as, ps)
+				return runAllDeps(cfg, prjs, tags, w, r, as, ps)
 			case pkgsKey:
-				return runAllPkgs(cfg, prjs, rc, as, ps)
+				return runAllPkgs(cfg, prjs, w, r, as, ps)
 			}
 		}
 
@@ -69,11 +69,11 @@ func RunAllActions(rc *fasthttp.RequestCtx) {
 
 		ps.SetTitleAndData(fmt.Sprintf("[%s] All Projects", actT.Title), results)
 		page := &vaction.Results{T: actT, Cfg: cfg, Projects: prjs, Ctxs: results, Tags: tags}
-		return controller.Render(rc, as, page, ps, "projects", actT.Title)
+		return controller.Render(w, r, as, page, ps, "projects", actT.Title)
 	})
 }
 
-func runAllStart(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (string, error) {
+func runAllStart(w http.ResponseWriter, r *http.Request, as *app.State, ps *cutil.PageState) (string, error) {
 	ps.SetTitleAndData("Start All", "TODO")
-	return controller.Render(rc, as, &views.Debug{}, ps, "projects", "Start")
+	return controller.Render(w, r, as, &views.Debug{}, ps, "projects", "Start")
 }

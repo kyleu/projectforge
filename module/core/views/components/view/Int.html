@@ -1,9 +1,9 @@
 {% import "{{{ .Package }}}/app/util" %}
 
-{% func Int(i int) %}{% stripspace %}
-  {%d i %}
+{% func Int(i any) %}{% stripspace %}
+  {%v i %}
 {% endstripspace %}{% endfunc %}
 
-{% func IntArray(value []int) %}{% stripspace %}
+{% func IntArray(value []any) %}{% stripspace %}
   {%= StringArray(util.ArrayToStringArray(value)) %}
 {% endstripspace %}{% endfunc %}

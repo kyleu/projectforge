@@ -2,43 +2,44 @@
 package clib
 
 import (
+	"net/http"
 	"strings"
-
-	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/assets"
 )
 
-func Favicon(rc *fasthttp.RequestCtx) {
+func Favicon(w http.ResponseWriter, r *http.Request) {
 	e, err := assets.Embed("favicon.ico")
-	assetResponse(rc, e, err)
+	assetResponse(w, r, e, err)
 }
 
-func RobotsTxt(rc *fasthttp.RequestCtx) {
+func RobotsTxt(w http.ResponseWriter, r *http.Request) {
 	e, err := assets.Embed("robots.txt")
-	assetResponse(rc, e, err)
+	assetResponse(w, r, e, err)
 }
 
-func Static(rc *fasthttp.RequestCtx) {
-	p := strings.TrimPrefix(string(rc.Request.URI().Path()), "/assets")
+func Static(w http.ResponseWriter, r *http.Request) {
+	p := strings.TrimPrefix(r.URL.Path, "/assets")
 	p = strings.TrimPrefix(p, "/")
 	if strings.Contains(p, "../") {
-		rc.Error("invalid path", fasthttp.StatusNotFound)
+		w.WriteHeader(http.StatusNotFound)
+		_, _ = w.Write([]byte("invalid path"))
 	} else {
 		e, err := assets.Embed(p)
-		assetResponse(rc, e, err)
+		assetResponse(w, r, e, err)
 	}
 }
 
-func assetResponse(rc *fasthttp.RequestCtx, e *assets.Entry, err error) {
+func assetResponse(w http.ResponseWriter, r *http.Request, e *assets.Entry, err error) {
 	if err == nil {
-		rc.Response.Header.SetContentType(e.Mime)
-		rc.Response.Header.Set("Cache-Control", "public, max-age=3600")
-		rc.SetStatusCode(fasthttp.StatusOK)
-		cutil.WriteCORS(rc)
-		_, _ = rc.Write(e.Bytes)
+		w.Header().Set(cutil.HeaderContentType, e.Mime)
+		w.Header().Set(cutil.HeaderCacheControl, "public, max-age=3600")
+		w.WriteHeader(http.StatusOK)
+		cutil.WriteCORS(w)
+		_, _ = w.Write(e.Bytes)
 	} else {
-		rc.Error(err.Error(), fasthttp.StatusNotFound)
+		w.WriteHeader(http.StatusNotFound)
+		_, _ = w.Write([]byte(err.Error()))
 	}
 }

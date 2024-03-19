@@ -2,8 +2,7 @@ package cproject
 
 import (
 	"fmt"
-
-	"github.com/valyala/fasthttp"
+	"net/http"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
@@ -12,9 +11,9 @@ import (
 	"projectforge.dev/projectforge/views/vexport"
 )
 
-func ProjectExportConfigForm(rc *fasthttp.RequestCtx) {
-	controller.Act("project.export.config.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(rc, as)
+func ProjectExportConfigForm(w http.ResponseWriter, r *http.Request) {
+	controller.Act("project.export.config.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, err := getProject(r, as)
 		if err != nil {
 			return "", err
 		}
@@ -27,17 +26,17 @@ func ProjectExportConfigForm(rc *fasthttp.RequestCtx) {
 
 		bc := []string{"projects", prj.Key, "Export"}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] Export", prj.Key), args.Config)
-		return controller.Render(rc, as, &vexport.ConfigForm{Project: prj, Cfg: args.Config}, ps, bc...)
+		return controller.Render(w, r, as, &vexport.ConfigForm{Project: prj, Cfg: args.Config}, ps, bc...)
 	})
 }
 
-func ProjectExportConfigSave(rc *fasthttp.RequestCtx) {
-	controller.Act("project.export.config.save", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		frm, err := cutil.ParseForm(rc)
+func ProjectExportConfigSave(w http.ResponseWriter, r *http.Request) {
+	controller.Act("project.export.config.save", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		frm, err := cutil.ParseForm(r, ps.RequestBody)
 		if err != nil {
 			return "", err
 		}
-		prj, err := getProject(rc, as)
+		prj, err := getProject(r, as)
 		if err != nil {
 			return "", err
 		}
@@ -60,6 +59,6 @@ func ProjectExportConfigSave(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 
-		return controller.FlashAndRedir(true, "configuration saved", fmt.Sprintf("/p/%s/export", prj.Key), rc, ps)
+		return controller.FlashAndRedir(true, "configuration saved", fmt.Sprintf("/p/%s/export", prj.Key), w, ps)
 	})
 }

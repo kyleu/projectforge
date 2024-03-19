@@ -8,7 +8,7 @@ package components
 
 //line views/components/TableHeader.html:2
 import (
-	"github.com/valyala/fasthttp"
+	"net/url"
 
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/filter"
@@ -28,7 +28,7 @@ var (
 )
 
 //line views/components/TableHeader.html:9
-func StreamTableHeader(qw422016 *qt422016.Writer, section string, key string, title string, params *filter.Params, icon string, u *fasthttp.URI, tooltip string, sortable bool, cls string, resizable bool, ps *cutil.PageState) {
+func StreamTableHeader(qw422016 *qt422016.Writer, section string, key string, title string, params *filter.Params, icon string, u *url.URL, tooltip string, sortable bool, cls string, resizable bool, ps *cutil.PageState) {
 //line views/components/TableHeader.html:9
 	qw422016.N().S(`<th class="`)
 //line views/components/TableHeader.html:10
@@ -100,7 +100,7 @@ func StreamTableHeader(qw422016 *qt422016.Writer, section string, key string, ti
 }
 
 //line views/components/TableHeader.html:32
-func WriteTableHeader(qq422016 qtio422016.Writer, section string, key string, title string, params *filter.Params, icon string, u *fasthttp.URI, tooltip string, sortable bool, cls string, resizable bool, ps *cutil.PageState) {
+func WriteTableHeader(qq422016 qtio422016.Writer, section string, key string, title string, params *filter.Params, icon string, u *url.URL, tooltip string, sortable bool, cls string, resizable bool, ps *cutil.PageState) {
 //line views/components/TableHeader.html:32
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/components/TableHeader.html:32
@@ -111,7 +111,7 @@ func WriteTableHeader(qq422016 qtio422016.Writer, section string, key string, ti
 }
 
 //line views/components/TableHeader.html:32
-func TableHeader(section string, key string, title string, params *filter.Params, icon string, u *fasthttp.URI, tooltip string, sortable bool, cls string, resizable bool, ps *cutil.PageState) string {
+func TableHeader(section string, key string, title string, params *filter.Params, icon string, u *url.URL, tooltip string, sortable bool, cls string, resizable bool, ps *cutil.PageState) string {
 //line views/components/TableHeader.html:32
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/components/TableHeader.html:32
@@ -126,14 +126,14 @@ func TableHeader(section string, key string, title string, params *filter.Params
 }
 
 //line views/components/TableHeader.html:34
-func StreamTableHeaderSimple(qw422016 *qt422016.Writer, section string, key string, title string, tooltip string, params *filter.Params, u *fasthttp.URI, ps *cutil.PageState) {
+func StreamTableHeaderSimple(qw422016 *qt422016.Writer, section string, key string, title string, tooltip string, params *filter.Params, u *url.URL, ps *cutil.PageState) {
 //line views/components/TableHeader.html:35
 	StreamTableHeader(qw422016, section, key, title, params, "", u, tooltip, u != nil, "", false, ps)
 //line views/components/TableHeader.html:36
 }
 
 //line views/components/TableHeader.html:36
-func WriteTableHeaderSimple(qq422016 qtio422016.Writer, section string, key string, title string, tooltip string, params *filter.Params, u *fasthttp.URI, ps *cutil.PageState) {
+func WriteTableHeaderSimple(qq422016 qtio422016.Writer, section string, key string, title string, tooltip string, params *filter.Params, u *url.URL, ps *cutil.PageState) {
 //line views/components/TableHeader.html:36
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/components/TableHeader.html:36
@@ -144,7 +144,7 @@ func WriteTableHeaderSimple(qq422016 qtio422016.Writer, section string, key stri
 }
 
 //line views/components/TableHeader.html:36
-func TableHeaderSimple(section string, key string, title string, tooltip string, params *filter.Params, u *fasthttp.URI, ps *cutil.PageState) string {
+func TableHeaderSimple(section string, key string, title string, tooltip string, params *filter.Params, u *url.URL, ps *cutil.PageState) string {
 //line views/components/TableHeader.html:36
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/components/TableHeader.html:36
@@ -159,7 +159,7 @@ func TableHeaderSimple(section string, key string, title string, tooltip string,
 }
 
 //line views/components/TableHeader.html:38
-func streamthNormal(qw422016 *qt422016.Writer, section string, key string, title string, params *filter.Params, icon string, u *fasthttp.URI, tooltip string, ps *cutil.PageState) {
+func streamthNormal(qw422016 *qt422016.Writer, section string, key string, title string, params *filter.Params, icon string, u *url.URL, tooltip string, ps *cutil.PageState) {
 //line views/components/TableHeader.html:38
 	qw422016.N().S(`<a class="sort-hover" href="?`)
 //line views/components/TableHeader.html:39
@@ -190,7 +190,7 @@ func streamthNormal(qw422016 *qt422016.Writer, section string, key string, title
 }
 
 //line views/components/TableHeader.html:49
-func writethNormal(qq422016 qtio422016.Writer, section string, key string, title string, params *filter.Params, icon string, u *fasthttp.URI, tooltip string, ps *cutil.PageState) {
+func writethNormal(qq422016 qtio422016.Writer, section string, key string, title string, params *filter.Params, icon string, u *url.URL, tooltip string, ps *cutil.PageState) {
 //line views/components/TableHeader.html:49
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/components/TableHeader.html:49
@@ -201,7 +201,7 @@ func writethNormal(qq422016 qtio422016.Writer, section string, key string, title
 }
 
 //line views/components/TableHeader.html:49
-func thNormal(section string, key string, title string, params *filter.Params, icon string, u *fasthttp.URI, tooltip string, ps *cutil.PageState) string {
+func thNormal(section string, key string, title string, params *filter.Params, icon string, u *url.URL, tooltip string, ps *cutil.PageState) string {
 //line views/components/TableHeader.html:49
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/components/TableHeader.html:49
@@ -216,7 +216,7 @@ func thNormal(section string, key string, title string, params *filter.Params, i
 }
 
 //line views/components/TableHeader.html:51
-func streamthSorted(qw422016 *qt422016.Writer, asc bool, section string, key string, title string, params *filter.Params, icon string, u *fasthttp.URI, tooltip string, ps *cutil.PageState) {
+func streamthSorted(qw422016 *qt422016.Writer, asc bool, section string, key string, title string, params *filter.Params, icon string, u *url.URL, tooltip string, ps *cutil.PageState) {
 //line views/components/TableHeader.html:53
 	ascStr := "ascending"
 	dirStr := "up"
@@ -261,7 +261,7 @@ func streamthSorted(qw422016 *qt422016.Writer, asc bool, section string, key str
 }
 
 //line views/components/TableHeader.html:70
-func writethSorted(qq422016 qtio422016.Writer, asc bool, section string, key string, title string, params *filter.Params, icon string, u *fasthttp.URI, tooltip string, ps *cutil.PageState) {
+func writethSorted(qq422016 qtio422016.Writer, asc bool, section string, key string, title string, params *filter.Params, icon string, u *url.URL, tooltip string, ps *cutil.PageState) {
 //line views/components/TableHeader.html:70
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/components/TableHeader.html:70
@@ -272,7 +272,7 @@ func writethSorted(qq422016 qtio422016.Writer, asc bool, section string, key str
 }
 
 //line views/components/TableHeader.html:70
-func thSorted(asc bool, section string, key string, title string, params *filter.Params, icon string, u *fasthttp.URI, tooltip string, ps *cutil.PageState) string {
+func thSorted(asc bool, section string, key string, title string, params *filter.Params, icon string, u *url.URL, tooltip string, ps *cutil.PageState) string {
 //line views/components/TableHeader.html:70
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/components/TableHeader.html:70

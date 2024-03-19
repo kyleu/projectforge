@@ -2,8 +2,9 @@
 package routes
 
 import (
-	"github.com/fasthttp/router"
-	"github.com/valyala/fasthttp"
+	"net/http"
+
+	"github.com/gorilla/mux"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
@@ -12,42 +13,47 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+func makeRoute(x *mux.Router, method string, path string, f http.HandlerFunc) {
+	cutil.AddRoute(method, path)
+	x.HandleFunc(path, f).Methods(method)
+}
+
 //nolint:revive
-func AppRoutes(as *app.State, logger util.Logger) fasthttp.RequestHandler {
-	r := router.New()
+func AppRoutes(as *app.State, logger util.Logger) (http.Handler, error) {
+	r := mux.NewRouter()
 
-	r.GET("/", controller.Home)
-	r.GET("/healthcheck", clib.Healthcheck)
-	r.GET("/about", clib.About)
+	makeRoute(r, http.MethodGet, "/", controller.Home)
+	makeRoute(r, http.MethodGet, "/healthcheck", clib.Healthcheck)
+	makeRoute(r, http.MethodGet, "/about", clib.About)
 
-	r.GET(cutil.DefaultProfilePath, clib.Profile)
-	r.POST(cutil.DefaultProfilePath, clib.ProfileSave)
-	r.GET(cutil.DefaultSearchPath, clib.Search)
+	makeRoute(r, http.MethodGet, cutil.DefaultProfilePath, clib.Profile)
+	makeRoute(r, http.MethodPost, cutil.DefaultProfilePath, clib.ProfileSave)
+	makeRoute(r, http.MethodGet, cutil.DefaultSearchPath, clib.Search)
+
 	themeRoutes(r)
 
 	// $PF_SECTION_START(routes)$
 	moduleRoutes(r)
 	projectRoutes(r)
 
-	r.GET("/testbed", controller.Testbed)
-	r.POST("/testbed", controller.Testbed)
+	makeRoute(r, http.MethodGet, "/testbed", controller.Testbed)
+	makeRoute(r, http.MethodPost, "/testbed", controller.Testbed)
 	// $PF_SECTION_END(routes)$
 
-	r.GET("/docs", clib.Docs)
-	r.GET("/docs/{path:*}", clib.Docs)
+	makeRoute(r, http.MethodGet, "/docs", clib.Docs)
+	makeRoute(r, http.MethodGet, "/docs/{path:.*}", clib.Docs)
 
-	r.GET("/admin", clib.Admin)
+	makeRoute(r, http.MethodGet, "/admin", clib.Admin)
+	makeRoute(r, http.MethodGet, "/admin/", clib.Admin)
+	makeRoute(r, http.MethodPost, "/admin/", clib.Admin)
 	execRoutes(r)
-	r.GET("/admin/{path:*}", clib.Admin)
-	r.POST("/admin/{path:*}", clib.Admin)
 
-	r.GET("/favicon.ico", clib.Favicon)
-	r.GET("/robots.txt", clib.RobotsTxt)
-	r.GET("/assets/{_:*}", clib.Static)
+	makeRoute(r, http.MethodGet, "/favicon.ico", clib.Favicon)
+	makeRoute(r, http.MethodGet, "/robots.txt", clib.RobotsTxt)
+	makeRoute(r, http.MethodGet, "/assets/{path:.*}", clib.Static)
 
-	r.OPTIONS("/", controller.Options)
-	r.OPTIONS("/{_:*}", controller.Options)
-	r.NotFound = controller.NotFoundAction
+	makeRoute(r, http.MethodOptions, "/", controller.Options)
+	r.HandleFunc("/", controller.NotFoundAction)
 
-	return clib.WireRouter(r, logger)
+	return cutil.WireRouter(r, logger)
 }

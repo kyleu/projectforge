@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/valyala/fasthttp"
+	"net/http"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
@@ -9,12 +9,12 @@ import (
 	"projectforge.dev/projectforge/views"
 )
 
-func Home(rc *fasthttp.RequestCtx) {
-	Act("home", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func Home(w http.ResponseWriter, r *http.Request) {
+	Act("home", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prjs := as.Services.Projects.Projects()
 		execs := as.Services.Exec.Execs
 		mods := as.Services.Modules.Modules()
 		ps.Data = util.ValueMap{"projects": prjs, "modules": mods}
-		return Render(rc, as, &views.Home{Projects: prjs, Execs: execs, Modules: mods}, ps)
+		return Render(w, r, as, &views.Home{Projects: prjs, Execs: execs, Modules: mods}, ps)
 	})
 }

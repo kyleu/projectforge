@@ -1,10 +1,10 @@
 {% import (
-  "github.com/valyala/fasthttp"
+  "net/url"
 
   "{{{ .Package }}}/app/lib/filter"
 ) %}
 
-{% func Pagination(count int, params *filter.Params, u *fasthttp.URI) %}{% stripspace %}
+{% func Pagination(count int, params *filter.Params, u *url.URL) %}{% stripspace %}
   {% if params != nil %}
     {% if params.HasNextPage(count) %}
       <div class="right">

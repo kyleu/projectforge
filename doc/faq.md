@@ -133,9 +133,9 @@ The usual form is:
 
 ```go
 // All controller actions require a fasthttp request/response
-func CurrentTime(rc *fasthttp.RequestCtx) {
+func CurrentTime(w http.ResponseWriter, r *http.Request) {
 	// The Act method wires up the page state for your logic
-	Act("current.time", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+	Act("current.time", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		// The PageState::Title is used as the HTML title
 		ps.Title = "The current server time for " + util.AppName
 		// For example purposes
@@ -143,7 +143,7 @@ func CurrentTime(rc *fasthttp.RequestCtx) {
 		// PageState::Data will be rendered as JSON or XML if the Content-Type of the request matches
 		ps.Data = t
 		// The Render method will send the template contents if HTML is requested. The final argument refers to the active menu key
-		return Render(rc, as, &views.CurrentTime{Time: t}, ps, "time")
+		return Render(w, r, as, &views.CurrentTime{Time: t}, ps, "time")
 	})
 }
 ```
@@ -151,7 +151,7 @@ func CurrentTime(rc *fasthttp.RequestCtx) {
 Add your action to `./app/controller/routes/routes.go` like so:
 
 ```go
-r.GET("/time", controller.CurrentTime)
+makeRoute(r, http.MethodGet, "/time", controller.CurrentTime)
 ```
 
 Then create a menu item in `./app/controller/cmenu/menu.go` like so:

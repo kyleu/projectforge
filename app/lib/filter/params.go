@@ -3,10 +3,10 @@ package filter
 
 import (
 	"fmt"
+	"net/url"
 	"strings"
 
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app/util"
 )
@@ -174,7 +174,7 @@ func (p *Params) String() string {
 	return fmt.Sprintf("%s(%s): %s", p.Key, ol, strings.Join(ord, " / "))
 }
 
-func (p *Params) ToQueryString(u *fasthttp.URI) string {
+func (p *Params) ToQueryString(u *url.URL) string {
 	if p == nil {
 		return ""
 	}
@@ -183,8 +183,10 @@ func (p *Params) ToQueryString(u *fasthttp.URI) string {
 		return ""
 	}
 
-	ret := &fasthttp.Args{}
-	u.QueryArgs().CopyTo(ret)
+	ret := url.Values{}
+	for k, v := range u.Query() {
+		ret[k] = v
+	}
 
 	ret.Del(p.Key + SuffixOrder)
 	ret.Del(p.Key + SuffixLimit)
@@ -206,5 +208,5 @@ func (p *Params) ToQueryString(u *fasthttp.URI) string {
 		ret.Add(p.Key+SuffixOffset, fmt.Sprint(p.Offset))
 	}
 
-	return string(ret.QueryString())
+	return ret.Encode()
 }

@@ -2,9 +2,9 @@ package cproject
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/pkg/errors"
-	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
@@ -15,9 +15,9 @@ import (
 	"projectforge.dev/projectforge/views/vexport"
 )
 
-func ProjectExportEnumDetail(rc *fasthttp.RequestCtx) {
-	controller.Act("project.export.enum.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, e, _, err := exportLoadEnum(rc, as, ps.Logger)
+func ProjectExportEnumDetail(w http.ResponseWriter, r *http.Request) {
+	controller.Act("project.export.enum.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, e, _, err := exportLoadEnum(r, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -28,13 +28,13 @@ func ProjectExportEnumDetail(rc *fasthttp.RequestCtx) {
 
 		bc := []string{"projects", prj.Key, fmt.Sprintf("Export||/p/%s/export", prj.Key), e.Title()}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] %s", prj.Key, e.Name), e)
-		return controller.Render(rc, as, &vexport.EnumDetail{Project: prj, Enum: e, File: fl}, ps, bc...)
+		return controller.Render(w, r, as, &vexport.EnumDetail{Project: prj, Enum: e, File: fl}, ps, bc...)
 	})
 }
 
-func ProjectExportEnumNew(rc *fasthttp.RequestCtx) {
-	controller.Act("project.export.enum.new", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(rc, as)
+func ProjectExportEnumNew(w http.ResponseWriter, r *http.Request) {
+	controller.Act("project.export.enum.new", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, err := getProject(r, as)
 		if err != nil {
 			return "", err
 		}
@@ -42,18 +42,18 @@ func ProjectExportEnumNew(rc *fasthttp.RequestCtx) {
 		e := &enum.Enum{}
 		bc := []string{"projects", prj.Key, fmt.Sprintf("Export||/p/%s/export", prj.Key), "New"}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] New Enum", prj.Key), e)
-		return controller.Render(rc, as, &vexport.EnumForm{Project: prj, Enum: e, Examples: enum.Examples}, ps, bc...)
+		return controller.Render(w, r, as, &vexport.EnumForm{Project: prj, Enum: e, Examples: enum.Examples}, ps, bc...)
 	})
 }
 
-func ProjectExportEnumCreate(rc *fasthttp.RequestCtx) {
-	controller.Act("project.export.enum.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(rc, as)
+func ProjectExportEnumCreate(w http.ResponseWriter, r *http.Request) {
+	controller.Act("project.export.enum.create", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, err := getProject(r, as)
 		if err != nil {
 			return "", err
 		}
 
-		frm, err := cutil.ParseForm(rc)
+		frm, err := cutil.ParseForm(r, ps.RequestBody)
 		if err != nil {
 			return "", err
 		}
@@ -75,13 +75,13 @@ func ProjectExportEnumCreate(rc *fasthttp.RequestCtx) {
 
 		msg := "enum created successfully"
 		u := fmt.Sprintf("/p/%s/export/enums/%s", prj.Key, mdl.Name)
-		return controller.FlashAndRedir(true, msg, u, rc, ps)
+		return controller.FlashAndRedir(true, msg, u, w, ps)
 	})
 }
 
-func ProjectExportEnumForm(rc *fasthttp.RequestCtx) {
-	controller.Act("project.export.enum.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, e, _, err := exportLoadEnum(rc, as, ps.Logger)
+func ProjectExportEnumForm(w http.ResponseWriter, r *http.Request) {
+	controller.Act("project.export.enum.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, e, _, err := exportLoadEnum(r, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -94,18 +94,18 @@ func ProjectExportEnumForm(rc *fasthttp.RequestCtx) {
 			"Edit",
 		}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] %s", prj.Key, e.Name), e)
-		return controller.Render(rc, as, &vexport.EnumForm{Project: prj, Enum: e, Examples: enum.Examples}, ps, bc...)
+		return controller.Render(w, r, as, &vexport.EnumForm{Project: prj, Enum: e, Examples: enum.Examples}, ps, bc...)
 	})
 }
 
-func ProjectExportEnumSave(rc *fasthttp.RequestCtx) {
-	controller.Act("project.export.enum.save", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, e, _, err := exportLoadEnum(rc, as, ps.Logger)
+func ProjectExportEnumSave(w http.ResponseWriter, r *http.Request) {
+	controller.Act("project.export.enum.save", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, e, _, err := exportLoadEnum(r, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}
 
-		frm, err := cutil.ParseForm(rc)
+		frm, err := cutil.ParseForm(r, ps.RequestBody)
 		if err != nil {
 			return "", err
 		}
@@ -125,13 +125,13 @@ func ProjectExportEnumSave(rc *fasthttp.RequestCtx) {
 
 		msg := "enum saved successfully"
 		u := fmt.Sprintf("/p/%s/export/enums/%s", prj.Key, e.Name)
-		return controller.FlashAndRedir(true, msg, u, rc, ps)
+		return controller.FlashAndRedir(true, msg, u, w, ps)
 	})
 }
 
-func ProjectExportEnumDelete(rc *fasthttp.RequestCtx) {
-	controller.Act("project.export.enum.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, mdl, _, err := exportLoadEnum(rc, as, ps.Logger)
+func ProjectExportEnumDelete(w http.ResponseWriter, r *http.Request) {
+	controller.Act("project.export.enum.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		prj, mdl, _, err := exportLoadEnum(r, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -145,6 +145,6 @@ func ProjectExportEnumDelete(rc *fasthttp.RequestCtx) {
 		}
 
 		msg := "enum deleted successfully"
-		return controller.FlashAndRedir(true, msg, fmt.Sprintf("/p/%s/export", prj.Key), rc, ps)
+		return controller.FlashAndRedir(true, msg, fmt.Sprintf("/p/%s/export", prj.Key), w, ps)
 	})
 }
