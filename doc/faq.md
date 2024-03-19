@@ -132,7 +132,7 @@ Create a new file in `app/controller` or a child directory, then add your method
 The usual form is:
 
 ```go
-// All controller actions require a fasthttp request/response
+// All controller actions require an http request/response
 func CurrentTime(w http.ResponseWriter, r *http.Request) {
 	// The Act method wires up the page state for your logic
 	Act("current.time", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {

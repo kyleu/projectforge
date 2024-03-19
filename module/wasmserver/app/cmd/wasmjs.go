@@ -3,13 +3,16 @@
 package cmd
 
 import (
+	"bytes"
 	"context"
+	"io"
 	"net/http"
 	"syscall/js"
 
 	"github.com/muesli/coral"
 	"github.com/pkg/errors"
-	"github.com/valyala/fasthttp"
+
+	"{{{ .Package }}}/app/controller/cutil"
 )
 
 const keyWASM = "wasm"
@@ -60,19 +63,18 @@ func emsg(s string) string {
 }
 
 func WASMProcess(req js.Value, headers js.Value, reqBody js.Value) (js.Value, error) {
-	rc := &fasthttp.RequestCtx{Request: fasthttp.Request{}, Response: fasthttp.Response{}}
-	err := populateRequest(req, headers, reqBody, rc)
+	r, err := populateRequest(req, headers, reqBody)
 	if err != nil {
 		return js.Null(), err
 	}
-	err = runRequest(rc)
+	rsp, err := runRequest(r)
 	if err != nil {
 		return js.Null(), err
 	}
-	return createResponse(rc)
+	return createResponse(rsp)
 }
 
-func populateRequest(req js.Value, headers js.Value, reqBody js.Value, rc *fasthttp.RequestCtx) (e error) {
+func populateRequest(req js.Value, headers js.Value, reqBody js.Value) (r *http.Request, e error) {
 	defer func() {
 		if x := recover(); x != nil {
 			if err, ok := x.(error); ok {
@@ -83,37 +85,35 @@ func populateRequest(req js.Value, headers js.Value, reqBody js.Value, rc *fasth
 		}
 	}()
 
-	url := req.Get("url").String()
-	rc.Request.URI().Update(url)
-
-	rc.Request.Header.SetHost(string(rc.Request.URI().Host()))
-
-	method := req.Get("method").String()
-	rc.Request.Header.SetMethod(method)
+	ret, err := http.NewRequest(req.Get("method").String(), req.Get("url").String(), http.NoBody)
+	if err != nil {
+		return nil, err
+	}
+	ret.Host = ret.URL.Hostname()
 
 	if !headers.IsNull() && !headers.IsUndefined() {
 		for i := 0; i < headers.Length(); i++ {
 			entry := headers.Index(i)
 			k, v := entry.Index(0).String(), entry.Index(1).String()
-			rc.Request.Header.Set(k, v)
+			ret.Header.Set(k, v)
 		}
 	}
 
 	if reqBody.IsNull() || reqBody.IsUndefined() {
-		return nil
+		return ret, nil
 	}
 
 	body := reqBody.String()
 	if body == "" {
-		return nil
+		return ret, nil
 	}
-	rc.Request.SetBody([]byte(body))
-	return nil
+	r.Body = io.NopCloser(bytes.NewReader([]byte(body)))
+	return ret, nil
 }
 
-func runRequest(w http.ResponseWriter, r *http.Request) (e error) {
+func runRequest(r *http.Request) (ret *WASMResponse, e error) {
 	if _router == nil {
-		return errors.New("didn't start app through the WASM action, no active router")
+		return nil, errors.New("didn't start app through the WASM action, no active router")
 	}
 	defer func() {
 		if x := recover(); x != nil {
@@ -124,19 +124,44 @@ func runRequest(w http.ResponseWriter, r *http.Request) (e error) {
 			}
 		}
 	}()
-	_router(rc)
-	return nil
+
+	w := &WASMResponse{Headers: http.Header{}, Body: bytes.NewBuffer(nil)}
+	_router.ServeHTTP(w, r)
+	return w, nil
 }
 
-func createResponse(w http.ResponseWriter, r *http.Request) (js.Value, error) {
+type WASMResponse struct {
+	StatusCode int
+	Headers    http.Header
+	Body       *bytes.Buffer
+}
+
+func (r *WASMResponse) Header() http.Header {
+	return r.Headers
+}
+
+func (r *WASMResponse) ContentType() string {
+	return r.Headers.Get(cutil.HeaderContentType)
+}
+
+func (r *WASMResponse) Write(b []byte) (int, error) {
+	return r.Body.Write(b)
+}
+
+func (r *WASMResponse) WriteHeader(statusCode int) {
+	r.StatusCode = statusCode
+}
+
+func createResponse(w *WASMResponse) (js.Value, error) {
 	rspClass := js.Global().Get("Response")
 	hd := js.Global().Get("Headers").New()
-	for _, b := range rc.Response.Header.PeekKeys() {
-		hd.Call("set", js.ValueOf(string(b)), js.ValueOf(string(rc.Response.Header.Peek(string(b)))))
+	for k, v := range w.Header() {
+		for _, x := range v {
+			hd.Call("set", js.ValueOf(k), js.ValueOf(x))
+		}
 	}
-	hd.Call("set", js.ValueOf("Content-Type"), js.ValueOf(string(rc.Response.Header.ContentType())))
-	rspBytes := rc.Response.Body()
-	opts := map[string]any{"status": rc.Response.StatusCode(), "headers": hd}
-	x := rspClass.New(js.ValueOf(string(rspBytes)), js.ValueOf(opts), js.ValueOf(map[string]any{"credentials": "same-origin"}))
+	hd.Call("set", js.ValueOf("Content-Type"), js.ValueOf(w.ContentType))
+	opts := map[string]any{"status": w.StatusCode, "headers": hd}
+	x := rspClass.New(js.ValueOf(w.Body.String()), js.ValueOf(opts), js.ValueOf(map[string]any{"credentials": "same-origin"}))
 	return x, nil
 }

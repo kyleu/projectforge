@@ -28,7 +28,7 @@ func StreamBragApp(qw422016 *qt422016.Writer) {
     </p>
 
     <p>
-      All projects managed by Project Forge provide an HTTP server based on <a href="https://github.com/valyala/fasthttp">fasthttp</a>, and use <a href="https://github.com/valyala/quicktemplate">quicktemplate</a> for HTML templates (and SQL, if enabled).
+      All projects managed by Project Forge provide an HTTP server using <a href="https://github.com/valyala/quicktemplate">quicktemplate</a> for HTML templates (and SQL, if enabled).
       An MVC framework is provided (but not required) that handles content negotiation, hierarchical menus, breadcrumbs, OAuth to dozens of providers, stateless user profiles, dark mode support, SVG management, syntax highlighting, form components, and embedded assets.
     </p>
 

@@ -5,7 +5,7 @@
 You control your application's features, provided via "modules" that enable everything from databases to OAuth.
 When creating a new application with Project Forge, a standard Golang project is created, which includes utilities and APIs to help you build the application you want, without compromise.
 
-All projects managed by Project Forge provide an HTTP server based on [fasthttp](https://github.com/valyala/fasthttp), and use [quicktemplate](https://github.com/valyala/quicktemplate) for HTML templates (and SQL, if enabled).
+All projects managed by Project Forge provide an HTTP server using [quicktemplate](https://github.com/valyala/quicktemplate) for HTML templates (and SQL, if enabled).
 An MVC framework is provided (but not required) that handles content negotiation, hierarchical menus, breadcrumbs, OAuth to dozens of providers, stateless user profiles, dark mode support, SVG management, syntax highlighting, form components, and embedded assets.
 
 Project Forge applications can support any UI framework, but the included UI renders a JS-dependency-free page, heavily optimized for speed and accessibility, with a modern UX that works surprisingly well without JavaScript.

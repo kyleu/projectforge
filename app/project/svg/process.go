@@ -1,11 +1,12 @@
 package svg
 
 import (
+	"io"
+	"net/http"
 	"path/filepath"
 	"strings"
 
 	"github.com/pkg/errors"
-	"github.com/valyala/fasthttp"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/util"
@@ -34,24 +35,27 @@ func load(src string, tgt string) (*SVG, error) {
 	if !strings.HasPrefix(src, "http") {
 		url = ghLineAwesome + src + util.ExtSVG
 	}
-	var b []byte
-	cl := &fasthttp.Client{}
-	status, b, err := cl.Get(b, url)
-	if err != nil || status == 404 {
+	cl := http.DefaultClient
+	rsp, err := cl.Get(url)
+	if err != nil || rsp.StatusCode == 404 {
 		if !strings.HasPrefix(src, "http") {
 			origErr := err
 			origURL := url
 			url = ghLineAwesome + src + "-solid.svg"
-			status, b, err = cl.Get(b, url)
+			rsp, err = cl.Get(url)
 			if err != nil {
 				return nil, errors.Wrapf(origErr, "unable to call URL [%s]", origURL)
 			}
 		} else {
-			return nil, errors.Wrapf(err, "unable to call URL [%s]: %d", url, status)
+			return nil, errors.Wrapf(err, "unable to call URL [%s]: %d", url, rsp.StatusCode)
 		}
 	}
-	if status != 200 {
-		return nil, errors.Errorf("received status [%d] while calling URL [%s]", status, url)
+	if rsp.StatusCode != 200 {
+		return nil, errors.Errorf("received status [%d] while calling URL [%s]", rsp.StatusCode, url)
+	}
+	b, err := io.ReadAll(rsp.Body)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to read response")
 	}
 
 	return Transform(tgt, b, url)

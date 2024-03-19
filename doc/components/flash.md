@@ -6,7 +6,7 @@ It's rendered as a panel in the upper-right, contains a close button (no JS requ
 Usually you'll want to set a flash at the end of a request, before a redirect.
 
 ```go
-// FlashAndRedir(success bool, msg string, redir string, rc *fasthttp.RequestCtx, ps *cutil.PageState)
+// FlashAndRedir(success bool, msg string, redir string, w http.ResponseWriter, ps *cutil.PageState)
 return controller.FlashAndRedir(true, msg, u, w, ps)
 ```
 
