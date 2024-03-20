@@ -51,7 +51,7 @@ func AppRoutes(as *app.State, logger util.Logger) (http.Handler, error) {
 	makeRoute(r, http.MethodGet, "/assets/{path:.*}", clib.Static)
 
 	makeRoute(r, http.MethodOptions, "/", controller.Options)
-	r.HandleFunc("/", controller.NotFoundAction)
+	r.PathPrefix("/").HandlerFunc(controller.NotFoundAction)
 
 	return cutil.WireRouter(r, logger)
 }

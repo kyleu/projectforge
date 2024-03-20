@@ -42,9 +42,9 @@ func AppRoutes(as *app.State, logger util.Logger) (http.Handler, error) {
 	makeRoute(r, http.MethodGet, "/docs", clib.Docs)
 	makeRoute(r, http.MethodGet, "/docs/{path:.*}", clib.Docs){{{ end }}}{{{ if .HasModule "graphql" }}}
 
-	makeRoute(r, http.MethodGet, "/graphql", controller.GraphQLIndex)
-	makeRoute(r, http.MethodGet, "/graphql/{key}", controller.GraphQLDetail)
-	makeRoute(r, http.MethodPost, "/graphql/{key}", controller.GraphQLRun){{{ end }}}
+	makeRoute(r, http.MethodGet, "/graphql", clib.GraphQLIndex)
+	makeRoute(r, http.MethodGet, "/graphql/{key}", clib.GraphQLDetail)
+	makeRoute(r, http.MethodPost, "/graphql/{key}", clib.GraphQLRun){{{ end }}}
 
 	adminRoutes(r){{{ if .HasModule "process" }}}
 	execRoutes(r){{{ end }}}{{{ if .HasModule "scripting" }}}
@@ -55,7 +55,7 @@ func AppRoutes(as *app.State, logger util.Logger) (http.Handler, error) {
 	makeRoute(r, http.MethodGet, "/assets/{path:.*}", clib.Static)
 
 	makeRoute(r, http.MethodOptions, "/", controller.Options)
-	r.HandleFunc("/", controller.NotFoundAction)
+	r.PathPrefix("/").HandlerFunc(controller.NotFoundAction)
 
 	return cutil.WireRouter(r, logger)
 }

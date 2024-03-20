@@ -1,4 +1,4 @@
-package controller
+package clib
 
 import (
 	"fmt"
@@ -7,13 +7,14 @@ import (
 	"github.com/samber/lo"
 
 	"{{{ .Package }}}/app"
+	"{{{ .Package }}}/app/controller"
 	"{{{ .Package }}}/app/controller/cutil"
 	"{{{ .Package }}}/app/util"
 	"{{{ .Package }}}/views/vgraphql"
 )
 
 func GraphQLIndex(w http.ResponseWriter, r *http.Request) {
-	Act("graphql.index", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+	controller.Act("graphql.index", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		keys := as.GraphQL.Keys()
 		if len(keys) == 1 {
 			return "/graphql/" + keys[0], nil
@@ -22,12 +23,12 @@ func GraphQLIndex(w http.ResponseWriter, r *http.Request) {
 			return as.GraphQL.ExecCount(key)
 		})
 		ps.SetTitleAndData("GraphQL List", keys)
-		return Render(w, r, as, &vgraphql.List{Keys: keys, Counts: counts}, ps, "graphql")
+		return controller.Render(w, r, as, &vgraphql.List{Keys: keys, Counts: counts}, ps, "graphql")
 	})
 }
 
 func GraphQLDetail(w http.ResponseWriter, r *http.Request) {
-	Act("graphql.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+	controller.Act("graphql.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		key, err := cutil.RCRequiredString(r, "key", false)
 		if err != nil {
 			return "", err
@@ -43,12 +44,12 @@ func GraphQLDetail(w http.ResponseWriter, r *http.Request) {
 		if len(titles) > 1 {
 			bc = append(bc, key)
 		}
-		return Render(w, r, as, &vgraphql.Detail{Key: key}, ps, bc...)
+		return controller.Render(w, r, as, &vgraphql.Detail{Key: key}, ps, bc...)
 	})
 }
 
 func GraphQLRun(w http.ResponseWriter, r *http.Request) {
-	Act("graphql.run", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+	controller.Act("graphql.run", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		key, err := cutil.RCRequiredString(r, "key", false)
 		if err != nil {
 			return "", err
