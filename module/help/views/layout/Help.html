@@ -8,7 +8,7 @@
 ) %}
 
 {% func Help(as *app.State, ps *cutil.PageState) %}{% stripspace %}
-  {%- if as.Services.Help != nil -%}
+  {%- if as.Services != nil && as.Services.Help != nil -%}
     {%- code hlp := as.Services.Help.Entry(ps.Action) -%}
       {%- if hlp == nil -%}
         <!-- no help file for [{%s ps.Action %}] -->

@@ -22,6 +22,7 @@ func SiteRoutes(logger util.Logger) (http.Handler, error) {
 	makeRoute(r, http.MethodGet, "/assets/{path:.*}", clib.Static)
 
 	makeRoute(r, http.MethodGet, "/", controller.Site)
+	makeRoute(r, http.MethodGet, "/{path:.*}", controller.Site)
 
 	makeRoute(r, http.MethodOptions, "/", controller.Options)
 	r.HandleFunc("/", controller.NotFoundAction)

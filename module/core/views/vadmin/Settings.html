@@ -33,19 +33,13 @@
     <ul class="mt">
       <li><a href="/admin/audit">{%= components.SVGRefIcon(`cog`, ps) %}View audit logs</a></li>
     </ul>
-  </div>{{{ end }}}{{{ if.HasModules "databaseui" "migration" }}}
-
-  <div class="card">
-    <h3>{%= components.SVGRefIcon(`database`, ps) %}Database Management</h3>{{{ if.HasModule "databaseui" }}}
-    {%= settingsLink("/admin/database", "database", "Database Management", "Tools for exploring and manipulating your database", ps) %}{{{ end }}}{{{ if.HasModule "migration" }}}
-    {%= settingsLink("/admin/migrations", "archive", "Migrations", "Shows the full content of all database SQL migrations", ps) %}{{{ end }}}
   </div>{{{ end }}}
 
   <div class="card">
     <h3>{%= components.SVGRefIcon(`archive`, ps) %}Admin Functions</h3>
     {%= settingsLink("/admin/server", "archive", "App Information", "All sorts of info about the server and runtime", ps) %}
     {%= settingsLink("/admin/modules", "archive", "Go Modules", "The Go modules used by " + util.AppName, ps) %}{{{ if .HasModule "queue" }}}
-    {%= settingsLink("/admin/queue", "archive", "Queue Statistics", "Manages the queue consumers and producers", ps) %}{{{ end }}}
+    {%= settingsLink("/admin/queue", "archive", "Queue Management", "Manages the queue consumers and producers", ps) %}{{{ end }}}
     {%= settingsLink("/theme", "archive", "Edit Themes", "Configure the design themes available to end users", ps) %}{{{ if .HasModule "process" }}}
     {%= settingsLink("/admin/exec", "archive", "Managed Processes", "Manage OS processes from within this app", ps) %}{{{ end }}}{{{ if .HasModule "scripting" }}}
     {%= settingsLink("/admin/scripting", "archive", "Script Files", "View and run the JavaScript files managed by the server", ps) %}{{{ end }}}
@@ -69,7 +63,12 @@
     {%= settingsLink("/admin/cpu/start", "cog", "Start CPU Profile", "Profiles the CPU using <em>./tmp/cpu.pprof</em>, use script to view", ps) %}
     {%= settingsLink("/admin/cpu/stop", "cog", "Stop CPU Profile", "Stops the active CPU profile", ps) %}{{{ end }}}
     <div class="clear"></div>
-  </div>{{{ if.HasAccount }}}
+  </div>{{{ if.HasModules "databaseui" "migration" }}}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`database`, ps) %}Database Management</h3>{{{ if.HasModule "databaseui" }}}
+    {%= settingsLink("/admin/database", "database", "Database Management", "Tools for exploring and manipulating your database", ps) %}{{{ end }}}{{{ if.HasModule "migration" }}}
+    {%= settingsLink("/admin/migrations", "archive", "Migrations", "Shows the full content of all database SQL migrations", ps) %}{{{ end }}}
+  </div>{{{ end }}}{{{ if.HasAccount }}}
 
   {%= vauth.Authentication(as, ps) %}
 

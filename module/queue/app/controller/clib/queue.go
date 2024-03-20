@@ -16,20 +16,6 @@ import (
 
 var QueueInstance *queue.Queue
 
-func initQueueInstance(ctx context.Context, logger util.Logger) (*queue.Status, error) {
-	if QueueInstance == nil {
-		db, err := database.OpenSQLiteDatabase(ctx, "queue", &database.SQLiteParams{File: "tmp/queue.sqlite"}, logger)
-		if err != nil {
-			return nil, err
-		}
-		QueueInstance, err = queue.New(ctx, "queue", 0, 10*time.Second, "", db, logger)
-		if err != nil {
-			return nil, err
-		}
-	}
-	return QueueInstance.Status(), nil
-}
-
 func QueueIndex(w http.ResponseWriter, r *http.Request) {
 	controller.Act("queue.index", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		st, err := initQueueInstance(ps.Context, ps.Logger)
@@ -59,4 +45,18 @@ func QueueSend(w http.ResponseWriter, r *http.Request) {
 		ps.SetTitleAndData("Queue", util.ValueMap{"message": msg, "status": st})
 		return controller.Render(w, r, as, &vadmin.Queue{Status: st, Message: msg}, ps, "admin", "Queue")
 	})
+}
+
+func initQueueInstance(ctx context.Context, logger util.Logger) (*queue.Status, error) {
+	if QueueInstance == nil {
+		db, err := database.OpenSQLiteDatabase(ctx, "queue", &database.SQLiteParams{File: "tmp/queue.sqlite"}, logger)
+		if err != nil {
+			return nil, err
+		}
+		QueueInstance, err = queue.New(ctx, "queue", 0, 10*time.Second, "", db, logger)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return QueueInstance.Status(), nil
 }

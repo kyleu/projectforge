@@ -32,7 +32,7 @@ var (
 //line views/layout/Help.html:11
 func StreamHelp(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
 //line views/layout/Help.html:12
-	if as.Services.Help != nil {
+	if as.Services != nil && as.Services.Help != nil {
 //line views/layout/Help.html:13
 		hlp := as.Services.Help.Entry(ps.Action)
 

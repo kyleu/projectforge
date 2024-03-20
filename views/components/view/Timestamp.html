@@ -10,7 +10,7 @@
 {% endstripspace %}{% endfunc %}
 
 {% func TimestampMillis(value *time.Time) %}{% stripspace %}
-  <span class="timestamp nowrap" data-timestamp="{%s util.TimeToRFC3339(value) %}">{%s util.TimeToFullMS(value) %}</span>
+  <span class="timestamp millis nowrap" data-timestamp="{%s util.TimeToRFC3339(value) %}">{%s util.TimeToFullMS(value) %}</span>
 {% endstripspace %}{% endfunc %}
 
 {% func TimestampRelative(value *time.Time, static bool) %}{% stripspace %}

@@ -8,19 +8,19 @@ export function utc(date: Date) {
 
 export function wireTime(el: HTMLElement) {
   const tsStr = el.dataset.timestamp;
-  if (tsStr === "") {
+  if (!tsStr) {
     console.log("invalid timestamp [" + tsStr + "]", el);
     return;
   }
   const ts = new Date(tsStr);
 
-  let fmt = el.dataset.format;
-  if (fmt === "") {
-    fmt = "yyyy-MM-dd hh:mm:ss";
-  }
   const tsEl = document.createElement("span");
   tsEl.title = ts.toISOString();
-  tsEl.innerText = ts.toLocaleString();
+  if (el.classList.contains("millis")) {
+    tsEl.innerText = ts.toISOString();
+  } else {
+    tsEl.innerText = ts.toLocaleString();
+  }
   el.replaceChildren(tsEl);
 }
 

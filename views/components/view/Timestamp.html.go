@@ -70,7 +70,7 @@ func Timestamp(value *time.Time) string {
 //line views/components/view/Timestamp.html:12
 func StreamTimestampMillis(qw422016 *qt422016.Writer, value *time.Time) {
 //line views/components/view/Timestamp.html:12
-	qw422016.N().S(`<span class="timestamp nowrap" data-timestamp="`)
+	qw422016.N().S(`<span class="timestamp millis nowrap" data-timestamp="`)
 //line views/components/view/Timestamp.html:13
 	qw422016.E().S(util.TimeToRFC3339(value))
 //line views/components/view/Timestamp.html:13
