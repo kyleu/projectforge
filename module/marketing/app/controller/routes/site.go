@@ -27,7 +27,6 @@ func SiteRoutes(logger util.Logger) (http.Handler, error) {
 	makeRoute(r, http.MethodGet, "/{path:.*}", controller.Site)
 
 	makeRoute(r, http.MethodOptions, "/", controller.Options)
-	r.HandleFunc("/", controller.NotFoundAction)
 
-	return cutil.WireRouter(r, logger)
+	return cutil.WireRouter(r, controller.NotFoundAction, logger)
 }

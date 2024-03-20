@@ -16,9 +16,11 @@ import (
 
 var AppRoutesList = map[string][]string{}
 
-func WireRouter(r *mux.Router, logger util.Logger) (http.Handler, error) {
+func WireRouter(r *mux.Router, notFound http.HandlerFunc, logger util.Logger) (http.Handler, error) {
 	p := httpmetrics.NewMetrics(util.AppKey, logger)
 	r.Handle(p.MetricsPath, promhttp.Handler()).Methods(http.MethodGet)
+
+	r.PathPrefix("/").HandlerFunc(notFound)
 
 	var ret http.Handler = r
 	includeCompression := util.GetEnvBool("compression_enabled", false)
