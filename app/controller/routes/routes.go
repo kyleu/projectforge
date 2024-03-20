@@ -43,9 +43,7 @@ func AppRoutes(as *app.State, logger util.Logger) (http.Handler, error) {
 	makeRoute(r, http.MethodGet, "/docs", clib.Docs)
 	makeRoute(r, http.MethodGet, "/docs/{path:.*}", clib.Docs)
 
-	makeRoute(r, http.MethodGet, "/admin", clib.Admin)
-	makeRoute(r, http.MethodGet, "/admin/", clib.Admin)
-	makeRoute(r, http.MethodPost, "/admin/", clib.Admin)
+	adminRoutes(r)
 	execRoutes(r)
 
 	makeRoute(r, http.MethodGet, "/favicon.ico", clib.Favicon)

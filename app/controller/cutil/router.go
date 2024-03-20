@@ -3,6 +3,7 @@ package cutil
 
 import (
 	"net/http"
+	"net/url"
 	"slices"
 
 	"github.com/CAFxX/httpcompression"
@@ -35,4 +36,10 @@ func AddRoute(method string, path string) {
 		slices.Sort(curr)
 		AppRoutesList[method] = curr
 	}
+}
+
+func URLAddQuery(u *url.URL, k string, v string) {
+	q := u.Query()
+	q.Set(k, v)
+	u.RawQuery = q.Encode()
 }

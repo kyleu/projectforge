@@ -1,0 +1,26 @@
+{% import (
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/lib/queue"
+  "{{{ .Package }}}/views/components"
+  "{{{ .Package }}}/views/layout"
+) %}
+
+{% code type Queue struct {
+  layout.Basic
+  Status *queue.Status
+  Message *queue.Message
+} %}
+
+{% func (p *Queue) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`queue`, ps) %}Queue Test</h3>
+    <div class="mt">{%= components.JSON(p.Status) %}</div>
+  </div>
+  {%- if p.Message != nil -%}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`cog`, ps) %}Message</h3>
+    <div class="mt">{%= components.JSON(p.Message) %}</div>
+  </div>
+  {%- endif -%}
+{% endfunc %}

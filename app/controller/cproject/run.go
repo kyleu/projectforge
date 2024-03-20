@@ -39,7 +39,7 @@ func RunAction(w http.ResponseWriter, r *http.Request) {
 		phase := cfg.GetStringOpt("phase")
 		if actT.Expensive(cfg) {
 			if cfg.GetStringOpt("hasloaded") != util.BoolTrue {
-				r.URL.Query().Set("hasloaded", util.BoolTrue)
+				cutil.URLAddQuery(r.URL, "hasloaded", util.BoolTrue)
 				page := &vpage.Load{URL: r.URL.String(), Title: fmt.Sprintf("Running [%s] for [%s]", phase, prj.Title())}
 				return controller.Render(w, r, as, page, ps, "projects", prj.Key, actT.Title)
 			}

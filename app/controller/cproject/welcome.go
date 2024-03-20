@@ -62,7 +62,7 @@ func WelcomeLoad(w http.ResponseWriter, r *http.Request) {
 
 		activeWelcomeProject = prj
 		activeWelcomeForm = frm
-		r.URL.Query().Set("hasloaded", util.BoolTrue)
+		cutil.URLAddQuery(r.URL, "hasloaded", util.BoolTrue)
 		page := &vpage.Load{URL: "/welcome/process", Title: "Generating and building your project"}
 		return controller.Render(w, r, as, page, ps, "Welcome")
 	})

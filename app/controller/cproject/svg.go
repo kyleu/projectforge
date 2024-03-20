@@ -114,7 +114,7 @@ func SVGSetApp(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		if r.URL.Query().Get("hasloaded") != util.BoolTrue {
-			r.URL.Query().Set("hasloaded", util.BoolTrue)
+			cutil.URLAddQuery(r.URL, "hasloaded", util.BoolTrue)
 			page := &vpage.Load{URL: r.URL.String(), Title: "Generating icons"}
 			return controller.Render(w, r, as, page, ps, "projects", prj.Key, "SVG||/svg/"+prj.Key, "App Icon")
 		}
@@ -146,7 +146,7 @@ func SVGRefreshApp(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		if r.URL.Query().Get("hasloaded") != util.BoolTrue {
-			r.URL.Query().Set("hasloaded", util.BoolTrue)
+			cutil.URLAddQuery(r.URL, "hasloaded", util.BoolTrue)
 			page := &vpage.Load{URL: r.URL.String(), Title: "Generating app icons"}
 			return controller.Render(w, r, as, page, ps, "projects", prj.Key, "SVG||/svg/"+prj.Key, "Refresh App Icon")
 		}
