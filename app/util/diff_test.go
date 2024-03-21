@@ -1,6 +1,8 @@
 //go:build test_all || !func_test
 
 // Package util - Content managed by Project Forge, see [projectforge.md] for details.
+// +build test_all !func_test
+
 package util_test
 
 import (
@@ -38,7 +40,7 @@ var diffTests = []*diffTest{
 	{k: "map.different", l: testObj, r: util.ValueMap{"x": util.ValueMap{"y": 2}}, d: util.Diffs{&util.Diff{Path: ".x.y", Old: "1", New: "2"}}},
 	{
 		k: "map.missing", l: testObj, r: util.ValueMap{"y": true}, d: util.Diffs{
-			&util.Diff{Path: ".x", Old: "map[y:1]", New: ""},
+			&util.Diff{Path: ".x", Old: `{"y":1}`, New: ""},
 			&util.Diff{Path: ".y", Old: "", New: util.BoolTrue},
 		},
 	},

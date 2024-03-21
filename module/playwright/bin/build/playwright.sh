@@ -1,29 +1,12 @@
 #!/bin/bash
 
-## Builds the app, installing all prerequisites
+## Runs the Playwright tests
 
 set -euo pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$dir/../.."
 
-echo "Installing utilities..."
-./bin/bootstrap.sh
-
-echo "Compiling templates..."
-./bin/templates.sh
-
-echo "Downloading dependencies..."
-go mod download
-
-echo "Updating client..."
-cd client
-npm install
-cd ..
-
-echo "Building client..."
-./bin/build/client.sh
-
-echo "Building application..."
-make build-release
+echo "Testing application..."
+npm playwright test
 
 echo "Done!"
