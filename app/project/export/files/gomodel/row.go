@@ -67,13 +67,13 @@ func modelTableCols(m *model.Model) (*golang.Block, error) {
 	ret := golang.NewBlock("Columns", "procedural")
 	ret.SkipDecl = true
 	ret.W("var (")
-	ret.W("\ttable         = %q", m.Name)
+	ret.W("\ttable         = %q", m.Table())
 	ret.W("\ttableQuoted   = fmt.Sprintf(\"%%q\", table)")
 	// if database == util.DatabaseSQLServer {
 	//	ret.W("\tpk            = []string{%s}", strings.Join(m.PKs().NamesQuoted(), ", "))
 	//	ret.W("\tpkQuoted      = util.StringArrayQuoted(pk)")
 	//}
-	cols := fmt.Sprintf("\tcolumns       = []string{%s}", strings.Join(m.Columns.NamesQuoted(), ", "))
+	cols := fmt.Sprintf("\tcolumns       = []string{%s}", strings.Join(m.Columns.SQLQuoted(), ", "))
 	if len(cols) > 160 {
 		cols += " //nolint:lll"
 	}
@@ -97,7 +97,7 @@ func modelRow(g *golang.File, m *model.Model, enums enum.Enums, database string)
 		if strings.HasPrefix(gdt, "sql.") {
 			g.AddImport(helper.ImpSQL)
 		}
-		ret.W("\t%s %s `db:%q json:%q`", util.StringPad(c.Proper(), maxColLength), util.StringPad(gdt, maxTypeLength), c.Name, c.Name)
+		ret.W("\t%s %s `db:%q json:%q`", util.StringPad(c.Proper(), maxColLength), util.StringPad(gdt, maxTypeLength), c.SQL(), c.Name)
 	}
 	ret.W("}")
 	return ret, nil
@@ -246,9 +246,9 @@ func defaultWC(m *model.Model, database string) *golang.Block {
 	idxs := make([]string, 0, len(c))
 	lo.ForEach(c, func(col *model.Column, idx int) {
 		if database == util.DatabaseSQLServer {
-			wc = append(wc, fmt.Sprintf("%q = @p%%%%d", col.Name))
+			wc = append(wc, fmt.Sprintf("%q = @p%%%%d", col.SQL()))
 		} else {
-			wc = append(wc, fmt.Sprintf("%q = $%%%%d", col.Name))
+			wc = append(wc, fmt.Sprintf("%q = $%%%%d", col.SQL()))
 		}
 		idxs = append(idxs, fmt.Sprintf("idx+%d", idx+1))
 	})

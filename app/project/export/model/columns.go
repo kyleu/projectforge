@@ -92,8 +92,18 @@ func (c Columns) Names() []string {
 	})
 }
 
+func (c Columns) SQL() []string {
+	return lo.Map(c, func(x *Column, _ int) string {
+		return x.SQL()
+	})
+}
+
 func (c Columns) NamesQuoted() []string {
 	return util.StringArrayQuoted(c.Names())
+}
+
+func (c Columns) SQLQuoted() []string {
+	return util.StringArrayQuoted(c.SQL())
 }
 
 func (c Columns) CamelNames() []string {

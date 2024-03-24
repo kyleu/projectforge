@@ -73,7 +73,7 @@ func serviceAddDeletedClause(m *model.Model) *golang.Block {
 	ret.W("\tif includeDeleted {")
 	ret.W("\t\treturn wc")
 	ret.W("\t}")
-	ret.W("\treturn wc + \" and \\\"%s\\\" is null\"", delCols[0].Name)
+	ret.W("\treturn wc + \" and \\\"%s\\\" is null\"", delCols[0].SQL())
 	ret.W("}")
 	return ret
 }

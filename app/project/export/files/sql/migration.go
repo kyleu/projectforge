@@ -32,10 +32,10 @@ func sqlDrop(m *model.Model, database string) (*golang.Block, error) {
 	ret := golang.NewBlock("SQLDrop", "sql")
 	ret.W(sqlFunc(m.Proper() + "Drop"))
 	if database == util.DatabaseSQLServer {
-		ret.W("if exists (select * from sysobjects where name='%s' and xtype='U')", m.Name)
-		ret.W("drop table %q;", m.Name)
+		ret.W("if exists (select * from sysobjects where name='%s' and xtype='U')", m.Table())
+		ret.W("drop table %q;", m.Table())
 	} else {
-		ret.W("drop table if exists %q;", m.Name)
+		ret.W("drop table if exists %q;", m.Table())
 	}
 	ret.W(sqlEnd())
 	return ret, nil
@@ -45,22 +45,22 @@ func sqlCreate(m *model.Model, models model.Models, database string) (*golang.Bl
 	ret := golang.NewBlock("SQLCreate", "sql")
 	ret.W(sqlFunc(m.Proper() + "Create"))
 	if database == util.DatabaseSQLServer {
-		ret.W("if not exists (select * from sysobjects where name='%s' and xtype='U')", m.Name)
-		ret.W("create table %q (", m.Name)
+		ret.W("if not exists (select * from sysobjects where name='%s' and xtype='U')", m.Table())
+		ret.W("create table %q (", m.Table())
 	} else {
-		ret.W("create table if not exists %q (", m.Name)
+		ret.W("create table if not exists %q (", m.Table())
 	}
 	for _, col := range m.Columns {
 		st, err := col.ToSQLType(database)
 		if err != nil {
 			return nil, err
 		}
-		ret.W("  %q %s,", col.Name, st)
+		ret.W("  %q %s,", col.SQL(), st)
 	}
 	sqlRelations(ret, m, models)
 	lo.ForEach(m.Columns, func(col *model.Column, _ int) {
 		if col.HasTag("unique") {
-			ret.W("  unique (%q),", col.Name)
+			ret.W("  unique (%q),", col.SQL())
 		}
 	})
 	ret.W("  primary key (%s)", strings.Join(m.PKs().NamesQuoted(), ", "))
@@ -71,7 +71,7 @@ func sqlCreate(m *model.Model, models model.Models, database string) (*golang.Bl
 	// var indexes [][]string
 	lo.ForEach(m.Columns, func(col *model.Column, _ int) {
 		if (col.PK && len(pks) > 1) || col.Indexed {
-			addIndex(database, ret, m.Name, col.Name)
+			addIndex(database, ret, m.Table(), col.SQL())
 		}
 	})
 	lo.ForEach(m.Relations, func(rel *model.Relation, _ int) {
@@ -81,7 +81,7 @@ func sqlCreate(m *model.Model, models model.Models, database string) (*golang.Bl
 		}
 		for _, c := range cols {
 			if !(c.PK || c.Indexed) {
-				addIndex(database, ret, m.Name, cols.Names()...)
+				addIndex(database, ret, m.Table(), cols.Names()...)
 				break
 			}
 		}

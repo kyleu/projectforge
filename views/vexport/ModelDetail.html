@@ -76,6 +76,9 @@
         {%- if model.ProperOverride != "" -%}
         <tr><th>Proper Override</th><td>{%s model.ProperOverride %}</td></tr>
         {%- endif -%}
+        {%- if model.TableOverride != "" -%}
+        <tr><th>Table Override</th><td>{%s model.TableOverride %}</td></tr>
+        {%- endif -%}
         {%- if model.RouteOverride != "" -%}
         <tr><th>Route Override</th><td>{%s model.RouteOverride %}</td></tr>
         {%- endif -%}

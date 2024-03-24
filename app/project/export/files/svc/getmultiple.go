@@ -23,7 +23,7 @@ func serviceGetMultipleSingleCol(m *model.Model, name string, col *model.Column,
 	ret.W("\t\treturn %s{}, nil", m.ProperPlural())
 	ret.W("\t}")
 	ret.W("\tparams = filters(params)")
-	ret.W("\twc := database.SQLInClause(%q, len(%s), 0, s.db.Type)", col.Name, col.CamelPlural())
+	ret.W("\twc := database.SQLInClause(%q, len(%s), 0, s.db.Type)", col.SQL(), col.CamelPlural())
 	if m.IsSoftDelete() {
 		ret.W("\twc = addDeletedClause(wc, includeDeleted)")
 	}
@@ -45,7 +45,7 @@ func serviceGetMultipleManyCols(m *model.Model, name string, cols model.Columns,
 	idxs := make([]string, 0, len(cols))
 	refs := make([]string, 0, len(cols))
 	lo.ForEach(cols, func(pk *model.Column, idx int) {
-		tags = append(tags, fmt.Sprintf("%s = $%%%%d", pk.Name))
+		tags = append(tags, fmt.Sprintf("%s = $%%%%d", pk.SQL()))
 		idxs = append(idxs, fmt.Sprintf("(idx*%d)+%d", len(cols), idx+1))
 		refs = append(refs, fmt.Sprintf("x.%s", pk.Proper()))
 	})

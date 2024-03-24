@@ -27,6 +27,7 @@ type Model struct {
 	TitleOverride  string           `json:"title,omitempty"`
 	PluralOverride string           `json:"plural,omitempty"`
 	ProperOverride string           `json:"proper,omitempty"`
+	TableOverride  string           `json:"table,omitempty"`
 	RouteOverride  string           `json:"route,omitempty"`
 	Config         util.ValueMap    `json:"config,omitempty"`
 	Columns        Columns          `json:"columns"`

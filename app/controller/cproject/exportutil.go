@@ -47,6 +47,8 @@ func exportModelFromForm(frm util.ValueMap, m *model.Model) error {
 	m.TitleOverride = get("titleOverride", m.TitleOverride)
 	m.PluralOverride = get("pluralOverride", m.PluralOverride)
 	m.ProperOverride = get("properOverride", m.ProperOverride)
+	m.TableOverride = get("tableOverride", m.TableOverride)
+	m.RouteOverride = get("routeOverride", m.RouteOverride)
 
 	cfg := util.ValueMap{}
 	err = util.FromJSON([]byte(get("config", util.ToJSON(m.Config))), &cfg)

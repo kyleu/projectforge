@@ -44,6 +44,8 @@
             {%= edit.StringTable("titleOverride", "", "Title Override", m.TitleOverride, 5, export.Helpers["model.titleOverride"]...) %}
             {%= edit.StringTable("pluralOverride", "", "Plural Override", m.PluralOverride, 5, export.Helpers["model.pluralOverride"]...) %}
             {%= edit.StringTable("properOverride", "", "Proper Override", m.ProperOverride, 5, export.Helpers["model.properOverride"]...) %}
+            {%= edit.StringTable("tableOverride", "", "Table Override", m.TableOverride, 5, export.Helpers["model.tableOverride"]...) %}
+            {%= edit.StringTable("routeOverride", "", "Route Override", m.RouteOverride, 5, export.Helpers["model.routeOverride"]...) %}
             {%= edit.TextareaTable("config", "", "Config", 3, util.ToJSON(m.Config), 5, export.Helpers["model.config"]...) %}
           </tbody>
         </table>

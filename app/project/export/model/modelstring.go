@@ -65,6 +65,13 @@ func (m *Model) FirstLetter() string {
 	return strings.ToLower(m.Name[0:1])
 }
 
+func (m *Model) Table() string {
+	if m.TableOverride == "" {
+		return m.Name
+	}
+	return m.TableOverride
+}
+
 func (m *Model) Route() string {
 	if m.RouteOverride == "" {
 		return m.PackageWithGroup("")

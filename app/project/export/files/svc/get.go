@@ -202,7 +202,7 @@ func serviceGet(key string, m *model.Model, cols model.Columns, dbRef string, en
 	} else {
 		wc := make([]string, 0, len(cols))
 		lo.ForEach(cols, func(col *model.Column, idx int) {
-			wc = append(wc, fmt.Sprintf("%q = $%d", col.Name, idx+1))
+			wc = append(wc, fmt.Sprintf("%q = $%d", col.SQL(), idx+1))
 		})
 		ret.W("\twc := %q", strings.Join(wc, " and "))
 	}

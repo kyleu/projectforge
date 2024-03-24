@@ -31,21 +31,22 @@ var ColumnFieldDescs = util.FieldDescs{
 }
 
 type Column struct {
-	Name       string         `json:"name"`
-	Type       *types.Wrapped `json:"type"`
-	PK         bool           `json:"pk,omitempty"`
-	Nullable   bool           `json:"nullable,omitempty"`
-	Search     bool           `json:"search,omitempty"`
-	SQLDefault string         `json:"sqlDefault,omitempty"`
-	Indexed    bool           `json:"indexed,omitempty"`
-	Display    string         `json:"display,omitempty"`
-	Format     string         `json:"format,omitempty"`
-	JSON       string         `json:"json,omitempty"`
-	Example    string         `json:"example,omitempty"`
-	Validation string         `json:"validation,omitempty"`
-	Values     []string       `json:"values,omitempty"`
-	Tags       []string       `json:"tags,omitempty"`
-	HelpString string         `json:"helpString,omitempty"`
+	Name        string         `json:"name"`
+	Type        *types.Wrapped `json:"type"`
+	PK          bool           `json:"pk,omitempty"`
+	Nullable    bool           `json:"nullable,omitempty"`
+	Search      bool           `json:"search,omitempty"`
+	SQLDefault  string         `json:"sqlDefault,omitempty"`
+	Indexed     bool           `json:"indexed,omitempty"`
+	Display     string         `json:"display,omitempty"`
+	Format      string         `json:"format,omitempty"`
+	JSON        string         `json:"json,omitempty"`
+	SQLOverride string         `json:"sql,omitempty"`
+	Example     string         `json:"example,omitempty"`
+	Validation  string         `json:"validation,omitempty"`
+	Values      []string       `json:"values,omitempty"`
+	Tags        []string       `json:"tags,omitempty"`
+	HelpString  string         `json:"helpString,omitempty"`
 }
 
 func (c *Column) Clone() *Column {
@@ -132,6 +133,13 @@ func (c *Column) BC() string {
 		return ""
 	}
 	return fmt.Sprintf(", %q", c.Camel())
+}
+
+func (c *Column) SQL() string {
+	if c.SQLOverride == "" {
+		return c.Name
+	}
+	return c.SQLOverride
 }
 
 func (c *Column) NeedsErr(_ string, database string) bool {

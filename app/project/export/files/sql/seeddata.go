@@ -34,7 +34,7 @@ func SeedData(m *model.Model, database string, linebreak string) (*file.File, er
 func sqlSeedData(m *model.Model, database string) (*golang.Block, error) {
 	ret := golang.NewBlock("SQLCreate", "sql")
 	ret.W(sqlFunc(m.Proper() + "SeedData"))
-	err := sqlSeedDataColumns(m, ret, m.Name, m.Columns, database)
+	err := sqlSeedDataColumns(m, ret, m.Table(), m.Columns, database)
 	if err != nil {
 		return nil, err
 	}
@@ -56,14 +56,14 @@ func sqlSeedDataColumns(m *model.Model, block *golang.Block, tableName string, c
 			colIdx := slices.IndexFunc(m.Columns, func(c *model.Column) bool {
 				return col.Name == c.Name
 			})
-			if colIdx == -1 && strings.HasPrefix(col.Name, m.Name+"_") {
-				trimmed := strings.TrimPrefix(col.Name, m.Name+"_")
+			if colIdx == -1 && strings.HasPrefix(col.SQL(), m.Table()+"_") {
+				trimmed := strings.TrimPrefix(col.SQL(), m.Table()+"_")
 				colIdx = slices.IndexFunc(m.Columns, func(c *model.Column) bool {
 					return trimmed == c.Name
 				})
 			}
-			if colIdx == -1 && strings.HasPrefix(col.Name, "current_") {
-				trimmed := strings.TrimPrefix(col.Name, "current_")
+			if colIdx == -1 && strings.HasPrefix(col.SQL(), "current_") {
+				trimmed := strings.TrimPrefix(col.SQL(), "current_")
 				colIdx = slices.IndexFunc(m.Columns, func(c *model.Column) bool {
 					return trimmed == c.Name
 				})
