@@ -6,7 +6,12 @@ cd "$dir/../.."
 
 if [ "$PUBLISH_TEST" != "true" ]
 then
-  time gon "./tools/notarize/gon.amd64.hcl"
-  time gon "./tools/notarize/gon.arm64.hcl"
-  time gon "./tools/notarize/gon.all.hcl"
+  xcrun notarytool submit --apple-id $APPLE_EMAIL --team-id $APPLE_TEAM_ID --password $APPLE_PASSWORD ./build/dist/{{{ .Exec }}}_{{{ .Version }}}_darwin_amd64_desktop.dmg
+  xcrun notarytool submit --apple-id $APPLE_EMAIL --team-id $APPLE_TEAM_ID --password $APPLE_PASSWORD ./build/dist/{{{ .Exec }}}_{{{ .Version }}}_darwin_amd64.zip
+
+  xcrun notarytool submit --apple-id $APPLE_EMAIL --team-id $APPLE_TEAM_ID --password $APPLE_PASSWORD ./build/dist/{{{ .Exec }}}_{{{ .Version }}}_darwin_arm64_desktop.dmg
+  xcrun notarytool submit --apple-id $APPLE_EMAIL --team-id $APPLE_TEAM_ID --password $APPLE_PASSWORD ./build/dist/{{{ .Exec }}}_{{{ .Version }}}_darwin_arm64.zip
+
+  xcrun notarytool submit --apple-id $APPLE_EMAIL --team-id $APPLE_TEAM_ID --password $APPLE_PASSWORD ./build/dist/{{{ .Exec }}}_{{{ .Version }}}_darwin_all_desktop.dmg
+  xcrun notarytool submit --apple-id $APPLE_EMAIL --team-id $APPLE_TEAM_ID --password $APPLE_PASSWORD ./build/dist/{{{ .Exec }}}_{{{ .Version }}}_darwin_all.zip
 fi
