@@ -7,11 +7,6 @@ cd "$dir/../.."
 if [ "$PUBLISH_TEST" != "true" ]
 then
   xcrun notarytool submit --apple-id $APPLE_EMAIL --team-id $APPLE_TEAM_ID --password $APPLE_PASSWORD ./build/dist/{{{ .Exec }}}_{{{ .Version }}}_darwin_amd64_desktop.dmg
-  xcrun notarytool submit --apple-id $APPLE_EMAIL --team-id $APPLE_TEAM_ID --password $APPLE_PASSWORD ./build/dist/{{{ .Exec }}}_{{{ .Version }}}_darwin_amd64.zip
-
   xcrun notarytool submit --apple-id $APPLE_EMAIL --team-id $APPLE_TEAM_ID --password $APPLE_PASSWORD ./build/dist/{{{ .Exec }}}_{{{ .Version }}}_darwin_arm64_desktop.dmg
-  xcrun notarytool submit --apple-id $APPLE_EMAIL --team-id $APPLE_TEAM_ID --password $APPLE_PASSWORD ./build/dist/{{{ .Exec }}}_{{{ .Version }}}_darwin_arm64.zip
-
   xcrun notarytool submit --apple-id $APPLE_EMAIL --team-id $APPLE_TEAM_ID --password $APPLE_PASSWORD ./build/dist/{{{ .Exec }}}_{{{ .Version }}}_darwin_all_desktop.dmg
-  xcrun notarytool submit --apple-id $APPLE_EMAIL --team-id $APPLE_TEAM_ID --password $APPLE_PASSWORD ./build/dist/{{{ .Exec }}}_{{{ .Version }}}_darwin_all.zip
 fi
