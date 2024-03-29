@@ -15,7 +15,6 @@ The following modules were used to build this project:
 - [ios](./doc/module/ios.md)
 - [jsx](./doc/module/jsx.md)
 - [marketing](./doc/module/marketing.md)
-- [notarize](./doc/module/notarize.md)
 - [playwright](./doc/module/playwright.md)
 - [process](./doc/module/process.md)
 - [richedit](./doc/module/richedit.md)

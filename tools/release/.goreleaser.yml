@@ -36,7 +36,6 @@ checksum:
     - glob: "./build/dist/*_framework.zip"
     - glob: "./build/dist/*_app.zip"
     - glob: "./build/dist/*_wasm_html.zip"
-    - glob: "./build/dist/*_notarized.zip"
     # $PF_SECTION_START(checksums)$
     - glob: "./build/dist/projectforge_module_*.zip"
     # $PF_SECTION_END(checksums)$
@@ -85,7 +84,6 @@ release:
     - glob: "./build/dist/*_framework.zip"
     - glob: "./build/dist/*_app.zip"
     - glob: "./build/dist/*_wasm_html.zip"
-    - glob: "./build/dist/*_notarized.zip"
     # $PF_SECTION_START(releasefiles)$
     - glob: "./build/dist/projectforge_module_*.zip"
     # $PF_SECTION_END(releasefiles)$
@@ -121,7 +119,6 @@ universal_binaries:
       - "./bin/build/android.sh {{ .Version }}"
       - "./bin/build/ios.sh {{ .Version }}"
       - "./bin/build/desktop.release.sh {{ .Version }}"
-      - "./tools/notarize/notarize.sh"
       # $PF_SECTION_START(extrascripts)$
       - "./bin/build/modules.sh"
       # $PF_SECTION_END(extrascripts)$

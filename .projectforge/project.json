@@ -15,7 +15,6 @@
     "ios",
     "jsx",
     "marketing",
-    "notarize",
     "playwright",
     "process",
     "richedit",
@@ -54,7 +53,6 @@
   "build": {
     "changelog": true,
     "desktop": true,
-    "notarize": true,
     "signing": true,
     "android": true,
     "iOS": true,
