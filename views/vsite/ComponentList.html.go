@@ -66,61 +66,62 @@ func (p *ComponentList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps 
 //line views/vsite/ComponentList.html:39
 	qw422016.N().S(` Components</h3>
     <p>Components are provided for your HTML UI. Most components can be used without JavaScript.</p>
-    <ul class="mt">
+  </div>
 `)
 //line views/vsite/ComponentList.html:42
 	for _, c := range AllComponents {
 //line views/vsite/ComponentList.html:42
-		qw422016.N().S(`      <li class="mt">
-        <a href="/components/`)
-//line views/vsite/ComponentList.html:44
+		qw422016.N().S(`  <a class="link-section" href="/components/`)
+//line views/vsite/ComponentList.html:43
 		qw422016.E().S(c.Key)
-//line views/vsite/ComponentList.html:44
-		qw422016.N().S(`">`)
-//line views/vsite/ComponentList.html:44
-		components.StreamSVGRefIcon(qw422016, c.Icon, ps)
-//line views/vsite/ComponentList.html:44
+//line views/vsite/ComponentList.html:43
+		qw422016.N().S(`">
+    <div class="card">
+      <div class="left mrs">`)
+//line views/vsite/ComponentList.html:45
+		components.StreamSVGRef(qw422016, c.Icon, 40, 40, "", ps)
+//line views/vsite/ComponentList.html:45
+		qw422016.N().S(`</div>
+      <strong class="highlight">`)
+//line views/vsite/ComponentList.html:46
 		qw422016.E().S(c.Title)
-//line views/vsite/ComponentList.html:44
-		qw422016.N().S(`</a>
-        <div class="clear"><em>`)
-//line views/vsite/ComponentList.html:45
+//line views/vsite/ComponentList.html:46
+		qw422016.N().S(`</strong>
+      <div><em>`)
+//line views/vsite/ComponentList.html:47
 		qw422016.E().S(c.Description)
-//line views/vsite/ComponentList.html:45
+//line views/vsite/ComponentList.html:47
 		qw422016.N().S(`</em></div>
-      </li>
+    </div>
+  </a>
 `)
-//line views/vsite/ComponentList.html:47
+//line views/vsite/ComponentList.html:50
 	}
-//line views/vsite/ComponentList.html:47
-	qw422016.N().S(`    </ul>
-  </div>
-`)
-//line views/vsite/ComponentList.html:50
+//line views/vsite/ComponentList.html:51
 }
 
-//line views/vsite/ComponentList.html:50
+//line views/vsite/ComponentList.html:51
 func (p *ComponentList) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsite/ComponentList.html:50
+//line views/vsite/ComponentList.html:51
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsite/ComponentList.html:50
+//line views/vsite/ComponentList.html:51
 	p.StreamBody(qw422016, as, ps)
-//line views/vsite/ComponentList.html:50
+//line views/vsite/ComponentList.html:51
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsite/ComponentList.html:50
+//line views/vsite/ComponentList.html:51
 }
 
-//line views/vsite/ComponentList.html:50
+//line views/vsite/ComponentList.html:51
 func (p *ComponentList) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsite/ComponentList.html:50
+//line views/vsite/ComponentList.html:51
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsite/ComponentList.html:50
+//line views/vsite/ComponentList.html:51
 	p.WriteBody(qb422016, as, ps)
-//line views/vsite/ComponentList.html:50
+//line views/vsite/ComponentList.html:51
 	qs422016 := string(qb422016.B)
-//line views/vsite/ComponentList.html:50
+//line views/vsite/ComponentList.html:51
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsite/ComponentList.html:50
+//line views/vsite/ComponentList.html:51
 	return qs422016
-//line views/vsite/ComponentList.html:50
+//line views/vsite/ComponentList.html:51
 }

@@ -1,0 +1,48 @@
+{% import (
+  "strings"
+
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/lib/schedule"
+  "{{{ .Package }}}/app/util"
+  "{{{ .Package }}}/views/layout"
+) %}
+
+{% code type Schedule struct {
+  layout.Basic
+  Jobs schedule.Jobs
+} %}
+
+{% func (p *Schedule) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>Scheduled Jobs</h3>
+    {%= jobTable(p.Jobs) %}
+  </div>
+{% endfunc %}
+
+{% func jobTable(jobs schedule.Jobs) %}
+    <div class="overflow full-width">
+      <table class="mt min-200 expanded">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Tags</th>
+            <th>Last</th>
+            <th>Next</th>
+          </tr>
+        </thead>
+        <tbody>
+          {%- for _, j := range jobs -%}
+          <tr>
+            <td class="shrink"><a href="/admin/schedule/{%s j.ID.String() %}">{%s j.ID.String() %}</a></td>
+            <td>{%s j.Name %}</td>
+            <td>{%s strings.Join(j.Tags, ", ") %}</td>
+            <td>{%s util.TimeToFullMS(j.Last) %}</td>
+            <td>{%s util.TimeToFullMS(j.Next) %}</td>
+          </tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
+{% endfunc %}

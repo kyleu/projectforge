@@ -17,7 +17,7 @@ var nativeModuleKeys = []string{
 	"android", "audit", "core", "database", "databaseui", "desktop", "docbrowse", "export", "expression",
 	"filesystem", "graphql", "har", "help", "ios", "jsx", "marketing", "migration", util.DatabaseMySQL,
 	"notebook", "notarize", "oauth", "playwright", util.DatabasePostgreSQL, "process", "queue", "readonlydb", "richedit",
-	"sandbox", "schema", "scripting", "search", util.DatabaseSQLite, util.DatabaseSQLServer, "themecatalog",
+	"sandbox", "schedule", "schema", "scripting", "search", util.DatabaseSQLite, util.DatabaseSQLServer, "themecatalog",
 	"types", "upgrade", "user", "wasmclient", "wasmserver", "websocket",
 }
 

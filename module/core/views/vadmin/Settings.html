@@ -40,7 +40,8 @@
     {%= settingsLink("/admin/server", "archive", "App Information", "All sorts of info about the server and runtime", ps) %}
     {%= settingsLink("/admin/modules", "archive", "Go Modules", "The Go modules used by " + util.AppName, ps) %}{{{ if .HasModule "queue" }}}
     {%= settingsLink("/admin/queue", "archive", "Queue Management", "Manages the queue consumers and producers", ps) %}{{{ end }}}
-    {%= settingsLink("/theme", "archive", "Edit Themes", "Configure the design themes available to end users", ps) %}{{{ if .HasModule "process" }}}
+    {%= settingsLink("/theme", "archive", "Edit Themes", "Configure the design themes available to end users", ps) %}{{{ if .HasModule "schedule" }}}
+    {%= settingsLink("/admin/schedule", "stopwatch", "Scheduled Jobs", "Manage the execution and results from scheduled tasks", ps) %}{{{ end }}}{{{ if .HasModule "process" }}}
     {%= settingsLink("/admin/exec", "archive", "Managed Processes", "Manage OS processes from within this app", ps) %}{{{ end }}}{{{ if .HasModule "scripting" }}}
     {%= settingsLink("/admin/scripting", "archive", "Script Files", "View and run the JavaScript files managed by the server", ps) %}{{{ end }}}
     {%= settingsLink("/admin/logs", "archive", "Recent Logs", "Displays the 100 most recent app logs", ps) %}

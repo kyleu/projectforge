@@ -15,13 +15,14 @@
 {% func (p *FeatureList) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`app`, ps) %}{%s util.AppName %} Features</h3>
-    <ul class="mt">
-      {%- for _, mod := range p.Modules -%}
-      <li class="mt">
-        <a href="{%s mod.FeaturesPath() %}">{%= components.SVGRefIcon(mod.Icon, ps) %}{%s mod.Title() %}</a>
-        <div class="clear"><em>{%s mod.Description %}</em></div>
-      </li>
-      {%- endfor -%}
-    </ul>
   </div>
+  {%- for _, mod := range p.Modules -%}
+    <a class="link-section" href="/m/{%s mod.Key %}">
+      <div class="card">
+        <div class="left mrs">{%= components.SVGRef(mod.IconSafe(), 40, 40, "", ps) %}</div>
+        <strong class="highlight">{%s mod.Title() %}</strong>
+        <div><em>{%s mod.Description %}</em></div>
+      </div>
+    </a>
+  {%- endfor -%}
 {% endfunc %}

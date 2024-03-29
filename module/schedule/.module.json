@@ -1,0 +1,10 @@
+{
+  "name": "Scheduled Jobs",
+  "icon": "stopwatch",
+  "description": "Provides a scheduled job engine and UI based on gocron",
+  "authorName": "Kyle U",
+  "authorEmail": "kyle@kyleu.com",
+  "license": "CC0",
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/schedule",
+  "priority": 20
+}

@@ -1,0 +1,29 @@
+{% import (
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/lib/schedule"
+  "{{{ .Package }}}/app/util"
+  "{{{ .Package }}}/views/components"
+  "{{{ .Package }}}/views/layout"
+) %}
+
+{% code type ScheduleDetail struct {
+  layout.Basic
+  Job *schedule.Job
+  Result *schedule.Result
+} %}
+
+{% func (p *ScheduleDetail) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>Scheduled Job [{%s p.Job.String() %}]</h3>
+    {%= jobTable(schedule.Jobs{p.Job}) %}
+  </div>
+  {%- if p.Result != nil -%}
+  <div class="card">
+    <div class="right">{%s util.MicrosToMillis(p.Result.DurationMicro) %}</div>
+    <h3>Most Recent Result</h3>
+    <em>{%s util.TimeToFull(&p.Result.Occurred) %}</em>
+    {%= components.JSON(p.Result.Returned) %}
+  </div>
+  {%- endif -%}
+{% endfunc %}

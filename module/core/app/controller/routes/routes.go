@@ -45,10 +45,10 @@ func AppRoutes(as *app.State, logger util.Logger) (http.Handler, error) {
 	makeRoute(r, http.MethodGet, "/graphql", clib.GraphQLIndex)
 	makeRoute(r, http.MethodGet, "/graphql/{key}", clib.GraphQLDetail)
 	makeRoute(r, http.MethodPost, "/graphql/{key}", clib.GraphQLRun){{{ end }}}
-
-	adminRoutes(r){{{ if .HasModule "process" }}}
+{{{ if .HasModule "process" }}}
 	execRoutes(r){{{ end }}}{{{ if .HasModule "scripting" }}}
 	scriptingRoutes(r){{{ end }}}
+	adminRoutes(r)
 
 	makeRoute(r, http.MethodGet, "/favicon.ico", clib.Favicon)
 	makeRoute(r, http.MethodGet, "/robots.txt", clib.RobotsTxt)

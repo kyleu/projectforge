@@ -38,13 +38,14 @@
   <div class="card">
     <h3>{%= components.SVGRefIcon(`app`, ps) %}{%s util.AppName %} Components</h3>
     <p>Components are provided for your HTML UI. Most components can be used without JavaScript.</p>
-    <ul class="mt">
-      {%- for _, c := range AllComponents -%}
-      <li class="mt">
-        <a href="/components/{%s c.Key %}">{%= components.SVGRefIcon(c.Icon, ps) %}{%s c.Title %}</a>
-        <div class="clear"><em>{%s c.Description %}</em></div>
-      </li>
-      {%- endfor -%}
-    </ul>
   </div>
+  {%- for _, c := range AllComponents -%}
+  <a class="link-section" href="/components/{%s c.Key %}">
+    <div class="card">
+      <div class="left mrs">{%= components.SVGRef(c.Icon, 40, 40, "", ps) %}</div>
+      <strong class="highlight">{%s c.Title %}</strong>
+      <div><em>{%s c.Description %}</em></div>
+    </div>
+  </a>
+  {%- endfor -%}
 {% endfunc %}
