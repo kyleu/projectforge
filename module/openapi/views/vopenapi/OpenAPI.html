@@ -1,0 +1,32 @@
+{% import (
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/views/layout"
+) %}
+
+{% code type OpenAPI struct {
+  layout.Basic
+  URL string
+} %}
+
+{% func (p *OpenAPI) Body(as *app.State, ps *cutil.PageState) %}
+  <div id="swagger-ui"></div>
+  <link rel="stylesheet" type="text/css" href="/assets/openapi/swagger-ui.css" />
+  <script src="/assets/openapi/swagger-ui-bundle.js" defer="defer"></script>
+  <script src="/assets/openapi/swagger-ui-standalone-preset.js" defer="defer"></script>
+  <script>
+    window.onload = function() {
+      window.ui = SwaggerUIBundle({
+        url: "{%s p.URL %}",
+        dom_id: '#swagger-ui',
+        deepLinking: true,
+        presets: [
+          SwaggerUIBundle.presets.apis
+        ],
+        plugins: [
+          SwaggerUIBundle.plugins.DownloadUrl
+        ]
+      });
+    };
+  </script>
+{% endfunc %}

@@ -1,0 +1,10 @@
+{
+  "name": "OpenAPI",
+  "icon": "robot",
+  "description": "Embeds the Swagger UI, using your OpenAPI specification",
+  "authorName": "Kyle U",
+  "authorEmail": "kyle@kyleu.com",
+  "license": "CC0",
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/openapi",
+  "priority": 30
+}
