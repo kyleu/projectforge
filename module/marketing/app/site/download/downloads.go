@@ -31,11 +31,7 @@ func calcDownloadLinks(version string) Links {
 		var u string
 		switch mode {
 		case ModeServer:
-			msg := "%s_%s_%s_%s.zip"{{{ if .IsNotarized }}}
-			if os == OSMac {
-				msg = "%s_%s_%s_%s_notarized.zip"
-			}{{{ end }}}
-			u = fmt.Sprintf(msg, util.AppKey, version, os, arch)
+			u = fmt.Sprintf("%s_%s_%s_%s.zip", util.AppKey, version, os, arch)
 		case ModeMobile:
 			u = fmt.Sprintf("%s_%s_%s_%s.zip", util.AppKey, version, os, arch)
 		case ModeDesktop:
