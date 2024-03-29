@@ -12,13 +12,14 @@ import (
 )
 
 // Initialize system dependencies for the marketing site.
-func initSite(as *app.State, logger util.Logger) {
+func initSite(_ context.Context, as *app.State, logger util.Logger) error {
 	mod, err := module.NewService(context.Background(), as.Files.Root(), logger)
 	if err != nil {
-		logger.Errorf("unable to initialize site: %+v", err)
+		return err
 	}
 	hlp := help.NewService(logger)
 	as.Services = &app.Services{Help: hlp, Modules: mod}
+	return nil
 }
 
 // Configure marketing site data for each request.

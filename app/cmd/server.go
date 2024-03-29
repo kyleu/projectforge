@@ -55,7 +55,10 @@ func loadServer(flags *Flags, logger util.Logger) (*app.State, http.Handler, uti
 	}
 	logger.Infof("started %s v%s using address [%s:%d] on %s:%s", util.AppName, _buildInfo.Version, flags.Address, flags.Port, runtime.GOOS, runtime.GOARCH)
 
-	controller.SetAppState(st, logger)
+	err = controller.SetAppState(st, logger)
+	if err != nil {
+		return nil, nil, logger, err
+	}
 	r, err := routes.AppRoutes(st, logger)
 	if err != nil {
 		return nil, nil, logger, err

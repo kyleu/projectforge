@@ -17,7 +17,8 @@ import (
 var allowedRoutes = []string{"/about", "/admin", "/testbed", "/welcome"}
 
 // Initialize app-specific system dependencies.
-func initApp(_ *app.State, _ util.Logger) {
+func initApp(_ context.Context, _ *app.State, _ util.Logger) error {
+	return nil
 }
 
 // Configure app-specific data for each request.

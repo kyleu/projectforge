@@ -2,6 +2,7 @@
 package controller
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 
@@ -18,16 +19,16 @@ var (
 	_currentSiteRootLogger util.Logger
 )
 
-func SetAppState(a *app.State, logger util.Logger) {
+func SetAppState(a *app.State, logger util.Logger) error {
 	_currentAppState = a
 	_currentAppRootLogger = logger
-	initApp(a, logger)
+	return initApp(context.Background(), a, logger)
 }
 
-func SetSiteState(a *app.State, logger util.Logger) {
+func SetSiteState(a *app.State, logger util.Logger) error {
 	_currentSiteState = a
 	_currentSiteRootLogger = logger
-	initSite(a, logger)
+	return initSite(context.Background(), a, logger)
 }
 
 func handleError(key string, as *app.State, ps *cutil.PageState, w http.ResponseWriter, r *http.Request, err error) (string, error) {
