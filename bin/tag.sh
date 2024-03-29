@@ -51,6 +51,8 @@ if [[ $TGT =~ $pat ]]; then
   rm -f "./main.go.bak"
   sed -i.bak -e "s/Version: \\\"[v]*[0-9]*[0-9]\.[0-9]*[0-9]\.[0-9]*[0-9]\\\"/Version: \"${TGT}\"/g" ./app/cmd/lib.go
   rm -f ./app/cmd/lib.go.bak
+  sed -i.bak -e "s/\\_[v]*[0-9]*[0-9]\.[0-9]*[0-9]\.[0-9]*[0-9]_/_${TGT}\\_/g" ./tools/notarize/notarize.sh
+  rm -f "./tools/notarize/notarize.sh.bak"
   sed -i.bak -e "s/\\\"version\\\": \\\"[v]*[0-9]*[0-9]\.[0-9]*[0-9]\.[0-9]*[0-9]\\\"/\"version\": \"${TGT}\"/g" ./.projectforge/project.json
   rm -f "./.projectforge/project.json.bak"
 fi
