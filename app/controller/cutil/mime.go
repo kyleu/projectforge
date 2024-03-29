@@ -21,6 +21,7 @@ const (
 	mimeXML   = "text/xml"
 	mimeYAML  = "application/x-yaml"
 
+	HeaderAccept                        = "Accept"
 	HeaderAccessControlAllowCredentials = "Access-Control-Allow-Credentials"
 	HeaderAccessControlAllowHeaders     = "Access-Control-Allow-Headers"
 	HeaderAccessControlAllowMethods     = "Access-Control-Allow-Methods"
@@ -125,7 +126,10 @@ func RespondMIME(filename string, mime string, ext string, ba []byte, w http.Res
 }
 
 func GetContentType(r *http.Request) string {
-	ret := r.Header.Get(HeaderContentType)
+	ret := r.Header.Get(HeaderAccept)
+	if ret == "" {
+		ret = r.Header.Get(HeaderContentType)
+	}
 	if idx := strings.Index(ret, ";"); idx > -1 {
 		ret = ret[0:idx]
 	}
