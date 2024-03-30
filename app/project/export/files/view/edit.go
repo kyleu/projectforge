@@ -88,23 +88,24 @@ func exportViewEditBody(m *model.Model, p *project.Project, args *model.Args) (*
 	ret.W("    </form>")
 	ret.W("  </div>")
 
-	canAutocomplete := lo.ContainsBy(m.Relations, func(x *model.Relation) bool {
-		return len(x.Src) == 1
-	})
-	if canAutocomplete {
+	var scripts []string
+	for _, rel := range m.Relations {
+		if len(rel.Src) != 1 {
+			continue
+		}
+		relScript, err := exportViewEditRelation(m, rel, p, args)
+		if err != nil {
+			return nil, err
+		}
+		if relScript != "" {
+			scripts = append(scripts, relScript)
+		}
+	}
+	if len(scripts) > 0 {
 		ret.W("  <script>")
 		ret.W("    document.addEventListener(\"DOMContentLoaded\", function() {")
-		for _, rel := range m.Relations {
-			if len(rel.Src) != 1 {
-				continue
-			}
-			relScript, err := exportViewEditRelation(m, rel, p, args)
-			if err != nil {
-				return nil, err
-			}
-			if relScript != "" {
-				ret.W(relScript)
-			}
+		for _, x := range scripts {
+			ret.W(x)
 		}
 		ret.W("    });")
 		ret.W("  </script>")
