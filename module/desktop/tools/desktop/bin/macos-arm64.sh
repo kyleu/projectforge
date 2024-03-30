@@ -7,4 +7,4 @@ dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$dir/.."
 
 echo "starting macOS arm64 desktop build..."
-GOOS=darwin GOARCH=arm64 CC=aarch64-apple-darwin22-clang CXX=aarch64-apple-darwin22-clang++ go build -o ../../dist/darwin_arm64/{{{ .Exec }}}
+GOOS=darwin GOARCH=arm64 CC=aarch64-apple-darwin23-clang CXX=aarch64-apple-darwin23-clang++ go build -o ../../dist/darwin_arm64/{{{ .Exec }}}
