@@ -18,9 +18,11 @@ func (s *Service) RegisterTap(w http.ResponseWriter, r *http.Request, logger uti
 		return id, err
 	}
 
-	s.tapsMu.Lock()
-	defer s.tapsMu.Unlock()
-	s.taps[id] = conn
+	func() {
+		s.tapsMu.Lock()
+		defer s.tapsMu.Unlock()
+		s.taps[id] = conn
+	}()
 	onMessage := func(m *Message) error {
 		logger.Errorf("message [%s:%s] received from tap socket", m.Channel, m.Cmd)
 		return nil
