@@ -23,13 +23,13 @@ func ToGoRowType(t types.Type, nullable bool, pkg string, enums enum.Enums, data
 		if t.Scalar() && nullable {
 			switch t.Key() {
 			case types.KeyString:
-				return "sql.NullString", nil
+				return "util.NilString", nil
 			case types.KeyInt:
-				return "sql.NullInt64", nil
+				return "util.NilInt64", nil
 			case types.KeyFloat:
-				return "sql.NullFloat64", nil
+				return "util.NilFloat64", nil
 			case types.KeyBool:
-				return "sql.NullBool", nil
+				return "util.NilBool", nil
 			}
 		}
 		return ToGoType(t, nullable, pkg, enums)

@@ -34,9 +34,6 @@ func Row(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*f
 	}
 	g.AddImport(imps...)
 	lo.ForEach(m.Columns, func(col *model.Column, _ int) {
-		if col.Nullable && (types.IsString(col.Type) || types.IsInt(col.Type) || types.IsBool(col.Type)) {
-			g.AddImport(helper.ImpSQL)
-		}
 		if col.Type.Key() == types.KeyUUID && args.Database == util.DatabaseSQLServer {
 			if col.Nullable {
 				g.AddImport(helper.ImpAppDatabase)
@@ -93,9 +90,6 @@ func modelRow(g *golang.File, m *model.Model, enums enum.Enums, database string)
 		gdt, err := c.ToGoRowType(m.Package, enums, database)
 		if err != nil {
 			return nil, err
-		}
-		if strings.HasPrefix(gdt, "sql.") {
-			g.AddImport(helper.ImpSQL)
 		}
 		ret.W("\t%s %s `db:%q json:%q`", util.StringPad(c.Proper(), maxColLength), util.StringPad(gdt, maxTypeLength), c.SQL(), c.Name)
 	}
