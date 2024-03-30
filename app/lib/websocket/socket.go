@@ -119,12 +119,6 @@ func ReadSocketLoop(connID uuid.UUID, sock *websocket.Conn, onMessage func(m *Me
 				logger.Warn(fmt.Sprintf("error running onDisconnect for [%v]: %+v", connID, err))
 			}
 		}
-		if onDisconnect == nil {
-			err := onDisconnect()
-			if err != nil {
-				logger.Warn(fmt.Sprintf("error running disconnect for [%v]: %+v", connID, err))
-			}
-		}
 		logger.Debug(fmt.Sprintf("closed websocket [%v]", connID.String()))
 	}()
 
