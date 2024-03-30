@@ -70,7 +70,8 @@ func All(p *project.Project, args *model.Args, addHeader bool, linebreak string)
 	}
 
 	if args.HasModule("migration") {
-		f, err := sql.MigrationAll(args.Models.Sorted(), args.Enums, addHeader, linebreak)
+		migModels := args.Models.WithoutTag("external").Sorted()
+		f, err := sql.MigrationAll(migModels, args.Enums, addHeader, linebreak)
 		if err != nil {
 			return nil, errors.Wrap(err, "can't render SQL \"all\" migration")
 		}

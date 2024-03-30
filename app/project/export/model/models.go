@@ -105,3 +105,15 @@ func (m Models) Validate(mods []string, groups Groups) error {
 	}
 	return nil
 }
+
+func (m Models) WithTag(tag string) Models {
+	return lo.Filter(m, func(x *Model, _ int) bool {
+		return x.HasTag(tag)
+	})
+}
+
+func (m Models) WithoutTag(tag string) Models {
+	return lo.Filter(m, func(x *Model, _ int) bool {
+		return !x.HasTag(tag)
+	})
+}

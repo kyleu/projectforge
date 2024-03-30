@@ -23,7 +23,7 @@ func ModelAll(m *model.Model, p *project.Project, args *model.Args, addHeader bo
 	}
 	calls = append(calls, fs...)
 
-	if args.HasModule("migration") {
+	if args.HasModule("migration") && !m.HasTag("external") {
 		f, err = sql.Migration(m, args, addHeader, linebreak)
 		if err != nil {
 			return nil, errors.Wrap(err, "can't render SQL migration")
