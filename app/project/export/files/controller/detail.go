@@ -154,7 +154,7 @@ func getReverseArgs(models model.Models, m *model.Model, rrels model.Relations, 
 		rNames := strings.Join(rCols.ProperNames(), "")
 		argKeys = append(argKeys, fmt.Sprintf("Rel%sBy%s", rm.ProperPlural(), rNames))
 		argVals = append(argVals, fmt.Sprintf("rel%sBy%s", rm.ProperPlural(), rNames))
-		ret.W("\t\trel%sBy%sPrms := ps.Params.Get(%q, nil, ps.Logger).Sanitize(%q)", rm.ProperPlural(), rNames, rm.Package, rm.Package)
+		ret.W("\t\trel%sBy%sPrms := ps.Params.Sanitized(%q, ps.Logger)", rm.ProperPlural(), rNames, rm.Package)
 		const msg = "\t\trel%sBy%s, err := as.Services.%s.GetBy%s(ps.Context, nil, %s, rel%sBy%sPrms%s, ps.Logger)"
 		ret.W(msg, rm.ProperPlural(), rNames, rm.Proper(), rNames, lCols.ToRefs("ret.", rCols...), rm.ProperPlural(), rNames, delSuffix)
 		ret.W("\t\tif err != nil {")

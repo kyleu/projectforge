@@ -36,7 +36,7 @@ func StreamSearchForm(qw422016 *qt422016.Writer, action string, fieldKey string,
 	m := map[string]string{}
 	for k, v := range ps.URI.Query() {
 		if k == fieldKey || strings.HasSuffix(k, ".x") {
-			return
+			continue
 		}
 		curr, ok := m[k]
 		if ok {

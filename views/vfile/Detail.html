@@ -11,15 +11,14 @@
 ) %}
 
 {% func Detail(path []string, b []byte, urlPrefix string, additionalLinks map[string]string, as *app.State, ps *cutil.PageState) %}
-  <div class="right"></div>
+  {%- if additionalLinks != nil && len(additionalLinks) > 0 -%}
+  <div class="right">
+    {%- for k, v := range additionalLinks -%}
+    <a href="{%s v %}"><button>{%s k %}</button></a>
+    {%- endfor -%}
+  </div>
+  {%- endif -%}
   <h3>
-    {%- if additionalLinks != nil && len(additionalLinks) > 0 -%}
-    <div class="right">
-      {%- for k, v := range additionalLinks -%}
-      <a href="{%s v %}"><button>{%s k %}</button></a>
-      {%- endfor -%}
-    </div>
-    {%- endif -%}
     {%- for idx, p := range path -%}/<a href="{%s urlPrefix %}/{%s filepath.Join(path[:idx + 1]...) %}">{%s p %}</a>{%- endfor -%}
     <em>({%s util.ByteSizeSI(int64(len(b))) %})</em>
   </h3>

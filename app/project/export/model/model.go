@@ -140,11 +140,11 @@ func (m *Model) AllSearches(database string) []string {
 			if !types.IsString(c.Type) {
 				switch database {
 				case util.DatabaseSQLServer:
-					x = fmt.Sprintf("cast(%s as nvarchar(2048))", c.Name)
+					x = fmt.Sprintf("cast(%s as nvarchar(2048))", c.SQL())
 				case util.DatabaseSQLite:
-					x = c.Name
+					x = c.SQL()
 				default:
-					x = fmt.Sprintf("%s::text", c.Name)
+					x = fmt.Sprintf("%s::text", c.SQL())
 				}
 			}
 			ret.Push("lower(" + x + ")")

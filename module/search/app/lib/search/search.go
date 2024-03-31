@@ -25,8 +25,12 @@ func Search(ctx context.Context, params *Params, as *app.State, page *cutil.Page
 	}
 	var allProviders []Provider
 	// $PF_SECTION_START(search_functions)$
+	// add your custom search functions here
 	testFunc := func(ctx context.Context, p *Params, as *app.State, page *cutil.PageState, logger util.Logger) (result.Results, error) {
-		return result.Results{{URL: "/search?q=test", Title: "Test Result", Icon: "star", Matches: nil}}, nil
+		if p.Q == "test" {
+			return result.Results{{URL: "/about", Title: "Test Result", Icon: "star", Matches: nil}}, nil
+		}
+		return nil, nil
 	}
 	allProviders = append(allProviders, testFunc)
 	// $PF_SECTION_END(search_functions)${{{ if .HasModule "export" }}}
@@ -37,13 +41,9 @@ func Search(ctx context.Context, params *Params, as *app.State, page *cutil.Page
 	}
 
 	params.Q = strings.TrimSpace(params.Q)
-
-	results, errs := util.AsyncCollect(allProviders, func(p Provider) (result.Results, error) {
+	results, errs := util.AsyncCollect(allProviders, func(p Provider) ([]*result.Result, error) {
 		return p(ctx, params, as, page, logger)
 	})
-
-	var ret result.Results = lo.FlatMap(results, func(x result.Results, _ int) []*result.Result {
-		return x
-	})
+	var ret result.Results = lo.Flatten(results)
 	return ret.Sort(), errs
 }

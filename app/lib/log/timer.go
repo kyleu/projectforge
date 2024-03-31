@@ -14,6 +14,7 @@ type Timer struct {
 	Timer   *util.Timer `json:"-"`
 	initial *util.Timer
 	index   int
+	acc     int
 }
 
 func NewTimer(key string, logger util.Logger) *Timer {
@@ -28,10 +29,11 @@ func (l *Timer) Lap(msg string, args ...any) {
 	} else {
 		l.Log.Infof(out)
 	}
+	l.acc += l.Timer.End()
 	l.Timer = util.TimerStart()
 }
 
-func (l *Timer) Complete() {
+func (l *Timer) Complete() int {
 	msg := fmt.Sprintf("completed after [%d] steps in [%s]", l.index, util.MicrosToMillis(l.initial.End()))
 	out := fmt.Sprintf("[%s::%d] ", l.Key, l.index) + msg + " [" + util.MicrosToMillis(l.Timer.End()) + "]"
 	if l.Log == nil {
@@ -39,4 +41,6 @@ func (l *Timer) Complete() {
 	} else {
 		l.Log.Infof(out)
 	}
+	l.acc += l.Timer.End()
+	return l.acc
 }

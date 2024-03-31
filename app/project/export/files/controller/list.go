@@ -2,7 +2,6 @@ package controller
 
 import (
 	"fmt"
-
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/project/export/enum"
@@ -29,19 +28,29 @@ func controllerList(g *golang.File, m *model.Model, grp *model.Column, models mo
 		g.AddImport(helper.ImpStrings)
 		ret.W("\t\tq := strings.TrimSpace(r.URL.Query().Get(\"q\"))")
 	}
-	ret.W("\t\tprms := ps.Params.Get(%q, nil, ps.Logger).Sanitize(%q)", m.Package, m.Package)
+	ret.W("\t\tprms := ps.Params.Sanitized(%q, ps.Logger)", m.Package)
 	if grpArgs == "" && m.HasSearches() {
 		ret.W("\t\tvar ret %s.%s", m.Package, m.ProperPlural())
 		ret.W("\t\tvar err error")
 		ret.W("\t\tif q == \"\" {")
 		ret.W("\t\t\tret, err = as.Services.%s.%s(ps.Context, nil, prms%s, ps.Logger)", m.Proper(), meth, suffix)
+		ret.WE(3, `""`)
 		ret.W("\t\t} else {")
 		ret.W("\t\t\tret, err = as.Services.%s.Search(ps.Context, q, nil, prms%s, ps.Logger)", m.Proper(), suffix)
+		ret.WE(3, `""`)
+		ret.W("\t\t\tif len(ret) == 1 {")
+		if len(m.Group) == 0 {
+			ret.W("\t\t\t\treturn FlashAndRedir(true, \"single result found\", ret[0].WebPath(), w, ps)")
+		} else {
+			g.AddImport(helper.ImpAppController)
+			ret.W("\t\t\t\treturn controller.FlashAndRedir(true, \"single result found\", ret[0].WebPath(), w, ps)")
+		}
+		ret.W("\t\t\t}")
 		ret.W("\t\t}")
 	} else {
 		ret.W("\t\tret, err := as.Services.%s.%s(ps.Context, nil%s, prms%s, ps.Logger)", m.Proper(), meth, grpArgs, suffix)
+		ret.WE(2, `""`)
 	}
-	ret.WE(2, `""`)
 	ret.W("\t\tps.SetTitleAndData(%q, ret)", m.TitlePlural())
 	var toStrings string
 	for _, rel := range m.Relations {

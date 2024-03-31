@@ -51,7 +51,7 @@ func exportViewTableFunc(m *model.Model, models model.Models, enums enum.Enums, 
 		}
 	})
 	ret.W("{%% func Table(models " + m.Package + "." + m.ProperPlural() + suffix + ", params filter.ParamSet, as *app.State, ps *cutil.PageState) %%}")
-	ret.W("  {%%- code prms := params.Get(\"" + m.Package + "\", nil, ps.Logger).Sanitize(\"" + m.Package + "\") -%%}")
+	ret.W("  {%%- code prms := params.Sanitized(\"" + m.Package + "\", ps.Logger) -%%}")
 	ret.W("  <table>")
 	ret.W("    <thead>")
 	ret.W("      <tr>")

@@ -39,13 +39,9 @@ func Search(ctx context.Context, params *Params, as *app.State, page *cutil.Page
 	}
 
 	params.Q = strings.TrimSpace(params.Q)
-
-	results, errs := util.AsyncCollect(allProviders, func(p Provider) (result.Results, error) {
+	results, errs := util.AsyncCollect(allProviders, func(p Provider) ([]*result.Result, error) {
 		return p(ctx, params, as, page, logger)
 	})
-
-	var ret result.Results = lo.FlatMap(results, func(x result.Results, _ int) []*result.Result {
-		return x
-	})
+	var ret result.Results = lo.Flatten(results)
 	return ret.Sort(), errs
 }

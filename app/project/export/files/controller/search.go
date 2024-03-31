@@ -53,7 +53,7 @@ func searchModel(m *model.Model) []string {
 		ret.Push("\t\t\treturn nil, nil")
 		ret.Push("\t\t}")
 	}
-	ret.Pushf("\t\tprm := params.PS.Get(%q, nil, logger).Sanitize(%q).WithLimit(5)", m.Package, m.Package)
+	ret.Pushf("\t\tprm := params.PS.Sanitized(%q, logger).WithLimit(5)", m.Package)
 	const msg = "\t\tmodels, err := as.Services.%s.Search(ctx, params.Q, nil, prm%s, logger)"
 	ret.Pushf(msg, m.Proper(), m.SoftDeleteSuffix())
 	ret.Push("\t\tif err != nil {")

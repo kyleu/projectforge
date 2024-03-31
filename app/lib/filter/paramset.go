@@ -19,6 +19,11 @@ func (s ParamSet) Get(key string, allowed []string, logger util.Logger) *Params 
 	return x.Filtered(allowed, logger).Sanitize(key)
 }
 
+func (s ParamSet) Sanitized(key string, logger util.Logger, defaultOrderings ...*Ordering) *Params {
+	ret := s.Get(key, nil, logger).Sanitize(key, defaultOrderings...)
+	return ret
+}
+
 func (s ParamSet) Specifies(key string) bool {
 	x, ok := s[key]
 	if !ok {
