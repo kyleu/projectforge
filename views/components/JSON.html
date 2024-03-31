@@ -39,16 +39,16 @@
   %}
   {% code json := util.ToJSONBytes(v, true) %}
   {% if len(json) > (1024 * 256) %}
-    <div class="mt"><em>This JSON is too large (<strong>{%s util.ByteSizeSI(int64(len(json))) %}</strong>), highlighting is disabled</em></div>
-    <div class="mt overflow full-width">
+    <div><em>This JSON is too large (<strong>{%s util.ByteSizeSI(int64(len(json))) %}</strong>), highlighting is disabled</em></div>
+    <div class="overflow full-width">
       <pre>{%s string(json) %}</pre>
     </div>
   {% else %}
     {% code out, err := cutil.FormatLang(string(json), "json") %}
     {% if err == nil %}
-      <div class="mt overflow full-width">{%s= out %}</div>
+      <div class="overflow full-width">{%s= out %}</div>
     {% else %}
-      <div class="mt error">{%s err.Error() %}</div>
+      <div class="error">{%s err.Error() %}</div>
     {% endif %}
   {% endif %}
 {% endstripspace %}{% endfunc %}

@@ -72,7 +72,7 @@ func (c *Column) ToGoEditString(prefix string, format string, id string, enums e
 		}
 		return fmt.Sprintf(msgTextarea, c.Camel(), id, c.Title(), c.ToGoString(prefix), h), nil
 	case types.KeyMap, types.KeyValueMap:
-		return fmt.Sprintf(msgTextarea, c.Camel(), id, c.Title(), c.ToGoString(prefix), h), nil
+		return fmt.Sprintf(msgTextarea, c.Camel(), id, c.Title(), prefix+c.Proper(), h), nil
 	case types.KeyReference:
 		return fmt.Sprintf(msgTextarea, c.Camel(), id, c.Title(), prefix+c.Proper(), h), nil
 	case types.KeyDate:

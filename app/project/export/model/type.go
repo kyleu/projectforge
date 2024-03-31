@@ -93,10 +93,7 @@ func ToGoString(t types.Type, nullable bool, prop string, alwaysString bool) str
 		return fmt.Sprintf("fmt.Sprint(%s)", prop)
 	case types.KeyList:
 		if alwaysString {
-			if nullable {
-				return fmt.Sprintf("util.ToJSON(%s)", prop)
-			}
-			return fmt.Sprintf("util.ToJSON(&%s)", prop)
+			return fmt.Sprintf("util.ToJSON(%s)", prop)
 		}
 		return prop
 	case types.KeyEnum:
@@ -105,7 +102,7 @@ func ToGoString(t types.Type, nullable bool, prop string, alwaysString bool) str
 		}
 		return prop
 	case types.KeyMap, types.KeyValueMap:
-		return fmt.Sprintf("%s.String()", prop)
+		return fmt.Sprintf("util.ToJSON(%s)", prop)
 	case types.KeyDate:
 		if alwaysString {
 			if nullable {

@@ -96,11 +96,11 @@ func StreamJSON(qw422016 *qt422016.Writer, v any) {
 //line views/components/JSON.html:41
 	if len(json) > (1024 * 256) {
 //line views/components/JSON.html:41
-		qw422016.N().S(`<div class="mt"><em>This JSON is too large (<strong>`)
+		qw422016.N().S(`<div><em>This JSON is too large (<strong>`)
 //line views/components/JSON.html:42
 		qw422016.E().S(util.ByteSizeSI(int64(len(json))))
 //line views/components/JSON.html:42
-		qw422016.N().S(`</strong>), highlighting is disabled</em></div><div class="mt overflow full-width"><pre>`)
+		qw422016.N().S(`</strong>), highlighting is disabled</em></div><div class="overflow full-width"><pre>`)
 //line views/components/JSON.html:44
 		qw422016.E().S(string(json))
 //line views/components/JSON.html:44
@@ -113,7 +113,7 @@ func StreamJSON(qw422016 *qt422016.Writer, v any) {
 //line views/components/JSON.html:48
 		if err == nil {
 //line views/components/JSON.html:48
-			qw422016.N().S(`<div class="mt overflow full-width">`)
+			qw422016.N().S(`<div class="overflow full-width">`)
 //line views/components/JSON.html:49
 			qw422016.N().S(out)
 //line views/components/JSON.html:49
@@ -121,7 +121,7 @@ func StreamJSON(qw422016 *qt422016.Writer, v any) {
 //line views/components/JSON.html:50
 		} else {
 //line views/components/JSON.html:50
-			qw422016.N().S(`<div class="mt error">`)
+			qw422016.N().S(`<div class="error">`)
 //line views/components/JSON.html:51
 			qw422016.E().S(err.Error())
 //line views/components/JSON.html:51
