@@ -75,7 +75,7 @@ func exportViewListBody(m *model.Model, models model.Models) *golang.Block {
 	ret.W("    {%%- if len(p.Models) == 0 -%%}")
 	ret.W("    <div class=\"mt\"><em>No %s available</em></div>", m.TitlePluralLower())
 	ret.W("    {%%- else -%%}")
-	ret.W("    <div class=\"overflow clear mt\">")
+	ret.W("    <div class=\"mt\">")
 	ret.W("      {%%= Table(p.Models" + suffix + ", p.Params, as, ps) %%}")
 	ret.W("    </div>")
 	ret.W("    {%%- endif -%%}")
