@@ -19,8 +19,8 @@ func (s *StringSlice) Empty() bool {
 	return len(s.Slice) == 0
 }
 
-func (s *StringSlice) Push(strings ...string) {
-	s.Slice = append(s.Slice, strings...)
+func (s *StringSlice) Push(strs ...string) {
+	s.Slice = append(s.Slice, strs...)
 }
 
 func (s *StringSlice) Pushf(msg string, args ...any) {

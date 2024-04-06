@@ -12,8 +12,8 @@ import (
 )
 
 // Initialize system dependencies for the marketing site.
-func initSite(_ context.Context, as *app.State, logger util.Logger) error {
-	mod, err := module.NewService(context.Background(), as.Files.Root(), logger)
+func initSite(ctx context.Context, as *app.State, logger util.Logger) error {
+	mod, err := module.NewService(ctx, as.Files.Root(), logger)
 	if err != nil {
 		return err
 	}

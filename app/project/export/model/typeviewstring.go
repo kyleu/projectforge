@@ -7,19 +7,28 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+const (
+	tmplStart   = "{%%"
+	tmplStartEQ = tmplStart + "= "
+	tmplStartS  = tmplStart + "s "
+	tmplStartV  = tmplStart + "v "
+	tmplEnd     = " %%}"
+	tmplEndP    = ")" + tmplEnd
+)
+
 func goViewStringForString(url bool, src string, t *types.Wrapped, nullable bool, prop string, format string, verbose bool) string {
 	key := "s"
 	if url {
 		key = "u"
 	}
 	if src == util.KeySimple {
-		return "{%%" + key + " " + prop + " %%}"
+		return tmplStart + key + " " + prop + tmplEnd
 	}
 	switch format {
 	case FmtCode.Key:
-		return "<pre class=\"prewsw\">{%%s " + ToGoString(t, nullable, prop, false) + " %%}</pre>"
+		return "<pre class=\"prewsw\">" + tmplStartS + ToGoString(t, nullable, prop, false) + tmplEnd + "</pre>"
 	case FmtLinebreaks.Key:
-		return "<div class=\"prewsl\">{%%s " + ToGoString(t, nullable, prop, false) + " %%}</div>"
+		return "<div class=\"prewsl\">" + tmplStartS + ToGoString(t, nullable, prop, false) + tmplEnd + "</div>"
 	case FmtCodeHidden.Key:
 		_, p := util.StringSplitLast(prop, '.', true)
 		ret := util.NewStringSlice(make([]string, 0, 30))
@@ -34,26 +43,26 @@ func goViewStringForString(url bool, src string, t *types.Wrapped, nullable bool
 		)
 		return ret.Join("")
 	case FmtJSON.Key, FmtHTML.Key, FmtSQL.Key:
-		return "{%%= view.Format(" + ToGoString(t, nullable, prop, false) + ", \"" + format + "\") %%}"
+		return tmplStartEQ + "view.Format(" + ToGoString(t, nullable, prop, false) + ", \"" + format + "\"" + tmplEndP
 	case FmtURL.Key:
-		x := "{%%" + key + " " + ToGoString(t, nullable, prop, false) + " %%}"
+		x := tmplStart + key + " " + ToGoString(t, nullable, prop, false) + tmplEnd
 		return fmt.Sprintf("<a href=%q target=\"_blank\" rel=\"noopener noreferrer\">%s</a>", x, x)
 	case FmtIcon.Key:
 		size := "18"
 		if src == util.KeyDetail {
 			size = "64"
 		}
-		return "{%%= components.Icon(" + ToGoString(t, nullable, prop, false) + ", " + size + ", \"\", ps) %%}"
+		return tmplStartEQ + "components.Icon(" + ToGoString(t, nullable, prop, false) + ", " + size + ", \"\", ps)" + tmplEnd
 	case FmtCountry.Key:
 		if verbose {
 			x := ToGoString(t, nullable, prop, false)
-			return "{%%" + key + " " + x + " %%} {%%s util.CountryFlag(" + x + ") %%}"
+			return tmplStart + key + " " + x + tmplEnd + " " + tmplStartS + "util.CountryFlag(" + x + tmplEndP
 		}
-		return "{%%" + key + " " + ToGoString(t, nullable, prop, false) + " %%}"
+		return tmplStart + key + " " + ToGoString(t, nullable, prop, false) + tmplEnd
 	case FmtSelect.Key:
-		return "<strong>{%%" + key + " " + ToGoString(t, nullable, prop, false) + " %%}</strong>"
+		return "<strong>" + tmplStart + key + " " + ToGoString(t, nullable, prop, false) + tmplEnd + "</strong>"
 	case "":
-		return "{%%= view.String(" + prop + ") %%}"
+		return tmplStartEQ + "view.String(" + prop + tmplEndP
 	default:
 		return "INVALID_STRING_FORMAT[" + format + "]"
 	}

@@ -40,7 +40,7 @@ func (f *FileSystem) UnzipToDir(src string, dest string) (*util.OrderedMap[int64
 			}
 		}()
 
-		path := filepath.Join(dest, zf.Name)
+		path := filepath.Join(dest, zf.Name) // #nosec G305
 
 		if !strings.HasPrefix(path, filepath.Clean(dest)+string(os.PathSeparator)) {
 			return 0, errors.Errorf("illegal file path: %s", path)
@@ -59,7 +59,7 @@ func (f *FileSystem) UnzipToDir(src string, dest string) (*util.OrderedMap[int64
 			defer func() {
 				_ = df.Close()
 			}()
-			sz, err = io.Copy(df, rc)
+			sz, err = io.Copy(df, rc) // #nosec G110
 			if err != nil {
 				return 0, err
 			}

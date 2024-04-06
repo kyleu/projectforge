@@ -15,6 +15,9 @@ func NotebookScript(p *project.Project, args *model.Args, addHeader bool, linebr
 	w := func(msg string, args ...any) {
 		content = append(content, fmt.Sprintf(msg, args...))
 	}
+	if addHeader {
+		w("// " + file.HeaderContent)
+	}
 	w(`import * as d3 from "npm:d3";`)
 	w("")
 	w("export async function load(u, t) {")
@@ -68,6 +71,6 @@ func NotebookScript(p *project.Project, args *model.Args, addHeader bool, linebr
 		Path:    []string{"notebook", "docs", "components"},
 		Name:    p.Key + ".js",
 		Mode:    filesystem.DefaultMode,
-		Content: strings.Join(content, "\n"),
+		Content: strings.Join(content, linebreak),
 	}, nil
 }

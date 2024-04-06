@@ -69,7 +69,7 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool, linebreak stri
 		doExtra = append(doExtra, col.Name)
 	})
 	lo.ForEach(m.Columns, func(col *model.Column, _ int) {
-		lo.ForEach(col.Tags, func(tag string, index int) {
+		lo.ForEach(col.Tags, func(tag string, _ int) {
 			if strings.HasPrefix(tag, "fn:") {
 				fn := strings.TrimPrefix(tag, "fn:")
 				getBys[fn] = append(getBys[fn], col)
@@ -91,7 +91,7 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool, linebreak stri
 		}
 		g.AddBlocks(ss)
 	}
-	g.AddBlocks(serviceListSQL(m, args.DBRef()), serviceListWhere(m, args.Database), serviceRandom(m, args.Database))
+	g.AddBlocks(serviceListSQL(m, args.DBRef()), serviceListWhere(m), serviceRandom(m, args.Database))
 	return g.Render(addHeader, linebreak)
 }
 

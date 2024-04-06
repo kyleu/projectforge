@@ -40,7 +40,7 @@ func serviceListSQL(m *model.Model, dbRef string) *golang.Block {
 	return ret
 }
 
-func serviceListWhere(m *model.Model, dbRef string) *golang.Block {
+func serviceListWhere(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("ListWhere", "func")
 	decl := "func (s *Service) ListWhere(ctx context.Context, tx *sqlx.Tx, where string, params *filter.Params, logger util.Logger, values ...any) (%s, error) {"
 	ret.W(decl, m.ProperPlural())

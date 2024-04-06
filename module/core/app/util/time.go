@@ -65,7 +65,7 @@ func TimeFromString(s string) (*time.Time, error) {
 	}
 	ret, err := dateparse.ParseLocal(s)
 	if err != nil {
-		return nil, errors.New("invalid date string [" + s + "]")
+		return nil, errors.Errorf("invalid date string [%s]", s)
 	}
 	return &ret, nil
 }
@@ -81,7 +81,7 @@ func TimeFromStringFmt(s string, fmt string) (*time.Time, error) {
 	}
 	ret, err := time.Parse(fmt, s)
 	if err != nil {
-		return nil, errors.New("invalid date string [" + s + "], expected [" + fmt + "]")
+		return nil, errors.Errorf("invalid date string [%s], expected [%s]", s, fmt)
 	}
 	return &ret, nil
 }

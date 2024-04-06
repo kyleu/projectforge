@@ -21,7 +21,7 @@ func ToCSV(data any) ([]string, [][]string, error) {
 	if x, ok := data.(string); ok {
 		csvdata, err := csv.NewReader(bytes.NewReader([]byte(x))).ReadAll()
 		if err != nil || len(csvdata) == 0 {
-			return []string{x}, [][]string{}, nil
+			return []string{x}, [][]string{}, nil //nolint:nilerr
 		}
 		return csvdata[0], csvdata[1:], nil
 	}

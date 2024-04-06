@@ -86,6 +86,6 @@ func exportViewTableFunc(m *model.Model, models model.Models, enums enum.Enums, 
 	ret.W("  {%%= components.Pagination(len(models) + prms.Offset, prms, ps.URI) %%}")
 	ret.W(`  <div class="clear"></div>`)
 	ret.W("  {%%- endif -%%}")
-	ret.W("{%% endfunc %%}")
+	ret.W(endfunc)
 	return ret, nil
 }

@@ -131,7 +131,7 @@ func LoadDepsMap(projects project.Projects, minVersions int, pSvc *project.Servi
 			ret[dep.Key] = curr
 		})
 	}
-	return lo.OmitBy(ret, func(k string, v map[string][]string) bool {
+	return lo.OmitBy(ret, func(_ string, v map[string][]string) bool {
 		return len(v) < minVersions
 	}), nil
 }

@@ -10,25 +10,25 @@ func ToGoViewString(t *types.Wrapped, prop string, nullable bool, format string,
 	switch t.Key() {
 	case types.KeyAny:
 		if src == util.KeySimple {
-			return "{%%v " + prop + " %%}"
+			return tmplStartV + prop + tmplEnd
 		}
-		return "{%%= components.JSON(" + prop + ") %%}"
+		return tmplStartEQ + "components.JSON(" + prop + tmplEndP
 	case types.KeyBool:
-		return "{%%v " + prop + " %%}"
+		return tmplStartV + prop + tmplEnd
 	case types.KeyInt:
 		switch format {
 		case FmtSI.Key:
-			return "{%%s util.ByteSizeSI(int64(" + prop + ")) %%}"
+			return tmplStartS + "util.ByteSizeSI(int64(" + prop + "))" + tmplEnd
 		case "":
-			return "{%%d " + prop + " %%}"
+			return tmplStart + "d " + prop + tmplEnd
 		default:
 			return "INVALID_INT_FORMAT[" + format + "]"
 		}
 	case types.KeyFloat:
-		return "{%%f " + prop + " %%}"
+		return tmplStart + "f " + prop + tmplEnd
 	case types.KeyList:
 		if src == util.KeySimple {
-			return "{%%v " + prop + " %%}"
+			return tmplStartV + prop + tmplEnd
 		}
 		lt := t.ListType()
 		if lt == nil {
@@ -36,47 +36,47 @@ func ToGoViewString(t *types.Wrapped, prop string, nullable bool, format string,
 		}
 		switch lt.Key() {
 		case types.KeyString:
-			return "{%%= view.StringArray(" + prop + ") %%}"
+			return tmplStartEQ + "view.StringArray(" + prop + tmplEndP
 		case types.KeyInt:
-			return "{%%= view.IntArray(util.ArrayFromAny(" + prop + ")) %%}"
+			return tmplStartEQ + "view.IntArray(util.ArrayFromAny(" + prop + "))" + tmplEnd
 		case types.KeyEnum:
 			e, _ := AsEnumInstance(lt, enums)
 			if e == nil {
 				return "ERROR: invalid enum [" + lt.String() + "]"
 			}
-			return "{%%= view.StringArray(" + prop + ".Strings()) %%}"
+			return tmplStartEQ + "view.StringArray(" + prop + ".Strings())" + tmplEnd
 		default:
-			return "{%%= components.JSON(" + prop + ") %%}"
+			return tmplStartEQ + "components.JSON(" + prop + tmplEndP
 		}
 	case types.KeyMap, types.KeyValueMap, types.KeyReference:
 		if src == util.KeySimple {
-			return "{%%v " + prop + " %%}"
+			return tmplStartV + prop + " %%}"
 		}
-		return "{%%= components.JSON(" + prop + ") %%}"
+		return tmplStartEQ + "components.JSON(" + prop + tmplEndP
 	case types.KeyDate:
 		if nullable {
-			return "{%%= view.TimestampDay(" + prop + ") %%}"
+			return tmplStartEQ + "view.TimestampDay(" + prop + tmplEndP
 		}
-		return "{%%= view.TimestampDay(&" + prop + ") %%}"
+		return tmplStartEQ + "view.TimestampDay(&" + prop + tmplEndP
 	case types.KeyEnum:
 		e, _ := AsEnumInstance(t, enums)
 		if e == nil || e.Simple() {
-			return "{%%v " + ToGoString(t, nullable, prop, false) + " %%}"
+			return tmplStartV + ToGoString(t, nullable, prop, false) + tmplEnd
 		}
-		return "{%%s " + ToGoString(t, nullable, prop, false) + ".String() %%}"
+		return tmplStartS + ToGoString(t, nullable, prop, false) + ".String()" + tmplEnd
 	case types.KeyTimestamp:
 		if nullable {
-			return "{%%= view.Timestamp(" + prop + ") %%}"
+			return tmplStartEQ + "view.Timestamp(" + prop + tmplEndP
 		}
-		return "{%%= view.Timestamp(&" + prop + ") %%}"
+		return tmplStartEQ + "view.Timestamp(&" + prop + tmplEndP
 	case types.KeyUUID:
 		if nullable {
-			return "{%%= view.UUID(" + prop + ") %%}"
+			return tmplStartEQ + "view.UUID(" + prop + tmplEndP
 		}
-		return "{%%= view.UUID(&" + prop + ") %%}"
+		return tmplStartEQ + "view.UUID(&" + prop + tmplEndP
 	case types.KeyString:
 		return goViewStringForString(url, src, t, nullable, prop, format, verbose)
 	default:
-		return "{%%v " + ToGoString(t, nullable, prop, false) + " %%}"
+		return tmplStartV + ToGoString(t, nullable, prop, false) + tmplEnd
 	}
 }

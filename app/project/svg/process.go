@@ -37,7 +37,8 @@ func load(src string, tgt string) (*SVG, error) {
 	if !strings.HasPrefix(src, "http") {
 		url = ghLineAwesome + src + util.ExtSVG
 	}
-	ctx, _ := context.WithTimeout(context.Background(), time.Minute)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
+	defer cancel()
 	r, err := http.NewRequestWithContext(ctx, http.MethodGet, url, http.NoBody)
 	if err != nil {
 		return nil, err

@@ -26,7 +26,9 @@ func contentWithHeader(filename string, t Type, c string, linebreak string, pkg 
 	switch t.Key {
 	case TypeBatch.Key:
 		return secondLine(c, "rem "+HeaderContent, linebreak)
-	case TypeCodeowners.Key, TypeDocker.Key, TypeDockerIgnore.Key, TypeEnv.Key, TypeGraphQL.Key, TypeHCL.Key, TypeMakefile.Key, TypeProperties.Key, TypeYAML.Key:
+	case
+		TypeCodeowners.Key, TypeDocker.Key, TypeDockerIgnore.Key, TypeEnv.Key, TypeGraphQL.Key, TypeHCL.Key,
+		TypeMakefile.Key, TypeProperties.Key, TypePython.Key, TypeYAML.Key:
 		return headerCommentPound + HeaderContent + linebreak + c
 	case TypeConf.Key, TypeEditorConfig.Key, TypeESLint.Key, TypeGitIgnore.Key:
 		return c

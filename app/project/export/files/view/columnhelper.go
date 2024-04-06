@@ -6,6 +6,8 @@ import (
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
+const endfunc = "{%% endfunc %%}"
+
 func colRow(ind string, col *model.Column, u string, viewString string, link bool) string {
 	ret := viewString
 	if col.HasTag("title") {

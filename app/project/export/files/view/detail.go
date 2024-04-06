@@ -162,7 +162,7 @@ func exportViewDetailBody(g *golang.Template, m *model.Model, audit bool, models
 		ret.W("  {%%- endif -%%}")
 	}
 	ret.W("  {%%%%= components.JSONModal(%q, \"%s JSON\", p.Model, 1) %%%%}", m.Camel(), m.Title())
-	ret.W("{%% endfunc %%}")
+	ret.W(endfunc)
 	return ret, nil
 }
 

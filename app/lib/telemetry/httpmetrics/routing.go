@@ -12,13 +12,13 @@ import (
 
 var defaultMetricPath = "/metrics"
 
-func (p *Metrics) WrapHandler(mux *mux.Router) http.HandlerFunc {
+func (p *Metrics) WrapHandler(router *mux.Router) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		reqBytes := make(chan int)
 		go computeApproximateRequestSize(r, reqBytes)
 
 		start := util.TimeCurrent()
-		mux.ServeHTTP(w, r)
+		router.ServeHTTP(w, r)
 		elapsed := float64(time.Since(start)) / float64(time.Second)
 		// status := strconv.Itoa(rc.Response.StatusCode())
 		status := "200"

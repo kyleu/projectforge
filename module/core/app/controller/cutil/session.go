@@ -24,6 +24,7 @@ var (
 	MaxBodySize  = int64(1024 * 1024 * 128) // 128MB
 )
 
+// @contextcheck(req_has_ctx).
 func LoadPageState(as *app.State, w http.ResponseWriter, r *http.Request, key string, logger util.Logger) *PageState {
 	parentCtx, logger := httpmetrics.ExtractHeaders(r, logger)
 	ctx, span, logger := telemetry.StartSpan(parentCtx, "http:"+key, logger)
@@ -31,7 +32,7 @@ func LoadPageState(as *app.State, w http.ResponseWriter, r *http.Request, key st
 	if !telemetry.SkipControllerMetrics {
 		httpmetrics.InjectHTTP(200, r, span)
 	}
-	session, flashes, prof{{{ if .HasAccount }}}, accts{{{ end }}} := loadSession(ctx, as, w, r, logger)
+	session, flashes, prof{{{ if .HasAccount }}}, accts{{{ end }}} := loadSession(ctx, as, w, r, logger) //nolint:contextcheck
 	params := ParamSetFromRequest(r)
 	ua := useragent.Parse(r.Header.Get("User-Agent"))
 	os := strings.ToLower(ua.OS)
@@ -83,9 +84,8 @@ func loadSession({{{ if .DatabaseUISaveUser }}}ctx{{{ else }}}_{{{ end }}} conte
 	flashes := util.StringSplitAndTrim(session.GetStringOpt(csession.WebFlashKey), ";")
 	if len(flashes) > 0 {
 		delete(session, csession.WebFlashKey)
-		err := csession.SaveSession(w, session, logger)
-		if err != nil {
-			logger.Warnf("can't save session: %+v", err)
+		if e := csession.SaveSession(w, session, logger); e != nil {
+			logger.Warnf("can't save session: %+v", e)
 		}
 	}
 

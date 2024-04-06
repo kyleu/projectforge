@@ -111,6 +111,6 @@ func randForType(t *types.Wrapped, format string, nullable bool, tags []string, 
 		}
 		return "util.UUID()", nil
 	default:
-		return "", errors.Errorf("unhandled x type [%s]", t.String())
+		return "", errors.Errorf("unhandled random type [%s]", t.String())
 	}
 }

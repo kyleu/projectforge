@@ -47,7 +47,8 @@ func searchBlock(args *model.Args) *golang.Block {
 
 func searchModel(m *model.Model) []string {
 	ret := &util.StringSlice{}
-	ret.Pushf("\t%sFunc := func(ctx context.Context, params *Params, as *app.State, page *cutil.PageState, logger util.Logger) (result.Results, error) {", m.Package)
+	fMsg := "\t%sFunc := func(ctx context.Context, params *Params, as *app.State, page *cutil.PageState, logger util.Logger) (result.Results, error) {"
+	ret.Pushf(fMsg, m.Package)
 	if !m.HasTag("public") {
 		ret.Push("\t\tif !page.Admin {")
 		ret.Push("\t\t\treturn nil, nil")

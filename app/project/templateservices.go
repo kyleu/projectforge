@@ -91,10 +91,6 @@ func (t *TemplateContext) ServicesConstructor() string {
 	refs := lo.Map(svcs, func(svc string, _ int) string {
 		return templateServicesRefs[svc]
 	})
-	args := ""
-	if t.HasModule("audit") {
-		args += ", auditSvc"
-	}
 	for idx, key := range svcs {
 		if key == "user" && t.ExportArgs != nil && t.ExportArgs.Models.Get("user") != nil {
 			continue

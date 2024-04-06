@@ -47,7 +47,7 @@ func Row(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*f
 	} else {
 		return nil, err2
 	}
-	mrow, err := modelRow(g, m, args.Enums, args.Database)
+	mrow, err := modelRow(m, args.Enums, args.Database)
 	if err != nil {
 		return nil, err
 	}
@@ -81,7 +81,7 @@ func modelTableCols(m *model.Model) (*golang.Block, error) {
 	return ret, nil
 }
 
-func modelRow(g *golang.File, m *model.Model, enums enum.Enums, database string) (*golang.Block, error) {
+func modelRow(m *model.Model, enums enum.Enums, database string) (*golang.Block, error) {
 	ret := golang.NewBlock(m.Proper()+"Row", "struct")
 	ret.W("type row struct {")
 	maxColLength := m.Columns.MaxCamelLength()

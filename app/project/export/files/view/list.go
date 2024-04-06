@@ -80,6 +80,6 @@ func exportViewListBody(m *model.Model, models model.Models) *golang.Block {
 	ret.W("    </div>")
 	ret.W("    {%%- endif -%%}")
 	ret.W("  </div>")
-	ret.W("{%% endfunc %%}")
+	ret.W(endfunc)
 	return ret
 }

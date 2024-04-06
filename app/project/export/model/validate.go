@@ -16,16 +16,41 @@ var goKeywords = []string{
 var reservedNames = map[string][]string{"audit": {"audit", "audit_record"}}
 
 func (m *Model) Validate(mods []string, models Models, groups Groups) error {
-	if len(m.PKs()) == 0 {
-		return errors.Errorf("model [%s] has no primary key", m.Name)
-	}
-	if m.Package == "vendor" {
-		return errors.Errorf("model [%s] uses [vendor] package, which is reserved by Go", m.Name)
+	if err := validateBasic(m); err != nil {
+		return err
 	}
 	for _, mod := range mods {
 		if lo.Contains(reservedNames[mod], m.Name) {
 			return errors.Errorf("model [%s] uses name which is reserved by [%s]", m.Name, mod)
 		}
+	}
+	if len(m.Group) > 0 && groups.Get(m.Group...) == nil {
+		if len(m.Group) == 1 && models.Get(m.Group[0]) == nil {
+			return errors.Errorf("model [%s] references undefined group [%s], and no model matches", m.Name, strings.Join(m.Group, "/"))
+		}
+		if len(m.Group) > 1 {
+			var cool bool
+			for _, x := range models {
+				mg := strings.Join(m.Group, "/")
+				xg := strings.Join(x.Group, "/") + "/" + x.Name
+				if mg == xg {
+					cool = true
+				}
+			}
+			if !cool {
+				return errors.Errorf("model [%s] references undefined group [%s], and no model matches", m.Name, strings.Join(m.Group, "/"))
+			}
+		}
+	}
+	return nil
+}
+
+func validateBasic(m *Model) error {
+	if len(m.PKs()) == 0 {
+		return errors.Errorf("model [%s] has no primary key", m.Name)
+	}
+	if m.Package == "vendor" {
+		return errors.Errorf("model [%s] uses [vendor] package, which is reserved by Go", m.Name)
 	}
 	if m.IsSoftDelete() {
 		if d := m.Columns.WithTag("deleted"); len(d) != 1 {
@@ -44,26 +69,6 @@ func (m *Model) Validate(mods []string, models Models, groups Groups) error {
 		for _, s := range rel.Src {
 			if m.Columns.Get(s) == nil {
 				return errors.Errorf("model [%s] relation [%s] references missing source column [%s]", m.Name, rel.Name, s)
-			}
-		}
-	}
-	if len(m.Group) > 0 {
-		if groups.Get(m.Group...) == nil {
-			if len(m.Group) == 1 && models.Get(m.Group[0]) == nil {
-				return errors.Errorf("model [%s] references undefined group [%s], and no model matches", m.Name, strings.Join(m.Group, "/"))
-			}
-			if len(m.Group) > 1 {
-				var cool bool
-				for _, x := range models {
-					mg := strings.Join(m.Group, "/")
-					xg := strings.Join(x.Group, "/") + "/" + x.Name
-					if mg == xg {
-						cool = true
-					}
-				}
-				if !cool {
-					return errors.Errorf("model [%s] references undefined group [%s], and no model matches", m.Name, strings.Join(m.Group, "/"))
-				}
 			}
 		}
 	}
