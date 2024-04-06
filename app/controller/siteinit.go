@@ -17,8 +17,8 @@ func initSite(_ context.Context, as *app.State, logger util.Logger) error {
 	if err != nil {
 		return err
 	}
-	hlp := help.NewService(logger)
-	as.Services = &app.Services{Help: hlp, Modules: mod}
+	as.Services = &app.Services{Modules: mod}
+	as.Services.Help = help.NewService(logger)
 	return nil
 }
 

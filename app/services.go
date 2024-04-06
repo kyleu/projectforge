@@ -5,8 +5,6 @@ import (
 	"context"
 	"encoding/json"
 
-	"projectforge.dev/projectforge/app/lib/exec"
-	"projectforge.dev/projectforge/app/lib/help"
 	"projectforge.dev/projectforge/app/lib/websocket"
 	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/project"
@@ -16,13 +14,11 @@ import (
 )
 
 type Services struct {
+	CoreServices
 	Modules  *module.Service
 	Projects *project.Service
 	Export   *export.Service
 	Git      *git.Service
-	Exec     *exec.Service
-	Socket   *websocket.Service
-	Help     *help.Service
 }
 
 func NewServices(ctx context.Context, st *State, rootLogger util.Logger) (*Services, error) {
@@ -30,9 +26,10 @@ func NewServices(ctx context.Context, st *State, rootLogger util.Logger) (*Servi
 	if err != nil {
 		return nil, err
 	}
-	ps, es, gs, xs, hs := project.NewService(), export.NewService(), git.NewService(), exec.NewService(), help.NewService(rootLogger)
-	ws := websocket.NewService(nil, socketHandler, nil)
-	return &Services{Modules: ms, Projects: ps, Export: es, Git: gs, Exec: xs, Socket: ws, Help: hs}, nil
+	ps, es, gs := project.NewService(), export.NewService(), git.NewService()
+	core := initCoreServices(ctx, st, rootLogger)
+	core.Socket.ReplaceHandlers(nil, socketHandler, nil)
+	return &Services{CoreServices: core, Modules: ms, Projects: ps, Export: es, Git: gs}, nil
 }
 
 func (s *Services) Close(_ context.Context, _ util.Logger) error {
