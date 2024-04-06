@@ -111,11 +111,11 @@ func ExecKill(w http.ResponseWriter, r *http.Request) {
 }
 
 func getExecRC(r *http.Request, as *app.State) (*exec.Exec, error) {
-	key, err := cutil.RCRequiredString(r, "key", false)
+	key, err := cutil.PathString(r, "key", false)
 	if err != nil {
 		return nil, err
 	}
-	idx, err := cutil.RCRequiredInt(r, "idx")
+	idx, err := cutil.PathInt(r, "idx")
 	if err != nil {
 		return nil, err
 	}

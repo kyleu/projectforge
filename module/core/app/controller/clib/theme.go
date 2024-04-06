@@ -27,7 +27,7 @@ func ThemeList(w http.ResponseWriter, r *http.Request) {
 
 func ThemeEdit(w http.ResponseWriter, r *http.Request) {
 	controller.Act("theme.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := cutil.RCRequiredString(r, "key", false)
+		key, err := cutil.PathString(r, "key", false)
 		if err != nil {
 			return "", err
 		}
@@ -61,7 +61,7 @@ func ThemeEdit(w http.ResponseWriter, r *http.Request) {
 
 func ThemeSave(w http.ResponseWriter, r *http.Request) {
 	controller.Act("theme.save", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := cutil.RCRequiredString(r, "key", false)
+		key, err := cutil.PathString(r, "key", false)
 		if err != nil {
 			return "", err
 		}
@@ -102,7 +102,7 @@ func ThemeSave(w http.ResponseWriter, r *http.Request) {
 
 func ThemeRemove(w http.ResponseWriter, r *http.Request) {
 	controller.Act("theme.remove", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := cutil.RCRequiredString(r, "key", false)
+		key, err := cutil.PathString(r, "key", false)
 		if err != nil {
 			return "", err
 		}

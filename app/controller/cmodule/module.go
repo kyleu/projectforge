@@ -53,7 +53,7 @@ func ModuleDetail(w http.ResponseWriter, r *http.Request) {
 }
 
 func getModule(r *http.Request, as *app.State, ps *cutil.PageState) (*module.Module, error) {
-	key, err := cutil.RCRequiredString(r, "key", true)
+	key, err := cutil.PathString(r, "key", true)
 	if err != nil {
 		return nil, err
 	}

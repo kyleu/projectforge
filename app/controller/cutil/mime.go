@@ -46,7 +46,7 @@ func WriteCORS(w http.ResponseWriter) {
 	}
 	setIfEmpty(HeaderAccessControlAllowHeaders, AllowedRequestHeaders)
 	setIfEmpty(HeaderAccessControlAllowMethods, "GET,POST,DELETE,PUT,PATCH,OPTIONS,HEAD")
-	if x := string(h.Get(HeaderReferer)); x == "" {
+	if x := h.Get(HeaderReferer); x == "" {
 		setIfEmpty(HeaderAccessControlAllowOrigin, "*")
 	} else {
 		u, err := url.Parse(x)
@@ -69,7 +69,7 @@ func WriteCORS(w http.ResponseWriter) {
 }
 
 func RespondDebug(w http.ResponseWriter, r *http.Request, as *app.State, filename string, ps *PageState) (string, error) {
-	return RespondJSON(w, filename, RequestCtxToMap(w, r, as, ps))
+	return RespondJSON(w, filename, RequestCtxToMap(r, as, ps))
 }
 
 func RespondCSV(w http.ResponseWriter, filename string, body any) (string, error) {

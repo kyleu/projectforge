@@ -27,7 +27,7 @@ func HarList(w http.ResponseWriter, r *http.Request) {
 
 func HarDetail(w http.ResponseWriter, r *http.Request) {
 	controller.Act("har.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := cutil.RCRequiredString(r, "key", true)
+		key, err := cutil.PathString(r, "key", true)
 		if err != nil {
 			return "", err
 		}
@@ -42,7 +42,7 @@ func HarDetail(w http.ResponseWriter, r *http.Request) {
 
 func HarDelete(w http.ResponseWriter, r *http.Request) {
 	controller.Act("har.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := cutil.RCRequiredString(r, "key", true)
+		key, err := cutil.PathString(r, "key", true)
 		if err != nil {
 			return "", err
 		}
@@ -56,7 +56,7 @@ func HarDelete(w http.ResponseWriter, r *http.Request) {
 
 func HarTrim(w http.ResponseWriter, r *http.Request) {
 	controller.Act("har.trim", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := cutil.RCRequiredString(r, "key", true)
+		key, err := cutil.PathString(r, "key", true)
 		if err != nil {
 			return "", err
 		}

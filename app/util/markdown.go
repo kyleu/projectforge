@@ -66,9 +66,7 @@ func MarkdownTableParse(md string) ([]string, [][]string) {
 		split := StringSplitAndTrim(line, "|")
 		if idx == 0 {
 			header = split
-		} else if idx == 1 {
-			// spacer, noop
-		} else {
+		} else if idx != 1 {
 			rows = append(rows, split)
 		}
 	}

@@ -26,7 +26,7 @@ func TestList(w http.ResponseWriter, r *http.Request) {
 
 func TestRun(w http.ResponseWriter, r *http.Request) {
 	controller.Act("test.run", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := cutil.RCRequiredString(r, "key", false)
+		key, err := cutil.PathString(r, "key", false)
 		if err != nil {
 			return "", err
 		}

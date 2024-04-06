@@ -44,7 +44,7 @@ func DoctorRunAll(w http.ResponseWriter, r *http.Request) {
 
 func DoctorRun(w http.ResponseWriter, r *http.Request) {
 	controller.Act("doctor.run", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := cutil.RCRequiredString(r, "key", false)
+		key, err := cutil.PathString(r, "key", false)
 		if err != nil {
 			return "", err
 		}
@@ -58,7 +58,7 @@ func DoctorRun(w http.ResponseWriter, r *http.Request) {
 
 func DoctorSolve(w http.ResponseWriter, r *http.Request) {
 	controller.Act("doctor.solve", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := cutil.RCRequiredString(r, "key", false)
+		key, err := cutil.PathString(r, "key", false)
 		if err != nil {
 			return "", err
 		}

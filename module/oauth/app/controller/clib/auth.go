@@ -47,7 +47,7 @@ func AuthCallback(w http.ResponseWriter, r *http.Request) {
 
 func AuthLogout(w http.ResponseWriter, r *http.Request) {
 	controller.Act("auth.logout", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := cutil.RCRequiredString(r, "key", false)
+		key, err := cutil.PathString(r, "key", false)
 		if err != nil {
 			return "", err
 		}
@@ -61,7 +61,7 @@ func AuthLogout(w http.ResponseWriter, r *http.Request) {
 }
 
 func getProvider(as *app.State, r *http.Request, logger util.Logger) (*auth.Provider, error) {
-	key, err := cutil.RCRequiredString(r, "key", false)
+	key, err := cutil.PathString(r, "key", false)
 	if err != nil {
 		return nil, err
 	}

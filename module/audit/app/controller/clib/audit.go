@@ -137,7 +137,7 @@ func RecordDetail(w http.ResponseWriter, r *http.Request) {
 }
 
 func auditFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*audit.Audit, error) {
-	idArgStr, err := cutil.RCRequiredString(r, "id", false)
+	idArgStr, err := cutil.PathString(r, "id", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [id] as an argument")
 	}
@@ -158,7 +158,7 @@ func auditFromForm(r *http.Request, requestBody []byte, setPK bool) (*audit.Audi
 }
 
 func recordFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*audit.Record, error) {
-	idArgStr, err := cutil.RCRequiredString(r, "id", false)
+	idArgStr, err := cutil.PathString(r, "id", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [id] as an argument")
 	}

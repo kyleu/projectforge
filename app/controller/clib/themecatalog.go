@@ -22,7 +22,7 @@ import (
 
 func ThemeColor(w http.ResponseWriter, r *http.Request) {
 	controller.Act("theme.color", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		col, err := cutil.RCRequiredString(r, "color", false)
+		col, err := cutil.PathString(r, "color", false)
 		if err != nil {
 			return "", err
 		}
@@ -56,7 +56,7 @@ func ThemeColorEdit(w http.ResponseWriter, r *http.Request) {
 
 func ThemePalette(w http.ResponseWriter, r *http.Request) {
 	controller.Act("theme.palette", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		pal, err := cutil.RCRequiredString(r, "palette", false)
+		pal, err := cutil.PathString(r, "palette", false)
 		if err != nil {
 			return "", err
 		}
@@ -80,11 +80,11 @@ func ThemePalette(w http.ResponseWriter, r *http.Request) {
 
 func ThemePaletteEdit(w http.ResponseWriter, r *http.Request) {
 	controller.Act("theme.palette.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		palette, err := cutil.RCRequiredString(r, "palette", false)
+		palette, err := cutil.PathString(r, "palette", false)
 		if err != nil {
 			return "", err
 		}
-		key, err := cutil.RCRequiredString(r, "theme", false)
+		key, err := cutil.PathString(r, "theme", false)
 		if err != nil {
 			return "", err
 		}

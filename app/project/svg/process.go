@@ -37,12 +37,14 @@ func load(src string, tgt string) (*SVG, error) {
 	}
 	cl := http.DefaultClient
 	rsp, err := cl.Get(url)
+	defer func() { _ = rsp.Body.Close() }()
 	if err != nil || rsp.StatusCode == 404 {
 		if !strings.HasPrefix(src, "http") {
 			origErr := err
 			origURL := url
 			url = ghLineAwesome + src + "-solid.svg"
 			rsp, err = cl.Get(url)
+			defer func() { _ = rsp.Body.Close() }()
 			if err != nil {
 				return nil, errors.Wrapf(origErr, "unable to call URL [%s]", origURL)
 			}
@@ -50,7 +52,7 @@ func load(src string, tgt string) (*SVG, error) {
 			return nil, errors.Wrapf(err, "unable to call URL [%s]: %d", url, rsp.StatusCode)
 		}
 	}
-	if rsp.StatusCode != 200 {
+	if rsp.StatusCode != http.StatusOK {
 		return nil, errors.Errorf("received status [%d] while calling URL [%s]", rsp.StatusCode, url)
 	}
 	b, err := io.ReadAll(rsp.Body)

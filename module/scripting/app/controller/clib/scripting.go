@@ -23,7 +23,7 @@ func ScriptingList(w http.ResponseWriter, r *http.Request) {
 
 func ScriptingDetail(w http.ResponseWriter, r *http.Request) {
 	controller.Act("scripting.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := cutil.RCRequiredString(r, "key", true)
+		key, err := cutil.PathString(r, "key", true)
 		if err != nil {
 			return "", err
 		}
@@ -77,7 +77,7 @@ func ScriptingCreate(w http.ResponseWriter, r *http.Request) {
 
 func ScriptingForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("scripting.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := cutil.RCRequiredString(r, "key", true)
+		key, err := cutil.PathString(r, "key", true)
 		if err != nil {
 			return "", err
 		}
@@ -92,7 +92,7 @@ func ScriptingForm(w http.ResponseWriter, r *http.Request) {
 
 func ScriptingSave(w http.ResponseWriter, r *http.Request) {
 	controller.Act("scripting.save", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := cutil.RCRequiredString(r, "key", true)
+		key, err := cutil.PathString(r, "key", true)
 		if err != nil {
 			return "", err
 		}
@@ -114,7 +114,7 @@ func ScriptingSave(w http.ResponseWriter, r *http.Request) {
 
 func ScriptingDelete(w http.ResponseWriter, r *http.Request) {
 	controller.Act("scripting.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := cutil.RCRequiredString(r, "key", true)
+		key, err := cutil.PathString(r, "key", true)
 		if err != nil {
 			return "", err
 		}

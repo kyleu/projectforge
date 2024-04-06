@@ -57,12 +57,12 @@ func controllerArgFor(col *model.Column, b *golang.Block, retVal string, indent 
 	}
 	switch col.Type.Key() {
 	case types.KeyBool:
-		add("%sArg, err := cutil.RCRequiredBool(r, %q)", col.Camel(), col.Camel())
+		add("%sArg, err := cutil.PathBool(r, %q)", col.Camel(), col.Camel())
 		add("if err != nil {")
 		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as a boolean argument\")", retVal, col.Camel())
 		add("}")
 	case types.KeyInt:
-		add("%sArgStr, err := cutil.RCRequiredString(r, %q, false)", col.Camel(), col.Camel())
+		add("%sArgStr, err := cutil.PathString(r, %q, false)", col.Camel(), col.Camel())
 		add("if err != nil {")
 		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as an argument\")", retVal, col.Camel())
 		add("}")
@@ -72,7 +72,7 @@ func controllerArgFor(col *model.Column, b *golang.Block, retVal string, indent 
 		add("}")
 		add("%sArg := int(%sArgX)", col.Camel(), col.Camel())
 	case types.KeyFloat:
-		add("%sArgStr, err := cutil.RCRequiredString(r, %q, false)", col.Camel(), col.Camel())
+		add("%sArgStr, err := cutil.PathString(r, %q, false)", col.Camel(), col.Camel())
 		add("if err != nil {")
 		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as an argument\")", retVal, col.Camel())
 		add("}")
@@ -81,7 +81,7 @@ func controllerArgFor(col *model.Column, b *golang.Block, retVal string, indent 
 		add("\treturn %s, errors.Wrap(err, \"field [%s] must be a valid a valid floating-point number\")", retVal, col.Camel())
 		add("}")
 	case types.KeyString:
-		add("%sArg, err := cutil.RCRequiredString(r, %q, false)", col.Camel(), col.Camel())
+		add("%sArg, err := cutil.PathString(r, %q, false)", col.Camel(), col.Camel())
 		add("if err != nil {")
 		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as a string argument\")", retVal, col.Camel())
 		add("}")
@@ -90,12 +90,12 @@ func controllerArgFor(col *model.Column, b *golang.Block, retVal string, indent 
 			add("// ERROR: invalid list argument [%s]", col.Type.String())
 			break
 		}
-		add("%sArg, err := cutil.RCRequiredArray(r, %q)", col.Camel(), col.Camel())
+		add("%sArg, err := cutil.PathArray(r, %q)", col.Camel(), col.Camel())
 		add("if err != nil {")
 		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as an comma-separated argument\")", retVal, col.Camel())
 		add("}")
 	case types.KeyUUID:
-		add("%sArgStr, err := cutil.RCRequiredString(r, %q, false)", col.Camel(), col.Camel())
+		add("%sArgStr, err := cutil.PathString(r, %q, false)", col.Camel(), col.Camel())
 		add("if err != nil {")
 		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as an argument\")", retVal, col.Camel())
 		add("}")

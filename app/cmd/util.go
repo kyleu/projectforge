@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strconv"
 	"sync"
+	"time"
 
 	"github.com/kirsle/configdir"
 	"github.com/pkg/errors"
@@ -96,7 +97,7 @@ func listen(address string, port uint16) (uint16, net.Listener, error) {
 var maxHeaderSize = 1024 * 256
 
 func serve(listener net.Listener, h http.Handler) error {
-	x := &http.Server{Handler: h, MaxHeaderBytes: maxHeaderSize}
+	x := &http.Server{Handler: h, MaxHeaderBytes: maxHeaderSize, ReadHeaderTimeout: time.Minute}
 	if err := x.Serve(listener); err != nil {
 		return errors.Wrap(err, "unable to run http server")
 	}

@@ -20,7 +20,7 @@ import (
 )
 
 func GitActionAll(w http.ResponseWriter, r *http.Request) {
-	a, _ := cutil.RCRequiredString(r, "act", false)
+	a, _ := cutil.PathString(r, "act", false)
 	controller.Act("git.all."+a, w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prjs := as.Services.Projects.Projects()
 		tags := util.StringSplitAndTrim(r.URL.Query().Get("tags"), ",")

@@ -20,7 +20,7 @@ func Notebook(w http.ResponseWriter, r *http.Request) {
 	controller.Act("notebook.view", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		status := as.Services.Notebook.Status()
 		if status == "running" {
-			pathS, _ := cutil.RCRequiredString(r, "path", false)
+			pathS, _ := cutil.PathString(r, "path", false)
 			path := util.StringSplitAndTrim(pathS, "/")
 			ps.SetTitleAndData("Notebook", path)
 			bc := []string{"notebook"}
@@ -96,7 +96,7 @@ func NotebookFileSave(w http.ResponseWriter, r *http.Request) {
 
 func NotebookAction(w http.ResponseWriter, r *http.Request) {
 	controller.Act("notebook.action", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		act, err := cutil.RCRequiredString(r, "act", false)
+		act, err := cutil.PathString(r, "act", false)
 		if err != nil {
 			return "", err
 		}
@@ -111,7 +111,7 @@ func NotebookAction(w http.ResponseWriter, r *http.Request) {
 }
 
 func notebookGetText(r *http.Request) (string, []string, []string) {
-	pathS, _ := cutil.RCRequiredString(r, "path", false)
+	pathS, _ := cutil.PathString(r, "path", false)
 	path := util.StringSplitAndTrim(pathS, "/")
 	bcAppend := "||/notebook/files"
 	bc := []string{"notebook", "files"}

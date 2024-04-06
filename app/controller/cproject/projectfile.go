@@ -33,7 +33,7 @@ func ProjectFile(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 
-		pathS, err := cutil.RCRequiredString(r, "path", false)
+		pathS, err := cutil.PathString(r, "path", false)
 		if err != nil {
 			return "", err
 		}

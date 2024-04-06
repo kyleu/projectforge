@@ -93,7 +93,7 @@ func exportLoadModel(r *http.Request, as *app.State, logger util.Logger) (*proje
 	if err != nil {
 		return nil, nil, nil, err
 	}
-	modelKey, err := cutil.RCRequiredString(r, "model", false)
+	modelKey, err := cutil.PathString(r, "model", false)
 	if err != nil {
 		return nil, nil, nil, err
 	}
@@ -148,7 +148,7 @@ func exportLoadEnum(r *http.Request, as *app.State, logger util.Logger) (*projec
 	if err != nil {
 		return nil, nil, nil, err
 	}
-	enumKey, err := cutil.RCRequiredString(r, "enum", false)
+	enumKey, err := cutil.PathString(r, "enum", false)
 	if err != nil {
 		return nil, nil, nil, err
 	}

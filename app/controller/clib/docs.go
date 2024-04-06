@@ -16,7 +16,7 @@ import (
 
 func Docs(w http.ResponseWriter, r *http.Request) {
 	controller.Act("docs", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		pth, _ := cutil.RCRequiredString(r, "path", false)
+		pth, _ := cutil.PathString(r, "path", false)
 		if pth == "" {
 			return "", errors.New("invalid path")
 		}

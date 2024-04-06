@@ -13,9 +13,8 @@ type NilBool struct {
 func (n NilBool) MarshalJSON() ([]byte, error) {
 	if n.Valid {
 		return json.Marshal(n.Bool)
-	} else {
-		return json.Marshal(nil)
 	}
+	return json.Marshal(nil)
 }
 
 func (n *NilBool) UnmarshalJSON(data []byte) error {
@@ -40,9 +39,8 @@ type NilFloat64 struct {
 func (n NilFloat64) MarshalJSON() ([]byte, error) {
 	if n.Valid {
 		return json.Marshal(n.Float64)
-	} else {
-		return json.Marshal(nil)
 	}
+	return json.Marshal(nil)
 }
 
 func (n *NilFloat64) UnmarshalJSON(data []byte) error {
@@ -67,9 +65,8 @@ type NilInt32 struct {
 func (n NilInt32) MarshalJSON() ([]byte, error) {
 	if n.Valid {
 		return json.Marshal(n.Int32)
-	} else {
-		return json.Marshal(nil)
 	}
+	return json.Marshal(nil)
 }
 
 func (n *NilInt32) UnmarshalJSON(data []byte) error {
@@ -94,9 +91,8 @@ type NilInt64 struct {
 func (n NilInt64) MarshalJSON() ([]byte, error) {
 	if n.Valid {
 		return json.Marshal(n.Int64)
-	} else {
-		return json.Marshal(nil)
 	}
+	return json.Marshal(nil)
 }
 
 func (n *NilInt64) UnmarshalJSON(data []byte) error {
@@ -121,9 +117,8 @@ type NilString struct {
 func (n NilString) MarshalJSON() ([]byte, error) {
 	if n.Valid {
 		return json.Marshal(n.String)
-	} else {
-		return json.Marshal(nil)
 	}
+	return json.Marshal(nil)
 }
 
 func (n *NilString) UnmarshalJSON(data []byte) error {
@@ -148,9 +143,8 @@ type NilTime struct {
 func (n NilTime) MarshalJSON() ([]byte, error) {
 	if n.Valid {
 		return json.Marshal(n.Time)
-	} else {
-		return json.Marshal(nil)
 	}
+	return json.Marshal(nil)
 }
 
 func (n *NilTime) UnmarshalJSON(data []byte) error {

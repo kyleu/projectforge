@@ -100,7 +100,7 @@ func projectFromForm(frm util.ValueMap, prj *project.Project) error {
 }
 
 func getProject(r *http.Request, as *app.State) (*project.Project, error) {
-	key, err := cutil.RCRequiredString(r, "key", true)
+	key, err := cutil.PathString(r, "key", true)
 	if err != nil {
 		return nil, err
 	}

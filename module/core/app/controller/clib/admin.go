@@ -78,7 +78,7 @@ func Admin(w http.ResponseWriter, r *http.Request) {
 			ps.SetTitleAndData("Modules", di)
 			return controller.Render(w, r, as, &vadmin.Modules{Modules: di}, ps, "admin", "Modules**robot")
 		case "request":
-			ps.SetTitleAndData("Request Debug", cutil.RequestCtxToMap(w, r, as, ps))
+			ps.SetTitleAndData("Request Debug", cutil.RequestCtxToMap(r, as, ps))
 			return controller.Render(w, r, as, &vadmin.Request{Req: r, Rsp: w}, ps, "admin", "Request**download")
 		case "routes":
 			ps.SetTitleAndData("HTTP Routes", cutil.AppRoutesList)

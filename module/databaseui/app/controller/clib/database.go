@@ -51,7 +51,7 @@ func DatabaseAction(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		act, err := cutil.RCRequiredString(r, "act", true)
+		act, err := cutil.PathString(r, "act", true)
 		if err != nil {
 			return "", err
 		}
@@ -100,8 +100,8 @@ func DatabaseTableView(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		schema, _ := cutil.RCRequiredString(r, "schema", true)
-		table, _ := cutil.RCRequiredString(r, "table", true)
+		schema, _ := cutil.PathString(r, "schema", true)
+		table, _ := cutil.PathString(r, "table", true)
 
 		tbl := fmt.Sprintf("%q", table)
 		if schema != "default" {
@@ -179,7 +179,7 @@ func DatabaseSQLRun(w http.ResponseWriter, r *http.Request) {
 }{{{ end }}}
 
 func getDatabaseService(r *http.Request) (*database.Service, error) {
-	key, err := cutil.RCRequiredString(r, "key", true)
+	key, err := cutil.PathString(r, "key", true)
 	if err != nil {
 		return nil, err
 	}

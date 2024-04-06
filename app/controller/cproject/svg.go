@@ -78,11 +78,11 @@ func SVGBuild(w http.ResponseWriter, r *http.Request) {
 func SVGAdd(w http.ResponseWriter, r *http.Request) {
 	controller.Act("svg.add", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		qa := r.URL.Query()
-		src := strings.TrimSpace(string(qa.Get("src")))
+		src := strings.TrimSpace(qa.Get("src"))
 		if src == "" {
 			return controller.ERsp("must provide [src]")
 		}
-		tgt := string(qa.Get("tgt"))
+		tgt := qa.Get("tgt")
 		if tgt == "" {
 			tgt = strings.TrimSuffix(src, "-solid")
 		}
@@ -193,7 +193,7 @@ func prjAndIcon(r *http.Request, as *app.State) (*project.Project, filesystem.Fi
 		return nil, nil, "", err
 	}
 
-	key, err := cutil.RCRequiredString(r, "icon", false)
+	key, err := cutil.PathString(r, "icon", false)
 	if err != nil {
 		return nil, nil, "", err
 	}

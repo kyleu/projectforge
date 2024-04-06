@@ -25,7 +25,7 @@ func ProjectList(w http.ResponseWriter, r *http.Request) {
 		if len(tags) > 0 {
 			prjs = prjs.WithTags(tags...)
 		}
-		switch string(r.URL.Query().Get("sort")) {
+		switch r.URL.Query().Get("sort") {
 		case "package":
 			slices.SortFunc(prjs, func(l *project.Project, r *project.Project) int {
 				return cmp.Compare(l.Package, r.Package)
@@ -36,7 +36,7 @@ func ProjectList(w http.ResponseWriter, r *http.Request) {
 			})
 		}
 		ps.SetTitleAndData("All Projects", prjs)
-		switch string(r.URL.Query().Get("fmt")) {
+		switch r.URL.Query().Get("fmt") {
 		case "ports":
 			msgs := lo.Map(prjs, func(p *project.Project, _ int) string {
 				return fmt.Sprintf("%s: %d", p.Key, p.Port)

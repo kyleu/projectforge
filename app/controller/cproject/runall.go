@@ -18,12 +18,12 @@ import (
 
 func RunAllActions(w http.ResponseWriter, r *http.Request) {
 	helpKey := "run.all"
-	actKey, _ := cutil.RCRequiredString(r, "act", false)
+	actKey, _ := cutil.PathString(r, "act", false)
 	if actKey != "" {
 		helpKey += "." + actKey
 	}
 	controller.Act(helpKey, w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		actS, err := cutil.RCRequiredString(r, "act", false)
+		actS, err := cutil.PathString(r, "act", false)
 		if err != nil {
 			return "", err
 		}

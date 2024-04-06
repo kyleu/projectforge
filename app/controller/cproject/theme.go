@@ -20,11 +20,11 @@ import (
 
 func ProjectThemePalette(w http.ResponseWriter, r *http.Request) {
 	controller.Act("project.theme.palette", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		pal, err := cutil.RCRequiredString(r, "palette", false)
+		pal, err := cutil.PathString(r, "palette", false)
 		if err != nil {
 			return "", err
 		}
-		prj, err := cutil.RCRequiredString(r, "key", false)
+		prj, err := cutil.PathString(r, "key", false)
 		if err != nil {
 			return "", err
 		}
@@ -59,7 +59,7 @@ func ProjectThemeSave(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		prj, err := cutil.RCRequiredString(r, "key", false)
+		prj, err := cutil.PathString(r, "key", false)
 		if err != nil {
 			return "", err
 		}
@@ -78,14 +78,14 @@ func ProjectThemeSave(w http.ResponseWriter, r *http.Request) {
 }
 
 func themeFromRC(r *http.Request) (string, *theme.Theme, error) {
-	if color, err := cutil.RCRequiredString(r, "color", false); err == nil {
+	if color, err := cutil.PathString(r, "color", false); err == nil {
 		return color, theme.ColorTheme(color, gamut.Hex(color)), nil
 	}
-	pal, err := cutil.RCRequiredString(r, "palette", false)
+	pal, err := cutil.PathString(r, "palette", false)
 	if err != nil {
 		return "", nil, err
 	}
-	themeKey, err := cutil.RCRequiredString(r, "theme", false)
+	themeKey, err := cutil.PathString(r, "theme", false)
 	if err != nil {
 		return "", nil, err
 	}

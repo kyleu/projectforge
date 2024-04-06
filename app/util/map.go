@@ -131,7 +131,7 @@ func (m ValueMap) AsChanges() (ValueMap, error) {
 	}), nil
 }
 
-func (m ValueMap) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
+func (m ValueMap) MarshalXML(e *xml.Encoder, _ xml.StartElement) error {
 	err := e.EncodeToken(xml.StartElement{Name: xml.Name{Local: "map"}})
 	if err != nil {
 		return err

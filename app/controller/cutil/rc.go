@@ -14,7 +14,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func RequestCtxToMap(w http.ResponseWriter, r *http.Request, as *app.State, ps *PageState) util.ValueMap {
+func RequestCtxToMap(r *http.Request, as *app.State, ps *PageState) util.ValueMap {
 	req := util.ValueMap{
 		"url": r.URL.String(), "protocol": r.URL.Scheme,
 		"host": r.URL.Host, "path": r.URL.Path,
@@ -33,7 +33,7 @@ func RequestCtxToMap(w http.ResponseWriter, r *http.Request, as *app.State, ps *
 	return ret
 }
 
-func RCRequiredString(r *http.Request, key string, allowEmpty bool) (string, error) {
+func PathString(r *http.Request, key string, allowEmpty bool) (string, error) {
 	v := mux.Vars(r)[key]
 	if (!allowEmpty) && v == "" {
 		return v, errors.Errorf("must provide [%s] in path", key)
@@ -45,16 +45,16 @@ func RCRequiredString(r *http.Request, key string, allowEmpty bool) (string, err
 	return v, nil
 }
 
-func RCRequiredBool(r *http.Request, key string) (bool, error) {
-	ret, err := RCRequiredString(r, key, true)
+func PathBool(r *http.Request, key string) (bool, error) {
+	ret, err := PathString(r, key, true)
 	if err != nil {
 		return false, err
 	}
 	return ret == util.BoolTrue, nil
 }
 
-func RCRequiredInt(r *http.Request, key string) (int, error) {
-	s, err := RCRequiredString(r, key, true)
+func PathInt(r *http.Request, key string) (int, error) {
+	s, err := PathString(r, key, true)
 	if err != nil {
 		return 0, err
 	}
@@ -62,16 +62,16 @@ func RCRequiredInt(r *http.Request, key string) (int, error) {
 	return int(ret), err
 }
 
-func RCRequiredUUID(r *http.Request, key string) (*uuid.UUID, error) {
-	ret, err := RCRequiredString(r, key, true)
+func PathUUID(r *http.Request, key string) (*uuid.UUID, error) {
+	ret, err := PathString(r, key, true)
 	if err != nil {
 		return nil, err
 	}
 	return util.UUIDFromString(ret), nil
 }
 
-func RCRequiredArray(r *http.Request, key string) ([]string, error) {
-	ret, err := RCRequiredString(r, key, true)
+func PathArray(r *http.Request, key string) ([]string, error) {
+	ret, err := PathString(r, key, true)
 	if err != nil {
 		return nil, err
 	}

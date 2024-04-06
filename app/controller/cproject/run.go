@@ -21,7 +21,7 @@ const (
 )
 
 func RunAction(w http.ResponseWriter, r *http.Request) {
-	actQ, _ := cutil.RCRequiredString(r, "act", false)
+	actQ, _ := cutil.PathString(r, "act", false)
 	act := "run.action." + actQ
 	if phase := r.URL.Query().Get("phase"); phase != "" {
 		act += "." + phase
@@ -77,12 +77,12 @@ func RunAction(w http.ResponseWriter, r *http.Request) {
 }
 
 func loadActionProject(r *http.Request, as *app.State) (util.ValueMap, action.Type, *project.Project, error) {
-	actS, err := cutil.RCRequiredString(r, "act", false)
+	actS, err := cutil.PathString(r, "act", false)
 	if err != nil {
 		return nil, action.TypeTest, nil, err
 	}
 	actT := action.TypeFromString(actS)
-	tgt, err := cutil.RCRequiredString(r, "key", false)
+	tgt, err := cutil.PathString(r, "key", false)
 	if err != nil {
 		return nil, actT, nil, err
 	}

@@ -32,9 +32,9 @@ var (
 )
 
 func GitAction(w http.ResponseWriter, r *http.Request) {
-	a, _ := cutil.RCRequiredString(r, "act", false)
+	a, _ := cutil.PathString(r, "act", false)
 	controller.Act("git.action."+a, w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key, err := cutil.RCRequiredString(r, "key", false)
+		key, err := cutil.PathString(r, "key", false)
 		if err != nil {
 			return "", err
 		}

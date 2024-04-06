@@ -21,7 +21,7 @@ func ScheduleList(w http.ResponseWriter, r *http.Request) {
 
 func ScheduleDetail(w http.ResponseWriter, r *http.Request) {
 	controller.Act("schedule.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		id, err := cutil.RCRequiredUUID(r, "id")
+		id, err := cutil.PathUUID(r, "id")
 		if err != nil {
 			return "", err
 		}
