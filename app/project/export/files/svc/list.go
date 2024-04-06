@@ -1,6 +1,7 @@
 package svc
 
 import (
+	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
 )
@@ -13,7 +14,7 @@ func serviceList(m *model.Model, dbRef string) *golang.Block {
 	if m.IsSoftDelete() {
 		delCols := m.Columns.WithTag("deleted")
 		ret.W("\tif !includeDeleted {")
-		ret.W("\t\twc = %q", delCols[0].NameQuoted()+" is null")
+		ret.W("\t\twc = %q", delCols[0].NameQuoted()+helper.TextIsNull)
 		ret.W("\t}")
 	}
 	ret.W("\tq := database.SQLSelect(columnsString, %s, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Type)", tableClause)

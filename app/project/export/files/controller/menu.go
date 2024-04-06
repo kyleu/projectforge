@@ -38,7 +38,7 @@ func sortModels(args *model.Args) (map[string][]string, []string, []string) {
 		} else {
 			gn := m.Group[len(m.Group)-1]
 			curr := groups[gn]
-			groups[gn] = append(curr, "menuItem"+n)
+			groups[gn] = append(curr, helper.TextMenuItem+n)
 		}
 	})
 	return groups, names, orphans
@@ -49,7 +49,7 @@ func menuBlockV(args *model.Args, groups map[string][]string, names []string) *g
 	lines := lo.Map(args.Models, func(m *model.Model, _ int) string {
 		n := util.StringPad(m.ProperWithGroup(args.Acronyms), nameLength)
 		i := menuSerialize(menuItemForModel(m, args.Models, args.Acronyms), "", true)
-		return fmt.Sprintf("\tmenuItem%s = %s", n, strings.Join(i, "\n"))
+		return fmt.Sprintf("\t%s%s = %s", helper.TextMenuItem, n, strings.Join(i, "\n"))
 	})
 	slices.Sort(lines)
 
@@ -110,7 +110,7 @@ func menuBlockGM(args *model.Args, orphans []string) *golang.Block {
 			}
 		}
 		for _, o := range orphans {
-			gm.W("\t\tmenuItem" + o + ",")
+			gm.W("\t\t%s%s,", helper.TextMenuItem, o)
 		}
 		gm.W("\t}")
 	}
@@ -145,10 +145,10 @@ func menuSerialize(m *menu.Item, prefix string, top bool) []string {
 	}
 	args := fmt.Sprintf("Key: %q, Title: %q, %sIcon: %q%s", m.Key, m.Title, desc, m.Icon, rt)
 	if len(m.Children) == 0 {
-		out = append(out, ws+prefix+"&menu.Item{"+args+"}")
+		out = append(out, ws+prefix+fmt.Sprintf("&menu.Item{%s}", args))
 	} else {
 		kids := lo.Map(m.Children, func(kid *menu.Item, _ int) string {
-			return "menuItem" + kid.Warning
+			return helper.TextMenuItem + kid.Warning
 		})
 		out = append(out, ws+prefix+"&menu.Item{"+args+", Children: menu.Items{"+strings.Join(kids, ", ")+"}}")
 	}

@@ -85,7 +85,7 @@ func (s *Service) Get(key string) (*Module, error) {
 	ret, ok := s.cache[key]
 	s.cacheMu.Unlock()
 	if !ok {
-		return nil, errors.New("no module available with key [" + key + "]")
+		return nil, errors.Errorf("no module available with key [%s]", key)
 	}
 	return ret, nil
 }

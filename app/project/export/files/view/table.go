@@ -66,7 +66,7 @@ func exportViewTableFunc(m *model.Model, models model.Models, enums enum.Enums, 
 			title = ""
 		}
 		call := fmt.Sprintf("components.TableHeaderSimple(%q, %q, %q, %s, prms, ps.URI, ps)", m.Package, col.Name, title, h)
-		ret.W("          {%%= " + call + " %%}")
+		ret.W("          {%%= " + call + helper.TextTmplEnd)
 	}
 	ret.W("        </tr>")
 	ret.W("      </thead>")
@@ -74,7 +74,7 @@ func exportViewTableFunc(m *model.Model, models model.Models, enums enum.Enums, 
 	ret.W("        {%%- for _, model := range models -%%}")
 	ret.W("        <tr>")
 	lo.ForEach(summCols, func(col *model.Column, _ int) {
-		viewTableColumn(g, ret, models, m, true, col, "model.", "", 5, enums)
+		viewTableColumn(g, ret, models, m, true, col, helper.TextModelPrefix, "", 5, enums)
 	})
 	ret.W("        </tr>")
 	ret.W("        {%%- endfor -%%}")
@@ -85,7 +85,7 @@ func exportViewTableFunc(m *model.Model, models model.Models, enums enum.Enums, 
 	ret.W("  <hr />")
 	ret.W("  {%%= components.Pagination(len(models) + prms.Offset, prms, ps.URI) %%}")
 	ret.W(`  <div class="clear"></div>`)
-	ret.W("  {%%- endif -%%}")
-	ret.W(endfunc)
+	ret.W(ind1 + helper.TextEndIfDash)
+	ret.W(helper.TextEndFunc)
 	return ret, nil
 }

@@ -10,16 +10,13 @@ import (
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/types"
+	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
 	"projectforge.dev/projectforge/app/util"
 )
 
-const (
-	nilStr    = "<nil>"
-	nullStr   = "null"
-	sqlIndent = "  "
-)
+const ind1 = "  "
 
 func SeedData(m *model.Model, database string, linebreak string) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"queries", "seeddata"}, fmt.Sprintf("seed_%s.sql", m.Name))
@@ -45,7 +42,7 @@ func sqlSeedData(m *model.Model, database string) (*golang.Block, error) {
 //nolint:gocognit
 func sqlSeedDataColumns(m *model.Model, block *golang.Block, tableName string, cols model.Columns, database string) error {
 	block.W("insert into %q (", tableName)
-	block.W(sqlIndent + strings.Join(cols.NamesQuoted(), ", "))
+	block.W(ind1 + strings.Join(cols.NamesQuoted(), ", "))
 	block.W(") values (")
 	for idx, row := range m.SeedData {
 		if len(row) != len(m.Columns) {
@@ -77,8 +74,8 @@ func sqlSeedDataColumns(m *model.Model, block *golang.Block, tableName string, c
 			case types.KeyString, types.KeyEnum:
 				vs = append(vs, processString(cellStr, "''"))
 			case types.KeyDate, types.KeyTimestamp:
-				if cellStr == nilStr {
-					vs = append(vs, nullStr)
+				if cellStr == helper.TextNil {
+					vs = append(vs, helper.TextNull)
 				} else if _, err := util.TimeFromString(cellStr); err == nil {
 					vs = append(vs, processString(cellStr, "''"))
 				} else {
@@ -89,20 +86,20 @@ func sqlSeedDataColumns(m *model.Model, block *golang.Block, tableName string, c
 			case types.KeyList:
 				vs = append(vs, processList(cell, cellStr))
 			case types.KeyInt:
-				if cellStr == nilStr {
+				if cellStr == helper.TextNil {
 					vs = append(vs, "0")
 					continue
 				}
 				vs = append(vs, fmt.Sprintf("%.0f", cell))
 			case types.KeyFloat:
-				if cellStr == nilStr {
+				if cellStr == helper.TextNil {
 					vs = append(vs, "0")
 					continue
 				}
 				vs = append(vs, fmt.Sprintf("%f", cell))
 			case types.KeyMap, types.KeyValueMap, types.KeyReference:
-				if cellStr == nilStr {
-					vs = append(vs, nullStr)
+				if cellStr == helper.TextNil {
+					vs = append(vs, helper.TextNull)
 					continue
 				}
 				switch cell.(type) {
@@ -112,14 +109,14 @@ func sqlSeedDataColumns(m *model.Model, block *golang.Block, tableName string, c
 					vs = append(vs, "'"+strings.ReplaceAll(util.ToJSONCompact(cell), "'", "''")+"'")
 				}
 			default:
-				if cellStr == nilStr {
-					vs = append(vs, nullStr)
+				if cellStr == helper.TextNil {
+					vs = append(vs, helper.TextNull)
 					continue
 				}
 				vs = append(vs, cellStr)
 			}
 		}
-		block.W(sqlIndent + strings.Join(vs, ", "))
+		block.W(ind1 + strings.Join(vs, ", "))
 		if idx < len(m.SeedData)-1 {
 			block.W("), (")
 		}
@@ -133,14 +130,14 @@ func sqlSeedDataColumns(m *model.Model, block *golang.Block, tableName string, c
 }
 
 func processString(cellStr string, dflt string) string {
-	if cellStr == nilStr {
+	if cellStr == helper.TextNil {
 		return dflt
 	}
 	return "'" + clean(cellStr) + "'"
 }
 
 func processList(cell any, cellStr string) string {
-	if cellStr == nilStr {
+	if cellStr == helper.TextNil {
 		return "'[]'"
 	}
 	a, ok := cell.([]any)

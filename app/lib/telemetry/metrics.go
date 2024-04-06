@@ -11,6 +11,8 @@ import (
 
 var SkipControllerMetrics = util.GetEnvBool("controller_metrics_disabled", false)
 
+const countSuffix = "Count"
+
 type CounterAndHistogram struct {
 	c *prometheus.CounterVec
 	h *prometheus.HistogramVec
@@ -18,7 +20,7 @@ type CounterAndHistogram struct {
 
 func NewCounterAndHistogram(subsystem string, name string, help string, logger util.Logger, labelNames ...string) *CounterAndHistogram {
 	return &CounterAndHistogram{
-		c: MetricsCounter(subsystem, name+"Count", help, logger, labelNames...),
+		c: MetricsCounter(subsystem, name+countSuffix, help, logger, labelNames...),
 		h: MetricsHistogram(subsystem, name, help, logger, labelNames...),
 	}
 }
@@ -36,7 +38,7 @@ type CounterAndGauge struct {
 
 func NewCounterAndGauge(subsystem string, name string, help string, logger util.Logger, labelNames ...string) *CounterAndGauge {
 	return &CounterAndGauge{
-		c: MetricsCounter(subsystem, name+"Count", help, logger, labelNames...),
+		c: MetricsCounter(subsystem, name+countSuffix, help, logger, labelNames...),
 		g: MetricsGauge(subsystem, name, help, logger, labelNames...),
 	}
 }

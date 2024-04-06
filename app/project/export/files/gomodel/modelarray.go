@@ -14,6 +14,8 @@ import (
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
+const tSet = "Set"
+
 func Models(m *model.Model, args *model.Args, addHeader bool, goVersion string, linebreak string) (*file.File, error) {
 	name := strings.ToLower(m.CamelPlural())
 	if name == strings.ToLower(m.Camel()) {
@@ -114,7 +116,7 @@ func modelArrayGetByMulti(m *model.Model, col *model.Column, enums enum.Enums) *
 	ret := golang.NewBlock(fmt.Sprintf("%sArrayGetBy%s", m.Proper(), col.Proper()), "func")
 	name := col.ProperPlural()
 	if name == col.Proper() {
-		name = col.Proper() + "Set"
+		name = col.Proper() + tSet
 	}
 	if name[len(name)-1] == 'S' {
 		name = name[:len(name)-1] + "s"
@@ -143,7 +145,7 @@ func modelArrayCol(m *model.Model, col *model.Column, enums enum.Enums) *golang.
 	ret := golang.NewBlock(fmt.Sprintf("%sArray%s", m.Proper(), col.ProperPlural()), "func")
 	name := col.ProperPlural()
 	if name == col.Proper() {
-		name = col.Proper() + "Set"
+		name = col.Proper() + tSet
 	}
 	if name[len(name)-1] == 'S' {
 		name = name[:len(name)-1] + "s"

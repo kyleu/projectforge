@@ -8,6 +8,7 @@ import (
 
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/enum"
+	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -17,55 +18,60 @@ func enumValues(e *enum.Enum) *golang.Block {
 	b.W("var (")
 
 	maxCount := util.StringArrayMaxLength(e.ValuesCamel())
-	names := make([]string, 0, len(e.Values))
+	names := lo.Map(e.Values, func(x *enum.Value, _ int) string {
+		return e.Proper() + x.Proper()
+	})
+
 	pl := len(e.Proper())
 	maxColLength := maxCount + pl
 	lo.ForEach(e.Values, func(v *enum.Value, _ int) {
-		n := e.Proper() + v.Proper()
-		names = append(names, n)
-		msg := fmt.Sprintf("\t%s = %s{Key: %q", util.StringPad(n, maxColLength), e.Proper(), v.Key)
-		if v.Name != "" {
-			msg += fmt.Sprintf(", Name: %q", v.Name)
-		}
-		if v.Description != "" {
-			msg += fmt.Sprintf(", Description: %q", v.Description)
-		}
-		if v.Icon != "" {
-			msg += fmt.Sprintf(", Icon: %q", v.Icon)
-		}
-		ef := e.ExtraFields()
-		for _, extraKey := range ef.Order {
-			var t string
-			if v.Extra != nil {
-				t = fmt.Sprint(v.Extra.GetSimple(extraKey))
-			}
-			switch ef.GetSimple(extraKey) {
-			case types.KeyString, "":
-				if t == "" {
-					continue
-				}
-				t = "\"" + t + "\""
-			case types.KeyTimestamp:
-				if t == "<nil>" || t == "" {
-					continue
-				}
-				t = "util.TimeFromStringSimple(\"" + t + "\")"
-			case types.KeyBool:
-				if t == "<nil>" {
-					t = util.BoolFalse
-				}
-				if t == util.BoolFalse || t == "" {
-					continue
-				}
-			}
-			msg += fmt.Sprintf(", %s: %s", util.StringToCamel(extraKey), t)
-		}
-
-		b.W(msg + "}")
+		b.W(enumValue(e, v, maxColLength))
 	})
 
 	b.WB()
 	b.W("\tAll%s = %s{%s}", e.ProperPlural(), e.ProperPlural(), strings.Join(names, ", "))
 	b.W(")")
 	return b
+}
+
+func enumValue(e *enum.Enum, v *enum.Value, maxColLength int) string {
+	msg := fmt.Sprintf("\t%s = %s{Key: %q", util.StringPad(e.Proper()+v.Proper(), maxColLength), e.Proper(), v.Key)
+	if v.Name != "" {
+		msg += fmt.Sprintf(", Name: %q", v.Name)
+	}
+	if v.Description != "" {
+		msg += fmt.Sprintf(", Description: %q", v.Description)
+	}
+	if v.Icon != "" {
+		msg += fmt.Sprintf(", Icon: %q", v.Icon)
+	}
+	ef := e.ExtraFields()
+	for _, extraKey := range ef.Order {
+		var t string
+		if v.Extra != nil {
+			t = fmt.Sprint(v.Extra.GetSimple(extraKey))
+		}
+		switch ef.GetSimple(extraKey) {
+		case types.KeyString, "":
+			if t == "" {
+				continue
+			}
+			t = "\"" + t + "\""
+		case types.KeyTimestamp:
+			if t == helper.TextNil || t == "" {
+				continue
+			}
+			t = "util.TimeFromStringSimple(\"" + t + "\")"
+		case types.KeyBool:
+			if t == helper.TextNil {
+				t = util.BoolFalse
+			}
+			if t == util.BoolFalse || t == "" {
+				continue
+			}
+		}
+		msg += fmt.Sprintf(", %s: %s", util.StringToCamel(extraKey), t)
+	}
+	msg += "}"
+	return msg
 }

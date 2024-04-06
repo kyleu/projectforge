@@ -16,14 +16,14 @@ func controllerList(g *golang.File, m *model.Model, grp *model.Column, models mo
 	meth := "List"
 	grpArgs := ""
 	if grp != nil {
-		meth = "GetBy" + grp.Title()
-		grpArgs = ", " + grp.Camel() + "Arg"
+		meth = helper.TextGetBy + grp.Title()
+		grpArgs = helper.TextCommaSpace + grp.Camel() + helper.TextArg
 		controllerArgFor(grp, ret, `""`, 2)
 	}
 
 	suffix := ""
 	if m.IsSoftDelete() {
-		suffix = ", " + incDel
+		suffix = helper.TextCommaSpace + incDel
 	}
 	if m.HasSearches() {
 		g.AddImport(helper.ImpStrings)

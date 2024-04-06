@@ -8,6 +8,7 @@ import (
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project/export/enum"
+	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -41,9 +42,9 @@ func typesCreate(enums enum.Enums, database string) *golang.Block {
 		})
 		switch {
 		case database == util.DatabaseSQLite:
-			ret.W("-- skipping definition of enum [%s], since SQLite does not support custom types", e.Name)
+			ret.W(helper.TextSQLComment+"skipping definition of enum [%s], since SQLite does not support custom types", e.Name)
 		case database == util.DatabaseSQLServer:
-			ret.W("-- skipping definition of enum [%s], since SQL Server does not support custom types", e.Name)
+			ret.W(helper.TextSQLComment+"skipping definition of enum [%s], since SQL Server does not support custom types", e.Name)
 		default:
 			ret.W("do $$ begin")
 			ret.W("  create type %q as enum (%s);", e.Name, strings.Join(q, ", "))

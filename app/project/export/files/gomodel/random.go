@@ -8,6 +8,7 @@ import (
 
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/enum"
+	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
 	"projectforge.dev/projectforge/app/util"
@@ -89,7 +90,7 @@ func randForType(t *types.Wrapped, format string, nullable bool, tags []string, 
 	case types.KeyString:
 		switch format {
 		case model.FmtHTML.Key:
-			return "\"<h3>\" + util.RandomString(6) + \"</h3>\"", nil
+			return fmt.Sprintf("%q + util.RandomString(6) + %q", helper.TextH3Start, helper.TextH3End), nil
 		case model.FmtIcon.Key:
 			return "util.RandomIcon()", nil
 		case model.FmtURL.Key:

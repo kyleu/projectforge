@@ -8,6 +8,8 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+const tSet = "Set"
+
 func (m *Model) Camel() string {
 	return util.StringToLowerCamel(m.Name)
 }
@@ -48,7 +50,7 @@ func (m *Model) Plural() string {
 	}
 	ret := util.StringToPlural(m.Name)
 	if ret == m.Name {
-		return ret + "Set"
+		return ret + tSet
 	}
 	return ret
 }
@@ -56,7 +58,7 @@ func (m *Model) Plural() string {
 func (m *Model) ProperPlural() string {
 	ret := util.StringToPlural(m.Proper())
 	if ret == m.Proper() {
-		return ret + "Set"
+		return ret + tSet
 	}
 	return ret
 }

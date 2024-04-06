@@ -47,7 +47,7 @@ func exportViewEditClass(m *model.Model) *golang.Block {
 func exportViewEditBody(m *model.Model, p *project.Project, args *model.Args) (*golang.Block, error) {
 	editURL := "/" + m.Route()
 	lo.ForEach(m.PKs(), func(pk *model.Column, _ int) {
-		editURL += "/{%% " + pk.ToGoString("p.Model.") + " %%}"
+		editURL += "/{%% " + pk.ToGoString("p.Model.") + helper.TextTmplEnd
 	})
 
 	delMsg := fmt.Sprintf("Are you sure you wish to delete %s [{%%%%s p.Model.String() %%%%}]?", m.TitleLower())
@@ -57,14 +57,14 @@ func exportViewEditBody(m *model.Model, p *project.Project, args *model.Args) (*
 	ret.W("  <div class=\"card\">")
 	ret.W("    {%%- if p.IsNew -%%}")
 	ret.W("    <div class=\"right\"><a href=\"?prototype=random\"><button>Random</button></a></div>")
-	ret.W("    <h3>" + svgRef(m.Icon) + " New " + m.Title() + "</h3>")
+	ret.W("    %s%s New %s%s", helper.TextH3Start, svgRef(m.Icon), m.Title(), helper.TextH3End)
 	ret.W("    <form action=\"/%s/_new\" class=\"mt\" method=\"post\">", m.Route())
 	ret.W("    {%%- else -%%}")
 	delPrefix := "    <div class=\"right\"><a class=\"link-confirm\" href=\"{%%s p.Model.WebPath() %%}/delete\" data-message=\""
 	ret.W(delPrefix + delMsg + "\"><button>Delete</button></a></div>")
-	ret.W("    <h3>" + svgRef(m.Icon) + " Edit " + m.Title() + " [{%%s p.Model.String() %%}]</h3>")
+	ret.W("    %s%s Edit %s [{%%%%s p.Model.String() %%%%}]%s", helper.TextH3Start, svgRef(m.Icon), m.Title(), helper.TextH3End)
 	ret.W("    <form action=\"\" method=\"post\">")
-	ret.W("    {%%- endif -%%}")
+	ret.W("    " + helper.TextEndIfDash)
 	ret.W("      <table class=\"mt expanded\">")
 	ret.W("        <tbody>")
 	editCols := m.Columns.WithoutTags("created", "updated")
@@ -78,9 +78,9 @@ func exportViewEditBody(m *model.Model, p *project.Project, args *model.Args) (*
 			return nil, err
 		}
 		if col.PK {
-			ret.W("          {%% if p.IsNew %%}" + call + "{%% endif %%}")
+			ret.W("          {%% if p.IsNew %%}" + call + helper.TextEndIf)
 		} else {
-			ret.W("          " + call)
+			ret.W(ind5 + call)
 		}
 	}
 	ret.W("          <tr><td colspan=\"2\"><button type=\"submit\">Save Changes</button></td></tr>")
@@ -112,7 +112,7 @@ func exportViewEditBody(m *model.Model, p *project.Project, args *model.Args) (*
 		ret.W("  </script>")
 	}
 
-	ret.W(endfunc)
+	ret.W(helper.TextEndFunc)
 	return ret, nil
 }
 

@@ -14,7 +14,7 @@ import (
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-const commonLine = "  %sBy%s %s.%s"
+const commonLine, ind5 = "  %sBy%s %s.%s", "          "
 
 func svgRef(icon string) string {
 	return "{%%= components.SVGRefIcon(`" + icon + "`, ps) %%}"
@@ -110,13 +110,13 @@ func exportViewDetailBody(g *golang.Template, m *model.Model, audit bool, models
 	ret.W("      <a href=\"#modal-%s\"><button type=\"button\">JSON</button></a>", m.Camel())
 	ret.W("      <a href=\"{%%s p.Model.WebPath() %%}/edit\"><button>{%%= components.SVGRef(\"edit\", 15, 15, \"icon\", ps) %%}Edit</button></a>")
 	ret.W("    </div>")
-	ret.W("    <h3>" + svgRef(m.Icon) + " {%%s p.Model.TitleString() %%}</h3>")
+	ret.W("    %s%s {%%%%s p.Model.TitleString() %%%%}%s", helper.TextH3Start, svgRef(m.Icon), helper.TextH3End)
 	ret.W("    <div><a href=\"/" + m.Route() + "\"><em>" + m.Title() + "</em></a></div>")
 	if len(m.Links) > 0 {
 		ret.W("    <div class=\"mt\">")
 		for _, link := range m.Links {
 			paths := lo.Map(m.PKs(), func(pk *model.Column, _ int) string {
-				return "{%%s p.Model." + model.ToGoString(pk.Type, pk.Nullable, pk.Proper(), true) + " %%}"
+				return "{%%s p.Model." + model.ToGoString(pk.Type, pk.Nullable, pk.Proper(), true) + helper.TextTmplEnd
 			})
 			u := strings.ReplaceAll(link.URL, "{}", strings.Join(paths, "/"))
 			ret.W("      <a href=%q><button type=\"button\">%s</button></a>", u, link.Title)
@@ -143,7 +143,7 @@ func exportViewDetailBody(g *golang.Template, m *model.Model, audit bool, models
 		viewDetailColumn(g, ret, models, m, false, col, "p.Model.", 6, enums)
 		ret.W("          </tr>")
 		if col.HasTag("debug-only") {
-			ret.W(`          {%%- endif -%%}`)
+			ret.W(ind5 + helper.TextEndIfDash)
 		}
 	}
 	ret.W("        </tbody>")
@@ -156,13 +156,13 @@ func exportViewDetailBody(g *golang.Template, m *model.Model, audit bool, models
 	if audit {
 		ret.W("  {%%- if len(p.AuditRecords) > 0 -%%}")
 		ret.W("  <div class=\"card\">")
-		ret.W("    <h3>Audits</h3>")
+		ret.W("    %sAudits%s", helper.TextH3Start, helper.TextH3End)
 		ret.W("    {%%= vaudit.RecordTable(p.AuditRecords, p.Params, as, ps) %%}")
 		ret.W("  </div>")
-		ret.W("  {%%- endif -%%}")
+		ret.W(ind1 + helper.TextEndIfDash)
 	}
 	ret.W("  {%%%%= components.JSONModal(%q, \"%s JSON\", p.Model, 1) %%%%}", m.Camel(), m.Title())
-	ret.W(endfunc)
+	ret.W(helper.TextEndFunc)
 	return ret, nil
 }
 
@@ -180,7 +180,7 @@ func exportViewDetailReverseRelations(ret *golang.Block, m *model.Model, models 
 		tgtCols := rel.TgtColumns(tgt)
 		tgtName := fmt.Sprintf("%sBy%s", tgt.ProperPlural(), strings.Join(tgtCols.ProperNames(), ""))
 		ret.W("      <li>")
-		extra := fmt.Sprintf("{%%%% if p.Params.Specifies(`%s`) %%%%} checked=\"checked\"{%%%% endif %%%%}", tgt.Package)
+		extra := fmt.Sprintf("{%%%% if p.Params.Specifies(`%s`) %%%%} checked=\"checked\""+helper.TextEndIfExtra, tgt.Package)
 		ret.W("        <input id=\"accordion-%s\" type=\"checkbox\" hidden=\"hidden\"%s />", tgtName, extra)
 		ret.W("        <label for=\"accordion-%s\">", tgtName)
 		ret.W("          {%%= components.ExpandCollapse(3, ps) %%}")
@@ -205,7 +205,7 @@ func exportViewDetailReverseRelations(ret *golang.Block, m *model.Model, models 
 			ret.W("            {%%%%= v%s.Table(p.Rel%s%s, p.Params, as, ps) %%%%}", tgt.Package, tgtName, addons)
 		}
 		ret.W("          </div>")
-		ret.W("          {%%- endif -%%}")
+		ret.W(ind5 + helper.TextEndIfDash)
 		ret.W("        </div></div></div>")
 		ret.W("      </li>")
 	})

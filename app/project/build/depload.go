@@ -62,7 +62,7 @@ func LoadDeps(
 	for _, l := range lines {
 		if strings.HasPrefix(l, "go list -m:") {
 			e := strings.TrimSpace(strings.TrimPrefix(strings.TrimSuffix(l, "; to add it:"), "go list -m:"))
-			return nil, errors.New("need [go mod tidy]:" + e)
+			return nil, errors.Errorf("need [go mod tidy]: %s", e)
 		}
 		d := &Dependency{}
 		parts := util.StringSplitAndTrim(l, " ")

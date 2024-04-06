@@ -106,9 +106,9 @@ func serviceCount(g *golang.File, m *model.Model, dbRef string) *golang.Block {
 		delCols := m.Columns.WithTag("deleted")
 		ret.W("\tif !includeDeleted {")
 		ret.W("\t\tif whereClause == \"\" {")
-		ret.W("\t\t\twhereClause = %q", delCols[0].NameQuoted()+" is null")
+		ret.W("\t\t\twhereClause = %q", delCols[0].NameQuoted()+helper.TextIsNull)
 		ret.W("\t\t} else {")
-		ret.W("\t\t\twhereClause += \" and \" + %q", delCols[0].NameQuoted()+" is null")
+		ret.W("\t\t\twhereClause += \" and \" + %q", delCols[0].NameQuoted()+helper.TextIsNull)
 		ret.W("\t\t}")
 		ret.W("\t}")
 	}
@@ -124,7 +124,7 @@ func serviceCount(g *golang.File, m *model.Model, dbRef string) *golang.Block {
 
 func serviceGet(key string, m *model.Model, cols model.Columns, dbRef string, enums enum.Enums) (*golang.Block, error) {
 	if key == "" {
-		key = "GetBy" + cols.Smushed()
+		key = helper.TextGetBy + cols.Smushed()
 	}
 	ret := golang.NewBlock(key, "func")
 	msg := "func (s *Service) %s(ctx context.Context, tx *sqlx.Tx, %s%s, logger util.Logger) (*%s, error) {"
@@ -152,7 +152,7 @@ func serviceGet(key string, m *model.Model, cols model.Columns, dbRef string, en
 	sj := strings.Join(cols.CamelNames(), ", ")
 	decls := make([]string, 0, len(cols))
 	lo.ForEach(cols, func(c *model.Column, _ int) {
-		decls = append(decls, c.Camel()+" [%%v]")
+		decls = append(decls, c.Camel()+declSubscript)
 	})
 	ret.W("\t\treturn nil, errors.Wrapf(err, \"unable to get %s by %s\", %s)", m.Camel(), strings.Join(decls, ", "), sj)
 	ret.W("\t}")

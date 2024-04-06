@@ -14,9 +14,11 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+const declSubscript = " [%%v]"
+
 func writeGetBy(key string, cols model.Columns, doExtra []string, name string, dbRef string, m *model.Model, args *model.Args, g *golang.File) error {
 	if name == "" {
-		name = "GetBy" + strings.Join(cols.ProperNames(), "")
+		name = helper.TextGetBy + strings.Join(cols.ProperNames(), "")
 	}
 	lo.ForEach(helper.ImportsForTypes("go", "", cols.Types()...), func(imp *golang.Import, _ int) {
 		g.AddImport(imp)
@@ -35,7 +37,7 @@ func writeGetBy(key string, cols model.Columns, doExtra []string, name string, d
 			if cols[0].ProperPlural() == cols[0].Proper() {
 				n += "Set"
 			}
-			pb, err := serviceGetMultipleSingleCol(m, "GetBy"+n, cols[0], dbRef, args.Enums)
+			pb, err := serviceGetMultipleSingleCol(m, helper.TextGetBy+n, cols[0], dbRef, args.Enums)
 			if err != nil {
 				return err
 			}
@@ -58,7 +60,7 @@ func serviceGetBy(key string, m *model.Model, cols model.Columns, returnMultiple
 
 func serviceGetByCols(key string, m *model.Model, cols model.Columns, dbRef string, enums enum.Enums, database string) (*golang.Block, error) {
 	if key == "" {
-		key = "GetBy" + cols.Smushed()
+		key = helper.TextGetBy + cols.Smushed()
 	}
 	ret := golang.NewBlock(key, "func")
 	args, err := cols.Args(m.Package, enums)
@@ -84,7 +86,7 @@ func serviceGetByCols(key string, m *model.Model, cols model.Columns, dbRef stri
 	sj := strings.Join(cols.CamelNames(), ", ")
 	decls := make([]string, 0, len(cols))
 	lo.ForEach(cols, func(c *model.Column, _ int) {
-		decls = append(decls, c.Camel()+" [%%v]")
+		decls = append(decls, c.Camel()+declSubscript)
 	})
 	ret.W("\t\treturn nil, errors.Wrapf(err, \"unable to get %s by %s\", %s)", m.TitlePlural(), strings.Join(decls, ", "), sj)
 	ret.W("\t}")

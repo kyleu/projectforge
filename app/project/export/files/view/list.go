@@ -56,21 +56,22 @@ func exportViewListBody(m *model.Model, models model.Models) *golang.Block {
 
 	ret.W("{%% func (p *List) Body(as *app.State, ps *cutil.PageState) %%}")
 	ret.W("  <div class=\"card\">")
+	const twoInd = "    "
 	if !m.HasSearches() {
 		ret.W("    <div class=\"right\"><a href=\"/%s/_new\"><button>New</button></a></div>", m.Route())
-		ret.W("    <h3>" + svgRef(m.Icon) + "{%%s ps.Title %%}</h3>")
+		ret.W("    %s%s{%%%%s ps.Title %%%%}%s", helper.TextH3Start, svgRef(m.Icon), helper.TextH3End)
 	} else {
 		ret.W(`    <div class="right">{%%%%= edit.SearchForm("", "q", "Search %s", p.SearchQuery, ps) %%%%}</div>`, m.TitlePlural())
 		ret.W(`    <div class="right mrs large-buttons">`)
 		ret.W(`      {%%%%- if len(p.Models) > 0 -%%%%}<a href="/%s/_random"><button>Random</button></a>{%%%%- endif -%%%%}`, m.Route())
-		ret.W(`      <a href="/%s/_new"><button>New</button></a>`, m.Route())
+		ret.W(`      <a href="/%s/_new"><button>New</button>`+helper.TextEndAnchor, m.Route())
 		ret.W(`    </div>`)
-		ret.W("    <h3>{%%%%= components.SVGRefIcon(`%s`, ps) %%%%}{%%%%s ps.Title %%%%}</h3>", m.Icon)
+		ret.W("    %s{%%%%= components.SVGRefIcon(`%s`, ps) %%%%}{%%%%s ps.Title %%%%}%s", helper.TextH3Start, m.Icon, helper.TextH3End)
 		ret.W("    <div class=\"clear\"></div>")
 		ret.W("    {%%- if p.SearchQuery != \"\" -%%}")
 		ret.W("    <hr />")
 		ret.W("    <em>Search results for [{%%s p.SearchQuery %%}]</em> (<a href=\"?\">clear</a>)")
-		ret.W("    {%%- endif -%%}")
+		ret.W(twoInd + helper.TextEndIfDash)
 	}
 	ret.W("    {%%- if len(p.Models) == 0 -%%}")
 	ret.W("    <div class=\"mt\"><em>No %s available</em></div>", m.TitlePluralLower())
@@ -78,8 +79,8 @@ func exportViewListBody(m *model.Model, models model.Models) *golang.Block {
 	ret.W("    <div class=\"mt\">")
 	ret.W("      {%%= Table(p.Models" + suffix + ", p.Params, as, ps) %%}")
 	ret.W("    </div>")
-	ret.W("    {%%- endif -%%}")
+	ret.W(twoInd + helper.TextEndIfDash)
 	ret.W("  </div>")
-	ret.W(endfunc)
+	ret.W(helper.TextEndFunc)
 	return ret
 }

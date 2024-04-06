@@ -7,11 +7,13 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+const keyText, keyNVarcharMax = "text", "nvarchar(max)"
+
 func ToSQLType(t types.Type, database string) (string, error) {
 	switch t.Key() {
 	case types.KeyAny:
 		if database == util.DatabaseSQLServer {
-			return "text", nil
+			return keyText, nil
 		}
 		return keyJSONB, nil
 	case types.KeyBool:
@@ -38,21 +40,21 @@ func ToSQLType(t types.Type, database string) (string, error) {
 		return "double precision", nil
 	case types.KeyList, types.KeyMap, types.KeyValueMap, types.KeyReference:
 		if database == util.DatabaseSQLServer {
-			return "nvarchar(max)", nil
+			return keyNVarcharMax, nil
 		}
 		return keyJSONB, nil
 	case types.KeyString:
 		if database == util.DatabaseSQLServer {
 			s, ok := types.Wrap(t).T.(*types.String)
 			if !ok {
-				return "nvarchar(max)", nil
+				return keyNVarcharMax, nil
 			}
 			if s.MaxLength > 0 {
 				return fmt.Sprintf("nvarchar(%d)", s.MaxLength), nil
 			}
-			return "nvarchar(max)", nil
+			return keyNVarcharMax, nil
 		}
-		return "text", nil
+		return keyText, nil
 	case types.KeyDate, types.KeyTimestamp:
 		if database == util.DatabaseSQLServer {
 			return "datetime", nil

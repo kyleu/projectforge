@@ -7,6 +7,8 @@ import (
 	"github.com/samber/lo"
 )
 
+const textArrow = " -> "
+
 type Dependency struct {
 	Key        string   `json:"key"`
 	Version    string   `json:"version,omitempty"`
@@ -40,7 +42,7 @@ func (d *Dependency) String() string {
 		ret += ": " + d.Version
 	}
 	if d.Available != "" && d.Available != d.Version {
-		ret += " -> " + d.Available
+		ret += textArrow + d.Available
 	}
 	return ret
 }

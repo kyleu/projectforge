@@ -41,7 +41,7 @@ func Deployments(curr string, fs filesystem.FileLoader, fix bool, path string, d
 				logs = append(logs, fmt.Sprintf("updated version [%s] to [%s]", hits, curr), strings.Join(final, "\n"))
 			} else {
 				df.Status = diff.StatusDifferent
-				df.Patch = hits + " -> " + curr
+				df.Patch = hits + textArrow + curr
 			}
 		}
 	}

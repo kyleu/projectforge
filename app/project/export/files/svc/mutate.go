@@ -107,7 +107,7 @@ func serviceUpdate(g *golang.File, m *model.Model, audit bool, database string) 
 
 	if cc := m.Columns.WithTag("created"); len(cc) > 0 || audit {
 		g.AddImport(helper.ImpErrors)
-		ret.W("\tcurr, err := s.Get(ctx, tx, %s%s, logger)", m.PKs().ToRefs("model."), m.SoftDeleteSuffix())
+		ret.W("\tcurr, err := s.Get(ctx, tx, %s%s, logger)", m.PKs().ToRefs(helper.TextModelPrefix), m.SoftDeleteSuffix())
 		ret.W("\tif err != nil {")
 		ret.W("\t\treturn errors.Wrapf(err, \"can't get original %s [%%%%s]\", model.String())", m.TitleLower())
 		ret.W("\t}")
@@ -126,7 +126,7 @@ func serviceUpdate(g *golang.File, m *model.Model, audit bool, database string) 
 	pks := m.PKs()
 	pkVals := make([]string, 0, len(pks))
 	lo.ForEach(pks, func(pk *model.Column, _ int) {
-		pkVals = append(pkVals, "model."+pk.Proper())
+		pkVals = append(pkVals, helper.TextModelPrefix+pk.Proper())
 	})
 	placeholder := ""
 	if database == util.DatabaseSQLServer {
@@ -163,7 +163,7 @@ func serviceUpdateIfNeeded(g *golang.File, m *model.Model, database string) (*go
 
 	if cc := m.Columns.WithTag("created"); len(cc) > 0 {
 		g.AddImport(helper.ImpErrors)
-		ret.W("\tcurr, err := s.Get(ctx, tx, %s%s, logger)", m.PKs().ToRefs("model."), m.SoftDeleteSuffix())
+		ret.W("\tcurr, err := s.Get(ctx, tx, %s%s, logger)", m.PKs().ToRefs(helper.TextModelPrefix), m.SoftDeleteSuffix())
 		ret.W("\tif curr == nil || err != nil {")
 		ret.W("\t\treturn s.Create(ctx, tx, logger, model)")
 		ret.W("\t}")
@@ -182,7 +182,7 @@ func serviceUpdateIfNeeded(g *golang.File, m *model.Model, database string) (*go
 	pks := m.PKs()
 	pkVals := make([]string, 0, len(pks))
 	lo.ForEach(pks, func(pk *model.Column, _ int) {
-		pkVals = append(pkVals, "model."+pk.Proper())
+		pkVals = append(pkVals, helper.TextModelPrefix+pk.Proper())
 	})
 	placeholder := ""
 	if database == util.DatabaseSQLServer {
@@ -286,7 +286,7 @@ func serviceAddCreatedUpdated(g *golang.File, m *model.Model, ret *golang.Block,
 func serviceLoadCreated(g *golang.File, ret *golang.Block, m *model.Model, createdCols model.Columns, loadCurr bool) error {
 	if len(createdCols) > 0 {
 		if loadCurr {
-			ret.W("\t\tcurr, e := s.Get(ctx, tx, %s%s)", m.PKs().ToRefs("model."), m.SoftDeleteSuffix())
+			ret.W("\t\tcurr, e := s.Get(ctx, tx, %s%s)", m.PKs().ToRefs(helper.TextModelPrefix), m.SoftDeleteSuffix())
 			ret.W("\t\tif e == nil && curr != nil {")
 			lo.ForEach(createdCols, func(created *model.Column, _ int) {
 				ret.W("\t\t\tmodel.%s = curr.%s", created.Proper(), created.Proper())
@@ -322,7 +322,7 @@ func serviceSetVal(g *golang.File, c *model.Column, ret *golang.Block, indent in
 			ret.W(ind+"model.%s = util.TimeCurrent()", c.Proper())
 		}
 	} else {
-		return errors.New("unhandled type [" + c.Type.Key() + "]")
+		return errors.Errorf("unhandled type [%s]", c.Type.Key())
 	}
 	return nil
 }

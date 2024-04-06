@@ -1,24 +1,32 @@
 package model
 
 import (
+	"fmt"
+
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/util"
 )
 
 func ToGoViewString(t *types.Wrapped, prop string, nullable bool, format string, verbose bool, url bool, enums enum.Enums, src string) string {
+	json := func() string {
+		return tmplStartEQ + "components.JSON(" + prop + tmplEndP
+	}
+	sa := func(x string) string {
+		return tmplStartEQ + "view.StringArray(" + x + tmplEndP
+	}
 	switch t.Key() {
 	case types.KeyAny:
 		if src == util.KeySimple {
 			return tmplStartV + prop + tmplEnd
 		}
-		return tmplStartEQ + "components.JSON(" + prop + tmplEndP
+		return json()
 	case types.KeyBool:
 		return tmplStartV + prop + tmplEnd
 	case types.KeyInt:
 		switch format {
 		case FmtSI.Key:
-			return tmplStartS + "util.ByteSizeSI(int64(" + prop + "))" + tmplEnd
+			return tmplStartS + fmt.Sprintf("util.ByteSizeSI(int64(%s))", prop) + tmplEnd
 		case "":
 			return tmplStart + "d " + prop + tmplEnd
 		default:
@@ -36,23 +44,23 @@ func ToGoViewString(t *types.Wrapped, prop string, nullable bool, format string,
 		}
 		switch lt.Key() {
 		case types.KeyString:
-			return tmplStartEQ + "view.StringArray(" + prop + tmplEndP
+			return sa(prop)
 		case types.KeyInt:
-			return tmplStartEQ + "view.IntArray(util.ArrayFromAny(" + prop + "))" + tmplEnd
+			return tmplStartEQ + fmt.Sprintf("view.IntArray(util.ArrayFromAny(%s))", prop) + tmplEnd
 		case types.KeyEnum:
 			e, _ := AsEnumInstance(lt, enums)
 			if e == nil {
 				return "ERROR: invalid enum [" + lt.String() + "]"
 			}
-			return tmplStartEQ + "view.StringArray(" + prop + ".Strings())" + tmplEnd
+			return sa(prop + stringsSuffix)
 		default:
-			return tmplStartEQ + "components.JSON(" + prop + tmplEndP
+			return json()
 		}
 	case types.KeyMap, types.KeyValueMap, types.KeyReference:
 		if src == util.KeySimple {
 			return tmplStartV + prop + " %%}"
 		}
-		return tmplStartEQ + "components.JSON(" + prop + tmplEndP
+		return json()
 	case types.KeyDate:
 		if nullable {
 			return tmplStartEQ + "view.TimestampDay(" + prop + tmplEndP

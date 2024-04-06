@@ -28,7 +28,7 @@ func modelString(g *golang.File, m *model.Model) *golang.Block {
 		})
 		s += "\""
 		lo.ForEach(m.PKs(), func(c *model.Column, _ int) {
-			s += ", " + c.ToGoString(m.FirstLetter()+".")
+			s += helper.TextCommaSpace + c.ToGoString(m.FirstLetter()+".")
 		})
 		ret.W(s + ")")
 	}

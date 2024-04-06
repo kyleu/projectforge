@@ -11,6 +11,8 @@ import (
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
+const msgEqSPrint = "\t\tmsg := fmt.Sprintf(\""
+
 func controllerCreateForm(m *model.Model, grp *model.Column, models model.Models, prefix string) *golang.Block {
 	ret := blockFor(m, prefix, grp, "create", "form")
 	if grp != nil {
@@ -84,7 +86,7 @@ func controllerCreate(m *model.Model, grp *model.Column, prefix string) *golang.
 	ret.W("\t\tif err != nil {")
 	ret.W("\t\t\treturn \"\", errors.Wrap(err, \"unable to save newly-created %s\")", m.Proper())
 	ret.W("\t\t}")
-	ret.W("\t\tmsg := fmt.Sprintf(\"" + m.Proper() + " [%%s] created\", ret.String())")
+	ret.W(msgEqSPrint + m.Proper() + " [%%s] created\", ret.String())")
 	ret.W("\t\treturn %sFlashAndRedir(true, msg, ret.WebPath(), w, ps)", prefix)
 	ret.W("\t})")
 	ret.W("}")
@@ -126,7 +128,7 @@ func controllerEdit(m *model.Model, grp *model.Column, prefix string) *golang.Bl
 	ret.W("\t\tif err != nil {")
 	ret.W("\t\t\treturn \"\", errors.Wrapf(err, \"unable to update %s [%%%%s]\", frm.String())", m.Proper())
 	ret.W("\t\t}")
-	ret.W("\t\tmsg := fmt.Sprintf(\"" + m.Proper() + " [%%s] updated\", frm.String())")
+	ret.W(msgEqSPrint + m.Proper() + " [%%s] updated\", frm.String())")
 	ret.W("\t\treturn %sFlashAndRedir(true, msg, frm.WebPath(), w, ps)", prefix)
 	ret.W("\t})")
 	ret.W("}")
@@ -148,7 +150,7 @@ func controllerDelete(m *model.Model, grp *model.Column, prefix string) *golang.
 	ret.W("\t\tif err != nil {")
 	ret.W("\t\t\treturn \"\", errors.Wrapf(err, \"unable to delete %s [%%%%s]\", ret.String())", m.TitleLower())
 	ret.W("\t\t}")
-	ret.W("\t\tmsg := fmt.Sprintf(\"" + m.Proper() + " [%%s] deleted\", ret.String())")
+	ret.W(msgEqSPrint + m.Proper() + " [%%s] deleted\", ret.String())")
 	ret.W("\t\treturn %sFlashAndRedir(true, msg, \"/%s\", w, ps)", prefix, m.Route())
 	ret.W("\t})")
 	ret.W("}")

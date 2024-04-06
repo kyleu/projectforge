@@ -14,12 +14,10 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-const viewIndent = "  "
-
 func viewDetailColumn(
 	g *golang.Template, ret *golang.Block, models model.Models, m *model.Model, link bool, col *model.Column, modelKey string, indent int, enums enum.Enums,
 ) {
-	ind := util.StringRepeat(viewIndent, indent)
+	ind := util.StringRepeat(ind1, indent)
 	rels := m.RelationsFor(col)
 	if len(rels) == 0 {
 		viewString := col.ToGoViewString(modelKey, true, false, enums, util.KeyDetail)
@@ -33,15 +31,13 @@ func viewDetailColumn(
 
 	toStrings := strings.Join(viewDetailColumnString(rels, models, m, col), "")
 
-	ret.W(ind + "<td class=\"nowrap\">")
+	ret.W(ind + helper.TextTDStart)
 	if col.PK && link {
-		ret.W(ind + "  <a href=\"" + m.LinkURL(modelKey, enums) + "\">" + col.ToGoViewString(modelKey, true, false, enums, util.KeyDetail) + toStrings + "</a>")
+		cv := col.ToGoViewString(modelKey, true, false, enums, util.KeyDetail)
+		ret.W(ind + linkStart + m.LinkURL(modelKey, enums) + `"` + ">" + cv + toStrings + helper.TextEndAnchor)
 	} else {
-		ret.W(ind + viewIndent + col.ToGoViewString(modelKey, true, false, enums, util.KeyDetail) + toStrings)
+		ret.W(ind + ind1 + col.ToGoViewString(modelKey, true, false, enums, util.KeyDetail) + toStrings)
 	}
-	const l = "<a title=%q href=\"{%%%%s %s %%%%}\">{%%%%= components.SVGRef(%q, 18, 18, \"\", ps) %%%%}</a>"
-	const msgNotNull = "%s  " + l
-	const msg = "%s  {%%%% if %s%s != nil %%%%}" + l + "{%%%% endif %%%%}"
 	lo.ForEach(rels, func(rel *model.Relation, _ int) {
 		if lo.Contains(rel.Src, col.Name) {
 			switch col.Type.Key() {
@@ -51,13 +47,13 @@ func viewDetailColumn(
 			relModel := models.Get(rel.Table)
 			wp := rel.WebPath(m, relModel, modelKey)
 			if col.Nullable {
-				ret.W(msg, ind, modelKey, col.Proper(), relModel.Title(), wp, relModel.Icon)
+				ret.W(anchorMsg, ind, modelKey, col.Proper(), relModel.Title(), wp, relModel.Icon)
 			} else {
-				ret.W(msgNotNull, ind, relModel.Title(), wp, relModel.Icon)
+				ret.W(anchorMsgNotNull, ind, relModel.Title(), wp, relModel.Icon)
 			}
 		}
 	})
-	ret.W(ind + "</td>")
+	ret.W(ind + helper.TextTDEnd)
 }
 
 func viewDetailColumnString(rels model.Relations, models model.Models, m *model.Model, col *model.Column) []string {
@@ -73,7 +69,7 @@ func viewDetailColumnString(rels model.Relations, models model.Models, m *model.
 		if len(relTitles) == 1 && relTitles[0].Name == col.Name {
 			return "", false
 		}
-		msg := "{%%%% if p.%sBy%s != nil %%%%} ({%%%%s p.%sBy%s.TitleString() %%%%}){%%%% endif %%%%}"
+		msg := "{%%%% if p.%sBy%s != nil %%%%} ({%%%%s p.%sBy%s.TitleString() %%%%})" + helper.TextEndIfExtra
 		return fmt.Sprintf(msg, relModel.Proper(), lNames, relModel.Proper(), lNames), true
 	})
 }

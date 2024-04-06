@@ -16,6 +16,8 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+const rDot = "r."
+
 func Row(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "row")
 	lo.ForEach(helper.ImportsForTypes("row", args.Database, m.Columns.Types()...), func(imp *golang.Import, _ int) {
@@ -122,7 +124,7 @@ func modelRowToModel(g *golang.File, m *model.Model, enums enum.Enums, database 
 			refs = append(refs, fmt.Sprintf("%s %sArg", k, c.Camel()))
 		case types.KeyList:
 			t := "[]any"
-			decoder := "r." + c.Proper()
+			decoder := rDot + c.Proper()
 			switch c.Type.ListType().Key() {
 			case types.KeyString:
 				t = "[]string"
@@ -152,14 +154,14 @@ func modelRowToModel(g *golang.File, m *model.Model, enums enum.Enums, database 
 			ret.W("\t_ = util.FromJSON(%s, &%sArg)", decoder, c.Camel())
 			refs = append(refs, fmt.Sprintf("%s %sArg", k, c.Camel()))
 		case types.KeyMap, types.KeyValueMap:
-			decoder := "r." + c.Proper()
+			decoder := rDot + c.Proper()
 			if helper.SimpleJSON(database) {
 				decoder = ba(decoder)
 			}
 			ret.W("\t%sArg, _ := util.FromJSONMap(%s)", c.Camel(), decoder)
 			refs = append(refs, fmt.Sprintf("%s %sArg", k, c.Camel()))
 		case types.KeyReference:
-			decoder := "r." + c.Proper()
+			decoder := rDot + c.Proper()
 			if helper.SimpleJSON(database) {
 				decoder = ba(decoder)
 			}

@@ -62,7 +62,7 @@ func TestRun(w http.ResponseWriter, r *http.Request) {
 
 			page = &vaction.Result{Ctx: &action.ResultContext{Prj: prj, Cfg: cfg, Res: res}}
 		default:
-			return "", errors.New("invalid test [" + key + "]")
+			return "", errors.Errorf("invalid test [%s]", key)
 		}
 		return controller.Render(w, r, as, page, ps, bc...)
 	})

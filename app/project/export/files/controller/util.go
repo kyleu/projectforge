@@ -5,6 +5,7 @@ import (
 
 	"github.com/samber/lo"
 
+	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
 )
@@ -35,7 +36,7 @@ func controllerModelFromPath(m *model.Model) *golang.Block {
 		controllerArgFor(col, ret, "nil", 1)
 	})
 	args := lo.Map(pks, func(x *model.Column, _ int) string {
-		return x.Camel() + "Arg"
+		return x.Camel() + helper.TextArg
 	})
 	suffix := ""
 	if m.IsSoftDelete() {

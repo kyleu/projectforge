@@ -8,6 +8,7 @@ import (
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
 	"projectforge.dev/projectforge/app/util"
@@ -30,7 +31,7 @@ func Migration(m *model.Model, args *model.Args, addHeader bool, linebreak strin
 
 func sqlDrop(m *model.Model, database string) (*golang.Block, error) {
 	ret := golang.NewBlock("SQLDrop", "sql")
-	ret.W(sqlFunc(m.Proper() + "Drop"))
+	ret.W(sqlFunc(m.Proper() + helper.TextDrop))
 	if database == util.DatabaseSQLServer {
 		ret.W("if exists (select * from sysobjects where name='%s' and xtype='U')", m.Table())
 		ret.W("drop table %q;", m.Table())

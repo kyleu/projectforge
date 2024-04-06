@@ -3,7 +3,7 @@ package types
 
 import "projectforge.dev/projectforge/app/util"
 
-const KeyJSON = "json"
+const KeyJSON, objStr = "json", "{}"
 
 type JSON struct {
 	IsObject bool `json:"obj,omitempty"`
@@ -37,7 +37,7 @@ func (x *JSON) From(v any) any {
 }
 
 func (x *JSON) Default(string) any {
-	return "{}"
+	return objStr
 }
 
 func NewJSON() *Wrapped {

@@ -4,11 +4,15 @@ import (
 	"strings"
 
 	"projectforge.dev/projectforge/app/project/export/enum"
+	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-const argString = "ctx context.Context, tx *sqlx.Tx, wc string, expected int, logger util.Logger, values ...any"
+const (
+	argString = "ctx context.Context, tx *sqlx.Tx, wc string, expected int, logger util.Logger, values ...any"
+	delMsg    = "// Delete doesn't actually delete, it only sets [%s]."
+)
 
 func serviceDelete(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	pks := m.PKs()
@@ -29,7 +33,7 @@ func serviceSoftDelete(m *model.Model, enums enum.Enums) (*golang.Block, error) 
 	pks := m.PKs()
 	delCols := m.Columns.WithTag("deleted")
 	ret := golang.NewBlock("Delete", "func")
-	ret.W("// Delete doesn't actually delete, it only sets [" + strings.Join(delCols.Names(), ", ") + "].")
+	ret.W(delMsg, strings.Join(delCols.Names(), ", "))
 	args, err := pks.Args(m.Package, enums)
 	if err != nil {
 		return nil, err
@@ -56,7 +60,7 @@ func serviceDeleteWhere(_ *model.Model) *golang.Block {
 func serviceSoftDeleteWhere(m *model.Model) *golang.Block {
 	delCols := m.Columns.WithTag("deleted")
 	ret := golang.NewBlock("Delete", "func")
-	ret.W("// Delete doesn't actually delete, it only sets [" + strings.Join(delCols.Names(), ", ") + "].")
+	ret.W(delMsg, strings.Join(delCols.Names(), ", "))
 	ret.W("func (s *Service) DeleteWhere(%s) error {", argString)
 	ret.W("\tcols := []string{%s}", strings.Join(delCols.NamesQuoted(), ", "))
 	ret.W("\tq := database.SQLUpdate(tableQuoted, cols, wc, s.db.Type)")
@@ -73,7 +77,7 @@ func serviceAddDeletedClause(m *model.Model) *golang.Block {
 	ret.W("\tif includeDeleted {")
 	ret.W("\t\treturn wc")
 	ret.W("\t}")
-	ret.W("\treturn wc + \" and \\\"%s\\\" is null\"", delCols[0].SQL())
+	ret.W("\treturn wc + \" and \\\"%s\\\""+helper.TextIsNull+"\"", delCols[0].SQL())
 	ret.W("}")
 	return ret
 }

@@ -5,6 +5,7 @@ import (
 
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/enum"
+	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -134,7 +135,7 @@ func blockGetByPropUnique(e *enum.Enum, efk string, t string) (*golang.Block, er
 	default:
 		return nil, errors.Errorf("unable to create enum helper for type [%s]", t)
 	}
-	gxBlock := golang.NewBlock(e.ProperPlural()+"GetBy"+efk, "method")
+	gxBlock := golang.NewBlock(e.ProperPlural()+helper.TextGetBy+efk, "method")
 	gxBlock.W("func (%s %s) GetBy%s(input %s, logger util.Logger) %s {", e.FirstLetter(), e.ProperPlural(), prop, goType, e.Proper())
 	gxBlock.W("\tfor _, value := range %s {", e.FirstLetter())
 	gxBlock.W("\t\tif value.%s == input {", prop)
@@ -161,7 +162,7 @@ func blockGetByPropShared(e *enum.Enum, efk string, t string) (*golang.Block, er
 	if t == types.KeyTimestamp {
 		goType = timePointer
 	}
-	gxBlock := golang.NewBlock(e.ProperPlural()+"GetBy"+efk, "method")
+	gxBlock := golang.NewBlock(e.ProperPlural()+helper.TextGetBy+efk, "method")
 	gxBlock.W("func (%s %s) GetBy%s(input %s, logger util.Logger) %s {", e.FirstLetter(), e.ProperPlural(), prop, goType, e.ProperPlural())
 	gxBlock.W("\tret := %s", e.FirstLetter())
 	gxBlock.W("\tfor _, value := range %s {", e.FirstLetter())

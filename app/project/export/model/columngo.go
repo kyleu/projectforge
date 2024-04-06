@@ -9,7 +9,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-const msgTextarea = `{%%%%= edit.TextareaTable(%q, %q, %q, 8, util.ToJSON(%s), 5, %s) %%%%}`
+const msgTextarea, stringsSuffix = `{%%%%= edit.TextareaTable(%q, %q, %q, 8, util.ToJSON(%s), 5, %s) %%%%}`, ".Strings()"
 
 func (c *Column) ToSQLType(database string) (string, error) {
 	ret, err := ToSQLType(c.Type, database)
@@ -46,7 +46,7 @@ func (c *Column) ToGoEditString(prefix string, format string, id string, enums e
 			ePrefix = e.Package + "." + ePrefix
 		}
 		eKeys := ePrefix + ".Keys()"
-		eTitles := ePrefix + ".Strings()"
+		eTitles := ePrefix + stringsSuffix
 		call := fmt.Sprintf("%s%s.Key", prefix, c.Proper())
 		if e.Simple() {
 			call = fmt.Sprintf("string(%s)", c.ToGoString(prefix))
@@ -62,8 +62,8 @@ func (c *Column) ToGoEditString(prefix string, format string, id string, enums e
 		e, _ := AsEnumInstance(lt.V, enums)
 		if e != nil {
 			return fmt.Sprintf(
-				`{%%%%= edit.CheckboxTable(%q, %q, %s.Keys(), %s.All%s.Keys(), %s.All%s.Strings(), 5, %s.All%s.Help()) %%%%}`,
-				c.Camel(), c.Title(), c.ToGoString(prefix), e.Package, e.ProperPlural(), e.Package, e.ProperPlural(), e.Package, e.ProperPlural(),
+				`{%%%%= edit.CheckboxTable(%q, %q, %s.Keys(), %s.All%s.Keys(), %s.All%s%s, 5, %s.All%s.Help()) %%%%}`,
+				c.Camel(), c.Title(), c.ToGoString(prefix), e.Package, e.ProperPlural(), e.Package, e.ProperPlural(), stringsSuffix, e.Package, e.ProperPlural(),
 			), nil
 		}
 		if c.Display == FmtTags.Key && lt.V.Key() == types.KeyString {

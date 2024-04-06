@@ -9,7 +9,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-const goStdBin = "go"
+const goStdBin, keyUser = "go", "user"
 
 func (t *TemplateContext) Title() string {
 	if t.Name != "" {
@@ -90,7 +90,7 @@ func (t *TemplateContext) HasAccount() bool {
 }
 
 func (t *TemplateContext) HasUser() bool {
-	return t.HasModules("user")
+	return t.HasModules(keyUser)
 }
 
 func (t *TemplateContext) IsNotarized() bool {

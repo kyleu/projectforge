@@ -10,14 +10,14 @@ import (
 )
 
 var (
-	templateServicesOrder = []string{"audit", "user", "har", "process", "notebook", "schedule", "scripting", "websocket", "help"}
+	templateServicesOrder = []string{"audit", keyUser, "har", "process", "notebook", "schedule", "scripting", "websocket", "help"}
 	templateServicesNames = map[string]string{
 		"audit": "Audit", "har": "Har", "notebook": "Notebook", "process": "Exec", "schedule": "Schedule",
-		"scripting": "Script", "websocket": "Socket", "user": "User", "help": "Help",
+		"scripting": "Script", "websocket": "Socket", keyUser: "User", "help": "Help",
 	}
 	templateServicesKeys = map[string]string{
 		"audit": "audit", "har": "har", "notebook": "notebook", "process": "exec", "schedule": "schedule",
-		"scripting": "scripting", "websocket": "websocket", "user": "user", "help": "help",
+		"scripting": "scripting", "websocket": "websocket", keyUser: keyUser, "help": "help",
 	}
 	templateServicesRefs = map[string]string{
 		"audit":     "auditSvc",
@@ -26,7 +26,7 @@ var (
 		"process":   "exec.NewService()",
 		"schedule":  "schedule.NewService()",
 		"scripting": "scripting.NewService(st.Files, \"scripts\")",
-		"user":      "user.NewService(st.Files, logger)",
+		keyUser:     "user.NewService(st.Files, logger)",
 		"websocket": "websocket.NewService(nil, nil, nil)",
 		"help":      "help.NewService(logger)",
 	}
@@ -36,7 +36,7 @@ func (t *TemplateContext) servicesNames() ([]string, []string, int) {
 	var svcs []string
 	for _, key := range templateServicesOrder {
 		if t.HasModule(key) {
-			if key == "user" && t.ExportArgs != nil && t.ExportArgs.Models.Get("user") != nil {
+			if key == keyUser && t.ExportArgs != nil && t.ExportArgs.Models.Get(keyUser) != nil {
 				continue
 			}
 			svcs = append(svcs, key)
@@ -69,13 +69,13 @@ func (t *TemplateContext) ServicesImports() string {
 	svcs, _, _ := t.servicesNames()
 	ret := &util.StringSlice{}
 	for _, svc := range svcs {
-		if svc == "user" {
+		if svc == keyUser {
 			continue
 		}
 		ret.Pushf("\t\"%s/app/lib/%s\"", t.Package, templateServicesKeys[svc])
 	}
 	ret.Sort()
-	if slices.Contains(svcs, "user") {
+	if slices.Contains(svcs, keyUser) {
 		ret.Pushf("\t\"%s/app/user\"", t.Package)
 	}
 	ret.Pushf("\t\"%s/app/util\"", t.Package)
@@ -92,7 +92,7 @@ func (t *TemplateContext) ServicesConstructor() string {
 		return templateServicesRefs[svc]
 	})
 	for idx, key := range svcs {
-		if key == "user" && t.ExportArgs != nil && t.ExportArgs.Models.Get("user") != nil {
+		if key == keyUser && t.ExportArgs != nil && t.ExportArgs.Models.Get(keyUser) != nil {
 			continue
 		}
 		ret.Pushf("\t\t%s %s,", util.StringPad(names[idx]+":", maxNameLength+1), refs[idx])

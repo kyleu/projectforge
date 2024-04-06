@@ -5,6 +5,7 @@ import (
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project/export/enum"
+	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
 )
@@ -19,7 +20,7 @@ func sqlDropAll(models model.Models, enums enum.Enums) *golang.Block {
 	ret := golang.NewBlock("SQLDropAll", "sql")
 	ret.W(sqlFunc("DropAll"))
 	for i := len(models) - 1; i >= 0; i-- {
-		ret.W(sqlCall(models[i].Proper() + "Drop"))
+		ret.W(sqlCall(models[i].Proper() + helper.TextDrop))
 	}
 	if len(enums) > 1 {
 		ret.W(sqlCall("TypesDrop"))
@@ -35,7 +36,7 @@ func sqlCreateAll(models model.Models, enums enum.Enums) *golang.Block {
 		ret.W(sqlCall("TypesCreate"))
 	}
 	lo.ForEach(models, func(m *model.Model, _ int) {
-		ret.W("-- {%%%%= %sCreate() %%%%}", m.Proper())
+		ret.W(helper.TextSQLComment+"{%%%%= %sCreate() %%%%}", m.Proper())
 	})
 	ret.W(sqlEnd())
 	return ret
@@ -53,7 +54,7 @@ func sqlSeedAll(models model.Models) *golang.Block {
 	ret.W(sqlFunc("SeedDataAll"))
 	lo.ForEach(models, func(m *model.Model, _ int) {
 		if len(m.SeedData) > 0 {
-			ret.W("-- {%%%%= %sSeedData() %%%%}", m.Proper())
+			ret.W(helper.TextSQLComment+"{%%%%= %sSeedData() %%%%}", m.Proper())
 		}
 	})
 	ret.W(sqlEnd())

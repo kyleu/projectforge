@@ -75,6 +75,8 @@ func forCols(g *golang.File, ret *golang.Block, indent int, m *model.Model, enum
 		ret.W(ind + "\treturn nil, " + s)
 		ret.W(ind + "}")
 	}
+	parseCall := "ret%s, err := m.Parse%s(%q, true, true)"
+	parseMsg := "ret.%s, err = m.Parse%s(%q, true, true)"
 	for _, col := range cols {
 		switch {
 		case col.Type.Key() == types.KeyAny:
@@ -101,7 +103,7 @@ func forCols(g *golang.File, ret *golang.Block, indent int, m *model.Model, enum
 			if err != nil {
 				return err
 			}
-			ret.W(ind+"ret%s, err := m.Parse%s(%q, true, true)", col.Proper(), col.ToGoMapParse(), col.Camel())
+			ret.W(ind+parseCall, col.Proper(), col.ToGoMapParse(), col.Camel())
 			catchErr("err")
 			var enumRef string
 			if e.Simple() {
@@ -117,7 +119,7 @@ func forCols(g *golang.File, ret *golang.Block, indent int, m *model.Model, enum
 		case col.Type.Key() == types.KeyList:
 			lt := types.TypeAs[*types.List](col.Type)
 			if e, _ := model.AsEnumInstance(lt.V, enums); e != nil {
-				ret.W(ind+"ret%s, err := m.Parse%s(%q, true, true)", col.Proper(), col.ToGoMapParse(), col.Camel())
+				ret.W(ind+parseCall, col.Proper(), col.ToGoMapParse(), col.Camel())
 				catchErr("err")
 				eRef := e.Proper()
 				if e.PackageWithGroup("") != m.PackageWithGroup("") {
@@ -125,11 +127,11 @@ func forCols(g *golang.File, ret *golang.Block, indent int, m *model.Model, enum
 				}
 				ret.W(ind+"ret.%s = %sParse(nil, ret%s...)", col.Proper(), eRef, col.Proper())
 			} else {
-				ret.W(ind+"ret.%s, err = m.Parse%s(%q, true, true)", col.Proper(), col.ToGoMapParse(), col.Camel())
+				ret.W(ind+parseMsg, col.Proper(), col.ToGoMapParse(), col.Camel())
 				catchErr("err")
 			}
 		case col.Nullable || col.Type.Scalar():
-			ret.W(ind+"ret.%s, err = m.Parse%s(%q, true, true)", col.Proper(), col.ToGoMapParse(), col.Camel())
+			ret.W(ind+parseMsg, col.Proper(), col.ToGoMapParse(), col.Camel())
 			catchErr("err")
 		default:
 			ret.W(ind+"ret%s, e := m.Parse%s(%q, true, true)", col.Proper(), col.ToGoMapParse(), col.Camel())

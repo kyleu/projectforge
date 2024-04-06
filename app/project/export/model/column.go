@@ -83,7 +83,7 @@ func (c *Column) TitleLower() string {
 func (c *Column) Plural() string {
 	ret := util.StringToPlural(c.Name)
 	if ret == c.Name {
-		return ret + "Set"
+		return ret + tSet
 	}
 	return ret
 }

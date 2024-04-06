@@ -17,7 +17,7 @@ type wrappedUnmarshal struct {
 func (x *Wrapped) MarshalJSON() ([]byte, error) {
 	b := util.ToJSONBytes(x.T, false)
 	s := string(b)
-	if s == "{}" || (x.T.Key() == KeyMap && s == `{"k":"string","v":"any"}`) || (x.T.Key() == KeyList && s == `{"v":"any"}`) {
+	if s == objStr || (x.T.Key() == KeyMap && s == `{"k":"string","v":"any"}`) || (x.T.Key() == KeyList && s == `{"v":"any"}`) {
 		return util.ToJSONBytes(x.K, false), nil
 	}
 	return util.ToJSONBytes(wrappedUnmarshal{K: x.K, T: b}, false), nil
@@ -33,7 +33,7 @@ func (x *Wrapped) UnmarshalJSON(data []byte) error {
 		if newErr != nil {
 			return err
 		}
-		wu = wrappedUnmarshal{K: str, T: []byte("{}")}
+		wu = wrappedUnmarshal{K: str, T: []byte(objStr)}
 	}
 	if wu.K == "boolean" {
 		wu.K = KeyBool
