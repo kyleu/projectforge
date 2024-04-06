@@ -12,7 +12,7 @@ import (
 )
 
 func Site(w http.ResponseWriter, r *http.Request) {
-	path := util.StringSplitAndTrim(string(r.URL.Path), "/")
+	path := util.StringSplitAndTrim(r.URL.Path, "/")
 	action := "site"
 	if len(path) > 0 {
 		action += "." + strings.Join(path, ".")

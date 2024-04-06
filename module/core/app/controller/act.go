@@ -35,7 +35,7 @@ func ActSite(key string, w http.ResponseWriter, r *http.Request, f func(as *app.
 	as := _currentSiteState
 	ps := cutil.LoadPageState(as, w, r, key, _currentSiteRootLogger)
 	ps.Menu = site.Menu(ps.Context, as, ps.Profile{{{ if .HasAccount }}}, ps.Accounts{{{ end }}}, ps.Logger){{{ if .HasAccount }}}
-	if allowed, reason := user.Check(string(r.URL.Path), ps.Accounts); !allowed {
+	if allowed, reason := user.Check(r.URL.Path, ps.Accounts); !allowed {
 		f = Unauthorized(w, r, reason, ps.Accounts)
 	}{{{ end }}}
 	if err := initSiteRequest(as, ps); err != nil {

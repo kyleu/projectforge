@@ -35,9 +35,7 @@ func (l *Timer) Lap(msg string, args ...any) int {
 }
 
 func (l *Timer) Complete() int {
-	msg := fmt.Sprintf("completed after [%d] steps in [%s]", l.index, util.MicrosToMillis(l.initial.End()))
-	out := fmt.Sprintf("[%s::%d] ", l.Key, l.index) + msg + " [" + util.MicrosToMillis(l.Timer.End()) + "]"
-	l.addLog(out)
+	_ = l.Lap("completed after [%d] steps in [%s]", l.index, util.MicrosToMillis(l.initial.End()))
 	return l.acc
 }
 

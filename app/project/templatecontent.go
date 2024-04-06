@@ -13,15 +13,18 @@ func (t *TemplateContext) CIContent() string {
 	if t.Info == nil {
 		return ""
 	}
+	common := func(x string) string {
+		return "on:" + t.Linebreak + "  push:" + t.Linebreak + "    tags:" + t.Linebreak + "      - '" + x + "'"
+	}
 	switch t.Info.CI {
 	case "all":
 		return "on: push"
 	case "tags":
-		return "on:" + t.Linebreak + "  push:" + t.Linebreak + "    tags:" + t.Linebreak + "      - '*'"
+		return common("*")
 	case "versions":
-		return "on:" + t.Linebreak + "  push:" + t.Linebreak + "    tags:" + t.Linebreak + "      - 'v*'"
+		return common("v*")
 	default:
-		return "on:" + t.Linebreak + "  push:" + t.Linebreak + "    tags:" + t.Linebreak + "      - 'DISABLED_v*'"
+		return common("DISABLED_v*")
 	}
 }
 

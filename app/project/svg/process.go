@@ -1,10 +1,12 @@
 package svg
 
 import (
+	"context"
 	"io"
 	"net/http"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/pkg/errors"
 
@@ -35,15 +37,19 @@ func load(src string, tgt string) (*SVG, error) {
 	if !strings.HasPrefix(src, "http") {
 		url = ghLineAwesome + src + util.ExtSVG
 	}
-	cl := http.DefaultClient
-	rsp, err := cl.Get(url)
+	ctx, _ := context.WithTimeout(context.Background(), time.Minute)
+	r, err := http.NewRequestWithContext(ctx, http.MethodGet, url, http.NoBody)
+	if err != nil {
+		return nil, err
+	}
+	rsp, err := http.DefaultClient.Do(r)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil || rsp.StatusCode == 404 {
 		if !strings.HasPrefix(src, "http") {
 			origErr := err
 			origURL := url
 			url = ghLineAwesome + src + "-solid.svg"
-			rsp, err = cl.Get(url)
+			rsp, err = http.DefaultClient.Do(r)
 			defer func() { _ = rsp.Body.Close() }()
 			if err != nil {
 				return nil, errors.Wrapf(origErr, "unable to call URL [%s]", origURL)

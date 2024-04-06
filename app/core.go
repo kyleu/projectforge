@@ -16,6 +16,7 @@ type CoreServices struct {
 	Help   *help.Service
 }
 
+//nolint:revive
 func initCoreServices(ctx context.Context, st *State, logger util.Logger) CoreServices {
 	return CoreServices{
 		Exec:   exec.NewService(),

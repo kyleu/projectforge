@@ -12,6 +12,7 @@ const (
 	headerCommentPound   = "# "
 	headerCommentSlashes = "// "
 	headerCommentXML     = "<!-- "
+	headerCommentXMLEnd  = " -->"
 )
 
 func ContainsHeader(s string) bool {
@@ -53,15 +54,15 @@ func contentWithHeader(filename string, t Type, c string, linebreak string, pkg 
 	case TypeGoMod.Key, TypeGradle.Key, TypeJavaScript.Key, TypeKotlin.Key, TypeSwift.Key, TypeTypeScript.Key:
 		return headerCommentSlashes + HeaderContent + linebreak + c
 	case TypeHTML.Key:
-		return headerCommentXML + HeaderContent + " -->" + linebreak + c
+		return headerCommentXML + HeaderContent + headerCommentXMLEnd + linebreak + c
 	case TypeMarkdown.Key:
-		return "<!--- " + HeaderContent + " -->" + linebreak + c
+		return "<!--- " + HeaderContent + headerCommentXMLEnd + linebreak + c
 	case TypeSQL.Key:
 		return "-- " + HeaderContent + linebreak + c
 	case TypeShell.Key:
 		return secondLine(c, headerCommentPound+HeaderContent, linebreak)
 	case TypeEntitlements.Key, TypeXML.Key:
-		return secondLine(c, headerCommentXML+HeaderContent+" -->", linebreak)
+		return secondLine(c, headerCommentXML+HeaderContent+headerCommentXMLEnd, linebreak)
 	default:
 		logger.Warnf("unhandled header for file [%s], of type [%s]", filename, t.Key)
 		return c

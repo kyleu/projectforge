@@ -77,11 +77,12 @@ func entryFor(key string, hd string, ft string, indent int) (*Entry, error) {
 			md = strings.TrimSpace(md[idx:])
 		}
 	}
+	const dblLB = "\n\n"
 	if hd != "" {
-		md = hd + "\n\n" + md
+		md = hd + dblLB + md
 	}
 	if ft != "" {
-		md += "\n\n" + ft
+		md += dblLB + ft
 	}
 	html := strings.TrimSpace(string(markdown.ToHTML([]byte(md), nil, nil)))
 	html = strings.Join(util.StringSplitLinesIndented(html, indent, false, false), "\n")

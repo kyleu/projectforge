@@ -85,7 +85,7 @@ func populateRequest(req js.Value, headers js.Value, reqBody js.Value) (r *http.
 		}
 	}()
 
-	ret, err := http.NewRequest(req.Get("method").String(), req.Get("url").String(), http.NoBody)
+	ret, err := http.NewRequestWithContext(context.Background(), req.Get("method").String(), req.Get("url").String(), http.NoBody)
 	if err != nil {
 		return nil, err
 	}
