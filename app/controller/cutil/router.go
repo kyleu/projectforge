@@ -22,13 +22,22 @@ func WireRouter(r *mux.Router, notFound http.HandlerFunc, logger util.Logger) (h
 
 	r.PathPrefix("/").HandlerFunc(notFound)
 
-	var ret http.Handler = r
+	var ret http.Handler = p.WrapHandler(r)
 	includeCompression := util.GetEnvBool("compression_enabled", false)
 	if includeCompression {
-		compress, _ := httpcompression.DefaultAdapter()
+		compressedTypes := []string{
+			"application/gzip", "application/octet-stream", "application/zip",
+			"audio/aac", "audio/mpeg", "audio/ogg",
+			"image/gif", "image/jpeg", "image/png", "image/webp",
+			"video/mpeg", "video/mp4", "video/webm",
+		}
+		compress, err := httpcompression.DefaultAdapter(httpcompression.ContentTypes(compressedTypes, true))
+		if err != nil {
+			return nil, err
+		}
 		ret = compress(ret)
 	}
-	return p.WrapHandler(r), nil
+	return ret, nil
 }
 
 func AddRoute(method string, path string) {

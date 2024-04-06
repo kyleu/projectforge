@@ -18,7 +18,7 @@ import (
 	"projectforge.dev/projectforge/views/vsvg"
 )
 
-const appString = "app"
+const appString, svgLink, svgPath = "app", "SVG||/svg/", "/svg/"
 
 func SVGList(w http.ResponseWriter, r *http.Request) {
 	controller.Act("svg.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
@@ -52,7 +52,7 @@ func SVGDetail(w http.ResponseWriter, r *http.Request) {
 		}
 		x := &svg.SVG{Key: key, Markup: content}
 		ps.SetTitleAndData("SVG ["+key+"]", x)
-		return controller.Render(w, r, as, &vsvg.View{Project: prj, SVG: x}, ps, "projects", prj.Key, "SVG||/svg/"+prj.Key, key)
+		return controller.Render(w, r, as, &vsvg.View{Project: prj, SVG: x}, ps, "projects", prj.Key, svgLink+prj.Key, key)
 	})
 }
 
@@ -71,7 +71,7 @@ func SVGBuild(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		msg := fmt.Sprintf("Parsed [%d] SVG files", count)
-		return controller.FlashAndRedir(true, msg, "/svg/"+prj.Key, w, ps)
+		return controller.FlashAndRedir(true, msg, svgPath+prj.Key, w, ps)
 	})
 }
 
@@ -102,8 +102,8 @@ func SVGAdd(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		ps.SetTitleAndData("SVG ["+x.Key+"]", x)
-		return controller.Render(w, r, as, &vsvg.View{Project: prj, SVG: x}, ps, "projects", prj.Key, "SVG||/svg/"+prj.Key, x.Key)
+		ps.SetTitleAndData("Added SVG ["+x.Key+"]", x)
+		return controller.Render(w, r, as, &vsvg.View{Project: prj, SVG: x}, ps, "projects", prj.Key, svgLink+prj.Key, x.Key)
 	})
 }
 
@@ -116,11 +116,11 @@ func SVGSetApp(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Query().Get("hasloaded") != util.BoolTrue {
 			cutil.URLAddQuery(r.URL, "hasloaded", util.BoolTrue)
 			page := &vpage.Load{URL: r.URL.String(), Title: "Generating icons"}
-			return controller.Render(w, r, as, page, ps, "projects", prj.Key, "SVG||/svg/"+prj.Key, "App Icon")
+			return controller.Render(w, r, as, page, ps, "projects", prj.Key, svgLink+prj.Key, "App Icon")
 		}
 		content, err := svg.Content(fs, key)
 		if err != nil {
-			return "", errors.Wrap(err, "unable to read SVG ["+key+"]")
+			return "", errors.Wrap(err, "unable to read app SVG ["+key+"]")
 		}
 		prj.Icon = key
 		err = as.Services.Projects.Save(prj, ps.Logger)
@@ -135,7 +135,7 @@ func SVGSetApp(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, "set SVG ["+key+"] as app icon", "/svg/"+prj.Key, w, ps)
+		return controller.FlashAndRedir(true, "set SVG ["+key+"] as app icon", svgPath+prj.Key, w, ps)
 	})
 }
 
@@ -148,7 +148,7 @@ func SVGRefreshApp(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Query().Get("hasloaded") != util.BoolTrue {
 			cutil.URLAddQuery(r.URL, "hasloaded", util.BoolTrue)
 			page := &vpage.Load{URL: r.URL.String(), Title: "Generating app icons"}
-			return controller.Render(w, r, as, page, ps, "projects", prj.Key, "SVG||/svg/"+prj.Key, "Refresh App Icon")
+			return controller.Render(w, r, as, page, ps, "projects", prj.Key, svgLink+prj.Key, "Refresh App Icon")
 		}
 		pfs, err := as.Services.Projects.GetFilesystem(prj)
 		if err != nil {
@@ -158,7 +158,7 @@ func SVGRefreshApp(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to refresh app icon")
 		}
-		return controller.FlashAndRedir(true, "refreshed app icon", "/svg/"+prj.Key, w, ps)
+		return controller.FlashAndRedir(true, "refreshed app icon", svgPath+prj.Key, w, ps)
 	})
 }
 
@@ -179,7 +179,7 @@ func SVGRemove(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, "removed SVG ["+key+"]", "/svg/"+prj.Key, w, ps)
+		return controller.FlashAndRedir(true, "removed SVG ["+key+"]", svgPath+prj.Key, w, ps)
 	})
 }
 

@@ -13,6 +13,8 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+const dblpipe = "||"
+
 func projectFromForm(frm util.ValueMap, prj *project.Project) error {
 	get := func(k string, def string) string {
 		x := frm.GetStringOpt(k)
@@ -34,7 +36,7 @@ func projectFromForm(frm util.ValueMap, prj *project.Project) error {
 	if prj.Port == 0 {
 		prj.Port = 10000
 	}
-	prj.Modules = util.StringSplitAndTrim(get("modules", strings.Join(prj.Modules, "||")), "||")
+	prj.Modules = util.StringSplitAndTrim(get("modules", strings.Join(prj.Modules, dblpipe)), dblpipe)
 	if len(prj.Modules) == 0 {
 		prj.Modules = []string{"core"}
 	}

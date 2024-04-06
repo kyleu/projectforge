@@ -33,10 +33,13 @@ func runDeps(prj *project.Project, res *action.Result, w http.ResponseWriter, r 
 		return "", errors.Errorf("data is of type [%T], expected [Dependencies]", res.Data)
 	}
 	ps.SetTitleAndData(fmt.Sprintf("[%s] Dependencies", prj.Key), deps)
-	return controller.Render(w, r, as, &vbuild.Deps{Project: prj, BuildResult: res, Dependencies: deps}, ps, "projects", prj.Key, "Dependency Management")
+	page := &vbuild.Deps{Project: prj, BuildResult: res, Dependencies: deps}
+	return controller.Render(w, r, as, page, ps, "projects", prj.Key, "Dependency Management")
 }
 
-func runAllDeps(cfg util.ValueMap, prjs project.Projects, tags []string, w http.ResponseWriter, r *http.Request, as *app.State, ps *cutil.PageState) (string, error) {
+func runAllDeps(
+	cfg util.ValueMap, prjs project.Projects, tags []string, w http.ResponseWriter, r *http.Request, as *app.State, ps *cutil.PageState,
+) (string, error) {
 	var msg string
 	key := cfg.GetStringOpt("key")
 	if pj := cfg.GetStringOpt("project"); pj != "" {

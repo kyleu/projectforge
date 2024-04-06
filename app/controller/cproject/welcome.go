@@ -16,8 +16,6 @@ import (
 	"projectforge.dev/projectforge/views/vwelcome"
 )
 
-const welcomeMessage = "Welcome to " + util.AppName + "! View this page in a browser to get started."
-
 func Welcome(w http.ResponseWriter, r *http.Request) {
 	controller.Act("welcome", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		override := r.URL.Query().Get("override") == util.BoolTrue
@@ -34,7 +32,7 @@ func Welcome(w http.ResponseWriter, r *http.Request) {
 			return controller.Render(w, r, as, &vwelcome.DepError{Results: ch}, ps, "Welcome||/welcome")
 		}
 
-		ps.SetTitleAndData("Welcome to "+util.AppName, welcomeMessage)
+		ps.SetTitleAndData("Welcome to "+util.AppName, "View this page in a browser to get started.")
 		ps.HideMenu = true
 		return controller.Render(w, r, as, &vwelcome.Welcome{Project: as.Services.Projects.Default()}, ps, "Welcome||/welcome")
 	})
@@ -53,7 +51,7 @@ func WelcomeLoad(w http.ResponseWriter, r *http.Request) {
 		}
 
 		prj := as.Services.Projects.Default()
-		mods, err := as.Services.Modules.GetModules(util.StringSplitAndTrim(frm.GetStringOpt("modules"), "||")...)
+		mods, err := as.Services.Modules.GetModules(util.StringSplitAndTrim(frm.GetStringOpt("modules"), dblpipe)...)
 		if err != nil {
 			return "", errors.Wrap(err, "can't parse modules")
 		}

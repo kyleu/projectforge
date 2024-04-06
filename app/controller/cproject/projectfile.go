@@ -38,7 +38,7 @@ func ProjectFile(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		path := util.StringSplitAndTrim(pathS, "/")
-		bcAppend := "||" + prj.WebPath() + "/fs"
+		bcAppend := dblpipe + prj.WebPath() + "/fs"
 		bc := []string{"projects", prj.Key, "Files" + bcAppend}
 		lo.ForEach(path, func(x string, _ int) {
 			bcAppend += "/" + x

@@ -9,14 +9,14 @@ import (
 	"projectforge.dev/projectforge/assets"
 )
 
-func Favicon(w http.ResponseWriter, r *http.Request) {
+func Favicon(w http.ResponseWriter, _ *http.Request) {
 	e, err := assets.Embed("favicon.ico")
-	assetResponse(w, r, e, err)
+	assetResponse(w, e, err)
 }
 
-func RobotsTxt(w http.ResponseWriter, r *http.Request) {
+func RobotsTxt(w http.ResponseWriter, _ *http.Request) {
 	e, err := assets.Embed("robots.txt")
-	assetResponse(w, r, e, err)
+	assetResponse(w, e, err)
 }
 
 func Static(w http.ResponseWriter, r *http.Request) {
@@ -27,11 +27,11 @@ func Static(w http.ResponseWriter, r *http.Request) {
 		_, _ = w.Write([]byte("invalid path"))
 	} else {
 		e, err := assets.Embed(p)
-		assetResponse(w, r, e, err)
+		assetResponse(w, e, err)
 	}
 }
 
-func assetResponse(w http.ResponseWriter, r *http.Request, e *assets.Entry, err error) {
+func assetResponse(w http.ResponseWriter, e *assets.Entry, err error) {
 	if err == nil {
 		w.Header().Set(cutil.HeaderContentType, e.Mime)
 		w.Header().Set(cutil.HeaderCacheControl, "public, max-age=3600")
