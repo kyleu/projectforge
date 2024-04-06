@@ -14,7 +14,7 @@
     {%- if s, ok := ps.Data.(string); ok -%}
     <div class="overflow full-width"><pre class="mt">{%s s %}</pre></div>
     {%- else -%}
-    {%s= components.JSON(ps.Data) %}
+    <div class="mt">{%s= components.JSON(ps.Data) %}</div>
     {%- endif -%}
   </div>
 {% endfunc %}

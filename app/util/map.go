@@ -82,6 +82,14 @@ func (m ValueMap) Clone() ValueMap {
 	return ret
 }
 
+func (m ValueMap) WithoutKeys(keys ...string) ValueMap {
+	ret := m.Clone()
+	for _, key := range keys {
+		delete(ret, key)
+	}
+	return ret
+}
+
 func (m ValueMap) String() string {
 	return ToJSONCompact(m)
 }

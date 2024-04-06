@@ -53,11 +53,11 @@ func (p *Debug) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
 //line views/Debug.html:16
 	} else {
 //line views/Debug.html:16
-		qw422016.N().S(`    `)
+		qw422016.N().S(`    <div class="mt">`)
 //line views/Debug.html:17
 		qw422016.N().S(components.JSON(ps.Data))
 //line views/Debug.html:17
-		qw422016.N().S(`
+		qw422016.N().S(`</div>
 `)
 //line views/Debug.html:18
 	}

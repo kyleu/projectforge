@@ -48,11 +48,11 @@ func StreamJSONModal(qw422016 *qt422016.Writer, key string, title string, item a
 //line views/components/JSON.html:17
 	qw422016.E().S(key)
 //line views/components/JSON.html:17
-	qw422016.N().S(`');">Copy to clipboard</button>`)
+	qw422016.N().S(`');">Copy to clipboard</button><div class="mt">`)
 //line views/components/JSON.html:18
 	StreamJSON(qw422016, item)
 //line views/components/JSON.html:18
-	qw422016.N().S(`</div></div></div><script>function clip(k) {if (!navigator.clipboard) {return;}const el = document.getElementById("modal-" + k + "-data");navigator.clipboard.writeText(el.innerText);}</script>`)
+	qw422016.N().S(`</div></div></div></div><script>function clip(k) {if (!navigator.clipboard) {return;}const el = document.getElementById("modal-" + k + "-data");navigator.clipboard.writeText(el.innerText);}</script>`)
 //line views/components/JSON.html:31
 }
 

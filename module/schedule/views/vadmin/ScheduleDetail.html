@@ -23,7 +23,7 @@
     <div class="right">{%s util.MicrosToMillis(p.Result.DurationMicro) %}</div>
     <h3>Most Recent Result</h3>
     <em>{%s util.TimeToFull(&p.Result.Occurred) %}</em>
-    {%= components.JSON(p.Result.Returned) %}
+    <div class="mt">{%= components.JSON(p.Result.Returned) %}</div>
   </div>
   {%- endif -%}
 {% endfunc %}

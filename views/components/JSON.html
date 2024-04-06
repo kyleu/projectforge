@@ -15,7 +15,7 @@
       <div class="modal-body">
         <div id="modal-{%s key %}-data" hidden="hidden" style="display:none;">{%s util.ToJSON(item) %}</div>
         <button onclick="clip('{%s key %}');">Copy to clipboard</button>
-        {%= JSON(item) %}
+        <div class="mt">{%= JSON(item) %}</div>
       </div>
     </div>
   </div>
