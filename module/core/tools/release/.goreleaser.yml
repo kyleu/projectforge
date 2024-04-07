@@ -125,7 +125,7 @@ universal_binaries:
     # This is a good place to put one-time use scripts
     post:{{{ if .BuildWASM }}}
       - "./bin/build/wasmrelease.sh {{ .Version }}"{{{ end }}}{{{ if .BuildDesktop }}}
-      - "./bin/build/desktop.release.retry.sh {{ .Version }}"{{{ end }}}{{{ if .BuildAndroid }}}
+      - "./bin/build/desktop.release.sh {{ .Version }}"{{{ end }}}{{{ if .BuildAndroid }}}
       - "./bin/build/android.sh {{ .Version }}"{{{ end }}}{{{ if .BuildIOS }}}
       - "./bin/build/ios.sh {{ .Version }}"{{{ end }}}{{{ if .BuildNotarize }}}
       - "./tools/notarize/notarize.sh"{{{ end }}}
