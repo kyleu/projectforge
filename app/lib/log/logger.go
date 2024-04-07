@@ -18,6 +18,7 @@ const keyCustom = "custom"
 var (
 	RecentLogs []*zapcore.Entry
 	recentMU   = &sync.Mutex{}
+	listenerMU = &sync.Mutex{}
 )
 
 func InitLogging(debug bool) (util.Logger, error) {

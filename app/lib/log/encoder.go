@@ -4,6 +4,7 @@ package log
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
@@ -18,10 +19,13 @@ const (
 	logIndent  = "  "
 )
 
+type ListenerFunc func(level string, occurred time.Time, loggerName string, message string, caller util.ValueMap, stack string, fields util.ValueMap)
+
 type customEncoder struct {
 	zapcore.Encoder
-	colored bool
-	pool    buffer.Pool
+	colored   bool
+	pool      buffer.Pool
+	listeners []ListenerFunc
 }
 
 func newEncoder(cfg zapcore.EncoderConfig, colored bool) *customEncoder {
@@ -40,6 +44,9 @@ func (e *customEncoder) EncodeEntry(entry zapcore.Entry, fields []zapcore.Field)
 		if len(RecentLogs) > 50 {
 			RecentLogs = RecentLogs[1:]
 		}
+	}()
+	go func() {
+		e.sendToListeners(entry, fields)
 	}()
 	b, err := e.Encoder.EncodeEntry(entry, fields)
 	if err != nil {
@@ -109,4 +116,20 @@ func (e *customEncoder) EncodeEntry(entry zapcore.Entry, fields []zapcore.Field)
 		})
 	}
 	return ret, nil
+}
+
+func (e *customEncoder) sendToListeners(entry zapcore.Entry, fields []zapcore.Field) {
+	listenerMU.Lock()
+	defer listenerMU.Unlock()
+	fieldMap := make(util.ValueMap, len(fields))
+	for _, x := range fields {
+		fieldMap[x.Key] = x.Interface
+	}
+	caller := util.ValueMap{"file": entry.Caller.File, "line": entry.Caller.Line, "function": entry.Caller.Function}
+	for _, listener := range e.listeners {
+		l := listener
+		go func() {
+			l(entry.Level.String(), entry.Time, entry.LoggerName, entry.Message, caller, entry.Stack, fieldMap)
+		}()
+	}
 }
