@@ -16,9 +16,9 @@ func NewService(logger util.Logger) (*Service, error) {
 	return &Service{Logger: logger}, nil
 }
 
-func (s *Service) Run() error {
+func (s *Service) Run(dbType string, key string) error {
 	s.Logger.Info("starting [pfdb]...")
-	db, err := s.loadDatabase()
+	db, err := s.loadDatabase(dbType, key)
 	if err != nil {
 		return err
 	}
@@ -27,17 +27,18 @@ func (s *Service) Run() error {
 	return nil
 }
 
-func (s *Service) loadDatabase() (*database.Service, error) {
-	key := util.GetEnv("key", util.AppKey)
-	switch dbType := util.GetEnv("database", "postgres"); dbType {
+func (s *Service) loadDatabase(dbType string, dbKey string) (*database.Service, error) {
+	key := util.GetEnv("database_key", dbKey)
+	dbType = util.GetEnv("database_type", dbType)
+	switch dbType {
 	case "mysql":
-		return nil, nil
+		return database.OpenMySQL(context.Background(), key, "", s.Logger)
 	case "postgres":
 		return database.OpenPostgres(context.Background(), key, "", s.Logger)
 	case "sqlite":
-		return nil, nil
+		return database.OpenSQLite(context.Background(), key, "", s.Logger)
 	case "sqlserver":
-		return nil, nil
+		return database.OpenSQLServer(context.Background(), key, "", s.Logger)
 	default:
 		return nil, errors.Errorf("invalid database type [%s]", dbType)
 	}

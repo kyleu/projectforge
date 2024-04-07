@@ -66,9 +66,6 @@ func PostgresParamsFromEnv(key string, defaultUser string, prefix string) *Postg
 }
 
 func OpenPostgres(ctx context.Context, key string, prefix string, logger util.Logger) (*Service, error) {
-	if key == "" {
-		key = util.AppKey
-	}
 	envParams := PostgresParamsFromEnv(key, key, prefix)
 	return OpenPostgresDatabase(ctx, key, envParams, logger)
 }

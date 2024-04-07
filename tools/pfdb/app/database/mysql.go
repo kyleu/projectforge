@@ -63,6 +63,16 @@ func MySQLParamsFromEnv(key string, defaultUser string, prefix string) *MySQLPar
 	return &MySQLParams{Host: h, Port: p, Username: u, Password: pw, Database: d, Schema: s, MaxConns: mc, Debug: debug}
 }
 
+func OpenMySQL(ctx context.Context, key string, prefix string, logger util.Logger) (*Service, error) {
+	envParams := MySQLParamsFromEnv(key, key, prefix)
+	return OpenMySQLDatabase(ctx, key, envParams, logger)
+}
+
+func OpenDefaultMySQL(logger util.Logger) (*Service, error) {
+	params := MySQLParamsFromEnv(util.AppKey, util.AppKey, "")
+	return OpenMySQLDatabase(context.Background(), util.AppKey, params, logger)
+}
+
 func OpenMySQLDatabase(ctx context.Context, key string, params *MySQLParams, logger util.Logger) (*Service, error) {
 	host := params.Host
 	if host == "" {
@@ -85,9 +95,4 @@ func OpenMySQLDatabase(ctx context.Context, key string, params *MySQLParams, log
 	db.SetMaxIdleConns(0)
 
 	return NewService(typeMySQL, key, params.Database, params.Schema, params.Username, params.Debug, db, logger)
-}
-
-func OpenDefaultMySQL(logger util.Logger) (*Service, error) {
-	params := MySQLParamsFromEnv(util.AppKey, util.AppKey, "")
-	return OpenMySQLDatabase(context.Background(), util.AppKey, params, logger)
 }

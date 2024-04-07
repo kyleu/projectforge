@@ -14,7 +14,9 @@ var (
 )
 
 type Flags struct {
-	Debug bool
+	Debug        bool
+	DatabaseType string
+	DatabaseKey  string
 }
 
 var initMu sync.Mutex
