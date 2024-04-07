@@ -49,12 +49,18 @@ All managed projects expose a web and CLI interface, and additional modules are 
 - `migration`: Database migrations and a common database service
 - `mysql`: API for accessing MySQL databases
 - `notarize`: Sends files to Apple for notarization
+- `notebook`: Provides an Observable Framework notebook
 - `oauth`: Login and session management for many OAuth providers
+- `openapi`: Embeds the Swagger UI, using your OpenAPI specification
+- `playwright`: Adds a project for testing the UI using playwright.dev
 - `postgres`: API for accessing PostgreSQL databases
 - `process`: Framework and UI for managing system processes.
 - `readonlydb`: Read-only database connection
+- `richedit`: Provides a rich editing experience with a decent fallback when scripting is disabled
 - `sandbox`: Useful playgrounds for testing custom functions
+- `schedule`: Provides a scheduled job engine and UI based on gocron
 - `schema`: Classes for representing a collection of custom models
+- `scripting`: Allows the execution of JavaScript files using a built-in interpreter
 - `search`: Adds search facilities to the top-level navigation bar
 - `sqlite`: Provides an API for accessing SQLite databases
 - `themecatalog`: A dozen default themes, and facilities to create additional
