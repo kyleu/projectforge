@@ -22,7 +22,8 @@ func adminRoutes(r *mux.Router) {
 	makeRoute(r, http.MethodGet, "/admin/database", clib.DatabaseList)
 	makeRoute(r, http.MethodGet, "/admin/database/{key}", clib.DatabaseDetail)
 	makeRoute(r, http.MethodGet, "/admin/database/{key}/{act}", clib.DatabaseAction)
-	makeRoute(r, http.MethodGet, "/admin/database/{key}/tables/{schema}/{table}", clib.DatabaseTableView){{{ if .DatabaseUISQLEditor }}}
+	makeRoute(r, http.MethodGet, "/admin/database/{key}/tables/{schema}/{table}", clib.DatabaseTableView)
+	makeRoute(r, http.MethodGet, "/admin/database/{key}/tables/{schema}/{table}/stats", clib.DatabaseTableStats){{{ if .DatabaseUISQLEditor }}}
 	makeRoute(r, http.MethodPost, "/admin/database/{key}/sql", clib.DatabaseSQLRun){{{ end }}}{{{ end }}}{{{ if .HasModule "schedule" }}}
 	makeRoute(r, http.MethodGet, "/admin/schedule", clib.ScheduleList)
 	makeRoute(r, http.MethodGet, "/admin/schedule/{id}", clib.ScheduleDetail){{{ end }}}{{{ if .HasModule "queue" }}}

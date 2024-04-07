@@ -46,12 +46,12 @@ func DatabaseDetail(w http.ResponseWriter, r *http.Request) {
 }
 
 func DatabaseAction(w http.ResponseWriter, r *http.Request) {
-	controller.Act("database.action", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		svc, err := getDatabaseService(r)
+	act, err := cutil.PathString(r, "act", true)
+	controller.Act("database.action."+act, w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		if err != nil {
 			return "", err
 		}
-		act, err := cutil.PathString(r, "act", true)
+		svc, err := getDatabaseService(r)
 		if err != nil {
 			return "", err
 		}
@@ -84,99 +84,14 @@ func DatabaseAction(w http.ResponseWriter, r *http.Request) {
 				return "", err
 			}
 			msg := fmt.Sprintf("Analyzed database in [%s]", util.MicrosToMillis(t.End()))
-			return controller.FlashAndRedir(true, msg, "/admin/database/"+svc.Key+"/tables", w, ps){{{ if .DatabaseUISQLEditor }}}
+			return controller.FlashAndRedir(true, msg, "/admin/database/"+svc.Key+"/tables", w, ps)
 		case "sql":
-			return controller.Render(w, r, as, &vdatabase.Detail{Mode: "sql", Svc: svc, SQL: "select 1;"}, ps, bc...){{{ end }}}
+			return controller.Render(w, r, as, &vdatabase.Detail{Mode: "sql", Svc: svc, SQL: "select 1;"}, ps, bc...)
 		default:
 			return "", errors.Errorf("invalid database action [%s]", act)
 		}
 	})
 }
-
-func DatabaseTableView(w http.ResponseWriter, r *http.Request) {
-	controller.Act("database.sql.run", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prms := ps.Params.Get("table", []string{"*"}, ps.Logger).Sanitize("table")
-		svc, err := getDatabaseService(r)
-		if err != nil {
-			return "", err
-		}
-		schema, _ := cutil.PathString(r, "schema", true)
-		table, _ := cutil.PathString(r, "table", true)
-
-		tbl := fmt.Sprintf("%q", table)
-		if schema != "default" {
-			tbl = fmt.Sprintf("%q.%q", schema, table)
-		}
-
-		q := database.SQLSelect("*", tbl, "", prms.OrderByString(), prms.Limit, prms.Offset, svc.Type)
-		res, err := svc.QueryRows(ps.Context, q, nil, ps.Logger)
-		ps.Data = res
-		bc := []string{"admin", "Database||/admin/database", fmt.Sprintf("%s||/admin/database/%s", svc.Key, svc.Key), "Tables"}
-		return controller.Render(w, r, as, &vdatabase.Results{Svc: svc, Schema: schema, Table: table, Results: res, Params: prms, Error: err}, ps, bc...)
-	})
-}{{{ if .DatabaseUISQLEditor }}}
-
-func DatabaseSQLRun(w http.ResponseWriter, r *http.Request) {
-	controller.Act("database.sql.run", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		svc, err := getDatabaseService(r)
-		if err != nil {
-			return "", err
-		}
-		_ = r.ParseForm()
-		f := r.PostForm
-		sql := f.Get("sql")
-		c := f.Get("commit")
-		commit := c == util.BoolTrue
-		action := f.Get("action")
-		if action == KeyAnalyze {
-			sql = "explain analyze " + sql
-		}
-
-		tx, err := svc.StartTransaction(ps.Logger)
-		if err != nil {
-			return "", errors.Wrap(err, "unable to start transaction")
-		}
-		defer func() { _ = tx.Rollback() }()
-
-		var columns []string
-		results := [][]any{}
-
-		timer := util.TimerStart()
-		result, err := svc.Query(ps.Context, sql, tx, ps.Logger)
-		if err != nil {
-			return "", err
-		}
-		defer func() { _ = result.Close() }()
-
-		elapsed := timer.End()
-
-		if result != nil {
-			for result.Next() {
-				if columns == nil {
-					columns, _ = result.Columns()
-				}
-				row, e := result.SliceScan()
-				if e != nil {
-					return "", errors.Wrap(e, "unable to read row")
-				}
-				results = append(results, row)
-			}
-		}{{{ if .DatabaseUIReadOnly }}}
-		_ = tx.Rollback(){{{ else }}}
-		if commit {
-			err = tx.Commit()
-			if err != nil {
-				return "", errors.Wrap(err, "unable to commit transaction")
-			}
-		} else {
-			_ = tx.Rollback()
-		}{{{ end }}}
-
-		ps.SetTitleAndData("SQL Results", results)
-		page := &vdatabase.Detail{Mode: "sql", Svc: svc, SQL: sql, Columns: columns, Results: results, Timing: elapsed, Commit: commit}
-		return controller.Render(w, r, as, page, ps, "admin", "Database||/admin/database", svc.Key+"||/admin/database/"+svc.Key, "Results")
-	})
-}{{{ end }}}
 
 func getDatabaseService(r *http.Request) (*database.Service, error) {
 	key, err := cutil.PathString(r, "key", true)

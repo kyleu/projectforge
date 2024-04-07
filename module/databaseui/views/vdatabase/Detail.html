@@ -103,30 +103,25 @@
   <div class="card">
     <h3>Table Sizes</h3>
     <div class="overflow full-width">
-      <table>
+      <table class="min-200">
         <thead>
-        <tr>{{{ if .PostgreSQL }}}
-          <th>Schema</th>{{{ end }}}
-          <th>Name</th>
-          <th title="(estimated)">Rows*</th>{{{ if .PostgreSQL }}}
-          <th>Total</th>
-          <th>Index</th>
-          <th>Toast</th>
-          <th>Table</th>{{{ end }}}
-        </tr>
+          <tr>
+            <th class="shrink">Name</th>
+            <th title="(estimated)">Rows*</th>
+            <th>Actions</th>
+          </tr>
         </thead>
         <tbody>
-        {%- for _, size := range sizes -%}
-        <tr>{{{ if .PostgreSQL }}}
-          <td>{%s size.Schema %}</td>{{{ end }}}
-          <td><a href="/admin/database/{%s key %}/tables/{%s size.Schema %}/{%s size.Name %}">{%s size.Name %}</a></td>
-          <td>{%s size.Rows %}</td>{{{ if .PostgreSQL }}}
-          <td>{%s size.Total.String %}</td>
-          <td>{%s size.Index.String %}</td>
-          <td>{%s size.Toast.String %}</td>
-          <td>{%s size.Table.String %}</td>{{{ end }}}
-        </tr>
-        {%- endfor -%}
+          {%- for _, size := range sizes -%}
+          <tr>
+            <td>{%s size.Name %}</td>
+            <td>{%s size.Rows %}</td>
+            <td style="white-space: nowrap;">
+              <a href="/admin/database/{%s key %}/tables/{%s size.Schema %}/{%s size.Name %}"><button>Data</button></a>
+              <a href="/admin/database/{%s key %}/tables/{%s size.Schema %}/{%s size.Name %}/stats"><button>Stats</button></a>
+            </td>
+          </tr>
+          {%- endfor -%}
         </tbody>
       </table>
     </div>
