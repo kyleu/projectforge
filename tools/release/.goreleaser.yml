@@ -116,9 +116,9 @@ universal_binaries:
     # This is a good place to put one-time use scripts
     post:
       - "./bin/build/wasmrelease.sh {{ .Version }}"
+      - "./bin/build/desktop.release.retry.sh {{ .Version }}"
       - "./bin/build/android.sh {{ .Version }}"
       - "./bin/build/ios.sh {{ .Version }}"
-      - "./bin/build/desktop.release.retry.sh {{ .Version }}"
       - "./tools/notarize/notarize.sh"
       # $PF_SECTION_START(extrascripts)$
       - "./bin/build/modules.sh"

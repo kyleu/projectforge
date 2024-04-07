@@ -1,6 +1,12 @@
 #!/bin/bash
 # Content managed by Project Forge, see [projectforge.md] for details.
 
+## Retries the flaky desktop build
+
+set -eo pipefail
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd "$dir"
+
 function handle_sigint() {
     echo "Received SIGINT (Ctrl-C), exiting."
     exit 1
