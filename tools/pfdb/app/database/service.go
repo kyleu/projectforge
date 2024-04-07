@@ -4,9 +4,10 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"strings"
+
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
-	"strings"
 
 	"projectforge.dev/projectforge/app/util"
 )
