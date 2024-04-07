@@ -1,8 +1,12 @@
 .git
-.goreleaser.yml
+.github
 .idea
 .run
+bin
 build
 client/node_modules
 data
 tmp
+tools/android
+tools/ios
+tools/release

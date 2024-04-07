@@ -118,7 +118,7 @@ universal_binaries:
       - "./bin/build/wasmrelease.sh {{ .Version }}"
       - "./bin/build/android.sh {{ .Version }}"
       - "./bin/build/ios.sh {{ .Version }}"
-      - "./bin/build/desktop.release.sh {{ .Version }}"
+      - "./bin/build/desktop.release.retry.sh {{ .Version }}"
       - "./tools/notarize/notarize.sh"
       # $PF_SECTION_START(extrascripts)$
       - "./bin/build/modules.sh"

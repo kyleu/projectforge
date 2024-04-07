@@ -127,7 +127,7 @@ universal_binaries:
       - "./bin/build/wasmrelease.sh {{ .Version }}"{{{ end }}}{{{ if .BuildAndroid }}}
       - "./bin/build/android.sh {{ .Version }}"{{{ end }}}{{{ if .BuildIOS }}}
       - "./bin/build/ios.sh {{ .Version }}"{{{ end }}}{{{ if .BuildDesktop }}}
-      - "./bin/build/desktop.release.sh {{ .Version }}"{{{ end }}}{{{ if .BuildNotarize }}}
+      - "./bin/build/desktop.release.retry.sh {{ .Version }}"{{{ end }}}{{{ if .BuildNotarize }}}
       - "./tools/notarize/notarize.sh"{{{ end }}}
       # $PF_SECTION_START(extrascripts)$
       # $PF_SECTION_END(extrascripts)${{{ end }}}

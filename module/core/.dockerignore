@@ -1,9 +1,11 @@
 # $PF_GENERATE_ONCE$
 .git
-.goreleaser.yml
+.github
 .idea
 .run
+bin
 build
 client/node_modules
 data
 tmp
+tools/release
