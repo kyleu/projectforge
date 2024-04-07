@@ -71,7 +71,7 @@ func OpenSQLServer(ctx context.Context, key string, prefix string, logger util.L
 	if key == "" {
 		key = util.AppKey
 	}
-	envParams := SQLServerParamsFromEnv(key, util.AppKey, prefix)
+	envParams := SQLServerParamsFromEnv(key, key, prefix)
 	return OpenSQLServerDatabase(ctx, key, envParams, logger)
 }
 

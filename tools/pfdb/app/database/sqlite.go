@@ -21,8 +21,8 @@ func OpenDefaultSQLite(ctx context.Context, logger util.Logger) (*Service, error
 	return OpenSQLite(ctx, "", "", logger)
 }
 
-func SQLiteParamsFromEnv(_ string, prefix string) *SQLiteParams {
-	f := util.AppKey + ".sqlite"
+func SQLiteParamsFromEnv(key string, prefix string) *SQLiteParams {
+	f := key + ".sqlite"
 	if x := util.GetEnv(prefix + "db_file"); x != "" {
 		f = x
 	}

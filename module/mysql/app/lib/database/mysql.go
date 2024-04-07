@@ -73,8 +73,7 @@ func OpenMySQL(ctx context.Context, key string, prefix string, logger util.Logge
 }
 
 func OpenDefaultMySQL(logger util.Logger) (*Service, error) {
-	params := MySQLParamsFromEnv(util.AppKey, util.AppKey, "")
-	return OpenMySQLDatabase(context.Background(), util.AppKey, params, logger)
+	return OpenMySQL(context.Background(), "", "", logger)
 }
 
 func OpenMySQLDatabase(ctx context.Context, key string, params *MySQLParams, logger util.Logger) (*Service, error) {

@@ -67,10 +67,7 @@ func SQLServerParamsFromEnv(key string, defaultUser string, prefix string) *SQLS
 }
 
 func OpenSQLServer(ctx context.Context, key string, prefix string, logger util.Logger) (*Service, error) {
-	if key == "" {
-		key = util.AppKey
-	}
-	envParams := SQLServerParamsFromEnv(key, util.AppKey, prefix)
+	envParams := SQLServerParamsFromEnv(key, key, prefix)
 	return OpenSQLServerDatabase(ctx, key, envParams, logger)
 }
 
@@ -92,10 +89,10 @@ func OpenSQLServerDatabase(ctx context.Context, key string, params *SQLServerPar
 	switch params.Username {
 	case "native", "local", "":
 		const template = "sqlserver://%s:%d?database=%s&app%%20name=%s"
-		url = fmt.Sprintf(template, host, port, params.Database, util.AppKey)
+		url = fmt.Sprintf(template, host, port, params.Database, "pfdb")
 	default:
 		const template = "sqlserver://%s:%s@%s:%d?database=%s&app%%20name=%s"
-		url = fmt.Sprintf(template, params.Username, params.Password, host, port, params.Database, util.AppKey)
+		url = fmt.Sprintf(template, params.Username, params.Password, host, port, params.Database, "pfdb")
 	}
 
 	db, err := sqlx.Open("sqlserver", url)
