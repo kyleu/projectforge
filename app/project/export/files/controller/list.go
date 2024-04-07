@@ -52,6 +52,10 @@ func controllerList(g *golang.File, m *model.Model, grp *model.Column, models mo
 		ret.W("\t\tret, err := as.Services.%s.%s(ps.Context, nil%s, prms%s, ps.Logger)", m.Proper(), meth, grpArgs, suffix)
 		ret.WE(2, `""`)
 	}
+	if m.HasTag("count") {
+		ret.W("\t\tcount, err := as.Services.%s.Count(ps.Context, nil%s, \"\"%s, ps.Logger)", m.Proper(), grpArgs, suffix)
+		ret.WE(2, `""`)
+	}
 	ret.W("\t\tps.SetTitleAndData(%q, ret)", m.TitlePlural())
 	var toStrings string
 	for _, rel := range m.Relations {
@@ -93,6 +97,9 @@ func controllerList(g *golang.File, m *model.Model, grp *model.Column, models mo
 	var searchSuffix string
 	if m.HasSearches() {
 		searchSuffix += ", SearchQuery: q"
+	}
+	if m.HasTag("count") {
+		searchSuffix += ", Count: count"
 	}
 	ret.W("\t\tpage := &v%s.List{Models: ret%s, Params: ps.Params%s}", m.Package, toStrings, searchSuffix)
 	render := "\t\treturn %sRender(w, r, as, page, ps, %s%s)"

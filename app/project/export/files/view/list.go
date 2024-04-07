@@ -18,6 +18,9 @@ func list(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*
 	if m.HasSearches() {
 		g.AddImport(helper.ImpComponentsEdit)
 	}
+	if m.HasTag("count") {
+		g.AddImport(helper.ImpAppUtil)
+	}
 	g.AddImport(helper.AppImport(m.PackageWithGroup("")))
 	g.AddBlocks(exportViewListClass(m, args.Models, g), exportViewListBody(m, args.Models))
 	return g.Render(addHeader, linebreak)
@@ -39,6 +42,9 @@ func exportViewListClass(m *model.Model, models model.Models, g *golang.Template
 	if m.HasSearches() {
 		ret.W("  SearchQuery string")
 	}
+	if m.HasTag("count") {
+		ret.W("  Count int")
+	}
 	ret.W("} %%}")
 	return ret
 }
@@ -57,16 +63,23 @@ func exportViewListBody(m *model.Model, models model.Models) *golang.Block {
 	ret.W("{%% func (p *List) Body(as *app.State, ps *cutil.PageState) %%}")
 	ret.W("  <div class=\"card\">")
 	const twoInd = "    "
-	if !m.HasSearches() {
-		ret.W("    <div class=\"right\"><a href=\"/%s/_new\"><button>New</button></a></div>", m.Route())
-		ret.W("    %s%s{%%%%s ps.Title %%%%}%s", helper.TextH3Start, svgRef(m.Icon), helper.TextH3End)
-	} else {
+	if m.HasSearches() {
 		ret.W(`    <div class="right">{%%%%= edit.SearchForm("", "q", "Search %s", p.SearchQuery, ps) %%%%}</div>`, m.TitlePlural())
 		ret.W(`    <div class="right mrs large-buttons">`)
 		ret.W(`      {%%%%- if len(p.Models) > 0 -%%%%}<a href="/%s/_random"><button>Random</button></a>{%%%%- endif -%%%%}`, m.Route())
 		ret.W(`      <a href="/%s/_new"><button>New</button>`+helper.TextEndAnchor, m.Route())
 		ret.W(`    </div>`)
 		ret.W("    %s{%%%%= components.SVGRefIcon(`%s`, ps) %%%%}{%%%%s ps.Title %%%%}%s", helper.TextH3Start, m.Icon, helper.TextH3End)
+	} else {
+		ret.W("    <div class=\"right\"><a href=\"/%s/_new\"><button>New</button></a></div>", m.Route())
+		ret.W("    %s%s{%%%%s ps.Title %%%%}%s", helper.TextH3Start, svgRef(m.Icon), helper.TextH3End)
+	}
+	if m.HasTag("count") {
+		ret.W("    {%%- if p.Count > 0 -%%}")
+		ret.W("    <em>{%%s util.StringPlural(p.Count, \"items\") %%}</em>")
+		ret.W("    {%%- endif -%%}")
+	}
+	if m.HasSearches() {
 		ret.W("    <div class=\"clear\"></div>")
 		ret.W("    {%%- if p.SearchQuery != \"\" -%%}")
 		ret.W("    <hr />")
