@@ -15,6 +15,6 @@ func initApp(_ context.Context, _ *app.State, _ util.Logger) error {
 }
 
 // Configure app-specific data for each request.
-func initAppRequest(_ context.Context, _ *app.State, _ *cutil.PageState) error {
+func initAppRequest(_ *app.State, _ *cutil.PageState) error {
 	return nil
 }

@@ -1,6 +1,7 @@
 package goenum
 
 import (
+	"fmt"
 	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/lib/types"
@@ -89,7 +90,7 @@ func blockGet(e *enum.Enum) *golang.Block {
 	gBlock.W("\tif logger != nil {")
 	gBlock.W("\t\tlogger.Warn(msg)")
 	gBlock.W("\t}")
-	gBlock.W("\treturn %s{Key: \"_error\", Name: \"error: \" + msg}", e.Proper())
+	gBlock.W(retUnknown(e))
 	gBlock.W("}")
 	return gBlock
 }
@@ -111,7 +112,7 @@ func blockGetByName(e *enum.Enum) *golang.Block {
 	gnBlock.W("\tif logger != nil {")
 	gnBlock.W("\t\tlogger.Warn(msg)")
 	gnBlock.W("\t}")
-	gnBlock.W("\treturn %s{Key: \"_error\", Name: \"error: \" + msg}", e.Proper())
+	gnBlock.W(retUnknown(e))
 	gnBlock.W("}")
 	return gnBlock
 }
@@ -151,7 +152,7 @@ func blockGetByPropUnique(e *enum.Enum, efk string, t string) (*golang.Block, er
 	gxBlock.W("\tif logger != nil {")
 	gxBlock.W("\t\tlogger.Warn(msg)")
 	gxBlock.W("\t}")
-	gxBlock.W("\treturn %s{Key: \"_error\", Name: \"error: \" + msg}", e.Proper())
+	gxBlock.W(retUnknown(e))
 	gxBlock.W("}")
 	return gxBlock, nil
 }
@@ -181,4 +182,11 @@ func blockRandom(e *enum.Enum) *golang.Block {
 	rBlock.W("\treturn %s[util.RandomInt(len(%s))]", e.FirstLetter(), e.FirstLetter())
 	rBlock.W("}")
 	return rBlock
+}
+
+func retUnknown(e *enum.Enum) string {
+	if d := e.Values.Default(); d != nil {
+		return fmt.Sprintf("\treturn %s%s", e.Proper(), d.Proper())
+	}
+	return fmt.Sprintf("\treturn %s{Key: \"_error\", Name: \"error: \" + msg}", e.Proper())
 }

@@ -33,7 +33,7 @@ func Admin(w http.ResponseWriter, r *http.Request) {
 		switch path[0] {
 		case "server":
 			info := util.DebugGetInfo(as.BuildInfo.Version, as.Started)
-			ps.Data = info
+			ps.SetTitleAndData("Server Info", info)
 			return controller.Render(w, r, as, &vadmin.ServerInfo{Info: info}, ps, "admin", "App Information")
 		case "cpu":
 			switch path[1] {
@@ -65,7 +65,7 @@ func Admin(w http.ResponseWriter, r *http.Request) {
 			return controller.Render(w, r, as, &vadmin.Logs{Logs: log.RecentLogs}, ps, "admin", "Recent Logs**folder")
 		case "memusage":
 			x := util.DebugMemStats()
-			ps.Data = x
+			ps.SetTitleAndData("Memory Usage", x)
 			return controller.Render(w, r, as, &vadmin.MemUsage{Mem: x}, ps, "admin", "Memory Usage**desktop")
 		case "modules":
 			di := util.DebugBuildInfo().Deps

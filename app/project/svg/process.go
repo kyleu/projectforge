@@ -50,6 +50,10 @@ func load(src string, tgt string) (*SVG, error) {
 			origErr := err
 			origURL := url
 			url = ghLineAwesome + src + "-solid.svg"
+			r, err := http.NewRequestWithContext(ctx, http.MethodGet, url, http.NoBody)
+			if err != nil {
+				return nil, err
+			}
 			rsp, err = http.DefaultClient.Do(r)
 			defer func() { _ = rsp.Body.Close() }()
 			if err != nil {
