@@ -35,7 +35,7 @@ func RunAction(w http.ResponseWriter, r *http.Request) {
 		if curr, ok := cfg["path"]; !ok || curr == "" {
 			cfg["path"] = prj.Path
 		}
-		isBuild := actT.Key == action.TypeBuild.Key
+		isBuild := actT.Matches(action.TypeBuild)
 		phase := cfg.GetStringOpt("phase")
 		if actT.Expensive(cfg) {
 			if cfg.GetStringOpt("hasloaded") != util.BoolTrue {

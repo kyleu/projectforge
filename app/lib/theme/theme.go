@@ -45,6 +45,10 @@ func (t *Theme) Equals(x *Theme) bool {
 	return t.Light.Equals(x.Light) && t.Dark.Equals(x.Dark)
 }
 
+func (t *Theme) Matches(x *Theme) bool {
+	return t.Key == x.Key
+}
+
 func (t *Theme) ToGo() string {
 	ret := &util.StringSlice{}
 	add := func(ind int, s string, args ...any) {
@@ -76,10 +80,10 @@ type Themes []*Theme
 
 func (t Themes) Sort() Themes {
 	slices.SortFunc(t, func(l *Theme, r *Theme) int {
-		if l.Key == Default.Key {
+		if l.Matches(Default) {
 			return 0
 		}
-		if r.Key == Default.Key {
+		if r.Matches(Default) {
 			return 0
 		}
 		return cmp.Compare(strings.ToLower(l.Key), strings.ToLower(r.Key))

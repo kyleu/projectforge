@@ -13,14 +13,20 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func enumValues(e *enum.Enum) *golang.Block {
-	b := golang.NewBlock(e.Proper(), "vars")
-	b.W("var (")
-
-	maxCount := util.StringArrayMaxLength(e.ValuesCamel())
+func enumValues(e *enum.Enum, simple bool) *golang.Block {
 	names := lo.Map(e.Values, func(x *enum.Value, _ int) string {
 		return e.Proper() + x.Proper()
 	})
+
+	b := golang.NewBlock(e.Proper(), "vars")
+
+	if e.Simple() {
+		b.W("\tvar All%s = %s{%s}", e.ProperPlural(), e.ProperPlural(), strings.Join(names, ", "))
+		return b
+	}
+
+	b.W("var (")
+	maxCount := util.StringArrayMaxLength(e.ValuesCamel())
 
 	pl := len(e.Proper())
 	maxColLength := maxCount + pl

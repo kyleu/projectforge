@@ -28,7 +28,7 @@ type Diffs []*Diff
 
 func (d Diffs) HasStatus(s *Status) bool {
 	return lo.ContainsBy(d, func(x *Diff) bool {
-		return x.Status.Key == s.Key
+		return x.Status.Matches(s)
 	})
 }
 

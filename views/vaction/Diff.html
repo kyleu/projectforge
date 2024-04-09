@@ -39,7 +39,7 @@
         {%- for _, d := range diffs -%}
           <tr>
             <td class="shrink">
-              {%- if strings.Contains(d.Path, "..") || d.Status.Key == diff.StatusNew.Key -%}
+              {%- if strings.Contains(d.Path, "..") || d.Status.Matches(diff.StatusNew) -%}
               {%s d.Path %}
               {%- else -%}
               <a href="/p/{%s prjKey %}/fs/{%s d.Path %}" target="_blank" rel="noopener noreferrer">{%s d.Path %}</a>
@@ -52,7 +52,7 @@
               <form action="/run/{%s prjKey %}/audit" method="get">
                 <input type="hidden" name="file" value="{%s d.Path %}" />
                 <button type="submit" name="fix" value="remove" title="Remove file from project">Purge</button>{% space %}
-                {%- if d.Status.Key == diff.StatusDifferent.Key -%}
+                {%- if d.Status.Matches(diff.StatusDifferent) -%}
                 <button type="submit" name="fix" value="header" title="Remove header from file">Fix</button>
                 {%- endif -%}
               </form>

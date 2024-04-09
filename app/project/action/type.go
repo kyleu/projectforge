@@ -43,6 +43,10 @@ func (t *Type) String() string {
 	return t.Key
 }
 
+func (t *Type) Matches(x Type) bool {
+	return t.Key == x.Key
+}
+
 func (t *Type) MarshalJSON() ([]byte, error) {
 	return util.ToJSONBytes(t.Key, false), nil
 }
@@ -58,7 +62,7 @@ func (t *Type) UnmarshalJSON(data []byte) error {
 }
 
 func (t *Type) Expensive(cfg util.ValueMap) bool {
-	if t.Key == TypeBuild.Key {
+	if t.Matches(TypeBuild) {
 		switch cfg.GetStringOpt("phase") {
 		case buildDeps.Key, buildLint.Key, buildFull.Key:
 			return true

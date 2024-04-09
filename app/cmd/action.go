@@ -37,7 +37,7 @@ func actionCmd(ctx context.Context, t action.Type) *coral.Command {
 		aliases = []string{"gen"}
 	}
 	ret := &coral.Command{Use: t.Key, Short: t.Description, RunE: f, Aliases: aliases}
-	if t.Key == action.TypeBuild.Key {
+	if t.Matches(action.TypeBuild) {
 		lo.ForEach(action.AllBuilds, func(x *action.Build, _ int) {
 			k := x.Key
 			fx := func(_ *coral.Command, args []string) error {

@@ -10,6 +10,11 @@
 } %}
 
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
+  <style>
+    html, body {
+      height: 100%;
+    }
+  </style>
   <link rel="stylesheet" media="screen" href="/assets/graphql/graphiql.min.css">
 
   <script src="/assets/graphql/fetch.min.js" type="application/javascript" defer="defer"></script>

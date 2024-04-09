@@ -15,7 +15,7 @@ import (
 
 const SQLiteEnabled = true
 
-var typeSQLite = &DBType{Key: "sqlite", Title: "SQLite", Quote: `"`, Placeholder: "$", SupportsReturning: true}
+var TypeSQLite = &DBType{Key: "sqlite", Title: "SQLite", Quote: `"`, Placeholder: "$", SupportsReturning: true}
 
 func OpenSQLiteDatabase(ctx context.Context, key string, params *SQLiteParams, logger util.Logger) (*Service, error) {
 	_, span, logger := telemetry.StartSpan(ctx, "database:open", logger)
@@ -28,5 +28,5 @@ func OpenSQLiteDatabase(ctx context.Context, key string, params *SQLiteParams, l
 	if err != nil {
 		return nil, errors.Wrap(err, "error opening database")
 	}
-	return NewService(typeSQLite, key, key, params.Schema, "sqlite", params.Debug, db, logger)
+	return NewService(TypeSQLite, key, key, params.Schema, "sqlite", params.Debug, db, logger)
 }

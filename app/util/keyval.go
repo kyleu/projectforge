@@ -49,6 +49,10 @@ func (k *KeyTypeDesc) Array(key string) []string {
 	return []string{strings.ReplaceAll("`"+k.Key+"`", "{key}", key), k.Type, strings.ReplaceAll(k.Description, "{key}", key)}
 }
 
+func (k *KeyTypeDesc) Matches(x *KeyTypeDesc) bool {
+	return k.Key == x.Key
+}
+
 type KeyTypeDescs []*KeyTypeDesc
 
 func (k KeyTypeDescs) Sort() KeyTypeDescs {

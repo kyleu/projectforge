@@ -27,34 +27,38 @@ func StatusFromString(s string) *Status {
 	})
 }
 
-func (t *Status) String() string {
-	return t.Key
+func (s *Status) String() string {
+	return s.Key
 }
 
-func (t *Status) StringFor(act string) string {
+func (s *Status) Matches(x *Status) bool {
+	return s.Key == x.Key
+}
+
+func (s *Status) StringFor(act string) string {
 	if act == "audit" {
-		switch t.Key {
+		switch s.Key {
 		case StatusDifferent.Key:
 			return "Invalid Header"
 		case StatusMissing.Key:
 			return "Empty Folder"
 		default:
-			return util.StringToTitle(t.Key)
+			return util.StringToTitle(s.Key)
 		}
 	}
-	return util.StringToTitle(t.Key)
+	return util.StringToTitle(s.Key)
 }
 
-func (t *Status) MarshalJSON() ([]byte, error) {
-	return util.ToJSONBytes(t.Key, false), nil
+func (s *Status) MarshalJSON() ([]byte, error) {
+	return util.ToJSONBytes(s.Key, false), nil
 }
 
-func (t *Status) UnmarshalJSON(data []byte) error {
-	var s string
+func (s *Status) UnmarshalJSON(data []byte) error {
+	var str string
 	if err := util.FromJSON(data, &s); err != nil {
 		return err
 	}
-	x := StatusFromString(s)
-	*t = *x
+	x := StatusFromString(str)
+	*s = *x
 	return nil
 }

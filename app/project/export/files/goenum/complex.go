@@ -1,6 +1,7 @@
 package goenum
 
 import (
+	"github.com/samber/lo"
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
@@ -19,7 +20,10 @@ func structComplex(e *enum.Enum, g *golang.File) []*golang.Block {
 	ef := e.ExtraFields()
 	extraKeys := ef.Order
 	if len(extraKeys) > 0 {
-		maxLength := util.StringArrayMaxLength(extraKeys)
+		extraKeyNames := lo.Map(extraKeys, func(x string, _ int) string {
+			return util.StringToCamel(x)
+		})
+		maxLength := util.StringArrayMaxLength(extraKeyNames)
 		structBlock.WB()
 		for _, x := range extraKeys {
 			t := ef.GetSimple(x)
@@ -38,6 +42,11 @@ func structComplex(e *enum.Enum, g *golang.File) []*golang.Block {
 	fnStringBlock.W("\t}")
 	fnStringBlock.W("\treturn %s.Key", e.FirstLetter())
 	fnStringBlock.W("}")
+
+	fnMatchBlock := golang.NewBlock(e.ProperPlural()+"Matches", "method")
+	fnMatchBlock.W("func (%s %s) Matches(xx %s) bool {", e.FirstLetter(), e.Proper(), e.Proper())
+	fnMatchBlock.W("\treturn %s.Key == xx.Key", e.FirstLetter())
+	fnMatchBlock.W("}")
 
 	fnJSONOutBlock := golang.NewBlock(e.Proper()+".MarshalJSON", "method")
 	fnJSONOutBlock.W("func (%s %s) MarshalJSON() ([]byte, error) {", e.FirstLetter(), e.Proper())
@@ -87,5 +96,5 @@ func structComplex(e *enum.Enum, g *golang.File) []*golang.Block {
 	fnScanBlock.W("\t}")
 	fnScanBlock.W("\treturn errors.Errorf(\"failed to scan %s enum from value [%%%%v]\", value)", e.Proper())
 	fnScanBlock.W("}")
-	return []*golang.Block{structBlock, fnStringBlock, fnJSONOutBlock, fnJSONInBlock, fnXMLOutBlock, fnXMLInBlock, fnValueBlock, fnScanBlock}
+	return []*golang.Block{structBlock, fnStringBlock, fnMatchBlock, fnJSONOutBlock, fnJSONInBlock, fnXMLOutBlock, fnXMLInBlock, fnValueBlock, fnScanBlock}
 }

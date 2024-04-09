@@ -13,7 +13,7 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-var typeMySQL = &DBType{Key: "mysql", Title: "MySQL", Quote: "`", Placeholder: "?", SupportsReturning: false}
+var TypeMySQL = &DBType{Key: "mysql", Title: "MySQL", Quote: "`", Placeholder: "?", SupportsReturning: false}
 
 type MySQLParams struct {
 	Host     string `json:"host"`
@@ -99,5 +99,5 @@ func OpenMySQLDatabase(ctx context.Context, key string, params *MySQLParams, log
 	db.SetMaxOpenConns(params.MaxConns)
 	db.SetMaxIdleConns(0)
 
-	return NewService(typeMySQL, key, params.Database, params.Schema, params.Username, params.Debug, db, logger)
+	return NewService(TypeMySQL, key, params.Database, params.Schema, params.Username, params.Debug, db, logger)
 }

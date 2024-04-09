@@ -82,7 +82,7 @@ func parse(pm *PrjAndMods) (util.KeyTypeDescs, map[string]int) {
 		mod := pm.Mods.Get(m)
 		lo.ForEach(mod.ConfigVars, func(src *util.KeyTypeDesc, _ int) {
 			hit := lo.ContainsBy(configVars, func(tgt *util.KeyTypeDesc) bool {
-				return src.Key == tgt.Key
+				return src.Matches(tgt)
 			})
 			if !hit {
 				configVars = append(configVars, src)

@@ -16,7 +16,7 @@ import (
 
 const defaultSQLServerSchema = "dbo"
 
-var typeSQLServer = &DBType{Key: "sqlserver", Title: "SQL Server", Quote: `"`, Placeholder: "@", SupportsReturning: true}
+var TypeSQLServer = &DBType{Key: "sqlserver", Title: "SQL Server", Quote: `"`, Placeholder: "@", SupportsReturning: true}
 
 type SQLServerParams struct {
 	Host     string `json:"host"`
@@ -112,7 +112,7 @@ func OpenSQLServerDatabase(ctx context.Context, key string, params *SQLServerPar
 
 	logger = logger.With("svc", "database", "db", key)
 
-	return NewService(typeSQLServer, key, params.Database, params.Schema, params.Username, params.Debug, db, logger)
+	return NewService(TypeSQLServer, key, params.Database, params.Schema, params.Username, params.Debug, db, logger)
 }
 
 func UUIDFromGUID(x *any) *uuid.UUID {

@@ -13,6 +13,7 @@ const timePointer = "*time.Time"
 func structSimple(e *enum.Enum) []*golang.Block {
 	tBlock := golang.NewBlock(e.Proper(), "typealias")
 	tBlock.W("type %s string", e.Proper())
+	tBlock.W("type %s []%s", e.ProperPlural(), e.Proper())
 
 	cBlock := golang.NewBlock(e.Proper(), "constvar")
 	cBlock.W("const (")

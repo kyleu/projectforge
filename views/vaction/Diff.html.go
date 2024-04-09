@@ -77,7 +77,7 @@ func streamrenderDiffs(qw422016 *qt422016.Writer, prjKey string, act action.Type
 //line views/vaction/Diff.html:39
 		qw422016.N().S(`<tr><td class="shrink">`)
 //line views/vaction/Diff.html:42
-		if strings.Contains(d.Path, "..") || d.Status.Key == diff.StatusNew.Key {
+		if strings.Contains(d.Path, "..") || d.Status.Matches(diff.StatusNew) {
 //line views/vaction/Diff.html:43
 			qw422016.E().S(d.Path)
 //line views/vaction/Diff.html:44
@@ -121,7 +121,7 @@ func streamrenderDiffs(qw422016 *qt422016.Writer, prjKey string, act action.Type
 //line views/vaction/Diff.html:54
 			qw422016.N().S(` `)
 //line views/vaction/Diff.html:55
-			if d.Status.Key == diff.StatusDifferent.Key {
+			if d.Status.Matches(diff.StatusDifferent) {
 //line views/vaction/Diff.html:55
 				qw422016.N().S(`<button type="submit" name="fix" value="header" title="Remove header from file">Fix</button>`)
 //line views/vaction/Diff.html:57

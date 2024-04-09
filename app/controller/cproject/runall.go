@@ -52,7 +52,7 @@ func RunAllActions(w http.ResponseWriter, r *http.Request) {
 		}
 		actT := action.TypeFromString(actS)
 
-		if actT.Key == action.TypeBuild.Key {
+		if actT.Matches(action.TypeBuild) {
 			switch cfg.GetStringOpt("phase") {
 			case "":
 				ps.SetTitleAndData("Build All Projects", prjs)

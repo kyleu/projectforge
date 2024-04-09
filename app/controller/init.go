@@ -16,21 +16,22 @@ import (
 
 var allowedRoutes = []string{"/about", "/admin", "/testbed", "/welcome"}
 
-// Initialize app-specific system dependencies.
 func initApp(_ context.Context, _ *app.State, _ util.Logger) error {
 	return nil
 }
 
-// Configure app-specific data for each request.
 func initAppRequest(as *app.State, ps *cutil.PageState) error {
 	if err := initProjects(ps.Context, as, ps.Logger); err != nil {
 		return errors.Wrap(err, "unable to initialize projects")
 	}
 	root := as.Services.Projects.Default()
-	if root.Info == nil && !lo.ContainsBy(allowedRoutes, func(r string) bool {
-		return strings.HasSuffix(ps.URI.Path, r)
-	}) {
-		ps.ForceRedirect = "/welcome"
+	if root.Info == nil {
+		allowed := lo.ContainsBy(allowedRoutes, func(r string) bool {
+			return strings.HasSuffix(ps.URI.Path, r)
+		})
+		if !allowed {
+			ps.ForceRedirect = "/welcome"
+		}
 	}
 	return nil
 }

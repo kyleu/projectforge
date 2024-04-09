@@ -6,4 +6,5 @@
 /.scannerwork
 /build
 /client/node_modules
-/tmp
+/tmp{{{ if .HasModule "sqlite" }}}
+/{{{ .Exec }}}.sqlite{{{ end }}}

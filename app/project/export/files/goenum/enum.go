@@ -13,7 +13,7 @@ func Enum(e *enum.Enum, addHeader bool, linebreak string) (*file.File, error) {
 	var m model.Model
 	m.Camel()
 	g := golang.NewFile(e.Package, []string{"app", e.PackageWithGroup("")}, strings.ToLower(e.Camel()))
-	g.AddBlocks(enumValues(e))
+	g.AddBlocks(enumValues(e, e.Simple()))
 	if e.Simple() {
 		g.AddBlocks(structSimple(e)...)
 	} else {

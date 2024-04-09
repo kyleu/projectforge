@@ -39,7 +39,7 @@ func (s *Service) Get(theme string, logger util.Logger) *Theme {
 }
 
 func (s *Service) Save(t *Theme, originalKey string, logger util.Logger) error {
-	if t.Key == Default.Key {
+	if t.Matches(Default) {
 		return errors.New("can't overwrite default theme")
 	}
 	if t.Key == "" || t.Key == KeyNew {
