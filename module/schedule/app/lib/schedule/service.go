@@ -2,6 +2,7 @@ package schedule
 
 import (
 	"context"
+	"fmt"
 	"sync"
 	"time"
 
@@ -38,20 +39,39 @@ func (s *Service) NewJob(
 	}
 	var id uuid.UUID
 	wrapped := func(ctx context.Context, logger util.Logger) {
-		t := util.TimerStart()
+		defer func() {
+			x := recover()
+			if x != nil {
+				logger.Errorf("unhandled [%T] error running job: %+v", x, x)
+			}
+		}()
+		timer := util.TimerStart()
 		var sp *telemetry.Span
 		ctx, sp, logger = telemetry.StartSpan(context.Background(), "job."+id.String(), logger)
 		defer sp.Complete()
 		logger.Debugf("running scheduled job [%s]", id.String())
 		res := &Result{Job: id, Occurred: time.Now()}
 		ret, err := f(ctx, logger)
-		res.DurationMicro = t.End()
+		res.DurationMicro = timer.End()
 		res.Returned = ret
 		if err != nil {
 			res.Error = err.Error()
 			logger.Warnf("error running scheduled job [%s]: %+v", id.String(), err)
 		}
-		logger.Debugf("completed scheduled job [%s] in [%s]: returned [%T]", id.String(), util.MicrosToMillis(res.DurationMicro), res.Returned)
+
+		var retStr string
+		switch t := res.Returned.(type) {
+		case string:
+			if len(t) > 256 {
+				retStr = fmt.Sprintf("string of length %d", len(t))
+			} else {
+				retStr = t
+			}
+		default:
+			retStr = fmt.Sprintf("%v (%T)", res.Returned, res.Returned)
+		}
+
+		logger.Debugf("completed scheduled job [%s] in [%s]: returned [%s]", id.String(), util.MicrosToMillis(res.DurationMicro), retStr)
 		s.resultMu.Lock()
 		defer s.resultMu.Unlock()
 		s.Results[id] = res

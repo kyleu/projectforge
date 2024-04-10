@@ -28,6 +28,6 @@
     {%- if p.Error != nil -%}
     <div class="mt error">{%s p.Error.Error() %}</div>
     {%- endif -%}
-    <div class="mt overflow">{%= view.MapArray(p.Results, p.Params, true, ps) %}</div>
+    <div class="mt overflow">{%= view.MapArray(true, p.Results...) %}</div>
   </div>
 {% endfunc %}

@@ -1,11 +1,12 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
 {% import (
   "fmt"
 
-  "{{{ .Package }}}/app/lib/types"
-  "{{{ .Package }}}/views/components"
+  "projectforge.dev/projectforge/app/lib/types"
+  "projectforge.dev/projectforge/views/components"
 ) %}
 
-{% func Any(x any, t *types.Wrapped) %}{% stripspace %}
+{% func AnyByType(x any, t *types.Wrapped) %}{% stripspace %}
   {% switch t.Key() %}
   {% case types.KeyAny %}
     {%= Default(x, t.String()) %}
@@ -43,7 +44,7 @@
     {% if x == nil %}
       <em>∅</em>
     {% else %}
-      {%= Any(x, t.T.(*types.Option).V) %}
+      {%= AnyByType(x, t.T.(*types.Option).V) %}
     {% endif %}
   {% case types.KeyRange %}
     {%= Default(x, t.String()) %}
@@ -74,9 +75,19 @@
 
 {% func Default(x any, t string) %}{% stripspace %}
   {% code msg := fmt.Sprintf("unhandled type: %s (%T)", t, x) %}
-  <span title="{%s msg %}">{%v x %}</span>
+  <span title="{%s msg %}">{%= Any(x) %}</span>
 {% endstripspace %}{% endfunc %}
 
 {% func Type(v types.Type) %}{% stripspace %}
   {%s v.String() %}
+{% endstripspace %}{% endfunc %}
+
+{% func Option(x any, t *types.Option) %}{% stripspace %}
+  {% switch t.V.Key() %}
+  {% default %}
+    <div class="two-pane">
+      <div class="l">{%= AnyByType(x, t.V) %}</div>
+      <div class="r"><button title="click to set field to null" type="button" onclick="projectforge.setSiblingToNull(this);">∅</button></div>
+    </div>
+  {% endswitch %}
 {% endstripspace %}{% endfunc %}

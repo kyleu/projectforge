@@ -1,0 +1,19 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "net/url"
+) %}
+
+{% func URL(u any) %}{% stripspace %}
+  {% if u == nil %}
+    <em>nil</em>
+  {% else %}
+    {% switch t := u.(type) %}
+    {% case string %}
+      <a target="_blank" rel="noopener noreferrer" href="{%s t %}">{%s t %}</a>
+    {% case url.URL %}
+      <a target="_blank" rel="noopener noreferrer" href="{%s t.String() %}">{%s t.String() %}</a>
+    {% default %}
+      {%v u %}
+    {% endswitch %}
+  {% endif %}
+{% endstripspace %}{% endfunc %}
