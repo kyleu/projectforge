@@ -93,6 +93,8 @@ func randForType(t *types.Wrapped, format string, nullable bool, tags []string, 
 			return fmt.Sprintf("%q + util.RandomString(6) + %q", helper.TextH3Start, helper.TextH3End), nil
 		case model.FmtIcon.Key:
 			return "util.RandomIcon()", nil
+		case model.FmtImage.Key:
+			return "\"http://via.placeholder.com/320x180\"", nil
 		case model.FmtURL.Key:
 			return "\"https://\" + util.RandomString(6) + \".com/\" + util.RandomString(6)", nil
 		default:

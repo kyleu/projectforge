@@ -12,6 +12,7 @@ var (
 	FmtCountry    = Format{Key: "country", Title: "Country", Description: ""}
 	FmtHTML       = Format{Key: "html", Title: "HTML", Description: ""}
 	FmtIcon       = Format{Key: "icon", Title: "Icon", Description: ""}
+	FmtImage      = Format{Key: "image", Title: "Image", Description: ""}
 	FmtJSON       = Format{Key: "json", Title: "JSON", Description: ""}
 	FmtLinebreaks = Format{Key: "linebreaks", Title: "Linebreaks", Description: ""}
 	FmtSelect     = Format{Key: "select", Title: "Select Box", Description: ""}
@@ -20,7 +21,7 @@ var (
 	FmtTags       = Format{Key: "tags", Title: "Tags", Description: ""}
 	FmtURL        = Format{Key: "url", Title: "URL", Description: ""}
 
-	AllFormats = Formats{FmtCode, FmtCodeHidden, FmtCountry, FmtHTML, FmtJSON, FmtSelect, FmtSI, FmtSQL, FmtURL}
+	AllFormats = Formats{FmtCode, FmtCodeHidden, FmtCountry, FmtHTML, FmtIcon, FmtImage, FmtJSON, FmtSelect, FmtSI, FmtSQL, FmtURL}
 )
 
 type Format struct {
