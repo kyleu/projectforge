@@ -90,11 +90,11 @@ func serviceGet(key string, m *model.Model, cols model.Columns, dbRef string, en
 		key = helper.TextGetBy + cols.Smushed()
 	}
 	ret := golang.NewBlock(key, "func")
-	msg := "func (s *Service) %s(ctx context.Context, tx *sqlx.Tx, %s%s, logger util.Logger) (*%s, error) {"
 	args, err := cols.Args(m.Package, enums)
 	if err != nil {
 		return nil, err
 	}
+	msg := "func (s *Service) %s(ctx context.Context, tx *sqlx.Tx, %s%s, logger util.Logger) (*%s, error) {"
 	ret.W(msg, key, args, getSuffix(m), m.Proper())
 	if slices.Equal(m.PKs().Names(), cols.Names()) {
 		ret.W("\twc := defaultWC(0)")

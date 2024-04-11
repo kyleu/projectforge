@@ -23,7 +23,7 @@ func Model(m *model.Model, args *model.Args, addHeader bool, linebreak string) (
 	lo.ForEach(helper.ImportsForTypes(types.KeyString, "", m.PKs().Types()...), func(imp *golang.Import, _ int) {
 		g.AddImport(imp)
 	})
-	g.AddImport(helper.ImpAppUtil)
+	g.AddImport(helper.ImpAppUtil, helper.ImpAppSvc)
 	imps, err := helper.SpecialImports(m.Columns, m.PackageWithGroup(""), args.Enums)
 	if err != nil {
 		return nil, err
@@ -34,6 +34,9 @@ func Model(m *model.Model, args *model.Args, addHeader bool, linebreak string) (
 		return nil, err
 	}
 	g.AddImport(imps...)
+
+	g.AddBlocks(typeAssert(m))
+
 	if len(m.PKs()) > 1 {
 		pk, e := modelPK(m, args.Enums)
 		if e != nil {
@@ -77,6 +80,12 @@ func Model(m *model.Model, args *model.Args, addHeader bool, linebreak string) (
 
 	g.AddBlocks(modelWebPath(g, m), modelToData(m, m.Columns, "", args.Database), fd)
 	return g.Render(addHeader, linebreak)
+}
+
+func typeAssert(m *model.Model) *golang.Block {
+	ret := golang.NewBlock("assert", "type")
+	ret.W("var _ svc.Model = (*%s)(nil)", m.Proper())
+	return ret
 }
 
 func modelToPK(m *model.Model, _ enum.Enums) (*golang.Block, error) {

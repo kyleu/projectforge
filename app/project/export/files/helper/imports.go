@@ -18,6 +18,7 @@ var (
 	ImpAppController  = AppImport("controller")
 	ImpAppDatabase    = AppImport("lib/database")
 	ImpAppMenu        = AppImport("lib/menu")
+	ImpAppSvc         = AppImport("lib/svc")
 	ImpAppUtil        = AppImport("util")
 	ImpContext        = golang.NewImport(golang.ImportTypeInternal, "context")
 	ImpComponents     = ViewImport("components")

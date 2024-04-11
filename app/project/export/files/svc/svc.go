@@ -8,6 +8,7 @@ import (
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/filter"
+	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
@@ -38,7 +39,7 @@ func ServiceAll(m *model.Model, args *model.Args, addHeader bool, linebreak stri
 
 func Service(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "service")
-	g.AddImport(helper.ImpFilter, helper.ImpAppDatabase)
+	g.AddImport(helper.ImpFilter, helper.ImpAppDatabase, helper.ImpAppSvc)
 
 	isRO := args.HasModule("readonlydb")
 	isAudit := args.HasModule("audit") && m.HasTag("audit")
@@ -46,8 +47,37 @@ func Service(m *model.Model, args *model.Args, addHeader bool, linebreak string)
 		g.AddImport(helper.ImpAudit)
 	}
 
-	g.AddBlocks(serviceStruct(isRO, isAudit), serviceNew(m, isRO, isAudit), serviceDefaultFilters(m))
+	g.AddBlocks(typeAssert(g, m, args.Enums), serviceStruct(isRO, isAudit), serviceNew(m, isRO, isAudit), serviceDefaultFilters(m))
 	return g.Render(addHeader, linebreak)
+}
+
+func typeAssert(g *golang.File, m *model.Model, enums enum.Enums) *golang.Block {
+	ret := golang.NewBlock("assert", "type")
+	suffix := ""
+	if m.IsSoftDelete() {
+		suffix += "SoftDelete"
+	}
+	var assertion string
+	if len(m.PKs()) == 1 {
+		lo.ForEach(helper.ImportsForTypes("go", "", m.PKs().Types()...), func(imp *golang.Import, _ int) {
+			g.AddImport(imp)
+		})
+		pk := m.PKs()[0]
+		args, _ := pk.ToGoType(m.Package, enums)
+		assertion = fmt.Sprintf("svc.Service%sID[*%s, %s, %s] = (*Service)(nil)", suffix, m.Proper(), m.ProperPlural(), args)
+	} else {
+		assertion = fmt.Sprintf("svc.Service%s[*%s, %s] = (*Service)(nil)", suffix, m.Proper(), m.ProperPlural())
+	}
+	if m.HasSearches() {
+		ret.W("var (")
+		ret.W("\t_ %s", assertion)
+		ss := fmt.Sprintf("svc.ServiceSearch[%s]", m.ProperPlural())
+		ret.W("\t_ %s = (*Service)(nil)", util.StringPad(ss, len(assertion)-18))
+		ret.W(")")
+	} else {
+		ret.W("var _ %s", assertion)
+	}
+	return ret
 }
 
 func serviceStruct(isRO bool, isAudit bool) *golang.Block {

@@ -13,7 +13,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func enumValues(e *enum.Enum, simple bool) *golang.Block {
+func enumValues(e *enum.Enum) *golang.Block {
 	names := lo.Map(e.Values, func(x *enum.Value, _ int) string {
 		return e.Proper() + x.Proper()
 	})
@@ -21,7 +21,7 @@ func enumValues(e *enum.Enum, simple bool) *golang.Block {
 	b := golang.NewBlock(e.Proper(), "vars")
 
 	if e.Simple() {
-		b.W("\tvar All%s = %s{%s}", e.ProperPlural(), e.ProperPlural(), strings.Join(names, ", "))
+		b.W("var All%s = %s{%s}", e.ProperPlural(), e.ProperPlural(), strings.Join(names, ", "))
 		return b
 	}
 
