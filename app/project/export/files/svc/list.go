@@ -1,10 +1,27 @@
 package svc
 
 import (
+	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/project/export/model"
 )
+
+func ServiceList(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
+	dbRef := args.DBRef()
+	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "servicelist")
+	g.AddImport(helper.ImpAppUtil, helper.ImpContext, helper.ImpErrors, helper.ImpSQLx, helper.ImpFilter, helper.ImpAppDatabase)
+	g.AddBlocks(serviceList(m, args.DBRef()), serviceListSQL(m, args.DBRef()), serviceListWhere(m), serviceCount(g, m, args.DBRef()))
+	if m.HasSearches() {
+		g.AddImport(helper.ImpStrings)
+		ss, err := serviceSearch(m, nil, dbRef, args.Enums, args.Database)
+		if err != nil {
+			return nil, err
+		}
+		g.AddBlocks(ss)
+	}
+	return g.Render(addHeader, linebreak)
+}
 
 func serviceList(m *model.Model, dbRef string) *golang.Block {
 	ret := golang.NewBlock("List", "func")
@@ -48,6 +65,33 @@ func serviceListWhere(m *model.Model) *golang.Block {
 	ret.W("\tparams = filters(params)")
 	ret.W("\tsql := database.SQLSelect(columnsString, tableQuoted, where, params.OrderByString(), params.Limit, params.Offset, s.db.Type)")
 	ret.W("\treturn s.ListSQL(ctx, tx, sql, logger, values...)")
+	ret.W("}")
+	return ret
+}
+
+func serviceCount(g *golang.File, m *model.Model, dbRef string) *golang.Block {
+	g.AddImport(helper.ImpStrings)
+	ret := golang.NewBlock("Count", "func")
+	ret.W("func (s *Service) Count(ctx context.Context, tx *sqlx.Tx, whereClause string%s, logger util.Logger, args ...any) (int, error) {", getSuffix(m))
+	ret.W("\tif strings.Contains(whereClause, \"'\") || strings.Contains(whereClause, \";\") {")
+	ret.W("\t\treturn 0, errors.Errorf(\"invalid where clause [%%s]\", whereClause)")
+	ret.W("\t}")
+	if m.IsSoftDelete() {
+		delCols := m.Columns.WithTag("deleted")
+		ret.W("\tif !includeDeleted {")
+		ret.W("\t\tif whereClause == \"\" {")
+		ret.W("\t\t\twhereClause = %q", delCols[0].NameQuoted()+helper.TextIsNull)
+		ret.W("\t\t} else {")
+		ret.W("\t\t\twhereClause += \" and \" + %q", delCols[0].NameQuoted()+helper.TextIsNull)
+		ret.W("\t\t}")
+		ret.W("\t}")
+	}
+	ret.W("\tq := database.SQLSelectSimple(\"count(*) as x\", %s, s.db.Type, whereClause)", tableClause)
+	ret.W("\tret, err := s.%s.SingleInt(ctx, q, tx, logger, args...)", dbRef)
+	ret.W("\tif err != nil {")
+	ret.W("\t\treturn 0, errors.Wrap(err, \"unable to get count of %s\")", m.TitlePluralLower())
+	ret.W("\t}")
+	ret.W("\treturn int(ret), nil")
 	ret.W("}")
 	return ret
 }

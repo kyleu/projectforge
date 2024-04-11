@@ -5,7 +5,10 @@ import (
 	"cmp"
 	"fmt"
 	"slices"
+	"strconv"
 	"strings"
+
+	"github.com/pkg/errors"
 
 	"github.com/samber/lo"
 )
@@ -75,7 +78,28 @@ type FieldDesc struct {
 	Type        string `json:"type,omitempty"`
 }
 
+func (d FieldDesc) Parse(q string) (any, error) {
+	switch d.Type {
+	case "bool":
+		return strconv.ParseBool(q)
+	case "int":
+		return strconv.ParseInt(q, 10, 64)
+	case "string":
+		return q, nil
+	case "time":
+		return TimeFromString(q)
+	default:
+		return nil, errors.Errorf("unable to parse [%s] value from string [%s]", d.Type, q)
+	}
+}
+
 type FieldDescs []*FieldDesc
+
+func (d FieldDescs) Get(key string) *FieldDesc {
+	return lo.FindOrElse(d, nil, func(x *FieldDesc) bool {
+		return x.Key == key
+	})
+}
 
 func (d FieldDescs) Keys() []string {
 	return lo.Map(d, func(x *FieldDesc, _ int) string {

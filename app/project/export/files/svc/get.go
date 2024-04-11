@@ -32,8 +32,6 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool, linebreak stri
 		return nil, err
 	}
 	g.AddImport(imps...)
-	g.AddBlocks(serviceList(m, args.DBRef()))
-	g.AddBlocks(serviceCount(g, m, args.DBRef()))
 	pkLen := len(m.PKs())
 	if pkLen > 0 {
 		gbpk, err := serviceGetByPK(m, dbRef, args.Enums, args.Database)
@@ -83,43 +81,8 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool, linebreak stri
 			return nil, err
 		}
 	}
-	if m.HasSearches() {
-		g.AddImport(helper.ImpStrings)
-		ss, err := serviceSearch(m, nil, dbRef, args.Enums, args.Database)
-		if err != nil {
-			return nil, err
-		}
-		g.AddBlocks(ss)
-	}
-	g.AddBlocks(serviceListSQL(m, args.DBRef()), serviceListWhere(m), serviceRandom(m, args.Database))
+	g.AddBlocks(serviceRandom(m, args.Database))
 	return g.Render(addHeader, linebreak)
-}
-
-func serviceCount(g *golang.File, m *model.Model, dbRef string) *golang.Block {
-	g.AddImport(helper.ImpStrings)
-	ret := golang.NewBlock("Count", "func")
-	ret.W("func (s *Service) Count(ctx context.Context, tx *sqlx.Tx, whereClause string%s, logger util.Logger, args ...any) (int, error) {", getSuffix(m))
-	ret.W("\tif strings.Contains(whereClause, \"'\") || strings.Contains(whereClause, \";\") {")
-	ret.W("\t\treturn 0, errors.Errorf(\"invalid where clause [%%s]\", whereClause)")
-	ret.W("\t}")
-	if m.IsSoftDelete() {
-		delCols := m.Columns.WithTag("deleted")
-		ret.W("\tif !includeDeleted {")
-		ret.W("\t\tif whereClause == \"\" {")
-		ret.W("\t\t\twhereClause = %q", delCols[0].NameQuoted()+helper.TextIsNull)
-		ret.W("\t\t} else {")
-		ret.W("\t\t\twhereClause += \" and \" + %q", delCols[0].NameQuoted()+helper.TextIsNull)
-		ret.W("\t\t}")
-		ret.W("\t}")
-	}
-	ret.W("\tq := database.SQLSelectSimple(\"count(*) as x\", %s, s.db.Type, whereClause)", tableClause)
-	ret.W("\tret, err := s.%s.SingleInt(ctx, q, tx, logger, args...)", dbRef)
-	ret.W("\tif err != nil {")
-	ret.W("\t\treturn 0, errors.Wrap(err, \"unable to get count of %s\")", m.TitlePluralLower())
-	ret.W("\t}")
-	ret.W("\treturn int(ret), nil")
-	ret.W("}")
-	return ret
 }
 
 func serviceGet(key string, m *model.Model, cols model.Columns, dbRef string, enums enum.Enums) (*golang.Block, error) {

@@ -25,11 +25,15 @@ func ServiceAll(m *model.Model, args *model.Args, addHeader bool, linebreak stri
 	if err != nil {
 		return nil, err
 	}
+	l, err := ServiceList(m, args, addHeader, linebreak)
+	if err != nil {
+		return nil, err
+	}
 	mt, err := ServiceMutate(m, args, addHeader, linebreak)
 	if err != nil {
 		return nil, err
 	}
-	return file.Files{x, g, mt}, nil
+	return file.Files{x, g, l, mt}, nil
 }
 
 func Service(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
