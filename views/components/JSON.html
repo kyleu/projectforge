@@ -44,7 +44,7 @@
       <pre>{%s string(json) %}</pre>
     </div>
   {% else %}
-    {% code out, err := cutil.FormatLang(string(json), "json") %}
+    {% code out, err := cutil.FormatLang(string(json), util.KeyJSON) %}
     {% if err == nil %}
       <div class="overflow full-width">{%s= out %}</div>
     {% else %}

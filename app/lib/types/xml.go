@@ -1,7 +1,9 @@
 // Package types - Content managed by Project Forge, see [projectforge.md] for details.
 package types
 
-const KeyXML = "xml"
+import "projectforge.dev/projectforge/app/util"
+
+const KeyXML = util.KeyXML
 
 type XML struct{}
 

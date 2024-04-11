@@ -10,7 +10,7 @@ import (
 
 func LoadVM(key string, src string, logger util.Logger) (any, *goja.Runtime, error) {
 	vm := goja.New()
-	vm.SetFieldNameMapper(goja.TagFieldNameMapper("json", true))
+	vm.SetFieldNameMapper(goja.TagFieldNameMapper(util.KeyJSON, true))
 	err := wireFunctions(key, vm, logger)
 	if err != nil {
 		return nil, nil, err

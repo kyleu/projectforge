@@ -108,7 +108,7 @@ func StreamJSON(qw422016 *qt422016.Writer, v any) {
 //line views/components/JSON.html:46
 	} else {
 //line views/components/JSON.html:47
-		out, err := cutil.FormatLang(string(json), "json")
+		out, err := cutil.FormatLang(string(json), util.KeyJSON)
 
 //line views/components/JSON.html:48
 		if err == nil {

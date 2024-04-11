@@ -1,6 +1,8 @@
 package types
 
-const KeyXML = "xml"
+import "{{{ .Package }}}/app/util"
+
+const KeyXML = util.KeyXML
 
 type XML struct{}
 

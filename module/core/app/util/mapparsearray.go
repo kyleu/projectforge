@@ -24,7 +24,7 @@ func (m ValueMap) ParseArray(path string, allowMissing bool, allowEmpty bool, co
 			if coerce {
 				return lo.ToAnySlice(StringSplitAndTrim(t, ",")), nil
 			}
-			return nil, decorateError(m, path, "json", errors.Wrap(err, "invalid JSON string"))
+			return nil, decorateError(m, path, KeyJSON, errors.Wrap(err, "invalid JSON string"))
 		}
 		return ret, err
 	case []byte:
@@ -37,7 +37,7 @@ func (m ValueMap) ParseArray(path string, allowMissing bool, allowEmpty bool, co
 			if coerce {
 				return lo.ToAnySlice(StringSplitAndTrim(string(t), ",")), nil
 			}
-			return nil, decorateError(m, path, "json", errors.Wrap(err, "invalid JSON bytes"))
+			return nil, decorateError(m, path, KeyJSON, errors.Wrap(err, "invalid JSON bytes"))
 		}
 		return ret, err
 	case []any:

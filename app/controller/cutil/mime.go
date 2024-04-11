@@ -77,12 +77,12 @@ func RespondCSV(w http.ResponseWriter, filename string, body any) (string, error
 	if err != nil {
 		return "", err
 	}
-	return RespondMIME(filename, mimeCSV, "csv", b, w)
+	return RespondMIME(filename, mimeCSV, util.KeyCSV, b, w)
 }
 
 func RespondJSON(w http.ResponseWriter, filename string, body any) (string, error) {
 	b := util.ToJSONBytes(body, true)
-	return RespondMIME(filename, mimeJSON, "json", b, w)
+	return RespondMIME(filename, mimeJSON, util.KeyJSON, b, w)
 }
 
 type XMLResponse struct {
@@ -94,7 +94,7 @@ func RespondXML(w http.ResponseWriter, filename string, body any) (string, error
 	if err != nil {
 		return "", errors.Wrapf(err, "can't serialize response of type [%T] to XML", body)
 	}
-	return RespondMIME(filename, mimeXML, "xml", b, w)
+	return RespondMIME(filename, mimeXML, util.KeyXML, b, w)
 }
 
 func RespondYAML(w http.ResponseWriter, filename string, body any) (string, error) {
@@ -102,7 +102,7 @@ func RespondYAML(w http.ResponseWriter, filename string, body any) (string, erro
 	if err != nil {
 		return "", err
 	}
-	return RespondMIME(filename, mimeYAML, "yaml", b, w)
+	return RespondMIME(filename, mimeYAML, util.KeyYAML, b, w)
 }
 
 func RespondMIME(filename string, mime string, ext string, ba []byte, w http.ResponseWriter) (string, error) {
@@ -137,13 +137,13 @@ func GetContentType(r *http.Request) string {
 	switch t {
 	case "debug":
 		return mimeDebug
-	case "csv":
+	case util.KeyCSV:
 		return mimeCSV
-	case "json":
+	case util.KeyJSON:
 		return mimeJSON
-	case "xml":
+	case util.KeyXML:
 		return mimeXML
-	case "yaml", "yml":
+	case util.KeyYAML, "yml":
 		return mimeYAML
 	default:
 		return strings.TrimSpace(ret)

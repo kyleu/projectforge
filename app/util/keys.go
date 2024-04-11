@@ -15,6 +15,11 @@ const (
 	KeyRandom  = "random"
 	KeyUnknown = "unknown"
 
+	KeyCSV  = "csv"
+	KeyJSON = "json"
+	KeyXML  = "xml"
+	KeyYAML = "yaml"
+
 	ExtJSON     = ".json"
 	ExtMarkdown = ".md"
 

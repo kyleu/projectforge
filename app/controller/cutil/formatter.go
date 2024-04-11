@@ -21,7 +21,7 @@ var (
 )
 
 func FormatJSON(v any) (string, error) {
-	return FormatLang(util.ToJSON(v), "json")
+	return FormatLang(util.ToJSON(v), util.KeyJSON)
 }
 
 func FormatLang(content string, lang string) (string, error) {

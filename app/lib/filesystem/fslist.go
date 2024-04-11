@@ -35,7 +35,7 @@ func (f *FileSystem) ListFiles(path string, ign []string, logger util.Logger) Fi
 }
 
 func (f *FileSystem) ListJSON(path string, ign []string, trimExtension bool, logger util.Logger) []string {
-	return f.ListExtension(path, "json", ign, trimExtension, logger)
+	return f.ListExtension(path, util.KeyJSON, ign, trimExtension, logger)
 }
 
 func (f *FileSystem) ListExtension(path string, ext string, ign []string, trimExtension bool, logger util.Logger) []string {

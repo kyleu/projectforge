@@ -3,7 +3,7 @@ package types
 
 import "projectforge.dev/projectforge/app/util"
 
-const KeyJSON, objStr = "json", "{}"
+const KeyJSON, objStr = util.KeyJSON, "{}"
 
 type JSON struct {
 	IsObject bool `json:"obj,omitempty"`

@@ -35,11 +35,11 @@ func Render(w http.ResponseWriter, r *http.Request, as *app.State, page layout.P
 	}()
 	ps.Breadcrumbs = append(ps.Breadcrumbs, breadcrumbs...)
 	ct := cutil.GetContentType(r)
+	var fn string
+	if r.URL.Query().Get("download") == "true" {
+		fn = ps.Action
+	}
 	if ps.Data != nil {
-		var fn string
-		if r.URL.Query().Get("download") == "true" {
-			fn = ps.Action
-		}
 		switch {
 		case cutil.IsContentTypeCSV(ct):
 			return cutil.RespondCSV(w, fn, ps.Data)
@@ -54,10 +54,25 @@ func Render(w http.ResponseWriter, r *http.Request, as *app.State, page layout.P
 		}
 	}
 	startNanos := util.TimeCurrentNanos()
-	w.Header().Set(cutil.HeaderContentType, "text/html; charset=UTF-8")
-	views.WriteRender(w, page, as, ps)
-	ps.RenderElapsed = float64((util.TimeCurrentNanos()-startNanos)/int64(time.Microsecond)) / float64(1000)
-	return "", nil
+	switch ps.DefaultFormat {
+	case "":
+		w.Header().Set(cutil.HeaderContentType, "text/html; charset=UTF-8")
+		views.WriteRender(w, page, as, ps)
+		ps.RenderElapsed = float64((util.TimeCurrentNanos()-startNanos)/int64(time.Microsecond)) / float64(1000)
+		return "", nil
+	case util.KeyCSV:
+		return cutil.RespondCSV(w, fn, ps.Data)
+	case util.KeyJSON:
+		return cutil.RespondJSON(w, fn, ps.Data)
+	case util.KeyXML:
+		return cutil.RespondXML(w, fn, ps.Data)
+	case util.KeyYAML:
+		return cutil.RespondYAML(w, fn, ps.Data)
+	case "debug":
+		return cutil.RespondDebug(w, r, as, fn, ps)
+	default:
+		return "", errors.Errorf("unable to process format [%s]", ps.DefaultFormat)
+	}
 }
 
 func ERsp(msg string, args ...any) (string, error) {
