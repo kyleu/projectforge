@@ -27,7 +27,7 @@ func (s *Service) Pull(ctx context.Context, prj *project.Project, logger util.Lo
 	status := ok
 	fetched := noUpdates
 	if count > 0 {
-		status = fmt.Sprintf("[%s] fetched", util.StringPlural(count, "update"))
+		status = fmt.Sprintf("[%s] pulled", util.StringPlural(count, "commit"))
 		fetched = status
 	}
 

@@ -37,7 +37,7 @@ func (r *Result) Actions() Actions {
 	if r.DataInt("commitsBehind") > 0 {
 		ret = append(ret, ActionPull)
 	}
-	ret = append(ret, ActionUndoCommit, ActionMagic, ActionHistory)
+	ret = append(ret, ActionReset, ActionUndoCommit, ActionMagic, ActionHistory)
 	return ret
 }
 

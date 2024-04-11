@@ -12,30 +12,26 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func (s *Service) Push(ctx context.Context, prj *project.Project, logger util.Logger) (*Result, error) {
-	_, err := gitFetch(ctx, prj.Path, false, logger)
+func (s *Service) Reset(ctx context.Context, prj *project.Project, logger util.Logger) (*Result, error) {
+	x, err := gitReset(ctx, prj.Path, logger)
 	if err != nil {
-		return nil, errors.Wrap(err, "unable to fetch for pull")
-	}
-	x, err := gitPush(ctx, prj.Path, logger)
-	if err != nil {
-		return nil, errors.Wrap(err, "unable to pull")
+		return nil, errors.Wrap(err, "unable to reset git repo")
 	}
 	count := lo.CountBy(util.StringSplitLines(x), func(line string) bool {
 		return strings.HasPrefix(line, "   ")
 	})
 	status := ok
-	fetched := noUpdates
+	fetched := "no changes"
 	if count > 0 {
-		status = fmt.Sprintf("[%s] pushed", util.StringPlural(count, "commit"))
+		status = fmt.Sprintf("[%s] reset", util.StringPlural(count, "file"))
 		fetched = status
 	}
 
 	return NewResult(prj, status, util.ValueMap{"updates": fetched}), nil
 }
 
-func gitPush(ctx context.Context, path string, logger util.Logger) (string, error) {
-	out, err := gitCmd(ctx, "push", path, logger)
+func gitReset(ctx context.Context, path string, logger util.Logger) (string, error) {
+	out, err := gitCmd(ctx, "reset --hard", path, logger)
 	if err != nil {
 		if isNoRepo(err) {
 			return "", nil

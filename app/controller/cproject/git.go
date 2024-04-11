@@ -66,6 +66,8 @@ func GitAction(w http.ResponseWriter, r *http.Request) {
 			result, err = as.Services.Git.Pull(ps.Context, prj, ps.Logger)
 		case git.ActionPush.Key:
 			result, err = as.Services.Git.Push(ps.Context, prj, ps.Logger)
+		case git.ActionReset.Key:
+			result, err = as.Services.Git.Reset(ps.Context, prj, ps.Logger)
 		case git.ActionOutdated.Key:
 			result, err = as.Services.Git.Outdated(ps.Context, prj, ps.Logger)
 		case git.ActionHistory.Key:

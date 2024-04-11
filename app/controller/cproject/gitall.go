@@ -33,13 +33,29 @@ func GitActionAll(w http.ResponseWriter, r *http.Request) {
 		action := git.ActionStatusFromString(a)
 		switch a {
 		case git.ActionStatus.Key, "":
-			results, err = gitStatusAll(prjs, as, ps)
+			results, err = gitAll(prjs, func(prj *project.Project) (*git.Result, error) {
+				return as.Services.Git.Status(ps.Context, prj, ps.Logger)
+			})
 		case git.ActionFetch.Key:
-			results, err = gitFetchAll(prjs, as, ps)
+			results, err = gitAll(prjs, func(prj *project.Project) (*git.Result, error) {
+				return as.Services.Git.Fetch(ps.Context, prj, ps.Logger)
+			})
 		case git.ActionPull.Key:
-			results, err = gitPullAll(prjs, as, ps)
+			results, err = gitAll(prjs, func(prj *project.Project) (*git.Result, error) {
+				return as.Services.Git.Pull(ps.Context, prj, ps.Logger)
+			})
+		case git.ActionPush.Key:
+			results, err = gitAll(prjs, func(prj *project.Project) (*git.Result, error) {
+				return as.Services.Git.Push(ps.Context, prj, ps.Logger)
+			})
+		case git.ActionReset.Key:
+			results, err = gitAll(prjs, func(prj *project.Project) (*git.Result, error) {
+				return as.Services.Git.Reset(ps.Context, prj, ps.Logger)
+			})
 		case git.ActionOutdated.Key:
-			results, err = gitOutdatedAll(prjs, as, ps)
+			results, err = gitAll(prjs, func(prj *project.Project) (*git.Result, error) {
+				return as.Services.Git.Outdated(ps.Context, prj, ps.Logger)
+			})
 		case git.ActionHistory.Key:
 			argRes := cutil.CollectArgs(r, gitHistoryArgs)
 			if argRes.HasMissing() {
@@ -60,10 +76,10 @@ func GitActionAll(w http.ResponseWriter, r *http.Request) {
 				return controller.Render(w, r, as, page, ps, "projects", "Git")
 			}
 			results, err = gitMagicAll(prjs, r, as, ps)
-		case git.ActionPush.Key:
-			results, err = gitPushAll(prjs, as, ps)
 		case git.ActionUndoCommit.Key:
-			results, err = gitUndoAll(prjs, as, ps)
+			results, err = gitAll(prjs, func(prj *project.Project) (*git.Result, error) {
+				return as.Services.Git.UndoCommit(ps.Context, prj, ps.Logger)
+			})
 		default:
 			err = errors.Errorf("unhandled action [%s] for all projects", a)
 		}
@@ -78,38 +94,8 @@ func GitActionAll(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func gitStatusAll(prjs project.Projects, as *app.State, ps *cutil.PageState) (git.Results, error) {
-	results, errs := util.AsyncCollect(prjs, func(prj *project.Project) (*git.Result, error) {
-		return as.Services.Git.Status(ps.Context, prj, ps.Logger)
-	})
-	return results, util.ErrorMerge(errs...)
-}
-
-func gitFetchAll(prjs project.Projects, as *app.State, ps *cutil.PageState) (git.Results, error) {
-	results, errs := util.AsyncCollect(prjs, func(prj *project.Project) (*git.Result, error) {
-		return as.Services.Git.Fetch(ps.Context, prj, ps.Logger)
-	})
-	return results, util.ErrorMerge(errs...)
-}
-
-func gitPullAll(prjs project.Projects, as *app.State, ps *cutil.PageState) (git.Results, error) {
-	results, errs := util.AsyncCollect(prjs, func(prj *project.Project) (*git.Result, error) {
-		return as.Services.Git.Pull(ps.Context, prj, ps.Logger)
-	})
-	return results, util.ErrorMerge(errs...)
-}
-
-func gitPushAll(prjs project.Projects, as *app.State, ps *cutil.PageState) (git.Results, error) {
-	results, errs := util.AsyncCollect(prjs, func(prj *project.Project) (*git.Result, error) {
-		return as.Services.Git.Push(ps.Context, prj, ps.Logger)
-	})
-	return results, util.ErrorMerge(errs...)
-}
-
-func gitOutdatedAll(prjs project.Projects, as *app.State, ps *cutil.PageState) (git.Results, error) {
-	results, errs := util.AsyncCollect(prjs, func(prj *project.Project) (*git.Result, error) {
-		return as.Services.Git.Outdated(ps.Context, prj, ps.Logger)
-	})
+func gitAll(prjs project.Projects, f func(prj *project.Project) (*git.Result, error)) (git.Results, error) {
+	results, errs := util.AsyncCollect(prjs, f)
 	return results, util.ErrorMerge(errs...)
 }
 
@@ -119,25 +105,16 @@ func gitHistoryAll(prjs project.Projects, r *http.Request, as *app.State, ps *cu
 	authors := util.StringSplitAndTrim(r.URL.Query().Get("authors"), ",")
 	limit, _ := strconv.ParseInt(r.URL.Query().Get("limit"), 10, 32)
 	commit := r.URL.Query().Get("commit")
-	results, errs := util.AsyncCollect(prjs, func(prj *project.Project) (*git.Result, error) {
+	return gitAll(prjs, func(prj *project.Project) (*git.Result, error) {
 		hist := &git.HistoryResult{Path: path, Since: since, Authors: authors, Commit: commit, Limit: int(limit)}
 		return as.Services.Git.History(ps.Context, prj, hist, ps.Logger)
 	})
-	return results, util.ErrorMerge(errs...)
 }
 
 func gitMagicAll(prjs project.Projects, r *http.Request, as *app.State, ps *cutil.PageState) (git.Results, error) {
 	message := r.URL.Query().Get("message")
 	dryRun := cutil.QueryStringBool(r, "dryRun")
-	results, errs := util.AsyncCollect(prjs, func(prj *project.Project) (*git.Result, error) {
+	return gitAll(prjs, func(prj *project.Project) (*git.Result, error) {
 		return as.Services.Git.Magic(ps.Context, prj, message, dryRun, ps.Logger)
 	})
-	return results, util.ErrorMerge(errs...)
-}
-
-func gitUndoAll(prjs project.Projects, as *app.State, ps *cutil.PageState) (git.Results, error) {
-	results, errs := util.AsyncCollect(prjs, func(prj *project.Project) (*git.Result, error) {
-		return as.Services.Git.UndoCommit(ps.Context, prj, ps.Logger)
-	})
-	return results, util.ErrorMerge(errs...)
 }
