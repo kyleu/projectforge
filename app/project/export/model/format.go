@@ -16,12 +16,13 @@ var (
 	FmtJSON       = Format{Key: "json", Title: "JSON", Description: ""}
 	FmtLinebreaks = Format{Key: "linebreaks", Title: "Linebreaks", Description: ""}
 	FmtSelect     = Format{Key: "select", Title: "Select Box", Description: ""}
+	FmtSeconds    = Format{Key: "seconds", Title: "Seconds", Description: ""}
 	FmtSI         = Format{Key: "si", Title: "SI Units", Description: ""}
 	FmtSQL        = Format{Key: "sql", Title: "SQL", Description: ""}
 	FmtTags       = Format{Key: "tags", Title: "Tags", Description: ""}
 	FmtURL        = Format{Key: "url", Title: "URL", Description: ""}
 
-	AllFormats = Formats{FmtCode, FmtCodeHidden, FmtCountry, FmtHTML, FmtIcon, FmtImage, FmtJSON, FmtSelect, FmtSI, FmtSQL, FmtURL}
+	AllFormats = Formats{FmtCode, FmtCodeHidden, FmtCountry, FmtHTML, FmtIcon, FmtImage, FmtJSON, FmtSelect, FmtSeconds, FmtSI, FmtSQL, FmtURL}
 )
 
 type Format struct {

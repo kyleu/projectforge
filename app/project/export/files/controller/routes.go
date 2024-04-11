@@ -16,7 +16,7 @@ func Routes(args *model.Args, addHeader bool, linebreak string) (*file.File, err
 	g := golang.NewFile("routes", []string{"app", "controller", "routes"}, "generated")
 	g.AddImport(helper.ImpRouter)
 	g.AddBlocks(routes(g, args))
-	lo.ForEach(args.Models.SortedDisplay(), func(m *model.Model, _ int) {
+	lo.ForEach(args.Models.SortedRoutes(), func(m *model.Model, _ int) {
 		if len(m.Group) == 0 {
 			g.AddImport(helper.ImpAppController)
 		} else {

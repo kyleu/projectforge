@@ -2,6 +2,7 @@
 package util
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -74,4 +75,26 @@ func TimeFromVerbose(s string) (*time.Time, error) {
 
 func TimeFromYMD(s string) (*time.Time, error) {
 	return TimeFromStringFmt(s, dateFmtYMD)
+}
+
+func FormatSeconds(x float64) string {
+	wholeSeconds := int(x)
+	fractionalPart := x - float64(wholeSeconds)
+	hours := wholeSeconds / 3600
+	minutes := (wholeSeconds % 3600) / 60
+	seconds := wholeSeconds % 60
+	var result string
+	if hours > 0 {
+		result += fmt.Sprintf("%dh ", hours)
+	}
+	if minutes > 0 || hours > 0 { // Include minutes if non-zero or if hours were displayed
+		result += fmt.Sprintf("%dm ", minutes)
+	}
+	if fractionalPart > 0 {
+		result += fmt.Sprintf("%.03fs", float64(seconds)+fractionalPart) // Adjust precision as necessary
+	} else {
+		result += fmt.Sprintf("%ds", seconds)
+	}
+
+	return result
 }

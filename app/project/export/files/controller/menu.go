@@ -30,7 +30,7 @@ func sortModels(args *model.Args) (map[string][]string, []string, []string) {
 	groups := map[string][]string{}
 	names := make([]string, 0, len(args.Models)+len(args.Groups))
 	orphans := make([]string, 0)
-	lo.ForEach(args.Models, func(m *model.Model, _ int) {
+	lo.ForEach(args.Models.SortedDisplay(), func(m *model.Model, _ int) {
 		n := m.ProperWithGroup(args.Acronyms)
 		names = append(names, n)
 		if len(m.Group) == 0 {

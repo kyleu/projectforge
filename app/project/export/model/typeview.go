@@ -27,13 +27,22 @@ func ToGoViewString(t *types.Wrapped, prop string, nullable bool, format string,
 		switch format {
 		case FmtSI.Key:
 			return tmplStartS + fmt.Sprintf("util.ByteSizeSI(int64(%s))", prop) + tmplEnd
+		case FmtSeconds.Key:
+			return tmplStartS + fmt.Sprintf("util.FormatSeconds(float64(%s))", prop) + tmplEnd
 		case "":
 			return tmplStart + "d " + prop + tmplEnd
 		default:
 			return "INVALID_INT_FORMAT[" + format + "]"
 		}
 	case types.KeyFloat:
-		return tmplStart + "f " + prop + tmplEnd
+		switch format {
+		case FmtSeconds.Key:
+			return tmplStartS + fmt.Sprintf("util.FormatSeconds(%s)", prop) + tmplEnd
+		case "":
+			return tmplStart + "f " + prop + tmplEnd
+		default:
+			return "INVALID_FLOAT_FORMAT[" + format + "]"
+		}
 	case types.KeyList:
 		if src == util.KeySimple {
 			return tmplStartV + prop + tmplEnd
