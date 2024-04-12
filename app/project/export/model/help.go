@@ -41,10 +41,26 @@ func Help(t types.Type, f string, nullable bool, enums enum.Enums) (string, erro
 		return q("[" + asRefK(t) + "], as a JSON object"), nil
 	case types.KeyString:
 		switch f {
-		case FmtURL.Key:
-			return q("URL in string form"), nil
+		case FmtCode.Key, FmtCodeHidden.Key:
+			return q("Formatted code"), nil
+		case FmtColor.Key:
+			return q("RGB color in string form"), nil
 		case FmtCountry.Key:
 			return q("Two-digit country code"), nil
+		case FmtHTML.Key:
+			return q("HTML code, in string form"), nil
+		case FmtIcon.Key:
+			return q("SVG icon key or URL"), nil
+		case FmtImage.Key:
+			return q("URL to valid image"), nil
+		case FmtJSON.Key:
+			return q("JSON code"), nil
+		case FmtSeconds.Key:
+			return q("Number of wall-clock seconds"), nil
+		case FmtSQL.Key:
+			return q("SQL code"), nil
+		case FmtURL.Key:
+			return q("URL in string form"), nil
 		default:
 			return q("String text"), nil
 		}

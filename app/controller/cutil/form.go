@@ -21,7 +21,39 @@ func ParseForm(r *http.Request, b []byte) (util.ValueMap, error) {
 	if IsContentTypeYAML(ct) {
 		return parseYAMLForm(b)
 	}
-	return parseHTTPForm(r)
+	ret, err := parseJSONForm(b)
+	if err != nil {
+		ret, err = parseHTTPForm(r)
+	}
+	return ret, err
+}
+
+func ParseFormAsMaps(r *http.Request, rBody []byte) ([]util.ValueMap, error) {
+	frm, err := ParseForm(r, rBody)
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to parse form")
+	}
+	switch {
+	case frm.HasKey("resultArray"):
+		return frm.GetMapArray("resultArray", false)
+	case frm.HasKey("json"):
+		var ret []util.ValueMap
+		js := frm.GetStringOpt("json")
+		m, err := util.FromJSONMap([]byte(js))
+		if err == nil {
+			ret = append(ret, m)
+		} else {
+			err = util.FromJSON([]byte(js), &ret)
+			if err != nil {
+				return nil, errors.Wrapf(err, "unable to parse JSON from [%s]", js)
+			}
+		}
+		return ret, nil
+	case len(frm) == 0:
+		return nil, errors.Errorf("unable to parse request body as events (no fields)")
+	default:
+		return []util.ValueMap{frm}, nil
+	}
 }
 
 func ParseFormAsChanges(r *http.Request, b []byte) (util.ValueMap, error) {

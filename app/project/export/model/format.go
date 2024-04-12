@@ -9,6 +9,7 @@ import (
 var (
 	FmtCode       = Format{Key: "code", Title: "Code", Description: ""}
 	FmtCodeHidden = Format{Key: "codehidden", Title: "Code (hidden)", Description: ""}
+	FmtColor      = Format{Key: "color", Title: "Color", Description: ""}
 	FmtCountry    = Format{Key: "country", Title: "Country", Description: ""}
 	FmtHTML       = Format{Key: "html", Title: "HTML", Description: ""}
 	FmtIcon       = Format{Key: "icon", Title: "Icon", Description: ""}
@@ -22,7 +23,7 @@ var (
 	FmtTags       = Format{Key: "tags", Title: "Tags", Description: ""}
 	FmtURL        = Format{Key: "url", Title: "URL", Description: ""}
 
-	AllFormats = Formats{FmtCode, FmtCodeHidden, FmtCountry, FmtHTML, FmtIcon, FmtImage, FmtJSON, FmtSelect, FmtSeconds, FmtSI, FmtSQL, FmtURL}
+	AllFormats = Formats{FmtCode, FmtCodeHidden, FmtColor, FmtCountry, FmtHTML, FmtIcon, FmtImage, FmtJSON, FmtSelect, FmtSeconds, FmtSI, FmtSQL, FmtURL}
 )
 
 type Format struct {

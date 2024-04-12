@@ -57,6 +57,8 @@ func goViewStringForString(url bool, src string, t *types.Wrapped, nullable bool
 		size := "128px"
 		msg := `<img style="max-width: %s; max-height: %s" src="{%%%%s %s %%%%}" />`
 		return fmt.Sprintf(msg, size, size, ToGoString(t, nullable, prop, false))
+	case FmtColor.Key:
+		return tmplStartEQ + "view.Color(" + ToGoString(t, nullable, prop, false) + ", \"\", ps)" + tmplEnd
 	case FmtCountry.Key:
 		if verbose {
 			x := ToGoString(t, nullable, prop, false)

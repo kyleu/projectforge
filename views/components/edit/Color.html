@@ -1,0 +1,20 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import "projectforge.dev/projectforge/views/components" %}
+
+{% func Color(key string, id string, label string, color string, placeholder ...string) %}{% stripspace %}
+  {% if id == "" %}
+    <label><input type="color" name="{%s key %}" value="{%s color %}" {%= components.PlaceholderFor(placeholder) %}/>{%s label %}</label>
+  {% else %}
+    <label><input id="{%s id %}" type="color" name="{%s key %}" value="{%s color %}" {%= components.PlaceholderFor(placeholder) %}/>{%s label %}</label>
+  {% endif %}
+{% endstripspace %}{% endfunc %}
+
+{% func ColorTable(key string, id string, title string, label string, value string) %}{% stripspace %}
+  <tr>
+    <th class="shrink"><label for="{%s id %}">{%s title %}</label></th>
+    <td>
+      {%= Color(key, id, label, value) %}
+    </td>
+  </tr>
+{% endstripspace %}{% endfunc %}
+

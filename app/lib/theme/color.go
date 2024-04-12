@@ -15,9 +15,7 @@ func ColorTheme(name string, c color.Color) *Theme {
 func themeColors(c color.Color) (*Colors, *Colors) {
 	light, dark := c, c
 
-	const threshold = (65535 * 3) / 2
 	r, g, b, _ := c.RGBA()
-
 	if total := r + g + b; total < threshold {
 		light = gamut.Lighter(c, 0.4)
 	} else {
