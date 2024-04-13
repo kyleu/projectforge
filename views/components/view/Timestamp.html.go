@@ -191,3 +191,48 @@ func TimestampDay(value *time.Time) string {
 	return qs422016
 //line views/components/view/Timestamp.html:22
 }
+
+//line views/components/view/Timestamp.html:24
+func StreamDurationSeconds(qw422016 *qt422016.Writer, seconds float64) {
+//line views/components/view/Timestamp.html:24
+	qw422016.N().S(`<span class="duration" data-seconds="`)
+//line views/components/view/Timestamp.html:25
+	qw422016.N().F(seconds)
+//line views/components/view/Timestamp.html:25
+	qw422016.N().S(`" title="`)
+//line views/components/view/Timestamp.html:25
+	qw422016.E().S(util.FormatSecondsFull(seconds))
+//line views/components/view/Timestamp.html:25
+	qw422016.N().S(`">`)
+//line views/components/view/Timestamp.html:25
+	qw422016.E().S(util.FormatSeconds(seconds))
+//line views/components/view/Timestamp.html:25
+	qw422016.N().S(`</span>`)
+//line views/components/view/Timestamp.html:26
+}
+
+//line views/components/view/Timestamp.html:26
+func WriteDurationSeconds(qq422016 qtio422016.Writer, seconds float64) {
+//line views/components/view/Timestamp.html:26
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/components/view/Timestamp.html:26
+	StreamDurationSeconds(qw422016, seconds)
+//line views/components/view/Timestamp.html:26
+	qt422016.ReleaseWriter(qw422016)
+//line views/components/view/Timestamp.html:26
+}
+
+//line views/components/view/Timestamp.html:26
+func DurationSeconds(seconds float64) string {
+//line views/components/view/Timestamp.html:26
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/components/view/Timestamp.html:26
+	WriteDurationSeconds(qb422016, seconds)
+//line views/components/view/Timestamp.html:26
+	qs422016 := string(qb422016.B)
+//line views/components/view/Timestamp.html:26
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/components/view/Timestamp.html:26
+	return qs422016
+//line views/components/view/Timestamp.html:26
+}

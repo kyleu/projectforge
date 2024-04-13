@@ -28,7 +28,7 @@ func detail(m *model.Model, args *model.Args, addHeader bool, linebreak string) 
 	if len(rrs) > 0 {
 		g.AddImport(helper.ImpFilter)
 	}
-	if m.Columns.HasFormat(model.FmtSI.Key) || m.Columns.HasFormat(model.FmtSeconds.Key) {
+	if m.Columns.HasFormat(model.FmtSI.Key) {
 		g.AddImport(helper.ImpAppUtil)
 	}
 	lo.ForEach(rrs, func(rel *model.Relation, _ int) {

@@ -20,3 +20,7 @@
 {% func TimestampDay(value *time.Time) %}{% stripspace %}
   {%s util.TimeToYMD(value) %}
 {% endstripspace %}{% endfunc %}
+
+{% func DurationSeconds(seconds float64) %}{% stripspace %}
+  <span class="duration" data-seconds="{%f seconds %}" title="{%s util.FormatSecondsFull(seconds) %}">{%s util.FormatSeconds(seconds) %}</span>
+{% endstripspace %}{% endfunc %}

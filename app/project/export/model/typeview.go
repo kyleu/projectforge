@@ -28,7 +28,7 @@ func ToGoViewString(t *types.Wrapped, prop string, nullable bool, format string,
 		case FmtSI.Key:
 			return tmplStartS + fmt.Sprintf("util.ByteSizeSI(int64(%s))", prop) + tmplEnd
 		case FmtSeconds.Key:
-			return tmplStartS + fmt.Sprintf("util.FormatSeconds(float64(%s))", prop) + tmplEnd
+			return tmplStartS + fmt.Sprintf("view.DurationSeconds(float64(%s))", prop) + tmplEnd
 		case "":
 			return tmplStart + "d " + prop + tmplEnd
 		default:
@@ -37,7 +37,7 @@ func ToGoViewString(t *types.Wrapped, prop string, nullable bool, format string,
 	case types.KeyFloat:
 		switch format {
 		case FmtSeconds.Key:
-			return tmplStartS + fmt.Sprintf("util.FormatSeconds(%s)", prop) + tmplEnd
+			return tmplStartEQ + fmt.Sprintf("view.DurationSeconds(%s)", prop) + tmplEnd
 		case "":
 			return tmplStart + "f " + prop + tmplEnd
 		default:

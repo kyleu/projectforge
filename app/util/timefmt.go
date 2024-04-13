@@ -3,6 +3,8 @@ package util
 
 import (
 	"fmt"
+	"math"
+	"strings"
 	"time"
 )
 
@@ -92,14 +94,37 @@ func FormatSeconds(x float64) string {
 	if hours > 0 {
 		result += fmt.Sprintf("%dh ", hours)
 	}
-	if minutes > 0 || hours > 0 { // Include minutes if non-zero or if hours were displayed
+	if minutes > 0 || hours > 0 {
 		result += fmt.Sprintf("%dm ", minutes)
 	}
 	if fractionalPart > 0 {
-		result += fmt.Sprintf("%.03fs", float64(seconds)+fractionalPart) // Adjust precision as necessary
+		result += fmt.Sprintf("%.03fs", float64(seconds)+fractionalPart)
 	} else {
 		result += fmt.Sprintf("%ds", seconds)
 	}
 
 	return result
+}
+
+func FormatSecondsFull(x float64) string {
+	wholeSeconds := int(x)
+	fractionalPart := x - float64(wholeSeconds)
+	hours := wholeSeconds / 3600
+	minutes := (wholeSeconds % 3600) / 60
+	seconds := wholeSeconds % 60
+	var result []string
+	f := func(key string, x int) {
+		result = append(result, StringPlural(x, key))
+	}
+	if hours > 0 {
+		f("hour", hours)
+	}
+	if minutes > 0 || hours > 0 {
+		f("minute", minutes)
+	}
+	f("second", seconds)
+	if fractionalPart > 0 {
+		result = append(result, fmt.Sprintf("%d milliseconds", int(math.Round((fractionalPart*1000)))))
+	}
+	return strings.Join(result, ", ")
 }
