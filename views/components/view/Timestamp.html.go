@@ -31,7 +31,7 @@ func StreamTimestamp(qw422016 *qt422016.Writer, value *time.Time) {
 //line views/components/view/Timestamp.html:8
 	qw422016.N().S(`<span class="timestamp nowrap" data-timestamp="`)
 //line views/components/view/Timestamp.html:9
-	qw422016.E().S(util.TimeToJS(value))
+	qw422016.E().S(util.TimeToJSFull(value))
 //line views/components/view/Timestamp.html:9
 	qw422016.N().S(`">`)
 //line views/components/view/Timestamp.html:9

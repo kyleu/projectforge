@@ -13,13 +13,14 @@
   Path string
   Script string
   LoadResult any
+  LoadError error
   Results map[string]map[string]any
 } %}
 
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <div class="right"><a href="/admin/scripting/{%u p.Path %}/edit"><button type="button">Edit</button></a></div>
-    <h3>{%= components.SVGRefIcon(`file-code`, ps) %} {%s p.Path %}</h3>
+    <h3>{%= components.SVGRefIcon(`file`, ps) %} {%s p.Path %}</h3>
     <div class="mt">
       {%- code out, err := cutil.FormatLang(p.Script, "js") -%}
       {%- if err == nil -%}
@@ -29,6 +30,12 @@
       {%- endif -%}
     </div>
   </div>
+  {% if p.LoadError != nil -%}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`cog`, ps) %} Load Error</h3>
+    <div class="mt error">{%s p.LoadError.Error() %}</div>
+  </div>
+  {%- endif -%}
   {% if p.LoadResult != nil -%}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`cog`, ps) %} Load Result</h3>

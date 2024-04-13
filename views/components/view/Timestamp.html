@@ -6,7 +6,7 @@
 ) %}
 
 {% func Timestamp(value *time.Time) %}{% stripspace %}
-  <span class="timestamp nowrap" data-timestamp="{%s util.TimeToJS(value) %}">{%s util.TimeToFull(value) %}</span>
+  <span class="timestamp nowrap" data-timestamp="{%s util.TimeToJSFull(value) %}">{%s util.TimeToFull(value) %}</span>
 {% endstripspace %}{% endfunc %}
 
 {% func TimestampMillis(value *time.Time) %}{% stripspace %}

@@ -96,7 +96,7 @@ func randForType(t *types.Wrapped, format string, nullable bool, tags []string, 
 		case model.FmtImage.Key:
 			return "\"http://via.placeholder.com/320x180\"", nil
 		case model.FmtURL.Key:
-			return "\"https://\" + util.RandomString(6) + \".com/\" + util.RandomString(6)", nil
+			return "util.RandomURL().String()", nil
 		default:
 			return "util.RandomString(12)", nil
 		}

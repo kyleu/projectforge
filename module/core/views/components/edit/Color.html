@@ -1,19 +1,24 @@
 {% import "{{{ .Package }}}/views/components" %}
 
-{% func Color(key string, id string, label string, color string, placeholder ...string) %}{% stripspace %}
+{% func Color(key string, id string, color string, placeholder ...string) %}{% stripspace %}
   {% if id == "" %}
-    <label><input type="color" name="{%s key %}" value="{%s color %}" {%= components.PlaceholderFor(placeholder) %}/>{%s label %}</label>
+    <input type="color" name="{%s key %}" value="{%s color %}" {%= components.PlaceholderFor(placeholder) %}/>
   {% else %}
-    <label><input id="{%s id %}" type="color" name="{%s key %}" value="{%s color %}" {%= components.PlaceholderFor(placeholder) %}/>{%s label %}</label>
+    <input id="{%s id %}" type="color" name="{%s key %}" value="{%s color %}" {%= components.PlaceholderFor(placeholder) %}/>
   {% endif %}
 {% endstripspace %}{% endfunc %}
 
-{% func ColorTable(key string, id string, title string, label string, value string) %}{% stripspace %}
+{% func ColorTable(key string, id string, title string, color string, indent int, help ...string) %}{% stripspace %}
   <tr>
+    {%= components.Indent(true, indent + 1) %}
     <th class="shrink"><label for="{%s id %}">{%s title %}</label></th>
+    {%= components.Indent(true, indent + 1) %}
     <td>
-      {%= Color(key, id, label, value) %}
+      {%= components.Indent(true, indent + 2) %}
+      {%= Color(key, id, color, help...) %}
+      {%= components.Indent(true, indent + 1) %}
     </td>
+  {%= components.Indent(true, indent) %}
   </tr>
 {% endstripspace %}{% endfunc %}
 

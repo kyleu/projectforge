@@ -98,7 +98,7 @@ func (c *Column) ToGoEditString(prefix string, format string, id string, enums e
 		case FmtCode.Key, FmtCodeHidden.Key, FmtHTML.Key, FmtJSON.Key, FmtSQL.Key:
 			return fmt.Sprintf(`{%%%%= edit.TextareaTable(%q, %q, %q, 8, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), c.ToGoString(prefix), h), nil
 		case FmtColor.Key:
-			return fmt.Sprintf(`{%%%%= edit.Color(%q, %q, %q, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), c.ToGoString(prefix), h), nil
+			return fmt.Sprintf(`{%%%%= edit.ColorTable(%q, %q, %q, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), c.ToGoString(prefix), h), nil
 		case FmtSelect.Key:
 			if len(c.Values) == 0 {
 				return fmt.Sprintf(`{%%%%= edit.Table(%q, %q, %q, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), c.ToGoString(prefix), h), nil

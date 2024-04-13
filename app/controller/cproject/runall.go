@@ -3,6 +3,7 @@ package cproject
 import (
 	"fmt"
 	"net/http"
+	"projectforge.dev/projectforge/views/vpage"
 
 	"github.com/samber/lo"
 
@@ -62,9 +63,14 @@ func RunAllActions(w http.ResponseWriter, r *http.Request) {
 				return runAllDeps(cfg, prjs, tags, w, r, as, ps)
 			case pkgsKey:
 				return runAllPkgs(cfg, prjs, w, r, as, ps)
+			case "full":
+				if cfg.GetStringOpt("hasloaded") != util.BoolTrue {
+					cutil.URLAddQuery(r.URL, "hasloaded", util.BoolTrue)
+					page := &vpage.Load{URL: r.URL.String(), Title: "Building all projects..."}
+					return controller.Render(w, r, as, page, ps, "projects", "Build")
+				}
 			}
 		}
-
 		results := action.ApplyAll(ps.Context, prjs, actT, cfg, as, ps.Logger)
 
 		ps.SetTitleAndData(fmt.Sprintf("[%s] All Projects", actT.Title), results)

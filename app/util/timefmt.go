@@ -12,6 +12,7 @@ const (
 	dateFmtHours   = "15:04:05"
 	dateFmtHTML    = "2006-01-02T15:04:05"
 	dateFmtJS      = "2006-01-02T15:04:05Z"
+	dateFmtJSFull  = "2006-01-02T15:04:05.000Z"
 	dateFmtRFC3339 = "2006-01-02T15:04:05.000Z07:00"
 	dateFmtVerbose = "Mon Jan 2 15:04:05 2006 -0700"
 	dateFmtYMD     = "2006-01-02"
@@ -35,6 +36,10 @@ func TimeToHTML(d *time.Time) string {
 
 func TimeToJS(d *time.Time) string {
 	return TimeToString(d, dateFmtJS)
+}
+
+func TimeToJSFull(d *time.Time) string {
+	return TimeToString(d, dateFmtJSFull)
 }
 
 func TimeToRFC3339(d *time.Time) string {

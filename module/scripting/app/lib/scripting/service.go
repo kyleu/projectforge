@@ -74,7 +74,7 @@ func (s *Service) Size(scr string) int {
 func (s *Service) SearchScripts(_ context.Context, _ filter.ParamSet, q string, logger util.Logger) (result.Results, error) {
 	f := func(fn string, _ int) (*result.Result, bool) {
 		fn, scr, _ := s.LoadScript(fn, logger)
-		res := result.NewResult("script", fn, "/admin/scripting/"+fn, fn, "file-code", scr, scr, q)
+		res := result.NewResult("script", fn, "/admin/scripting/"+fn, fn, "cog", scr, scr, q)
 		if len(res.Matches) > 0 {
 			return res, true
 		}

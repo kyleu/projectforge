@@ -35,7 +35,9 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 		if e != nil {
 			return nil, nil, errors.Wrap(e, "unable to export code")
 		}
-		srcFiles = append(srcFiles, files...)
+		srcFiles = lo.UniqBy(append(files, srcFiles...), func(f *file.File) string {
+			return f.FullPath()
+		})
 	}
 	configVars, portOffsets := parse(pm)
 	pm.Prj.ExportArgs, _ = pm.Prj.ModuleArgExport(pm.PSvc, pm.Logger)

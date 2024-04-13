@@ -15,10 +15,10 @@
 {% func (p *Form) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     {%- if p.Path == "" -%}
-    <h3>{%= components.SVGRefIcon(`file-code`, ps) %} New Script</h3>
+    <h3>{%= components.SVGRefIcon(`file`, ps) %} New Script</h3>
     {%- else -%}
     <div class="right"><a href="/admin/scripting/{%u p.Path %}/delete" onclick="return confirm('Are you sure you wish to delete script [{%s p.Path %}]?')"><button>Delete</button></a></div>
-    <h3>{%= components.SVGRefIcon(`file-code`, ps) %} Script [{%s p.Path %}]</h3>
+    <h3>{%= components.SVGRefIcon(`file`, ps) %} Script [{%s p.Path %}]</h3>
     {%- endif -%}
     <form action="" class="mt" method="post">
       <div class="overflow full-width">

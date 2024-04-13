@@ -44,9 +44,14 @@ func goViewStringForString(url bool, src string, t *types.Wrapped, nullable bool
 		return ret.Join("")
 	case FmtJSON.Key, FmtHTML.Key, FmtSQL.Key:
 		return tmplStartEQ + "view.Format(" + ToGoString(t, nullable, prop, false) + ", \"" + format + "\"" + tmplEndP
-	case FmtURL.Key:
-		x := tmplStart + key + " " + ToGoString(t, nullable, prop, false) + tmplEnd
-		return fmt.Sprintf("<a href=%q target=\"_blank\" rel=\"noopener noreferrer\">%s</a>", x, x)
+	case FmtColor.Key:
+		return tmplStartEQ + "view.Color(" + ToGoString(t, nullable, prop, false) + ", \"\", ps)" + tmplEnd
+	case FmtCountry.Key:
+		if verbose {
+			x := ToGoString(t, nullable, prop, false)
+			return tmplStart + key + " " + x + tmplEnd + " " + tmplStartS + "util.CountryFlag(" + x + tmplEndP
+		}
+		return tmplStart + key + " " + ToGoString(t, nullable, prop, false) + tmplEnd
 	case FmtIcon.Key:
 		size := "18"
 		if src == util.KeyDetail {
@@ -57,16 +62,11 @@ func goViewStringForString(url bool, src string, t *types.Wrapped, nullable bool
 		size := "128px"
 		msg := `<img style="max-width: %s; max-height: %s" src="{%%%%s %s %%%%}" />`
 		return fmt.Sprintf(msg, size, size, ToGoString(t, nullable, prop, false))
-	case FmtColor.Key:
-		return tmplStartEQ + "view.Color(" + ToGoString(t, nullable, prop, false) + ", \"\", ps)" + tmplEnd
-	case FmtCountry.Key:
-		if verbose {
-			x := ToGoString(t, nullable, prop, false)
-			return tmplStart + key + " " + x + tmplEnd + " " + tmplStartS + "util.CountryFlag(" + x + tmplEndP
-		}
-		return tmplStart + key + " " + ToGoString(t, nullable, prop, false) + tmplEnd
 	case FmtSelect.Key:
 		return "<strong>" + tmplStart + key + " " + ToGoString(t, nullable, prop, false) + tmplEnd + "</strong>"
+	case FmtURL.Key:
+		x := tmplStart + key + " " + ToGoString(t, nullable, prop, false) + tmplEnd
+		return fmt.Sprintf("<a href=%q target=\"_blank\" rel=\"noopener noreferrer\">%s</a>", x, x)
 	case "":
 		return tmplStartEQ + "view.String(" + prop + tmplEndP
 	default:

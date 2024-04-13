@@ -31,17 +31,19 @@ func ScriptingDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
+		page := &vscripting.Detail{Path: key, Script: src}
 		loadResult, vm, err := scripting.LoadVM(key, src, ps.Logger)
 		if err != nil {
-			return "", err
+			page.LoadError = err
 		}
+		page.LoadResult = loadResult
 		res, err := scripting.RunExamples(vm)
 		if err != nil {
 			return "", err
 		}
+		page.Results = res
 		ps.Title = key
 		ps.Data = map[string]any{"script": src, "results": res}
-		page := &vscripting.Detail{Path: key, Script: src, LoadResult: loadResult, Results: res}
 		return controller.Render(w, r, as, page, ps, "scripting", key)
 	})
 }

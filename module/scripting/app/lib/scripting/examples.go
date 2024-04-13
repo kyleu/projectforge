@@ -10,6 +10,9 @@ import (
 )
 
 func LoadExamples(vm *goja.Runtime) (map[string][][]any, error) {
+	if vm == nil {
+		return map[string][][]any{}, nil
+	}
 	exJS := vm.Get("examples")
 	if exJS == nil {
 		return nil, nil
