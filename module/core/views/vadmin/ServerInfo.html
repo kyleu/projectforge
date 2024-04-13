@@ -2,6 +2,7 @@
   "{{{ .Package }}}/app"
   "{{{ .Package }}}/app/controller/cutil"
   "{{{ .Package }}}/app/util"
+  "{{{ .Package }}}/views/components"
   "{{{ .Package }}}/views/layout"
 ) %}
 
@@ -11,18 +12,18 @@
 } %}
 
 {% func (p *ServerInfo) Body(as *app.State, ps *cutil.PageState) %}
-  {%= renderTags("Server Information", p.Info.ServerTags) %}
-  {%= renderTags("Runtime Information", p.Info.RuntimeTags) %}
-  {%= renderTags("App Information", p.Info.AppTags) %}
+  {%= renderTags("Server Information", p.Info.ServerTags, "cog", ps) %}
+  {%= renderTags("Runtime Information", p.Info.RuntimeTags, "desktop", ps) %}
+  {%= renderTags("App Information", p.Info.AppTags, "play", ps) %}
   <div class="card">
-    <h3>Go Modules</h3>
+    <h3>{%= components.SVGRefIcon(`archive`, ps) %}Go Modules</h3>
     {%= moduleTable(p.Info.Mods) %}
   </div>
 {% endfunc %}
 
-{% func renderTags(title string, tags *util.OrderedMap[string]) %}
+{% func renderTags(title string, tags *util.OrderedMap[string], icon string, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%s title %}</h3>
+    <h3>{%= components.SVGRefIcon(icon, ps) %}{%s title %}</h3>
     <div class="overflow full-width">
       <table class="mt min-200">
         <tbody>

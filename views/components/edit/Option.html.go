@@ -37,7 +37,7 @@ func StreamOption(qw422016 *qt422016.Writer, key string, id string, x any, t *ty
 //line views/components/edit/Option.html:10
 		qw422016.N().S(`<div class="two-pane"><div class="l">`)
 //line views/components/edit/Option.html:12
-		StreamAny(qw422016, key, id, x, t.V)
+		StreamAnyByType(qw422016, key, id, x, t.V)
 //line views/components/edit/Option.html:12
 		qw422016.N().S(`</div><div class="r"><button title="click to set field to null" type="button" onclick="projectforge.setSiblingToNull(this);">∅</button></div></div>`)
 //line views/components/edit/Option.html:15

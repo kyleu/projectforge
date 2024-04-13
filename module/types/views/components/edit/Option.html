@@ -8,7 +8,7 @@
     {%= Bool(key, id, x.(bool), true) %}
   {% default %}
     <div class="two-pane">
-      <div class="l">{%= Any(key, id, x, t.V) %}</div>
+      <div class="l">{%= AnyByType(key, id, x, t.V) %}</div>
       <div class="r"><button title="click to set field to null" type="button" onclick="{{{ .Exec }}}.setSiblingToNull(this);">∅</button></div>
     </div>
   {% endswitch %}

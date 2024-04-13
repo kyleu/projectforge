@@ -11,34 +11,39 @@ import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/theme"
+	"projectforge.dev/projectforge/views/components"
 	"projectforge.dev/projectforge/views/layout"
 )
 
-//line views/vtheme/List.html:9
+//line views/vtheme/List.html:10
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vtheme/List.html:9
+//line views/vtheme/List.html:10
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vtheme/List.html:9
+//line views/vtheme/List.html:10
 type List struct {
 	layout.Basic
 	Themes theme.Themes
 }
 
-//line views/vtheme/List.html:14
+//line views/vtheme/List.html:15
 func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vtheme/List.html:14
+//line views/vtheme/List.html:15
 	qw422016.N().S(`
   <div class="card">
-    <h3>Add Theme</h3>
+    <h3>`)
+//line views/vtheme/List.html:17
+	components.StreamSVGRefIcon(qw422016, `eye`, ps)
+//line views/vtheme/List.html:17
+	qw422016.N().S(`Add Theme</h3>
     <div class="mt">
       <a href="/theme/new" title="add new theme"><button>New Theme</button></a>
       <a href="/theme/palette/crayola" title="add new theme"><button>Choose from Crayola colors</button></a>
@@ -48,9 +53,9 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
       <form action="/theme/color/edit" method="get">
         <div class="mt">
           <input class="left mrs" type="color" name="color" value="`)
-//line views/vtheme/List.html:25
+//line views/vtheme/List.html:26
 	qw422016.E().S(theme.Default.Light.NavBackground)
-//line views/vtheme/List.html:25
+//line views/vtheme/List.html:26
 	qw422016.N().S(`" />
           <button type="submit">Custom Color Theme</button>
         </div>
@@ -58,59 +63,63 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
     </div>
   </div>
   <div class="card">
-    <h3>Current Themes</h3>
+    <h3>`)
+//line views/vtheme/List.html:33
+	components.StreamSVGRefIcon(qw422016, `play`, ps)
+//line views/vtheme/List.html:33
+	qw422016.N().S(`Current Themes</h3>
     <div class="overflow full-width">
       <div class="theme-container mt">
 `)
-//line views/vtheme/List.html:35
+//line views/vtheme/List.html:36
 	for _, t := range p.Themes {
-//line views/vtheme/List.html:35
+//line views/vtheme/List.html:36
 		qw422016.N().S(`        <div class="theme-item">
           <a href="/theme/`)
-//line views/vtheme/List.html:37
+//line views/vtheme/List.html:38
 		qw422016.N().U(t.Key)
-//line views/vtheme/List.html:37
+//line views/vtheme/List.html:38
 		qw422016.N().S(`">
             `)
-//line views/vtheme/List.html:38
+//line views/vtheme/List.html:39
 		StreamMockupTheme(qw422016, t, true, "app", 5, ps)
-//line views/vtheme/List.html:38
+//line views/vtheme/List.html:39
 		qw422016.N().S(`
           </a>
         </div>
 `)
-//line views/vtheme/List.html:41
+//line views/vtheme/List.html:42
 	}
-//line views/vtheme/List.html:41
+//line views/vtheme/List.html:42
 	qw422016.N().S(`      </div>
     </div>
   </div>
 `)
-//line views/vtheme/List.html:45
+//line views/vtheme/List.html:46
 }
 
-//line views/vtheme/List.html:45
+//line views/vtheme/List.html:46
 func (p *List) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vtheme/List.html:45
+//line views/vtheme/List.html:46
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vtheme/List.html:45
+//line views/vtheme/List.html:46
 	p.StreamBody(qw422016, as, ps)
-//line views/vtheme/List.html:45
+//line views/vtheme/List.html:46
 	qt422016.ReleaseWriter(qw422016)
-//line views/vtheme/List.html:45
+//line views/vtheme/List.html:46
 }
 
-//line views/vtheme/List.html:45
+//line views/vtheme/List.html:46
 func (p *List) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vtheme/List.html:45
+//line views/vtheme/List.html:46
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vtheme/List.html:45
+//line views/vtheme/List.html:46
 	p.WriteBody(qb422016, as, ps)
-//line views/vtheme/List.html:45
+//line views/vtheme/List.html:46
 	qs422016 := string(qb422016.B)
-//line views/vtheme/List.html:45
+//line views/vtheme/List.html:46
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vtheme/List.html:45
+//line views/vtheme/List.html:46
 	return qs422016
-//line views/vtheme/List.html:45
+//line views/vtheme/List.html:46
 }

@@ -13,93 +13,98 @@ import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/util"
+	"projectforge.dev/projectforge/views/components"
 	"projectforge.dev/projectforge/views/layout"
 )
 
-//line views/vadmin/Routes.html:11
+//line views/vadmin/Routes.html:12
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vadmin/Routes.html:11
+//line views/vadmin/Routes.html:12
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vadmin/Routes.html:11
+//line views/vadmin/Routes.html:12
 type Routes struct {
 	layout.Basic
 	Routes map[string][]string
 }
 
-//line views/vadmin/Routes.html:16
+//line views/vadmin/Routes.html:17
 func (p *Routes) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vadmin/Routes.html:16
+//line views/vadmin/Routes.html:17
 	qw422016.N().S(`
   <div class="card">
-    <h3>HTTP Routes</h3>
+    <h3>`)
+//line views/vadmin/Routes.html:19
+	components.StreamSVGRefIcon(qw422016, `code`, ps)
+//line views/vadmin/Routes.html:19
+	qw422016.N().S(`HTTP Routes</h3>
     <ul class="mt">
 `)
-//line views/vadmin/Routes.html:20
+//line views/vadmin/Routes.html:21
 	for _, k := range util.ArraySorted(lo.Keys(p.Routes)) {
-//line views/vadmin/Routes.html:20
+//line views/vadmin/Routes.html:21
 		qw422016.N().S(`      <li>
         <strong>`)
-//line views/vadmin/Routes.html:22
+//line views/vadmin/Routes.html:23
 		qw422016.E().S(k)
-//line views/vadmin/Routes.html:22
+//line views/vadmin/Routes.html:23
 		qw422016.N().S(`</strong>
         <ul>
 `)
-//line views/vadmin/Routes.html:24
+//line views/vadmin/Routes.html:25
 		for _, r := range p.Routes[k] {
-//line views/vadmin/Routes.html:24
+//line views/vadmin/Routes.html:25
 			qw422016.N().S(`          <li><code>`)
-//line views/vadmin/Routes.html:25
+//line views/vadmin/Routes.html:26
 			qw422016.E().S(r)
-//line views/vadmin/Routes.html:25
+//line views/vadmin/Routes.html:26
 			qw422016.N().S(`</code></li>
 `)
-//line views/vadmin/Routes.html:26
+//line views/vadmin/Routes.html:27
 		}
-//line views/vadmin/Routes.html:26
+//line views/vadmin/Routes.html:27
 		qw422016.N().S(`        </ul>
       </li>
 `)
-//line views/vadmin/Routes.html:29
+//line views/vadmin/Routes.html:30
 	}
-//line views/vadmin/Routes.html:29
+//line views/vadmin/Routes.html:30
 	qw422016.N().S(`    </ul>
   </div>
 `)
-//line views/vadmin/Routes.html:32
+//line views/vadmin/Routes.html:33
 }
 
-//line views/vadmin/Routes.html:32
+//line views/vadmin/Routes.html:33
 func (p *Routes) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vadmin/Routes.html:32
+//line views/vadmin/Routes.html:33
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vadmin/Routes.html:32
+//line views/vadmin/Routes.html:33
 	p.StreamBody(qw422016, as, ps)
-//line views/vadmin/Routes.html:32
+//line views/vadmin/Routes.html:33
 	qt422016.ReleaseWriter(qw422016)
-//line views/vadmin/Routes.html:32
+//line views/vadmin/Routes.html:33
 }
 
-//line views/vadmin/Routes.html:32
+//line views/vadmin/Routes.html:33
 func (p *Routes) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vadmin/Routes.html:32
+//line views/vadmin/Routes.html:33
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vadmin/Routes.html:32
+//line views/vadmin/Routes.html:33
 	p.WriteBody(qb422016, as, ps)
-//line views/vadmin/Routes.html:32
+//line views/vadmin/Routes.html:33
 	qs422016 := string(qb422016.B)
-//line views/vadmin/Routes.html:32
+//line views/vadmin/Routes.html:33
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vadmin/Routes.html:32
+//line views/vadmin/Routes.html:33
 	return qs422016
-//line views/vadmin/Routes.html:32
+//line views/vadmin/Routes.html:33
 }

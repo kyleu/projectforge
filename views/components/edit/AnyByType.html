@@ -5,7 +5,7 @@
   "projectforge.dev/projectforge/app/lib/types"
 ) %}
 
-{% func Any(key string, id string, x any, t *types.Wrapped) %}{% stripspace %}
+{% func AnyByType(key string, id string, x any, t *types.Wrapped) %}{% stripspace %}
   {% switch t.Key() %}
   {% case types.KeyAny %}
     {%= Default(key, id, x, t) %}
