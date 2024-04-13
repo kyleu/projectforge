@@ -43,6 +43,12 @@ const ciDesc = "Installs dependencies for the TypeScript client"
 
 type Builds []*Build
 
+func (b Builds) ForAllProjects() Builds {
+	return lo.Filter(b, func(x *Build, _ int) bool {
+		return x.Key != "lint"
+	})
+}
+
 func (b Builds) Get(key string) *Build {
 	return lo.FindOrElse(b, nil, func(x *Build) bool {
 		return x.Key == key

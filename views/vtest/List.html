@@ -1,6 +1,7 @@
 {% import (
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/layout"
 ) %}
 
@@ -8,7 +9,7 @@
 
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>Tests!</h3>
+    <h3>{%= components.SVGRefIcon(`list`, ps) %}Tests!</h3>
     <ul>
       <li><a href="/test/bootstrap">Rebuild test project</a></li>
       <li><a href="/test/diff">Text diff tests</a></li>

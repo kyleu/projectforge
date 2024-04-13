@@ -2,6 +2,7 @@
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/lib/theme"
+  "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/layout"
   "projectforge.dev/projectforge/views/vtheme"
 ) %}
@@ -17,7 +18,7 @@
 
 {% func (p *ThemePalette) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>Set theme for project [{%s p.Project %}]</h3>
+    <h3>{%= components.SVGRefIcon(`eye`, ps) %}Set theme for project [{%s p.Project %}]</h3>
     <form action="/theme" method="post">
       <input type="hidden" name="palette" value="{%s p.Palette %}" />
       <div class="overflow full-width">

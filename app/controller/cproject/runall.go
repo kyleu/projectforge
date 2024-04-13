@@ -3,8 +3,8 @@ package cproject
 import (
 	"fmt"
 	"net/http"
-	"projectforge.dev/projectforge/views/vpage"
 
+	"github.com/pkg/errors"
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app"
@@ -15,6 +15,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views"
 	"projectforge.dev/projectforge/views/vaction"
+	"projectforge.dev/projectforge/views/vpage"
 )
 
 func RunAllActions(w http.ResponseWriter, r *http.Request) {
@@ -63,6 +64,8 @@ func RunAllActions(w http.ResponseWriter, r *http.Request) {
 				return runAllDeps(cfg, prjs, tags, w, r, as, ps)
 			case pkgsKey:
 				return runAllPkgs(cfg, prjs, w, r, as, ps)
+			case "lint":
+				return "", errors.New("can't run multiple instances of golangcilint")
 			case "full":
 				if cfg.GetStringOpt("hasloaded") != util.BoolTrue {
 					cutil.URLAddQuery(r.URL, "hasloaded", util.BoolTrue)

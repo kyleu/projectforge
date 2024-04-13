@@ -3,6 +3,7 @@
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/project/action"
   "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/layout"
   "projectforge.dev/projectforge/views/vproject"
 ) %}
@@ -19,7 +20,7 @@
 
   <div class="card">
     <div class="right">{%s util.MicrosToMillis(p.Ctx.Res.Duration) %}</div>
-    <h3>Result</h3>
+    <h3>{%= components.SVGRefIcon(`map`, ps) %}Result</h3>
     <div class="mts">{%s p.Ctx.Res.Status %}</div>
   </div>
 

@@ -8,62 +8,67 @@ package vtest
 import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/views/components"
 	"projectforge.dev/projectforge/views/layout"
 )
 
-//line views/vtest/List.html:7
+//line views/vtest/List.html:8
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vtest/List.html:7
+//line views/vtest/List.html:8
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vtest/List.html:7
+//line views/vtest/List.html:8
 type List struct{ layout.Basic }
 
-//line views/vtest/List.html:9
+//line views/vtest/List.html:10
 func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vtest/List.html:9
+//line views/vtest/List.html:10
 	qw422016.N().S(`
   <div class="card">
-    <h3>Tests!</h3>
+    <h3>`)
+//line views/vtest/List.html:12
+	components.StreamSVGRefIcon(qw422016, `list`, ps)
+//line views/vtest/List.html:12
+	qw422016.N().S(`Tests!</h3>
     <ul>
       <li><a href="/test/bootstrap">Rebuild test project</a></li>
       <li><a href="/test/diff">Text diff tests</a></li>
     </ul>
   </div>
 `)
-//line views/vtest/List.html:17
+//line views/vtest/List.html:18
 }
 
-//line views/vtest/List.html:17
+//line views/vtest/List.html:18
 func (p *List) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vtest/List.html:17
+//line views/vtest/List.html:18
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vtest/List.html:17
+//line views/vtest/List.html:18
 	p.StreamBody(qw422016, as, ps)
-//line views/vtest/List.html:17
+//line views/vtest/List.html:18
 	qt422016.ReleaseWriter(qw422016)
-//line views/vtest/List.html:17
+//line views/vtest/List.html:18
 }
 
-//line views/vtest/List.html:17
+//line views/vtest/List.html:18
 func (p *List) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vtest/List.html:17
+//line views/vtest/List.html:18
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vtest/List.html:17
+//line views/vtest/List.html:18
 	p.WriteBody(qb422016, as, ps)
-//line views/vtest/List.html:17
+//line views/vtest/List.html:18
 	qs422016 := string(qb422016.B)
-//line views/vtest/List.html:17
+//line views/vtest/List.html:18
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vtest/List.html:17
+//line views/vtest/List.html:18
 	return qs422016
-//line views/vtest/List.html:17
+//line views/vtest/List.html:18
 }

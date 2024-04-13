@@ -6,28 +6,34 @@ package vbuild
 
 //line views/vbuild/BuildOptions.html:1
 import (
+	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/project/action"
+	"projectforge.dev/projectforge/views/components"
 )
 
-//line views/vbuild/BuildOptions.html:5
+//line views/vbuild/BuildOptions.html:7
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vbuild/BuildOptions.html:5
+//line views/vbuild/BuildOptions.html:7
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vbuild/BuildOptions.html:5
-func StreamBuildOptions(qw422016 *qt422016.Writer, key string) {
-//line views/vbuild/BuildOptions.html:5
+//line views/vbuild/BuildOptions.html:7
+func StreamBuildOptions(qw422016 *qt422016.Writer, key string, ps *cutil.PageState) {
+//line views/vbuild/BuildOptions.html:7
 	qw422016.N().S(`
   <div class="card">
-    <h3>Build your project</h3>
+    <h3>`)
+//line views/vbuild/BuildOptions.html:9
+	components.StreamSVGRefIcon(qw422016, `hammer`, ps)
+//line views/vbuild/BuildOptions.html:9
+	qw422016.N().S(`Build your project</h3>
     <div class="overflow full-width">
       <table class="mt">
         <thead>
@@ -38,67 +44,67 @@ func StreamBuildOptions(qw422016 *qt422016.Writer, key string) {
         </thead>
         <tbody>
 `)
-//line views/vbuild/BuildOptions.html:17
-	for _, b := range action.AllBuilds {
-//line views/vbuild/BuildOptions.html:17
+//line views/vbuild/BuildOptions.html:19
+	for _, b := range action.AllBuilds.ForAllProjects() {
+//line views/vbuild/BuildOptions.html:19
 		qw422016.N().S(`          <tr>
             <td><a href="/run/`)
-//line views/vbuild/BuildOptions.html:19
+//line views/vbuild/BuildOptions.html:21
 		qw422016.E().S(key)
-//line views/vbuild/BuildOptions.html:19
+//line views/vbuild/BuildOptions.html:21
 		qw422016.N().S(`/build?phase=`)
-//line views/vbuild/BuildOptions.html:19
+//line views/vbuild/BuildOptions.html:21
 		qw422016.E().S(b.Key)
-//line views/vbuild/BuildOptions.html:19
+//line views/vbuild/BuildOptions.html:21
 		qw422016.N().S(`" title="`)
-//line views/vbuild/BuildOptions.html:19
+//line views/vbuild/BuildOptions.html:21
 		qw422016.E().S(b.Description)
-//line views/vbuild/BuildOptions.html:19
+//line views/vbuild/BuildOptions.html:21
 		qw422016.N().S(`"><button>`)
-//line views/vbuild/BuildOptions.html:19
+//line views/vbuild/BuildOptions.html:21
 		qw422016.E().S(b.Title)
-//line views/vbuild/BuildOptions.html:19
+//line views/vbuild/BuildOptions.html:21
 		qw422016.N().S(`</button></a></td>
             <td>`)
-//line views/vbuild/BuildOptions.html:20
+//line views/vbuild/BuildOptions.html:22
 		qw422016.E().S(b.Description)
-//line views/vbuild/BuildOptions.html:20
+//line views/vbuild/BuildOptions.html:22
 		qw422016.N().S(`</td>
           </tr>
 `)
-//line views/vbuild/BuildOptions.html:22
+//line views/vbuild/BuildOptions.html:24
 	}
-//line views/vbuild/BuildOptions.html:22
+//line views/vbuild/BuildOptions.html:24
 	qw422016.N().S(`        </tbody>
       </table>
     </div>
   </div>
 `)
-//line views/vbuild/BuildOptions.html:27
+//line views/vbuild/BuildOptions.html:29
 }
 
-//line views/vbuild/BuildOptions.html:27
-func WriteBuildOptions(qq422016 qtio422016.Writer, key string) {
-//line views/vbuild/BuildOptions.html:27
+//line views/vbuild/BuildOptions.html:29
+func WriteBuildOptions(qq422016 qtio422016.Writer, key string, ps *cutil.PageState) {
+//line views/vbuild/BuildOptions.html:29
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vbuild/BuildOptions.html:27
-	StreamBuildOptions(qw422016, key)
-//line views/vbuild/BuildOptions.html:27
+//line views/vbuild/BuildOptions.html:29
+	StreamBuildOptions(qw422016, key, ps)
+//line views/vbuild/BuildOptions.html:29
 	qt422016.ReleaseWriter(qw422016)
-//line views/vbuild/BuildOptions.html:27
+//line views/vbuild/BuildOptions.html:29
 }
 
-//line views/vbuild/BuildOptions.html:27
-func BuildOptions(key string) string {
-//line views/vbuild/BuildOptions.html:27
+//line views/vbuild/BuildOptions.html:29
+func BuildOptions(key string, ps *cutil.PageState) string {
+//line views/vbuild/BuildOptions.html:29
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vbuild/BuildOptions.html:27
-	WriteBuildOptions(qb422016, key)
-//line views/vbuild/BuildOptions.html:27
+//line views/vbuild/BuildOptions.html:29
+	WriteBuildOptions(qb422016, key, ps)
+//line views/vbuild/BuildOptions.html:29
 	qs422016 := string(qb422016.B)
-//line views/vbuild/BuildOptions.html:27
+//line views/vbuild/BuildOptions.html:29
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vbuild/BuildOptions.html:27
+//line views/vbuild/BuildOptions.html:29
 	return qs422016
-//line views/vbuild/BuildOptions.html:27
+//line views/vbuild/BuildOptions.html:29
 }

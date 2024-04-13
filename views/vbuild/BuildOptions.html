@@ -1,10 +1,12 @@
 {% import (
+  "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/project/action"
+  "projectforge.dev/projectforge/views/components"
 ) %}
 
-{% func BuildOptions(key string) %}
+{% func BuildOptions(key string, ps *cutil.PageState) %}
   <div class="card">
-    <h3>Build your project</h3>
+    <h3>{%= components.SVGRefIcon(`hammer`, ps) %}Build your project</h3>
     <div class="overflow full-width">
       <table class="mt">
         <thead>
@@ -14,7 +16,7 @@
           </tr>
         </thead>
         <tbody>
-          {%- for _, b := range action.AllBuilds -%}
+          {%- for _, b := range action.AllBuilds.ForAllProjects() -%}
           <tr>
             <td><a href="/run/{%s key %}/build?phase={%s b.Key %}" title="{%s b.Description %}"><button>{%s b.Title %}</button></a></td>
             <td>{%s b.Description %}</td>

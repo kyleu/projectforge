@@ -205,7 +205,7 @@ func StreamAvailBuildActions(qw422016 *qt422016.Writer, currTags []string) {
       <tbody>
 `)
 //line views/vaction/Results.html:73
-	for _, b := range action.AllBuilds {
+	for _, b := range action.AllBuilds.ForAllProjects() {
 //line views/vaction/Results.html:73
 		qw422016.N().S(`        <tr>
           <td><a href="/run/build?phase=`)

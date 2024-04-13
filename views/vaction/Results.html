@@ -70,7 +70,7 @@
         </tr>
       </thead>
       <tbody>
-        {%- for _, b := range action.AllBuilds -%}
+        {%- for _, b := range action.AllBuilds.ForAllProjects() -%}
         <tr>
           <td><a href="/run/build?phase={%s b.Key %}{%s tags %}" title="{%s b.Description %}"><button>{%s b.Title %}</button></a></td>
           <td>{%s b.Description %}</td>

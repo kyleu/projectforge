@@ -19,7 +19,7 @@
 {% func (p *Deps) Body(as *app.State, ps *cutil.PageState) %}
   {%- code prj := p.Project -%}
   {%= vproject.Summary(prj, "Dependencies", nil, &action.TypeBuild, nil, ps) %}
-  {%= BuildOptions(prj.Key) %}
+  {%= BuildOptions(prj.Key, ps) %}
 
   {%- if p.BuildResult != nil && len(p.BuildResult.Errors) > 0 -%}
   <div class="card">

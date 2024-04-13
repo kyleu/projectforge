@@ -3,12 +3,13 @@
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/project/action"
   "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/views/components"
 ) %}
 
 {% func Detail(cfg util.ValueMap, res *action.Result, includeSkipped bool, as *app.State, ps *cutil.PageState) %}
   {%- if len(cfg) > 0 -%}
   <div class="card">
-    <h3>Config</h3>
+    <h3>{%= components.SVGRefIcon(`cog`, ps) %}Config</h3>
     <div class="overflow full-width">
       <table>
         <tbody>
@@ -26,7 +27,7 @@
   {%- if len(res.Errors) > 0 -%}
   <div class="card">
     <div class="right">{%s util.StringPlural(len(res.Errors), "error") %}</div>
-    <h3>Errors</h3>
+    <h3>{%= components.SVGRefIcon(`scale`, ps) %}Errors</h3>
     <ul class="mt">
       {%- for _, e := range res.Errors -%}
       <li class="error">{%s e %}</li>
@@ -36,7 +37,7 @@
   {%- endif -%}
   {%- if len(res.Logs) > 0 -%}
   <div class="card">
-    <h3>Logs</h3>
+    <h3>{%= components.SVGRefIcon(`list`, ps) %}Logs</h3>
     <div class="mt">
       <div class="overflow full-width">
         <table>
@@ -56,7 +57,7 @@
   {%- for _, mr := range res.Modules -%}
     <div class="card">
       <div class="right">{%s util.MicrosToMillis(mr.Duration) %}</div>
-      <h3>{%s util.StringPlural(len(mr.Keys), "Module") %}</h3>
+      <h3>{%= components.SVGRefIcon(`archive`, ps) %}{%s util.StringPlural(len(mr.Keys), "Module") %}</h3>
       <div class="right">{%s= res.StatusLog() %}</div>
       <div class="mts">
         <em>{%s mr.Status %}</em>

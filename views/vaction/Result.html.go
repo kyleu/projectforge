@@ -10,92 +10,97 @@ import (
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/project/action"
 	"projectforge.dev/projectforge/app/util"
+	"projectforge.dev/projectforge/views/components"
 	"projectforge.dev/projectforge/views/layout"
 	"projectforge.dev/projectforge/views/vproject"
 )
 
-//line views/vaction/Result.html:10
+//line views/vaction/Result.html:11
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vaction/Result.html:10
+//line views/vaction/Result.html:11
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vaction/Result.html:10
+//line views/vaction/Result.html:11
 type Result struct {
 	layout.Basic
 	Ctx *action.ResultContext
 }
 
-//line views/vaction/Result.html:15
+//line views/vaction/Result.html:16
 func (p *Result) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vaction/Result.html:15
+//line views/vaction/Result.html:16
 	qw422016.N().S(`
 `)
-//line views/vaction/Result.html:16
+//line views/vaction/Result.html:17
 	if p.Ctx.Prj != nil {
-//line views/vaction/Result.html:16
+//line views/vaction/Result.html:17
 		qw422016.N().S(`  `)
-//line views/vaction/Result.html:17
+//line views/vaction/Result.html:18
 		vproject.StreamSummary(qw422016, p.Ctx.Prj, p.Ctx.Title(), nil, &p.Ctx.Res.Action, nil, ps)
-//line views/vaction/Result.html:17
+//line views/vaction/Result.html:18
 		qw422016.N().S(`
 `)
-//line views/vaction/Result.html:18
+//line views/vaction/Result.html:19
 	}
-//line views/vaction/Result.html:18
+//line views/vaction/Result.html:19
 	qw422016.N().S(`
   <div class="card">
     <div class="right">`)
-//line views/vaction/Result.html:21
+//line views/vaction/Result.html:22
 	qw422016.E().S(util.MicrosToMillis(p.Ctx.Res.Duration))
-//line views/vaction/Result.html:21
+//line views/vaction/Result.html:22
 	qw422016.N().S(`</div>
-    <h3>Result</h3>
+    <h3>`)
+//line views/vaction/Result.html:23
+	components.StreamSVGRefIcon(qw422016, `map`, ps)
+//line views/vaction/Result.html:23
+	qw422016.N().S(`Result</h3>
     <div class="mts">`)
-//line views/vaction/Result.html:23
+//line views/vaction/Result.html:24
 	qw422016.E().S(p.Ctx.Res.Status)
-//line views/vaction/Result.html:23
+//line views/vaction/Result.html:24
 	qw422016.N().S(`</div>
   </div>
 
   `)
-//line views/vaction/Result.html:26
+//line views/vaction/Result.html:27
 	StreamDetail(qw422016, p.Ctx.Cfg, p.Ctx.Res, false, as, ps)
-//line views/vaction/Result.html:26
+//line views/vaction/Result.html:27
 	qw422016.N().S(`
 `)
-//line views/vaction/Result.html:27
+//line views/vaction/Result.html:28
 }
 
-//line views/vaction/Result.html:27
+//line views/vaction/Result.html:28
 func (p *Result) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vaction/Result.html:27
+//line views/vaction/Result.html:28
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vaction/Result.html:27
+//line views/vaction/Result.html:28
 	p.StreamBody(qw422016, as, ps)
-//line views/vaction/Result.html:27
+//line views/vaction/Result.html:28
 	qt422016.ReleaseWriter(qw422016)
-//line views/vaction/Result.html:27
+//line views/vaction/Result.html:28
 }
 
-//line views/vaction/Result.html:27
+//line views/vaction/Result.html:28
 func (p *Result) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vaction/Result.html:27
+//line views/vaction/Result.html:28
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vaction/Result.html:27
+//line views/vaction/Result.html:28
 	p.WriteBody(qb422016, as, ps)
-//line views/vaction/Result.html:27
+//line views/vaction/Result.html:28
 	qs422016 := string(qb422016.B)
-//line views/vaction/Result.html:27
+//line views/vaction/Result.html:28
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vaction/Result.html:27
+//line views/vaction/Result.html:28
 	return qs422016
-//line views/vaction/Result.html:27
+//line views/vaction/Result.html:28
 }

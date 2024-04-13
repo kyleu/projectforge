@@ -18,7 +18,7 @@
     {%- if p.Dir != "" -%}
     <div class="right"><em>{%s p.Dir %}</em></div>
     {%- endif -%}
-    <h3><a href="/m">{%= components.SVGRefIcon(`archive`, ps) %}{%s util.StringPlural(len(p.Modules), "Available Module") %}</a></h3>
+    <h3>{%= components.SVGRefIcon(`archive`, ps) %}{%s util.StringPlural(len(p.Modules), "Available Module") %}</h3>
   </div>
   {%- for _, mod := range p.Modules -%}
   <a class="link-section" href="/m/{%s mod.Key %}">

@@ -9,24 +9,25 @@ import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/theme"
+	"projectforge.dev/projectforge/views/components"
 	"projectforge.dev/projectforge/views/layout"
 	"projectforge.dev/projectforge/views/vtheme"
 )
 
-//line views/vproject/ThemePalette.html:9
+//line views/vproject/ThemePalette.html:10
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vproject/ThemePalette.html:9
+//line views/vproject/ThemePalette.html:10
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vproject/ThemePalette.html:9
+//line views/vproject/ThemePalette.html:10
 type ThemePalette struct {
 	layout.Basic
 	Project string
@@ -36,117 +37,121 @@ type ThemePalette struct {
 	Title   string
 }
 
-//line views/vproject/ThemePalette.html:18
+//line views/vproject/ThemePalette.html:19
 func (p *ThemePalette) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vproject/ThemePalette.html:18
+//line views/vproject/ThemePalette.html:19
 	qw422016.N().S(`
   <div class="card">
-    <h3>Set theme for project [`)
-//line views/vproject/ThemePalette.html:20
+    <h3>`)
+//line views/vproject/ThemePalette.html:21
+	components.StreamSVGRefIcon(qw422016, `eye`, ps)
+//line views/vproject/ThemePalette.html:21
+	qw422016.N().S(`Set theme for project [`)
+//line views/vproject/ThemePalette.html:21
 	qw422016.E().S(p.Project)
-//line views/vproject/ThemePalette.html:20
+//line views/vproject/ThemePalette.html:21
 	qw422016.N().S(`]</h3>
     <form action="/theme" method="post">
       <input type="hidden" name="palette" value="`)
-//line views/vproject/ThemePalette.html:22
+//line views/vproject/ThemePalette.html:23
 	qw422016.E().S(p.Palette)
-//line views/vproject/ThemePalette.html:22
+//line views/vproject/ThemePalette.html:23
 	qw422016.N().S(`" />
       <div class="overflow full-width">
         <table class="mt">
           <tbody>
 `)
-//line views/vproject/ThemePalette.html:26
+//line views/vproject/ThemePalette.html:27
 	for _, t := range p.Themes {
-//line views/vproject/ThemePalette.html:26
+//line views/vproject/ThemePalette.html:27
 		qw422016.N().S(`            <tr>
 `)
-//line views/vproject/ThemePalette.html:28
+//line views/vproject/ThemePalette.html:29
 		if p.Project == "" {
-//line views/vproject/ThemePalette.html:28
+//line views/vproject/ThemePalette.html:29
 			qw422016.N().S(`              <th class="shrink"><input type="checkbox" id="`)
-//line views/vproject/ThemePalette.html:29
+//line views/vproject/ThemePalette.html:30
 			qw422016.E().S(t.Key)
-//line views/vproject/ThemePalette.html:29
+//line views/vproject/ThemePalette.html:30
 			qw422016.N().S(`" name="`)
-//line views/vproject/ThemePalette.html:29
+//line views/vproject/ThemePalette.html:30
 			qw422016.E().S(t.Key)
-//line views/vproject/ThemePalette.html:29
+//line views/vproject/ThemePalette.html:30
 			qw422016.N().S(`" value="true" /></th>
 `)
-//line views/vproject/ThemePalette.html:30
+//line views/vproject/ThemePalette.html:31
 		}
-//line views/vproject/ThemePalette.html:30
+//line views/vproject/ThemePalette.html:31
 		qw422016.N().S(`              <th>
                 <label for="`)
-//line views/vproject/ThemePalette.html:32
+//line views/vproject/ThemePalette.html:33
 		qw422016.E().S(t.Key)
-//line views/vproject/ThemePalette.html:32
+//line views/vproject/ThemePalette.html:33
 		qw422016.N().S(`">`)
-//line views/vproject/ThemePalette.html:32
+//line views/vproject/ThemePalette.html:33
 		qw422016.E().S(t.Key)
-//line views/vproject/ThemePalette.html:32
+//line views/vproject/ThemePalette.html:33
 		qw422016.N().S(`</label>
                 <a href="/p/`)
-//line views/vproject/ThemePalette.html:33
+//line views/vproject/ThemePalette.html:34
 		qw422016.E().S(p.Project)
-//line views/vproject/ThemePalette.html:33
+//line views/vproject/ThemePalette.html:34
 		qw422016.N().S(`/palette/`)
-//line views/vproject/ThemePalette.html:33
+//line views/vproject/ThemePalette.html:34
 		qw422016.E().S(p.Palette)
-//line views/vproject/ThemePalette.html:33
+//line views/vproject/ThemePalette.html:34
 		qw422016.N().S(`/`)
-//line views/vproject/ThemePalette.html:33
+//line views/vproject/ThemePalette.html:34
 		qw422016.E().S(t.Key)
-//line views/vproject/ThemePalette.html:33
+//line views/vproject/ThemePalette.html:34
 		qw422016.N().S(`" class="link-confirm" data-message="Are you sure you'd like to overwrite the default theme?">Set as Default</a>
               </th>
               <th class="shrink" style="background-color: #ffffff; padding: 12px 36px;">`)
-//line views/vproject/ThemePalette.html:35
+//line views/vproject/ThemePalette.html:36
 		vtheme.StreamMockupColors(qw422016, p.Title, "", t.Light, true, p.Icon, 5, ps)
-//line views/vproject/ThemePalette.html:35
+//line views/vproject/ThemePalette.html:36
 		qw422016.N().S(`</th>
               <th class="shrink" style="background-color: #121212; padding: 12px 36px;">`)
-//line views/vproject/ThemePalette.html:36
+//line views/vproject/ThemePalette.html:37
 		vtheme.StreamMockupColors(qw422016, p.Title, "", t.Dark, true, p.Icon, 5, ps)
-//line views/vproject/ThemePalette.html:36
+//line views/vproject/ThemePalette.html:37
 		qw422016.N().S(`</th>
             </tr>
 `)
-//line views/vproject/ThemePalette.html:38
+//line views/vproject/ThemePalette.html:39
 	}
-//line views/vproject/ThemePalette.html:38
+//line views/vproject/ThemePalette.html:39
 	qw422016.N().S(`          </tbody>
         </table>
       </div>
     </form>
   </div>
 `)
-//line views/vproject/ThemePalette.html:44
+//line views/vproject/ThemePalette.html:45
 }
 
-//line views/vproject/ThemePalette.html:44
+//line views/vproject/ThemePalette.html:45
 func (p *ThemePalette) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vproject/ThemePalette.html:44
+//line views/vproject/ThemePalette.html:45
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/ThemePalette.html:44
+//line views/vproject/ThemePalette.html:45
 	p.StreamBody(qw422016, as, ps)
-//line views/vproject/ThemePalette.html:44
+//line views/vproject/ThemePalette.html:45
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/ThemePalette.html:44
+//line views/vproject/ThemePalette.html:45
 }
 
-//line views/vproject/ThemePalette.html:44
+//line views/vproject/ThemePalette.html:45
 func (p *ThemePalette) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vproject/ThemePalette.html:44
+//line views/vproject/ThemePalette.html:45
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/ThemePalette.html:44
+//line views/vproject/ThemePalette.html:45
 	p.WriteBody(qb422016, as, ps)
-//line views/vproject/ThemePalette.html:44
+//line views/vproject/ThemePalette.html:45
 	qs422016 := string(qb422016.B)
-//line views/vproject/ThemePalette.html:44
+//line views/vproject/ThemePalette.html:45
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/ThemePalette.html:44
+//line views/vproject/ThemePalette.html:45
 	return qs422016
-//line views/vproject/ThemePalette.html:44
+//line views/vproject/ThemePalette.html:45
 }

@@ -53,7 +53,7 @@ func (p *Packages) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 	qw422016.N().S(`
   `)
 //line views/vbuild/Packages.html:22
-	StreamBuildOptions(qw422016, prj.Key)
+	StreamBuildOptions(qw422016, prj.Key, ps)
 //line views/vbuild/Packages.html:22
 	qw422016.N().S(`
 
