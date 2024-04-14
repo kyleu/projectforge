@@ -26,15 +26,15 @@ func OpenDefaultSQLite(ctx context.Context, logger util.Logger) (*Service, error
 
 func SQLiteParamsFromEnv(key string, prefix string) *SQLiteParams {
 	f := key + ".sqlite"
-	if x := util.GetEnv(prefix + "db_file"); x != "" {
+	if x := util.GetEnv(prefix + cfgFile); x != "" {
 		f = x
 	}
 	s := "public"
-	if x := util.GetEnv(prefix + "db_schema"); x != "" {
+	if x := util.GetEnv(prefix + cfgSchema); x != "" {
 		s = x
 	}
 	debug := false
-	if x := util.GetEnv(prefix + "db_debug"); x != "" {
+	if x := util.GetEnv(prefix + cfgDebug); x != "" {
 		debug = x != util.BoolFalse
 	}
 	return &SQLiteParams{File: f, Schema: s, Debug: debug}

@@ -33,6 +33,10 @@ func (e *Enum) Title() string {
 	return e.TitleOverride
 }
 
+func (e *Enum) TitleLower() string {
+	return strings.ToLower(e.Title())
+}
+
 func (e *Enum) Proper() string {
 	if e.ProperOverride == "" {
 		return util.StringToCamel(e.Name)

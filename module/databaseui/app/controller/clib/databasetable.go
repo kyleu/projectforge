@@ -23,7 +23,7 @@ func DatabaseTableView(w http.ResponseWriter, r *http.Request) {
 		sch, tbl, key := loadTable(r)
 		q := database.SQLSelect("*", key, "", prms.OrderByString(), prms.Limit, prms.Offset, svc.Type)
 		res, err := svc.QueryRows(ps.Context, q, nil, ps.Logger)
-		bc := databaseBC(svc.Key, tbl)
+		bc := databaseTableBC(svc.Key)
 		ps.SetTitleAndData(tbl+" data", res)
 		return controller.Render(w, r, as, &vdatabase.Results{Svc: svc, Schema: sch, Table: tbl, Results: res, Params: prms, Error: err}, ps, bc...)
 	})
@@ -37,7 +37,7 @@ func DatabaseTableStats(w http.ResponseWriter, r *http.Request) {
 		}
 		_, tbl, _ := loadTable(r)
 		ret := util.ValueMap{"status": "todo"}
-		bc := databaseBC(svc.Key, "Stats")
+		bc := databaseTableBC(svc.Key, "Stats")
 		ps.SetTitleAndData(tbl+" stats", ret)
 		return controller.Render(w, r, as, &views.Debug{}, ps, bc...)
 	})
@@ -54,12 +54,7 @@ func loadTable(r *http.Request) (string, string, string) {
 	return schema, table, tbl
 }
 
-func databaseBC(svcKey string, name string) []string {
-	return []string{
-		"admin",
-		"Database||/admin/database",
-		fmt.Sprintf("%s||/admin/database/%s", svcKey, svcKey),
-		fmt.Sprintf("Tables||/admin/database/%s/tables", svcKey),
-		name,
-	}
+func databaseTableBC(key string, args ...string) []string {
+	tbls := fmt.Sprintf("Tables||%s%s/tables", dbRoute, key)
+	return databaseBC(key, append([]string{tbls}, args...)...)
 }

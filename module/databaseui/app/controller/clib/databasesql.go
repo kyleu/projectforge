@@ -69,6 +69,6 @@ func DatabaseSQLRun(w http.ResponseWriter, r *http.Request) {
 
 		ps.SetTitleAndData("SQL Results", results)
 		page := &vdatabase.Detail{Mode: "sql", Svc: svc, SQL: sql, Columns: columns, Results: results, Timing: elapsed, Commit: commit}
-		return controller.Render(w, r, as, page, ps, "admin", "Database||/admin/database", svc.Key+"||/admin/database/"+svc.Key, "Results")
+		return controller.Render(w, r, as, page, ps, databaseBC(svc.Key, "Results")...)
 	})
 }

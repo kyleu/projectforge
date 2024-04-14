@@ -22,15 +22,15 @@ func SQLSelectGrouped(columns string, tables string, where string, groupBy strin
 		columns = "*"
 	}
 	whereClause := ""
-	if len(where) > 0 {
+	if where != "" {
 		whereClause = whereSpaces + where
 	}
 	groupByClause := ""
-	if len(groupBy) > 0 {
+	if groupBy != "" {
 		groupByClause = " group by " + groupBy
 	}
 	orderByClause := ""
-	if len(orderBy) > 0 {
+	if orderBy != "" {
 		orderByClause = " order by " + orderBy
 	}
 	if dbt.Placeholder == "@" {

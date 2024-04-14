@@ -9,18 +9,12 @@ import (
 )
 
 func ToGoViewString(t *types.Wrapped, prop string, nullable bool, format string, verbose bool, url bool, enums enum.Enums, src string) string {
-	json := func() string {
-		return tmplStartEQ + "components.JSON(" + prop + tmplEndP
-	}
-	sa := func(x string) string {
-		return tmplStartEQ + "view.StringArray(" + x + tmplEndP
-	}
 	switch t.Key() {
 	case types.KeyAny:
 		if src == util.KeySimple {
 			return tmplStartV + prop + tmplEnd
 		}
-		return json()
+		return jsonGoViewString(prop)
 	case types.KeyBool:
 		return tmplStartV + prop + tmplEnd
 	case types.KeyInt:
@@ -44,32 +38,12 @@ func ToGoViewString(t *types.Wrapped, prop string, nullable bool, format string,
 			return "INVALID_FLOAT_FORMAT[" + format + "]"
 		}
 	case types.KeyList:
-		if src == util.KeySimple {
-			return tmplStartV + prop + tmplEnd
-		}
-		lt := t.ListType()
-		if lt == nil {
-			lt = types.NewString()
-		}
-		switch lt.Key() {
-		case types.KeyString:
-			return sa(prop)
-		case types.KeyInt:
-			return tmplStartEQ + fmt.Sprintf("view.IntArray(util.ArrayFromAny(%s))", prop) + tmplEnd
-		case types.KeyEnum:
-			e, _ := AsEnumInstance(lt, enums)
-			if e == nil {
-				return "ERROR: invalid enum [" + lt.String() + "]"
-			}
-			return sa(prop + stringsSuffix)
-		default:
-			return json()
-		}
+		return listGoViewString(t, prop, src, enums)
 	case types.KeyMap, types.KeyValueMap, types.KeyReference:
 		if src == util.KeySimple {
 			return tmplStartV + prop + " %%}"
 		}
-		return json()
+		return jsonGoViewString(prop)
 	case types.KeyDate:
 		if nullable {
 			return tmplStartEQ + "view.TimestampDay(" + prop + tmplEndP
@@ -95,5 +69,37 @@ func ToGoViewString(t *types.Wrapped, prop string, nullable bool, format string,
 		return goViewStringForString(url, src, t, nullable, prop, format, verbose)
 	default:
 		return tmplStartV + ToGoString(t, nullable, prop, false) + tmplEnd
+	}
+}
+
+func jsonGoViewString(prop string) string {
+	return tmplStartEQ + "components.JSON(" + prop + tmplEndP
+}
+
+func saGoViewString(x string) string {
+	return tmplStartEQ + "view.StringArray(" + x + tmplEndP
+}
+
+func listGoViewString(t *types.Wrapped, prop string, src string, enums enum.Enums) string {
+	if src == util.KeySimple {
+		return tmplStartV + prop + tmplEnd
+	}
+	lt := t.ListType()
+	if lt == nil {
+		lt = types.NewString()
+	}
+	switch lt.Key() {
+	case types.KeyString:
+		return saGoViewString(prop)
+	case types.KeyInt:
+		return tmplStartEQ + fmt.Sprintf("view.IntArray(util.ArrayFromAny(%s))", prop) + tmplEnd
+	case types.KeyEnum:
+		e, _ := AsEnumInstance(lt, enums)
+		if e == nil {
+			return "ERROR: invalid enum [" + lt.String() + "]"
+		}
+		return saGoViewString(prop + stringsSuffix)
+	default:
+		return jsonGoViewString(prop)
 	}
 }

@@ -35,6 +35,13 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 		if e != nil {
 			return nil, nil, errors.Wrap(e, "unable to export code")
 		}
+		x := lo.FindOrElse(srcFiles, nil, func(f *file.File) bool {
+			return f.Name == "nodetype.go"
+		})
+		y := lo.FindOrElse(files, nil, func(f *file.File) bool {
+			return f.Name == "nodetype.go"
+		})
+		println(x, y)
 		srcFiles = lo.UniqBy(append(files, srcFiles...), func(f *file.File) string {
 			return f.FullPath()
 		})

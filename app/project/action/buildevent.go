@@ -24,6 +24,7 @@ func onBuild(ctx context.Context, pm *PrjAndMods) *Result {
 	}
 
 	_, span, logger := telemetry.StartSpan(ctx, "build:"+phaseStr, pm.Logger)
+	span.Attribute("project", pm.Prj.Key)
 	defer span.Complete()
 	pm.Logger = logger
 

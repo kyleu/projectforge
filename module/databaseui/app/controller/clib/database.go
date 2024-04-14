@@ -15,13 +15,16 @@ import (
 	"{{{ .Package }}}/views/vdatabase"
 )
 
-const KeyAnalyze = "analyze"
+const (
+	KeyAnalyze = "analyze"
+	dbRoute    = "/admin/database/"
+)
 
 func DatabaseList(w http.ResponseWriter, r *http.Request) {
 	controller.Act("database.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		keys := database.RegistryKeys()
 		if len(keys) == 1 {
-			return "/admin/database/" + keys[0], nil
+			return dbRoute + keys[0], nil
 		}
 		svcs := make(map[string]*database.Service, len(keys))
 		for _, key := range keys {
@@ -41,7 +44,7 @@ func DatabaseDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(w, r, as, &vdatabase.Detail{Mode: "", Svc: svc}, ps, "admin", "Database||/admin/database", svc.Key)
+		return controller.Render(w, r, as, &vdatabase.Detail{Mode: "", Svc: svc}, ps, databaseBC(svc.Key)...)
 	})
 }
 
@@ -55,11 +58,11 @@ func DatabaseAction(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		bc := []string{"admin", "Database||/admin/database", fmt.Sprintf("%s||/admin/database/%s", svc.Key, svc.Key), act}
+		bc := databaseBC(svc.Key, act)
 		switch act {
 		case "enable":
 			_ = svc.EnableTracing(r.URL.Query().Get("tracing"), ps.Logger)
-			return "/admin/database/" + svc.Key + "/recent", nil
+			return dbRoute + svc.Key + "/recent", nil
 		case "recent":
 			if idxStr := r.URL.Query().Get("idx"); idxStr != "" {
 				idx, _ := strconv.ParseInt(idxStr, 10, 32)
@@ -84,7 +87,7 @@ func DatabaseAction(w http.ResponseWriter, r *http.Request) {
 				return "", err
 			}
 			msg := fmt.Sprintf("Analyzed database in [%s]", util.MicrosToMillis(t.End()))
-			return controller.FlashAndRedir(true, msg, "/admin/database/"+svc.Key+"/tables", w, ps)
+			return controller.FlashAndRedir(true, msg, dbRoute+svc.Key+"/tables", w, ps)
 		case "sql":
 			return controller.Render(w, r, as, &vdatabase.Detail{Mode: "sql", Svc: svc, SQL: "select 1;"}, ps, bc...)
 		default:
@@ -103,4 +106,8 @@ func getDatabaseService(r *http.Request) (*database.Service, error) {
 		return nil, errors.Wrapf(err, "no database found with key [%s]", key)
 	}
 	return svc, nil
+}
+
+func databaseBC(key string, args ...string) []string {
+	return append([]string{"admin", "Database||/admin/database", fmt.Sprintf("%s||%s%s", key, dbRoute, key)}, args...)
 }

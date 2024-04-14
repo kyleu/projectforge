@@ -4,10 +4,15 @@ import (
 	"fmt"
 	"image/color"
 
+	"github.com/pkg/errors"
+
 	"{{{ .Package }}}/app/util"
 )
 
-const threshold = (65535 * 3) / 2
+const (
+	white, black = "#ffffff", "#000000"
+	threshold    = (65535 * 3) / 2
+)
 
 var Default = func() *Theme {
 	nbl := "{{{ .Theme.Light.NavBackground }}}"
@@ -47,14 +52,14 @@ var Default = func() *Theme {
 func TextColorFor(clr string) string {
 	c, err := ParseHexColor(clr)
 	if err != nil {
-		return "#ffffff"
+		return white
 	}
 	r, g, b, _ := c.RGBA()
 	total := r + g + b
 	if total < threshold {
-		return "#ffffff"
+		return white
 	}
-	return "#000000"
+	return black
 }
 
 func ParseHexColor(s string) (color.RGBA, error) {
@@ -70,7 +75,7 @@ func ParseHexColor(s string) (color.RGBA, error) {
 		ret.G *= 17
 		ret.B *= 17
 	default:
-		err = fmt.Errorf("invalid length, must be 7 or 4")
+		err = errors.Errorf("invalid length [%d], must be 7 or 4", len(s))
 	}
 	return ret, err
 }

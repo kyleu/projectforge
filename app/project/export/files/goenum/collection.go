@@ -69,7 +69,7 @@ func blockString(e *enum.Enum) *golang.Block {
 func blockHelp(e *enum.Enum) *golang.Block {
 	fnHelpBlock := golang.NewBlock(e.Proper()+".Help", "method")
 	fnHelpBlock.W("func (%s %s) Help() string {", e.FirstLetter(), e.ProperPlural())
-	fnHelpBlock.W("\treturn \"Available options: [\" + strings.Join(%s.Strings(), \", \") + \"]\"", e.FirstLetter())
+	fnHelpBlock.W("\treturn \"Available %s options: [\" + strings.Join(%s.Strings(), \", \") + \"]\"", e.TitleLower(), e.FirstLetter())
 	fnHelpBlock.W("}")
 	return fnHelpBlock
 }
@@ -149,13 +149,17 @@ func blockGetByPropUnique(e *enum.Enum, efk string, t string) (*golang.Block, er
 		gxBlock.W("\t\treturn %s%s", e.Proper(), def.Proper())
 		gxBlock.W("\t}")
 	}
-	gxBlock.W("\tmsg := fmt.Sprintf(\"unable to find [%s] with %s [%%%%s]\", input)", e.Proper(), prop)
-	gxBlock.W("\tif logger != nil {")
-	gxBlock.W("\t\tlogger.Warn(msg)")
-	gxBlock.W("\t}")
+	possibleLogger(gxBlock, e, prop)
 	gxBlock.W(retUnknown(e))
 	gxBlock.W("}")
 	return gxBlock, nil
+}
+
+func possibleLogger(gxBlock *golang.Block, e *enum.Enum, prop string) {
+	gxBlock.W("\tif logger != nil {")
+	gxBlock.W("\t\tmsg := fmt.Sprintf(\"unable to find [%s] with %s [%%%%s]\", input)", e.Proper(), prop)
+	gxBlock.W("\t\tlogger.Warn(msg)")
+	gxBlock.W("\t}")
 }
 
 func blockGetByPropShared(e *enum.Enum, efk string, t string) (*golang.Block, error) {
@@ -165,7 +169,7 @@ func blockGetByPropShared(e *enum.Enum, efk string, t string) (*golang.Block, er
 		goType = timePointer
 	}
 	gxBlock := golang.NewBlock(e.ProperPlural()+helper.TextGetBy+efk, "method")
-	gxBlock.W("func (%s %s) GetBy%s(input %s, logger util.Logger) %s {", e.FirstLetter(), e.ProperPlural(), prop, goType, e.ProperPlural())
+	gxBlock.W("func (%s %s) GetBy%s(input %s) %s {", e.FirstLetter(), e.ProperPlural(), prop, goType, e.ProperPlural())
 	gxBlock.W("\tret := %s", e.FirstLetter())
 	gxBlock.W("\tfor _, value := range %s {", e.FirstLetter())
 	gxBlock.W("\t\tif value.%s == input {", prop)

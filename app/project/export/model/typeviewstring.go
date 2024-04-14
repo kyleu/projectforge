@@ -24,6 +24,7 @@ func goViewStringForString(url bool, src string, t *types.Wrapped, nullable bool
 	if src == util.KeySimple {
 		return tmplStart + key + " " + prop + tmplEnd
 	}
+	componentEnd := ", \"\", ps)"
 	switch format {
 	case FmtCode.Key:
 		return "<pre class=\"prewsw\">" + tmplStartS + ToGoString(t, nullable, prop, false) + tmplEnd + "</pre>"
@@ -45,7 +46,7 @@ func goViewStringForString(url bool, src string, t *types.Wrapped, nullable bool
 	case FmtJSON.Key, FmtHTML.Key, FmtSQL.Key:
 		return tmplStartEQ + "view.Format(" + ToGoString(t, nullable, prop, false) + ", \"" + format + "\"" + tmplEndP
 	case FmtColor.Key:
-		return tmplStartEQ + "view.Color(" + ToGoString(t, nullable, prop, false) + ", \"\", ps)" + tmplEnd
+		return tmplStartEQ + "view.Color(" + ToGoString(t, nullable, prop, false) + componentEnd + tmplEnd
 	case FmtCountry.Key:
 		if verbose {
 			x := ToGoString(t, nullable, prop, false)
@@ -57,7 +58,7 @@ func goViewStringForString(url bool, src string, t *types.Wrapped, nullable bool
 		if src == util.KeyDetail {
 			size = "64"
 		}
-		return tmplStartEQ + "components.Icon(" + ToGoString(t, nullable, prop, false) + ", " + size + ", \"\", ps)" + tmplEnd
+		return tmplStartEQ + "components.Icon(" + ToGoString(t, nullable, prop, false) + ", " + size + componentEnd + tmplEnd
 	case FmtImage.Key:
 		size := "128px"
 		msg := `<img style="max-width: %s; max-height: %s" src="{%%%%s %s %%%%}" />`

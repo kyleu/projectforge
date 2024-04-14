@@ -30,37 +30,37 @@ type PostgresParams struct {
 
 func PostgresParamsFromEnv(key string, defaultUser string, prefix string) *PostgresParams {
 	h := localhost
-	if x := util.GetEnv(prefix + "db_host"); x != "" {
+	if x := util.GetEnv(prefix + cfgHost); x != "" {
 		h = x
 	}
 	p := 0
-	if x := util.GetEnv(prefix + "db_port"); x != "" {
+	if x := util.GetEnv(prefix + cfgPort); x != "" {
 		px, _ := strconv.ParseInt(x, 10, 32)
 		p = int(px)
 	}
 	u := defaultUser
-	if x := util.GetEnv(prefix + "db_user"); x != "" {
+	if x := util.GetEnv(prefix + cfgUser); x != "" {
 		u = x
 	}
 	pw := defaultUser
-	if x := util.GetEnv(prefix + "db_password"); x != "" {
+	if x := util.GetEnv(prefix + cfgPassword); x != "" {
 		pw = x
 	}
 	d := key
-	if x := util.GetEnv(prefix + "db_database"); x != "" {
+	if x := util.GetEnv(prefix + cfgDatabase); x != "" {
 		d = x
 	}
 	s := defaultPostgreSQLSchema
-	if x := util.GetEnv(prefix + "db_schema"); x != "" {
+	if x := util.GetEnv(prefix + cfgSchema); x != "" {
 		s = x
 	}
 	mc := 16
-	if x := util.GetEnv(prefix + "db_max_connections"); x != "" {
+	if x := util.GetEnv(prefix + cfgMaxConns); x != "" {
 		mcx, _ := strconv.ParseInt(x, 10, 32)
 		mc = int(mcx)
 	}
 	debug := false
-	if x := util.GetEnv(prefix + "db_debug"); x != "" {
+	if x := util.GetEnv(prefix + cfgDebug); x != "" {
 		debug = x != util.BoolFalse
 	}
 	return &PostgresParams{Host: h, Port: p, Username: u, Password: pw, Database: d, Schema: s, MaxConns: mc, Debug: debug}
