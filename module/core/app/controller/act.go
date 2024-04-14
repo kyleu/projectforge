@@ -10,7 +10,7 @@ import (
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller/cutil"
 	"{{{ .Package }}}/app/lib/telemetry"{{{ if .HasAccount }}}
-	"{{{ .Package }}}/app/lib/user"{{{ end }}}{{{ if.HasModule "marketing" }}}
+	"{{{ .Package }}}/app/lib/user"{{{ end }}}{{{ if .HasModule "marketing" }}}
 	"{{{ .Package }}}/app/site"{{{ end }}}
 	"{{{ .Package }}}/app/util"
 )
@@ -30,7 +30,7 @@ func Act(key string, w http.ResponseWriter, r *http.Request, f ActFn) {
 	}{{{ end }}}
 	actComplete(key, as, ps, w, r, f)
 }
-{{{ if.HasModule "marketing" }}}
+{{{ if .HasModule "marketing" }}}
 func ActSite(key string, w http.ResponseWriter, r *http.Request, f func(as *app.State, ps *cutil.PageState) (string, error)) {
 	as := _currentSiteState
 	ps := cutil.LoadPageState(as, w, r, key, _currentSiteRootLogger)

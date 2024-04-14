@@ -9,7 +9,7 @@ import (
 )
 
 func adminRoutes(r *mux.Router) {
-	makeRoute(r, http.MethodGet, "/admin", clib.Admin){{{ if.HasModule "audit" }}}
+	makeRoute(r, http.MethodGet, "/admin", clib.Admin){{{ if .HasModule "audit" }}}
 	makeRoute(r, http.MethodGet, "/admin/audit", clib.AuditList)
 	makeRoute(r, http.MethodGet, "/admin/audit/random", clib.AuditCreateFormRandom)
 	makeRoute(r, http.MethodGet, "/admin/audit/new", clib.AuditCreateForm)

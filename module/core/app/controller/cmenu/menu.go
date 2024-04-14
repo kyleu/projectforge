@@ -16,7 +16,7 @@ func MenuFor(
 ) (menu.Items, any, error) {
 	var ret menu.Items
 	var data any
-	// $PF_SECTION_START(menu)$ {{{ if.HasExportModels }}}{{{ if .HasAccount }}}
+	// $PF_SECTION_START(menu)$ {{{ if .HasExportModels }}}{{{ if .HasAccount }}}
 	if isAdmin {
 		ret = append(ret, generatedMenu()...)
 	}{{{ else }}}

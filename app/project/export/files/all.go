@@ -52,17 +52,19 @@ func All(p *project.Project, args *model.Args, addHeader bool, linebreak string)
 		ret = append(ret, f)
 	}
 
+	if len(args.Models) > 0 {
+		x, err := controller.Routes(args, addHeader, linebreak)
+		if err != nil {
+			return nil, err
+		}
+		ret = append(ret, x)
+	}
+
 	if len(args.Models) == 0 {
 		return ret, nil
 	}
 
-	x, err := controller.Routes(args, addHeader, linebreak)
-	if err != nil {
-		return nil, err
-	}
-	ret = append(ret, x)
-
-	x, err = controller.Menu(args, addHeader, linebreak)
+	x, err := controller.Menu(args, addHeader, linebreak)
 	if err != nil {
 		return nil, err
 	}

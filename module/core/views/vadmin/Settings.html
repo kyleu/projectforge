@@ -4,7 +4,7 @@
   "{{{ .Package }}}/app/lib/user"{{{ end }}}
   "{{{ .Package }}}/app/util"
   "{{{ .Package }}}/views/components"
-  "{{{ .Package }}}/views/layout"{{{ if.HasAccount }}}
+  "{{{ .Package }}}/views/layout"{{{ if .HasAccount }}}
   "{{{ .Package }}}/views/vauth"{{{ end }}}
 ) %}
 
@@ -26,7 +26,7 @@
     <p><a target="_blank" rel="noopener noreferrer" href="{%s= util.AppURL %}">{%s= util.AppURL %}</a></p>
     {%- endif -%}
     <em>This page is for the settings of the application. To change your user preferences, such as themes, <a href="/profile">edit your profile</a>.</em>
-  </div>{{{ if.HasModule "audit" }}}
+  </div>{{{ if .HasModule "audit" }}}
 
   <div class="card">
     <h3>Audits</h3>
@@ -64,12 +64,12 @@
     {%= settingsLink("/admin/cpu/start", "cog", "Start CPU Profile", "Profiles the CPU using <em>./tmp/cpu.pprof</em>, use script to view", ps) %}
     {%= settingsLink("/admin/cpu/stop", "cog", "Stop CPU Profile", "Stops the active CPU profile", ps) %}{{{ end }}}
     <div class="clear"></div>
-  </div>{{{ if.HasModules "databaseui" "migration" }}}
+  </div>{{{ if .HasModules "databaseui" "migration" }}}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`database`, ps) %}Database Management</h3>{{{ if.HasModule "databaseui" }}}
-    {%= settingsLink("/admin/database", "database", "Database Management", "Tools for exploring and manipulating your database", ps) %}{{{ end }}}{{{ if.HasModule "migration" }}}
+    <h3>{%= components.SVGRefIcon(`database`, ps) %}Database Management</h3>{{{ if .HasModule "databaseui" }}}
+    {%= settingsLink("/admin/database", "database", "Database Management", "Tools for exploring and manipulating your database", ps) %}{{{ end }}}{{{ if .HasModule "migration" }}}
     {%= settingsLink("/admin/migrations", "archive", "Migrations", "Shows the full content of all database SQL migrations", ps) %}{{{ end }}}
-  </div>{{{ end }}}{{{ if.HasAccount }}}
+  </div>{{{ end }}}{{{ if .HasAccount }}}
 
   {%= vauth.Authentication(as, ps) %}
 

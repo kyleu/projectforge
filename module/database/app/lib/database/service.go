@@ -12,7 +12,7 @@ import (
 
 	"{{{ .Package }}}/app/lib/telemetry"
 	"{{{ .Package }}}/app/lib/telemetry/dbmetrics"
-	"{{{ .Package }}}/app/util"{{{ if.HasModule "migration" }}}
+	"{{{ .Package }}}/app/util"{{{ if .HasModule "migration" }}}
 	"{{{ .Package }}}/queries"
 	"{{{ .Package }}}/queries/schema"{{{ end }}}
 )
@@ -57,14 +57,14 @@ func (s *Service) String() string {
 }
 
 func (s *Service) Healthcheck(dbName string, db *sqlx.DB) error {
-	q := {{{ if.HasModule "migration" }}}queries.Healthcheck(){{{ else }}}"select 1"{{{ end }}}
+	q := {{{ if .HasModule "migration" }}}queries.Healthcheck(){{{ else }}}"select 1"{{{ end }}}
 	res, err := db.Query(q)
 	if err != nil || res.Err() != nil {
 		if err == nil {
 			err = res.Err()
 		}
 		if strings.Contains(err.Error(), "does not exist") {
-			{{{ if.HasModule "migration" }}}return errors.Wrapf(err, "database [%s] does not exist; run the following:\n"+schema.CreateDatabase(), dbName){{{ else }}}return errors.Wrapf(err, "database does not exist"){{{ end }}}
+			{{{ if .HasModule "migration" }}}return errors.Wrapf(err, "database [%s] does not exist; run the following:\n"+schema.CreateDatabase(), dbName){{{ else }}}return errors.Wrapf(err, "database does not exist"){{{ end }}}
 		}
 		return errors.Wrapf(err, "unable to run healthcheck [%s]", q)
 	}

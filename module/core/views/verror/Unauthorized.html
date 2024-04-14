@@ -16,7 +16,7 @@
   <div class="card">
     <h3>Unauthorized</h3>
     <em>{%s p.Message %}</em>
-    <p>You're not authorized to view <code>{%s p.Path %}</code></p>{{{ if.HasAccount }}}
+    <p>You're not authorized to view <code>{%s p.Path %}</code></p>{{{ if .HasAccount }}}
     {%- if len(p.Accounts) == 0 -%}
     <p>Sorry about that, maybe try <a href="{%s as.Auth.LoginURL() %}">logging in</a>?</p>
     {%- endif -%}{{{ end }}}

@@ -32,7 +32,7 @@ func AppRoutes(as *app.State, logger util.Logger) (http.Handler, error) {
 	makeRoute(r, http.MethodGet, "/auth/logout/{key}", clib.AuthLogout){{{ end }}}{{{ if .HasModule "search" }}}
 	makeRoute(r, http.MethodGet, cutil.DefaultSearchPath, clib.Search){{{ end }}}
 
-	themeRoutes(r){{{ if.HasModule "export" }}}
+	themeRoutes(r){{{ if .HasExportModels }}}
 	generatedRoutes(r){{{ end }}}
 
 	// $PF_SECTION_START(routes)$
