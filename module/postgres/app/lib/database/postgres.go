@@ -78,6 +78,7 @@ func PostgresParamsFromMap(m util.ValueMap) *PostgresParams {
 		Debug:    m.GetBoolOpt("debug"),
 	}
 }
+
 func OpenPostgres(ctx context.Context, key string, prefix string, logger util.Logger) (*Service, error) {
 	if key == "" {
 		key = util.AppKey

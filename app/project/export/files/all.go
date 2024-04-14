@@ -36,13 +36,27 @@ func All(p *project.Project, args *model.Args, addHeader bool, linebreak string)
 		ret = append(ret, calls...)
 	}
 
-	x, err := svc.Services(args, addHeader, linebreak)
-	if err != nil {
-		return nil, err
+	if len(args.Models) > 0 {
+		x, err := svc.Services(args, addHeader, linebreak)
+		if err != nil {
+			return nil, err
+		}
+		ret = append(ret, x)
 	}
-	ret = append(ret, x)
 
-	x, err = controller.Routes(args, addHeader, linebreak)
+	if len(args.Enums) > 0 && p.HasModule("migration") {
+		f, err := sql.Types(args.Enums, addHeader, linebreak, args.Database)
+		if err != nil {
+			return nil, errors.Wrap(err, "can't render SQL types")
+		}
+		ret = append(ret, f)
+	}
+
+	if len(args.Models) == 0 {
+		return ret, nil
+	}
+
+	x, err := controller.Routes(args, addHeader, linebreak)
 	if err != nil {
 		return nil, err
 	}
@@ -91,13 +105,6 @@ func All(p *project.Project, args *model.Args, addHeader bool, linebreak string)
 		f, err := sql.SeedDataAll(args.Models, linebreak)
 		if err != nil {
 			return nil, errors.Wrap(err, "can't render SQL \"all\" migration")
-		}
-		ret = append(ret, f)
-	}
-	if len(args.Enums) > 0 && p.HasModule("migration") {
-		f, err := sql.Types(args.Enums, addHeader, linebreak, args.Database)
-		if err != nil {
-			return nil, errors.Wrap(err, "can't render SQL types")
 		}
 		ret = append(ret, f)
 	}

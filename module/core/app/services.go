@@ -13,7 +13,7 @@ import (
 )
 
 type Services struct {
-	CoreServices{{{ if .HasModule "export" }}}
+	CoreServices{{{ if .HasExportModels }}}
 	GeneratedServices{{{ end }}}
 
 	// add your dependencies here
@@ -27,7 +27,7 @@ func NewServices(ctx context.Context, st *State, logger util.Logger) (*Services,
 	}
 	{{{ end }}}{{{ if .HasModule "audit" }}}auditSvc := audit.NewService(st.DB, logger)
 	{{{ end }}}return &Services{
-		CoreServices:      initCoreServices(ctx, st{{{ if .HasModule "audit" }}}, auditSvc{{{ end }}}, logger),{{{ if .HasModule "export" }}}
+		CoreServices:      initCoreServices(ctx, st{{{ if .HasModule "audit" }}}, auditSvc{{{ end }}}, logger),{{{ if .HasExportModels }}}
 		GeneratedServices: initGeneratedServices(ctx, st{{{ if .HasModule "audit" }}}, auditSvc{{{ end }}}, logger),{{{ end }}}
 	}, nil
 }
