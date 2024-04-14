@@ -1,4 +1,5 @@
 //go:build darwin || (!android && linux && 386) || (!android && linux && amd64) || (!android && linux && arm) || (!android && linux && arm64) || (!android && linux && riscv64) || (windows && amd64)
+
 package database
 
 import (
@@ -28,5 +29,7 @@ func OpenSQLiteDatabase(ctx context.Context, key string, params *SQLiteParams, l
 	if err != nil {
 		return nil, errors.Wrap(err, "error opening database")
 	}
-	return NewService(TypeSQLite, key, key, params.Schema, "sqlite", params.Debug, db, logger)
+
+	logger = logger.With("svc", "database", "db", key)
+	return NewService(TypeSQLite, key, key, params.Schema, "sqlite", params.Debug, db, params.File, logger)
 }

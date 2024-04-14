@@ -19,8 +19,10 @@
     <em>{%s util.StringPlural(len(p.Keys), "database") %} available</em>
   </div>
   {%- for _, key := range p.Keys -%}
+  {%- code svc := p.Services[key] -%}
   <div class="card">
-    <h3><a href="/admin/database/{%s key %}">{%= components.SVGRefIcon(`database`, ps) %}{%s key %}</a></h3>
+    <div class="right"><em>{%s svc.Type.Title %}</em></div>
+    <h3><a href="/admin/database/{%s key %}">{%= components.SVGRefIcon(`database`, ps) %}{%s svc.Key %}</a></h3>
   </div>
   {%- endfor -%}
 {% endfunc %}

@@ -22,7 +22,9 @@
 
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
+    <div class="right"><em>{%s p.Svc.Type.Title %}</em></div>
     <h3>{%= components.SVGRefIcon(`database`, ps) %}{%s p.Svc.Key %}</h3>
+    <div><em>{%s p.Svc.String() %}</em></div>
     <div class="mt">
       {%- if p.Svc.Tracing() == "" -%}
       <em>tracing is disabled</em>

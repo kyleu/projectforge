@@ -118,6 +118,7 @@ func OpenPostgresDatabase(ctx context.Context, key string, params *PostgresParam
 	db.SetMaxIdleConns(0)
 
 	logger = logger.With("svc", "database", "db", key)
+	stringRep := fmt.Sprintf("%s@%s:%d", params.Database, host, port)
 
-	return NewService(TypePostgres, key, params.Database, params.Schema, params.Username, params.Debug, db, logger)
+	return NewService(TypePostgres, key, params.Database, params.Schema, params.Username, params.Debug, db, stringRep, logger)
 }

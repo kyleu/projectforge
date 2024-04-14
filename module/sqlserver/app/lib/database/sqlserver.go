@@ -124,8 +124,9 @@ func OpenSQLServerDatabase(ctx context.Context, key string, params *SQLServerPar
 	db.SetMaxIdleConns(0)
 
 	logger = logger.With("svc", "database", "db", key)
+	stringRep := fmt.Sprintf("%s@%s:%d", params.Database, host, port)
 
-	return NewService(TypeSQLServer, key, params.Database, params.Schema, params.Username, params.Debug, db, logger)
+	return NewService(TypeSQLServer, key, params.Database, params.Schema, params.Username, params.Debug, db, stringRep, logger)
 }
 
 func UUIDFromGUID(x any) *uuid.UUID {

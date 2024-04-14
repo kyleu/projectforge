@@ -28,9 +28,12 @@ type Service struct {
 	tracing      string{{{ end }}}
 	db           *sqlx.DB
 	metrics      *dbmetrics.Metrics
+	stringRep    string
 }
 
-func NewService(typ *DBType, key string, dbName string, schName string, username string, debug bool, db *sqlx.DB, logger util.Logger) (*Service, error) {
+func NewService(
+	typ *DBType, key string, dbName string, schName string, username string, debug bool, db *sqlx.DB, stringRep string, logger util.Logger,
+) (*Service, error) {
 	if logger == nil {
 		return nil, errors.New("logger must be provided to database service")
 	}
@@ -40,13 +43,17 @@ func NewService(typ *DBType, key string, dbName string, schName string, username
 		logger.Debugf("unable to register database metrics for [%s]: %+v", key, err)
 	}
 
-	ret := &Service{Key: key, DatabaseName: dbName, SchemaName: schName, Username: username, Debug: debug, Type: typ, db: db, metrics: m}
+	ret := &Service{Key: key, DatabaseName: dbName, SchemaName: schName, Username: username, Debug: debug, Type: typ, db: db, metrics: m, stringRep: stringRep}
 	err = ret.Healthcheck(dbName, db)
 	if err != nil {
 		return ret, errors.Wrap(err, "unable to run healthcheck")
 	}
 	register(ret, logger)
 	return ret, nil
+}
+
+func (s *Service) String() string {
+	return s.stringRep
 }
 
 func (s *Service) Healthcheck(dbName string, db *sqlx.DB) error {
