@@ -64,6 +64,19 @@ func MySQLParamsFromEnv(key string, defaultUser string, prefix string) *MySQLPar
 	return &MySQLParams{Host: h, Port: p, Username: u, Password: pw, Database: d, Schema: s, MaxConns: mc, Debug: debug}
 }
 
+func MySQLParamsFromMap(m util.ValueMap) *MySQLParams {
+	return &MySQLParams{
+		Host:     m.GetStringOpt("host"),
+		Port:     m.GetIntOpt("port"),
+		Username: m.GetStringOpt("username"),
+		Password: m.GetStringOpt("password"),
+		Database: m.GetStringOpt("database"),
+		Schema:   m.GetStringOpt("schema"),
+		MaxConns: m.GetIntOpt("maxConns"),
+		Debug:    m.GetBoolOpt("debug"),
+	}
+}
+
 func OpenMySQL(ctx context.Context, key string, prefix string, logger util.Logger) (*Service, error) {
 	if key == "" {
 		key = util.AppKey

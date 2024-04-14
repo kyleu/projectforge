@@ -39,3 +39,7 @@ func SQLiteParamsFromEnv(key string, prefix string) *SQLiteParams {
 	}
 	return &SQLiteParams{File: f, Schema: s, Debug: debug}
 }
+
+func SQLiteParamsFromMap(m util.ValueMap) *SQLiteParams {
+	return &SQLiteParams{File: m.GetStringOpt("file"), Schema: m.GetStringOpt("schema"), Debug: m.GetBoolOpt("debug")}
+}

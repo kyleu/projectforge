@@ -67,6 +67,19 @@ func SQLServerParamsFromEnv(key string, defaultUser string, prefix string) *SQLS
 	return &SQLServerParams{Host: h, Port: p, Username: u, Password: pw, Database: d, Schema: s, MaxConns: mc, Debug: debug}
 }
 
+func SQLServerParamsFromMap(m util.ValueMap) *SQLServerParams {
+	return &SQLServerParams{
+		Host:     m.GetStringOpt("host"),
+		Port:     m.GetIntOpt("port"),
+		Username: m.GetStringOpt("username"),
+		Password: m.GetStringOpt("password"),
+		Database: m.GetStringOpt("database"),
+		Schema:   m.GetStringOpt("schema"),
+		MaxConns: m.GetIntOpt("maxConns"),
+		Debug:    m.GetBoolOpt("debug"),
+	}
+}
+
 func OpenSQLServer(ctx context.Context, key string, prefix string, logger util.Logger) (*Service, error) {
 	if key == "" {
 		key = util.AppKey
