@@ -23,26 +23,6 @@ var (
 	OriginUnknown    = Origin{Key: "unknown", Title: "Unknown", Icon: "star", Description: "Not quite sure what this is"}
 )
 
-func OriginKeys() []string {
-	return lo.Map(AllOrigins, func(x Origin, _ int) string {
-		return x.Key
-	})
-}
-
-func OriginTitles() []string {
-	return lo.Map(AllOrigins, func(x Origin, _ int) string {
-		return x.Title
-	})
-}
-
-var AllOrigins = []Origin{OriginMySQL, OriginPostgres, OriginSQLite, OriginSQLServer, OriginGraphQL, OriginProtobuf, OriginJSONSchema, OriginMock}
-
-func OriginFromString(key string) Origin {
-	return lo.FindOrElse(AllOrigins, OriginUnknown, func(t Origin) bool {
-		return t.Key == key
-	})
-}
-
 func (t *Origin) String() string {
 	return t.Key
 }
@@ -54,4 +34,32 @@ func (t *Origin) MarshalText() ([]byte, error) {
 func (t *Origin) UnmarshalText(data []byte) error {
 	*t = OriginFromString(string(data))
 	return nil
+}
+
+type Origins []Origin
+
+var AllOrigins = Origins{OriginMySQL, OriginPostgres, OriginSQLite, OriginSQLServer, OriginGraphQL, OriginProtobuf, OriginJSONSchema, OriginMock}
+
+func OriginFromString(key string) Origin {
+	return lo.FindOrElse(AllOrigins, OriginUnknown, func(t Origin) bool {
+		return t.Key == key
+	})
+}
+
+func (o Origins) Get(key string) Origin {
+	return lo.FindOrElse(o, OriginUnknown, func(x Origin) bool {
+		return x.Key == key
+	})
+}
+
+func (o Origins) Keys() []string {
+	return lo.Map(o, func(x Origin, _ int) string {
+		return x.Key
+	})
+}
+
+func (o Origins) Titles() []string {
+	return lo.Map(o, func(x Origin, _ int) string {
+		return x.Title
+	})
 }
