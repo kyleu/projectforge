@@ -28,7 +28,8 @@ func (s *Service) RegisterStringSchema(key string, title string, content string,
 	if _, ok := s.schemata[key]; ok {
 		return errors.Errorf("duplicate registration of schema [%s]", key)
 	}
-	sch, err := graphql.ParseSchema(content, target, graphql.Tracer(&otelgraphql.Tracer{Tracer: otel.GetTracerProvider().Tracer(util.AppKey)}))
+	traceOpt := graphql.Tracer(&otelgraphql.Tracer{Tracer: otel.GetTracerProvider().Tracer(util.AppKey)})
+	sch, err := graphql.ParseSchema(content, target, graphql.UseFieldResolvers(), traceOpt)
 	if err != nil {
 		return errors.Wrapf(err, "unable to parse schema for [%s]", key)
 	}

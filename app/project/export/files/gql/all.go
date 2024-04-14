@@ -15,6 +15,7 @@ func All(models model.Models, enums enum.Enums, linebreak string) (*file.File, e
 	if len(enums) > 0 {
 		modelBlocks(g, models, enums)
 	}
+	g.AddBlocks(extendQuery(), extendMutation())
 	return g.Render(false, linebreak)
 }
 
@@ -26,7 +27,6 @@ func enumBlocks(g *golang.Template, enums enum.Enums) {
 
 func enumBlock(e *enum.Enum) *golang.Block {
 	ret := golang.NewBlock("enum:"+e.Name, "graphql")
-	ret.WB()
 	ret.W("# Enum Type [%s]", e.Proper())
 	return ret
 }
@@ -39,7 +39,20 @@ func modelBlocks(g *golang.Template, models model.Models, enums enum.Enums) {
 
 func modelBlock(m *model.Model, _ enum.Enums) *golang.Block {
 	ret := golang.NewBlock("model:"+m.Name, "graphql")
-	ret.WB()
 	ret.W("# Model Class [%s]", m.Title())
+	return ret
+}
+
+func extendQuery() *golang.Block {
+	ret := golang.NewBlock("extendQuery", "graphql")
+	ret.W("extend type Query {")
+	ret.W("}")
+	return ret
+}
+
+func extendMutation() *golang.Block {
+	ret := golang.NewBlock("extendMutation", "graphql")
+	ret.W("extend type Mutation {")
+	ret.W("}")
 	return ret
 }

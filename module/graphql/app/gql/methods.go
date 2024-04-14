@@ -1,10 +1,12 @@
 // $PF_GENERATE_ONCE$
 package gql
 
-func (s *Schema) Hello() string {
-	return "Howdy!"
+import "context"
+
+func (s *Schema) Hello(ctx context.Context) (string, error) {
+	return "Howdy!", nil
 }
 
-func (s *Schema) Poke() string {
-	return "OK!"
+func (s *Schema) Poke(ctx context.Context) (string, error) {
+	return "OK!", nil
 }
