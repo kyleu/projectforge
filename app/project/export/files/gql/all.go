@@ -7,19 +7,15 @@ import (
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func All(models model.Models, enums enum.Enums, addHeader bool, linebreak string) (*file.File, error) {
+func All(models model.Models, enums enum.Enums, linebreak string) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"app", "gql"}, "generated.graphql")
-	headerBlock := golang.NewBlock("header", "graphql")
-	headerBlock.W("### This file contains generated definitions of generated models and enums")
-	headerBlock.W("### To use these definitions, include them inside your `schema.graphql` file")
-	g.AddBlocks(headerBlock)
 	if len(enums) > 0 {
 		enumBlocks(g, enums)
 	}
 	if len(enums) > 0 {
 		modelBlocks(g, models, enums)
 	}
-	return g.Render(addHeader, linebreak)
+	return g.Render(false, linebreak)
 }
 
 func enumBlocks(g *golang.Template, enums enum.Enums) {
