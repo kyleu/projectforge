@@ -29,7 +29,7 @@ func StringToArray(s string) []string {
 	ret := make([]string, 0)
 	lo.ForEach(split, func(x string, _ int) {
 		y := strings.TrimSpace(x)
-		if len(y) > 0 {
+		if y != "" {
 			ret = append(ret, y)
 		}
 	})

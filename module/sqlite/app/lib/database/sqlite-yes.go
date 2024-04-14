@@ -1,5 +1,4 @@
 //go:build darwin || (!android && linux && 386) || (!android && linux && amd64) || (!android && linux && arm) || (!android && linux && arm64) || (!android && linux && riscv64) || (windows && amd64)
-
 package database
 
 import (
@@ -8,7 +7,7 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
-	_ "modernc.org/sqlite" // load sqlite driver.
+	_ "modernc.org/sqlite"
 
 	"{{{ .Package }}}/app/lib/telemetry"
 	"{{{ .Package }}}/app/util"

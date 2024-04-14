@@ -7,7 +7,7 @@ import (
 	"github.com/samber/lo"
 )
 
-const whereSpaces = " where "
+const whereClause, fromClause, returningClause, selectClause = " where ", " from ", " returning ", "select "
 
 func SQLSelect(columns string, tables string, where string, orderBy string, limit int, offset int, dbt *DBType) string {
 	return SQLSelectGrouped(columns, tables, where, "", orderBy, limit, offset, dbt)
@@ -23,7 +23,7 @@ func SQLSelectGrouped(columns string, tables string, where string, groupBy strin
 	}
 	whereClause := ""
 	if where != "" {
-		whereClause = whereSpaces + where
+		whereClause += where
 	}
 	groupByClause := ""
 	if groupBy != "" {
@@ -36,17 +36,17 @@ func SQLSelectGrouped(columns string, tables string, where string, groupBy strin
 	if dbt.Placeholder == "@" {
 		switch {
 		case limit == 0 && offset == 0:
-			return "select " + columns + " from " + tables + whereClause + groupByClause + orderByClause
+			return selectClause + columns + fromClause + tables + whereClause + groupByClause + orderByClause
 		case limit > 0 && offset == 0:
 			limitClause := fmt.Sprintf("top %d ", limit)
-			return "select " + limitClause + columns + " from " + tables + whereClause + groupByClause + orderByClause
+			return selectClause + limitClause + columns + fromClause + tables + whereClause + groupByClause + orderByClause
 		case offset > 0:
 			if orderByClause == "" {
 				orderByClause = " order by (select null)"
 			}
 			offsetClause := fmt.Sprintf(" offset %d rows", offset)
 			limitClause := fmt.Sprintf(" fetch next %d rows only", limit)
-			return "select " + columns + " from " + tables + whereClause + groupByClause + orderByClause + offsetClause + limitClause
+			return selectClause + columns + fromClause + tables + whereClause + groupByClause + orderByClause + offsetClause + limitClause
 		}
 	}
 	limitClause := ""
@@ -57,7 +57,7 @@ func SQLSelectGrouped(columns string, tables string, where string, groupBy strin
 	if offset > 0 {
 		offsetClause = fmt.Sprintf(" offset %d", offset)
 	}
-	return "select " + columns + " from " + tables + whereClause + groupByClause + orderByClause + limitClause + offsetClause
+	return selectClause + columns + fromClause + tables + whereClause + groupByClause + orderByClause + limitClause + offsetClause
 }
 
 func SQLInsert(table string, columns []string, rows int, dbt *DBType) string {
@@ -79,15 +79,15 @@ func SQLInsert(table string, columns []string, rows int, dbt *DBType) string {
 func SQLInsertReturning(table string, columns []string, rows int, returning []string, dbt *DBType) string {
 	q := SQLInsert(table, columns, rows, dbt)
 	if len(returning) > 0 {
-		q += " returning " + strings.Join(returning, ", ")
+		q += returningClause + strings.Join(returning, ", ")
 	}
 	return q
 }
 
 func SQLUpdate(table string, columns []string, where string, dbt *DBType) string {
 	whereClause := ""
-	if len(where) > 0 {
-		whereClause = whereSpaces + where
+	if where != "" {
+		whereClause += where
 	}
 
 	stmts := lo.FilterMap(columns, func(col string, i int) (string, bool) {
@@ -99,7 +99,7 @@ func SQLUpdate(table string, columns []string, where string, dbt *DBType) string
 func SQLUpdateReturning(table string, columns []string, where string, returned []string, dbt *DBType) string {
 	q := SQLUpdate(table, columns, where, dbt)
 	if len(returned) > 0 {
-		q += " returning " + strings.Join(returned, ", ")
+		q += returningClause + strings.Join(returned, ", ")
 	}
 	return q
 }
@@ -147,7 +147,7 @@ func SQLDelete(table string, where string, _ *DBType) string {
 	if strings.TrimSpace(where) == "" {
 		return fmt.Sprintf("attempt to delete from [%s] with empty where clause", table)
 	}
-	return "delete from " + table + whereSpaces + where
+	return "delete from " + table + whereClause + where
 }
 
 func SQLInClause(column string, numParams int, offset int, dbt *DBType) string {

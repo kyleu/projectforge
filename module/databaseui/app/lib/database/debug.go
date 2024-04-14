@@ -18,6 +18,8 @@ const (
 	DebugLevelStatement = "statement"
 	DebugLevelValues    = "values"
 	DebugLevelAnalyze   = "analyze"
+
+	ellipsis = "..."
 )
 
 var (
@@ -46,14 +48,14 @@ type DebugStatement struct {
 
 func (s *DebugStatement) SQLTrimmed(maxLength int) string {
 	if len(s.SQL) > maxLength {
-		return s.SQL[:maxLength] + "..."
+		return s.SQL[:maxLength] + ellipsis
 	}
 	return s.SQL
 }
 
 func (s *DebugStatement) ErrorTrimmed(maxLength int) string {
 	if len(s.Error) > maxLength {
-		return s.Error[:maxLength] + "..."
+		return s.Error[:maxLength] + ellipsis
 	}
 	return s.Error
 }

@@ -13,7 +13,7 @@ import (
 
 func (s *Service) Query(ctx context.Context, q string, tx *sqlx.Tx, logger util.Logger, values ...any) (*sqlx.Rows, error) {
 	const op = "query"
-	now, ctx, span, logger := s.newSpan(ctx, "db:"+op, q, logger)
+	now, ctx, span, logger := s.newSpan(ctx, dbPrefix+op, q, logger)
 	var ret *sqlx.Rows
 	var err error
 	defer s.complete(q, op, span, now, logger, err)
@@ -115,7 +115,7 @@ func (s *Service) QuerySingleRow(ctx context.Context, q string, tx *sqlx.Tx, log
 
 func (s *Service) Select(ctx context.Context, dest any, q string, tx *sqlx.Tx, logger util.Logger, values ...any) error {
 	const op = "select"
-	now, ctx, span, logger := s.newSpan(ctx, "db:"+op, q, logger)
+	now, ctx, span, logger := s.newSpan(ctx, dbPrefix+op, q, logger)
 	var err error
 	defer s.complete(q, op, span, now, logger, err)
 	f := s.logQuery(ctx, fmt.Sprintf("selecting rows of type [%T]", dest), q, logger, values)
@@ -131,7 +131,7 @@ func (s *Service) Select(ctx context.Context, dest any, q string, tx *sqlx.Tx, l
 
 func (s *Service) Get(ctx context.Context, row any, q string, tx *sqlx.Tx, logger util.Logger, values ...any) error {
 	const op = "get"
-	now, ctx, span, logger := s.newSpan(ctx, "db:"+op, q, logger)
+	now, ctx, span, logger := s.newSpan(ctx, dbPrefix+op, q, logger)
 	var err error
 	defer s.complete(q, op, span, now, logger, err)
 	f := s.logQuery(ctx, fmt.Sprintf("getting single row of type [%T]", row), q, logger, values)
@@ -159,7 +159,7 @@ type singleIntResult struct {
 
 func (s *Service) SingleInt(ctx context.Context, q string, tx *sqlx.Tx, logger util.Logger, values ...any) (int64, error) {
 	const op = "single-int"
-	now, ctx, span, logger := s.newSpan(ctx, "db:"+op, q, logger)
+	now, ctx, span, logger := s.newSpan(ctx, dbPrefix+op, q, logger)
 	var err error
 	defer s.complete(q, op, span, now, logger, err)
 	x := &singleIntResult{}
@@ -179,7 +179,7 @@ type singleBoolResult struct {
 
 func (s *Service) SingleBool(ctx context.Context, q string, tx *sqlx.Tx, logger util.Logger, values ...any) (bool, error) {
 	const op = "single-bool"
-	now, ctx, span, logger := s.newSpan(ctx, "db:"+op, q, logger)
+	now, ctx, span, logger := s.newSpan(ctx, dbPrefix+op, q, logger)
 	var err error
 	defer s.complete(q, op, span, now, logger, err)
 	x := &singleBoolResult{}
