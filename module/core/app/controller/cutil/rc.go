@@ -27,8 +27,6 @@ func RequestCtxToMap(r *http.Request, {{{ if .HasModule "help" }}}as{{{ else }}}
 		"description": ps.Description, "title": ps.Title, "started": ps.Started,{{{ if .HasModule "help" }}} "help": hasHelp,{{{ end }}}
 	}
 	ret := util.ValueMap{"action": action, "data": ps.Data, "request": req}
-	// $PF_SECTION_START(debugstuff)$
-	// $PF_SECTION_END(debugstuff)$
 	return ret
 }
 
