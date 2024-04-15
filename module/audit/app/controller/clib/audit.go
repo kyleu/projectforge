@@ -25,7 +25,7 @@ func AuditList(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData(auditDefaultTitle, ret)
-		return controller.Render(w, r, as, &vaudit.List{Models: ret, Params: ps.Params}, ps, "admin", "Audit")
+		return controller.Render(r, as, &vaudit.List{Models: ret, Params: ps.Params}, ps, "admin", "Audit")
 	})
 }
 
@@ -40,7 +40,7 @@ func AuditDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child auditrecords")
 		}
-		return controller.Render(w, r, as, &vaudit.Detail{Model: ret, Params: ps.Params, Records: records}, ps, "admin", auditBreadcrumb, ret.String())
+		return controller.Render(r, as, &vaudit.Detail{Model: ret, Params: ps.Params, Records: records}, ps, "admin", auditBreadcrumb, ret.String())
 	})
 }
 
@@ -48,7 +48,7 @@ func AuditCreateForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("audit.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &audit.Audit{}
 		ps.SetTitleAndData("Create [Audit]", ret)
-		return controller.Render(w, r, as, &vaudit.Edit{Model: ret, IsNew: true}, ps, "admin", auditBreadcrumb, "Create")
+		return controller.Render(r, as, &vaudit.Edit{Model: ret, IsNew: true}, ps, "admin", auditBreadcrumb, "Create")
 	})
 }
 
@@ -56,7 +56,7 @@ func AuditCreateFormRandom(w http.ResponseWriter, r *http.Request) {
 	controller.Act("audit.create.form.random", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := audit.Random()
 		ps.SetTitleAndData("Create Random [Audit]", ret)
-		return controller.Render(w, r, as, &vaudit.Edit{Model: ret, IsNew: true}, ps, "admin", auditBreadcrumb, "Create")
+		return controller.Render(r, as, &vaudit.Edit{Model: ret, IsNew: true}, ps, "admin", auditBreadcrumb, "Create")
 	})
 }
 
@@ -71,7 +71,7 @@ func AuditCreate(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrap(err, "unable to save newly-created Audit")
 		}
 		msg := fmt.Sprintf("Audit [%s] created", ret.String())
-		return controller.FlashAndRedir(true, msg, ret.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
 
@@ -82,7 +82,7 @@ func AuditEditForm(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit ["+ret.String()+"]", ret)
-		return controller.Render(w, r, as, &vaudit.Edit{Model: ret}, ps, "admin", auditBreadcrumb, ret.String())
+		return controller.Render(r, as, &vaudit.Edit{Model: ret}, ps, "admin", auditBreadcrumb, ret.String())
 	})
 }
 
@@ -102,7 +102,7 @@ func AuditEdit(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to update Audit [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("Audit [%s] updated", frm.String())
-		return controller.FlashAndRedir(true, msg, frm.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
 
@@ -117,7 +117,7 @@ func AuditDelete(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to delete audit [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Audit [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/admin/audit", w, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/audit", ps)
 	})
 }
 
@@ -132,7 +132,7 @@ func RecordDetail(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData(ret.String(), ret)
-		return controller.Render(w, r, as, &vaudit.RecordDetail{Model: ret, Audit: aud}, ps, "admin", auditBreadcrumb, ret.String())
+		return controller.Render(r, as, &vaudit.RecordDetail{Model: ret, Audit: aud}, ps, "admin", auditBreadcrumb, ret.String())
 	})
 }
 

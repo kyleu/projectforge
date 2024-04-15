@@ -23,7 +23,7 @@ const execIcon = "file"
 func ExecList(w http.ResponseWriter, r *http.Request) {
 	controller.Act("exec.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ps.SetTitleAndData("Processes", as.Services.Exec.Execs)
-		return controller.Render(w, r, as, &vexec.List{Execs: as.Services.Exec.Execs}, ps, "exec")
+		return controller.Render(r, as, &vexec.List{Execs: as.Services.Exec.Execs}, ps, "exec")
 	})
 }
 
@@ -32,7 +32,7 @@ func ExecForm(w http.ResponseWriter, r *http.Request) {
 		x := &exec.Exec{}
 		ps.SetTitleAndData("New Process", x)
 		ps.DefaultNavIcon = execIcon
-		return controller.Render(w, r, as, &vexec.Form{Exec: x}, ps, "exec", "New Process")
+		return controller.Render(r, as, &vexec.Form{Exec: x}, ps, "exec", "New Process")
 	})
 }
 
@@ -65,7 +65,7 @@ func ExecNew(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, "started process", x.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, "started process", x.WebPath(), ps)
 	})
 }
 
@@ -77,7 +77,7 @@ func ExecDetail(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData(ex.String(), ex)
 		ps.DefaultNavIcon = execIcon
-		return controller.Render(w, r, as, &vexec.Detail{Exec: ex}, ps, "exec", ex.String())
+		return controller.Render(r, as, &vexec.Detail{Exec: ex}, ps, "exec", ex.String())
 	})
 }
 
@@ -106,7 +106,7 @@ func ExecKill(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, fmt.Sprintf("Killed process [%s]", proc.String()), "/admin/exec", w, ps)
+		return controller.FlashAndRedir(true, fmt.Sprintf("Killed process [%s]", proc.String()), "/admin/exec", ps)
 	})
 }
 

@@ -57,7 +57,7 @@ func GitAction(w http.ResponseWriter, r *http.Request) {
 			if argRes.HasMissing() {
 				ps.Data = argRes
 				url := fmt.Sprintf("/git/%s/commit", prj.Key)
-				return controller.Render(w, r, as, &vpage.Args{URL: url, Directions: "Enter your commit message", ArgRes: argRes}, ps, bc...)
+				return controller.Render(r, as, &vpage.Args{URL: url, Directions: "Enter your commit message", ArgRes: argRes}, ps, bc...)
 			}
 			result, err = as.Services.Git.Commit(ps.Context, prj, argRes.Values.GetStringOpt("message"), ps.Logger)
 		case git.ActionUndoCommit.Key:
@@ -75,7 +75,7 @@ func GitAction(w http.ResponseWriter, r *http.Request) {
 			if argRes.HasMissing() {
 				ps.Data = argRes
 				url := fmt.Sprintf("/git/%s/history", prj.Key)
-				return controller.Render(w, r, as, &vpage.Args{URL: url, Directions: "Choose your options", ArgRes: argRes}, ps, bc...)
+				return controller.Render(r, as, &vpage.Args{URL: url, Directions: "Choose your options", ArgRes: argRes}, ps, bc...)
 			}
 			path := argRes.Values.GetStringOpt("paths")
 			since, _ := util.TimeFromString(argRes.Values.GetStringOpt("since"))
@@ -89,7 +89,7 @@ func GitAction(w http.ResponseWriter, r *http.Request) {
 			if argRes.HasMissing() {
 				url := fmt.Sprintf("/git/%s/branch", prj.Key)
 				ps.Data = argRes
-				return controller.Render(w, r, as, &vpage.Args{URL: url, Directions: "Enter your branch name", ArgRes: argRes}, ps, bc...)
+				return controller.Render(r, as, &vpage.Args{URL: url, Directions: "Enter your branch name", ArgRes: argRes}, ps, bc...)
 			}
 			result, err = as.Services.Git.Commit(ps.Context, prj, argRes.Values.GetStringOpt("message"), ps.Logger)
 		case git.ActionMagic.Key:
@@ -97,7 +97,7 @@ func GitAction(w http.ResponseWriter, r *http.Request) {
 			if argRes.HasMissing() {
 				url := fmt.Sprintf("/git/%s/magic", prj.Key)
 				ps.Data = argRes
-				return controller.Render(w, r, as, &vpage.Args{URL: url, Directions: "Enter your commit message", ArgRes: argRes}, ps, bc...)
+				return controller.Render(r, as, &vpage.Args{URL: url, Directions: "Enter your commit message", ArgRes: argRes}, ps, bc...)
 			}
 			dryRun := argRes.Values.GetStringOpt("dryRun") == util.BoolTrue
 			result, err = as.Services.Git.Magic(ps.Context, prj, argRes.Values.GetStringOpt("message"), dryRun, ps.Logger)
@@ -118,6 +118,6 @@ func GitAction(w http.ResponseWriter, r *http.Request) {
 			result.Data = result.Data.Merge(statusResult.Data)
 		}
 		ps.Data = result
-		return controller.Render(w, r, as, &vgit.Result{Action: actn, Result: result}, ps, bc...)
+		return controller.Render(r, as, &vgit.Result{Action: actn, Result: result}, ps, bc...)
 	})
 }

@@ -7,7 +7,7 @@ Usually you'll want to set a flash at the end of a request, before a redirect.
 
 ```go
 // FlashAndRedir(success bool, msg string, redir string, w http.ResponseWriter, ps *cutil.PageState)
-return controller.FlashAndRedir(true, msg, u, w, ps)
+return controller.FlashAndRedir(true, msg, u, ps)
 ```
 
 Alternately, you can add a flash manually by appending to the `Flashes` field of `cutil.PageState` in your controller action.

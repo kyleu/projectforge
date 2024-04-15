@@ -15,7 +15,7 @@ func ScheduleList(w http.ResponseWriter, r *http.Request) {
 	controller.Act("schedule.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		jobs := as.Services.Schedule.ListJobs()
 		ps.SetTitleAndData("Schedules", jobs)
-		return controller.Render(w, r, as, &vadmin.Schedule{Jobs: jobs}, ps, "admin", scheduleBC)
+		return controller.Render(r, as, &vadmin.Schedule{Jobs: jobs}, ps, "admin", scheduleBC)
 	})
 }
 
@@ -33,6 +33,6 @@ func ScheduleDetail(w http.ResponseWriter, r *http.Request) {
 		res := as.Services.Schedule.Results[*id]
 
 		ps.SetTitleAndData(job.ID.String(), job)
-		return controller.Render(w, r, as, &vadmin.ScheduleDetail{Job: job, Result: res}, ps, "admin", scheduleBC, job.ID.String())
+		return controller.Render(r, as, &vadmin.ScheduleDetail{Job: job, Result: res}, ps, "admin", scheduleBC, job.ID.String())
 	})
 }

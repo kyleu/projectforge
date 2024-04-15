@@ -20,6 +20,6 @@ var homeContent = util.ValueMap{
 func Home(w http.ResponseWriter, r *http.Request) {
 	Act("home", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ps.SetTitleAndData(util.AppName, homeContent)
-		return Render(w, r, as, &views.Home{}, ps)
+		return Render(r, as, &views.Home{}, ps)
 	})
 }

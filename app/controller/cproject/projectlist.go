@@ -41,16 +41,16 @@ func ProjectList(w http.ResponseWriter, r *http.Request) {
 			msgs := lo.Map(prjs, func(p *project.Project, _ int) string {
 				return fmt.Sprintf("%s: %d", p.Key, p.Port)
 			})
-			_, _ = w.Write([]byte(strings.Join(msgs, util.StringDefaultLinebreak)))
+			_, _ = ps.W.Write([]byte(strings.Join(msgs, util.StringDefaultLinebreak)))
 			return "", nil
 		case "versions":
 			msgs := lo.Map(prjs, func(p *project.Project, _ int) string {
 				return fmt.Sprintf("%s: %s", p.Key, p.Version)
 			})
-			_, _ = w.Write([]byte(strings.Join(msgs, util.StringDefaultLinebreak)))
+			_, _ = ps.W.Write([]byte(strings.Join(msgs, util.StringDefaultLinebreak)))
 			return "", nil
 		default:
-			return controller.Render(w, r, as, &vproject.List{Projects: prjs, Execs: execs, Tags: tags}, ps, "projects")
+			return controller.Render(r, as, &vproject.List{Projects: prjs, Execs: execs, Tags: tags}, ps, "projects")
 		}
 	})
 }

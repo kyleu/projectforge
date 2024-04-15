@@ -25,13 +25,13 @@ func socketRoute(w http.ResponseWriter, r *http.Request, as *app.State, ps *cuti
 	if len(path) == 0 {
 		chans, conns, taps := as.Services.Socket.Status()
 		ps.SetTitleAndData("Sockets", util.ValueMap{"channels": chans, "connections": conns})
-		return controller.Render(w, r, as, &vadmin.Sockets{Channels: chans, Connections: conns, Taps: taps}, ps, bc()...)
+		return controller.Render(r, as, &vadmin.Sockets{Channels: chans, Connections: conns, Taps: taps}, ps, bc()...)
 	}
 	switch path[0] {
 	case "tap":
 		ps.SetTitleAndData("WebSocket Tap", "tap")
 		ps.DefaultNavIcon = "search"
-		return controller.Render(w, r, as, &vadmin.SocketTap{}, ps, bc("Tap")...)
+		return controller.Render(r, as, &vadmin.SocketTap{}, ps, bc("Tap")...)
 	case "tap-socket":
 		_, err := as.Services.Socket.RegisterTap(w, r, ps.Logger)
 		if err != nil {
@@ -46,7 +46,7 @@ func socketRoute(w http.ResponseWriter, r *http.Request, as *app.State, ps *cuti
 		members := as.Services.Socket.GetAllMembers(path[1])
 		ps.Data = ch
 		ps.DefaultNavIcon = socketIcon
-		return controller.Render(w, r, as, &vadmin.Channel{Channel: ch, Members: members}, ps, bc("Channel", ch.Key)...)
+		return controller.Render(r, as, &vadmin.Channel{Channel: ch, Members: members}, ps, bc("Channel", ch.Key)...)
 	case "conn":
 		if len(path) == 0 {
 			return "", errors.New("no connection ID in path")
@@ -62,7 +62,7 @@ func socketRoute(w http.ResponseWriter, r *http.Request, as *app.State, ps *cuti
 			}
 			ps.Data = c
 			ps.DefaultNavIcon = socketIcon
-			return controller.Render(w, r, as, &vadmin.Connection{Connection: c}, ps, bc("Connection", c.ID.String())...)
+			return controller.Render(r, as, &vadmin.Connection{Connection: c}, ps, bc("Connection", c.ID.String())...)
 		}
 		frm, _ := cutil.ParseForm(r, ps.RequestBody)
 		fromStr := frm.GetStringOpt("from")
@@ -80,7 +80,7 @@ func socketRoute(w http.ResponseWriter, r *http.Request, as *app.State, ps *cuti
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, "sent message", fmt.Sprintf("/admin/sockets/conn/%s", id.String()), w, ps)
+		return controller.FlashAndRedir(true, "sent message", fmt.Sprintf("/admin/sockets/conn/%s", id.String()), ps)
 	default:
 		return "", errors.Errorf("invalid path [%s]", strings.Join(path, "/"))
 	}

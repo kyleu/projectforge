@@ -14,7 +14,7 @@ import (
 func SandboxList(w http.ResponseWriter, r *http.Request) {
 	controller.Act("sandbox.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ps.SetTitleAndData("Sandboxes", sandbox.AllSandboxes)
-		return controller.Render(w, r, as, &vsandbox.List{}, ps, "sandbox")
+		return controller.Render(r, as, &vsandbox.List{}, ps, "sandbox")
 	})
 }
 
@@ -39,11 +39,11 @@ func SandboxRun(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData(sb.Title, ret)
 		if sb.Key == "testbed" {
-			return controller.Render(w, r, as, &vsandbox.Testbed{}, ps, "sandbox", sb.Key)
+			return controller.Render(r, as, &vsandbox.Testbed{}, ps, "sandbox", sb.Key)
 		}{{{ if .HasModule "wasmclient" }}}
 		if sb.Key == "wasm" {
-			return controller.Render(w, r, as, &vsandbox.WASM{}, ps, "sandbox", sb.Key)
+			return controller.Render(r, as, &vsandbox.WASM{}, ps, "sandbox", sb.Key)
 		}{{{ end }}}
-		return controller.Render(w, r, as, &vsandbox.Run{Key: key, Title: sb.Title, Icon: sb.Icon, Result: ret}, ps, "sandbox", sb.Key)
+		return controller.Render(r, as, &vsandbox.Run{Key: key, Title: sb.Title, Icon: sb.Icon, Result: ret}, ps, "sandbox", sb.Key)
 	})
 }

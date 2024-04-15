@@ -27,7 +27,7 @@ func ProjectExportModelDetail(w http.ResponseWriter, r *http.Request) {
 		}
 		bc := []string{"projects", prj.Key, fmt.Sprintf("Export||/p/%s/export", prj.Key), mdl.Title()}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] %s", prj.Key, mdl.Name), mdl)
-		return controller.Render(w, r, as, &vexport.ModelDetail{Project: prj, Model: mdl, Files: fls}, ps, bc...)
+		return controller.Render(r, as, &vexport.ModelDetail{Project: prj, Model: mdl, Files: fls}, ps, bc...)
 	})
 }
 
@@ -41,7 +41,7 @@ func ProjectExportModelSeedData(w http.ResponseWriter, r *http.Request) {
 		mbc := fmt.Sprintf("%s||/p/%s/export/models/%s", mdl.Title(), prj.Key, mdl.Name)
 		bc := []string{"projects", prj.Key, xbc, mbc, "Seed Data"}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] %s", prj.Key, mdl.Name), mdl)
-		return controller.Render(w, r, as, &vexport.ModelSeedData{Project: prj, Model: mdl}, ps, bc...)
+		return controller.Render(r, as, &vexport.ModelSeedData{Project: prj, Model: mdl}, ps, bc...)
 	})
 }
 
@@ -54,7 +54,7 @@ func ProjectExportModelNew(w http.ResponseWriter, r *http.Request) {
 		mdl := &model.Model{}
 		bc := []string{"projects", prj.Key, fmt.Sprintf("Export||/p/%s/export", prj.Key), "New"}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] New Model", prj.Key), mdl)
-		return controller.Render(w, r, as, &vexport.ModelForm{Project: prj, Model: mdl, Examples: model.Examples}, ps, bc...)
+		return controller.Render(r, as, &vexport.ModelForm{Project: prj, Model: mdl, Examples: model.Examples}, ps, bc...)
 	})
 }
 
@@ -87,7 +87,7 @@ func ProjectExportModelCreate(w http.ResponseWriter, r *http.Request) {
 
 		msg := "model created successfully"
 		u := fmt.Sprintf("/p/%s/export/models/%s", prj.Key, mdl.Name)
-		return controller.FlashAndRedir(true, msg, u, w, ps)
+		return controller.FlashAndRedir(true, msg, u, ps)
 	})
 }
 
@@ -105,7 +105,7 @@ func ProjectExportModelForm(w http.ResponseWriter, r *http.Request) {
 			"Edit",
 		}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] %s", prj.Key, mdl.Name), mdl)
-		return controller.Render(w, r, as, &vexport.ModelForm{Project: prj, Model: mdl, Examples: model.Examples}, ps, bc...)
+		return controller.Render(r, as, &vexport.ModelForm{Project: prj, Model: mdl, Examples: model.Examples}, ps, bc...)
 	})
 }
 
@@ -137,7 +137,7 @@ func ProjectExportModelSave(w http.ResponseWriter, r *http.Request) {
 
 		msg := "model saved successfully"
 		u := fmt.Sprintf("/p/%s/export/models/%s", prj.Key, mdl.Name)
-		return controller.FlashAndRedir(true, msg, u, w, ps)
+		return controller.FlashAndRedir(true, msg, u, ps)
 	})
 }
 
@@ -158,6 +158,6 @@ func ProjectExportModelDelete(w http.ResponseWriter, r *http.Request) {
 		}
 
 		msg := "model deleted successfully"
-		return controller.FlashAndRedir(true, msg, fmt.Sprintf("/p/%s/export", prj.Key), w, ps)
+		return controller.FlashAndRedir(true, msg, fmt.Sprintf("/p/%s/export", prj.Key), ps)
 	})
 }

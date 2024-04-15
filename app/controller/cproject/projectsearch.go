@@ -38,7 +38,7 @@ func ProjectSearch(w http.ResponseWriter, r *http.Request) {
 
 		ps.SetTitleAndData(fmt.Sprintf("[%s] Project Results", prj.Title()), res)
 		page := &vproject.Search{Project: prj, Params: params, Results: res}
-		return controller.Render(w, r, as, page, ps, "projects", prj.Key, "Search")
+		return controller.Render(r, as, page, ps, "projects", prj.Key, "Search")
 	})
 }
 
@@ -66,7 +66,7 @@ func ProjectSearchAll(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData("Project Search Results", ret)
 		page := &vproject.SearchAll{Params: params, Projects: prjs, Tags: tags, Results: ret}
-		return controller.Render(w, r, as, page, ps, "projects", "Search")
+		return controller.Render(r, as, page, ps, "projects", "Search")
 	})
 }
 

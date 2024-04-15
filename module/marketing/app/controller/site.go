@@ -28,6 +28,6 @@ func Site(w http.ResponseWriter, r *http.Request) {
 		if redir != "" {
 			return redir, nil
 		}
-		return Render(w, r, as, page, ps, bc...)
+		return Render(r, as, page, ps, bc...)
 	})
 }

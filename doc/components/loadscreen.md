@@ -10,7 +10,7 @@ func LongTask(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Query().Get("hasloaded") != util.BoolTrue {
 			cutil.URLAddQuery(r.URL, "hasloaded", util.BoolTrue)
 			page := &vpage.Load{URL: r.URL.String(), Title: "Hang Tight"}
-			return controller.Render(w, r, as, page, ps, "breadcrumb")
+			return controller.Render(r, as, page, ps, "breadcrumb")
 		}
 		return "/welcome", nil
 	})

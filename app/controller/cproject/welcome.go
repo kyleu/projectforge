@@ -23,18 +23,18 @@ func Welcome(w http.ResponseWriter, r *http.Request) {
 		if !showLoad {
 			ps.HideMenu = true
 			page := &vpage.Load{URL: "/welcome?loaded=true", Title: "Starting " + util.AppName, Message: "Checking some things..."}
-			return controller.Render(w, r, as, page, ps, "Welcome")
+			return controller.Render(r, as, page, ps, "Welcome")
 		}
 		ch := checks.CheckAll(ps.Context, as.Services.Modules.Modules().Keys(), ps.Logger, checks.Core(false).Keys()...).Errors()
 		if len(ch) > 0 && (!override) {
 			ps.SetTitleAndData("Missing Dependencies", ch.ErrorSummary())
 			ps.HideMenu = true
-			return controller.Render(w, r, as, &vwelcome.DepError{Results: ch}, ps, "Welcome||/welcome")
+			return controller.Render(r, as, &vwelcome.DepError{Results: ch}, ps, "Welcome||/welcome")
 		}
 
 		ps.SetTitleAndData("Welcome to "+util.AppName, "View this page in a browser to get started.")
 		ps.HideMenu = true
-		return controller.Render(w, r, as, &vwelcome.Welcome{Project: as.Services.Projects.Default()}, ps, "Welcome||/welcome")
+		return controller.Render(r, as, &vwelcome.Welcome{Project: as.Services.Projects.Default()}, ps, "Welcome||/welcome")
 	})
 }
 
@@ -62,7 +62,7 @@ func WelcomeLoad(w http.ResponseWriter, r *http.Request) {
 		activeWelcomeForm = frm
 		cutil.URLAddQuery(r.URL, "hasloaded", util.BoolTrue)
 		page := &vpage.Load{URL: "/welcome/process", Title: "Generating and building your project"}
-		return controller.Render(w, r, as, page, ps, "Welcome")
+		return controller.Render(r, as, page, ps, "Welcome")
 	})
 }
 
@@ -83,6 +83,6 @@ func WelcomeProcess(w http.ResponseWriter, r *http.Request) {
 		activeWelcomeProject = nil
 		activeWelcomeForm = nil
 
-		return controller.FlashAndRedir(true, "project initialized", prj.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, "project initialized", prj.WebPath(), ps)
 	})
 }

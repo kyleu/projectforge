@@ -59,7 +59,7 @@ func RunAllActions(w http.ResponseWriter, r *http.Request) {
 			case "":
 				ps.SetTitleAndData("Build All Projects", prjs)
 				page := &vaction.Results{T: actT, Cfg: cfg, Projects: prjs, Ctxs: nil, Tags: tags, IsBuild: true}
-				return controller.Render(w, r, as, page, ps, "projects", actT.Title)
+				return controller.Render(r, as, page, ps, "projects", actT.Title)
 			case depsKey:
 				return runAllDeps(cfg, prjs, tags, w, r, as, ps)
 			case pkgsKey:
@@ -70,7 +70,7 @@ func RunAllActions(w http.ResponseWriter, r *http.Request) {
 				if cfg.GetStringOpt("hasloaded") != util.BoolTrue {
 					cutil.URLAddQuery(r.URL, "hasloaded", util.BoolTrue)
 					page := &vpage.Load{URL: r.URL.String(), Title: "Building all projects..."}
-					return controller.Render(w, r, as, page, ps, "projects", "Build")
+					return controller.Render(r, as, page, ps, "projects", "Build")
 				}
 			}
 		}
@@ -78,11 +78,11 @@ func RunAllActions(w http.ResponseWriter, r *http.Request) {
 
 		ps.SetTitleAndData(fmt.Sprintf("[%s] All Projects", actT.Title), results)
 		page := &vaction.Results{T: actT, Cfg: cfg, Projects: prjs, Ctxs: results, Tags: tags}
-		return controller.Render(w, r, as, page, ps, "projects", actT.Title)
+		return controller.Render(r, as, page, ps, "projects", actT.Title)
 	})
 }
 
 func runAllStart(w http.ResponseWriter, r *http.Request, as *app.State, ps *cutil.PageState) (string, error) {
 	ps.SetTitleAndData("Start All", "TODO")
-	return controller.Render(w, r, as, &views.Debug{}, ps, "projects", "Start")
+	return controller.Render(r, as, &views.Debug{}, ps, "projects", "Start")
 }

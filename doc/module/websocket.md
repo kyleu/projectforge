@@ -18,7 +18,7 @@ To create a WebSocket connection, you'll need to create two controller actions a
 func Example(w http.ResponseWriter, r *http.Request) {
 	Act("example", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ps.SetTitleAndData("Example Test", "TODO")
-		return Render(w, r, as, &views.Example{}, ps)
+		return Render(r, as, &views.Example{}, ps)
 	})
 }
 

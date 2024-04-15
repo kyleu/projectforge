@@ -22,7 +22,7 @@ func ThemeList(w http.ResponseWriter, r *http.Request) {
 		th := as.Themes.All(ps.Logger)
 		ps.SetTitleAndData("Themes", th)
 		ps.DefaultNavIcon = themeIcon
-		return controller.Render(w, r, as, &vtheme.List{Themes: th}, ps, "Themes||/theme")
+		return controller.Render(r, as, &vtheme.List{Themes: th}, ps, "Themes||/theme")
 	})
 }
 
@@ -33,7 +33,7 @@ func ThemeEdit(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		if key == theme.Default.Key {
-			return controller.FlashAndRedir(false, "Unable to edit default theme", "/theme", w, ps)
+			return controller.FlashAndRedir(false, "Unable to edit default theme", "/theme", ps)
 		}
 		var t *theme.Theme
 		if key == theme.KeyNew {
@@ -56,7 +56,7 @@ func ThemeEdit(w http.ResponseWriter, r *http.Request) {
 		ps.SetTitleAndData("Edit theme ["+t.Key+"]", t)
 		ps.DefaultNavIcon = themeIcon
 		page := &vtheme.Edit{Theme: t, Icon: "app", Exists: as.Themes.FileExists(t.Key)}
-		return controller.Render(w, r, as, page, ps, "Themes||/theme", t.Key)
+		return controller.Render(r, as, page, ps, "Themes||/theme", t.Key)
 	})
 }
 
@@ -97,7 +97,7 @@ func ThemeSave(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 
-		return controller.ReturnToReferrer("saved changes to theme ["+newKey+"]", "/theme", w, ps)
+		return controller.ReturnToReferrer("saved changes to theme ["+newKey+"]", "/theme", ps)
 	})
 }
 
@@ -111,6 +111,6 @@ func ThemeRemove(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to remove theme")
 		}
-		return controller.ReturnToReferrer("removed theme ["+key+"]", "/theme", w, ps)
+		return controller.ReturnToReferrer("removed theme ["+key+"]", "/theme", ps)
 	})
 }

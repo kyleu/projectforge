@@ -45,11 +45,11 @@ func ProjectThemePalette(w http.ResponseWriter, r *http.Request) {
 			ps.Data = strings.Join(lo.Map(x, func(t *theme.Theme, _ int) string {
 				return t.ToGo()
 			}), util.StringDefaultLinebreak)
-			return controller.Render(w, r, as, &views.Debug{}, ps, "admin", "Themes")
+			return controller.Render(r, as, &views.Debug{}, ps, "admin", "Themes")
 		}
 		span.Complete()
 		page := &vproject.ThemePalette{Project: prj, Icon: prjIcon, Palette: pal, Themes: x, Title: prjTitle}
-		return controller.Render(w, r, as, page, ps, "admin", "Themes")
+		return controller.Render(r, as, page, ps, "admin", "Themes")
 	})
 }
 
@@ -73,7 +73,7 @@ func ProjectThemeSave(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		msg := fmt.Sprintf("set theme to [%s:%s]", pallette, thm.Key)
-		return controller.FlashAndRedir(true, msg, p.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, p.WebPath(), ps)
 	})
 }
 

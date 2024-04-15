@@ -23,7 +23,7 @@ func ProjectExportDeriveForm(w http.ResponseWriter, r *http.Request) {
 
 		bc := []string{"projects", prj.Key, fmt.Sprintf("Export||/p/%s/export", prj.Key), "Derive"}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] Derive Model", prj.Key), &model.Model{})
-		return controller.Render(w, r, as, &vexport.DeriveForm{Project: prj}, ps, bc...)
+		return controller.Render(r, as, &vexport.DeriveForm{Project: prj}, ps, bc...)
 	})
 }
 
@@ -65,6 +65,6 @@ func ProjectExportDerive(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] Derive Model", prj.Key), res)
 		bc := []string{"projects", prj.Key, fmt.Sprintf("Export||/p/%s/export", prj.Key), "Derive"}
-		return controller.Render(w, r, as, &vexport.DeriveForm{Project: prj, Result: res, Form: frm}, ps, bc...)
+		return controller.Render(r, as, &vexport.DeriveForm{Project: prj, Result: res, Form: frm}, ps, bc...)
 	})
 }

@@ -20,7 +20,7 @@ var changeDirArgs = cutil.Args{{Key: "dir", Title: "Directory", Description: "Fi
 func ChangeDir(w http.ResponseWriter, r *http.Request) {
 	controller.Act("change.dir", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		if runtime.GOOS == "js" {
-			return controller.FlashAndRedir(true, "Change directory not available on WASM", "/welcome?override=true", w, ps)
+			return controller.FlashAndRedir(true, "Change directory not available on WASM", "/welcome?override=true", ps)
 		}
 		ps.HideMenu = true
 		argRes := cutil.CollectArgs(r, changeDirArgs)
@@ -30,7 +30,7 @@ func ChangeDir(w http.ResponseWriter, r *http.Request) {
 			d, _ := filepath.Abs(".")
 			argRes.Values["dir"] = d
 			msg := "Choose the working directory to use for loading the main project"
-			return controller.Render(w, r, as, &vpage.Args{URL: "/welcome/changedir", Directions: msg, ArgRes: argRes}, ps, "Welcome")
+			return controller.Render(r, as, &vpage.Args{URL: "/welcome/changedir", Directions: msg, ArgRes: argRes}, ps, "Welcome")
 		}
 
 		err = os.Chdir(dir)

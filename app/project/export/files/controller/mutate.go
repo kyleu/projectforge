@@ -54,7 +54,7 @@ func controllerCreateForm(m *model.Model, grp *model.Column, models model.Models
 		ret.W("\t\tps.SetTitleAndData(fmt.Sprintf(\"Create ["+m.Proper()+"] for %s [%%%%s]\", %sArg), ret)", grp.TitleLower(), grp.Camel())
 	}
 	ret.W("\t\tps.Data = ret")
-	ret.W("\t\treturn %sRender(w, r, as, &v%s.Edit{Model: ret, IsNew: true}, ps, %s%s, \"Create\")", prefix, m.Package, m.Breadcrumbs(), grp.BC())
+	ret.W("\t\treturn %sRender(r, as, &v%s.Edit{Model: ret, IsNew: true}, ps, %s%s, \"Create\")", prefix, m.Package, m.Breadcrumbs(), grp.BC())
 	ret.W("\t})")
 	ret.W("}")
 	return ret
@@ -87,7 +87,7 @@ func controllerCreate(m *model.Model, grp *model.Column, prefix string) *golang.
 	ret.W("\t\t\treturn \"\", errors.Wrap(err, \"unable to save newly-created %s\")", m.Proper())
 	ret.W("\t\t}")
 	ret.W(msgEqSPrint + m.Proper() + " [%%s] created\", ret.String())")
-	ret.W("\t\treturn %sFlashAndRedir(true, msg, ret.WebPath(), w, ps)", prefix)
+	ret.W("\t\treturn %sFlashAndRedir(true, msg, ret.WebPath(), ps)", prefix)
 	ret.W("\t})")
 	ret.W("}")
 	return ret
@@ -102,7 +102,7 @@ func controllerEditForm(m *model.Model, grp *model.Column, prefix string) *golan
 	ret.WE(2, `""`)
 	checkGrp(ret, grp)
 	ret.W("\t\tps.SetTitleAndData(\"Edit \"+ret.String(), ret)")
-	ret.W("\t\treturn %sRender(w, r, as, &v%s.Edit{Model: ret}, ps, %s%s, ret.String())", prefix, m.Package, m.Breadcrumbs(), grp.BC())
+	ret.W("\t\treturn %sRender(r, as, &v%s.Edit{Model: ret}, ps, %s%s, ret.String())", prefix, m.Package, m.Breadcrumbs(), grp.BC())
 	ret.W("\t})")
 	ret.W("}")
 	return ret
@@ -129,7 +129,7 @@ func controllerEdit(m *model.Model, grp *model.Column, prefix string) *golang.Bl
 	ret.W("\t\t\treturn \"\", errors.Wrapf(err, \"unable to update %s [%%%%s]\", frm.String())", m.Proper())
 	ret.W("\t\t}")
 	ret.W(msgEqSPrint + m.Proper() + " [%%s] updated\", frm.String())")
-	ret.W("\t\treturn %sFlashAndRedir(true, msg, frm.WebPath(), w, ps)", prefix)
+	ret.W("\t\treturn %sFlashAndRedir(true, msg, frm.WebPath(), ps)", prefix)
 	ret.W("\t})")
 	ret.W("}")
 	return ret
@@ -151,7 +151,7 @@ func controllerDelete(m *model.Model, grp *model.Column, prefix string) *golang.
 	ret.W("\t\t\treturn \"\", errors.Wrapf(err, \"unable to delete %s [%%%%s]\", ret.String())", m.TitleLower())
 	ret.W("\t\t}")
 	ret.W(msgEqSPrint + m.Proper() + " [%%s] deleted\", ret.String())")
-	ret.W("\t\treturn %sFlashAndRedir(true, msg, \"/%s\", w, ps)", prefix, m.Route())
+	ret.W("\t\treturn %sFlashAndRedir(true, msg, \"/%s\", ps)", prefix, m.Route())
 	ret.W("\t})")
 	ret.W("}")
 	return ret

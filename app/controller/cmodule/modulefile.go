@@ -21,7 +21,7 @@ func ModuleFileRoot(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] Files", mod.Key), mod)
-		return controller.Render(w, r, as, &vmodule.Files{Module: mod}, ps, "modules", mod.Key, "Files**folder")
+		return controller.Render(r, as, &vmodule.Files{Module: mod}, ps, "modules", mod.Key, "Files**folder")
 	})
 }
 
@@ -45,6 +45,6 @@ func ModuleFile(w http.ResponseWriter, r *http.Request) {
 			bc = append(bc, b)
 		})
 		ps.SetTitleAndData(fmt.Sprintf("[%s] /%s", mod.Key, strings.Join(path, "/")), pathS)
-		return controller.Render(w, r, as, &vmodule.Files{Module: mod, Path: path}, ps, bc...)
+		return controller.Render(r, as, &vmodule.Files{Module: mod, Path: path}, ps, bc...)
 	})
 }

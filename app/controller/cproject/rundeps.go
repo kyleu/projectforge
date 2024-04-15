@@ -34,7 +34,7 @@ func runDeps(prj *project.Project, res *action.Result, w http.ResponseWriter, r 
 	}
 	ps.SetTitleAndData(fmt.Sprintf("[%s] Dependencies", prj.Key), deps)
 	page := &vbuild.Deps{Project: prj, BuildResult: res, Dependencies: deps}
-	return controller.Render(w, r, as, page, ps, "projects", prj.Key, "Dependency Management")
+	return controller.Render(r, as, page, ps, "projects", prj.Key, "Dependency Management")
 }
 
 func runAllDeps(
@@ -65,5 +65,5 @@ func runAllDeps(
 	}
 	ps.SetTitleAndData("Dependency Merge", ret)
 	page := &vbuild.DepMap{Message: msg, Result: ret, Tags: tags}
-	return controller.Render(w, r, as, page, ps, "projects", "Dependencies")
+	return controller.Render(r, as, page, ps, "projects", "Dependencies")
 }

@@ -33,7 +33,7 @@ func ThemeColor(w http.ResponseWriter, r *http.Request) {
 		th := theme.ColorTheme(col, gamut.Hex(col))
 		ps.SetTitleAndData(fmt.Sprintf("[%s] Theme", col), th)
 		ps.DefaultNavIcon = themeIcon
-		return controller.Render(w, r, as, &vtheme.Edit{Theme: th, Icon: "app"}, ps, "Themes||/theme", col)
+		return controller.Render(r, as, &vtheme.Edit{Theme: th, Icon: "app"}, ps, "Themes||/theme", col)
 	})
 }
 
@@ -50,7 +50,7 @@ func ThemeColorEdit(w http.ResponseWriter, r *http.Request) {
 		ps.SetTitleAndData("Edit theme colors ["+t.Key+"]", t)
 		ps.DefaultNavIcon = themeIcon
 		page := &vtheme.Edit{Theme: t, Icon: "app", Exists: as.Themes.FileExists(t.Key)}
-		return controller.Render(w, r, as, page, ps, "Themes||/theme", t.Key)
+		return controller.Render(r, as, page, ps, "Themes||/theme", t.Key)
 	})
 }
 
@@ -71,10 +71,10 @@ func ThemePalette(w http.ResponseWriter, r *http.Request) {
 			ps.Data = strings.Join(lo.Map(thms, func(t *theme.Theme, _ int) string {
 				return t.ToGo()
 			}), util.StringDefaultLinebreak)
-			return controller.Render(w, r, as, &views.Debug{}, ps, "Themes")
+			return controller.Render(r, as, &views.Debug{}, ps, "Themes")
 		}
 		ps.DefaultNavIcon = themeIcon
-		return controller.Render(w, r, as, &vtheme.Add{Palette: pal, Themes: thms}, ps, "Themes||/theme", "Palette")
+		return controller.Render(r, as, &vtheme.Add{Palette: pal, Themes: thms}, ps, "Themes||/theme", "Palette")
 	})
 }
 
@@ -89,7 +89,7 @@ func ThemePaletteEdit(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		if key == theme.Default.Key {
-			return controller.FlashAndRedir(false, "Unable to edit default theme", "/theme", w, ps)
+			return controller.FlashAndRedir(false, "Unable to edit default theme", "/theme", ps)
 		}
 		themes, err := theme.PaletteThemes(palette)
 		if err != nil {
@@ -101,6 +101,6 @@ func ThemePaletteEdit(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData("Edit theme palette ["+t.Key+"]", t)
 		ps.DefaultNavIcon = themeIcon
-		return controller.Render(w, r, as, &vtheme.Edit{Theme: t, Icon: "app"}, ps, "Themes||/theme", t.Key)
+		return controller.Render(r, as, &vtheme.Edit{Theme: t, Icon: "app"}, ps, "Themes||/theme", t.Key)
 	})
 }

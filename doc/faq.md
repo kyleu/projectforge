@@ -149,7 +149,7 @@ func CurrentTime(w http.ResponseWriter, r *http.Request) {
 		// PageState::Data will be rendered as JSON or XML if the Content-Type of the request matches
 		ps.Data = t
 		// The Render method will send the template contents if HTML is requested. The final argument refers to the active menu key
-		return Render(w, r, as, &views.CurrentTime{Time: t}, ps, "time")
+		return Render(r, as, &views.CurrentTime{Time: t}, ps, "time")
 	})
 }
 ```

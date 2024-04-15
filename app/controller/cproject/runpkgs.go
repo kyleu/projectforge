@@ -27,7 +27,7 @@ func runPkgs(prj *project.Project, res *action.Result, w http.ResponseWriter, r 
 		return "", errors.Errorf("data is of type [%T], expected [Pkgs]", res.Data)
 	}
 	ps.SetTitleAndData(fmt.Sprintf("[%s] Packages", prj.Key), pkgs)
-	return controller.Render(w, r, as, &vbuild.Packages{Project: prj, BuildResult: res, Packages: pkgs}, ps, "projects", prj.Key, "Packages")
+	return controller.Render(r, as, &vbuild.Packages{Project: prj, BuildResult: res, Packages: pkgs}, ps, "projects", prj.Key, "Packages")
 }
 
 func runAllPkgs(cfg util.ValueMap, prjs project.Projects, w http.ResponseWriter, r *http.Request, as *app.State, ps *cutil.PageState) (string, error) {
@@ -50,5 +50,5 @@ func runAllPkgs(cfg util.ValueMap, prjs project.Projects, w http.ResponseWriter,
 
 	ps.SetTitleAndData("Packages", pkgs)
 	page := &vbuild.PackagesAll{Projects: prjs, Results: ret, Packages: pkgs}
-	return controller.Render(w, r, as, page, ps, "projects", "Packages")
+	return controller.Render(r, as, page, ps, "projects", "Packages")
 }

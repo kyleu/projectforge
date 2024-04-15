@@ -32,6 +32,6 @@ func Docs(w http.ResponseWriter, r *http.Request) {
 		}
 		c, _ := doc.Content(pth + util.ExtMarkdown)
 		ps.SetTitleAndData(title, c)
-		return controller.Render(w, r, as, &vdoc.MarkdownPage{Title: pth, HTML: x}, ps, bc...)
+		return controller.Render(r, as, &vdoc.MarkdownPage{Title: pth, HTML: x}, ps, bc...)
 	})
 }

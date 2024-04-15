@@ -28,7 +28,7 @@ func ProjectExportEnumDetail(w http.ResponseWriter, r *http.Request) {
 
 		bc := []string{"projects", prj.Key, fmt.Sprintf("Export||/p/%s/export", prj.Key), e.Title()}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] %s", prj.Key, e.Name), e)
-		return controller.Render(w, r, as, &vexport.EnumDetail{Project: prj, Enum: e, File: fl}, ps, bc...)
+		return controller.Render(r, as, &vexport.EnumDetail{Project: prj, Enum: e, File: fl}, ps, bc...)
 	})
 }
 
@@ -42,7 +42,7 @@ func ProjectExportEnumNew(w http.ResponseWriter, r *http.Request) {
 		e := &enum.Enum{}
 		bc := []string{"projects", prj.Key, fmt.Sprintf("Export||/p/%s/export", prj.Key), "New"}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] New Enum", prj.Key), e)
-		return controller.Render(w, r, as, &vexport.EnumForm{Project: prj, Enum: e, Examples: enum.Examples}, ps, bc...)
+		return controller.Render(r, as, &vexport.EnumForm{Project: prj, Enum: e, Examples: enum.Examples}, ps, bc...)
 	})
 }
 
@@ -75,7 +75,7 @@ func ProjectExportEnumCreate(w http.ResponseWriter, r *http.Request) {
 
 		msg := "enum created successfully"
 		u := fmt.Sprintf("/p/%s/export/enums/%s", prj.Key, mdl.Name)
-		return controller.FlashAndRedir(true, msg, u, w, ps)
+		return controller.FlashAndRedir(true, msg, u, ps)
 	})
 }
 
@@ -94,7 +94,7 @@ func ProjectExportEnumForm(w http.ResponseWriter, r *http.Request) {
 			"Edit",
 		}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] %s", prj.Key, e.Name), e)
-		return controller.Render(w, r, as, &vexport.EnumForm{Project: prj, Enum: e, Examples: enum.Examples}, ps, bc...)
+		return controller.Render(r, as, &vexport.EnumForm{Project: prj, Enum: e, Examples: enum.Examples}, ps, bc...)
 	})
 }
 
@@ -125,7 +125,7 @@ func ProjectExportEnumSave(w http.ResponseWriter, r *http.Request) {
 
 		msg := "enum saved successfully"
 		u := fmt.Sprintf("/p/%s/export/enums/%s", prj.Key, e.Name)
-		return controller.FlashAndRedir(true, msg, u, w, ps)
+		return controller.FlashAndRedir(true, msg, u, ps)
 	})
 }
 
@@ -145,6 +145,6 @@ func ProjectExportEnumDelete(w http.ResponseWriter, r *http.Request) {
 		}
 
 		msg := "enum deleted successfully"
-		return controller.FlashAndRedir(true, msg, fmt.Sprintf("/p/%s/export", prj.Key), w, ps)
+		return controller.FlashAndRedir(true, msg, fmt.Sprintf("/p/%s/export", prj.Key), ps)
 	})
 }

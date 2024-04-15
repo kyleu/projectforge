@@ -20,7 +20,7 @@ func ModuleList(w http.ResponseWriter, r *http.Request) {
 		mods := as.Services.Modules.Modules()
 		ps.SetTitleAndData("Module Listing", mods)
 		dir := as.Services.Modules.ConfigDirectory()
-		return controller.Render(w, r, as, &vmodule.List{Modules: mods, Dir: dir}, ps, "modules")
+		return controller.Render(r, as, &vmodule.List{Modules: mods, Dir: dir}, ps, "modules")
 	})
 }
 
@@ -48,7 +48,7 @@ func ModuleDetail(w http.ResponseWriter, r *http.Request) {
 		}
 		dir := mod.Files.Root()
 		ps.SetTitleAndData(mod.Title(), mod)
-		return controller.Render(w, r, as, &vmodule.Detail{Module: mod, HTML: html, Usages: usages, Dir: dir}, ps, "modules", mod.Key)
+		return controller.Render(r, as, &vmodule.Detail{Module: mod, HTML: html, Usages: usages, Dir: dir}, ps, "modules", mod.Key)
 	})
 }
 

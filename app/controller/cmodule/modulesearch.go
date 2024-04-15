@@ -51,7 +51,7 @@ func ModuleSearch(w http.ResponseWriter, r *http.Request) {
 
 		ps.SetTitleAndData(fmt.Sprintf("[%s] Module Results", mod.Title()), mod)
 		page := &vmodule.Search{Module: mod, Params: params, Results: res}
-		return controller.Render(w, r, as, page, ps, "modules", mod.Key, "Search**archive")
+		return controller.Render(r, as, page, ps, "modules", mod.Key, "Search**archive")
 	})
 }
 

@@ -46,7 +46,7 @@ func profileAction(w http.ResponseWriter, r *http.Request, as *app.State, ps *cu
 	}
 	ps.DefaultNavIcon = "profile"
 	page := &vprofile.Profile{Profile: ps.Profile, Theme: thm, {{{ if .HasAccount }}}Providers: prvs, {{{ end }}}Referrer: redir}
-	return controller.Render(w, r, as, page, ps, "Profile")
+	return controller.Render(r, as, page, ps, "Profile")
 }
 
 func ProfileSave(w http.ResponseWriter, r *http.Request) {
@@ -92,6 +92,6 @@ func ProfileSave(w http.ResponseWriter, r *http.Request) {
 			}
 		}{{{ end }}}
 
-		return controller.ReturnToReferrer("Saved profile", referrerDefault, w, ps)
+		return controller.ReturnToReferrer("Saved profile", referrerDefault, ps)
 	})
 }

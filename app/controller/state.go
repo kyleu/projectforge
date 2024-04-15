@@ -31,8 +31,8 @@ func SetSiteState(a *app.State, logger util.Logger) error {
 	return initSite(context.Background(), a, logger)
 }
 
-func handleError(key string, as *app.State, ps *cutil.PageState, w http.ResponseWriter, r *http.Request, err error) (string, error) {
-	w.WriteHeader(http.StatusInternalServerError)
+func handleError(key string, as *app.State, ps *cutil.PageState, r *http.Request, err error) (string, error) {
+	ps.W.WriteHeader(http.StatusInternalServerError)
 
 	ps.LogError("error running action [%s]: %+v", key, err)
 
@@ -46,17 +46,17 @@ func handleError(key string, as *app.State, ps *cutil.PageState, w http.Response
 		ps.Logger.Error(cleanErr)
 		msg := fmt.Sprintf("error while cleaning request: %+v", cleanErr)
 		ps.Logger.Error(msg)
-		_, _ = w.Write([]byte(msg))
+		_, _ = ps.W.Write([]byte(msg))
 		return "", cleanErr
 	}
 
 	e := util.GetErrorDetail(err, ps.Admin)
 	ps.Data = e
-	redir, renderErr := Render(w, r, as, &verror.Error{Err: e}, ps)
+	redir, renderErr := Render(r, as, &verror.Error{Err: e}, ps)
 	if renderErr != nil {
 		msg := fmt.Sprintf("error while running error handler: %+v", renderErr)
 		ps.Logger.Error(msg)
-		_, _ = w.Write([]byte(msg))
+		_, _ = ps.W.Write([]byte(msg))
 		return "", renderErr
 	}
 	return redir, nil

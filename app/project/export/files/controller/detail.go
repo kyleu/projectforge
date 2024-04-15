@@ -57,14 +57,14 @@ func controllerDetail(g *golang.File, models model.Models, m *model.Model, grp *
 		})
 		argStr := strings.Join(args, ", ")
 		if audit {
-			msg := "\t\treturn %sRender(w, r, as, &v%s.Detail{%s, AuditRecords: relatedAuditRecords}, ps, %s%s, %s)"
+			msg := "\t\treturn %sRender(r, as, &v%s.Detail{%s, AuditRecords: relatedAuditRecords}, ps, %s%s, %s)"
 			ret.W(msg, prefix, m.Package, argStr, m.Breadcrumbs(), grpHistory, bcFor(m))
 		} else {
-			msg := "\t\treturn %sRender(w, r, as, &v%s.Detail{%s}, ps, %s%s, %s)"
+			msg := "\t\treturn %sRender(r, as, &v%s.Detail{%s}, ps, %s%s, %s)"
 			ret.W(msg, prefix, m.Package, argStr, m.Breadcrumbs(), grpHistory, bcFor(m))
 		}
 	} else {
-		ret.W("\t\treturn %sRender(w, r, as, &v%s.Detail{", prefix, m.Package)
+		ret.W("\t\treturn %sRender(r, as, &v%s.Detail{", prefix, m.Package)
 		keyPad := util.StringArrayMaxLength(argKeys) + 1
 		lo.ForEach(argKeys, func(k string, idx int) {
 			ret.W("\t\t\t%s %s,", util.StringPad(k+":", keyPad), argVals[idx])

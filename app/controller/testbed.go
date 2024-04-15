@@ -16,6 +16,6 @@ func Testbed(w http.ResponseWriter, r *http.Request) {
 			ret = frm.GetStringOpt("x")
 		}
 		ps.SetTitleAndData("Testbed", ret)
-		return Render(w, r, as, &views.Testbed{Param: ret}, ps)
+		return Render(r, as, &views.Testbed{Param: ret}, ps)
 	})
 }

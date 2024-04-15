@@ -15,6 +15,6 @@ func Home(w http.ResponseWriter, r *http.Request) {
 		execs := as.Services.Exec.Execs
 		mods := as.Services.Modules.Modules()
 		ps.Data = util.ValueMap{"projects": prjs, "modules": mods}
-		return Render(w, r, as, &views.Home{Projects: prjs, Execs: execs, Modules: mods}, ps)
+		return Render(r, as, &views.Home{Projects: prjs, Execs: execs, Modules: mods}, ps)
 	})
 }

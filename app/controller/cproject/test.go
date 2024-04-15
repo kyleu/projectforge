@@ -20,7 +20,7 @@ import (
 func TestList(w http.ResponseWriter, r *http.Request) {
 	controller.Act("test.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ps.SetTitleAndData("Tests", []string{"bootstrap", "diff"})
-		return controller.Render(w, r, as, &vtest.List{}, ps, "Tests")
+		return controller.Render(r, as, &vtest.List{}, ps, "Tests")
 	})
 }
 
@@ -64,6 +64,6 @@ func TestRun(w http.ResponseWriter, r *http.Request) {
 		default:
 			return "", errors.Errorf("invalid test [%s]", key)
 		}
-		return controller.Render(w, r, as, page, ps, bc...)
+		return controller.Render(r, as, page, ps, bc...)
 	})
 }

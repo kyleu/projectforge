@@ -27,10 +27,10 @@ func Notebook(w http.ResponseWriter, r *http.Request) {
 			if pathS != "" {
 				bc = append(bc, pathS)
 			}
-			return controller.Render(w, r, as, &vnotebook.Notebook{BaseURL: as.Services.Notebook.BaseURL, Path: pathS}, ps, bc...)
+			return controller.Render(r, as, &vnotebook.Notebook{BaseURL: as.Services.Notebook.BaseURL, Path: pathS}, ps, bc...)
 		}
 		ps.SetTitleAndData("Notebook Options", status)
-		return controller.Render(w, r, as, &vnotebook.Options{}, ps, "notebook")
+		return controller.Render(r, as, &vnotebook.Options{}, ps, "notebook")
 	})
 }
 
@@ -43,7 +43,7 @@ func NotebookFiles(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrap(err, "error listing files")
 		}
 		ps.SetTitleAndData(fmt.Sprintf("Notebook File /%s", pathS), files)
-		return controller.Render(w, r, as, &vnotebook.Files{Path: path, FS: as.Services.Notebook.FS}, ps, bc...)
+		return controller.Render(r, as, &vnotebook.Files{Path: path, FS: as.Services.Notebook.FS}, ps, bc...)
 	})
 }
 
@@ -57,7 +57,7 @@ func NotebookFileEdit(w http.ResponseWriter, r *http.Request) {
 		}
 		ret := string(b)
 		ps.SetTitleAndData(fmt.Sprintf("Notebook File /%s", pathS), path)
-		return controller.Render(w, r, as, &vnotebook.FileEdit{Path: path, Content: ret}, ps, bc...)
+		return controller.Render(r, as, &vnotebook.FileEdit{Path: path, Content: ret}, ps, bc...)
 	})
 }
 
@@ -90,7 +90,7 @@ func NotebookFileSave(w http.ResponseWriter, r *http.Request) {
 				return "", err
 			}
 		}
-		return controller.FlashAndRedir(true, msg, "/notebook/files/"+pathS, w, ps)
+		return controller.FlashAndRedir(true, msg, "/notebook/files/"+pathS, ps)
 	})
 }
 
@@ -103,7 +103,7 @@ func NotebookAction(w http.ResponseWriter, r *http.Request) {
 		switch act {
 		case "start":
 			err = as.Services.Notebook.Start()
-			return controller.FlashAndRedir(true, "Notebook started", "/notebook", w, ps)
+			return controller.FlashAndRedir(true, "Notebook started", "/notebook", ps)
 		default:
 			return "", errors.Errorf("invalid notebook action [%s]", act)
 		}

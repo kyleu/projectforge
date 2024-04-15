@@ -21,7 +21,7 @@ func HarList(w http.ResponseWriter, r *http.Request) {
 	controller.Act("har.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := as.Services.Har.List(ps.Logger)
 		ps.SetTitleAndData("Archives", ret)
-		return controller.Render(w, r, as, &vhar.List{Hars: ret}, ps, "har")
+		return controller.Render(r, as, &vhar.List{Hars: ret}, ps, "har")
 	})
 }
 
@@ -36,7 +36,7 @@ func HarDetail(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData("Archive ["+key+"]", ret)
-		return controller.Render(w, r, as, &vhar.Detail{Har: ret}, ps, "har", ret.Key)
+		return controller.Render(r, as, &vhar.Detail{Har: ret}, ps, "har", ret.Key)
 	})
 }
 
@@ -50,7 +50,7 @@ func HarDelete(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, "Archive deleted", "/har", w, ps)
+		return controller.FlashAndRedir(true, "Archive deleted", "/har", ps)
 	})
 }
 
@@ -72,7 +72,7 @@ func HarTrim(w http.ResponseWriter, r *http.Request) {
 		if argRes.HasMissing() {
 			url := fmt.Sprintf("%s/trim", h.WebPath())
 			ps.Data = argRes
-			return controller.Render(w, r, as, &vpage.Args{URL: url, Directions: "Select the requests to trim", ArgRes: argRes}, ps, "har", h.Key, "Trim")
+			return controller.Render(r, as, &vpage.Args{URL: url, Directions: "Select the requests to trim", ArgRes: argRes}, ps, "har", h.Key, "Trim")
 		}
 		originalCount := len(h.Entries)
 		h.Entries, err = h.Entries.Find(&har.Selector{URL: argRes.Values.GetStringOpt("url"), Mime: argRes.Values.GetStringOpt("mime")})
@@ -81,14 +81,14 @@ func HarTrim(w http.ResponseWriter, r *http.Request) {
 		}
 		newCount := len(h.Entries)
 		if newCount == originalCount {
-			return controller.FlashAndRedir(true, "no changes needed", h.WebPath(), w, ps)
+			return controller.FlashAndRedir(true, "no changes needed", h.WebPath(), ps)
 		}
 		err = as.Services.Har.Save(h)
 		if err != nil {
 			return "", err
 		}
 		msg := fmt.Sprintf("Trimmed [%d] entries from archive", originalCount-newCount)
-		return controller.FlashAndRedir(true, msg, h.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, h.WebPath(), ps)
 	})
 }
 
@@ -139,6 +139,6 @@ func HarUpload(w http.ResponseWriter, r *http.Request) {
 		}
 		msg := fmt.Sprintf("Created [%s] (%s)", name, util.ByteSizeSI(fileHeader.Size))
 		redir := "/har/" + name
-		return controller.FlashAndRedir(true, msg, redir, w, ps)
+		return controller.FlashAndRedir(true, msg, redir, ps)
 	})
 }

@@ -70,7 +70,9 @@ type PageState struct {
 	Data           any               `json:"data,omitempty"`
 	Started        time.Time         `json:"started,omitempty"`
 	RenderElapsed  float64           `json:"renderElapsed,omitempty"`
+	ResponseBytes  int64             `json:"responseBytes,omitempty"`
 	RequestBody    []byte            `json:"-"`
+	W              *WriteCounter     `json:"-"`
 	Logger         util.Logger       `json:"-"`
 	Context        context.Context   `json:"-"` //nolint:containedctx // properly closed, never directly used
 	Span           *telemetry.Span   `json:"-"`

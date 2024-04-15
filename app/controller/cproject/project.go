@@ -26,7 +26,7 @@ func ProjectDetail(w http.ResponseWriter, r *http.Request) {
 		validation := project.Validate(prj, fs, as.Services.Modules.Deps(), as.Services.Modules.Dangerous())
 		ps.SetTitleAndData(fmt.Sprintf("%s (project %s)", prj.Title(), prj.Key), prj)
 		page := &vproject.Detail{Project: prj, Modules: mods, Execs: execs, Validation: validation}
-		return controller.Render(w, r, as, page, ps, "projects", prj.Key)
+		return controller.Render(r, as, page, ps, "projects", prj.Key)
 	})
 }
 
@@ -34,7 +34,7 @@ func ProjectForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("project.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prj := project.NewProject("", ".")
 		ps.SetTitleAndData("New Project", prj)
-		return controller.Render(w, r, as, &vproject.Edit{Project: prj}, ps, "projects", "New")
+		return controller.Render(r, as, &vproject.Edit{Project: prj}, ps, "projects", "New")
 	})
 }
 
@@ -72,7 +72,7 @@ func ProjectCreate(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return controller.ERsp("unable to save project: %+v", err)
 		}
-		return controller.FlashAndRedir(true, "Created project ["+prj.Title()+"]", prj.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, "Created project ["+prj.Title()+"]", prj.WebPath(), ps)
 	})
 }
 
@@ -83,7 +83,7 @@ func ProjectEdit(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData(fmt.Sprintf("Edit %s (project %s)", prj.Title(), prj.Key), prj)
-		return controller.Render(w, r, as, &vproject.Edit{Project: prj}, ps, "projects", prj.Key)
+		return controller.Render(r, as, &vproject.Edit{Project: prj}, ps, "projects", prj.Key)
 	})
 }
 
@@ -106,6 +106,6 @@ func ProjectSave(w http.ResponseWriter, r *http.Request) {
 			return controller.ERsp("unable to save project: %+v", err)
 		}
 
-		return controller.FlashAndRedir(true, "Saved changes", prj.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, "Saved changes", prj.WebPath(), ps)
 	})
 }

@@ -41,10 +41,10 @@ func controllerList(g *golang.File, m *model.Model, grp *model.Column, models mo
 		ret.WE(3, `""`)
 		ret.W("\t\t\tif len(ret) == 1 {")
 		if len(m.Group) == 0 {
-			ret.W("\t\t\t\treturn FlashAndRedir(true, \"single result found\", ret[0].WebPath(), w, ps)")
+			ret.W("\t\t\t\treturn FlashAndRedir(true, \"single result found\", ret[0].WebPath(), ps)")
 		} else {
 			g.AddImport(helper.ImpAppController)
-			ret.W("\t\t\t\treturn controller.FlashAndRedir(true, \"single result found\", ret[0].WebPath(), w, ps)")
+			ret.W("\t\t\t\treturn controller.FlashAndRedir(true, \"single result found\", ret[0].WebPath(), ps)")
 		}
 		ret.W("\t\t\t}")
 		ret.W("\t\t}")
@@ -102,7 +102,7 @@ func controllerList(g *golang.File, m *model.Model, grp *model.Column, models mo
 		searchSuffix += ", Count: count"
 	}
 	ret.W("\t\tpage := &v%s.List{Models: ret%s, Params: ps.Params%s}", m.Package, toStrings, searchSuffix)
-	render := "\t\treturn %sRender(w, r, as, page, ps, %s%s)"
+	render := "\t\treturn %sRender(r, as, page, ps, %s%s)"
 	ret.W(render, prefix, m.Breadcrumbs(), grp.BC())
 	ret.W("\t})")
 	ret.W("}")

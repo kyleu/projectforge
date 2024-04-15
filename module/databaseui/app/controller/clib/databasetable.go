@@ -25,7 +25,7 @@ func DatabaseTableView(w http.ResponseWriter, r *http.Request) {
 		res, err := svc.QueryRows(ps.Context, q, nil, ps.Logger)
 		bc := databaseTableBC(svc.Key)
 		ps.SetTitleAndData(tbl+" data", res)
-		return controller.Render(w, r, as, &vdatabase.Results{Svc: svc, Schema: sch, Table: tbl, Results: res, Params: prms, Error: err}, ps, bc...)
+		return controller.Render(r, as, &vdatabase.Results{Svc: svc, Schema: sch, Table: tbl, Results: res, Params: prms, Error: err}, ps, bc...)
 	})
 }
 
@@ -39,7 +39,7 @@ func DatabaseTableStats(w http.ResponseWriter, r *http.Request) {
 		ret := util.ValueMap{"status": "todo"}
 		bc := databaseTableBC(svc.Key, "Stats")
 		ps.SetTitleAndData(tbl+" stats", ret)
-		return controller.Render(w, r, as, &views.Debug{}, ps, bc...)
+		return controller.Render(r, as, &views.Debug{}, ps, bc...)
 	})
 }
 

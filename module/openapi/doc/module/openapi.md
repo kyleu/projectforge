@@ -17,7 +17,7 @@ func OpenAPI(w http.ResponseWriter, r *http.Request) {
 	controller.Act("openapi", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		u := "http://localhost:{{{ .Port }}}/assets/openapi.json"
 		ps.SetTitleAndData("OpenAPI", u)
-		return controller.Render(w, r, as, &vopenapi.OpenAPI{URL: u}, ps, "breadcrumbs")
+		return controller.Render(r, as, &vopenapi.OpenAPI{URL: u}, ps, "breadcrumbs")
 	})
 }
 ```

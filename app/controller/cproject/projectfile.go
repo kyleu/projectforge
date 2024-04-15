@@ -22,7 +22,7 @@ func ProjectFileRoot(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ps.SetTitleAndData(fmt.Sprintf("%s (project %s)", prj.Title(), prj.Key), prj)
-		return controller.Render(w, r, as, &vproject.Files{Project: prj}, ps, "projects", prj.Key, "Files")
+		return controller.Render(r, as, &vproject.Files{Project: prj}, ps, "projects", prj.Key, "Files")
 	})
 }
 
@@ -45,7 +45,7 @@ func ProjectFile(w http.ResponseWriter, r *http.Request) {
 			bc = append(bc, x+bcAppend)
 		})
 		ps.SetTitleAndData(fmt.Sprintf("[%s] /%s", prj.Key, pathS), pathS)
-		return controller.Render(w, r, as, &vproject.Files{Project: prj, Path: path}, ps, bc...)
+		return controller.Render(r, as, &vproject.Files{Project: prj, Path: path}, ps, bc...)
 	})
 }
 
@@ -68,6 +68,6 @@ func ProjectFileStats(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] File Stats", prj.Key), ret)
 		page := &vproject.FileStats{Project: prj, Path: pth, Ext: ext, Files: ret}
-		return controller.Render(w, r, as, page, ps, "projects", prj.Key, "File Stats")
+		return controller.Render(r, as, page, ps, "projects", prj.Key, "File Stats")
 	})
 }

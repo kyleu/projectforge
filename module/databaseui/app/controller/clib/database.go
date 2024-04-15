@@ -34,7 +34,7 @@ func DatabaseList(w http.ResponseWriter, r *http.Request) {
 			}
 			svcs[key] = svc
 		}
-		return controller.Render(w, r, as, &vdatabase.List{Keys: keys, Services: svcs}, ps, "admin", "Database")
+		return controller.Render(r, as, &vdatabase.List{Keys: keys, Services: svcs}, ps, "admin", "Database")
 	})
 }
 
@@ -44,7 +44,7 @@ func DatabaseDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(w, r, as, &vdatabase.Detail{Mode: "", Svc: svc}, ps, databaseBC(svc.Key)...)
+		return controller.Render(r, as, &vdatabase.Detail{Mode: "", Svc: svc}, ps, databaseBC(svc.Key)...)
 	})
 }
 
@@ -68,17 +68,17 @@ func DatabaseAction(w http.ResponseWriter, r *http.Request) {
 				idx, _ := strconv.ParseInt(idxStr, 10, 32)
 				st := database.GetDebugStatement(svc.Key, int(idx))
 				if st != nil {
-					return controller.Render(w, r, as, &vdatabase.Statement{Statement: st}, ps, bc...)
+					return controller.Render(r, as, &vdatabase.Statement{Statement: st}, ps, bc...)
 				}
 			}
 			recent := database.GetDebugStatements(svc.Key)
-			return controller.Render(w, r, as, &vdatabase.Detail{Mode: "recent", Svc: svc, Recent: recent}, ps, bc...)
+			return controller.Render(r, as, &vdatabase.Detail{Mode: "recent", Svc: svc, Recent: recent}, ps, bc...)
 		case "tables":
 			sizes, dberr := svc.Sizes(ps.Context, ps.Logger)
 			if dberr != nil {
 				return "", errors.Wrapf(dberr, "unable to calculate sizes for database [%s]", svc.Key)
 			}
-			return controller.Render(w, r, as, &vdatabase.Detail{Mode: "tables", Svc: svc, Sizes: sizes}, ps, bc...)
+			return controller.Render(r, as, &vdatabase.Detail{Mode: "tables", Svc: svc, Sizes: sizes}, ps, bc...)
 		case KeyAnalyze:
 			t := util.TimerStart()
 			var tmp []any
@@ -87,9 +87,9 @@ func DatabaseAction(w http.ResponseWriter, r *http.Request) {
 				return "", err
 			}
 			msg := fmt.Sprintf("Analyzed database in [%s]", util.MicrosToMillis(t.End()))
-			return controller.FlashAndRedir(true, msg, dbRoute+svc.Key+"/tables", w, ps)
+			return controller.FlashAndRedir(true, msg, dbRoute+svc.Key+"/tables", ps)
 		case "sql":
-			return controller.Render(w, r, as, &vdatabase.Detail{Mode: "sql", Svc: svc, SQL: "select 1;"}, ps, bc...)
+			return controller.Render(r, as, &vdatabase.Detail{Mode: "sql", Svc: svc, SQL: "select 1;"}, ps, bc...)
 		default:
 			return "", errors.Errorf("invalid database action [%s]", act)
 		}

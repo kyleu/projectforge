@@ -68,11 +68,11 @@ func WriteCORS(w http.ResponseWriter) {
 	setIfEmpty(HeaderAccessControlExposeHeaders, AllowedResponseHeaders)
 }
 
-func RespondDebug(w http.ResponseWriter, r *http.Request, as *app.State, filename string, ps *PageState) (string, error) {
+func RespondDebug(w *WriteCounter, r *http.Request, as *app.State, filename string, ps *PageState) (string, error) {
 	return RespondJSON(w, filename, RequestCtxToMap(r, as, ps))
 }
 
-func RespondCSV(w http.ResponseWriter, filename string, body any) (string, error) {
+func RespondCSV(w *WriteCounter, filename string, body any) (string, error) {
 	b, err := util.ToCSVBytes(body)
 	if err != nil {
 		return "", err
@@ -80,7 +80,7 @@ func RespondCSV(w http.ResponseWriter, filename string, body any) (string, error
 	return RespondMIME(filename, mimeCSV, util.KeyCSV, b, w)
 }
 
-func RespondJSON(w http.ResponseWriter, filename string, body any) (string, error) {
+func RespondJSON(w *WriteCounter, filename string, body any) (string, error) {
 	b := util.ToJSONBytes(body, true)
 	return RespondMIME(filename, mimeJSON, util.KeyJSON, b, w)
 }
@@ -89,7 +89,7 @@ type XMLResponse struct {
 	Result any `xml:"result"`
 }
 
-func RespondXML(w http.ResponseWriter, filename string, body any) (string, error) {
+func RespondXML(w *WriteCounter, filename string, body any) (string, error) {
 	b, err := util.ToXMLBytes(body, true)
 	if err != nil {
 		return "", errors.Wrapf(err, "can't serialize response of type [%T] to XML", body)
@@ -97,7 +97,7 @@ func RespondXML(w http.ResponseWriter, filename string, body any) (string, error
 	return RespondMIME(filename, mimeXML, util.KeyXML, b, w)
 }
 
-func RespondYAML(w http.ResponseWriter, filename string, body any) (string, error) {
+func RespondYAML(w *WriteCounter, filename string, body any) (string, error) {
 	b, err := yaml.Marshal(body)
 	if err != nil {
 		return "", err
@@ -105,7 +105,7 @@ func RespondYAML(w http.ResponseWriter, filename string, body any) (string, erro
 	return RespondMIME(filename, mimeYAML, util.KeyYAML, b, w)
 }
 
-func RespondMIME(filename string, mime string, ext string, ba []byte, w http.ResponseWriter) (string, error) {
+func RespondMIME(filename string, mime string, ext string, ba []byte, w *WriteCounter) (string, error) {
 	h := w.Header()
 	h.Set(HeaderContentType, mime+"; charset=UTF-8")
 	if filename != "" {

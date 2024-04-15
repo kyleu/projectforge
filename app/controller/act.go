@@ -19,24 +19,26 @@ type ActFn func(as *app.State, ps *cutil.PageState) (string, error)
 
 func Act(key string, w http.ResponseWriter, r *http.Request, f ActFn) {
 	as := _currentAppState
-	ps := cutil.LoadPageState(as, w, r, key, _currentAppRootLogger)
+	wc := cutil.NewWriteCounter(w)
+	ps := cutil.LoadPageState(as, wc, r, key, _currentAppRootLogger)
 	if err := initAppRequest(as, ps); err != nil {
 		ps.Logger.Warnf("%+v", err)
 	}
-	actComplete(key, as, ps, w, r, f)
+	actComplete(key, as, ps, wc, r, f)
 }
 
 func ActSite(key string, w http.ResponseWriter, r *http.Request, f func(as *app.State, ps *cutil.PageState) (string, error)) {
 	as := _currentSiteState
-	ps := cutil.LoadPageState(as, w, r, key, _currentSiteRootLogger)
+	wc := cutil.NewWriteCounter(w)
+	ps := cutil.LoadPageState(as, wc, r, key, _currentAppRootLogger)
 	ps.Menu = site.Menu(ps.Context, as, ps.Profile, ps.Logger)
 	if err := initSiteRequest(as, ps); err != nil {
 		ps.Logger.Warnf("%+v", err)
 	}
-	actComplete(key, as, ps, w, r, f)
+	actComplete(key, as, ps, ps.W, r, f)
 }
 
-func actComplete(key string, as *app.State, ps *cutil.PageState, w http.ResponseWriter, r *http.Request, f ActFn) {
+func actComplete(key string, as *app.State, ps *cutil.PageState, w *cutil.WriteCounter, r *http.Request, f ActFn) {
 	err := ps.Clean(r, as)
 	if err != nil {
 		ps.Logger.Warnf("error while cleaning request, somehow: %+v", err)
@@ -57,7 +59,7 @@ func actComplete(key string, as *app.State, ps *cutil.PageState, w http.Response
 	if ps.ForceRedirect == "" || ps.ForceRedirect == r.URL.Path {
 		redir, err = safeRun(f, as, ps)
 		if err != nil {
-			redir, err = handleError(key, as, ps, w, r, err)
+			redir, err = handleError(key, as, ps, r, err)
 			if err != nil {
 				ps.Logger.Warnf("unable to handle error: %+v", err)
 			}
@@ -70,10 +72,11 @@ func actComplete(key string, as *app.State, ps *cutil.PageState, w http.Response
 		w.WriteHeader(http.StatusFound)
 	}
 	elapsedMillis := float64((util.TimeCurrentNanos()-ps.Started.UnixNano())/int64(time.Microsecond)) / float64(1000)
+	ps.ResponseBytes = w.Count()
 	defer ps.Close()
 	w.Header().Set("Server-Timing", fmt.Sprintf("server:dur=%.3f", elapsedMillis))
 	logger = logger.With("elapsed", elapsedMillis)
-	logger.Debugf("processed request in [%.3fms] (render: %.3fms)", elapsedMillis, ps.RenderElapsed)
+	logger.Debugf("processed request in [%.3fms] (render: %.3fms, response: %s)", elapsedMillis, ps.RenderElapsed, util.ByteSizeSI(ps.ResponseBytes))
 }
 
 func safeRun(f func(as *app.State, ps *cutil.PageState) (string, error), as *app.State, ps *cutil.PageState) (s string, e error) {

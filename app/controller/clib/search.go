@@ -24,13 +24,13 @@ func Search(w http.ResponseWriter, r *http.Request) {
 			ps.Title = fmt.Sprintf("[%s] %s", q, ps.Title)
 		}
 		if len(results) == 1 && results[0].URL != "" {
-			return controller.FlashAndRedir(true, "single search result found", results[0].URL, w, ps)
+			return controller.FlashAndRedir(true, "single search result found", results[0].URL, ps)
 		}
 		ps.DefaultNavIcon = searchKey
 		bc := []string{"Search||/search"}
 		if q != "" {
 			bc = append(bc, q)
 		}
-		return controller.Render(w, r, as, &vsearch.Results{Params: params, Results: results, Errors: errs}, ps, bc...)
+		return controller.Render(r, as, &vsearch.Results{Params: params, Results: results, Errors: errs}, ps, bc...)
 	})
 }

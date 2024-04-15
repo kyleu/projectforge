@@ -16,7 +16,7 @@ func PlaceOrder(w http.ResponseWriter, r *http.Request) {
 		if argRes.HasMissing() {
 			ps.Data = argRes
 			msg := "Choose some options"
-			return controller.Render(w, r, as, &vpage.Args{URL: r.URL.String(), Directions: msg, ArgRes: argRes}, ps, "breadcrumb")
+			return controller.Render(r, as, &vpage.Args{URL: r.URL.String(), Directions: msg, ArgRes: argRes}, ps, "breadcrumb")
 		}
 		return "/welcome", nil
 	})

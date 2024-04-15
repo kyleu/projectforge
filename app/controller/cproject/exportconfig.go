@@ -26,7 +26,7 @@ func ProjectExportConfigForm(w http.ResponseWriter, r *http.Request) {
 
 		bc := []string{"projects", prj.Key, "Export"}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] Export", prj.Key), args.Config)
-		return controller.Render(w, r, as, &vexport.ConfigForm{Project: prj, Cfg: args.Config}, ps, bc...)
+		return controller.Render(r, as, &vexport.ConfigForm{Project: prj, Cfg: args.Config}, ps, bc...)
 	})
 }
 
@@ -59,6 +59,6 @@ func ProjectExportConfigSave(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 
-		return controller.FlashAndRedir(true, "configuration saved", fmt.Sprintf("/p/%s/export", prj.Key), w, ps)
+		return controller.FlashAndRedir(true, "configuration saved", fmt.Sprintf("/p/%s/export", prj.Key), ps)
 	})
 }

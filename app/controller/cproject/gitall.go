@@ -63,7 +63,7 @@ func GitActionAll(w http.ResponseWriter, r *http.Request) {
 				ps.Data = argRes
 				hidden := map[string]string{"tags": strings.Join(tags, ",")}
 				page := &vpage.Args{URL: url, Directions: "Choose your options", ArgRes: argRes, Hidden: hidden}
-				return controller.Render(w, r, as, page, ps, "projects", "Git")
+				return controller.Render(r, as, page, ps, "projects", "Git")
 			}
 			results, err = gitHistoryAll(prjs, r, as, ps)
 		case git.ActionMagic.Key:
@@ -73,7 +73,7 @@ func GitActionAll(w http.ResponseWriter, r *http.Request) {
 				ps.Data = argRes
 				hidden := map[string]string{"tags": strings.Join(tags, ",")}
 				page := &vpage.Args{URL: url, Directions: "Enter your commit message", ArgRes: argRes, Hidden: hidden}
-				return controller.Render(w, r, as, page, ps, "projects", "Git")
+				return controller.Render(r, as, page, ps, "projects", "Git")
 			}
 			results, err = gitMagicAll(prjs, r, as, ps)
 		case git.ActionUndoCommit.Key:
@@ -90,7 +90,7 @@ func GitActionAll(w http.ResponseWriter, r *http.Request) {
 			return cmp.Compare(strings.ToLower(l.Project.Title()), strings.ToLower(r.Project.Title()))
 		})
 		ps.SetTitleAndData("[git] All Projects", results)
-		return controller.Render(w, r, as, &vgit.Results{Action: action, Results: results, Projects: prjs, Tags: tags}, ps, "projects", "Git")
+		return controller.Render(r, as, &vgit.Results{Action: action, Results: results, Projects: prjs, Tags: tags}, ps, "projects", "Git")
 	})
 }
 

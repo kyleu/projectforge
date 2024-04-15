@@ -25,7 +25,7 @@ var (
 )
 
 // @contextcheck(req_has_ctx).
-func LoadPageState(as *app.State, w http.ResponseWriter, r *http.Request, key string, logger util.Logger) *PageState {
+func LoadPageState(as *app.State, w *WriteCounter, r *http.Request, key string, logger util.Logger) *PageState {
 	parentCtx, logger := httpmetrics.ExtractHeaders(r, logger)
 	ctx, span, logger := telemetry.StartSpan(parentCtx, "http:"+key, logger)
 	span.Attribute("path", r.URL.Path)
@@ -57,7 +57,7 @@ func LoadPageState(as *app.State, w http.ResponseWriter, r *http.Request, key st
 		Action: key, Method: r.Method, URI: r.URL, Flashes: flashes, Session: session,
 		OS: os, OSVersion: ua.OSVersion, Browser: browser, BrowserVersion: ua.Version, Platform: platform,
 		Profile: prof, Params: params,
-		Icons: slices.Clone(initialIcons), Started: util.TimeCurrent(), Logger: logger, Context: ctx, Span: span, RequestBody: b,
+		Icons: slices.Clone(initialIcons), Started: util.TimeCurrent(), Logger: logger, Context: ctx, Span: span, RequestBody: b, W: w,
 	}
 }
 

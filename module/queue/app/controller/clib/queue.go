@@ -23,7 +23,7 @@ func QueueIndex(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData("Queue", st)
-		return controller.Render(w, r, as, &vadmin.Queue{Status: st}, ps, "admin", "Queue")
+		return controller.Render(r, as, &vadmin.Queue{Status: st}, ps, "admin", "Queue")
 	})
 }
 
@@ -43,7 +43,7 @@ func QueueSend(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData("Queue", util.ValueMap{"message": msg, "status": st})
-		return controller.Render(w, r, as, &vadmin.Queue{Status: st, Message: msg}, ps, "admin", "Queue")
+		return controller.Render(r, as, &vadmin.Queue{Status: st, Message: msg}, ps, "admin", "Queue")
 	})
 }
 

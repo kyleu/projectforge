@@ -26,7 +26,7 @@ func ProjectExportGroupsEdit(w http.ResponseWriter, r *http.Request) {
 		bc := []string{"projects", prj.Key, fmt.Sprintf("Export||/p/%s/export", prj.Key), "Groups"}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] Groups", prj.Key), args.Groups)
 		ex := model.Groups{{Key: "foo", Title: "Foo", Description: "The foos!", Icon: "star", Children: model.Groups{{Key: "bar"}}}}
-		return controller.Render(w, r, as, &vexport.GroupForm{Project: prj, Groups: args.Groups, Example: ex}, ps, bc...)
+		return controller.Render(r, as, &vexport.GroupForm{Project: prj, Groups: args.Groups, Example: ex}, ps, bc...)
 	})
 }
 
@@ -58,6 +58,6 @@ func ProjectExportGroupsSave(w http.ResponseWriter, r *http.Request) {
 
 		msg := "groups saved successfully"
 		u := fmt.Sprintf("/p/%s/export", prj.Key)
-		return controller.FlashAndRedir(true, msg, u, w, ps)
+		return controller.FlashAndRedir(true, msg, u, ps)
 	})
 }

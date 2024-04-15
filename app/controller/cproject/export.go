@@ -22,6 +22,6 @@ func ProjectExportOverview(w http.ResponseWriter, r *http.Request) {
 		}
 		bc := []string{"projects", prj.Key, "Export"}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] Export", prj.Key), args)
-		return controller.Render(w, r, as, &vexport.Overview{Project: prj, Args: args}, ps, bc...)
+		return controller.Render(r, as, &vexport.Overview{Project: prj, Args: args}, ps, bc...)
 	})
 }

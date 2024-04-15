@@ -32,6 +32,6 @@ func ProjectStart(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, "started project", exec.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, "started project", exec.WebPath(), ps)
 	})
 }
