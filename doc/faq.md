@@ -84,7 +84,7 @@ All managed projects expose a web and CLI interface, and additional modules are 
 - `generate`: Applies pending changes to files as required
 - `git`: Handles git operations, many options available, see below
 - `help`: Help about any command
-- `preview`: Show what would happen if you generate
+- `preview`: Shows what would happen if you generate
 - `server`: Starts the http server on port 40000 (by default)
 - `site`: Starts the marketing site on port 40000 (by default)
 - `svg`: Builds the project's SVG files
@@ -96,7 +96,7 @@ All managed projects expose a web and CLI interface, and additional modules are 
 
 ## What actions are available for my project from  the UI?<a name="faq-4"></a>
 
-- `preview`: Show what would happen if you generate
+- `preview`: Shows what would happen if you generate
 - `generate`: Applies pending changes to files as required
 - `audit`: Audits the project files, detecting invalid files and configuration
 - `build`: Builds the project, many options available, see below

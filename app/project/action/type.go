@@ -19,7 +19,7 @@ var (
 	TypeDebug    = Type{Key: "debug", Title: "Debug", Icon: "bug", Description: "Dumps information about the project"}
 	TypeDoctor   = Type{Key: "doctor", Title: "Doctor", Icon: "first-aid", Description: "Makes sure your machine has the required dependencies"}
 	TypeGenerate = Type{Key: "generate", Title: "Generate", Icon: "forward", Description: "Applies pending changes to files as required"}
-	TypePreview  = Type{Key: "preview", Title: "Preview", Icon: "play", Description: "Show what would happen if you generate"}
+	TypePreview  = Type{Key: "preview", Title: "Preview", Icon: "play", Description: "Shows what would happen if you generate"}
 	TypeRules    = Type{Key: "rules", Title: "Rules", Icon: "play", Description: "Apply export rules from json file located at ./rules.json"}
 	TypeSVG      = Type{Key: "svg", Title: "SVG", Icon: "icons", Description: "Builds the project's SVG files"}
 	TypeTest     = Type{Key: "test", Title: "Test", Icon: "wrench", Description: "Runs internal tests, you probably don't want this", Hidden: true}

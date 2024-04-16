@@ -71,18 +71,18 @@ func (p *Session) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 			v := ps.Session[k]
 
 //line views/vadmin/Session.html:28
-			qw422016.N().S(`            <tr>
-              <th class="shrink">`)
+			qw422016.N().S(`          <tr>
+            <th class="shrink">`)
 //line views/vadmin/Session.html:30
 			qw422016.E().S(k)
 //line views/vadmin/Session.html:30
 			qw422016.N().S(`</th>
-              <td>`)
+            <td>`)
 //line views/vadmin/Session.html:31
 			qw422016.E().S(fmt.Sprint(v))
 //line views/vadmin/Session.html:31
 			qw422016.N().S(`</td>
-            </tr>
+          </tr>
 `)
 //line views/vadmin/Session.html:33
 		}
