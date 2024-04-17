@@ -11,6 +11,11 @@ import (
 	"github.com/samber/lo"
 )
 
+type OrderedPair[V any] struct {
+	K string `json:"k"`
+	V V      `json:"v"`
+}
+
 type OrderedMap[V any] struct {
 	Lexical bool
 	Order   []string
@@ -21,12 +26,35 @@ func NewOrderedMap[V any](lexical bool, capacity int) *OrderedMap[V] {
 	return &OrderedMap[V]{Lexical: lexical, Order: make([]string, 0, capacity), Map: make(map[string]V, capacity)}
 }
 
+func NewOMap[V any]() *OrderedMap[V] {
+	return NewOrderedMap[V](false, 0)
+}
+
 func (o *OrderedMap[V]) Append(k string, v V) {
 	o.Order = append(o.Order, k)
 	o.Map[k] = v
 	if o.Lexical {
 		slices.Sort(o.Order)
 	}
+}
+
+func (o *OrderedMap[V]) Set(k string, v V) {
+	if _, ok := o.Map[k]; !ok {
+		o.Order = append(o.Order, k)
+	}
+	o.Map[k] = v
+	if o.Lexical {
+		slices.Sort(o.Order)
+	}
+}
+
+func (o *OrderedMap[V]) HasKey(k string) bool {
+	_, ok := o.Map[k]
+	return ok
+}
+
+func (o *OrderedMap[V]) IndexOf(k string) int {
+	return slices.Index(o.Order, k)
 }
 
 func (o *OrderedMap[V]) Get(k string) (V, bool) {
@@ -36,6 +64,19 @@ func (o *OrderedMap[V]) Get(k string) (V, bool) {
 
 func (o *OrderedMap[V]) GetSimple(k string) V {
 	return o.Map[k]
+}
+
+func (o *OrderedMap[V]) Pairs() []*OrderedPair[V] {
+	return lo.Map(o.Order, func(k string, _ int) *OrderedPair[V] {
+		return &OrderedPair[V]{K: k, V: o.GetSimple(k)}
+	})
+}
+
+func (o *OrderedMap[V]) Remove(k string) {
+	o.Order = lo.Filter(o.Order, func(x string, _ int) bool {
+		return x != k
+	})
+	delete(o.Map, k)
 }
 
 func (o OrderedMap[V]) MarshalYAML() (any, error) {

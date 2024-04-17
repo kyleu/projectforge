@@ -1,3 +1,16 @@
+{% import (
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/views/components"
+) %}
+
 {% func Bool(b bool) %}{% stripspace %}
   {% if b %}true{% else %}false{% endif %}
+{% endstripspace %}{% endfunc %}
+
+{% func BoolIcon(b bool, size int, cls string, ps *cutil.PageState) %}{% stripspace %}
+  {% if b %}
+    {%= components.SVGRef("check", size, size, cls, ps) %}
+  {% else %}
+    {%= components.SVGRef("times", size, size, cls, ps) %}
+  {% endif %}
 {% endstripspace %}{% endfunc %}
