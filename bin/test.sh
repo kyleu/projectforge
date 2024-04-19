@@ -32,7 +32,11 @@ if $do_watch; then
 fi
 
 if [ -f "test.env" ]; then
-	export $(cat test.env | grep -v "#" | xargs)
+  while IFS= read -r line || [ -n "$line" ]; do
+    if [[ ! $line =~ ^#.* ]]; then
+      export "$line"
+    fi
+  done < "test.env"
 fi
 
 if [ -f "./bin/test-setup.sh" ]; then

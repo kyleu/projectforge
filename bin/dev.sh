@@ -15,7 +15,11 @@ export projectforge_encryption_key=TEMP_SECRET_KEY
 
 # include env file
 if [ -f ".env" ]; then
-	export "$(cat .env | grep -v "#" | xargs)"
+  while IFS= read -r line || [ -n "$line" ]; do
+    if [[ ! $line =~ ^#.* ]]; then
+      export "$line"
+    fi
+  done < ".env"
 fi
 
 ./bin/templates.sh
