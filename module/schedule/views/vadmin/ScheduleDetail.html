@@ -1,4 +1,6 @@
 {% import (
+  "strings"
+
   "{{{ .Package }}}/app"
   "{{{ .Package }}}/app/controller/cutil"
   "{{{ .Package }}}/app/lib/schedule"
@@ -11,12 +13,43 @@
   layout.Basic
   Job *schedule.Job
   Result *schedule.Result
+  ExecCount int
 } %}
 
 {% func (p *ScheduleDetail) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
+    <div class="right">{%s util.StringPlural(p.ExecCount, "runs") %}</div>
     <h3>Scheduled Job [{%s p.Job.String() %}]</h3>
-    {%= jobTable(schedule.Jobs{p.Job}) %}
+    <div class="mt overflow full-width">
+      <table class="min-200 expanded">
+        <tbody>
+          <tr>
+            <th class="shrink">ID</th>
+            <td>{%s p.Job.ID.String() %}</td>
+          </tr>
+          <tr>
+            <th class="shrink">Name</th>
+            <td>{%s p.Job.Name %}</td>
+          </tr>
+          <tr>
+            <th class="shrink">Tags</th>
+            <td>{%s strings.Join(p.Job.Tags, ", ") %}</td>
+          </tr>
+          <tr>
+            <th class="shrink">Last Run</th>
+            <td>{%s util.TimeToFullMS(p.Job.Last) %}</td>
+          </tr>
+          <tr>
+            <th class="shrink">Next Run</th>
+            <td>{%s util.TimeToFullMS(p.Job.Next) %}</td>
+          </tr>
+          <tr>
+            <th class="shrink">Runs</th>
+            <td>{%d p.ExecCount %}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
   {%- if p.Result != nil -%}
   <div class="card">

@@ -1,6 +1,7 @@
 package clib
 
 import (
+	"fmt"
 	"net/http"
 
 	"{{{ .Package }}}/app"
@@ -15,7 +16,8 @@ func ScheduleList(w http.ResponseWriter, r *http.Request) {
 	controller.Act("schedule.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		jobs := as.Services.Schedule.ListJobs()
 		ps.SetTitleAndData("Schedules", jobs)
-		return controller.Render(r, as, &vadmin.Schedule{Jobs: jobs}, ps, "admin", scheduleBC)
+		ecs := as.Services.Schedule.ExecCounts
+		return controller.Render(r, as, &vadmin.Schedule{Jobs: jobs, ExecCounts: ecs}, ps, "admin", scheduleBC)
 	})
 }
 
@@ -28,11 +30,14 @@ func ScheduleDetail(w http.ResponseWriter, r *http.Request) {
 
 		job := as.Services.Schedule.GetJob(*id)
 		if job == nil {
-			return controller.ERsp("no scheduled job with id [%s]", id)
+			msg := fmt.Sprintf("no scheduled job with id [%s]", id)
+			return controller.FlashAndRedir(false, msg, "/admin/schedule", ps)
 		}
 		res := as.Services.Schedule.Results[*id]
+		ec := as.Services.Schedule.ExecCounts[*id]
 
 		ps.SetTitleAndData(job.ID.String(), job)
-		return controller.Render(r, as, &vadmin.ScheduleDetail{Job: job, Result: res}, ps, "admin", scheduleBC, job.ID.String())
+		page := &vadmin.ScheduleDetail{Job: job, Result: res, ExecCount: ec}
+		return controller.Render(r, as, page, ps, "admin", scheduleBC, job.ID.String())
 	})
 }

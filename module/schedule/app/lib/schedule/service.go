@@ -16,10 +16,11 @@ import (
 )
 
 type Service struct {
-	Engine   gocron.Scheduler      `json:"-"`
-	Started  time.Time             `json:"started"`
-	Results  map[uuid.UUID]*Result `json:"results,omitempty"`
-	resultMu sync.Mutex
+	Engine     gocron.Scheduler      `json:"-"`
+	Started    time.Time             `json:"started"`
+	ExecCounts map[uuid.UUID]int     `json:"execCounts,omitempty"`
+	Results    map[uuid.UUID]*Result `json:"results,omitempty"`
+	resultMu   sync.Mutex
 }
 
 func NewService() *Service {
@@ -27,7 +28,7 @@ func NewService() *Service {
 	if engine != nil {
 		engine.Start()
 	}
-	return &Service{Engine: engine, Started: time.Now(), Results: map[uuid.UUID]*Result{}}
+	return &Service{Engine: engine, Started: time.Now(), ExecCounts: map[uuid.UUID]int{}, Results: map[uuid.UUID]*Result{}}
 }
 
 func (s *Service) NewJob(
@@ -51,6 +52,7 @@ func (s *Service) NewJob(
 		defer sp.Complete()
 		logger.Debugf("running scheduled job [%s]", id.String())
 		res := &Result{Job: id, Occurred: time.Now()}
+		s.ExecCounts[id] += 1
 		ret, err := f(ctx, logger)
 		res.DurationMicro = timer.End()
 		res.Returned = ret

@@ -1,6 +1,8 @@
 {% import (
   "strings"
 
+  "github.com/google/uuid"
+
   "{{{ .Package }}}/app"
   "{{{ .Package }}}/app/controller/cutil"
   "{{{ .Package }}}/app/lib/schedule"
@@ -11,16 +13,17 @@
 {% code type Schedule struct {
   layout.Basic
   Jobs schedule.Jobs
+  ExecCounts map[uuid.UUID]int
 } %}
 
 {% func (p *Schedule) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>Scheduled Jobs</h3>
-    {%= jobTable(p.Jobs) %}
+    {%= jobTable(p.Jobs, p.ExecCounts) %}
   </div>
 {% endfunc %}
 
-{% func jobTable(jobs schedule.Jobs) %}
+{% func jobTable(jobs schedule.Jobs, ecs map[uuid.UUID]int) %}
     <div class="overflow full-width">
       <table class="mt min-200 expanded">
         <thead>
@@ -30,6 +33,7 @@
             <th>Tags</th>
             <th>Last</th>
             <th>Next</th>
+            <th>Runs</th>
           </tr>
         </thead>
         <tbody>
@@ -40,6 +44,7 @@
             <td>{%s strings.Join(j.Tags, ", ") %}</td>
             <td>{%s util.TimeToFullMS(j.Last) %}</td>
             <td>{%s util.TimeToFullMS(j.Next) %}</td>
+            <td>{%d ecs[j.ID] %}</td>
           </tr>
           {%- endfor -%}
         </tbody>
