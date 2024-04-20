@@ -1,4 +1,3 @@
-<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
 {% import (
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
@@ -17,14 +16,11 @@
   </div>
   <div class="card">
     <h3>About</h3>
-    {%- comment %}$PF_SECTION_START(about)${% endcomment -%}
     <p>Using code generation, the latest technology, and a strong standard library, Project Forge will help manage your project's code, assets, UI and UX.</p>
     {%= components.BragApp() %}
-    {%- comment %}$PF_SECTION_END(about)${% endcomment -%}
   </div>
   <div class="card">
     <h3>Help</h3>
-    {%- comment %}$PF_SECTION_START(help)${% endcomment -%}
     Pages with help files, like this one, have a <a href="#help">link</a> in the upper-right.
   </div>
   {%= components.BragProject() %}
@@ -35,7 +31,6 @@
       and the modules are <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>.
     </div>
     <div class="mt">Your project is your own, use any license you'd like.</div>
-    {%- comment %}$PF_SECTION_END(help)${% endcomment -%}
   </div>
   {%= SourceCode() %}
   {%= Feedback() %}
