@@ -41,7 +41,7 @@
     "authorID": "kyleu",
     "authorName": "Kyle U",
     "authorEmail": "projectforge@kyleu.com",
-    "license": "Proprietary",
+    "license": "MIT",
     "homepage": "https://projectforge.dev",
     "sourcecode": "https://github.com/kyleu/projectforge",
     "summary": "Build and maintain feature-rich applications using Golang",

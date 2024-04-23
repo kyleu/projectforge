@@ -19,7 +19,7 @@ brews:
     folder: Formula
     homepage: "https://projectforge.dev"
     description: "Project Forge creates and manages applications written in the Go programming language. Using code generation, the latest technology, and a strong standard library, Project Forge will help manage your project's code, assets, UI and UX."
-    license: "Proprietary"
+    license: "MIT"
     skip_upload: "false"
     install: "bin.install \"projectforge\""
 
@@ -60,7 +60,7 @@ nfpms:
     homepage: "https://projectforge.dev"
     maintainer: "Kyle U <projectforge@kyleu.com>"
     description: "Project Forge creates and manages applications written in the Go programming language. Using code generation, the latest technology, and a strong standard library, Project Forge will help manage your project's code, assets, UI and UX."
-    license: "Proprietary"
+    license: "MIT"
     formats:
       - apk
       - deb
@@ -98,7 +98,7 @@ snapcrafts:
     description: "Project Forge creates and manages applications written in the Go programming language. Using code generation, the latest technology, and a strong standard library, Project Forge will help manage your project's code, assets, UI and UX."
     grade: stable
     confinement: strict
-    license: "Proprietary"
+    license: "MIT"
 
 snapshot:
   name_template: "{{ .Tag }}"
