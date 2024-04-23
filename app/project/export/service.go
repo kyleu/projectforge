@@ -17,7 +17,7 @@ func NewService() *Service {
 	return &Service{}
 }
 
-func (s *Service) Files(p *project.Project, args *model.Args, addHeader bool, linebreak string) (f file.Files, e error) {
+func (s *Service) Files(p *project.Project, args *model.Args, addHeader bool, linebreak string) (_ file.Files, e error) {
 	defer func() {
 		if rec := recover(); rec != nil {
 			if err, ok := rec.(error); ok {
@@ -27,6 +27,5 @@ func (s *Service) Files(p *project.Project, args *model.Args, addHeader bool, li
 			}
 		}
 	}()
-	f, e = files.All(p, args, addHeader, linebreak)
-	return
+	return files.All(p, args, addHeader, linebreak)
 }

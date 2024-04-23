@@ -15,6 +15,7 @@ type Module struct {
 	Name        string                `json:"name,omitempty"`
 	Icon        string                `json:"icon,omitempty"`
 	Description string                `json:"description,omitempty"`
+	Hidden      bool                  `json:"hidden,omitempty"`
 	AuthorName  string                `json:"authorName,omitempty"`
 	AuthorEmail string                `json:"authorEmail,omitempty"`
 	License     string                `json:"license,omitempty"`

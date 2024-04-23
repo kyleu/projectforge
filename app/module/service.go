@@ -14,10 +14,10 @@ import (
 )
 
 var nativeModuleKeys = []string{
-	"android", "audit", "core", "database", "databaseui", "desktop", "docbrowse", "export", "expression", "filesystem",
-	"graphql", "har", "help", "ios", "jsx", "marketing", "migration", util.DatabaseMySQL, "notebook", "notarize",
-	"oauth", "openapi", "playwright", util.DatabasePostgreSQL, "process", "queue", "readonlydb", "richedit",
-	"sandbox", "schedule", "scripting", "search", util.DatabaseSQLite, util.DatabaseSQLServer,
+	"android", "audit", "core", "csharp", "database", "databaseui", "desktop", "docbrowse", "export", "expression",
+	"filesystem", "graphql", "har", "help", "ios", "jsx", "marketing", "migration", util.DatabaseMySQL,
+	"notebook", "notarize", "oauth", "openapi", "playwright", util.DatabasePostgreSQL, "process", "queue",
+	"readonlydb", "richedit", "sandbox", "schedule", "scripting", "search", util.DatabaseSQLite, util.DatabaseSQLServer,
 	"themecatalog", "types", "upgrade", "user", "wasmclient", "wasmserver", "websocket",
 }
 
@@ -109,9 +109,9 @@ func (s *Service) Keys() []string {
 }
 
 func (s *Service) Modules() Modules {
-	return lo.Map(s.Keys(), func(key string, _ int) *Module {
+	return lo.FilterMap(s.Keys(), func(key string, _ int) (*Module, bool) {
 		m, _ := s.Get(key)
-		return m
+		return m, !m.Hidden
 	})
 }
 

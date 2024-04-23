@@ -139,47 +139,55 @@ func StreamDetailSettings(qw422016 *qt422016.Writer, prj *project.Project, as *a
 	qw422016.N().S(`</td>
         </tr>
         <tr>
+          <th>Stats</th>
+          <td><a href="`)
+//line views/vproject/DetailSettings.html:56
+	qw422016.E().S(prj.WebPath())
+//line views/vproject/DetailSettings.html:56
+	qw422016.N().S(`/stats"><button>File Stats</button></a></td>
+        </tr>
+        <tr>
           <th>JSON</th>
           <td><a href="#modal-`)
-//line views/vproject/DetailSettings.html:56
+//line views/vproject/DetailSettings.html:60
 	qw422016.E().S(prj.Key)
-//line views/vproject/DetailSettings.html:56
+//line views/vproject/DetailSettings.html:60
 	qw422016.N().S(`"><button type="button">JSON</button></a></td>
         </tr>
       </tbody>
     </table>
   </div>
   `)
-//line views/vproject/DetailSettings.html:61
+//line views/vproject/DetailSettings.html:65
 	components.StreamJSONModal(qw422016, prj.Key, "Project JSON", prj, 1)
-//line views/vproject/DetailSettings.html:61
+//line views/vproject/DetailSettings.html:65
 	qw422016.N().S(`
 `)
-//line views/vproject/DetailSettings.html:62
+//line views/vproject/DetailSettings.html:66
 }
 
-//line views/vproject/DetailSettings.html:62
+//line views/vproject/DetailSettings.html:66
 func WriteDetailSettings(qq422016 qtio422016.Writer, prj *project.Project, as *app.State, ps *cutil.PageState) {
-//line views/vproject/DetailSettings.html:62
+//line views/vproject/DetailSettings.html:66
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/DetailSettings.html:62
+//line views/vproject/DetailSettings.html:66
 	StreamDetailSettings(qw422016, prj, as, ps)
-//line views/vproject/DetailSettings.html:62
+//line views/vproject/DetailSettings.html:66
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/DetailSettings.html:62
+//line views/vproject/DetailSettings.html:66
 }
 
-//line views/vproject/DetailSettings.html:62
+//line views/vproject/DetailSettings.html:66
 func DetailSettings(prj *project.Project, as *app.State, ps *cutil.PageState) string {
-//line views/vproject/DetailSettings.html:62
+//line views/vproject/DetailSettings.html:66
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/DetailSettings.html:62
+//line views/vproject/DetailSettings.html:66
 	WriteDetailSettings(qb422016, prj, as, ps)
-//line views/vproject/DetailSettings.html:62
+//line views/vproject/DetailSettings.html:66
 	qs422016 := string(qb422016.B)
-//line views/vproject/DetailSettings.html:62
+//line views/vproject/DetailSettings.html:66
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/DetailSettings.html:62
+//line views/vproject/DetailSettings.html:66
 	return qs422016
-//line views/vproject/DetailSettings.html:62
+//line views/vproject/DetailSettings.html:66
 }
