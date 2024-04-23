@@ -32,13 +32,15 @@ const (
 	KeyDetail = "detail"
 	KeySimple = "simple"
 
-	ExtCSS  = ".css"
-	ExtGo   = ".go"
-	ExtHTML = ".html"
-	ExtJS   = ".js"
-	ExtMod  = ".mod"
-	ExtSQL  = ".sql"
-	ExtSVG  = ".svg"
-	ExtTS   = ".ts"
+	ExtCS     = ".cs"
+	ExtCSHTML = ".cshtml"
+	ExtCSS    = ".css"
+	ExtGo     = ".go"
+	ExtHTML   = ".html"
+	ExtJS     = ".js"
+	ExtMod    = ".mod"
+	ExtSQL    = ".sql"
+	ExtSVG    = ".svg"
+	ExtTS     = ".ts"
 	// $PF_SECTION_END(keys)$.
 )

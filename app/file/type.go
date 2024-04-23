@@ -20,6 +20,8 @@ var (
 	TypeBatch        = Type{Key: "batch", Suffixes: []string{".bat"}, Title: "Windows batch file"}
 	TypeCodeowners   = Type{Key: "codeowners", Suffixes: []string{"CODEOWNERS"}, Title: "Code owners source control file"}
 	TypeConf         = Type{Key: "conf", Suffixes: []string{".conf"}, Title: "Configuration file"}
+	TypeCS           = Type{Key: "cs", Suffixes: []string{util.ExtCS}, Title: "C# source code"}
+	TypeCSHTML       = Type{Key: "cshtml", Suffixes: []string{util.ExtCSHTML}, Title: "C# HTML template"}
 	TypeCSS          = Type{Key: "css", Suffixes: []string{util.ExtCSS}, Title: "Cascading Stylesheet"}
 	TypeDocker       = Type{Key: "docker", Suffixes: dockerfileSuffixes, Title: "Docker build configuration"}
 	TypeDockerIgnore = Type{Key: "dockerignore", Suffixes: []string{".dockerignore"}, Title: "Docker ignore configuration"}
@@ -55,7 +57,7 @@ var (
 )
 
 var AllTypes = []Type{
-	TypeBatch, TypeCodeowners, TypeConf, TypeCSS, TypeDocker, TypeDockerIgnore, TypeEditorConfig, TypeEntitlements, TypeEnv,
+	TypeBatch, TypeCodeowners, TypeConf, TypeCS, TypeCSHTML, TypeCSS, TypeDocker, TypeDockerIgnore, TypeEditorConfig, TypeEntitlements, TypeEnv,
 	TypeESLint, TypeGitIgnore, TypeGo, TypeGoMod, TypeGradle, TypeGraphQL, TypeHCL, TypeHTML, TypeIcons, TypeIgnore,
 	TypeJavaScript, TypeJSON, TypeKotlin, TypeMakefile, TypeMarkdown, TypePList, TypeProperties, TypePython, TypeProtobuf,
 	TypeShell, TypeSQL, TypeSVG, TypeSwift, TypeTypeScript, TypeXML, TypeYAML,

@@ -52,12 +52,17 @@ func validateBasic(p *Project, e validationAddErrFn) {
 		e("no-modules", "no modules enabled")
 	}
 	if !lo.Contains(p.Modules, "core") {
-		e("no-modules", "core module not included")
+		if !lo.Contains(p.Modules, "csharp") {
+			e("no-modules", "core module not included")
+		}
 	}
 }
 
 func validateModuleDeps(modules []string, deps map[string][]string, e validationAddErrFn) {
 	if deps == nil {
+		return
+	}
+	if lo.Contains(modules, "csharp") {
 		return
 	}
 	lo.ForEach(modules, func(m string, _ int) {
@@ -169,6 +174,17 @@ func validateFilesystem(p *Project, e validationAddErrFn, fs filesystem.FileLoad
 	if !fs.Exists(".projectforge/project.json") {
 		e("project-file", "the project definition file (.projectforge/project.json) is missing")
 	}
+
+	if slices.Contains(p.Modules, "export") {
+		if !fs.Exists(".projectforge/export") {
+			e("missing-export-directory", "the project uses the export module, but doesn't have directory [./projectforge/export]")
+		}
+	}
+
+	if lo.Contains(p.Modules, "csharp") {
+		return
+	}
+
 	if !fs.Exists("app/services.go") {
 		e("needs-generate", "some generated files are missing, run the \"Generate\" action")
 		return
@@ -197,12 +213,6 @@ func validateFilesystem(p *Project, e validationAddErrFn, fs filesystem.FileLoad
 	if !fs.Exists(DebugOutputDir+p.Executable()) && !fs.Exists(DebugOutputDir+p.Executable()+".exe") {
 		e("needs-build", "your project hasn't been built recently, run a build using the buttons above")
 		return
-	}
-
-	if slices.Contains(p.Modules, "export") {
-		if !fs.Exists(".projectforge/export") {
-			e("missing-export-directory", "the project uses the export module, but doesn't have directory [./projectforge/export]")
-		}
 	}
 
 	if b, err := fs.ReadFile("client/src/svg/app.svg"); err == nil {
