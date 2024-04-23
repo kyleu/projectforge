@@ -1,7 +1,9 @@
 package util
 
 import (
+	"cmp"
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/samber/lo"
@@ -31,6 +33,14 @@ func (d Diffs) String() string {
 	return strings.Join(lo.Map(d, func(x *Diff, _ int) string {
 		return x.String()
 	}), "; ")
+}
+
+func (d Diffs) Sorted() Diffs {
+	ret := slices.Clone(d)
+	slices.SortFunc(ret, func(l *Diff, r *Diff) int {
+		return cmp.Compare(l.Path, r.Path)
+	})
+	return ret
 }
 
 func (d Diffs) StringVerbose() string {

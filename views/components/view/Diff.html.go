@@ -105,106 +105,125 @@ func StreamDiffsSet(qw422016 *qt422016.Writer, key string, value util.DiffsSet, 
 			dk, u := util.StringSplitLast(k, '^', true)
 
 //line views/components/view/Diff.html:46
+			v := value[k]
+
+//line views/components/view/Diff.html:47
 			if idx < 100 {
-//line views/components/view/Diff.html:46
+//line views/components/view/Diff.html:47
 				qw422016.N().S(`<li><input id="accordion-`)
-//line views/components/view/Diff.html:48
+//line views/components/view/Diff.html:49
 				qw422016.E().S(k)
-//line views/components/view/Diff.html:48
+//line views/components/view/Diff.html:49
 				qw422016.N().S(`-`)
-//line views/components/view/Diff.html:48
+//line views/components/view/Diff.html:49
 				qw422016.N().D(idx)
-//line views/components/view/Diff.html:48
+//line views/components/view/Diff.html:49
 				qw422016.N().S(`" type="checkbox" hidden="hidden" /><label for="accordion-`)
-//line views/components/view/Diff.html:49
-				qw422016.E().S(k)
-//line views/components/view/Diff.html:49
-				qw422016.N().S(`-`)
-//line views/components/view/Diff.html:49
-				qw422016.N().D(idx)
-//line views/components/view/Diff.html:49
-				qw422016.N().S(`">`)
 //line views/components/view/Diff.html:50
-				components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/components/view/Diff.html:51
-				if u != "" {
-//line views/components/view/Diff.html:51
-					qw422016.N().S(`<a href="`)
-//line views/components/view/Diff.html:51
-					qw422016.E().S(u)
-//line views/components/view/Diff.html:51
-					qw422016.N().S(`">`)
-//line views/components/view/Diff.html:51
-					qw422016.E().S(dk)
-//line views/components/view/Diff.html:51
-					qw422016.N().S(`</a>`)
-//line views/components/view/Diff.html:51
-				} else {
-//line views/components/view/Diff.html:51
-					qw422016.E().S(dk)
-//line views/components/view/Diff.html:51
+				qw422016.E().S(k)
+//line views/components/view/Diff.html:50
+				qw422016.N().S(`-`)
+//line views/components/view/Diff.html:50
+				qw422016.N().D(idx)
+//line views/components/view/Diff.html:50
+				qw422016.N().S(`"><div class="right">`)
+//line views/components/view/Diff.html:52
+				if len(v) == 1 {
+//line views/components/view/Diff.html:52
+					qw422016.N().S(`<em>(`)
+//line views/components/view/Diff.html:53
+					qw422016.E().S(v[0].String())
+//line views/components/view/Diff.html:53
+					qw422016.N().S(`)</em>`)
+//line views/components/view/Diff.html:53
+					qw422016.N().S(` `)
+//line views/components/view/Diff.html:54
 				}
-//line views/components/view/Diff.html:51
-				qw422016.N().S(`</label><div class="bd"><div><div>`)
-//line views/components/view/Diff.html:54
-				StreamDiffs(qw422016, value[k])
-//line views/components/view/Diff.html:54
-				qw422016.N().S(`</div></div></div></li>`)
+//line views/components/view/Diff.html:55
+				qw422016.E().S(util.StringPlural(len(v), "diff"))
+//line views/components/view/Diff.html:55
+				qw422016.N().S(`</div>`)
 //line views/components/view/Diff.html:57
-			}
+				components.StreamExpandCollapse(qw422016, 3, ps)
 //line views/components/view/Diff.html:58
+				if u != "" {
+//line views/components/view/Diff.html:58
+					qw422016.N().S(`<a href="`)
+//line views/components/view/Diff.html:58
+					qw422016.E().S(u)
+//line views/components/view/Diff.html:58
+					qw422016.N().S(`">`)
+//line views/components/view/Diff.html:58
+					qw422016.E().S(dk)
+//line views/components/view/Diff.html:58
+					qw422016.N().S(`</a>`)
+//line views/components/view/Diff.html:58
+				} else {
+//line views/components/view/Diff.html:58
+					qw422016.E().S(dk)
+//line views/components/view/Diff.html:58
+				}
+//line views/components/view/Diff.html:58
+				qw422016.N().S(`</label><div class="bd"><div><div>`)
+//line views/components/view/Diff.html:61
+				StreamDiffs(qw422016, v)
+//line views/components/view/Diff.html:61
+				qw422016.N().S(`</div></div></div></li>`)
+//line views/components/view/Diff.html:64
+			}
+//line views/components/view/Diff.html:65
 			if idx == 100 {
-//line views/components/view/Diff.html:58
+//line views/components/view/Diff.html:65
 				qw422016.N().S(`<li><input id="accordion-`)
-//line views/components/view/Diff.html:60
+//line views/components/view/Diff.html:67
 				qw422016.E().S(k)
-//line views/components/view/Diff.html:60
+//line views/components/view/Diff.html:67
 				qw422016.N().S(`-extras" type="checkbox" hidden="hidden" /><label for="accordion-`)
-//line views/components/view/Diff.html:61
+//line views/components/view/Diff.html:68
 				qw422016.E().S(k)
-//line views/components/view/Diff.html:61
+//line views/components/view/Diff.html:68
 				qw422016.N().S(`-extras">...and`)
-//line views/components/view/Diff.html:61
+//line views/components/view/Diff.html:68
 				qw422016.N().S(` `)
-//line views/components/view/Diff.html:61
+//line views/components/view/Diff.html:68
 				qw422016.N().D(len(value) - 100)
-//line views/components/view/Diff.html:61
+//line views/components/view/Diff.html:68
 				qw422016.N().S(` `)
-//line views/components/view/Diff.html:61
+//line views/components/view/Diff.html:68
 				qw422016.N().S(`extra</label></li>`)
-//line views/components/view/Diff.html:63
+//line views/components/view/Diff.html:70
 			}
-//line views/components/view/Diff.html:64
+//line views/components/view/Diff.html:71
 		}
-//line views/components/view/Diff.html:64
+//line views/components/view/Diff.html:71
 		qw422016.N().S(`</ul>`)
-//line views/components/view/Diff.html:66
+//line views/components/view/Diff.html:73
 	}
-//line views/components/view/Diff.html:67
+//line views/components/view/Diff.html:74
 }
 
-//line views/components/view/Diff.html:67
+//line views/components/view/Diff.html:74
 func WriteDiffsSet(qq422016 qtio422016.Writer, key string, value util.DiffsSet, ps *cutil.PageState) {
-//line views/components/view/Diff.html:67
+//line views/components/view/Diff.html:74
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/view/Diff.html:67
+//line views/components/view/Diff.html:74
 	StreamDiffsSet(qw422016, key, value, ps)
-//line views/components/view/Diff.html:67
+//line views/components/view/Diff.html:74
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/view/Diff.html:67
+//line views/components/view/Diff.html:74
 }
 
-//line views/components/view/Diff.html:67
+//line views/components/view/Diff.html:74
 func DiffsSet(key string, value util.DiffsSet, ps *cutil.PageState) string {
-//line views/components/view/Diff.html:67
+//line views/components/view/Diff.html:74
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/view/Diff.html:67
+//line views/components/view/Diff.html:74
 	WriteDiffsSet(qb422016, key, value, ps)
-//line views/components/view/Diff.html:67
+//line views/components/view/Diff.html:74
 	qs422016 := string(qb422016.B)
-//line views/components/view/Diff.html:67
+//line views/components/view/Diff.html:74
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/view/Diff.html:67
+//line views/components/view/Diff.html:74
 	return qs422016
-//line views/components/view/Diff.html:67
+//line views/components/view/Diff.html:74
 }
