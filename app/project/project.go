@@ -97,21 +97,21 @@ func (p *Project) WebPath() string {
 	return "/p/" + p.Key
 }
 
-func (p *Project) ModuleArgExport(pSvc *Service, logger util.Logger) (*model.Args, error) {
-	if p.ExportArgs == nil && p.HasModule("export") {
+func (p *Project) ModuleArgExport(pSvc *Service, logger util.Logger) error {
+	if p.ExportArgs == nil && (p.HasModule("export") || p.HasModule("csharp")) {
 		fs, err := pSvc.GetFilesystem(p)
 		if err != nil {
-			return nil, err
+			return err
 		}
 		p.ExportArgs, err = pSvc.loadExportArgs(fs, logger)
 		if err != nil {
-			return nil, err
+			return err
 		}
 		p.ExportArgs.Modules = p.Modules
 		p.ExportArgs.Database = p.DatabaseEngineDefault()
 		p.ExportArgs.Acronyms = p.Info.Acronyms
 	}
-	return p.ExportArgs, nil
+	return nil
 }
 
 func (p *Project) GoVersion() string {

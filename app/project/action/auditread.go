@@ -36,21 +36,12 @@ func getModuleFiles(pm *PrjAndMods) ([]string, error) {
 		return nil, err
 	}
 	if pm.Mods.Get("export") != nil {
-		args, err := pm.Prj.ModuleArgExport(pm.PSvc, pm.Logger)
-		if err != nil {
-			return nil, err
-		}
-		args.Modules = pm.Mods.Keys()
 		lb := util.StringDefaultLinebreak
-		pfs, err := pm.PSvc.GetFilesystem(pm.Prj)
-		if err != nil {
-			return nil, err
-		}
-		modContent, _ := pfs.ReadFile("go.mod")
+		modContent, _ := pm.FS.ReadFile("go.mod")
 		if modContent != nil {
 			lb = util.StringDetectLinebreak(string(modContent))
 		}
-		files, e := pm.ESvc.Files(pm.Prj, args, true, lb)
+		files, e := pm.ESvc.Files(pm.Prj, true, lb)
 		if e != nil {
 			return nil, err
 		}

@@ -14,21 +14,16 @@ func onSVG(ctx context.Context, pm *PrjAndMods) *Result {
 
 	tgt := fmt.Sprintf("%s/app/util/svg.go", pm.Prj.Path)
 
-	fs, err := pm.PSvc.GetFilesystem(pm.Prj)
-	if err != nil {
-		return ret.WithError(err)
-	}
-
 	if pm.Cfg.GetStringOpt("mode") == refreshMode {
 		ret.AddLog("refreshing app SVG for project [%s]", pm.Prj.Key)
-		err = svg.RefreshAppIcon(ctx, pm.Prj, fs, pm.Logger)
+		err := svg.RefreshAppIcon(ctx, pm.Prj, pm.FS, pm.Logger)
 		if err != nil {
 			return errorResult(err, TypeSVG, pm.Cfg, pm.Logger)
 		}
 		return ret
 	}
 
-	count, err := svg.Run(fs, tgt, pm.Logger)
+	count, err := svg.Run(pm.FS, tgt, pm.Logger)
 	if err != nil {
 		return errorResult(err, TypeSVG, pm.Cfg, pm.Logger)
 	}

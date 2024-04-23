@@ -26,12 +26,8 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 
 	if pm.Mods.Get("export") != nil && len(srcFiles) > 0 {
 		linebreak := util.StringDetectLinebreak(srcFiles[0].Content)
-		args, e := pm.Prj.ModuleArgExport(pm.PSvc, pm.Logger)
-		if e != nil {
-			return nil, nil, errors.Wrap(e, "export module arguments are invalid")
-		}
-		args.Modules = pm.Mods.Keys()
-		files, e := pm.ESvc.Files(pm.Prj, args, true, linebreak)
+		pm.Prj.ExportArgs.Modules = pm.Mods.Keys()
+		files, e := pm.ESvc.Files(pm.Prj, true, linebreak)
 		if e != nil {
 			return nil, nil, errors.Wrap(e, "unable to export code")
 		}
@@ -40,13 +36,8 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 		})
 	}
 	configVars, portOffsets := parse(pm)
-	pm.Prj.ExportArgs, _ = pm.Prj.ModuleArgExport(pm.PSvc, pm.Logger)
 	lb := util.StringDetectLinebreak(string(pm.File))
 	tCtx := pm.Prj.ToTemplateContext(configVars, portOffsets, lb)
-	tgt, err := pm.PSvc.GetFilesystem(pm.Prj)
-	if err != nil {
-		return nil, nil, err
-	}
 	for _, f := range srcFiles {
 		origPath := f.FullPath()
 		if strings.Contains(origPath, delimStart) {
@@ -58,7 +49,7 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 			f.Path = strings.Split(p, string(filepath.ListSeparator))
 			f.Name = n
 		}
-		err = file.ReplaceSections(f, tgt)
+		err = file.ReplaceSections(f, pm.FS)
 		if err != nil {
 			return nil, nil, err
 		}
@@ -69,7 +60,7 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 			return nil, nil, err
 		}
 	}
-	dfs, err := diff.FileLoader(pm.Mods.Keys(), srcFiles, tgt, false, pm.Logger)
+	dfs, err := diff.FileLoader(pm.Mods.Keys(), srcFiles, pm.FS, false, pm.Logger)
 	if err != nil {
 		return nil, nil, err
 	}

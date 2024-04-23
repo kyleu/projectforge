@@ -21,11 +21,7 @@ func onRules(pm *PrjAndMods) *Result {
 		return ret
 	}
 
-	pfs, err := pm.PSvc.GetFilesystem(pm.Prj)
-	if err != nil {
-		return ret.WithError(err)
-	}
-	icons, err := svg.List(pfs, pm.Logger)
+	icons, err := svg.List(pm.FS, pm.Logger)
 	if err != nil {
 		return ret.WithError(err)
 	}

@@ -38,8 +38,7 @@ func onAudit(ctx context.Context, pm *PrjAndMods) *Result {
 	if err != nil {
 		return errorResult(err, TypeAudit, pm.Cfg, pm.Logger)
 	}
-	fs, _ := pm.PSvc.GetFilesystem(pm.Prj)
-	errs := project.Validate(pm.Prj, fs, pm.MSvc.Deps(), pm.MSvc.Dangerous())
+	errs := project.Validate(pm.Prj, pm.FS, pm.MSvc.Deps(), pm.MSvc.Dangerous())
 	lo.ForEach(errs, func(err *project.ValidationError, _ int) {
 		ret = ret.WithError(errors.Errorf("%s: %s", err.Code, err.Message))
 	})
@@ -49,11 +48,7 @@ func onAudit(ctx context.Context, pm *PrjAndMods) *Result {
 
 func auditRun(pm *PrjAndMods, ret *Result) error {
 	timer := util.TimerStart()
-	tgt, err := pm.PSvc.GetFilesystem(pm.Prj)
-	if err != nil {
-		return err
-	}
-	generated, err := getGeneratedFiles(tgt, pm.Prj.Ignore, pm.Logger)
+	generated, err := getGeneratedFiles(pm.FS, pm.Prj.Ignore, pm.Logger)
 	if err != nil {
 		return err
 	}
@@ -72,7 +67,7 @@ func auditRun(pm *PrjAndMods, ret *Result) error {
 	if pm.Prj.HasModule("notebook") {
 		ign = append(ign, "notebook")
 	}
-	empty, err := getEmptyFolders(tgt, ign, pm.Logger)
+	empty, err := getEmptyFolders(pm.FS, ign, pm.Logger)
 	if err != nil {
 		return err
 	}

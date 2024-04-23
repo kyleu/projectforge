@@ -12,16 +12,12 @@ import (
 
 func ProjectExportOverview(w http.ResponseWriter, r *http.Request) {
 	controller.Act("project.export.overview", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(r, as)
-		if err != nil {
-			return "", err
-		}
-		args, err := prj.ModuleArgExport(as.Services.Projects, ps.Logger)
+		prj, err := getProjectWithArgs(r, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}
 		bc := []string{"projects", prj.Key, "Export"}
-		ps.SetTitleAndData(fmt.Sprintf("[%s] Export", prj.Key), args)
-		return controller.Render(r, as, &vexport.Overview{Project: prj, Args: args}, ps, bc...)
+		ps.SetTitleAndData(fmt.Sprintf("[%s] Export", prj.Key), prj.ExportArgs)
+		return controller.Render(r, as, &vexport.Overview{Project: prj, Args: prj.ExportArgs}, ps, bc...)
 	})
 }

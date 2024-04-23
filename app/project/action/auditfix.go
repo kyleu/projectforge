@@ -30,12 +30,8 @@ func auditRemove(ctx context.Context, fn string, pm *PrjAndMods, ret *Result) er
 		}
 		return nil
 	}
-	tgt, err := pm.PSvc.GetFilesystem(pm.Prj)
-	if err != nil {
-		return err
-	}
 	ret.AddLog("removed [%s]", fn)
-	return tgt.Remove(fn, pm.Logger)
+	return pm.FS.Remove(fn, pm.Logger)
 }
 
 func auditHeader(ctx context.Context, fn string, pm *PrjAndMods, ret *Result) error {
@@ -53,15 +49,11 @@ func auditHeader(ctx context.Context, fn string, pm *PrjAndMods, ret *Result) er
 		}
 		return nil
 	}
-	tgt, err := pm.PSvc.GetFilesystem(pm.Prj)
+	stat, err := pm.FS.Stat(fn)
 	if err != nil {
 		return err
 	}
-	stat, err := tgt.Stat(fn)
-	if err != nil {
-		return err
-	}
-	content, err := tgt.ReadFile(fn)
+	content, err := pm.FS.ReadFile(fn)
 	if err != nil {
 		return err
 	}
@@ -78,7 +70,7 @@ func auditHeader(ctx context.Context, fn string, pm *PrjAndMods, ret *Result) er
 	})
 	if hit {
 		final := strings.Join(fixed, util.StringDetectLinebreak(c))
-		err = tgt.WriteFile(fn, []byte(final), stat.Mode, true)
+		err = pm.FS.WriteFile(fn, []byte(final), stat.Mode, true)
 		if err != nil {
 			return errors.Wrapf(err, "can't overwrite file at path [%s]", fn)
 		}

@@ -115,179 +115,182 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 
 `)
 //line views/vproject/Detail.html:49
-		ea, _ := p.Project.ModuleArgExport(as.Services.Projects, ps.Logger)
+		_ = p.Project.ModuleArgExport(as.Services.Projects, ps.Logger)
 
 //line views/vproject/Detail.html:50
+		ea := p.Project.ExportArgs
+
+//line views/vproject/Detail.html:51
 		if ea != nil {
-//line views/vproject/Detail.html:50
+//line views/vproject/Detail.html:51
 			qw422016.N().S(`      <input name="type" type="radio" id="tab-modulearg-export" class="input"/>
       <label for="tab-modulearg-export" class="label">Export</label>
       <div class="panel">
         <a href="/p/`)
-//line views/vproject/Detail.html:54
+//line views/vproject/Detail.html:55
 			qw422016.E().S(p.Project.Key)
-//line views/vproject/Detail.html:54
+//line views/vproject/Detail.html:55
 			qw422016.N().S(`/export"><button>`)
-//line views/vproject/Detail.html:54
+//line views/vproject/Detail.html:55
 			components.StreamSVGRef(qw422016, "wrench", 15, 15, "icon", ps)
-//line views/vproject/Detail.html:54
+//line views/vproject/Detail.html:55
 			qw422016.N().S(`Manage</button></a>
         <hr />
 `)
-//line views/vproject/Detail.html:56
+//line views/vproject/Detail.html:57
 			if ea.Config != nil && util.ToJSONCompact(ea.Config) != "{}" {
-//line views/vproject/Detail.html:56
+//line views/vproject/Detail.html:57
 				qw422016.N().S(`        <h3>`)
-//line views/vproject/Detail.html:57
+//line views/vproject/Detail.html:58
 				components.StreamSVGRefIcon(qw422016, `print`, ps)
-//line views/vproject/Detail.html:57
+//line views/vproject/Detail.html:58
 				qw422016.N().S(`Export Configuration</h3>
         <div class="clear"></div>
         `)
-//line views/vproject/Detail.html:59
+//line views/vproject/Detail.html:60
 				components.StreamJSON(qw422016, ea.Config)
-//line views/vproject/Detail.html:59
+//line views/vproject/Detail.html:60
 				qw422016.N().S(`
         <hr />
 `)
-//line views/vproject/Detail.html:61
+//line views/vproject/Detail.html:62
 			}
-//line views/vproject/Detail.html:62
+//line views/vproject/Detail.html:63
 			if len(ea.Groups) > 0 {
-//line views/vproject/Detail.html:62
+//line views/vproject/Detail.html:63
 				qw422016.N().S(`        <h3>`)
-//line views/vproject/Detail.html:63
+//line views/vproject/Detail.html:64
 				components.StreamSVGRefIcon(qw422016, `users`, ps)
-//line views/vproject/Detail.html:63
+//line views/vproject/Detail.html:64
 				qw422016.N().S(`Groups</h3>
         <div class="mt clear"></div>
         `)
-//line views/vproject/Detail.html:65
+//line views/vproject/Detail.html:66
 				vexport.StreamGroupList(qw422016, ea.Groups, 4)
-//line views/vproject/Detail.html:65
+//line views/vproject/Detail.html:66
 				qw422016.N().S(`
         <hr />
 `)
-//line views/vproject/Detail.html:67
+//line views/vproject/Detail.html:68
 			}
-//line views/vproject/Detail.html:68
+//line views/vproject/Detail.html:69
 			if len(ea.Enums) > 0 {
-//line views/vproject/Detail.html:68
+//line views/vproject/Detail.html:69
 				qw422016.N().S(`        <h3>`)
-//line views/vproject/Detail.html:69
+//line views/vproject/Detail.html:70
 				components.StreamSVGRefIcon(qw422016, `hammer`, ps)
-//line views/vproject/Detail.html:69
+//line views/vproject/Detail.html:70
 				qw422016.N().S(`Enums</h3>
         <div class="mt clear"></div>
         `)
-//line views/vproject/Detail.html:71
+//line views/vproject/Detail.html:72
 				vexport.StreamEnumList(qw422016, ea.Enums, fmt.Sprintf("/p/%s/export/enums", p.Project.Key), as, ps)
-//line views/vproject/Detail.html:71
+//line views/vproject/Detail.html:72
 				qw422016.N().S(`
         <hr />
 `)
-//line views/vproject/Detail.html:73
+//line views/vproject/Detail.html:74
 			}
-//line views/vproject/Detail.html:74
+//line views/vproject/Detail.html:75
 			if len(ea.Models) > 0 {
-//line views/vproject/Detail.html:74
+//line views/vproject/Detail.html:75
 				qw422016.N().S(`        <h3 class="mt">`)
-//line views/vproject/Detail.html:75
+//line views/vproject/Detail.html:76
 				components.StreamSVGRefIcon(qw422016, `list`, ps)
-//line views/vproject/Detail.html:75
+//line views/vproject/Detail.html:76
 				qw422016.N().S(`Models</h3>
         <div class="clear"></div>
         `)
-//line views/vproject/Detail.html:77
+//line views/vproject/Detail.html:78
 				vexport.StreamModelList(qw422016, ea.Models, fmt.Sprintf("/p/%s/export/models", p.Project.Key), as, ps)
-//line views/vproject/Detail.html:77
+//line views/vproject/Detail.html:78
 				qw422016.N().S(`
 `)
-//line views/vproject/Detail.html:78
+//line views/vproject/Detail.html:79
 			}
-//line views/vproject/Detail.html:78
+//line views/vproject/Detail.html:79
 			qw422016.N().S(`      </div>
 `)
-//line views/vproject/Detail.html:80
+//line views/vproject/Detail.html:81
 		}
-//line views/vproject/Detail.html:81
+//line views/vproject/Detail.html:82
 	}
-//line views/vproject/Detail.html:81
+//line views/vproject/Detail.html:82
 	qw422016.N().S(`
     <input name="type" type="radio" id="tab-theme" class="input"/>
     <label for="tab-theme" class="label">Theme</label>
     <div class="panel">`)
-//line views/vproject/Detail.html:85
+//line views/vproject/Detail.html:86
 	StreamDetailTheme(qw422016, prj.Key, prj.Theme, prj.Title(), prj.IconSafe(), as, ps)
-//line views/vproject/Detail.html:85
+//line views/vproject/Detail.html:86
 	qw422016.N().S(`</div>
 
     <input name="type" type="radio" id="tab-modules" class="input"/>
     <label for="tab-modules" class="label">Modules</label>
     <div class="panel">`)
-//line views/vproject/Detail.html:89
+//line views/vproject/Detail.html:90
 	StreamDetailModules(qw422016, prj.Modules, p.Modules, as, ps)
-//line views/vproject/Detail.html:89
+//line views/vproject/Detail.html:90
 	qw422016.N().S(`</div>
 
 `)
-//line views/vproject/Detail.html:91
+//line views/vproject/Detail.html:92
 	if len(p.Execs) > 0 {
-//line views/vproject/Detail.html:91
+//line views/vproject/Detail.html:92
 		qw422016.N().S(`    <input name="type" type="radio" id="tab-execs" class="input"/>
     <label for="tab-execs" class="label">Processes</label>
     <div class="panel">`)
-//line views/vproject/Detail.html:94
+//line views/vproject/Detail.html:95
 		vexec.StreamTable(qw422016, p.Execs, as, ps)
-//line views/vproject/Detail.html:94
+//line views/vproject/Detail.html:95
 		qw422016.N().S(`</div>
 `)
-//line views/vproject/Detail.html:95
+//line views/vproject/Detail.html:96
 	}
-//line views/vproject/Detail.html:95
+//line views/vproject/Detail.html:96
 	qw422016.N().S(`
 `)
-//line views/vproject/Detail.html:97
+//line views/vproject/Detail.html:98
 	if prj.Build != nil && !prj.Build.Empty() {
-//line views/vproject/Detail.html:97
+//line views/vproject/Detail.html:98
 		qw422016.N().S(`    <input name="type" type="radio" id="tab-builds" class="input"/>
     <label for="tab-builds" class="label">Builds</label>
     <div class="panel">`)
-//line views/vproject/Detail.html:100
+//line views/vproject/Detail.html:101
 		StreamDetailBuild(qw422016, prj.Build, as, ps)
-//line views/vproject/Detail.html:100
+//line views/vproject/Detail.html:101
 		qw422016.N().S(`</div>
 `)
-//line views/vproject/Detail.html:101
+//line views/vproject/Detail.html:102
 	}
-//line views/vproject/Detail.html:101
+//line views/vproject/Detail.html:102
 	qw422016.N().S(`  </div>
 `)
-//line views/vproject/Detail.html:103
+//line views/vproject/Detail.html:104
 }
 
-//line views/vproject/Detail.html:103
+//line views/vproject/Detail.html:104
 func (p *Detail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vproject/Detail.html:103
+//line views/vproject/Detail.html:104
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/Detail.html:103
+//line views/vproject/Detail.html:104
 	p.StreamBody(qw422016, as, ps)
-//line views/vproject/Detail.html:103
+//line views/vproject/Detail.html:104
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/Detail.html:103
+//line views/vproject/Detail.html:104
 }
 
-//line views/vproject/Detail.html:103
+//line views/vproject/Detail.html:104
 func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vproject/Detail.html:103
+//line views/vproject/Detail.html:104
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/Detail.html:103
+//line views/vproject/Detail.html:104
 	p.WriteBody(qb422016, as, ps)
-//line views/vproject/Detail.html:103
+//line views/vproject/Detail.html:104
 	qs422016 := string(qb422016.B)
-//line views/vproject/Detail.html:103
+//line views/vproject/Detail.html:104
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/Detail.html:103
+//line views/vproject/Detail.html:104
 	return qs422016
-//line views/vproject/Detail.html:103
+//line views/vproject/Detail.html:104
 }

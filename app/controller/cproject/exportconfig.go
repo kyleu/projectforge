@@ -13,20 +13,14 @@ import (
 
 func ProjectExportConfigForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("project.export.config.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(r, as)
+		prj, err := getProjectWithArgs(r, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}
-		args, err := prj.ModuleArgExport(as.Services.Projects, ps.Logger)
-		if err != nil {
-			return "", err
-		}
-
-		ps.Data = args
-
+		ps.Data = prj.ExportArgs
 		bc := []string{"projects", prj.Key, "Export"}
-		ps.SetTitleAndData(fmt.Sprintf("[%s] Export", prj.Key), args.Config)
-		return controller.Render(r, as, &vexport.ConfigForm{Project: prj, Cfg: args.Config}, ps, bc...)
+		ps.SetTitleAndData(fmt.Sprintf("[%s] Export", prj.Key), prj.ExportArgs.Config)
+		return controller.Render(r, as, &vexport.ConfigForm{Project: prj, Cfg: prj.ExportArgs.Config}, ps, bc...)
 	})
 }
 
@@ -36,11 +30,7 @@ func ProjectExportConfigSave(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		prj, err := getProject(r, as)
-		if err != nil {
-			return "", err
-		}
-		args, err := prj.ModuleArgExport(as.Services.Projects, ps.Logger)
+		prj, err := getProjectWithArgs(r, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -52,7 +42,7 @@ func ProjectExportConfigSave(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 
-		args.Config = cfg
+		prj.ExportArgs.Config = cfg
 
 		err = as.Services.Projects.Save(prj, ps.Logger)
 		if err != nil {

@@ -15,11 +15,10 @@ import (
 
 func ProjectDetail(w http.ResponseWriter, r *http.Request) {
 	controller.Act("project.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(r, as)
+		prj, err := getProjectWithArgs(r, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}
-		prj.ExportArgs, _ = prj.ModuleArgExport(as.Services.Projects, ps.Logger)
 		mods := as.Services.Modules.Modules()
 		execs := as.Services.Exec.Execs.GetByKey(prj.Key)
 		fs, _ := as.Services.Projects.GetFilesystem(prj)

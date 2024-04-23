@@ -113,3 +113,15 @@ func getProject(r *http.Request, as *app.State) (*project.Project, error) {
 	}
 	return prj, nil
 }
+
+func getProjectWithArgs(r *http.Request, as *app.State, logger util.Logger) (*project.Project, error) {
+	prj, err := getProject(r, as)
+	if err != nil {
+		return nil, err
+	}
+	err = prj.ModuleArgExport(as.Services.Projects, logger)
+	if err != nil {
+		return nil, err
+	}
+	return prj, nil
+}

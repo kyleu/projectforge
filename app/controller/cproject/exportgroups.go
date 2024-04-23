@@ -14,19 +14,15 @@ import (
 
 func ProjectExportGroupsEdit(w http.ResponseWriter, r *http.Request) {
 	controller.Act("project.export.groups.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(r, as)
-		if err != nil {
-			return "", err
-		}
-		args, err := prj.ModuleArgExport(as.Services.Projects, ps.Logger)
+		prj, err := getProjectWithArgs(r, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}
 
 		bc := []string{"projects", prj.Key, fmt.Sprintf("Export||/p/%s/export", prj.Key), "Groups"}
-		ps.SetTitleAndData(fmt.Sprintf("[%s] Groups", prj.Key), args.Groups)
+		ps.SetTitleAndData(fmt.Sprintf("[%s] Groups", prj.Key), prj.ExportArgs.Groups)
 		ex := model.Groups{{Key: "foo", Title: "Foo", Description: "The foos!", Icon: "star", Children: model.Groups{{Key: "bar"}}}}
-		return controller.Render(r, as, &vexport.GroupForm{Project: prj, Groups: args.Groups, Example: ex}, ps, bc...)
+		return controller.Render(r, as, &vexport.GroupForm{Project: prj, Groups: prj.ExportArgs.Groups, Example: ex}, ps, bc...)
 	})
 }
 

@@ -89,7 +89,7 @@ func exportModelFromForm(frm util.ValueMap, m *model.Model) error {
 }
 
 func exportLoadModel(r *http.Request, as *app.State, logger util.Logger) (*project.Project, *model.Model, *model.Args, error) {
-	prj, args, err := exportLoadPrjArgs(r, as, logger)
+	prj, err := getProjectWithArgs(r, as, logger)
 	if err != nil {
 		return nil, nil, nil, err
 	}
@@ -101,13 +101,13 @@ func exportLoadModel(r *http.Request, as *app.State, logger util.Logger) (*proje
 	if modelKey == keyNew {
 		mdl = &model.Model{}
 	} else {
-		mdl = args.Models.Get(modelKey)
+		mdl = prj.ExportArgs.Models.Get(modelKey)
 	}
 	if mdl == nil {
 		return nil, nil, nil, errors.Errorf("no model found with key [%s]", modelKey)
 	}
 
-	return prj, mdl, args, nil
+	return prj, mdl, prj.ExportArgs, nil
 }
 
 func exportEnumFromForm(frm util.ValueMap, e *enum.Enum) error {
@@ -144,7 +144,7 @@ func exportEnumFromForm(frm util.ValueMap, e *enum.Enum) error {
 }
 
 func exportLoadEnum(r *http.Request, as *app.State, logger util.Logger) (*project.Project, *enum.Enum, *model.Args, error) {
-	prj, args, err := exportLoadPrjArgs(r, as, logger)
+	prj, err := getProjectWithArgs(r, as, logger)
 	if err != nil {
 		return nil, nil, nil, err
 	}
@@ -156,23 +156,11 @@ func exportLoadEnum(r *http.Request, as *app.State, logger util.Logger) (*projec
 	if enumKey == keyNew {
 		en = &enum.Enum{}
 	} else {
-		en = args.Enums.Get(enumKey)
+		en = prj.ExportArgs.Enums.Get(enumKey)
 	}
 	if en == nil {
 		return nil, nil, nil, errors.Errorf("no model found with key [%s]", enumKey)
 	}
 
-	return prj, en, args, nil
-}
-
-func exportLoadPrjArgs(r *http.Request, as *app.State, logger util.Logger) (*project.Project, *model.Args, error) {
-	prj, err := getProject(r, as)
-	if err != nil {
-		return nil, nil, err
-	}
-	args, err := prj.ModuleArgExport(as.Services.Projects, logger)
-	if err != nil {
-		return nil, nil, err
-	}
-	return prj, args, nil
+	return prj, en, prj.ExportArgs, nil
 }

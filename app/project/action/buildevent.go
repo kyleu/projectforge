@@ -51,11 +51,7 @@ func onDeps(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
 	}
 	upd := ret.Args.GetStringOpt("upd")
 	showAll := pm.Cfg.GetBoolOpt("showAll")
-	pfs, err := pm.PSvc.GetFilesystem(pm.Prj)
-	if err != nil {
-		return ret.WithError(err)
-	}
-	deps, err := build.LoadDeps(ctx, pm.Prj.Key, pm.Prj.Path, upd != util.BoolFalse, pfs, showAll, pm.Logger)
+	deps, err := build.LoadDeps(ctx, pm.Prj.Key, pm.Prj.Path, upd != util.BoolFalse, pm.FS, showAll, pm.Logger)
 	ret.Data = deps
 	if err != nil {
 		return ret.WithError(err)
@@ -68,11 +64,7 @@ func onImports(_ context.Context, pm *PrjAndMods, r *Result) *Result {
 	fix := fixStr == util.BoolTrue
 	fileStr := r.Args.GetStringOpt("file")
 	t := util.TimerStart()
-	pfs, err := pm.PSvc.GetFilesystem(pm.Prj)
-	if err != nil {
-		return r.WithError(err)
-	}
-	logs, diffs, err := build.Imports(pm.Prj.Package, fix, fileStr, pfs, pm.Logger)
+	logs, diffs, err := build.Imports(pm.Prj.Package, fix, fileStr, pm.FS, pm.Logger)
 	r.Modules = append(r.Modules, &module.Result{Keys: []string{"imports"}, Status: "OK", Diffs: diffs, Duration: t.End()})
 	r.Logs = append(r.Logs, logs...)
 	if err != nil {
@@ -82,11 +74,7 @@ func onImports(_ context.Context, pm *PrjAndMods, r *Result) *Result {
 }
 
 func onIgnored(_ context.Context, pm *PrjAndMods, r *Result) *Result {
-	pfs, err := pm.PSvc.GetFilesystem(pm.Prj)
-	if err != nil {
-		return r.WithError(err)
-	}
-	ign, err := build.Ignored(pm.Prj, pfs, pm.Logger)
+	ign, err := build.Ignored(pm.Prj, pm.FS, pm.Logger)
 	r.Data = ign
 	if err != nil {
 		return r.WithError(err)
@@ -102,11 +90,7 @@ func onIgnored(_ context.Context, pm *PrjAndMods, r *Result) *Result {
 }
 
 func onPackages(_ context.Context, pm *PrjAndMods, r *Result) *Result {
-	pfs, err := pm.PSvc.GetFilesystem(pm.Prj)
-	if err != nil {
-		return r.WithError(err)
-	}
-	pkgs, err := build.Packages(pm.Prj, pfs, pm.Cfg.GetBoolOpt("all"), pm.Logger)
+	pkgs, err := build.Packages(pm.Prj, pm.FS, pm.Cfg.GetBoolOpt("all"), pm.Logger)
 	r.Data = pkgs
 	if err != nil {
 		return r.WithError(err)
@@ -116,11 +100,7 @@ func onPackages(_ context.Context, pm *PrjAndMods, r *Result) *Result {
 
 func onCleanup(_ context.Context, pm *PrjAndMods, r *Result) *Result {
 	t := util.TimerStart()
-	pfs, err := pm.PSvc.GetFilesystem(pm.Prj)
-	if err != nil {
-		return r.WithError(err)
-	}
-	logs, diffs, err := build.Cleanup(pfs, pm.Logger)
+	logs, diffs, err := build.Cleanup(pm.FS, pm.Logger)
 	r.Modules = append(r.Modules, &module.Result{Keys: []string{"cleanup"}, Status: "OK", Diffs: diffs, Duration: t.End()})
 	r.Logs = append(r.Logs, logs...)
 	if err != nil {
@@ -146,11 +126,7 @@ func onDeployments(_ context.Context, pm *PrjAndMods, r *Result) *Result {
 	}
 	t := util.TimerStart()
 	fix := pm.Cfg.GetBoolOpt("fix")
-	pfs, err := pm.PSvc.GetFilesystem(pm.Prj)
-	if err != nil {
-		return r.WithError(err)
-	}
-	logs, diffs, err := build.Deployments(pm.Prj.Version, pfs, fix, pm.Cfg.GetStringOpt("path"), pm.Prj.Info.Deployments)
+	logs, diffs, err := build.Deployments(pm.Prj.Version, pm.FS, fix, pm.Cfg.GetStringOpt("path"), pm.Prj.Info.Deployments)
 	r.Modules = append(r.Modules, &module.Result{Keys: []string{"deployments"}, Status: "OK", Diffs: diffs, Duration: t.End()})
 	r.Logs = append(r.Logs, logs...)
 	if err != nil {

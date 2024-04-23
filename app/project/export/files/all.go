@@ -11,10 +11,13 @@ import (
 	"projectforge.dev/projectforge/app/project/export/files/script"
 	"projectforge.dev/projectforge/app/project/export/files/sql"
 	"projectforge.dev/projectforge/app/project/export/files/svc"
-	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func All(p *project.Project, args *model.Args, addHeader bool, linebreak string) (file.Files, error) {
+func All(p *project.Project, addHeader bool, linebreak string) (file.Files, error) {
+	if p.ExportArgs == nil {
+		return nil, errors.New("export arguments aren't loaded")
+	}
+	args := p.ExportArgs
 	if err := args.Validate(); err != nil {
 		return nil, errors.Wrap(err, "invalid export arguments")
 	}

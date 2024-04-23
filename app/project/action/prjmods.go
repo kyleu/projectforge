@@ -3,6 +3,7 @@ package action
 import (
 	"context"
 	"encoding/json"
+	"projectforge.dev/projectforge/app/lib/filesystem"
 
 	"github.com/pkg/errors"
 
@@ -18,6 +19,7 @@ import (
 type PrjAndMods struct {
 	Cfg    util.ValueMap
 	Prj    *project.Project
+	FS     filesystem.FileLoader
 	File   json.RawMessage
 	Mods   module.Modules
 	MSvc   *module.Service
@@ -43,6 +45,9 @@ func getPrjAndMods(ctx context.Context, p *Params) (context.Context, *PrjAndMods
 	if err != nil {
 		return nil, nil, errors.Wrapf(err, "unable to load project [%s]", p.ProjectKey)
 	}
+
+	fs, _ := p.PSvc.GetFilesystem(prj)
+
 	if prj.Info != nil {
 		for _, mod := range prj.Info.ModuleDefs {
 			_, e := p.MSvc.Register(ctx, prj.Path, mod.Key, mod.Path, mod.URL, p.Logger)
@@ -57,14 +62,17 @@ func getPrjAndMods(ctx context.Context, p *Params) (context.Context, *PrjAndMods
 		return nil, nil, err
 	}
 
-	args, err := prj.ModuleArgExport(p.PSvc, p.Logger)
+	err = prj.ModuleArgExport(p.PSvc, p.Logger)
 	if err != nil {
 		return nil, nil, err
 	}
-	if args != nil {
-		args.Modules = mods.Keys()
+	if prj.ExportArgs != nil {
+		prj.ExportArgs.Modules = mods.Keys()
 	}
 
-	pm := &PrjAndMods{Cfg: p.Cfg, File: f, Prj: prj, Mods: mods, MSvc: p.MSvc, PSvc: p.PSvc, XSvc: p.XSvc, ESvc: p.ESvc, EArgs: args, Logger: p.Logger}
+	pm := &PrjAndMods{
+		Cfg: p.Cfg, FS: fs, File: f, Prj: prj, Mods: mods,
+		MSvc: p.MSvc, PSvc: p.PSvc, XSvc: p.XSvc, ESvc: p.ESvc, EArgs: prj.ExportArgs, Logger: p.Logger,
+	}
 	return ctx, pm, nil
 }

@@ -37,10 +37,6 @@ func onGenerate(pm *PrjAndMods) *Result {
 		return ret.WithError(err)
 	}
 
-	tgtFS, err := pm.PSvc.GetFilesystem(pm.Prj)
-	if err != nil {
-		return ret.WithError(err)
-	}
 	for _, f := range dfs {
 		switch f.Status {
 		case diff.StatusIdentical, diff.StatusMissing, diff.StatusSkipped:
@@ -50,7 +46,7 @@ func onGenerate(pm *PrjAndMods) *Result {
 			case moduleKey:
 				ret = mergeToModule(pm, f, ret)
 			case projectKey:
-				ret = gen(srcFiles, f, ret, tgtFS)
+				ret = gen(srcFiles, f, ret, pm.FS)
 			}
 		default:
 			return ret.WithError(errors.Errorf("unhandled diff status [%s]", f.Status))
