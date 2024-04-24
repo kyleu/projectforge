@@ -35,6 +35,16 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 			return f.FullPath()
 		})
 	}
+	if pm.Mods.Get("csharp") != nil {
+		pm.Prj.ExportArgs.Modules = pm.Mods.Keys()
+		files, e := pm.ESvc.FilesCSharp(pm.Prj, true, "\n")
+		if e != nil {
+			return nil, nil, errors.Wrap(e, "unable to export C# code")
+		}
+		srcFiles = lo.UniqBy(append(files, srcFiles...), func(f *file.File) string {
+			return f.FullPath()
+		})
+	}
 	configVars, portOffsets := parse(pm)
 	lb := util.StringDetectLinebreak(string(pm.File))
 	tCtx := pm.Prj.ToTemplateContext(configVars, portOffsets, lb)

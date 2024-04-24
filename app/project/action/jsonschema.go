@@ -26,14 +26,14 @@ func schemaCheck(pm *PrjAndMods) ([]string, error) {
 	}
 	ret.Push(prj...)
 
-	if pm.EArgs != nil {
-		args, err := schemaConfig(schemata["config"], pm.EArgs.ConfigFile)
+	if pm.Prj.ExportArgs != nil {
+		args, err := schemaConfig(schemata["config"], pm.Prj.ExportArgs.ConfigFile)
 		if err != nil {
 			return nil, err
 		}
 		ret.Push(args...)
 
-		for k, v := range pm.EArgs.EnumFiles {
+		for k, v := range pm.Prj.ExportArgs.EnumFiles {
 			enum, err := schemaEnum(schemata["enum"], k, v)
 			if err != nil {
 				return nil, err
@@ -41,7 +41,7 @@ func schemaCheck(pm *PrjAndMods) ([]string, error) {
 			ret.Push(enum...)
 		}
 
-		for k, v := range pm.EArgs.ModelFiles {
+		for k, v := range pm.Prj.ExportArgs.ModelFiles {
 			model, err := schemaModel(schemata["model"], k, v)
 			if err != nil {
 				return nil, err

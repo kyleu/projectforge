@@ -29,7 +29,8 @@ func (f *File) AddBlocks(b ...*Block) {
 	f.Blocks = append(f.Blocks, b...)
 }
 
-func (f *File) Render(addHeader bool, linebreak string) (*file.File, error) {
+func (f *File) Render(addHeader bool) (*file.File, error) {
+	linebreak := "\n"
 	var content []string
 	if addHeader {
 		if f.Namespace == "" {

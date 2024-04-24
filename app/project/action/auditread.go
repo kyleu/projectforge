@@ -35,7 +35,7 @@ func getModuleFiles(pm *PrjAndMods) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	if pm.Mods.Get("export") != nil {
+	if pm.Prj.HasModule("export") {
 		lb := util.StringDefaultLinebreak
 		modContent, _ := pm.FS.ReadFile("go.mod")
 		if modContent != nil {
@@ -45,9 +45,18 @@ func getModuleFiles(pm *PrjAndMods) ([]string, error) {
 		if e != nil {
 			return nil, err
 		}
-		lo.ForEach(files, func(f *file.File, _ int) {
-			ret = append(ret, f.FullPath())
-		})
+		ret = lo.Uniq(append(lo.Map(files, func(f *file.File, _ int) string {
+			return f.FullPath()
+		}), ret...))
+	}
+	if pm.Prj.HasModule("csharp") {
+		files, e := pm.ESvc.FilesCSharp(pm.Prj, true, "\n")
+		if e != nil {
+			return nil, err
+		}
+		ret = lo.Uniq(append(lo.Map(files, func(f *file.File, _ int) string {
+			return f.FullPath()
+		}), ret...))
 	}
 	return ret, nil
 }

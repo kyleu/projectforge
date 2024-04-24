@@ -16,7 +16,7 @@ const keyTag, keyTags = "tag", "tags"
 
 func onRules(pm *PrjAndMods) *Result {
 	ret := newResult(TypeRules, pm.Prj, pm.Cfg, pm.Logger)
-	if pm.EArgs == nil {
+	if pm.Prj.ExportArgs == nil {
 		ret.Status = "OK"
 		return ret
 	}
@@ -29,7 +29,7 @@ func onRules(pm *PrjAndMods) *Result {
 	cleanIcons := lo.Reject(icons, func(x string, _ int) bool {
 		return lo.Contains(forbidden, x)
 	})
-	lo.ForEach(pm.EArgs.Models, func(m *model.Model, _ int) {
+	lo.ForEach(pm.Prj.ExportArgs.Models, func(m *model.Model, _ int) {
 		for lo.Contains(forbidden, m.Icon) {
 			idx := util.HashFNV32(m.Name) % uint32(len(cleanIcons))
 			m.Icon = cleanIcons[idx]
@@ -80,7 +80,7 @@ func applyRules(pm *PrjAndMods, rules map[string]string) error {
 		if split[0] == "disabled" {
 			continue
 		}
-		m := pm.EArgs.Models.Get(split[0])
+		m := pm.Prj.ExportArgs.Models.Get(split[0])
 		if m == nil {
 			return errors.Errorf("no model found with name [%s]", split[0])
 		}

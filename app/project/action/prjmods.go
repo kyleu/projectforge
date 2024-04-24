@@ -12,7 +12,6 @@ import (
 	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/project/export"
-	"projectforge.dev/projectforge/app/project/export/model"
 	"projectforge.dev/projectforge/app/util"
 )
 
@@ -27,7 +26,6 @@ type PrjAndMods struct {
 	XSvc   *exec.Service
 	SSvc   *websocket.Service
 	ESvc   *export.Service
-	EArgs  *model.Args
 	Logger util.Logger
 }
 
@@ -72,7 +70,7 @@ func getPrjAndMods(ctx context.Context, p *Params) (context.Context, *PrjAndMods
 
 	pm := &PrjAndMods{
 		Cfg: p.Cfg, FS: fs, File: f, Prj: prj, Mods: mods,
-		MSvc: p.MSvc, PSvc: p.PSvc, XSvc: p.XSvc, ESvc: p.ESvc, EArgs: prj.ExportArgs, Logger: p.Logger,
+		MSvc: p.MSvc, PSvc: p.PSvc, XSvc: p.XSvc, ESvc: p.ESvc, Logger: p.Logger,
 	}
 	return ctx, pm, nil
 }

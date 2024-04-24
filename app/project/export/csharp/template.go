@@ -18,7 +18,7 @@ type Template struct {
 	Blocks  Blocks   `json:"blocks"`
 }
 
-func NewCSharpTemplate(path []string, fn string) *Template {
+func NewTemplate(path []string, fn string) *Template {
 	return &Template{Path: path, Name: fn}
 }
 
@@ -34,7 +34,8 @@ func (f *Template) AddBlocks(b ...*Block) {
 	f.Blocks = append(f.Blocks, b...)
 }
 
-func (f *Template) Render(addHeader bool, linebreak string) (*file.File, error) {
+func (f *Template) Render(addHeader bool) (*file.File, error) {
+	linebreak := "\n"
 	var content []string
 	add := func(s string, args ...any) {
 		content = append(content, fmt.Sprintf(s+linebreak, args...))
