@@ -55,6 +55,7 @@ func RunAllActions(w http.ResponseWriter, r *http.Request) {
 		actT := action.TypeFromString(actS)
 
 		if actT.Matches(action.TypeBuild) {
+			prjs = prjs.WithoutModules("csharp")
 			switch cfg.GetStringOpt("phase") {
 			case "":
 				ps.SetTitleAndData("Build All Projects", prjs)

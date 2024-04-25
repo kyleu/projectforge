@@ -44,30 +44,28 @@ func (p Projects) Titles() []string {
 	})
 }
 
+func (p Projects) WithModules(modules ...string) Projects {
+	return lo.Filter(p, func(x *Project, _ int) bool {
+		return len(lo.Intersect(x.Modules, modules)) > 0
+	})
+}
+
+func (p Projects) WithoutModules(modules ...string) Projects {
+	return lo.Filter(p, func(x *Project, _ int) bool {
+		return len(lo.Intersect(x.Modules, modules)) == 0
+	})
+}
+
 func (p Projects) WithTags(tags ...string) Projects {
-	ret := make(Projects, 0, len(p))
-	for _, prj := range p {
-		for _, t := range tags {
-			if lo.Contains(prj.Tags, t) {
-				ret = append(ret, prj)
-				break
-			}
-		}
-	}
-	return ret
+	return lo.Filter(p, func(x *Project, _ int) bool {
+		return len(lo.Intersect(x.Tags, tags)) > 0
+	})
 }
 
 func (p Projects) WithoutTags(tags ...string) Projects {
-	ret := make(Projects, 0, len(p))
-	lo.ForEach(p, func(prj *Project, _ int) {
-		hit := lo.ContainsBy(tags, func(t string) bool {
-			return lo.Contains(prj.Tags, t)
-		})
-		if !hit {
-			ret = append(ret, prj)
-		}
+	return lo.Filter(p, func(x *Project, _ int) bool {
+		return len(lo.Intersect(x.Tags, tags)) == 0
 	})
-	return ret
 }
 
 func (p Projects) Tags() []string {

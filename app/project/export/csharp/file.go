@@ -29,20 +29,16 @@ func (f *File) AddBlocks(b ...*Block) {
 	f.Blocks = append(f.Blocks, b...)
 }
 
-func (f *File) Render(addHeader bool) (*file.File, error) {
+func (f *File) Render() (*file.File, error) {
 	linebreak := "\n"
 	var content []string
-	if addHeader {
-		if f.Namespace == "" {
-			content = append(content, fmt.Sprintf("// %s", file.HeaderContent))
-		} else {
-			content = append(content, fmt.Sprintf("// Namespace %s - %s", f.Namespace, file.HeaderContent))
-		}
-	}
 
 	if len(f.Imports) > 0 {
 		content = append(content, f.Imports.Render(linebreak))
+		content = append(content, "")
 	}
+
+	content = append(content, fmt.Sprintf("namespace %s;", f.Namespace), "")
 
 	for _, b := range f.Blocks {
 		x, err := b.Render(linebreak)

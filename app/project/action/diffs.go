@@ -37,7 +37,7 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 	}
 	if pm.Mods.Get("csharp") != nil {
 		pm.Prj.ExportArgs.Modules = pm.Mods.Keys()
-		files, e := pm.ESvc.FilesCSharp(pm.Prj, true, "\n")
+		files, e := pm.ESvc.FilesCSharp(pm.Prj)
 		if e != nil {
 			return nil, nil, errors.Wrap(e, "unable to export C# code")
 		}

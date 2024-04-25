@@ -8,7 +8,6 @@ import (
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/filesystem"
-	"projectforge.dev/projectforge/app/util"
 )
 
 type Template struct {
@@ -34,23 +33,13 @@ func (f *Template) AddBlocks(b ...*Block) {
 	f.Blocks = append(f.Blocks, b...)
 }
 
-func (f *Template) Render(addHeader bool) (*file.File, error) {
+func (f *Template) Render() (*file.File, error) {
 	linebreak := "\n"
 	var content []string
 	add := func(s string, args ...any) {
 		content = append(content, fmt.Sprintf(s+linebreak, args...))
 	}
 
-	if addHeader {
-		switch {
-		case strings.HasSuffix(f.Name, util.ExtSQL):
-			content = append(content, fmt.Sprintf("-- %s", file.HeaderContent))
-		case strings.HasSuffix(f.Name, ".graphql"):
-			content = append(content, fmt.Sprintf("# %s", file.HeaderContent))
-		default:
-			content = append(content, fmt.Sprintf("<!-- %s -->", file.HeaderContent))
-		}
-	}
 	if len(f.Imports) > 0 {
 		add(f.Imports.RenderHTML(linebreak))
 	}
