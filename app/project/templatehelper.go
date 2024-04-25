@@ -159,17 +159,21 @@ func (t *TemplateContext) TypeUUID() string {
 }
 
 func (t *TemplateContext) SQLServer() bool {
-	return t.DatabaseEngine == util.DatabaseSQLServer
+	return t.DatabaseEngine == util.DatabaseSQLServer || t.HasModule(util.DatabaseSQLServer)
+}
+
+func (t *TemplateContext) SQLServerOnly() bool {
+	return t.SQLServer() && !t.MySQL() && !t.PostgreSQL() && !t.SQLite()
 }
 
 func (t *TemplateContext) SQLite() bool {
-	return t.DatabaseEngine == util.DatabaseSQLite
+	return t.DatabaseEngine == util.DatabaseSQLite || t.HasModule(util.DatabaseSQLite)
 }
 
 func (t *TemplateContext) PostgreSQL() bool {
-	return t.DatabaseEngine == util.DatabasePostgreSQL
+	return t.DatabaseEngine == util.DatabasePostgreSQL || t.HasModule(util.DatabasePostgreSQL)
 }
 
 func (t *TemplateContext) MySQL() bool {
-	return t.DatabaseEngine == util.DatabasePostgreSQL
+	return t.DatabaseEngine == util.DatabaseMySQL || t.HasModule(util.DatabaseMySQL)
 }

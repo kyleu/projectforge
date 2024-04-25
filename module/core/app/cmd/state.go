@@ -33,7 +33,9 @@ func buildDefaultAppState(flags *Flags, logger util.Logger) (*app.State, error) 
 
 	db, err := database.OpenDefaultSQLite(ctx, logger){{{ else }}}{{{ if .SQLServer }}}
 
-	db, err := database.OpenDefaultSQLServer(ctx, logger){{{ end }}}{{{ end }}}{{{ end }}}
+	db, err := database.OpenDefaultSQLServer(ctx, logger){{{ else }}}{{{ if .MySQL }}}
+
+	db, err := database.OpenDefaultMySQL(ctx, logger){{{ end }}}{{{ end }}}{{{ end }}}{{{ end }}}
 	if err != nil {
 		logger.Errorf("unable to open default database: %+v", err)
 	}

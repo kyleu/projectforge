@@ -1,5 +1,7 @@
--- {% func SizeInfo() %}
-{{{ if .PostgreSQL }}}with recursive
+-- {% func SizeInfo(dbType string) %}
+-- {% switch dbType %}{{{ if .PostgreSQL }}}
+-- {% case "postgres" %}
+with recursive
   pg_inherit(inhrelid, inhparent) as (
     select inhrelid, inhparent
     from pg_inherits
@@ -42,7 +44,9 @@ from (
   ) a
   where oid = parent
 ) a
-order by total_bytes desc;{{{ else }}}select
+order by total_bytes desc;{{{ end }}}{{{ if .SQLite }}}
+-- {% case "sqlite" %}
+select
   'default' as "table_schema",
   "name" as "table_name",
   0 as "row_estimate",
@@ -56,5 +60,10 @@ order by total_bytes desc;{{{ else }}}select
   '' as "table_pretty"
 from "sqlite_master"
 where "type" = 'table'
-order by "table_name";{{{ end }}}
+order by "table_name";{{{ end }}}{{{ if .SQLServer }}}
+-- {% case "sqlserver" %}
+select 'TODO';{{{ end }}}
+-- {% default %}
+select 'unhandled database type [{%s dbType %}]';
+-- {% endswitch %}
 -- {% endfunc %}

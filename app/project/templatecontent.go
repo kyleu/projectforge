@@ -82,16 +82,6 @@ func (t *TemplateContext) IgnoredQuoted() string {
 	}), "")
 }
 
-func (t *TemplateContext) ExplainPrefix() string {
-	if t.HasModules(util.DatabasePostgreSQL) {
-		return "explain analyze "
-	}
-	if t.HasModules(util.DatabaseSQLite) {
-		return "explain query plan "
-	}
-	return "explain "
-}
-
 func (t *TemplateContext) HasExportModels() bool {
 	return t.ExportArgs != nil && len(t.ExportArgs.Models) > 0
 }

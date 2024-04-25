@@ -27,8 +27,9 @@ func (s *Service) List(ctx context.Context, tx *sqlx.Tx, params *filter.Params, 
 func (s *Service) Get(ctx context.Context, tx *sqlx.Tx, id uuid.UUID, logger util.Logger) (*Audit, error) {
 	wc := defaultWC
 	ret := &row{}
-	q := database.SQLSelectSimple(columnsString, tableQuoted, s.db.Type, wc)
-	err := s.db.Get(ctx, ret, q, tx, logger, id{{{ if .SQLServer }}}.String(){{{ end }}})
+	q := database.SQLSelectSimple(columnsString, tableQuoted, s.db.Type, wc){{{ if .SQLServerOnly }}}
+	err := s.db.Get(ctx, ret, q, tx, logger, id.String()){{{ else }}}
+	err := s.db.Get(ctx, ret, q, tx, logger, id){{{ end }}}
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get audit by id [%v]", id)
 	}
