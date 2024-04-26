@@ -36,25 +36,22 @@ func CSAll(p *project.Project) (file.Files, error) {
 }
 
 func ModelAll(m *model.Model, p *project.Project) (file.Files, error) {
-	var ret file.Files
-
 	ctrlr, err := controller(m, p)
 	if err != nil {
 		return nil, err
 	}
-	ret = append(ret, ctrlr)
-
 	svc, err := service(m, p)
 	if err != nil {
 		return nil, err
 	}
-	ret = append(ret, svc)
-
 	list, err := cshtmlList(m)
 	if err != nil {
 		return nil, err
 	}
-	ret = append(ret, list)
+	detail, err := cshtmlDetail(m)
+	if err != nil {
+		return nil, err
+	}
 
-	return ret, nil
+	return file.Files{ctrlr, svc, list, detail}, nil
 }

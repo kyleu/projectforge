@@ -1,6 +1,7 @@
 package csfiles
 
 import (
+	"fmt"
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project/export/csharp"
 	"projectforge.dev/projectforge/app/project/export/model"
@@ -25,7 +26,12 @@ func cshtmlList(m *model.Model) (*file.File, error) {
 	b.W("                @foreach (var item in Model) {")
 	b.W("                <tr>")
 	for _, col := range m.Columns {
-		b.W("                    <td>@Html.DisplayFor(_ => item.%s)</td>", col.Proper())
+		if col.PK {
+			pth := fmt.Sprintf("/%s/@item.%s", m.CamelPlural(), col.Proper())
+			b.W("                    <td><a href=%q>@Html.DisplayFor(_ => item.%s)</a></td>", pth, col.Proper())
+		} else {
+			b.W("                    <td>@Html.DisplayFor(_ => item.%s)</td>", col.Proper())
+		}
 	}
 	b.W("                </tr>")
 	b.W("                }")
