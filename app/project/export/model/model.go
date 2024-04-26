@@ -93,14 +93,6 @@ func (m *Model) PackageWithGroup(prefix string) string {
 	return strings.Join(x, "/")
 }
 
-func (m *Model) Namespace() string {
-	if len(m.Group) == 0 {
-		return m.Title()
-	}
-	x := append(m.Group, m.Title())
-	return strings.Join(x, ".")
-}
-
 func (m *Model) GroupString(prefix string, dflt string) string {
 	if len(m.Group) == 0 {
 		return dflt

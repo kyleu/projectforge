@@ -44,6 +44,12 @@ func ModelAll(m *model.Model, p *project.Project) (file.Files, error) {
 	}
 	ret = append(ret, ctrlr)
 
+	svc, err := service(m, p)
+	if err != nil {
+		return nil, err
+	}
+	ret = append(ret, svc)
+
 	list, err := cshtmlList(m)
 	if err != nil {
 		return nil, err

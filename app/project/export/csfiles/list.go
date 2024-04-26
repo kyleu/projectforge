@@ -9,7 +9,7 @@ import (
 func cshtmlList(m *model.Model) (*file.File, error) {
 	f := csharp.NewTemplate([]string{"Views", m.Title()}, m.TitlePlural()+".cshtml")
 	b := csharp.NewBlock(m.Title()+":List", "cshtml")
-	b.W("@model IEnumerable<%s>", m.Namespace())
+	b.W("@model IEnumerable<%s>", m.Title())
 	b.W("<div class=\"card\">")
 	b.W("    <h3>%s</h3>", m.TitlePlural())
 	b.W("    <div class=\"overflow full-width\">")

@@ -13,11 +13,15 @@ func menu(models model.Models, p *project.Project) (*file.File, error) {
 	b := csharp.NewBlock("Menu", "class")
 	b.W("public static class Menu")
 	b.W("{")
-	b.W("    public static List<MenuItem> GetItems()")
+	b.W("    public static IEnumerable<MenuItem> GetItems()")
 	b.W("    {")
 	b.W("        return [")
-	for _, m := range models {
-		b.W("            new MenuItem { Key = %q, Title = %q, Url = %q, Icon = %q },", m.Name, m.TitlePlural(), "/"+m.Plural(), m.Name)
+	for idx, m := range models {
+		suffix := ""
+		if idx < (len(models) - 1) {
+			suffix = ","
+		}
+		b.W("            new MenuItem { Key = %q, Title = %q, Url = %q, Icon = %q }%s", m.Name, m.TitlePlural(), "/"+m.Plural(), m.Name, suffix)
 	}
 	b.W("        ];")
 	b.W("    }")

@@ -6,7 +6,7 @@ type Imports []string
 
 func (i Imports) Render(linebreak string) string {
 	ret := &util.StringSlice{}
-	for _, imp := range i {
+	for _, imp := range util.ArraySorted(i) {
 		ret.Pushf("using %s;", imp)
 	}
 	return ret.Join(linebreak)
