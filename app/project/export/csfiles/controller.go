@@ -13,10 +13,14 @@ func controller(m *model.Model, p *project.Project) (*file.File, error) {
 	b := csharp.NewBlock("Controller", "class")
 	b.W("public class %sController(%sService svc) : BaseController", m.Title(), m.Proper())
 	b.W("{")
+	b.W("    private const string BaseRoute = %q;", "/"+m.CamelPlural())
+	b.W("")
 	controllerList(m, b)
 	if len(m.PKs()) == 1 {
 		b.W("")
 		controllerDetail(m, m.PKs()[0], b)
+		b.W("")
+		controllerDelete(m, m.PKs()[0], b)
 	}
 	b.W("}")
 	f.AddBlocks(b)
@@ -24,27 +28,36 @@ func controller(m *model.Model, p *project.Project) (*file.File, error) {
 }
 
 func controllerList(m *model.Model, b *csharp.Block) {
-	b.W("    [Route(%q)]", "/"+m.CamelPlural())
+	b.W("    [Route(BaseRoute)]")
 	b.W("    [HttpGet]")
-	b.W("    public async Task<IActionResult> %s()", m.TitlePlural())
+	b.W("    public async Task<IActionResult> List()")
 	b.W("    {")
-	b.W("        var ret = await svc.%s();", m.TitlePlural())
-	b.W("        ViewData[%q] = %q;", "Title", m.TitlePlural())
-	b.W("        return Result(ret);")
+	b.W("        var ret = await svc.List();")
+	b.W("        return Result(%q, ret, %q);", m.TitlePlural(), m.ProperPlural())
 	b.W("    }")
 }
 
 func controllerDetail(m *model.Model, pk *model.Column, b *csharp.Block) {
-	b.W("    [Route(%q)]", "/"+m.CamelPlural()+"/{"+pk.Camel()+"}")
+	b.W("    [Route(BaseRoute + %q)]", "/{"+pk.Camel()+"}")
 	b.W("    [HttpGet]")
-	b.W("    public async Task<IActionResult> %s(%s %s)", m.Proper(), ToCSharpType(pk), pk.Camel())
+	b.W("    public async Task<IActionResult> Get(%s %s)", ToCSharpType(pk), pk.Camel())
 	b.W("    {")
-	b.W("        var ret = await svc.%sBy%s(%s);", m.Proper(), pk.Proper(), pk.Camel())
+	b.W("        var ret = await svc.Get(%s);", pk.Camel())
 	b.W("        if (ret == null)")
 	b.W("        {")
 	b.W("            throw new ArgumentNullException(\"no %s available with id [\" + id + \"]\");", m.TitleLower())
 	b.W("        }")
-	b.W("        ViewData[\"Title\"] = ret.ToString();")
-	b.W("        return Result(ret);")
+	b.W("")
+	b.W("        return Result(%q, ret, ret.ToString());", m.Proper())
+	b.W("    }")
+}
+
+func controllerDelete(m *model.Model, pk *model.Column, b *csharp.Block) {
+	b.W("    [Route(BaseRoute + %q)]", "/{"+pk.Camel()+"}/delete")
+	b.W("    [HttpGet]")
+	b.W("    public async Task<IActionResult> Delete(%s %s)", ToCSharpType(pk), pk.Camel())
+	b.W("    {")
+	b.W("        var ret = await svc.Delete(%s);", pk.Camel())
+	b.W("        return Redirect(BaseRoute);")
 	b.W("    }")
 }

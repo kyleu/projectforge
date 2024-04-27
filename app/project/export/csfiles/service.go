@@ -10,16 +10,16 @@ import (
 
 func service(m *model.Model, p *project.Project) (*file.File, error) {
 	f := csharp.NewFile(p.Package+".Services."+m.Proper(), []string{"Services", m.Proper()}, m.Title()+"Service.cs")
-	f.AddImport(p.Package+".Entities", ImpEF)
+	f.AddImport(p.Package+".Entities", ImpEF, ImpServices)
 	b := csharp.NewBlock("Service", "class")
-	b.W("public class %sService(Database db) : BaseService(db)", m.Title())
+	b.W("public class %sService(Database db) : BaseService<Entities.%s>(db, db.%s)", m.Title(), m.Proper(), m.ProperPlural())
 	b.W("{")
-	b.W("    protected internal readonly DbSet<Entities.%s> _%s = db.%s;", m.Proper(), m.CamelPlural(), m.ProperPlural())
-	b.W("")
 	serviceList(m, b)
 	if len(m.PKs()) == 1 {
 		b.W("")
 		serviceDetail(m, m.PKs()[0], b)
+		b.W("")
+		serviceDelete(m, m.PKs()[0], b)
 	}
 	b.W("}")
 	f.AddBlocks(b)
@@ -27,16 +27,28 @@ func service(m *model.Model, p *project.Project) (*file.File, error) {
 }
 
 func serviceList(m *model.Model, b *csharp.Block) {
-	b.W("    public async Task<List<Entities.%s>> %s()", m.Proper(), m.ProperPlural())
+	b.W("    public async Task<List<Entities.%s>> List()", m.Proper())
 	b.W("    {")
-	b.W("        return await _%s.Take(100).AsQueryable().ToListAsync();", m.CamelPlural())
+	b.W("        return await Models.Take(100).AsQueryable().ToListAsync();")
 	b.W("    }")
 }
 
 func serviceDetail(m *model.Model, pk *model.Column, b *csharp.Block) {
-	b.W("    public async Task<Entities.%s?> %sBy%s(%s %s)", m.Proper(), m.Proper(), pk.Proper(), ToCSharpType(pk), pk.Camel())
+	b.W("    public async Task<Entities.%s?> Get(%s %s)", m.Proper(), ToCSharpType(pk), pk.Camel())
 	b.W("    {")
-	b.W("        return await _%s.FirstAsync(x => x.%s == %s);", m.CamelPlural(), pk.Proper(), pk.Camel())
+	b.W("        return await Models.FirstOrDefaultAsync(x => x.%s == %s);", pk.Proper(), pk.Camel())
+	b.W("    }")
+}
+
+func serviceDelete(m *model.Model, pk *model.Column, b *csharp.Block) {
+	b.W("    public async Task<Entities.%s?> Delete(%s %s)", m.Proper(), ToCSharpType(pk), pk.Camel())
+	b.W("    {")
+	b.W("        var ret = await Models.FirstOrDefaultAsync(x => x.%s == %s);", pk.Proper(), pk.Camel())
+	b.W("        if (ret != null)")
+	b.W("        {")
+	b.W("            Models.Remove(ret);")
+	b.W("        }")
+	b.W("        return ret;")
 	b.W("    }")
 }
 
