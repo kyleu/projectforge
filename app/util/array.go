@@ -103,18 +103,26 @@ func LengthAny(dest any) int {
 	return rfl.Len()
 }
 
-func ArrayFromAny(dest any) []any {
+func ArrayFromAny[T any](dest any) []T {
 	defer func() { _ = recover() }()
 	rfl := reflect.ValueOf(dest)
 	if rfl.Kind() == reflect.Ptr {
 		rfl = rfl.Elem()
 	}
 	if k := rfl.Kind(); k == reflect.Array || k == reflect.Slice {
-		return lo.Times(rfl.Len(), func(i int) any {
-			return rfl.Index(i).Interface()
+		return lo.Times(rfl.Len(), func(i int) T {
+			x := rfl.Index(i).Interface()
+			if t, ok := x.(T); ok {
+				return t
+			}
+			var t T
+			return t
 		})
 	}
-	return []any{dest}
+	if t, ok := dest.(T); ok {
+		return []T{t}
+	}
+	return nil
 }
 
 func ArrayFlatten[T any](arrs ...[]T) []T {
