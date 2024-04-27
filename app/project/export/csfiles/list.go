@@ -9,9 +9,9 @@ import (
 )
 
 func cshtmlList(m *model.Model) (*file.File, error) {
-	f := csharp.NewTemplate([]string{"Views", m.Title()}, m.TitlePlural()+".cshtml")
-	b := csharp.NewBlock(m.Title()+":List", "cshtml")
-	b.W("@model IEnumerable<%s>", m.Title())
+	f := csharp.NewTemplate([]string{"Views", m.Proper()}, m.ProperPlural()+".cshtml")
+	b := csharp.NewBlock(m.Proper()+":List", "cshtml")
+	b.W("@model IEnumerable<%s>", m.Proper())
 	b.W("<div class=\"card\">")
 	b.W("    <h3>%s</h3>", m.TitlePlural())
 	b.W("    <div class=\"overflow full-width\">")

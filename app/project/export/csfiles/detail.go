@@ -7,9 +7,9 @@ import (
 )
 
 func cshtmlDetail(m *model.Model) (*file.File, error) {
-	f := csharp.NewTemplate([]string{"Views", m.Title()}, m.Title()+".cshtml")
-	b := csharp.NewBlock(m.Title()+":Detail", "cshtml")
-	b.W("@model %s", m.Title())
+	f := csharp.NewTemplate([]string{"Views", m.Proper()}, m.Proper()+".cshtml")
+	b := csharp.NewBlock(m.Proper()+":Detail", "cshtml")
+	b.W("@model %s", m.Proper())
 	b.W("<div class=\"card\">")
 	b.W("    <h3>@Model.ToString()</h3>")
 	b.W("    <div class=\"overflow full-width\">")

@@ -8,10 +8,10 @@ import (
 )
 
 func controller(m *model.Model, p *project.Project) (*file.File, error) {
-	f := csharp.NewFile(p.Package+".Controllers", []string{"Controllers"}, m.Title()+"Controller.cs")
+	f := csharp.NewFile(p.Package+".Controllers", []string{"Controllers"}, m.Proper()+"Controller.cs")
 	f.AddImport(p.Package+".Services."+m.Proper(), ImpMVC, ImpControllers)
 	b := csharp.NewBlock("Controller", "class")
-	b.W("public class %sController(%sService svc) : BaseController", m.Title(), m.Proper())
+	b.W("public class %sController(%sService svc) : BaseController", m.Proper(), m.Proper())
 	b.W("{")
 	b.W("    private const string BaseRoute = %q;", "/"+m.CamelPlural())
 	b.W("")
@@ -33,7 +33,7 @@ func controllerList(m *model.Model, b *csharp.Block) {
 	b.W("    public async Task<IActionResult> List()")
 	b.W("    {")
 	b.W("        var ret = await svc.List();")
-	b.W("        return Result(%q, ret, %q);", m.TitlePlural(), m.ProperPlural())
+	b.W("        return Result(%q, ret, %q);", m.ProperPlural(), m.ProperPlural())
 	b.W("    }")
 }
 

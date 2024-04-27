@@ -10,10 +10,10 @@ import (
 )
 
 func service(m *model.Model, p *project.Project) (*file.File, error) {
-	f := csharp.NewFile(p.Package+".Services."+m.Proper(), []string{"Services", m.Proper()}, m.Title()+"Service.cs")
+	f := csharp.NewFile(p.Package+".Services."+m.Proper(), []string{"Services", m.Proper()}, m.Proper()+"Service.cs")
 	f.AddImport(p.Package+".Entities", ImpEF, ImpServices)
 	b := csharp.NewBlock("Service", "class")
-	b.W("public class %sService(Database db) : BaseService<Entities.%s>(db, db.%s)", m.Title(), m.Proper(), m.ProperPlural())
+	b.W("public class %sService(Database db) : BaseService<Entities.%s>(db, db.%s)", m.Proper(), m.Proper(), m.ProperPlural())
 	b.W("{")
 	serviceList(m, b)
 	if len(m.PKs()) == 1 {
