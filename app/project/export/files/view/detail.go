@@ -112,14 +112,18 @@ func exportViewDetailBody(g *golang.Template, m *model.Model, audit bool, models
 	ret.W("    </div>")
 	ret.W("    %s%s {%%%%s p.Model.TitleString() %%%%}%s", helper.TextH3Start, svgRef(m.Icon), helper.TextH3End)
 	ret.W("    <div><a href=\"/" + m.Route() + "\"><em>" + m.Title() + "</em></a></div>")
-	if len(m.Links) > 0 {
+	if len(m.Links.WithTags(true, "detail")) > 0 {
 		ret.W("    <div class=\"mt\">")
 		for _, link := range m.Links {
 			paths := lo.Map(m.PKs(), func(pk *model.Column, _ int) string {
 				return "{%%s p.Model." + model.ToGoString(pk.Type, pk.Nullable, pk.Proper(), true) + helper.TextTmplEnd
 			})
 			u := strings.ReplaceAll(link.URL, "{}", strings.Join(paths, "/"))
-			ret.W("      <a href=%q><button type=\"button\">%s</button></a>", u, link.Title)
+			icon := ""
+			if link.Icon != "" {
+				icon = fmt.Sprintf("{%%%%= components.SVGRef(%q, 15, 15, \"icon\", ps) %%%%} ", link.Icon)
+			}
+			ret.W("      <a href=%q><button type=\"button\">%s%s</button></a>", u, icon, link.Title)
 		}
 		ret.W("    </div>")
 	}
