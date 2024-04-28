@@ -33,7 +33,7 @@ func Run(fs filesystem.FileLoader, tgt string, logger util.Logger, prj *project.
 
 	var out string
 	if slices.Contains(prj.Modules, "csharp") {
-		out = cstemplate(svgs)
+		out = cstemplate(svgs, prj.Package)
 	} else {
 		out = template(svgs, util.StringDetectLinebreak(svgs[0].Markup))
 	}

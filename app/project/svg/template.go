@@ -51,7 +51,7 @@ func template(svgs []*SVG, linebreak string) string {
 	return out.String()
 }
 
-func cstemplate(svgs []*SVG) string {
+func cstemplate(svgs []*SVG, namespace string) string {
 	out := strings.Builder{}
 	w := func(s string, args ...any) {
 		out.WriteString(fmt.Sprintf(s, args...))
@@ -59,7 +59,7 @@ func cstemplate(svgs []*SVG) string {
 	}
 
 	w("// Code generated from files in [wwwroot/svg]. See " + util.AppURL + " for details. DO NOT EDIT.")
-	w("namespace EnterpriseMessaging.Util;")
+	w("namespace %s.Util;", namespace)
 	w("")
 	w("public static class Icons")
 	w("{")
