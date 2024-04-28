@@ -13,6 +13,7 @@ func cshtmlDetail(m *model.Model) (*file.File, error) {
 	b.W("@inject IconRegistryService IconRegistry")
 	b.W("<div class=\"card\">")
 	b.W("    <h3>@IconRegistry.Ref(%q, 20, 20, %q)@Model.ToString()</h3>", m.Icon, "icon")
+	b.W("    <em>%s</em>", m.Title())
 	b.W("    <div class=\"overflow full-width\">")
 	b.W("        <table class=\"mt min-200 expanded\">")
 	b.W("            <tbody>")
