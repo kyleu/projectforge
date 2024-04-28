@@ -21,7 +21,7 @@ func menu(models model.Models, p *project.Project) (*file.File, error) {
 		if idx < (len(models) - 1) {
 			suffix = ","
 		}
-		b.W("            new MenuItem { Key = %q, Title = %q, Url = %q, Icon = %q }%s", m.Name, m.TitlePlural(), "/"+m.Plural(), m.Name, suffix)
+		b.W("            new MenuItem { Key = %q, Title = %q, Url = %q, Icon = %q }%s", m.Name, m.TitlePlural(), m.CSRoute(), m.Name, suffix)
 	}
 	b.W("        ];")
 	b.W("    }")

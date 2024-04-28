@@ -3,7 +3,6 @@ package action
 import (
 	"context"
 	"fmt"
-
 	"projectforge.dev/projectforge/app/project/svg"
 )
 
@@ -13,6 +12,9 @@ func onSVG(ctx context.Context, pm *PrjAndMods) *Result {
 	ret := newResult(TypeSVG, pm.Prj, pm.Cfg, pm.Logger)
 
 	tgt := fmt.Sprintf("%s/app/util/svg.go", pm.Prj.Path)
+	if pm.Prj.IsCSharp() {
+		tgt = fmt.Sprintf("%s/Util/Icons.cs", pm.Prj.Path)
+	}
 
 	if pm.Cfg.GetStringOpt("mode") == refreshMode {
 		ret.AddLog("refreshing app SVG for project [%s]", pm.Prj.Key)
@@ -23,7 +25,7 @@ func onSVG(ctx context.Context, pm *PrjAndMods) *Result {
 		return ret
 	}
 
-	count, err := svg.Run(pm.FS, tgt, pm.Logger)
+	count, err := svg.Run(pm.FS, tgt, pm.Logger, pm.Prj)
 	if err != nil {
 		return errorResult(err, TypeSVG, pm.Cfg, pm.Logger)
 	}

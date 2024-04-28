@@ -50,3 +50,44 @@ func template(svgs []*SVG, linebreak string) string {
 
 	return out.String()
 }
+
+func cstemplate(svgs []*SVG) string {
+	out := strings.Builder{}
+	w := func(s string, args ...any) {
+		out.WriteString(fmt.Sprintf(s, args...))
+		out.WriteString("\n")
+	}
+
+	w("// Code generated from files in [wwwroot/svg]. See " + util.AppURL + " for details. DO NOT EDIT.")
+	w("namespace EnterpriseMessaging.Util;")
+	w("")
+	w("public static class Icons")
+	w("{")
+	for _, x := range svgs {
+		w("    private const string %sSVG = %q;", x.Key, x.Markup)
+	}
+	w("")
+	w("    public static Dictionary<string, string> Library = new Dictionary<string, string>")
+	w("    {")
+	for idx, x := range svgs {
+		suffix := ""
+		if idx < len(svgs)-1 {
+			suffix = ","
+		}
+		w("        { %q, %sSVG }%s", x.Key, x.Key, suffix)
+	}
+	w("    };")
+	w("}")
+
+	return out.String()
+}
+
+/*
+
+
+
+    {
+        { "sign_in", signInSVG }
+    };
+}
+*/

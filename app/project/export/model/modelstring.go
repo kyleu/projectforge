@@ -81,6 +81,13 @@ func (m *Model) Route() string {
 	return m.RouteOverride
 }
 
+func (m *Model) CSRoute() string {
+	if m.RouteOverride == "" {
+		return "/" + m.CamelPlural()
+	}
+	return m.RouteOverride
+}
+
 func (m *Model) IconSafe() string {
 	if _, ok := util.SVGLibrary[m.Icon]; ok {
 		return m.Icon

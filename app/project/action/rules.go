@@ -21,7 +21,7 @@ func onRules(pm *PrjAndMods) *Result {
 		return ret
 	}
 
-	icons, err := svg.List(pm.FS, pm.Logger)
+	icons, err := svg.List(pm.FS, pm.Logger, pm.Prj.Modules...)
 	if err != nil {
 		return ret.WithError(err)
 	}

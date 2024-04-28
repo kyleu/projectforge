@@ -72,7 +72,7 @@ func SetAppIcon(ctx context.Context, prj *project.Project, fs filesystem.FileLoa
 		return errors.Wrap(err, "unable to write initial [app.svg]")
 	}
 
-	_, err = Build(fs, logger)
+	_, err = Build(fs, logger, prj)
 	if err != nil {
 		return errors.Wrap(err, "unable to build SVG library")
 	}

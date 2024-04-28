@@ -85,6 +85,10 @@ func (p *Project) HasModule(key string) bool {
 	return lo.Contains(p.Modules, key)
 }
 
+func (p *Project) IsCSharp() bool {
+	return p.HasModule("csharp")
+}
+
 func (p *Project) ToMap() util.ValueMap {
 	return util.ValueMap{
 		"key": p.Key, "name": p.Name, "icon": p.Icon, "exec": p.Exec,
@@ -98,7 +102,7 @@ func (p *Project) WebPath() string {
 }
 
 func (p *Project) ModuleArgExport(pSvc *Service, logger util.Logger) error {
-	if p.ExportArgs == nil && (p.HasModule("export") || p.HasModule("csharp")) {
+	if p.ExportArgs == nil && (p.HasModule("export") || p.IsCSharp()) {
 		fs, err := pSvc.GetFilesystem(p)
 		if err != nil {
 			return err

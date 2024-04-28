@@ -49,7 +49,7 @@ func getModuleFiles(pm *PrjAndMods) ([]string, error) {
 			return f.FullPath()
 		}), ret...))
 	}
-	if pm.Prj.HasModule("csharp") {
+	if pm.Prj.IsCSharp() {
 		files, e := pm.ESvc.FilesCSharp(pm.Prj)
 		if e != nil {
 			return nil, err

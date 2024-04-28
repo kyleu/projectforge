@@ -35,7 +35,7 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 			return f.FullPath()
 		})
 	}
-	if pm.Mods.Get("csharp") != nil {
+	if pm.Prj.IsCSharp() {
 		pm.Prj.ExportArgs.Modules = pm.Mods.Keys()
 		files, e := pm.ESvc.FilesCSharp(pm.Prj)
 		if e != nil {

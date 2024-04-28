@@ -52,7 +52,7 @@ func validateBasic(p *Project, e validationAddErrFn) {
 		e("no-modules", "no modules enabled")
 	}
 	if !lo.Contains(p.Modules, "core") {
-		if !lo.Contains(p.Modules, "csharp") {
+		if !p.IsCSharp() {
 			e("no-modules", "core module not included")
 		}
 	}
@@ -181,7 +181,7 @@ func validateFilesystem(p *Project, e validationAddErrFn, fs filesystem.FileLoad
 		}
 	}
 
-	if lo.Contains(p.Modules, "csharp") {
+	if p.IsCSharp() {
 		return
 	}
 

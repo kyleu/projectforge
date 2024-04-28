@@ -5,6 +5,7 @@ import (
 	"io"
 	"net/http"
 	"path/filepath"
+	"slices"
 	"strings"
 	"time"
 
@@ -14,22 +15,26 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-const (
-	svgPath       = "client/src/svg"
-	ghLineAwesome = "https://raw.githubusercontent.com/icons8/line-awesome/master/svg/"
-)
+const ghLineAwesome = "https://raw.githubusercontent.com/icons8/line-awesome/master/svg/"
 
-func AddToProject(fs filesystem.FileLoader, src string, tgt string) (*SVG, error) {
+func AddToProject(fs filesystem.FileLoader, src string, tgt string, mods ...string) (*SVG, error) {
 	ret, err := load(src, tgt)
 	if err != nil {
 		return nil, err
 	}
-	dst := filepath.Join(svgPath, tgt+util.ExtSVG)
+	dst := filepath.Join(svgPath(mods...), tgt+util.ExtSVG)
 	err = fs.WriteFile(dst, []byte(ret.Markup), filesystem.DefaultMode, true)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to write SVG to file ["+tgt+".svg]")
 	}
 	return ret, nil
+}
+
+func svgPath(mods ...string) string {
+	if slices.Contains(mods, "csharp") {
+		return "wwwroot/svg"
+	}
+	return "client/src/svg"
 }
 
 func load(src string, tgt string) (*SVG, error) {
