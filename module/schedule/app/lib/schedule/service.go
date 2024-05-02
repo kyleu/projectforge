@@ -48,7 +48,8 @@ func (s *Service) NewJob(
 		}()
 		timer := util.TimerStart()
 		var sp *telemetry.Span
-		ctx, sp, logger = telemetry.StartSpan(context.Background(), "job."+id.String(), logger)
+		ctx, sp, logger = telemetry.StartSpan(ctx, "job."+id.String(), logger)
+		sp.Attribute("job", name)
 		defer sp.Complete()
 		logger.Debugf("running scheduled job [%s]", id.String())
 		res := &Result{Job: id, Occurred: time.Now()}
@@ -72,6 +73,7 @@ func (s *Service) NewJob(
 		default:
 			retStr = fmt.Sprintf("%v (%T)", res.Returned, res.Returned)
 		}
+		sp.Attribute("result", retStr)
 
 		logger.Debugf("completed scheduled job [%s] in [%s]: returned [%s]", id.String(), util.MicrosToMillis(res.DurationMicro), retStr)
 		s.resultMu.Lock()

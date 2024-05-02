@@ -8,8 +8,8 @@ import (
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func cshtmlList(m *model.Model) (*file.File, error) {
-	f := csharp.NewTemplate([]string{"Views", m.Proper()}, m.ProperPlural()+".cshtml")
+func cshtmlList(ns string, m *model.Model, args *model.Args) (*file.File, error) {
+	f := csharp.NewTemplate([]string{ns, "Views", m.Proper()}, m.ProperPlural()+".cshtml")
 	b := csharp.NewBlock(m.Proper()+":List", "cshtml")
 	b.W("@model IEnumerable<%s>", m.Proper())
 	b.W("@inject IconRegistryService IconRegistry")
@@ -25,14 +25,21 @@ func cshtmlList(m *model.Model) (*file.File, error) {
 	b.W("                </tr>")
 	b.W("            </thead>")
 	b.W("            <tbody>")
-	b.W("                @foreach (var item in Model) {")
+	b.W("                @foreach (var item in Model)")
+	b.W("                {")
 	b.W("                <tr>")
 	for _, col := range m.Columns {
 		if col.PK {
-			pth := fmt.Sprintf("/%s/@item.%s", m.CamelPlural(), col.Proper())
+			pth := fmt.Sprintf("%s/@item.%s", m.CSRoute(), col.Proper())
 			b.W("                    <td><a href=%q>@Html.DisplayFor(_ => item.%s)</a></td>", pth, col.Proper())
 		} else {
-			b.W("                    <td>@Html.DisplayFor(_ => item.%s)</td>", col.Proper())
+			r := m.RelationsFor(col)
+			if len(r) > 0 {
+				tgt := args.Models.Get(r[0].Table)
+				b.W("                    <td><a href=\"/%s/@item.%s\">@Html.DisplayFor(_ => item.%s)</a></td>", tgt.CamelLower(), col.Proper(), col.Proper())
+			} else {
+				b.W("                    <td>@Html.DisplayFor(_ => item.%s)</td>", col.Proper())
+			}
 		}
 	}
 	b.W("                </tr>")

@@ -1,19 +1,20 @@
 package csfiles
 
 import (
+	"fmt"
+
 	"projectforge.dev/projectforge/app/file"
-	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/project/export/csharp"
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func controller(m *model.Model, p *project.Project) (*file.File, error) {
-	f := csharp.NewFile(p.Package+".Controllers", []string{"Controllers"}, m.Proper()+"Controller.cs")
-	f.AddImport(p.Package+".Services."+m.Proper(), ImpMVC, ImpControllers)
+func controller(ns string, m *model.Model) (*file.File, error) {
+	f := csharp.NewFile(ns+".Controllers", []string{ns, "Controllers"}, m.Proper()+"Controller.cs")
+	f.AddImport(ns+".Services."+m.Proper(), ImpMVC, ImpControllers)
 	b := csharp.NewBlock("Controller", "class")
 	b.W("public class %sController(%sService svc) : BaseController", m.Proper(), m.Proper())
 	b.W("{")
-	b.W("    private const string BaseRoute = %q;", "/"+m.CamelPlural())
+	b.W("    private const string BaseRoute = %q;", "/"+m.CamelLower())
 	b.W("")
 	controllerList(m, b)
 	if len(m.PKs()) == 1 {
@@ -38,7 +39,7 @@ func controllerList(m *model.Model, b *csharp.Block) {
 }
 
 func controllerDetail(m *model.Model, pk *model.Column, b *csharp.Block) {
-	b.W("    [Route(BaseRoute + %q)]", "/{"+pk.Camel()+"}")
+	b.W("    [Route(BaseRoute + %q)]", fmt.Sprintf("/{%s%s}", pk.Camel(), ToCSharpViewType(pk)))
 	b.W("    [HttpGet]")
 	b.W("    public async Task<IActionResult> Get(%s %s)", ToCSharpType(pk), pk.Camel())
 	b.W("    {")
@@ -53,11 +54,11 @@ func controllerDetail(m *model.Model, pk *model.Column, b *csharp.Block) {
 }
 
 func controllerDelete(m *model.Model, pk *model.Column, b *csharp.Block) {
-	b.W("    [Route(BaseRoute + %q)]", "/{"+pk.Camel()+"}/delete")
+	b.W("    [Route(BaseRoute + %q)]", fmt.Sprintf("/{%s%s}/delete", pk.Camel(), ToCSharpViewType(pk)))
 	b.W("    [HttpGet]")
 	b.W("    public async Task<IActionResult> Delete(%s %s)", ToCSharpType(pk), pk.Camel())
 	b.W("    {")
-	b.W("        var ret = await svc.Delete(%s);", pk.Camel())
+	b.W("        await svc.Delete(%s);", pk.Camel())
 	b.W("        return Redirect(BaseRoute);")
 	b.W("    }")
 }

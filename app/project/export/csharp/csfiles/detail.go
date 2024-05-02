@@ -6,8 +6,8 @@ import (
 	"projectforge.dev/projectforge/app/project/export/model"
 )
 
-func cshtmlDetail(m *model.Model) (*file.File, error) {
-	f := csharp.NewTemplate([]string{"Views", m.Proper()}, m.Proper()+".cshtml")
+func cshtmlDetail(ns string, m *model.Model, args *model.Args) (*file.File, error) {
+	f := csharp.NewTemplate([]string{ns, "Views", m.Proper()}, m.Proper()+".cshtml")
 	b := csharp.NewBlock(m.Proper()+":Detail", "cshtml")
 	b.W("@model %s", m.Proper())
 	b.W("@inject IconRegistryService IconRegistry")
@@ -20,7 +20,14 @@ func cshtmlDetail(m *model.Model) (*file.File, error) {
 	for _, col := range m.Columns {
 		b.W("                <tr>")
 		b.W("                    <th class=\"shrink\">%s</th>", col.Title())
-		b.W("                    <td>@Html.DisplayFor(_ => Model.%s)</td>", col.Proper())
+		r := m.RelationsFor(col)
+		if len(r) > 0 {
+			msg := "                    <td><a href=\"%s/@Model.%s\">@Html.DisplayFor(_ => Model.%s)</a> (@Model.%s?.ToString())</td>"
+			tgt := args.Models.Get(r[0].Table)
+			b.W(msg, tgt.CSRoute(), col.Proper(), col.Proper(), tgt.Proper())
+		} else {
+			b.W("                    <td>@Html.DisplayFor(_ => Model.%s)</td>", col.Proper())
+		}
 		b.W("                </tr>")
 	}
 	b.W("            </tbody>")

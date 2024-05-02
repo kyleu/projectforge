@@ -1,2 +1,2 @@
 cd ..
-npm run dev -- --port 5146
+npm run dev -- --port {{{ .NotebookPort }}}

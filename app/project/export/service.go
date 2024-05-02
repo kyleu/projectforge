@@ -7,7 +7,7 @@ import (
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project"
-	"projectforge.dev/projectforge/app/project/export/csfiles"
+	"projectforge.dev/projectforge/app/project/export/csharp/csfiles"
 	"projectforge.dev/projectforge/app/project/export/files"
 )
 

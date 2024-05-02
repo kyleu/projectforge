@@ -3,6 +3,7 @@ package action
 import (
 	"context"
 	"fmt"
+
 	"projectforge.dev/projectforge/app/project/svg"
 )
 

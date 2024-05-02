@@ -1,6 +1,8 @@
 package file
 
 import (
+	"cmp"
+	"slices"
 	"strings"
 
 	"github.com/samber/lo"
@@ -28,4 +30,11 @@ func (f Files) Get(path string) *File {
 
 func (f Files) Exists(path string) bool {
 	return f.Get(path) != nil
+}
+
+func (f Files) Sort() Files {
+	slices.SortFunc(f, func(l *File, r *File) int {
+		return cmp.Compare(l.FullPath(), r.FullPath())
+	})
+	return f
 }

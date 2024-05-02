@@ -14,6 +14,10 @@ func (m *Model) Camel() string {
 	return util.StringToLowerCamel(m.Name)
 }
 
+func (m *Model) CamelLower() string {
+	return strings.ToLower(m.Camel())
+}
+
 func (m *Model) CamelPlural() string {
 	return util.StringToPlural(m.Camel())
 }
@@ -55,6 +59,10 @@ func (m *Model) Plural() string {
 	return ret
 }
 
+func (m *Model) PluralLower() string {
+	return strings.ToLower(m.Plural())
+}
+
 func (m *Model) ProperPlural() string {
 	ret := util.StringToPlural(m.Proper())
 	if ret == m.Proper() {
@@ -83,7 +91,7 @@ func (m *Model) Route() string {
 
 func (m *Model) CSRoute() string {
 	if m.RouteOverride == "" {
-		return "/" + m.CamelPlural()
+		return "/" + m.CamelLower()
 	}
 	return m.RouteOverride
 }
