@@ -18,6 +18,7 @@ const (
 	mimeCSV   = "text/csv"
 	mimeDebug = "text/plain"
 	mimeJSON  = "application/json"
+	mimeTOML  = "application/toml"
 	mimeXML   = "text/xml"
 	mimeYAML  = "application/x-yaml"
 
@@ -85,6 +86,11 @@ func RespondJSON(w *WriteCounter, filename string, body any) (string, error) {
 	return RespondMIME(filename, mimeJSON, util.KeyJSON, b, w)
 }
 
+func RespondTOML(w *WriteCounter, filename string, body any) (string, error) {
+	b := util.ToTOMLBytes(body)
+	return RespondMIME(filename, mimeTOML, util.KeyTOML, b, w)
+}
+
 type XMLResponse struct {
 	Result any `xml:"result"`
 }
@@ -141,6 +147,8 @@ func GetContentType(r *http.Request) string {
 		return mimeCSV
 	case util.KeyJSON:
 		return mimeJSON
+	case util.KeyTOML:
+		return mimeTOML
 	case util.KeyXML:
 		return mimeXML
 	case util.KeyYAML, "yml":
@@ -151,21 +159,25 @@ func GetContentType(r *http.Request) string {
 }
 
 func IsContentTypeCSV(c string) bool {
-	return c == mimeCSV
+	return c == mimeCSV || c == util.KeyCSV
 }
 
 func IsContentTypeDebug(c string) bool {
-	return c == mimeDebug
+	return c == mimeDebug || c == "debug"
 }
 
 func IsContentTypeJSON(c string) bool {
-	return c == mimeJSON || c == "text/json"
+	return c == mimeJSON || c == "text/json" || c == util.KeyJSON
+}
+
+func IsContentTypeTOML(c string) bool {
+	return c == mimeTOML || c == "text/toml" || c == util.KeyTOML
 }
 
 func IsContentTypeXML(c string) bool {
-	return c == "application/xml" || c == mimeXML
+	return c == "application/xml" || c == mimeXML || c == util.KeyXML
 }
 
 func IsContentTypeYAML(c string) bool {
-	return c == mimeYAML || c == "text/yaml"
+	return c == mimeYAML || c == "text/yaml" || c == util.KeyYAML
 }

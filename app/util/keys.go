@@ -17,6 +17,7 @@ const (
 
 	KeyCSV  = "csv"
 	KeyJSON = "json"
+	KeyTOML = "toml"
 	KeyXML  = "xml"
 	KeyYAML = "yaml"
 

@@ -2,77 +2,14 @@ package controller
 
 import (
 	"fmt"
-	"net/http"
 	"strings"
-	"time"
 
 	"github.com/pkg/errors"
 
-	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller/csession"
 	"{{{ .Package }}}/app/controller/cutil"
 	"{{{ .Package }}}/app/util"
-	"{{{ .Package }}}/views"
-	"{{{ .Package }}}/views/layout"
-	"{{{ .Package }}}/views/verror"
 )
-
-func Render(r *http.Request, as *app.State, page layout.Page, ps *cutil.PageState, breadcrumbs ...string) (string, error) {
-	defer func() {
-		x := recover()
-		if x != nil {
-			ps.LogError("error processing template: %+v", x)
-			switch t := x.(type) {
-			case error:
-				ed := util.GetErrorDetail(t, ps.Admin)
-				verror.WriteDetail(ps.W, ed, as, ps)
-			default:
-				ed := &util.ErrorDetail{Type: fmt.Sprintf("%T", x), Message: fmt.Sprint(t)}
-				verror.WriteDetail(ps.W, ed, as, ps)
-			}
-		}
-	}()
-	ps.Breadcrumbs = append(ps.Breadcrumbs, breadcrumbs...)
-	ct := cutil.GetContentType(r)
-	var fn string
-	if r.URL.Query().Get("download") == "true" {
-		fn = ps.Action
-	}
-	if ps.Data != nil {
-		switch {
-		case cutil.IsContentTypeCSV(ct):
-			return cutil.RespondCSV(ps.W, fn, ps.Data)
-		case cutil.IsContentTypeJSON(ct):
-			return cutil.RespondJSON(ps.W, fn, ps.Data)
-		case cutil.IsContentTypeXML(ct):
-			return cutil.RespondXML(ps.W, fn, ps.Data)
-		case cutil.IsContentTypeYAML(ct):
-			return cutil.RespondYAML(ps.W, fn, ps.Data)
-		case cutil.IsContentTypeDebug(ct):
-			return cutil.RespondDebug(ps.W, r, as, fn, ps)
-		}
-	}
-	startNanos := util.TimeCurrentNanos()
-	switch ps.DefaultFormat {
-	case "":
-		ps.W.Header().Set(cutil.HeaderContentType, "text/html; charset=UTF-8")
-		views.WriteRender(ps.W, page, as, ps)
-		ps.RenderElapsed = float64((util.TimeCurrentNanos()-startNanos)/int64(time.Microsecond)) / float64(1000)
-		return "", nil
-	case util.KeyCSV:
-		return cutil.RespondCSV(ps.W, fn, ps.Data)
-	case util.KeyJSON:
-		return cutil.RespondJSON(ps.W, fn, ps.Data)
-	case util.KeyXML:
-		return cutil.RespondXML(ps.W, fn, ps.Data)
-	case util.KeyYAML:
-		return cutil.RespondYAML(ps.W, fn, ps.Data)
-	case "debug":
-		return cutil.RespondDebug(ps.W, r, as, fn, ps)
-	default:
-		return "", errors.Errorf("unable to process format [%s]", ps.DefaultFormat)
-	}
-}
 
 func ERsp(msg string, args ...any) (string, error) {
 	return "", errors.Errorf(msg, args...)
