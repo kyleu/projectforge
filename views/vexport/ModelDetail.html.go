@@ -101,7 +101,7 @@ func (p *ModelDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *c
 		qw422016.N().S(` Relations</h3>
     `)
 //line views/vexport/ModelDetail.html:37
-		streammodelRelations(qw422016, m, as, ps)
+		streammodelRelations(qw422016, m, p.Project, as, ps)
 //line views/vexport/ModelDetail.html:37
 		qw422016.N().S(`
   </div>`)
@@ -515,7 +515,7 @@ func modelColumns(model *model.Model, as *app.State, ps *cutil.PageState) string
 }
 
 //line views/vexport/ModelDetail.html:144
-func streammodelRelations(qw422016 *qt422016.Writer, model *model.Model, as *app.State, ps *cutil.PageState) {
+func streammodelRelations(qw422016 *qt422016.Writer, model *model.Model, prj *project.Project, as *app.State, ps *cutil.PageState) {
 //line views/vexport/ModelDetail.html:144
 	qw422016.N().S(`
   <div class="overflow full-width">
@@ -544,11 +544,19 @@ func streammodelRelations(qw422016 *qt422016.Writer, model *model.Model, as *app
 		qw422016.E().S(strings.Join(rel.Src, ", "))
 //line views/vexport/ModelDetail.html:159
 		qw422016.N().S(`</td>
-          <td>`)
+          <td><a href="`)
+//line views/vexport/ModelDetail.html:160
+		qw422016.E().S(prj.WebPath())
+//line views/vexport/ModelDetail.html:160
+		qw422016.N().S(`/export/models/`)
 //line views/vexport/ModelDetail.html:160
 		qw422016.E().S(rel.Table)
 //line views/vexport/ModelDetail.html:160
-		qw422016.N().S(`</td>
+		qw422016.N().S(`">`)
+//line views/vexport/ModelDetail.html:160
+		qw422016.E().S(rel.Table)
+//line views/vexport/ModelDetail.html:160
+		qw422016.N().S(`</a></td>
           <td>`)
 //line views/vexport/ModelDetail.html:161
 		qw422016.E().S(strings.Join(rel.Tgt, ", "))
@@ -567,22 +575,22 @@ func streammodelRelations(qw422016 *qt422016.Writer, model *model.Model, as *app
 }
 
 //line views/vexport/ModelDetail.html:167
-func writemodelRelations(qq422016 qtio422016.Writer, model *model.Model, as *app.State, ps *cutil.PageState) {
+func writemodelRelations(qq422016 qtio422016.Writer, model *model.Model, prj *project.Project, as *app.State, ps *cutil.PageState) {
 //line views/vexport/ModelDetail.html:167
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vexport/ModelDetail.html:167
-	streammodelRelations(qw422016, model, as, ps)
+	streammodelRelations(qw422016, model, prj, as, ps)
 //line views/vexport/ModelDetail.html:167
 	qt422016.ReleaseWriter(qw422016)
 //line views/vexport/ModelDetail.html:167
 }
 
 //line views/vexport/ModelDetail.html:167
-func modelRelations(model *model.Model, as *app.State, ps *cutil.PageState) string {
+func modelRelations(model *model.Model, prj *project.Project, as *app.State, ps *cutil.PageState) string {
 //line views/vexport/ModelDetail.html:167
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vexport/ModelDetail.html:167
-	writemodelRelations(qb422016, model, as, ps)
+	writemodelRelations(qb422016, model, prj, as, ps)
 //line views/vexport/ModelDetail.html:167
 	qs422016 := string(qb422016.B)
 //line views/vexport/ModelDetail.html:167

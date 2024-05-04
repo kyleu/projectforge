@@ -34,7 +34,7 @@
   {%- if len(m.Relations) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`social`, ps) %} Relations</h3>
-    {%= modelRelations(m, as, ps) %}
+    {%= modelRelations(m, p.Project, as, ps) %}
   </div>{%- endif -%}{%- if len(m.Indexes) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`star`, ps) %} Indexes</h3>
@@ -141,7 +141,7 @@
   {%- endif -%}
 {% endfunc %}
 
-{% func modelRelations(model *model.Model, as *app.State, ps *cutil.PageState) %}
+{% func modelRelations(model *model.Model, prj *project.Project, as *app.State, ps *cutil.PageState) %}
   <div class="overflow full-width">
     <table class="mt min-200 full-width">
       <thead>
@@ -157,7 +157,7 @@
         <tr>
           <td>{%s rel.Name %}</td>
           <td>{%s strings.Join(rel.Src, ", ") %}</td>
-          <td>{%s rel.Table %}</td>
+          <td><a href="{%s prj.WebPath() %}/export/models/{%s rel.Table %}">{%s rel.Table %}</a></td>
           <td>{%s strings.Join(rel.Tgt, ", ") %}</td>
         </tr>
         {%- endfor -%}
