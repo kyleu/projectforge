@@ -34,11 +34,11 @@ func StreamBuildOptions(qw422016 *qt422016.Writer, key string, ps *cutil.PageSta
 	components.StreamSVGRefIcon(qw422016, `hammer`, ps)
 //line views/vbuild/BuildOptions.html:9
 	qw422016.N().S(`Build your project</h3>
-    <div class="overflow full-width">
-      <table class="mt">
+    <div class="mt overflow full-width">
+      <table class="min-200">
         <thead>
           <tr>
-            <th>Action</th>
+            <th class="shrink">Action</th>
             <th>Description</th>
           </tr>
         </thead>
