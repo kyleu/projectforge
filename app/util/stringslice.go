@@ -31,6 +31,10 @@ func (s *StringSlice) Join(x string) string {
 	return strings.Join(s.Slice, x)
 }
 
+func (s *StringSlice) String() string {
+	return s.Join("\n")
+}
+
 func (s *StringSlice) Sort() {
 	sort.Strings(s.Slice)
 }
