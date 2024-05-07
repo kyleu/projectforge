@@ -2,10 +2,10 @@ package svg
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"net/http"
 	"path/filepath"
-	"slices"
 	"strings"
 	"time"
 
@@ -17,12 +17,12 @@ import (
 
 const ghLineAwesome = "https://raw.githubusercontent.com/icons8/line-awesome/master/svg/"
 
-func AddToProject(fs filesystem.FileLoader, src string, tgt string, mods ...string) (*SVG, error) {
+func AddToProject(prj string, fs filesystem.FileLoader, src string, tgt string) (*SVG, error) {
 	ret, err := load(src, tgt)
 	if err != nil {
 		return nil, err
 	}
-	dst := filepath.Join(svgPath(mods...), tgt+util.ExtSVG)
+	dst := filepath.Join(svgPath(prj, tgt))
 	err = fs.WriteFile(dst, []byte(ret.Markup), filesystem.DefaultMode, true)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to write SVG to file ["+tgt+".svg]")
@@ -30,11 +30,12 @@ func AddToProject(fs filesystem.FileLoader, src string, tgt string, mods ...stri
 	return ret, nil
 }
 
-func svgPath(mods ...string) string {
-	if slices.Contains(mods, "csharp") {
-		return "wwwroot/svg"
+func svgPath(prj string, key string) string {
+	if strings.Contains(key, "@") {
+		x, y := util.StringSplit(key, '@', true)
+		return fmt.Sprintf("%s%s/wwwroot/svg/%s%s", util.StringToTitle(prj), util.StringToTitle(x), y, util.ExtSVG)
 	}
-	return "client/src/svg"
+	return "client/src/svg/" + key + util.ExtSVG
 }
 
 func load(src string, tgt string) (*SVG, error) {

@@ -30,7 +30,7 @@ func SVGList(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		icons, contents, err := svg.Contents(pfs, ps.Logger, prj.Modules...)
+		icons, contents, err := svg.Contents(prj.Key, pfs, ps.Logger, prj.IsCSharp())
 		if err != nil {
 			return "", errors.Wrap(err, "unable to list project SVGs")
 		}
@@ -46,7 +46,7 @@ func SVGDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		content, err := svg.Content(fs, key, prj.Modules...)
+		content, err := svg.Content(prj.Key, fs, key)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to read SVG ["+key+"]")
 		}
@@ -94,7 +94,7 @@ func SVGAdd(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		x, err := svg.AddToProject(pfs, src, tgt, prj.Modules...)
+		x, err := svg.AddToProject(prj.Key, pfs, src, tgt)
 		if err != nil {
 			return "", err
 		}
@@ -118,7 +118,7 @@ func SVGSetApp(w http.ResponseWriter, r *http.Request) {
 			page := &vpage.Load{URL: r.URL.String(), Title: "Generating icons"}
 			return controller.Render(r, as, page, ps, "projects", prj.Key, svgLink+prj.Key, "App Icon")
 		}
-		content, err := svg.Content(fs, key, prj.Modules...)
+		content, err := svg.Content(prj.Key, fs, key)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to read app SVG ["+key+"]")
 		}
@@ -171,7 +171,7 @@ func SVGRemove(w http.ResponseWriter, r *http.Request) {
 		if key == appString {
 			return "", errors.New("you can't remove the app icon")
 		}
-		err = svg.Remove(fs, key, ps.Logger, prj.Modules...)
+		err = svg.Remove(prj.Key, fs, key, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to remove SVG ["+key+"]")
 		}

@@ -8,7 +8,6 @@ import (
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/project/export/model"
-	"projectforge.dev/projectforge/app/project/svg"
 	"projectforge.dev/projectforge/app/util"
 )
 
@@ -21,20 +20,7 @@ func onRules(pm *PrjAndMods) *Result {
 		return ret
 	}
 
-	icons, err := svg.List(pm.FS, pm.Logger, pm.Prj.Modules...)
-	if err != nil {
-		return ret.WithError(err)
-	}
-	forbidden := []string{"app", "check", "down", "edit", "left", "question", "right", "search", "searchbox", "times", "up", "star"}
-	cleanIcons := lo.Reject(icons, func(x string, _ int) bool {
-		return lo.Contains(forbidden, x)
-	})
 	lo.ForEach(pm.Prj.ExportArgs.Models, func(m *model.Model, _ int) {
-		for lo.Contains(forbidden, m.Icon) {
-			idx := util.HashFNV32(m.Name) % uint32(len(cleanIcons))
-			m.Icon = cleanIcons[idx]
-		}
-		m.AddTag("audit")
 		m.AddTag("search")
 		lo.ForEach(m.Columns, func(col *model.Column, _ int) {
 			switch strings.ToLower(col.Name) {
@@ -45,7 +31,6 @@ func onRules(pm *PrjAndMods) *Result {
 			}
 			if col.PK {
 				col.Search = true
-				col.RemoveTag("search")
 			}
 		})
 	})

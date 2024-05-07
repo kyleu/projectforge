@@ -25,6 +25,12 @@ func CSAll(p *project.Project) (file.Files, error) {
 		return strings.Join(x.Group, "/")
 	})
 	for grp, mdls := range modelGroups {
+		if grp == "" {
+			keys := lo.Map(mdls, func(x *model.Model, _ int) string {
+				return x.Name
+			})
+			return nil, errors.Errorf("models [%s] have no group assigned, and can't be exported", strings.Join(keys, ", "))
+		}
 		if len(mdls) == 0 {
 			continue
 		}

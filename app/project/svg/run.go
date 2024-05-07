@@ -2,7 +2,6 @@ package svg
 
 import (
 	"cmp"
-	"path/filepath"
 	"slices"
 	"strings"
 
@@ -15,24 +14,23 @@ import (
 
 func Build(fs filesystem.FileLoader, logger util.Logger, prj *project.Project) (int, error) {
 	tgt := "app/util/svg.go"
-	if slices.Contains(prj.Modules, "csharp") {
+	if prj.IsCSharp() {
 		tgt = "Util/Icons.cs"
 	}
 	return Run(fs, tgt, logger, prj)
 }
 
 func Run(fs filesystem.FileLoader, tgt string, logger util.Logger, prj *project.Project) (int, error) {
-	svgs, err := loadSVGs(fs, logger, prj.Modules...)
+	svgs, err := loadSVGs(prj.Key, fs, logger, prj.IsCSharp())
 	if err != nil {
 		return 0, err
 	}
-
 	if len(svgs) == 0 {
 		return 0, errors.New("no SVGs available")
 	}
 
 	var out string
-	if slices.Contains(prj.Modules, "csharp") {
+	if prj.IsCSharp() {
 		out = cstemplate(svgs, prj.Package)
 	} else {
 		out = template(svgs, util.StringDetectLinebreak(svgs[0].Markup))
@@ -55,16 +53,16 @@ func markup(key string, bytes []byte) (string, error) {
 	return replaced, nil
 }
 
-func loadSVGs(fs filesystem.FileLoader, logger util.Logger, mods ...string) ([]*SVG, error) {
-	files := fs.ListExtension(svgPath(mods...), "svg", nil, false, logger)
+func loadSVGs(prj string, fs filesystem.FileLoader, logger util.Logger, cs bool) ([]*SVG, error) {
+	files, _ := List(prj, fs, logger, cs)
 	svgs := make([]*SVG, 0, len(files))
 	for _, f := range files {
-		b, err := fs.ReadFile(filepath.Join(svgPath(mods...), f))
+		s, err := Content(prj, fs, f)
 		if err != nil {
 			return nil, err
 		}
 		key := strings.TrimSuffix(f, util.ExtSVG)
-		mk, err := markup(key, b)
+		mk, err := markup(key, []byte(s))
 		if err != nil {
 			return nil, err
 		}
