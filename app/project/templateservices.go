@@ -27,7 +27,7 @@ var (
 		"schedule":  "schedule.NewService()",
 		"scripting": "scripting.NewService(st.Files, \"scripts\")",
 		keyUser:     "user.NewService(st.Files, logger)",
-		"websocket": "websocket.NewService(nil, nil, nil)",
+		"websocket": "websocket.NewService(nil, nil)",
 		"help":      "help.NewService(logger)",
 	}
 )

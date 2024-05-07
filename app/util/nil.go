@@ -3,7 +3,6 @@ package util
 
 import (
 	"database/sql"
-	"encoding/json"
 	"time"
 )
 
@@ -13,14 +12,14 @@ type NilBool struct {
 
 func (n NilBool) MarshalJSON() ([]byte, error) {
 	if n.Valid {
-		return json.Marshal(n.Bool)
+		return ToJSONBytes(n.Bool, false), nil
 	}
-	return json.Marshal(nil)
+	return ToJSONBytes(nil, false), nil
 }
 
 func (n *NilBool) UnmarshalJSON(data []byte) error {
 	var x *bool
-	if err := json.Unmarshal(data, &x); err != nil {
+	if err := FromJSON(data, &x); err != nil {
 		return err
 	}
 	if x != nil {
@@ -39,14 +38,14 @@ type NilFloat64 struct {
 
 func (n NilFloat64) MarshalJSON() ([]byte, error) {
 	if n.Valid {
-		return json.Marshal(n.Float64)
+		return ToJSONBytes(n.Float64, false), nil
 	}
-	return json.Marshal(nil)
+	return ToJSONBytes(nil, false), nil
 }
 
 func (n *NilFloat64) UnmarshalJSON(data []byte) error {
 	var x *float64
-	if err := json.Unmarshal(data, &x); err != nil {
+	if err := FromJSON(data, &x); err != nil {
 		return err
 	}
 	if x != nil {
@@ -65,14 +64,14 @@ type NilInt32 struct {
 
 func (n NilInt32) MarshalJSON() ([]byte, error) {
 	if n.Valid {
-		return json.Marshal(n.Int32)
+		return ToJSONBytes(n.Int32, false), nil
 	}
-	return json.Marshal(nil)
+	return ToJSONBytes(nil, false), nil
 }
 
 func (n *NilInt32) UnmarshalJSON(data []byte) error {
 	var x *int32
-	if err := json.Unmarshal(data, &x); err != nil {
+	if err := FromJSON(data, &x); err != nil {
 		return err
 	}
 	if x != nil {
@@ -91,14 +90,14 @@ type NilInt64 struct {
 
 func (n NilInt64) MarshalJSON() ([]byte, error) {
 	if n.Valid {
-		return json.Marshal(n.Int64)
+		return ToJSONBytes(n.Int64, false), nil
 	}
-	return json.Marshal(nil)
+	return ToJSONBytes(nil, false), nil
 }
 
 func (n *NilInt64) UnmarshalJSON(data []byte) error {
 	var x *int64
-	if err := json.Unmarshal(data, &x); err != nil {
+	if err := FromJSON(data, &x); err != nil {
 		return err
 	}
 	if x != nil {
@@ -117,14 +116,14 @@ type NilString struct {
 
 func (n NilString) MarshalJSON() ([]byte, error) {
 	if n.Valid {
-		return json.Marshal(n.String)
+		return ToJSONBytes(n.String, false), nil
 	}
-	return json.Marshal(nil)
+	return ToJSONBytes(nil, false), nil
 }
 
 func (n *NilString) UnmarshalJSON(data []byte) error {
 	var x *string
-	if err := json.Unmarshal(data, &x); err != nil {
+	if err := FromJSON(data, &x); err != nil {
 		return err
 	}
 	if x != nil {
@@ -143,14 +142,14 @@ type NilTime struct {
 
 func (n NilTime) MarshalJSON() ([]byte, error) {
 	if n.Valid {
-		return json.Marshal(n.Time)
+		return ToJSONBytes(n.Time, false), nil
 	}
-	return json.Marshal(nil)
+	return ToJSONBytes(nil, false), nil
 }
 
 func (n *NilTime) UnmarshalJSON(data []byte) error {
 	var x *time.Time
-	if err := json.Unmarshal(data, &x); err != nil {
+	if err := FromJSON(data, &x); err != nil {
 		return err
 	}
 	if x != nil {

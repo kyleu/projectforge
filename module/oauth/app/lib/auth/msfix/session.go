@@ -1,11 +1,12 @@
 package msfix
 
 import (
-	"encoding/json"
 	"time"
 
 	"github.com/markbates/goth"
 	"github.com/pkg/errors"
+
+	"{{{ .Package }}}/app/util"
 )
 
 type Session struct {
@@ -43,8 +44,7 @@ func (s *Session) Authorize(provider goth.Provider, params goth.Params) (string,
 }
 
 func (s Session) Marshal() string {
-	b, _ := json.Marshal(s) //nolint:errchkjson // no chance of error
-	return string(b)
+	return util.ToJSON(s)
 }
 
 func (s Session) String() string {

@@ -13,8 +13,8 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-func (s *Service) Register({{{ if .HasUser }}}u *dbuser.User, {{{ end }}}profile *user.Profile{{{ if .HasAccount }}}, accts user.Accounts{{{ end }}}, c *websocket.Conn, logger util.Logger) (*Connection, error) {
-	conn := NewConnection("system", {{{ if .HasUser }}}u, {{{ end }}}profile{{{ if .HasAccount }}}, accts{{{ end }}}, c)
+func (s *Service) Register({{{ if .HasUser }}}u *dbuser.User, {{{ end }}}profile *user.Profile{{{ if .HasAccount }}}, accts user.Accounts{{{ end }}}, c *websocket.Conn, h Handler, logger util.Logger) (*Connection, error) {
+	conn := NewConnection("system", {{{ if .HasUser }}}u, {{{ end }}}profile{{{ if .HasAccount }}}, accts{{{ end }}}, c, h)
 	s.connectionsMu.Lock()
 	defer s.connectionsMu.Unlock()
 	s.connections[conn.ID] = conn
@@ -43,7 +43,11 @@ func OnMessage(ctx context.Context, s *Service, connID uuid.UUID, message *Messa
 		return invalidConnection(connID)
 	}
 	s.WriteTap(message, logger)
-	return s.handler(ctx, s, c, message.Channel, message.Cmd, message.Param, logger)
+	if c.handler == nil {
+		return nil
+	} else {
+		return c.handler(ctx, s, c, message.Channel, message.Cmd, message.Param, logger)
+	}
 }
 
 func (s *Service) Disconnect(connID uuid.UUID, logger util.Logger) (bool, error) {

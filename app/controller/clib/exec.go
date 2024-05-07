@@ -87,7 +87,7 @@ func ExecSocket(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		err = as.Services.Socket.Upgrade(ps.Context, w, r, ex.String(), ps.Profile, ps.Logger)
+		_, err = as.Services.Socket.Upgrade(ps.Context, w, r, ex.String(), ps.Profile, nil, ps.Logger)
 		if err != nil {
 			ps.Logger.Warn("unable to upgrade connection to websocket")
 			return "", err

@@ -132,9 +132,13 @@ func ReadSocketLoop(connID uuid.UUID, sock *websocket.Conn, onMessage func(m *Me
 		if err != nil {
 			return errors.Wrap(err, "error decoding websocket message")
 		}
-		err = onMessage(m)
-		if err != nil {
-			return errors.Wrap(err, "error handling websocket message")
+		if onMessage == nil {
+			logger.Warnf("received [%s] message with command [%s] from connection [%s], which has no handler", m.Channel, m.Cmd, m.From)
+		} else {
+			err = onMessage(m)
+			if err != nil {
+				return errors.Wrap(err, "error handling websocket message")
+			}
 		}
 	}
 }

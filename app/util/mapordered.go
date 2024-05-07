@@ -4,7 +4,6 @@ package util
 import (
 	"bytes"
 	"cmp"
-	"encoding/json"
 	"encoding/xml"
 	"slices"
 
@@ -134,17 +133,9 @@ func (o OrderedMap[V]) MarshalJSON() ([]byte, error) {
 	buf.WriteByte('{')
 	l := len(o.Order)
 	for i, key := range o.Order {
-		km, err := json.Marshal(key)
-		if err != nil {
-			return nil, err
-		}
-		buf.Write(km)
+		buf.Write(ToJSONBytes(key, false))
 		buf.WriteByte(':')
-		vm, err := json.Marshal(o.Map[key])
-		if err != nil {
-			return nil, err
-		}
-		buf.Write(vm)
+		buf.Write(ToJSONBytes(o.Map[key], false))
 		if i != l-1 {
 			buf.WriteByte(',')
 		}

@@ -20,7 +20,7 @@ type CoreServices struct {
 func initCoreServices(ctx context.Context, st *State, logger util.Logger) CoreServices {
 	return CoreServices{
 		Exec:   exec.NewService(),
-		Socket: websocket.NewService(nil, nil, nil),
+		Socket: websocket.NewService(nil, nil),
 		Help:   help.NewService(logger),
 	}
 }
