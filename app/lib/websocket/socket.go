@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 	"sync/atomic"
 
 	"github.com/google/uuid"
@@ -125,7 +126,10 @@ func ReadSocketLoop(connID uuid.UUID, sock *websocket.Conn, onMessage func(m *Me
 	for {
 		_, message, err := sock.ReadMessage()
 		if err != nil {
-			return err
+			if strings.Contains(err.Error(), "1001") {
+				continue
+			}
+			return errors.Wrapf(err, "error processing socket read loop for connection [%s]", connID.String())
 		}
 		m := &Message{}
 		err = util.FromJSON(message, m)

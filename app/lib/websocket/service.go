@@ -5,7 +5,6 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"strings"
 	"sync"
 
 	"github.com/google/uuid"
@@ -15,8 +14,6 @@ import (
 	"projectforge.dev/projectforge/app/lib/user"
 	"projectforge.dev/projectforge/app/util"
 )
-
-type Handler func(ctx context.Context, s *Service, conn *Connection, svc string, cmd string, param []byte, logger util.Logger) error
 
 type ConnectEvent func(s *Service, conn *Connection, logger util.Logger) error
 
@@ -64,7 +61,8 @@ func (s *Service) Close() {
 var upgrader = websocket.Upgrader{EnableCompression: true}
 
 func (s *Service) Upgrade(
-	ctx context.Context, w http.ResponseWriter, r *http.Request, channel string, profile *user.Profile, handler Handler, logger util.Logger,
+	ctx context.Context, w http.ResponseWriter, r *http.Request, channel string,
+	profile *user.Profile, handler Handler, logger util.Logger,
 ) (uuid.UUID, error) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -78,13 +76,6 @@ func (s *Service) Upgrade(
 	joined, err := s.Join(cx.ID, channel, logger)
 	if err != nil {
 		logger.Error(fmt.Sprintf("error processing socket join (%v): %+v", joined, err))
-		return uuid.Nil, nil
-	}
-	err = s.ReadLoop(ctx, cx.ID, logger)
-	if err != nil {
-		if !strings.Contains(err.Error(), "1001") {
-			logger.Error(fmt.Sprintf("error processing socket read loop for connection [%s]: %+v", cx.ID.String(), err))
-		}
 		return uuid.Nil, nil
 	}
 	return cx.ID, nil

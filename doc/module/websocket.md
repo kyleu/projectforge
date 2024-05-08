@@ -28,12 +28,11 @@ func ExampleSocket(w http.ResponseWriter, r *http.Request) {
 		if channel == "" {
 			channel = util.RandomString(16)
 		}
-		err := as.Services.Socket.Upgrade(ps.Context, w, r, channel, ps.Profile, ps.Accounts, ps.Logger)
+		id, err := as.Services.Socket.Upgrade(...)
 		if err != nil {
-			ps.Logger.Warnf("unable to upgrade connection to WebSocket: %s", err.Error())
 			return "", err
 		}
-		return "", nil
+		return "", as.Services.Socket.ReadLoop(ps.Context, id, ps.Logger)
 	})
 }
 

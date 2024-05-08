@@ -1,6 +1,6 @@
 {
   "name": "WebSocket",
-  "icon": "cog",
+  "icon": "satellite",
   "description": "Provides an API for hosting WebSocket connections",
   "authorName": "Kyle U",
   "authorEmail": "kyle@kyleu.com",
