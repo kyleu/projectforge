@@ -75,3 +75,13 @@ table.centered th, table.centered td {
 table.centered th.left-align, table.centered td.left-align {
   text-align: left;
 }
+
+table.output .line {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+table.output td {
+  padding: 2px var(--padding);
+}

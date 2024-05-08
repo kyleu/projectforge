@@ -14,13 +14,11 @@
     }
   -%}
   <div class="overflow full-width">
-    <table class="mt">
+    <table class="mt output">
       <tbody id="{%s id %}">
+        <tr><td class="shrink"></td><td></td></tr>
         {%- for idx, line := range lines -%}
-        <tr style="font-family: monospace;">
-          <td class="shrink br" style="padding: 2px var(--padding) 2px 0; vertical-align: top;">{%d idx + 1 %}</td>
-          <td style="padding: 2px var(--padding);"><div style="white-space: pre-wrap; word-wrap: break-word; word-break: break-word;">{%s= line %}</div></td>
-        </tr>
+        <tr style="font-family: monospace;"><td>{%d idx + 1 %}</td><td><div class="line">{%s= line %}</div></td></tr>
         {%- endfor -%}
       </tbody>
     </table>

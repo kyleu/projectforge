@@ -1,12 +1,16 @@
 package module
 
 import (
+	"cmp"
 	"context"
 	"path/filepath"
+	"slices"
+	"strings"
 	"sync"
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
+	"golang.org/x/exp/maps"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/lib/search/result"
@@ -109,9 +113,23 @@ func (s *Service) Keys() []string {
 }
 
 func (s *Service) Modules() Modules {
-	return lo.FilterMap(s.Keys(), func(key string, _ int) (*Module, bool) {
-		m, _ := s.Get(key)
-		return m, !m.Hidden
+	s.cacheMu.Lock()
+	defer s.cacheMu.Unlock()
+	var ret Modules = maps.Values(s.cache)
+	return ret.Sort()
+}
+
+func (s *Service) ModulesSorted() Modules {
+	ret := s.Modules()
+	slices.SortFunc(ret, func(l *Module, r *Module) int {
+		return cmp.Compare(strings.ToLower(l.Name), strings.ToLower(r.Name))
+	})
+	return ret
+}
+
+func (s *Service) ModulesVisible() Modules {
+	return lo.Filter(s.ModulesSorted(), func(m *Module, _ int) bool {
+		return !m.Hidden
 	})
 }
 
@@ -122,7 +140,7 @@ func (s *Service) Deps() map[string][]string {
 }
 
 func (s *Service) Dangerous() []string {
-	return lo.FilterMap(s.Modules(), func(m *Module, _ int) (string, bool) {
+	return lo.FilterMap(s.ModulesSorted(), func(m *Module, _ int) (string, bool) {
 		return m.Key, m.Dangerous
 	})
 }
