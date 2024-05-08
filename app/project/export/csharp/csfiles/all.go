@@ -1,6 +1,7 @@
 package csfiles
 
 import (
+	"projectforge.dev/projectforge/app/util"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -37,7 +38,7 @@ func CSAll(p *project.Project) (file.Files, error) {
 		if strings.Contains(grp, "/") {
 			return nil, errors.Errorf("invalid group [%s]", grp)
 		}
-		ns := CSNamespace(p.Key, grp)
+		ns := CSNamespace(p.Key, util.StringToCamel(grp))
 		menuFile, err := menu(ns, mdls)
 		if err != nil {
 			return nil, err

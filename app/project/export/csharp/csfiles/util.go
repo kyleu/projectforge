@@ -33,10 +33,9 @@ func ToCSharpViewType(col *model.Column) any {
 	}
 }
 
-func CSNamespace(prefix string, grp string, path ...string) string {
-	ns := util.StringToTitle(grp)
-	if ns != "Shared" {
-		ns = util.StringToTitle(prefix) + ns
+func CSNamespace(prefix string, dflt string, path ...string) string {
+	if dflt != "Shared" {
+		dflt = util.StringToCamel(prefix) + dflt
 	}
-	return strings.Join(append([]string{ns}, path...), ".")
+	return strings.Join(append([]string{dflt}, path...), ".")
 }

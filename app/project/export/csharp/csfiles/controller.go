@@ -10,7 +10,10 @@ import (
 
 func controller(ns string, m *model.Model) (*file.File, error) {
 	f := csharp.NewFile(ns+".Controllers", []string{ns, "Controllers"}, m.Proper()+"Controller.cs")
-	f.AddImport(ns+".Services."+m.Proper(), ImpMVC, ImpControllers)
+	if ns != "Shared" {
+		f.AddImport(ImpControllers)
+	}
+	f.AddImport(ns+".Services."+m.Proper(), ImpMVC)
 	b := csharp.NewBlock("Controller", "class")
 	b.W("public class %sController(%sService svc) : BaseController", m.Proper(), m.Proper())
 	b.W("{")
