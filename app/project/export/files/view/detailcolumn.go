@@ -21,7 +21,7 @@ func viewDetailColumn(
 	rels := m.RelationsFor(col)
 	if len(rels) == 0 {
 		viewString := col.ToGoViewString(modelKey, true, false, enums, util.KeyDetail)
-		ret.W(colRow(ind, col, m.LinkURL(modelKey, enums), viewString, link))
+		ret.W(colRow(ind, col, ModelLinkURL(m, modelKey, enums), viewString, link))
 		return
 	}
 
@@ -34,7 +34,7 @@ func viewDetailColumn(
 	ret.W(ind + helper.TextTDStart)
 	if col.PK && link {
 		cv := col.ToGoViewString(modelKey, true, false, enums, util.KeyDetail)
-		ret.W(ind + linkStart + m.LinkURL(modelKey, enums) + `"` + ">" + cv + toStrings + helper.TextEndAnchor)
+		ret.W(ind + linkStart + ModelLinkURL(m, modelKey, enums) + `"` + ">" + cv + toStrings + helper.TextEndAnchor)
 	} else {
 		ret.W(ind + ind1 + col.ToGoViewString(modelKey, true, false, enums, util.KeyDetail) + toStrings)
 	}
@@ -45,7 +45,7 @@ func viewDetailColumn(
 				g.AddImport(helper.ImpFmt)
 			}
 			relModel := models.Get(rel.Table)
-			wp := rel.WebPath(m, relModel, modelKey)
+			wp := RelationWebPath(rel, m, relModel, modelKey)
 			if col.Nullable {
 				ret.W(anchorMsg, ind, modelKey, col.Proper(), relModel.Title(), wp, relModel.Icon)
 			} else {
@@ -54,6 +54,28 @@ func viewDetailColumn(
 		}
 	})
 	ret.W(ind + helper.TextTDEnd)
+}
+
+func ModelLinkURL(m *model.Model, prefix string, enums enum.Enums) string {
+	pks := m.PKs()
+	linkURL := "/" + m.Route()
+	lo.ForEach(pks, func(pk *model.Column, _ int) {
+		linkURL += "/" + pk.ToGoViewString(prefix, false, true, enums, util.KeySimple)
+	})
+	return linkURL
+}
+
+func RelationWebPath(rel *model.Relation, src *model.Model, tgt *model.Model, prefix string) interface{} {
+	url := "`/" + tgt.Route() + "`"
+	lo.ForEach(rel.Src, func(s string, _ int) {
+		c := src.Columns.Get(s)
+		x := c.ToGoString(prefix)
+		if types.IsString(c.Type) {
+			x = "url.QueryEscape(" + x + ")"
+		}
+		url += "+`/`+" + x
+	})
+	return url
 }
 
 func viewDetailColumnString(rels model.Relations, models model.Models, m *model.Model, col *model.Column) []string {

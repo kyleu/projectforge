@@ -6,7 +6,6 @@ import (
 
 	"github.com/samber/lo"
 
-	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/util"
 )
 
@@ -40,19 +39,6 @@ func (r *Relation) TgtQuoted() string {
 	return strings.Join(util.StringArrayQuoted(r.Tgt), ", ")
 }
 
-func (r *Relation) WebPath(src *Model, tgt *Model, prefix string) string {
-	url := "`/" + tgt.Route() + "`"
-	lo.ForEach(r.Src, func(s string, _ int) {
-		c := src.Columns.Get(s)
-		x := c.ToGoString(prefix)
-		if types.IsString(c.Type) {
-			x = "url.QueryEscape(" + x + ")"
-		}
-		url += "+`/`+" + x
-	})
-	return url
-}
-
 func (r *Relation) Reverse(name string) *Relation {
 	return &Relation{Name: r.Name, Src: r.Tgt, Table: name, Tgt: r.Src}
 }
@@ -66,6 +52,12 @@ type Relations []*Relation
 func (r Relations) ContainsSource(colName string) bool {
 	return lo.ContainsBy(r, func(x *Relation) bool {
 		return x.ContainsSource(colName)
+	})
+}
+
+func (r Relations) Get(name string) *Relation {
+	return lo.FindOrElse(r, nil, func(x *Relation) bool {
+		return x.Name == name
 	})
 }
 

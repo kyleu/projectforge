@@ -2,6 +2,7 @@ package model
 
 import (
 	"github.com/samber/lo"
+
 	"{{{ .Package }}}/app/util"
 )
 

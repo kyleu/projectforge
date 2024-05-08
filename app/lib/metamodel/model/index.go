@@ -4,6 +4,8 @@ package model
 import (
 	"fmt"
 
+	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/util"
 )
 
@@ -27,3 +29,9 @@ func (i *Index) SQL() string {
 }
 
 type Indexes []*Index
+
+func (i Indexes) Get(name string) *Index {
+	return lo.FindOrElse(i, nil, func(x *Index) bool {
+		return x.Name == name
+	})
+}

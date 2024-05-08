@@ -4,8 +4,6 @@ package model
 import (
 	"strings"
 
-	"github.com/samber/lo"
-
 	"projectforge.dev/projectforge/app/util"
 )
 
@@ -102,14 +100,6 @@ func (m *Model) IconSafe() string {
 		return m.Icon
 	}
 	return defaultIcon
-}
-
-func (m *Model) URLPath(prefix string) string {
-	url := "\"/" + m.Route() + "\""
-	lo.ForEach(m.PKs(), func(pk *Column, _ int) {
-		url += "+\"/\"+" + pk.ToGoString(prefix)
-	})
-	return url
 }
 
 func (m *Model) ClassRef() string {

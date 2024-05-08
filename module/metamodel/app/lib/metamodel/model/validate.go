@@ -20,15 +20,12 @@ func (m *Model) Validate(mods []string, models Models, groups Groups) error {
 	if err := validateBasic(m); err != nil {
 		return err
 	}
-	if slices.Contains(mods, "csharp") {
-		return nil
-	}
 	for _, mod := range mods {
 		if lo.Contains(reservedNames[mod], m.Name) {
 			return errors.Errorf("model [%s] uses name which is reserved by [%s]", m.Name, mod)
 		}
 	}
-	if len(m.Group) > 0 && groups.Get(m.Group...) == nil {
+	if len(m.Group) > 0 && groups.Get(m.Group...) == nil && !slices.Contains(mods, "csharp") {
 		if len(m.Group) == 1 && models.Get(m.Group[0]) == nil {
 			return errors.Errorf("model [%s] references undefined group [%s], and no model matches", m.Name, strings.Join(m.Group, "/"))
 		}
@@ -42,7 +39,7 @@ func (m *Model) Validate(mods []string, models Models, groups Groups) error {
 				}
 			}
 			if !cool {
-				return errors.Errorf("model [%s] references group [%s], and no model matches", m.Name, strings.Join(m.Group, "/"))
+				return errors.Errorf("model [%s] references undefined group [%s], and no model matches", m.Name, strings.Join(m.Group, "/"))
 			}
 		}
 	}

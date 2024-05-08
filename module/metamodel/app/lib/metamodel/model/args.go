@@ -10,6 +10,11 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
+const (
+	dbSQLite    = "sqlite"
+	dbSQLServer = "sqlserver"
+)
+
 type Args struct {
 	Config     util.ValueMap              `json:"config,omitempty"`
 	ConfigFile json.RawMessage            `json:"-"`
@@ -37,9 +42,9 @@ func (a *Args) DBRef() string {
 
 func (a *Args) DatabaseNow() string {
 	switch a.Database {
-	case util.DatabaseSQLite:
+	case dbSQLite:
 		return "current_timestamp"
-	case util.DatabaseSQLServer:
+	case dbSQLServer:
 		return "getdate()"
 	default:
 		return "now()"

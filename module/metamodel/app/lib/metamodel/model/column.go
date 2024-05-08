@@ -7,7 +7,6 @@ import (
 
 	"github.com/samber/lo"
 
-	"{{{ .Package }}}/app/lib/metamodel/enum"
 	"{{{ .Package }}}/app/lib/types"
 	"{{{ .Package }}}/app/util"
 )
@@ -103,25 +102,9 @@ func (c *Column) AddTag(t string) {
 	}
 }
 
-func (c *Column) ToGoString(prefix string) string {
-	return ToGoString(c.Type, c.Nullable, prefix+c.Proper(), false)
-}
-
-func (c *Column) ToGoViewString(prefix string, verbose bool, url bool, enums enum.Enums, src string) string {
-	return ToGoViewString(c.Type, prefix+c.Proper(), c.Nullable, c.Format, verbose, url, enums, src)
-}
-
-func (c *Column) ToGoType(pkg string, enums enum.Enums) (string, error) {
-	return ToGoType(c.Type, c.Nullable, pkg, enums)
-}
-
-func (c *Column) ToGoRowType(pkg string, enums enum.Enums, database string) (string, error) {
-	return ToGoRowType(c.Type, c.Nullable, pkg, enums, database)
-}
-
 func (c *Column) ShouldDisplay(k string) bool {
 	switch c.Display {
-	case util.KeyDetail:
+	case "detail":
 		return k == c.Display
 	default:
 		return true
@@ -142,8 +125,8 @@ func (c *Column) SQL() string {
 	return c.SQLOverride
 }
 
-func (c *Column) NeedsErr(_ string, database string) bool {
-	if database == util.DatabaseSQLServer && c.Type.Key() == types.KeyUUID && c.Nullable {
+func (c *Column) NeedsErr(_ string, db string) bool {
+	if db == dbSQLServer && c.Type.Key() == types.KeyUUID && c.Nullable {
 		return true
 	}
 	if c.Type.Scalar() {

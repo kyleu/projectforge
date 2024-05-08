@@ -8,7 +8,6 @@ import (
 	"github.com/samber/lo"
 
 	"{{{ .Package }}}/app/lib/filter"
-	"{{{ .Package }}}/app/lib/metamodel/enum"
 	"{{{ .Package }}}/app/lib/types"
 	"{{{ .Package }}}/app/util"
 )
@@ -61,15 +60,6 @@ func (m *Model) SoftDeleteSuffix() string {
 		return ", true"
 	}
 	return ""
-}
-
-func (m *Model) LinkURL(prefix string, enums enum.Enums) string {
-	pks := m.PKs()
-	linkURL := "/" + m.Route()
-	lo.ForEach(pks, func(pk *Column, _ int) {
-		linkURL += "/" + pk.ToGoViewString(prefix, false, true, enums, util.KeySimple)
-	})
-	return linkURL
 }
 
 func (m *Model) RelationsFor(col *Column) Relations {
@@ -129,7 +119,7 @@ func (m *Model) IndexedColumns(includePK bool) Columns {
 	return ret
 }
 
-func (m *Model) AllSearches(database string) []string {
+func (m *Model) AllSearches(db string) []string {
 	if !m.HasTag("search") {
 		return m.Search
 	}
@@ -138,10 +128,10 @@ func (m *Model) AllSearches(database string) []string {
 		if c.Search {
 			x := c.Name
 			if !types.IsString(c.Type) {
-				switch database {
-				case util.DatabaseSQLServer:
+				switch db {
+				case dbSQLServer:
 					x = fmt.Sprintf("cast(%s as nvarchar(2048))", c.SQL())
-				case util.DatabaseSQLite:
+				case dbSQLite:
 					x = c.SQL()
 				default:
 					x = fmt.Sprintf("%s::text", c.SQL())

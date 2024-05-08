@@ -12,6 +12,22 @@ import (
 
 const msgTextarea, stringsSuffix = `{%%%%= edit.TextareaTable(%q, %q, %q, 8, util.ToJSON(%s), 5, %s) %%%%}`, ".Strings()"
 
+func (c *Column) ToGoString(prefix string) string {
+	return ToGoString(c.Type, c.Nullable, prefix+c.Proper(), false)
+}
+
+func (c *Column) ToGoViewString(prefix string, verbose bool, url bool, enums enum.Enums, src string) string {
+	return ToGoViewString(c.Type, prefix+c.Proper(), c.Nullable, c.Format, verbose, url, enums, src)
+}
+
+func (c *Column) ToGoType(pkg string, enums enum.Enums) (string, error) {
+	return ToGoType(c.Type, c.Nullable, pkg, enums)
+}
+
+func (c *Column) ToGoRowType(pkg string, enums enum.Enums, database string) (string, error) {
+	return ToGoRowType(c.Type, c.Nullable, pkg, enums, database)
+}
+
 func (c *Column) ToSQLType(database string) (string, error) {
 	ret, err := ToSQLType(c.Type, database)
 	if err != nil {

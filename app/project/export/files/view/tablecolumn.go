@@ -31,7 +31,7 @@ func viewTableColumn(
 	rels := m.RelationsFor(col)
 	if len(rels) == 0 {
 		viewString := col.ToGoViewString(modelKey, true, false, enums, "table")
-		ret.W(colRow(ind, col, m.LinkURL(modelKey, enums), viewString, link))
+		ret.W(colRow(ind, col, ModelLinkURL(m, modelKey, enums), viewString, link))
 		return
 	}
 
@@ -44,7 +44,7 @@ func viewTableColumn(
 	ret.W(ind + helper.TextTDStart)
 	if col.PK && link {
 		cv := col.ToGoViewString(modelKey, true, false, enums, "table")
-		ret.W(ind + linkStart + m.LinkURL(modelKey, enums) + "\">" + cv + toStrings + helper.TextEndAnchor)
+		ret.W(ind + linkStart + ModelLinkURL(m, modelKey, enums) + "\">" + cv + toStrings + helper.TextEndAnchor)
 	} else {
 		ret.W(ind + ind1 + col.ToGoViewString(modelKey, true, false, enums, "table") + toStrings)
 	}
@@ -56,9 +56,9 @@ func viewTableColumn(
 			}
 			relModel := models.Get(rel.Table)
 			if col.Nullable {
-				ret.W(anchorMsg, ind, modelKey, col.Proper(), relModel.Title(), rel.WebPath(m, relModel, modelKey), relModel.Icon)
+				ret.W(anchorMsg, ind, modelKey, col.Proper(), relModel.Title(), RelationWebPath(rel, m, relModel, modelKey), relModel.Icon)
 			} else {
-				ret.W(anchorMsgNotNull, ind, relModel.Title(), rel.WebPath(m, relModel, modelKey), relModel.Icon)
+				ret.W(anchorMsgNotNull, ind, relModel.Title(), RelationWebPath(rel, m, relModel, modelKey), relModel.Icon)
 			}
 		}
 	})
