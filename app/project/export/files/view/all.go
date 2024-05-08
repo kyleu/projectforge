@@ -4,8 +4,8 @@ import (
 	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project"
-	"projectforge.dev/projectforge/app/project/export/model"
 )
 
 func All(m *model.Model, p *project.Project, args *model.Args, addHeader bool, linebreak string) (file.Files, error) {

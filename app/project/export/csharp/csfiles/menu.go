@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project/export/csharp"
-	"projectforge.dev/projectforge/app/project/export/model"
 )
 
 func menu(ns string, models model.Models) (*file.File, error) {

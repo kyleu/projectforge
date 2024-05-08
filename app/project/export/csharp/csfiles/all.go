@@ -7,8 +7,8 @@ import (
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project"
-	"projectforge.dev/projectforge/app/project/export/model"
 )
 
 func CSAll(p *project.Project) (file.Files, error) {

@@ -7,11 +7,11 @@ import (
 	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/lib/metamodel/enum"
+	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/lib/types"
-	"projectforge.dev/projectforge/app/project/export/enum"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
-	"projectforge.dev/projectforge/app/project/export/model"
 )
 
 func ModelDiff(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {

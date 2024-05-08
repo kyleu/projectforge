@@ -3,7 +3,7 @@ package goenum
 import (
 	"github.com/samber/lo"
 
-	"projectforge.dev/projectforge/app/project/export/enum"
+	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/util"
 )

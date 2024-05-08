@@ -7,9 +7,9 @@ import (
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
-	"projectforge.dev/projectforge/app/project/export/model"
 )
 
 func Routes(args *model.Args, addHeader bool, linebreak string) (*file.File, error) {

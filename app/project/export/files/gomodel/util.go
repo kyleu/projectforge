@@ -6,10 +6,10 @@ import (
 
 	"github.com/samber/lo"
 
+	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
-	"projectforge.dev/projectforge/app/project/export/model"
 )
 
 func modelString(g *golang.File, m *model.Model) *golang.Block {

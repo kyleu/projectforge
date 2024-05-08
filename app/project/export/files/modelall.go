@@ -4,13 +4,13 @@ import (
 	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/project/export/files/controller"
 	"projectforge.dev/projectforge/app/project/export/files/gomodel"
 	"projectforge.dev/projectforge/app/project/export/files/sql"
 	"projectforge.dev/projectforge/app/project/export/files/svc"
 	"projectforge.dev/projectforge/app/project/export/files/view"
-	"projectforge.dev/projectforge/app/project/export/model"
 )
 
 func ModelAll(m *model.Model, p *project.Project, args *model.Args, addHeader bool, linebreak string) (file.Files, error) {

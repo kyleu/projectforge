@@ -3,8 +3,8 @@ package sql
 import (
 	"github.com/samber/lo"
 
+	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project/export/golang"
-	"projectforge.dev/projectforge/app/project/export/model"
 )
 
 func sqlRelations(ret *golang.Block, m *model.Model, _ model.Models) {

@@ -8,8 +8,8 @@ import (
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
 
+	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/lib/types"
-	"projectforge.dev/projectforge/app/project/export/model"
 	"projectforge.dev/projectforge/app/util"
 )
 

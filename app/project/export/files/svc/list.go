@@ -2,9 +2,9 @@ package svc
 
 import (
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
-	"projectforge.dev/projectforge/app/project/export/model"
 )
 
 func ServiceList(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {

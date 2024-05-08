@@ -1,8 +1,8 @@
 package gomodel
 
 import (
+	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project/export/golang"
-	"projectforge.dev/projectforge/app/project/export/model"
 )
 
 func modelFieldDescs(m *model.Model) (*golang.Block, error) {

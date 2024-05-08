@@ -12,9 +12,9 @@ import (
 	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/lib/metamodel/enum"
+	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project/export/data"
-	"projectforge.dev/projectforge/app/project/export/enum"
-	"projectforge.dev/projectforge/app/project/export/model"
 	"projectforge.dev/projectforge/app/util"
 )
 

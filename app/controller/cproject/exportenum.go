@@ -9,7 +9,7 @@ import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
 	"projectforge.dev/projectforge/app/controller/cutil"
-	"projectforge.dev/projectforge/app/project/export/enum"
+	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/project/export/files/goenum"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/vexport"

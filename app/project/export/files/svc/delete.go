@@ -3,10 +3,10 @@ package svc
 import (
 	"strings"
 
-	"projectforge.dev/projectforge/app/project/export/enum"
+	"projectforge.dev/projectforge/app/lib/metamodel/enum"
+	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
-	"projectforge.dev/projectforge/app/project/export/model"
 )
 
 const (

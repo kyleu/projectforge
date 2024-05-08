@@ -6,8 +6,8 @@ import (
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project"
-	"projectforge.dev/projectforge/app/project/export/model"
 )
 
 func NotebookScript(p *project.Project, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {

@@ -3,8 +3,8 @@ package view
 import (
 	"fmt"
 
+	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
-	"projectforge.dev/projectforge/app/project/export/model"
 )
 
 func colRow(ind string, col *model.Column, u string, viewString string, link bool) string {
