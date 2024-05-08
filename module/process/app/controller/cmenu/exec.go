@@ -17,5 +17,5 @@ func processMenu(processes exec.Execs) *menu.Item {
 		ret = append(ret, &menu.Item{Key: p.String(), Title: title, Icon: "bolt", Description: p.String(), Route: p.WebPath()})
 	})
 	desc := "process executions managed by this system"
-	return &menu.Item{Key: "exec", Title: "Processes", Description: desc, Icon: "terminal", Route: "/admin/exec", Children: ret}
+	return &menu.Item{Key: "exec", Title: "Processes", Description: desc, Icon: "desktop", Route: "/admin/exec", Children: ret}
 }

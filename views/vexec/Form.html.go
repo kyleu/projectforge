@@ -50,7 +50,7 @@ func (p *Form) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
     <div class="card">
       <h3>`)
 //line views/vexec/Form.html:22
-	components.StreamSVGRefIcon(qw422016, "terminal", ps)
+	components.StreamSVGRefIcon(qw422016, "desktop", ps)
 //line views/vexec/Form.html:22
 	qw422016.N().S(`New Process</h3>
       <div class="overflow full-width">

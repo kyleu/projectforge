@@ -57,7 +57,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vexec/Detail.html:22
 	qw422016.N().S(`    <h3>`)
 //line views/vexec/Detail.html:23
-	components.StreamSVGRef(qw422016, "terminal", 20, 20, `icon`, ps)
+	components.StreamSVGRef(qw422016, "desktop", 20, 20, `icon`, ps)
 //line views/vexec/Detail.html:23
 	qw422016.N().S(` Process [`)
 //line views/vexec/Detail.html:23
@@ -68,7 +68,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
       <table>
         <tbody>
           <tr>
-            <th>Key</th>
+            <th class="shrink">Key</th>
             <td>`)
 //line views/vexec/Detail.html:29
 	if len(p.Exec.Link) > 0 {
@@ -190,7 +190,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
   <div class="card">
     <h3>`)
 //line views/vexec/Detail.html:76
-	components.StreamSVGRef(qw422016, "database", 20, 20, `icon`, ps)
+	components.StreamSVGRef(qw422016, "file", 20, 20, `icon`, ps)
 //line views/vexec/Detail.html:76
 	qw422016.N().S(` Output</h3>
     `)

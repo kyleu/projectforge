@@ -19,12 +19,12 @@
       <a href="{%s p.Exec.WebPath() %}/kill"><button>Kill</button></a>
     </div>
     {%- endif -%}
-    <h3>{%= components.SVGRef("terminal", 20, 20, `icon`, ps) %} Process [{%s p.Exec.String() %}]</h3>
+    <h3>{%= components.SVGRef("desktop", 20, 20, `icon`, ps) %} Process [{%s p.Exec.String() %}]</h3>
     <div class="overflow full-width">
       <table>
         <tbody>
           <tr>
-            <th>Key</th>
+            <th class="shrink">Key</th>
             <td>{% if len(p.Exec.Link) > 0 %}<a href="{%s p.Exec.Link %}">{%s p.Exec.Key %}</a>{% else %}{%s p.Exec.Key %}{% endif %}</td>
           </tr>
           <tr>
@@ -72,7 +72,7 @@
     </div>
   </div>
   <div class="card">
-    <h3>{%= components.SVGRef("database", 20, 20, `icon`, ps) %} Output</h3>
+    <h3>{%= components.SVGRef("file", 20, 20, `icon`, ps) %} Output</h3>
     {%= components.Terminal("console-list", p.Exec.Buffer.String()) %}
   </div>{{{ if .HasModule "websocket" }}}
 
