@@ -56,7 +56,7 @@
       <div class="overflow full-width">
         <table class="mt min-200">
           <tbody>
-          {%- for _, mod := range as.Services.Modules.Modules() -%}
+          {%- for _, mod := range as.Services.Modules.ModulesVisible() -%}
           <tr>
             <th class="shrink">
               <label>

@@ -17,7 +17,7 @@ import (
 
 func ModuleList(w http.ResponseWriter, r *http.Request) {
 	controller.Act("module.root", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		mods := as.Services.Modules.Modules()
+		mods := as.Services.Modules.ModulesVisible()
 		ps.SetTitleAndData("Module Listing", mods)
 		dir := as.Services.Modules.ConfigDirectory()
 		return controller.Render(r, as, &vmodule.List{Modules: mods, Dir: dir}, ps, "modules")

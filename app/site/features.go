@@ -16,13 +16,13 @@ import (
 )
 
 func featuresMenu(mSvc *module.Service) menu.Items {
-	return lo.Map(mSvc.Modules(), func(m *module.Module, _ int) *menu.Item {
+	return lo.Map(mSvc.ModulesVisible(), func(m *module.Module, _ int) *menu.Item {
 		return &menu.Item{Key: m.Key, Title: m.Title(), Description: m.Description, Icon: m.IconSafe(), Route: m.FeaturesPath()}
 	})
 }
 
 func featureList(as *app.State, ps *cutil.PageState) (layout.Page, error) {
-	mods := as.Services.Modules.Modules()
+	mods := as.Services.Modules.ModulesVisible()
 	ps.SetTitleAndData("Available Modules", mods)
 	return &vsite.FeatureList{Modules: mods}, nil
 }

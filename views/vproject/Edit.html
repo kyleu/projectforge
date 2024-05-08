@@ -56,16 +56,22 @@
       <div class="overflow full-width">
         <table class="mt min-200">
           <tbody>
-          {%- for _, mod := range as.Services.Modules.Modules() -%}
-          <tr>
-            <th class="shrink">
-              <label>
-                <input type="checkbox" name="modules" value="{%s mod.Key %}"{%- if prj.HasModule(mod.Key) -%} checked="checked"{%- endif -%} />
-                &nbsp;{%s mod.Title() %}
-              </label>
-            </th>
-            <td>{%s mod.Description %}</td>
-          </tr>
+          {%- for _, mod := range as.Services.Modules.ModulesSorted() -%}
+            {%- if mod.Hidden -%}
+            {%- if prj.HasModule(mod.Key) -%}
+            <input type="hidden" name="modules" value="{%s mod.Key %}" />
+            {%- endif-%}
+            {%- else -%}
+            <tr>
+              <th class="shrink">
+                <label>
+                  <input type="checkbox" name="modules" value="{%s mod.Key %}"{%- if prj.HasModule(mod.Key) -%} checked="checked"{%- endif -%} />
+                  &nbsp;{%s mod.Title() %}
+                </label>
+              </th>
+              <td>{%s mod.Description %}</td>
+            </tr>
+            {%- endif-%}
           {%- endfor -%}
           </tbody>
         </table>

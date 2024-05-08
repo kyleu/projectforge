@@ -144,7 +144,7 @@ func (p *Welcome) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
           <tbody>
 `)
 //line views/vwelcome/Welcome.html:59
-	for _, mod := range as.Services.Modules.Modules() {
+	for _, mod := range as.Services.Modules.ModulesVisible() {
 //line views/vwelcome/Welcome.html:59
 		qw422016.N().S(`          <tr>
             <th class="shrink">

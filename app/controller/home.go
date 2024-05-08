@@ -13,7 +13,7 @@ func Home(w http.ResponseWriter, r *http.Request) {
 	Act("home", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prjs := as.Services.Projects.Projects()
 		execs := as.Services.Exec.Execs
-		mods := as.Services.Modules.Modules()
+		mods := as.Services.Modules.ModulesVisible()
 		ps.Data = util.ValueMap{"projects": prjs, "modules": mods}
 		return Render(r, as, &views.Home{Projects: prjs, Execs: execs, Modules: mods}, ps)
 	})
