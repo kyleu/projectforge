@@ -54,7 +54,7 @@ func ExecNew(w http.ResponseWriter, r *http.Request) {
 		}
 		env := util.StringSplitAndTrim(strings.TrimSpace(frm.GetStringOpt("env")), ",")
 		x := as.Services.Exec.NewExec(key, cmd, path, env...)
-		err = x.Start(as.Services.Socket.Terminal(key, ps.Logger))
+		err = x.Start(as.Services.Socket.Terminal(x.String(), ps.Logger))
 		if err != nil {
 			return "", err
 		}

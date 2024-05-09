@@ -53,7 +53,7 @@ func ExecNew(w http.ResponseWriter, r *http.Request) {
 		}
 		env := util.StringSplitAndTrim(strings.TrimSpace(frm.GetStringOpt("env")), ",")
 		x := as.Services.Exec.NewExec(key, cmd, path, env...){{{ if .HasModule "websocket" }}}
-		err = x.Start(as.Services.Socket.Terminal(key, ps.Logger)){{{ else }}}
+		err = x.Start(as.Services.Socket.Terminal(x.String(), ps.Logger)){{{ else }}}
 		err = x.Start(){{{ end }}}
 		if err != nil {
 			return "", err
