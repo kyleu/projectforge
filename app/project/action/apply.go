@@ -71,9 +71,12 @@ func Apply(ctx context.Context, p *Params) (ret *Result) {
 			return errorResult(err, p.T, p.Cfg, logger)
 		}
 	}
+	prj := p.PSvc.Default()
 	if p.ProjectKey == "" {
-		prj := p.PSvc.Default()
 		p.ProjectKey = prj.Key
+	}
+	if prj == nil || strings.Contains(prj.Name, "(missing)") {
+		return errorResult(errors.New("no project found in current directory"), p.T, p.Cfg, logger)
 	}
 
 	var pm *PrjAndMods
