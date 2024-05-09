@@ -5,15 +5,13 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/pkg/errors"{{{ if .HasModule "websocket" }}}
-	"github.com/robert-nix/ansihtml"{{{ end }}}
+	"github.com/pkg/errors"
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller"
 	"{{{ .Package }}}/app/controller/cutil"
 	"{{{ .Package }}}/app/lib/exec"
-	{{{ if .HasModule "websocket" }}}"{{{ .Package }}}/app/lib/websocket"
-	{{{ end }}}"{{{ .Package }}}/app/util"
+	"{{{ .Package }}}/app/util"
 	"{{{ .Package }}}/views/vexec"
 )
 
@@ -55,12 +53,7 @@ func ExecNew(w http.ResponseWriter, r *http.Request) {
 		}
 		env := util.StringSplitAndTrim(strings.TrimSpace(frm.GetStringOpt("env")), ",")
 		x := as.Services.Exec.NewExec(key, cmd, path, env...){{{ if .HasModule "websocket" }}}
-		wf := func(key string, b []byte) error {
-			m := util.ValueMap{"msg": string(b), "html": string(ansihtml.ConvertToHTML(b))}
-			msg := &websocket.Message{Channel: key, Cmd: "output", Param: util.ToJSONBytes(m, true)}
-			return as.Services.Socket.WriteChannel(msg, ps.Logger)
-		}
-		err = x.Start(wf){{{ else }}}
+		err = x.Start(as.Services.Socket.Terminal(key, ps.Logger)){{{ else }}}
 		err = x.Start(){{{ end }}}
 		if err != nil {
 			return "", err

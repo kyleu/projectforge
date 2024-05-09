@@ -14,41 +14,50 @@
 } %}
 
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
+  {%= ExecDetail(p.Exec, ps) %}
   <div class="card">
-    {%- if p.Exec.Completed == nil -%}
+    <h3>{%= components.SVGRef("file", 20, 20, `icon`, ps) %} Output</h3>
+    <div class="mt">{%= components.Terminal("console-list", p.Exec.Buffer.String()) %}</div>
+  </div>
+  {%= ExecScript("console-list", p.Exec.WebPath() + "/connect", ps) %}
+{% endfunc %}
+
+{% func ExecDetail(ex *exec.Exec, ps *cutil.PageState) %}
+  <div class="card">
+    {%- if ex.Completed == nil -%}
     <div class="right">
-      <a href="{%s p.Exec.WebPath() %}/kill"><button>Kill</button></a>
+      <a href="{%s ex.WebPath() %}/kill"><button>Kill</button></a>
     </div>
     {%- endif -%}
-    <h3>{%= components.SVGRef("desktop", 20, 20, `icon`, ps) %} Process [{%s p.Exec.String() %}]</h3>
+    <h3>{%= components.SVGRef("desktop", 20, 20, `icon`, ps) %} Process [{%s ex.String() %}]</h3>
     <div class="overflow full-width">
       <table>
         <tbody>
           <tr>
             <th class="shrink">Key</th>
-            <td>{% if len(p.Exec.Link) > 0 %}<a href="{%s p.Exec.Link %}">{%s p.Exec.Key %}</a>{% else %}{%s p.Exec.Key %}{% endif %}</td>
+            <td>{% if len(ex.Link) > 0 %}<a href="{%s ex.Link %}">{%s ex.Key %}</a>{% else %}{%s ex.Key %}{% endif %}</td>
           </tr>
           <tr>
             <th>Index</th>
-            <td>{%d p.Exec.Idx %}</td>
+            <td>{%d ex.Idx %}</td>
           </tr>
           <tr>
             <th>PID</th>
-            <td>{%d p.Exec.PID %}</td>
+            <td>{%d ex.PID %}</td>
           </tr>
           <tr>
             <th>Command</th>
-            <td>{%s p.Exec.Cmd %}</td>
+            <td>{%s ex.Cmd %}</td>
           </tr>
           <tr>
             <th>Path</th>
-            <td>{%s p.Exec.Path %}</td>
+            <td>{%s ex.Path %}</td>
           </tr>
           <tr>
             <th>Environment</th>
             <td>
               <ul>
-                {%- for _, x := range p.Exec.Env -%}
+                {%- for _, x := range ex.Env -%}
                 <li>{%s x %}</li>
                 {%- endfor -%}
               </ul>
@@ -56,50 +65,39 @@
           </tr>
           <tr>
             <th>Started</th>
-            <td title="{%s util.TimeToFull(p.Exec.Started) %}">{%s util.TimeRelative(p.Exec.Started) %}</td>
+            <td title="{%s util.TimeToFull(ex.Started) %}">{%s util.TimeRelative(ex.Started) %}</td>
           </tr>
-          {%- if p.Exec.Completed != nil -%}
+          {%- if ex.Completed != nil -%}
           <tr>
             <th>Completed</th>
-            <td title="{%s util.TimeToFull(p.Exec.Completed) %}">{%s util.TimeRelative(p.Exec.Completed) %}</td>
+            <td title="{%s util.TimeToFull(ex.Completed) %}">{%s util.TimeRelative(ex.Completed) %}</td>
           </tr>
           <tr>
             <th>Exit Code</th>
-            <td>{%d p.Exec.ExitCode %}</td>
+            <td>{%d ex.ExitCode %}</td>
           </tr>
           {%- endif -%}
         </tbody>
       </table>
     </div>
   </div>
-  <div class="card">
-    <h3>{%= components.SVGRef("file", 20, 20, `icon`, ps) %} Output</h3>
-    {%= components.Terminal("console-list", p.Exec.Buffer.String()) %}
-  </div>
+{% endfunc %}
 
+{% func ExecScript(id string, connectURL string, ps *cutil.PageState) %}
   <script>
     function open() {
       console.log("[socket]: open");
     }
     function recv(m) {
-      const tbody = document.getElementById("console-list");
+      const tbody = document.getElementById("{%s id %}");
       const h = m.param["html"].split("\n");
       for (x in h) {
-        if (h[x] === "") {
-          continue;
-        }
         const row = document.createElement("tr");
-        row.style.fontFamily = "monospace";
-        const numTD = document.createElement("td");
-        numTD.className = "shrink";
-        numTD.style.padding = "2px var(--padding) 2px 0";
-        numTD.style.borderRight = "var(--border)";
-        numTD.style.verticalAlign = "top";
-        numTD.innerText = (tbody.children.length+1).toString();
+        const numTH = document.createElement("th");
+        numTH.innerText = (tbody.children.length).toString();
         const textTD = document.createElement("td");
-        textTD.style.padding = "2px var(--padding)";
         textTD.innerHTML = h[x];
-        row.append(numTD, textTD);
+        row.append(numTH, textTD);
         tbody.append(row);
       }
       const c = document.getElementById("content");
@@ -109,7 +107,7 @@
       console.log("[socket error]: " + e);
     }
     window.addEventListener('load', () => {
-      new projectforge.Socket(true, open, recv, err, "{%s p.Exec.WebPath() %}/connect");
+      new projectforge.Socket(true, open, recv, err, "{%s connectURL %}");
     })
   </script>
 {% endfunc %}

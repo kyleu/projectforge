@@ -7,13 +7,11 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	"github.com/robert-nix/ansihtml"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/exec"
-	"projectforge.dev/projectforge/app/lib/websocket"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/vexec"
 )
@@ -56,12 +54,7 @@ func ExecNew(w http.ResponseWriter, r *http.Request) {
 		}
 		env := util.StringSplitAndTrim(strings.TrimSpace(frm.GetStringOpt("env")), ",")
 		x := as.Services.Exec.NewExec(key, cmd, path, env...)
-		wf := func(key string, b []byte) error {
-			m := util.ValueMap{"msg": string(b), "html": string(ansihtml.ConvertToHTML(b))}
-			msg := &websocket.Message{Channel: key, Cmd: "output", Param: util.ToJSONBytes(m, true)}
-			return as.Services.Socket.WriteChannel(msg, ps.Logger)
-		}
-		err = x.Start(wf)
+		err = x.Start(as.Services.Socket.Terminal(key, ps.Logger))
 		if err != nil {
 			return "", err
 		}

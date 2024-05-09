@@ -14,11 +14,11 @@
     }
   -%}
   <div class="overflow full-width">
-    <table class="mt output">
+    <table class="terminal">
       <tbody id="{%s id %}">
         <tr><td class="shrink"></td><td></td></tr>
         {%- for idx, line := range lines -%}
-        <tr style="font-family: monospace;"><td>{%d idx + 1 %}</td><td><div class="line">{%s= line %}</div></td></tr>
+        <tr><th>{%d idx + 1 %}</th><td>{%s= line %}</td></tr>
         {%- endfor -%}
       </tbody>
     </table>

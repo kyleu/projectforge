@@ -4,11 +4,13 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"sync"
+	{{{ if .HasModule "websocket" }}}"strings"
+	{{{ end }}}"sync"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
-	"github.com/samber/lo"
+	{{{ if .HasModule "websocket" }}}"github.com/robert-nix/ansihtml"
+	{{{ end }}}"github.com/samber/lo"
 
 	"{{{ .Package }}}/app/lib/user"{{{ if .HasUser }}}
 	dbuser "{{{ .Package }}}/app/user"{{{ end }}}
@@ -79,4 +81,13 @@ func (s *Service) Upgrade(
 		return uuid.Nil, nil
 	}
 	return cx.ID, nil
-}
+}{{{ if .HasModule "websocket" }}}
+
+func (s *Service) Terminal(ch string, logger util.Logger) func(key string, b []byte) error {
+	return func(key string, b []byte) error {
+		html := string(ansihtml.ConvertToHTML(b))
+		m := util.ValueMap{"msg": string(b), "html": strings.TrimSpace(html)}
+		msg := NewMessage(nil, ch, "output", m)
+		return s.WriteChannel(msg, logger)
+	}
+}{{{ end }}}

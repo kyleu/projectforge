@@ -36,7 +36,7 @@ func StreamTerminal(qw422016 *qt422016.Writer, id string, s string) {
 	}
 
 //line views/components/Terminal.html:15
-	qw422016.N().S(`<div class="overflow full-width"><table class="mt output"><tbody id="`)
+	qw422016.N().S(`<div class="overflow full-width"><table class="terminal"><tbody id="`)
 //line views/components/Terminal.html:18
 	qw422016.E().S(id)
 //line views/components/Terminal.html:18
@@ -44,15 +44,15 @@ func StreamTerminal(qw422016 *qt422016.Writer, id string, s string) {
 //line views/components/Terminal.html:20
 	for idx, line := range lines {
 //line views/components/Terminal.html:20
-		qw422016.N().S(`<tr style="font-family: monospace;"><td>`)
+		qw422016.N().S(`<tr><th>`)
 //line views/components/Terminal.html:21
 		qw422016.N().D(idx + 1)
 //line views/components/Terminal.html:21
-		qw422016.N().S(`</td><td><div class="line">`)
+		qw422016.N().S(`</th><td>`)
 //line views/components/Terminal.html:21
 		qw422016.N().S(line)
 //line views/components/Terminal.html:21
-		qw422016.N().S(`</div></td></tr>`)
+		qw422016.N().S(`</td></tr>`)
 //line views/components/Terminal.html:22
 	}
 //line views/components/Terminal.html:22

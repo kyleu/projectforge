@@ -76,12 +76,16 @@ table.centered th.left-align, table.centered td.left-align {
   text-align: left;
 }
 
-table.output .line {
+table.terminal th {
+  font-family: monospace;
+  padding: 2px var(--padding);
+  border-right: var(--border);
+}
+
+table.terminal td {
+  font-family: monospace;
+  padding: 2px var(--padding);
   white-space: pre-wrap;
   word-wrap: break-word;
   word-break: break-word;
-}
-
-table.output td {
-  padding: 2px var(--padding);
 }
