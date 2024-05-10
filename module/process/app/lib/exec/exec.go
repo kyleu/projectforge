@@ -43,6 +43,9 @@ type Exec struct {
 }
 
 func NewExec(key string, idx int, cmd string, path string, envvars ...string) *Exec {
+	if idx := strings.Index(key, "/"); idx > -1 && idx < len(key) {
+		key = key[idx+1:]
+	}
 	return &Exec{Key: key, Idx: idx, Cmd: cmd, Env: envvars, Path: path, Buffer: &bytes.Buffer{}}
 }
 
