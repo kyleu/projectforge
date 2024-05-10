@@ -1,7 +1,6 @@
 package csfiles
 
 import (
-	"projectforge.dev/projectforge/app/util"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -10,6 +9,7 @@ import (
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func CSAll(p *project.Project) (file.Files, error) {
