@@ -62,6 +62,7 @@ func (e *Exec) Start(fns ...func(key string, b []byte) error) error {
 		w = io.MultiWriter(w, &writer{Key: e.String(), fn: fn})
 	})
 	e.Started = util.TimeCurrentP()
+	t := util.TimerStart()
 	cmd, err := util.StartProcess(e.Cmd, e.Path, nil, w, w, e.Env...)
 	if err != nil {
 		return err
@@ -70,7 +71,11 @@ func (e *Exec) Start(fns ...func(key string, b []byte) error) error {
 	e.PID = cmd.Process.Pid
 	defer func() {
 		go func() {
-			_ = e.Wait()
+			err2 := e.Wait()
+			if err2 != nil {
+				_, _ = w.Write([]byte(fmt.Sprintf(" ::: error while wating for process to terminate %s", err2.Error())))
+			}
+			_, _ = w.Write([]byte(fmt.Sprintf(" ::: process completed in [%s] with exit code [%d]", t.EndString(), e.ExitCode)))
 		}()
 	}()
 	return nil
