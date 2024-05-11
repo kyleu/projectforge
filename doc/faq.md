@@ -55,11 +55,12 @@ All managed projects expose a web and CLI interface, and additional modules are 
 - `playwright`: Adds a project for testing the UI using playwright.dev
 - `postgres`: API for accessing PostgreSQL databases
 - `process`: Framework and UI for managing system processes.
+- `proxy`: Provides an HTTP proxy while still enforcing this app's security
+- `queue`: Provides a simple message queue based on SQLite
 - `readonlydb`: Read-only database connection
 - `richedit`: Provides a rich editing experience with a decent fallback when scripting is disabled
 - `sandbox`: Useful playgrounds for testing custom functions
 - `schedule`: Provides a scheduled job engine and UI based on gocron
-- `schema`: Classes for representing a collection of custom models
 - `scripting`: Allows the execution of JavaScript files using a built-in interpreter
 - `search`: Adds search facilities to the top-level navigation bar
 - `sqlite`: Provides an API for accessing SQLite databases

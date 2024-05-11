@@ -42,6 +42,8 @@
       {%= Timestamp(t) %}
     {% case url.URL %}
       {%= URL(t) %}
+    {% case *url.URL %}
+      {%= URL(t) %}
     {% case uuid.UUID %}
       {%= UUID(&t) %}
     {% case *uuid.UUID %}

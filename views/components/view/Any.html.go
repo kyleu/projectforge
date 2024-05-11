@@ -97,50 +97,54 @@ func StreamAny(qw422016 *qt422016.Writer, x any) {
 //line views/components/view/Any.html:44
 			StreamURL(qw422016, t)
 //line views/components/view/Any.html:45
-		case uuid.UUID:
+		case *url.URL:
 //line views/components/view/Any.html:46
-			StreamUUID(qw422016, &t)
+			StreamURL(qw422016, t)
 //line views/components/view/Any.html:47
-		case *uuid.UUID:
+		case uuid.UUID:
 //line views/components/view/Any.html:48
+			StreamUUID(qw422016, &t)
+//line views/components/view/Any.html:49
+		case *uuid.UUID:
+//line views/components/view/Any.html:50
 			StreamUUID(qw422016, t)
-//line views/components/view/Any.html:49
-		default:
-//line views/components/view/Any.html:49
-			qw422016.N().S(`unhandled type [`)
-//line views/components/view/Any.html:50
-			qw422016.E().S(fmt.Sprintf("%T", x))
-//line views/components/view/Any.html:50
-			qw422016.N().S(`]`)
 //line views/components/view/Any.html:51
-		}
+		default:
+//line views/components/view/Any.html:51
+			qw422016.N().S(`unhandled type [`)
 //line views/components/view/Any.html:52
+			qw422016.E().S(fmt.Sprintf("%T", x))
+//line views/components/view/Any.html:52
+			qw422016.N().S(`]`)
+//line views/components/view/Any.html:53
+		}
+//line views/components/view/Any.html:54
 	}
-//line views/components/view/Any.html:53
+//line views/components/view/Any.html:55
 }
 
-//line views/components/view/Any.html:53
+//line views/components/view/Any.html:55
 func WriteAny(qq422016 qtio422016.Writer, x any) {
-//line views/components/view/Any.html:53
+//line views/components/view/Any.html:55
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/view/Any.html:53
+//line views/components/view/Any.html:55
 	StreamAny(qw422016, x)
-//line views/components/view/Any.html:53
+//line views/components/view/Any.html:55
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/view/Any.html:53
+//line views/components/view/Any.html:55
 }
 
-//line views/components/view/Any.html:53
+//line views/components/view/Any.html:55
 func Any(x any) string {
-//line views/components/view/Any.html:53
+//line views/components/view/Any.html:55
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/view/Any.html:53
+//line views/components/view/Any.html:55
 	WriteAny(qb422016, x)
-//line views/components/view/Any.html:53
+//line views/components/view/Any.html:55
 	qs422016 := string(qb422016.B)
-//line views/components/view/Any.html:53
+//line views/components/view/Any.html:55
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/view/Any.html:53
+//line views/components/view/Any.html:55
 	return qs422016
-//line views/components/view/Any.html:53
+//line views/components/view/Any.html:55
 }

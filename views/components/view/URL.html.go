@@ -59,38 +59,50 @@ func StreamURL(qw422016 *qt422016.Writer, u any) {
 //line views/components/view/URL.html:14
 			qw422016.N().S(`</a>`)
 //line views/components/view/URL.html:15
-		default:
+		case *url.URL:
+//line views/components/view/URL.html:15
+			qw422016.N().S(`<a target="_blank" rel="noopener noreferrer" href="`)
 //line views/components/view/URL.html:16
-			qw422016.E().V(u)
+			qw422016.E().S(t.String())
+//line views/components/view/URL.html:16
+			qw422016.N().S(`">`)
+//line views/components/view/URL.html:16
+			qw422016.E().S(t.String())
+//line views/components/view/URL.html:16
+			qw422016.N().S(`</a>`)
 //line views/components/view/URL.html:17
-		}
+		default:
 //line views/components/view/URL.html:18
+			qw422016.E().V(u)
+//line views/components/view/URL.html:19
+		}
+//line views/components/view/URL.html:20
 	}
-//line views/components/view/URL.html:19
+//line views/components/view/URL.html:21
 }
 
-//line views/components/view/URL.html:19
+//line views/components/view/URL.html:21
 func WriteURL(qq422016 qtio422016.Writer, u any) {
-//line views/components/view/URL.html:19
+//line views/components/view/URL.html:21
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/view/URL.html:19
+//line views/components/view/URL.html:21
 	StreamURL(qw422016, u)
-//line views/components/view/URL.html:19
+//line views/components/view/URL.html:21
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/view/URL.html:19
+//line views/components/view/URL.html:21
 }
 
-//line views/components/view/URL.html:19
+//line views/components/view/URL.html:21
 func URL(u any) string {
-//line views/components/view/URL.html:19
+//line views/components/view/URL.html:21
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/view/URL.html:19
+//line views/components/view/URL.html:21
 	WriteURL(qb422016, u)
-//line views/components/view/URL.html:19
+//line views/components/view/URL.html:21
 	qs422016 := string(qb422016.B)
-//line views/components/view/URL.html:19
+//line views/components/view/URL.html:21
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/view/URL.html:19
+//line views/components/view/URL.html:21
 	return qs422016
-//line views/components/view/URL.html:19
+//line views/components/view/URL.html:21
 }
