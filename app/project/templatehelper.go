@@ -43,9 +43,9 @@ func (t *TemplateContext) DangerousOK() bool {
 }
 
 func (t *TemplateContext) ModuleMarkdown() string {
-	return strings.Join(lo.Map(t.Modules, func(m string, _ int) string {
+	return strings.Join(util.ArraySorted(lo.Map(t.Modules, func(m string, _ int) string {
 		return fmt.Sprintf("- [%s](./doc/module/%s.md)", m, m)
-	}), t.Linebreak)
+	})), t.Linebreak)
 }
 
 func (t *TemplateContext) PortIncremented(i int) int {

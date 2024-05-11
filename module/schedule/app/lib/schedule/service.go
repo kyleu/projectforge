@@ -21,6 +21,7 @@ type Service struct {
 	ExecCounts map[uuid.UUID]int     `json:"execCounts,omitempty"`
 	Results    map[uuid.UUID]*Result `json:"results,omitempty"`
 	resultMu   sync.Mutex
+	loggingOff bool
 }
 
 func NewService() *Service {
@@ -51,7 +52,9 @@ func (s *Service) NewJob(
 		ctx, sp, logger = telemetry.StartSpan(ctx, "job."+id.String(), logger)
 		sp.Attribute("job", name)
 		defer sp.Complete()
-		logger.Debugf("running scheduled job [%s]", id.String())
+		if !s.loggingOff {
+			logger.Debugf("running scheduled job [%s]", id.String())
+		}
 		res := &Result{Job: id, Occurred: time.Now()}
 		s.ExecCounts[id] += 1
 		ret, err := f(ctx, logger)
@@ -75,7 +78,9 @@ func (s *Service) NewJob(
 		}
 		sp.Attribute("result", retStr)
 
-		logger.Debugf("completed scheduled job [%s] in [%s]: returned [%s]", id.String(), util.MicrosToMillis(res.DurationMicro), retStr)
+		if !s.loggingOff {
+			logger.Debugf("completed scheduled job [%s] in [%s]: returned [%s]", id.String(), util.MicrosToMillis(res.DurationMicro), retStr)
+		}
 		s.resultMu.Lock()
 		defer s.resultMu.Unlock()
 		s.Results[id] = res
@@ -98,6 +103,10 @@ func (s *Service) GetJob(id uuid.UUID) *Job {
 	return lo.FindOrElse(s.ListJobs(), nil, func(j *Job) bool {
 		return j.ID == id
 	})
+}
+
+func (s *Service) EnableLogging(enabled bool) {
+	s.loggingOff = !enabled
 }
 
 func (s *Service) Testbed(ctx context.Context, logger util.Logger) (any, error) {
