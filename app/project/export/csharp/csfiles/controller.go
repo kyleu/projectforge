@@ -13,13 +13,15 @@ func controller(ns string, m *model.Model) (*file.File, error) {
 	if ns != "Shared" {
 		f.AddImport(ImpControllers)
 	}
-	f.AddImport(ns+".Services."+m.Proper(), ImpMVC)
+	f.AddImport(ns+".Entities", ns+".Services."+m.Proper(), ImpMVC)
 	b := csharp.NewBlock("Controller", "class")
 	b.W("public class %sController(%sService svc) : BaseController", m.Proper(), m.Proper())
 	b.W("{")
 	b.W("    private const string BaseRoute = %q;", "/"+m.CamelLower())
 	b.W("")
 	controllerList(m, b)
+	b.W("")
+	controllerCreate(m, b)
 	if len(m.PKs()) == 1 {
 		b.W("")
 		controllerDetail(m, m.PKs()[0], b)
@@ -38,6 +40,17 @@ func controllerList(m *model.Model, b *csharp.Block) {
 	b.W("    {")
 	b.W("        var ret = await svc.List();")
 	b.W("        return Result(%q, ret, %q);", m.ProperPlural(), m.ProperPlural())
+	b.W("    }")
+}
+
+func controllerCreate(m *model.Model, b *csharp.Block) {
+	b.W("    [Route(BaseRoute)]")
+	b.W("    [HttpPost]")
+	b.W("    public async Task<IActionResult> Create([FromHttp] %s mdl)", m.Proper())
+	b.W("    {")
+	b.W("        svc.Models.Add(mdl);")
+	b.W("        await svc.Flush();")
+	b.W("        return Result(%q, mdl, mdl.ToString());", m.Proper())
 	b.W("    }")
 }
 
