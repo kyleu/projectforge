@@ -45,6 +45,8 @@ func (m ValueMap) ParseFloat(path string, allowMissing bool, allowEmpty bool) (f
 		return t, nil
 	case string:
 		return strconv.ParseFloat(t, 64)
+	case []byte:
+		return strconv.ParseFloat(string(t), 64)
 	case nil:
 		if !allowEmpty {
 			return 0, errors.Errorf("could not find float for path [%s]", path)
@@ -74,8 +76,13 @@ func (m ValueMap) ParseString(path string, allowMissing bool, allowEmpty bool) (
 			return "", errors.New("empty string")
 		}
 		return t, nil
+	case []byte:
+		if (!allowEmpty) && len(t) == 0 {
+			return "", errors.New("empty string")
+		}
+		return string(t), nil
 	case []string:
-		if (!allowEmpty) && len(t) == 0 || t[0] == "" {
+		if (!allowEmpty) && (len(t) == 0 || t[0] == "") {
 			return "", errors.New("empty string")
 		}
 		return strings.Join(t, "||"), nil
@@ -138,6 +145,18 @@ func (m ValueMap) ParseUUID(path string, allowMissing bool, allowEmpty bool) (*u
 			return nil, errors.New("empty uuid")
 		}
 		return &t, nil
+	case []byte:
+		if len(t) == 16 {
+			ret, err := uuid.FromBytes(t)
+			if err != nil {
+				return nil, err
+			}
+			if ret == uuid.Nil && (!allowEmpty) {
+				return nil, errors.Errorf("could not parse uuid from path [%s]", path)
+			}
+			return &ret, nil
+		}
+		return nil, errors.Errorf("invalid uuid bytes with length [%d]", len(t))
 	case string:
 		if t == "" && allowEmpty {
 			return nil, nil
@@ -181,6 +200,9 @@ func valueInt(path string, r any, allowEmpty bool) (int, error) {
 		return int(t), nil
 	case string:
 		ret, err := strconv.ParseInt(t, 10, 32)
+		return int(ret), err
+	case []byte:
+		ret, err := strconv.ParseInt(string(t), 10, 32)
 		return int(ret), err
 	case nil:
 		if !allowEmpty {

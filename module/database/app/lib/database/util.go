@@ -2,8 +2,12 @@ package database
 
 import (
 	"strings"
+	"unicode/utf8"
 
+	"github.com/jmoiron/sqlx"
 	"github.com/samber/lo"
+
+	"{{{ .Package }}}/app/util"
 )
 
 const (
@@ -34,4 +38,21 @@ func StringToArray(s string) []string {
 		}
 	})
 	return ret
+}
+
+func MapScan(row *sqlx.Rows) (util.ValueMap, error) {
+	x := util.ValueMap{}
+	err := row.MapScan(x)
+	if err != nil {
+		return nil, err
+	}
+	for k, v := range x {
+		switch t := v.(type) {
+		case []byte:
+			if utf8.Valid(t) {
+				x[k] = string(t)
+			}
+		}
+	}
+	return x, nil
 }
