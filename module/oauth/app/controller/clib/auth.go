@@ -8,6 +8,7 @@ import (
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller"
+	"{{{ .Package }}}/app/controller/csession"
 	"{{{ .Package }}}/app/controller/cutil"
 	"{{{ .Package }}}/app/lib/auth"
 	"{{{ .Package }}}/app/util"
@@ -21,8 +22,14 @@ func AuthDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		u, _, err := auth.CompleteUserAuth(prv, w, r, ps.Session, ps.Logger)
+		n, u, _, err := auth.CompleteUserAuth(prv, w, r, ps.Session, ps.Logger)
 		if err == nil {
+			if ps.Profile.SetName(n) {
+				err = csession.SaveProfile(ps.Profile, w, ps.Session, ps.Logger)
+				if err != nil {
+					return "", err
+				}
+			}
 			msg := fmt.Sprintf(signinMsg, auth.AvailableProviderNames[prv.ID], u.Email)
 			return controller.ReturnToReferrer(msg, cutil.DefaultProfilePath, ps)
 		}
@@ -36,9 +43,15 @@ func AuthCallback(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		u, _, err := auth.CompleteUserAuth(prv, w, r, ps.Session, ps.Logger)
+		n, u, _, err := auth.CompleteUserAuth(prv, w, r, ps.Session, ps.Logger)
 		if err != nil {
 			return "", err
+		}
+		if ps.Profile.SetName(n) {
+			err = csession.SaveProfile(ps.Profile, w, ps.Session, ps.Logger)
+			if err != nil {
+				return "", err
+			}
 		}
 		msg := fmt.Sprintf(signinMsg, auth.AvailableProviderNames[prv.ID], u.Email)
 		return controller.ReturnToReferrer(msg, cutil.DefaultProfilePath, ps)

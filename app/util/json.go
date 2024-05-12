@@ -56,6 +56,12 @@ func FromJSONAny(msg json.RawMessage) (any, error) {
 	return tgt, err
 }
 
+func FromJSONObj[T any](msg json.RawMessage) (T, error) {
+	var tgt T
+	err := FromJSON(msg, &tgt)
+	return tgt, err
+}
+
 func FromJSONReader(r io.Reader, tgt any) error {
 	return json.NewDecoder(r).Decode(tgt)
 }

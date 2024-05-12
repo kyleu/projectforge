@@ -24,6 +24,17 @@ func (p *Profile) ModeClass() string {
 	return "mode-" + p.Mode
 }
 
+func (p *Profile) SetName(n string) bool {
+	if p.Name == n {
+		return false
+	}
+	if p.Name != "" && p.Name != DefaultProfile.Name {
+		return false
+	}
+	p.Name = n
+	return true
+}
+
 func (p *Profile) Equals(x *Profile) bool {
 	return p.Name == x.Name && p.Mode == x.Mode && p.Theme == x.Theme
 }

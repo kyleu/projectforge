@@ -41,6 +41,10 @@ func (a *Account) Domain() string {
 	return r
 }
 
+func (a *Account) Matches(x *Account) bool {
+	return a.Provider == x.Provider && a.Email == x.Email
+}
+
 func accountFromString(s string) *Account {
 	p, e := util.StringSplit(s, ':', true)
 	var t, pic string

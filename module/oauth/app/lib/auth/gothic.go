@@ -25,10 +25,12 @@ func BeginAuthHandler(prv *Provider, w http.ResponseWriter, r *http.Request, web
 	return u, nil
 }
 
-func CompleteUserAuth(prv *Provider, w http.ResponseWriter, r *http.Request, websess util.ValueMap, logger util.Logger) (*user.Account, user.Accounts, error) {
+func CompleteUserAuth(
+	prv *Provider, w http.ResponseWriter, r *http.Request, websess util.ValueMap, logger util.Logger,
+) (string, *user.Account, user.Accounts, error) {
 	value, err := csession.GetFromSession(prv.ID, websess)
 	if err != nil {
-		return nil, nil, err
+		return "", nil, nil, err
 	}
 
 	defer func() {
@@ -37,47 +39,59 @@ func CompleteUserAuth(prv *Provider, w http.ResponseWriter, r *http.Request, web
 
 	g, err := gothFor(r, prv)
 	if err != nil {
-		return nil, nil, errors.Wrap(err, "unable to create oauth provider")
+		return "", nil, nil, errors.Wrap(err, "unable to create oauth provider")
 	}
 
 	sess, err := g.UnmarshalSession(value)
 	if err != nil {
-		return nil, nil, err
+		return "", nil, nil, err
 	}
 
 	err = validateState(w, r, sess)
 	if err != nil {
-		return nil, nil, err
+		return "", nil, nil, err
 	}
 
 	u, err := g.FetchUser(sess)
 	if err == nil {
-		return addToSession(u.Provider, u.Email, u.AvatarURL, u.AccessToken, w, websess, logger)
+		return addToSession(u.Provider, u.Name, u.Email, u.AvatarURL, u.AccessToken, w, websess, logger)
 	}
 
 	_, err = sess.Authorize(g, r.URL.Query())
 	if err != nil {
-		return nil, nil, err
+		return "", nil, nil, err
 	}
 
 	err = csession.StoreInSession(prv.ID, sess.Marshal(), w, websess, logger)
 	if err != nil {
-		return nil, nil, err
+		return "", nil, nil, err
 	}
 
 	gu, err := g.FetchUser(sess)
 	if err != nil {
-		return nil, nil, err
+		return "", nil, nil, err
 	}
 
-	return addToSession(gu.Provider, gu.Email, gu.AvatarURL, gu.AccessToken, w, websess, logger)
+	return addToSession(gu.Provider, gu.Name, gu.Email, gu.AvatarURL, gu.AccessToken, w, websess, logger)
 }
 
 func gothFor(r *http.Request, prv *Provider) (goth.Provider, error) {
 	proto := r.URL.Scheme
-	host := r.URL.Host
+	host := r.Host
 	if host == "" {
-		host = "localhost"
+		host = r.URL.Host
+		if r.URL.Port() != "" {
+			host += ":" + r.URL.Port()
+		}
+		if host == "" {
+			host = "localhost"
+		}
+	}
+	if fh := r.Header.Get("X-Forwarded-Host"); fh != "" {
+		host = fh
+		if fp := r.Header.Get("X-Forwarded-Proto"); fp != "" {
+			proto = fp
+		}
 	}
 	return prv.Goth(proto, host)
 }

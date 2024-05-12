@@ -13,21 +13,21 @@ import (
 const WebAuthKey = "auth"
 
 func addToSession(
-	provider string, email string, picture string, token string, w http.ResponseWriter, websess util.ValueMap, logger util.Logger,
-) (*user.Account, user.Accounts, error) {
+	provider string, name string, email string, picture string, token string, w http.ResponseWriter, websess util.ValueMap, logger util.Logger,
+) (string, *user.Account, user.Accounts, error) {
 	ret := getCurrentAuths(websess)
 	s := &user.Account{Provider: provider, Email: email, Picture: picture, Token: token}
 	for _, x := range ret {
-		if x.Provider == s.Provider && x.Email == s.Email {
-			return s, ret, nil
+		if x.Matches(s) {
+			return name, s, ret, nil
 		}
 	}
 	ret = append(ret, s)
 	err := setCurrentAuths(ret, w, websess, logger)
 	if err != nil {
-		return nil, nil, err
+		return name, nil, nil, err
 	}
-	return s, ret, nil
+	return name, s, ret, nil
 }
 
 func removeProviderData(w http.ResponseWriter, websess util.ValueMap, logger util.Logger) error {
