@@ -78,7 +78,9 @@ func (p *Overview) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vexport/Overview.html:29
 	components.StreamSVGRefIcon(qw422016, `users`, ps)
 //line views/vexport/Overview.html:29
-	qw422016.N().S(`Groups</h3>
+	qw422016.E().S(util.StringPlural(len(p.Args.Groups), "Group"))
+//line views/vexport/Overview.html:29
+	qw422016.N().S(`</h3>
     <div class="mt">
 `)
 //line views/vexport/Overview.html:31
@@ -116,7 +118,9 @@ func (p *Overview) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vexport/Overview.html:42
 	components.StreamSVGRefIcon(qw422016, `hammer`, ps)
 //line views/vexport/Overview.html:42
-	qw422016.N().S(`Enums</h3>
+	qw422016.E().S(util.StringPlural(len(p.Args.Enums), "Enum"))
+//line views/vexport/Overview.html:42
+	qw422016.N().S(`</h3>
 `)
 //line views/vexport/Overview.html:43
 	if len(p.Args.Enums) == 0 {
@@ -161,7 +165,9 @@ func (p *Overview) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vexport/Overview.html:54
 	components.StreamSVGRefIcon(qw422016, `list`, ps)
 //line views/vexport/Overview.html:54
-	qw422016.N().S(`Models</h3>
+	qw422016.E().S(util.StringPlural(len(p.Args.Models), "Model"))
+//line views/vexport/Overview.html:54
+	qw422016.N().S(`</h3>
     `)
 //line views/vexport/Overview.html:55
 	StreamModelList(qw422016, p.Args.Models, fmt.Sprintf("/p/%s/export/models", p.Project.Key), as, ps)
@@ -226,14 +232,16 @@ func StreamGroupList(qw422016 *qt422016.Writer, groups model.Groups, indent int)
 		}
 //line views/vexport/Overview.html:70
 		if g.Route != "" {
+//line views/vexport/Overview.html:70
+			qw422016.N().S(`:`)
 //line views/vexport/Overview.html:71
 			qw422016.N().S(` `)
 //line views/vexport/Overview.html:71
-			qw422016.N().S(`(<em><code>/`)
+			qw422016.N().S(`<em><code>`)
 //line views/vexport/Overview.html:71
 			qw422016.E().S(g.Route)
 //line views/vexport/Overview.html:71
-			qw422016.N().S(`</code></em>)`)
+			qw422016.N().S(`</code></em>`)
 //line views/vexport/Overview.html:72
 		}
 //line views/vexport/Overview.html:73

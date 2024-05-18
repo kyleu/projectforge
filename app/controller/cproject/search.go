@@ -18,7 +18,7 @@ import (
 	"projectforge.dev/projectforge/views/vproject"
 )
 
-func ProjectSearch(w http.ResponseWriter, r *http.Request) {
+func Search(w http.ResponseWriter, r *http.Request) {
 	controller.Act("project.search", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prj, err := getProject(r, as)
 		if err != nil {
@@ -42,7 +42,7 @@ func ProjectSearch(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func ProjectSearchAll(w http.ResponseWriter, r *http.Request) {
+func SearchAll(w http.ResponseWriter, r *http.Request) {
 	controller.Act("project.search.all", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prjs := as.Services.Projects.Projects()
 		tags := util.StringSplitAndTrim(r.URL.Query().Get("tags"), ",")

@@ -1,0 +1,38 @@
+{% import (
+  "fmt"
+
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/lib/metamodel/model"
+  "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/vexport"
+) %}
+
+{% func DetailExport(key string, ea *model.Args, as *app.State, ps *cutil.PageState) %}
+  <a href="/p/{%s key %}/export"><button>{%= components.SVGRef("wrench", 15, 15, "icon", ps) %}Manage</button></a>
+  <hr />
+  {%- if ea.Config != nil && util.ToJSONCompact(ea.Config) != "{}" -%}
+  <h3>{%= components.SVGRefIcon(`print`, ps) %}Export Configuration</h3>
+  <div class="clear"></div>
+  {%= components.JSON(ea.Config) %}
+  <hr />
+  {%- endif -%}
+  {%- if len(ea.Groups) > 0 -%}
+  <h3>{%= components.SVGRefIcon(`users`, ps) %}{%s util.StringPlural(len(ea.Groups), "Group") %}</h3>
+  <div class="mt clear"></div>
+  {%= vexport.GroupList(ea.Groups, 4) %}
+  <hr />
+  {%- endif -%}
+  {%- if len(ea.Enums) > 0 -%}
+  <h3>{%= components.SVGRefIcon(`hammer`, ps) %}{%s util.StringPlural(len(ea.Enums), "Enum") %}</h3>
+  <div class="mt clear"></div>
+  {%= vexport.EnumList(ea.Enums, fmt.Sprintf("/p/%s/export/enums", key), as, ps) %}
+  <hr />
+  {%- endif -%}
+  {%- if len(ea.Models) > 0 -%}
+  <h3 class="mt">{%= components.SVGRefIcon(`list`, ps) %}{%s util.StringPlural(len(ea.Models), "Model") %}</h3>
+  <div class="clear"></div>
+  {%= vexport.ModelList(ea.Models, fmt.Sprintf("/p/%s/export/models", key), as, ps) %}
+  {%- endif -%}
+{%- endfunc -%}

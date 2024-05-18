@@ -8,6 +8,8 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
+	"golang.org/x/exp/maps"
 
 	"{{{ .Package }}}/app/util"
 )
@@ -28,6 +30,17 @@ func (s *Service) Insert(ctx context.Context, q string, tx *sqlx.Tx, logger util
 		return errors.Errorf("no rows affected by insert using sql [%s] and %d values", q, len(values))
 	}
 	return nil
+}
+
+func (s *Service) InsertMap(ctx context.Context, table string, m util.ValueMap, tx *sqlx.Tx, logger util.Logger, values ...any) error {
+	columns := util.ArraySorted(lo.Filter(maps.Keys(m), func(x string, _ int) bool {
+		return !strings.HasPrefix(x, "~")
+	}))
+	q := SQLInsert("\"order\"", columns, 1, s.Type)
+	vals := lo.Map(columns, func(k string, _ int) any {
+		return m[k]
+	})
+	return s.Insert(ctx, q, tx, logger, vals...)
 }
 
 func (s *Service) Update(ctx context.Context, q string, tx *sqlx.Tx, expected int, logger util.Logger, values ...any) (int, error) {

@@ -17,7 +17,7 @@ import (
 	"projectforge.dev/projectforge/views/vproject"
 )
 
-func ProjectList(w http.ResponseWriter, r *http.Request) {
+func List(w http.ResponseWriter, r *http.Request) {
 	controller.Act("project.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prjs := as.Services.Projects.Projects()
 		execs := as.Services.Exec.Execs

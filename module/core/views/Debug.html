@@ -1,6 +1,7 @@
 {% import (
   "{{{ .Package }}}/app"
   "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/util"
   "{{{ .Package }}}/views/components"
   "{{{ .Package }}}/views/layout"
 ) %}
@@ -13,7 +14,22 @@
     {%- if s, ok := ps.Data.(string); ok -%}
     <div class="overflow full-width"><pre class="mt">{%s s %}</pre></div>
     {%- else -%}
+    {%- if util.ArrayTest(ps.Data) -%}
+    <div class="overflow full-width">
+      <table class="mt">
+        <tbody>
+          {%- for idx, x := range util.ArrayFromAny[any](ps.Data) -%}
+          <tr>
+            <th class="shrink">{%d idx + 1 %}</th>
+            <td>{%s= components.JSON(x) %}</td>
+          </tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
+    {%- else -%}
     <div class="mt">{%s= components.JSON(ps.Data) %}</div>
+    {%- endif -%}
     {%- endif -%}
   </div>
 {% endfunc %}

@@ -125,6 +125,12 @@ func ArrayFromAny[T any](dest any) []T {
 	return nil
 }
 
+func ArrayTest(dest any) bool {
+	defer func() { _ = recover() }()
+	k := reflect.ValueOf(dest).Kind()
+	return k == reflect.Array || k == reflect.Slice
+}
+
 func ArrayFlatten[T any](arrs ...[]T) []T {
 	return lo.Flatten(arrs)
 }

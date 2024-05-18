@@ -75,12 +75,12 @@ func exportViewListBody(m *model.Model, models model.Models) *golang.Block {
 				ret.W("      <a href=%q><button type=\"button\">%s%s</button></a>", link.URL, icon, link.Title)
 			}
 		}
-		ret.W(`      {%%%%- if len(p.Models) > 0 -%%%%}<a href="/%s/_random"><button>Random</button></a>{%%%%- endif -%%%%}`, m.Route())
-		ret.W(`      <a href="/%s/_new"><button>New</button>`+helper.TextEndAnchor, m.Route())
+		ret.W(`      {%%%%- if len(p.Models) > 0 -%%%%}<a href="/%s/_random"><button>{%%%%= components.SVGRef("gift", 15, 15, "icon", ps) %%%%}Random</button></a>{%%%%- endif -%%%%}`, m.Route())
+		ret.W(`      <a href="/%s/_new"><button>{%%%%= components.SVGRef("plus", 15, 15, "icon", ps) %%%%}New</button>`+helper.TextEndAnchor, m.Route())
 		ret.W(`    </div>`)
 		ret.W("    %s{%%%%= components.SVGRefIcon(`%s`, ps) %%%%}{%%%%s ps.Title %%%%}%s", helper.TextH3Start, m.Icon, helper.TextH3End)
 	} else {
-		ret.W("    <div class=\"right\"><a href=\"/%s/_new\"><button>New</button></a></div>", m.Route())
+		ret.W(`    <div class="right"><a href="/%s/_new"><button>{%%%%= components.SVGRef("plus", 15, 15, "icon", ps) %%%%}New</button></a></div>`, m.Route())
 		ret.W("    %s%s{%%%%s ps.Title %%%%}%s", helper.TextH3Start, svgRef(m.Icon), helper.TextH3End)
 	}
 	if m.HasTag("count") {

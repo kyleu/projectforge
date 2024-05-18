@@ -107,7 +107,7 @@ func exportViewDetailBody(g *golang.Template, m *model.Model, audit bool, models
 	ret.W("{%% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %%}")
 	ret.W("  <div class=\"card\">")
 	ret.W("    <div class=\"right\">")
-	ret.W("      <a href=\"#modal-%s\"><button type=\"button\">JSON</button></a>", m.Camel())
+	ret.W(`      <a href="#modal-%s"><button type="button">{%%%%= components.SVGRef("file", 15, 15, "icon", ps) %%%%}JSON</button></a>`, m.Camel())
 	ret.W("      <a href=\"{%%s p.Model.WebPath() %%}/edit\"><button>{%%= components.SVGRef(\"edit\", 15, 15, \"icon\", ps) %%}Edit</button></a>")
 	ret.W("    </div>")
 	ret.W("    %s%s {%%%%s p.Model.TitleString() %%%%}%s", helper.TextH3Start, svgRef(m.Icon), helper.TextH3End)

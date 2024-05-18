@@ -1,16 +1,12 @@
 {% import (
-  "fmt"
-
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/lib/exec"
   "projectforge.dev/projectforge/app/module"
   "projectforge.dev/projectforge/app/project"
-  "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/layout"
   "projectforge.dev/projectforge/views/vexec"
-  "projectforge.dev/projectforge/views/vexport"
 ) %}
 
 {% code type Detail struct {
@@ -42,43 +38,22 @@
     <div class="panel">{%= DetailSettings(prj, as, ps) %}</div>
 
     {%- if prj.Info != nil -%}
-      <input name="type" type="radio" id="tab-metadata" class="input"/>
-      <label for="tab-metadata" class="label">Metadata</label>
-      <div class="panel">{%= DetailMetadata(prj.Info, as, ps) %}</div>
+    <input name="type" type="radio" id="tab-metadata" class="input"/>
+    <label for="tab-metadata" class="label">Metadata</label>
+    <div class="panel">{%= DetailMetadata(prj.Info, as, ps) %}</div>
+    {%- endif -%}
 
-      {%- code _ = p.Project.ModuleArgExport(as.Services.Projects, ps.Logger) -%}
-      {%- code ea := p.Project.ExportArgs -%}
-      {%- if ea != nil -%}
-      <input name="type" type="radio" id="tab-modulearg-export" class="input"/>
-      <label for="tab-modulearg-export" class="label">Export</label>
-      <div class="panel">
-        <a href="/p/{%s p.Project.Key %}/export"><button>{%= components.SVGRef("wrench", 15, 15, "icon", ps) %}Manage</button></a>
-        <hr />
-        {%- if ea.Config != nil && util.ToJSONCompact(ea.Config) != "{}" -%}
-        <h3>{%= components.SVGRefIcon(`print`, ps) %}Export Configuration</h3>
-        <div class="clear"></div>
-        {%= components.JSON(ea.Config) %}
-        <hr />
-        {%- endif -%}
-        {%- if len(ea.Groups) > 0 -%}
-        <h3>{%= components.SVGRefIcon(`users`, ps) %}Groups</h3>
-        <div class="mt clear"></div>
-        {%= vexport.GroupList(ea.Groups, 4) %}
-        <hr />
-        {%- endif -%}
-        {%- if len(ea.Enums) > 0 -%}
-        <h3>{%= components.SVGRefIcon(`hammer`, ps) %}Enums</h3>
-        <div class="mt clear"></div>
-        {%= vexport.EnumList(ea.Enums, fmt.Sprintf("/p/%s/export/enums", p.Project.Key), as, ps) %}
-        <hr />
-        {%- endif -%}
-        {%- if len(ea.Models) > 0 -%}
-        <h3 class="mt">{%= components.SVGRefIcon(`list`, ps) %}Models</h3>
-        <div class="clear"></div>
-        {%= vexport.ModelList(ea.Models, fmt.Sprintf("/p/%s/export/models", p.Project.Key), as, ps) %}
-        {%- endif -%}
-      </div>
-      {%- endif -%}
+    {%- if p.Project.ExportArgs != nil -%}
+    <input name="type" type="radio" id="tab-modulearg-export" class="input"/>
+    <label for="tab-modulearg-export" class="label">Export</label>
+    <div class="panel">{%= DetailExport(prj.Key, p.Project.ExportArgs, as, ps) %}</div>
+    {%- endif -%}
+
+    {%- if p.Project.HasModule("migration") -%}
+    <input name="type" type="radio" id="tab-migration" class="input"/>
+    <label for="tab-migration" class="label">Migrations</label>
+    {%- code migs, _ := as.Services.Projects.MigrationList(ps.Context, prj, ps.Logger) -%}
+    <div class="panel">{%= DetailMigrations(prj.Key, migs, as, ps) %}</div>
     {%- endif -%}
 
     <input name="type" type="radio" id="tab-theme" class="input"/>
