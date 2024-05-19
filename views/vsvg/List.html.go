@@ -12,24 +12,25 @@ import (
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/project/action"
+	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/layout"
 	"projectforge.dev/projectforge/views/vproject"
 )
 
-//line views/vsvg/List.html:12
+//line views/vsvg/List.html:13
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vsvg/List.html:12
+//line views/vsvg/List.html:13
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vsvg/List.html:12
+//line views/vsvg/List.html:13
 type List struct {
 	layout.Basic
 	Project  *project.Project
@@ -37,27 +38,27 @@ type List struct {
 	Contents map[string]string
 }
 
-//line views/vsvg/List.html:19
+//line views/vsvg/List.html:20
 func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsvg/List.html:19
+//line views/vsvg/List.html:20
 	qw422016.N().S(`
   `)
-//line views/vsvg/List.html:20
+//line views/vsvg/List.html:21
 	vproject.StreamSummary(qw422016, p.Project, "SVG", nil, &action.TypeSVG, nil, ps)
-//line views/vsvg/List.html:20
+//line views/vsvg/List.html:21
 	qw422016.N().S(`
   <div class="card">
     <h3>SVG icons</h3>
     <div class="mt">
       <a href="/svg/`)
-//line views/vsvg/List.html:24
+//line views/vsvg/List.html:25
 	qw422016.E().S(p.Project.Key)
-//line views/vsvg/List.html:24
+//line views/vsvg/List.html:25
 	qw422016.N().S(`/x/build" title="Writes [svg.go], containing the contents of all SVGs"><button>Rebuild</button></a>
       <a href="/svg/`)
-//line views/vsvg/List.html:25
+//line views/vsvg/List.html:26
 	qw422016.E().S(p.Project.Key)
-//line views/vsvg/List.html:25
+//line views/vsvg/List.html:26
 	qw422016.N().S(`/x/refreshapp" title="Rewrites the application icon and all exported forms"><button>Refresh App Icon</button></a>
     </div>
   </div>
@@ -69,9 +70,9 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
       The SVG will be rewritten with attribution.
     </p>
     <form action="/svg/`)
-//line views/vsvg/List.html:35
+//line views/vsvg/List.html:36
 	qw422016.E().S(p.Project.Key)
-//line views/vsvg/List.html:35
+//line views/vsvg/List.html:36
 	qw422016.N().S(`/x/add" method="get">
       <div class="overflow full-width">
         <table>
@@ -96,63 +97,88 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
     <h3>Current Icons</h3>
     <div class="flex-wrap">
 `)
-//line views/vsvg/List.html:58
+//line views/vsvg/List.html:59
 	for _, k := range p.Keys {
-//line views/vsvg/List.html:58
+//line views/vsvg/List.html:59
 		qw422016.N().S(`      <div class="icon-container">
         <a href="/svg/`)
-//line views/vsvg/List.html:60
+//line views/vsvg/List.html:61
 		qw422016.E().S(p.Project.Key)
-//line views/vsvg/List.html:60
+//line views/vsvg/List.html:61
 		qw422016.N().S(`/`)
-//line views/vsvg/List.html:60
+//line views/vsvg/List.html:61
 		qw422016.E().S(k)
-//line views/vsvg/List.html:60
+//line views/vsvg/List.html:61
 		qw422016.N().S(`">
           <div>`)
-//line views/vsvg/List.html:61
+//line views/vsvg/List.html:62
 		qw422016.N().S(strings.ReplaceAll(p.Contents[k], "svg-"+k, "svg-"+k+"_adhoc"))
-//line views/vsvg/List.html:61
-		qw422016.N().S(`</div>
-          <div>`)
-//line views/vsvg/List.html:62
-		qw422016.E().S(k)
 //line views/vsvg/List.html:62
 		qw422016.N().S(`</div>
-        </a>
+`)
+//line views/vsvg/List.html:63
+		x, y := util.StringSplit(k, '@', true)
+
+//line views/vsvg/List.html:64
+		if y == "" {
+//line views/vsvg/List.html:64
+			qw422016.N().S(`          <div>`)
+//line views/vsvg/List.html:65
+			qw422016.E().S(k)
+//line views/vsvg/List.html:65
+			qw422016.N().S(`</div>
+`)
+//line views/vsvg/List.html:66
+		} else {
+//line views/vsvg/List.html:66
+			qw422016.N().S(`          <div>`)
+//line views/vsvg/List.html:67
+			qw422016.E().S(x)
+//line views/vsvg/List.html:67
+			qw422016.N().S(`</div>
+          <em style="font-size: 75%;">`)
+//line views/vsvg/List.html:68
+			qw422016.E().S(y)
+//line views/vsvg/List.html:68
+			qw422016.N().S(`</em>
+`)
+//line views/vsvg/List.html:69
+		}
+//line views/vsvg/List.html:69
+		qw422016.N().S(`        </a>
       </div>
 `)
-//line views/vsvg/List.html:65
+//line views/vsvg/List.html:72
 	}
-//line views/vsvg/List.html:65
+//line views/vsvg/List.html:72
 	qw422016.N().S(`    </div>
   </div>
 `)
-//line views/vsvg/List.html:68
+//line views/vsvg/List.html:75
 }
 
-//line views/vsvg/List.html:68
+//line views/vsvg/List.html:75
 func (p *List) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsvg/List.html:68
+//line views/vsvg/List.html:75
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsvg/List.html:68
+//line views/vsvg/List.html:75
 	p.StreamBody(qw422016, as, ps)
-//line views/vsvg/List.html:68
+//line views/vsvg/List.html:75
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsvg/List.html:68
+//line views/vsvg/List.html:75
 }
 
-//line views/vsvg/List.html:68
+//line views/vsvg/List.html:75
 func (p *List) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsvg/List.html:68
+//line views/vsvg/List.html:75
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsvg/List.html:68
+//line views/vsvg/List.html:75
 	p.WriteBody(qb422016, as, ps)
-//line views/vsvg/List.html:68
+//line views/vsvg/List.html:75
 	qs422016 := string(qb422016.B)
-//line views/vsvg/List.html:68
+//line views/vsvg/List.html:75
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsvg/List.html:68
+//line views/vsvg/List.html:75
 	return qs422016
-//line views/vsvg/List.html:68
+//line views/vsvg/List.html:75
 }

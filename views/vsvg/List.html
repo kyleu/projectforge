@@ -5,6 +5,7 @@
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/project"
   "projectforge.dev/projectforge/app/project/action"
+  "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/layout"
   "projectforge.dev/projectforge/views/vproject"
 ) %}
@@ -59,7 +60,13 @@
       <div class="icon-container">
         <a href="/svg/{%s p.Project.Key %}/{%s k %}">
           <div>{%s= strings.ReplaceAll(p.Contents[k], "svg-" + k, "svg-" + k + "_adhoc") %}</div>
+          {%- code x, y := util.StringSplit(k, '@', true) -%}
+          {%- if y == "" -%}
           <div>{%s k %}</div>
+          {%- else -%}
+          <div>{%s x %}</div>
+          <em style="font-size: 75%;">{%s y %}</em>
+          {%- endif -%}
         </a>
       </div>
       {%- endfor -%}

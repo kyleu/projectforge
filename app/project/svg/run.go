@@ -2,6 +2,7 @@ package svg
 
 import (
 	"cmp"
+	"fmt"
 	"slices"
 	"strings"
 
@@ -14,9 +15,6 @@ import (
 
 func Build(fs filesystem.FileLoader, logger util.Logger, prj *project.Project) (int, error) {
 	tgt := "app/util/svg.go"
-	if prj.IsCSharp() {
-		tgt = "Util/Icons.cs"
-	}
 	return Run(fs, tgt, logger, prj)
 }
 
@@ -29,16 +27,28 @@ func Run(fs filesystem.FileLoader, tgt string, logger util.Logger, prj *project.
 		return 0, errors.New("no SVGs available")
 	}
 
-	var out string
 	if prj.IsCSharp() {
-		out = cstemplate(svgs, prj.Package)
+		svgGroups := map[string]SVGs{}
+		for _, x := range svgs {
+			k, p := util.StringSplit(x.Key, '@', true)
+			x.Key = k
+			svgGroups[p] = append(svgGroups[p], x)
+		}
+		for g, x := range svgGroups {
+			namespace := util.StringToTitle(prj.Key) + util.StringToTitle(g)
+			out := cstemplate(namespace, x)
+			fn := fmt.Sprintf("%s/Util/Icons.cs", namespace)
+			err = writeFile(fs, fn, out)
+			if err != nil {
+				return 0, err
+			}
+		}
 	} else {
-		out = template(svgs, util.StringDetectLinebreak(svgs[0].Markup))
-	}
-
-	err = writeFile(fs, tgt, out)
-	if err != nil {
-		return 0, err
+		out := template(svgs, util.StringDetectLinebreak(svgs[0].Markup))
+		err = writeFile(fs, tgt, out)
+		if err != nil {
+			return 0, err
+		}
 	}
 
 	return len(svgs), nil
@@ -53,9 +63,9 @@ func markup(key string, bytes []byte) (string, error) {
 	return replaced, nil
 }
 
-func loadSVGs(prj string, fs filesystem.FileLoader, logger util.Logger, cs bool) ([]*SVG, error) {
+func loadSVGs(prj string, fs filesystem.FileLoader, logger util.Logger, cs bool) (SVGs, error) {
 	files, _ := List(prj, fs, logger, cs)
-	svgs := make([]*SVG, 0, len(files))
+	svgs := make(SVGs, 0, len(files))
 	for _, f := range files {
 		s, err := Content(prj, fs, f)
 		if err != nil {

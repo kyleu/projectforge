@@ -33,12 +33,13 @@ func AddToProject(prj string, fs filesystem.FileLoader, src string, tgt string) 
 func svgPath(prj string, key string) string {
 	if strings.Contains(key, "@") {
 		x, y := util.StringSplit(key, '@', true)
-		return fmt.Sprintf("%s%s/wwwroot/svg/%s%s", util.StringToTitle(prj), util.StringToTitle(x), y, util.ExtSVG)
+		return fmt.Sprintf("%s%s/wwwroot/svg/%s%s", util.StringToTitle(prj), util.StringToTitle(y), x, util.ExtSVG)
 	}
 	return "client/src/svg/" + key + util.ExtSVG
 }
 
 func load(src string, tgt string) (*SVG, error) {
+	tgt, _ = util.StringSplit(tgt, '@', true)
 	url := src
 	if !strings.HasPrefix(src, "http") {
 		url = ghLineAwesome + src + util.ExtSVG

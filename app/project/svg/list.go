@@ -33,7 +33,7 @@ func ListCSharp(prjKey string, fs filesystem.FileLoader, logger util.Logger) []s
 	})
 	return lo.FlatMap(prjDirs, func(prj string, _ int) []string {
 		return lo.Map(fs.ListExtension(prj+"/wwwroot/svg", "svg", nil, true, logger), func(svg string, _ int) string {
-			return fmt.Sprintf("%s@%s", strings.TrimPrefix(strings.ToLower(prj), prjKey), svg)
+			return fmt.Sprintf("%s@%s", svg, strings.TrimPrefix(strings.ToLower(prj), prjKey))
 		})
 	})
 }

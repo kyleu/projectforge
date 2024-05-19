@@ -9,7 +9,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func template(svgs []*SVG, linebreak string) string {
+func template(svgs SVGs, linebreak string) string {
 	out := strings.Builder{}
 	w := func(s string) {
 		out.WriteString(s)
@@ -51,7 +51,7 @@ func template(svgs []*SVG, linebreak string) string {
 	return out.String()
 }
 
-func cstemplate(svgs []*SVG, namespace string) string {
+func cstemplate(namespace string, svgs SVGs) string {
 	out := strings.Builder{}
 	w := func(s string, args ...any) {
 		out.WriteString(fmt.Sprintf(s, args...))
@@ -64,17 +64,17 @@ func cstemplate(svgs []*SVG, namespace string) string {
 	w("public static class Icons")
 	w("{")
 	for _, x := range svgs {
-		w("    private const string %sSVG = %q;", x.Key, x.Markup)
+		w("    private const string %s = %q;", x.Proper(), x.Markup)
 	}
 	w("")
-	w("    public static Dictionary<string, string> Library = new Dictionary<string, string>")
+	w("    public static readonly Dictionary<string, string> Library = new()")
 	w("    {")
 	for idx, x := range svgs {
 		suffix := ""
 		if idx < len(svgs)-1 {
 			suffix = ","
 		}
-		w("        { %q, %sSVG }%s", x.Key, x.Key, suffix)
+		w("        { %q, %s }%s", x.Key, x.Proper(), suffix)
 	}
 	w("    };")
 	w("}")
