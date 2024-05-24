@@ -57,8 +57,9 @@
     <div class="clear"></div>
   </div>
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`cog`, ps) %}App Profiling</h3>
-    {%= settingsLink("/admin/memusage", "cog", "Memory Usage", "Detailed memory usage statistics", ps) %}
+    <h3>{%= components.SVGRefIcon(`cog`, ps) %}App Profiling</h3>{{{ if .HasModule "system" }}}
+    {%= settingsLink("/admin/system", "desktop", "System Status", "Tons of info about the computer running this application", ps) %}{{{ end }}}
+    {%= settingsLink("/admin/memusage", "cog", "Memory Usage", "Detailed memory usage statistics for this application", ps) %}
     {%= settingsLink("/admin/gc", "cog", "Collect Garbage", "Runs the Go garbage collector", ps) %}{{{ if .DangerousOK }}}
     {%= settingsLink("/admin/heap", "cog", "Write Memory Dump", "Writes a memory dump to <em>./tmp/mem.pprof</em>, use script to view", ps) %}
     {%= settingsLink("/admin/cpu/start", "cog", "Start CPU Profile", "Profiles the CPU using <em>./tmp/cpu.pprof</em>, use script to view", ps) %}

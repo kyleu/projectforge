@@ -90,7 +90,14 @@ func Admin(w http.ResponseWriter, r *http.Request) {
 			ps.SetTitleAndData("Sitemap", ps.Menu)
 			return controller.Render(r, as, &vadmin.Sitemap{}, ps, "admin", "Sitemap**graph"){{{ if .HasModule "websocket" }}}
 		case "sockets":
-			return socketRoute(w, r, as, ps, path[1:]...){{{ end }}}
+			return socketRoute(w, r, as, ps, path[1:]...){{{ end }}}{{{ if .HasModule "system" }}}
+		case "system":
+			st, err := as.Services.System.Status(ps.Context, ps.Logger)
+			if err != nil {
+				return "", err
+			}
+			ps.SetTitleAndData("System Status", st)
+			return controller.Render(r, as, &vadmin.SystemStatus{Status: st}, ps, "admin", "Status**desktop"){{{ end }}}
 		// $PF_SECTION_START(admin-actions)$
 		// $PF_SECTION_END(admin-actions)$
 		default:

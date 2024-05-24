@@ -64,6 +64,7 @@ All managed projects expose a web and CLI interface, and additional modules are 
 - `scripting`: Allows the execution of JavaScript files using a built-in interpreter
 - `search`: Adds search facilities to the top-level navigation bar
 - `sqlite`: Provides an API for accessing SQLite databases
+- `system`: Provides logic and a UI for getting the status of the system the app is running on
 - `themecatalog`: A dozen default themes, and facilities to create additional
 - `types`: Classes for representing common data types
 - `upgrade`: In-place version upgrades using GitHub Releases
