@@ -39,18 +39,18 @@ func controllerList(m *model.Model, b *csharp.Block) {
 	b.W("    public async Task<IActionResult> List()")
 	b.W("    {")
 	b.W("        var ret = await svc.List();")
-	b.W("        return Result(%q, ret, %q);", m.ProperPlural(), m.ProperPlural())
+	b.W("        return Ok(ret);")
 	b.W("    }")
 }
 
 func controllerCreate(m *model.Model, b *csharp.Block) {
 	b.W("    [Route(BaseRoute)]")
 	b.W("    [HttpPost]")
-	b.W("    public async Task<IActionResult> Create([FromHttp] %s mdl)", m.Proper())
+	b.W("    public async Task<IActionResult> Create([FromBody] %s mdl)", m.Proper())
 	b.W("    {")
 	b.W("        svc.Models.Add(mdl);")
 	b.W("        await svc.Flush();")
-	b.W("        return Result(%q, mdl, mdl.ToString());", m.Proper())
+	b.W("        return Ok(mdl);")
 	b.W("    }")
 }
 
@@ -65,7 +65,7 @@ func controllerDetail(m *model.Model, pk *model.Column, b *csharp.Block) {
 	b.W("            throw new ArgumentNullException(\"no %s available with id [\" + id + \"]\");", m.TitleLower())
 	b.W("        }")
 	b.W("")
-	b.W("        return Result(%q, ret, ret.ToString());", m.Proper())
+	b.W("        return Ok(ret);")
 	b.W("    }")
 }
 

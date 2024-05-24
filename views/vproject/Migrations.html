@@ -1,0 +1,34 @@
+{% import (
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/project"
+  "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/layout"
+) %}
+
+{% code type Migrations struct {
+  layout.Basic
+  Project *project.Project
+  Migrations project.Migrations
+} %}
+
+{% func (p *Migrations) Body(as *app.State, ps *cutil.PageState) %}
+  {%- code prj := p.Project -%}
+  {%= Summary(prj, "", nil, nil, nil, ps) %}
+
+  <div class="card">
+    <h3>Migrations</h3>
+    <ul class="accordion">
+      {%- for _, m := range p.Migrations -%}
+      <li>
+        <input id="accordion-{%s m.Filename %}" type="checkbox" hidden="hidden" />
+        <label for="accordion-{%s m.Filename %}">{%= components.ExpandCollapse(3, ps) %}{%s m.Filename %}</label>
+        <div class="bd"><div><div>
+          {%- code out, _ := cutil.FormatLang(m.Content, "sql") -%}
+          {%s= out %}
+        </div></div></div>
+      </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+{% endfunc %}

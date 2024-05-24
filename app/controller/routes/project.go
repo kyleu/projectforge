@@ -28,7 +28,6 @@ func projectRoutes(r *mux.Router) {
 	makeRoute(r, http.MethodPost, "/p/{key}/edit", cproject.ProjectSave)
 	makeRoute(r, http.MethodGet, "/p/{key}/stats", cproject.FileStats)
 	makeRoute(r, http.MethodGet, "/p/{key}/migrations", cproject.Migrations)
-	makeRoute(r, http.MethodGet, "/p/{key}/migrations/{idx}", cproject.Migration)
 	makeRoute(r, http.MethodGet, "/p/{key}/start", cproject.ProjectStart)
 
 	exportRoutes(r)
