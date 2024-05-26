@@ -19,12 +19,20 @@
     <div class="overflow full-width">
       <table class="mt">
         <tbody>
-          {%- for idx, x := range util.ArrayFromAny[any](ps.Data) -%}
+          {%- code a := util.ArrayFromAny[any](ps.Data) -%}
+          {%- for idx, x := range a -%}
+          {%- if idx < 32 -%}
           <tr>
             <th class="shrink">{%d idx + 1 %}</th>
             <td>{%s= components.JSON(x) %}</td>
           </tr>
+          {%- endif -%}
           {%- endfor -%}
+          {%- if len(a) > 32 -%}
+          <tr>
+            <td class="shrink" colspan="2"><em>...and [{%d len(a) - 32 %}] more...</em></td>
+          </tr>
+          {%- endif -%}
         </tbody>
       </table>
     </div>

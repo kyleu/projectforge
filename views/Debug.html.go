@@ -63,69 +63,89 @@ func (p *Debug) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
         <tbody>
 `)
 //line views/Debug.html:22
-			for idx, x := range util.ArrayFromAny[any](ps.Data) {
-//line views/Debug.html:22
-				qw422016.N().S(`          <tr>
+			a := util.ArrayFromAny[any](ps.Data)
+
+//line views/Debug.html:23
+			for idx, x := range a {
+//line views/Debug.html:24
+				if idx < 32 {
+//line views/Debug.html:24
+					qw422016.N().S(`          <tr>
             <th class="shrink">`)
-//line views/Debug.html:24
-				qw422016.N().D(idx + 1)
-//line views/Debug.html:24
-				qw422016.N().S(`</th>
+//line views/Debug.html:26
+					qw422016.N().D(idx + 1)
+//line views/Debug.html:26
+					qw422016.N().S(`</th>
             <td>`)
-//line views/Debug.html:25
-				qw422016.N().S(components.JSON(x))
-//line views/Debug.html:25
-				qw422016.N().S(`</td>
+//line views/Debug.html:27
+					qw422016.N().S(components.JSON(x))
+//line views/Debug.html:27
+					qw422016.N().S(`</td>
           </tr>
 `)
-//line views/Debug.html:27
+//line views/Debug.html:29
+				}
+//line views/Debug.html:30
 			}
-//line views/Debug.html:27
+//line views/Debug.html:31
+			if len(a) > 32 {
+//line views/Debug.html:31
+				qw422016.N().S(`          <tr>
+            <td class="shrink" colspan="2"><em>...and [`)
+//line views/Debug.html:33
+				qw422016.N().D(len(a) - 32)
+//line views/Debug.html:33
+				qw422016.N().S(`] more...</em></td>
+          </tr>
+`)
+//line views/Debug.html:35
+			}
+//line views/Debug.html:35
 			qw422016.N().S(`        </tbody>
       </table>
     </div>
 `)
-//line views/Debug.html:31
+//line views/Debug.html:39
 		} else {
-//line views/Debug.html:31
+//line views/Debug.html:39
 			qw422016.N().S(`    <div class="mt">`)
-//line views/Debug.html:32
+//line views/Debug.html:40
 			qw422016.N().S(components.JSON(ps.Data))
-//line views/Debug.html:32
+//line views/Debug.html:40
 			qw422016.N().S(`</div>
 `)
-//line views/Debug.html:33
+//line views/Debug.html:41
 		}
-//line views/Debug.html:34
+//line views/Debug.html:42
 	}
-//line views/Debug.html:34
+//line views/Debug.html:42
 	qw422016.N().S(`  </div>
 `)
-//line views/Debug.html:36
+//line views/Debug.html:44
 }
 
-//line views/Debug.html:36
+//line views/Debug.html:44
 func (p *Debug) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/Debug.html:36
+//line views/Debug.html:44
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/Debug.html:36
+//line views/Debug.html:44
 	p.StreamBody(qw422016, as, ps)
-//line views/Debug.html:36
+//line views/Debug.html:44
 	qt422016.ReleaseWriter(qw422016)
-//line views/Debug.html:36
+//line views/Debug.html:44
 }
 
-//line views/Debug.html:36
+//line views/Debug.html:44
 func (p *Debug) Body(as *app.State, ps *cutil.PageState) string {
-//line views/Debug.html:36
+//line views/Debug.html:44
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/Debug.html:36
+//line views/Debug.html:44
 	p.WriteBody(qb422016, as, ps)
-//line views/Debug.html:36
+//line views/Debug.html:44
 	qs422016 := string(qb422016.B)
-//line views/Debug.html:36
+//line views/Debug.html:44
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/Debug.html:36
+//line views/Debug.html:44
 	return qs422016
-//line views/Debug.html:36
+//line views/Debug.html:44
 }
