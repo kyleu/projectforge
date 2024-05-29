@@ -66,14 +66,14 @@ func ModelAll(ns string, m *model.Model, args *model.Args) (file.Files, error) {
 	if err != nil {
 		return nil, err
 	}
-	list, err := cshtmlList(ns, m, args)
-	if err != nil {
-		return nil, err
-	}
-	detail, err := cshtmlDetail(ns, m, args)
-	if err != nil {
-		return nil, err
-	}
+	//list, err := cshtmlList(ns, m, args)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//detail, err := cshtmlDetail(ns, m, args)
+	//if err != nil {
+	//	return nil, err
+	//}
 
-	return file.Files{ctrlr, svc, list, detail}, nil
+	return file.Files{ctrlr, svc /*, list, detail */}, nil
 }

@@ -52,9 +52,15 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool, linebreak stri
 	getBys := map[string]model.Columns{}
 	titles := map[string]string{}
 	var doExtra []string
+	add := func(c *model.Column) {
+		getBys[c.Name] = model.Columns{c}
+		if !slices.Contains(doExtra, c.Name) {
+			doExtra = append(doExtra, c.Name)
+		}
+	}
 	if pkLen > 1 {
 		lo.ForEach(m.PKs(), func(pkCol *model.Column, _ int) {
-			getBys[pkCol.Name] = model.Columns{pkCol}
+			add(pkCol)
 		})
 	}
 	lo.ForEach(m.Relations, func(rel *model.Relation, _ int) {
@@ -63,8 +69,7 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool, linebreak stri
 		getBys[colStr] = cols
 	})
 	lo.ForEach(m.IndexedColumns(false), func(col *model.Column, _ int) {
-		getBys[col.Name] = model.Columns{col}
-		doExtra = append(doExtra, col.Name)
+		add(col)
 	})
 	lo.ForEach(m.Columns, func(col *model.Column, _ int) {
 		lo.ForEach(col.Tags, func(tag string, _ int) {

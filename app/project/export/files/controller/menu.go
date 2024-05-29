@@ -122,7 +122,7 @@ func menuBlockGM(args *model.Args, orphans []string) *golang.Block {
 func menuItemForModel(m *model.Model, models model.Models, acronyms []string) *menu.Item {
 	w := m.ProperWithGroup(acronyms)
 	ret := &menu.Item{Key: m.Package, Title: m.TitlePlural(), Description: m.Description, Icon: m.Icon, Route: m.Route(), Warning: w}
-	lo.ForEach(models.ForGroup(append(slices.Clone(m.Group), m.Name)...), func(x *model.Model, _ int) {
+	lo.ForEach(models.ForGroup(append(slices.Clone(m.Group), m.Package)...), func(x *model.Model, _ int) {
 		kid := menuItemForModel(x, models, acronyms)
 		ret.Children = append(ret.Children, kid)
 	})

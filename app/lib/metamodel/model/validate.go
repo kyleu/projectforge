@@ -27,20 +27,21 @@ func (m *Model) Validate(mods []string, models Models, groups Groups) error {
 		}
 	}
 	if len(m.Group) > 0 && groups.Get(m.Group...) == nil && !slices.Contains(mods, "csharp") {
+		msg := "model [%s] references undefined group [%s], and no model matches"
 		if len(m.Group) == 1 && models.Get(m.Group[0]) == nil {
-			return errors.Errorf("model [%s] references undefined group [%s], and no model matches", m.Name, strings.Join(m.Group, "/"))
+			return errors.Errorf(msg, m.Name, strings.Join(m.Group, "/"))
 		}
 		if len(m.Group) > 1 {
 			var cool bool
+			mg := strings.Join(m.Group, "/")
 			for _, x := range models {
-				mg := strings.Join(m.Group, "/")
-				xg := strings.Join(x.Group, "/") + "/" + x.Name
+				xg := strings.Join(x.Group, "/") + "/" + x.Package
 				if mg == xg {
 					cool = true
 				}
 			}
 			if !cool {
-				return errors.Errorf("model [%s] references undefined group [%s], and no model matches", m.Name, strings.Join(m.Group, "/"))
+				return errors.Errorf(msg, m.Name, strings.Join(m.Group, "/"))
 			}
 		}
 	}
