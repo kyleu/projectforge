@@ -12,7 +12,8 @@ import (
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller"
 	"{{{ .Package }}}/app/controller/cutil"{{{ if .HasModule "migration" }}}
-	"{{{ .Package }}}/app/lib/database/migrate"{{{ end }}}
+	"{{{ .Package }}}/app/lib/database/migrate"{{{ end }}}{{{ if .HasModule "brands" }}}
+	"{{{ .Package }}}/app/lib/icons"{{{ end }}}
 	"{{{ .Package }}}/app/lib/log"{{{ if .HasAccount }}}
 	"{{{ .Package }}}/app/lib/user"{{{ end }}}
 	"{{{ .Package }}}/app/util"
@@ -35,7 +36,10 @@ func Admin(w http.ResponseWriter, r *http.Request) {
 		case "server":
 			info := util.DebugGetInfo(as.BuildInfo.Version, as.Started)
 			ps.SetTitleAndData("Server Info", info)
-			return controller.Render(r, as, &vadmin.ServerInfo{Info: info}, ps, "admin", "App Information"){{{ if .DangerousOK }}}
+			return controller.Render(r, as, &vadmin.ServerInfo{Info: info}, ps, "admin", "App Information"){{{ if .HasModule "brands" }}}
+		case "brands":
+			ps.SetTitleAndData("Brand Icons", icons.BrandLibrary())
+			return controller.Render(r, as, &vadmin.BrandIcons{Library: icons.BrandLibrary()}, ps, "admin", "Brand Icons**folder"){{{ end }}}{{{ if .DangerousOK }}}
 		case "cpu":
 			switch path[1] {
 			case "start":

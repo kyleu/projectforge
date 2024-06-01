@@ -1,0 +1,46 @@
+{% import (
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/lib/icons"
+  "{{{ .Package }}}/views/components"
+  "{{{ .Package }}}/views/layout"
+) %}
+
+{% code type BrandIcons struct {
+  layout.Basic
+  Library *icons.Library
+} %}
+
+{% func (p *BrandIcons) Body(as *app.State, ps *cutil.PageState) %}
+  <style>
+    .library {
+      display: grid;
+      grid-template-columns: repeat(auto-fill,minmax(13rem,1fr));
+      margin: 0 0 1.5rem;
+    }
+    .brand-icon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      margin: var(--padding);
+    }
+    .brand-icon .svg {
+      width: 48px;
+      height: 48px;
+    }
+  </style>
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`image`, ps) %}Brand Icon Library</h3>
+    <div class="mt library">
+      {%- for _, key := range p.Library.SortedKeys() -%}
+      {%- code x := p.Library.Icons[key] -%}
+      <div class="brand-icon" title="{%s x.Key %}">
+        <div class="svg">{%s= x.HTML("brand-") %}</div>
+        <div>{%s x.Title %}</div>
+      </div>
+      {%- endfor -%}
+    </div>
+  </div>
+{% endfunc %}

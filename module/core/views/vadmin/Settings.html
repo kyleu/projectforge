@@ -53,7 +53,8 @@
     {%= settingsLink("/admin/routes", "bolt", "HTTP routes", "Enumerates all registered HTTP routes, by method", ps) %}
     {%= settingsLink("/admin/session", "bolt", "User Session", "View the user session, including all cookies and settings", ps) %}
     {%= settingsLink("/admin/request", "bolt", "Debug HTTP Request", "Full debug view of an HTTP request from your browser", ps) %}{{{ if .HasModule "websocket" }}}
-    {%= settingsLink("/admin/sockets", "bolt", "Active WebSockets", "Manage the active WebSockets in this server", ps) %}{{{ end }}}
+    {%= settingsLink("/admin/sockets", "bolt", "Active WebSockets", "Manage the active WebSockets in this server", ps) %}{{{ end }}}{{{ if .HasModule "brands" }}}
+    {%= settingsLink("/admin/brands", "bolt", "Brand Icons", "Displays the brand icons that are available to this application", ps) %}{{{ end }}}
     <div class="clear"></div>
   </div>
   <div class="card">

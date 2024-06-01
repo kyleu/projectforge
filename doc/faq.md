@@ -32,6 +32,7 @@ All managed projects expose a web and CLI interface, and additional modules are 
 
 - `android`: Webview-based application and Android build
 - `audit`: Audit framework for tracking changes in the system
+- `brands`: Provides thousands of SVG icons from `simple-icons` for representing common logos
 - `core`: Common utilities for a Go application
 - `database`: API for accessing relational databases
 - `databaseui`: UI for registered databases, allows auditing and tracing

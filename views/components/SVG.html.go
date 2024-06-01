@@ -31,42 +31,54 @@ var (
 
 //line views/components/SVG.html:11
 func StreamSVG(qw422016 *qt422016.Writer, k string) {
-//line views/components/SVG.html:11
-	qw422016.N().S(util.SVGLibrary[k])
-//line views/components/SVG.html:11
-}
-
-//line views/components/SVG.html:11
-func WriteSVG(qq422016 qtio422016.Writer, k string) {
-//line views/components/SVG.html:11
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/SVG.html:11
-	StreamSVG(qw422016, k)
-//line views/components/SVG.html:11
-	qt422016.ReleaseWriter(qw422016)
-//line views/components/SVG.html:11
-}
-
-//line views/components/SVG.html:11
-func SVG(k string) string {
-//line views/components/SVG.html:11
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/SVG.html:11
-	WriteSVG(qb422016, k)
-//line views/components/SVG.html:11
-	qs422016 := string(qb422016.B)
-//line views/components/SVG.html:11
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/SVG.html:11
-	return qs422016
-//line views/components/SVG.html:11
-}
-
+//line views/components/SVG.html:12
+	if svg, ok := util.SVGLibrary[k]; ok {
 //line views/components/SVG.html:13
-func StreamSVGRef(qw422016 *qt422016.Writer, k string, w int, h int, cls string, ps *cutil.PageState) {
+		qw422016.N().S(svg)
 //line views/components/SVG.html:14
-	if k != "" {
+	} else {
+//line views/components/SVG.html:14
+		qw422016.N().S(`<!-- missing icon definition for [`)
+//line views/components/SVG.html:15
+		qw422016.E().S(k)
+//line views/components/SVG.html:15
+		qw422016.N().S(`] -->`)
 //line views/components/SVG.html:16
+	}
+//line views/components/SVG.html:17
+}
+
+//line views/components/SVG.html:17
+func WriteSVG(qq422016 qtio422016.Writer, k string) {
+//line views/components/SVG.html:17
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/components/SVG.html:17
+	StreamSVG(qw422016, k)
+//line views/components/SVG.html:17
+	qt422016.ReleaseWriter(qw422016)
+//line views/components/SVG.html:17
+}
+
+//line views/components/SVG.html:17
+func SVG(k string) string {
+//line views/components/SVG.html:17
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/components/SVG.html:17
+	WriteSVG(qb422016, k)
+//line views/components/SVG.html:17
+	qs422016 := string(qb422016.B)
+//line views/components/SVG.html:17
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/components/SVG.html:17
+	return qs422016
+//line views/components/SVG.html:17
+}
+
+//line views/components/SVG.html:19
+func StreamSVGRef(qw422016 *qt422016.Writer, k string, w int, h int, cls string, ps *cutil.PageState) {
+//line views/components/SVG.html:20
+	if k != "" {
+//line views/components/SVG.html:22
 		ps.AddIcon(k)
 		if w == 0 {
 			w = 20
@@ -76,208 +88,208 @@ func StreamSVGRef(qw422016 *qt422016.Writer, k string, w int, h int, cls string,
 		}
 		style := fmt.Sprintf("width: %dpx; height: %dpx;", w, h)
 
-//line views/components/SVG.html:21
+//line views/components/SVG.html:27
 		if cls == "" {
-//line views/components/SVG.html:21
+//line views/components/SVG.html:27
 			qw422016.N().S(`<svg style="`)
-//line views/components/SVG.html:22
+//line views/components/SVG.html:28
 			qw422016.E().S(style)
-//line views/components/SVG.html:22
+//line views/components/SVG.html:28
 			qw422016.N().S(`"><use xlink:href="#svg-`)
-//line views/components/SVG.html:22
+//line views/components/SVG.html:28
 			qw422016.E().S(k)
-//line views/components/SVG.html:22
+//line views/components/SVG.html:28
 			qw422016.N().S(`" /></svg>`)
-//line views/components/SVG.html:23
-		} else {
-//line views/components/SVG.html:23
-			qw422016.N().S(`<svg class="`)
-//line views/components/SVG.html:24
-			qw422016.E().S(cls)
-//line views/components/SVG.html:24
-			qw422016.N().S(`" style="`)
-//line views/components/SVG.html:24
-			qw422016.E().S(style)
-//line views/components/SVG.html:24
-			qw422016.N().S(`"><use xlink:href="#svg-`)
-//line views/components/SVG.html:24
-			qw422016.E().S(k)
-//line views/components/SVG.html:24
-			qw422016.N().S(`" /></svg>`)
-//line views/components/SVG.html:25
-		}
-//line views/components/SVG.html:26
-	}
-//line views/components/SVG.html:27
-}
-
-//line views/components/SVG.html:27
-func WriteSVGRef(qq422016 qtio422016.Writer, k string, w int, h int, cls string, ps *cutil.PageState) {
-//line views/components/SVG.html:27
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/SVG.html:27
-	StreamSVGRef(qw422016, k, w, h, cls, ps)
-//line views/components/SVG.html:27
-	qt422016.ReleaseWriter(qw422016)
-//line views/components/SVG.html:27
-}
-
-//line views/components/SVG.html:27
-func SVGRef(k string, w int, h int, cls string, ps *cutil.PageState) string {
-//line views/components/SVG.html:27
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/SVG.html:27
-	WriteSVGRef(qb422016, k, w, h, cls, ps)
-//line views/components/SVG.html:27
-	qs422016 := string(qb422016.B)
-//line views/components/SVG.html:27
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/SVG.html:27
-	return qs422016
-//line views/components/SVG.html:27
-}
-
 //line views/components/SVG.html:29
-func StreamIcon(qw422016 *qt422016.Writer, k string, size int, cls string, ps *cutil.PageState) {
+		} else {
+//line views/components/SVG.html:29
+			qw422016.N().S(`<svg class="`)
 //line views/components/SVG.html:30
-	if strings.Contains(k, "/") {
+			qw422016.E().S(cls)
 //line views/components/SVG.html:30
-		qw422016.N().S(`<img alt="SVG icon [`)
+			qw422016.N().S(`" style="`)
+//line views/components/SVG.html:30
+			qw422016.E().S(style)
+//line views/components/SVG.html:30
+			qw422016.N().S(`"><use xlink:href="#svg-`)
+//line views/components/SVG.html:30
+			qw422016.E().S(k)
+//line views/components/SVG.html:30
+			qw422016.N().S(`" /></svg>`)
 //line views/components/SVG.html:31
-		qw422016.E().S(k)
-//line views/components/SVG.html:31
-		qw422016.N().S(`]" src="`)
-//line views/components/SVG.html:31
-		qw422016.E().S(k)
-//line views/components/SVG.html:31
-		qw422016.N().S(`" style="width:`)
-//line views/components/SVG.html:31
-		qw422016.N().D(size)
-//line views/components/SVG.html:31
-		qw422016.N().S(`px; height:`)
-//line views/components/SVG.html:31
-		qw422016.N().D(size)
-//line views/components/SVG.html:31
-		qw422016.N().S(`px;" />`)
+		}
 //line views/components/SVG.html:32
-	} else {
-//line views/components/SVG.html:33
-		StreamSVGRef(qw422016, k, size, size, cls, ps)
-//line views/components/SVG.html:34
 	}
-//line views/components/SVG.html:35
+//line views/components/SVG.html:33
 }
 
-//line views/components/SVG.html:35
-func WriteIcon(qq422016 qtio422016.Writer, k string, size int, cls string, ps *cutil.PageState) {
-//line views/components/SVG.html:35
+//line views/components/SVG.html:33
+func WriteSVGRef(qq422016 qtio422016.Writer, k string, w int, h int, cls string, ps *cutil.PageState) {
+//line views/components/SVG.html:33
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/SVG.html:35
-	StreamIcon(qw422016, k, size, cls, ps)
-//line views/components/SVG.html:35
+//line views/components/SVG.html:33
+	StreamSVGRef(qw422016, k, w, h, cls, ps)
+//line views/components/SVG.html:33
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/SVG.html:35
+//line views/components/SVG.html:33
 }
 
-//line views/components/SVG.html:35
-func Icon(k string, size int, cls string, ps *cutil.PageState) string {
-//line views/components/SVG.html:35
+//line views/components/SVG.html:33
+func SVGRef(k string, w int, h int, cls string, ps *cutil.PageState) string {
+//line views/components/SVG.html:33
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/SVG.html:35
-	WriteIcon(qb422016, k, size, cls, ps)
-//line views/components/SVG.html:35
+//line views/components/SVG.html:33
+	WriteSVGRef(qb422016, k, w, h, cls, ps)
+//line views/components/SVG.html:33
 	qs422016 := string(qb422016.B)
-//line views/components/SVG.html:35
+//line views/components/SVG.html:33
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/SVG.html:35
+//line views/components/SVG.html:33
 	return qs422016
-//line views/components/SVG.html:35
+//line views/components/SVG.html:33
 }
 
+//line views/components/SVG.html:35
+func StreamIcon(qw422016 *qt422016.Writer, k string, size int, cls string, ps *cutil.PageState) {
+//line views/components/SVG.html:36
+	if strings.Contains(k, "/") {
+//line views/components/SVG.html:36
+		qw422016.N().S(`<img alt="SVG icon [`)
 //line views/components/SVG.html:37
-func StreamSVGRefIcon(qw422016 *qt422016.Writer, k string, ps *cutil.PageState) {
+		qw422016.E().S(k)
+//line views/components/SVG.html:37
+		qw422016.N().S(`]" src="`)
+//line views/components/SVG.html:37
+		qw422016.E().S(k)
+//line views/components/SVG.html:37
+		qw422016.N().S(`" style="width:`)
+//line views/components/SVG.html:37
+		qw422016.N().D(size)
+//line views/components/SVG.html:37
+		qw422016.N().S(`px; height:`)
+//line views/components/SVG.html:37
+		qw422016.N().D(size)
+//line views/components/SVG.html:37
+		qw422016.N().S(`px;" />`)
 //line views/components/SVG.html:38
-	StreamSVGRef(qw422016, k, 20, 20, "icon", ps)
+	} else {
 //line views/components/SVG.html:39
+		StreamSVGRef(qw422016, k, size, size, cls, ps)
+//line views/components/SVG.html:40
+	}
+//line views/components/SVG.html:41
 }
 
-//line views/components/SVG.html:39
-func WriteSVGRefIcon(qq422016 qtio422016.Writer, k string, ps *cutil.PageState) {
-//line views/components/SVG.html:39
+//line views/components/SVG.html:41
+func WriteIcon(qq422016 qtio422016.Writer, k string, size int, cls string, ps *cutil.PageState) {
+//line views/components/SVG.html:41
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/SVG.html:39
-	StreamSVGRefIcon(qw422016, k, ps)
-//line views/components/SVG.html:39
+//line views/components/SVG.html:41
+	StreamIcon(qw422016, k, size, cls, ps)
+//line views/components/SVG.html:41
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/SVG.html:39
+//line views/components/SVG.html:41
 }
 
-//line views/components/SVG.html:39
-func SVGRefIcon(k string, ps *cutil.PageState) string {
-//line views/components/SVG.html:39
+//line views/components/SVG.html:41
+func Icon(k string, size int, cls string, ps *cutil.PageState) string {
+//line views/components/SVG.html:41
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/SVG.html:39
-	WriteSVGRefIcon(qb422016, k, ps)
-//line views/components/SVG.html:39
+//line views/components/SVG.html:41
+	WriteIcon(qb422016, k, size, cls, ps)
+//line views/components/SVG.html:41
 	qs422016 := string(qb422016.B)
-//line views/components/SVG.html:39
+//line views/components/SVG.html:41
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/SVG.html:39
+//line views/components/SVG.html:41
 	return qs422016
-//line views/components/SVG.html:39
+//line views/components/SVG.html:41
 }
 
-//line views/components/SVG.html:41
+//line views/components/SVG.html:43
+func StreamSVGRefIcon(qw422016 *qt422016.Writer, k string, ps *cutil.PageState) {
+//line views/components/SVG.html:44
+	StreamSVGRef(qw422016, k, 20, 20, "icon", ps)
+//line views/components/SVG.html:45
+}
+
+//line views/components/SVG.html:45
+func WriteSVGRefIcon(qq422016 qtio422016.Writer, k string, ps *cutil.PageState) {
+//line views/components/SVG.html:45
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/components/SVG.html:45
+	StreamSVGRefIcon(qw422016, k, ps)
+//line views/components/SVG.html:45
+	qt422016.ReleaseWriter(qw422016)
+//line views/components/SVG.html:45
+}
+
+//line views/components/SVG.html:45
+func SVGRefIcon(k string, ps *cutil.PageState) string {
+//line views/components/SVG.html:45
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/components/SVG.html:45
+	WriteSVGRefIcon(qb422016, k, ps)
+//line views/components/SVG.html:45
+	qs422016 := string(qb422016.B)
+//line views/components/SVG.html:45
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/components/SVG.html:45
+	return qs422016
+//line views/components/SVG.html:45
+}
+
+//line views/components/SVG.html:47
 func StreamIconGallery(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/components/SVG.html:41
+//line views/components/SVG.html:47
 	qw422016.N().S(`  <div class="flex-wrap mt">
 `)
-//line views/components/SVG.html:43
+//line views/components/SVG.html:49
 	for _, k := range util.SVGIconKeys {
-//line views/components/SVG.html:43
+//line views/components/SVG.html:49
 		qw422016.N().S(`    <div class="icon-gallery-icon">
       <div class="gallery-svg">`)
-//line views/components/SVG.html:45
+//line views/components/SVG.html:51
 		StreamSVGRef(qw422016, k, 64, 64, "icon", ps)
-//line views/components/SVG.html:45
+//line views/components/SVG.html:51
 		qw422016.N().S(`</div>
       <div class="gallery-title">`)
-//line views/components/SVG.html:46
+//line views/components/SVG.html:52
 		qw422016.E().S(k)
-//line views/components/SVG.html:46
+//line views/components/SVG.html:52
 		qw422016.N().S(`</div>
     </div>
 `)
-//line views/components/SVG.html:48
+//line views/components/SVG.html:54
 	}
-//line views/components/SVG.html:48
+//line views/components/SVG.html:54
 	qw422016.N().S(`  </div>
 `)
-//line views/components/SVG.html:50
+//line views/components/SVG.html:56
 }
 
-//line views/components/SVG.html:50
+//line views/components/SVG.html:56
 func WriteIconGallery(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/components/SVG.html:50
+//line views/components/SVG.html:56
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/SVG.html:50
+//line views/components/SVG.html:56
 	StreamIconGallery(qw422016, as, ps)
-//line views/components/SVG.html:50
+//line views/components/SVG.html:56
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/SVG.html:50
+//line views/components/SVG.html:56
 }
 
-//line views/components/SVG.html:50
+//line views/components/SVG.html:56
 func IconGallery(as *app.State, ps *cutil.PageState) string {
-//line views/components/SVG.html:50
+//line views/components/SVG.html:56
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/SVG.html:50
+//line views/components/SVG.html:56
 	WriteIconGallery(qb422016, as, ps)
-//line views/components/SVG.html:50
+//line views/components/SVG.html:56
 	qs422016 := string(qb422016.B)
-//line views/components/SVG.html:50
+//line views/components/SVG.html:56
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/SVG.html:50
+//line views/components/SVG.html:56
 	return qs422016
-//line views/components/SVG.html:50
+//line views/components/SVG.html:56
 }

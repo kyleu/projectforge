@@ -3,11 +3,22 @@
   "strings"
 
   "{{{ .Package }}}/app"
-  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/controller/cutil"{{{ if .HasModule "brands" }}}
+  "{{{ .Package }}}/app/lib/icons"{{{ end }}}
   "{{{ .Package }}}/app/util"
 ) %}
 
-{% func SVG(k string) %}{%s= util.SVGLibrary[k] %}{% endfunc %}
+{% func SVG(k string) %}{% stripspace %}{{{ if .HasModule "brands" }}}
+  {% if strings.HasPrefix(k, "brand-") %}
+  {%s= icons.BrandLibrary().HTML(k) %}
+  {% else %}{{{ end }}}
+  {% if svg, ok := util.SVGLibrary[k]; ok %}
+    {%s= svg %}
+  {% else %}
+    <!-- missing icon definition for [{%s k %}] -->
+  {% endif %}{{{ if .HasModule "brands" }}}
+  {% endif %}{{{ end }}}
+{% endstripspace %}{% endfunc %}
 
 {% func SVGRef(k string, w int, h int, cls string, ps *cutil.PageState) %}{% stripspace %}
   {% if k != "" %}

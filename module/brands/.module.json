@@ -1,0 +1,11 @@
+{
+  "name": "Brand Icons",
+  "icon": "brands",
+  "description": "Provides thousands of SVG icons from [simple-icons] for representing common logos",
+  "authorName": "Kyle U",
+  "authorEmail": "kyle@kyleu.com",
+  "license": "CC0",
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/brands",
+  "priority": 100
+}
+

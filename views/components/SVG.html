@@ -8,7 +8,13 @@
   "projectforge.dev/projectforge/app/util"
 ) %}
 
-{% func SVG(k string) %}{%s= util.SVGLibrary[k] %}{% endfunc %}
+{% func SVG(k string) %}{% stripspace %}
+  {% if svg, ok := util.SVGLibrary[k]; ok %}
+    {%s= svg %}
+  {% else %}
+    <!-- missing icon definition for [{%s k %}] -->
+  {% endif %}
+{% endstripspace %}{% endfunc %}
 
 {% func SVGRef(k string, w int, h int, cls string, ps *cutil.PageState) %}{% stripspace %}
   {% if k != "" %}
