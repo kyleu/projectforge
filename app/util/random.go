@@ -44,7 +44,7 @@ func RandomValueMap(keys int) ValueMap {
 	ret := ValueMap{}
 	lo.Times(keys, func(_ int) struct{} {
 		ret[RandomString(4)] = RandomString(10)
-		return struct{}{}
+		return EmptyStruct
 	})
 	return ret
 }

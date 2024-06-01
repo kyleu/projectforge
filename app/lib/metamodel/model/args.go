@@ -73,7 +73,7 @@ func (a *Args) Validate() error {
 		if _, ok := packages[m.Package]; ok {
 			return errors.Wrap(err, "multiple models are in package ["+m.Package+"]")
 		}
-		packages[m.Package] = struct{}{}
+		packages[m.Package] = util.EmptyStruct
 	}
 	return nil
 }

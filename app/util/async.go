@@ -69,7 +69,7 @@ func AsyncRateLimit[T any, R any](items []T, f func(x T) (R, error), maxConcurre
 
 	for {
 		select {
-		case limit <- struct{}{}:
+		case limit <- EmptyStruct:
 			idx++
 			item := items[idx]
 			go func() {

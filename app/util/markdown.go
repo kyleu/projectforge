@@ -44,7 +44,7 @@ func MarkdownTable(header []string, rows [][]string, linebreak string) (string, 
 	lo.ForEach(maxes, func(m int, mi int) {
 		lo.Times(m, func(_ int) struct{} {
 			divider += "-"
-			return struct{}{}
+			return EmptyStruct
 		})
 		if mi < len(maxes)-1 {
 			divider += "-|-"

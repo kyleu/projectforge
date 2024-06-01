@@ -112,7 +112,7 @@ func MatchesFor(key string, x any, q string) Matches {
 					ret = append(ret, m...)
 				}
 			}
-			return struct{}{}
+			return util.EmptyStruct
 		})
 		return ret
 	default:

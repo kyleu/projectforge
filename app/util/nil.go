@@ -6,6 +6,8 @@ import (
 	"time"
 )
 
+var EmptyStruct = struct{}{}
+
 type NilBool struct {
 	sql.NullBool
 }

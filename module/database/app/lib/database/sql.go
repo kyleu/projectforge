@@ -5,6 +5,8 @@ import (
 	"strings"
 
 	"github.com/samber/lo"
+
+	"{{{ .Package }}}/app/util"
 )
 
 const whereC, fromC, returningC, selectC = " where ", " from ", " returning ", "select "
@@ -71,7 +73,7 @@ func SQLInsert(table string, columns []string, rows int, dbt *DBType) string {
 			return dbt.PlaceholderFor((i * len(columns)) + idx + 1)
 		})
 		placeholders = append(placeholders, "("+strings.Join(ph, ", ")+")")
-		return struct{}{}
+		return util.EmptyStruct
 	})
 	return fmt.Sprintf("insert into %s (%s) values %s", table, colString, strings.Join(placeholders, ", "))
 }

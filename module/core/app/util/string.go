@@ -127,7 +127,7 @@ func StringPadLeft(s string, size int, chr rune) string {
 	sb := strings.Builder{}
 	lo.Times(size-sLen, func(_ int) struct{} {
 		sb.WriteRune(chr)
-		return struct{}{}
+		return EmptyStruct
 	})
 	sb.WriteString(s)
 	return sb.String()
@@ -144,7 +144,7 @@ func StringRepeat(s string, n int) string {
 	ret := strings.Builder{}
 	lo.Times(n, func(_ int) struct{} {
 		ret.WriteString(s)
-		return struct{}{}
+		return EmptyStruct
 	})
 	return ret.String()
 }
