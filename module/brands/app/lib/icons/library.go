@@ -45,8 +45,10 @@ func (l *Library) HTML(key string) string {
 	return ret.HTML("brand-")
 }
 
-var brandLibCache *Library
-var brandLibMu sync.Mutex
+var (
+	brandLibCache *Library
+	brandLibMu    sync.Mutex
+)
 
 func BrandLibrary() *Library {
 	if brandLibCache == nil {
