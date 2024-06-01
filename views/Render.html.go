@@ -9,6 +9,7 @@ package views
 //line views/Render.html:2
 import (
 	"fmt"
+	"slices"
 	"strings"
 
 	"projectforge.dev/projectforge/app"
@@ -19,22 +20,22 @@ import (
 	"projectforge.dev/projectforge/views/layout"
 )
 
-//line views/Render.html:14
+//line views/Render.html:15
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/Render.html:14
+//line views/Render.html:15
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/Render.html:14
-func StreamRender(qw422016 *qt422016.Writer, page layout.Page, as *app.State, ps *cutil.PageState) {
 //line views/Render.html:15
+func StreamRender(qw422016 *qt422016.Writer, page layout.Page, as *app.State, ps *cutil.PageState) {
+//line views/Render.html:16
 	ctx, span, _ := telemetry.StartSpan(ps.Context, "html:"+strings.TrimPrefix(fmt.Sprintf("%T", page), "*"), ps.Logger)
 	ps.Context = ctx
 	defer func() {
@@ -46,219 +47,222 @@ func StreamRender(qw422016 *qt422016.Writer, page layout.Page, as *app.State, ps
 		}
 	}()
 
-//line views/Render.html:25
+//line views/Render.html:26
 	qw422016.N().S(`<!DOCTYPE html>
 <html lang="en">
 <!-- `)
-//line views/Render.html:27
+//line views/Render.html:28
 	qw422016.E().S(cutil.PageComment)
-//line views/Render.html:27
+//line views/Render.html:28
 	qw422016.N().S(` -->
 <head>`)
-//line views/Render.html:28
+//line views/Render.html:29
 	page.StreamHead(qw422016, as, ps)
-//line views/Render.html:28
+//line views/Render.html:29
 	qw422016.N().S(`</head>
 <body`)
-//line views/Render.html:29
+//line views/Render.html:30
 	qw422016.N().S(ps.ClassDecl())
-//line views/Render.html:29
+//line views/Render.html:30
 	if ps.Action != "" {
-//line views/Render.html:29
+//line views/Render.html:30
 		qw422016.N().S(` `)
-//line views/Render.html:29
+//line views/Render.html:30
 		qw422016.N().S(`data-action="`)
-//line views/Render.html:29
+//line views/Render.html:30
 		qw422016.E().S(ps.Action)
-//line views/Render.html:29
+//line views/Render.html:30
 		qw422016.N().S(`"`)
-//line views/Render.html:29
+//line views/Render.html:30
 	}
-//line views/Render.html:29
+//line views/Render.html:30
 	qw422016.N().S(` `)
-//line views/Render.html:29
+//line views/Render.html:30
 	qw422016.N().S(`data-version="`)
-//line views/Render.html:29
+//line views/Render.html:30
 	qw422016.E().S(as.BuildInfo.Version)
-//line views/Render.html:29
+//line views/Render.html:30
 	qw422016.N().S(`">`)
-//line views/Render.html:29
+//line views/Render.html:30
 	if len(ps.Flashes) > 0 {
-//line views/Render.html:29
+//line views/Render.html:30
 		streamrenderFlashes(qw422016, ps.Flashes)
-//line views/Render.html:29
+//line views/Render.html:30
 	}
-//line views/Render.html:29
+//line views/Render.html:30
 	page.StreamNav(qw422016, as, ps)
-//line views/Render.html:29
+//line views/Render.html:30
 	qw422016.N().S(`
 <main id="content"`)
-//line views/Render.html:30
+//line views/Render.html:31
 	if ps.HideMenu {
-//line views/Render.html:30
+//line views/Render.html:31
 		qw422016.N().S(` class="nomenu"`)
-//line views/Render.html:30
+//line views/Render.html:31
 	}
-//line views/Render.html:30
+//line views/Render.html:31
 	qw422016.N().S(`>`)
-//line views/Render.html:30
+//line views/Render.html:31
 	page.StreamBody(qw422016, as, ps)
-//line views/Render.html:30
+//line views/Render.html:31
 	qw422016.N().S(`</main>
 `)
-//line views/Render.html:31
+//line views/Render.html:32
 	streamrenderIcons(qw422016, ps.Icons)
-//line views/Render.html:31
+//line views/Render.html:32
 	qw422016.N().S(`</body>
 </html>
 `)
-//line views/Render.html:33
+//line views/Render.html:34
 }
 
-//line views/Render.html:33
+//line views/Render.html:34
 func WriteRender(qq422016 qtio422016.Writer, page layout.Page, as *app.State, ps *cutil.PageState) {
-//line views/Render.html:33
+//line views/Render.html:34
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/Render.html:33
+//line views/Render.html:34
 	StreamRender(qw422016, page, as, ps)
-//line views/Render.html:33
+//line views/Render.html:34
 	qt422016.ReleaseWriter(qw422016)
-//line views/Render.html:33
+//line views/Render.html:34
 }
 
-//line views/Render.html:33
+//line views/Render.html:34
 func Render(page layout.Page, as *app.State, ps *cutil.PageState) string {
-//line views/Render.html:33
+//line views/Render.html:34
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/Render.html:33
+//line views/Render.html:34
 	WriteRender(qb422016, page, as, ps)
-//line views/Render.html:33
+//line views/Render.html:34
 	qs422016 := string(qb422016.B)
-//line views/Render.html:33
+//line views/Render.html:34
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/Render.html:33
+//line views/Render.html:34
 	return qs422016
-//line views/Render.html:33
+//line views/Render.html:34
 }
 
-//line views/Render.html:35
+//line views/Render.html:36
 func streamrenderFlashes(qw422016 *qt422016.Writer, flashes []string) {
-//line views/Render.html:36
+//line views/Render.html:37
 	if len(flashes) > 0 {
-//line views/Render.html:36
+//line views/Render.html:37
 		qw422016.N().S(`<div id="flash-container">`)
-//line views/Render.html:38
-		for idx, f := range flashes {
 //line views/Render.html:39
+		for idx, f := range flashes {
+//line views/Render.html:40
 			level, msg := util.StringSplit(f, ':', true)
 
-//line views/Render.html:39
+//line views/Render.html:40
 			qw422016.N().S(`<div class="flash"><input type="radio" style="display:none;" id="hide-flash-`)
-//line views/Render.html:41
+//line views/Render.html:42
 			qw422016.N().D(idx)
-//line views/Render.html:41
+//line views/Render.html:42
 			qw422016.N().S(`"><label for="hide-flash-`)
-//line views/Render.html:42
+//line views/Render.html:43
 			qw422016.N().D(idx)
-//line views/Render.html:42
+//line views/Render.html:43
 			qw422016.N().S(`"><span>×</span></label><div class="content flash-`)
-//line views/Render.html:43
+//line views/Render.html:44
 			qw422016.E().S(level)
-//line views/Render.html:43
+//line views/Render.html:44
 			qw422016.N().S(`">`)
-//line views/Render.html:44
+//line views/Render.html:45
 			qw422016.E().S(msg)
-//line views/Render.html:44
+//line views/Render.html:45
 			qw422016.N().S(`</div></div>`)
-//line views/Render.html:47
+//line views/Render.html:48
 		}
-//line views/Render.html:47
+//line views/Render.html:48
 		qw422016.N().S(`</div>`)
-//line views/Render.html:49
+//line views/Render.html:50
 	}
-//line views/Render.html:50
+//line views/Render.html:51
 }
 
-//line views/Render.html:50
+//line views/Render.html:51
 func writerenderFlashes(qq422016 qtio422016.Writer, flashes []string) {
-//line views/Render.html:50
+//line views/Render.html:51
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/Render.html:50
+//line views/Render.html:51
 	streamrenderFlashes(qw422016, flashes)
-//line views/Render.html:50
+//line views/Render.html:51
 	qt422016.ReleaseWriter(qw422016)
-//line views/Render.html:50
+//line views/Render.html:51
 }
 
-//line views/Render.html:50
+//line views/Render.html:51
 func renderFlashes(flashes []string) string {
-//line views/Render.html:50
+//line views/Render.html:51
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/Render.html:50
+//line views/Render.html:51
 	writerenderFlashes(qb422016, flashes)
-//line views/Render.html:50
+//line views/Render.html:51
 	qs422016 := string(qb422016.B)
-//line views/Render.html:50
+//line views/Render.html:51
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/Render.html:50
+//line views/Render.html:51
 	return qs422016
-//line views/Render.html:50
+//line views/Render.html:51
 }
 
-//line views/Render.html:52
+//line views/Render.html:53
 func streamrenderIcons(qw422016 *qt422016.Writer, icons []string) {
-//line views/Render.html:53
-	if len(icons) > 0 {
-//line views/Render.html:53
-		qw422016.N().S(`<div class="icon-list" style="display: none;">`)
 //line views/Render.html:54
+	slices.Sort(icons)
+
+//line views/Render.html:55
+	if len(icons) > 0 {
+//line views/Render.html:55
+		qw422016.N().S(`<div class="icon-list" style="display: none;">`)
+//line views/Render.html:56
 		qw422016.N().S(`
 `)
-//line views/Render.html:55
+//line views/Render.html:57
 		for _, icon := range icons {
-//line views/Render.html:56
+//line views/Render.html:58
 			qw422016.N().S(` `)
-//line views/Render.html:56
+//line views/Render.html:58
 			qw422016.N().S(` `)
-//line views/Render.html:56
+//line views/Render.html:58
 			components.StreamSVG(qw422016, icon)
-//line views/Render.html:56
+//line views/Render.html:58
 			qw422016.N().S(`
 `)
-//line views/Render.html:57
+//line views/Render.html:59
 		}
-//line views/Render.html:57
+//line views/Render.html:59
 		qw422016.N().S(`</div>`)
-//line views/Render.html:58
+//line views/Render.html:60
 		qw422016.N().S(`
 `)
-//line views/Render.html:59
+//line views/Render.html:61
 	}
-//line views/Render.html:60
+//line views/Render.html:62
 }
 
-//line views/Render.html:60
+//line views/Render.html:62
 func writerenderIcons(qq422016 qtio422016.Writer, icons []string) {
-//line views/Render.html:60
+//line views/Render.html:62
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/Render.html:60
+//line views/Render.html:62
 	streamrenderIcons(qw422016, icons)
-//line views/Render.html:60
+//line views/Render.html:62
 	qt422016.ReleaseWriter(qw422016)
-//line views/Render.html:60
+//line views/Render.html:62
 }
 
-//line views/Render.html:60
+//line views/Render.html:62
 func renderIcons(icons []string) string {
-//line views/Render.html:60
+//line views/Render.html:62
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/Render.html:60
+//line views/Render.html:62
 	writerenderIcons(qb422016, icons)
-//line views/Render.html:60
+//line views/Render.html:62
 	qs422016 := string(qb422016.B)
-//line views/Render.html:60
+//line views/Render.html:62
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/Render.html:60
+//line views/Render.html:62
 	return qs422016
-//line views/Render.html:60
+//line views/Render.html:62
 }

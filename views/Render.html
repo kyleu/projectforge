@@ -1,6 +1,7 @@
 <!-- Content managed by Project Forge, see [projectforge.md] for details. -->
 {% import (
   "fmt"
+  "slices"
   "strings"
 
   "projectforge.dev/projectforge/app"
@@ -50,6 +51,7 @@
 {% endstripspace %}{% endfunc %}
 
 {% func renderIcons(icons []string) %}{% stripspace %}
+  {%- code slices.Sort(icons) -%}
   {% if len(icons) > 0 %}
     <div class="icon-list" style="display: none;">{% newline %}
       {% for _, icon := range icons %}
