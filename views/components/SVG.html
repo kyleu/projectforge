@@ -12,7 +12,7 @@
   {% if svg, ok := util.SVGLibrary[k]; ok %}
     {%s= svg %}
   {% else %}
-    <!-- missing icon definition for [{%s k %}] -->
+    <!-- missing icon definition for [{%s k %}], using default icon -->{%s= strings.ReplaceAll(util.SVGLibrary["question"], "-question", "-"+k) %}
   {% endif %}
 {% endstripspace %}{% endfunc %}
 

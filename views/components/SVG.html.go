@@ -42,7 +42,9 @@ func StreamSVG(qw422016 *qt422016.Writer, k string) {
 //line views/components/SVG.html:15
 		qw422016.E().S(k)
 //line views/components/SVG.html:15
-		qw422016.N().S(`] -->`)
+		qw422016.N().S(`], using default icon -->`)
+//line views/components/SVG.html:15
+		qw422016.N().S(strings.ReplaceAll(util.SVGLibrary["question"], "-question", "-"+k))
 //line views/components/SVG.html:16
 	}
 //line views/components/SVG.html:17
