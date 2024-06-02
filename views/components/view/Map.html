@@ -2,8 +2,10 @@
 {% import "projectforge.dev/projectforge/app/util" %}
 
 {% func Map(preserveWhitespace bool, m util.ValueMap) %}{% stripspace %}
-  {%- if len(m.Keys()) == 0 -%}
+  {%- if m == nil -%}
   <em>no result</em>
+  {%- elseif len(m) == 0 -%}
+  <em>empty result</em>
   {%- else -%}
   <div class="overflow full-width">
     <table>

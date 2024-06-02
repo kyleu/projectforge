@@ -25,6 +25,9 @@
       justify-content: center;
       overflow: hidden;
       margin: var(--padding);
+      padding-bottom: var(--padding-small);
+      border-bottom-width: var(--padding-small);
+      border-bottom-style: solid;
     }
     .brand-icon .svg {
       width: 48px;
@@ -32,11 +35,12 @@
     }
   </style>
   <div class="card">
+    <div class="right"><em>{%d len(p.Library.Icons) %} icons</em></div>
     <h3>{%= components.SVGRefIcon(`image`, ps) %}Brand Icon Library</h3>
     <div class="mt library">
       {%- for _, key := range p.Library.SortedKeys() -%}
       {%- code x := p.Library.Icons[key] -%}
-      <div class="brand-icon" title="{%s x.Key %}">
+      <div class="brand-icon" style="border-color: #{%s x.Color %};" title="{%s x.Key %}">
         <div class="svg">{%s= x.HTML("brand-") %}</div>
         <div>{%s x.Title %}</div>
       </div>

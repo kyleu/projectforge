@@ -54,7 +54,9 @@ func BrandLibrary() *Library {
 	if brandLibCache == nil {
 		brandLibMu.Lock()
 		defer brandLibMu.Unlock()
-		brandLibCache = NewLibrary(BrandIcons...)
+		if brandLibCache == nil {
+			brandLibCache = NewLibrary(BrandIcons...)
+		}
 	}
 	return brandLibCache
 }
