@@ -176,6 +176,7 @@ func exportViewDetailReverseRelations(ret *golang.Block, m *model.Model, models 
 		return
 	}
 	g.AddImport(helper.ImpAppUtil)
+	ret.W("  {%%%%- code relationHelper := %s.%s{p.Model} -%%%%}", m.Package, m.ProperPlural())
 	ret.W("  <div class=\"card\">")
 	ret.W("    <h3 class=\"mb\">Relations</h3>")
 	ret.W("    <ul class=\"accordion\">")
@@ -200,7 +201,11 @@ func exportViewDetailReverseRelations(ret *golang.Block, m *model.Model, models 
 		var addons string
 		lo.ForEach(tgt.Relations, func(r *model.Relation, _ int) {
 			if len(r.Tgt) == 1 {
-				addons += ", nil"
+				if r.Table == m.Name {
+					addons += ", relationHelper"
+				} else {
+					addons += ", nil"
+				}
 			}
 		})
 		if m.PackageWithGroup("") == tgt.PackageWithGroup("") {
