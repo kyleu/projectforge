@@ -87,7 +87,7 @@ func serviceCreate(g *golang.File, m *model.Model, audit bool) (*golang.Block, e
 
 func serviceCreateChunked(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("CreateChunked", "func")
-	ret.W("func (s *Service) CreateChunked(ctx context.Context, tx *sqlx.Tx, chunkSize int, logger util.Logger, models ...*%s) error {", m.Proper())
+	ret.W("func (s *Service) CreateChunked(ctx context.Context, tx *sqlx.Tx, chunkSize int, progress *util.Progress, logger util.Logger, models ...*%s) error {", m.Proper())
 	ret.W("\tfor idx, chunk := range lo.Chunk(models, chunkSize) {")
 	ret.W("\t\tif logger != nil {")
 	ret.W("\t\t\tcount := ((idx + 1) * chunkSize) - 1")
@@ -99,6 +99,7 @@ func serviceCreateChunked(m *model.Model) *golang.Block {
 	ret.W("\t\tif err := s.Create(ctx, tx, logger, chunk...); err != nil {")
 	ret.W("\t\t\treturn err")
 	ret.W("\t\t}")
+	ret.W("\t\tprogress.Increment(chunkSize, logger)")
 	ret.W("\t}")
 	ret.W("\treturn nil")
 	ret.W("}")
@@ -249,7 +250,7 @@ func serviceSave(g *golang.File, m *model.Model, audit bool) (*golang.Block, err
 
 func serviceSaveChunked(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("SaveChunked", "func")
-	ret.W("func (s *Service) SaveChunked(ctx context.Context, tx *sqlx.Tx, chunkSize int, logger util.Logger, models ...*%s) error {", m.Proper())
+	ret.W("func (s *Service) SaveChunked(ctx context.Context, tx *sqlx.Tx, chunkSize int, progress *util.Progress, logger util.Logger, models ...*%s) error {", m.Proper())
 	ret.W("\tfor idx, chunk := range lo.Chunk(models, chunkSize) {")
 	ret.W("\t\tif logger != nil {")
 	ret.W("\t\t\tcount := ((idx + 1) * chunkSize) - 1")
@@ -261,6 +262,7 @@ func serviceSaveChunked(m *model.Model) *golang.Block {
 	ret.W("\t\tif err := s.Save(ctx, tx, logger, chunk...); err != nil {")
 	ret.W("\t\t\treturn err")
 	ret.W("\t\t}")
+	ret.W("\t\tprogress.Increment(chunkSize, logger)")
 	ret.W("\t}")
 	ret.W("\treturn nil")
 	ret.W("}")

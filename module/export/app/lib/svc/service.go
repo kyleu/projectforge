@@ -14,10 +14,10 @@ type ServiceBase[Mdl Model, Seq any] interface {
 	ListWhere(ctx context.Context, tx *sqlx.Tx, where string, params *filter.Params, logger util.Logger, values ...any) (Seq, error)
 	Random(ctx context.Context, tx *sqlx.Tx, logger util.Logger) (Mdl, error)
 	Create(ctx context.Context, tx *sqlx.Tx, logger util.Logger, models ...Mdl) error
-	CreateChunked(ctx context.Context, tx *sqlx.Tx, chunkSize int, logger util.Logger, models ...Mdl) error
+	CreateChunked(ctx context.Context, tx *sqlx.Tx, chunkSize int, progress *util.Progress, logger util.Logger, models ...Mdl) error
 	Update(ctx context.Context, tx *sqlx.Tx, model Mdl, logger util.Logger) error
 	Save(ctx context.Context, tx *sqlx.Tx, logger util.Logger, models ...Mdl) error
-	SaveChunked(ctx context.Context, tx *sqlx.Tx, chunkSize int, logger util.Logger, models ...Mdl) error
+	SaveChunked(ctx context.Context, tx *sqlx.Tx, chunkSize int, progress *util.Progress, logger util.Logger, models ...Mdl) error
 	DeleteWhere(ctx context.Context, tx *sqlx.Tx, wc string, expected int, logger util.Logger, values ...any) error
 }
 
