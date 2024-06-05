@@ -75,7 +75,7 @@ func viewColumn(
 			icon := fmt.Sprintf(anchorSVG, `"`+relModel.Icon+`"`)
 			if icons := relModel.Columns.WithFormat("icon"); len(icons) == 1 {
 				msg := `{%%%% if x := %s; x != nil %%%%}{%%%%= components.SVGRef(x.%s, 18, 18, "", ps) %%%%}{%%%% else %%%%}%s{%%%% endif %%%%}`
-				icon = fmt.Sprintf(msg, prefix, icons[0].Proper(), icon)
+				icon = fmt.Sprintf(msg, prefix, icons[0].ProperDerived(), icon)
 			}
 			wp := RelationWebPath(rel, m, relModel, modelKey)
 			if col.Nullable {

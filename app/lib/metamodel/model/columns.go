@@ -194,3 +194,9 @@ func (c Columns) HasFormat(f string) bool {
 		return col.Format == f
 	})
 }
+
+func (c Columns) NotDerived() Columns {
+	return lo.Filter(c, func(x *Column, _ int) bool {
+		return !x.Derived()
+	})
+}

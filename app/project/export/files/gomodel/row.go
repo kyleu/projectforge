@@ -72,7 +72,7 @@ func modelTableCols(m *model.Model) (*golang.Block, error) {
 	//	ret.W("\tpk            = []string{%s}", strings.Join(m.PKs().NamesQuoted(), ", "))
 	//	ret.W("\tpkQuoted      = util.StringArrayQuoted(pk)")
 	//}
-	cols := fmt.Sprintf("\tcolumns       = []string{%s}", strings.Join(m.Columns.SQLQuoted(), ", "))
+	cols := fmt.Sprintf("\tcolumns       = []string{%s}", strings.Join(m.Columns.NotDerived().SQLQuoted(), ", "))
 	if len(cols) > 160 {
 		cols += " //nolint:lll"
 	}
@@ -86,9 +86,10 @@ func modelTableCols(m *model.Model) (*golang.Block, error) {
 func modelRow(m *model.Model, enums enum.Enums, database string) (*golang.Block, error) {
 	ret := golang.NewBlock(m.Proper()+"Row", "struct")
 	ret.W("type row struct {")
-	maxColLength := m.Columns.MaxCamelLength()
-	maxTypeLength := m.Columns.MaxGoRowTypeLength(m.Package, enums, database)
-	for _, c := range m.Columns {
+	cols := m.Columns.NotDerived()
+	maxColLength := cols.MaxCamelLength()
+	maxTypeLength := cols.MaxGoRowTypeLength(m.Package, enums, database)
+	for _, c := range cols {
 		gdt, err := c.ToGoRowType(m.Package, enums, database)
 		if err != nil {
 			return nil, err
@@ -109,9 +110,10 @@ func modelRowToModel(g *golang.File, m *model.Model, enums enum.Enums, database 
 	ret.W("\tif r == nil {")
 	ret.W("\t\treturn nil")
 	ret.W("\t}")
-	refs := make([]string, 0, len(m.Columns))
-	pad := m.Columns.MaxCamelLength() + 1
-	for _, c := range m.Columns {
+	cols := m.Columns.NotDerived()
+	refs := make([]string, 0, len(cols))
+	pad := cols.MaxCamelLength() + 1
+	for _, c := range cols {
 		k := util.StringPad(c.Proper()+":", pad)
 		switch c.Type.Key() {
 		case types.KeyAny:

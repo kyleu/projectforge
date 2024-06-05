@@ -90,7 +90,7 @@ func controllerDetail(g *golang.File, models model.Models, m *model.Model, grp *
 func bcFor(m *model.Model) any {
 	icon := m.Icon
 	if icons := m.Columns.WithFormat("icon"); len(icons) > 0 {
-		return fmt.Sprintf("ret.TitleString()+\"**\"+ret.%s", icons[0].Proper())
+		return fmt.Sprintf("ret.TitleString()+\"**\"+ret.%s", icons[0].ProperDerived())
 	}
 	return fmt.Sprintf("ret.TitleString()+\"**%s\"", icon)
 }

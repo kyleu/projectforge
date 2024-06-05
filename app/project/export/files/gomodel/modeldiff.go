@@ -32,7 +32,7 @@ func modelDiffBlock(g *golang.File, m *model.Model, enums enum.Enums) (*golang.B
 
 	ret.W("func (%s *%s) Diff(%sx *%s) util.Diffs {", m.FirstLetter(), m.Proper(), m.FirstLetter(), m.Proper())
 	ret.W("\tvar diffs util.Diffs")
-	for _, col := range m.Columns {
+	for _, col := range m.Columns.NotDerived() {
 		if col.HasTag("updated") {
 			continue
 		}

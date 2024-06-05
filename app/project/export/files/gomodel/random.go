@@ -20,8 +20,9 @@ func modelRandom(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock(m.Proper()+"Random", "struct")
 	ret.W("func Random() *%s {", m.Proper())
 	ret.W("\treturn &%s{", m.Proper())
-	maxColLength := m.Columns.MaxCamelLength() + 1
-	for _, col := range m.Columns {
+	cols := m.Columns.NotDerived()
+	maxColLength := cols.MaxCamelLength() + 1
+	for _, col := range cols {
 		rnd, err := randForCol(col, m.PackageWithGroup(""), enums)
 		if err != nil {
 			return nil, err

@@ -78,7 +78,7 @@ func Model(m *model.Model, args *model.Args, addHeader bool, linebreak string) (
 		return nil, err
 	}
 
-	g.AddBlocks(modelWebPath(g, m), modelToData(m, m.Columns, "", args.Database), fd)
+	g.AddBlocks(modelWebPath(g, m), modelToData(m, m.Columns.NotDerived(), "", args.Database), fd)
 	return g.Render(addHeader, linebreak)
 }
 
@@ -105,9 +105,10 @@ func modelToPK(m *model.Model, _ enum.Enums) (*golang.Block, error) {
 func modelStruct(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock(m.Proper(), "struct")
 	ret.W("type %s struct {", m.Proper())
-	maxColLength := m.Columns.MaxCamelLength()
-	maxTypeLength := m.Columns.MaxGoTypeLength(m.Package, enums)
-	for _, c := range m.Columns {
+	cols := m.Columns.NotDerived()
+	maxColLength := cols.MaxCamelLength()
+	maxTypeLength := cols.MaxGoTypeLength(m.Package, enums)
+	for _, c := range cols {
 		gt, err := c.ToGoType(m.Package, enums)
 		if err != nil {
 			return nil, err

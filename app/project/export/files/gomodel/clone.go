@@ -15,7 +15,7 @@ import (
 func modelClone(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("Clone", "func")
 	ret.W("func (%s *%s) Clone() *%s {", m.FirstLetter(), m.Proper(), m.Proper())
-	calls := lo.Map(m.Columns, func(col *model.Column, _ int) string {
+	calls := lo.Map(m.Columns.NotDerived(), func(col *model.Column, _ int) string {
 		decl := col.Proper()
 		switch col.Type.Key() {
 		case types.KeyMap, types.KeyValueMap, types.KeyReference:

@@ -67,7 +67,7 @@ func exportViewEditBody(m *model.Model, p *project.Project, args *model.Args) (*
 	ret.W("    " + helper.TextEndIfDash)
 	ret.W("      <table class=\"mt expanded\">")
 	ret.W("        <tbody>")
-	editCols := m.Columns.WithoutTags("created", "updated")
+	editCols := m.Columns.NotDerived().WithoutTags("created", "updated")
 	for _, col := range editCols {
 		id := ""
 		if len(m.RelationsFor(col)) > 0 {

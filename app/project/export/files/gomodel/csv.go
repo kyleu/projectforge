@@ -11,7 +11,7 @@ import (
 func modelStrings(g *golang.File, m *model.Model) *golang.Block {
 	ret := golang.NewBlock("Strings", "func")
 	ret.W("func (%s *%s) Strings() []string {", m.FirstLetter(), m.Proper())
-	x := m.Columns.ToGoStrings(m.FirstLetter()+".", true, 160)
+	x := m.Columns.NotDerived().ToGoStrings(m.FirstLetter()+".", true, 160)
 	if strings.Contains(x, "fmt.") {
 		g.AddImport(helper.ImpFmt)
 	}

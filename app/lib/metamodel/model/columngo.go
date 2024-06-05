@@ -16,7 +16,8 @@ func (c *Column) ToGoString(prefix string) string {
 }
 
 func (c *Column) ToGoViewString(prefix string, verbose bool, url bool, enums enum.Enums, src string) string {
-	return ToGoViewString(c.Type, prefix+c.Proper(), c.Nullable, c.Format, verbose, url, enums, src)
+	prop := prefix + c.ProperDerived()
+	return ToGoViewString(c.Type, prop, c.Nullable, c.Format, verbose, url, enums, src)
 }
 
 func (c *Column) ToGoType(pkg string, enums enum.Enums) (string, error) {
@@ -47,11 +48,13 @@ func (c *Column) ToGoEditString(prefix string, format string, id string, enums e
 	if err != nil {
 		return "", err
 	}
+	prop := c.ToGoString(prefix)
+	preprop := prefix + c.Proper()
 	switch c.Type.Key() {
 	case types.KeyAny:
-		return fmt.Sprintf(msgTextarea, c.Camel(), id, c.Title(), c.ToGoString(prefix), h), nil
+		return fmt.Sprintf(msgTextarea, c.Camel(), id, c.Title(), prop, h), nil
 	case types.KeyBool:
-		return fmt.Sprintf(`{%%%%= edit.BoolTable(%q, %q, %s, 5, %s) %%%%}`, c.Camel(), c.Title(), prefix+c.Proper(), h), nil
+		return fmt.Sprintf(`{%%%%= edit.BoolTable(%q, %q, %s, 5, %s) %%%%}`, c.Camel(), c.Title(), preprop, h), nil
 	case types.KeyEnum:
 		e, err := AsEnumInstance(c.Type, enums)
 		if err != nil {
@@ -65,40 +68,40 @@ func (c *Column) ToGoEditString(prefix string, format string, id string, enums e
 		eTitles := ePrefix + stringsSuffix
 		call := fmt.Sprintf("%s%s.Key", prefix, c.Proper())
 		if e.Simple() {
-			call = fmt.Sprintf("string(%s)", c.ToGoString(prefix))
+			call = fmt.Sprintf("string(%s)", prop)
 		}
 		msg := `{%%%%= edit.SelectTable(%q, %q, %q, %s, %s, %s, 5, %s) %%%%}`
 		return fmt.Sprintf(msg, c.Camel(), id, c.Title(), call, eKeys, eTitles, h), nil
 	case types.KeyInt:
-		return fmt.Sprintf(`{%%%%= edit.IntTable(%q, %q, %q, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), prefix+c.Proper(), h), nil
+		return fmt.Sprintf(`{%%%%= edit.IntTable(%q, %q, %q, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), preprop, h), nil
 	case types.KeyFloat:
-		return fmt.Sprintf(`{%%%%= edit.FloatTable(%q, %q, %q, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), prefix+c.Proper(), h), nil
+		return fmt.Sprintf(`{%%%%= edit.FloatTable(%q, %q, %q, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), preprop, h), nil
 	case types.KeyList:
 		lt := types.TypeAs[*types.List](c.Type)
 		e, _ := AsEnumInstance(lt.V, enums)
 		if e != nil {
 			return fmt.Sprintf(
 				`{%%%%= edit.CheckboxTable(%q, %q, %s.Keys(), %s.All%s.Keys(), %s.All%s%s, 5, %s.All%s.Help()) %%%%}`,
-				c.Camel(), c.Title(), c.ToGoString(prefix), e.Package, e.ProperPlural(), e.Package, e.ProperPlural(), stringsSuffix, e.Package, e.ProperPlural(),
+				c.Camel(), c.Title(), prop, e.Package, e.ProperPlural(), e.Package, e.ProperPlural(), stringsSuffix, e.Package, e.ProperPlural(),
 			), nil
 		}
 		if c.Display == FmtTags.Key && lt.V.Key() == types.KeyString {
 			msg := `{%%%%= edit.TagsTable(%q, util.StringToTitle(%q), %q, %s, ps, 5, %s) %%%%}`
-			return fmt.Sprintf(msg, c.Camel(), id, c.Title(), c.ToGoString(prefix), h), nil
+			return fmt.Sprintf(msg, c.Camel(), id, c.Title(), prop, h), nil
 		}
-		return fmt.Sprintf(msgTextarea, c.Camel(), id, c.Title(), c.ToGoString(prefix), h), nil
+		return fmt.Sprintf(msgTextarea, c.Camel(), id, c.Title(), prop, h), nil
 	case types.KeyMap, types.KeyValueMap:
-		return fmt.Sprintf(msgTextarea, c.Camel(), id, c.Title(), prefix+c.Proper(), h), nil
+		return fmt.Sprintf(msgTextarea, c.Camel(), id, c.Title(), preprop, h), nil
 	case types.KeyReference:
-		return fmt.Sprintf(msgTextarea, c.Camel(), id, c.Title(), prefix+c.Proper(), h), nil
+		return fmt.Sprintf(msgTextarea, c.Camel(), id, c.Title(), preprop, h), nil
 	case types.KeyDate:
-		gs := c.ToGoString(prefix)
+		gs := prop
 		if !c.Nullable {
 			gs = "&" + gs
 		}
 		return fmt.Sprintf(`{%%%%= edit.TimestampDayTable(%q, %q, %q, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), gs, h), nil
 	case types.KeyTimestamp:
-		gs := c.ToGoString(prefix)
+		gs := prop
 		if !c.Nullable {
 			gs = "&" + gs
 		}
@@ -112,21 +115,21 @@ func (c *Column) ToGoEditString(prefix string, format string, id string, enums e
 	case types.KeyString:
 		switch format {
 		case FmtCode.Key, FmtCodeHidden.Key, FmtHTML.Key, FmtJSON.Key, FmtSQL.Key:
-			return fmt.Sprintf(`{%%%%= edit.TextareaTable(%q, %q, %q, 8, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), c.ToGoString(prefix), h), nil
+			return fmt.Sprintf(`{%%%%= edit.TextareaTable(%q, %q, %q, 8, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), prop, h), nil
 		case FmtColor.Key:
-			return fmt.Sprintf(`{%%%%= edit.ColorTable(%q, %q, %q, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), c.ToGoString(prefix), h), nil
+			return fmt.Sprintf(`{%%%%= edit.ColorTable(%q, %q, %q, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), prop, h), nil
 		case FmtSelect.Key:
 			if len(c.Values) == 0 {
-				return fmt.Sprintf(`{%%%%= edit.Table(%q, %q, %q, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), c.ToGoString(prefix), h), nil
+				return fmt.Sprintf(`{%%%%= edit.Table(%q, %q, %q, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), prop, h), nil
 			}
 			sel := `{%%%%= edit.SelectTable(%q, "", %q, %s, %s, nil, 5, %s) %%%%}`
 			opts := "[]string{" + strings.Join(util.StringArrayQuoted(c.Values), ", ") + "}"
-			return fmt.Sprintf(sel, c.Camel(), c.Title(), c.ToGoString(prefix), opts, h), nil
+			return fmt.Sprintf(sel, c.Camel(), c.Title(), prop, opts, h), nil
 		default:
-			return fmt.Sprintf(`{%%%%= edit.StringTable(%q, %q, %q, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), c.ToGoString(prefix), h), nil
+			return fmt.Sprintf(`{%%%%= edit.StringTable(%q, %q, %q, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), prop, h), nil
 		}
 	default:
-		return fmt.Sprintf(`{%%%%= edit.StringTable(%q, %q, %q, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), c.ToGoString(prefix), h), nil
+		return fmt.Sprintf(`{%%%%= edit.StringTable(%q, %q, %q, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), prop, h), nil
 	}
 }
 

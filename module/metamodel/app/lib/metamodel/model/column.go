@@ -71,6 +71,13 @@ func (c *Column) Proper() string {
 	return util.StringToCamel(c.Name)
 }
 
+func (c *Column) ProperDerived() string {
+	if c.Derived() {
+		return c.Proper() + "()"
+	}
+	return c.Proper()
+}
+
 func (c *Column) Title() string {
 	return util.StringToTitle(c.Name)
 }
@@ -142,4 +149,8 @@ func (c *Column) RemoveTag(t string) {
 	if idx := slices.Index(c.Tags, t); idx > -1 {
 		c.Tags = append(c.Tags[:idx], c.Tags[idx+1:]...)
 	}
+}
+
+func (c *Column) Derived() bool {
+	return c.HasTag("derived")
 }

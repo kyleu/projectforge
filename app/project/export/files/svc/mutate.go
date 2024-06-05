@@ -110,7 +110,8 @@ func serviceUpdate(g *golang.File, m *model.Model, audit bool, database string) 
 	ret := golang.NewBlock("Update", "func")
 	ret.W("func (s *Service) Update(ctx context.Context, tx *sqlx.Tx, model *%s, logger util.Logger) error {", m.Proper())
 
-	if cc := m.Columns.WithTag("created"); len(cc) > 0 || audit {
+	cols := m.Columns.NotDerived()
+	if cc := cols.WithTag("created"); len(cc) > 0 || audit {
 		g.AddImport(helper.ImpErrors)
 		ret.W("\tcurr, err := s.Get(ctx, tx, %s%s, logger)", m.PKs().ToRefs(helper.TextModelPrefix), m.SoftDeleteSuffix())
 		ret.W("\tif err != nil {")
@@ -121,7 +122,7 @@ func serviceUpdate(g *golang.File, m *model.Model, audit bool, database string) 
 		})
 	}
 
-	for _, updated := range m.Columns.WithTag("updated") {
+	for _, updated := range cols.WithTag("updated") {
 		err := serviceSetVal(g, updated, ret, 1)
 		if err != nil {
 			return nil, errors.Wrap(err, "")
@@ -137,11 +138,11 @@ func serviceUpdate(g *golang.File, m *model.Model, audit bool, database string) 
 	if database == util.DatabaseSQLServer {
 		placeholder = "@"
 	}
-	ret.W("\tq := database.SQLUpdate(tableQuoted, columnsQuoted, %q, s.db.Type)", pks.WhereClause(len(m.Columns), placeholder))
+	ret.W("\tq := database.SQLUpdate(tableQuoted, columnsQuoted, %q, s.db.Type)", pks.WhereClause(len(cols.NotDerived()), placeholder))
 	ret.W("\tdata := model.ToData()")
 	ret.W("\tdata = append(data, %s)", strings.Join(pkVals, ", "))
 	token := "="
-	if len(m.Columns.WithTag("created")) == 0 && (!audit) {
+	if len(cols.WithTag("created")) == 0 && (!audit) {
 		token = serviceAssignmentToken
 	}
 	ret.W("\t_, err %s s.db.Update(ctx, q, tx, 1, logger, data...)", token)
