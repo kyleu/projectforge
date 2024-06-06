@@ -12,7 +12,7 @@
 
 {% func (p *About) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`app`, ps) %}{%s util.AppName %}</h3>
+    <h3>{%= components.SVGIcon(`app`, ps) %}{%s util.AppName %}</h3>
     <em>v{%s as.BuildInfo.Version %}, started {%= view.TimestampRelative(&as.Started, false) %}</em>
   </div>
   <div class="card">

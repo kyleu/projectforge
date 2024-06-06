@@ -43,7 +43,7 @@ func (p *Routes) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
   <div class="card">
     <h3>`)
 //line views/vadmin/Routes.html:19
-	components.StreamSVGRefIcon(qw422016, `code`, ps)
+	components.StreamSVGIcon(qw422016, `code`, ps)
 //line views/vadmin/Routes.html:19
 	qw422016.N().S(`HTTP Routes</h3>
     <ul class="mt">

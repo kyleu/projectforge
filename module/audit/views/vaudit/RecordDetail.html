@@ -19,7 +19,7 @@
       <a href="#modal-record"><button type="button">JSON</button></a>
       <a href="{%s p.Model.WebPath() %}/edit"><button>Edit</button></a>
     </div>
-    <h3>{%= components.SVGRefIcon(`cog`, ps) %} Audit Record [{%s p.Model.String() %}]</h3>
+    <h3>{%= components.SVGIcon(`cog`, ps) %} Audit Record [{%s p.Model.String() %}]</h3>
     <div class="overflow full-width">
       <table class="mt">
         <tbody>
@@ -31,7 +31,7 @@
             <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Audit ID</th>
             <td>
               <div class="icon">{%= view.UUID(&p.Model.AuditID) %}</div>
-              <a title="Audit" href="{%s `/admin/audit`+`/`+p.Model.AuditID.String() %}">{%= components.SVGRefIcon("cog", ps) %}</a>
+              <a title="Audit" href="{%s `/admin/audit`+`/`+p.Model.AuditID.String() %}">{%= components.SVGIcon("cog", ps) %}</a>
             </td>
           </tr>
           <tr>

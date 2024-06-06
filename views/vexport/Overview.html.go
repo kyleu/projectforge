@@ -55,7 +55,7 @@ func (p *Overview) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 	qw422016.N().S(`Edit</button></a></div>
     <h3>`)
 //line views/vexport/Overview.html:24
-	components.StreamSVGRefIcon(qw422016, `print`, ps)
+	components.StreamSVGIcon(qw422016, `print`, ps)
 //line views/vexport/Overview.html:24
 	qw422016.N().S(`Export Configuration</h3>
     `)
@@ -76,7 +76,7 @@ func (p *Overview) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 	qw422016.N().S(`Edit</button></a></div>
     <h3>`)
 //line views/vexport/Overview.html:29
-	components.StreamSVGRefIcon(qw422016, `users`, ps)
+	components.StreamSVGIcon(qw422016, `users`, ps)
 //line views/vexport/Overview.html:29
 	qw422016.E().S(util.StringPlural(len(p.Args.Groups), "Group"))
 //line views/vexport/Overview.html:29
@@ -116,7 +116,7 @@ func (p *Overview) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
     </div>
     <h3>`)
 //line views/vexport/Overview.html:42
-	components.StreamSVGRefIcon(qw422016, `hammer`, ps)
+	components.StreamSVGIcon(qw422016, `hammer`, ps)
 //line views/vexport/Overview.html:42
 	qw422016.E().S(util.StringPlural(len(p.Args.Enums), "Enum"))
 //line views/vexport/Overview.html:42
@@ -163,7 +163,7 @@ func (p *Overview) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
     </div>
     <h3>`)
 //line views/vexport/Overview.html:54
-	components.StreamSVGRefIcon(qw422016, `list`, ps)
+	components.StreamSVGIcon(qw422016, `list`, ps)
 //line views/vexport/Overview.html:54
 	qw422016.E().S(util.StringPlural(len(p.Args.Models), "Model"))
 //line views/vexport/Overview.html:54

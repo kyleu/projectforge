@@ -64,7 +64,7 @@ func (p *EnumForm) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 	qw422016.N().S(`" data-message="Are you sure you wish to remove this export enum?"><button type="button">Delete</button></a></div>
       <h3>`)
 //line views/vexport/EnumForm.html:31
-	components.StreamSVGRefIcon(qw422016, e.IconSafe(), ps)
+	components.StreamSVGIcon(qw422016, e.IconSafe(), ps)
 //line views/vexport/EnumForm.html:31
 	if e.Name == "" {
 //line views/vexport/EnumForm.html:31

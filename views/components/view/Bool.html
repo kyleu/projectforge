@@ -9,6 +9,7 @@
 {% endstripspace %}{% endfunc %}
 
 {% func BoolIcon(b bool, size int, cls string, ps *cutil.PageState) %}{% stripspace %}
+  {% code if cls == "" { cls = "inline" } %}
   {% if b %}
     {%= components.SVGRef("check", size, size, cls, ps) %}
   {% else %}

@@ -43,7 +43,7 @@ func (p *Logs) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
   <div class="card">
     <h3>`)
 //line views/vadmin/Logs.html:19
-	components.StreamSVGRefIcon(qw422016, `filter`, ps)
+	components.StreamSVGIcon(qw422016, `filter`, ps)
 //line views/vadmin/Logs.html:19
 	qw422016.N().S(`Recent Logs</h3>
     `)

@@ -15,8 +15,8 @@
 
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <div class="right"><a href="/admin/exec/new" title="start a new process">{%= components.SVGRefIcon(`plus`, ps) %}</a></div>
-    <h3>{%= components.SVGRefIcon(`desktop`, ps) %} {%s util.StringPlural(len(p.Execs), "Process") %}</h3>
+    <div class="right"><a href="/admin/exec/new" title="start a new process">{%= components.SVGIcon(`plus`, ps) %}</a></div>
+    <h3>{%= components.SVGIcon(`desktop`, ps) %} {%s util.StringPlural(len(p.Execs), "Process") %}</h3>
     {%= Table(p.Execs, as, ps) %}
   </div>
 {% endfunc %}

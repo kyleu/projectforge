@@ -36,7 +36,7 @@
 
 {% func (p *ComponentList) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`app`, ps) %}{%s util.AppName %} Components</h3>
+    <h3>{%= components.SVGIcon(`app`, ps) %}{%s util.AppName %} Components</h3>
     <p>Components are provided for your HTML UI. Most components can be used without JavaScript.</p>
   </div>
   {%- for _, c := range AllComponents -%}

@@ -9,9 +9,9 @@
 
 {% func Nav(as *app.State, ps *cutil.PageState) %}
 <nav id="navbar">
-  <a class="logo" href="{%s ps.RootPath %}" title="{%s util.AppName %} {%s as.BuildInfo.String() %}">{%= components.SVGRef(ps.RootIcon, 32, 32, ``, ps) %}</a>
+  <a class="logo" href="{%s ps.RootPath %}" title="{%s util.AppName %} {%s as.BuildInfo.String() %}">{%= components.SVGSimple(ps.RootIcon, 32, ps) %}</a>
   <div class="breadcrumbs">
-    <a href="{%s ps.RootPath %}" class="nav-root-icon" title="{%s util.AppName %}">{%= components.SVGRef(ps.RootIcon, 18, 28, "breadcrumb-icon", ps) %}</a>
+    <a href="{%s ps.RootPath %}" class="nav-root-icon" title="{%s util.AppName %}">{%= components.SVGBreadcrumb(ps.RootIcon, ps) %}</a>
     <a class="link nav-root-item" href="{%s ps.RootPath %}">{%s ps.RootTitle %}</a>{%= NavItems(ps) %}
   </div>
   {%- if ps.SearchPath != "-" -%}
@@ -33,7 +33,7 @@
   {% if link != "" || last %}
   <a class="link{% if last %}{% space %}last{% endif %}" href="{%s link %}">
   {% endif %}
-    <span title="{%s title %}">{%= components.SVGRef(icon, 18, 28, "breadcrumb-icon", ps) %}</span>
+    <span title="{%s title %}">{%= components.SVGBreadcrumb(icon, ps) %}</span>
     <span class="nav-item-title">{%s title %}</span>
   {% if link != "" || last %}
   </a>
@@ -57,6 +57,6 @@
 
 {% func ProfileLink(as *app.State, ps *cutil.PageState) %}{% stripspace %}
   <a class="profile" title="Settings" href="{%s ps.ProfilePath %}">
-      {%= components.SVGRef(`profile`, 24, 24, ``, ps) %}
+      {%= components.SVGSimple(`profile`, 24, ps) %}
   </a>
 {% endstripspace %}{% endfunc %}

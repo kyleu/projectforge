@@ -60,7 +60,7 @@ func (p *Result) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vgit/Result.html:25
 	qw422016.N().S(`">`)
 //line views/vgit/Result.html:25
-	components.StreamSVGRefIcon(qw422016, prj.IconSafe(), ps)
+	components.StreamSVGIcon(qw422016, prj.IconSafe(), ps)
 //line views/vgit/Result.html:25
 	qw422016.N().S(` `)
 //line views/vgit/Result.html:25

@@ -16,7 +16,7 @@
 
 {% func (p *Routes) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`code`, ps) %}HTTP Routes</h3>
+    <h3>{%= components.SVGIcon(`code`, ps) %}HTTP Routes</h3>
     <ul class="mt">
       {%- for _, k := range util.ArraySorted(lo.Keys(p.Routes)) -%}
       <li>

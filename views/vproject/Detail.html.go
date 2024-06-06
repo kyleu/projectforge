@@ -60,7 +60,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 		qw422016.N().S(`  <div class="card">
     <h3>`)
 //line views/vproject/Detail.html:26
-		components.StreamSVGRefIcon(qw422016, "crosshairs", ps)
+		components.StreamSVGIcon(qw422016, "crosshairs", ps)
 //line views/vproject/Detail.html:26
 		qw422016.N().S(`Project Errors</h3>
     <ul>

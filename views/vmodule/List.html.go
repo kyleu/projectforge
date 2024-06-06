@@ -54,7 +54,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vmodule/List.html:20
 	qw422016.N().S(`    <h3>`)
 //line views/vmodule/List.html:21
-	components.StreamSVGRefIcon(qw422016, `archive`, ps)
+	components.StreamSVGIcon(qw422016, `archive`, ps)
 //line views/vmodule/List.html:21
 	qw422016.E().S(util.StringPlural(len(p.Modules), "Available Module"))
 //line views/vmodule/List.html:21

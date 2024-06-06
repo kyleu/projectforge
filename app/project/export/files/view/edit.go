@@ -61,7 +61,7 @@ func exportViewEditBody(m *model.Model, p *project.Project, args *model.Args) (*
 	ret.W("    <form action=\"/%s/_new\" class=\"mt\" method=\"post\">", m.Route())
 	ret.W("    {%%- else -%%}")
 	delPrefix := "    <div class=\"right\"><a class=\"link-confirm\" href=\"{%%s p.Model.WebPath() %%}/delete\" data-message=\""
-	ret.W(delPrefix + delMsg + "\"><button>Delete</button></a></div>")
+	ret.W(delPrefix + delMsg + `"><button>{%%= components.SVGButton("times", ps) %%}Delete</button></a></div>`)
 	ret.W("    %s%s Edit %s [{%%%%s p.Model.String() %%%%}]%s", helper.TextH3Start, svgRef(m.Icon), m.Title(), helper.TextH3End)
 	ret.W("    <form action=\"\" method=\"post\">")
 	ret.W("    " + helper.TextEndIfDash)

@@ -39,7 +39,7 @@ func (p *Testbed) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
   <div class="card">
     <h3>`)
 //line views/Testbed.html:16
-	components.StreamSVGRefIcon(qw422016, `app`, ps)
+	components.StreamSVGIcon(qw422016, `app`, ps)
 //line views/Testbed.html:16
 	qw422016.E().S(util.AppName)
 //line views/Testbed.html:16
@@ -62,7 +62,7 @@ func (p *Testbed) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
     <form action="" method="post">
       <h3>`)
 //line views/Testbed.html:23
-	components.StreamSVGRefIcon(qw422016, `cog`, ps)
+	components.StreamSVGIcon(qw422016, `cog`, ps)
 //line views/Testbed.html:23
 	qw422016.N().S(`Form Test</h3>
       <div class="mt">

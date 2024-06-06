@@ -13,14 +13,14 @@
 
 {% func (p *Testbed) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`app`, ps) %}{%s util.AppName %} Testbed</h3>
+    <h3>{%= components.SVGIcon(`app`, ps) %}{%s util.AppName %} Testbed</h3>
     {%- if p.Param != nil -%}
     {%= components.JSON(p.Param) %}
     {%- endif -%}
   </div>
   <div class="card">
     <form action="" method="post">
-      <h3>{%= components.SVGRefIcon(`cog`, ps) %}Form Test</h3>
+      <h3>{%= components.SVGIcon(`cog`, ps) %}Form Test</h3>
       <div class="mt">
         <textarea class="full-width" name="x" rows="8" placeholder="">{%v p.Param %}</textarea>
       </div>

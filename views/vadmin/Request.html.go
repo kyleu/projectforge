@@ -47,7 +47,7 @@ func (p *Request) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
     <div class="right"><a href="#modal-ps"><button type="button">Page State</button></a></div>
     <h3>`)
 //line views/vadmin/Request.html:23
-	components.StreamSVGRefIcon(qw422016, `link`, ps)
+	components.StreamSVGIcon(qw422016, `link`, ps)
 //line views/vadmin/Request.html:23
 	qw422016.N().S(`Request Debug</h3>
     <div class="overflow full-width">
@@ -145,7 +145,7 @@ func (p *Request) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 		qw422016.N().S(`  <div class="card">
     <h3>`)
 //line views/vadmin/Request.html:72
-		components.StreamSVGRefIcon(qw422016, `code`, ps)
+		components.StreamSVGIcon(qw422016, `code`, ps)
 //line views/vadmin/Request.html:72
 		qw422016.N().S(`Headers</h3>
     <div class="overflow full-width">

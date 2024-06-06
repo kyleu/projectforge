@@ -62,7 +62,7 @@ func StreamHelp(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
 //line views/layout/Help.html:26
 			qw422016.N().S(`" href="#help">`)
 //line views/layout/Help.html:26
-			components.StreamSVGRef(qw422016, `question`, 24, 24, ``, ps)
+			components.StreamSVGSimple(qw422016, `question`, 24, ps)
 //line views/layout/Help.html:26
 			qw422016.N().S(`</a>`)
 //line views/layout/Help.html:27
@@ -82,7 +82,7 @@ func StreamHelp(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
 //line views/layout/Help.html:33
 			qw422016.N().S(`<div class="modal-header"><a href="#" class="modal-close">×</a><h3>`)
 //line views/layout/Help.html:36
-			components.StreamSVGRefIcon(qw422016, `question`, ps)
+			components.StreamSVGIcon(qw422016, `question`, ps)
 //line views/layout/Help.html:36
 			qw422016.N().S(`Help:`)
 //line views/layout/Help.html:36

@@ -14,7 +14,7 @@
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
   {%- code titles := as.GraphQL.Titles() -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`graph`, ps) %}GraphQL</h3>
+    <h3>{%= components.SVGIcon(`graph`, ps) %}GraphQL</h3>
     {%- if len(p.Keys) == 0 -%}
     <p><em>no schemata available</em></p>
     {%- else -%}

@@ -53,7 +53,7 @@ func StreamSummary(qw422016 *qt422016.Writer, prj *project.Project, title string
 //line views/vproject/Summary.html:21
 	qw422016.N().S(`">`)
 //line views/vproject/Summary.html:21
-	components.StreamSVGRefIcon(qw422016, prj.IconSafe(), ps)
+	components.StreamSVGIcon(qw422016, prj.IconSafe(), ps)
 //line views/vproject/Summary.html:21
 	qw422016.N().S(` `)
 //line views/vproject/Summary.html:21

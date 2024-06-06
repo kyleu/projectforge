@@ -13,7 +13,7 @@
 
 {% func (p *SystemStatus) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`desktop`, ps) %}System Status</h3>
+    <h3>{%= components.SVGIcon(`desktop`, ps) %}System Status</h3>
     <div class="mt">{%= components.JSON(p.Status) %}</div>
   </div>
 {% endfunc %}

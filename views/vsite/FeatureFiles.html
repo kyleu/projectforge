@@ -25,7 +25,7 @@
   {%- if fs.IsDir(filepath.Join(p.Path...)) -%}
   {%- code files := fs.ListFiles(filepath.Join(p.Path...), nil, ps.Logger) -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(p.Module.Icon, ps) %}{%s p.Module.Title() %}</h3>
+    <h3>{%= components.SVGIcon(p.Module.Icon, ps) %}{%s p.Module.Title() %}</h3>
     {%= vfile.List(p.Path, files, fs, u, as, ps) %}
   </div>
   {%- else -%}
@@ -36,7 +36,7 @@
     }
   -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(p.Module.Icon, ps) %}{%s p.Module.Title() %}</h3>
+    <h3>{%= components.SVGIcon(p.Module.Icon, ps) %}{%s p.Module.Title() %}</h3>
     {%= vfile.Detail(p.Path, b, u, nil, as, ps) %}
   </div>
   {%- endif -%}

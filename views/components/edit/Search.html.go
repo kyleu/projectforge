@@ -69,7 +69,7 @@ func StreamSearchForm(qw422016 *qt422016.Writer, action string, fieldKey string,
 //line views/components/edit/Search.html:30
 	qw422016.N().S(`<button class="right" type="submit">`)
 //line views/components/edit/Search.html:31
-	components.StreamSVGRef(qw422016, "search", 22, 22, `icon`, ps)
+	components.StreamSVGRef(qw422016, "search", 22, 22, "icon", ps)
 //line views/components/edit/Search.html:31
 	qw422016.N().S(`</button><input class="right br0" type="search" placeholder="`)
 //line views/components/edit/Search.html:32

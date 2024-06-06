@@ -49,7 +49,7 @@ func StreamDetailExport(qw422016 *qt422016.Writer, key string, ea *model.Args, a
 //line views/vproject/DetailExport.html:15
 		qw422016.N().S(`  <h3>`)
 //line views/vproject/DetailExport.html:16
-		components.StreamSVGRefIcon(qw422016, `print`, ps)
+		components.StreamSVGIcon(qw422016, `print`, ps)
 //line views/vproject/DetailExport.html:16
 		qw422016.N().S(`Export Configuration</h3>
   <div class="clear"></div>
@@ -67,7 +67,7 @@ func StreamDetailExport(qw422016 *qt422016.Writer, key string, ea *model.Args, a
 //line views/vproject/DetailExport.html:21
 		qw422016.N().S(`  <h3>`)
 //line views/vproject/DetailExport.html:22
-		components.StreamSVGRefIcon(qw422016, `users`, ps)
+		components.StreamSVGIcon(qw422016, `users`, ps)
 //line views/vproject/DetailExport.html:22
 		qw422016.E().S(util.StringPlural(len(ea.Groups), "Group"))
 //line views/vproject/DetailExport.html:22
@@ -87,7 +87,7 @@ func StreamDetailExport(qw422016 *qt422016.Writer, key string, ea *model.Args, a
 //line views/vproject/DetailExport.html:27
 		qw422016.N().S(`  <h3>`)
 //line views/vproject/DetailExport.html:28
-		components.StreamSVGRefIcon(qw422016, `hammer`, ps)
+		components.StreamSVGIcon(qw422016, `hammer`, ps)
 //line views/vproject/DetailExport.html:28
 		qw422016.E().S(util.StringPlural(len(ea.Enums), "Enum"))
 //line views/vproject/DetailExport.html:28
@@ -107,7 +107,7 @@ func StreamDetailExport(qw422016 *qt422016.Writer, key string, ea *model.Args, a
 //line views/vproject/DetailExport.html:33
 		qw422016.N().S(`  <h3 class="mt">`)
 //line views/vproject/DetailExport.html:34
-		components.StreamSVGRefIcon(qw422016, `list`, ps)
+		components.StreamSVGIcon(qw422016, `list`, ps)
 //line views/vproject/DetailExport.html:34
 		qw422016.E().S(util.StringPlural(len(ea.Models), "Model"))
 //line views/vproject/DetailExport.html:34

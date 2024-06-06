@@ -43,7 +43,7 @@ func (p *Sitemap) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
   <div class="card">
     <h3>`)
 //line views/vadmin/Sitemap.html:19
-	components.StreamSVGRefIcon(qw422016, `star`, ps)
+	components.StreamSVGIcon(qw422016, `star`, ps)
 //line views/vadmin/Sitemap.html:19
 	qw422016.N().S(`Sitemap</h3>
     <div class="mt">

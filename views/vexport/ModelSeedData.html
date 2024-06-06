@@ -18,7 +18,7 @@
 {% func (p *ModelSeedData) Body(as *app.State, ps *cutil.PageState) %}
   {%- code m := p.Model -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(m.IconSafe(), ps) %}{%s m.Name %} Seed Data</h3>
+    <h3>{%= components.SVGIcon(m.IconSafe(), ps) %}{%s m.Name %} Seed Data</h3>
     <div class="mt overflow">
       <div class="overflow full-width">
         <table>

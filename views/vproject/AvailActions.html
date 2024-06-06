@@ -16,7 +16,7 @@
   -%}
   {%= vsearch.Form("/p/search", "", "Search All Files", currTags, ps) %}
   <h3>
-    <a href="/p">{%= components.SVGRefIcon(`code`, ps) %}All Projects</a>{% if len(currTags) > 0 %} tagged [<a href="/p?tags={%s strings.Join(currTags, `, `) %}">{%s strings.Join(currTags, `, `) %}</a>]{% endif %}{% if title != "" %}: <a href="">{%s title %}</a>{% endif %}
+    <a href="/p">{%= components.SVGIcon(`code`, ps) %}All Projects</a>{% if len(currTags) > 0 %} tagged [<a href="/p?tags={%s strings.Join(currTags, `, `) %}">{%s strings.Join(currTags, `, `) %}</a>]{% endif %}{% if title != "" %}: <a href="">{%s title %}</a>{% endif %}
   </h3>
   <div class="clear"></div>
   {%- if len(availTags) > 0 -%}

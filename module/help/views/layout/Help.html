@@ -22,7 +22,7 @@
             title = util.AppName
           }
         -%}
-        <a class="help-link" title="Help for this page" data-key="{%s strings.TrimSuffix(ps.Action, `.action`) %}" href="#help">{%= components.SVGRef(`question`, 24, 24, ``, ps) %}</a>
+        <a class="help-link" title="Help for this page" data-key="{%s strings.TrimSuffix(ps.Action, `.action`) %}" href="#help">{%= components.SVGSimple(`question`, 24, ps) %}</a>
         {%= components.Indent(true, 1) %}
         <div id="help" class="modal" style="display: none;">
           {%= components.Indent(true, 2) %}
@@ -32,7 +32,7 @@
             {%= components.Indent(true, 3) %}
             <div class="modal-header">
               <a href="#" class="modal-close">×</a>
-              <h3>{%= components.SVGRefIcon(`question`, ps) %}Help: {%s title %}</h3>
+              <h3>{%= components.SVGIcon(`question`, ps) %}Help: {%s title %}</h3>
             </div>
             {%= components.Indent(true, 3) %}
             <div class="modal-body">

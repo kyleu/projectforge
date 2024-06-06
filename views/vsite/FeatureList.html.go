@@ -40,7 +40,7 @@ func (p *FeatureList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *c
   <div class="card">
     <h3>`)
 //line views/vsite/FeatureList.html:17
-	components.StreamSVGRefIcon(qw422016, `app`, ps)
+	components.StreamSVGIcon(qw422016, `app`, ps)
 //line views/vsite/FeatureList.html:17
 	qw422016.E().S(util.AppName)
 //line views/vsite/FeatureList.html:17

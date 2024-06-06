@@ -23,7 +23,7 @@
 
   {%- if len(p.Validation) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon("crosshairs", ps) %}Project Errors</h3>
+    <h3>{%= components.SVGIcon("crosshairs", ps) %}Project Errors</h3>
     <ul>
       {%- for _, validation := range p.Validation -%}
       <li class="mts"><span class="error">{%s validation.Code %}</span>: {%s validation.Message %}</li>

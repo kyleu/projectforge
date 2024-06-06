@@ -15,7 +15,7 @@
 
 {% func (p *MemUsage) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`desktop`, ps) %}Memory Usage</h3>
+    <h3>{%= components.SVGIcon(`desktop`, ps) %}Memory Usage</h3>
     <em>Better formatting is coming soon</em>
     {%s= components.JSON(p.Mem) %}
   </div>

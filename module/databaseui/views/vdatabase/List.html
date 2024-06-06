@@ -15,14 +15,14 @@
 
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`database`, ps) %}Databases</h3>
+    <h3>{%= components.SVGIcon(`database`, ps) %}Databases</h3>
     <em>{%s util.StringPlural(len(p.Keys), "database") %} available</em>
   </div>
   {%- for _, key := range p.Keys -%}
   {%- code svc := p.Services[key] -%}
   <div class="card">
     <div class="right"><em>{%s svc.Type.Title %}</em></div>
-    <h3><a href="/admin/database/{%s key %}">{%= components.SVGRefIcon(`database`, ps) %}{%s svc.Key %}</a></h3>
+    <h3><a href="/admin/database/{%s key %}">{%= components.SVGIcon(`database`, ps) %}{%s svc.Key %}</a></h3>
   </div>
   {%- endfor -%}
 {% endfunc %}

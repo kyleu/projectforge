@@ -42,7 +42,7 @@ func (p *Download) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
   <div class="card">
     <h3>`)
 //line views/vsite/Download.html:18
-	components.StreamSVGRefIcon(qw422016, "download", ps)
+	components.StreamSVGIcon(qw422016, "download", ps)
 //line views/vsite/Download.html:18
 	qw422016.N().S(` Download `)
 //line views/vsite/Download.html:18
@@ -113,7 +113,7 @@ func streamdownloadShowLinks(qw422016 *qt422016.Writer, mode string, icon string
 		qw422016.N().S(`  <div class="card">
     <h3>`)
 //line views/vsite/Download.html:29
-		components.StreamSVGRefIcon(qw422016, icon, ps)
+		components.StreamSVGIcon(qw422016, icon, ps)
 //line views/vsite/Download.html:29
 		qw422016.E().S(title)
 //line views/vsite/Download.html:29
@@ -149,7 +149,7 @@ func streamdownloadShowLinks(qw422016 *qt422016.Writer, mode string, icon string
 				qw422016.N().S(`          <tr>
             <td style="width: 25%;">`)
 //line views/vsite/Download.html:43
-				components.StreamSVGRef(qw422016, link.OSIcon(), 20, 20, "icon", ps)
+				components.StreamSVGIcon(qw422016, link.OSIcon(), ps)
 //line views/vsite/Download.html:43
 				qw422016.E().S(link.OSString())
 //line views/vsite/Download.html:43

@@ -14,7 +14,7 @@
   -%}
   <div class="card">
     <div class="right"><a href="#modal-available"><button type="button">Available</button></a></div>
-    <h3>{%= components.SVGRefIcon(`profile`, ps) %}Authentication</h3>
+    <h3>{%= components.SVGIcon(`profile`, ps) %}Authentication</h3>
     {%- if len(prvs) == 0 -%}
     <em class="mt">no authentication providers configured, why not <a href="#modal-available">add one</a>?</em>
     {%- else -%}

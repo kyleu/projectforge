@@ -41,7 +41,7 @@ func (p *DepError) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
   <div class="card">
     <h3>`)
 //line views/vwelcome/DepError.html:18
-	components.StreamSVGRefIcon(qw422016, `warning`, ps)
+	components.StreamSVGIcon(qw422016, `warning`, ps)
 //line views/vwelcome/DepError.html:18
 	qw422016.N().S(` Missing Dependencies</h3>
     <div class="mt">Before you can start using `)

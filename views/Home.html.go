@@ -46,7 +46,7 @@ func (p *Home) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
   <div class="card">
     <h3>`)
 //line views/Home.html:23
-	components.StreamSVGRefIcon(qw422016, `app`, ps)
+	components.StreamSVGIcon(qw422016, `app`, ps)
 //line views/Home.html:23
 	qw422016.E().S(util.AppName)
 //line views/Home.html:23

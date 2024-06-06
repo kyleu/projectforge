@@ -42,7 +42,7 @@ func (p *MemUsage) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
   <div class="card">
     <h3>`)
 //line views/vadmin/MemUsage.html:18
-	components.StreamSVGRefIcon(qw422016, `desktop`, ps)
+	components.StreamSVGIcon(qw422016, `desktop`, ps)
 //line views/vadmin/MemUsage.html:18
 	qw422016.N().S(`Memory Usage</h3>
     <em>Better formatting is coming soon</em>

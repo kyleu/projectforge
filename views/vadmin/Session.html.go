@@ -42,7 +42,7 @@ func (p *Session) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
   <div class="card">
     <h3>`)
 //line views/vadmin/Session.html:18
-	components.StreamSVGRefIcon(qw422016, `desktop`, ps)
+	components.StreamSVGIcon(qw422016, `desktop`, ps)
 //line views/vadmin/Session.html:18
 	qw422016.N().S(`Session</h3>
     <em>`)
@@ -58,7 +58,7 @@ func (p *Session) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 		qw422016.N().S(`  <div class="card">
     <h3>`)
 //line views/vadmin/Session.html:23
-		components.StreamSVGRefIcon(qw422016, `list`, ps)
+		components.StreamSVGIcon(qw422016, `list`, ps)
 //line views/vadmin/Session.html:23
 		qw422016.N().S(`Values</h3>
     <div class="overflow full-width">
@@ -105,7 +105,7 @@ func (p *Session) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 	qw422016.N().S(`  <div class="card">
     <h3>`)
 //line views/vadmin/Session.html:44
-	components.StreamSVGRefIcon(qw422016, `profile`, ps)
+	components.StreamSVGIcon(qw422016, `profile`, ps)
 //line views/vadmin/Session.html:44
 	qw422016.N().S(`Profile</h3>
     <div class="mt">`)

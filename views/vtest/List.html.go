@@ -35,7 +35,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
   <div class="card">
     <h3>`)
 //line views/vtest/List.html:12
-	components.StreamSVGRefIcon(qw422016, `list`, ps)
+	components.StreamSVGIcon(qw422016, `list`, ps)
 //line views/vtest/List.html:12
 	qw422016.N().S(`Tests!</h3>
     <ul>

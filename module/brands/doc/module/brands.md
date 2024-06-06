@@ -15,5 +15,5 @@ Licensed under [CC0](https://creativecommons.org/publicdomain/zero/1.0)
 - To use a brand icon, simply reference an SVG starting with the prefix `brand-` in your template
 
 ```html
-{%= components.SVGRef("brand-apple", 64, 64, "", ps) %}
+{%= components.SVGRef("brand-apple", 64, 64, "some-class", ps) %}
 ```

@@ -48,7 +48,7 @@ func StreamSummary(qw422016 *qt422016.Writer, mod *module.Module, args util.Valu
 	qw422016.N().S(`
     <h3>`)
 //line views/vmodule/Summary.html:20
-	components.StreamSVGRefIcon(qw422016, mod.IconSafe(), ps)
+	components.StreamSVGIcon(qw422016, mod.IconSafe(), ps)
 //line views/vmodule/Summary.html:20
 	qw422016.N().S(` `)
 //line views/vmodule/Summary.html:20

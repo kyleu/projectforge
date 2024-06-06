@@ -38,7 +38,7 @@ func (p *GoSource) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
   <div class="card">
     <h3>`)
 //line views/vsite/GoSource.html:14
-	components.StreamSVGRefIcon(qw422016, `app`, ps)
+	components.StreamSVGIcon(qw422016, `app`, ps)
 //line views/vsite/GoSource.html:14
 	qw422016.N().S(` `)
 //line views/vsite/GoSource.html:14

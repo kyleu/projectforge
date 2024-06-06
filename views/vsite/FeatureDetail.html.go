@@ -45,7 +45,7 @@ func (p *FeatureDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps 
 	qw422016.N().S(`/files"><button>Files</button></a></div>
     <h3>`)
 //line views/vsite/FeatureDetail.html:18
-	components.StreamSVGRefIcon(qw422016, p.Module.Icon, ps)
+	components.StreamSVGIcon(qw422016, p.Module.Icon, ps)
 //line views/vsite/FeatureDetail.html:18
 	qw422016.E().S(p.Module.Title())
 //line views/vsite/FeatureDetail.html:18

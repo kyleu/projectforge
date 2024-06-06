@@ -19,7 +19,7 @@
 {% func (p *DeriveForm) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <form action="" method="post" class="mt expanded">
-      <h3>{%= components.SVGRefIcon(`dna`, ps) %}Import</h3>
+      <h3>{%= components.SVGIcon(`dna`, ps) %}Import</h3>
       <div class="overflow full-width">
         <table class="mt min-200 expanded">
           <tbody>
@@ -44,7 +44,7 @@
 
 {% func DeriveResult(r derive.Result, as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`play`, ps) %}Results</h3>
+    <h3>{%= components.SVGIcon(`play`, ps) %}Results</h3>
     {%= components.JSON(r) %}
   </div>
 {% endfunc %}

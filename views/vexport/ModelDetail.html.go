@@ -65,7 +65,7 @@ func (p *ModelDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *c
     </div>
     <h3>`)
 //line views/vexport/ModelDetail.html:26
-	components.StreamSVGRefIcon(qw422016, m.IconSafe(), ps)
+	components.StreamSVGIcon(qw422016, m.IconSafe(), ps)
 //line views/vexport/ModelDetail.html:26
 	qw422016.E().S(m.Name)
 //line views/vexport/ModelDetail.html:26
@@ -80,7 +80,7 @@ func (p *ModelDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *c
   <div class="card">
     <h3>`)
 //line views/vexport/ModelDetail.html:31
-	components.StreamSVGRefIcon(qw422016, `first-aid`, ps)
+	components.StreamSVGIcon(qw422016, `first-aid`, ps)
 //line views/vexport/ModelDetail.html:31
 	qw422016.N().S(` Columns</h3>
     `)
@@ -96,7 +96,7 @@ func (p *ModelDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *c
 		qw422016.N().S(`  <div class="card">
     <h3>`)
 //line views/vexport/ModelDetail.html:36
-		components.StreamSVGRefIcon(qw422016, `social`, ps)
+		components.StreamSVGIcon(qw422016, `social`, ps)
 //line views/vexport/ModelDetail.html:36
 		qw422016.N().S(` Relations</h3>
     `)
@@ -113,7 +113,7 @@ func (p *ModelDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *c
 		qw422016.N().S(`  <div class="card">
     <h3>`)
 //line views/vexport/ModelDetail.html:40
-		components.StreamSVGRefIcon(qw422016, `star`, ps)
+		components.StreamSVGIcon(qw422016, `star`, ps)
 //line views/vexport/ModelDetail.html:40
 		qw422016.N().S(` Indexes</h3>
     `)
@@ -130,7 +130,7 @@ func (p *ModelDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *c
 		qw422016.N().S(`  <div class="card">
     <h3>`)
 //line views/vexport/ModelDetail.html:44
-		components.StreamSVGRefIcon(qw422016, `file`, ps)
+		components.StreamSVGIcon(qw422016, `file`, ps)
 //line views/vexport/ModelDetail.html:44
 		qw422016.N().S(` Exported Files</h3>
     `)

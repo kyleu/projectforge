@@ -41,7 +41,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
   <div class="card">
     <h3>`)
 //line views/vtheme/List.html:17
-	components.StreamSVGRefIcon(qw422016, `eye`, ps)
+	components.StreamSVGIcon(qw422016, `eye`, ps)
 //line views/vtheme/List.html:17
 	qw422016.N().S(`Add Theme</h3>
     <div class="mt">
@@ -65,7 +65,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
   <div class="card">
     <h3>`)
 //line views/vtheme/List.html:33
-	components.StreamSVGRefIcon(qw422016, `play`, ps)
+	components.StreamSVGIcon(qw422016, `play`, ps)
 //line views/vtheme/List.html:33
 	qw422016.N().S(`Current Themes</h3>
     <div class="overflow full-width">

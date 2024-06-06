@@ -21,12 +21,12 @@
 {% func (p *Overview) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <div class="right"><a href="/p/{%s p.Project.Key %}/export/config"><button>{%= components.SVGRef("edit", 15, 15, "icon", ps) %}Edit</button></a></div>
-    <h3>{%= components.SVGRefIcon(`print`, ps) %}Export Configuration</h3>
+    <h3>{%= components.SVGIcon(`print`, ps) %}Export Configuration</h3>
     {%= components.JSON(p.Args.Config) %}
   </div>
   <div class="card">
     <div class="right"><a href="/p/{%s p.Project.Key %}/export/groups"><button>{%= components.SVGRef("edit", 15, 15, "icon", ps) %}Edit</button></a></div>
-    <h3>{%= components.SVGRefIcon(`users`, ps) %}{%s util.StringPlural(len(p.Args.Groups), "Group") %}</h3>
+    <h3>{%= components.SVGIcon(`users`, ps) %}{%s util.StringPlural(len(p.Args.Groups), "Group") %}</h3>
     <div class="mt">
       {%- if len(p.Args.Groups) == 0 -%}
       <em>no groups defined</em>
@@ -39,7 +39,7 @@
     <div class="right">
       <a href="/p/{%s p.Project.Key %}/export/enums/create/new"><button>{%= components.SVGRef("file", 15, 15, "icon", ps) %}New</button></a>
     </div>
-    <h3>{%= components.SVGRefIcon(`hammer`, ps) %}{%s util.StringPlural(len(p.Args.Enums), "Enum") %}</h3>
+    <h3>{%= components.SVGIcon(`hammer`, ps) %}{%s util.StringPlural(len(p.Args.Enums), "Enum") %}</h3>
     {%- if len(p.Args.Enums) == 0 -%}
     <em>no enums defined</em>
     {%- else -%}
@@ -51,7 +51,7 @@
       <a href="/p/{%s p.Project.Key %}/export/models/create/derive"><button>{%= components.SVGRef("dna", 15, 15, "icon", ps) %}Derive</button></a>
       <a href="/p/{%s p.Project.Key %}/export/models/create/new"><button>{%= components.SVGRef("file", 15, 15, "icon", ps) %}New</button></a>
     </div>
-    <h3>{%= components.SVGRefIcon(`list`, ps) %}{%s util.StringPlural(len(p.Args.Models), "Model") %}</h3>
+    <h3>{%= components.SVGIcon(`list`, ps) %}{%s util.StringPlural(len(p.Args.Models), "Model") %}</h3>
     {%= ModelList(p.Args.Models, fmt.Sprintf("/p/%s/export/models", p.Project.Key), as, ps) %}
   </div>
 {% endfunc %}

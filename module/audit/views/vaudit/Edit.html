@@ -18,11 +18,11 @@
   <div class="card">
     {%- if p.IsNew -%}
     <div class="right"><a href="/admin/audit/random"><button>Random</button></a></div>
-    <h3>{%= components.SVGRefIcon(`cog`, ps) %} New Audit</h3>
+    <h3>{%= components.SVGIcon(`cog`, ps) %} New Audit</h3>
     <form action="/admin/audit/new" class="mt" method="post">
     {%- else -%}
-    <div class="right"><a href="{%s p.Model.WebPath() %}/delete" onclick="return confirm('Are you sure you wish to delete audit [{%s p.Model.String() %}]?')"><button>Delete</button></a></div>
-    <h3>{%= components.SVGRefIcon(`cog`, ps) %} Edit Audit [{%s p.Model.String() %}]</h3>
+    <div class="right"><a href="{%s p.Model.WebPath() %}/delete" onclick="return confirm('Are you sure you wish to delete audit [{%s p.Model.String() %}]?')"><button>{%= components.SVGButton("times", ps) %}Delete</button></a></div>
+    <h3>{%= components.SVGIcon(`cog`, ps) %} Edit Audit [{%s p.Model.String() %}]</h3>
     <form action="" class="mt" method="post">
     {%- endif -%}
       <div class="overflow full-width">

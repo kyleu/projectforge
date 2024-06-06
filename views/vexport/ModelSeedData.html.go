@@ -48,7 +48,7 @@ func (p *ModelSeedData) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps 
 	qw422016.N().S(`  <div class="card">
     <h3>`)
 //line views/vexport/ModelSeedData.html:21
-	components.StreamSVGRefIcon(qw422016, m.IconSafe(), ps)
+	components.StreamSVGIcon(qw422016, m.IconSafe(), ps)
 //line views/vexport/ModelSeedData.html:21
 	qw422016.E().S(m.Name)
 //line views/vexport/ModelSeedData.html:21

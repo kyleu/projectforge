@@ -15,7 +15,7 @@
 {% func (p *FeatureDetail) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <div class="right"><a href="{%s p.Module.FeaturesPath() %}/files"><button>Files</button></a></div>
-    <h3>{%= components.SVGRefIcon(p.Module.Icon, ps) %}{%s p.Module.Title() %}</h3>
+    <h3>{%= components.SVGIcon(p.Module.Icon, ps) %}{%s p.Module.Title() %}</h3>
     <em>{%s p.Module.Description %}</em>
     {%s= p.HTML %}
   </div>

@@ -45,7 +45,7 @@
       {% if final %}<label class="final" for="{%s itemID %}-input" title="{%s i.Desc() %}">{% else %}<label for="{%s itemID %}-input" title="{%s i.Desc() %}">{% endif %}
         {% if i.Route != "" %}
           {%= components.Indent(true, indent + 3) %}
-          <a class="label-link" href="{%s i.Route %}">{%= components.SVGRef(`link`, 15, 15, ``, ps) %}</a>
+          <a class="label-link" href="{%s i.Route %}">{%= components.SVGSimple(`link`, 15, ps) %}</a>
         {% endif %}
         {%= components.ExpandCollapse(indent + 3, ps) %}
         {%= menuBadge(i, indent + 3, ps) %}
@@ -111,7 +111,7 @@
   {% if i.Badge == "" %}
   {% elseif strings.HasPrefix(i.Badge, ":") %}
     {%= components.Indent(true, indent) %}
-    <div class="badge">{%= components.SVGRef(i.Badge[1:], 18, 18, "", ps) %}</div>
+    <div class="badge">{%= components.SVGInline(i.Badge[1:], 18, ps) %}</div>
   {% else %}
     {%= components.Indent(true, indent) %}
     <div class="badge">{%s i.Badge %}</div>

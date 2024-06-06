@@ -23,16 +23,16 @@
     <div class="right">
       <a href="/p/{%s p.Project.Key %}/export/enums/{%s e.Name %}/edit"><button>{%= components.SVGRef("edit", 15, 15, "icon", ps) %}Edit</button></a>
     </div>
-    <h3>{%= components.SVGRefIcon(e.IconSafe(), ps) %}{%s e.Name %}</h3>
+    <h3>{%= components.SVGIcon(e.IconSafe(), ps) %}{%s e.Name %}</h3>
     <em>export enum</em>
     {%= enumSummary(p.Project.Key, e, as, ps) %}
   </div>
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`star`, ps) %} Values</h3>
+    <h3>{%= components.SVGIcon(`star`, ps) %} Values</h3>
     {%= enumValues(e, as, ps) %}
   </div>{%- if p.File != nil -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`file`, ps) %} Exported Files</h3>
+    <h3>{%= components.SVGIcon(`file`, ps) %} Exported Files</h3>
     {%= enumFiles(e, p.File, as, ps) %}
   </div>{%- endif -%}
 {% endfunc %}

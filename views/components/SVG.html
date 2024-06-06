@@ -40,8 +40,24 @@
   {% endif %}
 {% endstripspace %}{% endfunc %}
 
-{% func SVGRefIcon(k string, ps *cutil.PageState) %}{% stripspace %}
-  {%= SVGRef(k, 20, 20, "icon", ps) %}
+{% func SVGSimple(k string, size int, ps *cutil.PageState) %}{% stripspace %}
+  {%= SVGRef(k, size, size, "", ps) %}
+{% endstripspace %}{% endfunc %}
+
+{% func SVGButton(k string, ps *cutil.PageState) %}{% stripspace %}
+  {%= SVGRef(k, 14, 14, "icon", ps) %}
+{% endstripspace %}{% endfunc %}
+
+{% func SVGIcon(k string, ps *cutil.PageState) %}{% stripspace %}
+  {%= SVGRef(k, 18, 18, "icon", ps) %}
+{% endstripspace %}{% endfunc %}
+
+{% func SVGBreadcrumb(k string, ps *cutil.PageState) %}{% stripspace %}
+  {%= SVGRef(k, 18, 18, "breadcrumb-icon", ps) %}
+{% endstripspace %}{% endfunc %}
+
+{% func SVGInline(k string, size int, ps *cutil.PageState) %}{% stripspace %}
+  {%= SVGRef(k, size, size, "inline", ps) %}
 {% endstripspace %}{% endfunc %}
 
 {%- func IconGallery(as *app.State, ps *cutil.PageState) -%}

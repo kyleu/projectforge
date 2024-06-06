@@ -65,7 +65,7 @@ func (p *EnumDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cu
     </div>
     <h3>`)
 //line views/vexport/EnumDetail.html:26
-	components.StreamSVGRefIcon(qw422016, e.IconSafe(), ps)
+	components.StreamSVGIcon(qw422016, e.IconSafe(), ps)
 //line views/vexport/EnumDetail.html:26
 	qw422016.E().S(e.Name)
 //line views/vexport/EnumDetail.html:26
@@ -80,7 +80,7 @@ func (p *EnumDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cu
   <div class="card">
     <h3>`)
 //line views/vexport/EnumDetail.html:31
-	components.StreamSVGRefIcon(qw422016, `star`, ps)
+	components.StreamSVGIcon(qw422016, `star`, ps)
 //line views/vexport/EnumDetail.html:31
 	qw422016.N().S(` Values</h3>
     `)
@@ -95,7 +95,7 @@ func (p *EnumDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cu
 		qw422016.N().S(`  <div class="card">
     <h3>`)
 //line views/vexport/EnumDetail.html:35
-		components.StreamSVGRefIcon(qw422016, `file`, ps)
+		components.StreamSVGIcon(qw422016, `file`, ps)
 //line views/vexport/EnumDetail.html:35
 		qw422016.N().S(` Exported Files</h3>
     `)

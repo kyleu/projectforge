@@ -43,7 +43,7 @@ func (p *ConfigForm) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cu
     <div class="card">
       <h3>`)
 //line views/vexport/ConfigForm.html:20
-	components.StreamSVGRefIcon(qw422016, `print`, ps)
+	components.StreamSVGIcon(qw422016, `print`, ps)
 //line views/vexport/ConfigForm.html:20
 	qw422016.E().S(p.Project.Title())
 //line views/vexport/ConfigForm.html:20

@@ -20,7 +20,7 @@
 {% func (p *Request) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <div class="right"><a href="#modal-ps"><button type="button">Page State</button></a></div>
-    <h3>{%= components.SVGRefIcon(`link`, ps) %}Request Debug</h3>
+    <h3>{%= components.SVGIcon(`link`, ps) %}Request Debug</h3>
     <div class="overflow full-width">
       <table>
         <thead>
@@ -69,7 +69,7 @@
   {%- if len(p.Req.Header) > 0 -%}
   {%- code hd := cutil.RequestHeadersMap(p.Req) -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`code`, ps) %}Headers</h3>
+    <h3>{%= components.SVGIcon(`code`, ps) %}Headers</h3>
     <div class="overflow full-width">
       <table>
         <thead>

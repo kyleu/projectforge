@@ -36,7 +36,7 @@ func (p *Gallery) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
   <div class="card">
     <h3>`)
 //line views/vsite/Gallery.html:13
-	components.StreamSVGRefIcon(qw422016, `app`, ps)
+	components.StreamSVGIcon(qw422016, `app`, ps)
 //line views/vsite/Gallery.html:13
 	qw422016.E().S(util.AppName)
 //line views/vsite/Gallery.html:13
@@ -46,7 +46,7 @@ func (p *Gallery) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
   <div class="card">
     <h3>`)
 //line views/vsite/Gallery.html:17
-	components.StreamSVGRefIcon(qw422016, `hourglass`, ps)
+	components.StreamSVGIcon(qw422016, `hourglass`, ps)
 //line views/vsite/Gallery.html:17
 	qw422016.N().S(`Performance</h3>
     <div class="mt only-light"><img alt="devtools (light mode)" style="width: 100%; max-width: 800px;" loading="lazy" src="/assets/gallery/devtools-light.png" /></div>
@@ -56,7 +56,7 @@ func (p *Gallery) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
   <div class="card">
     <h3>`)
 //line views/vsite/Gallery.html:23
-	components.StreamSVGRefIcon(qw422016, `cog`, ps)
+	components.StreamSVGIcon(qw422016, `cog`, ps)
 //line views/vsite/Gallery.html:23
 	qw422016.N().S(`Settings</h3>
     <div class="mt only-light"><img alt="settings (light mode)" style="width: 100%; max-width: 800px;" loading="lazy" src="/assets/gallery/settings-light.png" /></div>
@@ -66,7 +66,7 @@ func (p *Gallery) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
   <div class="card">
     <h3>`)
 //line views/vsite/Gallery.html:29
-	components.StreamSVGRefIcon(qw422016, `ice-cream`, ps)
+	components.StreamSVGIcon(qw422016, `ice-cream`, ps)
 //line views/vsite/Gallery.html:29
 	qw422016.N().S(`Themes</h3>
     <div class="mt only-light"><img alt="themes (light mode)" style="width: 100%; max-width: 800px;" loading="lazy" src="/assets/gallery/themes-light.png" /></div>
@@ -76,7 +76,7 @@ func (p *Gallery) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
   <div class="card">
     <h3>`)
 //line views/vsite/Gallery.html:35
-	components.StreamSVGRefIcon(qw422016, `info`, ps)
+	components.StreamSVGIcon(qw422016, `info`, ps)
 //line views/vsite/Gallery.html:35
 	qw422016.N().S(`App Info</h3>
     <div class="mt only-light"><img alt="app info (light mode)" style="width: 100%; max-width: 800px;" loading="lazy" src="/assets/gallery/appinfo-light.png" /></div>

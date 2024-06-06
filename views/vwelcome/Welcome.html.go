@@ -73,7 +73,7 @@ func (p *Welcome) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
     <div class="card">
       <h3>`)
 //line views/vwelcome/Welcome.html:36
-	components.StreamSVGRefIcon(qw422016, `app`, ps)
+	components.StreamSVGIcon(qw422016, `app`, ps)
 //line views/vwelcome/Welcome.html:36
 	qw422016.N().S(` Create your project</h3>
       <div class="overflow full-width">
@@ -136,7 +136,7 @@ func (p *Welcome) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
     <div class="card">
       <h3>`)
 //line views/vwelcome/Welcome.html:55
-	components.StreamSVGRefIcon(qw422016, `archive`, ps)
+	components.StreamSVGIcon(qw422016, `archive`, ps)
 //line views/vwelcome/Welcome.html:55
 	qw422016.N().S(`Modules</h3>
       <div class="overflow full-width">

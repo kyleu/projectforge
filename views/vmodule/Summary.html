@@ -17,7 +17,7 @@
       }
     -%}
     {%= vsearch.Form("/m/" + mod.Key + "/search", q, "Search Files", nil, ps) %}
-    <h3>{%= components.SVGRefIcon(mod.IconSafe(), ps) %} {%s mod.Title() %}</h3>
+    <h3>{%= components.SVGIcon(mod.IconSafe(), ps) %} {%s mod.Title() %}</h3>
     {%- if mod.Dangerous -%}
     <em title="this module allows admins to perform actions that modify the server">dangerous module</em>
     {%- endif -%}

@@ -188,7 +188,7 @@ func StreamMenuItem(qw422016 *qt422016.Writer, i *menu.Item, path []string, brea
 //line views/layout/Menu.html:48
 			qw422016.N().S(`">`)
 //line views/layout/Menu.html:48
-			components.StreamSVGRef(qw422016, `link`, 15, 15, ``, ps)
+			components.StreamSVGSimple(qw422016, `link`, 15, ps)
 //line views/layout/Menu.html:48
 			qw422016.N().S(`</a>`)
 //line views/layout/Menu.html:49
@@ -391,7 +391,7 @@ func streammenuBadge(qw422016 *qt422016.Writer, i *menu.Item, indent int, ps *cu
 //line views/layout/Menu.html:113
 		qw422016.N().S(`<div class="badge">`)
 //line views/layout/Menu.html:114
-		components.StreamSVGRef(qw422016, i.Badge[1:], 18, 18, "", ps)
+		components.StreamSVGInline(qw422016, i.Badge[1:], 18, ps)
 //line views/layout/Menu.html:114
 		qw422016.N().S(`</div>`)
 //line views/layout/Menu.html:115

@@ -142,11 +142,11 @@ func streamtreeNode(qw422016 *qt422016.Writer, n *filesystem.Node, pth string, u
 //line views/vfile/Tree.html:50
 	if n.Dir {
 //line views/vfile/Tree.html:51
-		components.StreamSVGRef(qw422016, `folder`, 15, 15, ``, ps)
+		components.StreamSVGSimple(qw422016, `folder`, 15, ps)
 //line views/vfile/Tree.html:52
 	} else {
 //line views/vfile/Tree.html:53
-		components.StreamSVGRef(qw422016, `file`, 15, 15, ``, ps)
+		components.StreamSVGSimple(qw422016, `file`, 15, ps)
 //line views/vfile/Tree.html:54
 	}
 //line views/vfile/Tree.html:55

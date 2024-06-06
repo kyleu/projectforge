@@ -22,7 +22,7 @@
   <div class="card">
     <div class="right"><em>{%s p.Result.Status %}</em></div>
     <h3>
-      <a href="/p/{%s prj.Key %}">{%= components.SVGRefIcon(prj.IconSafe(), ps) %} {%s prj.Title() %}</a>: Git {%s p.Action.Title %}
+      <a href="/p/{%s prj.Key %}">{%= components.SVGIcon(prj.IconSafe(), ps) %} {%s prj.Title() %}</a>: Git {%s p.Action.Title %}
       {%- if p.Result.DataString("branch") != "" -%}
       <em>({%s p.Result.DataString("branch") %})</em>
       {%- endif -%}

@@ -64,7 +64,7 @@ func (p *ModelForm) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
 	qw422016.N().S(`" data-message="Are you sure you wish to remove this export model?"><button type="button">Delete</button></a></div>
       <h3>`)
 //line views/vexport/ModelForm.html:31
-	components.StreamSVGRefIcon(qw422016, m.IconSafe(), ps)
+	components.StreamSVGIcon(qw422016, m.IconSafe(), ps)
 //line views/vexport/ModelForm.html:31
 	if m.Name == "" {
 //line views/vexport/ModelForm.html:31

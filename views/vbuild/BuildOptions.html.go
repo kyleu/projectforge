@@ -31,7 +31,7 @@ func StreamBuildOptions(qw422016 *qt422016.Writer, key string, ps *cutil.PageSta
   <div class="card">
     <h3>`)
 //line views/vbuild/BuildOptions.html:9
-	components.StreamSVGRefIcon(qw422016, `hammer`, ps)
+	components.StreamSVGIcon(qw422016, `hammer`, ps)
 //line views/vbuild/BuildOptions.html:9
 	qw422016.N().S(`Build your project</h3>
     <div class="mt overflow full-width">

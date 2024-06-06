@@ -28,7 +28,7 @@
           <td><a href="/admin/audit/record/{%= view.UUID(&model.ID) %}">{%= view.UUID(&model.ID) %}</a></td>
           <td>
             <div class="icon">{%= view.UUID(&model.AuditID) %}</div>
-            <a title="Audit" href="{%s `/admin/audit/`+model.AuditID.String() %}">{%= components.SVGRefIcon("cog", ps) %}</a>
+            <a title="Audit" href="{%s `/admin/audit/`+model.AuditID.String() %}">{%= components.SVGIcon("cog", ps) %}</a>
           </td>
           <td>{%s model.T %}</td>
           <td>{%s model.PK %}</td>

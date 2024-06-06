@@ -32,7 +32,7 @@
       <a href="/notebook/edit/{%s= editPath %}"><button type="button">Edit</button></a>
     </div>
     {%- endif -%}
-    <h3>{%= components.SVGRefIcon(`notebook`, ps) %}Notebook Files</h3>
+    <h3>{%= components.SVGIcon(`notebook`, ps) %}Notebook Files</h3>
   </div>
   {%- if isDir -%}
   {%- code files := p.FS.ListFiles(editPath, nil, ps.Logger) -%}

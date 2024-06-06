@@ -36,7 +36,7 @@
   </style>
   <div class="card">
     <div class="right"><em>{%d len(p.Library.Icons) %} icons</em></div>
-    <h3>{%= components.SVGRefIcon(`image`, ps) %}Brand Icon Library</h3>
+    <h3>{%= components.SVGIcon(`image`, ps) %}Brand Icon Library</h3>
     <div class="mt library">
       {%- for _, key := range p.Library.SortedKeys() -%}
       {%- code x := p.Library.Icons[key] -%}

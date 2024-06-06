@@ -21,7 +21,7 @@ A simple page would look like this:
 
 {% func (p *Basic) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`app`, ps) %}{%s util.AppName %}</h3>
+    <h3>{%= components.SVGIcon(`app`, ps) %}{%s util.AppName %}</h3>
     <div class="mt">
       <p>This is my app!</p>
     </div>

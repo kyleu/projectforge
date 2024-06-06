@@ -23,7 +23,7 @@
 {% func (p *Results) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <div class="right">{%s util.MicrosToMillis(p.Timing) %} elapsed</div>
-    <h3>{%= components.SVGRefIcon(`database`, ps) %}Table [{% if p.Schema != "default" %}{%s p.Schema %}:{% endif %}{%s p.Table %}]</h3>
+    <h3>{%= components.SVGIcon(`database`, ps) %}Table [{% if p.Schema != "default" %}{%s p.Schema %}:{% endif %}{%s p.Table %}]</h3>
     <div><em>{%d len(p.Results) %} rows returned</em></div>
     {%- if p.Error != nil -%}
     <div class="mt error">{%s p.Error.Error() %}</div>

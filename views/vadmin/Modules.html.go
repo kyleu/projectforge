@@ -52,7 +52,7 @@ func (p *Modules) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 	qw422016.N().S(`</div>
     <h3>`)
 //line views/vadmin/Modules.html:20
-	components.StreamSVGRefIcon(qw422016, `archive`, ps)
+	components.StreamSVGIcon(qw422016, `archive`, ps)
 //line views/vadmin/Modules.html:20
 	qw422016.N().S(`Go Modules</h3>
     `)

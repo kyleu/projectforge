@@ -48,9 +48,9 @@
       </div>
       {%= components.ExpandCollapse(indent + 2, ps) %}
       {%- if n.Dir -%}
-      {%= components.SVGRef(`folder`, 15, 15, ``, ps) %}
+      {%= components.SVGSimple(`folder`, 15, ps) %}
       {%- else -%}
-      {%= components.SVGRef(`file`, 15, 15, ``, ps) %}
+      {%= components.SVGSimple(`file`, 15, ps) %}
       {%- endif -%}
       {% space %}{%s n.Name %}
       {%= components.Indent(true, indent + 1) %}

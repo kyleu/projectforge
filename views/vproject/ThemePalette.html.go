@@ -44,7 +44,7 @@ func (p *ThemePalette) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *
   <div class="card">
     <h3>`)
 //line views/vproject/ThemePalette.html:21
-	components.StreamSVGRefIcon(qw422016, `eye`, ps)
+	components.StreamSVGIcon(qw422016, `eye`, ps)
 //line views/vproject/ThemePalette.html:21
 	qw422016.N().S(`Set theme for project [`)
 //line views/vproject/ThemePalette.html:21

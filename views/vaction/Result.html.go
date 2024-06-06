@@ -60,7 +60,7 @@ func (p *Result) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`</div>
     <h3>`)
 //line views/vaction/Result.html:23
-	components.StreamSVGRefIcon(qw422016, `map`, ps)
+	components.StreamSVGIcon(qw422016, `map`, ps)
 //line views/vaction/Result.html:23
 	qw422016.N().S(`Result</h3>
     <div class="mts">`)

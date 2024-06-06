@@ -15,7 +15,7 @@
 
 {% func (p *DepError) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`warning`, ps) %} Missing Dependencies</h3>
+    <h3>{%= components.SVGIcon(`warning`, ps) %} Missing Dependencies</h3>
     <div class="mt">Before you can start using {%s util.AppName %}, we need to install some things.</div>
     <div class="mt"><a href="">Refresh</a> this page after you have corrected the errors.</div>
     <div class="mt">If your OS path has changed, you may need to restart the terminal that started Project Forge.</div>

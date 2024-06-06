@@ -180,7 +180,7 @@ Templates are written in [quicktemplate](https://github.com/valyala/quicktemplat
 
 {% func (p *CurrentTime) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`calendar`, ps) %}The Current Time!</h3>
+    <h3>{%= components.SVGIcon(`calendar`, ps) %}The Current Time!</h3>
     <p>{%s fmt.Sprint(p.Time) %}</p>
   </div>
 {% endfunc %}

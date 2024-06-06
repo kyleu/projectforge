@@ -76,7 +76,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
       </div>
       <h3>`)
 //line views/vtheme/Edit.html:31
-	components.StreamSVGRefIcon(qw422016, `eye`, ps)
+	components.StreamSVGIcon(qw422016, `eye`, ps)
 //line views/vtheme/Edit.html:31
 	if p.Theme.Key == theme.KeyNew {
 //line views/vtheme/Edit.html:31

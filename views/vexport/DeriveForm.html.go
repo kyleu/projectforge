@@ -45,7 +45,7 @@ func (p *DeriveForm) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cu
     <form action="" method="post" class="mt expanded">
       <h3>`)
 //line views/vexport/DeriveForm.html:22
-	components.StreamSVGRefIcon(qw422016, `dna`, ps)
+	components.StreamSVGIcon(qw422016, `dna`, ps)
 //line views/vexport/DeriveForm.html:22
 	qw422016.N().S(`Import</h3>
       <div class="overflow full-width">
@@ -125,7 +125,7 @@ func StreamDeriveResult(qw422016 *qt422016.Writer, r derive.Result, as *app.Stat
   <div class="card">
     <h3>`)
 //line views/vexport/DeriveForm.html:47
-	components.StreamSVGRefIcon(qw422016, `play`, ps)
+	components.StreamSVGIcon(qw422016, `play`, ps)
 //line views/vexport/DeriveForm.html:47
 	qw422016.N().S(`Results</h3>
     `)

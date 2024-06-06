@@ -56,7 +56,7 @@ func (p *ServerInfo) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cu
   <div class="card">
     <h3>`)
 //line views/vadmin/ServerInfo.html:20
-	components.StreamSVGRefIcon(qw422016, `archive`, ps)
+	components.StreamSVGIcon(qw422016, `archive`, ps)
 //line views/vadmin/ServerInfo.html:20
 	qw422016.N().S(`Go Modules</h3>
     `)
@@ -102,7 +102,7 @@ func streamrenderTags(qw422016 *qt422016.Writer, title string, tags *util.Ordere
   <div class="card">
     <h3>`)
 //line views/vadmin/ServerInfo.html:27
-	components.StreamSVGRefIcon(qw422016, icon, ps)
+	components.StreamSVGIcon(qw422016, icon, ps)
 //line views/vadmin/ServerInfo.html:27
 	qw422016.E().S(title)
 //line views/vadmin/ServerInfo.html:27

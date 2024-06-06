@@ -152,7 +152,7 @@ func StreamRichEditorCard(qw422016 *qt422016.Writer, key string, id string, titl
 //line views/components/edit/RichEdit.html:34
 	if icon != "" {
 //line views/components/edit/RichEdit.html:34
-		components.StreamSVGRefIcon(qw422016, icon, ps)
+		components.StreamSVGIcon(qw422016, icon, ps)
 //line views/components/edit/RichEdit.html:34
 	}
 //line views/components/edit/RichEdit.html:34

@@ -16,7 +16,7 @@
 
 {% func (p *Sitemap) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`star`, ps) %}Sitemap</h3>
+    <h3>{%= components.SVGIcon(`star`, ps) %}Sitemap</h3>
     <div class="mt">
       {%= SitemapDetail(ps.Menu, 1, ps) %}
     </div>

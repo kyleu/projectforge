@@ -47,7 +47,7 @@ func StreamAvailActions(qw422016 *qt422016.Writer, title string, currTags []stri
   <h3>
     <a href="/p">`)
 //line views/vproject/AvailActions.html:19
-	components.StreamSVGRefIcon(qw422016, `code`, ps)
+	components.StreamSVGIcon(qw422016, `code`, ps)
 //line views/vproject/AvailActions.html:19
 	qw422016.N().S(`All Projects</a>`)
 //line views/vproject/AvailActions.html:19

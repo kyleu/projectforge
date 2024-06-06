@@ -43,7 +43,7 @@ func (p *Add) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pag
   <div class="card">
     <h3>`)
 //line views/vtheme/Add.html:19
-	components.StreamSVGRefIcon(qw422016, `eye`, ps)
+	components.StreamSVGIcon(qw422016, `eye`, ps)
 //line views/vtheme/Add.html:19
 	qw422016.N().S(`Choose Theme</h3>
     <form action="/theme" method="post">

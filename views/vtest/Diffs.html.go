@@ -42,7 +42,7 @@ func (p *Diffs) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
   <div class="card">
     <h3>`)
 //line views/vtest/Diffs.html:19
-	components.StreamSVGRefIcon(qw422016, `list`, ps)
+	components.StreamSVGIcon(qw422016, `list`, ps)
 //line views/vtest/Diffs.html:19
 	qw422016.N().S(`Diffs</h3>
     <div class="overflow full-width">

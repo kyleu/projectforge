@@ -47,7 +47,7 @@ func StreamNav(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
 //line views/layout/Nav.html:12
 	qw422016.N().S(`">`)
 //line views/layout/Nav.html:12
-	components.StreamSVGRef(qw422016, ps.RootIcon, 32, 32, ``, ps)
+	components.StreamSVGSimple(qw422016, ps.RootIcon, 32, ps)
 //line views/layout/Nav.html:12
 	qw422016.N().S(`</a>
   <div class="breadcrumbs">
@@ -61,7 +61,7 @@ func StreamNav(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
 //line views/layout/Nav.html:14
 	qw422016.N().S(`">`)
 //line views/layout/Nav.html:14
-	components.StreamSVGRef(qw422016, ps.RootIcon, 18, 28, "breadcrumb-icon", ps)
+	components.StreamSVGBreadcrumb(qw422016, ps.RootIcon, ps)
 //line views/layout/Nav.html:14
 	qw422016.N().S(`</a>
     <a class="link nav-root-item" href="`)
@@ -178,7 +178,7 @@ func StreamNavItem(qw422016 *qt422016.Writer, link string, title string, icon st
 //line views/layout/Nav.html:36
 	qw422016.N().S(`">`)
 //line views/layout/Nav.html:36
-	components.StreamSVGRef(qw422016, icon, 18, 28, "breadcrumb-icon", ps)
+	components.StreamSVGBreadcrumb(qw422016, icon, ps)
 //line views/layout/Nav.html:36
 	qw422016.N().S(`</span><span class="nav-item-title">`)
 //line views/layout/Nav.html:37
@@ -278,7 +278,7 @@ func StreamProfileLink(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageS
 //line views/layout/Nav.html:59
 	qw422016.N().S(`">`)
 //line views/layout/Nav.html:60
-	components.StreamSVGRef(qw422016, `profile`, 24, 24, ``, ps)
+	components.StreamSVGSimple(qw422016, `profile`, 24, ps)
 //line views/layout/Nav.html:60
 	qw422016.N().S(`</a>`)
 //line views/layout/Nav.html:62
