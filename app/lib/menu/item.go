@@ -16,6 +16,7 @@ type Item struct {
 	Badge       string `json:"badge,omitempty"`
 	Icon        string `json:"icon,omitempty"`
 	Route       string `json:"route,omitempty"`
+	Hidden      bool   `json:"hidden"`
 	Warning     string `json:"warning,omitempty"`
 	Children    Items  `json:"children,omitempty"`
 }
@@ -53,6 +54,12 @@ type Items []*Item
 func (i Items) Get(key string) *Item {
 	return lo.FindOrElse(i, nil, func(item *Item) bool {
 		return item.Key == key
+	})
+}
+
+func (i Items) Visible() Items {
+	return lo.Filter(i, func(item *Item, _ int) bool {
+		return !item.Hidden
 	})
 }
 

@@ -9,7 +9,7 @@
 ) %}
 
 {% func Menu(ps *cutil.PageState) %}{% stripspace %}
-  {% if len(ps.Menu) > 0 %}
+  {% if len(ps.Menu.Visible()) > 0 %}
   <div class="menu-container">
     {%= components.Indent(true, 2) %}
     <div class="menu">
@@ -35,7 +35,7 @@
   {% if i.Key == "" %}
     {%= components.Indent(true, indent + 1) %}
     <li class="separator"></li>
-  {% elseif len(i.Children) > 0 %}
+  {% elseif len(i.Children.Visible()) > 0 %}
     {% code itemID := strings.Join(path, "--")%}
     {%= components.Indent(true, indent + 1) %}
     {% if active %}<li class="active" data-menu-key="{%s i.Key %}">{% else %}<li data-menu-key="{%s i.Key %}">{% endif %}
@@ -48,10 +48,7 @@
           <a class="label-link" href="{%s i.Route %}">{%= components.SVGRef(`link`, 15, 15, ``, ps) %}</a>
         {% endif %}
         {%= components.ExpandCollapse(indent + 3, ps) %}
-        {% if i.Badge != "" %}
-          {%= components.Indent(true, indent + 3) %}
-          <div class="badge">{%s i.Badge %}</div>
-        {% endif %}
+        {%= menuBadge(i, indent + 3, ps) %}
         {%= components.Indent(true, indent + 3) %}
         {% if i.Icon != "" %}
           {%= components.SVGRef(i.Icon, 16, 16, "icon", ps) %}
@@ -71,7 +68,7 @@
       <div class="menu-content level-{%d len(path) %}">
         {%= components.Indent(true, indent + 3) %}
         <menu>
-          {% for _, i := range i.Children %}
+          {% for _, i := range i.Children.Visible() %}
             {%= MenuItem(i, path, breadcrumbs, indent + 3, ps) %}
           {% endfor %}
           {%= components.Indent(true, indent + 3) %}
@@ -100,15 +97,23 @@
       {% else %}
       <a class="{%s finalClass %}" href="{%s i.Route %}" title="{%s i.Desc() %}">
       {% endif %}
-        {% if i.Badge != "" %}
-          {%= components.Indent(true, indent + 3) %}
-          <div class="badge">{%s i.Badge %}</div>
-        {% endif %}
+        {%= menuBadge(i, indent + 3, ps) %}
         {% if i.Icon != "" %}
           {%= components.SVGRef(i.Icon, 16, 16, "icon", ps) %}
         {% endif %}
         {%s i.Title %}
       </a>
     </li>
+  {% endif %}
+{% endstripspace %}{% endfunc %}
+
+{% func menuBadge(i *menu.Item, indent int, ps *cutil.PageState) %}{% stripspace %}
+  {% if i.Badge == "" %}
+  {% elseif strings.HasPrefix(i.Badge, ":") %}
+    {%= components.Indent(true, indent) %}
+    <div class="badge">{%= components.SVGRef(i.Badge[1:], 18, 18, "", ps) %}</div>
+  {% else %}
+    {%= components.Indent(true, indent) %}
+    <div class="badge">{%s i.Badge %}</div>
   {% endif %}
 {% endstripspace %}{% endfunc %}

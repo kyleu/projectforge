@@ -7,6 +7,7 @@ import (
 	"github.com/araddon/dateparse"
 	"github.com/dustin/go-humanize"
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 )
 
 func TimeTruncate(t *time.Time) *time.Time {
@@ -85,4 +86,22 @@ func TimeFromStringFmt(s string, fmt string) (*time.Time, error) {
 		return nil, errors.Errorf("invalid date string [%s], expected [%s]", s, fmt)
 	}
 	return &ret, nil
+}
+
+func TimeMax(ts ...*time.Time) *time.Time {
+	return lo.Reduce(ts, func(agg *time.Time, x *time.Time, _ int) *time.Time {
+		if x != nil && (agg == nil || x.After(*agg)) {
+			return x
+		}
+		return agg
+	}, nil)
+}
+
+func TimeMin(ts ...*time.Time) *time.Time {
+	return lo.Reduce(ts, func(agg *time.Time, x *time.Time, _ int) *time.Time {
+		if x != nil && (agg == nil || x.Before(*agg)) {
+			return x
+		}
+		return agg
+	}, nil)
 }

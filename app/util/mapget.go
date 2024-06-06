@@ -145,3 +145,11 @@ func (m ValueMap) GetType(key string, ret any) error {
 		return errors.Errorf("expected binary json data, encountered %T", t)
 	}
 }
+
+func MapGetOrElse[K comparable, V any](mp map[K]V, k K, dflt V) V {
+	ret, ok := mp[k]
+	if ok {
+		return ret
+	}
+	return dflt
+}

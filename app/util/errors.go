@@ -77,6 +77,9 @@ func TraceDetail(trace errors.StackTrace) []ErrorFrame {
 }
 
 func ErrorMerge(errs ...error) error {
+	errs = lo.Filter(errs, func(e error, _ int) bool {
+		return e != nil
+	})
 	switch len(errs) {
 	case 0:
 		return nil

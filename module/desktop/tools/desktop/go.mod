@@ -1,3 +1,4 @@
+// $PF_GENERATE_ONCE$
 module {{{ .Package }}}/tools/desktop
 
 go 1.22

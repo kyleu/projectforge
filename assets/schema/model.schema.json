@@ -56,7 +56,7 @@
       "description": "flags for this model that control generated code",
       "type": "array",
       "items": {
-        "enum": ["audit", "big", "count","external", "public", "search", "softDelete"]
+        "enum": ["audit", "big", "count","external", "menu-hidden", "public", "search", "softDelete"]
       }
     },
     "title": {

@@ -121,7 +121,9 @@ func menuBlockGM(args *model.Args, orphans []string) *golang.Block {
 
 func menuItemForModel(m *model.Model, models model.Models, acronyms []string) *menu.Item {
 	w := m.ProperWithGroup(acronyms)
-	ret := &menu.Item{Key: m.Package, Title: m.TitlePlural(), Description: m.Description, Icon: m.Icon, Route: m.Route(), Warning: w}
+	ret := &menu.Item{
+		Key: m.Package, Title: m.TitlePlural(), Description: m.Description, Icon: m.Icon, Route: m.Route(), Hidden: m.HasTag("menu-hidden"), Warning: w,
+	}
 	lo.ForEach(models.ForGroup(append(slices.Clone(m.Group), m.Package)...), func(x *model.Model, _ int) {
 		kid := menuItemForModel(x, models, acronyms)
 		ret.Children = append(ret.Children, kid)
@@ -137,7 +139,10 @@ func menuSerialize(m *menu.Item, prefix string, top bool) []string {
 	var out []string
 	var rt string
 	if m.Route != "" {
-		rt = fmt.Sprintf(", Route: %q", "/"+m.Route)
+		rt += fmt.Sprintf(", Route: %q", "/"+m.Route)
+	}
+	if m.Hidden {
+		rt += ", Hidden: true"
 	}
 	var desc string
 	if m.Description != "" {

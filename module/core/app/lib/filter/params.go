@@ -49,6 +49,7 @@ func (p *Params) Sanitize(key string, defaultOrderings ...*Ordering) *Params {
 	if p.Offset < 0 {
 		p.Offset = 0
 	}
+	p.Orderings = util.ArrayRemoveNil(p.Orderings)
 	if len(p.Orderings) == 0 {
 		return p.CloneOrdering(defaultOrderings...)
 	}

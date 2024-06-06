@@ -84,7 +84,7 @@
 
 .menu-container .badge {
   float: right;
-  margin-right: var(--padding-small);
+  margin-right: var(--padding);
   font-size: 75%;
   padding-top: 2px;
   color: var(--color-foreground-muted);
