@@ -83,8 +83,10 @@ func (d FieldDesc) Parse(q string) (any, error) {
 		return strconv.ParseBool(q)
 	case "int":
 		return strconv.ParseInt(q, 10, 64)
-	case "string":
+	case "string", "":
 		return q, nil
+	case "[]string":
+		return StringSplitAndTrim(q, ","), nil
 	case "time":
 		return TimeFromString(q)
 	default:

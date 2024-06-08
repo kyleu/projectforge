@@ -1,3 +1,4 @@
+// Package util - Content managed by Project Forge, see [projectforge.md] for details.
 package util
 
 import (
@@ -8,12 +9,8 @@ import (
 	"github.com/samber/lo"
 )
 
-func (m ValueMap) ParseArray(path string, allowMissing bool, allowEmpty bool, coerce bool) ([]any, error) {
-	result, err := m.GetPath(path, allowMissing)
-	if err != nil {
-		return nil, errors.Wrap(err, "invalid array")
-	}
-	switch t := result.(type) {
+func ParseArray(r any, path string, allowEmpty bool, coerce bool) ([]any, error) {
+	switch t := r.(type) {
 	case string:
 		if strings.TrimSpace(t) == "" {
 			return nil, nil
@@ -24,7 +21,7 @@ func (m ValueMap) ParseArray(path string, allowMissing bool, allowEmpty bool, co
 			if coerce {
 				return lo.ToAnySlice(StringSplitAndTrim(t, ",")), nil
 			}
-			return nil, decorateError(m, path, KeyJSON, errors.Wrap(err, "invalid JSON string"))
+			return nil, wrapError(path, KeyJSON, errors.Wrap(err, "invalid JSON string"))
 		}
 		return ret, err
 	case []byte:
@@ -37,7 +34,7 @@ func (m ValueMap) ParseArray(path string, allowMissing bool, allowEmpty bool, co
 			if coerce {
 				return lo.ToAnySlice(StringSplitAndTrim(string(t), ",")), nil
 			}
-			return nil, decorateError(m, path, KeyJSON, errors.Wrap(err, "invalid JSON bytes"))
+			return nil, wrapError(path, KeyJSON, errors.Wrap(err, "invalid JSON bytes"))
 		}
 		return ret, err
 	case []any:
@@ -65,8 +62,8 @@ func (m ValueMap) ParseArray(path string, allowMissing bool, allowEmpty bool, co
 	}
 }
 
-func (m ValueMap) ParseArrayString(path string, allowMissing bool, allowEmpty bool) ([]string, error) {
-	a, err := m.ParseArray(path, allowMissing, allowEmpty, true)
+func ParseArrayString(r any, path string, allowEmpty bool) ([]string, error) {
+	a, err := ParseArray(r, path, allowEmpty, true)
 	if err != nil {
 		return nil, err
 	}
@@ -75,14 +72,14 @@ func (m ValueMap) ParseArrayString(path string, allowMissing bool, allowEmpty bo
 	}), nil
 }
 
-func (m ValueMap) ParseArrayInt(path string, allowMissing bool, allowEmpty bool) ([]int, error) {
-	a, err := m.ParseArray(path, allowMissing, allowEmpty, true)
+func ParseArrayInt(r any, path string, allowEmpty bool) ([]int, error) {
+	a, err := ParseArray(r, path, allowEmpty, true)
 	if err != nil {
 		return nil, err
 	}
 	ia := make([]int, 0, len(a))
 	for idx, x := range a {
-		i, err := valueInt(fmt.Sprintf("%s.%d", path, idx), x, allowEmpty)
+		i, err := ParseInt(x, fmt.Sprintf("%s.%d", path, idx), allowEmpty)
 		if err != nil {
 			return nil, err
 		}
@@ -91,14 +88,14 @@ func (m ValueMap) ParseArrayInt(path string, allowMissing bool, allowEmpty bool)
 	return ia, nil
 }
 
-func (m ValueMap) ParseArrayFloat(path string, allowMissing bool, allowEmpty bool) ([]float64, error) {
-	a, err := m.ParseArray(path, allowMissing, allowEmpty, true)
+func ParseArrayFloat(r any, path string, allowEmpty bool) ([]float64, error) {
+	a, err := ParseArray(r, path, allowEmpty, true)
 	if err != nil {
 		return nil, err
 	}
 	fa := make([]float64, 0, len(a))
 	for idx, x := range a {
-		f, err := valueFloat(fmt.Sprintf("%s.%d", path, idx), x, allowEmpty)
+		f, err := ParseFloat(x, fmt.Sprintf("%s.%d", path, idx), allowEmpty)
 		if err != nil {
 			return nil, err
 		}
@@ -107,14 +104,14 @@ func (m ValueMap) ParseArrayFloat(path string, allowMissing bool, allowEmpty boo
 	return fa, nil
 }
 
-func (m ValueMap) ParseArrayMap(path string, allowMissing bool, allowEmpty bool) ([]ValueMap, error) {
-	a, err := m.ParseArray(path, allowMissing, allowEmpty, false)
+func ParseArrayMap(r any, path string, allowEmpty bool) ([]ValueMap, error) {
+	a, err := ParseArray(r, path, allowEmpty, false)
 	if err != nil {
 		return nil, err
 	}
 	ma := make([]ValueMap, 0, len(a))
 	for idx, x := range a {
-		m, err := valueMap(fmt.Sprintf("%s.%d", path, idx), x, allowEmpty)
+		m, err := ParseMap(x, fmt.Sprintf("%s.%d", path, idx), allowEmpty)
 		if err != nil {
 			return nil, err
 		}

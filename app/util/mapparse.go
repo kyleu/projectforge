@@ -2,9 +2,6 @@
 package util
 
 import (
-	"fmt"
-	"strconv"
-	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -12,245 +9,82 @@ import (
 )
 
 func (m ValueMap) ParseBool(path string, allowMissing bool, allowEmpty bool) (bool, error) {
-	result, err := m.GetPath(path, allowMissing)
-	if err != nil {
-		return false, errors.Wrap(err, "invalid bool")
-	}
-	switch t := result.(type) {
-	case bool:
-		return t, nil
-	case string:
-		return t == BoolTrue, nil
-	case nil:
-		if !allowEmpty {
-			return false, errors.Errorf("could not find bool for path [%s]", path)
-		}
-		return false, nil
-	default:
-		return false, invalidTypeError(path, "bool", t)
-	}
+	return parseMapField(m, path, allowMissing, func(res any) (bool, error) {
+		return ParseBool(res, path, allowEmpty)
+	})
 }
 
 func (m ValueMap) ParseFloat(path string, allowMissing bool, allowEmpty bool) (float64, error) {
-	result, err := m.GetPath(path, allowMissing)
-	if err != nil {
-		return 0, errors.Wrap(err, "invalid float")
-	}
-	switch t := result.(type) {
-	case int:
-		return float64(t), nil
-	case int64:
-		return float64(t), nil
-	case float64:
-		return t, nil
-	case string:
-		return strconv.ParseFloat(t, 64)
-	case []byte:
-		return strconv.ParseFloat(string(t), 64)
-	case nil:
-		if !allowEmpty {
-			return 0, errors.Errorf("could not find float for path [%s]", path)
-		}
-		return 0, nil
-	default:
-		return 0, invalidTypeError(path, "float", t)
-	}
+	return parseMapField(m, path, allowMissing, func(res any) (float64, error) {
+		return ParseFloat(res, path, allowEmpty)
+	})
 }
 
 func (m ValueMap) ParseInt(path string, allowMissing bool, allowEmpty bool) (int, error) {
-	result, err := m.GetPath(path, allowMissing)
-	if err != nil {
-		return 0, errors.Wrap(err, "invalid int")
-	}
-	return valueInt(path, result, allowEmpty)
+	return parseMapField(m, path, allowMissing, func(res any) (int, error) {
+		return ParseInt(res, path, allowEmpty)
+	})
+}
+
+func (m ValueMap) ParseMap(path string, allowMissing bool, allowEmpty bool) (ValueMap, error) {
+	return parseMapField(m, path, allowMissing, func(res any) (ValueMap, error) {
+		return ParseMap(res, path, allowEmpty)
+	})
 }
 
 func (m ValueMap) ParseString(path string, allowMissing bool, allowEmpty bool) (string, error) {
-	result, err := m.GetPath(path, allowMissing)
-	if err != nil {
-		return "", errors.Wrap(err, "invalid string")
-	}
-	switch t := result.(type) {
-	case string:
-		if (!allowEmpty) && t == "" {
-			return "", errors.New("empty string")
-		}
-		return t, nil
-	case []byte:
-		if (!allowEmpty) && len(t) == 0 {
-			return "", errors.New("empty string")
-		}
-		return string(t), nil
-	case []string:
-		if (!allowEmpty) && (len(t) == 0 || t[0] == "") {
-			return "", errors.New("empty string")
-		}
-		return strings.Join(t, "||"), nil
-	case nil:
-		if !allowEmpty {
-			return "", errors.Errorf("could not find string for path [%s]", path)
-		}
-		return "", nil
-	default:
-		return fmt.Sprint(t), nil
-	}
+	return parseMapField(m, path, allowMissing, func(res any) (string, error) {
+		return ParseString(res, path, allowEmpty)
+	})
 }
 
 func (m ValueMap) ParseTime(path string, allowMissing bool, allowEmpty bool) (*time.Time, error) {
-	result, err := m.GetPath(path, allowMissing)
-	if err != nil {
-		return nil, errors.Wrap(err, "invalid time")
-	}
-	switch t := result.(type) {
-	case time.Time:
-		return &t, nil
-	case *time.Time:
-		if t == nil && (!allowEmpty) {
-			return nil, errors.New("empty time")
-		}
-		return t, nil
-	case string:
-		ret, err := TimeFromString(t)
-		if err != nil {
-			return nil, decorateError(m, path, "time", err)
-		}
-		if ret == nil && (!allowEmpty) {
-			return nil, errors.Errorf("invalid time [%s]", t)
-		}
-		return ret, nil
-	case nil:
-		if !allowEmpty {
-			return nil, errors.Errorf("could not find time for path [%s]", path)
-		}
-		return nil, nil
-	default:
-		return nil, invalidTypeError(path, "time", t)
-	}
+	return parseMapField(m, path, allowMissing, func(res any) (*time.Time, error) {
+		return ParseTime(res, path, allowEmpty)
+	})
 }
 
 func (m ValueMap) ParseUUID(path string, allowMissing bool, allowEmpty bool) (*uuid.UUID, error) {
+	return parseMapField(m, path, allowMissing, func(res any) (*uuid.UUID, error) {
+		return ParseUUID(res, path, allowEmpty)
+	})
+}
+
+func (m ValueMap) ParseArray(path string, allowMissing bool, allowEmpty bool, coerce bool) ([]any, error) {
+	return parseMapField(m, path, allowMissing, func(res any) ([]any, error) {
+		return ParseArray(res, path, allowEmpty, coerce)
+	})
+}
+
+func (m ValueMap) ParseArrayString(path string, allowMissing bool, allowEmpty bool) ([]string, error) {
+	return parseMapField(m, path, allowMissing, func(res any) ([]string, error) {
+		return ParseArrayString(res, path, allowEmpty)
+	})
+}
+
+func (m ValueMap) ParseArrayInt(path string, allowMissing bool, allowEmpty bool) ([]int, error) {
+	return parseMapField(m, path, allowMissing, func(res any) ([]int, error) {
+		return ParseArrayInt(res, path, allowEmpty)
+	})
+}
+
+func (m ValueMap) ParseArrayFloat(path string, allowMissing bool, allowEmpty bool) ([]float64, error) {
+	return parseMapField(m, path, allowMissing, func(res any) ([]float64, error) {
+		return ParseArrayFloat(res, path, allowEmpty)
+	})
+}
+
+func (m ValueMap) ParseArrayMap(path string, allowMissing bool, allowEmpty bool) ([]ValueMap, error) {
+	return parseMapField(m, path, allowMissing, func(res any) ([]ValueMap, error) {
+		return ParseArrayMap(res, path, allowEmpty)
+	})
+}
+
+func parseMapField[T any](m ValueMap, path string, allowMissing bool, fn func(res any) (T, error)) (T, error) {
 	result, err := m.GetPath(path, allowMissing)
 	if err != nil {
-		return nil, errors.Wrap(err, "invalid uuid")
+		var x T
+		return x, errors.Wrapf(err, "invalid %T", result)
 	}
-
-	switch t := result.(type) {
-	case *uuid.UUID:
-		if t == nil && (!allowEmpty) {
-			return nil, errors.New("empty uuid")
-		}
-		return t, nil
-	case uuid.UUID:
-		if t == uuid.Nil && (!allowEmpty) {
-			return nil, errors.New("empty uuid")
-		}
-		return &t, nil
-	case []byte:
-		if len(t) == 16 {
-			ret, err := uuid.FromBytes(t)
-			if err != nil {
-				return nil, err
-			}
-			if ret == uuid.Nil && (!allowEmpty) {
-				return nil, errors.Errorf("could not parse uuid from path [%s]", path)
-			}
-			return &ret, nil
-		}
-		return nil, errors.Errorf("invalid uuid bytes with length [%d]", len(t))
-	case string:
-		if t == "" && allowEmpty {
-			return nil, nil
-		}
-		ret, err := uuid.Parse(t)
-		if err != nil {
-			return nil, err
-		}
-		if ret == uuid.Nil && (!allowEmpty) {
-			return nil, errors.Errorf("could not find uuid for path [%s]", path)
-		}
-		return &ret, nil
-	case nil:
-		if !allowEmpty {
-			return nil, errors.Errorf("could not find uuid for path [%s]", path)
-		}
-		return nil, nil
-	default:
-		return nil, invalidTypeError(path, "uuid", t)
-	}
-}
-
-func decorateError(m ValueMap, path string, t string, err error) error {
-	if err == nil {
-		return nil
-	}
-	return errors.Wrapf(err, "error parsing [%s] as [%s] from map with fields [%s]", path, t, strings.Join(m.Keys(), ", "))
-}
-
-func invalidTypeError(path string, t string, observed any) error {
-	return errors.Errorf("unable to parse [%s] at path [%s], invalid type [%T]", t, path, observed)
-}
-
-func valueInt(path string, r any, allowEmpty bool) (int, error) {
-	switch t := r.(type) {
-	case int:
-		return t, nil
-	case int64:
-		return int(t), nil
-	case float64:
-		return int(t), nil
-	case string:
-		ret, err := strconv.ParseInt(t, 10, 32)
-		return int(ret), err
-	case []byte:
-		ret, err := strconv.ParseInt(string(t), 10, 32)
-		return int(ret), err
-	case nil:
-		if !allowEmpty {
-			return 0, errors.Errorf("could not find int for path [%s]", path)
-		}
-		return 0, nil
-	default:
-		return 0, invalidTypeError(path, "int", t)
-	}
-}
-
-func valueFloat(path string, r any, allowEmpty bool) (float64, error) {
-	switch t := r.(type) {
-	case int:
-		return float64(t), nil
-	case int64:
-		return float64(t), nil
-	case float64:
-		return t, nil
-	case string:
-		ret, err := strconv.ParseFloat(t, 32)
-		return ret, err
-	case nil:
-		if !allowEmpty {
-			return 0, errors.Errorf("could not find float for path [%s]", path)
-		}
-		return 0, nil
-	default:
-		return 0, invalidTypeError(path, "float", t)
-	}
-}
-
-func valueMap(path string, r any, allowEmpty bool) (ValueMap, error) {
-	switch t := r.(type) {
-	case ValueMap:
-		return t, nil
-	case map[string]any:
-		return t, nil
-	case string:
-		return FromJSONMap([]byte(t))
-	case []byte:
-		return FromJSONMap(t)
-	case nil:
-		if !allowEmpty {
-			return nil, errors.Errorf("could not find int for path [%s]", path)
-		}
-		return ValueMap{}, nil
-	default:
-		return nil, invalidTypeError(path, "int", t)
-	}
+	return fn(result)
 }
