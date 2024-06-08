@@ -57,10 +57,10 @@ func ParseInt(r any, path string, allowEmpty bool) (int, error) {
 	case float64:
 		return int(t), nil
 	case string:
-		ret, err := strconv.ParseInt(t, 10, 32)
+		ret, err := strconv.ParseInt(t, 10, 64)
 		return int(ret), err
 	case []byte:
-		ret, err := strconv.ParseInt(string(t), 10, 32)
+		ret, err := strconv.ParseInt(string(t), 10, 64)
 		return int(ret), err
 	case nil:
 		if !allowEmpty {

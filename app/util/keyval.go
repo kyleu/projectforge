@@ -5,7 +5,6 @@ import (
 	"cmp"
 	"fmt"
 	"slices"
-	"strconv"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -77,18 +76,18 @@ type FieldDesc struct {
 	Type        string `json:"type,omitempty"`
 }
 
-func (d FieldDesc) Parse(q string) (any, error) {
+func (d FieldDesc) Parse(q any) (any, error) {
 	switch d.Type {
 	case "bool":
-		return strconv.ParseBool(q)
+		return ParseBool(q, "", true)
 	case "int":
-		return strconv.ParseInt(q, 10, 64)
+		return ParseInt(q, "", true)
 	case "string", "":
-		return q, nil
+		return ParseString(q, "", true)
 	case "[]string":
-		return StringSplitAndTrim(q, ","), nil
+		return ParseArrayString(q, "", true)
 	case "time":
-		return TimeFromString(q)
+		return ParseTime(q, "", true)
 	default:
 		return nil, errors.Errorf("unable to parse [%s] value from string [%s]", d.Type, q)
 	}
