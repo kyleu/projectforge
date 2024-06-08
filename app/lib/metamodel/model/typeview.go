@@ -16,7 +16,8 @@ func ToGoViewString(t *types.Wrapped, prop string, nullable bool, format string,
 		}
 		return jsonGoViewString(prop)
 	case types.KeyBool:
-		return tmplStartV + prop + tmplEnd
+		return tmplStartEQ + "view.BoolIcon(" + prop + ", 18, \"\", ps" + tmplEndP
+		//return tmplStartV + prop + tmplEnd
 	case types.KeyInt:
 		switch format {
 		case FmtSI.Key:

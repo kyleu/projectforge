@@ -75,9 +75,14 @@ func exportViewListBody(m *model.Model, models model.Models) *golang.Block {
 		for _, link := range m.Links {
 			icon := ""
 			if link.Icon != "" {
-				icon = fmt.Sprintf("{%%%%= components.SVGRef(%q, 15, 15, \"icon\", ps) %%%%} ", link.Icon)
+				icon = fmt.Sprintf("{%%%%= components.SVGRef(%q, 15, 15, \"icon\", ps) %%%%}", link.Icon)
 			}
-			ret.W("      <a href=%q><button type=\"button\">%s%s</button></a>", link.URL, icon, link.Title)
+			if link.Dangerous {
+				msg := "      <a class=%q data-message=%q href=%q><button type=\"button\">%s%s</button></a>"
+				ret.W(msg, "link-confirm", "Are you sure?", link.URL, icon, link.Title)
+			} else {
+				ret.W("      <a href=%q><button type=\"button\">%s%s</button></a>", link.URL, icon, link.Title)
+			}
 		}
 	}
 	ret.W(`      {%%%%- if len(p.Models) > 0 -%%%%}<a href="/%s/_random"><button>{%%%%= components.SVGButton("gift", ps) %%%%}Random</button></a>{%%%%- endif -%%%%}`, m.Route())
