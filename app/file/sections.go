@@ -72,9 +72,11 @@ func copySections(src string, tgt string) (string, error) {
 	for _, sec := range srcSections {
 		tgtSec := tgtSections.Get(sec.Key)
 		if tgtSec == nil {
+			// continue
 			return "", errors.Errorf("no section [%s] found in target", sec.Key)
 		}
 		if sec.End == 0 {
+			// continue
 			return "", errors.Errorf("no section end for [%s] found in target", sec.Key)
 		}
 

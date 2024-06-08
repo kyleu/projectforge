@@ -35,6 +35,7 @@ type Model struct {
 	Indexes        Indexes          `json:"indexes,omitempty"`
 	SeedData       [][]any          `json:"seedData,omitempty"`
 	Links          Links            `json:"links,omitempty"`
+	acronyms       []string
 }
 
 func (m *Model) HasTag(t string) bool {
@@ -148,9 +149,9 @@ func (m *Model) HasSearches() bool {
 	return len(m.AllSearches("")) > 0
 }
 
-func (m *Model) ProperWithGroup(extraAcronyms []string) string {
-	if len(m.Group) > 0 {
-		return util.StringToCamel(m.Group[len(m.Group)-1], extraAcronyms...) + util.StringToCamel(m.Package, extraAcronyms...)
+func (m *Model) SetAcronyms(acronyms ...string) {
+	m.acronyms = acronyms
+	for _, col := range m.Columns {
+		col.SetAcronyms(acronyms...)
 	}
-	return m.Proper()
 }

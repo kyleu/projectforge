@@ -30,22 +30,26 @@ var ColumnFieldDescs = util.FieldDescs{
 }
 
 type Column struct {
-	Name        string         `json:"name"`
-	Type        *types.Wrapped `json:"type"`
-	PK          bool           `json:"pk,omitempty"`
-	Nullable    bool           `json:"nullable,omitempty"`
-	Search      bool           `json:"search,omitempty"`
-	SQLDefault  string         `json:"sqlDefault,omitempty"`
-	Indexed     bool           `json:"indexed,omitempty"`
-	Display     string         `json:"display,omitempty"`
-	Format      string         `json:"format,omitempty"`
-	JSON        string         `json:"json,omitempty"`
-	SQLOverride string         `json:"sql,omitempty"`
-	Example     string         `json:"example,omitempty"`
-	Validation  string         `json:"validation,omitempty"`
-	Values      []string       `json:"values,omitempty"`
-	Tags        []string       `json:"tags,omitempty"`
-	HelpString  string         `json:"helpString,omitempty"`
+	Name           string         `json:"name"`
+	Type           *types.Wrapped `json:"type"`
+	PK             bool           `json:"pk,omitempty"`
+	Nullable       bool           `json:"nullable,omitempty"`
+	Search         bool           `json:"search,omitempty"`
+	SQLDefault     string         `json:"sqlDefault,omitempty"`
+	Indexed        bool           `json:"indexed,omitempty"`
+	Display        string         `json:"display,omitempty"`
+	Format         string         `json:"format,omitempty"`
+	JSON           string         `json:"json,omitempty"`
+	SQLOverride    string         `json:"sql,omitempty"`
+	TitleOverride  string         `json:"title,omitempty"`
+	PluralOverride string         `json:"plural,omitempty"`
+	ProperOverride string         `json:"proper,omitempty"`
+	Example        string         `json:"example,omitempty"`
+	Validation     string         `json:"validation,omitempty"`
+	Values         []string       `json:"values,omitempty"`
+	Tags           []string       `json:"tags,omitempty"`
+	HelpString     string         `json:"helpString,omitempty"`
+	acronyms       []string
 }
 
 func (c *Column) Clone() *Column {
@@ -60,7 +64,7 @@ func (c *Column) NameQuoted() string {
 }
 
 func (c *Column) Camel() string {
-	return util.StringToLowerCamel(c.Name)
+	return util.StringToLowerCamel(c.Name, c.acronyms...)
 }
 
 func (c *Column) CamelPlural() string {
@@ -68,7 +72,10 @@ func (c *Column) CamelPlural() string {
 }
 
 func (c *Column) Proper() string {
-	return util.StringToCamel(c.Name)
+	if c.ProperOverride == "" {
+		return util.StringToCamel(c.Name, c.acronyms...)
+	}
+	return c.ProperOverride
 }
 
 func (c *Column) ProperDerived() string {
@@ -79,7 +86,10 @@ func (c *Column) ProperDerived() string {
 }
 
 func (c *Column) Title() string {
-	return util.StringToTitle(c.Name)
+	if c.TitleOverride == "" {
+		return util.StringToTitle(c.Name, c.acronyms...)
+	}
+	return c.TitleOverride
 }
 
 func (c *Column) TitleLower() string {
@@ -87,6 +97,9 @@ func (c *Column) TitleLower() string {
 }
 
 func (c *Column) Plural() string {
+	if c.PluralOverride != "" {
+		return c.PluralOverride
+	}
 	ret := util.StringToPlural(c.Name)
 	if ret == c.Name {
 		return ret + tSet
@@ -153,4 +166,8 @@ func (c *Column) RemoveTag(t string) {
 
 func (c *Column) Derived() bool {
 	return c.HasTag("derived")
+}
+
+func (c *Column) SetAcronyms(acronyms ...string) {
+	c.acronyms = acronyms
 }

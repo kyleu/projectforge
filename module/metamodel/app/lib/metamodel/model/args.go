@@ -80,3 +80,13 @@ func (a *Args) Validate() error {
 func (a *Args) Audit(m *Model) bool {
 	return m.HasTag("audit") && lo.Contains(a.Modules, "audit")
 }
+
+func (a *Args) ApplyAcronyms(acronyms ...string) {
+	a.Acronyms = acronyms
+	for _, x := range a.Models {
+		x.SetAcronyms(acronyms...)
+	}
+	for _, x := range a.Enums {
+		x.SetAcronyms(acronyms...)
+	}
+}

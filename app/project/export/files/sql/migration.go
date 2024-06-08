@@ -51,7 +51,7 @@ func sqlCreate(m *model.Model, models model.Models, database string) (*golang.Bl
 	} else {
 		ret.W("create table if not exists %q (", m.Table())
 	}
-	for _, col := range m.Columns {
+	for _, col := range m.Columns.NotDerived() {
 		st, err := col.ToSQLType(database)
 		if err != nil {
 			return nil, err

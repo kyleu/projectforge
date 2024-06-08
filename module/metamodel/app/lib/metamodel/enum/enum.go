@@ -24,11 +24,12 @@ type Enum struct {
 	ProperOverride string        `json:"proper,omitempty"`
 	RouteOverride  string        `json:"route,omitempty"`
 	Config         util.ValueMap `json:"config,omitempty"`
+	acronyms       []string
 }
 
 func (e *Enum) Title() string {
 	if e.TitleOverride == "" {
-		return util.StringToTitle(e.Name)
+		return util.StringToTitle(e.Name, e.acronyms...)
 	}
 	return e.TitleOverride
 }
@@ -39,9 +40,9 @@ func (e *Enum) TitleLower() string {
 
 func (e *Enum) Proper() string {
 	if e.ProperOverride == "" {
-		return util.StringToCamel(e.Name)
+		return util.StringToCamel(e.Name, e.acronyms...)
 	}
-	return util.StringToCamel(e.ProperOverride)
+	return util.StringToCamel(e.ProperOverride, e.acronyms...)
 }
 
 func (e *Enum) ProperPlural() string {
@@ -64,7 +65,7 @@ func (e *Enum) IconSafe() string {
 }
 
 func (e *Enum) Camel() string {
-	return util.StringToLowerCamel(e.Name)
+	return util.StringToLowerCamel(e.Name, e.acronyms...)
 }
 
 func (e *Enum) ExtraFields() *util.OrderedMap[string] {
@@ -154,12 +155,16 @@ func (e *Enum) Breadcrumbs() string {
 
 func (e *Enum) ValuesCamel() []string {
 	return lo.Map(e.Values, func(x *Value, _ int) string {
-		return util.StringToCamel(x.Key)
+		return util.StringToCamel(x.Key, e.acronyms...)
 	})
 }
 
 func (e *Enum) Simple() bool {
 	return e.Values.AllSimple()
+}
+
+func (e *Enum) SetAcronyms(acronyms ...string) {
+	e.acronyms = acronyms
 }
 
 type Enums []*Enum

@@ -63,26 +63,28 @@ func exportViewListBody(m *model.Model, models model.Models) *golang.Block {
 	ret.W("{%% func (p *List) Body(as *app.State, ps *cutil.PageState) %%}")
 	ret.W("  <div class=\"card\">")
 	const twoInd = "    "
+	links := m.Links.WithTags(false, "list")
+	ln := fmt.Sprintf(`<a href="/%s/_new"><button>{%%%%= components.SVGButton("plus", ps) %%%%}New</button>%s`, m.Route(), helper.TextEndAnchor)
+
 	if m.HasSearches() {
 		ret.W(`    <div class="right">{%%%%= edit.SearchForm("", "q", "Search %s", p.SearchQuery, ps) %%%%}</div>`, m.TitlePlural())
-		ret.W(`    <div class="right mrs large-buttons">`)
-		if len(m.Links.WithTags(false, "list")) > 0 {
-			for _, link := range m.Links {
-				icon := ""
-				if link.Icon != "" {
-					icon = fmt.Sprintf("{%%%%= components.SVGRef(%q, 15, 15, \"icon\", ps) %%%%} ", link.Icon)
-				}
-				ret.W("      <a href=%q><button type=\"button\">%s%s</button></a>", link.URL, icon, link.Title)
-			}
-		}
-		ret.W(`      {%%%%- if len(p.Models) > 0 -%%%%}<a href="/%s/_random"><button>{%%%%= components.SVGButton("gift", ps) %%%%}Random</button></a>{%%%%- endif -%%%%}`, m.Route())
-		ret.W(`      <a href="/%s/_new"><button>{%%%%= components.SVGButton("plus", ps) %%%%}New</button>`+helper.TextEndAnchor, m.Route())
-		ret.W(`    </div>`)
-		ret.W("    %s{%%%%= components.SVGIcon(`%s`, ps) %%%%}{%%%%s ps.Title %%%%}%s", helper.TextH3Start, m.Icon, helper.TextH3End)
-	} else {
-		ret.W(`    <div class="right"><a href="/%s/_new"><button>{%%%%= components.SVGButton("plus", ps) %%%%}New</button></a></div>`, m.Route())
-		ret.W("    %s%s{%%%%s ps.Title %%%%}%s", helper.TextH3Start, svgRef(m.Icon), helper.TextH3End)
 	}
+
+	ret.W(`    <div class="right mrs large-buttons">`)
+	if len(links) > 0 {
+		for _, link := range m.Links {
+			icon := ""
+			if link.Icon != "" {
+				icon = fmt.Sprintf("{%%%%= components.SVGRef(%q, 15, 15, \"icon\", ps) %%%%} ", link.Icon)
+			}
+			ret.W("      <a href=%q><button type=\"button\">%s%s</button></a>", link.URL, icon, link.Title)
+		}
+	}
+	ret.W(`      {%%%%- if len(p.Models) > 0 -%%%%}<a href="/%s/_random"><button>{%%%%= components.SVGButton("gift", ps) %%%%}Random</button></a>{%%%%- endif -%%%%}`, m.Route())
+	ret.W(`      ` + ln)
+	ret.W(`    </div>`)
+	ret.W("    %s{%%%%= components.SVGIcon(`%s`, ps) %%%%}{%%%%s ps.Title %%%%}%s", helper.TextH3Start, m.Icon, helper.TextH3End)
+
 	if m.HasTag("count") {
 		ret.W("    {%%- if p.Count > 0 -%%}")
 		ret.W("    <em>{%%s util.StringPlural(p.Count, \"items\") %%}</em>")

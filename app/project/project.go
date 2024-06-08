@@ -107,13 +107,13 @@ func (p *Project) ModuleArgExport(pSvc *Service, logger util.Logger) error {
 		if err != nil {
 			return err
 		}
-		p.ExportArgs, err = pSvc.loadExportArgs(fs, logger)
+		p.ExportArgs, err = pSvc.loadExportArgs(fs, p.Info.Acronyms, logger)
 		if err != nil {
 			return err
 		}
 		p.ExportArgs.Modules = p.Modules
 		p.ExportArgs.Database = p.DatabaseEngineDefault()
-		p.ExportArgs.Acronyms = p.Info.Acronyms
+		p.ExportArgs.ApplyAcronyms(p.Info.Acronyms...)
 	}
 	return nil
 }

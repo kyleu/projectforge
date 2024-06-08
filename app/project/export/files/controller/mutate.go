@@ -164,7 +164,8 @@ func controllerModelFromForm(m *model.Model) *golang.Block {
 	ret.W("\tif err != nil {")
 	ret.W("\t\treturn nil, errors.Wrap(err, \"unable to parse form\")")
 	ret.W("\t}")
-	ret.W("\treturn %s.FromMap(frm, setPK)", m.Package)
+	ret.W("\tret, _, err := %s.FromMap(frm, setPK)", m.Package)
+	ret.W("\treturn ret, err")
 	ret.W("}")
 	return ret
 }

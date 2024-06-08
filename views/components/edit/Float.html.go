@@ -34,7 +34,7 @@ func StreamFloat(qw422016 *qt422016.Writer, key string, id string, value any, pl
 //line views/components/edit/Float.html:9
 		qw422016.E().S(key)
 //line views/components/edit/Float.html:9
-		qw422016.N().S(`" type="number" value="`)
+		qw422016.N().S(`" type="number" step="any" value="`)
 //line views/components/edit/Float.html:9
 		qw422016.E().V(value)
 //line views/components/edit/Float.html:9
@@ -54,7 +54,7 @@ func StreamFloat(qw422016 *qt422016.Writer, key string, id string, value any, pl
 //line views/components/edit/Float.html:11
 		qw422016.E().S(key)
 //line views/components/edit/Float.html:11
-		qw422016.N().S(`" type="number" value="`)
+		qw422016.N().S(`" type="number" step="any" value="`)
 //line views/components/edit/Float.html:11
 		qw422016.E().V(value)
 //line views/components/edit/Float.html:11

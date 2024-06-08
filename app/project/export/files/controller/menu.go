@@ -31,7 +31,7 @@ func sortModels(args *model.Args) (map[string][]string, []string, []string) {
 	names := make([]string, 0, len(args.Models)+len(args.Groups))
 	orphans := make([]string, 0)
 	lo.ForEach(args.Models.SortedDisplay(), func(m *model.Model, _ int) {
-		n := m.ProperWithGroup(args.Acronyms)
+		n := m.ProperWithGroup()
 		names = append(names, n)
 		if len(m.Group) == 0 {
 			orphans = append(orphans, n)
@@ -47,7 +47,7 @@ func sortModels(args *model.Args) (map[string][]string, []string, []string) {
 func menuBlockV(args *model.Args, groups map[string][]string, names []string) *golang.Block {
 	nameLength := util.StringArrayMaxLength(names)
 	lines := lo.Map(args.Models, func(m *model.Model, _ int) string {
-		n := util.StringPad(m.ProperWithGroup(args.Acronyms), nameLength)
+		n := util.StringPad(m.ProperWithGroup(), nameLength)
 		i := menuSerialize(menuItemForModel(m, args.Models, args.Acronyms), "", true)
 		return fmt.Sprintf("\t%s%s = %s", helper.TextMenuItem, n, strings.Join(i, "\n"))
 	})
@@ -120,7 +120,7 @@ func menuBlockGM(args *model.Args, orphans []string) *golang.Block {
 }
 
 func menuItemForModel(m *model.Model, models model.Models, acronyms []string) *menu.Item {
-	w := m.ProperWithGroup(acronyms)
+	w := m.ProperWithGroup()
 	ret := &menu.Item{
 		Key: m.Package, Title: m.TitlePlural(), Description: m.Description, Icon: m.Icon, Route: m.Route(), Hidden: m.HasTag("menu-hidden"), Warning: w,
 	}

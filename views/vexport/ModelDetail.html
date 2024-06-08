@@ -7,6 +7,7 @@
   "projectforge.dev/projectforge/app/lib/metamodel/model"
   "projectforge.dev/projectforge/app/project"
   "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/components/view"
   "projectforge.dev/projectforge/views/layout"
 ) %}
 
@@ -35,6 +36,10 @@
   <div class="card">
     <h3>{%= components.SVGIcon(`social`, ps) %} Relations</h3>
     {%= modelRelations(m, p.Project, as, ps) %}
+  </div>{%- endif -%}{%- if len(m.Links) > 0 -%}
+  <div class="card">
+    <h3>{%= components.SVGIcon(`link`, ps) %} Links</h3>
+    {%= modelLinks(m, as, ps) %}
   </div>{%- endif -%}{%- if len(m.Indexes) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGIcon(`star`, ps) %} Indexes</h3>
@@ -180,6 +185,31 @@
         <tr>
           <td>{%s idx.Name %}</td>
           <td>{%s idx.Decl %}</td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
+{% endfunc %}
+
+{% func modelLinks(model *model.Model, as *app.State, ps *cutil.PageState) %}
+  <div class="overflow full-width">
+    <table class="mt min-200 full-width">
+      <thead>
+        <tr>
+          <th class="shrink">Title</th>
+          <th>URL</th>
+          <th>Icon</th>
+          <th>Tags</th>
+        </tr>
+      </thead>
+      <tbody>
+        {%- for _, l := range model.Links -%}
+        <tr>
+          <td>{%s l.Title %}</td>
+          <td>{%= view.URL(l.URL) %}</td>
+          <td>{%= components.SVGIcon(l.Icon, ps) %}</td>
+          <td>{%= view.StringArray(l.Tags) %}</td>
         </tr>
         {%- endfor -%}
       </tbody>

@@ -6,9 +6,9 @@
 
 {% func Float(key string, id string, value any, placeholder ...string) %}{% stripspace %}
   {% if id == "" %}
-    <input name="{%s key %}" type="number" value="{%v value %}"{%= components.PlaceholderFor(placeholder) %} />
+    <input name="{%s key %}" type="number" step="any" value="{%v value %}"{%= components.PlaceholderFor(placeholder) %} />
   {% else %}
-    <input id="{%s id %}" name="{%s key %}" type="number" value="{%v value %}"{%= components.PlaceholderFor(placeholder) %} />
+    <input id="{%s id %}" name="{%s key %}" type="number" step="any" value="{%v value %}"{%= components.PlaceholderFor(placeholder) %} />
   {% endif %}
 {% endstripspace %}{% endfunc %}
 

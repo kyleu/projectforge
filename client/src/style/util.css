@@ -258,6 +258,10 @@ svg.icon {
   margin-right: var(--padding-small);
 }
 
+svg.search-icon {
+  margin-right: 0;
+}
+
 svg.inline {
   position: relative;
   top: 2px;

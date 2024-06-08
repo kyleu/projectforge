@@ -15,7 +15,7 @@
     <input type="hidden" name="tags" value="{%s strings.Join(currTags, `,`) %}" />
     {%- endif -%}
     <div class="right">
-      <button class="right" type="submit">{%= components.SVGRef("search", 22, 22, `icon`, ps) %}</button>
+      <button class="right" type="submit">{%= components.SVGRef("search", 20, 20, `icon search-icon`, ps) %}</button>
       <input class="right br0" type="text" name="q" value="{%s q %}" placeholder="{%s placeholder %}" />
     </div>
   </form>

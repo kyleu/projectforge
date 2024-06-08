@@ -18,7 +18,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func (s *Service) loadExportArgs(fs filesystem.FileLoader, logger util.Logger) (*model.Args, error) {
+func (s *Service) loadExportArgs(fs filesystem.FileLoader, acronyms []string, logger util.Logger) (*model.Args, error) {
 	args := &model.Args{Config: util.ValueMap{}}
 	exportPath := filepath.Join(ConfigDir, "export")
 	if !fs.IsDir(exportPath) {
@@ -74,7 +74,7 @@ func (s *Service) loadExportArgs(fs filesystem.FileLoader, logger util.Logger) (
 			return cmp.Compare(l.Name, r.Name)
 		})
 	}
-
+	args.ApplyAcronyms(acronyms...)
 	return args, nil
 }
 

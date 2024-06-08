@@ -10,7 +10,7 @@ import (
 const tSet = "Set"
 
 func (m *Model) Camel() string {
-	return util.StringToLowerCamel(m.Name)
+	return util.StringToLowerCamel(m.Name, m.acronyms...)
 }
 
 func (m *Model) CamelLower() string {
@@ -23,16 +23,23 @@ func (m *Model) CamelPlural() string {
 
 func (m *Model) Title() string {
 	if m.TitleOverride == "" {
-		return util.StringToTitle(m.Name)
+		return util.StringToTitle(m.Name, m.acronyms...)
 	}
 	return m.TitleOverride
 }
 
 func (m *Model) Proper() string {
 	if m.ProperOverride == "" {
-		return util.StringToCamel(m.Name)
+		return util.StringToCamel(m.Name, m.acronyms...)
 	}
-	return util.StringToCamel(m.ProperOverride)
+	return util.StringToCamel(m.ProperOverride, m.acronyms...)
+}
+
+func (m *Model) ProperWithGroup() string {
+	if len(m.Group) > 0 {
+		return util.StringToCamel(m.Group[len(m.Group)-1], m.acronyms...) + util.StringToCamel(m.Package, m.acronyms...)
+	}
+	return m.Proper()
 }
 
 func (m *Model) TitleLower() string {
