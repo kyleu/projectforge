@@ -62,6 +62,16 @@ button {
   cursor: pointer;
 }
 
+button:hover {
+  border-color: #888888;
+}
+
+button:disabled, button[disabled]{
+  border-color: #888888;
+  background-color: #888888;
+  cursor: default;
+}
+
 .button-link {
   border: none;
   outline: none;

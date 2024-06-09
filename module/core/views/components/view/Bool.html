@@ -1,5 +1,8 @@
 {% import (
+  "fmt"
+
   "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/util"
   "{{{ .Package }}}/views/components"
 ) %}
 
@@ -7,11 +10,40 @@
   {% if b %}true{% else %}false{% endif %}
 {% endstripspace %}{% endfunc %}
 
-{% func BoolIcon(b bool, size int, cls string, ps *cutil.PageState) %}{% stripspace %}
-  {% code if cls == "" { cls = "inline" } %}
-  {% if b %}
-    {%= components.SVGRef("check", size, size, cls, ps) %}
-  {% else %}
-    {%= components.SVGRef("times", size, size, cls, ps) %}
-  {% endif %}
+{% func BoolIcon(b bool, size int, cls string, ps *cutil.PageState, titles ...string) %}{% stripspace %}
+  {% code
+    if cls == "" {
+      cls = "inline"
+    }
+    extra := ""
+    switch len(titles) {
+    case 0:
+      if b {
+        extra = "true"
+      } else {
+        extra = "false"
+      }
+    case 1:
+      l, r := util.StringSplitLast(titles[0], '|', true)
+      if b || r == "" {
+        extra = l
+      } else {
+        extra = r
+      }
+    case 2:
+      if b {
+        extra = titles[0]
+      } else {
+        extra = titles[1]
+      }
+    }
+    if extra != "" {
+      extra = fmt.Sprintf(" title=%q", extra)
+    }
+    icon := "times"
+    if b {
+      icon = "check"
+    }
+  %}
+  <span{%s= extra %}>{%= components.SVGRef(icon, size, size, cls, ps) %}</span>
 {% endstripspace %}{% endfunc %}
