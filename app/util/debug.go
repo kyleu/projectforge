@@ -11,7 +11,10 @@ import (
 	"time"
 )
 
-var DEBUG = false
+var (
+	DEBUG     = false
+	ConfigDir = "."
+)
 
 type DebugInfo struct {
 	ServerTags  *OrderedMap[string]

@@ -71,6 +71,7 @@ func initIfNeeded() error {
 		return err
 	}
 	util.DEBUG = _flags.Debug
+	util.ConfigDir = _flags.ConfigDir
 	_logger = l
 	_initialized = true
 	return nil
