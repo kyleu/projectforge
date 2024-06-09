@@ -111,7 +111,7 @@
   {% if i.Badge == "" %}
   {% elseif strings.HasPrefix(i.Badge, ":") %}
     {%= components.Indent(true, indent) %}
-    <div class="badge">{%= components.SVGInline(i.Badge[1:], 18, ps) %}</div>
+    <div class="badge">{%= components.SVGSimple(i.Badge[1:], 18, ps) %}</div>
   {% else %}
     {%= components.Indent(true, indent) %}
     <div class="badge">{%s i.Badge %}</div>

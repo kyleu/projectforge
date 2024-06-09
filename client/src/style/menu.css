@@ -67,11 +67,21 @@
 .menu-container .label-link {
   float: right;
   margin-right: var(--padding);
-  margin-top: 2px;
+}
+
+.menu-container .label-link svg {
+  position: relative;
+  top: 2px;
 }
 
 .menu-container .item svg {
   margin-left: 19px;
+}
+
+.menu-container .item .badge svg {
+  position: relative;
+  margin-left: 0;
+  top: 0;
 }
 
 .menu-container a {

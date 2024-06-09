@@ -391,7 +391,7 @@ func streammenuBadge(qw422016 *qt422016.Writer, i *menu.Item, indent int, ps *cu
 //line views/layout/Menu.html:113
 		qw422016.N().S(`<div class="badge">`)
 //line views/layout/Menu.html:114
-		components.StreamSVGInline(qw422016, i.Badge[1:], 18, ps)
+		components.StreamSVGSimple(qw422016, i.Badge[1:], 18, ps)
 //line views/layout/Menu.html:114
 		qw422016.N().S(`</div>`)
 //line views/layout/Menu.html:115
