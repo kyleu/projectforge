@@ -79,7 +79,7 @@ func StreamList(qw422016 *qt422016.Writer, path []string, files filesystem.FileI
 //line views/vfile/List.html:25
 		qw422016.N().S(`">`)
 //line views/vfile/List.html:25
-		components.StreamSVGRef(qw422016, icon, 16, 16, `icon`, ps)
+		components.StreamSVGInline(qw422016, icon, 16, ps)
 //line views/vfile/List.html:25
 		qw422016.E().S(f.Name)
 //line views/vfile/List.html:25

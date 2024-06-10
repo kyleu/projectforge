@@ -23,10 +23,7 @@ const (
 
 func initAvailable() {
 	if AvailableProviderNames == nil {
-		openIDConnectName := util.GetEnv(OpenIDConnectKey + "_name")
-		if openIDConnectName == "" {
-			openIDConnectName = "OpenID Connect"
-		}
+		openIDConnectName := util.OrDefault(util.GetEnv(OpenIDConnectKey+"_name"), "OpenID Connect")
 		AvailableProviderNames = map[string]string{
 			"amazon":          "Amazon",
 			"apple":           "Apple",

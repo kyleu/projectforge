@@ -26,25 +26,14 @@
       }
     case 1:
       l, r := util.StringSplitLast(titles[0], '|', true)
-      if b || r == "" {
-        extra = l
-      } else {
-        extra = r
-      }
+      extra = util.Choose(b || r == "", l, r)
     case 2:
-      if b {
-        extra = titles[0]
-      } else {
-        extra = titles[1]
-      }
+      extra = util.Choose(b, titles[0], titles[1])
     }
     if extra != "" {
       extra = fmt.Sprintf(" title=%q", extra)
     }
-    icon := "times"
-    if b {
-      icon = "check"
-    }
+    icon := util.Choose(b, "check", "times")
   %}
   <span{%s= extra %}>{%= components.SVGRef(icon, size, size, cls, ps) %}</span>
 {% endstripspace %}{% endfunc %}

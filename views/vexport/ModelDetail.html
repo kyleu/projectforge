@@ -22,7 +22,7 @@
   {%- code m := p.Model -%}
   <div class="card">
     <div class="right">
-      <a href="/p/{%s p.Project.Key %}/export/models/{%s p.Model.Name %}/edit"><button>{%= components.SVGRef("edit", 15, 15, "icon", ps) %}Edit</button></a>
+      <a href="/p/{%s p.Project.Key %}/export/models/{%s p.Model.Name %}/edit"><button>{%= components.SVGButton("edit", ps) %}Edit</button></a>
     </div>
     <h3>{%= components.SVGIcon(m.IconSafe(), ps) %}{%s m.Name %}</h3>
     <em>export model</em>
@@ -102,6 +102,12 @@
         {%- if len(model.Config) > 0 -%}
         <tr><th>Config</th><td>{%= components.JSON(model.Config) %}</td></tr>
         {%- endif -%}
+        {%- if len(model.Links) > 0 -%}
+        <tr><th>Links</th><td>{%= components.JSON(model.Links) %}</td></tr>
+        {%- endif -%}
+        {%- if len(model.Imports) > 0 -%}
+        <tr><th>Imports</th><td>{%= components.JSON(model.Imports) %}</td></tr>
+        {%- endif -%}
       </tbody>
     </table>
   </div>
@@ -135,8 +141,8 @@
           <td>{%s col.Example %}</td>
           <td>{%s col.JSON %}</td>
           <td>{%s col.Validation %}</td>
-          <td>{% if col.Indexed || model.Relations.ContainsSource(col.Name) %}{%= components.SVGRef("check", 15, 15, "icon", ps) %}{% endif %}</td>
-          <td>{% if col.HasTag("unique") %}{%= components.SVGRef("check", 15, 15, "icon", ps) %}{% endif %}</td>
+          <td>{%= view.BoolIcon(col.Indexed || model.Relations.ContainsSource(col.Name), 15, "icon", ps) %}</td>
+          <td>{%= view.BoolIcon(col.HasTag("unique"), 15, "icon", ps) %}</td>
           <td>{%s strings.Join(col.Tags, ", ") %}</td>
         </tr>
         {%- endfor -%}

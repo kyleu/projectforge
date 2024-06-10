@@ -150,13 +150,13 @@ input[type=checkbox]:checked ~ .menu-toggle > .diagonal.part-2 {
 }
 
 @media (max-width: 800px) {
-  #navbar .nav-root-icon {
+  #navbar .nav-root-icon:not(.simple) {
     display: inline;
   }
-  #navbar .nav-root-item {
+  #navbar .nav-root-item:not(.simple) {
     display: none;
   }
-  #navbar .nav-item-title {
+  #navbar .nav-item-title:not(.simple) {
     display: none;
   }
   #navbar .last .nav-item-title {

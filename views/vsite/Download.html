@@ -15,7 +15,7 @@
 
 {% func (p *Download) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%= components.SVGIcon("download", ps) %} Download {%s util.AppName %} {%s as.BuildInfo.Version %}</h3>
+    <h3>{%= components.SVGIcon("download", ps) %}Download {%s util.AppName %} {%s as.BuildInfo.Version %}</h3>
   </div>
   {%= downloadShowLinks("server", "database", "Server Version", "A command line interface that can launch a web server or run commands", p.Links, as.BuildInfo.Version, ps) %}
   {%= downloadShowLinks("desktop", "desktop", "Desktop Version", "Standalone application using your platform's native web viewer", p.Links, as.BuildInfo.Version, ps) %}

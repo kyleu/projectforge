@@ -27,6 +27,7 @@ func table(m *model.Model, args *model.Args, addHeader bool, linebreak string) (
 		return nil, err
 	}
 	g.AddImport(imps...)
+	g.AddImport(m.Imports.Supporting("viewtable")...)
 	vtf, err := exportViewTableFunc(m, args.Models, args.Enums, g)
 	if err != nil {
 		return nil, err

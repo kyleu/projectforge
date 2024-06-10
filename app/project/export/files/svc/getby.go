@@ -20,7 +20,7 @@ func writeGetBy(key string, cols model.Columns, doExtra []string, name string, d
 	if name == "" {
 		name = helper.TextGetBy + strings.Join(cols.ProperNames(), "")
 	}
-	lo.ForEach(helper.ImportsForTypes("go", "", cols.Types()...), func(imp *golang.Import, _ int) {
+	lo.ForEach(helper.ImportsForTypes("go", "", cols.Types()...), func(imp *model.Import, _ int) {
 		g.AddImport(imp)
 	})
 	returnMultiple := lo.ContainsBy(cols, func(x *model.Column) bool {

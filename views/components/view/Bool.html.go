@@ -85,61 +85,50 @@ func StreamBoolIcon(qw422016 *qt422016.Writer, b bool, size int, cls string, ps 
 		}
 	case 1:
 		l, r := util.StringSplitLast(titles[0], '|', true)
-		if b || r == "" {
-			extra = l
-		} else {
-			extra = r
-		}
+		extra = util.Choose(b || r == "", l, r)
 	case 2:
-		if b {
-			extra = titles[0]
-		} else {
-			extra = titles[1]
-		}
+		extra = util.Choose(b, titles[0], titles[1])
 	}
 	if extra != "" {
 		extra = fmt.Sprintf(" title=%q", extra)
 	}
-	icon := "times"
-	if b {
-		icon = "check"
-	}
+	icon := util.Choose(b, "check", "times")
 
-//line views/components/view/Bool.html:48
+//line views/components/view/Bool.html:37
 	qw422016.N().S(`<span`)
-//line views/components/view/Bool.html:49
+//line views/components/view/Bool.html:38
 	qw422016.N().S(extra)
-//line views/components/view/Bool.html:49
+//line views/components/view/Bool.html:38
 	qw422016.N().S(`>`)
-//line views/components/view/Bool.html:49
+//line views/components/view/Bool.html:38
 	components.StreamSVGRef(qw422016, icon, size, size, cls, ps)
-//line views/components/view/Bool.html:49
+//line views/components/view/Bool.html:38
 	qw422016.N().S(`</span>`)
-//line views/components/view/Bool.html:50
+//line views/components/view/Bool.html:39
 }
 
-//line views/components/view/Bool.html:50
+//line views/components/view/Bool.html:39
 func WriteBoolIcon(qq422016 qtio422016.Writer, b bool, size int, cls string, ps *cutil.PageState, titles ...string) {
-//line views/components/view/Bool.html:50
+//line views/components/view/Bool.html:39
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/view/Bool.html:50
+//line views/components/view/Bool.html:39
 	StreamBoolIcon(qw422016, b, size, cls, ps, titles...)
-//line views/components/view/Bool.html:50
+//line views/components/view/Bool.html:39
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/view/Bool.html:50
+//line views/components/view/Bool.html:39
 }
 
-//line views/components/view/Bool.html:50
+//line views/components/view/Bool.html:39
 func BoolIcon(b bool, size int, cls string, ps *cutil.PageState, titles ...string) string {
-//line views/components/view/Bool.html:50
+//line views/components/view/Bool.html:39
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/view/Bool.html:50
+//line views/components/view/Bool.html:39
 	WriteBoolIcon(qb422016, b, size, cls, ps, titles...)
-//line views/components/view/Bool.html:50
+//line views/components/view/Bool.html:39
 	qs422016 := string(qb422016.B)
-//line views/components/view/Bool.html:50
+//line views/components/view/Bool.html:39
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/view/Bool.html:50
+//line views/components/view/Bool.html:39
 	return qs422016
-//line views/components/view/Bool.html:50
+//line views/components/view/Bool.html:39
 }

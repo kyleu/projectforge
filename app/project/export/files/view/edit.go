@@ -15,7 +15,7 @@ import (
 
 func edit(m *model.Model, p *project.Project, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "Edit.html")
-	lo.ForEach(helper.ImportsForTypes("webedit", "", m.Columns.Types()...), func(imp *golang.Import, _ int) {
+	lo.ForEach(helper.ImportsForTypes("webedit", "", m.Columns.Types()...), func(imp *model.Import, _ int) {
 		g.AddImport(imp)
 	})
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpComponentsEdit, helper.ImpCutil, helper.ImpLayout)
@@ -26,6 +26,7 @@ func edit(m *model.Model, p *project.Project, args *model.Args, addHeader bool, 
 		return nil, err
 	}
 	g.AddImport(imps...)
+	g.AddImport(m.Imports.Supporting("viewedit")...)
 	veb, err := exportViewEditBody(m, p, args)
 	if err != nil {
 		return nil, err

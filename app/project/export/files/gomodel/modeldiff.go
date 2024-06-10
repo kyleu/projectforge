@@ -17,6 +17,7 @@ import (
 func ModelDiff(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, strings.ToLower(m.Camel())+"diff")
 	g.AddImport(helper.ImpAppUtil)
+	g.AddImport(m.Imports.Supporting("diff")...)
 
 	mdiff, err := modelDiffBlock(g, m, args.Enums)
 	if err != nil {
@@ -33,6 +34,7 @@ func modelDiffBlock(g *golang.File, m *model.Model, enums enum.Enums) (*golang.B
 	ret.W("func (%s *%s) Diff(%sx *%s) util.Diffs {", m.FirstLetter(), m.Proper(), m.FirstLetter(), m.Proper())
 	ret.W("\tvar diffs util.Diffs")
 	for _, col := range m.Columns.NotDerived() {
+		key := col.CamelNoReplace()
 		if col.HasTag("updated") {
 			continue
 		}
@@ -44,7 +46,7 @@ func modelDiffBlock(g *golang.File, m *model.Model, enums enum.Enums) (*golang.B
 		case types.KeyBool, types.KeyInt, types.KeyFloat:
 			g.AddImport(helper.ImpFmt)
 			ret.W("\tif %s != %s {", l, r)
-			ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, fmt.Sprint(%s), fmt.Sprint(%s)))", col.Camel(), l, r)
+			ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, fmt.Sprint(%s), fmt.Sprint(%s)))", key, l, r)
 			ret.W("\t}")
 		case types.KeyEnum:
 			e, err := model.AsEnumInstance(col.Type, enums)
@@ -53,14 +55,14 @@ func modelDiffBlock(g *golang.File, m *model.Model, enums enum.Enums) (*golang.B
 			}
 			ret.W("\tif %s != %s {", l, r)
 			if e.Simple() {
-				ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, string(%s), string(%s)))", col.Camel(), l, r)
+				ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, string(%s), string(%s)))", key, l, r)
 			} else {
-				ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, %s.Key, %s.Key))", col.Camel(), l, r)
+				ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, %s.Key, %s.Key))", key, l, r)
 			}
 			ret.W("\t}")
 		case types.KeyString:
 			ret.W("\tif %s != %s {", l, r)
-			ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, %s, %s))", col.Camel(), l, r)
+			ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, %s, %s))", key, l, r)
 			ret.W("\t}")
 		case types.KeyDate, types.KeyTimestamp, types.KeyUUID:
 			if col.Nullable {
@@ -68,10 +70,10 @@ func modelDiffBlock(g *golang.File, m *model.Model, enums enum.Enums) (*golang.B
 				line := fmt.Sprintf(msg, l, r, l, r, l, r, l, r)
 				ret.W(line)
 				g.AddImport(helper.ImpFmt)
-				ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, fmt.Sprint(%s), fmt.Sprint(%s))) //nolint:gocritic // it's nullable", col.Camel(), l, r)
+				ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, fmt.Sprint(%s), fmt.Sprint(%s))) //nolint:gocritic // it's nullable", key, l, r)
 			} else {
 				ret.W("\tif %s != %s {", l, r)
-				ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, %s.String(), %s.String()))", col.Camel(), l, r)
+				ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, %s.String(), %s.String()))", key, l, r)
 			}
 			ret.W("\t}")
 		default:

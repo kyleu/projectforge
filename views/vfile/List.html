@@ -22,7 +22,7 @@
       x = append(x, f.Name)
       u := filepath.Join(x...)
     -%}
-    <div><a href="{%s u %}">{%= components.SVGRef(icon, 16, 16, `icon`, ps) %}{%s f.Name %}</a></div>
+    <div><a href="{%s u %}">{%= components.SVGInline(icon, 16, ps) %}{%s f.Name %}</a></div>
   {%- endfor -%}
   </div>
 {% endfunc %}

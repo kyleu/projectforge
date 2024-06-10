@@ -109,7 +109,7 @@ func StreamSummary(qw422016 *qt422016.Writer, prj *project.Project, title string
 //line views/vproject/Summary.html:34
 	qw422016.N().S(`/edit" title="Edit the project definition"><button>`)
 //line views/vproject/Summary.html:34
-	components.StreamSVGRef(qw422016, "edit", 15, 15, "icon", ps)
+	components.StreamSVGButton(qw422016, "edit", ps)
 //line views/vproject/Summary.html:34
 	qw422016.N().S(`Edit</button></a>
 `)
@@ -130,7 +130,7 @@ func StreamSummary(qw422016 *qt422016.Writer, prj *project.Project, title string
 //line views/vproject/Summary.html:36
 		qw422016.N().S(`"><button>`)
 //line views/vproject/Summary.html:36
-		components.StreamSVGRef(qw422016, t.Icon, 15, 15, "icon", ps)
+		components.StreamSVGButton(qw422016, t.Icon, ps)
 //line views/vproject/Summary.html:36
 		qw422016.E().S(t.Title)
 //line views/vproject/Summary.html:36
@@ -145,7 +145,7 @@ func StreamSummary(qw422016 *qt422016.Writer, prj *project.Project, title string
 //line views/vproject/Summary.html:38
 	qw422016.N().S(`/fs" title="Explore the project's files"><button>`)
 //line views/vproject/Summary.html:38
-	components.StreamSVGRef(qw422016, "folder", 15, 15, "icon", ps)
+	components.StreamSVGButton(qw422016, "folder", ps)
 //line views/vproject/Summary.html:38
 	qw422016.N().S(`Files</button></a>
       <a href="/svg/`)
@@ -154,7 +154,7 @@ func StreamSummary(qw422016 *qt422016.Writer, prj *project.Project, title string
 //line views/vproject/Summary.html:39
 	qw422016.N().S(`" title="Add new SVGs and set the app icon"><button>`)
 //line views/vproject/Summary.html:39
-	components.StreamSVGRef(qw422016, "icons", 15, 15, "icon", ps)
+	components.StreamSVGButton(qw422016, "icons", ps)
 //line views/vproject/Summary.html:39
 	qw422016.N().S(`SVG</button></a>
       <a href="/git/`)
@@ -163,7 +163,7 @@ func StreamSummary(qw422016 *qt422016.Writer, prj *project.Project, title string
 //line views/vproject/Summary.html:40
 	qw422016.N().S(`" title="Source control status for this project"><button>`)
 //line views/vproject/Summary.html:40
-	components.StreamSVGRef(qw422016, "git", 15, 15, "icon", ps)
+	components.StreamSVGButton(qw422016, "git", ps)
 //line views/vproject/Summary.html:40
 	qw422016.N().S(`Git</button></a>
     </div>

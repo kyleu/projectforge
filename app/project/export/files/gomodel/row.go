@@ -20,7 +20,7 @@ const rDot = "r."
 
 func Row(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "row")
-	lo.ForEach(helper.ImportsForTypes("row", args.Database, m.Columns.Types()...), func(imp *golang.Import, _ int) {
+	lo.ForEach(helper.ImportsForTypes("row", args.Database, m.Columns.Types()...), func(imp *model.Import, _ int) {
 		g.AddImport(imp)
 	})
 	g.AddImport(helper.ImpStrings, helper.ImpAppUtil, helper.ImpFmt)
@@ -35,6 +35,7 @@ func Row(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*f
 		return nil, err
 	}
 	g.AddImport(imps...)
+	g.AddImport(m.Imports.Supporting("row")...)
 	lo.ForEach(m.Columns, func(col *model.Column, _ int) {
 		if col.Type.Key() == types.KeyUUID && args.Database == util.DatabaseSQLServer {
 			if col.Nullable {
@@ -175,7 +176,7 @@ func modelRowToModel(g *golang.File, m *model.Model, enums enum.Enums, database 
 				ret.W("\t%sArg := &%s{}", c.Camel(), ref.K)
 			} else {
 				ret.W("\t%sArg := &%s.%s{}", c.Camel(), ref.Pkg.Last(), ref.K)
-				g.AddImport(golang.NewImport(golang.ImportTypeApp, ref.Pkg.ToPath()))
+				g.AddImport(model.NewImport(model.ImportTypeApp, ref.Pkg.ToPath()))
 			}
 			ret.W("\t_ = util.FromJSON(%s, %sArg)", decoder, c.Camel())
 			refs = append(refs, fmt.Sprintf("%s %sArg", k, c.Camel()))

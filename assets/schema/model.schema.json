@@ -56,7 +56,7 @@
       "description": "flags for this model that control generated code",
       "type": "array",
       "items": {
-        "enum": ["audit", "big", "count","external", "menu-hidden", "public", "search", "softDelete"]
+        "enum": ["audit", "big", "count", "external", "menu-hidden", "no-routes", "public", "search", "softDelete"]
       }
     },
     "title": {
@@ -106,6 +106,10 @@
     },
     "links": {
       "description": "additional links to display for this model",
+      "type": "array"
+    },
+    "imports": {
+      "description": "additional imports to include when rendering code",
       "type": "array"
     }
   },

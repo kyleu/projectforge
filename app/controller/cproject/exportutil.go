@@ -85,6 +85,20 @@ func exportModelFromForm(frm util.ValueMap, m *model.Model) error {
 	}
 	m.SeedData = sd
 
+	links := model.Links{}
+	err = util.FromJSON([]byte(get("links", util.ToJSON(m.Links))), &links)
+	if err != nil {
+		return errors.Wrap(err, "invalid links")
+	}
+	m.Links = links
+
+	imps := model.Imports{}
+	err = util.FromJSON([]byte(get("imps", util.ToJSON(m.Imports))), &imps)
+	if err != nil {
+		return errors.Wrap(err, "invalid imports")
+	}
+	m.Imports = imps
+
 	return nil
 }
 

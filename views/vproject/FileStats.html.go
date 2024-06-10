@@ -429,7 +429,7 @@ func streamrenderFileStatSummary(qw422016 *qt422016.Writer, f *stats.FileStat, e
 //line views/vproject/FileStats.html:111
 	qw422016.N().S(`</em></div>`)
 //line views/vproject/FileStats.html:112
-	components.StreamSVGRef(qw422016, icon, 16, 16, `icon`, ps)
+	components.StreamSVGInline(qw422016, icon, 16, ps)
 //line views/vproject/FileStats.html:113
 	if f.IsDir {
 //line views/vproject/FileStats.html:113

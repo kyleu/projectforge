@@ -18,19 +18,20 @@ import (
 func Menu(args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	g := golang.NewFile("cmenu", []string{"app", "controller", "cmenu"}, "generated")
 	g.AddImport(helper.ImpAppMenu)
-	groups, names, orphans := sortModels(args)
-	if vBlock := menuBlockV(args, groups, names); len(vBlock.Lines) > 0 {
+	models := args.Models.WithoutTag("no-routes")
+	groups, names, orphans := sortModels(models, args)
+	if vBlock := menuBlockV(models, args, groups, names); len(vBlock.Lines) > 0 {
 		g.AddBlocks(vBlock)
 	}
 	g.AddBlocks(menuBlockGM(args, orphans))
 	return g.Render(addHeader, linebreak)
 }
 
-func sortModels(args *model.Args) (map[string][]string, []string, []string) {
+func sortModels(models model.Models, args *model.Args) (map[string][]string, []string, []string) {
 	groups := map[string][]string{}
-	names := make([]string, 0, len(args.Models)+len(args.Groups))
+	names := make([]string, 0, len(models)+len(args.Groups))
 	orphans := make([]string, 0)
-	lo.ForEach(args.Models.SortedDisplay(), func(m *model.Model, _ int) {
+	lo.ForEach(models.SortedDisplay(), func(m *model.Model, _ int) {
 		n := m.ProperWithGroup()
 		names = append(names, n)
 		if len(m.Group) == 0 {
@@ -44,11 +45,11 @@ func sortModels(args *model.Args) (map[string][]string, []string, []string) {
 	return groups, names, orphans
 }
 
-func menuBlockV(args *model.Args, groups map[string][]string, names []string) *golang.Block {
+func menuBlockV(models model.Models, args *model.Args, groups map[string][]string, names []string) *golang.Block {
 	nameLength := util.StringArrayMaxLength(names)
-	lines := lo.Map(args.Models, func(m *model.Model, _ int) string {
+	lines := lo.Map(models, func(m *model.Model, _ int) string {
 		n := util.StringPad(m.ProperWithGroup(), nameLength)
-		i := menuSerialize(menuItemForModel(m, args.Models, args.Acronyms), "", true)
+		i := menuSerialize(menuItemForModel(m, models, args.Acronyms), "", true)
 		return fmt.Sprintf("\t%s%s = %s", helper.TextMenuItem, n, strings.Join(i, "\n"))
 	})
 	slices.Sort(lines)

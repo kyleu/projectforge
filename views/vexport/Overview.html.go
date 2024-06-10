@@ -50,7 +50,7 @@ func (p *Overview) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vexport/Overview.html:23
 	qw422016.N().S(`/export/config"><button>`)
 //line views/vexport/Overview.html:23
-	components.StreamSVGRef(qw422016, "edit", 15, 15, "icon", ps)
+	components.StreamSVGButton(qw422016, "edit", ps)
 //line views/vexport/Overview.html:23
 	qw422016.N().S(`Edit</button></a></div>
     <h3>`)
@@ -71,7 +71,7 @@ func (p *Overview) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vexport/Overview.html:28
 	qw422016.N().S(`/export/groups"><button>`)
 //line views/vexport/Overview.html:28
-	components.StreamSVGRef(qw422016, "edit", 15, 15, "icon", ps)
+	components.StreamSVGButton(qw422016, "edit", ps)
 //line views/vexport/Overview.html:28
 	qw422016.N().S(`Edit</button></a></div>
     <h3>`)
@@ -110,7 +110,7 @@ func (p *Overview) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vexport/Overview.html:40
 	qw422016.N().S(`/export/enums/create/new"><button>`)
 //line views/vexport/Overview.html:40
-	components.StreamSVGRef(qw422016, "file", 15, 15, "icon", ps)
+	components.StreamSVGButton(qw422016, "file", ps)
 //line views/vexport/Overview.html:40
 	qw422016.N().S(`New</button></a>
     </div>
@@ -148,7 +148,7 @@ func (p *Overview) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vexport/Overview.html:51
 	qw422016.N().S(`/export/models/create/derive"><button>`)
 //line views/vexport/Overview.html:51
-	components.StreamSVGRef(qw422016, "dna", 15, 15, "icon", ps)
+	components.StreamSVGButton(qw422016, "dna", ps)
 //line views/vexport/Overview.html:51
 	qw422016.N().S(`Derive</button></a>
       <a href="/p/`)
@@ -157,7 +157,7 @@ func (p *Overview) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vexport/Overview.html:52
 	qw422016.N().S(`/export/models/create/new"><button>`)
 //line views/vexport/Overview.html:52
-	components.StreamSVGRef(qw422016, "file", 15, 15, "icon", ps)
+	components.StreamSVGButton(qw422016, "file", ps)
 //line views/vexport/Overview.html:52
 	qw422016.N().S(`New</button></a>
     </div>
@@ -314,7 +314,7 @@ func StreamEnumList(qw422016 *qt422016.Writer, enums enum.Enums, urlPrefix strin
 //line views/vexport/Overview.html:96
 		qw422016.N().S(`">`)
 //line views/vexport/Overview.html:96
-		components.StreamSVGRef(qw422016, e.IconSafe(), 15, 15, ``, ps)
+		components.StreamSVGButton(qw422016, e.IconSafe(), ps)
 //line views/vexport/Overview.html:96
 		qw422016.N().S(`</a> <a href="`)
 //line views/vexport/Overview.html:96
@@ -396,7 +396,7 @@ func StreamModelList(qw422016 *qt422016.Writer, models model.Models, urlPrefix s
 //line views/vexport/Overview.html:121
 		qw422016.N().S(`">`)
 //line views/vexport/Overview.html:121
-		components.StreamSVGRef(qw422016, m.IconSafe(), 15, 15, ``, ps)
+		components.StreamSVGButton(qw422016, m.IconSafe(), ps)
 //line views/vexport/Overview.html:121
 		qw422016.N().S(`</a> <a href="`)
 //line views/vexport/Overview.html:121

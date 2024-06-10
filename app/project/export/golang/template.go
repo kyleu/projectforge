@@ -8,23 +8,24 @@ import (
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/util"
 )
 
 type Template struct {
-	Path    []string `json:"path,omitempty"`
-	Name    string   `json:"name"`
-	Imports Imports  `json:"imports"`
-	Blocks  Blocks   `json:"blocks"`
+	Path    []string      `json:"path,omitempty"`
+	Name    string        `json:"name"`
+	Imports model.Imports `json:"imports"`
+	Blocks  Blocks        `json:"blocks"`
 }
 
 func NewGoTemplate(path []string, fn string) *Template {
 	return &Template{Path: path, Name: fn}
 }
 
-func (f *Template) AddImport(i ...*Import) {
-	lo.ForEach(i, func(imp *Import, _ int) {
-		hit := lo.ContainsBy(f.Imports, func(x *Import) bool {
+func (f *Template) AddImport(i ...*model.Import) {
+	lo.ForEach(i, func(imp *model.Import, _ int) {
+		hit := lo.ContainsBy(f.Imports, func(x *model.Import) bool {
 			return x.Equals(imp)
 		})
 		if !hit {

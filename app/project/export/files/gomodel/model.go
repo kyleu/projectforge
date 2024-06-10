@@ -17,10 +17,10 @@ import (
 
 func Model(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, strings.ToLower(m.Camel()))
-	lo.ForEach(helper.ImportsForTypes("go", "", m.Columns.Types()...), func(imp *golang.Import, _ int) {
+	lo.ForEach(helper.ImportsForTypes("go", "", m.Columns.Types()...), func(imp *model.Import, _ int) {
 		g.AddImport(imp)
 	})
-	lo.ForEach(helper.ImportsForTypes(types.KeyString, "", m.PKs().Types()...), func(imp *golang.Import, _ int) {
+	lo.ForEach(helper.ImportsForTypes(types.KeyString, "", m.PKs().Types()...), func(imp *model.Import, _ int) {
 		g.AddImport(imp)
 	})
 	g.AddImport(helper.ImpAppUtil, helper.ImpAppSvc)
@@ -34,6 +34,7 @@ func Model(m *model.Model, args *model.Args, addHeader bool, linebreak string) (
 		return nil, err
 	}
 	g.AddImport(imps...)
+	g.AddImport(m.Imports.Supporting("model")...)
 
 	g.AddBlocks(typeAssert(m))
 
@@ -116,7 +117,7 @@ func modelStruct(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 		goType := util.StringPad(gt, maxTypeLength)
 		var tag string
 		if c.JSON == "" {
-			tag = fmt.Sprintf("json:%q", c.Camel()+modelJSONSuffix(c))
+			tag = fmt.Sprintf("json:%q", c.CamelNoReplace()+modelJSONSuffix(c))
 		} else {
 			tag = fmt.Sprintf("json:%q", c.JSON+modelJSONSuffix(c))
 		}

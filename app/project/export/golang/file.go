@@ -6,22 +6,23 @@ import (
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/util"
 )
 
 type File struct {
-	Package string   `json:"package,omitempty"`
-	Path    []string `json:"path,omitempty"`
-	Name    string   `json:"name"`
-	Imports Imports  `json:"imports"`
-	Blocks  Blocks   `json:"blocks"`
+	Package string        `json:"package,omitempty"`
+	Path    []string      `json:"path,omitempty"`
+	Name    string        `json:"name"`
+	Imports model.Imports `json:"imports"`
+	Blocks  Blocks        `json:"blocks"`
 }
 
 func NewFile(pkg string, path []string, fn string) *File {
 	return &File{Package: pkg, Path: path, Name: fn}
 }
 
-func (f *File) AddImport(i ...*Import) {
+func (f *File) AddImport(i ...*model.Import) {
 	f.Imports = f.Imports.Add(i...)
 }
 

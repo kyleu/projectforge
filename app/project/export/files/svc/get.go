@@ -20,7 +20,7 @@ const tableClause = "tableQuoted"
 func ServiceGet(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	dbRef := args.DBRef()
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "serviceget")
-	lo.ForEach(helper.ImportsForTypes("go", "", m.PKs().Types()...), func(imp *golang.Import, _ int) {
+	lo.ForEach(helper.ImportsForTypes("go", "", m.PKs().Types()...), func(imp *model.Import, _ int) {
 		g.AddImport(imp)
 	})
 	if len(m.PKs()) > 1 {
@@ -32,6 +32,7 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool, linebreak stri
 		return nil, err
 	}
 	g.AddImport(imps...)
+	g.AddImport(m.Imports.Supporting("serviceget")...)
 	pkLen := len(m.PKs())
 	if pkLen > 0 {
 		gbpk, err := serviceGetByPK(m, dbRef, args.Enums, args.Database)

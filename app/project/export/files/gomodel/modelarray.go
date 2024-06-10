@@ -22,14 +22,15 @@ func Models(m *model.Model, args *model.Args, addHeader bool, goVersion string, 
 		name += "_array"
 	}
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, name)
-	lo.ForEach(helper.ImportsForTypes("go", "", m.IndexedColumns(true).Types()...), func(imp *golang.Import, _ int) {
+	lo.ForEach(helper.ImportsForTypes("go", "", m.IndexedColumns(true).Types()...), func(imp *model.Import, _ int) {
 		g.AddImport(imp)
 	})
-	lo.ForEach(helper.ImportsForTypes(types.KeyString, "", m.PKs().Types()...), func(imp *golang.Import, _ int) {
+	lo.ForEach(helper.ImportsForTypes(types.KeyString, "", m.PKs().Types()...), func(imp *model.Import, _ int) {
 		g.AddImport(imp)
 	})
 	g.AddImport(helper.ImpSlicesForGo(goVersion))
 	g.AddImport(helper.ImpLo, helper.ImpAppUtil)
+	g.AddImport(m.Imports.Supporting("array")...)
 	g.AddBlocks(modelArray(m))
 
 	imps, err := helper.SpecialImports(m.IndexedColumns(true), m.PackageWithGroup(""), args.Enums)

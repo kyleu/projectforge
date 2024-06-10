@@ -64,11 +64,11 @@ func controllerList(g *golang.File, m *model.Model, grp *model.Column, models mo
 			continue
 		}
 		srcCol := m.Columns.Get(rel.Src[0])
-		lo.ForEach(helper.ImportsForTypes("go", "", srcCol.Type), func(imp *golang.Import, _ int) {
+		lo.ForEach(helper.ImportsForTypes("go", "", srcCol.Type), func(imp *model.Import, _ int) {
 			g.AddImport(imp)
 		})
 		tgtCol := relModel.Columns.Get(rel.Tgt[0])
-		lo.ForEach(helper.ImportsForTypes("go", "", srcCol.Type), func(imp *golang.Import, _ int) {
+		lo.ForEach(helper.ImportsForTypes("go", "", srcCol.Type), func(imp *model.Import, _ int) {
 			g.AddImport(imp)
 		})
 		gt, err := model.ToGoType(srcCol.Type, srcCol.Nullable, m.Package, enums)

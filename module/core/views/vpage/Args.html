@@ -3,6 +3,7 @@
 
   "{{{ .Package }}}/app"
   "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/util"
   "{{{ .Package }}}/views/components/edit"
   "{{{ .Package }}}/views/layout"
 ) %}
@@ -27,10 +28,7 @@
           <tbody>
             {%- for _, arg := range p.ArgRes.Args -%}
             {%- code
-              v := p.ArgRes.Values.GetStringOpt(arg.Key)
-              if v == "" {
-                v = arg.Default
-              }
+              v := util.OrDefault(p.ArgRes.Values.GetStringOpt(arg.Key), arg.Default)
               title := arg.Title
               if len(title) > 50 {
                 title = title[:50] + "..."

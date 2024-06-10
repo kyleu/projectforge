@@ -92,14 +92,8 @@ func OpenDefaultMySQL(ctx context.Context, logger util.Logger) (*Service, error)
 func OpenMySQLDatabase(ctx context.Context, key string, params *MySQLParams, logger util.Logger) (*Service, error) {
 	_, span, logger := telemetry.StartSpan(ctx, "database:open", logger)
 	defer span.Complete()
-	host := params.Host
-	if host == "" {
-		host = localhost
-	}
-	port := params.Port
-	if port == 0 {
-		port = 3306
-	}
+	host := util.OrDefault(params.Host, localhost)
+	port := util.OrDefault(params.Port, 3306)
 
 	const template = "%s:%s@tcp(%s:%d)/%s?parseTime=true"
 	url := fmt.Sprintf(template, params.Username, params.Password, host, port, params.Database)

@@ -18,10 +18,11 @@ const serviceAssignmentToken = ":="
 
 func ServiceMutate(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "servicemutate")
-	lo.ForEach(helper.ImportsForTypes("go", "", m.PKs().Types()...), func(imp *golang.Import, _ int) {
+	lo.ForEach(helper.ImportsForTypes("go", "", m.PKs().Types()...), func(imp *model.Import, _ int) {
 		g.AddImport(imp)
 	})
 	g.AddImport(helper.ImpAppUtil, helper.ImpContext, helper.ImpSQLx, helper.ImpAppDatabase, helper.ImpLo)
+	g.AddImport(m.Imports.Supporting("servicemutate")...)
 
 	if add, err := serviceCreate(g, m, args.Audit(m)); err == nil {
 		g.AddBlocks(add, serviceCreateChunked(m))

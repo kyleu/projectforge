@@ -4,6 +4,7 @@
 
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components/edit"
   "projectforge.dev/projectforge/views/layout"
 ) %}
@@ -28,10 +29,7 @@
           <tbody>
             {%- for _, arg := range p.ArgRes.Args -%}
             {%- code
-              v := p.ArgRes.Values.GetStringOpt(arg.Key)
-              if v == "" {
-                v = arg.Default
-              }
+              v := util.OrDefault(p.ArgRes.Values.GetStringOpt(arg.Key), arg.Default)
               title := arg.Title
               if len(title) > 50 {
                 title = title[:50] + "..."

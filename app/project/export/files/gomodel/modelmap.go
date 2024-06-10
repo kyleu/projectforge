@@ -28,6 +28,7 @@ func ModelMap(m *model.Model, args *model.Args, addHeader bool, linebreak string
 		return nil, err
 	}
 	g.AddImport(imps...)
+	g.AddImport(m.Imports.Supporting("map")...)
 	if b, e := modelFromMap(g, m, args.Enums, args.Database); e == nil {
 		g.AddBlocks(b)
 	} else {
@@ -49,7 +50,7 @@ func modelFromMap(g *golang.File, m *model.Model, enums enum.Enums, database str
 	ret.W("\t\tvar err error")
 	ret.W("\t\tswitch k {")
 	for _, col := range pks {
-		ret.W("\t\tcase %q:", col.Camel())
+		ret.W("\t\tcase %q:", col.CamelNoReplace())
 		ret.W("\t\t\tif setPK {")
 		if err := forCol(g, ret, 4, m, enums, col); err != nil {
 			return nil, err
@@ -57,7 +58,7 @@ func modelFromMap(g *golang.File, m *model.Model, enums enum.Enums, database str
 		ret.W("\t\t\t}")
 	}
 	for _, col := range nonPKs {
-		ret.W("\t\tcase %q:", col.Camel())
+		ret.W("\t\tcase %q:", col.CamelNoReplace())
 		if err := forCol(g, ret, 3, m, enums, col); err != nil {
 			return nil, err
 		}
@@ -100,7 +101,7 @@ func forCol(g *golang.File, ret *golang.Block, indent int, m *model.Model, enums
 			ret.W("\t%sArg := &%s{}", col.Camel(), ref.K)
 		} else {
 			ret.W("\t%sArg := &%s.%s{}", col.Camel(), ref.Pkg.Last(), ref.K)
-			g.AddImport(golang.NewImport(golang.ImportTypeApp, ref.Pkg.ToPath()))
+			g.AddImport(model.NewImport(model.ImportTypeApp, ref.Pkg.ToPath()))
 		}
 		ret.W(ind+"err = util.FromJSON([]byte(tmp%s), %sArg)", col.Proper(), col.Camel())
 		catchErr("err")

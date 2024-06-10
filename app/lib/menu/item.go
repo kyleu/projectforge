@@ -5,6 +5,8 @@ import (
 	"strings"
 
 	"github.com/samber/lo"
+
+	"projectforge.dev/projectforge/app/util"
 )
 
 var Separator = &Item{}
@@ -22,10 +24,7 @@ type Item struct {
 }
 
 func ItemFromString(bc string, dflt string) *Item {
-	icon := dflt
-	if icon == "" {
-		icon = "file"
-	}
+	icon := util.OrDefault(dflt, "file")
 	if iconIdx := strings.Index(bc, "**"); iconIdx > 0 {
 		icon = bc[iconIdx+2:]
 		bc = bc[:iconIdx]

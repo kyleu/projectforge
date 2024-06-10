@@ -25,10 +25,7 @@ func ReplaceEnvVars(s string, logger Logger) string {
 				d = orig[dIdx+1 : len(orig)-1]
 			}
 
-			o := GetEnv(n)
-			if o == "" {
-				o = d
-			}
+			o := OrDefault(GetEnv(n), d)
 			return ReplaceEnvVars(strings.Replace(s, orig, o, 1), logger)
 		}
 	}

@@ -131,7 +131,7 @@ func StreamAvailActions(qw422016 *qt422016.Writer, title string, currTags []stri
 //line views/vproject/AvailActions.html:32
 		qw422016.N().S(`"><button>`)
 //line views/vproject/AvailActions.html:32
-		components.StreamSVGRef(qw422016, t.Icon, 15, 15, "icon", ps)
+		components.StreamSVGButton(qw422016, t.Icon, ps)
 //line views/vproject/AvailActions.html:32
 		qw422016.E().S(t.Title)
 //line views/vproject/AvailActions.html:32
@@ -146,7 +146,7 @@ func StreamAvailActions(qw422016 *qt422016.Writer, title string, currTags []stri
 //line views/vproject/AvailActions.html:34
 	qw422016.N().S(`" title="Git dashboard for all projects"><button>`)
 //line views/vproject/AvailActions.html:34
-	components.StreamSVGRef(qw422016, "git", 15, 15, "icon", ps)
+	components.StreamSVGButton(qw422016, "git", ps)
 //line views/vproject/AvailActions.html:34
 	qw422016.N().S(`Git</button></a>
   </div>

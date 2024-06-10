@@ -21,7 +21,7 @@
   {%- code e := p.Enum -%}
   <div class="card">
     <div class="right">
-      <a href="/p/{%s p.Project.Key %}/export/enums/{%s e.Name %}/edit"><button>{%= components.SVGRef("edit", 15, 15, "icon", ps) %}Edit</button></a>
+      <a href="/p/{%s p.Project.Key %}/export/enums/{%s e.Name %}/edit"><button>{%= components.SVGButton("edit", ps) %}Edit</button></a>
     </div>
     <h3>{%= components.SVGIcon(e.IconSafe(), ps) %}{%s e.Name %}</h3>
     <em>export enum</em>

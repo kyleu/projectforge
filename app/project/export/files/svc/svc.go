@@ -40,6 +40,7 @@ func ServiceAll(m *model.Model, args *model.Args, addHeader bool, linebreak stri
 func Service(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "service")
 	g.AddImport(helper.ImpFilter, helper.ImpAppDatabase, helper.ImpAppSvc)
+	g.AddImport(m.Imports.Supporting("service")...)
 
 	isRO := args.HasModule("readonlydb")
 	isAudit := args.HasModule("audit") && m.HasTag("audit")
@@ -59,7 +60,7 @@ func typeAssert(g *golang.File, m *model.Model, enums enum.Enums) *golang.Block 
 	}
 	var assertion string
 	if len(m.PKs()) == 1 {
-		lo.ForEach(helper.ImportsForTypes("go", "", m.PKs().Types()...), func(imp *golang.Import, _ int) {
+		lo.ForEach(helper.ImportsForTypes("go", "", m.PKs().Types()...), func(imp *model.Import, _ int) {
 			g.AddImport(imp)
 		})
 		pk := m.PKs()[0]

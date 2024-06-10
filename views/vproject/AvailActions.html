@@ -29,8 +29,8 @@
   {%- endif -%}
   <div class="mt">
     {%- for _, t := range action.ProjectTypes -%}
-    <a href="/run/{%s t.Key %}{%s tags %}" title="{%s t.Description %}"><button>{%= components.SVGRef(t.Icon, 15, 15, "icon", ps) %}{%s t.Title %}</button></a>
+    <a href="/run/{%s t.Key %}{%s tags %}" title="{%s t.Description %}"><button>{%= components.SVGButton(t.Icon, ps) %}{%s t.Title %}</button></a>
     {%- endfor -%}
-    <a href="/git{%s tags %}" title="Git dashboard for all projects"><button>{%= components.SVGRef("git", 15, 15, "icon", ps) %}Git</button></a>
+    <a href="/git{%s tags %}" title="Git dashboard for all projects"><button>{%= components.SVGButton("git", ps) %}Git</button></a>
   </div>
 {% endfunc %}

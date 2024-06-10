@@ -11,6 +11,7 @@ func ServiceList(m *model.Model, args *model.Args, addHeader bool, linebreak str
 	dbRef := args.DBRef()
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "servicelist")
 	g.AddImport(helper.ImpAppUtil, helper.ImpContext, helper.ImpErrors, helper.ImpSQLx, helper.ImpFilter, helper.ImpAppDatabase)
+	g.AddImport(m.Imports.Supporting("servicelist")...)
 	g.AddBlocks(serviceList(m, args.DBRef()), serviceListSQL(m, args.DBRef()), serviceListWhere(m), serviceCount(g, m, args.DBRef()))
 	if m.HasSearches() {
 		g.AddImport(helper.ImpStrings)

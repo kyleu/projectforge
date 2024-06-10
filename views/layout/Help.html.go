@@ -46,98 +46,92 @@ func StreamHelp(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
 			qw422016.N().S(`] -->`)
 //line views/layout/Help.html:16
 		} else {
-//line views/layout/Help.html:18
-			title := hlp.Title
-			if title == "" {
-				title = ps.Title
-			}
-			if title == "" {
-				title = util.AppName
-			}
+//line views/layout/Help.html:17
+			title := util.OrDefault(util.OrDefault(hlp.Title, ps.Title), util.AppName)
 
-//line views/layout/Help.html:25
+//line views/layout/Help.html:17
 			qw422016.N().S(`<a class="help-link" title="Help for this page" data-key="`)
-//line views/layout/Help.html:26
+//line views/layout/Help.html:18
 			qw422016.E().S(strings.TrimSuffix(ps.Action, `.action`))
-//line views/layout/Help.html:26
+//line views/layout/Help.html:18
 			qw422016.N().S(`" href="#help">`)
-//line views/layout/Help.html:26
+//line views/layout/Help.html:18
 			components.StreamSVGSimple(qw422016, `question`, 24, ps)
-//line views/layout/Help.html:26
+//line views/layout/Help.html:18
 			qw422016.N().S(`</a>`)
-//line views/layout/Help.html:27
+//line views/layout/Help.html:19
 			components.StreamIndent(qw422016, true, 1)
-//line views/layout/Help.html:27
+//line views/layout/Help.html:19
 			qw422016.N().S(`<div id="help" class="modal" style="display: none;">`)
-//line views/layout/Help.html:29
+//line views/layout/Help.html:21
 			components.StreamIndent(qw422016, true, 2)
-//line views/layout/Help.html:29
+//line views/layout/Help.html:21
 			qw422016.N().S(`<a class="backdrop" href="#"></a>`)
-//line views/layout/Help.html:31
+//line views/layout/Help.html:23
 			components.StreamIndent(qw422016, true, 2)
-//line views/layout/Help.html:31
+//line views/layout/Help.html:23
 			qw422016.N().S(`<div class="modal-content">`)
-//line views/layout/Help.html:33
+//line views/layout/Help.html:25
 			components.StreamIndent(qw422016, true, 3)
-//line views/layout/Help.html:33
+//line views/layout/Help.html:25
 			qw422016.N().S(`<div class="modal-header"><a href="#" class="modal-close">×</a><h3>`)
-//line views/layout/Help.html:36
+//line views/layout/Help.html:28
 			components.StreamSVGIcon(qw422016, `question`, ps)
-//line views/layout/Help.html:36
+//line views/layout/Help.html:28
 			qw422016.N().S(`Help:`)
-//line views/layout/Help.html:36
+//line views/layout/Help.html:28
 			qw422016.E().S(title)
-//line views/layout/Help.html:36
+//line views/layout/Help.html:28
 			qw422016.N().S(`</h3></div>`)
-//line views/layout/Help.html:38
+//line views/layout/Help.html:30
 			components.StreamIndent(qw422016, true, 3)
-//line views/layout/Help.html:38
+//line views/layout/Help.html:30
 			qw422016.N().S(`<div class="modal-body">`)
-//line views/layout/Help.html:40
+//line views/layout/Help.html:32
 			components.StreamIndent(qw422016, true, 4)
-//line views/layout/Help.html:41
+//line views/layout/Help.html:33
 			qw422016.N().S(hlp.HTML)
-//line views/layout/Help.html:42
+//line views/layout/Help.html:34
 			components.StreamIndent(qw422016, true, 3)
-//line views/layout/Help.html:42
+//line views/layout/Help.html:34
 			qw422016.N().S(`</div>`)
-//line views/layout/Help.html:44
+//line views/layout/Help.html:36
 			components.StreamIndent(qw422016, true, 2)
-//line views/layout/Help.html:44
+//line views/layout/Help.html:36
 			qw422016.N().S(`</div>`)
-//line views/layout/Help.html:46
+//line views/layout/Help.html:38
 			components.StreamIndent(qw422016, true, 1)
-//line views/layout/Help.html:46
+//line views/layout/Help.html:38
 			qw422016.N().S(`</div>`)
-//line views/layout/Help.html:48
+//line views/layout/Help.html:40
 		}
-//line views/layout/Help.html:49
+//line views/layout/Help.html:41
 	}
-//line views/layout/Help.html:50
+//line views/layout/Help.html:42
 }
 
-//line views/layout/Help.html:50
+//line views/layout/Help.html:42
 func WriteHelp(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/layout/Help.html:50
+//line views/layout/Help.html:42
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/layout/Help.html:50
+//line views/layout/Help.html:42
 	StreamHelp(qw422016, as, ps)
-//line views/layout/Help.html:50
+//line views/layout/Help.html:42
 	qt422016.ReleaseWriter(qw422016)
-//line views/layout/Help.html:50
+//line views/layout/Help.html:42
 }
 
-//line views/layout/Help.html:50
+//line views/layout/Help.html:42
 func Help(as *app.State, ps *cutil.PageState) string {
-//line views/layout/Help.html:50
+//line views/layout/Help.html:42
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/layout/Help.html:50
+//line views/layout/Help.html:42
 	WriteHelp(qb422016, as, ps)
-//line views/layout/Help.html:50
+//line views/layout/Help.html:42
 	qs422016 := string(qb422016.B)
-//line views/layout/Help.html:50
+//line views/layout/Help.html:42
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/layout/Help.html:50
+//line views/layout/Help.html:42
 	return qs422016
-//line views/layout/Help.html:50
+//line views/layout/Help.html:42
 }

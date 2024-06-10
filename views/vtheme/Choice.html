@@ -2,6 +2,7 @@
 {% import (
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/lib/theme"
+  "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
 ) %}
 
@@ -15,12 +16,7 @@
       {%= components.Indent(true, indent + 2) %}
       <div class="right"><a href="/theme">Edit Themes</a></div>
       <div class="clear"></div>
-      {% code
-        sel := ps.Profile.Theme
-        if sel == "" {
-          sel = "default"
-        }
-      %}
+      {% code sel := util.OrDefault(ps.Profile.Theme, "default") %}
       {%= Choice(themes, sel, icon, indent + 2, ps) %}
     </td>
   {%= components.Indent(true, indent) %}

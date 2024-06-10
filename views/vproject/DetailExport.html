@@ -10,7 +10,7 @@
 ) %}
 
 {% func DetailExport(key string, ea *model.Args, as *app.State, ps *cutil.PageState) %}
-  <a href="/p/{%s key %}/export"><button>{%= components.SVGRef("wrench", 15, 15, "icon", ps) %}Manage</button></a>
+  <a href="/p/{%s key %}/export"><button>{%= components.SVGButton("wrench", ps) %}Manage</button></a>
   <hr />
   {%- if ea.Config != nil && util.ToJSONCompact(ea.Config) != "{}" -%}
   <h3>{%= components.SVGIcon(`print`, ps) %}Export Configuration</h3>

@@ -96,15 +96,8 @@ func OpenSQLServerDatabase(ctx context.Context, key string, params *SQLServerPar
 	_, span, logger := telemetry.StartSpan(ctx, "database:open", logger)
 	defer span.Complete()
 
-	host := params.Host
-	if host == "" {
-		host = localhost
-	}
-	port := params.Port
-	if port == 0 {
-		port = 1433
-	}
-
+	host := util.OrDefault(params.Host, localhost)
+	port := util.OrDefault(params.Port, 1433)
 	var url string
 	switch params.Username {
 	case "native", "local", "":

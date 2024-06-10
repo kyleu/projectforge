@@ -44,7 +44,7 @@ func (p *Download) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vsite/Download.html:18
 	components.StreamSVGIcon(qw422016, "download", ps)
 //line views/vsite/Download.html:18
-	qw422016.N().S(` Download `)
+	qw422016.N().S(`Download `)
 //line views/vsite/Download.html:18
 	qw422016.E().S(util.AppName)
 //line views/vsite/Download.html:18

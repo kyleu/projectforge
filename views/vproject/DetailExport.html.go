@@ -39,7 +39,7 @@ func StreamDetailExport(qw422016 *qt422016.Writer, key string, ea *model.Args, a
 //line views/vproject/DetailExport.html:13
 	qw422016.N().S(`/export"><button>`)
 //line views/vproject/DetailExport.html:13
-	components.StreamSVGRef(qw422016, "wrench", 15, 15, "icon", ps)
+	components.StreamSVGButton(qw422016, "wrench", ps)
 //line views/vproject/DetailExport.html:13
 	qw422016.N().S(`Manage</button></a>
   <hr />

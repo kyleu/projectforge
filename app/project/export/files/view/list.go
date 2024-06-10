@@ -22,6 +22,7 @@ func list(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*
 		g.AddImport(helper.ImpAppUtil)
 	}
 	g.AddImport(helper.AppImport(m.PackageWithGroup("")))
+	g.AddImport(m.Imports.Supporting("viewlist")...)
 	g.AddBlocks(exportViewListClass(m, args.Models, g), exportViewListBody(m, args.Models))
 	return g.Render(addHeader, linebreak)
 }
@@ -75,7 +76,7 @@ func exportViewListBody(m *model.Model, models model.Models) *golang.Block {
 		for _, link := range m.Links {
 			icon := ""
 			if link.Icon != "" {
-				icon = fmt.Sprintf("{%%%%= components.SVGRef(%q, 15, 15, \"icon\", ps) %%%%}", link.Icon)
+				icon = fmt.Sprintf("{%%%%= components.SVGButton(%q, ps) %%%%}", link.Icon)
 			}
 			if link.Dangerous {
 				msg := "      <a class=%q data-message=%q href=%q><button type=\"button\">%s%s</button></a>"

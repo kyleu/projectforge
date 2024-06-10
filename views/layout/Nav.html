@@ -1,5 +1,7 @@
 <!-- Content managed by Project Forge, see [projectforge.md] for details. -->
 {% import (
+  "fmt"
+
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/lib/menu"
@@ -11,8 +13,9 @@
 <nav id="navbar">
   <a class="logo" href="{%s ps.RootPath %}" title="{%s util.AppName %} {%s as.BuildInfo.String() %}">{%= components.SVGSimple(ps.RootIcon, 32, ps) %}</a>
   <div class="breadcrumbs">
-    <a href="{%s ps.RootPath %}" class="nav-root-icon" title="{%s util.AppName %}">{%= components.SVGBreadcrumb(ps.RootIcon, ps) %}</a>
-    <a class="link nav-root-item" href="{%s ps.RootPath %}">{%s ps.RootTitle %}</a>{%= NavItems(ps) %}
+    {%- code extra := util.Choose(len(ps.Breadcrumbs) == 0, " simple", "") -%}
+    <a href="{%s ps.RootPath %}" class="nav-root-icon{%s extra %}" title="{%s util.AppName %}">{%= components.SVGBreadcrumb(ps.RootIcon, ps) %}</a>
+    <a class="link nav-root-item{%s extra %}" href="{%s ps.RootPath %}">{%s ps.RootTitle %}</a>{%= NavItems(ps) %}
   </div>
   {%- if ps.SearchPath != "-" -%}
   <form action="{%s ps.SearchPath %}" class="search" title="search">
@@ -29,12 +32,13 @@
   {%- endif -%}
 </nav>{% endfunc %}
 
-{% func NavItem(link string, title string, icon string, last bool, ps *cutil.PageState) %}{% stripspace %}
+{% func NavItem(link string, title string, icon string, description string, last bool, ps *cutil.PageState) %}{% stripspace %}
   {% if link != "" || last %}
-  <a class="link{% if last %}{% space %}last{% endif %}" href="{%s link %}">
+  {%- code extra := util.Choose(description == "", "", fmt.Sprintf(" title=%q", description)) -%}
+  <a class="link{% if last %}{% space %}last{% endif %}" href="{%s link %}"{%s= extra %}>
   {% endif %}
-    <span title="{%s title %}">{%= components.SVGBreadcrumb(icon, ps) %}</span>
-    <span class="nav-item-title">{%s title %}</span>
+  <span>{%= components.SVGBreadcrumb(icon, ps) %}</span>
+  <span class="nav-item-title">{%s title %}</span>
   {% if link != "" || last %}
   </a>
   {% endif %}
@@ -51,7 +55,7 @@
     {%= components.Indent(true, 2) %}
     <span class="separator">/</span>
     {%= components.Indent(true, 2) %}
-    {%= NavItem(i.Route, i.Title, i.Icon, idx == len(ps.Breadcrumbs) - 1, ps) %}
+    {%= NavItem(i.Route, i.Title, i.Icon, i.Description, idx == len(ps.Breadcrumbs) - 1, ps) %}
   {% endfor %}
 {% endstripspace %}{% endfunc %}
 

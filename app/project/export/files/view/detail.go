@@ -43,6 +43,7 @@ func detail(m *model.Model, args *model.Args, addHeader bool, linebreak string) 
 		return nil, err
 	}
 	g.AddImport(imps...)
+	g.AddImport(m.Imports.Supporting("viewdetail")...)
 	lo.ForEach(m.Columns, func(c *model.Column, _ int) {
 		switch c.Type.Key() {
 		case types.KeyEnum:
@@ -121,7 +122,7 @@ func exportViewDetailBody(g *golang.Template, m *model.Model, audit bool, models
 			u := strings.ReplaceAll(link.URL, "{}", strings.Join(paths, "/"))
 			icon := ""
 			if link.Icon != "" {
-				icon = fmt.Sprintf("{%%%%= components.SVGRef(%q, 15, 15, \"icon\", ps) %%%%} ", link.Icon)
+				icon = fmt.Sprintf("{%%%%= components.SVGButton(%q, ps) %%%%} ", link.Icon)
 			}
 			ret.W("      <a href=%q><button type=\"button\">%s%s</button></a>", u, icon, link.Title)
 		}
@@ -189,7 +190,7 @@ func exportViewDetailReverseRelations(ret *golang.Block, m *model.Model, models 
 		ret.W("        <input id=\"accordion-%s\" type=\"checkbox\" hidden=\"hidden\"%s />", tgtName, extra)
 		ret.W("        <label for=\"accordion-%s\">", tgtName)
 		ret.W("          {%%= components.ExpandCollapse(3, ps) %%}")
-		ret.W("          {%%%%= components.SVGRef(`%s`, 16, 16, `icon`, ps) %%%%}", tgt.Icon)
+		ret.W("          {%%%%= components.SVGInline(`%s`, 16, ps) %%%%}", tgt.Icon)
 		msg := "          {%%%%s util.StringPlural(len(p.Rel%s), \"%s\") %%%%} by [%s]"
 		ret.W(msg, tgtName, tgt.Title(), strings.Join(tgtCols.Titles(), ", "))
 		ret.W("        </label>")

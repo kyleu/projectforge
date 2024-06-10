@@ -47,6 +47,8 @@
             {%= edit.StringTable("tableOverride", "", "Table Override", m.TableOverride, 5, export.Helpers["model.tableOverride"]...) %}
             {%= edit.StringTable("routeOverride", "", "Route Override", m.RouteOverride, 5, export.Helpers["model.routeOverride"]...) %}
             {%= edit.TextareaTable("config", "", "Config", 3, util.ToJSON(m.Config), 5, export.Helpers["model.config"]...) %}
+            {%= edit.TextareaTable("links", "", "Links", 3, util.ToJSON(m.Links), 5, export.Helpers["model.links"]...) %}
+            {%= edit.TextareaTable("imports", "", "Imports", 3, util.ToJSON(m.Imports), 5, export.Helpers["model.imports"]...) %}
           </tbody>
         </table>
       </div>

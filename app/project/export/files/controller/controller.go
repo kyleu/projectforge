@@ -21,9 +21,10 @@ func Controller(m *model.Model, args *model.Args, addHeader bool, linebreak stri
 		fn = m.GroupString("c", "") + "/" + fn
 	}
 	g := golang.NewFile(m.LastGroup("c", "controller"), []string{"app", "controller"}, fn)
-	lo.ForEach(helper.ImportsForTypes("parse", "", m.PKs().Types()...), func(imp *golang.Import, _ int) {
+	lo.ForEach(helper.ImportsForTypes("parse", "", m.PKs().Types()...), func(imp *model.Import, _ int) {
 		g.AddImport(imp)
 	})
+	g.AddImport(m.Imports.Supporting("controller")...)
 	if len(m.Group) > 0 {
 		g.AddImport(helper.ImpAppController)
 	}

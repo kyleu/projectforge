@@ -47,9 +47,9 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
   <div class="card">
     <h3>`)
 //line views/vexec/Detail.html:19
-	components.StreamSVGRef(qw422016, "file", 20, 20, `icon`, ps)
+	components.StreamSVGIcon(qw422016, "file", ps)
 //line views/vexec/Detail.html:19
-	qw422016.N().S(` Output</h3>
+	qw422016.N().S(`Output</h3>
     <div class="mt">`)
 //line views/vexec/Detail.html:20
 	components.StreamTerminal(qw422016, "console-list", p.Exec.Buffer.String())
@@ -113,9 +113,9 @@ func StreamExecDetail(qw422016 *qt422016.Writer, ex *exec.Exec, ps *cutil.PageSt
 //line views/vexec/Detail.html:31
 	qw422016.N().S(`    <h3>`)
 //line views/vexec/Detail.html:32
-	components.StreamSVGRef(qw422016, "desktop", 20, 20, `icon`, ps)
+	components.StreamSVGIcon(qw422016, "desktop", ps)
 //line views/vexec/Detail.html:32
-	qw422016.N().S(` Process [`)
+	qw422016.N().S(`Process [`)
 //line views/vexec/Detail.html:32
 	qw422016.E().S(ex.String())
 //line views/vexec/Detail.html:32

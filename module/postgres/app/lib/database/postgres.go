@@ -94,14 +94,8 @@ func OpenDefaultPostgres(ctx context.Context, logger util.Logger) (*Service, err
 func OpenPostgresDatabase(ctx context.Context, key string, params *PostgresParams, logger util.Logger) (*Service, error) {
 	_, span, logger := telemetry.StartSpan(ctx, "database:open", logger)
 	defer span.Complete()
-	host := params.Host
-	if host == "" {
-		host = localhost
-	}
-	port := params.Port
-	if port == 0 {
-		port = 5432
-	}
+	host := util.OrDefault(params.Host, localhost)
+	port := util.OrDefault(params.Port, 5432)
 	sch := defaultPostgreSQLSchema
 	if params.Schema != "" {
 		sch = params.Schema

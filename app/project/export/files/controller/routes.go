@@ -42,7 +42,7 @@ func routes(g *golang.File, args *model.Args) *golang.Block {
 
 func routeContent(args *model.Args) []string {
 	out := make([]string, 0, 100)
-	lo.ForEach(args.Models.SortedRoutes(), func(m *model.Model, _ int) {
+	lo.ForEach(args.Models.WithoutTag("no-routes").SortedRoutes(), func(m *model.Model, _ int) {
 		out = append(out, routeModelContent(m)...)
 	})
 	return out

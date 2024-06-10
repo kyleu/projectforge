@@ -109,7 +109,7 @@
   %}
   {%= components.ExpandCollapse(3, ps) %}
   <div class="right"><em>{%s util.ByteSizeSI(f.TotalSize()) %}</em></div>
-  {%= components.SVGRef(icon, 16, 16, `icon`, ps) %}
+  {%= components.SVGInline(icon, 16, ps) %}
   {% if f.IsDir %}
     <a href="?dir={%u f.FullPath() %}{% if ext != `` %}&ext={%s ext %}{% endif %}">
   {% endif %}
