@@ -81,10 +81,7 @@ func (m *Model) FirstLetter() string {
 }
 
 func (m *Model) Table() string {
-	if m.TableOverride == "" {
-		return m.Name
-	}
-	return m.TableOverride
+	return util.OrDefault(m.TableOverride, m.Name)
 }
 
 func (m *Model) Route() string {

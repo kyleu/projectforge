@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://projectforge.dev/schemas/enum.schema.json",
+  "title": "Enum",
+  "type": "object",
+  "properties": {
+    "name": {
+      "description": "the name of the enum, lowercase and underscore-delimited",
+      "type": "string"
+    },
+    "package": {
+      "description": "single-word package name for this enum",
+      "type": "string"
+    },
+    "group": {
+      "description": "when set, places this enum inside a folder group",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "description": {
+      "description": "used in UI and documentation",
+      "type": "string"
+    },
+    "icon": {
+      "description": "one of the SVGs available in ./assets",
+      "type": "string"
+    },
+    "values": {
+      "description": "the possible values of this enum's members",
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "description": "the name of the enum, lowercase and underscore-delimited",
+                "type": "string"
+              },
+              "title": {
+                "description": "the title of this enum",
+                "type": "string"
+              },
+              "description": {
+                "description": "used in UI and documentation",
+                "type": "string"
+              },
+              "icon": {
+                "description": "used in UI, often in place of the name",
+                "type": "string"
+              },
+              "extras": {
+                "description": "extra fields attached to enum values",
+                "type": "object"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "tags": {
+      "description": "simple flags for this model; unused",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "title": {
+      "description": "overrides the computed title",
+      "type": "string"
+    },
+    "proper": {
+      "description": "overrides the computed proper-case version of the name",
+      "type": "string"
+    },
+    "route": {
+      "description": "overrides the computed route",
+      "type": "string"
+    },
+    "config": {
+      "description": "a config object for this enum; unused",
+      "type": "object"
+    }
+  },
+  "required": ["name", "package", "values"]
+}

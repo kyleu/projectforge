@@ -50,11 +50,12 @@ func (c *Column) ToGoEditString(prefix string, format string, id string, enums e
 	}
 	prop := c.ToGoString(prefix)
 	preprop := prefix + c.Proper()
+	key := c.CamelNoReplace()
 	switch c.Type.Key() {
 	case types.KeyAny:
-		return fmt.Sprintf(msgTextarea, c.Camel(), id, c.Title(), prop, h), nil
+		return fmt.Sprintf(msgTextarea, key, id, c.Title(), prop, h), nil
 	case types.KeyBool:
-		return fmt.Sprintf(`{%%%%= edit.BoolTable(%q, %q, %s, 5, %s) %%%%}`, c.Camel(), c.Title(), preprop, h), nil
+		return fmt.Sprintf(`{%%%%= edit.BoolTable(%q, %q, %s, 5, %s) %%%%}`, key, c.Title(), preprop, h), nil
 	case types.KeyEnum:
 		e, err := AsEnumInstance(c.Type, enums)
 		if err != nil {
@@ -71,65 +72,65 @@ func (c *Column) ToGoEditString(prefix string, format string, id string, enums e
 			call = fmt.Sprintf("string(%s)", prop)
 		}
 		msg := `{%%%%= edit.SelectTable(%q, %q, %q, %s, %s, %s, 5, %s) %%%%}`
-		return fmt.Sprintf(msg, c.Camel(), id, c.Title(), call, eKeys, eTitles, h), nil
+		return fmt.Sprintf(msg, key, id, c.Title(), call, eKeys, eTitles, h), nil
 	case types.KeyInt:
-		return fmt.Sprintf(`{%%%%= edit.IntTable(%q, %q, %q, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), preprop, h), nil
+		return fmt.Sprintf(`{%%%%= edit.IntTable(%q, %q, %q, %s, 5, %s) %%%%}`, key, id, c.Title(), preprop, h), nil
 	case types.KeyFloat:
-		return fmt.Sprintf(`{%%%%= edit.FloatTable(%q, %q, %q, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), preprop, h), nil
+		return fmt.Sprintf(`{%%%%= edit.FloatTable(%q, %q, %q, %s, 5, %s) %%%%}`, key, id, c.Title(), preprop, h), nil
 	case types.KeyList:
 		lt := types.TypeAs[*types.List](c.Type)
 		e, _ := AsEnumInstance(lt.V, enums)
 		if e != nil {
 			return fmt.Sprintf(
 				`{%%%%= edit.CheckboxTable(%q, %q, %s.Keys(), %s.All%s.Keys(), %s.All%s%s, 5, %s.All%s.Help()) %%%%}`,
-				c.Camel(), c.Title(), prop, e.Package, e.ProperPlural(), e.Package, e.ProperPlural(), stringsSuffix, e.Package, e.ProperPlural(),
+				key, c.Title(), prop, e.Package, e.ProperPlural(), e.Package, e.ProperPlural(), stringsSuffix, e.Package, e.ProperPlural(),
 			), nil
 		}
 		if c.Display == FmtTags.Key && lt.V.Key() == types.KeyString {
 			msg := `{%%%%= edit.TagsTable(%q, util.StringToTitle(%q), %q, %s, ps, 5, %s) %%%%}`
-			return fmt.Sprintf(msg, c.Camel(), id, c.Title(), prop, h), nil
+			return fmt.Sprintf(msg, key, id, c.Title(), prop, h), nil
 		}
-		return fmt.Sprintf(msgTextarea, c.Camel(), id, c.Title(), prop, h), nil
+		return fmt.Sprintf(msgTextarea, key, id, c.Title(), prop, h), nil
 	case types.KeyMap, types.KeyValueMap:
-		return fmt.Sprintf(msgTextarea, c.Camel(), id, c.Title(), preprop, h), nil
+		return fmt.Sprintf(msgTextarea, key, id, c.Title(), preprop, h), nil
 	case types.KeyReference:
-		return fmt.Sprintf(msgTextarea, c.Camel(), id, c.Title(), preprop, h), nil
+		return fmt.Sprintf(msgTextarea, key, id, c.Title(), preprop, h), nil
 	case types.KeyDate:
 		gs := prop
 		if !c.Nullable {
 			gs = "&" + gs
 		}
-		return fmt.Sprintf(`{%%%%= edit.TimestampDayTable(%q, %q, %q, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), gs, h), nil
+		return fmt.Sprintf(`{%%%%= edit.TimestampDayTable(%q, %q, %q, %s, 5, %s) %%%%}`, key, id, c.Title(), gs, h), nil
 	case types.KeyTimestamp:
 		gs := prop
 		if !c.Nullable {
 			gs = "&" + gs
 		}
-		return fmt.Sprintf(`{%%%%= edit.TimestampTable(%q, %q, %q, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), gs, h), nil
+		return fmt.Sprintf(`{%%%%= edit.TimestampTable(%q, %q, %q, %s, 5, %s) %%%%}`, key, id, c.Title(), gs, h), nil
 	case types.KeyUUID:
 		gs := prefix + c.Proper()
 		if !c.Nullable {
 			gs = "&" + gs
 		}
-		return fmt.Sprintf(`{%%%%= edit.UUIDTable(%q, %q, %q, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), gs, h), nil
+		return fmt.Sprintf(`{%%%%= edit.UUIDTable(%q, %q, %q, %s, 5, %s) %%%%}`, key, id, c.Title(), gs, h), nil
 	case types.KeyString:
 		switch format {
 		case FmtCode.Key, FmtCodeHidden.Key, FmtHTML.Key, FmtJSON.Key, FmtSQL.Key:
-			return fmt.Sprintf(`{%%%%= edit.TextareaTable(%q, %q, %q, 8, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), prop, h), nil
+			return fmt.Sprintf(`{%%%%= edit.TextareaTable(%q, %q, %q, 8, %s, 5, %s) %%%%}`, key, id, c.Title(), prop, h), nil
 		case FmtColor.Key:
-			return fmt.Sprintf(`{%%%%= edit.ColorTable(%q, %q, %q, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), prop, h), nil
+			return fmt.Sprintf(`{%%%%= edit.ColorTable(%q, %q, %q, %s, 5, %s) %%%%}`, key, id, c.Title(), prop, h), nil
 		case FmtSelect.Key:
 			if len(c.Values) == 0 {
-				return fmt.Sprintf(`{%%%%= edit.Table(%q, %q, %q, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), prop, h), nil
+				return fmt.Sprintf(`{%%%%= edit.Table(%q, %q, %q, %s, 5, %s) %%%%}`, key, id, c.Title(), prop, h), nil
 			}
 			sel := `{%%%%= edit.SelectTable(%q, "", %q, %s, %s, nil, 5, %s) %%%%}`
 			opts := "[]string{" + strings.Join(util.StringArrayQuoted(c.Values), ", ") + "}"
-			return fmt.Sprintf(sel, c.Camel(), c.Title(), prop, opts, h), nil
+			return fmt.Sprintf(sel, key, c.Title(), prop, opts, h), nil
 		default:
-			return fmt.Sprintf(`{%%%%= edit.StringTable(%q, %q, %q, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), prop, h), nil
+			return fmt.Sprintf(`{%%%%= edit.StringTable(%q, %q, %q, %s, 5, %s) %%%%}`, key, id, c.Title(), prop, h), nil
 		}
 	default:
-		return fmt.Sprintf(`{%%%%= edit.StringTable(%q, %q, %q, %s, 5, %s) %%%%}`, c.Camel(), id, c.Title(), prop, h), nil
+		return fmt.Sprintf(`{%%%%= edit.StringTable(%q, %q, %q, %s, 5, %s) %%%%}`, key, id, c.Title(), prop, h), nil
 	}
 }
 

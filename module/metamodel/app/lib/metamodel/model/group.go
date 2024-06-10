@@ -26,10 +26,7 @@ func (g *Group) HasTag(t string) bool {
 }
 
 func (g *Group) IconSafe() string {
-	if g.Icon == "" {
-		return defaultIcon
-	}
-	return g.Icon
+	return util.OrDefault(g.Icon, defaultIcon)
 }
 
 func (g *Group) TitleSafe() string {
@@ -44,10 +41,7 @@ func (g *Group) Proper() string {
 }
 
 func (g *Group) String() string {
-	if g.Title == "" {
-		return g.Key
-	}
-	return g.Title
+	return util.OrDefault(g.Title, g.Key)
 }
 
 type Groups []*Group

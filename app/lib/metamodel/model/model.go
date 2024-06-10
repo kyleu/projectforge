@@ -35,6 +35,7 @@ type Model struct {
 	Indexes        Indexes          `json:"indexes,omitempty"`
 	SeedData       [][]any          `json:"seedData,omitempty"`
 	Links          Links            `json:"links,omitempty"`
+	Imports        Imports          `json:"imports,omitempty"`
 	acronyms       []string
 }
 

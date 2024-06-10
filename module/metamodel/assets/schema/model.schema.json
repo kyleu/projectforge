@@ -1,0 +1,234 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://projectforge.dev/schemas/model.schema.json",
+  "title": "Model",
+  "type": "object",
+  "properties": {
+    "name": {
+      "description": "the name of the model, lowercase and underscore-delimited",
+      "type": "string",
+      "minLength": 1
+    },
+    "package": {
+      "description": "single-word package name for this model",
+      "type": "string",
+      "minLength": 1
+    },
+    "group": {
+      "description": "when set, places this model inside a folder group",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "description": {
+      "description": "used in UI and documentation",
+      "type": "string"
+    },
+    "icon": {
+      "description": "one of the SVGs available in ./assets",
+      "type": "string"
+    },
+    "ordering": {
+      "description": "default SQL ordering when querying this model",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "column": {
+            "type": "string",
+            "minLength": 1
+          },
+          "asc": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "search": {
+      "description": "additional columns to include in the search",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "tags": {
+      "description": "flags for this model that control generated code",
+      "type": "array",
+      "items": {
+        "enum": ["audit", "big", "count", "external", "menu-hidden", "no-routes", "public", "search", "softDelete"]
+      }
+    },
+    "title": {
+      "description": "overrides the computed title",
+      "type": "string"
+    },
+    "plural": {
+      "description": "overrides the computed plural form",
+      "type": "string"
+    },
+    "proper": {
+      "description": "overrides the computed proper-case version of the name",
+      "type": "string"
+    },
+    "route": {
+      "description": "overrides the computed route",
+      "type": "string"
+    },
+    "config": {
+      "description": "a config object for this model; unused",
+      "type": "object"
+    },
+    "columns": {
+      "description": "the columns in this model's table",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/column"
+      }
+    },
+    "relations": {
+      "description": "defines relationships to other models",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/relation"
+      }
+    },
+    "indexes": {
+      "description": "additional indexes for this model",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/index"
+      }
+    },
+    "seedData": {
+      "description": "initial seed data for this model, in `[][]string` form",
+      "type": "array"
+    },
+    "links": {
+      "description": "additional links to display for this model",
+      "type": "array"
+    },
+    "imports": {
+      "description": "additional imports to include when rendering code",
+      "type": "array"
+    }
+  },
+  "required": [
+    "name",
+    "package"
+  ],
+  "$defs": {
+    "column": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "the name of this column, in database format",
+          "type": "string"
+        },
+        "type": {},
+        "pk": {
+          "description": "if set, column will be part of the primary key",
+          "type": "boolean"
+        },
+        "nullable": {
+          "description": "if set, null values are allowed",
+          "type": "boolean"
+        },
+        "search": {
+          "description": "if set, column will be part of the search",
+          "type": "boolean"
+        },
+        "sqlDefault": {
+          "description": "default value, include single quotes for string literals",
+          "type": "string"
+        },
+        "indexed": {
+          "description": "if set, column will be indexed",
+          "type": "boolean"
+        },
+        "display": {
+          "description": "if set to \"detail\", will omit column from listing tables",
+          "enum": ["detail", "tags", "url"]
+        },
+        "format": {
+          "description": "used for strings, controls output format in UI",
+          "enum": ["code", "codehidden", "color","country", "html", "icon", "image", "json", "linebreaks", "seconds", "select", "si", "sql", "tags", "url"]
+        },
+        "example": {
+          "description": "default example value to use when editing",
+          "type": "string"
+        },
+        "json": {
+          "description": "the JSON field name to use when serializing, defaults to [name]",
+          "type": "string"
+        },
+        "values": {
+          "description": "when format is \"select\", this controls the available values",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tags": {
+          "description": "tags controlling the column's code behavior",
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "enum": ["const", "created", "debug-only", "deleted", "derived" ,"link", "list-first", "no-title", "omitempty", "title", "unique", "updated"]
+              },
+              {
+                "type": "string",
+                "pattern": "^fn:"
+              }
+            ]
+          }
+        },
+        "helpString": {
+          "description": "emitted it the UI, this is an optional help string",
+          "type": "string"
+        }
+      }
+    },
+    "relation": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "name of this relationship, used as the database FK name",
+          "type": "string"
+        },
+        "src": {
+          "description": "columns from source table",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "table": {
+          "description": "name of target table",
+          "type": "string"
+        },
+        "tgt": {
+          "description": "columns from target table",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "index": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "name of the index, used as the database name",
+          "type": "string"
+        },
+        "decl": {
+          "description": "declaration, in SQL format, of this index's members",
+          "type": "string"
+        }
+      }
+    }
+  }
+}

@@ -68,6 +68,10 @@ func (c *Column) Camel() string {
 	return util.StringToLowerCamel(c.Name, c.acronyms...)
 }
 
+func (c *Column) CamelNoReplace() string {
+	return util.StringToLowerCamel(c.Name)
+}
+
 func (c *Column) CamelPlural() string {
 	return util.StringToPlural(c.Camel())
 }
@@ -140,10 +144,7 @@ func (c *Column) BC() string {
 }
 
 func (c *Column) SQL() string {
-	if c.SQLOverride == "" {
-		return c.Name
-	}
-	return c.SQLOverride
+	return util.OrDefault(c.SQLOverride, c.Name)
 }
 
 func (c *Column) NeedsErr(_ string, db string) bool {
