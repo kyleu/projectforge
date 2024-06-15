@@ -7,7 +7,6 @@ import (
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project"
-	"projectforge.dev/projectforge/app/project/export/csharp/csfiles"
 	"projectforge.dev/projectforge/app/project/export/files"
 )
 
@@ -28,17 +27,4 @@ func (s *Service) Files(p *project.Project, addHeader bool, linebreak string) (_
 		}
 	}()
 	return files.All(p, addHeader, linebreak)
-}
-
-func (s *Service) FilesCSharp(p *project.Project) (_ file.Files, e error) {
-	defer func() {
-		if rec := recover(); rec != nil {
-			if err, ok := rec.(error); ok {
-				e = err
-			} else {
-				e = errors.New(fmt.Sprint(rec))
-			}
-		}
-	}()
-	return csfiles.CSAll(p)
 }

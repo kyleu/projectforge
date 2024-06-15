@@ -10,6 +10,7 @@ const (
 	AppSource  = "{{{ .Info.Sourcecode }}}"
 	AppLegal   = `Built by <a href="mailto:{{{ .Info.AuthorEmail }}}">{{{ .Info.AuthorName }}}</a>, all rights reserved`
 
+	KeyDebug   = "debug"
 	KeyError   = "error"
 	KeyRandom  = "random"
 	KeyUnknown = "unknown"

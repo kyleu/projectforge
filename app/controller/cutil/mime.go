@@ -141,7 +141,7 @@ func GetContentType(r *http.Request) string {
 	}
 	t := r.URL.Query().Get("t")
 	switch t {
-	case "debug":
+	case util.KeyDebug:
 		return mimeDebug
 	case util.KeyCSV:
 		return mimeCSV
@@ -163,7 +163,7 @@ func IsContentTypeCSV(c string) bool {
 }
 
 func IsContentTypeDebug(c string) bool {
-	return c == mimeDebug || c == "debug"
+	return c == mimeDebug || c == util.KeyDebug
 }
 
 func IsContentTypeJSON(c string) bool {

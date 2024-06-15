@@ -45,8 +45,8 @@ type Exec struct {
 }
 
 func NewExec(key string, idx int, cmd string, path string, envvars ...string) *Exec {
-	if idx := strings.Index(key, "/"); idx > -1 && idx < len(key) {
-		key = key[idx+1:]
+	if x := strings.Index(key, "/"); x > -1 && x < len(key) {
+		key = key[x+1:]
 	}
 	return &Exec{Key: key, Idx: idx, Cmd: cmd, Env: envvars, Path: path, Buffer: &bytes.Buffer{}}
 }
@@ -74,9 +74,9 @@ func (e *Exec) Start(fns ...OutFn) error {
 		go func() {
 			err2 := e.Wait()
 			if err2 != nil {
-				_, _ = w.Write([]byte(fmt.Sprintf(" ::: error while wating for process to terminate %s", err2.Error())))
+				_, _ = fmt.Fprintf(w, " ::: error while wating for process to terminate %s", err2.Error())
 			}
-			_, _ = w.Write([]byte(fmt.Sprintf(" ::: process completed in [%s] with exit code [%d]", t.EndString(), e.ExitCode)))
+			_, _ = fmt.Fprintf(w, " ::: process completed in [%s] with exit code [%d]", t.EndString(), e.ExitCode)
 		}()
 	}()
 	return nil

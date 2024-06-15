@@ -30,7 +30,7 @@ func SVGList(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		icons, contents, err := svg.Contents(prj.Key, pfs, ps.Logger, prj.IsCSharp())
+		icons, contents, err := svg.Contents(prj.Key, pfs, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to list project SVGs")
 		}

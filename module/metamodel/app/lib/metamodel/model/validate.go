@@ -1,7 +1,6 @@
 package model
 
 import (
-	"slices"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -25,7 +24,7 @@ func (m *Model) Validate(mods []string, models Models, groups Groups) error {
 			return errors.Errorf("model [%s] uses name which is reserved by [%s]", m.Name, mod)
 		}
 	}
-	if len(m.Group) > 0 && groups.Get(m.Group...) == nil && !slices.Contains(mods, "csharp") {
+	if len(m.Group) > 0 && groups.Get(m.Group...) == nil {
 		msg := "model [%s] references undefined group [%s], and no model matches"
 		if len(m.Group) == 1 && models.Get(m.Group[0]) == nil {
 			return errors.Errorf(msg, m.Name, strings.Join(m.Group, "/"))

@@ -22,7 +22,7 @@ import (
 func GitActionAll(w http.ResponseWriter, r *http.Request) {
 	a, _ := cutil.PathString(r, "act", false)
 	controller.Act("git.all."+a, w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prjs := as.Services.Projects.Projects().WithoutModules("csharp")
+		prjs := as.Services.Projects.Projects()
 		tags := util.StringSplitAndTrim(r.URL.Query().Get("tags"), ",")
 		if len(tags) > 0 {
 			prjs = prjs.WithTags(tags...)

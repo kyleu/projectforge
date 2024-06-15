@@ -11,20 +11,11 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func List(prj string, fs filesystem.FileLoader, logger util.Logger, cs bool) ([]string, error) {
-	var files []string
-	if cs {
-		files = ListCSharp(prj, fs, logger)
-	} else {
-		files = ListGo(fs, logger)
-	}
+func List(prj string, fs filesystem.FileLoader, logger util.Logger) ([]string, error) {
+	files := fs.ListExtension("client/src/svg", "svg", nil, true, logger)
 	return lo.Map(files, func(key string, _ int) string {
 		return strings.TrimSuffix(key, util.ExtSVG)
 	}), nil
-}
-
-func ListGo(fs filesystem.FileLoader, logger util.Logger) []string {
-	return fs.ListExtension("client/src/svg", "svg", nil, true, logger)
 }
 
 func ListCSharp(prjKey string, fs filesystem.FileLoader, logger util.Logger) []string {
@@ -50,8 +41,8 @@ func Remove(prj string, fs filesystem.FileLoader, key string, logger util.Logger
 	return fs.Remove(svgPath(prj, key), logger)
 }
 
-func Contents(key string, fs filesystem.FileLoader, logger util.Logger, cs bool) ([]string, map[string]string, error) {
-	files, err := List(key, fs, logger, cs)
+func Contents(key string, fs filesystem.FileLoader, logger util.Logger) ([]string, map[string]string, error) {
+	files, err := List(key, fs, logger)
 	if err != nil {
 		return nil, nil, err
 	}

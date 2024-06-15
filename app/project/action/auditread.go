@@ -49,15 +49,6 @@ func getModuleFiles(pm *PrjAndMods) ([]string, error) {
 			return f.FullPath()
 		}), ret...))
 	}
-	if pm.Prj.IsCSharp() {
-		files, e := pm.ESvc.FilesCSharp(pm.Prj)
-		if e != nil {
-			return nil, err
-		}
-		ret = lo.Uniq(append(lo.Map(files, func(f *file.File, _ int) string {
-			return f.FullPath()
-		}), ret...))
-	}
 	return ret, nil
 }
 

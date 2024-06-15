@@ -13,10 +13,6 @@ func onSVG(ctx context.Context, pm *PrjAndMods) *Result {
 	ret := newResult(TypeSVG, pm.Prj, pm.Cfg, pm.Logger)
 
 	tgt := fmt.Sprintf("%s/app/util/svg.go", pm.Prj.Path)
-	if pm.Prj.IsCSharp() {
-		tgt = fmt.Sprintf("%s/Util/Icons.cs", pm.Prj.Path)
-	}
-
 	if pm.Cfg.GetStringOpt("mode") == refreshMode {
 		ret.AddLog("refreshing app SVG for project [%s]", pm.Prj.Key)
 		err := svg.RefreshAppIcon(ctx, pm.Prj, pm.FS, pm.Logger)

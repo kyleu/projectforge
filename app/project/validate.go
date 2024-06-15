@@ -52,17 +52,12 @@ func validateBasic(p *Project, e validationAddErrFn) {
 		e("no-modules", "no modules enabled")
 	}
 	if !lo.Contains(p.Modules, "core") {
-		if !p.IsCSharp() {
-			e("no-modules", "core module not included")
-		}
+		e("no-modules", "core module not included")
 	}
 }
 
 func validateModuleDeps(modules []string, deps map[string][]string, e validationAddErrFn) {
 	if deps == nil {
-		return
-	}
-	if lo.Contains(modules, "csharp") {
 		return
 	}
 	lo.ForEach(modules, func(m string, _ int) {
@@ -179,10 +174,6 @@ func validateFilesystem(p *Project, e validationAddErrFn, fs filesystem.FileLoad
 		if !fs.Exists(".projectforge/export") {
 			e("missing-export-directory", "the project uses the export module, but doesn't have directory [./projectforge/export]")
 		}
-	}
-
-	if p.IsCSharp() {
-		return
 	}
 
 	if !fs.Exists("app/services.go") {

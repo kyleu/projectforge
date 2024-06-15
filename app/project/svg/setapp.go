@@ -33,7 +33,7 @@ func proc(ctx context.Context, cmd string, path string, logger util.Logger) erro
 }
 
 func RefreshAppIcon(ctx context.Context, prj *project.Project, fs filesystem.FileLoader, logger util.Logger) error {
-	origB, err := fs.ReadFile("client/src/svg/" + prj.Icon + util.ExtSVG)
+	origB, err := fs.ReadFile(svgRoot + prj.Icon + util.ExtSVG)
 	if err != nil {
 		return errors.Wrap(err, "unable to read initial ["+prj.Icon+util.ExtSVG+"]")
 	}

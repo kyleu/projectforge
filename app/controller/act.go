@@ -30,7 +30,7 @@ func Act(key string, w http.ResponseWriter, r *http.Request, f ActFn) {
 func ActSite(key string, w http.ResponseWriter, r *http.Request, f func(as *app.State, ps *cutil.PageState) (string, error)) {
 	as := _currentSiteState
 	wc := cutil.NewWriteCounter(w)
-	ps := cutil.LoadPageState(as, wc, r, key, _currentAppRootLogger)
+	ps := cutil.LoadPageState(as, wc, r, key, _currentSiteRootLogger)
 	ps.Menu = site.Menu(ps.Context, as, ps.Profile, ps.Logger)
 	if err := initSiteRequest(as, ps); err != nil {
 		ps.Logger.Warnf("%+v", err)
