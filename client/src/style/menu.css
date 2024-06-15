@@ -54,6 +54,14 @@
   overflow: hidden;
 }
 
+.menu-container a.item {
+  text-decoration: none;
+}
+
+.menu-container a:hover.item>span{
+  text-decoration:underline;
+}
+
 .menu-container .final {
   color: var(--color-menu-selected-foreground);
   background-color: var(--color-menu-selected-background);
@@ -116,23 +124,23 @@
   padding-left: calc(var(--menu-padding) * 4);
 }
 
-.level-4 .label-item, .level-4 label {
+.level-4 .item, .level-4 label {
   padding-left: calc(var(--menu-padding) * 5);
 }
 
-.level-5 .label-item, .level-5 label {
+.level-5 .item, .level-5 label {
   padding-left: calc(var(--menu-padding) * 6);
 }
 
-.level-6 .label-item, .level-6 label {
+.level-6 .item, .level-6 label {
   padding-left: calc(var(--menu-padding) * 7);
 }
 
-.level-7 .label-item, .level-7 label {
+.level-7 .item, .level-7 label {
   padding-left: calc(var(--menu-padding) * 8);
 }
 
-.level-8 .label-item, .level-8 label {
+.level-8 .item, .level-8 label {
   padding-left: calc(var(--menu-padding) * 8);
 }
 

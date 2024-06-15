@@ -16,7 +16,7 @@
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
   {%= ExecDetail(p.Exec, ps) %}
   <div class="card">
-    <h3>{%= components.SVGIcon("file", ps) %}Output</h3>
+    <h3>{%= components.SVGIcon("file", ps) %} Output</h3>
     <div class="mt">{%= components.Terminal("console-list", p.Exec.Buffer.String()) %}</div>
   </div>
   {%= ExecScript("console-list", p.Exec.WebPath() + "/connect", ps) %}
@@ -29,7 +29,7 @@
       <a href="{%s ex.WebPath() %}/kill"><button>Kill</button></a>
     </div>
     {%- endif -%}
-    <h3>{%= components.SVGIcon("desktop", ps) %}Process [{%s ex.String() %}]</h3>
+    <h3>{%= components.SVGIcon("desktop", ps) %} Process [{%s ex.String() %}]</h3>
     <div class="overflow full-width">
       <table>
         <tbody>

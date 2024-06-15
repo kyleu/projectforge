@@ -45,7 +45,7 @@ func (p *Add) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pag
 //line views/vtheme/Add.html:19
 	components.StreamSVGIcon(qw422016, `eye`, ps)
 //line views/vtheme/Add.html:19
-	qw422016.N().S(`Choose Theme</h3>
+	qw422016.N().S(` Choose Theme</h3>
     <form action="/theme" method="post">
       <input type="hidden" name="palette" value="`)
 //line views/vtheme/Add.html:21

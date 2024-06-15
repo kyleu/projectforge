@@ -15,7 +15,7 @@
 
 {% func (p *Download) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%= components.SVGIcon("download", ps) %}Download {%s util.AppName %} {%s as.BuildInfo.Version %}</h3>
+    <h3>{%= components.SVGIcon("download", ps) %} Download {%s util.AppName %} {%s as.BuildInfo.Version %}</h3>
   </div>
   {%= downloadShowLinks("server", "database", "Server Version", "A command line interface that can launch a web server or run commands", p.Links, as.BuildInfo.Version, ps) %}
   {%= downloadShowLinks("desktop", "desktop", "Desktop Version", "Standalone application using your platform's native web viewer", p.Links, as.BuildInfo.Version, ps) %}
@@ -26,7 +26,7 @@
   {%- code modeLinks := links.GetByModes(mode) -%}
   {%- if len(modeLinks) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGIcon(icon, ps) %}{%s title %}</h3>
+    <h3>{%= components.SVGIcon(icon, ps) %} {%s title %}</h3>
     <em>{%s desc %}</em>
     <div class="overflow full-width">
       <table class="mt">
@@ -40,7 +40,7 @@
           {%- endif -%}
           {%- code currentOS = link.OS -%}
           <tr>
-            <td style="width: 25%;">{%= components.SVGIcon(link.OSIcon(), ps) %}{%s link.OSString() %}</td>
+            <td style="width: 25%;">{%= components.SVGIcon(link.OSIcon(), ps) %} {%s link.OSString() %}</td>
             <td>
           {%- endif -%}
               {%- if link.OS == download.OSLinux && (link.Arch == download.ArchPPC64 || link.Arch == download.ArchMIPS64Hard || link.Arch == download.ArchMIPSHard) -%}

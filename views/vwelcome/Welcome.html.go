@@ -138,7 +138,7 @@ func (p *Welcome) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 //line views/vwelcome/Welcome.html:55
 	components.StreamSVGIcon(qw422016, `archive`, ps)
 //line views/vwelcome/Welcome.html:55
-	qw422016.N().S(`Modules</h3>
+	qw422016.N().S(` Modules</h3>
       <div class="overflow full-width">
         <table class="mt min-200">
           <tbody>

@@ -66,17 +66,9 @@ func (p *EnumForm) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vexport/EnumForm.html:31
 	components.StreamSVGIcon(qw422016, e.IconSafe(), ps)
 //line views/vexport/EnumForm.html:31
-	if e.Name == "" {
+	qw422016.N().S(` `)
 //line views/vexport/EnumForm.html:31
-		qw422016.N().S(`New Enum`)
-//line views/vexport/EnumForm.html:31
-	} else {
-//line views/vexport/EnumForm.html:31
-		qw422016.N().S(`Edit `)
-//line views/vexport/EnumForm.html:31
-		qw422016.E().S(e.Name)
-//line views/vexport/EnumForm.html:31
-	}
+	qw422016.E().S(util.Choose(e.Name == "", "New Enum", "Edit "+e.Name))
 //line views/vexport/EnumForm.html:31
 	qw422016.N().S(`</h3>
       <div class="overflow full-width">

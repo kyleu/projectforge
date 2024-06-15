@@ -65,7 +65,7 @@ func exportViewListBody(m *model.Model, models model.Models) *golang.Block {
 	ret.W("  <div class=\"card\">")
 	const twoInd = "    "
 	links := m.Links.WithTags(false, "list")
-	ln := fmt.Sprintf(`<a href="/%s/_new"><button>{%%%%= components.SVGButton("plus", ps) %%%%}New</button>%s`, m.Route(), helper.TextEndAnchor)
+	ln := fmt.Sprintf(`<a href="/%s/_new"><button>{%%%%= components.SVGButton("plus", ps) %%%%} New</button>%s`, m.Route(), helper.TextEndAnchor)
 
 	if m.HasSearches() {
 		ret.W(`    <div class="right">{%%%%= edit.SearchForm("", "q", "Search %s", p.SearchQuery, ps) %%%%}</div>`, m.TitlePlural())
@@ -79,17 +79,17 @@ func exportViewListBody(m *model.Model, models model.Models) *golang.Block {
 				icon = fmt.Sprintf("{%%%%= components.SVGButton(%q, ps) %%%%}", link.Icon)
 			}
 			if link.Dangerous {
-				msg := "      <a class=%q data-message=%q href=%q><button type=\"button\">%s%s</button></a>"
+				msg := "      <a class=%q data-message=%q href=%q><button type=\"button\">%s %s</button></a>"
 				ret.W(msg, "link-confirm", "Are you sure?", link.URL, icon, link.Title)
 			} else {
 				ret.W("      <a href=%q><button type=\"button\">%s%s</button></a>", link.URL, icon, link.Title)
 			}
 		}
 	}
-	ret.W(`      {%%%%- if len(p.Models) > 0 -%%%%}<a href="/%s/_random"><button>{%%%%= components.SVGButton("gift", ps) %%%%}Random</button></a>{%%%%- endif -%%%%}`, m.Route())
+	ret.W(`      {%%%%- if len(p.Models) > 0 -%%%%}<a href="/%s/_random"><button>{%%%%= components.SVGButton("gift", ps) %%%%} Random</button></a>{%%%%- endif -%%%%}`, m.Route())
 	ret.W(`      ` + ln)
 	ret.W(`    </div>`)
-	ret.W("    %s{%%%%= components.SVGIcon(`%s`, ps) %%%%}{%%%%s ps.Title %%%%}%s", helper.TextH3Start, m.Icon, helper.TextH3End)
+	ret.W("    %s{%%%%= components.SVGIcon(`%s`, ps) %%%%} {%%%%s ps.Title %%%%}%s", helper.TextH3Start, m.Icon, helper.TextH3End)
 
 	if m.HasTag("count") {
 		ret.W("    {%%- if p.Count > 0 -%%}")

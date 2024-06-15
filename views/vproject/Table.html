@@ -11,8 +11,8 @@
 
 {% func Table(prjs project.Projects, tags []string, full bool, ex exec.Execs, as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <div class="right"><a href="/p/new"><button>{%= components.SVGButton("file", ps) %}New</button></a></div>
-    <h3><a href="/p">{%= components.SVGIcon(`list`, ps) %}{%s util.StringPlural(len(prjs), "Available Project") %}</a></h3>
+    <div class="right"><a href="/p/new"><button>{%= components.SVGButton("file", ps) %} New</button></a></div>
+    <h3><a href="/p">{%= components.SVGIcon(`list`, ps) %} {%s util.StringPlural(len(prjs), "Available Project") %}</a></h3>
     <div class="overflow full-width">
       <table class="mt min-200">
         {%- if full -%}

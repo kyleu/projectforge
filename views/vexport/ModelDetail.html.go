@@ -62,11 +62,13 @@ func (p *ModelDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *c
 //line views/vexport/ModelDetail.html:25
 	components.StreamSVGButton(qw422016, "edit", ps)
 //line views/vexport/ModelDetail.html:25
-	qw422016.N().S(`Edit</button></a>
+	qw422016.N().S(` Edit</button></a>
     </div>
     <h3>`)
 //line views/vexport/ModelDetail.html:27
 	components.StreamSVGIcon(qw422016, m.IconSafe(), ps)
+//line views/vexport/ModelDetail.html:27
+	qw422016.N().S(` `)
 //line views/vexport/ModelDetail.html:27
 	qw422016.E().S(m.Name)
 //line views/vexport/ModelDetail.html:27

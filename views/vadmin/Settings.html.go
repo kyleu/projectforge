@@ -59,6 +59,8 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vadmin/Settings.html:19
 	components.StreamSVGIcon(qw422016, `cog`, ps)
 //line views/vadmin/Settings.html:19
+	qw422016.N().S(` `)
+//line views/vadmin/Settings.html:19
 	qw422016.E().S(util.AppName)
 //line views/vadmin/Settings.html:19
 	qw422016.N().S(` `)
@@ -102,7 +104,7 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vadmin/Settings.html:30
 	components.StreamSVGIcon(qw422016, `archive`, ps)
 //line views/vadmin/Settings.html:30
-	qw422016.N().S(`Admin Functions</h3>
+	qw422016.N().S(` Admin Functions</h3>
     `)
 //line views/vadmin/Settings.html:31
 	streamsettingsLink(qw422016, "/admin/server", "archive", "App Information", "All sorts of info about the server and runtime", ps)
@@ -135,7 +137,7 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vadmin/Settings.html:39
 	components.StreamSVGIcon(qw422016, `bolt`, ps)
 //line views/vadmin/Settings.html:39
-	qw422016.N().S(`HTTP Methods</h3>
+	qw422016.N().S(` HTTP Methods</h3>
     `)
 //line views/vadmin/Settings.html:40
 	streamsettingsLink(qw422016, "/admin/sitemap", "bolt", "Sitemap", "Displays the HTTP actions that are available, with documentation", ps)
@@ -168,7 +170,7 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vadmin/Settings.html:48
 	components.StreamSVGIcon(qw422016, `cog`, ps)
 //line views/vadmin/Settings.html:48
-	qw422016.N().S(`App Profiling</h3>
+	qw422016.N().S(` App Profiling</h3>
     `)
 //line views/vadmin/Settings.html:49
 	streamsettingsLink(qw422016, "/admin/memusage", "cog", "Memory Usage", "Detailed memory usage statistics for this application", ps)

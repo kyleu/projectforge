@@ -54,7 +54,7 @@ func (p *Modules) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 //line views/vadmin/Modules.html:20
 	components.StreamSVGIcon(qw422016, `archive`, ps)
 //line views/vadmin/Modules.html:20
-	qw422016.N().S(`Go Modules</h3>
+	qw422016.N().S(` Go Modules</h3>
     `)
 //line views/vadmin/Modules.html:21
 	streammoduleTable(qw422016, p.Modules)

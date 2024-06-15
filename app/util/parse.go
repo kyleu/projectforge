@@ -11,6 +11,11 @@ import (
 	"github.com/pkg/errors"
 )
 
+func DefaultValue[T any]() T {
+	var ret T
+	return ret
+}
+
 func ParseBool(r any, path string, allowEmpty bool) (bool, error) {
 	switch t := r.(type) {
 	case bool:

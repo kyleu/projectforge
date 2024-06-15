@@ -49,7 +49,7 @@ func (p *Request) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 //line views/vadmin/Request.html:23
 	components.StreamSVGIcon(qw422016, `link`, ps)
 //line views/vadmin/Request.html:23
-	qw422016.N().S(`Request Debug</h3>
+	qw422016.N().S(` Request Debug</h3>
     <div class="overflow full-width">
       <table>
         <thead>
@@ -147,7 +147,7 @@ func (p *Request) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 //line views/vadmin/Request.html:72
 		components.StreamSVGIcon(qw422016, `code`, ps)
 //line views/vadmin/Request.html:72
-		qw422016.N().S(`Headers</h3>
+		qw422016.N().S(` Headers</h3>
     <div class="overflow full-width">
       <table>
         <thead>

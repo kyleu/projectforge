@@ -9,108 +9,113 @@ import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/module"
+	"projectforge.dev/projectforge/views/components"
 )
 
-//line views/vproject/DetailModules.html:7
+//line views/vproject/DetailModules.html:8
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vproject/DetailModules.html:7
+//line views/vproject/DetailModules.html:8
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vproject/DetailModules.html:7
+//line views/vproject/DetailModules.html:8
 func StreamDetailModules(qw422016 *qt422016.Writer, modKeys []string, mods module.Modules, as *app.State, ps *cutil.PageState) {
-//line views/vproject/DetailModules.html:7
+//line views/vproject/DetailModules.html:8
 	qw422016.N().S(`
   <div class="overflow full-width">
     <table class="min-200 full-width">
       <tbody>
 `)
-//line views/vproject/DetailModules.html:11
-	for _, mKey := range modKeys {
 //line views/vproject/DetailModules.html:12
+	for _, mKey := range modKeys {
+//line views/vproject/DetailModules.html:13
 		mod := mods.Get(mKey)
 
-//line views/vproject/DetailModules.html:13
+//line views/vproject/DetailModules.html:14
 		if mod == nil {
-//line views/vproject/DetailModules.html:13
+//line views/vproject/DetailModules.html:14
 			qw422016.N().S(`        <tr>
           <td class="shrink"><a href="/m/`)
-//line views/vproject/DetailModules.html:15
+//line views/vproject/DetailModules.html:16
 			qw422016.E().S(mKey)
-//line views/vproject/DetailModules.html:15
+//line views/vproject/DetailModules.html:16
 			qw422016.N().S(`">`)
-//line views/vproject/DetailModules.html:15
+//line views/vproject/DetailModules.html:16
 			qw422016.E().S(mKey)
-//line views/vproject/DetailModules.html:15
+//line views/vproject/DetailModules.html:16
 			qw422016.N().S(`</a></td>
           <td><div class="error">Error: no module named [`)
-//line views/vproject/DetailModules.html:16
+//line views/vproject/DetailModules.html:17
 			qw422016.E().S(mKey)
-//line views/vproject/DetailModules.html:16
+//line views/vproject/DetailModules.html:17
 			qw422016.N().S(`]</div></td>
         </tr>
 `)
-//line views/vproject/DetailModules.html:18
+//line views/vproject/DetailModules.html:19
 		} else {
-//line views/vproject/DetailModules.html:18
+//line views/vproject/DetailModules.html:19
 			qw422016.N().S(`        <tr>
           <td class="shrink"><a href="/m/`)
-//line views/vproject/DetailModules.html:20
+//line views/vproject/DetailModules.html:21
 			qw422016.E().S(mod.Key)
-//line views/vproject/DetailModules.html:20
+//line views/vproject/DetailModules.html:21
 			qw422016.N().S(`">`)
-//line views/vproject/DetailModules.html:20
+//line views/vproject/DetailModules.html:21
+			components.StreamSVGInline(qw422016, mod.Icon, 16, ps)
+//line views/vproject/DetailModules.html:21
+			qw422016.N().S(` `)
+//line views/vproject/DetailModules.html:21
 			qw422016.E().S(mod.Title())
-//line views/vproject/DetailModules.html:20
+//line views/vproject/DetailModules.html:21
 			qw422016.N().S(`</a></td>
           <td><em>`)
-//line views/vproject/DetailModules.html:21
+//line views/vproject/DetailModules.html:22
 			qw422016.E().S(mod.Description)
-//line views/vproject/DetailModules.html:21
+//line views/vproject/DetailModules.html:22
 			qw422016.N().S(`</em></td>
         </tr>
 `)
-//line views/vproject/DetailModules.html:23
+//line views/vproject/DetailModules.html:24
 		}
-//line views/vproject/DetailModules.html:24
+//line views/vproject/DetailModules.html:25
 	}
-//line views/vproject/DetailModules.html:24
+//line views/vproject/DetailModules.html:25
 	qw422016.N().S(`      </tbody>
     </table>
   </div>
 `)
-//line views/vproject/DetailModules.html:28
+//line views/vproject/DetailModules.html:29
 }
 
-//line views/vproject/DetailModules.html:28
+//line views/vproject/DetailModules.html:29
 func WriteDetailModules(qq422016 qtio422016.Writer, modKeys []string, mods module.Modules, as *app.State, ps *cutil.PageState) {
-//line views/vproject/DetailModules.html:28
+//line views/vproject/DetailModules.html:29
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/DetailModules.html:28
+//line views/vproject/DetailModules.html:29
 	StreamDetailModules(qw422016, modKeys, mods, as, ps)
-//line views/vproject/DetailModules.html:28
+//line views/vproject/DetailModules.html:29
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/DetailModules.html:28
+//line views/vproject/DetailModules.html:29
 }
 
-//line views/vproject/DetailModules.html:28
+//line views/vproject/DetailModules.html:29
 func DetailModules(modKeys []string, mods module.Modules, as *app.State, ps *cutil.PageState) string {
-//line views/vproject/DetailModules.html:28
+//line views/vproject/DetailModules.html:29
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/DetailModules.html:28
+//line views/vproject/DetailModules.html:29
 	WriteDetailModules(qb422016, modKeys, mods, as, ps)
-//line views/vproject/DetailModules.html:28
+//line views/vproject/DetailModules.html:29
 	qs422016 := string(qb422016.B)
-//line views/vproject/DetailModules.html:28
+//line views/vproject/DetailModules.html:29
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/DetailModules.html:28
+//line views/vproject/DetailModules.html:29
 	return qs422016
-//line views/vproject/DetailModules.html:28
+//line views/vproject/DetailModules.html:29
 }

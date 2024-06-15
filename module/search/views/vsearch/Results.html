@@ -4,6 +4,7 @@
   "{{{ .Package }}}/app/lib/search"
   "{{{ .Package }}}/app/lib/search/result"
   "{{{ .Package }}}/app/util"
+  "{{{ .Package }}}/views/components"
   "{{{ .Package }}}/views/layout"
 ) %}
 
@@ -16,7 +17,7 @@
 
 {% func (p *Results) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{% if p.Params.Q == "" %}Search{% else %}[{%s p.Params.Q %}] search results{% endif %}</h3>
+    <h3 title="Search results for [{%s p.Params.Q %}]">{%= components.SVGIcon("search", ps) %} Search Results</h3>
     <form class="mt expanded" action="{%s ps.SearchPath %}">
       <input name="q" value="{%s p.Params.Q %}" />
       <div class="mt"><button type="submit">Search Again</button></div>
@@ -32,7 +33,7 @@
   {%- endfor -%}
   {% if len(p.Errors) > 0 %}
   <div class="card">
-    <h3>{%s util.StringPlural(len(p.Errors), "Error") %}</h3>
+    <h3>{%= components.SVGIcon("error", ps) %} {%s util.StringPlural(len(p.Errors), "Error") %}</h3>
     <ul class="mt">
       {%- for _, e := range p.Errors -%}
       <li>{%s e.Error() %}</li>

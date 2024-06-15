@@ -52,12 +52,12 @@ func (p *Overview) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vexport/Overview.html:23
 	components.StreamSVGButton(qw422016, "edit", ps)
 //line views/vexport/Overview.html:23
-	qw422016.N().S(`Edit</button></a></div>
+	qw422016.N().S(` Edit</button></a></div>
     <h3>`)
 //line views/vexport/Overview.html:24
 	components.StreamSVGIcon(qw422016, `print`, ps)
 //line views/vexport/Overview.html:24
-	qw422016.N().S(`Export Configuration</h3>
+	qw422016.N().S(` Export Configuration</h3>
     `)
 //line views/vexport/Overview.html:25
 	components.StreamJSON(qw422016, p.Args.Config)
@@ -73,10 +73,12 @@ func (p *Overview) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vexport/Overview.html:28
 	components.StreamSVGButton(qw422016, "edit", ps)
 //line views/vexport/Overview.html:28
-	qw422016.N().S(`Edit</button></a></div>
+	qw422016.N().S(` Edit</button></a></div>
     <h3>`)
 //line views/vexport/Overview.html:29
 	components.StreamSVGIcon(qw422016, `users`, ps)
+//line views/vexport/Overview.html:29
+	qw422016.N().S(` `)
 //line views/vexport/Overview.html:29
 	qw422016.E().S(util.StringPlural(len(p.Args.Groups), "Group"))
 //line views/vexport/Overview.html:29
@@ -112,11 +114,13 @@ func (p *Overview) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vexport/Overview.html:40
 	components.StreamSVGButton(qw422016, "file", ps)
 //line views/vexport/Overview.html:40
-	qw422016.N().S(`New</button></a>
+	qw422016.N().S(` New</button></a>
     </div>
     <h3>`)
 //line views/vexport/Overview.html:42
 	components.StreamSVGIcon(qw422016, `hammer`, ps)
+//line views/vexport/Overview.html:42
+	qw422016.N().S(` `)
 //line views/vexport/Overview.html:42
 	qw422016.E().S(util.StringPlural(len(p.Args.Enums), "Enum"))
 //line views/vexport/Overview.html:42
@@ -150,7 +154,7 @@ func (p *Overview) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vexport/Overview.html:51
 	components.StreamSVGButton(qw422016, "dna", ps)
 //line views/vexport/Overview.html:51
-	qw422016.N().S(`Derive</button></a>
+	qw422016.N().S(` Derive</button></a>
       <a href="/p/`)
 //line views/vexport/Overview.html:52
 	qw422016.E().S(p.Project.Key)
@@ -159,11 +163,13 @@ func (p *Overview) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vexport/Overview.html:52
 	components.StreamSVGButton(qw422016, "file", ps)
 //line views/vexport/Overview.html:52
-	qw422016.N().S(`New</button></a>
+	qw422016.N().S(` New</button></a>
     </div>
     <h3>`)
 //line views/vexport/Overview.html:54
 	components.StreamSVGIcon(qw422016, `list`, ps)
+//line views/vexport/Overview.html:54
+	qw422016.N().S(` `)
 //line views/vexport/Overview.html:54
 	qw422016.E().S(util.StringPlural(len(p.Args.Models), "Model"))
 //line views/vexport/Overview.html:54
@@ -314,7 +320,7 @@ func StreamEnumList(qw422016 *qt422016.Writer, enums enum.Enums, urlPrefix strin
 //line views/vexport/Overview.html:96
 		qw422016.N().S(`">`)
 //line views/vexport/Overview.html:96
-		components.StreamSVGButton(qw422016, e.IconSafe(), ps)
+		components.StreamSVGIcon(qw422016, e.IconSafe(), ps)
 //line views/vexport/Overview.html:96
 		qw422016.N().S(`</a> <a href="`)
 //line views/vexport/Overview.html:96
@@ -396,7 +402,7 @@ func StreamModelList(qw422016 *qt422016.Writer, models model.Models, urlPrefix s
 //line views/vexport/Overview.html:121
 		qw422016.N().S(`">`)
 //line views/vexport/Overview.html:121
-		components.StreamSVGButton(qw422016, m.IconSafe(), ps)
+		components.StreamSVGIcon(qw422016, m.IconSafe(), ps)
 //line views/vexport/Overview.html:121
 		qw422016.N().S(`</a> <a href="`)
 //line views/vexport/Overview.html:121

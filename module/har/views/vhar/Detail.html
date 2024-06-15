@@ -17,9 +17,9 @@
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <div class="right">
-      <a href="{%s p.Har.WebPath() %}/delete" class="link-confirm" data-message="Are you sure?"><button>{%= components.SVGButton("times", ps) %}Delete</button></a>
+      <a href="{%s p.Har.WebPath() %}/delete" class="link-confirm" data-message="Are you sure?"><button>{%= components.SVGButton("times", ps) %} Delete</button></a>
     </div>
-    <h3>{%= components.SVGIcon(`book`, ps) %}{%s p.Har.Key %}</h3>
+    <h3>{%= components.SVGIcon(`book`, ps) %} {%s p.Har.Key %}</h3>
     <div class="mt">
       {%s util.MicrosToMillis(p.Har.Entries.TotalDuration()) %} elapsed, downloaded {%s util.ByteSizeSI(int64(p.Har.Entries.TotalResponseBodySize())) %}
     </div>

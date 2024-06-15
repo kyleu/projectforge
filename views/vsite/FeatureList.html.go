@@ -42,6 +42,8 @@ func (p *FeatureList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *c
 //line views/vsite/FeatureList.html:17
 	components.StreamSVGIcon(qw422016, `app`, ps)
 //line views/vsite/FeatureList.html:17
+	qw422016.N().S(` `)
+//line views/vsite/FeatureList.html:17
 	qw422016.E().S(util.AppName)
 //line views/vsite/FeatureList.html:17
 	qw422016.N().S(` Features</h3>

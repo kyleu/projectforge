@@ -13,23 +13,24 @@ import (
 	"projectforge.dev/projectforge/app/lib/search"
 	"projectforge.dev/projectforge/app/lib/search/result"
 	"projectforge.dev/projectforge/app/util"
+	"projectforge.dev/projectforge/views/components"
 	"projectforge.dev/projectforge/views/layout"
 )
 
-//line views/vsearch/Results.html:11
+//line views/vsearch/Results.html:12
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vsearch/Results.html:11
+//line views/vsearch/Results.html:12
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vsearch/Results.html:11
+//line views/vsearch/Results.html:12
 type Results struct {
 	layout.Basic
 	Params  *search.Params
@@ -37,121 +38,117 @@ type Results struct {
 	Errors  []error
 }
 
-//line views/vsearch/Results.html:18
+//line views/vsearch/Results.html:19
 func (p *Results) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsearch/Results.html:18
+//line views/vsearch/Results.html:19
 	qw422016.N().S(`
   <div class="card">
-    <h3>`)
-//line views/vsearch/Results.html:20
-	if p.Params.Q == "" {
-//line views/vsearch/Results.html:20
-		qw422016.N().S(`Search`)
-//line views/vsearch/Results.html:20
-	} else {
-//line views/vsearch/Results.html:20
-		qw422016.N().S(`[`)
-//line views/vsearch/Results.html:20
-		qw422016.E().S(p.Params.Q)
-//line views/vsearch/Results.html:20
-		qw422016.N().S(`] search results`)
-//line views/vsearch/Results.html:20
-	}
-//line views/vsearch/Results.html:20
-	qw422016.N().S(`</h3>
+    <h3 title="Search results for [`)
+//line views/vsearch/Results.html:21
+	qw422016.E().S(p.Params.Q)
+//line views/vsearch/Results.html:21
+	qw422016.N().S(`]">`)
+//line views/vsearch/Results.html:21
+	components.StreamSVGIcon(qw422016, "search", ps)
+//line views/vsearch/Results.html:21
+	qw422016.N().S(` Search Results</h3>
     <form class="mt expanded" action="`)
-//line views/vsearch/Results.html:21
+//line views/vsearch/Results.html:22
 	qw422016.E().S(ps.SearchPath)
-//line views/vsearch/Results.html:21
+//line views/vsearch/Results.html:22
 	qw422016.N().S(`">
       <input name="q" value="`)
-//line views/vsearch/Results.html:22
+//line views/vsearch/Results.html:23
 	qw422016.E().S(p.Params.Q)
-//line views/vsearch/Results.html:22
+//line views/vsearch/Results.html:23
 	qw422016.N().S(`" />
       <div class="mt"><button type="submit">Search Again</button></div>
     </form>
   </div>
 `)
-//line views/vsearch/Results.html:26
+//line views/vsearch/Results.html:27
 	if p.Params.Q != "" && len(p.Results) == 0 {
-//line views/vsearch/Results.html:26
+//line views/vsearch/Results.html:27
 		qw422016.N().S(`  <div class="card">
     <h3>No results</h3>
   </div>
 `)
-//line views/vsearch/Results.html:30
+//line views/vsearch/Results.html:31
 	}
-//line views/vsearch/Results.html:31
+//line views/vsearch/Results.html:32
 	for _, res := range p.Results {
-//line views/vsearch/Results.html:31
+//line views/vsearch/Results.html:32
 		qw422016.N().S(`  `)
-//line views/vsearch/Results.html:32
+//line views/vsearch/Results.html:33
 		StreamResult(qw422016, res, p.Params, as, ps)
-//line views/vsearch/Results.html:32
+//line views/vsearch/Results.html:33
 		qw422016.N().S(`
 `)
-//line views/vsearch/Results.html:33
+//line views/vsearch/Results.html:34
 	}
-//line views/vsearch/Results.html:33
+//line views/vsearch/Results.html:34
 	qw422016.N().S(`  `)
-//line views/vsearch/Results.html:34
+//line views/vsearch/Results.html:35
 	if len(p.Errors) > 0 {
-//line views/vsearch/Results.html:34
+//line views/vsearch/Results.html:35
 		qw422016.N().S(`
   <div class="card">
     <h3>`)
-//line views/vsearch/Results.html:36
+//line views/vsearch/Results.html:37
+		components.StreamSVGIcon(qw422016, "error", ps)
+//line views/vsearch/Results.html:37
+		qw422016.N().S(` `)
+//line views/vsearch/Results.html:37
 		qw422016.E().S(util.StringPlural(len(p.Errors), "Error"))
-//line views/vsearch/Results.html:36
+//line views/vsearch/Results.html:37
 		qw422016.N().S(`</h3>
     <ul class="mt">
 `)
-//line views/vsearch/Results.html:38
+//line views/vsearch/Results.html:39
 		for _, e := range p.Errors {
-//line views/vsearch/Results.html:38
+//line views/vsearch/Results.html:39
 			qw422016.N().S(`      <li>`)
-//line views/vsearch/Results.html:39
+//line views/vsearch/Results.html:40
 			qw422016.E().S(e.Error())
-//line views/vsearch/Results.html:39
+//line views/vsearch/Results.html:40
 			qw422016.N().S(`</li>
 `)
-//line views/vsearch/Results.html:40
+//line views/vsearch/Results.html:41
 		}
-//line views/vsearch/Results.html:40
+//line views/vsearch/Results.html:41
 		qw422016.N().S(`    </ul>
   </div>
   `)
-//line views/vsearch/Results.html:43
+//line views/vsearch/Results.html:44
 	}
-//line views/vsearch/Results.html:43
+//line views/vsearch/Results.html:44
 	qw422016.N().S(`
 `)
-//line views/vsearch/Results.html:44
+//line views/vsearch/Results.html:45
 }
 
-//line views/vsearch/Results.html:44
+//line views/vsearch/Results.html:45
 func (p *Results) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsearch/Results.html:44
+//line views/vsearch/Results.html:45
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsearch/Results.html:44
+//line views/vsearch/Results.html:45
 	p.StreamBody(qw422016, as, ps)
-//line views/vsearch/Results.html:44
+//line views/vsearch/Results.html:45
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsearch/Results.html:44
+//line views/vsearch/Results.html:45
 }
 
-//line views/vsearch/Results.html:44
+//line views/vsearch/Results.html:45
 func (p *Results) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsearch/Results.html:44
+//line views/vsearch/Results.html:45
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsearch/Results.html:44
+//line views/vsearch/Results.html:45
 	p.WriteBody(qb422016, as, ps)
-//line views/vsearch/Results.html:44
+//line views/vsearch/Results.html:45
 	qs422016 := string(qb422016.B)
-//line views/vsearch/Results.html:44
+//line views/vsearch/Results.html:45
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsearch/Results.html:44
+//line views/vsearch/Results.html:45
 	return qs422016
-//line views/vsearch/Results.html:44
+//line views/vsearch/Results.html:45
 }

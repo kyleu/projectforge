@@ -18,7 +18,7 @@
     {%- if util.AppSource != "" -%}
     <div class="right"><a target="_blank" rel="noopener noreferrer" href="{%s util.AppSource %}"><button>GitHub</button></a></div>
     {%- endif -%}
-    <h3 title="github:{%s as.BuildInfo.Commit %}">{%= components.SVGIcon(`cog`, ps) %}{%s util.AppName %} {%s as.BuildInfo.String() %}</h3>
+    <h3 title="github:{%s as.BuildInfo.Commit %}">{%= components.SVGIcon(`cog`, ps) %} {%s util.AppName %} {%s as.BuildInfo.String() %}</h3>
     {%- if util.AppLegal != "" -%}
     <div class="mt">{%s= util.AppLegal %}</div>
     {%- endif -%}
@@ -31,12 +31,12 @@
   <div class="card">
     <h3>Audits</h3>
     <ul class="mt">
-      <li><a href="/admin/audit">{%= components.SVGIcon(`cog`, ps) %}View audit logs</a></li>
+      <li><a href="/admin/audit">{%= components.SVGIcon(`cog`, ps) %} View audit logs</a></li>
     </ul>
   </div>{{{ end }}}
 
   <div class="card">
-    <h3>{%= components.SVGIcon(`archive`, ps) %}Admin Functions</h3>
+    <h3>{%= components.SVGIcon(`archive`, ps) %} Admin Functions</h3>
     {%= settingsLink("/admin/server", "archive", "App Information", "All sorts of info about the server and runtime", ps) %}
     {%= settingsLink("/admin/modules", "archive", "Go Modules", "The Go modules used by " + util.AppName, ps) %}{{{ if .HasModule "queue" }}}
     {%= settingsLink("/admin/queue", "archive", "Queue Management", "Manages the queue consumers and producers", ps) %}{{{ end }}}
@@ -48,7 +48,7 @@
     <div class="clear"></div>
   </div>
   <div class="card">
-    <h3>{%= components.SVGIcon(`bolt`, ps) %}HTTP Methods</h3>
+    <h3>{%= components.SVGIcon(`bolt`, ps) %} HTTP Methods</h3>
     {%= settingsLink("/admin/sitemap", "bolt", "Sitemap", "Displays the HTTP actions that are available, with documentation", ps) %}
     {%= settingsLink("/admin/routes", "bolt", "HTTP routes", "Enumerates all registered HTTP routes, by method", ps) %}
     {%= settingsLink("/admin/session", "bolt", "User Session", "View the user session, including all cookies and settings", ps) %}
@@ -58,7 +58,7 @@
     <div class="clear"></div>
   </div>
   <div class="card">
-    <h3>{%= components.SVGIcon(`cog`, ps) %}App Profiling</h3>{{{ if .HasModule "system" }}}
+    <h3>{%= components.SVGIcon(`cog`, ps) %} App Profiling</h3>{{{ if .HasModule "system" }}}
     {%= settingsLink("/admin/system", "desktop", "System Status", "Tons of info about the computer running this application", ps) %}{{{ end }}}
     {%= settingsLink("/admin/memusage", "cog", "Memory Usage", "Detailed memory usage statistics for this application", ps) %}
     {%= settingsLink("/admin/gc", "cog", "Collect Garbage", "Runs the Go garbage collector", ps) %}{{{ if .DangerousOK }}}
@@ -68,7 +68,7 @@
     <div class="clear"></div>
   </div>{{{ if .HasModules "databaseui" "migration" }}}
   <div class="card">
-    <h3>{%= components.SVGIcon(`database`, ps) %}Database Management</h3>{{{ if .HasModule "databaseui" }}}
+    <h3>{%= components.SVGIcon(`database`, ps) %} Database Management</h3>{{{ if .HasModule "databaseui" }}}
     {%= settingsLink("/admin/database", "database", "Database Management", "Tools for exploring and manipulating your database", ps) %}{{{ end }}}{{{ if .HasModule "migration" }}}
     {%= settingsLink("/admin/migrations", "archive", "Migrations", "Shows the full content of all database SQL migrations", ps) %}{{{ end }}}
   </div>{{{ end }}}{{{ if .HasAccount }}}

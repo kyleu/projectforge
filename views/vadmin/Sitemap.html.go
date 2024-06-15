@@ -45,7 +45,7 @@ func (p *Sitemap) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 //line views/vadmin/Sitemap.html:19
 	components.StreamSVGIcon(qw422016, `star`, ps)
 //line views/vadmin/Sitemap.html:19
-	qw422016.N().S(`Sitemap</h3>
+	qw422016.N().S(` Sitemap</h3>
     <div class="mt">
       `)
 //line views/vadmin/Sitemap.html:21
@@ -163,6 +163,8 @@ func streamsitemapItemDetail(qw422016 *qt422016.Writer, i *menu.Item, path []str
 	if i.Icon != "" {
 //line views/vadmin/Sitemap.html:49
 		components.StreamSVGRef(qw422016, i.Icon, 16, 16, "icon", ps)
+//line views/vadmin/Sitemap.html:49
+		qw422016.N().S(` `)
 //line views/vadmin/Sitemap.html:50
 	}
 //line views/vadmin/Sitemap.html:51

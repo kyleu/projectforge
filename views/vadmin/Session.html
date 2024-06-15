@@ -15,12 +15,12 @@
 
 {% func (p *Session) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%= components.SVGIcon(`desktop`, ps) %}Session</h3>
+    <h3>{%= components.SVGIcon(`desktop`, ps) %} Session</h3>
     <em>{%d len(ps.Session) %} values</em>
   </div>
   {%- if len(ps.Session) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGIcon(`list`, ps) %}Values</h3>
+    <h3>{%= components.SVGIcon(`list`, ps) %} Values</h3>
     <div class="overflow full-width">
       <table class="mt expanded">
         <tbody>
@@ -41,7 +41,7 @@
   </div>
   {%- endif -%}
   <div class="card">
-    <h3>{%= components.SVGIcon(`profile`, ps) %}Profile</h3>
+    <h3>{%= components.SVGIcon(`profile`, ps) %} Profile</h3>
     <div class="mt">{%= components.JSON(ps.Profile) %}</div>
   </div>
 {% endfunc %}

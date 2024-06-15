@@ -14,7 +14,7 @@
 
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%= components.SVGIcon(`eye`, ps) %}Add Theme</h3>
+    <h3>{%= components.SVGIcon(`eye`, ps) %} Add Theme</h3>
     <div class="mt">
       <a href="/theme/new" title="add new theme"><button>New Theme</button></a>
       <a href="/theme/palette/crayola" title="add new theme"><button>Choose from Crayola colors</button></a>
@@ -30,7 +30,7 @@
     </div>
   </div>
   <div class="card">
-    <h3>{%= components.SVGIcon(`play`, ps) %}Current Themes</h3>
+    <h3>{%= components.SVGIcon(`play`, ps) %} Current Themes</h3>
     <div class="overflow full-width">
       <div class="theme-container mt">
         {%- for _, t := range p.Themes -%}

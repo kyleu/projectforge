@@ -18,7 +18,7 @@ func edit(m *model.Model, p *project.Project, args *model.Args, addHeader bool, 
 	lo.ForEach(helper.ImportsForTypes("webedit", "", m.Columns.Types()...), func(imp *model.Import, _ int) {
 		g.AddImport(imp)
 	})
-	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpComponentsEdit, helper.ImpCutil, helper.ImpLayout)
+	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpComponentsEdit, helper.ImpCutil, helper.ImpLayout, helper.ImpAppUtil)
 	g.AddImport(helper.AppImport(m.PackageWithGroup("")))
 
 	imps, err := helper.EnumImports(m.Columns.Types(), m.PackageWithGroup(""), args.Enums)
@@ -59,13 +59,13 @@ func exportViewEditBody(m *model.Model, p *project.Project, args *model.Args) (*
 	ret.W("    {%%- if p.IsNew -%%}")
 	ret.W("    <div class=\"right\"><a href=\"?prototype=random\"><button>Random</button></a></div>")
 	ret.W("    %s%s New %s%s", helper.TextH3Start, svgRef(m.Icon), m.Title(), helper.TextH3End)
-	ret.W("    <form action=\"/%s/_new\" class=\"mt\" method=\"post\">", m.Route())
 	ret.W("    {%%- else -%%}")
 	delPrefix := "    <div class=\"right\"><a class=\"link-confirm\" href=\"{%%s p.Model.WebPath() %%}/delete\" data-message=\""
-	ret.W(delPrefix + delMsg + `"><button>{%%= components.SVGButton("times", ps) %%}Delete</button></a></div>`)
+	ret.W(delPrefix + delMsg + `"><button>{%%= components.SVGButton("times", ps) %%} Delete</button></a></div>`)
 	ret.W("    %s%s Edit %s [{%%%%s p.Model.String() %%%%}]%s", helper.TextH3Start, svgRef(m.Icon), m.Title(), helper.TextH3End)
-	ret.W("    <form action=\"\" method=\"post\">")
 	ret.W("    " + helper.TextEndIfDash)
+	rt := fmt.Sprintf("{%%%%s util.Choose(p.IsNew, `/%s/_new`, ``) %%%%}", m.Route())
+	ret.W("    <form action=%q class=\"mt\" method=\"post\">", rt)
 	ret.W("      <table class=\"mt expanded\">")
 	ret.W("        <tbody>")
 	editCols := m.Columns.NotDerived().WithoutTags("created", "updated")

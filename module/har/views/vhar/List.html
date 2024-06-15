@@ -12,7 +12,7 @@
 
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%= components.SVGIcon(`upload`, ps) %}HTTP Archives</h3>
+    <h3>{%= components.SVGIcon(`upload`, ps) %} HTTP Archives</h3>
     <div>
       <form action="" method="post" enctype="multipart/form-data">
         <div class="mt"><input type="file" name="f" /></div>
@@ -22,7 +22,7 @@
     </div>
   </div>
   <div class="card">
-    <h3>{%= components.SVGIcon(`book`, ps) %}Managed Archives</h3>
+    <h3>{%= components.SVGIcon(`book`, ps) %} Managed Archives</h3>
     <ul class="mts">
       {%- for _, r := range p.Hars -%}
       <li><a href="/har/{%s r %}">{%s r %}</a></li>

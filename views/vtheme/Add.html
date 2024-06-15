@@ -16,7 +16,7 @@
 
 {% func (p *Add) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%= components.SVGIcon(`eye`, ps) %}Choose Theme</h3>
+    <h3>{%= components.SVGIcon(`eye`, ps) %} Choose Theme</h3>
     <form action="/theme" method="post">
       <input type="hidden" name="palette" value="{%s p.Palette %}" />
       <div class="overflow full-width">

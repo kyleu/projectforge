@@ -19,7 +19,6 @@ var (
 	anchorIcon       = "<a title=%q href=\"{%%%%s %s %%%%}\">%s</a>"
 	anchorMsgNotNull = `%s  ` + anchorIcon
 	anchorMsg        = "%s  {%%%% if %s%s != nil %%%%}" + anchorIcon + helper.TextEndIfExtra
-	anchorSVG        = "{%%%%= components.SVGSimple(%s, 18, ps) %%%%}"
 	linkStart        = "  <a href=\""
 )
 
@@ -72,9 +71,9 @@ func viewColumn(
 				g.AddImport(helper.ImpFmt)
 			}
 			relModel := models.Get(rel.Table)
-			icon := fmt.Sprintf(anchorSVG, `"`+relModel.Icon+`"`)
+			icon := fmt.Sprintf("{%%%%= components.SVGLink(`%s`, ps) %%%%}", relModel.Icon)
 			if icons := relModel.Columns.WithFormat("icon"); len(icons) == 1 {
-				msg := `{%%%% if x := %s; x != nil %%%%}{%%%%= components.SVGSimple(x.%s, 18, ps) %%%%}{%%%% else %%%%}%s{%%%% endif %%%%}`
+				msg := `{%%%% if x := %s; x != nil %%%%}{%%%%= components.SVGLink(x.%s, ps) %%%%}{%%%% else %%%%}%s{%%%% endif %%%%}`
 				icon = fmt.Sprintf(msg, prefix, icons[0].ProperDerived(), icon)
 			}
 			wp := RelationWebPath(rel, m, relModel, modelKey)

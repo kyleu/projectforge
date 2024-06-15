@@ -55,7 +55,7 @@ func (p *GroupForm) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
 //line views/vexport/GroupForm.html:26
 	components.StreamSVGIcon(qw422016, `users`, ps)
 //line views/vexport/GroupForm.html:26
-	qw422016.N().S(`Groups</h3>
+	qw422016.N().S(` Groups</h3>
       <div class="mt expanded">
         `)
 //line views/vexport/GroupForm.html:28

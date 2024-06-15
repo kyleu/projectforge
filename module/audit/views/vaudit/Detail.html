@@ -21,7 +21,7 @@
       <a href="#modal-audit"><button type="button">JSON</button></a>
       <a href="{%s p.Model.WebPath() %}/edit"><button>Edit</button></a>
     </div>
-    <h3>{%= components.SVGIcon(`cog`, ps) %}Audit [{%s p.Model.String() %}]</h3>
+    <h3>{%= components.SVGIcon(`cog`, ps) %} Audit [{%s p.Model.String() %}]</h3>
     <div class="overflow full-width">
       <table class="mt">
         <tbody>
@@ -73,7 +73,7 @@
   {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
   {%- if len(p.Records) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGIcon(`cog`, ps) %}Audit Records</h3>
+    <h3>{%= components.SVGIcon(`cog`, ps) %} Audit Records</h3>
     {%= RecordTable(p.Records, p.Params, as, ps) %}
   </div>
   {%- endif -%}

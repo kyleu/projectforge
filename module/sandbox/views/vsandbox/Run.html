@@ -15,7 +15,7 @@
 
 {% func (p *Run) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%= components.SVGIcon(p.Icon, ps) %}{%s p.Title %}</h3>
+    <h3>{%= components.SVGIcon(p.Icon, ps) %} {%s p.Title %}</h3>
     <div class="mt">{%= components.JSON(p.Result) %}</div>
   </div>
 {% endfunc %}

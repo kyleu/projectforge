@@ -41,7 +41,7 @@ func StreamDetailExport(qw422016 *qt422016.Writer, key string, ea *model.Args, a
 //line views/vproject/DetailExport.html:13
 	components.StreamSVGButton(qw422016, "wrench", ps)
 //line views/vproject/DetailExport.html:13
-	qw422016.N().S(`Manage</button></a>
+	qw422016.N().S(` Manage</button></a>
   <hr />
 `)
 //line views/vproject/DetailExport.html:15
@@ -51,7 +51,7 @@ func StreamDetailExport(qw422016 *qt422016.Writer, key string, ea *model.Args, a
 //line views/vproject/DetailExport.html:16
 		components.StreamSVGIcon(qw422016, `print`, ps)
 //line views/vproject/DetailExport.html:16
-		qw422016.N().S(`Export Configuration</h3>
+		qw422016.N().S(` Export Configuration</h3>
   <div class="clear"></div>
   `)
 //line views/vproject/DetailExport.html:18
@@ -68,6 +68,8 @@ func StreamDetailExport(qw422016 *qt422016.Writer, key string, ea *model.Args, a
 		qw422016.N().S(`  <h3>`)
 //line views/vproject/DetailExport.html:22
 		components.StreamSVGIcon(qw422016, `users`, ps)
+//line views/vproject/DetailExport.html:22
+		qw422016.N().S(` `)
 //line views/vproject/DetailExport.html:22
 		qw422016.E().S(util.StringPlural(len(ea.Groups), "Group"))
 //line views/vproject/DetailExport.html:22
@@ -89,6 +91,8 @@ func StreamDetailExport(qw422016 *qt422016.Writer, key string, ea *model.Args, a
 //line views/vproject/DetailExport.html:28
 		components.StreamSVGIcon(qw422016, `hammer`, ps)
 //line views/vproject/DetailExport.html:28
+		qw422016.N().S(` `)
+//line views/vproject/DetailExport.html:28
 		qw422016.E().S(util.StringPlural(len(ea.Enums), "Enum"))
 //line views/vproject/DetailExport.html:28
 		qw422016.N().S(`</h3>
@@ -108,6 +112,8 @@ func StreamDetailExport(qw422016 *qt422016.Writer, key string, ea *model.Args, a
 		qw422016.N().S(`  <h3 class="mt">`)
 //line views/vproject/DetailExport.html:34
 		components.StreamSVGIcon(qw422016, `list`, ps)
+//line views/vproject/DetailExport.html:34
+		qw422016.N().S(` `)
 //line views/vproject/DetailExport.html:34
 		qw422016.E().S(util.StringPlural(len(ea.Models), "Model"))
 //line views/vproject/DetailExport.html:34

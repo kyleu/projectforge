@@ -44,7 +44,7 @@ func (p *Diffs) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
 //line views/vtest/Diffs.html:19
 	components.StreamSVGIcon(qw422016, `list`, ps)
 //line views/vtest/Diffs.html:19
-	qw422016.N().S(`Diffs</h3>
+	qw422016.N().S(` Diffs</h3>
     <div class="overflow full-width">
       <table>
         <thead>

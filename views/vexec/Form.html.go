@@ -52,7 +52,7 @@ func (p *Form) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vexec/Form.html:22
 	components.StreamSVGIcon(qw422016, "desktop", ps)
 //line views/vexec/Form.html:22
-	qw422016.N().S(`New Process</h3>
+	qw422016.N().S(` New Process</h3>
       <div class="overflow full-width">
         <table class="mt min-200 expanded">
           <tbody>

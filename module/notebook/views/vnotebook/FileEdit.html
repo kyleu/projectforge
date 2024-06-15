@@ -18,7 +18,7 @@
     pth := filepath.Join(p.Path...)
   -%}
   <div class="card">
-    <h3>{%= components.SVGIcon(`notebook`, ps) %}Edit Notebook File [{%s pth %}]</h3>
+    <h3>{%= components.SVGIcon(`notebook`, ps) %} Edit Notebook File [{%s pth %}]</h3>
     <form class="mt expanded" action="" method="post">
       <textarea name="content" rows="{%d 32 %}">{%s p.Content %}</textarea>
       <div class="mt">

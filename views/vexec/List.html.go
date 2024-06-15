@@ -49,6 +49,8 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vexec/List.html:19
 	components.StreamSVGIcon(qw422016, `desktop`, ps)
 //line views/vexec/List.html:19
+	qw422016.N().S(` `)
+//line views/vexec/List.html:19
 	qw422016.E().S(util.StringPlural(len(p.Execs), "Process"))
 //line views/vexec/List.html:19
 	qw422016.N().S(`</h3>

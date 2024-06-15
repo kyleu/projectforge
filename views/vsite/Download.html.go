@@ -44,7 +44,7 @@ func (p *Download) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vsite/Download.html:18
 	components.StreamSVGIcon(qw422016, "download", ps)
 //line views/vsite/Download.html:18
-	qw422016.N().S(`Download `)
+	qw422016.N().S(` Download `)
 //line views/vsite/Download.html:18
 	qw422016.E().S(util.AppName)
 //line views/vsite/Download.html:18
@@ -115,6 +115,8 @@ func streamdownloadShowLinks(qw422016 *qt422016.Writer, mode string, icon string
 //line views/vsite/Download.html:29
 		components.StreamSVGIcon(qw422016, icon, ps)
 //line views/vsite/Download.html:29
+		qw422016.N().S(` `)
+//line views/vsite/Download.html:29
 		qw422016.E().S(title)
 //line views/vsite/Download.html:29
 		qw422016.N().S(`</h3>
@@ -150,6 +152,8 @@ func streamdownloadShowLinks(qw422016 *qt422016.Writer, mode string, icon string
             <td style="width: 25%;">`)
 //line views/vsite/Download.html:43
 				components.StreamSVGIcon(qw422016, link.OSIcon(), ps)
+//line views/vsite/Download.html:43
+				qw422016.N().S(` `)
 //line views/vsite/Download.html:43
 				qw422016.E().S(link.OSString())
 //line views/vsite/Download.html:43

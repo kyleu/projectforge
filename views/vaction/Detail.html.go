@@ -41,7 +41,7 @@ func StreamDetail(qw422016 *qt422016.Writer, cfg util.ValueMap, res *action.Resu
 //line views/vaction/Detail.html:14
 		components.StreamSVGIcon(qw422016, `cog`, ps)
 //line views/vaction/Detail.html:14
-		qw422016.N().S(`Config</h3>
+		qw422016.N().S(` Config</h3>
     <div class="overflow full-width">
       <table>
         <tbody>
@@ -85,7 +85,7 @@ func StreamDetail(qw422016 *qt422016.Writer, cfg util.ValueMap, res *action.Resu
 //line views/vaction/Detail.html:32
 		components.StreamSVGIcon(qw422016, `scale`, ps)
 //line views/vaction/Detail.html:32
-		qw422016.N().S(`Errors</h3>
+		qw422016.N().S(` Errors</h3>
     <ul class="mt">
 `)
 //line views/vaction/Detail.html:34
@@ -113,7 +113,7 @@ func StreamDetail(qw422016 *qt422016.Writer, cfg util.ValueMap, res *action.Resu
 //line views/vaction/Detail.html:42
 		components.StreamSVGIcon(qw422016, `list`, ps)
 //line views/vaction/Detail.html:42
-		qw422016.N().S(`Logs</h3>
+		qw422016.N().S(` Logs</h3>
     <div class="mt">
       <div class="overflow full-width">
         <table>
@@ -162,6 +162,8 @@ func StreamDetail(qw422016 *qt422016.Writer, cfg util.ValueMap, res *action.Resu
 		qw422016.N().S(`">`)
 //line views/vaction/Detail.html:62
 		components.StreamSVGIcon(qw422016, `archive`, ps)
+//line views/vaction/Detail.html:62
+		qw422016.N().S(` `)
 //line views/vaction/Detail.html:62
 		qw422016.E().S(util.StringPlural(len(mr.Keys), "Module"))
 //line views/vaction/Detail.html:62

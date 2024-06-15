@@ -30,7 +30,7 @@
       {%- endif -%}
       <button type="button" class="toggle-editor toggle-editor-{%s key %}">Editor</button>
     </div>
-    <h3 title="{%s strings.Join(placeholder, `; `) %}">{% if icon != "" %}{%= components.SVGIcon(icon, ps) %}{% endif %}{%s title %}</h3>
+    <h3 title="{%s strings.Join(placeholder, `; `) %}">{% if icon != "" %}{%= components.SVGIcon(icon, ps) %}{% space %}{% endif %}{%s title %}</h3>
     <div class="mt expanded">
       {%= RichEditor(key, "input-" + key, title, columns, values, placeholder...) %}
     </div>

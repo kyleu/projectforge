@@ -13,7 +13,7 @@
 
 {% func (p *Home) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%= components.SVGIcon(`app`, ps) %}{%s util.AppName %}</h3>
+    <h3>{%= components.SVGIcon(`app`, ps) %} {%s util.AppName %}</h3>
     <div class="mt">Welcome to {%s util.AppName %}, your new application!</div>
   </div>
 {% endfunc %}

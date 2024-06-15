@@ -82,6 +82,18 @@ func ArrayTransform[T any, U any](x []T, f func(T) U) []U {
 	})
 }
 
+func ArraySplit[T any](xs []T, fn func(T) bool) ([]T, []T) {
+	var t, f []T
+	lo.ForEach(xs, func(x T, _ int) {
+		if fn(x) {
+			t = append(t, x)
+		} else {
+			f = append(f, x)
+		}
+	})
+	return t, f
+}
+
 func ArrayRemoveNil[T any](x []*T) []*T {
 	return lo.Reject(x, func(el *T, _ int) bool {
 		return el == nil

@@ -110,8 +110,6 @@ func (p *Results) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 //line views/vaction/Results.html:44
 		components.StreamExpandCollapse(qw422016, 3, ps)
 //line views/vaction/Results.html:44
-		qw422016.N().S(` `)
-//line views/vaction/Results.html:44
 		components.StreamSVGRef(qw422016, x.Prj.IconSafe(), 16, 16, "icon", ps)
 //line views/vaction/Results.html:44
 		qw422016.N().S(`

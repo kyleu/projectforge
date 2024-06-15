@@ -43,7 +43,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vtheme/List.html:17
 	components.StreamSVGIcon(qw422016, `eye`, ps)
 //line views/vtheme/List.html:17
-	qw422016.N().S(`Add Theme</h3>
+	qw422016.N().S(` Add Theme</h3>
     <div class="mt">
       <a href="/theme/new" title="add new theme"><button>New Theme</button></a>
       <a href="/theme/palette/crayola" title="add new theme"><button>Choose from Crayola colors</button></a>
@@ -67,7 +67,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vtheme/List.html:33
 	components.StreamSVGIcon(qw422016, `play`, ps)
 //line views/vtheme/List.html:33
-	qw422016.N().S(`Current Themes</h3>
+	qw422016.N().S(` Current Themes</h3>
     <div class="overflow full-width">
       <div class="theme-container mt">
 `)

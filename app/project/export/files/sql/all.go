@@ -52,7 +52,7 @@ func SeedDataAll(models model.Models, linebreak string) (*file.File, error) {
 func sqlSeedAll(models model.Models) *golang.Block {
 	ret := golang.NewBlock("SQLSeedDataAll", "sql")
 	ret.W(sqlFunc("SeedDataAll"))
-	lo.ForEach(models, func(m *model.Model, _ int) {
+	lo.ForEach(models.WithoutTag("external"), func(m *model.Model, _ int) {
 		if len(m.SeedData) > 0 {
 			ret.W(helper.TextSQLComment+"{%%%%= %sSeedData() %%%%}", m.Proper())
 		}

@@ -111,7 +111,7 @@ func StreamSummary(qw422016 *qt422016.Writer, prj *project.Project, title string
 //line views/vproject/Summary.html:34
 	components.StreamSVGButton(qw422016, "edit", ps)
 //line views/vproject/Summary.html:34
-	qw422016.N().S(`Edit</button></a>
+	qw422016.N().S(` Edit</button></a>
 `)
 //line views/vproject/Summary.html:35
 	for _, t := range action.ProjectTypes {
@@ -132,6 +132,8 @@ func StreamSummary(qw422016 *qt422016.Writer, prj *project.Project, title string
 //line views/vproject/Summary.html:36
 		components.StreamSVGButton(qw422016, t.Icon, ps)
 //line views/vproject/Summary.html:36
+		qw422016.N().S(` `)
+//line views/vproject/Summary.html:36
 		qw422016.E().S(t.Title)
 //line views/vproject/Summary.html:36
 		qw422016.N().S(`</button></a>
@@ -147,7 +149,7 @@ func StreamSummary(qw422016 *qt422016.Writer, prj *project.Project, title string
 //line views/vproject/Summary.html:38
 	components.StreamSVGButton(qw422016, "folder", ps)
 //line views/vproject/Summary.html:38
-	qw422016.N().S(`Files</button></a>
+	qw422016.N().S(` Files</button></a>
       <a href="/svg/`)
 //line views/vproject/Summary.html:39
 	qw422016.E().S(prj.Key)
@@ -156,7 +158,7 @@ func StreamSummary(qw422016 *qt422016.Writer, prj *project.Project, title string
 //line views/vproject/Summary.html:39
 	components.StreamSVGButton(qw422016, "icons", ps)
 //line views/vproject/Summary.html:39
-	qw422016.N().S(`SVG</button></a>
+	qw422016.N().S(` SVG</button></a>
       <a href="/git/`)
 //line views/vproject/Summary.html:40
 	qw422016.E().S(prj.Key)
@@ -165,7 +167,7 @@ func StreamSummary(qw422016 *qt422016.Writer, prj *project.Project, title string
 //line views/vproject/Summary.html:40
 	components.StreamSVGButton(qw422016, "git", ps)
 //line views/vproject/Summary.html:40
-	qw422016.N().S(`Git</button></a>
+	qw422016.N().S(` Git</button></a>
     </div>
   </div>
 `)

@@ -78,15 +78,9 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vtheme/Edit.html:31
 	components.StreamSVGIcon(qw422016, `eye`, ps)
 //line views/vtheme/Edit.html:31
-	if p.Theme.Key == theme.KeyNew {
+	qw422016.N().S(` `)
 //line views/vtheme/Edit.html:31
-		qw422016.N().S(`New Theme`)
-//line views/vtheme/Edit.html:31
-	} else {
-//line views/vtheme/Edit.html:31
-		qw422016.N().S(`Theme Edit`)
-//line views/vtheme/Edit.html:31
-	}
+	qw422016.E().S(util.Choose(p.Theme.Key == theme.KeyNew, "New Theme", "Theme Edit"))
 //line views/vtheme/Edit.html:31
 	qw422016.N().S(`</h3>
       <div class="overflow full-width">

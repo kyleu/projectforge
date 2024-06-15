@@ -152,3 +152,16 @@ func (m ValueMap) MarshalXML(e *xml.Encoder, _ xml.StartElement) error {
 	}
 	return e.Flush()
 }
+
+func ValueMapGet[T any](m ValueMap, pth string) (T, error) {
+	x, err := m.GetPath(pth, false)
+	if err != nil {
+		return DefaultValue[T](), err
+	}
+	ret, ok := x.(T)
+	if !ok {
+		var df T
+		return df, errors.Errorf("map value is of type [%T], expected [%T]", x, df)
+	}
+	return ret, nil
+}

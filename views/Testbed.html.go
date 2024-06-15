@@ -41,6 +41,8 @@ func (p *Testbed) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 //line views/Testbed.html:16
 	components.StreamSVGIcon(qw422016, `app`, ps)
 //line views/Testbed.html:16
+	qw422016.N().S(` `)
+//line views/Testbed.html:16
 	qw422016.E().S(util.AppName)
 //line views/Testbed.html:16
 	qw422016.N().S(` Testbed</h3>
@@ -64,7 +66,7 @@ func (p *Testbed) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 //line views/Testbed.html:23
 	components.StreamSVGIcon(qw422016, `cog`, ps)
 //line views/Testbed.html:23
-	qw422016.N().S(`Form Test</h3>
+	qw422016.N().S(` Form Test</h3>
       <div class="mt">
         <textarea class="full-width" name="x" rows="8" placeholder="">`)
 //line views/Testbed.html:25

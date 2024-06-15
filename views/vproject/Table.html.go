@@ -38,10 +38,12 @@ func StreamTable(qw422016 *qt422016.Writer, prjs project.Projects, tags []string
 //line views/vproject/Table.html:14
 	components.StreamSVGButton(qw422016, "file", ps)
 //line views/vproject/Table.html:14
-	qw422016.N().S(`New</button></a></div>
+	qw422016.N().S(` New</button></a></div>
     <h3><a href="/p">`)
 //line views/vproject/Table.html:15
 	components.StreamSVGIcon(qw422016, `list`, ps)
+//line views/vproject/Table.html:15
+	qw422016.N().S(` `)
 //line views/vproject/Table.html:15
 	qw422016.E().S(util.StringPlural(len(prjs), "Available Project"))
 //line views/vproject/Table.html:15

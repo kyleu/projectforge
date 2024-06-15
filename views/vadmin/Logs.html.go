@@ -45,7 +45,7 @@ func (p *Logs) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vadmin/Logs.html:19
 	components.StreamSVGIcon(qw422016, `filter`, ps)
 //line views/vadmin/Logs.html:19
-	qw422016.N().S(`Recent Logs</h3>
+	qw422016.N().S(` Recent Logs</h3>
     `)
 //line views/vadmin/Logs.html:20
 	streamlogTable(qw422016, p.Logs)

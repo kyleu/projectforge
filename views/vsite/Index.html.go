@@ -40,6 +40,8 @@ func (p *Index) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
 //line views/vsite/Index.html:14
 	components.StreamSVGIcon(qw422016, `app`, ps)
 //line views/vsite/Index.html:14
+	qw422016.N().S(` `)
+//line views/vsite/Index.html:14
 	qw422016.E().S(util.AppName)
 //line views/vsite/Index.html:14
 	qw422016.N().S(`</h3>
@@ -49,12 +51,12 @@ func (p *Index) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
 //line views/vsite/Index.html:17
 	components.StreamSVGButton(qw422016, "download", ps)
 //line views/vsite/Index.html:17
-	qw422016.N().S(`Download</button></a>
+	qw422016.N().S(` Download</button></a>
       <a href="https://github.com/kyleu/projectforge"><button>`)
 //line views/vsite/Index.html:18
 	components.StreamSVGButton(qw422016, "git", ps)
 //line views/vsite/Index.html:18
-	qw422016.N().S(`Source Code</button></a>
+	qw422016.N().S(` Source Code</button></a>
     </div>
     `)
 //line views/vsite/Index.html:20

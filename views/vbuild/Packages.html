@@ -57,7 +57,7 @@
         <li>
           <input id="accordion-{%s prj.Key %}" type="checkbox" hidden />
           <label for="accordion-{%s prj.Key %}">
-            {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef(prj.IconSafe(), 16, 16, "icon", ps) %} {%s prj.Title() %}
+            {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef(prj.IconSafe(), 16, 16, "icon", ps) %}{%s prj.Title() %}
           </label>
           <div class="bd"><div><div>
             {%= vproject.Summary(prj, "Packages", nil, nil, nil, ps) %}

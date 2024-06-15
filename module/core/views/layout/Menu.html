@@ -1,4 +1,5 @@
 {% import (
+  "fmt"
   "strings"
 
   "{{{ .Package }}}/app/controller/cmenu"
@@ -42,7 +43,7 @@
       <input id="{%s itemID %}-input" type="checkbox"{% if active %}{% space %}checked="checked"{% endif %}{% space %}hidden="hidden" />
       {%= components.Indent(true, indent + 2) %}
       {% if final %}<label class="final" for="{%s itemID %}-input" title="{%s i.Desc() %}">{% else %}<label for="{%s itemID %}-input" title="{%s i.Desc() %}">{% endif %}
-        {% if i.Route != "" %}
+        {% if i.Route != "" && i.Badge == "" %}
           {%= components.Indent(true, indent + 3) %}
           <a class="label-link" href="{%s i.Route %}">{%= components.SVGSimple(`link`, 15, ps) %}</a>
         {% endif %}
@@ -50,7 +51,7 @@
         {%= menuBadge(i, indent + 3, ps) %}
         {%= components.Indent(true, indent + 3) %}
         {% if i.Icon != "" %}
-          {%= components.SVGRef(i.Icon, 16, 16, "icon", ps) %}
+          {%= components.SVGRef(i.Icon, 16, 16, "icon", ps) %}{% space %}
         {% endif %}
         {% if i.Route != "" %}
           {% if i.Warning != "" %}
@@ -62,7 +63,7 @@
           {%s i.Title %}
         {% endif %}
       {%= components.Indent(true, indent + 2) %}
-      </label>
+      {% if final %}</label>{% else %}</label>{% endif %}
       {%= components.Indent(true, indent + 2) %}
       <div class="menu-content level-{%d len(path) %}">
         {%= components.Indent(true, indent + 3) %}
@@ -98,21 +99,33 @@
       {% endif %}
         {%= menuBadge(i, indent + 3, ps) %}
         {% if i.Icon != "" %}
-          {%= components.SVGRef(i.Icon, 16, 16, "icon", ps) %}
+          {%= components.SVGRef(i.Icon, 16, 16, "icon", ps) %}{% space %}
         {% endif %}
-        {%s i.Title %}
+        <span>{%s i.Title %}</span>
+      {% if i.Warning != "" %}
       </a>
+      {% else %}
+      </a>
+      {% endif %}
     </li>
   {% endif %}
 {% endstripspace %}{% endfunc %}
 
 {% func menuBadge(i *menu.Item, indent int, ps *cutil.PageState) %}{% stripspace %}
-  {% if i.Badge == "" %}
-  {% elseif strings.HasPrefix(i.Badge, ":") %}
-    {%= components.Indent(true, indent) %}
-    <div class="badge">{%= components.SVGSimple(i.Badge[1:], 18, ps) %}</div>
-  {% else %}
-    {%= components.Indent(true, indent) %}
-    <div class="badge">{%s i.Badge %}</div>
+  {% if i.Badge != "" %}
+    {%- code
+      badgeTitle := ""
+      if idx := strings.Index(i.Badge, "**"); idx > -1 {
+        badgeTitle = fmt.Sprintf(" title=%q", i.Badge[idx+2:])
+        i.Badge = i.Badge[:idx]
+      }
+    -%}
+    {% if strings.HasPrefix(i.Badge, ":") %}
+      {%= components.Indent(true, indent) %}
+      <div class="badge"{%s= badgeTitle %}>{%= components.SVGSimple(i.Badge[1:], 18, ps) %}</div>
+    {% else %}
+      {%= components.Indent(true, indent) %}
+      <div class="badge"{%s= badgeTitle %}>{%s i.Badge %}</div>
+    {% endif %}
   {% endif %}
 {% endstripspace %}{% endfunc %}

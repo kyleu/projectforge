@@ -164,8 +164,6 @@ func (p *PackagesAll) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *c
 //line views/vbuild/Packages.html:60
 		components.StreamSVGRef(qw422016, prj.IconSafe(), 16, 16, "icon", ps)
 //line views/vbuild/Packages.html:60
-		qw422016.N().S(` `)
-//line views/vbuild/Packages.html:60
 		qw422016.E().S(prj.Title())
 //line views/vbuild/Packages.html:60
 		qw422016.N().S(`

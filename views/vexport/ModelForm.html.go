@@ -66,17 +66,9 @@ func (p *ModelForm) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
 //line views/vexport/ModelForm.html:31
 	components.StreamSVGIcon(qw422016, m.IconSafe(), ps)
 //line views/vexport/ModelForm.html:31
-	if m.Name == "" {
+	qw422016.N().S(` `)
 //line views/vexport/ModelForm.html:31
-		qw422016.N().S(`New Model`)
-//line views/vexport/ModelForm.html:31
-	} else {
-//line views/vexport/ModelForm.html:31
-		qw422016.N().S(`Edit `)
-//line views/vexport/ModelForm.html:31
-		qw422016.E().S(m.Name)
-//line views/vexport/ModelForm.html:31
-	}
+	qw422016.E().S(util.Choose(m.Name == "", "New Model", "Edit "+m.Name))
 //line views/vexport/ModelForm.html:31
 	qw422016.N().S(`</h3>
       <div class="overflow full-width">

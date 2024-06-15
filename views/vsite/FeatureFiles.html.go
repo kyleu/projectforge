@@ -60,6 +60,8 @@ func (p *FeatureFiles) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *
 //line views/vsite/FeatureFiles.html:28
 		components.StreamSVGIcon(qw422016, p.Module.Icon, ps)
 //line views/vsite/FeatureFiles.html:28
+		qw422016.N().S(` `)
+//line views/vsite/FeatureFiles.html:28
 		qw422016.E().S(p.Module.Title())
 //line views/vsite/FeatureFiles.html:28
 		qw422016.N().S(`</h3>
@@ -83,6 +85,8 @@ func (p *FeatureFiles) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *
     <h3>`)
 //line views/vsite/FeatureFiles.html:39
 		components.StreamSVGIcon(qw422016, p.Module.Icon, ps)
+//line views/vsite/FeatureFiles.html:39
+		qw422016.N().S(` `)
 //line views/vsite/FeatureFiles.html:39
 		qw422016.E().S(p.Module.Title())
 //line views/vsite/FeatureFiles.html:39

@@ -20,7 +20,7 @@
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <div class="right"><a href="/admin/scripting/{%u p.Path %}/edit"><button type="button">Edit</button></a></div>
-    <h3>{%= components.SVGIcon(`file`, ps) %}{%s p.Path %}</h3>
+    <h3>{%= components.SVGIcon(`file`, ps) %} {%s p.Path %}</h3>
     <div class="mt">
       {%- code out, err := cutil.FormatLang(p.Script, "js") -%}
       {%- if err == nil -%}
@@ -32,13 +32,13 @@
   </div>
   {% if p.LoadError != nil -%}
   <div class="card">
-    <h3>{%= components.SVGIcon(`cog`, ps) %}Load Error</h3>
+    <h3>{%= components.SVGIcon(`cog`, ps) %} Load Error</h3>
     <div class="mt error">{%s p.LoadError.Error() %}</div>
   </div>
   {%- endif -%}
   {% if p.LoadResult != nil -%}
   <div class="card">
-    <h3>{%= components.SVGIcon(`cog`, ps) %}Load Result</h3>
+    <h3>{%= components.SVGIcon(`cog`, ps) %} Load Result</h3>
     <div class="mt">{%= components.JSON(p.LoadResult) %}</div>
   </div>
   {%- endif -%}
@@ -46,7 +46,7 @@
     {%- code res := p.Results[f] -%}
     {% if len(res) > 0 -%}
     <div class="card">
-      <h3>{%= components.SVGIcon(`play`, ps) %}[{%s f %}] Example Results</h3>
+      <h3>{%= components.SVGIcon(`play`, ps) %} [{%s f %}] Example Results</h3>
       <div class="mt">
         <div class="overflow full-width">
           <table class="expanded min-200">

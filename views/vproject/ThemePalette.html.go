@@ -46,7 +46,7 @@ func (p *ThemePalette) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *
 //line views/vproject/ThemePalette.html:21
 	components.StreamSVGIcon(qw422016, `eye`, ps)
 //line views/vproject/ThemePalette.html:21
-	qw422016.N().S(`Set theme for project [`)
+	qw422016.N().S(` Set theme for project [`)
 //line views/vproject/ThemePalette.html:21
 	qw422016.E().S(p.Project)
 //line views/vproject/ThemePalette.html:21

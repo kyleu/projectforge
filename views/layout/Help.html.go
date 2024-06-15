@@ -78,6 +78,8 @@ func StreamHelp(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
 //line views/layout/Help.html:28
 			components.StreamSVGIcon(qw422016, `question`, ps)
 //line views/layout/Help.html:28
+			qw422016.N().S(` `)
+//line views/layout/Help.html:28
 			qw422016.N().S(`Help:`)
 //line views/layout/Help.html:28
 			qw422016.E().S(title)

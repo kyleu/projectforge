@@ -48,6 +48,8 @@ func StreamTable(qw422016 *qt422016.Writer, mods module.Modules, full bool, dir 
 //line views/vmodule/Table.html:14
 	components.StreamSVGIcon(qw422016, `archive`, ps)
 //line views/vmodule/Table.html:14
+	qw422016.N().S(` `)
+//line views/vmodule/Table.html:14
 	qw422016.E().S(util.StringPlural(len(mods), "Available Module"))
 //line views/vmodule/Table.html:14
 	qw422016.N().S(`</a></h3>

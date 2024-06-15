@@ -6,6 +6,8 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
+type LogFn func(t *Timer, log string, elapsed int)
+
 // Timer lets you measure laps. It is not safe for concurrent use.
 type Timer struct {
 	Key         string      `json:"key"`
@@ -17,35 +19,38 @@ type Timer struct {
 	index       int
 	acc         int
 	persistLogs bool
+	fns         []LogFn
 }
 
-func NewTimer(key string, persistLogs bool, logger util.Logger) *Timer {
-	return &Timer{Key: key, Log: logger, Timer: util.TimerStart(), initial: util.TimerStart(), persistLogs: persistLogs}
+func NewTimer(key string, persistLogs bool, logger util.Logger, fns ...LogFn) *Timer {
+	return &Timer{Key: key, Log: logger, Timer: util.TimerStart(), initial: util.TimerStart(), persistLogs: persistLogs, fns: fns}
 }
 
-func (l *Timer) Lap(msg string, args ...any) int {
-	l.index++
-	l.addLog(msg, args...)
-	elapsed := l.Timer.End()
-	l.acc += elapsed
-	l.Laps = append(l.Laps, elapsed)
-	l.Timer = util.TimerStart()
+func (t *Timer) Lap(msg string, args ...any) int {
+	t.index++
+	out := t.addLog(msg, args...)
+	elapsed := t.Timer.End()
+	t.acc += elapsed
+	t.Laps = append(t.Laps, elapsed)
+	t.Timer = util.TimerStart()
+	for _, fn := range t.fns {
+		fn(t, out, 0)
+	}
 	return elapsed
 }
 
-func (l *Timer) Complete() int {
-	_ = l.Lap("completed after [%d] steps in [%s]", l.index, util.MicrosToMillis(l.initial.End()))
-	return l.acc
+func (t *Timer) Complete() int {
+	_ = t.Lap("completed after [%d] steps in [%s]", t.index, util.MicrosToMillis(t.initial.End()))
+	return t.acc
 }
 
-func (l *Timer) addLog(msg string, args ...any) {
-	out := fmt.Sprintf("[%s::%d] ", l.Key, l.index) + fmt.Sprintf(msg, args...) + " [" + util.MicrosToMillis(l.Timer.End()) + "]"
-	if l.Log == nil {
-		fmt.Println(out) //nolint:forbidigo
-	} else {
-		l.Log.Infof(out)
+func (t *Timer) addLog(msg string, args ...any) string {
+	out := fmt.Sprintf("[%s::%d] ", t.Key, t.index) + fmt.Sprintf(msg, args...) + " [" + util.MicrosToMillis(t.Timer.End()) + "]"
+	if t.Log != nil {
+		t.Log.Infof(out)
 	}
-	if l.persistLogs {
-		l.Logs = append(l.Logs, out)
+	if t.persistLogs {
+		t.Logs = append(t.Logs, out)
 	}
+	return out
 }

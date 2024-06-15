@@ -22,9 +22,9 @@
   {%- code m := p.Model -%}
   <div class="card">
     <div class="right">
-      <a href="/p/{%s p.Project.Key %}/export/models/{%s p.Model.Name %}/edit"><button>{%= components.SVGButton("edit", ps) %}Edit</button></a>
+      <a href="/p/{%s p.Project.Key %}/export/models/{%s p.Model.Name %}/edit"><button>{%= components.SVGButton("edit", ps) %} Edit</button></a>
     </div>
-    <h3>{%= components.SVGIcon(m.IconSafe(), ps) %}{%s m.Name %}</h3>
+    <h3>{%= components.SVGIcon(m.IconSafe(), ps) %} {%s m.Name %}</h3>
     <em>export model</em>
     {%= modelSummary(p.Project.Key, m, as, ps) %}
   </div>

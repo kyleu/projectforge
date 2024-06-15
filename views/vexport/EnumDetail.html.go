@@ -61,11 +61,13 @@ func (p *EnumDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cu
 //line views/vexport/EnumDetail.html:24
 	components.StreamSVGButton(qw422016, "edit", ps)
 //line views/vexport/EnumDetail.html:24
-	qw422016.N().S(`Edit</button></a>
+	qw422016.N().S(` Edit</button></a>
     </div>
     <h3>`)
 //line views/vexport/EnumDetail.html:26
 	components.StreamSVGIcon(qw422016, e.IconSafe(), ps)
+//line views/vexport/EnumDetail.html:26
+	qw422016.N().S(` `)
 //line views/vexport/EnumDetail.html:26
 	qw422016.E().S(e.Name)
 //line views/vexport/EnumDetail.html:26

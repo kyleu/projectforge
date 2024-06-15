@@ -17,7 +17,7 @@
   {%- code s := p.Statement -%}
   <div class="card">
     <div class="right">{%s util.MicrosToMillis(s.Timing) %} elapsed</div>
-    <h3>{%= components.SVGIcon(`database`, ps) %}Statement [{%d p.Statement.Index %}]</h3>
+    <h3>{%= components.SVGIcon(`database`, ps) %} Statement [{%d p.Statement.Index %}]</h3>
     <div class="right">{%d s.Count %} rows returned</div>
     <em>{%s s.Message %}</em>
     {%- if s.Error != "" -%}

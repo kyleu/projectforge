@@ -154,6 +154,8 @@ func StreamRichEditorCard(qw422016 *qt422016.Writer, key string, id string, titl
 //line views/components/edit/RichEdit.html:34
 		components.StreamSVGIcon(qw422016, icon, ps)
 //line views/components/edit/RichEdit.html:34
+		qw422016.N().S(` `)
+//line views/components/edit/RichEdit.html:34
 	}
 //line views/components/edit/RichEdit.html:34
 	qw422016.E().S(title)

@@ -62,7 +62,7 @@ func (p *Result) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vaction/Result.html:23
 	components.StreamSVGIcon(qw422016, `map`, ps)
 //line views/vaction/Result.html:23
-	qw422016.N().S(`Result</h3>
+	qw422016.N().S(` Result</h3>
     <div class="mts">`)
 //line views/vaction/Result.html:24
 	qw422016.E().S(p.Ctx.Res.Status)

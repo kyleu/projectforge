@@ -37,7 +37,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vtest/List.html:12
 	components.StreamSVGIcon(qw422016, `list`, ps)
 //line views/vtest/List.html:12
-	qw422016.N().S(`Tests!</h3>
+	qw422016.N().S(` Tests!</h3>
     <ul>
       <li><a href="/test/bootstrap">Rebuild test project</a></li>
       <li><a href="/test/diff">Text diff tests</a></li>

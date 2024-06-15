@@ -16,7 +16,7 @@
 
 {% func (p *Sitemap) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%= components.SVGIcon(`star`, ps) %}Sitemap</h3>
+    <h3>{%= components.SVGIcon(`star`, ps) %} Sitemap</h3>
     <div class="mt">
       {%= SitemapDetail(ps.Menu, 1, ps) %}
     </div>
@@ -46,7 +46,7 @@
       {%= components.Indent(true, indent + 1) %}
       <a href="{%s i.Route %}" title="{%s i.Desc() %}">
         {% if i.Icon != "" %}
-          {%= components.SVGRef(i.Icon, 16, 16, "icon", ps) %}
+          {%= components.SVGRef(i.Icon, 16, 16, "icon", ps) %}{% space %}
         {% endif %}
         {%s i.Title %}
       </a>

@@ -255,7 +255,6 @@
 svg.icon {
   position: relative;
   top: 2px;
-  margin-right: var(--padding-small);
 }
 
 svg.search-icon {
@@ -265,6 +264,11 @@ svg.search-icon {
 svg.inline {
   position: relative;
   top: 2px;
+}
+
+svg.link {
+  position: relative;
+  top: 4px;
 }
 
 .os-windows .icon {

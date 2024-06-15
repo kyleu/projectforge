@@ -2,6 +2,7 @@
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/module"
+  "projectforge.dev/projectforge/views/components"
 ) %}
 
 {% func DetailModules(modKeys []string, mods module.Modules, as *app.State, ps *cutil.PageState) %}
@@ -17,7 +18,7 @@
         </tr>
         {%- else -%}
         <tr>
-          <td class="shrink"><a href="/m/{%s mod.Key %}">{%s mod.Title() %}</a></td>
+          <td class="shrink"><a href="/m/{%s mod.Key %}">{%= components.SVGInline(mod.Icon, 16, ps) %} {%s mod.Title() %}</a></td>
           <td><em>{%s mod.Description %}</em></td>
         </tr>
         {%- endif -%}

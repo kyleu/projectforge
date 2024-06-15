@@ -28,7 +28,7 @@ func (x *Reference) Scalar() bool {
 }
 
 func (x *Reference) String() string {
-	return "ref:" + strings.Join(x.Path(), ".")
+	return "ref:" + strings.Join(x.Path(), "/")
 }
 
 func (x *Reference) From(v any) any {

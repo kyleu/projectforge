@@ -18,9 +18,11 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+type OutFn func(key string, b []byte) error
+
 type writer struct {
 	Key string
-	fn  func(key string, b []byte) error
+	fn  OutFn
 }
 
 func (w *writer) Write(p []byte) (int, error) {
@@ -54,14 +56,13 @@ func (e *Exec) WebPath() string {
 	return fmt.Sprintf("/admin/exec/%s/%d", url.QueryEscape(e.Key), e.Idx)
 }
 
-func (e *Exec) Start(fns ...func(key string, b []byte) error) error {
+func (e *Exec) Start(fns ...OutFn) error {
 	if e.Started != nil {
 		return errors.New("process already started")
 	}
-	var w io.Writer = e.Buffer
-	lo.ForEach(fns, func(fn func(key string, b []byte) error, _ int) {
-		w = io.MultiWriter(w, &writer{Key: e.String(), fn: fn})
-	})
+	w := lo.Reduce(fns, func(agg io.Writer, fn OutFn, _ int) io.Writer {
+		return io.MultiWriter(agg, &writer{Key: e.String(), fn: fn})
+	}, io.Writer(e.Buffer))
 	e.Started = util.TimeCurrentP()
 	t := util.TimerStart()
 	cmd, err := util.StartProcess(e.Cmd, e.Path, nil, w, w, e.Env...)

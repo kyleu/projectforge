@@ -62,7 +62,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vproject/Detail.html:26
 		components.StreamSVGIcon(qw422016, "crosshairs", ps)
 //line views/vproject/Detail.html:26
-		qw422016.N().S(`Project Errors</h3>
+		qw422016.N().S(` Project Errors</h3>
     <ul>
 `)
 //line views/vproject/Detail.html:28

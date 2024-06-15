@@ -19,24 +19,35 @@ import (
 func ApplyAll(ctx context.Context, prjs project.Projects, actT Type, cfg util.ValueMap, as *app.State, logger util.Logger) ResultContexts {
 	serial := cfg.GetBoolOpt("serial") || cfg.GetStringOpt("mode") == refreshMode
 	mu := sync.Mutex{}
-	mSvc, pSvc, eSvc, xSvc := as.Services.Modules, as.Services.Projects, as.Services.Export, as.Services.Exec
-	results, _ := util.AsyncCollect(prjs, func(prj *project.Project) (*ResultContext, error) {
+	nonSelf := prjs.WithoutTags("self")
+	results, _ := util.AsyncCollect(nonSelf, func(prj *project.Project) (*ResultContext, error) {
 		if serial {
 			mu.Lock()
 			defer mu.Unlock()
 		}
-		c := cfg.Clone()
-		prms := &Params{ProjectKey: prj.Key, T: actT, Cfg: cfg, MSvc: mSvc, PSvc: pSvc, XSvc: xSvc, ESvc: eSvc, Logger: logger}
-		result := Apply(ctx, prms)
-		if result.Project == nil {
-			result.Project = prj
-		}
-		return &ResultContext{Prj: prj, Cfg: c, Res: result}, nil
+		return funcName(prj, cfg, actT, as, logger, ctx)
 	})
+	if len(prjs) > len(nonSelf) {
+		for _, self := range prjs.WithTags("self") {
+			x, _ := funcName(self, cfg, actT, as, logger, ctx)
+			results = append(results, x)
+		}
+	}
 	slices.SortFunc(results, func(l *ResultContext, r *ResultContext) int {
 		return cmp.Compare(strings.ToLower(l.Prj.Title()), strings.ToLower(r.Prj.Title()))
 	})
 	return results
+}
+
+func funcName(prj *project.Project, cfg util.ValueMap, actT Type, as *app.State, logger util.Logger, ctx context.Context) (*ResultContext, error) {
+	mSvc, pSvc, eSvc, xSvc := as.Services.Modules, as.Services.Projects, as.Services.Export, as.Services.Exec
+	c := cfg.Clone()
+	prms := &Params{ProjectKey: prj.Key, T: actT, Cfg: cfg, MSvc: mSvc, PSvc: pSvc, XSvc: xSvc, ESvc: eSvc, Logger: logger}
+	result := Apply(ctx, prms)
+	if result.Project == nil {
+		result.Project = prj
+	}
+	return &ResultContext{Prj: prj, Cfg: c, Res: result}, nil
 }
 
 func Apply(ctx context.Context, p *Params) (ret *Result) {
