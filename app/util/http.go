@@ -14,11 +14,15 @@ type HTTPRequest struct {
 	client *http.Client
 }
 
-func NewHTTPRequest(ctx context.Context, method string, url string) *HTTPRequest {
+func NewHTTPRequest(ctx context.Context, method string, url string, bodies ...io.Reader) *HTTPRequest {
 	if method == "" {
 		method = http.MethodGet
 	}
-	ret, _ := http.NewRequestWithContext(ctx, method, url, http.NoBody)
+	var body io.Reader = http.NoBody
+	if len(bodies) > 0 {
+		body = bodies[0]
+	}
+	ret, _ := http.NewRequestWithContext(ctx, method, url, body)
 	return &HTTPRequest{Request: ret}
 }
 

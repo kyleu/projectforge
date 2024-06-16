@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"encoding/csv"
 	"fmt"
+	"strings"
 
 	"github.com/pkg/errors"
 )
@@ -19,7 +20,7 @@ func ToCSV(data any) ([]string, [][]string, error) {
 		return cols, rows, nil
 	}
 	if x, ok := data.(string); ok {
-		csvdata, err := csv.NewReader(bytes.NewReader([]byte(x))).ReadAll()
+		csvdata, err := csv.NewReader(strings.NewReader(x)).ReadAll()
 		if err != nil || len(csvdata) == 0 {
 			return []string{x}, [][]string{}, nil //nolint:nilerr
 		}

@@ -2,6 +2,7 @@ package auth
 
 import (
 	"fmt"
+	"path"
 	"strings"
 
 	"github.com/markbates/goth"
@@ -17,7 +18,17 @@ type Provider struct {
 	Scopes []string `json:"-"`
 }
 
-func (p *Provider) Goth(proto string, host string) (goth.Provider, error) {
+func (p *Provider) Goth(proto string, host string, redirPathOverride ...string) (goth.Provider, error) {
+	u := GothURL(p.ID, proto, host, redirPathOverride...)
+	gothPrv, err := toGoth(p.ID, p.Key, p.Secret, u, p.Scopes...)
+	if err != nil {
+		return nil, err
+	}
+	goth.UseProviders(gothPrv)
+	return gothPrv, nil
+}
+
+func GothURL(key string, proto string, host string, redirPathOverride ...string) string {
 	if p := util.GetEnv("oauth_protocol"); p != "" {
 		proto = p
 	}
@@ -33,11 +44,13 @@ func (p *Provider) Goth(proto string, host string) (goth.Provider, error) {
 		u = env
 	}
 	u = strings.TrimSuffix(u, "/")
-	cb := fmt.Sprintf("%s/auth/callback/%s", u, p.ID)
-	gothPrv, err := toGoth(p.ID, p.Key, p.Secret, cb, p.Scopes...)
-	if err != nil {
-		return nil, err
+	if len(redirPathOverride) == 0 {
+		u = fmt.Sprintf("%s/auth/callback/%s", u, key)
+	} else {
+		if strings.HasPrefix(redirPathOverride[0], proto) {
+			return redirPathOverride[0]
+		}
+		u = fmt.Sprintf("%s%s", u, path.Join(redirPathOverride...))
 	}
-	goth.UseProviders(gothPrv)
-	return gothPrv, nil
+	return u
 }

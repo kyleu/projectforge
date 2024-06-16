@@ -93,7 +93,11 @@ func gothFor(r *http.Request, prv *Provider) (goth.Provider, error) {
 			proto = fp
 		}
 	}
-	return prv.Goth(proto, host)
+	var redirOverrides []string
+	if x := r.URL.Query().Get("redir"); x != "" {
+		redirOverrides = append(redirOverrides, x)
+	}
+	return prv.Goth(proto, host, redirOverrides...)
 }
 
 func Logout(w http.ResponseWriter, r *http.Request, websess util.ValueMap, logger util.Logger, prvKeys ...string) error {
