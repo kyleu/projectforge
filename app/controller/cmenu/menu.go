@@ -7,6 +7,7 @@ import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/lib/filter"
 	"projectforge.dev/projectforge/app/lib/menu"
+	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/lib/user"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -14,6 +15,8 @@ import (
 func MenuFor(
 	ctx context.Context, isAuthed bool, isAdmin bool, profile *user.Profile, params filter.ParamSet, as *app.State, logger util.Logger, //nolint:revive
 ) (menu.Items, any, error) {
+	ctx, sp, _ := telemetry.StartSpan(ctx, "menu", logger)
+	defer sp.Complete()
 	var ret menu.Items
 	var data any
 	// $PF_SECTION_START(menu)$

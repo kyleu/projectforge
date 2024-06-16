@@ -7,6 +7,7 @@ import (
 	"{{{ .Package }}}/app/lib/filter"
 	"{{{ .Package }}}/app/lib/menu"{{{ if .HasModule "sandbox" }}}
 	"{{{ .Package }}}/app/lib/sandbox"{{{ end }}}
+	"{{{ .Package }}}/app/lib/telemetry"
 	"{{{ .Package }}}/app/lib/user"
 	"{{{ .Package }}}/app/util"
 )
@@ -14,6 +15,8 @@ import (
 func MenuFor(
 	ctx context.Context, isAuthed bool, isAdmin bool, profile *user.Profile, params filter.ParamSet, as *app.State, logger util.Logger, //nolint:revive
 ) (menu.Items, any, error) {
+	ctx, sp, _ := telemetry.StartSpan(ctx, "menu", logger)
+	defer sp.Complete()
 	var ret menu.Items
 	var data any
 	// $PF_SECTION_START(menu)$ {{{ if .HasExportModels }}}{{{ if .HasAccount }}}
