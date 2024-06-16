@@ -44,15 +44,15 @@
       <input id="{%s itemID %}-input" type="checkbox"{% if active %}{% space %}checked="checked"{% endif %}{% space %}hidden="hidden" />
       {%= components.Indent(true, indent + 2) %}
       {% if final %}<label class="final" for="{%s itemID %}-input" title="{%s i.Desc() %}">{% else %}<label for="{%s itemID %}-input" title="{%s i.Desc() %}">{% endif %}
-        {% if i.Route != "" && i.Badge == "" %}
-          {%= components.Indent(true, indent + 3) %}
-          <a class="label-link" href="{%s i.Route %}">{%= components.SVGSimple(`link`, 15, ps) %}</a>
-        {% endif %}
         {%= components.ExpandCollapse(indent + 3, ps) %}
         {%= menuBadge(i, indent + 3, ps) %}
         {%= components.Indent(true, indent + 3) %}
         {% if i.Icon != "" %}
-          {%= components.SVGRef(i.Icon, 16, 16, "icon", ps) %}{% space %}
+          {% if i.Warning != "" %}
+          <a class="link-confirm" data-message="{%s i.Warning %}" href="{%s i.Route %}">{%= components.SVGRef(i.Icon, 16, 16, "icon", ps) %}</a>{% space %}
+          {% else %}
+          <a href="{%s i.Route %}">{%= components.SVGRef(i.Icon, 16, 16, "icon", ps) %}</a>{% space %}
+          {% endif %}
         {% endif %}
         {% if i.Route != "" %}
           {% if i.Warning != "" %}

@@ -179,33 +179,47 @@ func StreamMenuItem(qw422016 *qt422016.Writer, i *menu.Item, path []string, brea
 //line views/layout/Menu.html:46
 		}
 //line views/layout/Menu.html:47
-		if i.Route != "" && i.Badge == "" {
-//line views/layout/Menu.html:48
-			components.StreamIndent(qw422016, true, indent+3)
-//line views/layout/Menu.html:48
-			qw422016.N().S(`<a class="label-link" href="`)
-//line views/layout/Menu.html:49
-			qw422016.E().S(i.Route)
-//line views/layout/Menu.html:49
-			qw422016.N().S(`">`)
-//line views/layout/Menu.html:49
-			components.StreamSVGSimple(qw422016, `link`, 15, ps)
-//line views/layout/Menu.html:49
-			qw422016.N().S(`</a>`)
-//line views/layout/Menu.html:50
-		}
-//line views/layout/Menu.html:51
 		components.StreamExpandCollapse(qw422016, indent+3, ps)
-//line views/layout/Menu.html:52
+//line views/layout/Menu.html:48
 		streammenuBadge(qw422016, i, indent+3, ps)
-//line views/layout/Menu.html:53
+//line views/layout/Menu.html:49
 		components.StreamIndent(qw422016, true, indent+3)
-//line views/layout/Menu.html:54
+//line views/layout/Menu.html:50
 		if i.Icon != "" {
+//line views/layout/Menu.html:51
+			if i.Warning != "" {
+//line views/layout/Menu.html:51
+				qw422016.N().S(`<a class="link-confirm" data-message="`)
+//line views/layout/Menu.html:52
+				qw422016.E().S(i.Warning)
+//line views/layout/Menu.html:52
+				qw422016.N().S(`" href="`)
+//line views/layout/Menu.html:52
+				qw422016.E().S(i.Route)
+//line views/layout/Menu.html:52
+				qw422016.N().S(`">`)
+//line views/layout/Menu.html:52
+				components.StreamSVGRef(qw422016, i.Icon, 16, 16, "icon", ps)
+//line views/layout/Menu.html:52
+				qw422016.N().S(`</a>`)
+//line views/layout/Menu.html:52
+				qw422016.N().S(` `)
+//line views/layout/Menu.html:53
+			} else {
+//line views/layout/Menu.html:53
+				qw422016.N().S(`<a href="`)
+//line views/layout/Menu.html:54
+				qw422016.E().S(i.Route)
+//line views/layout/Menu.html:54
+				qw422016.N().S(`">`)
+//line views/layout/Menu.html:54
+				components.StreamSVGRef(qw422016, i.Icon, 16, 16, "icon", ps)
+//line views/layout/Menu.html:54
+				qw422016.N().S(`</a>`)
+//line views/layout/Menu.html:54
+				qw422016.N().S(` `)
 //line views/layout/Menu.html:55
-			components.StreamSVGRef(qw422016, i.Icon, 16, 16, "icon", ps)
-//line views/layout/Menu.html:55
-			qw422016.N().S(` `)
+			}
 //line views/layout/Menu.html:56
 		}
 //line views/layout/Menu.html:57

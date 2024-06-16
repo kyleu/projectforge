@@ -72,16 +72,6 @@
   border-bottom: 1px solid var(--color-menu-selected-background);
 }
 
-.menu-container .label-link {
-  float: right;
-  margin-right: var(--padding);
-}
-
-.menu-container .label-link svg {
-  position: relative;
-  top: 2px;
-}
-
 .menu-container .item svg {
   margin-left: 19px;
 }
