@@ -70,7 +70,7 @@ func searchModel(m *model.Model) []string {
 	if icons := m.Columns.WithFormat("icon"); len(icons) == 1 {
 		icon = fmt.Sprintf("%s.%s", data, icons[0].ProperDerived())
 	}
-	ret.Pushf("\t\t\treturn result.NewResult(%q, m.String(), m.WebPath(), m.TitleString(), %s, m, %s, params.Q)", m.Package, icon, data)
+	ret.Pushf("\t\t\treturn result.NewResult(%q, m.String(), m.WebPath(), m.TitleString(), %s, m, %s, params.Q)", m.Title(), icon, data)
 	ret.Push("\t\t}), nil")
 	ret.Push("\t}")
 	return ret.Slice
