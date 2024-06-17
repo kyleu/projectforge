@@ -111,7 +111,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:48
-	edit.StreamStringTable(qw422016, "tags", "", "Tags", strings.Join(prj.Tags, ", "), 5, project.Helpers["tags"]...)
+	edit.StreamTagsTable(qw422016, "tags", "", "Tags", prj.Tags, ps, 5)
 //line views/vproject/Edit.html:48
 	qw422016.N().S(`
             `)

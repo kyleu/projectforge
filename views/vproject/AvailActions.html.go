@@ -45,139 +45,140 @@ func StreamAvailActions(qw422016 *qt422016.Writer, title string, currTags []stri
 //line views/vproject/AvailActions.html:17
 	qw422016.N().S(`
   <h3>
-    <a href="/p">`)
+    `)
 //line views/vproject/AvailActions.html:19
 	components.StreamSVGIcon(qw422016, `code`, ps)
 //line views/vproject/AvailActions.html:19
-	qw422016.N().S(` All Projects</a>`)
-//line views/vproject/AvailActions.html:19
+	qw422016.N().S(`
+    <a href="/p">All Projects</a>`)
+//line views/vproject/AvailActions.html:20
 	if len(currTags) > 0 {
-//line views/vproject/AvailActions.html:19
+//line views/vproject/AvailActions.html:20
 		qw422016.N().S(` tagged [<a href="/p?tags=`)
-//line views/vproject/AvailActions.html:19
+//line views/vproject/AvailActions.html:20
 		qw422016.E().S(strings.Join(currTags, `, `))
-//line views/vproject/AvailActions.html:19
+//line views/vproject/AvailActions.html:20
 		qw422016.N().S(`">`)
-//line views/vproject/AvailActions.html:19
+//line views/vproject/AvailActions.html:20
 		qw422016.E().S(strings.Join(currTags, `, `))
-//line views/vproject/AvailActions.html:19
+//line views/vproject/AvailActions.html:20
 		qw422016.N().S(`</a>]`)
-//line views/vproject/AvailActions.html:19
+//line views/vproject/AvailActions.html:20
 	}
-//line views/vproject/AvailActions.html:19
+//line views/vproject/AvailActions.html:20
 	if title != "" {
-//line views/vproject/AvailActions.html:19
+//line views/vproject/AvailActions.html:20
 		qw422016.N().S(`: <a href="">`)
-//line views/vproject/AvailActions.html:19
+//line views/vproject/AvailActions.html:20
 		qw422016.E().S(title)
-//line views/vproject/AvailActions.html:19
+//line views/vproject/AvailActions.html:20
 		qw422016.N().S(`</a>`)
-//line views/vproject/AvailActions.html:19
+//line views/vproject/AvailActions.html:20
 	}
-//line views/vproject/AvailActions.html:19
+//line views/vproject/AvailActions.html:20
 	qw422016.N().S(`
   </h3>
   <div class="clear"></div>
 `)
-//line views/vproject/AvailActions.html:22
+//line views/vproject/AvailActions.html:23
 	if len(availTags) > 0 {
-//line views/vproject/AvailActions.html:22
+//line views/vproject/AvailActions.html:23
 		qw422016.N().S(`  <div class="right mt">
     Available Tags:
 `)
-//line views/vproject/AvailActions.html:25
+//line views/vproject/AvailActions.html:26
 		for idx, t := range availTags {
-//line views/vproject/AvailActions.html:25
+//line views/vproject/AvailActions.html:26
 			qw422016.N().S(`    <a href="?tags=`)
-//line views/vproject/AvailActions.html:26
+//line views/vproject/AvailActions.html:27
 			qw422016.E().S(t)
-//line views/vproject/AvailActions.html:26
+//line views/vproject/AvailActions.html:27
 			qw422016.N().S(`"><code>`)
-//line views/vproject/AvailActions.html:26
+//line views/vproject/AvailActions.html:27
 			qw422016.E().S(t)
-//line views/vproject/AvailActions.html:26
+//line views/vproject/AvailActions.html:27
 			qw422016.N().S(`</code></a>`)
-//line views/vproject/AvailActions.html:26
+//line views/vproject/AvailActions.html:27
 			if idx != (len(availTags) - 1) {
-//line views/vproject/AvailActions.html:26
+//line views/vproject/AvailActions.html:27
 				qw422016.N().S(`, `)
-//line views/vproject/AvailActions.html:26
+//line views/vproject/AvailActions.html:27
 			}
-//line views/vproject/AvailActions.html:26
+//line views/vproject/AvailActions.html:27
 			qw422016.N().S(`
 `)
-//line views/vproject/AvailActions.html:27
+//line views/vproject/AvailActions.html:28
 		}
-//line views/vproject/AvailActions.html:27
+//line views/vproject/AvailActions.html:28
 		qw422016.N().S(`  </div>
 `)
-//line views/vproject/AvailActions.html:29
+//line views/vproject/AvailActions.html:30
 	}
-//line views/vproject/AvailActions.html:29
+//line views/vproject/AvailActions.html:30
 	qw422016.N().S(`  <div class="mt">
 `)
-//line views/vproject/AvailActions.html:31
+//line views/vproject/AvailActions.html:32
 	for _, t := range action.ProjectTypes {
-//line views/vproject/AvailActions.html:31
+//line views/vproject/AvailActions.html:32
 		qw422016.N().S(`    <a href="/run/`)
-//line views/vproject/AvailActions.html:32
+//line views/vproject/AvailActions.html:33
 		qw422016.E().S(t.Key)
-//line views/vproject/AvailActions.html:32
+//line views/vproject/AvailActions.html:33
 		qw422016.E().S(tags)
-//line views/vproject/AvailActions.html:32
+//line views/vproject/AvailActions.html:33
 		qw422016.N().S(`" title="`)
-//line views/vproject/AvailActions.html:32
+//line views/vproject/AvailActions.html:33
 		qw422016.E().S(t.Description)
-//line views/vproject/AvailActions.html:32
+//line views/vproject/AvailActions.html:33
 		qw422016.N().S(`"><button>`)
-//line views/vproject/AvailActions.html:32
+//line views/vproject/AvailActions.html:33
 		components.StreamSVGButton(qw422016, t.Icon, ps)
-//line views/vproject/AvailActions.html:32
+//line views/vproject/AvailActions.html:33
 		qw422016.N().S(` `)
-//line views/vproject/AvailActions.html:32
+//line views/vproject/AvailActions.html:33
 		qw422016.E().S(t.Title)
-//line views/vproject/AvailActions.html:32
+//line views/vproject/AvailActions.html:33
 		qw422016.N().S(`</button></a>
 `)
-//line views/vproject/AvailActions.html:33
+//line views/vproject/AvailActions.html:34
 	}
-//line views/vproject/AvailActions.html:33
+//line views/vproject/AvailActions.html:34
 	qw422016.N().S(`    <a href="/git`)
-//line views/vproject/AvailActions.html:34
+//line views/vproject/AvailActions.html:35
 	qw422016.E().S(tags)
-//line views/vproject/AvailActions.html:34
+//line views/vproject/AvailActions.html:35
 	qw422016.N().S(`" title="Git dashboard for all projects"><button>`)
-//line views/vproject/AvailActions.html:34
+//line views/vproject/AvailActions.html:35
 	components.StreamSVGButton(qw422016, "git", ps)
-//line views/vproject/AvailActions.html:34
+//line views/vproject/AvailActions.html:35
 	qw422016.N().S(` Git</button></a>
   </div>
 `)
-//line views/vproject/AvailActions.html:36
+//line views/vproject/AvailActions.html:37
 }
 
-//line views/vproject/AvailActions.html:36
+//line views/vproject/AvailActions.html:37
 func WriteAvailActions(qq422016 qtio422016.Writer, title string, currTags []string, availTags []string, ps *cutil.PageState) {
-//line views/vproject/AvailActions.html:36
+//line views/vproject/AvailActions.html:37
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/AvailActions.html:36
+//line views/vproject/AvailActions.html:37
 	StreamAvailActions(qw422016, title, currTags, availTags, ps)
-//line views/vproject/AvailActions.html:36
+//line views/vproject/AvailActions.html:37
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/AvailActions.html:36
+//line views/vproject/AvailActions.html:37
 }
 
-//line views/vproject/AvailActions.html:36
+//line views/vproject/AvailActions.html:37
 func AvailActions(title string, currTags []string, availTags []string, ps *cutil.PageState) string {
-//line views/vproject/AvailActions.html:36
+//line views/vproject/AvailActions.html:37
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/AvailActions.html:36
+//line views/vproject/AvailActions.html:37
 	WriteAvailActions(qb422016, title, currTags, availTags, ps)
-//line views/vproject/AvailActions.html:36
+//line views/vproject/AvailActions.html:37
 	qs422016 := string(qb422016.B)
-//line views/vproject/AvailActions.html:36
+//line views/vproject/AvailActions.html:37
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/AvailActions.html:36
+//line views/vproject/AvailActions.html:37
 	return qs422016
-//line views/vproject/AvailActions.html:36
+//line views/vproject/AvailActions.html:37
 }

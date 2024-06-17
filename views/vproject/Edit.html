@@ -45,7 +45,7 @@
             {%= edit.StringTable("args", "", "Args", prj.Args, 5, project.Helpers["args"]...) %}
             {%= edit.IntTable("port", "", "Port", prj.Port, 5, project.Helpers["port"]...) %}
             {%= edit.StringTable("ignore", "", "Ignore", strings.Join(prj.Ignore, ", "), 5, project.Helpers["ignore"]...) %}
-            {%= edit.StringTable("tags", "", "Tags", strings.Join(prj.Tags, ", "), 5, project.Helpers["tags"]...) %}
+            {%= edit.TagsTable("tags", "", "Tags", prj.Tags, ps, 5) %}
             {%= edit.StringTable("path", "", "Path", prj.Path, 5, project.Helpers["path"]...) %}
           </tbody>
         </table>

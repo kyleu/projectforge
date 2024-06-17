@@ -1,8 +1,9 @@
 package build
 
 import (
-	"github.com/samber/lo"
 	"slices"
+
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/project"
