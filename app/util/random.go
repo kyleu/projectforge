@@ -70,13 +70,20 @@ func RandomURL() *url.URL {
 	return u
 }
 
-func RandomElements[T any](l []T, x int) []T {
-	if len(l) <= x {
-		return lo.Shuffle(l)
+func RandomElements[T any](slice []T, idx int) []T {
+	if len(slice) <= idx {
+		return lo.Shuffle(slice)
 	}
-	return lo.Map(lo.Range(x), func(_ int, _ int) T {
-		return l[RandomInt(len(l))]
+	return lo.Map(lo.Range(idx), func(_ int, _ int) T {
+		return slice[RandomInt(len(slice))]
 	})
+}
+
+func RandomElement[T any](slice []T) T {
+	if len(slice) == 0 {
+		return DefaultValue[T]()
+	}
+	return slice[RandomInt(len(slice))]
 }
 
 func RandomDiffs(size int) Diffs {

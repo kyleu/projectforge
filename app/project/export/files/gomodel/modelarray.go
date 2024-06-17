@@ -97,10 +97,7 @@ func modelArrayGet(g *golang.File, m *model.Model, cols model.Columns, enums enu
 func modelArrayRandom(m *model.Model) *golang.Block {
 	ret := golang.NewBlock(m.Proper()+"ArrayRandom", "func")
 	ret.W("func (%s %s) Random() *%s {", m.FirstLetter(), m.ProperPlural(), m.Proper())
-	ret.W("\tif len(%s) == 0 {", m.FirstLetter())
-	ret.W("\t\treturn nil")
-	ret.W("\t}")
-	ret.W("\treturn %s[util.RandomInt(len(%s))]", m.FirstLetter(), m.FirstLetter())
+	ret.W("\treturn util.RandomElement(%s)", m.FirstLetter())
 	ret.W("}")
 	return ret
 }

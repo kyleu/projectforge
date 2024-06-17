@@ -184,7 +184,7 @@ func blockGetByPropShared(e *enum.Enum, efk string, t string) (*golang.Block, er
 func blockRandom(e *enum.Enum) *golang.Block {
 	rBlock := golang.NewBlock(e.ProperPlural()+"Random", "method")
 	rBlock.W("func (%s %s) Random() %s {", e.FirstLetter(), e.ProperPlural(), e.Proper())
-	rBlock.W("\treturn %s[util.RandomInt(len(%s))]", e.FirstLetter(), e.FirstLetter())
+	rBlock.W("\treturn util.RandomElement(%s)", e.FirstLetter())
 	rBlock.W("}")
 	return rBlock
 }
