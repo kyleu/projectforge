@@ -121,6 +121,7 @@
             {%= edit.StringTable("goVersion", "", "Go Version", info.GoVersion, 5, project.Helpers["goVersion"]...) %}
             {%= edit.StringTable("goBinary", "", "Go Binary", info.GoBinary, 5, project.Helpers["goBinary"]...) %}
             {%= edit.StringTable("extraFiles", "", "Extra Files", strings.Join(info.ExtraFiles, ", "), 5, project.Helpers["extraFiles"]...) %}
+            {%= edit.StringTable("ignoredFiles", "", "Ignored Files", strings.Join(info.IgnoredFiles, ", "), 5, project.Helpers["ignoredFiles"]...) %}
             {%= edit.StringTable("deployments", "", "Deployments", strings.Join(info.Deployments, ", "), 5, project.Helpers["deployments"]...) %}
             {%= edit.TextareaTable("envvars", "", "Env Vars", 8, util.ToJSON(info.EnvVars), 5, project.Helpers["envvars"]...) %}
             {%= edit.TextareaTable("docs", "", "Documentation", 8, util.ToJSON(info.Docs), 5, project.Helpers["docs"]...) %}

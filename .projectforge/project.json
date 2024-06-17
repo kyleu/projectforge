@@ -50,7 +50,12 @@
     "bundle": "com.kyleu.projectforge",
     "signingIdentity": "Developer ID Application: Kyle Unverferth (C6S478FYLD)",
     "notarizeEmail": "kyle@kyleu.com",
-    "javaPackage": "dev.projectforge"
+    "javaPackage": "dev.projectforge",
+    "ignoredFiles": [
+      "app/site/handle.go",
+      "app/site/menu.go",
+      "views/vsite/Index.html"
+    ]
   },
   "build": {
     "changelog": true,

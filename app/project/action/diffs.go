@@ -60,7 +60,7 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 			return nil, nil, err
 		}
 	}
-	dfs, err := diff.FileLoader(pm.Mods.Keys(), srcFiles, pm.FS, false, pm.Logger)
+	dfs, err := diff.FileLoader(pm.Mods.Keys(), srcFiles, pm.FS, pm.Prj.Info.IgnoredFiles, false, pm.Logger)
 	if err != nil {
 		return nil, nil, err
 	}

@@ -139,6 +139,7 @@ func infoFromCfg(proto *project.Project, cfg util.ValueMap) *project.Info {
 		GoBinary:        str("goBinary", i.GoBinary),
 		ConfigVars:      cfgVars,
 		ExtraFiles:      util.StringSplitAndTrim(str("extraFiles", strings.Join(i.ExtraFiles, ", ")), ","),
+		IgnoredFiles:    util.StringSplitAndTrim(str("ignoredFiles", strings.Join(i.IgnoredFiles, ", ")), ","),
 		Deployments:     util.StringSplitAndTrim(str("deployments", strings.Join(i.Deployments, ", ")), ","),
 		EnvVars:         envVars,
 		Docs:            docs,

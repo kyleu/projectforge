@@ -19,7 +19,6 @@ const (
 	startPattern        = "_START("
 	endPattern          = "_END("
 	closePattern        = ")$"
-	IgnorePattern       = prefix + "IGNORE" + suffix
 	GenerateOncePattern = prefix + "GENERATE_ONCE" + suffix
 )
 

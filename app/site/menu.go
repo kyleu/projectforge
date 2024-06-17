@@ -1,4 +1,3 @@
-// Package site - $PF_IGNORE$
 package site
 
 import (

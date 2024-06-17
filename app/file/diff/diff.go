@@ -71,7 +71,7 @@ func Files(src file.Files, tgt file.Files, includeUnchanged bool) Diffs {
 	})
 }
 
-func FileLoader(mods []string, src file.Files, tgt filesystem.FileLoader, includeUnchanged bool, logger util.Logger) (Diffs, error) {
+func FileLoader(mods []string, src file.Files, tgt filesystem.FileLoader, ignoredFiles []string, includeUnchanged bool, logger util.Logger) (Diffs, error) {
 	var ret Diffs
 	for _, s := range src {
 		p := s.FullPath()
@@ -94,7 +94,7 @@ func FileLoader(mods []string, src file.Files, tgt filesystem.FileLoader, includ
 			}
 			tgtFile = file.NewFile(p, t.Mode, b, false, pkg, logger)
 
-			if strings.Contains(tgtFile.Content, file.IgnorePattern) {
+			if slices.Contains(ignoredFiles, tgtFile.FullPath()) {
 				skip = true
 			}
 			if strings.Contains(s.Content, file.GenerateOncePattern) {

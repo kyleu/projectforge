@@ -16,13 +16,10 @@ const (
 )
 
 func ContainsHeader(s string) bool {
-	return strings.Contains(s, HeaderContent) || strings.Contains(s, "$PF_IGNORE$")
+	return strings.Contains(s, HeaderContent)
 }
 
 func contentWithHeader(filename string, t Type, c string, linebreak string, pkg string, logger util.Logger) string {
-	if strings.Contains(c, IgnorePattern) {
-		return c
-	}
 	switch t.Key {
 	case TypeBatch.Key:
 		return secondLine(c, "rem "+HeaderContent, linebreak)

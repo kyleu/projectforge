@@ -196,6 +196,13 @@
             "type": "string"
           }
         },
+        "ignoredFiles": {
+          "description": "files relative to this project that are ignored by code generation",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "deployments": {
           "description": "files that track deployment of this app",
           "type": "array",

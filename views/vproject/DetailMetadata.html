@@ -119,6 +119,20 @@
           </td>
         </tr>
         <tr>
+          <th>Ignored Files</th>
+          <td>
+            {%- if len(info.IgnoredFiles) == 0 -%}
+            <em>none</em>
+            {%- else -%}
+            <ul>
+              {%- for _, x := range info.IgnoredFiles -%}
+              <li>{%s x %}</li>
+              {%- endfor -%}
+            </ul>
+            {%- endif -%}
+          </td>
+        </tr>
+        <tr>
           <th>Deployments</th>
           <td>
             {%- if len(info.Deployments) == 0 -%}

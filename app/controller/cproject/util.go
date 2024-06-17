@@ -76,6 +76,7 @@ func projectFromForm(frm util.ValueMap, prj *project.Project) error {
 	prj.Info.GoVersion = get("goVersion", prj.Info.GoBinary)
 	prj.Info.GoBinary = get("goBinary", prj.Info.GoBinary)
 	prj.Info.ExtraFiles = util.StringSplitAndTrim(get("extraFiles", strings.Join(prj.Info.ExtraFiles, ", ")), ",")
+	prj.Info.IgnoredFiles = util.StringSplitAndTrim(get("ignoredFiles", strings.Join(prj.Info.IgnoredFiles, ", ")), ",")
 	prj.Info.Deployments = util.StringSplitAndTrim(get("deployments", strings.Join(prj.Info.Deployments, ", ")), ",")
 	prj.Info.Acronyms = util.StringSplitAndTrim(get("acronyms", strings.Join(prj.Info.Acronyms, ", ")), ",")
 

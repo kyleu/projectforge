@@ -50,6 +50,7 @@ type Info struct {
 	GoBinary        string            `json:"goBinary,omitempty"`
 	ConfigVars      util.KeyTypeDescs `json:"configVars,omitempty"`
 	ExtraFiles      []string          `json:"extraFiles,omitempty"`
+	IgnoredFiles    []string          `json:"ignoredFiles,omitempty"`
 	Deployments     []string          `json:"deployments,omitempty"`
 	EnvVars         []string          `json:"envVars,omitempty"`
 	Docs            Docs              `json:"docs,omitempty"`
