@@ -7,7 +7,7 @@ import (
 	"projectforge.dev/projectforge/app/project/export/golang"
 )
 
-func ServiceList(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
+func ServiceList(m *model.Model, args *model.Args, linebreak string) (*file.File, error) {
 	dbRef := args.DBRef()
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "servicelist")
 	g.AddImport(helper.ImpAppUtil, helper.ImpContext, helper.ImpErrors, helper.ImpSQLx, helper.ImpFilter, helper.ImpAppDatabase)
@@ -21,7 +21,7 @@ func ServiceList(m *model.Model, args *model.Args, addHeader bool, linebreak str
 		}
 		g.AddBlocks(ss)
 	}
-	return g.Render(addHeader, linebreak)
+	return g.Render(linebreak)
 }
 
 func serviceList(m *model.Model, dbRef string) *golang.Block {

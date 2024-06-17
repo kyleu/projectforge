@@ -16,7 +16,7 @@ import (
 
 const tSet = "Set"
 
-func Models(m *model.Model, args *model.Args, addHeader bool, goVersion string, linebreak string) (*file.File, error) {
+func Models(m *model.Model, args *model.Args, goVersion string, linebreak string) (*file.File, error) {
 	name := strings.ToLower(m.CamelPlural())
 	if name == strings.ToLower(m.Camel()) {
 		name += "_array"
@@ -62,7 +62,7 @@ func Models(m *model.Model, args *model.Args, addHeader bool, goVersion string, 
 		}
 	})
 	g.AddBlocks(modelArrayToCSV(m), modelArrayRandom(m), modelArrayClone(m))
-	return g.Render(addHeader, linebreak)
+	return g.Render(linebreak)
 }
 
 func modelArray(m *model.Model) *golang.Block {

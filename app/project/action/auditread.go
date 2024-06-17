@@ -5,52 +5,9 @@ import (
 	"slices"
 
 	"github.com/pkg/errors"
-	"github.com/samber/lo"
-
-	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/util"
 )
-
-func getGeneratedFiles(tgt filesystem.FileLoader, ignore []string, logger util.Logger) ([]string, error) {
-	filenames, err := tgt.ListFilesRecursive("", ignore, logger)
-	if err != nil {
-		return nil, err
-	}
-	ret := &util.StringSlice{}
-	for _, fn := range filenames {
-		b, e := tgt.PeekFile(fn, 1024)
-		if e != nil {
-			return nil, e
-		}
-		if file.ContainsHeader(string(b)) {
-			ret.Push(fn)
-		}
-	}
-	return ret.Slice, nil
-}
-
-func getModuleFiles(pm *PrjAndMods) ([]string, error) {
-	ret, err := pm.MSvc.GetFilenames(pm.Mods, pm.Logger)
-	if err != nil {
-		return nil, err
-	}
-	if pm.Prj.HasModule("export") {
-		lb := util.StringDefaultLinebreak
-		modContent, _ := pm.FS.ReadFile("go.mod")
-		if modContent != nil {
-			lb = util.StringDetectLinebreak(string(modContent))
-		}
-		files, e := pm.ESvc.Files(pm.Prj, true, lb)
-		if e != nil {
-			return nil, err
-		}
-		ret = lo.Uniq(append(lo.Map(files, func(f *file.File, _ int) string {
-			return f.FullPath()
-		}), ret...))
-	}
-	return ret, nil
-}
 
 func getEmptyFolders(tgt filesystem.FileLoader, ignore []string, logger util.Logger, pth ...string) ([]string, error) {
 	ret := &util.StringSlice{}

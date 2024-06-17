@@ -13,7 +13,7 @@ import (
 	"projectforge.dev/projectforge/app/project/export/files/svc"
 )
 
-func All(p *project.Project, addHeader bool, linebreak string) (file.Files, error) {
+func All(p *project.Project, linebreak string) (file.Files, error) {
 	if p.ExportArgs == nil {
 		return nil, errors.New("export arguments aren't loaded")
 	}
@@ -24,7 +24,7 @@ func All(p *project.Project, addHeader bool, linebreak string) (file.Files, erro
 	ret := make(file.Files, 0, (len(args.Models)*10)+len(args.Enums))
 
 	for _, e := range args.Enums {
-		call, err := goenum.Enum(e, addHeader, linebreak)
+		call, err := goenum.Enum(e, linebreak)
 		if err != nil {
 			return nil, errors.Wrapf(err, "error processing enum [%s]", e.Name)
 		}
@@ -32,7 +32,7 @@ func All(p *project.Project, addHeader bool, linebreak string) (file.Files, erro
 	}
 
 	for _, m := range args.Models {
-		calls, err := ModelAll(m, p, args, addHeader, linebreak)
+		calls, err := ModelAll(m, p, args, linebreak)
 		if err != nil {
 			return nil, errors.Wrapf(err, "error processing model [%s]", m.Name)
 		}
@@ -40,7 +40,7 @@ func All(p *project.Project, addHeader bool, linebreak string) (file.Files, erro
 	}
 
 	if len(args.Models) > 0 {
-		x, err := svc.Services(args, addHeader, linebreak)
+		x, err := svc.Services(args, linebreak)
 		if err != nil {
 			return nil, err
 		}
@@ -48,7 +48,7 @@ func All(p *project.Project, addHeader bool, linebreak string) (file.Files, erro
 	}
 
 	if len(args.Enums) > 0 && p.HasModule("migration") {
-		f, err := sql.Types(args.Enums, addHeader, linebreak, args.Database)
+		f, err := sql.Types(args.Enums, linebreak, args.Database)
 		if err != nil {
 			return nil, errors.Wrap(err, "can't render SQL types")
 		}
@@ -56,7 +56,7 @@ func All(p *project.Project, addHeader bool, linebreak string) (file.Files, erro
 	}
 
 	if len(args.Models) > 0 {
-		x, err := controller.Routes(args, addHeader, linebreak)
+		x, err := controller.Routes(args, linebreak)
 		if err != nil {
 			return nil, err
 		}
@@ -67,14 +67,14 @@ func All(p *project.Project, addHeader bool, linebreak string) (file.Files, erro
 		return ret, nil
 	}
 
-	x, err := controller.Menu(args, addHeader, linebreak)
+	x, err := controller.Menu(args, linebreak)
 	if err != nil {
 		return nil, err
 	}
 	ret = append(ret, x)
 
 	if args.HasModule("search") {
-		x, err = controller.Search(args, addHeader, linebreak)
+		x, err = controller.Search(args, linebreak)
 		if err != nil {
 			return nil, err
 		}
@@ -91,7 +91,7 @@ func All(p *project.Project, addHeader bool, linebreak string) (file.Files, erro
 
 	if args.HasModule("migration") {
 		migModels := args.Models.WithoutTag("external").Sorted()
-		f, err := sql.MigrationAll(migModels, args.Enums, addHeader, linebreak)
+		f, err := sql.MigrationAll(migModels, args.Enums, linebreak)
 		if err != nil {
 			return nil, errors.Wrap(err, "can't render SQL \"all\" migration")
 		}
@@ -99,7 +99,7 @@ func All(p *project.Project, addHeader bool, linebreak string) (file.Files, erro
 	}
 
 	if args.HasModule("notebook") {
-		x, err := script.NotebookScript(p, args, addHeader, linebreak)
+		x, err := script.NotebookScript(p, args, linebreak)
 		if err != nil {
 			return nil, err
 		}

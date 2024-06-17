@@ -52,9 +52,6 @@
               <form action="/run/{%s prjKey %}/audit" method="get">
                 <input type="hidden" name="file" value="{%s d.Path %}" />
                 <button type="submit" name="fix" value="remove" title="Remove file from project">Purge</button>{% space %}
-                {%- if d.Status.Matches(diff.StatusDifferent) -%}
-                <button type="submit" name="fix" value="header" title="Remove header from file">Fix</button>
-                {%- endif -%}
               </form>
               {%- case "preview" -%}
               <form action="/run/{%s prjKey %}/generate" method="get">

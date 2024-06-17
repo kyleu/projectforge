@@ -12,7 +12,7 @@ import (
 	"projectforge.dev/projectforge/app/project/export/golang"
 )
 
-func list(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
+func list(m *model.Model, args *model.Args, linebreak string) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "List.html")
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpFilter, helper.ImpLayout)
 	if m.HasSearches() {
@@ -24,7 +24,7 @@ func list(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*
 	g.AddImport(helper.AppImport(m.PackageWithGroup("")))
 	g.AddImport(m.Imports.Supporting("viewlist")...)
 	g.AddBlocks(exportViewListClass(m, args.Models, g), exportViewListBody(m, args.Models))
-	return g.Render(addHeader, linebreak)
+	return g.Render(linebreak)
 }
 
 func exportViewListClass(m *model.Model, models model.Models, g *golang.Template) *golang.Block {

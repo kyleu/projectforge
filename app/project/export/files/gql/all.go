@@ -16,7 +16,7 @@ func All(models model.Models, enums enum.Enums, linebreak string) (*file.File, e
 		modelBlocks(g, models, enums)
 	}
 	g.AddBlocks(extendQuery(), extendMutation())
-	return g.Render(false, linebreak)
+	return g.Render(linebreak)
 }
 
 func enumBlocks(g *golang.Template, enums enum.Enums) {

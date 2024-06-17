@@ -10,10 +10,10 @@ import (
 	"projectforge.dev/projectforge/app/project/export/golang"
 )
 
-func MigrationAll(models model.Models, enums enum.Enums, addHeader bool, linebreak string) (*file.File, error) {
+func MigrationAll(models model.Models, enums enum.Enums, linebreak string) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"queries", "ddl"}, "all.sql")
 	g.AddBlocks(sqlDropAll(models, enums), sqlCreateAll(models, enums))
-	return g.Render(addHeader, linebreak)
+	return g.Render(linebreak)
 }
 
 func sqlDropAll(models model.Models, enums enum.Enums) *golang.Block {
@@ -46,7 +46,7 @@ func SeedDataAll(models model.Models, linebreak string) (*file.File, error) {
 	ordered := models.Sorted()
 	g := golang.NewGoTemplate([]string{"queries", "seeddata"}, "all.sql")
 	g.AddBlocks(sqlSeedAll(ordered))
-	return g.Render(false, linebreak)
+	return g.Render(linebreak)
 }
 
 func sqlSeedAll(models model.Models) *golang.Block {

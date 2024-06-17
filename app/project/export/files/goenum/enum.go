@@ -9,7 +9,7 @@ import (
 	"projectforge.dev/projectforge/app/project/export/golang"
 )
 
-func Enum(e *enum.Enum, addHeader bool, linebreak string) (*file.File, error) {
+func Enum(e *enum.Enum, linebreak string) (*file.File, error) {
 	var m model.Model
 	m.Camel()
 	g := golang.NewFile(e.Package, []string{"app", e.PackageWithGroup("")}, strings.ToLower(e.Camel()))
@@ -25,7 +25,7 @@ func Enum(e *enum.Enum, addHeader bool, linebreak string) (*file.File, error) {
 		}
 		g.AddBlocks(coll...)
 	}
-	return g.Render(addHeader, linebreak)
+	return g.Render(linebreak)
 }
 
 func enumStructParse(e *enum.Enum) *golang.Block {

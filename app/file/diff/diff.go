@@ -92,7 +92,7 @@ func FileLoader(mods []string, src file.Files, tgt filesystem.FileLoader, ignore
 					pkg = spl[len(spl)-2]
 				}
 			}
-			tgtFile = file.NewFile(p, t.Mode, b, false, pkg, logger)
+			tgtFile = file.NewFile(p, t.Mode, b, pkg, logger)
 
 			if slices.Contains(ignoredFiles, tgtFile.FullPath()) {
 				skip = true

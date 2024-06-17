@@ -17,7 +17,7 @@ import (
 
 const tableClause = "tableQuoted"
 
-func ServiceGet(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
+func ServiceGet(m *model.Model, args *model.Args, linebreak string) (*file.File, error) {
 	dbRef := args.DBRef()
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "serviceget")
 	lo.ForEach(helper.ImportsForTypes("go", "", m.PKs().Types()...), func(imp *model.Import, _ int) {
@@ -88,7 +88,7 @@ func ServiceGet(m *model.Model, args *model.Args, addHeader bool, linebreak stri
 		}
 	}
 	g.AddBlocks(serviceRandom(m, args.Database))
-	return g.Render(addHeader, linebreak)
+	return g.Render(linebreak)
 }
 
 func serviceGet(key string, m *model.Model, cols model.Columns, dbRef string, enums enum.Enums) (*golang.Block, error) {

@@ -14,7 +14,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func Migration(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
+func Migration(m *model.Model, args *model.Args, linebreak string) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"queries", "ddl"}, m.Name+util.ExtSQL)
 	drop, err := sqlDrop(m, args.Database)
 	if err != nil {
@@ -26,7 +26,7 @@ func Migration(m *model.Model, args *model.Args, addHeader bool, linebreak strin
 		return nil, err
 	}
 	g.AddBlocks(sc)
-	return g.Render(addHeader, linebreak)
+	return g.Render(linebreak)
 }
 
 func sqlDrop(m *model.Model, database string) (*golang.Block, error) {

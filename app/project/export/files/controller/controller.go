@@ -15,7 +15,7 @@ import (
 
 const defaultPrefix = "controller."
 
-func Controller(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
+func Controller(m *model.Model, args *model.Args, linebreak string) (*file.File, error) {
 	fn := m.Package
 	if len(m.Group) > 0 {
 		fn = m.GroupString("c", "") + "/" + fn
@@ -46,7 +46,7 @@ func Controller(m *model.Model, args *model.Args, addHeader bool, linebreak stri
 		controllerEditForm(m, nil, prefix), controllerEdit(m, nil, prefix), controllerDelete(m, nil, prefix),
 	)
 	g.AddBlocks(controllerModelFromPath(m), controllerModelFromForm(m))
-	return g.Render(addHeader, linebreak)
+	return g.Render(linebreak)
 }
 
 func controllerArgFor(col *model.Column, b *golang.Block, retVal string, indent int) {

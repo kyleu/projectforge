@@ -15,7 +15,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func Menu(args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
+func Menu(args *model.Args, linebreak string) (*file.File, error) {
 	g := golang.NewFile("cmenu", []string{"app", "controller", "cmenu"}, "generated")
 	g.AddImport(helper.ImpAppMenu)
 	models := args.Models.WithoutTag("no-routes")
@@ -24,7 +24,7 @@ func Menu(args *model.Args, addHeader bool, linebreak string) (*file.File, error
 		g.AddBlocks(vBlock)
 	}
 	g.AddBlocks(menuBlockGM(args, orphans))
-	return g.Render(addHeader, linebreak)
+	return g.Render(linebreak)
 }
 
 func sortModels(models model.Models, args *model.Args) (map[string][]string, []string, []string) {

@@ -24,8 +24,6 @@ func onAudit(ctx context.Context, pm *PrjAndMods) *Result {
 	switch f := pm.Cfg.GetStringOpt("fix"); f {
 	case "remove":
 		err = auditRemove(ctx, pm.Cfg.GetStringOpt("file"), pm, ret)
-	case "header":
-		err = auditHeader(ctx, pm.Cfg.GetStringOpt("file"), pm, ret)
 	case "":
 		// noop, run normal audit
 	default:
@@ -48,21 +46,8 @@ func onAudit(ctx context.Context, pm *PrjAndMods) *Result {
 
 func auditRun(pm *PrjAndMods, ret *Result) error {
 	timer := util.TimerStart()
-	generated, err := getGeneratedFiles(pm.FS, pm.Prj.Ignore, pm.Logger)
-	if err != nil {
-		return err
-	}
-	src, err := getModuleFiles(pm)
-	if err != nil {
-		return err
-	}
 
-	audits := lo.FilterMap(generated, func(g string, _ int) (*diff.Diff, bool) {
-		if !lo.Contains(src, g) && !isBad(g) {
-			return &diff.Diff{Path: g, Status: diff.StatusDifferent}, true
-		}
-		return nil, false
-	})
+	var audits diff.Diffs
 	ign := slices.Clone(pm.Prj.Ignore)
 	if pm.Prj.HasModule("notebook") {
 		ign = append(ign, "notebook")

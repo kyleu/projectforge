@@ -120,211 +120,205 @@ func streamrenderDiffs(qw422016 *qt422016.Writer, prjKey string, act action.Type
 			qw422016.N().S(`" /><button type="submit" name="fix" value="remove" title="Remove file from project">Purge</button>`)
 //line views/vaction/Diff.html:54
 			qw422016.N().S(` `)
-//line views/vaction/Diff.html:55
-			if d.Status.Matches(diff.StatusDifferent) {
-//line views/vaction/Diff.html:55
-				qw422016.N().S(`<button type="submit" name="fix" value="header" title="Remove header from file">Fix</button>`)
-//line views/vaction/Diff.html:57
-			}
-//line views/vaction/Diff.html:57
+//line views/vaction/Diff.html:54
 			qw422016.N().S(`</form>`)
-//line views/vaction/Diff.html:59
+//line views/vaction/Diff.html:56
 		case "preview":
-//line views/vaction/Diff.html:59
+//line views/vaction/Diff.html:56
 			qw422016.N().S(`<form action="/run/`)
-//line views/vaction/Diff.html:60
+//line views/vaction/Diff.html:57
 			qw422016.E().S(prjKey)
-//line views/vaction/Diff.html:60
+//line views/vaction/Diff.html:57
 			qw422016.N().S(`/generate" method="get"><input type="hidden" name="file" value="`)
-//line views/vaction/Diff.html:61
+//line views/vaction/Diff.html:58
 			qw422016.E().S(d.Path)
-//line views/vaction/Diff.html:61
+//line views/vaction/Diff.html:58
 			qw422016.N().S(`" />`)
-//line views/vaction/Diff.html:62
+//line views/vaction/Diff.html:59
 			if d.Status.String() != "new" {
-//line views/vaction/Diff.html:62
+//line views/vaction/Diff.html:59
 				qw422016.N().S(`<!--`)
-//line views/vaction/Diff.html:63
+//line views/vaction/Diff.html:60
 				qw422016.N().S(` `)
-//line views/vaction/Diff.html:63
+//line views/vaction/Diff.html:60
 				qw422016.N().S(`<button type="submit" name="to" value="module" title="Incorporate change into module">&lt;-</button>`)
-//line views/vaction/Diff.html:63
+//line views/vaction/Diff.html:60
 				qw422016.N().S(` `)
-//line views/vaction/Diff.html:63
+//line views/vaction/Diff.html:60
 				qw422016.N().S(`-->`)
-//line views/vaction/Diff.html:63
+//line views/vaction/Diff.html:60
 				qw422016.N().S(` `)
-//line views/vaction/Diff.html:64
+//line views/vaction/Diff.html:61
 			}
-//line views/vaction/Diff.html:64
+//line views/vaction/Diff.html:61
 			qw422016.N().S(`<button type="submit" name="to" value="project" title="Overwrite project changes with module version">-&gt;</button></form>`)
-//line views/vaction/Diff.html:67
+//line views/vaction/Diff.html:64
 		case "build":
-//line views/vaction/Diff.html:68
+//line views/vaction/Diff.html:65
 			switch cfg.GetStringOpt("phase") {
-//line views/vaction/Diff.html:69
+//line views/vaction/Diff.html:66
 			case "imports":
-//line views/vaction/Diff.html:69
+//line views/vaction/Diff.html:66
 				qw422016.N().S(`<form action="/run/`)
-//line views/vaction/Diff.html:70
+//line views/vaction/Diff.html:67
 				qw422016.E().S(prjKey)
-//line views/vaction/Diff.html:70
+//line views/vaction/Diff.html:67
 				qw422016.N().S(`/build" method="get"><input type="hidden" name="fix" value="true" /><input type="hidden" name="phase" value="imports" /><input type="hidden" name="file" value="`)
-//line views/vaction/Diff.html:73
+//line views/vaction/Diff.html:70
 				qw422016.E().S(d.Path)
-//line views/vaction/Diff.html:73
+//line views/vaction/Diff.html:70
 				qw422016.N().S(`" /><button type="submit" title="Reorder modules">Fix</button></form>`)
-//line views/vaction/Diff.html:76
+//line views/vaction/Diff.html:73
 			case "deployments":
-//line views/vaction/Diff.html:77
+//line views/vaction/Diff.html:74
 				if d.Status != diff.StatusIdentical {
-//line views/vaction/Diff.html:77
+//line views/vaction/Diff.html:74
 					qw422016.N().S(`<form action="/run/`)
-//line views/vaction/Diff.html:78
+//line views/vaction/Diff.html:75
 					qw422016.E().S(prjKey)
-//line views/vaction/Diff.html:78
+//line views/vaction/Diff.html:75
 					qw422016.N().S(`/build" method="get"><input type="hidden" name="fix" value="true" /><input type="hidden" name="phase" value="deployments" /><input type="hidden" name="file" value="`)
-//line views/vaction/Diff.html:81
+//line views/vaction/Diff.html:78
 					qw422016.E().S(d.Path)
-//line views/vaction/Diff.html:81
+//line views/vaction/Diff.html:78
 					qw422016.N().S(`" /><button type="submit" title="Update deployment">Fix</button></form>`)
-//line views/vaction/Diff.html:84
+//line views/vaction/Diff.html:81
 				}
-//line views/vaction/Diff.html:85
+//line views/vaction/Diff.html:82
 			}
-//line views/vaction/Diff.html:86
+//line views/vaction/Diff.html:83
 		}
-//line views/vaction/Diff.html:86
+//line views/vaction/Diff.html:83
 		qw422016.N().S(`</td><td>`)
-//line views/vaction/Diff.html:88
+//line views/vaction/Diff.html:85
 		streamrenderPatch(qw422016, d.Patch, as, ps)
-//line views/vaction/Diff.html:88
+//line views/vaction/Diff.html:85
 		qw422016.N().S(`</td></tr>`)
-//line views/vaction/Diff.html:90
+//line views/vaction/Diff.html:87
 	}
-//line views/vaction/Diff.html:90
+//line views/vaction/Diff.html:87
 	qw422016.N().S(`</tbody></table></div>`)
-//line views/vaction/Diff.html:94
+//line views/vaction/Diff.html:91
 }
 
-//line views/vaction/Diff.html:94
+//line views/vaction/Diff.html:91
 func writerenderDiffs(qq422016 qtio422016.Writer, prjKey string, act action.Type, diffs diff.Diffs, cfg util.ValueMap, as *app.State, ps *cutil.PageState) {
-//line views/vaction/Diff.html:94
+//line views/vaction/Diff.html:91
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vaction/Diff.html:94
+//line views/vaction/Diff.html:91
 	streamrenderDiffs(qw422016, prjKey, act, diffs, cfg, as, ps)
-//line views/vaction/Diff.html:94
+//line views/vaction/Diff.html:91
 	qt422016.ReleaseWriter(qw422016)
-//line views/vaction/Diff.html:94
+//line views/vaction/Diff.html:91
 }
 
-//line views/vaction/Diff.html:94
+//line views/vaction/Diff.html:91
 func renderDiffs(prjKey string, act action.Type, diffs diff.Diffs, cfg util.ValueMap, as *app.State, ps *cutil.PageState) string {
-//line views/vaction/Diff.html:94
+//line views/vaction/Diff.html:91
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vaction/Diff.html:94
+//line views/vaction/Diff.html:91
 	writerenderDiffs(qb422016, prjKey, act, diffs, cfg, as, ps)
-//line views/vaction/Diff.html:94
+//line views/vaction/Diff.html:91
 	qs422016 := string(qb422016.B)
-//line views/vaction/Diff.html:94
+//line views/vaction/Diff.html:91
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vaction/Diff.html:94
+//line views/vaction/Diff.html:91
 	return qs422016
-//line views/vaction/Diff.html:94
+//line views/vaction/Diff.html:91
 }
 
-//line views/vaction/Diff.html:96
+//line views/vaction/Diff.html:93
 func streamrenderPatch(qw422016 *qt422016.Writer, patch string, as *app.State, ps *cutil.PageState) {
-//line views/vaction/Diff.html:97
+//line views/vaction/Diff.html:94
 	lines := util.StringSplitLines(patch)
 
-//line views/vaction/Diff.html:97
+//line views/vaction/Diff.html:94
 	qw422016.N().S(`<pre>`)
-//line views/vaction/Diff.html:99
+//line views/vaction/Diff.html:96
 	for _, line := range lines {
-//line views/vaction/Diff.html:100
+//line views/vaction/Diff.html:97
 		if len(line) > 0 {
-//line views/vaction/Diff.html:101
+//line views/vaction/Diff.html:98
 			switch line[0] {
-//line views/vaction/Diff.html:102
+//line views/vaction/Diff.html:99
 			case ' ':
-//line views/vaction/Diff.html:102
+//line views/vaction/Diff.html:99
 				qw422016.N().S(`<div class="color-muted" title="unchanged">`)
-//line views/vaction/Diff.html:103
+//line views/vaction/Diff.html:100
 				qw422016.E().S(line[1:])
-//line views/vaction/Diff.html:103
+//line views/vaction/Diff.html:100
 				if len(line) == 1 {
-//line views/vaction/Diff.html:103
+//line views/vaction/Diff.html:100
 					qw422016.N().S(`&nbsp;`)
-//line views/vaction/Diff.html:103
+//line views/vaction/Diff.html:100
 				}
-//line views/vaction/Diff.html:103
+//line views/vaction/Diff.html:100
 				qw422016.N().S(`</div>`)
-//line views/vaction/Diff.html:104
+//line views/vaction/Diff.html:101
 			case '+':
-//line views/vaction/Diff.html:104
+//line views/vaction/Diff.html:101
 				qw422016.N().S(`<div title="added" class="success">`)
-//line views/vaction/Diff.html:105
+//line views/vaction/Diff.html:102
 				qw422016.E().S(line[1:])
-//line views/vaction/Diff.html:105
+//line views/vaction/Diff.html:102
 				if len(line) == 1 {
-//line views/vaction/Diff.html:105
+//line views/vaction/Diff.html:102
 					qw422016.N().S(`&nbsp;`)
-//line views/vaction/Diff.html:105
+//line views/vaction/Diff.html:102
 				}
-//line views/vaction/Diff.html:105
+//line views/vaction/Diff.html:102
 				qw422016.N().S(`</div>`)
-//line views/vaction/Diff.html:106
+//line views/vaction/Diff.html:103
 			case '-':
-//line views/vaction/Diff.html:106
+//line views/vaction/Diff.html:103
 				qw422016.N().S(`<div title="removed" class="error">`)
-//line views/vaction/Diff.html:107
+//line views/vaction/Diff.html:104
 				qw422016.E().S(line[1:])
-//line views/vaction/Diff.html:107
+//line views/vaction/Diff.html:104
 				if len(line) == 1 {
-//line views/vaction/Diff.html:107
+//line views/vaction/Diff.html:104
 					qw422016.N().S(`&nbsp;`)
-//line views/vaction/Diff.html:107
+//line views/vaction/Diff.html:104
 				}
-//line views/vaction/Diff.html:107
+//line views/vaction/Diff.html:104
 				qw422016.N().S(`</div>`)
-//line views/vaction/Diff.html:108
+//line views/vaction/Diff.html:105
 			default:
-//line views/vaction/Diff.html:109
+//line views/vaction/Diff.html:106
 				qw422016.E().S(line)
-//line views/vaction/Diff.html:110
+//line views/vaction/Diff.html:107
 			}
-//line views/vaction/Diff.html:111
+//line views/vaction/Diff.html:108
 		}
-//line views/vaction/Diff.html:112
+//line views/vaction/Diff.html:109
 	}
-//line views/vaction/Diff.html:112
+//line views/vaction/Diff.html:109
 	qw422016.N().S(`</pre>`)
-//line views/vaction/Diff.html:114
+//line views/vaction/Diff.html:111
 }
 
-//line views/vaction/Diff.html:114
+//line views/vaction/Diff.html:111
 func writerenderPatch(qq422016 qtio422016.Writer, patch string, as *app.State, ps *cutil.PageState) {
-//line views/vaction/Diff.html:114
+//line views/vaction/Diff.html:111
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vaction/Diff.html:114
+//line views/vaction/Diff.html:111
 	streamrenderPatch(qw422016, patch, as, ps)
-//line views/vaction/Diff.html:114
+//line views/vaction/Diff.html:111
 	qt422016.ReleaseWriter(qw422016)
-//line views/vaction/Diff.html:114
+//line views/vaction/Diff.html:111
 }
 
-//line views/vaction/Diff.html:114
+//line views/vaction/Diff.html:111
 func renderPatch(patch string, as *app.State, ps *cutil.PageState) string {
-//line views/vaction/Diff.html:114
+//line views/vaction/Diff.html:111
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vaction/Diff.html:114
+//line views/vaction/Diff.html:111
 	writerenderPatch(qb422016, patch, as, ps)
-//line views/vaction/Diff.html:114
+//line views/vaction/Diff.html:111
 	qs422016 := string(qb422016.B)
-//line views/vaction/Diff.html:114
+//line views/vaction/Diff.html:111
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vaction/Diff.html:114
+//line views/vaction/Diff.html:111
 	return qs422016
-//line views/vaction/Diff.html:114
+//line views/vaction/Diff.html:111
 }

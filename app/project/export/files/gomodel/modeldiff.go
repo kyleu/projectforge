@@ -14,7 +14,7 @@ import (
 	"projectforge.dev/projectforge/app/project/export/golang"
 )
 
-func ModelDiff(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
+func ModelDiff(m *model.Model, args *model.Args, linebreak string) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, strings.ToLower(m.Camel())+"diff")
 	g.AddImport(helper.ImpAppUtil)
 	g.AddImport(m.Imports.Supporting("diff")...)
@@ -25,7 +25,7 @@ func ModelDiff(m *model.Model, args *model.Args, addHeader bool, linebreak strin
 	}
 	g.AddBlocks(mdiff)
 
-	return g.Render(addHeader, linebreak)
+	return g.Render(linebreak)
 }
 
 func modelDiffBlock(g *golang.File, m *model.Model, enums enum.Enums) (*golang.Block, error) {

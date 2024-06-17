@@ -30,19 +30,12 @@ func (f *File) AddBlocks(b ...*Block) {
 	f.Blocks = append(f.Blocks, b...)
 }
 
-func (f *File) Render(addHeader bool, linebreak string) (*file.File, error) {
+func (f *File) Render(linebreak string) (*file.File, error) {
 	var content []string
 	add := func(s string, args ...any) {
 		content = append(content, fmt.Sprintf(s+linebreak, args...))
 	}
 
-	if addHeader {
-		if f.Package == "" {
-			content = append(content, fmt.Sprintf("// %s", file.HeaderContent))
-		} else {
-			content = append(content, fmt.Sprintf("// Package %s - %s", f.Package, file.HeaderContent))
-		}
-	}
 	add("package %s", f.Package)
 
 	if len(f.Imports) > 0 {

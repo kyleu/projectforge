@@ -10,13 +10,10 @@ import (
 	"projectforge.dev/projectforge/app/project"
 )
 
-func NotebookScript(p *project.Project, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
+func NotebookScript(p *project.Project, args *model.Args, linebreak string) (*file.File, error) {
 	var content []string
 	w := func(msg string, args ...any) {
 		content = append(content, fmt.Sprintf(msg, args...))
-	}
-	if addHeader {
-		w("// " + file.HeaderContent)
 	}
 	w(`import * as d3 from "npm:d3";`)
 	w("")

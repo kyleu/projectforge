@@ -25,7 +25,7 @@ func SeedData(m *model.Model, database string, linebreak string) (*file.File, er
 		return nil, err
 	}
 	g.AddBlocks(seed)
-	return g.Render(false, linebreak)
+	return g.Render(linebreak)
 }
 
 func sqlSeedData(m *model.Model, database string) (*golang.Block, error) {

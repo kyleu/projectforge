@@ -15,7 +15,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func Model(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
+func Model(m *model.Model, args *model.Args, linebreak string) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, strings.ToLower(m.Camel()))
 	lo.ForEach(helper.ImportsForTypes("go", "", m.Columns.Types()...), func(imp *model.Import, _ int) {
 		g.AddImport(imp)
@@ -80,7 +80,7 @@ func Model(m *model.Model, args *model.Args, addHeader bool, linebreak string) (
 	}
 
 	g.AddBlocks(modelWebPath(g, m), modelToData(m, m.Columns.NotDerived(), "", args.Database), fd)
-	return g.Render(addHeader, linebreak)
+	return g.Render(linebreak)
 }
 
 func typeAssert(m *model.Model) *golang.Block {

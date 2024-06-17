@@ -17,27 +17,27 @@ import (
 
 const incDel = ", includeDeleted bool"
 
-func ServiceAll(m *model.Model, args *model.Args, addHeader bool, linebreak string) (file.Files, error) {
-	x, err := Service(m, args, addHeader, linebreak)
+func ServiceAll(m *model.Model, args *model.Args, linebreak string) (file.Files, error) {
+	x, err := Service(m, args, linebreak)
 	if err != nil {
 		return nil, err
 	}
-	g, err := ServiceGet(m, args, addHeader, linebreak)
+	g, err := ServiceGet(m, args, linebreak)
 	if err != nil {
 		return nil, err
 	}
-	l, err := ServiceList(m, args, addHeader, linebreak)
+	l, err := ServiceList(m, args, linebreak)
 	if err != nil {
 		return nil, err
 	}
-	mt, err := ServiceMutate(m, args, addHeader, linebreak)
+	mt, err := ServiceMutate(m, args, linebreak)
 	if err != nil {
 		return nil, err
 	}
 	return file.Files{x, g, l, mt}, nil
 }
 
-func Service(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
+func Service(m *model.Model, args *model.Args, linebreak string) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "service")
 	g.AddImport(helper.ImpFilter, helper.ImpAppDatabase, helper.ImpAppSvc)
 	g.AddImport(m.Imports.Supporting("service")...)
@@ -49,7 +49,7 @@ func Service(m *model.Model, args *model.Args, addHeader bool, linebreak string)
 	}
 
 	g.AddBlocks(typeAssert(g, m, args.Enums), serviceStruct(isRO, isAudit), serviceNew(m, isRO, isAudit), serviceDefaultFilters(m))
-	return g.Render(addHeader, linebreak)
+	return g.Render(linebreak)
 }
 
 func typeAssert(g *golang.File, m *model.Model, enums enum.Enums) *golang.Block {

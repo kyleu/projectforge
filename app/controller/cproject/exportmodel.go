@@ -21,7 +21,7 @@ func ProjectExportModelDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		fls, err := files.ModelAll(mdl, prj, args, true, util.StringDefaultLinebreak)
+		fls, err := files.ModelAll(mdl, prj, args, util.StringDefaultLinebreak)
 		if err != nil {
 			ps.Logger.Warnf("unable to generate files for model [%s]", mdl.Name)
 		}

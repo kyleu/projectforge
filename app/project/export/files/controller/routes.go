@@ -12,7 +12,7 @@ import (
 	"projectforge.dev/projectforge/app/project/export/golang"
 )
 
-func Routes(args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
+func Routes(args *model.Args, linebreak string) (*file.File, error) {
 	g := golang.NewFile("routes", []string{"app", "controller", "routes"}, "generated")
 	g.AddImport(helper.ImpRouter)
 	g.AddBlocks(routes(g, args))
@@ -23,7 +23,7 @@ func Routes(args *model.Args, addHeader bool, linebreak string) (*file.File, err
 			g.AddImport(helper.AppImport("controller/" + m.GroupString("c", "")))
 		}
 	})
-	return g.Render(addHeader, linebreak)
+	return g.Render(linebreak)
 }
 
 func routes(g *golang.File, args *model.Args) *golang.Block {

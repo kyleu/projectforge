@@ -21,7 +21,7 @@ func ProjectExportEnumDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		fl, err := goenum.Enum(e, true, util.StringDefaultLinebreak)
+		fl, err := goenum.Enum(e, util.StringDefaultLinebreak)
 		if err != nil {
 			ps.Logger.Warnf("unable to generate files for enum [%s]", e.Name)
 		}

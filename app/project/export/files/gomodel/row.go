@@ -18,7 +18,7 @@ import (
 
 const rDot = "r."
 
-func Row(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
+func Row(m *model.Model, args *model.Args, linebreak string) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "row")
 	lo.ForEach(helper.ImportsForTypes("row", args.Database, m.Columns.Types()...), func(imp *model.Import, _ int) {
 		g.AddImport(imp)
@@ -60,7 +60,7 @@ func Row(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*f
 		return nil, err
 	}
 	g.AddBlocks(mrm, modelRowArray(), modelRowArrayTransformer(m), defaultWC(m, args.Database))
-	return g.Render(addHeader, linebreak)
+	return g.Render(linebreak)
 }
 
 func modelTableCols(m *model.Model) (*golang.Block, error) {

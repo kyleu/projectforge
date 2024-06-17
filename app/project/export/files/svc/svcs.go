@@ -13,7 +13,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func Services(args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
+func Services(args *model.Args, linebreak string) (*file.File, error) {
 	g := golang.NewFile("app", []string{"app"}, "generated")
 	g.AddImport(helper.ImpContext, helper.ImpAppUtil)
 	if args.HasModule("audit") {
@@ -54,7 +54,7 @@ func Services(args *model.Args, addHeader bool, linebreak string) (*file.File, e
 	})
 
 	g.AddBlocks(servicesStruct(svcs), servicesInitFn(refs, initParams))
-	return g.Render(addHeader, linebreak)
+	return g.Render(linebreak)
 }
 
 func servicesStruct(svcs []string) *golang.Block {

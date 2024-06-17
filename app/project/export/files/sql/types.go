@@ -13,10 +13,10 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func Types(enums enum.Enums, addHeader bool, linebreak string, database string) (*file.File, error) {
+func Types(enums enum.Enums, linebreak string, database string) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"queries", "ddl"}, "types.sql")
 	g.AddBlocks(typesDrop(enums, database), typesCreate(enums, database))
-	return g.Render(addHeader, linebreak)
+	return g.Render(linebreak)
 }
 
 func typesDrop(enums enum.Enums, database string) *golang.Block {

@@ -13,18 +13,18 @@ import (
 	"projectforge.dev/projectforge/app/project/export/files/view"
 )
 
-func ModelAll(m *model.Model, p *project.Project, args *model.Args, addHeader bool, linebreak string) (file.Files, error) {
+func ModelAll(m *model.Model, p *project.Project, args *model.Args, linebreak string) (file.Files, error) {
 	var calls file.Files
 	var f *file.File
 
-	fs, err := basics(m, args, addHeader, p.GoVersion(), linebreak)
+	fs, err := basics(m, args, p.GoVersion(), linebreak)
 	if err != nil {
 		return nil, err
 	}
 	calls = append(calls, fs...)
 
 	if args.HasModule("migration") {
-		f, err = sql.Migration(m, args, addHeader, linebreak)
+		f, err = sql.Migration(m, args, linebreak)
 		if err != nil {
 			return nil, errors.Wrap(err, "can't render SQL migration")
 		}
@@ -38,7 +38,7 @@ func ModelAll(m *model.Model, p *project.Project, args *model.Args, addHeader bo
 		calls = append(calls, f)
 	}
 
-	fs, err = view.All(m, p, args, addHeader, linebreak)
+	fs, err = view.All(m, p, args, linebreak)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't render list template")
 	}
@@ -47,41 +47,41 @@ func ModelAll(m *model.Model, p *project.Project, args *model.Args, addHeader bo
 	return calls, nil
 }
 
-func basics(m *model.Model, args *model.Args, addHeader bool, goVersion string, linebreak string) (file.Files, error) {
+func basics(m *model.Model, args *model.Args, goVersion string, linebreak string) (file.Files, error) {
 	var calls file.Files
-	f, err := gomodel.Model(m, args, addHeader, linebreak)
+	f, err := gomodel.Model(m, args, linebreak)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't render model")
 	}
-	fd, err := gomodel.ModelDiff(m, args, addHeader, linebreak)
+	fd, err := gomodel.ModelDiff(m, args, linebreak)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't render model")
 	}
-	fm, err := gomodel.ModelMap(m, args, addHeader, linebreak)
+	fm, err := gomodel.ModelMap(m, args, linebreak)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't render model")
 	}
 	calls = append(calls, f, fd, fm)
 
-	f, err = gomodel.Models(m, args, addHeader, goVersion, linebreak)
+	f, err = gomodel.Models(m, args, goVersion, linebreak)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't render models")
 	}
 	calls = append(calls, f)
 
-	f, err = gomodel.Row(m, args, addHeader, linebreak)
+	f, err = gomodel.Row(m, args, linebreak)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't render Row")
 	}
 	calls = append(calls, f)
 
-	fs, err := svc.ServiceAll(m, args, addHeader, linebreak)
+	fs, err := svc.ServiceAll(m, args, linebreak)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't render service")
 	}
 	calls = append(calls, fs...)
 
-	f, err = controller.Controller(m, args, addHeader, linebreak)
+	f, err = controller.Controller(m, args, linebreak)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't render controller")
 	}

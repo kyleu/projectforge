@@ -20,7 +20,7 @@ func svgRef(icon string) string {
 	return "{%%= components.SVGIcon(`" + icon + "`, ps) %%}"
 }
 
-func detail(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
+func detail(m *model.Model, args *model.Args, linebreak string) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "Detail.html")
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpComponentsView, helper.ImpCutil, helper.ImpLayout)
 	g.AddImport(helper.AppImport(m.PackageWithGroup("")))
@@ -68,7 +68,7 @@ func detail(m *model.Model, args *model.Args, addHeader bool, linebreak string) 
 		return nil, err
 	}
 	g.AddBlocks(exportViewDetailClass(m, args.Models, args.Audit(m), g), vdb)
-	return g.Render(addHeader, linebreak)
+	return g.Render(linebreak)
 }
 
 func exportViewDetailClass(m *model.Model, models model.Models, audit bool, g *golang.Template) *golang.Block {

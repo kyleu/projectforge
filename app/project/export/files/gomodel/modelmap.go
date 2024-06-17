@@ -15,7 +15,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func ModelMap(m *model.Model, args *model.Args, addHeader bool, linebreak string) (*file.File, error) {
+func ModelMap(m *model.Model, args *model.Args, linebreak string) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, strings.ToLower(m.Camel())+"map")
 	g.AddImport(helper.ImpAppUtil)
 	imps, err := helper.SpecialImports(m.Columns, m.PackageWithGroup(""), args.Enums)
@@ -34,7 +34,7 @@ func ModelMap(m *model.Model, args *model.Args, addHeader bool, linebreak string
 	} else {
 		return nil, err
 	}
-	return g.Render(addHeader, linebreak)
+	return g.Render(linebreak)
 }
 
 func modelFromMap(g *golang.File, m *model.Model, enums enum.Enums, database string) (*golang.Block, error) {
