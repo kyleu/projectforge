@@ -39,8 +39,23 @@ func modelString(g *golang.File, m *model.Model) *golang.Block {
 func modelTitle(g *golang.File, m *model.Model) *golang.Block {
 	ret := golang.NewBlock("Title", "func")
 	ret.W("func (%s *%s) TitleString() string {", m.FirstLetter(), m.Proper())
-	if titles := m.Columns.WithTag("title"); len(titles) > 0 {
-		toStrings := lo.Map(titles, func(title *model.Column, _ int) string {
+	titles := m.Columns.WithTag("title")
+	var toStrings []string
+	switch len(titles) {
+	case 0:
+		ret.W("\treturn %s.String()", m.FirstLetter())
+	case 1:
+		title := titles[0]
+		x := model.ToGoString(title.Type, title.Nullable, fmt.Sprintf("%s.%s", m.FirstLetter(), title.Proper()), true)
+		if strings.HasPrefix(x, "fmt.") {
+			g.AddImport(helper.ImpFmt)
+		}
+		ret.W("\tif xx := %s; xx != \"\" {", x)
+		ret.W("\t\treturn xx")
+		ret.W("\t}")
+		ret.W("\treturn %s.String()", m.FirstLetter())
+	default:
+		toStrings = lo.Map(titles, func(title *model.Column, _ int) string {
 			x := model.ToGoString(title.Type, title.Nullable, fmt.Sprintf("%s.%s", m.FirstLetter(), title.Proper()), true)
 			if strings.HasPrefix(x, "fmt.") {
 				g.AddImport(helper.ImpFmt)
@@ -48,8 +63,6 @@ func modelTitle(g *golang.File, m *model.Model) *golang.Block {
 			return x
 		})
 		ret.W("\treturn %s", strings.Join(toStrings, " + \" / \" + "))
-	} else {
-		ret.W("\treturn %s.String()", m.FirstLetter())
 	}
 	ret.W("}")
 	return ret

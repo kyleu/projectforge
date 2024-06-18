@@ -4,8 +4,6 @@ import (
 	"strings"
 
 	"github.com/samber/lo"
-
-	"{{{ .Package }}}/app/util"
 )
 
 var Separator = &Item{}
@@ -23,15 +21,21 @@ type Item struct {
 }
 
 func ItemFromString(bc string, dflt string) *Item {
-	icon := util.OrDefault(dflt, "file")
-	if iconIdx := strings.Index(bc, "**"); iconIdx > 0 {
+	icon := dflt
+	if icon == "" {
+		icon = "file"
+	}
+	if iconIdx := strings.Index(bc, "**"); iconIdx > -1 {
 		icon = bc[iconIdx+2:]
 		bc = bc[:iconIdx]
 	}
 	bcLink := ""
-	if bci := strings.Index(bc, "||"); bci > 0 {
+	if bci := strings.Index(bc, "||"); bci > -1 {
 		bcLink = bc[bci+2:]
 		bc = bc[:bci]
+	}
+	if bc == "" {
+		bc = dflt
 	}
 	return &Item{Key: bc, Title: bc, Icon: icon, Route: bcLink}
 }
