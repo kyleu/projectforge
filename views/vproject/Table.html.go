@@ -43,7 +43,7 @@ func StreamTable(qw422016 *qt422016.Writer, prjs project.Projects, tags []string
 //line views/vproject/Table.html:15
 	components.StreamSVGIcon(qw422016, `list`, ps)
 //line views/vproject/Table.html:15
-	qw422016.N().S(` `)
+	qw422016.N().S(`</a> <a href="/p">`)
 //line views/vproject/Table.html:15
 	qw422016.E().S(util.StringPlural(len(prjs), "Available Project"))
 //line views/vproject/Table.html:15
