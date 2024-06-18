@@ -1,4 +1,3 @@
-// Package filter - Content managed by Project Forge, see [projectforge.md] for details.
 package filter
 
 import (

@@ -1,4 +1,3 @@
-<!--- Content managed by Project Forge, see [projectforge.md] for details. -->
 # Project Forge WASM Server
 
 This folder contains the templates used for running the WebAssembly build in a browser.

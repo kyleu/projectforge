@@ -1,4 +1,3 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
 import {createEditorInput} from "./editorfield";
 import type {Editor} from "./editortypes";
 import {modalGetBody, modalGetOrCreate, modalSetTitle} from "./modal";

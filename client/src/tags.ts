@@ -1,4 +1,3 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
 import {els, opt, req, setDisplay} from "./dom";
 import {svgRef} from "./util";
 

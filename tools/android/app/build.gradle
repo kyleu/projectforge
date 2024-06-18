@@ -1,4 +1,3 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'

@@ -1,4 +1,3 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
 import {opt} from "./dom";
 
 function renderAudit(msg: string, ...codes: unknown[]) { // eslint-disable-line @typescript-eslint/no-explicit-any

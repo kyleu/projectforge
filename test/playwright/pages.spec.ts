@@ -1,4 +1,3 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
 import {expect, Page, test, TestInfo} from "@playwright/test";
 
 const screenshot = async(key: string, page: Page, testInfo: TestInfo, browserName: string) => {

@@ -1,4 +1,3 @@
-<!--- Content managed by Project Forge, see [projectforge.md] for details. -->
 # Core
 
 This is a module for [Project Forge](https://projectforge.dev). It provides common utilities for a Go application.

@@ -1,4 +1,3 @@
-// Package types - Content managed by Project Forge, see [projectforge.md] for details.
 package types
 
 const KeyAny = "any"

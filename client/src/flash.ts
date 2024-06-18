@@ -1,4 +1,3 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
 function fade(el: HTMLElement) {
   setTimeout(() => {
     el.style.opacity = "0";

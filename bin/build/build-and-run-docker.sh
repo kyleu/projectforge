@@ -1,5 +1,4 @@
 #!/bin/bash
-# Content managed by Project Forge, see [projectforge.md] for details.
 
 ## Builds the Docker image and runs it
 

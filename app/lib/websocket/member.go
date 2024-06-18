@@ -1,4 +1,3 @@
-// Package websocket - Content managed by Project Forge, see [projectforge.md] for details.
 package websocket
 
 import (

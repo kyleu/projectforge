@@ -1,4 +1,3 @@
-# Content managed by Project Forge, see [projectforge.md] for details.
 # Requires golangci-lint 1.49.0; `go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest`
 issues:
   max-issues-per-linter: 0

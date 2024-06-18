@@ -1,4 +1,3 @@
-# Content managed by Project Forge, see [projectforge.md] for details.
 .PHONY: clean
 clean: ## Removes builds and compiled templates
 	@rm -rf tmp/*.hashcode

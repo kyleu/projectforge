@@ -1,5 +1,4 @@
 @ECHO OFF
-rem Content managed by Project Forge, see [projectforge.md] for details.
 
 rem Formatting code from all projects
 

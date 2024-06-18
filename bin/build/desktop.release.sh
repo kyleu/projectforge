@@ -1,5 +1,4 @@
 #!/bin/bash
-# Content managed by Project Forge, see [projectforge.md] for details.
 
 ## Meant to be run as part of the release process, builds desktop apps
 

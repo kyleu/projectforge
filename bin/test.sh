@@ -1,5 +1,4 @@
 #!/bin/bash
-# Content managed by Project Forge, see [projectforge.md] for details.
 
 ## Runs all the tests. Pass "-c" to clear the cache first, "-w" to watch for changes.
 

@@ -1,4 +1,3 @@
-# Content managed by Project Forge, see [projectforge.md] for details.
 .PHONY: build
 build: ## Build all binaries
 	go build -gcflags "all=-N -l" -o ../../build/debug/projectforge-desktop .

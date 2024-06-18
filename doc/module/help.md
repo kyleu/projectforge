@@ -1,4 +1,3 @@
-<!--- Content managed by Project Forge, see [projectforge.md] for details. -->
 # Help
 
 This is a module for [Project Forge](https://projectforge.dev). It provides Markdown help files that integrate into the UI

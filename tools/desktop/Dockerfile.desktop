@@ -1,4 +1,3 @@
-# Content managed by Project Forge, see [projectforge.md] for details.
 FROM --platform=linux/amd64 ghcr.io/gythialy/golang-cross:v1.22.1-0-bookworm AS builder
 
 LABEL maintainer="projectforge@kyleu.com"

@@ -1,4 +1,3 @@
-// Package telemetry - Content managed by Project Forge, see [projectforge.md] for details.
 package telemetry
 
 import (

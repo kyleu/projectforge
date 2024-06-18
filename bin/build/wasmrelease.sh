@@ -1,5 +1,4 @@
 #!/bin/bash
-# Content managed by Project Forge, see [projectforge.md] for details.
 ## Builds the application as a WebAssembly library
 
 set -eo pipefail

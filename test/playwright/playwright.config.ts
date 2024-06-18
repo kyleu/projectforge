@@ -1,4 +1,3 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
 import {defineConfig, devices, PlaywrightTestOptions, PlaywrightWorkerOptions, Project} from "@playwright/test";
 
 const prj = (

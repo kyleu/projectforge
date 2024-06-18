@@ -1,4 +1,3 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
 importScripts("wasm_exec.js");
 
 const wasmURI = "projectforge.wasm";

@@ -1,4 +1,3 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
 function debounce(callback: (...args: unknown[]) => void, wait: number) {
   let timeoutId = 0;
   return (...args: unknown[]) => {

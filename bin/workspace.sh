@@ -1,5 +1,4 @@
 #!/usr/bin/osascript
-# Content managed by Project Forge, see [projectforge.md] for details.
 tell application "iTerm2"
 	set lwin to current session of current tab of current window
 	set lwidth to columns of lwin

@@ -1,4 +1,3 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
 import {type Column, typeKey} from "./editortypes";
 
 function stringInput(id: string, col: Column, x: { [p: string]: unknown }, onChange?: () => void) {

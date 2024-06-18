@@ -1,4 +1,3 @@
-<!--- Content managed by Project Forge, see [projectforge.md] for details. -->
 # Rich Editor
 
 This is a module for [Project Forge](https://projectforge.dev). It provides a rich editing experience with a decent fallback when scripting is disabled

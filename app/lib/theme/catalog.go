@@ -1,4 +1,3 @@
-// Package theme - Content managed by Project Forge, see [projectforge.md] for details.
 package theme
 
 //nolint:lll

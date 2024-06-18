@@ -1,4 +1,3 @@
-// Package filesystem - Content managed by Project Forge, see [projectforge.md] for details.
 package filesystem_test
 
 import (

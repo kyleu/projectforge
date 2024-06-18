@@ -1,4 +1,3 @@
-<!--- Content managed by Project Forge, see [projectforge.md] for details. -->
 # Scripts
 
 There's a variety of shell scripts available in `./bin`. Here's a few of them:

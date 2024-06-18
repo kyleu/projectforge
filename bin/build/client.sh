@@ -1,5 +1,4 @@
 #!/bin/bash
-# Content managed by Project Forge, see [projectforge.md] for details.
 
 ## Uses `esbuild` to compile the scripts in `client`
 ## Requires node, tsc, and esbuild available on the path

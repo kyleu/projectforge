@@ -1,5 +1,4 @@
 #!/bin/bash
-# Content managed by Project Forge, see [projectforge.md] for details.
 
 ## Starts a pprof server using the (previously-recorded) CPU profile at ./tmp/cpu.pprof
 

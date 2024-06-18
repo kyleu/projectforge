@@ -1,5 +1,4 @@
 #!/bin/bash
-# Content managed by Project Forge, see [projectforge.md] for details.
 
 ## Builds the TypeScript resources, then watches for changes via `watchexec`
 ## Requires node and tsc available on the path

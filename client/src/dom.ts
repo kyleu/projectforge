@@ -1,4 +1,3 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
 export function els<T extends HTMLElement>(selector: string, context?: Element): readonly T[] {
   let result: NodeListOf<Element>;
   if (context) {

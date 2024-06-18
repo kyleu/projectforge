@@ -1,4 +1,3 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
 function startApp() {
   const getLog = (s) => "### Client: " + s;
   if ("serviceWorker" in navigator) {

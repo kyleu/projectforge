@@ -1,4 +1,3 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
 import {rowEditHandler} from "./editorobject";
 import {type Column, type Editor, type Type, typeToString} from "./editortypes";
 

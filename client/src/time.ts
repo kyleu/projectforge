@@ -1,4 +1,3 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
 import {els} from "./dom";
 
 export function utc(date: Date) {

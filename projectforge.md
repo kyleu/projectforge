@@ -1,4 +1,3 @@
-<!--- Content managed by Project Forge, see [projectforge.md] for details. -->
 This project was built with help from [Project Forge](https://projectforge.dev)
 
 Project Forge helps you build and maintain feature-rich applications written in the Go programming language. 

@@ -1,5 +1,4 @@
 #!/bin/bash
-# Content managed by Project Forge, see [projectforge.md] for details.
 
 ## Runs code statistics, checks for outdated dependencies, then runs linters
 

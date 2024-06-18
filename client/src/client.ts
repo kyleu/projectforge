@@ -1,4 +1,3 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
 import "./client.css";
 import {JSX} from "./jsx"; // eslint-disable-line @typescript-eslint/no-unused-vars
 import {audit} from "./audit";

@@ -1,4 +1,3 @@
-<!--- Content managed by Project Forge, see [projectforge.md] for details. -->
 # JSX
 
 This is a module for [Project Forge](https://projectforge.dev). It provides a slim JSX implementation for scripting.

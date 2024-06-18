@@ -1,4 +1,3 @@
-<!--- Content managed by Project Forge, see [projectforge.md] for details. -->
 # Theme Catalog
 
 This is a module for [Project Forge](https://projectforge.dev). It includes a dozen default themes, and facilities to create additional.

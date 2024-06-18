@@ -1,4 +1,3 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
 export function modalInit() {
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {

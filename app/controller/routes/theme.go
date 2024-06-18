@@ -1,4 +1,3 @@
-// Package routes - Content managed by Project Forge, see [projectforge.md] for details.
 package routes
 
 import (

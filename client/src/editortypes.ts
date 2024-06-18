@@ -1,4 +1,3 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
 export function typeKey(t?: string) {
   if (t && t !== "") {
     return t;

@@ -1,4 +1,3 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
 import {els, req} from "./dom";
 import {createTable} from "./editortable";
 import type {Column, Editor} from "./editortypes";

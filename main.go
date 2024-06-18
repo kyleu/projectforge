@@ -1,4 +1,3 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
 package main // import projectforge.dev/projectforge
 
 import (

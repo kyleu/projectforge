@@ -1,4 +1,3 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
 let appUnloading = false;
 
 export type Message = {
