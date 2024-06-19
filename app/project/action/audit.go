@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"slices"
-	"strings"
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
@@ -83,15 +82,4 @@ func auditRun(pm *PrjAndMods, ret *Result) error {
 	mr := &module.Result{Keys: pm.Mods.Keys(), Status: "OK", Diffs: audits, Duration: timer.End()}
 	ret.Modules = append(ret.Modules, mr)
 	return nil
-}
-
-var badFiles = []string{"client.js.map", "client.css.map", "file/header.go"}
-
-func isBad(s string) bool {
-	for _, bad := range badFiles {
-		if strings.HasSuffix(s, bad) {
-			return true
-		}
-	}
-	return false
 }

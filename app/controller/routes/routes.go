@@ -17,7 +17,6 @@ func makeRoute(x *mux.Router, method string, path string, f http.HandlerFunc) {
 	x.HandleFunc(path, f).Methods(method)
 }
 
-//nolint:revive
 func AppRoutes(as *app.State, logger util.Logger) (http.Handler, error) {
 	r := mux.NewRouter()
 
