@@ -112,7 +112,7 @@ func (r *Result) StatusLog() string {
 		})
 	})
 	if fileCount == 0 {
-		return "<em>no changes</em>"
+		return "<em>ok</em>"
 	}
 	return util.StringPlural(fileCount, "change")
 }
