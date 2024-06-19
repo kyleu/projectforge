@@ -385,6 +385,10 @@
           "description": "if set, build will fail if tests fail",
           "type": "boolean"
         },
+        "noScript": {
+          "description": "if set, prevents JavaScript from being emitted or utilized",
+          "type": "boolean"
+        },
         "desktop": {
           "description": "if set, generates a desktop application",
           "type": "boolean"
@@ -399,10 +403,6 @@
         },
         "safeMode": {
           "description": "if set, limits dangerous activities",
-          "type": "boolean"
-        },
-        "simple": {
-          "description": "if set, skips extra files like debug images",
           "type": "boolean"
         },
         "android": {

@@ -52,12 +52,12 @@ dockers:
     image_templates:
       - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:{{ trimprefix .Tag \"v\" }}"
       - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:latest"
-    dockerfile: ./tools/release/Dockerfile.release{{{ .ExtraFilesContent }}}{{{ if .Build.Simple }}}{{{ else }}}
+    dockerfile: ./tools/release/Dockerfile.release{{{ .ExtraFilesContent }}}
   -
     image_templates:
       - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:{{ trimprefix .Tag \"v\" }}-debug"
       - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:latest-debug"
-    dockerfile: ./tools/release/Dockerfile.debug{{{ .ExtraFilesContent }}}{{{ end }}}
+    dockerfile: ./tools/release/Dockerfile.debug{{{ .ExtraFilesContent }}}
 
 dist: "build/dist"
 {{{ if .Build.NFPMS }}}
@@ -115,7 +115,7 @@ snapshot:
 source:
   enabled: true
   name_template: "{{ .ProjectName }}_{{ .Version }}_source"
-  format: "zip"{{{ if .Build.Simple }}}{{{ else }}}
+  format: "zip"
 
 universal_binaries:
 - id: "darwin"
@@ -130,18 +130,8 @@ universal_binaries:
       - "./bin/build/ios.sh {{ .Version }}"{{{ end }}}{{{ if .BuildNotarize }}}
       - "./tools/notarize/notarize.sh"{{{ end }}}
       # $PF_SECTION_START(extrascripts)$
-      # $PF_SECTION_END(extrascripts)${{{ end }}}
-{{{ if .Build.Simple }}}
-builds:
-  - id: "linux"
-    goos:
-      - "linux"
-    goarch:
-      - "amd64"
-    mod_timestamp: "{{ .CommitTimestamp }}"{{{ .GoBinaryContent }}}
-    # $PF_SECTION_START(simplescripts)$
-    # $PF_SECTION_END(simplescripts)$
-{{{ else }}}
+      # $PF_SECTION_END(extrascripts)$
+
 builds:
   - id: "darwin"
     goos:
@@ -309,5 +299,4 @@ builds:
     goarch:
       - "amd64"
     mod_timestamp: "{{ .CommitTimestamp }}"{{{ .GoBinaryContent }}}
-{{{ end -}}}
 {{{ end -}}}

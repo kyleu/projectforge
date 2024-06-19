@@ -10,13 +10,13 @@ type Build struct {
 	Private   bool `json:"private,omitempty"`
 	Changelog bool `json:"changelog,omitempty"`
 	TestsFail bool `json:"testsFail,omitempty"`
+	NoScript  bool `json:"noScript,omitempty"`
+	Simple    bool `json:"simple,omitempty"`
 
 	Desktop  bool `json:"desktop,omitempty"`
 	Notarize bool `json:"notarize,omitempty"`
 	Signing  bool `json:"signing,omitempty"`
 	SafeMode bool `json:"safeMode,omitempty"`
-
-	Simple bool `json:"simple,omitempty"`
 
 	Android bool `json:"android,omitempty"`
 	IOS     bool `json:"iOS,omitempty"`
@@ -52,16 +52,18 @@ func (b *Build) HasArm() bool {
 }
 
 func (b *Build) Empty() bool {
-	return !(b.Private || b.Changelog || b.TestsFail || b.Desktop || b.Notarize || b.Signing || b.SafeMode ||
-		b.Simple || b.Android || b.IOS || b.WASM || b.X86 || b.WindowsARM ||
-		b.LinuxARM || b.LinuxMIPS || b.LinuxOdd || b.AIX || b.Dragonfly || b.Illumos || b.FreeBSD || b.NetBSD ||
-		b.OpenBSD || b.Plan9 || b.Solaris || b.Homebrew || b.NFPMS || b.BOM || b.Snapcraft)
+	return !(b.Private || b.Changelog || b.TestsFail || b.NoScript || b.Simple ||
+		b.Desktop || b.Notarize || b.Signing || b.SafeMode ||
+		b.Android || b.IOS || b.WASM || b.X86 || b.WindowsARM ||
+		b.LinuxARM || b.LinuxMIPS || b.LinuxOdd || b.AIX || b.Dragonfly || b.Illumos ||
+		b.FreeBSD || b.NetBSD || b.OpenBSD || b.Plan9 || b.Solaris ||
+		b.Homebrew || b.NFPMS || b.BOM || b.Snapcraft)
 }
 
 func (b *Build) ToMap() map[string]bool {
 	return map[string]bool{
-		"private": b.Private, "changelog": b.Changelog, "testsFail": b.TestsFail,
-		"desktop": b.Desktop, "notarize": b.Notarize, "signing": b.Signing, "safeMode": b.SafeMode, "simple": b.Simple,
+		"private": b.Private, "changelog": b.Changelog, "testsFail": b.TestsFail, "noScript": b.NoScript,
+		"desktop": b.Desktop, "notarize": b.Notarize, "signing": b.Signing, "safeMode": b.SafeMode,
 		"android": b.Android, "ios": b.IOS, "wasm": b.WASM, "x86": b.X86, "windows-arm": b.WindowsARM,
 		"linux-arm": b.LinuxARM, "linux-mips": b.LinuxMIPS, "linux-odd": b.LinuxOdd,
 		"aix": b.AIX, "dragonfly": b.Dragonfly, "illumos": b.Illumos, "freebsd": b.FreeBSD,
@@ -76,9 +78,9 @@ func BuildFromMap(frm util.ValueMap) *Build {
 		return v == util.BoolTrue
 	}
 	return &Build{
-		Private: x("private"), Changelog: x("changelog"), TestsFail: x("testsFail"),
+		Private: x("private"), Changelog: x("changelog"), TestsFail: x("testsFail"), NoScript: x("noScript"),
 		Desktop: x("desktop"), Notarize: x("notarize"), Signing: x("signing"), SafeMode: x("safeMode"),
-		Simple: x("simple"), Android: x("android"), IOS: x("ios"), WASM: x("wasm"), X86: x("x86"), WindowsARM: x("windows-arm"),
+		Android: x("android"), IOS: x("ios"), WASM: x("wasm"), X86: x("x86"), WindowsARM: x("windows-arm"),
 		LinuxARM: x("linux-arm"), LinuxMIPS: x("linux-mips"), LinuxOdd: x("linux-odd"),
 		AIX: x("aix"), Dragonfly: x("dragonfly"), Illumos: x("illumos"), FreeBSD: x("freebsd"),
 		NetBSD: x("netbsd"), OpenBSD: x("openbsd"), Plan9: x("plan9"), Solaris: x("solaris"),
@@ -93,11 +95,10 @@ type BuildOption struct {
 }
 
 var AllBuildOptions = []*BuildOption{
-	{Key: "simple", Title: "Simple", Description: "Only build Linux amd64 and a single Docker image (ignores all other build options)"},
-
 	{Key: "private", Title: "Private", Description: "This project is not public (affects publishing)"},
 	{Key: "changelog", Title: "Changelog", Description: "Generate changelogs from GitHub commits"},
 	{Key: "testsFail", Title: "Tests Fail", Description: "If set, Docker build will fail unless all tests pass"},
+	{Key: "noScript", Title: "No Script", Description: "Prevents JavaScript from being emitted or utilized"},
 
 	{Key: "desktop", Title: "Desktop", Description: "Webview-based applications for the three major operating systems (requires \"desktop\" module)"},
 	{Key: "notarize", Title: "Notarize", Description: "Sends build artifacts to Apple for notarization (requires \"notarize\" module)"},
