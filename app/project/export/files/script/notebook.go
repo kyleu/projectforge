@@ -10,7 +10,7 @@ import (
 	"projectforge.dev/projectforge/app/project"
 )
 
-func NotebookScript(p *project.Project, args *model.Args, linebreak string) (*file.File, error) {
+func NotebookScript(p *project.Project, models model.Models, linebreak string) (*file.File, error) {
 	var content []string
 	w := func(msg string, args ...any) {
 		content = append(content, fmt.Sprintf(msg, args...))
@@ -54,7 +54,7 @@ func NotebookScript(p *project.Project, args *model.Args, linebreak string) (*fi
 	w("  return ret;")
 	w("}")
 
-	for _, m := range args.Models {
+	for _, m := range models {
 		w("")
 		w("export async function %s(opts) {", m.CamelPlural())
 		w("  return await load(urlFor(%q, %q, opts), opts?.t);", m.Package, m.Route())

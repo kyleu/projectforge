@@ -20,9 +20,9 @@ func MenuFor(
 	var data any
 	// $PF_SECTION_START(menu)$
 	ret = append(ret,
-		projectMenu(as.Services.Projects.Projects()),
+		projectMenu(ctx, as.Services.Projects.Projects()),
 		menu.Separator,
-		moduleMenu(as.Services.Modules.ModulesVisible()),
+		moduleMenu(ctx, as.Services.Modules.ModulesVisible()),
 		menu.Separator,
 	)
 	adm := &menu.Item{Key: "admin", Title: "Settings", Description: "System-wide settings and preferences", Icon: "cog", Route: "/admin"}

@@ -1,6 +1,8 @@
 package cmenu
 
 import (
+	"context"
+
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/lib/menu"
@@ -8,7 +10,7 @@ import (
 	"projectforge.dev/projectforge/app/project"
 )
 
-func projectMenu(prjs project.Projects) *menu.Item {
+func projectMenu(_ context.Context, prjs project.Projects) *menu.Item {
 	ret := &menu.Item{Key: "projects", Title: "Projects", Description: "View all of the projects managed by this application", Icon: "code", Route: "/p"}
 	lo.ForEach(prjs, func(prj *project.Project, _ int) {
 		key := prj.Key
@@ -18,7 +20,7 @@ func projectMenu(prjs project.Projects) *menu.Item {
 	return ret
 }
 
-func moduleMenu(mods module.Modules) *menu.Item {
+func moduleMenu(_ context.Context, mods module.Modules) *menu.Item {
 	ret := &menu.Item{Key: "modules", Title: "Modules", Description: "View all of the modules managed by this application", Icon: "archive", Route: "/m"}
 	lo.ForEach(mods, func(mod *module.Module, _ int) {
 		key := mod.Key

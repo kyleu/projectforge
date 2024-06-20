@@ -78,6 +78,7 @@ func toDelimited(s string, delimiter uint8) string {
 	return toScreamingDelimited(s, delimiter, "", false)
 }
 
+//nolint:nestif,gocognit,gocyclo,cyclop
 func toScreamingDelimited(s string, delimiter uint8, ignore string, screaming bool) string {
 	s = strings.TrimSpace(s)
 	n := strings.Builder{}

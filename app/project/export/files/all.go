@@ -4,6 +4,8 @@ import (
 	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/lib/metamodel/enum"
+	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/project/export/files/controller"
 	"projectforge.dev/projectforge/app/project/export/files/goenum"
@@ -23,7 +25,54 @@ func All(p *project.Project, linebreak string) (file.Files, error) {
 	}
 	ret := make(file.Files, 0, (len(args.Models)*10)+len(args.Enums))
 
-	for _, e := range args.Enums {
+	enumRet, err := allEnum(p, linebreak, args.Enums, args.Database)
+	if err != nil {
+		return nil, err
+	}
+	ret = append(ret, enumRet...)
+
+	if len(args.Models) == 0 {
+		return ret, nil
+	}
+
+	for _, m := range args.Models {
+		calls, e := ModelAll(m, p, args, linebreak)
+		if e != nil {
+			return nil, errors.Wrapf(e, "error processing model [%s]", m.Name)
+		}
+		ret = append(ret, calls...)
+	}
+
+	x, err := svc.Services(args, linebreak)
+	if err != nil {
+		return nil, err
+	}
+	ret = append(ret, x)
+
+	x, err = controller.Routes(args, linebreak)
+	if err != nil {
+		return nil, err
+	}
+	ret = append(ret, x)
+
+	x, err = controller.Menu(args, linebreak)
+	if err != nil {
+		return nil, err
+	}
+	ret = append(ret, x)
+
+	extraRet, err := extraFiles(p, linebreak, args)
+	if err != nil {
+		return nil, err
+	}
+	ret = append(ret, extraRet...)
+
+	return ret, nil
+}
+
+func allEnum(p *project.Project, linebreak string, enums enum.Enums, database string) (file.Files, error) {
+	var ret file.Files
+	for _, e := range enums {
 		call, err := goenum.Enum(e, linebreak)
 		if err != nil {
 			return nil, errors.Wrapf(err, "error processing enum [%s]", e.Name)
@@ -31,50 +80,21 @@ func All(p *project.Project, linebreak string) (file.Files, error) {
 		ret = append(ret, call)
 	}
 
-	for _, m := range args.Models {
-		calls, err := ModelAll(m, p, args, linebreak)
-		if err != nil {
-			return nil, errors.Wrapf(err, "error processing model [%s]", m.Name)
-		}
-		ret = append(ret, calls...)
-	}
-
-	if len(args.Models) > 0 {
-		x, err := svc.Services(args, linebreak)
-		if err != nil {
-			return nil, err
-		}
-		ret = append(ret, x)
-	}
-
-	if len(args.Enums) > 0 && p.HasModule("migration") {
-		f, err := sql.Types(args.Enums, linebreak, args.Database)
+	if len(enums) > 0 && p.HasModule("migration") {
+		f, err := sql.Types(enums, linebreak, database)
 		if err != nil {
 			return nil, errors.Wrap(err, "can't render SQL types")
 		}
 		ret = append(ret, f)
 	}
+	return ret, nil
+}
 
-	if len(args.Models) > 0 {
-		x, err := controller.Routes(args, linebreak)
-		if err != nil {
-			return nil, err
-		}
-		ret = append(ret, x)
-	}
-
-	if len(args.Models) == 0 {
-		return ret, nil
-	}
-
-	x, err := controller.Menu(args, linebreak)
-	if err != nil {
-		return nil, err
-	}
-	ret = append(ret, x)
+func extraFiles(p *project.Project, linebreak string, args *model.Args) (file.Files, error) {
+	var ret file.Files
 
 	if args.HasModule("search") {
-		x, err = controller.Search(args, linebreak)
+		x, err := controller.Search(args, linebreak)
 		if err != nil {
 			return nil, err
 		}
@@ -82,7 +102,15 @@ func All(p *project.Project, linebreak string) (file.Files, error) {
 	}
 
 	if args.HasModule("graphql") {
-		x, err = gql.All(args.Models, args.Enums, linebreak)
+		x, err := gql.All(args.Models, args.Enums, linebreak)
+		if err != nil {
+			return nil, err
+		}
+		ret = append(ret, x)
+	}
+
+	if args.HasModule("notebook") {
+		x, err := script.NotebookScript(p, args.Models, linebreak)
 		if err != nil {
 			return nil, err
 		}
@@ -98,14 +126,6 @@ func All(p *project.Project, linebreak string) (file.Files, error) {
 		ret = append(ret, f)
 	}
 
-	if args.HasModule("notebook") {
-		x, err := script.NotebookScript(p, args, linebreak)
-		if err != nil {
-			return nil, err
-		}
-		ret = append(ret, x)
-	}
-
 	if args.Models.HasSeedData() {
 		f, err := sql.SeedDataAll(args.Models, linebreak)
 		if err != nil {
@@ -113,5 +133,6 @@ func All(p *project.Project, linebreak string) (file.Files, error) {
 		}
 		ret = append(ret, f)
 	}
+
 	return ret, nil
 }

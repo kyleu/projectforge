@@ -14,7 +14,10 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-const serviceAssignmentToken = ":="
+const (
+	serviceAssignmentToken = ":="
+	chunkedArgs            = "ctx context.Context, tx *sqlx.Tx, chunkSize int, progress *util.Progress, logger util.Logger, models ...*%s) error {"
+)
 
 func ServiceMutate(m *model.Model, args *model.Args, linebreak string) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "servicemutate")
@@ -88,7 +91,7 @@ func serviceCreate(g *golang.File, m *model.Model, audit bool) (*golang.Block, e
 
 func serviceCreateChunked(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("CreateChunked", "func")
-	ret.W("func (s *Service) CreateChunked(ctx context.Context, tx *sqlx.Tx, chunkSize int, progress *util.Progress, logger util.Logger, models ...*%s) error {", m.Proper())
+	ret.W("func (s *Service) CreateChunked("+chunkedArgs, m.Proper())
 	ret.W("\tfor idx, chunk := range lo.Chunk(models, chunkSize) {")
 	ret.W("\t\tif logger != nil {")
 	ret.W("\t\t\tcount := ((idx + 1) * chunkSize) - 1")
@@ -252,7 +255,7 @@ func serviceSave(g *golang.File, m *model.Model, audit bool) (*golang.Block, err
 
 func serviceSaveChunked(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("SaveChunked", "func")
-	ret.W("func (s *Service) SaveChunked(ctx context.Context, tx *sqlx.Tx, chunkSize int, progress *util.Progress, logger util.Logger, models ...*%s) error {", m.Proper())
+	ret.W("func (s *Service) SaveChunked("+chunkedArgs, m.Proper())
 	ret.W("\tfor idx, chunk := range lo.Chunk(models, chunkSize) {")
 	ret.W("\t\tif logger != nil {")
 	ret.W("\t\t\tcount := ((idx + 1) * chunkSize) - 1")

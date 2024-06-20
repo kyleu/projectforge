@@ -86,7 +86,8 @@ func exportViewListBody(m *model.Model, models model.Models) *golang.Block {
 			}
 		}
 	}
-	ret.W(`      {%%%%- if len(p.Models) > 0 -%%%%}<a href="/%s/_random"><button>{%%%%= components.SVGButton("gift", ps) %%%%} Random</button></a>{%%%%- endif -%%%%}`, m.Route())
+	msg := `<a href="/%s/_random"><button>{%%%%= components.SVGButton("gift", ps) %%%%} Random</button></a>`
+	ret.W(`      {%%%%- if len(p.Models) > 0 -%%%%}`+msg+`{%%%%- endif -%%%%}`, m.Route())
 	ret.W(`      ` + ln)
 	ret.W(`    </div>`)
 	ret.W("    %s{%%%%= components.SVGIcon(`%s`, ps) %%%%} {%%%%s ps.Title %%%%}%s", helper.TextH3Start, m.Icon, helper.TextH3End)
