@@ -13,6 +13,7 @@ const (
 	KeyDebug   = "debug"
 	KeyError   = "error"
 	KeyRandom  = "random"
+	KeyStart   = "start"
 	KeyUnknown = "unknown"
 
 	KeyCSV  = "csv"

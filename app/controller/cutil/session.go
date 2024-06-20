@@ -60,7 +60,9 @@ func LoadPageState(as *app.State, w *WriteCounter, r *http.Request, key string, 
 	}
 }
 
-func loadSession(_ context.Context, _ *app.State, w http.ResponseWriter, r *http.Request, logger util.Logger) (util.ValueMap, []string, *user.Profile) {
+func loadSession(
+	_ context.Context, _ *app.State, w http.ResponseWriter, r *http.Request, logger util.Logger,
+) (util.ValueMap, []string, *user.Profile) {
 	c, _ := r.Cookie(util.AppKey)
 	if c == nil || c.Value == "" {
 		return util.ValueMap{}, nil, user.DefaultProfile.Clone()

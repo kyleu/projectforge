@@ -42,7 +42,7 @@ func Admin(w http.ResponseWriter, r *http.Request) {
 			return controller.Render(r, as, &vadmin.BrandIcons{Library: icons.BrandLibrary()}, ps, "admin", "Brand Icons**folder"){{{ end }}}{{{ if .DangerousOK }}}
 		case "cpu":
 			switch path[1] {
-			case "start":
+			case util.KeyStart:
 				err := util.DebugStartCPUProfile()
 				if err != nil {
 					return "", err

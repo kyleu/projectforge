@@ -13,8 +13,8 @@ import (
 
 func getState(r *http.Request) string {
 	state := r.URL.Query().Get("state")
-	if len(state) > 0 {
-		return string(state)
+	if state != "" {
+		return state
 	}
 	nonceBytes := util.RandomBytes(64)
 	return base64.URLEncoding.EncodeToString(nonceBytes)

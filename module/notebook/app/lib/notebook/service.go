@@ -38,7 +38,10 @@ func (s *Service) Status() string {
 	if err != nil {
 		return "not-started"
 	}
-	if rsp.StatusCode != 200 {
+	defer func() {
+		_ = rsp.Body.Close()
+	}()
+	if rsp.StatusCode != http.StatusOK {
 		return "invalid-response"
 	}
 	return "running"

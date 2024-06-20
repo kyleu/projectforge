@@ -36,7 +36,7 @@ func Admin(w http.ResponseWriter, r *http.Request) {
 			return controller.Render(r, as, &vadmin.ServerInfo{Info: info}, ps, "admin", "App Information")
 		case "cpu":
 			switch path[1] {
-			case "start":
+			case util.KeyStart:
 				err := util.DebugStartCPUProfile()
 				if err != nil {
 					return "", err

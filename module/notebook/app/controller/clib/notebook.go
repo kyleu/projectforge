@@ -101,8 +101,11 @@ func NotebookAction(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		switch act {
-		case "start":
+		case util.KeyStart:
 			err = as.Services.Notebook.Start()
+			if err != nil {
+				return "", err
+			}
 			return controller.FlashAndRedir(true, "Notebook started", "/notebook", ps)
 		default:
 			return "", errors.Errorf("invalid notebook action [%s]", act)
