@@ -20,6 +20,10 @@ func (s *Service) History(ctx context.Context, prj *project.Project, hist *Histo
 	return NewResult(prj, ok, util.ValueMap{"history": hist}), nil
 }
 
+const hFDelimit, hLDelimit = "»¦«", "»¦¦¦«"
+
+var historyFormat = fmt.Sprintf("%%H%s%%an%s%%ae%s%%cd%s%%B%s", hFDelimit, hFDelimit, hFDelimit, hFDelimit, hLDelimit)
+
 func gitHistory(ctx context.Context, path string, hist *HistoryResult, logger util.Logger) error {
 	// if hist.Commit != "" {
 	//	curr := &HistoryEntry{SHA: hist.Commit}
@@ -30,8 +34,7 @@ func gitHistory(ctx context.Context, path string, hist *HistoryResult, logger ut
 	//	return nil
 	//}
 
-	format := "%H»¦«%an»¦«%ae»¦«%cd»¦«%B»¦¦¦«"
-	cmd := "log --pretty=format:" + format
+	cmd := "log --pretty=format:" + historyFormat
 	if hist.Since != nil {
 		cmd += fmt.Sprintf(" --since %v", hist.Since)
 	}
