@@ -7,11 +7,11 @@
   <em>empty result</em>
   {%- else -%}
   <div class="overflow full-width">
-    <table>
+    <table class="expanded min-200">
       <tbody>
         {%- for _, k := range m.Keys() -%}
           <tr>
-            <th>{%s k %}</th>
+            <th class="shrink">{%s k %}</th>
             {%- if preserveWhitespace -%}
             <td class="prews">{%= Any(m[k]) %}</td>
             {%- else -%}

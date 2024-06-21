@@ -1,6 +1,7 @@
 {% import (
   "fmt"
   "net/url"
+  "strings"
   "time"
 
   "github.com/google/uuid"
@@ -47,6 +48,12 @@
       {%= UUID(&t) %}
     {% case *uuid.UUID %}
       {%= UUID(t) %}
+    {% case []any %}
+      {% code arr, extra := util.ArrayLimit(util.StringArrayFromAny(t, 32), 8) %}
+      {%s strings.Join(arr, ", ") %}
+      {% if extra > 0 %}
+        {% space %}<em>...and{% space %}{%d extra %}{% space %}more</em>
+      {% endif %}
     {% default %}
       unhandled type [{%s fmt.Sprintf("%T", x) %}]
     {% endswitch %}

@@ -57,6 +57,13 @@ func ArraySorted[T cmp.Ordered](x []T) []T {
 	return x
 }
 
+func ArrayLimit[T cmp.Ordered](x []T, limit int) ([]T, int) {
+	if limit == 0 || limit > len(x) {
+		limit = len(x)
+	}
+	return x[:limit], len(x) - limit
+}
+
 func StringArrayOxfordComma(names []string, separator string) string {
 	ret := ""
 	lo.ForEach(names, func(name string, idx int) {
