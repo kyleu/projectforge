@@ -34,7 +34,7 @@ brews:
 {{{ end }}}
 changelog:{{{ if .Build.Changelog }}}
   use: "github"{{{ else }}}
-  skip: true{{{ end }}}
+  disable: true{{{ end }}}
 
 checksum:
   name_template: "checksums.txt"
