@@ -57,44 +57,53 @@ func (p *Home) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
       <div>Project Forge creates and manages applications written in the <a href="https://go.dev">Go</a> programming language.</div>
       <p><em>Using code generation, the latest technology, and a strong standard library, Project Forge will help manage your project's code, assets, UI and UX.</em></p>
       <a href="/about"><button>Learn More</button></a>
-    </div>
+`)
+//line views/Home.html:28
+	if len(p.Projects) > 0 {
+//line views/Home.html:28
+		qw422016.N().S(`      <a href="/run/preview"><button>Preview All</button></a>
+`)
+//line views/Home.html:30
+	}
+//line views/Home.html:30
+	qw422016.N().S(`    </div>
   </div>
   `)
-//line views/Home.html:30
+//line views/Home.html:33
 	vproject.StreamTable(qw422016, p.Projects, nil, false, p.Execs, as, ps)
-//line views/Home.html:30
+//line views/Home.html:33
 	qw422016.N().S(`
   `)
-//line views/Home.html:31
+//line views/Home.html:34
 	vmodule.StreamTable(qw422016, p.Modules, false, "", as, ps)
-//line views/Home.html:31
+//line views/Home.html:34
 	qw422016.N().S(`
 `)
-//line views/Home.html:32
+//line views/Home.html:35
 }
 
-//line views/Home.html:32
+//line views/Home.html:35
 func (p *Home) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/Home.html:32
+//line views/Home.html:35
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/Home.html:32
+//line views/Home.html:35
 	p.StreamBody(qw422016, as, ps)
-//line views/Home.html:32
+//line views/Home.html:35
 	qt422016.ReleaseWriter(qw422016)
-//line views/Home.html:32
+//line views/Home.html:35
 }
 
-//line views/Home.html:32
+//line views/Home.html:35
 func (p *Home) Body(as *app.State, ps *cutil.PageState) string {
-//line views/Home.html:32
+//line views/Home.html:35
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/Home.html:32
+//line views/Home.html:35
 	p.WriteBody(qb422016, as, ps)
-//line views/Home.html:32
+//line views/Home.html:35
 	qs422016 := string(qb422016.B)
-//line views/Home.html:32
+//line views/Home.html:35
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/Home.html:32
+//line views/Home.html:35
 	return qs422016
-//line views/Home.html:32
+//line views/Home.html:35
 }
