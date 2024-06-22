@@ -1,4 +1,6 @@
 # http://goreleaser.com
+version: 2
+
 project_name: projectforge
 
 archives:
@@ -15,7 +17,7 @@ brews:
     commit_author:
       name: "Kyle U"
       email: "projectforge@kyleu.com"
-    folder: Formula
+    directory: Formula
     homepage: "https://projectforge.dev"
     description: "Project Forge creates and manages applications written in the Go programming language. Using code generation, the latest technology, and a strong standard library, Project Forge will help manage your project's code, assets, UI and UX."
     license: "MIT"

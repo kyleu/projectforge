@@ -1,4 +1,6 @@
 # http://goreleaser.com
+version: 2
+
 project_name: {{{ .Key }}}
 {{{ if .HasSlack }}}
 announce:
@@ -20,7 +22,7 @@ brews:
     commit_author:
       name: "{{{ .Info.AuthorName }}}"
       email: "{{{ .Info.AuthorEmail }}}"
-    folder: Formula
+    directory: Formula
     homepage: "{{{ .Info.Homepage }}}"
     description: "{{{ .Info.Description }}}"
     license: "{{{ .Info.License }}}"
