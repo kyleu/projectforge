@@ -130,6 +130,10 @@ func RespondMIME(filename string, mime string, ext string, ba []byte, w *WriteCo
 	return "", nil
 }
 
+func RespondDownload(filename string, ba []byte, w *WriteCounter) (string, error) {
+	return RespondMIME(filename, "application/octet-stream", "", ba, w)
+}
+
 func GetContentType(r *http.Request) string {
 	ret := r.Header.Get(HeaderAccept)
 	if ret == "" {

@@ -3,6 +3,7 @@ package clib
 import (
 	"fmt"
 	"net/http"
+	"path/filepath"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -38,6 +39,13 @@ func NotebookFiles(w http.ResponseWriter, r *http.Request) {
 	controller.Act("notebook.files", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		pathS, path, bc := notebookGetText(r)
 		fs := as.Services.Notebook.FS
+		if r.URL.Query().Get("download") == "true" {
+			b, err := fs.ReadFile(filepath.Join(path...))
+			if err != nil {
+				return "", errors.Wrap(err, "unable to read file for download")
+			}
+			return cutil.RespondDownload(path[len(path)-1], b, ps.W)
+		}
 		files, err := fs.ListTree(nil, pathS, []string{"cache"}, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "error listing files")
