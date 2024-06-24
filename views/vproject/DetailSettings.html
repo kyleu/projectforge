@@ -5,6 +5,7 @@
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/project"
   "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/components/view"
 ) %}
 
 {% func DetailSettings(prj *project.Project, as *app.State, ps *cutil.PageState) %}
@@ -25,7 +26,7 @@
         </tr>
         <tr>
           <th>Package</th>
-          <td><a href="https://{%s prj.Package %}" target="_blank" rel="noopener noreferrer">{%s prj.Package %}</a></td>
+          <td>{%= view.URL("https://" + prj.Package, prj.Package, true, ps) %}</td>
         </tr>
         <tr>
           <th>Args</th>

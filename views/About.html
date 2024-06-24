@@ -32,14 +32,14 @@
     </div>
     <div class="mt">Your project is your own, use any license you'd like.</div>
   </div>
-  {%= SourceCode() %}
+  {%= SourceCode(ps) %}
   {%= Feedback() %}
 {% endfunc %}
 
-{% func SourceCode() %}
+{% func SourceCode(ps *cutil.PageState) %}
   <div class="card">
     <h3>Source Code</h3>
-    <p>The project is available on <a href="https://github.com/kyleu/projectforge" target="_blank" rel="noopener noreferrer">GitHub</a></p>
+    <p>The project is available on {%= view.URL(util.AppSource, "GitHub", true, ps) %}</p>
   </div>
 {% endfunc %}
 

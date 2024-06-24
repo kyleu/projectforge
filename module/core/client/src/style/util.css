@@ -270,6 +270,10 @@ svg.link {
   top: 4px;
 }
 
+svg.link.padded {
+  margin-left: 4px;
+}
+
 .os-windows .icon {
   margin-top: 0;
 }

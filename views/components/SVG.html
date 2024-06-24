@@ -63,6 +63,10 @@
   {%= SVGRef(k, 18, 18, "link", ps) %}
 {% endstripspace %}{% endfunc %}
 
+{% func SVGLinkPadded(k string, ps *cutil.PageState) %}{% stripspace %}
+  {%= SVGRef(k, 18, 18, "link padded", ps) %}
+{% endstripspace %}{% endfunc %}
+
 {%- func IconGallery(as *app.State, ps *cutil.PageState) -%}
   <div class="flex-wrap mt">
     {%- for _, k := range util.SVGIconKeys -%}

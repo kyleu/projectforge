@@ -4,6 +4,7 @@
   "{{{ .Package }}}/app/lib/user"{{{ end }}}
   "{{{ .Package }}}/app/util"
   "{{{ .Package }}}/views/components"
+  "{{{ .Package }}}/views/components/view"
   "{{{ .Package }}}/views/layout"{{{ if .HasAccount }}}
   "{{{ .Package }}}/views/vauth"{{{ end }}}
 ) %}
@@ -23,7 +24,7 @@
     <div class="mt">{%s= util.AppLegal %}</div>
     {%- endif -%}
     {%- if util.AppURL != "" -%}
-    <p><a target="_blank" rel="noopener noreferrer" href="{%s= util.AppURL %}">{%s= util.AppURL %}</a></p>
+    <p>{%= view.URL(util.AppURL, "", true, ps) %}</p>
     {%- endif -%}
     <em>This page is for the settings of the application. To change your user preferences, such as themes, <a href="/profile">edit your profile</a>.</em>
   </div>{{{ if .HasModule "audit" }}}

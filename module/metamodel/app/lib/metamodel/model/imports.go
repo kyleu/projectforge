@@ -8,7 +8,7 @@ import (
 
 	"github.com/samber/lo"
 
-	"projectforge.dev/projectforge/app/util"
+	"{{{ .Package }}}/app/util"
 )
 
 type ImportType string

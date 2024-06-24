@@ -3,6 +3,7 @@
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/module"
   "projectforge.dev/projectforge/app/project"
+  "projectforge.dev/projectforge/views/components/view"
   "projectforge.dev/projectforge/views/layout"
 ) %}
 
@@ -44,7 +45,7 @@
           </tr>
           <tr>
             <th>Sourcecode</th>
-            <td><a href="{%s mod.Sourcecode %}" target="_blank" rel="noopener noreferrer">{%s mod.Sourcecode %}</a></td>
+            <td>{%= view.URL(mod.Sourcecode, "", true, ps) %}</td>
           </tr>
           {%- if p.Dir != "" -%}
           <tr>

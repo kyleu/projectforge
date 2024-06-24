@@ -6,6 +6,7 @@
   "projectforge.dev/projectforge/app/project"
   "projectforge.dev/projectforge/app/project/action"
   "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/views/components/view"
   "projectforge.dev/projectforge/views/layout"
   "projectforge.dev/projectforge/views/vproject"
 ) %}
@@ -29,7 +30,7 @@
   <div class="card">
     <h3>Add a new icon</h3>
     <p>
-      To add an icon to your application, enter a key from <a href="https://icons8.com/line-awesome" target="_blank" rel="noopener noreferrer">Line Awesome</a>.
+      To add an icon to your application, enter a key from {%= view.URL("https://icons8.com/line-awesome", "Line Awesome", true, ps) %}.
       Instead of an icon key, you may also provide a URL to any SVG.
       The SVG will be rewritten with attribution.
     </p>

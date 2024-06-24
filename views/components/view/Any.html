@@ -6,10 +6,11 @@
 
   "github.com/google/uuid"
 
+  "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/util"
 ) %}
 
-{% func Any(x any) %}{% stripspace %}
+{% func Any(x any, ps *cutil.PageState) %}{% stripspace %}
   {% if x == nil %}
     <em>nil</em>
   {% else %}
@@ -29,9 +30,9 @@
     {% case int64 %}
       {%= Int(t) %}
     {% case util.ValueMap %}
-      {%= Map(false, t) %}
+      {%= Map(false, t, ps) %}
     {% case []util.ValueMap %}
-      {%= MapArray(false, t...) %}
+      {%= MapArray(false, ps, t...) %}
     {% case util.Pkg %}
       {%= Package(t) %}
     {% case string %}
@@ -41,9 +42,9 @@
     {% case *time.Time %}
       {%= Timestamp(t) %}
     {% case url.URL %}
-      {%= URL(t) %}
+      {%= URL(t, "", true, ps) %}
     {% case *url.URL %}
-      {%= URL(t) %}
+      {%= URL(t, "", true, ps) %}
     {% case uuid.UUID %}
       {%= UUID(&t) %}
     {% case *uuid.UUID %}

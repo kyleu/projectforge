@@ -6,6 +6,7 @@
   "projectforge.dev/projectforge/app/file/diff"
   "projectforge.dev/projectforge/app/project/action"
   "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/views/components/view"
 ) %}
 
 {% func renderDiffs(prjKey string, act action.Type, diffs diff.Diffs, cfg util.ValueMap, as *app.State, ps *cutil.PageState) %}{% stripspace %}
@@ -42,7 +43,7 @@
               {%- if strings.Contains(d.Path, "..") || d.Status.Matches(diff.StatusNew) -%}
               {%s d.Path %}
               {%- else -%}
-              <a href="/p/{%s prjKey %}/fs/{%s d.Path %}" target="_blank" rel="noopener noreferrer">{%s d.Path %}</a>
+              {%= view.URL("/p/" + prjKey + "/fs/" + d.Path, d.Path, true, ps) %}</td>
               {%- endif -%}
             </td>
             <td>{%s d.Status.StringFor(act.Key) %}</td>

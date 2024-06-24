@@ -17,7 +17,7 @@
   {%= renderTags("App Information", p.Info.AppTags, "play", ps) %}
   <div class="card">
     <h3>{%= components.SVGIcon(`archive`, ps) %} Go Modules</h3>
-    {%= moduleTable(p.Info.Mods) %}
+    {%= moduleTable(p.Info.Mods, ps) %}
   </div>
 {% endfunc %}
 

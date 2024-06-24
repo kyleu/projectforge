@@ -86,7 +86,7 @@ func (p *About) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
   </div>
   `)
 //line views/About.html:35
-	StreamSourceCode(qw422016)
+	StreamSourceCode(qw422016, ps)
 //line views/About.html:35
 	qw422016.N().S(`
   `)
@@ -125,34 +125,38 @@ func (p *About) Body(as *app.State, ps *cutil.PageState) string {
 }
 
 //line views/About.html:39
-func StreamSourceCode(qw422016 *qt422016.Writer) {
+func StreamSourceCode(qw422016 *qt422016.Writer, ps *cutil.PageState) {
 //line views/About.html:39
 	qw422016.N().S(`
   <div class="card">
     <h3>Source Code</h3>
-    <p>The project is available on <a href="https://github.com/kyleu/projectforge" target="_blank" rel="noopener noreferrer">GitHub</a></p>
+    <p>The project is available on `)
+//line views/About.html:42
+	view.StreamURL(qw422016, util.AppSource, "GitHub", true, ps)
+//line views/About.html:42
+	qw422016.N().S(`</p>
   </div>
 `)
 //line views/About.html:44
 }
 
 //line views/About.html:44
-func WriteSourceCode(qq422016 qtio422016.Writer) {
+func WriteSourceCode(qq422016 qtio422016.Writer, ps *cutil.PageState) {
 //line views/About.html:44
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/About.html:44
-	StreamSourceCode(qw422016)
+	StreamSourceCode(qw422016, ps)
 //line views/About.html:44
 	qt422016.ReleaseWriter(qw422016)
 //line views/About.html:44
 }
 
 //line views/About.html:44
-func SourceCode() string {
+func SourceCode(ps *cutil.PageState) string {
 //line views/About.html:44
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/About.html:44
-	WriteSourceCode(qb422016)
+	WriteSourceCode(qb422016, ps)
 //line views/About.html:44
 	qs422016 := string(qb422016.B)
 //line views/About.html:44

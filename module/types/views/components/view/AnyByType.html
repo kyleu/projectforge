@@ -1,30 +1,31 @@
 {% import (
   "fmt"
 
+  "{{{ .Package }}}/app/controller/cutil"
   "{{{ .Package }}}/app/lib/types"
   "{{{ .Package }}}/views/components"
 ) %}
 
-{% func AnyByType(x any, t *types.Wrapped) %}{% stripspace %}
+{% func AnyByType(x any, t *types.Wrapped, ps *cutil.PageState) %}{% stripspace %}
   {% switch t.Key() %}
   {% case types.KeyAny %}
-    {%= Default(x, t.String()) %}
+    {%= Default(x, t.String(), ps) %}
   {% case types.KeyBit %}
-    {%= Default(x, t.String()) %}
+    {%= Default(x, t.String(), ps) %}
   {% case types.KeyBool %}
     {%= Bool(x.(bool)) %}
   {% case types.KeyByte %}
-    {%= Default(x, t.String()) %}
+    {%= Default(x, t.String(), ps) %}
   {% case types.KeyChar %}
-    {%= Default(x, t.String()) %}
+    {%= Default(x, t.String(), ps) %}
   {% case types.KeyDate %}
-    {%= Default(x, t.String()) %}
+    {%= Default(x, t.String(), ps) %}
   {% case types.KeyEnum %}
     <span title="enum:{%s t.T.(*types.Enum).Ref %}">{%v x %}</span>
   {% case types.KeyEnumValue %}
-    {%= Default(x, t.String()) %}
+    {%= Default(x, t.String(), ps) %}
   {% case types.KeyError %}
-    {%= Default(x, t.String()) %}
+    {%= Default(x, t.String(), ps) %}
   {% case types.KeyFloat %}
     {%= Float(x) %}
   {% case types.KeyInt %}
@@ -32,61 +33,61 @@
   {% case types.KeyJSON %}
     {%= components.JSON(x) %}
   {% case types.KeyList %}
-    {%= Default(x, t.String()) %}
+    {%= Default(x, t.String(), ps) %}
   {% case types.KeyMap %}
-    {%= Default(x, t.String()) %}
+    {%= Default(x, t.String(), ps) %}
   {% case types.KeyMethod %}
-    {%= Default(x, t.String()) %}
+    {%= Default(x, t.String(), ps) %}
   {% case types.KeyNil %}
-    {%= Default(x, t.String()) %}
+    {%= Default(x, t.String(), ps) %}
   {% case types.KeyOption %}
     {% if x == nil %}
       <em>∅</em>
     {% else %}
-      {%= AnyByType(x, t.T.(*types.Option).V) %}
+      {%= AnyByType(x, t.T.(*types.Option).V, ps) %}
     {% endif %}
   {% case types.KeyRange %}
-    {%= Default(x, t.String()) %}
+    {%= Default(x, t.String(), ps) %}
   {% case types.KeyReference %}
-    {%= Default(x, t.String()) %}
+    {%= Default(x, t.String(), ps) %}
   {% case types.KeySet %}
-    {%= Default(x, t.String()) %}
+    {%= Default(x, t.String(), ps) %}
   {% case types.KeyString %}
     {%= String(x.(string)) %}
   {% case types.KeyTime %}
-    {%= Default(x, t.String()) %}
+    {%= Default(x, t.String(), ps) %}
   {% case types.KeyTimestamp %}
-    {%= Default(x, t.String()) %}
+    {%= Default(x, t.String(), ps) %}
   {% case types.KeyTimestampZoned %}
-    {%= Default(x, t.String()) %}
+    {%= Default(x, t.String(), ps) %}
   {% case types.KeyUnknown %}
-    {%= Default(x, t.String()) %}
+    {%= Default(x, t.String(), ps) %}
   {% case types.KeyUUID %}
-    {%= Default(x, t.String()) %}
+    {%= Default(x, t.String(), ps) %}
   {% case types.KeyValueMap %}
-    {%= Default(x, t.String()) %}
+    {%= Default(x, t.String(), ps) %}
   {% case types.KeyXML %}
-    {%= Default(x, t.String()) %}
+    {%= Default(x, t.String(), ps) %}
   {% default %}
-    {%= Default(x, t.String()) %}
+    {%= Default(x, t.String(), ps) %}
   {% endswitch %}
 {% endstripspace %}{% endfunc %}
 
-{% func Default(x any, t string) %}{% stripspace %}
+{% func Default(x any, t string, ps *cutil.PageState) %}{% stripspace %}
   {% code msg := fmt.Sprintf("unhandled type: %s (%T)", t, x) %}
-  <span title="{%s msg %}">{%= Any(x) %}</span>
+  <span title="{%s msg %}">{%= Any(x, ps) %}</span>
 {% endstripspace %}{% endfunc %}
 
 {% func Type(v types.Type) %}{% stripspace %}
   {%s v.String() %}
 {% endstripspace %}{% endfunc %}
 
-{% func Option(x any, t *types.Option) %}{% stripspace %}
+{% func Option(x any, t *types.Option, ps *cutil.PageState) %}{% stripspace %}
   {% switch t.V.Key() %}
   {% default %}
     <div class="two-pane">
-      <div class="l">{%= AnyByType(x, t.V) %}</div>
-      <div class="r"><button title="click to set field to null" type="button" onclick="{{{ .Exec }}}.setSiblingToNull(this);">∅</button></div>
+      <div class="l">{%= AnyByType(x, t.V, ps) %}</div>
+      <div class="r"><button title="click to set field to null" type="button" onclick="projectforge.setSiblingToNull(this);">∅</button></div>
     </div>
   {% endswitch %}
 {% endstripspace %}{% endfunc %}

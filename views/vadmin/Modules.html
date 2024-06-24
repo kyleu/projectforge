@@ -5,6 +5,7 @@
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/components/view"
   "projectforge.dev/projectforge/views/layout"
 ) %}
 
@@ -17,11 +18,11 @@
   <div class="card">
     <div class="right">{%s util.AppName %} v{%s as.BuildInfo.Version %}</div>
     <h3>{%= components.SVGIcon(`archive`, ps) %} Go Modules</h3>
-    {%= moduleTable(p.Modules) %}
+    {%= moduleTable(p.Modules, ps) %}
   </div>
 {% endfunc %}
 
-{% func moduleTable(mods []*debug.Module) %}
+{% func moduleTable(mods []*debug.Module, ps *cutil.PageState) %}
     <div class="overflow full-width">
       <table class="mt">
         <thead>
@@ -33,7 +34,7 @@
         <tbody>
           {%- for _, m := range mods -%}
           <tr>
-            <td><a target="_blank" rel="noopener noreferrer" href="https://{%s m.Path %}">{%s m.Path %}</a></td>
+            <td>{%= view.URL("https://" + m.Path, m.Path, true, ps) %}</td>
             <td title="{%s m.Sum %}">{%s m.Version %}</td>
           </tr>
           {%- endfor -%}

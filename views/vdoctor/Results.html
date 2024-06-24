@@ -6,6 +6,7 @@
   "projectforge.dev/projectforge/app/doctor"
   "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/components/view"
   "projectforge.dev/projectforge/views/layout"
 ) %}
 
@@ -45,7 +46,7 @@
     {%- for _, s := range x.Solutions -%}
     <div class="mt">
       {%- if strings.HasPrefix(s, "#") -%}
-      <a target="_blank" href="{%s strings.TrimPrefix(s, `#`) %}" rel="noopener noreferrer">{%s strings.TrimPrefix(s, `#`) %}</a>
+      {%= view.URL(strings.TrimPrefix(s, `#`), "", true, ps) %}
       {%- elseif strings.HasPrefix(s, "!") -%}
       [<em>{%s strings.TrimPrefix(s, `!`) %}</em>]
       {%- if strings.HasPrefix(s, "!go ") -%}

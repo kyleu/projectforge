@@ -1,6 +1,9 @@
-{% import "projectforge.dev/projectforge/app/util" %}
+{% import (
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/util"
+) %}
 
-{% func Map(preserveWhitespace bool, m util.ValueMap) %}{% stripspace %}
+{% func Map(preserveWhitespace bool, m util.ValueMap, ps *cutil.PageState) %}{% stripspace %}
   {%- if m == nil -%}
   <em>no result</em>
   {%- elseif len(m) == 0 -%}
@@ -13,9 +16,9 @@
           <tr>
             <th class="shrink">{%s k %}</th>
             {%- if preserveWhitespace -%}
-            <td class="prews">{%= Any(m[k]) %}</td>
+            <td class="prews">{%= Any(m[k], ps) %}</td>
             {%- else -%}
-            <td>{%= Any(m[k]) %}</td>
+            <td>{%= Any(m[k], ps) %}</td>
             {%- endif -%}
           </tr>
         {%- endfor -%}
@@ -25,7 +28,7 @@
   {%- endif -%}
 {% endstripspace %}{% endfunc %}
 
-{% func MapArray(preserveWhitespace bool, maps ...util.ValueMap) %}{% stripspace %}
+{% func MapArray(preserveWhitespace bool, ps *cutil.PageState, maps ...util.ValueMap) %}{% stripspace %}
   {%- if len(maps) == 0 -%}
   <em>no results</em>
   {%- else -%}
@@ -43,9 +46,9 @@
           <tr>
             {%- for _, k := range m.Keys() -%}
             {%- if preserveWhitespace -%}
-            <td class="prews">{%= Any(m[k]) %}</td>
+            <td class="prews">{%= Any(m[k], ps) %}</td>
             {%- else -%}
-            <td>{%= Any(m[k]) %}</td>
+            <td>{%= Any(m[k], ps) %}</td>
             {%- endif -%}
             {%- endfor -%}
           </tr>

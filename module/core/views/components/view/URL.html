@@ -1,20 +1,33 @@
 {% import (
+  "fmt"
   "net/url"
+  "strings"
+
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/views/components"
 ) %}
 
-{% func URL(u any) %}{% stripspace %}
+{% func URL(u any, content string, includeExternalIcon bool, ps *cutil.PageState) %}{% stripspace %}
   {% if u == nil %}
     <em>nil</em>
   {% else %}
-    {% switch t := u.(type) %}
-    {% case string %}
-      <a target="_blank" rel="noopener noreferrer" href="{%s t %}">{%s t %}</a>
-    {% case url.URL %}
-      <a target="_blank" rel="noopener noreferrer" href="{%s t.String() %}">{%s t.String() %}</a>
-    {% case *url.URL %}
-      <a target="_blank" rel="noopener noreferrer" href="{%s t.String() %}">{%s t.String() %}</a>
-    {% default %}
-      {%v u %}
-    {% endswitch %}
+    {% code
+      var href string
+      switch t := u.(type) {
+      case string:
+        href = t
+      case url.URL:
+        href = t.String()
+      case *url.URL:
+        href = t.String()
+      default:
+        href = fmt.Sprint(u)
+      }
+      if content == "" {
+        content = href
+      }
+      showIcon := includeExternalIcon && strings.HasPrefix(href, "http")
+    %}
+    <a target="_blank" rel="noopener noreferrer" href="{%s href %}">{%s content %}{% if showIcon %}{%= components.SVGLinkPadded(`external`, ps) %}{% endif %}</a>
   {% endif %}
 {% endstripspace %}{% endfunc %}

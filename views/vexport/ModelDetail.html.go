@@ -727,7 +727,7 @@ func streammodelLinks(qw422016 *qt422016.Writer, model *model.Model, as *app.Sta
 		qw422016.N().S(`</td>
           <td>`)
 //line views/vexport/ModelDetail.html:216
-		view.StreamURL(qw422016, l.URL)
+		view.StreamURL(qw422016, l.URL, "", true, ps)
 //line views/vexport/ModelDetail.html:216
 		qw422016.N().S(`</td>
           <td>`)

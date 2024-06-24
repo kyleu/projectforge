@@ -59,7 +59,7 @@ func (p *ServerInfo) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cu
 	qw422016.N().S(` Go Modules</h3>
     `)
 //line views/vadmin/ServerInfo.html:20
-	streammoduleTable(qw422016, p.Info.Mods)
+	streammoduleTable(qw422016, p.Info.Mods, ps)
 //line views/vadmin/ServerInfo.html:20
 	qw422016.N().S(`
   </div>

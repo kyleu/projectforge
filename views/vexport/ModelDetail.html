@@ -213,7 +213,7 @@
         {%- for _, l := range model.Links -%}
         <tr>
           <td>{%s l.Title %}</td>
-          <td>{%= view.URL(l.URL) %}</td>
+          <td>{%= view.URL(l.URL, "", true, ps) %}</td>
           <td>{%= components.SVGIcon(l.Icon, ps) %}</td>
           <td>{%= view.StringArray(l.Tags) %}</td>
         </tr>

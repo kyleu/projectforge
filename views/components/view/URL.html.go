@@ -6,101 +6,95 @@ package view
 
 //line views/components/view/URL.html:1
 import (
+	"fmt"
 	"net/url"
+	"strings"
+
+	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/views/components"
 )
 
-//line views/components/view/URL.html:5
+//line views/components/view/URL.html:10
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/components/view/URL.html:5
+//line views/components/view/URL.html:10
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/components/view/URL.html:5
-func StreamURL(qw422016 *qt422016.Writer, u any) {
-//line views/components/view/URL.html:6
+//line views/components/view/URL.html:10
+func StreamURL(qw422016 *qt422016.Writer, u any, content string, includeExternalIcon bool, ps *cutil.PageState) {
+//line views/components/view/URL.html:11
 	if u == nil {
-//line views/components/view/URL.html:6
+//line views/components/view/URL.html:11
 		qw422016.N().S(`<em>nil</em>`)
-//line views/components/view/URL.html:8
+//line views/components/view/URL.html:13
 	} else {
-//line views/components/view/URL.html:9
+//line views/components/view/URL.html:15
+		var href string
 		switch t := u.(type) {
-//line views/components/view/URL.html:10
 		case string:
-//line views/components/view/URL.html:10
-			qw422016.N().S(`<a target="_blank" rel="noopener noreferrer" href="`)
-//line views/components/view/URL.html:11
-			qw422016.E().S(t)
-//line views/components/view/URL.html:11
-			qw422016.N().S(`">`)
-//line views/components/view/URL.html:11
-			qw422016.E().S(t)
-//line views/components/view/URL.html:11
-			qw422016.N().S(`</a>`)
-//line views/components/view/URL.html:12
+			href = t
 		case url.URL:
-//line views/components/view/URL.html:12
-			qw422016.N().S(`<a target="_blank" rel="noopener noreferrer" href="`)
-//line views/components/view/URL.html:13
-			qw422016.E().S(t.String())
-//line views/components/view/URL.html:13
-			qw422016.N().S(`">`)
-//line views/components/view/URL.html:13
-			qw422016.E().S(t.String())
-//line views/components/view/URL.html:13
-			qw422016.N().S(`</a>`)
-//line views/components/view/URL.html:14
+			href = t.String()
 		case *url.URL:
-//line views/components/view/URL.html:14
-			qw422016.N().S(`<a target="_blank" rel="noopener noreferrer" href="`)
-//line views/components/view/URL.html:15
-			qw422016.E().S(t.String())
-//line views/components/view/URL.html:15
-			qw422016.N().S(`">`)
-//line views/components/view/URL.html:15
-			qw422016.E().S(t.String())
-//line views/components/view/URL.html:15
-			qw422016.N().S(`</a>`)
-//line views/components/view/URL.html:16
+			href = t.String()
 		default:
-//line views/components/view/URL.html:17
-			qw422016.E().V(u)
-//line views/components/view/URL.html:18
+			href = fmt.Sprint(u)
 		}
-//line views/components/view/URL.html:19
+		if content == "" {
+			content = href
+		}
+		showIcon := includeExternalIcon && strings.HasPrefix(href, "http")
+
+//line views/components/view/URL.html:30
+		qw422016.N().S(`<a target="_blank" rel="noopener noreferrer" href="`)
+//line views/components/view/URL.html:31
+		qw422016.E().S(href)
+//line views/components/view/URL.html:31
+		qw422016.N().S(`">`)
+//line views/components/view/URL.html:31
+		qw422016.E().S(content)
+//line views/components/view/URL.html:31
+		if showIcon {
+//line views/components/view/URL.html:31
+			components.StreamSVGLinkPadded(qw422016, `external`, ps)
+//line views/components/view/URL.html:31
+		}
+//line views/components/view/URL.html:31
+		qw422016.N().S(`</a>`)
+//line views/components/view/URL.html:32
 	}
-//line views/components/view/URL.html:20
+//line views/components/view/URL.html:33
 }
 
-//line views/components/view/URL.html:20
-func WriteURL(qq422016 qtio422016.Writer, u any) {
-//line views/components/view/URL.html:20
+//line views/components/view/URL.html:33
+func WriteURL(qq422016 qtio422016.Writer, u any, content string, includeExternalIcon bool, ps *cutil.PageState) {
+//line views/components/view/URL.html:33
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/view/URL.html:20
-	StreamURL(qw422016, u)
-//line views/components/view/URL.html:20
+//line views/components/view/URL.html:33
+	StreamURL(qw422016, u, content, includeExternalIcon, ps)
+//line views/components/view/URL.html:33
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/view/URL.html:20
+//line views/components/view/URL.html:33
 }
 
-//line views/components/view/URL.html:20
-func URL(u any) string {
-//line views/components/view/URL.html:20
+//line views/components/view/URL.html:33
+func URL(u any, content string, includeExternalIcon bool, ps *cutil.PageState) string {
+//line views/components/view/URL.html:33
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/view/URL.html:20
-	WriteURL(qb422016, u)
-//line views/components/view/URL.html:20
+//line views/components/view/URL.html:33
+	WriteURL(qb422016, u, content, includeExternalIcon, ps)
+//line views/components/view/URL.html:33
 	qs422016 := string(qb422016.B)
-//line views/components/view/URL.html:20
+//line views/components/view/URL.html:33
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/view/URL.html:20
+//line views/components/view/URL.html:33
 	return qs422016
-//line views/components/view/URL.html:20
+//line views/components/view/URL.html:33
 }
