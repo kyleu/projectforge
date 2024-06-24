@@ -3,7 +3,9 @@ package cproject
 import (
 	"fmt"
 	"net/http"
+	"path/filepath"
 
+	"github.com/pkg/errors"
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app"
@@ -20,9 +22,9 @@ func FileRoot(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-
+		fsys, _ := as.Services.Projects.GetFilesystem(prj)
 		ps.SetTitleAndData(fmt.Sprintf("%s (project %s)", prj.Title(), prj.Key), prj)
-		return controller.Render(r, as, &vproject.Files{Project: prj}, ps, "projects", prj.Key, "Files")
+		return controller.Render(r, as, &vproject.Files{Project: prj, FS: fsys}, ps, "projects", prj.Key, "Files")
 	})
 }
 
@@ -38,6 +40,15 @@ func File(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		path := util.StringSplitAndTrim(pathS, "/")
+		fsys, _ := as.Services.Projects.GetFilesystem(prj)
+		if r.URL.Query().Get("download") == "true" {
+			b, err := fsys.ReadFile(filepath.Join(path...))
+			if err != nil {
+				return "", errors.Wrapf(err, "unable to read project file [%s] for download", pathS)
+			}
+			return cutil.RespondDownload(path[len(path)-1], b, ps.W)
+		}
+
 		bcAppend := dblpipe + prj.WebPath() + "/fs"
 		bc := []string{"projects", prj.Key, "Files" + bcAppend}
 		lo.ForEach(path, func(x string, _ int) {
@@ -45,7 +56,7 @@ func File(w http.ResponseWriter, r *http.Request) {
 			bc = append(bc, x+bcAppend)
 		})
 		ps.SetTitleAndData(fmt.Sprintf("[%s] /%s", prj.Key, pathS), pathS)
-		return controller.Render(r, as, &vproject.Files{Project: prj, Path: path}, ps, bc...)
+		return controller.Render(r, as, &vproject.Files{Project: prj, Path: path, FS: fsys}, ps, bc...)
 	})
 }
 

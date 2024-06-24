@@ -11,122 +11,128 @@ import (
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/views/layout"
 	"projectforge.dev/projectforge/views/vfile"
 )
 
-//line views/vproject/Files.html:12
+//line views/vproject/Files.html:13
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vproject/Files.html:12
+//line views/vproject/Files.html:13
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vproject/Files.html:12
+//line views/vproject/Files.html:13
 type Files struct {
 	layout.Basic
 	Project *project.Project
 	Path    []string
+	FS      filesystem.FileLoader
 }
 
-//line views/vproject/Files.html:18
+//line views/vproject/Files.html:20
 func (p *Files) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vproject/Files.html:18
+//line views/vproject/Files.html:20
 	qw422016.N().S(`
 `)
-//line views/vproject/Files.html:20
+//line views/vproject/Files.html:22
 	prj := p.Project
-	fs, _ := as.Services.Projects.GetFilesystem(prj)
 	u := prj.WebPath() + "/fs"
 	pth := filepath.Join(p.Path...)
 
-//line views/vproject/Files.html:24
+//line views/vproject/Files.html:25
 	qw422016.N().S(`  `)
-//line views/vproject/Files.html:25
+//line views/vproject/Files.html:26
 	StreamSummary(qw422016, prj, "/"+strings.Join(p.Path, "/"), nil, nil, nil, ps)
-//line views/vproject/Files.html:25
+//line views/vproject/Files.html:26
 	qw422016.N().S(`
 `)
-//line views/vproject/Files.html:26
-	if fs.IsDir(pth) {
 //line views/vproject/Files.html:27
-		files := fs.ListFiles(pth, nil, ps.Logger)
+	if p.FS.IsDir(pth) {
+//line views/vproject/Files.html:28
+		files := p.FS.ListFiles(pth, nil, ps.Logger)
 
-//line views/vproject/Files.html:27
+//line views/vproject/Files.html:28
 		qw422016.N().S(`  <div class="card">
     <div class="right"><a href="/p/`)
-//line views/vproject/Files.html:29
+//line views/vproject/Files.html:30
 		qw422016.E().S(prj.Key)
-//line views/vproject/Files.html:29
+//line views/vproject/Files.html:30
 		qw422016.N().S(`/stats`)
-//line views/vproject/Files.html:29
+//line views/vproject/Files.html:30
 		if pth != `` {
-//line views/vproject/Files.html:29
+//line views/vproject/Files.html:30
 			qw422016.N().S(`?dir=`)
-//line views/vproject/Files.html:29
+//line views/vproject/Files.html:30
 			qw422016.N().U(pth)
-//line views/vproject/Files.html:29
+//line views/vproject/Files.html:30
 		}
-//line views/vproject/Files.html:29
+//line views/vproject/Files.html:30
 		qw422016.N().S(`"><button>File Stats</button></a></div>
     `)
-//line views/vproject/Files.html:30
-		vfile.StreamList(qw422016, p.Path, files, fs, u, as, ps)
-//line views/vproject/Files.html:30
+//line views/vproject/Files.html:31
+		vfile.StreamList(qw422016, p.Path, files, p.FS, u, as, ps)
+//line views/vproject/Files.html:31
 		qw422016.N().S(`
   </div>
 `)
-//line views/vproject/Files.html:32
+//line views/vproject/Files.html:33
 	} else {
-//line views/vproject/Files.html:34
-		b, err := fs.ReadFile(pth)
+//line views/vproject/Files.html:35
+		b, err := p.FS.ReadFile(pth)
 		if err != nil {
 			panic(err)
 		}
 
-//line views/vproject/Files.html:38
+//line views/vproject/Files.html:39
 		qw422016.N().S(`  <div class="card">
-    `)
-//line views/vproject/Files.html:40
-		vfile.StreamDetail(qw422016, p.Path, b, u, nil, as, ps)
-//line views/vproject/Files.html:40
+`)
+//line views/vproject/Files.html:41
+		links := map[string]string{"Download": "?download=true"}
+
+//line views/vproject/Files.html:41
+		qw422016.N().S(`    `)
+//line views/vproject/Files.html:42
+		vfile.StreamDetail(qw422016, p.Path, b, u, links, as, ps)
+//line views/vproject/Files.html:42
 		qw422016.N().S(`
   </div>
 `)
-//line views/vproject/Files.html:42
+//line views/vproject/Files.html:44
 	}
-//line views/vproject/Files.html:43
+//line views/vproject/Files.html:45
 }
 
-//line views/vproject/Files.html:43
+//line views/vproject/Files.html:45
 func (p *Files) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vproject/Files.html:43
+//line views/vproject/Files.html:45
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/Files.html:43
+//line views/vproject/Files.html:45
 	p.StreamBody(qw422016, as, ps)
-//line views/vproject/Files.html:43
+//line views/vproject/Files.html:45
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/Files.html:43
+//line views/vproject/Files.html:45
 }
 
-//line views/vproject/Files.html:43
+//line views/vproject/Files.html:45
 func (p *Files) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vproject/Files.html:43
+//line views/vproject/Files.html:45
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/Files.html:43
+//line views/vproject/Files.html:45
 	p.WriteBody(qb422016, as, ps)
-//line views/vproject/Files.html:43
+//line views/vproject/Files.html:45
 	qs422016 := string(qb422016.B)
-//line views/vproject/Files.html:43
+//line views/vproject/Files.html:45
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/Files.html:43
+//line views/vproject/Files.html:45
 	return qs422016
-//line views/vproject/Files.html:43
+//line views/vproject/Files.html:45
 }

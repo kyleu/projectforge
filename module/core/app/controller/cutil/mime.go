@@ -16,6 +16,7 @@ import (
 const (
 	mimeCSV   = "text/csv"
 	mimeDebug = "text/plain"
+	mimeHTML  = "text/html"
 	mimeJSON  = "application/json"
 	mimeTOML  = "application/toml"
 	mimeXML   = "text/xml"
@@ -77,17 +78,17 @@ func RespondCSV(w *WriteCounter, filename string, body any) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return RespondMIME(filename, mimeCSV, util.KeyCSV, b, w)
+	return RespondMIME(filename, mimeCSV, b, w)
 }
 
 func RespondJSON(w *WriteCounter, filename string, body any) (string, error) {
 	b := util.ToJSONBytes(body, true)
-	return RespondMIME(filename, mimeJSON, util.KeyJSON, b, w)
+	return RespondMIME(filename, mimeJSON, b, w)
 }
 
 func RespondTOML(w *WriteCounter, filename string, body any) (string, error) {
 	b := util.ToTOMLBytes(body)
-	return RespondMIME(filename, mimeTOML, util.KeyTOML, b, w)
+	return RespondMIME(filename, mimeTOML, b, w)
 }
 
 type XMLResponse struct {
@@ -99,7 +100,7 @@ func RespondXML(w *WriteCounter, filename string, body any) (string, error) {
 	if err != nil {
 		return "", errors.Wrapf(err, "can't serialize response of type [%T] to XML", body)
 	}
-	return RespondMIME(filename, mimeXML, util.KeyXML, b, w)
+	return RespondMIME(filename, mimeXML, b, w)
 }
 
 func RespondYAML(w *WriteCounter, filename string, body any) (string, error) {
@@ -107,16 +108,19 @@ func RespondYAML(w *WriteCounter, filename string, body any) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return RespondMIME(filename, mimeYAML, util.KeyYAML, b, w)
+	return RespondMIME(filename, mimeYAML, b, w)
 }
 
-func RespondMIME(filename string, mime string, ext string, ba []byte, w *WriteCounter) (string, error) {
+func RespondMIME(filename string, mime string, ba []byte, w *WriteCounter) (string, error) {
 	h := w.Header()
-	h.Set(HeaderContentType, mime+"; charset=UTF-8")
-	if filename != "" {
-		if !strings.HasSuffix(filename, "."+ext) {
-			filename = filename + "." + ext
+	switch mime {
+	case mimeCSV, mimeDebug, mimeHTML, mimeJSON, mimeTOML, mimeXML, mimeYAML:
+		if !strings.Contains(mime, "; charset") {
+			mime += "; charset=UTF-8"
 		}
+	}
+	h.Set(HeaderContentType, mime)
+	if filename != "" {
 		h.Set("Content-Disposition", fmt.Sprintf(`attachment; filename=%q`, filename))
 	}
 	WriteCORS(w)
@@ -131,7 +135,7 @@ func RespondMIME(filename string, mime string, ext string, ba []byte, w *WriteCo
 }
 
 func RespondDownload(filename string, ba []byte, w *WriteCounter) (string, error) {
-	return RespondMIME(filename, "application/octet-stream", "", ba, w)
+	return RespondMIME(filename, "application/octet-stream", ba, w)
 }
 
 func GetContentType(r *http.Request) string {

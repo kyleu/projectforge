@@ -3,8 +3,10 @@ package cmodule
 import (
 	"fmt"
 	"net/http"
+	"path/filepath"
 	"strings"
 
+	"github.com/pkg/errors"
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app"
@@ -20,8 +22,9 @@ func ModuleFileRoot(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
+		fsys := as.Services.Modules.GetFilesystem(mod.Key)
 		ps.SetTitleAndData(fmt.Sprintf("[%s] Files", mod.Key), mod)
-		return controller.Render(r, as, &vmodule.Files{Module: mod}, ps, "modules", mod.Key, "Files**folder")
+		return controller.Render(r, as, &vmodule.Files{Module: mod, FS: fsys}, ps, "modules", mod.Key, "Files**folder")
 	})
 }
 
@@ -36,7 +39,15 @@ func ModuleFile(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
+		fsys := as.Services.Modules.GetFilesystem(mod.Key)
 		path := util.StringSplitAndTrim(pathS, "/")
+		if r.URL.Query().Get("download") == "true" {
+			b, err := fsys.ReadFile(filepath.Join(path...))
+			if err != nil {
+				return "", errors.Wrapf(err, "unable to read module file [%s] for download", pathS)
+			}
+			return cutil.RespondDownload(path[len(path)-1], b, ps.W)
+		}
 		bcAppend := "||/m/" + mod.Key + "/fs"
 		bc := []string{"modules", mod.Key, "Files" + bcAppend + "**folder"}
 		lo.ForEach(path, func(x string, _ int) {
@@ -45,6 +56,6 @@ func ModuleFile(w http.ResponseWriter, r *http.Request) {
 			bc = append(bc, b)
 		})
 		ps.SetTitleAndData(fmt.Sprintf("[%s] /%s", mod.Key, strings.Join(path, "/")), pathS)
-		return controller.Render(r, as, &vmodule.Files{Module: mod, Path: path}, ps, bc...)
+		return controller.Render(r, as, &vmodule.Files{Module: mod, Path: path, FS: fsys}, ps, bc...)
 	})
 }
