@@ -1,9 +1,0 @@
-{
-  "name": "System Status",
-  "icon": "desktop",
-  "description": "Provides logic and a UI for getting the status of the system the app is running on",
-  "authorName": "Kyle U",
-  "authorEmail": "kyle@kyleu.com",
-  "license": "CC0",
-  "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/system"
-}

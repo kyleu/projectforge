@@ -10,14 +10,14 @@ import (
 )
 
 var (
-	templateServicesOrder = []string{"audit", keyUser, "har", "process", "notebook", "schedule", "scripting", "websocket", "system", "help"}
+	templateServicesOrder = []string{"audit", keyUser, "har", "process", "notebook", "schedule", "scripting", "websocket", "help"}
 	templateServicesNames = map[string]string{
 		"audit": "Audit", "har": "Har", "notebook": "Notebook", "process": "Exec", "schedule": "Schedule",
-		"scripting": "Script", "system": "System", "websocket": "Socket", keyUser: "User", "help": "Help",
+		"scripting": "Script", "websocket": "Socket", keyUser: "User", "help": "Help",
 	}
 	templateServicesKeys = map[string]string{
 		"audit": "audit", "har": "har", "notebook": "notebook", "process": "exec", "schedule": "schedule",
-		"scripting": "scripting", "system": "system", "websocket": "websocket", keyUser: keyUser, "help": "help",
+		"scripting": "scripting", "websocket": "websocket", keyUser: keyUser, "help": "help",
 	}
 	templateServicesRefs = map[string]string{
 		"audit":     "auditSvc",
@@ -26,7 +26,6 @@ var (
 		"process":   "exec.NewService()",
 		"schedule":  "schedule.NewService()",
 		"scripting": "scripting.NewService(st.Files, \"scripts\")",
-		"system":    "system.NewService()",
 		keyUser:     "user.NewService(st.Files, logger)",
 		"websocket": "websocket.NewService(nil, nil)",
 		"help":      "help.NewService(logger)",
