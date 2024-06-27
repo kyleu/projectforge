@@ -1,7 +1,7 @@
 {
-  "name": "WebAssembly Client",
+  "name": "WASM Client",
   "icon": "gift",
-  "description": "Provides a WASM library and HTML host for an HTTP client",
+  "description": "Provides a WebAssembly library and HTML host for an HTTP client",
   "authorName": "Kyle U",
   "authorEmail": "kyle@kyleu.com",
   "license": "CC0",

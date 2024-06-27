@@ -1,5 +1,5 @@
 {
-  "name": "WebAssembly Server",
+  "name": "WASM Server",
   "icon": "server",
   "description": "Build your normal app as an http server, but load it as a WebAssembly module or Service Worker",
   "authorName": "Kyle U",

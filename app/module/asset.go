@@ -2,7 +2,6 @@ package module
 
 import (
 	"context"
-	"io"
 	"net/http"
 	"path"
 	"runtime"
@@ -54,25 +53,17 @@ func loadAssetMap(ctx context.Context, logger util.Logger) error {
 		return loadBackupAssetMap(logger)
 	}
 	logger.Infof("loading assets from [%s]", assetURL)
-	httpClient := telemetry.WrapHTTPClient(http.DefaultClient)
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, assetURL, nil)
-	if err != nil {
-		return errors.Wrapf(err, "unable to create request from [%s]", assetURL)
-	}
+	req := util.NewHTTPRequest(ctx, http.MethodGet, assetURL)
 	req.Header.Set("Access-Control-Allow-Origin", "*")
-	rsp, err := httpClient.Do(req)
+	rsp, b, err := req.WithClient(telemetry.HTTPClient()).RunSimple()
 	if err != nil {
 		return loadBackupAssetMap(logger)
 	}
 	if rsp.StatusCode != 200 {
 		return errors.Errorf("release asset [%s] returned status [%d]", assetURL, rsp.StatusCode)
 	}
-	bts, err := io.ReadAll(rsp.Body)
-	if err != nil {
-		return errors.Wrapf(err, "unable to read release asset from [%s]", assetURL)
-	}
 	x := &ghRsp{}
-	err = util.FromJSON(bts, &x)
+	err = util.FromJSON(b, &x)
 	if err != nil {
 		return errors.Wrapf(err, "release asset at [%s] returned invalid JSON", assetURL)
 	}

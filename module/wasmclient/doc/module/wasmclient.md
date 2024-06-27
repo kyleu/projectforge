@@ -1,6 +1,6 @@
-# WebAssembly
+# WASM Client
 
-This is a module for [Project Forge](https://projectforge.dev). Provides a WASM library and HTML host for a custom WASM application
+This is a module for [Project Forge](https://projectforge.dev). Provides a WebAssembly library and HTML host for a custom WASM application
 
 https://github.com/kyleu/projectforge/tree/master/module/wasm
 

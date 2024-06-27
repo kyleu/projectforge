@@ -19,12 +19,7 @@ func (s *Service) Download(_ context.Context, key string, url string, logger uti
 		return errors.New("must provide URL")
 	}
 	logger.Infof("downloading module [%s] from URL [%s]", key, url)
-	req, err := http.NewRequestWithContext(context.Background(), "GET", url, nil)
-	if err != nil {
-		return errors.Wrapf(err, "invalid URL [%s] for module [%s]", url, key)
-	}
-
-	response, err := http.DefaultClient.Do(req)
+	response, err := util.NewHTTPRequest(context.Background(), http.MethodGet, url).Run()
 	if err != nil {
 		return errors.Wrapf(err, "unable to retrieve module [%s] from [%s]", key, url)
 	}
