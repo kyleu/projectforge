@@ -59,6 +59,6 @@ func loadSite(flags *Flags, logger util.Logger) (http.Handler, util.Logger, erro
 	if err != nil {
 		return nil, logger, err
 	}
-	logger.Infof("started marketing site using address [%s:%d] on %s:%s", flags.Address, flags.Port, runtime.GOOS, runtime.GOARCH)
+	logger.Infof("started marketing site using address [http://%s:%d] on %s:%s", flags.Address, flags.Port, runtime.GOOS, runtime.GOARCH)
 	return r, logger, nil
 }

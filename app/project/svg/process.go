@@ -3,7 +3,6 @@ package svg
 import (
 	"context"
 	"fmt"
-	"io"
 	"net/http"
 	"strings"
 	"time"
@@ -48,37 +47,19 @@ func load(src string, tgt string) (*SVG, error) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
-	r, err := http.NewRequestWithContext(ctx, http.MethodGet, url, http.NoBody)
+	rsp, b, err := util.NewHTTPRequest(ctx, http.MethodGet, url).RunSimple()
 	if err != nil {
-		return nil, err
-	}
-	rsp, err := http.DefaultClient.Do(r)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil || rsp.StatusCode == 404 {
 		if !strings.HasPrefix(src, "http") {
 			origErr := err
 			origURL := url
 			url = ghLineAwesome + src + "-solid.svg"
-			r, reqErr := http.NewRequestWithContext(ctx, http.MethodGet, url, http.NoBody)
-			if reqErr != nil {
-				return nil, reqErr
-			}
-			rsp, reqErr = http.DefaultClient.Do(r)
-			defer func() { _ = rsp.Body.Close() }()
-			if reqErr != nil {
+			rsp, b, err = util.NewHTTPRequest(ctx, http.MethodGet, url).RunSimple()
+			if err != nil {
 				return nil, errors.Wrapf(origErr, "unable to call URL [%s]", origURL)
 			}
 		} else {
 			return nil, errors.Wrapf(err, "unable to call URL [%s]: %d", url, rsp.StatusCode)
 		}
 	}
-	if rsp.StatusCode != http.StatusOK {
-		return nil, errors.Errorf("received status [%d] while calling URL [%s]", rsp.StatusCode, url)
-	}
-	b, err := io.ReadAll(rsp.Body)
-	if err != nil {
-		return nil, errors.Wrapf(err, "unable to read response")
-	}
-
 	return Transform(tgt, b, url)
 }

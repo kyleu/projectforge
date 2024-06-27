@@ -52,7 +52,7 @@ func loadServer(flags *Flags, logger util.Logger) (*app.State, http.Handler, uti
 	if err != nil {
 		return nil, nil, logger, err
 	}
-	logger.Infof("started %s v%s using address [%s:%d] on %s:%s", util.AppName, _buildInfo.Version, flags.Address, flags.Port, runtime.GOOS, runtime.GOARCH)
+	logger.Infof("started %s v%s using address [http://%s:%d] on %s:%s", util.AppName, _buildInfo.Version, flags.Address, flags.Port, runtime.GOOS, runtime.GOARCH)
 
 	err = controller.SetAppState(st, logger)
 	if err != nil {

@@ -18,11 +18,7 @@ func (f *FileSystem) Download(ctx context.Context, url string, path string, over
 	if f.Exists(path) && !overwrite {
 		return 0, errors.Errorf("file [%s] exists", path)
 	}
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, http.NoBody)
-	if err != nil {
-		return 0, errors.Wrapf(err, "unable to make request for url [%s]", url)
-	}
-	rsp, err := http.DefaultClient.Do(req)
+	rsp, err := util.NewHTTPRequest(ctx, http.MethodGet, url).Run()
 	if err != nil {
 		return 0, errors.Wrapf(err, "unable to load url [%s]", url)
 	}

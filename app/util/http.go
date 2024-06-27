@@ -35,9 +35,17 @@ func (r *HTTPRequest) WithClient(c *http.Client) *HTTPRequest {
 	return r
 }
 
-func (r *HTTPRequest) RunSimple() (*http.Response, []byte, error) {
+func (r *HTTPRequest) Run() (*http.Response, error) {
 	cl := Choose(r.client == nil, http.DefaultClient, r.client)
 	rsp, err := cl.Do(r.Request)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func (r *HTTPRequest) RunSimple() (*http.Response, []byte, error) {
+	rsp, err := r.Run()
 	if err != nil {
 		return nil, nil, err
 	}
