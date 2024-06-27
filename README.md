@@ -43,6 +43,56 @@ A project managed by Project Forge...
 - Uses ESBuild for a TypeScript client with progressive enhancement, embedded SVGs, and modern CSS
 
 
+## Available Modules
+
+|                                                                  |                                                                                                |
+|------------------------------------------------------------------|------------------------------------------------------------------------------------------------|
+| [Core](module/core/doc/module/core.md)                           | Provides common utilities for a Go application                                                 
+| [Android App](module/android/doc/module/android.md)              | Webview-based application and Android build                                                    
+| [Audit](module/audit/doc/module/audit.md)                        | Using the database module, provides an audit framework for tracking changes                    
+| [Brand Icons](module/brands/doc/module/brands.md)                | Provides thousands of SVG icons from [simple-icons] for representing common logos              
+| [Database](module/database/doc/module/database.md)               | Provides an API for accessing relational databases                                             
+| [Database UI](module/databaseui/doc/module/databaseui.md)        | Provides a UI for registered databases                                                         
+| [Desktop](module/desktop/doc/module/desktop.md)                  | Provides a desktop application using the system's webview                                      
+| [Doc Browser](module/docbrowse/doc/module/docbrowse.md)          | Provides a UI for browsing the documentation                                                   
+| [Export](module/export/doc/module/export.md)                     | Generates code based on the project's schema                                                   
+| [Expression](module/expression/doc/module/expression.md)         | Exposes CEL engine for evaluating arbitrary expressions                                        
+| [Filesystem](module/filesystem/doc/module/filesystem.md)         | Provides an abstraction around local and remote filesystems                                    
+| [GraphQL](module/graphql/doc/module/graphql.md)                  | Supports GraphQL APIs within your application                                                  
+| [Help](module/help/doc/module/help.md)                           | Provides Markdown help files that integrate into the UI                                        
+| [HTTP Archive](module/har/doc/module/har.md)                     | Provides classes for parsing HTTP Archive (*.har) files                                        
+| [iOS App](module/ios/doc/module/ios.md)                          | Webview-based application and iOS build                                                        
+| [JSX](module/jsx/doc/module/jsx.md)                              | Provides a slim JSX implementation for scripting                                               
+| [Marketing Site](module/marketing/doc/module/marketing.md)       | Provides a website for downloads, tutorials, and marketing                                     
+| [Migration](module/migration/doc/module/migration.md)            | Database migrations and a common PostgreSQL or SQLite database                                 
+| [MySQL](module/mysql/doc/module/mysql.md)                        | Provides an API for accessing MySQL databases                                                  
+| [Notarize](module/notarize/doc/module/notarize.md)               | Sends files to Apple for notarization                                                          
+| [Notebook](module/notebook/doc/module/notebook.md)               | Provides an Observable Framework notebook                                                      
+| [OAuth](module/oauth/doc/module/oauth.md)                        | Provides logins and session management for many OAuth providers                                
+| [OpenAPI](module/openapi/doc/module/openapi.md)                  | Embeds the Swagger UI, using your OpenAPI specification                                        
+| [Playwright](module/playwright/doc/module/playwright.md)         | Adds a project for testing the UI using playwright.dev                                         
+| [PostgreSQL](module/postgres/doc/module/postgres.md)             | Provides an API for accessing PostgreSQL databases                                             
+| [Process](module/process/doc/module/process.md)                  | Provides a framework for managing system processes                                             
+| [Proxy](module/proxy/doc/module/proxy.md)                        | Provides an HTTP proxy while still enforcing this app's security                               
+| [Queue](module/queue/doc/module/queue.md)                        | Provides a simple message queue based on SQLite                                                
+| [Read-only DB](module/readonlydb/doc/module/readonlydb.md)       | Adds a read-only database connection                                                           
+| [Rich Editor](module/richedit/doc/module/richedit.md)            | It provides a rich editing experience with a decent fallback when scripting is disabled        
+| [Sandbox](module/sandbox/doc/module/sandbox.md)                  | Useful playgrounds for testing custom functions                                                
+| [Scheduled Jobs](module/schedule/doc/module/schedule.md)         | Provides a scheduled job engine and UI based on gocron                                         
+| [Scripting](module/scripting/doc/module/scripting.md)            | Allows the execution of JavaScript files using a built-in interpreter                          
+| [Search](module/search/doc/module/search.md)                     | Adds search facilities to the top-level navigation bar                                         
+| [SQL Server](module/sqlserver/doc/module/sqlserver.md)           | Provides an API for accessing MSSQL databases                                                  
+| [SQLite](module/sqlite/doc/module/sqlite.md)                     | Provides an API for accessing SQLite databases                                                 
+| [System Status](module/system/doc/module/system.md)              | Provides logic and a UI for getting the status of the system the app is running on             
+| [Theme Catalog](module/themecatalog/doc/module/themecatalog.md)  | Includes a dozen default themes, and facilities to create additional                           
+| [Types](module/types/doc/module/types.md)                        | Classes for representing common data types                                                     
+| [Upgrade](module/upgrade/doc/module/upgrade.md)                  | Provides in-place version upgrades using GitHub Releases                                       
+| [User](module/user/doc/module/user.md)                           | Classes for representing a user                                                                
+| [WebAssembly Client](module/wasmclient/doc/module/wasmclient.md) | Provides a WASM library and HTML host for an HTTP client                                       
+| [WebAssembly Server](module/wasmserver/doc/module/wasmserver.md) | Build your normal app as an http server, but load it as a WebAssembly module or Service Worker 
+| [WebSocket](module/websocket/doc/module/websocket.md)            | Provides an API for hosting WebSocket connections                                              
+
+
 ## Example Applications
 
 - [Rituals.dev](https://rituals.dev) ([GitHub](https://github.com/kyleu/rituals)):
