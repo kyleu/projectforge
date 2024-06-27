@@ -4,7 +4,13 @@
   "projectforge.dev/projectforge/views/components"
 ) %}
 
-{% func BuildOptions(key string, ps *cutil.PageState) %}
+{% func BuildOptions(key string, forAll bool, ps *cutil.PageState) %}
+  {%- code
+    acts := action.AllBuilds
+    if forAll {
+      acts = acts.ForAllProjects()
+    }
+  -%}
   <div class="card">
     <h3>{%= components.SVGIcon(`hammer`, ps) %} Build your project</h3>
     <div class="mt overflow full-width">
@@ -16,7 +22,7 @@
           </tr>
         </thead>
         <tbody>
-          {%- for _, b := range action.AllBuilds.ForAllProjects() -%}
+          {%- for _, b := range acts -%}
           <tr>
             <td><a href="/run/{%s key %}/build?phase={%s b.Key %}" title="{%s b.Description %}"><button>{%s b.Title %}</button></a></td>
             <td>{%s b.Description %}</td>

@@ -25,7 +25,7 @@
     }
   -%}
   {%= vproject.Summary(prj, title, nil, &action.TypeBuild, nil, ps) %}
-  {%= BuildOptions(prj.Key, ps) %}
+  {%= BuildOptions(prj.Key, false, ps) %}
   {%- if p.BuildResult != nil -%}
   {%- code br := p.BuildResult -%}
   <div class="card">
