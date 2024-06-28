@@ -49,6 +49,10 @@ hr {
   border-top: var(--border);
 }
 
+figure {
+  margin: 0;
+}
+
 input, button, textarea, select {
   border: var(--border);
   color: var(--color-foreground);
