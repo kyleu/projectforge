@@ -7,5 +7,6 @@
   "license": "CC0",
   "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/scripting",
   "dangerous": true,
-  "requires": ["filesystem"]
+  "requires": ["filesystem"],
+  "technology": ["goja"]
 }

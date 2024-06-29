@@ -48,5 +48,6 @@
       "description": "when set, logs all database interactions for the read-only database"
     }
   ],
-  "requires": ["database"]
+  "requires": ["database"],
+  "technology": ["mysql", "postgres", "sqlite", "sqlserver"]
 }

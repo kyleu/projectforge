@@ -30,6 +30,13 @@ func Transform(tgt string, b []byte, url string) (*SVG, error) {
 		markup += s + linebreak
 	}
 
+	if idx := strings.LastIndex(tgt, "/"); idx > -1 {
+		tgt = tgt[idx+1:]
+	}
+	if idx := strings.LastIndex(tgt, "."); idx > -1 {
+		tgt = tgt[:idx]
+	}
+
 	add("<!-- imported from " + url + " -->")
 	add(`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 32 32">`)
 	add(fmt.Sprintf(`  <symbol id="svg-%s" viewBox=%q>`, tgt, vb))

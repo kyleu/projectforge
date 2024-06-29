@@ -8,5 +8,6 @@
   "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/export",
   "priority": 100,
   "dangerous": true,
-  "requires": ["database"]
+  "requires": ["database"],
+  "technology": ["typescript"]
 }

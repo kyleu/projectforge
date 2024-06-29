@@ -1,6 +1,6 @@
 # Proxy
 
-This is a module for [Project Forge](https://projectforge.dev). It provides an HTTP proxy while still enforcing this app's security.
+This is a module for [Project Forge](https://projectforge.dev). It provides an HTTP proxy while still enforcing your app's security.
 
 https://github.com/kyleu/projectforge/tree/master/module/proxy
 

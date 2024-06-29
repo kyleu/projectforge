@@ -8,5 +8,6 @@
   "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/databaseui",
   "dangerous": true,
   "requires": ["database"],
-  "priority": 40
+  "priority": 40,
+  "technology": ["mysql", "postgres", "sqlite", "sqlserver"]
 }

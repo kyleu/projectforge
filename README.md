@@ -64,7 +64,7 @@ A project managed by Project Forge...
 | [iOS App](module/ios/doc/module/ios.md)                          | Webview-based application and iOS build                                                        |
 | [JSX](module/jsx/doc/module/jsx.md)                              | Provides a slim JSX implementation for scripting                                               |
 | [Marketing Site](module/marketing/doc/module/marketing.md)       | Provides a website for downloads, tutorials, and marketing                                     |
-| [Migration](module/migration/doc/module/migration.md)            | Database migrations and a common PostgreSQL or SQLite database                                 |
+| [Migration](module/migration/doc/module/migration.md)            | Database migrations and a common database pool                                                 |
 | [MySQL](module/mysql/doc/module/mysql.md)                        | Provides an API for accessing MySQL databases                                                  |
 | [Notarize](module/notarize/doc/module/notarize.md)               | Sends files to Apple for notarization                                                          |
 | [Notebook](module/notebook/doc/module/notebook.md)               | Provides an Observable Framework notebook                                                      |

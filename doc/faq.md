@@ -47,7 +47,7 @@ All managed projects expose a web and CLI interface, and additional modules are 
 - `ios`: Webview-based application and iOS build
 - `jsx`: A custom JSX engine for reactive UIs without React
 - `marketing`: Serves a website for downloads, tutorials, and marketing
-- `migration`: Database migrations and a common database service
+- `migration`: Database migrations and a common database pool
 - `mysql`: API for accessing MySQL databases
 - `notarize`: Sends files to Apple for notarization
 - `notebook`: Provides an Observable Framework notebook

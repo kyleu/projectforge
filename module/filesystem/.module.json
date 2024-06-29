@@ -6,5 +6,6 @@
   "authorEmail": "kyle@kyleu.com",
   "license": "CC0",
   "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/filesystem",
-  "priority": 10
+  "priority": 10,
+  "technology": ["afero"]
 }

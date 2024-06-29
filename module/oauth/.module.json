@@ -28,5 +28,6 @@
       "description": "when OpenID is enabled, this determines the URL"
     }
   ],
-  "priority": 30
+  "priority": 30,
+  "technology": ["goth"]
 }

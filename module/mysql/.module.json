@@ -49,5 +49,6 @@
     }
   ],
   "requires": ["database"],
-  "priority": 10
+  "priority": 10,
+  "technology": ["mysql"]
 }

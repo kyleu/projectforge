@@ -3,6 +3,7 @@
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/module"
   "projectforge.dev/projectforge/app/project"
+  "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/components/view"
   "projectforge.dev/projectforge/views/layout"
 ) %}
@@ -53,6 +54,18 @@
             <td>{%s p.Dir %}</td>
           </tr>
           {%- endif -%}
+          <tr>
+            <th>Technology</th>
+            <td>
+              <div style="display: flex; flex-direction: row;">
+                {%- for _, t := range mod.Technology -%}
+                {%= tech(t, ps) %}
+                {%- endfor -%}
+                {%= tech("go", ps) %}
+                {%= tech("projectforge", ps) %}
+              </div>
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -72,5 +85,15 @@
       <li><a href="/p/{%s x.Key %}">{%s x.Title() %}</a></li>
       {%- endfor -%}
     </ul>
+  </div>
+{% endfunc %}
+
+{% func tech(t string, ps *cutil.PageState) %}
+  {%- code s, u, i := module.Tech(t, ps.Logger) -%}
+  <div style="text-align: center; margin-right: 18px;">
+    <a target="_blank" rel="noopener noreferrer" href="{%s u %}" title="{%s t %}">
+      {%= components.SVGInline(i, 32, ps) %}
+      <div>{%s s %}</div>
+    </a>
   </div>
 {% endfunc %}

@@ -1,11 +1,12 @@
 {
   "name": "Migration",
   "icon": "database",
-  "description": "Database migrations and a common PostgreSQL or SQLite database",
+  "description": "Database migrations and a common database pool",
   "authorName": "Kyle U",
   "authorEmail": "kyle@kyleu.com",
   "license": "CC0",
   "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/migration",
   "requires": ["database"],
-  "priority": 10
+  "priority": 10,
+  "technology": ["mysql", "postgres", "sqlite", "sqlserver"]
 }

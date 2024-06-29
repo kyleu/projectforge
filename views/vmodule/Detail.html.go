@@ -10,24 +10,25 @@ import (
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/views/components"
 	"projectforge.dev/projectforge/views/components/view"
 	"projectforge.dev/projectforge/views/layout"
 )
 
-//line views/vmodule/Detail.html:10
+//line views/vmodule/Detail.html:11
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vmodule/Detail.html:10
+//line views/vmodule/Detail.html:11
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vmodule/Detail.html:10
+//line views/vmodule/Detail.html:11
 type Detail struct {
 	layout.Basic
 	Module *module.Module
@@ -36,19 +37,19 @@ type Detail struct {
 	Dir    string
 }
 
-//line views/vmodule/Detail.html:18
+//line views/vmodule/Detail.html:19
 func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vmodule/Detail.html:18
+//line views/vmodule/Detail.html:19
 	qw422016.N().S(`
 `)
-//line views/vmodule/Detail.html:19
+//line views/vmodule/Detail.html:20
 	mod := p.Module
 
-//line views/vmodule/Detail.html:19
+//line views/vmodule/Detail.html:20
 	qw422016.N().S(`  `)
-//line views/vmodule/Detail.html:20
+//line views/vmodule/Detail.html:21
 	StreamSummary(qw422016, mod, nil, ps)
-//line views/vmodule/Detail.html:20
+//line views/vmodule/Detail.html:21
 	qw422016.N().S(`
   <div class="card">
     <h3>Details</h3>
@@ -58,145 +59,236 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
           <tr>
             <th>Key</th>
             <td>`)
-//line views/vmodule/Detail.html:28
+//line views/vmodule/Detail.html:29
 	qw422016.E().S(mod.Key)
-//line views/vmodule/Detail.html:28
+//line views/vmodule/Detail.html:29
 	qw422016.N().S(`</td>
           </tr>
           <tr>
             <th>Name</th>
             <td>`)
-//line views/vmodule/Detail.html:32
+//line views/vmodule/Detail.html:33
 	qw422016.E().S(mod.Name)
-//line views/vmodule/Detail.html:32
+//line views/vmodule/Detail.html:33
 	qw422016.N().S(`</td>
           </tr>
           <tr>
             <th>Description</th>
             <td>`)
-//line views/vmodule/Detail.html:36
+//line views/vmodule/Detail.html:37
 	qw422016.E().S(mod.Description)
-//line views/vmodule/Detail.html:36
+//line views/vmodule/Detail.html:37
 	qw422016.N().S(`</td>
           </tr>
           <tr>
             <th>Author</th>
             <td><a href="mailto:`)
-//line views/vmodule/Detail.html:40
+//line views/vmodule/Detail.html:41
 	qw422016.E().S(mod.AuthorEmail)
-//line views/vmodule/Detail.html:40
+//line views/vmodule/Detail.html:41
 	qw422016.N().S(`">`)
-//line views/vmodule/Detail.html:40
+//line views/vmodule/Detail.html:41
 	qw422016.E().S(mod.AuthorName)
-//line views/vmodule/Detail.html:40
+//line views/vmodule/Detail.html:41
 	qw422016.N().S(`</a></td>
           </tr>
           <tr>
             <th>License</th>
             <td>`)
-//line views/vmodule/Detail.html:44
+//line views/vmodule/Detail.html:45
 	qw422016.E().S(mod.License)
-//line views/vmodule/Detail.html:44
+//line views/vmodule/Detail.html:45
 	qw422016.N().S(`</td>
           </tr>
           <tr>
             <th>Sourcecode</th>
             <td>`)
-//line views/vmodule/Detail.html:48
+//line views/vmodule/Detail.html:49
 	view.StreamURL(qw422016, mod.Sourcecode, "", true, ps)
-//line views/vmodule/Detail.html:48
+//line views/vmodule/Detail.html:49
 	qw422016.N().S(`</td>
           </tr>
 `)
-//line views/vmodule/Detail.html:50
+//line views/vmodule/Detail.html:51
 	if p.Dir != "" {
-//line views/vmodule/Detail.html:50
+//line views/vmodule/Detail.html:51
 		qw422016.N().S(`          <tr>
             <th>File Source</th>
             <td>`)
-//line views/vmodule/Detail.html:53
+//line views/vmodule/Detail.html:54
 		qw422016.E().S(p.Dir)
-//line views/vmodule/Detail.html:53
+//line views/vmodule/Detail.html:54
 		qw422016.N().S(`</td>
           </tr>
 `)
-//line views/vmodule/Detail.html:55
+//line views/vmodule/Detail.html:56
 	}
-//line views/vmodule/Detail.html:55
-	qw422016.N().S(`        </tbody>
+//line views/vmodule/Detail.html:56
+	qw422016.N().S(`          <tr>
+            <th>Technology</th>
+            <td>
+              <div style="display: flex; flex-direction: row;">
+`)
+//line views/vmodule/Detail.html:61
+	for _, t := range mod.Technology {
+//line views/vmodule/Detail.html:61
+		qw422016.N().S(`                `)
+//line views/vmodule/Detail.html:62
+		streamtech(qw422016, t, ps)
+//line views/vmodule/Detail.html:62
+		qw422016.N().S(`
+`)
+//line views/vmodule/Detail.html:63
+	}
+//line views/vmodule/Detail.html:63
+	qw422016.N().S(`                `)
+//line views/vmodule/Detail.html:64
+	streamtech(qw422016, "go", ps)
+//line views/vmodule/Detail.html:64
+	qw422016.N().S(`
+                `)
+//line views/vmodule/Detail.html:65
+	streamtech(qw422016, "projectforge", ps)
+//line views/vmodule/Detail.html:65
+	qw422016.N().S(`
+              </div>
+            </td>
+          </tr>
+        </tbody>
       </table>
     </div>
   </div>
 `)
-//line views/vmodule/Detail.html:60
+//line views/vmodule/Detail.html:73
 	if p.HTML != "" {
-//line views/vmodule/Detail.html:60
+//line views/vmodule/Detail.html:73
 		qw422016.N().S(`  <div class="card">
     `)
-//line views/vmodule/Detail.html:62
+//line views/vmodule/Detail.html:75
 		qw422016.N().S(p.HTML)
-//line views/vmodule/Detail.html:62
+//line views/vmodule/Detail.html:75
 		qw422016.N().S(`
   </div>
 `)
-//line views/vmodule/Detail.html:64
+//line views/vmodule/Detail.html:77
 	}
-//line views/vmodule/Detail.html:64
+//line views/vmodule/Detail.html:77
 	qw422016.N().S(`  <div class="card">
     <h3>Project Usages</h3>
     <ul class="mt">
 `)
-//line views/vmodule/Detail.html:68
+//line views/vmodule/Detail.html:81
 	if len(p.Usages) == 0 {
-//line views/vmodule/Detail.html:68
+//line views/vmodule/Detail.html:81
 		qw422016.N().S(`      <li><em>not referenced</em></li>
 `)
-//line views/vmodule/Detail.html:70
+//line views/vmodule/Detail.html:83
 	}
-//line views/vmodule/Detail.html:71
+//line views/vmodule/Detail.html:84
 	for _, x := range p.Usages {
-//line views/vmodule/Detail.html:71
+//line views/vmodule/Detail.html:84
 		qw422016.N().S(`      <li><a href="/p/`)
-//line views/vmodule/Detail.html:72
+//line views/vmodule/Detail.html:85
 		qw422016.E().S(x.Key)
-//line views/vmodule/Detail.html:72
+//line views/vmodule/Detail.html:85
 		qw422016.N().S(`">`)
-//line views/vmodule/Detail.html:72
+//line views/vmodule/Detail.html:85
 		qw422016.E().S(x.Title())
-//line views/vmodule/Detail.html:72
+//line views/vmodule/Detail.html:85
 		qw422016.N().S(`</a></li>
 `)
-//line views/vmodule/Detail.html:73
+//line views/vmodule/Detail.html:86
 	}
-//line views/vmodule/Detail.html:73
+//line views/vmodule/Detail.html:86
 	qw422016.N().S(`    </ul>
   </div>
 `)
-//line views/vmodule/Detail.html:76
+//line views/vmodule/Detail.html:89
 }
 
-//line views/vmodule/Detail.html:76
+//line views/vmodule/Detail.html:89
 func (p *Detail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vmodule/Detail.html:76
+//line views/vmodule/Detail.html:89
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vmodule/Detail.html:76
+//line views/vmodule/Detail.html:89
 	p.StreamBody(qw422016, as, ps)
-//line views/vmodule/Detail.html:76
+//line views/vmodule/Detail.html:89
 	qt422016.ReleaseWriter(qw422016)
-//line views/vmodule/Detail.html:76
+//line views/vmodule/Detail.html:89
 }
 
-//line views/vmodule/Detail.html:76
+//line views/vmodule/Detail.html:89
 func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vmodule/Detail.html:76
+//line views/vmodule/Detail.html:89
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vmodule/Detail.html:76
+//line views/vmodule/Detail.html:89
 	p.WriteBody(qb422016, as, ps)
-//line views/vmodule/Detail.html:76
+//line views/vmodule/Detail.html:89
 	qs422016 := string(qb422016.B)
-//line views/vmodule/Detail.html:76
+//line views/vmodule/Detail.html:89
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vmodule/Detail.html:76
+//line views/vmodule/Detail.html:89
 	return qs422016
-//line views/vmodule/Detail.html:76
+//line views/vmodule/Detail.html:89
+}
+
+//line views/vmodule/Detail.html:91
+func streamtech(qw422016 *qt422016.Writer, t string, ps *cutil.PageState) {
+//line views/vmodule/Detail.html:91
+	qw422016.N().S(`
+`)
+//line views/vmodule/Detail.html:92
+	s, u, i := module.Tech(t, ps.Logger)
+
+//line views/vmodule/Detail.html:92
+	qw422016.N().S(`  <div style="text-align: center; margin-right: 18px;">
+    <a target="_blank" rel="noopener noreferrer" href="`)
+//line views/vmodule/Detail.html:94
+	qw422016.E().S(u)
+//line views/vmodule/Detail.html:94
+	qw422016.N().S(`" title="`)
+//line views/vmodule/Detail.html:94
+	qw422016.E().S(t)
+//line views/vmodule/Detail.html:94
+	qw422016.N().S(`">
+      `)
+//line views/vmodule/Detail.html:95
+	components.StreamSVGInline(qw422016, i, 32, ps)
+//line views/vmodule/Detail.html:95
+	qw422016.N().S(`
+      <div>`)
+//line views/vmodule/Detail.html:96
+	qw422016.E().S(s)
+//line views/vmodule/Detail.html:96
+	qw422016.N().S(`</div>
+    </a>
+  </div>
+`)
+//line views/vmodule/Detail.html:99
+}
+
+//line views/vmodule/Detail.html:99
+func writetech(qq422016 qtio422016.Writer, t string, ps *cutil.PageState) {
+//line views/vmodule/Detail.html:99
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vmodule/Detail.html:99
+	streamtech(qw422016, t, ps)
+//line views/vmodule/Detail.html:99
+	qt422016.ReleaseWriter(qw422016)
+//line views/vmodule/Detail.html:99
+}
+
+//line views/vmodule/Detail.html:99
+func tech(t string, ps *cutil.PageState) string {
+//line views/vmodule/Detail.html:99
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vmodule/Detail.html:99
+	writetech(qb422016, t, ps)
+//line views/vmodule/Detail.html:99
+	qs422016 := string(qb422016.B)
+//line views/vmodule/Detail.html:99
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vmodule/Detail.html:99
+	return qs422016
+//line views/vmodule/Detail.html:99
 }

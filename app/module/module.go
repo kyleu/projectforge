@@ -25,6 +25,7 @@ type Module struct {
 	Dangerous   bool                  `json:"dangerous,omitempty"`
 	Requires    []string              `json:"requires,omitempty"`
 	Priority    int                   `json:"priority,omitempty"`
+	Technology  []string              `json:"technology,omitempty"`
 	Files       filesystem.FileLoader `json:"-"`
 	URL         string                `json:"-"`
 	UsageMD     string                `json:"-"`

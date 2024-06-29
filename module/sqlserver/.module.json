@@ -49,5 +49,6 @@
     }
   ],
   "requires": ["database"],
-  "priority": 40
+  "priority": 40,
+  "technology": ["sqlserver"]
 }

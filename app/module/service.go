@@ -122,8 +122,11 @@ func (s *Service) Modules() Modules {
 func (s *Service) ModulesSorted() Modules {
 	ret := s.Modules()
 	slices.SortFunc(ret, func(l *Module, r *Module) int {
+		if r.Key == "core" {
+			return 1
+		}
 		if l.Key == "core" {
-			return -100
+			return -1
 		}
 		return cmp.Compare(strings.ToLower(l.Name), strings.ToLower(r.Name))
 	})

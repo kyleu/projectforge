@@ -6,5 +6,6 @@
   "authorEmail": "kyle@kyleu.com",
   "license": "CC0",
   "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/desktop",
-  "priority": 20
+  "priority": 20,
+  "technology": ["golang-cross"]
 }

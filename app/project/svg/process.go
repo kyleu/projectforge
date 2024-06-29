@@ -23,10 +23,10 @@ func AddToProject(prj string, fs filesystem.FileLoader, src string, tgt string) 
 	if err != nil {
 		return nil, err
 	}
-	dst := svgPath(prj, tgt)
+	dst := svgPath(prj, ret.Key)
 	err = fs.WriteFile(dst, []byte(ret.Markup), filesystem.DefaultMode, true)
 	if err != nil {
-		return nil, errors.Wrap(err, "unable to write SVG to file ["+tgt+".svg]")
+		return nil, errors.Wrap(err, "unable to write SVG to file ["+ret.Key+".svg]")
 	}
 	return ret, nil
 }
@@ -41,24 +41,31 @@ func svgPath(prj string, key string) string {
 
 func load(src string, tgt string) (*SVG, error) {
 	tgt, _ = util.StringSplit(tgt, '@', true)
-	url := src
-	if !strings.HasPrefix(src, "http") {
-		url = ghLineAwesome + src + util.ExtSVG
+	var url string
+	test := func(u string) ([]byte, error) {
+		url = u
+		ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
+		defer cancel()
+		rsp, b, err := util.NewHTTPRequest(ctx, http.MethodGet, u).RunSimple()
+		return b, errors.Wrapf(err, "unable to call URL [%s]: %d", u, rsp.StatusCode)
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
-	defer cancel()
-	rsp, b, err := util.NewHTTPRequest(ctx, http.MethodGet, url).RunSimple()
+
+	if strings.HasPrefix(src, "http") {
+		b, err := test(src)
+		if err != nil {
+			return nil, errors.Wrap(err, "")
+		}
+		return Transform(tgt, b, src)
+	}
+
+	b, err := test(ghLineAwesome + src + util.ExtSVG)
 	if err != nil {
-		if !strings.HasPrefix(src, "http") {
-			origErr := err
-			origURL := url
-			url = ghLineAwesome + src + "-solid.svg"
-			rsp, b, err = util.NewHTTPRequest(ctx, http.MethodGet, url).RunSimple()
+		b, err = test(ghLineAwesome + src + "-solid.svg")
+		if err != nil {
+			b, err = test(ghLineAwesome + src + "-solid.svg")
 			if err != nil {
-				return nil, errors.Wrapf(origErr, "unable to call URL [%s]", origURL)
+				return nil, err
 			}
-		} else {
-			return nil, errors.Wrapf(err, "unable to call URL [%s]: %d", url, rsp.StatusCode)
 		}
 	}
 	return Transform(tgt, b, url)

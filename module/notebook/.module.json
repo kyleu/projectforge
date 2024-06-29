@@ -12,5 +12,6 @@
       "type": "string",
       "description": "base URL of the notebook server, defaults to [app port + 10]"
     }
-  ]
+  ],
+  "technology": ["observable"]
 }

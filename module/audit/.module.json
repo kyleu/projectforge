@@ -8,5 +8,6 @@
   "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/audit",
   "dangerous": true,
   "requires": ["database"],
-  "priority": 20
+  "priority": 20,
+  "technology": ["mysql", "postgres", "sqlite", "sqlserver"]
 }

@@ -13,5 +13,6 @@
       "description": "when set, skips metrics for database methods"
     }
   ],
-  "priority": 10
+  "priority": 10,
+  "technology": ["mysql", "postgres", "sqlite", "sqlserver"]
 }
