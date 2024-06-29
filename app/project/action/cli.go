@@ -32,7 +32,7 @@ func cliProject(ctx context.Context, p *project.Project, modKeys []string, logge
 		})
 		return errors.New(strings.Join(msgs, util.StringDefaultLinebreak))
 	}
-	clilog("\nAll good!\n\n")
+	clilog("All good, project will be created in the current directory\n\n")
 	if p.Key == "" {
 		path, _ := os.Getwd()
 		_, path = util.StringSplitPath(path)
