@@ -5,6 +5,7 @@
   "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/layout"
+  "projectforge.dev/projectforge/views/vmodule"
 ) %}
 
 {% code type FeatureList struct {
@@ -19,6 +20,7 @@
   {%- for _, mod := range p.Modules -%}
     <a class="link-section" href="/m/{%s mod.Key %}">
       <div class="card">
+        {%= vmodule.ModuleTechList(mod, ps) %}
         <div class="left mrs">{%= components.SVGRef(mod.IconSafe(), 40, 40, "", ps) %}</div>
         <strong class="highlight">{%s mod.Title() %}</strong>
         <div><em>{%s mod.Description %}</em></div>

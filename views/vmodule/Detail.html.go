@@ -51,43 +51,16 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	StreamSummary(qw422016, mod, nil, ps)
 //line views/vmodule/Detail.html:21
 	qw422016.N().S(`
+  `)
+//line views/vmodule/Detail.html:22
+	StreamModuleTech(qw422016, mod, ps)
+//line views/vmodule/Detail.html:22
+	qw422016.N().S(`
   <div class="card">
     <h3>`)
-//line views/vmodule/Detail.html:23
-	components.StreamSVGIcon(qw422016, "microchip", ps)
-//line views/vmodule/Detail.html:23
-	qw422016.N().S(` Technology</h3>
-    <div class="mt" style="display: flex; flex-direction: row;">
-`)
-//line views/vmodule/Detail.html:25
-	for _, t := range mod.Technology {
-//line views/vmodule/Detail.html:25
-		qw422016.N().S(`      `)
-//line views/vmodule/Detail.html:26
-		streamtech(qw422016, t, ps)
-//line views/vmodule/Detail.html:26
-		qw422016.N().S(`
-`)
-//line views/vmodule/Detail.html:27
-	}
-//line views/vmodule/Detail.html:27
-	qw422016.N().S(`      `)
-//line views/vmodule/Detail.html:28
-	streamtech(qw422016, "go", ps)
-//line views/vmodule/Detail.html:28
-	qw422016.N().S(`
-      `)
-//line views/vmodule/Detail.html:29
-	streamtech(qw422016, "projectforge", ps)
-//line views/vmodule/Detail.html:29
-	qw422016.N().S(`
-    </div>
-  </div>
-  <div class="card">
-    <h3>`)
-//line views/vmodule/Detail.html:33
+//line views/vmodule/Detail.html:24
 	components.StreamSVGIcon(qw422016, "archive", ps)
-//line views/vmodule/Detail.html:33
+//line views/vmodule/Detail.html:24
 	qw422016.N().S(` Details</h3>
     <div class="overflow full-width">
       <table class="mt">
@@ -95,210 +68,276 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
           <tr>
             <th>Key</th>
             <td>`)
-//line views/vmodule/Detail.html:39
+//line views/vmodule/Detail.html:30
 	qw422016.E().S(mod.Key)
-//line views/vmodule/Detail.html:39
+//line views/vmodule/Detail.html:30
 	qw422016.N().S(`</td>
           </tr>
           <tr>
             <th>Name</th>
             <td>`)
-//line views/vmodule/Detail.html:43
+//line views/vmodule/Detail.html:34
 	qw422016.E().S(mod.Name)
-//line views/vmodule/Detail.html:43
+//line views/vmodule/Detail.html:34
 	qw422016.N().S(`</td>
           </tr>
           <tr>
             <th>Description</th>
             <td>`)
-//line views/vmodule/Detail.html:47
+//line views/vmodule/Detail.html:38
 	qw422016.E().S(mod.Description)
-//line views/vmodule/Detail.html:47
+//line views/vmodule/Detail.html:38
 	qw422016.N().S(`</td>
           </tr>
           <tr>
             <th>Author</th>
             <td><a href="mailto:`)
-//line views/vmodule/Detail.html:51
+//line views/vmodule/Detail.html:42
 	qw422016.E().S(mod.AuthorEmail)
-//line views/vmodule/Detail.html:51
+//line views/vmodule/Detail.html:42
 	qw422016.N().S(`">`)
-//line views/vmodule/Detail.html:51
+//line views/vmodule/Detail.html:42
 	qw422016.E().S(mod.AuthorName)
-//line views/vmodule/Detail.html:51
+//line views/vmodule/Detail.html:42
 	qw422016.N().S(`</a></td>
           </tr>
           <tr>
             <th>License</th>
             <td>`)
-//line views/vmodule/Detail.html:55
+//line views/vmodule/Detail.html:46
 	qw422016.E().S(mod.License)
-//line views/vmodule/Detail.html:55
+//line views/vmodule/Detail.html:46
 	qw422016.N().S(`</td>
           </tr>
           <tr>
             <th>Sourcecode</th>
             <td>`)
-//line views/vmodule/Detail.html:59
+//line views/vmodule/Detail.html:50
 	view.StreamURL(qw422016, mod.Sourcecode, "", true, ps)
-//line views/vmodule/Detail.html:59
+//line views/vmodule/Detail.html:50
 	qw422016.N().S(`</td>
           </tr>
 `)
-//line views/vmodule/Detail.html:61
+//line views/vmodule/Detail.html:52
 	if p.Dir != "" {
-//line views/vmodule/Detail.html:61
+//line views/vmodule/Detail.html:52
 		qw422016.N().S(`          <tr>
             <th>File Source</th>
             <td>`)
-//line views/vmodule/Detail.html:64
+//line views/vmodule/Detail.html:55
 		qw422016.E().S(p.Dir)
-//line views/vmodule/Detail.html:64
+//line views/vmodule/Detail.html:55
 		qw422016.N().S(`</td>
           </tr>
 `)
-//line views/vmodule/Detail.html:66
+//line views/vmodule/Detail.html:57
 	}
-//line views/vmodule/Detail.html:66
+//line views/vmodule/Detail.html:57
 	qw422016.N().S(`        </tbody>
       </table>
     </div>
   </div>
 `)
-//line views/vmodule/Detail.html:71
+//line views/vmodule/Detail.html:62
 	if p.HTML != "" {
-//line views/vmodule/Detail.html:71
+//line views/vmodule/Detail.html:62
 		qw422016.N().S(`  <div class="card">
     `)
-//line views/vmodule/Detail.html:73
+//line views/vmodule/Detail.html:64
 		qw422016.N().S(p.HTML)
-//line views/vmodule/Detail.html:73
+//line views/vmodule/Detail.html:64
 		qw422016.N().S(`
   </div>
 `)
-//line views/vmodule/Detail.html:75
+//line views/vmodule/Detail.html:66
 	}
-//line views/vmodule/Detail.html:75
+//line views/vmodule/Detail.html:66
 	qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vmodule/Detail.html:77
+//line views/vmodule/Detail.html:68
 	components.StreamSVGIcon(qw422016, "code", ps)
-//line views/vmodule/Detail.html:77
+//line views/vmodule/Detail.html:68
 	qw422016.N().S(` Project Usages</h3>
     <ul class="mt">
 `)
-//line views/vmodule/Detail.html:79
+//line views/vmodule/Detail.html:70
 	if len(p.Usages) == 0 {
-//line views/vmodule/Detail.html:79
+//line views/vmodule/Detail.html:70
 		qw422016.N().S(`      <li><em>not referenced</em></li>
 `)
-//line views/vmodule/Detail.html:81
+//line views/vmodule/Detail.html:72
 	}
-//line views/vmodule/Detail.html:82
+//line views/vmodule/Detail.html:73
 	for _, x := range p.Usages {
-//line views/vmodule/Detail.html:82
+//line views/vmodule/Detail.html:73
 		qw422016.N().S(`      <li><a href="/p/`)
-//line views/vmodule/Detail.html:83
+//line views/vmodule/Detail.html:74
 		qw422016.E().S(x.Key)
-//line views/vmodule/Detail.html:83
+//line views/vmodule/Detail.html:74
 		qw422016.N().S(`">`)
-//line views/vmodule/Detail.html:83
+//line views/vmodule/Detail.html:74
 		qw422016.E().S(x.Title())
-//line views/vmodule/Detail.html:83
+//line views/vmodule/Detail.html:74
 		qw422016.N().S(`</a></li>
 `)
-//line views/vmodule/Detail.html:84
+//line views/vmodule/Detail.html:75
 	}
-//line views/vmodule/Detail.html:84
+//line views/vmodule/Detail.html:75
 	qw422016.N().S(`    </ul>
   </div>
 `)
-//line views/vmodule/Detail.html:87
+//line views/vmodule/Detail.html:78
 }
 
-//line views/vmodule/Detail.html:87
+//line views/vmodule/Detail.html:78
 func (p *Detail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vmodule/Detail.html:87
+//line views/vmodule/Detail.html:78
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vmodule/Detail.html:87
+//line views/vmodule/Detail.html:78
 	p.StreamBody(qw422016, as, ps)
-//line views/vmodule/Detail.html:87
+//line views/vmodule/Detail.html:78
 	qt422016.ReleaseWriter(qw422016)
-//line views/vmodule/Detail.html:87
+//line views/vmodule/Detail.html:78
 }
 
-//line views/vmodule/Detail.html:87
+//line views/vmodule/Detail.html:78
 func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vmodule/Detail.html:87
+//line views/vmodule/Detail.html:78
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vmodule/Detail.html:87
+//line views/vmodule/Detail.html:78
 	p.WriteBody(qb422016, as, ps)
-//line views/vmodule/Detail.html:87
+//line views/vmodule/Detail.html:78
 	qs422016 := string(qb422016.B)
-//line views/vmodule/Detail.html:87
+//line views/vmodule/Detail.html:78
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vmodule/Detail.html:87
+//line views/vmodule/Detail.html:78
 	return qs422016
-//line views/vmodule/Detail.html:87
+//line views/vmodule/Detail.html:78
 }
 
-//line views/vmodule/Detail.html:89
+//line views/vmodule/Detail.html:80
 func streamtech(qw422016 *qt422016.Writer, t string, ps *cutil.PageState) {
-//line views/vmodule/Detail.html:89
+//line views/vmodule/Detail.html:80
 	qw422016.N().S(`
 `)
-//line views/vmodule/Detail.html:90
+//line views/vmodule/Detail.html:81
 	s, u, i := module.Tech(t, ps.Logger)
 
-//line views/vmodule/Detail.html:90
+//line views/vmodule/Detail.html:81
 	qw422016.N().S(`  <div style="text-align: center; margin-right: 18px;">
     <a target="_blank" rel="noopener noreferrer" href="`)
-//line views/vmodule/Detail.html:92
+//line views/vmodule/Detail.html:83
 	qw422016.E().S(u)
-//line views/vmodule/Detail.html:92
+//line views/vmodule/Detail.html:83
 	qw422016.N().S(`" title="`)
-//line views/vmodule/Detail.html:92
+//line views/vmodule/Detail.html:83
 	qw422016.E().S(t)
-//line views/vmodule/Detail.html:92
+//line views/vmodule/Detail.html:83
 	qw422016.N().S(`">
       `)
-//line views/vmodule/Detail.html:93
+//line views/vmodule/Detail.html:84
 	components.StreamSVGInline(qw422016, i, 32, ps)
-//line views/vmodule/Detail.html:93
+//line views/vmodule/Detail.html:84
 	qw422016.N().S(`
-      <div>`)
-//line views/vmodule/Detail.html:94
+      <div class="mts">`)
+//line views/vmodule/Detail.html:85
 	qw422016.E().S(s)
-//line views/vmodule/Detail.html:94
+//line views/vmodule/Detail.html:85
 	qw422016.N().S(`</div>
     </a>
   </div>
 `)
-//line views/vmodule/Detail.html:97
+//line views/vmodule/Detail.html:88
 }
 
-//line views/vmodule/Detail.html:97
+//line views/vmodule/Detail.html:88
 func writetech(qq422016 qtio422016.Writer, t string, ps *cutil.PageState) {
-//line views/vmodule/Detail.html:97
+//line views/vmodule/Detail.html:88
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vmodule/Detail.html:97
+//line views/vmodule/Detail.html:88
 	streamtech(qw422016, t, ps)
-//line views/vmodule/Detail.html:97
+//line views/vmodule/Detail.html:88
 	qt422016.ReleaseWriter(qw422016)
-//line views/vmodule/Detail.html:97
+//line views/vmodule/Detail.html:88
 }
 
-//line views/vmodule/Detail.html:97
+//line views/vmodule/Detail.html:88
 func tech(t string, ps *cutil.PageState) string {
-//line views/vmodule/Detail.html:97
+//line views/vmodule/Detail.html:88
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vmodule/Detail.html:97
+//line views/vmodule/Detail.html:88
 	writetech(qb422016, t, ps)
-//line views/vmodule/Detail.html:97
+//line views/vmodule/Detail.html:88
 	qs422016 := string(qb422016.B)
-//line views/vmodule/Detail.html:97
+//line views/vmodule/Detail.html:88
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vmodule/Detail.html:97
+//line views/vmodule/Detail.html:88
 	return qs422016
+//line views/vmodule/Detail.html:88
+}
+
+//line views/vmodule/Detail.html:90
+func StreamModuleTech(qw422016 *qt422016.Writer, mod *module.Module, ps *cutil.PageState) {
+//line views/vmodule/Detail.html:90
+	qw422016.N().S(`
+  <div class="card">
+    <h3>`)
+//line views/vmodule/Detail.html:92
+	components.StreamSVGIcon(qw422016, "microchip", ps)
+//line views/vmodule/Detail.html:92
+	qw422016.N().S(` Technology</h3>
+    <div class="mt" style="display: flex; flex-direction: row;">
+`)
+//line views/vmodule/Detail.html:94
+	for _, t := range mod.Technology {
+//line views/vmodule/Detail.html:94
+		qw422016.N().S(`      `)
+//line views/vmodule/Detail.html:95
+		streamtech(qw422016, t, ps)
+//line views/vmodule/Detail.html:95
+		qw422016.N().S(`
+`)
+//line views/vmodule/Detail.html:96
+	}
+//line views/vmodule/Detail.html:96
+	qw422016.N().S(`      `)
 //line views/vmodule/Detail.html:97
+	streamtech(qw422016, "go", ps)
+//line views/vmodule/Detail.html:97
+	qw422016.N().S(`
+      `)
+//line views/vmodule/Detail.html:98
+	streamtech(qw422016, "projectforge", ps)
+//line views/vmodule/Detail.html:98
+	qw422016.N().S(`
+    </div>
+  </div>
+`)
+//line views/vmodule/Detail.html:101
+}
+
+//line views/vmodule/Detail.html:101
+func WriteModuleTech(qq422016 qtio422016.Writer, mod *module.Module, ps *cutil.PageState) {
+//line views/vmodule/Detail.html:101
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vmodule/Detail.html:101
+	StreamModuleTech(qw422016, mod, ps)
+//line views/vmodule/Detail.html:101
+	qt422016.ReleaseWriter(qw422016)
+//line views/vmodule/Detail.html:101
+}
+
+//line views/vmodule/Detail.html:101
+func ModuleTech(mod *module.Module, ps *cutil.PageState) string {
+//line views/vmodule/Detail.html:101
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vmodule/Detail.html:101
+	WriteModuleTech(qb422016, mod, ps)
+//line views/vmodule/Detail.html:101
+	qs422016 := string(qb422016.B)
+//line views/vmodule/Detail.html:101
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vmodule/Detail.html:101
+	return qs422016
+//line views/vmodule/Detail.html:101
 }

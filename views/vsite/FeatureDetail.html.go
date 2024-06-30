@@ -11,84 +11,90 @@ import (
 	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/views/components"
 	"projectforge.dev/projectforge/views/layout"
+	"projectforge.dev/projectforge/views/vmodule"
 )
 
-//line views/vsite/FeatureDetail.html:9
+//line views/vsite/FeatureDetail.html:10
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vsite/FeatureDetail.html:9
+//line views/vsite/FeatureDetail.html:10
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vsite/FeatureDetail.html:9
+//line views/vsite/FeatureDetail.html:10
 type FeatureDetail struct {
 	layout.Basic
 	Module *module.Module
 	HTML   string
 }
 
-//line views/vsite/FeatureDetail.html:15
+//line views/vsite/FeatureDetail.html:16
 func (p *FeatureDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsite/FeatureDetail.html:15
+//line views/vsite/FeatureDetail.html:16
 	qw422016.N().S(`
   <div class="card">
     <div class="right"><a href="`)
-//line views/vsite/FeatureDetail.html:17
+//line views/vsite/FeatureDetail.html:18
 	qw422016.E().S(p.Module.FeaturesPath())
-//line views/vsite/FeatureDetail.html:17
+//line views/vsite/FeatureDetail.html:18
 	qw422016.N().S(`/files"><button>Files</button></a></div>
     <h3>`)
-//line views/vsite/FeatureDetail.html:18
+//line views/vsite/FeatureDetail.html:19
 	components.StreamSVGIcon(qw422016, p.Module.Icon, ps)
-//line views/vsite/FeatureDetail.html:18
+//line views/vsite/FeatureDetail.html:19
 	qw422016.N().S(` `)
-//line views/vsite/FeatureDetail.html:18
+//line views/vsite/FeatureDetail.html:19
 	qw422016.E().S(p.Module.Title())
-//line views/vsite/FeatureDetail.html:18
+//line views/vsite/FeatureDetail.html:19
 	qw422016.N().S(`</h3>
     <em>`)
-//line views/vsite/FeatureDetail.html:19
+//line views/vsite/FeatureDetail.html:20
 	qw422016.E().S(p.Module.Description)
-//line views/vsite/FeatureDetail.html:19
+//line views/vsite/FeatureDetail.html:20
 	qw422016.N().S(`</em>
     `)
-//line views/vsite/FeatureDetail.html:20
+//line views/vsite/FeatureDetail.html:21
 	qw422016.N().S(p.HTML)
-//line views/vsite/FeatureDetail.html:20
+//line views/vsite/FeatureDetail.html:21
 	qw422016.N().S(`
   </div>
+  `)
+//line views/vsite/FeatureDetail.html:23
+	vmodule.StreamModuleTech(qw422016, p.Module, ps)
+//line views/vsite/FeatureDetail.html:23
+	qw422016.N().S(`
 `)
-//line views/vsite/FeatureDetail.html:22
+//line views/vsite/FeatureDetail.html:24
 }
 
-//line views/vsite/FeatureDetail.html:22
+//line views/vsite/FeatureDetail.html:24
 func (p *FeatureDetail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsite/FeatureDetail.html:22
+//line views/vsite/FeatureDetail.html:24
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsite/FeatureDetail.html:22
+//line views/vsite/FeatureDetail.html:24
 	p.StreamBody(qw422016, as, ps)
-//line views/vsite/FeatureDetail.html:22
+//line views/vsite/FeatureDetail.html:24
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsite/FeatureDetail.html:22
+//line views/vsite/FeatureDetail.html:24
 }
 
-//line views/vsite/FeatureDetail.html:22
+//line views/vsite/FeatureDetail.html:24
 func (p *FeatureDetail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsite/FeatureDetail.html:22
+//line views/vsite/FeatureDetail.html:24
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsite/FeatureDetail.html:22
+//line views/vsite/FeatureDetail.html:24
 	p.WriteBody(qb422016, as, ps)
-//line views/vsite/FeatureDetail.html:22
+//line views/vsite/FeatureDetail.html:24
 	qs422016 := string(qb422016.B)
-//line views/vsite/FeatureDetail.html:22
+//line views/vsite/FeatureDetail.html:24
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsite/FeatureDetail.html:22
+//line views/vsite/FeatureDetail.html:24
 	return qs422016
-//line views/vsite/FeatureDetail.html:22
+//line views/vsite/FeatureDetail.html:24
 }

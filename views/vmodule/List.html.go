@@ -72,128 +72,167 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vmodule/List.html:24
 		qw422016.N().S(`">
     <div class="card">
-      <div class="right">
-`)
-//line views/vmodule/List.html:27
-		for _, t := range mod.Technology {
-//line views/vmodule/List.html:27
-			qw422016.N().S(`        `)
-//line views/vmodule/List.html:28
-			streamicon(qw422016, t, ps)
-//line views/vmodule/List.html:28
-			qw422016.N().S(`
-`)
-//line views/vmodule/List.html:29
-		}
-//line views/vmodule/List.html:29
-		qw422016.N().S(`        `)
-//line views/vmodule/List.html:30
-		streamicon(qw422016, "go", ps)
-//line views/vmodule/List.html:30
+      `)
+//line views/vmodule/List.html:26
+		StreamModuleTechList(qw422016, mod, ps)
+//line views/vmodule/List.html:26
 		qw422016.N().S(`
-        `)
-//line views/vmodule/List.html:31
-		streamicon(qw422016, "projectforge", ps)
-//line views/vmodule/List.html:31
-		qw422016.N().S(`
-      </div>
       <div class="left mrs">`)
-//line views/vmodule/List.html:33
+//line views/vmodule/List.html:27
 		components.StreamSVGRef(qw422016, mod.IconSafe(), 40, 40, "", ps)
-//line views/vmodule/List.html:33
+//line views/vmodule/List.html:27
 		qw422016.N().S(`</div>
       <strong class="highlight">`)
-//line views/vmodule/List.html:34
+//line views/vmodule/List.html:28
 		qw422016.E().S(mod.Title())
-//line views/vmodule/List.html:34
+//line views/vmodule/List.html:28
 		qw422016.N().S(`</strong>
       <div><em>`)
-//line views/vmodule/List.html:35
+//line views/vmodule/List.html:29
 		qw422016.E().S(mod.Description)
-//line views/vmodule/List.html:35
+//line views/vmodule/List.html:29
 		qw422016.N().S(`</em></div>
     </div>
   </a>
 `)
-//line views/vmodule/List.html:38
+//line views/vmodule/List.html:32
 	}
-//line views/vmodule/List.html:39
+//line views/vmodule/List.html:33
 }
 
-//line views/vmodule/List.html:39
+//line views/vmodule/List.html:33
 func (p *List) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vmodule/List.html:39
+//line views/vmodule/List.html:33
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vmodule/List.html:39
+//line views/vmodule/List.html:33
 	p.StreamBody(qw422016, as, ps)
-//line views/vmodule/List.html:39
+//line views/vmodule/List.html:33
 	qt422016.ReleaseWriter(qw422016)
-//line views/vmodule/List.html:39
+//line views/vmodule/List.html:33
 }
 
-//line views/vmodule/List.html:39
+//line views/vmodule/List.html:33
 func (p *List) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vmodule/List.html:39
+//line views/vmodule/List.html:33
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vmodule/List.html:39
+//line views/vmodule/List.html:33
 	p.WriteBody(qb422016, as, ps)
-//line views/vmodule/List.html:39
+//line views/vmodule/List.html:33
 	qs422016 := string(qb422016.B)
-//line views/vmodule/List.html:39
+//line views/vmodule/List.html:33
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vmodule/List.html:39
+//line views/vmodule/List.html:33
 	return qs422016
-//line views/vmodule/List.html:39
+//line views/vmodule/List.html:33
 }
 
-//line views/vmodule/List.html:41
+//line views/vmodule/List.html:35
 func streamicon(qw422016 *qt422016.Writer, t string, ps *cutil.PageState) {
-//line views/vmodule/List.html:41
+//line views/vmodule/List.html:35
 	qw422016.N().S(`
 `)
-//line views/vmodule/List.html:42
+//line views/vmodule/List.html:36
 	s, u, i := module.Tech(t, ps.Logger)
 
-//line views/vmodule/List.html:42
+//line views/vmodule/List.html:36
 	qw422016.N().S(`  <span title="`)
-//line views/vmodule/List.html:43
+//line views/vmodule/List.html:37
 	qw422016.E().S(s)
-//line views/vmodule/List.html:43
+//line views/vmodule/List.html:37
 	qw422016.N().S(` - `)
-//line views/vmodule/List.html:43
+//line views/vmodule/List.html:37
 	qw422016.E().S(u)
-//line views/vmodule/List.html:43
+//line views/vmodule/List.html:37
 	qw422016.N().S(`">`)
-//line views/vmodule/List.html:43
+//line views/vmodule/List.html:37
 	components.StreamSVGInline(qw422016, i, 24, ps)
-//line views/vmodule/List.html:43
+//line views/vmodule/List.html:37
 	qw422016.N().S(`</span>
 `)
-//line views/vmodule/List.html:44
+//line views/vmodule/List.html:38
 }
 
-//line views/vmodule/List.html:44
+//line views/vmodule/List.html:38
 func writeicon(qq422016 qtio422016.Writer, t string, ps *cutil.PageState) {
-//line views/vmodule/List.html:44
+//line views/vmodule/List.html:38
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vmodule/List.html:44
+//line views/vmodule/List.html:38
 	streamicon(qw422016, t, ps)
-//line views/vmodule/List.html:44
+//line views/vmodule/List.html:38
 	qt422016.ReleaseWriter(qw422016)
-//line views/vmodule/List.html:44
+//line views/vmodule/List.html:38
 }
 
-//line views/vmodule/List.html:44
+//line views/vmodule/List.html:38
 func icon(t string, ps *cutil.PageState) string {
-//line views/vmodule/List.html:44
+//line views/vmodule/List.html:38
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vmodule/List.html:44
+//line views/vmodule/List.html:38
 	writeicon(qb422016, t, ps)
-//line views/vmodule/List.html:44
+//line views/vmodule/List.html:38
 	qs422016 := string(qb422016.B)
-//line views/vmodule/List.html:44
+//line views/vmodule/List.html:38
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vmodule/List.html:44
+//line views/vmodule/List.html:38
 	return qs422016
+//line views/vmodule/List.html:38
+}
+
+//line views/vmodule/List.html:40
+func StreamModuleTechList(qw422016 *qt422016.Writer, mod *module.Module, ps *cutil.PageState) {
+//line views/vmodule/List.html:40
+	qw422016.N().S(`
+  <div class="right">
+`)
+//line views/vmodule/List.html:42
+	for _, t := range mod.Technology {
+//line views/vmodule/List.html:42
+		qw422016.N().S(`    `)
+//line views/vmodule/List.html:43
+		streamicon(qw422016, t, ps)
+//line views/vmodule/List.html:43
+		qw422016.N().S(`
+`)
 //line views/vmodule/List.html:44
+	}
+//line views/vmodule/List.html:44
+	qw422016.N().S(`    `)
+//line views/vmodule/List.html:45
+	streamicon(qw422016, "go", ps)
+//line views/vmodule/List.html:45
+	qw422016.N().S(`
+    `)
+//line views/vmodule/List.html:46
+	streamicon(qw422016, "projectforge", ps)
+//line views/vmodule/List.html:46
+	qw422016.N().S(`
+  </div>
+`)
+//line views/vmodule/List.html:48
+}
+
+//line views/vmodule/List.html:48
+func WriteModuleTechList(qq422016 qtio422016.Writer, mod *module.Module, ps *cutil.PageState) {
+//line views/vmodule/List.html:48
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vmodule/List.html:48
+	StreamModuleTechList(qw422016, mod, ps)
+//line views/vmodule/List.html:48
+	qt422016.ReleaseWriter(qw422016)
+//line views/vmodule/List.html:48
+}
+
+//line views/vmodule/List.html:48
+func ModuleTechList(mod *module.Module, ps *cutil.PageState) string {
+//line views/vmodule/List.html:48
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vmodule/List.html:48
+	WriteModuleTechList(qb422016, mod, ps)
+//line views/vmodule/List.html:48
+	qs422016 := string(qb422016.B)
+//line views/vmodule/List.html:48
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vmodule/List.html:48
+	return qs422016
+//line views/vmodule/List.html:48
 }

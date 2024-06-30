@@ -4,6 +4,7 @@
   "projectforge.dev/projectforge/app/module"
   "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/layout"
+  "projectforge.dev/projectforge/views/vmodule"
 ) %}
 
 {% code type FeatureDetail struct {
@@ -19,4 +20,5 @@
     <em>{%s p.Module.Description %}</em>
     {%s= p.HTML %}
   </div>
+  {%= vmodule.ModuleTech(p.Module, ps) %}
 {% endfunc %}

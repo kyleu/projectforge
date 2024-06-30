@@ -23,13 +23,7 @@
   {%- for _, mod := range p.Modules -%}
   <a class="link-section" href="/m/{%s mod.Key %}">
     <div class="card">
-      <div class="right">
-        {%- for _, t := range mod.Technology -%}
-        {%= icon(t, ps) %}
-        {%- endfor -%}
-        {%= icon("go", ps) %}
-        {%= icon("projectforge", ps) %}
-      </div>
+      {%= ModuleTechList(mod, ps) %}
       <div class="left mrs">{%= components.SVGRef(mod.IconSafe(), 40, 40, "", ps) %}</div>
       <strong class="highlight">{%s mod.Title() %}</strong>
       <div><em>{%s mod.Description %}</em></div>
@@ -41,4 +35,14 @@
 {% func icon(t string, ps *cutil.PageState) %}
   {%- code s, u, i := module.Tech(t, ps.Logger) -%}
   <span title="{%s s %} - {%s u %}">{%= components.SVGInline(i, 24, ps) %}</span>
+{% endfunc %}
+
+{% func ModuleTechList(mod *module.Module, ps *cutil.PageState) %}
+  <div class="right">
+    {%- for _, t := range mod.Technology -%}
+    {%= icon(t, ps) %}
+    {%- endfor -%}
+    {%= icon("go", ps) %}
+    {%= icon("projectforge", ps) %}
+  </div>
 {% endfunc %}

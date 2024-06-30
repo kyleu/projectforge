@@ -19,16 +19,7 @@
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
   {%- code mod := p.Module -%}
   {%= Summary(mod, nil, ps) %}
-  <div class="card">
-    <h3>{%= components.SVGIcon("microchip", ps) %} Technology</h3>
-    <div class="mt" style="display: flex; flex-direction: row;">
-      {%- for _, t := range mod.Technology -%}
-      {%= tech(t, ps) %}
-      {%- endfor -%}
-      {%= tech("go", ps) %}
-      {%= tech("projectforge", ps) %}
-    </div>
-  </div>
+  {%= ModuleTech(mod, ps) %}
   <div class="card">
     <h3>{%= components.SVGIcon("archive", ps) %} Details</h3>
     <div class="overflow full-width">
@@ -91,7 +82,20 @@
   <div style="text-align: center; margin-right: 18px;">
     <a target="_blank" rel="noopener noreferrer" href="{%s u %}" title="{%s t %}">
       {%= components.SVGInline(i, 32, ps) %}
-      <div>{%s s %}</div>
+      <div class="mts">{%s s %}</div>
     </a>
+  </div>
+{% endfunc %}
+
+{% func ModuleTech(mod *module.Module, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>{%= components.SVGIcon("microchip", ps) %} Technology</h3>
+    <div class="mt" style="display: flex; flex-direction: row;">
+      {%- for _, t := range mod.Technology -%}
+      {%= tech(t, ps) %}
+      {%- endfor -%}
+      {%= tech("go", ps) %}
+      {%= tech("projectforge", ps) %}
+    </div>
   </div>
 {% endfunc %}
