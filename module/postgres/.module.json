@@ -1,6 +1,6 @@
 {
   "name": "PostgreSQL",
-  "icon": "database",
+  "icon": "postgres",
   "description": "Provides an API for accessing PostgreSQL databases",
   "authorName": "Kyle U",
   "authorEmail": "kyle@kyleu.com",

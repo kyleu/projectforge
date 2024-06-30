@@ -1,6 +1,6 @@
 {
   "name": "MySQL",
-  "icon": "database",
+  "icon": "mysql",
   "description": "Provides an API for accessing MySQL databases",
   "authorName": "Kyle U",
   "authorEmail": "kyle@kyleu.com",

@@ -1,6 +1,6 @@
 {
   "name": "SQL Server",
-  "icon": "database",
+  "icon": "sqlserver",
   "description": "Provides an API for accessing MSSQL databases",
   "authorName": "Kyle U",
   "authorEmail": "kyle@kyleu.com",

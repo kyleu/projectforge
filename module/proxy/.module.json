@@ -1,6 +1,6 @@
 {
   "name": "Proxy",
-  "icon": "database",
+  "icon": "bullhorn",
   "description": "Provides an HTTP proxy while still enforcing your app's security",
   "authorName": "Kyle U",
   "authorEmail": "kyle@kyleu.com",

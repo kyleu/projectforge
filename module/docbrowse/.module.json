@@ -1,6 +1,6 @@
 {
   "name": "Doc Browser",
-  "icon": "file",
+  "icon": "docs",
   "description": "Provides a UI for browsing the documentation",
   "authorName": "Kyle U",
   "authorEmail": "kyle@kyleu.com",

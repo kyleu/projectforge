@@ -1,6 +1,6 @@
 {
   "name": "SQLite",
-  "icon": "database",
+  "icon": "sqlite",
   "description": "Provides an API for accessing SQLite databases",
   "authorName": "Kyle U",
   "authorEmail": "kyle@kyleu.com",
