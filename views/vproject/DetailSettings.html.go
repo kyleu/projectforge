@@ -60,131 +60,143 @@ func StreamDetailSettings(qw422016 *qt422016.Writer, prj *project.Project, as *a
 	qw422016.N().S(`</td>
         </tr>
         <tr>
-          <th>Package</th>
+          <th>Icon</th>
           <td>`)
 //line views/vproject/DetailSettings.html:29
-	view.StreamURL(qw422016, "https://"+prj.Package, prj.Package, true, ps)
+	components.StreamSVGLink(qw422016, prj.IconSafe(), ps)
 //line views/vproject/DetailSettings.html:29
+	qw422016.N().S(` `)
+//line views/vproject/DetailSettings.html:29
+	qw422016.E().S(prj.Icon)
+//line views/vproject/DetailSettings.html:29
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th>Package</th>
+          <td>`)
+//line views/vproject/DetailSettings.html:33
+	view.StreamURL(qw422016, "https://"+prj.Package, prj.Package, true, ps)
+//line views/vproject/DetailSettings.html:33
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th>Args</th>
           <td>`)
-//line views/vproject/DetailSettings.html:33
+//line views/vproject/DetailSettings.html:37
 	qw422016.E().S(prj.Args)
-//line views/vproject/DetailSettings.html:33
+//line views/vproject/DetailSettings.html:37
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th>Port</th>
           <td><a href="http://localhost:`)
-//line views/vproject/DetailSettings.html:37
+//line views/vproject/DetailSettings.html:41
 	qw422016.N().D(prj.Port)
-//line views/vproject/DetailSettings.html:37
+//line views/vproject/DetailSettings.html:41
 	qw422016.N().S(`" target="_blank" rel="noopener noreferrer">`)
-//line views/vproject/DetailSettings.html:37
+//line views/vproject/DetailSettings.html:41
 	qw422016.N().D(prj.Port)
-//line views/vproject/DetailSettings.html:37
+//line views/vproject/DetailSettings.html:41
 	qw422016.N().S(`</a></td>
         </tr>
         <tr>
           <th>Ignore</th>
           <td>`)
-//line views/vproject/DetailSettings.html:41
+//line views/vproject/DetailSettings.html:45
 	qw422016.E().S(strings.Join(prj.Ignore, ", "))
-//line views/vproject/DetailSettings.html:41
+//line views/vproject/DetailSettings.html:45
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th>Tags</th>
           <td>
 `)
-//line views/vproject/DetailSettings.html:46
+//line views/vproject/DetailSettings.html:50
 	for i, tag := range prj.Tags {
-//line views/vproject/DetailSettings.html:46
+//line views/vproject/DetailSettings.html:50
 		qw422016.N().S(`
             <a href="/p?tags=`)
-//line views/vproject/DetailSettings.html:47
+//line views/vproject/DetailSettings.html:51
 		qw422016.E().S(tag)
-//line views/vproject/DetailSettings.html:47
+//line views/vproject/DetailSettings.html:51
 		qw422016.N().S(`">`)
-//line views/vproject/DetailSettings.html:47
+//line views/vproject/DetailSettings.html:51
 		qw422016.E().S(tag)
-//line views/vproject/DetailSettings.html:47
+//line views/vproject/DetailSettings.html:51
 		qw422016.N().S(`</a>`)
-//line views/vproject/DetailSettings.html:47
+//line views/vproject/DetailSettings.html:51
 		if i < len(prj.Tags)-1 {
-//line views/vproject/DetailSettings.html:47
+//line views/vproject/DetailSettings.html:51
 			qw422016.N().S(`,`)
-//line views/vproject/DetailSettings.html:47
+//line views/vproject/DetailSettings.html:51
 		}
-//line views/vproject/DetailSettings.html:47
+//line views/vproject/DetailSettings.html:51
 		qw422016.N().S(`
 `)
-//line views/vproject/DetailSettings.html:48
+//line views/vproject/DetailSettings.html:52
 	}
-//line views/vproject/DetailSettings.html:48
+//line views/vproject/DetailSettings.html:52
 	qw422016.N().S(`
           </td>
         </tr>
         <tr>
           <th>Path</th>
           <td>`)
-//line views/vproject/DetailSettings.html:53
+//line views/vproject/DetailSettings.html:57
 	qw422016.E().S(prj.Path)
-//line views/vproject/DetailSettings.html:53
+//line views/vproject/DetailSettings.html:57
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th>Stats</th>
           <td><a href="`)
-//line views/vproject/DetailSettings.html:57
+//line views/vproject/DetailSettings.html:61
 	qw422016.E().S(prj.WebPath())
-//line views/vproject/DetailSettings.html:57
+//line views/vproject/DetailSettings.html:61
 	qw422016.N().S(`/stats"><button>File Stats</button></a></td>
         </tr>
         <tr>
           <th>JSON</th>
           <td><a href="#modal-`)
-//line views/vproject/DetailSettings.html:61
+//line views/vproject/DetailSettings.html:65
 	qw422016.E().S(prj.Key)
-//line views/vproject/DetailSettings.html:61
+//line views/vproject/DetailSettings.html:65
 	qw422016.N().S(`"><button type="button">JSON</button></a></td>
         </tr>
       </tbody>
     </table>
   </div>
   `)
-//line views/vproject/DetailSettings.html:66
+//line views/vproject/DetailSettings.html:70
 	components.StreamJSONModal(qw422016, prj.Key, "Project JSON", prj, 1)
-//line views/vproject/DetailSettings.html:66
+//line views/vproject/DetailSettings.html:70
 	qw422016.N().S(`
 `)
-//line views/vproject/DetailSettings.html:67
+//line views/vproject/DetailSettings.html:71
 }
 
-//line views/vproject/DetailSettings.html:67
+//line views/vproject/DetailSettings.html:71
 func WriteDetailSettings(qq422016 qtio422016.Writer, prj *project.Project, as *app.State, ps *cutil.PageState) {
-//line views/vproject/DetailSettings.html:67
+//line views/vproject/DetailSettings.html:71
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/DetailSettings.html:67
+//line views/vproject/DetailSettings.html:71
 	StreamDetailSettings(qw422016, prj, as, ps)
-//line views/vproject/DetailSettings.html:67
+//line views/vproject/DetailSettings.html:71
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/DetailSettings.html:67
+//line views/vproject/DetailSettings.html:71
 }
 
-//line views/vproject/DetailSettings.html:67
+//line views/vproject/DetailSettings.html:71
 func DetailSettings(prj *project.Project, as *app.State, ps *cutil.PageState) string {
-//line views/vproject/DetailSettings.html:67
+//line views/vproject/DetailSettings.html:71
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/DetailSettings.html:67
+//line views/vproject/DetailSettings.html:71
 	WriteDetailSettings(qb422016, prj, as, ps)
-//line views/vproject/DetailSettings.html:67
+//line views/vproject/DetailSettings.html:71
 	qs422016 := string(qb422016.B)
-//line views/vproject/DetailSettings.html:67
+//line views/vproject/DetailSettings.html:71
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/DetailSettings.html:67
+//line views/vproject/DetailSettings.html:71
 	return qs422016
-//line views/vproject/DetailSettings.html:67
+//line views/vproject/DetailSettings.html:71
 }

@@ -25,6 +25,10 @@
           <td>{%s prj.Version %}</td>
         </tr>
         <tr>
+          <th>Icon</th>
+          <td>{%= components.SVGLink(prj.IconSafe(), ps) %} {%s prj.Icon %}</td>
+        </tr>
+        <tr>
           <th>Package</th>
           <td>{%= view.URL("https://" + prj.Package, prj.Package, true, ps) %}</td>
         </tr>
