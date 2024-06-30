@@ -29,7 +29,7 @@
     }
   -%}
   <div class="card">
-    {%= vproject.AvailActions(title, p.Tags, p.Projects.Tags(), ps) %}
+    {%= vproject.AvailActions(title, p.Tags, p.Projects.Tags(), p.T.Icon, ps) %}
   </div>
   <div class="card">
     {%- if p.IsBuild -%}

@@ -42,7 +42,7 @@ func GitAction(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to load project")
 		}
-		bc := []string{"projects", prj.Key, "Git"}
+		bc := []string{"projects", prj.Key, "Git**git"}
 		var result *git.Result
 		actn := git.ActionStatusFromString(a)
 		switch a {

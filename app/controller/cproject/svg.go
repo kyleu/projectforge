@@ -36,7 +36,7 @@ func SVGList(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ps.SetTitleAndData("SVG Tools", icons)
-		return controller.Render(r, as, &vsvg.List{Project: prj, Keys: icons, Contents: contents}, ps, "projects", prj.Key, "SVG")
+		return controller.Render(r, as, &vsvg.List{Project: prj, Keys: icons, Contents: contents}, ps, "projects", prj.Key, svgBC(prj))
 	})
 }
 
@@ -52,8 +52,12 @@ func SVGDetail(w http.ResponseWriter, r *http.Request) {
 		}
 		x := &svg.SVG{Key: key, Markup: content}
 		ps.SetTitleAndData("SVG ["+key+"]", x)
-		return controller.Render(r, as, &vsvg.View{Project: prj, SVG: x}, ps, "projects", prj.Key, svgLink+prj.Key, key)
+		return controller.Render(r, as, &vsvg.View{Project: prj, SVG: x}, ps, "projects", prj.Key, svgBC(prj), key)
 	})
+}
+
+func svgBC(prj *project.Project) string {
+	return svgLink + prj.Key + "**" + "icons"
 }
 
 func SVGBuild(w http.ResponseWriter, r *http.Request) {
@@ -103,7 +107,7 @@ func SVGAdd(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData("Added SVG ["+x.Key+"]", x)
-		return controller.Render(r, as, &vsvg.View{Project: prj, SVG: x}, ps, "projects", prj.Key, svgLink+prj.Key, x.Key)
+		return controller.Render(r, as, &vsvg.View{Project: prj, SVG: x}, ps, "projects", prj.Key, svgBC(prj), x.Key)
 	})
 }
 
@@ -116,7 +120,7 @@ func SVGSetApp(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Query().Get("hasloaded") != util.BoolTrue {
 			cutil.URLAddQuery(r.URL, "hasloaded", util.BoolTrue)
 			page := &vpage.Load{URL: r.URL.String(), Title: "Generating icons"}
-			return controller.Render(r, as, page, ps, "projects", prj.Key, svgLink+prj.Key, "App Icon")
+			return controller.Render(r, as, page, ps, "projects", prj.Key, svgBC(prj), "App Icon")
 		}
 		content, err := svg.Content(prj.Key, fs, key)
 		if err != nil {
@@ -148,7 +152,7 @@ func SVGRefreshApp(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Query().Get("hasloaded") != util.BoolTrue {
 			cutil.URLAddQuery(r.URL, "hasloaded", util.BoolTrue)
 			page := &vpage.Load{URL: r.URL.String(), Title: "Generating app icons"}
-			return controller.Render(r, as, page, ps, "projects", prj.Key, svgLink+prj.Key, "Refresh App Icon")
+			return controller.Render(r, as, page, ps, "projects", prj.Key, svgBC(prj), "Refresh App Icon")
 		}
 		pfs, err := as.Services.Projects.GetFilesystem(prj)
 		if err != nil {

@@ -18,7 +18,7 @@
 
 {% func (p *SearchAll) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    {%= AvailActions("Search", p.Tags, p.Projects.Tags(), ps) %}
+    {%= AvailActions("Search", p.Tags, p.Projects.Tags(), "search", ps) %}
   </div>
   <div class="card">
     <ul class="accordion">

@@ -50,7 +50,8 @@ func List(w http.ResponseWriter, r *http.Request) {
 			_, _ = ps.W.Write([]byte(strings.Join(msgs, util.StringDefaultLinebreak)))
 			return "", nil
 		default:
-			return controller.Render(r, as, &vproject.List{Projects: prjs, Execs: execs, Tags: tags}, ps, "projects")
+			page := &vproject.List{Projects: prjs, Execs: execs, Tags: tags, Icon: "code"}
+			return controller.Render(r, as, page, ps, "projects")
 		}
 	})
 }

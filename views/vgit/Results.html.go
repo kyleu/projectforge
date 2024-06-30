@@ -54,7 +54,7 @@ func (p *Results) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 	qw422016.N().S(`  <div class="card">
     `)
 //line views/vgit/Results.html:29
-	vproject.StreamAvailActions(qw422016, "Git "+p.Action.Title, p.Tags, p.Projects.Tags(), ps)
+	vproject.StreamAvailActions(qw422016, "Git "+p.Action.Title, p.Tags, p.Projects.Tags(), "git", ps)
 //line views/vgit/Results.html:29
 	qw422016.N().S(`
   </div>

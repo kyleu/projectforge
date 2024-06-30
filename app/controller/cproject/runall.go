@@ -58,7 +58,7 @@ func RunAllActions(w http.ResponseWriter, r *http.Request) {
 			if cfg.GetStringOpt("hasloaded") != util.BoolTrue {
 				cutil.URLAddQuery(r.URL, "hasloaded", util.BoolTrue)
 				page := &vpage.Load{URL: r.URL.String(), Title: "Auditing all projects..."}
-				return controller.Render(r, as, page, ps, "projects", "Audit")
+				return controller.Render(r, as, page, ps, "projects", "Audit**"+actT.Icon)
 			}
 		}
 
@@ -67,7 +67,7 @@ func RunAllActions(w http.ResponseWriter, r *http.Request) {
 			case "":
 				ps.SetTitleAndData("Build All Projects", prjs)
 				page := &vaction.Results{T: actT, Cfg: cfg, Projects: prjs, Ctxs: nil, Tags: tags, IsBuild: true}
-				return controller.Render(r, as, page, ps, "projects", actT.Title)
+				return controller.Render(r, as, page, ps, "projects", actT.Breadcrumb())
 			case depsKey:
 				return runAllDeps(cfg, prjs, tags, w, r, as, ps)
 			case pkgsKey:
@@ -78,7 +78,7 @@ func RunAllActions(w http.ResponseWriter, r *http.Request) {
 				if cfg.GetStringOpt("hasloaded") != util.BoolTrue {
 					cutil.URLAddQuery(r.URL, "hasloaded", util.BoolTrue)
 					page := &vpage.Load{URL: r.URL.String(), Title: "Building all projects..."}
-					return controller.Render(r, as, page, ps, "projects", "Build")
+					return controller.Render(r, as, page, ps, "projects", actT.Breadcrumb())
 				}
 			}
 		}
@@ -86,11 +86,11 @@ func RunAllActions(w http.ResponseWriter, r *http.Request) {
 
 		ps.SetTitleAndData(fmt.Sprintf("[%s] All Projects", actT.Title), results)
 		page := &vaction.Results{T: actT, Cfg: cfg, Projects: prjs, Ctxs: results, Tags: tags}
-		return controller.Render(r, as, page, ps, "projects", actT.Title)
+		return controller.Render(r, as, page, ps, "projects", actT.Breadcrumb())
 	})
 }
 
 func runAllStart(w http.ResponseWriter, r *http.Request, as *app.State, ps *cutil.PageState) (string, error) {
 	ps.SetTitleAndData("Start All", "TODO")
-	return controller.Render(r, as, &views.Debug{}, ps, "projects", "Start")
+	return controller.Render(r, as, &views.Debug{}, ps, "projects", "Start**play")
 }

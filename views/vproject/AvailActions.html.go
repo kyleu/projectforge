@@ -28,7 +28,7 @@ var (
 )
 
 //line views/vproject/AvailActions.html:10
-func StreamAvailActions(qw422016 *qt422016.Writer, title string, currTags []string, availTags []string, ps *cutil.PageState) {
+func StreamAvailActions(qw422016 *qt422016.Writer, title string, currTags []string, availTags []string, icon string, ps *cutil.PageState) {
 //line views/vproject/AvailActions.html:10
 	qw422016.N().S(`
 `)
@@ -47,7 +47,7 @@ func StreamAvailActions(qw422016 *qt422016.Writer, title string, currTags []stri
   <h3>
     `)
 //line views/vproject/AvailActions.html:19
-	components.StreamSVGIcon(qw422016, `code`, ps)
+	components.StreamSVGIcon(qw422016, icon, ps)
 //line views/vproject/AvailActions.html:19
 	qw422016.N().S(`
     <a href="/p">All Projects</a>`)
@@ -158,22 +158,22 @@ func StreamAvailActions(qw422016 *qt422016.Writer, title string, currTags []stri
 }
 
 //line views/vproject/AvailActions.html:37
-func WriteAvailActions(qq422016 qtio422016.Writer, title string, currTags []string, availTags []string, ps *cutil.PageState) {
+func WriteAvailActions(qq422016 qtio422016.Writer, title string, currTags []string, availTags []string, icon string, ps *cutil.PageState) {
 //line views/vproject/AvailActions.html:37
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vproject/AvailActions.html:37
-	StreamAvailActions(qw422016, title, currTags, availTags, ps)
+	StreamAvailActions(qw422016, title, currTags, availTags, icon, ps)
 //line views/vproject/AvailActions.html:37
 	qt422016.ReleaseWriter(qw422016)
 //line views/vproject/AvailActions.html:37
 }
 
 //line views/vproject/AvailActions.html:37
-func AvailActions(title string, currTags []string, availTags []string, ps *cutil.PageState) string {
+func AvailActions(title string, currTags []string, availTags []string, icon string, ps *cutil.PageState) string {
 //line views/vproject/AvailActions.html:37
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vproject/AvailActions.html:37
-	WriteAvailActions(qb422016, title, currTags, availTags, ps)
+	WriteAvailActions(qb422016, title, currTags, availTags, icon, ps)
 //line views/vproject/AvailActions.html:37
 	qs422016 := string(qb422016.B)
 //line views/vproject/AvailActions.html:37

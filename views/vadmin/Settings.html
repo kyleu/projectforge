@@ -29,24 +29,24 @@
   <div class="card">
     <h3>{%= components.SVGIcon(`archive`, ps) %} Admin Functions</h3>
     {%= settingsLink("/admin/server", "archive", "App Information", "All sorts of info about the server and runtime", ps) %}
-    {%= settingsLink("/admin/modules", "archive", "Go Modules", "The Go modules used by " + util.AppName, ps) %}
+    {%= settingsLink("/admin/modules", "robot", "Go Modules", "The Go modules used by " + util.AppName, ps) %}
     {%= settingsLink("/theme", "archive", "Edit Themes", "Configure the design themes available to end users", ps) %}
     {%= settingsLink("/admin/exec", "archive", "Managed Processes", "Manage OS processes from within this app", ps) %}
-    {%= settingsLink("/admin/logs", "archive", "Recent Logs", "Displays the 100 most recent app logs", ps) %}
+    {%= settingsLink("/admin/logs", "folder", "Recent Logs", "Displays the 100 most recent app logs", ps) %}
     <div class="clear"></div>
   </div>
   <div class="card">
     <h3>{%= components.SVGIcon(`bolt`, ps) %} HTTP Methods</h3>
-    {%= settingsLink("/admin/sitemap", "bolt", "Sitemap", "Displays the HTTP actions that are available, with documentation", ps) %}
-    {%= settingsLink("/admin/routes", "bolt", "HTTP routes", "Enumerates all registered HTTP routes, by method", ps) %}
-    {%= settingsLink("/admin/session", "bolt", "User Session", "View the user session, including all cookies and settings", ps) %}
-    {%= settingsLink("/admin/request", "bolt", "Debug HTTP Request", "Full debug view of an HTTP request from your browser", ps) %}
-    {%= settingsLink("/admin/sockets", "bolt", "Active WebSockets", "Manage the active WebSockets in this server", ps) %}
+    {%= settingsLink("/admin/sitemap", "graph", "Sitemap", "Displays the HTTP actions that are available, with documentation", ps) %}
+    {%= settingsLink("/admin/routes", "folder", "HTTP routes", "Enumerates all registered HTTP routes, by method", ps) %}
+    {%= settingsLink("/admin/session", "play", "User Session", "View the user session, including all cookies and settings", ps) %}
+    {%= settingsLink("/admin/request", "download", "Debug HTTP Request", "Full debug view of an HTTP request from your browser", ps) %}
+    {%= settingsLink("/admin/sockets", "cog", "Active WebSockets", "Manage the active WebSockets in this server", ps) %}
     <div class="clear"></div>
   </div>
   <div class="card">
     <h3>{%= components.SVGIcon(`cog`, ps) %} App Profiling</h3>
-    {%= settingsLink("/admin/memusage", "cog", "Memory Usage", "Detailed memory usage statistics for this application", ps) %}
+    {%= settingsLink("/admin/memusage", "desktop", "Memory Usage", "Detailed memory usage statistics for this application", ps) %}
     {%= settingsLink("/admin/gc", "cog", "Collect Garbage", "Runs the Go garbage collector", ps) %}
     {%= settingsLink("/admin/heap", "cog", "Write Memory Dump", "Writes a memory dump to <em>./tmp/mem.pprof</em>, use script to view", ps) %}
     {%= settingsLink("/admin/cpu/start", "cog", "Start CPU Profile", "Profiles the CPU using <em>./tmp/cpu.pprof</em>, use script to view", ps) %}
@@ -57,7 +57,7 @@
 
 {% func settingsLink(href string, icon string, title string, description string, ps *cutil.PageState) %}{% stripspace %}
   <hr class="clear" />
-  <div class="mts">
+  <div class="mts ml">
     <a href="{%s href %}"><strong>{%s title %}</strong></a>
     <div><em>{%s= description %}</em></div>
   </div>

@@ -41,13 +41,13 @@ func RunAction(w http.ResponseWriter, r *http.Request) {
 			if cfg.GetStringOpt("hasloaded") != util.BoolTrue {
 				cutil.URLAddQuery(r.URL, "hasloaded", util.BoolTrue)
 				page := &vpage.Load{URL: r.URL.String(), Title: fmt.Sprintf("Running [%s] for [%s]", phase, prj.Title())}
-				return controller.Render(r, as, page, ps, "projects", prj.Key, actT.Title)
+				return controller.Render(r, as, page, ps, "projects", prj.Key, actT.Breadcrumb())
 			}
 		}
 		if isBuild && phase == "" {
 			ps.Data = action.AllBuilds
 			page := &vbuild.BuildResult{Project: prj, Cfg: cfg}
-			return controller.Render(r, as, page, ps, "projects", prj.Key, actT.Title)
+			return controller.Render(r, as, page, ps, "projects", prj.Key, actT.Breadcrumb())
 		}
 		result := action.Apply(ps.Context, actionParams(prj.Key, actT, cfg, as, ps.Logger))
 		if result == nil {
@@ -68,11 +68,11 @@ func RunAction(w http.ResponseWriter, r *http.Request) {
 				return runPkgs(prj, result, w, r, as, ps)
 			}
 			page := &vbuild.BuildResult{Project: prj, Cfg: cfg, BuildResult: result}
-			return controller.Render(r, as, page, ps, "projects", prj.Key, actT.Title)
+			return controller.Render(r, as, page, ps, "projects", prj.Key, actT.Breadcrumb())
 		}
 
 		page := &vaction.Result{Ctx: &action.ResultContext{Prj: prj, Cfg: cfg, Res: result}}
-		return controller.Render(r, as, page, ps, "projects", prj.Key, actT.Title)
+		return controller.Render(r, as, page, ps, "projects", prj.Key, actT.Breadcrumb())
 	})
 }
 

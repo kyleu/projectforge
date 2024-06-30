@@ -11,12 +11,13 @@
   layout.Basic
   Projects project.Projects
   Execs exec.Execs
+  Icon string
   Tags []string
 } %}
 
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    {%= AvailActions("", p.Tags, p.Projects.Tags(), ps) %}
+    {%= AvailActions("", p.Tags, p.Projects.Tags(), p.Icon, ps) %}
   </div>
   {%= Table(p.Projects, p.Tags, true, p.Execs, as, ps) %}
 {% endfunc %}

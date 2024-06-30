@@ -20,7 +20,17 @@
   {%- code mod := p.Module -%}
   {%= Summary(mod, nil, ps) %}
   <div class="card">
-    <h3>Details</h3>
+    <h3>{%= components.SVGIcon("microchip", ps) %} Technology</h3>
+    <div class="mt" style="display: flex; flex-direction: row;">
+      {%- for _, t := range mod.Technology -%}
+      {%= tech(t, ps) %}
+      {%- endfor -%}
+      {%= tech("go", ps) %}
+      {%= tech("projectforge", ps) %}
+    </div>
+  </div>
+  <div class="card">
+    <h3>{%= components.SVGIcon("archive", ps) %} Details</h3>
     <div class="overflow full-width">
       <table class="mt">
         <tbody>
@@ -54,18 +64,6 @@
             <td>{%s p.Dir %}</td>
           </tr>
           {%- endif -%}
-          <tr>
-            <th>Technology</th>
-            <td>
-              <div style="display: flex; flex-direction: row;">
-                {%- for _, t := range mod.Technology -%}
-                {%= tech(t, ps) %}
-                {%- endfor -%}
-                {%= tech("go", ps) %}
-                {%= tech("projectforge", ps) %}
-              </div>
-            </td>
-          </tr>
         </tbody>
       </table>
     </div>
@@ -76,7 +74,7 @@
   </div>
   {%- endif -%}
   <div class="card">
-    <h3>Project Usages</h3>
+    <h3>{%= components.SVGIcon("code", ps) %} Project Usages</h3>
     <ul class="mt">
       {%- if len(p.Usages) == 0 -%}
       <li><em>not referenced</em></li>

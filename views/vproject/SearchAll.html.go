@@ -44,7 +44,7 @@ func (p *SearchAll) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
   <div class="card">
     `)
 //line views/vproject/SearchAll.html:21
-	StreamAvailActions(qw422016, "Search", p.Tags, p.Projects.Tags(), ps)
+	StreamAvailActions(qw422016, "Search", p.Tags, p.Projects.Tags(), "search", ps)
 //line views/vproject/SearchAll.html:21
 	qw422016.N().S(`
   </div>

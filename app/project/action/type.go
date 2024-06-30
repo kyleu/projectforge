@@ -43,6 +43,10 @@ func (t *Type) String() string {
 	return t.Key
 }
 
+func (t *Type) Breadcrumb() string {
+	return t.Title + "**" + t.Icon
+}
+
 func (t *Type) Matches(x Type) bool {
 	return t.Key == x.Key
 }

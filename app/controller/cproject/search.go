@@ -66,7 +66,7 @@ func SearchAll(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData("Project Search Results", ret)
 		page := &vproject.SearchAll{Params: params, Projects: prjs, Tags: tags, Results: ret}
-		return controller.Render(r, as, page, ps, "projects", "Search")
+		return controller.Render(r, as, page, ps, "projects", "Search**search")
 	})
 }
 
