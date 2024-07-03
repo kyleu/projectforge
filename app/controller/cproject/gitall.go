@@ -72,7 +72,8 @@ func GitActionAll(w http.ResponseWriter, r *http.Request) {
 				url := "/git/all/magic"
 				ps.Data = argRes
 				hidden := map[string]string{"tags": strings.Join(tags, ",")}
-				page := &vpage.Args{URL: url, Directions: "Enter your commit message", ArgRes: argRes, Hidden: hidden}
+				warning := "Are you sure you'd like to commit and push for all projects?"
+				page := &vpage.Args{URL: url, Directions: "Enter your commit message", ArgRes: argRes, Hidden: hidden, Warning: warning}
 				return controller.Render(r, as, page, ps, "projects", "Git**git")
 			}
 			results, err = gitMagicAll(prjs, r, as, ps)

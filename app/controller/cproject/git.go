@@ -97,7 +97,9 @@ func GitAction(w http.ResponseWriter, r *http.Request) {
 			if argRes.HasMissing() {
 				url := fmt.Sprintf("/git/%s/magic", prj.Key)
 				ps.Data = argRes
-				return controller.Render(r, as, &vpage.Args{URL: url, Directions: "Enter your commit message", ArgRes: argRes}, ps, bc...)
+				warning := "Are you sure you'd like to commit and push?"
+				page := &vpage.Args{URL: url, Directions: "Enter your commit message", ArgRes: argRes, Warning: warning}
+				return controller.Render(r, as, page, ps, bc...)
 			}
 			dryRun := argRes.Values.GetStringOpt("dryRun") == util.BoolTrue
 			result, err = as.Services.Git.Magic(ps.Context, prj, argRes.Values.GetStringOpt("message"), dryRun, ps.Logger)
