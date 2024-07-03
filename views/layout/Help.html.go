@@ -78,8 +78,6 @@ func StreamHelp(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
 //line views/layout/Help.html:27
 			qw422016.N().S(` `)
 //line views/layout/Help.html:27
-			qw422016.N().S(`Help:`)
-//line views/layout/Help.html:27
 			qw422016.E().S(title)
 //line views/layout/Help.html:27
 			qw422016.N().S(`</h3></div>`)

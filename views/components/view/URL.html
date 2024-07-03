@@ -4,6 +4,7 @@
   "strings"
 
   "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
 ) %}
 
@@ -30,4 +31,18 @@
     %}
     <a target="_blank" rel="noopener noreferrer" href="{%s href %}">{%s content %}{% if showIcon %}{%= components.SVGLinkPadded(`external`, ps) %}{% endif %}</a>
   {% endif %}
+{% endstripspace %}{% endfunc %}
+
+{% func CodeLink(path string, title string, ps *cutil.PageState) %}{% stripspace %}
+  {%- code
+    origPath := path
+    if title == "" {
+      title = path
+    }
+    if !strings.HasPrefix(path, "/") {
+      path = "/" + path
+    }
+    u := util.AppSource + "/blob/master" + path
+  -%}
+  {%= URL(u, origPath, false, ps) %}
 {% endstripspace %}{% endfunc %}
