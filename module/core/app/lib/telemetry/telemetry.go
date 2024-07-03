@@ -28,6 +28,7 @@ func InitializeIfNeeded(enabled bool, version string, logger util.Logger) bool {
 	if enabled {
 		Initialize(version, logger)
 	}
+	util.HTTPDefaultClient = WrapHTTPClient(util.HTTPDefaultClient)
 	return true
 }
 

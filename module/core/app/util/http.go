@@ -8,6 +8,8 @@ import (
 	"github.com/pkg/errors"
 )
 
+var HTTPDefaultClient = http.DefaultClient
+
 type HTTPRequest struct {
 	*http.Request
 	client *http.Client
@@ -36,7 +38,7 @@ func (r *HTTPRequest) WithClient(c *http.Client) *HTTPRequest {
 }
 
 func (r *HTTPRequest) Run() (*http.Response, error) {
-	cl := Choose(r.client == nil, http.DefaultClient, r.client)
+	cl := Choose(r.client == nil, HTTPDefaultClient, r.client)
 	rsp, err := cl.Do(r.Request)
 	if err != nil {
 		return nil, err
