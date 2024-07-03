@@ -44,10 +44,7 @@ func (f FileStats) Extensions() map[string]int {
 }
 
 func GetFileStats(fs filesystem.FileLoader, pth string, logger util.Logger) (FileStats, error) {
-	if pth == "" {
-		pth = "."
-	}
-	return listDir(fs, logger, pth)
+	return listDir(fs, logger, util.OrDefault(pth, "."))
 }
 
 var ignores = []string{"^tmp/", "^node_modules/", "^libs/"}

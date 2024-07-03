@@ -32,10 +32,7 @@ type Module struct {
 }
 
 func (m *Module) Title() string {
-	if m.Name == "" {
-		return m.Key
-	}
-	return m.Name
+	return util.OrDefault(m.Name, m.Key)
 }
 
 func (m *Module) IconSafe() string {

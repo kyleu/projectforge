@@ -62,11 +62,7 @@ func DoctorSolve(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		returnURL := r.URL.Query().Get("return")
-		if returnURL == "" {
-			returnURL = "/doctor/all"
-		}
-
+		returnURL := util.OrDefault(r.URL.Query().Get("return"), "/doctor/all")
 		c := checks.GetCheck(key)
 		checks.SetModules(as.Services.Modules.Deps(), as.Services.Modules.Dangerous())
 		ret := c.Check(ps.Context, ps.Logger)

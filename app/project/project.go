@@ -44,10 +44,7 @@ func NewProject(key string, path string) *Project {
 }
 
 func (p *Project) Title() string {
-	if p.Name == "" {
-		return p.Key
-	}
-	return p.Name
+	return util.OrDefault(p.Name, p.Key)
 }
 
 func (p *Project) NameSafe() string {
@@ -55,10 +52,7 @@ func (p *Project) NameSafe() string {
 }
 
 func (p *Project) Executable() string {
-	if p.Exec == "" {
-		return p.Key
-	}
-	return p.Exec
+	return util.OrDefault(p.Exec, p.Key)
 }
 
 func (p *Project) CleanKey() string {
@@ -76,10 +70,7 @@ func (p *Project) DescriptionSafe() string {
 	if p.Info == nil {
 		return ""
 	}
-	if p.Info.Description == "" {
-		return p.Info.Summary
-	}
-	return p.Info.Description
+	return util.OrDefault(p.Info.Description, p.Info.Summary)
 }
 
 func (p *Project) HasModule(key string) bool {

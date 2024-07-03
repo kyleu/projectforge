@@ -24,11 +24,7 @@ func projectFromCfg(proto *project.Project, cfg util.ValueMap) *project.Project 
 		return s
 	}
 	str := func(key string, def string) string {
-		ret := cfg.GetStringOpt(key)
-		if ret == "" {
-			return def
-		}
-		return ret
+		return util.OrDefault(cfg.GetStringOpt(key), def)
 	}
 	integer := func(key string, def int) int {
 		s := str(key, "")
@@ -83,11 +79,7 @@ func projectFromCfg(proto *project.Project, cfg util.ValueMap) *project.Project 
 
 func infoFromCfg(proto *project.Project, cfg util.ValueMap) *project.Info {
 	str := func(key string, def string) string {
-		ret := cfg.GetStringOpt(key)
-		if ret == "" {
-			return def
-		}
-		return ret
+		return util.OrDefault(cfg.GetStringOpt(key), def)
 	}
 
 	i := proto.Info

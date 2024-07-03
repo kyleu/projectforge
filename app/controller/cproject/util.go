@@ -17,19 +17,12 @@ const dblpipe = "||"
 
 func projectFromForm(frm util.ValueMap, prj *project.Project) error {
 	get := func(k string, def string) string {
-		x := frm.GetStringOpt(k)
-		if x == "" {
-			return def
-		}
-		return x
+		return util.OrDefault(frm.GetStringOpt(k), def)
 	}
 	prj.Name = get("name", prj.Name)
 	prj.Icon = get("icon", prj.Icon)
 	prj.Version = get("version", prj.Version)
-	prj.Package = get("package", prj.Package)
-	if prj.Package == "" {
-		prj.Package = "github.com/org/" + prj.Key
-	}
+	prj.Package = util.OrDefault(get("package", prj.Package), "github.com/org/"+prj.Key)
 	prj.Args = get("args", prj.Args)
 	prt, _ := strconv.ParseInt(get("port", fmt.Sprintf("%d", prj.Port)), 10, 32)
 	prj.Port = int(prt)

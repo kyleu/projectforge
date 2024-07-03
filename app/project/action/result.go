@@ -68,22 +68,14 @@ func (r *Result) AddWarn(msg string, args ...any) {
 }
 
 func (r *Result) Merge(tgt *Result) *Result {
-	status := r.Status
-	if status == "" {
-		status = tgt.Status
-	}
-	logger := r.logger
-	if logger == nil {
-		logger = tgt.logger
-	}
 	return &Result{
-		Status:   status,
+		Status:   util.OrDefault(r.Status, tgt.Status),
 		Args:     r.Args.Merge(tgt.Args),
 		Modules:  append(append(module.Results{}, r.Modules...), tgt.Modules...),
 		Logs:     append(append([]string{}, r.Logs...), tgt.Logs...),
 		Errors:   append(append([]string{}, r.Errors...), tgt.Errors...),
 		Duration: r.Duration + tgt.Duration,
-		logger:   logger,
+		logger:   util.OrDefault(r.logger, tgt.logger),
 	}
 }
 

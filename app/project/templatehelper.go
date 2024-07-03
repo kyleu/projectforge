@@ -128,17 +128,11 @@ func (t *TemplateContext) DatabaseUISaveUser() bool {
 }
 
 func (t *TemplateContext) GoVersionSafe() string {
-	if t.Info.GoVersion == "" {
-		return DefaultGoVersion
-	}
-	return t.Info.GoVersion
+	return util.OrDefault(t.Info.GoVersion, DefaultGoVersion)
 }
 
 func (t *TemplateContext) GoBinarySafe() string {
-	if t.Info.GoBinary == "" {
-		return goStdBin
-	}
-	return t.Info.GoBinary
+	return util.OrDefault(t.Info.GoBinary, goStdBin)
 }
 
 func (t *TemplateContext) Placeholder(idx int) string {

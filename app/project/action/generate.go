@@ -22,10 +22,7 @@ func onGenerate(pm *PrjAndMods) *Result {
 	ret := newResult(TypeGenerate, pm.Prj, pm.Cfg, pm.Logger)
 	timer := util.TimerStart()
 
-	to := pm.Cfg.GetStringOpt("to")
-	if to == "" {
-		to = projectKey
-	}
+	to := util.OrDefault(pm.Cfg.GetStringOpt("to"), projectKey)
 	fl := pm.Cfg.GetStringOpt("file")
 
 	srcFiles, dfs, err := diffs(pm)

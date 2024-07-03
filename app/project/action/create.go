@@ -3,6 +3,7 @@ package action
 import (
 	"context"
 	"fmt"
+	"projectforge.dev/projectforge/app/util"
 
 	"github.com/pkg/errors"
 
@@ -11,11 +12,7 @@ import (
 )
 
 func onCreate(ctx context.Context, params *Params) *Result {
-	path := params.Cfg.GetStringOpt("path")
-	if path == "" {
-		path = "."
-	}
-
+	path := util.OrDefault(params.Cfg.GetStringOpt("path"), ".")
 	prj, _ := params.PSvc.Get(params.ProjectKey)
 	if prj == nil {
 		prj = project.NewProject(params.ProjectKey, path)

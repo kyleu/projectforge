@@ -86,10 +86,7 @@ func SVGAdd(w http.ResponseWriter, r *http.Request) {
 		if src == "" {
 			return controller.ERsp("must provide [src]")
 		}
-		tgt := qa.Get("tgt")
-		if tgt == "" {
-			tgt = strings.TrimSuffix(src, "-solid")
-		}
+		tgt := util.OrDefault(qa.Get("tgt"), strings.TrimSuffix(src, "-solid"))
 		prj, err := getProject(r, as)
 		if err != nil {
 			return "", err

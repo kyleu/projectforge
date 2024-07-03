@@ -20,11 +20,7 @@ const keyNew = "new"
 
 func exportModelFromForm(frm util.ValueMap, m *model.Model) error {
 	get := func(k string, def string) string {
-		x := frm.GetStringOpt(k)
-		if x == "" {
-			return def
-		}
-		return x
+		return util.OrDefault(frm.GetStringOpt(k), def)
 	}
 	m.Name = get("name", m.Name)
 	m.Package = get("package", m.Package)
@@ -126,11 +122,7 @@ func exportLoadModel(r *http.Request, as *app.State, logger util.Logger) (*proje
 
 func exportEnumFromForm(frm util.ValueMap, e *enum.Enum) error {
 	get := func(k string, def string) string {
-		x := frm.GetStringOpt(k)
-		if x == "" {
-			return def
-		}
-		return x
+		return util.OrDefault(frm.GetStringOpt(k), def)
 	}
 	e.Name = get("name", e.Name)
 	e.Package = get("package", e.Package)

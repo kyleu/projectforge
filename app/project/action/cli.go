@@ -132,9 +132,5 @@ func promptString(query string, curr string) string {
 	if err != nil {
 		clilog("error: " + err.Error() + util.StringDefaultLinebreak)
 	}
-	text = strings.TrimSuffix(strings.TrimSuffix(text, "\n"), "\r")
-	if text == "" {
-		text = curr
-	}
-	return text
+	return util.OrDefault(strings.TrimSuffix(strings.TrimSuffix(text, "\n"), "\r"), curr)
 }
