@@ -58,6 +58,7 @@ type PageState struct {
 	SearchPath     string            `json:"searchPath,omitempty"`
 	ProfilePath    string            `json:"profilePath,omitempty"`
 	HideMenu       bool              `json:"hideMenu,omitempty"`
+	NoScript       bool              `json:"noScript,omitempty"`
 	ForceRedirect  string            `json:"forceRedirect,omitempty"`
 	DefaultFormat  string            `json:"defaultFormat,omitempty"`
 	HeaderContent  string            `json:"headerContent,omitempty"`

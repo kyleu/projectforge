@@ -20,6 +20,6 @@
   <link rel="icon" href="{%s assets.URL(`logo.svg`) %}" type="image/svg+xml">
   <style>
     {%s= thm.CSS(2) %}  </style>
-  <link rel="stylesheet" media="screen" href="{%s assets.URL(`client.css`) %}">
-  <script type="text/javascript" src="{%s assets.URL(`client.js`) %}"></script>
+  <link rel="stylesheet" media="screen" href="{%s assets.URL(`client.css`) %}">{% if !ps.NoScript %}
+  <script type="text/javascript" src="{%s assets.URL(`client.js`) %}"></script>{% endif %}
 {% endfunc %}
