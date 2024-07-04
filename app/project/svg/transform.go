@@ -66,6 +66,10 @@ func transformNodes(nodes []xmlNode) (string, error) {
 			return nil
 		}
 
+		if node.XMLName.Local == "title" {
+			continue
+		}
+
 		node.Attrs = cleanAttrs(node.Attrs)
 
 		class := findAttr("class")
