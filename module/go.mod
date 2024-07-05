@@ -1,4 +1,4 @@
-module github.com/kyleu/projectforge/module
+module projectforge.dev/projectforge/module
 
 go 1.22
 

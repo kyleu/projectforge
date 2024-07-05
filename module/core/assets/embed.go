@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"mime"
 	"path/filepath"
+	"sync"
 
 	"github.com/pkg/errors"
 
@@ -20,7 +21,10 @@ type Entry struct {
 	Hash  string
 }
 
-var cache = map[string]*Entry{}
+var (
+	cache   = map[string]*Entry{}
+	cacheMu sync.Mutex
+)
 
 func Embed(path string) (*Entry, error) {
 	if path == "embed.go" {
@@ -29,6 +33,8 @@ func Embed(path string) (*Entry, error) {
 	if x, ok := cache[path]; ok {
 		return x, nil
 	}
+	cacheMu.Lock()
+	defer cacheMu.Unlock()
 	data, err := FS.ReadFile(path)
 	if err != nil {
 		return nil, errors.Wrapf(err, "error reading asset at [%s]", path)

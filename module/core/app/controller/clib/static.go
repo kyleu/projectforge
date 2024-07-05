@@ -19,8 +19,7 @@ func RobotsTxt(w http.ResponseWriter, _ *http.Request) {
 }
 
 func Static(w http.ResponseWriter, r *http.Request) {
-	p := strings.TrimPrefix(r.URL.Path, "/assets")
-	p = strings.TrimPrefix(p, "/")
+	p, _ := cutil.PathString(r, "path", false)
 	if strings.Contains(p, "../") {
 		w.WriteHeader(http.StatusNotFound)
 		_, _ = w.Write([]byte("invalid path"))
