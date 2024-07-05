@@ -6,6 +6,7 @@
   "projectforge.dev/projectforge/app/file/diff"
   "projectforge.dev/projectforge/app/project/action"
   "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/components/view"
 ) %}
 
@@ -47,7 +48,7 @@
               {%- endif -%}
             </td>
             <td>{%s d.Status.StringFor(act.Key) %}</td>
-            <td>
+            <td class="nowrap">
               {%- switch act.Key -%}
               {%- case "audit" -%}
               <form action="/run/{%s prjKey %}/audit" method="get">
@@ -58,9 +59,9 @@
               <form action="/run/{%s prjKey %}/generate" method="get">
                 <input type="hidden" name="file" value="{%s d.Path %}" />
                 {%- if d.Status.String() != "new" -%}
-                <!--{% space %}<button type="submit" name="to" value="module" title="Incorporate change into module">&lt;-</button>{% space %}-->{% space %}
+                <button type="submit" name="to" value="ignore" title="Mark file as ignored">{%= components.SVGButton("close", ps) %}</button>{% space %}
                 {%- endif -%}
-                <button type="submit" name="to" value="project" title="Overwrite project changes with module version">-&gt;</button>
+                <button type="submit" name="to" value="project" title="Overwrite project changes with module version">{%= components.SVGButton("forward", ps) %}</button>
               </form>
               {%- case "build" -%}
                 {%- switch cfg.GetStringOpt("phase") -%}

@@ -1,6 +1,7 @@
 package action
 
 import (
+	"slices"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -14,8 +15,8 @@ import (
 )
 
 const (
+	ignoreKey  = "ignore"
 	projectKey = "project"
-	moduleKey  = "module"
 )
 
 func onGenerate(pm *PrjAndMods) *Result {
@@ -40,8 +41,8 @@ func onGenerate(pm *PrjAndMods) *Result {
 			// noop
 		case diff.StatusDifferent, diff.StatusNew:
 			switch to {
-			case moduleKey:
-				ret = mergeToModule(pm, f, ret)
+			case ignoreKey:
+				ret = ignoreFile(pm, f.Path, ret)
 			case projectKey:
 				ret = gen(srcFiles, f, ret, pm.FS)
 			}
@@ -52,6 +53,19 @@ func onGenerate(pm *PrjAndMods) *Result {
 
 	mr := &module.Result{Keys: pm.Mods.Keys(), Status: "OK", Diffs: dfs, Duration: timer.End()}
 	ret.Modules = append(ret.Modules, mr)
+	return ret
+}
+
+func ignoreFile(pm *PrjAndMods, pth string, ret *Result) *Result {
+	ign := pm.Prj.Info.IgnoredFiles
+	if slices.Contains(ign, pth) {
+		return ret
+	}
+	ign = util.ArraySorted(append(ign, pth))
+	pm.Prj.Info.IgnoredFiles = ign
+	if err := pm.PSvc.Save(pm.Prj, pm.Logger); err != nil {
+		return ret.WithError(err)
+	}
 	return ret
 }
 
@@ -80,14 +94,5 @@ func gen(srcFiles file.Files, f *diff.Diff, ret *Result, tgtFS filesystem.FileLo
 	if err != nil {
 		return ret.WithError(errors.Wrapf(err, "unable to write updated content to [%s]", f.Path))
 	}
-	return ret
-}
-
-func mergeToModule(pm *PrjAndMods, d *diff.Diff, ret *Result) *Result {
-	logs, err := pm.MSvc.UpdateFile(pm.Mods, d, pm.Logger)
-	if err != nil {
-		return ret.WithError(err)
-	}
-	ret.AddLog("merged [%s] from project to module: %s", d.Path, strings.Join(logs, ", "))
 	return ret
 }
