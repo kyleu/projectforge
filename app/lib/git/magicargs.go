@@ -29,7 +29,7 @@ func (s *Service) magicArgsFor(ctx context.Context, prj string, path string, mes
 	ret := NewResult(prj, "no changes needed", data)
 
 	return &magicArgs{
-		Ctx: ctx, Prj: prj, DryRun: dryRun, Dirty: dirtyCount, Ahead: ahead, Behind: behind,
+		Ctx: ctx, Prj: prj, Path: path, DryRun: dryRun, Dirty: dirtyCount, Ahead: ahead, Behind: behind,
 		Branch: branch, Message: message, Result: ret, Logger: logger,
 	}, nil
 }
