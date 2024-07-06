@@ -5,12 +5,11 @@ import (
 
 	"github.com/pkg/errors"
 
-	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func (s *Service) gitStash(ctx context.Context, prj *project.Project, logger util.Logger) (string, error) {
-	out, err := gitCmd(ctx, "stash", prj.Path, logger)
+func (s *Service) gitStash(ctx context.Context, path string, logger util.Logger) (string, error) {
+	out, err := gitCmd(ctx, "stash", path, logger)
 	if err != nil {
 		if isNoRepo(err) {
 			return "", nil
@@ -20,8 +19,8 @@ func (s *Service) gitStash(ctx context.Context, prj *project.Project, logger uti
 	return out, nil
 }
 
-func (s *Service) gitStashPop(ctx context.Context, prj *project.Project, logger util.Logger) (string, error) {
-	out, err := gitCmd(ctx, "stash pop", prj.Path, logger)
+func (s *Service) gitStashPop(ctx context.Context, path string, logger util.Logger) (string, error) {
+	out, err := gitCmd(ctx, "stash pop", path, logger)
 	if err != nil {
 		if isNoRepo(err) {
 			return "", nil

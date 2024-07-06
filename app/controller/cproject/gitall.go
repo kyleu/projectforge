@@ -12,8 +12,8 @@ import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
 	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/lib/git"
 	"projectforge.dev/projectforge/app/project"
-	"projectforge.dev/projectforge/app/project/git"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/vgit"
 	"projectforge.dev/projectforge/views/vpage"
@@ -34,27 +34,27 @@ func GitActionAll(w http.ResponseWriter, r *http.Request) {
 		switch a {
 		case git.ActionStatus.Key, "":
 			results, err = gitAll(prjs, func(prj *project.Project) (*git.Result, error) {
-				return as.Services.Git.Status(ps.Context, prj, ps.Logger)
+				return as.Services.Git.Status(ps.Context, prj.Key, prj.Path, ps.Logger)
 			})
 		case git.ActionFetch.Key:
 			results, err = gitAll(prjs, func(prj *project.Project) (*git.Result, error) {
-				return as.Services.Git.Fetch(ps.Context, prj, ps.Logger)
+				return as.Services.Git.Fetch(ps.Context, prj.Key, prj.Path, ps.Logger)
 			})
 		case git.ActionPull.Key:
 			results, err = gitAll(prjs, func(prj *project.Project) (*git.Result, error) {
-				return as.Services.Git.Pull(ps.Context, prj, ps.Logger)
+				return as.Services.Git.Pull(ps.Context, prj.Key, prj.Path, ps.Logger)
 			})
 		case git.ActionPush.Key:
 			results, err = gitAll(prjs, func(prj *project.Project) (*git.Result, error) {
-				return as.Services.Git.Push(ps.Context, prj, ps.Logger)
+				return as.Services.Git.Push(ps.Context, prj.Key, prj.Path, ps.Logger)
 			})
 		case git.ActionReset.Key:
 			results, err = gitAll(prjs, func(prj *project.Project) (*git.Result, error) {
-				return as.Services.Git.Reset(ps.Context, prj, ps.Logger)
+				return as.Services.Git.Reset(ps.Context, prj.Key, prj.Path, ps.Logger)
 			})
 		case git.ActionOutdated.Key:
 			results, err = gitAll(prjs, func(prj *project.Project) (*git.Result, error) {
-				return as.Services.Git.Outdated(ps.Context, prj, ps.Logger)
+				return as.Services.Git.Outdated(ps.Context, prj.Key, prj.Path, ps.Logger)
 			})
 		case git.ActionHistory.Key:
 			argRes := cutil.CollectArgs(r, gitHistoryArgs)
@@ -79,7 +79,7 @@ func GitActionAll(w http.ResponseWriter, r *http.Request) {
 			results, err = gitMagicAll(prjs, r, as, ps)
 		case git.ActionUndoCommit.Key:
 			results, err = gitAll(prjs, func(prj *project.Project) (*git.Result, error) {
-				return as.Services.Git.UndoCommit(ps.Context, prj, ps.Logger)
+				return as.Services.Git.UndoCommit(ps.Context, prj.Key, prj.Path, ps.Logger)
 			})
 		default:
 			err = errors.Errorf("unhandled action [%s] for all projects", a)
@@ -88,7 +88,8 @@ func GitActionAll(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		slices.SortFunc(results, func(l *git.Result, r *git.Result) int {
-			return cmp.Compare(strings.ToLower(l.Project.Title()), strings.ToLower(r.Project.Title()))
+			lp, rp := prjs.Get(l.Project), prjs.Get(r.Project)
+			return cmp.Compare(strings.ToLower(lp.Title()), strings.ToLower(rp.Title()))
 		})
 		ps.SetTitleAndData("[git] All Projects", results)
 		return controller.Render(r, as, &vgit.Results{Action: action, Results: results, Projects: prjs, Tags: tags}, ps, "projects", "Git")
@@ -108,7 +109,7 @@ func gitHistoryAll(prjs project.Projects, r *http.Request, as *app.State, ps *cu
 	commit := r.URL.Query().Get("commit")
 	return gitAll(prjs, func(prj *project.Project) (*git.Result, error) {
 		hist := &git.HistoryResult{Path: path, Since: since, Authors: authors, Commit: commit, Limit: int(limit)}
-		return as.Services.Git.History(ps.Context, prj, hist, ps.Logger)
+		return as.Services.Git.History(ps.Context, prj.Key, prj.Path, hist, ps.Logger)
 	})
 }
 
@@ -116,6 +117,6 @@ func gitMagicAll(prjs project.Projects, r *http.Request, as *app.State, ps *cuti
 	message := r.URL.Query().Get("message")
 	dryRun := cutil.QueryStringBool(r, "dryRun")
 	return gitAll(prjs, func(prj *project.Project) (*git.Result, error) {
-		return as.Services.Git.Magic(ps.Context, prj, message, dryRun, ps.Logger)
+		return as.Services.Git.Magic(ps.Context, prj.Key, prj.Path, message, dryRun, ps.Logger)
 	})
 }

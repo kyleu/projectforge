@@ -4,12 +4,11 @@ import (
 	"context"
 	"fmt"
 
-	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func (s *Service) UndoCommit(ctx context.Context, prj *project.Project, logger util.Logger) (*Result, error) {
-	result, err := gitResetSoft(ctx, prj.Path, logger)
+func (s *Service) UndoCommit(ctx context.Context, prj string, path string, logger util.Logger) (*Result, error) {
+	result, err := gitResetSoft(ctx, path, logger)
 	if err != nil {
 		return nil, err
 	}

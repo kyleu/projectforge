@@ -4,15 +4,14 @@ import (
 	"context"
 	"fmt"
 
-	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func (s *Service) Commit(ctx context.Context, prj *project.Project, msg string, logger util.Logger) (*Result, error) {
-	if prj.Key == "pftest" {
+func (s *Service) Commit(ctx context.Context, prj string, path string, msg string, logger util.Logger) (*Result, error) {
+	if prj == "pftest" {
 		msg = "."
 	}
-	result, err := gitCommit(ctx, prj.Path, msg, logger)
+	result, err := gitCommit(ctx, path, msg, logger)
 	if err != nil {
 		return nil, err
 	}

@@ -8,7 +8,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func ToGoViewString(t *types.Wrapped, prop string, nullable bool, format string, verbose bool, url bool, enums enum.Enums, src string) string {
+func ToGoViewString(t *types.Wrapped, prop string, nullable bool, format string, display string, verbose bool, url bool, enums enum.Enums, src string) string {
 	switch t.Key() {
 	case types.KeyAny:
 		if src == util.KeySimple {
@@ -41,6 +41,9 @@ func ToGoViewString(t *types.Wrapped, prop string, nullable bool, format string,
 	case types.KeyList:
 		return listGoViewString(t, prop, src, enums)
 	case types.KeyMap, types.KeyValueMap, types.KeyReference:
+		if display == "summary" && src == "table" {
+			return jsonGoViewString(prop)
+		}
 		if src == util.KeySimple {
 			return tmplStartV + prop + " %%}"
 		}

@@ -8,16 +8,15 @@ import (
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
 
-	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func (s *Service) Pull(ctx context.Context, prj *project.Project, logger util.Logger) (*Result, error) {
-	_, err := gitFetch(ctx, prj.Path, false, logger)
+func (s *Service) Pull(ctx context.Context, prj string, path string, logger util.Logger) (*Result, error) {
+	_, err := gitFetch(ctx, path, false, logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to fetch for pull")
 	}
-	x, err := gitPull(ctx, prj.Path, logger)
+	x, err := gitPull(ctx, path, logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to pull")
 	}

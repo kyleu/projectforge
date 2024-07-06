@@ -4,7 +4,7 @@
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/project"
-  "projectforge.dev/projectforge/app/project/git"
+  "projectforge.dev/projectforge/app/lib/git"
   "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/layout"
   "projectforge.dev/projectforge/views/vproject"
@@ -70,18 +70,19 @@
     <ul class="accordion">
       {%- for _, x := range p.Results -%}
       <li>
-        <input id="accordion-{%s x.Project.Key %}" type="checkbox" hidden />
-        <label for="accordion-{%s x.Project.Key %}">
+        <input id="accordion-{%s x.Project %}" type="checkbox" hidden />
+        <label for="accordion-{%s x.Project %}">
+          {%- code prj := p.Projects.Get(x.Project) -%}
           <em class="right">{%s x.Status %}{% if x.Error != "" %} (error){% endif %}</em>
-          {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef(x.Project.IconSafe(), 16, 16, "icon", ps) %}
-          {%s x.Project.Title() %}
+          {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef(prj.IconSafe(), 16, 16, "icon", ps) %}
+          {%s prj.Title() %}
           {%- if x.DataString("branch") != "" -%}
           <em>({%s x.DataString("branch") %})</em>
           {%- endif -%}
         </label>
         <div class="bd"><div><div>
           {%= statusActions(x, true) %}
-          {%= statusDetail(x.Project, x) %}
+          {%= statusDetail(x) %}
         </div></div></div>
       </li>
       {%- endfor -%}

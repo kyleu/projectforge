@@ -17,7 +17,7 @@ func (c *Column) ToGoString(prefix string) string {
 
 func (c *Column) ToGoViewString(prefix string, verbose bool, url bool, enums enum.Enums, src string) string {
 	prop := prefix + c.ProperDerived()
-	return ToGoViewString(c.Type, prop, c.Nullable, c.Format, verbose, url, enums, src)
+	return ToGoViewString(c.Type, prop, c.Nullable, c.Format, c.Display, verbose, url, enums, src)
 }
 
 func (c *Column) ToGoType(pkg string, enums enum.Enums) (string, error) {

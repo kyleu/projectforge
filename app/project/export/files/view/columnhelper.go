@@ -47,13 +47,9 @@ func viewColumn(
 	ind := util.StringRepeat(ind1, indent)
 	rels := m.RelationsFor(col)
 	if len(rels) == 0 {
-		viewString := col.ToGoViewString(modelKey, true, false, enums, key)
-		ret.W(colRow(ind, col, ModelLinkURL(m, modelKey, enums), viewString, link))
+		cv := col.ToGoViewString(modelKey, true, false, enums, key)
+		ret.W(colRow(ind, col, ModelLinkURL(m, modelKey, enums), cv, link))
 		return
-	}
-
-	if types.IsString(col.Type) {
-		g.AddImport(helper.ImpURL)
 	}
 
 	ret.W(ind + helper.TextTDStart)
@@ -61,7 +57,8 @@ func viewColumn(
 		cv := col.ToGoViewString(modelKey, true, false, enums, key)
 		ret.W(ind + linkStart + ModelLinkURL(m, modelKey, enums) + "\">" + cv + toStrings + helper.TextEndAnchor)
 	} else {
-		ret.W(ind + ind1 + col.ToGoViewString(modelKey, true, false, enums, key) + toStrings)
+		cv := col.ToGoViewString(modelKey, true, false, enums, key)
+		ret.W(ind + ind1 + cv + toStrings)
 	}
 
 	lo.ForEach(rels, func(rel *model.Relation, _ int) {
@@ -69,6 +66,8 @@ func viewColumn(
 			switch col.Type.Key() {
 			case types.KeyBool, types.KeyInt, types.KeyFloat:
 				g.AddImport(helper.ImpFmt)
+			case types.KeyString:
+				g.AddImport(helper.ImpURL)
 			}
 			relModel := models.Get(rel.Table)
 			icon := fmt.Sprintf("{%%%%= components.SVGLink(`%s`, ps) %%%%}", relModel.Icon)

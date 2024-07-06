@@ -8,12 +8,11 @@ import (
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
 
-	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func (s *Service) History(ctx context.Context, prj *project.Project, hist *HistoryResult, logger util.Logger) (*Result, error) {
-	err := gitHistory(ctx, prj.Path, hist, logger)
+func (s *Service) History(ctx context.Context, prj string, path string, hist *HistoryResult, logger util.Logger) (*Result, error) {
+	err := gitHistory(ctx, path, hist, logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to retrieve history")
 	}

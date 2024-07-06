@@ -6,12 +6,11 @@ import (
 
 	"github.com/pkg/errors"
 
-	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func (s *Service) Magic(ctx context.Context, prj *project.Project, message string, dryRun bool, logger util.Logger) (*Result, error) {
-	args, err := s.magicArgsFor(ctx, prj, message, dryRun, logger)
+func (s *Service) Magic(ctx context.Context, prj string, path string, message string, dryRun bool, logger util.Logger) (*Result, error) {
+	args, err := s.magicArgsFor(ctx, prj, path, message, dryRun, logger)
 	if err != nil {
 		return nil, err
 	}

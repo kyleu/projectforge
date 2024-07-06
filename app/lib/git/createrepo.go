@@ -5,12 +5,11 @@ import (
 
 	"github.com/pkg/errors"
 
-	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func (s *Service) CreateRepo(ctx context.Context, prj *project.Project, logger util.Logger) (*Result, error) {
-	err := gitCreateRepo(ctx, prj.Path, logger)
+func (s *Service) CreateRepo(ctx context.Context, prj string, path string, logger util.Logger) (*Result, error) {
+	err := gitCreateRepo(ctx, path, logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to create repo")
 	}

@@ -9,17 +9,16 @@ import (
 	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/lib/telemetry"
-	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func (s *Service) Outdated(ctx context.Context, prj *project.Project, logger util.Logger) (*Result, error) {
-	_, span, _ := telemetry.StartSpan(ctx, "git.outdated:"+prj.Key, logger)
+func (s *Service) Outdated(ctx context.Context, prj string, path string, logger util.Logger) (*Result, error) {
+	_, span, _ := telemetry.StartSpan(ctx, "git.outdated:"+prj, logger)
 	defer span.Complete()
 
 	data := make(util.ValueMap, 16)
 
-	tag, commitsAhead, err := gitOutdated(ctx, prj.Path, logger)
+	tag, commitsAhead, err := gitOutdated(ctx, path, logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to find git outdated commits")
 	}

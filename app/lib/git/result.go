@@ -5,20 +5,19 @@ import (
 
 	"github.com/samber/lo"
 
-	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )
 
 var ResultFields = []string{"Project", "Status", "Data", "Error"}
 
 type Result struct {
-	Project *project.Project `json:"-"`
-	Status  string           `json:"status"`
-	Data    util.ValueMap    `json:"data"`
-	Error   string           `json:"error"`
+	Project string        `json:"project"`
+	Status  string        `json:"status"`
+	Data    util.ValueMap `json:"data"`
+	Error   string        `json:"error"`
 }
 
-func NewResult(prj *project.Project, status string, data util.ValueMap) *Result {
+func NewResult(prj string, status string, data util.ValueMap) *Result {
 	return &Result{Project: prj, Status: status, Data: data}
 }
 
@@ -78,7 +77,7 @@ func (r *Result) DataStringArray(k string) []string {
 }
 
 func (r *Result) Strings() []string {
-	return []string{r.Project.Key, r.Status, r.Data.String(), r.Error}
+	return []string{r.Project, r.Status, r.Data.String(), r.Error}
 }
 
 func (r *Result) ToCSV() ([]string, [][]string) {
@@ -89,7 +88,7 @@ type Results []*Result
 
 func (r Results) Get(key string) *Result {
 	return lo.FindOrElse(r, nil, func(x *Result) bool {
-		return x.Project.Key == key
+		return x.Project == key
 	})
 }
 

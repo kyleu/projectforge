@@ -4,10 +4,10 @@ package app // import "projectforge.dev/projectforge/app"
 import (
 	"context"
 
+	"projectforge.dev/projectforge/app/lib/git"
 	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/project/export"
-	"projectforge.dev/projectforge/app/project/git"
 	"projectforge.dev/projectforge/app/util"
 )
 

@@ -5,14 +5,13 @@ import (
 
 	"github.com/pkg/errors"
 
-	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func (s *Service) magicArgsFor(ctx context.Context, prj *project.Project, message string, dryRun bool, logger util.Logger) (*magicArgs, error) {
-	statRet, err := s.Status(ctx, prj, logger)
+func (s *Service) magicArgsFor(ctx context.Context, prj string, path string, message string, dryRun bool, logger util.Logger) (*magicArgs, error) {
+	statRet, err := s.Status(ctx, prj, path, logger)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get status for project [%s]", prj.Key)
+		return nil, errors.Wrapf(err, "unable to get status for project [%s]", prj)
 	}
 	branch := statRet.DataString("branch")
 

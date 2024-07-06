@@ -5,7 +5,7 @@
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/project"
-  "projectforge.dev/projectforge/app/project/git"
+  "projectforge.dev/projectforge/app/lib/git"
   "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/layout"
@@ -15,10 +15,11 @@
   layout.Basic
   Action *git.Action
   Result *git.Result
+  Project *project.Project
 } %}
 
 {% func (p *Result) Body(as *app.State, ps *cutil.PageState) %}
-  {%- code prj := p.Result.Project -%}
+  {%- code prj := p.Project -%}
   <div class="card">
     <div class="right"><em>{%s p.Result.Status %}</em></div>
     <h3>
@@ -30,21 +31,20 @@
     <div class="mt">
       {%= statusActions(p.Result, false) %}
     </div>
-    {%= statusDetail(prj, p.Result) %}
+    {%= statusDetail(p.Result) %}
   </div>
 {% endfunc %}
 
 {% func statusActions(r *git.Result, showProject bool) %}
-  {%- code prj := r.Project -%}
   {%- if showProject -%}
-  <a href="/p/{%s prj.Key %}"><button>View Project</button></a>
+  <a href="/p/{%s r.Project %}"><button>View Project</button></a>
   {%- endif -%}
   {%- for _, t := range r.Actions() -%}
-  <a href="/git/{%s prj.Key %}/{%s t.Key %}" title="{%s t.Description %}"><button>{%s t.Title %}</button></a>
+  <a href="/git/{%s r.Project %}/{%s t.Key %}" title="{%s t.Description %}"><button>{%s t.Title %}</button></a>
   {%- endfor -%}
 {% endfunc %}
 
-{% func statusDetail(prj *project.Project, r *git.Result) %}
+{% func statusDetail(r *git.Result) %}
   <div class="overflow full-width">
     <table class="mt min-200">
       <tbody>
@@ -72,7 +72,7 @@
         <tr>
           <th class="shrink">Ahead By</th>
           <td>
-            <div class="right"><a href="/git/{%s prj.Key %}/push"><button>Push</button></a></div>
+            <div class="right"><a href="/git/{%s r.Project %}/push"><button>Push</button></a></div>
             {%s util.StringPlural(delta, "commit") %}
           </td>
         </tr>
@@ -81,7 +81,7 @@
         <tr>
           <th class="shrink">Behind By</th>
           <td>
-            <div class="right"><a href="/git/{%s prj.Key %}/pull"><button>Pull</button></a></div>
+            <div class="right"><a href="/git/{%s r.Project %}/pull"><button>Pull</button></a></div>
             {%s util.StringPlural(delta, "commit") %}
           </td>
         </tr>
@@ -108,7 +108,7 @@
           <td>
             {%- code dirt := r.DataStringArray("dirty") -%}
             {%- if len(dirt) > 0 -%}
-            <div class="right"><a href="/git/{%s prj.Key %}/commit"><button>Commit</button></a></div>
+            <div class="right"><a href="/git/{%s r.Project %}/commit"><button>Commit</button></a></div>
             <ul>
               {%- for _, d := range dirt -%}
               <li>{%s d %}</li>
