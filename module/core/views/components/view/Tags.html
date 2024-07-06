@@ -1,0 +1,9 @@
+{% func Tags(values []string) %}{% stripspace %}
+<div class="tag-editor">
+  <div class="tags">
+    {% for _, x := range values %}
+    <span class="item">{%s x %}</span>
+    {% endfor %}
+  </div>
+</div>
+{% endstripspace %}{% endfunc %}

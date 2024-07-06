@@ -42,7 +42,7 @@ func ToGoViewString(t *types.Wrapped, prop string, nullable bool, format string,
 		return listGoViewString(t, prop, src, enums)
 	case types.KeyMap, types.KeyValueMap, types.KeyReference:
 		if display == "summary" && src == "table" {
-			return jsonGoViewString(prop)
+			return tmplStartEQ + "view.MapKeys(" + prop + tmplEndP
 		}
 		if src == util.KeySimple {
 			return tmplStartV + prop + " %%}"

@@ -28,6 +28,14 @@
   {%- endif -%}
 {% endstripspace %}{% endfunc %}
 
+{% func MapKeys(m util.ValueMap) %}{% stripspace %}
+  {%- if m == nil || len(m) == 0 -%}
+  <em>no keys</em>
+  {%- else -%}
+  {%= Tags(m.Keys()) %}
+  {%- endif -%}
+{% endstripspace %}{% endfunc %}
+
 {% func MapArray(preserveWhitespace bool, ps *cutil.PageState, maps ...util.ValueMap) %}{% stripspace %}
   {%- if len(maps) == 0 -%}
   <em>no results</em>
