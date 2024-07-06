@@ -7,15 +7,15 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func (s *Service) Commit(ctx context.Context, prj string, path string, msg string, logger util.Logger) (*Result, error) {
-	if prj == "pftest" {
+func (s *Service) Commit(ctx context.Context, msg string, logger util.Logger) (*Result, error) {
+	if s.Key == "pftest" {
 		msg = "."
 	}
-	result, err := gitCommit(ctx, path, msg, logger)
+	result, err := gitCommit(ctx, s.Path, msg, logger)
 	if err != nil {
 		return nil, err
 	}
-	return NewResult(prj, ok, util.ValueMap{"commit": result, "commitMessage": msg}), nil
+	return NewResult(s.Key, ok, util.ValueMap{"commit": result, "commitMessage": msg}), nil
 }
 
 func gitCommit(ctx context.Context, path string, message string, logger util.Logger) (string, error) {

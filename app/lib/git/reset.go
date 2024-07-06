@@ -11,8 +11,8 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func (s *Service) Reset(ctx context.Context, prj string, path string, logger util.Logger) (*Result, error) {
-	x, err := gitReset(ctx, path, logger)
+func (s *Service) Reset(ctx context.Context, logger util.Logger) (*Result, error) {
+	x, err := gitReset(ctx, s.Path, logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to reset git repo")
 	}
@@ -26,7 +26,7 @@ func (s *Service) Reset(ctx context.Context, prj string, path string, logger uti
 		fetched = status
 	}
 
-	return NewResult(prj, status, util.ValueMap{"updates": fetched}), nil
+	return NewResult(s.Key, status, util.ValueMap{"updates": fetched}), nil
 }
 
 func gitReset(ctx context.Context, path string, logger util.Logger) (string, error) {

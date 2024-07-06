@@ -34,27 +34,27 @@ func GitActionAll(w http.ResponseWriter, r *http.Request) {
 		switch a {
 		case git.ActionStatus.Key, "":
 			results, err = gitAll(prjs, func(prj *project.Project) (*git.Result, error) {
-				return as.Services.Git.Status(ps.Context, prj.Key, prj.Path, ps.Logger)
+				return git.NewService(prj.Key, prj.Path).Status(ps.Context, ps.Logger)
 			})
 		case git.ActionFetch.Key:
 			results, err = gitAll(prjs, func(prj *project.Project) (*git.Result, error) {
-				return as.Services.Git.Fetch(ps.Context, prj.Key, prj.Path, ps.Logger)
+				return git.NewService(prj.Key, prj.Path).Fetch(ps.Context, ps.Logger)
 			})
 		case git.ActionPull.Key:
 			results, err = gitAll(prjs, func(prj *project.Project) (*git.Result, error) {
-				return as.Services.Git.Pull(ps.Context, prj.Key, prj.Path, ps.Logger)
+				return git.NewService(prj.Key, prj.Path).Pull(ps.Context, ps.Logger)
 			})
 		case git.ActionPush.Key:
 			results, err = gitAll(prjs, func(prj *project.Project) (*git.Result, error) {
-				return as.Services.Git.Push(ps.Context, prj.Key, prj.Path, ps.Logger)
+				return git.NewService(prj.Key, prj.Path).Push(ps.Context, ps.Logger)
 			})
 		case git.ActionReset.Key:
 			results, err = gitAll(prjs, func(prj *project.Project) (*git.Result, error) {
-				return as.Services.Git.Reset(ps.Context, prj.Key, prj.Path, ps.Logger)
+				return git.NewService(prj.Key, prj.Path).Reset(ps.Context, ps.Logger)
 			})
 		case git.ActionOutdated.Key:
 			results, err = gitAll(prjs, func(prj *project.Project) (*git.Result, error) {
-				return as.Services.Git.Outdated(ps.Context, prj.Key, prj.Path, ps.Logger)
+				return git.NewService(prj.Key, prj.Path).Outdated(ps.Context, ps.Logger)
 			})
 		case git.ActionHistory.Key:
 			argRes := cutil.CollectArgs(r, gitHistoryArgs)
@@ -79,7 +79,7 @@ func GitActionAll(w http.ResponseWriter, r *http.Request) {
 			results, err = gitMagicAll(prjs, r, as, ps)
 		case git.ActionUndoCommit.Key:
 			results, err = gitAll(prjs, func(prj *project.Project) (*git.Result, error) {
-				return as.Services.Git.UndoCommit(ps.Context, prj.Key, prj.Path, ps.Logger)
+				return git.NewService(prj.Key, prj.Path).UndoCommit(ps.Context, ps.Logger)
 			})
 		default:
 			err = errors.Errorf("unhandled action [%s] for all projects", a)
@@ -109,7 +109,7 @@ func gitHistoryAll(prjs project.Projects, r *http.Request, as *app.State, ps *cu
 	commit := r.URL.Query().Get("commit")
 	return gitAll(prjs, func(prj *project.Project) (*git.Result, error) {
 		hist := &git.HistoryResult{Path: path, Since: since, Authors: authors, Commit: commit, Limit: int(limit)}
-		return as.Services.Git.History(ps.Context, prj.Key, prj.Path, hist, ps.Logger)
+		return git.NewService(prj.Key, prj.Path).History(ps.Context, hist, ps.Logger)
 	})
 }
 
@@ -117,6 +117,6 @@ func gitMagicAll(prjs project.Projects, r *http.Request, as *app.State, ps *cuti
 	message := r.URL.Query().Get("message")
 	dryRun := cutil.QueryStringBool(r, "dryRun")
 	return gitAll(prjs, func(prj *project.Project) (*git.Result, error) {
-		return as.Services.Git.Magic(ps.Context, prj.Key, prj.Path, message, dryRun, ps.Logger)
+		return git.NewService(prj.Key, prj.Path).Magic(ps.Context, message, dryRun, ps.Logger)
 	})
 }

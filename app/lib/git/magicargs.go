@@ -8,10 +8,10 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func (s *Service) magicArgsFor(ctx context.Context, prj string, path string, message string, dryRun bool, logger util.Logger) (*magicArgs, error) {
-	statRet, err := s.Status(ctx, prj, path, logger)
+func (s *Service) magicArgsFor(ctx context.Context, message string, dryRun bool, logger util.Logger) (*magicArgs, error) {
+	statRet, err := s.Status(ctx, logger)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get status for project [%s]", prj)
+		return nil, errors.Wrapf(err, "unable to get status for project [%s]", s.Key)
 	}
 	branch := statRet.DataString("branch")
 
@@ -26,10 +26,10 @@ func (s *Service) magicArgsFor(ctx context.Context, prj string, path string, mes
 	ahead := statRet.DataInt("commitsAhead")
 	behind := statRet.DataInt("commitsBehind")
 
-	ret := NewResult(prj, "no changes needed", data)
+	ret := NewResult(s.Key, "no changes needed", data)
 
 	return &magicArgs{
-		Ctx: ctx, Prj: prj, Path: path, DryRun: dryRun, Dirty: dirtyCount, Ahead: ahead, Behind: behind,
+		Ctx: ctx, DryRun: dryRun, Dirty: dirtyCount, Ahead: ahead, Behind: behind,
 		Branch: branch, Message: message, Result: ret, Logger: logger,
 	}, nil
 }

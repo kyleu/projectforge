@@ -11,12 +11,12 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func (s *Service) History(ctx context.Context, prj string, path string, hist *HistoryResult, logger util.Logger) (*Result, error) {
-	err := gitHistory(ctx, path, hist, logger)
+func (s *Service) History(ctx context.Context, hist *HistoryResult, logger util.Logger) (*Result, error) {
+	err := gitHistory(ctx, s.Path, hist, logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to retrieve history")
 	}
-	return NewResult(prj, ok, util.ValueMap{"history": hist}), nil
+	return NewResult(s.Key, ok, util.ValueMap{"history": hist}), nil
 }
 
 const hFDelimit, hLDelimit = "»¦«", "»¦¦¦«"

@@ -9,8 +9,8 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func (s *Service) Magic(ctx context.Context, prj string, path string, message string, dryRun bool, logger util.Logger) (*Result, error) {
-	args, err := s.magicArgsFor(ctx, prj, path, message, dryRun, logger)
+func (s *Service) Magic(ctx context.Context, message string, dryRun bool, logger util.Logger) (*Result, error) {
+	args, err := s.magicArgsFor(ctx, message, dryRun, logger)
 	if err != nil {
 		return nil, err
 	}

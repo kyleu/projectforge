@@ -5,8 +5,11 @@ const (
 	noUpdates = "no updates"
 )
 
-type Service struct{}
+type Service struct {
+	Key  string `json:"key"`
+	Path string `json:"path,omitempty"`
+}
 
-func NewService() *Service {
-	return &Service{}
+func NewService(key string, path string) *Service {
+	return &Service{Key: key, Path: path}
 }

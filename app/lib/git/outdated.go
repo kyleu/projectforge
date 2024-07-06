@@ -12,13 +12,13 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func (s *Service) Outdated(ctx context.Context, prj string, path string, logger util.Logger) (*Result, error) {
-	_, span, _ := telemetry.StartSpan(ctx, "git.outdated:"+prj, logger)
+func (s *Service) Outdated(ctx context.Context, logger util.Logger) (*Result, error) {
+	_, span, _ := telemetry.StartSpan(ctx, "git.outdated:"+s.Key, logger)
 	defer span.Complete()
 
 	data := make(util.ValueMap, 16)
 
-	tag, commitsAhead, err := gitOutdated(ctx, path, logger)
+	tag, commitsAhead, err := gitOutdated(ctx, s.Path, logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to find git outdated commits")
 	}
@@ -30,7 +30,7 @@ func (s *Service) Outdated(ctx context.Context, prj string, path string, logger 
 	if commitsAhead > 0 {
 		status += fmt.Sprintf(" - %d commits ahead", commitsAhead)
 	}
-	return NewResult(prj, status, data), nil
+	return NewResult(s.Key, status, data), nil
 }
 
 func gitOutdated(ctx context.Context, path string, logger util.Logger) (string, int, error) {

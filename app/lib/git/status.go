@@ -12,13 +12,13 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func (s *Service) Status(ctx context.Context, prj string, path string, logger util.Logger) (*Result, error) {
-	_, span, _ := telemetry.StartSpan(ctx, "git.status:"+prj, logger)
+func (s *Service) Status(ctx context.Context, logger util.Logger) (*Result, error) {
+	_, span, _ := telemetry.StartSpan(ctx, "git.status:"+s.Key, logger)
 	defer span.Complete()
 
 	data := make(util.ValueMap, 16)
 
-	commitsAhead, commitsBehind, dirty, err := gitStatus(ctx, path, logger)
+	commitsAhead, commitsBehind, dirty, err := gitStatus(ctx, s.Path, logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to find git status")
 	}
@@ -29,7 +29,7 @@ func (s *Service) Status(ctx context.Context, prj string, path string, logger ut
 		data["commitsBehind"] = commitsBehind
 	}
 
-	data["branch"] = gitBranch(ctx, path, logger)
+	data["branch"] = gitBranch(ctx, s.Path, logger)
 	if len(dirty) > 0 {
 		data["dirty"] = dirty
 	}
@@ -37,7 +37,7 @@ func (s *Service) Status(ctx context.Context, prj string, path string, logger ut
 	if len(dirty) > 0 {
 		status = fmt.Sprintf("[%d] changes", len(dirty))
 	}
-	return NewResult(prj, status, data), nil
+	return NewResult(s.Key, status, data), nil
 }
 
 func gitStatus(ctx context.Context, path string, logger util.Logger) (int, int, []string, error) {

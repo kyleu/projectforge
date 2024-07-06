@@ -45,13 +45,14 @@ func GitAction(w http.ResponseWriter, r *http.Request) {
 		bc := []string{"projects", prj.Key, "Git**git"}
 		var result *git.Result
 		actn := git.ActionStatusFromString(a)
+		gs := git.NewService(prj.Key, prj.Path)
 		switch a {
 		case git.ActionStatus.Key, "":
 			// runs by default
 		case git.ActionCreateRepo.Key:
-			result, err = as.Services.Git.CreateRepo(ps.Context, prj.Key, prj.Path, ps.Logger)
+			result, err = gs.CreateRepo(ps.Context, ps.Logger)
 		case git.ActionFetch.Key:
-			result, err = as.Services.Git.Fetch(ps.Context, prj.Key, prj.Path, ps.Logger)
+			result, err = gs.Fetch(ps.Context, ps.Logger)
 		case git.ActionCommit.Key:
 			argRes := cutil.CollectArgs(r, gitCommitArgs)
 			if argRes.HasMissing() {
@@ -59,17 +60,17 @@ func GitAction(w http.ResponseWriter, r *http.Request) {
 				url := fmt.Sprintf("/git/%s/commit", prj.Key)
 				return controller.Render(r, as, &vpage.Args{URL: url, Directions: "Enter your commit message", ArgRes: argRes}, ps, bc...)
 			}
-			result, err = as.Services.Git.Commit(ps.Context, prj.Key, prj.Path, argRes.Values.GetStringOpt("message"), ps.Logger)
+			result, err = gs.Commit(ps.Context, argRes.Values.GetStringOpt("message"), ps.Logger)
 		case git.ActionUndoCommit.Key:
-			result, err = as.Services.Git.UndoCommit(ps.Context, prj.Key, prj.Path, ps.Logger)
+			result, err = gs.UndoCommit(ps.Context, ps.Logger)
 		case git.ActionPull.Key:
-			result, err = as.Services.Git.Pull(ps.Context, prj.Key, prj.Path, ps.Logger)
+			result, err = gs.Pull(ps.Context, ps.Logger)
 		case git.ActionPush.Key:
-			result, err = as.Services.Git.Push(ps.Context, prj.Key, prj.Path, ps.Logger)
+			result, err = gs.Push(ps.Context, ps.Logger)
 		case git.ActionReset.Key:
-			result, err = as.Services.Git.Reset(ps.Context, prj.Key, prj.Path, ps.Logger)
+			result, err = gs.Reset(ps.Context, ps.Logger)
 		case git.ActionOutdated.Key:
-			result, err = as.Services.Git.Outdated(ps.Context, prj.Key, prj.Path, ps.Logger)
+			result, err = gs.Outdated(ps.Context, ps.Logger)
 		case git.ActionHistory.Key:
 			argRes := cutil.CollectArgs(r, gitHistoryArgs)
 			if argRes.HasMissing() {
@@ -83,7 +84,7 @@ func GitAction(w http.ResponseWriter, r *http.Request) {
 			commit := r.URL.Query().Get("commit")
 			limit, _ := strconv.ParseInt(argRes.Values.GetStringOpt("limit"), 10, 32)
 			hist := &git.HistoryResult{Path: path, Since: since, Authors: authors, Commit: commit, Limit: int(limit)}
-			result, err = as.Services.Git.History(ps.Context, prj.Key, prj.Path, hist, ps.Logger)
+			result, err = gs.History(ps.Context, hist, ps.Logger)
 		case git.ActionBranch.Key:
 			argRes := cutil.CollectArgs(r, gitBranchArgs)
 			if argRes.HasMissing() {
@@ -91,7 +92,7 @@ func GitAction(w http.ResponseWriter, r *http.Request) {
 				ps.Data = argRes
 				return controller.Render(r, as, &vpage.Args{URL: url, Directions: "Enter your branch name", ArgRes: argRes}, ps, bc...)
 			}
-			result, err = as.Services.Git.Commit(ps.Context, prj.Key, prj.Path, argRes.Values.GetStringOpt("message"), ps.Logger)
+			result, err = gs.Commit(ps.Context, argRes.Values.GetStringOpt("message"), ps.Logger)
 		case git.ActionMagic.Key:
 			argRes := cutil.CollectArgs(r, gitMagicArgs)
 			if argRes.HasMissing() {
@@ -102,14 +103,14 @@ func GitAction(w http.ResponseWriter, r *http.Request) {
 				return controller.Render(r, as, page, ps, bc...)
 			}
 			dryRun := argRes.Values.GetStringOpt("dryRun") == util.BoolTrue
-			result, err = as.Services.Git.Magic(ps.Context, prj.Key, prj.Path, argRes.Values.GetStringOpt("message"), dryRun, ps.Logger)
+			result, err = gs.Magic(ps.Context, argRes.Values.GetStringOpt("message"), dryRun, ps.Logger)
 		default:
 			err = errors.Errorf("unhandled action [%s]", a)
 		}
 		if err != nil {
 			return "", err
 		}
-		statusResult, err := as.Services.Git.Status(ps.Context, prj.Key, prj.Path, ps.Logger)
+		statusResult, err := gs.Status(ps.Context, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to pull repo status")
 		}
@@ -120,6 +121,7 @@ func GitAction(w http.ResponseWriter, r *http.Request) {
 			result.Data = result.Data.Merge(statusResult.Data)
 		}
 		ps.Data = result
-		return controller.Render(r, as, &vgit.Result{Action: actn, Result: result, Project: prj}, ps, bc...)
+		page := &vgit.Result{Action: actn, Result: result, URL: prj.WebPath(), Title: prj.Title(), Icon: prj.IconSafe()}
+		return controller.Render(r, as, page, ps, bc...)
 	})
 }

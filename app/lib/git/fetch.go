@@ -11,8 +11,8 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func (s *Service) Fetch(ctx context.Context, prj string, path string, logger util.Logger) (*Result, error) {
-	x, err := gitFetch(ctx, path, true, logger)
+func (s *Service) Fetch(ctx context.Context, logger util.Logger) (*Result, error) {
+	x, err := gitFetch(ctx, s.Path, true, logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to fetch")
 	}
@@ -26,7 +26,7 @@ func (s *Service) Fetch(ctx context.Context, prj string, path string, logger uti
 		fetched = status
 	}
 
-	return NewResult(prj, status, util.ValueMap{"updates": fetched}), nil
+	return NewResult(s.Key, status, util.ValueMap{"updates": fetched}), nil
 }
 
 func gitFetch(ctx context.Context, path string, dryRun bool, logger util.Logger) (string, error) {

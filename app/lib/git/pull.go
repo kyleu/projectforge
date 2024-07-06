@@ -11,12 +11,12 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func (s *Service) Pull(ctx context.Context, prj string, path string, logger util.Logger) (*Result, error) {
-	_, err := gitFetch(ctx, path, false, logger)
+func (s *Service) Pull(ctx context.Context, logger util.Logger) (*Result, error) {
+	_, err := gitFetch(ctx, s.Path, false, logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to fetch for pull")
 	}
-	x, err := gitPull(ctx, path, logger)
+	x, err := gitPull(ctx, s.Path, logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to pull")
 	}
@@ -30,7 +30,7 @@ func (s *Service) Pull(ctx context.Context, prj string, path string, logger util
 		fetched = status
 	}
 
-	return NewResult(prj, status, util.ValueMap{"updates": fetched}), nil
+	return NewResult(s.Key, status, util.ValueMap{"updates": fetched}), nil
 }
 
 func gitPull(ctx context.Context, path string, logger util.Logger) (string, error) {

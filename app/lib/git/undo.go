@@ -7,13 +7,13 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func (s *Service) UndoCommit(ctx context.Context, prj string, path string, logger util.Logger) (*Result, error) {
-	result, err := gitResetSoft(ctx, path, logger)
+func (s *Service) UndoCommit(ctx context.Context, logger util.Logger) (*Result, error) {
+	result, err := gitResetSoft(ctx, s.Path, logger)
 	if err != nil {
 		return nil, err
 	}
 
-	return NewResult(prj, ok, util.ValueMap{"reset": result}), nil
+	return NewResult(s.Key, ok, util.ValueMap{"reset": result}), nil
 }
 
 func gitResetSoft(ctx context.Context, path string, logger util.Logger) (string, error) {

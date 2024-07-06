@@ -12,60 +12,60 @@ import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/git"
-	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/components"
 	"projectforge.dev/projectforge/views/layout"
 )
 
-//line views/vgit/Result.html:14
+//line views/vgit/Result.html:13
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vgit/Result.html:14
+//line views/vgit/Result.html:13
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vgit/Result.html:14
+//line views/vgit/Result.html:13
 type Result struct {
 	layout.Basic
-	Action  *git.Action
-	Result  *git.Result
-	Project *project.Project
+	Action *git.Action
+	Result *git.Result
+	URL    string
+	Title  string
+	Icon   string
 }
 
-//line views/vgit/Result.html:21
+//line views/vgit/Result.html:22
 func (p *Result) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vgit/Result.html:21
+//line views/vgit/Result.html:22
 	qw422016.N().S(`
-`)
-//line views/vgit/Result.html:22
-	prj := p.Project
-
-//line views/vgit/Result.html:22
-	qw422016.N().S(`  <div class="card">
+  <div class="card">
     <div class="right"><em>`)
 //line views/vgit/Result.html:24
 	qw422016.E().S(p.Result.Status)
 //line views/vgit/Result.html:24
 	qw422016.N().S(`</em></div>
     <h3>
-      <a href="/p/`)
+      <a href="`)
 //line views/vgit/Result.html:26
-	qw422016.E().S(prj.Key)
+	qw422016.E().S(p.URL)
 //line views/vgit/Result.html:26
 	qw422016.N().S(`">`)
 //line views/vgit/Result.html:26
-	components.StreamSVGIcon(qw422016, prj.IconSafe(), ps)
+	if p.Icon != "" {
 //line views/vgit/Result.html:26
-	qw422016.N().S(` `)
+		components.StreamSVGIcon(qw422016, p.Icon, ps)
 //line views/vgit/Result.html:26
-	qw422016.E().S(prj.Title())
+		qw422016.N().S(` `)
+//line views/vgit/Result.html:26
+	}
+//line views/vgit/Result.html:26
+	qw422016.E().S(p.Title)
 //line views/vgit/Result.html:26
 	qw422016.N().S(`</a>: Git `)
 //line views/vgit/Result.html:26

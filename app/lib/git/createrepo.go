@@ -8,12 +8,12 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func (s *Service) CreateRepo(ctx context.Context, prj string, path string, logger util.Logger) (*Result, error) {
-	err := gitCreateRepo(ctx, path, logger)
+func (s *Service) CreateRepo(ctx context.Context, logger util.Logger) (*Result, error) {
+	err := gitCreateRepo(ctx, s.Path, logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to create repo")
 	}
-	return NewResult(prj, ok, util.ValueMap{"repo": "created"}), nil
+	return NewResult(s.Key, ok, util.ValueMap{"repo": "created"}), nil
 }
 
 func gitCreateRepo(ctx context.Context, path string, logger util.Logger) error {

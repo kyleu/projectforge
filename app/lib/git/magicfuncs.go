@@ -10,8 +10,6 @@ import (
 
 type magicArgs struct {
 	Ctx     context.Context //nolint:containedctx
-	Prj     string
-	Path    string
 	DryRun  bool
 	Dirty   int
 	Ahead   int
@@ -25,7 +23,7 @@ type magicArgs struct {
 func (s *Service) magicCommit(a *magicArgs, add func(string, ...any)) error {
 	add("committing [%s] with message [%s]", util.StringPlural(a.Dirty, "file"), a.Message)
 	if !a.DryRun {
-		x, err := s.Commit(a.Ctx, a.Prj, a.Path, a.Message, a.Logger)
+		x, err := s.Commit(a.Ctx, a.Message, a.Logger)
 		if err != nil {
 			return errors.Wrap(err, "unable to commit")
 		}
@@ -37,7 +35,7 @@ func (s *Service) magicCommit(a *magicArgs, add func(string, ...any)) error {
 func (s *Service) magicPull(a *magicArgs, add func(string, ...any)) error {
 	add("pulling [%s] from [%s]", util.StringPlural(a.Behind, "commit"), a.Branch)
 	if !a.DryRun {
-		x, err := s.Pull(a.Ctx, a.Prj, a.Path, a.Logger)
+		x, err := s.Pull(a.Ctx, a.Logger)
 		if err != nil {
 			return errors.Wrap(err, "unable to pull")
 		}
@@ -49,7 +47,7 @@ func (s *Service) magicPull(a *magicArgs, add func(string, ...any)) error {
 func (s *Service) magicPush(a *magicArgs, count int, add func(string, ...any)) error {
 	add("pushing [%s] to [%s]", util.StringPlural(count, "commit"), a.Branch)
 	if !a.DryRun {
-		x, err := s.Push(a.Ctx, a.Prj, a.Path, a.Logger)
+		x, err := s.Push(a.Ctx, a.Logger)
 		if err != nil {
 			return errors.Wrap(err, "unable to push")
 		}
@@ -61,7 +59,7 @@ func (s *Service) magicPush(a *magicArgs, count int, add func(string, ...any)) e
 func (s *Service) magicStash(a *magicArgs, add func(string, ...any)) error {
 	add("stashing [%s]", util.StringPlural(a.Dirty, "file"))
 	if !a.DryRun {
-		_, err := s.gitStash(a.Ctx, a.Path, a.Logger)
+		_, err := s.gitStash(a.Ctx, s.Path, a.Logger)
 		if err != nil {
 			return errors.Wrap(err, "unable to apply stash")
 		}
@@ -73,7 +71,7 @@ func (s *Service) magicStash(a *magicArgs, add func(string, ...any)) error {
 func (s *Service) magicStashPop(a *magicArgs, add func(string, ...any)) error {
 	add("restoring [%s] from stash", util.StringPlural(a.Dirty, "file"))
 	if !a.DryRun {
-		_, err := s.gitStashPop(a.Ctx, a.Path, a.Logger)
+		_, err := s.gitStashPop(a.Ctx, s.Path, a.Logger)
 		if err != nil {
 			return errors.Wrap(err, "unable to pop stash")
 		}
