@@ -6,11 +6,12 @@
   "package": "projectforge.dev/projectforge",
   "port": 40000,
   "modules": [
-    "android",
     "core",
+    "android",
     "desktop",
     "docbrowse",
     "filesystem",
+    "git",
     "help",
     "ios",
     "jsx",

@@ -8,6 +8,7 @@ var techLookup = map[string][]string{
 	"cel":           {"CEL", "https://github.com/google/cel-spec"},
 	"coral":         {"Coral", "https://github.com/muesli/coral", "terminal"},
 	"gamut":         {"gamut", "https://github.com/muesli/gamut", "paintbrush"},
+	"git":           {"Git", "https://git-scm.com/"},
 	"go":            {"Golang", "https://go.dev"},
 	"gocron":        {"gocron", "https://github.com/go-co-op/gocron/v2", "hourglass"},
 	"goja":          {"goja", "https://github.com/dop251/goja", "code"},

@@ -58,6 +58,7 @@ A project managed by Project Forge...
 | [Export](module/export/doc/module/export.md)                     | Generates code based on the project's schema                                                   |
 | [Expression](module/expression/doc/module/expression.md)         | Exposes CEL engine for evaluating arbitrary expressions                                        |
 | [Filesystem](module/filesystem/doc/module/filesystem.md)         | Provides an abstraction around local and remote filesystems                                    |
+| [Git](module/graphql/doc/module/git.md)                          | Helper classes for performing operations on git repositories                                   |
 | [GraphQL](module/graphql/doc/module/graphql.md)                  | Supports GraphQL APIs within your application                                                  |
 | [Help](module/help/doc/module/help.md)                           | Provides Markdown help files that integrate into the UI                                        |
 | [HTTP Archive](module/har/doc/module/har.md)                     | Provides classes for parsing HTTP Archive (*.har) files                                        |

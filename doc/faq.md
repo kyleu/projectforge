@@ -41,6 +41,7 @@ All managed projects expose a web and CLI interface, and additional modules are 
 - `export`: Generates code based on the project's schema
 - `expression`: CEL engine for evaluating arbitrary expressions
 - `filesystem`: An abstraction around local and remote filesystems
+- `git`: Helper classes for performing operations on git repositories
 - `graphql`: Supports GraphQL APIs within your application
 - `har`: Utilities for working with HTTP Archive files
 - `help`: Markdown-backed help files that integrate into the UI
