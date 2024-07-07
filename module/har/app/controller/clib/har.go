@@ -64,18 +64,18 @@ func HarTrim(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		trimArgs := cutil.Args{
+		trimArgs := util.FieldDescs{
 			{Key: "url", Title: "URL", Description: "matches against the URL (add \"*\" on either side to match wildcards)", Type: "string"},
 			{Key: "mime", Title: "MIME", Description: "matches against the MIME type of the response", Type: "string", Choices: []string{"application/json"}},
 		}
-		argRes := cutil.CollectArgs(r, trimArgs)
-		if argRes.HasMissing() {
+		results := util.FieldDescsCollect(r, trimArgs)
+		if results.HasMissing() {
 			url := fmt.Sprintf("%s/trim", h.WebPath())
-			ps.Data = argRes
-			return controller.Render(r, as, &vpage.Args{URL: url, Directions: "Select the requests to trim", ArgRes: argRes}, ps, "har", h.Key, "Trim")
+			ps.Data = results
+			return controller.Render(r, as, &vpage.Args{URL: url, Directions: "Select the requests to trim", Results: results}, ps, "har", h.Key, "Trim")
 		}
 		originalCount := len(h.Entries)
-		h.Entries, err = h.Entries.Find(&har.Selector{URL: argRes.Values.GetStringOpt("url"), Mime: argRes.Values.GetStringOpt("mime")})
+		h.Entries, err = h.Entries.Find(&har.Selector{URL: results.Values.GetStringOpt("url"), Mime: results.Values.GetStringOpt("mime")})
 		if err != nil {
 			return "", err
 		}

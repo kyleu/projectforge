@@ -6,7 +6,6 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/pkg/errors"
 	"github.com/samber/lo"
 )
 
@@ -65,43 +64,5 @@ func (k KeyTypeDescs) Sort() KeyTypeDescs {
 func (k KeyTypeDescs) Array(key string) [][]string {
 	return lo.Map(k.Sort(), func(x *KeyTypeDesc, _ int) []string {
 		return x.Array(key)
-	})
-}
-
-type FieldDesc struct {
-	Key         string `json:"key"`
-	Title       string `json:"title"`
-	Description string `json:"description,omitempty"`
-	Type        string `json:"type,omitempty"`
-}
-
-func (d FieldDesc) Parse(q any) (any, error) {
-	switch d.Type {
-	case "bool":
-		return ParseBool(q, "", true)
-	case "int":
-		return ParseInt(q, "", true)
-	case "string", "":
-		return ParseString(q, "", true)
-	case "[]string":
-		return ParseArrayString(q, "", true)
-	case "time":
-		return ParseTime(q, "", true)
-	default:
-		return nil, errors.Errorf("unable to parse [%s] value from string [%s]", d.Type, q)
-	}
-}
-
-type FieldDescs []*FieldDesc
-
-func (d FieldDescs) Get(key string) *FieldDesc {
-	return lo.FindOrElse(d, nil, func(x *FieldDesc) bool {
-		return x.Key == key
-	})
-}
-
-func (d FieldDescs) Keys() []string {
-	return lo.Map(d, func(x *FieldDesc, _ int) string {
-		return x.Key
 	})
 }

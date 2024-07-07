@@ -12,10 +12,11 @@ import (
 	"projectforge.dev/projectforge/app/controller"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/vpage"
 )
 
-var changeDirArgs = cutil.Args{{Key: "dir", Title: "Directory", Description: "Filesystem directory to use as the main working directory"}}
+var changeDirArgs = util.FieldDescs{{Key: "dir", Title: "Directory", Description: "Filesystem directory to use as the main working directory"}}
 
 func ChangeDir(w http.ResponseWriter, r *http.Request) {
 	controller.Act("change.dir", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
@@ -23,14 +24,14 @@ func ChangeDir(w http.ResponseWriter, r *http.Request) {
 			return controller.FlashAndRedir(true, "Change directory not available on WASM", "/welcome?override=true", ps)
 		}
 		ps.HideMenu = true
-		argRes := cutil.CollectArgs(r, changeDirArgs)
+		argRes := util.FieldDescsCollect(r, changeDirArgs)
 		dir, err := argRes.Values.GetString("dir", false)
 		if err != nil || dir == "" || argRes.HasMissing() {
 			ps.Data = argRes
 			d, _ := filepath.Abs(".")
 			argRes.Values["dir"] = d
 			msg := "Choose the working directory to use for loading the main project"
-			return controller.Render(r, as, &vpage.Args{URL: "/welcome/changedir", Directions: msg, ArgRes: argRes}, ps, "Welcome")
+			return controller.Render(r, as, &vpage.Args{URL: "/welcome/changedir", Directions: msg, Results: argRes}, ps, "Welcome")
 		}
 
 		err = os.Chdir(dir)

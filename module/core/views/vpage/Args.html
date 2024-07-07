@@ -14,7 +14,7 @@
   layout.Basic
   URL string
   Directions string
-  ArgRes *cutil.ArgResults
+  Results *util.FieldDescResults
   Hidden map[string]string
   Warning string
 } %}
@@ -35,9 +35,9 @@
       <div class="overflow full-width">
         <table class="mt min-200 expanded">
           <tbody>
-            {%- for _, arg := range p.ArgRes.Args -%}
+            {%- for _, arg := range p.Results.FieldDescs -%}
             {%- code
-              v := util.OrDefault(p.ArgRes.Values.GetStringOpt(arg.Key), arg.Default)
+              v := util.OrDefault(p.Results.Values.GetStringOpt(arg.Key), arg.Default)
               title := arg.Title
               if len(title) > 50 {
                 title = title[:50] + "..."

@@ -35,7 +35,7 @@ type Args struct {
 	layout.Basic
 	URL        string
 	Directions string
-	ArgRes     *cutil.ArgResults
+	Results    *util.FieldDescResults
 	Hidden     map[string]string
 	Warning    string
 }
@@ -97,9 +97,9 @@ func (p *Args) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
           <tbody>
 `)
 //line views/vpage/Args.html:38
-	for _, arg := range p.ArgRes.Args {
+	for _, arg := range p.Results.FieldDescs {
 //line views/vpage/Args.html:40
-		v := util.OrDefault(p.ArgRes.Values.GetStringOpt(arg.Key), arg.Default)
+		v := util.OrDefault(p.Results.Values.GetStringOpt(arg.Key), arg.Default)
 		title := arg.Title
 		if len(title) > 50 {
 			title = title[:50] + "..."
