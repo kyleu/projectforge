@@ -133,53 +133,53 @@
   </div>
 {% endfunc %}
 
-{% func displayHistory(hist *git.HistoryResult) %}
-      {%- if hist.Since != nil -%}
+{% func displayHistory(res *git.HistoryResult) %}
+      {%- if res.Args.Since != nil -%}
       <tr>
         <th>Since</th>
-        <td>{%s util.TimeToFull(hist.Since) %}</td>
+        <td>{%s util.TimeToFull(res.Args.Since) %}</td>
       </tr>
       {%- endif -%}
-      {%- if len(hist.Authors) > 0 -%}
+      {%- if len(res.Args.Authors) > 0 -%}
       <tr>
         <th>Authors</th>
-        <td>{%s strings.Join(hist.Authors, ", ") %}</td>
+        <td>{%s strings.Join(res.Args.Authors, ", ") %}</td>
       </tr>
       {%- endif -%}
-      {%- if hist.Limit > 0 -%}
+      {%- if res.Args.Limit > 0 -%}
       <tr>
         <th>Limit</th>
-        <td>{%d hist.Limit %}</td>
+        <td>{%d res.Args.Limit %}</td>
       </tr>
       {%- endif -%}
-      {%- if len(hist.Entries) > 0 -%}
+      {%- if len(res.Entries) > 0 -%}
       <tr>
-        <th>Entries ({%d len(hist.Entries) %})</th>
+        <th>Entries ({%d len(res.Entries) %})</th>
         <td>
-          {%- for _, e := range hist.Entries -%}
-            {%= displayEntry(hist, e) %}
+          {%- for _, e := range res.Entries -%}
+            {%= displayEntry(res.Args, e) %}
           {%- endfor -%}
         </td>
       </tr>
       {%- endif -%}
 {% endfunc %}
 
-{% func displayEntry(hist *git.HistoryResult, e *git.HistoryEntry) %}
+{% func displayEntry(args *git.HistoryArgs, e *git.HistoryEntry) %}
   {%- code
-    u := "?path=" + hist.Path
-    if hist.Since != nil {
-      u += "&since=" + util.TimeToYMD(hist.Since)
+    u := "?path=" + args.Path
+    if args.Since != nil {
+      u += "&since=" + util.TimeToYMD(args.Since)
     }
-    if len(hist.Authors) > 0 {
-      u += "&authors=" + strings.Join(hist.Authors, ",")
+    if len(args.Authors) > 0 {
+      u += "&authors=" + strings.Join(args.Authors, ",")
     }
-    if hist.Limit > 0 {
-      u += "&limit=" + fmt.Sprint(hist.Limit)
+    if args.Limit > 0 {
+      u += "&limit=" + fmt.Sprint(args.Limit)
     }
     u += "&commit=" + e.SHA
   -%}
   <div class="card ml0">
-    <div class="right"><em>{%s util.TimeToFull(e.OccurredTime()) %}</em></div>
+    <div class="right"><em>{%s util.TimeToFull(&e.Occurred) %}</em></div>
     <h4><a href="{%s u %}">{%s e.SHA %}</a></h4>
     <div class="mt">{%s e.Message %}</div>
     <div class="mt">

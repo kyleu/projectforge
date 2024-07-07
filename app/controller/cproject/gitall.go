@@ -57,23 +57,23 @@ func GitActionAll(w http.ResponseWriter, r *http.Request) {
 				return git.NewService(prj.Key, prj.Path).Outdated(ps.Context, ps.Logger)
 			})
 		case git.ActionHistory.Key:
-			argRes := cutil.CollectArgs(r, gitHistoryArgs)
+			argRes := util.FieldDescsCollect(r, gitHistoryArgs)
 			if argRes.HasMissing() {
 				url := "/git/all/history"
 				ps.Data = argRes
 				hidden := map[string]string{"tags": strings.Join(tags, ",")}
-				page := &vpage.Args{URL: url, Directions: "Choose your options", ArgRes: argRes, Hidden: hidden}
+				page := &vpage.Args{URL: url, Directions: "Choose your options", Results: argRes, Hidden: hidden}
 				return controller.Render(r, as, page, ps, "projects", "Git**git")
 			}
 			results, err = gitHistoryAll(prjs, r, as, ps)
 		case git.ActionMagic.Key:
-			argRes := cutil.CollectArgs(r, gitMagicArgs)
+			argRes := util.FieldDescsCollect(r, gitMagicArgs)
 			if argRes.HasMissing() {
 				url := "/git/all/magic"
 				ps.Data = argRes
 				hidden := map[string]string{"tags": strings.Join(tags, ",")}
 				warning := "Are you sure you'd like to commit and push for all projects?"
-				page := &vpage.Args{URL: url, Directions: "Enter your commit message", ArgRes: argRes, Hidden: hidden, Warning: warning}
+				page := &vpage.Args{URL: url, Directions: "Enter your commit message", Results: argRes, Hidden: hidden, Warning: warning}
 				return controller.Render(r, as, page, ps, "projects", "Git**git")
 			}
 			results, err = gitMagicAll(prjs, r, as, ps)
@@ -108,8 +108,8 @@ func gitHistoryAll(prjs project.Projects, r *http.Request, as *app.State, ps *cu
 	limit, _ := strconv.ParseInt(r.URL.Query().Get("limit"), 10, 32)
 	commit := r.URL.Query().Get("commit")
 	return gitAll(prjs, func(prj *project.Project) (*git.Result, error) {
-		hist := &git.HistoryResult{Path: path, Since: since, Authors: authors, Commit: commit, Limit: int(limit)}
-		return git.NewService(prj.Key, prj.Path).History(ps.Context, hist, ps.Logger)
+		args := &git.HistoryArgs{Path: path, Since: since, Authors: authors, Commit: commit, Limit: int(limit)}
+		return git.NewService(prj.Key, prj.Path).History(ps.Context, args, ps.Logger)
 	})
 }
 

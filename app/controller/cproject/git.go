@@ -17,18 +17,18 @@ import (
 )
 
 var (
-	authorsArg = &cutil.Arg{Key: "authors", Title: "Authors", Description: "Limit to a set of author emails (comma-separated)"}
-	branchArg  = &cutil.Arg{Key: "name", Title: "Branch Name", Description: "The name to used for the new branch"}
-	dryRunArg  = &cutil.Arg{Key: "dryRun", Title: "Dry Run", Description: "Runs without any destructive operations", Type: "bool", Default: util.BoolTrue}
-	limitArg   = &cutil.Arg{Key: "limit", Title: "Limit", Description: "Limits the results to, at most, this amount", Type: "number", Default: "100"}
-	messageArg = &cutil.Arg{Key: "message", Title: "Message", Description: "The message to used for the commit"}
-	pathArg    = &cutil.Arg{Key: "path", Title: "Path", Description: "Limits the results to the provided path (leave blank for all)"}
-	sinceArg   = &cutil.Arg{Key: "since", Title: "Since", Description: "Limit to a date range", Type: "datetime"}
+	authorsArg = &util.FieldDesc{Key: "authors", Title: "Authors", Description: "Limit to a set of author emails (comma-separated)"}
+	branchArg  = &util.FieldDesc{Key: "name", Title: "Branch Name", Description: "The name to used for the new branch"}
+	dryRunArg  = &util.FieldDesc{Key: "dryRun", Title: "Dry Run", Description: "Runs without any destructive operations", Type: "bool", Default: util.BoolTrue}
+	limitArg   = &util.FieldDesc{Key: "limit", Title: "Limit", Description: "Limits the results to, at most, this amount", Type: "number", Default: "100"}
+	messageArg = &util.FieldDesc{Key: "message", Title: "Message", Description: "The message to used for the commit"}
+	pathArg    = &util.FieldDesc{Key: "path", Title: "Path", Description: "Limits the results to the provided path (leave blank for all)"}
+	sinceArg   = &util.FieldDesc{Key: "since", Title: "Since", Description: "Limit to a date range", Type: "datetime"}
 
-	gitBranchArgs  = cutil.Args{branchArg}
-	gitCommitArgs  = cutil.Args{messageArg}
-	gitHistoryArgs = cutil.Args{pathArg, sinceArg, authorsArg, limitArg}
-	gitMagicArgs   = cutil.Args{messageArg, dryRunArg}
+	gitBranchArgs  = util.FieldDescs{branchArg}
+	gitCommitArgs  = util.FieldDescs{messageArg}
+	gitHistoryArgs = util.FieldDescs{pathArg, sinceArg, authorsArg, limitArg}
+	gitMagicArgs   = util.FieldDescs{messageArg, dryRunArg}
 )
 
 func GitAction(w http.ResponseWriter, r *http.Request) {
@@ -54,11 +54,11 @@ func GitAction(w http.ResponseWriter, r *http.Request) {
 		case git.ActionFetch.Key:
 			result, err = gs.Fetch(ps.Context, ps.Logger)
 		case git.ActionCommit.Key:
-			argRes := cutil.CollectArgs(r, gitCommitArgs)
+			argRes := util.FieldDescsCollect(r, gitCommitArgs)
 			if argRes.HasMissing() {
 				ps.Data = argRes
 				url := fmt.Sprintf("/git/%s/commit", prj.Key)
-				return controller.Render(r, as, &vpage.Args{URL: url, Directions: "Enter your commit message", ArgRes: argRes}, ps, bc...)
+				return controller.Render(r, as, &vpage.Args{URL: url, Directions: "Enter your commit message", Results: argRes}, ps, bc...)
 			}
 			result, err = gs.Commit(ps.Context, argRes.Values.GetStringOpt("message"), ps.Logger)
 		case git.ActionUndoCommit.Key:
@@ -72,34 +72,34 @@ func GitAction(w http.ResponseWriter, r *http.Request) {
 		case git.ActionOutdated.Key:
 			result, err = gs.Outdated(ps.Context, ps.Logger)
 		case git.ActionHistory.Key:
-			argRes := cutil.CollectArgs(r, gitHistoryArgs)
+			argRes := util.FieldDescsCollect(r, gitHistoryArgs)
 			if argRes.HasMissing() {
 				ps.Data = argRes
 				url := fmt.Sprintf("/git/%s/history", prj.Key)
-				return controller.Render(r, as, &vpage.Args{URL: url, Directions: "Choose your options", ArgRes: argRes}, ps, bc...)
+				return controller.Render(r, as, &vpage.Args{URL: url, Directions: "Choose your options", Results: argRes}, ps, bc...)
 			}
 			path := argRes.Values.GetStringOpt("paths")
 			since, _ := util.TimeFromString(argRes.Values.GetStringOpt("since"))
 			authors := util.StringSplitAndTrim(argRes.Values.GetStringOpt("authors"), ",")
 			commit := r.URL.Query().Get("commit")
 			limit, _ := strconv.ParseInt(argRes.Values.GetStringOpt("limit"), 10, 32)
-			hist := &git.HistoryResult{Path: path, Since: since, Authors: authors, Commit: commit, Limit: int(limit)}
-			result, err = gs.History(ps.Context, hist, ps.Logger)
+			args := &git.HistoryArgs{Path: path, Since: since, Authors: authors, Commit: commit, Limit: int(limit)}
+			result, err = gs.History(ps.Context, args, ps.Logger)
 		case git.ActionBranch.Key:
-			argRes := cutil.CollectArgs(r, gitBranchArgs)
+			argRes := util.FieldDescsCollect(r, gitBranchArgs)
 			if argRes.HasMissing() {
 				url := fmt.Sprintf("/git/%s/branch", prj.Key)
 				ps.Data = argRes
-				return controller.Render(r, as, &vpage.Args{URL: url, Directions: "Enter your branch name", ArgRes: argRes}, ps, bc...)
+				return controller.Render(r, as, &vpage.Args{URL: url, Directions: "Enter your branch name", Results: argRes}, ps, bc...)
 			}
 			result, err = gs.Commit(ps.Context, argRes.Values.GetStringOpt("message"), ps.Logger)
 		case git.ActionMagic.Key:
-			argRes := cutil.CollectArgs(r, gitMagicArgs)
+			argRes := util.FieldDescsCollect(r, gitMagicArgs)
 			if argRes.HasMissing() {
 				url := fmt.Sprintf("/git/%s/magic", prj.Key)
 				ps.Data = argRes
 				warning := "Are you sure you'd like to commit and push?"
-				page := &vpage.Args{URL: url, Directions: "Enter your commit message", ArgRes: argRes, Warning: warning}
+				page := &vpage.Args{URL: url, Directions: "Enter your commit message", Results: argRes, Warning: warning}
 				return controller.Render(r, as, page, ps, bc...)
 			}
 			dryRun := argRes.Values.GetStringOpt("dryRun") == util.BoolTrue

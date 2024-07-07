@@ -38,3 +38,22 @@ func ActionStatusFromString(key string) *Action {
 		return act.Key == key
 	})
 }
+
+func (r *Result) Actions() Actions {
+	ret := Actions{ActionStatus}
+	if r.Status == "no repo" {
+		return append(ret, ActionCreateRepo)
+	}
+	ret = append(ret, ActionFetch)
+	if dirty := r.DataStringArray("dirty"); len(dirty) > 0 {
+		ret = append(ret, ActionCommit)
+	}
+	if r.DataInt("commitsAhead") > 0 {
+		ret = append(ret, ActionPush)
+	}
+	if r.DataInt("commitsBehind") > 0 {
+		ret = append(ret, ActionPull)
+	}
+	ret = append(ret, ActionReset, ActionUndoCommit, ActionMagic, ActionHistory)
+	return ret
+}

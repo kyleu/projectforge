@@ -428,18 +428,18 @@ func statusDetail(r *git.Result) string {
 }
 
 //line views/vgit/Result.html:136
-func streamdisplayHistory(qw422016 *qt422016.Writer, hist *git.HistoryResult) {
+func streamdisplayHistory(qw422016 *qt422016.Writer, res *git.HistoryResult) {
 //line views/vgit/Result.html:136
 	qw422016.N().S(`
 `)
 //line views/vgit/Result.html:137
-	if hist.Since != nil {
+	if res.Args.Since != nil {
 //line views/vgit/Result.html:137
 		qw422016.N().S(`      <tr>
         <th>Since</th>
         <td>`)
 //line views/vgit/Result.html:140
-		qw422016.E().S(util.TimeToFull(hist.Since))
+		qw422016.E().S(util.TimeToFull(res.Args.Since))
 //line views/vgit/Result.html:140
 		qw422016.N().S(`</td>
       </tr>
@@ -447,13 +447,13 @@ func streamdisplayHistory(qw422016 *qt422016.Writer, hist *git.HistoryResult) {
 //line views/vgit/Result.html:142
 	}
 //line views/vgit/Result.html:143
-	if len(hist.Authors) > 0 {
+	if len(res.Args.Authors) > 0 {
 //line views/vgit/Result.html:143
 		qw422016.N().S(`      <tr>
         <th>Authors</th>
         <td>`)
 //line views/vgit/Result.html:146
-		qw422016.E().S(strings.Join(hist.Authors, ", "))
+		qw422016.E().S(strings.Join(res.Args.Authors, ", "))
 //line views/vgit/Result.html:146
 		qw422016.N().S(`</td>
       </tr>
@@ -461,13 +461,13 @@ func streamdisplayHistory(qw422016 *qt422016.Writer, hist *git.HistoryResult) {
 //line views/vgit/Result.html:148
 	}
 //line views/vgit/Result.html:149
-	if hist.Limit > 0 {
+	if res.Args.Limit > 0 {
 //line views/vgit/Result.html:149
 		qw422016.N().S(`      <tr>
         <th>Limit</th>
         <td>`)
 //line views/vgit/Result.html:152
-		qw422016.N().D(hist.Limit)
+		qw422016.N().D(res.Args.Limit)
 //line views/vgit/Result.html:152
 		qw422016.N().S(`</td>
       </tr>
@@ -475,22 +475,22 @@ func streamdisplayHistory(qw422016 *qt422016.Writer, hist *git.HistoryResult) {
 //line views/vgit/Result.html:154
 	}
 //line views/vgit/Result.html:155
-	if len(hist.Entries) > 0 {
+	if len(res.Entries) > 0 {
 //line views/vgit/Result.html:155
 		qw422016.N().S(`      <tr>
         <th>Entries (`)
 //line views/vgit/Result.html:157
-		qw422016.N().D(len(hist.Entries))
+		qw422016.N().D(len(res.Entries))
 //line views/vgit/Result.html:157
 		qw422016.N().S(`)</th>
         <td>
 `)
 //line views/vgit/Result.html:159
-		for _, e := range hist.Entries {
+		for _, e := range res.Entries {
 //line views/vgit/Result.html:159
 			qw422016.N().S(`            `)
 //line views/vgit/Result.html:160
-			streamdisplayEntry(qw422016, hist, e)
+			streamdisplayEntry(qw422016, res.Args, e)
 //line views/vgit/Result.html:160
 			qw422016.N().S(`
 `)
@@ -506,22 +506,22 @@ func streamdisplayHistory(qw422016 *qt422016.Writer, hist *git.HistoryResult) {
 }
 
 //line views/vgit/Result.html:165
-func writedisplayHistory(qq422016 qtio422016.Writer, hist *git.HistoryResult) {
+func writedisplayHistory(qq422016 qtio422016.Writer, res *git.HistoryResult) {
 //line views/vgit/Result.html:165
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vgit/Result.html:165
-	streamdisplayHistory(qw422016, hist)
+	streamdisplayHistory(qw422016, res)
 //line views/vgit/Result.html:165
 	qt422016.ReleaseWriter(qw422016)
 //line views/vgit/Result.html:165
 }
 
 //line views/vgit/Result.html:165
-func displayHistory(hist *git.HistoryResult) string {
+func displayHistory(res *git.HistoryResult) string {
 //line views/vgit/Result.html:165
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vgit/Result.html:165
-	writedisplayHistory(qb422016, hist)
+	writedisplayHistory(qb422016, res)
 //line views/vgit/Result.html:165
 	qs422016 := string(qb422016.B)
 //line views/vgit/Result.html:165
@@ -532,20 +532,20 @@ func displayHistory(hist *git.HistoryResult) string {
 }
 
 //line views/vgit/Result.html:167
-func streamdisplayEntry(qw422016 *qt422016.Writer, hist *git.HistoryResult, e *git.HistoryEntry) {
+func streamdisplayEntry(qw422016 *qt422016.Writer, args *git.HistoryArgs, e *git.HistoryEntry) {
 //line views/vgit/Result.html:167
 	qw422016.N().S(`
 `)
 //line views/vgit/Result.html:169
-	u := "?path=" + hist.Path
-	if hist.Since != nil {
-		u += "&since=" + util.TimeToYMD(hist.Since)
+	u := "?path=" + args.Path
+	if args.Since != nil {
+		u += "&since=" + util.TimeToYMD(args.Since)
 	}
-	if len(hist.Authors) > 0 {
-		u += "&authors=" + strings.Join(hist.Authors, ",")
+	if len(args.Authors) > 0 {
+		u += "&authors=" + strings.Join(args.Authors, ",")
 	}
-	if hist.Limit > 0 {
-		u += "&limit=" + fmt.Sprint(hist.Limit)
+	if args.Limit > 0 {
+		u += "&limit=" + fmt.Sprint(args.Limit)
 	}
 	u += "&commit=" + e.SHA
 
@@ -553,7 +553,7 @@ func streamdisplayEntry(qw422016 *qt422016.Writer, hist *git.HistoryResult, e *g
 	qw422016.N().S(`  <div class="card ml0">
     <div class="right"><em>`)
 //line views/vgit/Result.html:182
-	qw422016.E().S(util.TimeToFull(e.OccurredTime()))
+	qw422016.E().S(util.TimeToFull(&e.Occurred))
 //line views/vgit/Result.html:182
 	qw422016.N().S(`</em></div>
     <h4><a href="`)
@@ -636,22 +636,22 @@ func streamdisplayEntry(qw422016 *qt422016.Writer, hist *git.HistoryResult, e *g
 }
 
 //line views/vgit/Result.html:202
-func writedisplayEntry(qq422016 qtio422016.Writer, hist *git.HistoryResult, e *git.HistoryEntry) {
+func writedisplayEntry(qq422016 qtio422016.Writer, args *git.HistoryArgs, e *git.HistoryEntry) {
 //line views/vgit/Result.html:202
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vgit/Result.html:202
-	streamdisplayEntry(qw422016, hist, e)
+	streamdisplayEntry(qw422016, args, e)
 //line views/vgit/Result.html:202
 	qt422016.ReleaseWriter(qw422016)
 //line views/vgit/Result.html:202
 }
 
 //line views/vgit/Result.html:202
-func displayEntry(hist *git.HistoryResult, e *git.HistoryEntry) string {
+func displayEntry(args *git.HistoryArgs, e *git.HistoryEntry) string {
 //line views/vgit/Result.html:202
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vgit/Result.html:202
-	writedisplayEntry(qb422016, hist, e)
+	writedisplayEntry(qb422016, args, e)
 //line views/vgit/Result.html:202
 	qs422016 := string(qb422016.B)
 //line views/vgit/Result.html:202
