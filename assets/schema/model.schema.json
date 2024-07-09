@@ -152,7 +152,7 @@
         },
         "format": {
           "description": "used for strings, controls output format in UI",
-          "enum": ["code", "codehidden", "color","country", "html", "icon", "image", "json", "linebreaks", "seconds", "select", "si", "sql", "tags", "url"]
+          "enum": ["code", "codehidden", "color", "country", "html", "icon", "image", "json", "linebreaks", "seconds", "select", "si", "sql", "tags", "url"]
         },
         "example": {
           "description": "default example value to use when editing",
