@@ -24,7 +24,11 @@ const hFDelimit, hLDelimit = "»¦«", "»¦¦¦«"
 var historyFormat = fmt.Sprintf("%%H%s%%an%s%%ae%s%%cd%s%%B%s", hFDelimit, hFDelimit, hFDelimit, hFDelimit, hLDelimit)
 
 func gitHistory(ctx context.Context, path string, args *HistoryArgs, logger util.Logger) (*HistoryResult, error) {
-	cmd := "log --pretty=format:" + historyFormat
+	cmd := "log"
+	if args.Commit != "" {
+		cmd += fmt.Sprintf(" %v...HEAD", args.Commit)
+	}
+	cmd += " --pretty=format:" + historyFormat
 	if args.Since != nil {
 		cmd += fmt.Sprintf(" --since %v", args.Since)
 	}

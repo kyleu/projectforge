@@ -44,3 +44,13 @@ func UUIDP() *uuid.UUID {
 	ret := UUID()
 	return &ret
 }
+
+func UUIDV7() uuid.UUID {
+	ret, _ := uuid.NewV7()
+	return ret
+}
+
+func UUIDV7P() *uuid.UUID {
+	ret := UUIDV7()
+	return &ret
+}
