@@ -46,4 +46,14 @@ type HistoryFile struct {
 	File   string
 }
 
+func (h *HistoryFile) String() string {
+	return h.File
+}
+
 type HistoryFiles []*HistoryFile
+
+func (h HistoryFiles) Strings() []string {
+	return lo.Map(h, func(x *HistoryFile, _ int) string {
+		return x.String()
+	})
+}
