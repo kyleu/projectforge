@@ -76,11 +76,14 @@
   {%- if len(files) == 0 -%}
   <p><em>No files available</em></p>
   {%- else -%}
-  <ul>
+  <table class="min-200">
     {%- for _, extKey := range util.ArraySorted(lo.Keys(exts)) -%}
-    <li><a href="?ext={%s extKey %}{% if len(pth) > 0 %}&pth={%u strings.Join(pth, `/`) %}{% endif %}">{%s extKey %}</a>: {%d exts[extKey] %}</li>
+    <tr>
+      <td class="shrink"><a href="?ext={%s extKey %}{% if len(pth) > 0 %}&pth={%u strings.Join(pth, `/`) %}{% endif %}">{%s extKey %}</a></td>
+      <td>{%d exts[extKey] %}</td>
+    </tr>
     {%- endfor -%}
-  </ul>
+  </table>
   {%- endif -%}
 {% endfunc %}
 

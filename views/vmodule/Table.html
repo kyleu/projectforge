@@ -25,7 +25,10 @@
         <tbody>
           {%- for _, mod := range mods -%}
           <tr>
-            <td class="shrink"><a href="/m/{%s mod.Key %}">{%= components.SVGRef(mod.IconSafe(), 16, 16, "icon", ps) %} {%s mod.Title() %}</a></td>
+            <td class="shrink">
+              <a href="/m/{%s mod.Key %}">{%= components.SVGRef(mod.IconSafe(), 16, 16, "icon", ps) %}</a>
+              <a href="/m/{%s mod.Key %}">{%s mod.Title() %}</a>
+            </td>
             <td>{%s mod.Description %}</td>
           </tr>
           {%- endfor -%}

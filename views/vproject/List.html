@@ -4,6 +4,7 @@
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/lib/exec"
   "projectforge.dev/projectforge/app/project"
+  "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/layout"
 ) %}
 
@@ -19,5 +20,17 @@
   <div class="card">
     {%= AvailActions("", p.Tags, p.Projects.Tags(), p.Icon, ps) %}
   </div>
-  {%= Table(p.Projects, p.Tags, true, p.Execs, as, ps) %}
+  {%- for _, prj := range p.Projects -%}
+  {%= ListItem(prj, ps) %}
+  {%- endfor -%}
+{% endfunc %}
+
+{% func ListItem(prj *project.Project, ps *cutil.PageState) %}
+  <a class="link-section" href="{%s prj.WebPath() %}" title="{%s prj.DescriptionSafe() %}">
+    <div class="card">
+      <div class="left mrs">{%= components.SVGRef(prj.IconSafe(), 40, 40, "", ps) %}</div>
+      <strong class="highlight">{%s prj.Title() %}</strong>
+      <div><em>{%s prj.Package %}</em></div>
+    </div>
+  </a>
 {% endfunc %}

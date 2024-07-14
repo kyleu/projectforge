@@ -75,59 +75,66 @@ func StreamTable(qw422016 *qt422016.Writer, mods module.Modules, full bool, dir 
 	for _, mod := range mods {
 //line views/vmodule/Table.html:26
 		qw422016.N().S(`          <tr>
-            <td class="shrink"><a href="/m/`)
-//line views/vmodule/Table.html:28
+            <td class="shrink">
+              <a href="/m/`)
+//line views/vmodule/Table.html:29
 		qw422016.E().S(mod.Key)
-//line views/vmodule/Table.html:28
+//line views/vmodule/Table.html:29
 		qw422016.N().S(`">`)
-//line views/vmodule/Table.html:28
+//line views/vmodule/Table.html:29
 		components.StreamSVGRef(qw422016, mod.IconSafe(), 16, 16, "icon", ps)
-//line views/vmodule/Table.html:28
-		qw422016.N().S(` `)
-//line views/vmodule/Table.html:28
+//line views/vmodule/Table.html:29
+		qw422016.N().S(`</a>
+              <a href="/m/`)
+//line views/vmodule/Table.html:30
+		qw422016.E().S(mod.Key)
+//line views/vmodule/Table.html:30
+		qw422016.N().S(`">`)
+//line views/vmodule/Table.html:30
 		qw422016.E().S(mod.Title())
-//line views/vmodule/Table.html:28
-		qw422016.N().S(`</a></td>
+//line views/vmodule/Table.html:30
+		qw422016.N().S(`</a>
+            </td>
             <td>`)
-//line views/vmodule/Table.html:29
+//line views/vmodule/Table.html:32
 		qw422016.E().S(mod.Description)
-//line views/vmodule/Table.html:29
+//line views/vmodule/Table.html:32
 		qw422016.N().S(`</td>
           </tr>
 `)
-//line views/vmodule/Table.html:31
+//line views/vmodule/Table.html:34
 	}
-//line views/vmodule/Table.html:31
+//line views/vmodule/Table.html:34
 	qw422016.N().S(`        </tbody>
       </table>
     </div>
   </div>
 `)
-//line views/vmodule/Table.html:36
+//line views/vmodule/Table.html:39
 }
 
-//line views/vmodule/Table.html:36
+//line views/vmodule/Table.html:39
 func WriteTable(qq422016 qtio422016.Writer, mods module.Modules, full bool, dir string, as *app.State, ps *cutil.PageState) {
-//line views/vmodule/Table.html:36
+//line views/vmodule/Table.html:39
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vmodule/Table.html:36
+//line views/vmodule/Table.html:39
 	StreamTable(qw422016, mods, full, dir, as, ps)
-//line views/vmodule/Table.html:36
+//line views/vmodule/Table.html:39
 	qt422016.ReleaseWriter(qw422016)
-//line views/vmodule/Table.html:36
+//line views/vmodule/Table.html:39
 }
 
-//line views/vmodule/Table.html:36
+//line views/vmodule/Table.html:39
 func Table(mods module.Modules, full bool, dir string, as *app.State, ps *cutil.PageState) string {
-//line views/vmodule/Table.html:36
+//line views/vmodule/Table.html:39
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vmodule/Table.html:36
+//line views/vmodule/Table.html:39
 	WriteTable(qb422016, mods, full, dir, as, ps)
-//line views/vmodule/Table.html:36
+//line views/vmodule/Table.html:39
 	qs422016 := string(qb422016.B)
-//line views/vmodule/Table.html:36
+//line views/vmodule/Table.html:39
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vmodule/Table.html:36
+//line views/vmodule/Table.html:39
 	return qs422016
-//line views/vmodule/Table.html:36
+//line views/vmodule/Table.html:39
 }

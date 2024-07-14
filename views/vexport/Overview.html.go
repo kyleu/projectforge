@@ -112,7 +112,7 @@ func (p *Overview) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vexport/Overview.html:40
 	qw422016.N().S(`/export/enums/create/new"><button>`)
 //line views/vexport/Overview.html:40
-	components.StreamSVGButton(qw422016, "file", ps)
+	components.StreamSVGButton(qw422016, "plus", ps)
 //line views/vexport/Overview.html:40
 	qw422016.N().S(` New</button></a>
     </div>
@@ -161,7 +161,7 @@ func (p *Overview) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vexport/Overview.html:52
 	qw422016.N().S(`/export/models/create/new"><button>`)
 //line views/vexport/Overview.html:52
-	components.StreamSVGButton(qw422016, "file", ps)
+	components.StreamSVGButton(qw422016, "plus", ps)
 //line views/vexport/Overview.html:52
 	qw422016.N().S(` New</button></a>
     </div>

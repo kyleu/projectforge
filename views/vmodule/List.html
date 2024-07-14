@@ -21,14 +21,7 @@
     <h3>{%= components.SVGIcon(`archive`, ps) %} {%s util.StringPlural(len(p.Modules), "Available Module") %}</h3>
   </div>
   {%- for _, mod := range p.Modules -%}
-  <a class="link-section" href="/m/{%s mod.Key %}">
-    <div class="card">
-      {%= ModuleTechList(mod, ps) %}
-      <div class="left mrs">{%= components.SVGRef(mod.IconSafe(), 40, 40, "", ps) %}</div>
-      <strong class="highlight">{%s mod.Title() %}</strong>
-      <div><em>{%s mod.Description %}</em></div>
-    </div>
-  </a>
+  {%= ListItem(mod, ps) %}
   {%- endfor -%}
 {% endfunc %}
 
@@ -45,4 +38,15 @@
     {%= icon("go", ps) %}
     {%= icon("projectforge", ps) %}
   </div>
+{% endfunc %}
+
+{% func ListItem(mod *module.Module, ps *cutil.PageState) %}
+  <a class="link-section" href="/m/{%s mod.Key %}">
+    <div class="card">
+      {%= ModuleTechList(mod, ps) %}
+      <div class="left mrs">{%= components.SVGRef(mod.IconSafe(), 40, 40, "", ps) %}</div>
+      <strong class="highlight">{%s mod.Title() %}</strong>
+      <div><em>{%s mod.Description %}</em></div>
+    </div>
+  </a>
 {% endfunc %}

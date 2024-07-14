@@ -36,7 +36,7 @@ func StreamTable(qw422016 *qt422016.Writer, prjs project.Projects, tags []string
   <div class="card">
     <div class="right"><a href="/p/new"><button>`)
 //line views/vproject/Table.html:14
-	components.StreamSVGButton(qw422016, "file", ps)
+	components.StreamSVGButton(qw422016, "plus", ps)
 //line views/vproject/Table.html:14
 	qw422016.N().S(` New</button></a></div>
     <h3><a href="/p">`)
@@ -117,17 +117,21 @@ func StreamTable(qw422016 *qt422016.Writer, prjs project.Projects, tags []string
 	for _, prj := range prjs {
 //line views/vproject/Table.html:34
 		qw422016.N().S(`          <tr>
-            <td class="shrink"><a href="/p/`)
-//line views/vproject/Table.html:36
+            <td class="shrink">
+              <a href="/p/`)
+//line views/vproject/Table.html:37
 		qw422016.E().S(prj.Key)
-//line views/vproject/Table.html:36
-		qw422016.N().S(`">
-              `)
+//line views/vproject/Table.html:37
+		qw422016.N().S(`">`)
 //line views/vproject/Table.html:37
 		components.StreamSVGRef(qw422016, prj.IconSafe(), 16, 16, "icon", ps)
 //line views/vproject/Table.html:37
-		qw422016.N().S(`
-              `)
+		qw422016.N().S(`</a>
+              <a href="/p/`)
+//line views/vproject/Table.html:38
+		qw422016.E().S(prj.Key)
+//line views/vproject/Table.html:38
+		qw422016.N().S(`">`)
 //line views/vproject/Table.html:38
 		if prj.Key == util.AppKey {
 //line views/vproject/Table.html:38
@@ -143,8 +147,8 @@ func StreamTable(qw422016 *qt422016.Writer, prjs project.Projects, tags []string
 //line views/vproject/Table.html:38
 		}
 //line views/vproject/Table.html:38
-		qw422016.N().S(`
-            </a></td>
+		qw422016.N().S(`</a>
+            </td>
             <td>`)
 //line views/vproject/Table.html:40
 		qw422016.E().S(prj.Package)

@@ -11,7 +11,7 @@
 
 {% func Table(prjs project.Projects, tags []string, full bool, ex exec.Execs, as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <div class="right"><a href="/p/new"><button>{%= components.SVGButton("file", ps) %} New</button></a></div>
+    <div class="right"><a href="/p/new"><button>{%= components.SVGButton("plus", ps) %} New</button></a></div>
     <h3><a href="/p">{%= components.SVGIcon(`code`, ps) %}</a> <a href="/p">{%s util.StringPlural(len(prjs), "Available Project") %}</a></h3>
     <div class="overflow full-width">
       <table class="mt min-200">
@@ -33,10 +33,10 @@
         <tbody>
           {%- for _, prj := range prjs -%}
           <tr>
-            <td class="shrink"><a href="/p/{%s prj.Key %}">
-              {%= components.SVGRef(prj.IconSafe(), 16, 16, "icon", ps) %}
-              {% if prj.Key == util.AppKey %}<strong>{% endif %}{%s prj.Title() %}{% if prj.Key == util.AppKey %}</strong>{% endif %}
-            </a></td>
+            <td class="shrink">
+              <a href="/p/{%s prj.Key %}">{%= components.SVGRef(prj.IconSafe(), 16, 16, "icon", ps) %}</a>
+              <a href="/p/{%s prj.Key %}">{% if prj.Key == util.AppKey %}<strong>{% endif %}{%s prj.Title() %}{% if prj.Key == util.AppKey %}</strong>{% endif %}</a>
+            </td>
             <td>{%s prj.Package %}</td>
             {%- if full -%}
             <td class="shrink"><a href="http://localhost:{%d prj.Port %}" title="browse to [http://localhost:{%d prj.Port %}]" target="_blank" rel="noopener noreferrer">{%d prj.Port %}</a></td>

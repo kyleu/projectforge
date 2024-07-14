@@ -37,7 +37,7 @@
   </div>
   <div class="card">
     <div class="right">
-      <a href="/p/{%s p.Project.Key %}/export/enums/create/new"><button>{%= components.SVGButton("file", ps) %} New</button></a>
+      <a href="/p/{%s p.Project.Key %}/export/enums/create/new"><button>{%= components.SVGButton("plus", ps) %} New</button></a>
     </div>
     <h3>{%= components.SVGIcon(`hammer`, ps) %} {%s util.StringPlural(len(p.Args.Enums), "Enum") %}</h3>
     {%- if len(p.Args.Enums) == 0 -%}
@@ -49,7 +49,7 @@
   <div class="card">
     <div class="right">
       <a href="/p/{%s p.Project.Key %}/export/models/create/derive"><button>{%= components.SVGButton("dna", ps) %} Derive</button></a>
-      <a href="/p/{%s p.Project.Key %}/export/models/create/new"><button>{%= components.SVGButton("file", ps) %} New</button></a>
+      <a href="/p/{%s p.Project.Key %}/export/models/create/new"><button>{%= components.SVGButton("plus", ps) %} New</button></a>
     </div>
     <h3>{%= components.SVGIcon(`list`, ps) %} {%s util.StringPlural(len(p.Args.Models), "Model") %}</h3>
     {%= ModelList(p.Args.Models, fmt.Sprintf("/p/%s/export/models", p.Project.Key), as, ps) %}

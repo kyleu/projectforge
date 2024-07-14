@@ -28,7 +28,7 @@ var techLookup = map[string][]string{
 	"simple-icons":  {"Simple Icons", "https://simpleicons.org", "simpleicons"},
 	"sqlite":        {"SQLite", "https://www.sqlite.org"},
 	"sqlserver":     {"SQL Server", "https://www.microsoft.com/en-us/sql-server"},
-	"swagger":       {"Swagger", "https://swagger.io", "print"},
+	"swagger":       {"Swagger", "https://swagger.io", "robot"},
 	"typescript":    {"TypeScript", "https://www.typescriptlang.org"},
 	"wasm":          {"WebAssembly", "https://webassembly.org"},
 	"websocket":     {"WebSocket", "https://developer.mozilla.org", "satellite"},

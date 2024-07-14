@@ -273,214 +273,217 @@ func streamrenderTypes(qw422016 *qt422016.Writer, pth []string, files stats.File
 //line views/vproject/FileStats.html:78
 	} else {
 //line views/vproject/FileStats.html:78
-		qw422016.N().S(`  <ul>
+		qw422016.N().S(`  <table class="min-200">
 `)
 //line views/vproject/FileStats.html:80
 		for _, extKey := range util.ArraySorted(lo.Keys(exts)) {
 //line views/vproject/FileStats.html:80
-			qw422016.N().S(`    <li><a href="?ext=`)
-//line views/vproject/FileStats.html:81
+			qw422016.N().S(`    <tr>
+      <td class="shrink"><a href="?ext=`)
+//line views/vproject/FileStats.html:82
 			qw422016.E().S(extKey)
-//line views/vproject/FileStats.html:81
+//line views/vproject/FileStats.html:82
 			if len(pth) > 0 {
-//line views/vproject/FileStats.html:81
+//line views/vproject/FileStats.html:82
 				qw422016.N().S(`&pth=`)
-//line views/vproject/FileStats.html:81
+//line views/vproject/FileStats.html:82
 				qw422016.N().U(strings.Join(pth, `/`))
-//line views/vproject/FileStats.html:81
+//line views/vproject/FileStats.html:82
 			}
-//line views/vproject/FileStats.html:81
+//line views/vproject/FileStats.html:82
 			qw422016.N().S(`">`)
-//line views/vproject/FileStats.html:81
+//line views/vproject/FileStats.html:82
 			qw422016.E().S(extKey)
-//line views/vproject/FileStats.html:81
-			qw422016.N().S(`</a>: `)
-//line views/vproject/FileStats.html:81
+//line views/vproject/FileStats.html:82
+			qw422016.N().S(`</a></td>
+      <td>`)
+//line views/vproject/FileStats.html:83
 			qw422016.N().D(exts[extKey])
-//line views/vproject/FileStats.html:81
-			qw422016.N().S(`</li>
+//line views/vproject/FileStats.html:83
+			qw422016.N().S(`</td>
+    </tr>
 `)
-//line views/vproject/FileStats.html:82
+//line views/vproject/FileStats.html:85
 		}
-//line views/vproject/FileStats.html:82
-		qw422016.N().S(`  </ul>
+//line views/vproject/FileStats.html:85
+		qw422016.N().S(`  </table>
 `)
-//line views/vproject/FileStats.html:84
+//line views/vproject/FileStats.html:87
 	}
-//line views/vproject/FileStats.html:85
+//line views/vproject/FileStats.html:88
 }
 
-//line views/vproject/FileStats.html:85
+//line views/vproject/FileStats.html:88
 func writerenderTypes(qq422016 qtio422016.Writer, pth []string, files stats.FileStats, ext string, as *app.State, ps *cutil.PageState) {
-//line views/vproject/FileStats.html:85
+//line views/vproject/FileStats.html:88
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/FileStats.html:85
+//line views/vproject/FileStats.html:88
 	streamrenderTypes(qw422016, pth, files, ext, as, ps)
-//line views/vproject/FileStats.html:85
+//line views/vproject/FileStats.html:88
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/FileStats.html:85
+//line views/vproject/FileStats.html:88
 }
 
-//line views/vproject/FileStats.html:85
+//line views/vproject/FileStats.html:88
 func renderTypes(pth []string, files stats.FileStats, ext string, as *app.State, ps *cutil.PageState) string {
-//line views/vproject/FileStats.html:85
+//line views/vproject/FileStats.html:88
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/FileStats.html:85
+//line views/vproject/FileStats.html:88
 	writerenderTypes(qb422016, pth, files, ext, as, ps)
-//line views/vproject/FileStats.html:85
+//line views/vproject/FileStats.html:88
 	qs422016 := string(qb422016.B)
-//line views/vproject/FileStats.html:85
+//line views/vproject/FileStats.html:88
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/FileStats.html:85
+//line views/vproject/FileStats.html:88
 	return qs422016
-//line views/vproject/FileStats.html:85
+//line views/vproject/FileStats.html:88
 }
 
-//line views/vproject/FileStats.html:87
+//line views/vproject/FileStats.html:90
 func streamrenderFileStat(qw422016 *qt422016.Writer, pth []string, f *stats.FileStat, ext string, as *app.State, ps *cutil.PageState) {
-//line views/vproject/FileStats.html:87
+//line views/vproject/FileStats.html:90
 	qw422016.N().S(`
   <li>
     <input id="accordion-`)
-//line views/vproject/FileStats.html:89
+//line views/vproject/FileStats.html:92
 	qw422016.E().S(f.FullPath())
-//line views/vproject/FileStats.html:89
+//line views/vproject/FileStats.html:92
 	qw422016.N().S(`" type="checkbox" hidden />
     <label for="accordion-`)
-//line views/vproject/FileStats.html:90
+//line views/vproject/FileStats.html:93
 	qw422016.E().S(f.FullPath())
-//line views/vproject/FileStats.html:90
+//line views/vproject/FileStats.html:93
 	qw422016.N().S(`">`)
-//line views/vproject/FileStats.html:90
+//line views/vproject/FileStats.html:93
 	streamrenderFileStatSummary(qw422016, f, ext, ps)
-//line views/vproject/FileStats.html:90
+//line views/vproject/FileStats.html:93
 	qw422016.N().S(`</label>
     <div class="bd"><div><div>
 `)
-//line views/vproject/FileStats.html:92
+//line views/vproject/FileStats.html:95
 	if len(f.Kids) > 0 {
-//line views/vproject/FileStats.html:92
+//line views/vproject/FileStats.html:95
 		qw422016.N().S(`      <ul class="accordion">
 `)
-//line views/vproject/FileStats.html:94
+//line views/vproject/FileStats.html:97
 		for _, k := range f.Kids {
-//line views/vproject/FileStats.html:94
+//line views/vproject/FileStats.html:97
 			qw422016.N().S(`        `)
-//line views/vproject/FileStats.html:95
+//line views/vproject/FileStats.html:98
 			streamrenderFileStat(qw422016, append(slices.Clone(pth), f.Name), k, ext, as, ps)
-//line views/vproject/FileStats.html:95
+//line views/vproject/FileStats.html:98
 			qw422016.N().S(`
 `)
-//line views/vproject/FileStats.html:96
+//line views/vproject/FileStats.html:99
 		}
-//line views/vproject/FileStats.html:96
+//line views/vproject/FileStats.html:99
 		qw422016.N().S(`      </ul>
     </div></div></div>
     `)
-//line views/vproject/FileStats.html:99
+//line views/vproject/FileStats.html:102
 	}
-//line views/vproject/FileStats.html:99
+//line views/vproject/FileStats.html:102
 	qw422016.N().S(`
   </li>
 `)
-//line views/vproject/FileStats.html:101
+//line views/vproject/FileStats.html:104
 }
 
-//line views/vproject/FileStats.html:101
+//line views/vproject/FileStats.html:104
 func writerenderFileStat(qq422016 qtio422016.Writer, pth []string, f *stats.FileStat, ext string, as *app.State, ps *cutil.PageState) {
-//line views/vproject/FileStats.html:101
+//line views/vproject/FileStats.html:104
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/FileStats.html:101
+//line views/vproject/FileStats.html:104
 	streamrenderFileStat(qw422016, pth, f, ext, as, ps)
-//line views/vproject/FileStats.html:101
+//line views/vproject/FileStats.html:104
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/FileStats.html:101
+//line views/vproject/FileStats.html:104
 }
 
-//line views/vproject/FileStats.html:101
+//line views/vproject/FileStats.html:104
 func renderFileStat(pth []string, f *stats.FileStat, ext string, as *app.State, ps *cutil.PageState) string {
-//line views/vproject/FileStats.html:101
+//line views/vproject/FileStats.html:104
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/FileStats.html:101
+//line views/vproject/FileStats.html:104
 	writerenderFileStat(qb422016, pth, f, ext, as, ps)
-//line views/vproject/FileStats.html:101
+//line views/vproject/FileStats.html:104
 	qs422016 := string(qb422016.B)
-//line views/vproject/FileStats.html:101
+//line views/vproject/FileStats.html:104
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/FileStats.html:101
+//line views/vproject/FileStats.html:104
 	return qs422016
-//line views/vproject/FileStats.html:101
+//line views/vproject/FileStats.html:104
 }
 
-//line views/vproject/FileStats.html:103
+//line views/vproject/FileStats.html:106
 func streamrenderFileStatSummary(qw422016 *qt422016.Writer, f *stats.FileStat, ext string, ps *cutil.PageState) {
-//line views/vproject/FileStats.html:105
+//line views/vproject/FileStats.html:108
 	icon := "file"
 	if f.IsDir {
 		icon = "folder"
 	}
 
-//line views/vproject/FileStats.html:110
+//line views/vproject/FileStats.html:113
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vproject/FileStats.html:110
+//line views/vproject/FileStats.html:113
 	qw422016.N().S(`<div class="right"><em>`)
-//line views/vproject/FileStats.html:111
+//line views/vproject/FileStats.html:114
 	qw422016.E().S(util.ByteSizeSI(f.TotalSize()))
-//line views/vproject/FileStats.html:111
+//line views/vproject/FileStats.html:114
 	qw422016.N().S(`</em></div>`)
-//line views/vproject/FileStats.html:112
-	components.StreamSVGInline(qw422016, icon, 16, ps)
-//line views/vproject/FileStats.html:113
-	if f.IsDir {
-//line views/vproject/FileStats.html:113
-		qw422016.N().S(`<a href="?dir=`)
-//line views/vproject/FileStats.html:114
-		qw422016.N().U(f.FullPath())
-//line views/vproject/FileStats.html:114
-		if ext != `` {
-//line views/vproject/FileStats.html:114
-			qw422016.N().S(`&ext=`)
-//line views/vproject/FileStats.html:114
-			qw422016.E().S(ext)
-//line views/vproject/FileStats.html:114
-		}
-//line views/vproject/FileStats.html:114
-		qw422016.N().S(`">`)
 //line views/vproject/FileStats.html:115
-	}
+	components.StreamSVGInline(qw422016, icon, 16, ps)
 //line views/vproject/FileStats.html:116
-	qw422016.E().S(f.Name)
-//line views/vproject/FileStats.html:117
 	if f.IsDir {
+//line views/vproject/FileStats.html:116
+		qw422016.N().S(`<a href="?dir=`)
 //line views/vproject/FileStats.html:117
-		qw422016.N().S(`</a>`)
-//line views/vproject/FileStats.html:119
+		qw422016.N().U(f.FullPath())
+//line views/vproject/FileStats.html:117
+		if ext != `` {
+//line views/vproject/FileStats.html:117
+			qw422016.N().S(`&ext=`)
+//line views/vproject/FileStats.html:117
+			qw422016.E().S(ext)
+//line views/vproject/FileStats.html:117
+		}
+//line views/vproject/FileStats.html:117
+		qw422016.N().S(`">`)
+//line views/vproject/FileStats.html:118
 	}
+//line views/vproject/FileStats.html:119
+	qw422016.E().S(f.Name)
 //line views/vproject/FileStats.html:120
+	if f.IsDir {
+//line views/vproject/FileStats.html:120
+		qw422016.N().S(`</a>`)
+//line views/vproject/FileStats.html:122
+	}
+//line views/vproject/FileStats.html:123
 }
 
-//line views/vproject/FileStats.html:120
+//line views/vproject/FileStats.html:123
 func writerenderFileStatSummary(qq422016 qtio422016.Writer, f *stats.FileStat, ext string, ps *cutil.PageState) {
-//line views/vproject/FileStats.html:120
+//line views/vproject/FileStats.html:123
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/FileStats.html:120
+//line views/vproject/FileStats.html:123
 	streamrenderFileStatSummary(qw422016, f, ext, ps)
-//line views/vproject/FileStats.html:120
+//line views/vproject/FileStats.html:123
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/FileStats.html:120
+//line views/vproject/FileStats.html:123
 }
 
-//line views/vproject/FileStats.html:120
+//line views/vproject/FileStats.html:123
 func renderFileStatSummary(f *stats.FileStat, ext string, ps *cutil.PageState) string {
-//line views/vproject/FileStats.html:120
+//line views/vproject/FileStats.html:123
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/FileStats.html:120
+//line views/vproject/FileStats.html:123
 	writerenderFileStatSummary(qb422016, f, ext, ps)
-//line views/vproject/FileStats.html:120
+//line views/vproject/FileStats.html:123
 	qs422016 := string(qb422016.B)
-//line views/vproject/FileStats.html:120
+//line views/vproject/FileStats.html:123
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/FileStats.html:120
+//line views/vproject/FileStats.html:123
 	return qs422016
-//line views/vproject/FileStats.html:120
+//line views/vproject/FileStats.html:123
 }
