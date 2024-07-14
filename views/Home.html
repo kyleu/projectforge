@@ -24,9 +24,9 @@
     <div class="mt">
       <div>Project Forge creates and manages applications written in the <a href="https://go.dev">Go</a> programming language.</div>
       <p><em>Using code generation, the latest technology, and a strong standard library, Project Forge will help manage your project's code, assets, UI and UX.</em></p>
-      <a href="/about"><button>Learn More</button></a>
+      <a href="/about"><button>{%= components.SVGButton("question", ps) %} Learn More</button></a>
       {%- if len(p.Projects) > 0 -%}
-      <a href="/run/preview"><button>Preview All</button></a>
+      <a href="/run/preview"><button>{%= components.SVGButton("play", ps) %} Preview All</button></a>
       {%- endif -%}
     </div>
   </div>

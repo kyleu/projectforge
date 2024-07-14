@@ -5,6 +5,7 @@
   "projectforge.dev/projectforge/app/lib/exec"
   "projectforge.dev/projectforge/app/project"
   "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/components/view"
   "projectforge.dev/projectforge/views/layout"
 ) %}
 
@@ -29,6 +30,7 @@
   <a class="link-section" href="{%s prj.WebPath() %}" title="{%s prj.DescriptionSafe() %}">
     <div class="card">
       <div class="left mrs">{%= components.SVGRef(prj.IconSafe(), 40, 40, "", ps) %}</div>
+      <div class="right">{%= view.Tags(prj.Tags) %}</div>
       <strong class="highlight">{%s prj.Title() %}</strong>
       <div><em>{%s prj.Package %}</em></div>
     </div>

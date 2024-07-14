@@ -49,9 +49,9 @@
               {%- endif -%}
             </td>
             {%- endif -%}
-            <td class="shrink">
+            <td class="shrink" style="text-align: right;">
               {%- for idx, tag := range prj.Tags -%}
-              <a href="/p?tags={%s tag %}"><code>{%s tag %}</code></a>{% if idx < (len(prj.Tags) - 1) %}, {% endif %}
+              <a href="/p?tags={%s tag %}">{%s tag %}</a>{% if idx < (len(prj.Tags) - 1) %}, {% endif %}
               {%- endfor -%}
             </td>
           </tr>

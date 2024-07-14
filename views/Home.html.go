@@ -56,12 +56,20 @@ func (p *Home) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
     <div class="mt">
       <div>Project Forge creates and manages applications written in the <a href="https://go.dev">Go</a> programming language.</div>
       <p><em>Using code generation, the latest technology, and a strong standard library, Project Forge will help manage your project's code, assets, UI and UX.</em></p>
-      <a href="/about"><button>Learn More</button></a>
+      <a href="/about"><button>`)
+//line views/Home.html:27
+	components.StreamSVGButton(qw422016, "question", ps)
+//line views/Home.html:27
+	qw422016.N().S(` Learn More</button></a>
 `)
 //line views/Home.html:28
 	if len(p.Projects) > 0 {
 //line views/Home.html:28
-		qw422016.N().S(`      <a href="/run/preview"><button>Preview All</button></a>
+		qw422016.N().S(`      <a href="/run/preview"><button>`)
+//line views/Home.html:29
+		components.StreamSVGButton(qw422016, "play", ps)
+//line views/Home.html:29
+		qw422016.N().S(` Preview All</button></a>
 `)
 //line views/Home.html:30
 	}
