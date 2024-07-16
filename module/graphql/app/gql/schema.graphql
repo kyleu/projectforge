@@ -1,5 +1,5 @@
 # $PF_GENERATE_ONCE$
-## include[scalars.graphql]{{{ if .HasModule "export" }}}
+## include[scalars.graphql]{{{ if .HasExport }}}
 ## include[generated.graphql]{{{ end }}}
 ## include[query.graphql]
 ## include[mutation.graphql]

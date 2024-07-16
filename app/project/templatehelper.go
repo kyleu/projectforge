@@ -152,6 +152,10 @@ func (t *TemplateContext) TypeUUID() string {
 	return "uuid"
 }
 
+func (t *TemplateContext) HasExport() bool {
+	return t.HasModules("export")
+}
+
 func (t *TemplateContext) MySQL() bool {
 	return t.DatabaseEngine == util.DatabaseMySQL || t.HasModule(util.DatabaseMySQL)
 }

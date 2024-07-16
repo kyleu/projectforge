@@ -31,10 +31,6 @@ func All(p *project.Project, linebreak string) (file.Files, error) {
 	}
 	ret = append(ret, enumRet...)
 
-	if len(args.Models) == 0 {
-		return ret, nil
-	}
-
 	for _, m := range args.Models {
 		calls, e := ModelAll(m, p, args, linebreak)
 		if e != nil {
@@ -126,13 +122,11 @@ func extraFiles(p *project.Project, linebreak string, args *model.Args) (file.Fi
 		ret = append(ret, f)
 	}
 
-	if args.Models.HasSeedData() {
-		f, err := sql.SeedDataAll(args.Models, linebreak)
-		if err != nil {
-			return nil, errors.Wrap(err, "can't render SQL \"all\" migration")
-		}
-		ret = append(ret, f)
+	f, err := sql.SeedDataAll(args.Models, linebreak)
+	if err != nil {
+		return nil, errors.Wrap(err, "can't render SQL \"all\" migration")
 	}
+	ret = append(ret, f)
 
 	return ret, nil
 }

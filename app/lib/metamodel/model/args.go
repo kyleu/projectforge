@@ -90,3 +90,7 @@ func (a *Args) ApplyAcronyms(acronyms ...string) {
 		x.SetAcronyms(acronyms...)
 	}
 }
+
+func (a *Args) Empty() bool {
+	return a == nil || (len(a.Models) == 0 && len(a.Enums) == 0)
+}

@@ -19,7 +19,7 @@ func MenuFor(
 	defer sp.Complete()
 	var ret menu.Items
 	var data any
-	// $PF_SECTION_START(menu)$ {{{ if .HasExportModels }}}{{{ if .HasAccount }}}
+	// $PF_SECTION_START(menu)$ {{{ if .HasExport }}}{{{ if .HasAccount }}}
 	if isAdmin {
 		ret = append(ret, generatedMenu()...)
 	}{{{ else }}}

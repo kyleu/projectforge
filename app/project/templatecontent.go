@@ -82,10 +82,6 @@ func (t *TemplateContext) IgnoredQuoted() string {
 	}), "")
 }
 
-func (t *TemplateContext) HasExportModels() bool {
-	return t.ExportArgs != nil && len(t.ExportArgs.Models) > 0
-}
-
 func (t *TemplateContext) HasModules(keys ...string) bool {
 	return lo.ContainsBy(keys, func(key string) bool {
 		return lo.Contains(t.Modules, key)
