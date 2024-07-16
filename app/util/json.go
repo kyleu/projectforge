@@ -27,10 +27,10 @@ func ToJSONBytes(x any, indent bool) []byte {
 		}
 		enc.SetEscapeHTML(false)
 		_ = enc.Encode(x) //nolint:errchkjson // no chance of error
-		return bts.Bytes()
+		return bytes.TrimSuffix(bts.Bytes(), []byte{'\n'})
 	}
 	b, _ := json.Marshal(x) //nolint:errchkjson // no chance of error
-	return b
+	return bytes.TrimSuffix(b, []byte{'\n'})
 }
 
 func FromJSON(msg json.RawMessage, tgt any) error {
