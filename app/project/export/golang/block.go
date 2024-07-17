@@ -33,6 +33,12 @@ func (b *Block) W(l string, args ...any) {
 	}
 }
 
+func (b *Block) WA(a ...string) {
+	lo.ForEach(a, func(x string, _ int) {
+		b.W(x)
+	})
+}
+
 func (b *Block) WB() {
 	b.Lines = append(b.Lines, "")
 }
