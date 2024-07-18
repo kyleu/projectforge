@@ -21,7 +21,7 @@ func actionF(ctx context.Context, t action.Type, args []string) error {
 		return errors.Wrap(err, "error initializing application")
 	}
 	cfg := extractConfig(args)
-	logResult(t, runToCompletion(ctx, "", t, cfg))
+	logResult(t, runToCompletion(ctx, "", t, cfg), util.RootLogger)
 	return nil
 }
 
@@ -60,21 +60,21 @@ func actionCommands() []*coral.Command {
 	return ret
 }
 
-func logResult(t action.Type, r *action.Result) {
-	_logger.Infof("%s [%s]: %s in [%s]", util.AppName, t.String(), r.Status, util.MicrosToMillis(r.Duration))
+func logResult(t action.Type, r *action.Result, logger util.Logger) {
+	logger.Infof("%s [%s]: %s in [%s]", util.AppName, t.String(), r.Status, util.MicrosToMillis(r.Duration))
 	if len(r.Errors) > 0 {
-		_logger.Warnf("Errors:")
+		logger.Warnf("Errors:")
 		lo.ForEach(r.Errors, func(e string, _ int) {
-			_logger.Warn(" - " + e)
+			logger.Warn(" - " + e)
 		})
 	}
 	if r.Modules.DiffCount(false) > 0 {
 		lo.ForEach(r.Modules, func(m *module.Result, _ int) {
 			lo.ForEach(m.DiffsFiltered(false), func(d *diff.Diff, _ int) {
-				_logger.Infof("%s [%s]:", d.Path, d.Status)
+				logger.Infof("%s [%s]:", d.Path, d.Status)
 				lo.ForEach(d.Changes, func(c *diff.Change, _ int) {
 					lo.ForEach(c.Lines, func(l *diff.Line, _ int) {
-						_logger.Info(strings.TrimSuffix(strings.TrimSuffix(l.String(), "\n"), "\r"))
+						logger.Info(strings.TrimSuffix(strings.TrimSuffix(l.String(), "\n"), "\r"))
 					})
 				})
 			})
@@ -84,7 +84,7 @@ func logResult(t action.Type, r *action.Result) {
 		deps, ok := r.Data.(build.Dependencies)
 		if ok {
 			lo.ForEach(deps, func(dep *build.Dependency, _ int) {
-				_logger.Infof(dep.String())
+				logger.Infof(dep.String())
 			})
 		}
 	}

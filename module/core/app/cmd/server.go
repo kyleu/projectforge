@@ -29,7 +29,7 @@ func startServer(flags *Flags) error {
 		return errors.Wrap(err, "error initializing application")
 	}
 
-	st, r, logger, err := loadServer(flags, _logger)
+	st, r, logger, err := loadServer(flags, util.RootLogger)
 	if err != nil {
 		return err
 	}

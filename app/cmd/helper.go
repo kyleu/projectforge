@@ -15,11 +15,11 @@ import (
 )
 
 func runToCompletion(ctx context.Context, projectKey string, t action.Type, cfg util.ValueMap) *action.Result {
-	mSvc, _ := module.NewService(ctx, _flags.ConfigDir, _logger)
+	mSvc, _ := module.NewService(ctx, _flags.ConfigDir, util.RootLogger)
 	pSvc := project.NewService()
 	eSvc := export.NewService()
 	xSvc := exec.NewService()
-	logger := _logger.With("service", "runner")
+	logger := util.RootLogger.With("service", "runner")
 	p := &action.Params{ProjectKey: projectKey, T: t, Cfg: cfg, MSvc: mSvc, PSvc: pSvc, SSvc: nil, XSvc: xSvc, ESvc: eSvc, CLI: true, Logger: logger}
 	return action.Apply(ctx, p)
 }

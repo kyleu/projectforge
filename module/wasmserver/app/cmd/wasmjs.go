@@ -33,12 +33,12 @@ func startWASM(flags *Flags) error {
 		return errors.Wrap(err, "error initializing application")
 	}
 
-	st, r, logger, err := loadServer(flags, _logger)
+	st, r, logger, err := loadServer(flags, util.RootLogger)
 	if err != nil {
 		return err
 	}
 	logger.Infof("Started WASM server")
-	defer func() { _ = st.Close(context.Background(), _logger) }()
+	defer func() { _ = st.Close(context.Background(), util.RootLogger) }()
 	_router = r
 
 	select {}

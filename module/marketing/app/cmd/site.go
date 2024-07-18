@@ -30,7 +30,7 @@ func startSite(flags *Flags) error {
 		return errors.Wrap(err, "error initializing application")
 	}
 
-	r, _, err := loadSite(flags, _logger)
+	r, _, err := loadSite(flags, util.RootLogger)
 	if err != nil {
 		return err
 	}

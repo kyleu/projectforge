@@ -20,7 +20,6 @@ var (
 	_initialized = false
 	_buildInfo   *app.BuildInfo
 	_flags       = &Flags{}
-	_logger      util.Logger
 )
 
 type Flags struct {
@@ -69,9 +68,9 @@ func initIfNeeded() error {
 	if err != nil {
 		return err
 	}
-	util.DEBUG = _flags.Debug
 	util.ConfigDir = _flags.ConfigDir
-	_logger = l
+	util.DEBUG = _flags.Debug
+	util.RootLogger = l
 	_initialized = true
 	return nil
 }

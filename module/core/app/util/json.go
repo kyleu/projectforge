@@ -8,7 +8,10 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-var jsoniterParser = jsoniter.Config{EscapeHTML: false, SortMapKeys: true, ValidateJsonRawMessage: true}.Froze()
+var (
+	jsoniterParser  = jsoniter.Config{EscapeHTML: false, SortMapKeys: true, ValidateJsonRawMessage: true}.Froze()
+	trailingNewline = []byte{'\n'}
+)
 
 func ToJSON(x any) string {
 	return string(ToJSONBytes(x, true))
@@ -26,11 +29,12 @@ func ToJSONBytes(x any, indent bool) []byte {
 			enc.SetIndent("", "  ")
 		}
 		enc.SetEscapeHTML(false)
-		_ = enc.Encode(x) //nolint:errchkjson // no chance of error
-		return bytes.TrimSuffix(bts.Bytes(), []byte{'\n'})
+		jsonHandleError(enc.Encode(x))
+		return bytes.TrimSuffix(bts.Bytes(), trailingNewline)
 	}
-	b, _ := json.Marshal(x) //nolint:errchkjson // no chance of error
-	return bytes.TrimSuffix(b, []byte{'\n'})
+	b, err := json.Marshal(x)
+	jsonHandleError(err)
+	return bytes.TrimSuffix(b, trailingNewline)
 }
 
 func FromJSON(msg json.RawMessage, tgt any) error {
@@ -78,6 +82,12 @@ func CycleJSON(src any, tgt any) error {
 
 func JSONToMap(i any) map[string]any {
 	m := map[string]any{}
-	_ = CycleJSON(i, &m)
+	jsonHandleError(CycleJSON(i, &m))
 	return m
+}
+
+func jsonHandleError(err error) {
+	if err != nil && RootLogger != nil {
+		RootLogger.Warnf("error encountered serializing JSON: %+v", err)
+	}
 }

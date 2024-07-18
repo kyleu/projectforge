@@ -14,8 +14,8 @@ func updateF(ctx context.Context) error {
 	if err := initIfNeeded(); err != nil {
 		return errors.Wrap(err, "error initializing application")
 	}
-	_logger.Infof("updating " + util.AppName + " modules...")
-	mSvc, err := module.NewService(ctx, _flags.ConfigDir, _logger)
+	util.RootLogger.Infof("updating " + util.AppName + " modules...")
+	mSvc, err := module.NewService(ctx, _flags.ConfigDir, util.RootLogger)
 	if err != nil {
 		return err
 	}
@@ -23,12 +23,12 @@ func updateF(ctx context.Context) error {
 		url := mod.URL
 		var err error
 		if url == "" {
-			url, err = mSvc.AssetURL(ctx, mod.Key, _logger)
+			url, err = mSvc.AssetURL(ctx, mod.Key, util.RootLogger)
 			if err != nil {
 				return err
 			}
 		}
-		err = mSvc.Download(ctx, mod.Key, url, _logger)
+		err = mSvc.Download(ctx, mod.Key, url, util.RootLogger)
 		if err != nil {
 			return err
 		}
