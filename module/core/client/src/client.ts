@@ -1,5 +1,5 @@
 import "./client.css";{{{ if .HasModule "jsx" }}}
-import {JSX} from "./jsx"; // eslint-disable-line @typescript-eslint/no-unused-vars{{{ end }}}
+import {JSX} from "./jsx";{{{ end }}}
 import {audit} from "./audit";
 import {menuInit} from "./menu";
 import {modeInit} from "./mode";
@@ -16,7 +16,7 @@ import {socketInit} from "./socket";{{{ end }}}
 import {appInit} from "./app";
 
 declare global {
-  interface Window { // eslint-disable-line @typescript-eslint/consistent-type-definitions
+  interface Window {
     "{{{ .CleanKey }}}": {
       wireTime: (el: HTMLElement) => void;
       relativeTime: (el: HTMLElement) => string;

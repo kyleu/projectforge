@@ -6,4 +6,4 @@ cd %~dp0\..\client
 
 echo "=== linting client ==="
 @ECHO ON
-eslint --ext .js,.ts,.tsx .
+eslint .

@@ -1,6 +1,6 @@
 import {opt} from "./dom";
 
-function renderAudit(msg: string, ...codes: unknown[]) { // eslint-disable-line @typescript-eslint/no-explicit-any
+function renderAudit(msg: string, ...codes: unknown[]) {
   const li = document.createElement("li");
   li.innerText = msg;
   for (const code of codes) {

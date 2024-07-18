@@ -121,6 +121,7 @@ All managed projects expose a web and CLI interface, and additional modules are 
 - `format`: Runs [bin/format.sh]
 - `imports`: Reorders the imports
 - `lint`: Runs [bin/check.sh]
+- `lint-client`: Runs [bin/check-client.sh]
 - `packages`: Visualize your application's packages
 - `test`: Does a test
 - `tidy`: Runs [go mod tidy]

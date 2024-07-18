@@ -68,6 +68,7 @@ var (
 	buildTidy          = simpleBuild("tidy", "Tidy", "go mod tidy")
 	buildFormat        = simpleBuild("format", "Format", filepath.Join("bin", "format."+build.ScriptExtension))
 	buildLint          = simpleBuild("lint", "Lint", filepath.Join("bin", "check."+build.ScriptExtension))
+	buildLintClient    = simpleBuild("lint-client", "Lint Client", filepath.Join("bin", "check-client."+build.ScriptExtension))
 	buildTemplates     = simpleBuild("templates", "Templates", filepath.Join("bin", "templates."+build.ScriptExtension))
 	buildClientInstall = &Build{
 		Key: "clientInstall", Title: "Client Install", Description: ciDesc, Run: func(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
@@ -83,7 +84,7 @@ var (
 
 var AllBuilds = Builds{
 	buildFull, buildBuild, buildStart, buildClean, buildDeps, buildImports, buildIgnored, buildPackages, buildCleanup,
-	buildTidy, buildFormat, buildLint, buildTemplates, buildClientInstall, buildClientBuild, buildDeployments, buildTest,
+	buildTidy, buildFormat, buildLint, buildLintClient, buildTemplates, buildClientInstall, buildClientBuild, buildDeployments, buildTest,
 }
 
 func fullBuild(ctx context.Context, prj *project.Project, r *Result, logger util.Logger) *Result {
