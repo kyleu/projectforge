@@ -2,6 +2,8 @@ package util
 
 import (
 	"fmt"
+	"github.com/samber/lo"
+	"strings"
 	"unicode"
 
 	"github.com/gertd/go-pluralize"
@@ -18,24 +20,34 @@ func plrlSvc() {
 func StringToPlural(s string) string {
 	plrlSvc()
 	ret := plrl.Plural(s)
-	if len(ret) < 3 {
+	if len(ret) < 3 || len(ret) == len(s) {
 		return ret
 	}
-	if ret[len(ret)-1] == 'S' {
-		runes := []rune(ret)
-		c2 := runes[len(runes)-2]
-		c3 := runes[len(runes)-3]
-		if unicode.IsUpper(c2) && unicode.IsUpper(c3) {
-			runes[len(runes)-1] = 's'
-			ret = string(runes)
-		}
+	runes := []rune(ret)
+	l0, l1, l2 := ret[len(ret)-1], runes[len(runes)-2], runes[len(runes)-3]
+	if l0 == 'S' && unicode.IsUpper(l1) && unicode.IsUpper(l2) {
+		runes[len(runes)-1] = 's'
+		ret = string(runes)
+	}
+	if l1 == 'E' && unicode.IsUpper(l2) {
+		runes[len(runes)-2] = 'e'
+		ret = string(runes)
 	}
 	return ret
 }
 
 func StringToSingular(s string) string {
 	plrlSvc()
-	return plrl.Singular(s)
+	ret := plrl.Singular(s)
+	if len(s) != len(ret) {
+		orig := s[:len(ret)]
+		if lo.EveryBy([]rune(orig), func(x rune) bool {
+			return unicode.IsUpper(x)
+		}) && strings.ToLower(orig) == strings.ToLower(ret) {
+			ret = orig
+		}
+	}
+	return ret
 }
 
 func StringForms(s string) (string, string) {

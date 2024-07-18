@@ -5,6 +5,7 @@ import (
 	"cmp"
 	"encoding/xml"
 	"slices"
+	"strings"
 
 	"github.com/samber/lo"
 )
@@ -82,6 +83,10 @@ func (o OrderedMap[V]) MarshalYAML() (any, error) {
 }
 
 func (o OrderedMap[V]) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
+	if idx := strings.LastIndex(start.Name.Local, "["); idx > -1 {
+		start.Name.Local = start.Name.Local[:idx]
+	}
+
 	if err := e.EncodeToken(start); err != nil {
 		return err
 	}
