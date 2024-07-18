@@ -14,6 +14,7 @@ import (
 	"github.com/pkg/errors"
 
 	"{{{ .Package }}}/app/controller/cutil"
+	"{{{ .Package }}}/app/util"
 )
 
 const keyWASM = "wasm"

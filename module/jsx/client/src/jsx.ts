@@ -1,7 +1,7 @@
 import {setHTML} from "./dom";
 
 declare global {
-  namespace JSX { // eslint-disable-line @typescript-eslint/no-namespace
+  namespace JSX { // eslint-disable-line @typescript-eslint/no-namespace, no-shadow
     type IntrinsicElements = {
       [elemName: string]: unknown;
     }
@@ -21,7 +21,7 @@ export function JSX(tag: string, attrs: any[], ...args: Node[]) { // eslint-disa
     if (name && attrs.hasOwnProperty(name)) { // eslint-disable-line no-prototype-builtins
       const v = attrs[name];
       if (name === "dangerouslySetInnerHTML") {
-        setHTML(e, v.__html);
+        setHTML(e, v.__html); // eslint-disable-line no-underscore-dangle
       } else if (v === true) {
         e.setAttribute(name, name);
       } else if (v !== false && v !== null && v !== undefined) {
