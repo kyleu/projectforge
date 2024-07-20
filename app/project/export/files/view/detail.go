@@ -99,6 +99,7 @@ func exportViewDetailClass(m *model.Model, models model.Models, audit bool, g *g
 	if audit {
 		ret.W("  AuditRecords audit.Records")
 	}
+	ret.W("  Paths []string")
 	ret.W("} %%}")
 	return ret
 }
@@ -109,10 +110,10 @@ func exportViewDetailBody(g *golang.Template, m *model.Model, audit bool, models
 	ret.W("  <div class=\"card\">")
 	ret.W("    <div class=\"right\">")
 	ret.W(`      <a href="#modal-%s"><button type="button">{%%%%= components.SVGButton("file", ps) %%%%} JSON</button></a>`, m.Camel())
-	ret.W("      <a href=\"{%%s p.Model.WebPath() %%}/edit\"><button>{%%= components.SVGButton(\"edit\", ps) %%} Edit</button></a>")
+	ret.W("      <a href=\"{%%s p.Model.WebPath(p.Paths...) %%}/edit\"><button>{%%= components.SVGButton(\"edit\", ps) %%} Edit</button></a>")
 	ret.W("    </div>")
 	ret.W("    %s%s {%%%%s p.Model.TitleString() %%%%}%s", helper.TextH3Start, svgRef(m.Icon), helper.TextH3End)
-	ret.W("    <div><a href=\"/" + m.Route() + "\"><em>" + m.Title() + "</em></a></div>")
+	ret.W("    <div><a href=\"{%%%%s %s.Route(p.Paths...) %%%%}\"><em>%s</em></a></div>", m.Package, m.Title())
 	if len(m.Links.WithTags(true, "detail")) > 0 {
 		ret.W("    <div class=\"mt\">")
 		for _, link := range m.Links {

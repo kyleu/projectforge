@@ -40,6 +40,7 @@ func exportViewListClass(m *model.Model, models model.Models, g *golang.Template
 		ret.W(commonLine, relModel.ProperPlural(), relNames, relModel.Package, relModel.ProperPlural())
 	})
 	ret.W("  Params filter.ParamSet")
+	ret.W("  Paths []string")
 	if m.HasSearches() {
 		ret.W("  SearchQuery string")
 	}
@@ -65,7 +66,8 @@ func exportViewListBody(m *model.Model, models model.Models) *golang.Block {
 	ret.W("  <div class=\"card\">")
 	const twoInd = "    "
 	links := m.Links.WithTags(false, "list")
-	ln := fmt.Sprintf(`<a href="/%s/_new"><button>{%%%%= components.SVGButton("plus", ps) %%%%} New</button>%s`, m.Route(), helper.TextEndAnchor)
+	pth := "{%%s " + m.Package + ".Route(p.Paths...) %%}"
+	ln := fmt.Sprintf(`<a href="%s/_new"><button>{%%%%= components.SVGButton("plus", ps) %%%%} New</button>%s`, pth, helper.TextEndAnchor)
 
 	if m.HasSearches() {
 		ret.W(`    <div class="right">{%%%%= edit.SearchForm("", "q", "Search %s", p.SearchQuery, ps) %%%%}</div>`, m.TitlePlural())
@@ -108,7 +110,7 @@ func exportViewListBody(m *model.Model, models model.Models) *golang.Block {
 	ret.W("    <div class=\"mt\"><em>No %s available</em></div>", m.TitlePluralLower())
 	ret.W("    {%%- else -%%}")
 	ret.W("    <div class=\"mt\">")
-	ret.W("      {%%= Table(p.Models" + suffix + ", p.Params, as, ps) %%}")
+	ret.W("      {%%= Table(p.Models" + suffix + ", p.Params, as, ps, p.Paths...) %%}")
 	ret.W("    </div>")
 	ret.W(twoInd + helper.TextEndIfDash)
 	ret.W("  </div>")

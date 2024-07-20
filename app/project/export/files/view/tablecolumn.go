@@ -18,7 +18,7 @@ func viewTableColumn(
 ) {
 	rels := m.RelationsFor(col)
 	toStrings := getTableColumnStrings(m, modelKey, rels, models, prefix)
-	viewColumn("table", g, ret, m, col, toStrings, link, modelKey, indent, models, enums)
+	viewColumn("table", g, ret, m, col, toStrings, link, modelKey, indent, models, enums, "paths")
 }
 
 func getTableColumnStrings(m *model.Model, modelKey string, rels model.Relations, models model.Models, prefix string) string {

@@ -23,7 +23,7 @@ func Model(m *model.Model, args *model.Args, linebreak string) (*file.File, erro
 	lo.ForEach(helper.ImportsForTypes(types.KeyString, "", m.PKs().Types()...), func(imp *model.Import, _ int) {
 		g.AddImport(imp)
 	})
-	g.AddImport(helper.ImpAppUtil, helper.ImpAppSvc)
+	g.AddImport(helper.ImpAppUtil, helper.ImpAppSvc, helper.ImpPath)
 	imps, err := helper.SpecialImports(m.Columns, m.PackageWithGroup(""), args.Enums)
 	if err != nil {
 		return nil, err
@@ -36,7 +36,7 @@ func Model(m *model.Model, args *model.Args, linebreak string) (*file.File, erro
 	g.AddImport(imps...)
 	g.AddImport(m.Imports.Supporting("model")...)
 
-	g.AddBlocks(typeAssert(m))
+	g.AddBlocks(defaultRoute(m), routeMethod(m), typeAssert(m))
 
 	if len(m.PKs()) > 1 {
 		pk, e := modelPK(m, args.Enums)
@@ -86,6 +86,23 @@ func Model(m *model.Model, args *model.Args, linebreak string) (*file.File, erro
 func typeAssert(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("assert", "type")
 	ret.W("var _ svc.Model = (*%s)(nil)", m.Proper())
+	return ret
+}
+
+func defaultRoute(m *model.Model) *golang.Block {
+	ret := golang.NewBlock("DefaultRoute", "const")
+	ret.W("const DefaultRoute = %q", "/"+m.Route())
+	return ret
+}
+
+func routeMethod(m *model.Model) *golang.Block {
+	ret := golang.NewBlock("Route", "func")
+	ret.W("func Route(paths ...string) string {")
+	ret.W("\tif len(paths) == 0 {")
+	ret.W("\t\tpaths = []string{DefaultRoute}")
+	ret.W("\t}")
+	ret.W("\treturn path.Join(paths...)")
+	ret.W("}")
 	return ret
 }
 

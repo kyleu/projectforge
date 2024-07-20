@@ -70,26 +70,24 @@ func modelTitle(g *golang.File, m *model.Model) *golang.Block {
 
 func modelWebPath(g *golang.File, m *model.Model) *golang.Block {
 	ret := golang.NewBlock("WebPath", "type")
-	ret.W("func (%s *%s) WebPath() string {", m.FirstLetter(), m.Proper())
-	p := "\"/" + m.Route() + "\""
+	ret.W("func (%s *%s) WebPath(paths ...string) string {", m.FirstLetter(), m.Proper())
+	ret.W("\tif len(paths) == 0 {")
+	ret.W("\t\tpaths = []string{DefaultRoute}")
+	ret.W("\t}")
+	keys := make([]string, 0, len(m.PKs()))
 	lo.ForEach(m.PKs(), func(pk *model.Column, _ int) {
-		if strings.HasSuffix(p, "\"") {
-			p = p[:len(p)-1] + "/" + "\" + "
-		} else {
-			p += " + \"/\" + "
-		}
+		g.AddImport(helper.ImpURL)
 		switch {
 		case types.IsStringList(pk.Type):
 			g.AddImport(helper.ImpStrings)
-			p += fmt.Sprintf(`strings.Join(%s, ",")`, pk.ToGoString(m.FirstLetter()+"."))
+			keys = append(keys, fmt.Sprintf(`url.QueryEscape(strings.Join(%s, ","))`, pk.ToGoString(m.FirstLetter()+".")))
 		case types.IsString(pk.Type):
-			g.AddImport(helper.ImpURL)
-			p += "url.QueryEscape(" + pk.ToGoString(m.FirstLetter()+".") + ")"
+			keys = append(keys, "url.QueryEscape("+pk.ToGoString(m.FirstLetter()+".")+")")
 		default:
-			p += pk.ToGoString(m.FirstLetter() + ".")
+			keys = append(keys, "url.QueryEscape("+pk.ToGoString(m.FirstLetter()+".")+")")
 		}
 	})
-	ret.W("\treturn " + p)
+	ret.W("\treturn path.Join(append(paths, %s)...)", strings.Join(keys, ", "))
 	ret.W("}")
 	return ret
 }

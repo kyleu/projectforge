@@ -40,19 +40,14 @@ func exportViewEditClass(m *model.Model) *golang.Block {
 	ret.W("{%% code type Edit struct {")
 	ret.W("  layout.Basic")
 	ret.W("  Model *%s.%s", m.Package, m.Proper())
+	ret.W("  Paths []string")
 	ret.W("  IsNew bool")
 	ret.W("} %%}")
 	return ret
 }
 
 func exportViewEditBody(m *model.Model, p *project.Project, args *model.Args) (*golang.Block, error) {
-	editURL := "/" + m.Route()
-	lo.ForEach(m.PKs(), func(pk *model.Column, _ int) {
-		editURL += "/{%% " + pk.ToGoString("p.Model.") + helper.TextTmplEnd
-	})
-
 	delMsg := fmt.Sprintf("Are you sure you wish to delete %s [{%%%%s p.Model.String() %%%%}]?", m.TitleLower())
-
 	ret := golang.NewBlock("EditBody", "func")
 	ret.W("{%% func (p *Edit) Body(as *app.State, ps *cutil.PageState) %%}")
 	ret.W("  <div class=\"card\">")
@@ -60,11 +55,11 @@ func exportViewEditBody(m *model.Model, p *project.Project, args *model.Args) (*
 	ret.W("    <div class=\"right\"><a href=\"?prototype=random\"><button>Random</button></a></div>")
 	ret.W("    %s%s New %s%s", helper.TextH3Start, svgRef(m.Icon), m.Title(), helper.TextH3End)
 	ret.W("    {%%- else -%%}")
-	delPrefix := "    <div class=\"right\"><a class=\"link-confirm\" href=\"{%%s p.Model.WebPath() %%}/delete\" data-message=\""
+	delPrefix := "    <div class=\"right\"><a class=\"link-confirm\" href=\"{%%s p.Model.WebPath(p.Paths...) %%}/delete\" data-message=\""
 	ret.W(delPrefix + delMsg + `"><button>{%%= components.SVGButton("times", ps) %%} Delete</button></a></div>`)
 	ret.W("    %s%s Edit %s [{%%%%s p.Model.String() %%%%}]%s", helper.TextH3Start, svgRef(m.Icon), m.Title(), helper.TextH3End)
 	ret.W("    " + helper.TextEndIfDash)
-	rt := fmt.Sprintf("{%%%%s util.Choose(p.IsNew, `/%s/_new`, ``) %%%%}", m.Route())
+	rt := fmt.Sprintf("{%%%%s util.Choose(p.IsNew, %s.Route(p.Paths...) + `/_new`, p.Model.WebPath(p.Paths...) + `/edit`) %%%%}", m.Package)
 	ret.W("    <form action=%q class=\"mt\" method=\"post\">", rt)
 	ret.W("      <table class=\"mt expanded\">")
 	ret.W("        <tbody>")

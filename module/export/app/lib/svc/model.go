@@ -7,7 +7,7 @@ type Model interface {
 	TitleString() string
 	Strings() []string
 	ToCSV() ([]string, [][]string)
-	WebPath() string
+	WebPath(prefixes ...string) string
 	ToData() []any
 }
 
