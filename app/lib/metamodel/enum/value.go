@@ -72,11 +72,6 @@ func (x *Value) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	x.Key = str
-	x.Name = ""
-	x.Description = ""
-	x.Icon = ""
-	x.Extra = nil
-	x.Default = false
 	x.Simple = true
 	return nil
 }

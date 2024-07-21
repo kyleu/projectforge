@@ -2,11 +2,11 @@ package util
 
 import (
 	"fmt"
-	"github.com/samber/lo"
 	"strings"
 	"unicode"
 
 	"github.com/gertd/go-pluralize"
+	"github.com/samber/lo"
 )
 
 var plrl *pluralize.Client
