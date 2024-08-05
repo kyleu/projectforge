@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/samber/lo"
@@ -16,13 +15,8 @@ import (
 func Search(args *model.Args, linebreak string) (*file.File, error) {
 	g := golang.NewFile("search", []string{"app", "lib", "search"}, "generated")
 	if args.Models.HasSearch() {
-		g.AddImport(helper.ImpContext, helper.ImpApp, helper.ImpAppUtil, helper.ImpCutil, helper.ImpLo, helper.ImpSearchResult)
+		g.AddImport(helper.ImpContext, helper.ImpApp, helper.ImpAppUtil, helper.ImpCutil, helper.ImpSearchResult)
 	}
-	lo.ForEach(args.Models, func(m *model.Model, _ int) {
-		if m.HasSearches() {
-			g.AddImport(helper.AppImport(m.PackageWithGroup("")))
-		}
-	})
 	g.AddBlocks(searchBlock(args))
 	return g.Render(linebreak)
 }
@@ -55,23 +49,8 @@ func searchModel(m *model.Model) []string {
 		ret.Push("\t\t}")
 	}
 	ret.Pushf("\t\tprm := params.PS.Sanitized(%q, logger).WithLimit(5)", m.Package)
-	const msg = "\t\tmodels, err := as.Services.%s.Search(ctx, params.Q, nil, prm%s, logger)"
+	const msg = "\t\treturn as.Services.%s.SearchEntries(ctx, params.Q, nil, prm%s, logger)"
 	ret.Pushf(msg, m.Proper(), m.SoftDeleteSuffix())
-	ret.Push("\t\tif err != nil {")
-	ret.Push("\t\t\treturn nil, err")
-	ret.Push("\t\t}")
-
-	ret.Pushf("\t\treturn lo.Map(models, func(m *%s.%s, _ int) *result.Result {", m.Package, m.Proper())
-	data := "m"
-	if m.HasTag("big") {
-		data = "nil"
-	}
-	icon := fmt.Sprintf("%q", m.Icon)
-	if icons := m.Columns.WithFormat("icon"); len(icons) == 1 {
-		icon = fmt.Sprintf("%s.%s", data, icons[0].ProperDerived())
-	}
-	ret.Pushf("\t\t\treturn result.NewResult(%q, m.String(), m.WebPath(), m.TitleString(), %s, m, %s, params.Q)", m.Title(), icon, data)
-	ret.Push("\t\t}), nil")
 	ret.Push("\t}")
 	return ret.Slice
 }

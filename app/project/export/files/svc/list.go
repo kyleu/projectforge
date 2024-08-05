@@ -19,7 +19,12 @@ func ServiceList(m *model.Model, args *model.Args, linebreak string) (*file.File
 		if err != nil {
 			return nil, err
 		}
-		g.AddBlocks(ss)
+		sse, err := serviceSearchEntries(m, nil, dbRef)
+		if err != nil {
+			return nil, err
+		}
+		g.AddImport(helper.ImpLo, helper.ImpSearchResult)
+		g.AddBlocks(ss, sse)
 	}
 	return g.Render(linebreak)
 }
