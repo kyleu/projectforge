@@ -5,7 +5,8 @@ import (
 
 	"github.com/jmoiron/sqlx"
 
-	"{{{ .Package }}}/app/lib/filter"
+	"{{{ .Package }}}/app/lib/filter"{{{ if .HasModule "search" }}}
+	"{{{ .Package }}}/app/lib/search/result"{{{ end }}}
 	"{{{ .Package }}}/app/util"
 )
 
@@ -25,11 +26,15 @@ type Service[Mdl Model, Seq any] interface {
 	ServiceBase[Mdl, Seq]
 	Count(ctx context.Context, tx *sqlx.Tx, whereClause string, logger util.Logger, args ...any) (int, error)
 	List(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger) (Seq, error)
-}
+}{{{ if .HasModule "search" }}}
 
 type ServiceSearch[Seq any] interface {
 	Search(ctx context.Context, query string, tx *sqlx.Tx, params *filter.Params, logger util.Logger) (Seq, error)
 }
+
+type ServiceSearchEntries interface {
+	SearchEntries(ctx context.Context, query string, tx *sqlx.Tx, params *filter.Params, logger util.Logger) (result.Results, error)
+}{{{ end }}}
 
 type ServiceID[Mdl Model, Seq any, ID any] interface {
 	Service[Mdl, Seq]
