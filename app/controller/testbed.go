@@ -19,7 +19,7 @@ func Testbed(w http.ResponseWriter, r *http.Request) {
 			ret = frm.GetStringOpt("x")
 		}
 		if ret == "modules" {
-			println(strings.Join(echoModules(as.Services.Modules.ModulesVisible()), "\n"))
+			ret = strings.Join(echoModules(as.Services.Modules.ModulesVisible()), "\n")
 		}
 		ps.SetTitleAndData("Testbed", ret)
 		return Render(r, as, &vtest.Testbed{Param: ret}, ps)

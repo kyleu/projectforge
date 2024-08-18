@@ -17,7 +17,6 @@ func serviceSearch(m *model.Model, grp *model.Column, dbRef string, enums enum.E
 	if grp != nil {
 		prefix = "By" + grp.Proper()
 	}
-	var clauses []string
 	hasEqual, hasLike := false, false
 	lo.ForEach(m.AllSearches(database), func(s string, _ int) {
 		if strings.HasPrefix(s, "=") {
@@ -26,10 +25,7 @@ func serviceSearch(m *model.Model, grp *model.Column, dbRef string, enums enum.E
 			hasLike = true
 		}
 	})
-	eq, like := "$1", "$2"
-	if database == util.DatabaseSQLServer {
-		eq, like = "@p1", "@p2"
-	}
+	eq, like := prms(database)
 	var params []string
 	if hasEqual {
 		params = append(params, "strings.ToLower(query)")
@@ -40,6 +36,7 @@ func serviceSearch(m *model.Model, grp *model.Column, dbRef string, enums enum.E
 			like = eq
 		}
 	}
+	var clauses []string
 	lo.ForEach(m.AllSearches(database), func(s string, _ int) {
 		if strings.HasPrefix(s, "=") {
 			clauses = append(clauses, s+" = "+eq)
@@ -94,29 +91,8 @@ func serviceSearchEntries(m *model.Model, grp *model.Column, database string) (*
 	if grp != nil {
 		prefix = "By" + grp.Proper()
 	}
+	eq, like := prms(database)
 	var clauses []string
-	hasEqual, hasLike := false, false
-	lo.ForEach(m.AllSearches(database), func(s string, _ int) {
-		if strings.HasPrefix(s, "=") {
-			hasEqual = true
-		} else {
-			hasLike = true
-		}
-	})
-	eq, like := "$1", "$2"
-	if database == util.DatabaseSQLServer {
-		eq, like = "@p1", "@p2"
-	}
-	var params []string
-	if hasEqual {
-		params = append(params, "strings.ToLower(query)")
-	}
-	if hasLike {
-		params = append(params, `"%%" + strings.ToLower(query) + "%%"`)
-		if !hasEqual {
-			like = eq
-		}
-	}
 	lo.ForEach(m.AllSearches(database), func(s string, _ int) {
 		if strings.HasPrefix(s, "=") {
 			clauses = append(clauses, s+" = "+eq)
@@ -126,8 +102,9 @@ func serviceSearchEntries(m *model.Model, grp *model.Column, database string) (*
 	})
 
 	ret := golang.NewBlock("search", "func")
-	const decl = "func (s *Service) SearchEntries%s(ctx context.Context, query string, tx *sqlx.Tx, params *filter.Params%s, logger util.Logger) (result.Results, error) {"
-	ret.W(decl, prefix, getSuffix(m))
+	const prms = "ctx context.Context, query string, tx *sqlx.Tx"
+	const decl = "func (s *Service) SearchEntries%s(%s, params *filter.Params%s, logger util.Logger) (result.Results, error) {"
+	ret.W(decl, prefix, prms, getSuffix(m))
 	ret.W("\tret, err := s.Search%s(ctx, query, tx, params, logger)", prefix)
 	ret.WE(1, "nil")
 	ret.W("\treturn lo.Map(ret, func(m *%s, _ int) *result.Result {", m.Proper())
@@ -143,4 +120,11 @@ func serviceSearchEntries(m *model.Model, grp *model.Column, database string) (*
 	ret.W("\t}), nil")
 	ret.W("}")
 	return ret, nil
+}
+
+func prms(database string) (string, string) {
+	if database == util.DatabaseSQLServer {
+		return "@p1", "@p2"
+	}
+	return "$1", "$2"
 }

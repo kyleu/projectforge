@@ -66,7 +66,7 @@ func exportViewListBody(m *model.Model, models model.Models) *golang.Block {
 	ret.W("  <div class=\"card\">")
 	const twoInd = "    "
 	links := m.Links.WithTags(false, "list")
-	pth := "{%%s " + m.Package + ".Route(p.Paths...) %%}"
+	pth := stringLead + m.Package + ".Route(p.Paths...) %%}"
 	ln := fmt.Sprintf(`<a href="%s/_new"><button>{%%%%= components.SVGButton("plus", ps) %%%%} New</button>%s`, pth, helper.TextEndAnchor)
 
 	if m.HasSearches() {

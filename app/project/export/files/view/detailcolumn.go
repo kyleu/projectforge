@@ -13,6 +13,8 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+const stringLead = "{%%s "
+
 func viewDetailColumn(
 	g *golang.Template, ret *golang.Block, models model.Models, m *model.Model, link bool, col *model.Column, modelKey string, indent int, enums enum.Enums,
 ) {
@@ -22,7 +24,7 @@ func viewDetailColumn(
 }
 
 func ModelLinkURL(m *model.Model, prefix string, enums enum.Enums) string {
-	return "{%%s " + prefix + "WebPath(paths...) %%}"
+	return stringLead + prefix + "WebPath(paths...) %%}"
 }
 
 func viewDetailColumnString(rels model.Relations, models model.Models, m *model.Model, col *model.Column) []string {

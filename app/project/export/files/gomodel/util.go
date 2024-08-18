@@ -77,14 +77,13 @@ func modelWebPath(g *golang.File, m *model.Model) *golang.Block {
 	keys := make([]string, 0, len(m.PKs()))
 	lo.ForEach(m.PKs(), func(pk *model.Column, _ int) {
 		g.AddImport(helper.ImpURL)
+		const fn = "url.QueryEscape"
 		switch {
 		case types.IsStringList(pk.Type):
 			g.AddImport(helper.ImpStrings)
-			keys = append(keys, fmt.Sprintf(`url.QueryEscape(strings.Join(%s, ","))`, pk.ToGoString(m.FirstLetter()+".")))
-		case types.IsString(pk.Type):
-			keys = append(keys, "url.QueryEscape("+pk.ToGoString(m.FirstLetter()+".")+")")
+			keys = append(keys, fmt.Sprintf(fn+`(strings.Join(%s, ","))`, pk.ToGoString(m.FirstLetter()+".")))
 		default:
-			keys = append(keys, "url.QueryEscape("+pk.ToGoString(m.FirstLetter()+".")+")")
+			keys = append(keys, fn+"("+pk.ToGoString(m.FirstLetter()+".")+")")
 		}
 	})
 	ret.W("\treturn path.Join(append(paths, %s)...)", strings.Join(keys, ", "))

@@ -60,9 +60,10 @@ func load(src string, tgt string) (*SVG, error) {
 
 	b, err := test(ghLineAwesome + src + util.ExtSVG)
 	if err != nil {
-		b, err = test(ghLineAwesome + src + "-solid.svg")
+		const suffix = "-solid.svg"
+		b, err = test(ghLineAwesome + src + suffix)
 		if err != nil {
-			b, err = test(ghLineAwesome + src + "-solid.svg")
+			b, err = test(ghLineAwesome + src + suffix)
 			if err != nil {
 				return nil, err
 			}

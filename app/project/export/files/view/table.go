@@ -17,9 +17,6 @@ import (
 
 func table(m *model.Model, args *model.Args, linebreak string) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "Table.html")
-	if m.Name == "deck" {
-		println(m.Name)
-	}
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpComponentsView, helper.ImpCutil, helper.ImpFilter)
 	g.AddImport(helper.AppImport(m.PackageWithGroup("")))
 	if m.Columns.HasFormat(model.FmtCountry.Key) || m.Columns.HasFormat(model.FmtSI.Key) {
