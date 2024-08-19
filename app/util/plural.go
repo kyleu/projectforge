@@ -41,9 +41,7 @@ func StringToSingular(s string) string {
 	ret := plrl.Singular(s)
 	if len(s) != len(ret) {
 		orig := s[:len(ret)]
-		if lo.EveryBy([]rune(orig), func(x rune) bool {
-			return unicode.IsUpper(x)
-		}) && strings.ToLower(orig) == strings.ToLower(ret) {
+		if lo.EveryBy([]rune(orig), unicode.IsUpper) && strings.EqualFold(orig, ret) {
 			ret = orig
 		}
 	}

@@ -1,12 +1,15 @@
-package util
+package util_test
 
 import (
 	"encoding/json"
 	"reflect"
 	"testing"
+
+	"{{{ .Package }}}/app/util"
 )
 
 func TestToJSON(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		name  string
 		input interface{}
@@ -20,15 +23,18 @@ func TestToJSON(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := ToJSON(tt.input); got != tt.want {
-				t.Errorf("ToJSON() = %v, want %v", got, tt.want)
+		x := tt
+		t.Run(x.name, func(t *testing.T) {
+			t.Parallel()
+			if got := util.ToJSON(x.input); got != x.want {
+				t.Errorf("ToJSON() = %v, want %v", got, x.want)
 			}
 		})
 	}
 }
 
 func TestToJSONCompact(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		name  string
 		input interface{}
@@ -42,15 +48,18 @@ func TestToJSONCompact(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := ToJSONCompact(tt.input); got != tt.want {
-				t.Errorf("ToJSONCompact() = %v, want %v", got, tt.want)
+		x := tt
+		t.Run(x.name, func(t *testing.T) {
+			t.Parallel()
+			if got := util.ToJSONCompact(x.input); got != x.want {
+				t.Errorf("ToJSONCompact() = %v, want %v", got, x.want)
 			}
 		})
 	}
 }
 
 func TestFromJSON(t *testing.T) {
+	t.Parallel()
 	type testStruct struct {
 		A int
 		B string
@@ -65,19 +74,22 @@ func TestFromJSON(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+		x := tt
+		t.Run(x.name, func(t *testing.T) {
+			t.Parallel()
 			var got testStruct
-			if err := FromJSON(tt.input, &got); err != nil {
+			if err := util.FromJSON(x.input, &got); err != nil {
 				t.Errorf("FromJSON() error = %v", err)
 			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("FromJSON() = %v, want %v", got, tt.want)
+			if !reflect.DeepEqual(got, x.want) {
+				t.Errorf("FromJSON() = %v, want %v", got, x.want)
 			}
 		})
 	}
 }
 
 func TestFromJSONString(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		name  string
 		input json.RawMessage
@@ -87,13 +99,15 @@ func TestFromJSONString(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := FromJSONString(tt.input)
+		x := tt
+		t.Run(x.name, func(t *testing.T) {
+			t.Parallel()
+			got, err := util.FromJSONString(x.input)
 			if err != nil {
 				t.Errorf("FromJSONString() error = %v", err)
 			}
-			if got != tt.want {
-				t.Errorf("FromJSONString() = %v, want %v", got, tt.want)
+			if got != x.want {
+				t.Errorf("FromJSONString() = %v, want %v", got, x.want)
 			}
 		})
 	}

@@ -1,15 +1,18 @@
-package util
+package util_test
 
 import (
 	"reflect"
 	"testing"
+
+	"{{{ .Package }}}/app/util"
 )
 
 func TestNodeGet(t *testing.T) {
-	root := &Node[int]{
+	t.Parallel()
+	root := &util.Node[int]{
 		Name: "root",
-		Children: Nodes[int]{
-			{Name: "child1", Children: Nodes[int]{{Name: "grandchild"}}},
+		Children: util.Nodes[int]{
+			{Name: "child1", Children: util.Nodes[int]{{Name: "grandchild"}}},
 			{Name: "child2"},
 		},
 	}
@@ -36,10 +39,11 @@ func TestNodeGet(t *testing.T) {
 }
 
 func TestNodeFlatten(t *testing.T) {
-	root := &Node[int]{
+	t.Parallel()
+	root := &util.Node[int]{
 		Name: "root",
-		Children: Nodes[int]{
-			{Name: "child1", Children: Nodes[int]{{Name: "grandchild"}}},
+		Children: util.Nodes[int]{
+			{Name: "child1", Children: util.Nodes[int]{{Name: "grandchild"}}},
 			{Name: "child2"},
 		},
 	}
@@ -58,7 +62,8 @@ func TestNodeFlatten(t *testing.T) {
 }
 
 func TestNodesSort(t *testing.T) {
-	nodes := Nodes[int]{
+	t.Parallel()
+	nodes := util.Nodes[int]{
 		{Name: "c"},
 		{Name: "a"},
 		{Name: "b"},
@@ -75,11 +80,12 @@ func TestNodesSort(t *testing.T) {
 }
 
 func TestNodesMerge(t *testing.T) {
-	n1 := Nodes[int]{
+	t.Parallel()
+	n1 := util.Nodes[int]{
 		{Name: "a", Tags: []string{"tag1"}},
-		{Name: "b", Children: Nodes[int]{{Name: "b1"}}},
+		{Name: "b", Children: util.Nodes[int]{{Name: "b1"}}},
 	}
-	n2 := Nodes[int]{
+	n2 := util.Nodes[int]{
 		{Name: "a", Tags: []string{"tag2"}},
 		{Name: "c"},
 	}
@@ -105,9 +111,10 @@ func TestNodesMerge(t *testing.T) {
 }
 
 func TestTreeFlatten(t *testing.T) {
-	tree := Tree[int]{
-		Nodes: Nodes[int]{
-			{Name: "root", Children: Nodes[int]{
+	t.Parallel()
+	tree := util.Tree[int]{
+		Nodes: util.Nodes[int]{
+			{Name: "root", Children: util.Nodes[int]{
 				{Name: "child"},
 			}},
 		},
@@ -122,13 +129,14 @@ func TestTreeFlatten(t *testing.T) {
 }
 
 func TestTreeMerge(t *testing.T) {
-	t1 := &Tree[int]{
-		Nodes:  Nodes[int]{{Name: "a"}},
-		Config: ValueMap{"key1": "value1"},
+	t.Parallel()
+	t1 := &util.Tree[int]{
+		Nodes:  util.Nodes[int]{{Name: "a"}},
+		Config: util.ValueMap{"key1": "value1"},
 	}
-	t2 := &Tree[int]{
-		Nodes:  Nodes[int]{{Name: "b"}},
-		Config: ValueMap{"key2": "value2"},
+	t2 := &util.Tree[int]{
+		Nodes:  util.Nodes[int]{{Name: "b"}},
+		Config: util.ValueMap{"key2": "value2"},
 	}
 
 	merged := t1.Merge(t2)

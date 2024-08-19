@@ -1,7 +1,9 @@
-package util
+package util_test
 
 import (
 	"testing"
+
+	"projectforge.dev/projectforge/app/util"
 )
 
 func TestStringToPlural(t *testing.T) {
@@ -21,10 +23,11 @@ func TestStringToPlural(t *testing.T) {
 		{"a", "as"},
 	}
 
-	for _, test := range tests {
-		result := StringToPlural(test.input)
-		if result != test.expected {
-			t.Errorf("StringToPlural(%s) = %s; expected %s", test.input, result, test.expected)
+	for _, tt := range tests {
+		x := tt
+		result := util.StringToPlural(x.input)
+		if result != x.expected {
+			t.Errorf("StringToPlural(%s) = %s; expected %s", x.input, result, x.expected)
 		}
 	}
 }
@@ -46,10 +49,11 @@ func TestStringToSingular(t *testing.T) {
 		{"as", "a"},
 	}
 
-	for _, test := range tests {
-		result := StringToSingular(test.input)
-		if result != test.expected {
-			t.Errorf("StringToSingular(%s) = %s; expected %s", test.input, result, test.expected)
+	for _, tt := range tests {
+		x := tt
+		result := util.StringToSingular(x.input)
+		if result != x.expected {
+			t.Errorf("StringToSingular(%s) = %s; expected %s", x.input, result, x.expected)
 		}
 	}
 }
@@ -67,10 +71,11 @@ func TestStringForms(t *testing.T) {
 		{"CLASS", "CLASS", "CLASSes"},
 	}
 
-	for _, test := range tests {
-		singResult, pluralResult := StringForms(test.input)
-		if singResult != test.expectedSing || pluralResult != test.expectedPlural {
-			t.Errorf("StringForms(%s) = (%s, %s); expected (%s, %s)", test.input, singResult, pluralResult, test.expectedSing, test.expectedPlural)
+	for _, tt := range tests {
+		x := tt
+		singResult, pluralResult := util.StringForms(x.input)
+		if singResult != x.expectedSing || pluralResult != x.expectedPlural {
+			t.Errorf("StringForms(%s) = (%s, %s); expected (%s, %s)", x.input, singResult, pluralResult, x.expectedSing, x.expectedPlural)
 		}
 	}
 }
@@ -89,10 +94,11 @@ func TestStringPlural(t *testing.T) {
 		{3, "CLASS", "3 CLASSes"},
 	}
 
-	for _, test := range tests {
-		result := StringPlural(test.count, test.input)
-		if result != test.expected {
-			t.Errorf("StringPlural(%d, %s) = %s; expected %s", test.count, test.input, result, test.expected)
+	for _, tt := range tests {
+		x := tt
+		result := util.StringPlural(x.count, x.input)
+		if result != x.expected {
+			t.Errorf("StringPlural(%d, %s) = %s; expected %s", x.count, x.input, result, x.expected)
 		}
 	}
 }

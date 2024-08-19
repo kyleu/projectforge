@@ -1,12 +1,15 @@
-package util
+package util_test
 
 import (
 	"fmt"
 	"testing"
 	"time"
+
+	"projectforge.dev/projectforge/app/util"
 )
 
 func TestTimeFormatting(t *testing.T) {
+	t.Parallel()
 	testTime := time.Date(2023, 5, 15, 14, 30, 45, 123456789, time.UTC)
 
 	tests := []struct {
@@ -14,57 +17,61 @@ func TestTimeFormatting(t *testing.T) {
 		function func(*time.Time) string
 		expected string
 	}{
-		{"TimeToFull", TimeToFull, "2023-05-15 14:30:45"},
-		{"TimeToFullMS", TimeToFullMS, "2023-05-15 14:30:45.123456"},
-		{"TimeToHours", TimeToHours, "14:30:45"},
-		{"TimeToHTML", TimeToHTML, "2023-05-15T14:30:45"},
-		{"TimeToJS", TimeToJS, "2023-05-15T14:30:45Z"},
-		{"TimeToJSFull", TimeToJSFull, "2023-05-15T14:30:45.123Z"},
-		{"TimeToRFC3339", TimeToRFC3339, "2023-05-15T14:30:45.123Z"},
-		{"TimeToVerbose", TimeToVerbose, "Mon May 15 14:30:45 2023 +0000"},
-		{"TimeToYMD", TimeToYMD, "2023-05-15"},
+		{"TimeToFull", util.TimeToFull, "2023-05-15 14:30:45"},
+		{"TimeToFullMS", util.TimeToFullMS, "2023-05-15 14:30:45.123456"},
+		{"TimeToHours", util.TimeToHours, "14:30:45"},
+		{"TimeToHTML", util.TimeToHTML, "2023-05-15T14:30:45"},
+		{"TimeToJS", util.TimeToJS, "2023-05-15T14:30:45Z"},
+		{"TimeToJSFull", util.TimeToJSFull, "2023-05-15T14:30:45.123Z"},
+		{"TimeToRFC3339", util.TimeToRFC3339, "2023-05-15T14:30:45.123Z"},
+		{"TimeToVerbose", util.TimeToVerbose, "Mon May 15 14:30:45 2023 +0000"},
+		{"TimeToYMD", util.TimeToYMD, "2023-05-15"},
 	}
 
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			result := tt.function(&testTime)
-			if result != tt.expected {
-				t.Errorf("%s = %v, want %v", tt.name, result, tt.expected)
+		x := tt
+		t.Run(x.name, func(t *testing.T) {
+			result := x.function(&testTime)
+			if result != x.expected {
+				t.Errorf("%s = %v, want %v", x.name, result, x.expected)
 			}
 		})
 	}
 }
 
 func TestTimeParsing(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		name     string
 		function func(string) (*time.Time, error)
 		input    string
 		expected time.Time
 	}{
-		{"TimeFromFull", TimeFromFull, "2023-05-15 14:30:45", time.Date(2023, 5, 15, 14, 30, 45, 0, time.UTC)},
-		{"TimeFromFullMS", TimeFromFullMS, "2023-05-15 14:30:45.123456", time.Date(2023, 5, 15, 14, 30, 45, 123456000, time.UTC)},
-		{"TimeFromHTML", TimeFromHTML, "2023-05-15T14:30:45", time.Date(2023, 5, 15, 14, 30, 45, 0, time.UTC)},
-		{"TimeFromJS", TimeFromJS, "2023-05-15T14:30:45Z", time.Date(2023, 5, 15, 14, 30, 45, 0, time.UTC)},
-		{"TimeFromRFC3339", TimeFromRFC3339, "2023-05-15T14:30:45.123Z", time.Date(2023, 5, 15, 14, 30, 45, 123000000, time.UTC)},
-		{"TimeFromVerbose", TimeFromVerbose, "Mon May 15 14:30:45 2023 +0000", time.Date(2023, 5, 15, 14, 30, 45, 0, time.UTC)},
-		{"TimeFromYMD", TimeFromYMD, "2023-05-15", time.Date(2023, 5, 15, 0, 0, 0, 0, time.UTC)},
+		{"TimeFromFull", util.TimeFromFull, "2023-05-15 14:30:45", time.Date(2023, 5, 15, 14, 30, 45, 0, time.UTC)},
+		{"TimeFromFullMS", util.TimeFromFullMS, "2023-05-15 14:30:45.123456", time.Date(2023, 5, 15, 14, 30, 45, 123456000, time.UTC)},
+		{"TimeFromHTML", util.TimeFromHTML, "2023-05-15T14:30:45", time.Date(2023, 5, 15, 14, 30, 45, 0, time.UTC)},
+		{"TimeFromJS", util.TimeFromJS, "2023-05-15T14:30:45Z", time.Date(2023, 5, 15, 14, 30, 45, 0, time.UTC)},
+		{"TimeFromRFC3339", util.TimeFromRFC3339, "2023-05-15T14:30:45.123Z", time.Date(2023, 5, 15, 14, 30, 45, 123000000, time.UTC)},
+		{"TimeFromVerbose", util.TimeFromVerbose, "Mon May 15 14:30:45 2023 +0000", time.Date(2023, 5, 15, 14, 30, 45, 0, time.UTC)},
+		{"TimeFromYMD", util.TimeFromYMD, "2023-05-15", time.Date(2023, 5, 15, 0, 0, 0, 0, time.UTC)},
 	}
 
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			result, err := tt.function(tt.input)
+		x := tt
+		t.Run(x.name, func(t *testing.T) {
+			result, err := x.function(x.input)
 			if err != nil {
-				t.Errorf("%s returned unexpected error: %v", tt.name, err)
+				t.Errorf("%s returned unexpected error: %v", x.name, err)
 			}
-			if !result.Equal(tt.expected) {
-				t.Errorf("%s = %v, want %v", tt.name, result, tt.expected)
+			if !result.Equal(x.expected) {
+				t.Errorf("%s = %v, want %v", x.name, result, x.expected)
 			}
 		})
 	}
 }
 
 func TestFormatSeconds(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		input    float64
 		expected string
@@ -76,16 +83,19 @@ func TestFormatSeconds(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		t.Run(fmt.Sprintf("%.3f", tt.input), func(t *testing.T) {
-			result := FormatSeconds(tt.input)
-			if result != tt.expected {
-				t.Errorf("FormatSeconds(%.3f) = %s, want %s", tt.input, result, tt.expected)
+		x := tt
+		t.Run(fmt.Sprintf("%.3f", x.input), func(t *testing.T) {
+			t.Parallel()
+			result := util.FormatSeconds(x.input)
+			if result != x.expected {
+				t.Errorf("FormatSeconds(%.3f) = %s, want %s", x.input, result, x.expected)
 			}
 		})
 	}
 }
 
 func TestFormatSecondsFull(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		input    float64
 		expected string
@@ -97,10 +107,11 @@ func TestFormatSecondsFull(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		t.Run(fmt.Sprintf("%.3f", tt.input), func(t *testing.T) {
-			result := FormatSecondsFull(tt.input)
-			if result != tt.expected {
-				t.Errorf("FormatSecondsFull(%.3f) = %s, want %s", tt.input, result, tt.expected)
+		x := tt
+		t.Run(fmt.Sprintf("%.3f", x.input), func(t *testing.T) {
+			result := util.FormatSecondsFull(x.input)
+			if result != x.expected {
+				t.Errorf("FormatSecondsFull(%.3f) = %s, want %s", x.input, result, x.expected)
 			}
 		})
 	}
