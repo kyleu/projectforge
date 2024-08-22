@@ -11,7 +11,7 @@
 {% func (p *GoSource) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>{%= components.SVGIcon(`app`, ps) %} {%s util.AppName %}</h3>
-    <pre>go install {{{ .Package }}}@latest</pre>
+    <pre class="mt">go install {{{ .Package }}}@latest</pre>
     <p>
       <a href="{{{ .Info.Sourcecode }}}"><button>Source Code</button></a>
     </p>

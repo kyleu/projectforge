@@ -43,7 +43,7 @@ func (p *GoSource) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 	qw422016.E().S(util.AppName)
 //line views/vsite/GoSource.html:13
 	qw422016.N().S(`</h3>
-    <pre>go install projectforge.dev/projectforge@latest</pre>
+    <pre class="mt">go install projectforge.dev/projectforge@latest</pre>
     <p>
       <a href="https://github.com/kyleu/projectforge"><button>Source Code</button></a>
     </p>

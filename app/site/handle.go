@@ -30,7 +30,7 @@ func Handle(path []string, as *app.State, ps *cutil.PageState) (string, layout.P
 			"<meta name=\"go-import\" content=\"projectforge.dev/projectforge git %s\">\n  " +
 			"<meta name=\"go-source\" content=\"projectforge.dev/projectforge %s %s/tree/master{/dir} %s/blob/master{/dir}/{file}#L{line}\">"
 		ps.HeaderContent = fmt.Sprintf(msg, util.AppSource, util.AppSource, util.AppSource, util.AppSource)
-		return "", &vsite.GoSource{}, path, nil
+		return "", &vsite.GoSource{}, []string{"Source**code"}, nil
 	case keyFeatures:
 		switch {
 		case len(path) == 1:

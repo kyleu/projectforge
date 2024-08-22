@@ -1,7 +1,7 @@
 // $PF_GENERATE_ONCE$
 module {{{ .Package }}}/tools/desktop
 
-go 1.22
+go {{{ .GoVersionSafe }}}
 
 require (
 	{{{ .Package }}} v0.0.0

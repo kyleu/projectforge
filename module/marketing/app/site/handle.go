@@ -30,7 +30,7 @@ func Handle(path []string, as *app.State, ps *cutil.PageState) (string, layout.P
 			"<meta name=\"go-import\" content=\"{{{ .Package }}} git %s\">\n  " +
 			"<meta name=\"go-source\" content=\"{{{ .Package }}} %s %s/tree/master{/dir} %s/blob/master{/dir}/{file}#L{line}\">"
 		ps.HeaderContent = fmt.Sprintf(msg, util.AppSource, util.AppSource, util.AppSource, util.AppSource)
-		return "", &vsite.GoSource{}, path, nil
+		return "", &vsite.GoSource{}, []string{"Source**code"}, nil
 	case keyAbout:
 		ps.SetTitleAndData("About "+util.AppName, util.AppName+" v"+as.BuildInfo.Version)
 		page = &views.About{}
