@@ -1,6 +1,6 @@
 module projectforge.dev/projectforge
 
-go 1.23.0
+go 1.22.6
 
 require (
 	github.com/CAFxX/httpcompression v0.0.9
