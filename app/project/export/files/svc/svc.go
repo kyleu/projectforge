@@ -56,7 +56,7 @@ func typeAssert(g *golang.File, m *model.Model, enums enum.Enums) *golang.Block 
 	ret := golang.NewBlock("assert", "type")
 	suffix := ""
 	if m.IsSoftDelete() {
-		suffix += "SoftDelete"
+		suffix += "soft-delete"
 	}
 	var assertion string
 	if len(m.PKs()) == 1 {

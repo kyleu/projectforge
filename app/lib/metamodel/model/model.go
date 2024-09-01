@@ -54,7 +54,7 @@ func (m *Model) PKs() Columns {
 }
 
 func (m *Model) IsSoftDelete() bool {
-	return m.HasTag("softDelete")
+	return m.HasTag("soft-delete")
 }
 
 func (m *Model) SoftDeleteSuffix() string {
