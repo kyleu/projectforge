@@ -1,0 +1,141 @@
+type Module {
+    key: String!
+    name: String!
+    icon: String!
+    description: String!
+    hidden: Boolean!
+    authorName: String!
+    authorEmail: String!
+    license: String!
+    sourcecode: String!
+    configVars: [String!]!
+    portOffsets: [String!]!
+    dangerous: Boolean!
+    requires: [String!]!
+    priority: Int!
+    technology: [String!]!
+    files: [String!]!
+    url: String!
+    usageMD: [String!]!
+}
+
+type Colors {
+	border: String!
+	linkDecoration: String!
+    foreground: String!
+	foregroundMuted: String!
+	background: String!
+	backgroundMuted: String!
+	linkForeground: String!
+	linkVisitedForeground: String!
+	navForeground: String!
+	navBackground: String!
+	menuForeground: String!
+	menuSelectedForeground: String!
+	menuBackground: String!
+	menuSelectedBackground: String!
+	modalBackdrop: String!
+	success: String!
+	error: String!
+}
+
+type Theme {
+	key: String!
+	light: Colors!
+	dark:  Colors!
+}
+
+type Info {
+	org: String!
+	authorID: String!
+	authorName: String!
+	authorEmail: String!
+	team: String!
+	license: String!
+	homepage: String!
+	sourcecode: String!
+	summary: String!
+	description: String!
+	ci: String!
+	homebrew: String!
+	bundle: String!
+	signingIdentity: String!
+	notarizeEmail: String!
+	databaseEngine: String!
+	slack: String!
+	channels: [String!]!
+	javaPackage: String!
+	goVersion: String!
+	goBinary: String!
+	configVars: [String!]!
+	extraFiles: [String!]!
+	ignoredFiles: [String!]!
+	deployments: [String!]!
+	envVars: [String!]!
+	#docs: Docs!
+	acronyms: [String!]!
+	#moduleDefs: ModuleDefs!
+}
+
+type Build {
+	private:   Boolean!
+	changelog: Boolean!
+	testsFail: Boolean!
+	noScript:  Boolean!
+	simple:    Boolean!
+
+	desktop:  Boolean!
+	notarize: Boolean!
+	signing:  Boolean!
+	safeMode: Boolean!
+
+	android: Boolean!
+	iOS:     Boolean!
+	wasm:    Boolean!
+	x86:     Boolean!
+
+	windowsARM: Boolean!
+	linuxARM:   Boolean!
+	linuxMIPS:  Boolean!
+	linuxOdd:   Boolean!
+
+	aix:       Boolean!
+	dragonfly: Boolean!
+	illumos:   Boolean!
+	freeBSD:   Boolean!
+	netBSD:    Boolean!
+	openBSD:   Boolean!
+	plan9:     Boolean!
+	solaris:   Boolean!
+
+	homebrew:  Boolean!
+	nfpms:     Boolean!
+	bom:       Boolean!
+	snapcraft: Boolean!
+}
+
+
+type Project {
+    key: String!
+    name: String!
+    icon: String!
+    exec: String!
+    version: String!
+    package: String!
+    args: String!
+    port: Int!
+    modules: [String!]!
+    ignore: [String!]!
+    tags: [String!]!
+
+    info: Info!
+    theme: Theme!
+    build: Build!
+    files: [String!]!
+
+    #exportArgs: *model.Args
+    #config: Util.ValueMap
+    path: String!
+    parent: String!
+    error: String!
+}

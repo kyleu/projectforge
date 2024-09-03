@@ -1,0 +1,4 @@
+# $PF_GENERATE_ONCE$
+type Example {
+    id: String!
+}

@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"projectforge.dev/projectforge/app/gql"
 	"strings"
 	"sync"
 
@@ -16,7 +17,11 @@ import (
 
 var allowedRoutes = []string{"/about", "/admin", "/testbed", "/welcome"}
 
-func initApp(_ context.Context, _ *app.State, _ util.Logger) error {
+func initApp(_ context.Context, as *app.State, logger util.Logger) error {
+	_, err := gql.NewSchema(as, logger)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

@@ -44,6 +44,10 @@ type KeyTypeDesc struct {
 	Description string `json:"description"`
 }
 
+func (k *KeyTypeDesc) String() string {
+	return fmt.Sprintf("%s (%s)", k.Key, k.Type)
+}
+
 func (k *KeyTypeDesc) Array(key string) []string {
 	return []string{strings.ReplaceAll("`"+k.Key+"`", "{key}", key), k.Type, strings.ReplaceAll(k.Description, "{key}", key)}
 }
@@ -53,6 +57,12 @@ func (k *KeyTypeDesc) Matches(x *KeyTypeDesc) bool {
 }
 
 type KeyTypeDescs []*KeyTypeDesc
+
+func (k KeyTypeDescs) Strings() []string {
+	return lo.Map(k, func(x *KeyTypeDesc, _ int) string {
+		return x.String()
+	})
+}
 
 func (k KeyTypeDescs) Sort() KeyTypeDescs {
 	slices.SortFunc(k, func(l *KeyTypeDesc, r *KeyTypeDesc) int {

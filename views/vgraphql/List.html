@@ -1,0 +1,41 @@
+{% import (
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/layout"
+) %}
+
+{% code type List struct {
+  layout.Basic
+  Keys []string
+  Counts []int
+} %}
+
+{% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
+  {%- code titles := as.GraphQL.Titles() -%}
+  <div class="card">
+    <h3>{%= components.SVGIcon(`graph`, ps) %} GraphQL</h3>
+    {%- if len(p.Keys) == 0 -%}
+    <p><em>no schemata available</em></p>
+    {%- else -%}
+    <div class="overflow full-width">
+      <table class="mt">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th class="shrink">Exec Count</th>
+          </tr>
+        </thead>
+        <tbody>
+          {%- for idx, k := range p.Keys -%}
+          <tr>
+            <td><a href="/graphql/{%s k %}">{%s titles[k] %}</a></td>
+            <td>{%d p.Counts[idx] %}</td>
+          </tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
+    {%- endif -%}
+  </div>
+{% endfunc %}

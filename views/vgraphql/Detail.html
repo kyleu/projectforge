@@ -1,0 +1,30 @@
+{% import (
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/views/layout"
+) %}
+
+{% code type Detail struct {
+  layout.Basic
+  Key string
+} %}
+
+{% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
+  <style>
+    html, body {
+      height: 100%;
+    }
+  </style>
+  <link rel="stylesheet" media="screen" href="/assets/graphql/graphiql.min.css">
+
+  <script src="/assets/graphql/fetch.min.js" type="application/javascript" defer="defer"></script>
+  <script src="/assets/graphql/react.min.js" type="application/javascript" defer="defer"></script>
+  <script src="/assets/graphql/react-dom.min.js" type="application/javascript" defer="defer"></script>
+  <script src="/assets/graphql/graphiql.min.js" type="application/javascript" defer="defer"></script>
+
+  <script>window.GraphQLVersion = "16.5.0"</script>
+  <script src="/assets/graphql/render.js" type="application/javascript" defer="defer"></script>
+  <div id="graphiql">
+    <em>Loading...</em>
+  </div>
+{% endfunc %}

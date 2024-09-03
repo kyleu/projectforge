@@ -1,0 +1,4 @@
+## include[scalars.graphql]
+## include[types.graphql]
+## include[query.graphql]
+## include[mutation.graphql]

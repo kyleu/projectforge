@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/lib/graphql"
 	"projectforge.dev/projectforge/app/lib/telemetry"
 	"projectforge.dev/projectforge/app/lib/theme"
 	"projectforge.dev/projectforge/app/util"
@@ -32,6 +33,7 @@ type State struct {
 	Debug     bool
 	BuildInfo *BuildInfo
 	Files     filesystem.FileLoader
+	GraphQL   *graphql.Service
 	Themes    *theme.Service
 	Services  *Services
 	Started   time.Time
@@ -57,6 +59,7 @@ func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, enableTelemetr
 		Debug:     debug,
 		BuildInfo: bi,
 		Files:     f,
+		GraphQL:   graphql.NewService(),
 		Themes:    theme.NewService(f),
 		Started:   util.TimeCurrent(),
 	}, nil
@@ -64,5 +67,8 @@ func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, enableTelemetr
 
 func (s State) Close(ctx context.Context, logger util.Logger) error {
 	defer func() { _ = telemetry.Close(ctx) }()
+	if err := s.GraphQL.Close(); err != nil {
+		logger.Errorf("error closing GraphQL service: %+v", err)
+	}
 	return s.Services.Close(ctx, logger)
 }

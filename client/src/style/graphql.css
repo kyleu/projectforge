@@ -1,0 +1,8 @@
+#graphiql {
+  height: 100%;
+  box-sizing: unset;
+}
+
+.graphiql-logo-link {
+  display: none;
+}

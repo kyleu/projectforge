@@ -12,6 +12,7 @@
     "docbrowse",
     "filesystem",
     "git",
+    "graphql",
     "help",
     "ios",
     "jsx",
