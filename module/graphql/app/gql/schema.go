@@ -20,14 +20,15 @@ type Schema struct {
 	sch string
 	svc *graphql.Service
 	st  *app.State
+	log util.Logger
 }
 
-func NewSchema(st *app.State) (*Schema, error) {
+func NewSchema(st *app.State, logger util.Logger) (*Schema, error) {
 	sch, err := read("schema.graphql", 0)
 	if err != nil {
 		return nil, err
 	}
-	ret := &Schema{sch: sch, svc: st.GraphQL, st: st}
+	ret := &Schema{sch: sch, svc: st.GraphQL, st: st, log: logger}
 	err = ret.svc.RegisterStringSchema(util.AppKey, util.AppName, ret.sch, ret)
 	if err != nil {
 		return nil, err
