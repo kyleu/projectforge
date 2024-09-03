@@ -131,6 +131,14 @@ func (t *TemplateContext) GoVersionSafe() string {
 	return util.OrDefault(t.Info.GoVersion, DefaultGoVersion)
 }
 
+func (t *TemplateContext) GoMajorVersionSafe() string {
+	v := util.OrDefault(t.Info.GoVersion, DefaultGoVersion)
+	if strings.Count(v, ".") <= 1 {
+		return v
+	}
+	return v[:strings.LastIndex(v, ".")]
+}
+
 func (t *TemplateContext) GoBinarySafe() string {
 	return util.OrDefault(t.Info.GoBinary, goStdBin)
 }

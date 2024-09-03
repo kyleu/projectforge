@@ -1,7 +1,7 @@
 // $PF_GENERATE_ONCE$
 module {{{ .Package }}}
 
-go {{{ .GoVersionSafe }}}
+go {{{ .GoMajorVersionSafe }}}
 
 require (
 	github.com/CAFxX/httpcompression v0.0.9

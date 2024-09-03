@@ -62,10 +62,10 @@ func RunAction(w http.ResponseWriter, r *http.Request) {
 		ps.Data = result
 		if isBuild {
 			if phase == depsKey {
-				return runDeps(prj, result, w, r, as, ps)
+				return runDeps(prj, result, r, as, ps)
 			}
 			if phase == pkgsKey {
-				return runPkgs(prj, result, w, r, as, ps)
+				return runPkgs(prj, result, r, as, ps)
 			}
 			page := &vbuild.BuildResult{Project: prj, Cfg: cfg, BuildResult: result}
 			return controller.Render(r, as, page, ps, "projects", prj.Key, actT.Breadcrumb())
