@@ -2,7 +2,9 @@ package gql
 
 import (
 	"context"
+
 	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/project"
 )

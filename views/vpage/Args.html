@@ -51,6 +51,9 @@
             {%- case "number", "int" -%}
             {%- code i, _ := strconv.ParseInt(v, 10, 32) -%}
             {%= edit.IntTable(arg.Key, "", title, int(i), 5, arg.Description) %}
+            {%- case "float" -%}
+            {%- code f, _ := strconv.ParseFloat(v, 64) -%}
+            {%= edit.FloatTable(arg.Key, "", title, f, 5, arg.Description) %}
             {%- default -%}
             {%= edit.DatalistTable(arg.Key, "", title, v, arg.Choices, nil, 5, arg.Description) %}
             {%- endswitch -%}

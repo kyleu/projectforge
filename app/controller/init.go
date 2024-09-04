@@ -2,7 +2,6 @@ package controller
 
 import (
 	"context"
-	"projectforge.dev/projectforge/app/gql"
 	"strings"
 	"sync"
 
@@ -11,6 +10,7 @@ import (
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/gql"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )

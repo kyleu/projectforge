@@ -18,11 +18,11 @@ type FieldDesc struct {
 
 func (d FieldDesc) Parse(q any) (any, error) {
 	switch d.Type {
-	case "bool":
+	case "bool", "boolean":
 		return ParseBool(q, "", true)
 	case "float":
 		return ParseFloat(q, "", true)
-	case "int":
+	case "int", "number":
 		return ParseInt(q, "", true)
 	case "string", "":
 		return ParseString(q, "", true)

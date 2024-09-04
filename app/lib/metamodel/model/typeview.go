@@ -58,7 +58,11 @@ func ToGoViewString(t *types.Wrapped, prop string, nullable bool, format string,
 		if e == nil || e.Simple() {
 			return tmplStartV + ToGoString(t, nullable, prop, false) + tmplEnd
 		}
-		return tmplStartS + ToGoString(t, nullable, prop, false) + ".String()" + tmplEnd
+		ret := tmplStartS + ToGoString(t, nullable, prop, false) + ".String()" + tmplEnd
+		if e.HasValueIcons() {
+			ret += " " + tmplStartEQ + "components.SVGIcon(" + ToGoString(t, nullable, prop, false) + ".Icon, ps)" + tmplEnd
+		}
+		return ret
 	case types.KeyTimestamp:
 		if nullable {
 			return tmplStartEQ + "view.Timestamp(" + prop + tmplEndP

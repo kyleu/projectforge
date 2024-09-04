@@ -37,16 +37,19 @@ func getTableColumnStrings(m *model.Model, modelKey string, rels model.Relations
 		if len(relTitles) == 0 {
 			relTitles = relModel.PKs()
 		}
+		get := fmt.Sprintf("%sBy%s.Get(%s%s)", k, srcCol.Proper(), modelKey, srcCol.Proper())
+		if srcCol.Nullable && !tgtCol.Nullable {
+			get = fmt.Sprintf("%sBy%s.Get(*%s%s)", k, srcCol.Proper(), modelKey, srcCol.Proper())
+		}
+
 		if len(relTitles) == 1 && relTitles[0].Name == tgtCol.Name {
-			return "", false
+			return get + "||", true
 		}
 		st, end := "{%% if x := ", "; x != nil %%} ({%%s x.TitleString() %%})"
 		if srcCol.Nullable && !tgtCol.Nullable {
-			get := fmt.Sprintf("%sBy%s.Get(*%s%s)", k, srcCol.Proper(), modelKey, srcCol.Proper())
-			return "{%% if " + modelKey + srcCol.Proper() + " != nil %%}" +
+			return get + "||{%% if " + modelKey + srcCol.Proper() + " != nil %%}" +
 				st + get + end + helper.TextEndIf + helper.TextEndIf, true
 		}
-		get := fmt.Sprintf("%sBy%s.Get(%s%s)", k, srcCol.Proper(), modelKey, srcCol.Proper())
 		return get + "||" + st + get + end + helper.TextEndIf, true
 	})
 	return strings.Join(ret, "")

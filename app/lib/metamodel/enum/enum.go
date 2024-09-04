@@ -145,6 +145,12 @@ func (e *Enum) HasTag(t string) bool {
 	return lo.Contains(e.Tags, t)
 }
 
+func (e *Enum) HasValueIcons() bool {
+	return lo.ContainsBy(e.Values, func(x *Value) bool {
+		return x.Icon != ""
+	})
+}
+
 func (e *Enum) Breadcrumbs() string {
 	ret := lo.Map(e.Group, func(g string, _ int) string {
 		return fmt.Sprintf("%q", g)

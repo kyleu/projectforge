@@ -2,8 +2,10 @@ package gql
 
 import (
 	"fmt"
+
 	"github.com/samber/lo"
 	"golang.org/x/exp/maps"
+
 	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/util"
 )

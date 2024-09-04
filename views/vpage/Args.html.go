@@ -138,19 +138,31 @@ func (p *Args) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 			qw422016.N().S(`
 `)
 //line views/vpage/Args.html:54
-		default:
-//line views/vpage/Args.html:54
+		case "float":
+//line views/vpage/Args.html:55
+			f, _ := strconv.ParseFloat(v, 64)
+
+//line views/vpage/Args.html:55
 			qw422016.N().S(`            `)
-//line views/vpage/Args.html:55
-			edit.StreamDatalistTable(qw422016, arg.Key, "", title, v, arg.Choices, nil, 5, arg.Description)
-//line views/vpage/Args.html:55
+//line views/vpage/Args.html:56
+			edit.StreamFloatTable(qw422016, arg.Key, "", title, f, 5, arg.Description)
+//line views/vpage/Args.html:56
 			qw422016.N().S(`
 `)
-//line views/vpage/Args.html:56
+//line views/vpage/Args.html:57
+		default:
+//line views/vpage/Args.html:57
+			qw422016.N().S(`            `)
+//line views/vpage/Args.html:58
+			edit.StreamDatalistTable(qw422016, arg.Key, "", title, v, arg.Choices, nil, 5, arg.Description)
+//line views/vpage/Args.html:58
+			qw422016.N().S(`
+`)
+//line views/vpage/Args.html:59
 		}
-//line views/vpage/Args.html:57
+//line views/vpage/Args.html:60
 	}
-//line views/vpage/Args.html:57
+//line views/vpage/Args.html:60
 	qw422016.N().S(`          </tbody>
         </table>
       </div>
@@ -158,31 +170,31 @@ func (p *Args) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
     </form>
   </div>
 `)
-//line views/vpage/Args.html:64
+//line views/vpage/Args.html:67
 }
 
-//line views/vpage/Args.html:64
+//line views/vpage/Args.html:67
 func (p *Args) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vpage/Args.html:64
+//line views/vpage/Args.html:67
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vpage/Args.html:64
+//line views/vpage/Args.html:67
 	p.StreamBody(qw422016, as, ps)
-//line views/vpage/Args.html:64
+//line views/vpage/Args.html:67
 	qt422016.ReleaseWriter(qw422016)
-//line views/vpage/Args.html:64
+//line views/vpage/Args.html:67
 }
 
-//line views/vpage/Args.html:64
+//line views/vpage/Args.html:67
 func (p *Args) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vpage/Args.html:64
+//line views/vpage/Args.html:67
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vpage/Args.html:64
+//line views/vpage/Args.html:67
 	p.WriteBody(qb422016, as, ps)
-//line views/vpage/Args.html:64
+//line views/vpage/Args.html:67
 	qs422016 := string(qb422016.B)
-//line views/vpage/Args.html:64
+//line views/vpage/Args.html:67
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vpage/Args.html:64
+//line views/vpage/Args.html:67
 	return qs422016
-//line views/vpage/Args.html:64
+//line views/vpage/Args.html:67
 }

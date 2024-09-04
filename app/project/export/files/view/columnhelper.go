@@ -15,7 +15,7 @@ import (
 
 var (
 	ind1             = "  "
-	anchorIcon       = "<a title=%q href=\"{%%%%s %s %%%%}\">%s</a>"
+	anchorIcon       = "<a title=%q href=%q>%s</a>"
 	anchorMsgNotNull = `%s  ` + anchorIcon
 	anchorMsg        = "%s  {%%%% if %s%s != nil %%%%}" + anchorIcon + helper.TextEndIfExtra
 	linkStart        = "  <a href=\""
@@ -68,7 +68,10 @@ func viewColumn(
 				msg := `{%%%% if x := %s; x != nil %%%%}{%%%%= components.SVGLink(x.%s, ps) %%%%}{%%%% else %%%%}%s{%%%% endif %%%%}`
 				icon = fmt.Sprintf(msg, prefix, icons[0].ProperDerived(), icon)
 			}
-			wp := modelKey + "WebPath(" + pathKey + "...)"
+			if prefix == "" {
+				println()
+			}
+			wp := `{%% if x := ` + prefix + `; x != nil %%}{%%s x.WebPath(` + pathKey + `...) %%}{%% endif %%}`
 			if col.Nullable {
 				ret.W(anchorMsg, ind, modelKey, col.Proper(), relModel.Title(), wp, icon)
 			} else {
