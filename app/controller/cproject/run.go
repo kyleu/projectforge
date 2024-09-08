@@ -87,7 +87,7 @@ func loadActionProject(r *http.Request, as *app.State) (util.ValueMap, action.Ty
 		return nil, actT, nil, err
 	}
 
-	cfg := cutil.QueryArgsMap(r)
+	cfg := cutil.QueryArgsMap(r.URL)
 	prj, err := as.Services.Projects.Get(tgt)
 	if err != nil {
 		return nil, actT, nil, err

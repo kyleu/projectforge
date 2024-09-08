@@ -80,9 +80,9 @@ func QueryStringBool(r *http.Request, key string) bool {
 	return x == util.BoolTrue || x == "t" || x == "True" || x == "TRUE"
 }
 
-func QueryArgsMap(r *http.Request) util.ValueMap {
-	ret := make(util.ValueMap, len(r.Header))
-	for k, v := range r.URL.Query() {
+func QueryArgsMap(uri *url.URL) util.ValueMap {
+	ret := make(util.ValueMap, len(uri.Query()))
+	for k, v := range uri.Query() {
 		if len(v) == 1 {
 			ret[k] = v[0]
 		} else {

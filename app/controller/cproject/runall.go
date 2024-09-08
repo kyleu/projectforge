@@ -29,7 +29,7 @@ func RunAllActions(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		cfg := cutil.QueryArgsMap(r)
+		cfg := cutil.QueryArgsMap(r.URL)
 		prjs := as.Services.Projects.Projects()
 		tags := util.StringSplitAndTrim(r.URL.Query().Get("tags"), ",")
 		if len(tags) == 0 {
