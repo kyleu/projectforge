@@ -63,20 +63,31 @@ func detail(m *model.Model, args *model.Args, linebreak string) (*file.File, err
 		g.AddImport(helper.AppImport("lib/audit"))
 		g.AddImport(helper.ViewImport("vaudit"))
 	}
-	vdb, err := exportViewDetailBody(g, m, args.Audit(m), args.Models, args.Enums)
+	vdb, err := exportViewDetailBody(g, m, rrs, args.Audit(m), args.Models, args.Enums)
 	if err != nil {
 		return nil, err
 	}
-	g.AddBlocks(exportViewDetailClass(m, args.Models, args.Audit(m), g), vdb)
+	vdt, err := exportViewDetailTable(g, m, args.Models, args.Enums)
+	if err != nil {
+		return nil, err
+	}
+
+	g.AddBlocks(exportViewDetailClass(m, rrs, args.Models, args.Audit(m), g), vdb, vdt)
+	if len(rrs) > 0 {
+		vdr, err := exportViewDetailRelations(g, m, rrs, args.Models)
+		if err != nil {
+			return nil, err
+		}
+		g.AddBlocks(vdr)
+	}
 	return g.Render(linebreak)
 }
 
-func exportViewDetailClass(m *model.Model, models model.Models, audit bool, g *golang.Template) *golang.Block {
+func exportViewDetailClass(m *model.Model, rrs model.Relations, models model.Models, audit bool, g *golang.Template) *golang.Block {
 	ret := golang.NewBlock("Detail", "struct")
 	ret.W("{%% code type Detail struct {")
 	ret.W("  layout.Basic")
-	ret.W("  Model *%s.%s", m.Package, m.Proper())
-	rrs := models.ReverseRelations(m.Name)
+	ret.W("  Model %s", m.Pointer())
 	if m.Columns.HasFormat(model.FmtCountry.Key) {
 		g.AddImport(helper.ImpAppUtil)
 	}
@@ -104,7 +115,7 @@ func exportViewDetailClass(m *model.Model, models model.Models, audit bool, g *g
 	return ret
 }
 
-func exportViewDetailBody(g *golang.Template, m *model.Model, audit bool, models model.Models, enums enum.Enums) (*golang.Block, error) {
+func exportViewDetailBody(g *golang.Template, m *model.Model, rrs model.Relations, audit bool, models model.Models, enums enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock("DetailBody", "func")
 	ret.W("{%% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %%}")
 	ret.W("  <div class=\"card\">")
@@ -129,36 +140,13 @@ func exportViewDetailBody(g *golang.Template, m *model.Model, audit bool, models
 		}
 		ret.W("    </div>")
 	}
-	ret.W("    <div class=\"mt overflow full-width\">")
-	ret.W("      <table>")
-	ret.W("        <tbody>")
-	for _, col := range m.Columns {
-		if col.HasTag("debug-only") {
-			ret.W(`          {%%- if as.Debug -%%}`)
-		}
-		ret.W("          <tr>")
-		h, err := col.Help(enums)
-		if err != nil {
-			return nil, err
-		}
-		hlp := h
-		if !strings.HasPrefix(hlp, "\"") {
-			hlp = "\"{%%s " + hlp + " %%}\""
-		}
-		ret.W(`            <th class="shrink" title=%s>%s</th>`, hlp, col.Title())
-		viewDetailColumn(g, ret, models, m, false, col, "p.Model.", 6, enums)
-		ret.W("          </tr>")
-		if col.HasTag("debug-only") {
-			ret.W(ind5 + helper.TextEndIfDash)
-		}
-	}
-	ret.W("        </tbody>")
-	ret.W("      </table>")
-	ret.W("    </div>")
+	ret.W("    {%%= DetailTable(p, ps) %%}")
 	ret.W("  </div>")
 	ret.W("  {%%- comment %%}$PF_SECTION_START(extra)${%% endcomment -%%}")
 	ret.W("  {%%- comment %%}$PF_SECTION_END(extra)${%% endcomment -%%}")
-	exportViewDetailReverseRelations(ret, m, models, g)
+	if len(rrs) > 0 {
+		ret.W("  {%%= DetailRelations(as, p, ps) %%}")
+	}
 	if audit {
 		ret.W("  {%%- if len(p.AuditRecords) > 0 -%%}")
 		ret.W("  <div class=\"card\">")
@@ -172,54 +160,35 @@ func exportViewDetailBody(g *golang.Template, m *model.Model, audit bool, models
 	return ret, nil
 }
 
-func exportViewDetailReverseRelations(ret *golang.Block, m *model.Model, models model.Models, g *golang.Template) {
-	rels := models.ReverseRelations(m.Name)
-	if len(rels) == 0 {
-		return
-	}
-	g.AddImport(helper.ImpAppUtil)
-	ret.W("  {%%%%- code relationHelper := %s.%s{p.Model} -%%%%}", m.Package, m.ProperPlural())
-	ret.W("  <div class=\"card\">")
-	ret.W("    <h3 class=\"mb\">Relations</h3>")
-	ret.W("    <ul class=\"accordion\">")
-	lo.ForEach(rels, func(rel *model.Relation, _ int) {
-		tgt := models.Get(rel.Table)
-		tgtCols := rel.TgtColumns(tgt)
-		tgtName := fmt.Sprintf("%sBy%s", tgt.ProperPlural(), strings.Join(tgtCols.ProperNames(), ""))
-		ret.W("      <li>")
-		extra := fmt.Sprintf("{%%%% if p.Params.Specifies(`%s`) %%%%} checked=\"checked\""+helper.TextEndIfExtra, tgt.Package)
-		ret.W("        <input id=\"accordion-%s\" type=\"checkbox\" hidden=\"hidden\"%s />", tgtName, extra)
-		ret.W("        <label for=\"accordion-%s\">", tgtName)
-		ret.W("          {%%= components.ExpandCollapse(3, ps) %%}")
-		ret.W("          {%%%%= components.SVGInline(`%s`, 16, ps) %%%%}", tgt.Icon)
-		msg := "          {%%%%s util.StringPlural(len(p.Rel%s), \"%s\") %%%%} by [%s]"
-		ret.W(msg, tgtName, tgt.Title(), strings.Join(tgtCols.Titles(), ", "))
-		ret.W("        </label>")
-		ret.W("        <div class=\"bd\"><div><div>")
-		ret.W("          {%%%%- if len(p.Rel%s) == 0 -%%%%}", tgtName)
-		ret.W("          <em>no related %s</em>", tgt.TitlePlural())
-		ret.W("          {%%- else -%%}")
-		ret.W("          <div class=\"overflow clear\">")
-		var addons string
-		lo.ForEach(tgt.Relations, func(r *model.Relation, _ int) {
-			if len(r.Tgt) == 1 {
-				if r.Table == m.Name {
-					addons += ", relationHelper"
-				} else {
-					addons += ", nil"
-				}
-			}
-		})
-		if m.PackageWithGroup("") == tgt.PackageWithGroup("") {
-			ret.W("            {%%%%= Table(p.Rel%s%s, p.Params, as, ps) %%%%}", tgtName, addons)
-		} else {
-			ret.W("            {%%%%= v%s.Table(p.Rel%s%s, p.Params, as, ps) %%%%}", tgt.Package, tgtName, addons)
+func exportViewDetailTable(g *golang.Template, m *model.Model, models model.Models, enums enum.Enums) (*golang.Block, error) {
+	ret := golang.NewBlock("DetailTable", "func")
+	ret.W("{%% func DetailTable(p *Detail, ps *cutil.PageState) %%}")
+	ret.W("  <div class=\"mt overflow full-width\">")
+	ret.W("    <table>")
+	ret.W("      <tbody>")
+	for _, col := range m.Columns {
+		if col.HasTag("debug-only") {
+			ret.W(`        {%%- if as.Debug -%%}`)
 		}
-		ret.W("          </div>")
-		ret.W(ind5 + helper.TextEndIfDash)
-		ret.W("        </div></div></div>")
-		ret.W("      </li>")
-	})
-	ret.W("    </ul>")
+		ret.W("        <tr>")
+		h, err := col.Help(enums)
+		if err != nil {
+			return nil, err
+		}
+		hlp := h
+		if !strings.HasPrefix(hlp, "\"") {
+			hlp = "\"{%%s " + hlp + " %%}\""
+		}
+		ret.W(`          <th class="shrink" title=%s>%s</th>`, hlp, col.Title())
+		viewDetailColumn(g, ret, models, m, false, col, "p.Model.", 5, enums)
+		ret.W("        </tr>")
+		if col.HasTag("debug-only") {
+			ret.W(ind5 + helper.TextEndIfDash)
+		}
+	}
+	ret.W("      </tbody>")
+	ret.W("    </table>")
 	ret.W("  </div>")
+	ret.W(helper.TextEndFunc)
+	return ret, nil
 }

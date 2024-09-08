@@ -39,7 +39,7 @@ func exportViewEditClass(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("Edit", "struct")
 	ret.W("{%% code type Edit struct {")
 	ret.W("  layout.Basic")
-	ret.W("  Model *%s.%s", m.Package, m.Proper())
+	ret.W("  Model %s", m.Pointer())
 	ret.W("  Paths []string")
 	ret.W("  IsNew bool")
 	ret.W("} %%}")

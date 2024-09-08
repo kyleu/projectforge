@@ -76,7 +76,7 @@ func controllerList(g *golang.File, m *model.Model, grp *model.Column, models mo
 			return nil, err
 		}
 		g.AddImport(helper.ImpLo)
-		ret.W("\t\t%sIDsBy%s := lo.Map(ret, func(x *%s.%s, _ int) %s {", relModel.Camel(), srcCol.Proper(), m.Package, m.Proper(), gt)
+		ret.W("\t\t%sIDsBy%s := lo.Map(ret, func(x %s, _ int) %s {", relModel.Camel(), srcCol.Proper(), m.Pointer(), gt)
 		ret.W("\t\t\treturn x.%s", srcCol.Proper())
 		ret.W("\t\t})")
 		suffix := ""

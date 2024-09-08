@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	"strings"
 
 	"{{{ .Package }}}/app/util"
@@ -82,6 +83,10 @@ func (m *Model) FirstLetter() string {
 
 func (m *Model) Table() string {
 	return util.OrDefault(m.TableOverride, m.Name)
+}
+
+func (m *Model) Pointer() string {
+	return fmt.Sprintf("*%s.%s", m.Package, m.Proper())
 }
 
 func (m *Model) Route() string {
