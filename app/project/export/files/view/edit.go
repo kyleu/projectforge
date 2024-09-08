@@ -128,7 +128,7 @@ func exportViewEditRelation(m *model.Model, rel *model.Relation, p *project.Proj
 		var refs []string
 		lo.ForEach(titles, func(title *model.Column, _ int) {
 			if !title.PK {
-				refs = append(refs, fmt.Sprintf("o[%q]", title.Camel()))
+				refs = append(refs, fmt.Sprintf("(o[%q] || %q)", title.Camel(), "[no "+title.TitleLower()+"]"))
 			}
 		})
 		title = fmt.Sprintf(`(o) => %s + " (" + o[%q] + ")"`, strings.Join(refs, " + \" / \" + "), tgt.Camel())

@@ -17,7 +17,7 @@ func Routes(args *model.Args, linebreak string) (*file.File, error) {
 	g.AddImport(helper.ImpRouter)
 	g.AddBlocks(routeConsts(g, args))
 	g.AddBlocks(routes(g, args))
-	lo.ForEach(args.Models.WithoutTag("no-routes").SortedRoutes(), func(m *model.Model, _ int) {
+	lo.ForEach(args.Models.SortedRoutes(), func(m *model.Model, _ int) {
 		if len(m.Group) == 0 {
 			g.AddImport(helper.ImpAppController)
 		} else {
