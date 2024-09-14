@@ -32,7 +32,7 @@ func ModelMap(m *model.Model, args *model.Args, linebreak string) (*file.File, e
 	if b, e := modelFromMap(g, m, args.Enums, args.Database); e == nil {
 		g.AddBlocks(b)
 	} else {
-		return nil, err
+		return nil, e
 	}
 	return g.Render(linebreak)
 }
@@ -85,6 +85,14 @@ func forCol(g *golang.File, ret *golang.Block, indent int, m *model.Model, enums
 		ret.W(ind + "\treturn nil, nil, " + s)
 		ret.W(ind + "}")
 	}
+	colMP := func(msg string) error {
+		mp, err := col.ToGoMapParse()
+		if err != nil {
+			return err
+		}
+		ret.W(msg, col.Proper(), mp)
+		return nil
+	}
 	parseCall := "ret%s, err := m.Parse%s(k, true, true)"
 	parseMsg := "ret.%s, err = m.Parse%s(k, true, true)"
 	switch {
@@ -111,7 +119,9 @@ func forCol(g *golang.File, ret *golang.Block, indent int, m *model.Model, enums
 		if err != nil {
 			return err
 		}
-		ret.W(ind+parseCall, col.Proper(), col.ToGoMapParse())
+		if err := colMP(ind + parseCall); err != nil {
+			return err
+		}
 		catchErr("err")
 		var enumRef string
 		if e.Simple() {
@@ -124,10 +134,16 @@ func forCol(g *golang.File, ret *golang.Block, indent int, m *model.Model, enums
 		} else {
 			ret.W(ind+"ret.%s = %s.%s", col.Proper(), e.Package, enumRef)
 		}
+	case col.Type.Key() == types.KeyJSON:
+		if err := colMP(ind + "ret.%s, err = m.Parse%s(k, true, true)"); err != nil {
+			return err
+		}
 	case col.Type.Key() == types.KeyList:
 		lt := types.TypeAs[*types.List](col.Type)
 		if e, _ := model.AsEnumInstance(lt.V, enums); e != nil {
-			ret.W(ind+parseCall, col.Proper(), col.ToGoMapParse())
+			if err := colMP(ind + parseCall); err != nil {
+				return err
+			}
 			catchErr("err")
 			eRef := e.Proper()
 			if e.PackageWithGroup("") != m.PackageWithGroup("") {
@@ -135,13 +151,19 @@ func forCol(g *golang.File, ret *golang.Block, indent int, m *model.Model, enums
 			}
 			ret.W(ind+"ret.%s = %sParse(nil, ret%s...)", col.Proper(), eRef, col.Proper())
 		} else {
-			ret.W(ind+parseMsg, col.Proper(), col.ToGoMapParse())
+			if err := colMP(ind + parseMsg); err != nil {
+				return err
+			}
 			catchErr("err")
 		}
 	case col.Nullable || col.Type.Scalar():
-		ret.W(ind+parseMsg, col.Proper(), col.ToGoMapParse())
+		if err := colMP(ind + parseMsg); err != nil {
+			return err
+		}
 	default:
-		ret.W(ind+"ret%s, e := m.Parse%s(k, true, true)", col.Proper(), col.ToGoMapParse())
+		if err := colMP(ind + "ret%s, e := m.Parse%s(k, true, true)"); err != nil {
+			return err
+		}
 		catchErr("e")
 		ret.W(ind+"if ret%s != nil {", col.Proper())
 		ret.W(ind+"\tret.%s = *ret%s", col.Proper(), col.Proper())

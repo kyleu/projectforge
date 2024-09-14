@@ -76,6 +76,10 @@ func (x *Value) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+func (x *Value) Clone() *Value {
+	return &Value{Key: x.Key, Name: x.Name, Description: x.Description, Icon: x.Icon, Extra: x.Extra.Clone(), Default: x.Default, Simple: x.Simple}
+}
+
 type Values []*Value
 
 func (v Values) Keys() []string {
@@ -108,5 +112,11 @@ func (v Values) Titles() []string {
 			return x.Title()
 		}
 		return x.Key
+	})
+}
+
+func (v Values) Clone() Values {
+	return lo.Map(v, func(x *Value, index int) *Value {
+		return x.Clone()
 	})
 }

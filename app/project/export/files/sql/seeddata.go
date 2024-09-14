@@ -73,7 +73,7 @@ func sqlSeedDataColumns(m *model.Model, block *golang.Block, tableName string, c
 			switch col.Type.Key() {
 			case types.KeyString, types.KeyEnum:
 				vs = append(vs, processString(cellStr, "''"))
-			case types.KeyDate, types.KeyTimestamp:
+			case types.KeyDate, types.KeyTimestamp, types.KeyTimestampZoned:
 				if cellStr == helper.TextNil {
 					vs = append(vs, helper.TextNull)
 				} else if _, err := util.TimeFromString(cellStr); err == nil {

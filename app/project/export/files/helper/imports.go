@@ -4,11 +4,8 @@ import (
 	"fmt"
 
 	"github.com/samber/lo"
-	"golang.org/x/mod/semver"
-
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/lib/types"
-	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )
 
@@ -38,7 +35,6 @@ var (
 	ImpRouter         = model.NewImport(model.ImportTypeExternal, "github.com/gorilla/mux")
 	ImpSearchResult   = AppImport("lib/search/result")
 	ImpSlices         = model.NewImport(model.ImportTypeInternal, "slices")
-	ImpSlices119      = model.NewImport(model.ImportTypeExternal, "model.org/x/exp/slices")
 	ImpSQLx           = model.NewImport(model.ImportTypeExternal, "github.com/jmoiron/sqlx")
 	ImpStrconv        = model.NewImport(model.ImportTypeInternal, "strconv")
 	ImpStrings        = model.NewImport(model.ImportTypeInternal, "strings")
@@ -57,10 +53,6 @@ func ViewImport(path string) *model.Import {
 }
 
 func ImpSlicesForGo(v string) *model.Import {
-	c := semver.Compare("v"+v, "v"+project.DefaultGoVersion)
-	if c < 0 {
-		return ImpSlices119
-	}
 	return ImpSlices
 }
 
@@ -91,7 +83,7 @@ func importsForTypeCtxGo(t types.Type) model.Imports {
 	switch t.Key() {
 	case types.KeyMap, types.KeyValueMap, types.KeyList:
 		return model.Imports{ImpAppUtil}
-	case types.KeyDate, types.KeyTimestamp:
+	case types.KeyDate, types.KeyTimestamp, types.KeyTimestampZoned:
 		return model.Imports{ImpTime}
 	case types.KeyUUID:
 		return model.Imports{ImpUUID}
@@ -112,7 +104,7 @@ func importsForTypeCtxRow(t types.Type, database string) model.Imports {
 			return model.Imports{ImpAppUtil}
 		}
 		return model.Imports{ImpJSON, ImpAppUtil}
-	case types.KeyDate, types.KeyTimestamp:
+	case types.KeyDate, types.KeyTimestamp, types.KeyTimestampZoned:
 		return model.Imports{ImpTime}
 	case types.KeyUUID:
 		if database == util.DatabaseSQLServer {

@@ -60,6 +60,9 @@
         {%- if len(model.Group) > 0 -%}
         <tr><th>Group</th><td>{%s strings.Join(model.Group, "/") %}</td></tr>
         {%- endif -%}
+        {%- if model.Schema != "" -%}
+        <tr><th>Schema</th><td>{%s model.Schema %}</td></tr>
+        {%- endif -%}
         <tr><th>Description</th><td>{%s model.Description %}</td></tr>
         <tr>
           <th>Ordering</th>

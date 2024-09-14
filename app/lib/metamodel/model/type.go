@@ -91,7 +91,7 @@ func ToGoString(t types.Type, nullable bool, prop string, alwaysString bool) str
 	switch t.Key() {
 	case types.KeyAny, types.KeyBool, types.KeyInt, types.KeyFloat:
 		return fmt.Sprintf("fmt.Sprint(%s)", prop)
-	case types.KeyList:
+	case types.KeyList, types.KeyJSON:
 		if alwaysString {
 			return fmt.Sprintf("util.ToJSON(%s)", prop)
 		}

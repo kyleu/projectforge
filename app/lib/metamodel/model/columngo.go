@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/pkg/errors"
+
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/util"
@@ -73,10 +75,12 @@ func (c *Column) ToGoEditString(prefix string, format string, id string, enums e
 		}
 		msg := `{%%%%= edit.SelectTable(%q, %q, %q, %s, %s, %s, 5, %s) %%%%}`
 		return fmt.Sprintf(msg, key, id, c.Title(), call, eKeys, eTitles, h), nil
-	case types.KeyInt:
-		return fmt.Sprintf(`{%%%%= edit.IntTable(%q, %q, %q, %s, 5, %s) %%%%}`, key, id, c.Title(), preprop, h), nil
 	case types.KeyFloat:
 		return fmt.Sprintf(`{%%%%= edit.FloatTable(%q, %q, %q, %s, 5, %s) %%%%}`, key, id, c.Title(), preprop, h), nil
+	case types.KeyInt:
+		return fmt.Sprintf(`{%%%%= edit.IntTable(%q, %q, %q, %s, 5, %s) %%%%}`, key, id, c.Title(), preprop, h), nil
+	case types.KeyJSON:
+		return fmt.Sprintf(msgTextarea, key, id, c.Title(), prop, h), nil
 	case types.KeyList:
 		lt := types.TypeAs[*types.List](c.Type)
 		e, _ := AsEnumInstance(lt.V, enums)
@@ -101,7 +105,7 @@ func (c *Column) ToGoEditString(prefix string, format string, id string, enums e
 			gs = "&" + gs
 		}
 		return fmt.Sprintf(`{%%%%= edit.TimestampDayTable(%q, %q, %q, %s, 5, %s) %%%%}`, key, id, c.Title(), gs, h), nil
-	case types.KeyTimestamp:
+	case types.KeyTimestamp, types.KeyTimestampZoned:
 		gs := prop
 		if !c.Nullable {
 			gs = "&" + gs
@@ -134,38 +138,44 @@ func (c *Column) ToGoEditString(prefix string, format string, id string, enums e
 	}
 }
 
-func (c *Column) ToGoMapParse() string {
+func (c *Column) ToGoMapParse() (string, error) {
 	return toGoMapParse(c.Type)
 }
 
-func toGoMapParse(t types.Type) string {
+func toGoMapParse(t types.Type) (string, error) {
 	switch t.Key() {
 	case types.KeyAny:
-		return ""
+		return "Unknown", nil
 	case types.KeyBool:
-		return "Bool"
-	case types.KeyInt:
-		return "Int"
+		return "Bool", nil
 	case types.KeyFloat:
-		return "Float"
+		return "Float", nil
+	case types.KeyInt:
+		return "Int", nil
+	case types.KeyJSON:
+		return "JSON", nil
 	case types.KeyList:
 		l := types.TypeAs[*types.List](t)
 		if l == nil {
-			return fmt.Sprintf("ERROR:invalid list type [%T]", t)
+			return fmt.Sprintf("ERROR:invalid list type [%T]", t), nil
 		}
-		return "Array" + toGoMapParse(l.V)
+		x, err := toGoMapParse(l.V)
+		if err != nil {
+			return "", err
+		}
+		return "Array" + x, nil
 	case types.KeyMap, types.KeyValueMap:
-		return "Map"
+		return "Map", nil
 	case types.KeyReference:
-		return asRefK(t)
+		return asRefK(t), nil
 	case types.KeyString, types.KeyEnum:
-		return "String"
-	case types.KeyDate, types.KeyTimestamp:
-		return "Time"
+		return "String", nil
+	case types.KeyDate, types.KeyTimestamp, types.KeyTimestampZoned:
+		return "Time", nil
 	case types.KeyUUID:
-		return "UUID"
+		return "UUID", nil
 	default:
-		return "ERROR:unhandled map parse for type [" + t.Key() + "]"
+		return "", errors.Errorf("ERROR:unhandled map parse for type [%s]", t.Key())
 	}
 }
 
@@ -188,7 +198,7 @@ func (c *Column) ZeroVal() string {
 		return types.KeyNil
 	case types.KeyString:
 		return `""`
-	case types.KeyDate, types.KeyTimestamp:
+	case types.KeyDate, types.KeyTimestamp, types.KeyTimestampZoned:
 		return "time.Time{}"
 	case types.KeyUUID:
 		return "uuid.UUID{}"

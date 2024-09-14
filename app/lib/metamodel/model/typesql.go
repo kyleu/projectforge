@@ -55,6 +55,8 @@ func ToSQLType(t types.Type, database string) (string, error) {
 			return keyNVarcharMax, nil
 		}
 		return keyText, nil
+	case types.KeyTimestampZoned:
+		return "timestamp", nil
 	case types.KeyDate, types.KeyTimestamp:
 		if database == util.DatabaseSQLServer {
 			return "datetime", nil

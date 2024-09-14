@@ -2,6 +2,7 @@ package enum
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/samber/lo"
@@ -16,6 +17,7 @@ type Enum struct {
 	Name           string        `json:"name"`
 	Package        string        `json:"package"`
 	Group          []string      `json:"group,omitempty"`
+	Schema         string        `json:"schema,omitempty"`
 	Description    string        `json:"description,omitempty"`
 	Icon           string        `json:"icon,omitempty"`
 	Values         Values        `json:"values,omitempty"`
@@ -173,10 +175,41 @@ func (e *Enum) SetAcronyms(acronyms ...string) {
 	e.acronyms = acronyms
 }
 
+func (e *Enum) Clone() *Enum {
+	return &Enum{
+		Name:           e.Name,
+		Package:        e.Package,
+		Group:          e.Group,
+		Schema:         e.Schema,
+		Description:    e.Description,
+		Icon:           e.Icon,
+		Values:         e.Values.Clone(),
+		Tags:           slices.Clone(e.Tags),
+		TitleOverride:  e.TitleOverride,
+		ProperOverride: e.ProperOverride,
+		RouteOverride:  e.RouteOverride,
+		Config:         e.Config.Clone(),
+		acronyms:       slices.Clone(e.acronyms),
+	}
+}
+
+func (e *Enum) AddTag(t string) {
+	if !lo.Contains(e.Tags, t) {
+		e.Tags = append(e.Tags, t)
+		slices.Sort(e.Tags)
+	}
+}
+
 type Enums []*Enum
 
 func (e Enums) Get(key string) *Enum {
 	return lo.FindOrElse(e, nil, func(x *Enum) bool {
 		return x.Name == key
+	})
+}
+
+func (e Enums) Clone() Enums {
+	return lo.Map(e, func(x *Enum, index int) *Enum {
+		return x.Clone()
 	})
 }

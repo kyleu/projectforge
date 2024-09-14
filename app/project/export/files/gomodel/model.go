@@ -131,6 +131,9 @@ func modelStruct(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 		if err != nil {
 			return nil, err
 		}
+		if gt == "*any" {
+			gt = "any"
+		}
 		goType := util.StringPad(gt, maxTypeLength)
 		var tag string
 		if c.JSON == "" {

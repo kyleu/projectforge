@@ -28,7 +28,7 @@ func structComplex(e *enum.Enum, g *golang.File) []*golang.Block {
 		structBlock.WB()
 		for _, x := range extraKeys {
 			t := ef.GetSimple(x)
-			if t == types.KeyTimestamp {
+			if t == types.KeyTimestamp || t == types.KeyTimestampZoned {
 				t = timePointer
 			}
 			structBlock.W("\t%s %s", util.StringPad(util.StringToCamel(x), maxLength), t)

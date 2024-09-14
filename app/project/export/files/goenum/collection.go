@@ -131,7 +131,7 @@ func blockGetByPropUnique(e *enum.Enum, efk string, t string) (*golang.Block, er
 		dflt = "0"
 	case types.KeyBool:
 		dflt = util.BoolFalse
-	case types.KeyTimestamp:
+	case types.KeyTimestamp, types.KeyTimestampZoned:
 		dflt = "nil"
 		goType = timePointer
 	default:
@@ -165,7 +165,7 @@ func possibleLogger(gxBlock *golang.Block, e *enum.Enum, prop string) {
 func blockGetByPropShared(e *enum.Enum, efk string, t string) (*golang.Block, error) {
 	prop := util.StringToCamel(efk)
 	goType := t
-	if t == types.KeyTimestamp {
+	if t == types.KeyTimestamp || t == types.KeyTimestampZoned {
 		goType = timePointer
 	}
 	gxBlock := golang.NewBlock(e.ProperPlural()+helper.TextGetBy+efk, "method")

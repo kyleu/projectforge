@@ -16,6 +16,7 @@ type Model struct {
 	Name           string           `json:"name"`
 	Package        string           `json:"package"`
 	Group          []string         `json:"group,omitempty"`
+	Schema         string           `json:"schema,omitempty"`
 	Description    string           `json:"description,omitempty"`
 	Icon           string           `json:"icon,omitempty"`
 	Ordering       filter.Orderings `json:"ordering,omitempty"`

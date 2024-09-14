@@ -63,7 +63,7 @@ func ToGoViewString(t *types.Wrapped, prop string, nullable bool, format string,
 			ret += " " + tmplStartEQ + "components.SVGIcon(" + ToGoString(t, nullable, prop, false) + ".Icon, ps)" + tmplEnd
 		}
 		return ret
-	case types.KeyTimestamp:
+	case types.KeyTimestamp, types.KeyTimestampZoned:
 		if nullable {
 			return tmplStartEQ + "view.Timestamp(" + prop + tmplEndP
 		}

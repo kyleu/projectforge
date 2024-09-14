@@ -68,11 +68,11 @@ func modelTableCols(m *model.Model) (*golang.Block, error) {
 	ret.SkipDecl = true
 	ret.W("var (")
 	ret.W("\ttable         = %q", m.Table())
-	ret.W("\ttableQuoted   = fmt.Sprintf(\"%%q\", table)")
-	// if database == util.DatabaseSQLServer {
-	//	ret.W("\tpk            = []string{%s}", strings.Join(m.PKs().NamesQuoted(), ", "))
-	//	ret.W("\tpkQuoted      = util.StringArrayQuoted(pk)")
-	//}
+	if m.Schema == "" {
+		ret.W("\ttableQuoted   = fmt.Sprintf(\"%%q\", table)")
+	} else {
+		ret.W("\ttableQuoted   = fmt.Sprintf(\"%%q.%%q\", \"" + m.Schema + "\", table)")
+	}
 	cols := fmt.Sprintf("\tcolumns       = []string{%s}", strings.Join(m.Columns.NotDerived().SQLQuoted(), ", "))
 	if len(cols) > 160 {
 		cols += " //nolint:lll"
@@ -94,6 +94,9 @@ func modelRow(m *model.Model, enums enum.Enums, database string) (*golang.Block,
 		gdt, err := c.ToGoRowType(m.Package, enums, database)
 		if err != nil {
 			return nil, err
+		}
+		if gdt == "*any" {
+			gdt = "any"
 		}
 		ret.W("\t%s %s `db:%q json:%q`", util.StringPad(c.Proper(), maxColLength), util.StringPad(gdt, maxTypeLength), c.SQL(), c.Name)
 	}

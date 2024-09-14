@@ -63,7 +63,7 @@ func enumValue(e *enum.Enum, v *enum.Value, maxColLength int) string {
 				continue
 			}
 			t = "\"" + t + "\""
-		case types.KeyTimestamp:
+		case types.KeyTimestamp, types.KeyTimestampZoned:
 			if t == helper.TextNil || t == "" {
 				continue
 			}

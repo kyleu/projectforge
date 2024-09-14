@@ -324,7 +324,7 @@ func serviceLoadCreated(g *golang.File, ret *golang.Block, m *model.Model, creat
 
 func serviceSetVal(g *golang.File, c *model.Column, ret *golang.Block, indent int) error {
 	ind := util.StringRepeat("\t", indent)
-	if c.Type.Key() == types.KeyTimestamp || c.Type.Key() == types.KeyDate {
+	if c.Type.Key() == types.KeyTimestamp || c.Type.Key() == types.KeyTimestampZoned || c.Type.Key() == types.KeyDate {
 		if c.Nullable {
 			g.AddImport(helper.ImpAppUtil)
 			ret.W(ind+"model.%s = util.TimeCurrentP()", c.Proper())

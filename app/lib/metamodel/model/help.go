@@ -66,7 +66,7 @@ func Help(t types.Type, f string, nullable bool, enums enum.Enums) (string, erro
 		}
 	case types.KeyDate:
 		return q("Calendar date"), nil
-	case types.KeyTimestamp:
+	case types.KeyTimestamp, types.KeyTimestampZoned:
 		return q("Date and time, in almost any format"), nil
 	case types.KeyUUID:
 		return q("UUID in format (00000000-0000-0000-0000-000000000000)"), nil

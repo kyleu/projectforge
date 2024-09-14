@@ -72,6 +72,8 @@ func applyRules(pm *PrjAndMods, rules map[string]string) error {
 		switch split[1] {
 		case "group":
 			m.Group = util.StringSplitAndTrim(v, ".")
+		case "schema":
+			m.Schema = v
 		case keyTag:
 			m.AddTag(v)
 		case keyTags:
