@@ -42,5 +42,5 @@
 .tag-editor .add-item {
   cursor: pointer;
   float: left;
-  margin-top: var(--padding-small);
+  margin-left: var(--padding-small);
 }
