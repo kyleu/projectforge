@@ -27,7 +27,11 @@ var (
 //line views/components/view/Timestamp.html:7
 func StreamTimestamp(qw422016 *qt422016.Writer, value *time.Time) {
 //line views/components/view/Timestamp.html:7
-	qw422016.N().S(`<span class="timestamp nowrap" data-timestamp="`)
+	qw422016.N().S(`<span class="timestamp nowrap" title="`)
+//line views/components/view/Timestamp.html:8
+	qw422016.E().S(util.TimeToVerbose(value))
+//line views/components/view/Timestamp.html:8
+	qw422016.N().S(`" data-timestamp="`)
 //line views/components/view/Timestamp.html:8
 	qw422016.E().S(util.TimeToJSFull(value))
 //line views/components/view/Timestamp.html:8
@@ -68,7 +72,11 @@ func Timestamp(value *time.Time) string {
 //line views/components/view/Timestamp.html:11
 func StreamTimestampMillis(qw422016 *qt422016.Writer, value *time.Time) {
 //line views/components/view/Timestamp.html:11
-	qw422016.N().S(`<span class="timestamp millis nowrap" data-timestamp="`)
+	qw422016.N().S(`<span class="timestamp millis nowrap" title="`)
+//line views/components/view/Timestamp.html:12
+	qw422016.E().S(util.TimeToVerbose(value))
+//line views/components/view/Timestamp.html:12
+	qw422016.N().S(`" data-timestamp="`)
 //line views/components/view/Timestamp.html:12
 	qw422016.E().S(util.TimeToRFC3339(value))
 //line views/components/view/Timestamp.html:12
@@ -119,7 +127,11 @@ func StreamTimestampRelative(qw422016 *qt422016.Writer, value *time.Time, static
 //line views/components/view/Timestamp.html:16
 	}
 //line views/components/view/Timestamp.html:16
-	qw422016.N().S(`nowrap" data-timestamp="`)
+	qw422016.N().S(`nowrap" title="`)
+//line views/components/view/Timestamp.html:16
+	qw422016.E().S(util.TimeToVerbose(value))
+//line views/components/view/Timestamp.html:16
+	qw422016.N().S(`" data-timestamp="`)
 //line views/components/view/Timestamp.html:16
 	qw422016.E().S(util.TimeToFull(value))
 //line views/components/view/Timestamp.html:16

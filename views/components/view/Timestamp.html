@@ -5,15 +5,15 @@
 ) %}
 
 {% func Timestamp(value *time.Time) %}{% stripspace %}
-  <span class="timestamp nowrap" data-timestamp="{%s util.TimeToJSFull(value) %}">{%s util.TimeToFull(value) %}</span>
+  <span class="timestamp nowrap" title="{%s util.TimeToVerbose(value) %}" data-timestamp="{%s util.TimeToJSFull(value) %}">{%s util.TimeToFull(value) %}</span>
 {% endstripspace %}{% endfunc %}
 
 {% func TimestampMillis(value *time.Time) %}{% stripspace %}
-  <span class="timestamp millis nowrap" data-timestamp="{%s util.TimeToRFC3339(value) %}">{%s util.TimeToFullMS(value) %}</span>
+  <span class="timestamp millis nowrap" title="{%s util.TimeToVerbose(value) %}" data-timestamp="{%s util.TimeToRFC3339(value) %}">{%s util.TimeToFullMS(value) %}</span>
 {% endstripspace %}{% endfunc %}
 
 {% func TimestampRelative(value *time.Time, static bool) %}{% stripspace %}
-  <span class="{% if !static %}reltime{% space %}{% endif %}nowrap" data-timestamp="{%s util.TimeToFull(value) %}">{%s util.TimeRelative(value) %}</span>
+  <span class="{% if !static %}reltime{% space %}{% endif %}nowrap" title="{%s util.TimeToVerbose(value) %}" data-timestamp="{%s util.TimeToFull(value) %}">{%s util.TimeRelative(value) %}</span>
 {% endstripspace %}{% endfunc %}
 
 {% func TimestampDay(value *time.Time) %}{% stripspace %}
