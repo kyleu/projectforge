@@ -15,6 +15,7 @@ import (
 
 const (
 	ghLineAwesome = "https://raw.githubusercontent.com/icons8/line-awesome/master/svg/"
+	simpleIcons   = "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/"
 	svgRoot       = "client/src/svg/"
 )
 
@@ -41,13 +42,22 @@ func svgPath(prj string, key string) string {
 
 func load(src string, tgt string) (*SVG, error) {
 	tgt, _ = util.StringSplit(tgt, '@', true)
-	var url string
 	test := func(u string) ([]byte, error) {
-		url = u
 		ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 		defer cancel()
 		rsp, b, err := util.NewHTTPRequest(ctx, http.MethodGet, u).RunSimple()
 		return b, errors.Wrapf(err, "unable to call URL [%s]: %d", u, rsp.StatusCode)
+	}
+
+	get := func(u string) (*SVG, error) {
+		if !strings.HasSuffix(u, ".svg") {
+			u += util.ExtSVG
+		}
+		b, err := test(u)
+		if err != nil {
+			return nil, err
+		}
+		return Transform(tgt, b, u)
 	}
 
 	if strings.HasPrefix(src, "http") {
@@ -58,16 +68,9 @@ func load(src string, tgt string) (*SVG, error) {
 		return Transform(tgt, b, src)
 	}
 
-	b, err := test(ghLineAwesome + src + util.ExtSVG)
-	if err != nil {
-		const suffix = "-solid.svg"
-		b, err = test(ghLineAwesome + src + suffix)
-		if err != nil {
-			b, err = test(ghLineAwesome + src + suffix)
-			if err != nil {
-				return nil, err
-			}
-		}
+	if strings.HasPrefix(src, "brand-") {
+		return get(simpleIcons + strings.TrimPrefix(src, "brand-"))
 	}
-	return Transform(tgt, b, url)
+
+	return get(ghLineAwesome + src)
 }

@@ -36,10 +36,18 @@ func (s *Service) getAdditionalFilename(fs filesystem.FileLoader) string {
 	return s.additional
 }
 
-func (s *Service) getAdditional(fs filesystem.FileLoader, logger util.Logger) ([]string, bool) {
-	additionalContent, err := fs.ReadFile(s.getAdditionalFilename(fs))
+func (s *Service) getAdditional(fs filesystem.FileLoader, createIfMissing bool, logger util.Logger) ([]string, bool) {
+	pth := s.getAdditionalFilename(fs)
+	additionalContent, err := fs.ReadFile(pth)
 	if err != nil {
-		return nil, false
+		if !createIfMissing {
+			return nil, false
+		}
+		additionalContent = []byte("[]")
+		err = fs.WriteFile(pth, additionalContent, filesystem.DefaultMode, false)
+		if err != nil {
+			return nil, false
+		}
 	}
 	var additional []string
 	err = util.FromJSON(additionalContent, &additional)
@@ -50,7 +58,7 @@ func (s *Service) getAdditional(fs filesystem.FileLoader, logger util.Logger) ([
 }
 
 func (s *Service) addAdditional(path string, fs filesystem.FileLoader, logger util.Logger) {
-	add, ok := s.getAdditional(fs, logger)
+	add, ok := s.getAdditional(fs, true, logger)
 	if !ok {
 		return
 	}

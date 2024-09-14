@@ -41,7 +41,7 @@ func modelDiffBlock(g *golang.File, m *model.Model, enums enum.Enums) (*golang.B
 		l := fmt.Sprintf("%s.%s", m.FirstLetter(), col.Proper())
 		r := fmt.Sprintf("%sx.%s", m.FirstLetter(), col.Proper())
 		switch col.Type.Key() {
-		case types.KeyAny, types.KeyList, types.KeyMap, types.KeyValueMap, types.KeyReference:
+		case types.KeyAny, types.KeyJSON, types.KeyList, types.KeyMap, types.KeyValueMap, types.KeyReference:
 			ret.W("\tdiffs = append(diffs, util.DiffObjects(%s, %s, %q)...)", l, r, col.Camel())
 		case types.KeyBool, types.KeyInt, types.KeyFloat:
 			g.AddImport(helper.ImpFmt)
@@ -64,7 +64,7 @@ func modelDiffBlock(g *golang.File, m *model.Model, enums enum.Enums) (*golang.B
 			ret.W("\tif %s != %s {", l, r)
 			ret.W("\t\tdiffs = append(diffs, util.NewDiff(%q, %s, %s))", key, l, r)
 			ret.W("\t}")
-		case types.KeyDate, types.KeyTimestamp, types.KeyUUID:
+		case types.KeyDate, types.KeyTimestamp, types.KeyTimestampZoned, types.KeyUUID:
 			if col.Nullable {
 				msg := "\tif (%s == nil && %s != nil) || (%s != nil && %s == nil) || (%s != nil && %s != nil && *%s != *%s) {"
 				line := fmt.Sprintf(msg, l, r, l, r, l, r, l, r)

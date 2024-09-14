@@ -40,7 +40,7 @@ func randForCol(col *model.Column, pkg string, enums enum.Enums) (string, error)
 
 func randForType(t *types.Wrapped, format string, nullable bool, tags []string, pkg string, enums enum.Enums) (string, error) {
 	switch t.Key() {
-	case types.KeyAny:
+	case types.KeyAny, types.KeyJSON:
 		return types.KeyNil, nil
 	case types.KeyBool:
 		return "util.RandomBool()", nil
@@ -101,7 +101,7 @@ func randForType(t *types.Wrapped, format string, nullable bool, tags []string, 
 		default:
 			return "util.RandomString(12)", nil
 		}
-	case types.KeyDate, types.KeyTimestamp:
+	case types.KeyDate, types.KeyTimestamp, types.KeyTimestampZoned:
 		if slices.Contains(tags, "deleted") {
 			return types.KeyNil, nil
 		}
