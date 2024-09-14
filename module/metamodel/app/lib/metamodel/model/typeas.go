@@ -42,6 +42,9 @@ func AsRef(t types.Type) (*types.Reference, error) {
 	if !ok {
 		return nil, errors.Errorf("InvalidType(%T)", w.T)
 	}
+	if ref.K == "" {
+		return nil, errors.New("invalid empty reference")
+	}
 	return ref, nil
 }
 

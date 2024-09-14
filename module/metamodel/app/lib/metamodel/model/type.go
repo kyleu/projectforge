@@ -5,8 +5,8 @@ import (
 
 	"github.com/pkg/errors"
 
-	"projectforge.dev/projectforge/app/lib/metamodel/enum"
-	"projectforge.dev/projectforge/app/lib/types"
+	"{{{ .Package }}}/app/lib/metamodel/enum"
+	"{{{ .Package }}}/app/lib/types"
 )
 
 const (
