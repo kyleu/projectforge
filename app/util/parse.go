@@ -76,6 +76,22 @@ func ParseInt(r any, path string, allowEmpty bool) (int, error) {
 	}
 }
 
+func ParseJSON(r any, path string, allowEmpty bool) (any, error) {
+	switch t := r.(type) {
+	case []byte:
+		return FromJSONAny(t)
+	case string:
+		return FromJSONAny([]byte(t))
+	case nil:
+		if !allowEmpty {
+			return nil, errors.Errorf("could not find json for path [%s]", path)
+		}
+		return nil, nil
+	default:
+		return t, nil
+	}
+}
+
 func ParseMap(r any, path string, allowEmpty bool) (ValueMap, error) {
 	switch t := r.(type) {
 	case ValueMap:

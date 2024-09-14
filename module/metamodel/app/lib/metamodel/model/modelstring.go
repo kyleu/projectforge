@@ -85,6 +85,14 @@ func (m *Model) Table() string {
 	return util.OrDefault(m.TableOverride, m.Name)
 }
 
+func (m *Model) TableNS() string {
+	ret := m.Table()
+	if m.Schema != "" {
+		ret = fmt.Sprintf("%q.%q", m.Schema, m.Table())
+	}
+	return ret
+}
+
 func (m *Model) Pointer() string {
 	return fmt.Sprintf("*%s.%s", m.Package, m.Proper())
 }

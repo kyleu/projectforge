@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/samber/lo"
+	"golang.org/x/exp/maps"
 )
 
 type OrderedPair[V any] struct {
@@ -76,6 +77,13 @@ func (o *OrderedMap[V]) Remove(k string) {
 		return x != k
 	})
 	delete(o.Map, k)
+}
+
+func (o *OrderedMap[V]) Clone() *OrderedMap[V] {
+	if o == nil {
+		return nil
+	}
+	return &OrderedMap[V]{Lexical: o.Lexical, Order: slices.Clone(o.Order), Map: maps.Clone(o.Map)}
 }
 
 func (o OrderedMap[V]) MarshalYAML() (any, error) {

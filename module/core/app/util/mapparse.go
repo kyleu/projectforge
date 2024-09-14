@@ -25,6 +25,12 @@ func (m ValueMap) ParseInt(path string, allowMissing bool, allowEmpty bool) (int
 	})
 }
 
+func (m ValueMap) ParseJSON(path string, allowMissing bool, allowEmpty bool) (any, error) {
+	return parseMapField(m, path, allowMissing, func(res any) (any, error) {
+		return ParseJSON(res, path, allowEmpty)
+	})
+}
+
 func (m ValueMap) ParseMap(path string, allowMissing bool, allowEmpty bool) (ValueMap, error) {
 	return parseMapField(m, path, allowMissing, func(res any) (ValueMap, error) {
 		return ParseMap(res, path, allowEmpty)
