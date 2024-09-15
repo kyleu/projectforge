@@ -20,7 +20,10 @@ const (
 	SuffixDescending = ".d"
 )
 
-var AllowedColumns = map[string][]string{}
+var (
+	AllowedColumns     = map[string][]string{}
+	TransformedColumns = map[string]map[string]string{}
+)
 
 type Params struct {
 	Key       string    `json:"key"`
@@ -52,6 +55,13 @@ func (p *Params) Sanitize(key string, defaultOrderings ...*Ordering) *Params {
 	p.Orderings = util.ArrayRemoveNil(p.Orderings)
 	if len(p.Orderings) == 0 {
 		return p.CloneOrdering(defaultOrderings...)
+	}
+	if tx, ok := TransformedColumns[key]; ok {
+		for k, v := range tx {
+			if o := p.Orderings.Get(v); o != nil {
+				o.Column = k
+			}
+		}
 	}
 	return p
 }
@@ -127,7 +137,7 @@ func (p *Params) OrderByString() string {
 	return strings.Join(ret, ", ")
 }
 
-func (p *Params) Filtered(available []string, logger util.Logger) *Params {
+func (p *Params) Filtered(key string, available []string, logger util.Logger) *Params {
 	if available == nil {
 		available = AllowedColumns[p.Key]
 	}
@@ -139,8 +149,13 @@ func (p *Params) Filtered(available []string, logger util.Logger) *Params {
 	}
 	if len(p.Orderings) > 0 {
 		allowed := Orderings{}
-
+		tx, hasTX := TransformedColumns[key]
 		lo.ForEach(p.Orderings, func(o *Ordering, _ int) {
+			if hasTX {
+				if v, set := tx[o.Column]; set {
+					o.Column = v
+				}
+			}
 			containsCol := lo.ContainsBy(available, func(c string) bool {
 				return c == o.Column
 			})

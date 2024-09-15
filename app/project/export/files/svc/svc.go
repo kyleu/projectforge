@@ -115,6 +115,17 @@ func serviceNew(m *model.Model, isRO bool, isAudit bool) *golang.Block {
 	}
 	ret.W("func NewService(db *database.Service%s) *Service {", newSuffix)
 	ret.W("\tfilter.AllowedColumns[\"%s\"] = columns", m.Package)
+	transforms := lo.Filter(m.Columns, func(x *model.Column, _ int) bool {
+		return x.SQL() != x.Name
+	})
+	if len(transforms) > 0 {
+		pad := transforms.MaxCamelLength()
+		ret.W("\tfilter.TransformedColumns[%q] = map[string]string{", m.Camel())
+		lo.ForEach(transforms, func(x *model.Column, _ int) {
+			ret.W("\t\t%s %q,", util.StringPad("\""+x.Name+"\":", pad), x.SQL())
+		})
+		ret.W("\t}")
+	}
 	ret.W("\treturn &Service{db: db%s}", callSuffix)
 	ret.W("}")
 	return ret
