@@ -1,7 +1,6 @@
 package git
 
 const (
-	ok        = "OK"
 	noUpdates = "no updates"
 )
 

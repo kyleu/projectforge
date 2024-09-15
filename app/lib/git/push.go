@@ -23,7 +23,7 @@ func (s *Service) Push(ctx context.Context, logger util.Logger) (*Result, error)
 	count := lo.CountBy(util.StringSplitLines(x), func(line string) bool {
 		return strings.HasPrefix(line, "   ")
 	})
-	status := ok
+	status := util.OK
 	fetched := noUpdates
 	if count > 0 {
 		status = fmt.Sprintf("[%s] pushed", util.StringPlural(count, "commit"))

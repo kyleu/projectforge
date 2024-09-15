@@ -15,7 +15,7 @@ func (s *Service) Commit(ctx context.Context, msg string, logger util.Logger) (*
 	if err != nil {
 		return nil, err
 	}
-	return NewResult(s.Key, ok, util.ValueMap{"commit": result, "commitMessage": msg}), nil
+	return NewResult(s.Key, util.OK, util.ValueMap{"commit": result, "commitMessage": msg}), nil
 }
 
 func gitCommit(ctx context.Context, path string, message string, logger util.Logger) (string, error) {

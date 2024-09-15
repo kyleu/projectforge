@@ -33,7 +33,7 @@ func (s *Service) Status(ctx context.Context, logger util.Logger) (*Result, erro
 	if len(dirty) > 0 {
 		data["dirty"] = dirty
 	}
-	status := ok
+	status := util.OK
 	if len(dirty) > 0 {
 		status = fmt.Sprintf("[%d] changes", len(dirty))
 	}

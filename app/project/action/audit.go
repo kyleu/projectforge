@@ -79,7 +79,7 @@ func auditRun(pm *PrjAndMods, ret *Result) error {
 		return err
 	}
 	ret.Errors = append(ret.Errors, sch...)
-	mr := &module.Result{Keys: pm.Mods.Keys(), Status: "OK", Diffs: audits, Duration: timer.End()}
+	mr := &module.Result{Keys: pm.Mods.Keys(), Status: util.OK, Diffs: audits, Duration: timer.End()}
 	ret.Modules = append(ret.Modules, mr)
 	return nil
 }

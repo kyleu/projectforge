@@ -8,6 +8,6 @@ import (
 )
 
 func Healthcheck(w http.ResponseWriter, _ *http.Request) {
-	x := util.ValueMap{"status": "OK"}
+	x := util.ValueMap{"status": util.OK}
 	_, _ = cutil.RespondJSON(cutil.NewWriteCounter(w), "", x)
 }

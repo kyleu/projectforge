@@ -27,7 +27,7 @@ type Result struct {
 }
 
 func newResult(act Type, prj *project.Project, cfg util.ValueMap, logger util.Logger) *Result {
-	return &Result{Project: prj, Action: act, Args: cfg, Status: "OK", logger: logger}
+	return &Result{Project: prj, Action: act, Args: cfg, Status: util.OK, logger: logger}
 }
 
 func (r *Result) WithError(err error) *Result {

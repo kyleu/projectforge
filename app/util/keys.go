@@ -25,6 +25,7 @@ const (
 	ExtJSON     = ".json"
 	ExtMarkdown = ".md"
 
+	OK = "ok"
 	// $PF_SECTION_START(keys)$.
 	DatabaseMySQL      = "mysql"
 	DatabasePostgreSQL = "postgres"

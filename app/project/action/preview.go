@@ -13,7 +13,7 @@ func onPreview(pm *PrjAndMods) *Result {
 		return ret.WithError(err)
 	}
 
-	mr := &module.Result{Keys: pm.Mods.Keys(), Status: "OK", Diffs: dfs, Duration: timer.End()}
+	mr := &module.Result{Keys: pm.Mods.Keys(), Status: util.OK, Diffs: dfs, Duration: timer.End()}
 	ret.Modules = append(ret.Modules, mr)
 	return ret
 }

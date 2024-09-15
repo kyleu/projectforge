@@ -65,7 +65,7 @@ func onImports(_ context.Context, pm *PrjAndMods, r *Result) *Result {
 	fileStr := r.Args.GetStringOpt("file")
 	t := util.TimerStart()
 	logs, diffs, err := build.Imports(pm.Prj.Package, fix, fileStr, pm.FS, pm.Logger)
-	r.Modules = append(r.Modules, &module.Result{Keys: []string{"imports"}, Status: "OK", Diffs: diffs, Duration: t.End()})
+	r.Modules = append(r.Modules, &module.Result{Keys: []string{"imports"}, Status: util.OK, Diffs: diffs, Duration: t.End()})
 	r.Logs = append(r.Logs, logs...)
 	if err != nil {
 		return r.WithError(err)
@@ -79,7 +79,7 @@ func onIgnored(_ context.Context, pm *PrjAndMods, r *Result) *Result {
 	if err != nil {
 		return r.WithError(err)
 	}
-	res := &module.Result{Keys: []string{"ignored"}, Status: "OK"}
+	res := &module.Result{Keys: []string{"ignored"}, Status: util.OK}
 	lo.ForEach(ign, func(x string, _ int) {
 		if x != "app/file/header.go" && x != "doc/faq.md" {
 			res.Diffs = append(res.Diffs, &diff.Diff{Path: x, Status: diff.StatusDifferent})
@@ -101,7 +101,7 @@ func onPackages(_ context.Context, pm *PrjAndMods, r *Result) *Result {
 func onCleanup(_ context.Context, pm *PrjAndMods, r *Result) *Result {
 	t := util.TimerStart()
 	logs, diffs, err := build.Cleanup(pm.FS, pm.Logger)
-	r.Modules = append(r.Modules, &module.Result{Keys: []string{"cleanup"}, Status: "OK", Diffs: diffs, Duration: t.End()})
+	r.Modules = append(r.Modules, &module.Result{Keys: []string{"cleanup"}, Status: util.OK, Diffs: diffs, Duration: t.End()})
 	r.Logs = append(r.Logs, logs...)
 	if err != nil {
 		return r.WithError(err)
@@ -112,7 +112,7 @@ func onCleanup(_ context.Context, pm *PrjAndMods, r *Result) *Result {
 func onFull(ctx context.Context, pm *PrjAndMods, r *Result) *Result {
 	t := util.TimerStart()
 	logs, err := build.Full(ctx, pm.Prj, pm.Logger)
-	r.Modules = append(r.Modules, &module.Result{Keys: []string{"fullbuild"}, Status: "OK", Duration: t.End()})
+	r.Modules = append(r.Modules, &module.Result{Keys: []string{"fullbuild"}, Status: util.OK, Duration: t.End()})
 	r.Logs = append(r.Logs, logs...)
 	if err != nil {
 		return r.WithError(err)
@@ -127,7 +127,7 @@ func onDeployments(_ context.Context, pm *PrjAndMods, r *Result) *Result {
 	t := util.TimerStart()
 	fix := pm.Cfg.GetBoolOpt("fix")
 	logs, diffs, err := build.Deployments(pm.Prj.Version, pm.FS, fix, pm.Cfg.GetStringOpt("path"), pm.Prj.Info.Deployments)
-	r.Modules = append(r.Modules, &module.Result{Keys: []string{"deployments"}, Status: "OK", Diffs: diffs, Duration: t.End()})
+	r.Modules = append(r.Modules, &module.Result{Keys: []string{"deployments"}, Status: util.OK, Diffs: diffs, Duration: t.End()})
 	r.Logs = append(r.Logs, logs...)
 	if err != nil {
 		return r.WithError(err)

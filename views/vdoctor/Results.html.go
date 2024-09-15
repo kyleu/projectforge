@@ -148,7 +148,7 @@ func StreamRenderResult(qw422016 *qt422016.Writer, x *doctor.Result, redir strin
 	qw422016.N().S(`</em></div>
 `)
 //line views/vdoctor/Results.html:40
-	if x.Status == "OK" {
+	if x.Status == util.OK {
 //line views/vdoctor/Results.html:40
 		qw422016.N().S(`    <div class="mt success">`)
 //line views/vdoctor/Results.html:41

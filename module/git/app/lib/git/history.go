@@ -16,7 +16,7 @@ func (s *Service) History(ctx context.Context, args *HistoryArgs, logger util.Lo
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to retrieve history")
 	}
-	return NewResult(s.Key, ok, util.ValueMap{"history": hist}), nil
+	return NewResult(s.Key, util.OK, util.ValueMap{"history": hist}), nil
 }
 
 const hFDelimit, hLDelimit = "»¦«", "»¦¦¦«"
