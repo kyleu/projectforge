@@ -69,7 +69,9 @@ func load(src string, tgt string) (*SVG, error) {
 	}
 
 	if strings.HasPrefix(src, "brand-") {
-		return get(simpleIcons + strings.TrimPrefix(src, "brand-"))
+		src = strings.TrimPrefix(src, "brand-")
+		tgt = strings.TrimPrefix(tgt, "brand-")
+		return get(simpleIcons + src)
 	}
 
 	return get(ghLineAwesome + src)

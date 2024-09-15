@@ -12,7 +12,7 @@ func TestToJSON(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
 		name  string
-		input interface{}
+		input any
 		want  string
 	}{
 		{"Simple", map[string]int{"a": 1, "b": 2}, "{\n  \"a\": 1,\n  \"b\": 2\n}"},
@@ -37,7 +37,7 @@ func TestToJSONCompact(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
 		name  string
-		input interface{}
+		input any
 		want  string
 	}{
 		{"Simple", map[string]int{"a": 1, "b": 2}, "{\"a\":1,\"b\":2}"},

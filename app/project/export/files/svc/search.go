@@ -114,7 +114,7 @@ func serviceSearchEntries(m *model.Model, grp *model.Column, database string) (*
 		data = "nil"
 	}
 	if icons := m.Columns.WithFormat("icon"); len(icons) == 1 {
-		icon = fmt.Sprintf("%s.%s", data, icons[0].ProperDerived())
+		icon = fmt.Sprintf("%s.%s", data, icons[0].IconDerived())
 	}
 	ret.W("\t\treturn result.NewResult(%q, m.String(), m.WebPath(), m.TitleString(), %s, m, %s, query)", m.Title(), icon, data)
 	ret.W("\t}), nil")

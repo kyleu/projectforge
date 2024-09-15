@@ -50,6 +50,13 @@ func (i *Item) Desc() string {
 	return i.Title
 }
 
+func (i *Item) Clone() *Item {
+	return &Item{
+		Key: i.Key, Title: i.Title, Description: i.Description, Badge: i.Badge, Icon: i.Icon,
+		Route: i.Route, Hidden: i.Hidden, Warning: i.Warning, Children: i.Children,
+	}
+}
+
 type Items []*Item
 
 func (i Items) Get(key string) *Item {

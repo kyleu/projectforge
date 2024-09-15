@@ -53,11 +53,11 @@ func exportViewEditBody(m *model.Model, p *project.Project, args *model.Args) (*
 	ret.W("  <div class=\"card\">")
 	ret.W("    {%%- if p.IsNew -%%}")
 	ret.W("    <div class=\"right\"><a href=\"?prototype=random\"><button>Random</button></a></div>")
-	ret.W("    %s%s New %s%s", helper.TextH3Start, svgRef(m.Icon), m.Title(), helper.TextH3End)
+	ret.W("    %s%s New %s%s", helper.TextH3Start, iconRef(m), m.Title(), helper.TextH3End)
 	ret.W("    {%%- else -%%}")
 	delPrefix := "    <div class=\"right\"><a class=\"link-confirm\" href=\"{%%s p.Model.WebPath(p.Paths...) %%}/delete\" data-message=\""
 	ret.W(delPrefix + delMsg + `"><button>{%%= components.SVGButton("times", ps) %%} Delete</button></a></div>`)
-	ret.W("    %s%s Edit %s [{%%%%s p.Model.String() %%%%}]%s", helper.TextH3Start, svgRef(m.Icon), m.Title(), helper.TextH3End)
+	ret.W("    %s%s Edit %s [{%%%%s p.Model.String() %%%%}]%s", helper.TextH3Start, iconRef(m), m.Title(), helper.TextH3End)
 	ret.W("    " + helper.TextEndIfDash)
 	rt := fmt.Sprintf("{%%%%s util.Choose(p.IsNew, %s.Route(p.Paths...) + `/_new`, p.Model.WebPath(p.Paths...) + `/edit`) %%%%}", m.Package)
 	ret.W("    <form action=%q class=\"mt\" method=\"post\">", rt)

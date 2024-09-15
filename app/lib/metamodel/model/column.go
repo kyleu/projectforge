@@ -89,6 +89,14 @@ func (c *Column) ProperDerived() string {
 	return c.Proper()
 }
 
+func (c *Column) IconDerived() string {
+	ret := c.ProperDerived()
+	if c.Type.Key() == "enum" {
+		ret += ".Icon"
+	}
+	return ret
+}
+
 func (c *Column) Title() string {
 	if c.TitleOverride == "" {
 		return util.StringToTitle(c.Name, c.acronyms...)

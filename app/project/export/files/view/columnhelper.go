@@ -66,10 +66,7 @@ func viewColumn(
 			icon := fmt.Sprintf("{%%%%= components.SVGLink(`%s`, ps) %%%%}", relModel.Icon)
 			if icons := relModel.Columns.WithFormat("icon"); len(icons) == 1 {
 				msg := `{%%%% if x := %s; x != nil %%%%}{%%%%= components.SVGLink(x.%s, ps) %%%%}{%%%% else %%%%}%s{%%%% endif %%%%}`
-				icon = fmt.Sprintf(msg, prefix, icons[0].ProperDerived(), icon)
-			}
-			if prefix == "" {
-				println()
+				icon = fmt.Sprintf(msg, prefix, icons[0].IconDerived(), icon)
 			}
 			wp := `{%% if x := ` + prefix + `; x != nil %%}{%%s x.WebPath(` + pathKey + `...) %%}{%% endif %%}`
 			if col.Nullable {

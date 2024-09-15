@@ -16,8 +16,11 @@ import (
 
 const commonLine, ind5 = "  %sBy%s %s.%s", "          "
 
-func svgRef(icon string) string {
-	return "{%%= components.SVGIcon(`" + icon + "`, ps) %%}"
+func iconRef(m *model.Model) string {
+	if icons := m.Columns.WithFormat("icon"); len(icons) == 1 {
+		return "{%%= components.SVGIcon(p.Model." + icons[0].IconDerived() + ", ps) %%}"
+	}
+	return "{%%= components.SVGIcon(`" + m.Icon + "`, ps) %%}"
 }
 
 func detail(m *model.Model, args *model.Args, linebreak string) (*file.File, error) {
@@ -120,10 +123,10 @@ func exportViewDetailBody(g *golang.Template, m *model.Model, rrs model.Relation
 	ret.W("{%% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %%}")
 	ret.W("  <div class=\"card\">")
 	ret.W("    <div class=\"right\">")
-	ret.W(`      <a href="#modal-%s"><button type="button">{%%%%= components.SVGButton("file", ps) %%%%} JSON</button></a>`, m.Camel())
-	ret.W("      <a href=\"{%%s p.Model.WebPath(p.Paths...) %%}/edit\"><button>{%%= components.SVGButton(\"edit\", ps) %%} Edit</button></a>")
+	ret.W(`      <a href="#modal-%s"><button type="button" title="JSON">{%%%%= components.SVGButton("code", ps) %%%%}</button></a>`, m.Camel())
+	ret.W(`      <a href="{%%s p.Model.WebPath(p.Paths...) %%}/edit" title="Edit"><button>{%%= components.SVGButton("edit", ps) %%}</button></a>`)
 	ret.W("    </div>")
-	ret.W("    %s%s {%%%%s p.Model.TitleString() %%%%}%s", helper.TextH3Start, svgRef(m.Icon), helper.TextH3End)
+	ret.W("    %s%s {%%%%s p.Model.TitleString() %%%%}%s", helper.TextH3Start, iconRef(m), helper.TextH3End)
 	ret.W("    <div><a href=\"{%%%%s %s.Route(p.Paths...) %%%%}\"><em>%s</em></a></div>", m.Package, m.Title())
 	if len(m.Links.WithTags(true, "detail")) > 0 {
 		ret.W("    <div class=\"mt\">")

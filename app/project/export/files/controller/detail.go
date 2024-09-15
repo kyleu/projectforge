@@ -89,10 +89,18 @@ func controllerDetail(g *golang.File, models model.Models, m *model.Model, grp *
 
 func bcFor(m *model.Model) any {
 	icon := m.Icon
+	var ret string
 	if icons := m.Columns.WithFormat("icon"); len(icons) > 0 {
-		return fmt.Sprintf("ret.TitleString()+\"**\"+ret.%s", icons[0].ProperDerived())
+		ret = fmt.Sprintf("ret.TitleString()+\"**\"+ret.%s", icons[0].IconDerived())
+	} else {
+		ret = fmt.Sprintf("ret.TitleString()+\"**%s\"", icon)
 	}
-	return fmt.Sprintf("ret.TitleString()+\"**%s\"", icon)
+	if m.HasTag("menu-items") {
+		if pks := m.PKs(); len(pks) == 1 {
+			return "ret." + pks[0].Proper()
+		}
+	}
+	return ret
 }
 
 func getArgs(g *golang.File, models model.Models, m *model.Model, rrels model.Relations, ret *golang.Block) ([]string, []string) {
