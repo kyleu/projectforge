@@ -56,7 +56,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
   </div>
   `)
 //line views/vexec/Detail.html:21
-	StreamExecScript(qw422016, "console-list", p.Exec.WebPath()+"/connect", ps)
+	StreamExecScript(qw422016, "console-list", p.Exec.WebPath()+"/connect", as.Debug, ps)
 //line views/vexec/Detail.html:21
 	qw422016.N().S(`
 `)
@@ -272,20 +272,55 @@ func ExecDetail(ex *exec.Exec, ps *cutil.PageState) string {
 }
 
 //line views/vexec/Detail.html:85
-func StreamExecScript(qw422016 *qt422016.Writer, id string, connectURL string, ps *cutil.PageState) {
+func StreamExecScript(qw422016 *qt422016.Writer, id string, connectURL string, debug bool, ps *cutil.PageState, extraHandlers ...string) {
 //line views/vexec/Detail.html:85
 	qw422016.N().S(`
   <script>
-    function open() {
+    function open() {`)
+//line views/vexec/Detail.html:87
+	if debug {
+//line views/vexec/Detail.html:87
+		qw422016.N().S(`
       console.log("[socket]: open");
-    }
+    `)
+//line views/vexec/Detail.html:89
+	}
+//line views/vexec/Detail.html:89
+	qw422016.N().S(`}
     function recv(m) {
       const tbody = document.getElementById("`)
 //line views/vexec/Detail.html:91
 	qw422016.E().S(id)
 //line views/vexec/Detail.html:91
 	qw422016.N().S(`");
+      if(m.cmd !== "output") {
+`)
+//line views/vexec/Detail.html:93
+	if len(extraHandlers) == 0 {
+//line views/vexec/Detail.html:93
+		qw422016.N().S(`        console.log("unknown command [" + m.cmd + "] received");
+`)
+//line views/vexec/Detail.html:95
+	} else {
+//line views/vexec/Detail.html:96
+		for _, h := range extraHandlers {
+//line views/vexec/Detail.html:96
+			qw422016.N().S(`        `)
+//line views/vexec/Detail.html:97
+			qw422016.N().S(h)
+//line views/vexec/Detail.html:97
+			qw422016.N().S(`
+`)
+//line views/vexec/Detail.html:98
+		}
+//line views/vexec/Detail.html:99
+	}
+//line views/vexec/Detail.html:99
+	qw422016.N().S(`      }
       const h = m.param["html"].split("\n");
+      if(h.length === 0) {
+
+      }
       for (x in h) {
         const row = document.createElement("tr");
         const numTH = document.createElement("th");
@@ -298,43 +333,55 @@ func StreamExecScript(qw422016 *qt422016.Writer, id string, connectURL string, p
       const c = document.getElementById("content");
       c.scrollTo(0, c.scrollHeight);
     }
-    function err(e) {
+    function err(e) {`)
+//line views/vexec/Detail.html:117
+	if debug {
+//line views/vexec/Detail.html:117
+		qw422016.N().S(`
       console.log("[socket error]: " + e);
-    }
+      `)
+//line views/vexec/Detail.html:119
+	}
+//line views/vexec/Detail.html:119
+	qw422016.N().S(`}
     window.addEventListener('load', () => {
-      new projectforge.Socket(true, open, recv, err, "`)
-//line views/vexec/Detail.html:109
+      new workbench.Socket(`)
+//line views/vexec/Detail.html:121
+	qw422016.E().V(debug)
+//line views/vexec/Detail.html:121
+	qw422016.N().S(`, open, recv, err, "`)
+//line views/vexec/Detail.html:121
 	qw422016.E().S(connectURL)
-//line views/vexec/Detail.html:109
+//line views/vexec/Detail.html:121
 	qw422016.N().S(`");
     })
   </script>
 `)
-//line views/vexec/Detail.html:112
+//line views/vexec/Detail.html:124
 }
 
-//line views/vexec/Detail.html:112
-func WriteExecScript(qq422016 qtio422016.Writer, id string, connectURL string, ps *cutil.PageState) {
-//line views/vexec/Detail.html:112
+//line views/vexec/Detail.html:124
+func WriteExecScript(qq422016 qtio422016.Writer, id string, connectURL string, debug bool, ps *cutil.PageState, extraHandlers ...string) {
+//line views/vexec/Detail.html:124
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexec/Detail.html:112
-	StreamExecScript(qw422016, id, connectURL, ps)
-//line views/vexec/Detail.html:112
+//line views/vexec/Detail.html:124
+	StreamExecScript(qw422016, id, connectURL, debug, ps, extraHandlers...)
+//line views/vexec/Detail.html:124
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexec/Detail.html:112
+//line views/vexec/Detail.html:124
 }
 
-//line views/vexec/Detail.html:112
-func ExecScript(id string, connectURL string, ps *cutil.PageState) string {
-//line views/vexec/Detail.html:112
+//line views/vexec/Detail.html:124
+func ExecScript(id string, connectURL string, debug bool, ps *cutil.PageState, extraHandlers ...string) string {
+//line views/vexec/Detail.html:124
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexec/Detail.html:112
-	WriteExecScript(qb422016, id, connectURL, ps)
-//line views/vexec/Detail.html:112
+//line views/vexec/Detail.html:124
+	WriteExecScript(qb422016, id, connectURL, debug, ps, extraHandlers...)
+//line views/vexec/Detail.html:124
 	qs422016 := string(qb422016.B)
-//line views/vexec/Detail.html:112
+//line views/vexec/Detail.html:124
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexec/Detail.html:112
+//line views/vexec/Detail.html:124
 	return qs422016
-//line views/vexec/Detail.html:112
+//line views/vexec/Detail.html:124
 }
