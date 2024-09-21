@@ -120,7 +120,10 @@ function tagsAdd(tagContainerEl: HTMLElement, editorEl: HTMLElement) {
 }
 
 export function tagsWire(el: HTMLElement) {
-  const input = req<HTMLInputElement>("input.result", el);
+  const input = opt<HTMLInputElement>("input.result", el);
+  if (!input) {
+    return;
+  }
   const tagContainer = req<HTMLDivElement>(".tags", el);
   const vals = input.value.split(",").map((x) => x.trim()).filter((k) => k !== "");
 

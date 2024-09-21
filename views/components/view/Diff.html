@@ -1,6 +1,4 @@
 {% import (
-  "github.com/samber/lo"
-
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
@@ -35,15 +33,20 @@
   {%- endif -%}
 {% endstripspace %}{% endfunc %}
 
-{% func DiffsSet(key string, value util.DiffsSet, ps *cutil.PageState) %}{% stripspace %}
+{% func DiffsSet(key string, value util.DiffsSet, limit int, ps *cutil.PageState) %}{% stripspace %}
   {%- if len(value) == 0 -%}
   <em>no changes</em>
   {%- else -%}
   <ul class="accordion">
-    {%- for idx, k := range util.ArraySorted[string](lo.Keys(value)) -%}
-      {% code dk, u := util.StringSplitLast(k, '^', true) %}
-      {% code v := value[k] %}
-      {%- if idx < 100 -%}
+    {%- for idx, k := range value.Keys() -%}
+      {%- code
+        dk, u := util.StringSplitLast(k, '^', true)
+        v := value[k]
+        if limit == 0 {
+          limit = 100
+        }
+      -%}
+      {%- if limit > 0 && idx < limit -%}
         <li>
           <input id="accordion-{%s k %}-{%d idx %}" type="checkbox" hidden="hidden" />
           <label for="accordion-{%s k %}-{%d idx %}">
@@ -61,10 +64,10 @@
           </div></div></div>
         </li>
       {%- endif -%}
-      {%- if idx == 100 -%}
+      {%- if idx == limit && limit > 0 -%}
         <li>
           <input id="accordion-{%s k %}-extras" type="checkbox" hidden="hidden" />
-          <label for="accordion-{%s k %}-extras">...and{% space %}{%d len(value) - 100 %}{% space %}extra</label>
+          <label for="accordion-{%s k %}-extras">...and{% space %}{%d len(value) - limit %}{% space %}extra</label>
         </li>
       {%- endif -%}
     {%- endfor -%}

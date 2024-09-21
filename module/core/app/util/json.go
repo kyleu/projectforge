@@ -54,6 +54,14 @@ func FromJSONMap(msg json.RawMessage) (ValueMap, error) {
 }
 
 func FromJSONAny(msg json.RawMessage) (any, error) {
+	if bytes.HasPrefix(msg, []byte("\"{")) {
+		if str, err := FromJSONString(msg); err == nil {
+			var tgt any
+			if err = FromJSON([]byte(str), &tgt); err == nil {
+				return tgt, nil
+			}
+		}
+	}
 	var tgt any
 	err := FromJSON(msg, &tgt)
 	return tgt, err

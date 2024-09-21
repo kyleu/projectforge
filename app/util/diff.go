@@ -51,6 +51,10 @@ func (d Diffs) StringVerbose() string {
 
 type DiffsSet map[string]Diffs
 
+func (d DiffsSet) Keys() []string {
+	return ArraySorted[string](lo.Keys(d))
+}
+
 func DiffObjects(l any, r any, path ...string) Diffs {
 	return DiffObjectsIgnoring(l, r, nil, path...)
 }
