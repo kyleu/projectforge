@@ -118,7 +118,7 @@
       console.log("[socket error]: " + e);
       {% endif %}}
     window.addEventListener('load', () => {
-      new workbench.Socket({%v debug %}, open, recv, err, "{%s connectURL %}");
+      new {{{ .Key }}}.Socket({%v debug %}, open, recv, err, "{%s connectURL %}");
     })
   </script>
 {% endfunc %}
