@@ -84,7 +84,7 @@ func controllerList(g *golang.File, m *model.Model, grp *model.Column, models mo
 			suffix = ", false"
 		}
 		c := fmt.Sprintf("%sIDsBy%s", relModel.Camel(), srcCol.Proper())
-		if srcCol.Nullable && !tgtCol.Nullable {
+		if srcCol.Nullable && !srcCol.Type.Scalar() && !tgtCol.Nullable {
 			g.AddImport(helper.ImpAppUtil)
 			c = "util.ArrayDereference(" + c + ")"
 		}

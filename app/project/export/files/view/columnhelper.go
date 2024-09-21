@@ -69,7 +69,7 @@ func viewColumn(
 				icon = fmt.Sprintf(msg, prefix, icons[0].IconDerived(), icon)
 			}
 			wp := `{%% if x := ` + prefix + `; x != nil %%}{%%s x.WebPath(` + pathKey + `...) %%}{%% endif %%}`
-			if col.Nullable {
+			if col.Nullable && !col.Type.Scalar() {
 				ret.W(anchorMsg, ind, modelKey, col.Proper(), relModel.Title(), wp, icon)
 			} else {
 				ret.W(anchorMsgNotNull, ind, relModel.Title(), wp, icon)

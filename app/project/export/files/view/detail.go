@@ -25,7 +25,12 @@ func iconRef(m *model.Model) string {
 
 func detail(m *model.Model, args *model.Args, linebreak string) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "Detail.html")
-	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpComponentsView, helper.ImpCutil, helper.ImpLayout)
+	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpLayout)
+	if lo.ContainsBy(m.Columns, func(x *model.Column) bool {
+		return !x.Type.Scalar() || x.Type.Key() == "string"
+	}) {
+		g.AddImport(helper.ImpComponentsView)
+	}
 	g.AddImport(helper.AppImport(m.PackageWithGroup("")))
 	rrs := args.Models.ReverseRelations(m.Name)
 	if len(rrs) > 0 {

@@ -36,7 +36,11 @@ func controllerModelFromPath(m *model.Model) *golang.Block {
 		controllerArgFor(col, ret, "nil", 1)
 	})
 	args := lo.Map(pks, func(x *model.Column, _ int) string {
-		return x.Camel() + helper.TextArg
+		if x.Nullable && !x.Type.Scalar() {
+			return "&" + x.Camel() + helper.TextArg
+		} else {
+			return x.Camel() + helper.TextArg
+		}
 	})
 	suffix := ""
 	if m.IsSoftDelete() {

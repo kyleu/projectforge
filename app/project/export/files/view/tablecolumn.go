@@ -38,7 +38,7 @@ func getTableColumnStrings(m *model.Model, modelKey string, rels model.Relations
 			relTitles = relModel.PKs()
 		}
 		get := fmt.Sprintf("%sBy%s.Get(%s%s)", k, srcCol.Proper(), modelKey, srcCol.Proper())
-		if srcCol.Nullable && !tgtCol.Nullable {
+		if srcCol.Nullable && !srcCol.Type.Scalar() && !tgtCol.Nullable {
 			get = fmt.Sprintf("%sBy%s.Get(*%s%s)", k, srcCol.Proper(), modelKey, srcCol.Proper())
 		}
 
@@ -46,9 +46,8 @@ func getTableColumnStrings(m *model.Model, modelKey string, rels model.Relations
 			return get + "||", true
 		}
 		st, end := "{%% if x := ", "; x != nil %%} ({%%s x.TitleString() %%})"
-		if srcCol.Nullable && !tgtCol.Nullable {
-			return get + "||{%% if " + modelKey + srcCol.Proper() + " != nil %%}" +
-				st + get + end + helper.TextEndIf + helper.TextEndIf, true
+		if srcCol.Nullable && !srcCol.Type.Scalar() && !tgtCol.Nullable {
+			return get + "||{%% if " + modelKey + srcCol.Proper() + " != nil %%}" + st + get + end + helper.TextEndIf + helper.TextEndIf, true
 		}
 		return get + "||" + st + get + end + helper.TextEndIf, true
 	})

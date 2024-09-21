@@ -74,5 +74,9 @@ func load(src string, tgt string) (*SVG, error) {
 		return get(simpleIcons + src)
 	}
 
+	if ret, err := get(ghLineAwesome + src + "-solid.svg"); err == nil {
+		return ret, nil
+	}
+
 	return get(ghLineAwesome + src)
 }

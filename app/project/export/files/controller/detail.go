@@ -31,8 +31,6 @@ func controllerDetail(g *golang.File, models model.Models, m *model.Model, grp *
 		ret.W("\t\tincDel := cutil.QueryStringBool(r, \"includeDeleted\")")
 	}
 	ret.WB()
-	argKeys, argVals := getArgs(g, models, m, rrels, ret)
-	revArgKeys, revArgVals := getReverseArgs(models, m, rrels, ret)
 	if audit {
 		pks := m.PKs()
 		if len(pks) > 1 {
@@ -51,6 +49,9 @@ func controllerDetail(g *golang.File, models model.Models, m *model.Model, grp *
 		ret.W("\t\t}")
 		ret.WB()
 	}
+
+	argKeys, argVals := getArgs(g, models, m, rrels, ret)
+	revArgKeys, revArgVals := getReverseArgs(models, m, rrels, ret)
 	if len(argKeys)+len(revArgKeys) <= 2 {
 		args := lo.Map(argKeys, func(k string, idx int) string {
 			return fmt.Sprintf("%s: %s", k, argVals[idx])
