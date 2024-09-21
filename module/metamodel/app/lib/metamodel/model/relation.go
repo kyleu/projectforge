@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/samber/lo"
@@ -44,6 +45,10 @@ func (r *Relation) Reverse(name string) *Relation {
 
 func (r *Relation) ContainsSource(colName string) bool {
 	return len(r.Src) == 1 && r.Src[0] == colName
+}
+
+func (r *Relation) Uniq() string {
+	return fmt.Sprintf("%s -> %s", strings.Join(util.ArraySorted(r.Src), ","), strings.Join(util.ArraySorted(r.Tgt), ","))
 }
 
 type Relations []*Relation

@@ -134,7 +134,7 @@ func (c Columns) ToRefs(prefix string, relCols ...*Column) string {
 		r := prefix + x.Proper()
 		if len(relCols) > idx {
 			tc := relCols[idx]
-			if tc.Nullable && !x.Nullable {
+			if tc.Nullable && !tc.Type.Scalar() && !x.Nullable {
 				r = "&" + r
 			}
 		}

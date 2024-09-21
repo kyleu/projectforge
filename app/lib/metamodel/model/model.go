@@ -156,3 +156,13 @@ func (m *Model) SetAcronyms(acronyms ...string) {
 		col.SetAcronyms(acronyms...)
 	}
 }
+
+func (m *Model) Cleanup() {
+	m.Relations = lo.UniqBy(m.Relations, func(x *Relation) string {
+		return x.Uniq()
+	})
+	for _, rel := range m.Relations {
+		rel.Src = lo.Uniq(rel.Src)
+		rel.Tgt = lo.Uniq(rel.Tgt)
+	}
+}

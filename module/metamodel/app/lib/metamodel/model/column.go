@@ -182,3 +182,7 @@ func (c *Column) Derived() bool {
 func (c *Column) SetAcronyms(acronyms ...string) {
 	c.acronyms = acronyms
 }
+
+func (c *Column) String() string {
+	return fmt.Sprintf("%s: %s%s", c.Name, util.Choose(c.Nullable, "*", ""), c.Type.String())
+}
