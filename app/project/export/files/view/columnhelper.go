@@ -52,11 +52,10 @@ func viewColumn(
 	}
 
 	ret.W(ind + helper.TextTDStart)
+	cv := col.ToGoViewString(modelKey, true, false, enums, key)
 	if col.PK && link {
-		cv := col.ToGoViewString(modelKey, true, false, enums, key)
 		ret.W(ind + linkStart + ModelLinkURL(m, modelKey, enums) + "\">" + cv + toStrings + helper.TextEndAnchor)
 	} else {
-		cv := col.ToGoViewString(modelKey, true, false, enums, key)
 		ret.W(ind + ind1 + cv + toStrings)
 	}
 

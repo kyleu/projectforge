@@ -10,7 +10,7 @@ import (
 
 func ToGoViewString(t *types.Wrapped, prop string, nullable bool, format string, display string, verbose bool, url bool, enums enum.Enums, src string) string {
 	switch t.Key() {
-	case types.KeyAny:
+	case types.KeyAny, types.KeyJSON:
 		if src == util.KeySimple {
 			return tmplStartV + prop + tmplEnd
 		}

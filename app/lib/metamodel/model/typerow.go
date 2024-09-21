@@ -13,6 +13,8 @@ func ToGoRowType(t types.Type, nullable bool, pkg string, enums enum.Enums, data
 			return types.KeyString, nil
 		}
 		return "json.RawMessage", nil
+	case types.KeyJSON:
+		return "util.NilJSON", nil
 	default:
 		if t.Key() == types.KeyUUID && database == util.DatabaseSQLServer {
 			if nullable {

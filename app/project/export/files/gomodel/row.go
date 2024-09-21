@@ -128,6 +128,14 @@ func modelRowToModel(g *golang.File, m *model.Model, enums enum.Enums, database 
 				ret.W("\t_ = util.FromJSON(r.%s, &%sArg)", c.Proper(), c.Camel())
 			}
 			refs = append(refs, fmt.Sprintf("%s %sArg", k, c.Camel()))
+		case types.KeyJSON:
+			ret.W("\tvar %sArg any", c.Camel())
+			if helper.SimpleJSON(database) {
+				ret.W("\t_ = util.FromJSON([]byte(r.%s.V), &%sArg)", c.Proper(), c.Camel())
+			} else {
+				ret.W("\t_ = util.FromJSON(r.%s.V, &%sArg)", c.Proper(), c.Camel())
+			}
+			refs = append(refs, fmt.Sprintf("%s %sArg", k, c.Camel()))
 		case types.KeyList:
 			t := "[]any"
 			decoder := rDot + c.Proper()

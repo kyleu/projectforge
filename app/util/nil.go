@@ -2,6 +2,7 @@ package util
 
 import (
 	"database/sql"
+	"encoding/json"
 	"time"
 )
 
@@ -107,6 +108,28 @@ func (n *NilInt64) UnmarshalJSON(data []byte) error {
 	} else {
 		n.Valid = false
 		n.Int64 = 0
+	}
+	return nil
+}
+
+type NilJSON struct {
+	sql.Null[json.RawMessage]
+}
+
+func (n NilJSON) MarshalJSON() ([]byte, error) {
+	if n.Valid {
+		return n.V, nil
+	}
+	return ToJSONBytes(nil, false), nil
+}
+
+func (n *NilJSON) UnmarshalJSON(data []byte) error {
+	if data != nil {
+		n.Valid = true
+		n.V = data
+	} else {
+		n.Valid = false
+		n.V = nil
 	}
 	return nil
 }
