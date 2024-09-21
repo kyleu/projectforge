@@ -122,7 +122,7 @@ func getArgs(g *golang.File, models model.Models, m *model.Model, rrels model.Re
 		var conditions []string
 		var args []string
 		lo.ForEach(lCols, func(col *model.Column, _ int) {
-			if col.Nullable {
+			if col.Nullable && !col.Type.Scalar() {
 				conditions = append(conditions, fmt.Sprintf("ret.%s != nil", col.Proper()))
 				args = append(args, fmt.Sprintf("*ret.%s", col.Proper()))
 			} else {
