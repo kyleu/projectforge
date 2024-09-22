@@ -6,6 +6,8 @@ package vmodule
 
 //line views/vmodule/Files.html:1
 import (
+	"fmt"
+	"path"
 	"path/filepath"
 
 	"projectforge.dev/projectforge/app"
@@ -16,20 +18,20 @@ import (
 	"projectforge.dev/projectforge/views/vfile"
 )
 
-//line views/vmodule/Files.html:12
+//line views/vmodule/Files.html:14
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vmodule/Files.html:12
+//line views/vmodule/Files.html:14
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vmodule/Files.html:12
+//line views/vmodule/Files.html:14
 type Files struct {
 	layout.Basic
 	Module *module.Module
@@ -37,87 +39,88 @@ type Files struct {
 	FS     filesystem.FileLoader
 }
 
-//line views/vmodule/Files.html:19
+//line views/vmodule/Files.html:21
 func (p *Files) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vmodule/Files.html:19
+//line views/vmodule/Files.html:21
 	qw422016.N().S(`
 `)
-//line views/vmodule/Files.html:21
+//line views/vmodule/Files.html:23
 	mod := p.Module
 	u := "/m/" + mod.Key + "/fs"
 
-//line views/vmodule/Files.html:23
+//line views/vmodule/Files.html:25
 	qw422016.N().S(`
   `)
-//line views/vmodule/Files.html:25
+//line views/vmodule/Files.html:27
 	StreamSummary(qw422016, mod, nil, ps)
-//line views/vmodule/Files.html:25
+//line views/vmodule/Files.html:27
 	qw422016.N().S(`
 
 `)
-//line views/vmodule/Files.html:27
+//line views/vmodule/Files.html:29
 	if p.FS.IsDir(filepath.Join(p.Path...)) {
-//line views/vmodule/Files.html:28
+//line views/vmodule/Files.html:30
 		files := p.FS.ListFiles(filepath.Join(p.Path...), nil, ps.Logger)
 
-//line views/vmodule/Files.html:28
+//line views/vmodule/Files.html:30
 		qw422016.N().S(`  <div class="card">
     `)
-//line views/vmodule/Files.html:30
+//line views/vmodule/Files.html:32
 		vfile.StreamList(qw422016, p.Path, files, p.FS, u, as, ps)
-//line views/vmodule/Files.html:30
+//line views/vmodule/Files.html:32
 		qw422016.N().S(`
   </div>
 `)
-//line views/vmodule/Files.html:32
-	} else {
 //line views/vmodule/Files.html:34
+	} else {
+//line views/vmodule/Files.html:36
 		b, err := p.FS.ReadFile(filepath.Join(p.Path...))
 		if err != nil {
 			panic(err)
 		}
 
-//line views/vmodule/Files.html:38
+//line views/vmodule/Files.html:40
 		qw422016.N().S(`  <div class="card">
 `)
-//line views/vmodule/Files.html:40
+//line views/vmodule/Files.html:43
 		links := map[string]string{"Download": "?download=true"}
+		lineNumLink := fmt.Sprintf("%s/%s#L{}", p.Module.Sourcecode, path.Join(p.Path...))
 
-//line views/vmodule/Files.html:40
+//line views/vmodule/Files.html:45
 		qw422016.N().S(`    `)
-//line views/vmodule/Files.html:41
-		vfile.StreamDetail(qw422016, p.Path, b, u, links, as, ps)
-//line views/vmodule/Files.html:41
+//line views/vmodule/Files.html:46
+		vfile.StreamDetail(qw422016, p.Path, b, u, links, as, ps, lineNumLink, "View line {} on GitHub")
+//line views/vmodule/Files.html:46
 		qw422016.N().S(`
   </div>
 `)
-//line views/vmodule/Files.html:43
+//line views/vmodule/Files.html:48
 	}
-//line views/vmodule/Files.html:44
+//line views/vmodule/Files.html:49
 }
 
-//line views/vmodule/Files.html:44
+//line views/vmodule/Files.html:49
 func (p *Files) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vmodule/Files.html:44
+//line views/vmodule/Files.html:49
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vmodule/Files.html:44
+//line views/vmodule/Files.html:49
 	p.StreamBody(qw422016, as, ps)
-//line views/vmodule/Files.html:44
+//line views/vmodule/Files.html:49
 	qt422016.ReleaseWriter(qw422016)
-//line views/vmodule/Files.html:44
+//line views/vmodule/Files.html:49
 }
 
-//line views/vmodule/Files.html:44
+//line views/vmodule/Files.html:49
 func (p *Files) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vmodule/Files.html:44
+//line views/vmodule/Files.html:49
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vmodule/Files.html:44
+//line views/vmodule/Files.html:49
 	p.WriteBody(qb422016, as, ps)
-//line views/vmodule/Files.html:44
+//line views/vmodule/Files.html:49
 	qs422016 := string(qb422016.B)
-//line views/vmodule/Files.html:44
+//line views/vmodule/Files.html:49
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vmodule/Files.html:44
+//line views/vmodule/Files.html:49
 	return qs422016
-//line views/vmodule/Files.html:44
+//line views/vmodule/Files.html:49
 }

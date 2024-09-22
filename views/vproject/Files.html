@@ -1,4 +1,6 @@
 {% import (
+  "fmt"
+  "path"
   "path/filepath"
   "strings"
 
@@ -38,8 +40,11 @@
     }
   -%}
   <div class="card">
-    {%- code links := map[string]string{"Download": "?download=true"} -%}
-    {%= vfile.Detail(p.Path, b, u, links, as, ps) %}
+    {%- code
+      links := map[string]string{"Download": "?download=true"}
+      lineNumLink := fmt.Sprintf("%s/blob/HEAD/%s#L{}", p.Project.Info.Sourcecode, path.Join(p.Path...))
+    -%}
+    {%= vfile.Detail(p.Path, b, u, links, as, ps, lineNumLink, "View line {} on GitHub") %}
   </div>
   {%- endif -%}
 {% endfunc %}

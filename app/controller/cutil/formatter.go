@@ -3,6 +3,7 @@ package cutil
 import (
 	"fmt"
 	h "html"
+	"regexp"
 	"strings"
 
 	"github.com/alecthomas/chroma"
@@ -19,24 +20,32 @@ var (
 	noLineNums *html.Formatter
 )
 
-func FormatJSON(v any) (string, error) {
-	return FormatLang(util.ToJSON(v), util.KeyJSON)
+func FormatJSON(v any, lineNumLinkAndTitle ...string) (string, error) {
+	return FormatLang(util.ToJSON(v), util.KeyJSON, lineNumLinkAndTitle...)
 }
 
-func FormatLang(content string, lang string) (string, error) {
+func FormatLang(content string, lang string, lineNumLinkAndTitle ...string) (string, error) {
 	l := lexers.Get(lang)
-	return FormatString(content, l)
+	return FormatString(content, l, lineNumLinkAndTitle...)
 }
 
-func FormatFilename(content string, filename string) (string, error) {
+func FormatLangIgnoreErrors(content string, lang string, lineNumLinkAndTitle ...string) string {
+	ret, err := FormatLang(content, lang, lineNumLinkAndTitle...)
+	if err != nil {
+		return fmt.Sprintf("encoding error: %s\n%s", err.Error(), content)
+	}
+	return ret
+}
+
+func FormatFilename(content string, filename string, lineNumLinkAndTitle ...string) (string, error) {
 	l := lexers.Match(filename)
 	if l == nil {
 		l = lexers.Fallback
 	}
-	return FormatString(content, l)
+	return FormatString(content, l, lineNumLinkAndTitle...)
 }
 
-func FormatString(content string, l chroma.Lexer) (string, error) {
+func FormatString(content string, l chroma.Lexer, lineNumLinkAndTitle ...string) (string, error) {
 	if l == nil {
 		return "", errors.New("no lexer available for this content")
 	}
@@ -71,8 +80,35 @@ func FormatString(content string, l chroma.Lexer) (string, error) {
 	if l.Config().Name == "SQL" {
 		ret = strings.ReplaceAll(ret, `<span class="err">$</span>`, `<span class="mi">$</span>`)
 	}
+	if len(lineNumLinkAndTitle) > 0 {
+		title := ""
+		if len(lineNumLinkAndTitle) > 1 {
+			title = lineNumLinkAndTitle[1]
+		}
+		ret = injectLinks(ret, lineNumLinkAndTitle[0], title)
+	}
 	ret = strings.Replace(ret, `<td class="lntd"><pre tabindex="0" class="chroma"><span class="lnt">1<br /></span></pre></td>`, "", 1)
 	return ret, nil
+}
+
+var injectLinksRegex = regexp.MustCompile(`<span class="lnt">(.*?)</span>`)
+
+func injectLinks(ret string, url string, title string) string {
+	return injectLinksRegex.ReplaceAllStringFunc(ret, func(match string) string {
+		content := injectLinksRegex.FindStringSubmatch(match)[1]
+		var num int
+		for _, x := range strings.TrimSpace(content) {
+			if x >= '0' && x <= '9' {
+				num = num*10 + int(x-'0')
+			} else {
+				break
+			}
+		}
+		u := strings.ReplaceAll(url, "{}", fmt.Sprint(num))
+		t := strings.ReplaceAll(title, "{}", fmt.Sprint(num))
+		anchor := fmt.Sprintf(`<a target="_blank" rel="noopener noreferrer" title=%q href=%q>`, t, u)
+		return strings.Replace(match, content, anchor+content+"</a>", 1)
+	})
 }
 
 func FormatMarkdown(s string) (string, error) {

@@ -30,7 +30,7 @@ var (
 )
 
 //line views/vfile/Detail.html:12
-func StreamDetail(qw422016 *qt422016.Writer, path []string, b []byte, urlPrefix string, additionalLinks map[string]string, as *app.State, ps *cutil.PageState) {
+func StreamDetail(qw422016 *qt422016.Writer, path []string, b []byte, urlPrefix string, additionalLinks map[string]string, as *app.State, ps *cutil.PageState, lineNumLinkAndTitle ...string) {
 //line views/vfile/Detail.html:12
 	qw422016.N().S(`
 `)
@@ -101,7 +101,7 @@ func StreamDetail(qw422016 *qt422016.Writer, path []string, b []byte, urlPrefix 
 //line views/vfile/Detail.html:27
 	} else if utf8.Valid(b) {
 //line views/vfile/Detail.html:28
-		out, _ := cutil.FormatFilename(string(b), path[len(path)-1])
+		out, _ := cutil.FormatFilename(string(b), path[len(path)-1], lineNumLinkAndTitle...)
 
 //line views/vfile/Detail.html:28
 		qw422016.N().S(`    `)
@@ -193,22 +193,22 @@ func StreamDetail(qw422016 *qt422016.Writer, path []string, b []byte, urlPrefix 
 }
 
 //line views/vfile/Detail.html:62
-func WriteDetail(qq422016 qtio422016.Writer, path []string, b []byte, urlPrefix string, additionalLinks map[string]string, as *app.State, ps *cutil.PageState) {
+func WriteDetail(qq422016 qtio422016.Writer, path []string, b []byte, urlPrefix string, additionalLinks map[string]string, as *app.State, ps *cutil.PageState, lineNumLinkAndTitle ...string) {
 //line views/vfile/Detail.html:62
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vfile/Detail.html:62
-	StreamDetail(qw422016, path, b, urlPrefix, additionalLinks, as, ps)
+	StreamDetail(qw422016, path, b, urlPrefix, additionalLinks, as, ps, lineNumLinkAndTitle...)
 //line views/vfile/Detail.html:62
 	qt422016.ReleaseWriter(qw422016)
 //line views/vfile/Detail.html:62
 }
 
 //line views/vfile/Detail.html:62
-func Detail(path []string, b []byte, urlPrefix string, additionalLinks map[string]string, as *app.State, ps *cutil.PageState) string {
+func Detail(path []string, b []byte, urlPrefix string, additionalLinks map[string]string, as *app.State, ps *cutil.PageState, lineNumLinkAndTitle ...string) string {
 //line views/vfile/Detail.html:62
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vfile/Detail.html:62
-	WriteDetail(qb422016, path, b, urlPrefix, additionalLinks, as, ps)
+	WriteDetail(qb422016, path, b, urlPrefix, additionalLinks, as, ps, lineNumLinkAndTitle...)
 //line views/vfile/Detail.html:62
 	qs422016 := string(qb422016.B)
 //line views/vfile/Detail.html:62
