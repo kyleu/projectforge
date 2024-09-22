@@ -2,6 +2,7 @@ package view
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/samber/lo"
@@ -33,14 +34,13 @@ func viewDetailColumnString(rels model.Relations, models model.Models, m *model.
 		lCols := rel.SrcColumns(m)
 		lNames := strings.Join(lCols.ProperNames(), "")
 
+		x := fmt.Sprintf("p.%sBy%s", relModel.Proper(), lNames)
 		relTitles := relModel.Columns.WithTag("title")
 		if len(relTitles) == 0 {
-			relTitles = relModel.PKs()
+			if relPks := relModel.PKs(); slices.Equal(relPks.Names(), rel.Tgt) {
+				return x + "||", true
+			}
 		}
-		if len(relTitles) == 1 && relTitles[0].Name == col.Name {
-			return "", false
-		}
-		x := fmt.Sprintf("p.%sBy%s", relModel.Proper(), lNames)
 		msg := "%s||{%%%% if %s != nil %%%%} ({%%%%s %s.TitleString() %%%%})" + helper.TextEndIfExtra
 		return fmt.Sprintf(msg, x, x, x), true
 	})
