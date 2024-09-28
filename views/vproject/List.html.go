@@ -60,97 +60,110 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 `)
 //line views/vproject/List.html:26
 	}
-//line views/vproject/List.html:27
+//line views/vproject/List.html:26
+	qw422016.N().S(`  <a class="link-section" href="/p/new" title="Create a new project">
+    <div class="card">
+      <div class="left mrs">`)
+//line views/vproject/List.html:29
+	components.StreamSVGRef(qw422016, "plus", 40, 40, "", ps)
+//line views/vproject/List.html:29
+	qw422016.N().S(`</div>
+      <strong class="highlight"><em>New Project</em></strong>
+      <div><em>Create a new project</em></div>
+    </div>
+  </a>
+`)
+//line views/vproject/List.html:34
 }
 
-//line views/vproject/List.html:27
+//line views/vproject/List.html:34
 func (p *List) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vproject/List.html:27
+//line views/vproject/List.html:34
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/List.html:27
+//line views/vproject/List.html:34
 	p.StreamBody(qw422016, as, ps)
-//line views/vproject/List.html:27
+//line views/vproject/List.html:34
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/List.html:27
+//line views/vproject/List.html:34
 }
 
-//line views/vproject/List.html:27
+//line views/vproject/List.html:34
 func (p *List) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vproject/List.html:27
+//line views/vproject/List.html:34
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/List.html:27
+//line views/vproject/List.html:34
 	p.WriteBody(qb422016, as, ps)
-//line views/vproject/List.html:27
+//line views/vproject/List.html:34
 	qs422016 := string(qb422016.B)
-//line views/vproject/List.html:27
+//line views/vproject/List.html:34
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/List.html:27
+//line views/vproject/List.html:34
 	return qs422016
-//line views/vproject/List.html:27
+//line views/vproject/List.html:34
 }
 
-//line views/vproject/List.html:29
+//line views/vproject/List.html:36
 func StreamListItem(qw422016 *qt422016.Writer, prj *project.Project, ps *cutil.PageState) {
-//line views/vproject/List.html:29
+//line views/vproject/List.html:36
 	qw422016.N().S(`
   <a class="link-section" href="`)
-//line views/vproject/List.html:30
+//line views/vproject/List.html:37
 	qw422016.E().S(prj.WebPath())
-//line views/vproject/List.html:30
+//line views/vproject/List.html:37
 	qw422016.N().S(`" title="`)
-//line views/vproject/List.html:30
+//line views/vproject/List.html:37
 	qw422016.E().S(prj.DescriptionSafe())
-//line views/vproject/List.html:30
+//line views/vproject/List.html:37
 	qw422016.N().S(`">
     <div class="card">
       <div class="left mrs">`)
-//line views/vproject/List.html:32
+//line views/vproject/List.html:39
 	components.StreamSVGRef(qw422016, prj.IconSafe(), 40, 40, "", ps)
-//line views/vproject/List.html:32
+//line views/vproject/List.html:39
 	qw422016.N().S(`</div>
       <div class="right">`)
-//line views/vproject/List.html:33
+//line views/vproject/List.html:40
 	view.StreamTags(qw422016, prj.Tags)
-//line views/vproject/List.html:33
+//line views/vproject/List.html:40
 	qw422016.N().S(`</div>
       <strong class="highlight">`)
-//line views/vproject/List.html:34
+//line views/vproject/List.html:41
 	qw422016.E().S(prj.Title())
-//line views/vproject/List.html:34
+//line views/vproject/List.html:41
 	qw422016.N().S(`</strong>
       <div><em>`)
-//line views/vproject/List.html:35
+//line views/vproject/List.html:42
 	qw422016.E().S(prj.Package)
-//line views/vproject/List.html:35
+//line views/vproject/List.html:42
 	qw422016.N().S(`</em></div>
     </div>
   </a>
 `)
-//line views/vproject/List.html:38
+//line views/vproject/List.html:45
 }
 
-//line views/vproject/List.html:38
+//line views/vproject/List.html:45
 func WriteListItem(qq422016 qtio422016.Writer, prj *project.Project, ps *cutil.PageState) {
-//line views/vproject/List.html:38
+//line views/vproject/List.html:45
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/List.html:38
+//line views/vproject/List.html:45
 	StreamListItem(qw422016, prj, ps)
-//line views/vproject/List.html:38
+//line views/vproject/List.html:45
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/List.html:38
+//line views/vproject/List.html:45
 }
 
-//line views/vproject/List.html:38
+//line views/vproject/List.html:45
 func ListItem(prj *project.Project, ps *cutil.PageState) string {
-//line views/vproject/List.html:38
+//line views/vproject/List.html:45
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/List.html:38
+//line views/vproject/List.html:45
 	WriteListItem(qb422016, prj, ps)
-//line views/vproject/List.html:38
+//line views/vproject/List.html:45
 	qs422016 := string(qb422016.B)
-//line views/vproject/List.html:38
+//line views/vproject/List.html:45
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/List.html:38
+//line views/vproject/List.html:45
 	return qs422016
-//line views/vproject/List.html:38
+//line views/vproject/List.html:45
 }

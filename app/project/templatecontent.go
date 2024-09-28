@@ -96,6 +96,10 @@ func (t *TemplateContext) Public() bool {
 	return t.Build == nil || !t.Build.Private
 }
 
+func (t *TemplateContext) Private() bool {
+	return t.Build == nil && t.Build.Private
+}
+
 func (t *TemplateContext) Acronyms() string {
 	if t.Info == nil || len(t.Info.Acronyms) == 0 {
 		return ""

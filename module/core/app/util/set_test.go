@@ -1,21 +1,25 @@
-package util
+package util_test
 
 import (
 	"bytes"
 	"encoding/xml"
 	"reflect"
 	"testing"
+
+	"{{{ .Package }}}/app/util"
 )
 
 func TestNewSet(t *testing.T) {
-	s := NewSet[int](5)
+	t.Parallel()
+	s := util.NewSet[int](5)
 	if len(s.Map) != 0 {
 		t.Errorf("Expected empty set, got %v", s.Map)
 	}
 }
 
 func TestSet(t *testing.T) {
-	s := NewSet[int]()
+	t.Parallel()
+	s := util.NewSet[int]()
 	s.Set(1)
 	s.Set(2)
 	s.Set(1)
@@ -25,7 +29,8 @@ func TestSet(t *testing.T) {
 }
 
 func TestContains(t *testing.T) {
-	s := NewSet[string]()
+	t.Parallel()
+	s := util.NewSet[string]()
 	s.Set("a")
 	if !s.Contains("a") {
 		t.Error("Expected set to contain 'a'")
@@ -36,7 +41,8 @@ func TestContains(t *testing.T) {
 }
 
 func TestRemove(t *testing.T) {
-	s := NewSet[int]()
+	t.Parallel()
+	s := util.NewSet[int]()
 	s.Set(1)
 	s.Set(2)
 	s.Remove(1)
@@ -49,7 +55,8 @@ func TestRemove(t *testing.T) {
 }
 
 func TestEntries(t *testing.T) {
-	s := NewSet[int]()
+	t.Parallel()
+	s := util.NewSet[int]()
 	s.Set(3)
 	s.Set(1)
 	s.Set(2)
@@ -61,7 +68,8 @@ func TestEntries(t *testing.T) {
 }
 
 func TestClone(t *testing.T) {
-	s1 := NewSet[int]()
+	t.Parallel()
+	s1 := util.NewSet[int]()
 	s1.Set(1)
 	s1.Set(2)
 	s2 := s1.Clone()
@@ -75,7 +83,8 @@ func TestClone(t *testing.T) {
 }
 
 func TestMarshalYAML(t *testing.T) {
-	s := NewSet[string]()
+	t.Parallel()
+	s := util.NewSet[string]()
 	s.Set("c")
 	s.Set("a")
 	s.Set("b")
@@ -90,7 +99,8 @@ func TestMarshalYAML(t *testing.T) {
 }
 
 func TestMarshalXML(t *testing.T) {
-	s := NewSet[int]()
+	t.Parallel()
+	s := util.NewSet[int]()
 	s.Set(1)
 	s.Set(2)
 	var buf bytes.Buffer
@@ -106,8 +116,9 @@ func TestMarshalXML(t *testing.T) {
 }
 
 func TestUnmarshalJSON(t *testing.T) {
+	t.Parallel()
 	jsonData := `[1, 2, 3]`
-	s := NewSet[int]()
+	s := util.NewSet[int]()
 	err := s.UnmarshalJSON([]byte(jsonData))
 	if err != nil {
 		t.Fatalf("Unexpected error: %v", err)
@@ -119,7 +130,8 @@ func TestUnmarshalJSON(t *testing.T) {
 }
 
 func TestMarshalJSON(t *testing.T) {
-	s := NewSet[string]()
+	t.Parallel()
+	s := util.NewSet[string]()
 	s.Set("a")
 	s.Set("b")
 	s.Set("c")
@@ -127,7 +139,7 @@ func TestMarshalJSON(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Unexpected error: %v", err)
 	}
-	expected := ToJSON([]string{"a", "b", "c"})
+	expected := util.ToJSON([]string{"a", "b", "c"})
 	if string(js) != expected {
 		t.Errorf("Expected %s, got %s", expected, string(js))
 	}

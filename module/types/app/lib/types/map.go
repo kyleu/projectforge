@@ -27,7 +27,7 @@ func (x *Map) Scalar() bool {
 
 func (x *Map) String() string {
 	k, v := x.K.String(), x.V.String()
-	if k == "string" && v == "any" {
+	if k == KeyString && v == KeyAny {
 		return x.Key()
 	}
 	return fmt.Sprintf("%s[%s]%s", x.Key(), k, v)

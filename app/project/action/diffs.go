@@ -3,6 +3,7 @@ package action
 import (
 	"path"
 	"path/filepath"
+	"slices"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -22,6 +23,12 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 	srcFiles, err := pm.MSvc.GetFiles(pm.Mods, pm.Logger)
 	if err != nil {
 		return nil, nil, errors.Wrapf(err, "unable to get files from [%d] modules", len(pm.Mods))
+	}
+
+	if pm.Prj.Build == nil || pm.Prj.Build.Private {
+		srcFiles = lo.Filter(srcFiles, func(x *file.File, _ int) bool {
+			return slices.Equal(x.Path, []string{"doc", "module"})
+		})
 	}
 
 	if pm.Mods.Get("export") != nil && len(srcFiles) > 0 {

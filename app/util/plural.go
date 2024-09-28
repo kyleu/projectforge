@@ -40,7 +40,7 @@ func StringToSingular(s string) string {
 	plrlSvc()
 	ret := plrl.Singular(s)
 	if len(s) != len(ret) {
-		orig := s[:len(s)]
+		orig := s
 		if lo.EveryBy([]rune(orig), unicode.IsUpper) && strings.EqualFold(orig, ret) {
 			ret = orig
 		}

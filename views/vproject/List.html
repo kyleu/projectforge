@@ -24,6 +24,13 @@
   {%- for _, prj := range p.Projects -%}
   {%= ListItem(prj, ps) %}
   {%- endfor -%}
+  <a class="link-section" href="/p/new" title="Create a new project">
+    <div class="card">
+      <div class="left mrs">{%= components.SVGRef("plus", 40, 40, "", ps) %}</div>
+      <strong class="highlight"><em>New Project</em></strong>
+      <div><em>Create a new project</em></div>
+    </div>
+  </a>
 {% endfunc %}
 
 {% func ListItem(prj *project.Project, ps *cutil.PageState) %}

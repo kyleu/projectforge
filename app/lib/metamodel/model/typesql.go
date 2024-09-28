@@ -56,12 +56,12 @@ func ToSQLType(t types.Type, database string) (string, error) {
 		}
 		return keyText, nil
 	case types.KeyTimestampZoned:
-		return "timestamp", nil
+		return types.KeyTimestamp, nil
 	case types.KeyDate, types.KeyTimestamp:
 		if database == util.DatabaseSQLServer {
 			return "datetime", nil
 		}
-		return "timestamp", nil
+		return types.KeyTimestamp, nil
 	case types.KeyUUID:
 		if database == util.DatabaseSQLServer {
 			return "uniqueidentifier", nil

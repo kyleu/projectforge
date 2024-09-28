@@ -21,7 +21,7 @@ func ToGoType(t types.Type, nullable bool, pkg string, enums enum.Enums) (string
 	var ret string
 	switch t.Key() {
 	case types.KeyAny, types.KeyJSON:
-		ret = "any"
+		ret = types.KeyAny
 	case types.KeyBool:
 		ret = types.KeyBool
 	case types.KeyEnum:

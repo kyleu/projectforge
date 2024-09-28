@@ -33,6 +33,5 @@
     <a href="/run/{%s t.Key %}{%s tags %}" title="{%s t.Description %}"><button>{%= components.SVGButton(t.Icon, ps) %} {%s t.Title %}</button></a>
     {%- endfor -%}
     <a href="/git{%s tags %}" title="Git dashboard for all projects"><button>{%= components.SVGButton("git", ps) %} Git</button></a>
-    <a href="/p/new" title="Create a new project"><button>{%= components.SVGButton("plus", ps) %} New</button></a>
   </div>
 {% endfunc %}
