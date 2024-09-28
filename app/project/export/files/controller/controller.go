@@ -54,7 +54,7 @@ func controllerArgFor(col *model.Column, b *golang.Block, retVal string, indent 
 		return "\t"
 	}), "")
 	add := func(s string, args ...any) {
-		b.W(ind+s, args...)
+		b.WF(ind+s, args...)
 	}
 	switch col.Type.Key() {
 	case types.KeyBool:
@@ -116,12 +116,12 @@ func blockFor(m *model.Model, prefix string, grp *model.Column, keys ...string) 
 	})
 	name := m.Proper() + withGroupName(strings.Join(properKeys, ""), grp)
 	ret := golang.NewBlock(name, "func")
-	ret.W("func %s(w http.ResponseWriter, r *http.Request) {", name)
+	ret.WF("func %s(w http.ResponseWriter, r *http.Request) {", name)
 	grpStr := ""
 	if grp != nil {
 		grpStr = grp.Name + "."
 	}
-	ret.W("\t%sAct(\"%s.%s%s\", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {", prefix, m.Package, grpStr, strings.Join(keys, "."))
+	ret.WF("\t%sAct(\"%s.%s%s\", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {", prefix, m.Package, grpStr, strings.Join(keys, "."))
 	return ret
 }
 

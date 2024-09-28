@@ -25,12 +25,12 @@ func NewBlock(k string, t string) *Block {
 	return &Block{Key: k, Type: t}
 }
 
-func (b *Block) W(l string, args ...any) {
-	if len(args) == 0 {
-		b.Lines = append(b.Lines, l)
-	} else {
-		b.Lines = append(b.Lines, fmt.Sprintf(l, args...))
-	}
+func (b *Block) WF(l string, args ...any) {
+	b.W(fmt.Sprintf(l, args...))
+}
+
+func (b *Block) W(l string) {
+	b.Lines = append(b.Lines, l)
 }
 
 func (b *Block) WA(a ...string) {

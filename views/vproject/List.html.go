@@ -48,31 +48,29 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vproject/List.html:22
 	qw422016.N().S(`
   </div>
-`)
-//line views/vproject/List.html:24
-	for _, prj := range p.Projects {
-//line views/vproject/List.html:24
-		qw422016.N().S(`  `)
-//line views/vproject/List.html:25
-		StreamListItem(qw422016, prj, ps)
-//line views/vproject/List.html:25
-		qw422016.N().S(`
-`)
-//line views/vproject/List.html:26
-	}
-//line views/vproject/List.html:26
-	qw422016.N().S(`  <a class="link-section" href="/p/new" title="Create a new project">
+  <a class="link-section" href="/p/new" title="Create a new project">
     <div class="card">
       <div class="left mrs">`)
-//line views/vproject/List.html:29
+//line views/vproject/List.html:26
 	components.StreamSVGRef(qw422016, "plus", 40, 40, "", ps)
-//line views/vproject/List.html:29
+//line views/vproject/List.html:26
 	qw422016.N().S(`</div>
       <strong class="highlight"><em>New Project</em></strong>
       <div><em>Create a new project</em></div>
     </div>
   </a>
 `)
+//line views/vproject/List.html:31
+	for _, prj := range p.Projects {
+//line views/vproject/List.html:31
+		qw422016.N().S(`  `)
+//line views/vproject/List.html:32
+		StreamListItem(qw422016, prj, ps)
+//line views/vproject/List.html:32
+		qw422016.N().S(`
+`)
+//line views/vproject/List.html:33
+	}
 //line views/vproject/List.html:34
 }
 

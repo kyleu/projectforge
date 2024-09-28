@@ -71,12 +71,12 @@ func typeAssert(g *golang.File, m *model.Model, enums enum.Enums) *golang.Block 
 	}
 	if m.HasSearches() {
 		ret.W("var (")
-		ret.W("\t_ %s", assertion)
+		ret.WF("\t_ %s", assertion)
 		ss := fmt.Sprintf("svc.ServiceSearch[%s]", m.ProperPlural())
-		ret.W("\t_ %s = (*Service)(nil)", util.StringPad(ss, len(assertion)-18))
+		ret.WF("\t_ %s = (*Service)(nil)", util.StringPad(ss, len(assertion)-18))
 		ret.W(")")
 	} else {
-		ret.W("var _ %s", assertion)
+		ret.WF("var _ %s", assertion)
 	}
 	return ret
 }
@@ -91,12 +91,12 @@ func serviceStruct(isRO bool, isAudit bool) *golang.Block {
 	if isRO {
 		size = 6
 	}
-	ret.W("\t%s *database.Service", util.StringPad("db", size))
+	ret.WF("\t%s *database.Service", util.StringPad("db", size))
 	if isRO {
-		ret.W("\t%s *database.Service", util.StringPad("dbRead", size))
+		ret.WF("\t%s *database.Service", util.StringPad("dbRead", size))
 	}
 	if isAudit {
-		ret.W("\t%s *audit.Service", util.StringPad("audit", size))
+		ret.WF("\t%s *audit.Service", util.StringPad("audit", size))
 	}
 	ret.W("}")
 	return ret
@@ -113,20 +113,20 @@ func serviceNew(m *model.Model, isRO bool, isAudit bool) *golang.Block {
 		newSuffix = ", aud *audit.Service"
 		callSuffix = ", audit: aud"
 	}
-	ret.W("func NewService(db *database.Service%s) *Service {", newSuffix)
-	ret.W("\tfilter.AllowedColumns[\"%s\"] = columns", m.Package)
+	ret.WF("func NewService(db *database.Service%s) *Service {", newSuffix)
+	ret.WF("\tfilter.AllowedColumns[\"%s\"] = columns", m.Package)
 	transforms := lo.Filter(m.Columns, func(x *model.Column, _ int) bool {
 		return x.SQL() != x.Name
 	})
 	if len(transforms) > 0 {
 		pad := transforms.MaxCamelLength()
-		ret.W("\tfilter.TransformedColumns[%q] = map[string]string{", m.Camel())
+		ret.WF("\tfilter.TransformedColumns[%q] = map[string]string{", m.Camel())
 		lo.ForEach(transforms, func(x *model.Column, _ int) {
-			ret.W("\t\t%s %q,", util.StringPad("\""+x.Name+"\":", pad), x.SQL())
+			ret.WF("\t\t%s %q,", util.StringPad("\""+x.Name+"\":", pad), x.SQL())
 		})
 		ret.W("\t}")
 	}
-	ret.W("\treturn &Service{db: db%s}", callSuffix)
+	ret.WF("\treturn &Service{db: db%s}", callSuffix)
 	ret.W("}")
 	return ret
 }
@@ -143,9 +143,9 @@ func serviceDefaultFilters(m *model.Model) *golang.Block {
 		}
 	})
 	if len(ords) == 0 {
-		ret.W("\treturn orig.Sanitize(%q)", m.Package)
+		ret.WF("\treturn orig.Sanitize(%q)", m.Package)
 	} else {
-		ret.W("\treturn orig.Sanitize(%q, %s)", m.Package, strings.Join(ords, ", "))
+		ret.WF("\treturn orig.Sanitize(%q, %s)", m.Package, strings.Join(ords, ", "))
 	}
 	ret.W("}")
 	return ret

@@ -24,7 +24,7 @@ func typesDrop(enums enum.Enums, database string) *golang.Block {
 	ret.W(sqlFunc("TypesDrop"))
 	for i := len(enums) - 1; i >= 0; i-- {
 		if database != util.DatabaseSQLite && database != util.DatabaseSQLServer {
-			ret.W("drop type if exists %q;", enums[i].Name)
+			ret.WF("drop type if exists %q;", enums[i].Name)
 		}
 	}
 	ret.W(sqlEnd())
@@ -42,12 +42,12 @@ func typesCreate(enums enum.Enums, database string) *golang.Block {
 		})
 		switch {
 		case database == util.DatabaseSQLite:
-			ret.W(helper.TextSQLComment+"skipping definition of enum [%s], since SQLite does not support custom types", e.Name)
+			ret.WF(helper.TextSQLComment+"skipping definition of enum [%s], since SQLite does not support custom types", e.Name)
 		case database == util.DatabaseSQLServer:
-			ret.W(helper.TextSQLComment+"skipping definition of enum [%s], since SQL Server does not support custom types", e.Name)
+			ret.WF(helper.TextSQLComment+"skipping definition of enum [%s], since SQL Server does not support custom types", e.Name)
 		default:
 			ret.W("do $$ begin")
-			ret.W("  create type %q as enum (%s);", e.Name, strings.Join(q, ", "))
+			ret.WF("  create type %q as enum (%s);", e.Name, strings.Join(q, ", "))
 			ret.W("exception")
 			ret.W("  when duplicate_object then null;")
 			ret.W("end $$;")

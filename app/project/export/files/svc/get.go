@@ -101,7 +101,7 @@ func serviceGet(key string, m *model.Model, cols model.Columns, dbRef string, en
 		return nil, err
 	}
 	msg := "func (s *Service) %s(ctx context.Context, tx *sqlx.Tx, %s%s, logger util.Logger) (*%s, error) {"
-	ret.W(msg, key, args, getSuffix(m), m.Proper())
+	ret.WF(msg, key, args, getSuffix(m), m.Proper())
 	if slices.Equal(m.PKs().Names(), cols.Names()) {
 		ret.W("\twc := defaultWC(0)")
 	} else {
@@ -109,41 +109,41 @@ func serviceGet(key string, m *model.Model, cols model.Columns, dbRef string, en
 		lo.ForEach(cols, func(col *model.Column, idx int) {
 			wc = append(wc, fmt.Sprintf("%q = $%d", col.SQL(), idx+1))
 		})
-		ret.W("\twc := %q", strings.Join(wc, " and "))
+		ret.WF("\twc := %q", strings.Join(wc, " and "))
 	}
 	if m.IsSoftDelete() {
 		ret.W("\twc = addDeletedClause(wc, includeDeleted)")
 	}
 	ret.W("\tret := &row{}")
-	ret.W("\tq := database.SQLSelectSimple(columnsString, %s, s.db.Type, wc)", tableClause)
-	ret.W("\terr := s.%s.Get(ctx, ret, q, tx, logger, %s)", dbRef, strings.Join(cols.CamelNames(), ", "))
+	ret.WF("\tq := database.SQLSelectSimple(columnsString, %s, s.db.Type, wc)", tableClause)
+	ret.WF("\terr := s.%s.Get(ctx, ret, q, tx, logger, %s)", dbRef, strings.Join(cols.CamelNames(), ", "))
 	ret.W("\tif err != nil {")
 	sj := strings.Join(cols.CamelNames(), ", ")
 	decls := make([]string, 0, len(cols))
 	lo.ForEach(cols, func(c *model.Column, _ int) {
 		decls = append(decls, c.Camel()+declSubscript)
 	})
-	ret.W("\t\treturn nil, errors.Wrapf(err, \"unable to get %s by %s\", %s)", m.Camel(), strings.Join(decls, ", "), sj)
+	ret.WF("\t\treturn nil, errors.Wrapf(err, \"unable to get %s by %s\", %s)", m.Camel(), strings.Join(decls, ", "), sj)
 	ret.W("\t}")
-	ret.W("\treturn ret.To%s(), nil", m.Proper())
+	ret.WF("\treturn ret.To%s(), nil", m.Proper())
 	ret.W("}")
 	return ret, nil
 }
 
 func serviceRandom(m *model.Model, database string) *golang.Block {
 	ret := golang.NewBlock("Random", "func")
-	ret.W("func (s *Service) Random(ctx context.Context, tx *sqlx.Tx, logger util.Logger) (*%s, error) {", m.Proper())
+	ret.WF("func (s *Service) Random(ctx context.Context, tx *sqlx.Tx, logger util.Logger) (*%s, error) {", m.Proper())
 	ret.W("\tret := &row{}")
 	rnd := "random()"
 	if database == util.DatabaseSQLServer {
 		rnd = "newid()"
 	}
-	ret.W("\tq := database.SQLSelect(columnsString, tableQuoted, \"\", %q, 1, 0, s.db.Type)", rnd)
+	ret.WF("\tq := database.SQLSelect(columnsString, tableQuoted, \"\", %q, 1, 0, s.db.Type)", rnd)
 	ret.W("\terr := s.db.Get(ctx, ret, q, tx, logger)")
 	ret.W("\tif err != nil {")
-	ret.W("\t\treturn nil, errors.Wrap(err, \"unable to get random %s\")", m.TitlePluralLower())
+	ret.WF("\t\treturn nil, errors.Wrap(err, \"unable to get random %s\")", m.TitlePluralLower())
 	ret.W("\t}")
-	ret.W("\treturn ret.To%s(), nil", m.Proper())
+	ret.WF("\treturn ret.To%s(), nil", m.Proper())
 	ret.W("}")
 	return ret
 }

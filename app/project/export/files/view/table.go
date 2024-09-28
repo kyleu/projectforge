@@ -10,6 +10,7 @@ import (
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
+	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/util"
@@ -19,7 +20,7 @@ func table(m *model.Model, args *model.Args, linebreak string) (*file.File, erro
 	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "Table.html")
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpFilter)
 	if lo.ContainsBy(m.Columns, func(x *model.Column) bool {
-		return !x.Type.Scalar() || x.Type.Key() == "string"
+		return !x.Type.Scalar() || x.Type.Key() == types.KeyString
 	}) {
 		g.AddImport(helper.ImpComponentsView)
 	}

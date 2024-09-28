@@ -27,7 +27,7 @@ func detail(m *model.Model, args *model.Args, linebreak string) (*file.File, err
 	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "Detail.html")
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpLayout)
 	if lo.ContainsBy(m.Columns, func(x *model.Column) bool {
-		return !x.Type.Scalar() || x.Type.Key() == "string"
+		return !x.Type.Scalar() || x.Type.Key() == types.KeyString
 	}) {
 		g.AddImport(helper.ImpComponentsView)
 	}
@@ -95,7 +95,7 @@ func exportViewDetailClass(m *model.Model, rrs model.Relations, models model.Mod
 	ret := golang.NewBlock("Detail", "struct")
 	ret.W("{%% code type Detail struct {")
 	ret.W("  layout.Basic")
-	ret.W("  Model %s", m.Pointer())
+	ret.WF("  Model %s", m.Pointer())
 	if m.Columns.HasFormat(model.FmtCountry.Key) {
 		g.AddImport(helper.ImpAppUtil)
 	}
@@ -104,7 +104,7 @@ func exportViewDetailClass(m *model.Model, rrs model.Relations, models model.Mod
 		relCols := rel.SrcColumns(m)
 		relNames := strings.Join(relCols.ProperNames(), "")
 		g.AddImport(helper.AppImport(relModel.PackageWithGroup("")))
-		ret.W(commonLine, relModel.Proper(), relNames, "*"+relModel.Package, relModel.Proper())
+		ret.WF(commonLine, relModel.Proper(), relNames, "*"+relModel.Package, relModel.Proper())
 	})
 
 	if len(rrs) > 0 || audit {
@@ -113,7 +113,7 @@ func exportViewDetailClass(m *model.Model, rrs model.Relations, models model.Mod
 	lo.ForEach(rrs, func(rel *model.Relation, _ int) {
 		rm := models.Get(rel.Table)
 		rCols := rel.TgtColumns(rm)
-		ret.W(commonLine, "Rel"+rm.ProperPlural(), strings.Join(rCols.ProperNames(), ""), rm.Package, rm.ProperPlural())
+		ret.WF(commonLine, "Rel"+rm.ProperPlural(), strings.Join(rCols.ProperNames(), ""), rm.Package, rm.ProperPlural())
 	})
 	if audit {
 		ret.W("  AuditRecords audit.Records")
@@ -128,13 +128,13 @@ func exportViewDetailBody(g *golang.Template, m *model.Model, rrs model.Relation
 	ret.W("{%% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %%}")
 	ret.W("  <div class=\"card\">")
 	ret.W("    <div class=\"right\">")
-	ret.W(`      <a href="#modal-%s"><button type="button" title="JSON">{%%%%= components.SVGButton("code", ps) %%%%}</button></a>`, m.Camel())
+	ret.WF(`      <a href="#modal-%s"><button type="button" title="JSON">{%%%%= components.SVGButton("code", ps) %%%%}</button></a>`, m.Camel())
 	ret.W(`      <a href="{%%s p.Model.WebPath(p.Paths...) %%}/edit" title="Edit"><button>{%%= components.SVGButton("edit", ps) %%}</button></a>`)
 	ret.W("    </div>")
-	ret.W("    %s%s {%%%%s p.Model.TitleString() %%%%}%s", helper.TextH3Start, iconRef(m), helper.TextH3End)
-	ret.W("    <div><a href=\"{%%%%s %s.Route(p.Paths...) %%%%}\"><em>%s</em></a></div>", m.Package, m.Title())
+	ret.WF("    %s%s {%%%%s p.Model.TitleString() %%%%}%s", helper.TextH3Start, iconRef(m), helper.TextH3End)
+	ret.WF("    <div><a href=\"{%%%%s %s.Route(p.Paths...) %%%%}\"><em>%s</em></a></div>", m.Package, m.Title())
 	if len(m.Links.WithTags(true, "detail")) > 0 {
-		ret.W("    <div class=\"mt\">")
+		ret.WF("    <div class=\"mt\">")
 		for _, link := range m.Links {
 			paths := lo.Map(m.PKs(), func(pk *model.Column, _ int) string {
 				return "{%%s p.Model." + model.ToGoString(pk.Type, pk.Nullable, pk.Proper(), true) + helper.TextTmplEnd
@@ -144,9 +144,9 @@ func exportViewDetailBody(g *golang.Template, m *model.Model, rrs model.Relation
 			if link.Icon != "" {
 				icon = fmt.Sprintf("{%%%%= components.SVGButton(%q, ps) %%%%} ", link.Icon)
 			}
-			ret.W("      <a href=%q><button type=\"button\">%s %s</button></a>", u, icon, link.Title)
+			ret.WF("      <a href=%q><button type=\"button\">%s %s</button></a>", u, icon, link.Title)
 		}
-		ret.W("    </div>")
+		ret.WF("    </div>")
 	}
 	ret.W("    {%%= DetailTable(p, ps) %%}")
 	ret.W("  </div>")
@@ -158,12 +158,12 @@ func exportViewDetailBody(g *golang.Template, m *model.Model, rrs model.Relation
 	if audit {
 		ret.W("  {%%- if len(p.AuditRecords) > 0 -%%}")
 		ret.W("  <div class=\"card\">")
-		ret.W("    %sAudits%s", helper.TextH3Start, helper.TextH3End)
+		ret.WF("    %sAudits%s", helper.TextH3Start, helper.TextH3End)
 		ret.W("    {%%= vaudit.RecordTable(p.AuditRecords, p.Params, as, ps) %%}")
 		ret.W("  </div>")
 		ret.W(ind1 + helper.TextEndIfDash)
 	}
-	ret.W("  {%%%%= components.JSONModal(%q, \"%s JSON\", p.Model, 1) %%%%}", m.Camel(), m.Title())
+	ret.WF("  {%%%%= components.JSONModal(%q, \"%s JSON\", p.Model, 1) %%%%}", m.Camel(), m.Title())
 	ret.W(helper.TextEndFunc)
 	return ret, nil
 }
@@ -187,7 +187,7 @@ func exportViewDetailTable(g *golang.Template, m *model.Model, models model.Mode
 		if !strings.HasPrefix(hlp, "\"") {
 			hlp = "\"{%%s " + hlp + " %%}\""
 		}
-		ret.W(`          <th class="shrink" title=%s>%s</th>`, hlp, col.Title())
+		ret.WF(`          <th class="shrink" title=%s>%s</th>`, hlp, col.Title())
 		viewDetailColumn(g, ret, models, m, false, col, "p.Model.", 5, enums)
 		ret.W("        </tr>")
 		if col.HasTag("debug-only") {

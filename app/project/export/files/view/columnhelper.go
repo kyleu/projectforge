@@ -69,9 +69,9 @@ func viewColumn(
 			}
 			wp := `{%% if x := ` + prefix + `; x != nil %%}{%%s x.WebPath(` + pathKey + `...) %%}{%% endif %%}`
 			if col.Nullable && !col.Type.Scalar() {
-				ret.W(anchorMsg, ind, modelKey, col.Proper(), relModel.Title(), wp, icon)
+				ret.WF(anchorMsg, ind, modelKey, col.Proper(), relModel.Title(), wp, icon)
 			} else {
-				ret.W(anchorMsgNotNull, ind, relModel.Title(), wp, icon)
+				ret.WF(anchorMsgNotNull, ind, relModel.Title(), wp, icon)
 			}
 		}
 	})

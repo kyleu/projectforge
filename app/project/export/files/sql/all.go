@@ -36,7 +36,7 @@ func sqlCreateAll(models model.Models, enums enum.Enums) *golang.Block {
 		ret.W(sqlCall("TypesCreate"))
 	}
 	lo.ForEach(models, func(m *model.Model, _ int) {
-		ret.W(helper.TextSQLComment+"{%%%%= %sCreate() %%%%}", m.Proper())
+		ret.WF(helper.TextSQLComment+"{%%%%= %sCreate() %%%%}", m.Proper())
 	})
 	ret.W(sqlEnd())
 	return ret
@@ -54,7 +54,7 @@ func sqlSeedAll(models model.Models) *golang.Block {
 	ret.W(sqlFunc("SeedDataAll"))
 	lo.ForEach(models.WithoutTag("external"), func(m *model.Model, _ int) {
 		if len(m.SeedData) > 0 {
-			ret.W(helper.TextSQLComment+"{%%%%= %sSeedData() %%%%}", m.Proper())
+			ret.WF(helper.TextSQLComment+"{%%%%= %sSeedData() %%%%}", m.Proper())
 		}
 	})
 	ret.W(sqlEnd())

@@ -14,7 +14,7 @@ func onDebug(pm *PrjAndMods) *Result {
 
 	ret.AddWarn("Modules:")
 	lo.ForEach(pm.Mods.Keys(), func(m string, _ int) {
-		ret.AddLog(" - " + m)
+		ret.Log(" - " + m)
 	})
 
 	return ret

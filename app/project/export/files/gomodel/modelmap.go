@@ -43,14 +43,14 @@ func modelFromMap(g *golang.File, m *model.Model, enums enum.Enums, database str
 	nonPKs := cols.NonPKs()
 
 	ret := golang.NewBlock(m.Package+"FromForm", "func")
-	ret.W("func FromMap(m util.ValueMap, setPK bool) (*%s, util.ValueMap, error) {", m.Proper())
-	ret.W("\tret := &%s{}", m.Proper())
+	ret.WF("func FromMap(m util.ValueMap, setPK bool) (*%s, util.ValueMap, error) {", m.Proper())
+	ret.WF("\tret := &%s{}", m.Proper())
 	ret.W("\textra := util.ValueMap{}")
 	ret.W("\tfor k, v := range m {")
 	ret.W("\t\tvar err error")
 	ret.W("\t\tswitch k {")
 	for _, col := range pks {
-		ret.W("\t\tcase %q:", col.CamelNoReplace())
+		ret.WF("\t\tcase %q:", col.CamelNoReplace())
 		ret.W("\t\t\tif setPK {")
 		if err := forCol(g, ret, 4, m, enums, col); err != nil {
 			return nil, err
@@ -58,7 +58,7 @@ func modelFromMap(g *golang.File, m *model.Model, enums enum.Enums, database str
 		ret.W("\t\t\t}")
 	}
 	for _, col := range nonPKs {
-		ret.W("\t\tcase %q:", col.CamelNoReplace())
+		ret.WF("\t\tcase %q:", col.CamelNoReplace())
 		if err := forCol(g, ret, 3, m, enums, col); err != nil {
 			return nil, err
 		}
@@ -78,6 +78,7 @@ func modelFromMap(g *golang.File, m *model.Model, enums enum.Enums, database str
 	return ret, nil
 }
 
+//nolint:gocognit
 func forCol(g *golang.File, ret *golang.Block, indent int, m *model.Model, enums enum.Enums, col *model.Column) error {
 	ind := util.StringRepeat("\t", indent)
 	catchErr := func(s string) {
@@ -90,30 +91,30 @@ func forCol(g *golang.File, ret *golang.Block, indent int, m *model.Model, enums
 		if err != nil {
 			return err
 		}
-		ret.W(msg, col.Proper(), mp)
+		ret.WF(msg, col.Proper(), mp)
 		return nil
 	}
 	parseCall := "ret%s, err := m.Parse%s(k, true, true)"
 	parseMsg := "ret.%s, err = m.Parse%s(k, true, true)"
 	switch {
 	case col.Type.Key() == types.KeyAny:
-		ret.W(ind+"ret.%s = m[%q]", col.Proper(), col.Camel())
+		ret.WF(ind+"ret.%s = m[%q]", col.Proper(), col.Camel())
 	case col.Type.Key() == types.KeyReference:
-		ret.W(ind+"tmp%s, err := m.ParseString(%q, true, true)", col.Proper(), col.Camel())
+		ret.WF(ind+"tmp%s, err := m.ParseString(%q, true, true)", col.Proper(), col.Camel())
 		catchErr("err")
 		ref, err := model.AsRef(col.Type)
 		if err != nil {
 			return errors.Wrap(err, "invalid ref")
 		}
 		if ref.Pkg.Last() == m.Package {
-			ret.W(ind+"%sArg := &%s{}", col.Camel(), ref.K)
+			ret.WF(ind+"%sArg := &%s{}", col.Camel(), ref.K)
 		} else {
-			ret.W(ind+"%sArg := &%s.%s{}", col.Camel(), ref.Pkg.Last(), ref.K)
+			ret.WF(ind+"%sArg := &%s.%s{}", col.Camel(), ref.Pkg.Last(), ref.K)
 			g.AddImport(model.NewImport(model.ImportTypeApp, ref.Pkg.ToPath()))
 		}
-		ret.W(ind+"err = util.FromJSON([]byte(tmp%s), %sArg)", col.Proper(), col.Camel())
+		ret.WF(ind+"err = util.FromJSON([]byte(tmp%s), %sArg)", col.Proper(), col.Camel())
 		catchErr("err")
-		ret.W(ind+"ret.%s = %sArg", col.Proper(), col.Camel())
+		ret.WF(ind+"ret.%s = %sArg", col.Proper(), col.Camel())
 	case col.Type.Key() == types.KeyEnum:
 		e, err := model.AsEnumInstance(col.Type, enums)
 		if err != nil {
@@ -130,9 +131,9 @@ func forCol(g *golang.File, ret *golang.Block, indent int, m *model.Model, enums
 			enumRef = fmt.Sprintf("All%s.Get(ret%s, nil)", e.ProperPlural(), col.Proper())
 		}
 		if e.PackageWithGroup("") == m.PackageWithGroup("") {
-			ret.W(ind+"ret.%s = %s", col.Proper(), enumRef)
+			ret.WF(ind+"ret.%s = %s", col.Proper(), enumRef)
 		} else {
-			ret.W(ind+"ret.%s = %s.%s", col.Proper(), e.Package, enumRef)
+			ret.WF(ind+"ret.%s = %s.%s", col.Proper(), e.Package, enumRef)
 		}
 	case col.Type.Key() == types.KeyJSON:
 		if err := colMP(ind + "ret.%s, err = m.Parse%s(k, true, true)"); err != nil {
@@ -149,7 +150,7 @@ func forCol(g *golang.File, ret *golang.Block, indent int, m *model.Model, enums
 			if e.PackageWithGroup("") != m.PackageWithGroup("") {
 				eRef = e.Package + "." + eRef
 			}
-			ret.W(ind+"ret.%s = %sParse(nil, ret%s...)", col.Proper(), eRef, col.Proper())
+			ret.WF(ind+"ret.%s = %sParse(nil, ret%s...)", col.Proper(), eRef, col.Proper())
 		} else {
 			if err := colMP(ind + parseMsg); err != nil {
 				return err
@@ -165,8 +166,8 @@ func forCol(g *golang.File, ret *golang.Block, indent int, m *model.Model, enums
 			return err
 		}
 		catchErr("e")
-		ret.W(ind+"if ret%s != nil {", col.Proper())
-		ret.W(ind+"\tret.%s = *ret%s", col.Proper(), col.Proper())
+		ret.WF(ind+"if ret%s != nil {", col.Proper())
+		ret.WF(ind+"\tret.%s = *ret%s", col.Proper(), col.Proper())
 		ret.W(ind + "}")
 	}
 	return nil

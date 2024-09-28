@@ -27,7 +27,7 @@ func enumBlocks(g *golang.Template, enums enum.Enums) {
 
 func enumBlock(e *enum.Enum) *golang.Block {
 	ret := golang.NewBlock("enum:"+e.Name, "graphql")
-	ret.W("# Enum Type [%s]", e.Proper())
+	ret.WF("# Enum Type [%s]", e.Proper())
 	return ret
 }
 
@@ -39,7 +39,7 @@ func modelBlocks(g *golang.Template, models model.Models, enums enum.Enums) {
 
 func modelBlock(m *model.Model, _ enum.Enums) *golang.Block {
 	ret := golang.NewBlock("model:"+m.Name, "graphql")
-	ret.W("# Model Class [%s]", m.Title())
+	ret.WF("# Model Class [%s]", m.Title())
 	return ret
 }
 

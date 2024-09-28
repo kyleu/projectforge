@@ -18,8 +18,8 @@ const nilKey = "nil"
 
 func modelRandom(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock(m.Proper()+"Random", "struct")
-	ret.W("func Random() *%s {", m.Proper())
-	ret.W("\treturn &%s{", m.Proper())
+	ret.WF("func Random() *%s {", m.Proper())
+	ret.WF("\treturn &%s{", m.Proper())
 	cols := m.Columns.NotDerived()
 	maxColLength := cols.MaxCamelLength() + 1
 	for _, col := range cols {
@@ -27,7 +27,7 @@ func modelRandom(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 		if err != nil {
 			return nil, err
 		}
-		ret.W("\t\t%s %s,", util.StringPad(col.Proper()+":", maxColLength), rnd)
+		ret.WF("\t\t%s %s,", util.StringPad(col.Proper()+":", maxColLength), rnd)
 	}
 	ret.W("\t}")
 	ret.W("}")

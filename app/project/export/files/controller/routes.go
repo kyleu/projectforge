@@ -74,14 +74,14 @@ func routeModelContent(m *model.Model) *golang.Block {
 
 	rt := func(method string, extra string, act string) {
 		if extra == "" {
-			ret.W("\tmakeRoute(r, http.Method%s, prefix, %s.%s%s)", method, pkg, m.Proper(), act)
+			ret.WF("\tmakeRoute(r, http.Method%s, prefix, %s.%s%s)", method, pkg, m.Proper(), act)
 		} else {
-			ret.W("\tmakeRoute(r, http.Method%s, prefix+%s, %s.%s%s)", method, extra, pkg, m.Proper(), act)
+			ret.WF("\tmakeRoute(r, http.Method%s, prefix+%s, %s.%s%s)", method, extra, pkg, m.Proper(), act)
 		}
 	}
 
-	ret.W("func generatedRoutes%s(r *mux.Router, prefix string) {", m.Proper())
-	ret.W("\tconst pkn = %q", "/"+pkn)
+	ret.WF("func generatedRoutes%s(r *mux.Router, prefix string) {", m.Proper())
+	ret.WF("\tconst pkn = %q", "/"+pkn)
 	rt("Get", "", "List")
 	rt("Get", "routeNew", "CreateForm")
 	rt("Post", "routeNew", "Create")
@@ -90,7 +90,7 @@ func routeModelContent(m *model.Model) *golang.Block {
 	rt("Get", "pkn+routeEdit", "EditForm")
 	rt("Post", "pkn+routeEdit", "Edit")
 	rt("Get", "pkn+routeDelete", "Delete")
-	ret.W("}")
+	ret.WF("}")
 
 	return ret
 }

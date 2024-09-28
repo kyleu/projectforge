@@ -21,7 +21,7 @@ func exportViewDetailRelations(g *golang.Template, m *model.Model, rels model.Re
 
 func exportViewDetailReverseRelations(ret *golang.Block, m *model.Model, rels model.Relations, models model.Models, g *golang.Template) {
 	g.AddImport(helper.ImpAppUtil)
-	ret.W("  {%%%%- code relationHelper := %s.%s{p.Model} -%%%%}", m.Package, m.ProperPlural())
+	ret.WF("  {%%%%- code relationHelper := %s.%s{p.Model} -%%%%}", m.Package, m.ProperPlural())
 	ret.W("  <div class=\"card\">")
 	ret.W("    <h3 class=\"mb\">Relations</h3>")
 	ret.W("    <ul class=\"accordion\">")
@@ -39,16 +39,16 @@ func exportViewDetailReverseRelation(ret *golang.Block, m *model.Model, rel *mod
 	tgtName := fmt.Sprintf("%sBy%s", tgt.ProperPlural(), strings.Join(tgtCols.ProperNames(), ""))
 	ret.W("      <li>")
 	extra := fmt.Sprintf("{%%%% if p.Params.Specifies(`%s`) %%%%} checked=\"checked\""+helper.TextEndIfExtra, tgt.Package)
-	ret.W("        <input id=\"accordion-%s\" type=\"checkbox\" hidden=\"hidden\"%s />", tgtName, extra)
-	ret.W("        <label for=\"accordion-%s\">", tgtName)
+	ret.WF("        <input id=\"accordion-%s\" type=\"checkbox\" hidden=\"hidden\"%s />", tgtName, extra)
+	ret.WF("        <label for=\"accordion-%s\">", tgtName)
 	ret.W("          {%%= components.ExpandCollapse(3, ps) %%}")
-	ret.W("          {%%%%= components.SVGInline(`%s`, 16, ps) %%%%}", tgt.Icon)
+	ret.WF("          {%%%%= components.SVGInline(`%s`, 16, ps) %%%%}", tgt.Icon)
 	msg := "          {%%%%s util.StringPlural(len(p.Rel%s), \"%s\") %%%%} by [%s]"
-	ret.W(msg, tgtName, tgt.Title(), strings.Join(tgtCols.Titles(), ", "))
+	ret.WF(msg, tgtName, tgt.Title(), strings.Join(tgtCols.Titles(), ", "))
 	ret.W("        </label>")
 	ret.W("        <div class=\"bd\"><div><div>")
-	ret.W("          {%%%%- if len(p.Rel%s) == 0 -%%%%}", tgtName)
-	ret.W("          <em>no related %s</em>", tgt.TitlePlural())
+	ret.WF("          {%%%%- if len(p.Rel%s) == 0 -%%%%}", tgtName)
+	ret.WF("          <em>no related %s</em>", tgt.TitlePlural())
 	ret.W("          {%%- else -%%}")
 	ret.W("          <div class=\"overflow clear\">")
 	var addons string
@@ -62,9 +62,9 @@ func exportViewDetailReverseRelation(ret *golang.Block, m *model.Model, rel *mod
 		}
 	})
 	if m.PackageWithGroup("") == tgt.PackageWithGroup("") {
-		ret.W("            {%%%%= Table(p.Rel%s%s, p.Params, as, ps) %%%%}", tgtName, addons)
+		ret.WF("            {%%%%= Table(p.Rel%s%s, p.Params, as, ps) %%%%}", tgtName, addons)
 	} else {
-		ret.W("            {%%%%= v%s.Table(p.Rel%s%s, p.Params, as, ps) %%%%}", tgt.Package, tgtName, addons)
+		ret.WF("            {%%%%= v%s.Table(p.Rel%s%s, p.Params, as, ps) %%%%}", tgt.Package, tgtName, addons)
 	}
 	ret.W("          </div>")
 	ret.W(ind5 + helper.TextEndIfDash)

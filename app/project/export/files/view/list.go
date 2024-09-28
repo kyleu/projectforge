@@ -31,13 +31,13 @@ func exportViewListClass(m *model.Model, models model.Models, g *golang.Template
 	ret := golang.NewBlock("List", "struct")
 	ret.W("{%% code type List struct {")
 	ret.W("  layout.Basic")
-	ret.W("  Models %s.%s", m.Package, m.ProperPlural())
+	ret.WF("  Models %s.%s", m.Package, m.ProperPlural())
 	lo.ForEach(m.Relations, func(rel *model.Relation, _ int) {
 		relModel := models.Get(rel.Table)
 		relCols := rel.SrcColumns(m)
 		relNames := strings.Join(relCols.ProperNames(), "")
 		g.AddImport(helper.AppImport(relModel.PackageWithGroup("")))
-		ret.W(commonLine, relModel.ProperPlural(), relNames, relModel.Package, relModel.ProperPlural())
+		ret.WF(commonLine, relModel.ProperPlural(), relNames, relModel.Package, relModel.ProperPlural())
 	})
 	ret.W("  Params filter.ParamSet")
 	ret.W("  Paths []string")
@@ -70,7 +70,7 @@ func exportViewListBody(m *model.Model, models model.Models) *golang.Block {
 	ln := fmt.Sprintf(`<a href="%s/_new"><button>{%%%%= components.SVGButton("plus", ps) %%%%} New</button>%s`, pth, helper.TextEndAnchor)
 
 	if m.HasSearches() {
-		ret.W(`    <div class="right">{%%%%= edit.SearchForm("", "q", "Search %s", p.SearchQuery, ps) %%%%}</div>`, m.TitlePlural())
+		ret.WF(`    <div class="right">{%%%%= edit.SearchForm("", "q", "Search %s", p.SearchQuery, ps) %%%%}</div>`, m.TitlePlural())
 	}
 
 	ret.W(`    <div class="right mrs large-buttons">`)
@@ -82,17 +82,17 @@ func exportViewListBody(m *model.Model, models model.Models) *golang.Block {
 			}
 			if link.Dangerous {
 				msg := "      <a class=%q data-message=%q href=%q><button type=\"button\">%s %s</button></a>"
-				ret.W(msg, "link-confirm", "Are you sure?", link.URL, icon, link.Title)
+				ret.WF(msg, "link-confirm", "Are you sure?", link.URL, icon, link.Title)
 			} else {
-				ret.W("      <a href=%q><button type=\"button\">%s %s</button></a>", link.URL, icon, link.Title)
+				ret.WF("      <a href=%q><button type=\"button\">%s %s</button></a>", link.URL, icon, link.Title)
 			}
 		}
 	}
 	msg := `<a href="{%%%%s %s.Route(p.Paths...) %%%%}/_random"><button>{%%%%= components.SVGButton("gift", ps) %%%%} Random</button></a>`
-	ret.W(`      {%%%%- if len(p.Models) > 1 -%%%%}`+msg+`{%%%%- endif -%%%%}`, m.Package)
+	ret.WF(`      {%%%%- if len(p.Models) > 1 -%%%%}`+msg+`{%%%%- endif -%%%%}`, m.Package)
 	ret.W(`      ` + ln)
 	ret.W(`    </div>`)
-	ret.W("    %s{%%%%= components.SVGIcon(`%s`, ps) %%%%} {%%%%s ps.Title %%%%}%s", helper.TextH3Start, m.Icon, helper.TextH3End)
+	ret.WF("    %s{%%%%= components.SVGIcon(`%s`, ps) %%%%} {%%%%s ps.Title %%%%}%s", helper.TextH3Start, m.Icon, helper.TextH3End)
 
 	if m.HasTag("count") {
 		ret.W("    {%%- if p.Count > 0 -%%}")
@@ -107,7 +107,7 @@ func exportViewListBody(m *model.Model, models model.Models) *golang.Block {
 		ret.W(twoInd + helper.TextEndIfDash)
 	}
 	ret.W("    {%%- if len(p.Models) == 0 -%%}")
-	ret.W("    <div class=\"mt\"><em>No %s available</em></div>", m.TitlePluralLower())
+	ret.WF("    <div class=\"mt\"><em>No %s available</em></div>", m.TitlePluralLower())
 	ret.W("    {%%- else -%%}")
 	ret.W("    <div class=\"mt\">")
 	ret.W("      {%%= Table(p.Models" + suffix + ", p.Params, as, ps, p.Paths...) %%}")

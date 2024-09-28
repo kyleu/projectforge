@@ -75,22 +75,22 @@ func serviceGetByCols(key string, m *model.Model, cols model.Columns, dbRef stri
 	if database == util.DatabaseSQLServer {
 		placeholder = "@"
 	}
-	ret.W("\twc := %q", cols.WhereClause(0, placeholder))
+	ret.WF("\twc := %q", cols.WhereClause(0, placeholder))
 	if m.IsSoftDelete() {
 		ret.W("\twc = addDeletedClause(wc, includeDeleted)")
 	}
-	ret.W("\tq := database.SQLSelect(columnsString, %s, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Type)", tableClause)
+	ret.WF("\tq := database.SQLSelect(columnsString, %s, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Type)", tableClause)
 	ret.W("\tret := rows{}")
-	ret.W("\terr := s.%s.Select(ctx, &ret, q, tx, logger, %s)", dbRef, strings.Join(cols.CamelNames(), ", "))
+	ret.WF("\terr := s.%s.Select(ctx, &ret, q, tx, logger, %s)", dbRef, strings.Join(cols.CamelNames(), ", "))
 	ret.W("\tif err != nil {")
 	sj := strings.Join(cols.CamelNames(), ", ")
 	decls := make([]string, 0, len(cols))
 	lo.ForEach(cols, func(c *model.Column, _ int) {
 		decls = append(decls, c.Camel()+declSubscript)
 	})
-	ret.W("\t\treturn nil, errors.Wrapf(err, \"unable to get %s by %s\", %s)", m.TitlePlural(), strings.Join(decls, ", "), sj)
+	ret.WF("\t\treturn nil, errors.Wrapf(err, \"unable to get %s by %s\", %s)", m.TitlePlural(), strings.Join(decls, ", "), sj)
 	ret.W("\t}")
-	ret.W("\treturn ret.To%s(), nil", m.ProperPlural())
+	ret.WF("\treturn ret.To%s(), nil", m.ProperPlural())
 	ret.W("}")
 	return ret, nil
 }

@@ -29,15 +29,15 @@ func controllerList(g *golang.File, m *model.Model, grp *model.Column, models mo
 		g.AddImport(helper.ImpStrings)
 		ret.W("\t\tq := strings.TrimSpace(r.URL.Query().Get(\"q\"))")
 	}
-	ret.W("\t\tprms := ps.Params.Sanitized(%q, ps.Logger)", m.Package)
+	ret.WF("\t\tprms := ps.Params.Sanitized(%q, ps.Logger)", m.Package)
 	if grpArgs == "" && m.HasSearches() {
-		ret.W("\t\tvar ret %s.%s", m.Package, m.ProperPlural())
+		ret.WF("\t\tvar ret %s.%s", m.Package, m.ProperPlural())
 		ret.W("\t\tvar err error")
 		ret.W("\t\tif q == \"\" {")
-		ret.W("\t\t\tret, err = as.Services.%s.%s(ps.Context, nil, prms%s, ps.Logger)", m.Proper(), meth, suffix)
+		ret.WF("\t\t\tret, err = as.Services.%s.%s(ps.Context, nil, prms%s, ps.Logger)", m.Proper(), meth, suffix)
 		ret.WE(3, `""`)
 		ret.W("\t\t} else {")
-		ret.W("\t\t\tret, err = as.Services.%s.Search(ps.Context, q, nil, prms%s, ps.Logger)", m.Proper(), suffix)
+		ret.WF("\t\t\tret, err = as.Services.%s.Search(ps.Context, q, nil, prms%s, ps.Logger)", m.Proper(), suffix)
 		ret.WE(3, `""`)
 		ret.W("\t\t\tif len(ret) == 1 {")
 		if len(m.Group) == 0 {
@@ -49,14 +49,14 @@ func controllerList(g *golang.File, m *model.Model, grp *model.Column, models mo
 		ret.W("\t\t\t}")
 		ret.W("\t\t}")
 	} else {
-		ret.W("\t\tret, err := as.Services.%s.%s(ps.Context, nil%s, prms%s, ps.Logger)", m.Proper(), meth, grpArgs, suffix)
+		ret.WF("\t\tret, err := as.Services.%s.%s(ps.Context, nil%s, prms%s, ps.Logger)", m.Proper(), meth, grpArgs, suffix)
 		ret.WE(2, `""`)
 	}
 	if m.HasTag("count") {
-		ret.W("\t\tcount, err := as.Services.%s.Count(ps.Context, nil%s, \"\"%s, ps.Logger)", m.Proper(), grpArgs, suffix)
+		ret.WF("\t\tcount, err := as.Services.%s.Count(ps.Context, nil%s, \"\"%s, ps.Logger)", m.Proper(), grpArgs, suffix)
 		ret.WE(2, `""`)
 	}
-	ret.W("\t\tps.SetTitleAndData(%q, ret)", m.TitlePlural())
+	ret.WF("\t\tps.SetTitleAndData(%q, ret)", m.TitlePlural())
 	var toStrings string
 	for _, rel := range m.Relations {
 		relModel := models.Get(rel.Table)
@@ -76,8 +76,8 @@ func controllerList(g *golang.File, m *model.Model, grp *model.Column, models mo
 			return nil, err
 		}
 		g.AddImport(helper.ImpLo)
-		ret.W("\t\t%sIDsBy%s := lo.Map(ret, func(x %s, _ int) %s {", relModel.Camel(), srcCol.Proper(), m.Pointer(), gt)
-		ret.W("\t\t\treturn x.%s", srcCol.Proper())
+		ret.WF("\t\t%sIDsBy%s := lo.Map(ret, func(x %s, _ int) %s {", relModel.Camel(), srcCol.Proper(), m.Pointer(), gt)
+		ret.WF("\t\t\treturn x.%s", srcCol.Proper())
 		ret.W("\t\t})")
 		suffix := ""
 		if relModel.IsSoftDelete() {
@@ -89,7 +89,7 @@ func controllerList(g *golang.File, m *model.Model, grp *model.Column, models mo
 			c = "util.ArrayDereference(" + c + ")"
 		}
 		call := "\t\t%sBy%s, err := as.Services.%s.GetMultiple(ps.Context, nil, nil%s, ps.Logger, %s...)"
-		ret.W(call, relModel.CamelPlural(), srcCol.Proper(), relModel.Proper(), suffix, c)
+		ret.WF(call, relModel.CamelPlural(), srcCol.Proper(), relModel.Proper(), suffix, c)
 		ret.WE(2, `""`)
 
 		toStrings += fmt.Sprintf(", %sBy%s: %sBy%s", relModel.ProperPlural(), srcCol.Proper(), relModel.CamelPlural(), srcCol.Proper())
@@ -101,9 +101,9 @@ func controllerList(g *golang.File, m *model.Model, grp *model.Column, models mo
 	if m.HasTag("count") {
 		searchSuffix += ", Count: count"
 	}
-	ret.W("\t\tpage := &v%s.List{Models: ret%s, Params: ps.Params%s}", m.Package, toStrings, searchSuffix)
+	ret.WF("\t\tpage := &v%s.List{Models: ret%s, Params: ps.Params%s}", m.Package, toStrings, searchSuffix)
 	render := "\t\treturn %sRender(r, as, page, ps, %s%s)"
-	ret.W(render, prefix, m.Breadcrumbs(), grp.BC())
+	ret.WF(render, prefix, m.Breadcrumbs(), grp.BC())
 	ret.W("\t})")
 	ret.W("}")
 	return ret, nil

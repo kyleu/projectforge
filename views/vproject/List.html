@@ -21,9 +21,6 @@
   <div class="card">
     {%= AvailActions("", p.Tags, p.Projects.Tags(), p.Icon, ps) %}
   </div>
-  {%- for _, prj := range p.Projects -%}
-  {%= ListItem(prj, ps) %}
-  {%- endfor -%}
   <a class="link-section" href="/p/new" title="Create a new project">
     <div class="card">
       <div class="left mrs">{%= components.SVGRef("plus", 40, 40, "", ps) %}</div>
@@ -31,6 +28,9 @@
       <div><em>Create a new project</em></div>
     </div>
   </a>
+  {%- for _, prj := range p.Projects -%}
+  {%= ListItem(prj, ps) %}
+  {%- endfor -%}
 {% endfunc %}
 
 {% func ListItem(prj *project.Project, ps *cutil.PageState) %}

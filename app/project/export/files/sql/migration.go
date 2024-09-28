@@ -33,10 +33,10 @@ func sqlDrop(m *model.Model, database string) (*golang.Block, error) {
 	ret := golang.NewBlock("SQLDrop", "sql")
 	ret.W(sqlFunc(m.Proper() + helper.TextDrop))
 	if database == util.DatabaseSQLServer {
-		ret.W("if exists (select * from sysobjects where name='%s' and xtype='U')", m.Table())
-		ret.W("drop table %q;", m.Table())
+		ret.WF("if exists (select * from sysobjects where name='%s' and xtype='U')", m.Table())
+		ret.WF("drop table %q;", m.Table())
 	} else {
-		ret.W("drop table if exists %q;", m.Table())
+		ret.WF("drop table if exists %q;", m.Table())
 	}
 	ret.W(sqlEnd())
 	return ret, nil
@@ -46,25 +46,25 @@ func sqlCreate(m *model.Model, models model.Models, database string) (*golang.Bl
 	ret := golang.NewBlock("SQLCreate", "sql")
 	ret.W(sqlFunc(m.Proper() + "Create"))
 	if database == util.DatabaseSQLServer {
-		ret.W("if not exists (select * from sysobjects where name='%s' and xtype='U')", m.Table())
-		ret.W("create table %q (", m.Table())
+		ret.WF("if not exists (select * from sysobjects where name='%s' and xtype='U')", m.Table())
+		ret.WF("create table %q (", m.Table())
 	} else {
-		ret.W("create table if not exists %q (", m.Table())
+		ret.WF("create table if not exists %q (", m.Table())
 	}
 	for _, col := range m.Columns.NotDerived() {
 		st, err := col.ToSQLType(database)
 		if err != nil {
 			return nil, err
 		}
-		ret.W("  %q %s,", col.SQL(), st)
+		ret.WF("  %q %s,", col.SQL(), st)
 	}
 	sqlRelations(ret, m, models)
 	lo.ForEach(m.Columns, func(col *model.Column, _ int) {
 		if col.HasTag("unique") {
-			ret.W("  unique (%q),", col.SQL())
+			ret.WF("  unique (%q),", col.SQL())
 		}
 	})
-	ret.W("  primary key (%s)", strings.Join(m.PKs().NamesQuoted(), ", "))
+	ret.WF("  primary key (%s)", strings.Join(m.PKs().NamesQuoted(), ", "))
 	ret.W(");")
 
 	pks := m.PKs()
@@ -101,9 +101,9 @@ func addIndex(database string, ret *golang.Block, tbl string, names ...string) {
 	})
 	ret.WB()
 	if database == util.DatabaseSQLServer {
-		ret.W("if not exists (select * from sys.indexes where name='%s' and object_id=object_id('%s'))", tbl, name)
-		ret.W("create index %q on %q (%s);", name, tbl, strings.Join(quoted, ", "))
+		ret.WF("if not exists (select * from sys.indexes where name='%s' and object_id=object_id('%s'))", tbl, name)
+		ret.WF("create index %q on %q (%s);", name, tbl, strings.Join(quoted, ", "))
 	} else {
-		ret.W("create index if not exists %q on %q (%s);", name, tbl, strings.Join(quoted, ", "))
+		ret.WF("create index if not exists %q on %q (%s);", name, tbl, strings.Join(quoted, ", "))
 	}
 }

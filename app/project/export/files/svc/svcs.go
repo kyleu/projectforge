@@ -73,7 +73,7 @@ func servicesStruct(svcs []string) *golang.Block {
 
 func servicesInitFn(refs []string, params string) *golang.Block {
 	ret := golang.NewBlock("initGeneratedServices", "func")
-	ret.W("func initGeneratedServices(ctx context.Context, %s, logger util.Logger) GeneratedServices {", params)
+	ret.WF("func initGeneratedServices(ctx context.Context, %s, logger util.Logger) GeneratedServices {", params)
 	if len(refs) == 0 {
 		ret.W("\treturn GeneratedServices{}")
 		ret.W("}")

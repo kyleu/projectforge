@@ -22,9 +22,9 @@ func controllerCreateForm(m *model.Model, grp *model.Column, models model.Models
 	if grp != nil {
 		decls = append(decls, fmt.Sprintf("%s: %sArg", grp.Proper(), grp.Camel()))
 	}
-	ret.W("\t\tret := &%s{%s}", m.ClassRef(), strings.Join(decls, ", "))
+	ret.WF("\t\tret := &%s{%s}", m.ClassRef(), strings.Join(decls, ", "))
 	ret.W("\t\tif r.URL.Query().Get(\"prototype\") == util.KeyRandom {")
-	ret.W("\t\t\tret = %s.Random()", m.Package)
+	ret.WF("\t\t\tret = %s.Random()", m.Package)
 	var encounteredRelTables []string
 	for _, rel := range m.Relations {
 		relModel := models.Get(rel.Table)
@@ -34,27 +34,27 @@ func controllerCreateForm(m *model.Model, grp *model.Column, models model.Models
 		srcCol := rel.SrcColumns(m)[0]
 		tgtCol := rel.TgtColumns(relModel)[0]
 		if !slices.Contains(encounteredRelTables, rel.Table) {
-			ret.W("\t\t\trandom%s, err := as.Services.%s.Random(ps.Context, nil, ps.Logger)", relModel.Proper(), relModel.Proper())
+			ret.WF("\t\t\trandom%s, err := as.Services.%s.Random(ps.Context, nil, ps.Logger)", relModel.Proper(), relModel.Proper())
 			encounteredRelTables = append(encounteredRelTables, rel.Table)
 		}
-		ret.W("\t\t\tif err == nil && random%s != nil {", relModel.Proper())
+		ret.WF("\t\t\tif err == nil && random%s != nil {", relModel.Proper())
 		var ref string
 		if srcCol.Nullable && !srcCol.Type.Scalar() && !tgtCol.Nullable {
 			ref = "&"
 		}
-		ret.W("\t\t\t\tret.%s = %srandom%s.%s", srcCol.Proper(), ref, relModel.Proper(), tgtCol.Proper())
+		ret.WF("\t\t\t\tret.%s = %srandom%s.%s", srcCol.Proper(), ref, relModel.Proper(), tgtCol.Proper())
 		ret.W("\t\t\t}")
 	}
 
 	ret.W("\t\t}")
 
 	if grp == nil {
-		ret.W("\t\tps.SetTitleAndData(\"Create [" + m.Proper() + "]\", ret)")
+		ret.WF("\t\tps.SetTitleAndData(\"Create [%s]\", ret)", m.Proper())
 	} else {
-		ret.W("\t\tps.SetTitleAndData(fmt.Sprintf(\"Create ["+m.Proper()+"] for %s [%%%%s]\", %sArg), ret)", grp.TitleLower(), grp.Camel())
+		ret.WF("\t\tps.SetTitleAndData(fmt.Sprintf(\"Create ["+m.Proper()+"] for %s [%%%%s]\", %sArg), ret)", grp.TitleLower(), grp.Camel())
 	}
 	ret.W("\t\tps.Data = ret")
-	ret.W("\t\treturn %sRender(r, as, &v%s.Edit{Model: ret, IsNew: true}, ps, %s%s, \"Create\")", prefix, m.Package, m.Breadcrumbs(), grp.BC())
+	ret.WF("\t\treturn %sRender(r, as, &v%s.Edit{Model: ret, IsNew: true}, ps, %s%s, \"Create\")", prefix, m.Package, m.Breadcrumbs(), grp.BC())
 	ret.W("\t})")
 	ret.W("}")
 	return ret
@@ -62,9 +62,9 @@ func controllerCreateForm(m *model.Model, grp *model.Column, models model.Models
 
 func controllerRandom(m *model.Model, prefix string) *golang.Block {
 	ret := blockFor(m, prefix, nil, "random")
-	ret.W("\t\tret, err := as.Services.%s.Random(ps.Context, nil, ps.Logger)", m.Proper())
+	ret.WF("\t\tret, err := as.Services.%s.Random(ps.Context, nil, ps.Logger)", m.Proper())
 	ret.W("\t\tif err != nil {")
-	ret.W("\t\t\treturn \"\", errors.Wrap(err, \"unable to find random %s\")", m.Proper())
+	ret.WF("\t\t\treturn \"\", errors.Wrap(err, \"unable to find random %s\")", m.Proper())
 	ret.W("\t\t}")
 	ret.W("\t\treturn ret.WebPath(), nil")
 	ret.W("\t})")
@@ -77,17 +77,17 @@ func controllerCreate(m *model.Model, grp *model.Column, prefix string) *golang.
 	if grp != nil {
 		controllerArgFor(grp, ret, `""`, 2)
 	}
-	ret.W("\t\tret, err := %sFromForm(r, ps.RequestBody, true)", m.Package)
+	ret.WF("\t\tret, err := %sFromForm(r, ps.RequestBody, true)", m.Package)
 	ret.W("\t\tif err != nil {")
-	ret.W("\t\t\treturn \"\", errors.Wrap(err, \"unable to parse %s from form\")", m.Proper())
+	ret.WF("\t\t\treturn \"\", errors.Wrap(err, \"unable to parse %s from form\")", m.Proper())
 	ret.W("\t\t}")
 	checkGrp(ret, grp)
-	ret.W("\t\terr = as.Services.%s.Create(ps.Context, nil, ps.Logger, ret)", m.Proper())
+	ret.WF("\t\terr = as.Services.%s.Create(ps.Context, nil, ps.Logger, ret)", m.Proper())
 	ret.W("\t\tif err != nil {")
-	ret.W("\t\t\treturn \"\", errors.Wrap(err, \"unable to save newly-created %s\")", m.Proper())
+	ret.WF("\t\t\treturn \"\", errors.Wrap(err, \"unable to save newly-created %s\")", m.Proper())
 	ret.W("\t\t}")
 	ret.W(msgEqSPrint + m.Proper() + " [%%s] created\", ret.String())")
-	ret.W("\t\treturn %sFlashAndRedir(true, msg, ret.WebPath(), ps)", prefix)
+	ret.WF("\t\treturn %sFlashAndRedir(true, msg, ret.WebPath(), ps)", prefix)
 	ret.W("\t})")
 	ret.W("}")
 	return ret
@@ -98,11 +98,11 @@ func controllerEditForm(m *model.Model, grp *model.Column, prefix string) *golan
 	if grp != nil {
 		controllerArgFor(grp, ret, `""`, 2)
 	}
-	ret.W("\t\tret, err := %sFromPath(r, as, ps)", m.Package)
+	ret.WF("\t\tret, err := %sFromPath(r, as, ps)", m.Package)
 	ret.WE(2, `""`)
 	checkGrp(ret, grp)
 	ret.W("\t\tps.SetTitleAndData(\"Edit \"+ret.String(), ret)")
-	ret.W("\t\treturn %sRender(r, as, &v%s.Edit{Model: ret}, ps, %s%s, ret.String())", prefix, m.Package, m.Breadcrumbs(), grp.BC())
+	ret.WF("\t\treturn %sRender(r, as, &v%s.Edit{Model: ret}, ps, %s%s, ret.String())", prefix, m.Package, m.Breadcrumbs(), grp.BC())
 	ret.W("\t})")
 	ret.W("}")
 	return ret
@@ -113,23 +113,23 @@ func controllerEdit(m *model.Model, grp *model.Column, prefix string) *golang.Bl
 	if grp != nil {
 		controllerArgFor(grp, ret, `""`, 2)
 	}
-	ret.W("\t\tret, err := %sFromPath(r, as, ps)", m.Package)
+	ret.WF("\t\tret, err := %sFromPath(r, as, ps)", m.Package)
 	ret.WE(2, `""`)
 	checkGrp(ret, grp)
-	ret.W("\t\tfrm, err := %sFromForm(r, ps.RequestBody, false)", m.Package)
+	ret.WF("\t\tfrm, err := %sFromForm(r, ps.RequestBody, false)", m.Package)
 	ret.W("\t\tif err != nil {")
-	ret.W("\t\t\treturn \"\", errors.Wrap(err, \"unable to parse %s from form\")", m.Proper())
+	ret.WF("\t\t\treturn \"\", errors.Wrap(err, \"unable to parse %s from form\")", m.Proper())
 	ret.W("\t\t}")
 	checkGrp(ret, grp, "frm")
 	lo.ForEach(m.PKs(), func(pk *model.Column, _ int) {
-		ret.W("\t\tfrm.%s = ret.%s", pk.Proper(), pk.Proper())
+		ret.WF("\t\tfrm.%s = ret.%s", pk.Proper(), pk.Proper())
 	})
-	ret.W("\t\terr = as.Services.%s.Update(ps.Context, nil, frm, ps.Logger)", m.Proper())
+	ret.WF("\t\terr = as.Services.%s.Update(ps.Context, nil, frm, ps.Logger)", m.Proper())
 	ret.W("\t\tif err != nil {")
-	ret.W("\t\t\treturn \"\", errors.Wrapf(err, \"unable to update %s [%%%%s]\", frm.String())", m.Proper())
+	ret.WF("\t\t\treturn \"\", errors.Wrapf(err, \"unable to update %s [%%%%s]\", frm.String())", m.Proper())
 	ret.W("\t\t}")
 	ret.W(msgEqSPrint + m.Proper() + " [%%s] updated\", frm.String())")
-	ret.W("\t\treturn %sFlashAndRedir(true, msg, frm.WebPath(), ps)", prefix)
+	ret.WF("\t\treturn %sFlashAndRedir(true, msg, frm.WebPath(), ps)", prefix)
 	ret.W("\t})")
 	ret.W("}")
 	return ret
@@ -140,18 +140,18 @@ func controllerDelete(m *model.Model, grp *model.Column, prefix string) *golang.
 	if grp != nil {
 		controllerArgFor(grp, ret, `""`, 2)
 	}
-	ret.W("\t\tret, err := %sFromPath(r, as, ps)", m.Package)
+	ret.WF("\t\tret, err := %sFromPath(r, as, ps)", m.Package)
 	ret.WE(2, `""`)
 	checkGrp(ret, grp)
 	pkCamels := lo.Map(m.PKs(), func(pk *model.Column, _ int) string {
 		return "ret." + pk.Proper()
 	})
-	ret.W("\t\terr = as.Services.%s.Delete(ps.Context, nil, %s, ps.Logger)", m.Proper(), strings.Join(pkCamels, ", "))
+	ret.WF("\t\terr = as.Services.%s.Delete(ps.Context, nil, %s, ps.Logger)", m.Proper(), strings.Join(pkCamels, ", "))
 	ret.W("\t\tif err != nil {")
-	ret.W("\t\t\treturn \"\", errors.Wrapf(err, \"unable to delete %s [%%%%s]\", ret.String())", m.TitleLower())
+	ret.WF("\t\t\treturn \"\", errors.Wrapf(err, \"unable to delete %s [%%%%s]\", ret.String())", m.TitleLower())
 	ret.W("\t\t}")
 	ret.W(msgEqSPrint + m.Proper() + " [%%s] deleted\", ret.String())")
-	ret.W("\t\treturn %sFlashAndRedir(true, msg, \"/%s\", ps)", prefix, m.Route())
+	ret.WF("\t\treturn %sFlashAndRedir(true, msg, \"/%s\", ps)", prefix, m.Route())
 	ret.W("\t})")
 	ret.W("}")
 	return ret
@@ -159,12 +159,12 @@ func controllerDelete(m *model.Model, grp *model.Column, prefix string) *golang.
 
 func controllerModelFromForm(m *model.Model) *golang.Block {
 	ret := golang.NewBlock(m.Package+"FromForm", "func")
-	ret.W("func %sFromForm(r *http.Request, b []byte, setPK bool) (*%s, error) {", m.Package, m.ClassRef())
+	ret.WF("func %sFromForm(r *http.Request, b []byte, setPK bool) (*%s, error) {", m.Package, m.ClassRef())
 	ret.W("\tfrm, err := cutil.ParseForm(r, b)")
 	ret.W("\tif err != nil {")
-	ret.W("\t\treturn nil, errors.Wrap(err, \"unable to parse form\")")
+	ret.WF("\t\treturn nil, errors.Wrap(err, \"unable to parse form\")")
 	ret.W("\t}")
-	ret.W("\tret, _, err := %s.FromMap(frm, setPK)", m.Package)
+	ret.WF("\tret, _, err := %s.FromMap(frm, setPK)", m.Package)
 	ret.W("\treturn ret, err")
 	ret.W("}")
 	return ret

@@ -107,11 +107,11 @@ func menuBlockGM(args *model.Args, orphans []string) *golang.Block {
 		gm.W("\treturn menu.Items{")
 		for _, g := range args.Groups {
 			if !g.Provided {
-				gm.W("\t\tmenuGroup%s,", util.StringToCamel(g.Proper(), args.Acronyms...))
+				gm.WF("\t\tmenuGroup%s,", util.StringToCamel(g.Proper(), args.Acronyms...))
 			}
 		}
 		for _, o := range orphans {
-			gm.W("\t\t%s%s,", helper.TextMenuItem, o)
+			gm.WF("\t\t%s%s,", helper.TextMenuItem, o)
 		}
 		gm.W("\t}")
 	}

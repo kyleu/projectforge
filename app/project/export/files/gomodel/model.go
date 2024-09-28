@@ -85,13 +85,13 @@ func Model(m *model.Model, args *model.Args, linebreak string) (*file.File, erro
 
 func typeAssert(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("assert", "type")
-	ret.W("var _ svc.Model = (*%s)(nil)", m.Proper())
+	ret.WF("var _ svc.Model = (*%s)(nil)", m.Proper())
 	return ret
 }
 
 func defaultRoute(m *model.Model) *golang.Block {
 	ret := golang.NewBlock("DefaultRoute", "const")
-	ret.W("const DefaultRoute = %q", "/"+m.Route())
+	ret.WF("const DefaultRoute = %q", "/"+m.Route())
 	return ret
 }
 
@@ -108,12 +108,12 @@ func routeMethod(m *model.Model) *golang.Block {
 
 func modelToPK(m *model.Model, _ enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock("PK", "struct")
-	ret.W("func (%s *%s) ToPK() *PK {", m.FirstLetter(), m.Proper())
+	ret.WF("func (%s *%s) ToPK() *PK {", m.FirstLetter(), m.Proper())
 	ret.W("\treturn &PK{")
 	pks := m.PKs()
 	maxColLength := pks.MaxCamelLength() + 1
 	for _, c := range pks {
-		ret.W("\t\t%s %s.%s,", util.StringPad(c.Proper()+":", maxColLength), m.FirstLetter(), c.Proper())
+		ret.WF("\t\t%s %s.%s,", util.StringPad(c.Proper()+":", maxColLength), m.FirstLetter(), c.Proper())
 	}
 	ret.W("\t}")
 	ret.W("}")
@@ -122,7 +122,7 @@ func modelToPK(m *model.Model, _ enum.Enums) (*golang.Block, error) {
 
 func modelStruct(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock(m.Proper(), "struct")
-	ret.W("type %s struct {", m.Proper())
+	ret.WF("type %s struct {", m.Proper())
 	cols := m.Columns.NotDerived()
 	maxColLength := cols.MaxCamelLength()
 	maxTypeLength := cols.MaxGoTypeLength(m.Package, enums)
@@ -131,8 +131,8 @@ func modelStruct(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 		if err != nil {
 			return nil, err
 		}
-		if gt == "*any" {
-			gt = "any"
+		if gt == "*"+types.KeyAny {
+			gt = types.KeyAny
 		}
 		goType := util.StringPad(gt, maxTypeLength)
 		var tag string
@@ -147,7 +147,7 @@ func modelStruct(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 		if c.Example != "" {
 			tag += fmt.Sprintf(",fake:%q", c.Example)
 		}
-		ret.W("\t%s %s `%s`", util.StringPad(c.Proper(), maxColLength), goType, tag)
+		ret.WF("\t%s %s `%s`", util.StringPad(c.Proper(), maxColLength), goType, tag)
 	}
 	ret.W("}")
 	return ret, nil
@@ -163,15 +163,15 @@ func modelConstructor(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	if err != nil {
 		return nil, err
 	}
-	ret.W("func New(%s) *%s {", args, m.Proper())
-	ret.W("\treturn &%s{%s}", m.Proper(), m.PKs().Refs())
+	ret.WF("func New(%s) *%s {", args, m.Proper())
+	ret.WF("\treturn &%s{%s}", m.Proper(), m.PKs().Refs())
 	ret.W("}")
 	return ret, nil
 }
 
 func modelToData(m *model.Model, cols model.Columns, suffix string, database string) *golang.Block {
 	ret := golang.NewBlock(m.Proper(), "func")
-	ret.W("func (%s *%s) ToData%s() []any {", m.FirstLetter(), m.Proper(), suffix)
+	ret.WF("func (%s *%s) ToData%s() []any {", m.FirstLetter(), m.Proper(), suffix)
 	calls := lo.Map(cols, func(c *model.Column, _ int) string {
 		tk := c.Type.Key()
 		switch {
@@ -183,11 +183,11 @@ func modelToData(m *model.Model, cols model.Columns, suffix string, database str
 	})
 	lines := util.JoinLines(calls, " ", 120)
 	if len(lines) == 1 && len(lines[0]) < 100 {
-		ret.W("\treturn []any{%s}", strings.TrimSuffix(lines[0], ","))
+		ret.WF("\treturn []any{%s}", strings.TrimSuffix(lines[0], ","))
 	} else {
 		ret.W("\treturn []any{")
 		lo.ForEach(lines, func(l string, _ int) {
-			ret.W("\t\t%s", l)
+			ret.WF("\t\t%s", l)
 		})
 		ret.W("\t}")
 	}

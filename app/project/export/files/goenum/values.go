@@ -21,7 +21,7 @@ func enumValues(e *enum.Enum) *golang.Block {
 	b := golang.NewBlock(e.Proper(), "vars")
 
 	if e.Simple() {
-		b.W("var All%s = %s{%s}", e.ProperPlural(), e.ProperPlural(), strings.Join(names, ", "))
+		b.WF("var All%s = %s{%s}", e.ProperPlural(), e.ProperPlural(), strings.Join(names, ", "))
 		return b
 	}
 
@@ -35,7 +35,7 @@ func enumValues(e *enum.Enum) *golang.Block {
 	})
 
 	b.WB()
-	b.W("\tAll%s = %s{%s}", e.ProperPlural(), e.ProperPlural(), strings.Join(names, ", "))
+	b.WF("\tAll%s = %s{%s}", e.ProperPlural(), e.ProperPlural(), strings.Join(names, ", "))
 	b.W(")")
 	return b
 }
