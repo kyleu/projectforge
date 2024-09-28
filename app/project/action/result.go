@@ -52,11 +52,14 @@ func (r *Result) AddDebug(msg string, args ...any) {
 }
 
 func (r *Result) AddLog(msg string, args ...any) {
-	ret := fmt.Sprintf(msg, args...)
+	r.Log(fmt.Sprintf(msg, args...))
+}
+
+func (r *Result) Log(l string) {
 	if r.logger != nil {
-		r.logger.Info(ret)
+		r.logger.Info(l)
 	}
-	r.Logs = append(r.Logs, ret)
+	r.Logs = append(r.Logs, l)
 }
 
 func (r *Result) AddWarn(msg string, args ...any) {

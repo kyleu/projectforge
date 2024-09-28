@@ -88,5 +88,5 @@ func ErrorMerge(errs ...error) error {
 	msg := lo.Map(errs, func(e error, _ int) string {
 		return e.Error()
 	})
-	return errors.Wrapf(errs[0], strings.Join(msg, ", "))
+	return errors.Wrap(errs[0], strings.Join(msg, ", "))
 }

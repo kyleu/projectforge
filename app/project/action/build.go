@@ -26,7 +26,7 @@ func simpleProc(ctx context.Context, cmd string, path string, ret *Result, logge
 	if err != nil {
 		return ret.WithError(err)
 	}
-	ret.AddLog("build output for [" + cmd + "]:\n" + out)
+	ret.AddLog("build output for [%s]:\n%s", cmd, out)
 	if exitCode != 0 {
 		ret.WithError(errors.Errorf("build failed with exit code [%d]", exitCode))
 	}
@@ -90,7 +90,7 @@ var AllBuilds = Builds{
 func fullBuild(ctx context.Context, prj *project.Project, r *Result, logger util.Logger) *Result {
 	logs, err := build.Full(ctx, prj, logger)
 	lo.ForEach(logs, func(l string, _ int) {
-		r.AddLog(l)
+		r.Log(l)
 	})
 	if err != nil {
 		return r.WithError(err)

@@ -27,7 +27,11 @@ func iconset(img image.Image) ([]byte, error) {
 	iconBuffers := new(bytes.Buffer)
 	for _, s := range sizes {
 		imgBuf := new(bytes.Buffer)
-		resized := resize.Resize(uint(s), uint(s), img, resize.MitchellNetravali)
+		var sz uint = 16
+		if s > 0 {
+			sz = uint(s)
+		}
+		resized := resize.Resize(sz, sz, img, resize.MitchellNetravali)
 		if err := png.Encode(imgBuf, resized); err != nil {
 			return nil, err
 		}

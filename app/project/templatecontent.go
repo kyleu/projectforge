@@ -68,9 +68,9 @@ func (t *TemplateContext) IgnoredSetting() string {
 	if len(t.Ignore) == 0 {
 		return ""
 	}
-	return " --skip-dirs \"" + strings.Join(lo.Map(t.Ignore, func(i string, _ int) string {
-		return "/" + strings.TrimPrefix(i, "^")
-	}), "|") + "\""
+	return "  exclude-dirs:\n" + strings.Join(lo.Map(t.Ignore, func(i string, _ int) string {
+		return "    - /" + strings.TrimPrefix(i, "^")
+	}), "\n")
 }
 
 func (t *TemplateContext) IgnoredQuoted() string {

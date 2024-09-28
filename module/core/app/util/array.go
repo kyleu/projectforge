@@ -11,8 +11,8 @@ import (
 )
 
 func StringArrayMaxLength(a []string) int {
-	return len(lo.MaxBy(a, func(x string, max string) bool {
-		return len(x) > len(max)
+	return len(lo.MaxBy(a, func(x string, mx string) bool {
+		return len(x) > len(mx)
 	}))
 }
 

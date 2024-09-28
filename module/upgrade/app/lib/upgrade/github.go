@@ -38,7 +38,7 @@ func (s *Service) getRelease(ctx context.Context, n string) (*github.RepositoryR
 		rel, res, err = s.client.Repositories.GetReleaseByTag(ctx, org, repo, n)
 	}
 	if err != nil {
-		if res != nil && res.StatusCode == 404 {
+		if res != nil && res.StatusCode == http.StatusNotFound {
 			return nil, errors.Errorf("can't access repository at [%s]", util.AppSource)
 		}
 	}

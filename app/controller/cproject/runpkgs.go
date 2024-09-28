@@ -20,7 +20,7 @@ import (
 
 func runPkgs(prj *project.Project, res *action.Result, r *http.Request, as *app.State, ps *cutil.PageState) (string, error) {
 	if res.HasErrors() {
-		return "", errors.Errorf(strings.Join(res.Errors, ", "))
+		return "", errors.New(strings.Join(res.Errors, ", "))
 	}
 	pkgs, ok := res.Data.(build.Pkgs)
 	if !ok {

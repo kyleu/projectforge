@@ -26,7 +26,7 @@ func actionParams(tgt string, t action.Type, cfg util.ValueMap, as *app.State, l
 
 func runDeps(prj *project.Project, res *action.Result, r *http.Request, as *app.State, ps *cutil.PageState) (string, error) {
 	if res.HasErrors() {
-		return "", errors.Errorf(strings.Join(res.Errors, ", "))
+		return "", errors.New(strings.Join(res.Errors, ", "))
 	}
 	deps, ok := res.Data.(build.Dependencies)
 	if !ok {

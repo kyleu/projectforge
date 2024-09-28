@@ -2,6 +2,7 @@
 issues:
   max-issues-per-linter: 0
   max-same-issues: 0
+{{{ .IgnoredSetting }}}
 
 output:
   sort-results: true
@@ -46,17 +47,14 @@ linters-settings:
   golint:
     min-confidence: 0
   gomnd:
-    settings:
-      mnd:
-        checks:
-          - argument
-          - assign
-          - case
-          - condition
-          - operation
-          - return
+    checks:
+      - argument
+      - assign
+      - case
+      - condition
+      - operation
+      - return
   govet:
-    check-shadowing: true
     settings:
       printf:
         funcs:
@@ -91,6 +89,7 @@ linters:
     - bodyclose
     - containedctx
     - contextcheck
+    - copyloopvar
     - cyclop
     # - deadcode # deprecated
     - decorder
@@ -98,15 +97,16 @@ linters:
     - dogsled
     # - dupl
     - durationcheck
+    - err113
     - errcheck
     - errchkjson
     - errname
     - errorlint
-    - execinquery
+    # - execinquery # deprecated
     - exhaustive
     # - exhaustivestruct # deprecated
     # - exhaustruct
-    - exportloopref
+    # - exportloopref # deprecated
     - forbidigo
     - forcetypeassert
     - funlen
@@ -119,7 +119,6 @@ linters:
     - gocyclo
     - godot
     - godox
-    - goerr113
     - gofmt
     - gofumpt
     - goheader
