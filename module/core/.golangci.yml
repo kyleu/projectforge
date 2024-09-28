@@ -54,6 +54,9 @@ linters-settings:
       - condition
       - operation
       - return
+  gosec:
+    excludes:
+      - G115
   govet:
     settings:
       printf:

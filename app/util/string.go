@@ -133,11 +133,11 @@ func StringPadLeft(s string, size int, chr rune) string {
 	return sb.String()
 }
 
-func StringTruncate(s string, max int) string {
-	if max > len(s) {
+func StringTruncate(s string, mx int) string {
+	if mx > len(s) {
 		return s
 	}
-	return s[:strings.LastIndex(s[:max], " ")]
+	return s[:strings.LastIndex(s[:mx], " ")]
 }
 
 func StringRepeat(s string, n int) string {
