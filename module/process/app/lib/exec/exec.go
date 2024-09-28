@@ -42,6 +42,7 @@ type Exec struct {
 	Link      string        `json:"link,omitempty"`
 	Buffer    *bytes.Buffer `json:"-"`
 	execCmd   *exec.Cmd
+	writer    io.Writer
 }
 
 func NewExec(key string, idx int, cmd string, path string, envvars ...string) *Exec {
@@ -59,26 +60,30 @@ func (e *Exec) Start(fns ...OutFn) error {
 	if e.Started != nil {
 		return errors.New("process already started")
 	}
-	w := lo.Reduce(fns, func(agg io.Writer, fn OutFn, _ int) io.Writer {
+	e.writer = lo.Reduce(fns, func(agg io.Writer, fn OutFn, _ int) io.Writer {
 		return io.MultiWriter(agg, &writer{Key: e.String(), fn: fn})
 	}, io.Writer(e.Buffer))
 	e.Started = util.TimeCurrentP()
-	t := util.TimerStart()
-	cmd, err := util.StartProcess(e.Cmd, e.Path, nil, w, w, e.Env...)
+	cmd, err := util.StartProcess(e.Cmd, e.Path, nil, e.writer, e.writer, e.Env...)
 	if err != nil {
 		return err
 	}
 	e.execCmd = cmd
 	e.PID = cmd.Process.Pid
-	defer func() {
-		go func() {
-			err2 := e.Wait()
-			if err2 != nil {
-				_, _ = fmt.Fprintf(w, " ::: error while wating for process to terminate %s", err2.Error())
-			}
-			_, _ = fmt.Fprintf(w, " ::: process completed in [%s] with exit code [%d]", t.EndString(), e.ExitCode)
-		}()
-	}()
+	return nil
+}
+
+func (e *Exec) Run(fns ...OutFn) error {
+	t := util.TimerStart()
+	err := e.Start(fns...)
+	if err != nil {
+		return err
+	}
+	err = e.Wait()
+	if err != nil {
+		_, _ = fmt.Fprintf(e.writer, " ::: error while wating for process to terminate %s", err.Error())
+	}
+	_, _ = fmt.Fprintf(e.writer, " ::: process completed in [%s] with exit code [%d]", t.EndString(), e.ExitCode)
 	return nil
 }
 
@@ -95,9 +100,10 @@ func (e *Exec) Wait() error {
 	}
 	exit, err := e.execCmd.Process.Wait()
 	if err != nil {
-		_ = e.execCmd.Wait()
-		for (e.execCmd.ProcessState == nil || !e.execCmd.ProcessState.Exited()) && time.Since(util.TimeCurrent()) < (4*time.Second) {
-			time.Sleep(500 * time.Millisecond)
+		if err2 := e.execCmd.Wait(); err2 == nil {
+			for (e.execCmd.ProcessState == nil || !e.execCmd.ProcessState.Exited()) && time.Since(util.TimeCurrent()) < (4*time.Second) {
+				time.Sleep(500 * time.Millisecond)
+			}
 		}
 		exit = e.execCmd.ProcessState
 	}

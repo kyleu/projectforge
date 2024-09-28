@@ -9,6 +9,10 @@ cd "$dir/.."
 # $PF_SECTION_START(keys)$
 # $PF_SECTION_END(keys)$
 
+if command -v title &> /dev/null; then
+  title "{{{ .CleanKey }}}"
+fi
+
 [[ -f "$HOME/bin/oauth" ]] && . "$HOME/bin/oauth"
 export {{{ .CleanKey }}}_encryption_key=TEMP_SECRET_KEY
 

@@ -119,7 +119,7 @@ All managed projects expose a web and CLI interface, and additional modules are 
 - `deployments`: Manages deployments
 - `deps`: Manages Go dependencies
 - `format`: Runs [bin/format.sh]
-- `imports`: Reorders the imports
+- `imports`: Organizes the imports in source files and templates
 - `lint`: Runs [bin/check.sh]
 - `lint-client`: Runs [bin/check-client.sh]
 - `packages`: Visualize your application's packages

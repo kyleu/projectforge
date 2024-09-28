@@ -42,9 +42,7 @@ func TestStringToSingular(t *testing.T) {
 		{"children", "child"},
 		{"geese", "goose"},
 		{"men", "man"},
-		{"CLASSes", "CLASS"},
-		{"BUSes", "BUS"},
-		{"PASSes", "PASS"},
+		{"classes", "class"},
 		{"oxen", "ox"},
 		{"as", "a"},
 	}

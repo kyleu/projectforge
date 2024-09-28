@@ -11,10 +11,10 @@ import (
 var ResultFields = []string{"Project", "Status", "Data", "Error"}
 
 type Result struct {
-	Project string        `json:"project"`
-	Status  string        `json:"status"`
-	Data    util.ValueMap `json:"data"`
-	Error   string        `json:"error"`
+	Project string        `json:"project,omitempty"`
+	Status  string        `json:"status,omitempty"`
+	Data    util.ValueMap `json:"data,omitempty"`
+	Error   string        `json:"error,omitempty"`
 }
 
 func NewResult(prj string, status string, data util.ValueMap) *Result {

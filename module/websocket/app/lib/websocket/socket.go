@@ -47,6 +47,11 @@ func (s *Service) WriteMessage(connID uuid.UUID, message *Message, logger util.L
 	return s.write(connID, util.ToJSON(message), logger)
 }
 
+func (s *Service) WriteCloseRequest(connID uuid.UUID, logger util.Logger) error {
+	message := &Message{Cmd: "close-connection"}
+	return s.WriteMessage(connID, message, logger)
+}
+
 func (s *Service) WriteChannel(message *Message, logger util.Logger, except ...uuid.UUID) error {
 	if message == nil {
 		return errors.New("no message provided")
@@ -127,6 +132,9 @@ func ReadSocketLoop(connID uuid.UUID, sock *websocket.Conn, onMessage func(m *Me
 		if err != nil {
 			if strings.Contains(err.Error(), "1001") {
 				continue
+			}
+			if strings.Contains(err.Error(), "close 1005") {
+				return nil
 			}
 			return errors.Wrapf(err, "error processing socket read loop for connection [%s]", connID.String())
 		}

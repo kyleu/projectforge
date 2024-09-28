@@ -14,7 +14,7 @@
       {%- if res.Data == nil -%}
       <em>{%s res.Type %}</em>
       {%- elseif res.ID != "" -%}
-      <a href="#modal-{%s res.Type %}-{%s res.ID %}"><button type="button">{%s res.Type %}</button></a>
+      <a href="#modal-{%s res.Type %}-{%s res.ID %}"><button type="button">{% if res.Icon != "" %}{%= components.SVGButton(res.Icon, ps) %} {% endif %}{%s res.Type %}</button></a>
       {%= components.JSONModal(res.Type + "-" + res.ID, res.Type, res.Data, 3) %}
       {%- endif -%}
     </div>

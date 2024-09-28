@@ -1,13 +1,21 @@
+import {els} from "./dom";
+
 export function modalInit() {
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
-      if (document.location.hash.startsWith("#modal-")) {
-        document.location.hash = "";
+      if (document.location.hash.substring(0, 7) === "#modal-") {
+        // document.location.hash = "";
+        window.history.back();
       }
     }
   });
+  els(".backdrop, .modal-close").forEach((el) => {
+    el.addEventListener("click", (ev) => {
+      ev.preventDefault();
+      window.history.back();
+    });
+  });
 }
-
 export function modalNew(key: string, title: string) {
   const el = document.createElement("div");
   el.classList.add("modal");

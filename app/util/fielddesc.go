@@ -62,8 +62,8 @@ func (a *FieldDescResults) HasMissing() bool {
 func FieldDescsCollect(r *http.Request, args FieldDescs) *FieldDescResults {
 	ret := make(ValueMap, len(args))
 	var missing []string
+	qa := r.URL.Query()
 	lo.ForEach(args, func(arg *FieldDesc, _ int) {
-		qa := r.URL.Query()
 		if !qa.Has(arg.Key) {
 			missing = append(missing, arg.Key)
 		}

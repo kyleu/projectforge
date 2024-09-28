@@ -96,12 +96,13 @@
         {%- for _, h := range extraHandlers -%}
         {%s= h %}
         {%- endfor -%}
+        return;
         {%- endif -%}
       }
-      const h = m.param["html"].split("\n");
-      if(h.length === 0) {
-
+      if (m.param["html"] === undefined) {
+        console.log("no [html] key in message param: " + JSON.stringify(m, null, 2));
       }
+      const h = m.param["html"].split("\n");
       for (x in h) {
         const row = document.createElement("tr");
         const numTH = document.createElement("th");
@@ -116,9 +117,9 @@
     }
     function err(e) {{% if debug %}
       console.log("[socket error]: " + e);
-      {% endif %}}
+    {% endif %}}
     window.addEventListener('load', () => {
-      new {{{ .Key }}}.Socket({%v debug %}, open, recv, err, "{%s connectURL %}");
+      new devstart.Socket({%v debug %}, open, recv, err, "{%s connectURL %}");
     })
   </script>
 {% endfunc %}

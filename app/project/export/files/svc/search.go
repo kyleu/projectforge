@@ -49,7 +49,7 @@ func serviceSearch(m *model.Model, grp *model.Column, dbRef string, enums enum.E
 	grpTxt := ""
 	if grp == nil {
 		wc := "(" + strings.Join(clauses, " or ") + ")"
-		ret.W("const searchClause = %q", wc)
+		ret.W("const searchClause = `%s`", wc)
 		ret.WB()
 	} else {
 		gt, err := grp.ToGoType(m.Package, enums)

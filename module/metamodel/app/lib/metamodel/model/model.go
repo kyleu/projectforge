@@ -50,6 +50,12 @@ func (m *Model) AddTag(t string) {
 	}
 }
 
+func (m *Model) RemoveTag(t string) {
+	m.Tags = lo.Filter(m.Tags, func(x string, _ int) bool {
+		return x != t
+	})
+}
+
 func (m *Model) PKs() Columns {
 	return m.Columns.PKs()
 }
@@ -133,11 +139,11 @@ func (m *Model) AllSearches(db string) []string {
 			if !types.IsString(c.Type) {
 				switch db {
 				case dbSQLServer:
-					x = fmt.Sprintf("cast(%s as nvarchar(2048))", c.SQL())
+					x = fmt.Sprintf("cast(%q as nvarchar(2048))", c.SQL())
 				case dbSQLite:
 					x = c.SQL()
 				default:
-					x = fmt.Sprintf("%s::text", c.SQL())
+					x = fmt.Sprintf("%q::text", c.SQL())
 				}
 			}
 			ret.Push("lower(" + x + ")")

@@ -57,6 +57,14 @@ func StreamResult(qw422016 *qt422016.Writer, res *result.Result, params *search.
 //line views/vsearch/Result.html:17
 		qw422016.N().S(`"><button type="button">`)
 //line views/vsearch/Result.html:17
+		if res.Icon != "" {
+//line views/vsearch/Result.html:17
+			components.StreamSVGButton(qw422016, res.Icon, ps)
+//line views/vsearch/Result.html:17
+			qw422016.N().S(` `)
+//line views/vsearch/Result.html:17
+		}
+//line views/vsearch/Result.html:17
 		qw422016.E().S(res.Type)
 //line views/vsearch/Result.html:17
 		qw422016.N().S(`</button></a>

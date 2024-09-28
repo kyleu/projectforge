@@ -61,7 +61,7 @@ var (
 	buildStart         = &Build{Key: "start", Title: "Start", Description: "Starts the prebuilt project binary", Run: onStart}
 	buildClean         = simpleBuild("clean", "Clean", "make clean")
 	buildDeps          = &Build{Key: "deps", Title: "Dependencies", Description: "Manages Go dependencies", Run: onDeps}
-	buildImports       = &Build{Key: "imports", Title: "Imports", Description: "Reorders the imports", Run: onImports}
+	buildImports       = &Build{Key: "imports", Title: "Imports", Description: "Organizes the imports in source files and templates", Run: onImports}
 	buildIgnored       = &Build{Key: "ignored", Title: "Ignored", Description: "Shows files that are ignored by code generation", Run: onIgnored}
 	buildPackages      = &Build{Key: "packages", Title: "Packages", Description: "Visualize your application's packages", Run: onPackages}
 	buildCleanup       = &Build{Key: "cleanup", Title: "Cleanup", Description: "Cleans up file permissions", Run: onCleanup}

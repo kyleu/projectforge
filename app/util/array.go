@@ -57,7 +57,7 @@ func ArraySorted[T cmp.Ordered](x []T) []T {
 	return x
 }
 
-func ArrayLimit[T cmp.Ordered](x []T, limit int) ([]T, int) {
+func ArrayLimit[T any](x []T, limit int) ([]T, int) {
 	if limit == 0 || limit > len(x) {
 		limit = len(x)
 	}

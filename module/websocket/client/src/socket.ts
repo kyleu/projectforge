@@ -34,6 +34,7 @@ export class Socket {
   pauseSeconds: number;
   pendingMessages: Message[];
   connectTime?: number;
+  closed?: boolean;
   sock?: WebSocket;
 
   constructor(debug: boolean, o: () => void, r: (m: Message) => void, e: (svc: string, err: string) => void, url?: string) {
@@ -70,13 +71,17 @@ export class Socket {
       if (s.debug) {
         console.debug("[socket]: receive", msg);
       }
-      s.recv(msg);
+      if (msg.cmd === "close-connection") {
+        s.disconnect();
+      } else {
+        s.recv(msg);
+      }
     };
     this.sock.onerror = (event) => () => {
       s.err("socket", event.type);
     };
     this.sock.onclose = () => {
-      if (appUnloading) {
+      if (appUnloading || s.closed) {
         return;
       }
       s.connected = false;
@@ -99,7 +104,11 @@ export class Socket {
   }
 
   disconnect() {
-    // noop
+    this.closed = true;
+    setTimeout(() => {
+      this.sock?.close();
+      console.debug("[socket] closed");
+    }, 500);
   }
 
   send(msg: Message) {
