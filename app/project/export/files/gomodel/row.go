@@ -71,7 +71,7 @@ func modelTableCols(m *model.Model) (*golang.Block, error) {
 	if m.Schema == "" {
 		ret.W("\ttableQuoted   = fmt.Sprintf(\"%%q\", table)")
 	} else {
-		ret.WF("\ttableQuoted   = fmt.Sprintf(\"%%q.%%q\", %q, table)", m.Schema)
+		ret.WF("\ttableQuoted   = fmt.Sprintf(\"%%%%q.%%%%q\", %q, table)", m.Schema)
 	}
 	cols := fmt.Sprintf("\tcolumns       = []string{%s}", strings.Join(m.Columns.NotDerived().SQLQuoted(), ", "))
 	if len(cols) > 160 {
