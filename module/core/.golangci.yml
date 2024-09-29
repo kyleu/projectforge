@@ -1,8 +1,7 @@
 # Requires golangci-lint 1.49.0; `go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest`
 issues:
   max-issues-per-linter: 0
-  max-same-issues: 0
-{{{ .IgnoredSetting }}}
+  max-same-issues: 0{{{ .IgnoredSetting }}}
 
 output:
   sort-results: true
