@@ -4,20 +4,28 @@
 
 {% func TableEditor(key string, columns []*util.FieldDesc, values util.ValueMap, action string, method string, title string) %}
   <form action="{%s action %}" method="{%s method %}">
-    <table class="mt expanded">
-      <tbody>
-        {%- for _, arg := range columns -%}
-        {%- switch arg.Type -%}
-        {%- case "bool" -%}
-        {%= BoolTable(arg.Key, arg.Title, values.GetBoolOpt(arg.Key), 3, arg.Description) %}
-        {%- default -%}
-        {%= StringTable(arg.Key, key + "-" + arg.Key, arg.Title, values.GetStringOpt(arg.Key), 3, arg.Description) %}
-        {%- endswitch -%}
-        {%- endfor -%}
-        <tr>
-          <td colspan="2"><button type="submit">{%s title %}</button></td>
-        </tr>
-      </tbody>
-    </table>
+    {%= TableEditorNoForm(key, columns, values, "", "", title) %}
   </form>
+{% endfunc %}
+
+{% func TableEditorNoForm(key string, columns []*util.FieldDesc, values util.ValueMap, name string, value string, title string) %}
+  <table class="mt expanded">
+    <tbody>
+      {%- for _, arg := range columns -%}
+      {%- switch arg.Type -%}
+      {%- case "bool" -%}
+      {%= BoolTable(arg.Key, arg.Title, values.GetBoolOpt(arg.Key), 3, arg.Description) %}
+      {%- default -%}
+      {%= StringTable(arg.Key, key + "-" + arg.Key, arg.Title, values.GetStringOpt(arg.Key), 3, arg.Description) %}
+      {%- endswitch -%}
+      {%- endfor -%}
+      <tr>
+        {%- if name == "" -%}
+        <td colspan="2"><button type="submit">{%s title %}</button></td>
+        {%- else -%}
+        <td colspan="2"><button name="{%s name %}" value="{%s value %}" type="submit">{%s title %}</button></td>
+        {%- endif -%}
+      </tr>
+    </tbody>
+  </table>
 {% endfunc %}

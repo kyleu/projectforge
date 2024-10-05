@@ -19,6 +19,19 @@ import (
 
 type OutFn func(key string, b []byte) error
 
+func WriteOutFns(key string, b []byte, fns ...OutFn) error {
+	for _, fn := range fns {
+		if err := fn(key, b); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func WriteOutFnsString(s string, fns ...OutFn) {
+	_ = WriteOutFns("default", []byte(s), fns...)
+}
+
 type writer struct {
 	Key string
 	fn  OutFn

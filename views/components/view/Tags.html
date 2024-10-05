@@ -1,8 +1,15 @@
-{% func Tags(values []string) %}{% stripspace %}
-<div class="tag-editor">
+{% import "strings" %}
+
+{% func Tags(values []string, url ...string) %}{% stripspace %}
+<div class="tag-view">
   <div class="tags">
     {% for _, x := range values %}
+    {% if len(url) == 0 %}
     <span class="item">{%s x %}</span>
+    {% else %}
+    {% code u := strings.ReplaceAll(url[0], "{}", x) %}
+    <span class="item"><a href="{%s u %}">{%s x %}</a></span>
+    {% endif %}
     {% endfor %}
   </div>
 </div>

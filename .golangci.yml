@@ -86,6 +86,8 @@ linters-settings:
     rules:
       - name: blank-imports
         disabled: true
+  stylecheck:
+    checks: ["all", "-ST1003"]
 
 linters:
   disable-all: true

@@ -1,9 +1,9 @@
 .tag-editor .tags, .tag-view .tags {
   touch-action: none;
+  display: flex;
 }
 
 .tag-editor .tags .item, .tag-view .tags .item {
-  float: left;
   background-color: var(--color-background-muted);
   margin-right: var(--padding-small);
 
@@ -23,7 +23,7 @@
   margin-right: 0;
 }
 
-.tag-editor .value {
+.tag-editor .value, .tag-view .value {
   padding: 0 4px;
 }
 

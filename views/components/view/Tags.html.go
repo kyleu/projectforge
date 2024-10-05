@@ -5,59 +5,81 @@
 package view
 
 //line views/components/view/Tags.html:1
+import "strings"
+
+//line views/components/view/Tags.html:3
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/components/view/Tags.html:1
+//line views/components/view/Tags.html:3
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/components/view/Tags.html:1
-func StreamTags(qw422016 *qt422016.Writer, values []string) {
-//line views/components/view/Tags.html:1
-	qw422016.N().S(`<div class="tag-editor"><div class="tags">`)
-//line views/components/view/Tags.html:4
+//line views/components/view/Tags.html:3
+func StreamTags(qw422016 *qt422016.Writer, values []string, url ...string) {
+//line views/components/view/Tags.html:3
+	qw422016.N().S(`<div class="tag-view"><div class="tags">`)
+//line views/components/view/Tags.html:6
 	for _, x := range values {
-//line views/components/view/Tags.html:4
-		qw422016.N().S(`<span class="item">`)
-//line views/components/view/Tags.html:5
-		qw422016.E().S(x)
-//line views/components/view/Tags.html:5
-		qw422016.N().S(`</span>`)
-//line views/components/view/Tags.html:6
+//line views/components/view/Tags.html:7
+		if len(url) == 0 {
+//line views/components/view/Tags.html:7
+			qw422016.N().S(`<span class="item">`)
+//line views/components/view/Tags.html:8
+			qw422016.E().S(x)
+//line views/components/view/Tags.html:8
+			qw422016.N().S(`</span>`)
+//line views/components/view/Tags.html:9
+		} else {
+//line views/components/view/Tags.html:10
+			u := strings.ReplaceAll(url[0], "{}", x)
+
+//line views/components/view/Tags.html:10
+			qw422016.N().S(`<span class="item"><a href="`)
+//line views/components/view/Tags.html:11
+			qw422016.E().S(u)
+//line views/components/view/Tags.html:11
+			qw422016.N().S(`">`)
+//line views/components/view/Tags.html:11
+			qw422016.E().S(x)
+//line views/components/view/Tags.html:11
+			qw422016.N().S(`</a></span>`)
+//line views/components/view/Tags.html:12
+		}
+//line views/components/view/Tags.html:13
 	}
-//line views/components/view/Tags.html:6
+//line views/components/view/Tags.html:13
 	qw422016.N().S(`</div></div>`)
-//line views/components/view/Tags.html:9
+//line views/components/view/Tags.html:16
 }
 
-//line views/components/view/Tags.html:9
-func WriteTags(qq422016 qtio422016.Writer, values []string) {
-//line views/components/view/Tags.html:9
+//line views/components/view/Tags.html:16
+func WriteTags(qq422016 qtio422016.Writer, values []string, url ...string) {
+//line views/components/view/Tags.html:16
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/view/Tags.html:9
-	StreamTags(qw422016, values)
-//line views/components/view/Tags.html:9
+//line views/components/view/Tags.html:16
+	StreamTags(qw422016, values, url...)
+//line views/components/view/Tags.html:16
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/view/Tags.html:9
+//line views/components/view/Tags.html:16
 }
 
-//line views/components/view/Tags.html:9
-func Tags(values []string) string {
-//line views/components/view/Tags.html:9
+//line views/components/view/Tags.html:16
+func Tags(values []string, url ...string) string {
+//line views/components/view/Tags.html:16
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/view/Tags.html:9
-	WriteTags(qb422016, values)
-//line views/components/view/Tags.html:9
+//line views/components/view/Tags.html:16
+	WriteTags(qb422016, values, url...)
+//line views/components/view/Tags.html:16
 	qs422016 := string(qb422016.B)
-//line views/components/view/Tags.html:9
+//line views/components/view/Tags.html:16
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/view/Tags.html:9
+//line views/components/view/Tags.html:16
 	return qs422016
-//line views/components/view/Tags.html:9
+//line views/components/view/Tags.html:16
 }
