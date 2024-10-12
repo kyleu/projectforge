@@ -1,7 +1,7 @@
 {
   "name": "Read-only DB",
   "icon": "database",
-  "description": "Adds a read-only database connection",
+  "description": "Adds a read-only database connection, with a separate configuration",
   "authorName": "Kyle U",
   "authorEmail": "kyle@kyleu.com",
   "license": "CC0",

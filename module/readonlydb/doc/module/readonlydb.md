@@ -1,6 +1,6 @@
 # Read-only Database
 
-This is a module for [Project Forge](https://projectforge.dev). Provides a read-only database
+This is a module for [Project Forge](https://projectforge.dev). It provides a read-only database, with a separate configuration, and wires it into the application.
 
 https://github.com/kyleu/projectforge/tree/master/module/readonlydb
 
