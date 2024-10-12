@@ -8,10 +8,10 @@ import (
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
 
-	"projectforge.dev/projectforge/app/lib/exec"
-	"projectforge.dev/projectforge/app/lib/filesystem"
-	"projectforge.dev/projectforge/app/lib/telemetry"
-	"projectforge.dev/projectforge/app/util"
+	"{{{ .Package }}}/app/lib/exec"
+	"{{{ .Package }}}/app/lib/filesystem"
+	"{{{ .Package }}}/app/lib/telemetry"
+	"{{{ .Package }}}/app/util"
 )
 
 type Service struct {

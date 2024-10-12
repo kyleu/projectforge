@@ -1,6 +1,5 @@
 {% import (
   "fmt"
-  "strconv"
   "strings"
 
   "projectforge.dev/projectforge/app"
@@ -32,36 +31,7 @@
       {%- for k, v := range p.Hidden -%}
       <input type="hidden" name="{%s k %}" value="{%s v %}" />
       {%- endfor -%}
-      <div class="overflow full-width">
-        <table class="mt min-200 expanded">
-          <tbody>
-            {%- for _, arg := range p.Results.FieldDescs -%}
-            {%- code
-              v := util.OrDefault(p.Results.Values.GetStringOpt(arg.Key), arg.Default)
-              title := arg.Title
-              if len(title) > 50 {
-                title = title[:50] + "..."
-              }
-            -%}
-            {%- switch arg.Type -%}
-            {%- case "bool" -%}
-            {%= edit.BoolTable(arg.Key, title, v == "true", 5, arg.Description) %}
-            {%- case "textarea" -%}
-            {%= edit.TextareaTable(arg.Key, "", title, 12, v, 5, arg.Description) %}
-            {%- case "number", "int" -%}
-            {%- code i, _ := strconv.ParseInt(v, 10, 32) -%}
-            {%= edit.IntTable(arg.Key, "", title, int(i), 5, arg.Description) %}
-            {%- case "float" -%}
-            {%- code f, _ := strconv.ParseFloat(v, 64) -%}
-            {%= edit.FloatTable(arg.Key, "", title, f, 5, arg.Description) %}
-            {%- default -%}
-            {%= edit.DatalistTable(arg.Key, "", title, v, arg.Choices, nil, 5, arg.Description) %}
-            {%- endswitch -%}
-            {%- endfor -%}
-          </tbody>
-        </table>
-      </div>
-      <button class="mt" type="submit">Submit</button>
+      {%= edit.TableEditorNoForm("args", p.Results.FieldDescs, p.Results.Values, "", "", "Submit") %}
     </form>
   </div>
 {% endfunc %}

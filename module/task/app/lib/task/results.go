@@ -7,7 +7,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 
-	"projectforge.dev/projectforge/app/util"
+	"{{{ .Package }}}/app/util"
 )
 
 type Results []*Result

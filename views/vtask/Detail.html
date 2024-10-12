@@ -4,28 +4,60 @@
   "projectforge.dev/projectforge/app/lib/task"
   "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/components/view"
   "projectforge.dev/projectforge/views/components/edit"
   "projectforge.dev/projectforge/views/layout"
+  "projectforge.dev/projectforge/views/vexec"
 ) %}
 
 {% code type Detail struct {
   layout.Basic
   Task *task.Task
   Result *task.Result
+  Args util.ValueMap
+  SocketURL string
 } %}
 
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>{%= components.SVGIcon(p.Task.IconSafe(), ps) %} {%s p.Task.TitleSafe() %}</h3>
-    {%- code
-      resArgs := util.ValueMap{}
-      if p.Result != nil {
-        resArgs = p.Result.Args
-      }
-    -%}
-    {%= edit.TableEditor("provider", p.Task.Args, resArgs, p.Task.WebPath()+"/run", "get", "Run") %}
+    <form action="{%s p.Task.WebPath() %}/run" method="get">
+      <table class="mt expanded">
+        <tbody>
+          {%= edit.TableEditorNoTable(p.Task.Key, p.Task.Fields(), p.Args) %}
+          <tr>
+            <td colspan="2">
+              <button type="submit">Run</button>
+              <button type="submit" name="async" value="true">Start</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </form>
   </div>
   {%- if p.Result != nil -%}
   {%= Result(as, p.Result, ps) %}
   {%- endif -%}
+
+  {%- if p.SocketURL != "" -%}
+  <script>
+    function processMessage(m) {
+      if (m.cmd === "complete") {
+        const deets = document.getElementById("result-detail");
+        deets.innerHTML = m.param.html;
+      }
+    }
+  </script>
+  {%= SocketContent(as, "task-output", p.Task, p.SocketURL, ps, "processMessage(m)") %}
+  {%- endif -%}
+{% endfunc %}
+
+{% func SocketContent(as *app.State, key string, t *task.Task, u string, ps *cutil.PageState, callbacks ...string) %}
+  <div class="card">
+    <div class="right">{%= view.TimestampRelative(util.TimeCurrentP(), false) %}</div>
+    <h3>{%= components.SVGIcon("file", ps) %} {%s t.TitleSafe() %} Logs</h3>
+    <div class="mt">{%= components.Terminal("task-output", "Starting task [" + t.TitleSafe() + "]...") %}</div>
+  </div>
+  <div id="result-detail"></div>
+  {%= vexec.ExecScript(key, u, as.Debug, ps, callbacks...) %}
 {% endfunc %}

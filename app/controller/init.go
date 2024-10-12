@@ -23,9 +23,14 @@ func initApp(_ context.Context, as *app.State, logger util.Logger) error {
 	if err != nil {
 		return err
 	}
-
-	t := task.NewTask("testbed", "", "utility", "star", "Who knows what it'll do?")
-	t.Args = util.FieldDescs{{Key: "action", Title: "Action"}}
+	tf := func(ctx context.Context, res *task.Result, logger util.Logger) error {
+		res.Log("!!!!")
+		return nil
+	}
+	t := task.NewTask("testbed", "", "utility", "star", "Who knows what it'll do?", tf)
+	t.Fields = func() util.FieldDescs {
+		return util.FieldDescs{{Key: "action", Title: "Action", Choices: as.Services.Projects.Keys()}}
+	}
 	err = as.Services.Task.RegisterTask(t)
 	if err != nil {
 		return err

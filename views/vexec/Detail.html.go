@@ -348,7 +348,7 @@ func StreamExecScript(qw422016 *qt422016.Writer, id string, connectURL string, d
 //line views/vexec/Detail.html:120
 	qw422016.N().S(`}
     window.addEventListener('load', () => {
-      new devstart.Socket(`)
+      new projectforge.Socket(`)
 //line views/vexec/Detail.html:122
 	qw422016.E().V(debug)
 //line views/vexec/Detail.html:122

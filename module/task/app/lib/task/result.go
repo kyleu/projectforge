@@ -6,7 +6,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"projectforge.dev/projectforge/app/util"
+	"{{{ .Package }}}/app/util"
 )
 
 type ResultLogFn func(key string, data any)

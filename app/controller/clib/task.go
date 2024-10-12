@@ -1,6 +1,7 @@
 package clib
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/pkg/errors"
@@ -9,6 +10,8 @@ import (
 	"projectforge.dev/projectforge/app/controller"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/task"
+	"projectforge.dev/projectforge/app/lib/websocket"
+	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/vtask"
 )
 
@@ -50,10 +53,49 @@ func TaskRun(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Errorf("unable to find task [%s]", key)
 		}
 		args := cutil.QueryArgsMap(r.URL)
-		ret := t.Run(ps.Context, args, ps.Logger)
-		page := &vtask.Detail{Task: t, Result: ret}
-		ps.SetTitleAndData(t.TitleSafe(), ret)
+		page := &vtask.Detail{Task: t, Args: args}
+		if args.GetBoolOpt("async") {
+			delete(args, "async")
+			page.SocketURL = t.WebPath() + "/start" + "?" + args.ToQueryString()
+			ps.SetTitleAndData(t.TitleSafe(), t)
+		} else {
+			ret := t.Run(ps.Context, args, ps.Logger)
+			page.Result = ret
+			ps.SetTitleAndData(t.TitleSafe(), ret)
+		}
 		return controller.Render(r, as, page, ps, taskBC(t, "Run**play")...)
+	})
+}
+
+func TaskStart(w http.ResponseWriter, r *http.Request) {
+	controller.Act("task.start", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		key, err := cutil.PathString(r, "key", false)
+		if err != nil {
+			return "", err
+		}
+		t := as.Services.Task.RegisteredTasks.Get(key)
+		if t == nil {
+			return "", errors.Errorf("unable to find task [%s]", key)
+		}
+		args := cutil.QueryArgsMap(r.URL)
+
+		ch := fmt.Sprintf("%s-%d", t.Key, util.RandomInt(1000))
+		id, err := as.Services.Socket.Upgrade(ps.Context, w, r, ch, ps.Profile, websocket.EchoHandler, ps.Logger)
+		if err != nil {
+			ps.Logger.Warnf("unable to upgrade connection to WebSocket: %s", err.Error())
+			return "", err
+		}
+
+		fn := as.Services.Socket.Terminal(ch, ps.Logger)
+		go func() {
+			res := t.Run(ps.Context, args, ps.Logger, fn)
+			html := vtask.ResultSummary(as, res, ps)
+			x := util.ValueMap{"result": res, "html": html}
+			_ = as.Services.Socket.WriteMessage(id, websocket.NewMessage(nil, ch, "complete", x), ps.Logger)
+			_ = as.Services.Socket.WriteCloseRequest(id, ps.Logger)
+		}()
+
+		return "", as.Services.Socket.ReadLoop(ps.Context, id, ps.Logger)
 	})
 }
 

@@ -5,22 +5,23 @@ import (
 
 	"github.com/pkg/errors"
 
-	"projectforge.dev/projectforge/app/lib/exec"
-	"projectforge.dev/projectforge/app/util"
+	"{{{ .Package }}}/app/lib/exec"
+	"{{{ .Package }}}/app/util"
 )
 
 type TaskFn func(ctx context.Context, res *Result, logger util.Logger) error
 
 type Task struct {
-	Key           string          `json:"key"`
-	Title         string          `json:"title,omitempty"`
-	Category      string          `json:"category,omitempty"`
-	Icon          string          `json:"icon,omitempty"`
-	Description   string          `json:"description,omitempty"`
-	Tags          []string        `json:"tags,omitempty"`
-	Args          util.FieldDescs `json:"args,omitempty"`
-	Dangerous     string          `json:"dangerous,omitempty"`
-	MaxConcurrent int             `json:"maxConcurrent,omitempty"`
+	Key           string                 `json:"key"`
+	Title         string                 `json:"title,omitempty"`
+	Category      string                 `json:"category,omitempty"`
+	Icon          string                 `json:"icon,omitempty"`
+	Description   string                 `json:"description,omitempty"`
+	Tags          []string               `json:"tags,omitempty"`
+	Fields        func() util.FieldDescs `json:"args,omitempty"`
+	Dangerous     string                 `json:"dangerous,omitempty"`
+	WebURL        string                 `json:"webURL,omitempty"`
+	MaxConcurrent int                    `json:"maxConcurrent,omitempty"`
 	fns           []TaskFn
 }
 
@@ -49,13 +50,16 @@ func (t *Task) IconSafe() string {
 }
 
 func (t *Task) WebPath() string {
+	if t.WebURL != "" {
+		return t.WebURL
+	}
 	return "/admin/task/" + t.Key
 }
 
 func (t *Task) Clone() *Task {
 	return &Task{
 		Key: t.Key, Title: t.Title, Category: t.Category, Icon: t.Icon, Description: t.Description, Tags: t.Tags,
-		Args: t.Args, Dangerous: t.Dangerous, MaxConcurrent: t.MaxConcurrent,
+		Fields: t.Fields, Dangerous: t.Dangerous, MaxConcurrent: t.MaxConcurrent,
 	}
 }
 
@@ -87,7 +91,13 @@ func (t *Task) RunWithResult(ctx context.Context, res *Result, logger util.Logge
 func (t *Task) resultLogFn(logger util.Logger, fns ...exec.OutFn) ResultLogFn {
 	return func(key string, data any) {
 		for _, fn := range fns {
-			if err := fn(key, util.ToJSONBytes(data, true)); err != nil {
+			var b []byte
+			if s, ok := data.(string); ok {
+				b = []byte(s)
+			} else {
+				util.ToJSONBytes(data, true)
+			}
+			if err := fn(key, b); err != nil {
 				logger.Warnf("error calling result function: %s", err.Error())
 			}
 		}

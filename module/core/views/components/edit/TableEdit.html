@@ -9,23 +9,35 @@
 {% endfunc %}
 
 {% func TableEditorNoForm(key string, columns []*util.FieldDesc, values util.ValueMap, name string, value string, title string) %}
-  <table class="mt expanded">
-    <tbody>
-      {%- for _, arg := range columns -%}
-      {%- switch arg.Type -%}
-      {%- case "bool" -%}
-      {%= BoolTable(arg.Key, arg.Title, values.GetBoolOpt(arg.Key), 3, arg.Description) %}
-      {%- default -%}
-      {%= StringTable(arg.Key, key + "-" + arg.Key, arg.Title, values.GetStringOpt(arg.Key), 3, arg.Description) %}
-      {%- endswitch -%}
-      {%- endfor -%}
-      <tr>
-        {%- if name == "" -%}
-        <td colspan="2"><button type="submit">{%s title %}</button></td>
-        {%- else -%}
-        <td colspan="2"><button name="{%s name %}" value="{%s value %}" type="submit">{%s title %}</button></td>
-        {%- endif -%}
-      </tr>
-    </tbody>
-  </table>
+  <div class="overflow full-width">
+    <table class="mt min-200 expanded">
+      <tbody>
+        {%= TableEditorNoTable(key, columns, values) %}
+        <tr>
+          {%- if name == "" -%}
+          <td colspan="2"><button type="submit">{%s title %}</button></td>
+          {%- else -%}
+          <td colspan="2"><button name="{%s name %}" value="{%s value %}" type="submit">{%s title %}</button></td>
+          {%- endif -%}
+        </tr>
+      </tbody>
+    </table>
+  </div>
 {% endfunc %}
+
+{% func TableEditorNoTable(key string, columns []*util.FieldDesc, values util.ValueMap) %}{% stripspace %}
+  {%- for _, arg := range columns -%}
+    {%- switch arg.Type -%}
+    {%- case "bool" -%}
+      {%= BoolTable(arg.Key, arg.Title, values.GetBoolOpt(arg.Key), 3, arg.Description) %}
+    {%- case "textarea" -%}
+      {%= TextareaTable(arg.Key, "", arg.Title, 12, values.GetStringOpt(arg.Key), 3, arg.Description) %}
+    {%- case "number", "int" -%}
+      {%= IntTable(arg.Key, "", arg.Title, values.GetIntOpt(arg.Key), 3, arg.Description) %}
+    {%- case "float" -%}
+      {%= FloatTable(arg.Key, "", arg.Title, values.GetFloatOpt(arg.Key), 3, arg.Description) %}
+    {%- default -%}
+      {%= DatalistTable(arg.Key, "", arg.Title, values.GetStringOpt(arg.Key), arg.Choices, nil, 3, arg.Description) %}
+    {%- endswitch -%}
+  {%- endfor -%}
+{% endstripspace %}{% endfunc %}
