@@ -83,7 +83,7 @@
 {% func settingsLink(href string, icon string, title string, description string, ps *cutil.PageState) %}{% stripspace %}
   <hr class="clear" />
   <div class="mts ml">
-    <a href="{%s href %}"><strong>{%s title %}</strong></a>
+    <a href="{%s href %}">{%= components.SVGInline(icon, 16, ps) %}{% space %}<strong>{%s title %}</strong></a>
     <div><em>{%s= description %}</em></div>
   </div>
 {% endstripspace %}{% endfunc %}

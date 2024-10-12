@@ -1,5 +1,6 @@
 {% import (
   "fmt"
+  "net/http"
 
   "{{{ .Package }}}/app"
   "{{{ .Package }}}/app/controller/cutil"
@@ -32,14 +33,17 @@
 </nav>{% endfunc %}
 
 {% func NavItem(link string, title string, icon string, description string, last bool, ps *cutil.PageState) %}{% stripspace %}
-  {% if link != "" || last %}
-  {%- code extra := util.Choose(description == "", "", fmt.Sprintf(" title=%q", description)) -%}
-  <a class="link{% if last %}{% space %}last{% endif %}" href="{%s link %}"{%s= extra %}>
+  {% code shouldLink := link != "" || (last && ps.Method == http.MethodGet) %}
+  {% if shouldLink %}
+    {%- code extra := util.Choose(description == "", "", fmt.Sprintf(" title=%q", description)) -%}
+    <a class="link{% if last %}{% space %}last{% endif %}" href="{%s link %}"{%s= extra %}>
   {% endif %}
+
   <span>{%= components.SVGBreadcrumb(icon, ps) %}</span>
   <span class="nav-item-title">{%s title %}</span>
-  {% if link != "" || last %}
-  </a>
+
+  {% if shouldLink %}
+    </a>
   {% endif %}
 {% endstripspace %}{% endfunc %}
 
