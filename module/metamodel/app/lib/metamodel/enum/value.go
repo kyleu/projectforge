@@ -67,8 +67,8 @@ func (x *Value) UnmarshalJSON(data []byte) error {
 		x.Simple = false
 		return nil
 	}
-	str := ""
-	if err := util.FromJSON(data, &str); err != nil {
+	str, err := util.FromJSONString(data)
+	if err != nil {
 		return err
 	}
 	x.Key = str

@@ -26,8 +26,7 @@ func (s *Service) loadExportArgs(fs filesystem.FileLoader, acronyms []string, lo
 	}
 	if exportCfgPath := filepath.Join(exportPath, "config.json"); fs.Exists(exportCfgPath) {
 		if cfg, err := fs.ReadFile(exportCfgPath); err == nil {
-			cfgMap := util.ValueMap{}
-			err = util.FromJSON(cfg, &cfgMap)
+			cfgMap, err := util.FromJSONMap(cfg)
 			if err != nil {
 				return nil, errors.Wrap(err, "invalid export config")
 			}
@@ -37,8 +36,7 @@ func (s *Service) loadExportArgs(fs filesystem.FileLoader, acronyms []string, lo
 	}
 	if groupCfgPath := filepath.Join(exportPath, "groups.json"); fs.Exists(groupCfgPath) {
 		if grpFile, err := fs.ReadFile(groupCfgPath); err == nil {
-			grps := model.Groups{}
-			err = util.FromJSON(grpFile, &grps)
+			grps, err := util.FromJSONObj[model.Groups](grpFile)
 			if err != nil {
 				return nil, errors.Wrap(err, "invalid group config")
 			}
@@ -92,13 +90,12 @@ func getEnums(exportPath string, fs filesystem.FileLoader, logger util.Logger) (
 		if err != nil {
 			return nil, nil, errors.Wrapf(err, "unable to read export enum file from [%s]", fn)
 		}
-		m := &enum.Enum{}
-		err = util.FromJSON(content, m)
+		e, err := util.FromJSONObj[*enum.Enum](content)
 		if err != nil {
 			return nil, nil, errors.Wrapf(err, "unable to read export enum JSON from [%s]", fn)
 		}
-		enums = append(enums, m)
-		enumFiles[m.Name] = content
+		enums = append(enums, e)
+		enumFiles[e.Name] = content
 	}
 	return enumFiles, enums, nil
 }
@@ -117,8 +114,7 @@ func getModels(exportPath string, fs filesystem.FileLoader, logger util.Logger) 
 		if err != nil {
 			return nil, nil, errors.Wrapf(err, "unable to read export model file from [%s]", fn)
 		}
-		m := &model.Model{}
-		err = util.FromJSON(content, m)
+		m, err := util.FromJSONObj[*model.Model](content)
 		if err != nil {
 			return nil, nil, errors.Wrapf(err, "unable to read export model JSON from [%s]", fn)
 		}
@@ -155,8 +151,7 @@ func getJSONModels(cfg util.ValueMap, groups model.Groups, fs filesystem.FileLoa
 		if err != nil {
 			return nil, nil, errors.Wrapf(err, "can't read file [%s]", fn)
 		}
-		df := &data.File{}
-		err = util.FromJSON(x, df)
+		df, err := util.FromJSONObj[*data.File](x)
 		if err != nil {
 			return nil, nil, errors.Wrapf(err, "unable to parse JSON data file at [%s]", fn)
 		}

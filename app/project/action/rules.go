@@ -40,8 +40,7 @@ func onRules(pm *PrjAndMods) *Result {
 	if err != nil {
 		return ret.WithError(err)
 	}
-	rules := map[string]string{}
-	err = util.FromJSON(b, &rules)
+	rules, err := util.FromJSONObj[map[string]string](b)
 	if err != nil {
 		return ret.WithError(err)
 	}

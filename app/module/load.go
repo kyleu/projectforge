@@ -73,8 +73,7 @@ func (s *Service) load(ctx context.Context, key string, pth string, url string, 
 		return nil, errors.Wrapf(err, "unable to read [%s]", configFilename)
 	}
 
-	ret := &Module{}
-	err = util.FromJSON(b, ret)
+	ret, err := util.FromJSONObj[*Module](b)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to parse [%s] as module with key [%s]", configFilename, key)
 	}

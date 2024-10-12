@@ -62,8 +62,7 @@ func loadAssetMap(ctx context.Context, logger util.Logger) error {
 	if rsp.StatusCode != 200 {
 		return errors.Errorf("release asset [%s] returned status [%d]", assetURL, rsp.StatusCode)
 	}
-	x := &ghRsp{}
-	err = util.FromJSON(b, &x)
+	x, err := util.FromJSONObj[*ghRsp](b)
 	if err != nil {
 		return errors.Wrapf(err, "release asset at [%s] returned invalid JSON", assetURL)
 	}

@@ -49,8 +49,7 @@ func (s *Service) getAdditional(fs filesystem.FileLoader, createIfMissing bool, 
 			return nil, false
 		}
 	}
-	var additional []string
-	err = util.FromJSON(additionalContent, &additional)
+	additional, err := util.FromJSONObj[[]string](additionalContent)
 	if err != nil {
 		logger.Warnf("unable to parse additional projects from [%s]: %+v", s.getAdditionalFilename(fs), err)
 	}

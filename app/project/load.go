@@ -42,8 +42,7 @@ func (s *Service) load(path string) (json.RawMessage, *Project, error) {
 		return nil, nil, err
 	}
 
-	ret := &Project{}
-	err = util.FromJSON(b, &ret)
+	ret, err := util.FromJSONObj[*Project](b)
 	if err != nil {
 		_, r := util.StringSplitPath(path)
 		if r == "." || r == "" {
@@ -79,8 +78,7 @@ func (s *Service) loadModuleConfig(fs filesystem.FileLoader) (util.ValueMap, err
 	var ret util.ValueMap
 	if exportCfgPath := filepath.Join(dbuiPath, "config.json"); fs.Exists(exportCfgPath) {
 		if cfg, err := fs.ReadFile(exportCfgPath); err == nil {
-			cfgMap := util.ValueMap{}
-			err = util.FromJSON(cfg, &cfgMap)
+			cfgMap, err := util.FromJSONMap(cfg)
 			if err != nil {
 				return nil, errors.Wrap(err, "invalid databaseui config")
 			}

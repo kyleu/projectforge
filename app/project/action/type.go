@@ -56,8 +56,8 @@ func (t *Type) MarshalJSON() ([]byte, error) {
 }
 
 func (t *Type) UnmarshalJSON(data []byte) error {
-	var s string
-	if err := util.FromJSON(data, &s); err != nil {
+	s, err := util.FromJSONString(data)
+	if err != nil {
 		return err
 	}
 	x := TypeFromString(s)

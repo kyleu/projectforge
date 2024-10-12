@@ -14,8 +14,7 @@ func ParseArray(r any, path string, allowEmpty bool, coerce bool) ([]any, error)
 		if strings.TrimSpace(t) == "" {
 			return nil, nil
 		}
-		var ret []any
-		err := FromJSON([]byte(t), &ret)
+		ret, err := FromJSONObj[[]any]([]byte(t))
 		if err != nil {
 			if coerce {
 				return lo.ToAnySlice(StringSplitAndTrim(t, ",")), nil
@@ -27,8 +26,7 @@ func ParseArray(r any, path string, allowEmpty bool, coerce bool) ([]any, error)
 		if len(t) == 0 {
 			return nil, nil
 		}
-		var ret []any
-		err := FromJSON(t, &ret)
+		ret, err := FromJSONObj[[]any](t)
 		if err != nil {
 			if coerce {
 				return lo.ToAnySlice(StringSplitAndTrim(string(t), ",")), nil

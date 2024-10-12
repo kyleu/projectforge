@@ -36,8 +36,7 @@ func ProjectExportConfigSave(w http.ResponseWriter, r *http.Request) {
 		}
 
 		cfgJSON := frm.GetStringOpt("cfg")
-		cfg := util.ValueMap{}
-		err = util.FromJSON([]byte(cfgJSON), &cfg)
+		cfg, err := util.FromJSONMap([]byte(cfgJSON))
 		if err != nil {
 			return "", err
 		}

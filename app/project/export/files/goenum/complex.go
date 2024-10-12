@@ -56,8 +56,8 @@ func structComplex(e *enum.Enum, g *golang.File) []*golang.Block {
 
 	fnJSONInBlock := golang.NewBlock(e.Proper()+".UnmarshalJSON", "method")
 	fnJSONInBlock.WF("func (%s *%s) UnmarshalJSON(data []byte) error {", e.FirstLetter(), e.Proper())
-	fnJSONInBlock.W("\tvar key string")
-	fnJSONInBlock.W("\tif err := util.FromJSON(data, &key); err != nil {")
+	fnJSONInBlock.W("\tkey, err := util.FromJSONString(data)")
+	fnJSONInBlock.W("\tif err != nil {")
 	fnJSONInBlock.W("\t\treturn err")
 	fnJSONInBlock.W("\t}")
 	fnJSONInBlock.WF("\t*%s = All%s.Get(key, nil)", e.FirstLetter(), e.ProperPlural())

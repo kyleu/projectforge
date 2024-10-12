@@ -13,8 +13,8 @@ import (
 
 func Derive(name string, pkg string, content string, logger util.Logger) Result {
 	ret := Result{}
-	var js any
-	if err := util.FromJSON([]byte(content), &js); err == nil {
+	js, err := util.FromJSONAny([]byte(content))
+	if err == nil {
 		return deriveJSON(name, pkg, js, ret, logger)
 	}
 	if st, _ := os.Stat(content); st != nil {

@@ -37,8 +37,7 @@ func ProjectExportGroupsSave(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		j := frm.GetStringOpt("groups")
-		g := model.Groups{}
-		err = util.FromJSON([]byte(j), &g)
+		g, err := util.FromJSONObj[model.Groups]([]byte(j))
 		if err != nil {
 			return "", err
 		}

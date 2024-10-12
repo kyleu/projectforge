@@ -37,8 +37,8 @@ func (x *Format) MarshalJSON() ([]byte, error) {
 }
 
 func (x *Format) UnmarshalJSON(data []byte) error {
-	str := ""
-	if err := util.FromJSON(data, &str); err != nil {
+	str, err := util.FromJSONString(data)
+	if err != nil {
 		return err
 	}
 	curr := AllFormats.Get(str, nil)

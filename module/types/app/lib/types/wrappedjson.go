@@ -40,63 +40,39 @@ func (x *Wrapped) UnmarshalJSON(data []byte) error {
 	var t Type
 	switch wu.K {
 	case KeyAny:
-		tgt := &Any{}
-		err = util.FromJSON(wu.T, &tgt)
-		t = tgt
+		t, err = util.FromJSONObj[*Any](wu.T)
 	case KeyBit:
-		tgt := &Bit{}
-		err = util.FromJSON(wu.T, &tgt)
-		t = tgt
+		t, err = util.FromJSONObj[*Bit](wu.T)
 	case KeyBool:
-		tgt := &Bool{}
-		err = util.FromJSON(wu.T, &tgt)
-		t = tgt
+		t, err = util.FromJSONObj[*Bool](wu.T)
 	case KeyByte:
-		tgt := &Byte{}
-		err = util.FromJSON(wu.T, &tgt)
-		t = tgt
+		t, err = util.FromJSONObj[*Byte](wu.T)
 	case KeyChar:
-		tgt := &Char{}
-		err = util.FromJSON(wu.T, &tgt)
-		t = tgt
+		t, err = util.FromJSONObj[*Char](wu.T)
 	case KeyDate:
-		tgt := &Date{}
-		err = util.FromJSON(wu.T, &tgt)
-		t = tgt
+		t, err = util.FromJSONObj[*Date](wu.T)
 	case KeyEnum:
-		tgt := &Enum{}
-		err = util.FromJSON(wu.T, &tgt)
-		t = tgt
+		t, err = util.FromJSONObj[*Enum](wu.T)
 	case KeyEnumValue:
-		tgt := &EnumValue{}
-		err = util.FromJSON(wu.T, &tgt)
-		t = tgt
+		t, err = util.FromJSONObj[*EnumValue](wu.T)
 	case KeyError:
-		tgt := &Error{}
-		err = util.FromJSON(wu.T, &tgt)
-		t = tgt
+		t, err = util.FromJSONObj[*Error](wu.T)
 	case KeyFloat:
-		tgt := &Float{}
-		err = util.FromJSON(wu.T, &tgt)
-		t = tgt
+		t, err = util.FromJSONObj[*Float](wu.T)
 	case KeyInt:
-		tgt := &Int{}
-		err = util.FromJSON(wu.T, &tgt)
-		t = tgt
+		t, err = util.FromJSONObj[*Int](wu.T)
 	case KeyJSON:
-		tgt := &JSON{}
-		err = util.FromJSON(wu.T, &tgt)
-		t = tgt
+		t, err = util.FromJSONObj[*JSON](wu.T)
 	case KeyList:
-		tgt := &List{}
-		err = util.FromJSON(wu.T, &tgt)
+		var tgt *List
+		tgt, err = util.FromJSONObj[*List](wu.T)
 		if tgt.V == nil {
 			tgt.V = NewAny()
 		}
 		t = tgt
 	case KeyMap:
-		tgt := &Map{}
-		err = util.FromJSON(wu.T, &tgt)
+		var tgt *Map
+		tgt, err = util.FromJSONObj[*Map](wu.T)
 		if tgt.K == nil {
 			tgt.K = NewString()
 		}
@@ -105,73 +81,53 @@ func (x *Wrapped) UnmarshalJSON(data []byte) error {
 		}
 		t = tgt
 	case KeyMethod:
-		tgt := &Method{}
-		err = util.FromJSON(wu.T, &tgt)
+		var tgt *Method
+		tgt, err = util.FromJSONObj[*Method](wu.T)
 		if tgt.Ret == nil {
 			tgt.Ret = NewAny()
 		}
 		t = tgt
 	case KeyNil:
-		tgt := &Nil{}
-		err = util.FromJSON(wu.T, &tgt)
-		t = tgt
+		t, err = util.FromJSONObj[*Nil](wu.T)
 	case KeyOption:
-		tgt := &Option{}
-		err = util.FromJSON(wu.T, &tgt)
-		if tgt.V == nil {
+		var tgt *Option
+		tgt, err = util.FromJSONObj[*Option](wu.T)
+		if tgt != nil && tgt.V == nil {
 			tgt.V = NewAny()
 		}
 		t = tgt
 	case KeyRange:
-		tgt := &Range{}
-		err = util.FromJSON(wu.T, &tgt)
-		if tgt.V == nil {
+		var tgt *Range
+		tgt, err = util.FromJSONObj[*Range](wu.T)
+		if tgt != nil && tgt.V == nil {
 			tgt.V = NewAny()
 		}
 		t = tgt
 	case KeyReference:
-		tgt := &Reference{}
-		err = util.FromJSON(wu.T, &tgt)
-		t = tgt
+		t, err = util.FromJSONObj[*Reference](wu.T)
 	case KeySet:
-		tgt := &Set{}
-		err = util.FromJSON(wu.T, &tgt)
-		if tgt.V == nil {
+		var tgt *Set
+		tgt, err = util.FromJSONObj[*Set](wu.T)
+		if tgt != nil && tgt.V == nil {
 			tgt.V = NewAny()
 		}
 		t = tgt
 	case KeyString:
-		tgt := &String{}
-		err = util.FromJSON(wu.T, &tgt)
-		t = tgt
+		t, err = util.FromJSONObj[*String](wu.T)
 	case KeyTime:
-		tgt := &Time{}
-		err = util.FromJSON(wu.T, &tgt)
-		t = tgt
+		t, err = util.FromJSONObj[*Time](wu.T)
 	case KeyTimestamp:
-		tgt := &Timestamp{}
-		err = util.FromJSON(wu.T, &tgt)
-		t = tgt
+		t, err = util.FromJSONObj[*Timestamp](wu.T)
 	case KeyTimestampZoned:
-		tgt := &TimestampZoned{}
-		err = util.FromJSON(wu.T, &tgt)
-		t = tgt
+		t, err = util.FromJSONObj[*TimestampZoned](wu.T)
 	case KeyUnknown:
-		tgt := &Unknown{}
-		err = util.FromJSON(wu.T, &tgt)
-		t = tgt
+		t, err = util.FromJSONObj[*Unknown](wu.T)
 	case KeyUUID:
-		tgt := &UUID{}
-		err = util.FromJSON(wu.T, &tgt)
-		t = tgt
+		t, err = util.FromJSONObj[*UUID](wu.T)
 	case KeyValueMap:
-		tgt := &ValueMap{}
-		err = util.FromJSON(wu.T, &tgt)
-		t = tgt
+		t, err = util.FromJSONObj[*ValueMap](wu.T)
 	case KeyXML:
-		tgt := &XML{}
-		err = util.FromJSON(wu.T, &tgt)
-		t = tgt
+		t, err = util.FromJSONObj[*XML](wu.T)
 	default:
 		t = &Unknown{X: "unmarshal:" + wu.K}
 	}

@@ -40,8 +40,7 @@ func loadRootProject(r *doctor.Result) (*project.Project, filesystem.FileLoader,
 	if err != nil {
 		return nil, nil, r.WithError(doctor.NewError("missing", "unable to read project from [%s]", dir))
 	}
-	p := &project.Project{}
-	err = util.FromJSON(b, p)
+	p, err := util.FromJSONObj[*project.Project](b)
 	if err != nil {
 		return nil, nil, r.WithError(doctor.NewError("invalid", "unable to parse project JSON from [%s]", dir))
 	}

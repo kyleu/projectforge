@@ -106,8 +106,7 @@ func loadProfile(session util.ValueMap) (*user.Profile, error) {
 		}
 		s = util.ToJSON(m)
 	}
-	p := &user.Profile{}
-	err := util.FromJSON([]byte(s), p)
+	p, err := util.FromJSONObj[*user.Profile]([]byte(s))
 	if err != nil {
 		return nil, err
 	}

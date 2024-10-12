@@ -54,8 +54,8 @@ func (s *Status) MarshalJSON() ([]byte, error) {
 }
 
 func (s *Status) UnmarshalJSON(data []byte) error {
-	var str string
-	if err := util.FromJSON(data, &s); err != nil {
+	str, err := util.FromJSONString(data)
+	if err != nil {
 		return err
 	}
 	x := StatusFromString(str)

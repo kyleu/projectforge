@@ -29,8 +29,7 @@ func exportModelFromForm(frm util.ValueMap, m *model.Model) error {
 	m.Description = get("description", m.Description)
 	m.Icon = get("icon", m.Icon)
 
-	ords := filter.Orderings{}
-	err := util.FromJSON([]byte(get("ordering", util.ToJSON(m.Ordering))), &ords)
+	ords, err := util.FromJSONObj[filter.Orderings]([]byte(get("ordering", util.ToJSON(m.Ordering))))
 	if err != nil {
 		return errors.Wrap(err, "invalid ordering")
 	}
@@ -47,54 +46,40 @@ func exportModelFromForm(frm util.ValueMap, m *model.Model) error {
 	m.TableOverride = get("tableOverride", m.TableOverride)
 	m.RouteOverride = get("routeOverride", m.RouteOverride)
 
-	cfg := util.ValueMap{}
-	err = util.FromJSON([]byte(get("config", util.ToJSON(m.Config))), &cfg)
+	m.Config, err = util.FromJSONMap([]byte(get("config", util.ToJSON(m.Config))))
 	if err != nil {
 		return errors.Wrap(err, "invalid config")
 	}
-	m.Config = cfg
 
-	cols := model.Columns{}
-	err = util.FromJSON([]byte(get("columns", util.ToJSON(m.Columns))), &cols)
+	m.Columns, err = util.FromJSONObj[model.Columns]([]byte(get("columns", util.ToJSON(m.Columns))))
 	if err != nil {
 		return errors.Wrap(err, "invalid columns")
 	}
-	m.Columns = cols
 
-	rels := model.Relations{}
-	err = util.FromJSON([]byte(get("relations", util.ToJSON(m.Relations))), &rels)
+	m.Relations, err = util.FromJSONObj[model.Relations]([]byte(get("relations", util.ToJSON(m.Relations))))
 	if err != nil {
 		return errors.Wrap(err, "invalid relations")
 	}
-	m.Relations = rels
 
-	idxs := model.Indexes{}
-	err = util.FromJSON([]byte(get("indexes", util.ToJSON(m.Indexes))), &idxs)
+	m.Indexes, err = util.FromJSONObj[model.Indexes]([]byte(get("indexes", util.ToJSON(m.Indexes))))
 	if err != nil {
 		return errors.Wrap(err, "invalid indexes")
 	}
-	m.Indexes = idxs
 
-	var sd [][]any
-	err = util.FromJSON([]byte(get("seedData", util.ToJSON(m.SeedData))), &sd)
+	m.SeedData, err = util.FromJSONObj[[][]any]([]byte(get("seedData", util.ToJSON(m.SeedData))))
 	if err != nil {
 		return errors.Wrap(err, "invalid seed data")
 	}
-	m.SeedData = sd
 
-	links := model.Links{}
-	err = util.FromJSON([]byte(get("links", util.ToJSON(m.Links))), &links)
+	m.Links, err = util.FromJSONObj[model.Links]([]byte(get("links", util.ToJSON(m.Links))))
 	if err != nil {
 		return errors.Wrap(err, "invalid links")
 	}
-	m.Links = links
 
-	imps := model.Imports{}
-	err = util.FromJSON([]byte(get("imps", util.ToJSON(m.Imports))), &imps)
+	m.Imports, err = util.FromJSONObj[model.Imports]([]byte(get("imps", util.ToJSON(m.Imports))))
 	if err != nil {
 		return errors.Wrap(err, "invalid imports")
 	}
-	m.Imports = imps
 
 	return nil
 }
@@ -141,8 +126,7 @@ func exportEnumFromForm(frm util.ValueMap, e *enum.Enum) error {
 		return err
 	}
 
-	cfg := util.ValueMap{}
-	err = util.FromJSON([]byte(get("config", util.ToJSON(e.Config))), &cfg)
+	cfg, err := util.FromJSONMap([]byte(get("config", util.ToJSON(e.Config))))
 	if err != nil {
 		return errors.Wrap(err, "invalid config")
 	}
