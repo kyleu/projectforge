@@ -1,0 +1,31 @@
+{% import (
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/lib/task"
+  "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/components/edit"
+  "projectforge.dev/projectforge/views/layout"
+) %}
+
+{% code type Detail struct {
+  layout.Basic
+  Task *task.Task
+  Result *task.Result
+} %}
+
+{% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>{%= components.SVGIcon(p.Task.IconSafe(), ps) %} {%s p.Task.TitleSafe() %}</h3>
+    {%- code
+      resArgs := util.ValueMap{}
+      if p.Result != nil {
+        resArgs = p.Result.Args
+      }
+    -%}
+    {%= edit.TableEditor("provider", p.Task.Args, resArgs, p.Task.WebPath()+"/run", "get", "Run") %}
+  </div>
+  {%- if p.Result != nil -%}
+  {%= Result(as, p.Result, ps) %}
+  {%- endif -%}
+{% endfunc %}

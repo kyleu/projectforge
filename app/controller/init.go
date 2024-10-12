@@ -11,6 +11,7 @@ import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/gql"
+	"projectforge.dev/projectforge/app/lib/task"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -19,6 +20,13 @@ var allowedRoutes = []string{"/about", "/admin", "/testbed", "/welcome"}
 
 func initApp(_ context.Context, as *app.State, logger util.Logger) error {
 	_, err := gql.NewSchema(as, logger)
+	if err != nil {
+		return err
+	}
+
+	t := task.NewTask("testbed", "", "utility", "star", "Who knows what it'll do?")
+	t.Args = util.FieldDescs{{Key: "action", Title: "Action"}}
+	err = as.Services.Task.RegisterTask(t)
 	if err != nil {
 		return err
 	}

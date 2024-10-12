@@ -22,6 +22,7 @@ The following modules were used to build this project:
 - [process](./doc/module/process.md)
 - [richedit](./doc/module/richedit.md)
 - [search](./doc/module/search.md)
+- [task](./doc/module/task.md)
 - [themecatalog](./doc/module/themecatalog.md)
 - [types](./doc/module/types.md)
 - [upgrade](./doc/module/upgrade.md)

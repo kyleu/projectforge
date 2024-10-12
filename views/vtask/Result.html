@@ -1,0 +1,73 @@
+{% import (
+  "strings"
+
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/lib/task"
+  "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/components/view"
+) %}
+
+{% func Result(as *app.State, res *task.Result, ps *cutil.PageState) %}
+  {%- if res.Error != "" -%}
+  <div class="card">
+    <h3>{%= components.SVGIcon("error", ps) %} Error</h3>
+    <div class="mt">
+      <pre class="error">Error: {%s res.Error %}</pre>
+    </div>
+  </div>
+  {%- endif -%}
+
+  {%- if len(res.Logs) > 0 -%}
+  <div class="card">
+    <h3>{%= components.SVGIcon("file", ps) %} {%s res.Task.TitleSafe() %} Logs</h3>
+    <div class="mt">{%= components.Terminal("console-list", strings.Join(res.Logs, "\n")) %}</div>
+  </div>
+  {%- endif -%}
+
+  <div class="card">
+    <div class="right">
+      {%s util.MicrosToMillis(res.Elapsed) %}
+      <a href="#modal-result-{%s res.ID.String() %}" title="JSON"><button>{%= components.SVGButton(`code`, ps) %}</button></a>
+    </div>
+    <h3>{%= components.SVGIcon(res.Task.IconSafe(), ps) %} {%s res.Task.TitleSafe() %} Result</h3>
+    <div><em>{%= view.TimestampRelative(&res.Started, false) %}</em></div>
+    <div class="mt">
+      {%= renderResult(res, as, ps) %}
+    </div>
+  </div>
+  {%= components.JSONModal("result-" + res.ID.String(), "Result [" + res.String() + "] JSON", res, 1) %}
+{% endfunc %}
+
+{% func ResultSummary(as *app.State, res *task.Result, ps *cutil.PageState) %}
+  {%- if res.Error != "" -%}
+  <div class="card">
+    <h3>{%= components.SVGIcon("error", ps) %} Error</h3>
+    <div class="mt">
+      <pre class="error">Error: {%s res.Error %}</pre>
+    </div>
+  </div>
+  {%- endif -%}
+
+  <div class="card">
+    <div class="right">
+      {%s util.MicrosToMillis(res.Elapsed) %}
+      <a href="#modal-result" title="JSON"><button>{%= components.SVGButton(`code`, ps) %}</button></a>
+    </div>
+    <h3>{%= components.SVGIcon("cog", ps) %} Result</h3>
+    <div><em>{%= view.TimestampRelative(&res.Started, false) %}</em></div>
+    <div class="mt">
+      {%= renderResult(res, as, ps) %}
+    </div>
+  </div>
+  {%= components.JSONModal("result", "Result [" + res.String() + "] JSON", res, 1) %}
+{% endfunc %}
+
+{% func renderResult(res *task.Result, as *app.State, ps *cutil.PageState) %}{% stripspace %}
+  {%- if res.Data == nil -%}
+    <em>no data</em>
+  {%- else -%}
+    {%= components.JSON(res.Data) %}
+  {%- endif -%}
+{% endstripspace %}{% endfunc %}

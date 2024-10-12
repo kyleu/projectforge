@@ -1,0 +1,43 @@
+{% import (
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/lib/task"
+  "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/layout"
+) %}
+
+{% code type List struct {
+  layout.Basic
+  Tasks task.Tasks
+} %}
+
+{% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>{%= components.SVGIcon(`task`, ps) %} Registered Tasks</h3>
+    <div class="overflow full-width">
+      <table class="mt expanded">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Key</th>
+            <th>Title</th>
+          </tr>
+        </thead>
+        <tbody>
+          {%- if len(p.Tasks) == 0 -%}
+          <tr>
+            <td colspan="3"><em>no tasks available</em></td>
+          </tr>
+          {%- endif -%}
+          {%- for _, t := range p.Tasks -%}
+          <tr>
+            <td class="shrink"><a href="{%s t.WebPath() %}">{%= components.SVGInline(t.IconSafe(), 16, ps) %}</a></td>
+            <td class="shrink"><a href="{%s t.WebPath() %}">{%s t.Key %}</a></td>
+            <td>{%s t.TitleSafe() %}</td>
+          </tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endfunc %}

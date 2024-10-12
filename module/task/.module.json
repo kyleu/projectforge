@@ -1,0 +1,10 @@
+{
+  "name": "Task Engine",
+  "icon": "task",
+  "description": "Provides an engine for executing and monitoring tasks",
+  "authorName": "Kyle U",
+  "authorEmail": "kyle@kyleu.com",
+  "license": "CC0",
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/task",
+  "requires": ["process"]
+}
