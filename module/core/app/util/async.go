@@ -1,6 +1,7 @@
 package util
 
 import (
+	"fmt"
 	"sync"
 	"time"
 
@@ -8,80 +9,107 @@ import (
 	"github.com/samber/lo"
 )
 
-func AsyncCollect[T any, R any](items []T, f func(x T) (R, error)) ([]R, []error) {
+func AsyncCollect[T any, R any](items []T, f func(x T) (R, error), loggers ...Logger) ([]R, []error) {
 	ret := make([]R, 0, len(items))
 	var errs []error
 	mu := sync.Mutex{}
+	size := len(items)
 	wg := sync.WaitGroup{}
-	wg.Add(len(items))
+	wg.Add(size)
+	var processed int
+
 	lo.ForEach(items, func(x T, _ int) {
 		i := x
 		go func() {
+			defer wg.Done()
 			r, err := f(i)
 			mu.Lock()
+			defer mu.Unlock()
+			processed++
 			if err == nil {
 				ret = append(ret, r)
 			} else {
 				errs = append(errs, errors.Wrapf(err, "error running async function for item [%v]", i))
 			}
-			mu.Unlock()
-			wg.Done()
+			for _, logger := range loggers {
+				logger.Debugf("processed [%d/%d] items", processed, size)
+			}
 		}()
 	})
 	wg.Wait()
 	return ret, errs
 }
 
-func AsyncCollectMap[T any, K comparable, R any](items []T, k func(x T) K, f func(x T) (R, error)) (map[K]R, map[K]error) {
+func AsyncCollectMap[T any, K comparable, R any](items []T, k func(x T) K, f func(x T) (R, error), loggers ...Logger) (map[K]R, map[K]error) {
 	ret := make(map[K]R, len(items))
 	errs := map[K]error{}
 	mu := sync.Mutex{}
+	size := len(items)
 	wg := sync.WaitGroup{}
-	wg.Add(len(items))
+	wg.Add(size)
+	var processed int
+
 	lo.ForEach(items, func(x T, _ int) {
 		i := x
 		go func() {
+			defer wg.Done()
 			key := k(i)
 			r, err := f(i)
 			mu.Lock()
+			defer mu.Unlock()
+			processed++
 			if err == nil {
 				ret[key] = r
 			} else {
 				errs[key] = errors.Wrapf(err, "error running async function for item [%v]", key)
 			}
-			mu.Unlock()
-			wg.Done()
+			for _, logger := range loggers {
+				logger.Debugf("processed [%d/%d] items", processed, size)
+			}
 		}()
 	})
 	wg.Wait()
 	return ret, errs
 }
 
-func AsyncRateLimit[T any, R any](items []T, f func(x T) (R, error), maxConcurrent int, timeout time.Duration) ([]R, []error) {
+func AsyncRateLimit[T any, R any](key string, items []T, f func(x T) (R, error), maxConcurrent int, timeout time.Duration, loggers ...Logger) ([]R, []error) {
 	ret := make([]R, 0, len(items))
 	errs := make([]error, 0)
 	mu := sync.Mutex{}
+	size := len(items)
 	wg := sync.WaitGroup{}
+	wg.Add(size)
+	var processed int
+	var started int
+	prefix := fmt.Sprintf("[%s] ", key)
+	log := func(msg string, args ...any) {
+		for _, logger := range loggers {
+			logger.Debugf(prefix+msg, args...)
+		}
+	}
 
 	limit := make(chan struct{}, maxConcurrent)
 	defer close(limit)
+	log("starting to process [%d] items, [%d] at once)", size, maxConcurrent)
 
 	for idx, item := range items {
 		select {
 		case limit <- struct{}{}:
-			wg.Add(1)
 			go func(item T, idx int) {
 				defer wg.Done()
 				defer func() { <-limit }()
-
+				started++
+				log("starting to process item [%d/%d]...", started, size)
 				r, err := f(item)
 				mu.Lock()
 				defer mu.Unlock()
+				processed++
 				if err == nil {
 					ret = append(ret, r)
 				} else {
 					errs = append(errs, errors.Wrapf(err, "error running async function for item [%v]", item))
 				}
+				log("processed [%d/%d] items", processed, size)
 			}(item, idx)
 		case <-time.After(timeout):
 			errs = append(errs, errors.Errorf("job timed out after [%v]", timeout))

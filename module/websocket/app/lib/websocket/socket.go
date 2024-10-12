@@ -64,9 +64,6 @@ func (s *Service) WriteChannel(message *Message, logger util.Logger, except ...u
 		return nil
 	}
 	json := util.ToJSON(message)
-	if size := len(conns.ConnIDs) - len(except); size > 0 {
-		logger.Debugf("sending message [%v::%v] to [%v] connections", message.Channel, message.Cmd, size)
-	}
 	lo.ForEach(conns.ConnIDs, func(conn uuid.UUID, _ int) {
 		if !lo.Contains(except, conn) {
 			connID := conn
@@ -138,8 +135,7 @@ func ReadSocketLoop(connID uuid.UUID, sock *websocket.Conn, onMessage func(m *Me
 			}
 			return errors.Wrapf(err, "error processing socket read loop for connection [%s]", connID.String())
 		}
-		m := &Message{}
-		err = util.FromJSON(message, m)
+		m, err := util.FromJSONObj[*Message](message)
 		if err != nil {
 			return errors.Wrap(err, "error decoding websocket message")
 		}

@@ -9,6 +9,9 @@ import (
 var defaultIgnore = []string{".DS_Store$", "^.git/", "^.idea/", "^build/", "^client/node_modules", ".html.go$", ".sql.go$"}
 
 func buildIgnore(ign []string) []string {
+	if len(ign) == 1 && ign[0] == "-" {
+		return nil
+	}
 	ret := util.NewStringSlice(append([]string{}, defaultIgnore...))
 	ret.Push(ign...)
 	return ret.Slice

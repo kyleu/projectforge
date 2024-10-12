@@ -106,6 +106,13 @@ func ArrayRemoveNil[T any](x []*T) []*T {
 	})
 }
 
+func ArrayRemoveEmpty[T comparable](x []T) []T {
+	var check T
+	return lo.Reject(x, func(el T, _ int) bool {
+		return el == check
+	})
+}
+
 func ArrayDereference[T any](x []*T) []T {
 	return lo.Map(x, func(el *T, _ int) T {
 		return lo.FromPtr(el)

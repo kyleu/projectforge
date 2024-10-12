@@ -57,6 +57,29 @@ func (r *Result) DataStringArray(k string) []string {
 	return ret
 }
 
+func (r *Result) String() string {
+	ret := r.Status
+	if branch := r.Data.GetStringOpt("branch"); branch != "" {
+		ret += "[" + branch + "]"
+	}
+	ahead := r.Data.GetStringOpt("commitsAhead")
+	behind := r.Data.GetStringOpt("commitsBehind")
+	if ahead != "" || behind != "" {
+		ret += " ("
+		if ahead != "" {
+			ret += ahead + " ahead"
+		}
+		if behind != "" {
+			if ahead != "" {
+				ret += ", "
+			}
+			ret += behind + " behind"
+		}
+		ret += ")"
+	}
+	return ret
+}
+
 func (r *Result) Strings() []string {
 	return []string{r.Project, r.Status, r.Data.String(), r.Error}
 }
