@@ -28,6 +28,14 @@ func (m ValueMap) Add(kvs ...any) {
 	}
 }
 
+func (m ValueMap) With(k string, v any) ValueMap {
+	if m == nil {
+		m = ValueMap{}
+	}
+	m[k] = v
+	return m
+}
+
 func (m ValueMap) Merge(args ...ValueMap) ValueMap {
 	ret := m.Clone()
 	lo.ForEach(args, func(arg ValueMap, _ int) {

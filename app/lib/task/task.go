@@ -59,8 +59,20 @@ func (t *Task) WebPath() string {
 func (t *Task) Clone() *Task {
 	return &Task{
 		Key: t.Key, Title: t.Title, Category: t.Category, Icon: t.Icon, Description: t.Description, Tags: t.Tags,
-		Fields: t.Fields, Dangerous: t.Dangerous, MaxConcurrent: t.MaxConcurrent,
+		Fields: t.Fields, Dangerous: t.Dangerous, WebURL: t.WebURL, MaxConcurrent: t.MaxConcurrent, fns: t.fns,
 	}
+}
+
+func (t *Task) WithFunction(fn TaskFn) *Task {
+	ret := t.Clone()
+	ret.fns = append(ret.fns, fn)
+	return ret
+}
+
+func (t *Task) WithoutFunctions(fn TaskFn) *Task {
+	ret := t.Clone()
+	t.fns = nil
+	return ret
 }
 
 func (t *Task) WithTags(tags []string) *Task {
@@ -85,7 +97,7 @@ func (t *Task) RunWithResult(ctx context.Context, res *Result, logger util.Logge
 			return res.CompleteError(errors.Wrapf(err, "unable to run task [%s]", t.Key))
 		}
 	}
-	return res.Complete("OK")
+	return res
 }
 
 func (t *Task) resultLogFn(logger util.Logger, fns ...exec.OutFn) ResultLogFn {
