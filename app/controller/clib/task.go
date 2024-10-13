@@ -52,14 +52,14 @@ func TaskRun(w http.ResponseWriter, r *http.Request) {
 		if t == nil {
 			return "", errors.Errorf("unable to find task [%s]", key)
 		}
-		args := cutil.QueryArgsMap(r.URL)
+		args, runner := argsAndRunner(r)
 		page := &vtask.Detail{Task: t, Args: args}
 		if args.GetBoolOpt("async") {
 			delete(args, "async")
 			page.SocketURL = t.WebPath() + "/start" + "?" + args.ToQueryString()
 			ps.SetTitleAndData(t.TitleSafe(), t)
 		} else {
-			ret := t.Run(ps.Context, args, ps.Logger)
+			ret := t.Run(ps.Context, runner, args, ps.Logger)
 			page.Result = ret
 			ps.SetTitleAndData(t.TitleSafe(), ret)
 		}
@@ -77,8 +77,7 @@ func TaskStart(w http.ResponseWriter, r *http.Request) {
 		if t == nil {
 			return "", errors.Errorf("unable to find task [%s]", key)
 		}
-		args := cutil.QueryArgsMap(r.URL)
-
+		args, runner := argsAndRunner(r)
 		ch := fmt.Sprintf("%s-%d", t.Key, util.RandomInt(1000))
 		id, err := as.Services.Socket.Upgrade(ps.Context, w, r, ch, ps.Profile, websocket.EchoHandler, ps.Logger)
 		if err != nil {
@@ -88,7 +87,7 @@ func TaskStart(w http.ResponseWriter, r *http.Request) {
 
 		fn := as.Services.Socket.Terminal(ch, ps.Logger)
 		go func() {
-			res := t.Run(ps.Context, args, ps.Logger, fn)
+			res := t.Run(ps.Context, runner, args, ps.Logger, fn)
 			html := vtask.ResultSummary(as, res, ps)
 			x := util.ValueMap{"result": res, "html": html}
 			_ = as.Services.Socket.WriteMessage(id, websocket.NewMessage(nil, ch, "complete", x), ps.Logger)
@@ -111,6 +110,16 @@ func TaskRemove(w http.ResponseWriter, r *http.Request) {
 		}
 		return controller.ReturnToReferrer("removed task ["+key+"]", "/admin/task", ps)
 	})
+}
+
+func argsAndRunner(r *http.Request) (util.ValueMap, string) {
+	args := cutil.QueryArgsMap(r.URL)
+	runner := args.GetStringOpt("runner")
+	if runner == "" {
+		runner = "ad-hoc"
+	}
+	args = args.WithoutKeys("runner")
+	return args, runner
 }
 
 func taskBC(t *task.Task, extra ...string) []string {

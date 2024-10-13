@@ -14,6 +14,7 @@ type ResultLogFn func(key string, data any)
 type Result struct {
 	ID       uuid.UUID     `json:"id"`
 	Task     *Task         `json:"task"`
+	Runner   string        `json:"runner,omitempty"`
 	Args     util.ValueMap `json:"args,omitempty"`
 	Started  time.Time     `json:"started,omitempty"`
 	Elapsed  int           `json:"elapsed,omitempty"`
@@ -27,12 +28,12 @@ type Result struct {
 	fns      []ResultLogFn
 }
 
-func NewResult(task *Task, args util.ValueMap, fns ...ResultLogFn) *Result {
-	return &Result{ID: util.UUID(), Task: task, Args: args, Started: time.Now(), Status: "ok", Metadata: util.ValueMap{}, fns: fns}
+func NewResult(task *Task, runner string, args util.ValueMap, fns ...ResultLogFn) *Result {
+	return &Result{ID: util.UUID(), Task: task, Runner: runner, Args: args, Started: time.Now(), Status: "ok", Metadata: util.ValueMap{}, fns: fns}
 }
 
-func CompletedResult(key string, task *Task, args util.ValueMap, data any, err error, logs ...string) *Result {
-	ret := NewResult(task, args)
+func CompletedResult(task *Task, runner string, args util.ValueMap, data any, err error, logs ...string) *Result {
+	ret := NewResult(task, runner, args)
 	ret.AddLogs(logs...)
 	ret.Complete(data, err)
 	return ret
@@ -56,12 +57,12 @@ func (r *Result) AddLogs(msgs ...string) {
 }
 
 func (r *Result) Complete(data any, errs ...error) *Result {
-	if data != nil {
-		r.Data = data
-	}
+	r.Data = data
 	if err := util.ErrorMerge(errs...); err != nil {
 		r.Error = err.Error()
 		r.Status = "error"
+	} else if r.Status == "" {
+		r.Status = "ok"
 	}
 	r.Elapsed = int(time.Since(r.Started).Microseconds())
 	r.Log("task [%s] completed in [%s]", r.Task.TitleSafe(), util.MicrosToMillis(r.Elapsed))
@@ -69,7 +70,7 @@ func (r *Result) Complete(data any, errs ...error) *Result {
 }
 
 func (r *Result) CompleteSimple(data any) *Result {
-	return r.Complete(data, nil)
+	return r.Complete(data)
 }
 
 func (r *Result) CompleteError(err error) *Result {
@@ -78,6 +79,18 @@ func (r *Result) CompleteError(err error) *Result {
 
 func (r *Result) EndTime() time.Time {
 	return r.Started.Add(time.Duration(r.Elapsed) * time.Microsecond)
+}
+
+func (r *Result) DataMap() util.ValueMap {
+	if r.Data == nil {
+		return nil
+	}
+	ret, err := util.ParseMap(r.Data, "", true)
+	if ret != nil && err == nil {
+		return ret
+	}
+	ret, _ = util.FromJSONMap(util.ToJSONBytes(r.Data, true))
+	return ret
 }
 
 func (r *Result) String() string {

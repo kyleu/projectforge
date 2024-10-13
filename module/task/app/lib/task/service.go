@@ -37,23 +37,23 @@ func (s *Service) RegisterTask(t *Task) error {
 	return nil
 }
 
-func (s *Service) Run(ctx context.Context, task *Task, args util.ValueMap, logger util.Logger, fns ...exec.OutFn) *Result {
+func (s *Service) Run(ctx context.Context, task *Task, runner string, args util.ValueMap, logger util.Logger, fns ...exec.OutFn) *Result {
 	ctx, span, logger := telemetry.StartSpan(context.Background(), "task:run:"+task.Key, logger)
 	defer span.Complete()
 
-	ret := task.Run(ctx, args, logger, fns...)
+	ret := task.Run(ctx, runner, args, logger, fns...)
 	//if err := s.SaveResult(task, logger); err != nil {
 	//	return ret.CompleteError(errors.Wrapf(err, "unable to save [%s] result for task [%s]", task.Key, task.ID))
 	//}
 	return ret
 }
 
-func (s *Service) RunAll(ctx context.Context, task *Task, argsSet []util.ValueMap, logger util.Logger, fns ...exec.OutFn) (Results, error) {
+func (s *Service) RunAll(ctx context.Context, task *Task, runner string, argsSet []util.ValueMap, logger util.Logger, fns ...exec.OutFn) (Results, error) {
 	call := func(args util.ValueMap) (*Result, error) {
 		if task == nil {
 			return nil, nil
 		}
-		return s.Run(ctx, task, args, logger, fns...), nil
+		return s.Run(ctx, task, runner, args, logger, fns...), nil
 	}
 	maxConcurrent := task.MaxConcurrent
 	if maxConcurrent == -1 {

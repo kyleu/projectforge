@@ -62,7 +62,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
         <tbody>
           `)
 //line views/vtask/Detail.html:27
-	edit.StreamTableEditorNoTable(qw422016, p.Task.Key, p.Task.Fields(), p.Args)
+	edit.StreamTableEditorNoTable(qw422016, p.Task.Key, p.Task.Fields, p.Args)
 //line views/vtask/Detail.html:27
 	qw422016.N().S(`
           <tr>

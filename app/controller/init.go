@@ -24,13 +24,11 @@ func initApp(_ context.Context, as *app.State, logger util.Logger) error {
 		return err
 	}
 	tf := func(ctx context.Context, res *task.Result, logger util.Logger) error {
-		res.Log("!!!!")
+		res.Log("Testbed!")
 		return nil
 	}
 	t := task.NewTask("testbed", "", "utility", "star", "Who knows what it'll do?", tf)
-	t.Fields = func() util.FieldDescs {
-		return util.FieldDescs{{Key: "action", Title: "Action", Choices: as.Services.Projects.Keys()}}
-	}
+	t.Fields = util.FieldDescs{{Key: "project", Title: "Project"}}
 	err = as.Services.Task.RegisterTask(t)
 	if err != nil {
 		return err
@@ -51,6 +49,7 @@ func initAppRequest(as *app.State, ps *cutil.PageState) error {
 			ps.ForceRedirect = "/welcome"
 		}
 	}
+	as.Services.Task.RegisteredTasks.Get("testbed").Fields[0].Choices = as.Services.Projects.Keys()
 	return nil
 }
 

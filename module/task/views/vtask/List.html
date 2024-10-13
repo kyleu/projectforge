@@ -15,10 +15,9 @@
   <div class="card">
     <h3>{%= components.SVGIcon(`task`, ps) %} Registered Tasks</h3>
     <div class="overflow full-width">
-      <table class="mt expanded">
+      <table class="mt min-200 expanded">
         <thead>
           <tr>
-            <th></th>
             <th>Key</th>
             <th>Title</th>
           </tr>
@@ -31,8 +30,7 @@
           {%- endif -%}
           {%- for _, t := range p.Tasks -%}
           <tr>
-            <td class="shrink"><a href="{%s t.WebPath() %}">{%= components.SVGInline(t.IconSafe(), 16, ps) %}</a></td>
-            <td class="shrink"><a href="{%s t.WebPath() %}">{%s t.Key %}</a></td>
+            <td class="shrink"><a href="{%s t.WebPath() %}">{%= components.SVGInline(t.IconSafe(), 16, ps) %} {%s t.Key %}</a></td>
             <td>{%s t.TitleSafe() %}</td>
           </tr>
           {%- endfor -%}

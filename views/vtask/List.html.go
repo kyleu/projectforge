@@ -43,87 +43,81 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vtask/List.html:16
 	qw422016.N().S(` Registered Tasks</h3>
     <div class="overflow full-width">
-      <table class="mt expanded">
+      <table class="mt min-200 expanded">
         <thead>
           <tr>
-            <th></th>
             <th>Key</th>
             <th>Title</th>
           </tr>
         </thead>
         <tbody>
 `)
-//line views/vtask/List.html:27
+//line views/vtask/List.html:26
 	if len(p.Tasks) == 0 {
-//line views/vtask/List.html:27
+//line views/vtask/List.html:26
 		qw422016.N().S(`          <tr>
             <td colspan="3"><em>no tasks available</em></td>
           </tr>
 `)
-//line views/vtask/List.html:31
+//line views/vtask/List.html:30
 	}
-//line views/vtask/List.html:32
+//line views/vtask/List.html:31
 	for _, t := range p.Tasks {
-//line views/vtask/List.html:32
+//line views/vtask/List.html:31
 		qw422016.N().S(`          <tr>
             <td class="shrink"><a href="`)
-//line views/vtask/List.html:34
+//line views/vtask/List.html:33
 		qw422016.E().S(t.WebPath())
-//line views/vtask/List.html:34
+//line views/vtask/List.html:33
 		qw422016.N().S(`">`)
-//line views/vtask/List.html:34
+//line views/vtask/List.html:33
 		components.StreamSVGInline(qw422016, t.IconSafe(), 16, ps)
-//line views/vtask/List.html:34
-		qw422016.N().S(`</a></td>
-            <td class="shrink"><a href="`)
-//line views/vtask/List.html:35
-		qw422016.E().S(t.WebPath())
-//line views/vtask/List.html:35
-		qw422016.N().S(`">`)
-//line views/vtask/List.html:35
+//line views/vtask/List.html:33
+		qw422016.N().S(` `)
+//line views/vtask/List.html:33
 		qw422016.E().S(t.Key)
-//line views/vtask/List.html:35
+//line views/vtask/List.html:33
 		qw422016.N().S(`</a></td>
             <td>`)
-//line views/vtask/List.html:36
+//line views/vtask/List.html:34
 		qw422016.E().S(t.TitleSafe())
-//line views/vtask/List.html:36
+//line views/vtask/List.html:34
 		qw422016.N().S(`</td>
           </tr>
 `)
-//line views/vtask/List.html:38
+//line views/vtask/List.html:36
 	}
-//line views/vtask/List.html:38
+//line views/vtask/List.html:36
 	qw422016.N().S(`        </tbody>
       </table>
     </div>
   </div>
 `)
-//line views/vtask/List.html:43
+//line views/vtask/List.html:41
 }
 
-//line views/vtask/List.html:43
+//line views/vtask/List.html:41
 func (p *List) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vtask/List.html:43
+//line views/vtask/List.html:41
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vtask/List.html:43
+//line views/vtask/List.html:41
 	p.StreamBody(qw422016, as, ps)
-//line views/vtask/List.html:43
+//line views/vtask/List.html:41
 	qt422016.ReleaseWriter(qw422016)
-//line views/vtask/List.html:43
+//line views/vtask/List.html:41
 }
 
-//line views/vtask/List.html:43
+//line views/vtask/List.html:41
 func (p *List) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vtask/List.html:43
+//line views/vtask/List.html:41
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vtask/List.html:43
+//line views/vtask/List.html:41
 	p.WriteBody(qb422016, as, ps)
-//line views/vtask/List.html:43
+//line views/vtask/List.html:41
 	qs422016 := string(qb422016.B)
-//line views/vtask/List.html:43
+//line views/vtask/List.html:41
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vtask/List.html:43
+//line views/vtask/List.html:41
 	return qs422016
-//line views/vtask/List.html:43
+//line views/vtask/List.html:41
 }

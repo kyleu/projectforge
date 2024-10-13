@@ -24,7 +24,7 @@
     <form action="{%s p.Task.WebPath() %}/run" method="get">
       <table class="mt expanded">
         <tbody>
-          {%= edit.TableEditorNoTable(p.Task.Key, p.Task.Fields(), p.Args) %}
+          {%= edit.TableEditorNoTable(p.Task.Key, p.Task.Fields, p.Args) %}
           <tr>
             <td colspan="2">
               <button type="submit">Run</button>
