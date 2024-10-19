@@ -2,11 +2,11 @@ package template
 
 import (
 	"fmt"
-	"projectforge.dev/projectforge/app/project"
 	"strings"
 
 	"github.com/samber/lo"
 
+	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )
 

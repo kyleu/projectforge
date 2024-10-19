@@ -2,7 +2,6 @@ package action
 
 import (
 	"fmt"
-	template2 "projectforge.dev/projectforge/app/project/template"
 	"slices"
 	"strconv"
 	"strings"
@@ -12,6 +11,7 @@ import (
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/project"
+	template2 "projectforge.dev/projectforge/app/project/template"
 	"projectforge.dev/projectforge/app/util"
 )
 

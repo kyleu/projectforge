@@ -3,7 +3,6 @@ package action
 import (
 	"path"
 	"path/filepath"
-	"projectforge.dev/projectforge/app/project/template"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -11,6 +10,7 @@ import (
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/file/diff"
+	"projectforge.dev/projectforge/app/project/template"
 	"projectforge.dev/projectforge/app/util"
 )
 
