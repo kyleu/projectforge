@@ -7,7 +7,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-type Info struct {
+type GQLInfo struct {
 	Org             string
 	AuthorID        string
 	AuthorName      string
@@ -39,8 +39,8 @@ type Info struct {
 	ModuleDefs      project.ModuleDefs
 }
 
-func FromInfo(i *project.Info, logger util.Logger) *Info {
-	return &Info{
+func FromInfo(i *project.Info, logger util.Logger) *GQLInfo {
+	return &GQLInfo{
 		Org:             i.Org,
 		AuthorID:        i.AuthorID,
 		AuthorName:      i.AuthorName,
@@ -73,7 +73,7 @@ func FromInfo(i *project.Info, logger util.Logger) *Info {
 	}
 }
 
-type Project struct {
+type GQLProject struct {
 	Key     string
 	Name    string
 	Icon    string
@@ -86,7 +86,7 @@ type Project struct {
 	Ignore  []string
 	Tags    []string
 
-	Info  *Info
+	Info  *GQLInfo
 	Theme *theme.Theme
 	Build *project.Build
 	Files []string
@@ -98,8 +98,8 @@ type Project struct {
 	Error      string
 }
 
-func FromProject(p *project.Project, logger util.Logger) *Project {
-	return &Project{
+func FromProject(p *project.Project, logger util.Logger) *GQLProject {
+	return &GQLProject{
 		Key:        p.Key,
 		Name:       p.Name,
 		Icon:       p.Icon,

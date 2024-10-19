@@ -19,8 +19,8 @@ func (s *Schema) Modules(ctx context.Context) ([]*Module, error) {
 	}), nil
 }
 
-func (s *Schema) Projects(ctx context.Context) ([]*Project, error) {
-	return lo.Map(s.st.Services.Projects.Projects(), func(x *project.Project, _ int) *Project {
+func (s *Schema) Projects(ctx context.Context) ([]*GQLProject, error) {
+	return lo.Map(s.st.Services.Projects.Projects(), func(x *project.Project, _ int) *GQLProject {
 		return FromProject(x, s.log)
 	}), nil
 }

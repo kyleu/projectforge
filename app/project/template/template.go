@@ -1,7 +1,8 @@
-package project
+package template
 
 import (
 	"fmt"
+	"projectforge.dev/projectforge/app/project"
 	"strings"
 
 	"github.com/samber/lo"
@@ -27,23 +28,23 @@ type TemplateContext struct {
 	Modules    []string `json:"modules,omitempty"`
 	Tags       []string `json:"tags,omitempty"`
 
-	ExportArgs     *model.Args   `json:"exportArgs,omitempty"`
-	Config         util.ValueMap `json:"config,omitempty"`
-	Info           *Info         `json:"info,omitempty"`
-	Build          *Build        `json:"build,omitempty"`
-	Theme          *theme.Theme  `json:"theme,omitempty"`
-	DatabaseEngine string        `json:"databaseEngine,omitempty"`
-	Linebreak      string        `json:"-"`
+	ExportArgs     *model.Args    `json:"exportArgs,omitempty"`
+	Config         util.ValueMap  `json:"config,omitempty"`
+	Info           *project.Info  `json:"info,omitempty"`
+	Build          *project.Build `json:"build,omitempty"`
+	Theme          *theme.Theme   `json:"theme,omitempty"`
+	DatabaseEngine string         `json:"databaseEngine,omitempty"`
+	Linebreak      string         `json:"-"`
 }
 
-func (p *Project) ToTemplateContext(configVars util.KeyTypeDescs, portOffsets map[string]int, linebreak string) *TemplateContext {
+func ToTemplateContext(p *project.Project, configVars util.KeyTypeDescs, portOffsets map[string]int, linebreak string) *TemplateContext {
 	i := p.Info
 	if i == nil {
-		i = &Info{}
+		i = &project.Info{}
 	}
 	b := p.Build
 	if b == nil {
-		b = &Build{}
+		b = &project.Build{}
 	}
 	t := p.Theme
 	if t == nil {

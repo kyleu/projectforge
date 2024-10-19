@@ -56,6 +56,6 @@ var Helpers = func() map[string][]string {
 	return ret
 }()
 
-func clean(key string) string {
+func CleanKey(key string) string {
 	return strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(key, "-", "_"), "/", "_"), ".", "_")
 }

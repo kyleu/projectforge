@@ -3,6 +3,7 @@ package action
 import (
 	"path"
 	"path/filepath"
+	"projectforge.dev/projectforge/app/project/template"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -38,7 +39,7 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 	}
 	configVars, portOffsets := parse(pm)
 	lb := util.StringDetectLinebreak(string(pm.File))
-	tCtx := pm.Prj.ToTemplateContext(configVars, portOffsets, lb)
+	tCtx := template.ToTemplateContext(pm.Prj, configVars, portOffsets, lb)
 	for _, f := range srcFiles {
 		origPath := f.FullPath()
 		if strings.Contains(origPath, delimStart) {

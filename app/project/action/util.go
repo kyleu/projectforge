@@ -2,6 +2,7 @@ package action
 
 import (
 	"fmt"
+	template2 "projectforge.dev/projectforge/app/project/template"
 	"slices"
 	"strconv"
 	"strings"
@@ -140,7 +141,7 @@ func infoFromCfg(proto *project.Project, cfg util.ValueMap) *project.Info {
 	}
 }
 
-func runTemplate(path string, content string, ctx *project.TemplateContext) (string, error) {
+func runTemplate(path string, content string, ctx *template2.TemplateContext) (string, error) {
 	t, err := template.New(path).Delims(delimStart, delimEnd).Parse(content)
 	if err != nil {
 		return "", errors.Wrapf(err, "unable to create template for [%s]", path)
@@ -154,6 +155,6 @@ func runTemplate(path string, content string, ctx *project.TemplateContext) (str
 	return res.String(), nil
 }
 
-func runTemplateFile(f *file.File, ctx *project.TemplateContext) (string, error) {
+func runTemplateFile(f *file.File, ctx *template2.TemplateContext) (string, error) {
 	return runTemplate(f.FullPath(), f.Content, ctx)
 }

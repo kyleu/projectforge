@@ -1,7 +1,8 @@
-package project
+package template
 
 import (
 	"fmt"
+	"projectforge.dev/projectforge/app/project"
 	"strings"
 
 	"github.com/samber/lo"
@@ -19,7 +20,7 @@ func (t *TemplateContext) Title() string {
 }
 
 func (t *TemplateContext) CleanKey() string {
-	return clean(t.Key)
+	return project.CleanKey(t.Key)
 }
 
 func (t *TemplateContext) NotebookPort() int {
@@ -128,11 +129,11 @@ func (t *TemplateContext) DatabaseUISaveUser() bool {
 }
 
 func (t *TemplateContext) GoVersionSafe() string {
-	return util.OrDefault(t.Info.GoVersion, DefaultGoVersion)
+	return util.OrDefault(t.Info.GoVersion, project.DefaultGoVersion)
 }
 
 func (t *TemplateContext) GoMajorVersionSafe() string {
-	v := util.OrDefault(t.Info.GoVersion, DefaultGoVersion)
+	v := util.OrDefault(t.Info.GoVersion, project.DefaultGoVersion)
 	if strings.Count(v, ".") <= 1 {
 		return v
 	}

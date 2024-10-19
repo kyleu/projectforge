@@ -2,6 +2,7 @@ package action
 
 import (
 	"context"
+	"strings"
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
@@ -121,12 +122,15 @@ func onFull(ctx context.Context, pm *PrjAndMods, r *Result) *Result {
 }
 
 func onDeployments(_ context.Context, pm *PrjAndMods, r *Result) *Result {
-	if pm.Prj.Info == nil || len(pm.Prj.Info.Deployments) == 0 {
+	deploys := lo.Filter(pm.Prj.Info.Deployments, func(x string, _ int) bool {
+		return !strings.HasPrefix(x, "ts:")
+	})
+	if pm.Prj.Info == nil || len(deploys) == 0 {
 		return r
 	}
 	t := util.TimerStart()
 	fix := pm.Cfg.GetBoolOpt("fix")
-	logs, diffs, err := build.Deployments(pm.Prj.Version, pm.FS, fix, pm.Cfg.GetStringOpt("path"), pm.Prj.Info.Deployments)
+	logs, diffs, err := build.Deployments(pm.Prj.Version, pm.FS, fix, pm.Cfg.GetStringOpt("path"), deploys)
 	r.Modules = append(r.Modules, &module.Result{Keys: []string{"deployments"}, Status: util.OK, Diffs: diffs, Duration: t.End()})
 	r.Logs = append(r.Logs, logs...)
 	if err != nil {

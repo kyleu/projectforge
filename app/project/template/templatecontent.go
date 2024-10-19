@@ -1,4 +1,4 @@
-package project
+package template
 
 import (
 	"fmt"
@@ -80,6 +80,25 @@ func (t *TemplateContext) IgnoredQuoted() string {
 	return strings.Join(lo.Map(t.Ignore, func(i string, _ int) string {
 		return fmt.Sprintf(", %q", strings.TrimPrefix(i, "^"))
 	}), "")
+}
+
+func (t *TemplateContext) TypeScriptProjectContent() string {
+	return strings.Join(lo.Map(lo.Filter(t.Info.Deployments, func(x string, _ int) bool {
+		return strings.HasPrefix(x, "ts:")
+	}), func(x string, _ int) string {
+		return strings.Join([]string{
+			"",
+			"",
+			"esbuild.build({",
+			`  entryPoints: ["src/game/game.ts"],`,
+			"  bundle: true,",
+			"  minify: true,",
+			"  sourcemap: true,",
+			`  outfile: "../assets/game.js",`,
+			"  logLevel: \"info\"",
+			"}).catch((e) => console.error(e.message));",
+		}, "\n")
+	}), "\n")
 }
 
 func (t *TemplateContext) HasModules(keys ...string) bool {

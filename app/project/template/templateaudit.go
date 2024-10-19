@@ -1,4 +1,4 @@
-package project
+package template
 
 func (t *TemplateContext) AuditData() string {
 	if t.SQLServer() {

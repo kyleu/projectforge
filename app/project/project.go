@@ -56,7 +56,7 @@ func (p *Project) Executable() string {
 }
 
 func (p *Project) CleanKey() string {
-	return clean(p.Key)
+	return CleanKey(p.Key)
 }
 
 func (p *Project) IconSafe() string {
