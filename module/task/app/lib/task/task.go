@@ -2,14 +2,14 @@ package task
 
 import (
 	"context"
-
-	"github.com/pkg/errors"
+	"fmt"
 
 	"{{{ .Package }}}/app/lib/exec"
+	"{{{ .Package }}}/app/lib/telemetry"
 	"{{{ .Package }}}/app/util"
 )
 
-type TaskFn func(ctx context.Context, res *Result, logger util.Logger) error
+type TaskFn func(ctx context.Context, res *Result, logger util.Logger) *Result
 
 type Task struct {
 	Key           string          `json:"key"`
@@ -69,7 +69,7 @@ func (t *Task) WithFunction(fn TaskFn) *Task {
 	return ret
 }
 
-func (t *Task) WithoutFunctions(fn TaskFn) *Task {
+func (t *Task) WithoutFunctions() *Task {
 	ret := t.Clone()
 	t.fns = nil
 	return ret
@@ -81,26 +81,36 @@ func (t *Task) WithTags(tags []string) *Task {
 	return ret
 }
 
-func (t *Task) Run(ctx context.Context, runner string, args util.ValueMap, logger util.Logger, fns ...exec.OutFn) *Result {
-	ret := NewResult(t, runner, args, t.resultLogFn(logger, fns...))
+func (t *Task) Run(ctx context.Context, run string, args util.ValueMap, logger util.Logger, fns ...exec.OutFn) *Result {
+	ret := NewResult(t, run, args, t.ResultLogFn(logger, fns...))
 	return t.RunWithResult(ctx, ret, logger)
 }
 
 func (t *Task) RunWithResult(ctx context.Context, res *Result, logger util.Logger) *Result {
+	var span *telemetry.Span
+	ctx, span, logger = telemetry.StartSpan(ctx, fmt.Sprintf("run-%s", res.String(), t.Key), logger)
+	defer span.Complete()
+
+	span.Attribute("result", res.ID)
+	span.Attribute("task.key", t.Key)
+	span.Attribute("task.category", t.Category)
+	span.Attribute("action", t.Key)
+	logger.Debugf("starting [%s] run for [%s]", t.Key, res.String())
+	tm := util.TimerStart()
+
 	if len(t.fns) == 0 {
 		res.Log("no work to do for task [%s]", t.TitleSafe())
 		return res.Complete("OK")
 	}
 	for _, fn := range t.fns {
-		err := fn(ctx, res, logger)
-		if err != nil {
-			return res.CompleteError(errors.Wrapf(err, "unable to run task [%s]", t.Key))
-		}
+		res = fn(ctx, res, logger)
 	}
+
+	logger.Debugf("completed [%s] run for [%s] in [%s]", t.Key, res.String(), util.MicrosToMillis(tm.End()))
 	return res
 }
 
-func (t *Task) resultLogFn(logger util.Logger, fns ...exec.OutFn) ResultLogFn {
+func (t *Task) ResultLogFn(logger util.Logger, fns ...exec.OutFn) ResultLogFn {
 	return func(key string, data any) {
 		for _, fn := range fns {
 			var b []byte

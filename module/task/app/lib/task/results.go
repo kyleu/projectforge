@@ -18,9 +18,27 @@ func (r Results) Get(id uuid.UUID) *Result {
 	})
 }
 
-func (r Results) ForAct(act string) *Result {
+func (r Results) ForTask(act string) Results {
+	return lo.Filter(r, func(x *Result, _ int) bool {
+		return x.Task != nil && x.Task.Key == act
+	})
+}
+
+func (r Results) ForTaskFirst(act string) *Result {
 	return lo.FindOrElse(r, nil, func(x *Result) bool {
 		return x.Task != nil && x.Task.Key == act
+	})
+}
+
+func (r Results) ForRun(run string) Results {
+	return lo.Filter(r, func(x *Result, _ int) bool {
+		return x.Run == run
+	})
+}
+
+func (r Results) ForRunFirst(run string) *Result {
+	return lo.FindOrElse(r, nil, func(x *Result) bool {
+		return x.Run == run
 	})
 }
 

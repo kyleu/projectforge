@@ -14,7 +14,7 @@ type ResultLogFn func(key string, data any)
 type Result struct {
 	ID       uuid.UUID     `json:"id"`
 	Task     *Task         `json:"task"`
-	Runner   string        `json:"runner,omitempty"`
+	Run      string        `json:"run,omitempty"`
 	Args     util.ValueMap `json:"args,omitempty"`
 	Started  time.Time     `json:"started,omitempty"`
 	Elapsed  int           `json:"elapsed,omitempty"`
@@ -28,12 +28,12 @@ type Result struct {
 	fns      []ResultLogFn
 }
 
-func NewResult(task *Task, runner string, args util.ValueMap, fns ...ResultLogFn) *Result {
-	return &Result{ID: util.UUID(), Task: task, Runner: runner, Args: args, Started: time.Now(), Status: "ok", Metadata: util.ValueMap{}, fns: fns}
+func NewResult(task *Task, run string, args util.ValueMap, fns ...ResultLogFn) *Result {
+	return &Result{ID: util.UUID(), Task: task, Run: run, Args: args, Started: time.Now(), Status: "ok", Metadata: util.ValueMap{}, fns: fns}
 }
 
-func CompletedResult(task *Task, runner string, args util.ValueMap, data any, err error, logs ...string) *Result {
-	ret := NewResult(task, runner, args)
+func CompletedResult(task *Task, run string, args util.ValueMap, data any, err error, logs ...string) *Result {
+	ret := NewResult(task, run, args)
 	ret.AddLogs(logs...)
 	ret.Complete(data, err)
 	return ret

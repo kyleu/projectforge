@@ -100,7 +100,7 @@ func StreamResult(qw422016 *qt422016.Writer, as *app.State, res *task.Result, ps
     </div>
     <h3>`)
 //line views/vtask/Result.html:34
-	components.StreamSVGIcon(qw422016, res.Task.IconSafe(), ps)
+	components.StreamSVGIcon(qw422016, "cog", ps)
 //line views/vtask/Result.html:34
 	qw422016.N().S(` `)
 //line views/vtask/Result.html:34
@@ -198,6 +198,10 @@ func StreamResultSummary(qw422016 *qt422016.Writer, as *app.State, res *task.Res
     <h3>`)
 //line views/vtask/Result.html:58
 	components.StreamSVGIcon(qw422016, "cog", ps)
+//line views/vtask/Result.html:58
+	qw422016.N().S(` `)
+//line views/vtask/Result.html:58
+	qw422016.E().S(res.Task.TitleSafe())
 //line views/vtask/Result.html:58
 	qw422016.N().S(` Result</h3>
     <div><em>`)

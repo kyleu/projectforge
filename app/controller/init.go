@@ -23,9 +23,9 @@ func initApp(_ context.Context, as *app.State, logger util.Logger) error {
 	if err != nil {
 		return err
 	}
-	tf := func(ctx context.Context, res *task.Result, logger util.Logger) error {
+	tf := func(ctx context.Context, res *task.Result, logger util.Logger) *task.Result {
 		res.Log("Testbed!")
-		return nil
+		return res.CompleteSimple(res.Args)
 	}
 	t := task.NewTask("testbed", "", "utility", "star", "Who knows what it'll do?", tf)
 	t.Fields = util.FieldDescs{{Key: "project", Title: "Project"}}

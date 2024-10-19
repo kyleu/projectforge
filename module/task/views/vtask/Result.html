@@ -31,7 +31,7 @@
       {%s util.MicrosToMillis(res.Elapsed) %}
       <a href="#modal-result-{%s res.ID.String() %}" title="JSON"><button>{%= components.SVGButton(`code`, ps) %}</button></a>
     </div>
-    <h3>{%= components.SVGIcon(res.Task.IconSafe(), ps) %} {%s res.Task.TitleSafe() %} Result</h3>
+    <h3>{%= components.SVGIcon("cog", ps) %} {%s res.Task.TitleSafe() %} Result</h3>
     <div><em>{%= view.TimestampRelative(&res.Started, false) %}</em></div>
     <div class="mt">
       {%= renderResult(res, as, ps) %}
@@ -55,7 +55,7 @@
       {%s util.MicrosToMillis(res.Elapsed) %}
       <a href="#modal-result" title="JSON"><button>{%= components.SVGButton(`code`, ps) %}</button></a>
     </div>
-    <h3>{%= components.SVGIcon("cog", ps) %} Result</h3>
+    <h3>{%= components.SVGIcon("cog", ps) %} {%s res.Task.TitleSafe() %} Result</h3>
     <div><em>{%= view.TimestampRelative(&res.Started, false) %}</em></div>
     <div class="mt">
       {%= renderResult(res, as, ps) %}

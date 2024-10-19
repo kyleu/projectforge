@@ -57,7 +57,7 @@ func RunAllActions(w http.ResponseWriter, r *http.Request) {
 		if actT.Matches(action.TypeAudit) {
 			if cfg.GetStringOpt("hasloaded") != util.BoolTrue {
 				cutil.URLAddQuery(r.URL, "hasloaded", util.BoolTrue)
-				page := &vpage.Load{URL: r.URL.String(), Title: "Auditing all projects..."}
+				page := &vpage.Load{URL: r.URL.String(), Title: "Auditing all projects"}
 				return controller.Render(r, as, page, ps, "projects", "Audit**"+actT.Icon)
 			}
 		}
@@ -77,7 +77,7 @@ func RunAllActions(w http.ResponseWriter, r *http.Request) {
 			case "full":
 				if cfg.GetStringOpt("hasloaded") != util.BoolTrue {
 					cutil.URLAddQuery(r.URL, "hasloaded", util.BoolTrue)
-					page := &vpage.Load{URL: r.URL.String(), Title: "Building all projects..."}
+					page := &vpage.Load{URL: r.URL.String(), Title: "Building all projects"}
 					return controller.Render(r, as, page, ps, "projects", actT.Breadcrumb())
 				}
 			}
