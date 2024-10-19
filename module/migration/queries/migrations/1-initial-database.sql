@@ -7,6 +7,8 @@
 -- {%= ddl.CreateAll() %}
 -- {%= seeddata.SeedDataAll() %}
 
+select 1;
+
 -- {% endfunc %}{{{ else }}}
 -- {% func Migration1InitialDatabase(debug bool) %}
 

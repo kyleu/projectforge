@@ -50,3 +50,14 @@ func URL(path string) string {
 	e, _ := Embed(path)
 	return fmt.Sprintf("/assets/%s?hash=%s", path, e.Hash)
 }
+
+func ScriptElement(path string, deferFlag bool) string {
+	if deferFlag {
+		return fmt.Sprintf("<script src=%q defer=\"defer\"></script>", URL(path))
+	}
+	return fmt.Sprintf("<script src=%q></script>", URL(path))
+}
+
+func StylesheetElement(path string) string {
+	return fmt.Sprintf(`<link rel="stylesheet" media="screen" href=%q>`, URL(path))
+}

@@ -20,7 +20,7 @@ var (
 	listenerMU = &sync.Mutex{}
 )
 
-func InitLogging(debug bool) (util.Logger, error) {
+func InitLogging(debug bool, fns ...ListenerFunc) (util.Logger, error) {
 	var logger *zap.Logger
 	var err error
 	lf := util.GetEnv("logging_format")
@@ -28,9 +28,9 @@ func InitLogging(debug bool) (util.Logger, error) {
 	case strings.EqualFold(lf, util.KeyJSON):
 		logger, err = initJSONLogging(getLevel(zap.InfoLevel))
 	case debug:
-		logger, err = initDevLogging(getLevel(zap.DebugLevel))
+		logger, err = initDevLogging(getLevel(zap.DebugLevel), fns...)
 	default:
-		logger, err = initSimpleLogging(getLevel(zap.DebugLevel))
+		logger, err = initSimpleLogging(getLevel(zap.DebugLevel), fns...)
 	}
 	if err != nil {
 		return nil, errors.Wrap(err, "error initializing logging")
@@ -42,9 +42,9 @@ func CreateTestLogger() (util.Logger, error) {
 	return InitLogging(false)
 }
 
-func initDevLogging(lvl zapcore.Level) (*zap.Logger, error) {
+func initDevLogging(lvl zapcore.Level, fns ...ListenerFunc) (*zap.Logger, error) {
 	_ = zap.RegisterEncoder(keyCustom, func(cfg zapcore.EncoderConfig) (zapcore.Encoder, error) {
-		return newEncoder(cfg, runtime.GOOS != "js"), nil
+		return newEncoder(cfg, runtime.GOOS != "js", fns...), nil
 	})
 	config := zap.NewDevelopmentConfig()
 	config.EncoderConfig = zapcore.EncoderConfig{}
@@ -60,9 +60,9 @@ func initJSONLogging(lvl zapcore.Level) (*zap.Logger, error) {
 	return config.Build(zap.AddStacktrace(zap.PanicLevel), zap.AddCaller())
 }
 
-func initSimpleLogging(lvl zapcore.Level) (*zap.Logger, error) {
+func initSimpleLogging(lvl zapcore.Level, fns ...ListenerFunc) (*zap.Logger, error) {
 	_ = zap.RegisterEncoder(keyCustom, func(cfg zapcore.EncoderConfig) (zapcore.Encoder, error) {
-		return createSimpleEncoder(cfg), nil
+		return createSimpleEncoder(cfg, fns...), nil
 	})
 	config := zap.NewDevelopmentConfig()
 	config.EncoderConfig = zapcore.EncoderConfig{}

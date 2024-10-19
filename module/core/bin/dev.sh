@@ -10,7 +10,7 @@ cd "$dir/.."
 # $PF_SECTION_END(keys)$
 
 if command -v title &> /dev/null; then
-  title "{{{ .CleanKey }}}"
+  title "{{{ .Key }}}"
 fi
 
 [[ -f "$HOME/bin/oauth" ]] && . "$HOME/bin/oauth"

@@ -8,4 +8,4 @@ esbuild.build({
   sourcemap: true,
   outfile: "../assets/client.js",
   logLevel: "info"
-}).catch((e) => console.error(e.message));
+}).catch((e) => console.error(e.message));{{{ .TypeScriptProjectContent }}}

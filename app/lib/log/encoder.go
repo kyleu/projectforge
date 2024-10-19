@@ -27,8 +27,8 @@ type customEncoder struct {
 	listeners []ListenerFunc
 }
 
-func newEncoder(cfg zapcore.EncoderConfig, colored bool) *customEncoder {
-	return &customEncoder{Encoder: zapcore.NewJSONEncoder(cfg), colored: colored, pool: buffer.NewPool()}
+func newEncoder(cfg zapcore.EncoderConfig, colored bool, fns ...ListenerFunc) *customEncoder {
+	return &customEncoder{Encoder: zapcore.NewJSONEncoder(cfg), colored: colored, pool: buffer.NewPool(), listeners: fns}
 }
 
 func (e *customEncoder) Clone() zapcore.Encoder {

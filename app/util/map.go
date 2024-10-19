@@ -97,6 +97,10 @@ func (m ValueMap) WithoutKeys(keys ...string) ValueMap {
 	return ret
 }
 
+func (m ValueMap) AsMap() map[string]any {
+	return m
+}
+
 func (m ValueMap) String() string {
 	return ToJSONCompact(m)
 }

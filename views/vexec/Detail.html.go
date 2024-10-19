@@ -324,10 +324,10 @@ func StreamExecScript(qw422016 *qt422016.Writer, id string, connectURL string, d
         console.log("no [html] key in message param: " + JSON.stringify(m, null, 2));
       }
       const h = m.param["html"].split("\n");
-      for (x in h) {
+      for (const x in h) {
         const row = document.createElement("tr");
         const numTH = document.createElement("th");
-        numTH.innerText = (tbody.children.length).toString();
+        numTH.innerText = tbody.children.length.toString();
         const textTD = document.createElement("td");
         textTD.innerHTML = h[x];
         row.append(numTH, textTD);

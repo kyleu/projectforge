@@ -1,5 +1,7 @@
+{% import "{{{ .Package }}}/assets" %}
+
 {% func WASMScript() %}
-<script src="/assets/wasm/wasm_exec.js" defer="defer"></script>
+{%s= assets.ScriptElement(`wasm/wasm_exec.js`, true) %}
 <script>
   document.addEventListener("DOMContentLoaded", function() {
     if (!WebAssembly.instantiateStreaming) {
@@ -11,7 +13,7 @@
 
     const start = new Date().getTime();
     const go = new Go();
-    WebAssembly.instantiateStreaming(fetch("/assets/wasm/{{{ .Exec }}}.wasm"), go.importObject).then((result) => {
+    WebAssembly.instantiateStreaming(fetch("{%s assets.URL(`wasm/{{{ .Exec }}}.wasm`) %}"), go.importObject).then((result) => {
       go.run(result.instance);
       wasmInit(new Date().getTime() - start);
     });

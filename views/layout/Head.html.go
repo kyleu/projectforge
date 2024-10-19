@@ -91,20 +91,16 @@ func StreamHead(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
 	qw422016.N().S(thm.CSS(2))
 //line views/layout/Head.html:22
 	qw422016.N().S(`  </style>
-  <link rel="stylesheet" media="screen" href="`)
+  `)
 //line views/layout/Head.html:23
-	qw422016.E().S(assets.URL(`client.css`))
-//line views/layout/Head.html:23
-	qw422016.N().S(`">`)
+	qw422016.N().S(assets.StylesheetElement(`client.css`))
 //line views/layout/Head.html:23
 	if !ps.NoScript {
 //line views/layout/Head.html:23
 		qw422016.N().S(`
-  <script type="text/javascript" src="`)
+  `)
 //line views/layout/Head.html:24
-		qw422016.E().S(assets.URL(`client.js`))
-//line views/layout/Head.html:24
-		qw422016.N().S(`"></script>`)
+		qw422016.N().S(assets.ScriptElement(`client.js`, true))
 //line views/layout/Head.html:24
 	}
 //line views/layout/Head.html:24

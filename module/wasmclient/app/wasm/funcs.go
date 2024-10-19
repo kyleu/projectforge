@@ -11,7 +11,7 @@ import (
 
 func wireFunctions() {
 	js.Global().Set("increment", js.FuncOf(increment))
-	js.Global().Set("log", js.FuncOf(log))
+	js.Global().Set("log", js.FuncOf(logInfo))
 	js.Global().Set("send", js.FuncOf(send))
 }
 
@@ -31,7 +31,7 @@ func send(this js.Value, args []js.Value) any {
 	return arg
 }
 
-func log(this js.Value, args []js.Value) any {
+func logInfo(this js.Value, args []js.Value) any {
 	if _rootLogger == nil {
 		println("ERROR: no logger available")
 		return nil
