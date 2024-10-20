@@ -2,7 +2,7 @@
 
 This is a module for [Project Forge](https://projectforge.dev). It provides a read-only database, with a separate configuration, and wires it into the application.
 
-https://github.com/kyleu/projectforge/tree/master/module/readonlydb
+https://github.com/kyleu/projectforge/tree/main/module/readonlydb
 
 ### License
 

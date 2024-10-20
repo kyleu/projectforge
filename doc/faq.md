@@ -288,4 +288,4 @@ _So many_. See the files in `./app/util`, there's a ton of juicy stuff.
 Export configuration is stored in `./.projectforge/export`.
 A rudimentary UI is provided in the "Export" section of your project's page. 
 To be honest, the easiest way to do this is to copy/paste and modify an existing model definition.
-There's some good examples at [rituals.dev](https://github.com/kyleu/rituals/tree/master/.projectforge/export/models).
+There's some good examples at [rituals.dev](https://github.com/kyleu/rituals/tree/main/.projectforge/export/models).

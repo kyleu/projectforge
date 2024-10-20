@@ -2,7 +2,7 @@
 
 This is a module for [Project Forge](https://projectforge.dev). It provides thousands of SVG icons from [simple-icons](https://github.com/simple-icons/simple-icons) for representing common logos
 
-https://github.com/kyleu/projectforge/tree/master/module/brands
+https://github.com/kyleu/projectforge/tree/main/module/brands
 
 ### License
 

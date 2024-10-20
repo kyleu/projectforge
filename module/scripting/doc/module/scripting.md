@@ -2,7 +2,7 @@
 
 This is a module for [Project Forge](https://projectforge.dev). It allows the execution of JavaScript files using a built-in interpreter.
 
-https://github.com/kyleu/projectforge/tree/master/module/scripting
+https://github.com/kyleu/projectforge/tree/main/module/scripting
 
 ### License
 

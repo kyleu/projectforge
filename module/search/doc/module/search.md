@@ -2,7 +2,7 @@
 
 This is a module for [Project Forge](https://projectforge.dev). It adds search facilities to the top-level navigation bar.
 
-https://github.com/kyleu/projectforge/tree/master/module/search
+https://github.com/kyleu/projectforge/tree/main/module/search
 
 ### License
 

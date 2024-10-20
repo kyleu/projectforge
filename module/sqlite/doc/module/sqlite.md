@@ -2,7 +2,7 @@
 
 This is a module for [Project Forge](https://projectforge.dev). It provides an API for accessing SQLite databases
 
-https://github.com/kyleu/projectforge/tree/master/module/sqlite
+https://github.com/kyleu/projectforge/tree/main/module/sqlite
 
 ### License
 

@@ -2,7 +2,7 @@
 
 This is a module for [Project Forge](https://projectforge.dev). It provides a UI for browsing the documentation.
 
-https://github.com/kyleu/projectforge/tree/master/module/docbrowse
+https://github.com/kyleu/projectforge/tree/main/module/docbrowse
 
 ### License
 

@@ -2,7 +2,7 @@
 
 This is a module for [Project Forge](https://projectforge.dev). It provides an engine for executing and monitoring tasks.
 
-https://github.com/kyleu/projectforge/tree/master/module/readonlydb
+https://github.com/kyleu/projectforge/tree/main/module/readonlydb
 
 ### License
 

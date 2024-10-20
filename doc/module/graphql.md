@@ -2,7 +2,7 @@
 
 This is a module for [Project Forge](https://projectforge.dev). It supports GraphQL APIs within your application
 
-https://github.com/kyleu/projectforge/tree/master/module/graphql
+https://github.com/kyleu/projectforge/tree/main/module/graphql
 
 ### License 
 

@@ -2,7 +2,7 @@
 
 This is a module for [Project Forge](https://projectforge.dev). It provides a framework for managing system processes.
 
-https://github.com/kyleu/projectforge/tree/master/module/process
+https://github.com/kyleu/projectforge/tree/main/module/process
 
 ### License
 

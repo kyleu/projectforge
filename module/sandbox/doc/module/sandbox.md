@@ -2,7 +2,7 @@
 
 This is a module for [Project Forge](https://projectforge.dev). Useful playgrounds for testing custom functions.
 
-https://github.com/kyleu/projectforge/tree/master/module/sandbox
+https://github.com/kyleu/projectforge/tree/main/module/sandbox
 
 ### License
 

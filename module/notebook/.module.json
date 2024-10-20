@@ -5,7 +5,7 @@
   "authorName": "Kyle U",
   "authorEmail": "kyle@kyleu.com",
   "license": "CC0",
-  "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/notebook",
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/main/module/notebook",
   "configVars": [
     {
       "key": "notebook_base_url",

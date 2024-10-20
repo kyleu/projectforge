@@ -2,7 +2,7 @@
 
 This is a module for [Project Forge](https://projectforge.dev). It provides a scheduled job engine and UI based on `gocron`
 
-https://github.com/kyleu/projectforge/tree/master/module/schedule
+https://github.com/kyleu/projectforge/tree/main/module/schedule
 
 ### License
 

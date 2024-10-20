@@ -5,7 +5,7 @@
   "authorName": "Kyle U",
   "authorEmail": "kyle@kyleu.com",
   "license": "CC0",
-  "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/oauth",
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/main/module/oauth",
   "configVars": [
     {
       "key": "oauth_redirect",

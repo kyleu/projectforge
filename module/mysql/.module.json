@@ -5,7 +5,7 @@
   "authorName": "Kyle U",
   "authorEmail": "kyle@kyleu.com",
   "license": "CC0",
-  "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/mysql",
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/main/module/mysql",
   "configVars": [
     {
       "key": "db_host",

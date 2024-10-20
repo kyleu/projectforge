@@ -2,7 +2,7 @@
 
 This is a module for [Project Forge](https://projectforge.dev). It provides a website for downloads, tutorials, and marketing
 
-https://github.com/kyleu/projectforge/tree/master/module/marketing
+https://github.com/kyleu/projectforge/tree/main/module/marketing
 
 ### License
 

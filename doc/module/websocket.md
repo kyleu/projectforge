@@ -2,7 +2,7 @@
 
 This is a module for [Project Forge](https://projectforge.dev). It provides a WebSocket API
 
-https://github.com/kyleu/projectforge/tree/master/module/websocket
+https://github.com/kyleu/projectforge/tree/main/module/websocket
 
 ### License
 

@@ -2,7 +2,7 @@
 
 This is a module for [Project Forge](https://projectforge.dev). It provides a desktop application using the system's webview
 
-https://github.com/kyleu/projectforge/tree/master/module/desktop
+https://github.com/kyleu/projectforge/tree/main/module/desktop
 
 ### License
 

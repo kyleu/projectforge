@@ -2,7 +2,7 @@
 
 This is a module for [Project Forge](https://projectforge.dev). It provides Markdown help files that integrate into the UI
 
-https://github.com/kyleu/projectforge/tree/master/module/help
+https://github.com/kyleu/projectforge/tree/main/module/help
 
 ### License 
 

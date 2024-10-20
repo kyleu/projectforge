@@ -42,7 +42,7 @@
     if !strings.HasPrefix(path, "/") {
       path = "/" + path
     }
-    u := util.AppSource + "/blob/master" + path
+    u := util.AppSource + "/blob/main" + path
   -%}
   {%= URL(u, origPath, false, ps) %}
 {% endstripspace %}{% endfunc %}

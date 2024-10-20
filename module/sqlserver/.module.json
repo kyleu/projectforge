@@ -5,7 +5,7 @@
   "authorName": "Kyle U",
   "authorEmail": "kyle@kyleu.com",
   "license": "CC0",
-  "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/sqlserver",
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/main/module/sqlserver",
   "configVars": [
     {
       "key": "db_host",

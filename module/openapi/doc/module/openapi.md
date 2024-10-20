@@ -2,7 +2,7 @@
 
 This is a module for [Project Forge](https://projectforge.dev). It embeds the Swagger UI, using your OpenAPI specification 
 
-https://github.com/kyleu/projectforge/tree/master/module/openapi
+https://github.com/kyleu/projectforge/tree/main/module/openapi
 
 ### License 
 

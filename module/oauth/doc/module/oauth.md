@@ -2,7 +2,7 @@
 
 This is a module for [Project Forge](https://projectforge.dev). It provides logins and session management for many OAuth providers.
 
-https://github.com/kyleu/projectforge/tree/master/module/oauth
+https://github.com/kyleu/projectforge/tree/main/module/oauth
 
 ### License
 

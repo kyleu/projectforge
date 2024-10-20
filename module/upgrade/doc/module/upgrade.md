@@ -2,7 +2,7 @@
 
 This is a module for [Project Forge](https://projectforge.dev). It provides in-place version upgrades using GitHub Releases.
 
-https://github.com/kyleu/projectforge/tree/master/module/upgrade
+https://github.com/kyleu/projectforge/tree/main/module/upgrade
 
 ### License
 

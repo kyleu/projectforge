@@ -2,7 +2,7 @@
 
 This is a module for [Project Forge](https://projectforge.dev). It provides an API for accessing Microsoft SQL Server databases.
 
-https://github.com/kyleu/projectforge/tree/master/module/sqlserver
+https://github.com/kyleu/projectforge/tree/main/module/sqlserver
 
 ### License
 

@@ -2,7 +2,7 @@
 
 This is a module for [Project Forge](https://projectforge.dev). It provides a slim JSX implementation for scripting.
 
-https://github.com/kyleu/projectforge/tree/master/module/jsx
+https://github.com/kyleu/projectforge/tree/main/module/jsx
 
 ### License
 

@@ -110,7 +110,7 @@ func StreamCodeLink(qw422016 *qt422016.Writer, path string, title string, ps *cu
 	if !strings.HasPrefix(path, "/") {
 		path = "/" + path
 	}
-	u := util.AppSource + "/blob/master" + path
+	u := util.AppSource + "/blob/main" + path
 
 //line views/components/view/URL.html:47
 	StreamURL(qw422016, u, origPath, false, ps)

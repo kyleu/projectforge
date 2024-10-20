@@ -2,7 +2,7 @@
 
 This is a module for [Project Forge](https://projectforge.dev). It generates code based on the project's schema.
 
-https://github.com/kyleu/projectforge/tree/master/module/export
+https://github.com/kyleu/projectforge/tree/main/module/export
 
 ### License
 

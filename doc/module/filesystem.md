@@ -2,7 +2,7 @@
 
 This is a module for [Project Forge](https://projectforge.dev). It provides an abstraction around local and remote filesystems
 
-https://github.com/kyleu/projectforge/tree/master/module/filesystem
+https://github.com/kyleu/projectforge/tree/main/module/filesystem
 
 ### License 
 

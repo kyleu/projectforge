@@ -2,7 +2,7 @@
 
 This is a module for [Project Forge](https://projectforge.dev). It provides an Observable Framework notebook
 
-https://github.com/kyleu/projectforge/tree/master/module/notebook
+https://github.com/kyleu/projectforge/tree/main/module/notebook
 
 ### License 
 

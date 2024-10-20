@@ -5,7 +5,7 @@
   "authorName": "Kyle U",
   "authorEmail": "kyle@kyleu.com",
   "license": "CC0",
-  "sourcecode": "https://github.com/kyleu/projectforge/tree/master/module/graphql",
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/main/module/graphql",
   "priority": 30,
   "technology": ["graphql-go"]
 }

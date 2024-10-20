@@ -2,7 +2,7 @@
 
 This is a module for [Project Forge](https://projectforge.dev). It provides a UI for registered databases.
 
-https://github.com/kyleu/projectforge/tree/master/module/databaseui
+https://github.com/kyleu/projectforge/tree/main/module/databaseui
 
 ### License
 

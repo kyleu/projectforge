@@ -2,7 +2,7 @@
 
 This is a module for [Project Forge](https://projectforge.dev). It provides a webview-based application and iOS build
 
-https://github.com/kyleu/projectforge/tree/master/module/ios
+https://github.com/kyleu/projectforge/tree/main/module/ios
 
 ### License 
 

@@ -2,7 +2,7 @@
 
 This is a module for [Project Forge](https://projectforge.dev). It provides helper classes for performing operations on git repositories.
 
-https://github.com/kyleu/projectforge/tree/master/module/git
+https://github.com/kyleu/projectforge/tree/main/module/git
 
 ### License
 

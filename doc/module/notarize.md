@@ -2,7 +2,7 @@
 
 This is a module for [Project Forge](https://projectforge.dev). It sends files to Apple for notarization.
 
-https://github.com/kyleu/projectforge/tree/master/module/notarize
+https://github.com/kyleu/projectforge/tree/main/module/notarize
 
 ### License
 

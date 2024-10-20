@@ -2,7 +2,7 @@
 
 This is a module for [Project Forge](https://projectforge.dev). It adds a project for testing the UI using https://playwright.dev
 
-https://github.com/kyleu/projectforge/tree/master/module/playwright
+https://github.com/kyleu/projectforge/tree/main/module/playwright
 
 ### License
 

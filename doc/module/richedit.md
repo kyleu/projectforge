@@ -2,7 +2,7 @@
 
 This is a module for [Project Forge](https://projectforge.dev). It provides a rich editing experience with a decent fallback when scripting is disabled
 
-https://github.com/kyleu/projectforge/tree/master/module/richedit
+https://github.com/kyleu/projectforge/tree/main/module/richedit
 
 ### License
 
