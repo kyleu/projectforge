@@ -1,8 +1,7 @@
-// $PF_GENERATE_ONCE$
 //go:build js
 // +build js
 
-package main
+package wasm
 
 import (
 	"{{{ .Package }}}/app/util"

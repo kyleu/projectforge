@@ -11,6 +11,7 @@ body {
   box-sizing: border-box;
   background-color: var(--color-background);
   color: var(--color-foreground);
+  height: 100vh;
 }
 
 a {

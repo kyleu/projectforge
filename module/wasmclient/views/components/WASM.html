@@ -1,6 +1,9 @@
-{% import "{{{ .Package }}}/assets" %}
+{% import (
+  "{{{ .Package }}}/app/util"
+  "{{{ .Package }}}/assets"
+) %}
 
-{% func WASMScript() %}
+{% func WASMScript(cfg any) %}
 {%s= assets.ScriptElement(`wasm/wasm_exec.js`, true) %}
 <script>
   document.addEventListener("DOMContentLoaded", function() {
@@ -15,7 +18,7 @@
     const go = new Go();
     WebAssembly.instantiateStreaming(fetch("{%s assets.URL(`wasm/{{{ .Exec }}}.wasm`) %}"), go.importObject).then((result) => {
       go.run(result.instance);
-      wasmInit(new Date().getTime() - start);
+      wasmInit(new Date().getTime() - start, {%s= util.ToJSONCompact(cfg) %});
     });
   });
 </script>

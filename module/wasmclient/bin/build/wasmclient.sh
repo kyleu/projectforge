@@ -8,4 +8,4 @@ cd "$dir/../.."
 
 echo "building {{{ .Name }}} WASM client library..."
 mkdir -p build/wasm
-GOOS=js GOARCH=wasm go build -o ./assets/wasm/{{{ .Exec }}}.wasm ./app/wasm/main.go
+GOOS=js GOARCH=wasm go build -o ./assets/wasm/{{{ .Exec }}}.wasm ./app/wasm/wasm_cmd/main.go

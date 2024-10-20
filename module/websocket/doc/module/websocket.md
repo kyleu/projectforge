@@ -72,7 +72,7 @@ function send(cmd, param) {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-  sock = new lifelog.Socket(true, open, recv, err, "/example/connect");
+  sock = new {{{ .CleanKey }}}.Socket(true, open, recv, err, "/example/connect");
   console.log("loaded socket connection");
 });
 

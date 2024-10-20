@@ -1,7 +1,8 @@
+// $PF_GENERATE_ONCE$
 //go:build js
 // +build js
 
-package main
+package wasm
 
 import (
 	"time"
@@ -10,27 +11,26 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-var (
-	_rootLogger util.Logger
-	_close      chan struct{}
-)
+type WASM struct {
+	logger  util.Logger
+	CloseCh chan struct{}
+}
 
-func main() {
+func NewWASM() *WASM {
+	ret := &WASM{CloseCh: make(chan struct{})}
+
 	logFn := func(level string, occurred time.Time, loggerName string, message string, caller util.ValueMap, stack string, fields util.ValueMap) {
-		Log(level, occurred, loggerName, message, caller, stack, fields)
+		ret.Log(level, occurred, loggerName, message, caller, stack, fields)
 	}
 	l, err := log.InitLogging(true, logFn)
 	if err != nil {
 		println(err)
 	}
-	_rootLogger = l
+	ret.logger = l
 
 	t := util.TimerStart()
-	wireFunctions()
-
-	initWASM(l)
-
+	ret.wireFunctions()
 	l.Infof("[%s] started in [%s]", util.AppName, t.EndString())
-	_close = make(chan struct{})
-	<-_close
+
+	return ret
 }
