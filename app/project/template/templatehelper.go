@@ -23,6 +23,10 @@ func (t *TemplateContext) CleanKey() string {
 	return project.CleanKey(t.Key)
 }
 
+func (t *TemplateContext) CleanName() string {
+	return project.CleanKey(t.Name)
+}
+
 func (t *TemplateContext) NotebookPort() int {
 	return t.Port + 10
 }

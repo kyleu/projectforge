@@ -13,7 +13,7 @@ import (
 
 type WASM struct {
 	logger  util.Logger
-	CloseCh chan struct{}
+	closeCh chan struct{}
 }
 
 func NewWASM() (*WASM, error) {
@@ -33,4 +33,9 @@ func NewWASM() (*WASM, error) {
 	l.Infof("[%s] started in [%s]", util.AppName, t.EndString())
 
 	return ret, nil
+}
+
+func (w *WASM) Run() error {
+	<-w.closeCh
+	return nil
 }

@@ -10,5 +10,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	<-w.CloseCh
+	err = w.Run()
+	if err != nil {
+		panic(err)
+	}
 }
