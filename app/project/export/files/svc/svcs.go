@@ -19,12 +19,12 @@ func Services(args *model.Args, linebreak string) (*file.File, error) {
 	if args.HasModule("audit") {
 		g.AddImport(helper.ImpAudit)
 	}
-	for _, m := range args.Models {
+	for _, m := range args.Models.WithService() {
 		g.AddImport(helper.AppImport(m.PackageWithGroup("")))
 	}
 
 	svcSize := 0
-	lo.ForEach(args.Models, func(m *model.Model, _ int) {
+	lo.ForEach(args.Models.WithService(), func(m *model.Model, _ int) {
 		if len(m.Proper()) > svcSize {
 			svcSize = len(m.Proper())
 		}
@@ -38,7 +38,7 @@ func Services(args *model.Args, linebreak string) (*file.File, error) {
 
 	svcs := make([]string, 0, len(args.Models))
 	refs := make([]string, 0, len(args.Models))
-	lo.ForEach(args.Models, func(m *model.Model, _ int) {
+	lo.ForEach(args.Models.WithService(), func(m *model.Model, _ int) {
 		svcs = append(svcs, fmt.Sprintf("%s *%s.Service", util.StringPad(m.Proper(), svcSize), m.Package))
 
 		refParamsArr := []string{"st.DB"}

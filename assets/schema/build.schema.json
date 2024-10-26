@@ -1,0 +1,126 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://projectforge.dev/schemas/build.schema.json",
+  "title": "Build",
+  "description": "Build settings for a Project Forge project",
+  "type": "object",
+  "properties": {
+    "publish": {
+      "description": "if set, publishes this release to GitHub",
+      "type": "boolean"
+    },
+    "private": {
+      "description": "if set, skips public assets",
+      "type": "boolean"
+    },
+    "changelog": {
+      "description": "if set, generates a changelog from commit comments",
+      "type": "boolean"
+    },
+    "testsFail": {
+      "description": "if set, build will fail if tests fail",
+      "type": "boolean"
+    },
+    "noScript": {
+      "description": "if set, prevents JavaScript from being emitted or utilized",
+      "type": "boolean"
+    },
+    "desktop": {
+      "description": "if set, generates a desktop application",
+      "type": "boolean"
+    },
+    "notarize": {
+      "description": "if set, notarizes the iOS and macOS binaries with Apple",
+      "type": "boolean"
+    },
+    "signing": {
+      "description": "if set, signs the results with PGP",
+      "type": "boolean"
+    },
+    "safeMode": {
+      "description": "if set, limits dangerous activities",
+      "type": "boolean"
+    },
+    "android": {
+      "description": "if set, generates an Android application",
+      "type": "boolean"
+    },
+    "iOS": {
+      "description": "if set, generates an iOS application",
+      "type": "boolean"
+    },
+    "wasm": {
+      "description": "if set, generates an WASM binary",
+      "type": "boolean"
+    },
+    "x86": {
+      "description": "if set, generates x86 binaries",
+      "type": "boolean"
+    },
+    "windowsARM": {
+      "description": "if set, generates ARM Windows binaries",
+      "type": "boolean"
+    },
+    "linuxARM": {
+      "description": "if set, generates ARM Linux binaries",
+      "type": "boolean"
+    },
+    "linuxMIPS": {
+      "description": "if set, generates MIPS Linux binaries",
+      "type": "boolean"
+    },
+    "linuxOdd": {
+      "description": "if set, generates Linux binaries for weird architectures",
+      "type": "boolean"
+    },
+    "aix": {
+      "description": "if set, generates AIX binaries",
+      "type": "boolean"
+    },
+    "dragonfly": {
+      "description": "if set, generates Dragonfly binaries",
+      "type": "boolean"
+    },
+    "illumos": {
+      "description": "if set, generates Illumos binaries",
+      "type": "boolean"
+    },
+    "freeBSD": {
+      "description": "if set, generates FreeBSD binaries",
+      "type": "boolean"
+    },
+    "netBSD": {
+      "description": "if set, generates NetBSD binaries",
+      "type": "boolean"
+    },
+    "openBSD": {
+      "description": "if set, generates OpenBSD binaries",
+      "type": "boolean"
+    },
+    "plan9": {
+      "description": "if set, generates Plan 9 binaries",
+      "type": "boolean"
+    },
+    "solaris": {
+      "description": "if set, generates Solaris binaries",
+      "type": "boolean"
+    },
+    "homebrew": {
+      "description": "if set, publishes this project to Homebrew",
+      "type": "boolean"
+    },
+    "nfpms": {
+      "description": "if set, generates NFPMS packages",
+      "type": "boolean"
+    },
+    "bom": {
+      "description": "if set, generates BoM packages",
+      "type": "boolean"
+    },
+    "snapcraft": {
+      "description": "if set, generates Snapcraft packages",
+      "type": "boolean"
+    }
+  },
+  "additionalProperties": false
+}

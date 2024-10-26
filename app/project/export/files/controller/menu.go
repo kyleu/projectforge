@@ -18,7 +18,7 @@ import (
 func Menu(args *model.Args, linebreak string) (*file.File, error) {
 	g := golang.NewFile("cmenu", []string{"app", "controller", "cmenu"}, "generated")
 	g.AddImport(helper.ImpAppMenu)
-	models := args.Models.WithoutTag("no-routes")
+	models := args.Models.WithRoutes()
 	groups, names, orphans := sortModels(models, args)
 	if vBlock := menuBlockV(models, args, groups, names); len(vBlock.Lines) > 0 {
 		g.AddBlocks(vBlock)

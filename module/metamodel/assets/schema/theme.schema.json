@@ -1,0 +1,97 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://projectforge.dev/schemas/project.schema.json",
+  "title": "Project",
+  "type": "object",
+  "properties": {
+    "light": {
+      "description": "light-mode colors",
+      "$ref": "#/$defs/colors"
+    },
+    "dark": {
+      "description": "dark-mode colors",
+      "$ref": "#/$defs/colors"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "light",
+    "dark"
+  ],
+  "$defs": {
+    "colors": {
+      "type": "object",
+      "properties": {
+        "brd": {
+          "description": "border color",
+          "type": "string"
+        },
+        "ld": {
+          "description": "link decoration color",
+          "type": "string"
+        },
+        "fg": {
+          "description": "foreground color",
+          "type": "string"
+        },
+        "fgm": {
+          "description": "foreground muted color",
+          "type": "string"
+        },
+        "bg": {
+          "description": "background color",
+          "type": "string"
+        },
+        "bgm": {
+          "description": "background muted color",
+          "type": "string"
+        },
+        "lf": {
+          "description": "link foreground color",
+          "type": "string"
+        },
+        "lvf": {
+          "description": "visited link foreground color",
+          "type": "string"
+        },
+        "nf": {
+          "description": "nav foreground color",
+          "type": "string"
+        },
+        "nb": {
+          "description": "nav background color",
+          "type": "string"
+        },
+        "mf": {
+          "description": "menu foreground color",
+          "type": "string"
+        },
+        "mb": {
+          "description": "menu background color",
+          "type": "string"
+        },
+        "msf": {
+          "description": "selected menu foreground color",
+          "type": "string"
+        },
+        "msb": {
+          "description": "selected menu background color",
+          "type": "string"
+        },
+        "mbd": {
+          "description": "modal backdrop color",
+          "type": "string"
+        },
+        "ok": {
+          "description": "success foreground color",
+          "type": "string"
+        },
+        "err": {
+          "description": "error foreground color",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -32,7 +32,7 @@ func detail(m *model.Model, args *model.Args, linebreak string) (*file.File, err
 		g.AddImport(helper.ImpComponentsView)
 	}
 	g.AddImport(helper.AppImport(m.PackageWithGroup("")))
-	rrs := args.Models.ReverseRelations(m.Name)
+	rrs := args.Models.WithController().ReverseRelations(m.Name)
 	if len(rrs) > 0 {
 		g.AddImport(helper.ImpFilter)
 	}

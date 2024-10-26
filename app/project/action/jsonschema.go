@@ -3,8 +3,12 @@ package action
 import (
 	"bytes"
 	"encoding/json"
+	"io"
+	"strings"
 
+	"github.com/pkg/errors"
 	"github.com/santhosh-tekuri/jsonschema"
+	"github.com/santhosh-tekuri/jsonschema/loader"
 
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/assets"
@@ -91,9 +95,26 @@ func schemaModel(sch *jsonschema.Schema, k string, f json.RawMessage) ([]string,
 	return ret.Slice, nil
 }
 
+type ld struct{}
+
+func (l *ld) Load(u string) (io.ReadCloser, error) {
+	idx := strings.LastIndex(u, "/")
+	if idx == -1 {
+		return nil, errors.Errorf("unable to load schema asset from url [%s]", u)
+	}
+	f := u[idx+1:]
+	e, err := assets.Embed("schema/" + f)
+	if err != nil {
+		return nil, err
+	}
+	return io.NopCloser(bytes.NewBuffer(e.Bytes)), nil
+}
+
 func loadSchemata() error {
 	c := jsonschema.NewCompiler()
 	c.Draft = jsonschema.Draft7
+
+	loader.Register("https", &ld{})
 
 	x := func(k string) error {
 		e, err := assets.Embed("schema/" + k + ".schema.json")
@@ -112,6 +133,14 @@ func loadSchemata() error {
 		return nil
 	}
 	err := x("project")
+	if err != nil {
+		return err
+	}
+	err = x("info")
+	if err != nil {
+		return err
+	}
+	err = x("build")
 	if err != nil {
 		return err
 	}

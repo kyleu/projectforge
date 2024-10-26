@@ -67,10 +67,10 @@
       ]
     },
     "tags": {
-      "description": "simple flags for this model; unused",
+      "description": "flags for this enum that control generated code",
       "type": "array",
       "items": {
-        "type": "string"
+        "enum": ["external", "no-database"]
       }
     },
     "title": {
@@ -87,7 +87,7 @@
     },
     "config": {
       "description": "a config object for this enum; unused",
-      "type": "object"
+      "$ref": "config.schema.json#/"
     }
   },
   "required": ["name", "package", "values"]

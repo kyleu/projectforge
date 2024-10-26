@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
@@ -29,6 +30,7 @@ func ModelMap(m *model.Model, args *model.Args, linebreak string) (*file.File, e
 	}
 	g.AddImport(imps...)
 	g.AddImport(m.Imports.Supporting("map")...)
+	g.AddBlocks(modelToMap(g, m, args.Enums, args.Database))
 	if b, e := modelFromMap(g, m, args.Enums, args.Database); e == nil {
 		g.AddBlocks(b)
 	} else {
@@ -37,12 +39,27 @@ func ModelMap(m *model.Model, args *model.Args, linebreak string) (*file.File, e
 	return g.Render(linebreak)
 }
 
+func modelToMap(g *golang.File, m *model.Model, enums enum.Enums, database string) *golang.Block {
+	ret := golang.NewBlock(m.Package+"ToMap", "func")
+	ret.WF("func (%s *%s) ToMap() util.ValueMap {", m.FirstLetter(), m.Proper())
+	content := strings.Join(lo.Map(m.Columns, func(col *model.Column, _ int) string {
+		return fmt.Sprintf(`%q: %s.%s`, col.Camel(), m.FirstLetter(), col.Proper())
+	}), ", ")
+	ret.W("\treturn util.ValueMap{" + content + "}")
+	ret.W("}")
+
+	_ = ` {
+		return util.ValueMap{"id": m.ID, "t": m.T, "data": m.Data, "occurred": m.Occurred}
+	}`
+	return ret
+}
+
 func modelFromMap(g *golang.File, m *model.Model, enums enum.Enums, database string) (*golang.Block, error) {
 	cols := m.Columns.NotDerived().WithoutTags("created", "updated")
 	pks := cols.PKs()
 	nonPKs := cols.NonPKs()
 
-	ret := golang.NewBlock(m.Package+"FromForm", "func")
+	ret := golang.NewBlock(m.Package+"FromMap", "func")
 	ret.WF("func FromMap(m util.ValueMap, setPK bool) (*%s, util.ValueMap, error) {", m.Proper())
 	ret.WF("\tret := &%s{}", m.Proper())
 	ret.W("\textra := util.ValueMap{}")

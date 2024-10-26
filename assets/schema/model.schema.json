@@ -56,7 +56,7 @@
       "description": "flags for this model that control generated code",
       "type": "array",
       "items": {
-        "enum": ["audit", "big", "count", "external", "menu-hidden", "menu-items", "no-routes", "public", "search", "softDelete"]
+        "enum": ["audit", "big", "count", "external", "menu-hidden", "menu-items", "no-database", "no-service", "no-controller", "no-routes", "public", "search", "softDelete"]
       }
     },
     "title": {
@@ -77,7 +77,7 @@
     },
     "config": {
       "description": "a config object for this model; unused",
-      "type": "object"
+      "$ref": "config.schema.json#/"
     },
     "columns": {
       "description": "the columns in this model's table",

@@ -36,7 +36,7 @@ func Controller(m *model.Model, args *model.Args, linebreak string) (*file.File,
 	if len(m.Group) > 0 {
 		prefix = defaultPrefix
 	}
-	cl, err := controllerList(g, m, nil, args.Models, args.Enums, prefix)
+	cl, err := controllerList(g, m, nil, args.Models.WithController(), args.Enums, prefix)
 	if err != nil {
 		return nil, err
 	}

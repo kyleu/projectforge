@@ -38,11 +38,16 @@ func structComplex(e *enum.Enum, g *golang.File) []*golang.Block {
 
 	fnStringBlock := golang.NewBlock(e.Proper()+".String", "method")
 	fnStringBlock.WF("func (%s %s) String() string {", e.FirstLetter(), e.Proper())
-	fnStringBlock.WF("\tif %s.Name != \"\" {", e.FirstLetter())
-	fnStringBlock.WF("\t\treturn %s.Name", e.FirstLetter())
-	fnStringBlock.W("\t}")
 	fnStringBlock.WF("\treturn %s.Key", e.FirstLetter())
 	fnStringBlock.W("}")
+
+	fnNameSafeBlock := golang.NewBlock(e.Proper()+".NameSafe", "method")
+	fnNameSafeBlock.WF("func (%s %s) NameSafe() string {", e.FirstLetter(), e.Proper())
+	fnNameSafeBlock.WF("\tif %s.Name != \"\" {", e.FirstLetter())
+	fnNameSafeBlock.WF("\t\treturn %s.Name", e.FirstLetter())
+	fnNameSafeBlock.W("\t}")
+	fnNameSafeBlock.WF("\treturn %s.String()", e.FirstLetter())
+	fnNameSafeBlock.W("}")
 
 	fnMatchBlock := golang.NewBlock(e.ProperPlural()+"Matches", "method")
 	fnMatchBlock.WF("func (%s %s) Matches(xx %s) bool {", e.FirstLetter(), e.Proper(), e.Proper())
@@ -97,5 +102,7 @@ func structComplex(e *enum.Enum, g *golang.File) []*golang.Block {
 	fnScanBlock.W("\t}")
 	fnScanBlock.WF("\treturn errors.Errorf(\"failed to scan %s enum from value [%%%%v]\", value)", e.Proper())
 	fnScanBlock.W("}")
-	return []*golang.Block{structBlock, fnStringBlock, fnMatchBlock, fnJSONOutBlock, fnJSONInBlock, fnXMLOutBlock, fnXMLInBlock, fnValueBlock, fnScanBlock}
+	return []*golang.Block{
+		structBlock, fnStringBlock, fnNameSafeBlock, fnMatchBlock, fnJSONOutBlock, fnJSONInBlock, fnXMLOutBlock, fnXMLInBlock, fnValueBlock, fnScanBlock,
+	}
 }

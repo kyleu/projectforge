@@ -21,7 +21,7 @@ func Migration(m *model.Model, args *model.Args, linebreak string) (*file.File, 
 		return nil, err
 	}
 	g.AddBlocks(drop)
-	sc, err := sqlCreate(m, args.Models, args.Database)
+	sc, err := sqlCreate(m, args.Models.WithDatabase(), args.Database)
 	if err != nil {
 		return nil, err
 	}

@@ -213,3 +213,15 @@ func (e Enums) Clone() Enums {
 		return x.Clone()
 	})
 }
+
+func (e Enums) WithTag(tag string) Enums {
+	return lo.Filter(e, func(x *Enum, _ int) bool {
+		return x.HasTag(tag)
+	})
+}
+
+func (e Enums) WithoutTag(tag string) Enums {
+	return lo.Filter(e, func(x *Enum, _ int) bool {
+		return !x.HasTag(tag)
+	})
+}

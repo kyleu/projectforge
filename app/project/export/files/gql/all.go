@@ -12,7 +12,7 @@ func All(models model.Models, enums enum.Enums, linebreak string) (*file.File, e
 	if len(enums) > 0 {
 		enumBlocks(g, enums)
 	}
-	if len(enums) > 0 {
+	if len(models) > 0 {
 		modelBlocks(g, models, enums)
 	}
 	g.AddBlocks(extendQuery(), extendMutation())

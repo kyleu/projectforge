@@ -14,7 +14,7 @@ import (
 
 func Search(args *model.Args, linebreak string) (*file.File, error) {
 	g := golang.NewFile("search", []string{"app", "lib", "search"}, "generated")
-	if args.Models.HasSearch() {
+	if args.Models.WithController().HasSearch() {
 		g.AddImport(helper.ImpContext, helper.ImpApp, helper.ImpAppUtil, helper.ImpCutil, helper.ImpSearchResult)
 	}
 	g.AddBlocks(searchBlock(args))
@@ -25,7 +25,7 @@ func searchBlock(args *model.Args) *golang.Block {
 	ret := golang.NewBlock("menu", "func")
 	keys := make([]string, 0, len(args.Models))
 	ret.W("func generatedSearch() []Provider {")
-	lo.ForEach(args.Models, func(m *model.Model, _ int) {
+	lo.ForEach(args.Models.WithController(), func(m *model.Model, _ int) {
 		if m.HasSearches() {
 			keys = append(keys, m.Package+"Func")
 			out := searchModel(m)

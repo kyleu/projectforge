@@ -76,8 +76,8 @@ func allEnum(p *project.Project, linebreak string, enums enum.Enums, database st
 		ret = append(ret, call)
 	}
 
-	if len(enums) > 0 && p.HasModule("migration") {
-		f, err := sql.Types(enums, linebreak, database)
+	if len(enums.WithDatabase()) > 0 && p.HasModule("migration") {
+		f, err := sql.Types(enums.WithDatabase(), linebreak, database)
 		if err != nil {
 			return nil, errors.Wrap(err, "can't render SQL types")
 		}
@@ -98,11 +98,14 @@ func extraFiles(p *project.Project, linebreak string, args *model.Args) (file.Fi
 	}
 
 	if args.HasModule("graphql") {
-		x, err := gql.All(args.Models, args.Enums, linebreak)
-		if err != nil {
-			return nil, err
+		m, e := args.Models.WithDatabase(), args.Enums.WithDatabase()
+		if len(m) > 0 || len(e) > 0 {
+			x, err := gql.All(m, e, linebreak)
+			if err != nil {
+				return nil, err
+			}
+			ret = append(ret, x)
 		}
-		ret = append(ret, x)
 	}
 
 	if args.HasModule("notebook") {
@@ -114,19 +117,22 @@ func extraFiles(p *project.Project, linebreak string, args *model.Args) (file.Fi
 	}
 
 	if args.HasModule("migration") {
-		migModels := args.Models.WithoutTag("external").Sorted()
-		f, err := sql.MigrationAll(migModels, args.Enums, linebreak)
+		migModels := args.Models.WithoutTag("external").WithDatabase().Sorted()
+		migEnums := args.Enums.WithDatabase()
+		f, err := sql.MigrationAll(migModels, migEnums, linebreak)
 		if err != nil {
 			return nil, errors.Wrap(err, "can't render SQL \"all\" migration")
 		}
 		ret = append(ret, f)
 	}
 
-	f, err := sql.SeedDataAll(args.Models, linebreak)
-	if err != nil {
-		return nil, errors.Wrap(err, "can't render SQL \"all\" migration")
+	if len(args.Models.WithDatabase()) > 0 || len(args.Enums.WithDatabase()) > 0 {
+		f, err := sql.SeedDataAll(args.Models.WithDatabase(), linebreak)
+		if err != nil {
+			return nil, errors.Wrap(err, "can't render SQL \"all\" migration")
+		}
+		ret = append(ret, f)
 	}
-	ret = append(ret, f)
 
 	return ret, nil
 }

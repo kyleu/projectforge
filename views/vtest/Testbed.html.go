@@ -10,69 +10,63 @@ import (
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/components"
+	"projectforge.dev/projectforge/views/components/edit"
 	"projectforge.dev/projectforge/views/layout"
 )
 
-//line views/vtest/Testbed.html:9
+//line views/vtest/Testbed.html:10
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vtest/Testbed.html:9
+//line views/vtest/Testbed.html:10
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vtest/Testbed.html:9
+//line views/vtest/Testbed.html:10
 type Testbed struct {
 	layout.Basic
-	Param any
+	Key    string
+	Keys   []string
+	Titles []string
+	Param  any
+	Result any
 }
 
-//line views/vtest/Testbed.html:14
+//line views/vtest/Testbed.html:19
 func (p *Testbed) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vtest/Testbed.html:14
+//line views/vtest/Testbed.html:19
 	qw422016.N().S(`
   <div class="card">
     <h3>`)
-//line views/vtest/Testbed.html:16
+//line views/vtest/Testbed.html:21
 	components.StreamSVGIcon(qw422016, `app`, ps)
-//line views/vtest/Testbed.html:16
+//line views/vtest/Testbed.html:21
 	qw422016.N().S(` `)
-//line views/vtest/Testbed.html:16
+//line views/vtest/Testbed.html:21
 	qw422016.E().S(util.AppName)
-//line views/vtest/Testbed.html:16
+//line views/vtest/Testbed.html:21
 	qw422016.N().S(` Testbed</h3>
-`)
-//line views/vtest/Testbed.html:17
-	if p.Param != nil {
-//line views/vtest/Testbed.html:17
-		qw422016.N().S(`    `)
-//line views/vtest/Testbed.html:18
-		components.StreamJSON(qw422016, p.Param)
-//line views/vtest/Testbed.html:18
-		qw422016.N().S(`
-`)
-//line views/vtest/Testbed.html:19
-	}
-//line views/vtest/Testbed.html:19
-	qw422016.N().S(`  </div>
-  <div class="card">
     <form action="" method="post">
-      <h3>`)
-//line views/vtest/Testbed.html:23
-	components.StreamSVGIcon(qw422016, `cog`, ps)
-//line views/vtest/Testbed.html:23
-	qw422016.N().S(` Form Test</h3>
-      <div class="mt">
-        <textarea class="full-width" name="x" rows="8" placeholder="">`)
-//line views/vtest/Testbed.html:25
-	qw422016.E().V(p.Param)
-//line views/vtest/Testbed.html:25
-	qw422016.N().S(`</textarea>
+      <div class="overflow full-width">
+        <table class="mt expanded min-200">
+          <tbody>
+            `)
+//line views/vtest/Testbed.html:26
+	edit.StreamSelectTable(qw422016, "key", "", "Key", p.Key, p.Keys, p.Titles, 6)
+//line views/vtest/Testbed.html:26
+	qw422016.N().S(`
+            `)
+//line views/vtest/Testbed.html:27
+	edit.StreamTextareaTable(qw422016, "param", "", "Param", 8, util.ToJSON(p.Param), 6)
+//line views/vtest/Testbed.html:27
+	qw422016.N().S(`
+          </tbody>
+        </table>
       </div>
       <div class="mt">
         <button type="submit">Test</button>
@@ -80,31 +74,71 @@ func (p *Testbed) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
     </form>
   </div>
 `)
-//line views/vtest/Testbed.html:32
+//line views/vtest/Testbed.html:36
+	if p.Result != nil {
+//line views/vtest/Testbed.html:36
+		qw422016.N().S(`  <div class="card">
+    <h3>`)
+//line views/vtest/Testbed.html:38
+		components.StreamSVGIcon(qw422016, `cog`, ps)
+//line views/vtest/Testbed.html:38
+		qw422016.N().S(` Result</h3>
+    <div class="mt">
+`)
+//line views/vtest/Testbed.html:40
+		s, ok := p.Result.(string)
+
+//line views/vtest/Testbed.html:41
+		if ok {
+//line views/vtest/Testbed.html:41
+			qw422016.N().S(`      <pre>`)
+//line views/vtest/Testbed.html:42
+			qw422016.E().S(s)
+//line views/vtest/Testbed.html:42
+			qw422016.N().S(`</pre>
+`)
+//line views/vtest/Testbed.html:43
+		} else {
+//line views/vtest/Testbed.html:43
+			qw422016.N().S(`      `)
+//line views/vtest/Testbed.html:44
+			components.StreamJSON(qw422016, p.Result)
+//line views/vtest/Testbed.html:44
+			qw422016.N().S(`
+`)
+//line views/vtest/Testbed.html:45
+		}
+//line views/vtest/Testbed.html:45
+		qw422016.N().S(`    </div>
+  </div>
+`)
+//line views/vtest/Testbed.html:48
+	}
+//line views/vtest/Testbed.html:49
 }
 
-//line views/vtest/Testbed.html:32
+//line views/vtest/Testbed.html:49
 func (p *Testbed) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vtest/Testbed.html:32
+//line views/vtest/Testbed.html:49
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vtest/Testbed.html:32
+//line views/vtest/Testbed.html:49
 	p.StreamBody(qw422016, as, ps)
-//line views/vtest/Testbed.html:32
+//line views/vtest/Testbed.html:49
 	qt422016.ReleaseWriter(qw422016)
-//line views/vtest/Testbed.html:32
+//line views/vtest/Testbed.html:49
 }
 
-//line views/vtest/Testbed.html:32
+//line views/vtest/Testbed.html:49
 func (p *Testbed) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vtest/Testbed.html:32
+//line views/vtest/Testbed.html:49
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vtest/Testbed.html:32
+//line views/vtest/Testbed.html:49
 	p.WriteBody(qb422016, as, ps)
-//line views/vtest/Testbed.html:32
+//line views/vtest/Testbed.html:49
 	qs422016 := string(qb422016.B)
-//line views/vtest/Testbed.html:32
+//line views/vtest/Testbed.html:49
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vtest/Testbed.html:32
+//line views/vtest/Testbed.html:49
 	return qs422016
-//line views/vtest/Testbed.html:32
+//line views/vtest/Testbed.html:49
 }

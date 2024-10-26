@@ -3,30 +3,47 @@
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/components/edit"
   "projectforge.dev/projectforge/views/layout"
 ) %}
 
 {% code type Testbed struct {
   layout.Basic
+  Key string
+  Keys []string
+  Titles []string
   Param any
+  Result any
 } %}
 
 {% func (p *Testbed) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>{%= components.SVGIcon(`app`, ps) %} {%s util.AppName %} Testbed</h3>
-    {%- if p.Param != nil -%}
-    {%= components.JSON(p.Param) %}
-    {%- endif -%}
-  </div>
-  <div class="card">
     <form action="" method="post">
-      <h3>{%= components.SVGIcon(`cog`, ps) %} Form Test</h3>
-      <div class="mt">
-        <textarea class="full-width" name="x" rows="8" placeholder="">{%v p.Param %}</textarea>
+      <div class="overflow full-width">
+        <table class="mt expanded min-200">
+          <tbody>
+            {%= edit.SelectTable("key", "", "Key", p.Key, p.Keys, p.Titles, 6) %}
+            {%= edit.TextareaTable("param", "", "Param", 8, util.ToJSON(p.Param), 6) %}
+          </tbody>
+        </table>
       </div>
       <div class="mt">
         <button type="submit">Test</button>
       </div>
     </form>
   </div>
+  {%- if p.Result != nil -%}
+  <div class="card">
+    <h3>{%= components.SVGIcon(`cog`, ps) %} Result</h3>
+    <div class="mt">
+      {%- code s, ok := p.Result.(string) -%}
+      {%- if ok -%}
+      <pre>{%s s %}</pre>
+      {%- else -%}
+      {%= components.JSON(p.Result) %}
+      {%- endif -%}
+    </div>
+  </div>
+  {%- endif -%}
 {% endfunc %}
