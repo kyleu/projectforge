@@ -123,7 +123,7 @@ func FormatSecondsFull(x float64) string {
 	}
 	f("second", seconds)
 	if fractionalPart > 0 {
-		result = append(result, fmt.Sprintf("%d milliseconds", int(math.Round((fractionalPart*1000)))))
+		result = append(result, fmt.Sprintf("%d milliseconds", int(math.Round(fractionalPart*1000))))
 	}
 	return strings.Join(result, ", ")
 }

@@ -35,7 +35,7 @@ func DatabaseSQLRun(w http.ResponseWriter, r *http.Request) {
 		defer func() { _ = tx.Rollback() }()
 
 		var columns []string
-		results := [][]any{}
+		var results [][]any
 
 		timer := util.TimerStart()
 		result, err := svc.Query(ps.Context, sql, tx, ps.Logger)

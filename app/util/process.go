@@ -53,8 +53,8 @@ func RunProcess(cmd string, path string, in io.Reader, out io.Writer, er io.Writ
 	}
 	err = c.Wait()
 	if err != nil {
-		ec, ok := err.(*exec.ExitError) //nolint:errorlint
-		if ok {
+		var ec *exec.ExitError
+		if ok := errors.As(err, &ec); ok {
 			return ec.ExitCode(), nil
 		}
 		return -1, errors.Wrapf(err, "unable to run [%s] (%T)", cmd, err)

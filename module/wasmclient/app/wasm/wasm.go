@@ -16,7 +16,7 @@ type WASM struct {
 	CloseCh chan struct{}
 }
 
-func NewWASM() *WASM {
+func NewWASM() (*WASM, error) {
 	ret := &WASM{CloseCh: make(chan struct{})}
 
 	logFn := func(level string, occurred time.Time, loggerName string, message string, caller util.ValueMap, stack string, fields util.ValueMap) {
@@ -24,7 +24,7 @@ func NewWASM() *WASM {
 	}
 	l, err := log.InitLogging(true, logFn)
 	if err != nil {
-		println(err)
+		return nil, err
 	}
 	ret.logger = l
 
@@ -32,5 +32,5 @@ func NewWASM() *WASM {
 	ret.wireFunctions()
 	l.Infof("[%s] started in [%s]", util.AppName, t.EndString())
 
-	return ret
+	return ret, nil
 }

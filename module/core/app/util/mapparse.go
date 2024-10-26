@@ -1,10 +1,12 @@
 package util
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 )
 
 func (m ValueMap) ParseBool(path string, allowMissing bool, allowEmpty bool) (bool, error) {
@@ -92,4 +94,51 @@ func parseMapField[T any](m ValueMap, path string, allowMissing bool, fn func(re
 		return x, errors.Wrapf(err, "invalid %T", result)
 	}
 	return fn(result)
+}
+
+func simplifyValue(k string, v any) any {
+	if v != nil {
+		switch t := v.(type) {
+		case []string:
+			v = ArrayFromAny[any](t)
+		case []int:
+			v = ArrayFromAny[any](t)
+		case []int64:
+			v = ArrayFromAny[any](t)
+		case []float32:
+			v = ArrayFromAny[any](t)
+		case []float64:
+			v = ArrayFromAny[any](t)
+		case uuid.UUID:
+			v = t.String()
+		case *uuid.UUID:
+			v = t.String()
+		case time.Time:
+			v = TimeToJS(&t)
+		case *time.Time:
+			v = TimeToJS(t)
+		case ValueMap:
+			v = t.AsMap(true)
+		case []ValueMap:
+			v = lo.Map(t, func(x ValueMap, _ int) any {
+				return x.AsMap(true)
+			})
+		case []any:
+			v = lo.Map(t, func(x any, idx int) any {
+				return simplifyValue(fmt.Sprintf("%s[%d]", k, idx), x)
+			})
+		case map[string]any:
+		case string:
+		case int:
+		case bool:
+		case float64:
+		default:
+			if s, ok := v.(fmt.Stringer); ok {
+				v = s.String()
+			} else {
+				println(fmt.Sprintf("encountered [%s] value of type [%T]", k, v))
+			}
+		}
+	}
+	return v
 }

@@ -90,10 +90,10 @@ func newMigration(ctx context.Context, s *database.Service, e *Migration, tx *sq
 
 func maxMigrationIdx(ctx context.Context, s *database.Service, tx *sqlx.Tx, logger util.Logger) int {
 	q := database.SQLSelectSimple("max(idx) as x", "migration", s.Type)
-	max, err := s.SingleInt(ctx, q, tx, logger)
+	mx, err := s.SingleInt(ctx, q, tx, logger)
 	if err != nil {
 		logger.Errorf("error getting migrations: %+v", err)
 		return -1
 	}
-	return int(max)
+	return int(mx)
 }

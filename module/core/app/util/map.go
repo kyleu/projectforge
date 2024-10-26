@@ -29,11 +29,9 @@ func (m ValueMap) Add(kvs ...any) {
 }
 
 func (m ValueMap) With(k string, v any) ValueMap {
-	if m == nil {
-		m = ValueMap{}
-	}
-	m[k] = v
-	return m
+	x := m.Clone()
+	x[k] = v
+	return x
 }
 
 func (m ValueMap) Merge(args ...ValueMap) ValueMap {
@@ -97,8 +95,15 @@ func (m ValueMap) WithoutKeys(keys ...string) ValueMap {
 	return ret
 }
 
-func (m ValueMap) AsMap() map[string]any {
-	return m
+func (m ValueMap) AsMap(simplify bool) map[string]any {
+	if !simplify {
+		return m
+	}
+	ret := make(map[string]any, len(m))
+	for k, v := range m {
+		ret[k] = simplifyValue(k, v)
+	}
+	return ret
 }
 
 func (m ValueMap) String() string {

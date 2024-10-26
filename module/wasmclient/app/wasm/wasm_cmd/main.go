@@ -6,6 +6,9 @@ package main
 import "{{{ .Package }}}/app/wasm"
 
 func main() {
-	w := wasm.NewWASM()
+	w, err := wasm.NewWASM()
+	if err != nil {
+		panic(err)
+	}
 	<-w.CloseCh
 }

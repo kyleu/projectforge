@@ -27,6 +27,14 @@ func NewHTTPRequest(ctx context.Context, method string, url string, bodies ...io
 	return &HTTPRequest{Request: ret}
 }
 
+func NewHTTPGet(ctx context.Context, url string) *HTTPRequest {
+	return NewHTTPRequest(ctx, http.MethodGet, url, http.NoBody)
+}
+
+func NewHTTPPost(ctx context.Context, url string, body io.Reader) *HTTPRequest {
+	return NewHTTPRequest(ctx, http.MethodPost, url, body)
+}
+
 func (r *HTTPRequest) WithHeader(k string, v string) *HTTPRequest {
 	r.Header.Set(k, v)
 	return r

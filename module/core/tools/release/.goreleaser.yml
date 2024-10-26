@@ -95,6 +95,8 @@ release:
     - glob: "./build/dist/*_wasm_html.zip"{{{ end }}}
     # $PF_SECTION_START(releasefiles)$
     # $PF_SECTION_END(releasefiles)$
+
+report_sizes: true
 {{{ if .Build.BOM }}}
 sboms:
   - artifacts: archive

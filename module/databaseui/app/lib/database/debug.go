@@ -70,11 +70,12 @@ func (s *DebugStatement) Complete(count int, msg string, err error, output ...an
 type DebugStatements []*DebugStatement
 
 func (d DebugStatements) Add(st *DebugStatement) DebugStatements {
-	if len(d) > MaxTracedStatements {
-		d = d[1:]
+	x := d[:]
+	if len(x) > MaxTracedStatements {
+		x = x[1:]
 	}
-	d = append(d, st)
-	return d
+	x = append(x, st)
+	return x
 }
 
 func GetDebugStatements(key string) DebugStatements {
