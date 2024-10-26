@@ -88,7 +88,7 @@ func (t *Task) Run(ctx context.Context, run string, args util.ValueMap, logger u
 
 func (t *Task) RunWithResult(ctx context.Context, res *Result, logger util.Logger) *Result {
 	var span *telemetry.Span
-	ctx, span, logger = telemetry.StartSpan(ctx, fmt.Sprintf("run-%s", res.String(), t.Key), logger)
+	ctx, span, logger = telemetry.StartSpan(ctx, fmt.Sprintf("run-%s-%s", res.String(), t.Key), logger)
 	defer span.Complete()
 
 	span.Attribute("result", res.ID)
