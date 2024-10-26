@@ -136,7 +136,11 @@ func simplifyValue(k string, v any) any {
 			if s, ok := v.(fmt.Stringer); ok {
 				v = s.String()
 			} else {
-				println(fmt.Sprintf("encountered [%s] value of type [%T]", k, v))
+				var err error
+				v, err = FromJSONAny(ToJSONBytes(v, true))
+				if err != nil {
+					panic(fmt.Sprintf("encountered [%s] value of type [%T]", k, v))
+				}
 			}
 		}
 	}

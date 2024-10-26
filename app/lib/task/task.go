@@ -95,7 +95,7 @@ func (t *Task) RunWithResult(ctx context.Context, res *Result, logger util.Logge
 	span.Attribute("task.key", t.Key)
 	span.Attribute("task.category", t.Category)
 	span.Attribute("action", t.Key)
-	logger.Debugf("starting [%s] run for [%s]", t.Key, res.String())
+	logger.Debugf("starting [%s] run for [%s]", t.Key, res.Summarize())
 	tm := util.TimerStart()
 
 	if len(t.fns) == 0 {
@@ -106,7 +106,7 @@ func (t *Task) RunWithResult(ctx context.Context, res *Result, logger util.Logge
 		res = fn(ctx, res, logger)
 	}
 
-	logger.Debugf("completed [%s] run for [%s] in [%s]", t.Key, res.String(), util.MicrosToMillis(tm.End()))
+	logger.Debugf("completed [%s] run for [%s] in [%s]", t.Key, res.Summarize(), tm.EndString())
 	return res
 }
 
