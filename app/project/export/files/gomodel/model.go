@@ -153,7 +153,10 @@ func modelStruct(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	return ret, nil
 }
 
-func modelJSONSuffix(_ *model.Column) string {
+func modelJSONSuffix(col *model.Column) string {
+	if col.HasTag("force-json") {
+		return ""
+	}
 	return ",omitempty"
 }
 

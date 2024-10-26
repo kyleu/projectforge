@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://projectforge.dev/schemas/column.schema.json",
+  "title": "Build",
+  "type": "object",
+  "properties": {
+    "name": {
+      "description": "the name of this column, in database format",
+      "type": "string"
+    },
+    "type": {},
+    "pk": {
+      "description": "if set, column will be part of the primary key",
+      "type": "boolean"
+    },
+    "nullable": {
+      "description": "if set, null values are allowed",
+      "type": "boolean"
+    },
+    "search": {
+      "description": "if set, column will be part of the search",
+      "type": "boolean"
+    },
+    "sqlDefault": {
+      "description": "default value, include single quotes for string literals",
+      "type": "string"
+    },
+    "indexed": {
+      "description": "if set, column will be indexed",
+      "type": "boolean"
+    },
+    "display": {
+      "description": "if set to \"detail\", will omit column from listing tables",
+      "enum": ["detail", "tags", "url", "summary"]
+    },
+    "format": {
+      "description": "used for strings, controls output format in UI",
+      "enum": ["code", "codehidden", "color", "country", "html", "icon", "image", "json", "linebreaks", "seconds", "select", "si", "sql", "tags", "url"]
+    },
+    "example": {
+      "description": "default example value to use when editing",
+      "type": "string"
+    },
+    "json": {
+      "description": "the JSON field name to use when serializing, defaults to [name]",
+      "type": "string"
+    },
+    "values": {
+      "description": "when format is \"select\", this controls the available values",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "tags": {
+      "description": "tags controlling the column's code behavior",
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "enum": ["const", "created", "debug-only", "deleted", "derived", "force-json" ,"link", "list-first", "no-title", "omitempty", "title", "unique", "updated"]
+          },
+          {
+            "type": "string",
+            "pattern": "^fn:"
+          }
+        ]
+      }
+    },
+    "helpString": {
+      "description": "emitted it the UI, this is an optional help string",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}
