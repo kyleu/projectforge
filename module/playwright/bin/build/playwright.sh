@@ -7,6 +7,6 @@ dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$dir/../.."
 
 echo "Testing application..."
-npm playwright test
+npx playwright test
 
 echo "Done!"

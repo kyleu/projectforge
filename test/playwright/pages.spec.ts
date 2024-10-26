@@ -7,7 +7,7 @@ const screenshot = async(key: string, page: Page, testInfo: TestInfo, browserNam
 
 test.describe("pages", () => {
   test('about', async ({ page, viewport, browserName }, testInfo) => {
-    await page.goto(`/about`)
+    await page.goto(`http://127.0.0.1:40000/about`)
     await screenshot("about", page, testInfo, browserName);
 
     await expect(page).toHaveTitle(/Project Forge/);
