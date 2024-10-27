@@ -24,7 +24,7 @@ func controllerCreateForm(m *model.Model, grp *model.Column, models model.Models
 	}
 	ret.WF("\t\tret := &%s{%s}", m.ClassRef(), strings.Join(decls, ", "))
 	ret.W("\t\tif r.URL.Query().Get(\"prototype\") == util.KeyRandom {")
-	ret.WF("\t\t\tret = %s.Random()", m.Package)
+	ret.WF("\t\t\tret = %s.Random%s()", m.Package, m.Proper())
 	var encounteredRelTables []string
 	for _, rel := range m.Relations {
 		relModel := models.Get(rel.Table)
@@ -164,7 +164,7 @@ func controllerModelFromForm(m *model.Model) *golang.Block {
 	ret.W("\tif err != nil {")
 	ret.WF("\t\treturn nil, errors.Wrap(err, \"unable to parse form\")")
 	ret.W("\t}")
-	ret.WF("\tret, _, err := %s.FromMap(frm, setPK)", m.Package)
+	ret.WF("\tret, _, err := %s.%sFromMap(frm, setPK)", m.Package, m.Proper())
 	ret.W("\treturn ret, err")
 	ret.W("}")
 	return ret

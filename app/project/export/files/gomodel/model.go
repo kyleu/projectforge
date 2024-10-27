@@ -23,7 +23,10 @@ func Model(m *model.Model, args *model.Args, linebreak string) (*file.File, erro
 	lo.ForEach(helper.ImportsForTypes(types.KeyString, "", m.PKs().Types()...), func(imp *model.Import, _ int) {
 		g.AddImport(imp)
 	})
-	g.AddImport(helper.ImpAppUtil, helper.ImpAppSvc, helper.ImpPath)
+	if !m.SkipController() {
+		g.AddImport(helper.ImpPath)
+	}
+	g.AddImport(helper.ImpAppUtil, helper.ImpAppSvc)
 	imps, err := helper.SpecialImports(m.Columns, m.PackageWithGroup(""), args.Enums)
 	if err != nil {
 		return nil, err
@@ -171,7 +174,7 @@ func modelConstructor(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	if err != nil {
 		return nil, err
 	}
-	ret.WF("func New(%s) *%s {", args, m.Proper())
+	ret.WF("func New%s(%s) *%s {", m.Proper(), args, m.Proper())
 	ret.WF("\treturn &%s{%s}", m.Proper(), m.PKs().Refs())
 	ret.W("}")
 	return ret, nil

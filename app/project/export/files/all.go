@@ -2,7 +2,6 @@ package files
 
 import (
 	"github.com/pkg/errors"
-	"projectforge.dev/projectforge/app/project/export/files/typescript"
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
@@ -14,6 +13,7 @@ import (
 	"projectforge.dev/projectforge/app/project/export/files/script"
 	"projectforge.dev/projectforge/app/project/export/files/sql"
 	"projectforge.dev/projectforge/app/project/export/files/svc"
+	"projectforge.dev/projectforge/app/project/export/files/typescript"
 )
 
 func All(p *project.Project, linebreak string) (file.Files, error) {

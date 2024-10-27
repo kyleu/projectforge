@@ -69,7 +69,7 @@ func serviceSearch(m *model.Model, grp *model.Column, dbRef string, enums enum.E
 	ret.W("\tvar vals []any")
 	ret.W("\tvar err error")
 	ret.W("\tif strings.Contains(query, \":\") {")
-	ret.W("\t\twc, vals, err = database.QueryFieldDescs(FieldDescs, query, 0)")
+	ret.WF("\t\twc, vals, err = database.QueryFieldDescs(%sFieldDescs, query, 0)", m.Proper())
 	ret.W("\t} else {")
 	ret.WF("\t\twc = %s", defSC)
 	ret.WF("\t\tvals = []any{%s}", strings.Join(params, ", "))

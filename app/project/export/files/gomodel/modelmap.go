@@ -60,7 +60,7 @@ func modelFromMap(g *golang.File, m *model.Model, enums enum.Enums, database str
 	nonPKs := cols.NonPKs()
 
 	ret := golang.NewBlock(m.Package+"FromMap", "func")
-	ret.WF("func FromMap(m util.ValueMap, setPK bool) (*%s, util.ValueMap, error) {", m.Proper())
+	ret.WF("func %sFromMap(m util.ValueMap, setPK bool) (*%s, util.ValueMap, error) {", m.Proper(), m.Proper())
 	ret.WF("\tret := &%s{}", m.Proper())
 	ret.W("\textra := util.ValueMap{}")
 	ret.W("\tfor k, v := range m {")
