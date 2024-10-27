@@ -70,7 +70,7 @@
       "description": "flags for this enum that control generated code",
       "type": "array",
       "items": {
-        "enum": ["external", "no-database"]
+        "enum": ["external", "no-golang", "no-database", "typescript"]
       }
     },
     "title": {

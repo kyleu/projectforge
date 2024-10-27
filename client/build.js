@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import esbuild from "esbuild";
 
 esbuild.build({
@@ -8,4 +7,4 @@ esbuild.build({
   sourcemap: true,
   outfile: "../assets/client.js",
   logLevel: "info"
-}).catch((e) => console.error(e.message));
+});

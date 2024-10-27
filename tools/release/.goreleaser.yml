@@ -124,7 +124,7 @@ universal_binaries:
       - "./bin/build/ios.sh {{ .Version }}"
       - "./tools/notarize/notarize.sh"
       # $PF_SECTION_START(extrascripts)$
-      - "./bin/build/modules.sh"
+      # - "./bin/build/modules.sh"
       # $PF_SECTION_END(extrascripts)$
 
 builds:

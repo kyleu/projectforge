@@ -8,7 +8,7 @@ pwd
 
 echo "packaging modules..."
 
-function z {
+function copyModule {
   echo "updating [$1] module"
   cd $1
   touch *
@@ -23,6 +23,6 @@ mkdir -p assets/module
 cd module
 for d in * ; do
   if [ -d "$d" ]; then
-    z "$d"
+    copyModule "$d"
   fi
 done

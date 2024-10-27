@@ -96,7 +96,7 @@ func (t *TemplateContext) TypeScriptProjectContent() string {
 			"  sourcemap: true,",
 			`  outfile: "../assets/game.js",`,
 			"  logLevel: \"info\"",
-			"}).catch((e) => console.error(e.message));",
+			"});",
 		}, "\n")
 	}), "\n")
 }

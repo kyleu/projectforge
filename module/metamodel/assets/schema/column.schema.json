@@ -58,7 +58,7 @@
       "items": {
         "oneOf": [
           {
-            "enum": ["const", "created", "debug-only", "deleted", "derived", "force-json" ,"link", "list-first", "no-title", "omitempty", "title", "unique", "updated"]
+            "enum": ["const", "created", "debug-only", "deleted", "derived", "force-json" ,"link", "list-first", "no-title", "omitempty", "title", "optional-json", "unique", "updated"]
           },
           {
             "type": "string",

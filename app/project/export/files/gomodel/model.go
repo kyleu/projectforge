@@ -36,7 +36,10 @@ func Model(m *model.Model, args *model.Args, linebreak string) (*file.File, erro
 	g.AddImport(imps...)
 	g.AddImport(m.Imports.Supporting("model")...)
 
-	g.AddBlocks(defaultRoute(m), routeMethod(m), typeAssert(m))
+	if !m.SkipController() {
+		g.AddBlocks(defaultRoute(m), routeMethod(m))
+	}
+	g.AddBlocks(typeAssert(m))
 
 	if len(m.PKs()) > 1 {
 		pk, e := modelPK(m, args.Enums)
@@ -78,8 +81,10 @@ func Model(m *model.Model, args *model.Args, linebreak string) (*file.File, erro
 	if err != nil {
 		return nil, err
 	}
-
-	g.AddBlocks(modelWebPath(g, m), modelToData(m, m.Columns.NotDerived(), "", args.Database), fd)
+	if !m.SkipController() {
+		g.AddBlocks(modelWebPath(g, m))
+	}
+	g.AddBlocks(modelToData(m, m.Columns.NotDerived(), "", args.Database), fd)
 	return g.Render(linebreak)
 }
 

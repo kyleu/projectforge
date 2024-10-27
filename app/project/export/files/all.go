@@ -2,6 +2,7 @@ package files
 
 import (
 	"github.com/pkg/errors"
+	"projectforge.dev/projectforge/app/project/export/files/typescript"
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
@@ -132,6 +133,14 @@ func extraFiles(p *project.Project, linebreak string, args *model.Args) (file.Fi
 			return nil, errors.Wrap(err, "can't render SQL \"all\" migration")
 		}
 		ret = append(ret, f)
+	}
+
+	if m, e := args.Models.WithTypeScript(), args.Enums.WithTypeScript(); len(m) > 0 || len(e) > 0 {
+		files, err := typescript.All(m, e, linebreak)
+		if err != nil {
+			return nil, errors.Wrap(err, "can't render TypeScript output")
+		}
+		ret = append(ret, files...)
 	}
 
 	return ret, nil
