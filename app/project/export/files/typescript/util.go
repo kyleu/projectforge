@@ -57,6 +57,9 @@ func tsType(t *types.Wrapped, enums enum.Enums) string {
 	case types.KeyEnum:
 		e := enums.Get(t.EnumKey())
 		return e.Proper()
+	case types.KeyList:
+		lt := t.ListType()
+		return tsType(lt, enums) + "[]"
 	case types.KeyReference:
 		r, _ := model.AsRef(t)
 		return strings.TrimPrefix(r.K, "*")
