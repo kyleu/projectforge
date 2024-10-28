@@ -67,11 +67,7 @@ func ToGoType(t types.Type, nullable bool, pkg string, enums enum.Enums) (string
 		if err != nil {
 			return "", err
 		}
-		if ref.Pkg.Last() == pkg {
-			ret = fmt.Sprintf("*%s", ref.K)
-		} else {
-			ret = fmt.Sprintf("*%s.%s", ref.Pkg.Last(), ref.K)
-		}
+		ret = ref.LastRef(ref.Pkg.Last() != pkg)
 	case types.KeyString:
 		ret = types.KeyString
 	case types.KeyDate, types.KeyTimestamp, types.KeyTimestampZoned:
@@ -93,7 +89,7 @@ func ToGoString(t types.Type, nullable bool, prop string, alwaysString bool) str
 		return fmt.Sprintf("fmt.Sprint(%s)", prop)
 	case types.KeyList, types.KeyJSON:
 		if alwaysString {
-			return fmt.Sprintf("util.ToJSON(%s)", prop)
+			return fmt.Sprintf("util.ToJSONCompact(%s)", prop)
 		}
 		return prop
 	case types.KeyEnum:
@@ -102,7 +98,7 @@ func ToGoString(t types.Type, nullable bool, prop string, alwaysString bool) str
 		}
 		return prop
 	case types.KeyMap, types.KeyValueMap:
-		return fmt.Sprintf("util.ToJSON(%s)", prop)
+		return fmt.Sprintf("util.ToJSONCompact(%s)", prop)
 	case types.KeyDate:
 		if alwaysString {
 			if nullable {
@@ -119,11 +115,13 @@ func ToGoString(t types.Type, nullable bool, prop string, alwaysString bool) str
 			return fmt.Sprintf("util.TimeToFull(&%s)", prop)
 		}
 		return prop
-	case types.KeyUUID, types.KeyReference:
+	case types.KeyUUID:
 		if alwaysString && nullable {
 			return fmt.Sprintf("util.StringNullable(%s)", prop)
 		}
 		return fmt.Sprintf("%s.String()", prop)
+	case types.KeyReference:
+		return fmt.Sprintf("util.ToJSONCompact(%s)", prop)
 	default:
 		return prop
 	}

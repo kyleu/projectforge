@@ -41,6 +41,6 @@ func Group(group string, models model.Models, enums enum.Enums, linebreak string
 		dir = append(dir, group)
 	}
 	g := golang.NewGoTemplate(dir, "models.ts")
-	g.AddBlocks(tsContent(models, enums))
+	g.AddBlocks(tsContent(enums, models)...)
 	return g.Render(linebreak)
 }

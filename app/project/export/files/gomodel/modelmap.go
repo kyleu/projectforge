@@ -123,10 +123,8 @@ func forCol(g *golang.File, ret *golang.Block, indent int, m *model.Model, enums
 		if err != nil {
 			return errors.Wrap(err, "invalid ref")
 		}
-		if ref.Pkg.Last() == m.Package {
-			ret.WF(ind+"%sArg := &%s{}", col.Camel(), ref.K)
-		} else {
-			ret.WF(ind+"%sArg := &%s.%s{}", col.Camel(), ref.Pkg.Last(), ref.K)
+		ret.WF(ind+"%sArg := %s{}", col.Camel(), ref.LastAddr(ref.Pkg.Last() != m.Package))
+		if ref.Pkg.Last() != m.Package {
 			g.AddImport(model.NewImport(model.ImportTypeApp, ref.Pkg.ToPath()))
 		}
 		ret.WF(ind+"err = util.FromJSON([]byte(tmp%s), %sArg)", col.Proper(), col.Camel())

@@ -2,6 +2,7 @@ package model
 
 import (
 	"fmt"
+	"strings"
 
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/types"
@@ -38,7 +39,7 @@ func Help(t types.Type, f string, nullable bool, enums enum.Enums) (string, erro
 	case types.KeyMap, types.KeyValueMap:
 		return q("JSON object"), nil
 	case types.KeyReference:
-		return q("[" + asRefK(t) + "], as a JSON object"), nil
+		return q("[" + strings.TrimPrefix(asRefK(t), "*") + "], as a JSON object"), nil
 	case types.KeyString:
 		switch f {
 		case FmtCode.Key, FmtCodeHidden.Key:

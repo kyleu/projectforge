@@ -1,6 +1,7 @@
 package types
 
 import (
+	"fmt"
 	"slices"
 	"strings"
 
@@ -36,7 +37,23 @@ func (x *Reference) From(v any) any {
 
 func (x *Reference) Path() util.Pkg {
 	ret := slices.Clone(x.Pkg)
-	return append(ret, x.K)
+	return append(ret, strings.TrimPrefix(x.K, "*"))
+}
+
+func (x *Reference) LastRef(includePkg bool) string {
+	if len(x.Pkg) == 0 || !includePkg {
+		return x.K
+	}
+	prefix := util.Choose(strings.HasPrefix(x.K, "*"), "*", "")
+	return fmt.Sprintf("%s%s.%s", prefix, x.Pkg.Last(), strings.TrimPrefix(x.K, "*"))
+}
+
+func (x *Reference) LastAddr(includePkg bool) string {
+	if len(x.Pkg) == 0 || !includePkg {
+		return strings.ReplaceAll(x.K, "*", "&")
+	}
+	prefix := util.Choose(strings.HasPrefix(x.K, "*"), "&", "")
+	return fmt.Sprintf("%s%s.%s", prefix, x.Pkg.Last(), strings.TrimPrefix(x.K, "*"))
 }
 
 func (x *Reference) Default(string) any {

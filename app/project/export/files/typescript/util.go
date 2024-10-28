@@ -7,22 +7,22 @@ import (
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/util"
+	"strings"
 )
 
-func tsContent(models model.Models, enums enum.Enums) *golang.Block {
-	ret := golang.NewBlock("TypeScript", "ts")
+func tsContent(enums enum.Enums, models model.Models) golang.Blocks {
+	ret := make(golang.Blocks, 0, len(enums)+len(models))
 	for _, e := range enums {
-		tsEnum(e, ret)
+		ret = append(ret, tsEnum(e))
 	}
 	for _, m := range models {
-		tsModel(m, enums, ret)
+		ret = append(ret, tsModel(m, enums))
 	}
-	ret.W("// $PF_SECTION_START(models)$")
-	ret.W("// $PF_SECTION_END(models)$")
 	return ret
 }
 
-func tsEnum(e *enum.Enum, ret *golang.Block) {
+func tsEnum(e *enum.Enum) *golang.Block {
+	ret := golang.NewBlock("tsenum-"+e.Name, "ts")
 	ret.W("// eslint-disable-next-line no-shadow")
 	ret.WF("export enum %s {", e.Proper())
 	lo.ForEach(e.Values, func(v *enum.Value, idx int) {
@@ -30,19 +30,20 @@ func tsEnum(e *enum.Enum, ret *golang.Block) {
 		ret.WF("  %s = %q%s", v.Name, v.Key, suffix)
 	})
 	ret.W("}")
-	ret.WB()
+	return ret
 }
 
-func tsModel(m *model.Model, enums enum.Enums, ret *golang.Block) {
+func tsModel(m *model.Model, enums enum.Enums) *golang.Block {
+	ret := golang.NewBlock("tsmodel-"+m.Name, "ts")
 	ret.WF("export class %s {", m.Proper())
 	for _, col := range m.Columns {
 		optional := util.Choose(col.Nullable || col.HasTag("optional-json"), "?", "")
 		ret.WF("  %s%s: %s;", col.Camel(), optional, tsType(col.Type, enums))
 	}
-	ret.WF("  // $PF_SECTION_START(model-%s)$", m.Proper())
-	ret.WF("  // $PF_SECTION_END(model-%s)$", m.Proper())
 	ret.W("}")
 	ret.WB()
+	ret.WF("export type %s = Array<%s>;", m.ProperPlural(), m.Proper())
+	return ret
 }
 
 func tsType(t *types.Wrapped, enums enum.Enums) string {
@@ -56,6 +57,9 @@ func tsType(t *types.Wrapped, enums enum.Enums) string {
 	case types.KeyEnum:
 		e := enums.Get(t.EnumKey())
 		return e.Proper()
+	case types.KeyReference:
+		r, _ := model.AsRef(t)
+		return strings.TrimPrefix(r.K, "*")
 	case types.KeyValueMap, types.KeyMap:
 		return "{ [key: string]: unknown }"
 	default:

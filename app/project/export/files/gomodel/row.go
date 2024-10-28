@@ -183,10 +183,8 @@ func modelRowToModel(g *golang.File, m *model.Model, enums enum.Enums, database 
 			if err != nil {
 				return nil, errors.Wrap(err, "invalid ref")
 			}
-			if ref.Pkg.Last() == m.Package {
-				ret.WF("\t%sArg := &%s{}", c.Camel(), ref.K)
-			} else {
-				ret.WF("\t%sArg := &%s.%s{}", c.Camel(), ref.Pkg.Last(), ref.K)
+			ret.WF("\t%sArg := %s{}", c.Camel(), ref.LastAddr(ref.Pkg.Last() != m.Package))
+			if ref.Pkg.Last() != m.Package {
 				g.AddImport(model.NewImport(model.ImportTypeApp, ref.Pkg.ToPath()))
 			}
 			ret.WF("\t_ = util.FromJSON(%s, %sArg)", decoder, c.Camel())
